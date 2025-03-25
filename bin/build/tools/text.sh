@@ -276,17 +276,43 @@ inArray() {
 
 # Usage: {fn} haystack needle ...
 # Argument: haystack - Required. String. String to search.
-# Argument: needle - Optional. String. One or more strings to find as a substring of `haystack`.
+# Argument: needle ... - Optional. String. One or more strings to find as a substring of `haystack`.
 # Exit Code: 0 - IFF ANY needle matches as a substring of haystack
+# Exit Code: 1 - No needles found in haystack
 # Summary: Find whether a substring exists in one or more strings
 # Does needle exist as a substring of haystack?
-substringFound() {
+stringContains() {
   local haystack="${1-}"
+
+  [ -n "$haystack" ] || return 1
   shift
   while [ $# -gt 0 ]; do
-    if [ -n "$1" ]; then
-      ! isSubstring "$1" "$haystack" || return 0
-    fi
+    [ -n "$1" ] || continue
+    local needle="$1"
+    [ "${haystack#*"$needle"}" = "$haystack" ] || return 0
+    shift
+  done
+  return 1
+}
+
+# Usage: {fn} haystack needle ...
+# Argument: haystack - Required. String. String to search.
+# Argument: needle ... - Optional. String. One or more strings to find as a case-insensitive substring of `haystack`.
+# Exit Code: 0 - IFF ANY needle matches as a substring of haystack
+# Exit Code: 1 - No needles found in haystack
+# Summary: Find whether a substring exists in one or more strings
+# Does needle exist as a substring of haystack?
+stringContainsInsensitive() {
+  local haystack="${1-}"
+
+  [ -n "$haystack" ] || return 1
+  shift
+  haystack=$(lowercase "$haystack") || :
+  while [ $# -gt 0 ]; do
+    [ -n "$1" ] || continue
+    local needle
+    needle=$(lowercase "$1") || :
+    [ "${haystack#*"$needle"}" = "$haystack" ] || return 0
     shift
   done
   return 1
@@ -326,10 +352,10 @@ _beginsWith() {
 # Tested: No
 #
 isSubstring() {
-  local element=${1-} item
+  local needle=${1-}
   shift || return 1
-  for item; do
-    [ "${item#*"$element"}" = "$item" ] || return 0
+  for haystack; do
+    [ "${haystack#*"$needle"}" = "$haystack" ] || return 0
     shift
   done
   return 1

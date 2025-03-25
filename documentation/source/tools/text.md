@@ -47,7 +47,8 @@
 {inArray}
 {isSubstring}
 {isSubstringInsensitive}
-{substringFound}
+{stringContains} 
+{stringContainsInsensitive}
 {beginsWith}
 {stringOffset}
 {maximumFieldLength}

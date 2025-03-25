@@ -548,7 +548,7 @@ _fileMatchesHelper() {
       __catchEnvironment "$usage" printf "%s\n" "$@" >"$fileList" || _clean $? "${clean[@]}" || return $?
     fi
     while read -r file; do
-      if [ "${#exceptions[@]}" -gt 0 ] && substringFound "$file" "${exceptions[@]}"; then
+      if [ "${#exceptions[@]}" -gt 0 ] && stringContains "$file" "${exceptions[@]}"; then
         continue
       fi
       if $success; then

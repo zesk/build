@@ -7,7 +7,7 @@
 
 _timingFactor() {
   if isBitBucketPipeline; then
-    printf "%d\n" 10
+    printf "%d\n" 16
   else
     printf "%d\n" 6
   fi
@@ -29,18 +29,18 @@ __slowDaemon() {
 testProcessWait() {
   local background timingFactor
 
-  printf "%s %s\n"  "$(decorate info "Uptime")" "$(decorate code "$(uptime)")"
+  printf "%s %s\n" "$(decorate info "Uptime")" "$(decorate code "$(uptime)")"
   __slowDaemon &
   disown
   background=$!
 
   timingFactor="$(_timingFactor)"
 
-  export BUILD_DEBUG_LINES=9999
+  __mockValue BUILD_DEBUG_LINES "" 9999
   assertNotExitCode --stderr-match Expired 0 processWait --timeout "$((timingFactor / 2))" "$background" || return $?
   assertExitCode 0 kill -0 "$background" || return $?
   assertExitCode 0 processWait --timeout "$timingFactor" "$background" || return $?
   assertExitCode 0 processWait --timeout "$timingFactor" "$background" || return $?
   assertNotExitCode --stderr-match "must be alive" 0 processWait --require --timeout "$timingFactor" "$background" || return $?
-  unset BUILD_DEBUG_LINES
+  __mockValue BUILD_DEBUG_LINES "" --end
 }

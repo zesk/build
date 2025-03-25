@@ -68,6 +68,8 @@ __tools() {
 # Usage: {fn}
 # Fetch the current live version of the software
 __hookVersionLive() {
-  githubLatestRelease zesk/build "$@"
+  if ! githubLatestRelease zesk/build "$@" 2>/dev/null; then
+    __throwEnvironment "_return" "Unable to access Github" || return $?
+  fi
 }
 __tools ../.. __hookVersionLive "$@"

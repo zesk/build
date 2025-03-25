@@ -188,6 +188,7 @@ newRelease() {
 
   buildEnvironmentContext __newRelease "$usage" "$isInteractive" "$newVersion"
 }
+
 __newRelease() {
   local usage="$1" isInteractive="$2" newVersion="$3"
   local newVersion readLoop=false currentVersion liveVersion nextVersion notes isInteractive

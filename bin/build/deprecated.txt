@@ -1,4 +1,6 @@
 # v0.25.10
+substringFound|stringContains|
+substringInsensitiveFound|stringContainsInsensitive|
 .env.STAGING|.STAGING.env|
 .env.PRODUCTION|.PRODUCTION.env|
 .env.staging|.staging.env|

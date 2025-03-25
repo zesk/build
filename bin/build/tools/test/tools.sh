@@ -201,7 +201,7 @@ testSuite() {
   # Showing them? Great. We're done.
   #
   if $showFlag; then
-    __testSuiteFilenameToCode "${allSuites[@]}"
+    __testSuitePathToCode "${allSuites[@]}"
     _textExit 0
   fi
 
@@ -333,7 +333,7 @@ testSuite() {
     for item in "${filteredTests[@]}"; do
       if [ "$item" != "${item#\#}" ]; then
         sectionFile="${item#\#}"
-        sectionName=$(__testSuiteFilenameToCode "$sectionFile")
+        sectionName=$(__testSuitePathToCode "$sectionFile")
         continue
       fi
       if $continueFlag; then
@@ -493,7 +493,7 @@ __testSuiteListTests() {
     local item="$1"
     if [ "$item" != "${item#\#}" ]; then
       sectionFile="${item#\#}"
-      sectionName=$(__testSuiteFilenameToCode "$sectionFile")
+      sectionName=$(__testSuitePathToCode "$sectionFile")
       printf -- "# %s\n" "$sectionName"
       shift
       continue
@@ -566,7 +566,7 @@ __testLookup() {
 
   shift 2
   while [ $# -gt 0 ]; do
-    if [ "$lookup" = "$(__testSuiteFilenameToCode "$1")" ]; then
+    if [ "$lookup" = "$(__testSuitePathToCode "$1")" ]; then
       printf "%s\n" "$1"
       return 0
     fi
@@ -624,7 +624,7 @@ __testSuiteExecutor() {
 # 3. Remaining string is the test suite code
 #
 # Example: `./app/tests/core/magic-tests.sh` -> `magic`
-__testSuiteFilenameToCode() {
+__testSuitePathToCode() {
   local testPath
   while [ "$#" -gt 0 ]; do
     testPath="$(basename "$1")"
@@ -920,15 +920,34 @@ __testMatches() {
 # Our test failed
 __testFailed() {
   local errorCode name sectionName="$1" item="$2"
+  local maxLen=64
 
   __catchEnvironment "$usage" hookRunOptional bash-test-fail "$sectionName" "$item" || __throwEnvironment "$usage" "... continuing" || :
 
   errorCode="$(_code assert)"
-  printf "%s: %s - %s %s (%s)\n" "$(decorate error "Exit")" "$(decorate bold-red "$errorCode")" "$(decorate error "Failed running")" "$(decorate info "$item")" "$(decorate magenta "$sectionName")"
-  for name in IFS HOME LINES COLUMNS OSTYPE PPID PID PWD TERM; do
-    printf "%s=%s\n" "$(decorate label "$name")" "$(decorate value "${!name-}")"
-  done
-  decorate info "$(decorate magenta "$sectionName") $(decorate code "$item") failed on $(decorate value "$(date +"%F %T")")"
+  printf "%s: %s - %s %s (%s)\n" "$(decorate error "Exit")" "$(decorate bold-red "$errorCode")" "$(decorate error "Failed running")" "$(decorate info "$item")" "$(decorate magenta "$sectionName")" || :
+  skipEnv=()
+  read -r -a skipEnv < <(environmentSecureVariables) || :
+  while read -r name; do
+    if ! inArray "$name" PATH HOME OSTYPE PWD TERM; then
+      if inArray "$name" "${skipEnv[@]}"; then
+        continue
+      fi
+    fi
+    local len=${#!name-}
+    if stringContainsInsensitive "$name" secret key password; then
+      decorate pair "$name" "$(decorate red "$len $(plural "$len" "character" "characters")" - HIDDEN)"
+    else
+      local value="${!name-}"
+      [ "$len" -lt "$maxLen" ] || value="${value:0:$maxLen} ... $(decorate green "$len $(plural "$len" "character" "characters")")"
+      [ -n "$value" ] || value="$(decorate orange "[blank]")"
+      decorate pair "$name" "${!name-}"
+    fi
+  done < <(environmentVariables | sort -u)
+  local averages=()
+  read -r -a averages < <(loadAverage) || :
+  printf "%s%s\n" "$(decorate info "Load averages:")" "$(decorate each code "${averages[@]+"${averages[@]}"}")" || :
+  decorate info "$(decorate magenta "$sectionName") $(decorate code "$item") failed on $(decorate value "$(date +"%F %T")")" || :
   export globalTestFailure="$*"
   return "$errorCode"
 }

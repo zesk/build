@@ -8,10 +8,10 @@
 #
 
 testSubstringFound() {
-  assertExitCode 0 substringFound haystack needle needle needle needle needle aystac needle || return $?
-  assertExitCode 0 substringFound haystack needle needle needle needle needle haystac needle || return $?
-  assertExitCode 0 substringFound haystack needle needle needle needle needle aystack needle || return $?
-  assertNotExitCode 0 substringFound haystack needle needle needle needle needle Haystack needle || return $?
+  assertExitCode 0 stringContains haystack needle needle needle needle needle aystac needle || return $?
+  assertExitCode 0 stringContains haystack needle needle needle needle needle haystac needle || return $?
+  assertExitCode 0 stringContains haystack needle needle needle needle needle aystack needle || return $?
+  assertNotExitCode 0 stringContains haystack needle needle needle needle needle Haystack needle || return $?
 }
 
 __testIsSubstringData() {

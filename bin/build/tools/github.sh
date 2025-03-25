@@ -35,13 +35,15 @@ __githubAPI() {
     details+=("$(decorate green Authenticated)")
   fi
 
+  errorFile=$(fileTemporaryName "$handler") || return $?
   while [ $# -gt 0 ]; do
     local url="https://api.github.com/repos/$1${suffix}"
-    if ! curl "${hh[@]+"${hh[@]}"}" -o - -s "$url" | jq -r "$query"; then
-      __throwEnvironment "$handler" "API call failed for $1 ($(decorate code "$url")) ${details[*]-}" || return $?
+    if ! curl "${hh[@]+"${hh[@]}"}" -o - -s "$url" 2>>"$errorFile" | jq -r "$query" 2>>"$errorFile"; then
+      __throwEnvironment "$handler" "API call failed for $1 ($(decorate code "$url"))"$'\n'"${details[*]-}"$'\n'"$(dumpPipe Errors <"$errorFile")" || _clean $? "$errorFile" || return $?
     fi
     shift
   done
+  __catchEnvironment "$handler" rm -rf "$errorFile" || return $?
 }
 
 #
