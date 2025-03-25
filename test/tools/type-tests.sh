@@ -144,7 +144,7 @@ EOF
 }
 
 # must have no negative signs
-_dataUn_dataSignedIntegerSamples() {
+_dataUnsignedIntegerSamples() {
   cat <<EOF
 1
 +0
@@ -174,7 +174,7 @@ EOF
 }
 
 # must have decimal
-__un_dataSignedNumberSamples() {
+_dataUnsignedNumberSamples() {
   cat <<EOF
 512.4
 0.1
@@ -299,17 +299,17 @@ testUn_dataSignedIntegerSamples() {
 
   # Unsigned integers are just unsigned
   statusMessage decorate info _testValidateUnsignedInteger
-  _dataUn_dataSignedIntegerSamples | _testValidateUnsignedInteger || return $?
+  _dataUnsignedIntegerSamples | _testValidateUnsignedInteger || return $?
 
   statusMessage decorate info _testValidateSignedInteger
-  _dataUn_dataSignedIntegerSamples | _testValidateSignedInteger || return $?
+  _dataUnsignedIntegerSamples | _testValidateSignedInteger || return $?
 
   # Unsigned integers are both signed and unsigned numbers
   statusMessage decorate info _testValidateUnsignedNumber
-  _dataUn_dataSignedIntegerSamples | _testValidateUnsignedNumber || return $?
+  _dataUnsignedIntegerSamples | _testValidateUnsignedNumber || return $?
 
   statusMessage decorate info _testValidateSignedNumber
-  _dataUn_dataSignedIntegerSamples | _testValidateSignedNumber || return $?
+  _dataUnsignedIntegerSamples | _testValidateSignedNumber || return $?
 }
 
 testSignedNumberSamples() {
@@ -332,17 +332,17 @@ testUn_dataSignedNumberSamples() {
 
   # Number are neither signed nor unsigned
   statusMessage decorate code _testValidateUnsignedNumber
-  __un_dataSignedNumberSamples | _testValidateUnsignedNumber || return $?
+  _dataUnsignedNumberSamples | _testValidateUnsignedNumber || return $?
 
   statusMessage decorate code _testValidateSignedNumber
-  __un_dataSignedNumberSamples | _testValidateSignedNumber || return $?
+  _dataUnsignedNumberSamples | _testValidateSignedNumber || return $?
   # unsigned numbers are not integers, ever
 
   statusMessage decorate code _testValidateNotSignedInteger
-  __un_dataSignedNumberSamples | _testValidateNotSignedInteger || return $?
+  _dataUnsignedNumberSamples | _testValidateNotSignedInteger || return $?
 
   statusMessage decorate code _testValidateNotUnsignedInteger
-  __un_dataSignedNumberSamples | _testValidateNotUnsignedInteger || return $?
+  _dataUnsignedNumberSamples | _testValidateNotUnsignedInteger || return $?
 }
 
 testBadNumericSamples() {

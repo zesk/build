@@ -40,10 +40,10 @@
 - 18.317 test__catchCode
 - 15.679 testAwsEnvironmentFromCredentials
 - 15.661 testIdenticalCheckSingles
-- 15.267 testUn_dataSignedIntegerSamples
+- 15.267 testUnsignedIntegerSamples
 - 14.945 testValidateCharacterClass
 - 14.739 testHooksWhichSeemBenign
-- 14.211 testUn_dataSignedNumberSamples
+- 14.211 testUnsignedNumberSamples
 - 14.19 testIterm2
 - 14.076 testBashPrompt
 - 13.185 testSignedNumberSamples
