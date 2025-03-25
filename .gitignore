@@ -3,7 +3,7 @@
 /.vscode/
 /vendor/
 .composer/
-/.env*
+/*.env
 /.idea/*.xml
 /.idea/*.iml
 /.build-docs/

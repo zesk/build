@@ -13,7 +13,7 @@ export globalTestFailure=
 # Supports argument flags in tests:
 # `TAP-Directive` `Test-Skip` `TODO`
 # Filters (`--tag` and `--skip-tag`) are applied in order after the function pattern or suite filter.
-# Argument: --one test - Optional. Add one test suite to run.
+# Argument: --suite testSuite - Optional. Add one test suite to run.
 # Argument: --show - Optional. Flag. List all test suites.
 # Argument: -l - Optional. Flag. List all test suites.
 # Argument: --help - Optional. This help.
@@ -31,6 +31,8 @@ export globalTestFailure=
 # Argument: --tag tagName - Optional. String. Include tests (only) tagged with this name.
 # Argument: --env-file environmentFile - Optional. EnvironmentFile. Load one ore more environment files prior to running tests
 # Argument: --tap tapFile - Optional. FileDirectory. Output test results in TAP format to `tapFile`.
+# Argument: --one testSuite - Optional. Add one test suite to run. (Synonym for `--suite`)
+# Argument: -1 testSuite - Optional. Add one test suite to run. (Synonym for `--suite`)
 # Argument: testFunctionPattern - Optional. String. Test function (or substring of function name) to run.
 # Hook: bash-test-start
 # Hook: bash-test-pass
@@ -75,7 +77,7 @@ testSuite() {
 
   local tags=() skipTags=() runner=()
   local beQuiet=false listFlag=false verboseMode=false continueFlag=false doStats=true showFlag=false showTags=false tapFile=""
-  local testPaths=() messyOption="" checkTests=() matchTests=() failExecutors=()
+  local testPaths=() messyOption="" runTestSuites=() matchTests=() failExecutors=()
 
   # _IDENTICAL_ argument-case-header 5
   local __saved=("$@") __count=$#
@@ -133,9 +135,9 @@ testSuite() {
       -c | --continue)
         continueFlag=true
         ;;
-      -1 | --one)
+      -1 | --one | --suite)
         shift
-        checkTests+=("$(usageArgumentString "$usage" "$argument" "${1-}")") || return $?
+        runTestSuites+=("$(usageArgumentString "$usage" "$argument" "${1-}")") || return $?
         ;;
       --list)
         verboseMode=false
@@ -173,8 +175,8 @@ testSuite() {
   # Intro statement to console
   #
   if ! $beQuiet; then
-    if [ ${#checkTests[@]} -gt 0 ]; then
-      printf "%s %s\n" "$(decorate warning "Adding ${#checkTests[@]} $(plural ${#checkTests[@]} suite suites):")" "$(decorate bold-red "${checkTests[@]}")"
+    if [ ${#runTestSuites[@]} -gt 0 ]; then
+      printf "%s %s\n" "$(decorate warning "Adding ${#runTestSuites[@]} $(plural ${#runTestSuites[@]} suite suites):")" "$(decorate bold-red "${runTestSuites[@]}")"
     fi
     local intro
     intro=$(printf -- "%s started on %s %s\n" "$(decorate bold-magenta "${usage#_}")" "$startString" "$load")
@@ -190,27 +192,28 @@ testSuite() {
   #
   # Load all tests
   #
-  local allTests=()
+  local allSuites=()
   while read -r item; do
-    allTests+=("$item")
-  done < <(__testFiles "${testPaths[@]}" | sort -u)
+    allSuites+=("$item")
+  done < <(__testSuitesNames "${testPaths[@]}" | sort -u)
 
   #
   # Showing them? Great. We're done.
   #
   if $showFlag; then
-    __testCode "${allTests[@]}"
+    __testSuiteFilenameToCode "${allSuites[@]}"
     _textExit 0
   fi
 
-  if [ ${#checkTests[@]} -eq 0 ]; then
-    checkTests=("${allTests[@]}")
+  # Determine the list of tests to run from the list of suites (or all suites)
+  if [ ${#runTestSuites[@]} -eq 0 ]; then
+    runTestSuites=("${allSuites[@]}")
   else
     foundTests=()
-    for item in "${checkTests[@]}"; do
-      foundTests+=("$(__testLookup "$usage" "$item" "${allTests[@]}")") || return $?
+    for item in "${runTestSuites[@]}"; do
+      foundTests+=("$(__testLookup "$usage" "$item" "${allSuites[@]}")") || return $?
     done
-    checkTests=("${foundTests[@]+"${foundTests[@]}"}")
+    runTestSuites=("${foundTests[@]+"${foundTests[@]}"}")
   fi
 
   __catchEnvironment "$usage" requireFileDirectory "$quietLog" || return $?
@@ -219,7 +222,7 @@ testSuite() {
   testFunctions=$(fileTemporaryName "$usage") || return $?
 
   local tests=() item
-  for item in "${checkTests[@]}"; do
+  for item in "${runTestSuites[@]}"; do
     if ! __testLoad "$item" >"$testFunctions"; then
       __throwEnvironment "$usage" "Can not load $item" || return $?
     fi
@@ -330,7 +333,7 @@ testSuite() {
     for item in "${filteredTests[@]}"; do
       if [ "$item" != "${item#\#}" ]; then
         sectionFile="${item#\#}"
-        sectionName=$(__testCode "$sectionFile")
+        sectionName=$(__testSuiteFilenameToCode "$sectionFile")
         continue
       fi
       if $continueFlag; then
@@ -382,6 +385,9 @@ _testSuite() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
+#
+# Set up test-related environment variables and traps
+#
 __testSuiteInitialize() {
   statusMessage decorate info "Initializing test suite ..."
 
@@ -408,6 +414,7 @@ __testSuiteInitialize() {
   bashDebugInterruptFile
 }
 
+# Display the tags
 __testSuiteShowTags() {
   local sectionFile=""
   while [ $# -gt 0 ]; do
@@ -486,7 +493,7 @@ __testSuiteListTests() {
     local item="$1"
     if [ "$item" != "${item#\#}" ]; then
       sectionFile="${item#\#}"
-      sectionName=$(__testCode "$sectionFile")
+      sectionName=$(__testSuiteFilenameToCode "$sectionFile")
       printf -- "# %s\n" "$sectionName"
       shift
       continue
@@ -549,12 +556,17 @@ __testStats() {
   printf -- "\n"
 }
 
+# Find our suite code in a list of test file paths
+# Argument: testSuite - String. Required.. Name of the test suite to find in a list of test paths.
+# Argument: testPaths - RelativeFile. Required. One or more test paths to search.
+# stdin: nothing
+# stdout: Name of the test path which matches the test suite
 __testLookup() {
   local usage="$1" lookup="$2"
 
   shift 2
   while [ $# -gt 0 ]; do
-    if [ "$lookup" = "$(__testCode "$1")" ]; then
+    if [ "$lookup" = "$(__testSuiteFilenameToCode "$1")" ]; then
       printf "%s\n" "$1"
       return 0
     fi
@@ -563,6 +575,10 @@ __testLookup() {
   __throwArgument "$usage" "No such suite $lookup" || return $?
 }
 
+# Fetch the line number of a test
+# Argument: testFunction - String. Name of the test suite function.
+# stdin: File to look for the function definition
+# stdout: PositiveInteger. The line number (with newline)
 __testGetLine() {
   local line
 
@@ -601,7 +617,14 @@ __testSuiteExecutor() {
   return 1
 }
 
-__testCode() {
+# Given a path to a file which contains a test suite, return the code for the suite
+# The transformation is:
+# 1. `basename $file`
+# 2. Trim all characters after a `-` in the file name
+# 3. Remaining string is the test suite code
+#
+# Example: `./app/tests/core/magic-tests.sh` -> `magic`
+__testSuiteFilenameToCode() {
   local testPath
   while [ "$#" -gt 0 ]; do
     testPath="$(basename "$1")"
@@ -611,13 +634,20 @@ __testCode() {
   done
 }
 
-__testFiles() {
+# Find test suite files
+# Argument: directory - Directory. Required. One or more paths to search for test files.
+# Matches files which end with `-tests.sh`
+__testSuitesNames() {
   while [ "$#" -gt 0 ]; do
     find "$1" -type f -name '*-tests.sh'
     shift
   done
 }
 
+# Check our global test failure as a back up to some how missing a failure elsewhere
+# Environment: globalTestFailure
+# Exit Code: 0 - Something failed somewhere
+# Exit Code: 1 - Nothing failed anywhere, we should pass
 __testDidAnythingFail() {
   export globalTestFailure
 
@@ -629,12 +659,20 @@ __testDidAnythingFail() {
   return 1
 }
 
+#
+# Output a heading for a test section
+#
+# Argument: String. Required. Test heading.
+#
 __testSection() {
   [ -n "$*" ] || _argument "Blank argument $(debuggingStack)"
   clearLine
   boxedHeading --size 0 "$@"
 }
 
+#
+# Output a heading for a test
+#
 __testHeading() {
   decorate code "$(decorate orange "$(echoBar '*')")"
   printf "%s" "$(decorate code)$(clearLine)"
@@ -642,13 +680,28 @@ __testHeading() {
   decorate code "$(decorate orange "$(echoBar '=')")"
 }
 
+#
+# Output debugging for terminal issues and colors/CI
+#
 __testDebugTermDisplay() {
-  printf "TERM: %s DISPLAY: %s\n" "${TERM-none}" "${DISPLAY-none} hasColors: $(
+  printf -- "TERM: %s DISPLAY: %s hasColors: %s\n" "${TERM-none}" "${DISPLAY-none}" "$(
     hasColors
     printf %d $?
   )"
 }
 
+# Load flags associated with a test
+# Parses a test comment header and fetches values which are in the form `# Test-Foo: value`
+# Converts these to a string in the form:
+#
+#     Foo:value;Bar:anotherValue;Marker:true
+#
+# Which can be easily scanned by other tools to determine eligibility of a test to run or
+# other options.
+# Argument: source - File. Required. File to scan.
+# Argument: functionName - String. Required. Function to fetch the flags for
+# stdout: String
+# stdin: none
 __testLoadFlags() {
   local source="$1" functionName="$2"
   local values=()
@@ -683,7 +736,7 @@ __testLoad() {
   while [ "$#" -gt 0 ]; do
     __catchEnvironment "$usage" isExecutable "$1" || _clean $? "$__beforeFunctions" "$__testFunctions" || return $?
 
-    declare -pF | awk '{ print $3 }' | grep -e '^test' | sort >"$__beforeFunctions"
+    declare -pF | awk '{ print $3 }' | sort -u >"$__beforeFunctions"
     tests=()
     set -a
     # shellcheck source=/dev/null
@@ -696,9 +749,19 @@ __testLoad() {
       done
       __tests+=("${tests[@]}")
     fi
+    local extraFunctions=()
     # diff outputs ("-" and "+") prefixes or ("< " and "> ")
-    declare -pF | awk '{ print $3 }' | grep -e '^test' | sort | diff -U 0 "$__beforeFunctions" - | grep 'test' | cut -c 2- | trimSpace >"$__testFunctions" || :
+    declare -pF | awk '{ print $3 }' | sort -u | diff -U 0 "$__beforeFunctions" - | grep -e '^[-+][^+-]' | cut -c 2- | trimSpace >"$__testFunctions" || :
     while read -r __test; do
+      if [ "$__test" != "${__test#_}" ]; then
+        extraFunctions+=("$__test")
+        continue
+      fi
+      if [ "$__test" = "${__test#test}" ]; then
+        decorate warning "Test function $(decorate code "$__test") found in test suites, start with $(decorate code "_") or $(decorate code "test")" 1>&2
+        extraFunctions+=("$__test")
+        continue
+      fi
       ! inArray "$__test" "${__tests[@]+"${__tests[@]}"}" || {
         clearLine
         decorate error "$1 - Duplicated: $(decorate code "$__test")"
@@ -716,6 +779,9 @@ ___testLoad() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
+#
+# Set up shell options
+#
 __testRunShellInitialize() {
   shopt -s shift_verbose failglob
 }
@@ -735,7 +801,7 @@ __testRun() {
   local usage="_${FUNCNAME[0]}"
   local quietLog="$1" __test="${2-}" __flags="${3-}" platform
 
-  local tests testName __testDirectory __TEST_SUITE_RESULT
+  local tests __testDirectory __TEST_SUITE_RESULT
   local __test __tests tests __testStart
   local __beforeFunctions errorTest
 
@@ -744,7 +810,7 @@ __testRun() {
 
   __testRunShellInitialize
 
-  platform="$(__testPlatformName)"
+  platform="$(_testPlatform)"
   [ -n "$platform" ] || __throwEnvironment "$usage" "No platform defined?" || return $?
 
   errorTest=$(_code assert)
@@ -831,14 +897,19 @@ ___testRun() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
+# Argument: testPattern - String. Required. Test string to match.
+# Argument: testMatches ... - String. Optional. One or more tests to match with.
+# Performs a case-insensitive anywhere-in-the-string match
+# Exit Code: 0 - Test was found in the list
+# Exit Code: 1 - Test was not found in the list
 __testMatches() {
-  local testName match
+  local testPattern match
 
-  testName=$(lowercase "$1")
+  testPattern=$(lowercase "$1")
   shift
   while [ "$#" -gt 0 ]; do
     match=$(lowercase "$1")
-    if [ "${testName#*"$match"}" != "$testName" ]; then
+    if [ "${testPattern#*"$match"}" != "$testPattern" ]; then
       return 0
     fi
     shift
@@ -846,13 +917,13 @@ __testMatches() {
   return 1
 }
 
+# Our test failed
 __testFailed() {
   local errorCode name sectionName="$1" item="$2"
 
-  __catchEnvironment "$usage" hookRunOptional bash-test-pass "$sectionName" "$item" || __throwEnvironment "$usage" "... continuing" || :
+  __catchEnvironment "$usage" hookRunOptional bash-test-fail "$sectionName" "$item" || __throwEnvironment "$usage" "... continuing" || :
 
   errorCode="$(_code assert)"
-  export IFS
   printf "%s: %s - %s %s (%s)\n" "$(decorate error "Exit")" "$(decorate bold-red "$errorCode")" "$(decorate error "Failed running")" "$(decorate info "$item")" "$(decorate magenta "$sectionName")"
   for name in IFS HOME LINES COLUMNS OSTYPE PPID PID PWD TERM; do
     printf "%s=%s\n" "$(decorate label "$name")" "$(decorate value "${!name-}")"
@@ -872,10 +943,10 @@ __testCleanup() {
   shopt -u failglob
   __environment rm -rf "$home/vendor/" "$home/node_modules/" "$home/composer.json" "$home/composer.lock" "$home/test."*/ "$home/.test"*/ "./aws" || return $?
   if [ -d "$cache" ]; then
-    # __environment find "$cache" -type f ! -path '*/.build/.*/*'
+    # Delete non-dot files
     __environment find "$cache" -type f ! -path '*/.build/.*/*' -delete || return $?
     # Delete empty directories
-    __environment find "$cache" -depth -type d -empty -delete || return $?
+    __environment find "$cache" -depth -type d ! -path '*/.build/.*/*' -empty -delete || return $?
   fi
 }
 

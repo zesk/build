@@ -112,7 +112,7 @@ githubURLsToCSV() {
 # Argument: image - String. Optional. Image to load
 # Load Zesk Build in a preconfigured container
 # Starts in `/root/build`
-# Loads .env.STAGING first
+# Loads .STAGING.env first
 buildContainer() {
   local image="${1-ubuntu:latest}"
   local name="${image%:latest}"
@@ -123,7 +123,7 @@ buildContainer() {
     "packageWhich --verbose shasum apt-rdepends"
     "cd ~/build"
   )
-  dockerLocalContainer --image "$image" --path /root/build --env-file .env.STAGING /root/build/bin/build/bash-build.sh --rc-extras "${ee[@]}" -- "$@"
+  dockerLocalContainer --image "$image" --path /root/build --env-file .STAGING.env /root/build/bin/build/bash-build.sh --rc-extras "${ee[@]}" -- "$@"
 }
 
 __buildConfigure

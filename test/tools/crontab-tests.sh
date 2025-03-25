@@ -6,10 +6,9 @@
 #
 # Copyright &copy; 2025 Market Acumen, Inc.
 #
-declare -a tests
-tests+=(crontabApplicationUpdateTest)
 
-crontabApplicationUpdateTest() {
+testCrontabApplicationUpdate() {
+  local usage="_return"
   local emptyPath envFile
   # empty test
 
@@ -24,4 +23,12 @@ crontabApplicationUpdateTest() {
   assertExitCode --stdout-match "test hello" --stdout-match "$emptyPath/hello" 0 crontabApplicationUpdate --user root --env-file "$envFile" "$emptyPath" --show || return $?
 
   rm -rf "$emptyPath" || :
+}
+
+testCrontabDeprecatedArgument() {
+  local usage="_return" envFile
+
+  envFile=$(fileTemporaryName "$usage")
+  assertNotExitCode --stderr-ok --line "$LINENO" 0 crontabApplicationUpdate --env "$envFile" || return $?
+  rm -rf "$envFile" || return $?
 }

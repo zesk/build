@@ -20,19 +20,19 @@ testBinaryTypes() {
 _testLineLabel() {
   printf "%s %s " "$(decorate info "$1")" "$(decorate code "$2")"
 }
-validateMissingItems() {
+_testValidateMissingItems() {
   while IFS='' read -r testLine; do
     if ! assertNotExitCode 0 isCallable "$testLine"; then
-      _testLineLabel validateMissingItems "$testLine"
+      _testLineLabel _testValidateMissingItems "$testLine"
       return 1
     fi
     if ! assertNotExitCode 0 isExecutable "$testLine"; then
-      _testLineLabel validateMissingItems "$testLine"
+      _testLineLabel _testValidateMissingItems "$testLine"
       return 1
     fi
   done
 }
-validateFunction() {
+_testValidateFunction() {
   while IFS="" read -r testLine; do
     if ! assertExitCode 0 isFunction "$testLine"; then
       _testLineLabel isFunction "$testLine"
@@ -40,7 +40,7 @@ validateFunction() {
     fi
   done
 }
-validateNotFunction() {
+_testValidateNotFunction() {
   while IFS="" read -r testLine; do
     if ! assertNotExitCode 0 isFunction "$testLine"; then
       _testLineLabel "NOT isFunction" "$testLine"
@@ -48,7 +48,7 @@ validateNotFunction() {
     fi
   done
 }
-validateExecutable() {
+_testValidateExecutable() {
   while IFS="" read -r testLine; do
     if ! assertExitCode 0 isExecutable "$testLine"; then
       _testLineLabel "isExecutable" "$testLine"
@@ -56,7 +56,7 @@ validateExecutable() {
     fi
   done
 }
-validateNotExecutable() {
+_testValidateNotExecutable() {
   while IFS="" read -r testLine; do
     if ! assertNotExitCode 0 isExecutable "$testLine"; then
       _testLineLabel "NOT isExecutable" "$testLine"
@@ -64,7 +64,7 @@ validateNotExecutable() {
     fi
   done
 }
-validateCallable() {
+_testValidateCallable() {
   while IFS="" read -r testLine; do
     if ! assertExitCode 0 isCallable "$testLine"; then
       _testLineLabel "isCallable" "$testLine"
@@ -72,7 +72,7 @@ validateCallable() {
     fi
   done
 }
-validateNotCallable() {
+_testValidateNotCallable() {
   while IFS="" read -r testLine; do
     if ! assertNotExitCode 0 isCallable "$testLine"; then
       _testLineLabel "NOT isCallable" "$testLine"
@@ -81,7 +81,7 @@ validateNotCallable() {
   done
 }
 
-callableExecutables() {
+_dataCallableExecutables() {
   cat <<EOF
 bin/build/map.sh
 bin/build/cannon.sh
@@ -91,21 +91,21 @@ EOF
 }
 
 # Builtins count so source is a function! (. is excluded)
-callableFunctions() {
+_dataCallableFunctions() {
   cat <<EOF
 source
 declare
 echo
 contextOpen
-callableExecutables
-validateMissingItems
+_dataCallableExecutables
+_testValidateMissingItems
 isUnsignedNumber
 isCallable
 EOF
 }
 
 # NOTHING Callable or Executable or Function
-sampleNotExecutable() {
+_dataSampleNotExecutable() {
   cat <<EOF
 notAFile
 /
@@ -120,19 +120,19 @@ EOF
 }
 
 testNotExecutable() {
-  sampleNotExecutable | validateMissingItems || return $?
-  sampleNotExecutable | validateNotExecutable || return $?
+  _dataSampleNotExecutable | _testValidateMissingItems || return $?
+  _dataSampleNotExecutable | _testValidateNotExecutable || return $?
 }
 
 testExecutableCallable() {
-  callableExecutables | validateExecutable || return $?
-  callableExecutables | validateCallable || return $?
-  callableExecutables | validateNotFunction || return $?
-  callableFunctions | grep -v echo | validateNotExecutable || return $?
-  callableFunctions | validateCallable || return $?
+  _dataCallableExecutables | _testValidateExecutable || return $?
+  _dataCallableExecutables | _testValidateCallable || return $?
+  _dataCallableExecutables | _testValidateNotFunction || return $?
+  _dataCallableFunctions | grep -v echo | _testValidateNotExecutable || return $?
+  _dataCallableFunctions | _testValidateCallable || return $?
 }
 
-signedIntegerSamples() {
+_dataSignedIntegerSamples() {
   cat <<EOF
 -1
 -23
@@ -144,7 +144,7 @@ EOF
 }
 
 # must have no negative signs
-unsignedIntegerSamples() {
+_dataUn_dataSignedIntegerSamples() {
   cat <<EOF
 1
 +0
@@ -159,7 +159,7 @@ EOF
 }
 
 # must be negative floats
-signedNumberSamples() {
+_dataSignedNumberSamples() {
   cat <<EOF
 -9999999999999.0
 -512.4
@@ -174,7 +174,7 @@ EOF
 }
 
 # must have decimal
-unsignedNumberSamples() {
+__un_dataSignedNumberSamples() {
   cat <<EOF
 512.4
 0.1
@@ -189,7 +189,7 @@ EOF
 }
 
 # just plain bad
-badNumericSamples() {
+__badNumericSamples() {
   cat <<'EOF'
 -6.02214076e23
 NULL
@@ -213,7 +213,7 @@ null
 EOF
 }
 
-validateSignedInteger() {
+_testValidateSignedInteger() {
   while IFS="" read -r testLine; do
     if ! assertExitCode 0 isInteger "$testLine"; then
       _testLineLabel "isInteger" "$testLine"
@@ -221,7 +221,7 @@ validateSignedInteger() {
     fi
   done
 }
-validateNotSignedInteger() {
+_testValidateNotSignedInteger() {
   while IFS="" read -r testLine; do
     if ! assertNotExitCode 0 isInteger "$testLine"; then
       _testLineLabel "NOT isInteger" "$testLine"
@@ -229,7 +229,7 @@ validateNotSignedInteger() {
     fi
   done
 }
-validateUnsignedInteger() {
+_testValidateUnsignedInteger() {
   while IFS="" read -r testLine; do
     if ! assertExitCode 0 isUnsignedInteger "$testLine"; then
       _testLineLabel "isUnsignedInteger" "$testLine"
@@ -237,7 +237,7 @@ validateUnsignedInteger() {
     fi
   done
 }
-validateNotUnsignedInteger() {
+_testValidateNotUnsignedInteger() {
   while IFS="" read -r testLine; do
     if ! assertNotExitCode 0 isUnsignedInteger "$testLine"; then
       _testLineLabel "NOT isUnsignedInteger" "$testLine"
@@ -245,7 +245,7 @@ validateNotUnsignedInteger() {
     fi
   done
 }
-validateUnsignedNumber() {
+_testValidateUnsignedNumber() {
   while IFS="" read -r testLine; do
     if ! assertExitCode 0 isUnsignedNumber "$testLine"; then
       _testLineLabel "isUnsignedNumber" "$testLine"
@@ -253,7 +253,7 @@ validateUnsignedNumber() {
     fi
   done
 }
-validateNotUnsignedNumber() {
+_testValidateNotUnsignedNumber() {
   while IFS="" read -r testLine; do
     if ! assertNotExitCode 0 isUnsignedNumber "$testLine"; then
       _testLineLabel "NOT isUnsignedNumber" "$testLine"
@@ -261,7 +261,7 @@ validateNotUnsignedNumber() {
     fi
   done
 }
-validateSignedNumber() {
+_testValidateSignedNumber() {
   while IFS="" read -r testLine; do
     if ! assertExitCode 0 isNumber "$testLine"; then
       _testLineLabel "isNumber" "$testLine"
@@ -269,7 +269,7 @@ validateSignedNumber() {
     fi
   done
 }
-validateNotSignedNumber() {
+_testValidateNotSignedNumber() {
   while IFS="" read -r testLine; do
     if ! assertNotExitCode 0 isNumber "$testLine"; then
       _testLineLabel "NOT isNumber" "$testLine"
@@ -284,32 +284,32 @@ testSignedIntegerSamples() {
   #
 
   # Unsigned/Signed integers are signed
-  signedIntegerSamples | validateSignedInteger || return $?
-  signedIntegerSamples | validateSignedNumber || return $?
+  _dataSignedIntegerSamples | _testValidateSignedInteger || return $?
+  _dataSignedIntegerSamples | _testValidateSignedNumber || return $?
   # Signed integers is not unsigned anything
-  signedIntegerSamples | validateNotUnsignedInteger || return $?
-  signedIntegerSamples | validateNotUnsignedNumber || return $?
+  _dataSignedIntegerSamples | _testValidateNotUnsignedInteger || return $?
+  _dataSignedIntegerSamples | _testValidateNotUnsignedNumber || return $?
 }
 
-testUnsignedIntegerSamples() {
+testUn_dataSignedIntegerSamples() {
 
   #
   # unsigned Integer
   #
 
   # Unsigned integers are just unsigned
-  statusMessage decorate info validateUnsignedInteger
-  unsignedIntegerSamples | validateUnsignedInteger || return $?
+  statusMessage decorate info _testValidateUnsignedInteger
+  _dataUn_dataSignedIntegerSamples | _testValidateUnsignedInteger || return $?
 
-  statusMessage decorate info validateSignedInteger
-  unsignedIntegerSamples | validateSignedInteger || return $?
+  statusMessage decorate info _testValidateSignedInteger
+  _dataUn_dataSignedIntegerSamples | _testValidateSignedInteger || return $?
 
   # Unsigned integers are both signed and unsigned numbers
-  statusMessage decorate info validateUnsignedNumber
-  unsignedIntegerSamples | validateUnsignedNumber || return $?
+  statusMessage decorate info _testValidateUnsignedNumber
+  _dataUn_dataSignedIntegerSamples | _testValidateUnsignedNumber || return $?
 
-  statusMessage decorate info validateSignedNumber
-  unsignedIntegerSamples | validateSignedNumber || return $?
+  statusMessage decorate info _testValidateSignedNumber
+  _dataUn_dataSignedIntegerSamples | _testValidateSignedNumber || return $?
 }
 
 testSignedNumberSamples() {
@@ -317,49 +317,49 @@ testSignedNumberSamples() {
   #
   # signed Number
   #
-  statusMessage decorate code validateSignedNumber
-  signedNumberSamples | validateSignedNumber || return $?
-  statusMessage decorate code validateNotUnsignedNumber
-  signedNumberSamples | validateNotUnsignedNumber || return $?
+  statusMessage decorate code _testValidateSignedNumber
+  _dataSignedNumberSamples | _testValidateSignedNumber || return $?
+  statusMessage decorate code _testValidateNotUnsignedNumber
+  _dataSignedNumberSamples | _testValidateNotUnsignedNumber || return $?
   # signed numbers are not integers, ever
-  statusMessage decorate code validateNotSignedInteger
-  signedNumberSamples | validateNotSignedInteger || return $?
-  statusMessage decorate code validateNotUnsignedInteger
-  signedNumberSamples | validateNotUnsignedInteger || return $?
+  statusMessage decorate code _testValidateNotSignedInteger
+  _dataSignedNumberSamples | _testValidateNotSignedInteger || return $?
+  statusMessage decorate code _testValidateNotUnsignedInteger
+  _dataSignedNumberSamples | _testValidateNotUnsignedInteger || return $?
 }
 
-testUnsignedNumberSamples() {
+testUn_dataSignedNumberSamples() {
 
   # Number are neither signed nor unsigned
-  statusMessage decorate code validateUnsignedNumber
-  unsignedNumberSamples | validateUnsignedNumber || return $?
+  statusMessage decorate code _testValidateUnsignedNumber
+  __un_dataSignedNumberSamples | _testValidateUnsignedNumber || return $?
 
-  statusMessage decorate code validateSignedNumber
-  unsignedNumberSamples | validateSignedNumber || return $?
+  statusMessage decorate code _testValidateSignedNumber
+  __un_dataSignedNumberSamples | _testValidateSignedNumber || return $?
   # unsigned numbers are not integers, ever
 
-  statusMessage decorate code validateNotSignedInteger
-  unsignedNumberSamples | validateNotSignedInteger || return $?
+  statusMessage decorate code _testValidateNotSignedInteger
+  __un_dataSignedNumberSamples | _testValidateNotSignedInteger || return $?
 
-  statusMessage decorate code validateNotUnsignedInteger
-  unsignedNumberSamples | validateNotUnsignedInteger || return $?
+  statusMessage decorate code _testValidateNotUnsignedInteger
+  __un_dataSignedNumberSamples | _testValidateNotUnsignedInteger || return $?
 }
 
 testBadNumericSamples() {
   #
   # Nothing is good
   #
-  statusMessage decorate code validateNotSignedInteger
-  badNumericSamples | validateNotSignedInteger || return $?
+  statusMessage decorate code _testValidateNotSignedInteger
+  __badNumericSamples | _testValidateNotSignedInteger || return $?
 
-  statusMessage decorate code validateNotUnsignedInteger
-  badNumericSamples | validateNotUnsignedInteger || return $?
+  statusMessage decorate code _testValidateNotUnsignedInteger
+  __badNumericSamples | _testValidateNotUnsignedInteger || return $?
 
-  statusMessage decorate code validateNotSignedNumber
-  badNumericSamples | validateNotSignedNumber || return $?
+  statusMessage decorate code _testValidateNotSignedNumber
+  __badNumericSamples | _testValidateNotSignedNumber || return $?
 
-  statusMessage decorate code validateNotUnsignedNumber
-  badNumericSamples | validateNotUnsignedNumber || return $?
+  statusMessage decorate code _testValidateNotUnsignedNumber
+  __badNumericSamples | _testValidateNotUnsignedNumber || return $?
 }
 
 __trueValues() {

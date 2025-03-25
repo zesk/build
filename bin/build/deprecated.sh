@@ -249,6 +249,10 @@ __misspellingCannon() {
 # --configuration
 #
 __deprecatedConfiguration() {
+  local home
+
+  home=$(__environment buildHome) || return $?
+
   export HOME
 
   local newHome
@@ -268,8 +272,20 @@ __deprecatedConfiguration() {
     fi
   fi
 
-  local exitCode=0 home
-  home=$(buildHome)
+  [ ! -f "$home/.env.STAGING" ] || mv "$home/.env.STAGING" "$home/.STAGING.env" || return $?
+  [ ! -f "$home/.env.PRODUCTION" ] || mv "$home/.env.PRODUCTION" "$home/.PRODUCTION.env" || return $?
+  local fileName
+  while read -r fileName; do
+    local directory newName suffix
+    directory=$(dirname "$fileName")
+    fileName="$(basename "$fileName")"
+    newName="${fileName#.env.}"
+    suffix="${newName#*.}"
+    newName="${newName%%.*}"
+    __echo mv "$directory/$fileName" "$directory/.$suffix.$newName.env"
+  done < <(find "$home" -name '.env.STAGING.*' -or -name '.env.PRODUCTION.*' -name '.env.staging.*' -or -name '.env.production.*')
+
+  local exitCode=0
   find "$home" -name '.check-assertions' | outputTrigger "$(decorate error ".check-assertions is deprecated")" || exitCode=$?
   find "$home" -name '.debugging' | outputTrigger "$(decorate error ".debugging is deprecated")" || exitCode=$?
   return "$exitCode"

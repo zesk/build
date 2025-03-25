@@ -13,7 +13,7 @@ _timingFactor() {
   fi
 }
 
-slowDaemon() {
+__slowDaemon() {
   local start timingFactor
   local this
 
@@ -30,7 +30,7 @@ testProcessWait() {
   local background timingFactor
 
   printf "%s %s\n"  "$(decorate info "Uptime")" "$(decorate code "$(uptime)")"
-  slowDaemon &
+  __slowDaemon &
   disown
   background=$!
 

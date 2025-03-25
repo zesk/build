@@ -1,4 +1,8 @@
 # v0.25.10
+.env.STAGING|.STAGING.env|
+.env.PRODUCTION|.PRODUCTION.env|
+.env.staging|.staging.env|
+.env.production|.production.env|
 
 # v0.25.9
 

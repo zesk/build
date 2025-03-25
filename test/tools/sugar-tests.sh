@@ -30,6 +30,15 @@ __alwaysFail() {
   return 1
 }
 
+testUndo() {
+  assertExitCode --line "$LINENO" 1 _undo 1 || return $?
+  assertExitCode --line "$LINENO" --stdout-match Hello --stdout-no-match world 1 _undo 1 printf "%s\n" "Hello" || return $?
+  assertExitCode --line "$LINENO" --stdout-match Hello --stdout-no-match world 1 _undo 1 printf "%s\n" "Hello" -- || return $?
+  assertExitCode --line "$LINENO" --stdout-match Hello --stdout-no-match world 1 _undo 1 printf "%s\n" "Hello" -- -- -- || return $?
+  assertExitCode --line "$LINENO" --stdout-match Hello --stdout-match world 1 _undo 1 printf "%s\n" "Hello" -- printf "%s\n" "world" || return $?
+  assertExitCode --line "$LINENO" --stdout-match Hello --stdout-match world 1 _undo 1 printf "%s\n" "Hello" -- printf "%s\n" "world" -- || return $?
+}
+
 testMapReturn() {
   assertExitCode --line "$LINENO" 99 mapReturn 1 1 99 || return $?
   assertExitCode --line "$LINENO" 99 mapReturn 1 1 99 1 98 || return $?

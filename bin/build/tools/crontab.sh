@@ -85,8 +85,7 @@ crontabApplicationUpdate() {
         "$usage" 0
         return $?
         ;;
-      # --env DEPRECATED 2024-11 TODO
-      --env | --env-file)
+      --env-file)
         [ -z "$rootEnv" ] || __throwArgument "$usage" "$argument already" || return $?
         shift
         rootEnv=$(usageArgumentFile "$usage" "rootEnv" "$1")

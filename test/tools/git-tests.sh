@@ -7,7 +7,7 @@
 # Copyright &copy; 2025 Market Acumen, Inc.
 #
 
-gitAddRemotesToSSHKnown() {
+_gitAddRemotesToSSHKnown() {
   local remoteHost
   local sshKnown=.ssh/known_hosts
   local extension
@@ -35,7 +35,7 @@ gitAddRemotesToSSHKnown() {
 
 testGitVersionList() {
   if ! gitHasAnyRefs; then
-    gitAddRemotesToSSHKnown || return $?
+    _gitAddRemotesToSSHKnown || return $?
     statusMessage decorate info "Pulling tags ..."
     git pull --tags >/dev/null 2>&1 || _environment "Unable to pull git tags ... failed" || return $?
     decorate success " done"

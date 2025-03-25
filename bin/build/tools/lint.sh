@@ -6,6 +6,62 @@
 #
 # Copyright &copy; 2025 Market Acumen, Inc.
 
+# Run `shellcheck` and `bash -n` on a set of bash files.
+#
+# This can be run on any directory tree to test scripts in any application.
+#
+# Shell comments must not be immediately after a function end, e.g. this is invalid:
+#
+#     myFunc() {
+#     }
+#     # Hey
+#
+# Example:     bashLint goo.sh
+# Argument: script - File. Optional. Shell script to validate
+# Side-effect: shellcheck is installed
+# Side-effect: Status written to stdout, errors written to stderr
+# Exit Code: 0 - All found files pass `shellcheck` and `bash -n` and shell comment syntax
+# Exit Code: 1 - One or more files did not pass
+# Output: This outputs `statusMessage`s to `stdout` and errors to `stderr`.
+bashLint() {
+  local usage="_${FUNCNAME[0]}"
+
+  __catchEnvironment "$usage" packageWhich shellcheck shellcheck || return $?
+  __catchEnvironment "$usage" packageWhich pcregrep pcregrep || return $?
+
+  # Open 3 and 4 to aliases so we can change them
+  exec 3>/dev/null
+  exec 4>&1
+  local argument
+  while [ $# -gt 0 ]; do
+    argument="$1"
+    [ -n "$argument" ] || __throwArgument "$usage" "blank argument" || return $?
+    case "$argument" in
+      --verbose)
+        exec 3>&1
+        exec 4>/dev/null
+        ;;
+      *)
+        [ -f "$argument" ] || __throwArgument "$usage" "$(printf -- "%s: %s PWD: %s" "Not a item" "$(decorate code "$argument")" "$(pwd)")" || return $?
+        # shellcheck disable=SC2210
+        __catchEnvironment "$usage" bash -n "$argument" 1>&3 2>&3 || _undo $? printf "%s\n" "bash -n failed" 1>&4 || return $?
+        # shellcheck disable=SC2210
+        __catchEnvironment "$usage" shellcheck "$argument" 1>&3 2>&3 || _undo $? printf "%s\n" "shellcheck" 1>&4 || return $?
+        local found
+        if found=$(pcregrep -n -l -M '\n\}\n#' "$argument"); then
+          __throwEnvironment "$usage" "found }\\n#: $(decorate code "$found")" 1>&3 2>&3 || _undo $? printf "%s\n" "comment following brace" 1>&4 || return $?
+        fi
+        ;;
+    esac
+    # _IDENTICAL_ argument-esac-shift 1
+    shift
+  done
+}
+_bashLint() {
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
 # Run `bashLint` on a set of bash files.
 #
 # Usage: bashLintFiles [ --exec binary ] [ file0 ... ]
@@ -61,27 +117,31 @@ bashLintFiles() {
   local source=none
   if [ ${#checkedFiles[@]} -gt 0 ]; then
     source="argument"
-    ! $verbose || decorate info "Reading item list from arguments ..."
+    ! $verbose || statusMessage decorate info "Reading item list from arguments ..."
     for argument in "${checkedFiles[@]}"; do
       [ -n "$argument" ] || continue
-      if ! _bashLintFilesHelper "$verbose" "$argument" "$source"; then
+      if ! message=$(_bashLintFilesHelper "$verbose" "$argument" "$source"); then
+        statusMessage decorate warning "Failed: $(decorate file "$argument") $(decorate code "$message")"
         failedFiles+=("$argument")
       fi
     done
   elif [ $# -eq 0 ]; then
     source="stdin"
-    ! $verbose || decorate info "Reading item list from stdin ..."
+    ! $verbose || statusMessage decorate info "Reading item list from stdin ..."
     while read -r argument; do
       [ -n "$argument" ] || continue
-      if ! _bashLintFilesHelper "$verbose" "$argument" "$source"; then
+      if ! message=$(_bashLintFilesHelper "$verbose" "$argument" "$source"); then
+        statusMessage decorate warning "Failed: $(decorate file "$argument") $(decorate code "$message")"
         failedFiles+=("$argument")
       fi
     done
   fi
   if [ "${#failedFiles[@]}" -gt 0 ]; then
     {
-      statusMessage --last printf -- "%s\n%s\n" "$(decorate warning "Files failed:")" "$(printf -- "- %s\n" "${failedFiles[@]}")"
-      decorate info "# ${#failedFiles[@]} $(plural ${#failedFiles[@]} error errors)"
+      statusMessage --last printf -- "%s\n" "$(decorate warning "${#failedFiles[@]} $(plural ${#failedFiles[@]} file files) failed:")"
+      for failedFile in "${failedFiles[@]}"; do
+        bashLint --verbose "$failedFile" 2>/dev/null | dumpPipe "$(decorate warning "$(lineFill "$(decorate file "$failedFile")")")"
+      done
     } 1>&2
     if $interactive; then
       bashLintFilesInteractive "${ii[@]+"${ii[@]}"}" "${failedFiles[@]}"
@@ -90,7 +150,7 @@ bashLintFiles() {
         "$binary" "${failedFiles[@]}"
       fi
     fi
-    __throwEnvironment "$usage" "Failed:" "${failedFiles[*]}" || return $?
+    return 1
   fi
   statusMessage decorate success "All scripts passed validation ($source)"
   printf -- "\n"
@@ -106,11 +166,11 @@ _bashLintFilesHelper() {
 
   ! $verbose || vv+=(--verbose)
   ! $verbose || statusMessage decorate info "👀 Checking \"$file\" ($source) ..." || :
-  if reason=$(bashLint "${vv[@]+"${vv[@]}"}" "$file" 2>&1); then
+  if reason=$(bashLint "${vv[@]+"${vv[@]}"}" "$file" 1>/dev/null 2>/dev/null); then
     ! $verbose || statusMessage --last decorate success "bashLint $file passed"
   else
     ! $verbose || statusMessage --last decorate info "bashLint $file failed: $reason"
-    printf -- "%s: %s\n" "$file" "$reason" 1>&2
+    printf -- "%s\n" "$reason"
     return 1
   fi
 }
@@ -200,62 +260,6 @@ _bashLintInteractiveCheck() {
   decorate blue "$(echoBar "+-")"
   decorate info "$# $(plural $# item files) remain"
   return 1
-}
-
-# Usage: {fn} [ script ... ]
-#
-# Run `shellcheck` and `bash -n` on a set of bash files.
-#
-# This can be run on any directory tree to test scripts in any application.
-#
-# Shell comments must not be immediately after a function end, e.g. this is invalid:
-#
-#     myFunc() {
-#     }
-#     # Hey
-#
-# Example:     bashLint goo.sh
-# Argument: script - Shell script to validate
-# Side-effect: shellcheck is installed
-# Side-effect: Status written to stdout, errors written to stderr
-# Exit Code: 0 - All found files pass `shellcheck` and `bash -n` and shell comment syntax
-# Exit Code: 1 - One or more files did not pass
-# Output: This outputs `statusMessage`s to `stdout` and errors to `stderr`.
-bashLint() {
-  local usage="_${FUNCNAME[0]}"
-
-  __catchEnvironment "$usage" packageWhich shellcheck shellcheck || return $?
-  __catchEnvironment "$usage" packageWhich pcregrep pcregrep || return $?
-
-  # Open 3 to pipe to nowhere
-  exec 3>/dev/null
-  local argument
-  while [ $# -gt 0 ]; do
-    argument="$1"
-    [ -n "$argument" ] || __throwArgument "$usage" "blank argument" || return $?
-    case "$argument" in
-      --verbose)
-        decorate warning "Verbose on"
-        exec 3>&1
-        ;;
-      *)
-        [ -f "$argument" ] || __throwArgument "$usage" "$(printf -- "%s: %s PWD: %s" "Not a item" "$(decorate code "$argument")" "$(pwd)")" || return $?
-        # shellcheck disable=SC2210
-        __catchEnvironment "$usage" bash -n "$argument" 1>&3 || return $?
-        # shellcheck disable=SC2210
-        __catchEnvironment "$usage" shellcheck "$argument" 1>&3 || return $?
-        local found
-        if found=$(pcregrep -n -l -M '\n\}\n#' "$argument"); then
-          __throwEnvironment "$usage" "$argument: pcregrep found }\\n#: $(decorate code "$found")" || return $?
-        fi
-        ;;
-    esac
-    shift || __throwArgument "$usage" "shifting $argument failed" || return $?
-  done
-}
-_bashLint() {
-  # _IDENTICAL_ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Usage: {fn} [ --exec binary ] [ directory ]
