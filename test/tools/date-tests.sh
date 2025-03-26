@@ -35,3 +35,12 @@ testDateValid() {
     assertNotExitCode --stderr-ok --line "$LINENO" 0 dateValid "$testDate" || return $?
   done < <(__testDateInvalidData)
 }
+
+testDateAdd() {
+  assertEquals --line "$LINENO" "2024-12-31" "$(dateAdd --days -1 "2025-01-01")" || return $?
+  assertEquals --line "$LINENO" "2024-12-30" "$(dateAdd --days -2 "2025-01-01")" || return $?
+  assertEquals --line "$LINENO" "2025-03-01" "$(dateAdd "2025-02-28")" || return $?
+  assertEquals --line "$LINENO" "2025-03-01" "$(dateAdd --days 1 "2025-02-28")" || return $?
+  assertEquals --line "$LINENO" "2025-02-28" "$(dateAdd --days 0 "2025-02-28")" || return $?
+  assertEquals --line "$LINENO" "2024-02-29" "$(dateAdd --days -365 "2025-02-28")" || return $?
+}

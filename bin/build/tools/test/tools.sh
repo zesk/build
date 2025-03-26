@@ -850,16 +850,16 @@ __testRun() {
       else
         resultCode=97
         stickyCode=$errorTest
-        printf "%s\n" "stderr-SUCCESS $__test has STDERR:" >>"$quietLog"
-        dumpPipe <"$captureStderr" >>"$quietLog"
+        printf "%s\n" "stderr-SUCCESS $__test has STDERR:" | tee -a "$quietLog"
+        dumpPipe <"$captureStderr" | tee -a "$quietLog"
       fi
     else
       resultCode=$?
       stickyCode=$errorTest
-      printf "%s\n" "FAILED [$resultCode] $__test" >>"$quietLog"
+      printf "%s\n" "FAILED [$resultCode] $__test" | tee -a "$quietLog"
       if ! isEmptyFile "$captureStderr"; then
-        printf "%s\n" "stderr-FAILED [$resultCode] $__test has STDERR:" >>"$quietLog"
-        dumpPipe <"$captureStderr" >>"$quietLog"
+        printf "%s\n" "stderr-FAILED [$resultCode] $__test ALSO has STDERR:" | tee -a "$quietLog"
+        dumpPipe <"$captureStderr" | tee -a "$quietLog"
       fi
     fi
     rm -rf "$captureStderr" || :
@@ -888,7 +888,7 @@ __testRun() {
     stickyCode=$errorTest
   fi
   if [ "$stickyCode" -ne 0 ]; then
-    printf "%s %s\n" "$(decorate label "Reason:")" "$(decorate magenta "$__TEST_SUITE_RESULT")"
+    decorate pair "Reason:" "\"$__TEST_SUITE_RESULT\""
   fi
   return "$stickyCode"
 }
@@ -934,14 +934,14 @@ __testFailed() {
         continue
       fi
     fi
-    local len=${#!name-}
+    local value="${!name-}"
+    local len=${#value}
     if stringContainsInsensitive "$name" secret key password; then
       decorate pair "$name" "$(decorate red "$len $(plural "$len" "character" "characters")" - HIDDEN)"
     else
-      local value="${!name-}"
       [ "$len" -lt "$maxLen" ] || value="${value:0:$maxLen} ... $(decorate green "$len $(plural "$len" "character" "characters")")"
       [ -n "$value" ] || value="$(decorate orange "[blank]")"
-      decorate pair "$name" "${!name-}"
+      decorate pair "$name" "$value"
     fi
   done < <(environmentVariables | sort -u)
   local averages=()

@@ -64,7 +64,8 @@ timestampToDate() {
   if [ $# -lt 1 ] || [ $# -gt 2 ]; then
     __throwArgument "$usage" "${FUNCNAME[0]} requires 1 or 2 arguments: integerTimestamp [ format ] –- Passed $#:" "$@" || return $?
   fi
-  __timestampToDate "$@"
+  local format="${2:-%F}"
+  __timestampToDate "$1" "$format"
 }
 _timestampToDate() {
   # _IDENTICAL_ usageDocument 1
@@ -116,6 +117,46 @@ dateValid() {
   __environment [ "${day#0}" -le 31 ] || return $?
 }
 _dateValid() {
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+# Add or subtract days from a text date
+# Argument: --days delta - SignedInteger. Number of days to add (or subtract - use a negative number). Affects all timestamps *after* it.
+# Argument: timestamp ... - Date. Timestamp to update.
+# stdout: Date with days added to it
+#
+# Example:     newYearsEve=$(dateAdd "2025-01-01" -1)
+dateAdd() {
+  local usage="_${FUNCNAME[0]}" days=1
+
+  # _IDENTICAL_ argument-case-header 5
+  local __saved=("$@") __count=$#
+  while [ $# -gt 0 ]; do
+    local argument="$1" __index=$((__count - $# + 1))
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
+    case "$argument" in
+      # _IDENTICAL_ --help 4
+      --help)
+        "$usage" 0
+        return $?
+        ;;
+      --days)
+        shift
+        days=$(usageArgumentInteger "$usage" "$argument" "${1-}") || return $?
+        ;;
+      *)
+        # _IDENTICAL_ argumentUnknown 1
+        local timestamp
+        timestamp=$(__catchArgument "$usage" dateToTimestamp "$argument") || return $?
+        __catchArgument "$usage" timestampToDate "$((timestamp + (86400 * days)))" || return $?
+        ;;
+    esac
+    # _IDENTICAL_ argument-esac-shift 1
+    shift
+  done
+}
+_dateAdd() {
   # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

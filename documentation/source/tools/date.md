@@ -4,6 +4,7 @@
 [⬅ Parent ](../index.md)
 <hr />
 
+{dateAdd}
 {dateValid}
 {dateToFormat}
 {dateToTimestamp}
