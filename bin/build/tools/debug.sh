@@ -520,10 +520,11 @@ __listChildProcessIDs() {
 }
 
 # Output current open files
+# stdout
 debugOpenFiles() {
   local usage="_${FUNCNAME[0]}"
 
-  local name="${FUNCNAME[1]}}" target=""
+  local name="${FUNCNAME[1]}}"
 
   muzzle packageWhich lsof || return $?
   # _IDENTICAL_ argument-case-header 5
@@ -537,23 +538,18 @@ debugOpenFiles() {
         "$usage" 0
         return $?
         ;;
-      *)
-        [ -z "$target" ] || __throwArgument "$usage" "target already specified" || return $?
-        target=$(usageArgumentFileDirectory "$usage" "$argument" "${1-}") || return $?
-        ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
     shift
   done
-  [ -n "$target" ] || __throwArgument "$usage" "Missing --target" || return $?
-  printf "%s\n" "PID: $$" >>"$target"
-  __listOpenFiles "$$" >"$target"
+  printf "%s\n" "PID: $$"
+  __listOpenFiles "$$"
   local child children=()
 
   read -r -a children < <(__listChildProcessIDs "$$") || :
-  for child in "${children[@]}"; do
-    printf "%s\n" "Child PID: $child" >>"$target"
-    __listOpenFiles "$child" >>"$target"
+  for child in "${children[@]+"${children[@]}"}"; do
+    printf "%s\n" "Child PID: $child"
+    __listOpenFiles "$child"
   done
 }
 _debugOpenFiles() {
