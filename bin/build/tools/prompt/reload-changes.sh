@@ -138,11 +138,8 @@ reloadChanges() {
       *)
         if [ -z "$source" ]; then
           source="$(usageArgumentRealFile "$handler" "source" "$argument")" || return $?
-        elif [ 0 -eq "${#paths[@]}" ]; then
-          paths+=("$(usageArgumentRealDirectory "$handler" "path" "$argument")") || return $?
         else
-          name="$*"
-          break
+          paths+=("$(usageArgumentRealDirectory "$handler" "path" "$argument")") || return $?
         fi
         ;;
     esac
@@ -173,7 +170,7 @@ reloadChanges() {
 
   __catchEnvironment "$handler" printf -- "%s\n" "$name" "$source" "${paths[@]}" "--" >>"$cacheFile" || return $?
 
-  decorate success "Watching $(decorate file "$path") as $(decorate value "$name")"
+  decorate success "Watching $(decorate each file "${paths[@]}") as $(decorate value "$name")"
   bashPrompt --first bashPromptModule_reloadChanges
 }
 
