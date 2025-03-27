@@ -171,6 +171,7 @@ _reloadChanges() {
 __reloadChangesRemove() {
   local handler="$1" file="$2" name="$3" firstLine
 
+  [ -f "$file" ] || return 0
   while read -r firstLine; do
     local lineNumber firstLine="${firstLine%:*}" aa=()
     while read -r lineNumber; do
