@@ -15,7 +15,7 @@ __resultText() {
   shift
   text="$*"
   # Hide newlines
-  text=${text//$'\n'/"␤"}
+  text=$(newlineHide "$text")
   if "$passed"; then
     # shellcheck disable=SC2015
     [ -z "$text" ] && decorate blue "(blank)" || decorate code "$text"
@@ -251,6 +251,21 @@ _assertConditionHelper() {
   fi
   exitCode=0
   "${runner[@]}" "$@" >"$outputFile" 2>"$errorFile" || exitCode=$?
+  #
+  # Added sync to see if it fixes this
+  #
+
+  #  ❌ : assertExitCode Line 35: assertExitCode stdout does not contain string: Hello
+  #  assertExitCode stdout: 0 lines, 0 bytes (empty) [0.418 seconds]
+  #  ✅ : assertExitCode Line 35: assertExitCode stdout does not contain strings: ("world" ) [0.17 seconds]
+  #  ❌ : assertExitCode  Line 35: assertExitCode ➡️ "_undo" "1" "printf" "%s\n" "Hello" => correctly -> (should succeed) -> 1 (= expected 1), correct [0.134 seconds]
+  #  assertExitCode stdout: 0 lines, 0 bytes (empty)
+  #  assertExitCode stderr: 0 lines, 0 bytes (empty)
+  #  FAILED [97] testUndo
+  #  stderr-FAILED [97] testUndo ALSO has STDERR:
+  #  3 lines, 583 bytes (shown)
+
+  __catchEnvironment "$usage" sync || return $?
 
   if $debugFlag; then
     __buildDebugDisable v

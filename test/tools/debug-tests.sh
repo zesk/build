@@ -226,3 +226,56 @@ testOutputTrigger() {
   assertExitCode --line "$LINENO" 0 outputTrigger --name YoYoBaby <"$temp" || return $?
   __catchEnvironment "$usage" rm -rf "$temp" || return $?
 }
+
+testDumpEnvironmentSafe() {
+  export PRIVATE_THING
+
+  PRIVATE_THING="CriticalThinkingIsInShortSupply"
+
+  matches=(
+    --stdout-no-match "PRIVATE_THING"
+    --stdout-no-match "$PRIVATE_THING"
+  )
+  assertExitCode --line "$LINENO" "${matches[@]}" 0 dumpEnvironment --skip-env PRIVATE_THING || return $?
+  matches=(
+    --stdout-match "PRIVATE_THING"
+    --stdout-no-match "$PRIVATE_THING"
+    --stdout-match HIDDEN
+  )
+  assertExitCode --line "$LINENO" "${matches[@]}" 0 dumpEnvironment --secure-match PRIVATE || return $?
+  matches=(
+    --stdout-match "PRIVATE_THING"
+    --stdout-no-match "$PRIVATE_THING"
+    --stdout-match "Z'D STUN"
+  )
+  assertExitCode --line "$LINENO" "${matches[@]}" 0 dumpEnvironment --secure-match PRIVATE --secure-suffix " Z'D STUN" || return $?
+  matches=(
+    --stdout-match "PRIVATE_THING"
+    --stdout-match "$PRIVATE_THING"
+  )
+  assertExitCode --line "$LINENO" "${matches[@]}" 0 dumpEnvironment || return $?
+
+  unset PRIVATE_THING
+}
+
+testDumpEnvironmentUnsafe() {
+  export PRIVATE_THING
+
+  PRIVATE_THING="TheDeathOfTheCommons"
+
+  # Argument errors
+  assertExitCode --line "$LINENO" --stderr-match "Unknown" 2 dumpEnvironmentUnsafe --secure-match "PRIVATE" || return $?
+  assertExitCode --line "$LINENO" --stderr-match "Unknown" 2 dumpEnvironmentUnsafe --secure-suffix "PRIVATE" || return $?
+  # Works fine
+  assertExitCode --line "$LINENO" --stdout-match "PRIVATE_THING" --stdout-match "$PRIVATE_THING" 0 dumpEnvironmentUnsafe || return $?
+  # Partial match does not filter
+  assertExitCode --line "$LINENO" --stdout-match "PRIVATE_THING" --stdout-match "$PRIVATE_THING" 0 dumpEnvironmentUnsafe --skip-env PRIVATE || return $?
+  # Case match does NOT filter
+  assertExitCode --line "$LINENO" --stdout-match "PRIVATE_THING" --stdout-match "$PRIVATE_THING" 0 dumpEnvironmentUnsafe --skip-env private_thing || return $?
+  # Exact match does filter
+  assertExitCode --line "$LINENO" --stdout-no-match "PRIVATE_THING" --stdout-no-match "$PRIVATE_THING" 0 dumpEnvironmentUnsafe --skip-env PRIVATE_THING || return $?
+  # --show-skipped shows name not value
+  assertExitCode --line "$LINENO" --stdout-match "PRIVATE_THING" --stdout-no-match "$PRIVATE_THING" 0 dumpEnvironmentUnsafe --skip-env PRIVATE_THING --show-skipped || return $?
+
+  unset PRIVATE_THING
+}

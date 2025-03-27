@@ -123,6 +123,14 @@ quoteGrepPattern() {
   printf "%s\n" "$value"
 }
 
+# Hide newlines in text (to ensure single-line output or other manipulation)
+# Argument: text - String. Required. Text to replace.
+# Argument: replace - String. Optional. Replacement string for newlines.
+newlineHide() {
+  local text="${1-}" replace="${2-"␤"}"
+  printf -- "%s\n" "${text//$'\n'/"$replace"}"
+}
+
 #
 # Quote strings for inclusion in shell quoted strings
 # Usage: escapeSingleQuotes text

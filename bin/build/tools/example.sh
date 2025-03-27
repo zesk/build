@@ -18,7 +18,6 @@ _usageFunction() {
 }
 
 #
-# Usage: {fn}
 # DOC TEMPLATE: --help 1
 # Argument: --help - Optional. Flag. Display this help.
 # Argument: --easy - Optional. Flag. Easy mode.

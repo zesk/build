@@ -919,34 +919,16 @@ __testMatches() {
 
 # Our test failed
 __testFailed() {
-  local errorCode name sectionName="$1" item="$2"
-  local maxLen=64
+  local errorCode sectionName="$1" item="$2"
 
   __catchEnvironment "$usage" hookRunOptional bash-test-fail "$sectionName" "$item" || __throwEnvironment "$usage" "... continuing" || :
 
   errorCode="$(_code assert)"
   printf "%s: %s - %s %s (%s)\n" "$(decorate error "Exit")" "$(decorate bold-red "$errorCode")" "$(decorate error "Failed running")" "$(decorate info "$item")" "$(decorate magenta "$sectionName")" || :
-  skipEnv=()
-  read -r -a skipEnv < <(environmentSecureVariables) || :
-  while read -r name; do
-    if ! inArray "$name" PATH HOME OSTYPE PWD TERM; then
-      if inArray "$name" "${skipEnv[@]}"; then
-        continue
-      fi
-    fi
-    local value="${!name-}"
-    local len=${#value}
-    if stringContainsInsensitive "$name" secret key password; then
-      decorate pair "$name" "$(decorate red "$len $(plural "$len" "character" "characters")" - HIDDEN)"
-    else
-      [ "$len" -lt "$maxLen" ] || value="${value:0:$maxLen} ... $(decorate green "$len $(plural "$len" "character" "characters")")"
-      [ -n "$value" ] || value="$(decorate orange "[blank]")"
-      decorate pair "$name" "$value"
-    fi
-  done < <(environmentVariables | sort -u)
-  local averages=()
-  read -r -a averages < <(loadAverage) || :
-  printf "%s%s\n" "$(decorate info "Load averages:")" "$(decorate each code "${averages[@]+"${averages[@]}"}")" || :
+
+  dumpEnvironment || :
+  dumpLoadAverages || :
+
   decorate info "$(decorate magenta "$sectionName") $(decorate code "$item") failed on $(decorate value "$(date +"%F %T")")" || :
   export globalTestFailure="$*"
   return "$errorCode"

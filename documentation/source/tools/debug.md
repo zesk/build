@@ -12,7 +12,9 @@
 {isErrorExit}
 {dumpPipe}
 {dumpBinary}
-{dumpFile}
+{dumpFile} 
+{dumpEnvironmentSafe}
+{dumpLoadAverages}
 {plumber}
 {housekeeper}
 {outputTrigger}
