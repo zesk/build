@@ -10,25 +10,27 @@
 # Source-Hook: project-deactivate
 bashPromptModule_reloadChanges() {
   local cacheFile usage="_return"
-  local home
+  local home debug=false removeNames=()
 
   home=$(buildHome) || return $?
   cacheFile="$(__reloadChangesCacheFile "$usage")" || return $?
   [ -f "$cacheFile" ] || return 0
 
   local argument pathIndex=0
-  ! buildDebugEnabled reloadChanges || decorate pair reloadChanges "$(decorate file "$cacheFile")"
+  ! buildDebugEnabled reloadChanges || debug=true
+
+  ! $debug || decorate pair reloadChanges "$(decorate file "$cacheFile")"
 
   local name="" source="" paths=()
   while read -r argument; do
     if [ -z "$name" ]; then
       name=$(usageArgumentString "$usage" "name" "$argument") || return $?
-      ! buildDebugEnabled reloadChanges || decorate pair name "$name"
+      ! $debug || decorate pair name "$name"
       continue
     elif [ -z "$source" ]; then
       source=$(usageArgumentString "$usage" "source" "$argument") || return $?
       [ "${source:0:1}" = "/" ] || source="$home/$source"
-      ! buildDebugEnabled reloadChanges || decorate pair source "$(decorate file "$source")"
+      ! $debug || decorate pair source "$(decorate file "$source")"
       continue
     elif [ "$argument" = "--" ]; then
       name=""
@@ -40,29 +42,42 @@ bashPromptModule_reloadChanges() {
     local newestFile path pathStateFile modified=0 filename="" prefix=""
     path=$(usageArgumentString "$usage" "path" "$argument") || return $?
 
+    if [ ! -d "$path" ]; then
+      decorate warning "$path was removed"
+      removeNames+=("$name")
+      continue
+    fi
+    if ! fileDirectoryExists "$source"; then
+      decorate warning "$source has moved"
+      removeNames+=("$name")
+      continue
+    fi
     [ "${path:0:1}" = "/" ] || path="$home/$path"
     newestFile=$(directoryNewestFile "$path" --find -name '*.sh') || return $?
     newestModified=$(modificationTime "$newestFile") || return $?
-    ! buildDebugEnabled reloadChanges || decorate pair newestFile "$(decorate file "$newestFile")"
+    ! $debug || decorate pair newestFile "$(decorate file "$newestFile")"
     pathStateFile="$(__reloadChangesCacheFile "$usage" "$pathIndex")" || return $?
     if [ -f "$pathStateFile" ]; then
       modified="$(head -n 1 "$pathStateFile")"
       filename="$(tail -n 1 "$pathStateFile")"
     fi
     if [ "$newestModified" -gt "$modified" ]; then
-      ! buildDebugEnabled reloadChanges || decorate info "$newestModified -gt $modified"
+      ! $debug || decorate info "$newestModified -gt $modified"
       prefix=""
       [ -z "$filename" ] || prefix="$(decorate file "$filename") -> "
       decorate info "$name code changed, reloading $(decorate file "$source") [$prefix$(decorate file "$newestFile")]"
       modified=$(modificationTime) || return $?
-      ! buildDebugEnabled reloadChanges || decorate info "Saving new state file $newestModified $newestFile"
+      ! $debug || decorate info "Saving new state file $newestModified $newestFile"
       printf "%s\n" "$newestModified" "$newestFile" >"$pathStateFile"
       # shellcheck source=/dev/null
       source "$source"
     else
-      ! buildDebugEnabled reloadChanges || decorate error "! $newestModified -gt $modified"
+      ! $debug || decorate error "! $newestModified -gt $modified"
     fi
   done <"$cacheFile"
+  for name in "${removeNames[@]+"${removeNames[@]+}"}"; do
+    __reloadChangesRemove "$usage" "$cacheFile" "$name" || return $?
+  done
 }
 
 __reloadChangesCacheFile() {
