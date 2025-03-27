@@ -94,7 +94,7 @@ __reloadChangesCacheFile() {
 reloadChanges() {
   local usage="_${FUNCNAME[0]}"
 
-  local path="" name=""
+  local path="" name="" source="" paths=()
 
   # _IDENTICAL_ argument-case-header 5
   local __saved=("$@") __count=$#
@@ -150,7 +150,7 @@ reloadChanges() {
   [ -n "$source" ] || __throwArgument "$usage" "--source required" || return $?
 
   [ 0 -lt "${#paths[@]}" ] || __throwArgument "$usage" "At least one path is required" || return $?
-  if [ -n "$name" ]; then
+  if [ -z "$name" ]; then
     local pathNames=() path
     for path in "${paths[@]}"; do pathNames+=("$(basename "$path")"); done
     name="${pathNames[*]}"

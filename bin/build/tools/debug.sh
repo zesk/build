@@ -863,7 +863,7 @@ dumpEnvironmentUnsafe() {
   # Disable the secure features by putting them at the end
   __internalDumpEnvironment "$usage" "$@" --secure-match - --secure-suffix ""
 }
-_dumpEnvironment() {
+_dumpEnvironmentUnsafe() {
   # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
