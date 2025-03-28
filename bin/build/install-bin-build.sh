@@ -1194,12 +1194,12 @@ _undo() {
         args=()
         ;;
       *)
-
         args+=("$1")
         ;;
     esac
     shift
   done
+  [ "${#args[@]}" -eq 0 ] || __execute "${args[@]}" || :
   return "$exitCode"
 }
 __undo() {
