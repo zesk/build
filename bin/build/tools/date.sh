@@ -146,8 +146,6 @@ dateAdd() {
         days=$(usageArgumentInteger "$usage" "$argument" "${1-}") || return $?
         ;;
       *)
-        # _IDENTICAL_ argumentUnknown 1
-        __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
         timestamp=$(__catchArgument "$usage" dateToTimestamp "$argument") || return $?
         __catchArgument "$usage" timestampToDate "$((timestamp + (86400 * days)))" || return $?
         ;;
