@@ -9,8 +9,8 @@
 # Source-Hook: project-activate
 # Source-Hook: project-deactivate
 bashPromptModule_reloadChanges() {
-  local cacheFile usage="_return"
-  local home debug=false removeNames=()
+  local usage="_return"
+  local home debug=false removeSources=() cacheFile
 
   home=$(buildHome) || return $?
   cacheFile="$(__reloadChangesCacheFile "$usage")" || return $?
@@ -23,14 +23,14 @@ bashPromptModule_reloadChanges() {
 
   local name="" source="" paths=()
   while read -r argument; do
-    if [ -z "$name" ]; then
-      name=$(usageArgumentString "$usage" "name" "$argument") || return $?
-      ! $debug || decorate pair name "$name"
-      continue
-    elif [ -z "$source" ]; then
+    if [ -z "$source" ]; then
       source=$(usageArgumentString "$usage" "source" "$argument") || return $?
       [ "${source:0:1}" = "/" ] || source="$home/$source"
       ! $debug || decorate pair source "$(decorate file "$source")"
+      continue
+    elif [ -z "$name" ]; then
+      name=$(usageArgumentString "$usage" "name" "$argument") || return $?
+      ! $debug || decorate pair name "$name"
       continue
     elif [ "$argument" = "--" ]; then
       name=""
@@ -39,17 +39,17 @@ bashPromptModule_reloadChanges() {
       continue
     fi
 
-    local newestFile path pathStateFile modified=0 filename="" prefix=""
+    local newestFile path pathStateFile modified=0 filename="" prefix="" suffix=""
     path=$(usageArgumentString "$usage" "path" "$argument") || return $?
 
     if [ ! -d "$path" ]; then
       decorate warning "$path was removed"
-      removeNames+=("$name")
+      removeSources+=("$source")
       continue
     fi
     if ! fileDirectoryExists "$source"; then
       decorate warning "$source has moved"
-      removeNames+=("$name")
+      removeSources+=("$source")
       continue
     fi
     [ "${path:0:1}" = "/" ] || path="$home/$path"
@@ -63,9 +63,10 @@ bashPromptModule_reloadChanges() {
     fi
     if [ "$newestModified" -gt "$modified" ]; then
       ! $debug || decorate info "$newestModified -gt $modified"
-      prefix=""
+      prefix="" suffix=""
       [ -z "$filename" ] || prefix="$(decorate file "$filename") -> "
-      decorate info "$name code changed, reloading $(decorate file "$source") [$prefix$(decorate file "$newestFile")]"
+      [ "$filename" != "$newestFile" ] || suffix=" ✏️"
+      printf "%s %s\n" "$(decorate value "$name")" "$(decorate info "code changed, reloading $(decorate file "$source") [$prefix$(decorate file "$newestFile")$suffix]")"
       modified=$(modificationTime) || return $?
       ! $debug || decorate info "Saving new state file $newestModified $newestFile"
       printf "%s\n" "$newestModified" "$newestFile" >"$pathStateFile"
@@ -75,7 +76,7 @@ bashPromptModule_reloadChanges() {
       ! $debug || decorate error "! $newestModified -gt $modified"
     fi
   done <"$cacheFile"
-  for name in "${removeNames[@]+"${removeNames[@]+}"}"; do
+  for name in "${removeSources[@]+"${removeSources[@]+}"}"; do
     __reloadChangesRemove "$usage" "$cacheFile" "$name" || return $?
   done
 }
@@ -168,7 +169,7 @@ reloadChanges() {
 
   __reloadChangesRemove "$usage" "$cacheFile" "$name" || return $?
 
-  __catchEnvironment "$usage" printf -- "%s\n" "$name" "$source" "${paths[@]}" "--" >>"$cacheFile" || return $?
+  __catchEnvironment "$usage" printf -- "%s\n" "$source" "$name" "${paths[@]}" "--" >>"$cacheFile" || return $?
 
   decorate success "Watching $(decorate each file "${paths[@]}") as $(decorate value "$name")"
   bashPrompt --first bashPromptModule_reloadChanges
@@ -180,10 +181,10 @@ __reloadChangesShow() {
   local argument
   name="" && source="" && paths=()
   while read -r argument; do
-    if [ -z "$name" ]; then
-      name=$(usageArgumentString "$usage" "config-name" "$argument")
-    elif [ -z "$source" ]; then
+    if [ -z "$source" ]; then
       source="$(usageArgumentRealFile "$usage" "config-source" "$argument")" || return $?
+    elif [ -z "$name" ]; then
+      name=$(usageArgumentString "$usage" "config-name" "$argument")
     elif [ "$argument" != "--" ]; then
       paths+=("$(usageArgumentRealDirectory "$usage" "config-path" "$argument")") || return $?
     else
@@ -198,7 +199,7 @@ _reloadChanges() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 __reloadChangesRemove() {
-  local usage="$1" cacheFile="$2" matchName="$3"
+  local usage="$1" cacheFile="$2" matchSource="$3"
 
   [ -f "$cacheFile" ] || return 0
 
@@ -206,13 +207,13 @@ __reloadChangesRemove() {
 
   __catchEnvironment "$usage" touch "$target" || return $?
   while IFS="" read -r argument; do
-    if [ -z "$name" ]; then
-      name=$(usageArgumentString "$usage" "config-name" "$argument")
-    elif [ -z "$source" ]; then
+    if [ -z "$source" ]; then
       source="$(usageArgumentRealFile "$usage" "config-source" "$argument")" || _clean $? "$target" || return $?
+    elif [ -z "$name" ]; then
+      name=$(usageArgumentString "$usage" "config-name" "$argument")
     elif [ "$argument" = "--" ]; then
-      if [ "$name" != "$matchName" ]; then
-        __catchEnvironment "$usage" printf -- "%s\n" "$name" "$source" "${paths[@]}" "--" >>"$target" || _clean $? "$target" || return $?
+      if [ "$source" != "$matchSource" ]; then
+        __catchEnvironment "$usage" printf -- "%s\n" "$source" "$name" "${paths[@]}" "--" >>"$target" || _clean $? "$target" || return $?
       fi
       name=""
       source=""
