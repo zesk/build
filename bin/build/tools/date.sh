@@ -126,7 +126,7 @@ _dateValid() {
 # Argument: timestamp ... - Date. Timestamp to update.
 # stdout: Date with days added to it
 #
-# Example:     newYearsEve=$(dateAdd "2025-01-01" -1)
+# Example:     newYearsEve=$(dateAdd --days -1 "2025-01-01")
 dateAdd() {
   local usage="_${FUNCNAME[0]}" days=1
 
