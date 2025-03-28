@@ -10,7 +10,7 @@
 # Source-Hook: project-deactivate
 bashPromptModule_reloadChanges() {
   local usage="_return"
-  local home debug=false removeSources=() cacheFile
+  local home removeSources=() cacheFile debug=false
 
   home=$(buildHome) || return $?
   cacheFile="$(__reloadChangesCacheFile "$usage")" || return $?
@@ -39,7 +39,7 @@ bashPromptModule_reloadChanges() {
       continue
     fi
 
-    local newestFile path pathStateFile modified=0 filename="" prefix="" suffix=""
+    local newestFile path pathStateFile modified=0 filename="" prefix=""
     path=$(usageArgumentString "$usage" "path" "$argument") || return $?
 
     if [ ! -d "$path" ]; then
@@ -63,10 +63,10 @@ bashPromptModule_reloadChanges() {
     fi
     if [ "$newestModified" -gt "$modified" ]; then
       ! $debug || decorate info "$newestModified -gt $modified"
-      prefix="" suffix=""
+      prefix=""
       [ -z "$filename" ] || prefix="$(decorate file "$filename") -> "
-      [ "$filename" != "$newestFile" ] || suffix=" ✏️"
-      printf "%s %s\n" "$(decorate value "$name")" "$(decorate info "code changed, reloading $(decorate file "$source") [$prefix$(decorate file "$newestFile")$suffix]")"
+      [ "$filename" != "$newestFile" ] || prefix="✏️"
+      printf "%s %s\n" "$(decorate value "$name")" "$(decorate info "code changed, reloading $(decorate file "$source") [$prefix$(decorate file "$newestFile")]")"
       modified=$(modificationTime) || return $?
       ! $debug || decorate info "Saving new state file $newestModified $newestFile"
       printf "%s\n" "$newestModified" "$newestFile" >"$pathStateFile"
@@ -77,7 +77,7 @@ bashPromptModule_reloadChanges() {
     fi
   done <"$cacheFile"
   for name in "${removeSources[@]+"${removeSources[@]+}"}"; do
-    __reloadChangesRemove "$usage" "$cacheFile" "$name" || return $?
+    __reloadChangesRemove "$usage" "$cacheFile" "$source" || return $?
   done
 }
 
@@ -167,7 +167,7 @@ reloadChanges() {
     name="${pathNames[*]}"
   fi
 
-  __reloadChangesRemove "$usage" "$cacheFile" "$name" || return $?
+  __reloadChangesRemove "$usage" "$cacheFile" "$source" || return $?
 
   __catchEnvironment "$usage" printf -- "%s\n" "$source" "$name" "${paths[@]}" "--" >>"$cacheFile" || return $?
 
