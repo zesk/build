@@ -30,6 +30,7 @@ __interactiveApprove() {
   approvedHome=$(__interactiveApproveHome "$usage") || return $?
 
   if [ -d "$sourcePath" ]; then
+    sourcePath="${sourcePath%/}"
     local sourceFile approved=true
     while read -r sourceFile; do
       if ! __interactiveApproveRegisterCacheFile "$usage" "$sourceFile" "$approvedHome" "$@"; then

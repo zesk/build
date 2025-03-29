@@ -29,30 +29,6 @@ __installBinBuildJSON() {
   printf "%s\n" "$jsonFile"
 }
 
-# _IDENTICAL_ jsonField 22
-
-# Fetch a non-blank field from a JSON file with error handling
-# Argument: handler - Function. Required. Error handler.
-# Argument: jsonFile - File. Required. A JSON file to parse
-# Argument: ... - Arguments. Optional. Passed directly to jq
-# stdout: selected field
-# stderr: error messages
-# Exit Code: 0 - Field was found and was non-blank
-# Exit Code: 1 - Field was not found or is blank
-# Requires: jq whichExists __throwEnvironment printf rm decorate head
-jsonField() {
-  local handler="$1" jsonFile="$2" value message && shift 2
-
-  [ -f "$jsonFile" ] || __throwEnvironment "$handler" "$jsonFile is not a file" || return $?
-  whichExists jq || __throwEnvironment "$handler" "Requires jq - not installed" || return $?
-  if ! value=$(jq -r "$@" <"$jsonFile"); then
-    message="$(printf -- "%s\n%s\n" "Unable to fetch selector $(decorate each code "$@") from JSON:" "$(head -n 100 "$jsonFile")")"
-    __throwEnvironment "$handler" "$message" || return $?
-  fi
-  [ -n "$value" ] || __throwEnvironment "$handler" "$(printf -- "%s\n%s\n" "Selector $(decorate each code "$@") was blank from JSON:" "$(head -n 100 "$jsonFile")")" || return $?
-  printf -- "%s\n" "$value"
-}
-
 __githubInstallationURL() {
   local usage="$1" jsonFile="$2"
   url=$(jsonField "$usage" "$jsonFile" .tarball_url) || return $?
@@ -152,7 +128,7 @@ __installPackageConfiguration() {
   _installRemotePackage "$rel" "bin/build" "install-bin-build.sh" --version-function __installBinBuildVersion --url-function __installBinBuildURL --check-function __installBinBuildCheck --name "Zesk Build" "$@"
 }
 
-# IDENTICAL _installRemotePackage 301
+# IDENTICAL _installRemotePackage 327
 
 # Installs {name} in a local project directory if not installed. Also
 # will overwrite {source} with the latest version after installation.
@@ -194,6 +170,7 @@ __installPackageConfiguration() {
 # Argument: --version-function urlFunction - Optional. Function. Function to compare live version to local version. Exits 0 if they match. Output version text if you want. INTERNAL.
 # Argument: --url-function urlFunction - Optional. Function. Function to return the URL to download. INTERNAL.
 # Argument: --check-function checkFunction - Optional. Function. Function to check the installation and output the version number or package name. INTERNAL.
+# Argument: --installer installer - Optional. Executable. Binary to run after installation succeeds.
 # Argument: --replace fie - Optional. Flag. Replace the target file with this script and delete this one. Internal only, do not use. INTERNAL.
 # Argument: --debug - Optional. Flag. Debugging is on. INTERNAL.
 # Argument: --force - Optional. Flag. Force installation even if file is up to date.
@@ -279,6 +256,10 @@ _installRemotePackage() {
         isFunction "${1-}" || __throwArgument "$usage" "$argument not callable: ${1-}" || return $?
         urlFunction="$1"
         ;;
+      --installer)
+        shift
+        installers+=("$(usageArgumentString "$usage" "$argument" "${1-}")") || return $?
+        ;;
       --check-function)
         shift
         [ -z "$checkFunction" ] || __throwArgument "$usage" "$argument already" || return $?
@@ -362,6 +343,13 @@ _installRemotePackage() {
   message="$message (local)$binName"
   printf -- "%s\n" "$message"
   __installRemotePackageLocal "$installPath/$packageInstallerName" "$myBinary" "$relative"
+
+  local installer
+  for installer in "${installers[@]+"${installers[@]}"}"; do
+    [ -f "$installer" ] || __throwEnvironment "$usage" "$installer is missing" || return $?
+    [ -x "$installer" ] || __throwEnvironment "$usage" "$installer is not executable" || return $?
+    __catchEnvironment "$usage" "$installer" || return $?
+  done
 }
 
 # Error handler for _installRemotePackage
@@ -378,7 +366,7 @@ __installRemotePackage() {
 
 # Debug is enabled, show why
 # Requires: decorate
-# Debugging: a2c19d33c1693764ff521a0880aeffd7485a040f
+# Debugging: da39a3ee5e6b4b0d3255bfef95601890afd80709
 __installRemotePackageDebug() {
   decorate orange "${1-} enabled" && set -x
 }
@@ -453,7 +441,6 @@ __installRemotePackageGitCheck() {
 # Requires: grep printf chmod wait
 # Requires: _environment isUnsignedInteger cat _clean
 __installRemotePackageLocal() {
-  local source="$1" myBinary="$2" relTop="$3"
   local source="$1" myBinary="$2" relTop="$3"
   local log="$myBinary.$$.log"
   {

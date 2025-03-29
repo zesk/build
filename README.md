@@ -4,7 +4,7 @@ Pipeline, build, and operations tools useful for any project.
 
 - `bash` functions work on all Unix-style operating systems
 - Build, deployment and management tools for pipelines and production systems (system setup, services, cron, permissions separations)
-- Operating system differences supported automatically
+- Operating system differences in many tools supported automatically
 
 This code toolkit depends solely on [`bash`](https://www.gnu.org/software/bash/manual/bash.html) and a few other binaries (`jq`) and a conscientious decision has been made to not depend on any other language libraries, as of 2025 support for Bash 3 and 4 remains stable.
 
@@ -18,17 +18,16 @@ This toolkit assumes:
 - Binaries from this project installed at `./bin/build/` (required)
 - Files containing bash code end with `.sh`
 - **Release notes** are located in a dedicated subdirectory (may be configured per-project), files are named `v1.0.0.md` which match version names (`v1.0.0`) (required)
+- Installation pulls from `github.com` using `curl` or `wget`
 
 To use in your pipeline:
 
 - copy `bin/build/install-bin-build.sh` into your project (changing last line as needed) or use `installInstallBuild` to install it.
 - run it before you need this code (will be installed at `bin/build`)
-- installation pulls from `github.com` using `curl` or `wget`
 
 To install it in the operating system:
 
-- Installation can ba accomplished by copying `bin/build/install-bin-build.sh` to `/usr/local/bin/build/` and running it as `root`
-- installation pulls from `github.com` using `curl` or `wget`
+- Copy `bin/build/install-bin-build.sh` to `/usr/local/bin/build/` and running it as `root` 
 
 ## Main entry points
 
@@ -154,4 +153,4 @@ If you test on another OS or need support on a specific platform, [report an iss
 
 License is [MIT License](LICENSE.md). Source can be found online at [GitHub](https://github.com/zesk/build).
 
-Reviewed: 2024-12-15
+Reviewed: 2025-03-29

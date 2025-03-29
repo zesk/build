@@ -70,7 +70,7 @@ deprecatedIgnore() {
   notes="${notes%/}"
   printf -- "%s\n" "!" -name 'deprecated.txt' "!" -name 'deprecated.sh' "!" \
     -name 'deprecated.md' ! -name 'unused.md' \
-    "!" -path "*/$notes/*" \
+    "!" -path "*$notes/*" \
     "!" -path "*/.*/*"
 }
 _deprecatedIgnore() {

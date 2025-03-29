@@ -65,14 +65,7 @@ isUnsignedInteger() {
 
 # <-- END of IDENTICAL _return
 
-#
-# Build Zesk Build
-#
-__buildBuild() {
-  local usage="_${FUNCNAME[0]}"
-  local width=25
-  export BUILD_COLORS
-
+__buildDebugColors() {
   printf -- "BUILD_COLORS=\"%s\"\n" "${BUILD_COLORS-}"
   printf -- "tput colors %s" "$(tput colors 2>&1 || :)"
   if hasColors; then
@@ -84,7 +77,31 @@ __buildBuild() {
   decorate pair "$width" "DISPLAY" "${DISPLAY-}"
   decorate pair "$width" "BUILD_COLORS" "${BUILD_COLORS-}"
 
-  if ! ./bin/update-md.sh --skip-commit; then
+}
+
+#
+# Build Zesk Build
+#
+# Argument: --debug - Flag. Debug TERM info.
+__buildBuild() {
+  local usage="_${FUNCNAME[0]}"
+  local home
+  local width=25
+  export BUILD_COLORS
+
+  __catchEnvironment "$usage" awsInstall || return $?
+
+  local target cloudFrontID
+  target=$(buildEnvironmentGet "DOCUMENTATION_S3_PREFIX") || return $?
+  cloudFrontID=$(buildEnvironmentGet "DOCUMENTATION_CLOUDFRONT_ID") || return $?
+
+  home=$(__catchEnvironment "$usage" buildHome) || return $?
+  if [ "${1-}" = "--debug" ]; then
+    __buildDebugColors
+    shift
+  fi
+
+  if ! "$home/bin/update-md.sh" --skip-commit; then
     __catchEnvironment "$usage" "Can not update the Markdown files" || return $?
   fi
 
@@ -94,7 +111,26 @@ __buildBuild() {
     git commit -m "Build version $(hookRun version-current)" -a || :
     git push origin || :
   fi
-  ./bin/build/identical-repair.sh || _environment "Identical repair failed" || return $?
+  "$home/bin/build/deprecated.sh" || __throwEnvironment "$usage" "Deprecated failed" || return $?
+  "$home/bin/build/identical-repair.sh" || __throwEnvironment "$usage" "Identical repair failed" || return $?
+
+  if [ -n "$target" ]; then
+    [ -n "$target" ] || __throwEnvironment "$usage" "DOCUMENTATION_S3_PREFIX is blank" || return $?
+    [ "$target" != "${target#s3://}" ] || __throwEnvironment "$usage" "DOCUMENTATION_S3_PREFIX=$(decorate code "$target") is NOT a S3 URL" || return $?
+
+    [ -n "$cloudFrontID" ] || __throwEnvironment "$usage" "DOCUMENTATION_CLOUDFRONT_ID is blank" || return $?
+
+    local rootShow rootPath="$home/documentation/site"
+    rootShow=$(decorate file "$rootPath")
+    if [ -d "$home/documentation/site" ]; then
+      statusMessage decorate info "Removing $rootShow" || return $?
+      __catchEnvironment "$usage" rm -rf "$rootPath" || return $?
+    fi
+    "$home/bin/documentation.sh" || __throwEnvironment "$usage" "Documentation failed" || return $?
+    [ -d "$home/documentation/site" ] || __throwEnvironment "$usage" "Documentation failed to create $rootShow" || return $?
+    __catchEnvironment "$usage" aws s3 sync --delete "$rootPath" "$target" || return $?
+    __catchEnvironment "$usage" aws cloudfront create-invalidation --distribution-id "$cloudFrontID" --paths / || return $?
+  fi
   decorate success Built successfully.
 }
 ___buildBuild() {
