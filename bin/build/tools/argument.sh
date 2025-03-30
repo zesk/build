@@ -32,22 +32,22 @@
 # Argument: arguments - Optional. String. One or more arguments to parse.
 # Output is a temporary `stateFile` on line 1
 _arguments() {
-  local usageArguments="_${FUNCNAME[0]}"
+  local _usage_="_${FUNCNAME[0]}"
   local source="${1-}" this="${2-}"
   local usage="_$this"
 
   local stateFile checkFunction value clean required flags=() noneFlag=false
 
   ARGUMENTS="${ARGUMENTS-}"
-  shift || __throwArgument "$usageArguments" "Missing this" || return $?
-  shift || __throwArgument "$usageArguments" "Missing source" || return $?
+  shift || __throwArgument "$_usage_" "Missing this" || return $?
+  shift || __throwArgument "$_usage_" "Missing source" || return $?
   if [ "${1-}" = "--none" ]; then
     shift
     noneFlag=true
   fi
-  stateFile=$(__catchEnvironment "$usageArguments" mktemp) || return $?
-  spec=$(__catchEnvironment "$usageArguments" _commentArgumentSpecification "$source" "$this") || return $?
-  __catchEnvironment "$usageArguments" _commentArgumentSpecificationDefaults "$spec" >"$stateFile" || return $?
+  stateFile=$(__catchEnvironment "$_usage_" mktemp) || return $?
+  spec=$(__catchEnvironment "$_usage_" _commentArgumentSpecification "$source" "$this") || return $?
+  __catchEnvironment "$_usage_" _commentArgumentSpecificationDefaults "$spec" >"$stateFile" || return $?
   IFS=$'\n' read -d '' -r -a required <"$(__commentArgumentSpecification__required "$spec")" || :
 
   # Rest is calling function argument usage
@@ -97,7 +97,7 @@ _arguments() {
     return "$(_code exit)"
   fi
   if $noneFlag; then
-    __catchEnvironment "$usageArguments" rm -rf "$stateFile" || return $?
+    __catchEnvironment "$_usage_" rm -rf "$stateFile" || return $?
     unset ARGUMENTS || return $?
     return 0
   fi

@@ -58,7 +58,7 @@ usageTemplate() {
     printf -- "%s: %s%s\n\n%s\n\n%s\n%s\n" \
       "$usageString" \
       "$(decorate info "$binName")" \
-      "$(printf "%s" "$options" | usageArguments "$delimiter")" \
+      "$(printf "%s" "$options" | usageFormatArguments "$delimiter")" \
       "$(printf "%s" "$options" | usageGenerator "$((nSpaces + 2))" "$delimiter" | simpleMarkdownToConsole | trimTail | wrapLines "    " "$(decorate reset)")" \
       "$description" \
       "$exit_code" | trimTail
@@ -82,9 +82,9 @@ _usageTemplate() {
 # Input is in the format with "{argument}{delimiter}{description}{newline}" and generates a list of arguments (optionally decorated) color-coded based
 # on whether the word "require" appears in the description.
 #
-# Usage: usageArguments delimiter
+# Usage: usageFormatArguments delimiter
 # Argument: delimiter - Required. String. The character to separate name value pairs in the input
-usageArguments() {
+usageFormatArguments() {
   local handler="_${FUNCNAME[0]}"
   [ $# -le 3 ] || __throwArgument "$handler" "Requires 3 or fewer arguments" || return $?
 

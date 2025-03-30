@@ -800,7 +800,7 @@ _bashDocumentation_Extract() {
 
 # Formats arguments for markdown
 __bashDocumentationDefaultArguments() {
-  printf "%s\n" "$*" | sed 's/ - /^/1' | usageArguments '^' '' ''
+  printf "%s\n" "$*" | sed 's/ - /^/1' | usageFormatArguments '^' '' ''
 }
 
 #
