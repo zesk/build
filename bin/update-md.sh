@@ -74,7 +74,7 @@ __addNoteTo() {
 #
 # Usage: {fn} [ --skip-commit ]
 # Argument: --skip-commit - Skip the commit if the files change
-#
+# Requires: jq __throwArgument statusMessage
 __updateMarkdown() {
   local usage="${FUNCNAME[0]#_}"
   local flagSkipCommit buildMarker

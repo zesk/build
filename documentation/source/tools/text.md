@@ -28,6 +28,7 @@
 
 {printfOutputPrefix}
 {printfOutputSuffix}
+{newlineHide}
 
 ## Cleanup ANSI text
 

@@ -10,6 +10,8 @@
 {buildDebugStop}
 {isBashDebug}
 {isErrorExit}
+{dumpEnvironmentUnsafe}
+{dumpEnvironment}
 {dumpPipe}
 {dumpBinary}
 {dumpFile} 
