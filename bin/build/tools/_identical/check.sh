@@ -308,18 +308,21 @@ __identicalCheckMatchFile() {
 # Argument: ... - Optional. Additional arguments are passed directly to `identicalCheck`.
 identicalCheckShell() {
   local usage="_${FUNCNAME[0]}"
-  local argument single singleFile aa=() pp=()
+  local argument single singleFile aa=() pp=() addDefaultPrefixes=true
 
   singles=()
   while [ $# -gt 0 ]; do
     argument="$1"
     [ -n "$argument" ] || __throwArgument "$usage" "blank argument" || return $?
     case "$argument" in
+      --internal-only)
+        pp=(--prefix '# ''DOC TEMPLATE:' --prefix '# ''_IDENTICAL_')
+        addDefaultPrefixes=false
+        ;;
       --internal)
         if [ "${#pp[@]}" -eq 0 ]; then
           # Ordering here matters so declare from inside scope to outside scope
-          pp+=(--prefix '# ''DOC TEMPLATE:')
-          pp+=(--prefix '# ''_IDENTICAL_')
+          pp+=(--prefix '# ''DOC TEMPLATE:' --prefix '# ''_IDENTICAL_')
         fi
         ;;
       --interactive)
@@ -340,7 +343,7 @@ identicalCheckShell() {
     esac
     shift || :
   done
-  pp+=(--prefix '# ''IDENTICAL')
+  ! $addDefaultPrefixes || pp+=(--prefix '# ''IDENTICAL')
   __catchEnvironment "$usage" identicalCheck "${aa[@]+"${aa[@]}"}" "${pp[@]}" --extension sh "$@" || return $?
 }
 _identicalCheckShell() {
