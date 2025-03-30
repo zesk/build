@@ -99,103 +99,6 @@ __catchArgumentHelper() {
   printf "%s\n" "$variableValue"
 }
 
-# List valid types which can be validated
-validateTypeList() {
-  local prefix="__validateType"
-  declare -F | removeFields 2 | grepSafe -e "^$prefix" | cut -c "$((${#prefix} + 1))"- | sort
-}
-
-# Are all arguments passed a validate type?
-# DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
-isValidateType() {
-  local usage="_${FUNCNAME[0]}"
-
-  local prefix="__validateType"
-
-  # _IDENTICAL_ argument-case-header 5
-  local __saved=("$@") __count=$#
-  while [ $# -gt 0 ]; do
-    local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
-    case "$argument" in
-      # _IDENTICAL_ --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      *)
-        isFunction "$prefix$argument" || __throwArgument "$usage" "Invalid type $argument" || return $?
-        ;;
-    esac
-    # _IDENTICAL_ argument-esac-shift 1
-    shift
-  done
-}
-
-# Validate a value by type
-# Argument: handler - Function. Required. Error handler.
-# Argument: type - Type. Required. Type to validate.
-# Argument: name - String. Required. Name of the variable which is being validated.
-# Argument: value - EmptyString. Required. Value to validate.
-# Exit Code: 0 - Valid is valid, stdout is a filtered version of the value to be used
-# Exit Code: 2 - Valid is invalid, output reason to stderr
-validate() {
-  local usage="_${FUNCNAME[0]}"
-  local prefix="__validateType"
-
-  [ $# -eq 0 ] || __help "$usage" "$@" || return 0
-  [ $# -ge 4 ] || __throwArgument "$usage" "Missing arguments ($# < 4)" || return $?
-
-  local handler="$1" type="$2" name="$3" value && shift 3
-
-  local typeFunction="$prefix$type"
-  isFunction "$typeFunction" || __throwArgument "$usage" "validate $type is not a valid type:"$'\n'"$(validateTypeList)" || return $?
-
-  if ! value=$("$typeFunction" "$@" 2>&1); then
-    local suffix=""
-    [ -z "$value" ] || suffix=" $(decorate error "$value")"
-    __throwArgument "$handler" "$name ($(decorate each code "$@")) is not type $(decorate label "$type")$suffix" || return $?
-  fi
-  printf "%s\n" "$value"
-}
-
-__validateTypeString() {
-  [ -n "${1-}" ] || __throwValidate "blank" || return $?
-}
-
-__validateTypeEmptyString() {
-  return 0
-}
-
-__validateTypeUnsignedInteger() {
-  isUnsignedInteger "${1-}" || __throwValidate || return $?
-}
-
-__validateTypePositiveInteger() {
-  isPositiveInteger "${1-}" || __throwValidate || return $?
-}
-
-__validateTypeInteger() {
-  isInteger "${1-}" || __throwValidate || return $?
-}
-
-__validateTypeNumber() {
-  isNumber "${1-}" || __throwValidate || return $?
-}
-
-__validateTypeFunction() {
-  isFunction "${1-}" || __throwValidate || return $?
-}
-
-__validateTypeExecutable() {
-  isExecutable "${1-}" || __throwValidate || return $?
-}
-
-__throwValidate() {
-  printf -- "%s\n" "$@" 1>&2
-  return 2
-}
 
 # IDENTICAL usageArgumentCore 14
 
@@ -227,6 +130,22 @@ usageArgumentInteger() {
   args[3]="${4-}"
   [ ${#args[@]} -eq 4 ] || __throwArgument "$usage" "Need 4 arguments" || return $?
   __catchArgumentHelper integer "${args[@]}" isInteger || return $?
+}
+
+# Validates a value is a number
+# Usage: {fn} usageFunction variableName variableValue [ noun ]
+# Argument: usageFunction - Required. Function. Run if usage fails
+# Argument: variableName - Required. String. Name of variable being tested
+# Argument: variableValue - Required. String. Required only in that if it's blank, it fails.
+# Argument: noun - Optional. String. Noun used to describe the argument in errors, defaults to `integer`
+# Exit Code: 2 - Argument error
+# Exit Code: 0 - Success
+usageArgumentNumber() {
+  local args usage="$1"
+  args=("$@")
+  args[3]="${4-}"
+  [ ${#args[@]} -eq 4 ] || __throwArgument "$usage" "Need 4 arguments" || return $?
+  __catchArgumentHelper integer "${args[@]}" isNumber || return $?
 }
 
 # Validates a value is an unsigned integer
@@ -388,7 +307,7 @@ usageArgumentDirectoryList() {
   IFS=":" read -r -a directories <<<"$3" || :
   for directory in "${directories[@]+"${directories[@]}"}"; do
     [ -n "$directory" ] || continue
-    [ -d "$directory" ] || __throwArgument "$2 element #$index is not a directory $(decorate code "$directory"): $(decorate value "$3")" || return $?
+    [ -d "$directory" ] || __throwArgument "$usage" "$2 element #$index is not a directory $(decorate code "$directory"): $(decorate value "$3")" || return $?
     result+=("$directory")
     index=$((index + 1))
   done
@@ -421,7 +340,7 @@ usageArgumentApplicationDirectoryList() {
     directory="${directory#./}"
     directory="${directory#/}"
     directory="${directory%/}"
-    [ -d "${home%/}/$directory" ] || __throwArgument "$2 element #$index is not a directory $(decorate code "$home/$directory"): $(decorate value "$3")" || return $?
+    [ -d "${home%/}/$directory" ] || __throwArgument "$usage" "$2 element #$index is not a directory $(decorate code "$home/$directory"): $(decorate value "$3")" || return $?
     result+=("$directory")
     index=$((index + 1))
   done
@@ -452,7 +371,7 @@ usageArgumentApplicationDirectory() {
   directory="${directory#./}"
   directory="${directory#/}"
   directory="${directory%/}"
-  [ -d "${home%/}/$directory" ] || __throwArgument "$2 element #$index is not a directory $(decorate code "$home/$directory"): $(decorate value "$3")" || return $?
+  [ -d "${home%/}/$directory" ] || __throwArgument "$usage" "$2 element #$index is not a directory $(decorate code "$home/$directory"): $(decorate value "$3")" || return $?
   printf "%s\n" "${home%/}/$directory"
 }
 
