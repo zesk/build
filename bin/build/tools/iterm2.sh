@@ -186,7 +186,7 @@ iTerm2ColorTypes() {
   printf "%s\n" fg bg selbg selfg curbg curfg # Selection and maybe current line?
   printf "%s\n" bold link underline           # Formatting
   printf "%s\n" tab                           # Tab color! - awesome
-  read -r -d"" -a colors < <(iTerm2ColorNames)
+  read -r -d "" -a colors < <(iTerm2ColorNames)
   printf -- "%s\n" "${colors[@]}"
   printf -- "%s\n" "${colors[@]}" | wrapLines "br_" ""
 }

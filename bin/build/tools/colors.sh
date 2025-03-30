@@ -667,7 +667,7 @@ colorFormat() {
   else
     local done=false
     while ! $done; do
-      IFS=$'\n' read -d"" -r r g b || done=true
+      IFS=$'\n' read -d "" -r r g b || done=true
       # shellcheck disable=SC2059
       isUnsignedInteger "$r" && isUnsignedInteger "$g" && isUnsignedInteger "$b" && printf -- "$format" "$r" "$g" "$b"
     done

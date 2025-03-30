@@ -179,15 +179,18 @@ _identicalCheckSinglesChecker() {
       token="${token%%.match}"
       token="${token#*@}"
       tokenFile="$tokenFile/$token"
-      IFS=$'\n' read -d"" -r lineNumber targetFile < <(tail -n 2 "$tokenFile")
+      decorate pair
+      IFS=$'\n' read -d "" -r lineCount lineNumber targetFile <"$tokenFile"
       allSingles+=("$token")
+      local linesNoun
+      linesNoun=$(plural "$lineCount" line lines)
       if inArray "$token" "${singles[@]+"${singles[@]}"}"; then
         knownSingles+=("$token")
-        knownSinglesReport+=("$(printf -- "%s in %s" "$(decorate code "$token")" "$(decorate info "$(decorate file "$targetFile")")"):$lineNumber")
+        knownSinglesReport+=("$(printf -- "%s in %s" "$(decorate code "$token")" "$(decorate info "$(decorate file "$targetFile")")"):$lineNumber ($lineCount $linesNoun)")
       else
         lonelySingles+=("$token")
         lonelySinglesFiles+=("$targetFile")
-        lonelySinglesReport+=("$(printf -- "%s in %s" "$(decorate code "$token")" "$(decorate notice "$(decorate file "$targetFile")")"):$lineNumber")
+        lonelySinglesReport+=("$(printf -- "%s in %s" "$(decorate code "$token")" "$(decorate notice "$(decorate file "$targetFile")")"):$lineNumber ($lineCount $linesNoun)")
         exitCode="$identicalCode"
       fi
     fi

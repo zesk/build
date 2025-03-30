@@ -21,6 +21,8 @@
 # Argument: --no-map - Optional. Flag. Do not map __BASE__, __FILE__, __DIR__ tokens.
 # Argument: --debug - Optional. Additional debugging information is output.
 # Argument: --help - Optional. Flag. This help.
+# Argument: --singles singlesFiles - Optional. File. One or more files which contain a list of allowed `IDENTICAL` singles, one per line.
+# Argument: --single singleToken - Optional. String. One or more tokens which cam be singles.
 #
 # Exit Code: 2 - Argument error
 # Exit Code: 0 - Success, everything matches
@@ -94,6 +96,18 @@ identicalCheck() {
         shift
         skipFiles+=("$(usageArgumentFile "$usage" "$argument" "${1-}")") || return $?
         ;;
+      --singles)
+        local singleFile
+        shift
+        singleFile=$(usageArgumentFile "$usage" singlesFile "${1-}") || return $?
+        while read -r single; do
+          single="${single#"${single%%[![:space:]]*}"}"
+          single="${single%"${single##*[![:space:]]}"}"
+          if [ "${single###}" = "${single}" ]; then
+            singles+=("$single")
+          fi
+        done <"$singleFile"
+        ;;
       --single)
         shift
         singles+=("$1")
@@ -131,7 +145,7 @@ identicalCheck() {
   rootDir=$(__catchEnvironment "$usage" realPath "$rootDir") || return $?
   local tempDirectory resultsFile searchFileList
 
-  tempDirectory="$(fileTemporaryName "$usage" -d -t "${usage#_}.XXXXXXXX")" || return $?
+  tempDirectory="$(fileTemporaryName "$usage" -d -t "${usage#_}")" || return $?
   resultsFile=$(fileTemporaryName "$usage") || return $?
   searchFileList=$(fileTemporaryName "$usage") || return $?
   clean+=("$tempDirectory" "$searchFileList")
@@ -308,21 +322,10 @@ identicalCheckShell() {
           pp+=(--prefix '# ''_IDENTICAL_')
         fi
         ;;
-      --singles)
-        shift
-        singleFile=$(usageArgumentFile "$usage" singlesFile "${1-}") || return $?
-        while read -r single; do
-          single="${single#"${single%%[![:space:]]*}"}"
-          single="${single%"${single##*[![:space:]]}"}"
-          if [ "${single###}" = "${single}" ]; then
-            aa+=(--single "$single")
-          fi
-        done <"$singleFile"
-        ;;
       --interactive)
         aa+=("$argument")
         ;;
-      --repair | --single | --exec | --prefix | --exclude | --extension | --skip)
+      --repair | --single | --exec | --prefix | --exclude | --extension | --skip | --singles)
         shift
         aa+=("$argument" "${1-}")
         ;;

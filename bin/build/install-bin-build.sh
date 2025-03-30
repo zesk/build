@@ -87,6 +87,12 @@ __installBinBuildCheck() {
   __installCheck "zesk/build" "build.json" "$@"
 }
 
+# IDENTICAL jsonField 1
+# replace it here
+
+# _IDENTICAL_ jsonField 1
+# replace it here
+
 # IDENTICAL __installCheck 18
 
 # Check the directory after installation and output the version

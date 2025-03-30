@@ -89,7 +89,7 @@ testQuoteSedPattern() {
   assertEquals --line "$LINENO" '\\' "$(quoteSedPattern '\')" || return $?
   assertEquals --line "$LINENO" "\\/" "$(quoteSedPattern "/")" || return $?
   # Fails in code somewhere
-  read -d"" -r value < <(__testQuoteSedPatternData)
+  read -d "" -r value < <(__testQuoteSedPatternData)
 
   mappedValue="$(printf %s "{name}" | name=$value mapEnvironment)"
   assertEquals --line "$LINENO" "$mappedValue" "$value" || return $?
@@ -105,7 +105,7 @@ testQuoteSedReplacement() {
   assertEquals --line "$LINENO" "\\/" "$(quoteSedReplacement "/")" || return $?
   assertEquals --line "$LINENO" "/" "$(quoteSedReplacement "/" "~")" || return $?
   # Fails in code somewhere
-  read -d"" -r value < <(__testQuoteSedPatternData)
+  read -d "" -r value < <(__testQuoteSedPatternData)
 
   mappedValue="$(printf %s "{name}" | name=$value mapEnvironment)"
   assertEquals --line "$LINENO" "$mappedValue" "$value" || return $?
