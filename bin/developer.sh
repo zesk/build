@@ -26,7 +26,7 @@ __buildConfigure() {
   # shellcheck disable=SC2139
   alias IdenticalRepair="$home/bin/build/identical-repair.sh"
 
-  reloadChanges --name "Zesk Build" bin/build/tools.sh bin
+  reloadChanges --name "Zesk Build" bin/build/tools.sh bin/build/tools
 }
 
 __buildConfigureUndo() {

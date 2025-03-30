@@ -16,12 +16,13 @@ __installBinBuildLatest() {
 }
 
 # Download remote JSON as a temporary file (delete it)
+# Requires: whichExists __throwEnvironment fileTemporaryName __installBinBuildLatest curl urlFetch printf
 __installBinBuildJSON() {
   local usage="$1" jsonFile message
 
   whichExists jq || __throwEnvironment "$usage" "Requires jq to install" || return $?
   jsonFile=$(fileTemporaryName "$usage") || return $?
-  if ! curl -s "$(__installBinBuildLatest)" >"$jsonFile" 2>&1; then
+  if ! urlFetch "$(__installBinBuildLatest)" "$jsonFile"; then
     message="$(printf -- "%s\n%s\n" "Unable to fetch latest JSON:" "$(cat "$jsonFile")")"
     rm -rf "$jsonFile" || :
     __throwEnvironment "$usage" "$message" || return $?
@@ -29,6 +30,7 @@ __installBinBuildJSON() {
   printf "%s\n" "$jsonFile"
 }
 
+# Requires: jsonField printf
 __githubInstallationURL() {
   local usage="$1" jsonFile="$2"
   url=$(jsonField "$usage" "$jsonFile" .tarball_url) || return $?
@@ -36,6 +38,7 @@ __githubInstallationURL() {
 }
 
 # Installs Zesk Build from GitHub
+# Requires: __installBinBuildJSON __githubInstallationURL rm __throwArgument printf
 __installBinBuildURL() {
   local usage="$1" jsonFile
 
@@ -53,6 +56,7 @@ __installBinBuildURL() {
 }
 
 # Checks Zesk Build version on GitHub
+# Requires: __installBinBuildJSON jsonField jq versionSort decorate __githubInstallationURL __throwArgument
 __installBinBuildVersion() {
   local usage="$1" installPath="$2" packagePath="$3" jsonFile version url upIcon="☝️" okIcon="👌"
 
@@ -83,15 +87,34 @@ __installBinBuildVersion() {
 }
 
 # Check the install directory after installation and output the version
+# Requires: __installCheck
 __installBinBuildCheck() {
   __installCheck "zesk/build" "build.json" "$@"
 }
 
-# IDENTICAL jsonField 1
-# replace it here
+# _IDENTICAL_ jsonField 22
 
-# _IDENTICAL_ jsonField 1
-# replace it here
+# Fetch a non-blank field from a JSON file with error handling
+# Argument: handler - Function. Required. Error handler.
+# Argument: jsonFile - File. Required. A JSON file to parse
+# Argument: ... - Arguments. Optional. Passed directly to jq
+# stdout: selected field
+# stderr: error messages
+# Exit Code: 0 - Field was found and was non-blank
+# Exit Code: 1 - Field was not found or is blank
+# Requires: jq whichExists __throwEnvironment printf rm decorate head
+jsonField() {
+  local handler="$1" jsonFile="$2" value message && shift 2
+
+  [ -f "$jsonFile" ] || __throwEnvironment "$handler" "$jsonFile is not a file" || return $?
+  whichExists jq || __throwEnvironment "$handler" "Requires jq - not installed" || return $?
+  if ! value=$(jq -r "$@" <"$jsonFile"); then
+    message="$(printf -- "%s\n%s\n" "Unable to fetch selector $(decorate each code "$@") from JSON:" "$(head -n 100 "$jsonFile")")"
+    __throwEnvironment "$handler" "$message" || return $?
+  fi
+  [ -n "$value" ] || __throwEnvironment "$handler" "$(printf -- "%s\n%s\n" "Selector $(decorate each code "$@") was blank from JSON:" "$(head -n 100 "$jsonFile")")" || return $?
+  printf -- "%s\n" "$value"
+}
 
 # IDENTICAL __installCheck 18
 
