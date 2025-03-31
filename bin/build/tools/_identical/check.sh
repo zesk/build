@@ -145,7 +145,7 @@ identicalCheck() {
   rootDir=$(__catchEnvironment "$usage" realPath "$rootDir") || return $?
   local tempDirectory resultsFile searchFileList
 
-  tempDirectory="$(fileTemporaryName "$usage" -d -t "${usage#_}")" || return $?
+  tempDirectory="$(fileTemporaryName "$usage" -d)" || return $?
   resultsFile=$(fileTemporaryName "$usage") || return $?
   searchFileList=$(fileTemporaryName "$usage") || return $?
   clean+=("$tempDirectory" "$searchFileList")
