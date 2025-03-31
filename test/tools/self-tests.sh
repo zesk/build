@@ -79,6 +79,7 @@ testBuildEnvironmentLoadAll() {
       isFunction "$validator" || _environment "$type is not a known type in $(decorate file "$envFile")" || return $?
     ) || return $?
   done < <(find "$home" -type f -name '*.sh' -path '*/env/*' ! -path '*/test/*' ! -path '*/.*/*' -exec basename {} \; | cut -d . -f 1) || return $?
+  __catchEnvironment "$usage" rm -rf "$tempFile" || return $?
 }
 
 testBuildFunctions() {
