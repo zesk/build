@@ -68,12 +68,53 @@ isUnsignedInteger() {
 # Deploy Zesk Build
 #
 __buildDeploy() {
-  local start appId notes
-  local usage
+  local usage="_${FUNCNAME[0]}"
 
-  usage="${FUNCNAME[0]#_}"
+  local debugFlag=false makeDocumentation=false
 
-  start=$(timingStart) || __throwEnvironment "$usage" "timingStart" || return $?
+  export BUILD_COLORS
+
+  # _IDENTICAL_ argument-case-header 5
+  local __saved=("$@") __count=$#
+  while [ $# -gt 0 ]; do
+    local argument="$1" __index=$((__count - $# + 1))
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
+    case "$argument" in
+      # _IDENTICAL_ --help 4
+      --help)
+        "$usage" 0
+        return $?
+        ;;
+      --documentation)
+        makeDocumentation=true
+        ;;
+      --debug)
+        __buildDebugColors
+        debugFlag=true
+        ;;
+      *)
+        # _IDENTICAL_ argumentUnknown 1
+        __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
+        ;;
+    esac
+    # _IDENTICAL_ argument-esac-shift 1
+    shift
+  done
+
+  local start
+  start=$(timingStart)
+
+  ! $debugFlag || statusMessage decorate info "Installing AWS ..."
+  __catchEnvironment "$usage" awsInstall || return $?
+
+  local target cloudFrontID
+  target=$(buildEnvironmentGet "DOCUMENTATION_S3_PREFIX") || return $?
+  cloudFrontID=$(buildEnvironmentGet "DOCUMENTATION_CLOUDFRONT_ID") || return $?
+
+  local home
+  home=$(__catchEnvironment "$usage" buildHome) || return $?
+
+  local appId notes
 
   statusMessage decorate info "Fetching deep copy of repository ..." || :
   __catchEnvironment "$usage" git fetch --unshallow || return $?
@@ -90,6 +131,31 @@ __buildDeploy() {
 
   bigText "$currentVersion" | wrapLines "    $(decorate green "Zesk BUILD    🛠️️ ") $(decorate magenta)" "$(decorate green " ⚒️ ")" || :
   decorate info "Deploying a new release ... " || :
+
+  if $makeDocumentation; then
+    local rootShow rootPath="$home/documentation/site"
+    rootShow=$(decorate file "$rootPath")
+
+    if [ -n "$target" ]; then
+      __throwEnvironment "$usage" "No DOCUMENTATION_S3_PREFIX but --documentation supplied" || return $?
+    fi
+    if [ ! -d "$rootPath" ]; then
+      __throwEnvironment "$usage" "$rootShow does not exist but --documentation supplied" || return $?
+    fi
+
+    # Validate for later (possibly every time in the future)
+    [ -n "$target" ] || __throwEnvironment "$usage" "DOCUMENTATION_S3_PREFIX is blank" || return $?
+    [ "$target" != "${target#s3://}" ] || __throwEnvironment "$usage" "DOCUMENTATION_S3_PREFIX=$(decorate code "$target") is NOT a S3 URL" || return $?
+    [ -n "$cloudFrontID" ] || __throwEnvironment "$usage" "DOCUMENTATION_CLOUDFRONT_ID is blank" || return $?
+
+    ! $debugFlag || statusMessage decorate warning "Publishing documentation to $target ..."
+
+    # Ideally do this in a way which is more transactional with the release version
+    ! $debugFlag || statusMessage decorate warning "Syncing documentation to $target ..."
+    __catchEnvironment "$usage" aws s3 sync --delete "$rootPath" "$target" || return $?
+    ! $debugFlag || statusMessage decorate warning "Creating invalidation for $(decorate code "$cloudFrontID") ..."
+    __catchEnvironment "$usage" aws cloudfront create-invalidation --distribution-id "$cloudFrontID" --paths / || return $?
+  fi
 
   if ! githubRelease "$notes" "$currentVersion" "$appId"; then
     decorate warning "Deleting tagged version ... " || :

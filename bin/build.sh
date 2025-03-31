@@ -73,9 +73,9 @@ __buildDebugColors() {
   else
     decorate error "No colors ${BUILD_COLORS-¢}"
   fi
-  decorate pair "$width" "TERM" "${TERM-¢}"
-  decorate pair "$width" "DISPLAY" "${DISPLAY-}"
-  decorate pair "$width" "BUILD_COLORS" "${BUILD_COLORS-}"
+  decorate pair "TERM" "${TERM-¢}"
+  decorate pair "DISPLAY" "${DISPLAY-}"
+  decorate pair "BUILD_COLORS" "${BUILD_COLORS-}"
 
 }
 
@@ -85,53 +85,82 @@ __buildDebugColors() {
 # Argument: --debug - Flag. Debug TERM info.
 __buildBuild() {
   local usage="_${FUNCNAME[0]}"
-  local home
-  local width=25
+
+  local debugFlag=false makeDocumentation=false
+
   export BUILD_COLORS
 
+  # _IDENTICAL_ argument-case-header 5
+  local __saved=("$@") __count=$#
+  while [ $# -gt 0 ]; do
+    local argument="$1" __index=$((__count - $# + 1))
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
+    case "$argument" in
+      # _IDENTICAL_ --help 4
+      --help)
+        "$usage" 0
+        return $?
+        ;;
+      --documentation)
+        makeDocumentation=true
+        ;;
+      --debug)
+        __buildDebugColors
+        debugFlag=true
+        ;;
+      *)
+        # _IDENTICAL_ argumentUnknown 1
+        __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
+        ;;
+    esac
+    # _IDENTICAL_ argument-esac-shift 1
+    shift
+  done
+
+  local start
+  start=$(timingStart)
+
+  ! $debugFlag || statusMessage decorate info "Installing AWS ..."
   __catchEnvironment "$usage" awsInstall || return $?
 
-  local target cloudFrontID
-  target=$(buildEnvironmentGet "DOCUMENTATION_S3_PREFIX") || return $?
-  cloudFrontID=$(buildEnvironmentGet "DOCUMENTATION_CLOUDFRONT_ID") || return $?
-
+  local home
   home=$(__catchEnvironment "$usage" buildHome) || return $?
-  if [ "${1-}" = "--debug" ]; then
-    __buildDebugColors
-    shift
-  fi
 
+  ! $debugFlag || statusMessage decorate info "Updating markdown ..."
   if ! "$home/bin/update-md.sh" --skip-commit; then
     __catchEnvironment "$usage" "Can not update the Markdown files" || return $?
   fi
 
+  ! $debugFlag || statusMessage decorate warning "Running deprecated ..."
+  "$home/bin/build/deprecated.sh" || __throwEnvironment "$usage" "Deprecated failed" || return $?
+
+  ! $debugFlag || statusMessage decorate warning "Running identical ..."
+  "$home/bin/build/identical-repair.sh" || __throwEnvironment "$usage" "Identical repair failed" || return $?
+
+  if $makeDocumentation; then
+    local path rootShow rootPath="$home/documentation/site"
+    rootShow=$(decorate file "$rootPath")
+    for path in "$rootPath" "$home/documentation/docs"; do
+      if [ -d "$path" ]; then
+        statusMessage decorate warning "Removing $path for build" || return $?
+        __catchEnvironment "$usage" rm -rf "$path" || return $?
+      fi
+    done
+    ! $debugFlag || statusMessage decorate warning "Building documentation ..."
+    "$home/bin/documentation.sh" || __throwEnvironment "$usage" "Documentation failed" || return $?
+    [ -d "$rootPath" ] || __throwEnvironment "$usage" "Documentation failed to create $rootShow" || return $?
+  fi
+
   if gitRepositoryChanged; then
+    ! $debugFlag || statusMessage decorate info "Repository changed, committing ..."
     printf -- "%s\n" "CHANGES:" || :
     gitShowChanges | wrapLines "$(decorate code)    " "$(decorate reset)"
     git commit -m "Build version $(hookRun version-current)" -a || :
     git push origin || :
+    ! $debugFlag || statusMessage decorate warning "commit or push Failures are ignored ..."
   fi
-  "$home/bin/build/deprecated.sh" || __throwEnvironment "$usage" "Deprecated failed" || return $?
-  "$home/bin/build/identical-repair.sh" || __throwEnvironment "$usage" "Identical repair failed" || return $?
 
-  if [ -n "$target" ]; then
-    [ -n "$target" ] || __throwEnvironment "$usage" "DOCUMENTATION_S3_PREFIX is blank" || return $?
-    [ "$target" != "${target#s3://}" ] || __throwEnvironment "$usage" "DOCUMENTATION_S3_PREFIX=$(decorate code "$target") is NOT a S3 URL" || return $?
-
-    [ -n "$cloudFrontID" ] || __throwEnvironment "$usage" "DOCUMENTATION_CLOUDFRONT_ID is blank" || return $?
-
-    local rootShow rootPath="$home/documentation/site"
-    rootShow=$(decorate file "$rootPath")
-    if [ -d "$home/documentation/site" ]; then
-      statusMessage decorate info "Removing $rootShow" || return $?
-      __catchEnvironment "$usage" rm -rf "$rootPath" || return $?
-    fi
-    "$home/bin/documentation.sh" || __throwEnvironment "$usage" "Documentation failed" || return $?
-    [ -d "$home/documentation/site" ] || __throwEnvironment "$usage" "Documentation failed to create $rootShow" || return $?
-    __catchEnvironment "$usage" aws s3 sync --delete "$rootPath" "$target" || return $?
-    __catchEnvironment "$usage" aws cloudfront create-invalidation --distribution-id "$cloudFrontID" --paths / || return $?
-  fi
-  decorate success Built successfully.
+  statusMessage --last "$start" "Built successfully in"
 }
 ___buildBuild() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"

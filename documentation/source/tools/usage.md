@@ -45,9 +45,10 @@ Essentially a `usage` function is a failure handler. If you need a simple `usage
 {usageArgumentString}
 {usageArgumentEnvironmentVariable}
 
-## Argument check: Types
+## Argument check: Number and Simple Types
 
 {usageArgumentBoolean}
+{usageArgumentNumber}
 {usageArgumentInteger}
 {usageArgumentPositiveInteger}
 {usageArgumentUnsignedInteger}
