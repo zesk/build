@@ -164,7 +164,7 @@ __buildDeploy() {
   fi
   timingReport "$start" "Release completed in" || :
 }
-_buildDeploy() {
+___buildDeploy() {
   usageDocument "${BASH_SOURCE[0]}" "_${FUNCNAME[0]}" "$@"
 }
 

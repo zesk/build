@@ -84,11 +84,11 @@ developerTrack() {
     if [ ! -f "$cachePath/function" ]; then
       __throwEnvironment "$usage" "Finish called but never started" || return $?
     fi
+    # shellcheck source=/dev/null
+    source "$cachePath/alias.source" || __throwEnvironment "$usage" "Aliases reload failed" || return $?
     tempPath=$(fileTemporaryName "$usage" -d) || return $?
     ! $verboseFlag || statusMessage decorate info "Finishing tracking ... comparing with $tempPath"
     __developerTrack "$usage" "$tempPath" || return $?
-    grep '__build' "$tempPath/function"
-
     printf -- "%s" "" >"$cachePath/CHANGES"
     for itemType in "alias" "function" "environment"; do
       ! $verboseFlag || statusMessage decorate info "Running $itemType"
@@ -104,9 +104,9 @@ developerTrack() {
 }
 __developerTrack() {
   local usage="$1" path="$2"
-  alias -p | removeFields 1 | cut -d = -f 1 | sort -u >"$path/alias" || return $?
+  alias -p | tee "$path/alias.source" | removeFields 1 | cut -d = -f 1 | sort -u >"$path/alias" || return $?
   declare -F | cut -d ' ' -f 3 | sort -u >"$path/function" || return $?
-  environmentVariables | cut -d ' ' -f 3 | sort -u >"$path/environment" || return $?
+  environmentVariables | sort -u >"$path/environment" || return $?
 }
 _developerTrack() {
   # _IDENTICAL_ usageDocument 1

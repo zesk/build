@@ -16,7 +16,7 @@ pipelines:
           services:
             - docker
           script:
-            - bin/documentation.sh --deploy
+            - bin/documentation.sh
     staging:
       - step:
           size: 8x
