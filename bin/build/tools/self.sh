@@ -312,13 +312,16 @@ _buildEnvironmentPath() {
 # created by build's default.
 #
 # Modifies local environment. Not usually run within a subshell.
-#
+# Argument: --print - Flag. Print the environment file loaded last.
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
 # Environment: $envName
 # Environment: BUILD_ENVIRONMENT_DIRS - `:` separated list of paths to load env files
 #
 buildEnvironmentLoad() {
   local usage="_${FUNCNAME[0]}"
 
+  printFlag=false
   # _IDENTICAL_ argument-case-header 5
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
@@ -330,8 +333,11 @@ buildEnvironmentLoad() {
         "$usage" 0
         return $?
         ;;
+      --print)
+        printFlag=true
+        ;;
       *)
-        local env found=false paths=() path file=""
+        local env found="" paths=() path file=""
 
         env="$(usageArgumentEnvironmentVariable "$usage" "environmentVariable" "$1")"
         IFS=$'\n' read -d '' -r -a paths < <(_buildEnvironmentPath) || :
@@ -340,14 +346,15 @@ buildEnvironmentLoad() {
           file="$path/$env.sh"
           if [ -x "$file" ]; then
             export "${env?}" || __throwEnvironment "$usage" "export $env failed" || return $?
-            found=true
+            found="$file"
             set -a || :
             # shellcheck source=/dev/null
             source "$file" || __throwEnvironment "$usage" source "$file" || return $?
             set +a || :
           fi
         done
-        $found || __throwEnvironment "$usage" "Missing $env" || return $?
+        [ -n "$found" ] || __throwEnvironment "$usage" "Missing $env" || return $?
+        ! $printFlag || __catchEnvironment "$usage" printf -- "%s\n" "$found" || return $?
         ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1

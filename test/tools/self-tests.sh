@@ -22,6 +22,7 @@ testBinBuildRequires() {
 }
 
 testBuildEnvironmentLoadAll() {
+  local usage="_return"
   local home loadIt nonBlankEnvs=(
     APACHE_HOME
     APPLICATION_BUILD_DATE
@@ -54,26 +55,29 @@ testBuildEnvironmentLoadAll() {
   )
 
   home=$(__environment buildHome) || return $?
+  tempFile=$(fileTemporaryName "$usage")
 
   find "$home" -type f -name '*.sh' -path '*/env/*' ! -path '*/test/*' ! -path '*/.*/*' -exec basename {} \; | cut -d . -f 1 | dumpPipe "All env files found"
   while read -r loadIt; do
     (
+      local envFile
       export "${loadIt?}"
-      buildEnvironmentLoad "$loadIt" || _environment "buildEnvironmentLoad $loadIt failed" return $?
+      buildEnvironmentLoad --print "$loadIt" >"$tempFile" || _environment "buildEnvironmentLoad $loadIt failed" return $?
+      envFile="$(cat "$tempFile")"
+      assertFileExists --line "$LINENO" "$envFile" || return $?
+
       # statusMessage decorate info Loaded "$loadIt=${!loadIt}"
       if inArray "$loadIt" "${nonBlankEnvs[@]}"; then
         assertNotEquals --line "$LINENO" --display "Loaded $loadIt is non-blank: \"${!loadIt}\"" "${!loadIt}" "" || return $?
       fi
+      assertFileContains --line "$LINENO" "$envFile" "# Type:" "# Category:" || return $?
+
+      local type
+      type=$(grep -m 1 -e "^# Type:" "$envFile" | cut -f 2 -d : | trimSpace)
+
+      validator="usageArgument$type"
+      isFunction "$validator" || _environment "$type is not a known type in $(decorate file "$envFile")" || return $?
     ) || return $?
-
-    local envFile="$home/bin/build/env/$loadIt.sh"
-    assertFileContains --line "$LINENO" "$envFile" "# Type:" "# Category:" || return $?
-
-    local type
-    type=$(grep -m 1 -e "^# Type:" "$envFile" | cut -f 2 -d : | trimSpace)
-
-    validator="usageArgument$type"
-    isFunction "$validator" || _environment "$type is not a known type in $(decorate file "$envFile")" || return $?
   done < <(find "$home" -type f -name '*.sh' -path '*/env/*' ! -path '*/test/*' ! -path '*/.*/*' -exec basename {} \; | cut -d . -f 1) || return $?
 }
 
