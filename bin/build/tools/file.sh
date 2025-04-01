@@ -295,14 +295,14 @@ realPath() {
 # Normalizes segments of `/./` and `/../` in a path without using `realPath`
 # Removes dot and dot-dot paths from a path correctly
 simplifyPath() {
-  local path elements segment dot=0 result IFS="/"
+  local path elements=() segment dot=0 result IFS="/"
   while [ $# -gt 0 ]; do
     path="$1"
     path="${path#"./"}"
     path="${path//\/\.\///}"
     read -r -a elements <<<"$path" || :
     result=()
-    for segment in "${elements[@]}"; do
+    for segment in "${elements[@]+"${elements[@]}"}"; do
       if [ "$segment" = ".." ]; then
         dot=$((dot + 1))
       elif [ $dot -gt 0 ]; then
