@@ -82,7 +82,7 @@ buildCompletion() {
 
   home=$(__catchEnvironment "$usage" buildHome) || return $?
   name="$(decorate info "$(buildEnvironmentGet APPLICATION_NAME)")"
-  homeText=$(decorate file "$homeText")
+  homeText="$(decorate code "$home")"
 
   shopt -s expand_aliases || return $?
 
@@ -91,8 +91,12 @@ buildCompletion() {
   fi
   # shellcheck disable=SC2139
   alias "$aliasName"="$home/bin/build/tools.sh"
+
+  local reloadCode="source \"$home/bin/build/tools.sh\" && decorate info \"Reloaded $name @ $homeText\""
+
   # shellcheck disable=SC2139
-  alias "$reloadAliasName"="source \"$home/bin/build/tools.sh\" && decorate info \"Reloaded $name @ $homeText\" "
+  alias "$reloadAliasName"="$reloadCode"
+
   $quietFlag || printf "%s %s\n" "$(decorate info "Created aliases")" "$(decorate each code "$aliasName" "$reloadAliasName")"
 }
 _buildCompletion() {
