@@ -34,6 +34,7 @@ This is universally used throughout.
 {__throwArgument}
 {_undo}
 {muzzle}
+{mapReturn}
 
 ## Deprecated Logging
 

@@ -41,6 +41,7 @@
 {trimSpace}
 {trimHead}
 {trimTail}
+{trimBoth}
 {singleBlankLines}
 
 ## Finding or Calculating
