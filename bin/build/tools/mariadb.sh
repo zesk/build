@@ -132,7 +132,7 @@ mariadbConnect() {
 
   [ -n "$binary" ] || binary=$(buildEnvironmentGet MARIADB_BINARY_CONNECT) || return $?
   [ -n "$binary" ] || __throwArgument "$usage" "--binary not supplied and MARIADB_BINARY_CONNECT is blank - at least one is required (MARIADB_BINARY_CONNECT=${MARIADB_BINARY_CONNECT-})" || return $?
-  isCallable "$binary" || __throwArgument "$usage" "binary $binary is not executable (MARIADB_BINARY_CONNECT=${MARIADB_BINARY_CONNECT-})" || return $?
+  $printFlag || isCallable "$binary" || __throwArgument "$usage" "binary $binary is not executable (MARIADB_BINARY_CONNECT=${MARIADB_BINARY_CONNECT-})" || return $?
 
   [ -n "$dsn" ] || __throwArgument "$usage" "dsn required" || return $?
 
