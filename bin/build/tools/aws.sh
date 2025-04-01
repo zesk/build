@@ -399,7 +399,6 @@ awsCredentialsAdd() {
   [ -n "$secret" ] || __throwArgument "$usage" "secret is required" || return $?
 
   local lines=(
-    ""
     "[$profileName]"
     "aws_access_key_id = $key"
     "aws_secret_access_key = $secret"
@@ -514,16 +513,18 @@ _awsCredentialsRemoveSection() {
   local pattern="\[\s*$profileName\s*\]" temp lines total
   total=$((0 + $(__catchEnvironment "$usage" wc -l <"$credentials"))) || return $?
   exec 3>&1
-  lines=$(__catchEnvironment "$usage" grepSafe -m 1 -B 32767 "$credentials" -e "$pattern" | __catchEnvironment "$usage" grepSafe -v -e "$pattern" | trimTail | tee >(cat >&3) | wc -l) || return $?
-  [ -z "$newCredentials" ] || __catchEnvironment "$usage" printf -- "%s\n" "$newCredentials" "" || return $?
-  __catchEnvironment "$usage" grepSafe -v -e "$pattern" <"$credentials" | tail -n "$((total - lines + 2))" | awk '/\[[^]]+\]/{flag=1} flag' | trimHead || return $?
+  lines=$(($(__catchEnvironment "$usage" grepSafe -m 1 -B 32767 "$credentials" -e "$pattern" | __catchEnvironment "$usage" grepSafe -v -e "$pattern" | trimTail | tee >(cat >&3) | wc -l) + 0)) || return $?
+  [ -z "$newCredentials" ] || __catchEnvironment "$usage" printf -- "\n%s\n" "$newCredentials" | trimTail || return $?
+  local remain=$((total - lines - 2))
+  printf -- "\n"
+  tail -n "$remain" <"$credentials" | awk '/\[[^]]+\]/{flag=1} flag' | trimTail || return $?
 }
 
 _awsCredentialsRemoveSectionInPlace() {
   local usage="$1" credentials="$2" profileName="$3" newCredentials="${4-}"
 
   temp=$(fileTemporaryName "$usage") || return $?
-  _awsCredentialsRemoveSection "$usage" "$credentials" "$profileName" "$newCredentials" | trimHead >"$temp" || _clean $? "$temp" || return $?
+  _awsCredentialsRemoveSection "$usage" "$credentials" "$profileName" "$newCredentials" | trimBoth >"$temp" || _clean $? "$temp" || return $?
   __catchEnvironment "$usage" cp "$temp" "$credentials" || _clean $? "$temp" || return $?
   __catchEnvironment "$usage" rm -rf "$temp" || return $?
 }
