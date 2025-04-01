@@ -191,6 +191,15 @@ replaceFirstPattern() {
   sed "s/$(quoteSedPattern "$1")/$(quoteSedPattern "$2")/1"
 }
 
+# Trim whitespace from beginning and end of a stream
+# Explained:
+# 1. `-e :a`: Creates a label `a` for looping
+# 2. `/./,$!d` deletes all lines until the first non-blank line is found (`/./` matches any non-blank line).
+# 3. `/./!{N;ba}`: For blank lines at the end, it appends lines to the pattern space (`N`) until a non-blank line is found, then loops back to label `a`.
+trimBoth() {
+  sed -e :a -e '/./,$!d' -e '/^\n*$/{$d;N;ba' -e '}'
+}
+
 #
 # Usage: {fn}
 # Removes any blank lines from the beginning of a stream

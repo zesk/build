@@ -245,6 +245,7 @@ _awsProfilesList() {
 # Usage: {fn} [ profileName ] | [ --profile profileName ]
 # Argument: profileName - String. Optional. The credentials profile to load (default value is `default` and loads section identified by `[default]` in `~/.aws/credentials`)
 # Argument: --profile profileName - String. Optional. The credentials profile to load (default value is `default` and loads section identified by `[default]` in `~/.aws/credentials`)
+# Argument: --comments - Flag. Optional. Write comments to the credentials file (in addition to updating the record).
 # Both forms can be used, but the profile should be supplied once and only once.
 # Example:     setFile=$(mktemp)
 # Example:     if awsEnvironment "$profile" > "$setFile"; then
@@ -344,13 +345,13 @@ _awsCredentialsHasProfile() {
 # Summary: Write an AWS profile to the AWS credentials file
 # Argument: --profile profileName - String. Optional. The credentials profile to write (default value is `default`)
 # Argument: --force - Flag. Optional. Write the credentials file even if the profile already exists
-# Argument: --skip-comments - Flag. Optional. Do not write comments to the credentials file (just update the record)
+# Argument: --comments - Flag. Optional. Write comments to the credentials file (in addition to updating the record).
 # Argument: key - The AWS_ACCESS_KEY_ID to write
 # Argument: secret - The AWS_SECRET_ACCESS_KEY to write
 awsCredentialsAdd() {
   local usage="_${FUNCNAME[0]}"
 
-  local forceFlag=false profileName="" key="" secret="" skipComments=false
+  local forceFlag=false profileName="" key="" secret="" addComments=false
 
   # _IDENTICAL_ argument-case-header 5
   local __saved=("$@") __count=$#
@@ -366,8 +367,8 @@ awsCredentialsAdd() {
       --force)
         forceFlag=true
         ;;
-      --skip-comments)
-        skipComments=true
+      --comments)
+        addComments=true
         ;;
       # IDENTICAL --profileHandler 5
       --profile)
@@ -406,12 +407,12 @@ awsCredentialsAdd() {
   local credentials
   credentials="$(__catchEnvironment "$usage" awsCredentialsFile --create)" || return $?
   if awsCredentialsHasProfile "$profileName"; then
-    "$skipComments" || lines+=("# ${FUNCNAME[0]} replaced $profileName on $(date -u)")
+    ! "$addComments" || lines+=("# ${FUNCNAME[0]} replaced $profileName on $(date -u)")
     $forceFlag || __throwEnvironment "$usage" "Profile $(decorate value "$profileName") exists in $(decorate code "$credentials")" || return $?
     _awsCredentialsRemoveSectionInPlace "$usage" "$credentials" "$profileName" "$(printf -- "%s\n" "${lines[@]}")" || return $?
   else
-    "$skipComments" || lines+=("# ${FUNCNAME[0]} added $profileName on $(date -u)") || __throwEnvironment "$usage" "Generating comment line failed" || return $?
-    __catchEnvironment "$usage" printf -- "%s\n" "${lines[@]}" >>"$credentials" || return $?
+    ! "$addComments" || lines+=("# ${FUNCNAME[0]} added $profileName on $(date -u)") || __throwEnvironment "$usage" "Generating comment line failed" || return $?
+    __catchEnvironment "$usage" printf -- "%s\n" "${lines[@]}" | trimHead >>"$credentials" || return $?
   fi
 }
 _awsCredentialsAdd() {
@@ -425,6 +426,7 @@ _awsCredentialsAdd() {
 #
 # Usage: {fn} [ --help ] [ --profile profileName ] [ --force ] [ profileName ]
 # Argument: --profile profileName - String. Optional. The credentials profile to write (default value is `default`)
+# Argument: --comments - Flag. Optional. Write comments to the credentials file (in addition to updating the record).
 awsCredentialsRemove() {
   local usage="_${FUNCNAME[0]}"
 
@@ -432,7 +434,7 @@ awsCredentialsRemove() {
 
   __catchEnvironment "$usage" buildEnvironmentLoad AWS_PROFILE || return $?
 
-  local forceFlag=false profileName="" key="" secret="" skipComments=false
+  local forceFlag=false profileName="" key="" secret="" addComments=false
 
   # _IDENTICAL_ argument-case-header 5
   local __saved=("$@") __count=$#
@@ -451,8 +453,8 @@ awsCredentialsRemove() {
         [ -z "$profileName" ] || __throwArgument "$usage" "--profile already specified" || return $?
         profileName="$(usageArgumentString "$usage" "$argument" "${1-}")" || return $?
         ;;
-      --skip-comments)
-        skipComments=true
+      --comments)
+        addComments=true
         ;;
       *)
         if [ -z "$profileName" ]; then
@@ -512,16 +514,16 @@ _awsCredentialsRemoveSection() {
   local pattern="\[\s*$profileName\s*\]" temp lines total
   total=$((0 + $(__catchEnvironment "$usage" wc -l <"$credentials"))) || return $?
   exec 3>&1
-  lines=$(__catchEnvironment "$usage" grepSafe -m 1 -B 32767 "$credentials" -e "$pattern" | __catchEnvironment "$usage" grepSafe -v -e "$pattern" | tee >(cat >&3) | wc -l) || return $?
-  __catchEnvironment "$usage" printf -- "%s" "$newCredentials" || return $?
-  __catchEnvironment "$usage" grepSafe -v -e "$pattern" <"$credentials" | tail -n "$((total - lines + 2))" | awk '/\[[^]]+\]/{flag=1} flag' || return $?
+  lines=$(__catchEnvironment "$usage" grepSafe -m 1 -B 32767 "$credentials" -e "$pattern" | __catchEnvironment "$usage" grepSafe -v -e "$pattern" | trimTail | tee >(cat >&3) | wc -l) || return $?
+  [ -z "$newCredentials" ] || __catchEnvironment "$usage" printf -- "%s\n" "$newCredentials" "" || return $?
+  __catchEnvironment "$usage" grepSafe -v -e "$pattern" <"$credentials" | tail -n "$((total - lines + 2))" | awk '/\[[^]]+\]/{flag=1} flag' | trimHead || return $?
 }
 
 _awsCredentialsRemoveSectionInPlace() {
   local usage="$1" credentials="$2" profileName="$3" newCredentials="${4-}"
 
   temp=$(fileTemporaryName "$usage") || return $?
-  _awsCredentialsRemoveSection "$usage" "$credentials" "$profileName" "$newCredentials" >"$temp" || _clean $? "$temp" || return $?
+  _awsCredentialsRemoveSection "$usage" "$credentials" "$profileName" "$newCredentials" | trimHead >"$temp" || _clean $? "$temp" || return $?
   __catchEnvironment "$usage" cp "$temp" "$credentials" || _clean $? "$temp" || return $?
   __catchEnvironment "$usage" rm -rf "$temp" || return $?
 }

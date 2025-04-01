@@ -255,7 +255,7 @@ testAwsEnvironmentFromCredentials() {
 
   AWS_ACCESS_KEY_ID=AKIAZZZZZZZZZ789ABCDE
 
-  assertExitCode --line "$LINENO" 0 awsCredentialsFromEnvironment --force || return $?
+  assertExitCode --line "$LINENO" 0 awsCredentialsFromEnvironment --comments --force || return $?
 
   # dumpPipe credentials post --force <"$credFile"
 
@@ -306,6 +306,54 @@ testAwsEnvironmentFromCredentials() {
   __awsTestCleanup
 }
 
+testAWSCredentialsEdit() {
+  local usage="_return"
+  local testCredentials
+  local testResults home
+
+  local profileName="staging-widgets-robot-build"
+
+  home=$(buildHome) || return $?
+
+  testHome=$(fileTemporaryName "$usage" -d) || return $?
+  testResults=$(fileTemporaryName "$usage") || return $?
+  testCredentials="$home/test/example/aws/fake.credentials.txt"
+  _awsCredentialsRemoveSection _return "$testCredentials" "$profileName" "" >"$testResults" || return $?
+  assertExitCode --line "$LINENO" 0 diff -u "$testResults" "$home/test/example/aws/fake.credentials.0.txt" || return $?
+
+  __mockValue HOME
+
+  HOME="$testHome"
+
+  local testAWSCredentials testPassword="abcdefghabcdefghabcdefghabcdefghhabcdefgh"
+
+  testAWSCredentials=$(__environment awsCredentialsFile --path) || return $?
+  assertFileDoesNotExist --line "$LINENO" "$testAWSCredentials" || return $?
+
+  assertExitCode --line "$LINENO" 0 awsCredentialsAdd --force --profile "$profileName" "AKIA0123456789001233" "$testPassword" || return $?
+
+  assertFileExists --line "$LINENO" "$testAWSCredentials" || return $?
+  assertExitCode --line "$LINENO" 0 diff -u "$testAWSCredentials" "$home/test/example/aws/fake.credentials.1.txt" || return $?
+
+  __environment cp "$testCredentials" "$testAWSCredentials" || return $?
+  assertExitCode --line "$LINENO" 0 awsCredentialsAdd --force --profile "$profileName" "AKIA0123456789001233" "$testPassword" || return $?
+  assertExitCode --line "$LINENO" 0 diff -u "$testAWSCredentials" "$home/test/example/aws/fake.credentials.2.txt" || return $?
+
+  assertExitCode --line "$LINENO" 0 awsCredentialsAdd --force --profile "$profileName" "AKIA0123456789001234" "$testPassword" || return $?
+  assertExitCode --line "$LINENO" 0 diff -u "$testAWSCredentials" "$home/test/example/aws/fake.credentials.3.txt" || return $?
+
+  assertExitCode --line "$LINENO" 0 awsCredentialsAdd --force --profile "$profileName" "AKIA0123456789001233" "$testPassword" || return $?
+  assertExitCode --line "$LINENO" 0 diff -u "$testAWSCredentials" "$home/test/example/aws/fake.credentials.2.txt" || return $?
+
+  assertExitCode --line "$LINENO" 0 awsCredentialsAdd --force --profile "consolidated-devops" "AKIA0000000000001233" "$testPassword" || return $?
+  assertExitCode --line "$LINENO" 0 diff -u "$testAWSCredentials" "$home/test/example/aws/fake.credentials.4.txt" || return $?
+
+  assertExitCode --line "$LINENO" 0 awsCredentialsAdd --force --profile "consolidated-devops" "AKIA0000000000009999" "deadbeef" || return $?
+  assertExitCode --line "$LINENO" 0 diff -u "$testAWSCredentials" "$home/test/example/aws/fake.credentials.5.txt" || return $?
+
+  __mockValue HOME "" --end
+}
+
 testAWSProfiles() {
   local list firstName='test-aws' secondName='never-gonna-let-you-down'
 
@@ -330,7 +378,7 @@ testAWSProfiles() {
   credentials="$(awsCredentialsFile --create)" || return $?
   assertFileExists --line "$LINENO" "$credentials" || return $?
 
-  assertExitCode --line "$LINENO" 0 awsCredentialsRemove "$firstName" || return $?
+  assertExitCode --line "$LINENO" 0 awsCredentialsRemove --comments "$firstName" || return $?
 
   __environment awsProfilesList >"$list" || return $?
   assertFileDoesNotContain --line "$LINENO" "$list" "$firstName" || _undo $? dumpPipe awsProfilesList <"$list" || return $?
@@ -338,39 +386,39 @@ testAWSProfiles() {
 
   local testKey="AKIAZ0123456789ABCDE" testPassword="haaaaaaanrNGhaaaaaaanrNGhaaaaaaanrNGABYU"
 
-  __echo assertExitCode --line "$LINENO" 0 awsCredentialsAdd --skip-comments --profile "$firstName" "$testKey" "$testPassword" || return $?
+  __echo assertExitCode --line "$LINENO" 0 awsCredentialsAdd --profile "$firstName" "$testKey" "$testPassword" || return $?
   __echo assertFileContains --line "$LINENO" "$credentials" "$testKey" "$testPassword" || return $?
   __echo assertFileDoesNotContain --line "$LINENO" "$credentials" "# awsCredentialsAdd" || return $?
 
   # Exists
-  assertNotExitCode --stderr-match 'exists in' --line "$LINENO" 0 awsCredentialsAdd --profile "$firstName" "$testKey" "$testPassword" || return $?
+  assertNotExitCode --stderr-match 'exists in' --line "$LINENO" 0 awsCredentialsAdd --comments --profile "$firstName" "$testKey" "$testPassword" || return $?
   assertFileDoesNotContain --line "$LINENO" "$credentials" "# awsCredentialsAdd" || return $?
-  assertExitCode --line "$LINENO" 0 awsCredentialsAdd --force --profile "$firstName" "$testKey" "$testPassword" || return $?
+  assertExitCode --line "$LINENO" 0 awsCredentialsAdd --comments --force --profile "$firstName" "$testKey" "$testPassword" || return $?
   assertFileContains --line "$LINENO" "$credentials" "# awsCredentialsAdd" || return $?
 
   __environment awsProfilesList >"$list" || return $?
   assertFileContains --line "$LINENO" "$list" "$firstName" || return $?
   assertFileDoesNotContain --line "$LINENO" "$list" "$secondName" || return $?
-  assertExitCode --line "$LINENO" 0 awsCredentialsAdd --profile "$secondName" "$testKey" "$testPassword" || return $?
+  assertExitCode --line "$LINENO" 0 awsCredentialsAdd --comments --profile "$secondName" "$testKey" "$testPassword" || return $?
 
   __environment awsProfilesList >"$list" || return $?
   assertFileContains --line "$LINENO" "$list" "$firstName" || return $?
   assertFileContains --line "$LINENO" "$list" "$secondName" || return $?
 
-  assertExitCode --line "$LINENO" 0 awsCredentialsRemove "$firstName" || return $?
+  assertExitCode --line "$LINENO" 0 awsCredentialsRemove --comments "$firstName" || return $?
 
   __environment awsProfilesList >"$list" || return $?
   assertFileDoesNotContain --line "$LINENO" "$list" "$firstName" || return $?
   assertFileContains --line "$LINENO" "$list" "$secondName" || return $?
 
-  assertExitCode --line "$LINENO" 0 awsCredentialsRemove "$firstName" || return $?
+  assertExitCode --line "$LINENO" 0 awsCredentialsRemove --comments "$firstName" || return $?
   decorate info removed first name
 
   __environment awsProfilesList >"$list" || return $?
   assertFileDoesNotContain --line "$LINENO" "$list" "$firstName" || return $?
   assertFileContains --line "$LINENO" "$list" "$secondName" || return $?
 
-  assertExitCode --line "$LINENO" 0 awsCredentialsRemove --profile "$secondName" || return $?
+  assertExitCode --line "$LINENO" 0 awsCredentialsRemove --comments --profile "$secondName" || return $?
   decorate info removed second name
 
   dumpPipe "awsProfiles saved" <"$list"
