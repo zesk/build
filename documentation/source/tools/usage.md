@@ -32,11 +32,18 @@ Essentially a `usage` function is a failure handler. If you need a simple `usage
 {usageArgumentLink}
 {usageArgumentFileDirectory}
 {usageArgumentDirectory}
+{usageArgumentDirectoryList}
 {usageArgumentRealDirectory}
 {usageArgumentRemoteDirectory}
-{usageArgumentApplicationDirectory}
+
+## Argument Environment Files
+
 {usageArgumentLoadEnvironmentFile}
-{usageArgumentDirectoryList}
+
+## Argument Application paths
+
+{usageArgumentApplicationFile}
+{usageArgumentApplicationDirectory}
 {usageArgumentApplicationDirectoryList}
 
 ## Argument check: Strings
