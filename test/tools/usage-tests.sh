@@ -41,6 +41,7 @@ __testUsageArgumentsFile() {
      third^Required thing
 EOF
 }
+
 testUsageArguments() {
   local value testIndex=0
 

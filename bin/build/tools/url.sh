@@ -112,6 +112,10 @@ urlParse() {
     shift
   done
 }
+_urlParse() {
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
 
 #
 # Gets the component of one or more URLs

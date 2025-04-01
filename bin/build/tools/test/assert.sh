@@ -170,8 +170,8 @@ _assertNotExitCode() {
 # Argument: --skip-plumber - Optional. Flag. Skip plumber check for function calls.
 # Argument: --dump - Optional. Flag. Output stderr and stdout after test regardless.
 # Argument: --dump-binary - Optional. Flag. Output stderr and stdout after test regardless, and output binary.
-# Argument: needle - Thing we are looking for
-# Argument: haystack - Thing we are looking in
+# Argument: needle - String. Text we are looking for.
+# Argument: haystack ... - String. One or more strings to find `needle` in - it must be found in all haystacks.
 # Exit Code: 0 - The assertion succeeded
 # Exit Code: 1 - Assertion failed
 # Exit Code: 2 - Bad arguments
@@ -203,8 +203,8 @@ _assertContains() {
 # Argument: --skip-plumber - Optional. Flag. Skip plumber check for function calls.
 # Argument: --dump - Optional. Flag. Output stderr and stdout after test regardless.
 # Argument: --dump-binary - Optional. Flag. Output stderr and stdout after test regardless, and output binary.
-# Argument: needle - Thing we are looking for
-# Argument: haystack - Thing we are looking in
+# Argument: needle - String. Text we are looking for.
+# Argument: haystack ... - String. One or more strings to find `needle` in - it must be found in no haystacks.
 # Exit Code: 0 - The assertion succeeded
 # Exit Code: 1 - Assertion failed
 # Exit Code: 2 - Bad arguments

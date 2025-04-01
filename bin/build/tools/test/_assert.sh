@@ -489,7 +489,7 @@ ___assertContains() {
   while [ $# -gt 0 ]; do
     haystack="${1-}"
     [ -n "$haystack" ] || _argument "blank haystack passed to contains assertion" || return $?
-    printf "%s" "$haystack" | grep -q "$needle" || return $?
+    [ "${haystack#*"$needle"}" != "$haystack" ] || _argument "\"$needle\" not found in \"$haystack\"" || return 1
     shift
   done
 }
@@ -500,7 +500,7 @@ ___assertContainsFormat() {
   shift 2
   needle="$(decorate code "${1-}")" && shift
   haystack=$(__resultText "$testPassed" "$*")
-  printf -- "%s %s %s\n" "$needle" "$(_choose "$testPassed" "contains" "does not contain")" "$haystack"
+  printf -- "%s %s %s\n" "$needle" "$(_choose "$testPassed" "is contained in" "is not contained in")" "$haystack"
 }
 
 #=== === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === ===

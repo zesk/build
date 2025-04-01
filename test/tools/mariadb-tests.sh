@@ -5,7 +5,27 @@
 # Copyright &copy; 2025 Market Acumen, Inc.
 #
 
-testMariaDump() {
+__justEcho() {
+  printf -- "%s\n" "$*"
+}
+testMariadbConnect() {
+  local testString
+
+  testString=$(mariadbConnect --binary __justEcho "mysql://user:password@host/dbname") || return $?
+  assertContains --line "$LINENO" "-u user" "$testString" || return $?
+  assertContains --line "$LINENO" "-p""password" "$testString" || return $?
+  assertContains --line "$LINENO" "-h host" "$testString" || return $?
+  assertContains --line "$LINENO" " dbname" "$testString" || return $?
+  assertContains --line "$LINENO" " --port=3306" "$testString" || return $?
+  testString=$(mariadbConnect --binary __justEcho "mysqli://user:password@remote:9876/better-app") || return $?
+  assertContains --line "$LINENO" "-u user" "$testString" || return $?
+  assertContains --line "$LINENO" "-p""password" "$testString" || return $?
+  assertContains --line "$LINENO" "-h remote" "$testString" || return $?
+  assertContains --line "$LINENO" " better-app" "$testString" || return $?
+  assertContains --line "$LINENO" " --port=9876" "$testString" || return $?
+}
+
+testMariaDBDump() {
   local matches
 
   matches=(
@@ -18,7 +38,7 @@ testMariaDump() {
     --stdout-match "example.com"
   )
   # assertExitCode --line "$LINENO" 0 mariadbInstall || return $?
-  assertExitCode --leak MARIADB_BINARY_DUMP --line "$LINENO" "${matches[@]}" 0 mariadbDump --binary echo --echo --user john --password secret --port 99 --host example.com || return $?
+  assertExitCode --leak MARIADB_BINARY_DUMP --line "$LINENO" "${matches[@]}" 0 mariadbDump --binary echo --print --user john --password secret --port 99 --host example.com || return $?
 
   unset MARIADB_BINARY_DUMP
 }

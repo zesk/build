@@ -44,40 +44,11 @@ export globalTestFailure=
 testSuite() {
   local usage="_${FUNCNAME[0]}"
 
-  local load home
-
-  home=$(__catchEnvironment "$usage" buildHome) || return $?
-  load=$(decorate value "(Load $(loadAverage | head -n 1))")
-
-  export TERM
-
-  # Test internal exports
-  export __TEST_SUITE_CLEAN_EXIT __TEST_SUITE_TRACE
-
-  __testSuiteInitialize
-
-  local startString allTestStart quietLog
-
-  startString="$(__catchEnvironment "$usage" date +"%F %T")" || return $?
-  allTestStart=$(timingStart) || return $?
-
-  __catchEnvironment "$usage" buildEnvironmentLoad BUILD_COLORS_MODE BUILD_COLORS XDG_CACHE_HOME XDG_STATE_HOME HOME || return $?
-
-  quietLog="$(__catchEnvironment "$usage" buildQuietLog "$usage")" || return $?
-
-  __catchEnvironment "$usage" requireFileDirectory "$quietLog" || return $?
-  __catchEnvironment "$usage" touch "$quietLog" || return $?
-
-  # Start tracing
-  __catchEnvironment "$usage" printf -- "%s\n" "$__TEST_SUITE_TRACE" >>"$quietLog" || return $?
-
-  # Color mode
-  export BUILD_COLORS BUILD_COLORS_MODE
-  BUILD_COLORS_MODE=$(__catchEnvironment "$usage" consoleConfigureColorMode) || return $?
-
   local tags=() skipTags=() runner=()
-  local beQuiet=false listFlag=false verboseMode=false continueFlag=false doStats=true showFlag=false showTags=false tapFile=""
+  local beQuiet=false listFlag=false verboseMode=false continueFlag=false doStats=true showFlag=false showTags=false tapFile="" cleanFlag=false
   local testPaths=() messyOption="" runTestSuites=() matchTests=() failExecutors=()
+
+  set -eou pipefail
 
   # _IDENTICAL_ argument-case-header 5
   local __saved=("$@") __count=$#
@@ -126,7 +97,7 @@ testSuite() {
         testPaths+=("$(usageArgumentDirectory "$usage" "$argument" "${1-}")") || return $?
         ;;
       --coverage)
-        decorate warning "Will collect coverage statistics ..."
+        $beQuiet || decorate warning "Will collect coverage statistics ..."
         runner=(bashCoverage)
         ;;
       --no-stats)
@@ -152,12 +123,7 @@ testSuite() {
         failExecutors+=("--")
         ;;
       --clean)
-        statusMessage decorate warning "Cleaning tests and exiting ... "
-        __TEST_SUITE_CLEAN_EXIT=true
-        __testCleanup || return $?
-        statusMessage timingReport "$allTestStart" "Cleaned in"
-        printf "\n"
-        return 0
+        cleanFlag=true
         ;;
       --messy)
         trap '__testCleanupMess true' EXIT QUIT TERM
@@ -168,6 +134,46 @@ testSuite() {
     esac
     shift || __throwArgument "$usage" "shift argument $(decorate label "$argument")" || return $?
   done
+
+  if $cleanFlag; then
+    $beQuiet || statusMessage decorate warning "Cleaning tests and exiting ... "
+    __TEST_SUITE_CLEAN_EXIT=true
+    __testCleanup || return $?
+    statusMessage timingReport "$allTestStart" "Cleaned in"
+    printf "\n"
+    return 0
+  fi
+
+  __catchEnvironment "$usage" buildEnvironmentLoad BUILD_COLORS_MODE BUILD_COLORS XDG_CACHE_HOME XDG_STATE_HOME HOME || return $?
+
+  local load home
+
+  home=$(__catchEnvironment "$usage" buildHome) || return $?
+  load=$(decorate value "(Load $(loadAverage | head -n 1))")
+
+  local startString allTestStart quietLog
+
+  startString="$(__catchEnvironment "$usage" date +"%F %T")" || return $?
+  allTestStart=$(timingStart) || return $?
+
+  export TERM
+
+  # Test internal exports
+  export __TEST_SUITE_CLEAN_EXIT __TEST_SUITE_TRACE
+
+  __testSuiteInitialize "$beQuiet"
+
+  quietLog="$(__catchEnvironment "$usage" buildQuietLog "$usage")" || return $?
+
+  __catchEnvironment "$usage" requireFileDirectory "$quietLog" || return $?
+  __catchEnvironment "$usage" touch "$quietLog" || return $?
+
+  # Start tracing
+  __catchEnvironment "$usage" printf -- "%s\n" "$__TEST_SUITE_TRACE" >>"$quietLog" || return $?
+
+  # Color mode
+  export BUILD_COLORS BUILD_COLORS_MODE
+  BUILD_COLORS_MODE=$(__catchEnvironment "$usage" consoleConfigureColorMode) || return $?
 
   [ "${#testPaths[@]}" -gt 0 ] || __throwArgument "$usage" "Need at least one --tests directory" || return $?
 
@@ -265,16 +271,16 @@ testSuite() {
   fi
 
   [ "${#tests[@]}" -gt 0 ] || __throwEnvironment "$usage" "No tests found" || return $?
-  local filteredTests=() item
+  local filteredTests=() item actualTest=""
   for item in "${tests[@]}"; do
     if [ "$item" = "${item#\#}" ]; then
       if [ -n "$startTest" ]; then
         if [ "$item" = "$startTest" ]; then
           startTest=
           clearLine
-          decorate warning "Continuing at test $(decorate code "$item") ..."
+          $beQuiet || decorate warning "Continuing at test $(decorate code "$item") ..."
         else
-          statusMessage decorate warning "Skipping $(decorate code "$item") ..."
+          $beQuiet || statusMessage decorate warning "Skipping $(decorate code "$item") ..."
           continue
         fi
       fi
@@ -282,11 +288,13 @@ testSuite() {
         if ! __testMatches "$item" "${matchTests[@]}"; then
           continue
         fi
-        statusMessage decorate success "Matched $(decorate value "$item")"
+        actualTest="$item"
+        $beQuiet || statusMessage decorate success "Matched $(decorate value "$item")"
       fi
     fi
     filteredTests+=("$item")
   done
+  [ -n "$actualTest" ] || __throwArgument "$usage" "No tests match $(decorate code "${matchTests[@]}")" || return $?
   [ -z "$startTest" ] || __throwEnvironment "$usage" "$continueFile contains an unknown test: $startTest, starting from beginning" || :
 
   # Filter by tags
@@ -326,7 +334,7 @@ testSuite() {
   [ -z "$tapFile" ] || __testSuiteTAP_plan "$tapFile" "${#filteredTests[@]}" || return $?
   [ -z "$tapFile" ] || failExecutors+=("__testSuiteTAP_not_ok" "$tapFile" --)
 
-  local runTime
+  local runTime testsRun=()
   if [ ${#filteredTests[@]} -gt 0 ]; then
     __TEST_SUITE_TRACE=options
     local sectionName="" sectionNameHeading="" sectionFile
@@ -357,6 +365,7 @@ testSuite() {
 
       testLine=$(__testGetLine "$item" <"$sectionFile") || :
       flags=$(__testLoadFlags "$sectionFile" "$item")
+      testsRun+=("$item")
       "${runner[@]+"${runner[@]}"}" __testRun "$quietLog" "$item" "$flags" || __testSuiteExecutor "$item" "$sectionFile" "$testLine" "$flags" "${failExecutors[@]+"${failExecutors[@]}"}" || __testFailed "$sectionName" "$item" || return $?
       [ -z "$tapFile" ] || __testSuiteTAP_ok "$tapFile" "$item" "$sectionFile" "$testLine" "$flags" || return $?
 
@@ -364,6 +373,7 @@ testSuite() {
       ! $doStats || printf "%s %s\n" "$runTime" "$item" >>"$statsFile"
       __catchEnvironment "$usage" hookRunOptional bash-test-pass "$sectionName" "$item" "$flags" || __throwEnvironment "$usage" "... continuing" || :
     done
+    [ ${#matchTests[@]} -eq 0 ] || [ ${#testsRun[@]} -gt 0 ] || __throwArgument "$usage" "Match not found: $(decorate each code "${matchTests[@]}")" || return $?
     bigText --bigger Passed | wrapLines "" "    " | wrapLines --fill "*" "$(decorate success)    " "$(decorate reset)"
     if $continueFlag; then
       printf "%s\n" "PASSED" >"$continueFile"
@@ -375,6 +385,7 @@ testSuite() {
     [ ${#skipTags[@]} -eq 0 ] || message+=("Skip Tags: $(decorate each code "${skipTags[@]}")")
     __throwEnvironment "$usage" "No tests match" "${message[@]}" || return $?
   fi
+
   [ -z "$statsFile" ] || __testStats "$statsFile"
   timingReport "$allTestStart" "Completed in"
 
@@ -389,7 +400,9 @@ _testSuite() {
 # Set up test-related environment variables and traps
 #
 __testSuiteInitialize() {
-  statusMessage decorate info "Initializing test suite ..."
+  local beQuiet="$1"
+
+  $beQuiet || statusMessage decorate info "Initializing test suite ..."
 
   # Add fast-usage to debugging
   export BUILD_DEBUG

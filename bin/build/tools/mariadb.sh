@@ -94,7 +94,7 @@ _mariadbDump() {
 # Argument: dsn - URL. Database to connect to. All arguments after this are passed to `binary`.
 # Argument: binary - Callable. Executable to connect to the database.
 # Argument: --print - Flag. Optional. Just print the statement instead of running it.
-mariadbConnectDSN() {
+mariadbConnect() {
   local usage="_${FUNCNAME[0]}"
   local dsn="" binary="" printFlag=false
 
@@ -111,13 +111,15 @@ mariadbConnectDSN() {
         ;;
       --binary)
         shift
-        binary=$(usageArgumentExecutable "$usage" "$argument" "${1-}") || return $?
+        binary=$(usageArgumentCallable "$usage" "$argument" "${1-}") || return $?
         ;;
       --print)
         printFlag=true
         ;;
       *)
         urlValid "$argument" || __throwArgument "dsn is not valid: ${#argument} chars" || return $?
+        dsn="$argument"
+        shift
         break
         ;;
     esac
@@ -125,21 +127,23 @@ mariadbConnectDSN() {
     shift
   done
 
+  [ -n "$dsn" ] || __throwArgument "$usage" "dsn required" || return $?
+
   local url="" path="" name="" user="" password="" host="" port="" error=""
   # eval OK - urlParse
   eval "$(urlParse "$dsn")"
   [ -z "$error" ] || __throwEnvironment "DSN Parsing failed: $error" || return $?
   isPositiveInteger "$port" || port=3306
   : "$url $path $error"
-  [ -n "$user" ] && [ -n "$password" ] && [ -n "$name" ] && [ -n "$host" ] || _failed "dsn=(${#dsn} chars)" "name=$name" "host=$host" "user=$user" "password=(${#password} chars)" || return $?
-  local aa=(-u "$user" "-p$password" --port="$port" -h "$host" "$name" "$@")
+  [ -n "$user" ] && [ -n "$password" ] && [ -n "$name" ] && [ -n "$host" ] || __throwArgument "$usage" "Unable to parse DSN: dsn=(${#dsn} chars)" "name=$name" "host=$host" "user=$user" "password=(${#password} chars)" || return $?
+  local aa=(-u "$user" "-p$password" "--port=$port" -h "$host" "$name" "$@")
   if $printFlag; then
     printf "%s %s\n" "$binary" "${aa[*]}"
   else
     "$binary" "${aa[@]}"
   fi
 }
-_mariadbConnectDSN() {
+_mariadbConnect() {
   # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
