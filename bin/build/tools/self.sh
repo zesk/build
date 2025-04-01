@@ -278,7 +278,7 @@ buildHome() {
     source "$(dirname "${BASH_SOURCE[0]}")/../env/BUILD_HOME.sh" || __throwEnvironment "$usage" "BUILD_HOME.sh failed" || return $?
     [ -n "${BUILD_HOME-}" ] || __throwEnvironment "$usage" "BUILD_HOME STILL blank" || return $?
   fi
-  printf "%s\n" "${BUILD_HOME-}"
+  printf "%s\n" "${BUILD_HOME%/}"
 }
 _buildHome() {
   # _IDENTICAL_ usageDocument 1

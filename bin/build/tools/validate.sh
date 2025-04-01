@@ -219,6 +219,12 @@ __validateTypeEnvironmentVariable() {
 
 # Utility function for `test`
 ___validateTypeTest() {
+  ___validateTypeCheck "$@" && shift || return $?
+  printf "%s\n" "$@"
+}
+
+# Utility function for `test`
+___validateTypeCheck() {
   local testFlag="$1" && shift
   [ -n "${1-}" ] || __throwValidate "blank" || return $?
   test "$testFlag" "$@" || __throwValidate || return $?
@@ -237,7 +243,8 @@ __validateTypeFile() {
 
 # A directory exists
 __validateTypeDirectory() {
-  ___validateTypeTest -d "$@"
+  ___validateTypeCheck -d "$@"
+  printf "%s\n" "${1%/}"
 }
 
 # A link exists
@@ -249,6 +256,7 @@ __validateTypeLink() {
 __validateTypeFileDirectory() {
   [ -n "${1-}" ] || __throwValidate "blank" || return $?
   fileDirectoryExists "${1-}"
+  printf "%s\n" "${1-}"
 }
 
 # A real path for a directory
@@ -257,6 +265,7 @@ __validateTypeRealDirectory() {
   [ -n "$value" ] || __throwValidate "blank" || return $?
   value=$(realPath "$value") || __throwValidate "realPath failed" || return $?
   [ -d "$value" ] || __throwValidate || return $?
+  printf "%s\n" "${value%/}"
 }
 
 # A real path for a file
@@ -270,7 +279,7 @@ __validateTypeRealFile() {
 # A path which is on a remote system
 __validateTypeRemoteDirectory() {
   [ "${1:0:1}" = "/" ] || __throwValidate "begins with a slash" || return $?
-  printf "%s\n" "$1"
+  printf "%s\n" "${1%/}"
 }
 
 # A secret

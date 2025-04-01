@@ -99,7 +99,6 @@ __catchArgumentHelper() {
   printf "%s\n" "$variableValue"
 }
 
-
 # IDENTICAL usageArgumentCore 14
 
 # Require an argument to be non-blank
@@ -609,7 +608,7 @@ usageArgumentRemoteDirectory() {
   shift 2 || :
   local path="${1-}"
   [ "${path:0:1}" = "/" ] || __throwArgument "$usage" "$argument \"${1-}\" is not a valid remote path" || return $?
-  printf "%s\n" "$1"
+  printf "%s\n" "${1%/}"
 }
 
 # A remote path is one which exists in another file system
