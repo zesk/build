@@ -346,7 +346,7 @@ usageArgumentApplicationDirectoryList() {
   printf "%s\n" "$(listJoin ":" "${result[@]+"${result[@]}"}")"
 }
 
-# Validates a value as an application-relative directory. Upon success, outputs the full path.
+# Validates a value as an application-relative directory. Upon success, outputs relative path.
 # Usage: {fn} usageFunction variableName variableValue [ noun ]
 # Argument: usageFunction - Required. Function. Run if usage fails
 # Argument: variableName - Required. String. Name of variable being tested
@@ -364,14 +364,41 @@ usageArgumentApplicationDirectory() {
   fi
   local home directory="$3"
 
-  [ -z "$directory" ] || __throwArgument "$usage" "$2 is blank" || return $?
+  [ -n "$directory" ] || __throwArgument "$usage" "$directory is blank" || return $?
   home=$(__catchEnvironment "$usage" buildHome) || return $?
 
   directory="${directory#./}"
   directory="${directory#/}"
   directory="${directory%/}"
   [ -d "${home%/}/$directory" ] || __throwArgument "$usage" "$2 element #$index is not a directory $(decorate code "$home/$directory"): $(decorate value "$3")" || return $?
-  printf "%s\n" "${home%/}/$directory"
+  printf "%s\n" "$directory"
+}
+
+# Validates a value as an application-relative file. Upon success, outputs relative path.
+# Usage: {fn} usageFunction variableName variableValue [ noun ]
+# Argument: usageFunction - Required. Function. Run if usage fails
+# Argument: variableName - Required. String. Name of variable being tested
+# Argument: variableValue - Required. String. Value to test.
+# Argument: noun - Optional. String. Noun used to describe the argument in errors, defaults to `directory list`
+# Exit Code: 2 - Argument error
+# Exit Code: 0 - Success
+usageArgumentApplicationFile() {
+  local usage="$1" args
+  args=("$@")
+  args[3]="${4-}"
+  [ ${#args[@]} -eq 4 ] || __throwArgument "$usage" "${FUNCNAME[0]} Need at least 3 arguments" || return $?
+
+  local file="$3"
+  [ -n "$file" ] || __throwArgument "$usage" "$directory is blank" || return $?
+
+  local home
+  home=$(__catchEnvironment "$usage" buildHome) || return $?
+
+  file="${file#./}"
+  file="${file#/}"
+  local appFile="${home%/}/$file"
+  [ -f "$appFile" ] || __throwArgument "$usage" "$2 element #$index is not a file $(decorate code "$appFile"): $(decorate value "$file")" || return $?
+  printf "%s\n" "$file"
 }
 
 # Validates a value is not blank and is a directory and does `realPath` on it.

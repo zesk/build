@@ -141,20 +141,25 @@ __validateTypeExecutable() {
   printf "%s\n" "${1-}"
 }
 
-___validateTypeApplicationDirectory() {
-  local home="$1" directory="$2"
-  [ -n "$directory" ] || __throwValidate "blank" || return $?
-  directory="${directory#./}"
-  directory="${directory#/}"
-  directory="${directory%/}"
-  [ -d "$home/$directory" ] || __throwValidate || return $?
-  printf "%s\n" "$home/$directory"
+___validateTypeApplicationTest() {
+  local test="$1" home="$2" item="$3"
+  [ -n "$item" ] || __throwValidate "blank" || return $?
+  item="${item#./}"
+  item="${item#/}"
+  test "$test" "$home/$item" || __throwValidate || return $?
+  printf "%s\n" "$item"
 }
+
 __validateTypeApplicationDirectory() {
   local home directory="${1-}"
   home=$(buildHome) || return $?
-  home="${home%/}"
-  ___validateTypeApplicationDirectory "$home" "$directory" || return $?
+  ___validateTypeApplicationTest -d "$home" "${directory%/}" || return $?
+}
+
+__validateTypeApplicationFile() {
+  local home file="${1-}"
+  home=$(buildHome) || return $?
+  ___validateTypeApplicationTest -f "$home" "$file" || return $?
 }
 
 __validateTypeApplicationDirectoryList() {

@@ -46,6 +46,11 @@ exampleFunction() {
         "$usage" 0
         return $?
         ;;
+      # _IDENTICAL_ --handler 4
+      --handler)
+        shift
+        usage=$(usageArgumentFunction "$usage" "$argument" "${1-}") || return $?
+        ;;
       --easy)
         easyFlag=true
         ;;

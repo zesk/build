@@ -129,8 +129,8 @@ buildDevelopmentLink() {
         "$usage" 0
         return $?
         ;;
-      --reset)
-        ;;
+      --reset) ;;
+
       *)
         # _IDENTICAL_ argumentUnknown 1
         __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
@@ -139,7 +139,7 @@ buildDevelopmentLink() {
     # _IDENTICAL_ argument-esac-shift 1
     shift
   done
-  developerDevelopmentLink --binary "install-bin-build.sh" --path "bin/build" --version-json "bin/build/build.json" --variable "BUILD_DEVELOPMENT_HOME" "$@"
+  developerDevelopmentLink --handler "$usage" --binary "install-bin-build.sh" --path "bin/build" --version-json "bin/build/build.json" --variable "BUILD_DEVELOPMENT_HOME" "$@"
 }
 _buildDevelopmentLink() {
   # _IDENTICAL_ usageDocument 1
@@ -169,17 +169,22 @@ developerDevelopmentLink() {
         "$usage" 0
         return $?
         ;;
+      # _IDENTICAL_ --handler 4
+      --handler)
+        shift
+        usage=$(usageArgumentFunction "$usage" "$argument" "${1-}") || return $?
+        ;;
       --binary)
         shift
         binary=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
         ;;
       --path)
         shift
-        path=$(usageArgumentRemoteDirectory "$usage" "$argument" "${1-}") || return $?
+        path=$(usageArgumentApplicationDirectory "$usage" "$argument" "${1-}") || __throwArgument "$usage" "path failed #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
         ;;
       --version-json)
         shift
-        versionJSON=$(usageArgumentRemoteDirectory "$usage" "$argument" "${1-}") || return $?
+        versionJSON=$(usageArgumentApplicationFile "$usage" "$argument" "${1-}") || return $?
         ;;
       --variable)
         shift
