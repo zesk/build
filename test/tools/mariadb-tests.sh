@@ -23,6 +23,8 @@ testMariadbConnect() {
   assertContains --line "$LINENO" "-h remote" "$testString" || return $?
   assertContains --line "$LINENO" " better-app" "$testString" || return $?
   assertContains --line "$LINENO" " --port=9876" "$testString" || return $?
+  testString=$(mariadbConnect --print "mysqli://user:password@remote:9876/better-app") || return $?
+  assertContains --line "$LINENO" "mariadb " "$testString" || return $?
 }
 
 testMariaDBDump() {

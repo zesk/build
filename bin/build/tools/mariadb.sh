@@ -94,6 +94,7 @@ _mariadbDump() {
 # Argument: dsn - URL. Database to connect to. All arguments after this are passed to `binary`.
 # Argument: binary - Callable. Executable to connect to the database.
 # Argument: --print - Flag. Optional. Just print the statement instead of running it.
+# Environment: MARIADB_BINARY_CONNECT
 mariadbConnect() {
   local usage="_${FUNCNAME[0]}"
   local dsn="" binary="" printFlag=false
@@ -126,6 +127,12 @@ mariadbConnect() {
     # _IDENTICAL_ argument-esac-shift 1
     shift
   done
+
+  export MARIADB_BINARY_CONNECT
+
+  [ -n "$binary" ] || binary=$(buildEnvironmentGet MARIADB_BINARY_CONNECT) || return $?
+  [ -n "$binary" ] || __throwArgument "$usage" "--binary not supplied and MARIADB_BINARY_CONNECT is blank - at least one is required (MARIADB_BINARY_CONNECT=${MARIADB_BINARY_CONNECT-})" || return $?
+  isCallable "$binary" || __throwArgument "$usage" "binary $binary is not executable (MARIADB_BINARY_CONNECT=${MARIADB_BINARY_CONNECT-})" || return $?
 
   [ -n "$dsn" ] || __throwArgument "$usage" "dsn required" || return $?
 
