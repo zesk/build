@@ -37,7 +37,7 @@ set -eou pipefail
 # See: docs/_templates/deprecated.md
 __deprecatedCleanup() {
   local usage="_${FUNCNAME[0]}" exitCode=0
-  local doCannon=true doTokens=true doSpelling=true doConfiguration=true
+  local doCannon=true doTokens=true doSpelling=true doConfiguration=true ignoreExtras=()
 
   # _IDENTICAL_ argument-case-header 5
   local __saved=("$@") __count=$#
@@ -98,6 +98,17 @@ __deprecatedCleanup() {
         doTokens=false
         doSpelling="true"
         ;;
+      --find)
+        shift
+        while [ $# -gt 0 ]; do
+          if [ "$1" = "--" ]; then
+            break
+          fi
+          ignoreExtras+=("$1")
+          shift
+        done
+        [ $# -eq 0 ] || shift
+        ;;
       *)
         # _IDENTICAL_ argumentUnknown 1
         __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
@@ -106,6 +117,9 @@ __deprecatedCleanup() {
     # _IDENTICAL_ argument-esac-shift 1
     shift
   done
+
+  export __BUILD_DEPRECATED_EXTRAS
+  __BUILD_DEPRECATED_EXTRAS=("${ignoreExtras[@]+"${ignoreExtras[@]}"}")
 
   start=$(__environment timingStart) || return $?
 
@@ -143,10 +157,11 @@ ___deprecatedCleanup() {
 
 # list of ignore flags for `find`
 __deprecatedIgnore() {
+  export __BUILD_DEPRECATED_EXTRAS
   printf -- "%s\n" "!" -name 'deprecated.txt' "!" -name 'deprecated.sh' "!" \
     -name 'deprecated.md' ! -name 'unused.md' \
     "!" -path '*/documentation/*/release/*' \
-    "!" -path "*/.*/*"
+    "!" -path "*/.*/*" "${__BUILD_DEPRECATED_EXTRAS[@]+"${__BUILD_DEPRECATED_EXTRAS[@]}"}"
 }
 
 # Find files which match a token

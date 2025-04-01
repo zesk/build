@@ -489,7 +489,7 @@ ___assertContains() {
   while [ $# -gt 0 ]; do
     haystack="${1-}"
     [ -n "$haystack" ] || _argument "blank haystack passed to contains assertion" || return $?
-    [ "${haystack#*"$needle"}" != "$haystack" ] || _argument "\"$needle\" not found in \"$haystack\"" || return 1
+    [ "${haystack#*"$needle"}" != "$haystack" ] || return 1
     shift
   done
 }

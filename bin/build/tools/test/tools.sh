@@ -288,9 +288,9 @@ testSuite() {
         if ! __testMatches "$item" "${matchTests[@]}"; then
           continue
         fi
-        actualTest="$item"
         $beQuiet || statusMessage decorate success "Matched $(decorate value "$item")"
       fi
+      actualTest="$item"
     fi
     filteredTests+=("$item")
   done
