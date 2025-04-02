@@ -392,6 +392,7 @@ phpComposer() {
   statusMessage --last timingReport "$start" "${FUNCNAME[0]} completed in" || :
 }
 _phpComposer() {
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -403,6 +404,10 @@ phpComposerInstall() {
   __catchEnvironment "$usage" urlFetch "https://getcomposer.org/composer.phar" "$tempBinary" || _clean $? "$tempBinary" || return $?
   __catchEnvironment "$usage" mv -f "$tempBinary" "$target" || _clean $? "$tempBinary" || return $?
   __catchEnvironment "$usage" chmod +x "$target" || _clean $? "$tempBinary" || return $?
+}
+_phpComposerInstall() {
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Argument: --env-file envFile - Optional. File. Environment file to load.
@@ -508,6 +513,7 @@ phpTest() {
   statusMessage timingReport "$init" "PHP Test completed in" || return $?
 }
 _phpTest() {
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 _phpTestSetup() {
