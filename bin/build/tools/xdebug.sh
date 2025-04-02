@@ -47,7 +47,7 @@ __xdebug_Require() {
 xdebugEnable() {
   local handler="_${FUNCNAME[0]}"
   __xdebug_Require "$handler" || return $?
-  export XDEBUG_ENABLED=1
+  export XDEBUG_ENABLED=true
   decorate success "xdebug debugging $(decorate value "[ENABLED]")"
 }
 _xdebugEnable() {
@@ -61,7 +61,7 @@ xdebugDisable() {
   local handler="_${FUNCNAME[0]}"
 
   __xdebug_Require "$handler" || return $?
-
+  export XDEBUG_ENABLED
   unset XDEBUG_ENABLED
   decorate info "xdebug debugging $(decorate value "(disabled)")"
 }

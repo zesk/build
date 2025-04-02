@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2025 Market Acumen, Inc.
-# Type: BooleanLike
+# Type: Boolean
 # Category: PHP
 # Vendor: xdebug
 # Is xdebug enabled? Calling application can honor this global to automatically connect to the debugger.
