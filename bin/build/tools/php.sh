@@ -395,7 +395,9 @@ _phpComposer() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
+# Install composer for PHP
 phpComposerInstall() {
+  ! whichExists composer || return 0
   local target="/usr/local/bin/composer"
   local tempBinary="$target.$$"
   __catchEnvironment "$usage" urlFetch "https://getcomposer.org/composer.phar" "$tempBinary" || _clean $? "$tempBinary" || return $?

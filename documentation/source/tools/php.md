@@ -6,6 +6,7 @@
 
 {phpInstall}
 {phpComposer}
+{phpComposerInstall}
 {phpBuild}
 {phpLog}
 {phpTest}
