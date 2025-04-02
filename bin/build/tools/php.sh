@@ -375,8 +375,8 @@ phpComposer() {
     composerBin+=("-v" "$composerDirectory/$cacheDir:/tmp")
     composerBin+=("$dockerImage")
   else
-    __catchEnvironmentQuiet "$usage" "$quietLog" packageInstall composer composer || return $?
-    statusMessage decorate success "Installed composer ... " || :
+    phpComposerInstall
+    decorate success "Installed composer ... " || :
     composerBin=(composer)
   fi
   statusMessage decorate info "Validating ... "
@@ -393,6 +393,14 @@ phpComposer() {
 }
 _phpComposer() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+phpComposerInstall() {
+  local target="/usr/local/bin/composer"
+  local tempBinary="$target.$$"
+  __catchEnvironment "$usage" urlFetch "https://getcomposer.org/composer.phar" "$tempBinary" || _clean $? "$tempBinary" || return $?
+  __catchEnvironment "$usage" mv -f "$tempBinary" "$target" || _clean $? "$tempBinary" || return $?
+  __catchEnvironment "$usage" chmod +x "$target" || _clean $? "$tempBinary" || return $?
 }
 
 # Argument: --env-file envFile - Optional. File. Environment file to load.
