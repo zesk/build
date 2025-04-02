@@ -605,13 +605,13 @@ _isEmptyFile() {
 _directoryGamutFile() {
   local gamutModified="" remain comparer="$1" gamut="" directory="${2-.}" && shift 2
   while read -r modified file; do
-    isPositiveInteger "$modified" || __throwEnvironment "$usage" "stat -lt output a non-integer: \"$modified\" \"$file\"" || return $?
+    isPositiveInteger "$modified" || __throwEnvironment "$usage" "__listFileModificationTimes output a non-integer: \"$modified\" \"$file\"" || return $?
     # shellcheck disable=SC1073 disable=SC1072 disable=SC1009
     if [ -z "$gamutModified" ] || [ "$modified" "$comparer" "$gamutModified" ]; then
       gamutModified="$modified"
       gamut="$file"
     fi
-  done < <(find "$directory" -type f ! -path "*/.*/*" "$@" -exec stat -lt '%s' {} \+ | removeFields 5)
+  done < <(__listFileModificationTimes "$directory" -type f ! -path "*/.*/*" "$@")
   [ -n "$gamut" ] || return 1
   printf "%s\n" "$gamut"
 }
