@@ -365,12 +365,12 @@ phpComposer() {
 
   [ -d "$composerDirectory/$cacheDir" ] || mkdir -p "$composerDirectory/$cacheDir"
 
-  local installArgs=("--ignore-platform-reqs") quietLog composerBin
+  local installArgs=("--ignore-platform-reqs") quietLog
 
   quietLog="$(__catchEnvironment "$usage" buildQuietLog "$usage")" || return $?
   bigText "Install vendor" >>"$quietLog"
 
-  local butFirst=""
+  local butFirst="" composerBin=(composer)
   if $forceDocker; then
     $quietFlag || statusMessage decorate info "Pulling composer ... "
     __catchEnvironmentQuiet "$usage" "$quietLog" docker pull "$dockerImage" || return $?
@@ -379,12 +379,12 @@ phpComposer() {
     composerBin+=("-v" "$composerDirectory/$cacheDir:/tmp")
     composerBin+=("$dockerImage")
     butFirst="Pulled composer image. "
-  elif ! whichExists docker-compose docker; then
+  elif ! whichExists composer; then
     $quietFlag || statusMessage decorate info "Installing composer ... "
     __catchEnvironment "$usage" phpComposerInstall || return $?
     butFirst="Installed composer. "
-    composerBin=(composer)
   fi
+
   $quietFlag || statusMessage decorate info "${butFirst}Validating ... "
 
   __catchEnvironment "$usage" muzzle pushd "$composerDirectory" || return $?
