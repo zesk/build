@@ -331,7 +331,7 @@ _phpEchoBar() {
 phpComposer() {
   local usage="_${FUNCNAME[0]}"
 
-  local start dockerImage=composer:${BUILD_COMPOSER_VERSION:-latest} composerDirectory="." cacheDir=".composer" forceDocker=false
+  local start dockerImage=composer:${BUILD_COMPOSER_VERSION:-latest} composerDirectory="." cacheDir=".composer" forceDocker=false quietFlag=false
   start=$(timingStart)
 
   # _IDENTICAL_ argument-case-header 5
@@ -344,6 +344,9 @@ phpComposer() {
       --help)
         "$usage" 0
         return $?
+        ;;
+      --quiet)
+        quietFlag=true
         ;;
       --docker)
         decorate warning "Requiring docker composer"
@@ -367,29 +370,32 @@ phpComposer() {
   quietLog="$(__catchEnvironment "$usage" buildQuietLog "$usage")" || return $?
   bigText "Install vendor" >>"$quietLog"
 
+  local butFirst=""
   if $forceDocker; then
-    statusMessage decorate info "Pulling composer ... "
+    $quietFlag || statusMessage decorate info "Pulling composer ... "
     __catchEnvironmentQuiet "$usage" "$quietLog" docker pull "$dockerImage" || return $?
     composerBin=(docker run)
     composerBin+=("-v" "$composerDirectory:/app")
     composerBin+=("-v" "$composerDirectory/$cacheDir:/tmp")
     composerBin+=("$dockerImage")
-  else
-    phpComposerInstall
-    decorate success "Installed composer ... " || :
+    butFirst="Pulled composer image. "
+  elif ! whichExists docker-compose docker; then
+    $quietFlag || statusMessage decorate info "Installing composer ... "
+    __catchEnvironment "$usage" phpComposerInstall || return $?
+    butFirst="Installed composer. "
     composerBin=(composer)
   fi
-  statusMessage decorate info "Validating ... "
+  $quietFlag || statusMessage decorate info "${butFirst}Validating ... "
 
   __catchEnvironment "$usage" muzzle pushd "$composerDirectory" || return $?
   printf "%s\n" "Running: ${composerBin[*]} validate" >>"$quietLog"
   "${composerBin[@]}" validate >>"$quietLog" 2>&1 || _undo $? muzzle popd || buildFailed "$quietLog" || return $?
 
-  statusMessage decorate info "Application packages ... " || :
+  $quietFlag || statusMessage decorate info "Application packages ... " || :
   printf "%s\n" "Running: ${composerBin[*]} install ${installArgs[*]}" >>"$quietLog" || :
   "${composerBin[@]}" install "${installArgs[@]}" >>"$quietLog" 2>&1 || _undo $? muzzle popd || buildFailed "$quietLog" || return $?
   __catchEnvironment "$usage" muzzle popd || return $?
-  statusMessage --last timingReport "$start" "${FUNCNAME[0]} completed in" || :
+  $quietFlag || statusMessage --last timingReport "$start" "${FUNCNAME[0]} completed in" || :
 }
 _phpComposer() {
   # _IDENTICAL_ usageDocument 1
