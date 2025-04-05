@@ -37,7 +37,7 @@ testBuildApplicationTools() {
 
   __environment muzzle pushd "$testApp" || return $?
 
-  assertEquals --line "$LINENO:" "$("$testApp/bin/tools.sh" hookVersionCurrent --application "$testApp")" "v1.2.3" || return $?
+  assertEquals --line "$LINENO" "$("$testApp/bin/tools.sh" hookVersionCurrent --application "$testApp")" "v1.2.3" || return $?
   __environment muzzle popd || return $?
 }
 
