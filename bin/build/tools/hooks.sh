@@ -42,15 +42,22 @@ _hookContextWrapper() {
     shift
   done
 
-  local start
+  local start home
 
+  home=$(__catchEnvironment "$usage" buildHome) || return $?
   start="$(pwd -P 2>/dev/null)" || __throwEnvironment "$usage" "Failed to get pwd" || return $?
+  start=$(__catchEnvironment "$usage" realPath "$start") || return $?
+
   if [ -z "$application" ]; then
-    application=$(gitFindHome "$start") || __throwEnvironment "$usage" "Unable to find git home" || return $?
-    application="${application%/}"
-    if [ "${start#"$application"}" = "$start" ]; then
-      buildEnvironmentContext hookVersionCurrent --application "$application" "${__saved[@]}" || return $?
-      return 0
+    if [ "${start#"$home"}" = "$start" ]; then
+      application="$home"
+    else
+      application=$(gitFindHome "$start") || __throwEnvironment "$usage" "Unable to find git home" || return $?
+      application="${application%/}"
+      if [ "${start#"$application"}" = "$start" ]; then
+        buildEnvironmentContext hookVersionCurrent --application "$application" "${__saved[@]}" || return $?
+        return 0
+      fi
     fi
   fi
   __catchEnvironment "$usage" hookRun --application "$application" "$hookName" "$@" || return $?

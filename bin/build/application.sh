@@ -127,7 +127,7 @@ __applicationTools() {
   export DEVELOPER_TRACK
 
   set --
-  __build ".." bin : || return $?
+  __build ".." bin : >/dev/null || return $?
 
   [ -z "${DEVELOPER_TRACK-}" ] || developerTrack "${BASH_SOURCE[0]}"
 

@@ -21,6 +21,26 @@ testBinBuildRequires() {
   bashCheckRequires --require --unused --report "$home/bin/build/need-bash.sh" || return $?
 }
 
+testBuildApplicationTools() {
+  local
+  local testApp
+
+  testApp=$(fileTemporaryName "$usage" -d) || return $?
+
+  muzzle requireDirectory "$testApp/bin" || return $?
+  muzzle requireDirectory "$testApp/docs/release" || return $?
+  muzzle requireDirectory "$testApp/bin/tools" || return $?
+
+  __environment touch "$testApp/docs/release/v1.2.3.md" || return $?
+  assertExitCode --line "$LINENO" 0 installInstallBuild "$testApp/bin" "$testApp" || return $?
+  __environment cp "$(buildHome)/bin/build/application.sh" "$testApp/bin/tools.sh" || return $?
+
+  __environment muzzle pushd "$testApp" || return $?
+
+  assertEquals --line "$LINENO:" "$("$testApp/bin/tools.sh" hookVersionCurrent --application "$testApp")" "v1.2.3" || return $?
+  __environment muzzle popd || return $?
+}
+
 testBuildEnvironmentLoadAll() {
   local usage="_return"
   local home loadIt nonBlankEnvs=(
