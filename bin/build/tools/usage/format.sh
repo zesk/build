@@ -23,13 +23,19 @@
 #
 # Do not call usage functions here to avoid recursion
 # Usage: {fn} binName options delimiter description exitCode
+# Argument: binaryName - String. Required. The function name
+# Argument: argumentsText - String. Required. The argument definition.
+# Argument: argumentsText - String. Required. The argument delimiter.
+# Argument: description - String. Required. The function description
+# Argument: exitCode - Integer. Required. The exit code of the function prior to showing usage
+# Argument: ... - String. Any additional description - output directly.
 # Requires: exitString __throwArgument trimSpace usageArgumentUnsignedInteger __throwArgument decorate printf
 usageTemplate() {
   local usage="_${FUNCNAME[0]}" __saved=("$@")
 
   [ $# -ge 5 ] || __throwArgument "$usage" "Requires 5 or more arguments" || return $?
 
-  local binName options="$2" delimiter="$3" description="$4" exitCode exit_code=""
+  local binName options="$2" delimiter="$3" description="$4" exitCode
 
   binName="$(trimSpace "$1")"
   exitCode=$(usageArgumentUnsignedInteger "$usage" "exitCode" "$5") || return $?
@@ -41,32 +47,35 @@ usageTemplate() {
   else
     usageString="$(decorate bold-red Usage)"
   fi
-  if [ ${#@} -gt 0 ]; then
+  if [ $# -gt 0 ] && [ -n "$*" ]; then
+    decorate each code __saved "${#__saved[@]}" "${__saved[@]}"
     if [ "$exitCode" -eq 0 ]; then
       printf "%s\n\n" "$(decorate success "$@")"
     elif [ "$exitCode" != 2 ]; then
-      printf "%s %s\n" "$(decorate code "[$(exitString "$exitCode")]")" "$(decorate error "$@")"
+      printf "%s %s\n" "$(decorate error "[$(exitString "$exitCode")]")" "$(decorate code "$@")"
       return "$exitCode"
     else
-      printf "%s %s %s\n" "$(decorate code "[$exitCode]")" "$(decorate warning Argument)" "$(decorate error "$@")"
+      printf "%s %s\n" "$(decorate warning "[$(exitString "$exitCode")]")" "$(decorate code "$@")"
     fi
+    echo BABY
   fi
   description=${description:-"No description"}
   nSpaces=$(printf %s "$options" | maximumFieldLength 1 "$delimiter")
 
   if [ -n "$delimiter" ] && [ -n "$options" ]; then
-    printf -- "%s: %s%s\n\n%s\n\n%s\n%s\n" \
+    printf -- "%s: %s%s\n\n%s\n\n%s\n" \
       "$usageString" \
       "$(decorate info "$binName")" \
       "$(printf "%s" "$options" | usageFormatArguments "$delimiter")" \
       "$(printf "%s" "$options" | usageGenerator "$((nSpaces + 2))" "$delimiter" | simpleMarkdownToConsole | trimTail | wrapLines "    " "$(decorate reset)")" \
-      "$description" \
-      "$exit_code" | trimTail
+      "$(simpleMarkdownToConsole <<<"$description")" |
+      trimBoth
   else
     printf "%s: %s\n\n%s\n\n" \
       "$usageString" \
       "$(decorate info "$binName")" \
-      "$description"
+      "$description" |
+      trimBoth
   fi
   if buildDebugEnabled usage; then
     debuggingStack

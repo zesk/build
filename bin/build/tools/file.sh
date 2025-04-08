@@ -573,6 +573,9 @@ _fileMatchesHelper() {
 # Is this an empty (zero-sized) file?
 # Exit code: 0 - if all files passed in are empty files
 # Exit code: 1 - if any files passed in are non-empty files
+# Argument: file - File. Optional. One or more files, all of which must be empty.
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
 isEmptyFile() {
   local usage="_${FUNCNAME[0]}"
 

@@ -76,7 +76,7 @@ usageDocumentComplex() {
     __throwArgument "$usage" "Unable to extract \"$functionName\" from \"$functionDefinitionFile\"" || _clean $? "$variablesFile" || return $?
   fi
   (
-    local description="" argument="" base
+    local description="" argument="" base exit_code=""
 
     set -a
     base="$(basename "$functionDefinitionFile")"
@@ -92,7 +92,12 @@ usageDocumentComplex() {
       __buildDebugDisable
     fi
     bashRecursionDebug
-    usageTemplate "$(mapEnvironment <<<"$fn")" "$(printf "%s\n" "$argument" | sed 's/ - /^/1')" "^" "$(printf "%s\n" "$description" | mapEnvironment | simpleMarkdownToConsole)" "$exitCode" "$(decorate "$color" "$@")"
+    if [ -n "$exit_code" ]; then
+      local formatted
+      formatted="$(printf "%s\n%s\n" "Exit codes:" "$(wrapLines "- " "" <<<"$(trimSpace "$exit_code")")")"
+      description="$(trimTail <<<"$description")"$'\n'$'\n'"$formatted"
+    fi
+    usageTemplate "$(mapEnvironment <<<"$fn")" "$(printf "%s\n" "$argument" | sed 's/ - /^/1')" "^" "$description" "$exitCode" "$@"
     if $bashDebug; then
       __buildDebugEnable
     fi

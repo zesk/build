@@ -366,9 +366,11 @@ _lineFill() {
 #
 # Summary: Prefix output lines with a string
 # Usage: wrapLines [ --fill ] [ prefix [ suffix ... ] ] < fileToWrapLines
-# Exit Code: 0
-# Argument: `prefix` - Prefix each line with this text
-# Argument: `suffix` - Prefix each line with this text
+# Exit Code: 0 - stdout contains input wrapped with text
+# Exit Code: 1 - Environment error
+# Exit Code: 2 - Argument error
+# Argument: prefix - String. Required. Prefix each line with this text
+# Argument: suffix - String. Required. Prefix each line with this text
 # Example:     cat "$file" | wrapLines "$(decorate code)" "$(decorate reset)"
 # Example:     cat "$errors" | wrapLines "    ERROR: [" "]"
 #

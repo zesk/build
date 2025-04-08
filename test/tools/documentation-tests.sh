@@ -7,6 +7,21 @@
 # Copyright &copy; 2025 Market Acumen, Inc.
 #
 
+testBashFunctionComment() {
+  local usage="_return"
+  local home
+  local matches=(
+    --stdout-match "Stop watching changes"
+    --stdout-match "--help"
+    --stdout-match "--source source"
+    --stdout-match "--name name"
+  )
+
+  home=$(__catchEnvironment "$usage" buildHome) || return $?
+
+  assertExitCode --line "$LINENO" "${matches[@]}" 0 bashFunctionComment "$home/bin/build/tools/prompt/reload-changes.sh" reloadChanges || return $?
+}
+
 testDocumentation() {
   local testOutput
   local summary description

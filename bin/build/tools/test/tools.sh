@@ -958,7 +958,7 @@ __testCleanup() {
   __environment rm -rf "$home/vendor/" "$home/node_modules/" "$home/composer.json" "$home/composer.lock" "$home/test."*/ "$home/.test"*/ "./aws" || return $?
   if [ -d "$cache" ]; then
     # Delete non-dot files
-    __environment find "$cache" -type f ! -path '*/.build/.*/*' -delete || return $?
+    __environment find "$cache" -type f ! -path '*/.build/.*/*' -delete 2>/dev/null || return $?
     # Delete empty directories
     __environment find "$cache" -depth -type d ! -path '*/.build/.*/*' -empty -delete || return $?
   fi
