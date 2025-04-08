@@ -1,0 +1,6 @@
+Usage: testThatFunction --one thing [ --another thing ]
+
+    --one thing      Required. String. Thing.
+    --another thing  Optional. Integer. Another thing.
+
+Makes the world a better place

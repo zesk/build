@@ -957,10 +957,12 @@ __testCleanup() {
   shopt -u failglob
   __environment rm -rf "$home/vendor/" "$home/node_modules/" "$home/composer.json" "$home/composer.lock" "$home/test."*/ "$home/.test"*/ "./aws" || return $?
   if [ -d "$cache" ]; then
+    # Been getting errors, I think, in this function in testing on Darwin
+    # Added debugging to see if I can locate why - seems to be a race condition
     # Delete non-dot files
-    __environment find "$cache" -type f ! -path '*/.build/.*/*' -delete 2>/dev/null || return $?
+    __environment find "$cache" -type f ! -path '*/.build/.*/*' -delete || _undo $? printf -- "find -delete FAILED ON LINE %d (files)" "$LINENO" 1>&2 || return $?
     # Delete empty directories
-    __environment find "$cache" -depth -type d ! -path '*/.build/.*/*' -empty -delete || return $?
+    __environment find "$cache" -depth -type d ! -path '*/.build/.*/*' -empty -delete || _undo $? printf -- "find -delete FAILED ON LINE %d (empty directories)" "$LINENO" 1>&2 || return $?
   fi
 }
 

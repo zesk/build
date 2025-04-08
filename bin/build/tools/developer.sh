@@ -223,7 +223,7 @@ developerDevelopmentLink() {
   target="$home/$path"
 
   showName=$(buildEnvironmentGet APPLICATION_NAME) || return $?
-  showName=$(decorate value "$showName")
+  showName=$(decorate label "$showName")
   developmentHome=$(__catchEnvironment "$usage" buildEnvironmentGet "$variable") || return $?
   if [ -n "$developmentHome" ]; then
     developmentHome=$(__catchEnvironment "$usage" realPath "${developmentHome%/}") || return $?
@@ -256,7 +256,7 @@ developerDevelopmentLink() {
         verb="Copied"
         __catchEnvironment "$usage" cp -R "$developmentHome/" "$target" || return $?
       fi
-      printf -- "%s %s %s %s %s\n" "$aok" "$(decorate info "$verb")" "$(decorate file "$developmentHome")" "$arrowIcon" "$(decorate file "$(realPath "$target")")"
+      printf -- "%s %s %s %s %s (%s)\n" "$aok" "$(decorate info "$verb")" "$(decorate file "$developmentHome")" "$arrowIcon" "$showName" "$(decorate file "$(realPath "$target")")"
     elif [ -L "$target" ]; then
       printf -- "%s %s %s %s\n" "$aok" "$(decorate file "$target")" "$arrowIcon" "$(decorate file "$(realPath "$target")")"
     elif [ -f "$home/$versionJSON" ]; then

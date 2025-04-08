@@ -3,6 +3,16 @@
 # Copyright &copy; 2025 Market Acumen, Inc.
 #
 
+testUsageTemplate() {
+  local usage="_return"
+  local home
+
+  home="$(__catchEnvironment "$usage" buildHome)" || return $?
+
+  output=$(usageTemplate testThatFunction "--one thing^Required. String. Thing."$'\n'"--another thing^Optional. Integer. Another thing." "^" "Makes the world a better place" 0 | stripAnsi) || __throwEnvironment "$usage" "usageTemplate failed" || return $?
+  assertEquals --line "$LINENO" "$output" "$(cat "$home/test/example/usageTemplateSimple.txt")" || return $?
+}
+
 testUsageFunctions() {
   local match
 

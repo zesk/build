@@ -34,7 +34,7 @@ _dockerComposeIsRunning() {
 dockerComposeCommandList() {
   [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return 0
   # Sampled 2025
-  printf -- "%s\n" attach build commit config cp create down events exec export images kill logs ls pause port ps pull push restart rm run scale start stats stop top unpause up version wait watch
+  printf -- "%s\n" attach build commit config cp create down events exec export images kill logs ls pause port ps pull push restart rm run scale start stats stop top unpause up version wait watch | sort -u
 }
 _dockerComposeCommandList() {
   ! false || dockerComposeCommandList --help
@@ -72,7 +72,8 @@ _isDockerComposeCommand() {
 # Argument: --volume - String. Name of the volume associated with the container to preserve or delete.
 # Argument: --clean - Flag. Delete the volume prior to building.
 # Argument: --keep - Flag. Keep the volume during build.
-# Argument: --default-env environmentNameValue - EnvironmentNameValue. An environment variable name and value (in the form `NAME=value` to require in the `.env` file.
+# Argument: --default-env | --env environmentNameValue - EnvironmentNameValue. An environment variable name and value (in the form `NAME=value` to require in the `.env` file.
+# Argument: --env environmentNameValue - EnvironmentNameValue. An environment variable name and value (in the form `NAME=value` to require in the `.env` file. If set already in the file or in the environment then has no effect.
 # Argument: composeCommand - You can send any compose command and arguments thereafter are passed to `docker compose`
 # Environment files are managed automatically by this function (with backups).
 # Environment files are named in uppercase after the deployment as `.DEPLOYMENT.env` in the home directory
@@ -88,7 +89,8 @@ _isDockerComposeCommand() {
 dockerCompose() {
   local usage="_${FUNCNAME[0]}"
 
-  local deployment="" aa=() buildFlag=false deleteVolumes=false keepVolumes="" keepVolumesDefault=false
+  local deployment="" aa=()
+  local buildFlag=false deleteVolumes=false keepVolumes="" keepVolumesDefault=false hasCommand=false debugFlag=false
   local databaseVolume=""
 
   # _IDENTICAL_ argument-case-header 5
@@ -102,6 +104,9 @@ dockerCompose() {
         "$usage" 0
         return $?
         ;;
+      --debug)
+        debugFlag=true
+        ;;
       --production)
         deployment="production"
         ;;
@@ -112,6 +117,7 @@ dockerCompose() {
         shift
         deployment="$(usageArgumentString "$usage" "$argument" "${1-}")" || return $?
         deployment="$(uppercase "$deployment")"
+        ! $debugFlag || decorate info "Deployment set to $deployment"
         ;;
       --volume)
         shift
@@ -126,10 +132,14 @@ dockerCompose() {
         ;;
       --build)
         buildFlag=true
+        hasCommand=true
         ;;
-      --default-env)
+      --default-env | --env)
+        local environmentPair
         shift
-        local name="${argument%%=.*]}" value="${argument#.*=}"
+        environmentPair="$(usageArgumentString "$usage" "$argument" "${1-}")" || return $?
+        local name="${environmentPair%%=*}" value="${environmentPair#*=}"
+        ! $debugFlag || decorate info "Environment supplied $(decorate pair "$name" "$value")"
         name="$(usageArgumentEnvironmentVariable "$usage" "$argument" "$name")" || return $?
         requiredEnvironment+=("$name" "$value")
         ;;
@@ -144,6 +154,7 @@ dockerCompose() {
       *)
         if isDockerComposeCommand "$argument"; then
           aa+=("$@")
+          hasCommand=true
           break
         fi
         # _IDENTICAL_ argumentUnknown 1
@@ -170,18 +181,25 @@ dockerCompose() {
 
   start=$(timingStart)
 
+  if ! $buildFlag && ! $hasCommand; then
+    __throwArgument "$usage" "Need a docker command:"$'\n'"- $(dockerComposeCommandList | decorate each code)" || return $?
+  fi
+
   __dockerComposeEnvironmentSetup "$usage" "$deployment" "${requiredEnvironment[@]+"${requiredEnvironment[@]}"}" DEPLOYMENT="$deployment" || return $?
 
   if $buildFlag; then
     aa=("build" "${aa[@]+"${aa[@]}"}")
     if $deleteVolumes; then
+      ! $debugFlag || decorate info "--clean supplied so deleting volumes"
       if dockerVolumeExists "$databaseVolume"; then
+        ! $debugFlag || decorate info "$databaseVolume volume exists, deleting"
         __dockerVolumeDelete "$usage" "$databaseVolume" || return $?
         statusMessage decorate warning "Deleted volume $(decorate code "${databaseVolume}") - will be created with new environment variables"
       else
         decorate info "Volume $(decorate code "$databaseVolume") does not exist"
       fi
     elif $keepVolumes; then
+      ! $debugFlag || decorate info "--keep supplied, no deletion"
       if dockerVolumeExists "$databaseVolume"; then
         decorate info "Keeping volume $(decorate code "$databaseVolume")"
       fi
@@ -190,11 +208,12 @@ dockerCompose() {
     fi
   fi
 
+  ! $debugFlag || decorate info "Running" "$(decorate label "docker compose")" "$(decorate each code "${aa[@]+"${aa[@]}"}")"
   __dockerCompose "$usage" "${aa[@]+"${aa[@]}"}" || return $?
 
   local name
-  name="$(decorate value "$(buildEnvironmentGet APPLICATION_NAME)")"
-  statusMessage --last timingReport "$start" "Built $name in"
+  name="$(decorate label "$(buildEnvironmentGet APPLICATION_NAME)")"
+  statusMessage --last timingReport "$start" "Completed $name in"
 }
 _dockerCompose() {
   # _IDENTICAL_ usageDocument 1

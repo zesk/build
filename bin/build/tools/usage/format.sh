@@ -25,7 +25,7 @@
 # Usage: {fn} binName options delimiter description exitCode
 # Argument: binaryName - String. Required. The function name
 # Argument: argumentsText - String. Required. The argument definition.
-# Argument: argumentsText - String. Required. The argument delimiter.
+# Argument: argumentsDelimiter - String. Required. The argument delimiter.
 # Argument: description - String. Required. The function description
 # Argument: exitCode - Integer. Required. The exit code of the function prior to showing usage
 # Argument: ... - String. Any additional description - output directly.
@@ -56,7 +56,6 @@ usageTemplate() {
     else
       printf "%s %s\n" "$(decorate warning "[$(exitString "$exitCode")]")" "$(decorate code "$@")"
     fi
-    echo BABY
   fi
   description=${description:-"No description"}
   nSpaces=$(printf %s "$options" | maximumFieldLength 1 "$delimiter")

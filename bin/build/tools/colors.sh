@@ -785,16 +785,3 @@ _toggleCharacterToColor() {
     fi
   done
 }
-
-# Usage: decorate each decoration argument1 argument2 ...
-# Runs the following command on each subsequent argument to allow for formatting with spaces
-__decorateExtensionEach() {
-  local code="$1" formatted=()
-
-  shift || return 0
-  while [ $# -gt 0 ]; do
-    formatted+=("$(decorate "$code" "$1")")
-    shift
-  done
-  IFS=" " printf "%s\n" "${formatted[*]-}"
-}
