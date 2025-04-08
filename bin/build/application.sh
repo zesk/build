@@ -5,7 +5,7 @@
 # Copyright &copy; 2025, Market Acumen, Inc.
 #
 # This file generically loads all application tools in `./bin/tools` and allows for extensions
-# Zesk Build for an application with little effort.
+# to Zesk Build within an application with little effort.
 #
 # Copy this file into your application project at `./bin/` next to `install-bin-build.sh`
 #
@@ -121,17 +121,19 @@ __applicationToolsList() {
 __applicationTools() {
   local source="${BASH_SOURCE[0]}"
   local here="${source%/*}"
-  local __saved=("$@")
+  local __saved=("$@") track=false
 
   export BUILD_TEXT_BINARY
   export DEVELOPER_TRACK
+  if [ -n "${DEVELOPER_TRACK-}" ]; then
+    unset DEVELOPER_TRACK
+    track=true
+  fi
 
   set --
   __build ".." bin : >/dev/null || return $?
 
-  [ -z "${DEVELOPER_TRACK-}" ] || developerTrack "${BASH_SOURCE[0]}"
-
-  unset DEVELOPER_TRACK
+  ! $track || developerTrack "${BASH_SOURCE[0]}"
 
   bashSourcePath "$(realPath "$here/tools/")" || return $?
 

@@ -68,7 +68,7 @@ buildAddTool() {
 
   while [ $# -gt 0 ]; do
     case "$1" in
-      *[^[:alnum:]]*)
+      *[^-[:alnum:]]*)
         __throwArgument "$usage" "Invalid name: $1" || return $?
         ;;
     esac

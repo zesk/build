@@ -131,6 +131,7 @@ anyEnvToDockerEnv() {
   __anyEnvToFunctionEnv "_${FUNCNAME[0]}" bashCommentFilter dockerEnvFromBashEnv "$@" || return $?
 }
 _anyEnvToDockerEnv() {
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -147,6 +148,7 @@ anyEnvToBashEnv() {
   __anyEnvToFunctionEnv "_${FUNCNAME[0]}" dockerEnvToBash cat "$@" || return $?
 }
 _anyEnvToBashEnv() {
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -176,6 +178,7 @@ dockerEnvToBash() {
   fi
 }
 _dockerEnvToBash() {
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -239,6 +242,7 @@ dockerEnvFromBashEnv() {
   __catchEnvironment "$usage" rm -rf "$tempFile" || return $?
 }
 _dockerEnvFromBashEnv() {
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -354,6 +358,7 @@ dockerLocalContainer() {
   return $exitCode
 }
 _dockerLocalContainer() {
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -395,6 +400,7 @@ dockerImages() {
   docker images "${filter[@]+"${filter[@]}"}" | awk '{ print $1 ":" $2 }' | grep -v 'REPOSITORY:'
 }
 _dockerImages() {
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -435,3 +441,56 @@ _dockerImages() {
 #   -q, --quiet           Only show image IDs
 #       --tree            List multi-platform images as a tree (EXPERIMENTAL)
 #
+
+
+## --------------------------------------------------------------------------------------------------------------------------------------------
+
+
+# Does a docker volume exist with name?
+# Argument: name - String. Required.
+dockerVolumeExists() {
+  local usage="_${FUNCNAME[0]}"
+  __help "$usage" "$@" || return 0
+  [ $# -eq 1 ] || __throwArgument "$usage" "Requires a volume name" || return $?
+  docker volume ls --format json | jq .Name | grep -q "$1"
+}
+_dockerVolumeExists() {
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+# Does a docker volume exist with name?
+# Argument: name - String. Required.
+dockerVolumeDelete() {
+  local usage="_${FUNCNAME[0]}"
+  __help "$usage" "$@" || return 0
+  [ $# -eq 1 ] || __throwArgument "$usage" "Requires a volume name" || return $?
+  docker volume ls --format json | jq .Name | grep -q "$1"
+}
+
+__dockerVolumeDeleteInteractive() {
+  local usage="$1" databaseVolume="$2" && shift 2
+
+  local running=false suffix=""
+
+  if dockerComposeIsRunning; then
+    running=true
+    suffix=" (container will also be shut down)"
+  fi
+
+  if dockerVolumeExists "$databaseVolume"; then
+    if confirmYesNo --no --timeout 60 --info "Delete database volume $(decorate code "$databaseVolume")$suffix?"; then
+      if $running; then
+        statusMessage decorate info "Bringing down container ..."
+        __catchEnvironment "$usage" docker compose down --remove-orphans || return $?
+      fi
+      __dockerVolumeDelete "$usage" "$databaseVolume" || return $?
+    fi
+  fi
+}
+
+__dockerVolumeDelete() {
+  local usage="$1" databaseVolume="$2" && shift 2
+
+  __catchEnvironment "$usage" docker volume rm "$databaseVolume" || return $?
+}
