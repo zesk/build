@@ -8,9 +8,18 @@
 # Is docker compose currently running?
 # DOC TEMPLATE: --help 1
 # Argument: --help - Optional. Flag. Display this help.
+# Exit Code: 1 - Not running
+# Exit Code: 0 - Running
 dockerComposeIsRunning() {
-  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return 0
-  ! dockerCompose ps --format json | outputTrigger >/dev/null 2>&1
+  local usage="_${FUNCNAME[0]}"
+  [ $# -eq 0 ] || __help --only "$usage" "$@" || return 0
+  local temp
+  temp=$(fileTemporaryName "$usage") || return $?
+  __catchEnvironment "$usage" dockerCompose ps --format json >"$temp" || _clean $? "$temp" || return $?
+  local exitCode=1
+  isEmptyFile "$temp" || exitCode=0
+  __catchEnvironment "$usage" rm -rf "$temp" || return $?
+  return $exitCode
 }
 _dockerComposeIsRunning() {
   # _IDENTICAL_ usageDocument 1

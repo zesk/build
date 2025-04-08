@@ -6,7 +6,27 @@
 #
 
 testIsDockerComposeRunning() {
+  local usage="_return"
+
   if whichExists docker; then
-    assertNotExitCode --stderr-match "Missing" --stderr-match "docker-compose.yml" 0 dockerComposeIsRunning || return $?
+    local oldHome
+
+    oldHome=$(__catchEnvironment "$usage" buildHome) || return $?
+
+    __mockValue BUILD_HOME
+
+    export BUILD_HOME
+
+    BUILD_HOME=$(fileTemporaryName "$usage" -d) || return $?
+
+    __catchEnvironment "$usage" mkdir "$BUILD_HOME/bin" || return $?
+    __catchEnvironment "$usage" cp -R "$oldHome/bin/build" "$BUILD_HOME/bin/build" || return $?
+    __catchEnvironment "$usage" pushd "$BUILD_HOME" || return $?
+
+    assertNotExitCode --line "$LINENO" --stderr-match "Missing" --stderr-match ".STAGING.env" 0 dockerComposeIsRunning || return $?
+    __catchEnvironment "$usage" touch "$BUILD_HOME/.STAGING.env" || return $?
+    assertNotExitCode --line "$LINENO" --stderr-match "Missing" --stderr-match "docker-compose.yml" 0 dockerComposeIsRunning || return $?
+
+    __mockValue BUILD_HOME "" --end
   fi
 }
