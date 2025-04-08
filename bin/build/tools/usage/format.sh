@@ -48,7 +48,6 @@ usageTemplate() {
     usageString="$(decorate bold-red Usage)"
   fi
   if [ $# -gt 0 ] && [ -n "$*" ]; then
-    decorate each code __saved "${#__saved[@]}" "${__saved[@]}"
     if [ "$exitCode" -eq 0 ]; then
       printf "%s\n\n" "$(decorate success "$@")"
     elif [ "$exitCode" != 2 ]; then
