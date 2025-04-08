@@ -129,7 +129,7 @@ buildDevelopmentLink() {
         "$usage" 0
         return $?
         ;;
-      --reset) ;;
+      --reset | --copy) ;;
 
       *)
         # _IDENTICAL_ argumentUnknown 1
@@ -139,7 +139,7 @@ buildDevelopmentLink() {
     # _IDENTICAL_ argument-esac-shift 1
     shift
   done
-  developerDevelopmentLink --handler "$usage" --binary "install-bin-build.sh" --path "bin/build" --version-json "bin/build/build.json" --variable "BUILD_DEVELOPMENT_HOME" "$@"
+  developerDevelopmentLink --handler "$usage" --binary "install-bin-build.sh" --path "bin/build" --version-json "bin/build/build.json" --variable "BUILD_DEVELOPMENT_HOME" "${__saved[@]+"${__saved[@]}"}"
 }
 _buildDevelopmentLink() {
   # _IDENTICAL_ usageDocument 1
@@ -152,11 +152,13 @@ _buildDevelopmentLink() {
 # Argument: --path - ApplicationDirectory. Required. The library path to convert to a link.
 # Argument: --version-json - ApplicationFile. Required. The library JSON file to check.
 # Argument: --variable - EnvironmentVariable. Required. The environment variable which represents the local path of the library to link to.
+# Argument: --copy - Flag. Optional. Copy the files instead of creating a link - more compatible with Docker but slower and requires synchronization.
 # Argument: --reset - Flag. Optional. Revert the link and reinstall using the original binary.
+# Test: TODO
 developerDevelopmentLink() {
   local usage="_${FUNCNAME[0]}"
 
-  local resetFlag=false binary="" path="" versionJSON="" variable=""
+  local resetFlag=false binary="" path="" versionJSON="" variable="" copyFlag=false
 
   # _IDENTICAL_ argument-case-header 5
   local __saved=("$@") __count=$#
@@ -173,6 +175,9 @@ developerDevelopmentLink() {
       --handler)
         shift
         usage=$(usageArgumentFunction "$usage" "$argument" "${1-}") || return $?
+        ;;
+      --copy)
+        copyFlag=true
         ;;
       --binary)
         shift
@@ -238,7 +243,21 @@ developerDevelopmentLink() {
     fi
   else
     local arrowIcon="➡️" aok="✅"
-    if [ -L "$target" ]; then
+    if $copyFlag; then
+      local verb
+      if [ -L "$target" ]; then
+        __catchEnvironment "$usage" rm "$target" || return $?
+        __catchEnvironment "$usage" mkdir -p "$target" || return $?
+      fi
+      if whichExists rsync; then
+        verb="Synchronized"
+        __catchEnvironment "$usage" rsync -a "$developmentHome/$path/" "$target/" || return $?
+      else
+        verb="Copied"
+        __catchEnvironment "$usage" cp -R "$developmentHome/" "$target" || return $?
+      fi
+      printf -- "%s %s %s %s %s\n" "$aok" "$(decorate info "$verb")" "$(decorate file "$developmentHome")" "$arrowIcon" "$(decorate file "$(realPath "$target")")"
+    elif [ -L "$target" ]; then
       printf -- "%s %s %s %s\n" "$aok" "$(decorate file "$target")" "$arrowIcon" "$(decorate file "$(realPath "$target")")"
     elif [ -f "$home/$versionJSON" ]; then
       if confirmYesNo --timeout 30 --default false "$(decorate warning "Removing $(decorate file "$target") in project $showName"?)"; then

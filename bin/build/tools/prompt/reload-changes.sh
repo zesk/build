@@ -81,17 +81,14 @@ bashPromptModule_reloadChanges() {
   done
 }
 
-__reloadChangesCacheFile() {
-  local usage="$1" extension="${2-state}"
-  reloadHome=$(__catchEnvironment "$usage" buildEnvironmentGetDirectory --subdirectory "reloadChanges" XDG_STATE_HOME) || return $?
-  cacheFile="$(__catchEnvironment "$usage" buildEnvironmentGet APPLICATION_CODE).$extension" || return $?
-  printf "%s/%s\n" "${reloadHome%/}" "${cacheFile}"
-}
-
 # Watch or more directories for changes in a file extension and reload a source file if any changes occur. Loads
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
 # Argument: --source source - Required. File. Source file to source upon change.
 # Argument: --name name - Optional. String. The name to call this when changes occur.
 # Argument: --path path - Required. Directory. OneOrMore. A directory to scan for changes in `.sh` files
+# Argument: --stop - Flag. Optional. Stop watching changes and remove all watches.
+# Argument: --show - Flag. Optional. Show watched settings and exit.
 reloadChanges() {
   local usage="_${FUNCNAME[0]}"
 
@@ -189,11 +186,10 @@ __reloadChangesShow() {
     elif [ "$argument" != "--" ]; then
       paths+=("$(usageArgumentRealDirectory "$usage" "config-path" "$argument")") || return $?
     else
-      printf "%s %s\n%s\n" "👀 $(decorate info "$name")" "$(decorate code "(source $(decorate file "$source"))")" "$(printf -- "- %s\n" "${paths[@]}"))"
+      printf "%s %s %s\n%s\n" "👀 $(decorate info "$name")" "$(decorate code "(source $(decorate file "$source"))")" "when changes found in" "$(printf -- "- %s\n" "${paths[@]}"))"
       name="" && source="" && paths=()
     fi
   done <"$cacheFile"
-  dumpPipe "Reload data file:" <"$cacheFile"
 }
 _reloadChanges() {
   # _IDENTICAL_ usageDocument 1
@@ -225,4 +221,11 @@ __reloadChangesRemove() {
     fi
   done <"$cacheFile"
   __catchEnvironment "$usage" mv -f "$target" "$cacheFile" || return $?
+}
+
+__reloadChangesCacheFile() {
+  local usage="$1" extension="${2-state}"
+  reloadHome=$(__catchEnvironment "$usage" buildEnvironmentGetDirectory --subdirectory "reloadChanges" XDG_STATE_HOME) || return $?
+  cacheFile="$(__catchEnvironment "$usage" buildEnvironmentGet APPLICATION_CODE).$extension" || return $?
+  printf "%s/%s\n" "${reloadHome%/}" "${cacheFile}"
 }
