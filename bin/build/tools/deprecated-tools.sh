@@ -60,6 +60,10 @@ deprecatedIgnore() {
   local usage="_${FUNCNAME[0]}"
   local notes
 
+  export __BUILD_DEPRECATED_EXTRAS
+
+  isArray __BUILD_DEPRECATED_EXTRAS || __BUILD_DEPRECATED_EXTRAS=()
+
   notes=$(__catchEnvironment "$usage" buildEnvironmentGet BUILD_RELEASE_NOTES) || return $?
   if [ -z "$notes" ]; then
     __throwEnvironment "$usage" "BUILD_RELEASE_NOTES is blank?" || return $?
@@ -68,10 +72,14 @@ deprecatedIgnore() {
   notes="${notes#.}"
   notes="${notes#/}"
   notes="${notes%/}"
-  printf -- "%s\n" "!" -name 'deprecated.txt' "!" -name 'deprecated.sh' "!" \
-    -name 'deprecated.md' ! -name 'unused.md' \
-    "!" -path "*$notes/*" \
-    "!" -path "*/.*/*"
+  printf -- "%s\n" \
+    ! -name 'deprecated*.txt' \
+    ! -name 'deprecated.sh' \
+    ! -name 'deprecated*.md' \
+    ! -name 'unused.md' \
+    ! -path "*$notes/*" \
+    ! -path "*/.*/*" \
+    "${__BUILD_DEPRECATED_EXTRAS[@]+"${__BUILD_DEPRECATED_EXTRAS[@]}"}"
 }
 _deprecatedIgnore() {
   # _IDENTICAL_ usageDocument 1

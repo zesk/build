@@ -121,6 +121,8 @@ __deprecatedCleanup() {
   export __BUILD_DEPRECATED_EXTRAS
   __BUILD_DEPRECATED_EXTRAS=("${ignoreExtras[@]+"${ignoreExtras[@]}"}")
 
+  __BUILD_DEPRECATED_EXTRAS+=(! -path '*/documentation/*/release/*')
+
   start=$(__environment timingStart) || return $?
 
   # END OF CANNONS
@@ -155,24 +157,12 @@ ___deprecatedCleanup() {
 #  ▀▀ ▝▀▘▌  ▘  ▝▀▘▝▀ ▝▀▘ ▀ ▝▀▘▝▀▘ ▝▀ ▝▀▘▌  ▌  ▝▀ ▘   ▀
 #
 
-# list of ignore flags for `find`
-__deprecatedIgnore() {
-  export __BUILD_DEPRECATED_EXTRAS
-  printf -- "%s\n" \
-    ! -name 'deprecated*.txt' \
-    ! -name 'deprecated.sh' \
-    ! -name 'deprecated*.md' \
-    ! -name 'unused.md' \
-    ! -path '*/documentation/*/release/*' \
-    ! -path "*/.*/*" "${__BUILD_DEPRECATED_EXTRAS[@]+"${__BUILD_DEPRECATED_EXTRAS[@]}"}"
-}
-
 __deprecatedTokens() {
   local exitCode=0 start results
 
   results=$(__environment mktemp) || return $?
   for deprecatedToken in "$@"; do
-    if deprecatedFind __deprecatedIgnore "$deprecatedToken" >"$results"; then
+    if deprecatedFind deprecatedIgnore "$deprecatedToken" >"$results"; then
       statusMessage --last decorate error "DEPRECATED token $(decorate code "$deprecatedToken") found"
       wrapLines "$(decorate code)" "$(decorate reset)" <"$results" || _clean $? "$results" || return $?
       exitCode=1
@@ -212,7 +202,7 @@ __deprecatedCannonsByVersion() {
   local home
 
   home=$(__environment buildHome) || return $?
-  deprecatedCannonFile __deprecatedIgnore "$home/bin/build/deprecated.txt"
+  deprecatedCannonFile deprecatedIgnore "$home/bin/build/deprecated.txt"
 }
 
 #
@@ -223,7 +213,7 @@ __misspellingCannon() {
   local start exitCode=0
   start=$(__environment timingStart) || return $?
   # START OF MISSPELLING CANNON
-  deprecatedCannon __deprecatedIgnore 'decoreate' 'decorate' || exitCode=$?
+  deprecatedCannon deprecatedIgnore 'decoreate' 'decorate' || exitCode=$?
   # END OF MISSPELLING CANNON
   statusMessage --last timingReport "$start" "Misspelling cannon took"
   return "$exitCode"
