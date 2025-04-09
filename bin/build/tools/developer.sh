@@ -236,6 +236,7 @@ developerDevelopmentLink() {
     runBinary=(composer require "$composerPackage")
     path="vendor/$composerPackage"
     versionJSON="$path/composer.json"
+    developmentPath=""
   fi
   [ -n "$variable" ] || __throwArgument "$usage" "--variable is required" || return $?
 
@@ -254,7 +255,11 @@ developerDevelopmentLink() {
   if [ -n "$developmentHome" ]; then
     developmentHome=$(__catchEnvironment "$usage" realPath "${developmentHome%/}") || return $?
   fi
-  [ -d "$developmentHome/$path" ] || __throwEnvironment "$usage" "$variable is not a directory: $(decorate error "$developmentHome/$path")" || return $?
+
+  local source="$developmentHome/$developmentPath"
+  source="${source%/}"
+
+  [ -d "$source" ] || __throwEnvironment "$usage" "$variable is not a directory: $(decorate error "$source")" || return $?
 
   [ "$home" != "$developmentHome" ] || __throwEnvironment "$usage" "This $(decorate warning "is") the development directory: $showName" || return $?
 
@@ -269,9 +274,6 @@ developerDevelopmentLink() {
     fi
   else
     local arrowIcon="➡️" aok="✅"
-
-    local source="$developmentHome/$developmentPath"
-    source="${source%/}"
 
     [ -z "$developmentPath" ] || [ -d "$source" ] || __throwEnvironment "$usage" "$source is not a directory" || return $?
 
