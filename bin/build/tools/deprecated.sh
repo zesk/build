@@ -18,6 +18,13 @@
 #             |_|
 #
 
+# DEPRECATED 2025-04-09
+# nounAction naming
+listFileModificationTimes() {
+  _deprecated "${FUNCNAME[0]}"
+  fileModificationTimes "$@"
+}
+
 # DEPRECATED 2025-02-18
 # nounAction naming
 beginTiming() {

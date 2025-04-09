@@ -1,7 +1,7 @@
 # v0.22.0
 _format
 _command
-_list
+_list |
 
 # v0.17.0
 bin/build/pipeline/

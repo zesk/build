@@ -45,11 +45,14 @@ buildDebugEnabled() {
   return 1
 }
 
+# For __buildDebugEnable
+# Debugging: 513a78fb762a9632315fc564b560d644fd280f89
+# Debugging: f6bef8d783239932a1b4311d027289c42d9d4b3f
+
 # Internal: true
 # Usage: {fn} [ setArgs ]
 # Turn on debugging and additional `set` arguments
 # Actually does 'set -x` - should be only occurrence.
-# Debugging: 9497d5cc396db1a6769106b61e72cb2bb5bb1f67
 # Depends: -
 __buildDebugEnable() {
   set "-x${1-}" # Debugging
@@ -62,6 +65,9 @@ __buildDebugEnable() {
 __buildDebugDisable() {
   set "+x${1-}" # Debugging off
 }
+
+# For buildDebugStart
+# Debugging: c14d97f2fca824204ca0df151f444f4a7f08f556
 
 #
 # Start build debugging if it is enabled.
@@ -511,11 +517,11 @@ _outputTrigger() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-__listOpenFiles() {
+__filesOpenList() {
   lsof -a -d 0-2147483647 -p "$1"
 }
 
-__listChildProcessIDs() {
+__processChildrenIDs() {
   pgrep -P "$1"
 }
 
@@ -543,13 +549,13 @@ debugOpenFiles() {
     shift
   done
   printf "%s\n" "PID: $$"
-  __listOpenFiles "$$"
+  __filesOpenList "$$"
   local child children=()
 
-  read -r -a children < <(__listChildProcessIDs "$$") || :
+  read -r -a children < <(__processChildrenIDs "$$") || :
   for child in "${children[@]+"${children[@]}"}"; do
     printf "%s\n" "Child PID: $child"
-    __listOpenFiles "$child"
+    __filesOpenList "$child"
   done
 }
 _debugOpenFiles() {

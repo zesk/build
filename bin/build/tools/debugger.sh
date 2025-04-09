@@ -325,8 +325,8 @@ __bashDebugCommandUnwatch() {
   export __BUILD_BASH_DEBUG_WATCH
   while read -r -p "$(decorate warning "Unwatch"): " __item; do
     [ -n "$__item" ] || statusMessage printf -- "" && break
-    local __index=0 __list=() __show=() __found
-    __list=()
+    local __index=0 __items=() __show=() __found
+    __items=()
     __found=false
     for __value in "${__BUILD_BASH_DEBUG_WATCH[@]+"${__BUILD_BASH_DEBUG_WATCH[@]}"}"; do
       if [ "$__value" = "$__item" ] || [ "$__index" = "$__item" ]; then
@@ -334,7 +334,7 @@ __bashDebugCommandUnwatch() {
         __found=true
       else
         __show+=("[$(decorate value "$__index")] $(decorate code "$__value")")
-        __list+=("$__value")
+        __items+=("$__value")
       fi
       __index=$((__index + 1))
     done
@@ -342,7 +342,7 @@ __bashDebugCommandUnwatch() {
       # shellcheck disable=SC2059
       printf -- "%s\n%s" "$(decorate error "No $__item found in watch list:")" "$(printf -- "- $(decorate code %s)\n" "${__show[@]+"${__show[@]}"}")"
     fi
-    __BUILD_BASH_DEBUG_WATCH=("${__list[@]+"${__list[@]}"}")
+    __BUILD_BASH_DEBUG_WATCH=("${__items[@]+"${__items[@]}"}")
     _bashDebugWatch
   done
 }

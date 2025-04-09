@@ -151,7 +151,7 @@ _bashSanitizeCheckCopyright() {
     while IFS=":" read -r file pattern; do
       error="$(decorate error "No pattern used")" pattern="$(decorate value "$pattern")" file="$(decorate code "$file")" mapEnvironment <<<"{error}: {pattern} missing from {file}"
     done <"$matches"
-    __throwEnvironment "$usage" used debugging || _clean $? "$matches" || return $?
+    __throwEnvironment "$usage" "File pattern check failed" || _clean $? "$matches" || return $?
   fi
   set +v
 }
@@ -165,15 +165,17 @@ _bashSanitizeCheckDebugging() {
   if fileMatches 'set ["]\?-x' -- -- - >"$matches"; then
     local file line remain debugHash found=false
     while IFS=":" read -r file line remain; do
-      debugHash="$(sed -e "${line}p" | shaPipe)"
+      [ -f "$file" ] || __throwEnvironment "$usage" "returned line \"$file $line $remain\" - not a file" || return $?
+      debugHash="$(sed -e "${line}p" -e d <"$file" | shaPipe)"
       if grep -q -e "Debugging: $debugHash" "$file"; then
         continue
       fi
       found=true
-      debugHash=$debugHash file="$(decorate code "$file")" error="$(decorate error "debugging used")" line="$(decorate value "$line")" remain="$(decorate code "$remain")" mapEnvironment <<<"{error}: {file}:{line} @ {remain} # Debugging: {debugHash}"
+      message=$(debugHash=$debugHash file="$(decorate code "$file")" error="$(decorate error "debugging used")" line="$(decorate value "$line")" remain="$(decorate code "$remain")" mapEnvironment <<<"{error}: {file}:{line} @ {remain} # Debugging: {debugHash}")
+      statusMessage --last printf "%s\n" "$message"
     done <"$matches"
     $found || return 0
-    dumpPipe fileMatches "${BASH_SOURCE[0]}" <"$matches"
+    statusMessage --last dumpPipe "Debugging matches:" "${BASH_SOURCE[0]}" <"$matches"
     __catchEnvironment "$usage" rm -rf "$matches" || return $?
     __throwEnvironment "$usage" "Debugging found" || return $?
   fi

@@ -289,7 +289,7 @@ __identicalCheckMatchFile() {
 #
 # - `# IDENTICAL tokenName 1`
 # - `# _IDENTICAL_ tokenName 1`, and
-# - `# DOC TEMPLATE: tokenName 1`
+# - `# DOC TEMPLATE: ``tokenName 1`
 #
 # This allows for overlapping identical sections within templates with the intent:
 #
@@ -298,12 +298,12 @@ __identicalCheckMatchFile() {
 # - `DOC TEMPLATE:` - used in documentation templates for functions - is handled by internal document generator
 #
 # Usage: {fn} [ --repair repairSource ] [ --help ] [ --interactive ] [ --check checkDirectory ] ...
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
 # Argument: --singles singlesFiles - Optional. File. One or more files which contain a list of allowed `IDENTICAL` singles, one per line.
 # Argument: --single singleToken - Optional. String. One or more tokens which cam be singles.
 # Argument: --repair directory - Optional. Directory. Any files in onr or more directories can be used to repair other files.
 # Argument: --internal - Flag. Optional. Do updates for `# _IDENTICAL_` and `# DOC TEMPLATE:` prefixes first.
-# DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
 # Argument: --interactive - Flag. Optional. Interactive mode on fixing errors.
 # Argument: ... - Optional. Additional arguments are passed directly to `identicalCheck`.
 identicalCheckShell() {

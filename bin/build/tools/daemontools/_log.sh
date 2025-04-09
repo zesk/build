@@ -33,13 +33,10 @@ isUnsignedInteger() {
 
 # <-- END of IDENTICAL _return
 
-# _IDENTICAL_ __execute 10
+# _IDENTICAL_ __execute 7
 
-# Usage: {fn} __execute binary [ ... ]
-# Argument: binary - Required. Executable.
-# Argument: ... - Any arguments are passed to binary
+# Argument: binary ... - Required. Executable. Any arguments are passed to `binary`.
 # Run binary and output failed command upon error
-# Unlike `_sugar.sh`'s `__execute`, this does not depend on `_command`.
 # Requires: _return
 __execute() {
   "$@" || _return "$?" "$@" || return $?
