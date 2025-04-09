@@ -124,30 +124,14 @@ isUnsignedInteger() {
 
 # <-- END of IDENTICAL _return
 
-__applicationToolsList() {
-  developerTrack "${BASH_SOURCE[0]}" --list
-}
-
 __applicationTools() {
   local source="${BASH_SOURCE[0]}"
-  local here="${source%/*}"
-  local __saved=("$@") track=false
-
-  export BUILD_TEXT_BINARY
-  export DEVELOPER_TRACK
-  if [ -n "${DEVELOPER_TRACK-}" ]; then
-    unset DEVELOPER_TRACK
-    track=true
-  fi
+  local here="${source%/*}" __saved=("$@")
 
   set --
-  __build ".." bin : >/dev/null || return $?
-
-  ! $track || developerTrack "${BASH_SOURCE[0]}"
+  __build .. bin : >/dev/null || return $?
 
   bashSourcePath "$(realPath "$here/tools/")" || return $?
-
-  [ -n "${BUILD_TEXT_BINARY-}" ] || BUILD_TEXT_BINARY=toilet
 
   __execute "${__saved[@]+"${__saved[@]}"}" || return $?
 }

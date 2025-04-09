@@ -64,4 +64,14 @@ __tools() {
   __source bin/build/tools.sh "$@"
 }
 
-__tools .. "$@"
+__buildTools() {
+  local source="${BASH_SOURCE[0]}"
+  local here="${source%/*}"
+
+  __tools ..
+  bashSourcePath "$(realPath "$here/tools/")" || return $?
+
+  [ $# -eq 0 ] || __execute "$@"
+}
+
+__buildTools "$@"

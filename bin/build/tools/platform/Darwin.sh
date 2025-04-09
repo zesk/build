@@ -63,3 +63,7 @@ __timestamp() {
 __testPlatformName() {
   printf -- "%s\n" "darwin"
 }
+
+__bigTextBinary() {
+  printf "%s\n" "figlet"
+}

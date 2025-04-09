@@ -87,3 +87,11 @@ else
     printf -- "%s\n" "linux"
   }
 fi
+
+__bigTextBinary() {
+  if apkIsInstalled; then
+    printf "%s\n" "toilet"
+  else
+    printf "%s\n" "figlet"
+  fi
+}

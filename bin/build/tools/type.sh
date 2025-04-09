@@ -96,13 +96,28 @@ isTrue() {
   return 0
 }
 
+# Bash types beyond `type -t`
+isType() {
+  local text
+  text=$(declare -p "$1" 2>/dev/null) || return 1
+  case "$text" in
+    *"declare -ax "*) printf -- "%s\n" "array" "export" ;;
+    *"declare -a "*) printf -- "%s\n" "array" "local" ;;
+    *"declare -x "*) printf -- "%s\n" "string" "export" ;;
+    *"declare -- "*) printf -- "%s\n" "string" "local" ;;
+    *"declare -fx "*) printf -- "%s\n" "function" "export" ;;
+    *"declare -f "*) printf -- "%s\n" "function" "local" ;;
+    *) __throwArgument "$usage" "Unknown type: $1 -> \"$text\"" || return $? ;;
+  esac
+}
+
 # Is a variable declared as an array?
 # Usage: {fn} variableName
 # Argument: variableName - Required. String. Variable to check is an array.
 isArray() {
-  local declareText
-  declareText=$(declare -p "$1" 2>/dev/null) || return 1
-  [ "${declareText#declare -a}" != "$declareText" ]
+  local typeLine
+  read -r typeLine < <(isType "$1")
+  [ "$typeLine" = "array" ]
 }
 
 # IDENTICAL _type 46

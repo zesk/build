@@ -9,6 +9,8 @@
 
 # Display large text in the console for banners and important messages
 #
+# `BUILD_TEXT_BINARY` can be `figlet` or `toilet`
+#
 # Usage: bigText [ --bigger ] Text to output
 #
 # standard (figlet)
@@ -55,6 +57,7 @@ bigText() {
   local fonts binary index=0
 
   binary=$(__catchEnvironment "$usage" buildEnvironmentGet BUILD_TEXT_BINARY) || return $?
+  [ -n "$binary" ] || binary="$(__catchEnvironment "$usage" __bigTextBinary)" || return $?
   [ -n "$binary" ] || __throwEnvironment "$usage" "Need BUILD_TEXT_BINARY" || return $?
   case "$binary" in
     figlet) fonts=("standard" "big") ;;
