@@ -74,7 +74,7 @@ bigText() {
     index=1
     shift
   fi
-  "$binary" -f "${fonts[index]}" "$@"
+  "$binary" -w "$(consoleColumns)" -f "${fonts[index]}" "$@"
 }
 _bigText() {
   # _IDENTICAL_ usageDocument 1
