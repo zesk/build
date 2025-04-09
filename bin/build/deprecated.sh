@@ -158,10 +158,13 @@ ___deprecatedCleanup() {
 # list of ignore flags for `find`
 __deprecatedIgnore() {
   export __BUILD_DEPRECATED_EXTRAS
-  printf -- "%s\n" "!" -name 'deprecated.txt' "!" -name 'deprecated.sh' "!" \
-    -name 'deprecated.md' ! -name 'unused.md' \
-    "!" -path '*/documentation/*/release/*' \
-    "!" -path "*/.*/*" "${__BUILD_DEPRECATED_EXTRAS[@]+"${__BUILD_DEPRECATED_EXTRAS[@]}"}"
+  printf -- "%s\n" \
+    ! -name 'deprecated.txt' \
+    ! -name 'deprecated.sh' \
+    ! -name 'deprecated.md' \
+    ! -name 'unused.md' \
+    ! -path '*/documentation/*/release/*' \
+    ! -path "*/.*/*" "${__BUILD_DEPRECATED_EXTRAS[@]+"${__BUILD_DEPRECATED_EXTRAS[@]}"}"
 }
 
 __deprecatedTokens() {
@@ -284,6 +287,33 @@ __deprecatedConfiguration() {
   return "$exitCode"
 }
 
+# IDENTICAL _return 26
+
+# Usage: {fn} [ exitCode [ message ... ] ]
+# Argument: exitCode - Required. Integer. Exit code to return. Default is 1.
+# Argument: message ... - Optional. String. Message to output to stderr.
+# Exit Code: exitCode
+# Requires: isUnsignedInteger printf _return
+_return() {
+  local r="${1-:1}" && shift 2>/dev/null
+  isUnsignedInteger "$r" || _return 2 "${FUNCNAME[1]-none}:${BASH_LINENO[1]-} -> ${FUNCNAME[0]} non-integer $r" "$@" || return $?
+  printf -- "[%d] ❌ %s\n" "$r" "${*-§}" 1>&2 || : && return "$r"
+}
+
+# Test if an argument is an unsigned integer
+# Source: https://stackoverflow.com/questions/806906/how-do-i-test-if-a-variable-is-a-number-in-bash
+# Credits: F. Hauri - Give Up GitHub (isnum_Case)
+# Original: is_uint
+# Usage: {fn} argument ...
+# Exit Code: 0 - if it is an unsigned integer
+# Exit Code: 1 - if it is not an unsigned integer
+# Requires: _return
+isUnsignedInteger() {
+  [ $# -eq 1 ] || _return 2 "Single argument only: $*" || return $?
+  case "${1#+}" in '' | *[!0-9]*) return 1 ;; esac
+}
+
+# <-- END of IDENTICAL _return
 # IDENTICAL __source 19
 
 # Load a source file and run a command
@@ -314,33 +344,5 @@ __source() {
 __tools() {
   __source bin/build/tools.sh "$@"
 }
-
-# IDENTICAL _return 26
-
-# Usage: {fn} [ exitCode [ message ... ] ]
-# Argument: exitCode - Required. Integer. Exit code to return. Default is 1.
-# Argument: message ... - Optional. String. Message to output to stderr.
-# Exit Code: exitCode
-# Requires: isUnsignedInteger printf _return
-_return() {
-  local r="${1-:1}" && shift 2>/dev/null
-  isUnsignedInteger "$r" || _return 2 "${FUNCNAME[1]-none}:${BASH_LINENO[1]-} -> ${FUNCNAME[0]} non-integer $r" "$@" || return $?
-  printf -- "[%d] ❌ %s\n" "$r" "${*-§}" 1>&2 || : && return "$r"
-}
-
-# Test if an argument is an unsigned integer
-# Source: https://stackoverflow.com/questions/806906/how-do-i-test-if-a-variable-is-a-number-in-bash
-# Credits: F. Hauri - Give Up GitHub (isnum_Case)
-# Original: is_uint
-# Usage: {fn} argument ...
-# Exit Code: 0 - if it is an unsigned integer
-# Exit Code: 1 - if it is not an unsigned integer
-# Requires: _return
-isUnsignedInteger() {
-  [ $# -eq 1 ] || _return 2 "Single argument only: $*" || return $?
-  case "${1#+}" in '' | *[!0-9]*) return 1 ;; esac
-}
-
-# <-- END of IDENTICAL _return
 
 __tools ../.. __deprecatedCleanup "$@"

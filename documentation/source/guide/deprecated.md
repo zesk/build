@@ -72,7 +72,7 @@ This document lists functionality which was removed, why, and when.
 
 ## Release v0.11.4
 
-deprecatedTokens+=(`ops.sh` `__ops`)
+- Deprecated tokens `ops.sh` `__ops`
 
 ## Release v0.11.6
 
@@ -84,8 +84,7 @@ deprecatedTokens+=(`ops.sh` `__ops`)
 
 ## Release v0.11.8
 
-- `aws.sh` `aws.sh`
-  deprecatedToken+=(`__try`)
+- Deprecated tokens `__try`
 
 ## Release v0.11.9
 
