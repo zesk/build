@@ -19,6 +19,8 @@ export globalTestFailure=
 # Argument: --help - Optional. This help.
 # Argument: --clean - Optional. Delete test artifact files and exit. (No tests run)
 # Argument: --continue - Optional. Flag. Continue from last successful test.
+# Argument: --delete directoryOrFile - Optional. FileDirectory. A file or directory to delete when the test suite terminates.
+# Argument: --delete-common - Flag. Delete `./vendor` and `./node_modules` (and other temporary build directories) by default.
 # Argument: -c - Optional. Flag. Continue from last successful test.
 # Argument: --verbose - Optional. Flag. Be verbose.
 # Argument: --coverage - Optional. Flag. Feature in progress - generate a coverage file for tests.
@@ -125,6 +127,15 @@ testSuite() {
       --clean)
         cleanFlag=true
         ;;
+      --delete)
+        shift
+        dd+=("$(usageArgumentFileDirectory "$usage" "$argument" "${1-}")") || return $?
+        ;;
+      --delete-common)
+        dd+=("$(buildHome)/vendor") || return $?
+        dd+=("$(buildHome)/node_modules") || return $?
+        dd+=("$(buildHome)/.composer") || return $?
+        ;;
       --messy)
         trap '__testCleanupMess true' EXIT QUIT TERM
         ;;
@@ -134,6 +145,13 @@ testSuite() {
     esac
     shift || __throwArgument "$usage" "shift argument $(decorate label "$argument")" || return $?
   done
+
+  export TERM
+
+  # Test internal exports
+  export __TEST_SUITE_CLEAN_EXIT __TEST_SUITE_TRACE __TEST_SUITE_CLEAN_DIRS
+
+  __testSuiteInitialize "$beQuiet"
 
   if $cleanFlag; then
     $beQuiet || statusMessage decorate warning "Cleaning tests and exiting ... "
@@ -156,13 +174,6 @@ testSuite() {
   startString="$(__catchEnvironment "$usage" date +"%F %T")" || return $?
   allTestStart=$(timingStart) || return $?
 
-  export TERM
-
-  # Test internal exports
-  export __TEST_SUITE_CLEAN_EXIT __TEST_SUITE_TRACE
-
-  __testSuiteInitialize "$beQuiet"
-
   quietLog="$(__catchEnvironment "$usage" buildQuietLog "$usage")" || return $?
 
   __catchEnvironment "$usage" requireFileDirectory "$quietLog" || return $?
@@ -175,7 +186,7 @@ testSuite() {
   export BUILD_COLORS BUILD_COLORS_MODE
   BUILD_COLORS_MODE=$(__catchEnvironment "$usage" consoleConfigureColorMode) || return $?
 
-  [ "${#testPaths[@]}" -gt 0 ] || __throwArgument "$usage" "Need at least one --tests directory" || return $?
+  [ "${#testPaths[@]}" -gt 0 ] || __throwArgument "$usage" "Need at least one --tests directory ($(decorate each quote "${__saved[@]}"))" || return $?
 
   #
   # Intro statement to console
@@ -414,10 +425,11 @@ __testSuiteInitialize() {
   FUNCNEST=200
 
   # Test internal exports
-  export __TEST_SUITE_CLEAN_EXIT __TEST_SUITE_TRACE
+  export __TEST_SUITE_CLEAN_EXIT __TEST_SUITE_TRACE __TEST_SUITE_CLEAN_DIRS
 
   __TEST_SUITE_CLEAN_EXIT=false
   __TEST_SUITE_TRACE=initialization
+  __TEST_SUITE_CLEAN_DIRS=()
 
   # Add a trap
   trap '__testCleanupMess' EXIT QUIT TERM ERR
@@ -955,14 +967,16 @@ __testCleanup() {
   home=$(__environment buildHome) || return $?
   cache=$(__environment buildCacheDirectory) || return $?
   shopt -u failglob
-  __environment rm -rf "$home/vendor/" "$home/node_modules/" "$home/composer.json" "$home/composer.lock" "$home/test."*/ "$home/.test"*/ "./aws" || return $?
+  export __TEST_CLEANUP_DIRS
+
+  __environment rm -rf "$home/test."*/ "$home/.test"*/ "${__TEST_CLEANUP_DIRS[@]+"${__TEST_CLEANUP_DIRS[@]}"}" || return $?
   if [ -d "$cache" ]; then
     # Been getting errors, I think, in this function in testing on Darwin
     # Added debugging to see if I can locate why - seems to be a race condition
     # Delete non-dot files
-    __environment find "$cache" -type f ! -path '*/.build/.*/*' -delete || _undo $? printf -- "find -delete FAILED ON LINE %d (files)" "$LINENO" 1>&2 || return $?
+    __environment find "$cache" -type f ! -path '*/.build/.*/*' -delete || _undo $? printf "find -delete FAILED ON LINE %d (files)" "$LINENO" 1>&2 || return $?
     # Delete empty directories
-    __environment find "$cache" -depth -type d ! -path '*/.build/.*/*' -empty -delete || _undo $? printf -- "find -delete FAILED ON LINE %d (empty directories)" "$LINENO" 1>&2 || return $?
+    __environment find "$cache" -depth -type d ! -path '*/.build/.*/*' -empty -delete || _undo $? printf "find -delete FAILED ON LINE %d (empty directories)" "$LINENO" 1>&2 || return $?
   fi
 }
 

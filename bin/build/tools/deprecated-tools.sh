@@ -198,7 +198,8 @@ deprecatedFind() {
         else
           [ -n "$cannonPath" ] || cannonPath=$(__catchEnvironment "$usage" buildHome) || return $?
           search="$(usageArgumentString "$usage" "search" "${1-}")" || return $?
-          if find "$cannonPath" -type f "${aa[@]}" -print0 | xargs -0 grep -q "$1"; then
+          search="$(quoteGrepPattern "$search")"
+          if find "$cannonPath" -type f "${aa[@]}" -print0 | xargs -0 grep -n -l -e "$search"; then
             return 0
           fi
         fi

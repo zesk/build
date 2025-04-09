@@ -164,36 +164,14 @@ __deprecatedIgnore() {
     "!" -path "*/.*/*" "${__BUILD_DEPRECATED_EXTRAS[@]+"${__BUILD_DEPRECATED_EXTRAS[@]}"}"
 }
 
-# Find files which match a token
-__deprecatedFind() {
-  local ignoreStuff=()
-  read -d '' -r -a ignoreStuff < <(__deprecatedIgnore) || [ "${#ignoreStuff[@]}" -gt 0 ] || _environment "__deprecatedIgnore empty?" || return $?
-  while [ "$#" -gt 0 ]; do
-    if find . -type f -name '*.sh' -or -name '*.md' "${ignoreStuff[@]}" -print0 | xargs -0 grep -q "$1"; then
-      return 0
-    fi
-    shift
-  done
-  return 1
-}
-
-# Usage: {fn} search replace [ additionalCannonArgs ]
-__deprecatedCannon() {
-  local from="$1" to="$2" ignoreStuff=()
-  shift 2
-  read -d '' -r -a ignoreStuff < <(__deprecatedIgnore) || [ "${#ignoreStuff[@]}" -gt 0 ] || _environment "__deprecatedIgnore empty?" || return $?
-  # ignore should go at the end so it has priority over previous entries
-  cannon "$from" "$to" "$@" "${ignoreStuff[@]}"
-}
-
 __deprecatedTokens() {
-  local ignoreStuff exitCode=0 start results
-  read -d '' -r -a ignoreStuff < <(__deprecatedIgnore) || :
+  local exitCode=0 start results
+
   results=$(__environment mktemp) || return $?
   start=$(__environment timingStart) || return $?
   for deprecatedToken in "$@"; do
     statusMessage decorate info "Looking for deprecated token $(decorate code "$deprecatedToken") ..."
-    if find . -type f "${ignoreStuff[@]+"${ignoreStuff[@]}"}" -print0 | xargs -0 grep -l -e "$deprecatedToken" >"$results"; then
+    if deprecatedFind __deprecatedIgnore "$deprecatedToken" >"$results"; then
       statusMessage --last decorate error "DEPRECATED token $(decorate code "$deprecatedToken") found"
       wrapLines "$(decorate code)" "$(decorate reset)" <"$results" || _clean $? "$results" || return $?
       exitCode=1
@@ -254,7 +232,7 @@ __misspellingCannon() {
   local start exitCode=0
   start=$(__environment timingStart) || return $?
   # START OF MISSPELLING CANNON
-  __deprecatedCannon 'decoreate' 'decorate' || exitCode=$?
+  deprecatedCannon __deprecatedIgnore 'decoreate' 'decorate' || exitCode=$?
   # END OF MISSPELLING CANNON
   statusMessage --last timingReport "$start" "Misspelling cannon took"
   return "$exitCode"
@@ -316,11 +294,11 @@ __deprecatedConfiguration() {
 # Security: source
 __source() {
   local me="${BASH_SOURCE[0]}" e=253
-  local here="${me%/*}" a=()
+  local here="${me%/*}"
   local source="$here/${2:-".."}/${1-}" && shift 2 || _return $e "missing source" || return $?
   [ -d "${source%/*}" ] || _return $e "${source%/*} is not a directory" || return $?
   [ -f "$source" ] && [ -x "$source" ] || _return $e "$source not an executable file" "$@" || return $?
-  while [ $# -gt 0 ]; do a+=("$1") && shift; done
+  local a=("$@") && set --
   # shellcheck source=/dev/null
   source "$source" || _return $e source "$source" "$@" || return $?
   [ ${#a[@]} -gt 0 ] || return 0

@@ -25,11 +25,11 @@
 # Security: source
 __source() {
   local me="${BASH_SOURCE[0]}" e=253
-  local here="${me%/*}" a=()
+  local here="${me%/*}"
   local source="$here/${2:-".."}/${1-}" && shift 2 || _return $e "missing source" || return $?
   [ -d "${source%/*}" ] || _return $e "${source%/*} is not a directory" || return $?
   [ -f "$source" ] && [ -x "$source" ] || _return $e "$source not an executable file" "$@" || return $?
-  while [ $# -gt 0 ]; do a+=("$1") && shift; done
+  local a=("$@") && set --
   # shellcheck source=/dev/null
   source "$source" || _return $e source "$source" "$@" || return $?
   [ ${#a[@]} -gt 0 ] || return 0

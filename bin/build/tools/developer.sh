@@ -139,7 +139,7 @@ buildDevelopmentLink() {
     # _IDENTICAL_ argument-esac-shift 1
     shift
   done
-  developerDevelopmentLink --handler "$usage" --binary "install-bin-build.sh" --path "bin/build" --version-json "bin/build/build.json" --variable "BUILD_DEVELOPMENT_HOME" "${__saved[@]+"${__saved[@]}"}"
+  developerDevelopmentLink --handler "$usage" --binary "install-bin-build.sh" --path "bin/build" --development-path "bin/build" --version-json "bin/build/build.json" --variable "BUILD_DEVELOPMENT_HOME" "${__saved[@]+"${__saved[@]}"}"
 }
 _buildDevelopmentLink() {
   # _IDENTICAL_ usageDocument 1
@@ -148,17 +148,20 @@ _buildDevelopmentLink() {
 
 # Link a current library with another version being developed nearby using a link
 # Does not work inside docker containers unless you explicitly do some magic with paths (maybe we will add this)
-# Argument: --binary - String. Required. The binary to install the library remotely if needed to revert back.
-# Argument: --path - ApplicationDirectory. Required. The library path to convert to a link.
-# Argument: --version-json - ApplicationFile. Required. The library JSON file to check.
-# Argument: --variable - EnvironmentVariable. Required. The environment variable which represents the local path of the library to link to.
+# Argument: --binary - String. Optional. The binary to install the library remotely if needed to revert back.
+# Argument: --composer composerPackage - String. Optional. The composer package to convert to a link (or copy.)
+# Argument: --path applicationPath - ApplicationDirectory. Required. The library path to convert to a link (or copy).
+# Argument: --development-path developmentPath- Directory. Optional. Path in the target development directory to link (or copy) to the path.
+# Argument: --version-json jsonFile - ApplicationFile. Required. The library JSON file to check.
+# Argument: --version-selector jsonFile - String. Optional. Query to extract version from JSON file (defaults to `.version`)
+# Argument: --variable variableNameValue - EnvironmentVariable. Required. The environment variable which represents the local path of the library to link to.
 # Argument: --copy - Flag. Optional. Copy the files instead of creating a link - more compatible with Docker but slower and requires synchronization.
 # Argument: --reset - Flag. Optional. Revert the link and reinstall using the original binary.
 # Test: TODO
 developerDevelopmentLink() {
   local usage="_${FUNCNAME[0]}"
 
-  local resetFlag=false binary="" path="" versionJSON="" variable="" copyFlag=false
+  local resetFlag=false path="" versionJSON="" variable="" copyFlag=false composerPackage="" developmentPath="" versionSelector="" runBinary=()
 
   # _IDENTICAL_ argument-case-header 5
   local __saved=("$@") __count=$#
@@ -179,9 +182,17 @@ developerDevelopmentLink() {
       --copy)
         copyFlag=true
         ;;
+      --composer)
+        shift
+        composerPackage=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
+        ;;
       --binary)
         shift
-        binary=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
+        runBinary+=("$(usageArgumentString "$usage" "$argument" "${1-}")") || return $?
+        ;;
+      --development-path)
+        shift
+        developmentPath=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
         ;;
       --path)
         shift
@@ -190,6 +201,10 @@ developerDevelopmentLink() {
       --version-json)
         shift
         versionJSON=$(usageArgumentApplicationFile "$usage" "$argument" "${1-}") || return $?
+        ;;
+      --version-selector)
+        shift
+        versionSelector=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
         ;;
       --variable)
         shift
@@ -207,42 +222,59 @@ developerDevelopmentLink() {
     shift
   done
 
-  [ -n "$binary" ] || __throwArgument "$usage" "--binary is required" || return $?
-  [ -n "$path" ] || __throwArgument "$usage" "--path is required" || return $?
-  [ -n "$versionJSON" ] || __throwArgument "$usage" "--version-json is required" || return $?
-  [ -n "$variable" ] || __throwArgument "$usage" "--variable is required" || return $?
+  [ -n "$versionSelector" ] || versionSelector=".version"
+
   local home target
+  home=$(__catchEnvironment "$usage" buildHome) || return $?
+  home=$(__catchEnvironment "$usage" realPath "${home%/}") || return $?
+
+  if [ -z "$composerPackage" ]; then
+    [ "${#runBinary[@]}" -gt 0 ] || __throwArgument "$usage" "--binary or --composer is required" || return $?
+    [ -n "$path" ] || __throwArgument "$usage" "--path is required" || return $?
+    [ -n "$versionJSON" ] || __throwArgument "$usage" "--version-json is required" || return $?
+  else
+    runBinary=(composer require "$composerPackage")
+    path="vendor/$composerPackage"
+    versionJSON="$path/composer.json"
+  fi
+  [ -n "$variable" ] || __throwArgument "$usage" "--variable is required" || return $?
 
   local developmentHome=""
 
-  [ -n "$binary" ] || __throwArgument "$usage" "--binary is required" || return $?
   path="${path%/}"
-  [ -n "$versionJSON" ] || __throwArgument "$usage" "--version-json is required" || return $?
-
-  home=$(__catchEnvironment "$usage" buildHome) || return $?
   target="$home/$path"
+  developmentPath="${developmentPath#/}"
+  developmentPath="${developmentPath%/}"
 
   showName=$(buildEnvironmentGet APPLICATION_NAME) || return $?
   showName=$(decorate label "$showName")
+
+  # developmentHome
   developmentHome=$(__catchEnvironment "$usage" buildEnvironmentGet "$variable") || return $?
   if [ -n "$developmentHome" ]; then
     developmentHome=$(__catchEnvironment "$usage" realPath "${developmentHome%/}") || return $?
   fi
   [ -d "$developmentHome/$path" ] || __throwEnvironment "$usage" "$variable is not a directory: $(decorate error "$developmentHome/$path")" || return $?
-  home=$(__catchEnvironment "$usage" realPath "${home%/}") || return $?
 
   [ "$home" != "$developmentHome" ] || __throwEnvironment "$usage" "This $(decorate warning "is") the development directory: $showName" || return $?
 
   if $resetFlag; then
     local versionText
-    versionText="$(jq -r .version <"$home/$versionJSON")"
+    [ -f "$home/$versionJSON" ] || __throwEnvironment "$usage" "$(decorate file "$home/$versionJSON") does not exist" || return $?
+    versionText="$(jq -r "$versionSelector" <"$home/$versionJSON")"
     if [ -L "$target" ]; then
-      __developerDevelopmentLink "$home" "$path" "$binary" "$developmentHome"
+      __developerDevelopmentRevert "$usage" "$home" "$path" "$developmentHome" "${runBinary[@]}"
     else
       statusMessage --last printf -- "%s using %s\n" "$showName" "$(decorate file "$target")" "$versionText"
     fi
   else
     local arrowIcon="➡️" aok="✅"
+
+    local source="$developmentHome/$developmentPath"
+    source="${source%/}"
+
+    [ -z "$developmentPath" ] || [ -d "$source" ] || __throwEnvironment "$usage" "$source is not a directory" || return $?
+
     if $copyFlag; then
       local verb
       if [ -L "$target" ]; then
@@ -251,10 +283,10 @@ developerDevelopmentLink() {
       fi
       if whichExists rsync; then
         verb="Synchronized"
-        __catchEnvironment "$usage" rsync -a "$developmentHome/$path/" "$target/" || return $?
+        __catchEnvironment "$usage" rsync -a "$source/" "$target/" || return $?
       else
         verb="Copied"
-        __catchEnvironment "$usage" cp -R "$developmentHome/" "$target" || return $?
+        __catchEnvironment "$usage" cp -R "$source/" "$target" || return $?
       fi
       printf -- "%s %s %s %s %s (%s)\n" "$aok" "$(decorate info "$verb")" "$(decorate file "$developmentHome")" "$arrowIcon" "$showName" "$(decorate file "$(realPath "$target")")"
     elif [ -L "$target" ]; then
@@ -262,7 +294,7 @@ developerDevelopmentLink() {
     elif [ -f "$home/$versionJSON" ]; then
       if confirmYesNo --timeout 30 --default false "$(decorate warning "Removing $(decorate file "$target") in project $showName"?)"; then
         __catchEnvironment "$usage" rm -rf "$target" || return $?
-        __catchEnvironment "$usage" ln -s "$developmentHome/$path" "$target" || return $?
+        __catchEnvironment "$usage" ln -s "$source" "$target" || return $?
       else
         statusMessage --last decorate error "Nothing removed."
       fi
@@ -271,29 +303,30 @@ developerDevelopmentLink() {
     fi
   fi
 }
+
 _developerDevelopmentLink() {
   # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
+
+# Installer can fall back
 __developerDevelopmentRevert() {
-  local home="$1" relPath="$2" binary="$3" developmentHome="$4"
+  local usage="$1" home="$2" relPath="$3" developmentHome="$4" && shift 4
+
+  [ $# -gt 0 ] || __throwArgument "$usage" "Missing installer" || return $?
 
   local target="$home/$relPath/"
-
   __catchEnvironment "$usage" rm -rf "$target" || return $?
-  local installer
-  if installer=$(find "$home" -name "$binary" | head -n 1); then
-    if [ ! -x "$installer" ]; then
-      decorate warning "$(decorate file "$installer") is not executable, replacing" || return $?
-      installer=""
-    fi
-  fi
-  if [ -z "$installr" ]; then
-    __catchEnvironment "$usage" requireDirectory "$target" || return $?
+
+  if [ $# -eq 1 ] && ! isExecutable "$1"; then
+    local binary="$1" installer
     installer="$developmentHome/$relPath/$binary"]
     [ -x "$installer" ] || __throwEnvironment "$usage" "$installer does not exist" || return $?
+    __catchEnvironment "$usage" requireDirectory "$target" || return $?
     __catchEnvironment "$usage" cp "$installer" "$target/$binary" || return $?
-    installer="$target/$binary"
+    set -- "$target/$binary"
   fi
-  __catchEnvironment "$usage" "$installer" || return $?
+
+  __catchEnvironment "$usage" "$@" || return $?
+  [ -d "$target" ] || __throwEnvironment "$usage" "Installer $(decorate code "$*") did not install $(decorate file "$target")"
 }

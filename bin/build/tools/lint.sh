@@ -140,7 +140,7 @@ bashLintFiles() {
     {
       statusMessage --last printf -- "%s\n" "$(decorate warning "${#failedFiles[@]} $(plural ${#failedFiles[@]} file files) failed:")"
       for failedFile in "${failedFiles[@]}"; do
-        bashLint --verbose "$failedFile" 2>/dev/null | dumpPipe "$(decorate warning "$(lineFill "$(decorate file "$failedFile")")")"
+        bashLint --verbose "$failedFile" 2>/dev/null | dumpPipe "$(decorate warning "$(lineFill "•" "••[ $(decorate file "$failedFile") ]")")"
       done
     } 1>&2
     if $interactive; then
