@@ -70,6 +70,7 @@ _isDockerComposeCommand() {
 # Argument: --staging - Flag. Staging container build. Shortcut for `--deployment staging` (uses `.STAGING.env`)
 # Argument: --deployment deploymentName - String. Deployment name to use. (uses `.$(uppercase "$deploymentName").env`)
 # Argument: --volume - String. Name of the volume associated with the container to preserve or delete.
+# Argument: --build - Flag. `build` command with volume management
 # Argument: --clean - Flag. Delete the volume prior to building.
 # Argument: --keep - Flag. Keep the volume during build.
 # Argument: --default-env | --env environmentNameValue - EnvironmentNameValue. An environment variable name and value (in the form `NAME=value` to require in the `.env` file.
