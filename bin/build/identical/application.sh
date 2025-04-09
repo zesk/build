@@ -1,11 +1,17 @@
 #!/usr/bin/env bash
 #
-# Zesk Build application tools extension
+# Original of application.sh
+#
+# This template can be used to load or install Zesk Build in another project
+#
+# - Copy this file to bin/tools.sh
+# - Copy install-bin-build.sh to bin/install-bin-build.sh
+# - `source bin/tools.sh` installs and loads Zesk Build.
 #
 # Copyright &copy; 2025, Market Acumen, Inc.
 #
 
-# _IDENTICAL_ application.sh 145
+# _IDENTICAL_ application.sh EOF
 
 #
 # This file generically loads all application tools in `./bin/tools` and allows for extensions
