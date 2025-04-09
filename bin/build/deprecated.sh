@@ -159,9 +159,9 @@ ___deprecatedCleanup() {
 __deprecatedIgnore() {
   export __BUILD_DEPRECATED_EXTRAS
   printf -- "%s\n" \
-    ! -name 'deprecated.txt' \
+    ! -name 'deprecated*.txt' \
     ! -name 'deprecated.sh' \
-    ! -name 'deprecated.md' \
+    ! -name 'deprecated*.md' \
     ! -name 'unused.md' \
     ! -path '*/documentation/*/release/*' \
     ! -path "*/.*/*" "${__BUILD_DEPRECATED_EXTRAS[@]+"${__BUILD_DEPRECATED_EXTRAS[@]}"}"
@@ -171,9 +171,7 @@ __deprecatedTokens() {
   local exitCode=0 start results
 
   results=$(__environment mktemp) || return $?
-  start=$(__environment timingStart) || return $?
   for deprecatedToken in "$@"; do
-    statusMessage decorate info "Looking for deprecated token $(decorate code "$deprecatedToken") ..."
     if deprecatedFind __deprecatedIgnore "$deprecatedToken" >"$results"; then
       statusMessage --last decorate error "DEPRECATED token $(decorate code "$deprecatedToken") found"
       wrapLines "$(decorate code)" "$(decorate reset)" <"$results" || _clean $? "$results" || return $?
@@ -181,7 +179,6 @@ __deprecatedTokens() {
     fi
   done
   __environment rm -rf "$results" || return $?
-  statusMessage --last timingReport "$start" "Deprecated token scan took"
   return "$exitCode"
 }
 
@@ -189,32 +186,23 @@ __deprecatedTokens() {
 # --tokens
 #
 __deprecatedTokensByVersion() {
-  local deprecatedTokens=()
-  deprecatedTokens=()
+  local home line tokens=() deprecatedTokens=()
 
-  # v0.22.0
-  deprecatedTokens+=(_format _command _list)
-
-  # v0.17.0
-  # deprecatedToken+=(' --env ')
-
-  # v0.14.3
+  start=$(__environment timingStart) || return $?
   home=$(__environment buildHome) || return $?
-  for file in "$home/bin/build/pipeline/"*.sh; do
-    deprecatedToken+=("${file#"$home"}")
-  done
-  for file in "$home/bin/build/install/"*.sh; do
-    deprecatedToken+=("${file#"$home"}")
-  done
-  deprecatedToken+=('__''try')
-  # v0.11.4
-  deprecatedTokens+=("ops"".sh" "__""ops")
-  deprecatedTokens+=(crontab-application-sync.sh)
-  # v0.7.10
-  deprecatedToken+=('bin/build/pipeline')
-  # v0.7.0
-  deprecatedTokens+=(dockerPHPExtensions usageWrapper usageRequireBinary usage "[^_]usageEnvironment")
-  __deprecatedTokens "${deprecatedToken[@]}"
+  while read -r line; do
+    if [ "${line##}" != "${line}" ]; then
+      comment=$(trimSpace "${line##}")
+      statusMessage decorate value "$comment ..."
+    fi
+    IFS="|" read -r -a tokens <<<"$line" || :
+    if [ "${#tokens[@]}" -gt 0 ]; then
+      deprecatedTokens+=("${tokens[@]}")
+    fi
+    statusMessage decorate info "$comment deprecated tokens: $(decorate each code "${deprecatedTokens[@]}") ..."
+    __deprecatedTokens "${deprecatedTokens[@]}"
+  done <"$home/bin/build/deprecated-tokens.txt"
+  statusMessage --last timingReport "$start" "Deprecated token scan took"
 }
 
 #
