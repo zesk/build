@@ -287,9 +287,9 @@ __identicalCheckMatchFile() {
 #
 # Looks for up to three tokens in code:
 #
-# - `# IDENTICAL tokenName 1`
-# - `# _IDENTICAL_ tokenName 1`, and
-# - `# DOC TEMPLATE: ``tokenName 1`
+# - `# ``IDENTICAL tokenName 1`
+# - `# ``_IDENTICAL_ tokenName 1`, and
+# - `# ``DOC TEMPLATE: tokenName 1`
 #
 # This allows for overlapping identical sections within templates with the intent:
 #
