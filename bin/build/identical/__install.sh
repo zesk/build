@@ -6,7 +6,6 @@
 #
 # Copyright &copy; 2025 Market Acumen, Inc.
 #
-# Does NOT require IDENTICAL __execute as `tools.sh` supplies that as well
 
 # IDENTICAL __install EOF
 
@@ -19,7 +18,7 @@
 # Requires: _return __execute
 __install() {
   local installer="${1-}" source="${2-}" relativeHome="${3:-".."}" me="${BASH_SOURCE[0]}"
-  local here="${me%/*}" e=253 arguments=()
+  local here="${me%/*}" e=253 a
   local install="$here/$relativeHome/$installer" tools="$here/$relativeHome/$source"
   [ -n "$installer" ] || _return $e "blank installer" || return $?
   [ -n "$source" ] || _return $e "blank source" || return $?
@@ -28,9 +27,9 @@ __install() {
     [ -d "${tools%/*}" ] || _return $e "$install failed to create directory ${tools%/*}" || return $?
   fi
   [ -x "$tools" ] || _return $e "$install failed to create $tools" "$@" || return $?
-  shift && shift && shift && while [ $# -gt 0 ]; do arguments+=("$1") && shift; done
+  shift 3 && a=("$@") && set --
   # shellcheck source=/dev/null
-  source "$tools" || _return $e source "$tools" || return $?
-  [ ${#arguments[@]} -gt 0 ] || return 0
-  __execute "${arguments[@]}" || return $?
+  source "$tools" || _return "$e" source "$tools" || return $?
+  [ ${#a[@]} -gt 0 ] || return 0
+  __execute "${a[@]}" || return $?
 }

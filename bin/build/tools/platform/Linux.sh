@@ -14,7 +14,7 @@ else
 fi
 
 # Requires: find stat
-__listFileModificationTimes() {
+__fileModificationTimes() {
   local directory="$1" && shift
   find "$directory" -type f "$@" -exec stat --format='%Y %n' {} \;
 }

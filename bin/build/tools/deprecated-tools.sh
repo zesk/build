@@ -86,6 +86,74 @@ _deprecatedIgnore() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
+# Run deprecated tokens file search
+deprecatedTokensFile() {
+  local usage="_${FUNCNAME[0]}"
+
+  local findArgumentFunction="" files=() cannonPath=""
+
+  # _IDENTICAL_ argument-case-header 5
+  local __saved=("$@") __count=$#
+  while [ $# -gt 0 ]; do
+    local argument="$1" __index=$((__count - $# + 1))
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
+    case "$argument" in
+      # _IDENTICAL_ --help 4
+      --help)
+        "$usage" 0
+        return $?
+        ;;
+      --path)
+        shift
+        cannonPath=$(usageArgumentDirectory "$usage" "$argument cannonPath" "${1-}") || return $?
+        ;;
+      *)
+        if [ -z "$findArgumentFunction" ]; then
+          findArgumentFunction=$(usageArgumentFunction "$usage" "ignoreFunction" "$1") || return $?
+        else
+          files+=("$(usageArgumentFile "$usage" "cannonFile" "$1")") || return $?
+        fi
+        ;;
+    esac
+    # _IDENTICAL_ argument-esac-shift 1
+    shift
+  done
+
+  [ -n "$findArgumentFunction" ] || __throwArgument "$usage" "findArgumentFunction required" || return $?
+  [ -n "$cannonPath" ] || cannonPath=$(__catchEnvironment "$usage" buildHome) || return $?
+
+  local line tokens=()
+  local exitCode=0 start results comment="" commentText="(start of file)"
+
+  start=$(timingStart)
+  results=$(fileTemporaryName "$usage") || return $?
+  while read -r line; do
+    comment="${line#\#}"
+    if [ "$comment" != "$line" ]; then
+      comment=$(trimSpace "$comment")
+      commentText="$(decorate info "$(buildEnvironmentGet APPLICATION_NAME)") $(decorate label "$comment")"
+      statusMessage printf "%s\n" "$commentText ..."
+      continue
+    fi
+    IFS="|" read -r -a tokens <<<"$line" || :
+    if [ "${#tokens[@]}" -gt 0 ]; then
+      statusMessage decorate info "$commentText deprecated tokens: $(decorate each code "${tokens[@]}") ..."
+      if deprecatedFind "$findArgumentFunction" "${tokens[@]}" >"$results"; then
+        statusMessage --last decorate error "$commentText token found: $(decorate each code "${tokens[@]}")"
+        wrapLines "$(decorate code)" "$(decorate reset)" <"$results"
+        exitCode=1
+      fi
+    fi
+  done < <(cat "${files[@]+"${files[@]}"}")
+  __catchEnvironment "$usage" rm -rf "$results" || return $?
+
+  statusMessage --last timingReport "$start" "Deprecated token scan took"
+}
+_deprecatedTokensFile() {
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
 # Argument: findArgumentFunction - Function. Required. Find arguments (for `find`) for cannon.
 # Argument: cannonFile - File. Required. One or more files delimited with `|` characters, one per line `search|replace|findArguments|...`. If not files are supplied then pipe file via stdin.
 # Run cannon using a configuration file or files.

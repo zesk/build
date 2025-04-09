@@ -8,18 +8,6 @@
 # Docs: contextOpen ./documentation/source/tools/sugar.md
 # Test: contextOpen ./test/tools/sugar-tests.sh
 
-# IDENTICAL __execute 10
-
-# Usage: {fn} __execute binary [ ... ]
-# Argument: binary - Required. Executable.
-# Argument: ... - Any arguments are passed to binary
-# Run binary and output failed command upon error
-# Unlike `_sugar.sh`'s `__execute`, this does not depend on `_command`.
-# Requires: _return
-__execute() {
-  "$@" || _return "$?" "$@" || return $?
-}
-
 # Run a command, fail using a handler
 # Usage: {fn} handler command arguments
 # Argument: handler - Callable. Required. Function to call on error.
@@ -163,6 +151,15 @@ mapReturn() {
 _mapReturn() {
   # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+# _IDENTICAL_ __execute 7
+
+# Argument: binary ... - Required. Executable. Any arguments are passed to `binary`.
+# Run binary and output failed command upon error
+# Requires: _return
+__execute() {
+  "$@" || _return "$?" "$@" || return $?
 }
 
 # IDENTICAL _undo 38

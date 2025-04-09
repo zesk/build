@@ -33,7 +33,7 @@ isUnsignedInteger() {
 
 # <-- END of IDENTICAL _return
 
-# IDENTICAL __execute 10
+# _IDENTICAL_ __execute 10
 
 # Usage: {fn} __execute binary [ ... ]
 # Argument: binary - Required. Executable.

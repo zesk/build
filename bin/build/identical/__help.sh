@@ -6,8 +6,6 @@
 #
 # Copyright &copy; 2025 Market Acumen, Inc.
 #
-# Requires: IDENTICAL _return
-# Does NOT require IDENTICAL __execute as `tools.sh` supplies that as well
 
 # IDENTICAL __help EOF
 
@@ -27,7 +25,7 @@
 # Example:     __help "$usage" "$@" || return 0
 # Example:     [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return 0
 # Example:     [ $# -eq 0 ] || __help --only "$usage" "$@" || return 0
-# Depends: __throwArgument
+# Requires: __throwArgument
 __help() {
   local usage="${1-}" && shift
   if [ "$usage" = "--only" ]; then

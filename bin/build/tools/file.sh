@@ -9,6 +9,20 @@
 #
 #
 
+# TODO suggest rename
+#mostRecentlyModifiedFile|fileRecentlyModified
+#mostRecentlyModifiedTimestamp|fileTimestampRecentlyModified
+#isNewestFile|fileIsNewest
+#isOldestFile|fileIsOldest
+#oldestFile|fileOldest
+#newestFile|fileNewest
+#modifiedSeconds|fileModifiedSeconds
+#modifiedDays|fileModifiedDays
+#modificationSeconds|fileModificationSeconds
+#modificationTime|fileModificationTime
+#renameFiles|filesRename
+
+
 #
 # Renames "$file0$oldSuffix" to "$file0$newSuffix" if file exists and outputs a message using the actionVerb
 #
@@ -107,7 +121,7 @@ _modificationSeconds() {
 # Output: 1704312758 bin/build/deprecated.sh
 # Output: 1705442647 bin/build/build.json
 #
-listFileModificationTimes() {
+fileModificationTimes() {
   local usage="_${FUNCNAME[0]}"
   local directory
 
@@ -115,9 +129,9 @@ listFileModificationTimes() {
   [ -d "$directory" ] || __throwArgument "$usage" "Not a directory $(decorate code "$directory")" || return $?
   shift || :
   # See: platform
-  __listFileModificationTimes "$directory" "$@"
+  __fileModificationTimes "$directory" "$@"
 }
-_listFileModificationTimes() {
+_fileModificationTimes() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -130,7 +144,7 @@ mostRecentlyModifiedFile() {
   directory="$1"
   [ -d "$directory" ] || __throwArgument "$usage" "Not a directory $(decorate code "$directory")" || return $?
   shift || :
-  listFileModificationTimes "$directory" -type f "$@" | sort -r | head -1 | cut -f2- -d" "
+  fileModificationTimes "$directory" -type f "$@" | sort -r | head -1 | cut -f2- -d" "
 }
 _mostRecentlyModifiedFile() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
@@ -145,7 +159,7 @@ mostRecentlyModifiedTimestamp() {
   directory="$1"
   [ -d "$directory" ] || __throwArgument "$usage" "Not a directory $(decorate code "$directory")" || return $?
   shift || :
-  listFileModificationTimes "$directory" -type f "$@" | sort -r | head -1 | cut -f1 -d" "
+  fileModificationTimes "$directory" -type f "$@" | sort -r | head -1 | cut -f1 -d" "
 }
 _mostRecentlyModifiedTimestamp() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
@@ -608,13 +622,13 @@ _isEmptyFile() {
 _directoryGamutFile() {
   local gamutModified="" remain comparer="$1" gamut="" directory="${2-.}" && shift 2
   while read -r modified file; do
-    isPositiveInteger "$modified" || __throwEnvironment "$usage" "__listFileModificationTimes output a non-integer: \"$modified\" \"$file\"" || return $?
+    isPositiveInteger "$modified" || __throwEnvironment "$usage" "__fileModificationTimes output a non-integer: \"$modified\" \"$file\"" || return $?
     # shellcheck disable=SC1073 disable=SC1072 disable=SC1009
     if [ -z "$gamutModified" ] || [ "$modified" "$comparer" "$gamutModified" ]; then
       gamutModified="$modified"
       gamut="$file"
     fi
-  done < <(__listFileModificationTimes "$directory" -type f ! -path "*/.*/*" "$@")
+  done < <(__fileModificationTimes "$directory" -type f ! -path "*/.*/*" "$@")
   [ -n "$gamut" ] || return 1
   printf "%s\n" "$gamut"
 }

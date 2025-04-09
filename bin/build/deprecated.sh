@@ -121,22 +121,25 @@ __deprecatedCleanup() {
   export __BUILD_DEPRECATED_EXTRAS
   __BUILD_DEPRECATED_EXTRAS=("${ignoreExtras[@]+"${ignoreExtras[@]}"}")
 
-  __BUILD_DEPRECATED_EXTRAS+=(! -path '*/documentation/*/release/*')
+  __BUILD_DEPRECATED_EXTRAS+=(! -path '*/documentation/*/release/*' ! -path '*/documentation/site/*')
 
   start=$(__environment timingStart) || return $?
+  local home
+
+  home=$(__environment buildHome) || return $?
 
   # END OF CANNONS
   if $doCannon; then
     statusMessage --last decorate info "Deprecated cannon ..."
-    __deprecatedCannonsByVersion || exitCode=$?
+    __deprecatedCannonsByVersion "$home" || exitCode=$?
   fi
   if $doSpelling; then
     statusMessage --last decorate info "Spelling cannon ..."
-    __misspellingCannon || exitCode=$?
+    __misspellingCannonByVersion "$home" || exitCode=$?
   fi
   if $doTokens; then
     statusMessage --last decorate info "Finding deprecated tokens ..."
-    __deprecatedTokensByVersion || exitCode=$?
+    __deprecatedTokensByVersion "$home" || exitCode=$?
   fi
   if $doConfiguration; then
     statusMessage --last decorate info "Cleaning up configuration ..."
@@ -157,66 +160,26 @@ ___deprecatedCleanup() {
 #  ▀▀ ▝▀▘▌  ▘  ▝▀▘▝▀ ▝▀▘ ▀ ▝▀▘▝▀▘ ▝▀ ▝▀▘▌  ▌  ▝▀ ▘   ▀
 #
 
-__deprecatedTokens() {
-  local exitCode=0 start results
-
-  results=$(__environment mktemp) || return $?
-  for deprecatedToken in "$@"; do
-    if deprecatedFind deprecatedIgnore "$deprecatedToken" >"$results"; then
-      statusMessage --last decorate error "DEPRECATED token $(decorate code "$deprecatedToken") found"
-      wrapLines "$(decorate code)" "$(decorate reset)" <"$results" || _clean $? "$results" || return $?
-      exitCode=1
-    fi
-  done
-  __environment rm -rf "$results" || return $?
-  return "$exitCode"
-}
-
 #
 # --tokens
 #
 __deprecatedTokensByVersion() {
-  local home line tokens=() deprecatedTokens=()
-
-  start=$(__environment timingStart) || return $?
-  home=$(__environment buildHome) || return $?
-  while read -r line; do
-    if [ "${line##}" != "${line}" ]; then
-      comment=$(trimSpace "${line##}")
-      statusMessage decorate value "$comment ..."
-    fi
-    IFS="|" read -r -a tokens <<<"$line" || :
-    if [ "${#tokens[@]}" -gt 0 ]; then
-      deprecatedTokens+=("${tokens[@]}")
-    fi
-    statusMessage decorate info "$comment deprecated tokens: $(decorate each code "${deprecatedTokens[@]}") ..."
-    __deprecatedTokens "${deprecatedTokens[@]}"
-  done <"$home/bin/build/deprecated-tokens.txt"
-  statusMessage --last timingReport "$start" "Deprecated token scan took"
+  deprecatedTokensFile deprecatedIgnore "$1/bin/build/deprecated-tokens.txt"
 }
 
 #
 # --cannons
 #
 __deprecatedCannonsByVersion() {
-  local home
-
-  home=$(__environment buildHome) || return $?
-  deprecatedCannonFile deprecatedIgnore "$home/bin/build/deprecated.txt"
+  deprecatedCannonFile deprecatedIgnore "$1/bin/build/deprecated.txt"
 }
 
 #
 # --spelling
 #
 # Fingers don't always hit the keys right
-__misspellingCannon() {
-  local start exitCode=0
-  start=$(__environment timingStart) || return $?
-  # START OF MISSPELLING CANNON
-  deprecatedCannon deprecatedIgnore 'decoreate' 'decorate' || exitCode=$?
-  # END OF MISSPELLING CANNON
-  statusMessage --last timingReport "$start" "Misspelling cannon took"
-  return "$exitCode"
+__misspellingCannonByVersion() {
+  deprecatedCannonFile deprecatedIgnore "$1/bin/build/deprecated-misspelled.txt"
 }
 
 #

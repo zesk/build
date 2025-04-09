@@ -21,7 +21,7 @@
 {modifiedDays}
 {modifiedSeconds}
 
-{listFileModificationTimes}
+{fileModificationTimes}
 {mostRecentlyModifiedFile}
 {mostRecentlyModifiedTimestamp}
 
