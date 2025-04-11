@@ -96,8 +96,10 @@ __hookPreCommitPHP() {
   statusMessage decorate success "PHP fixer ran"
   __catchEnvironment "$usage" rm -f "$fixResults" || return $?
 
-  statusMessage decorate info "Updating version ..."
-  phpComposerSetVersion
+  if [ -f "$home/composer.json" ]; then
+    statusMessage decorate info "Updating version ..."
+    phpComposerSetVersion
+  fi
 
   statusMessage --last reportTiming "$start" "PHP pre-commit finished in"
 }
