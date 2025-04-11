@@ -46,15 +46,18 @@ __hookPreCommitPHP() {
     shift
   done
 
+  local start
+
+  start=$(timingStart)
+
   statusMessage --last printf -- "%s %s (%s)\n" "$(decorate info "[pre-commit]")" "$(decorate code ".php")" "$(decorate label "PHP Hypertext Processor")"
   __catchEnvironment "$usage" gitPreCommitListExtension php | wrapLines "- $(decorate bold-blue)" "$(decorate reset)" || return $?
 
-  local home
+  local home mode
+
   home=$(__catchEnvironment "$usage" buildHome) || return $?
-
-  local mode
-
   mode=$(_choose "$readOnly" 0440 0640)
+
   statusMessage decorate info ".php script mode -> $(decorate code "$mode")"
   __catchEnvironment "$usage" find "$home" -type f -name '*.php' ! -path '*/bin/*' ! -path '*/.*/*' ! -path '*/vendor/*' -exec chmod -v "$mode" {} \; || return $?
   mode=$(_choose "$readOnly" 0550 0750)
@@ -89,9 +92,14 @@ __hookPreCommitPHP() {
     rm -rf "$fixResults" || :L
     __throwEnvironment "$usage" "PHP files failed" || return $?
   fi
-  statusMessage --last decorate success "PHP fixer ran"
-  rm -f "$fixResults" || :
+  statusMessage decorate success "PHP fixer ran"
+  statusMessage decorate success "PHP fixer ran"
+  __catchEnvironment "$usage" rm -f "$fixResults" || return $?
 
+  statusMessage decorate info "Updating version ..."
+  phpComposerSetVersion
+
+  statusMessage --last reportTiming "$start" "PHP pre-commit finished in"
 }
 ___hookPreCommitPHP() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
