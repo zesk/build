@@ -259,13 +259,14 @@ __dockerComposeEnvironmentSetup() {
   fi
   __catchEnvironment "$usage" cp "$deploymentEnv" "$envFile" || return $?
 
+  local icon="⬅"
   # Remaining arguments are pairs
   while [ $# -gt 1 ]; do
     local variable="$1" value="$2" envValue
 
     envValue=$(environmentValueRead "$envFile" "$variable") || :
     if [ -z "$envValue" ]; then
-      decorate info "Writing default $(decorate code "$variable") $(decorate value "$value") to $(decorate file "$envFile")"
+      decorate info "Writing $(decorate file "$envFile") $icon $(decorate code "$variable") $(decorate value "$value") (default)"
       __catchEnvironment "$usage" environmentValueWrite "$variable" "$value" >>"$envFile" || return $?
     fi
     shift 2
