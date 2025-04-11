@@ -22,6 +22,14 @@ isVersion() {
   done
 }
 
+# Take one or more versions and strip the leading `v`
+versionNoVee() {
+  while [ $# -gt 0 ]; do
+    printf "%s\n" "${1#v}"
+    shift
+  done
+}
+
 # Summary: Output path to current release notes
 #
 # Output path to current release notes

@@ -7,7 +7,34 @@
 
 # Announce a list of functions now available
 developerAnnounce() {
-  local aa=() ff=() types=() item itemType
+  local usage="_${FUNCNAME[0]}"
+
+  local debugFlag=false
+
+  # _IDENTICAL_ argument-case-header 5
+  local __saved=("$@") __count=$#
+  while [ $# -gt 0 ]; do
+    local argument="$1" __index=$((__count - $# + 1))
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
+    case "$argument" in
+      # _IDENTICAL_ --help 4
+      --help)
+        "$usage" 0
+        return $?
+        ;;
+      --debug)
+        debugFlag=true
+        ;;
+      *)
+        source=$(usageArgumentRealFile "$usage" "source" "${1-}") || return $?
+        ;;
+    esac
+    # _IDENTICAL_ argument-esac-shift 1
+    shift
+  done
+
+  local aa=() ff=() types=() unknowns=() item itemType
+
   while read -r item; do
     [ -n "$item" ] || continue
     [ "$item" = "${item#_}" ] || continue
@@ -16,15 +43,24 @@ developerAnnounce() {
       alias) aa+=("$item") ;;
       function) ff+=("$item") ;;
       *)
-        local message
-        message="$(decorate info "$(decorate value "$item") is of type $(isType "$item" | decorate each code)")"
-        types+=("$message")
+        if muzzle isType "$item"; then
+          local message
+          message="$(decorate info "$(decorate value "$item") is type $(isType "$item" | decorate each code) (item $itemType)")"
+          types+=("$message")
+        else
+          unknowns+=("$item")
+        fi
         ;;
     esac
   done
   [ "${#ff[@]}" -eq 0 ] || decorate info "Available functions $(decorate each code "${ff[@]}")"
   [ "${#aa[@]}" -eq 0 ] || decorate info "Available aliases $(decorate each code "${aa[@]}")"
   [ "${#types[@]}" -eq 0 ] || decorate info "Available types:$(printf "%s\n" "" "${types[@]}")"
+  ! $debugFlag || [ "${#unknowns[@]}" -eq 0 ] || decorate info "Unknowns: $(decorate error "${#unknowns[@]}")"
+}
+_developerAnnounce() {
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Undo a set of developer functions or aliases
@@ -38,7 +74,11 @@ developerUndo() {
     case "$itemType" in
       alias) unalias "$item" ;;
       function) unset "${item}" ;;
-      *) decorate info "Type of $(decorate value "$item") is $(decorate code "$itemType") - not handled" 1>&2 ;;
+      *)
+        if muzzle isType "$item"; then
+          unset "$item"
+        fi
+        ;;
     esac
   done
 }
@@ -89,7 +129,7 @@ developerTrack() {
     local tempPath itemType
 
     if [ ! -f "$cachePath/function" ]; then
-      __throwEnvironment "$usage" "Finish called but never started" || return $?
+      __throwEnvironment "$usage" "Finish called but never started: source is $(decorate file "$source")" || return $?
     fi
     if ! muzzle isType "${exportMarker?}"; then
       if [ -f "$cachePath/CHANGES" ]; then
@@ -113,7 +153,7 @@ developerTrack() {
     unset "${exportMarker?}"
     cat "$cachePath/CHANGES"
   else
-    if muzzle isType "$exportMarker"; then
+    if muzzle isType "$exportMarker" && [ -f "$cachePath/functions" ]; then
       printf "%s\n" "$(timingStart)" >>"$cachePath/reloaded"
       ! $verboseFlag || statusMessage --last decorate info "Developer tracking reloaded AND no-op"
     else
@@ -121,6 +161,9 @@ developerTrack() {
       ! $verboseFlag || statusMessage decorate info "Starting developer tracking"
       __catchEnvironment "$usage" printf -- "%s\n" "$source" >"$cachePath/source" || return $?
       __developerTrack "$usage" "$cachePath" || return $?
+      if [ ! -f "$cachePath/function" ]; then
+        __throwEnvironment "$usage" "Track did not write cache file $(decorate file "$cachePath/function")" || return $?
+      fi
       ! $verboseFlag || statusMessage --last decorate info "Developer tracking on"
     fi
   fi
@@ -308,10 +351,11 @@ developerDevelopmentLink() {
       fi
       if whichExists rsync; then
         verb="Synchronized"
-        __catchEnvironment "$usage" rsync -a "$source/" "$target/" || return $?
+        __catchEnvironment "$usage" rsync -a --exclude "*/.git/" --delete "$source/" "$target/" || return $?
       else
         verb="Copied"
         __catchEnvironment "$usage" cp -R "$source/" "$target" || return $?
+        __catchEnvironment find "$target" -name .git -type d -delete || return $?
       fi
       printf -- "%s %s %s %s %s (%s)\n" "$aok" "$(decorate info "$verb")" "$(decorate file "$developmentHome")" "$arrowIcon" "$showName" "$(decorate file "$(realPath "$target")")"
     elif [ -L "$target" ]; then

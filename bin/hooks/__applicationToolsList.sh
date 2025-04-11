@@ -8,8 +8,7 @@
 # Copyright &copy; 2025 Market Acumen, Inc.
 #
 
+developerTrack "${BASH_SOURCE[0]}"
 __applicationToolsList() {
   developerTrack "${BASH_SOURCE[0]}" --list
 }
-
-developerTrack "${BASH_SOURCE[0]}"

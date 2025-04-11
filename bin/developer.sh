@@ -6,34 +6,28 @@
 #
 # Zesk Developer scripts
 
-developerTrack "${BASH_SOURCE[0]}"
+# shellcheck source=/dev/null
+if source "${BASH_SOURCE[0]%/*}/tools.sh"; then
+  __buildConfigure() {
+    local home
 
-__buildFunctions() {
-  developerTrack "${BASH_SOURCE[0]}" --list
-}
-__buildAnnounce() {
-  developerAnnounce < <(__buildFunctions)
-}
+    home=$(__environment buildHome) || return $?
 
-__buildConfigure() {
-  local home
+    # shellcheck disable=SC2139
+    alias t="$home/bin/build/tools.sh"
+    alias tools=t
+    # shellcheck disable=SC2139
+    alias IdenticalRepair="$home/bin/build/identical-repair.sh"
 
-  home=$(__environment buildHome) || return $?
+    reloadChanges --name "Zesk Build" bin/build/tools.sh bin/build/tools
+    developerAnnounce < <(__applicationToolsList)
+  }
 
-  # shellcheck disable=SC2139
-  alias t="$home/bin/build/tools.sh"
-  alias tools=t
-  # shellcheck disable=SC2139
-  alias IdenticalRepair="$home/bin/build/identical-repair.sh"
+  __buildConfigureUndo() {
+    developerUndo < <(__applicationToolsList)
+  }
 
-  reloadChanges --name "Zesk Build" bin/build/tools.sh bin/build/tools
-}
+  __buildConfigure
 
-__buildConfigureUndo() {
-  developerUndo < <(__buildFunctions)
-}
-
-__buildConfigure
-__buildAnnounce
-
-unset __buildConfigure __buildAnnounce
+  unset __buildConfigure
+fi

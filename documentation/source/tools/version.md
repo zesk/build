@@ -8,3 +8,4 @@
 {newRelease}
 {nextMinorVersion}
 {isVersion}
+{versionNoVee}

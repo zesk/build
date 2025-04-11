@@ -154,3 +154,37 @@ testPHPBuild() {
 
   unset APP_THING BUILD_TARGET BUILD_TIMESTAMP
 }
+
+
+testPHPComposerSetVersion() {
+  local home testHome usage="_return"
+
+  home=$(__catchEnvironment "$usage" buildHome) || return $?
+
+  testHome=$(fileTemporaryName "$usage" -d) || return $?
+
+  __catchEnvironment "$usage" cp -R "$home" "$testHome/testDir" || return $?
+  __mockValue BUILD_HOME
+
+  export BUILD_HOME
+  BUILD_HOME="$testHome/testDir"
+
+  local testVersionFile="$BUILD_HOME/composer.json"
+  assertNotExitCode --line "$LINENO" --stderr-match "composer.json" 0 phpComposerSetVersion || return $?
+  printf "%s\n" "{}" >"$testVersionFile" || return $?
+
+  assertExitCode --line "$LINENO" 0 phpComposerSetVersion --version "1.0" || return $?
+  assertFileContains --line "$LINENO" "$testVersionFile" "1.0" || return $?
+  assertExitCode --line "$LINENO" 0 phpComposerSetVersion --version "foobar" || return $?
+  assertFileContains --line "$LINENO" "$testVersionFile" "foobar" || return $?
+  assertExitCode --line "$LINENO" 0 phpComposerSetVersion || return $?
+
+  version=$(hookVersionCurrent) || return $?
+  assertFileDoesNotContain --line "$LINENO" "$testVersionFile" "$version" || return $?
+  noVeeVersion=$(versionNoVee "$version") || return $?
+  assertFileContains --line "$LINENO" "$testVersionFile" "$noVeeVersion" || return $?
+
+  __mockValue BUILD_HOME "" --end
+
+  __catchEnvironment "$usage" rm -rf "$testHome" || return $?
+}

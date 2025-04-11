@@ -69,6 +69,7 @@ __buildTools() {
   local here="${source%/*}"
 
   __tools ..
+
   bashSourcePath "$(realPath "$here/tools/")" || return $?
 
   [ $# -eq 0 ] || __execute "$@"
