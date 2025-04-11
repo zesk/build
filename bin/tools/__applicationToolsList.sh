@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# IDENTICAL __applicationToolsList.sh EOF
+# IDENTICAL __applicationToolsList.sh 12
 #
 # __applicationToolsList.sh
 #
@@ -8,8 +8,7 @@
 # Copyright &copy; 2025 Market Acumen, Inc.
 #
 
+developerTrack "${BASH_SOURCE[0]}"
 __applicationToolsList() {
   developerTrack "${BASH_SOURCE[0]}" --list
 }
-
-developerTrack "${BASH_SOURCE[0]}"
