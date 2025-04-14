@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# IDENTICAL __applicationToolsList.sh 12
+# IDENTICAL __applicationToolsList.sh 14
 #
 # __applicationToolsList.sh
 #
@@ -9,6 +9,8 @@
 #
 
 developerTrack "${BASH_SOURCE[0]}"
+
+# Return the application tools added (functions globals and aliases)
 __applicationToolsList() {
   developerTrack "${BASH_SOURCE[0]}" --list
 }

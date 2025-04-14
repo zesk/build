@@ -9,6 +9,8 @@
 #
 
 developerTrack "${BASH_SOURCE[0]}"
+
+# Return the application tools added (functions globals and aliases)
 __applicationToolsList() {
   developerTrack "${BASH_SOURCE[0]}" --list
 }

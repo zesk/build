@@ -9,8 +9,7 @@
 
 # Summary: Quote sed search strings for shell use
 # Quote a string to be used in a sed pattern on the command line.
-# Usage: quoteSedPattern text
-# Argument: text - Text to quote
+# Argument: text - EmptyString. Required. Text to quote
 # Output: string quoted and appropriate to insert in a sed search or replacement phrase
 # Example:     sed "s/$(quoteSedPattern "$1")/$(quoteSedPattern "$2")/g"
 # Example:     needSlash=$(quoteSedPattern '$.*/[\]^')
@@ -24,7 +23,8 @@ quoteSedPattern() {
 
 # Summary: Quote sed replacement strings for shell use
 # Usage: quoteSedReplacement text separatorChar
-# Argument: text - Text to quote
+# Argument: text - EmptyString. Required. Text to quote
+# Argument: separatorChar - The character used to separate the sed pattern and replacement. Defaults to `/`.
 # Output: string quoted and appropriate to insert in a sed search or replacement phrase
 # Example:     sed "s/$(quoteSedPattern "$1")/$(quoteSedReplacement "$2")/g"
 # Example:     needSlash=$(quoteSedPattern '$.*/[\]^')

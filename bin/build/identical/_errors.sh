@@ -8,7 +8,7 @@
 
 # _IDENTICAL_ _errors EOF
 
-# Return `argument` error code always. Outputs `message ...` to `stderr`.
+# Return `argument` error code. Outputs `message ...` to `stderr`.
 # Argument: message ... - String. Optional. Message to output.
 # Exit Code: 2
 # Requires: _return
@@ -16,7 +16,7 @@ _argument() {
   _return 2 "$@" || return $?
 }
 
-# Return `environment` error code always. Outputs `message ...` to `stderr`.
+# Return `environment` error code. Outputs `message ...` to `stderr`.
 # Argument: message ... - String. Optional. Message to output.
 # Exit Code: 1
 # Requires: _return

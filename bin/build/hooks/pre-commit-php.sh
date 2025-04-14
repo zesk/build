@@ -101,7 +101,7 @@ __hookPreCommitPHP() {
     phpComposerSetVersion
   fi
 
-  statusMessage --last reportTiming "$start" "PHP pre-commit finished in"
+  statusMessage --last timingReport "$start" "PHP pre-commit finished in"
 }
 ___hookPreCommitPHP() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"

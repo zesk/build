@@ -7,9 +7,9 @@
 
 # IDENTICAL __build 11
 
-# Load build tools (installing if needed) and run command
-# Argument: installerPath - Optional. Directory. Path to `install-bin-build.sh` binary.
-# Argument: relativeHome - Required. Directory. Path to application home.
+# Load build tools (installing if needed) and runs a command
+# Argument: relativeHome - Optional. Directory. Path to application home.
+# Argument: installerPath - Optional. Directory. Path to `install-bin-build.sh` binary. Defaults to `bin`
 # Argument: command ... - Optional. Callable. A command to run and optional arguments.
 # Requires: __install
 # Example:     __build ../../.. functionToCall "$@"
@@ -20,7 +20,7 @@ __build() {
 
 # IDENTICAL __install 25
 
-# Load build tools (installing if needed) and run command
+# Load a bash script (installing if needed) and run an optional command
 # Argument: installer - Required. File. Installation binary.
 # Argument: source - Required. File. Include file which should exist after installation.
 # Argument: relativeHome - Optional. Directory. Path to application home. Default is `..`.
@@ -45,17 +45,19 @@ __install() {
   __execute "${a[@]}" || return $?
 }
 
-# IDENTICAL _return 26
+# IDENTICAL _return 28
 
-# Usage: {fn} [ exitCode [ message ... ] ]
-# Argument: exitCode - Required. Integer. Exit code to return. Default is 1.
-# Argument: message ... - Optional. String. Message to output to stderr.
+# Return passed in integer return code and output message to `stderr` (non-zero) or `stdout` (zero)
+# Argument: exitCode - Required. UnsignedInteger. Exit code to return. Default is 1.
+# Argument: message ... - Optional. String. Message to output
 # Exit Code: exitCode
 # Requires: isUnsignedInteger printf _return
 _return() {
-  local r="${1-:1}" && shift 2>/dev/null
-  isUnsignedInteger "$r" || _return 2 "${FUNCNAME[1]-none}:${BASH_LINENO[1]-} -> ${FUNCNAME[0]} non-integer $r" "$@" || return $?
-  printf -- "[%d] ❌ %s\n" "$r" "${*-§}" 1>&2 || : && return "$r"
+  local code="${1:-1}" && shift 2>/dev/null
+  isUnsignedInteger "$code" || _return 2 "${FUNCNAME[1]-none}:${BASH_LINENO[1]-} -> ${FUNCNAME[0]} non-integer \"$code\"" "$@" || return $?
+  [ "$code" -gt 0 ] || printf -- "✅ %s\n" "${*-§}" && return 0
+  printf -- "❌ [%d] %s\n" "$code" "${*-§}" 1>&2
+  return "$code"
 }
 
 # Test if an argument is an unsigned integer

@@ -9,7 +9,6 @@
 
 # IDENTICAL __help EOF
 
-# Usage: {fn} [ --only ] usageFunction arguments
 # Simple help argument handler.
 #
 # Easy `--help` handler for any function useful when it's the only option.

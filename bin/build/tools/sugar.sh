@@ -162,20 +162,19 @@ __execute() {
   "$@" || _return "$?" "$@" || return $?
 }
 
-# IDENTICAL _undo 38
+# IDENTICAL _undo 37
 
 # Run a function and preserve exit code
 # Returns `exitCode`
-# Usage: {fn} exitCode undoFunction ...
 # Argument: exitCode - Required. Integer. Exit code to return.
 # Argument: undoFunction - Optional. Command to run to undo something. Return status is ignored.
 # Argument: -- - Flag. Optional. Used to delimit multiple commands.
 # As a caveat, your command to `undo` can NOT take the argument `--` as a parameter.
-# Example: local undo thing
-# Example: thing=$(__catchEnvironment "$handler" createLargeResource) || return $?
-# Example: undo+=(-- deleteLargeResource "$thing")
-# Example: thing=$(__catchEnvironment "$handler" createMassiveResource) || _undo $? "${undo[@]}" || return $?
-# Example: undo+=(-- deleteMassiveResource "$thing")
+# Example:     local undo thing
+# Example:     thing=$(__catchEnvironment "$handler" createLargeResource) || return $?
+# Example:     undo+=(-- deleteLargeResource "$thing")
+# Example:     thing=$(__catchEnvironment "$handler" createMassiveResource) || _undo $? "${undo[@]}" || return $?
+# Example:     undo+=(-- deleteMassiveResource "$thing")
 # Requires: isPositiveInteger __catchArgument decorate __execute
 # Requires: usageDocument
 _undo() {

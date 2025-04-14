@@ -1,3 +1,7 @@
+# v0.31.1
+(__where)|(__gitHookPath)|
+IDENTICAL __where|IDENTICAL __gitHookPath|
+
 # v0.30.4
 
 # v0.30.3

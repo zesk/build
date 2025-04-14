@@ -16,17 +16,19 @@
 # Copyright &copy; 2025 Market Acumen, Inc.
 #
 
-# IDENTICAL _return 26
+# IDENTICAL _return 28
 
-# Usage: {fn} [ exitCode [ message ... ] ]
-# Argument: exitCode - Required. Integer. Exit code to return. Default is 1.
-# Argument: message ... - Optional. String. Message to output to stderr.
+# Return passed in integer return code and output message to `stderr` (non-zero) or `stdout` (zero)
+# Argument: exitCode - Required. UnsignedInteger. Exit code to return. Default is 1.
+# Argument: message ... - Optional. String. Message to output
 # Exit Code: exitCode
 # Requires: isUnsignedInteger printf _return
 _return() {
-  local r="${1-:1}" && shift 2>/dev/null
-  isUnsignedInteger "$r" || _return 2 "${FUNCNAME[1]-none}:${BASH_LINENO[1]-} -> ${FUNCNAME[0]} non-integer $r" "$@" || return $?
-  printf -- "[%d] ❌ %s\n" "$r" "${*-§}" 1>&2 || : && return "$r"
+  local code="${1:-1}" && shift 2>/dev/null
+  isUnsignedInteger "$code" || _return 2 "${FUNCNAME[1]-none}:${BASH_LINENO[1]-} -> ${FUNCNAME[0]} non-integer \"$code\"" "$@" || return $?
+  [ "$code" -gt 0 ] || printf -- "✅ %s\n" "${*-§}" && return 0
+  printf -- "❌ [%d] %s\n" "$code" "${*-§}" 1>&2
+  return "$code"
 }
 
 # Test if an argument is an unsigned integer
@@ -164,9 +166,13 @@ usageDocument() {
   usageDocumentSimple "$@"
 }
 
-# IDENTICAL usageDocumentSimple 15
+# IDENTICAL usageDocumentSimple 19
 
 # Output a simple error message for a function
+# Argument: source - File. Required. File where documentation exists.
+# Argument: function - String. Required. Function to document.
+# Argument: returnCode - UnsignedInteger. Required. Exit code to return.
+# Argument: message ... - Optional. String. Message to display to the user.
 # Requires: bashFunctionComment decorate read printf exitString
 usageDocumentSimple() {
   local source="${1-}" functionName="${2-}" exitCode="${3-}" color helpColor="info" icon="❌" line prefix="" skip=false && shift 3
@@ -201,9 +207,8 @@ _bashFunctionComment() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# IDENTICAL __help 34
+# IDENTICAL __help 33
 
-# Usage: {fn} [ --only ] usageFunction arguments
 # Simple help argument handler.
 #
 # Easy `--help` handler for any function useful when it's the only option.
@@ -237,11 +242,11 @@ __help() {
   return 0
 }
 
-# IDENTICAL _type 46
+# IDENTICAL _type 45
 
-# Usage: {fn} argument ...
 # Test if an argument is a positive integer (non-zero)
-#
+# Takes one argument only.
+# Argument: value - EmptyString. Required. Value to check if it is an unsigned integer
 # Exit Code: 0 - if it is a positive integer
 # Exit Code: 1 - if it is not a positive integer
 # Requires: __catchArgument isUnsignedInteger usageDocument
@@ -266,7 +271,6 @@ _isPositiveInteger() {
 
 #
 # Test if argument are bash functions
-# Usage: {fn} string0
 # Argument: string - Required. String to test if it is a bash function. Builtins are supported. `.` is explicitly not supported to disambiguate it from the current directory `.`.
 # If no arguments are passed, returns exit code 1.
 # Exit code: 0 - argument is bash function
@@ -293,10 +297,9 @@ exitString() {
   local k="" && while [ $# -gt 0 ]; do case "$1" in 1) k="environment" ;; 2) k="argument" ;; 97) k="assert" ;; 105) k="identical" ;; 108) k="leak" ;; 116) k="timeout" ;; 120) k="exit" ;; 253) k="internal" ;; esac && [ -n "$k" ] || k="$1" && printf "%s\n" "$k" && shift; done
 }
 
-# IDENTICAL usageArgumentCore 14
+# IDENTICAL usageArgumentCore 13
 
 # Require an argument to be non-blank
-# Usage: {fn} usage argument [ value ]
 # Argument: usage - Required. Function. Usage function to call upon failure.
 # Argument: argument - Required. String. Name of the argument used in error messages.
 # Argument: value - Optional. String, Value which should be non-blank otherwise an argument error is thrown.

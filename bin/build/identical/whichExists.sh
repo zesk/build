@@ -7,11 +7,10 @@
 
 # IDENTICAL whichExists EOF
 
-# Usage: {fn} binary ...
-# Argument: binary - Required. String. Binary to find in the system `PATH`.
+# Argument: binary ... - Required. String. One or more Binaries to find in the system `PATH`.
 # Exit code: 0 - If all values are found
 # Exit code: 1 - If any value is not found
-# Requires: __throwArgument which decorate
+# Requires: __throwArgument which decorate __decorateExtensionEach
 whichExists() {
   local usage="_${FUNCNAME[0]}"
   local __saved=("$@") __count=$#

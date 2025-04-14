@@ -346,16 +346,6 @@ plasterLines() {
   printf "\n"
 }
 
-# IDENTICAL _clearLine 8
-
-# Simple blank line generator for scripts
-# Usage: {fn}
-# Requires: read stty printf seq sed
-_clearLine() {
-  local width
-  read -d' ' -r width < <(stty size) || width=80 && printf "\r%s\r" "$(seq -s' ' "$((width + 1))" | sed 's/[0-9]//g')"
-}
-
 # Output a status message
 #
 # This is intended for messages on a line which are then overwritten using clearLine

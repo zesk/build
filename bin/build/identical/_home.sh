@@ -8,13 +8,13 @@
 
 # IDENTICAL _home EOF
 
-# Usage: {fn} user
 # Argument: user - String. Required. User name to look up.
 # Summary: Quick user database look up
 # Look user up, output user home
 # Environment: APPLICATION_USER
 # Environment: HOME
 # stdout: the home directory
+# File: /etc/passwd
 # Requires: grep cut _return printf /etc/passwd
 _home() {
   local user="${1-}" userDatabase="/etc/passwd" home

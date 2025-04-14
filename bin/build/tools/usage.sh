@@ -99,10 +99,9 @@ __catchArgumentHelper() {
   printf "%s\n" "$variableValue"
 }
 
-# IDENTICAL usageArgumentCore 14
+# IDENTICAL usageArgumentCore 13
 
 # Require an argument to be non-blank
-# Usage: {fn} usage argument [ value ]
 # Argument: usage - Required. Function. Usage function to call upon failure.
 # Argument: argument - Required. String. Name of the argument used in error messages.
 # Argument: value - Optional. String, Value which should be non-blank otherwise an argument error is thrown.

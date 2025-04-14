@@ -11,11 +11,10 @@
 #
 # -- CUT BELOW HERE --
 
-# IDENTICAL _sugar 126
+# IDENTICAL _sugar 129
 
-# Usage: {fn} name ...
 # Argument: name ... - Optional. String. Exit code value to output.
-# Print one or more an exit codes by name.
+# Print one or more return codes by name.
 #
 # Known codes:
 #
@@ -42,8 +41,10 @@ _code() {
 
 # Output the exit code as a string
 # Winner of the one-line bash award 10 years running
+# Argument: code ... - UnsignedInteger. String. Exit code value to output.
+# stdout: exitCodeToken, one per line
 exitString() {
-  local k="" && while [ $# -gt 0 ]; do case "$1" in 1) k="environment" ;; 2) k="argument" ;; 97) k="assert" ;; 105) k="identical" ;; 108) k="leak" ;; 116) k="timeout" ;; 120) k="exit" ;; 253) k="internal" ;; esac && [ -n "$k" ] || k="$1" && printf "%s\n" "$k" && shift; done
+  local k="" && while [ $# -gt 0 ]; do case "$1" in 1) k="environment" ;; 2) k="argument" ;; 97) k="assert" ;; 105) k="identical" ;; 108) k="leak" ;; 116) k="timeout" ;; 120) k="exit" ;; 253) k="internal" ;; 254) k="unknown" ;; *) k="[exitString unknown \"$1\"]" ;; esac && [ -n "$k" ] || k="$1" && printf "%s\n" "$k" && shift; done
 }
 
 # Boolean test
@@ -58,15 +59,17 @@ isBoolean() {
 }
 
 # Boolean selector
-# Usage: {fn} testValue trueChoice falseChoice
 # Requires: isBoolean _argument printf
+# Argument: testValue - Boolean. Required. Test value
+# Argument: trueChoice - EmptyString. Optional. Value to output when testValue is `true`
+# Argument: falseChoice - EmptyString. Optional. Value to output when testValue is `false`
 _choose() {
   local testValue="${1-}" && shift
   isBoolean "$testValue" || _argument "${BASH_SOURCE[1]-no function name}:${BASH_LINENO[0]-no line} ${FUNCNAME[1]} -> ${FUNCNAME[0]} non-boolean: \"$testValue\"" || return $?
   "$testValue" && printf -- "%s\n" "${1-}" || printf -- "%s\n" "${2-}"
 }
 
-# Usage: {fn} exitCode item ...
+# Delete files or directories and return the same exit code passed in.
 # Argument: exitCode - Required. Integer. Exit code to return.
 # Argument: item - Optional. One or more files or folders to delete, failures are logged to stderr.
 # Requires: isUnsignedInteger _argument __environment

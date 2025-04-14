@@ -483,9 +483,8 @@ _commentArgumentsRemainder() {
   printf "%s\n" "$stateFile" "$@"
 }
 
-# IDENTICAL __help 34
+# IDENTICAL __help 33
 
-# Usage: {fn} [ --only ] usageFunction arguments
 # Simple help argument handler.
 #
 # Easy `--help` handler for any function useful when it's the only option.

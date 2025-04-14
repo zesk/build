@@ -69,12 +69,14 @@ __packageCheckFunction() {
 # INTERNAL:    Argument: applicationHome - Directory. Required. Path to the application home where target will be installed, or is installed. (e.g. myApp/)
 # INTERNAL:    Argument: installPath - Directory. Required. Path to the installPath home where target will be installed, or is installed. (e.g. myApp/bin/build)
 # INTERNAL:
-# INTERNAL: `version-function` should exit 0 to halt the
+# INTERNAL: `version-function` should return 0 to halt the installation. Any other return code, installation continues normally.
 # INTERNAL:
 # INTERNAL: Calling signature for `url-function`:
 # INTERNAL:
 # INTERNAL:    Usage: url-function handler
 # INTERNAL:    Argument: handler - Function. Required. Function to call when an error occurs.
+# INTERNAL:
+# INTERNAL: `url-function` should output a URL and exit 0. Any other return code terminates installation.
 # INTERNAL:
 # INTERNAL: Calling signature for `check-function`:
 # INTERNAL:
@@ -289,7 +291,7 @@ __installRemotePackage() {
 
 # Debug is enabled, show why
 # Requires: decorate
-# Debugging: 32d4d8d55438f3ee975344ed5322e9aedc762648
+# Debugging: 73b0bd4ba49583263542da725669003fc821eb63
 __installRemotePackageDebug() {
   decorate orange "${1-} enabled" && set -x
 }

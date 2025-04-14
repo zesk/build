@@ -10,9 +10,9 @@
 
 # IDENTICAL _type EOF
 
-# Usage: {fn} argument ...
 # Test if an argument is a positive integer (non-zero)
-#
+# Takes one argument only.
+# Argument: value - EmptyString. Required. Value to check if it is an unsigned integer
 # Exit Code: 0 - if it is a positive integer
 # Exit Code: 1 - if it is not a positive integer
 # Requires: __catchArgument isUnsignedInteger usageDocument
@@ -37,7 +37,6 @@ _isPositiveInteger() {
 
 #
 # Test if argument are bash functions
-# Usage: {fn} string0
 # Argument: string - Required. String to test if it is a bash function. Builtins are supported. `.` is explicitly not supported to disambiguate it from the current directory `.`.
 # If no arguments are passed, returns exit code 1.
 # Exit code: 0 - argument is bash function

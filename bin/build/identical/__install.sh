@@ -9,7 +9,7 @@
 
 # IDENTICAL __install EOF
 
-# Load build tools (installing if needed) and run command
+# Load a bash script (installing if needed) and run an optional command
 # Argument: installer - Required. File. Installation binary.
 # Argument: source - Required. File. Include file which should exist after installation.
 # Argument: relativeHome - Optional. Directory. Path to application home. Default is `..`.

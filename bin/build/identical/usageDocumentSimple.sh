@@ -10,6 +10,10 @@
 # IDENTICAL usageDocumentSimple EOF
 
 # Output a simple error message for a function
+# Argument: source - File. Required. File where documentation exists.
+# Argument: function - String. Required. Function to document.
+# Argument: returnCode - UnsignedInteger. Required. Exit code to return.
+# Argument: message ... - Optional. String. Message to display to the user.
 # Requires: bashFunctionComment decorate read printf exitString
 usageDocumentSimple() {
   local source="${1-}" functionName="${2-}" exitCode="${3-}" color helpColor="info" icon="❌" line prefix="" skip=false && shift 3
