@@ -1051,3 +1051,51 @@ __unquote() {
   esac
   printf "%s\n" "$value"
 }
+
+# Replace all occurrences of a string within another string
+# Argument: needle - String. Required. String to replace.
+# Argument: replacement - EmptyString. c. String to replace needle with.
+# Argument: haystack - EmptyString. EmptyString. String to modify. If not supplied, manipulates stdin.
+# stdout: New string with needle replaced
+stringReplace() {
+  local usage="_${FUNCNAME[0]}"
+
+  local needle="" replacement="" sedCommand="" hasTextArguments=false
+
+  # _IDENTICAL_ argument-case-header 5
+  local __saved=("$@") __count=$#
+  while [ $# -gt 0 ]; do
+    local argument="$1" __index=$((__count - $# + 1))
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
+    case "$argument" in
+      # _IDENTICAL_ --help 4
+      --help)
+        "$usage" 0
+        return $?
+        ;;
+      *)
+        if [ -z "$needle" ]; then
+          needle="$(usageArgumentString "$usage" "$argument" "${1-}")" || return $?
+        elif [ -z "$sedCommand" ]; then
+          replacement="$(usageArgumentEmptyString "$usage" "$argument" "${1-}")" || return $?
+          sedCommand="s/$(quoteSedPattern "$needle")/$(quoteSedReplacement "$replacement")/g"
+        else
+          sed -e "$sedCommand" <<<"$1"
+          hasTextArguments=true
+        fi
+        ;;
+    esac
+    # _IDENTICAL_ argument-esac-shift 1
+    shift
+  done
+  if $hasTextArguments; then
+    return 0
+  fi
+  [ -n "$needle" ] || __throwArgument "$usage" "Missing needle" || return $?
+  [ -n "$sedCommand" ] || __throwArgument "$usage" "Missing replacement" || return $?
+  sed -e "$sedCommand"
+}
+_stringReplace() {
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}

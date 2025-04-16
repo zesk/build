@@ -98,7 +98,7 @@ __build() {
   __install "$installerPath/install-bin-build.sh" "bin/build/tools.sh" "$relative" "$@" || return $?
 }
 
-# IDENTICAL _return 28
+# IDENTICAL _return 27
 
 # Return passed in integer return code and output message to `stderr` (non-zero) or `stdout` (zero)
 # Argument: exitCode - Required. UnsignedInteger. Exit code to return. Default is 1.
@@ -108,8 +108,7 @@ __build() {
 _return() {
   local code="${1:-1}" && shift 2>/dev/null
   isUnsignedInteger "$code" || _return 2 "${FUNCNAME[1]-none}:${BASH_LINENO[1]-} -> ${FUNCNAME[0]} non-integer \"$code\"" "$@" || return $?
-  [ "$code" -gt 0 ] || printf -- "✅ %s\n" "${*-§}" && return 0
-  printf -- "❌ [%d] %s\n" "$code" "${*-§}" 1>&2
+  [ "$code" -eq 0 ] && printf -- "✅ %s\n" "${*-§}" && return 0 || printf -- "❌ [%d] %s\n" "$code" "${*-§}" 1>&2
   return "$code"
 }
 

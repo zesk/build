@@ -7,140 +7,69 @@
 # Docs: ./documentation/source/tools/prompt.md
 # Test: ./test/tools/prompt-tests.sh
 
-__bashPromptList() {
-  local promptCommand
-
-  for promptCommand in "${__BASH_PROMPT_MODULES[@]+"${__BASH_PROMPT_MODULES[@]}"}"; do
-    if isFunction "$promptCommand"; then
-      printf -- "- %s (%s)\n" "$(decorate code "$promptCommand")" "$(decorate orange "function")"
-    else
-      printf -- "- %s (%s)\n" "$(decorate value "$promptCommand")" "$(decorate blue "file")"
-    fi
-  done
-}
-
-# Usage: {fn} [ --first | --last | module ]
-# Argument: --first - Flag. Optional. All subsequent modules are added first to the list.
-# Argument: --last - Flag. Optional. ALl subsequent modules are added to the end of the list.
-# Argument: module - Callable. Required. The module to add
-__bashPromptAdd() {
-  local usage="$1" && shift
-
-  local first=false last=false verbose=false found
-
-  export __BASH_PROMPT_MODULES
-  if ! isArray "__BASH_PROMPT_MODULES"; then
-    __BASH_PROMPT_MODULES=()
-  fi
-
-  # _IDENTICAL_ argument-case-header 5
-  local __saved=("$@") __count=$#
-  while [ $# -gt 0 ]; do
-    local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
-    case "$argument" in
-      --verbose)
-        verbose=true
-        ;;
-      --first)
-        first=true
-        last=false
-        ;;
-      --last)
-        first=false
-        last=true
-        ;;
-      *)
-        local found=""
-        isCallable "$argument" || __throwArgument "$usage" "$argument must be executable or a function" || return $?
-        ! inArray "$argument" "${__BASH_PROMPT_MODULES[@]+"${__BASH_PROMPT_MODULES[@]}"}" || found="$argument"
-        if $first; then
-          if [ -n "$found" ]; then
-            if [ "${__BASH_PROMPT_MODULES[0]-}" = "$found" ]; then
-              return 0
-            fi
-            __bashPromptRemove "$usage" "$found" || return $?
-            ! $verbose || decorate info "Moving bash module to first: $(decorate code "$argument")"
-          else
-            ! $verbose || decorate info "Added bash module: $(decorate code "$argument")"
-          fi
-          __BASH_PROMPT_MODULES=("$argument" "${__BASH_PROMPT_MODULES[@]+"${__BASH_PROMPT_MODULES[@]}"}")
-        else
-          if [ -n "$found" ]; then
-            if ! $last || [ "${__BASH_PROMPT_MODULES[${#__BASH_PROMPT_MODULES[@]} - 1]}" = "$argument" ]; then
-              return 0
-            fi
-            __bashPromptRemove "$usage" "$found" || return $?
-            ! $verbose || decorate info "Moving bash module to last: $(decorate code "$argument")"
-          else
-            ! $verbose || decorate info "Added bash module: $(decorate code "$argument")"
-          fi
-          __BASH_PROMPT_MODULES=("${__BASH_PROMPT_MODULES[@]+"${__BASH_PROMPT_MODULES[@]}"}" "$argument")
-        fi
-        ;;
-    esac
-    # _IDENTICAL_ argument-esac-shift 1
-    shift
-  done
-  return 0
-}
-
-bashPromptColorsFormat() {
-  local index color colors=()
-  local all=()
-
-  while read -r color; do all+=("$color"); done < <(decorations)
-  IFS=":" read -r -a colors <<<"$1:::::" || :
-  for index in "${!colors[@]}"; do
-    color="${colors[index]}"
-    if inArray "$color" "${all[@]}"; then
-      colors[index]="$(decorate "$color")"
-    else
-      colors[index]=""
-    fi
-    [ "$index" -le 4 ] || unset "colors[$index]"
-  done
-  colors+=("$(decorate reset)")
-  printf "%s\n" "$(listJoin ":" "${colors[@]}")"
-}
-
-# Usage: {fn} usageFunction removeModule
-# Fails if not found
-__bashPromptRemove() {
-  local usage="$1" module="$2" current modules=() found=false
-
-  export __BASH_PROMPT_MODULES
-  if ! isArray "__BASH_PROMPT_MODULES"; then
-    __BASH_PROMPT_MODULES=()
-  fi
-  for current in "${__BASH_PROMPT_MODULES[@]+"${__BASH_PROMPT_MODULES[@]}"}"; do
-    if [ "$module" = "$current" ]; then
-      found=true
-    else
-      modules+=("$current")
-    fi
-  done
-  $found || __throwEnvironment "$usage" "$module was not found in modules: $(decorate each code "${__BASH_PROMPT_MODULES[@]+"${__BASH_PROMPT_MODULES[@]}"}")" || return $?
-  __BASH_PROMPT_MODULES=("${modules[@]+"${modules[@]}"}")
-}
-
-# Usage: {fn} [ --first | --last | module ] [ --colors colorsText ]
+# Argument: module - Executable. Optional. Module to enable or disable. To disable, specify `-module`.
 # Argument: --reset - Flag. Optional. Remove all prompt modules.
 # Argument: --list - Flag. Optional. List the current modules.
 # Argument: --first - Flag. Optional. Add all subsequent modules first to the list.
 # Argument: --last - Flag. Optional. Add all subsequent modules last to the list.
-# Argument: --label promptLabel - String. Optional. Display this label on each prompt.
-# Argument: module - String. Optional. Module to enable or disable. To disable, specify `-module`
-# Argument: --colors colorsText - String. Optional. Set the prompt colors.
-# Argument: --skip-terminal - Flag. Optional. Skip the check for a terminal attached to standard in.
-# Bash prompt creates a prompt and adds return code status display and modules
-# Modules are any binary or executable to run each prompt, and can be added or removed here
-# Example: bashPrompt --colors "bold-cyan:bold-magenta:green:orange:code"
+# Argument: --format promptFormat - String. Optional. Display this label on each prompt.
+# Argument: --success successText - EmptyString. Optional. Text to display in the prompt when the previous command succeeded.
+# Argument: --failure failureText - EmptyString. Optional. Text to display in the prompt when the previous command failed.
+# Argument: --label promptLabel - String. Optional. The prompt format string. See PROMPT FORMATTING below
+# Argument: --colors colorsText - String. Optional. Set the prompt colors. See COLORS below.
+# Argument: --skip-terminal - Flag. Optional. Skip the check for a terminal attached to `stdin`.
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
+#
+# Bash prompt creates the `PS1` prompt with the following extra features:
+#
+# - Easy colorization
+# - Easy customization
+# - Return code of prior command dynamically displayed in following prompt
+# - Easily extend your bash prompt with modules
+#
+#
+# ## PROMPT MODULES
+#
+# Modules are any binary or executable to run each prompt, and can be added, removed or managed here.
+#
+# ## COLORS
+#
+# The `--colors` are currently a `:`-separated list of color **names** (not escape codes), in order:
+#
+# 1. Success color (Array index 0)
+# 2. Failure color (Array index 1)
+# 3. User color (Array index 2)
+# 4. Host color (Array index 3)
+# 5. Directory color (Array index 4)
+#
+# ## PROMPT FORMATTING
+#
+# Prompts respond to the prior command by changing the status text and color based on the exit code. The **prompt color** for success and failure can be
+# set using the `--colors` option.
+#
+# Prompts can be formatted with a string which can use standard PS1 formatting codes, or the following tokens (surrounded by braces):
+#
+# - `$` - The dollar character or `#` when the user is root, with color (`\$` equivalent)
+# - `label` - The value of `--label` used in the most recent `bashPrompt` call (with color)
+# - `user` - The user with color (`\u` equivalent)
+# - `code` - Plain text, the non-zero exit code
+# - `host` - Host name with color (`\h` equivalent)
+# - `directory` - Host name with color (`\h` equivalent)
+# - `status` - `successText` or `failureText` with appropriate colors
+# - `reset` - A color reset escape sequence to cancel any color mode currently set
+#
+# Example: bashPrompt --colors "bold-cyan:bold-magenta:green:orange:code" --format "{label} {user}@{host} {status}"
 # Environment: PROMPT_COMMAND
 bashPrompt() {
   local usage="_${FUNCNAME[0]}"
 
-  local label=$'\0' addArguments=() colorsText="" resetFlag=false verbose=false skipTerminal=false listFlag=false
+  local addArguments=() colorsText="" resetFlag=false verbose=false skipTerminal=false listFlag=false
+
+  export __BASH_PROMPT_PREVIOUS
+  isArray __BASH_PROMPT_PREVIOUS || __BASH_PROMPT_PREVIOUS=()
+
+  local successPrompt="${__BASH_PROMPT_PREVIOUS[0]-}" failurePrompt="${__BASH_PROMPT_PREVIOUS[1]-}" label="${__BASH_PROMPT_PREVIOUS[2]-}"
 
   # _IDENTICAL_ argument-case-header 5
   local __saved=("$@") __count=$#
@@ -153,12 +82,25 @@ bashPrompt() {
         "$usage" 0
         return $?
         ;;
+      --success)
+        shift
+        successPrompt=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
+        ;;
+      --failure)
+        shift
+        failurePrompt=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
+        ;;
       --label)
         shift
         label="$(usageArgumentEmptyString "$usage" "$argument" "${1-}")" || return $?
+        [ -z "$label" ] || label="$label "
         ;;
       --list)
         listFlag=true
+        ;;
+      --format)
+        shift
+        promptFormat=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
         ;;
       --skip-terminal)
         skipTerminal=true
@@ -193,12 +135,23 @@ bashPrompt() {
     shift
   done
 
+  if [ -z "$successPrompt" ] || $resetFlag; then
+    successPrompt=">"
+  fi
+  if [ -z "$failurePrompt" ] || $resetFlag; then
+    failurePrompt="§"
+  fi
+  if [ -z "$promptFormat" ] || $resetFlag; then
+    promptFormat="{label}{user}@{host} {directory} {code}{status} "
+  fi
+
   $skipTerminal || [ -t 0 ] || __throwEnvironment "$usage" "Requires a terminal" || return $?
 
   export PROMPT_COMMAND PS1 __BASH_PROMPT_PREVIOUS __BASH_PROMPT_MODULES BUILD_PROMPT_COLORS
 
   if $resetFlag; then
     __BASH_PROMPT_MODULES=()
+    addArguments=()
     ! $verbose || decorate info "Prompt modules reset to empty list."
   fi
   # IDENTICAL bashPromptAddArguments 3
@@ -217,7 +170,7 @@ bashPrompt() {
 
   __catchEnvironment "$usage" buildEnvironmentLoad BUILD_PROMPT_COLORS || return $?
 
-  if [ -z "${BUILD_PROMPT_COLORS-}" ] || [ -n "$colorsText" ]; then
+  if [ -z "${BUILD_PROMPT_COLORS-}" ] || [ -n "$colorsText" ] || $resetFlag; then
     [ -n "$colorsText" ] || colorsText=$(bashPromptColorScheme default)
     BUILD_PROMPT_COLORS=$(bashPromptColorsFormat "${colorsText}")
   fi
@@ -239,11 +192,8 @@ bashPrompt() {
     PROMPT_COMMAND="$theCommand"
   fi
   isArray __BASH_PROMPT_PREVIOUS || __BASH_PROMPT_PREVIOUS=()
-  if [ "$label" != $'\0' ]; then
-    label="$label "
-    __BASH_PROMPT_PREVIOUS=("${__BASH_PROMPT_PREVIOUS[0]-}" "$label")
-  fi
-  PS1="$(__bashPromptGeneratePS1)"
+  __BASH_PROMPT_PREVIOUS=("$successPrompt" "$failurePrompt" "$label" 0)
+  PS1="$(__bashPromptGeneratePS1 "$promptFormat")"
 }
 _bashPrompt() {
   # _IDENTICAL_ usageDocument 1
@@ -333,50 +283,205 @@ bashPromptColorScheme() {
   printf -- "%s" "$colors"
 }
 
-# Prompt is the following literal tokens concatenated:
-# - user
-# - "@"
-# - host
-# - " "
-# - CWD
-# - " "
-# - exit status ">" or "@"
-# - " "
-__bashPromptGeneratePS1() {
-  local colors reset
-  export BUILD_PROMPT_COLORS __BASH_PROMPT_PREVIOUS
-  IFS=":" read -r -a colors <<<"${BUILD_PROMPT_COLORS-}" || :
-  reset="$(decorate reset)"
-  printf -- "%s%s%s@%s %s %s %s" \
-    "\[\${__BASH_PROMPT_MARKERS[0]-}\]" \
-    "\${__BASH_PROMPT_PREVIOUS[1]-}" \
-    "\[${colors[2]-}\]\u\[${reset}\]" \
-    "\[${colors[3]-}\]\h" \
-    "\[${colors[4]-}\]\w\[${reset}\]" \
-    "\[\${__BASH_PROMPT_PREVIOUS[2]-}\]\${__BASH_PROMPT_PREVIOUS[3]-}\[${reset}\]" \
-    "\[\${__BASH_PROMPT_MARKERS[1]-}\]"
+# Requires: isArray
+# Environment: __BASH_PROMPT_MODULES
+# Environment: __BASH_PROMPT_PREVIOUS
+__bashPromptSanity() {
+  export __BASH_PROMPT_MODULES __BASH_PROMPT_PREVIOUS
+  if ! isArray "__BASH_PROMPT_MODULES"; then
+    __BASH_PROMPT_MODULES=()
+  fi
+  if ! isArray "__BASH_PROMPT_PREVIOUS"; then
+    __BASH_PROMPT_PREVIOUS=()
+  fi
 }
 
-# __BASH_PROMPT_PREVIOUS
-# 0 - exit status
-# 1 - prompt prefix
-# 2 - last statement prefix
-# 3 - last statement symbol
+# Requires: isFunction printf decorate
+__bashPromptList() {
+  local promptCommand
+
+  __bashPromptSanity
+
+  for promptCommand in "${__BASH_PROMPT_MODULES[@]+"${__BASH_PROMPT_MODULES[@]}"}"; do
+    if isFunction "$promptCommand"; then
+      printf -- "- %s (%s)\n" "$(decorate code "$promptCommand")" "$(decorate orange "function")"
+    else
+      printf -- "- %s (%s)\n" "$(decorate value "$promptCommand")" "$(decorate blue "file")"
+    fi
+  done
+}
+
+# Usage: {fn} [ --first | --last | module ]
+# Argument: --first - Flag. Optional. All subsequent modules are added first to the list.
+# Argument: --last - Flag. Optional. ALl subsequent modules are added to the end of the list.
+# Argument: module - Callable. Required. The module to add
+__bashPromptAdd() {
+  local usage="$1" && shift
+
+  local first=false last=false verbose=false found
+
+  __bashPromptSanity
+
+  # _IDENTICAL_ argument-case-header 5
+  local __saved=("$@") __count=$#
+  while [ $# -gt 0 ]; do
+    local argument="$1" __index=$((__count - $# + 1))
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
+    case "$argument" in
+      --verbose)
+        verbose=true
+        ;;
+      --first)
+        first=true
+        last=false
+        ;;
+      --last)
+        first=false
+        last=true
+        ;;
+      *)
+        local found=""
+        isCallable "$argument" || __throwArgument "$usage" "$argument must be executable or a function" || return $?
+        ! inArray "$argument" "${__BASH_PROMPT_MODULES[@]+"${__BASH_PROMPT_MODULES[@]}"}" || found="$argument"
+        if $first; then
+          if [ -n "$found" ]; then
+            if [ "${__BASH_PROMPT_MODULES[0]-}" = "$found" ]; then
+              return 0
+            fi
+            __bashPromptRemove "$usage" "$found" || return $?
+            ! $verbose || decorate info "Moving bash module to first: $(decorate code "$argument")"
+          else
+            ! $verbose || decorate info "Added bash module: $(decorate code "$argument")"
+          fi
+          __BASH_PROMPT_MODULES=("$argument" "${__BASH_PROMPT_MODULES[@]+"${__BASH_PROMPT_MODULES[@]}"}")
+        else
+          if [ -n "$found" ]; then
+            if ! $last || [ "${__BASH_PROMPT_MODULES[${#__BASH_PROMPT_MODULES[@]} - 1]}" = "$argument" ]; then
+              return 0
+            fi
+            __bashPromptRemove "$usage" "$found" || return $?
+            ! $verbose || decorate info "Moving bash module to last: $(decorate code "$argument")"
+          else
+            ! $verbose || decorate info "Added bash module: $(decorate code "$argument")"
+          fi
+          __BASH_PROMPT_MODULES=("${__BASH_PROMPT_MODULES[@]+"${__BASH_PROMPT_MODULES[@]}"}" "$argument")
+        fi
+        ;;
+    esac
+    # _IDENTICAL_ argument-esac-shift 1
+    shift
+  done
+  return 0
+}
+
+#
+# Given a list of color names, generate the color codes in a :-separated list
+# Requires: decorations read inArray decorate listJoin
+bashPromptColorsFormat() {
+  local index color colors=()
+  local all=()
+
+  while read -r color; do all+=("$color"); done < <(decorations)
+  IFS=":" read -r -a colors <<<"$1:::::" || :
+  for index in "${!colors[@]}"; do
+    color="${colors[index]}"
+    if inArray "$color" "${all[@]}"; then
+      colors[index]="$(decorate "$color")"
+    else
+      colors[index]=""
+    fi
+    [ "$index" -le 4 ] || unset "colors[$index]"
+  done
+  colors+=("$(decorate reset)")
+  printf "%s\n" "$(listJoin ":" "${colors[@]}")"
+}
+
+# Usage: {fn} usageFunction removeModule
+# Fails if not found
+# Requires: isArray read inArray decorate listJoin
+__bashPromptRemove() {
+  local usage="$1" module="$2" current modules=() found=false
+
+  __bashPromptSanity
+  for current in "${__BASH_PROMPT_MODULES[@]+"${__BASH_PROMPT_MODULES[@]}"}"; do
+    if [ "$module" = "$current" ]; then
+      found=true
+    else
+      modules+=("$current")
+    fi
+  done
+  $found || __throwEnvironment "$usage" "$module was not found in modules: $(decorate each code "${__BASH_PROMPT_MODULES[@]+"${__BASH_PROMPT_MODULES[@]}"}")" || return $?
+  __BASH_PROMPT_MODULES=("${modules[@]+"${modules[@]}"}")
+}
+
+__bashPromptFormat() {
+  local formatString="$1"
+
+  while read -r token replacement; do
+    formatString=$(stringReplace "{${token}}" "$replacement" "$formatString")
+  done < <(__bashPromptCode)
+  printf -- "%s%s%s" "\[\${__BASH_PROMPT_MARKERS[0]-}\]" "$formatString" "\[\${__BASH_PROMPT_MARKERS[1]-}\]"
+}
+
+__bashPromptGeneratePS1() {
+  __bashPromptFormat "$@"
+}
+
+# Internal documentation - do not depend on this external of this file:
+#
+# __BASH_PROMPT_PREVIOUS[0] - successText
+# __BASH_PROMPT_PREVIOUS[1] - failureText
+# __BASH_PROMPT_PREVIOUS[2] - label
+# __BASH_PROMPT_PREVIOUS[3] - return code
+# __BASH_PROMPT_PREVIOUS[4] - return color
+# __BASH_PROMPT_PREVIOUS[5] - return text
+
+__bashPromptHideEscapes() {
+  printf -- "\[%s\]%s\[%s\]" "$1" "$2" "$3"
+}
+
+__bashPromptCode() {
+  local colors=() reset
+  reset="$(decorate reset)"
+  export BUILD_PROMPT_COLORS __BASH_PROMPT_PREVIOUS
+  IFS=":" read -r -a colors <<<"${BUILD_PROMPT_COLORS-}" || :
+  printf "%s %s\n" \
+    "$" "$(__bashPromptHideEscapes "\${__BASH_PROMPT_PREVIOUS[4]-}" "\$" "$reset")" \
+    "code" "$(__bashPromptHideEscapes "\${__BASH_PROMPT_PREVIOUS[4]-}" "\${__BASH_PROMPT_PREVIOUS[3]#0}" "$reset")" \
+    "status" "$(__bashPromptHideEscapes "\${__BASH_PROMPT_PREVIOUS[4]-}" "\${__BASH_PROMPT_PREVIOUS[5]-}" "$reset")" \
+    "label" "\${__BASH_PROMPT_PREVIOUS[2]-}" \
+    "user" "$(__bashPromptHideEscapes "${colors[2]-}" "\u" "$reset")" \
+    "host" "$(__bashPromptHideEscapes "${colors[3]-}" "\h" "$reset")" \
+    "directory" "$(__bashPromptHideEscapes "${colors[4]-}" "\w" "$reset")" \
+    "reset" "\[$reset\]"
+}
+
 # This is the main command running each command prompt
 __bashPromptCommand() {
-  __BASH_PROMPT_PREVIOUS=("$?" "${__BASH_PROMPT_PREVIOUS[1]-}")
-  local colors promptCommand
+  local exitCode=$?
+
+  __bashPromptSanity
+
+  # Index 0 1 2 3
+  __BASH_PROMPT_PREVIOUS=("${__BASH_PROMPT_PREVIOUS[0]-}" "${__BASH_PROMPT_PREVIOUS[1]-}" "${__BASH_PROMPT_PREVIOUS[2]-}" "$exitCode")
+  local colors
   export BUILD_PROMPT_COLORS
   IFS=":" read -r -a colors <<<"${BUILD_PROMPT_COLORS-}" || :
-  if [ "${__BASH_PROMPT_PREVIOUS[0]}" -eq 0 ]; then
+  if [ "$exitCode" -eq 0 ]; then
+    # Index 4 - color
     __BASH_PROMPT_PREVIOUS+=("${colors[0]-}")
-    __BASH_PROMPT_PREVIOUS+=(">")
+    # Index 5 - text
+    __BASH_PROMPT_PREVIOUS+=("${__BASH_PROMPT_PREVIOUS[0]-}")
   else
+    # Index 4 - color
     __BASH_PROMPT_PREVIOUS+=("${colors[1]-}")
-    __BASH_PROMPT_PREVIOUS+=("§")
+    # Index 5 - text
+    __BASH_PROMPT_PREVIOUS+=("${__BASH_PROMPT_PREVIOUS[1]-}")
   fi
   local debug=false
   ! buildDebugEnabled bashPrompt || debug=true
+
+  local promptCommand
   for promptCommand in "${__BASH_PROMPT_MODULES[@]}"; do
     if isFunction "$promptCommand"; then
       ! $debug || decorate warning "Running $(decorate code "$promptCommand")"
@@ -387,4 +492,5 @@ __bashPromptCommand() {
       . "$promptCommand"
     fi
   done
+  return $exitCode
 }

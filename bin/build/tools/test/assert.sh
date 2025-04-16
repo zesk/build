@@ -37,7 +37,7 @@
 # Reviewed: 2023-11-12
 #
 assertEquals() {
-  _assertEqualsHelper "${FUNCNAME[0]}" --success true "$@" || return $?
+  _assertEqualsHelper "${FUNCNAME[0]}" --line-depth --success true "$@" || return $?
 }
 _assertEquals() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"

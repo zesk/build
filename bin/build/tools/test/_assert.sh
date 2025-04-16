@@ -121,7 +121,7 @@ _assertConditionHelper() {
   local this="$1" && shift
   local usage="_$this"
   local pairs=() debugFlag=false
-  local success=true file="" lineNumber="" linePrefix="" displayName="" tester="" formatter="__resultFormatter"
+  local success=true file="" lineDepth="" lineNumber="" linePrefix="" displayName="" tester="" formatter="__resultFormatter"
   local outputContains=() outputNotContains=() stderrContains=() stderrNotContains=()
   local doPlumber="" leaks=()
   local errorsOk=false dumpFlag=false dumpBinaryFlag=false expectedExitCode=0 code1=false
@@ -158,7 +158,6 @@ _assertConditionHelper() {
       --line)
         shift
         lineNumber="${1-}"
-        [ -z "$lineNumber" ] || linePrefix="$(decorate bold-magenta "Line ${1-}: ")"
         ;;
       --test)
         shift
@@ -201,6 +200,10 @@ _assertConditionHelper() {
         dumpBinaryFlag=true
         dumpFlag=true
         ;;
+      --line-depth)
+        shift
+        lineDepth="$(usageArgumentPositiveInteger "$usage" "$argument" "${1-}")" || return $?
+        ;;
       --plumber)
         doPlumber=true
         ;;
@@ -223,6 +226,16 @@ _assertConditionHelper() {
     # _IDENTICAL_ argument-esac-shift 1
     shift
   done
+  if [ -n "$lineDepth" ]; then
+    local computeLine="${BASH_LINENO[$((lineDepth + 1))]}"
+    if [ -z "$lineNumber" ]; then
+      lineNumber="$computeLine"
+    elif [ "$lineNumber" != "$computeLine" ]; then
+      displayName="${displayName} (Computed line [$computeLine] != passed line [$lineNumber])"
+      displayName
+    fi
+  fi
+  [ -z "$lineNumber" ] || linePrefix="$(decorate bold-magenta "Line ${1-}: ")"
   if [ -z "$doPlumber" ]; then
     doPlumber=false
     if parseBoolean "$(buildEnvironmentGet "TEST_PLUMBER")"; then
