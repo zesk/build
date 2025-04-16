@@ -86,6 +86,8 @@ __buildIdenticalRepair() {
   while read -r item; do
     aa+=(--repair "$item")
   done < <(find "$home" -type d -name identical ! -path "*/.*/*")
+  bashDebugInterruptFile --error --interrupt
+  set -eou pipefail
   __catchEnvironment "$usage" identicalCheckShell --skip "$(realPath "${BASH_SOURCE[0]}")" "${aa[@]+"${aa[@]}"}" --exec contextOpen "$@" || return $?
 }
 ___buildIdenticalRepair() {

@@ -8,6 +8,7 @@
 # Copyright &copy; 2025 Market Acumen, Inc.
 #
 
+# Start tracking - anything declared after this will be returned as a defined "new" thing
 developerTrack "${BASH_SOURCE[0]}"
 
 # Return the application tools added (functions globals and aliases)

@@ -1077,12 +1077,14 @@ __decorateExtensionQuote() {
   printf -- "\"%s\"\n" "$text"
 }
 
-# _IDENTICAL_ exitString 6
+# _IDENTICAL_ _exitString 8
 
 # Output the exit code as a string
 # Winner of the one-line bash award 10 years running
+# Argument: code ... - UnsignedInteger. String. Exit code value to output.
+# stdout: exitCodeToken, one per line
 exitString() {
-  local k="" && while [ $# -gt 0 ]; do case "$1" in 1) k="environment" ;; 2) k="argument" ;; 97) k="assert" ;; 105) k="identical" ;; 108) k="leak" ;; 116) k="timeout" ;; 120) k="exit" ;; 253) k="internal" ;; esac && [ -n "$k" ] || k="$1" && printf "%s\n" "$k" && shift; done
+  local k="" && while [ $# -gt 0 ]; do case "$1" in 1) k="environment" ;; 2) k="argument" ;; 97) k="assert" ;; 105) k="identical" ;; 108) k="leak" ;; 116) k="timeout" ;; 120) k="exit" ;; 253) k="internal" ;; 254) k="unknown" ;; *) k="[exitString unknown \"$1\"]" ;; esac && [ -n "$k" ] || k="$1" && printf "%s\n" "$k" && shift; done
 }
 
 # IDENTICAL _return 28
@@ -1153,7 +1155,7 @@ __catchEnvironment() {
 
 # _IDENTICAL_ _errors 16
 
-# Return `argument` error code always. Outputs `message ...` to `stderr`.
+# Return `argument` error code. Outputs `message ...` to `stderr`.
 # Argument: message ... - String. Optional. Message to output.
 # Exit Code: 2
 # Requires: _return
@@ -1161,7 +1163,7 @@ _argument() {
   _return 2 "$@" || return $?
 }
 
-# Return `environment` error code always. Outputs `message ...` to `stderr`.
+# Return `environment` error code. Outputs `message ...` to `stderr`.
 # Argument: message ... - String. Optional. Message to output.
 # Exit Code: 1
 # Requires: _return

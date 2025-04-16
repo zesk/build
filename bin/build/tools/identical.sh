@@ -11,7 +11,7 @@
 # May return non-integer count and should be tested by calling function
 #
 __identicalLineParse() {
-  local file="${1-}"
+  local file="${1-}" count line0 line1
   local prefix="${2-}"
   local identicalLine="${3-}"
 
@@ -19,6 +19,7 @@ __identicalLineParse() {
   if ! isUnsignedInteger "$lineNumber"; then
     _environment "__identicalLineParse: \"$identicalLine\" no line number: \"$lineNumber\"" || return $?
   fi
+  # Trim line number from beginning of line
   identicalLine=${identicalLine#*:}
   identicalLine="$(trimSpace "${identicalLine##*"$prefix"}")"
   token=${identicalLine%% *}

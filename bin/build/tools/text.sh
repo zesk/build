@@ -2,11 +2,10 @@
 #
 # Copyright &copy; 2025 Market Acumen, Inc.
 #
-# Shell Dependencies: awk sed date sort printf
+# Docs: ./documentation/source/tools/text.md
+# Test: ./test/tools/text-tests.sh
 #
-# Docs: o ./documentation/source/tools/text.md
-# Test: o ./test/tools/text-tests.sh
-#
+
 ###############################################################################
 #
 #    ▄                    ▄
@@ -105,15 +104,15 @@ _parseBoolean() {
 
 # _IDENTICAL_ _text 18
 
-# Summary: Quote grep -e patterns for shell use
+# Quote grep -e patterns for shell use
 #
-# Usage: {fn} text
-# Argument: text - Text to quote
+# Argument: text - EmptyString. Required. Text to quote.
 # Output: string quoted and appropriate to insert in a grep search or replacement phrase
 # Example:     grep -e "$(quoteGrepPattern "$pattern")" < "$filterFile"
 # Requires: printf sed
 quoteGrepPattern() {
-  value=$(printf "%s\n" "$1" | sed 's/\([\\.*+?]\)/\\\1/g')
+  local value="${1-}"
+  value=$(printf "%s\n" "$value" | sed 's/\([\\.*+?]\)/\\\1/g')
   value="${value//[/\\[}"
   value="${value//]/\\]}"
   value="${value//)/\\)}"
@@ -253,6 +252,7 @@ trimSpace() {
   fi
 }
 _trimSpace() {
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -406,6 +406,7 @@ isSubstringInsensitive() {
   return 1
 }
 _isSubstringInsensitive() {
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -596,6 +597,7 @@ shaPipe() {
   fi
 }
 _shaPipe() {
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -650,6 +652,7 @@ cachedShaPipe() {
   fi
 }
 _cachedShaPipe() {
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -716,6 +719,7 @@ isCharacterClass() {
   done
 }
 _isCharacterClass() {
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -751,6 +755,7 @@ isCharacterClasses() {
   return 1
 }
 _isCharacterClasses() {
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -775,6 +780,7 @@ characterFromInteger() {
   done
 }
 _characterFromInteger() {
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -797,6 +803,7 @@ stringValidate() {
   done
 }
 _stringValidate() {
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -817,6 +824,7 @@ characterToInteger() {
   done
 }
 _characterToInteger() {
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 

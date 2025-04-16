@@ -97,17 +97,18 @@ identicalRepair() {
   else
     exec 3>&1
   fi
-  local currentLineNumber=0
+  local currentLineNumber=0 undo=("exec" "3>&-" --)
+
   # totalLines is *$destination* lines
   totalLines=$(wc -l <"$destination")
   while read -r identicalLine; do
     local isEOF=false
-    parsed=$(__catchArgument "$usage" __identicalLineParse "$destination" "$prefix" "$identicalLine") || return $?
+    parsed=$(__catchArgument "$usage" __identicalLineParse "$destination" "$prefix" "$identicalLine") || _undo $? "${undo[@]}" || return $?
     IFS=" " read -r lineNumber token count < <(printf -- "%s\n" "$parsed") || :
     if [ "$count" = "EOF" ]; then
       isEOF=true
     fi
-    count=$(__identicalLineCount "$count" "$((totalLines - lineNumber))") || __throwEnvironment "$usage" "\"$identicalLine\" invalid count: $count" || return $?
+    count=$(__identicalLineCount "$count" "$((totalLines - lineNumber))") || __throwEnvironment "$usage" "\"$identicalLine\" invalid count: $count" || _undo $? "${undo[@]}" || return $?
     if [ "$lineNumber" -gt 1 ]; then
       if [ "$currentLineNumber" -eq 0 ]; then
         head -n $((lineNumber - 1)) <"$destination" >&3
@@ -126,6 +127,7 @@ identicalRepair() {
   if [ "$currentLineNumber" -lt "$totalLines" ]; then
     tail -n $((totalLines - currentLineNumber + 1)) <"$destination" >&3
   fi
+  exec 3>&-
   if ! $stdout; then
     __catchEnvironment "$usage" cp -f "$targetFile" "$destination" || return $?
     rm -f "$targetFile" || :

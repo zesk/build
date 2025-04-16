@@ -5,7 +5,7 @@
 # Copyright &copy; 2025, Market Acumen, Inc.
 #
 
-# _IDENTICAL_ application.sh 129
+# _IDENTICAL_ application.sh 133
 
 #
 # This file generically loads all application tools in `./bin/tools` and allows for extensions
@@ -127,7 +127,7 @@ __applicationTools() {
   local here="${source%/*}" __saved=("$@")
 
   set --
-  __build .. bin : >/dev/null || return $?
+  __build .. bin >/dev/null || return $?
 
   bashSourcePath "$(realPath "$here/tools/")" || return $?
 
