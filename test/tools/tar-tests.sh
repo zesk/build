@@ -32,25 +32,25 @@ testTarExtractFilePattern() {
   __environment printf "%s\n" "going" >"$base/a/b/c/d/b.json" || return $?
 
   __environment muzzle pushd "$temp" || return $?
-  assertExitCode --line "$LINENO" 0 tarCreate foo.tar.gz base || return $?$()
+  assertExitCode 0 tarCreate foo.tar.gz base || return $?$()
 
   IFS=" " content="$(__environment tarExtractPattern '*/a.json' <foo.tar.gz | sort)" || return $?
   content=${content//$'\n'/ }
-  assertEquals --line "$LINENO" "$content" "give going never to up you" || return $?
+  assertEquals "$content" "give going never to up you" || return $?
 
   IFS=" " content="$(__environment tarExtractPattern '*/e/*/a.json' <foo.tar.gz | sort)" || return $?
   content=${content//$'\n'/ }
-  assertEquals --line "$LINENO" "$content" "give up you" || return $?
+  assertEquals "$content" "give up you" || return $?
 
   IFS=" " content="$(__environment tarExtractPattern '*/e*/a.json' <foo.tar.gz | sort)" || return $?
   content=${content//$'\n'/ }
-  assertEquals --line "$LINENO" "$content" "give to up you" || return $?
+  assertEquals "$content" "give to up you" || return $?
 
   IFS=" " content="$(__environment tarExtractPattern '*/b/*/a.json' <foo.tar.gz | sort)" || return $?
   content=${content//$'\n'/ }
-  assertEquals --line "$LINENO" "$content" "going never" || return $?
+  assertEquals "$content" "going never" || return $?
 
   IFS=" " content="$(__environment tarExtractPattern '*/b.json' <foo.tar.gz | sort)" || return $?
   content=${content//$'\n'/ }
-  assertEquals --line "$LINENO" "$content" "down going let never to you" || return $?
+  assertEquals "$content" "down going let never to you" || return $?
 }

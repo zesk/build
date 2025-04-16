@@ -83,32 +83,32 @@ EOF
 
 testQuoteSedPattern() {
   local value mappedValue
-  assertEquals --line "$LINENO" "\\[" "$(quoteSedPattern "[")" || return $?
-  assertEquals --line "$LINENO" "\\]" "$(quoteSedPattern "]")" || return $?
+  assertEquals "\\[" "$(quoteSedPattern "[")" || return $?
+  assertEquals "\\]" "$(quoteSedPattern "]")" || return $?
   # shellcheck disable=SC1003
-  assertEquals --line "$LINENO" '\\' "$(quoteSedPattern '\')" || return $?
-  assertEquals --line "$LINENO" "\\/" "$(quoteSedPattern "/")" || return $?
+  assertEquals '\\' "$(quoteSedPattern '\')" || return $?
+  assertEquals "\\/" "$(quoteSedPattern "/")" || return $?
   # Fails in code somewhere
   read -d "" -r value < <(__testQuoteSedPatternData)
 
   mappedValue="$(printf %s "{name}" | name=$value mapEnvironment)"
-  assertEquals --line "$LINENO" "$mappedValue" "$value" || return $?
+  assertEquals "$mappedValue" "$value" || return $?
 }
 
 testQuoteSedReplacement() {
   local value mappedValue
-  assertEquals --line "$LINENO" "\\&" "$(quoteSedReplacement "&")" || return $?
+  assertEquals "\\&" "$(quoteSedReplacement "&")" || return $?
   # shellcheck disable=SC1003
-  assertEquals --line "$LINENO" '\\' "$(quoteSedReplacement '\')" || return $?
+  assertEquals '\\' "$(quoteSedReplacement '\')" || return $?
   # shellcheck disable=SC1003
-  assertEquals --line "$LINENO" '\\' "$(quoteSedReplacement '\' '~')" || return $?
-  assertEquals --line "$LINENO" "\\/" "$(quoteSedReplacement "/")" || return $?
-  assertEquals --line "$LINENO" "/" "$(quoteSedReplacement "/" "~")" || return $?
+  assertEquals '\\' "$(quoteSedReplacement '\' '~')" || return $?
+  assertEquals "\\/" "$(quoteSedReplacement "/")" || return $?
+  assertEquals "/" "$(quoteSedReplacement "/" "~")" || return $?
   # Fails in code somewhere
   read -d "" -r value < <(__testQuoteSedPatternData)
 
   mappedValue="$(printf %s "{name}" | name=$value mapEnvironment)"
-  assertEquals --line "$LINENO" "$mappedValue" "$value" || return $?
+  assertEquals "$mappedValue" "$value" || return $?
 }
 
 testLowercase() {
@@ -176,15 +176,15 @@ testCharacterFromInteger() {
 }
 
 testPrintfOutput() {
-  assertEquals --line "$LINENO" "$(echo "ab" | printfOutputPrefix "c")" "cab" || return $?
-  assertEquals --line "$LINENO" "$(printf "" | printfOutputPrefix "c")" "" || return $?
-  assertEquals --line "$LINENO" "$(echo "ab" | printfOutputSuffix "c")" "ab"$'\n'"c" || return $?
-  assertEquals --line "$LINENO" "$(printf "" | printfOutputSuffix "c")" "" || return $?
+  assertEquals "$(echo "ab" | printfOutputPrefix "c")" "cab" || return $?
+  assertEquals "$(printf "" | printfOutputPrefix "c")" "" || return $?
+  assertEquals "$(echo "ab" | printfOutputSuffix "c")" "ab"$'\n'"c" || return $?
+  assertEquals "$(printf "" | printfOutputSuffix "c")" "" || return $?
 }
 
 testUnquote() {
   __testUnquoteData | while read -r quote quoted unquoted; do
-    assertEquals --line "$LINENO" "$(unquote "$quote" "$quoted")" "$unquoted" --message "unquote \"$quote\" \"$quoted\"" || return $?
+    assertEquals "$(unquote "$quote" "$quoted")" "$unquoted" --message "unquote \"$quote\" \"$quoted\"" || return $?
   done
 }
 

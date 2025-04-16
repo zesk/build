@@ -34,11 +34,11 @@ EOF
 testColorBrightness() {
   local expected r g b
   _colorBrightnessValues | while read -r expected r g b; do
-    assertEquals --line "$LINENO" "$expected" "$(printf "%d\n" "$r" "$g" "$b" | colorBrightness)" "echo $r $g $b \| colorBrightness failed to be $expected" || return $?
-    assertEquals --line "$LINENO" "$expected" "$(colorBrightness "$r" "$g" "$b")" "colorBrightness $r $g $b failed to be $expected" || return $?
+    assertEquals "$expected" "$(printf "%d\n" "$r" "$g" "$b" | colorBrightness)" "echo $r $g $b \| colorBrightness failed to be $expected" || return $?
+    assertEquals "$expected" "$(colorBrightness "$r" "$g" "$b")" "colorBrightness $r $g $b failed to be $expected" || return $?
   done
   _colorBrightnessBadValues | while read -r expected r g b; do
-    assertNotExitCode --line "$LINENO" --stderr-ok 0 colorBrightness "$r" "$g" "$b" || return $?
+    assertNotExitCode --stderr-ok 0 colorBrightness "$r" "$g" "$b" || return $?
   done
 }
 
@@ -63,9 +63,9 @@ testStatusMessageLast() {
   statusMessage decorate warning "Mocking console animation (true)"
   __mockConsoleAnimation true
 
-  assertEquals --line "$LINENO" 0 "$(($(statusMessage --first printf -- "%s" "$phrase" | wc -l) + 0))" || return $?
-  assertEquals --line "$LINENO" 0 "$(($(statusMessage printf -- "%s" "$phrase" | wc -l) + 0))" || return $?
-  assertEquals --line "$LINENO" 1 "$(($(statusMessage --last printf -- "%s" "$phrase" | wc -l) + 0))" || return $?
+  assertEquals 0 "$(($(statusMessage --first printf -- "%s" "$phrase" | wc -l) + 0))" || return $?
+  assertEquals 0 "$(($(statusMessage printf -- "%s" "$phrase" | wc -l) + 0))" || return $?
+  assertEquals 1 "$(($(statusMessage --last printf -- "%s" "$phrase" | wc -l) + 0))" || return $?
 
   statusMessage decorate warning "Ending mocked console animation"
   __mockConsoleAnimation --end
@@ -73,9 +73,9 @@ testStatusMessageLast() {
   statusMessage decorate warning "Mocking console animation (false)"
   __mockConsoleAnimation false
 
-  assertEquals --line "$LINENO" 0 "$(($(statusMessage --first printf -- "%s" "$phrase" | wc -l) + 0))" || return $?
-  assertEquals --line "$LINENO" 1 "$(($(statusMessage printf -- "%s" "$phrase" | wc -l) + 0))" || return $?
-  assertEquals --line "$LINENO" 1 "$(($(statusMessage --last printf -- "%s" "$phrase" | wc -l) + 0))" || return $?
+  assertEquals 0 "$(($(statusMessage --first printf -- "%s" "$phrase" | wc -l) + 0))" || return $?
+  assertEquals 1 "$(($(statusMessage printf -- "%s" "$phrase" | wc -l) + 0))" || return $?
+  assertEquals 1 "$(($(statusMessage --last printf -- "%s" "$phrase" | wc -l) + 0))" || return $?
 
   __mockConsoleAnimation --end
   statusMessage decorate warning "Ending mocked console animation"

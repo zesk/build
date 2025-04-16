@@ -16,6 +16,6 @@ EOF
 
 testGithubURLParse() {
   while read -r url expected; do
-    assertEquals --line "$LINENO" "$expected" "$(githubURLParse "$url")" || return $?
+    assertEquals "$expected" "$(githubURLParse "$url")" || return $?
   done < <(__testGithubURLParseData)
 }

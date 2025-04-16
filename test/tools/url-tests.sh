@@ -77,7 +77,7 @@ EOF
 
 testUrlValid() {
   __validUrls | while read -r url; do
-    assertExitCode --line "$LINENO" 0 urlValid "$url" || return $?
+    assertExitCode 0 urlValid "$url" || return $?
   done
 }
 
@@ -88,7 +88,7 @@ testUrlFilter() {
   output=$(__environment mktemp) || return $?
   source="$home/test/example/urlFilter.source.html"
   urlFilter "$source" >"$output" || _environment "urlFilter $source failed" || return $?
-  assertExitCode --line "$LINENO" 0 diff "$output" "$home/test/example/urlFilter.output.txt" || _undo $? dumpPipe "urlFilter $source" <"$output" || _undo $? rm -rf "$output" || return $?
+  assertExitCode 0 diff "$output" "$home/test/example/urlFilter.output.txt" || _undo $? dumpPipe "urlFilter $source" <"$output" || _undo $? rm -rf "$output" || return $?
 }
 
 testUrlOpen() {
@@ -97,13 +97,13 @@ testUrlOpen() {
 
   url="https://www.example.com/"
   BUILD_URL_BINARY="echo"
-  assertEquals --line "$LINENO" "$(urlOpen "$url")" "$url" || return $?
-  assertEquals --line "$LINENO" "$(urlOpen --ignore '*bad*url*' "$url")" "$url" || return $?
-  assertEquals --line "$LINENO" "1" "$(urlOpen "$url" "$url" | wc -l | trimSpace)" || return $?
-  assertEquals --line "$LINENO" "2" "$(urlOpen --wait "$url" "$url" | wc -l | trimSpace)" || return $?
+  assertEquals "$(urlOpen "$url")" "$url" || return $?
+  assertEquals "$(urlOpen --ignore '*bad*url*' "$url")" "$url" || return $?
+  assertEquals "1" "$(urlOpen "$url" "$url" | wc -l | trimSpace)" || return $?
+  assertEquals "2" "$(urlOpen --wait "$url" "$url" | wc -l | trimSpace)" || return $?
 
   assertNotExitCode --stderr-match 'Invalid URL' --stderr-match 'bad-url' --line "$LINENO" 0 urlOpen "bad-url" || return $?
-  assertExitCode --line "$LINENO" 0 urlOpen --ignore "bad-url" || return $?
+  assertExitCode 0 urlOpen --ignore "bad-url" || return $?
 
   unset BUILD_URL_BINARY
 }
@@ -111,13 +111,13 @@ testUrlOpen() {
 testFetch() {
   local targetFile
 
-  assertExitCode --line "$LINENO" 0 urlFetch --help || return $?
+  assertExitCode 0 urlFetch --help || return $?
 
   targetFile=$(mktemp)
-  assertFileExists --line "$LINENO" "$targetFile" || return $?
+  assertFileExists "$targetFile" || return $?
   assertFileSize --line "$LINENO" 0 "$targetFile" || return $?
-  assertExitCode --line "$LINENO" 0 urlFetch 'https://example.com' "$targetFile" || return $?
-  assertFileExists --line "$LINENO" "$targetFile" || return $?
+  assertExitCode 0 urlFetch 'https://example.com' "$targetFile" || return $?
+  assertFileExists "$targetFile" || return $?
   assertNotFileSize --line "$LINENO" 0 "$targetFile" || return $?
   assertFileContains --line "$LINENO" "$targetFile" "https://www.iana.org/domains/example" || return $?
   __environment rm -rf "$targetFile" || return $?

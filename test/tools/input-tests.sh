@@ -14,10 +14,10 @@ testInputConfigurationAdd() {
   savedHome=$HOME
 
   HOME=$(__environment mktemp -d) || return $?
-  assertFileDoesNotExist --line "$LINENO" "$HOME/.input""rc" || return $?
-  assertExitCode --line "$LINENO" 0 inputConfigurationAdd "\ep" "history-search-backward" || return $?
+  assertFileDoesNotExist "$HOME/.input""rc" || return $?
+  assertExitCode 0 inputConfigurationAdd "\ep" "history-search-backward" || return $?
 
-  assertFileContains --line "$LINENO" "$HOME/.input""rc" history-search-backward || return $?
+  assertFileContains "$HOME/.input""rc" history-search-backward || return $?
 
   HOME=$savedHome
 }

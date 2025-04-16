@@ -78,11 +78,11 @@ testsWhichAppearToWork() {
 
 _subprocessAssertValue() {
   printf "%s %s" "$(decorate code "$(alignLeft "$width" "$2") ")" " -> "
-  assertEquals --line "$LINENO" "$1" "$(_subprocessSavedValue)" "_subprocessAssertValue $2 buildFailed " || _fail "_subprocessAssertValue $*"
+  assertEquals "$1" "$(_subprocessSavedValue)" "_subprocessAssertValue $2 buildFailed " || _fail "_subprocessAssertValue $*"
 }
 _scopeAssert() {
   printf "%s %s" "$(decorate code "$(alignLeft "$width" "$3") ")" " -> "
-  assertEquals --line "$LINENO" "$1" "$2" "$3 failed" || _fail "$1 $2 $3"
+  assertEquals "$1" "$2" "$3 failed" || _fail "$1 $2 $3"
 }
 
 #

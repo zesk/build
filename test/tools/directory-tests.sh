@@ -22,7 +22,7 @@ testIsAbsolutePath() {
   local path exitCode
 
   __testIsAbsolutePathData | while IFS=, read -r path exitCode; do
-    assertExitCode --line "$LINENO" "$exitCode" isAbsolutePath "$path" || return $?
+    assertExitCode "$exitCode" isAbsolutePath "$path" || return $?
   done
 }
 
@@ -30,25 +30,25 @@ testRequireFileDirectory() {
   local testDir="temp.$$"
 
   assertDirectoryDoesNotExist --line "$LINENO" "$testDir" || return $?
-  assertExitCode --line "$LINENO" 0 requireFileDirectory "$testDir" || return $?
+  assertExitCode 0 requireFileDirectory "$testDir" || return $?
   assertDirectoryDoesNotExist --line "$LINENO" "$testDir" || return $?
 
   assertDirectoryDoesNotExist --line "$LINENO" "$testDir" || return $?
-  assertExitCode --line "$LINENO" 0 requireFileDirectory "$testDir/place" || return $?
+  assertExitCode 0 requireFileDirectory "$testDir/place" || return $?
   assertDirectoryExists --line "$LINENO" "$testDir" || return $?
 
-  assertExitCode --line "$LINENO" 0 rm -rf "$testDir" || return $?
+  assertExitCode 0 rm -rf "$testDir" || return $?
 }
 
 testFileDirectoryExists() {
-  assertExitCode --line "$LINENO" 0 fileDirectoryExists "${BASH_SOURCE[0]}}" || return $?
-  assertNotExitCode --line "$LINENO" 0 fileDirectoryExists "${BASH_SOURCE[0]}}/not-a-dir" || return $?
+  assertExitCode 0 fileDirectoryExists "${BASH_SOURCE[0]}}" || return $?
+  assertNotExitCode 0 fileDirectoryExists "${BASH_SOURCE[0]}}/not-a-dir" || return $?
 }
 
 testDirectoryRelativePath() {
   local test expected
   while IFS=: read -r test expected; do
-    assertEquals --line "$LINENO" "$(directoryRelativePath "$test")" "$expected" || return $?
+    assertEquals "$(directoryRelativePath "$test")" "$expected" || return $?
   done < <(__testDirectoryRelativePathData)
 }
 

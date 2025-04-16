@@ -44,10 +44,10 @@ EOF
 testIsMappable() {
   local exitCode token
   while read -r exitCode token; do
-    assertExitCode --line "$LINENO" "$exitCode" isMappable "$token" || return $?
+    assertExitCode "$exitCode" isMappable "$token" || return $?
   done < <(__testIsMappableData)
   while read -r exitCode token; do
-    assertExitCode --line "$LINENO" "$exitCode" isMappable --prefix '[' --suffix ']' "$token" || return $?
+    assertExitCode "$exitCode" isMappable --prefix '[' --suffix ']' "$token" || return $?
   done < <(__testIsMappableDataBracket)
 }
 
@@ -64,19 +64,19 @@ testMapPrefixSuffix() {
   local itemIndex=1 binary
 
   for binary in mapEnvironment bin/build/map.sh; do
-    assertEquals --line "$LINENO" "Hello, world." "$(echo "[NAME], [PLACE]." | NAME=Hello PLACE=world "$binary" --prefix '[' --suffix ']')" "#$itemIndex failed" || return $?
+    assertEquals "Hello, world." "$(echo "[NAME], [PLACE]." | NAME=Hello PLACE=world "$binary" --prefix '[' --suffix ']')" "#$itemIndex failed" || return $?
     itemIndex=$((itemIndex + 1))
-    assertEquals --line "$LINENO" "Hello, world." "$(echo "{NAME}, {PLACE}." | NAME=Hello PLACE=world "$binary")" "#$itemIndex failed" || return $?
+    assertEquals "Hello, world." "$(echo "{NAME}, {PLACE}." | NAME=Hello PLACE=world "$binary")" "#$itemIndex failed" || return $?
     itemIndex=$((itemIndex + 1))
-    assertEquals --line "$LINENO" "Hello, world." "$(echo "{NAME}, {PLACE}." | NAME=Hello PLACE=world "$binary" NAME PLACE)" "#$itemIndex failed" || return $?
+    assertEquals "Hello, world." "$(echo "{NAME}, {PLACE}." | NAME=Hello PLACE=world "$binary" NAME PLACE)" "#$itemIndex failed" || return $?
     itemIndex=$((itemIndex + 1))
-    assertEquals --line "$LINENO" "Hello, {PLACE}." "$(echo "{NAME}, {PLACE}." | NAME=Hello PLACE=world "$binary" NAME)" "#$itemIndex failed" || return $?
+    assertEquals "Hello, {PLACE}." "$(echo "{NAME}, {PLACE}." | NAME=Hello PLACE=world "$binary" NAME)" "#$itemIndex failed" || return $?
     itemIndex=$((itemIndex + 1))
-    assertEquals --line "$LINENO" "{NAME}, world." "$(echo "{NAME}, {PLACE}." | NAME=Hello PLACE=world "$binary" PLACE)" "#$itemIndex failed" || return $?
+    assertEquals "{NAME}, world." "$(echo "{NAME}, {PLACE}." | NAME=Hello PLACE=world "$binary" PLACE)" "#$itemIndex failed" || return $?
     itemIndex=$((itemIndex + 1))
-    assertEquals --line "$LINENO" "{NAME}, {PLACE}." "$(echo "{NAME}, {PLACE}." | NAME=Hello PLACE=world "$binary" NAM PLAC)" "#$itemIndex failed" || return $?
+    assertEquals "{NAME}, {PLACE}." "$(echo "{NAME}, {PLACE}." | NAME=Hello PLACE=world "$binary" NAM PLAC)" "#$itemIndex failed" || return $?
     itemIndex=$((itemIndex + 1))
-    assertEquals --line "$LINENO" "{NAME}, {PLACE}." "$(echo "{NAME}, {PLACE}." | NAME=Hello PLACE=world "$binary" AME LACE)" "#$itemIndex failed" || return $?
+    assertEquals "{NAME}, {PLACE}." "$(echo "{NAME}, {PLACE}." | NAME=Hello PLACE=world "$binary" AME LACE)" "#$itemIndex failed" || return $?
     itemIndex=$((itemIndex + 1))
   done
 }
@@ -86,11 +86,11 @@ testMapValue() {
 
   tempEnv=$(__environment mktemp) || return $?
 
-  assertEquals --line "$LINENO" "{foo}" "$(mapValue "$tempEnv" "{foo}")" || return $?
+  assertEquals "{foo}" "$(mapValue "$tempEnv" "{foo}")" || return $?
 
   printf "%s=%s\n" "foo" "bar" >>"$tempEnv"
 
-  assertEquals --line "$LINENO" "bar" "$(mapValue "$tempEnv" "{foo}")" || return $?
+  assertEquals "bar" "$(mapValue "$tempEnv" "{foo}")" || return $?
 
   __environment rm "$tempEnv" || return $?
 }

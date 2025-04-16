@@ -203,6 +203,9 @@ _assertConditionHelper() {
       --line-depth)
         shift
         lineDepth="$(usageArgumentPositiveInteger "$usage" "$argument" "${1-}")" || return $?
+        #        decorate pair lineDepth "$lineDepth -> ${BASH_LINENO[lineDepth]}"
+        #        decorate each code "${FUNCNAME[@]}"
+        #        decorate each code "${BASH_LINENO[@]}"
         ;;
       --plumber)
         doPlumber=true
@@ -226,16 +229,16 @@ _assertConditionHelper() {
     # _IDENTICAL_ argument-esac-shift 1
     shift
   done
+
   if [ -n "$lineDepth" ]; then
-    local computeLine="${BASH_LINENO[$((lineDepth + 1))]}"
+    local computeLine="${BASH_LINENO[lineDepth]}"
     if [ -z "$lineNumber" ]; then
       lineNumber="$computeLine"
     elif [ "$lineNumber" != "$computeLine" ]; then
       displayName="${displayName} (Computed line [$computeLine] != passed line [$lineNumber])"
-      displayName
     fi
   fi
-  [ -z "$lineNumber" ] || linePrefix="$(decorate bold-magenta "Line ${1-}: ")"
+  [ -z "$lineNumber" ] || linePrefix="$(decorate bold-magenta "Line $lineNumber: ")"
   if [ -z "$doPlumber" ]; then
     doPlumber=false
     if parseBoolean "$(buildEnvironmentGet "TEST_PLUMBER")"; then
@@ -355,11 +358,9 @@ __assertFileContainsHelper() {
   local success="$1"
   local this="$2"
   local argument
-  local file lineNumber linePrefix
-  local found args expected verb notVerb message displayName
+  local lineNumber="" file=""
 
   shift 2
-  file=
 
   linePrefix=
   lineNumber=
@@ -379,9 +380,6 @@ __assertFileContainsHelper() {
       --line)
         shift
         lineNumber="${1-}"
-        if [ -n "$lineNumber" ]; then
-          linePrefix="$(decorate bold-magenta "Line $lineNumber: ")"
-        fi
         ;;
       *)
         if [ -z "$file" ]; then
@@ -395,8 +393,13 @@ __assertFileContainsHelper() {
     shift
   done
 
+  local linePrefix=""
+  [ -z "$lineNumber" ] || linePrefix="$(decorate bold-magenta "Line $lineNumber: ")"
+
   displayName="${displayName:-"$file"}"
   [ -f "$file" ] || _assertFailure "$this" "$displayName is not a file \"$file\": $*" || return $?
+
+  local found args expected verb notVerb message displayName
 
   verb=$(_choose "$success" "contains" "does not contain") || return $?
   notVerb=$(_choose "$success" "does not contain" "contains") || return $?
@@ -444,7 +447,7 @@ __resultFormatter() {
 _assertEqualsHelper() {
   local this="$1"
   shift
-  _assertConditionHelper "$this" --test ___assertIsEqual --formatter ___assertIsEqualFormat "$@" || return $?
+  _assertConditionHelper "$this" --line-depth 2 --test ___assertIsEqual --formatter ___assertIsEqualFormat "$@" || return $?
 }
 ___assertIsEqual() {
   [ "${1-}" = "${2-}" ]
@@ -524,7 +527,7 @@ ___assertContainsFormat() {
 _assertDirectoryExistsHelper() {
   local this="$1"
   shift
-  _assertConditionHelper "$this" --test ___assertDirectoryExists --formatter ___assertDirectoryExistsFormat "$@" || return $?
+  _assertConditionHelper "$this" --line-depth 2 --test ___assertDirectoryExists --formatter ___assertDirectoryExistsFormat "$@" || return $?
 }
 ___assertDirectoryExists() {
   while [ $# -gt 0 ]; do
@@ -546,7 +549,7 @@ ___assertDirectoryExistsFormat() {
 _assertDirectoryEmptyHelper() {
   local this="$1"
   shift
-  _assertConditionHelper "$this" --test ___assertDirectoryEmpty --formatter ___assertDirectoryEmptyFormat "$@" || return $?
+  _assertConditionHelper "$this" --line-depth 2 --test ___assertDirectoryEmpty --formatter ___assertDirectoryEmptyFormat "$@" || return $?
 }
 ___assertDirectoryEmpty() {
   while [ $# -gt 0 ]; do
@@ -568,7 +571,7 @@ ___assertDirectoryEmptyFormat() {
 _assertFileExistsHelper() {
   local this="$1"
   shift
-  _assertConditionHelper "$this" --test ___assertFileExists --formatter ___assertFileExistsFormat "$@" || return $?
+  _assertConditionHelper "$this" --line-depth 2 --test ___assertFileExists --formatter ___assertFileExistsFormat "$@" || return $?
 }
 ___assertFileExists() {
   while [ $# -gt 0 ]; do
@@ -590,7 +593,7 @@ ___assertFileExistsFormat() {
 _assertFileSizeHelper() {
   local this="$1"
   shift
-  _assertConditionHelper "$this" --test ___assertFileSize --formatter ___assertFileSizeFormat "$@" || return $?
+  _assertConditionHelper "$this" --line-depth 2 --test ___assertFileSize --formatter ___assertFileSizeFormat "$@" || return $?
 }
 ___assertFileSize() {
   local expectedSize="${1-}" actualSize
@@ -621,7 +624,7 @@ ___assertFileSizeFormat() {
 _assertOutputEqualsHelper() {
   local this="$1"
   shift
-  _assertConditionHelper "$this" --test ___assertOutputEquals --formatter ___assertOutputEqualsFormat "$@" || return $?
+  _assertConditionHelper "$this" --line-depth 2 --test ___assertOutputEquals --formatter ___assertOutputEqualsFormat "$@" || return $?
 }
 ___assertOutputEquals() {
   local expected="${1-}" binary="${2-}" output stderr exitCode=0
@@ -661,7 +664,11 @@ __assertFileDoesNotContainThis() {
   __assertFileContainsHelper false "$@" || return $?
 }
 
+#=== === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === ===
 #
+# Exit Code
+#
+#=== === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === ===#
 # Assert a process runs and exits with the correct exit code.
 #
 # If this fails it will output an error and exit.
@@ -682,7 +689,7 @@ __assertFileDoesNotContainThis() {
 _assertExitCodeHelper() {
   local this="$1"
   shift
-  _assertConditionHelper "$this" --code1 --test ___assertExitCodeTest --formatter ___assertExitCodeFormat "$@" || return $?
+  _assertConditionHelper "$this" --line-depth 2 --code1 --test ___assertExitCodeTest --formatter ___assertExitCodeFormat "$@" || return $?
 }
 ___assertExitCodeTest() {
   local binary="${1-}"
@@ -699,6 +706,11 @@ ___assertExitCodeFormat() {
   printf "%s => %s" "${command% }" "$(__resultText "$testPassed" "$(_choose "$testPassed" "correctly" "incorrectly")")"
 }
 
+#=== === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === ===
+#
+# Output contains
+#
+#=== === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === ===#
 #
 # Run a command and expect the output to contain the occurrence of a string.
 #
@@ -718,7 +730,7 @@ ___assertExitCodeFormat() {
 _assertOutputContainsHelper() {
   local this="$1"
   shift
-  _assertConditionHelper "$this" --test ___assertOutputContainsTest --formatter ___assertOutputContainsFormat "$@" || return $?
+  _assertConditionHelper "$this" --line-depth 2 --test ___assertOutputContainsTest --formatter ___assertOutputContainsFormat "$@" || return $?
 }
 ___assertOutputContainsTest() {
   local contains="${1-}" binary="${2-}" captureOut exitCode

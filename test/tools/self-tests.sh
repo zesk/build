@@ -6,9 +6,9 @@
 #
 
 testBuildRunner() {
-  assertExitCode --stderr-match "Hello, world" --line "$LINENO" 1 Build --verbose _return 1 "Hello, world" || return $?
-  assertExitCode --stderr-match "welcome our" --line "$LINENO" 99 Build --verbose _return 99 "I. for one, welcome our ..." || return $?
-  assertExitCode --stderr-match "bad arg" --line "$LINENO" 2 Build --verbose _return "NaN" "bad arg" || return $?
+  assertExitCode --stderr-match "Hello, world" 1 Build --verbose _return 1 "Hello, world" || return $?
+  assertExitCode --stderr-match "welcome our" 99 Build --verbose _return 99 "I. for one, welcome our ..." || return $?
+  assertExitCode --stderr-match "bad arg" 2 Build --verbose _return "NaN" "bad arg" || return $?
 }
 
 testBinBuildRequires() {
@@ -32,12 +32,12 @@ testBuildApplicationTools() {
   muzzle requireDirectory "$testApp/bin/tools" || return $?
 
   __environment touch "$testApp/docs/release/v1.2.3.md" || return $?
-  assertExitCode --line "$LINENO" 0 installInstallBuild "$testApp/bin" "$testApp" || return $?
+  assertExitCode 0 installInstallBuild "$testApp/bin" "$testApp" || return $?
   __environment cp "$(buildHome)/bin/build/application.sh" "$testApp/bin/tools.sh" || return $?
 
   __environment muzzle pushd "$testApp" || return $?
 
-  assertEquals --line "$LINENO" "$("$testApp/bin/tools.sh" hookVersionCurrent --application "$testApp")" "v1.2.3" || return $?
+  assertEquals "$("$testApp/bin/tools.sh" hookVersionCurrent --application "$testApp")" "v1.2.3" || return $?
   __environment muzzle popd || return $?
 }
 
@@ -84,13 +84,13 @@ testBuildEnvironmentLoadAll() {
       export "${loadIt?}"
       buildEnvironmentLoad --print "$loadIt" >"$tempFile" || _environment "buildEnvironmentLoad $loadIt failed" return $?
       envFile="$(cat "$tempFile")"
-      assertFileExists --line "$LINENO" "$envFile" || return $?
+      assertFileExists "$envFile" || return $?
 
       # statusMessage decorate info Loaded "$loadIt=${!loadIt}"
       if inArray "$loadIt" "${nonBlankEnvs[@]}"; then
-        assertNotEquals --line "$LINENO" --display "Loaded $loadIt is non-blank: \"${!loadIt}\"" "${!loadIt}" "" || return $?
+        assertNotEquals --display "Loaded $loadIt is non-blank: \"${!loadIt}\"" "${!loadIt}" "" || return $?
       fi
-      assertFileContains --line "$LINENO" "$envFile" "# Type:" "# Category:" || return $?
+      assertFileContains "$envFile" "# Type:" "# Category:" || return $?
 
       local type
       type=$(grep -m 1 -e "^# Type:" "$envFile" | cut -f 2 -d : | trimSpace)
@@ -147,12 +147,12 @@ testInstallBinBuildNetwork() {
   __catchEnvironment "$handler" cp "$home/bin/build/install-bin-build.sh" "$testBinBuild" || return $?
   __catchEnvironment "$handler" echo '# this make the file different' >>"$testBinBuild" || return $?
 
-  assertDirectoryDoesNotExist --line "$LINENO" "$testDir/bin/build" || return $?
-  assertFileDoesNotExist --line "$LINENO" "$testDir/bin/build/tools.sh" || return $?
+  assertDirectoryDoesNotExist "$testDir/bin/build" || return $?
+  assertFileDoesNotExist "$testDir/bin/build/tools.sh" || return $?
 
-  assertExitCode --line "$LINENO" 0 "$testBinBuild" --force --url 'https://github.com/zesk/build/archive/refs/tags/v0.21.0.tar.gz' || return $?
-  assertDirectoryExists --line "$LINENO" "$testDir/bin/build" || return $?
-  assertFileExists --line "$LINENO" "$testDir/bin/build/tools.sh" || return $?
+  assertExitCode 0 "$testBinBuild" --force --url 'https://github.com/zesk/build/archive/refs/tags/v0.21.0.tar.gz' || return $?
+  assertDirectoryExists "$testDir/bin/build" || return $?
+  assertFileExists "$testDir/bin/build/tools.sh" || return $?
 }
 
 #
@@ -187,9 +187,9 @@ testInstallBinBuild() {
   #  ▖ ▌▛▀ ▌ ▖▐ ▖▐ ▌ ▌▌ ▌ ▟▟▖ ▌
   #  ▝▀ ▝▀▘▝▀  ▀ ▀▘▝▀ ▘ ▘ ▝▝ ▝▀
 
-  assertDirectoryDoesNotExist --line "$LINENO" "$testDir/bin/build" || return $?
+  assertDirectoryDoesNotExist "$testDir/bin/build" || return $?
 
-  assertFileContains --line "$LINENO" "$testBinBuild" "make the file different" || return $?
+  assertFileContains "$testBinBuild" "make the file different" || return $?
 
   matches=(
     --stdout-match "install-bin-build.sh"
@@ -199,7 +199,7 @@ testInstallBinBuild() {
     --stdout-match "Installed"
   )
 
-  assertExitCode --dump --line "$LINENO" "${matches[@]}" 0 "$testDir/bin/pipeline/install-bin-build.sh" --mock "$home/bin/build" || return $?
+  assertExitCode --dump "${matches[@]}" 0 "$testDir/bin/pipeline/install-bin-build.sh" --mock "$home/bin/build" || return $?
   assertFileDoesNotContain --line "$LINENO" "$testBinBuild" "make the file different" || return $?
   assertFileContains --line "$LINENO" "$testBinBuild" "__installPackageConfiguration ../.. " || return $?
 
@@ -310,14 +310,14 @@ testBuildEnvironmentLoad() {
   printf "%s\n" "#!/usr/bin/env bash" >"$target"
   BUILD_ENVIRONMENT_DIRS="$tempDir" assertNotExitCode --stderr-match Missing --line "$LINENO" 0 buildEnvironmentLoad FOO || return $?
   __environment chmod +x "$target" || return $?
-  BUILD_ENVIRONMENT_DIRS="$tempDir" assertExitCode --line "$LINENO" 0 buildEnvironmentLoad FOO || return $?
+  BUILD_ENVIRONMENT_DIRS="$tempDir" assertExitCode 0 buildEnvironmentLoad FOO || return $?
 
-  assertEquals --line "$LINENO" "${FOO-}" "" || return $?
+  assertEquals "${FOO-}" "" || return $?
 
   printf "%s\n" "export FOO" "FOO=hello" >>"$target"
   BUILD_ENVIRONMENT_DIRS="$tempDir" assertExitCode --leak FOO --line "$LINENO" 0 buildEnvironmentLoad FOO || return $?
 
-  assertEquals --line "$LINENO" "${FOO-}" "hello" || return $?
+  assertEquals "${FOO-}" "hello" || return $?
 
   unset FOO
 }
@@ -334,14 +334,14 @@ testBuildEnvironmentGet() {
   printf "%s\n" "#!/usr/bin/env bash" >"$target"
   BUILD_ENVIRONMENT_DIRS="$tempDir" assertNotExitCode --stderr-match Missing --line "$LINENO" 0 buildEnvironmentGet FOO || return $?
   __environment chmod +x "$target" || return $?
-  BUILD_ENVIRONMENT_DIRS="$tempDir" assertExitCode --line "$LINENO" 0 buildEnvironmentGet FOO || return $?
+  BUILD_ENVIRONMENT_DIRS="$tempDir" assertExitCode 0 buildEnvironmentGet FOO || return $?
 
-  assertEquals --line "$LINENO" "${FOO-}" "" || return $?
+  assertEquals "${FOO-}" "" || return $?
 
   printf "%s\n" "export FOO" "FOO=hello" >>"$target"
   BUILD_ENVIRONMENT_DIRS="$tempDir" assertExitCode --leak FOO --line "$LINENO" --stdout-match "hello" 0 buildEnvironmentGet FOO || return $?
 
-  assertEquals --line "$LINENO" "${FOO-}" "hello" || return $?
+  assertEquals "${FOO-}" "hello" || return $?
 
   unset FOO
 }
@@ -353,7 +353,7 @@ testUnderscoreUnderscoreBuild() {
   home=$(__environment buildHome) || return $?
   testPath=$(__environment mktemp -d) || return $?
   __environment cp -R "$home/test/example/simple-php" "$testPath/app" || return $?
-  assertExitCode --line "$LINENO" 0 installInstallBuild --local "$testPath/app/bin" "$testPath/app" || return $?
+  assertExitCode 0 installInstallBuild --local "$testPath/app/bin" "$testPath/app" || return $?
   __environment cp -R "$home/bin/build" "$testPath/app/bin/build" || return $?
 
   APPLICATION_ID=testID.$$ assertExitCode --dump --line "$LINENO" 0 "$testPath/app/bin/build.sh" || return $?

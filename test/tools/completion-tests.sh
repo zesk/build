@@ -10,5 +10,5 @@ testCompletion() {
 
   buildCompletion --alias foobar || return $?
 
-  assertEquals --line "$LINENO" "$(foobar todayDate)" "$(todayDate)" || return $?
+  assertEquals "$(foobar todayDate)" "$(todayDate)" || return $?
 }

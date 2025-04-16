@@ -14,12 +14,12 @@ testCursorGetSet() {
     exec 2>&1
     cursorGet
     IFS=$'\n' read -t 3 -r -d $'\0' x y < <(cursorGet) || :
-    assertExitCode --display "$x is not unsigned integer" --line "$LINENO" 0 isUnsignedInteger "$x" || return $?
-    assertExitCode --display "$y is not unsigned integer" --line "$LINENO" 0 isUnsignedInteger "$y" || return $?
-    assertExitCode --line "$LINENO" 0 cursorSet 0 0 || return $?
-    #    assertNotExitCode --line "$LINENO" 0 cursorSet 0 0 || return $?
-    assertExitCode --line "$LINENO" 0 cursorSet 1 1 || return $?
-    assertExitCode --line "$LINENO" 0 cursorSet "$(consoleColumns)" "$(consoleRows)" || return $?
-    assertExitCode --line "$LINENO" 0 cursorSet "$x" "$y" || return $?
+    assertExitCode --display "$x is not unsigned integer" 0 isUnsignedInteger "$x" || return $?
+    assertExitCode --display "$y is not unsigned integer" 0 isUnsignedInteger "$y" || return $?
+    assertExitCode 0 cursorSet 0 0 || return $?
+    #    assertNotExitCode 0 cursorSet 0 0 || return $?
+    assertExitCode 0 cursorSet 1 1 || return $?
+    assertExitCode 0 cursorSet "$(consoleColumns)" "$(consoleRows)" || return $?
+    assertExitCode 0 cursorSet "$x" "$y" || return $?
   fi
 }

@@ -14,7 +14,7 @@ _hookTestFailed() {
 }
 
 testVersionLive() {
-  assertExitCode --line "$LINENO" 0 hookRun version-live || return $?
+  assertExitCode 0 hookRun version-live || return $?
 }
 
 # Tag: slow
@@ -65,34 +65,34 @@ testHookSystem() {
 
   statusMessage decorate info "hasHook test0"
   # Allowed hooks have .sh or no .sh but must be +x
-  assertExitCode --line "$LINENO" 0 hasHook --application "$testDir" test0 || _hookTestFailed "$testDir" || return $?
+  assertExitCode 0 hasHook --application "$testDir" test0 || _hookTestFailed "$testDir" || return $?
 
   statusMessage decorate info "hasHook test1"
-  assertExitCode --line "$LINENO" 0 hasHook --application "$testDir" test1 || _hookTestFailed "$testDir" || return $?
+  assertExitCode 0 hasHook --application "$testDir" test1 || _hookTestFailed "$testDir" || return $?
 
   statusMessage decorate info "hasHook test2"
-  assertExitCode --line "$LINENO" 0 hasHook --application "$testDir" test2 || _hookTestFailed "$testDir" || return $?
+  assertExitCode 0 hasHook --application "$testDir" test2 || _hookTestFailed "$testDir" || return $?
 
   statusMessage decorate info "hasHook nonZero"
-  assertExitCode --line "$LINENO" 0 hasHook --application "$testDir" nonZero || _hookTestFailed "$testDir" || return $?
+  assertExitCode 0 hasHook --application "$testDir" nonZero || _hookTestFailed "$testDir" || return $?
 
   statusMessage decorate info "hasHook noExtension"
-  assertExitCode --line "$LINENO" 0 hasHook --application "$testDir" noExtension || _hookTestFailed "$testDir" || return $?
+  assertExitCode 0 hasHook --application "$testDir" noExtension || _hookTestFailed "$testDir" || return $?
 
   statusMessage decorate info "hasHook nonZeroNoExt"
-  assertExitCode --line "$LINENO" 0 hasHook --application "$testDir" nonZeroNoExt || _hookTestFailed "$testDir" || return $?
+  assertExitCode 0 hasHook --application "$testDir" nonZeroNoExt || _hookTestFailed "$testDir" || return $?
 
   statusMessage decorate info "hasHook result"
-  assertExitCode --line "$LINENO" 0 hasHook --application "$testDir" result || _hookTestFailed "$testDir" || return $?
+  assertExitCode 0 hasHook --application "$testDir" result || _hookTestFailed "$testDir" || return $?
 
   statusMessage decorate info "hasHook reflect"
-  assertExitCode --line "$LINENO" 0 hasHook --application "$testDir" reflect || _hookTestFailed "$testDir" || return $?
+  assertExitCode 0 hasHook --application "$testDir" reflect || _hookTestFailed "$testDir" || return $?
 
   # If not -x, then ignored
   statusMessage decorate info "hasHook nonX"
-  assertExitCode --line "$LINENO" --stderr-ok 1 hasHook --application "$testDir" nonX || _hookTestFailed "$testDir" || return $?
+  assertExitCode --stderr-ok 1 hasHook --application "$testDir" nonX || _hookTestFailed "$testDir" || return $?
   statusMessage decorate info "hasHook nonXNoExt"
-  assertExitCode --line "$LINENO" --stderr-ok 1 hasHook --application "$testDir" nonXNoExt || _hookTestFailed "$testDir" || return $?
+  assertExitCode --stderr-ok 1 hasHook --application "$testDir" nonXNoExt || _hookTestFailed "$testDir" || return $?
 
   # No hook
   statusMessage decorate info "hasHook test3"
@@ -100,33 +100,33 @@ testHookSystem() {
 
   # Exit codes
   statusMessage decorate info "hookRun test0"
-  assertExitCode --leak BUILD_DEBUG --line "$LINENO" 0 hookRun --application "$testDir" test0 || _hookTestFailed "$testDir" || return $?
+  assertExitCode --leak BUILD_DEBUG 0 hookRun --application "$testDir" test0 || _hookTestFailed "$testDir" || return $?
   statusMessage decorate info "hookRun test1"
-  assertExitCode --leak BUILD_DEBUG --line "$LINENO" 0 hookRun --application "$testDir" test1 || _hookTestFailed "$testDir" || return $?
+  assertExitCode --leak BUILD_DEBUG 0 hookRun --application "$testDir" test1 || _hookTestFailed "$testDir" || return $?
   statusMessage decorate info "hookRun noExtension"
-  assertExitCode --leak BUILD_DEBUG --line "$LINENO" 0 hookRun --application "$testDir" noExtension || _hookTestFailed "$testDir" || return $?
+  assertExitCode --leak BUILD_DEBUG 0 hookRun --application "$testDir" noExtension || _hookTestFailed "$testDir" || return $?
   statusMessage decorate info "hookRun nonZero"
 
-  assertExitCode --line "$LINENO" 99 hookRun --application "$testDir" nonZero || _hookTestFailed "$testDir" || return $?
+  assertExitCode 99 hookRun --application "$testDir" nonZero || _hookTestFailed "$testDir" || return $?
   statusMessage decorate info "hookRun nonX"
-  assertExitCode --line "$LINENO" --stderr-ok 2 hookRun --application "$testDir" nonX || _hookTestFailed "$testDir" || return $?
+  assertExitCode --stderr-ok 2 hookRun --application "$testDir" nonX || _hookTestFailed "$testDir" || return $?
   statusMessage decorate info "hookRun nonXNoExt"
-  assertExitCode --line "$LINENO" --stderr-ok 2 hookRun --application "$testDir" nonXNoExt || _hookTestFailed "$testDir" || return $?
+  assertExitCode --stderr-ok 2 hookRun --application "$testDir" nonXNoExt || _hookTestFailed "$testDir" || return $?
   statusMessage decorate info "hookRun test2"
-  assertExitCode --leak BUILD_DEBUG --line "$LINENO" 0 hookRun --application "$testDir" test2 || _hookTestFailed "$testDir" || return $?
+  assertExitCode --leak BUILD_DEBUG 0 hookRun --application "$testDir" test2 || _hookTestFailed "$testDir" || return $?
   statusMessage decorate info "hookRun test3"
-  assertExitCode --leak BUILD_DEBUG --line "$LINENO" --stderr-ok 2 hookRun --application "$testDir" test3 || _hookTestFailed "$testDir" || return $?
+  assertExitCode --leak BUILD_DEBUG --stderr-ok 2 hookRun --application "$testDir" test3 || _hookTestFailed "$testDir" || return $?
 
   for hook in result reflect; do
     for exitCode in $(seq 0 7 245); do
       statusMessage decorate info "hookRun $hook $exitCode"
-      assertExitCode --leak BUILD_DEBUG --line "$LINENO" "$exitCode" hookRun --application "$testDir" "$hook" "$exitCode" || _hookTestFailed "$testDir" || return $?
+      assertExitCode --leak BUILD_DEBUG "$exitCode" hookRun --application "$testDir" "$hook" "$exitCode" || _hookTestFailed "$testDir" || return $?
     done
   done
 
-  assertOutputContains --leak BUILD_DEBUG --line "$LINENO" "$randomApp" hookRun --application "$testDir" test0 || return $?
-  assertOutputDoesNotContain --leak BUILD_DEBUG --line "$LINENO" "build/hooks" hookRun --application "$testDir" test0 || return $?
-  assertOutputContains --leak BUILD_DEBUG --line "$LINENO" "$randomApp" hookRun --application "$testDir" test1 || return $?
+  assertOutputContains --leak BUILD_DEBUG "$randomApp" hookRun --application "$testDir" test0 || return $?
+  assertOutputDoesNotContain --leak BUILD_DEBUG "build/hooks" hookRun --application "$testDir" test0 || return $?
+  assertOutputContains --leak BUILD_DEBUG "$randomApp" hookRun --application "$testDir" test1 || return $?
   assertOutputDoesNotContain --leak BUILD_DEBUG --line "$LINENO" "build/hooks" hookRun --application "$testDir" test1 || return $?
   assertOutputContains --leak BUILD_DEBUG --line "$LINENO" "$randomDefault" hookRun --application "$testDir" test2 || return $?
   assertOutputContains --leak BUILD_DEBUG --line "$LINENO" "build/hooks" hookRun --application "$testDir" test2 || return $?

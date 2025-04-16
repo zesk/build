@@ -10,19 +10,19 @@ testUsageTemplate() {
   home="$(__catchEnvironment "$usage" buildHome)" || return $?
 
   output=$(usageTemplate testThatFunction "--one thing^Required. String. Thing."$'\n'"--another thing^Optional. Integer. Another thing." "^" "Makes the world a better place" 0 | stripAnsi) || __throwEnvironment "$usage" "usageTemplate failed" || return $?
-  assertEquals --line "$LINENO" "$output" "$(cat "$home/test/example/usageTemplateSimple.txt")" || return $?
+  assertEquals "$output" "$(cat "$home/test/example/usageTemplateSimple.txt")" || return $?
 }
 
 testUsageFunctions() {
   local match
 
   match=$(randomString)
-  assertExitCode --line "$LINENO" --stderr-match "$match" 1 _environment "$match" || return $?
-  assertExitCode --line "$LINENO" --stderr-match "$match" 2 _argument "$match" || return $?
-  assertExitCode --line "$LINENO" --stderr-match "$match" 1 __throwEnvironment _return "$match" || return $?
-  assertExitCode --line "$LINENO" --stderr-match "$match" 2 __throwArgument _return "$match" || return $?
-  assertExitCode --line "$LINENO" --stderr-match "$match" 1 __catchEnvironment _return _return 99 "$match" || return $?
-  assertExitCode --line "$LINENO" --stderr-match "$match" 2 __catchArgument _return _return 99 "$match" || return $?
+  assertExitCode --stderr-match "$match" 1 _environment "$match" || return $?
+  assertExitCode --stderr-match "$match" 2 _argument "$match" || return $?
+  assertExitCode --stderr-match "$match" 1 __throwEnvironment _return "$match" || return $?
+  assertExitCode --stderr-match "$match" 2 __throwArgument _return "$match" || return $?
+  assertExitCode --stderr-match "$match" 1 __catchEnvironment _return _return 99 "$match" || return $?
+  assertExitCode --stderr-match "$match" 2 __catchArgument _return _return 99 "$match" || return $?
 }
 
 __sampleArgs() {
@@ -39,7 +39,7 @@ testUsageArguments1() {
   results=$(__environment mktemp) || return $?
   __sampleArgs | usageFormatArguments "^" "" "" >"$results"
 
-  assertEquals --line "$LINENO" " --name --thing thing [ --value name ]" "$(cat "$results")" || return $?
+  assertEquals " --name --thing thing [ --value name ]" "$(cat "$results")" || return $?
 
   __environment rm "$results" || return $?
 }

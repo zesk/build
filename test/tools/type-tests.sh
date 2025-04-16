@@ -395,21 +395,21 @@ EOF
 testIsTrue() {
   local value trues=()
   while read -r value; do
-    assertExitCode --line "$LINENO" 0 isTrue "$value" || return $?
+    assertExitCode 0 isTrue "$value" || return $?
     trues+=("$value")
   done < <(__trueValues)
-  assertExitCode --line "$LINENO" 0 isTrue "${trues[@]}" || return $?
-  assertExitCode --line "$LINENO" 0 isTrue "${trues[@]}" "${trues[@]}" || return $?
+  assertExitCode 0 isTrue "${trues[@]}" || return $?
+  assertExitCode 0 isTrue "${trues[@]}" "${trues[@]}" || return $?
   while read -r value; do
-    assertNotExitCode --line "$LINENO" 0 isTrue "$value" || return $?
+    assertNotExitCode 0 isTrue "$value" || return $?
   done < <(__falseValues)
-  assertNotExitCode --line "$LINENO" 0 isTrue "${trues[@]}" "$value" || return $?
-  assertNotExitCode --line "$LINENO" 0 isTrue "$value" "${trues[@]}" || return $?
+  assertNotExitCode 0 isTrue "${trues[@]}" "$value" || return $?
+  assertNotExitCode 0 isTrue "$value" "${trues[@]}" || return $?
 }
 
 testPositiveIntegers() {
-  assertExitCode --line "$LINENO" 0 isPositiveInteger 1 || return $?
-  assertExitCode --line "$LINENO" 0 isPositiveInteger 1 || return $?
+  assertExitCode 0 isPositiveInteger 1 || return $?
+  assertExitCode 0 isPositiveInteger 1 || return $?
 }
 
 testIsArray() {

@@ -76,38 +76,38 @@ testPHPBuild() {
 
   buildEnvironmentLoad BUILD_TARGET BUILD_TIMESTAMP
 
-  assertEquals --line "$LINENO" "${BUILD_TARGET}" "app.tar.gz" || return $?
+  assertEquals "${BUILD_TARGET}" "app.tar.gz" || return $?
 
-  assertExitCode --line "$LINENO" 0 mkdir -p "$testPath/bin" || return $?
-  assertExitCode --line "$LINENO" 0 installInstallBuild "$testPath/bin" "$testPath" || return $?
-  assertFileExists --line "$LINENO" "$testPath/bin/install-bin-build.sh" || return $?
-  assertFileContains --line "$LINENO" "$testPath/bin/install-bin-build.sh" " .. " || return $?
+  assertExitCode 0 mkdir -p "$testPath/bin" || return $?
+  assertExitCode 0 installInstallBuild "$testPath/bin" "$testPath" || return $?
+  assertFileExists "$testPath/bin/install-bin-build.sh" || return $?
+  assertFileContains "$testPath/bin/install-bin-build.sh" " .. " || return $?
   here=$(pwd) || _environment pwd || return $?
 
   decorate info "Test build directory is: $testPath" || :
 
   __environment cd "$testPath" || return $?
-  assertFileDoesNotExist --line "$LINENO" "./app.tar.gz" || return $?
-  assertDirectoryDoesNotExist --line "$LINENO" "$testPath/bin/build" || return $?
+  assertFileDoesNotExist "./app.tar.gz" || return $?
+  assertDirectoryDoesNotExist "$testPath/bin/build" || return $?
 
   # Test this version only
-  assertExitCode --line "$LINENO" 0 installInstallBuild --local "$testPath/bin" "$testPath" || return $?
-  assertFileExists --line "$LINENO" "$testPath/bin/install-bin-build.sh" || return $?
-  assertFileContains --line "$LINENO" "$testPath/bin/install-bin-build.sh" " .. " || return $?
+  assertExitCode 0 installInstallBuild --local "$testPath/bin" "$testPath" || return $?
+  assertFileExists "$testPath/bin/install-bin-build.sh" || return $?
+  assertFileContains "$testPath/bin/install-bin-build.sh" " .. " || return $?
 
   # OLD INSTALLER IS BROKEN
   assertExitCode --dump 0 "$testPath/bin/install-bin-build.sh" --mock "$home/bin/build" || return $?
-  assertDirectoryExists --line "$LINENO" "$testPath/bin/build" || return $?
+  assertDirectoryExists "$testPath/bin/build" || return $?
 
   decorate warning "Building PHP app" || :
 
-  assertEquals --line "$LINENO" "${BUILD_TARGET}" "app.tar.gz" || return $?
+  assertEquals "${BUILD_TARGET}" "app.tar.gz" || return $?
 
   printf "\n"
   # No environment
 
   bin/build.sh || return $?
-  assertFileExists --line "$LINENO" "$testPath/app.tar.gz" || return $?
+  assertFileExists "$testPath/app.tar.gz" || return $?
   rm ./app.tar.gz || return $?
 
   export APP_THING=secret
@@ -115,12 +115,12 @@ testPHPBuild() {
   # Add an environment
   printf "\n"
   __environment bin/build.sh APP_THING || return $?
-  assertFileExists --line "$LINENO" "$testPath/app.tar.gz" || return $?
+  assertFileExists "$testPath/app.tar.gz" || return $?
 
   BUILD_TARGET=alternate.tar.gz
   printf "\n"
   __environment bin/build.sh || return $?
-  assertFileExists --line "$LINENO" "$testPath/$BUILD_TARGET" || return $?
+  assertFileExists "$testPath/$BUILD_TARGET" || return $?
 
   mkdir ./compare-app || return $?
   mkdir ./compare-alternate || return $?
@@ -146,9 +146,9 @@ testPHPBuild() {
   decorate info "Extracting app.tar.gz manifest ... "
   tar tf app.tar.gz >"$manifest.complete" || return $?
   grep -v 'vendor/' "$manifest.complete" >"$manifest" || return $?
-  assertFileContains --line "$LINENO" "$manifest" .deploy .deploy/APPLICATION_ID .deploy/APPLICATION_TAG simple.application.php src/Application.php .env || return $?
-  assertFileDoesNotContain --line "$LINENO" "$manifest" composer.lock composer.json bitbucket-pipelines.yml || return $?
-  assertFileContains --line "$LINENO" "$manifest.complete" vendor/zesk vendor/composer || return $?
+  assertFileContains "$manifest" .deploy .deploy/APPLICATION_ID .deploy/APPLICATION_TAG simple.application.php src/Application.php .env || return $?
+  assertFileDoesNotContain "$manifest" composer.lock composer.json bitbucket-pipelines.yml || return $?
+  assertFileContains "$manifest.complete" vendor/zesk vendor/composer || return $?
 
   decorate success Passed.
 
@@ -170,17 +170,17 @@ testPHPComposerSetVersion() {
   BUILD_HOME="$testHome/testDir"
 
   local testVersionFile="$BUILD_HOME/composer.json"
-  assertNotExitCode --line "$LINENO" --stderr-match "composer.json" 0 phpComposerSetVersion || return $?
+  assertNotExitCode --stderr-match "composer.json" 0 phpComposerSetVersion || return $?
   printf "%s\n" "{}" >"$testVersionFile" || return $?
 
-  assertExitCode --line "$LINENO" 0 phpComposerSetVersion --version "1.0" || return $?
-  assertFileContains --line "$LINENO" "$testVersionFile" "1.0" || return $?
-  assertExitCode --line "$LINENO" 0 phpComposerSetVersion --version "foobar" || return $?
-  assertFileContains --line "$LINENO" "$testVersionFile" "foobar" || return $?
-  assertExitCode --line "$LINENO" 0 phpComposerSetVersion || return $?
+  assertExitCode 0 phpComposerSetVersion --version "1.0" || return $?
+  assertFileContains "$testVersionFile" "1.0" || return $?
+  assertExitCode 0 phpComposerSetVersion --version "foobar" || return $?
+  assertFileContains "$testVersionFile" "foobar" || return $?
+  assertExitCode 0 phpComposerSetVersion || return $?
 
   version=$(hookVersionCurrent) || return $?
-  assertFileDoesNotContain --line "$LINENO" "$testVersionFile" "$version" || return $?
+  assertFileDoesNotContain "$testVersionFile" "$version" || return $?
   noVeeVersion=$(versionNoVee "$version") || return $?
   assertFileContains --line "$LINENO" "$testVersionFile" "$noVeeVersion" || return $?
 

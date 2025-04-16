@@ -13,9 +13,9 @@ testIdenticalEofWithBracket() {
   home=$(__environment buildHome) || return $?
   temp=$(__environment mktemp -d) || return $?
   __environment cp -R "$home/test/example/similar" "$temp/similar" || return $?
-  assertDirectoryExists --line "$LINENO" "$temp/similar" "$temp/similar/fix" || return $?
-  assertExitCode --line "$LINENO" 0 identicalCheck --repair "$temp/similar/fix" --prefix '# ''IDENTICAL' --extension txt --cd "$temp/similar" || return $?
-  assertFileContains --line "$LINENO" "$temp/similar/eofbug-target.txt" "}" || return $?
+  assertDirectoryExists "$temp/similar" "$temp/similar/fix" || return $?
+  assertExitCode 0 identicalCheck --repair "$temp/similar/fix" --prefix '# ''IDENTICAL' --extension txt --cd "$temp/similar" || return $?
+  assertFileContains "$temp/similar/eofbug-target.txt" "}" || return $?
 }
 
 testIdenticalCheckAndRepairMap() {
@@ -37,16 +37,16 @@ testIdenticalCheckAndRepairMap() {
   assertExitCode --stderr-ok 0 identicalCheck --cd "$testPath" --repair "$testPath/identical" --extension "txt" --prefix '-- IDENTICAL' || return $?
 
   for name in dog cat bird forest snake duck leopard; do
-    assertFileDoesNotContain --line "$LINENO" "$testPath/tests/$name.txt" __EXTENSION__ __FILE__ __DIRECTORY__ __BASE__ || return $?
-    assertFileDoesNotContain --line "$LINENO" "$testPath/alternate/$name.txt" __EXTENSION__ __FILE__ __DIRECTORY__ __BASE__ || return $?
-    assertFileContains --line "$LINENO" "$testPath/tests/$name.txt" "- EXTENSION txt" || return $?
-    assertFileContains --line "$LINENO" "$testPath/tests/$name.txt" "- DIRECTORY" "tests/" || return $?
-    assertFileContains --line "$LINENO" "$testPath/tests/$name.txt" "- FILE" "tests/$name.txt" || return $?
-    assertFileContains --line "$LINENO" "$testPath/tests/$name.txt" "- BASE $name.txt" || return $?
-    assertFileContains --line "$LINENO" "$testPath/alternate/$name.txt" "- EXTENSION txt" || return $?
-    assertFileContains --line "$LINENO" "$testPath/alternate/$name.txt" "- DIRECTORY" "alternate/" || return $?
-    assertFileContains --line "$LINENO" "$testPath/alternate/$name.txt" "- FILE" "alternate/$name.txt" || return $?
-    assertFileContains --line "$LINENO" "$testPath/alternate/$name.txt" "- BASE $name.txt" || return $?
+    assertFileDoesNotContain "$testPath/tests/$name.txt" __EXTENSION__ __FILE__ __DIRECTORY__ __BASE__ || return $?
+    assertFileDoesNotContain "$testPath/alternate/$name.txt" __EXTENSION__ __FILE__ __DIRECTORY__ __BASE__ || return $?
+    assertFileContains "$testPath/tests/$name.txt" "- EXTENSION txt" || return $?
+    assertFileContains "$testPath/tests/$name.txt" "- DIRECTORY" "tests/" || return $?
+    assertFileContains "$testPath/tests/$name.txt" "- FILE" "tests/$name.txt" || return $?
+    assertFileContains "$testPath/tests/$name.txt" "- BASE $name.txt" || return $?
+    assertFileContains "$testPath/alternate/$name.txt" "- EXTENSION txt" || return $?
+    assertFileContains "$testPath/alternate/$name.txt" "- DIRECTORY" "alternate/" || return $?
+    assertFileContains "$testPath/alternate/$name.txt" "- FILE" "alternate/$name.txt" || return $?
+    assertFileContains "$testPath/alternate/$name.txt" "- BASE $name.txt" || return $?
   done
 }
 
@@ -96,34 +96,34 @@ testIdenticalChecks() {
   identicalCheckArgs=(--cd "test/example" --extension 'txt')
 
   clearLine && decorate info "same file match"
-  assertExitCode --line "$LINENO" --stdout-match Verified 0 identicalCheck "${identicalCheckArgs[@]}" --prefix '# eIDENTICAL' || return $?
+  assertExitCode --stdout-match Verified 0 identicalCheck "${identicalCheckArgs[@]}" --prefix '# eIDENTICAL' || return $?
 
   clearLine && decorate info "same file mismatch"
-  assertExitCode --dump --line "$LINENO" --stderr-match 'Token code changed' "$identicalError" identicalCheck "${identicalCheckArgs[@]}" --prefix '# fIDENTICAL' || return $?
+  assertExitCode --dump --stderr-match 'Token code changed' "$identicalError" identicalCheck "${identicalCheckArgs[@]}" --prefix '# fIDENTICAL' || return $?
 
   clearLine && decorate info "overlap failure"
-  assertExitCode --line "$LINENO" --stderr-match 'overlap' "$identicalError" identicalCheck "${identicalCheckArgs[@]}" --prefix '# aIDENTICAL' || return $?
+  assertExitCode --stderr-match 'overlap' "$identicalError" identicalCheck "${identicalCheckArgs[@]}" --prefix '# aIDENTICAL' || return $?
 
   clearLine && decorate info "bad number failure"
-  assertExitCode --line "$LINENO" --stderr-match 'invalid count: NAN' "$identicalError" identicalCheck "${identicalCheckArgs[@]}" --prefix '# bIDENTICAL' || return $?
+  assertExitCode --stderr-match 'invalid count: NAN' "$identicalError" identicalCheck "${identicalCheckArgs[@]}" --prefix '# bIDENTICAL' || return $?
 
   clearLine && decorate info "single instance failure"
-  assertExitCode --line "$LINENO" --stderr-match 'Single token' "$identicalError" identicalCheck "${identicalCheckArgs[@]}" --prefix '# cIDENTICAL' || return $?
-  assertExitCode --line "$LINENO" --stderr-match 'Single token' "$identicalError" identicalCheck "${identicalCheckArgs[@]}" --prefix '# xIDENTICAL' || return $?
+  assertExitCode --stderr-match 'Single token' "$identicalError" identicalCheck "${identicalCheckArgs[@]}" --prefix '# cIDENTICAL' || return $?
+  assertExitCode --stderr-match 'Single token' "$identicalError" identicalCheck "${identicalCheckArgs[@]}" --prefix '# xIDENTICAL' || return $?
 
   clearLine && decorate info "$(pwd) passing 3 files"
-  assertExitCode --line "$LINENO" --dump 0 identicalCheck "${identicalCheckArgs[@]}" --prefix '# dIDENTICAL' || return $?
+  assertExitCode --dump 0 identicalCheck "${identicalCheckArgs[@]}" --prefix '# dIDENTICAL' || return $?
 
   clearLine && decorate info "slash slash"
-  assertExitCode --line "$LINENO" --stderr-match 'Token code changed' "$identicalError" identicalCheck "${identicalCheckArgs[@]}" --prefix '// Alternate heading is identical ' || return $?
+  assertExitCode --stderr-match 'Token code changed' "$identicalError" identicalCheck "${identicalCheckArgs[@]}" --prefix '// Alternate heading is identical ' || return $?
 
   clearLine && decorate info "slash slash prefix mismatch is OK"
-  assertExitCode --line "$LINENO" 0 identicalCheck "${identicalCheckArgs[@]}" --prefix '// IDENTICAL' || return $?
+  assertExitCode 0 identicalCheck "${identicalCheckArgs[@]}" --prefix '// IDENTICAL' || return $?
 
   clearLine && decorate info "case match"
-  assertExitCode --line "$LINENO" 0 identicalCheck "${identicalCheckArgs[@]}" --prefix '// Identical' || return $?
+  assertExitCode 0 identicalCheck "${identicalCheckArgs[@]}" --prefix '// Identical' || return $?
 
-  assertNotExitCode --dump --line "$LINENO" --stderr-match overlap 0 identicalCheck "${identicalCheckArgs[@]}" --prefix '# OVERLAP_IDENTICAL' || return $?
+  assertNotExitCode --dump --stderr-match overlap 0 identicalCheck "${identicalCheckArgs[@]}" --prefix '# OVERLAP_IDENTICAL' || return $?
 }
 
 testIdenticalCheckSingles() {
@@ -131,7 +131,7 @@ testIdenticalCheckSingles() {
 
   identicalError=$(_code identical)
 
-  assertEquals --line "$LINENO" 105 "$identicalError" || return $?
+  assertEquals 105 "$identicalError" || return $?
 
   #
   # Unusual quoting here is to avoid matching the word uh, IDENTICAL with the comment here
@@ -139,13 +139,13 @@ testIdenticalCheckSingles() {
   identicalCheckArgs=(--cd "test/example" --extension 'txt' --prefix '# ''singleIDENTICAL')
 
   singles=()
-  assertExitCode --line "$LINENO" --stderr-match single1 --stderr-match single2 "$identicalError" identicalCheck "${identicalCheckArgs[@]}" "${singles[@]+"${singles[@]}"}" || return $?
+  assertExitCode --stderr-match single1 --stderr-match single2 "$identicalError" identicalCheck "${identicalCheckArgs[@]}" "${singles[@]+"${singles[@]}"}" || return $?
 
   singles=(--single single1)
-  assertExitCode --line "$LINENO" --stderr-no-match single1 --stderr-match single2 "$identicalError" identicalCheck "${identicalCheckArgs[@]}" "${singles[@]+"${singles[@]}"}" || return $?
+  assertExitCode --stderr-no-match single1 --stderr-match single2 "$identicalError" identicalCheck "${identicalCheckArgs[@]}" "${singles[@]+"${singles[@]}"}" || return $?
 
   singles=(--single single1 --single single2)
-  assertExitCode --line "$LINENO" "0" identicalCheck "${singles[@]+"${singles[@]}"}" --extension txt --prefix '# ''singleIDENTICAL' || return $?
+  assertExitCode "0" identicalCheck "${singles[@]+"${singles[@]}"}" --extension txt --prefix '# ''singleIDENTICAL' || return $?
 }
 
 # Simple case when an identical directory exists and is supplied but contains no matching files

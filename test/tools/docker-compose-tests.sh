@@ -23,9 +23,9 @@ testIsDockerComposeRunning() {
     __catchEnvironment "$usage" cp -R "$oldHome/bin/build" "$BUILD_HOME/bin/build" || return $?
     __catchEnvironment "$usage" pushd "$BUILD_HOME" || return $?
 
-    assertNotExitCode --line "$LINENO" --stderr-match "Missing" --stderr-match ".STAGING.env" 0 dockerComposeIsRunning || return $?
+    assertNotExitCode --stderr-match "Missing" --stderr-match ".STAGING.env" 0 dockerComposeIsRunning || return $?
     __catchEnvironment "$usage" touch "$BUILD_HOME/.STAGING.env" || return $?
-    assertNotExitCode --line "$LINENO" --stderr-match "Missing" --stderr-match "docker-compose.yml" 0 dockerComposeIsRunning || return $?
+    assertNotExitCode --stderr-match "Missing" --stderr-match "docker-compose.yml" 0 dockerComposeIsRunning || return $?
 
     __mockValue BUILD_HOME "" --end
   fi

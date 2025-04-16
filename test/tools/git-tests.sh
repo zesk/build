@@ -54,9 +54,9 @@ testGitVersionList() {
 testGitCommitFailures() {
   local tempDirectory
 
-  assertNotExitCode --line "$LINENO" --stderr-ok 0 gitCommit "" || return $?
+  assertNotExitCode --stderr-ok 0 gitCommit "" || return $?
   tempDirectory="$(mktemp -d)/a/deep/one" || _environment "mktemp" || return $?
-  assertNotExitCode --line "$LINENO" --stderr-match "$tempDirectory" 0 gitCommit --home "$tempDirectory" last || return $?
+  assertNotExitCode --stderr-match "$tempDirectory" 0 gitCommit --home "$tempDirectory" last || return $?
   rm -rf "$tempDirectory" || :
 }
 

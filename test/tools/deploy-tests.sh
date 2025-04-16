@@ -198,7 +198,7 @@ testDeployApplication() {
   if ! packageWhich curl curl; then
     _environment "Failed to install curl" || return $?
   fi
-  assertExitCode --line "$LINENO" 0 phpInstall || return $?
+  assertExitCode 0 phpInstall || return $?
 
   if ! home=$(pwd -P 2>/dev/null); then
     _environment "Unable to pwd" || return $?
@@ -249,7 +249,7 @@ testDeployApplication() {
   # ________________________________________________________________________________________________________________________________
   __testSection deployApplication fails on top of a directory
   t=1a
-  assertNotExitCode --line "$LINENO" --dump --stderr-match "should be a link" 0 deployApplication "${firstArgs[@]+${firstArgs[@]}}" --application "$d/live-app" --home "$d/DEPLOY" --id "$t" || return $?
+  assertNotExitCode --dump --stderr-match "should be a link" 0 deployApplication "${firstArgs[@]+${firstArgs[@]}}" --application "$d/live-app" --home "$d/DEPLOY" --id "$t" || return $?
   _waitForValue "$startingValue" || return $?
 
   #
@@ -259,7 +259,7 @@ testDeployApplication() {
   # ________________________________________________________________________________________________________________________________
   __testSection deployMigrateDirectoryToLink fails on with no version in the application
 
-  assertNotExitCode --line "$LINENO" --stderr-match "deployment version" 0 deployMigrateDirectoryToLink "$d/DEPLOY" "$d/live-app" || return $?
+  assertNotExitCode --stderr-match "deployment version" 0 deployMigrateDirectoryToLink "$d/DEPLOY" "$d/live-app" || return $?
   _waitForValue "$startingValue" || return $?
 
   migrateVersion="O66"
@@ -269,7 +269,7 @@ testDeployApplication() {
   # ________________________________________________________________________________________________________________________________
   __testSection deployMigrateDirectoryToLink fails on with no version in the DEPLOYMENT directory
 
-  assertNotExitCode --line "$LINENO" --stderr-match "not found in" 0 deployMigrateDirectoryToLink "$d/DEPLOY" "$d/live-app" || return $?
+  assertNotExitCode --stderr-match "not found in" 0 deployMigrateDirectoryToLink "$d/DEPLOY" "$d/live-app" || return $?
   _waitForValue "$startingValue" || return $?
 
   mkdir -p "$d/DEPLOY/$migrateVersion"
@@ -285,8 +285,8 @@ testDeployApplication() {
   fi
   _waitForValue "$startingValue" || return $?
 
-  assertExitCode --line "$LINENO" 0 test -d "$d/DEPLOY/O66/app" || return $?
-  assertExitCode --line "$LINENO" 0 test -L "$d/live-app" || return $?
+  assertExitCode 0 test -d "$d/DEPLOY/O66/app" || return $?
+  assertExitCode 0 test -L "$d/live-app" || return $?
 
   #
   # Now that it's a link we have to restart our server
@@ -314,16 +314,16 @@ testDeployApplication() {
     # _deployShowFiles "$d" || :
     assertEquals "$t" "$(deployApplicationVersion "$d/live-app")" || return $?
     if [ -n "$lastOne" ]; then
-      assertFileExists --line "$LINENO" "$d/DEPLOY/$t.previous" || _deployShowFiles "$d" || return $?
-      assertFileExists --line "$LINENO" "$d/DEPLOY/$lastOne.next" || _deployShowFiles "$d" || return $?
+      assertFileExists "$d/DEPLOY/$t.previous" || _deployShowFiles "$d" || return $?
+      assertFileExists "$d/DEPLOY/$lastOne.next" || _deployShowFiles "$d" || return $?
     else
       # First one links back to bad version
       if [ "$t" = "1a" ]; then
-        assertFileExists --line "$LINENO" "$d/DEPLOY/$t.previous" || _deployShowFiles "$d" || return $?
+        assertFileExists "$d/DEPLOY/$t.previous" || _deployShowFiles "$d" || return $?
       else
-        assertFileDoesNotExist --line "$LINENO" "$d/DEPLOY/$t.previous" || _deployShowFiles "$d" || return $?
+        assertFileDoesNotExist "$d/DEPLOY/$t.previous" || _deployShowFiles "$d" || return $?
       fi
-      assertFileDoesNotExist --line "$LINENO" "$d/DEPLOY/$t.next" || _deployShowFiles "$d" || return $?
+      assertFileDoesNotExist "$d/DEPLOY/$t.next" || _deployShowFiles "$d" || return $?
     fi
     lastOne="$t"
     firstArgs=()
@@ -331,11 +331,11 @@ testDeployApplication() {
 
   for t in 1a 2b 3c 4d; do
     decorate info deployHasVersion $t test 2
-    assertExitCode --line "$LINENO" 0 deployHasVersion "$d/DEPLOY" "$t" || return $?
+    assertExitCode 0 deployHasVersion "$d/DEPLOY" "$t" || return $?
   done
   for t in null "" 3g 999999 $'\n'; do
     decorate info deployHasVersion "$t" BAD test
-    assertNotExitCode --line "$LINENO" --stderr-ok 0 deployHasVersion "$d/DEPLOY" "$t" || return $?
+    assertNotExitCode --stderr-ok 0 deployHasVersion "$d/DEPLOY" "$t" || return $?
   done
 
   _testAssertDeploymentLinkages "$d" || return $?
@@ -347,21 +347,21 @@ testDeployApplication() {
     decorate pair 40 _simplePHPRequest "$(_simplePHPRequest)"
     _waitForValue "$t" || return $?
 
-    assertEquals --line "$LINENO" "$t" "$(_simplePHPRequest)" "PHP application undo to new version $t failed" || return $?
+    assertEquals "$t" "$(_simplePHPRequest)" "PHP application undo to new version $t failed" || return $?
     # ________________________________________________________________________________________________________________________________
     __testSection "deployApplication --revert $t"
-    assertEquals --line "$LINENO" "$t" "$(deployApplicationVersion "$d/live-app")" || return $?
+    assertEquals "$t" "$(deployApplicationVersion "$d/live-app")" || return $?
     deployApplication --revert --home "$d/DEPLOY" --id "$t" --application "$d/live-app" || return $?
     _testAssertDeploymentLinkages "$d" || return $?
   done
 
   t=1a
-  assertEquals --line "$LINENO" "$t" "$(deployApplicationVersion "$d/live-app")" || return $?
+  assertEquals "$t" "$(deployApplicationVersion "$d/live-app")" || return $?
 
   decorate pair 40 _simplePHPRequest "$(_simplePHPRequest)"
   _waitForValue "$t" || return $?
 
-  assertEquals --line "$LINENO" "$t" "$(_simplePHPRequest)" "PHP application undo to new version $t failed" || return $?
+  assertEquals "$t" "$(_simplePHPRequest)" "PHP application undo to new version $t failed" || return $?
 
   # ________________________________________________________________________________________________________________________________
   __testSection No previous version
@@ -381,22 +381,22 @@ testDeployApplication() {
 
   # ________________________________________________________________________________________________________________________________
   __testSection deployApplication fail bad version
-  assertNotExitCode --line "$LINENO" --stderr-ok 0 deployApplication --home "$d/DEPLOY" --id "3g" --application "$d/live-app" || return $?
+  assertNotExitCode --stderr-ok 0 deployApplication --home "$d/DEPLOY" --id "3g" --application "$d/live-app" || return $?
 
   _testAssertDeploymentLinkages "$d" || return $?
 
   # ________________________________________________________________________________________________________________________________
   t=1a
   __testSection deployApplication fail incorrect target $t
-  assertNotExitCode --line "$LINENO" --stderr-ok 0 deployApplication --home "$d/DEPLOY" --id "$t" --application "$d/live-app" --target ap.tar.gz || return $?
+  assertNotExitCode --stderr-ok 0 deployApplication --home "$d/DEPLOY" --id "$t" --application "$d/live-app" --target ap.tar.gz || return $?
 
   __testSection deployApplication fail missing or blank arguments $t
-  assertNotExitCode --line "$LINENO" --stderr-ok 0 deployApplication --home "" --id "$t" --application "$d/live-app" || return $?
-  assertNotExitCode --line "$LINENO" --stderr-ok 0 deployApplication --home "$d/DEPLOY" --id "" --application "$d/live-app" || return $?
-  assertNotExitCode --line "$LINENO" --stderr-ok 0 deployApplication --home "$d/DEPLOY" --id "$t" --application "" || return $?
-  assertNotExitCode --line "$LINENO" --stderr-ok 0 deployApplication --id "$t" --application "$d/live-app" || return $?
-  assertNotExitCode --line "$LINENO" --stderr-ok 0 deployApplication --home "$d/DEPLOY" --application "$d/live-app" || return $?
-  assertNotExitCode --line "$LINENO" --stderr-ok 0 deployApplication --home "$d/DEPLOY" --id "$t" || return $?
+  assertNotExitCode --stderr-ok 0 deployApplication --home "" --id "$t" --application "$d/live-app" || return $?
+  assertNotExitCode --stderr-ok 0 deployApplication --home "$d/DEPLOY" --id "" --application "$d/live-app" || return $?
+  assertNotExitCode --stderr-ok 0 deployApplication --home "$d/DEPLOY" --id "$t" --application "" || return $?
+  assertNotExitCode --stderr-ok 0 deployApplication --id "$t" --application "$d/live-app" || return $?
+  assertNotExitCode --stderr-ok 0 deployApplication --home "$d/DEPLOY" --application "$d/live-app" || return $?
+  assertNotExitCode --stderr-ok 0 deployApplication --home "$d/DEPLOY" --id "$t" || return $?
 
   _testAssertDeploymentLinkages "$d" || return $?
 
@@ -406,7 +406,7 @@ testDeployApplication() {
   PHP_SERVER_PID=
   _waitForDeath "$PHP_SERVER_PID"
 
-  assertExitCode --line "$LINENO" 0 phpUninstall || return $?
+  assertExitCode 0 phpUninstall || return $?
 
   unset PHP_SERVER_ROOT
   unset PHP_SERVER_PID
@@ -424,8 +424,8 @@ testDeployPackageName() {
 
   saveTarget=${BUILD_TARGET-NONE}
 
-  assertExitCode --line "$LINENO" --leak BUILD_TARGET 0 deployPackageName || return $?
-  assertEquals --line "$LINENO" "app.tar.gz" "$(deployPackageName)" || return $?
+  assertExitCode --leak BUILD_TARGET 0 deployPackageName || return $?
+  assertEquals "app.tar.gz" "$(deployPackageName)" || return $?
 
   # shellcheck source=/dev/null
   source bin/build/env/BUILD_TARGET.sh || return $?
@@ -434,11 +434,11 @@ testDeployPackageName() {
 
   BUILD_TARGET="bummer-of-a-birthmark-hal.tar.gz"
 
-  assertExitCode --line "$LINENO" 0 deployPackageName || return $?
+  assertExitCode 0 deployPackageName || return $?
 
-  assertEquals --line "$LINENO" "bummer-of-a-birthmark-hal.tar.gz" "$BUILD_TARGET" || return $?
-  assertEquals --line "$LINENO" "bummer-of-a-birthmark-hal.tar.gz" "$(deployPackageName)" || return $?
-  assertEquals --line "$LINENO" "bummer-of-a-birthmark-hal.tar.gz" "$(_exportWorksRight)" || return $?
+  assertEquals "bummer-of-a-birthmark-hal.tar.gz" "$BUILD_TARGET" || return $?
+  assertEquals "bummer-of-a-birthmark-hal.tar.gz" "$(deployPackageName)" || return $?
+  assertEquals "bummer-of-a-birthmark-hal.tar.gz" "$(_exportWorksRight)" || return $?
 
   unset BUILD_TARGET
 
@@ -447,7 +447,7 @@ testDeployPackageName() {
   # shellcheck source=/dev/null
   __environment buildEnvironmentLoad BUILD_TARGET || return $?
 
-  assertEquals --line "$LINENO" "app.tar.gz" "$(deployPackageName)" || return $?
+  assertEquals "app.tar.gz" "$(deployPackageName)" || return $?
 
   export BUILD_TARGET
   BUILD_TARGET="$saveTarget"

@@ -18,48 +18,48 @@ __testBashPromptC() {
 testBashPrompt() {
   local matches leak leaks=(PS1 BUILD_PROMPT_COLORS PROMPT_COMMAND __BASH_PROMPT_MODULES __BASH_PROMPT_PREVIOUS) ll=()
 
-  assertExitCode --line "$LINENO" 0 bashPrompt --help || return $?
+  assertExitCode 0 bashPrompt --help || return $?
 
   [ ! -t 0 ] || decorate info "console $(decorate bold)IS a terminal$(decorate info) so --skip-terminal test will be skipped"
-  [ -t 0 ] || assertNotExitCode --stderr-match "Requires a terminal" --line "$LINENO" "${ll[@]}" "${matches[@]}" 0 bashPrompt --colors "::::" || return $?
+  [ -t 0 ] || assertNotExitCode --stderr-match "Requires a terminal" "${ll[@]}" "${matches[@]}" 0 bashPrompt --colors "::::" || return $?
 
   for leak in "${leaks[@]}"; do
     ll+=(--leak "$leak")
   done
 
   bashPrompt --skip-terminal --colors "::::"
-  assertExitCode --line "$LINENO" "${ll[@]}" 0 bashPrompt --skip-terminal --colors "::::" || return $?
+  assertExitCode "${ll[@]}" 0 bashPrompt --skip-terminal --colors "::::" || return $?
   matches=(--stdout-match __testBashPromptA --stdout-match __testBashPromptB --stdout-match __testBashPromptC)
   bashPrompt --skip-terminal --first __testBashPromptA __testBashPromptB __testBashPromptC __testBashPromptA __testBashPromptB __testBashPromptC --list
-  assertExitCode --line "$LINENO" "${ll[@]}" "${matches[@]}" 0 bashPrompt --skip-terminal --first __testBashPromptA __testBashPromptB __testBashPromptC __testBashPromptA __testBashPromptB __testBashPromptC --list || return $?
+  assertExitCode "${ll[@]}" "${matches[@]}" 0 bashPrompt --skip-terminal --first __testBashPromptA __testBashPromptB __testBashPromptC __testBashPromptA __testBashPromptB __testBashPromptC --list || return $?
 
   # Remove A
   matches=(--stdout-no-match __testBashPromptA --stdout-match __testBashPromptB --stdout-match __testBashPromptC)
-  assertExitCode --line "$LINENO" "${ll[@]}" "${matches[@]}" 0 bashPrompt --skip-terminal -__testBashPromptA --list || return $?
+  assertExitCode "${ll[@]}" "${matches[@]}" 0 bashPrompt --skip-terminal -__testBashPromptA --list || return $?
 
   # Remove C
   matches=(--stdout-no-match __testBashPromptA --stdout-match __testBashPromptB --stdout-no-match __testBashPromptC)
-  assertExitCode --line "$LINENO" "${ll[@]}" "${matches[@]}" 0 bashPrompt --skip-terminal -__testBashPromptC --list || return $?
+  assertExitCode "${ll[@]}" "${matches[@]}" 0 bashPrompt --skip-terminal -__testBashPromptC --list || return $?
 
   # Remove J (?)
   matches=()
   matches+=(--stderr-match "__testBashPromptJ was not found in modules")
-  assertNotExitCode --line "$LINENO" "${ll[@]}" "${matches[@]}" 0 bashPrompt --skip-terminal -__testBashPromptJ --list || return $?
+  assertNotExitCode "${ll[@]}" "${matches[@]}" 0 bashPrompt --skip-terminal -__testBashPromptJ --list || return $?
 
   # bashPrompt --skip-terminal -__testBashPromptB --list || return $?
   # Remove B
   matches=(--stdout-no-match __testBashPromptA --stdout-no-match __testBashPromptB --stdout-no-match __testBashPromptC)
-  assertExitCode --line "$LINENO" "${ll[@]}" "${matches[@]}" 0 bashPrompt --skip-terminal -__testBashPromptB --list || return $?
+  assertExitCode "${ll[@]}" "${matches[@]}" 0 bashPrompt --skip-terminal -__testBashPromptB --list || return $?
 
   matches=(--stdout-no-match __testBashPromptA --stdout-no-match __testBashPromptB --stdout-no-match __testBashPromptC)
   matches+=(--stderr-match "__testBashPromptJ was not found in modules")
   # Remove J (?)
-  assertNotExitCode --line "$LINENO" "${ll[@]}" "${matches[@]}" 0 bashPrompt --skip-terminal -__testBashPromptJ --list || return $?
+  assertNotExitCode "${ll[@]}" "${matches[@]}" 0 bashPrompt --skip-terminal -__testBashPromptJ --list || return $?
 
   matches=(--stdout-no-match __testBashPromptA --stdout-no-match __testBashPromptB --stdout-no-match __testBashPromptC)
   matches+=(--stderr-match "__testBashPromptK was not found in modules")
   # Remove K (?)
-  assertNotExitCode --line "$LINENO" "${ll[@]}" "${matches[@]}" 0 bashPrompt --skip-terminal -__testBashPromptK --list || return $?
+  assertNotExitCode "${ll[@]}" "${matches[@]}" 0 bashPrompt --skip-terminal -__testBashPromptK --list || return $?
 
   unset "${leaks[@]}"
 }

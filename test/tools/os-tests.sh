@@ -23,9 +23,9 @@ testNewestAndOldest() {
   bTime=$(modificationTime "b") || _environment modificationTime b failed || return $?
   cTime=$(modificationTime "c") || _environment modificationTime c failed || return $?
 
-  if ! assertOutputEquals --line "$LINENO" "a" oldestFile "a" "b" "c" ||
-    ! assertOutputEquals --line "$LINENO" "a" oldestFile "c" "b" "a" ||
-    ! assertOutputEquals --line "$LINENO" "a" oldestFile "c" "a" "b" ||
+  if ! assertOutputEquals "a" oldestFile "a" "b" "c" ||
+    ! assertOutputEquals "a" oldestFile "c" "b" "a" ||
+    ! assertOutputEquals "a" oldestFile "c" "a" "b" ||
     ! assertOutputEquals --line "$LINENO" "c" newestFile "a" "b" "c" ||
     ! assertOutputEquals --line "$LINENO" "c" newestFile "c" "b" "a" ||
     ! assertOutputEquals --line "$LINENO" "c" newestFile "c" "a" "b"; then
@@ -34,12 +34,12 @@ testNewestAndOldest() {
 
   if ! assertGreaterThan --line "$LINENO" "$bTime" "$aTime" "bTime > aTime" ||
     ! assertGreaterThan --line "$LINENO" "$cTime" "$aTime" "cTime > aTime" ||
-    ! assertExitCode --line "$LINENO" 0 isNewestFile "c" "a" ||
-    ! assertExitCode --line "$LINENO" 0 isNewestFile "c" "b" ||
-    ! assertExitCode --line "$LINENO" 0 isNewestFile "b" "a" ||
-    ! assertExitCode --line "$LINENO" 1 isNewestFile "b" "c" ||
-    ! assertExitCode --line "$LINENO" 1 isNewestFile "a" "c" ||
-    ! assertExitCode --line "$LINENO" 1 isNewestFile "a" "b"; then
+    ! assertExitCode 0 isNewestFile "c" "a" ||
+    ! assertExitCode 0 isNewestFile "c" "b" ||
+    ! assertExitCode 0 isNewestFile "b" "a" ||
+    ! assertExitCode 1 isNewestFile "b" "c" ||
+    ! assertExitCode 1 isNewestFile "a" "c" ||
+    ! assertExitCode 1 isNewestFile "a" "b"; then
     return 1
   fi
 }
@@ -56,8 +56,8 @@ testMemoryRelated() {
     return 1
   fi
 
-  assertExitCode --line "$LINENO" 0 isInteger "$rss" || return $?
-  assertExitCode --line "$LINENO" 0 isInteger "$vsz" || return $?
+  assertExitCode 0 isInteger "$rss" || return $?
+  assertExitCode 0 isInteger "$vsz" || return $?
 
   assertGreaterThan --line "$LINENO" "$rss" 1024 "pid $$ rss $rss" || return $?
   assertGreaterThan --line "$LINENO" "$vsz" 1024 "pid $$ virtual memory $vsz" || return $?
@@ -65,51 +65,51 @@ testMemoryRelated() {
 }
 
 testRunCount() {
-  assertEquals --line "$LINENO" "$(runCount 10 echo -n .)" ".........." || return $?
-  assertEquals --line "$LINENO" "$(runCount 20 echo -n .)" "...................." || return $?
-  assertExitCode --line "$LINENO" --stderr-match 'positive integer' 2 runCount -4923 echo busted || return $?
-  assertExitCode --line "$LINENO" --stderr-match 'positive integer' 2 runCount 33.3 echo busted || return $?
-  assertExitCode --line "$LINENO" --stderr-match 'positive integer' 2 runCount 4.0 echo busted || return $?
-  assertExitCode --line "$LINENO" --stderr-match 'positive integer' 2 runCount thirty echo busted || return $?
+  assertEquals "$(runCount 10 echo -n .)" ".........." || return $?
+  assertEquals "$(runCount 20 echo -n .)" "...................." || return $?
+  assertExitCode --stderr-match 'positive integer' 2 runCount -4923 echo busted || return $?
+  assertExitCode --stderr-match 'positive integer' 2 runCount 33.3 echo busted || return $?
+  assertExitCode --stderr-match 'positive integer' 2 runCount 4.0 echo busted || return $?
+  assertExitCode --stderr-match 'positive integer' 2 runCount thirty echo busted || return $?
 }
 
 testServiceToPortStandard() {
-  assertEquals --line "$LINENO" "$(serviceToStandardPort ssh)" 22 ssh || return $?
-  assertEquals --line "$LINENO" "$(serviceToStandardPort "ssh ")" 22 ssh || return $?
-  assertEquals --line "$LINENO" "$(serviceToStandardPort " ssh ")" 22 ssh || return $?
-  assertEquals --line "$LINENO" "$(serviceToStandardPort http)" 80 http || return $?
-  assertEquals --line "$LINENO" "$(serviceToStandardPort "         http     ")" 80 http || return $?
-  assertEquals --line "$LINENO" "$(serviceToStandardPort https)" 443 https || return $?
-  assertEquals --line "$LINENO" "$(serviceToStandardPort mariadb)" 3306 mariadb || return $?
-  assertEquals --line "$LINENO" "$(serviceToStandardPort mysql)" 3306 mysql || return $?
-  assertEquals --line "$LINENO" "$(serviceToStandardPort postgres)" 5432 postgres || return $?
-  assertNotExitCode --line "$LINENO" --stderr-match 'arguments' 0 serviceToStandardPort || return $?
-  assertNotExitCode --line "$LINENO" --stderr-match unknown 0 serviceToStandardPort rtmp || return $?
-  assertNotExitCode --line "$LINENO" --stderr-match unknown 0 serviceToStandardPort echo || return $?
-  assertNotExitCode --line "$LINENO" --stderr-match unknown 0 serviceToStandardPort "" || return $?
-  assertNotExitCode --line "$LINENO" --stderr-match unknown 0 serviceToStandardPort "22" || return $?
-  assertNotExitCode --line "$LINENO" --stderr-match unknown 0 serviceToStandardPort ".https" || return $?
-  assertNotExitCode --line "$LINENO" --stderr-match unknown 0 serviceToStandardPort " " || return $?
+  assertEquals "$(serviceToStandardPort ssh)" 22 ssh || return $?
+  assertEquals "$(serviceToStandardPort "ssh ")" 22 ssh || return $?
+  assertEquals "$(serviceToStandardPort " ssh ")" 22 ssh || return $?
+  assertEquals "$(serviceToStandardPort http)" 80 http || return $?
+  assertEquals "$(serviceToStandardPort "         http     ")" 80 http || return $?
+  assertEquals "$(serviceToStandardPort https)" 443 https || return $?
+  assertEquals "$(serviceToStandardPort mariadb)" 3306 mariadb || return $?
+  assertEquals "$(serviceToStandardPort mysql)" 3306 mysql || return $?
+  assertEquals "$(serviceToStandardPort postgres)" 5432 postgres || return $?
+  assertNotExitCode --stderr-match 'arguments' 0 serviceToStandardPort || return $?
+  assertNotExitCode --stderr-match unknown 0 serviceToStandardPort rtmp || return $?
+  assertNotExitCode --stderr-match unknown 0 serviceToStandardPort echo || return $?
+  assertNotExitCode --stderr-match unknown 0 serviceToStandardPort "" || return $?
+  assertNotExitCode --stderr-match unknown 0 serviceToStandardPort "22" || return $?
+  assertNotExitCode --stderr-match unknown 0 serviceToStandardPort ".https" || return $?
+  assertNotExitCode --stderr-match unknown 0 serviceToStandardPort " " || return $?
 }
 
 testServiceToPort() {
-  assertEquals --line "$LINENO" "$(serviceToPort ssh)" 22 ssh || return $?
-  assertEquals --line "$LINENO" "$(serviceToPort "ssh ")" 22 ssh || return $?
-  assertEquals --line "$LINENO" "$(serviceToPort " ssh ")" 22 ssh || return $?
-  assertEquals --line "$LINENO" "$(serviceToPort http)" 80 http || return $?
-  assertEquals --line "$LINENO" "$(serviceToPort "         http     ")" 80 http || return $?
-  assertEquals --line "$LINENO" "$(serviceToPort https)" 443 https || return $?
-  assertEquals --line "$LINENO" "$(serviceToPort mariadb)" 3306 mariadb || return $?
-  assertEquals --line "$LINENO" "$(serviceToPort mysql)" 3306 mysql || return $?
-  assertEquals --line "$LINENO" "$(serviceToPort postgres)" 5432 postgres || return $?
-  assertEquals --line "$LINENO" "$(serviceToPort echo)" 7 echo || return $?
+  assertEquals "$(serviceToPort ssh)" 22 ssh || return $?
+  assertEquals "$(serviceToPort "ssh ")" 22 ssh || return $?
+  assertEquals "$(serviceToPort " ssh ")" 22 ssh || return $?
+  assertEquals "$(serviceToPort http)" 80 http || return $?
+  assertEquals "$(serviceToPort "         http     ")" 80 http || return $?
+  assertEquals "$(serviceToPort https)" 443 https || return $?
+  assertEquals "$(serviceToPort mariadb)" 3306 mariadb || return $?
+  assertEquals "$(serviceToPort mysql)" 3306 mysql || return $?
+  assertEquals "$(serviceToPort postgres)" 5432 postgres || return $?
+  assertEquals "$(serviceToPort echo)" 7 echo || return $?
 
   assertNotExitCode --stderr-ok 0 serviceToPort || return $?
 
-  assertNotExitCode --line "$LINENO" --stderr-match blank 0 serviceToPort "" || return $?
-  assertNotExitCode --line "$LINENO" --stderr-match unknown 0 serviceToPort "22" || return $?
-  assertNotExitCode --line "$LINENO" --stderr-match unknown 0 serviceToPort ".https" || return $?
-  assertNotExitCode --line "$LINENO" --stderr-match "whitespace" 0 serviceToPort " " || return $?
+  assertNotExitCode --stderr-match blank 0 serviceToPort "" || return $?
+  assertNotExitCode --stderr-match unknown 0 serviceToPort "22" || return $?
+  assertNotExitCode --stderr-match unknown 0 serviceToPort ".https" || return $?
+  assertNotExitCode --stderr-match "whitespace" 0 serviceToPort " " || return $?
 }
 
 testExtensionLists() {
@@ -118,7 +118,7 @@ testExtensionLists() {
   me=$(__environment realPath "${BASH_SOURCE[0]}") || return $?
 
   export BUILD_HOME
-  assertExitCode --line "$LINENO" 0 buildEnvironmentLoad BUILD_HOME || return $?
+  assertExitCode 0 buildEnvironmentLoad BUILD_HOME || return $?
 
   target=$(mktemp -d) || _environment "mktemp -d" || return $?
 

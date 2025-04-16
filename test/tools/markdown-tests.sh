@@ -25,7 +25,7 @@ testMarkdownFormatList() {
 }
 
 testMarkdownRemoveSections() {
-  assertEquals --line "$LINENO" "$(__dataMarkdownRemoveSections | markdown_removeUnfinishedSections)" "$(__dataMarkdownRemoveSectionsExpected)" || return $?
+  assertEquals "$(__dataMarkdownRemoveSections | markdown_removeUnfinishedSections)" "$(__dataMarkdownRemoveSectionsExpected)" || return $?
 }
 
 __dataMarkdownRemoveSections() {

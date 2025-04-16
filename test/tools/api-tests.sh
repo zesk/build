@@ -8,19 +8,19 @@
 #
 
 testAPITools() {
-  assertEquals --line "$LINENO" "$(plural 0 singular plural)" "plural" || return $?
-  assertEquals --line "$LINENO" "$(plural 1 singular plural)" "singular" || return $?
-  assertEquals --line "$LINENO" "$(plural 2 singular plural)" "plural" || return $?
-  assertEquals --line "$LINENO" "$(plural -1 singular plural)" "plural" || return $?
-  assertExitCode --line "$LINENO" --stderr-ok 1 plural X singular plural || return $?
+  assertEquals "$(plural 0 singular plural)" "plural" || return $?
+  assertEquals "$(plural 1 singular plural)" "singular" || return $?
+  assertEquals "$(plural 2 singular plural)" "plural" || return $?
+  assertEquals "$(plural -1 singular plural)" "plural" || return $?
+  assertExitCode --stderr-ok 1 plural X singular plural || return $?
 
-  assertEquals --line "$LINENO" "$(alignRight 20 012345)" "              012345" || return $?
-  assertEquals --line "$LINENO" "$(alignRight 5 012345)" "012345" || return $?
-  assertEquals --line "$LINENO" "$(alignRight 0 012345)" "012345" || return $?
+  assertEquals "$(alignRight 20 012345)" "              012345" || return $?
+  assertEquals "$(alignRight 5 012345)" "012345" || return $?
+  assertEquals "$(alignRight 0 012345)" "012345" || return $?
 
-  assertEquals --line "$LINENO" "$(dateToFormat 2023-04-20 %s)" "1681948800" || return $?
-  assertEquals --line "$LINENO" "$(dateToFormat 2023-04-20 %Y-%m-%d)" "2023-04-20" || return $?
-  assertEquals --line "$LINENO" "$(dateToTimestamp 2023-04-20)" "1681948800" || return $?
+  assertEquals "$(dateToFormat 2023-04-20 %s)" "1681948800" || return $?
+  assertEquals "$(dateToFormat 2023-04-20 %Y-%m-%d)" "2023-04-20" || return $?
+  assertEquals "$(dateToTimestamp 2023-04-20)" "1681948800" || return $?
 }
 
 testHooks() {
@@ -46,8 +46,8 @@ testEnvironmentVariables() {
 
 testDates() {
   local t y ty tm td yy ym yd
-  assertEquals --line "$LINENO" "$(timestampToDate 1697666075 %F)" "2023-10-18" || return $?
-  assertEquals --line "$LINENO" "$(todayDate)" "$(date -u +%F)" || return $?
+  assertEquals "$(timestampToDate 1697666075 %F)" "2023-10-18" || return $?
+  assertEquals "$(todayDate)" "$(date -u +%F)" || return $?
 
   t="$(todayDate)" || _environment todayDate failed || return $?
   y="$(yesterdayDate)" || _environment yesterdayDate failed || return $?
@@ -62,12 +62,12 @@ testDates() {
   tm=${tm#0}
   td=$((td + 0))
   tm=$((tm + 0))
-  assertExitCode --line "$LINENO" 0 isInteger "$ty" || return $?
-  assertExitCode --line "$LINENO" 0 isInteger "$tm" || return $?
-  assertExitCode --line "$LINENO" 0 isInteger "$td" || return $?
-  assertExitCode --line "$LINENO" 0 isInteger "$yy" || return $?
-  assertExitCode --line "$LINENO" 0 isInteger "$ym" || return $?
-  assertExitCode --line "$LINENO" 0 isInteger "$yd" || return $?
+  assertExitCode 0 isInteger "$ty" || return $?
+  assertExitCode 0 isInteger "$tm" || return $?
+  assertExitCode 0 isInteger "$td" || return $?
+  assertExitCode 0 isInteger "$yy" || return $?
+  assertExitCode 0 isInteger "$ym" || return $?
+  assertExitCode 0 isInteger "$yd" || return $?
 
   # today 2024-01-01
   # yesterday 2023-12-31

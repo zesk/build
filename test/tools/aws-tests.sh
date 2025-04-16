@@ -55,14 +55,14 @@ testAWSIPAccess() {
 
   awsIPAccess --verbose --services ssh,mysql --id robot@zesk/build --ip 10.0.0.1 --group "$TEST_AWS_SECURITY_GROUP" || return $?
 
-  assertExitCode --dump --line "$LINENO" 0 awsIPAccess --services ssh,mysql --id robot@zesk/build --ip 10.0.0.1 --group "$TEST_AWS_SECURITY_GROUP" || return $?
-  assertExitCode --dump --line "$LINENO" 0 awsIPAccess --revoke --services 22,3306 --id robot@zesk/build --ip 10.0.0.1 --group "$TEST_AWS_SECURITY_GROUP" || return $?
+  assertExitCode --dump 0 awsIPAccess --services ssh,mysql --id robot@zesk/build --ip 10.0.0.1 --group "$TEST_AWS_SECURITY_GROUP" || return $?
+  assertExitCode --dump 0 awsIPAccess --revoke --services 22,3306 --id robot@zesk/build --ip 10.0.0.1 --group "$TEST_AWS_SECURITY_GROUP" || return $?
 
   unset AWS_ACCESS_KEY_ID
   unset AWS_SECRET_ACCESS_KEY
 
   __testSection "CLI IP and no credentials - fails"
-  assertNotExitCode --line "$LINENO" --stderr-ok --dump 0 awsIPAccess --services ssh,http --id robot@zesk/build --ip 10.0.0.1 --group "$TEST_AWS_SECURITY_GROUP" || return $?
+  assertNotExitCode --stderr-ok --dump 0 awsIPAccess --services ssh,http --id robot@zesk/build --ip 10.0.0.1 --group "$TEST_AWS_SECURITY_GROUP" || return $?
 
   mkdir "$HOME/.aws"
   {
@@ -77,14 +77,14 @@ testAWSIPAccess() {
   echo "AWS_PROFILE: ${AWS_PROFILE-}"
 
   # Work using environment variables
-  assertExitCode --line "$LINENO" 0 awsIPAccess --services ssh,http --id robot@zesk/build --ip 10.0.0.1 --group "$TEST_AWS_SECURITY_GROUP" || return $?
-  assertExitCode --line "$LINENO" 0 awsIPAccess --revoke --services ssh,http --id robot@zesk/build --ip 10.0.0.1 --group "$TEST_AWS_SECURITY_GROUP" || return $?
+  assertExitCode 0 awsIPAccess --services ssh,http --id robot@zesk/build --ip 10.0.0.1 --group "$TEST_AWS_SECURITY_GROUP" || return $?
+  assertExitCode 0 awsIPAccess --revoke --services ssh,http --id robot@zesk/build --ip 10.0.0.1 --group "$TEST_AWS_SECURITY_GROUP" || return $?
 
   __testSection "Generated IP and file system credentials"
 
   # Work using environment variables
-  assertExitCode --line "$LINENO" 0 awsIPAccess --services ssh,http --id robot@zesk/build-autoip --group "$TEST_AWS_SECURITY_GROUP" || return $?
-  assertExitCode --line "$LINENO" 0 awsIPAccess --revoke --services ssh,http --id robot@zesk/build-autoip --group "$TEST_AWS_SECURITY_GROUP" || return $?
+  assertExitCode 0 awsIPAccess --services ssh,http --id robot@zesk/build-autoip --group "$TEST_AWS_SECURITY_GROUP" || return $?
+  assertExitCode 0 awsIPAccess --revoke --services ssh,http --id robot@zesk/build-autoip --group "$TEST_AWS_SECURITY_GROUP" || return $?
 
   rm -rf "$HOME"
 
@@ -183,12 +183,12 @@ testAwsRegionValid() {
   local r
 
   for r in us-east-1 us-east-2 us-west-1 us-west-2; do
-    assertExitCode --line "$LINENO" 0 awsRegionValid "$r" || return $?
-    assertNotExitCode --line "$LINENO" 0 awsRegionValid "$r" "FAKE" || return $?
+    assertExitCode 0 awsRegionValid "$r" || return $?
+    assertNotExitCode 0 awsRegionValid "$r" "FAKE" || return $?
   done
-  assertNotExitCode --line "$LINENO" 0 awsRegionValid || return $?
-  assertNotExitCode --line "$LINENO" 0 awsRegionValid bad || return $?
-  assertNotExitCode --line "$LINENO" 0 awsRegionValid us-east-1000 || return $?
+  assertNotExitCode 0 awsRegionValid || return $?
+  assertNotExitCode 0 awsRegionValid bad || return $?
+  assertNotExitCode 0 awsRegionValid us-east-1000 || return $?
 }
 
 testAwsEnvironmentFromCredentials() {
@@ -209,82 +209,82 @@ testAwsEnvironmentFromCredentials() {
 
   credFile="$HOME/.aws/credentials"
 
-  assertNotExitCode --line "$LINENO" 0 awsHasEnvironment || return $?
-  assertNotExitCode --line "$LINENO" --stderr-match awsCredentialsFile 0 awsCredentialsHasProfile || return $?
+  assertNotExitCode 0 awsHasEnvironment || return $?
+  assertNotExitCode --stderr-match awsCredentialsFile 0 awsCredentialsHasProfile || return $?
 
-  assertNotExitCode --line "$LINENO" --stderr-match awsCredentialsFile 0 awsEnvironmentFromCredentials || return $?
-  assertNotExitCode --line "$LINENO" --stderr-match AWS_ACCESS_KEY_ID --stderr-match AWS_SECRET_ACCESS_KEY 0 awsCredentialsFromEnvironment || return $?
+  assertNotExitCode --stderr-match awsCredentialsFile 0 awsEnvironmentFromCredentials || return $?
+  assertNotExitCode --stderr-match AWS_ACCESS_KEY_ID --stderr-match AWS_SECRET_ACCESS_KEY 0 awsCredentialsFromEnvironment || return $?
 
   AWS_ACCESS_KEY_ID=
   AWS_SECRET_ACCESS_KEY=
 
-  assertFileDoesNotExist --line "$LINENO" "$credFile" || return $?
+  assertFileDoesNotExist "$credFile" || return $?
 
-  assertNotExitCode --line "$LINENO" --stderr-match awsCredentialsFile 0 awsEnvironmentFromCredentials || return $?
-  assertNotExitCode --line "$LINENO" --stderr-match AWS_ACCESS_KEY_ID --stderr-match AWS_SECRET_ACCESS_KEY 0 awsCredentialsFromEnvironment || return $?
+  assertNotExitCode --stderr-match awsCredentialsFile 0 awsEnvironmentFromCredentials || return $?
+  assertNotExitCode --stderr-match AWS_ACCESS_KEY_ID --stderr-match AWS_SECRET_ACCESS_KEY 0 awsCredentialsFromEnvironment || return $?
 
-  assertFileDoesNotExist --line "$LINENO" "$credFile" || return $?
+  assertFileDoesNotExist "$credFile" || return $?
 
   AWS_ACCESS_KEY_ID=AKIAZ0123456789ABCDE
   AWS_SECRET_ACCESS_KEY="VAcpL47ZIqi3NLzsBuSImsXl4n6r9UpQpTmNz3p1"
 
-  assertNotExitCode --line "$LINENO" --stderr-match "awsCredentialsFile" 0 awsCredentialsHasProfile || return $?
-  assertNotExitCode --line "$LINENO" --stderr-match "awsCredentialsFile" 0 awsCredentialsHasProfile default || return $?
+  assertNotExitCode --stderr-match "awsCredentialsFile" 0 awsCredentialsHasProfile || return $?
+  assertNotExitCode --stderr-match "awsCredentialsFile" 0 awsCredentialsHasProfile default || return $?
 
-  assertExitCode --line "$LINENO" 0 awsHasEnvironment || return $?
+  assertExitCode 0 awsHasEnvironment || return $?
 
-  assertFileDoesNotExist --line "$LINENO" "$credFile" || return $?
+  assertFileDoesNotExist "$credFile" || return $?
 
-  assertExitCode --line "$LINENO" 0 awsCredentialsFromEnvironment || return $?
+  assertExitCode 0 awsCredentialsFromEnvironment || return $?
 
-  assertFileExists --line "$LINENO" "$credFile" || return $?
+  assertFileExists "$credFile" || return $?
 
-  assertEquals --line "$LINENO" --display "More than one [default] line in credentials" 1 $((0 + $(grep -c '\[default\]' "$credFile"))) || return $?
-  assertEquals --line "$LINENO" --display "No [hello-world] line in credentials" 0 $((0 + $(grep -c '\[hello-world\]' "$credFile"))) || return $?
+  assertEquals --display "More than one [default] line in credentials" 1 $((0 + $(grep -c '\[default\]' "$credFile"))) || return $?
+  assertEquals --display "No [hello-world] line in credentials" 0 $((0 + $(grep -c '\[hello-world\]' "$credFile"))) || return $?
 
-  assertExitCode --line "$LINENO" 0 awsCredentialsHasProfile || return $?
-  assertExitCode --line "$LINENO" 0 awsCredentialsHasProfile default || return $?
+  assertExitCode 0 awsCredentialsHasProfile || return $?
+  assertExitCode 0 awsCredentialsHasProfile default || return $?
 
-  assertFileContains --line "$LINENO" "$credFile" "[default]" "$AWS_ACCESS_KEY_ID" "$AWS_SECRET_ACCESS_KEY" || return $?
-  assertEquals --line "$LINENO" --display "More than one [default] line in credentials" 1 $((0 + $(grep -c '\[default\]' "$credFile"))) || return $?
+  assertFileContains "$credFile" "[default]" "$AWS_ACCESS_KEY_ID" "$AWS_SECRET_ACCESS_KEY" || return $?
+  assertEquals --display "More than one [default] line in credentials" 1 $((0 + $(grep -c '\[default\]' "$credFile"))) || return $?
 
-  assertNotExitCode --line "$LINENO" --stderr-match "Profile" --stderr-match "exists in" 0 awsCredentialsFromEnvironment || return $?
+  assertNotExitCode --stderr-match "Profile" --stderr-match "exists in" 0 awsCredentialsFromEnvironment || return $?
 
   firstId=$AWS_ACCESS_KEY_ID
   firstKey=$AWS_SECRET_ACCESS_KEY
 
   AWS_ACCESS_KEY_ID=AKIAZZZZZZZZZ789ABCDE
 
-  assertExitCode --line "$LINENO" 0 awsCredentialsFromEnvironment --comments --force || return $?
+  assertExitCode 0 awsCredentialsFromEnvironment --comments --force || return $?
 
   # dumpPipe credentials post --force <"$credFile"
 
-  assertFileContains --line "$LINENO" "$credFile" "$AWS_ACCESS_KEY_ID" "$AWS_SECRET_ACCESS_KEY" "replaced default" "$year" || return $?
-  assertEquals --line "$LINENO" --display "More than one [default] line in credentials" 1 $((0 + $(grep -c '\[default\]' "$credFile"))) || return $?
-  assertEquals --line "$LINENO" --display "No [hello-world] line in credentials" 0 $((0 + $(grep -c '\[hello-world\]' "$credFile"))) || return $?
+  assertFileContains "$credFile" "$AWS_ACCESS_KEY_ID" "$AWS_SECRET_ACCESS_KEY" "replaced default" "$year" || return $?
+  assertEquals --display "More than one [default] line in credentials" 1 $((0 + $(grep -c '\[default\]' "$credFile"))) || return $?
+  assertEquals --display "No [hello-world] line in credentials" 0 $((0 + $(grep -c '\[hello-world\]' "$credFile"))) || return $?
 
-  assertFileDoesNotContain --line "$LINENO" "$credFile" "$firstId" || return $?
+  assertFileDoesNotContain "$credFile" "$firstId" || return $?
 
   AWS_SECRET_ACCESS_KEY="VaAaAaAaAaAaAaAaAzZBzZzZzZzZzZzZzZzZzZzZ"
 
-  assertExitCode --line "$LINENO" 0 awsCredentialsFromEnvironment --profile hello-world || return $?
+  assertExitCode 0 awsCredentialsFromEnvironment --profile hello-world || return $?
 
   # dumpPipe credentials post hello-world <"$credFile"
 
-  assertFileContains --line "$LINENO" "$credFile" "[default]" "[hello-world]" "$AWS_ACCESS_KEY_ID" "$AWS_SECRET_ACCESS_KEY" || return $?
+  assertFileContains "$credFile" "[default]" "[hello-world]" "$AWS_ACCESS_KEY_ID" "$AWS_SECRET_ACCESS_KEY" || return $?
 
-  assertEquals --line "$LINENO" --display "More than one [default] line in credentials" 1 $((0 + $(grep -c '\[default\]' "$credFile"))) || return $?
-  assertEquals --line "$LINENO" --display "More than one [hello-world] line in credentials" 1 $((0 + $(grep -c '\[hello-world\]' "$credFile"))) || return $?
+  assertEquals --display "More than one [default] line in credentials" 1 $((0 + $(grep -c '\[default\]' "$credFile"))) || return $?
+  assertEquals --display "More than one [hello-world] line in credentials" 1 $((0 + $(grep -c '\[hello-world\]' "$credFile"))) || return $?
 
-  assertNotExitCode --line "$LINENO" --stderr-match "Profile" --stderr-match "exists in" 0 awsCredentialsFromEnvironment --profile hello-world || return $?
+  assertNotExitCode --stderr-match "Profile" --stderr-match "exists in" 0 awsCredentialsFromEnvironment --profile hello-world || return $?
 
-  assertExitCode --line "$LINENO" 0 awsCredentialsFromEnvironment --profile hello-world --force || return $?
+  assertExitCode 0 awsCredentialsFromEnvironment --profile hello-world --force || return $?
 
-  assertEquals --line "$LINENO" --display "More than one [default] line in credentials" 1 $((0 + $(grep -c '\[default\]' "$credFile"))) || return $?
-  assertEquals --line "$LINENO" --display "More than one [hello-world] line in credentials" 1 $((0 + $(grep -c '\[hello-world\]' "$credFile"))) || return $?
+  assertEquals --display "More than one [default] line in credentials" 1 $((0 + $(grep -c '\[default\]' "$credFile"))) || return $?
+  assertEquals --display "More than one [hello-world] line in credentials" 1 $((0 + $(grep -c '\[hello-world\]' "$credFile"))) || return $?
 
-  assertFileContains --line "$LINENO" "$credFile" "$firstKey" "$AWS_ACCESS_KEY_ID" "$AWS_SECRET_ACCESS_KEY" "replaced default" "$year" '[default]' '[hello-world]' || return $?
-  assertFileDoesNotContain --line "$LINENO" "$credFile" "$firstId" || return $?
+  assertFileContains "$credFile" "$firstKey" "$AWS_ACCESS_KEY_ID" "$AWS_SECRET_ACCESS_KEY" "replaced default" "$year" '[default]' '[hello-world]' || return $?
+  assertFileDoesNotContain "$credFile" "$firstId" || return $?
 
   matches=(
     --stdout-match AWS_SECRET_ACCESS_KEY
@@ -292,14 +292,14 @@ testAwsEnvironmentFromCredentials() {
     --stdout-match AWS_ACCESS_KEY_ID
     --stdout-match "$AWS_ACCESS_KEY_ID"
   )
-  assertExitCode --line "$LINENO" "${matches[@]}" 0 awsEnvironmentFromCredentials --profile hello-world || return $?
+  assertExitCode "${matches[@]}" 0 awsEnvironmentFromCredentials --profile hello-world || return $?
   matches=(
     --stdout-match AWS_SECRET_ACCESS_KEY
     --stdout-match "$firstKey"
     --stdout-match AWS_ACCESS_KEY_ID
     --stdout-match "$AWS_ACCESS_KEY_ID"
   )
-  assertExitCode --line "$LINENO" "${matches[@]}" 0 awsEnvironmentFromCredentials --profile default || return $?
+  assertExitCode "${matches[@]}" 0 awsEnvironmentFromCredentials --profile default || return $?
 
   rm -rf "$HOME"
 
@@ -319,7 +319,7 @@ testAWSCredentialsEdit() {
   testResults=$(fileTemporaryName "$usage") || return $?
   testCredentials="$home/test/example/aws/fake.credentials.txt"
   _awsCredentialsRemoveSection _return "$testCredentials" "$profileName" "" >"$testResults" || return $?
-  assertExitCode --line "$LINENO" 0 diff -u "$testResults" "$home/test/example/aws/fake.credentials.0.txt" || return $?
+  assertExitCode 0 diff -u "$testResults" "$home/test/example/aws/fake.credentials.0.txt" || return $?
 
   __mockValue HOME
 
@@ -328,28 +328,28 @@ testAWSCredentialsEdit() {
   local testAWSCredentials testPassword="abcdefghabcdefghabcdefghabcdefghhabcdefgh"
 
   testAWSCredentials=$(__environment awsCredentialsFile --path) || return $?
-  assertFileDoesNotExist --line "$LINENO" "$testAWSCredentials" || return $?
+  assertFileDoesNotExist "$testAWSCredentials" || return $?
 
-  assertExitCode --line "$LINENO" 0 awsCredentialsAdd --force --profile "$profileName" "AKIA0123456789001233" "$testPassword" || return $?
+  assertExitCode 0 awsCredentialsAdd --force --profile "$profileName" "AKIA0123456789001233" "$testPassword" || return $?
 
-  assertFileExists --line "$LINENO" "$testAWSCredentials" || return $?
-  assertExitCode --line "$LINENO" 0 diff -u "$testAWSCredentials" "$home/test/example/aws/fake.credentials.1.txt" || return $?
+  assertFileExists "$testAWSCredentials" || return $?
+  assertExitCode 0 diff -u "$testAWSCredentials" "$home/test/example/aws/fake.credentials.1.txt" || return $?
 
   __environment cp "$testCredentials" "$testAWSCredentials" || return $?
-  assertExitCode --line "$LINENO" 0 awsCredentialsAdd --force --profile "$profileName" "AKIA0123456789001233" "$testPassword" || return $?
-  assertExitCode --line "$LINENO" 0 diff -u "$testAWSCredentials" "$home/test/example/aws/fake.credentials.2.txt" || return $?
+  assertExitCode 0 awsCredentialsAdd --force --profile "$profileName" "AKIA0123456789001233" "$testPassword" || return $?
+  assertExitCode 0 diff -u "$testAWSCredentials" "$home/test/example/aws/fake.credentials.2.txt" || return $?
 
-  assertExitCode --line "$LINENO" 0 awsCredentialsAdd --force --profile "$profileName" "AKIA0123456789001234" "$testPassword" || return $?
-  assertExitCode --line "$LINENO" 0 diff -u "$testAWSCredentials" "$home/test/example/aws/fake.credentials.3.txt" || return $?
+  assertExitCode 0 awsCredentialsAdd --force --profile "$profileName" "AKIA0123456789001234" "$testPassword" || return $?
+  assertExitCode 0 diff -u "$testAWSCredentials" "$home/test/example/aws/fake.credentials.3.txt" || return $?
 
-  assertExitCode --line "$LINENO" 0 awsCredentialsAdd --force --profile "$profileName" "AKIA0123456789001233" "$testPassword" || return $?
-  assertExitCode --line "$LINENO" 0 diff -u "$testAWSCredentials" "$home/test/example/aws/fake.credentials.2.txt" || return $?
+  assertExitCode 0 awsCredentialsAdd --force --profile "$profileName" "AKIA0123456789001233" "$testPassword" || return $?
+  assertExitCode 0 diff -u "$testAWSCredentials" "$home/test/example/aws/fake.credentials.2.txt" || return $?
 
-  assertExitCode --line "$LINENO" 0 awsCredentialsAdd --force --profile "consolidated-devops" "AKIA0000000000001233" "$testPassword" || return $?
-  assertExitCode --line "$LINENO" 0 diff -u "$testAWSCredentials" "$home/test/example/aws/fake.credentials.4.txt" || return $?
+  assertExitCode 0 awsCredentialsAdd --force --profile "consolidated-devops" "AKIA0000000000001233" "$testPassword" || return $?
+  assertExitCode 0 diff -u "$testAWSCredentials" "$home/test/example/aws/fake.credentials.4.txt" || return $?
 
-  assertExitCode --line "$LINENO" 0 awsCredentialsAdd --force --profile "consolidated-devops" "AKIA0000000000009999" "deadbeef" || return $?
-  assertExitCode --line "$LINENO" 0 diff -u "$testAWSCredentials" "$home/test/example/aws/fake.credentials.5.txt" || return $?
+  assertExitCode 0 awsCredentialsAdd --force --profile "consolidated-devops" "AKIA0000000000009999" "deadbeef" || return $?
+  assertExitCode 0 diff -u "$testAWSCredentials" "$home/test/example/aws/fake.credentials.5.txt" || return $?
 
   __mockValue HOME "" --end
 }
@@ -376,9 +376,9 @@ testAWSProfiles() {
   assertFileDoesNotExist --line "$LINENO" "$credentials" || return $?
 
   credentials="$(awsCredentialsFile --create)" || return $?
-  assertFileExists --line "$LINENO" "$credentials" || return $?
+  assertFileExists "$credentials" || return $?
 
-  assertExitCode --line "$LINENO" 0 awsCredentialsRemove --comments "$firstName" || return $?
+  assertExitCode 0 awsCredentialsRemove --comments "$firstName" || return $?
 
   __environment awsProfilesList >"$list" || return $?
   assertFileDoesNotContain --line "$LINENO" "$list" "$firstName" || _undo $? dumpPipe awsProfilesList <"$list" || return $?
@@ -386,39 +386,39 @@ testAWSProfiles() {
 
   local testKey="AKIAZ0123456789ABCDE" testPassword="haaaaaaanrNGhaaaaaaanrNGhaaaaaaanrNGABYU"
 
-  __echo assertExitCode --line "$LINENO" 0 awsCredentialsAdd --profile "$firstName" "$testKey" "$testPassword" || return $?
+  __echo assertExitCode 0 awsCredentialsAdd --profile "$firstName" "$testKey" "$testPassword" || return $?
   __echo assertFileContains --line "$LINENO" "$credentials" "$testKey" "$testPassword" || return $?
   __echo assertFileDoesNotContain --line "$LINENO" "$credentials" "# awsCredentialsAdd" || return $?
 
   # Exists
   assertNotExitCode --stderr-match 'exists in' --line "$LINENO" 0 awsCredentialsAdd --comments --profile "$firstName" "$testKey" "$testPassword" || return $?
   assertFileDoesNotContain --line "$LINENO" "$credentials" "# awsCredentialsAdd" || return $?
-  assertExitCode --line "$LINENO" 0 awsCredentialsAdd --comments --force --profile "$firstName" "$testKey" "$testPassword" || return $?
+  assertExitCode 0 awsCredentialsAdd --comments --force --profile "$firstName" "$testKey" "$testPassword" || return $?
   assertFileContains --line "$LINENO" "$credentials" "# awsCredentialsAdd" || return $?
 
   __environment awsProfilesList >"$list" || return $?
   assertFileContains --line "$LINENO" "$list" "$firstName" || return $?
   assertFileDoesNotContain --line "$LINENO" "$list" "$secondName" || return $?
-  assertExitCode --line "$LINENO" 0 awsCredentialsAdd --comments --profile "$secondName" "$testKey" "$testPassword" || return $?
+  assertExitCode 0 awsCredentialsAdd --comments --profile "$secondName" "$testKey" "$testPassword" || return $?
 
   __environment awsProfilesList >"$list" || return $?
   assertFileContains --line "$LINENO" "$list" "$firstName" || return $?
   assertFileContains --line "$LINENO" "$list" "$secondName" || return $?
 
-  assertExitCode --line "$LINENO" 0 awsCredentialsRemove --comments "$firstName" || return $?
+  assertExitCode 0 awsCredentialsRemove --comments "$firstName" || return $?
 
   __environment awsProfilesList >"$list" || return $?
   assertFileDoesNotContain --line "$LINENO" "$list" "$firstName" || return $?
   assertFileContains --line "$LINENO" "$list" "$secondName" || return $?
 
-  assertExitCode --line "$LINENO" 0 awsCredentialsRemove --comments "$firstName" || return $?
+  assertExitCode 0 awsCredentialsRemove --comments "$firstName" || return $?
   decorate info removed first name
 
   __environment awsProfilesList >"$list" || return $?
   assertFileDoesNotContain --line "$LINENO" "$list" "$firstName" || return $?
   assertFileContains --line "$LINENO" "$list" "$secondName" || return $?
 
-  assertExitCode --line "$LINENO" 0 awsCredentialsRemove --comments --profile "$secondName" || return $?
+  assertExitCode 0 awsCredentialsRemove --comments --profile "$secondName" || return $?
   decorate info removed second name
 
   dumpPipe "awsProfiles saved" <"$list"

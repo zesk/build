@@ -39,43 +39,43 @@ testBuildDebugEnabled() {
 
   __mockValue BUILD_DEBUG
 
-  assertExitCode --skip-plumber --line "$LINENO" 1 buildDebugEnabled || return $?
-  assertNotExitCode --line "$LINENO" 0 buildDebugEnabled || return $?
-  # assertNotExitCode --dump --stderr-ok --debug --skip-plumber --line "$LINENO" --leak BUILD_DEBUG 0 buildDebugEnabled || return $?
+  assertExitCode --skip-plumber 1 buildDebugEnabled || return $?
+  assertNotExitCode 0 buildDebugEnabled || return $?
+  # assertNotExitCode --dump --stderr-ok --debug --skip-plumber --leak BUILD_DEBUG 0 buildDebugEnabled || return $?
 
   BUILD_DEBUG=
 
-  assertNotExitCode --line "$LINENO" 0 buildDebugEnabled || return $?
+  assertNotExitCode 0 buildDebugEnabled || return $?
 
   __testSection BUILD_DEBUG is ON
   BUILD_DEBUG=1
 
   _testBuildDebugEnabledStart "$quietLog"
 
-  assertExitCode --line "$LINENO" 0 buildDebugEnabled || _testBuildDebugEnabledExit $? "$quietLog" "$LINENO" || return $?
+  assertExitCode 0 buildDebugEnabled || _testBuildDebugEnabledExit $? "$quietLog" "$LINENO" || return $?
   assertExitCode --stderr-ok 0 buildDebugStart || return $?
-  assertExitCode --stderr-ok --line "$LINENO" --stderr-ok 0 isBashDebug || _testBuildDebugEnabledExit $? "$quietLog" "$LINENO" || return $?
-  assertExitCode --stderr-ok --line "$LINENO" 0 buildDebugEnabled || _testBuildDebugEnabledExit $? "$quietLog" "$LINENO" || return $?
+  assertExitCode --stderr-ok --stderr-ok 0 isBashDebug || _testBuildDebugEnabledExit $? "$quietLog" "$LINENO" || return $?
+  assertExitCode --stderr-ok 0 buildDebugEnabled || _testBuildDebugEnabledExit $? "$quietLog" "$LINENO" || return $?
   assertExitCode --stderr-ok 0 buildDebugStop || _testBuildDebugEnabledExit $? "$quietLog" "$LINENO" || return $?
-  assertNotExitCode --line "$LINENO" 0 isBashDebug || _testBuildDebugEnabledExit $? "$quietLog" "$LINENO" || return $?
+  assertNotExitCode 0 isBashDebug || _testBuildDebugEnabledExit $? "$quietLog" "$LINENO" || return $?
 
   __testSection BUILD_DEBUG is OFF
   BUILD_DEBUG=
 
-  assertNotExitCode --line "$LINENO" 0 buildDebugEnabled || _testBuildDebugEnabledExit $? "$quietLog" || return $?
+  assertNotExitCode 0 buildDebugEnabled || _testBuildDebugEnabledExit $? "$quietLog" || return $?
   assertNotExitCode 0 buildDebugStart || _testBuildDebugEnabledExit $? "$quietLog" "$LINENO" || return $?
 
   __buildDebugEnable
 
-  assertExitCode --stderr-ok --line "$LINENO" 0 isBashDebug || _testBuildDebugEnabledExit $? "$quietLog" "$LINENO" || return $?
+  assertExitCode --stderr-ok 0 isBashDebug || _testBuildDebugEnabledExit $? "$quietLog" "$LINENO" || return $?
   # Does not change it (off)
   assertNotExitCode --stderr-ok 0 buildDebugStop || return $?
-  assertExitCode --stderr-ok --line "$LINENO" 0 isBashDebug || _testBuildDebugEnabledExit $? "$quietLog" "$LINENO" || return $?
+  assertExitCode --stderr-ok 0 isBashDebug || _testBuildDebugEnabledExit $? "$quietLog" "$LINENO" || return $?
 
   # Does change it (on)
   BUILD_DEBUG=1
   assertExitCode --stderr-ok 0 buildDebugStop || return $?
-  assertNotExitCode --line "$LINENO" 0 isBashDebug || _testBuildDebugEnabledExit $? "$quietLog" "$LINENO" || return $?
+  assertNotExitCode 0 isBashDebug || _testBuildDebugEnabledExit $? "$quietLog" "$LINENO" || return $?
   # Disable anyway
 
   __buildDebugDisable
@@ -90,17 +90,17 @@ testErrorExit() {
 
   set +E
   set +e
-  assertExitCode --line "$LINENO" 0 isErrorExit || return $?
+  assertExitCode 0 isErrorExit || return $?
   set -E
   set -e
-  assertExitCode --line "$LINENO" 0 isErrorExit || return $?
+  assertExitCode 0 isErrorExit || return $?
   set -E
   set -e
   actual="$(
     isErrorExit
     printf %d $?
   )"
-  assertEquals --line "$LINENO" "0" "$actual" "\$(isErrorExit; printf %d $?)" || return $?
+  assertEquals "0" "$actual" "\$(isErrorExit; printf %d $?)" || return $?
 
   # `set -e` DOES NOT INHERIT TO SUBSHELLS AFAIK and there is no easy way to do so
   # In general, the consensus is to avoid using set -e and use trap ERR
@@ -120,17 +120,17 @@ testPlumber() {
   local leakCode
 
   leakCode=$(_code leak)
-  assertEquals --line "$LINENO" 108 "$leakCode" || return $?
-  assertEquals --line "$LINENO" 108 "$leakCode" || return $?
-  assertEquals --line "$LINENO" 108 "$leakCode" || return $?
-  assertEquals --line "$LINENO" 108 "$leakCode" || return $?
-  assertExitCode --line "$LINENO" 0 plumber || return $?
-  assertExitCode --line "$LINENO" 0 plumber plumber echo true || return $?
-  assertExitCode --line "$LINENO" 0 plumber plumber decorate warning Hello || return $?
+  assertEquals 108 "$leakCode" || return $?
+  assertEquals 108 "$leakCode" || return $?
+  assertEquals 108 "$leakCode" || return $?
+  assertEquals 108 "$leakCode" || return $?
+  assertExitCode 0 plumber || return $?
+  assertExitCode 0 plumber plumber echo true || return $?
+  assertExitCode 0 plumber plumber decorate warning Hello || return $?
   # Run as a subshell so no leaks
-  assertExitCode --line "$LINENO" 0 plumber statusMessage __leakyPipe Cool || return $?
+  assertExitCode 0 plumber statusMessage __leakyPipe Cool || return $?
   # Run directly within plumber so catches leaks
-  assertExitCode --skip-plumber --line "$LINENO" "0" plumber --leak IS_THIS_GLOBAL --leak wonderful __leakyPipe Cool || return $?
+  assertExitCode --skip-plumber "0" plumber --leak IS_THIS_GLOBAL --leak wonderful __leakyPipe Cool || return $?
 
   unset IS_THIS_GLOBAL wonderful
 }
@@ -157,14 +157,14 @@ testHousekeeper() {
   __environment cp -r "$BUILD_HOME" "$testDir" || return $?
   __environment cd "$testDir" || return $?
 
-  assertEquals --line "$LINENO" 108 "$leakCode" || return $?
+  assertEquals 108 "$leakCode" || return $?
 
   statusMessage decorate info Housekeeper tests
-  assertNotExitCode --stderr-match "is not directory" --line "$LINENO" 0 housekeeper --path NOT-A-DIR || return $?
-  assertNotExitCode --stderr-match "not callable" --line "$LINENO" 0 housekeeper "$testDir" "NotABinary" || return $?
+  assertNotExitCode --stderr-match "is not directory" 0 housekeeper --path NOT-A-DIR || return $?
+  assertNotExitCode --stderr-match "not callable" 0 housekeeper "$testDir" "NotABinary" || return $?
 
   # Simple case - nothing
-  assertExitCode --line "$LINENO" 0 housekeeper "$testDir" __writeTo || return $?
+  assertExitCode 0 housekeeper "$testDir" __writeTo || return $?
 
   # Write 5 files
   testFiles=(dust dirt cobwebs cruft temporary-files)
@@ -172,7 +172,7 @@ testHousekeeper() {
   for testFile in "${testFiles[@]}"; do
     matches+=(--stderr-match "$testFile")
   done
-  assertNotExitCode --line "$LINENO" "${matches[@]}" 0 housekeeper "$testDir" __writeTo "${testFiles[@]}" || return $?
+  assertNotExitCode "${matches[@]}" 0 housekeeper "$testDir" __writeTo "${testFiles[@]}" || return $?
 
   # Change dust
   matches=(
@@ -182,7 +182,7 @@ testHousekeeper() {
     --stderr-no-match "cruft"
     --stderr-no-match "temporary-files"
   )
-  assertNotExitCode --line "$LINENO" "${matches[@]}" 0 housekeeper "$testDir" __writeTo dust || return $?
+  assertNotExitCode "${matches[@]}" 0 housekeeper "$testDir" __writeTo dust || return $?
 
   matches=(
     --stderr-no-match "dust"
@@ -192,7 +192,7 @@ testHousekeeper() {
     --stderr-no-match "temporary-files"
   )
   # Remove cobwebs
-  assertNotExitCode --line "$LINENO" "${matches[@]}" 0 housekeeper "$testDir" rm cobwebs || return $?
+  assertNotExitCode "${matches[@]}" 0 housekeeper "$testDir" rm cobwebs || return $?
   # Remove multiple
   matches=(
     --stderr-match "dust"
@@ -202,7 +202,7 @@ testHousekeeper() {
     --stderr-match "temporary-files"
   )
   testFiles=(dust dirt cruft temporary-files)
-  assertNotExitCode --line "$LINENO" "${matches[@]}" 0 housekeeper "$testDir" rm -f "${testFiles[@]}" || return $?
+  assertNotExitCode "${matches[@]}" 0 housekeeper "$testDir" rm -f "${testFiles[@]}" || return $?
 
   __environment rm -rf "$testDir" || return $?
 }
@@ -212,18 +212,18 @@ testDumpPipe() {
 
   ff=$(fileTemporaryName "$usage") || return $?
   decorate code "Hello, world" >>"$ff"
-  assertFileExists --line "$LINENO" "$ff" || return $?
-  assertExitCode --line "$LINENO" 0 dumpPipe --vanish "$ff" || return $?
-  assertFileDoesNotExist --line "$LINENO" "$ff" || return $?
+  assertFileExists "$ff" || return $?
+  assertExitCode 0 dumpPipe --vanish "$ff" || return $?
+  assertFileDoesNotExist "$ff" || return $?
 }
 
 testOutputTrigger() {
   local usage="_return"
 
-  assertExitCode --stderr-match YoYoBaby --line "$LINENO" 1 outputTrigger --name YoYoBaby <<<"Hello" || return $?
+  assertExitCode --stderr-match YoYoBaby 1 outputTrigger --name YoYoBaby <<<"Hello" || return $?
   local temp
   temp=$(fileTemporaryName "$usage") || return $?
-  assertExitCode --line "$LINENO" 0 outputTrigger --name YoYoBaby <"$temp" || return $?
+  assertExitCode 0 outputTrigger --name YoYoBaby <"$temp" || return $?
   __catchEnvironment "$usage" rm -rf "$temp" || return $?
 }
 
@@ -236,24 +236,24 @@ testDumpEnvironmentSafe() {
     --stdout-no-match "PRIVATE_THING"
     --stdout-no-match "$PRIVATE_THING"
   )
-  assertExitCode --line "$LINENO" "${matches[@]}" 0 dumpEnvironment --skip-env PRIVATE_THING || return $?
+  assertExitCode "${matches[@]}" 0 dumpEnvironment --skip-env PRIVATE_THING || return $?
   matches=(
     --stdout-match "PRIVATE_THING"
     --stdout-no-match "$PRIVATE_THING"
     --stdout-match HIDDEN
   )
-  assertExitCode --line "$LINENO" "${matches[@]}" 0 dumpEnvironment --secure-match PRIVATE || return $?
+  assertExitCode "${matches[@]}" 0 dumpEnvironment --secure-match PRIVATE || return $?
   matches=(
     --stdout-match "PRIVATE_THING"
     --stdout-no-match "$PRIVATE_THING"
     --stdout-match "Z'D STUN"
   )
-  assertExitCode --line "$LINENO" "${matches[@]}" 0 dumpEnvironment --secure-match PRIVATE --secure-suffix " Z'D STUN" || return $?
+  assertExitCode "${matches[@]}" 0 dumpEnvironment --secure-match PRIVATE --secure-suffix " Z'D STUN" || return $?
   matches=(
     --stdout-match "PRIVATE_THING"
     --stdout-match "$PRIVATE_THING"
   )
-  assertExitCode --line "$LINENO" "${matches[@]}" 0 dumpEnvironment || return $?
+  assertExitCode "${matches[@]}" 0 dumpEnvironment || return $?
 
   unset PRIVATE_THING
 }
@@ -264,18 +264,18 @@ testDumpEnvironmentUnsafe() {
   PRIVATE_THING="TheDeathOfTheCommons"
 
   # Argument errors
-  assertExitCode --line "$LINENO" --stderr-match "Unknown" 2 dumpEnvironmentUnsafe --secure-match "PRIVATE" || return $?
-  assertExitCode --line "$LINENO" --stderr-match "Unknown" 2 dumpEnvironmentUnsafe --secure-suffix "PRIVATE" || return $?
+  assertExitCode --stderr-match "Unknown" 2 dumpEnvironmentUnsafe --secure-match "PRIVATE" || return $?
+  assertExitCode --stderr-match "Unknown" 2 dumpEnvironmentUnsafe --secure-suffix "PRIVATE" || return $?
   # Works fine
-  assertExitCode --line "$LINENO" --stdout-match "PRIVATE_THING" --stdout-match "$PRIVATE_THING" 0 dumpEnvironmentUnsafe || return $?
+  assertExitCode --stdout-match "PRIVATE_THING" --stdout-match "$PRIVATE_THING" 0 dumpEnvironmentUnsafe || return $?
   # Partial match does not filter
-  assertExitCode --line "$LINENO" --stdout-match "PRIVATE_THING" --stdout-match "$PRIVATE_THING" 0 dumpEnvironmentUnsafe --skip-env PRIVATE || return $?
+  assertExitCode --stdout-match "PRIVATE_THING" --stdout-match "$PRIVATE_THING" 0 dumpEnvironmentUnsafe --skip-env PRIVATE || return $?
   # Case match does NOT filter
-  assertExitCode --line "$LINENO" --stdout-match "PRIVATE_THING" --stdout-match "$PRIVATE_THING" 0 dumpEnvironmentUnsafe --skip-env private_thing || return $?
+  assertExitCode --stdout-match "PRIVATE_THING" --stdout-match "$PRIVATE_THING" 0 dumpEnvironmentUnsafe --skip-env private_thing || return $?
   # Exact match does filter
-  assertExitCode --line "$LINENO" --stdout-no-match "PRIVATE_THING" --stdout-no-match "$PRIVATE_THING" 0 dumpEnvironmentUnsafe --skip-env PRIVATE_THING || return $?
+  assertExitCode --stdout-no-match "PRIVATE_THING" --stdout-no-match "$PRIVATE_THING" 0 dumpEnvironmentUnsafe --skip-env PRIVATE_THING || return $?
   # --show-skipped shows name not value
-  assertExitCode --line "$LINENO" --stdout-match "PRIVATE_THING" --stdout-no-match "$PRIVATE_THING" 0 dumpEnvironmentUnsafe --skip-env PRIVATE_THING --show-skipped || return $?
+  assertExitCode --stdout-match "PRIVATE_THING" --stdout-no-match "$PRIVATE_THING" 0 dumpEnvironmentUnsafe --skip-env PRIVATE_THING --show-skipped || return $?
 
   unset PRIVATE_THING
 }

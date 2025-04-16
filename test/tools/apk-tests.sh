@@ -12,7 +12,7 @@ testIsAlpine() {
 
   __mockValue BUILD_DEBUG
 
-  assertExitCode --line "$LINENO" --stdout-match "an Alpine system" 0 isAlpine --help || return $?
+  assertExitCode --stdout-match "an Alpine system" 0 isAlpine --help || return $?
 
   __mockValue BUILD_DEBUG "" --end
 }
@@ -22,11 +22,11 @@ testIsApkInstalled() {
 
   apkIsInstalled --help || return $?
   #  echo "${BASH_SOURCE[0]}:$LINENO"
-  assertExitCode --line "$LINENO" 0 apkIsInstalled --help || return $?
+  assertExitCode 0 apkIsInstalled --help || return $?
   #  echo "${BASH_SOURCE[0]}:$LINENO"
   if isAlpine; then
     #    echo "${BASH_SOURCE[0]}:$LINENO"
-    assertExitCode --line "$LINENO" 0 apkIsInstalled || return $?
+    assertExitCode 0 apkIsInstalled || return $?
     #    echo "${BASH_SOURCE[0]}:$LINENO"
   fi
   #  echo "${BASH_SOURCE[0]}:$LINENO"
@@ -37,12 +37,12 @@ testIsApkInstalled() {
 
 testAlpineContainer() {
   if whichExists docker; then
-    assertExitCode --line "$LINENO" 0 alpineContainer echo "FOO=\"foo\"" || return $?
+    assertExitCode 0 alpineContainer echo "FOO=\"foo\"" || return $?
     local value
 
     value=$(trimSpace "$(alpineContainer echo "FOO=\"foo\"")")
 
-    assertEquals --line "$LINENO" "$value" "FOO=\"foo\"" || return $?
+    assertEquals "$value" "FOO=\"foo\"" || return $?
   fi
   return 0
 }

@@ -19,7 +19,7 @@ testBashFunctionComment() {
 
   home=$(__catchEnvironment "$usage" buildHome) || return $?
 
-  assertExitCode --line "$LINENO" "${matches[@]}" 0 bashFunctionComment "$home/bin/build/tools/prompt/reload-changes.sh" reloadChanges || return $?
+  assertExitCode "${matches[@]}" 0 bashFunctionComment "$home/bin/build/tools/prompt/reload-changes.sh" reloadChanges || return $?
 }
 
 testDocumentation() {
@@ -90,8 +90,8 @@ testDocSections() {
   home=$(__environment buildHome) || return $?
   doc=$(__environment mktemp) || return $?
   __environment bashDocumentFunction "$home/bin/build/tools/git.sh" gitMainly "$home/bin/build/tools/documentation/__function.md" >"$doc" || return $?
-  assertFileContains --line "$LINENO" "$doc" 'No arguments' || return $?
+  assertFileContains "$doc" 'No arguments' || return $?
 
   __environment bashDocumentFunction "$home/bin/build/tools/git.sh" gitCommit "$home/bin/build/tools/documentation/__function.md" >"$doc" || return $?
-  assertFileContains --line "$LINENO" "$doc" '### Arguments' '--help' || return $?
+  assertFileContains "$doc" '### Arguments' '--help' || return $?
 }

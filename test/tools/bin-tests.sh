@@ -20,7 +20,7 @@ __testInstallInstallBuild() {
   assertDirectoryExists --line "$LINENO" "$targetDir" || return $?
   testBinary="$targetDir/install-bin-build.sh"
   assertExitCode --dump --line "$LINENO" 0 installInstallBuild --local "$targetDir" "$topDir" || return $?
-  assertFileExists --line "$LINENO" "$testBinary" || return $?
+  assertFileExists "$testBinary" || return $?
   marker=$(randomString)
   echo " # changed $marker" >>"$testBinary"
   if ! grep -q "$marker" "$testBinary"; then
@@ -33,7 +33,7 @@ __testInstallInstallBuild() {
 
   assertDirectoryDoesNotExist --line "$LINENO" "$topDir/bin/build" || return $?
 
-  assertExitCode --line "$LINENO" --stdout-match "zesk/build" --stdout-match "Installed" 0 "$testBinary" --mock "$BUILD_HOME/bin/build" || return $?
+  assertExitCode --stdout-match "zesk/build" --stdout-match "Installed" 0 "$testBinary" --mock "$BUILD_HOME/bin/build" || return $?
 
   if [ ! -d "$topDir/bin/build" ]; then
     find "$topDir" -type f
@@ -49,7 +49,7 @@ __testInstallInstallBuild() {
   # Do not use updated binary as behavior is unpredictable (this is the last version)
   __environment mv -f "$testBinary.backup" "$testBinary" || return $?
 
-  assertExitCode --line "$LINENO" --stdout-match "already installed" 0 "$testBinary" || return $?
+  assertExitCode --stdout-match "already installed" 0 "$testBinary" || return $?
 
   decorate success "install-bin-build.sh update was tested successfully"
   rm -rf "$topDir"
@@ -64,7 +64,7 @@ testMapBin() {
 
   expected="testgoob{foo}{bar}goob"
 
-  assertEquals --line "$LINENO" "$expected" "$actual" || return $?
+  assertEquals "$expected" "$actual" || return $?
 }
 
 testMapPortability() {
@@ -75,7 +75,7 @@ testMapPortability() {
   cp ./bin/build/map.sh "./random.$$/"
   export DUDE=ax
   export WILD=m
-  assertEquals --line "$LINENO" "$(echo "{WILD}{DUDE}i{WILD}u{WILD}" | ./random.$$/map.sh)" "maximum" || return $?
+  assertEquals "$(echo "{WILD}{DUDE}i{WILD}u{WILD}" | ./random.$$/map.sh)" "maximum" || return $?
   rm -rf "$tempDir"
   unset DUDE WILD
 }

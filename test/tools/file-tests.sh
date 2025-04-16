@@ -89,8 +89,8 @@ testFileMatches() {
   )
   invertedMatches=() && while read -r match; do invertedMatches+=("$match"); done < <(_invertMatches "${matches[@]}")
 
-  assertExitCode --line "$LINENO" "${matches[@]}" 0 fileMatches "$pattern" -- "${ex[@]+"${ex[@]}"}" -- - <"$matchFiles" || return $?
-  assertExitCode --line "$LINENO" "${invertedMatches[@]}" 0 fileNotMatches "$pattern" -- "${ex[@]+"${ex[@]}"}" -- - <"$matchFiles" || return $?
+  assertExitCode "${matches[@]}" 0 fileMatches "$pattern" -- "${ex[@]+"${ex[@]}"}" -- - <"$matchFiles" || return $?
+  assertExitCode "${invertedMatches[@]}" 0 fileNotMatches "$pattern" -- "${ex[@]+"${ex[@]}"}" -- - <"$matchFiles" || return $?
 
   # zulu exceptions
   pattern="zulu"
@@ -106,8 +106,8 @@ testFileMatches() {
   matches+=("${neverMatches[@]}")
   invertedMatches+=("${neverMatches[@]}")
 
-  assertExitCode --line "$LINENO" "${matches[@]}" 0 fileMatches "$pattern" -- "${ex[@]+"${ex[@]}"}" -- - <"$matchFiles" || return $?
-  assertExitCode --line "$LINENO" "${invertedMatches[@]}" 0 fileNotMatches "$pattern" -- "${ex[@]+"${ex[@]}"}" -- - <"$matchFiles" || return $?
+  assertExitCode "${matches[@]}" 0 fileMatches "$pattern" -- "${ex[@]+"${ex[@]}"}" -- - <"$matchFiles" || return $?
+  assertExitCode "${invertedMatches[@]}" 0 fileNotMatches "$pattern" -- "${ex[@]+"${ex[@]}"}" -- - <"$matchFiles" || return $?
 
   # zulu beginning of line
   pattern="^zulu"
@@ -122,8 +122,8 @@ testFileMatches() {
   )
   invertedMatches=() && while read -r match; do invertedMatches+=("$match"); done < <(_invertMatches "${matches[@]}")
 
-  assertExitCode --line "$LINENO" "${matches[@]}" 0 fileMatches "$pattern" -- "${ex[@]+"${ex[@]}"}" -- - <"$matchFiles" || return $?
-  assertExitCode --line "$LINENO" "${invertedMatches[@]}" 0 fileNotMatches "$pattern" -- "${ex[@]+"${ex[@]}"}" -- - <"$matchFiles" || return $?
+  assertExitCode "${matches[@]}" 0 fileMatches "$pattern" -- "${ex[@]+"${ex[@]}"}" -- - <"$matchFiles" || return $?
+  assertExitCode "${invertedMatches[@]}" 0 fileNotMatches "$pattern" -- "${ex[@]+"${ex[@]}"}" -- - <"$matchFiles" || return $?
 
   # zulu EOL
   pattern="zulu$"
@@ -138,8 +138,8 @@ testFileMatches() {
   )
   invertedMatches=() && while read -r match; do invertedMatches+=("$match"); done < <(_invertMatches "${matches[@]}")
 
-  assertExitCode --line "$LINENO" "${matches[@]}" 0 fileMatches "$pattern" -- "${ex[@]+"${ex[@]}"}" -- - <"$matchFiles" || return $?
-  assertExitCode --line "$LINENO" "${invertedMatches[@]}" 0 fileNotMatches "$pattern" -- "${ex[@]+"${ex[@]}"}" -- - <"$matchFiles" || return $?
+  assertExitCode "${matches[@]}" 0 fileMatches "$pattern" -- "${ex[@]+"${ex[@]}"}" -- - <"$matchFiles" || return $?
+  assertExitCode "${invertedMatches[@]}" 0 fileNotMatches "$pattern" -- "${ex[@]+"${ex[@]}"}" -- - <"$matchFiles" || return $?
 
   # Devops
   pattern="Devops"
@@ -154,8 +154,8 @@ testFileMatches() {
   )
   invertedMatches=() && while read -r match; do invertedMatches+=("$match"); done < <(_invertMatches "${matches[@]}")
 
-  assertExitCode --line "$LINENO" "${matches[@]}" 0 fileMatches "$pattern" -- "${ex[@]+"${ex[@]}"}" -- - <"$matchFiles" || return $?
-  assertExitCode --line "$LINENO" "${invertedMatches[@]}" 0 fileNotMatches "$pattern" -- "${ex[@]+"${ex[@]}"}" -- - <"$matchFiles" || return $?
+  assertExitCode "${matches[@]}" 0 fileMatches "$pattern" -- "${ex[@]+"${ex[@]}"}" -- - <"$matchFiles" || return $?
+  assertExitCode "${invertedMatches[@]}" 0 fileNotMatches "$pattern" -- "${ex[@]+"${ex[@]}"}" -- - <"$matchFiles" || return $?
 
   # Fancier RE
   pattern='set ["]\?-x'
@@ -170,8 +170,8 @@ testFileMatches() {
   )
   invertedMatches=() && while read -r match; do invertedMatches+=("$match"); done < <(_invertMatches "${matches[@]}")
 
-  assertExitCode --line "$LINENO" "${matches[@]}" 0 fileMatches "$pattern" -- "${ex[@]+"${ex[@]}"}" -- - <"$matchFiles" || return $?
-  assertExitCode --line "$LINENO" "${invertedMatches[@]}" 0 fileNotMatches "$pattern" -- "${ex[@]+"${ex[@]}"}" -- - <"$matchFiles" || return $?
+  assertExitCode "${matches[@]}" 0 fileMatches "$pattern" -- "${ex[@]+"${ex[@]}"}" -- - <"$matchFiles" || return $?
+  assertExitCode "${invertedMatches[@]}" 0 fileNotMatches "$pattern" -- "${ex[@]+"${ex[@]}"}" -- - <"$matchFiles" || return $?
 
   # Exclude everything
   pattern='.'
@@ -186,8 +186,8 @@ testFileMatches() {
   )
   invertedMatches=("${matches[@]}")
 
-  assertNotExitCode --line "$LINENO" "${matches[@]}" 0 fileMatches "$pattern" -- "${ex[@]+"${ex[@]}"}" -- - <"$matchFiles" || return $?
-  assertNotExitCode --line "$LINENO" "${invertedMatches[@]}" 0 fileNotMatches "$pattern" -- "${ex[@]+"${ex[@]}"}" -- - <"$matchFiles" || return $?
+  assertNotExitCode "${matches[@]}" 0 fileMatches "$pattern" -- "${ex[@]+"${ex[@]}"}" -- - <"$matchFiles" || return $?
+  assertNotExitCode "${invertedMatches[@]}" 0 fileNotMatches "$pattern" -- "${ex[@]+"${ex[@]}"}" -- - <"$matchFiles" || return $?
 
   # Include everything (blank files are skipped)
   pattern='.'
@@ -202,8 +202,8 @@ testFileMatches() {
   )
   invertedMatches=() && while read -r match; do invertedMatches+=("$match"); done < <(_invertMatches "${matches[@]}")
 
-  assertExitCode --line "$LINENO" "${matches[@]}" 0 fileMatches "$pattern" -- "${ex[@]+"${ex[@]}"}" -- - <"$matchFiles" || return $?
-  assertExitCode --line "$LINENO" "${invertedMatches[@]}" 0 fileNotMatches "$pattern" -- "${ex[@]+"${ex[@]}"}" -- - <"$matchFiles" || return $?
+  assertExitCode "${matches[@]}" 0 fileMatches "$pattern" -- "${ex[@]+"${ex[@]}"}" -- - <"$matchFiles" || return $?
+  assertExitCode "${invertedMatches[@]}" 0 fileNotMatches "$pattern" -- "${ex[@]+"${ex[@]}"}" -- - <"$matchFiles" || return $?
 }
 
 testLinkCreate() {
@@ -215,15 +215,15 @@ testLinkCreate() {
 
   target="wacky.$$"
   assertFileDoesNotExist --line "$LINENO" "$home/bin/build/$target" || return $?
-  assertExitCode --line "$LINENO" 0 linkCreate --help || return $?
-  assertExitCode --line "$LINENO" 0 linkCreate "$home/bin/build/tools.sh" "$target" || return $?
-  assertExitCode --line "$LINENO" 0 test -L "$home/bin/build/$target" || return $?
-  assertExitCode --line "$LINENO" 0 "$home/bin/build/$target" linkCreate "$home/bin/build/tools.sh" "$target.ALT" || return $?
-  assertExitCode --line "$LINENO" 0 test -L "$home/bin/build/$target.ALT" || return $?
-  assertExitCode --line "$LINENO" 0 "$home/bin/build/$target.ALT" linkCreate "$home/bin/build/tools.sh" "$target.FINAL" || return $?
-  assertExitCode --line "$LINENO" 0 test -L "$home/bin/build/$target.FINAL" || return $?
+  assertExitCode 0 linkCreate --help || return $?
+  assertExitCode 0 linkCreate "$home/bin/build/tools.sh" "$target" || return $?
+  assertExitCode 0 test -L "$home/bin/build/$target" || return $?
+  assertExitCode 0 "$home/bin/build/$target" linkCreate "$home/bin/build/tools.sh" "$target.ALT" || return $?
+  assertExitCode 0 test -L "$home/bin/build/$target.ALT" || return $?
+  assertExitCode 0 "$home/bin/build/$target.ALT" linkCreate "$home/bin/build/tools.sh" "$target.FINAL" || return $?
+  assertExitCode 0 test -L "$home/bin/build/$target.FINAL" || return $?
   assertNotExitCode --stderr-match "Can not link to another link" --line "$LINENO" 0 "$home/bin/build/$target.ALT" linkCreate "$home/bin/build/$target.FINAL" "$target.NoLinkyLinks" || return $?
-  assertExitCode --line "$LINENO" 0 test -L "$home/bin/build/$target.FINAL" || return $?
-  assertEquals --line "$LINENO" "$((0 + $(find "$home/bin/build" -name "wacky.*" | wc -l)))" "3" || return $?
+  assertExitCode 0 test -L "$home/bin/build/$target.FINAL" || return $?
+  assertEquals "$((0 + $(find "$home/bin/build" -name "wacky.*" | wc -l)))" "3" || return $?
   __environment rm -rf "$home/bin/build/$target*" || return $?
 }

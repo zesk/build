@@ -28,7 +28,7 @@ testDecorateBasics() {
     actual="$(decorate "$color")Bird, bird. bird is the word.$(decorate reset)"
     expected="$(decorate "$color" "Bird, bird. bird is the word.")"
 
-    if ! assertEquals --line "$LINENO" "$expected" "$actual"; then
+    if ! assertEquals "$expected" "$actual"; then
       dumpBinary "Expected" <<<"$expected"
       dumpBinary "Actual" <<<"$actual"
       return 1
@@ -55,7 +55,7 @@ testSimpleMarkdownToConsole() {
 
   actual="$(printf "%s" "$testString" | simpleMarkdownToConsole)"
 
-  if ! assertEquals --line "$LINENO" "$expected" "$actual" "$this:$LINENO"; then
+  if ! assertEquals "$expected" "$actual" "$this:$LINENO"; then
     printf "%s\n" "$expected" | dumpBinary "Expected"
     printf "%s\n" "$actual" | dumpBinary "Actual"
     return 1
@@ -66,7 +66,7 @@ testSimpleMarkdownToConsole() {
   BUILD_COLORS="$saveBC"
 
   expected="Code text is italic and bold"
-  assertEquals --line "$LINENO" "$actual" "$expected" || return $?
+  assertEquals "$actual" "$expected" || return $?
 }
 
 testColorComboTest() {

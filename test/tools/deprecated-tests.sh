@@ -18,8 +18,8 @@ testDeprecatedFind() {
   local home
 
   home=$(__environment buildHome) || return $?
-  assertExitCode --line "$LINENO" 0 deprecatedFind deprecatedIgnore --path "$home/test/example/deprecated/" oldFunction || return $?
-  assertExitCode --line "$LINENO" 1 deprecatedFind deprecatedIgnore --path "$home/test/example/deprecated/" newFunction || return $?
+  assertExitCode 0 deprecatedFind deprecatedIgnore --path "$home/test/example/deprecated/" oldFunction || return $?
+  assertExitCode 1 deprecatedFind deprecatedIgnore --path "$home/test/example/deprecated/" newFunction || return $?
 }
 
 # Coverage: deprecatedCannon
@@ -31,12 +31,12 @@ testDeprecatedCannon() {
   __environment cp -R "$home/test/example/deprecated/" "$tempDir/deprecated" || return $?
 
   local target="$tempDir/deprecated/hello.txt"
-  assertFileExists --line "$LINENO" "$target" || return $?
+  assertFileExists "$target" || return $?
 
   assertFileContains --line "$LINENO" "$target" "oldFunction" || return $?
   assertFileDoesNotContain --line "$LINENO" "$target" "newFunction" || return $?
 
-  assertExitCode --line "$LINENO" 1 deprecatedCannon --path "$tempDir" deprecatedIgnore oldFunction newFunction || return $?
+  assertExitCode 1 deprecatedCannon --path "$tempDir" deprecatedIgnore oldFunction newFunction || return $?
 
   assertFileContains --line "$LINENO" "$target" "newFunction" || return $?
   assertFileDoesNotContain --line "$LINENO" "$target" "oldFunction" || return $?

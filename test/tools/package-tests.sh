@@ -8,29 +8,29 @@
 testPackageAPI() {
   local ourTestBinary=ronn ourTestPackage=ronn
 
-  assertNotExitCode --line "$LINENO" 0 packageNeedRestartFlag || return $?
-  assertExitCode --line "$LINENO" 0 packageUpdate --force || return $?
-  assertExitCode --line "$LINENO" 0 packageNeedRestartFlag yes || return $?
-  assertExitCode --line "$LINENO" 0 packageNeedRestartFlag || return $?
-  assertExitCode --line "$LINENO" 0 packageNeedRestartFlag "" || return $?
-  assertNotExitCode --line "$LINENO" 0 packageNeedRestartFlag || return $?
+  assertNotExitCode 0 packageNeedRestartFlag || return $?
+  assertExitCode 0 packageUpdate --force || return $?
+  assertExitCode 0 packageNeedRestartFlag yes || return $?
+  assertExitCode 0 packageNeedRestartFlag || return $?
+  assertExitCode 0 packageNeedRestartFlag "" || return $?
+  assertNotExitCode 0 packageNeedRestartFlag || return $?
 
-  assertExitCode --line "$LINENO" 0 packageWhichUninstall "$ourTestBinary" "$ourTestPackage" || return $?
+  assertExitCode 0 packageWhichUninstall "$ourTestBinary" "$ourTestPackage" || return $?
   local installed
 
   IFS=$'\n' read -d '' -r -a installed < <(packageInstalledList) || :
   assertGreaterThan --line "$LINENO" "${#installed[@]}" 0 || return $?
-  assertNotExitCode --line "$LINENO" 0 inArray "$ourTestPackage" "${installed[@]}" || return $?
+  assertNotExitCode 0 inArray "$ourTestPackage" "${installed[@]}" || return $?
 
-  assertExitCode --line "$LINENO" 0 packageWhich --force "$ourTestBinary" "$ourTestPackage" || return $?
+  assertExitCode 0 packageWhich --force "$ourTestBinary" "$ourTestPackage" || return $?
 
   IFS=$'\n' read -d '' -r -a installed < <(packageInstalledList) || :
   assertGreaterThan --line "$LINENO" "${#installed[@]}" 0 || return $?
-  assertExitCode --line "$LINENO" 0 inArray "$ourTestPackage" "${installed[@]}" || return $?
+  assertExitCode 0 inArray "$ourTestPackage" "${installed[@]}" || return $?
 
-  assertExitCode --line "$LINENO" 0 packageManagerValid apk || return $?
-  assertExitCode --line "$LINENO" 0 packageManagerValid apt || return $?
-  assertExitCode --line "$LINENO" 0 packageManagerValid brew || return $?
-  assertNotExitCode --line "$LINENO" 0 packageManagerValid apt-get || return $?
-  assertExitCode --line "$LINENO" 0 packageManagerValid "$(packageManagerDefault)" || return $?
+  assertExitCode 0 packageManagerValid apk || return $?
+  assertExitCode 0 packageManagerValid apt || return $?
+  assertExitCode 0 packageManagerValid brew || return $?
+  assertNotExitCode 0 packageManagerValid apt-get || return $?
+  assertExitCode 0 packageManagerValid "$(packageManagerDefault)" || return $?
 }

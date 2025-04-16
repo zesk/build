@@ -77,17 +77,17 @@ testDockerEnvToBashPipe() {
 testDockerEnvFromBash() {
   local out err
 
-  assertExitCode --line "$LINENO" --stderr-ok 2 dockerEnvFromBashEnv ./test/example/bad.env || return $?
+  assertExitCode --stderr-ok 2 dockerEnvFromBashEnv ./test/example/bad.env || return $?
 
-  assertExitCode --line "$LINENO" --stdout-match "host=" --stdout-match "application=beanstalk" --stdout-match "uname=" 0 dockerEnvFromBashEnv ./test/example/bash.env || return $?
+  assertExitCode --stdout-match "host=" --stdout-match "application=beanstalk" --stdout-match "uname=" 0 dockerEnvFromBashEnv ./test/example/bash.env || return $?
 
   out=$(mktemp) || _environment "mktemp" || return $?
   err=$(mktemp) || _environment "mktemp" || return $?
 
   dockerEnvFromBashEnv ./test/example/bash.env >"$out" 2>"$err" || return 1
   dumpPipe "ERRORS dockerEnvFromBashEnv ./test/example/docker.env" <"$err"
-  assertEquals --line "$LINENO" 0 "$(fileSize "$err")" || return $?
-  assertFileContains --line "$LINENO" "$out" "host=" "today=" "uname=" || return $?
+  assertEquals 0 "$(fileSize "$err")" || return $?
+  assertFileContains "$out" "host=" "today=" "uname=" || return $?
 
   rm -f "$out" "$err" || :
 }
@@ -100,7 +100,7 @@ testAnyEnvToDockerEnv() {
 
   __environment anyEnvToDockerEnv "$testEnv" >"$testEnv.result" || return $?
   dumpPipe "Result - should be blank" <"$testEnv.result"
-  assertExitCode --line "$LINENO" 0 isEmptyFile "$testEnv.result" || return $?
+  assertExitCode 0 isEmptyFile "$testEnv.result" || return $?
 
   __environment cp "$home/test/example/bash.env" "$testEnv" || return $?
 
@@ -108,10 +108,10 @@ testAnyEnvToDockerEnv() {
   __environment anyEnvToDockerEnv "$testEnv" >"$testEnv.result" || return $?
   # as a pipe
   __environment anyEnvToDockerEnv >"$testEnv.result2" <"$testEnv" || return $?
-  assertExitCode --dump --line "$LINENO" 0 diff -w "$testEnv.result2" "$testEnv.result" || return $?
+  assertExitCode --dump 0 diff -w "$testEnv.result2" "$testEnv.result" || return $?
 
   printf -- "%s=%s\n" "NAME" "\"value\"" >"$testEnv"
-  assertExitCode --line "$LINENO" --stdout-match 'NAME=value' 0 anyEnvToDockerEnv "$testEnv" || return $?
+  assertExitCode --stdout-match 'NAME=value' 0 anyEnvToDockerEnv "$testEnv" || return $?
 
   rm -rf "$testEnv" "$testEnv.result" "$testEnv.result2"
 }
@@ -124,17 +124,17 @@ testAnyEnvToBashEnv() {
 
   __environment anyEnvToDockerEnv "$testEnv" >"$testEnv.result" || _environment "Failed @ $LINENO" || return $?
   __environment anyEnvToBashEnv "$testEnv" >"$testEnv.result" || _environment "Failed @ $LINENO" || return $?
-  assertExitCode --line "$LINENO" 0 isEmptyFile "$testEnv.result" || return $?
+  assertExitCode 0 isEmptyFile "$testEnv.result" || return $?
 
   __environment cp "$home/test/example/docker.env" "$testEnv" || return $?
 
   __environment anyEnvToBashEnv "$testEnv" >"$testEnv.result" || return $?
   __environment anyEnvToBashEnv >"$testEnv.result2" <"$testEnv" || return $?
 
-  assertExitCode --line "$LINENO" 0 diff -w "$testEnv.result2" "$testEnv.result" || return $?
+  assertExitCode 0 diff -w "$testEnv.result2" "$testEnv.result" || return $?
 
   printf -- "%s=%s\n" "NAME" "\"value\"" >"$testEnv"
-  assertExitCode --line "$LINENO" --stdout-match 'NAME=value' 0 anyEnvToDockerEnv "$testEnv" || return $?
+  assertExitCode --stdout-match 'NAME=value' 0 anyEnvToDockerEnv "$testEnv" || return $?
 
   rm -rf "$testEnv" "$testEnv.result" "$testEnv.result2" || :
 }
@@ -159,17 +159,17 @@ testEnvCommentHandling() {
   __environment printf -- "%s\n" "# Comment" "WORD=born" >"$testEnvDocker" || return $?
   __environment printf -- "%s\n" "# Comment" "WORD=\"born\"" >"$testEnvBash" || return $?
 
-  assertExitCode --line "$LINENO" 0 checkDockerEnvFile "$testEnvDocker" || return $?
-  assertNotExitCode --stderr-match "WORD=\"born\"" --line "$LINENO" 0 checkDockerEnvFile "$testEnvBash" || return $?
+  assertExitCode 0 checkDockerEnvFile "$testEnvDocker" || return $?
+  assertNotExitCode --stderr-match "WORD=\"born\"" 0 checkDockerEnvFile "$testEnvBash" || return $?
 
   for testFile in "$testEnvDocker" "$testEnvBash"; do
     #    statusMessage --last __echo anyEnvToBashEnv <"$testFile"
     #    statusMessage --last __echo anyEnvToDockerEnv <"$testFile"
-    assertExitCode --stdout-match "WORD=\"born\"" --stdout-match "# Comment" --line "$LINENO" 0 anyEnvToBashEnv "$testFile" || return $?
-    assertExitCode --stdout-match "WORD=born" --stdout-no-match "# Comment" --line "$LINENO" 0 anyEnvToDockerEnv "$testFile" || return $?
+    assertExitCode --stdout-match "WORD=\"born\"" --stdout-match "# Comment" 0 anyEnvToBashEnv "$testFile" || return $?
+    assertExitCode --stdout-match "WORD=born" --stdout-no-match "# Comment" 0 anyEnvToDockerEnv "$testFile" || return $?
   done
-  assertExitCode --stdout-match "WORD=\"born\"" --stdout-match "# Comment" --line "$LINENO" 0 dockerEnvToBash "$testEnvDocker" || return $?
-  assertExitCode --stdout-match "WORD=born" --stdout-no-match "# Comment" --line "$LINENO" 0 dockerEnvFromBashEnv "$testEnvBash" || return $?
+  assertExitCode --stdout-match "WORD=\"born\"" --stdout-match "# Comment" 0 dockerEnvToBash "$testEnvDocker" || return $?
+  assertExitCode --stdout-match "WORD=born" --stdout-no-match "# Comment" 0 dockerEnvFromBashEnv "$testEnvBash" || return $?
 
   __environment rm -rf "$testEnvBase" "$testEnvDocker" "$testEnvBash" || return $?
 }

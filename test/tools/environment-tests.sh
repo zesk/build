@@ -17,24 +17,24 @@ testDotEnvConfigure() {
   __environment mkdir -p "$tempDir" || return $?
   __environment muzzle pushd "$tempDir" || return $?
   decorate info "$(pwd)"
-  assertNotExitCode --line "$LINENO" --stderr-match "is not file" 0 environmentFileLoad .env --optional .env.local || return $?
+  assertNotExitCode --stderr-match "is not file" 0 environmentFileLoad .env --optional .env.local || return $?
 
   tempEnv="$tempDir/.env"
   __environment touch "$tempEnv" || return $?
   __environment environmentValueWrite TESTENVWORKS "$magic" >>"$tempEnv" || return $?
 
-  assertEquals --line "$LINENO" "" "${TESTENVWORKS-}" || return $?
-  assertEquals --line "$LINENO" "" "${TESTENVLOCALWORKS-}" || return $?
+  assertEquals "" "${TESTENVWORKS-}" || return $?
+  assertEquals "" "${TESTENVLOCALWORKS-}" || return $?
 
-  assertExitCode --leak TESTENVWORKS --line "$LINENO" 0 environmentFileLoad .env --optional .env.local "$tempDir" || return $?
+  assertExitCode --leak TESTENVWORKS 0 environmentFileLoad .env --optional .env.local "$tempDir" || return $?
   environmentFileLoad .env --optional .env.local "$tempDir" || return $?
 
   # Support no files
-  assertExitCode --line "$LINENO" 0 environmentFileLoad --optional .env.local.Never .env.whatever.local || return $?
+  assertExitCode 0 environmentFileLoad --optional .env.local.Never .env.whatever.local || return $?
 
-  assertEquals --line "$LINENO" "$magic" "${TESTENVWORKS-}" || return $?
+  assertEquals "$magic" "${TESTENVWORKS-}" || return $?
 
-  assertEquals --line "$LINENO" "" "${TESTENVLOCALWORKS-}" || return $?
+  assertEquals "" "${TESTENVLOCALWORKS-}" || return $?
 
   __environment environmentValueWrite TESTENVLOCALWORKS "$magic" >>"$tempEnv" || return $?
   __environment environmentValueWrite TESTENVWORKS "NEW-$magic" >>"$tempEnv" || return $?
@@ -42,10 +42,10 @@ testDotEnvConfigure() {
 
   #echo "PWD is $(pwd)"
   #environmentFileLoad --debug .env --optional .env.local || return $?
-  assertExitCode --line "$LINENO" 0 environmentFileLoad .env --optional .env.local || return $?
+  assertExitCode 0 environmentFileLoad .env --optional .env.local || return $?
 
-  assertEquals --line "$LINENO" "NEW-$magic" "${TESTENVWORKS-}" || return $?
-  assertEquals --line "$LINENO" "$magic" "${TESTENVLOCALWORKS-}" || return $?
+  assertEquals "NEW-$magic" "${TESTENVWORKS-}" || return $?
+  assertEquals "$magic" "${TESTENVLOCALWORKS-}" || return $?
 
   __environment muzzle popd || return $?
   __environment rm -rf "$tempDir" || return $?
@@ -62,7 +62,7 @@ testEnvironmentFileLoad() {
 
   __mockValue BUILD_DEBUG
 
-  assertExitCode --stderr-match "Requires at least one environmentFile" --stderr-match "Safely load an environment file" --line "$LINENO" 2 environmentFileLoad || return $?
+  assertExitCode --stderr-match "Requires at least one environmentFile" --stderr-match "Safely load an environment file" 2 environmentFileLoad || return $?
 
   __mockValue BUILD_DEBUG "" --end
 
@@ -76,26 +76,26 @@ testEnvironmentFileLoad() {
 
   envFile="$tempDir/.env"
 
-  assertNotExitCode --stderr-match "is not file" --line "$LINENO" 0 environmentFileLoad "$envFile" || return $?
+  assertNotExitCode --stderr-match "is not file" 0 environmentFileLoad "$envFile" || return $?
 
   [ -d "$tempDir" ] || _environment "$tempDir disappeared" || return $?
   __environment touch "$envFile" || return $?
-  assertExitCode --line "$LINENO" 0 environmentFileLoad "$envFile" || return $?
-  assertEquals --line "$LINENO" "${TESTVAR-}" "" || return $?
+  assertExitCode 0 environmentFileLoad "$envFile" || return $?
+  assertEquals "${TESTVAR-}" "" || return $?
 
   envFile="$tempDir/.env.local"
-  assertExitCode --line "$LINENO" 0 environmentFileLoad --optional .env.local || _environment "environmentFileLoad --optional .env.local failed" || return $?
+  assertExitCode 0 environmentFileLoad --optional .env.local || _environment "environmentFileLoad --optional .env.local failed" || return $?
 
   [ -d "$tempDir" ] || _environment "$tempDir disappeared" || return $?
   __environment touch "$envFile" || return $?
-  assertExitCode --line "$LINENO" 0 environmentFileLoad .env --optional .env.local || _environment "environmentFileLoad .env --optional .env.local failed with both .env" || return $?
+  assertExitCode 0 environmentFileLoad .env --optional .env.local || _environment "environmentFileLoad .env --optional .env.local failed with both .env" || return $?
 
   envFile="$tempDir/.env.$name"
   printf "%s\n" "$name=worked" >"$envFile"
 
-  assertEquals --line "$LINENO" "$(export "$name"=none && environmentFileLoad "$envFile" && printf "%s\n" "${!name-}")" "worked" || return $?
-  assertEquals --line "$LINENO" "$(export "$name"=none && environmentFileLoad --ignore TESTVAR "$envFile" && printf "%s\n" "${!name-}")" "none" || return $?
-  assertNotExitCode --stderr-match "secure value" --line "$LINENO" 0 environmentFileLoad --secure TESTVAR "$envFile" || return $?
+  assertEquals "$(export "$name"=none && environmentFileLoad "$envFile" && printf "%s\n" "${!name-}")" "worked" || return $?
+  assertEquals "$(export "$name"=none && environmentFileLoad --ignore TESTVAR "$envFile" && printf "%s\n" "${!name-}")" "none" || return $?
+  assertNotExitCode --stderr-match "secure value" 0 environmentFileLoad --secure TESTVAR "$envFile" || return $?
 
   unset TESTVAR
 
@@ -140,7 +140,7 @@ testEnvironmentVariables() {
     decorate error environmentVariables failed
     return 1
   fi
-  assertFileContains --line "$LINENO" "$e" BUILD_TEST_UNIQUE HOME PATH PWD TERM SHLVL || return $?
+  assertFileContains "$e" BUILD_TEST_UNIQUE HOME PATH PWD TERM SHLVL || return $?
   wrapLines "environmentVariables: $(decorate code)" "$(decorate reset)" <"$e"
   rm "$e"
 
@@ -163,7 +163,7 @@ testEnvironmentValueReadWrite() {
   __testEnvironmentValueReadWriteData | while read -r testName testValue; do
     __environment environmentValueWrite "$testName" "$testValue" >>"$foo" || return $?
     value=$(__environment environmentValueRead "$foo" "$testName" "*default*") || return $?
-    assertEquals --line "$LINENO" "$testValue" "$value" "Read write value changed" || return $?
+    assertEquals "$testValue" "$value" "Read write value changed" || return $?
   done
 }
 
@@ -180,23 +180,23 @@ testEnvironmentValueWriteArray() {
   )
 
   assertExitCode --stdout-match "NAME=()" 0 environmentValueWriteArray NAME || return $?
-  assertEquals --line "$LINENO" "NAME=([0]=\"\")" "$(environmentValueWriteArray NAME "")" || return $?
-  assertEquals --line "$LINENO" "NAME=([0]=\"One\" [1]=\"Two\")" "$(environmentValueWriteArray NAME "One" "Two")" || return $?
+  assertEquals "NAME=([0]=\"\")" "$(environmentValueWriteArray NAME "")" || return $?
+  assertEquals "NAME=([0]=\"One\" [1]=\"Two\")" "$(environmentValueWriteArray NAME "One" "Two")" || return $?
 
   decorate pair 20 envFile "$envFile"
   index=0
   declare -a restoredValue
   for testArrayText in "${testArrays[@]}"; do
     IFS=":" read -r -a testArray <<<"$testArrayText"
-    assertGreaterThan --line "$LINENO" ${#testArray[@]} 1 || return $?
+    assertGreaterThan ${#testArray[@]} 1 || return $?
     environmentValueWrite "STRING$index" "${testArray[@]}" >>"$envFile"
     environmentValueWriteArray "ARRAY$index" "${testArray[@]}" >>"$envFile"
     # dumpPipe envFile <"$envFile"
     restoredValue=() && while read -r item; do restoredValue+=("$item"); done < <(__environment environmentValueReadArray "$envFile" "ARRAY$index" || return $?)
-    assertEquals --line "$LINENO" "${#testArray[*]}" "${#restoredValue[*]}" || return $?
-    assertEquals --line "$LINENO" "${testArray[*]}" "${restoredValue[*]}" || return $?
+    assertEquals "${#testArray[*]}" "${#restoredValue[*]}" || return $?
+    assertEquals "${testArray[*]}" "${restoredValue[*]}" || return $?
     restoredValue=() && while read -r item; do restoredValue+=("$item"); done < <(__environment environmentValueReadArray "$envFile" "STRING$index" || return $?)
-    assertEquals --line "$LINENO" "${testArray[*]}" "${restoredValue[*]}" || return $?
+    assertEquals "${testArray[*]}" "${restoredValue[*]}" || return $?
     index=$((index + 1))
   done
 }
@@ -235,10 +235,10 @@ testEnvironmentNameValid() {
   local testValue
 
   while IFS="" read -r testValue; do
-    assertNotExitCode --line "$LINENO" 0 environmentVariableNameValid "$testValue" || return $?
+    assertNotExitCode 0 environmentVariableNameValid "$testValue" || return $?
   done < <(__testEnvironmentNameValidFailValues)
   while IFS="" read -r testValue; do
-    assertExitCode --line "$LINENO" 0 environmentVariableNameValid "$testValue" || return $?
+    assertExitCode 0 environmentVariableNameValid "$testValue" || return $?
   done < <(__testEnvironmentNameValidPassValues)
 }
 
@@ -250,17 +250,17 @@ testEnvironmentValueReadDefault() {
   __environment environmentValueWrite Greeting Hello >>"$envFile" || return $?
   __environment environmentValueWrite Target World >>"$envFile" || return $?
 
-  assertExitCode --line "$LINENO" --stdout-match Hello 0 environmentValueRead "$envFile" Greeting || return $?
+  assertExitCode --stdout-match Hello 0 environmentValueRead "$envFile" Greeting || return $?
 
-  assertExitCode --line "$LINENO" 1 environmentValueRead "$envFile" Salutation || return $?
-  assertExitCode --line "$LINENO" 0 environmentValueRead "$envFile" Salutation "" || return $?
-  assertExitCode --line "$LINENO" --stdout-match "Bonjour" 0 environmentValueRead "$envFile" Salutation "Bonjour" || return $?
+  assertExitCode 1 environmentValueRead "$envFile" Salutation || return $?
+  assertExitCode 0 environmentValueRead "$envFile" Salutation "" || return $?
+  assertExitCode --stdout-match "Bonjour" 0 environmentValueRead "$envFile" Salutation "Bonjour" || return $?
 
-  assertExitCode --line "$LINENO" --stdout-match World 0 environmentValueRead "$envFile" Target || return $?
+  assertExitCode --stdout-match World 0 environmentValueRead "$envFile" Target || return $?
 
-  assertExitCode --line "$LINENO" --stderr-ok 1 environmentValueRead "$envFile" TARGET || return $?
-  assertExitCode --line "$LINENO" 0 environmentValueRead "$envFile" TARGET "" || return $?
-  assertExitCode --line "$LINENO" --stdout-match "Paris" 0 environmentValueRead "$envFile" TARGET "Paris" || return $?
+  assertExitCode --stderr-ok 1 environmentValueRead "$envFile" TARGET || return $?
+  assertExitCode 0 environmentValueRead "$envFile" TARGET "" || return $?
+  assertExitCode --stdout-match "Paris" 0 environmentValueRead "$envFile" TARGET "Paris" || return $?
 
   __environment rm -rf "$envFile" || return $?
 }
@@ -280,12 +280,12 @@ testEnvironmentOutput() {
 
   __environment environmentOutput >>"$envFile" || return $?
 
-  assertFileContains --line "$LINENO" "$envFile" ZESK_BUILD_ROCKS= || return $?
-  assertFileDoesNotContain --line "$LINENO" "$envFile" "FAIL" || return $?
-  assertFileDoesNotContain --line "$LINENO" "$envFile" "HIDE_THIS" || return $?
-  assertExitCode --line "$LINENO" 0 grep -e "^ZESK_BUILD_ROCKS=" "$envFile" || return $?
+  assertFileContains "$envFile" ZESK_BUILD_ROCKS= || return $?
+  assertFileDoesNotContain "$envFile" "FAIL" || return $?
+  assertFileDoesNotContain "$envFile" "HIDE_THIS" || return $?
+  assertExitCode 0 grep -e "^ZESK_BUILD_ROCKS=" "$envFile" || return $?
   while read -r envName; do
-    assertExitCode --line "$LINENO" 0 grep -v -e "^$envName=" "$envFile" || return $?
+    assertExitCode 0 grep -v -e "^$envName=" "$envFile" || return $?
   done < <(environmentSecureVariables)
 
   unset ZESK_BUILD_ROCKS __HIDE_THIS_STUFF _HIDE_THIS_STUFF
