@@ -7,7 +7,8 @@
 # Docs: ./documentation/source/tools/prompt.md
 # Test: ./test/tools/prompt-tests.sh
 
-# Argument: module - Executable. Optional. Module to enable or disable. To disable, specify `-module`.
+# Argument: module - Executable. Optional. Module to enable or disable.
+# Argument: --remove module - Optional. Remove the module specified (should match exactly)
 # Argument: --reset - Flag. Optional. Remove all prompt modules.
 # Argument: --list - Flag. Optional. List the current modules.
 # Argument: --first - Flag. Optional. Add all subsequent modules first to the list.
@@ -69,7 +70,7 @@ bashPrompt() {
   export __BASH_PROMPT_PREVIOUS
   isArray __BASH_PROMPT_PREVIOUS || __BASH_PROMPT_PREVIOUS=()
 
-  local successPrompt="${__BASH_PROMPT_PREVIOUS[0]-}" failurePrompt="${__BASH_PROMPT_PREVIOUS[1]-}" label="${__BASH_PROMPT_PREVIOUS[2]-}"
+  local promptFormat="" successPrompt="${__BASH_PROMPT_PREVIOUS[0]-}" failurePrompt="${__BASH_PROMPT_PREVIOUS[1]-}" label="${__BASH_PROMPT_PREVIOUS[2]-}"
 
   # _IDENTICAL_ argument-case-header 5
   local __saved=("$@") __count=$#
@@ -102,6 +103,12 @@ bashPrompt() {
         shift
         promptFormat=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
         ;;
+      --remove)
+        shift
+        local module
+        module=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
+        __bashPromptRemove "$usage" "$module" || return $?
+        ;;
       --skip-terminal)
         skipTerminal=true
         ;;
@@ -124,11 +131,7 @@ bashPrompt() {
         addArguments+=("$argument")
         ;;
       *)
-        if [ "${argument#-}" != "$argument" ]; then
-          __bashPromptRemove "$usage" "${argument#-}" || return $?
-        else
-          addArguments+=("$argument")
-        fi
+        addArguments+=("$argument")
         ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
@@ -139,10 +142,10 @@ bashPrompt() {
     successPrompt=">"
   fi
   if [ -z "$failurePrompt" ] || $resetFlag; then
-    failurePrompt="§"
+    failurePrompt=" §" # Space for code
   fi
   if [ -z "$promptFormat" ] || $resetFlag; then
-    promptFormat="{label}{user}@{host} {directory} {code}{status} "
+    promptFormat="{label}{user}@{host} {directory} {return}{status} "
   fi
 
   $skipTerminal || [ -t 0 ] || __throwEnvironment "$usage" "Requires a terminal" || return $?
@@ -403,14 +406,21 @@ __bashPromptRemove() {
   local usage="$1" module="$2" current modules=() found=false
 
   __bashPromptSanity
+
   for current in "${__BASH_PROMPT_MODULES[@]+"${__BASH_PROMPT_MODULES[@]}"}"; do
+
     if [ "$module" = "$current" ]; then
       found=true
     else
       modules+=("$current")
     fi
   done
-  $found || __throwEnvironment "$usage" "$module was not found in modules: $(decorate each code "${__BASH_PROMPT_MODULES[@]+"${__BASH_PROMPT_MODULES[@]}"}")" || return $?
+
+  if ! $found; then
+    local moduleList
+    [ "${#__BASH_PROMPT_MODULES[@]}" -eq 0 ] && moduleList="$(decorate warning none)" || moduleList=$(decorate each code "${__BASH_PROMPT_MODULES[@]}")
+    __throwEnvironment "$usage" "$module was not found in modules: $moduleList" || return $?
+  fi
   __BASH_PROMPT_MODULES=("${modules[@]+"${modules[@]}"}")
 }
 
@@ -435,6 +445,7 @@ __bashPromptGeneratePS1() {
 # __BASH_PROMPT_PREVIOUS[3] - return code
 # __BASH_PROMPT_PREVIOUS[4] - return color
 # __BASH_PROMPT_PREVIOUS[5] - return text
+# __BASH_PROMPT_PREVIOUS[6] - return string
 
 __bashPromptHideEscapes() {
   printf -- "\[%s\]%s\[%s\]" "$1" "$2" "$3"
@@ -448,6 +459,7 @@ __bashPromptCode() {
   printf "%s %s\n" \
     "$" "$(__bashPromptHideEscapes "\${__BASH_PROMPT_PREVIOUS[4]-}" "\$" "$reset")" \
     "code" "$(__bashPromptHideEscapes "\${__BASH_PROMPT_PREVIOUS[4]-}" "\${__BASH_PROMPT_PREVIOUS[3]#0}" "$reset")" \
+    "return" "$(__bashPromptHideEscapes "\${__BASH_PROMPT_PREVIOUS[4]-}" "\${__BASH_PROMPT_PREVIOUS[6]}" "$reset")" \
     "status" "$(__bashPromptHideEscapes "\${__BASH_PROMPT_PREVIOUS[4]-}" "\${__BASH_PROMPT_PREVIOUS[5]-}" "$reset")" \
     "label" "\${__BASH_PROMPT_PREVIOUS[2]-}" \
     "user" "$(__bashPromptHideEscapes "${colors[2]-}" "\u" "$reset")" \
@@ -472,12 +484,17 @@ __bashPromptCommand() {
     __BASH_PROMPT_PREVIOUS+=("${colors[0]-}")
     # Index 5 - text
     __BASH_PROMPT_PREVIOUS+=("${__BASH_PROMPT_PREVIOUS[0]-}")
+    # Index 6 - code text
+    __BASH_PROMPT_PREVIOUS+=("")
   else
     # Index 4 - color
     __BASH_PROMPT_PREVIOUS+=("${colors[1]-}")
     # Index 5 - text
     __BASH_PROMPT_PREVIOUS+=("${__BASH_PROMPT_PREVIOUS[1]-}")
+    # Index 6 - code text
+    __BASH_PROMPT_PREVIOUS+=("$(exitString "$exitCode")")
   fi
+
   local debug=false
   ! buildDebugEnabled bashPrompt || debug=true
 

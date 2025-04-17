@@ -4,7 +4,7 @@
 #
 # NO DEPENDENCIES
 
-# IDENTICAL decorate 190
+# IDENTICAL decorate 202
 
 # Sets the environment variable `BUILD_COLORS` if not set, uses `TERM` to calculate
 #
@@ -168,20 +168,32 @@ _caseStyles() {
 # Example:     decorate each code "$@"
 # Requires: decorate printf
 __decorateExtensionEach() {
-  local code="$1" formatted=() item
+  local formatted=() item addIndex=false showCount=false index=0 prefix=""
 
-  shift || return 0
+  while [ $# -gt 0 ]; do
+    case "$1" in
+      --index) addIndex=true ;;
+      --count) showCount=true ;;
+      *) code="$1" && shift && break ;;
+    esac
+    shift
+  done
   if [ $# -eq 0 ]; then
     while read -r item; do
-      formatted+=("$(decorate "$code" "$item")")
+      ! $addIndex || prefix="$index:"
+      formatted+=("$prefix$(decorate "$code" "$item")")
+      index=$((index + 1))
     done
   else
     while [ $# -gt 0 ]; do
+      ! $addIndex || prefix="$index:"
       item="$1"
-      formatted+=("$(decorate "$code" "$item")")
+      formatted+=("$prefix$(decorate "$code" "$item")")
       shift
+      index=$((index + 1))
     done
   fi
+  ! $showCount || formatted+=("[$index]")
   IFS=" " printf -- "%s\n" "${formatted[*]-}"
 }
 

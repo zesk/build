@@ -69,20 +69,29 @@ __hostname() {
   hostname -f
 }
 
-# Date support for %3N helps with milliseconds
-__timestamp() {
-  local sec ms
-  sec=$(date '+%s:%3N')
-  local ms="${sec#*:}"
-  ms=${ms#0}
-  printf "%d\n" $((${sec%:*} * 1000 + ${ms#0}))
-}
-
 if isAlpine; then
+  # Options here are:
+  # - Bash 5 (no) `EPOCHREALTIME`
+  # - gnu date (no) via coreutils "%s%N"
+  # uptime hack here (yes)
+  __timestamp() {
+    local sec ms
+    IFS="." read -d ' ' -r upsec ms </proc/uptime || :
+    : "$upsec"
+    sec=$(date '+%s')
+    printf "%d%s0\n" "$ms" "$sec"
+  }
+
   __testPlatformName() {
     printf -- "%s\n" "alpine"
   }
 else
+  # Date support for %3N helps with milliseconds
+  __timestamp() {
+    local sec ms
+    date '+%s%3N'
+  }
+
   __testPlatformName() {
     printf -- "%s\n" "linux"
   }

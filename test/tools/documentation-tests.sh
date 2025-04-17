@@ -35,7 +35,7 @@ testDocumentation() {
   source "$testOutput" > >(outputTrigger --name "$testOutput" --verbose) || return $?
   set +a
   assertEquals "Assert two strings are not equal"$'\n' "${summary}" || return $?
-  assertEquals $'Assert two strings are not equal.\n\nIf this fails it will output an error and exit.\n\n' "${description}" || return $?
+  assertEquals $'Assert two strings are not equal.\n\nIf this fails it will output an error and exit.\n' "${description}" || return $?
 
   bashDocumentation_Extract "$(bashDocumentation_FindFunctionDefinition . assertEquals)" assertEquals >"$testOutput" || return $?
   set -a

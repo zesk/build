@@ -35,31 +35,31 @@ testBashPrompt() {
 
   # Remove A
   matches=(--stdout-no-match __testBashPromptA --stdout-match __testBashPromptB --stdout-match __testBashPromptC)
-  assertExitCode "${ll[@]}" "${matches[@]}" 0 bashPrompt --skip-terminal -__testBashPromptA --list || return $?
+  assertExitCode "${ll[@]}" "${matches[@]}" 0 bashPrompt --skip-terminal --remove __testBashPromptA --list || return $?
 
   # Remove C
   matches=(--stdout-no-match __testBashPromptA --stdout-match __testBashPromptB --stdout-no-match __testBashPromptC)
-  assertExitCode "${ll[@]}" "${matches[@]}" 0 bashPrompt --skip-terminal -__testBashPromptC --list || return $?
+  assertExitCode "${ll[@]}" "${matches[@]}" 0 bashPrompt --skip-terminal --remove __testBashPromptC --list || return $?
 
   # Remove J (?)
   matches=()
   matches+=(--stderr-match "__testBashPromptJ was not found in modules")
-  assertNotExitCode "${ll[@]}" "${matches[@]}" 0 bashPrompt --skip-terminal -__testBashPromptJ --list || return $?
+  assertNotExitCode "${ll[@]}" "${matches[@]}" 0 bashPrompt --skip-terminal --remove __testBashPromptJ --list || return $?
 
-  # bashPrompt --skip-terminal -__testBashPromptB --list || return $?
+  # bashPrompt --skip-terminal --remove __testBashPromptB --list || return $?
   # Remove B
   matches=(--stdout-no-match __testBashPromptA --stdout-no-match __testBashPromptB --stdout-no-match __testBashPromptC)
-  assertExitCode "${ll[@]}" "${matches[@]}" 0 bashPrompt --skip-terminal -__testBashPromptB --list || return $?
+  assertExitCode "${ll[@]}" "${matches[@]}" 0 bashPrompt --skip-terminal --remove __testBashPromptB --list || return $?
 
   matches=(--stdout-no-match __testBashPromptA --stdout-no-match __testBashPromptB --stdout-no-match __testBashPromptC)
   matches+=(--stderr-match "__testBashPromptJ was not found in modules")
   # Remove J (?)
-  assertNotExitCode "${ll[@]}" "${matches[@]}" 0 bashPrompt --skip-terminal -__testBashPromptJ --list || return $?
+  assertNotExitCode "${ll[@]}" "${matches[@]}" 0 bashPrompt --skip-terminal --remove __testBashPromptJ --list || return $?
 
   matches=(--stdout-no-match __testBashPromptA --stdout-no-match __testBashPromptB --stdout-no-match __testBashPromptC)
   matches+=(--stderr-match "__testBashPromptK was not found in modules")
   # Remove K (?)
-  assertNotExitCode "${ll[@]}" "${matches[@]}" 0 bashPrompt --skip-terminal -__testBashPromptK --list || return $?
+  assertNotExitCode "${ll[@]}" "${matches[@]}" 0 bashPrompt --skip-terminal --remove __testBashPromptK --list || return $?
 
   unset "${leaks[@]}"
 }

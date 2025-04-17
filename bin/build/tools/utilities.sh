@@ -40,10 +40,10 @@ incrementor() {
   local this="${FUNCNAME[0]}"
   local usage="_$this"
   local argument cacheDirectory
-  local name value persistence counterFile
+  local name value counterFile
 
   cacheDirectory=$(__catchEnvironment "$usage" buildCacheDirectory "$this/$$") || return $?
-  persistence="$(__catchEnvironment "$usage" requireDirectory "$cacheDirectory")" || return $?
+  cacheDirectory="$(__catchEnvironment "$usage" requireDirectory "$cacheDirectory")" || return $?
   name=""
   value=""
   # _IDENTICAL_ argument-case-header 5
@@ -58,7 +58,7 @@ incrementor() {
         return $?
         ;;
       --reset)
-        rm -rf "$persistence" || :
+        rm -rf "$cacheDirectory" || :
         return 0
         ;;
       *[^-_a-zA-Z0-9]*)
@@ -67,13 +67,13 @@ incrementor() {
       *)
         if isInteger "$argument"; then
           if [ -n "$name" ]; then
-            __incrementor "$persistence/$name" "$value"
+            __incrementor "$cacheDirectory/$name" "$value"
             name=
           fi
           value="$argument"
         else
           if [ -n "$name" ]; then
-            __incrementor "$persistence/$name" "$value"
+            __incrementor "$cacheDirectory/$name" "$value"
           fi
           name="$argument"
           [ -n "$name" ] || name=default
@@ -84,7 +84,7 @@ incrementor() {
     shift
   done
   [ -n "$name" ] || name=default
-  __incrementor "$persistence/$name" "$value"
+  __incrementor "$cacheDirectory/$name" "$value"
 }
 _incrementor() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"

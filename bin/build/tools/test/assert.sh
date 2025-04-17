@@ -37,7 +37,7 @@
 # Reviewed: 2023-11-12
 #
 assertEquals() {
-  _assertEqualsHelper "${FUNCNAME[0]}" --line-depth --success true "$@" || return $?
+  _assertEqualsHelper "${FUNCNAME[0]}" --success true "$@" || return $?
 }
 _assertEquals() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
@@ -69,7 +69,6 @@ _assertEquals() {
 # Example:     assertNotEquals "$(uname -s)" "FreeBSD" "Not compatible with FreeBSD"
 # Example:     Single quote break-s
 # Reviewed: 2023-11-12
-#
 assertNotEquals() {
   _assertEqualsHelper "${FUNCNAME[0]}" --success false "$@" || return $?
 }
@@ -588,7 +587,7 @@ _assertOutputDoesNotContain() {
 # Reviewed: 2023-11-12
 #
 assertFileContains() {
-  __assertFileContainsThis "${FUNCNAME[0]}" "$@" || return $?
+  __assertFileContainsThis "${FUNCNAME[0]}" --line-depth 2 "$@" || return $?
 }
 _assertFileContains() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"

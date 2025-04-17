@@ -71,7 +71,7 @@ __identicalCheckInsideLoopLineHandler() {
       countFile="$countFile.mapped"
     fi
     if ! diff -b -q "$countFile" "$compareFile" >/dev/null; then
-      statusMessage --last printf -- "%s%s: %s\n< %s\n> %s%s\n" "$(decorate info "$token")" "$(decorate error "Token code changed ($count): ($countFile)")" "$(decorate success "$(decorate file "$tokenFileName")")" "$(decorate warning "$(decorate file "$searchFile")")" "$(decorate code)" 1>&2
+      statusMessage --last printf -- "[%s] %s: %s\n< %s\n> %s%s\n" "$(decorate code "$token")" "$(decorate error "Token code changed ($count):")" "$(decorate success "$(decorate file "$tokenFileName")")" "$(decorate warning "$(decorate file "$searchFile")")" "$(decorate code)" 1>&2
       diff "$countFile" "$compareFile" | wrapLines "$(decorate subtle "diff:") $(decorate code)" "$(decorate reset)" || : 1>&2
       isBadFile=true
     else
@@ -102,7 +102,7 @@ _identicalCheckInsideLoop() {
 
   # State file
   local extendedPattern
-  extendedPattern="^[[:space:]]*$(quoteGrepPattern "$prefix")[[:space:]][a-zA-Z0-9_.][a-zA-Z0-9_.]*[[:space:]][[:space:]]*([0-9][0-9]*|EOF)"
+  extendedPattern="^\s*$(quoteGrepPattern "$prefix")\s\s*[-a-zA-Z0-9_.][-a-zA-Z0-9_.]*\s\s*(\S*)"
 
   if ! grep -n -E "$extendedPattern" <"$searchFile" >"$foundLines"; then
     __catchEnvironment "$usage" rm -rf "$foundLines" || return $?

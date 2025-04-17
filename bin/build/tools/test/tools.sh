@@ -49,6 +49,7 @@ testSuite() {
   local tags=() skipTags=() runner=()
   local beQuiet=false listFlag=false verboseMode=false continueFlag=false doStats=true showFlag=false showTags=false tapFile="" cleanFlag=false
   local testPaths=() messyOption="" runTestSuites=() matchTests=() failExecutors=()
+  local startTest=""
 
   set -eou pipefail
 
@@ -106,6 +107,12 @@ testSuite() {
         doStats=false
         ;;
       -c | --continue)
+        continueFlag=true
+        ;;
+      --start)
+        [ -z "$startTest" ] || __throwArgument "$usage" "$argument supplied twice" || return $?
+        shift
+        startTest="$(usageArgumentString "$usage" "$argument" "$1")" || return $?
         continueFlag=true
         ;;
       -1 | --one | --suite)
@@ -274,11 +281,17 @@ testSuite() {
   # Otherwise, delete the continue file.
   $continueFlag || [ ! -f "$continueFile" ] || __catchEnvironment "$usage" rm "$continueFile" || return $?
 
-  local startTest=""
   if $continueFlag; then
-    # If the continue file exists, the file contains the next test name on line 1
-    startTest="$([ ! -f "$continueFile" ] || head -n 1 "$continueFile")"
-    [ "$startTest" != "PASSED" ]
+    if [ -z "$startTest" ]; then
+      # If the continue file exists, the file contains the next test name on line 1
+      startTest="$([ ! -f "$continueFile" ] || head -n 1 "$continueFile")"
+      if [ "$startTest" = "PASSED" ]; then
+        statusMessage --last decorate success "All tests passed successfully. Next test run will start from the beginning."
+        __catchEnvironment "$usage" rm -rf "$continueFile" || return $?
+        __TEST_SUITE_CLEAN_EXIT=true
+        return 0
+      fi
+    fi
   fi
 
   [ "${#tests[@]}" -gt 0 ] || __throwEnvironment "$usage" "No tests found" || return $?

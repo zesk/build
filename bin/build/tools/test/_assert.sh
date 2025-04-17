@@ -121,7 +121,7 @@ _assertConditionHelper() {
   local this="$1" && shift
   local usage="_$this"
   local pairs=() debugFlag=false
-  local success=true file="" lineDepth="" lineNumber="" linePrefix="" displayName="" tester="" formatter="__resultFormatter"
+  local success=true file="" lineDepth="" lineNumber="" displayName="" tester="" formatter="__resultFormatter"
   local outputContains=() outputNotContains=() stderrContains=() stderrNotContains=()
   local doPlumber="" leaks=()
   local errorsOk=false dumpFlag=false dumpBinaryFlag=false expectedExitCode=0 code1=false
@@ -155,9 +155,14 @@ _assertConditionHelper() {
       --debug)
         debugFlag=true
         ;;
+      # IDENTICAL assert-line-argument-case 8
       --line)
         shift
         lineNumber="${1-}"
+        ;;
+      --line-depth)
+        shift
+        lineDepth="$(usageArgumentPositiveInteger "$usage" "$argument" "${1-}")" || return $?
         ;;
       --test)
         shift
@@ -200,13 +205,6 @@ _assertConditionHelper() {
         dumpBinaryFlag=true
         dumpFlag=true
         ;;
-      --line-depth)
-        shift
-        lineDepth="$(usageArgumentPositiveInteger "$usage" "$argument" "${1-}")" || return $?
-        #        decorate pair lineDepth "$lineDepth -> ${BASH_LINENO[lineDepth]}"
-        #        decorate each code "${FUNCNAME[@]}"
-        #        decorate each code "${BASH_LINENO[@]}"
-        ;;
       --plumber)
         doPlumber=true
         ;;
@@ -230,6 +228,8 @@ _assertConditionHelper() {
     shift
   done
 
+  # IDENTICAL lineDepthComputation 11
+  local linePrefix=""
   if [ -n "$lineDepth" ]; then
     local computeLine="${BASH_LINENO[lineDepth]}"
     if [ -z "$lineNumber" ]; then
@@ -239,6 +239,8 @@ _assertConditionHelper() {
     fi
   fi
   [ -z "$lineNumber" ] || linePrefix="$(decorate bold-magenta "Line $lineNumber: ")"
+  # -- end IDENTICAL lineDepthComputation
+
   if [ -z "$doPlumber" ]; then
     doPlumber=false
     if parseBoolean "$(buildEnvironmentGet "TEST_PLUMBER")"; then
@@ -358,13 +360,10 @@ __assertFileContainsHelper() {
   local success="$1"
   local this="$2"
   local argument
-  local lineNumber="" file=""
+  local lineNumber="" file="" displayName="" lineDepth=""
 
   shift 2
 
-  linePrefix=
-  lineNumber=
-  displayName=
   while [ $# -gt 0 ]; do
     argument="$1"
     case "$argument" in
@@ -377,9 +376,14 @@ __assertFileContainsHelper() {
         "$usage" 0
         return $?
         ;;
+      # IDENTICAL assert-line-argument-case 8
       --line)
         shift
         lineNumber="${1-}"
+        ;;
+      --line-depth)
+        shift
+        lineDepth="$(usageArgumentPositiveInteger "$usage" "$argument" "${1-}")" || return $?
         ;;
       *)
         if [ -z "$file" ]; then
@@ -393,19 +397,30 @@ __assertFileContainsHelper() {
     shift
   done
 
+  # IDENTICAL lineDepthComputation 11
   local linePrefix=""
+  if [ -n "$lineDepth" ]; then
+    local computeLine="${BASH_LINENO[lineDepth]}"
+    if [ -z "$lineNumber" ]; then
+      lineNumber="$computeLine"
+    elif [ "$lineNumber" != "$computeLine" ]; then
+      displayName="${displayName} (Computed line [$computeLine] != passed line [$lineNumber])"
+    fi
+  fi
   [ -z "$lineNumber" ] || linePrefix="$(decorate bold-magenta "Line $lineNumber: ")"
+  # -- end IDENTICAL lineDepthComputation
 
   displayName="${displayName:-"$file"}"
   [ -f "$file" ] || _assertFailure "$this" "$displayName is not a file \"$file\": $*" || return $?
 
-  local found args expected verb notVerb message displayName
+  local args verb notVerb
 
   verb=$(_choose "$success" "contains" "does not contain") || return $?
   notVerb=$(_choose "$success" "does not contain" "contains") || return $?
   args=("$@")
+
   while [ $# -gt 0 ]; do
-    expected="$1"
+    local expected="$1" found
     [ -n "$expected" ] || _assertFailure "$this" "Blank match passed: ${args[*]}" || return $?
     if grep -q -e "$(quoteGrepPattern "$expected")" "$file"; then
       found=true
@@ -416,6 +431,7 @@ __assertFileContainsHelper() {
       # shellcheck disable=SC2059
       _assertSuccess "$this" "$linePrefix$displayName $verb strings: ($(printf -- "\"$(decorate code "%s")\" " "${args[@]+${args[@]}}"))" || return $?
     else
+      local message
       message="$(printf -- "%s %s %s\n%s" "$linePrefix$displayName" "$notVerb string:" "$(decorate code "$expected")" "$(dumpPipe --tail "$displayName" <"$file")")"
       _assertFailure "$this" "$message" || return $?
     fi

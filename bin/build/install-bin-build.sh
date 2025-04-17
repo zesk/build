@@ -885,7 +885,7 @@ _isFunction() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# IDENTICAL decorate 190
+# IDENTICAL decorate 202
 
 # Sets the environment variable `BUILD_COLORS` if not set, uses `TERM` to calculate
 #
@@ -1049,20 +1049,32 @@ _caseStyles() {
 # Example:     decorate each code "$@"
 # Requires: decorate printf
 __decorateExtensionEach() {
-  local code="$1" formatted=() item
+  local formatted=() item addIndex=false showCount=false index=0 prefix=""
 
-  shift || return 0
+  while [ $# -gt 0 ]; do
+    case "$1" in
+      --index) addIndex=true ;;
+      --count) showCount=true ;;
+      *) code="$1" && shift && break ;;
+    esac
+    shift
+  done
   if [ $# -eq 0 ]; then
     while read -r item; do
-      formatted+=("$(decorate "$code" "$item")")
+      ! $addIndex || prefix="$index:"
+      formatted+=("$prefix$(decorate "$code" "$item")")
+      index=$((index + 1))
     done
   else
     while [ $# -gt 0 ]; do
+      ! $addIndex || prefix="$index:"
       item="$1"
-      formatted+=("$(decorate "$code" "$item")")
+      formatted+=("$prefix$(decorate "$code" "$item")")
       shift
+      index=$((index + 1))
     done
   fi
+  ! $showCount || formatted+=("[$index]")
   IFS=" " printf -- "%s\n" "${formatted[*]-}"
 }
 
@@ -1084,7 +1096,7 @@ __decorateExtensionQuote() {
 # Argument: code ... - UnsignedInteger. String. Exit code value to output.
 # stdout: exitCodeToken, one per line
 exitString() {
-  local k="" && while [ $# -gt 0 ]; do case "$1" in 1) k="environment" ;; 2) k="argument" ;; 97) k="assert" ;; 105) k="identical" ;; 108) k="leak" ;; 116) k="timeout" ;; 120) k="exit" ;; 253) k="internal" ;; 254) k="unknown" ;; *) k="[exitString unknown \"$1\"]" ;; esac && [ -n "$k" ] || k="$1" && printf "%s\n" "$k" && shift; done
+  local k="" && while [ $# -gt 0 ]; do case "$1" in 1) k="environment" ;; 2) k="argument" ;; 97) k="assert" ;; 105) k="identical" ;; 108) k="leak" ;; 116) k="timeout" ;; 120) k="exit" ;; 127) k="not-found" ;; 141) k="interrupt" ;; 253) k="internal" ;; 254) k="unknown" ;; *) k="[exitString unknown \"$1\"]" ;; esac && [ -n "$k" ] || k="$1" && printf "%s\n" "$k" && shift; done
 }
 
 # IDENTICAL _return 27

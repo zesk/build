@@ -308,7 +308,7 @@ __decorateExtensionPair() {
   if [ -z "$name" ]; then
     return 0
   fi
-  printf "%s %s\n" "$(decorate label "$(alignLeft "$width" "$name")")" "$(decorate each value "$@")"
+  printf "%s %s%s\n" "$(decorate label "$(alignLeft "$width" "$name")")" "$(decorate each value "$@")" "$(decorate reset)"
 }
 
 #

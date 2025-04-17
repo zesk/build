@@ -185,8 +185,9 @@ _commentArgumentSpecification() {
     ) || __throwEnvironment "$usage" "Loading $cacheFile" || return $?
   fi
   if [ ! -f "$argumentDirectory/@" ]; then
+    __catchEnvironment "$usage" printf "%s" "" >"$functionCache/flags" || return $?
     argumentId=1
-    while read -r -a argumentLine; do
+    while IFS=" " read -r -a argumentLine; do
       __catchEnvironment "$usage" _commentArgumentSpecificationParseLine "$functionCache" "$argumentId" "${argumentLine[@]+"${argumentLine[@]}"}" || return $?
       argumentId=$((argumentId + 1))
     done <"$argumentsFile"
@@ -198,6 +199,16 @@ _commentArgumentSpecification() {
 __commentArgumentSpecification() {
   # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+_commentArgumentSpecificationComplete() {
+  local usage="_${FUNCNAME[0]}" functionCache="$1" previous="$2" word="$3"
+
+  if [ -z "$previous" ]; then
+    local runner=(cat)
+    [ -z "$word" ] || runner=(grepSafe -e "$(quoteGrepPattern "$word")")
+    "${runner[@]}" "$functionCache/flags"
+  fi
 }
 
 __commentArgumentSpecification__defaults() {
@@ -232,24 +243,42 @@ __commentArgumentSpecificationDefaults() {
 _commentArgumentSpecificationParseLine() {
   local functionCache="${1-}" argumentId="${2-}"
   local argumentDirectory="${functionCache%/}/parsed"
-  local argument file
-  local required saveRequired argumentIndex="" argumentType argumentName argumentFinder argumentRepeat=false argumentDefault=""
   local argumentRemainder=false
 
   [ -d "$argumentDirectory" ] || _argument "$argumentDirectory is not a directory" || return $?
   isUnsignedInteger "$argumentId" || _argument "$argumentId is not an integer" || return $?
   shift 2
 
-  argumentName=
+  local argument file
+  local required saveRequired argumentType argumentName argumentDefault="" argumentFlag=false
+
+  local argumentName="" argumentIndex="" argumentFinder="" argumentRepeat=false doubleDashDelimit=false
+  local savedLine
+
+  # Parse "type" section which is everything up until the `-`
+  # Formats are:
+  # 1. `--flag -`
+  # 2. `argumentName -`
+  # 3. `argumentName... -`
+  # 4. `argumentName ... -`
+  # 4. `argumentName ... -- -`
+  # 5. `--flag argumentName ... -`
+  # 6. `--flag argumentOne argumentTwo ... -`
+  # 7. `--flag ... -- -`
   savedLine="$(decorate each code "$@")"
   while [ "$#" -gt 0 ]; do
-    argument="$1"
+    local argument="$1"
     case "$argument" in
-      --* | -[[:alpha:]]*)
+      --)
+        doubleDashDelimit="--"
+        ;;
+      --[[:alnum:]]* | -[[:alpha:]]*)
         argumentIndex=
+        argumentFlag=true
         argumentFinder="$argument"
         argumentName="${argument#-}"
         argumentName="${argumentName#-}"
+        argumentRepeat=false
         if [ "${argumentName%...}" != "${argumentName}" ]; then
           argumentRepeat=true
           argumentName="${argumentName%...}"
@@ -272,7 +301,7 @@ _commentArgumentSpecificationParseLine() {
         else
           argumentIndex=0
         fi
-        argumentFinder="#--$argumentIndex"
+        [ -n "$argumentFinder" ] || argumentFinder="#--$argumentIndex"
         printf "%d\n" "$argumentIndex" >"$argumentDirectory/index"
         argumentName="$argument"
         ;;
@@ -306,11 +335,14 @@ _commentArgumentSpecificationParseLine() {
     done
     {
       environmentValueWrite argumentName "$argumentName"
+      environmentValueWrite argumentName "$argumentName"
       environmentValueWrite argumentRepeat "$argumentRepeat"
       environmentValueWrite argumentType "$argumentType"
       environmentValueWrite argumentId "$argumentIndex"
       environmentValueWrite argumentRequired "$required"
       environmentValueWrite argumentFinder "$argumentFinder"
+      environmentValueWrite argumentDelimiter "$doubleDashDelimit"
+      environmentValueWrite argumentFlag "$argumentFlag"
       environmentValueWrite description "$description"
     } >"$argumentDirectory/$argumentFinder" || _argument "Unable to write $argumentDirectory/$argumentFinder" || return $?
     if $required; then
@@ -325,6 +357,9 @@ _commentArgumentSpecificationParseLine() {
   fi
   if $argumentRemainder; then
     printf "%s\n" true >"$functionCache/remainder"
+  fi
+  if $argumentFlag; then
+    printf "%s\n" "$argumentFinder" >>"$functionCache/flags"
   fi
 }
 __commentArgumentSpecificationParseLine() {
@@ -361,7 +396,7 @@ _commentArgumentTypeValid() {
       return 0
       ;;
     # Types
-    Boolean | PositiveInteger | Integer | UnsignedInteger | Number)
+    Flag | Boolean | PositiveInteger | Integer | UnsignedInteger | Number)
       return 0
       ;;
     # Functional

@@ -21,7 +21,6 @@ testIdenticalEofWithBracket() {
 testIdenticalCheckAndRepairMap() {
   local testPath home name
 
-
   home=$(__environment buildHome) || return $?
   testPath=$(__environment mktemp -d) || return $?
   decorate info "HOME is $home"
@@ -99,7 +98,7 @@ testIdenticalChecks() {
   assertExitCode --stdout-match Verified 0 identicalCheck "${identicalCheckArgs[@]}" --prefix '# eIDENTICAL' || return $?
 
   clearLine && decorate info "same file mismatch"
-  assertExitCode --dump --stderr-match 'Token code changed' "$identicalError" identicalCheck "${identicalCheckArgs[@]}" --prefix '# fIDENTICAL' || return $?
+  assertExitCode --stderr-match 'Token code changed' "$identicalError" identicalCheck "${identicalCheckArgs[@]}" --prefix '# fIDENTICAL' || return $?
 
   clearLine && decorate info "overlap failure"
   assertExitCode --stderr-match 'overlap' "$identicalError" identicalCheck "${identicalCheckArgs[@]}" --prefix '# aIDENTICAL' || return $?
@@ -112,10 +111,10 @@ testIdenticalChecks() {
   assertExitCode --stderr-match 'Single token' "$identicalError" identicalCheck "${identicalCheckArgs[@]}" --prefix '# xIDENTICAL' || return $?
 
   clearLine && decorate info "$(pwd) passing 3 files"
-  assertExitCode --dump 0 identicalCheck "${identicalCheckArgs[@]}" --prefix '# dIDENTICAL' || return $?
+  assertExitCode 0 identicalCheck "${identicalCheckArgs[@]}" --prefix '# dIDENTICAL' || return $?
 
   clearLine && decorate info "slash slash"
-  assertExitCode --stderr-match 'Token code changed' "$identicalError" identicalCheck "${identicalCheckArgs[@]}" --prefix '// Alternate heading is identical ' || return $?
+  assertExitCode --stderr-match 'Token code changed' "$identicalError" identicalCheck "${identicalCheckArgs[@]}" --prefix '// Alternate heading is identical' || return $?
 
   clearLine && decorate info "slash slash prefix mismatch is OK"
   assertExitCode 0 identicalCheck "${identicalCheckArgs[@]}" --prefix '// IDENTICAL' || return $?
@@ -123,7 +122,7 @@ testIdenticalChecks() {
   clearLine && decorate info "case match"
   assertExitCode 0 identicalCheck "${identicalCheckArgs[@]}" --prefix '// Identical' || return $?
 
-  assertNotExitCode --dump --stderr-match overlap 0 identicalCheck "${identicalCheckArgs[@]}" --prefix '# OVERLAP_IDENTICAL' || return $?
+  assertNotExitCode --stderr-match overlap 0 identicalCheck "${identicalCheckArgs[@]}" --prefix '# OVERLAP_IDENTICAL' || return $?
 }
 
 testIdenticalCheckSingles() {
