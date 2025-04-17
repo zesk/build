@@ -53,6 +53,7 @@ isNumber() {
 # Usage: {fn} argument ...
 # Exit Code: 0 - if it is a signed integer
 # Exit Code: 1 - if it is not a signed integer
+# Argument: value - EmptyString. The value to test.
 # Credits: F. Hauri - Give Up GitHub (isuint_Case)
 # Source: https://stackoverflow.com/questions/806906/how-do-i-test-if-a-variable-is-a-number-in-bash
 #
@@ -65,7 +66,7 @@ isInteger() {
 
 # Test if all arguments are callable as a command
 # Usage: {fn} string0 [ string1 ... ]
-# Argument: string - Required. Path to binary to test if it is executable.
+# Argument: string - Required. EmptyString. Path to binary to test if it is executable.
 # If no arguments are passed, returns exit code 1.
 # Exit code: 0 - All arguments are callable as a command
 # Exit code: 1 - One or or more arguments are callable as a command
@@ -77,6 +78,7 @@ isCallable() {
 }
 
 # True-ish
+# Argument: value ... - EmptyString. One or more values to test.
 # Usage: {fn} value ...
 # Succeeds when all arguments are "true"-ish
 isTrue() {

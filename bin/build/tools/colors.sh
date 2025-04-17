@@ -331,19 +331,27 @@ clearLine() {
 
 # Outputs a line and fills the remainder with space
 plasterLines() {
+  local usage="_${FUNCNAME[0]}"
+
   local line curX curY rows character=" "
-  IFS=$'\n' read -r -d '' _ curY < <(cursorGet)
-  rows=$(consoleRows)
-  columns=$(consoleColumns)
+  IFS=$'\n' read -r -d '' curX curY < <(cursorGet) || :
+  isUnsignedInteger "$curX" || __throwEnvironment "$usage" "cursorGet returned $curX $curY" || return $?
+  isUnsignedInteger "$curY" || __throwEnvironment "$usage" "cursorGet returned $curX $curY" || return $?
+  rows=$(__catchEnvironment "$usage" consoleRows) || return $?
+  columns=$(__catchEnvironment "$usage" consoleColumns) || return $?
   while IFS="" read -r line; do
-    cursorSet 1 "$curY"
+    __catchEnvironment "$usage" cursorSet 1 "$curY" || return $?
     printf "%s" "$line"
-    IFS=$'\n' read -r -d '' curX _ < <(cursorGet)
+    IFS=$'\n' read -r -d '' curX _ < <(cursorGet) || :
     printf "%s" "$(repeat $((columns - curX)) "$character")"
     curY=$((curY + 1))
     [ $curY -le "$rows" ] || break
   done
   printf "\n"
+}
+_plasterLines() {
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Output a status message

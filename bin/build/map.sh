@@ -313,7 +313,7 @@ usageArgumentString() {
   printf "%s\n" "$1"
 }
 
-# IDENTICAL decorate 202
+# IDENTICAL decorate 207
 
 # Sets the environment variable `BUILD_COLORS` if not set, uses `TERM` to calculate
 #
@@ -476,6 +476,8 @@ _caseStyles() {
 # Also supports formatting input lines instead (on the same line)
 # Example:     decorate each code "$@"
 # Requires: decorate printf
+# Argument: --index - Flag. Optional. Show the index of each item before with a colon. `0:first 1:second` etc.
+# Argument: --count - Flag. Optional. Show the count of the items at the end in brackets `[11]`.
 __decorateExtensionEach() {
   local formatted=() item addIndex=false showCount=false index=0 prefix=""
 
@@ -483,16 +485,19 @@ __decorateExtensionEach() {
     case "$1" in
       --index) addIndex=true ;;
       --count) showCount=true ;;
+      --arguments) showCount=true ;;
       *) code="$1" && shift && break ;;
     esac
     shift
   done
   if [ $# -eq 0 ]; then
-    while read -r item; do
-      ! $addIndex || prefix="$index:"
-      formatted+=("$prefix$(decorate "$code" "$item")")
-      index=$((index + 1))
-    done
+    if read -t 0; then
+      while read -r item; do
+        ! $addIndex || prefix="$index:"
+        formatted+=("$prefix$(decorate "$code" "$item")")
+        index=$((index + 1))
+      done
+    fi
   else
     while [ $# -gt 0 ]; do
       ! $addIndex || prefix="$index:"

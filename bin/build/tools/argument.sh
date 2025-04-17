@@ -206,8 +206,18 @@ _commentArgumentSpecificationComplete() {
 
   if [ -z "$previous" ]; then
     local runner=(cat)
-    [ -z "$word" ] || runner=(grepSafe -e "$(quoteGrepPattern "$word")")
+    [ -z "$word" ] || runner=(grepSafe -e "^$(quoteGrepPattern "$word")")
     "${runner[@]}" "$functionCache/flags"
+  elif [ -f "$functionCache/parsed/$previous" ]; then
+    local argumentType
+    if argumentType=$(environmentValueRead "$functionCache/parsed/$previous" "argumentType"); then
+      local completionFunction="__completionType$argumentType"
+      if isFunction "$completionFunction"; then
+        "$completionFunction" "$word"
+      else
+        printf "%s\n" "noCompletion:$argumentType"
+      fi
+    fi
   fi
 }
 
@@ -335,7 +345,6 @@ _commentArgumentSpecificationParseLine() {
     done
     {
       environmentValueWrite argumentName "$argumentName"
-      environmentValueWrite argumentName "$argumentName"
       environmentValueWrite argumentRepeat "$argumentRepeat"
       environmentValueWrite argumentType "$argumentType"
       environmentValueWrite argumentId "$argumentIndex"
@@ -352,7 +361,7 @@ _commentArgumentSpecificationParseLine() {
       argumentDefault=false
     fi
     if [ -n "$argumentDefault" ]; then
-      __environment environmentValueWrite "$argumentName" "$argumentDefault" >>"$(__commentArgumentSpecification__defaults "$functionCache")" || return $?
+      __environment environmentValueWrite "${argumentName/-/_}" "$argumentDefault" >>"$(__commentArgumentSpecification__defaults "$functionCache")" || return $?
     fi
   fi
   if $argumentRemainder; then

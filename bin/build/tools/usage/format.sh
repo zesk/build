@@ -30,6 +30,7 @@
 # Argument: exitCode - Integer. Required. The exit code of the function prior to showing usage
 # Argument: ... - String. Any additional description - output directly.
 # Requires: exitString __throwArgument trimSpace usageArgumentUnsignedInteger __throwArgument decorate printf
+# BUILD_DEBUG: usage - For all `--help` and any function which uses `usageTemplate` to output documentation (upon error), the stack will be displayed
 usageTemplate() {
   local usage="_${FUNCNAME[0]}" __saved=("$@")
 

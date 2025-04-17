@@ -8,6 +8,7 @@
 #
 # Source-Hook: project-activate
 # Source-Hook: project-deactivate
+# BUILD_DEBUG: reloadChanges - `bashPromptModule_reloadChanges` will show debugging information
 bashPromptModule_reloadChanges() {
   local usage="_return"
   local home removeSources=() cacheFile debug=false

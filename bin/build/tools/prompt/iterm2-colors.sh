@@ -16,6 +16,7 @@
 #
 # Example:     bashPrompt --last bashPromptModule_iTerm2Colors
 # Requires: buildHome statusMessage buildEnvironmentGetDirectory requireDirectory cachedShaPipe decorate buildDebugEnabled iTerm2SetColors consoleConfigureColorMode
+# BUILD_DEBUG: iterm2-colors - When `bashPromptModule_iTerm2Colors` is enabled, will show colors and how they are applied
 bashPromptModule_iTerm2Colors() {
   local debug=false home
 

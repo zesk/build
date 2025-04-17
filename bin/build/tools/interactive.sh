@@ -277,6 +277,8 @@ loopExecute() {
 
   local loopCallable="" sleepDelay=10 title="" until=()
 
+  bashDebugInterruptFile --error --interrupt
+
   # _IDENTICAL_ argument-case-header 5
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
@@ -317,7 +319,6 @@ loopExecute() {
   [ ${#until[@]} -gt 0 ] || until=("0")
 
   local done=false exitCode=0 outputBuffer statusLine rowCount outsideColor
-
   outsideColor="code"
   outputBuffer=$(fileTemporaryName "$usage") || return $?
   iterations=1
@@ -343,6 +344,7 @@ loopExecute() {
     start=$(timingStart) || return $?
     showRows=$((rowCount - saveY))
     exitCode=0
+    set +e +u +o pipefail
     if [ $iterations = 1 ]; then
       "$loopCallable" "$@" 2>&1 || exitCode=$?
     else
@@ -369,7 +371,7 @@ loopExecute() {
       bigText "Success"
       done=true
     else
-      __catchEnvironment "$usage" boxedHeading --outside "$outsideColor" --inside "$outsideColor" "$title $(decorate orange "(looping)")" | plasterLines || return $?
+      __catchEnvironment "$usage" boxedHeading --outside "$outsideColor" --inside "$outsideColor" "$title $(decorate orange "(looping)")" || echo "EXIT CODE: $?"
       printf "%s\n" "$statusLine" | plasterLines || return $?
       (
         tail -n "$showRows" <"$outputBuffer"
@@ -646,8 +648,8 @@ interactiveCountdown() {
   [ -z "$prefix" ] || prefix="$prefix "
 
   while [ "$now" -lt "$end" ]; do
-    "${runner[@]}" "$(printf "%s%s" "$(decorate info "$prefix")" "$(decorate value " $((counter / 1000)) ")")"
-    sleep 1
+    __catchEnvironment "$usage" "${runner[@]}" "$(printf "%s%s" "$(decorate info "$prefix")" "$(decorate value " $((counter / 1000)) ")")" || return $?
+    sleep 1 || __throwEnvironment "$usage" "Interrupted" || return $?
     now=$(timingStart) || return $?
     counter=$((end - now))
   done

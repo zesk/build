@@ -4,19 +4,25 @@
 [⬅ Parent ](../index.md)
 <hr />
 
-{debuggingStack}
+## Debugging 
+
+The global `BUILD_DEBUG` can be set to a comma-delimited list of values to enable debugging for areas of Zesk Build.
+
+Known tags are:
+
+FunctionAttributeList: BUILD_DEBUG 
+
 {buildDebugEnabled}
 {buildDebugStart}
 {buildDebugStop}
+
+## Bash Debug
+
 {isBashDebug}
 {isErrorExit}
-{dumpEnvironmentUnsafe}
-{dumpEnvironment}
-{dumpPipe}
-{dumpBinary}
-{dumpFile} 
-{dumpEnvironmentSafe}
-{dumpLoadAverages}
+
+## Debugging tools
+
 {plumber}
 {housekeeper}
 {outputTrigger}

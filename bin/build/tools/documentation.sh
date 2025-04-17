@@ -26,6 +26,7 @@ usageDocument() {
 #
 # Simplifies documentation and keeps it with the code.
 #
+# BUILD_DEBUG: fast-usage - `usageDocumentComplex` does not output formatted help for performance reasons
 usageDocumentComplex() {
   local usage="_${FUNCNAME[0]}"
 

@@ -11,6 +11,7 @@
 # Actual implementation of `hookRun` and `hookRunOptional`
 # See: hookRun
 #
+# BUILD_DEBUG: hook - `hookRun` and `hookSource` and optional versions of the same functions will output additional debugging information
 __hookRunner() {
   local usage="${1-}" && shift
 

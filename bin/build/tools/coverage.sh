@@ -132,7 +132,7 @@ __bashCoverageMarker() {
   export BUILD_HOME
   local source=${BASH_SOURCE[1]} home="${BUILD_HOME%/}/" command="${BASH_COMMAND//$'\n'/\n}"
   source="${source#"$home"}"
-  printf -- "%s:%d %s\n" "$source" "${BASH_LINENO[0]}" "$command" >>"$1"
+  printf -- "%s:%s %s %s\n" "$source" "${BASH_LINENO[1]}" "${FUNCNAME[1]}" "$command" >>"$1"
   # debuggingStack >>"$1.stack" || return $?
 }
 ___bashCoverageMarker() {
