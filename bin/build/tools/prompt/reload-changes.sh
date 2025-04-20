@@ -118,7 +118,7 @@ reloadChanges() {
         ;;
       --stop)
         # If not found we do not care
-        muzzle bashPrompt -bashPromptModule_reloadChanges 2>&1 || :
+        muzzle bashPrompt --remove bashPromptModule_reloadChanges 2>&1 || :
         if cacheFile="$(__reloadChangesCacheFile "$usage")"; then
           __catchEnvironment "$usage" rm -rf "$cacheFile" || return $?
         fi
