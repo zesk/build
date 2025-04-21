@@ -159,7 +159,7 @@ __installPackageConfiguration() {
   _installRemotePackage "$rel" "bin/build" "install-bin-build.sh" --version-function __installBinBuildVersion --url-function __installBinBuildURL --check-function __installBinBuildCheck --name "Zesk Build" "$@"
 }
 
-# IDENTICAL _installRemotePackage 334
+# IDENTICAL _installRemotePackage 347
 
 # Installs {name} in a local project directory if not installed. Also
 # will overwrite {source} with the latest version after installation.
@@ -375,19 +375,39 @@ _installRemotePackage() {
   __installRemotePackageGitCheck "$applicationHome" "$packagePath" || :
   message="$message (local)$binName"
   printf -- "%s\n" "$message"
-  __installRemotePackageLocal "$installPath/$packageInstallerName" "$myBinary" "$relative"
 
-  local installer lastExit=0 exitCode=0
-  for installer in "${installers[@]+"${installers[@]}"}"; do
-    [ -f "$installer" ] || __throwEnvironment "$usage" "$installer is missing" || return $?
-    [ -x "$installer" ] || __throwEnvironment "$usage" "$installer is not executable" || return $?
-    __catchEnvironment "$usage" "$installer" 2>&1 || lastExit=$?
-    if [ $lastExit -gt 0 ]; then
-      printf -- "%s\n" "Installer $(decorate code "$installer") failed [$(decorate error "$lastExit")]"
-      exitCode=$lastExit
+  local lastExit=0
+
+  if [ "${#installers[@]}" -gt 0 ]; then
+    local installer lastExit=0 installerLog
+
+    installerLog=$(fileTemporaryName "$usage") || return $?
+
+    for installer in "${installers[@]}"; do
+      if [ ! -f "$installer" ]; then
+        __throwEnvironment "$usage" "$installer is missing" || exitCode=$?
+        continue
+      fi
+      if [ ! -x "$installer" ]; then
+        __throwEnvironment "$usage" "$installer is not executable" || exitCode=$?
+        continue
+      fi
+      decorate info "Running secondary installer $(decorate code "$installer") ..."
+      __catchEnvironment "$usage" "$installer" >"$installerLog" 2>&1 || lastExit=$?
+      if [ $lastExit -gt 0 ]; then
+        printf -- "%s\n" "Installer $(decorate code "$installer") failed [$(decorate error "$lastExit")]" 1>&2
+        cat "$installerLog" 1>&2 || :
+        printf -- "" >"$installerLog" || :
+        exitCode=$lastExit || :
+      fi
+    done
+    rm -f "$installerLog" || :
+    if [ "$exitCode" != 0 ]; then
+      return "$exitCode"
     fi
-  done
-  return $exitCode
+  fi
+
+  __installRemotePackageLocal "$installPath/$packageInstallerName" "$myBinary" "$relative"
 }
 
 # Error handler for _installRemotePackage
@@ -480,19 +500,12 @@ __installRemotePackageGitCheck() {
 # Requires: _environment isUnsignedInteger cat _clean
 __installRemotePackageLocal() {
   local source="$1" myBinary="$2" relTop="$3"
-  local log="$myBinary.$$.log"
   {
     grep -v -e '^__installPackageConfiguration ' <"$source"
     printf "%s %s \"%s\"\n" "__installPackageConfiguration" "$relTop" '$@'
   } >"$myBinary.$$"
   chmod +x "$myBinary.$$" || _environment "chmod +x failed" || return $?
-  "$myBinary.$$" --replace "$myBinary" >"$log" 2>&1 &
-  local pid=$!
-  if ! isUnsignedInteger "$pid"; then
-    _environment "Unable to run $myBinary.$$" || return $?
-  fi
-  wait "$pid" || _environment "$(printf "%s\n%s\n" "install log failed: $pid" "$(cat "$log")")" || _clean $? "$log" || return $?
-  _clean 0 "$log" || return $?
+  exec "$myBinary.$$" --replace "$myBinary"
 }
 
 # IDENTICAL versionSort 51
