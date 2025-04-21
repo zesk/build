@@ -194,8 +194,11 @@ bashPrompt() {
   else
     PROMPT_COMMAND="$theCommand"
   fi
+  local colors=()
+  IFS=":" read -r -a colors <<<"${BUILD_PROMPT_COLORS-}"
+
   isArray __BASH_PROMPT_PREVIOUS || __BASH_PROMPT_PREVIOUS=()
-  __BASH_PROMPT_PREVIOUS=("$successPrompt" "$failurePrompt" "$label" 0)
+  __BASH_PROMPT_PREVIOUS=("$successPrompt" "$failurePrompt" "$label" 0 "${colors[0]}" "$successPrompt" "")
   PS1="$(__bashPromptGeneratePS1 "$promptFormat")"
 }
 _bashPrompt() {

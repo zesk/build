@@ -269,12 +269,17 @@ _installRemotePackage() {
   printf -- "%s\n" "$message"
   __installRemotePackageLocal "$installPath/$packageInstallerName" "$myBinary" "$relative"
 
-  local installer
+  local installer lastExit=0 exitCode=0
   for installer in "${installers[@]+"${installers[@]}"}"; do
     [ -f "$installer" ] || __throwEnvironment "$usage" "$installer is missing" || return $?
     [ -x "$installer" ] || __throwEnvironment "$usage" "$installer is not executable" || return $?
-    __catchEnvironment "$usage" "$installer" || return $?
+    __catchEnvironment "$usage" "$installer" 2>&1 || lastExit=$?
+    if [ $lastExit -gt 0 ]; then
+      printf -- "%s\n" "Installer $(decorate code "$installer") failed [$(decorate error "$lastExit")]"
+      exitCode=$lastExit
+    fi
   done
+  return $exitCode
 }
 
 # Error handler for _installRemotePackage
