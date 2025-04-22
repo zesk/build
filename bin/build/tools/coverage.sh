@@ -303,7 +303,7 @@ __bashCoverageReportConvertFiles() {
           lineClasses+=(uncovered)
         fi
         content=$(line_classes="${lineClasses[*]}" content="$content" index="$index" extra="$extra" mapEnvironment "${lineTemplateVariables[@]}" <"$lineTemplate")
-        content=$(wrapLines "        " "" <<<"$content")
+        content=$(decorate wrap "        " "" <<<"$content")
         printf -- "%s\n" "$content" | tee "$dataPath/$index.cached" >>"$lineContentFile"
       else
         cat "$dataPath/$index.cached" >>"$lineContentFile"

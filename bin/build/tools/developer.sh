@@ -8,7 +8,7 @@
 # Announce a list of functions now available
 developerAnnounce() {
   local usage="_${FUNCNAME[0]}"
-
+  local skipItems=()
   local debugFlag=false
 
   # _IDENTICAL_ argument-case-header 5
@@ -33,6 +33,7 @@ developerAnnounce() {
     shift
   done
 
+  IFS=$'\n' read -r -d "" -a skipItems < <(environmentSecureVariables)
   local aa=() ff=() types=() unknowns=() item itemType
 
   while read -r item; do
@@ -43,6 +44,7 @@ developerAnnounce() {
       alias) aa+=("$item") ;;
       function) ff+=("$item") ;;
       *)
+        ! inArray "$item" "${skipItems[@]}" || continue
         if muzzle isType "$item"; then
           local message
           message="$(decorate info "$(decorate value "$item") is type $(isType "$item" | decorate each code) (item $itemType)")"

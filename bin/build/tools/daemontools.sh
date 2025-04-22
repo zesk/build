@@ -494,7 +494,7 @@ daemontoolsManager() {
     done
     # Does this work?
     if ! sleep "$intervalSeconds"; then
-      statusMessage --last printf -- "%s\n%s%s\n" "$(decorate reset)" "$(decorate warning "Interrupt")"
+      statusMessage --last printf -- "%s\n%s%s\n" "$(decorate reset --)" "$(decorate warning "Interrupt")"
       break
     fi
     if [ "$chirpSeconds" -gt 0 ]; then

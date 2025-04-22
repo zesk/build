@@ -81,6 +81,8 @@ _bigText() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
+# Experimental
+# Place bigText at a position on the console
 bigTextAt() {
   local usage="_${FUNCNAME[0]}"
   local message="" x="" y=""
@@ -217,12 +219,12 @@ labeledBigText() {
   tweenNonLabel="$(repeat "$((${#plainLabel}))" " ")$tweenNonLabel"
   if $isBottom; then
     printf -- "%s%s\n""%s%s%s\n" \
-      "$(printf -- "%s\n" "$banner" | wrapLines "$linePrefix$tweenNonLabel" "$lineSuffix" | head -n "$((nLines - 1))")" "$lineSuffix" \
+      "$(printf -- "%s\n" "$banner" | decorate wrap "$linePrefix$tweenNonLabel" "$lineSuffix" | head -n "$((nLines - 1))")" "$lineSuffix" \
       "$linePrefix$label$tweenLabel" "$(printf -- "%s\n" "$banner" | tail -n 1)" "$lineSuffix"
   else
     printf -- "%s%s%s\n""%s%s\n" \
       "$linePrefix$label$tweenLabel" "$(printf -- "%s\n" "$banner" | head -n 1)" "$lineSuffix" \
-      "$(printf -- "%s\n" "$banner" | wrapLines "$linePrefix$tweenNonLabel" "$lineSuffix" | tail -n "$((nLines - 1))")" "$lineSuffix"
+      "$(printf -- "%s\n" "$banner" | decorate wrap "$linePrefix$tweenNonLabel" "$lineSuffix" | tail -n "$((nLines - 1))")" "$lineSuffix"
   fi
 }
 _labeledBigText() {
@@ -281,6 +283,7 @@ repeat() {
   __throwArgument "$usage" "missing repeat string" || return $?
 }
 _repeat() {
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -363,21 +366,21 @@ _lineFill() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-#
+# fn: decorate wrap
 # Wrap lines with a string, useful to format output or add color codes to
 # consoles which do not honor colors line-by-line. Intended to be used as a pipe.
 #
 # Summary: Prefix output lines with a string
-# Usage: wrapLines [ --fill ] [ prefix [ suffix ... ] ] < fileToWrapLines
+# Usage: decorate wrap [ --fill ] [ prefix [ suffix ... ] ] < fileToWrapLines
 # Exit Code: 0 - stdout contains input wrapped with text
 # Exit Code: 1 - Environment error
 # Exit Code: 2 - Argument error
 # Argument: prefix - String. Required. Prefix each line with this text
 # Argument: suffix - String. Required. Prefix each line with this text
-# Example:     cat "$file" | wrapLines "$(decorate code)" "$(decorate reset)"
-# Example:     cat "$errors" | wrapLines "    ERROR: [" "]"
+# Example:     cat "$file" | decorate wrap "CODE> " " <EOL>"
+# Example:     cat "$errors" | decorate wrap "    ERROR: [" "]"
 #
-wrapLines() {
+__decorateExtensionWrap() {
   local usage="_${FUNCNAME[0]}"
   local argument fill prefix suffix width actualWidth strippedText cleanLine pad line
 
@@ -423,7 +426,7 @@ wrapLines() {
     strippedText="$(printf "%s" "$prefix$suffix" | stripAnsi)"
     actualWidth=$((width - ${#strippedText}))
     if [ "$actualWidth" -lt 0 ]; then
-      __throwArgument "$usage" "$width is too small to support prefix and suffix characters (${#strippedText})" || return $?
+      __throwArgument "$usage" "$width is too small to support prefix and suffix characters (${#prefix} + ${#suffix}):"$'\n'"prefix=$prefix"$'\n'"suffix=$suffix" || return $?
     fi
     if [ "$actualWidth" -eq 0 ]; then
       # If we are doing nothing then do not do nothing
@@ -444,7 +447,8 @@ wrapLines() {
     printf "%s%s%s%s\n" "$prefix" "$line" "$pad" "$suffix"
   done
 }
-_wrapLines() {
+___decorateExtensionWrap() {
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -580,6 +584,7 @@ boxedHeading() {
   printf "%s\n" "$bar"
 }
 _boxedHeading() {
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 

@@ -481,15 +481,15 @@ __gitCommitReleaseNotesUpdate() {
 
   home=$(__catchEnvironment "$usage" buildHome) || return $?
   pattern="$(quoteGrepPattern "$comment")"
-  __catchEnvironment "$usage" statusMessage --last printf -- "%s%s\n" "$(lineFill '.' "$(decorate label "Release notes") $(decorate file "$notes") $(decorate decoration)")" "$(decorate reset)" || return $?
+  __catchEnvironment "$usage" statusMessage --last printf -- "%s%s\n" "$(lineFill '.' "$(decorate label "Release notes") $(decorate file "$notes") $(decorate decoration --)")" "$(decorate reset --)" || return $?
   if ! grep -q -e "$pattern" "$notes"; then
     __catchEnvironment "$usage" printf -- "%s %s\n" "-" "$comment" >>"$notes" || return $?
     __catchEnvironment "$usage" printf -- "%s %s:\n%s\n" "$(decorate info "Adding comment to")" "$(decorate file "$notes")" "$(boxedHeading "$comment")" || return $?
     __catchEnvironment "$usage" git add "$notes" || return $?
-    __catchEnvironment "$usage" grep -B 10 -e "$pattern" "$notes" | wrapLines "$(decorate code)" "$(decorate reset)" || return $?
+    __catchEnvironment "$usage" grep -B 10 -e "$pattern" "$notes" | decorate code || return $?
   else
     __catchEnvironment "$usage" statusMessage printf -- "%s %s:\n" "$(decorate info "Comment already added to")" "$(decorate code "$notes")" || return $?
-    __catchEnvironment "$usage" grep -q -e "$pattern" "$notes" | wrapLines "$(decorate code)" "$(decorate reset)" || return $?
+    __catchEnvironment "$usage" grep -q -e "$pattern" "$notes" | decorate code || return $?
   fi
 }
 __gitCommitReleaseNotesGetLastComment() {

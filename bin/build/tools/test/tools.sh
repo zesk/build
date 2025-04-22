@@ -398,7 +398,7 @@ testSuite() {
       __catchEnvironment "$usage" hookRunOptional bash-test-pass "$sectionName" "$item" "$flags" || __throwEnvironment "$usage" "... continuing" || :
     done
     [ ${#matchTests[@]} -eq 0 ] || [ ${#testsRun[@]} -gt 0 ] || __throwArgument "$usage" "Match not found: $(decorate each code "${matchTests[@]}")" || return $?
-    bigText --bigger Passed | wrapLines "" "    " | wrapLines --fill "*" "$(decorate success)    " "$(decorate reset)"
+    bigText --bigger Passed | decorate wrap "" "    " | decorate success | decorate wrap --fill "*" "    "
     if $continueFlag; then
       printf "%s\n" "PASSED" >"$continueFile"
     fi
@@ -712,10 +712,14 @@ __testSection() {
 # Output a heading for a test
 #
 __testHeading() {
-  decorate code "$(decorate orange "$(echoBar '*')")"
-  printf "%s" "$(decorate code)$(clearLine)"
-  bigText "$@" | wrapLines --fill " " "$(decorate code)    " "$(decorate reset)"
-  decorate code "$(decorate orange "$(echoBar '=')")"
+  local bar
+
+  bar=$(decorate code "$(decorate orange "$(echoBar '*')")")
+
+  clearLine
+  printf -- "%s\n" "$bar"
+  bigText "$@" | decorate code | decorate wrap --fill " " "    "
+  printf -- "%s\n" "$bar"
 }
 
 #

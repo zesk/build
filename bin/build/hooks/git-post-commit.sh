@@ -93,7 +93,7 @@ __gitPushHelper() {
 
   tempFile=$(fileTemporaryName "$usage") || return $?
   statusMessage --last decorate success "Pushing to remote ..."
-  if ! __catchEnvironment "$usage" git push origin 2>&1 | tee "$tempFile" | grep 'remote:' | removeFields 1 | wrapLines "Remote: $(decorate code)" "$(decorate reset)"; then
+  if ! __catchEnvironment "$usage" git push origin 2>&1 | tee "$tempFile" | grep 'remote:' | removeFields 1 | decorate code | decorate wrap "Remote: "; then
     if ! grep -q 'up-to-date' "$tempFile"; then
       dumpPipe "git push" <"$tempFile" || :
       __catchEnvironment "$usage" rm -rf "$tempFile" || :

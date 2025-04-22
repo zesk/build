@@ -398,7 +398,7 @@ bashPromptColorsFormat() {
     fi
     [ "$index" -le 4 ] || unset "colors[$index]"
   done
-  colors+=("$(decorate reset)")
+  colors+=("$(decorate reset --)")
   printf "%s\n" "$(listJoin ":" "${colors[@]}")"
 }
 
@@ -456,7 +456,7 @@ __bashPromptHideEscapes() {
 
 __bashPromptCode() {
   local colors=() reset
-  reset="$(decorate reset)"
+  reset="$(decorate reset --)"
   export BUILD_PROMPT_COLORS __BASH_PROMPT_PREVIOUS
   IFS=":" read -r -a colors <<<"${BUILD_PROMPT_COLORS-}" || :
   printf "%s %s\n" \

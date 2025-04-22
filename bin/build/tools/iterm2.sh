@@ -188,7 +188,7 @@ iTerm2ColorTypes() {
   printf "%s\n" tab                           # Tab color! - awesome
   read -r -d "" -a colors < <(iTerm2ColorNames)
   printf -- "%s\n" "${colors[@]}"
-  printf -- "%s\n" "${colors[@]}" | wrapLines "br_" ""
+  printf -- "%s\n" "${colors[@]}" | decorate wrap "br_" ""
 }
 
 # Usage: {fn} handler verboseFlag colorSetting

@@ -157,7 +157,7 @@ __buildBuild() {
   if gitRepositoryChanged; then
     ! $debugFlag || statusMessage decorate info "Repository changed, committing ..."
     printf -- "%s\n" "CHANGES:" || :
-    gitShowChanges | wrapLines "$(decorate code)    " "$(decorate reset)"
+    gitShowChanges | decorate code | decorate wrap "    "
     git commit -m "Build version $(hookRun version-current)" -a || :
     git push origin || :
     ! $debugFlag || statusMessage decorate warning "commit or push Failures are ignored ..."

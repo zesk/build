@@ -4,7 +4,7 @@
 #
 # NO DEPENDENCIES
 
-# IDENTICAL decorate 207
+# IDENTICAL decorate 215
 
 # Sets the environment variable `BUILD_COLORS` if not set, uses `TERM` to calculate
 #
@@ -75,9 +75,9 @@ decorations() {
     code info notice success warning error subtle label value decoration
 }
 _decorations() {
+  ! false || decorations --help
   # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
-  ! false || decorations --help
 }
 
 # Singular decoration function
@@ -89,18 +89,20 @@ _decorations() {
 decorate() {
   local usage="_${FUNCNAME[0]}" text="" what="${1-}" lp dp style
   shift && [ -n "$what" ] || __catchArgument "$usage" "Requires at least one argument: \"$*\"" || return $?
+
   if ! style=$(_caseStyles "$what"); then
     local extend func="${what/-/_}"
     extend="__decorateExtension$(printf "%s" "${func:0:1}" | awk '{print toupper($0)}')${func:1}"
     # When this next line calls `__catchArgument` it results in an infinite loop
     # shellcheck disable=SC2119
     isFunction "$extend" || _argument printf -- "%s\n%s\n" "Unknown decoration name: $what ($extend)" "$(decorations)" || return $?
-    __catchEnvironment "$usage" "$extend" "$@" || return $?
-    return $?
+    __executeInputSupport "$usage" "$extend" -- "$@" || return $?
+    return 0
   fi
   read -r lp dp text <<<"$style" || :
   local p='\033['
-  __decorate "$text" "${p}${lp}m" "${p}${dp:-$lp}m" "${p}0m" "$@"
+
+  __executeInputSupport "$usage" __decorate "$text" "${p}${lp}m" "${p}${dp:-$lp}m" "${p}0m" -- "$@" || return $?
 }
 _decorate() {
   # _IDENTICAL_ usageDocument 1
@@ -182,10 +184,16 @@ __decorateExtensionEach() {
     shift
   done
   if [ $# -eq 0 ]; then
-    if read -t 0; then
+    local byte
+    if read -r -t 1 -n 1 byte; then
+      if [ "$byte" = $'\n' ]; then
+        formatted+=("$prefix$(decorate "$code" "")")
+        byte=""
+      fi
       while read -r item; do
         ! $addIndex || prefix="$index:"
-        formatted+=("$prefix$(decorate "$code" "$item")")
+        formatted+=("$prefix$(decorate "$code" "$byte$item")")
+        byte=""
         index=$((index + 1))
       done
     fi

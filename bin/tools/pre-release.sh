@@ -37,6 +37,6 @@ buildPreRelease() {
     color="error"
     text="Failed"
   fi
-  wrapLines "$(decorate "$color")" "$(decorate reset)" | bigText "$text"
+  bigText "$text" | decorate "$color"
   return "$exitCode"
 }

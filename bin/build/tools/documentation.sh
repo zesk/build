@@ -95,7 +95,7 @@ usageDocumentComplex() {
     bashRecursionDebug
     if [ -n "$exit_code" ]; then
       local formatted
-      formatted="$(printf "%s\n%s\n" "Exit codes:" "$(wrapLines "- " "" <<<"$(trimSpace "$exit_code")")")"
+      formatted="$(printf "%s\n%s\n" "Exit codes:" "$(decorate wrap "- " "" <<<"$(trimSpace "$exit_code")")")"
       description="$(trimTail <<<"$description")"$'\n'$'\n'"$formatted"
     fi
     usageTemplate "$(mapEnvironment <<<"$fn")" "$(printf "%s\n" "$argument" | sed 's/ - /^/1')" "^" "$description" "$exitCode" "$@"
@@ -898,7 +898,7 @@ _bashDocumentationFormatter_exit_code() {
 # Format usage blocks (indents as a code block)
 #
 _bashDocumentationFormatter_usage() {
-  wrapLines "    " ""
+  decorate wrap "    "
 }
 
 # #
@@ -908,7 +908,7 @@ _bashDocumentationFormatter_usage() {
 #     markdown_FormatList
 # }
 _bashDocumentationFormatter_output() {
-  wrapLines "    " ""
+  decorate wrap "    "
 }
 
 #
@@ -922,7 +922,7 @@ _bashDocumentationFormatter_argument() {
 # Format depends blocks (indents as a code block)
 #
 _bashDocumentationFormatter_depends() {
-  wrapLines "    " ""
+  decorate wrap "    "
 }
 
 #

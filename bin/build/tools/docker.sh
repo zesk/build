@@ -39,7 +39,7 @@ dumpDockerTestFile() {
 
   if [ -f "$proc1File" ]; then
     bigText $proc1File
-    wrapLines "$(decorate magenta)" "$(decorate reset)" <"$proc1File"
+    decorate magenta <"$proc1File"
   else
     decorate warning "Missing $proc1File"
   fi

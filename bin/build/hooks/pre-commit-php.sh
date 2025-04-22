@@ -51,7 +51,7 @@ __hookPreCommitPHP() {
   start=$(timingStart)
 
   statusMessage --last printf -- "%s %s (%s)\n" "$(decorate info "[pre-commit]")" "$(decorate code ".php")" "$(decorate label "PHP Hypertext Processor")"
-  __catchEnvironment "$usage" gitPreCommitListExtension php | wrapLines "- $(decorate bold-blue)" "$(decorate reset)" || return $?
+  __catchEnvironment "$usage" gitPreCommitListExtension php | decorate bold-blue | decorate wrap "- " || return $?
 
   local home mode
 

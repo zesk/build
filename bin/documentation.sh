@@ -278,7 +278,7 @@ __buildDocumentationBuild() {
     # Coding
     local example
 
-    example="$(wrapLines "    " "" <"$home/bin/build/tools/example.sh")" || __throwEnvironment "$usage" "generating example" || return $?
+    example="$(decorate wrap "    " <"$home/bin/build/tools/example.sh")" || __throwEnvironment "$usage" "generating example" || return $?
     example="$example" __catchEnvironment "$usage" mapEnvironment <"$home/documentation/source/guide/coding.md" >"$home/documentation/docs/guide/coding.md" || return $?
 
     statusMessage decorate notice "Updating env/index.md ..."

@@ -107,7 +107,7 @@ __hookGitPreCommit() {
   __catchEnvironment "$usage" gitPreCommitSetup || return $?
   __catchEnvironment "$usage" hookRunOptional "$hookName" || return $?
 
-  statusMessage --last decorate info "$(lineFill '*' "$APPLICATION_NAME $(decorate magenta "$hookName") $(decorate decoration)")"
+  statusMessage --last decorate info "$(lineFill '*' "$APPLICATION_NAME $(decorate magenta "$hookName") $(decorate decoration --)")"
 
   local extension extensions=()
   read -r -a extensions < <(printf "%s" "${BUILD_PRECOMMIT_EXTENSIONS-}") || :

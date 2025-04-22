@@ -68,6 +68,7 @@
 {shaPipe}
 {cachedShaPipe}
 {cannon}
+{stringReplace}
 
 # Characters
 

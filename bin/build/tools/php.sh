@@ -300,7 +300,11 @@ _phpBuild() {
 _phpBuildBanner() {
   local label="$1"
   shift
-  labeledBigText --top --prefix "$(decorate blue PHP) $(decorate magenta). . . . $(decorate reset)$(decorate bold-orange) " --suffix "$(decorate reset)" --tween " $(decorate reset)$(decorate green)" "$label: " "$@"
+
+  labeledBigText --top \
+    --prefix "$(decorate blue PHP) $(decorate magenta ". . . .") $(decorate bold-orange --)" \
+    --suffix "$(decorate reset --)" --tween " $(decorate reset --)$(decorate green --)" \
+    "$label: " "$@"
 }
 _phpEchoBar() {
   decorate bold-blue "$(echoBar '.-+^`^+-')" || :
@@ -390,9 +394,9 @@ phpTest() {
   local reason=""
   if ! hookRun test-runner; then
     reason="test-runner hook failed"
-    _phpTestResult Failed "$(decorate orange)" "❌" "🔥" 13 2
+    _phpTestResult Failed orange "❌" "🔥" 13 2
   else
-    _phpTestResult "  Success " "$(decorate green)" "☘️ " "💙" 18 4
+    _phpTestResult "  Success " green "☘️ " "💙" 18 4
   fi
   decorate info "Bringing down containers ..." || :
   start=$(timingStart) || return $?
@@ -430,6 +434,6 @@ _phpTestResult() {
   local message=$1 color=$2 top=$3 bottom=$4 width=${5-16} thick="${6-3}"
   local gap="    "
   repeat "$thick" "$(printf "%s" "$(repeat "$width" "$top")")"$'\n'
-  bigText "$message" | wrapLines "$top$gap$color" "$(decorate reset)$gap$bottom"
+  bigText "$message" | decorate "$color" | decorate wrap "$top$gap" "$gap$bottom"
   repeat "$thick" "$(printf "%s" "$(repeat "$width" "$bottom")")"$'\n'
 }

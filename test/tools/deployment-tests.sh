@@ -120,7 +120,7 @@ testDeployRemoteFinish() {
   matches=(--stdout-match "reverted")
   assertExitCode --dump "${matches[@]+${matches[@]}}" 0 deployRemoteFinish "--revert" "--target" "app.tar.gz" "--home" "$tempDirectory/deploy" "--id" "$id" "--application" "$tempDirectory/app" || return $?
   assertEquals "$tempDirectory/deploy/$oldId/app" "$(readlink "$tempDirectory/app")" || return $?
-  printf "%s %s\n" "$(decorate bold-magenta "APP points to")" "$(decorate code)"
+  printf "%s %s\n" "$(decorate bold-magenta "APP points to")" "$(decorate code --)"
 
   find "$tempDirectory" -type d -or -type l -or -name '*.env' | dumpPipe "$id Reverted to $oldId"
 

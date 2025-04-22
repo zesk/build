@@ -257,7 +257,7 @@ githubRelease() {
   resultsFile="$(buildCacheDirectory)/results.json" || __throwEnvironment "$usage" "Unable create cache directory" || return $?
 
   decorate decoration "$(echoBar)" || :
-  bigText "$releaseName" | wrapLines "$(decorate magenta)" "$(decorate reset)" || :
+  bigText "$releaseName" | decorate magenta
   decorate decoration "$(echoBar)" || :
   printf "%s %s (%s) %s\n" "$(decorate green Tagging)" "$(decorate code "$releaseName")" "$(decorate magenta "$commitish")" "$(decorate green "and pushing ... ")" || :
 
@@ -289,14 +289,14 @@ githubRelease() {
     "https://api.github.com/repos/$repoOwner/$repoName/releases" \
     -d "$JSON" >"$resultsFile"; then
     decorate error "POST failed to GitHub" 1>&2 || :
-    wrapLines "$(decorate info)JSON: $(decorate code)" "$(decorate reset)" <"$JSON" 1>&2 || :
+    decorate code <<<"$JSON" | decorate wrap "$(decorate info "JSON: ")" 1>&2
     buildFailed "$resultsFile" 1>&2 || return $?
   fi
   url="$(jq .html_url <"$resultsFile")"
   if [ -z "$url" ] || [ "$url" = "null" ]; then
     decorate error "Results had no html_url" 1>&2 || :
     decorate error "Access token length ${#accessToken}" 1>&2 || :
-    printf %s "$JSON" | wrapLines "$(decorate info)Submitted JSON: $(decorate code)" "$(decorate reset)" 1>&2 || :
+    decorate code <<<"$JSON" | decorate wrap "$(decorate info "Submitted JSON: ")" 1>&2
     buildFailed "$resultsFile" 1>&2 || return $?
   fi
   printf "%s: %s\n" "$(decorate info URL)" "$(decorate orange "$url")" || :

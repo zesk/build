@@ -124,7 +124,7 @@ testEnvironmentFileMake() {
     fi
     for v in TESTING_ENV APPLICATION_BUILD_DATE APPLICATION_VERSION DSN; do
       if ! grep -q "$v" .env; then
-        _environment "$(printf -- "%s %s\n%s" "environmentFileApplicationMake > .env file does not contain" "$(decorate code "$v")" "$(wrapLines "$(decorate code)    " "$(decorate reset)" <.env)")" || return $?
+        _environment "$(printf -- "%s %s\n%s" "environmentFileApplicationMake > .env file does not contain" "$(decorate code "$v")" "$(decorate code <.env | decorate wrap "    ")")" || return $?
       fi
     done
     decorate green application-environment.sh works AOK
@@ -141,7 +141,7 @@ testEnvironmentVariables() {
     return 1
   fi
   assertFileContains "$e" BUILD_TEST_UNIQUE HOME PATH PWD TERM SHLVL || return $?
-  wrapLines "environmentVariables: $(decorate code)" "$(decorate reset)" <"$e"
+  printf "%s\n%s" "environmentVariables:" "$(decorate code <"$e")"
   rm "$e"
 
   unset BUILD_TEST_UNIQUE

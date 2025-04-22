@@ -22,7 +22,6 @@
 #modificationTime|fileModificationTime
 #renameFiles|filesRename
 
-
 #
 # Renames "$file0$oldSuffix" to "$file0$newSuffix" if file exists and outputs a message using the actionVerb
 #
@@ -569,7 +568,7 @@ _fileMatchesHelper() {
         if grep -n -e "$pattern" "$file" >"$foundLines"; then
           if ! isEmptyFile "$foundLines"; then
             found=true
-            wrapLines "$file:" "" <"$foundLines"
+            decorate wrap "$file: " <"$foundLines"
           fi
         fi
       else

@@ -79,7 +79,7 @@ _copyFilePrompt() {
 # Argument: verb - Descriptive verb of what's up
 _copyFileShow() {
   _copyFilePrompt "$@"
-  wrapLines "$(decorate code)" "$(decorate reset)"
+  decorate code
 }
 
 #
@@ -165,7 +165,7 @@ copyFile() {
           if ! diff -q "$actualSource" "$destination" >/dev/null; then
             prefix="$(decorate subtle "$(basename "$source")"): "
             _copyFilePrompt "$source" "$destination" "Changes" || :
-            diff "$actualSource" "$destination" | sed '1d' | wrapLines "$prefix$(decorate code)" "$(decorate reset)" || :
+            diff "$actualSource" "$destination" | sed '1d' | decorate code | decorate wrap "$prefix"
             verb="File changed${verb}"
           else
             return 0

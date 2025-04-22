@@ -243,7 +243,7 @@ colorTest() {
     subtle
   )
   for i in "${colors[@]}"; do
-    printf -- "%s%s\n" "$(decorate reset)" "$(decorate "$i" "$i: The quick brown fox jumped over the lazy dog.")"
+    printf -- "%s%s\n" "$(decorate reset --)" "$(decorate "$i" "$i: The quick brown fox jumped over the lazy dog.")"
   done
 }
 
@@ -308,7 +308,7 @@ __decorateExtensionPair() {
   if [ -z "$name" ]; then
     return 0
   fi
-  printf "%s %s%s\n" "$(decorate label "$(alignLeft "$width" "$name")")" "$(decorate each value "$@")" "$(decorate reset)"
+  printf "%s %s%s\n" "$(decorate label "$(alignLeft "$width" "$name")")" "$(decorate each value "$@")" "$(decorate reset --)"
 }
 
 #
@@ -501,7 +501,7 @@ consoleRows() {
 #
 simpleMarkdownToConsole() {
   # shellcheck disable=SC2119
-  _toggleCharacterToColor '`' "$(decorate code)" | _toggleCharacterToColor '**' "$(decorate red)" | _toggleCharacterToColor '*' "$(decorate cyan)"
+  _toggleCharacterToColor '`' "$(decorate code --)" | _toggleCharacterToColor '**' "$(decorate red --)" | _toggleCharacterToColor '*' "$(decorate cyan --)"
 }
 
 # Argument: r - UnsignedInteger. Required.
@@ -737,7 +737,7 @@ _colorMultiply() {
 # Usage: toggleCharacterToColor character colorOn [ colorOff ]
 # Argument: character - The character to map to color start/stop
 # Argument: colorOn - Color on escape sequence
-# Argument: colorOff - Color off escape sequence defaults to "$(decorate reset)"
+# Argument: colorOff - Color off escape sequence defaults to "$(decorate reset --)"
 #
 _toggleCharacterToColor() {
   local sequence line code reset lastItem lastLine=
@@ -745,7 +745,7 @@ _toggleCharacterToColor() {
   # TODO is quoteSedPattern correct for BASH // replacement?
   sequence="$(quoteSedPattern "$1")"
   code="$2"
-  reset="${3-$(decorate reset)}"
+  reset="${3-$(decorate reset --)}"
   while true; do
     if ! IFS= read -r line; then
       lastLine=1

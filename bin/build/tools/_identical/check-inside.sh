@@ -62,8 +62,8 @@ __identicalCheckInsideLoopLineHandler() {
       dumpPipe compareFile <"$compareFile"
       badFiles+=("$searchFile")
       {
-        statusMessage --last printf -- "%s: %s\n< %s\n%s" "$(decorate info "$token")" "$(decorate warning "Identical sections overlap:")" "$(decorate success "$(decorate file "$searchFile")")" "$(decorate code)" || :
-        grep -e "$extendedPattern" "$compareFile" | wrapLines "$(decorate code)    " "$(decorate reset)" || :
+        statusMessage --last printf -- "%s: %s\n< %s\n" "$(decorate info "$token")" "$(decorate warning "Identical sections overlap:")" "$(decorate success "$(decorate file "$searchFile")")"
+        grepSafe -e "$extendedPattern" "$compareFile" | decorate code | decorate wrap "    "
         statusMessage --first decorate reset
       } 1>&2
     elif $mapFile; then
@@ -71,8 +71,8 @@ __identicalCheckInsideLoopLineHandler() {
       countFile="$countFile.mapped"
     fi
     if ! diff -b -q "$countFile" "$compareFile" >/dev/null; then
-      statusMessage --last printf -- "[%s] %s: %s\n< %s\n> %s%s\n" "$(decorate code "$token")" "$(decorate error "Token code changed ($count):")" "$(decorate success "$(decorate file "$tokenFileName")")" "$(decorate warning "$(decorate file "$searchFile")")" "$(decorate code)" 1>&2
-      diff "$countFile" "$compareFile" | wrapLines "$(decorate subtle "diff:") $(decorate code)" "$(decorate reset)" || : 1>&2
+      statusMessage --last printf -- "[%s] %s: %s\n< %s\n> %s%s\n" "$(decorate code "$token")" "$(decorate error "Token code changed ($count):")" "$(decorate success "$(decorate file "$tokenFileName")")" "$(decorate warning "$(decorate file "$searchFile")")" "$(decorate code --)" 1>&2
+      diff "$countFile" "$compareFile" | decorate code | decorate wrap "$(decorate subtle "diff: ")" 1>&2
       isBadFile=true
     else
       statusMessage printf -- "%s %s in %s, lines %d-%d" "$(decorate success "Verified")" "$(decorate code "$token")" "$(decorate file "$searchFile")" "$lineNumber" "$((lineNumber + tokenLineCount))"

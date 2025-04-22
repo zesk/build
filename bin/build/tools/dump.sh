@@ -91,7 +91,6 @@ __debuggingStackCodeList() {
   done
 }
 
-
 # Dump a pipe with a title and stats
 # Argument: --symbol symbol - Optional. String. Symbol to place before each line. (Blank is ok).
 # Argument: --tail - Optional. Flag. Show the tail of the file and not the head when not enough can be shown.
@@ -190,7 +189,7 @@ dumpPipe() {
   local decoration width
   decoration="$(decorate code "$(echoBar)")"
   width=$(consoleColumns) || __throwEnvironment "$usage" consoleColumns || return $?
-  printf -- "%s\n%s\n%s\n" "$decoration" "$("$endBinary" -n "$showLines" "$item" | wrapLines --width "$((width - 1))" --fill " " "$symbol" "$(decorate reset)")" "$decoration"
+  printf -- "%s\n%s\n%s\n" "$decoration" "$("$endBinary" -n "$showLines" "$item" | decorate wrap --width "$((width - 1))" --fill " " "$symbol" "$(decorate reset --)")" "$decoration"
   rm -rf "$item" || :
 }
 _dumpPipe() {

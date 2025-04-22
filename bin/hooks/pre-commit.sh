@@ -72,7 +72,7 @@ __hookPreCommit() {
   # gitPreCommitSetup is already called
   local fileCopies nonOriginalWithEOF nonOriginal original
 
-  gitPreCommitListExtension @ | wrapLines "- $(decorate value)" "$(decorate reset)"
+  gitPreCommitListExtension @ | decorate value | decorate wrap "- "
   gitPreCommitHeader sh md json
 
   statusMessage decorate success Updating help files ...

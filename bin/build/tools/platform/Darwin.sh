@@ -67,3 +67,39 @@ __testPlatformName() {
 __bigTextBinary() {
   printf "%s\n" "figlet"
 }
+
+# _IDENTICAL_ __executeInputSupport 34
+
+# Support arguments and stdin as arguments to an executor
+__executeInputSupport() {
+  local usage="$1" executor=() && shift
+
+  while [ $# -gt 0 ]; do
+    if [ "$1" = "--" ]; then
+      shift
+      break
+    fi
+    executor+=("$1")
+    shift
+  done
+  [ ${#executor[@]} -gt 0 ] || return 0
+
+  local byte
+  # On Darwin `read -t 0` DOES NOT WORK as a select on stdin
+  if [ $# -eq 0 ] && read -r -t 1 -n 1 byte; then
+    local line
+    if [ "$byte" = $'\n' ]; then
+      __catchEnvironment "$usage" "${executor[@]}" "" || return $?
+      byte=""
+    fi
+    while read -r line; do
+      __catchEnvironment "$usage" "${executor[@]}" "$byte$line" || return $?
+      byte=""
+    done
+  else
+    if [ "$1" = "--" ]; then
+      shift
+    fi
+    __catchEnvironment "$usage" "${executor[@]}" "$@" || return $?
+  fi
+}

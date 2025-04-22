@@ -66,7 +66,7 @@ usageTemplate() {
       "$usageString" \
       "$(decorate info "$binName")" \
       "$(printf "%s" "$options" | usageFormatArguments "$delimiter")" \
-      "$(printf "%s" "$options" | usageGenerator "$((nSpaces + 2))" "$delimiter" | simpleMarkdownToConsole | trimTail | wrapLines "    " "$(decorate reset)")" \
+      "$(printf "%s" "$options" | usageGenerator "$((nSpaces + 2))" "$delimiter" | simpleMarkdownToConsole | trimTail | decorate wrap "    " "$(decorate reset --)")" \
       "$(simpleMarkdownToConsole <<<"$description")" |
       trimBoth
   else
@@ -142,10 +142,10 @@ usageFormatArguments() {
 usageGenerator() {
   local nSpaces=$((${1-30} + 0)) separatorChar=${2-" "} labelPrefix valuePrefix labelOptionalPrefix labelRequiredPrefix capsLine lastLine
 
-  labelOptionalPrefix=${3-"$(decorate blue)"}
-  labelRequiredPrefix=${4-"$(decorate red)"}
+  labelOptionalPrefix=${3-"$(decorate blue --)"}
+  labelRequiredPrefix=${4-"$(decorate red --)"}
   # shellcheck disable=SC2119
-  valuePrefix=${5-"$(decorate value)"}
+  valuePrefix=${5-"$(decorate value --)"}
   lastLine=
   blankLine=false
 

@@ -159,7 +159,7 @@ __installPackageConfiguration() {
   _installRemotePackage "$rel" "bin/build" "install-bin-build.sh" --version-function __installBinBuildVersion --url-function __installBinBuildURL --check-function __installBinBuildCheck --name "Zesk Build" "$@"
 }
 
-# IDENTICAL _installRemotePackage 347
+# IDENTICAL _installRemotePackage 350
 
 # Installs {name} in a local project directory if not installed. Also
 # will overwrite {source} with the latest version after installation.
@@ -194,16 +194,19 @@ __installPackageConfiguration() {
 # INTERNAL:
 # INTERNAL: If `checkFunction` fails, it should output any errors to `stderr` and return a non-zero exit code.
 # INTERNAL:
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
 # Argument: --source source - Optional. String. Source to display for the binary name. INTERNAL.
 # Argument: --name name - Optional. String. Name to display for the remote package name. INTERNAL.
 # Argument: --local localPackageDirectory - Optional. Directory. Directory of an existing installation to mock behavior for testing. INTERNAL.
 # Argument: --url url - Optional. URL. URL of a tar.gz file. Download source code from here.
-# Argument: --user headerText - Optional. String. Add `username:password` to remote request.
+# Argument: --user username - Optional. String. Add `username:password` to remote request.
+# Argument: --password passwordText - Optional. String. Add `username:password` to remote request.
 # Argument: --header headerText - Optional. String. Add one or more headers to the remote request.
 # Argument: --version-function urlFunction - Optional. Function. Function to compare live version to local version. Exits 0 if they match. Output version text if you want. INTERNAL.
 # Argument: --url-function urlFunction - Optional. Function. Function to return the URL to download. INTERNAL.
 # Argument: --check-function checkFunction - Optional. Function. Function to check the installation and output the version number or package name. INTERNAL.
-# Argument: --installer installer - Optional. Executable. Binary to run after installation succeeds.
+# Argument: --installer installer - Optional. Executable. Multiple. Binary to run after installation succeeds. Can be supplied multiple times.
 # Argument: --replace fie - Optional. Flag. Replace the target file with this script and delete this one. Internal only, do not use. INTERNAL.
 # Argument: --debug - Optional. Flag. Debugging is on. INTERNAL.
 # Argument: --force - Optional. Flag. Force installation even if file is up to date.
@@ -242,24 +245,6 @@ _installRemotePackage() {
         shift
         name=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
         ;;
-      --debug)
-        __installRemotePackageDebug "$argument"
-        ;;
-      --diff)
-        installArgs+=("$argument")
-        ;;
-      --replace)
-        shift
-        newName=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
-        decorate bold-blue "Replacing $(decorate orange "${BASH_SOURCE[0]}") -> $(decorate bold-orange "$newName")"
-        __catchEnvironment "$usage" cp -f "${BASH_SOURCE[0]}" "$newName" || return $?
-        __catchEnvironment "$usage" rm -rf "${BASH_SOURCE[0]}" || return $?
-        return 0
-        ;;
-      --force)
-        forceFlag=true
-        installReason="--force specified"
-        ;;
       --mock | --local)
         [ -z "$localPath" ] || __throwArgument "$usage" "$argument already" || return $?
         shift
@@ -289,15 +274,33 @@ _installRemotePackage() {
         isFunction "${1-}" || __throwArgument "$usage" "$argument not callable: ${1-}" || return $?
         urlFunction="$1"
         ;;
-      --installer)
-        shift
-        installers+=("$(usageArgumentString "$usage" "$argument" "${1-}")") || return $?
-        ;;
       --check-function)
         shift
         [ -z "$checkFunction" ] || __throwArgument "$usage" "$argument already" || return $?
         isFunction "${1-}" || __throwArgument "$usage" "$argument not callable: ${1-}" || return $?
         checkFunction="$1"
+        ;;
+      --installer)
+        shift
+        installers+=("$(usageArgumentString "$usage" "$argument" "${1-}")") || return $?
+        ;;
+      --replace)
+        shift
+        newName=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
+        decorate bold-blue "Replacing $(decorate orange "${BASH_SOURCE[0]}") -> $(decorate bold-orange "$newName")"
+        __catchEnvironment "$usage" cp -f "${BASH_SOURCE[0]}" "$newName" || return $?
+        __catchEnvironment "$usage" rm -rf "${BASH_SOURCE[0]}" || return $?
+        return 0
+        ;;
+      --debug)
+        __installRemotePackageDebug "$argument"
+        ;;
+      --force)
+        forceFlag=true
+        installReason="--force specified"
+        ;;
+      --diff)
+        installArgs+=("$argument")
         ;;
       *)
         __throwArgument "$usage" "unknown argument #$__index: $argument" || return $?
@@ -392,11 +395,11 @@ _installRemotePackage() {
         __throwEnvironment "$usage" "$installer is not executable" || exitCode=$?
         continue
       fi
-      decorate info "Running secondary installer $(decorate code "$installer") ..."
+      decorate info "Running installer $(decorate code "$installer") ..."
       __catchEnvironment "$usage" "$installer" >"$installerLog" 2>&1 || lastExit=$?
       if [ $lastExit -gt 0 ]; then
-        printf -- "%s\n" "Installer $(decorate code "$installer") failed [$(decorate error "$lastExit")]" 1>&2
-        cat "$installerLog" 1>&2 || :
+        decorate error "Installer $(decorate code "$installer") failed [$(decorate error "$lastExit")]" 1>&2
+        decorate code <"$installerLog" 1>&2
         printf -- "" >"$installerLog" || :
         exitCode=$lastExit || :
       fi
@@ -903,7 +906,7 @@ _isFunction() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# IDENTICAL decorate 207
+# IDENTICAL decorate 215
 
 # Sets the environment variable `BUILD_COLORS` if not set, uses `TERM` to calculate
 #
@@ -974,9 +977,9 @@ decorations() {
     code info notice success warning error subtle label value decoration
 }
 _decorations() {
+  ! false || decorations --help
   # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
-  ! false || decorations --help
 }
 
 # Singular decoration function
@@ -988,18 +991,20 @@ _decorations() {
 decorate() {
   local usage="_${FUNCNAME[0]}" text="" what="${1-}" lp dp style
   shift && [ -n "$what" ] || __catchArgument "$usage" "Requires at least one argument: \"$*\"" || return $?
+
   if ! style=$(_caseStyles "$what"); then
     local extend func="${what/-/_}"
     extend="__decorateExtension$(printf "%s" "${func:0:1}" | awk '{print toupper($0)}')${func:1}"
     # When this next line calls `__catchArgument` it results in an infinite loop
     # shellcheck disable=SC2119
     isFunction "$extend" || _argument printf -- "%s\n%s\n" "Unknown decoration name: $what ($extend)" "$(decorations)" || return $?
-    __catchEnvironment "$usage" "$extend" "$@" || return $?
-    return $?
+    __executeInputSupport "$usage" "$extend" -- "$@" || return $?
+    return 0
   fi
   read -r lp dp text <<<"$style" || :
   local p='\033['
-  __decorate "$text" "${p}${lp}m" "${p}${dp:-$lp}m" "${p}0m" "$@"
+
+  __executeInputSupport "$usage" __decorate "$text" "${p}${lp}m" "${p}${dp:-$lp}m" "${p}0m" -- "$@" || return $?
 }
 _decorate() {
   # _IDENTICAL_ usageDocument 1
@@ -1081,10 +1086,16 @@ __decorateExtensionEach() {
     shift
   done
   if [ $# -eq 0 ]; then
-    if read -t 0; then
+    local byte
+    if read -r -t 1 -n 1 byte; then
+      if [ "$byte" = $'\n' ]; then
+        formatted+=("$prefix$(decorate "$code" "")")
+        byte=""
+      fi
       while read -r item; do
         ! $addIndex || prefix="$index:"
-        formatted+=("$prefix$(decorate "$code" "$item")")
+        formatted+=("$prefix$(decorate "$code" "$byte$item")")
+        byte=""
         index=$((index + 1))
       done
     fi
@@ -1119,7 +1130,7 @@ __decorateExtensionQuote() {
 # Argument: code ... - UnsignedInteger. String. Exit code value to output.
 # stdout: exitCodeToken, one per line
 exitString() {
-  local k="" && while [ $# -gt 0 ]; do case "$1" in 1) k="environment" ;; 2) k="argument" ;; 97) k="assert" ;; 105) k="identical" ;; 108) k="leak" ;; 116) k="timeout" ;; 120) k="exit" ;; 127) k="not-found" ;; 141) k="interrupt" ;; 253) k="internal" ;; 254) k="unknown" ;; *) k="[exitString unknown \"$1\"]" ;; esac && [ -n "$k" ] || k="$1" && printf "%s\n" "$k" && shift; done
+  local k="" && while [ $# -gt 0 ]; do case "$1" in 0) k="success" ;; 1) k="environment" ;; 2) k="argument" ;; 97) k="assert" ;; 105) k="identical" ;; 108) k="leak" ;; 116) k="timeout" ;; 120) k="exit" ;; 127) k="not-found" ;; 141) k="interrupt" ;; 253) k="internal" ;; 254) k="unknown" ;; *) k="[exitString unknown \"$1\"]" ;; esac && [ -n "$k" ] || k="$1" && printf "%s\n" "$k" && shift; done
 }
 
 # IDENTICAL _return 27

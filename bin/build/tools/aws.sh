@@ -817,9 +817,9 @@ awsIPAccess() {
 
   if $verboseFlag; then
     if $optionRevoke; then
-      bigText "Closing ..." | wrapLines "$(decorate magenta)" "$(decorate reset)"
+      bigText "Closing ..." | decorate magenta
     else
-      bigText "Opening ..." | wrapLines "$(decorate blue)" "$(decorate reset)"
+      bigText "Opening ..." | decorate blue
     fi
     local width=40
 

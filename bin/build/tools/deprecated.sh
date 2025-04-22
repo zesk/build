@@ -18,23 +18,16 @@
 #             |_|
 #
 
+# DEPRECATED 2025-04-22
+# See: decorate wrap
+wrapLines() {
+  _deprecated "${FUNCNAME[0]}"
+  decorate wrap "$@"
+}
+
 # DEPRECATED 2025-04-09
 # nounAction naming
 listFileModificationTimes() {
   _deprecated "${FUNCNAME[0]}"
   fileModificationTimes "$@"
-}
-
-# DEPRECATED 2025-02-18
-# nounAction naming
-beginTiming() {
-  _deprecated "${FUNCNAME[0]}"
-  timingStart "$@"
-}
-
-# DEPRECATED 2025-02-18
-# nounAction naming
-reportTiming() {
-  _deprecated "${FUNCNAME[0]}"
-  timingReport "$@"
 }

@@ -6,3 +6,5 @@ Hides these from [New and uncategorized functions](./todo.md)
 {reportTiming}
 
 {exampleFunction}
+{wrapLines}
+{listFileModificationTimes}

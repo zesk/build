@@ -21,6 +21,7 @@ if source "${BASH_SOURCE[0]%/*}/tools.sh"; then
 
     reloadChanges --name "Zesk Build" bin/build/tools.sh bin/build/tools
     buildCompletion
+
     developerAnnounce < <(__applicationToolsList)
   }
 

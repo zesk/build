@@ -140,7 +140,7 @@ deprecatedTokensFile() {
       statusMessage decorate info "$commentText deprecated tokens: $(decorate each code "${tokens[@]}") ..."
       if deprecatedFind "$findArgumentFunction" "${tokens[@]}" >"$results"; then
         statusMessage --last decorate error "$commentText token found: $(decorate each code "${tokens[@]}")"
-        wrapLines "$(decorate code)" "$(decorate reset)" <"$results"
+        decorate code <"$results"
         exitCode=1
       fi
     fi

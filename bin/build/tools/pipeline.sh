@@ -37,9 +37,9 @@ buildFailed() {
   local quietLog="${1-}" showLines=100 failBar
 
   shift
-  failBar="$(decorate reset)$(decorate magenta "$(repeat 80 "❌")")"
+  failBar="$(decorate reset --)$(decorate magenta "$(repeat 80 "❌")")"
   statusMessage printf -- "%s" ""
-  bigText "Failed" | wrapLines "    " "  " | wrapLines --fill "*" "" "$(decorate error)" "$(decorate reset)"
+  bigText "Failed" | decorate error | decorate wrap "" " " | decorate wrap --fill "*"
   # shellcheck disable=SC2094
   statusMessage --last printf -- "%s\n" "$failBar"
   # shellcheck disable=SC2094
@@ -200,12 +200,12 @@ isUpToDate() {
       1) timeText="Yesterday" ;;
       *) timeText="$daysAgo $(plural $daysAgo day days) ago" ;;
     esac
-    labeledBigText --prefix "$(decorate reset)" --top --tween "$(decorate red)" "$label" "EXPIRED $timeText"
+    labeledBigText --prefix "$(decorate reset --)" --top --tween "$(decorate red --)" "$label" "EXPIRED $timeText"
     return 1
   fi
   daysAgo=$((-daysAgo))
   if [ $daysAgo -lt 14 ]; then
-    labeledBigText --prefix "$(decorate reset)" --top --tween "$(decorate orange)" "${name}expires on $(decorate code "$expireDate"), in " "$daysAgo $(plural $daysAgo day days)"
+    labeledBigText --prefix "$(decorate reset --)" --top --tween "$(decorate orange --)" "${name}expires on $(decorate code "$expireDate"), in " "$daysAgo $(plural $daysAgo day days)"
   elif [ $daysAgo -lt 30 ]; then
     # decorate info "keyDate $keyDate"
     # decorate info "accessKeyTimestamp $accessKeyTimestamp"

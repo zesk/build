@@ -86,16 +86,19 @@ __packageCheckFunction() {
 # INTERNAL:
 # INTERNAL: If `checkFunction` fails, it should output any errors to `stderr` and return a non-zero exit code.
 # INTERNAL:
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
 # Argument: --source source - Optional. String. Source to display for the binary name. INTERNAL.
 # Argument: --name name - Optional. String. Name to display for the remote package name. INTERNAL.
 # Argument: --local localPackageDirectory - Optional. Directory. Directory of an existing installation to mock behavior for testing. INTERNAL.
 # Argument: --url url - Optional. URL. URL of a tar.gz file. Download source code from here.
-# Argument: --user headerText - Optional. String. Add `username:password` to remote request.
+# Argument: --user username - Optional. String. Add `username:password` to remote request.
+# Argument: --password passwordText - Optional. String. Add `username:password` to remote request.
 # Argument: --header headerText - Optional. String. Add one or more headers to the remote request.
 # Argument: --version-function urlFunction - Optional. Function. Function to compare live version to local version. Exits 0 if they match. Output version text if you want. INTERNAL.
 # Argument: --url-function urlFunction - Optional. Function. Function to return the URL to download. INTERNAL.
 # Argument: --check-function checkFunction - Optional. Function. Function to check the installation and output the version number or package name. INTERNAL.
-# Argument: --installer installer - Optional. Executable. Binary to run after installation succeeds.
+# Argument: --installer installer - Optional. Executable. Multiple. Binary to run after installation succeeds. Can be supplied multiple times.
 # Argument: --replace fie - Optional. Flag. Replace the target file with this script and delete this one. Internal only, do not use. INTERNAL.
 # Argument: --debug - Optional. Flag. Debugging is on. INTERNAL.
 # Argument: --force - Optional. Flag. Force installation even if file is up to date.
@@ -134,24 +137,6 @@ _installRemotePackage() {
         shift
         name=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
         ;;
-      --debug)
-        __installRemotePackageDebug "$argument"
-        ;;
-      --diff)
-        installArgs+=("$argument")
-        ;;
-      --replace)
-        shift
-        newName=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
-        decorate bold-blue "Replacing $(decorate orange "${BASH_SOURCE[0]}") -> $(decorate bold-orange "$newName")"
-        __catchEnvironment "$usage" cp -f "${BASH_SOURCE[0]}" "$newName" || return $?
-        __catchEnvironment "$usage" rm -rf "${BASH_SOURCE[0]}" || return $?
-        return 0
-        ;;
-      --force)
-        forceFlag=true
-        installReason="--force specified"
-        ;;
       --mock | --local)
         [ -z "$localPath" ] || __throwArgument "$usage" "$argument already" || return $?
         shift
@@ -181,15 +166,33 @@ _installRemotePackage() {
         isFunction "${1-}" || __throwArgument "$usage" "$argument not callable: ${1-}" || return $?
         urlFunction="$1"
         ;;
-      --installer)
-        shift
-        installers+=("$(usageArgumentString "$usage" "$argument" "${1-}")") || return $?
-        ;;
       --check-function)
         shift
         [ -z "$checkFunction" ] || __throwArgument "$usage" "$argument already" || return $?
         isFunction "${1-}" || __throwArgument "$usage" "$argument not callable: ${1-}" || return $?
         checkFunction="$1"
+        ;;
+      --installer)
+        shift
+        installers+=("$(usageArgumentString "$usage" "$argument" "${1-}")") || return $?
+        ;;
+      --replace)
+        shift
+        newName=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
+        decorate bold-blue "Replacing $(decorate orange "${BASH_SOURCE[0]}") -> $(decorate bold-orange "$newName")"
+        __catchEnvironment "$usage" cp -f "${BASH_SOURCE[0]}" "$newName" || return $?
+        __catchEnvironment "$usage" rm -rf "${BASH_SOURCE[0]}" || return $?
+        return 0
+        ;;
+      --debug)
+        __installRemotePackageDebug "$argument"
+        ;;
+      --force)
+        forceFlag=true
+        installReason="--force specified"
+        ;;
+      --diff)
+        installArgs+=("$argument")
         ;;
       *)
         __throwArgument "$usage" "unknown argument #$__index: $argument" || return $?
@@ -284,11 +287,11 @@ _installRemotePackage() {
         __throwEnvironment "$usage" "$installer is not executable" || exitCode=$?
         continue
       fi
-      decorate info "Running secondary installer $(decorate code "$installer") ..."
+      decorate info "Running installer $(decorate code "$installer") ..."
       __catchEnvironment "$usage" "$installer" >"$installerLog" 2>&1 || lastExit=$?
       if [ $lastExit -gt 0 ]; then
-        printf -- "%s\n" "Installer $(decorate code "$installer") failed [$(decorate error "$lastExit")]" 1>&2
-        cat "$installerLog" 1>&2 || :
+        decorate error "Installer $(decorate code "$installer") failed [$(decorate error "$lastExit")]" 1>&2
+        decorate code <"$installerLog" 1>&2
         printf -- "" >"$installerLog" || :
         exitCode=$lastExit || :
       fi

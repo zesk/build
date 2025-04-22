@@ -8,7 +8,7 @@ All console functions in the form `decorate style` where `style` is a color name
 
 Examples:
 
-    cat $file | wrapLines "$(decorate green)" "$(decorate reset)"
+    decorate green < "$file"
     decorate info Starting to deploy ...
 
 ## Color Mode

@@ -74,8 +74,8 @@ __hookNotify() {
     fi
     muzzle darwinNotification "${ss[@]+"${ss[@]}"}" --title "$title" "$(stripAnsi <<<"$*")"
   else
-    printf "%s\n" "$(decorate notice "NOTIFY: $title")"
-    printf "%s\n" "$*" | wrapLines "$(decorate notice "NOTIFY:") $(decorate info)" "$(decorate reset)"
+    decorate notice "NOTIFY: $title"
+    printf "%s\n" "$*" | decorate info | decorate wrap "$(decorate notice "NOTIFY:")"
   fi
 }
 ___hookNotify() {

@@ -132,7 +132,7 @@ __buildDeploy() {
   notes=$(releaseNotes) || __throwEnvironment "$usage" "releaseNotes" || return $?
   [ -f "$notes" ] || __throwEnvironment "$usage" "$notes does not exist" || return $?
 
-  bigText "$currentVersion" | wrapLines "    $(decorate green "Zesk BUILD    🛠️️ ") $(decorate magenta)" "$(decorate green " ⚒️ ")" || :
+  bigText "$currentVersion" | decorate magenta | decorate wrap "$(decorate green "Zesk BUILD    🛠️️ ")" "$(decorate green " ⚒️ ")"
   decorate info "Deploying a new release ... " || :
 
   if $makeDocumentation; then

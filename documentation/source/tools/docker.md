@@ -7,10 +7,13 @@
 {dumpDockerTestFile}
 {insideDocker}
 {checkDockerEnvFile}
+{anyEnvToBashEnv}
+{anyEnvToDockerEnv}
+
 {dockerLocalContainer}
 {dockerEnvFromBashEnv}
 {dockerEnvToBash}
-{anyEnvToBashEnv}
-{anyEnvToDockerEnv}
 {dockerPlatformDefault}
 {dockerImages}
+{dockerVolumeDelete}
+{dockerVolumeExists}

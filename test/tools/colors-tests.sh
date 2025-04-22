@@ -21,21 +21,6 @@ testSemanticColorTest() {
   unset BUILD_COLORS_MODE
 }
 
-testDecorateBasics() {
-  local color
-
-  for color in red yellow green blue; do
-    actual="$(decorate "$color")Bird, bird. bird is the word.$(decorate reset)"
-    expected="$(decorate "$color" "Bird, bird. bird is the word.")"
-
-    if ! assertEquals "$expected" "$actual"; then
-      dumpBinary "Expected" <<<"$expected"
-      dumpBinary "Actual" <<<"$actual"
-      return 1
-    fi
-  done
-}
-
 testSimpleMarkdownToConsole() {
   local saveBC actual expected testString
   local this=${FUNCNAME[0]}

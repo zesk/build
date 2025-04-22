@@ -4,9 +4,9 @@
 [⬅ Parent ](../index.md)
 <hr />
 
-{githubProjectJSON
 {githubLatest}
 {githubLatestRelease}
 {githubRelease}
 {githubPublishDate}
 {githubURLParse}
+{githubProjectJSON}
