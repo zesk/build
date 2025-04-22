@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
 #
-# input-tests.sh
+# readline-tests.sh
 #
-# Input tests
+# readline tests
 #
 # Copyright &copy; 2025 Market Acumen, Inc.
 #
 
-testInputConfigurationAdd() {
+testReadlineConfigurationAdd() {
   local savedHome
 
   export HOME
@@ -15,7 +15,7 @@ testInputConfigurationAdd() {
 
   HOME=$(__environment mktemp -d) || return $?
   assertFileDoesNotExist "$HOME/.input""rc" || return $?
-  assertExitCode 0 inputConfigurationAdd "\ep" "history-search-backward" || return $?
+  assertExitCode 0 readlineConfigurationAdd "\ep" "history-search-backward" || return $?
 
   assertFileContains "$HOME/.input""rc" history-search-backward || return $?
 

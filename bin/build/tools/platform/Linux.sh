@@ -126,7 +126,7 @@ __executeInputSupport() {
       __catchEnvironment "$usage" "${executor[@]}" "$line" || return $?
     done
   else
-    if [ "$1" = "--" ]; then
+    if [ "${1-}" = "--" ]; then
       shift
     fi
     __catchEnvironment "$usage" "${executor[@]}" "$@" || return $?

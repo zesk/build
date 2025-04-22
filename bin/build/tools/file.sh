@@ -48,7 +48,7 @@ renameFiles() {
 
   old=$(usageArgumentEmptyString "$usage" "oldSuffix" "${1-}") && shift || return $?
   new=$(usageArgumentEmptyString "$usage" "newSuffix" "${1-}") && shift || return $?
-  verb="${1-}" && shift || :
+  verb="${1-}" && shift || return $?
 
   for i in "$@"; do
     if [ -f "$i$old" ]; then
@@ -98,7 +98,8 @@ modificationSeconds() {
   now_="$(__catchEnvironment "$usage" date +%s)" || return $?
   local __count=$#
   while [ $# -gt 0 ]; do
-    local argument="$(usageArgumentFile "$usage" "argument #$((__count - $# + 1))" "${1-}")" || return $?
+    local argument
+    argument="$(usageArgumentFile "$usage" "argument #$((__count - $# + 1))" "${1-}")" || return $?
     __catchEnvironment "$usage" printf "%d\n" "$((now_ - $(modificationTime "$argument")))" || return $?
     shift
   done
@@ -619,26 +620,16 @@ _isEmptyFile() {
 
 # Usage: {fn} directory
 _directoryGamutFile() {
-  local gamutModified="" remain comparer="$1" gamut="" directory="${2-.}" && shift 2
-  while read -r modified file; do
-    isPositiveInteger "$modified" || __throwEnvironment "$usage" "__fileModificationTimes output a non-integer: \"$modified\" \"$file\"" || return $?
-    # shellcheck disable=SC1073 disable=SC1072 disable=SC1009
-    if [ -z "$gamutModified" ] || [ "$modified" "$comparer" "$gamutModified" ]; then
-      gamutModified="$modified"
-      gamut="$file"
-    fi
-  done < <(__fileModificationTimes "$directory" -type f ! -path "*/.*/*" "$@")
-  [ -n "$gamut" ] || return 1
-  printf "%s\n" "$gamut"
+  local clipper="$1" directory="${2-.}" modified file && shift 2
+  read -r modified file < <(__fileModificationTimes "$directory" -type f ! -path "*/.*/*" "$@" | sort -n | "$clipper" -n 1) || :
+  isPositiveInteger "$modified" || __throwEnvironment "$usage" "__fileModificationTimes output a non-integer: \"$modified\" \"$file\"" || return $?
+  printf "%s\n" "$file"
 }
 
 # Argument: --find findArgs ... -- - Optional. ArgumentsDoubleDashDelimited. Arguments delimited by a double-dash (or end of argument list)
 _directoryGamutFileWrapper() {
   local usage="$1" comparator="$2" && shift 2
   local directory="" findArgs=()
-
-  # IDENTICAL startBeginTiming 1
-  start=$(timingStart) || return $?
 
   # _IDENTICAL_ argument-case-header 5
   local __saved=("$@") __count=$#
@@ -670,26 +661,26 @@ _directoryGamutFileWrapper() {
   done
   [ -n "$directory" ] || __throwArgument "$usage" "directory is required" || return $?
   if ! _directoryGamutFile "$comparator" "$directory" "${findArgs[@]+"${findArgs[@]}"}"; then
-    __throwEnvironment "$usage" "No files in $(decorate file "$directory") ("${findArgs[*]-}")" || return $?
+    __throwEnvironment "$usage" "No files in $(decorate file "$directory") (${findArgs[*]-})" || return $?
   fi
 }
 
-# Find the oldest file in a directory
+# Find the oldest modified file in a directory
 # Argument: directory - Directory. Required. Directory to search for the oldest file.
 # Argument: --find findArgs ... -- - Optional. Arguments. Arguments delimited by a double-dash (or end of argument list)
 directoryOldestFile() {
-  _directoryGamutFileWrapper "_${FUNCNAME[0]}" "-lt" "$@"
+  _directoryGamutFileWrapper "_${FUNCNAME[0]}" head "$@"
 }
 _directoryOldestFile() {
   # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# Find the newest file in a directory
+# Find the newest modified file in a directory
 # Argument: directory - Directory. Required. Directory to search for the newest file.
 # Argument: --find findArgs ... -- - Optional. Arguments. Arguments delimited by a double-dash (or end of argument list)
 directoryNewestFile() {
-  _directoryGamutFileWrapper "_${FUNCNAME[0]}" "-gt" "$@"
+  _directoryGamutFileWrapper "_${FUNCNAME[0]}" tail "$@"
 }
 _directoryNewestFile() {
   # _IDENTICAL_ usageDocument 1

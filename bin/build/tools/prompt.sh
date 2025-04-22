@@ -501,15 +501,19 @@ __bashPromptCommand() {
   local debug=false
   ! buildDebugEnabled bashPrompt || debug=true
 
-  local promptCommand
+  local promptCommand start
   for promptCommand in "${__BASH_PROMPT_MODULES[@]}"; do
     if isFunction "$promptCommand"; then
-      ! $debug || decorate warning "Running $(decorate code "$promptCommand")"
+      ! $debug || statusMessage decorate warning "Running $(decorate code "$promptCommand") "
+      start=$(timingStart)
       "$promptCommand"
+      ! $debug || timingReport "$start"
     else
-      ! $debug || decorate warning "Sourcing $(decorate code "$promptCommand")"
+      ! $debug || statusMessage decorate warning "Sourcing $(decorate code "$promptCommand")"
+      start=$(timingStart)
       # shellcheck source=/dev/null
       . "$promptCommand"
+      ! $debug || timingReport "$start"
     fi
   done
   return $exitCode

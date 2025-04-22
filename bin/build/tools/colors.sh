@@ -18,7 +18,9 @@
 #   ▀▀  ▝▀▘   ▀▀  ▝▀▘  ▀    ▀▀▀
 #
 
+#
 # This modifies text containing escape sequences to best make text look correct
+#
 __wrapColor() {
   local escapeColor=$'\e'"[" prefix="$1" && shift
   local suffix="${escapeColor}0m" text="$*" _magic="¢" start starts end ends

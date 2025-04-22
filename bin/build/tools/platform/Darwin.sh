@@ -97,7 +97,7 @@ __executeInputSupport() {
       byte=""
     done
   else
-    if [ "$1" = "--" ]; then
+    if [ "${1-}" = "--" ]; then
       shift
     fi
     __catchEnvironment "$usage" "${executor[@]}" "$@" || return $?

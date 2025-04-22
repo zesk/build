@@ -19,6 +19,13 @@
 #
 
 # DEPRECATED 2025-04-22
+# See: readlineConfigurationAdd
+inputConfigurationAdd() {
+  _deprecated "${FUNCNAME[0]}"
+  readlineConfigurationAdd "$@"
+}
+
+# DEPRECATED 2025-04-22
 # See: decorate wrap
 wrapLines() {
   _deprecated "${FUNCNAME[0]}"

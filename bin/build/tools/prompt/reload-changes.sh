@@ -13,6 +13,8 @@ bashPromptModule_reloadChanges() {
   local usage="_return"
   local home removeSources=() cacheFile debug=false
 
+  export __BASH_PROMPT_RELOAD_CHANGES
+
   home=$(buildHome) || return $?
   cacheFile="$(__reloadChangesCacheFile "$usage")" || return $?
   [ -f "$cacheFile" ] || return 0
@@ -20,9 +22,11 @@ bashPromptModule_reloadChanges() {
   local argument pathIndex=0
   ! buildDebugEnabled reloadChanges || debug=true
 
-  ! $debug || decorate pair reloadChanges "$(decorate file "$cacheFile")"
+  ! $debug || decorate info "reloadChanges:"
+  ! $debug || decorate pair cacheFile "$(decorate file "$cacheFile")"
 
   local name="" source="" paths=()
+  local reloadSource=false
   while read -r argument; do
     if [ -z "$source" ]; then
       source=$(usageArgumentString "$usage" "source" "$argument") || return $?
@@ -34,6 +38,7 @@ bashPromptModule_reloadChanges() {
       ! $debug || decorate pair name "$name"
       continue
     elif [ "$argument" = "--" ]; then
+      reloadSource=false
       name=""
       source=""
       paths=()
@@ -41,7 +46,16 @@ bashPromptModule_reloadChanges() {
     fi
 
     local newestFile path pathStateFile modified=0 filename="" prefix=""
+
     path=$(usageArgumentString "$usage" "path" "$argument") || return $?
+
+    # Reloaded on a prior path, just skip until the next record
+    if $reloadSource; then
+      ! $debug || decorate pair Skipping path "$(decorate file "$path")"
+      continue
+    fi
+
+    ! $debug || decorate pair path "$(decorate file "$path")"
 
     if [ ! -d "$path" ]; then
       decorate warning "$path was removed"
@@ -53,28 +67,42 @@ bashPromptModule_reloadChanges() {
       removeSources+=("$source")
       continue
     fi
-    [ "${path:0:1}" = "/" ] || path="$home/$path"
-    newestFile=$(directoryNewestFile "$path" --find -name '*.sh') || return $?
-    newestModified=$(modificationTime "$newestFile") || return $?
-    ! $debug || decorate pair newestFile "$(decorate file "$newestFile")"
+
     pathStateFile="$(__reloadChangesCacheFile "$usage" "$pathIndex")" || return $?
     if [ -f "$pathStateFile" ]; then
       modified="$(head -n 1 "$pathStateFile")"
       filename="$(tail -n 1 "$pathStateFile")"
+      if isInteger "${__BASH_PROMPT_RELOAD_CHANGES-}"; then
+        if [ "$modified" -gt "${__BASH_PROMPT_RELOAD_CHANGES}" ]; then
+          ! $debug || decorate info "Another process detected changes in $(decorate label "$name") [$modified]"
+          __BASH_PROMPT_RELOAD_CHANGES="$modified"
+          reloadSource=true
+        fi
+      fi
     fi
-    if [ "$newestModified" -gt "$modified" ]; then
+
+    [ "${path:0:1}" = "/" ] || path="$home/$path"
+    newestFile=$(directoryNewestFile "$path" --find -name '*.sh') || return $?
+    newestModified=$(modificationTime "$newestFile") || return $?
+    ! $debug || decorate pair newestFile "$(decorate file "$newestFile")"
+    if [ "$newestModified" -gt "$modified" ] || [ "$newestFile" != "$filename" ]; then
       ! $debug || decorate info "$newestModified -gt $modified"
       prefix=""
       [ -z "$filename" ] || prefix="$(decorate file "$filename") -> "
       [ "$filename" != "$newestFile" ] || prefix="✏️"
       printf "%s %s\n" "$(decorate value "$name")" "$(decorate info "code changed, reloading $(decorate file "$source") [$prefix$(decorate file "$newestFile")]")"
-      modified=$(modificationTime) || return $?
       ! $debug || decorate info "Saving new state file $newestModified $newestFile"
       printf "%s\n" "$newestModified" "$newestFile" >"$pathStateFile"
-      # shellcheck source=/dev/null
-      source "$source"
+      __BASH_PROMPT_RELOAD_CHANGES="$newestModified"
+      reloadSource=true
     else
       ! $debug || decorate error "! $newestModified -gt $modified"
+      continue
+    fi
+
+    if $reloadSource; then
+      # shellcheck source=/dev/null
+      source "$source"
     fi
   done <"$cacheFile"
   for name in "${removeSources[@]+"${removeSources[@]+}"}"; do
