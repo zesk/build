@@ -432,3 +432,51 @@ _dumpLoadAverages() {
   # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
+
+# Output to hex
+# Argument: --size size - Integer. Output at most size bytes of data.
+hexDump() {
+  local usage="_${FUNCNAME[0]}"
+
+  local size="" arguments=()
+  local runner=(od -w32 -A n -t xz -v)
+
+  # _IDENTICAL_ argument-case-header 5
+  local __saved=("$@") __count=$#
+  while [ $# -gt 0 ]; do
+    local argument="$1" __index=$((__count - $# + 1))
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
+    case "$argument" in
+      # _IDENTICAL_ --help 4
+      --help)
+        "$usage" 0
+        return $?
+        ;;
+      --size)
+        shift
+        size=$(usageArgumentPositiveInteger "$usage" "$argument" "${1-}") || return $?
+        runner+=("-N" "$size")
+        ;;
+      *)
+        arguments+=("$argument")
+        ;;
+    esac
+    # _IDENTICAL_ argument-esac-shift 1
+    shift
+  done
+
+  whichExists od || __throwEnvironment "$usage" "od required to be installed" || return $?
+
+  if [ "${#arguments[@]}" -eq 0 ]; then
+    "${runner[@]}"
+  else
+    local argument
+    for argument in "${arguments[@]}"; do
+      "${runner[@]}" <<<"$argument"
+    done
+  fi
+}
+_hexDump() {
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}

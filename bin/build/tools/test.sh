@@ -89,11 +89,6 @@ dumpBinary() {
     shift || __throwArgument "$usage" shift || return $?
   done
 
-  local columns
-  # Is this installed by default?
-  __catchEnvironment "$usage" muzzle packageWhich xxd xxd || return $?
-  columns=$(__catchEnvironment "$usage" consoleColumns) || return $?
-
   local item
   if [ "${#vanishFiles[@]}" -gt 0 ]; then
     for item in "${vanishFiles[@]}"; do
@@ -135,7 +130,7 @@ dumpBinary() {
   if [ -n "$showBytes" ]; then
     endPreprocess=("$endBinary" --bytes="$showBytes")
   fi
-  __catchEnvironment "$usage" "${endPreprocess[@]}" <"$item" | __catchEnvironment "$usage" xxd -c "$((columns / 4))" | decorate code | decorate wrap "$symbol " || _clean $? "$item" || return $?
+  __catchEnvironment "$usage" "${endPreprocess[@]}" <"$item" | __catchEnvironment "$usage" hexDump | decorate code | decorate wrap "$symbol " || _clean $? "$item" || return $?
   __catchEnvironment "$usage" rm -rf "$item" || return $?
   return 0
 }

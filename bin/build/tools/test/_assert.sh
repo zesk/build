@@ -21,7 +21,7 @@ __resultText() {
   # Hide newlines
   text=$(newlineHide "$text")
   if stringContains "$text" $'\e'; then
-    text="$(xxd -u -c 32 -l "$max" <<<"$text")"
+    text="$(hexDump --size "$max" "$text")"
   fi
   [ "$length" -lt "$max" ] || text="${text:0:$max} ..."
   if [ "$length" -eq 0 ]; then
