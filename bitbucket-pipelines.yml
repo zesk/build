@@ -10,7 +10,6 @@ pipelines:
   branches:
     docs:
       - step:
-          size: 8x
           deployment: documentation
           name: Build documentation
           services:
@@ -19,7 +18,6 @@ pipelines:
             - bin/documentation.sh
     staging:
       - step:
-          size: 8x
           deployment: staging
           name: Build and Test
           services:
@@ -29,7 +27,6 @@ pipelines:
             - bin/test.sh --skip-tag package-install --skip-tag slow
     main:
       - step:
-          size: 8x
           deployment: production
           name: Build, Test, and Deploy
           services:
@@ -42,7 +39,6 @@ pipelines:
             - bin/deploy.sh
     deploy:
       - step:
-          size: 8x
           deployment: deploy
           name: Just Deploy
           services:
@@ -52,7 +48,6 @@ pipelines:
             - bin/deploy.sh
     test:
       - step:
-          size: 8x
           deployment: test
           name: Just Test
           artifacts:
@@ -65,7 +60,6 @@ pipelines:
             - TEST_PLUMBER=true BUILD_DEBUG="${BUILD_DEBUG-%,},usage" bin/test.sh "${aa[@]+"${aa[@]}"}"
     coverage:
       - step:
-          size: 8x
           deployment: coverage
           name: Coverage stats
           artifacts:
