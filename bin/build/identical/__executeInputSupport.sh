@@ -16,6 +16,9 @@
 # _IDENTICAL_ __executeInputSupport EOF
 
 # Support arguments and stdin as arguments to an executor
+# Argument: executor ... -- - The command to run on each line of input or on each additional argument. Arguments to prefix the final variable argument can be supplied prior to an initial `--`.
+# Argument: -- - Alone after the executor forces `stdin` to be ignored. The `--` flag is also removed from the arguments passed to the executor.
+# Argument: ... - Any additional arguments are passed directly to the executor
 __executeInputSupport() {
   local usage="$1" executor=() && shift
 
@@ -31,14 +34,14 @@ __executeInputSupport() {
 
   local byte
   # On Darwin `read -t 0` DOES NOT WORK as a select on stdin
-  if [ $# -eq 0 ] && read -r -t 1 -n 1 byte; then
+  if [ $# -eq 0 ] && IFS="" read -r -t 1 -n 1 byte; then
     local line done=false
     if [ "$byte" = $'\n' ]; then
       __catchEnvironment "$usage" "${executor[@]}" "" || return $?
       byte=""
     fi
     while ! $done; do
-      IFS='' read -r line || done=true
+      IFS="" read -r line || done=true
       [ -n "$byte$line" ] || ! $done || break
       __catchEnvironment "$usage" "${executor[@]}" "$byte$line" || return $?
       byte=""

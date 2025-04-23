@@ -201,7 +201,7 @@ __undo() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# _IDENTICAL_ __executeInputSupport 34
+# _IDENTICAL_ __executeInputSupport 39
 
 # Support arguments and stdin as arguments to an executor
 # Argument: executor ... -- - The command to run on each line of input or on each additional argument. Arguments to prefix the final variable argument can be supplied prior to an initial `--`.
@@ -222,15 +222,14 @@ __executeInputSupport() {
 
   local byte
   # On Darwin `read -t 0` DOES NOT WORK as a select on stdin
-  # On Linux, it does NOT work in all cases (cat as input fails)
-  if [ $# -eq 0 ] && read -r -t 1 -n 1 byte; then
+  if [ $# -eq 0 ] && IFS="" read -r -t 1 -n 1 byte; then
     local line done=false
     if [ "$byte" = $'\n' ]; then
       __catchEnvironment "$usage" "${executor[@]}" "" || return $?
       byte=""
     fi
     while ! $done; do
-      read -r line || done=true
+      IFS="" read -r line || done=true
       [ -n "$byte$line" ] || ! $done || break
       __catchEnvironment "$usage" "${executor[@]}" "$byte$line" || return $?
       byte=""
