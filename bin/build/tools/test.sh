@@ -130,7 +130,7 @@ dumpBinary() {
   if [ -n "$showBytes" ]; then
     endPreprocess=("$endBinary" --bytes="$showBytes")
   fi
-  __catchEnvironment "$usage" "${endPreprocess[@]}" <"$item" | __catchEnvironment "$usage" hexDump | decorate code | decorate wrap "$symbol " || _clean $? "$item" || return $?
+  __catchEnvironment "$usage" "${endPreprocess[@]}" <"$item" | __catchEnvironment "$usage" dumpHex | decorate code | decorate wrap "$symbol " || _clean $? "$item" || return $?
   __catchEnvironment "$usage" rm -rf "$item" || return $?
   return 0
 }

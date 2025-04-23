@@ -435,7 +435,7 @@ _dumpLoadAverages() {
 
 # Output to hex
 # Argument: --size size - Integer. Output at most size bytes of data.
-hexDump() {
+dumpHex() {
   local usage="_${FUNCNAME[0]}"
 
   local size="" arguments=()
@@ -476,7 +476,7 @@ hexDump() {
     done
   fi
 }
-_hexDump() {
+_dumpHex() {
   # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
