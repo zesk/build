@@ -111,7 +111,7 @@ _usageDocumentComplex() {
   usageDocumentSimple "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# IDENTICAL usageDocumentSimple 19
+# IDENTICAL usageDocumentSimple 20
 
 # Output a simple error message for a function
 # Argument: source - File. Required. File where documentation exists.
@@ -120,12 +120,13 @@ _usageDocumentComplex() {
 # Argument: message ... - Optional. String. Message to display to the user.
 # Requires: bashFunctionComment decorate read printf exitString
 usageDocumentSimple() {
-  local source="${1-}" functionName="${2-}" exitCode="${3-}" color helpColor="info" icon="❌" line prefix="" skip=false && shift 3
+  local source="${1-}" functionName="${2-}" exitCode="${3-}" color helpColor="info" icon="❌" line prefix="" done=false skip=false && shift 3
 
   case "$exitCode" in 0) icon="🏆" && color="info" && [ $# -ne 0 ] || skip=true ;; 1) color="error" ;; 2) color="bold-red" ;; *) color="orange" ;; esac
   [ $# -eq 0 ] || [ "$exitCode" -ne 0 ]
   $skip || printf -- "%s [%s] %s\n" "$icon" "$(decorate "code" "$(exitString "$exitCode")")" "$(decorate "$color" "$*")"
-  while read -r line; do
+  while ! $done; do
+    IFS='' read -r line || done=true
     printf "%s%s\n" "$prefix" "$(decorate "$helpColor" "$line")"
     prefix=""
   done < <(bashFunctionComment "$source" "$functionName")

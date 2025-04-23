@@ -8,6 +8,7 @@
 #
 # General reason for this: `read -t 0` which is the ideal solution does not behave identically
 # across platforms to determine if stdin has input. Darwin specifically ignores `-t` when stdin is a pipe or file.
+# Linux does not honor `read -t` in several cases as well so it is not considered reliable
 #
 # So our hack solution is to read a single byte with a 1-second timeout and then add that into our first line of output
 # if needed. Handle the case when the first line is blank (and is a newline)
@@ -31,12 +32,14 @@ __executeInputSupport() {
   local byte
   # On Darwin `read -t 0` DOES NOT WORK as a select on stdin
   if [ $# -eq 0 ] && read -r -t 1 -n 1 byte; then
-    local line
+    local line done=false
     if [ "$byte" = $'\n' ]; then
       __catchEnvironment "$usage" "${executor[@]}" "" || return $?
       byte=""
     fi
-    while read -r line; do
+    while ! $done; do
+      IFS='' read -r line || done=true
+      [ -n "$byte$line" ] || ! $done || break
       __catchEnvironment "$usage" "${executor[@]}" "$byte$line" || return $?
       byte=""
     done

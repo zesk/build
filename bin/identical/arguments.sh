@@ -31,10 +31,12 @@ source "${BASH_SOURCE[0]%/*}/../tools.sh"
 # Argument: --help - Optional. Flag. Display this help.
 # DOC TEMPLATE: --env-file 1
 # Argument: --env-file envFile - Optional. File. Environment file to load - can handle any format.
-# DOC TEMPLATE: assert-common 14
+# DOC TEMPLATE: assert-common 16
 # Argument: --help - Optional. Flag. Display this help.
 # Argument: --line lineNumber - Optional. Integer. Line number of calling function.
-# Argument: --debug - Optional. Flag. Debugging
+# Argument: --line-depth depth - Optional. Integer. The depth in the stack of function calls to find the line number of the calling function.
+# Argument: --debug - Optional. Flag. Debugging enabled for the assertion function.
+# Argument: --debug-lines - Optional. Flag. Debugging of SOLELY differences between --line passed in and the computed line from the --line-depth parameter.
 # Argument: --display - Optional. String. Display name for the condition.
 # Argument: --success - Optional. Boolean. Whether the assertion should pass (`true`) or fail (`false`)
 # Argument: --stderr-match - Optional. String. One or more strings which must match stderr. Implies `--stderr-ok`

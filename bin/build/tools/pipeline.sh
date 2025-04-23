@@ -44,7 +44,7 @@ buildFailed() {
   statusMessage --last printf -- "%s\n" "$failBar"
   # shellcheck disable=SC2094
   dumpPipe --lines "$showLines" --tail "$(basename "$quietLog")" "$@" <"$quietLog"
-  _environment "Build failed:" "$@" || return $?
+  _environment "Failed:" "$@" || return $?
 }
 
 # IDENTICAL versionSort 51

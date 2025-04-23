@@ -79,12 +79,15 @@ __buildIdenticalRepair() {
 
   home=$(__catchEnvironment "$usage" buildHome) || return $?
   __catchEnvironment "$usage" muzzle cd "$home" || return $?
-  aa=()
-  while read -r item; do
-    aa+=(--singles "$item")
+  local done=false aa=()
+  while ! $done; do
+    read -r item || done=true
+    [ -z "$item" ] || aa+=(--singles "$item")
   done < <(find . -name 'singles.txt' -path '*/identical/*' ! -path "*/.*/*")
-  while read -r item; do
-    aa+=(--repair "$item")
+  done=false
+  while ! $done; do
+    read -r item || done=true
+    [ -z "$item" ] || aa+=(--repair "$item")
   done < <(find "$home" -type d -name identical ! -path "*/.*/*")
   bashDebugInterruptFile --error --interrupt
   set -eou pipefail

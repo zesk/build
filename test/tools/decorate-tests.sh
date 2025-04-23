@@ -9,7 +9,7 @@
 
 testDecorateStdin() {
   assertExitCode 0 decorate green || return $?
-  assertEquals "$(printf "%s\n" "Something notable and prescient" "Leader" | decorate quote)" "\"Something notable and prescient\""$'\n'"\"Leader\""$'\n' || return $?
+  assertEquals "$(printf "%s\n" "Something notable and prescient" "Leader" | decorate quote)" "\"Something notable and prescient\""$'\n'"\"Leader\"" || return $?
 }
 
 testDecorateBasics() {
@@ -35,5 +35,8 @@ testDecorateBasics() {
 }
 
 testDecorateArgs() {
-  assertEquals "$(decorate reset --)" "$(decorate reset <<<"")" || return $?
+  local reset
+
+  reset=$(printf -- '\e[0m')
+  assertEquals "$(decorate reset --)" "$reset" || return $?
 }

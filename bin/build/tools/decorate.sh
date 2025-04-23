@@ -4,7 +4,7 @@
 #
 # NO DEPENDENCIES
 
-# IDENTICAL decorate 215
+# IDENTICAL decorate 217
 
 # Sets the environment variable `BUILD_COLORS` if not set, uses `TERM` to calculate
 #
@@ -85,7 +85,7 @@ _decorations() {
 # Argument: style - String. Required. One of: reset underline no-underline bold no-bold black black-contrast blue cyan green magenta orange red white yellow bold-black bold-black-contrast bold-blue bold-cyan bold-green bold-magenta bold-orange bold-red bold-white bold-yellow code info notice success warning error subtle label value decoration
 # Argument: text - Text to output. If not supplied, outputs a code to change the style to the new style.
 # stdout: Decorated text
-# Requires: isFunction _argument awk __catchEnvironment usageDocument
+# Requires: isFunction _argument awk __catchEnvironment usageDocument __executeInputSupport
 decorate() {
   local usage="_${FUNCNAME[0]}" text="" what="${1-}" lp dp style
   shift && [ -n "$what" ] || __catchArgument "$usage" "Requires at least one argument: \"$*\"" || return $?
@@ -190,7 +190,9 @@ __decorateExtensionEach() {
         formatted+=("$prefix$(decorate "$code" "")")
         byte=""
       fi
-      while read -r item; do
+      local done=false
+      while ! $done; do
+        IFS='' read -r item || done=true
         ! $addIndex || prefix="$index:"
         formatted+=("$prefix$(decorate "$code" "$byte$item")")
         byte=""

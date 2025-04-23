@@ -197,17 +197,18 @@ _identicalCheckSinglesChecker() {
   resultsFile=$(__catchEnvironment "$usage" environmentValueRead "$stateFile" resultsFile) || return $?
   while read -r item; do singles+=("$item"); done < <(__catchEnvironment "$usage" environmentValueReadArray "$stateFile" "singles") || return $?
 
-  local tokenFile targetFile matchFile exitCode=0
+  local tokenFile targetFile matchFile exitCode=0 done=false
   local allSingles=() knownSingles=() knownSinglesReport=() lonelySingles=() lonelySinglesReport=() lonelySinglesFiles=()
 
-  while read -r matchFile; do
+  while ! $done; do
+    read -r matchFile || done=true
+    [ -n "$matchFile" ] || continue
     if [ ! -f "$matchFile.compare" ]; then
       tokenFile="$(dirname "$matchFile")"
       token="$(basename "$matchFile")"
       token="${token%%.match}"
       token="${token#*@}"
       tokenFile="$tokenFile/$token"
-      decorate pair
       IFS=$'\n' read -d "" -r lineCount lineNumber targetFile <"$tokenFile"
       allSingles+=("$token")
       local linesNoun

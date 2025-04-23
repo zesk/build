@@ -11,18 +11,38 @@
 
 # Format test text, special display for blank strings
 __resultText() {
-  local passed="$1" text
+  local passed="$1" text prefix length max=80
   shift
   text="$*"
+  length="${#text}"
+
+  prefix="$(decorate subtle "$(alignRight 9 "${#text} $(plural "${#text}" char chars)")")"
+
   # Hide newlines
   text=$(newlineHide "$text")
-  if "$passed"; then
-    # shellcheck disable=SC2015
-    [ -z "$text" ] && decorate blue "(blank)" || decorate code "$text"
-  else
-    # shellcheck disable=SC2015
-    [ -z "$text" ] && decorate bold-red "(blank)" || decorate error "$text"
+  if stringContains "$text" $'\e'; then
+    text="$(xxd -u -c 32 -l "$max" <<<"$text")"
   fi
+  [ "$length" -lt "$max" ] || text="${text:0:$max} ..."
+  if [ "$length" -eq 0 ]; then
+    text="(blank)"
+    if $passed; then
+      color="blue"
+    else
+      color="bold-red"
+    fi
+  elif $passed; then
+    color="code"
+  else
+    color="error"
+  fi
+  printf "%s %s\n" "$(decorate "$color" "$text")" "$prefix"
+}
+
+___printResultPair() {
+  local label="$1" resultStatus="$2" result="$3" suffix="${4-}"
+  [ -z "$suffix" ] || suffix=" ${suffix# }"
+  printf "%s: %s%s\n" "$label" "$(__resultText "$resultStatus" "$result")" "$suffix"
 }
 
 # Save and report the timing since the last call
@@ -100,10 +120,12 @@ _assertSuccess() {
 }
 
 # Core condition assertion handler
-# DOC TEMPLATE: assert-common 14
+# DOC TEMPLATE: assert-common 16
 # Argument: --help - Optional. Flag. Display this help.
 # Argument: --line lineNumber - Optional. Integer. Line number of calling function.
-# Argument: --debug - Optional. Flag. Debugging
+# Argument: --line-depth depth - Optional. Integer. The depth in the stack of function calls to find the line number of the calling function.
+# Argument: --debug - Optional. Flag. Debugging enabled for the assertion function.
+# Argument: --debug-lines - Optional. Flag. Debugging of SOLELY differences between --line passed in and the computed line from the --line-depth parameter.
 # Argument: --display - Optional. String. Display name for the condition.
 # Argument: --success - Optional. Boolean. Whether the assertion should pass (`true`) or fail (`false`)
 # Argument: --stderr-match - Optional. String. One or more strings which must match stderr. Implies `--stderr-ok`
@@ -124,7 +146,7 @@ _assertConditionHelper() {
   local success=true file="" lineDepth="" lineNumber="" displayName="" tester="" formatter="__resultFormatter"
   local outputContains=() outputNotContains=() stderrContains=() stderrNotContains=()
   local doPlumber="" leaks=()
-  local errorsOk=false dumpFlag=false dumpBinaryFlag=false expectedExitCode=0 code1=false
+  local errorsOk=false dumpFlag=false dumpBinaryFlag=false expectedExitCode=0 code1=false debugLines=false
   local message result testPassed runner exitCode outputFile errorFile stderrTitle stdoutTitle
 
   set -eou pipefail
@@ -217,6 +239,9 @@ _assertConditionHelper() {
         doPlumber=true
         leaks+=(--leak "$(usageArgumentString "$usage" "$argument globalName" "${1-}")") || return $?
         ;;
+      --debug-lines)
+        debugLines=true
+        ;;
       --code1)
         code1=true
         ;;
@@ -234,7 +259,7 @@ _assertConditionHelper() {
     local computeLine="${BASH_LINENO[lineDepth]}"
     if [ -z "$lineNumber" ]; then
       lineNumber="$computeLine"
-    elif [ "$lineNumber" != "$computeLine" ]; then
+    elif [ "$lineNumber" != "$computeLine" ] && $debugLines; then
       displayName="${displayName} (Computed line [$computeLine] != passed line [$lineNumber])"
     fi
   fi
@@ -335,8 +360,8 @@ _assertConditionHelper() {
   fi
   if ! $testPassed || $dumpFlag; then
     if $dumpBinaryFlag; then
-      dumpBinary "$stdoutTitle" <"$outputFile" | dumpPipe "$stdoutTitle" || :
-      dumpBinary "$stderrTitle" <"$errorFile" | dumpPipe "$stderrTitle" || :
+      dumpBinary "$stdoutTitle" <"$outputFile" || :
+      dumpBinary "$stderrTitle" <"$errorFile" || :
     else
       dumpPipe --tail "$stdoutTitle" <"$outputFile" || :
       dumpPipe --tail "$stderrTitle" <"$errorFile" || :
@@ -465,13 +490,27 @@ _assertEqualsHelper() {
   shift
   _assertConditionHelper "$this" --line-depth 2 --test ___assertIsEqual --formatter ___assertIsEqualFormat "$@" || return $?
 }
+
 ___assertIsEqual() {
   [ "${1-}" = "${2-}" ]
 }
+
 ___assertIsEqualFormat() {
-  local testPassed="${1-}" success="${2-}" left="${3-}"
+  local testPassed="${1-}" success="${2-}" left="${3-}" suffix="" compare right
   shift && shift && shift
-  printf -- "%s %s %s\n" "$(__resultText "$testPassed" "$left")" "$(_choose "$success" "=" "!=")" "$(__resultText "$testPassed" "$*")"
+  right="$*"
+  if $testPassed; then
+    if $success; then
+      printf "%s %s" "$(decorate green "equals")" "$(__resultText true "$left")"
+    else
+      printf "%s %s != %s" "$(decorate green "not equals")" "$(__resultText true "$left")" "$(__resultText false "$right")"
+    fi
+  else
+    compare="$(decorate warning "$(_choose "$success" "DOES NOT EQUAL" "EQUALS")")"
+    decorate error "Test for $(_choose "$success" "equality" "inequality") failed:"
+    ___printResultPair "Expected" true "$left" "$compare"
+    ___printResultPair "  Actual" "$testPassed" "$right"
+  fi
 }
 
 #=== === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === ===

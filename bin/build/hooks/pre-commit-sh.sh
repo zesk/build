@@ -19,13 +19,15 @@ source "${BASH_SOURCE[0]%/*}/../tools.sh"
 # 2. Checks all shell files for errors
 # fn: {base}
 __hookPreCommitShell() {
-  local file changed
   local usage="_${FUNCNAME[0]}"
 
   statusMessage --last printf -- "%s %s (%s)\n" "$(decorate info "[pre-commit]")" "$(decorate code ".sh")" "$(decorate label "Shell files")"
   __catchEnvironment "$usage" gitPreCommitListExtension sh | decorate bold-magenta || return $?
-  changed=()
-  while read -r file; do changed+=("$file"); done < <(gitPreCommitListExtension sh)
+  local done=false changed=() file
+  while ! $done; do
+    read -r file || done=true
+    [ -z "$file" ] || changed+=("$file")
+  done < <(gitPreCommitListExtension sh)
   __catchEnvironment "$usage" bashSanitize "${changed[@]+"${changed[@]}"}" || return $?
 }
 ___hookPreCommitShell() {

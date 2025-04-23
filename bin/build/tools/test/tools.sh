@@ -718,7 +718,7 @@ __testHeading() {
 
   clearLine
   printf -- "%s\n" "$bar"
-  bigText "$@" | decorate code | decorate wrap --fill " " "    "
+  bigText "$@" | decorate wrap --fill " " "    " | decorate code
   printf -- "%s\n" "$bar"
 }
 
@@ -899,7 +899,7 @@ __testRun() {
       resultCode=$?
       stickyCode=$errorTest
       printf "%s\n" "FAILED [$resultCode] $__test" | tee -a "$quietLog"
-      if ! isEmptyFile "$captureStderr"; then
+      if ! isEmptyFile "$captureStderr" && isSubstringInsensitive ";stderr-FAILED;" ";$__flags;"; then
         printf "%s\n" "stderr-FAILED [$resultCode] $__test ALSO has STDERR:" | tee -a "$quietLog"
         dumpPipe <"$captureStderr" | tee -a "$quietLog"
       fi

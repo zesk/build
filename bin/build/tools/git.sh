@@ -863,7 +863,7 @@ gitPreCommitListExtension() {
     [ -f "$directory/$1" ] || __throwEnvironment "$usage" "No files with extension $1" || return $?
     __catchEnvironment "$usage" cat "$directory/$1" || return $?
     shift
-  done
+  done | sort
 }
 _gitPreCommitListExtension() {
   # _IDENTICAL_ usageDocument 1

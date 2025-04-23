@@ -165,7 +165,7 @@ usageDocument() {
   usageDocumentSimple "$@"
 }
 
-# IDENTICAL usageDocumentSimple 19
+# IDENTICAL usageDocumentSimple 20
 
 # Output a simple error message for a function
 # Argument: source - File. Required. File where documentation exists.
@@ -174,12 +174,13 @@ usageDocument() {
 # Argument: message ... - Optional. String. Message to display to the user.
 # Requires: bashFunctionComment decorate read printf exitString
 usageDocumentSimple() {
-  local source="${1-}" functionName="${2-}" exitCode="${3-}" color helpColor="info" icon="❌" line prefix="" skip=false && shift 3
+  local source="${1-}" functionName="${2-}" exitCode="${3-}" color helpColor="info" icon="❌" line prefix="" done=false skip=false && shift 3
 
   case "$exitCode" in 0) icon="🏆" && color="info" && [ $# -ne 0 ] || skip=true ;; 1) color="error" ;; 2) color="bold-red" ;; *) color="orange" ;; esac
   [ $# -eq 0 ] || [ "$exitCode" -ne 0 ]
   $skip || printf -- "%s [%s] %s\n" "$icon" "$(decorate "code" "$(exitString "$exitCode")")" "$(decorate "$color" "$*")"
-  while read -r line; do
+  while ! $done; do
+    IFS='' read -r line || done=true
     printf "%s%s\n" "$prefix" "$(decorate "$helpColor" "$line")"
     prefix=""
   done < <(bashFunctionComment "$source" "$functionName")
@@ -313,7 +314,7 @@ usageArgumentString() {
   printf "%s\n" "$1"
 }
 
-# IDENTICAL decorate 215
+# IDENTICAL decorate 217
 
 # Sets the environment variable `BUILD_COLORS` if not set, uses `TERM` to calculate
 #
@@ -394,7 +395,7 @@ _decorations() {
 # Argument: style - String. Required. One of: reset underline no-underline bold no-bold black black-contrast blue cyan green magenta orange red white yellow bold-black bold-black-contrast bold-blue bold-cyan bold-green bold-magenta bold-orange bold-red bold-white bold-yellow code info notice success warning error subtle label value decoration
 # Argument: text - Text to output. If not supplied, outputs a code to change the style to the new style.
 # stdout: Decorated text
-# Requires: isFunction _argument awk __catchEnvironment usageDocument
+# Requires: isFunction _argument awk __catchEnvironment usageDocument __executeInputSupport
 decorate() {
   local usage="_${FUNCNAME[0]}" text="" what="${1-}" lp dp style
   shift && [ -n "$what" ] || __catchArgument "$usage" "Requires at least one argument: \"$*\"" || return $?
@@ -499,7 +500,9 @@ __decorateExtensionEach() {
         formatted+=("$prefix$(decorate "$code" "")")
         byte=""
       fi
-      while read -r item; do
+      local done=false
+      while ! $done; do
+        IFS='' read -r item || done=true
         ! $addIndex || prefix="$index:"
         formatted+=("$prefix$(decorate "$code" "$byte$item")")
         byte=""
@@ -528,6 +531,44 @@ __decorateExtensionQuote() {
   text="${text//\"/\\\"}"
   text="${text//\$/\\\$}"
   printf -- "\"%s\"\n" "$text"
+}
+
+# _IDENTICAL_ __executeInputSupport 36
+
+# Support arguments and stdin as arguments to an executor
+__executeInputSupport() {
+  local usage="$1" executor=() && shift
+
+  while [ $# -gt 0 ]; do
+    if [ "$1" = "--" ]; then
+      shift
+      break
+    fi
+    executor+=("$1")
+    shift
+  done
+  [ ${#executor[@]} -gt 0 ] || return 0
+
+  local byte
+  # On Darwin `read -t 0` DOES NOT WORK as a select on stdin
+  if [ $# -eq 0 ] && read -r -t 1 -n 1 byte; then
+    local line done=false
+    if [ "$byte" = $'\n' ]; then
+      __catchEnvironment "$usage" "${executor[@]}" "" || return $?
+      byte=""
+    fi
+    while ! $done; do
+      IFS='' read -r line || done=true
+      [ -n "$byte$line" ] || ! $done || break
+      __catchEnvironment "$usage" "${executor[@]}" "$byte$line" || return $?
+      byte=""
+    done
+  else
+    if [ "${1-}" = "--" ]; then
+      shift
+    fi
+    __catchEnvironment "$usage" "${executor[@]}" "$@" || return $?
+  fi
 }
 
 # IDENTICAL reverseFileLines 12

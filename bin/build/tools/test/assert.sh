@@ -15,10 +15,12 @@
 # If this fails it will output an error and exit.
 #
 # Usage: assertEquals expected actual [ message ]
-# DOC TEMPLATE: assert-common 14
+# DOC TEMPLATE: assert-common 16
 # Argument: --help - Optional. Flag. Display this help.
 # Argument: --line lineNumber - Optional. Integer. Line number of calling function.
-# Argument: --debug - Optional. Flag. Debugging
+# Argument: --line-depth depth - Optional. Integer. The depth in the stack of function calls to find the line number of the calling function.
+# Argument: --debug - Optional. Flag. Debugging enabled for the assertion function.
+# Argument: --debug-lines - Optional. Flag. Debugging of SOLELY differences between --line passed in and the computed line from the --line-depth parameter.
 # Argument: --display - Optional. String. Display name for the condition.
 # Argument: --success - Optional. Boolean. Whether the assertion should pass (`true`) or fail (`false`)
 # Argument: --stderr-match - Optional. String. One or more strings which must match stderr. Implies `--stderr-ok`
@@ -48,10 +50,12 @@ _assertEquals() {
 # If this fails it will output an error and exit.
 # Summary: Assert two strings are not equal
 # Usage: assertNotEquals expected actual [ message ]
-# DOC TEMPLATE: assert-common 14
+# DOC TEMPLATE: assert-common 16
 # Argument: --help - Optional. Flag. Display this help.
 # Argument: --line lineNumber - Optional. Integer. Line number of calling function.
-# Argument: --debug - Optional. Flag. Debugging
+# Argument: --line-depth depth - Optional. Integer. The depth in the stack of function calls to find the line number of the calling function.
+# Argument: --debug - Optional. Flag. Debugging enabled for the assertion function.
+# Argument: --debug-lines - Optional. Flag. Debugging of SOLELY differences between --line passed in and the computed line from the --line-depth parameter.
 # Argument: --display - Optional. String. Display name for the condition.
 # Argument: --success - Optional. Boolean. Whether the assertion should pass (`true`) or fail (`false`)
 # Argument: --stderr-match - Optional. String. One or more strings which must match stderr. Implies `--stderr-ok`
@@ -86,10 +90,12 @@ _assertNotEquals() {
 # Argument: expectedExitCode - A numeric exit code expected from the command
 # Argument: command - The command to run
 # Argument: arguments - Any arguments to pass to the command to run
-# DOC TEMPLATE: assert-common 14
+# DOC TEMPLATE: assert-common 16
 # Argument: --help - Optional. Flag. Display this help.
 # Argument: --line lineNumber - Optional. Integer. Line number of calling function.
-# Argument: --debug - Optional. Flag. Debugging
+# Argument: --line-depth depth - Optional. Integer. The depth in the stack of function calls to find the line number of the calling function.
+# Argument: --debug - Optional. Flag. Debugging enabled for the assertion function.
+# Argument: --debug-lines - Optional. Flag. Debugging of SOLELY differences between --line passed in and the computed line from the --line-depth parameter.
 # Argument: --display - Optional. String. Display name for the condition.
 # Argument: --success - Optional. Boolean. Whether the assertion should pass (`true`) or fail (`false`)
 # Argument: --stderr-match - Optional. String. One or more strings which must match stderr. Implies `--stderr-ok`
@@ -122,10 +128,12 @@ _assertExitCode() {
 # Argument: expectedExitCode - A numeric exit code not expected from the command
 # Argument: command - The command to run
 # Argument: arguments - Any arguments to pass to the command to run
-# DOC TEMPLATE: assert-common 14
+# DOC TEMPLATE: assert-common 16
 # Argument: --help - Optional. Flag. Display this help.
 # Argument: --line lineNumber - Optional. Integer. Line number of calling function.
-# Argument: --debug - Optional. Flag. Debugging
+# Argument: --line-depth depth - Optional. Integer. The depth in the stack of function calls to find the line number of the calling function.
+# Argument: --debug - Optional. Flag. Debugging enabled for the assertion function.
+# Argument: --debug-lines - Optional. Flag. Debugging of SOLELY differences between --line passed in and the computed line from the --line-depth parameter.
 # Argument: --display - Optional. String. Display name for the condition.
 # Argument: --success - Optional. Boolean. Whether the assertion should pass (`true`) or fail (`false`)
 # Argument: --stderr-match - Optional. String. One or more strings which must match stderr. Implies `--stderr-ok`
@@ -154,10 +162,12 @@ _assertNotExitCode() {
 #
 # Usage: {fn} needle haystack
 #
-# DOC TEMPLATE: assert-common 14
+# DOC TEMPLATE: assert-common 16
 # Argument: --help - Optional. Flag. Display this help.
 # Argument: --line lineNumber - Optional. Integer. Line number of calling function.
-# Argument: --debug - Optional. Flag. Debugging
+# Argument: --line-depth depth - Optional. Integer. The depth in the stack of function calls to find the line number of the calling function.
+# Argument: --debug - Optional. Flag. Debugging enabled for the assertion function.
+# Argument: --debug-lines - Optional. Flag. Debugging of SOLELY differences between --line passed in and the computed line from the --line-depth parameter.
 # Argument: --display - Optional. String. Display name for the condition.
 # Argument: --success - Optional. Boolean. Whether the assertion should pass (`true`) or fail (`false`)
 # Argument: --stderr-match - Optional. String. One or more strings which must match stderr. Implies `--stderr-ok`
@@ -187,10 +197,12 @@ _assertContains() {
 #
 # Usage: {fn} needle haystack
 #
-# DOC TEMPLATE: assert-common 14
+# DOC TEMPLATE: assert-common 16
 # Argument: --help - Optional. Flag. Display this help.
 # Argument: --line lineNumber - Optional. Integer. Line number of calling function.
-# Argument: --debug - Optional. Flag. Debugging
+# Argument: --line-depth depth - Optional. Integer. The depth in the stack of function calls to find the line number of the calling function.
+# Argument: --debug - Optional. Flag. Debugging enabled for the assertion function.
+# Argument: --debug-lines - Optional. Flag. Debugging of SOLELY differences between --line passed in and the computed line from the --line-depth parameter.
 # Argument: --display - Optional. String. Display name for the condition.
 # Argument: --success - Optional. Boolean. Whether the assertion should pass (`true`) or fail (`false`)
 # Argument: --stderr-match - Optional. String. One or more strings which must match stderr. Implies `--stderr-ok`
@@ -226,10 +238,12 @@ _assertNotContains() {
 #
 # Usage: assertDirectoryExists directory [ message ... ]
 #
-# DOC TEMPLATE: assert-common 14
+# DOC TEMPLATE: assert-common 16
 # Argument: --help - Optional. Flag. Display this help.
 # Argument: --line lineNumber - Optional. Integer. Line number of calling function.
-# Argument: --debug - Optional. Flag. Debugging
+# Argument: --line-depth depth - Optional. Integer. The depth in the stack of function calls to find the line number of the calling function.
+# Argument: --debug - Optional. Flag. Debugging enabled for the assertion function.
+# Argument: --debug-lines - Optional. Flag. Debugging of SOLELY differences between --line passed in and the computed line from the --line-depth parameter.
 # Argument: --display - Optional. String. Display name for the condition.
 # Argument: --success - Optional. Boolean. Whether the assertion should pass (`true`) or fail (`false`)
 # Argument: --stderr-match - Optional. String. One or more strings which must match stderr. Implies `--stderr-ok`
@@ -260,10 +274,12 @@ _assertDirectoryExists() {
 #
 # Usage: assertDirectoryDoesNotExist directory [ message ... ]
 #
-# DOC TEMPLATE: assert-common 14
+# DOC TEMPLATE: assert-common 16
 # Argument: --help - Optional. Flag. Display this help.
 # Argument: --line lineNumber - Optional. Integer. Line number of calling function.
-# Argument: --debug - Optional. Flag. Debugging
+# Argument: --line-depth depth - Optional. Integer. The depth in the stack of function calls to find the line number of the calling function.
+# Argument: --debug - Optional. Flag. Debugging enabled for the assertion function.
+# Argument: --debug-lines - Optional. Flag. Debugging of SOLELY differences between --line passed in and the computed line from the --line-depth parameter.
 # Argument: --display - Optional. String. Display name for the condition.
 # Argument: --success - Optional. Boolean. Whether the assertion should pass (`true`) or fail (`false`)
 # Argument: --stderr-match - Optional. String. One or more strings which must match stderr. Implies `--stderr-ok`
@@ -295,10 +311,12 @@ _assertDirectoryDoesNotExist() {
 #
 # Usage: {fn} directory [ message ... ]
 #
-# DOC TEMPLATE: assert-common 14
+# DOC TEMPLATE: assert-common 16
 # Argument: --help - Optional. Flag. Display this help.
 # Argument: --line lineNumber - Optional. Integer. Line number of calling function.
-# Argument: --debug - Optional. Flag. Debugging
+# Argument: --line-depth depth - Optional. Integer. The depth in the stack of function calls to find the line number of the calling function.
+# Argument: --debug - Optional. Flag. Debugging enabled for the assertion function.
+# Argument: --debug-lines - Optional. Flag. Debugging of SOLELY differences between --line passed in and the computed line from the --line-depth parameter.
 # Argument: --display - Optional. String. Display name for the condition.
 # Argument: --success - Optional. Boolean. Whether the assertion should pass (`true`) or fail (`false`)
 # Argument: --stderr-match - Optional. String. One or more strings which must match stderr. Implies `--stderr-ok`
@@ -330,10 +348,12 @@ _assertDirectoryEmpty() {
 #
 # Usage: {fn} directory [ message ... ]
 #
-# DOC TEMPLATE: assert-common 14
+# DOC TEMPLATE: assert-common 16
 # Argument: --help - Optional. Flag. Display this help.
 # Argument: --line lineNumber - Optional. Integer. Line number of calling function.
-# Argument: --debug - Optional. Flag. Debugging
+# Argument: --line-depth depth - Optional. Integer. The depth in the stack of function calls to find the line number of the calling function.
+# Argument: --debug - Optional. Flag. Debugging enabled for the assertion function.
+# Argument: --debug-lines - Optional. Flag. Debugging of SOLELY differences between --line passed in and the computed line from the --line-depth parameter.
 # Argument: --display - Optional. String. Display name for the condition.
 # Argument: --success - Optional. Boolean. Whether the assertion should pass (`true`) or fail (`false`)
 # Argument: --stderr-match - Optional. String. One or more strings which must match stderr. Implies `--stderr-ok`
@@ -373,10 +393,12 @@ _assertDirectoryNotEmpty() {
 #
 # Usage: {fn} item [ message ... ]
 #
-# DOC TEMPLATE: assert-common 14
+# DOC TEMPLATE: assert-common 16
 # Argument: --help - Optional. Flag. Display this help.
 # Argument: --line lineNumber - Optional. Integer. Line number of calling function.
-# Argument: --debug - Optional. Flag. Debugging
+# Argument: --line-depth depth - Optional. Integer. The depth in the stack of function calls to find the line number of the calling function.
+# Argument: --debug - Optional. Flag. Debugging enabled for the assertion function.
+# Argument: --debug-lines - Optional. Flag. Debugging of SOLELY differences between --line passed in and the computed line from the --line-depth parameter.
 # Argument: --display - Optional. String. Display name for the condition.
 # Argument: --success - Optional. Boolean. Whether the assertion should pass (`true`) or fail (`false`)
 # Argument: --stderr-match - Optional. String. One or more strings which must match stderr. Implies `--stderr-ok`
@@ -407,10 +429,12 @@ _assertFileExists() {
 #
 # Usage: {fn} item [ message ... ]
 #
-# DOC TEMPLATE: assert-common 14
+# DOC TEMPLATE: assert-common 16
 # Argument: --help - Optional. Flag. Display this help.
 # Argument: --line lineNumber - Optional. Integer. Line number of calling function.
-# Argument: --debug - Optional. Flag. Debugging
+# Argument: --line-depth depth - Optional. Integer. The depth in the stack of function calls to find the line number of the calling function.
+# Argument: --debug - Optional. Flag. Debugging enabled for the assertion function.
+# Argument: --debug-lines - Optional. Flag. Debugging of SOLELY differences between --line passed in and the computed line from the --line-depth parameter.
 # Argument: --display - Optional. String. Display name for the condition.
 # Argument: --success - Optional. Boolean. Whether the assertion should pass (`true`) or fail (`false`)
 # Argument: --stderr-match - Optional. String. One or more strings which must match stderr. Implies `--stderr-ok`
@@ -452,10 +476,12 @@ _assertFileDoesNotExist() {
 # If this fails it will output an error and exit.
 #
 # Usage: assertOutputEquals expected binary [ parameters ]
-# DOC TEMPLATE: assert-common 14
+# DOC TEMPLATE: assert-common 16
 # Argument: --help - Optional. Flag. Display this help.
 # Argument: --line lineNumber - Optional. Integer. Line number of calling function.
-# Argument: --debug - Optional. Flag. Debugging
+# Argument: --line-depth depth - Optional. Integer. The depth in the stack of function calls to find the line number of the calling function.
+# Argument: --debug - Optional. Flag. Debugging enabled for the assertion function.
+# Argument: --debug-lines - Optional. Flag. Debugging of SOLELY differences between --line passed in and the computed line from the --line-depth parameter.
 # Argument: --display - Optional. String. Display name for the condition.
 # Argument: --success - Optional. Boolean. Whether the assertion should pass (`true`) or fail (`false`)
 # Argument: --stderr-match - Optional. String. One or more strings which must match stderr. Implies `--stderr-ok`
@@ -486,10 +512,12 @@ _assertOutputEquals() {
 # If this fails it will output the command result to stdout.
 #
 # Usage: {fn} expected command [ arguments ... ]
-# DOC TEMPLATE: assert-common 14
+# DOC TEMPLATE: assert-common 16
 # Argument: --help - Optional. Flag. Display this help.
 # Argument: --line lineNumber - Optional. Integer. Line number of calling function.
-# Argument: --debug - Optional. Flag. Debugging
+# Argument: --line-depth depth - Optional. Integer. The depth in the stack of function calls to find the line number of the calling function.
+# Argument: --debug - Optional. Flag. Debugging enabled for the assertion function.
+# Argument: --debug-lines - Optional. Flag. Debugging of SOLELY differences between --line passed in and the computed line from the --line-depth parameter.
 # Argument: --display - Optional. String. Display name for the condition.
 # Argument: --success - Optional. Boolean. Whether the assertion should pass (`true`) or fail (`false`)
 # Argument: --stderr-match - Optional. String. One or more strings which must match stderr. Implies `--stderr-ok`
@@ -524,10 +552,12 @@ _assertOutputContains() {
 # If this fails it will output the command result to stdout.
 #
 # Usage: assertOutputDoesNotContain expected command [ arguments ... ]
-# DOC TEMPLATE: assert-common 14
+# DOC TEMPLATE: assert-common 16
 # Argument: --help - Optional. Flag. Display this help.
 # Argument: --line lineNumber - Optional. Integer. Line number of calling function.
-# Argument: --debug - Optional. Flag. Debugging
+# Argument: --line-depth depth - Optional. Integer. The depth in the stack of function calls to find the line number of the calling function.
+# Argument: --debug - Optional. Flag. Debugging enabled for the assertion function.
+# Argument: --debug-lines - Optional. Flag. Debugging of SOLELY differences between --line passed in and the computed line from the --line-depth parameter.
 # Argument: --display - Optional. String. Display name for the condition.
 # Argument: --success - Optional. Boolean. Whether the assertion should pass (`true`) or fail (`false`)
 # Argument: --stderr-match - Optional. String. One or more strings which must match stderr. Implies `--stderr-ok`
@@ -560,10 +590,12 @@ _assertOutputDoesNotContain() {
 # Assert a file contains one or more strings
 # Usage: {fn} fileName string0 [ ... ]
 #
-# DOC TEMPLATE: assert-common 14
+# DOC TEMPLATE: assert-common 16
 # Argument: --help - Optional. Flag. Display this help.
 # Argument: --line lineNumber - Optional. Integer. Line number of calling function.
-# Argument: --debug - Optional. Flag. Debugging
+# Argument: --line-depth depth - Optional. Integer. The depth in the stack of function calls to find the line number of the calling function.
+# Argument: --debug - Optional. Flag. Debugging enabled for the assertion function.
+# Argument: --debug-lines - Optional. Flag. Debugging of SOLELY differences between --line passed in and the computed line from the --line-depth parameter.
 # Argument: --display - Optional. String. Display name for the condition.
 # Argument: --success - Optional. Boolean. Whether the assertion should pass (`true`) or fail (`false`)
 # Argument: --stderr-match - Optional. String. One or more strings which must match stderr. Implies `--stderr-ok`
@@ -596,10 +628,12 @@ _assertFileContains() {
 # Assert a file does not contains any occurrence of one or more strings
 # Usage: {fn} fileName string0 [ ... ]
 #
-# DOC TEMPLATE: assert-common 14
+# DOC TEMPLATE: assert-common 16
 # Argument: --help - Optional. Flag. Display this help.
 # Argument: --line lineNumber - Optional. Integer. Line number of calling function.
-# Argument: --debug - Optional. Flag. Debugging
+# Argument: --line-depth depth - Optional. Integer. The depth in the stack of function calls to find the line number of the calling function.
+# Argument: --debug - Optional. Flag. Debugging enabled for the assertion function.
+# Argument: --debug-lines - Optional. Flag. Debugging of SOLELY differences between --line passed in and the computed line from the --line-depth parameter.
 # Argument: --display - Optional. String. Display name for the condition.
 # Argument: --success - Optional. Boolean. Whether the assertion should pass (`true`) or fail (`false`)
 # Argument: --stderr-match - Optional. String. One or more strings which must match stderr. Implies `--stderr-ok`
@@ -629,10 +663,12 @@ _assertFileDoesNotContain() {
 # Assert a file has an expected size in bytes
 # Usage: {fn} expectedSize [ fileName ... ]
 #
-# DOC TEMPLATE: assert-common 14
+# DOC TEMPLATE: assert-common 16
 # Argument: --help - Optional. Flag. Display this help.
 # Argument: --line lineNumber - Optional. Integer. Line number of calling function.
-# Argument: --debug - Optional. Flag. Debugging
+# Argument: --line-depth depth - Optional. Integer. The depth in the stack of function calls to find the line number of the calling function.
+# Argument: --debug - Optional. Flag. Debugging enabled for the assertion function.
+# Argument: --debug-lines - Optional. Flag. Debugging of SOLELY differences between --line passed in and the computed line from the --line-depth parameter.
 # Argument: --display - Optional. String. Display name for the condition.
 # Argument: --success - Optional. Boolean. Whether the assertion should pass (`true`) or fail (`false`)
 # Argument: --stderr-match - Optional. String. One or more strings which must match stderr. Implies `--stderr-ok`
@@ -662,10 +698,12 @@ _assertFileSize() {
 # Assert a file does NOT have an expected size in bytes
 # Usage: {fn} expectedSize [ fileName ... ]
 #
-# DOC TEMPLATE: assert-common 14
+# DOC TEMPLATE: assert-common 16
 # Argument: --help - Optional. Flag. Display this help.
 # Argument: --line lineNumber - Optional. Integer. Line number of calling function.
-# Argument: --debug - Optional. Flag. Debugging
+# Argument: --line-depth depth - Optional. Integer. The depth in the stack of function calls to find the line number of the calling function.
+# Argument: --debug - Optional. Flag. Debugging enabled for the assertion function.
+# Argument: --debug-lines - Optional. Flag. Debugging of SOLELY differences between --line passed in and the computed line from the --line-depth parameter.
 # Argument: --display - Optional. String. Display name for the condition.
 # Argument: --success - Optional. Boolean. Whether the assertion should pass (`true`) or fail (`false`)
 # Argument: --stderr-match - Optional. String. One or more strings which must match stderr. Implies `--stderr-ok`
@@ -695,10 +733,12 @@ _assertNotFileSize() {
 # Assert a file is empty (zero sized)
 # Usage: {fn} [ fileName ... ]
 #
-# DOC TEMPLATE: assert-common 14
+# DOC TEMPLATE: assert-common 16
 # Argument: --help - Optional. Flag. Display this help.
 # Argument: --line lineNumber - Optional. Integer. Line number of calling function.
-# Argument: --debug - Optional. Flag. Debugging
+# Argument: --line-depth depth - Optional. Integer. The depth in the stack of function calls to find the line number of the calling function.
+# Argument: --debug - Optional. Flag. Debugging enabled for the assertion function.
+# Argument: --debug-lines - Optional. Flag. Debugging of SOLELY differences between --line passed in and the computed line from the --line-depth parameter.
 # Argument: --display - Optional. String. Display name for the condition.
 # Argument: --success - Optional. Boolean. Whether the assertion should pass (`true`) or fail (`false`)
 # Argument: --stderr-match - Optional. String. One or more strings which must match stderr. Implies `--stderr-ok`
@@ -727,10 +767,12 @@ _assertZeroFileSize() {
 # Assert a file is non-empty (non-zero sized)
 # Usage: {fn} [ fileName ... ]
 #
-# DOC TEMPLATE: assert-common 14
+# DOC TEMPLATE: assert-common 16
 # Argument: --help - Optional. Flag. Display this help.
 # Argument: --line lineNumber - Optional. Integer. Line number of calling function.
-# Argument: --debug - Optional. Flag. Debugging
+# Argument: --line-depth depth - Optional. Integer. The depth in the stack of function calls to find the line number of the calling function.
+# Argument: --debug - Optional. Flag. Debugging enabled for the assertion function.
+# Argument: --debug-lines - Optional. Flag. Debugging of SOLELY differences between --line passed in and the computed line from the --line-depth parameter.
 # Argument: --display - Optional. String. Display name for the condition.
 # Argument: --success - Optional. Boolean. Whether the assertion should pass (`true`) or fail (`false`)
 # Argument: --stderr-match - Optional. String. One or more strings which must match stderr. Implies `--stderr-ok`
@@ -767,10 +809,12 @@ _assertNotZeroFileSize() {
 #
 # Assert `leftValue > rightValue`
 #
-# DOC TEMPLATE: assert-common 14
+# DOC TEMPLATE: assert-common 16
 # Argument: --help - Optional. Flag. Display this help.
 # Argument: --line lineNumber - Optional. Integer. Line number of calling function.
-# Argument: --debug - Optional. Flag. Debugging
+# Argument: --line-depth depth - Optional. Integer. The depth in the stack of function calls to find the line number of the calling function.
+# Argument: --debug - Optional. Flag. Debugging enabled for the assertion function.
+# Argument: --debug-lines - Optional. Flag. Debugging of SOLELY differences between --line passed in and the computed line from the --line-depth parameter.
 # Argument: --display - Optional. String. Display name for the condition.
 # Argument: --success - Optional. Boolean. Whether the assertion should pass (`true`) or fail (`false`)
 # Argument: --stderr-match - Optional. String. One or more strings which must match stderr. Implies `--stderr-ok`
@@ -798,10 +842,12 @@ _assertGreaterThan() {
 
 # Assert `leftValue >= rightValue`
 #
-# DOC TEMPLATE: assert-common 14
+# DOC TEMPLATE: assert-common 16
 # Argument: --help - Optional. Flag. Display this help.
 # Argument: --line lineNumber - Optional. Integer. Line number of calling function.
-# Argument: --debug - Optional. Flag. Debugging
+# Argument: --line-depth depth - Optional. Integer. The depth in the stack of function calls to find the line number of the calling function.
+# Argument: --debug - Optional. Flag. Debugging enabled for the assertion function.
+# Argument: --debug-lines - Optional. Flag. Debugging of SOLELY differences between --line passed in and the computed line from the --line-depth parameter.
 # Argument: --display - Optional. String. Display name for the condition.
 # Argument: --success - Optional. Boolean. Whether the assertion should pass (`true`) or fail (`false`)
 # Argument: --stderr-match - Optional. String. One or more strings which must match stderr. Implies `--stderr-ok`
@@ -830,10 +876,12 @@ _assertGreaterThanOrEqual() {
 #
 # Assert `leftValue < rightValue`
 #
-# DOC TEMPLATE: assert-common 14
+# DOC TEMPLATE: assert-common 16
 # Argument: --help - Optional. Flag. Display this help.
 # Argument: --line lineNumber - Optional. Integer. Line number of calling function.
-# Argument: --debug - Optional. Flag. Debugging
+# Argument: --line-depth depth - Optional. Integer. The depth in the stack of function calls to find the line number of the calling function.
+# Argument: --debug - Optional. Flag. Debugging enabled for the assertion function.
+# Argument: --debug-lines - Optional. Flag. Debugging of SOLELY differences between --line passed in and the computed line from the --line-depth parameter.
 # Argument: --display - Optional. String. Display name for the condition.
 # Argument: --success - Optional. Boolean. Whether the assertion should pass (`true`) or fail (`false`)
 # Argument: --stderr-match - Optional. String. One or more strings which must match stderr. Implies `--stderr-ok`
@@ -863,10 +911,12 @@ _assertLessThan() {
 # Assert `leftValue <= rightValue`
 #
 # Usage: {fn} leftValue rightValue [ message ]
-# DOC TEMPLATE: assert-common 14
+# DOC TEMPLATE: assert-common 16
 # Argument: --help - Optional. Flag. Display this help.
 # Argument: --line lineNumber - Optional. Integer. Line number of calling function.
-# Argument: --debug - Optional. Flag. Debugging
+# Argument: --line-depth depth - Optional. Integer. The depth in the stack of function calls to find the line number of the calling function.
+# Argument: --debug - Optional. Flag. Debugging enabled for the assertion function.
+# Argument: --debug-lines - Optional. Flag. Debugging of SOLELY differences between --line passed in and the computed line from the --line-depth parameter.
 # Argument: --display - Optional. String. Display name for the condition.
 # Argument: --success - Optional. Boolean. Whether the assertion should pass (`true`) or fail (`false`)
 # Argument: --stderr-match - Optional. String. One or more strings which must match stderr. Implies `--stderr-ok`

@@ -7,7 +7,7 @@
 # Add configuration to `~/.inputrc` for a key binding
 # Argument: keyStroke - Required. String.
 # Argument: action - Required. String.
-# Example: inputConfigurationAdd "\ep" history-search-backward
+# Example: readlineConfigurationAdd "\ep" history-search-backward
 readlineConfigurationAdd() {
   local usage="_${FUNCNAME[0]}"
   local target=".input""rc" keyStroke="${1-}" action="${2-}" pattern

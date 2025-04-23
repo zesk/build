@@ -58,10 +58,10 @@ __hookPreCommitPHP() {
   home=$(__catchEnvironment "$usage" buildHome) || return $?
   mode=$(_choose "$readOnly" 0440 0640)
 
-  statusMessage decorate info ".php script mode -> $(decorate code "$mode")"
+  statusMessage --last decorate info ".php script mode -> $(decorate code "$mode")"
   __catchEnvironment "$usage" find "$home" -type f -name '*.php' ! -path '*/bin/*' ! -path '*/.*/*' ! -path '*/vendor/*' -exec chmod -v "$mode" {} \; || return $?
   mode=$(_choose "$readOnly" 0550 0750)
-  statusMessage decorate info ".php bin mode -> $(decorate code "$mode")"
+  statusMessage --last decorate info ".php bin mode -> $(decorate code "$mode")"
   __catchEnvironment "$usage" find "$home" -type f -name '*.php' -path '*/bin/*' ! -path '*/.*/*' ! -path '*/vendor/*' -exec chmod -v "$mode" {} \; || return $?
 
   if [ ! -d "$home/vendor" ]; then
@@ -69,8 +69,11 @@ __hookPreCommitPHP() {
     return $?
   fi
 
-  local file changed=()
-  while read -r file; do changed+=("$file"); done < <(gitPreCommitListExtension php)
+  local done=false file changed=()
+  while ! $done; do
+    read -r file || done=true
+    [ -z "$file" ] || changed+=("$file")
+  done < <(gitPreCommitListExtension php)
   if [ ! -x "$home/vendor/bin/php-cs-fixer" ]; then
     statusMessage --last decorate error "Missing binary"
     __throwEnvironment "$usage" "No php-cs-fixer found" || return $?

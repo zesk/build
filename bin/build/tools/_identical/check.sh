@@ -148,7 +148,8 @@ identicalCheck() {
   tempDirectory="$(fileTemporaryName "$usage" -d)" || return $?
   resultsFile=$(fileTemporaryName "$usage") || return $?
   searchFileList=$(fileTemporaryName "$usage") || return $?
-  clean+=("$tempDirectory" "$searchFileList")
+  clean+=("$searchFileList")
+  $debug || clean+=("$tempDirectory")
 
   __identicalCheckGenerateSearchFiles "$usage" "${repairSources[@]+"${repairSources[@]}"}" -- "$rootDir" "${findArgs[@]}" ! -path "*/.*/*" "${excludes[@]+${excludes[@]}}" >"$searchFileList" || _clean $? "${clean[@]}" || return $?
   if [ ! -s "$searchFileList" ]; then
@@ -210,8 +211,9 @@ identicalCheck() {
   fi
 
   __catchEnvironment "$usage" rm -rf "${clean[@]}" || return $?
-
-  rm -rf "$tempDirectory" || :
+  if $debug; then
+    printf "%s %s\n" "$(decorate warning "Keeping directory")" "$(decorate file "$tempDirectory")"
+  fi
   if [ $(($(wc -l <"$resultsFile") + 0)) -ne 0 ]; then
     exitCode=$failureCode
   fi

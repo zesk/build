@@ -507,11 +507,13 @@ __commentArgumentType() {
 # Argument: stateFile - Required. File.
 # Argument: ... - Optional. String. One or more
 _commentArgumentsRemainder() {
-  local usage="$1" specification="$2" stateFile="$3" name value
+  local usage="$1" specification="$2" stateFile="$3" name value done=false
 
   shift && shift && shift
   __commentArgumentSpecificationMagic "$usage" "$specification" || return $?
-  while read -d '' -r name; do
+  while ! $done; do
+    read -d '' -r name || done=true
+    [ -n "$name" ] || continue
     value="$(__catchEnvironment "$usage" environmentValueRead "$stateFile" "$name" "")" || return $?
     if [ -z "$value" ]; then
       __throwArgument "$usage" "$name is required" || return $?
