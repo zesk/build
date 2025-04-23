@@ -109,14 +109,14 @@ _assertFailure() {
   local function="${1-None}"
   incrementor assert-failure >/dev/null
   shift || :
-  statusMessage printf -- "%s: %s %s [%s] " "$(_symbolFail)" "$(decorate error "$function")" "$(decorate info "$@")" "$(_assertTiming)" 1>&2 || return $?
+  statusMessage printf -- "%s %s %s [%s] " "$(_symbolFail)" "$(decorate error "$function")" "$*" "$(_assertTiming)" 1>&2 || return $?
   return "$(_code assert)"
 }
 _assertSuccess() {
   local function="${1-None}"
   incrementor assert-success >/dev/null
   shift || :
-  statusMessage printf -- "%s: %s %s [%s] " "$(_symbolSuccess)" "$(decorate success "$function")" "$(decorate info "$@")" "$(_assertTiming)" || return $?
+  statusMessage printf -- "%s %s %s [%s] " "$(_symbolSuccess)" "$(decorate success "$function")" "$*" "$(_assertTiming)" || return $?
 }
 
 # Core condition assertion handler
@@ -322,12 +322,7 @@ _assertConditionHelper() {
   # shellcheck disable=SC2059
   message="$(printf "$(decorate label %s) %s, " "${pairs[@]+"${pairs[@]}"}")"
   message="${message%, }"
-  message="$(
-    printf -- "%s%s ➡️ %s -> (%s)" \
-      "$linePrefix" "$(decorate code "$this")" \
-      "$result" \
-      "$message"
-  )"
+  message="$(printf -- "%s ➡️ %s -> (%s)" "$linePrefix" "$result" "$message")"
   if $code1 || [ "$expectedExitCode" -ne 0 ]; then
     message="$message -> $exitCode ($(_choose "$success" "=" "!=") expected $expectedExitCode), $(__resultText "$testPassed" "$(_choose "$testPassed" correct incorrect)")"
   fi
@@ -454,7 +449,7 @@ __assertFileContainsHelper() {
     fi
     if [ "$found" = "$success" ]; then
       # shellcheck disable=SC2059
-      _assertSuccess "$this" "$linePrefix$displayName $verb strings: ($(printf -- "\"$(decorate code "%s")\" " "${args[@]+${args[@]}}"))" || return $?
+      _assertSuccess "$this" "$linePrefix$displayName $verb string: \"$(decorate code "$expected")\"" || return $?
     else
       local message
       message="$(printf -- "%s %s %s\n%s" "$linePrefix$displayName" "$notVerb string:" "$(decorate code "$expected")" "$(dumpPipe --tail "$displayName" <"$file")")"
