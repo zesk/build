@@ -10,6 +10,7 @@ Dump things for debugging
 {dumpEnvironment}
 {dumpPipe}
 {dumpBinary}
+{dumpHex}
 {dumpFile}
 {dumpEnvironmentSafe}
 {dumpLoadAverages}
