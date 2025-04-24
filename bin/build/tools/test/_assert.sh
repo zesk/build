@@ -380,7 +380,7 @@ __assertFileContainsHelper() {
   local success="$1"
   local this="$2"
   local argument
-  local lineNumber="" file="" displayName="" lineDepth=""
+  local lineNumber="" file="" displayName="" lineDepth="" debugLines=false
 
   shift 2
 
@@ -400,6 +400,9 @@ __assertFileContainsHelper() {
       --line)
         shift
         lineNumber="${1-}"
+        ;;
+      --debug-lines)
+        debugLines=true
         ;;
       --line-depth)
         shift
@@ -423,7 +426,7 @@ __assertFileContainsHelper() {
     local computeLine="${BASH_LINENO[lineDepth]}"
     if [ -z "$lineNumber" ]; then
       lineNumber="$computeLine"
-    elif [ "$lineNumber" != "$computeLine" ]; then
+    elif [ "$lineNumber" != "$computeLine" ] && $debugLines; then
       displayName="${displayName} (Computed line [$computeLine] != passed line [$lineNumber])"
     fi
   fi
