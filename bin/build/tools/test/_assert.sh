@@ -11,12 +11,10 @@
 
 # Format test text, special display for blank strings
 __resultText() {
-  local passed="$1" text prefix length max=80
-  shift
+  local passed="$1" text length max=80 color && shift
+
   text="$*"
   length="${#text}"
-
-  prefix="$(decorate subtle "$(alignRight 9 "${#text} $(plural "${#text}" char chars)")")"
 
   # Hide newlines
   text=$(newlineHide "$text")
@@ -36,13 +34,23 @@ __resultText() {
   else
     color="error"
   fi
-  printf "%s %s\n" "$(decorate "$color" "$text")" "$prefix"
+  decorate "$color" "$text"
+}
+
+# Format test text, special display for blank strings
+__resultTextSize() {
+  local passed="$1" text length && shift
+
+  text="$*"
+  length="${#text}"
+
+  printf "%s %s\n" "$(__resultText "$passed" "$text")" "$(decorate subtle "$(alignRight 9 "$length $(plural "$length" char chars)")")"
 }
 
 ___printResultPair() {
   local label="$1" resultStatus="$2" result="$3" suffix="${4-}"
   [ -z "$suffix" ] || suffix=" ${suffix# }"
-  printf "%s: %s%s\n" "$label" "$(__resultText "$resultStatus" "$result")" "$suffix"
+  printf "%s: %s%s\n" "$label" "$(__resultTextSize "$resultStatus" "$result")" "$suffix"
 }
 
 # Save and report the timing since the last call
@@ -499,9 +507,9 @@ ___assertIsEqualFormat() {
   right="$*"
   if $testPassed; then
     if $success; then
-      printf "%s %s" "$(decorate green "equals")" "$(__resultText true "$left")"
+      printf "%s %s" "$(decorate green "equals")" "$(__resultTextSize true "$left")"
     else
-      printf "%s %s != %s" "$(decorate green "not equals")" "$(__resultText true "$left")" "$(__resultText false "$right")"
+      printf "%s %s != %s" "$(decorate green "not equals")" "$(__resultTextSize true "$left")" "$(__resultTextSize false "$right")"
     fi
   else
     compare="$(decorate warning "$(_choose "$success" "DOES NOT EQUAL" "EQUALS")")"
@@ -568,7 +576,7 @@ ___assertContainsFormat() {
 
   shift 2
   needle="$(decorate code "${1-}")" && shift
-  haystack=$(__resultText "$testPassed" "$*")
+  haystack=$(__resultTextSize "$testPassed" "$*")
   printf -- "%s %s %s\n" "$needle" "$(_choose "$testPassed" "is contained in" "is not contained in")" "$haystack"
 }
 
@@ -704,7 +712,7 @@ ___assertOutputEqualsFormat() {
 
   message="$(decorate code "$binary")$(printf " \"%s\"" "$@")"
   verb=$(_choose "$success" "matches" "does not match")
-  printf -- "%s %s %s %s" "$message" "$(decorate code "$(cat)")" "$(__resultText "$testPassed" "$verb")" "$(__resultText "$testPassed" "$expected")"
+  printf -- "%s %s %s %s" "$message" "$(decorate code "$(cat)")" "$(__resultText "$testPassed" "$verb")" "$(__resultTextSize "$testPassed" "$expected")"
 }
 
 # Usage: {fn} thisName arguments
