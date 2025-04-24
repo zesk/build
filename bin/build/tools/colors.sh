@@ -60,7 +60,7 @@ __wrapColor() {
 # Argument: --dark - Optional. Flag. Dark mode for darker backgrounds.
 # Argument: --light - Optional. Flag. Light mode for lighter backgrounds.
 # Environment: BUILD_COLORS_MODE
-#
+# BUILD_DEBUG: BUILD_COLORS_MODE
 consoleColorMode() {
   local usage="_${FUNCNAME[0]}"
 
@@ -81,9 +81,15 @@ consoleColorMode() {
       ;;
     --dark)
       BUILD_COLORS_MODE=dark
+      if buildDebugEnabled BUILD_COLORS_MODE; then
+        decorate info "BUILD_COLORS_MODE set to dark"
+      fi
       ;;
     --light)
       BUILD_COLORS_MODE=light
+      if buildDebugEnabled BUILD_COLORS_MODE; then
+        decorate info "BUILD_COLORS_MODE set to light"
+      fi
       ;;
     *)
       # _IDENTICAL_ argumentUnknown 1
