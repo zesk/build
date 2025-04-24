@@ -401,12 +401,12 @@ __assertFileContainsHelper() {
         shift
         lineNumber="${1-}"
         ;;
-      --debug-lines)
-        debugLines=true
-        ;;
       --line-depth)
         shift
         lineDepth="$(usageArgumentPositiveInteger "$usage" "$argument" "${1-}")" || return $?
+        ;;
+      --debug-lines)
+        debugLines=true
         ;;
       *)
         if [ -z "$file" ]; then
