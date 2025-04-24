@@ -18,7 +18,7 @@
 # Requires: buildHome statusMessage buildEnvironmentGetDirectory requireDirectory cachedShaPipe decorate buildDebugEnabled iTerm2SetColors consoleConfigureColorMode
 # BUILD_DEBUG: iterm2-colors - When `bashPromptModule_iTerm2Colors` is enabled, will show colors and how they are applied
 bashPromptModule_iTerm2Colors() {
-  local debug=false home
+  local debug=false home start
 
   home=$(buildHome 2>/dev/null) || return 0
 
@@ -42,20 +42,25 @@ bashPromptModule_iTerm2Colors() {
       hash="$schemeFile:$hash"
       [ "$hash" != "${__BUILD_ITERM2_COLORS-}" ] || return 0
 
-      ! $debug || decorate info "Applying colors from $(decorate file "$schemeFile")"
+      ! $debug || statusMessage decorate info "Applying colors from $(decorate file "$schemeFile") ... "
 
+      start=$(timingStart)
       saveBackground=$(fileTemporaryName _return) || return 0
       iTerm2SetColors --fill --ignore --skip-errors < <(grep -v -e '^#' "$schemeFile" | sed '/^$/d' | tee "$saveBackground") || :
       bg="$(grep -e '^bg=' "$saveBackground" | tail -n 1 | cut -f 2 -d =)"
       rm -rf "$saveBackground"
 
+      ! $debug || timingReport "$start"
+
       __BUILD_ITERM2_COLORS="$hash"
+
+      start=$(timingStart)
 
       local mode
       mode=$(__environment consoleConfigureColorMode "$bg") || :
       [ -z "$mode" ] || BUILD_COLORS_MODE="$mode" && bashPrompt --colors "$(bashPromptColorScheme "$mode")"
 
-      ! $debug || decorate info "Background is now $bg and mode is $mode"
+      ! $debug || timingReport "$start" "Background is now $bg and mode is $mode ... "
       break
     else
       ! $debug || statusMessage --last decorate info "$schemeFile does not exist"
