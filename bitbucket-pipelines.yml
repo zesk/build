@@ -4,6 +4,12 @@
 # Copyright &copy; 2025 Market Acumen Inc.
 #
 # Requires: docker
+#
+# - 8x costs 8x the cost, speedup is 10% or so as most tests are I/O bound
+# - 2x is adequate for Bitbucket Pipelines
+#
+# otherwise tests fail with `interrupt` when memory runs out (I assume)
+#
 image: atlassian/default-image:4
 
 pipelines:
@@ -12,6 +18,7 @@ pipelines:
       - step:
           deployment: documentation
           name: Build documentation
+          size: 2x
           services:
             - docker
           script:
@@ -42,6 +49,7 @@ pipelines:
       - step:
           deployment: deploy
           name: Just Deploy
+          size: 2x
           services:
             - docker
           script:
@@ -51,6 +59,7 @@ pipelines:
       - step:
           deployment: test
           name: Just Test
+          size: 2x
           artifacts:
             - test.stats
             - .last-run-test
@@ -63,6 +72,7 @@ pipelines:
       - step:
           deployment: coverage
           name: Coverage stats
+          size: 2x
           artifacts:
             - test.stats
             - coverage.stats.gz
