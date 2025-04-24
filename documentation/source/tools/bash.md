@@ -28,7 +28,7 @@
 
 ## Builtins
 
-{isBashBuiltin} 
+{isBashBuiltin}
 {bashBuiltins}
 
 ## Linting

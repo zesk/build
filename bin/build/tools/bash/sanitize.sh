@@ -36,26 +36,26 @@ bashSanitize() {
     local argument="$1" __index=$((__count - $# + 1))
     [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-      # _IDENTICAL_ --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      --exec)
-        shift
-        executor=$(usageArgumentCallable "$usage" "$argument" "${1-}") || return $?
-        ;;
-      --home)
-        shift
-        home=$(usageArgumentDirectory "$usage" "$argument" "${1-}") || return $?
-        ;;
-      --check)
-        shift || __throwArgument "$usage" "shift $argument" || return $?
-        checkAssertions+=("$(usageArgumentDirectory "$usage" "checkDirectory" "$1")") || return $?
-        ;;
-      *)
-        break
-        ;;
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    --exec)
+      shift
+      executor=$(usageArgumentCallable "$usage" "$argument" "${1-}") || return $?
+      ;;
+    --home)
+      shift
+      home=$(usageArgumentDirectory "$usage" "$argument" "${1-}") || return $?
+      ;;
+    --check)
+      shift || __throwArgument "$usage" "shift $argument" || return $?
+      checkAssertions+=("$(usageArgumentDirectory "$usage" "checkDirectory" "$1")") || return $?
+      ;;
+    *)
+      break
+      ;;
     esac
     shift || :
   done

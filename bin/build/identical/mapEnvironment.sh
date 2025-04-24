@@ -38,22 +38,22 @@ mapEnvironment() {
     local argument="$1" __index=$((__count - $# + 1))
     [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-      # _IDENTICAL_ --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      --prefix)
-        shift
-        __prefix="$(usageArgumentString "$usage" "$argument" "${1-}")" || return $?
-        ;;
-      --suffix)
-        shift
-        __suffix="$(usageArgumentString "$usage" "$argument" "${1-}")" || return $?
-        ;;
-      *)
-        break
-        ;;
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    --prefix)
+      shift
+      __prefix="$(usageArgumentString "$usage" "$argument" "${1-}")" || return $?
+      ;;
+    --suffix)
+      shift
+      __suffix="$(usageArgumentString "$usage" "$argument" "${1-}")" || return $?
+      ;;
+    *)
+      break
+      ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
     shift
@@ -83,10 +83,10 @@ _mapEnvironmentGenerateSedFile() {
   shift 2
   while [ $# -gt 0 ]; do
     case "$1" in
-      *[%{}]* | LD_*) ;; # skips
-      *)
-        printf "s/%s/%s/g\n" "$(quoteSedPattern "$__prefix$1$__suffix")" "$(quoteSedReplacement "${!1-}")"
-        ;;
+    *[%{}]* | LD_*) ;; # skips
+    *)
+      printf "s/%s/%s/g\n" "$(quoteSedPattern "$__prefix$1$__suffix")" "$(quoteSedReplacement "${!1-}")"
+      ;;
     esac
     shift
   done

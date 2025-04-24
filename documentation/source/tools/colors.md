@@ -13,7 +13,8 @@ Examples:
 
 ## Color Mode
 
-Zesk Build now supports two color modes for light and dark terminals with related contrasts. To set use `consoleColorMode`.
+Zesk Build now supports two color modes for light and dark terminals with related contrasts. To set use
+`consoleColorMode`.
 
 {decorate}
 {decorations}

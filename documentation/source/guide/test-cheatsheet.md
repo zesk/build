@@ -68,7 +68,7 @@ Expression combinations:
 
 Except for `-h` and `-L`, all `FILE`-related tests dereference symbolic links.
 
-Beware that parentheses need to be escaped (e.g., by backslashes) for shells. 
+Beware that parentheses need to be escaped (e.g., by backslashes) for shells.
 
 Binary `-a` and `-o` are ambiguous. Use `test EXPR1 && test EXPR2` or `test EXPR1 || test EXPR2` instead.
 

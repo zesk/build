@@ -4,7 +4,7 @@
 [⬅ Parent ](../index.md)
 <hr />
 
-## Attributes 
+## Attributes
 
 ### Modification time
 
@@ -35,7 +35,7 @@
 {fileSize}
 {betterType}
 
-## Platform 
+## Platform
 
 {realPath}
 {renameLink}
@@ -50,7 +50,7 @@
 ## Finding
 
 {fileMatches}
-{fileNotMatches} 
+{fileNotMatches}
 
 ## Links
 

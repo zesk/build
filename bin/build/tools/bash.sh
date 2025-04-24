@@ -21,18 +21,18 @@ isBashBuiltin() {
   [ $# -gt 0 ] || __throwArgument "$usage" "Need builtin" || return $?
   [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
   case "${1-}" in
-    ":" | "." | "[" | "alias" | "bg" | "bind" | "break" | "builtin" | "case" | "cd" | "command" | "compgen" | "complete" | "continue" | "declare" | "dirs" | "disown" | "echo" | "enable" | "eval" | "exec" | "exit" | "export" | "fc" | "fg" | "getopts")
-      return 0
-      ;;
-    "hash" | "help" | "history" | "if" | "jobs" | "kill" | "let" | "local" | "logout" | "popd" | "printf" | "pushd" | "pwd" | "read" | "readonly" | "return" | "set" | "shift" | "shopt" | "source" | "suspend" | "test" | "times" | "trap" | "type" | "typeset")
-      return 0
-      ;;
-    "ulimit" | "umask" | "unalias" | "unset" | "until" | "wait" | "while")
-      return 0
-      ;;
-    *)
-      return 1
-      ;;
+  ":" | "." | "[" | "alias" | "bg" | "bind" | "break" | "builtin" | "case" | "cd" | "command" | "compgen" | "complete" | "continue" | "declare" | "dirs" | "disown" | "echo" | "enable" | "eval" | "exec" | "exit" | "export" | "fc" | "fg" | "getopts")
+    return 0
+    ;;
+  "hash" | "help" | "history" | "if" | "jobs" | "kill" | "let" | "local" | "logout" | "popd" | "printf" | "pushd" | "pwd" | "read" | "readonly" | "return" | "set" | "shift" | "shopt" | "source" | "suspend" | "test" | "times" | "trap" | "type" | "typeset")
+    return 0
+    ;;
+  "ulimit" | "umask" | "unalias" | "unset" | "until" | "wait" | "while")
+    return 0
+    ;;
+  *)
+    return 1
+    ;;
   esac
 }
 _isBashBuiltin() {
@@ -73,19 +73,19 @@ bashLibrary() {
     local argument="$1" __index=$((__count - $# + 1))
     [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-      # _IDENTICAL_ --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      --verbose)
-        verboseFlag=true
-        ;;
-      *)
-        run="$argument"
-        shift
-        break
-        ;;
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    --verbose)
+      verboseFlag=true
+      ;;
+    *)
+      run="$argument"
+      shift
+      break
+      ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
     shift
@@ -125,23 +125,23 @@ bashSourcePath() {
     local argument="$1" __index=$((__count - $# + 1))
     [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-      # _IDENTICAL_ --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      *)
-        local path
-        path=$(usageArgumentDirectory "$usage" "directory" "$argument") || return $?
-        # shellcheck disable=SC2015
-        while read -r tool; do
-          local tool="${tool#./}"
-          [ -f "$path/$tool" ] || __throwEnvironment "$usage" "$path/$tool is not a bash source file" || return $?
-          [ -x "$path/$tool" ] || __throwEnvironment "$usage" "$path/$tool is not executable" || return $?
-          # shellcheck source=/dev/null
-          source "$path/$tool" || __throwEnvironment "$usage" "source $path/$tool" || return $?
-        done < <(cd "$path" && find "." -type f -name '*.sh' ! -path "*/.*/*" || :)
-        ;;
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    *)
+      local path
+      path=$(usageArgumentDirectory "$usage" "directory" "$argument") || return $?
+      # shellcheck disable=SC2015
+      while read -r tool; do
+        local tool="${tool#./}"
+        [ -f "$path/$tool" ] || __throwEnvironment "$usage" "$path/$tool is not a bash source file" || return $?
+        [ -x "$path/$tool" ] || __throwEnvironment "$usage" "$path/$tool is not executable" || return $?
+        # shellcheck source=/dev/null
+        source "$path/$tool" || __throwEnvironment "$usage" "source $path/$tool" || return $?
+      done < <(cd "$path" && find "." -type f -name '*.sh' ! -path "*/.*/*" || :)
+      ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
     shift
@@ -164,18 +164,18 @@ bashFunctionDefined() {
     local argument="$1" __index=$((__count - $# + 1))
     [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-      # _IDENTICAL_ --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      *)
-        if [ -z "$function" ]; then
-          function="$(usageArgumentString "$usage" "functionName" "${1-}")" || return $?
-        else
-          files+=("$(usageArgumentFile "$usage" "file" "${1-}")") || return $?
-        fi
-        ;;
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    *)
+      if [ -z "$function" ]; then
+        function="$(usageArgumentString "$usage" "functionName" "${1-}")" || return $?
+      else
+        files+=("$(usageArgumentFile "$usage" "file" "${1-}")") || return $?
+      fi
+      ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
     shift
@@ -213,21 +213,21 @@ bashShowUsage() {
     local argument="$1" __index=$((__count - $# + 1))
     [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-      # _IDENTICAL_ --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      --check)
-        checkFlags=(-q)
-        ;;
-      *)
-        if [ -z "$functionName" ]; then
-          functionName=$(usageArgumentString "$usage" "functionName" "$1") || return $?
-        else
-          files+=("$(usageArgumentFile "$usage" "file" "$1")") || return $?
-        fi
-        ;;
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    --check)
+      checkFlags=(-q)
+      ;;
+    *)
+      if [ -z "$functionName" ]; then
+        functionName=$(usageArgumentString "$usage" "functionName" "$1") || return $?
+      else
+        files+=("$(usageArgumentFile "$usage" "file" "$1")") || return $?
+      fi
+      ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
     shift
@@ -260,16 +260,16 @@ bashListFunctions() {
     local argument="$1" __index=$((__count - $# + 1))
     [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-      # _IDENTICAL_ --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      *)
-        local file
-        file=$(usageArgumentFile "$usage" "file" "$1") || return $?
-        __bashListFunctions <"$file"
-        ;;
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    *)
+      local file
+      file=$(usageArgumentFile "$usage" "file" "$1") || return $?
+      __bashListFunctions <"$file"
+      ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
     shift
@@ -306,23 +306,23 @@ bashFunctionCommentVariable() {
     local argument="$1" __index=$((__count - $# + 1))
     [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-      # _IDENTICAL_ --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      --prefix)
-        prefixFlag=true
-        ;;
-      *)
-        if [ -z "$source" ]; then
-          source="$(usageArgumentFile "$usage" "source" "${1-}")" || return $?
-        elif [ -z "$functionName" ]; then
-          functionName=$(usageArgumentString "$usage" "functionName" "${1-}") || return $?
-        elif [ -z "$variableName" ]; then
-          variableName=$(usageArgumentString "$usage" "variableName" "${1-}") || return $?
-        fi
-        ;;
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    --prefix)
+      prefixFlag=true
+      ;;
+    *)
+      if [ -z "$source" ]; then
+        source="$(usageArgumentFile "$usage" "source" "${1-}")" || return $?
+      elif [ -z "$functionName" ]; then
+        functionName=$(usageArgumentString "$usage" "functionName" "${1-}") || return $?
+      elif [ -z "$variableName" ]; then
+        variableName=$(usageArgumentString "$usage" "variableName" "${1-}") || return $?
+      fi
+      ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
     shift
@@ -382,17 +382,17 @@ bashCommentFilter() {
     local argument="$1" __index=$((__count - $# + 1))
     [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-      # _IDENTICAL_ --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      --only)
-        ff=()
-        ;;
-      *)
-        files+=("$(usageArgumentFile "$usage" "file" "$1")") || return $?
-        ;;
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    --only)
+      ff=()
+      ;;
+    *)
+      files+=("$(usageArgumentFile "$usage" "file" "$1")") || return $?
+      ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
     shift

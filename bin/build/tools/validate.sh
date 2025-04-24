@@ -58,14 +58,14 @@ isValidateType() {
     local argument="$1" __index=$((__count - $# + 1))
     [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-      # _IDENTICAL_ --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      *)
-        isFunction "$prefix$argument" || __throwArgument "$usage" "Invalid type $argument" || return $?
-        ;;
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    *)
+      isFunction "$prefix$argument" || __throwArgument "$usage" "Invalid type $argument" || return $?
+      ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
     shift
@@ -188,9 +188,9 @@ __validateTypeBooleanLike() {
   local rs=0
   parseBoolean "${1-}" || rs=$?
   case "$rs" in
-    0) rs="true" ;;
-    1) rs="false" ;;
-    *) __throwValidate "parse boolean failed" || return $? ;;
+  0) rs="true" ;;
+  1) rs="false" ;;
+  *) __throwValidate "parse boolean failed" || return $? ;;
   esac
   printf "%s\n" "$rs"
 }

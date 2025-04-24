@@ -51,15 +51,15 @@ _invertMatches() {
   local output
   while [ $# -gt 0 ]; do
     case "$1" in
-      --stdout-match)
-        output="--stdout-no-match"
-        ;;
-      --stdout-no-match)
-        output="--stdout-match"
-        ;;
-      *)
-        output="$1"
-        ;;
+    --stdout-match)
+      output="--stdout-no-match"
+      ;;
+    --stdout-no-match)
+      output="--stdout-match"
+      ;;
+    *)
+      output="$1"
+      ;;
     esac
     printf "%s\n" "$output"
     shift

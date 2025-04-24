@@ -4,7 +4,8 @@ namespace zesk\SimpleApplication;
 
 use ErrorException;
 
-class Application {
+class Application
+{
 	/**
 	 *
 	 * @return string
@@ -14,7 +15,7 @@ class Application {
 	{
 		$rootDir = dirname(__DIR__);
 		$cacheDir = $rootDir . '/cache';
-
+		
 		if (!is_dir($cacheDir)) {
 			if (!mkdir($cacheDir, 0700)) {
 				throw new ErrorException("Can not create cache: $cacheDir");
@@ -22,7 +23,7 @@ class Application {
 		}
 		return $cacheDir;
 	}
-
+	
 	/**
 	 *
 	 * @return string
@@ -32,7 +33,7 @@ class Application {
 	{
 		return self::namedEnvironmentPath("cron");
 	}
-
+	
 	/**
 	 *
 	 * @return string
@@ -42,7 +43,7 @@ class Application {
 	{
 		return self::namedEnvironmentPath("service");
 	}
-
+	
 	/**
 	 * @param string $prefix
 	 * @return string
@@ -52,7 +53,7 @@ class Application {
 	{
 		return self::cacheFilePath("$prefix-env.json");
 	}
-
+	
 	/**
 	 * @param string $name
 	 * @return string
@@ -62,7 +63,7 @@ class Application {
 	{
 		return self::cacheDirectory() . "/$name";
 	}
-
+	
 	/**
 	 *
 	 * @return void
@@ -72,10 +73,10 @@ class Application {
 	{
 		self::writeEnvironment(self::PREFIX_CRON);
 	}
-
+	
 	const PREFIX_CRON = "cron";
 	const PREFIX_SERVICE = "service";
-
+	
 	/**
 	 *
 	 * @return void
@@ -85,7 +86,7 @@ class Application {
 	{
 		self::writeEnvironment(self::PREFIX_SERVICE);
 	}
-
+	
 	public static function unameSet(): array
 	{
 		return [
@@ -93,7 +94,7 @@ class Application {
 			'arch' => php_uname('m'),
 		];
 	}
-
+	
 	/**
 	 * @param string $prefix
 	 * @return void
@@ -110,11 +111,11 @@ class Application {
 		} else {
 			$first = intval(file_get_contents($firstFile));
 		}
-
+		
 		$data = ['firstRun' => $first, 'lastRun' => $now, 'uname' => self::unameSet()] + $extras + $_SERVER + $_ENV;
 		file_put_contents(self::namedEnvironmentPath($prefix), json_encode($data, JSON_PRETTY_PRINT));
 	}
-
+	
 	/**
 	 * @return string[]
 	 * @throws ErrorException
@@ -131,7 +132,7 @@ class Application {
 		}
 		return $result;
 	}
-
+	
 	/**
 	 * @return string[]
 	 * @throws ErrorException
@@ -140,7 +141,7 @@ class Application {
 	{
 		return self::loadNamedEnvironment(self::PREFIX_CRON);
 	}
-
+	
 	/**
 	 * @return string[]
 	 * @throws ErrorException
@@ -149,7 +150,7 @@ class Application {
 	{
 		return self::loadNamedEnvironment(self::PREFIX_SERVICE);
 	}
-
+	
 	private static function unquote($x)
 	{
 		$first = $x[0];
@@ -159,7 +160,7 @@ class Application {
 		}
 		return $x;
 	}
-
+	
 	/**
 	 * @return array|string[]
 	 */
@@ -181,7 +182,7 @@ class Application {
 		}
 		return $env;
 	}
-
+	
 	/**
 	 * @return string
 	 * @throws ErrorException
@@ -190,7 +191,7 @@ class Application {
 	{
 		return self::cacheDirectory() . "/service.json";
 	}
-
+	
 	/**
 	 * @return void
 	 */

@@ -38,34 +38,34 @@ mapEnvironment2() {
     local argument="$1" __index=$((__count - $# + 1))
     [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-      # _IDENTICAL_ --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      --prefix)
-        shift
-        __prefix=$(usageArgumentString "$usage" "$argument" "${1-}")
-        ;;
-      --suffix)
-        shift
-        __suffix=$(usageArgumentString "$usage" "$argument" "${1-}")
-        ;;
-      --search-filter)
-        shift
-        __searchFilters+=("$(usageArgumentCallable "$usage" "searchFilter" "${1-}")") || return $?
-        ;;
-      --replace-filter)
-        shift
-        __replaceFilters+=("$(usageArgumentCallable "$usage" "replaceFilter" "${1-}")") || return $?
-        ;;
-      --env-file)
-        shift
-        muzzle usageArgumentLoadEnvironmentFile "$usage" "$argument" "${1-}" || return $?
-        ;;
-      *)
-        __ee+=("$(usageArgumentEnvironmentValue "$usage" "environmentVariableName" "$argument")")
-        ;;
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    --prefix)
+      shift
+      __prefix=$(usageArgumentString "$usage" "$argument" "${1-}")
+      ;;
+    --suffix)
+      shift
+      __suffix=$(usageArgumentString "$usage" "$argument" "${1-}")
+      ;;
+    --search-filter)
+      shift
+      __searchFilters+=("$(usageArgumentCallable "$usage" "searchFilter" "${1-}")") || return $?
+      ;;
+    --replace-filter)
+      shift
+      __replaceFilters+=("$(usageArgumentCallable "$usage" "replaceFilter" "${1-}")") || return $?
+      ;;
+    --env-file)
+      shift
+      muzzle usageArgumentLoadEnvironmentFile "$usage" "$argument" "${1-}" || return $?
+      ;;
+    *)
+      __ee+=("$(usageArgumentEnvironmentValue "$usage" "environmentVariableName" "$argument")")
+      ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
     shift

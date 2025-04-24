@@ -343,8 +343,8 @@ fileSize() {
   __catchEnvironment "$usage" buildEnvironmentLoad OSTYPE || return $?
 
   case "$(lowercase "${OSTYPE}")" in
-    *darwin*) opts=("-f" "%z") ;;
-    *) opts=('-c%s') ;;
+  *darwin*) opts=("-f" "%z") ;;
+  *) opts=('-c%s') ;;
   esac
   while [ $# -gt 0 ]; do
     size="$(stat "${opts[@]}" "$1")" || __throwEnvironment "$usage" "Unable to stat" "${opts[@]}" "$1" || return $?
@@ -407,21 +407,21 @@ renameLink() {
     local argument="$1" __index=$((__count - $# + 1))
     [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-      # _IDENTICAL_ --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      *)
-        if [ -z "$from" ]; then
-          from=$(usageArgumentLink "$usage" "from $(betterType "$1")" "$1") || return $?
-        elif [ -z "$to" ]; then
-          to=$(usageArgumentString "$usage" "to $(betterType "$1")" "$1") || return $?
-        else
-          # _IDENTICAL_ argumentUnknown 1
-          __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
-        fi
-        ;;
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    *)
+      if [ -z "$from" ]; then
+        from=$(usageArgumentLink "$usage" "from $(betterType "$1")" "$1") || return $?
+      elif [ -z "$to" ]; then
+        to=$(usageArgumentString "$usage" "to $(betterType "$1")" "$1") || return $?
+      else
+        # _IDENTICAL_ argumentUnknown 1
+        __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
+      fi
+      ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
     shift
@@ -532,18 +532,18 @@ _fileMatchesHelper() {
     local argument="$1" __index=$((__count - $# + 1))
     [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-      # _IDENTICAL_ --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      --)
-        shift
-        break
-        ;;
-      *)
-        patterns+=("$1")
-        ;;
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    --)
+      shift
+      break
+      ;;
+    *)
+      patterns+=("$1")
+      ;;
     esac
     shift
   done
@@ -599,15 +599,15 @@ isEmptyFile() {
     local argument="$1" __index=$((__count - $# + 1))
     [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-      # _IDENTICAL_ --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      *)
-        argument="$(usageArgumentFile "$usage" "file" "$1")" || return $?
-        [ ! -s "$argument" ] || return 1
-        ;;
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    *)
+      argument="$(usageArgumentFile "$usage" "file" "$1")" || return $?
+      [ ! -s "$argument" ] || return 1
+      ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
     shift
@@ -637,24 +637,24 @@ _directoryGamutFileWrapper() {
     local argument="$1" __index=$((__count - $# + 1))
     [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-      # _IDENTICAL_ --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      --find)
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    --find)
+      shift
+      while [ $# -gt 0 ]; do
+        [ "$1" != "--" ] || break
+        findArgs+=("$1")
         shift
-        while [ $# -gt 0 ]; do
-          [ "$1" != "--" ] || break
-          findArgs+=("$1")
-          shift
-        done
-        [ $# -gt 0 ] || break
-        ;;
-      *)
-        [ -z "$directory" ] || __throwArgument "$usage" "Directory already supplied" || return $?
-        directory="$(usageArgumentDirectory "$usage" "$argument" "${1-}")" || return $?
-        ;;
+      done
+      [ $# -gt 0 ] || break
+      ;;
+    *)
+      [ -z "$directory" ] || __throwArgument "$usage" "Directory already supplied" || return $?
+      directory="$(usageArgumentDirectory "$usage" "$argument" "${1-}")" || return $?
+      ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
     shift
@@ -702,25 +702,25 @@ linkCreate() {
     local argument="$1" __index=$((__count - $# + 1))
     [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-      # _IDENTICAL_ --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      --no-backup)
-        backupFlag=false
-        ;;
-      *)
-        if [ -z "$target" ]; then
-          target=$(usageArgumentExists "$usage" "target" "$argument") || return $?
-          path=$(__catchEnvironment "$usage" dirname "$target") || return $?
-        elif [ -z "$linkName" ]; then
-          linkName=$(usageArgumentString "$usage" "linkName" "$argument") || return $?
-        else
-          # _IDENTICAL_ argumentUnknown 1
-          __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
-        fi
-        ;;
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    --no-backup)
+      backupFlag=false
+      ;;
+    *)
+      if [ -z "$target" ]; then
+        target=$(usageArgumentExists "$usage" "target" "$argument") || return $?
+        path=$(__catchEnvironment "$usage" dirname "$target") || return $?
+      elif [ -z "$linkName" ]; then
+        linkName=$(usageArgumentString "$usage" "linkName" "$argument") || return $?
+      else
+        # _IDENTICAL_ argumentUnknown 1
+        __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
+      fi
+      ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
     shift

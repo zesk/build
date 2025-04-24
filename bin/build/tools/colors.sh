@@ -74,21 +74,21 @@ consoleColorMode() {
     local argument="$1" __index=$((__count - $# + 1))
     [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-      # _IDENTICAL_ --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      --dark)
-        BUILD_COLORS_MODE=dark
-        ;;
-      --light)
-        BUILD_COLORS_MODE=light
-        ;;
-      *)
-        # _IDENTICAL_ argumentUnknown 1
-        __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
-        ;;
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    --dark)
+      BUILD_COLORS_MODE=dark
+      ;;
+    --light)
+      BUILD_COLORS_MODE=light
+      ;;
+    *)
+      # _IDENTICAL_ argumentUnknown 1
+      __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
+      ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
     shift
@@ -281,7 +281,7 @@ semanticColorTest() {
     subtle
   )
   for i in "${colors[@]}"; do
-    decorate reset
+    decorate reset --
     decorate "$i" "$i: The quick brown fox jumped over the lazy dog."
   done
 }
@@ -395,37 +395,37 @@ statusMessage() {
     local argument="$1" __index=$((__count - $# + 1))
     [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-      # _IDENTICAL_ --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      --first)
-        if ! hasConsoleAnimation; then
-          shift
-          __catchEnvironment "$usage" printf -- "%s" "$("$@")" || return $?
-          return 0
-        fi
-        ;;
-      --inline)
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    --first)
+      if ! hasConsoleAnimation; then
         shift
-        local suffix="\n"
-        ! hasConsoleAnimation || suffix=""
-        __catchEnvironment "$usage" printf -- "%s$suffix" "$("$@")" || return $?
+        __catchEnvironment "$usage" printf -- "%s" "$("$@")" || return $?
         return 0
-        ;;
-      --last)
-        if hasConsoleAnimation; then
-          lastMessage=$'\n'
-        fi
-        ;;
-      -*)
-        # _IDENTICAL_ argumentUnknown 1
-        __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
-        ;;
-      *)
-        break
-        ;;
+      fi
+      ;;
+    --inline)
+      shift
+      local suffix="\n"
+      ! hasConsoleAnimation || suffix=""
+      __catchEnvironment "$usage" printf -- "%s$suffix" "$("$@")" || return $?
+      return 0
+      ;;
+    --last)
+      if hasConsoleAnimation; then
+        lastMessage=$'\n'
+      fi
+      ;;
+    -*)
+      # _IDENTICAL_ argumentUnknown 1
+      __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
+      ;;
+    *)
+      break
+      ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
     shift
@@ -631,17 +631,17 @@ __colorHexToInteger() {
 __colorParse() {
   local color="$1"
   case "${#color}" in
-    3) __colorHexToInteger "${color:0:1}${color:0:1}${color:1:1}${color:1:1}${color:2:1}${color:2:1}" ;;
-    6) __colorHexToInteger "$color" ;;
-    *) printf "%s\n" "hex-length" 1>&2 && return 1 ;;
+  3) __colorHexToInteger "${color:0:1}${color:0:1}${color:1:1}${color:1:1}${color:2:1}${color:2:1}" ;;
+  6) __colorHexToInteger "$color" ;;
+  *) printf "%s\n" "hex-length" 1>&2 && return 1 ;;
   esac
 }
 __colorParseArgument() {
   local argument="${1-}"
   case "$argument" in
-    [[:xdigit:]]*) __colorParse "$argument" || return 1 ;;
-    [[:alpha:]]*:[[:xdigit:]]*) __colorParse "${argument#*:}" || return 1 ;;
-    *) printf -- "%s\n" "invalid-color" 1>&2 && return 1 ;;
+  [[:xdigit:]]*) __colorParse "$argument" || return 1 ;;
+  [[:alpha:]]*:[[:xdigit:]]*) __colorParse "${argument#*:}" || return 1 ;;
+  *) printf -- "%s\n" "invalid-color" 1>&2 && return 1 ;;
   esac
 }
 

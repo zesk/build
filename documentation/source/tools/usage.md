@@ -77,11 +77,10 @@ Essentially a `usage` function is a failure handler. If you need a simple `usage
 {usageArgumentMissing}
 {usageArgumentUnknown}
 
-
 {buildEnvironmentGetDirectory}
 {dateValid}
 
-## Lists 
+## Lists
 
 {usageArgumentArray}
 {usageArgumentColonDelimitedList}

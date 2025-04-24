@@ -87,11 +87,11 @@ isTrue() {
   while [ $# -gt 0 ]; do
     value=$(lowercase "$1")
     case "$value" in
-      1 | true | yes | enabled | y) ;;
-      "" | 0 | false | no | disabled | n | null | nil | "0.0") return 1 ;;
-      *)
-        ! isInteger "$value" || [ "$value" -ne 0 ] || ! isNumber "$value" || [ "$(truncateFloat "$value")" -ne 0 ] || return 1
-        ;;
+    1 | true | yes | enabled | y) ;;
+    "" | 0 | false | no | disabled | n | null | nil | "0.0") return 1 ;;
+    *)
+      ! isInteger "$value" || [ "$value" -ne 0 ] || ! isNumber "$value" || [ "$(truncateFloat "$value")" -ne 0 ] || return 1
+      ;;
     esac
     shift
   done
@@ -103,13 +103,13 @@ isType() {
   local text
   text=$(declare -p "$1" 2>/dev/null) || return 1
   case "$text" in
-    *"declare -ax "*) printf -- "%s\n" "array" "export" ;;
-    *"declare -a "*) printf -- "%s\n" "array" "local" ;;
-    *"declare -x "*) printf -- "%s\n" "string" "export" ;;
-    *"declare -- "*) printf -- "%s\n" "string" "local" ;;
-    *"declare -fx "*) printf -- "%s\n" "function" "export" ;;
-    *"declare -f "*) printf -- "%s\n" "function" "local" ;;
-    *) __throwArgument "$usage" "Unknown type: $1 -> \"$text\"" || return $? ;;
+  *"declare -ax "*) printf -- "%s\n" "array" "export" ;;
+  *"declare -a "*) printf -- "%s\n" "array" "local" ;;
+  *"declare -x "*) printf -- "%s\n" "string" "export" ;;
+  *"declare -- "*) printf -- "%s\n" "string" "local" ;;
+  *"declare -fx "*) printf -- "%s\n" "function" "export" ;;
+  *"declare -f "*) printf -- "%s\n" "function" "local" ;;
+  *) __throwArgument "$usage" "Unknown type: $1 -> \"$text\"" || return $? ;;
   esac
 }
 

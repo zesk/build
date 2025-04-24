@@ -52,8 +52,8 @@
 
 ## git pre-commit hook
 
-{gitPreCommitSetup} 
-{gitPreCommitHeader} 
-{gitPreCommitHasExtension} 
-{gitPreCommitListExtension} 
+{gitPreCommitSetup}
+{gitPreCommitHeader}
+{gitPreCommitHasExtension}
+{gitPreCommitListExtension}
 {gitPreCommitCleanup}

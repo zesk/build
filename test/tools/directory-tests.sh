@@ -53,7 +53,7 @@ testDirectoryRelativePath() {
 }
 
 __testDirectoryRelativePathData() {
-  cat<<'EOF'
+  cat <<'EOF'
 :.
 abc:
 /abc:..

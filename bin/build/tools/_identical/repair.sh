@@ -25,36 +25,36 @@ identicalRepair() {
     local argument="$1" __index=$((__count - $# + 1))
     [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-      # _IDENTICAL_ --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      --no-map)
-        fileMap=false
-        ;;
-      --prefix)
-        [ -z "$prefix" ] || __throwArgument "$usage" "single $argument only:" "$arguments" || return $?
-        shift
-        prefix="$(usageArgumentString "$usage" "$argument" "${1-}")" || return $?
-        ;;
-      --token)
-        [ -z "$token" ] || __throwArgument "$usage" "single $argument only:" "$arguments" || return $?
-        shift
-        token="$(usageArgumentString "$usage" "$argument" "${1-}")" || return $?
-        ;;
-      --stdout)
-        stdout=true
-        ;;
-      *)
-        if [ -z "$source" ]; then
-          source=$(usageArgumentFile "$usage" "source" "$argument") || return $?
-        elif [ -z "$destination" ]; then
-          destination=$(usageArgumentFile "$usage" "destination" "$argument") || return $?
-        else
-          __throwArgument "$usage" "unknown argument: $(decorate value "$argument")" || return $?
-        fi
-        ;;
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    --no-map)
+      fileMap=false
+      ;;
+    --prefix)
+      [ -z "$prefix" ] || __throwArgument "$usage" "single $argument only:" "$arguments" || return $?
+      shift
+      prefix="$(usageArgumentString "$usage" "$argument" "${1-}")" || return $?
+      ;;
+    --token)
+      [ -z "$token" ] || __throwArgument "$usage" "single $argument only:" "$arguments" || return $?
+      shift
+      token="$(usageArgumentString "$usage" "$argument" "${1-}")" || return $?
+      ;;
+    --stdout)
+      stdout=true
+      ;;
+    *)
+      if [ -z "$source" ]; then
+        source=$(usageArgumentFile "$usage" "source" "$argument") || return $?
+      elif [ -z "$destination" ]; then
+        destination=$(usageArgumentFile "$usage" "destination" "$argument") || return $?
+      else
+        __throwArgument "$usage" "unknown argument: $(decorate value "$argument")" || return $?
+      fi
+      ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
     shift

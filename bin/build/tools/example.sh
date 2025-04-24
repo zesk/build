@@ -41,36 +41,36 @@ exampleFunction() {
     local argument="$1" __index=$((__count - $# + 1))
     [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-      # _IDENTICAL_ --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      # _IDENTICAL_ --handler 4
-      --handler)
-        shift
-        usage=$(usageArgumentFunction "$usage" "$argument" "${1-}") || return $?
-        ;;
-      --easy)
-        easyFlag=true
-        ;;
-      --name)
-        # shift here never fails as [ #$ -gt 0 ]
-        shift
-        name="$(usageArgumentString "$usage" "$argument" "${1-}")" || return $?
-        ;;
-      --path)
-        shift
-        path="$(usageArgumentDirectory "$usage" "$argument" "${1-}")" || return $?
-        ;;
-      --target)
-        shift
-        target="$(usageArgumentFileDirectory "$usage" "$argument" "${1-}")" || return $?
-        ;;
-      *)
-        # _IDENTICAL_ argumentUnknown 1
-        __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
-        ;;
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    # _IDENTICAL_ --handler 4
+    --handler)
+      shift
+      usage=$(usageArgumentFunction "$usage" "$argument" "${1-}") || return $?
+      ;;
+    --easy)
+      easyFlag=true
+      ;;
+    --name)
+      # shift here never fails as [ #$ -gt 0 ]
+      shift
+      name="$(usageArgumentString "$usage" "$argument" "${1-}")" || return $?
+      ;;
+    --path)
+      shift
+      path="$(usageArgumentDirectory "$usage" "$argument" "${1-}")" || return $?
+      ;;
+    --target)
+      shift
+      target="$(usageArgumentFileDirectory "$usage" "$argument" "${1-}")" || return $?
+      ;;
+    *)
+      # _IDENTICAL_ argumentUnknown 1
+      __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
+      ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
     shift
@@ -195,15 +195,15 @@ __hookGitPostCommit() {
     local argument="$1" __index=$((__count - $# + 1))
     [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-      # _IDENTICAL_ --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      *)
-        # _IDENTICAL_ argumentUnknown 1
-        __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
-        ;;
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    *)
+      # _IDENTICAL_ argumentUnknown 1
+      __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
+      ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
     shift

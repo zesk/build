@@ -124,79 +124,79 @@ _installRemotePackage() {
     local argument="$1" __index=$((__count - $# + 1))
     [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-      # _IDENTICAL_ --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      --source)
-        shift
-        source=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
-        ;;
-      --name)
-        shift
-        name=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
-        ;;
-      --mock | --local)
-        [ -z "$localPath" ] || __throwArgument "$usage" "$argument already" || return $?
-        shift
-        [ -n "${1-}" ] || __throwArgument "$usage" "$argument blank argument #$__index" || return $?
-        localPath="$(__catchArgument "$usage" realPath "${1%/}")" || return $?
-        [ -x "$localPath/tools.sh" ] || __throwArgument "$usage" "$argument argument (\"$(decorate code "$localPath")\") must be path to bin/build containing tools.sh" || return $?
-        ;;
-      --user | --header | --password)
-        shift
-        fetchArguments+=("$argument" "$(usageArgumentString "$usage" "$argument" "${1-}")")
-        ;;
-      --url)
-        shift
-        [ -z "$url" ] || __throwArgument "$usage" "$argument already" || return $?
-        [ -n "${1-}" ] || __throwArgument "$usage" "$argument blank argument" || return $?
-        url="$1"
-        ;;
-      --version-function)
-        shift
-        [ -z "$versionFunction" ] || __throwArgument "$usage" "$argument already" || return $?
-        isFunction "${1-}" || __throwArgument "$usage" "$argument not callable: ${1-}" || return $?
-        versionFunction="$1"
-        ;;
-      --url-function)
-        shift
-        [ -z "$urlFunction" ] || __throwArgument "$usage" "$argument already" || return $?
-        isFunction "${1-}" || __throwArgument "$usage" "$argument not callable: ${1-}" || return $?
-        urlFunction="$1"
-        ;;
-      --check-function)
-        shift
-        [ -z "$checkFunction" ] || __throwArgument "$usage" "$argument already" || return $?
-        isFunction "${1-}" || __throwArgument "$usage" "$argument not callable: ${1-}" || return $?
-        checkFunction="$1"
-        ;;
-      --installer)
-        shift
-        installers+=("$(usageArgumentString "$usage" "$argument" "${1-}")") || return $?
-        ;;
-      --replace)
-        shift
-        newName=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
-        decorate bold-blue "Replacing $(decorate orange "${BASH_SOURCE[0]}") -> $(decorate bold-orange "$newName")"
-        __catchEnvironment "$usage" cp -f "${BASH_SOURCE[0]}" "$newName" || return $?
-        __catchEnvironment "$usage" rm -rf "${BASH_SOURCE[0]}" || return $?
-        return 0
-        ;;
-      --debug)
-        __installRemotePackageDebug "$argument"
-        ;;
-      --force)
-        forceFlag=true
-        installReason="--force specified"
-        ;;
-      --diff)
-        installArgs+=("$argument")
-        ;;
-      *)
-        __throwArgument "$usage" "unknown argument #$__index: $argument" || return $?
-        ;;
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    --source)
+      shift
+      source=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
+      ;;
+    --name)
+      shift
+      name=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
+      ;;
+    --mock | --local)
+      [ -z "$localPath" ] || __throwArgument "$usage" "$argument already" || return $?
+      shift
+      [ -n "${1-}" ] || __throwArgument "$usage" "$argument blank argument #$__index" || return $?
+      localPath="$(__catchArgument "$usage" realPath "${1%/}")" || return $?
+      [ -x "$localPath/tools.sh" ] || __throwArgument "$usage" "$argument argument (\"$(decorate code "$localPath")\") must be path to bin/build containing tools.sh" || return $?
+      ;;
+    --user | --header | --password)
+      shift
+      fetchArguments+=("$argument" "$(usageArgumentString "$usage" "$argument" "${1-}")")
+      ;;
+    --url)
+      shift
+      [ -z "$url" ] || __throwArgument "$usage" "$argument already" || return $?
+      [ -n "${1-}" ] || __throwArgument "$usage" "$argument blank argument" || return $?
+      url="$1"
+      ;;
+    --version-function)
+      shift
+      [ -z "$versionFunction" ] || __throwArgument "$usage" "$argument already" || return $?
+      isFunction "${1-}" || __throwArgument "$usage" "$argument not callable: ${1-}" || return $?
+      versionFunction="$1"
+      ;;
+    --url-function)
+      shift
+      [ -z "$urlFunction" ] || __throwArgument "$usage" "$argument already" || return $?
+      isFunction "${1-}" || __throwArgument "$usage" "$argument not callable: ${1-}" || return $?
+      urlFunction="$1"
+      ;;
+    --check-function)
+      shift
+      [ -z "$checkFunction" ] || __throwArgument "$usage" "$argument already" || return $?
+      isFunction "${1-}" || __throwArgument "$usage" "$argument not callable: ${1-}" || return $?
+      checkFunction="$1"
+      ;;
+    --installer)
+      shift
+      installers+=("$(usageArgumentString "$usage" "$argument" "${1-}")") || return $?
+      ;;
+    --replace)
+      shift
+      newName=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
+      decorate bold-blue "Replacing $(decorate orange "${BASH_SOURCE[0]}") -> $(decorate bold-orange "$newName")"
+      __catchEnvironment "$usage" cp -f "${BASH_SOURCE[0]}" "$newName" || return $?
+      __catchEnvironment "$usage" rm -rf "${BASH_SOURCE[0]}" || return $?
+      return 0
+      ;;
+    --debug)
+      __installRemotePackageDebug "$argument"
+      ;;
+    --force)
+      forceFlag=true
+      installReason="--force specified"
+      ;;
+    --diff)
+      installArgs+=("$argument")
+      ;;
+    *)
+      __throwArgument "$usage" "unknown argument #$__index: $argument" || return $?
+      ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
     shift

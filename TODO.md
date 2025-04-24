@@ -1,6 +1,7 @@
 # Current plans
 
-- `usage.sh` and related `usageArgument` will be moved to a less verbose type-checking interface modeled after the `decorate` pattern which seemed to work well.
+- `usage.sh` and related `usageArgument` will be moved to a less verbose type-checking interface modeled after the
+  `decorate` pattern which seemed to work well.
 - Continue migration to local `local` usage instead of head of function (`example.sh` arguments handling)
 - Move `docs` to something not Bash-based perhaps
 - Start writing some tutorials on how to get it set up and working (video?)

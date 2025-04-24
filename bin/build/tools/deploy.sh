@@ -188,33 +188,33 @@ deployLink() {
     local argument="$1"
     [ -n "$argument" ] || __throwArgument "$usage" "blank argument" || return $?
     case "$argument" in
-      # _IDENTICAL_ --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      *)
-        if [ -z "$applicationLinkPath" ]; then
-          applicationLinkPath="$argument"
-          if [ -e "$applicationLinkPath" ]; then
-            if [ ! -L "$applicationLinkPath" ]; then
-              [ ! -d "$applicationLinkPath" ] || __throwArgument "$usage" "$applicationLinkPath is directory (should be a link)" || return $?
-              # Not a link or directory
-              __throwArgument "$usage" "Unknown file type $(betterType "$applicationLinkPath")" || return $?
-            fi
-          else
-            applicationLinkPath=$(usageArgumentFileDirectory "$usage" applicationLinkPath "$applicationLinkPath") || return $?
-          fi
-        elif [ -z "$currentApplicationHome" ]; then
-          # No checking - allows pre-linking
-          currentApplicationHome="$argument"
-          if [ ! -d "$currentApplicationHome" ]; then
-            decorate warning "currentApplicationHome $currentApplicationHome points to a non-existent directory"
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    *)
+      if [ -z "$applicationLinkPath" ]; then
+        applicationLinkPath="$argument"
+        if [ -e "$applicationLinkPath" ]; then
+          if [ ! -L "$applicationLinkPath" ]; then
+            [ ! -d "$applicationLinkPath" ] || __throwArgument "$usage" "$applicationLinkPath is directory (should be a link)" || return $?
+            # Not a link or directory
+            __throwArgument "$usage" "Unknown file type $(betterType "$applicationLinkPath")" || return $?
           fi
         else
-          __throwArgument "$usage" "unknown argument $(decorate value "$argument")" || return $?
+          applicationLinkPath=$(usageArgumentFileDirectory "$usage" applicationLinkPath "$applicationLinkPath") || return $?
         fi
-        ;;
+      elif [ -z "$currentApplicationHome" ]; then
+        # No checking - allows pre-linking
+        currentApplicationHome="$argument"
+        if [ ! -d "$currentApplicationHome" ]; then
+          decorate warning "currentApplicationHome $currentApplicationHome points to a non-existent directory"
+        fi
+      else
+        __throwArgument "$usage" "unknown argument $(decorate value "$argument")" || return $?
+      fi
+      ;;
     esac
     shift || :
   done
@@ -252,21 +252,21 @@ deployMigrateDirectoryToLink() {
     argument="$1"
     [ -n "$argument" ] || __throwArgument "$usage" "blank argument" || return $?
     case "$argument" in
-      # _IDENTICAL_ --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      *)
-        if [ -z "$deployHome" ]; then
-          deployHome="$(usageArgumentDirectory "$usage" "deployHome" "$1")" || return $?
-        elif [ -z "$applicationPath" ]; then
-          applicationPath="$(usageArgumentDirectory "$usage" "applicationPath" "$1")" || return $?
-        else
-          __throwArgument "$usage" "unknown argument $(decorate value "$argument")" || return $?
-        fi
-        shift || __throwArgument "$usage" "shift after $argument failed" || return $?
-        ;;
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    *)
+      if [ -z "$deployHome" ]; then
+        deployHome="$(usageArgumentDirectory "$usage" "deployHome" "$1")" || return $?
+      elif [ -z "$applicationPath" ]; then
+        applicationPath="$(usageArgumentDirectory "$usage" "applicationPath" "$1")" || return $?
+      else
+        __throwArgument "$usage" "unknown argument $(decorate value "$argument")" || return $?
+      fi
+      shift || __throwArgument "$usage" "shift after $argument failed" || return $?
+      ;;
     esac
   done
   appVersion=$(deployApplicationVersion "$applicationPath") || __throwEnvironment "$usage" "No application deployment version" || return $?

@@ -24,24 +24,24 @@ runCount() {
     argument="$1"
     [ -n "$argument" ] || __throwArgument "$usage" "blank argument" || return $?
     case "$argument" in
-      # _IDENTICAL_ --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      *)
-        if [ -z "$total" ]; then
-          isUnsignedInteger "$argument" || __throwArgument "$usage" "$argument must be a positive integer" || return $?
-          total="$argument"
-        else
-          index=0
-          while [ "$index" -lt "$total" ]; do
-            index=$((index + 1))
-            "$@" || __throwEnvironment "$usage" "iteration #$index" "$@" return $?
-          done
-          return 0
-        fi
-        ;;
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    *)
+      if [ -z "$total" ]; then
+        isUnsignedInteger "$argument" || __throwArgument "$usage" "$argument must be a positive integer" || return $?
+        total="$argument"
+      else
+        index=0
+        while [ "$index" -lt "$total" ]; do
+          index=$((index + 1))
+          "$@" || __throwEnvironment "$usage" "iteration #$index" "$@" return $?
+        done
+        return 0
+      fi
+      ;;
     esac
     shift || __throwArgument "$usage" shift || return $?
   done
@@ -83,19 +83,19 @@ makeShellFilesExecutable() {
     local argument="$1" __index=$((__count - $# + 1))
     [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-      # _IDENTICAL_ --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      --find)
-        shift
-        IFS=' ' read -r -a tempArgs <<<"${1-}" || :
-        findArgs+=("${tempArgs[@]+"${tempArgs[@]}"}")
-        ;;
-      *)
-        paths+=("$(usageArgumentDirectory "$usage" "directory" "$1")") || return $?
-        ;;
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    --find)
+      shift
+      IFS=' ' read -r -a tempArgs <<<"${1-}" || :
+      findArgs+=("${tempArgs[@]+"${tempArgs[@]}"}")
+      ;;
+    *)
+      paths+=("$(usageArgumentDirectory "$usage" "directory" "$1")") || return $?
+      ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
     shift
@@ -279,12 +279,12 @@ serviceToStandardPort() {
   while [ $# -gt 0 ]; do
     service="$(trimSpace "${1-}")"
     case "$service" in
-      ssh) port=22 ;;
-      http) port=80 ;;
-      https) port=443 ;;
-      mariadb | mysql) port=3306 ;;
-      postgres) port=5432 ;;
-      *) __throwEnvironment "$usage" "$service unknown" || return $? ;;
+    ssh) port=22 ;;
+    http) port=80 ;;
+    https) port=443 ;;
+    mariadb | mysql) port=3306 ;;
+    postgres) port=5432 ;;
+    *) __throwEnvironment "$usage" "$service unknown" || return $? ;;
     esac
     printf "%d\n" "$port"
     shift || __throwArgument "$usage" shift "$argument" "$@" || return $?
@@ -317,23 +317,23 @@ serviceToPort() {
     argument="$(trimSpace "$argument")"
     [ -n "$argument" ] || __throwArgument "$usage" "argument is whitespace" || return $?
     case "$argument" in
-      --services)
-        shift || __throwArgument "$usage" "missing $argument argument" || return $?
-        servicesFile=$(usageArgumentFile "$usage" "servicesFile" "$1") || return $?
-        ;;
-      *)
-        if [ ! -f "$servicesFile" ]; then
-          __catchEnvironment "$usage" serviceToStandardPort "$@" || return $?
+    --services)
+      shift || __throwArgument "$usage" "missing $argument argument" || return $?
+      servicesFile=$(usageArgumentFile "$usage" "servicesFile" "$1") || return $?
+      ;;
+    *)
+      if [ ! -f "$servicesFile" ]; then
+        __catchEnvironment "$usage" serviceToStandardPort "$@" || return $?
+      else
+        service="$(trimSpace "${1-}")"
+        if port="$(grep /tcp "$servicesFile" | grep "^$service\s" | awk '{ print $2 }' | cut -d / -f 1)"; then
+          isInteger "$port" || __throwEnvironment "$usage" "Port found in $servicesFile is not an integer: $port" || return $?
         else
-          service="$(trimSpace "${1-}")"
-          if port="$(grep /tcp "$servicesFile" | grep "^$service\s" | awk '{ print $2 }' | cut -d / -f 1)"; then
-            isInteger "$port" || __throwEnvironment "$usage" "Port found in $servicesFile is not an integer: $port" || return $?
-          else
-            port="$(serviceToStandardPort "$service")" || __throwEnvironment "$usage" serviceToStandardPort "$service" || return $?
-          fi
-          printf "%d\n" "$port"
+          port="$(serviceToStandardPort "$service")" || __throwEnvironment "$usage" serviceToStandardPort "$service" || return $?
         fi
-        ;;
+        printf "%d\n" "$port"
+      fi
+      ;;
     esac
     shift || __throwArgument "$usage" "shift argument $argument" || return $?
   done
@@ -385,21 +385,21 @@ extensionLists() {
     local argument="$1" __index=$((__count - $# + 1))
     [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-      # _IDENTICAL_ --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      --clean)
-        cleanFlag=true
-        ;;
-      *)
-        if [ -z "$directory" ]; then
-          directory=$(usageArgumentDirectory "$usage" "directory" "$1") || return $?
-        else
-          names+=("$1")
-        fi
-        ;;
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    --clean)
+      cleanFlag=true
+      ;;
+    *)
+      if [ -z "$directory" ]; then
+        directory=$(usageArgumentDirectory "$usage" "directory" "$1") || return $?
+      else
+        names+=("$1")
+      fi
+      ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
     shift

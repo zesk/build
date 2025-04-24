@@ -25,21 +25,21 @@ debuggingStack() {
     local argument="$1" __index=$((__count - $# + 1))
     [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-      # _IDENTICAL_ --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      -x)
-        showExports=true
-        ;;
-      --me)
-        addMe=true
-        ;;
-      *)
-        # _IDENTICAL_ argumentUnknown 1
-        __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
-        ;;
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    -x)
+      showExports=true
+      ;;
+    --me)
+      addMe=true
+      ;;
+    *)
+      # _IDENTICAL_ argumentUnknown 1
+      __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
+      ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
     shift
@@ -111,33 +111,33 @@ dumpPipe() {
     local argument="$1" __index=$((__count - $# + 1))
     [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-      # _IDENTICAL_ --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      --head)
-        endBinary="head"
-        ;;
-      --vanish)
-        shift
-        vanishFiles+=("$(usageArgumentFile "$usage" "$argument" "${1-}")") || return $?
-        ;;
-      --tail)
-        endBinary="tail"
-        ;;
-      --symbol)
-        shift || __throwArgument "$usage" "missing $argument argument" || return $?
-        symbol="$1"
-        ;;
-      --lines)
-        shift || __throwArgument "$usage" "missing $argument argument" || return $?
-        showLines=$(usageArgumentUnsignedInteger "$usage" "showLines" "$1") || return $?
-        ;;
-      *)
-        names+=("$argument")
-        break
-        ;;
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    --head)
+      endBinary="head"
+      ;;
+    --vanish)
+      shift
+      vanishFiles+=("$(usageArgumentFile "$usage" "$argument" "${1-}")") || return $?
+      ;;
+    --tail)
+      endBinary="tail"
+      ;;
+    --symbol)
+      shift || __throwArgument "$usage" "missing $argument argument" || return $?
+      symbol="$1"
+      ;;
+    --lines)
+      shift || __throwArgument "$usage" "missing $argument argument" || return $?
+      showLines=$(usageArgumentUnsignedInteger "$usage" "showLines" "$1") || return $?
+      ;;
+    *)
+      names+=("$argument")
+      break
+      ;;
     esac
     shift || __throwArgument "$usage" shift || return $?
   done
@@ -212,24 +212,24 @@ dumpFile() {
     local argument="$1" __index=$((__count - $# + 1))
     [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-      # _IDENTICAL_ --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      --symbol)
-        shift || __throwArgument "$usage" "shift $argument" || return $?
-        dumpArgs+=("$argument" "$1")
-        ;;
-      --lines)
-        shift || __throwArgument "$usage" "missing $argument argument" || return $?
-        dumpArgs+=("--lines" "$1")
-        ;;
-      *)
-        [ -f "$argument" ] || __throwArgument "$usage" "$argument is not a item" || return $?
-        files+=("$argument")
-        __throwArgument "$usage" "unknown argument: $argument" || return $?
-        ;;
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    --symbol)
+      shift || __throwArgument "$usage" "shift $argument" || return $?
+      dumpArgs+=("$argument" "$1")
+      ;;
+    --lines)
+      shift || __throwArgument "$usage" "missing $argument argument" || return $?
+      dumpArgs+=("--lines" "$1")
+      ;;
+    *)
+      [ -f "$argument" ] || __throwArgument "$usage" "$argument is not a item" || return $?
+      files+=("$argument")
+      __throwArgument "$usage" "unknown argument: $argument" || return $?
+      ;;
     esac
     shift || __throwArgument "$usage" shift || return $?
   done
@@ -281,42 +281,42 @@ __internalDumpEnvironment() {
     local argument="$1" __index=$((__count - $# + 1))
     [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-      # _IDENTICAL_ --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      --show-skipped)
-        showSkipped=true
-        ;;
-      --maximum-length)
-        shift
-        maxLen=$(usageArgumentPositiveInteger "$usage" "$argument" "${1-}") || return $?
-        ;;
-      --skip-env)
-        shift
-        skipEnv+=("$(usageArgumentEnvironmentVariable "$usage" "$argument" "${1-}")") || return $?
-        ;;
-      --secure-match)
-        shift
-        case "${1-}" in
-          "" | "-" | "--")
-            matches=()
-            fillMatches=false
-            ;;
-          *)
-            matches+=("${1-}")
-            ;;
-        esac
-        ;;
-      --secure-suffix)
-        shift
-        secureSuffix="${1-}"
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    --show-skipped)
+      showSkipped=true
+      ;;
+    --maximum-length)
+      shift
+      maxLen=$(usageArgumentPositiveInteger "$usage" "$argument" "${1-}") || return $?
+      ;;
+    --skip-env)
+      shift
+      skipEnv+=("$(usageArgumentEnvironmentVariable "$usage" "$argument" "${1-}")") || return $?
+      ;;
+    --secure-match)
+      shift
+      case "${1-}" in
+      "" | "-" | "--")
+        matches=()
+        fillMatches=false
         ;;
       *)
-        # _IDENTICAL_ argumentUnknown 1
-        __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
+        matches+=("${1-}")
         ;;
+      esac
+      ;;
+    --secure-suffix)
+      shift
+      secureSuffix="${1-}"
+      ;;
+    *)
+      # _IDENTICAL_ argumentUnknown 1
+      __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
+      ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
     shift
@@ -410,15 +410,15 @@ dumpLoadAverages() {
     local argument="$1" __index=$((__count - $# + 1))
     [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-      # _IDENTICAL_ --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      *)
-        # _IDENTICAL_ argumentUnknown 1
-        __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
-        ;;
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    *)
+      # _IDENTICAL_ argumentUnknown 1
+      __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
+      ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
     shift
@@ -447,19 +447,19 @@ dumpHex() {
     local argument="$1" __index=$((__count - $# + 1))
     [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-      # _IDENTICAL_ --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      --size)
-        shift
-        size=$(usageArgumentPositiveInteger "$usage" "$argument" "${1-}") || return $?
-        runner+=("-N" "$size")
-        ;;
-      *)
-        arguments+=("$argument")
-        ;;
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    --size)
+      shift
+      size=$(usageArgumentPositiveInteger "$usage" "$argument" "${1-}") || return $?
+      runner+=("-N" "$size")
+      ;;
+    *)
+      arguments+=("$argument")
+      ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
     shift

@@ -56,18 +56,18 @@ usageDocumentComplex() {
 
   local color="success"
   case "$exitCode" in
-    0 | 2)
-      if buildDebugEnabled "fast-usage"; then
-        [ "$exitCode" -eq 0 ] || exec 1>&2 && color="warning"
-        printf -- "%s%s %s\n" "$(decorate value "[$exitCode]")" "$(decorate code " $functionName ")" "$(decorate "$color" "$@")"
-        return "$exitCode"
-      fi
-      ;;
-    *)
-      [ "$exitCode" -eq 0 ] || exec 1>&2 && color="error"
+  0 | 2)
+    if buildDebugEnabled "fast-usage"; then
+      [ "$exitCode" -eq 0 ] || exec 1>&2 && color="warning"
       printf -- "%s%s %s\n" "$(decorate value "[$exitCode]")" "$(decorate code " $functionName ")" "$(decorate "$color" "$@")"
       return "$exitCode"
-      ;;
+    fi
+    ;;
+  *)
+    [ "$exitCode" -eq 0 ] || exec 1>&2 && color="error"
+    printf -- "%s%s %s\n" "$(decorate value "[$exitCode]")" "$(decorate code " $functionName ")" "$(decorate "$color" "$@")"
+    return "$exitCode"
+    ;;
   esac
 
   local variablesFile
@@ -181,38 +181,38 @@ documentationTemplateCompile() {
     local argument="$1" __index=$((__count - $# + 1))
     [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-      # _IDENTICAL_ --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      --env-file)
-        shift
-        envFile=$(usageArgumentFile "$usage" "envFile" "$1") || return $?
-        envFiles+=("$envFile")
-        envFileArgs+=("$argument" "$envFile")
-        ;;
-      --verbose)
-        verboseFlag=true
-        ;;
-      --force)
-        forceFlag=true
-        ;;
-      *)
-        # Load arguments one-by-one
-        if [ -z "$cacheDirectory" ]; then
-          cacheDirectory=$1
-        elif [ -z "$documentTemplate" ]; then
-          documentTemplate=$1
-        elif [ -z "$functionTemplate" ]; then
-          functionTemplate=$1
-        elif [ -z "$targetFile" ]; then
-          targetFile=$1
-        else
-          # _IDENTICAL_ argumentUnknown 1
-          __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
-        fi
-        ;;
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    --env-file)
+      shift
+      envFile=$(usageArgumentFile "$usage" "envFile" "$1") || return $?
+      envFiles+=("$envFile")
+      envFileArgs+=("$argument" "$envFile")
+      ;;
+    --verbose)
+      verboseFlag=true
+      ;;
+    --force)
+      forceFlag=true
+      ;;
+    *)
+      # Load arguments one-by-one
+      if [ -z "$cacheDirectory" ]; then
+        cacheDirectory=$1
+      elif [ -z "$documentTemplate" ]; then
+        documentTemplate=$1
+      elif [ -z "$functionTemplate" ]; then
+        functionTemplate=$1
+      elif [ -z "$targetFile" ]; then
+        targetFile=$1
+      else
+        # _IDENTICAL_ argumentUnknown 1
+        __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
+      fi
+      ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
     shift
@@ -364,29 +364,29 @@ documentationTemplateFunctionCompile() {
     local argument="$1" __index=$((__count - $# + 1))
     [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-      # _IDENTICAL_ --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      --env-file)
-        shift
-        envFile=$(usageArgumentFile "$usage" "envFile" "$1") || return $?
-        envFiles+=("$envFile")
-        ;;
-      *)
-        # Load arguments one-by-one
-        if [ -z "$cacheDirectory" ]; then
-          cacheDirectory=$1
-        elif [ -z "$functionName" ]; then
-          functionName=$1
-        elif [ -z "$functionTemplate" ]; then
-          functionTemplate=$1
-        else
-          # _IDENTICAL_ argumentUnknown 1
-          __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
-        fi
-        ;;
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    --env-file)
+      shift
+      envFile=$(usageArgumentFile "$usage" "envFile" "$1") || return $?
+      envFiles+=("$envFile")
+      ;;
+    *)
+      # Load arguments one-by-one
+      if [ -z "$cacheDirectory" ]; then
+        cacheDirectory=$1
+      elif [ -z "$functionName" ]; then
+        functionName=$1
+      elif [ -z "$functionTemplate" ]; then
+        functionTemplate=$1
+      else
+        # _IDENTICAL_ argumentUnknown 1
+        __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
+      fi
+      ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
     shift
@@ -443,41 +443,41 @@ documentationTemplateDirectoryCompile() {
     local argument="$1" __index=$((__count - $# + 1))
     [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-      # _IDENTICAL_ --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      --force)
-        passArgs+=("$argument")
-        ;;
-      --verbose)
-        verboseFlag=true
-        passArgs+=("$argument")
-        ;;
-      --filter)
-        shift
-        while [ $# -gt 0 ] && [ "$1" != "--" ]; do filterArgs+=("$1") && shift; done
-        ;;
-      --env-file)
-        passArgs+=("$argument")
-        shift || __throwArgument "$usage" "missing $argument argument" || return $?
-        passArgs+=("$1")
-        ;;
-      *)
-        if [ -z "$cacheDirectory" ]; then
-          cacheDirectory="$1"
-        elif [ -z "$templateDirectory" ]; then
-          templateDirectory="$1"
-        elif [ -z "$functionTemplate" ]; then
-          functionTemplate="$1"
-        elif [ -z "$targetDirectory" ]; then
-          targetDirectory="$1"
-        else
-          # _IDENTICAL_ argumentUnknown 1
-          __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
-        fi
-        ;;
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    --force)
+      passArgs+=("$argument")
+      ;;
+    --verbose)
+      verboseFlag=true
+      passArgs+=("$argument")
+      ;;
+    --filter)
+      shift
+      while [ $# -gt 0 ] && [ "$1" != "--" ]; do filterArgs+=("$1") && shift; done
+      ;;
+    --env-file)
+      passArgs+=("$argument")
+      shift || __throwArgument "$usage" "missing $argument argument" || return $?
+      passArgs+=("$1")
+      ;;
+    *)
+      if [ -z "$cacheDirectory" ]; then
+        cacheDirectory="$1"
+      elif [ -z "$templateDirectory" ]; then
+        templateDirectory="$1"
+      elif [ -z "$functionTemplate" ]; then
+        functionTemplate="$1"
+      elif [ -z "$targetDirectory" ]; then
+        targetDirectory="$1"
+      else
+        # _IDENTICAL_ argumentUnknown 1
+        __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
+      fi
+      ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
     shift

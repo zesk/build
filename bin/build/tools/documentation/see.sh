@@ -38,28 +38,28 @@ documentationIndex_SeeLinker() {
     local argument="$1" __index=$((__count - $# + 1))
     [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-      # _IDENTICAL_ --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      *)
-        if [ -z "$cacheDirectory" ]; then
-          cacheDirectory=$(usageArgumentDirectory _documentationIndex_SeeLinker "cacheDirectory" "${1%%/}") || return $?
-        elif [ -z "$documentationDirectory" ]; then
-          documentationDirectory=$(usageArgumentDirectory _documentationIndex_SeeLinker "documentationDirectory" "${1%%/}") || return $?
-        elif [ -z "$seeFunctionTemplate" ]; then
-          seeFunctionTemplate=$(usageArgumentFile _documentationIndex_SeeLinker seeFunctionTemplate "${1##./}") || return $?
-          shift || :
-          seeFunctionLink="$1"
-        elif [ -z "$seeFileTemplate" ]; then
-          seeFileTemplate=$(usageArgumentFile _documentationIndex_SeeLinker seeFileTemplate "${1##./}") || return $?
-          shift || __throwArgument "$usage" "seeFileLink required" || return $?
-          seeFileLink="$1"
-        else
-          break
-        fi
-        ;;
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    *)
+      if [ -z "$cacheDirectory" ]; then
+        cacheDirectory=$(usageArgumentDirectory _documentationIndex_SeeLinker "cacheDirectory" "${1%%/}") || return $?
+      elif [ -z "$documentationDirectory" ]; then
+        documentationDirectory=$(usageArgumentDirectory _documentationIndex_SeeLinker "documentationDirectory" "${1%%/}") || return $?
+      elif [ -z "$seeFunctionTemplate" ]; then
+        seeFunctionTemplate=$(usageArgumentFile _documentationIndex_SeeLinker seeFunctionTemplate "${1##./}") || return $?
+        shift || :
+        seeFunctionLink="$1"
+      elif [ -z "$seeFileTemplate" ]; then
+        seeFileTemplate=$(usageArgumentFile _documentationIndex_SeeLinker seeFileTemplate "${1##./}") || return $?
+        shift || __throwArgument "$usage" "seeFileLink required" || return $?
+        seeFileLink="$1"
+      else
+        break
+      fi
+      ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
     shift

@@ -55,51 +55,51 @@ deployBuildEnvironment() {
     argument="$1"
     [ -n "$argument" ] || __throwArgument "$usage" "blank argument" || return $?
     case "$argument" in
-      # _IDENTICAL_ --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      --env-file)
-        shift
-        envFiles+=("$(usageArgumentFile "$usage" "envFile" "${1-}")") || return $?
-        ;;
-      --debug)
-        debuggingFlag=true
-        ;;
-      --first)
-        deployArgs+=("$argument")
-        ;;
-      --home)
-        shift
-        [ -n "${1-}" ] || __throwArgument "$usage" "blank $argument argument" || return $?
-        deployHome="${1-}"
-        ;;
-      --host)
-        shift
-        [ -n "${1-}" ] || __throwArgument "$usage" "blank $argument argument" || return $?
-        userHosts+=("$1")
-        ;;
-      --id)
-        shift
-        [ -n "${1-}" ] || __throwArgument "$usage" "blank $argument argument" || return $?
-        applicationId="$1"
-        ;;
-      --application)
-        shift
-        applicationPath="${1-}"
-        ;;
-      --target)
-        shift
-        [ -n "${1-}" ] || __throwArgument "$usage" "blank $argument argument" || return $?
-        targetPackage="${1-}"
-        ;;
-      --dry-run)
-        dryRun=true
-        ;;
-      *)
-        userHosts+=("$argument")
-        ;;
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    --env-file)
+      shift
+      envFiles+=("$(usageArgumentFile "$usage" "envFile" "${1-}")") || return $?
+      ;;
+    --debug)
+      debuggingFlag=true
+      ;;
+    --first)
+      deployArgs+=("$argument")
+      ;;
+    --home)
+      shift
+      [ -n "${1-}" ] || __throwArgument "$usage" "blank $argument argument" || return $?
+      deployHome="${1-}"
+      ;;
+    --host)
+      shift
+      [ -n "${1-}" ] || __throwArgument "$usage" "blank $argument argument" || return $?
+      userHosts+=("$1")
+      ;;
+    --id)
+      shift
+      [ -n "${1-}" ] || __throwArgument "$usage" "blank $argument argument" || return $?
+      applicationId="$1"
+      ;;
+    --application)
+      shift
+      applicationPath="${1-}"
+      ;;
+    --target)
+      shift
+      [ -n "${1-}" ] || __throwArgument "$usage" "blank $argument argument" || return $?
+      targetPackage="${1-}"
+      ;;
+    --dry-run)
+      dryRun=true
+      ;;
+    *)
+      userHosts+=("$argument")
+      ;;
     esac
     shift || __throwArgument "$usage" "missing argument $(decorate label "$argument")" || return $?
   done
@@ -240,50 +240,50 @@ deployRemoteFinish() {
     argument="$1"
     [ -n "$argument" ] || __throwArgument "$usage" "blank argument" || return $?
     case "$argument" in
-      # _IDENTICAL_ --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      --debug)
-        debuggingFlag=true
-        ;;
-      --deploy)
-        # shellcheck disable=SC2015
-        ! $cleanupFlag && ! $revertFlag || __throwArgument "$usage" "$argument is incompatible with --cleanup and --revert" || return $?
-        cleanupFlag=false
-        revertFlag=false
-        ;;
-      --cleanup)
-        cleanupFlag=true
-        ;;
-      --revert)
-        revertFlag=true
-        ;;
-      --first)
-        firstFlags+=("$argument")
-        ;;
-      --home)
-        shift
-        deployHome=$(usageArgumentDirectory "$usage" deployHome "${1-}") || return $?
-        ;;
-      --id)
-        shift
-        [ -n "${1-}" ] || __throwArgument "$usage" "blank $argument $argument" || return $?
-        applicationId="$1"
-        ;;
-      --application)
-        shift
-        applicationPath=$(usageArgumentFileDirectory "$usage" applicationPath "${1-}") || return $?
-        ;;
-      --target)
-        shift
-        [ -n "${1-}" ] || __throwArgument "$usage" "blank $argument $argument" || return $?
-        targetPackage="${1-}"
-        ;;
-      *)
-        __throwArgument "unknown argument: $(decorate value "$argument")" || return $?
-        ;;
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    --debug)
+      debuggingFlag=true
+      ;;
+    --deploy)
+      # shellcheck disable=SC2015
+      ! $cleanupFlag && ! $revertFlag || __throwArgument "$usage" "$argument is incompatible with --cleanup and --revert" || return $?
+      cleanupFlag=false
+      revertFlag=false
+      ;;
+    --cleanup)
+      cleanupFlag=true
+      ;;
+    --revert)
+      revertFlag=true
+      ;;
+    --first)
+      firstFlags+=("$argument")
+      ;;
+    --home)
+      shift
+      deployHome=$(usageArgumentDirectory "$usage" deployHome "${1-}") || return $?
+      ;;
+    --id)
+      shift
+      [ -n "${1-}" ] || __throwArgument "$usage" "blank $argument $argument" || return $?
+      applicationId="$1"
+      ;;
+    --application)
+      shift
+      applicationPath=$(usageArgumentFileDirectory "$usage" applicationPath "${1-}") || return $?
+      ;;
+    --target)
+      shift
+      [ -n "${1-}" ] || __throwArgument "$usage" "blank $argument $argument" || return $?
+      targetPackage="${1-}"
+      ;;
+    *)
+      __throwArgument "unknown argument: $(decorate value "$argument")" || return $?
+      ;;
     esac
     shift || __throwArgument "$usage" "missing argument $(decorate label "$argument")" || return $?
   done
@@ -379,22 +379,22 @@ _deployRevertApplication() {
     argument="$1"
     [ -n "$argument" ] || __throwArgument "$usage" "blank argument" || return $?
     case "$argument" in
-      --first)
-        firstDeployment=true
-        ;;
-      *)
-        if [ -z "$deployHome" ]; then
-          deployHome=$(usageArgumentDirectory "$usage" deployHome "$1") || return $?
-        elif [ -z "$applicationId" ]; then
-          applicationId="$1"
-        elif [ -z "$applicationPath" ]; then
-          applicationPath=$(usageArgumentDirectory "$usage" applicationPath "$1") || return $?
-        elif [ -z "$targetPackage" ]; then
-          targetPackage="$1"
-        else
-          __throwArgument "unknown argument: $(decorate value "$argument")" || return $?
-        fi
-        ;;
+    --first)
+      firstDeployment=true
+      ;;
+    *)
+      if [ -z "$deployHome" ]; then
+        deployHome=$(usageArgumentDirectory "$usage" deployHome "$1") || return $?
+      elif [ -z "$applicationId" ]; then
+        applicationId="$1"
+      elif [ -z "$applicationPath" ]; then
+        applicationPath=$(usageArgumentDirectory "$usage" applicationPath "$1") || return $?
+      elif [ -z "$targetPackage" ]; then
+        targetPackage="$1"
+      else
+        __throwArgument "unknown argument: $(decorate value "$argument")" || return $?
+      fi
+      ;;
     esac
     shift || :
   done
@@ -513,77 +513,77 @@ deployToRemote() {
     local argument="$1"
     [ -n "$argument" ] || __throwArgument "$usage" "blank argument" || return $?
     case "$argument" in
-      --target)
-        shift
-        [ -z "$buildTarget" ] || __throwArgument "$usage" "$argument supplied twice" || return $?
-        buildTarget="$1"
-        ;;
-      --skip-ssh-host)
-        addSSHHosts=false
-        ;;
-      --add-ssh-host)
-        addSSHHosts=true
-        ;;
-      --home)
-        shift
-        [ -z "$deployHome" ] || __throwArgument "$usage" "$argument supplied twice" || return $?
-        deployHome="$1"
-        ;;
-      --first)
-        firstFlags+=("$argument")
-        ;;
-      --application)
-        shift
-        [ -z "$applicationPath" ] || __throwArgument "$usage" "$argument supplied twice" || return $?
-        applicationPath="$1"
-        ;;
-      --ip)
-        shift
-        currentIP=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
-        ;;
-      --id)
-        shift
-        [ -z "$applicationId" ] || __throwArgument "$usage" "$argument supplied twice" || return $?
-        applicationId="$1"
-        ;;
-      # _IDENTICAL_ --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      --deploy)
-        if "$deployFlag"; then
-          __throwArgument "$usage" "--deploy arg passed twice" || return $?
-        fi
-        deployFlag=true
-        remoteArgs+=("$1")
-        ;;
-      --revert)
-        if "$revertFlag"; then
-          __throwArgument "$usage" "--revert specified twice" || return $?
-        fi
-        revertFlag=true
-        remoteArgs+=("$1")
-        ;;
-      --cleanup)
-        if "$cleanupFlag"; then
-          __throwArgument "$usage" "--cleanup specified twice" || return $?
-        fi
-        cleanupFlag=true
-        remoteArgs+=("$1")
-        ;;
-      --debug)
-        debuggingFlag=true
-        ;;
-      --commands)
-        showCommands=true
-        # Technically, you can enable after this `--commands --add-ssh-hosts` on CLI
-        addSSHHosts=false
-        ;;
-      *)
-        # Breaks a single argument "A B C" into three arguments "A" "B" "C" by space
-        IFS=' ' read -r -a userHosts <<<"$1" || :
-        ;;
+    --target)
+      shift
+      [ -z "$buildTarget" ] || __throwArgument "$usage" "$argument supplied twice" || return $?
+      buildTarget="$1"
+      ;;
+    --skip-ssh-host)
+      addSSHHosts=false
+      ;;
+    --add-ssh-host)
+      addSSHHosts=true
+      ;;
+    --home)
+      shift
+      [ -z "$deployHome" ] || __throwArgument "$usage" "$argument supplied twice" || return $?
+      deployHome="$1"
+      ;;
+    --first)
+      firstFlags+=("$argument")
+      ;;
+    --application)
+      shift
+      [ -z "$applicationPath" ] || __throwArgument "$usage" "$argument supplied twice" || return $?
+      applicationPath="$1"
+      ;;
+    --ip)
+      shift
+      currentIP=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
+      ;;
+    --id)
+      shift
+      [ -z "$applicationId" ] || __throwArgument "$usage" "$argument supplied twice" || return $?
+      applicationId="$1"
+      ;;
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    --deploy)
+      if "$deployFlag"; then
+        __throwArgument "$usage" "--deploy arg passed twice" || return $?
+      fi
+      deployFlag=true
+      remoteArgs+=("$1")
+      ;;
+    --revert)
+      if "$revertFlag"; then
+        __throwArgument "$usage" "--revert specified twice" || return $?
+      fi
+      revertFlag=true
+      remoteArgs+=("$1")
+      ;;
+    --cleanup)
+      if "$cleanupFlag"; then
+        __throwArgument "$usage" "--cleanup specified twice" || return $?
+      fi
+      cleanupFlag=true
+      remoteArgs+=("$1")
+      ;;
+    --debug)
+      debuggingFlag=true
+      ;;
+    --commands)
+      showCommands=true
+      # Technically, you can enable after this `--commands --add-ssh-hosts` on CLI
+      addSSHHosts=false
+      ;;
+    *)
+      # Breaks a single argument "A B C" into three arguments "A" "B" "C" by space
+      IFS=' ' read -r -a userHosts <<<"$1" || :
+      ;;
     esac
     shift || :
   done
@@ -774,12 +774,12 @@ __deployCommandsFile() {
   shift || :
   while [ $# -gt 0 ]; do
     case "$1" in
-      -*)
-        break
-        ;;
-      *)
-        printf "%s || exit \$?\n" "$1"
-        ;;
+    -*)
+      break
+      ;;
+    *)
+      printf "%s || exit \$?\n" "$1"
+      ;;
     esac
     shift || :
   done

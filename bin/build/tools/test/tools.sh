@@ -59,96 +59,96 @@ testSuite() {
     local argument="$1" __index=$((__count - $# + 1))
     [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-      # _IDENTICAL_ --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      -l | --show)
-        showFlag=true
-        beQuiet=true
-        ;;
-      --debugger)
-        bashDebuggerEnable
-        ;;
-      --verbose)
-        verboseMode=true
-        ;;
-      --show-tags)
-        beQuiet=true
-        showTags=true
-        ;;
-      --tap)
-        shift
-        tapFile=$(usageArgumentFileDirectory "$usage" "$argument" "${1-}") || return $?
-        ;;
-      --tag)
-        shift
-        tags+=("$(usageArgumentString "$usage" "$argument" "${1-}")") || return $?
-        ;;
-      --skip-tag)
-        shift
-        skipTags+=("$(usageArgumentString "$usage" "$argument" "${1-}")") || return $?
-        ;;
-      --env-file)
-        shift
-        muzzle usageArgumentLoadEnvironmentFile "$usage" "envFile" "${1-}" || return $?
-        decorate info "Loaded environment file $(decorate code "$1")"
-        ;;
-      --tests)
-        shift
-        testPaths+=("$(usageArgumentDirectory "$usage" "$argument" "${1-}")") || return $?
-        ;;
-      --coverage)
-        $beQuiet || decorate warning "Will collect coverage statistics ..."
-        runner=(bashCoverage)
-        ;;
-      --no-stats)
-        doStats=false
-        ;;
-      -c | --continue)
-        continueFlag=true
-        ;;
-      --start)
-        [ -z "$startTest" ] || __throwArgument "$usage" "$argument supplied twice" || return $?
-        shift
-        startTest="$(usageArgumentString "$usage" "$argument" "$1")" || return $?
-        continueFlag=true
-        ;;
-      -1 | --one | --suite)
-        shift
-        runTestSuites+=("$(usageArgumentString "$usage" "$argument" "${1-}")") || return $?
-        ;;
-      --list)
-        verboseMode=false
-        beQuiet=true
-        listFlag=true
-        ;;
-      --fail)
-        shift
-        failExecutors+=("$(usageArgumentCallable "$usage" "failExecutor" "${1-}")") || return $?
-        # shellcheck disable=SC2015
-        while [ $# -gt 0 ]; do [ "$1" != "--" ] && failExecutors+=("$1") && shift || break; done
-        failExecutors+=("--")
-        ;;
-      --clean)
-        cleanFlag=true
-        ;;
-      --delete)
-        shift
-        dd+=("$(usageArgumentFileDirectory "$usage" "$argument" "${1-}")") || return $?
-        ;;
-      --delete-common)
-        dd+=("$(buildHome)/vendor") || return $?
-        dd+=("$(buildHome)/node_modules") || return $?
-        dd+=("$(buildHome)/.composer") || return $?
-        ;;
-      --messy)
-        trap '__testCleanupMess true' EXIT QUIT TERM
-        ;;
-      *)
-        matchTests+=("$(usageArgumentString "$usage" "match" "$1")")
-        ;;
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    -l | --show)
+      showFlag=true
+      beQuiet=true
+      ;;
+    --debugger)
+      bashDebuggerEnable
+      ;;
+    --verbose)
+      verboseMode=true
+      ;;
+    --show-tags)
+      beQuiet=true
+      showTags=true
+      ;;
+    --tap)
+      shift
+      tapFile=$(usageArgumentFileDirectory "$usage" "$argument" "${1-}") || return $?
+      ;;
+    --tag)
+      shift
+      tags+=("$(usageArgumentString "$usage" "$argument" "${1-}")") || return $?
+      ;;
+    --skip-tag)
+      shift
+      skipTags+=("$(usageArgumentString "$usage" "$argument" "${1-}")") || return $?
+      ;;
+    --env-file)
+      shift
+      muzzle usageArgumentLoadEnvironmentFile "$usage" "envFile" "${1-}" || return $?
+      decorate info "Loaded environment file $(decorate code "$1")"
+      ;;
+    --tests)
+      shift
+      testPaths+=("$(usageArgumentDirectory "$usage" "$argument" "${1-}")") || return $?
+      ;;
+    --coverage)
+      $beQuiet || decorate warning "Will collect coverage statistics ..."
+      runner=(bashCoverage)
+      ;;
+    --no-stats)
+      doStats=false
+      ;;
+    -c | --continue)
+      continueFlag=true
+      ;;
+    --start)
+      [ -z "$startTest" ] || __throwArgument "$usage" "$argument supplied twice" || return $?
+      shift
+      startTest="$(usageArgumentString "$usage" "$argument" "$1")" || return $?
+      continueFlag=true
+      ;;
+    -1 | --one | --suite)
+      shift
+      runTestSuites+=("$(usageArgumentString "$usage" "$argument" "${1-}")") || return $?
+      ;;
+    --list)
+      verboseMode=false
+      beQuiet=true
+      listFlag=true
+      ;;
+    --fail)
+      shift
+      failExecutors+=("$(usageArgumentCallable "$usage" "failExecutor" "${1-}")") || return $?
+      # shellcheck disable=SC2015
+      while [ $# -gt 0 ]; do [ "$1" != "--" ] && failExecutors+=("$1") && shift || break; done
+      failExecutors+=("--")
+      ;;
+    --clean)
+      cleanFlag=true
+      ;;
+    --delete)
+      shift
+      dd+=("$(usageArgumentFileDirectory "$usage" "$argument" "${1-}")") || return $?
+      ;;
+    --delete-common)
+      dd+=("$(buildHome)/vendor") || return $?
+      dd+=("$(buildHome)/node_modules") || return $?
+      dd+=("$(buildHome)/.composer") || return $?
+      ;;
+    --messy)
+      trap '__testCleanupMess true' EXIT QUIT TERM
+      ;;
+    *)
+      matchTests+=("$(usageArgumentString "$usage" "match" "$1")")
+      ;;
     esac
     shift || __throwArgument "$usage" "shift argument $(decorate label "$argument")" || return $?
   done
@@ -474,20 +474,20 @@ __testSuiteFilterTags() {
 
   while [ $# -gt 0 ]; do
     case "$1" in
-      "--")
-        if $gotTags; then
-          skipTags=("${current[@]+"${current[@]}"}")
-          shift
-          break
-        else
-          gotTags=true
-          tags=("${current[@]+"${current[@]}"}")
-          current=()
-        fi
-        ;;
-      *)
-        current+=("$1")
-        ;;
+    "--")
+      if $gotTags; then
+        skipTags=("${current[@]+"${current[@]}"}")
+        shift
+        break
+      else
+        gotTags=true
+        tags=("${current[@]+"${current[@]}"}")
+        current=()
+      fi
+      ;;
+    *)
+      current+=("$1")
+      ;;
     esac
     shift
   done

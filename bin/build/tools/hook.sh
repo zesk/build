@@ -25,20 +25,20 @@ __hookRunner() {
     local argument="$1" __index=$((__count - $# + 1))
     [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-      --require)
-        requireHook=true
-        ;;
-      --source)
-        sourceHook=true
-        ;;
-      --)
-        shift
-        break
-        ;;
-      *)
-        # _IDENTICAL_ argumentUnknown 1
-        __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
-        ;;
+    --require)
+      requireHook=true
+      ;;
+    --source)
+      sourceHook=true
+      ;;
+    --)
+      shift
+      break
+      ;;
+    *)
+      # _IDENTICAL_ argumentUnknown 1
+      __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
+      ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
     shift
@@ -53,46 +53,46 @@ __hookRunner() {
     local argument="$1" __index=$((__count - $# + 1))
     [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-      # _IDENTICAL_ --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      --next)
-        shift
-        whichArgs+=("$argument" "$(usageArgumentFile "$usage" "$argument" "${1-}")") || return $?
-        ;;
-      --application)
-        shift || :
-        applicationHome=$(usageArgumentDirectory "$usage" applicationHome "${1-}") || return $?
-        whichArgs+=(--application "$applicationHome")
-        ;;
-      *)
-        local hook binary="$argument"
-        shift
-        if ! hook=$(whichHook "${whichArgs[@]+${whichArgs[@]}}" "$binary"); then
-          if $requireHook; then
-            # hookRun
-            __throwArgument "$usage" "Hook not found $(decorate code "$binary")" || return $?
-          else
-            if buildDebugEnabled; then
-              printf "%s %s %s %s\n" "$(decorate warning "No hook")" "$(decorate code "$binary")" "$(decorate warning "in this project:")" "$(decorate code "$applicationHome")"
-            fi
-            # hookRunOptional
-            return 0
-          fi
-        fi
-        if buildDebugEnabled hook; then
-          statusMessage decorate success "Running hook $(decorate code "$binary") $*"
-        fi
-        if "$sourceHook"; then
-          set --
-          __catchEnvironment "$usage" source "$hook" || return $?
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    --next)
+      shift
+      whichArgs+=("$argument" "$(usageArgumentFile "$usage" "$argument" "${1-}")") || return $?
+      ;;
+    --application)
+      shift || :
+      applicationHome=$(usageArgumentDirectory "$usage" applicationHome "${1-}") || return $?
+      whichArgs+=(--application "$applicationHome")
+      ;;
+    *)
+      local hook binary="$argument"
+      shift
+      if ! hook=$(whichHook "${whichArgs[@]+${whichArgs[@]}}" "$binary"); then
+        if $requireHook; then
+          # hookRun
+          __throwArgument "$usage" "Hook not found $(decorate code "$binary")" || return $?
         else
-          "$hook" "$@" || return $?
+          if buildDebugEnabled; then
+            printf "%s %s %s %s\n" "$(decorate warning "No hook")" "$(decorate code "$binary")" "$(decorate warning "in this project:")" "$(decorate code "$applicationHome")"
+          fi
+          # hookRunOptional
+          return 0
         fi
-        return 0
-        ;;
+      fi
+      if buildDebugEnabled hook; then
+        statusMessage decorate success "Running hook $(decorate code "$binary") $*"
+      fi
+      if "$sourceHook"; then
+        set --
+        __catchEnvironment "$usage" source "$hook" || return $?
+      else
+        "$hook" "$@" || return $?
+      fi
+      return 0
+      ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
     shift
@@ -230,13 +230,13 @@ hasHook() {
     argument="$1"
     [ -n "$argument" ] || __throwArgument "$usage" "blank argument" || return $?
     case "$1" in
-      --application)
-        shift || :
-        applicationHome=$(usageArgumentDirectory "$usage" applicationHome "${1-}") || return $?
-        ;;
-      *)
-        binary="$(whichHook --application "$applicationHome" "$argument")" || return 1
-        ;;
+    --application)
+      shift || :
+      applicationHome=$(usageArgumentDirectory "$usage" applicationHome "${1-}") || return $?
+      ;;
+    *)
+      binary="$(whichHook --application "$applicationHome" "$argument")" || return 1
+      ;;
     esac
     shift || :
   done
@@ -278,36 +278,36 @@ whichHook() {
     argument="$1"
     [ -n "$argument" ] || __throwArgument "$usage" "blank argument" || return $?
     case "$argument" in
-      --application)
-        shift
-        applicationHome=$(usageArgumentDirectory "$usage" "$argument" "${1-}") || return $?
-        ;;
-      --next)
-        shift
-        nextSource=$(usageArgumentFile "$usage" "$argument" "${1-}") || return $?
-        nextSource=$(__catchEnvironment "$usage" realPath "$nextSource") || return $?
-        ;;
-      *)
-        for hookPath in "${hookPaths[@]}"; do
-          local appPath="${applicationHome%/}/${hookPath%/}"
-          [ -d "$appPath" ] || continue
-          for extension in "" ".sh"; do
-            binary="$appPath/$1$extension"
-            if [ -x "$binary" ]; then
-              if [ -n "$nextSource" ]; then
-                if [ "$binary" = "$nextSource" ]; then
-                  nextSource=""
-                fi
-                break
+    --application)
+      shift
+      applicationHome=$(usageArgumentDirectory "$usage" "$argument" "${1-}") || return $?
+      ;;
+    --next)
+      shift
+      nextSource=$(usageArgumentFile "$usage" "$argument" "${1-}") || return $?
+      nextSource=$(__catchEnvironment "$usage" realPath "$nextSource") || return $?
+      ;;
+    *)
+      for hookPath in "${hookPaths[@]}"; do
+        local appPath="${applicationHome%/}/${hookPath%/}"
+        [ -d "$appPath" ] || continue
+        for extension in "" ".sh"; do
+          binary="$appPath/$1$extension"
+          if [ -x "$binary" ]; then
+            if [ -n "$nextSource" ]; then
+              if [ "$binary" = "$nextSource" ]; then
+                nextSource=""
               fi
-              printf "%s\n" "$binary"
-              return 0
+              break
             fi
-            [ ! -f "$binary" ] || _environment "$binary exists but is not executable and will be ignored" || return $?
-          done
+            printf "%s\n" "$binary"
+            return 0
+          fi
+          [ ! -f "$binary" ] || _environment "$binary exists but is not executable and will be ignored" || return $?
         done
-        return 1
-        ;;
+      done
+      return 1
+      ;;
     esac
     shift || :
   done

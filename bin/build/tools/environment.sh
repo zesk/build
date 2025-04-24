@@ -140,15 +140,15 @@ environmentVariableNameValid() {
   while [ $# -gt 0 ]; do
     [ -n "$1" ] || return 1
     case "$1" in
-      *[!A-Za-z0-9_]*)
-        return 1
-        ;;
-      *)
-        case "${1:0:1}" in
-          [A-Za-z_]) ;;
-          *) return 1 ;;
-        esac
-        ;;
+    *[!A-Za-z0-9_]*)
+      return 1
+      ;;
+    *)
+      case "${1:0:1}" in
+      [A-Za-z_]) ;;
+      *) return 1 ;;
+      esac
+      ;;
     esac
     shift
   done
@@ -216,17 +216,17 @@ dotEnvConfigure() {
     local argument="$1" __index=$((__count - $# + 1))
     [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-      # _IDENTICAL_ --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      --verbose | --debug)
-        aa+=("$argument")
-        ;;
-      *)
-        where=$(usageArgumentDirectory "$usage" "where" "$1") || return $?
-        ;;
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    --verbose | --debug)
+      aa+=("$argument")
+      ;;
+    *)
+      where=$(usageArgumentDirectory "$usage" "where" "$1") || return $?
+      ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
     shift
@@ -267,52 +267,52 @@ environmentFileLoad() {
     local argument="$1" __index=$((__count - $# + 1))
     [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-      # _IDENTICAL_ --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      --verbose)
-        verboseMode=true
-        ! $debugMode || printf -- "VERBOSE MODE on (Call: %s)\n" "$(decorate each code "${usage#_}" "${__saved[@]}")"
-        ;;
-      --debug)
-        debugMode=true
-        verboseMode=true
-        statusMessage decorate info "Debug mode enabled"
-        ;;
-      --secure)
-        shift
-        secureList+=("$(usageArgumentString "$usage" "$argument" "${1-}")") || return $?
-        ;;
-      --secure-defaults)
-        read -d "" -r -a secureList < <(environmentSecureVariables) || :
-        ;;
-      --ignore)
-        shift
-        ignoreList+=("$(usageArgumentString "$usage" "$argument" "${1-}")") || return $?
-        ;;
-      --require)
-        required=true
-        ! $debugMode || printf -- "Current: %s\n" "$argument"
-        ;;
-      --optional)
-        required=false
-        ! $debugMode || printf -- "Current: %s\n" "$argument"
-        ;;
-      *)
-        hasOne=true
-        if $required; then
-          ! $debugMode || printf -- "Loading required file: %s\n" "$argument"
-          ff+=("$(usageArgumentFile "$usage" "environmentFile" "$argument")") || return $?
-        else
-          ! $verboseMode || statusMessage decorate info "Loading optional file: $(decorate file "$argument")"
-          environmentFile=$(usageArgumentFileDirectory "$usage" "environmentFile" "$argument") || return $?
-          if [ -f "$environmentFile" ]; then
-            ff+=("$environmentFile")
-          fi
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    --verbose)
+      verboseMode=true
+      ! $debugMode || printf -- "VERBOSE MODE on (Call: %s)\n" "$(decorate each code "${usage#_}" "${__saved[@]}")"
+      ;;
+    --debug)
+      debugMode=true
+      verboseMode=true
+      statusMessage decorate info "Debug mode enabled"
+      ;;
+    --secure)
+      shift
+      secureList+=("$(usageArgumentString "$usage" "$argument" "${1-}")") || return $?
+      ;;
+    --secure-defaults)
+      read -d "" -r -a secureList < <(environmentSecureVariables) || :
+      ;;
+    --ignore)
+      shift
+      ignoreList+=("$(usageArgumentString "$usage" "$argument" "${1-}")") || return $?
+      ;;
+    --require)
+      required=true
+      ! $debugMode || printf -- "Current: %s\n" "$argument"
+      ;;
+    --optional)
+      required=false
+      ! $debugMode || printf -- "Current: %s\n" "$argument"
+      ;;
+    *)
+      hasOne=true
+      if $required; then
+        ! $debugMode || printf -- "Loading required file: %s\n" "$argument"
+        ff+=("$(usageArgumentFile "$usage" "environmentFile" "$argument")") || return $?
+      else
+        ! $verboseMode || statusMessage decorate info "Loading optional file: $(decorate file "$argument")"
+        environmentFile=$(usageArgumentFileDirectory "$usage" "environmentFile" "$argument") || return $?
+        if [ -f "$environmentFile" ]; then
+          ff+=("$environmentFile")
         fi
-        ;;
+      fi
+      ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
     shift
@@ -448,13 +448,13 @@ environmentFileShow() {
   # Will be exported to the environment file, only if defined
   while [ $# -gt 0 ]; do
     case $1 in
-      --)
-        shift
-        break
-        ;;
-      *)
-        variables+=("$(usageArgumentEnvironmentVariable "$usage" "variableName" "$1")") || return $?
-        ;;
+    --)
+      shift
+      break
+      ;;
+    *)
+      variables+=("$(usageArgumentEnvironmentVariable "$usage" "variableName" "$1")") || return $?
+      ;;
     esac
     shift
   done
@@ -517,27 +517,27 @@ environmentFileApplicationMake() {
     local argument="$1" __index=$((__count - $# + 1))
     [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-      # _IDENTICAL_ --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      --)
-        if $isOptional; then
-          __throwArgument "$usage" "Double -- found in argument list ($(decorate each quote "${__saved[@]}"))" || return $?
-        fi
-        isOptional=true
-        variableName="optionalVariable"
-        ;;
-      *)
-        local variable
-        variable="$(usageArgumentEnvironmentVariable "$usage" "$variableName" "$1")" || return $?
-        if $isOptional; then
-          optional+=("$variable")
-        else
-          required+=("$variable")
-        fi
-        ;;
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    --)
+      if $isOptional; then
+        __throwArgument "$usage" "Double -- found in argument list ($(decorate each quote "${__saved[@]}"))" || return $?
+      fi
+      isOptional=true
+      variableName="optionalVariable"
+      ;;
+    *)
+      local variable
+      variable="$(usageArgumentEnvironmentVariable "$usage" "$variableName" "$1")" || return $?
+      if $isOptional; then
+        optional+=("$variable")
+      else
+        required+=("$variable")
+      fi
+      ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
     shift
@@ -628,15 +628,15 @@ environmentAddFile() {
     local argument="$1" __index=$((__count - $# + 1))
     [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-      # _IDENTICAL_ --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      *)
-        name=$(usageArgumentEnvironmentVariable "$usage" "environmentVariable" "$1") || return $?
-        environmentNames+=("$name")
-        ;;
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    *)
+      name=$(usageArgumentEnvironmentVariable "$usage" "environmentVariable" "$1") || return $?
+      environmentNames+=("$name")
+      ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
     shift

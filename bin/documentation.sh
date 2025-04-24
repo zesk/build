@@ -166,54 +166,54 @@ __buildDocumentationBuild() {
     local argument="$1" __index=$((__count - $# + 1))
     [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-      # _IDENTICAL_ --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      --templates-only)
-        updateDerived=false
-        updateTemplates="true"
-        updateReference=false
-        makeDocumentation=false
-        ;;
-      --derived-only)
-        updateDerived="true"
-        updateTemplates=false
-        updateReference=false
-        makeDocumentation=false
-        ;;
-      --reference-only)
-        updateDerived=false
-        updateTemplates=false
-        updateReference="true"
-        makeDocumentation=false
-        ;;
-      --mkdocs-only)
-        updateDerived=false
-        updateTemplates=false
-        updateReference=false
-        makeDocumentation="true"
-        ;;
-      --clean)
-        cleanFlag=true
-        ;;
-      --verbose)
-        da+=("$argument")
-        ea+=("$argument")
-        ;;
-      --filter)
-        da+=("$argument")
-        while [ $# -gt 0 ] && [ "$1" != "--" ]; do da+=("$1") && shift; done
-        ;;
-      --force)
-        da+=("$argument")
-        ea+=("$argument")
-        ;;
-      *)
-        # _IDENTICAL_ argumentUnknown 1
-        __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
-        ;;
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    --templates-only)
+      updateDerived=false
+      updateTemplates="true"
+      updateReference=false
+      makeDocumentation=false
+      ;;
+    --derived-only)
+      updateDerived="true"
+      updateTemplates=false
+      updateReference=false
+      makeDocumentation=false
+      ;;
+    --reference-only)
+      updateDerived=false
+      updateTemplates=false
+      updateReference="true"
+      makeDocumentation=false
+      ;;
+    --mkdocs-only)
+      updateDerived=false
+      updateTemplates=false
+      updateReference=false
+      makeDocumentation="true"
+      ;;
+    --clean)
+      cleanFlag=true
+      ;;
+    --verbose)
+      da+=("$argument")
+      ea+=("$argument")
+      ;;
+    --filter)
+      da+=("$argument")
+      while [ $# -gt 0 ] && [ "$1" != "--" ]; do da+=("$1") && shift; done
+      ;;
+    --force)
+      da+=("$argument")
+      ea+=("$argument")
+      ;;
+    *)
+      # _IDENTICAL_ argumentUnknown 1
+      __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
+      ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
     shift

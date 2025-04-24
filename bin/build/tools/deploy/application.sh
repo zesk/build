@@ -68,46 +68,46 @@ deployApplication() {
     argument="$1"
     [ -n "$argument" ] || __throwArgument "$usage" "blank argument" || return $?
     case "$argument" in
-      # _IDENTICAL_ --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      --verbose)
-        verboseFlag=true
-        ;;
-      --message)
-        shift
-        [ -n "${1-}" ] || __throwArgument "blank $argument argument" || return $?
-        message="$1"
-        ;;
-      --first)
-        firstFlag=true
-        ;;
-      --revert)
-        revertFlag=true
-        ;;
-      --home)
-        shift
-        deployHome=$(usageArgumentDirectory "$usage" deployHome "${1-}") || return $?
-        ;;
-      --id)
-        shift
-        [ -n "${1-}" ] || __throwArgument "blank $argument argument" || return $?
-        applicationId="$1"
-        ;;
-      --application)
-        shift
-        applicationPath=$(usageArgumentFileDirectory "$usage" applicationPath "${1-}") || return $?
-        ;;
-      --target)
-        shift
-        [ -n "${1-}" ] || __throwArgument "blank $argument argument" || return $?
-        targetPackage="$1"
-        ;;
-      *)
-        __throwArgument "$usage" "unknown argument $(decorate value "$argument")" || return $?
-        ;;
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    --verbose)
+      verboseFlag=true
+      ;;
+    --message)
+      shift
+      [ -n "${1-}" ] || __throwArgument "blank $argument argument" || return $?
+      message="$1"
+      ;;
+    --first)
+      firstFlag=true
+      ;;
+    --revert)
+      revertFlag=true
+      ;;
+    --home)
+      shift
+      deployHome=$(usageArgumentDirectory "$usage" deployHome "${1-}") || return $?
+      ;;
+    --id)
+      shift
+      [ -n "${1-}" ] || __throwArgument "blank $argument argument" || return $?
+      applicationId="$1"
+      ;;
+    --application)
+      shift
+      applicationPath=$(usageArgumentFileDirectory "$usage" applicationPath "${1-}") || return $?
+      ;;
+    --target)
+      shift
+      [ -n "${1-}" ] || __throwArgument "blank $argument argument" || return $?
+      targetPackage="$1"
+      ;;
+    *)
+      __throwArgument "$usage" "unknown argument $(decorate value "$argument")" || return $?
+      ;;
     esac
     shift || __throwArgument "$usage" "shift argument $argument failed" || return $?
   done

@@ -30,19 +30,19 @@ yarnInstall() {
     local argument="$1" __index=$((__count - $# + 1))
     [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-      # _IDENTICAL_ --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      --version)
-        shift
-        version=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
-        ;;
-      *)
-        # _IDENTICAL_ argumentUnknown 1
-        __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
-        ;;
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    --version)
+      shift
+      version=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
+      ;;
+    *)
+      # _IDENTICAL_ argumentUnknown 1
+      __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
+      ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
     shift
@@ -86,38 +86,38 @@ __nodePackageManagerArguments_yarn() {
     local argument
     argument="$(usageArgumentString "$usage" "argument" "$1")" || return $?
     case "$argument" in
-      --global)
-        globalFlag=true
-        ;;
+    --global)
+      globalFlag=true
+      ;;
     esac
     shift
   done
 
   case "$action" in
-    run)
-      ! $globalFlag || __throwArgument "$usage" "--global makes no sense with run" || return $?
-      printf "%s\n" "run"
-      ;;
-    update)
-      printf "%s\n" "install"
-      ;;
-    uninstall)
-      if $globalFlag; then
-        printf "%s\n" "global" "remove"
-      else
-        printf "%s\n" "remove"
-      fi
-      ;;
-    install)
-      if $globalFlag; then
-        printf "%s\n" "global" "add"
-      else
-        printf "%s\n" "add"
-      fi
-      ;;
-    *)
-      __catchArgument "$usage" "Unknown action: $action" || return $?
-      ;;
+  run)
+    ! $globalFlag || __throwArgument "$usage" "--global makes no sense with run" || return $?
+    printf "%s\n" "run"
+    ;;
+  update)
+    printf "%s\n" "install"
+    ;;
+  uninstall)
+    if $globalFlag; then
+      printf "%s\n" "global" "remove"
+    else
+      printf "%s\n" "remove"
+    fi
+    ;;
+  install)
+    if $globalFlag; then
+      printf "%s\n" "global" "add"
+    else
+      printf "%s\n" "add"
+    fi
+    ;;
+  *)
+    __catchArgument "$usage" "Unknown action: $action" || return $?
+    ;;
   esac
 }
 

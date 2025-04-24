@@ -102,12 +102,12 @@ _deploymentGenerateValue() {
 _deploymentToSuffix() {
   local usage="$1" deployment="$2"
   case "$deployment" in
-    production) versionSuffix=rc ;;
-    staging) versionSuffix=s ;;
-    test) versionSuffix=t ;;
-    *)
-      __throwArgument "$usage" "--deployment $deployment unknown - can not set versionSuffix" || return $?
-      ;;
+  production) versionSuffix=rc ;;
+  staging) versionSuffix=s ;;
+  test) versionSuffix=t ;;
+  *)
+    __throwArgument "$usage" "--deployment $deployment unknown - can not set versionSuffix" || return $?
+    ;;
   esac
   printf "%s\n" "$versionSuffix"
 }
@@ -154,40 +154,40 @@ phpBuild() {
     local argument="$1" __index=$((__count - $# + 1))
     [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-      # _IDENTICAL_ --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      --tag | --no-tag | --skip-tag)
-        statusMessage decorate subtle "$argument is deprecated"
-        ;;
-      --composer)
-        shift
-        composerArgs+=("$(usageArgumentString "$usage" "$argument" "${1-}")") || return $?
-        ;;
-      --name)
-        shift
-        targetName=$(usageArgumentString "$usage" "name" "${1-}") || return $?
-        ;;
-      --)
-        shift
-        break
-        ;;
-      --clean)
-        optClean=1
-        ;;
-      --suffix)
-        shift
-        versionSuffix=$(usageArgumentString "$usage" "versionSuffix" "${1-}") || return $?
-        ;;
-      --home)
-        shift
-        home=$(usageArgumentDirectory "$usage" "$argument" "${1-}") || return $?
-        ;;
-      *)
-        environments+=("$1")
-        ;;
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    --tag | --no-tag | --skip-tag)
+      statusMessage decorate subtle "$argument is deprecated"
+      ;;
+    --composer)
+      shift
+      composerArgs+=("$(usageArgumentString "$usage" "$argument" "${1-}")") || return $?
+      ;;
+    --name)
+      shift
+      targetName=$(usageArgumentString "$usage" "name" "${1-}") || return $?
+      ;;
+    --)
+      shift
+      break
+      ;;
+    --clean)
+      optClean=1
+      ;;
+    --suffix)
+      shift
+      versionSuffix=$(usageArgumentString "$usage" "versionSuffix" "${1-}") || return $?
+      ;;
+    --home)
+      shift
+      home=$(usageArgumentDirectory "$usage" "$argument" "${1-}") || return $?
+      ;;
+    *)
+      environments+=("$1")
+      ;;
     esac
     shift
   done
@@ -328,24 +328,24 @@ phpTest() {
     local argument="$1" __index=$((__count - $# + 1))
     [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-      # _IDENTICAL_ --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      --env-file)
-        shift
-        muzzle usageArgumentLoadEnvironmentFile "$usage" "$argument" "${1-}" || return $?
-        statusMessage decorate info "Loaded $argument $(decorate file "$1") (wd: $(pwd))" || return $?
-        ;;
-      --home)
-        shift
-        home=$(usageArgumentDirectory "$usage" "$argument" "${1-}") || return $?
-        ;;
-      *)
-        # _IDENTICAL_ argumentUnknown 1
-        __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
-        ;;
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    --env-file)
+      shift
+      muzzle usageArgumentLoadEnvironmentFile "$usage" "$argument" "${1-}" || return $?
+      statusMessage decorate info "Loaded $argument $(decorate file "$1") (wd: $(pwd))" || return $?
+      ;;
+    --home)
+      shift
+      home=$(usageArgumentDirectory "$usage" "$argument" "${1-}") || return $?
+      ;;
+    *)
+      # _IDENTICAL_ argumentUnknown 1
+      __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
+      ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
     shift

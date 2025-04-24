@@ -24,25 +24,25 @@ __packageListFunction() {
     local argument="$1" __index=$((__count - $# + 1))
     [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-      # _IDENTICAL_ --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      --before)
-        shift
-        beforeFunctions+=("$(usageArgumentFunction "$usage" "$argument" "${1-}")") || return $?
-        ;;
-      # IDENTICAL managerArgumentHandler 5
-      --manager)
-        shift
-        manager=$(usageArgumentString "$usage" "$argument" "${1-}")
-        packageManagerValid "$manager" || __throwArgument "$usage" "Manager is invalid: $(decorate code "$manager")" || return $?
-        ;;
-      *)
-        # _IDENTICAL_ argumentUnknown 1
-        __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
-        ;;
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    --before)
+      shift
+      beforeFunctions+=("$(usageArgumentFunction "$usage" "$argument" "${1-}")") || return $?
+      ;;
+    # IDENTICAL managerArgumentHandler 5
+    --manager)
+      shift
+      manager=$(usageArgumentString "$usage" "$argument" "${1-}")
+      packageManagerValid "$manager" || __throwArgument "$usage" "Manager is invalid: $(decorate code "$manager")" || return $?
+      ;;
+    *)
+      # _IDENTICAL_ argumentUnknown 1
+      __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
+      ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
     shift
@@ -81,29 +81,29 @@ __packageUpFunction() {
     local argument="$1" __index=$((__count - $# + 1))
     [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-      # _IDENTICAL_ --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      # IDENTICAL managerArgumentHandler 5
-      --manager)
-        shift
-        manager=$(usageArgumentString "$usage" "$argument" "${1-}")
-        packageManagerValid "$manager" || __throwArgument "$usage" "Manager is invalid: $(decorate code "$manager")" || return $?
-        ;;
-      --force)
-        forceFlag=true
-        ;;
-      --show-log)
-        showLog=true
-        ;;
-      --verbose)
-        verboseFlag=true
-        ;;
-      *)
-        break
-        ;;
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    # IDENTICAL managerArgumentHandler 5
+    --manager)
+      shift
+      manager=$(usageArgumentString "$usage" "$argument" "${1-}")
+      packageManagerValid "$manager" || __throwArgument "$usage" "Manager is invalid: $(decorate code "$manager")" || return $?
+      ;;
+    --force)
+      forceFlag=true
+      ;;
+    --show-log)
+      showLog=true
+      ;;
+    --verbose)
+      verboseFlag=true
+      ;;
+    *)
+      break
+      ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
     shift
@@ -201,34 +201,34 @@ packageWhich() {
     local argument="$1" __index=$((__count - $# + 1))
     [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-      # _IDENTICAL_ --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      --force)
-        forceFlag=true
-        ;;
-      --show-log | --verbose)
-        vv=("$argument")
-        ;;
-      # IDENTICAL managerArgumentHandler 5
-      --manager)
-        shift
-        manager=$(usageArgumentString "$usage" "$argument" "${1-}")
-        packageManagerValid "$manager" || __throwArgument "$usage" "Manager is invalid: $(decorate code "$manager")" || return $?
-        ;;
-      -*)
-        # _IDENTICAL_ argumentUnknown 1
-        __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
-        ;;
-      *)
-        if [ -z "$binary" ]; then
-          binary=$(usageArgumentString "$usage" "binary" "$argument") || return $?
-        else
-          packages+=("$(usageArgumentString "$usage" "binary" "$argument")") || return $?
-        fi
-        ;;
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    --force)
+      forceFlag=true
+      ;;
+    --show-log | --verbose)
+      vv=("$argument")
+      ;;
+    # IDENTICAL managerArgumentHandler 5
+    --manager)
+      shift
+      manager=$(usageArgumentString "$usage" "$argument" "${1-}")
+      packageManagerValid "$manager" || __throwArgument "$usage" "Manager is invalid: $(decorate code "$manager")" || return $?
+      ;;
+    -*)
+      # _IDENTICAL_ argumentUnknown 1
+      __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
+      ;;
+    *)
+      if [ -z "$binary" ]; then
+        binary=$(usageArgumentString "$usage" "binary" "$argument") || return $?
+      else
+        packages+=("$(usageArgumentString "$usage" "binary" "$argument")") || return $?
+      fi
+      ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
     shift
@@ -279,27 +279,27 @@ packageWhichUninstall() {
     local argument="$1" __index=$((__count - $# + 1))
     [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-      # _IDENTICAL_ --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      # IDENTICAL managerArgumentHandler 5
-      --manager)
-        shift
-        manager=$(usageArgumentString "$usage" "$argument" "${1-}")
-        packageManagerValid "$manager" || __throwArgument "$usage" "Manager is invalid: $(decorate code "$manager")" || return $?
-        ;;
-      --verbose)
-        vv=("$argument")
-        ;;
-      *)
-        if [ -z "$binary" ]; then
-          binary=$(usageArgumentString "$usage" "binary" "$argument") || return $?
-        else
-          packages+=("$(usageArgumentString "$usage" "binary" "$argument")") || return $?
-        fi
-        ;;
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    # IDENTICAL managerArgumentHandler 5
+    --manager)
+      shift
+      manager=$(usageArgumentString "$usage" "$argument" "${1-}")
+      packageManagerValid "$manager" || __throwArgument "$usage" "Manager is invalid: $(decorate code "$manager")" || return $?
+      ;;
+    --verbose)
+      vv=("$argument")
+      ;;
+    *)
+      if [ -z "$binary" ]; then
+        binary=$(usageArgumentString "$usage" "binary" "$argument") || return $?
+      else
+        packages+=("$(usageArgumentString "$usage" "binary" "$argument")") || return $?
+      fi
+      ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
     shift
@@ -354,31 +354,31 @@ packageInstall() {
     local argument="$1" __index=$((__count - $# + 1))
     [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-      # _IDENTICAL_ --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      # IDENTICAL managerArgumentHandler 5
-      --manager)
-        shift
-        manager=$(usageArgumentString "$usage" "$argument" "${1-}")
-        packageManagerValid "$manager" || __throwArgument "$usage" "Manager is invalid: $(decorate code "$manager")" || return $?
-        ;;
-      --force)
-        forceFlag=true
-        ;;
-      --verbose)
-        verboseFlag=true
-        ;;
-      --show-log)
-        vv+=(--show-log)
-        ;;
-      *)
-        if ! inArray "$argument" "${packages[@]+"${packages[@]}"}"; then
-          packages+=("$argument")
-        fi
-        ;;
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    # IDENTICAL managerArgumentHandler 5
+    --manager)
+      shift
+      manager=$(usageArgumentString "$usage" "$argument" "${1-}")
+      packageManagerValid "$manager" || __throwArgument "$usage" "Manager is invalid: $(decorate code "$manager")" || return $?
+      ;;
+    --force)
+      forceFlag=true
+      ;;
+    --verbose)
+      verboseFlag=true
+      ;;
+    --show-log)
+      vv+=(--show-log)
+      ;;
+    *)
+      if ! inArray "$argument" "${packages[@]+"${packages[@]}"}"; then
+        packages+=("$argument")
+      fi
+      ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
     shift
@@ -460,14 +460,14 @@ packageIsInstalled() {
     local argument="$1" __index=$((__count - $# + 1))
     [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-      # _IDENTICAL_ --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      *)
-        packages+=("$argument")
-        ;;
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    *)
+      packages+=("$argument")
+      ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
     shift
@@ -507,20 +507,20 @@ packageUninstall() {
     local argument="$1" __index=$((__count - $# + 1))
     [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-      # _IDENTICAL_ --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      # IDENTICAL managerArgumentHandler 5
-      --manager)
-        shift
-        manager=$(usageArgumentString "$usage" "$argument" "${1-}")
-        packageManagerValid "$manager" || __throwArgument "$usage" "Manager is invalid: $(decorate code "$manager")" || return $?
-        ;;
-      *)
-        packages+=("$argument")
-        ;;
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    # IDENTICAL managerArgumentHandler 5
+    --manager)
+      shift
+      manager=$(usageArgumentString "$usage" "$argument" "${1-}")
+      packageManagerValid "$manager" || __throwArgument "$usage" "Manager is invalid: $(decorate code "$manager")" || return $?
+      ;;
+    *)
+      packages+=("$argument")
+      ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
     shift
@@ -565,8 +565,8 @@ _packageStandardPackages() {
 # Is the package manager supported?
 packageManagerValid() {
   case "$1" in
-    apk | apt | brew) return 0 ;;
-    *) return 1 ;;
+  apk | apt | brew) return 0 ;;
+  *) return 1 ;;
   esac
 }
 

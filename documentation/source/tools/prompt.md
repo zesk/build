@@ -8,8 +8,10 @@ The prompt supports a few things:
 
 Tools to work with the shell prompt `PS1`
 
-- `bashPromptModule_binBuild` is a module for `bashPrompt` which sets the Zesk Build home depending on your current directory
-- `bashPromptModule_ApplicationPath` is a module for `bashPrompt` which displays the current application/path as a badge in iTerm
+- `bashPromptModule_binBuild` is a module for `bashPrompt` which sets the Zesk Build home depending on your current
+  directory
+- `bashPromptModule_ApplicationPath` is a module for `bashPrompt` which displays the current application/path as a badge
+  in iTerm
 - `consoleDefaultTitle` can be used as a module to set the current title
 
 Examples:
@@ -23,7 +25,7 @@ Examples:
 
 ## Functions
 
-{bashPrompt} 
+{bashPrompt}
 {bashPromptColorScheme}
 {bashPromptColorsFormat}
 {bashPromptMarkers}
@@ -41,11 +43,11 @@ To enable:
 
     bashPrompt bashPromptModule_binBuild bashPromptModule_ApplicationPath
 
-{bashPromptModule_binBuild} 
+{bashPromptModule_binBuild}
 
-{bashPromptModule_ApplicationPath} 
+{bashPromptModule_ApplicationPath}
 
-{bashPromptModule_dotFilesWatcher} 
+{bashPromptModule_dotFilesWatcher}
 
 {bashPromptModule_iTerm2Colors}
 
@@ -55,11 +57,11 @@ To enable:
 
 Example during setup:
 
-   dotFilesApproved bash > "$(dotFilesApprovedFile)"
+dotFilesApproved bash > "$(dotFilesApprovedFile)"
 
 And then in your bash prompt:
 
-   bashPrompt bashPromptModule_dotFilesWatcher
+bashPrompt bashPromptModule_dotFilesWatcher
 
 Any new dot files which appear will then show a warning in your console.
 

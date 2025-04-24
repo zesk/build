@@ -70,29 +70,29 @@ githubURLParse() {
     local argument="$1" __index=$((__count - $# + 1))
     [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-      # _IDENTICAL_ --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      *)
-        local url path
-        url=$(usageArgumentURL "$usage" "url" "$1") || return $?
-        local host
-        host=$(urlParseItem host "$url") || return $?
-        if [ "$host" != "github.com" ]; then
-          __throwArgument "$usage" "Not a github site: $(decorate code "$url")" || return $?
-        fi
-        path=$(urlParseItem path "$url") || return $?
-        # Trim ends of slashes
-        path="${path#/}"
-        path="${path%/}"
-        local owner repository _
-        IFS='/' read -d '' -r owner repository _ <<<"$path" || :
-        [ -n "$owner" ] || __throwArgument "usage" "Blank owner" || return $?
-        [ -n "$repository" ] || __throwArgument "usage" "Blank repository" || return $?
-        printf "%s/%s\n" "$owner" "$repository"
-        ;;
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    *)
+      local url path
+      url=$(usageArgumentURL "$usage" "url" "$1") || return $?
+      local host
+      host=$(urlParseItem host "$url") || return $?
+      if [ "$host" != "github.com" ]; then
+        __throwArgument "$usage" "Not a github site: $(decorate code "$url")" || return $?
+      fi
+      path=$(urlParseItem path "$url") || return $?
+      # Trim ends of slashes
+      path="${path#/}"
+      path="${path%/}"
+      local owner repository _
+      IFS='/' read -d '' -r owner repository _ <<<"$path" || :
+      [ -n "$owner" ] || __throwArgument "usage" "Blank owner" || return $?
+      [ -n "$repository" ] || __throwArgument "usage" "Blank repository" || return $?
+      printf "%s/%s\n" "$owner" "$repository"
+      ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
     shift
@@ -198,29 +198,29 @@ githubRelease() {
     argument="$1"
     [ -n "$argument" ] || __throwArgument "$usage" "blank argument" || return $?
     case "$argument" in
-      --token)
-        shift
-        [ -n "${1-}" ] || __throwArgument "$usage" "Blank $argument argument" || return $?
-        accessToken="$1"
-        ;;
-      --owner)
-        shift
-        [ -n "${1-}" ] || __throwArgument "$usage" "Blank $argument argument" || return $?
-        repoOwner="$1"
-        ;;
-      --name)
-        shift
-        [ -n "${1-}" ] || __throwArgument "$usage" "Blank $argument argument" || return $?
-        repoName="$1"
-        ;;
-      --expire)
-        shift
-        [ -n "${1-}" ] || __throwArgument "$usage" "Blank $argument argument" || return $?
-        accessTokenExpire="$1"
-        ;;
-      *)
-        extras+=("$1")
-        ;;
+    --token)
+      shift
+      [ -n "${1-}" ] || __throwArgument "$usage" "Blank $argument argument" || return $?
+      accessToken="$1"
+      ;;
+    --owner)
+      shift
+      [ -n "${1-}" ] || __throwArgument "$usage" "Blank $argument argument" || return $?
+      repoOwner="$1"
+      ;;
+    --name)
+      shift
+      [ -n "${1-}" ] || __throwArgument "$usage" "Blank $argument argument" || return $?
+      repoName="$1"
+      ;;
+    --expire)
+      shift
+      [ -n "${1-}" ] || __throwArgument "$usage" "Blank $argument argument" || return $?
+      accessTokenExpire="$1"
+      ;;
+    *)
+      extras+=("$1")
+      ;;
     esac
     shift || __throwArgument "$usage" "missing argument $(decorate label "$argument")" || return $?
   done

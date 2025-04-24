@@ -62,20 +62,20 @@ applicationHome() {
     local argument="$1" __index=$((__count - $# + 1))
     [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-      # _IDENTICAL_ --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      --go)
-        shift
-        __applicationHomeGo "$usage" "$@"
-        return 0
-        ;;
-      *)
-        [ -z "$here" ] || __throwArgument "$usage" "Unknown argument (applicationHome set already to $(decorate code "$here"))"
-        here=$(usageArgumentDirectory "$usage" "directory" "$argument") || return $?
-        ;;
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    --go)
+      shift
+      __applicationHomeGo "$usage" "$@"
+      return 0
+      ;;
+    *)
+      [ -z "$here" ] || __throwArgument "$usage" "Unknown argument (applicationHome set already to $(decorate code "$here"))"
+      here=$(usageArgumentDirectory "$usage" "directory" "$argument") || return $?
+      ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
     shift

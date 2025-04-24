@@ -29,21 +29,21 @@ bashCoverage() {
     local argument="$1" __index=$((__count - $# + 1))
     [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-      # _IDENTICAL_ --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      --verbose)
-        verbose=true
-        ;;
-      --target)
-        shift
-        target="$(usageArgumentFileDirectory "$usage" "$argument" "${1-}")" || return $?
-        ;;
-      *)
-        break
-        ;;
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    --verbose)
+      verbose=true
+      ;;
+    --target)
+      shift
+      target="$(usageArgumentFileDirectory "$usage" "$argument" "${1-}")" || return $?
+      ;;
+    *)
+      break
+      ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
     shift
@@ -76,22 +76,22 @@ bashCoverageReport() {
     local argument="$1" __index=$((__count - $# + 1))
     [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-      # _IDENTICAL_ --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      --cache)
-        shift
-        reportCache="$(usageArgumentDirectory "$usage" "$argument" "${1-}")" || return $?
-        ;;
-      --target)
-        shift
-        target="$(usageArgumentFileDirectory "$usage" "$argument" "${1-}")" || return $?
-        ;;
-      *)
-        files+=("$(usageArgumentFile "$usage" "coverageFile" "$1")") || return $?
-        ;;
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    --cache)
+      shift
+      reportCache="$(usageArgumentDirectory "$usage" "$argument" "${1-}")" || return $?
+      ;;
+    --target)
+      shift
+      target="$(usageArgumentFileDirectory "$usage" "$argument" "${1-}")" || return $?
+      ;;
+    *)
+      files+=("$(usageArgumentFile "$usage" "coverageFile" "$1")") || return $?
+      ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
     shift
@@ -376,15 +376,15 @@ __bashCoverageMatch() {
 __bashCoverageCanIgnore() {
   while [ $# -gt 0 ]; do
     case "$1" in
-      "&&" | "!" | "!!" | ";" | ":" | "()" | "{" | "}") ;;
-      "|" | "||" | ";;") ;;
-      "if" | "fi" | "case" | "esac") ;;
-      *)
-        case "$(unquote "\"" "$1")" in
-          "\$()") ;;
-          *) printf "%s\n" "$1" ;;
-        esac
-        ;;
+    "&&" | "!" | "!!" | ";" | ":" | "()" | "{" | "}") ;;
+    "|" | "||" | ";;") ;;
+    "if" | "fi" | "case" | "esac") ;;
+    *)
+      case "$(unquote "\"" "$1")" in
+      "\$()") ;;
+      *) printf "%s\n" "$1" ;;
+      esac
+      ;;
     esac
     shift
   done
@@ -399,14 +399,14 @@ __bashCoverageLineIsCoverable() {
   while [ $# -gt 0 ]; do
     trimmedLine=$(trimSpace "$1")
     case "$trimmedLine" in
-      "" | "}" | "{" | "done" | "fi" | "else" | "then")
+    "" | "}" | "{" | "done" | "fi" | "else" | "then")
+      return 1
+      ;;
+    *)
+      if [ "${trimmedLine:0:1}" = "#" ]; then
         return 1
-        ;;
-      *)
-        if [ "${trimmedLine:0:1}" = "#" ]; then
-          return 1
-        fi
-        ;;
+      fi
+      ;;
     esac
     shift
   done

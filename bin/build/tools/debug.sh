@@ -150,21 +150,21 @@ bashDebugInterruptFile() {
     local argument="$1" __index=$((__count - $# + 1))
     [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-      # _IDENTICAL_ --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      --interrupt)
-        inArray INT "${traps[@]+"${traps[@]}"}" || traps+=("INT")
-        ;;
-      --error)
-        inArray ERR "${traps[@]+"${traps[@]}"}" || traps+=("ERR")
-        ;;
-      *)
-        # _IDENTICAL_ argumentUnknown 1
-        __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
-        ;;
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    --interrupt)
+      inArray INT "${traps[@]+"${traps[@]}"}" || traps+=("INT")
+      ;;
+    --error)
+      inArray ERR "${traps[@]+"${traps[@]}"}" || traps+=("ERR")
+      ;;
+    *)
+      # _IDENTICAL_ argumentUnknown 1
+      __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
+      ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
     shift
@@ -238,18 +238,18 @@ plumber() {
     local argument="$1" __index=$((__count - $# + 1))
     [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-      # _IDENTICAL_ --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      --leak)
-        shift
-        __ignore+=("$(usageArgumentString "$usage" "globalName" "${1-}")") || return $?
-        ;;
-      *)
-        break
-        ;;
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    --leak)
+      shift
+      __ignore+=("$(usageArgumentString "$usage" "globalName" "${1-}")") || return $?
+      ;;
+    *)
+      break
+      ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
     shift
@@ -316,28 +316,28 @@ housekeeper() {
     local argument="$1" __index=$((__count - $# + 1))
     [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-      # _IDENTICAL_ --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      --ignore)
-        shift
-        __pattern="$(usageArgumentString "$usage" "grepPattern" "${1-}")" || return $?
-        __ignore+=(-e "$__pattern")
-        ;;
-      --path)
-        shift
-        path="$(usageArgumentDirectory "$usage" "path" "${1-}")" || return $?
-        watchPaths+=("$path")
-        ;;
-      *)
-        if [ -d "$1" ]; then
-          watchPaths+=("$1")
-        else
-          break
-        fi
-        ;;
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    --ignore)
+      shift
+      __pattern="$(usageArgumentString "$usage" "grepPattern" "${1-}")" || return $?
+      __ignore+=(-e "$__pattern")
+      ;;
+    --path)
+      shift
+      path="$(usageArgumentDirectory "$usage" "path" "${1-}")" || return $?
+      watchPaths+=("$path")
+      ;;
+    *)
+      if [ -d "$1" ]; then
+        watchPaths+=("$1")
+      else
+        break
+      fi
+      ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
     shift
@@ -397,22 +397,22 @@ outputTrigger() {
     local argument="$1" __index=$((__count - $# + 1))
     [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-      # _IDENTICAL_ --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      --verbose)
-        verbose=true
-        ;;
-      --name)
-        shift || __throwArgument "$usage" "missing $argument argument" || return $?
-        [ -n "$1" ] || __throwArgument "$usage" "Blank $argument argument" || return $?
-        name="$1"
-        ;;
-      *)
-        break
-        ;;
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    --verbose)
+      verbose=true
+      ;;
+    --name)
+      shift || __throwArgument "$usage" "missing $argument argument" || return $?
+      [ -n "$1" ] || __throwArgument "$usage" "Blank $argument argument" || return $?
+      name="$1"
+      ;;
+    *)
+      break
+      ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
     shift
@@ -465,11 +465,11 @@ debugOpenFiles() {
     local argument="$1" __index=$((__count - $# + 1))
     [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-      # _IDENTICAL_ --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
     shift

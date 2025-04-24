@@ -60,11 +60,11 @@ bigText() {
   [ -n "$binary" ] || binary="$(__catchEnvironment "$usage" __bigTextBinary)" || return $?
   [ -n "$binary" ] || __throwEnvironment "$usage" "Need BUILD_TEXT_BINARY" || return $?
   case "$binary" in
-    figlet) fonts=("standard" "big") ;;
-    toilet) fonts=("smblock" "smmono12") ;;
-    *)
-      __throwEnvironment "$usage" "Unknown BUILD_TEXT_BINARY $(decorate code "$binary")" || return $?
-      ;;
+  figlet) fonts=("standard" "big") ;;
+  toilet) fonts=("smblock" "smmono12") ;;
+  *)
+    __throwEnvironment "$usage" "Unknown BUILD_TEXT_BINARY $(decorate code "$binary")" || return $?
+    ;;
   esac
   if ! whichExists "$binary"; then
     decorate green "BIG TEXT: $*"
@@ -93,20 +93,20 @@ bigTextAt() {
     local argument="$1" __index=$((__count - $# + 1))
     [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-      # _IDENTICAL_ --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      *)
-        if [ -z "$x" ]; then
-          x=$(usageArgumentInteger "$usage" "xOffset" "$argument") || return $?
-        elif [ -z "$y" ]; then
-          y=$(usageArgumentInteger "$usage" "yOffset" "$argument") || return $?
-        else
-          message=$(__catchEnvironment "$usage" bigText "$@") || return $?
-        fi
-        ;;
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    *)
+      if [ -z "$x" ]; then
+        x=$(usageArgumentInteger "$usage" "xOffset" "$argument") || return $?
+      elif [ -z "$y" ]; then
+        y=$(usageArgumentInteger "$usage" "yOffset" "$argument") || return $?
+      else
+        message=$(__catchEnvironment "$usage" bigText "$@") || return $?
+      fi
+      ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
     shift
@@ -173,40 +173,40 @@ labeledBigText() {
     local argument="$1" __index=$((__count - $# + 1))
     [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-      # _IDENTICAL_ --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      --top)
-        isBottom=false
-        ;;
-      --bottom)
-        isBottom=true
-        ;;
-      --prefix)
-        shift || :
-        linePrefix="${1-}"
-        ;;
-      --suffix)
-        shift || :
-        lineSuffix="${1-}"
-        ;;
-      --tween)
-        shift || :
-        tweenLabel="${1-}"
-        tweenNonLabel="${1-}"
-        ;;
-      *)
-        if [ "$argument" != "${argument#-}" ]; then
-          # _IDENTICAL_ argumentUnknown 1
-          __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
-        fi
-        label="$argument"
-        plainLabel="$(printf -- "%s\n" "$label" | stripAnsi)" || __throwArgument "$usage" "Unable to clean label" || return $?
-        shift
-        break
-        ;;
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    --top)
+      isBottom=false
+      ;;
+    --bottom)
+      isBottom=true
+      ;;
+    --prefix)
+      shift || :
+      linePrefix="${1-}"
+      ;;
+    --suffix)
+      shift || :
+      lineSuffix="${1-}"
+      ;;
+    --tween)
+      shift || :
+      tweenLabel="${1-}"
+      tweenNonLabel="${1-}"
+      ;;
+    *)
+      if [ "$argument" != "${argument#-}" ]; then
+        # _IDENTICAL_ argumentUnknown 1
+        __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
+      fi
+      label="$argument"
+      plainLabel="$(printf -- "%s\n" "$label" | stripAnsi)" || __throwArgument "$usage" "Unable to clean label" || return $?
+      shift
+      break
+      ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
     shift
@@ -251,32 +251,32 @@ repeat() {
   while [ $# -gt 0 ]; do
     argument="$1"
     case "$argument" in
-      # _IDENTICAL_ --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      *)
-        if [ -z "$count" ]; then
-          count="$(usageArgumentUnsignedInteger "$usage" "count" "$1")" || return $?
-        else
-          powers=("$*")
-          curPow=${#powers[@]}
-          while [ $((2 ** curPow)) -le "$count" ]; do
-            powers["$curPow"]="${powers[$curPow - 1]}${powers[$curPow - 1]}"
-            curPow=$((curPow + 1))
-          done
-          curPow=0
-          while [ "$count" -gt 0 ] && [ $curPow -lt ${#powers[@]} ]; do
-            if [ $((count & (2 ** curPow))) -ne 0 ]; then
-              printf -- "%s" "${powers[$curPow]}"
-              count=$((count - (2 ** curPow)))
-            fi
-            curPow=$((curPow + 1))
-          done
-          return 0
-        fi
-        ;;
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    *)
+      if [ -z "$count" ]; then
+        count="$(usageArgumentUnsignedInteger "$usage" "count" "$1")" || return $?
+      else
+        powers=("$*")
+        curPow=${#powers[@]}
+        while [ $((2 ** curPow)) -le "$count" ]; do
+          powers["$curPow"]="${powers[$curPow - 1]}${powers[$curPow - 1]}"
+          curPow=$((curPow + 1))
+        done
+        curPow=0
+        while [ "$count" -gt 0 ] && [ $curPow -lt ${#powers[@]} ]; do
+          if [ $((count & (2 ** curPow))) -ne 0 ]; then
+            printf -- "%s" "${powers[$curPow]}"
+            count=$((count - (2 ** curPow)))
+          fi
+          curPow=$((curPow + 1))
+        done
+        return 0
+      fi
+      ;;
     esac
     shift || __throwArgument "$usage" "shift argument $argument" || return $?
   done
@@ -307,25 +307,25 @@ echoBar() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     case "$argument" in
-      # _IDENTICAL_ --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      *)
-        if [ $# -gt 2 ]; then
-          # _IDENTICAL_ argumentUnknown 1
-          __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
-        fi
-        barText="$argument"
-        shift
-        if [ -n "${1-}" ]; then
-          delta=$(usageArgumentInteger "$usage" "delta" "$1")
-        else
-          delta=0
-          break
-        fi
-        ;;
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    *)
+      if [ $# -gt 2 ]; then
+        # _IDENTICAL_ argumentUnknown 1
+        __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
+      fi
+      barText="$argument"
+      shift
+      if [ -n "${1-}" ]; then
+        delta=$(usageArgumentInteger "$usage" "delta" "$1")
+      else
+        delta=0
+        break
+      fi
+      ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
     shift
@@ -391,31 +391,31 @@ __decorateExtensionWrap() {
   while [ $# -gt 0 ]; do
     argument="$1"
     case "$argument" in
-      # _IDENTICAL_ --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      --fill)
-        shift || __throwArgument "$usage" "missing $argument argument" || return $?
-        [ 1 -eq "${#1}" ] || __throwArgument "$usage" "Fill character must be single character" || return $?
-        fill="$1"
-        width="${width:-needed}"
-        ;;
-      --width)
-        shift || __throwArgument "$usage" "missing $argument argument" || return $?
-        isUnsignedInteger "$1" && [ "$1" -gt 0 ] || __throwArgument "$usage" "$argument requires positive integer" || return $?
-        width="$1"
-        ;;
-      *)
-        if [ "$prefix" = $'\1' ]; then
-          prefix="$1"
-        elif [ "$suffix" = $'\1' ]; then
-          suffix="$1"
-        else
-          suffix="$suffix $1"
-        fi
-        ;;
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    --fill)
+      shift || __throwArgument "$usage" "missing $argument argument" || return $?
+      [ 1 -eq "${#1}" ] || __throwArgument "$usage" "Fill character must be single character" || return $?
+      fill="$1"
+      width="${width:-needed}"
+      ;;
+    --width)
+      shift || __throwArgument "$usage" "missing $argument argument" || return $?
+      isUnsignedInteger "$1" && [ "$1" -gt 0 ] || __throwArgument "$usage" "$argument requires positive integer" || return $?
+      width="$1"
+      ;;
+    *)
+      if [ "$prefix" = $'\1' ]; then
+        prefix="$1"
+      elif [ "$suffix" = $'\1' ]; then
+        suffix="$1"
+      else
+        suffix="$suffix $1"
+      fi
+      ;;
     esac
     shift || __throwArgument "$usage" shift || return $?
   done
@@ -515,30 +515,30 @@ boxedHeading() {
     local argument="$1" __index=$((__count - $# + 1))
     [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-      # _IDENTICAL_ --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      --outside)
-        shift
-        decoration=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
-        ;;
-      --inside)
-        shift
-        inside=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
-        ;;
-      --shrink)
-        shift
-        shrink=$(usageArgumentUnsignedInteger "$usage" "$argument" "${1-}") || return $?
-        ;;
-      --size)
-        shift
-        nLines=$(usageArgumentUnsignedInteger "$usage" "$argument" "${1-}") || return $?
-        ;;
-      *)
-        text+=("$1")
-        ;;
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    --outside)
+      shift
+      decoration=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
+      ;;
+    --inside)
+      shift
+      inside=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
+      ;;
+    --shrink)
+      shift
+      shrink=$(usageArgumentUnsignedInteger "$usage" "$argument" "${1-}") || return $?
+      ;;
+    --size)
+      shift
+      nLines=$(usageArgumentUnsignedInteger "$usage" "$argument" "${1-}") || return $?
+      ;;
+    *)
+      text+=("$1")
+      ;;
     esac
     shift
   done

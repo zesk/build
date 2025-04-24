@@ -63,97 +63,97 @@ documentationBuild() {
     argument="$1"
     [ -n "$argument" ] || __throwArgument "$usage" "blank argument" || return $?
     case "$argument" in
-      --git)
-        _buildDocumentation_MergeWithDocsBranch
-        return $?
-        ;;
-      --commit)
-        _buildDocumentation_Recommit
-        return $?
-        ;;
-      --company)
-        shift
-        company=$(usageArgumentString "$usage" "$argument" "${1-}")
-        ;;
-      --name)
-        shift
-        applicationName=$(usageArgumentString "$usage" "$argument" "${1-}")
-        ;;
-      --filter)
+    --git)
+      _buildDocumentation_MergeWithDocsBranch
+      return $?
+      ;;
+    --commit)
+      _buildDocumentation_Recommit
+      return $?
+      ;;
+    --company)
+      shift
+      company=$(usageArgumentString "$usage" "$argument" "${1-}")
+      ;;
+    --name)
+      shift
+      applicationName=$(usageArgumentString "$usage" "$argument" "${1-}")
+      ;;
+    --filter)
+      docArgs+=("$argument")
+      shift
+      while [ $# -gt 0 ] && [ "$1" != "--" ]; do docArgs+=("$1") && shift; done
+      docArgs+=("--")
+      ;;
+    --template)
+      [ -z "$templatePath" ] || __throwArgument "$usage" "$argument already supplied" || return $?
+      shift
+      templatePath=$(usageArgumentRealDirectory "$usage" "$argument" "${1-}")
+      ;;
+    --page-template)
+      [ -z "$pageTemplate" ] || __throwArgument "$usage" "$argument already supplied" || return $?
+      shift
+      pageTemplate=$(usageArgumentFile "$usage" "$argument" "${1-}")
+      ;;
+    --function-template)
+      [ -z "$functionTemplate" ] || __throwArgument "$usage" "$argument already supplied" || return $?
+      shift
+      functionTemplate=$(usageArgumentFile "$usage" "$argument" "${1-}")
+      ;;
+    --source)
+      shift
+      sourcePaths+=("$(usageArgumentRealDirectory "$usage" "$argument" "${1-}")")
+      ;;
+    --target)
+      shift
+      targetPath="$(usageArgumentDirectory "$usage" "$argument" "${1-}")"
+      targetPath="${targetPath#"$home"/}"
+      ;;
+    --company-link)
+      shift
+      companyLink=$(usageArgumentString "$usage" "$argument" "${1-}")
+      ;;
+    --unlinked-template)
+      shift
+      unlinkedTemplate=$(usageArgumentFile "$usage" "$argument" "${1-}")
+      ;;
+    --unlinked-target)
+      shift
+      unlinkedTarget=$(usageArgumentFileDirectory "$usage" "$argument" "${1-}")
+      ;;
+    --clean)
+      indexArgs+=("$argument")
+      cleanFlag=true
+      ;;
+    --see-prefix)
+      shift
+      seePrefix="${1-}"
+      ;;
+    --unlinked-update)
+      [ -z "$actionFlag" ] || __throwArgument "$usage" "$argument and $actionFlag are mutually exclusive" || return $?
+      actionFlag="$argument"
+      ;;
+    --force)
+      if ! inArray "$argument" "${docArgs[@]}"; then
         docArgs+=("$argument")
-        shift
-        while [ $# -gt 0 ] && [ "$1" != "--" ]; do docArgs+=("$1") && shift; done
-        docArgs+=("--")
-        ;;
-      --template)
-        [ -z "$templatePath" ] || __throwArgument "$usage" "$argument already supplied" || return $?
-        shift
-        templatePath=$(usageArgumentRealDirectory "$usage" "$argument" "${1-}")
-        ;;
-      --page-template)
-        [ -z "$pageTemplate" ] || __throwArgument "$usage" "$argument already supplied" || return $?
-        shift
-        pageTemplate=$(usageArgumentFile "$usage" "$argument" "${1-}")
-        ;;
-      --function-template)
-        [ -z "$functionTemplate" ] || __throwArgument "$usage" "$argument already supplied" || return $?
-        shift
-        functionTemplate=$(usageArgumentFile "$usage" "$argument" "${1-}")
-        ;;
-      --source)
-        shift
-        sourcePaths+=("$(usageArgumentRealDirectory "$usage" "$argument" "${1-}")")
-        ;;
-      --target)
-        shift
-        targetPath="$(usageArgumentDirectory "$usage" "$argument" "${1-}")"
-        targetPath="${targetPath#"$home"/}"
-        ;;
-      --company-link)
-        shift
-        companyLink=$(usageArgumentString "$usage" "$argument" "${1-}")
-        ;;
-      --unlinked-template)
-        shift
-        unlinkedTemplate=$(usageArgumentFile "$usage" "$argument" "${1-}")
-        ;;
-      --unlinked-target)
-        shift
-        unlinkedTarget=$(usageArgumentFileDirectory "$usage" "$argument" "${1-}")
-        ;;
-      --clean)
         indexArgs+=("$argument")
-        cleanFlag=true
-        ;;
-      --see-prefix)
-        shift
-        seePrefix="${1-}"
-        ;;
-      --unlinked-update)
-        [ -z "$actionFlag" ] || __throwArgument "$usage" "$argument and $actionFlag are mutually exclusive" || return $?
-        actionFlag="$argument"
-        ;;
-      --force)
-        if ! inArray "$argument" "${docArgs[@]}"; then
-          docArgs+=("$argument")
-          indexArgs+=("$argument")
-        fi
-        ;;
-      --verbose)
-        verbose=true
-        if ! inArray "$argument" "${docArgs[@]}"; then
-          docArgs+=("$argument")
-          indexArgs+=("$argument")
-        fi
-        ;;
-      # _IDENTICAL_ --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      *)
-        __throwArgument "$usage" "unknown argument $(decorate value "$argument")" || return $?
-        ;;
+      fi
+      ;;
+    --verbose)
+      verbose=true
+      if ! inArray "$argument" "${docArgs[@]}"; then
+        docArgs+=("$argument")
+        indexArgs+=("$argument")
+      fi
+      ;;
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    *)
+      __throwArgument "$usage" "unknown argument $(decorate value "$argument")" || return $?
+      ;;
     esac
     shift
   done

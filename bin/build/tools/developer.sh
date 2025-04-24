@@ -17,17 +17,17 @@ developerAnnounce() {
     local argument="$1" __index=$((__count - $# + 1))
     [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-      # _IDENTICAL_ --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      --debug)
-        debugFlag=true
-        ;;
-      *)
-        source=$(usageArgumentRealFile "$usage" "source" "${1-}") || return $?
-        ;;
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    --debug)
+      debugFlag=true
+      ;;
+    *)
+      source=$(usageArgumentRealFile "$usage" "source" "${1-}") || return $?
+      ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
     shift
@@ -41,18 +41,18 @@ developerAnnounce() {
     [ "$item" = "${item#_}" ] || continue
     itemType=$(type -t "$item")
     case "$itemType" in
-      alias) aa+=("$item") ;;
-      function) ff+=("$item") ;;
-      *)
-        ! inArray "$item" "${skipItems[@]}" || continue
-        if muzzle isType "$item"; then
-          local message
-          message="$(decorate info "$(decorate value "$item") is type $(isType "$item" | decorate each code) (item $itemType)")"
-          types+=("$message")
-        else
-          unknowns+=("$item")
-        fi
-        ;;
+    alias) aa+=("$item") ;;
+    function) ff+=("$item") ;;
+    *)
+      ! inArray "$item" "${skipItems[@]}" || continue
+      if muzzle isType "$item"; then
+        local message
+        message="$(decorate info "$(decorate value "$item") is type $(isType "$item" | decorate each code) (item $itemType)")"
+        types+=("$message")
+      else
+        unknowns+=("$item")
+      fi
+      ;;
     esac
   done
   [ "${#ff[@]}" -eq 0 ] || decorate info "Available functions $(decorate each code "${ff[@]}")"
@@ -74,13 +74,13 @@ developerUndo() {
     local itemType
     itemType=$(type -t "$item")
     case "$itemType" in
-      alias) unalias "$item" ;;
-      function) unset "${item}" ;;
-      *)
-        if muzzle isType "$item"; then
-          unset "$item"
-        fi
-        ;;
+    alias) unalias "$item" ;;
+    function) unset "${item}" ;;
+    *)
+      if muzzle isType "$item"; then
+        unset "$item"
+      fi
+      ;;
     esac
   done
 }
@@ -100,20 +100,20 @@ developerTrack() {
     local argument="$1" __index=$((__count - $# + 1))
     [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-      # _IDENTICAL_ --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      --list)
-        listChanges=true
-        ;;
-      --verbose)
-        verboseFlag=true
-        ;;
-      *)
-        source=$(usageArgumentRealFile "$usage" "source" "${1-}") || return $?
-        ;;
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    --list)
+      listChanges=true
+      ;;
+    --verbose)
+      verboseFlag=true
+      ;;
+    *)
+      source=$(usageArgumentRealFile "$usage" "source" "${1-}") || return $?
+      ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
     shift
@@ -192,17 +192,17 @@ buildDevelopmentLink() {
     local argument="$1" __index=$((__count - $# + 1))
     [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-      # _IDENTICAL_ --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      --reset | --copy) ;;
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    --reset | --copy) ;;
 
-      *)
-        # _IDENTICAL_ argumentUnknown 1
-        __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
-        ;;
+    *)
+      # _IDENTICAL_ argumentUnknown 1
+      __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
+      ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
     shift
@@ -237,54 +237,54 @@ developerDevelopmentLink() {
     local argument="$1" __index=$((__count - $# + 1))
     [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-      # _IDENTICAL_ --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      # _IDENTICAL_ --handler 4
-      --handler)
-        shift
-        usage=$(usageArgumentFunction "$usage" "$argument" "${1-}") || return $?
-        ;;
-      --copy)
-        copyFlag=true
-        ;;
-      --composer)
-        shift
-        composerPackage=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
-        ;;
-      --binary)
-        shift
-        runBinary+=("$(usageArgumentString "$usage" "$argument" "${1-}")") || return $?
-        ;;
-      --development-path)
-        shift
-        developmentPath=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
-        ;;
-      --path)
-        shift
-        path=$(usageArgumentApplicationDirectory "$usage" "$argument" "${1-}") || __throwArgument "$usage" "path failed #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
-        ;;
-      --version-json)
-        shift
-        versionJSON=$(usageArgumentApplicationFile "$usage" "$argument" "${1-}") || return $?
-        ;;
-      --version-selector)
-        shift
-        versionSelector=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
-        ;;
-      --variable)
-        shift
-        variable=$(usageArgumentEnvironmentVariable "$usage" "$argument" "${1-}") || return $?
-        ;;
-      --reset)
-        resetFlag=true
-        ;;
-      *)
-        # _IDENTICAL_ argumentUnknown 1
-        __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
-        ;;
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    # _IDENTICAL_ --handler 4
+    --handler)
+      shift
+      usage=$(usageArgumentFunction "$usage" "$argument" "${1-}") || return $?
+      ;;
+    --copy)
+      copyFlag=true
+      ;;
+    --composer)
+      shift
+      composerPackage=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
+      ;;
+    --binary)
+      shift
+      runBinary+=("$(usageArgumentString "$usage" "$argument" "${1-}")") || return $?
+      ;;
+    --development-path)
+      shift
+      developmentPath=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
+      ;;
+    --path)
+      shift
+      path=$(usageArgumentApplicationDirectory "$usage" "$argument" "${1-}") || __throwArgument "$usage" "path failed #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
+      ;;
+    --version-json)
+      shift
+      versionJSON=$(usageArgumentApplicationFile "$usage" "$argument" "${1-}") || return $?
+      ;;
+    --version-selector)
+      shift
+      versionSelector=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
+      ;;
+    --variable)
+      shift
+      variable=$(usageArgumentEnvironmentVariable "$usage" "$argument" "${1-}") || return $?
+      ;;
+    --reset)
+      resetFlag=true
+      ;;
+    *)
+      # _IDENTICAL_ argumentUnknown 1
+      __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
+      ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
     shift

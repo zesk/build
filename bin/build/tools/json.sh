@@ -59,54 +59,54 @@ jsonSetValue() {
     local argument="$1" __index=$((__count - $# + 1))
     [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-      # _IDENTICAL_ --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      --generator)
-        shift
-        generator="$(usageArgumentFunction "$usage" "$argument" "${1-}")" || return $?
-        ;;
-      --status)
-        statusFlag=true
-        ;;
-      --quiet)
-        quietFlag=true
-        ;;
-      --value)
-        shift
-        value="$(usageArgumentString "$usage" "$argument" "${1-}")" || return $?
-        ;;
-      --key)
-        shift
-        key="$(usageArgumentString "$usage" "$argument" "${1-}")" || return $?
-        ;;
-      --filter)
-        shift
-        filter="$(usageArgumentFunction "$usage" "$argument" "${1-}")" || return $?
-        ;;
-      *)
-        [ -n "$key" ] || __throwArgument "$usage" "--key is required" || return $?
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    --generator)
+      shift
+      generator="$(usageArgumentFunction "$usage" "$argument" "${1-}")" || return $?
+      ;;
+    --status)
+      statusFlag=true
+      ;;
+    --quiet)
+      quietFlag=true
+      ;;
+    --value)
+      shift
+      value="$(usageArgumentString "$usage" "$argument" "${1-}")" || return $?
+      ;;
+    --key)
+      shift
+      key="$(usageArgumentString "$usage" "$argument" "${1-}")" || return $?
+      ;;
+    --filter)
+      shift
+      filter="$(usageArgumentFunction "$usage" "$argument" "${1-}")" || return $?
+      ;;
+    *)
+      [ -n "$key" ] || __throwArgument "$usage" "--key is required" || return $?
 
-        file="$(usageArgumentFile "$usage" "$argument" "${1-}")" || return $?
+      file="$(usageArgumentFile "$usage" "$argument" "${1-}")" || return $?
+      if [ -z "$value" ]; then
+        if [ -z "$generator" ]; then
+          __throwArgument "$usage" "--generator or --value is required" || return $?
+        fi
+        value=$(__catchEnvironment "$usage" "$generator") || return $?
         if [ -z "$value" ]; then
-          if [ -z "$generator" ]; then
-            __throwArgument "$usage" "--generator or --value is required" || return $?
-          fi
-          value=$(__catchEnvironment "$usage" "$generator") || return $?
-          if [ -z "$value" ]; then
-            __throwEnvironment "$usage" "Value returned by --generator $generator hook is blank" || return $?
-          fi
+          __throwEnvironment "$usage" "Value returned by --generator $generator hook is blank" || return $?
         fi
-        if [ -n "$filter" ]; then
-          value=$(__catchEnvironment "$usage" "$filter" "$value") || return $?
-          if [ -z "$value" ]; then
-            __throwEnvironment "$usage" "Value returned by --filter $filter hook is blank" || return $?
-          fi
+      fi
+      if [ -n "$filter" ]; then
+        value=$(__catchEnvironment "$usage" "$filter" "$value") || return $?
+        if [ -z "$value" ]; then
+          __throwEnvironment "$usage" "Value returned by --filter $filter hook is blank" || return $?
         fi
-        __jsonSetValue "$usage" "$file" "$key" "$value" "$quietFlag" "$statusFlag" || return $?
-        ;;
+      fi
+      __jsonSetValue "$usage" "$file" "$key" "$value" "$quietFlag" "$statusFlag" || return $?
+      ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
     shift

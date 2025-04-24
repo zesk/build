@@ -59,31 +59,31 @@ daemontoolsInstallService() {
     local argument="$1" __index=$((__count - $# + 1))
     [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-      # _IDENTICAL_ --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      --home)
-        shift
-        serviceHome="${1-}"
-        ;;
-      --escalate)
-        extras+=("$argument")
-        ;;
-      --log)
-        shift
-        logPath="$(usageArgumentDirectory "$usage" "$argument" "${1-}")" || return $?
-        ;;
-      *)
-        if [ -z "$serviceFile" ]; then
-          serviceFile=$(usageArgumentExecutable "$usage" "serviceFile" "$1") || return $?
-        elif [ -z "$serviceName" ]; then
-          serviceName=$(usageArgumentString "$usage" "serviceName" "$1") || return $?
-        else
-          __throwArgument "$usage" "Extra argument $1" || return $?
-        fi
-        ;;
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    --home)
+      shift
+      serviceHome="${1-}"
+      ;;
+    --escalate)
+      extras+=("$argument")
+      ;;
+    --log)
+      shift
+      logPath="$(usageArgumentDirectory "$usage" "$argument" "${1-}")" || return $?
+      ;;
+    *)
+      if [ -z "$serviceFile" ]; then
+        serviceFile=$(usageArgumentExecutable "$usage" "serviceFile" "$1") || return $?
+      elif [ -z "$serviceName" ]; then
+        serviceName=$(usageArgumentString "$usage" "serviceName" "$1") || return $?
+      else
+        __throwArgument "$usage" "Extra argument $1" || return $?
+      fi
+      ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
     shift
@@ -169,17 +169,17 @@ daemontoolsRemoveService() {
     arg=$1
     [ -n "$arg" ] || __throwArgument "$usage" "blank argument" || return $?
     case "$arg" in
-      --home)
-        shift || :
-        serviceHome="${1-}"
-        ;;
-      *)
-        if [ -z "$serviceName" ]; then
-          serviceName="$1"
-        else
-          __throwArgument "$usage" "Extra argument $1" || return $?
-        fi
-        ;;
+    --home)
+      shift || :
+      serviceHome="${1-}"
+      ;;
+    *)
+      if [ -z "$serviceName" ]; then
+        serviceName="$1"
+      else
+        __throwArgument "$usage" "Extra argument $1" || return $?
+      fi
+      ;;
     esac
     shift || __throwArgument "$usage" "Failed after $arg" || return $?
   done
@@ -275,13 +275,13 @@ daemontoolsTerminate() {
     argument="$1"
     [ -n "$argument" ] || __throwArgument "$usage" "blank argument" || return $?
     case "$argument" in
-      --timeout)
-        shift || __throwArgument "$usage" "missing $argument argument" || return $?
-        timeout=$(usageArgumentInteger "$usage" "seconds" "$1") || return $?
-        ;;
-      *)
-        __throwArgument "$usage" "unknown argument $(decorate value "$argument")" || return $?
-        ;;
+    --timeout)
+      shift || __throwArgument "$usage" "missing $argument argument" || return $?
+      timeout=$(usageArgumentInteger "$usage" "seconds" "$1") || return $?
+      ;;
+    *)
+      __throwArgument "$usage" "unknown argument $(decorate value "$argument")" || return $?
+      ;;
     esac
     shift || __throwArgument "$usage" "shift argument $(decorate code "$argument")" || return $?
   done
@@ -392,50 +392,50 @@ daemontoolsManager() {
     local argument="$1" __index=$((__count - $# + 1))
     [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-      # _IDENTICAL_ --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      --chirp)
-        shift
-        chirpSeconds=$(usageArgumentPositiveInteger "$usage" chirpSeconds "${1-}") || return $?
-        ;;
-      --interval)
-        shift
-        intervalSeconds=$(usageArgumentPositiveInteger "$usage" intervalSeconds "${1-}") || return $?
-        ;;
-      --stat)
-        shift
-        [ -z "$statFile" ] || __throwArgument "$usage" "$argument must be specified once ($statFile and ${1-})" || return $?
-        statFile=$(usageArgumentFileDirectory "$usage" "statFile" "${1-}") || return $?
-        ;;
-      --home)
-        shift
-        serviceHome=$(usageArgumentDirectory "$usage" "serviceHome" "${1-}") || return $?
-        ;;
-      --action)
-        shift
-        IFS="," read -r -a currentActions <<<"$1" || :
-        [ ${#currentActions[@]} -gt 0 ] || __throwArgument "$usage" "$argument No actions specified"
-        for action in "${currentActions[@]}"; do
-          case "$action" in start | restart | stop) ;; *) __throwArgument "$usage" "Invalid action $action" || return $? ;; esac
-        done
-        ;;
-      *)
-        if [ -z "$service" ]; then
-          service="$1"
-          [ -d "$service" ] || __throwEnvironment "$usage" "service must be a service directory that exists: $service" || return $?
-        else
-          file="$1"
-          [ -d "$(dirname "$file")" ] || __throwEnvironment "$usage" "file must be in a directory that exists: $file" || return $?
-          services+=("$service")
-          files+=("$file")
-          actions+=("${currentActions[*]}")
-          service=
-          file=
-        fi
-        ;;
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    --chirp)
+      shift
+      chirpSeconds=$(usageArgumentPositiveInteger "$usage" chirpSeconds "${1-}") || return $?
+      ;;
+    --interval)
+      shift
+      intervalSeconds=$(usageArgumentPositiveInteger "$usage" intervalSeconds "${1-}") || return $?
+      ;;
+    --stat)
+      shift
+      [ -z "$statFile" ] || __throwArgument "$usage" "$argument must be specified once ($statFile and ${1-})" || return $?
+      statFile=$(usageArgumentFileDirectory "$usage" "statFile" "${1-}") || return $?
+      ;;
+    --home)
+      shift
+      serviceHome=$(usageArgumentDirectory "$usage" "serviceHome" "${1-}") || return $?
+      ;;
+    --action)
+      shift
+      IFS="," read -r -a currentActions <<<"$1" || :
+      [ ${#currentActions[@]} -gt 0 ] || __throwArgument "$usage" "$argument No actions specified"
+      for action in "${currentActions[@]}"; do
+        case "$action" in start | restart | stop) ;; *) __throwArgument "$usage" "Invalid action $action" || return $? ;; esac
+      done
+      ;;
+    *)
+      if [ -z "$service" ]; then
+        service="$1"
+        [ -d "$service" ] || __throwEnvironment "$usage" "service must be a service directory that exists: $service" || return $?
+      else
+        file="$1"
+        [ -d "$(dirname "$file")" ] || __throwEnvironment "$usage" "file must be in a directory that exists: $file" || return $?
+        services+=("$service")
+        files+=("$file")
+        actions+=("${currentActions[*]}")
+        service=
+        file=
+      fi
+      ;;
     esac
     shift
   done
@@ -476,9 +476,9 @@ daemontoolsManager() {
           printf "start=%s\n""action=%s\n""daemon=%d\n""service=%s\n" "$(date +%s)" "$fileAction" "$$" "$service" >"$file.svc"
           printf "Service %s: %s\n" "$fileAction" "$(basename "$service")"
           case $fileAction in
-            start) svcBinFlags="-u" ;;
-            stop) svcBinFlags="-d" ;;
-            *) svcBinFlags="-t" ;;
+          start) svcBinFlags="-u" ;;
+          stop) svcBinFlags="-d" ;;
+          *) svcBinFlags="-t" ;;
           esac
           break
         fi

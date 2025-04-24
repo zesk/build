@@ -124,24 +124,24 @@ mapReturn() {
     local argument="$1" __index=$((__count - $# + 1))
     [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-      # _IDENTICAL_ --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      *)
-        if [ -z "$value" ]; then
-          value=$(usageArgumentUnsignedInteger "$usage" "value" "$1") || return $?
-        elif [ -z "$from" ]; then
-          from=$(usageArgumentUnsignedInteger "$usage" "from" "$1") || return $?
-        elif [ -z "$to" ]; then
-          to=$(usageArgumentUnsignedInteger "$usage" "to" "$1") || return $?
-          if [ "$value" -eq "$from" ]; then
-            return "$to"
-          fi
-          from="" && to=""
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    *)
+      if [ -z "$value" ]; then
+        value=$(usageArgumentUnsignedInteger "$usage" "value" "$1") || return $?
+      elif [ -z "$from" ]; then
+        from=$(usageArgumentUnsignedInteger "$usage" "from" "$1") || return $?
+      elif [ -z "$to" ]; then
+        to=$(usageArgumentUnsignedInteger "$usage" "to" "$1") || return $?
+        if [ "$value" -eq "$from" ]; then
+          return "$to"
         fi
-        ;;
+        from="" && to=""
+      fi
+      ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
     shift
@@ -183,13 +183,13 @@ _undo() {
   isPositiveInteger "$exitCode" || __catchArgument "$__usage" "Not an integer $(decorate value "$exitCode") (#$__count: $(decorate each code "${__saved[@]+"${__saved[@]}"}"))" || return $?
   while [ $# -gt 0 ]; do
     case "$1" in
-      --)
-        [ "${#args[@]}" -eq 0 ] || __execute "${args[@]}" || :
-        args=()
-        ;;
-      *)
-        args+=("$1")
-        ;;
+    --)
+      [ "${#args[@]}" -eq 0 ] || __execute "${args[@]}" || :
+      args=()
+      ;;
+    *)
+      args+=("$1")
+      ;;
     esac
     shift
   done

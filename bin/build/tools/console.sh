@@ -30,20 +30,20 @@ consoleGetColor() {
     argument="$1"
     [ -n "$argument" ] || __throwArgument "$usage" "blank argument" || return $?
     case "$argument" in
-      # _IDENTICAL_ --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      --background)
-        xtermCode="11"
-        ;;
-      --foreground)
-        xtermCode="10"
-        ;;
-      *)
-        __throwArgument "$usage" "unknown argument: $(decorate value "$argument")" || return $?
-        ;;
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    --background)
+      xtermCode="11"
+      ;;
+    --foreground)
+      xtermCode="10"
+      ;;
+    *)
+      __throwArgument "$usage" "unknown argument: $(decorate value "$argument")" || return $?
+      ;;
     esac
     shift || __throwArgument "$usage" "shift argument $(decorate label "$argument")" || return $?
   done
@@ -74,9 +74,9 @@ consoleGetColor() {
   if $success; then
     for color in "${colors[@]+${colors[@]}}"; do
       case "$color" in
-        [0-9a-fA-F][0-9a-fA-F][0-9a-fA-F][0-9a-fA-F])
-          printf -- "%d\n" $(((0x$color + 0) / 256))
-          ;;
+      [0-9a-fA-F][0-9a-fA-F][0-9a-fA-F][0-9a-fA-F])
+        printf -- "%d\n" $(((0x$color + 0) / 256))
+        ;;
       esac
     done
   fi

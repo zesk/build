@@ -12,14 +12,13 @@
 
 {loopExecute}
 {interactiveCountdown}
-{confirmYesNo} 
+{confirmYesNo}
 {pause}
 {interactiveBashSource}
 
 ## Copy files
 
 {copyFileWouldChange} {copyFile}
-
 
 ## Examples
 

@@ -136,19 +136,19 @@ dateAdd() {
     local argument="$1" __index=$((__count - $# + 1))
     [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-      # _IDENTICAL_ --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      --days)
-        shift
-        days=$(usageArgumentInteger "$usage" "$argument" "${1-}") || return $?
-        ;;
-      *)
-        timestamp=$(__catchArgument "$usage" dateToTimestamp "$argument") || return $?
-        __catchArgument "$usage" timestampToDate "$((timestamp + (86400 * days)))" || return $?
-        ;;
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    --days)
+      shift
+      days=$(usageArgumentInteger "$usage" "$argument" "${1-}") || return $?
+      ;;
+    *)
+      timestamp=$(__catchArgument "$usage" dateToTimestamp "$argument") || return $?
+      __catchArgument "$usage" timestampToDate "$((timestamp + (86400 * days)))" || return $?
+      ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
     shift

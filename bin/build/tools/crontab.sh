@@ -80,34 +80,34 @@ crontabApplicationUpdate() {
     local argument="$1" __index=$((__count - $# + 1))
     [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-      # _IDENTICAL_ --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      --env-file)
-        [ -z "$rootEnv" ] || __throwArgument "$usage" "$argument already" || return $?
-        shift
-        rootEnv=$(usageArgumentFile "$usage" "rootEnv" "$1")
-        ;;
-      --mapper)
-        [ -z "$environmentMapper" ] || __throwArgument "$usage" "$argument already" || return $?
-        shift
-        environmentMapper=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
-        ;;
-      --user)
-        shift
-        user="$(usageArgumentString "$usage" "$argument" "${1-}")" || return $?
-        ;;
-      --show)
-        flagShow=true
-        ;;
-      --diff)
-        flagDiff=true
-        ;;
-      *)
-        appPath="$(usageArgumentDirectory "$usage" "applicationPath" "$argument")"
-        ;;
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    --env-file)
+      [ -z "$rootEnv" ] || __throwArgument "$usage" "$argument already" || return $?
+      shift
+      rootEnv=$(usageArgumentFile "$usage" "rootEnv" "$1")
+      ;;
+    --mapper)
+      [ -z "$environmentMapper" ] || __throwArgument "$usage" "$argument already" || return $?
+      shift
+      environmentMapper=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
+      ;;
+    --user)
+      shift
+      user="$(usageArgumentString "$usage" "$argument" "${1-}")" || return $?
+      ;;
+    --show)
+      flagShow=true
+      ;;
+    --diff)
+      flagDiff=true
+      ;;
+    *)
+      appPath="$(usageArgumentDirectory "$usage" "applicationPath" "$argument")"
+      ;;
     esac
     shift
   done

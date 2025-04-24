@@ -20,14 +20,14 @@ bashGetRequires() {
     local argument="$1" __index=$((__count - $# + 1))
     [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-      # _IDENTICAL_ --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      *)
-        files+=("$(usageArgumentFile "$usage" "checkFile" "${1-}")") || return $?
-        ;;
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    *)
+      files+=("$(usageArgumentFile "$usage" "checkFile" "${1-}")") || return $?
+      ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
     shift
@@ -74,27 +74,27 @@ bashCheckRequires() {
     local argument="$1" __index=$((__count - $# + 1))
     [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-      # _IDENTICAL_ --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      --ignore-prefix)
-        shift
-        ignorePrefixes+=("$(usageArgumentString "$usage" "$argument" "${1-}")") || return $?
-        ;;
-      --report)
-        reportFlag=true
-        ;;
-      --unused)
-        unusedFlag=true
-        ;;
-      --require)
-        requireFlag=true
-        ;;
-      *)
-        files+=("$(usageArgumentFile "$usage" "checkFile" "${1-}")") || return $?
-        ;;
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    --ignore-prefix)
+      shift
+      ignorePrefixes+=("$(usageArgumentString "$usage" "$argument" "${1-}")") || return $?
+      ;;
+    --report)
+      reportFlag=true
+      ;;
+    --unused)
+      unusedFlag=true
+      ;;
+    --require)
+      requireFlag=true
+      ;;
+    *)
+      files+=("$(usageArgumentFile "$usage" "checkFile" "${1-}")") || return $?
+      ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
     shift

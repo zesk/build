@@ -26,7 +26,7 @@
 {documentationIndex_Generate}
 {documentationIndex_Lookup}
 
-# Linking documentation 
+# Linking documentation
 
 {documentationIndex_LinkDocumentationPaths}
 {documentationIndex_SetUnlinkedDocumentationPath}

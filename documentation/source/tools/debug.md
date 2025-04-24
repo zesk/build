@@ -4,13 +4,13 @@
 [⬅ Parent ](../index.md)
 <hr />
 
-## Debugging 
+## Debugging
 
 The global `BUILD_DEBUG` can be set to a comma-delimited list of values to enable debugging for areas of Zesk Build.
 
 Known tags are:
 
-FunctionAttributeList: BUILD_DEBUG 
+FunctionAttributeList: BUILD_DEBUG
 
 {buildDebugEnabled}
 {buildDebugStart}

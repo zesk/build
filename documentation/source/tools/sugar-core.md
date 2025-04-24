@@ -11,18 +11,21 @@ The functions are grouped as follows;
 - `_` - Single underscore prefixed functions means "return" a failure value
 - `__` - Double underscore prefixed functions means "run the command" and handle the failure value
 
-Most functions are used in the form suffixed with `|| return $?` which takes the returned code and returns immediately from the function.
+Most functions are used in the form suffixed with `|| return $?` which takes the returned code and returns immediately
+from the function.
 
     _return 1 "This failed" || return $?
     __argument isInteger "$1" || return $?
 
-Alternately, these can be used within an `if` or other compound statement but the return code should be returned to the user, typically.
+Alternately, these can be used within an `if` or other compound statement but the return code should be returned to the
+user, typically.
 
 Quick guide:
 
 - `isPositiveInteger value` - Returns 0 if value passed is an integer, otherwise returns 1.
 - `isBoolean value` - Returns 0 if value passed is `true` or `false`, otherwise returns 1.
-- `_choose testValue trueValue falseValue` - Outputs `trueValue` when `[ "$testValue" = "true" ]` otherwise outputs `falseValue`.
+- `_choose testValue trueValue falseValue` - Outputs `trueValue` when `[ "$testValue" = "true" ]` otherwise outputs
+  `falseValue`.
 
 Error codes:
 

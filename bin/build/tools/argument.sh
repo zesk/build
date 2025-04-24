@@ -57,34 +57,34 @@ _arguments() {
     local argument="$1" __index=$((__count - $# + 1))
     type="$(_commentArgumentType "$spec" "$stateFile" "$__index" "$argument")" || _clean "$?" "${clean[@]}" || return $?
     case "$type" in
-      Flag)
+    Flag)
+      argumentName="$(_commentArgumentName "$spec" "$stateFile" "$__index" "$argument")" || _clean "$?" "${clean[@]}" || return $?
+      __catchEnvironment "$usage" environmentValueWrite "$argumentName" "true" >>"$stateFile" || _clean "$?" "${clean[@]}" || return $?
+      if ! inArray "$argumentName" "${flags[@]+"${flags[@]}"}"; then
+        flags+=("$argumentName")
+      fi
+      ;;
+    -)
+      shift
+      break
+      ;;
+    *)
+      if _commentArgumentTypeValid "${type#!}"; then
+        type="${type#!}"
         argumentName="$(_commentArgumentName "$spec" "$stateFile" "$__index" "$argument")" || _clean "$?" "${clean[@]}" || return $?
-        __catchEnvironment "$usage" environmentValueWrite "$argumentName" "true" >>"$stateFile" || _clean "$?" "${clean[@]}" || return $?
-        if ! inArray "$argumentName" "${flags[@]+"${flags[@]}"}"; then
-          flags+=("$argumentName")
-        fi
-        ;;
-      -)
+      elif _commentArgumentTypeValid "$type"; then
+        argumentName="$(_commentArgumentName "$spec" "$stateFile" "$__index" "$argument")" || _clean "$?" "${clean[@]}" || return $?
         shift
-        break
-        ;;
-      *)
-        if _commentArgumentTypeValid "${type#!}"; then
-          type="${type#!}"
-          argumentName="$(_commentArgumentName "$spec" "$stateFile" "$__index" "$argument")" || _clean "$?" "${clean[@]}" || return $?
-        elif _commentArgumentTypeValid "$type"; then
-          argumentName="$(_commentArgumentName "$spec" "$stateFile" "$__index" "$argument")" || _clean "$?" "${clean[@]}" || return $?
-          shift
-          argument="${1-}"
-        else
-          find "$spec" -type f 1>&2
-          dumpPipe stateFile <"$stateFile" 1>&2
-          __throwArgument "$usage" "unhandled argument type \"$type\" #$__index: $argument" || _clean "$?" "${clean[@]}" || return $?
-        fi
-        checkFunction="usageArgument${type}"
-        value="$("$checkFunction" "$usage" "$argumentName" "$argument")" || _clean "$?" || return $?
-        __catchEnvironment "$usage" environmentValueWrite "$argumentName" "$value" >>"$stateFile" || _clean "$?" || return $?
-        ;;
+        argument="${1-}"
+      else
+        find "$spec" -type f 1>&2
+        dumpPipe stateFile <"$stateFile" 1>&2
+        __throwArgument "$usage" "unhandled argument type \"$type\" #$__index: $argument" || _clean "$?" "${clean[@]}" || return $?
+      fi
+      checkFunction="usageArgument${type}"
+      value="$("$checkFunction" "$usage" "$argumentName" "$argument")" || _clean "$?" || return $?
+      __catchEnvironment "$usage" environmentValueWrite "$argumentName" "$value" >>"$stateFile" || _clean "$?" || return $?
+      ;;
     esac
     shift || __throwArgument "$usage" "missing argument #$__index: $argument" || _clean "$?" "${clean[@]}" || return $?
   done
@@ -279,42 +279,42 @@ _commentArgumentSpecificationParseLine() {
   while [ "$#" -gt 0 ]; do
     local argument="$1"
     case "$argument" in
-      --)
-        doubleDashDelimit="--"
-        ;;
-      --[[:alnum:]]* | -[[:alpha:]]*)
-        argumentIndex=
-        argumentFlag=true
-        argumentFinder="$argument"
-        argumentName="${argument#-}"
-        argumentName="${argumentName#-}"
-        argumentRepeat=false
-        if [ "${argumentName%...}" != "${argumentName}" ]; then
-          argumentRepeat=true
-          argumentName="${argumentName%...}"
-        fi
-        ;;
-      ...)
-        if [ -z "$argumentName" ]; then
-          argumentRemainder=true
-        else
-          argumentRepeat=true
-        fi
-        ;;
-      -)
-        shift
-        break
-        ;;
-      *)
-        if [ -f "$argumentDirectory/index" ]; then
-          argumentIndex=$(($(head -n 1 "$argumentDirectory/index") + 1))
-        else
-          argumentIndex=0
-        fi
-        [ -n "$argumentFinder" ] || argumentFinder="#--$argumentIndex"
-        printf "%d\n" "$argumentIndex" >"$argumentDirectory/index"
-        argumentName="$argument"
-        ;;
+    --)
+      doubleDashDelimit="--"
+      ;;
+    --[[:alnum:]]* | -[[:alpha:]]*)
+      argumentIndex=
+      argumentFlag=true
+      argumentFinder="$argument"
+      argumentName="${argument#-}"
+      argumentName="${argumentName#-}"
+      argumentRepeat=false
+      if [ "${argumentName%...}" != "${argumentName}" ]; then
+        argumentRepeat=true
+        argumentName="${argumentName%...}"
+      fi
+      ;;
+    ...)
+      if [ -z "$argumentName" ]; then
+        argumentRemainder=true
+      else
+        argumentRepeat=true
+      fi
+      ;;
+    -)
+      shift
+      break
+      ;;
+    *)
+      if [ -f "$argumentDirectory/index" ]; then
+        argumentIndex=$(($(head -n 1 "$argumentDirectory/index") + 1))
+      else
+        argumentIndex=0
+      fi
+      [ -n "$argumentFinder" ] || argumentFinder="#--$argumentIndex"
+      printf "%d\n" "$argumentIndex" >"$argumentDirectory/index"
+      argumentName="$argument"
+      ;;
     esac
     shift
   done
@@ -396,29 +396,29 @@ _commentArgumentParseRequired() {
 _commentArgumentTypeValid() {
   local type="${1-}"
   case "$type" in
-    # File system
-    File | FileDirectory | Directory | LoadEnvironmentFile | RealDirectory)
-      return 0
-      ;;
-    # Strings
-    EmptyString | String | EnvironmentVariable)
-      return 0
-      ;;
-    # Types
-    Flag | Boolean | PositiveInteger | Integer | UnsignedInteger | Number)
-      return 0
-      ;;
-    # Functional
-    Executable | Callable | Function)
-      return 0
-      ;;
-    # Internet
-    URL)
-      return 0
-      ;;
-    *)
-      return 1
-      ;;
+  # File system
+  File | FileDirectory | Directory | LoadEnvironmentFile | RealDirectory)
+    return 0
+    ;;
+  # Strings
+  EmptyString | String | EnvironmentVariable)
+    return 0
+    ;;
+  # Types
+  Flag | Boolean | PositiveInteger | Integer | UnsignedInteger | Number)
+    return 0
+    ;;
+  # Functional
+  Executable | Callable | Function)
+    return 0
+    ;;
+  # Internet
+  URL)
+    return 0
+    ;;
+  *)
+    return 1
+    ;;
   esac
 }
 

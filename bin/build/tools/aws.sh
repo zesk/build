@@ -48,12 +48,12 @@ awsInstall() {
   local url
   statusMessage decorate info "Installing aws-cli ... " || :
   case "${HOSTTYPE-}" in
-    arm64 | aarch64)
-      url="https://awscli.amazonaws.com/awscli-exe-linux-aarch64.zip"
-      ;;
-    *)
-      url="https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip"
-      ;;
+  arm64 | aarch64)
+    url="https://awscli.amazonaws.com/awscli-exe-linux-aarch64.zip"
+    ;;
+  *)
+    url="https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip"
+    ;;
   esac
   {
     local buildDir quietLog clean=()
@@ -109,28 +109,28 @@ awsCredentialsFile() {
     local argument="$1" __index=$((__count - $# + 1))
     [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
     case "$argument" in
-      # _IDENTICAL_ --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      --create)
-        createFlag=true
-        ;;
-      --path)
-        checkFlag=false
-        ;;
-      --home)
-        shift
-        home=$(usageArgumentDirectory "$usage" "home" "${1-}") || return $?
-        ;;
-      --verbose)
-        verbose=true
-        ;;
-      *)
-        # _IDENTICAL_ argumentUnknown 1
-        __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
-        ;;
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    --create)
+      createFlag=true
+      ;;
+    --path)
+      checkFlag=false
+      ;;
+    --home)
+      shift
+      home=$(usageArgumentDirectory "$usage" "home" "${1-}") || return $?
+      ;;
+    --verbose)
+      verbose=true
+      ;;
+    *)
+      # _IDENTICAL_ argumentUnknown 1
+      __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
+      ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
     shift
@@ -266,21 +266,21 @@ awsEnvironmentFromCredentials() {
     local argument="$1" __index=$((__count - $# + 1))
     [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-      # _IDENTICAL_ --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      # IDENTICAL --profileHandler 5
-      --profile)
-        shift
-        [ -z "$profileName" ] || __throwArgument "$usage" "--profile already specified" || return $?
-        profileName="$(usageArgumentString "$usage" "$argument" "${1-}")" || return $?
-        ;;
-      *)
-        [ -z "$profileName" ] || __throwArgument "$usage" "profileName already supplied" || return $?
-        profileName="$1"
-        ;;
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    # IDENTICAL --profileHandler 5
+    --profile)
+      shift
+      [ -z "$profileName" ] || __throwArgument "$usage" "--profile already specified" || return $?
+      profileName="$(usageArgumentString "$usage" "$argument" "${1-}")" || return $?
+      ;;
+    *)
+      [ -z "$profileName" ] || __throwArgument "$usage" "profileName already supplied" || return $?
+      profileName="$1"
+      ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
     shift
@@ -359,33 +359,33 @@ awsCredentialsAdd() {
     local argument="$1" __index=$((__count - $# + 1))
     [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-      # _IDENTICAL_ --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      --force)
-        forceFlag=true
-        ;;
-      --comments)
-        addComments=true
-        ;;
-      # IDENTICAL --profileHandler 5
-      --profile)
-        shift
-        [ -z "$profileName" ] || __throwArgument "$usage" "--profile already specified" || return $?
-        profileName="$(usageArgumentString "$usage" "$argument" "${1-}")" || return $?
-        ;;
-      *)
-        if [ -z "$key" ]; then
-          key=$(usageArgumentString "$usage" "key" "$1") || return $?
-        elif [ -z "$secret" ]; then
-          secret=$(usageArgumentString "$usage" "secret" "$1") || return $?
-        else
-          # _IDENTICAL_ argumentUnknown 1
-          __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
-        fi
-        ;;
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    --force)
+      forceFlag=true
+      ;;
+    --comments)
+      addComments=true
+      ;;
+    # IDENTICAL --profileHandler 5
+    --profile)
+      shift
+      [ -z "$profileName" ] || __throwArgument "$usage" "--profile already specified" || return $?
+      profileName="$(usageArgumentString "$usage" "$argument" "${1-}")" || return $?
+      ;;
+    *)
+      if [ -z "$key" ]; then
+        key=$(usageArgumentString "$usage" "key" "$1") || return $?
+      elif [ -z "$secret" ]; then
+        secret=$(usageArgumentString "$usage" "secret" "$1") || return $?
+      else
+        # _IDENTICAL_ argumentUnknown 1
+        __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
+      fi
+      ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
     shift
@@ -441,28 +441,28 @@ awsCredentialsRemove() {
     local argument="$1" __index=$((__count - $# + 1))
     [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-      # _IDENTICAL_ --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      # IDENTICAL --profileHandler 5
-      --profile)
-        shift
-        [ -z "$profileName" ] || __throwArgument "$usage" "--profile already specified" || return $?
-        profileName="$(usageArgumentString "$usage" "$argument" "${1-}")" || return $?
-        ;;
-      --comments)
-        addComments=true
-        ;;
-      *)
-        if [ -z "$profileName" ]; then
-          profileName="$(usageArgumentString "$usage" "$argument" "$1")" || return $?
-        else
-          # _IDENTICAL_ argumentUnknown 1
-          __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
-        fi
-        ;;
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    # IDENTICAL --profileHandler 5
+    --profile)
+      shift
+      [ -z "$profileName" ] || __throwArgument "$usage" "--profile already specified" || return $?
+      profileName="$(usageArgumentString "$usage" "$argument" "${1-}")" || return $?
+      ;;
+    --comments)
+      addComments=true
+      ;;
+    *)
+      if [ -z "$profileName" ]; then
+        profileName="$(usageArgumentString "$usage" "$argument" "$1")" || return $?
+      else
+        # _IDENTICAL_ argumentUnknown 1
+        __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
+      fi
+      ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
     shift
@@ -553,55 +553,55 @@ awsSecurityGroupIPModify() {
     local argument="$1" __index=$((__count - $# + 1))
     [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-      # _IDENTICAL_ --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      # IDENTICAL profileNameArgumentHandlerCase 6
-      --profile)
-        shift
-        [ ${#pp[@]} -eq 0 ] || __throwArgument "$usage" "$argument already specified: ${pp[*]}"
-        profileName="$(usageArgumentString "$usage" "$argument" "$1")" || return $?
-        pp=("$argument" "$profileName")
-        ;;
-      --group)
-        shift
-        group=$(usageArgumentString "$usage" "$argument" "${1-}")
-        ;;
-      --port)
-        shift
-        port=$(usageArgumentPositiveInteger "$usage" "$argument" "${1-}")
-        ;;
-      --description)
-        shift
-        description=$(usageArgumentString "$usage" "$argument" "${1-}")
-        ;;
-      --ip)
-        shift
-        ip=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
-        ;;
-      --add)
-        verb="Adding"
-        mode="$argument"
-        ;;
-      --remove)
-        verb="Removing"
-        mode="$argument"
-        ;;
-      --register)
-        verb="Registering"
-        mode="$argument"
-        ;;
-      # IDENTICAL regionArgumentHandler 5
-      --region)
-        shift
-        [ -z "$region" ] || __throwArgument "$usage" "$argument already specified: $region"
-        region=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
-        ;;
-      *)
-        __throwArgument "unknown argument: $argument" || return $?
-        ;;
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    # IDENTICAL profileNameArgumentHandlerCase 6
+    --profile)
+      shift
+      [ ${#pp[@]} -eq 0 ] || __throwArgument "$usage" "$argument already specified: ${pp[*]}"
+      profileName="$(usageArgumentString "$usage" "$argument" "$1")" || return $?
+      pp=("$argument" "$profileName")
+      ;;
+    --group)
+      shift
+      group=$(usageArgumentString "$usage" "$argument" "${1-}")
+      ;;
+    --port)
+      shift
+      port=$(usageArgumentPositiveInteger "$usage" "$argument" "${1-}")
+      ;;
+    --description)
+      shift
+      description=$(usageArgumentString "$usage" "$argument" "${1-}")
+      ;;
+    --ip)
+      shift
+      ip=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
+      ;;
+    --add)
+      verb="Adding"
+      mode="$argument"
+      ;;
+    --remove)
+      verb="Removing"
+      mode="$argument"
+      ;;
+    --register)
+      verb="Registering"
+      mode="$argument"
+      ;;
+    # IDENTICAL regionArgumentHandler 5
+    --region)
+      shift
+      [ -z "$region" ] || __throwArgument "$usage" "$argument already specified: $region"
+      region=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
+      ;;
+    *)
+      __throwArgument "unknown argument: $argument" || return $?
+      ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
     shift
@@ -741,43 +741,43 @@ awsIPAccess() {
     local argument="$1"
     [ -n "$argument" ] || __throwArgument "$usage" "blank argument" || return $?
     case "$argument" in
-      # _IDENTICAL_ --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      --services)
-        shift || __throwArgument "$usage" "missing $argument argument" || return $?
-        IFS=', ' read -r -a services <<<"$1" || :
-        ;;
-      # IDENTICAL profileNameArgumentHandlerCase 6
-      --profile)
-        shift
-        [ ${#pp[@]} -eq 0 ] || __throwArgument "$usage" "$argument already specified: ${pp[*]}"
-        profileName="$(usageArgumentString "$usage" "$argument" "$1")" || return $?
-        pp=("$argument" "$profileName")
-        ;;
-      --revoke)
-        optionRevoke=true
-        ;;
-      --verbose)
-        verboseFlag=true
-        ;;
-      --group)
-        shift || __throwArgument "$usage" "missing $argument argument" || return $?
-        securityGroups+=("$1")
-        ;;
-      --ip)
-        shift || __throwArgument "$usage" "missing $argument argument" || return $?
-        currentIP="$1"
-        ;;
-      --id)
-        shift || __throwArgument "$usage" "missing $argument argument" || return $?
-        developerId="$1"
-        ;;
-      *)
-        break
-        ;;
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    --services)
+      shift || __throwArgument "$usage" "missing $argument argument" || return $?
+      IFS=', ' read -r -a services <<<"$1" || :
+      ;;
+    # IDENTICAL profileNameArgumentHandlerCase 6
+    --profile)
+      shift
+      [ ${#pp[@]} -eq 0 ] || __throwArgument "$usage" "$argument already specified: ${pp[*]}"
+      profileName="$(usageArgumentString "$usage" "$argument" "$1")" || return $?
+      pp=("$argument" "$profileName")
+      ;;
+    --revoke)
+      optionRevoke=true
+      ;;
+    --verbose)
+      verboseFlag=true
+      ;;
+    --group)
+      shift || __throwArgument "$usage" "missing $argument argument" || return $?
+      securityGroups+=("$1")
+      ;;
+    --ip)
+      shift || __throwArgument "$usage" "missing $argument argument" || return $?
+      currentIP="$1"
+      ;;
+    --id)
+      shift || __throwArgument "$usage" "missing $argument argument" || return $?
+      developerId="$1"
+      ;;
+    *)
+      break
+      ;;
     esac
     shift || __throwArgument "$usage" "shift failed" || return $?
   done
@@ -872,18 +872,18 @@ awsRegionValid() {
   [ $# -gt 0 ] || return 1
   while [ $# -gt 0 ]; do
     case "$1" in
-      eu-north-1) ;;
-      eu-central-1) ;;
-      eu-west-1 | eu-west-2 | eu-west-3) ;;
-      ap-south-1) ;;
-      ap-southeast-1 | ap-southeast-2) ;;
-      ap-northeast-3 | ap-northeast-2 | ap-northeast-1) ;;
-      ca-central-1) ;;
-      sa-east-1) ;;
-      us-east-1 | us-east-2 | us-west-1 | us-west-2) ;;
-      *)
-        return 1
-        ;;
+    eu-north-1) ;;
+    eu-central-1) ;;
+    eu-west-1 | eu-west-2 | eu-west-3) ;;
+    ap-south-1) ;;
+    ap-southeast-1 | ap-southeast-2) ;;
+    ap-northeast-3 | ap-northeast-2 | ap-northeast-1) ;;
+    ca-central-1) ;;
+    sa-east-1) ;;
+    us-east-1 | us-east-2 | us-west-1 | us-west-2) ;;
+    *)
+      return 1
+      ;;
     esac
     shift
   done

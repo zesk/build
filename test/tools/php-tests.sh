@@ -155,7 +155,6 @@ testPHPBuild() {
   unset APP_THING BUILD_TARGET BUILD_TIMESTAMP
 }
 
-
 testPHPComposerSetVersion() {
   local home testHome usage="_return"
 

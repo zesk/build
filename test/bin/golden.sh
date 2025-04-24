@@ -68,8 +68,6 @@ isUnsignedInteger() {
 
 # <-- END of IDENTICAL _return
 
-
-
 # Lay an egg
 layAnEgg() {
   local hay=""
@@ -83,7 +81,6 @@ _layAnEgg() {
 }
 
 __tools ../.. layAnEgg "$@" || :
-
 
 # fn: makeCryptoThing
 # Lay an egg.

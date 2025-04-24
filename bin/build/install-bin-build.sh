@@ -232,79 +232,79 @@ _installRemotePackage() {
     local argument="$1" __index=$((__count - $# + 1))
     [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-      # _IDENTICAL_ --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      --source)
-        shift
-        source=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
-        ;;
-      --name)
-        shift
-        name=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
-        ;;
-      --mock | --local)
-        [ -z "$localPath" ] || __throwArgument "$usage" "$argument already" || return $?
-        shift
-        [ -n "${1-}" ] || __throwArgument "$usage" "$argument blank argument #$__index" || return $?
-        localPath="$(__catchArgument "$usage" realPath "${1%/}")" || return $?
-        [ -x "$localPath/tools.sh" ] || __throwArgument "$usage" "$argument argument (\"$(decorate code "$localPath")\") must be path to bin/build containing tools.sh" || return $?
-        ;;
-      --user | --header | --password)
-        shift
-        fetchArguments+=("$argument" "$(usageArgumentString "$usage" "$argument" "${1-}")")
-        ;;
-      --url)
-        shift
-        [ -z "$url" ] || __throwArgument "$usage" "$argument already" || return $?
-        [ -n "${1-}" ] || __throwArgument "$usage" "$argument blank argument" || return $?
-        url="$1"
-        ;;
-      --version-function)
-        shift
-        [ -z "$versionFunction" ] || __throwArgument "$usage" "$argument already" || return $?
-        isFunction "${1-}" || __throwArgument "$usage" "$argument not callable: ${1-}" || return $?
-        versionFunction="$1"
-        ;;
-      --url-function)
-        shift
-        [ -z "$urlFunction" ] || __throwArgument "$usage" "$argument already" || return $?
-        isFunction "${1-}" || __throwArgument "$usage" "$argument not callable: ${1-}" || return $?
-        urlFunction="$1"
-        ;;
-      --check-function)
-        shift
-        [ -z "$checkFunction" ] || __throwArgument "$usage" "$argument already" || return $?
-        isFunction "${1-}" || __throwArgument "$usage" "$argument not callable: ${1-}" || return $?
-        checkFunction="$1"
-        ;;
-      --installer)
-        shift
-        installers+=("$(usageArgumentString "$usage" "$argument" "${1-}")") || return $?
-        ;;
-      --replace)
-        shift
-        newName=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
-        decorate bold-blue "Replacing $(decorate orange "${BASH_SOURCE[0]}") -> $(decorate bold-orange "$newName")"
-        __catchEnvironment "$usage" cp -f "${BASH_SOURCE[0]}" "$newName" || return $?
-        __catchEnvironment "$usage" rm -rf "${BASH_SOURCE[0]}" || return $?
-        return 0
-        ;;
-      --debug)
-        __installRemotePackageDebug "$argument"
-        ;;
-      --force)
-        forceFlag=true
-        installReason="--force specified"
-        ;;
-      --diff)
-        installArgs+=("$argument")
-        ;;
-      *)
-        __throwArgument "$usage" "unknown argument #$__index: $argument" || return $?
-        ;;
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    --source)
+      shift
+      source=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
+      ;;
+    --name)
+      shift
+      name=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
+      ;;
+    --mock | --local)
+      [ -z "$localPath" ] || __throwArgument "$usage" "$argument already" || return $?
+      shift
+      [ -n "${1-}" ] || __throwArgument "$usage" "$argument blank argument #$__index" || return $?
+      localPath="$(__catchArgument "$usage" realPath "${1%/}")" || return $?
+      [ -x "$localPath/tools.sh" ] || __throwArgument "$usage" "$argument argument (\"$(decorate code "$localPath")\") must be path to bin/build containing tools.sh" || return $?
+      ;;
+    --user | --header | --password)
+      shift
+      fetchArguments+=("$argument" "$(usageArgumentString "$usage" "$argument" "${1-}")")
+      ;;
+    --url)
+      shift
+      [ -z "$url" ] || __throwArgument "$usage" "$argument already" || return $?
+      [ -n "${1-}" ] || __throwArgument "$usage" "$argument blank argument" || return $?
+      url="$1"
+      ;;
+    --version-function)
+      shift
+      [ -z "$versionFunction" ] || __throwArgument "$usage" "$argument already" || return $?
+      isFunction "${1-}" || __throwArgument "$usage" "$argument not callable: ${1-}" || return $?
+      versionFunction="$1"
+      ;;
+    --url-function)
+      shift
+      [ -z "$urlFunction" ] || __throwArgument "$usage" "$argument already" || return $?
+      isFunction "${1-}" || __throwArgument "$usage" "$argument not callable: ${1-}" || return $?
+      urlFunction="$1"
+      ;;
+    --check-function)
+      shift
+      [ -z "$checkFunction" ] || __throwArgument "$usage" "$argument already" || return $?
+      isFunction "${1-}" || __throwArgument "$usage" "$argument not callable: ${1-}" || return $?
+      checkFunction="$1"
+      ;;
+    --installer)
+      shift
+      installers+=("$(usageArgumentString "$usage" "$argument" "${1-}")") || return $?
+      ;;
+    --replace)
+      shift
+      newName=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
+      decorate bold-blue "Replacing $(decorate orange "${BASH_SOURCE[0]}") -> $(decorate bold-orange "$newName")"
+      __catchEnvironment "$usage" cp -f "${BASH_SOURCE[0]}" "$newName" || return $?
+      __catchEnvironment "$usage" rm -rf "${BASH_SOURCE[0]}" || return $?
+      return 0
+      ;;
+    --debug)
+      __installRemotePackageDebug "$argument"
+      ;;
+    --force)
+      forceFlag=true
+      installReason="--force specified"
+      ;;
+    --diff)
+      installArgs+=("$argument")
+      ;;
+    *)
+      __throwArgument "$usage" "unknown argument #$__index: $argument" || return $?
+      ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
     shift
@@ -539,18 +539,18 @@ versionSort() {
     local argument="$1" __index=$((__count - $# + 1))
     [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-      # _IDENTICAL_ --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      -r | --reverse)
-        reverse="r"
-        ;;
-      *)
-        # _IDENTICAL_ argumentUnknown 1
-        __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
-        ;;
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    -r | --reverse)
+      reverse="r"
+      ;;
+    *)
+      # _IDENTICAL_ argumentUnknown 1
+      __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
+      ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
     shift
@@ -610,72 +610,72 @@ urlFetch() {
     local argument="$1" __index=$((__count - $# + 1))
     [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-      # _IDENTICAL_ --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      --header)
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    --header)
+      shift
+      local name value
+      name="${1%%:}"
+      value="${1#*:}"
+      if [ "$name" = "$1" ] || [ "$value" = "$1" ]; then
+        __catchArgument "$usage" "Invalid $argument $1 passed" || return $?
+      fi
+      headers+=("$1")
+      curlArgs+=("--header" "$1")
+      wgetArgs+=("--header=$1")
+      ;;
+    --wget)
+      binary="wget"
+      ;;
+    --curl)
+      binary="curl"
+      ;;
+    --binary)
+      shift
+      binary=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
+      whichExists "$binary" || __throwArgument "$usage" "$binary must be in PATH: $PATH" || return $?
+      ;;
+    --argument-format)
+      format=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
+      case "$format" in curl | wget) ;; *) __throwArgument "$usage" "$argument must be curl or wget" || return $? ;; esac
+      ;;
+    --password)
+      shift
+      password="$1"
+      ;;
+    --user)
+      shift
+      user=$(usageArgumentString "$usage" "$argument (user)" "$user") || return $?
+      if [ "$user" != "${user#*:}" ]; then
+        userHasColons=true
+      fi
+      curlArgs+=(--user "$user:$password")
+      wgetArgs+=("--http-user=$user" "--http-password=$password")
+      genericArgs+=("$argument" "$1")
+      ;;
+    --agent)
+      shift
+      local agent="$1"
+      [ -n "$agent" ] || __throwArgument "$usage" "$argument must be non-blank" || return $?
+      wgetArgs+=("--user-agent=$1")
+      curlArgs+=("--user-agent" "$1")
+      genericArgs+=("$argument" "$1")
+      ;;
+    *)
+      if [ -z "$url" ]; then
+        url="$1"
+      elif [ -z "$target" ]; then
+        target="$1"
         shift
-        local name value
-        name="${1%%:}"
-        value="${1#*:}"
-        if [ "$name" = "$1" ] || [ "$value" = "$1" ]; then
-          __catchArgument "$usage" "Invalid $argument $1 passed" || return $?
-        fi
-        headers+=("$1")
-        curlArgs+=("--header" "$1")
-        wgetArgs+=("--header=$1")
-        ;;
-      --wget)
-        binary="wget"
-        ;;
-      --curl)
-        binary="curl"
-        ;;
-      --binary)
-        shift
-        binary=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
-        whichExists "$binary" || __throwArgument "$usage" "$binary must be in PATH: $PATH" || return $?
-        ;;
-      --argument-format)
-        format=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
-        case "$format" in curl | wget) ;; *) __throwArgument "$usage" "$argument must be curl or wget" || return $? ;; esac
-        ;;
-      --password)
-        shift
-        password="$1"
-        ;;
-      --user)
-        shift
-        user=$(usageArgumentString "$usage" "$argument (user)" "$user") || return $?
-        if [ "$user" != "${user#*:}" ]; then
-          userHasColons=true
-        fi
-        curlArgs+=(--user "$user:$password")
-        wgetArgs+=("--http-user=$user" "--http-password=$password")
-        genericArgs+=("$argument" "$1")
-        ;;
-      --agent)
-        shift
-        local agent="$1"
-        [ -n "$agent" ] || __throwArgument "$usage" "$argument must be non-blank" || return $?
-        wgetArgs+=("--user-agent=$1")
-        curlArgs+=("--user-agent" "$1")
-        genericArgs+=("$argument" "$1")
-        ;;
-      *)
-        if [ -z "$url" ]; then
-          url="$1"
-        elif [ -z "$target" ]; then
-          target="$1"
-          shift
-          break
-        else
-          # _IDENTICAL_ argumentUnknown 1
-          __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
-        fi
-        ;;
+        break
+      else
+        # _IDENTICAL_ argumentUnknown 1
+        __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
+      fi
+      ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
     shift
@@ -699,9 +699,9 @@ urlFetch() {
   [ -n "$binary" ] || __throwEnvironment "$usage" "wget or curl required" || return $?
   [ -n "$format" ] || format="$binary"
   case "$format" in
-    wget) __catchEnvironment "$usage" "$binary" -q --output-document="$target" --timeout=10 "${wgetArgs[@]+"${wgetArgs[@]}"}" "$url" "$@" || return $? ;;
-    curl) __catchEnvironment "$usage" "$binary" -L -s "$url" "$@" -o "$target" "${curlArgs[@]+"${curlArgs[@]}"}" || return $? ;;
-    *) __throwEnvironment "$usage" "No handler for binary format $(decorate value "$format") (binary is $(decorate code "$binary")) $(decorate each value "${genericArgs[@]}")" || return $? ;;
+  wget) __catchEnvironment "$usage" "$binary" -q --output-document="$target" --timeout=10 "${wgetArgs[@]+"${wgetArgs[@]}"}" "$url" "$@" || return $? ;;
+  curl) __catchEnvironment "$usage" "$binary" -L -s "$url" "$@" -o "$target" "${curlArgs[@]+"${curlArgs[@]}"}" || return $? ;;
+  *) __throwEnvironment "$usage" "No handler for binary format $(decorate value "$format") (binary is $(decorate code "$binary")) $(decorate each value "${genericArgs[@]}")" || return $? ;;
   esac
 }
 _urlFetch() {
@@ -1020,48 +1020,48 @@ _decorate() {
 # Requires: printf
 _caseStyles() {
   case "$1" in
-    reset) lp='0' ;;
-      # styles
-    underline) lp='4' ;;
-    no-underline) lp='24' ;;
-    bold) lp='1' ;;
-    no-bold) lp='21' ;;
-      # colors
-    black) lp='109;7' ;;
-    black-contrast) lp='107;30' ;;
-    blue) lp='94' ;;
-    cyan) lp='36' ;;
-    green) lp='92' ;;
-    magenta) lp='35' ;;
-    orange) lp='33' ;;
-    red) lp='31' ;;
-    white) lp='48;5;0;37' ;;
-    yellow) lp='48;5;16;38;5;11' ;;
-      # bold-colors
-    bold-black) lp='1;109;7' ;;
-    bold-black-contrast) lp='1;107;30' ;;
-    bold-blue) lp='1;94' ;;
-    bold-cyan) lp='1;36' ;;
-    bold-green) lp='92' ;;
-    bold-magenta) lp='1;35' ;;
-    bold-orange) lp='1;33' ;;
-    bold-red) lp='1;31' ;;
-    bold-white) lp='1;48;5;0;37' ;;
-    bold-yellow) lp='1;48;5;16;38;5;11' ;;
-      # semantic-colors
-    code) lp='1;97;44' ;;
-    info) lp='38;5;20' && dp='1;33' && text="Info" ;;
-    notice) lp='46;31' && dp='1;97;44' && text="Notice" ;;
-    success) lp='42;30' && dp='0;32' && text="Success" ;;
-    warning) lp='1;93;41' && text="Warning" ;;
-    error) lp='1;91' && text="ERROR" ;;
-    subtle) lp='1;38;5;252' && dp='1;38;5;240' ;;
-    label) lp='34;103' && dp='1;96' ;;
-    value) lp='1;40;97' && dp='1;97' ;;
-    decoration) lp='45;97' && dp='45;30' ;;
-    *)
-      return 1
-      ;;
+  reset) lp='0' ;;
+    # styles
+  underline) lp='4' ;;
+  no-underline) lp='24' ;;
+  bold) lp='1' ;;
+  no-bold) lp='21' ;;
+    # colors
+  black) lp='109;7' ;;
+  black-contrast) lp='107;30' ;;
+  blue) lp='94' ;;
+  cyan) lp='36' ;;
+  green) lp='92' ;;
+  magenta) lp='35' ;;
+  orange) lp='33' ;;
+  red) lp='31' ;;
+  white) lp='48;5;0;37' ;;
+  yellow) lp='48;5;16;38;5;11' ;;
+    # bold-colors
+  bold-black) lp='1;109;7' ;;
+  bold-black-contrast) lp='1;107;30' ;;
+  bold-blue) lp='1;94' ;;
+  bold-cyan) lp='1;36' ;;
+  bold-green) lp='92' ;;
+  bold-magenta) lp='1;35' ;;
+  bold-orange) lp='1;33' ;;
+  bold-red) lp='1;31' ;;
+  bold-white) lp='1;48;5;0;37' ;;
+  bold-yellow) lp='1;48;5;16;38;5;11' ;;
+    # semantic-colors
+  code) lp='1;97;44' ;;
+  info) lp='38;5;20' && dp='1;33' && text="Info" ;;
+  notice) lp='46;31' && dp='1;97;44' && text="Notice" ;;
+  success) lp='42;30' && dp='0;32' && text="Success" ;;
+  warning) lp='1;93;41' && text="Warning" ;;
+  error) lp='1;91' && text="ERROR" ;;
+  subtle) lp='1;38;5;252' && dp='1;38;5;240' ;;
+  label) lp='34;103' && dp='1;96' ;;
+  value) lp='1;40;97' && dp='1;97' ;;
+  decoration) lp='45;97' && dp='45;30' ;;
+  *)
+    return 1
+    ;;
   esac
   printf "%s %s %s\n" "$lp" "${dp:-$lp}" "$text"
 }
@@ -1079,10 +1079,10 @@ __decorateExtensionEach() {
 
   while [ $# -gt 0 ]; do
     case "$1" in
-      --index) addIndex=true ;;
-      --count) showCount=true ;;
-      --arguments) showCount=true ;;
-      *) code="$1" && shift && break ;;
+    --index) addIndex=true ;;
+    --count) showCount=true ;;
+    --arguments) showCount=true ;;
+    *) code="$1" && shift && break ;;
     esac
     shift
   done
@@ -1309,13 +1309,13 @@ _undo() {
   isPositiveInteger "$exitCode" || __catchArgument "$__usage" "Not an integer $(decorate value "$exitCode") (#$__count: $(decorate each code "${__saved[@]+"${__saved[@]}"}"))" || return $?
   while [ $# -gt 0 ]; do
     case "$1" in
-      --)
-        [ "${#args[@]}" -eq 0 ] || __execute "${args[@]}" || :
-        args=()
-        ;;
-      *)
-        args+=("$1")
-        ;;
+    --)
+      [ "${#args[@]}" -eq 0 ] || __execute "${args[@]}" || :
+      args=()
+      ;;
+    *)
+      args+=("$1")
+      ;;
     esac
     shift
   done

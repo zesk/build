@@ -22,32 +22,32 @@ sysvInitScriptInstall() {
     local argument="$1" __index=$((__count - $# + 1))
     [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-      # _IDENTICAL_ --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      *)
-        local baseName target
-        baseName=$(__catchArgument "$usage" basename "$argument") || return $?
-        target="$initHome/$baseName"
-        [ -x "$argument" ] || __throwArgument "$usage" "Not executable: $argument" || return $?
-        if [ -f "$target" ]; then
-          if diff -q "$1" "$target" >/dev/null; then
-            statusMessage decorate success "reinstalling script: $(decorate code "$baseName")"
-          else
-            __throwEnvironment "$usage" "$(decorate code "$target") already exists - remove first" || return $?
-          fi
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    *)
+      local baseName target
+      baseName=$(__catchArgument "$usage" basename "$argument") || return $?
+      target="$initHome/$baseName"
+      [ -x "$argument" ] || __throwArgument "$usage" "Not executable: $argument" || return $?
+      if [ -f "$target" ]; then
+        if diff -q "$1" "$target" >/dev/null; then
+          statusMessage decorate success "reinstalling script: $(decorate code "$baseName")"
         else
-          statusMessage decorate success "installing script: $(decorate code "$baseName")"
+          __throwEnvironment "$usage" "$(decorate code "$target") already exists - remove first" || return $?
         fi
-        __catchEnvironment "$usage" cp -f "$argument" "$target" || return $?
-        statusMessage decorate warning "Updating mode of $(decorate code "$baseName") ..."
-        __catchEnvironment "$usage" chmod +x "$target" || return $?
-        statusMessage decorate warning "rc.d defaults $(decorate code "$baseName") ..."
-        __catchEnvironment "$usage" update-rc.d "$baseName" defaults || return $?
-        statusMessage --last printf -- "%s %s\n" "$(decorate code "$baseName")" "$(decorate success "installed successfully")"
-        ;;
+      else
+        statusMessage decorate success "installing script: $(decorate code "$baseName")"
+      fi
+      __catchEnvironment "$usage" cp -f "$argument" "$target" || return $?
+      statusMessage decorate warning "Updating mode of $(decorate code "$baseName") ..."
+      __catchEnvironment "$usage" chmod +x "$target" || return $?
+      statusMessage decorate warning "rc.d defaults $(decorate code "$baseName") ..."
+      __catchEnvironment "$usage" update-rc.d "$baseName" defaults || return $?
+      statusMessage --last printf -- "%s %s\n" "$(decorate code "$baseName")" "$(decorate success "installed successfully")"
+      ;;
     esac
     shift
   done
@@ -73,23 +73,23 @@ sysvInitScriptUninstall() {
     local argument="$1" __index=$((__count - $# + 1))
     [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-      # _IDENTICAL_ --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      *)
-        local baseName target
-        baseName=$(__catchArgument "$usage" basename "$argument") || return $?
-        target="$initHome/$baseName"
-        if [ -f "$target" ]; then
-          update-rc.d -f "$baseName" remove || __throwEnvironment "$usage" "update-rc.d $baseName remove failed" || return $?
-          __catchEnvironment "$usage" rm -f "$target" || return $?
-          printf "%s %s\n" "$(decorate code "$baseName")" "$(decorate success "removed successfully")"
-        else
-          printf "%s %s\n" "$(decorate code "$baseName")" "$(decorate warning "not installed")"
-        fi
-        ;;
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    *)
+      local baseName target
+      baseName=$(__catchArgument "$usage" basename "$argument") || return $?
+      target="$initHome/$baseName"
+      if [ -f "$target" ]; then
+        update-rc.d -f "$baseName" remove || __throwEnvironment "$usage" "update-rc.d $baseName remove failed" || return $?
+        __catchEnvironment "$usage" rm -f "$target" || return $?
+        printf "%s %s\n" "$(decorate code "$baseName")" "$(decorate success "removed successfully")"
+      else
+        printf "%s %s\n" "$(decorate code "$baseName")" "$(decorate warning "not installed")"
+      fi
+      ;;
     esac
     shift
   done

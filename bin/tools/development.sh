@@ -12,9 +12,9 @@ buildAddTool() {
 
   while [ $# -gt 0 ]; do
     case "$1" in
-      *[^-[:alnum:]]*)
-        __throwArgument "$usage" "Invalid name: $1" || return $?
-        ;;
+    *[^-[:alnum:]]*)
+      __throwArgument "$usage" "Invalid name: $1" || return $?
+      ;;
     esac
     for file in "bin/build/tools/$1.sh" "test/tools/$1-tests.sh"; do
       if [ ! -f "$home/$file" ]; then

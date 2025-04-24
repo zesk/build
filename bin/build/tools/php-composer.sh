@@ -40,24 +40,24 @@ phpComposer() {
     local argument="$1" __index=$((__count - $# + 1))
     [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-      # _IDENTICAL_ --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      --quiet)
-        quietFlag=true
-        ;;
-      --docker)
-        decorate warning "Requiring docker composer"
-        forceDocker=true
-        ;;
-      *)
-        [ "$composerDirectory" = "." ] || __throwArgument "$usage" "Unknown argument $1" || return $?
-        [ -d "$argument" ] || __throwArgument "$usage" "Directory does not exist: $argument" || return $?
-        composerDirectory="$argument"
-        statusMessage decorate info "Composer directory: $(decorate file "$composerDirectory")"
-        ;;
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    --quiet)
+      quietFlag=true
+      ;;
+    --docker)
+      decorate warning "Requiring docker composer"
+      forceDocker=true
+      ;;
+    *)
+      [ "$composerDirectory" = "." ] || __throwArgument "$usage" "Unknown argument $1" || return $?
+      [ -d "$argument" ] || __throwArgument "$usage" "Directory does not exist: $argument" || return $?
+      composerDirectory="$argument"
+      statusMessage decorate info "Composer directory: $(decorate file "$composerDirectory")"
+      ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
     shift
@@ -116,7 +116,6 @@ _phpComposerInstall() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-
 # For any project, ensures the `version` field in `composer.json` matches `runHook version-current`
 #
 # Run as a commit hook for any PHP project or as part of your build or development process
@@ -141,27 +140,27 @@ phpComposerSetVersion() {
     local argument="$1" __index=$((__count - $# + 1))
     [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-      # _IDENTICAL_ --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      --version)
-        shift
-        version="$(usageArgumentString "$usage" "$argument" "${1-}")" || return $?
-        aa+=(--value "$version")
-        ;;
-      --status | --quiet)
-        aa+=("$argument")
-        ;;
-      --home)
-        shift
-        home="$(usageArgumentDirectory "$usage" "$argument" "${1-}")" || return $?
-        ;;
-      *)
-        # _IDENTICAL_ argumentUnknown 1
-        __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
-        ;;
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    --version)
+      shift
+      version="$(usageArgumentString "$usage" "$argument" "${1-}")" || return $?
+      aa+=(--value "$version")
+      ;;
+    --status | --quiet)
+      aa+=("$argument")
+      ;;
+    --home)
+      shift
+      home="$(usageArgumentDirectory "$usage" "$argument" "${1-}")" || return $?
+      ;;
+    *)
+      # _IDENTICAL_ argumentUnknown 1
+      __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
+      ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
     shift

@@ -59,46 +59,46 @@ aptKeyAdd() {
     local argument="$1" __index=$((__count - $# + 1))
     [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-      # _IDENTICAL_ --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      --name)
-        shift
-        names+=("$(usageArgumentString "$usage" "$argument" "${1-}")") || return $?
-        ;;
-      --skip)
-        skipUpdate=true
-        ;;
-      --title)
-        shift
-        title="$(usageArgumentString "$usage" "$argument" "${1-}")" || return $?
-        ;;
-      --source)
-        shift
-        sourceTypes+=("$(usageArgumentString "$usage" "$argument" "${1-}")") || return $?
-        ;;
-      --repository-url)
-        shift
-        repoUrl="$(usageArgumentURL "$usage" "$argument" "${1-}")" || return $?
-        ;;
-      --list)
-        shift
-        listName="$(usageArgumentString "$usage" "$argument" "${1-}")" || return $?
-        ;;
-      --release)
-        shift
-        releaseName="$(usageArgumentString "$usage" "$argument" "${1-}")" || return $?
-        ;;
-      --url)
-        shift
-        remoteUrls+=("$(usageArgumentURL "$usage" "$argument" "${1-}")") || return $?
-        ;;
-      *)
-        # _IDENTICAL_ argumentUnknown 1
-        __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
-        ;;
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    --name)
+      shift
+      names+=("$(usageArgumentString "$usage" "$argument" "${1-}")") || return $?
+      ;;
+    --skip)
+      skipUpdate=true
+      ;;
+    --title)
+      shift
+      title="$(usageArgumentString "$usage" "$argument" "${1-}")" || return $?
+      ;;
+    --source)
+      shift
+      sourceTypes+=("$(usageArgumentString "$usage" "$argument" "${1-}")") || return $?
+      ;;
+    --repository-url)
+      shift
+      repoUrl="$(usageArgumentURL "$usage" "$argument" "${1-}")" || return $?
+      ;;
+    --list)
+      shift
+      listName="$(usageArgumentString "$usage" "$argument" "${1-}")" || return $?
+      ;;
+    --release)
+      shift
+      releaseName="$(usageArgumentString "$usage" "$argument" "${1-}")" || return $?
+      ;;
+    --url)
+      shift
+      remoteUrls+=("$(usageArgumentURL "$usage" "$argument" "${1-}")") || return $?
+      ;;
+    *)
+      # _IDENTICAL_ argumentUnknown 1
+      __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
+      ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
     shift
@@ -172,20 +172,20 @@ aptKeyRemove() {
     local argument="$1" __index=$((__count - $# + 1))
     [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-      # _IDENTICAL_ --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      --verbose)
-        verboseFlag=true
-        ;;
-      --skip)
-        skipUpdate=true
-        ;;
-      *)
-        names+=("$argument")
-        ;;
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    --verbose)
+      verboseFlag=true
+      ;;
+    --skip)
+      skipUpdate=true
+      ;;
+    *)
+      names+=("$argument")
+      ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
     shift

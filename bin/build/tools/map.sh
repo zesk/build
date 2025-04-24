@@ -58,37 +58,37 @@ mapValue() {
     local argument="$1" __index=$((__count - $# + 1))
     [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-      # _IDENTICAL_ --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      --prefix)
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    --prefix)
+      shift
+      prefix=$(usageArgumentString "$usage" "$argument" "${1-}")
+      ;;
+    --suffix)
+      shift
+      suffix=$(usageArgumentString "$usage" "$argument" "${1-}")
+      ;;
+    --search-filter)
+      shift
+      searchFilters+=("$(usageArgumentCallable "$usage" "searchFilter" "${1-}")") || return $?
+      ;;
+    --replace-filter)
+      shift
+      replaceFilters+=("$(usageArgumentCallable "$usage" "replaceFilter" "${1-}")") || return $?
+      ;;
+    *)
+      if [ -z "$mapFile" ]; then
+        mapFile=$(usageArgumentFile "$usage" "mapFile" "${1-}") || return $?
         shift
-        prefix=$(usageArgumentString "$usage" "$argument" "${1-}")
-        ;;
-      --suffix)
-        shift
-        suffix=$(usageArgumentString "$usage" "$argument" "${1-}")
-        ;;
-      --search-filter)
-        shift
-        searchFilters+=("$(usageArgumentCallable "$usage" "searchFilter" "${1-}")") || return $?
-        ;;
-      --replace-filter)
-        shift
-        replaceFilters+=("$(usageArgumentCallable "$usage" "replaceFilter" "${1-}")") || return $?
-        ;;
-      *)
-        if [ -z "$mapFile" ]; then
-          mapFile=$(usageArgumentFile "$usage" "mapFile" "${1-}") || return $?
-          shift
-          break
-        else
-          # _IDENTICAL_ argumentUnknown 1
-          __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
-        fi
-        ;;
+        break
+      else
+        # _IDENTICAL_ argumentUnknown 1
+        __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
+      fi
+      ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
     shift
@@ -162,22 +162,22 @@ mapEnvironment() {
     local argument="$1" __index=$((__count - $# + 1))
     [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-      # _IDENTICAL_ --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      --prefix)
-        shift
-        __prefix="$(usageArgumentString "$usage" "$argument" "${1-}")" || return $?
-        ;;
-      --suffix)
-        shift
-        __suffix="$(usageArgumentString "$usage" "$argument" "${1-}")" || return $?
-        ;;
-      *)
-        break
-        ;;
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    --prefix)
+      shift
+      __prefix="$(usageArgumentString "$usage" "$argument" "${1-}")" || return $?
+      ;;
+    --suffix)
+      shift
+      __suffix="$(usageArgumentString "$usage" "$argument" "${1-}")" || return $?
+      ;;
+    *)
+      break
+      ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
     shift
@@ -207,10 +207,10 @@ _mapEnvironmentGenerateSedFile() {
   shift 2
   while [ $# -gt 0 ]; do
     case "$1" in
-      *[%{}]* | LD_*) ;; # skips
-      *)
-        printf "s/%s/%s/g\n" "$(quoteSedPattern "$__prefix$1$__suffix")" "$(quoteSedReplacement "${!1-}")"
-        ;;
+    *[%{}]* | LD_*) ;; # skips
+    *)
+      printf "s/%s/%s/g\n" "$(quoteSedPattern "$__prefix$1$__suffix")" "$(quoteSedReplacement "${!1-}")"
+      ;;
     esac
     shift
   done
@@ -246,24 +246,24 @@ cannon() {
     local argument="$1" __index=$((__count - $# + 1))
     [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-      # _IDENTICAL_ --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      --path)
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    --path)
+      shift
+      cannonPath=$(usageArgumentDirectory "$usage" "$argument cannonPath" "${1-}")
+      ;;
+    *)
+      if [ -z "$search" ]; then
+        search="$(usageArgumentString "$usage" "searchText" "$argument")"
+      elif [ -z "$replace" ]; then
+        replace="$argument"
         shift
-        cannonPath=$(usageArgumentDirectory "$usage" "$argument cannonPath" "${1-}")
-        ;;
-      *)
-        if [ -z "$search" ]; then
-          search="$(usageArgumentString "$usage" "searchText" "$argument")"
-        elif [ -z "$replace" ]; then
-          replace="$argument"
-          shift
-          break
-        fi
-        ;;
+        break
+      fi
+      ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
     shift

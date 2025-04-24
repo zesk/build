@@ -75,18 +75,18 @@ versionSort() {
     local argument="$1" __index=$((__count - $# + 1))
     [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-      # _IDENTICAL_ --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      -r | --reverse)
-        reverse="r"
-        ;;
-      *)
-        # _IDENTICAL_ argumentUnknown 1
-        __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
-        ;;
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    -r | --reverse)
+      reverse="r"
+      ;;
+    *)
+      # _IDENTICAL_ argumentUnknown 1
+      __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
+      ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
     shift
@@ -160,19 +160,19 @@ isUpToDate() {
     argument="$1"
     [ -n "$argument" ] || __throwArgument "$usage" "blank argument" || return $?
     case "$argument" in
-      --name)
-        shift || :
-        name="$1"
-        ;;
-      *)
-        if [ -z "$keyDate" ]; then
-          keyDate="$argument"
-        elif [ -n "$upToDateDays" ]; then
-          upToDateDays="$argument"
-        else
-          __throwArgument "$usage" "unknown argument $(decorate value "$argument")" || return $?
-        fi
-        ;;
+    --name)
+      shift || :
+      name="$1"
+      ;;
+    *)
+      if [ -z "$keyDate" ]; then
+        keyDate="$argument"
+      elif [ -n "$upToDateDays" ]; then
+        upToDateDays="$argument"
+      else
+        __throwArgument "$usage" "unknown argument $(decorate value "$argument")" || return $?
+      fi
+      ;;
     esac
     shift || __throwArgument "shift $argument" || return $?
   done
@@ -196,9 +196,9 @@ isUpToDate() {
   if [ "$todayTimestamp" -gt "$expireTimestamp" ]; then
     label=$(printf "%s %s\n" "$(decorate error "${name}expired on ")" "$(decorate red "$keyDate")")
     case "$daysAgo" in
-      0) timeText="Today" ;;
-      1) timeText="Yesterday" ;;
-      *) timeText="$daysAgo $(plural $daysAgo day days) ago" ;;
+    0) timeText="Today" ;;
+    1) timeText="Yesterday" ;;
+    *) timeText="$daysAgo $(plural $daysAgo day days) ago" ;;
     esac
     labeledBigText --prefix "$(decorate reset --)" --top --tween "$(decorate red --)" "$label" "EXPIRED $timeText"
     return 1

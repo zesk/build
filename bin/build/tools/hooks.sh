@@ -26,18 +26,18 @@ _hookContextWrapper() {
     local argument="$1" __index=$((__count - $# + 1))
     [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-      # _IDENTICAL_ --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      --application)
-        shift
-        application=$(usageArgumentDirectory "$usage" "home" "${1-}") || return $?
-        ;;
-      *)
-        break
-        ;;
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    --application)
+      shift
+      application=$(usageArgumentDirectory "$usage" "home" "${1-}") || return $?
+      ;;
+    *)
+      break
+      ;;
     esac
     shift
   done

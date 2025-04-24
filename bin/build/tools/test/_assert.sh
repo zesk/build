@@ -163,99 +163,99 @@ _assertConditionHelper() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     case "$argument" in
-      # _IDENTICAL_ --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      --exit)
-        shift
-        expectedExitCode=$(usageArgumentUnsignedInteger "$usage" "$argument" "${1-}")
-        pairs+=("Exit" "$(decorate bold-magenta " $expectedExitCode ")")
-        ;;
-      --display)
-        shift
-        displayName="$(usageArgumentString "$usage" "$argument" "${1-}")" || return $?
-        ;;
-      --success)
-        shift
-        success="$(usageArgumentBoolean "$usage" "$argument" "${1-}")" || return $?
-        pairs+=("should" "$(_choose "$success" "succeed" "$(decorate warning "fail")")")
-        ;;
-      --debug)
-        debugFlag=true
-        ;;
-      # IDENTICAL assert-line-argument-case 8
-      --line)
-        shift
-        lineNumber="${1-}"
-        ;;
-      --line-depth)
-        shift
-        lineDepth="$(usageArgumentPositiveInteger "$usage" "$argument" "${1-}")" || return $?
-        ;;
-      --test)
-        shift
-        tester="$(usageArgumentString "$usage" "$argument" "${1-}")" || return $?
-        ;;
-      --formatter)
-        shift
-        formatter="$(usageArgumentString "$usage" "$argument" "${1-}")" || return $?
-        ;;
-      --stderr-ok)
-        errorsOk=true
-        ;;
-      --stderr-match)
-        shift || :
-        [ -n "${1-}" ] || __throwArgument "$usage" "Blank $argument argument" || return $?
-        stderrContains+=("$1")
-        errorsOk=true
-        ;;
-      --stderr-no-match)
-        shift || :
-        [ -n "${1-}" ] || __throwArgument "$usage" "Blank $argument argument" || return $?
-        stderrNotContains+=("$1")
-        errorsOk=true
-        ;;
-      --stdout-match)
-        shift || :
-        [ -n "${1-}" ] || __throwArgument "$usage" "Blank $argument argument" || return $?
-        outputContains+=("$1")
-        ;;
-      --stdout-no-match)
-        shift || :
-        [ -n "${1-}" ] || __throwArgument "$usage" "Blank $argument argument" || return $?
-        outputNotContains+=("$1")
-        ;;
-      --dump)
-        dumpFlag=true
-        dumpBinaryFlag=false
-        ;;
-      --dump-binary)
-        dumpBinaryFlag=true
-        dumpFlag=true
-        ;;
-      --plumber)
-        doPlumber=true
-        ;;
-      --skip-plumber)
-        doPlumber=false
-        leaks=()
-        ;;
-      --leak)
-        shift
-        doPlumber=true
-        leaks+=(--leak "$(usageArgumentString "$usage" "$argument globalName" "${1-}")") || return $?
-        ;;
-      --debug-lines)
-        debugLines=true
-        ;;
-      --code1)
-        code1=true
-        ;;
-      *)
-        break
-        ;;
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    --exit)
+      shift
+      expectedExitCode=$(usageArgumentUnsignedInteger "$usage" "$argument" "${1-}")
+      pairs+=("Exit" "$(decorate bold-magenta " $expectedExitCode ")")
+      ;;
+    --display)
+      shift
+      displayName="$(usageArgumentString "$usage" "$argument" "${1-}")" || return $?
+      ;;
+    --success)
+      shift
+      success="$(usageArgumentBoolean "$usage" "$argument" "${1-}")" || return $?
+      pairs+=("should" "$(_choose "$success" "succeed" "$(decorate warning "fail")")")
+      ;;
+    --debug)
+      debugFlag=true
+      ;;
+    # IDENTICAL assert-line-argument-case 8
+    --line)
+      shift
+      lineNumber="${1-}"
+      ;;
+    --line-depth)
+      shift
+      lineDepth="$(usageArgumentPositiveInteger "$usage" "$argument" "${1-}")" || return $?
+      ;;
+    --test)
+      shift
+      tester="$(usageArgumentString "$usage" "$argument" "${1-}")" || return $?
+      ;;
+    --formatter)
+      shift
+      formatter="$(usageArgumentString "$usage" "$argument" "${1-}")" || return $?
+      ;;
+    --stderr-ok)
+      errorsOk=true
+      ;;
+    --stderr-match)
+      shift || :
+      [ -n "${1-}" ] || __throwArgument "$usage" "Blank $argument argument" || return $?
+      stderrContains+=("$1")
+      errorsOk=true
+      ;;
+    --stderr-no-match)
+      shift || :
+      [ -n "${1-}" ] || __throwArgument "$usage" "Blank $argument argument" || return $?
+      stderrNotContains+=("$1")
+      errorsOk=true
+      ;;
+    --stdout-match)
+      shift || :
+      [ -n "${1-}" ] || __throwArgument "$usage" "Blank $argument argument" || return $?
+      outputContains+=("$1")
+      ;;
+    --stdout-no-match)
+      shift || :
+      [ -n "${1-}" ] || __throwArgument "$usage" "Blank $argument argument" || return $?
+      outputNotContains+=("$1")
+      ;;
+    --dump)
+      dumpFlag=true
+      dumpBinaryFlag=false
+      ;;
+    --dump-binary)
+      dumpBinaryFlag=true
+      dumpFlag=true
+      ;;
+    --plumber)
+      doPlumber=true
+      ;;
+    --skip-plumber)
+      doPlumber=false
+      leaks=()
+      ;;
+    --leak)
+      shift
+      doPlumber=true
+      leaks+=(--leak "$(usageArgumentString "$usage" "$argument globalName" "${1-}")") || return $?
+      ;;
+    --debug-lines)
+      debugLines=true
+      ;;
+    --code1)
+      code1=true
+      ;;
+    *)
+      break
+      ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
     shift
@@ -395,34 +395,34 @@ __assertFileContainsHelper() {
   while [ $# -gt 0 ]; do
     argument="$1"
     case "$argument" in
-      --display)
-        shift
-        displayName="$(usageArgumentString "$usage" "$argument" "${1-}")" || return $?
-        ;;
-      # _IDENTICAL_ --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      # IDENTICAL assert-line-argument-case 8
-      --line)
-        shift
-        lineNumber="${1-}"
-        ;;
-      --line-depth)
-        shift
-        lineDepth="$(usageArgumentPositiveInteger "$usage" "$argument" "${1-}")" || return $?
-        ;;
-      --debug-lines)
-        debugLines=true
-        ;;
-      *)
-        if [ -z "$file" ]; then
-          file="$argument"
-        else
-          break
-        fi
-        ;;
+    --display)
+      shift
+      displayName="$(usageArgumentString "$usage" "$argument" "${1-}")" || return $?
+      ;;
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    # IDENTICAL assert-line-argument-case 8
+    --line)
+      shift
+      lineNumber="${1-}"
+      ;;
+    --line-depth)
+      shift
+      lineDepth="$(usageArgumentPositiveInteger "$usage" "$argument" "${1-}")" || return $?
+      ;;
+    --debug-lines)
+      debugLines=true
+      ;;
+    *)
+      if [ -z "$file" ]; then
+        file="$argument"
+      else
+        break
+      fi
+      ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
     shift

@@ -100,67 +100,67 @@ dockerCompose() {
     local argument="$1" __index=$((__count - $# + 1))
     [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-      # _IDENTICAL_ --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      --debug)
-        debugFlag=true
-        ;;
-      --production)
-        deployment="production"
-        ;;
-      --staging)
-        deployment="staging"
-        ;;
-      --deployment)
-        shift
-        deployment="$(usageArgumentString "$usage" "$argument" "${1-}")" || return $?
-        deployment="$(uppercase "$deployment")"
-        ! $debugFlag || decorate info "Deployment set to $deployment"
-        ;;
-      --volume)
-        shift
-        databaseVolume=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
-        ;;
-      --clean)
-        deleteVolumes=true
-        ;;
-      --keep)
-        deleteVolumes=false
-        keepVolumes=true
-        ;;
-      --build)
-        buildFlag=true
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    --debug)
+      debugFlag=true
+      ;;
+    --production)
+      deployment="production"
+      ;;
+    --staging)
+      deployment="staging"
+      ;;
+    --deployment)
+      shift
+      deployment="$(usageArgumentString "$usage" "$argument" "${1-}")" || return $?
+      deployment="$(uppercase "$deployment")"
+      ! $debugFlag || decorate info "Deployment set to $deployment"
+      ;;
+    --volume)
+      shift
+      databaseVolume=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
+      ;;
+    --clean)
+      deleteVolumes=true
+      ;;
+    --keep)
+      deleteVolumes=false
+      keepVolumes=true
+      ;;
+    --build)
+      buildFlag=true
+      hasCommand=true
+      ;;
+    --default-env | --env)
+      local environmentPair
+      shift
+      environmentPair="$(usageArgumentString "$usage" "$argument" "${1-}")" || return $?
+      local name="${environmentPair%%=*}" value="${environmentPair#*=}"
+      ! $debugFlag || decorate info "Environment supplied $(decorate pair "$name" "$value")"
+      name="$(usageArgumentEnvironmentVariable "$usage" "$argument" "$name")" || return $?
+      requiredEnvironment+=("$name" "$value")
+      ;;
+    db)
+      aa+=("$argument")
+      keepVolumesDefault=false
+      ;;
+    web)
+      keepVolumesDefault=true
+      aa+=("$argument")
+      ;;
+    *)
+      if isDockerComposeCommand "$argument"; then
+        aa+=("$@")
         hasCommand=true
-        ;;
-      --default-env | --env)
-        local environmentPair
-        shift
-        environmentPair="$(usageArgumentString "$usage" "$argument" "${1-}")" || return $?
-        local name="${environmentPair%%=*}" value="${environmentPair#*=}"
-        ! $debugFlag || decorate info "Environment supplied $(decorate pair "$name" "$value")"
-        name="$(usageArgumentEnvironmentVariable "$usage" "$argument" "$name")" || return $?
-        requiredEnvironment+=("$name" "$value")
-        ;;
-      db)
-        aa+=("$argument")
-        keepVolumesDefault=false
-        ;;
-      web)
-        keepVolumesDefault=true
-        aa+=("$argument")
-        ;;
-      *)
-        if isDockerComposeCommand "$argument"; then
-          aa+=("$@")
-          hasCommand=true
-          break
-        fi
-        # _IDENTICAL_ argumentUnknown 1
-        __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
-        ;;
+        break
+      fi
+      # _IDENTICAL_ argumentUnknown 1
+      __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
+      ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
     shift

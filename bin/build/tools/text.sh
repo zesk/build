@@ -44,28 +44,28 @@ isMappable() {
     local argument="$1" __index=$((__count - $# + 1))
     [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-      # _IDENTICAL_ --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      --token)
-        shift
-        tokenClasses="$(usageArgumentString "$usage" "$argument" "${1-}")" || return $?
-        ;;
-      --prefix)
-        shift
-        prefix=$(quoteGrepPattern "$(usageArgumentString "$usage" "$argument" "${1-}")") || return $?
-        ;;
-      --suffix)
-        shift
-        suffix=$(quoteGrepPattern "$(usageArgumentString "$usage" "$argument" "${1-}")") || return $?
-        ;;
-      *)
-        if printf "%s\n" "$1" | grep -q -e "$prefix$tokenClasses$tokenClasses*$suffix"; then
-          return 0
-        fi
-        ;;
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    --token)
+      shift
+      tokenClasses="$(usageArgumentString "$usage" "$argument" "${1-}")" || return $?
+      ;;
+    --prefix)
+      shift
+      prefix=$(quoteGrepPattern "$(usageArgumentString "$usage" "$argument" "${1-}")") || return $?
+      ;;
+    --suffix)
+      shift
+      suffix=$(quoteGrepPattern "$(usageArgumentString "$usage" "$argument" "${1-}")") || return $?
+      ;;
+    *)
+      if printf "%s\n" "$1" | grep -q -e "$prefix$tokenClasses$tokenClasses*$suffix"; then
+        return 0
+      fi
+      ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
     shift
@@ -88,12 +88,12 @@ _isMappable() {
 parseBoolean() {
   __help "_${FUNCNAME[0]}" "$@" || return 0
   case "$(lowercase "$1")" in
-    y | yes | 1 | true)
-      return 0
-      ;;
-    n | no | 0 | false)
-      return 1
-      ;;
+  y | yes | 1 | true)
+    return 0
+    ;;
+  n | no | 0 | false)
+    return 1
+    ;;
   esac
   return 2
 }
@@ -847,21 +847,21 @@ characterClassReport() {
     local argument="$1" __index=$((__count - $# + 1))
     [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-      # _IDENTICAL_ --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      --class)
-        classOuter=true
-        ;;
-      --char)
-        classOuter=false
-        ;;
-      *)
-        # _IDENTICAL_ argumentUnknown 1
-        __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
-        ;;
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    --class)
+      classOuter=true
+      ;;
+    --char)
+      classOuter=false
+      ;;
+    *)
+      # _IDENTICAL_ argumentUnknown 1
+      __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
+      ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
     shift
@@ -947,15 +947,15 @@ removeFields() {
     local argument="$1" __index=$((__count - $# + 1))
     [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-      # _IDENTICAL_ --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      *)
-        [ -z "$fieldCount" ] || __throwArgument "$usage" "Only one fieldCount should be provided argument #$__index: $argument" || return $?
-        fieldCount="$(usageArgumentPositiveInteger "$usage" "fieldCount" "$argument")" || return $?
-        ;;
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    *)
+      [ -z "$fieldCount" ] || __throwArgument "$usage" "Only one fieldCount should be provided argument #$__index: $argument" || return $?
+      fieldCount="$(usageArgumentPositiveInteger "$usage" "fieldCount" "$argument")" || return $?
+      ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
     shift
@@ -1045,9 +1045,9 @@ unquote() {
 __unquote() {
   local value="${1-}"
   case "${value:0:1}" in
-    "'") value="$(unquote "'" "$value")" ;;
-    '"') value="$(unquote '"' "$value")" ;;
-    *) ;;
+  "'") value="$(unquote "'" "$value")" ;;
+  '"') value="$(unquote '"' "$value")" ;;
+  *) ;;
   esac
   printf "%s\n" "$value"
 }
@@ -1068,22 +1068,22 @@ stringReplace() {
     local argument="$1" __index=$((__count - $# + 1))
     [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-      # _IDENTICAL_ --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      *)
-        if [ -z "$needle" ]; then
-          needle="$(usageArgumentString "$usage" "$argument" "${1-}")" || return $?
-        elif [ -z "$sedCommand" ]; then
-          replacement="$(usageArgumentEmptyString "$usage" "$argument" "${1-}")" || return $?
-          sedCommand="s/$(quoteSedPattern "$needle")/$(quoteSedReplacement "$replacement")/g"
-        else
-          sed -e "$sedCommand" <<<"$1"
-          hasTextArguments=true
-        fi
-        ;;
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    *)
+      if [ -z "$needle" ]; then
+        needle="$(usageArgumentString "$usage" "$argument" "${1-}")" || return $?
+      elif [ -z "$sedCommand" ]; then
+        replacement="$(usageArgumentEmptyString "$usage" "$argument" "${1-}")" || return $?
+        sedCommand="s/$(quoteSedPattern "$needle")/$(quoteSedReplacement "$replacement")/g"
+      else
+        sed -e "$sedCommand" <<<"$1"
+        hasTextArguments=true
+      fi
+      ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
     shift

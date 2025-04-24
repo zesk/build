@@ -124,21 +124,21 @@ testCrontabApplicationSync() {
     argument="$1"
     [ -n "$argument" ] || __throwArgument "$usage" "blank argument" || return $?
     case "$argument" in
-      -v | --verbose)
-        verboseFlag=1
-        decorate info "Verbosity on" 1>&2
-        ;;
-      -k | --keep)
-        keepFlag=1
-        decorate warning "Keeping test artifacts" 1>&2
-        ;;
-      -s | --show)
-        showFlag=1
-        ;;
-      *)
-        [ -d "$argument" ] || __throwArgument "$usage" "No arguments" || return $?
-        decorate info "Home is $argument"
-        ;;
+    -v | --verbose)
+      verboseFlag=1
+      decorate info "Verbosity on" 1>&2
+      ;;
+    -k | --keep)
+      keepFlag=1
+      decorate warning "Keeping test artifacts" 1>&2
+      ;;
+    -s | --show)
+      showFlag=1
+      ;;
+    *)
+      [ -d "$argument" ] || __throwArgument "$usage" "No arguments" || return $?
+      decorate info "Home is $argument"
+      ;;
     esac
     shift || __throwArgument "$usage" "missing argument $(decorate label "$argument")" || return $?
   done

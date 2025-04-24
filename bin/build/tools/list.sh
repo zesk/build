@@ -76,28 +76,28 @@ listAppend() {
     local argument="$1" __index=$((__count - $# + 1))
     [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-      # _IDENTICAL_ --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      --first)
-        firstFlag=true
-        ;;
-      --last)
-        firstFlag=false
-        ;;
-      *)
-        if [ "$(stringOffset "$argument$separator" "$separator$separator$listValue$separator")" -lt 0 ]; then
-          if [ -z "$listValue" ]; then
-            listValue="$argument"
-          elif "$firstFlag"; then
-            listValue="$argument$separator${listValue#"$separator"}"
-          else
-            listValue="${listValue%"$separator"}$separator$argument"
-          fi
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    --first)
+      firstFlag=true
+      ;;
+    --last)
+      firstFlag=false
+      ;;
+    *)
+      if [ "$(stringOffset "$argument$separator" "$separator$separator$listValue$separator")" -lt 0 ]; then
+        if [ -z "$listValue" ]; then
+          listValue="$argument"
+        elif "$firstFlag"; then
+          listValue="$argument$separator${listValue#"$separator"}"
+        else
+          listValue="${listValue%"$separator"}$separator$argument"
         fi
-        ;;
+      fi
+      ;;
     esac
     shift || __throwArgument "$usage" "shift $argument" || return $?
   done
@@ -126,25 +126,25 @@ listCleanDuplicates() {
     local argument="$1" __index=$((__count - $# + 1))
     [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-      # _IDENTICAL_ --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      --test)
-        shift
-        test=$(usageArgumentCallable "$usage" "$argument" "${1-}") || return $?
-        ;;
-      --removed)
-        showRemoved=true
-        ;;
-      *)
-        if [ -z "$separator" ]; then
-          separator="$argument"
-        else
-          break
-        fi
-        ;;
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    --test)
+      shift
+      test=$(usageArgumentCallable "$usage" "$argument" "${1-}") || return $?
+      ;;
+    --removed)
+      showRemoved=true
+      ;;
+    *)
+      if [ -z "$separator" ]; then
+        separator="$argument"
+      else
+        break
+      fi
+      ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
     shift

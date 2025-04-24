@@ -31,47 +31,47 @@ installInstallBinary() {
     local argument="$1" __index=$((__count - $# + 1))
     [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-      # _IDENTICAL_ --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      --bin)
-        shift
-        installBinName=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
-        ;;
-      --url-function)
-        shift
-        urlFunction=$(usageArgumentCallable "$usage" "$argument" "${1-}") || return $?
-        ;;
-      --post)
-        shift
-        postFunction=$(usageArgumentCallable "$usage" "$argument" "${1-}") || return $?
-        ;;
-      --url)
-        shift
-        url=$(usageArgumentURL "$usage" "$argument" "${1-}") || return $?
-        ;;
-      --source)
-        shift
-        source=$(usageArgumentFile "$usage" "$argument" "${1-}") || return $?
-        ;;
-      --diff)
-        showDiffFlag=true
-        ;;
-      --local)
-        localFlag=true
-        ;;
-      *)
-        if [ -z "$path" ]; then
-          path=$(usageArgumentFileDirectory "$usage" "path" "$1") || return $?
-        elif [ -z "$applicationHome" ]; then
-          applicationHome=$(usageArgumentDirectory "$usage" "applicationHome" "$1") || return $?
-        else
-          # _IDENTICAL_ argumentUnknown 1
-          __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
-        fi
-        ;;
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    --bin)
+      shift
+      installBinName=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
+      ;;
+    --url-function)
+      shift
+      urlFunction=$(usageArgumentCallable "$usage" "$argument" "${1-}") || return $?
+      ;;
+    --post)
+      shift
+      postFunction=$(usageArgumentCallable "$usage" "$argument" "${1-}") || return $?
+      ;;
+    --url)
+      shift
+      url=$(usageArgumentURL "$usage" "$argument" "${1-}") || return $?
+      ;;
+    --source)
+      shift
+      source=$(usageArgumentFile "$usage" "$argument" "${1-}") || return $?
+      ;;
+    --diff)
+      showDiffFlag=true
+      ;;
+    --local)
+      localFlag=true
+      ;;
+    *)
+      if [ -z "$path" ]; then
+        path=$(usageArgumentFileDirectory "$usage" "path" "$1") || return $?
+      elif [ -z "$applicationHome" ]; then
+        applicationHome=$(usageArgumentDirectory "$usage" "applicationHome" "$1") || return $?
+      else
+        # _IDENTICAL_ argumentUnknown 1
+        __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
+      fi
+      ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
     shift
@@ -328,34 +328,34 @@ buildEnvironmentLoad() {
     local argument="$1" __index=$((__count - $# + 1))
     [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-      # _IDENTICAL_ --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      --print)
-        printFlag=true
-        ;;
-      *)
-        local env found="" paths=() path file=""
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    --print)
+      printFlag=true
+      ;;
+    *)
+      local env found="" paths=() path file=""
 
-        env="$(usageArgumentEnvironmentVariable "$usage" "environmentVariable" "$1")"
-        IFS=$'\n' read -d '' -r -a paths < <(_buildEnvironmentPath) || :
-        for path in "${paths[@]}"; do
-          [ -d "$path" ] || continue
-          file="$path/$env.sh"
-          if [ -x "$file" ]; then
-            export "${env?}" || __throwEnvironment "$usage" "export $env failed" || return $?
-            found="$file"
-            set -a || :
-            # shellcheck source=/dev/null
-            source "$file" || __throwEnvironment "$usage" source "$file" || return $?
-            set +a || :
-          fi
-        done
-        [ -n "$found" ] || __throwEnvironment "$usage" "Missing $env" || return $?
-        ! $printFlag || __catchEnvironment "$usage" printf -- "%s\n" "$found" || return $?
-        ;;
+      env="$(usageArgumentEnvironmentVariable "$usage" "environmentVariable" "$1")"
+      IFS=$'\n' read -d '' -r -a paths < <(_buildEnvironmentPath) || :
+      for path in "${paths[@]}"; do
+        [ -d "$path" ] || continue
+        file="$path/$env.sh"
+        if [ -x "$file" ]; then
+          export "${env?}" || __throwEnvironment "$usage" "export $env failed" || return $?
+          found="$file"
+          set -a || :
+          # shellcheck source=/dev/null
+          source "$file" || __throwEnvironment "$usage" source "$file" || return $?
+          set +a || :
+        fi
+      done
+      [ -n "$found" ] || __throwEnvironment "$usage" "Missing $env" || return $?
+      ! $printFlag || __catchEnvironment "$usage" printf -- "%s\n" "$found" || return $?
+      ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
     shift
@@ -387,22 +387,22 @@ Build() {
     local argument="$1" __index=$((__count - $# + 1))
     [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-      # _IDENTICAL_ --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      --start)
-        shift
-        startDirectory=$(usageArgumentDirectory "$usage" "$argument" "${1-}") || return $?
-        ;;
-      --verbose)
-        vv+=("$argument")
-        verboseFlag=true
-        ;;
-      *)
-        break
-        ;;
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    --start)
+      shift
+      startDirectory=$(usageArgumentDirectory "$usage" "$argument" "${1-}") || return $?
+      ;;
+    --verbose)
+      vv+=("$argument")
+      verboseFlag=true
+      ;;
+    *)
+      break
+      ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
     shift
@@ -449,15 +449,15 @@ buildEnvironmentGet() {
     local argument="$1" __index=$((__count - $# + 1))
     [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-      # _IDENTICAL_ --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      *)
-        __catchEnvironment "$usage" buildEnvironmentLoad "$argument" || return $?
-        printf "%s\n" "${!argument-}"
-        ;;
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    *)
+      __catchEnvironment "$usage" buildEnvironmentLoad "$argument" || return $?
+      printf "%s\n" "${!argument-}"
+      ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
     shift
@@ -494,30 +494,30 @@ buildEnvironmentGetDirectory() {
     local argument="$1" __index=$((__count - $# + 1))
     [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-      # _IDENTICAL_ --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      --exists)
-        existsFlag=true
-        ;;
-      --subdirectory)
-        shift
-        subdirectory=$(usageArgumentString "$usage" "$argument" "${1-}")
-        ;;
-      --no-create)
-        createFlag=false
-        ;;
-      *)
-        local path
-        path=$(__catchEnvironment "$usage" buildEnvironmentGet "$argument" 2>/dev/null) || return $?
-        [ -z "$subdirectory" ] || subdirectory="${subdirectory#/}"
-        subdirectory="${path%/}/$subdirectory"
-        ! $createFlag || path=$(__catchEnvironment "$usage" requireDirectory "$subdirectory") || return $?
-        ! $existsFlag || [ -d "$subdirectory" ] || __throwEnvironment "$usage" "$argument -> $subdirectory does not exist" || return $?
-        printf "%s\n" "${subdirectory%/}"
-        ;;
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    --exists)
+      existsFlag=true
+      ;;
+    --subdirectory)
+      shift
+      subdirectory=$(usageArgumentString "$usage" "$argument" "${1-}")
+      ;;
+    --no-create)
+      createFlag=false
+      ;;
+    *)
+      local path
+      path=$(__catchEnvironment "$usage" buildEnvironmentGet "$argument" 2>/dev/null) || return $?
+      [ -z "$subdirectory" ] || subdirectory="${subdirectory#/}"
+      subdirectory="${path%/}/$subdirectory"
+      ! $createFlag || path=$(__catchEnvironment "$usage" requireDirectory "$subdirectory") || return $?
+      ! $existsFlag || [ -d "$subdirectory" ] || __throwEnvironment "$usage" "$argument -> $subdirectory does not exist" || return $?
+      printf "%s\n" "${subdirectory%/}"
+      ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
     shift
@@ -545,21 +545,21 @@ buildQuietLog() {
     local argument="$1" __index=$((__count - $# + 1))
     [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-      # _IDENTICAL_ --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      --no-create)
-        flagMake=false
-        ;;
-      *)
-        local logFile
-        logFile="$(__catchEnvironment "$usage" buildCacheDirectory)/${1#_}.log" || return $?
-        ! "$flagMake" || __catchEnvironment "$usage" requireFileDirectory "$logFile" || return $?
-        __catchEnvironment "$usage" printf -- "%s\n" "$logFile" || return $?
-        return 0
-        ;;
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    --no-create)
+      flagMake=false
+      ;;
+    *)
+      local logFile
+      logFile="$(__catchEnvironment "$usage" buildCacheDirectory)/${1#_}.log" || return $?
+      ! "$flagMake" || __catchEnvironment "$usage" requireFileDirectory "$logFile" || return $?
+      __catchEnvironment "$usage" printf -- "%s\n" "$logFile" || return $?
+      return 0
+      ;;
     esac
     shift || :
   done

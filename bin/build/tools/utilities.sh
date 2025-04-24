@@ -52,33 +52,33 @@ incrementor() {
     local argument="$1" __index=$((__count - $# + 1))
     [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-      # _IDENTICAL_ --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      --reset)
-        rm -rf "$cacheDirectory" || :
-        return 0
-        ;;
-      *[^-_a-zA-Z0-9]*)
-        __throwArgument "$usage" "Invalid argument or variable name: $argument" || return $?
-        ;;
-      *)
-        if isInteger "$argument"; then
-          if [ -n "$name" ]; then
-            __incrementor "$cacheDirectory/$name" "$value"
-            name=
-          fi
-          value="$argument"
-        else
-          if [ -n "$name" ]; then
-            __incrementor "$cacheDirectory/$name" "$value"
-          fi
-          name="$argument"
-          [ -n "$name" ] || name=default
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    --reset)
+      rm -rf "$cacheDirectory" || :
+      return 0
+      ;;
+    *[^-_a-zA-Z0-9]*)
+      __throwArgument "$usage" "Invalid argument or variable name: $argument" || return $?
+      ;;
+    *)
+      if isInteger "$argument"; then
+        if [ -n "$name" ]; then
+          __incrementor "$cacheDirectory/$name" "$value"
+          name=
         fi
-        ;;
+        value="$argument"
+      else
+        if [ -n "$name" ]; then
+          __incrementor "$cacheDirectory/$name" "$value"
+        fi
+        name="$argument"
+        [ -n "$name" ] || name=default
+      fi
+      ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
     shift
@@ -120,28 +120,28 @@ pipeRunner() {
     local argument="$1" __index=$((__count - $# + 1))
     [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-      # _IDENTICAL_ --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      --mode)
-        shift
-        mode=$(usageArgumentString "$usage" "mode" "${1-}") || return $?
-        ;;
-      --writer)
-        [ -z "$namedPipe" ] || __throwArgument "$usage" "No namedPipe supplied" || return $?
-        [ -p "$namedPipe" ] || __throwEnvironment "$usage" "$namedPipe not a named pipe" || return $?
-        __catchEnvironment "$usage" printf "%s\n" "$*" >"$namedPipe" || return $?
-        ;;
-      *)
-        if [ -n "$namedPipe" ]; then
-          binary="$(usageArgumentCallable "$usage" "readerExecutable" "$argument")" || return $?
-          break
-        else
-          namedPipe=$(usageArgumentFileDirectory "$usage" "namedPipe" "$argument") || return $?
-        fi
-        ;;
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    --mode)
+      shift
+      mode=$(usageArgumentString "$usage" "mode" "${1-}") || return $?
+      ;;
+    --writer)
+      [ -z "$namedPipe" ] || __throwArgument "$usage" "No namedPipe supplied" || return $?
+      [ -p "$namedPipe" ] || __throwEnvironment "$usage" "$namedPipe not a named pipe" || return $?
+      __catchEnvironment "$usage" printf "%s\n" "$*" >"$namedPipe" || return $?
+      ;;
+    *)
+      if [ -n "$namedPipe" ]; then
+        binary="$(usageArgumentCallable "$usage" "readerExecutable" "$argument")" || return $?
+        break
+      else
+        namedPipe=$(usageArgumentFileDirectory "$usage" "namedPipe" "$argument") || return $?
+      fi
+      ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
     shift

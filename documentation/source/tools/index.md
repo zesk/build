@@ -67,7 +67,8 @@ Wrappers for these are in [package tools](./package.md).
 - [Apt Package Manager](./apt.md)
 - [Homebrew](./brew.md)
 
-If needed (and not massively complex) &mdash; will add platform-generic installation names in the future. Currently assumes packages are named identically between platforms.
+If needed (and not massively complex) &mdash; will add platform-generic installation names in the future. Currently
+assumes packages are named identically between platforms.
 
 # How to include in your scripts
 

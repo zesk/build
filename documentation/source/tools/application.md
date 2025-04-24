@@ -1,6 +1,7 @@
-# Application Development 
+# Application Development
 
-The concept of the `Application Home` is the current project you are working on in your system. The value is stored in a cache file and can be updated using `applicationHome` or the (default) aliases `g` and `G`.
+The concept of the `Application Home` is the current project you are working on in your system. The value is stored in a
+cache file and can be updated using `applicationHome` or the (default) aliases `g` and `G`.
 
 A pattern used can be per-project:
 

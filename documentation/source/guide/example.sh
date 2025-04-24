@@ -28,7 +28,7 @@ source "$(dirname "${BASH_SOURCE[0]}")/tools.sh" || exit 99
 #
 myCoolScript() {
   local argument fileArg directoryArg
-    local usage
+  local usage
 
   usage="_${FUNCNAME[0]}"
 
@@ -38,20 +38,20 @@ myCoolScript() {
     argument="$1"
     [ -n "$argument" ] || __throwArgument "$usage" "blank argument" || return $?
     case "$argument" in
-      # _IDENTICAL_ --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      *)
-        if [ -z "$fileArg" ]; then
-          fileArg="$(usageArgumentFile "$usage" fileArg "$argument")" || return $?
-        elif [ -z "$directoryArg" ]; then
-          directoryArg="$(usageArgumentDirectory "$usage" directoryArg "$argument")" || return $?
-        else
-          __throwArgument "unknown argument: $argument" || return $?
-        fi
-        ;;
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    *)
+      if [ -z "$fileArg" ]; then
+        fileArg="$(usageArgumentFile "$usage" fileArg "$argument")" || return $?
+      elif [ -z "$directoryArg" ]; then
+        directoryArg="$(usageArgumentDirectory "$usage" directoryArg "$argument")" || return $?
+      else
+        __throwArgument "unknown argument: $argument" || return $?
+      fi
+      ;;
     esac
     shift || :
   done

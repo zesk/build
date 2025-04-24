@@ -27,13 +27,16 @@ To use in your pipeline:
 - Application [deployment](./tools/deployment.md) support to multiple hosts with rollback
 - Support for [application hooks](./tools/hook.md) and environment
 - [Bash prompt support](./tools/prompt.md) with [colors](./tools/decoration.md)
-- Bash [documentation](./guide/documentation.md) framework with [automatic usage](./guide/usage.md) in shell and markdown documentation
+- Bash [documentation](./guide/documentation.md) framework with [automatic usage](./guide/usage.md) in shell and
+  markdown documentation
 - Comprehensive [argument](./tools/usage.md) validation
 - Generic [package](./tools/package.md) interface for system configuration
 - Advanced [Bash debugger](./tools/debug.md) features
 - Complete [testing](./tools/test.md) and [assertion](./tools/assert.md) framework
 - Safe [environment files](./tools/environment.md) support
-- Tools for [AWS](./tools/aws.md), [crontab](./tools/crontab.md), [daemontools](./tools/daemontools.md), [docker](./tools/docker.md), [interactivity](./tools/interactive.md), [URLs](./tools/url.md), versions, and terminal integration
+- Tools
+  for [AWS](./tools/aws.md), [crontab](./tools/crontab.md), [daemontools](./tools/daemontools.md), [docker](./tools/docker.md), [interactivity](./tools/interactive.md), [URLs](./tools/url.md),
+  versions, and terminal integration
 
 ## Usage and arguments
 

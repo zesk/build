@@ -2,7 +2,8 @@
 
 [⬅ Return to top](../index.md)
 
-Usage is the output that a command generates when an error occurs or the user (typically) uses the `--help` argument with the command.
+Usage is the output that a command generates when an error occurs or the user (typically) uses the `--help` argument
+with the command.
 
 e.g.
 
@@ -63,7 +64,7 @@ Usage for a command typically consists of the following components:
 
 ### `Argument:` - Function arguments
 
-Workhorse for defining how a function should be called. 
+Workhorse for defining how a function should be called.
 
 Format is:
 
@@ -118,7 +119,8 @@ Where:
 
 ### Usage using comments
 
-Any name/value pair to be associated with a `function` but the handler requires access to the current file to generate (as the code reads the script to extract the comment):
+Any name/value pair to be associated with a `function` but the handler requires access to the current file to generate (
+as the code reads the script to extract the comment):
 
     #!/usr/bin/env bash
 

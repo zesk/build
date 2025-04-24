@@ -69,9 +69,9 @@ Most `deploy-foo` hooks should handle failure and return application state to a 
 {__hookApplicationTag}
 {__hookMaintenance}
 
-{__hookDeployStart} 
-{__hookDeployMove} 
-{__hookDeployConfirm} 
-{__hookDeployCleanup} 
-{__hookDeployFinish} 
+{__hookDeployStart}
+{__hookDeployMove}
+{__hookDeployConfirm}
+{__hookDeployCleanup}
+{__hookDeployFinish}
 {__hookDeployRevert}

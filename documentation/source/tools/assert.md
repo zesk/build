@@ -26,7 +26,7 @@ These functions are solely available after you call `testSuite`.
 {assertExitCode}
 {assertNotExitCode}
 
-## Output 
+## Output
 
 {assertOutputEquals}
 {assertOutputContains}

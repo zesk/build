@@ -20,18 +20,18 @@ deprecatedFilePrependVersion() {
     local argument="$1" __index=$((__count - $# + 1))
     [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-      # _IDENTICAL_ --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      *)
-        if [ -z "$target" ]; then
-          target="$(usageArgumentFile "$usage" "target" "${1-}")" || return $?
-        elif [ -z "$version" ]; then
-          version="$(usageArgumentString "$usage" "version" "$1")" || return $?
-        fi
-        ;;
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    *)
+      if [ -z "$target" ]; then
+        target="$(usageArgumentFile "$usage" "target" "${1-}")" || return $?
+      elif [ -z "$version" ]; then
+        version="$(usageArgumentString "$usage" "version" "$1")" || return $?
+      fi
+      ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
     shift
@@ -98,22 +98,22 @@ deprecatedTokensFile() {
     local argument="$1" __index=$((__count - $# + 1))
     [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-      # _IDENTICAL_ --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      --path)
-        shift
-        cannonPath=$(usageArgumentDirectory "$usage" "$argument cannonPath" "${1-}") || return $?
-        ;;
-      *)
-        if [ -z "$findArgumentFunction" ]; then
-          findArgumentFunction=$(usageArgumentFunction "$usage" "ignoreFunction" "$1") || return $?
-        else
-          files+=("$(usageArgumentFile "$usage" "cannonFile" "$1")") || return $?
-        fi
-        ;;
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    --path)
+      shift
+      cannonPath=$(usageArgumentDirectory "$usage" "$argument cannonPath" "${1-}") || return $?
+      ;;
+    *)
+      if [ -z "$findArgumentFunction" ]; then
+        findArgumentFunction=$(usageArgumentFunction "$usage" "ignoreFunction" "$1") || return $?
+      else
+        files+=("$(usageArgumentFile "$usage" "cannonFile" "$1")") || return $?
+      fi
+      ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
     shift
@@ -183,22 +183,22 @@ deprecatedCannonFile() {
     local argument="$1" __index=$((__count - $# + 1))
     [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-      # _IDENTICAL_ --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      --path)
-        shift
-        cannonPath=$(usageArgumentDirectory "$usage" "$argument cannonPath" "${1-}") || return $?
-        ;;
-      *)
-        if [ -z "$findArgumentFunction" ]; then
-          findArgumentFunction=$(usageArgumentFunction "$usage" "ignoreFunction" "$1") || return $?
-        else
-          files+=("$(usageArgumentFile "$usage" "cannonFile" "$1")") || return $?
-        fi
-        ;;
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    --path)
+      shift
+      cannonPath=$(usageArgumentDirectory "$usage" "$argument cannonPath" "${1-}") || return $?
+      ;;
+    *)
+      if [ -z "$findArgumentFunction" ]; then
+        findArgumentFunction=$(usageArgumentFunction "$usage" "ignoreFunction" "$1") || return $?
+      else
+        files+=("$(usageArgumentFile "$usage" "cannonFile" "$1")") || return $?
+      fi
+      ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
     shift
@@ -257,29 +257,29 @@ deprecatedFind() {
     local argument="$1" __index=$((__count - $# + 1))
     [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-      # _IDENTICAL_ --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      --path)
-        shift
-        cannonPath=$(usageArgumentDirectory "$usage" "$argument" "${1-}") || return $?
-        ;;
-      *)
-        if [ -z "$findArgumentFunction" ]; then
-          findArgumentFunction=$(usageArgumentFunction "$usage" "ignoreFunction" "$1") || return $?
-          local aa=()
-          read -d '' -r -a aa < <("$findArgumentFunction") || [ "${#aa[@]}" -gt 0 ] || __throwArgument "$usage" "$findArgumentFunction returned empty" || return $?
-        else
-          [ -n "$cannonPath" ] || cannonPath=$(__catchEnvironment "$usage" buildHome) || return $?
-          search="$(usageArgumentString "$usage" "search" "${1-}")" || return $?
-          search="$(quoteGrepPattern "$search")"
-          if find "$cannonPath" -type f "${aa[@]}" -print0 | xargs -0 grep -n -l -e "$search"; then
-            return 0
-          fi
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    --path)
+      shift
+      cannonPath=$(usageArgumentDirectory "$usage" "$argument" "${1-}") || return $?
+      ;;
+    *)
+      if [ -z "$findArgumentFunction" ]; then
+        findArgumentFunction=$(usageArgumentFunction "$usage" "ignoreFunction" "$1") || return $?
+        local aa=()
+        read -d '' -r -a aa < <("$findArgumentFunction") || [ "${#aa[@]}" -gt 0 ] || __throwArgument "$usage" "$findArgumentFunction returned empty" || return $?
+      else
+        [ -n "$cannonPath" ] || cannonPath=$(__catchEnvironment "$usage" buildHome) || return $?
+        search="$(usageArgumentString "$usage" "search" "${1-}")" || return $?
+        search="$(quoteGrepPattern "$search")"
+        if find "$cannonPath" -type f "${aa[@]}" -print0 | xargs -0 grep -n -l -e "$search"; then
+          return 0
         fi
-        ;;
+      fi
+      ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
     shift
@@ -307,26 +307,26 @@ deprecatedCannon() {
     local argument="$1" __index=$((__count - $# + 1))
     [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-      # _IDENTICAL_ --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      --path)
-        shift
-        cannonPath=$(usageArgumentDirectory "$usage" "$argument" "${1-}") || return $?
-        ;;
-      *)
-        if [ -z "$findArgumentFunction" ]; then
-          findArgumentFunction=$(usageArgumentFunction "$usage" "ignoreFunction" "$1") || return $?
-        elif [ -z "$search" ]; then
-          search="$(usageArgumentString "$usage" "search" "${1-}")" || return $?
-        elif [ -z "$replace" ]; then
-          replace="$(usageArgumentString "$usage" "replace" "${1-}")" || return $?
-        else
-          break
-        fi
-        ;;
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    --path)
+      shift
+      cannonPath=$(usageArgumentDirectory "$usage" "$argument" "${1-}") || return $?
+      ;;
+    *)
+      if [ -z "$findArgumentFunction" ]; then
+        findArgumentFunction=$(usageArgumentFunction "$usage" "ignoreFunction" "$1") || return $?
+      elif [ -z "$search" ]; then
+        search="$(usageArgumentString "$usage" "search" "${1-}")" || return $?
+      elif [ -z "$replace" ]; then
+        replace="$(usageArgumentString "$usage" "replace" "${1-}")" || return $?
+      else
+        break
+      fi
+      ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
     shift

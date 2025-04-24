@@ -48,38 +48,38 @@ processWait() {
     local argument="$1" __index=$((__count - $# + 1))
     [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-      # _IDENTICAL_ --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      --require)
-        requireFlag=true
-        ;;
-      --verbose)
-        verboseFlag=true
-        ;;
-      --signals)
-        shift || __throwArgument "$usage" "missing $argument argument" || return $?
-        IFS=',' read -r -a signals < <(uppercase "$1")
-        for signal in "${signals[@]}"; do
-          case "$signal" in
-            STOP | QUIT | INT | KILL | HUP | ABRT | TERM) ;;
-            *)
-              __throwArgument "$usage" "Invalid signal $signal" || return $?
-              ;;
-          esac
-        done
-        ;;
-      --timeout)
-        shift || __throwArgument "$usage" "missing $argument" || return $?
-        timeout=$(usageArgumentInteger "$usage" "timeout" "$1") || return $?
-        signalTimeout=$timeout
-        ;;
-      *)
-        processId=$(usageArgumentInteger "$usage" "processId" "$1") || return $?
-        processIds+=("$processId")
-        ;;
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    --require)
+      requireFlag=true
+      ;;
+    --verbose)
+      verboseFlag=true
+      ;;
+    --signals)
+      shift || __throwArgument "$usage" "missing $argument argument" || return $?
+      IFS=',' read -r -a signals < <(uppercase "$1")
+      for signal in "${signals[@]}"; do
+        case "$signal" in
+        STOP | QUIT | INT | KILL | HUP | ABRT | TERM) ;;
+        *)
+          __throwArgument "$usage" "Invalid signal $signal" || return $?
+          ;;
+        esac
+      done
+      ;;
+    --timeout)
+      shift || __throwArgument "$usage" "missing $argument" || return $?
+      timeout=$(usageArgumentInteger "$usage" "timeout" "$1") || return $?
+      signalTimeout=$timeout
+      ;;
+    *)
+      processId=$(usageArgumentInteger "$usage" "processId" "$1") || return $?
+      processIds+=("$processId")
+      ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
     shift

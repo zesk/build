@@ -30,21 +30,21 @@ documentationIndex_Lookup() {
   mode=settings
   while [ $# -gt 0 ]; do
     case "$1" in
-      --file) mode="file" ;;
-      --combined) mode="combined" ;;
-      --settings) mode="settings" ;;
-      --source) mode="source" ;;
-      --line) mode="line" ;;
-      *)
-        if [ -z "$cacheDirectory" ]; then
-          cacheDirectory="${1%%/}"
-          shift
-          if ! cacheDirectory="$(_documentationIndex_GeneratePath "$cacheDirectory")"; then
-            return $?
-          fi
+    --file) mode="file" ;;
+    --combined) mode="combined" ;;
+    --settings) mode="settings" ;;
+    --source) mode="source" ;;
+    --line) mode="line" ;;
+    *)
+      if [ -z "$cacheDirectory" ]; then
+        cacheDirectory="${1%%/}"
+        shift
+        if ! cacheDirectory="$(_documentationIndex_GeneratePath "$cacheDirectory")"; then
+          return $?
         fi
-        break
-        ;;
+      fi
+      break
+      ;;
     esac
     shift
   done
@@ -79,18 +79,18 @@ documentationIndex_Lookup() {
     __throwEnvironment "$usage" "Index is corrupt, file $(decorate error "$resultFile") is not found. regenerate" || return $?
   fi
   case $mode in
-    combined)
-      printf -- "%s:%d\n" "$sourceFile" "$lineNumber"
-      ;;
-    settings)
-      printf -- "%s\n" "$resultFile"
-      ;;
-    source)
-      printf -- "%s\n" "$sourceFile"
-      ;;
-    line)
-      printf -- "%d\n" "$lineNumber"
-      ;;
+  combined)
+    printf -- "%s:%d\n" "$sourceFile" "$lineNumber"
+    ;;
+  settings)
+    printf -- "%s\n" "$resultFile"
+    ;;
+  source)
+    printf -- "%s\n" "$sourceFile"
+    ;;
+  line)
+    printf -- "%d\n" "$lineNumber"
+    ;;
   esac
   return 0
 }
@@ -143,36 +143,36 @@ documentationIndex_Generate() {
     local argument="$1" __index=$((__count - $# + 1))
     [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-      # _IDENTICAL_ --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      --force)
-        forceFlag=true
-        ;;
-      --verbose)
-        verboseFlag=true
-        ;;
-      --filter)
-        shift
-        while [ $# -gt 0 ] && [ "$1" != "--" ]; do filterArgs+=("$1") && shift; done
-        ;;
-      *)
-        if [ -z "$codePath" ]; then
-          codePath="$1"
-          if [ ! -d "$codePath" ]; then
-            __throwEnvironment "$usage" "$codePath is not a directory" || return $?
-          fi
-          codePath="${codePath#./}"
-          codePath="${codePath%/}"
-        elif [ -z "$cacheDirectory" ]; then
-          cacheDirectory="$(__catchEnvironment "$usage" _documentationIndex_GeneratePath "$1")" || return $?
-        else
-          # _IDENTICAL_ argumentUnknown 1
-          __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    --force)
+      forceFlag=true
+      ;;
+    --verbose)
+      verboseFlag=true
+      ;;
+    --filter)
+      shift
+      while [ $# -gt 0 ] && [ "$1" != "--" ]; do filterArgs+=("$1") && shift; done
+      ;;
+    *)
+      if [ -z "$codePath" ]; then
+        codePath="$1"
+        if [ ! -d "$codePath" ]; then
+          __throwEnvironment "$usage" "$codePath is not a directory" || return $?
         fi
-        ;;
+        codePath="${codePath#./}"
+        codePath="${codePath%/}"
+      elif [ -z "$cacheDirectory" ]; then
+        cacheDirectory="$(__catchEnvironment "$usage" _documentationIndex_GeneratePath "$1")" || return $?
+      else
+        # _IDENTICAL_ argumentUnknown 1
+        __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
+      fi
+      ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
     shift
@@ -335,14 +335,14 @@ documentationIndex_UnlinkedIterator() {
   local flagUnderscore=false
   while [ $# -gt 0 ]; do
     case $1 in
-      --underscore)
-        flagUnderscore=true
-        ;;
-      *)
-        if ! cacheDirectory=$(usageArgumentDirectory _documentationIndex_UnlinkedIteratorUsage cacheDirectory "$1"); then
-          return $?
-        fi
-        ;;
+    --underscore)
+      flagUnderscore=true
+      ;;
+    *)
+      if ! cacheDirectory=$(usageArgumentDirectory _documentationIndex_UnlinkedIteratorUsage cacheDirectory "$1"); then
+        return $?
+      fi
+      ;;
     esac
     shift
   done
@@ -381,19 +381,19 @@ documentationIndex_FunctionIterator() {
   local cacheDirectory="" functionIndexPath=""
   while [ $# -gt 0 ]; do
     case "$1" in
-      *)
-        if [ -z "$cacheDirectory" ]; then
-          cacheDirectory="$1"
-          if [ ! -d "$cacheDirectory" ]; then
-            __throwArgument "$usage" "cacheDirectory must be a directory" || return $?
-          fi
-          if ! functionIndexPath="$(_documentationIndex_GeneratePath "$cacheDirectory")"; then
-            __throwArgument "$usage" "Unable to generate index at path $(decorate file "$cacheDirectory")" || return $?
-          fi
-        else
-          __throwArgument "$usage" "Unknown argument $1" || return $?
+    *)
+      if [ -z "$cacheDirectory" ]; then
+        cacheDirectory="$1"
+        if [ ! -d "$cacheDirectory" ]; then
+          __throwArgument "$usage" "cacheDirectory must be a directory" || return $?
         fi
-        ;;
+        if ! functionIndexPath="$(_documentationIndex_GeneratePath "$cacheDirectory")"; then
+          __throwArgument "$usage" "Unable to generate index at path $(decorate file "$cacheDirectory")" || return $?
+        fi
+      else
+        __throwArgument "$usage" "Unknown argument $1" || return $?
+      fi
+      ;;
     esac
     shift
   done
@@ -448,27 +448,27 @@ documentationIndex_LinkDocumentationPaths() {
     local argument="$1" __index=$((__count - $# + 1))
     [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-      # _IDENTICAL_ --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      --force) ;;
-      *)
-        if [ -z "$cacheDirectory" ]; then
-          cacheDirectory="$1"
-          [ -d "$cacheDirectory" ] || __throwArgument "$usage" "cacheDirectory documentTemplate - $cacheDirectory not a directory" || return $?
-          cacheDirectory="${cacheDirectory%%/}"
-        elif [ -z "$documentTemplate" ]; then
-          documentTemplate="$1"
-          [ -f "$documentTemplate" ] || __throwArgument "$usage" "cacheDirectory documentTemplate - $documentTemplate not a file" || return $?
-        elif [ -z "$documentationPath" ]; then
-          documentationPath="$1"
-        else
-          # _IDENTICAL_ argumentUnknown 1
-          __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
-        fi
-        ;;
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    --force) ;;
+    *)
+      if [ -z "$cacheDirectory" ]; then
+        cacheDirectory="$1"
+        [ -d "$cacheDirectory" ] || __throwArgument "$usage" "cacheDirectory documentTemplate - $cacheDirectory not a directory" || return $?
+        cacheDirectory="${cacheDirectory%%/}"
+      elif [ -z "$documentTemplate" ]; then
+        documentTemplate="$1"
+        [ -f "$documentTemplate" ] || __throwArgument "$usage" "cacheDirectory documentTemplate - $documentTemplate not a file" || return $?
+      elif [ -z "$documentationPath" ]; then
+        documentationPath="$1"
+      else
+        # _IDENTICAL_ argumentUnknown 1
+        __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
+      fi
+      ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
     shift

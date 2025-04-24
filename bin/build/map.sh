@@ -427,48 +427,48 @@ _decorate() {
 # Requires: printf
 _caseStyles() {
   case "$1" in
-    reset) lp='0' ;;
-      # styles
-    underline) lp='4' ;;
-    no-underline) lp='24' ;;
-    bold) lp='1' ;;
-    no-bold) lp='21' ;;
-      # colors
-    black) lp='109;7' ;;
-    black-contrast) lp='107;30' ;;
-    blue) lp='94' ;;
-    cyan) lp='36' ;;
-    green) lp='92' ;;
-    magenta) lp='35' ;;
-    orange) lp='33' ;;
-    red) lp='31' ;;
-    white) lp='48;5;0;37' ;;
-    yellow) lp='48;5;16;38;5;11' ;;
-      # bold-colors
-    bold-black) lp='1;109;7' ;;
-    bold-black-contrast) lp='1;107;30' ;;
-    bold-blue) lp='1;94' ;;
-    bold-cyan) lp='1;36' ;;
-    bold-green) lp='92' ;;
-    bold-magenta) lp='1;35' ;;
-    bold-orange) lp='1;33' ;;
-    bold-red) lp='1;31' ;;
-    bold-white) lp='1;48;5;0;37' ;;
-    bold-yellow) lp='1;48;5;16;38;5;11' ;;
-      # semantic-colors
-    code) lp='1;97;44' ;;
-    info) lp='38;5;20' && dp='1;33' && text="Info" ;;
-    notice) lp='46;31' && dp='1;97;44' && text="Notice" ;;
-    success) lp='42;30' && dp='0;32' && text="Success" ;;
-    warning) lp='1;93;41' && text="Warning" ;;
-    error) lp='1;91' && text="ERROR" ;;
-    subtle) lp='1;38;5;252' && dp='1;38;5;240' ;;
-    label) lp='34;103' && dp='1;96' ;;
-    value) lp='1;40;97' && dp='1;97' ;;
-    decoration) lp='45;97' && dp='45;30' ;;
-    *)
-      return 1
-      ;;
+  reset) lp='0' ;;
+    # styles
+  underline) lp='4' ;;
+  no-underline) lp='24' ;;
+  bold) lp='1' ;;
+  no-bold) lp='21' ;;
+    # colors
+  black) lp='109;7' ;;
+  black-contrast) lp='107;30' ;;
+  blue) lp='94' ;;
+  cyan) lp='36' ;;
+  green) lp='92' ;;
+  magenta) lp='35' ;;
+  orange) lp='33' ;;
+  red) lp='31' ;;
+  white) lp='48;5;0;37' ;;
+  yellow) lp='48;5;16;38;5;11' ;;
+    # bold-colors
+  bold-black) lp='1;109;7' ;;
+  bold-black-contrast) lp='1;107;30' ;;
+  bold-blue) lp='1;94' ;;
+  bold-cyan) lp='1;36' ;;
+  bold-green) lp='92' ;;
+  bold-magenta) lp='1;35' ;;
+  bold-orange) lp='1;33' ;;
+  bold-red) lp='1;31' ;;
+  bold-white) lp='1;48;5;0;37' ;;
+  bold-yellow) lp='1;48;5;16;38;5;11' ;;
+    # semantic-colors
+  code) lp='1;97;44' ;;
+  info) lp='38;5;20' && dp='1;33' && text="Info" ;;
+  notice) lp='46;31' && dp='1;97;44' && text="Notice" ;;
+  success) lp='42;30' && dp='0;32' && text="Success" ;;
+  warning) lp='1;93;41' && text="Warning" ;;
+  error) lp='1;91' && text="ERROR" ;;
+  subtle) lp='1;38;5;252' && dp='1;38;5;240' ;;
+  label) lp='34;103' && dp='1;96' ;;
+  value) lp='1;40;97' && dp='1;97' ;;
+  decoration) lp='45;97' && dp='45;30' ;;
+  *)
+    return 1
+    ;;
   esac
   printf "%s %s %s\n" "$lp" "${dp:-$lp}" "$text"
 }
@@ -486,10 +486,10 @@ __decorateExtensionEach() {
 
   while [ $# -gt 0 ]; do
     case "$1" in
-      --index) addIndex=true ;;
-      --count) showCount=true ;;
-      --arguments) showCount=true ;;
-      *) code="$1" && shift && break ;;
+    --index) addIndex=true ;;
+    --count) showCount=true ;;
+    --arguments) showCount=true ;;
+    *) code="$1" && shift && break ;;
     esac
     shift
   done
@@ -617,22 +617,22 @@ mapEnvironment() {
     local argument="$1" __index=$((__count - $# + 1))
     [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-      # _IDENTICAL_ --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      --prefix)
-        shift
-        __prefix="$(usageArgumentString "$usage" "$argument" "${1-}")" || return $?
-        ;;
-      --suffix)
-        shift
-        __suffix="$(usageArgumentString "$usage" "$argument" "${1-}")" || return $?
-        ;;
-      *)
-        break
-        ;;
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    --prefix)
+      shift
+      __prefix="$(usageArgumentString "$usage" "$argument" "${1-}")" || return $?
+      ;;
+    --suffix)
+      shift
+      __suffix="$(usageArgumentString "$usage" "$argument" "${1-}")" || return $?
+      ;;
+    *)
+      break
+      ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
     shift
@@ -662,10 +662,10 @@ _mapEnvironmentGenerateSedFile() {
   shift 2
   while [ $# -gt 0 ]; do
     case "$1" in
-      *[%{}]* | LD_*) ;; # skips
-      *)
-        printf "s/%s/%s/g\n" "$(quoteSedPattern "$__prefix$1$__suffix")" "$(quoteSedReplacement "${!1-}")"
-        ;;
+    *[%{}]* | LD_*) ;; # skips
+    *)
+      printf "s/%s/%s/g\n" "$(quoteSedPattern "$__prefix$1$__suffix")" "$(quoteSedReplacement "${!1-}")"
+      ;;
     esac
     shift
   done

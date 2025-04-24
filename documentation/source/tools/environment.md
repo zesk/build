@@ -22,7 +22,7 @@
 {environmentValueWrite}
 {environmentValueWriteArray}
 {environmentValueRead}
-{environmentValueReadArray} 
+{environmentValueReadArray}
 {environmentValueConvertArray}
 {environmentLines}
 {environmentNames}

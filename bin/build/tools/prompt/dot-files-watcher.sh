@@ -89,10 +89,10 @@ __dotFilesApproved() {
   local items=()
   while [ $# -gt 0 ]; do
     case "$1" in
-      "bash") items+=(".bash_profile" ".bashrc" ".profile" ".bash_history" ".inputrc" ".ssh/" ".cache/" ".config/" ".local/") ;;
-      "git") items+=(".git-credentials" ".gitconfig" ".gitignore_global") ;;
-      "darwin") items+=(".DS_Store" ".MacOSX/" ".TemporaryItems/" ".Trash/") ;;
-      "mysql") items+=(".my.cnf" ".mylogin.cnf" ".mysql_history") ;;
+    "bash") items+=(".bash_profile" ".bashrc" ".profile" ".bash_history" ".inputrc" ".ssh/" ".cache/" ".config/" ".local/") ;;
+    "git") items+=(".git-credentials" ".gitconfig" ".gitignore_global") ;;
+    "darwin") items+=(".DS_Store" ".MacOSX/" ".TemporaryItems/" ".Trash/") ;;
+    "mysql") items+=(".my.cnf" ".mylogin.cnf" ".mysql_history") ;;
     esac
     shift
   done
@@ -108,17 +108,17 @@ dotFilesApproved() {
 
   while [ $# -gt 0 ]; do
     case "$1" in
-      "all")
-        __dotFilesApproved bash darwin git mysql
-        return 0
-        ;;
-      "bash" | "darwin" | "git" | "mysql")
-        __dotFilesApproved "$1"
-        return 0
-        ;;
-      *)
-        __throwArgument "$usage" "Unknown approved list: $1" || return $?
-        ;;
+    "all")
+      __dotFilesApproved bash darwin git mysql
+      return 0
+      ;;
+    "bash" | "darwin" | "git" | "mysql")
+      __dotFilesApproved "$1"
+      return 0
+      ;;
+    *)
+      __throwArgument "$usage" "Unknown approved list: $1" || return $?
+      ;;
     esac
   done
   __dotFilesApproved bash

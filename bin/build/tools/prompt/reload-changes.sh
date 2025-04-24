@@ -93,7 +93,9 @@ bashPromptModule_reloadChanges() {
       printf "%s %s\n" "$(decorate value "$name")" "$(decorate info "code changed, reloading $(decorate file "$source") [$prefix$(decorate file "$newestFile")]")"
       ! $debug || decorate info "Saving new state file $newestModified $newestFile"
       printf "%s\n" "$newestModified" "$newestFile" >"$pathStateFile"
-      __BASH_PROMPT_RELOAD_CHANGES="$newestModified"
+      if isInteger "${__BASH_PROMPT_RELOAD_CHANGES-}" && [ "$__BASH_PROMPT_RELOAD_CHANGES" -lt "$newestModified" ]; then
+        __BASH_PROMPT_RELOAD_CHANGES="$newestModified"
+      fi
       reloadSource=true
     else
       ! $debug || decorate error "! $newestModified -gt $modified"
@@ -131,47 +133,47 @@ reloadChanges() {
     local argument="$1" __index=$((__count - $# + 1))
     [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-      # _IDENTICAL_ --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      --source)
-        [ -z "$source" ] || __throwArgument "$usage" "--source only can be supplied once" || return $?
-        shift
-        source="$(usageArgumentRealFile "$usage" "$argument" "${1-}")" || return $?
-        ;;
-      --show)
-        showFlag=true
-        ;;
-      --stop)
-        # If not found we do not care
-        muzzle bashPrompt --remove bashPromptModule_reloadChanges 2>&1 || :
-        if cacheFile="$(__reloadChangesCacheFile "$usage")"; then
-          __catchEnvironment "$usage" rm -rf "$cacheFile" || return $?
-        fi
-        statusMessage --last decorate success "Disabled reloadChanges ..."
-        return 0
-        ;;
-      --name)
-        shift
-        name="$(usageArgumentString "$usage" "$argument" "${1-}")" || return $?
-        ;;
-      --path)
-        shift
-        paths+=("$(usageArgumentRealDirectory "$usage" "$argument" "${1-}")") || return $?
-        ;;
-      -*)
-        # _IDENTICAL_ argumentUnknown 1
-        __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
-        ;;
-      *)
-        if [ -z "$source" ]; then
-          source="$(usageArgumentRealFile "$usage" "source" "$argument")" || return $?
-        else
-          paths+=("$(usageArgumentRealDirectory "$usage" "path" "$argument")") || return $?
-        fi
-        ;;
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    --source)
+      [ -z "$source" ] || __throwArgument "$usage" "--source only can be supplied once" || return $?
+      shift
+      source="$(usageArgumentRealFile "$usage" "$argument" "${1-}")" || return $?
+      ;;
+    --show)
+      showFlag=true
+      ;;
+    --stop)
+      # If not found we do not care
+      muzzle bashPrompt --remove bashPromptModule_reloadChanges 2>&1 || :
+      if cacheFile="$(__reloadChangesCacheFile "$usage")"; then
+        __catchEnvironment "$usage" rm -rf "$cacheFile" || return $?
+      fi
+      statusMessage --last decorate success "Disabled reloadChanges ..."
+      return 0
+      ;;
+    --name)
+      shift
+      name="$(usageArgumentString "$usage" "$argument" "${1-}")" || return $?
+      ;;
+    --path)
+      shift
+      paths+=("$(usageArgumentRealDirectory "$usage" "$argument" "${1-}")") || return $?
+      ;;
+    -*)
+      # _IDENTICAL_ argumentUnknown 1
+      __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
+      ;;
+    *)
+      if [ -z "$source" ]; then
+        source="$(usageArgumentRealFile "$usage" "source" "$argument")" || return $?
+      else
+        paths+=("$(usageArgumentRealDirectory "$usage" "path" "$argument")") || return $?
+      fi
+      ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
     shift
@@ -207,9 +209,11 @@ reloadChanges() {
 __reloadChangesShow() {
   local usage="$1" cacheFile="$2" name source paths
 
-  local argument
+  local argument done=false
   name="" && source="" && paths=()
-  while read -r argument; do
+  while ! $done; do
+    read -r argument || done=true
+    [ -n "$argument" ] || continue
     if [ -z "$source" ]; then
       source="$(usageArgumentRealFile "$usage" "config-source" "$argument")" || return $?
     elif [ -z "$name" ]; then
@@ -217,7 +221,7 @@ __reloadChangesShow() {
     elif [ "$argument" != "--" ]; then
       paths+=("$(usageArgumentRealDirectory "$usage" "config-path" "$argument")") || return $?
     else
-      printf "%s %s %s\n%s\n" "👀 $(decorate info "$name")" "$(decorate code "(source $(decorate file "$source"))")" "when changes found in" "$(printf -- "- %s\n" "${paths[@]}"))"
+      printf "%s %s %s\n%s\n" "👀 $(decorate info "$name")" "$(decorate code "(source $(decorate file "$source"))")" "when changes found in" "$(printf -- "%s\n" "${paths[@]}" | decorate code | decorate wrap -- "- ")"
       name="" && source="" && paths=()
     fi
   done <"$cacheFile"

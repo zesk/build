@@ -49,7 +49,7 @@
 {inArray}
 {isSubstring}
 {isSubstringInsensitive}
-{stringContains} 
+{stringContains}
 {stringContainsInsensitive}
 {beginsWith}
 {stringOffset}

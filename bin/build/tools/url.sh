@@ -49,64 +49,64 @@ urlParse() {
     local argument="$1" __index=$((__count - $# + 1))
     [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-      # _IDENTICAL_ --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      *)
-        local u="${1-}"
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    *)
+      local u="${1-}"
 
-        # parts
-        local url="$u" path="" name="" user="" password="" host="" port="" error=""
-        local scheme="${u%%://*}"
+      # parts
+      local url="$u" path="" name="" user="" password="" host="" port="" error=""
+      local scheme="${u%%://*}"
 
-        if [ "$scheme" != "$url" ] && [ -n "$scheme" ]; then
-          # Have a scheme
-          u="${u#*://}"
-          # u is user:pass@host:port/path...
-          # path
-          name="${u#*/}"
-          if [ "$name" != "$u" ]; then
-            path="/$name"
-          else
-            path="/"
-            name=""
-          fi
-          u="${u%%/*}"
-          # u now possibly: user:pass@host:port
-          host="${u##*@}"
-          if [ "$host" = "$u" ]; then
-            user=""
+      if [ "$scheme" != "$url" ] && [ -n "$scheme" ]; then
+        # Have a scheme
+        u="${u#*://}"
+        # u is user:pass@host:port/path...
+        # path
+        name="${u#*/}"
+        if [ "$name" != "$u" ]; then
+          path="/$name"
+        else
+          path="/"
+          name=""
+        fi
+        u="${u%%/*}"
+        # u now possibly: user:pass@host:port
+        host="${u##*@}"
+        if [ "$host" = "$u" ]; then
+          user=""
+          password=""
+        else
+          user="${u%@*}"
+          password="${user#*:}"
+          if [ "$password" = "$user" ]; then
             password=""
           else
-            user="${u%@*}"
-            password="${user#*:}"
-            if [ "$password" = "$user" ]; then
-              password=""
-            else
-              user="${user%%:*}"
-            fi
+            user="${user%%:*}"
           fi
-          port="${host##*:}"
-          if [ "$port" = "$host" ]; then
-            port=""
-          else
-            host="${host%:*}"
-          fi
-          error=""
-        else
-          error="no-scheme"
-          scheme=""
         fi
-        for v in url path name scheme user password host port error; do
-          printf "%s=%s\n" "$v" "$(quoteBashString "${!v}")"
-        done
-        printf -- "\n"
-        : "$path" # usage warning
-        # Exit code 1 if failed
-        [ -z "$error" ] || return 1
-        ;;
+        port="${host##*:}"
+        if [ "$port" = "$host" ]; then
+          port=""
+        else
+          host="${host%:*}"
+        fi
+        error=""
+      else
+        error="no-scheme"
+        scheme=""
+      fi
+      for v in url path name scheme user password host port error; do
+        printf "%s=%s\n" "$v" "$(quoteBashString "${!v}")"
+      done
+      printf -- "\n"
+      : "$path" # usage warning
+      # Exit code 1 if failed
+      [ -z "$error" ] || return 1
+      ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
     shift
@@ -138,25 +138,25 @@ urlParseItem() {
     local argument="$1" __index=$((__count - $# + 1))
     [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-      # _IDENTICAL_ --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      *)
-        if [ -z "$component" ]; then
-          component=$(usageArgumentString "$usage" "component" "$1") || return $?
-        else
-          url="$1"
-          # subshell hides variable scope
-          (
-            local url path name scheme user password host port error=""
-            eval "$(urlParse "$url")" || __throwArgument "$usage" "Unable to parse $url" || return $?
-            [ -z "$error" ] || __throwArgument "$usage" "Unable to parse $(decorate code "$url"): $(decorate error "$error")" || return $?
-            printf "%s\n" "${!component-}"
-          ) || return $?
-        fi
-        ;;
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    *)
+      if [ -z "$component" ]; then
+        component=$(usageArgumentString "$usage" "component" "$1") || return $?
+      else
+        url="$1"
+        # subshell hides variable scope
+        (
+          local url path name scheme user password host port error=""
+          eval "$(urlParse "$url")" || __throwArgument "$usage" "Unable to parse $url" || return $?
+          [ -z "$error" ] || __throwArgument "$usage" "Unable to parse $(decorate code "$url"): $(decorate error "$error")" || return $?
+          printf "%s\n" "${!component-}"
+        ) || return $?
+      fi
+      ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
     shift
@@ -180,14 +180,14 @@ urlValid() {
     local argument="$1" __index=$((__count - $# + 1))
     [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-      # _IDENTICAL_ --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      *)
-        urlParse "$1" >/dev/null || return 1
-        ;;
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    *)
+      urlParse "$1" >/dev/null || return 1
+      ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
     shift
@@ -210,19 +210,19 @@ urlOpener() {
     local argument="$1" __index=$((__count - $# + 1))
     [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-      # _IDENTICAL_ --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      --exec)
-        shift
-        binary=$(usageArgumentExecutable "$usage" "$argument" "${1-}") || return $?
-        ;;
-      *)
-        # _IDENTICAL_ argumentUnknown 1
-        __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
-        ;;
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    --exec)
+      shift
+      binary=$(usageArgumentExecutable "$usage" "$argument" "${1-}") || return $?
+      ;;
+    *)
+      # _IDENTICAL_ argumentUnknown 1
+      __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
+      ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
     shift
@@ -297,25 +297,25 @@ urlFilter() {
     local argument="$1" __index=$((__count - $# + 1))
     [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-      # _IDENTICAL_ --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      --show-file)
-        aa=("$argument")
-        showFile=true
-        ;;
-      --debug)
-        debugFlag=true
-        ;;
-      --file)
-        shift
-        file="$(usageArgumentString "$usage" "$argument" "${1-}")" || return $?
-        ;;
-      *)
-        files+=("$(usageArgumentFile "$usage" "file" "$1")") || return $?
-        ;;
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    --show-file)
+      aa=("$argument")
+      showFile=true
+      ;;
+    --debug)
+      debugFlag=true
+      ;;
+    --file)
+      shift
+      file="$(usageArgumentString "$usage" "$argument" "${1-}")" || return $?
+      ;;
+    *)
+      files+=("$(usageArgumentFile "$usage" "file" "$1")") || return $?
+      ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
     shift
@@ -362,20 +362,20 @@ urlOpen() {
     local argument="$1" __index=$((__count - $# + 1))
     [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-      # _IDENTICAL_ --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      --ignore)
-        ignoreFlag=true
-        ;;
-      --wait)
-        waitFlag=true
-        ;;
-      *)
-        urls+=("$(usageArgumentString "$usage" "url" "$1")") || return $?
-        ;;
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    --ignore)
+      ignoreFlag=true
+      ;;
+    --wait)
+      waitFlag=true
+      ;;
+    *)
+      urls+=("$(usageArgumentString "$usage" "url" "$1")") || return $?
+      ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
     shift
@@ -465,72 +465,72 @@ urlFetch() {
     local argument="$1" __index=$((__count - $# + 1))
     [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-      # _IDENTICAL_ --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      --header)
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    --header)
+      shift
+      local name value
+      name="${1%%:}"
+      value="${1#*:}"
+      if [ "$name" = "$1" ] || [ "$value" = "$1" ]; then
+        __catchArgument "$usage" "Invalid $argument $1 passed" || return $?
+      fi
+      headers+=("$1")
+      curlArgs+=("--header" "$1")
+      wgetArgs+=("--header=$1")
+      ;;
+    --wget)
+      binary="wget"
+      ;;
+    --curl)
+      binary="curl"
+      ;;
+    --binary)
+      shift
+      binary=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
+      whichExists "$binary" || __throwArgument "$usage" "$binary must be in PATH: $PATH" || return $?
+      ;;
+    --argument-format)
+      format=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
+      case "$format" in curl | wget) ;; *) __throwArgument "$usage" "$argument must be curl or wget" || return $? ;; esac
+      ;;
+    --password)
+      shift
+      password="$1"
+      ;;
+    --user)
+      shift
+      user=$(usageArgumentString "$usage" "$argument (user)" "$user") || return $?
+      if [ "$user" != "${user#*:}" ]; then
+        userHasColons=true
+      fi
+      curlArgs+=(--user "$user:$password")
+      wgetArgs+=("--http-user=$user" "--http-password=$password")
+      genericArgs+=("$argument" "$1")
+      ;;
+    --agent)
+      shift
+      local agent="$1"
+      [ -n "$agent" ] || __throwArgument "$usage" "$argument must be non-blank" || return $?
+      wgetArgs+=("--user-agent=$1")
+      curlArgs+=("--user-agent" "$1")
+      genericArgs+=("$argument" "$1")
+      ;;
+    *)
+      if [ -z "$url" ]; then
+        url="$1"
+      elif [ -z "$target" ]; then
+        target="$1"
         shift
-        local name value
-        name="${1%%:}"
-        value="${1#*:}"
-        if [ "$name" = "$1" ] || [ "$value" = "$1" ]; then
-          __catchArgument "$usage" "Invalid $argument $1 passed" || return $?
-        fi
-        headers+=("$1")
-        curlArgs+=("--header" "$1")
-        wgetArgs+=("--header=$1")
-        ;;
-      --wget)
-        binary="wget"
-        ;;
-      --curl)
-        binary="curl"
-        ;;
-      --binary)
-        shift
-        binary=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
-        whichExists "$binary" || __throwArgument "$usage" "$binary must be in PATH: $PATH" || return $?
-        ;;
-      --argument-format)
-        format=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
-        case "$format" in curl | wget) ;; *) __throwArgument "$usage" "$argument must be curl or wget" || return $? ;; esac
-        ;;
-      --password)
-        shift
-        password="$1"
-        ;;
-      --user)
-        shift
-        user=$(usageArgumentString "$usage" "$argument (user)" "$user") || return $?
-        if [ "$user" != "${user#*:}" ]; then
-          userHasColons=true
-        fi
-        curlArgs+=(--user "$user:$password")
-        wgetArgs+=("--http-user=$user" "--http-password=$password")
-        genericArgs+=("$argument" "$1")
-        ;;
-      --agent)
-        shift
-        local agent="$1"
-        [ -n "$agent" ] || __throwArgument "$usage" "$argument must be non-blank" || return $?
-        wgetArgs+=("--user-agent=$1")
-        curlArgs+=("--user-agent" "$1")
-        genericArgs+=("$argument" "$1")
-        ;;
-      *)
-        if [ -z "$url" ]; then
-          url="$1"
-        elif [ -z "$target" ]; then
-          target="$1"
-          shift
-          break
-        else
-          # _IDENTICAL_ argumentUnknown 1
-          __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
-        fi
-        ;;
+        break
+      else
+        # _IDENTICAL_ argumentUnknown 1
+        __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
+      fi
+      ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
     shift
@@ -554,9 +554,9 @@ urlFetch() {
   [ -n "$binary" ] || __throwEnvironment "$usage" "wget or curl required" || return $?
   [ -n "$format" ] || format="$binary"
   case "$format" in
-    wget) __catchEnvironment "$usage" "$binary" -q --output-document="$target" --timeout=10 "${wgetArgs[@]+"${wgetArgs[@]}"}" "$url" "$@" || return $? ;;
-    curl) __catchEnvironment "$usage" "$binary" -L -s "$url" "$@" -o "$target" "${curlArgs[@]+"${curlArgs[@]}"}" || return $? ;;
-    *) __throwEnvironment "$usage" "No handler for binary format $(decorate value "$format") (binary is $(decorate code "$binary")) $(decorate each value "${genericArgs[@]}")" || return $? ;;
+  wget) __catchEnvironment "$usage" "$binary" -q --output-document="$target" --timeout=10 "${wgetArgs[@]+"${wgetArgs[@]}"}" "$url" "$@" || return $? ;;
+  curl) __catchEnvironment "$usage" "$binary" -L -s "$url" "$@" -o "$target" "${curlArgs[@]+"${curlArgs[@]}"}" || return $? ;;
+  *) __throwEnvironment "$usage" "No handler for binary format $(decorate value "$format") (binary is $(decorate code "$binary")) $(decorate each value "${genericArgs[@]}")" || return $? ;;
   esac
 }
 _urlFetch() {

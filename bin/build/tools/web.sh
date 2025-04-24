@@ -20,21 +20,21 @@ urlMatchesLocalFileSize() {
     local argument="$1" __index=$((__count - $# + 1))
     [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-      # _IDENTICAL_ --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      *)
-        if [ -z "$url" ]; then
-          url=$(usageArgumentString "$usage" "url" "$1") || return $?
-        elif [ -z "$file" ]; then
-          file="$(usageArgumentFile "$usage" "file" "$1")" || return $?
-        else
-          # _IDENTICAL_ argumentUnknown 1
-          __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
-        fi
-        ;;
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    *)
+      if [ -z "$url" ]; then
+        url=$(usageArgumentString "$usage" "url" "$1") || return $?
+      elif [ -z "$file" ]; then
+        file="$(usageArgumentFile "$usage" "file" "$1")" || return $?
+      else
+        # _IDENTICAL_ argumentUnknown 1
+        __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
+      fi
+      ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
     shift
@@ -65,18 +65,18 @@ urlContentLength() {
     local argument="$1" __index=$((__count - $# + 1))
     [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-      # _IDENTICAL_ --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      *)
-        url=$(usageArgumentURL "$usage" "url" "$1")
-        tempFile=$(fileTemporaryName "$usage") || return $?
-        __catchEnvironment "$usage" curl -s -I "$url" >"$tempFile" || _clean $? "$tempFile" || return $?
-        remoteSize=$(grep -q -i 'Content-Length' "$tempFile" | awk '{ print $2 }') || __throwEnvironment "$usage" "Remote URL did not return Content-Length" || return $?
-        printf "%d\n" $((remoteSize + 0))
-        ;;
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    *)
+      url=$(usageArgumentURL "$usage" "url" "$1")
+      tempFile=$(fileTemporaryName "$usage") || return $?
+      __catchEnvironment "$usage" curl -s -I "$url" >"$tempFile" || _clean $? "$tempFile" || return $?
+      remoteSize=$(grep -q -i 'Content-Length' "$tempFile" | awk '{ print $2 }') || __throwEnvironment "$usage" "Remote URL did not return Content-Length" || return $?
+      printf "%d\n" $((remoteSize + 0))
+      ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
     shift
@@ -103,26 +103,26 @@ hostIPList() {
     local argument="$1" __index=$((__count - $# + 1))
     [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-      # _IDENTICAL_ --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      --install)
-        __catchEnvironment "$usage" packageWhich ifconfig net-tools || return $?
-        ;;
-      *)
-        # _IDENTICAL_ argumentUnknown 1
-        __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
-        ;;
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    --install)
+      __catchEnvironment "$usage" packageWhich ifconfig net-tools || return $?
+      ;;
+    *)
+      # _IDENTICAL_ argumentUnknown 1
+      __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
+      ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
     shift
   done
   case "$(lowercase "$OSTYPE")" in
-    linux) ifconfig | grep 'inet addr:' | cut -f 2 -d : | trimSpace | cut -f 1 -d ' ' ;;
-    linux-gnu | darwin* | freebsd*) ifconfig | grep 'inet ' | trimSpace | cut -f 2 -d ' ' ;;
-    *) __throwEnvironment "$usage" "hostIPList Unsupported OSTYPE \"$OSTYPE\"" || return $? ;;
+  linux) ifconfig | grep 'inet addr:' | cut -f 2 -d : | trimSpace | cut -f 1 -d ' ' ;;
+  linux-gnu | darwin* | freebsd*) ifconfig | grep 'inet ' | trimSpace | cut -f 2 -d ' ' ;;
+  *) __throwEnvironment "$usage" "hostIPList Unsupported OSTYPE \"$OSTYPE\"" || return $? ;;
   esac
 }
 _hostIPList() {
@@ -161,15 +161,15 @@ websiteScrape() {
     local argument="$1" __index=$((__count - $# + 1))
     [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-      # _IDENTICAL_ --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      *)
-        url=$(usageArgumentURL "$usage" "url" "$1") || return $?
-        break
-        ;;
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    *)
+      url=$(usageArgumentURL "$usage" "url" "$1") || return $?
+      break
+      ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
     shift

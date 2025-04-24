@@ -78,65 +78,65 @@ bashPrompt() {
     local argument="$1" __index=$((__count - $# + 1))
     [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-      # _IDENTICAL_ --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      --success)
-        shift
-        successPrompt=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
-        ;;
-      --failure)
-        shift
-        failurePrompt=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
-        ;;
-      --label)
-        shift
-        label="$(usageArgumentEmptyString "$usage" "$argument" "${1-}")" || return $?
-        [ -z "$label" ] || label="$label "
-        ;;
-      --list)
-        listFlag=true
-        ;;
-      --format)
-        shift
-        promptFormat=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
-        ;;
-      --remove)
-        shift
-        local module
-        module=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
-        __bashPromptRemove "$usage" "$module" || return $?
-        ;;
-      --skip-terminal)
-        skipTerminal=true
-        ;;
-      --reset)
-        resetFlag=true
-        ;;
-      --colors)
-        shift
-        colorsText="$(usageArgumentString "$usage" "$argument" "${1-}")" || return $?
-        local colors
-        IFS=":" read -r -a colors <<<"$colorsText" || :
-        [ "${#colors[@]}" -ge 2 ] || __throwArgument "$usage" "$argument should be min 2 colors separated by a colon: $(decorate code "$colorsText")" || return $?
-        [ "${#colors[@]}" -le 5 ] || __throwArgument "$usage" "$argument should be max 5 colors separated by a colon: $(decorate code "$colorsText")" || return $?
-        ;;
-      --first | --last | --debug)
-        addArguments+=("$argument")
-        ;;
-      --order)
-        shift
-        order=$(usageArgumentUnsignedInteger "$usage" "$argument" "${1-}") || return $?
-        addArguments+=("$argument" "$order")
-        ;;
-      --verbose)
-        verbose=true
-        ;;
-      *)
-        addArguments+=("$argument")
-        ;;
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    --success)
+      shift
+      successPrompt=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
+      ;;
+    --failure)
+      shift
+      failurePrompt=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
+      ;;
+    --label)
+      shift
+      label="$(usageArgumentEmptyString "$usage" "$argument" "${1-}")" || return $?
+      [ -z "$label" ] || label="$label "
+      ;;
+    --list)
+      listFlag=true
+      ;;
+    --format)
+      shift
+      promptFormat=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
+      ;;
+    --remove)
+      shift
+      local module
+      module=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
+      __bashPromptRemove "$usage" "$module" || return $?
+      ;;
+    --skip-terminal)
+      skipTerminal=true
+      ;;
+    --reset)
+      resetFlag=true
+      ;;
+    --colors)
+      shift
+      colorsText="$(usageArgumentString "$usage" "$argument" "${1-}")" || return $?
+      local colors
+      IFS=":" read -r -a colors <<<"$colorsText" || :
+      [ "${#colors[@]}" -ge 2 ] || __throwArgument "$usage" "$argument should be min 2 colors separated by a colon: $(decorate code "$colorsText")" || return $?
+      [ "${#colors[@]}" -le 5 ] || __throwArgument "$usage" "$argument should be max 5 colors separated by a colon: $(decorate code "$colorsText")" || return $?
+      ;;
+    --first | --last | --debug)
+      addArguments+=("$argument")
+      ;;
+    --order)
+      shift
+      order=$(usageArgumentUnsignedInteger "$usage" "$argument" "${1-}") || return $?
+      addArguments+=("$argument" "$order")
+      ;;
+    --verbose)
+      verbose=true
+      ;;
+    *)
+      addArguments+=("$argument")
+      ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
     shift
@@ -253,14 +253,14 @@ bashPromptMarkers() {
     local argument="$1" __index=$((__count - $# + 1))
     [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-      # _IDENTICAL_ --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      *)
-        markers+=("$1")
-        ;;
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    *)
+      markers+=("$1")
+      ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
     shift
@@ -285,10 +285,10 @@ bashPromptColorScheme() {
   __help "$usage" "$@" || return 0
   exitColor="bold-green:bold-red"
   case "${1-}" in
-    forest) colors="bold-cyan:bold-magenta:green:orange:code" ;;
-    light) colors="$exitColor:magenta:blue:bold-black" ;;
-    dark) colors="$exitColor:magenta:blue:bold-white" ;;
-    *) colors="$exitColor:magenta:blue:bold-black" ;;
+  forest) colors="bold-cyan:bold-magenta:green:orange:code" ;;
+  light) colors="$exitColor:magenta:blue:bold-black" ;;
+  dark) colors="$exitColor:magenta:blue:bold-white" ;;
+  *) colors="$exitColor:magenta:blue:bold-black" ;;
   esac
   printf -- "%s" "$colors"
 }
@@ -329,7 +329,7 @@ __bashPromptList() {
 __bashPromptAdd() {
   local usage="$1" && shift
 
-  local order=5  found
+  local order=5 found
 
   __bashPromptSanity
 
@@ -339,26 +339,26 @@ __bashPromptAdd() {
     local argument="$1" __index=$((__count - $# + 1))
     [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-      --order)
-        shift
-        order=$(usageArgumentUnsignedInteger "$usage" "$argument" "${1-}") || return $?
-        [ "$order" -lt 10 ] || order=9
-        ;;
-      --first)
-        order=0
-        ;;
-      --last)
-        order=9
-        ;;
-      *)
-        local module modules=() found=false
-        export __BASH_PROMPT_MODULES
-        for module in "${__BASH_PROMPT_MODULES[@]+"${__BASH_PROMPT_MODULES[@]}"}"; do
-          [ "${argument}" = "${module#[0-9]:}" ] ||  modules+=("$module")
-        done
-        modules+=("$order:$argument")
-        __bashPromptModulesSave "${modules[@]}"
-        ;;
+    --order)
+      shift
+      order=$(usageArgumentUnsignedInteger "$usage" "$argument" "${1-}") || return $?
+      [ "$order" -lt 10 ] || order=9
+      ;;
+    --first)
+      order=0
+      ;;
+    --last)
+      order=9
+      ;;
+    *)
+      local module modules=() found=false
+      export __BASH_PROMPT_MODULES
+      for module in "${__BASH_PROMPT_MODULES[@]+"${__BASH_PROMPT_MODULES[@]}"}"; do
+        [ "${argument}" = "${module#[0-9]:}" ] || modules+=("$module")
+      done
+      modules+=("$order:$argument")
+      __bashPromptModulesSave "${modules[@]}"
+      ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
     shift
@@ -394,7 +394,6 @@ __bashPromptRemove() {
   fi
   __BASH_PROMPT_MODULES=("${modules[@]+"${modules[@]}"}")
 }
-
 
 #
 # Given a list of color names, generate the color codes in a :-separated list

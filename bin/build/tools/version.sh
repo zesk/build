@@ -56,18 +56,18 @@ releaseNotes() {
     local argument="$1" __index=$((__count - $# + 1))
     [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-      # _IDENTICAL_ --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      *)
-        if [ -n "$version" ]; then
-          decorate error "Version $version already specified: $argument"
-        else
-          version="$argument"
-        fi
-        ;;
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    *)
+      if [ -n "$version" ]; then
+        decorate error "Version $version already specified: $argument"
+      else
+        version="$argument"
+      fi
+      ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
     shift
@@ -108,26 +108,26 @@ nextMinorVersion() {
     local argument="$1" __index=$((__count - $# + 1))
     [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-      # _IDENTICAL_ --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      *)
-        local last prefix
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    *)
+      local last prefix
 
-        last="${1##*.}"
-        __catchArgument "$usage" isInteger "$last" || return $?
-        prefix="${1%.*}"
-        prefix="${prefix#v*}"
-        if [ "$prefix" != "${1-}" ]; then
-          prefix="$prefix."
-        else
-          prefix=
-        fi
-        last=$((last + 1))
-        printf "%s%s" "$prefix" "$last"
-        ;;
+      last="${1##*.}"
+      __catchArgument "$usage" isInteger "$last" || return $?
+      prefix="${1%.*}"
+      prefix="${prefix#v*}"
+      if [ "$prefix" != "${1-}" ]; then
+        prefix="$prefix."
+      else
+        prefix=
+      fi
+      last=$((last + 1))
+      printf "%s%s" "$prefix" "$last"
+      ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
     shift
@@ -171,24 +171,24 @@ newRelease() {
     local argument="$1" __index=$((__count - $# + 1))
     [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-      # _IDENTICAL_ --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      --non-interactive)
-        isInteractive=false
-        decorate warning "Non-interactive mode set"
-        ;;
-      *)
-        if [ -n "$newVersion" ]; then
-          # _IDENTICAL_ argumentUnknown 1
-          __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
-        fi
-        newVersion="${argument#v}"
-        isVersion "$newVersion" || __throwArgument "$usage" "$argument is not a version" || return $?
-        newVersion="v$newVersion"
-        ;;
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    --non-interactive)
+      isInteractive=false
+      decorate warning "Non-interactive mode set"
+      ;;
+    *)
+      if [ -n "$newVersion" ]; then
+        # _IDENTICAL_ argumentUnknown 1
+        __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
+      fi
+      newVersion="${argument#v}"
+      isVersion "$newVersion" || __throwArgument "$usage" "$argument is not a version" || return $?
+      newVersion="v$newVersion"
+      ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
     shift

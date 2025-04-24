@@ -54,29 +54,29 @@ sshAddKnownHost() {
     local argument="$1" __index=$((__count - $# + 1))
     [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-      # _IDENTICAL_ --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      --verbose)
-        verbose=true
-        verboseArgs=("-v")
-        ;;
-      *)
-        local remoteHost
-        remoteHost="$1"
-        if grep -q "$remoteHost" "$sshKnown"; then
-          ! $verbose || decorate info "Host $remoteHost already known"
-        elif ssh-keyscan "${verboseArgs[@]+"${verboseArgs[@]+}"}" "$remoteHost" >"$output" 2>&1; then
-          cat "$output" >>"$sshKnown"
-          ! $verbose || decorate success "Added $remoteHost to $sshKnown"
-        else
-          exitCode=$?
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    --verbose)
+      verbose=true
+      verboseArgs=("-v")
+      ;;
+    *)
+      local remoteHost
+      remoteHost="$1"
+      if grep -q "$remoteHost" "$sshKnown"; then
+        ! $verbose || decorate info "Host $remoteHost already known"
+      elif ssh-keyscan "${verboseArgs[@]+"${verboseArgs[@]+}"}" "$remoteHost" >"$output" 2>&1; then
+        cat "$output" >>"$sshKnown"
+        ! $verbose || decorate success "Added $remoteHost to $sshKnown"
+      else
+        exitCode=$?
 
-          printf "%s: %s\nOUTPUT:\n%s\nEND OUTPUT\n" "$(decorate error "Failed to add $remoteHost to $sshKnown")" "$(decorate code "$exitCode")" "$(decorate code <"$output" | decorate wrap ">> ")" 1>&2
-        fi
-        ;;
+        printf "%s: %s\nOUTPUT:\n%s\nEND OUTPUT\n" "$(decorate error "Failed to add $remoteHost to $sshKnown")" "$(decorate code "$exitCode")" "$(decorate code <"$output" | decorate wrap ">> ")" 1>&2
+      fi
+      ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
     shift
@@ -116,28 +116,28 @@ sshSetup() {
     local argument="$1" __index=$((__count - $# + 1))
     [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-      # _IDENTICAL_ --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      --type)
-        shift
-        keyType="$(usageArgumentString "$usage" "$argument" "${1-}")" || return $?
-        case "$keyType" in ed25519 | rsa | dsa) ;; *) __throwArgument "$usage" "Key type $1 is not known: ed25519 | rsa | dsa" || return $? ;; esac
-        ;;
-      --bits)
-        shift
-        minBits=512
-        keyBits=$(usageArgumentPositiveInteger "$usage" "$argument" "${1-}") || return $?
-        [ "$keyBits" -ge "$minBits" ] || __throwArgument "$usage" "Key bits must be at least $minBits: $keyBits" || return $?
-        ;;
-      --force)
-        flagForce=true
-        ;;
-      *)
-        servers+=("$arg")
-        ;;
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    --type)
+      shift
+      keyType="$(usageArgumentString "$usage" "$argument" "${1-}")" || return $?
+      case "$keyType" in ed25519 | rsa | dsa) ;; *) __throwArgument "$usage" "Key type $1 is not known: ed25519 | rsa | dsa" || return $? ;; esac
+      ;;
+    --bits)
+      shift
+      minBits=512
+      keyBits=$(usageArgumentPositiveInteger "$usage" "$argument" "${1-}") || return $?
+      [ "$keyBits" -ge "$minBits" ] || __throwArgument "$usage" "Key bits must be at least $minBits: $keyBits" || return $?
+      ;;
+    --force)
+      flagForce=true
+      ;;
+    *)
+      servers+=("$arg")
+      ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
     shift

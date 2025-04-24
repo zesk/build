@@ -140,8 +140,8 @@ _bashDebugTrap() {
     __BUILD_BASH_STEP_CONTROL=()
   fi
   case "$BASH_COMMAND" in
-    bashDebuggerDisable | "trap - DEBUG" | '"$@"') return 0 ;;
-    *) ;;
+  bashDebuggerDisable | "trap - DEBUG" | '"$@"') return 0 ;;
+  *) ;;
   esac
 
   local __where __cmd __item __value __rightArrow="➡️"
@@ -168,43 +168,43 @@ _bashDebugTrap() {
     local __aa=("$__cmd")
     __exitCode=0
     case "$__cmd" in
-      "." | " " | "" | $'\r')
-        __cmd="${__BUILD_BASH_DEBUG_LAST:0:1}"
-        if [ -z "$__cmd" ]; then
-          __error="$(decorate error "No last command")"
-          __exitCode=1
-          __aa=()
-        else
-          # Repeat last command
-          __aa=("${__BUILD_BASH_DEBUG_LAST:0:1}")
-          [ ${#__BUILD_BASH_DEBUG_LAST} -eq 1 ] || __aa+=("${__BUILD_BASH_DEBUG_LAST:1}")
-        fi
-        ;;
+    "." | " " | "" | $'\r')
+      __cmd="${__BUILD_BASH_DEBUG_LAST:0:1}"
+      if [ -z "$__cmd" ]; then
+        __error="$(decorate error "No last command")"
+        __exitCode=1
+        __aa=()
+      else
+        # Repeat last command
+        __aa=("${__BUILD_BASH_DEBUG_LAST:0:1}")
+        [ ${#__BUILD_BASH_DEBUG_LAST} -eq 1 ] || __aa+=("${__BUILD_BASH_DEBUG_LAST:1}")
+      fi
+      ;;
     esac
     statusMessage printf -- "Execute: $(decorate code "$__cmd")"
     [ "${#__aa[@]}" -eq 0 ] || __bashDebugExecuteCommand "${__aa[@]}" || __exitCode=$?
     case $__exitCode in
-      0)
-        # Continue code execution
-        __error=""
-        __exitCode=0
-        break
-        ;;
-      1)
-        # Read another debugger command
-        ;;
-      2)
-        # Skip next command
-        __error=""
-        __exitCode=1
-        break
-        ;;
-      3)
-        # Debugger was terminated
-        # Restore Application FDs
-        exec 0<&30 1>&31 2>&32
-        return 0
-        ;;
+    0)
+      # Continue code execution
+      __error=""
+      __exitCode=0
+      break
+      ;;
+    1)
+      # Read another debugger command
+      ;;
+    2)
+      # Skip next command
+      __error=""
+      __exitCode=1
+      break
+      ;;
+    3)
+      # Debugger was terminated
+      # Restore Application FDs
+      exec 0<&30 1>&31 2>&32
+      return 0
+      ;;
     esac
     if [ -n "$__error" ]; then
       __error="${__error% } "
@@ -229,68 +229,68 @@ __bashDebugExecuteCommand() {
   # Uses calling scope
   __error=""
   case "$__cmd" in
-    "*")
-      statusMessage printf -- ""
-      if bashDebugInterruptFile 2>/dev/null; then
-        statusMessage --last decorate info "$(decorate file "$HOME/.interrupt") will be created on interrupt"
-      else
-        statusMessage --last decorate notice "Interrupt handler already installed."
-      fi
-      return 1
-      ;;
-    "j")
-      decorate warning "Skipping $BASH_COMMAND"
-      __BUILD_BASH_DEBUG_LAST="jump"
-      return 2
-      ;;
-    "d" | "i")
-      statusMessage printf -- ""
-      __BUILD_BASH_DEBUG_LAST="into"
-      return 0
-      ;;
-    "k")
-      statusMessage --last decorate info "Call stack:"
-      debuggingStack
-      return 1
-      ;;
-    "s" | "n")
-      __bashDebugCommandStep
-      statusMessage printf -- ""
-      __BUILD_BASH_DEBUG_LAST="step"
-      return 0
-      ;;
-    "?" | "h")
-      _bashDebug 0
-      return 1
-      ;;
-    "u")
-      statusMessage printf -- ""
-      __bashDebugCommandUnwatch
-      return 1
-      ;;
-    "w")
-      statusMessage printf -- ""
-      __bashDebugCommandWatch
-      return 1
-      ;;
-    "q")
-      statusMessage --last decorate notice "Debugger control ended."
-      bashDebuggerDisable
-      return 3
-      ;;
-    "!")
-      statusMessage printf -- ""
-      if [ -n "$__arg" ]; then
-        __bashDebugCommandEvaluate "$__arg"
-      else
-        __bashDebugCommandEvaluateLoop
-      fi
-      return 1
-      ;;
-    *)
-      __error="[$(decorate error " $__cmd ")]($(decorate value "$(characterToInteger "$__cmd")")) No such command"
-      return 1
-      ;;
+  "*")
+    statusMessage printf -- ""
+    if bashDebugInterruptFile 2>/dev/null; then
+      statusMessage --last decorate info "$(decorate file "$HOME/.interrupt") will be created on interrupt"
+    else
+      statusMessage --last decorate notice "Interrupt handler already installed."
+    fi
+    return 1
+    ;;
+  "j")
+    decorate warning "Skipping $BASH_COMMAND"
+    __BUILD_BASH_DEBUG_LAST="jump"
+    return 2
+    ;;
+  "d" | "i")
+    statusMessage printf -- ""
+    __BUILD_BASH_DEBUG_LAST="into"
+    return 0
+    ;;
+  "k")
+    statusMessage --last decorate info "Call stack:"
+    debuggingStack
+    return 1
+    ;;
+  "s" | "n")
+    __bashDebugCommandStep
+    statusMessage printf -- ""
+    __BUILD_BASH_DEBUG_LAST="step"
+    return 0
+    ;;
+  "?" | "h")
+    _bashDebug 0
+    return 1
+    ;;
+  "u")
+    statusMessage printf -- ""
+    __bashDebugCommandUnwatch
+    return 1
+    ;;
+  "w")
+    statusMessage printf -- ""
+    __bashDebugCommandWatch
+    return 1
+    ;;
+  "q")
+    statusMessage --last decorate notice "Debugger control ended."
+    bashDebuggerDisable
+    return 3
+    ;;
+  "!")
+    statusMessage printf -- ""
+    if [ -n "$__arg" ]; then
+      __bashDebugCommandEvaluate "$__arg"
+    else
+      __bashDebugCommandEvaluateLoop
+    fi
+    return 1
+    ;;
+  *)
+    __error="[$(decorate error " $__cmd ")]($(decorate value "$(characterToInteger "$__cmd")")) No such command"
+    return 1
+    ;;
   esac
 }
 

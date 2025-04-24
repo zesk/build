@@ -2,7 +2,8 @@
 
 Zesk Build has some documentation tools which can be used in any project to document your `bash` code simply.
 
-To add automatic usage for a function, the pattern to use is to add a comment before the function as shown here and add a usage handler which is your function name prefixed with a single underscore (`_`):
+To add automatic usage for a function, the pattern to use is to add a comment before the function as shown here and add
+a usage handler which is your function name prefixed with a single underscore (`_`):
 
     # Lay an egg
     layAnEgg() {
@@ -20,14 +21,15 @@ To add `--help` support for simple functions, use the `__help` function:
 
     [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return 0
 
-The above will add `myFunction --help` support for simple functions as well as error handling. In the above example, when the 
+The above will add `myFunction --help` support for simple functions as well as error handling. In the above example,
+when the
 
     No hay
     
     Usage: layAnEgg
     
     Lay an egg
-    
+
 You can add arguments, exit codes, summary lines, or even rename the function to something else in the documentation:
 
     # fn: makeCryptoThing

@@ -13,7 +13,8 @@ These utilities can be accessed via the shell in the PATH:
 They are intended to be standalone tools useful for a variety of installation and package management functions:
 
 - [`cannon.sh`](./text.md#cannon) - Same as [`cannon`](./text.md#cannon)
-- [`chmod-sh.sh`](./os.md#makeShellFilesExecutable) - Same as [`makeShellFilesExecutable`](./os.md#makeShellFilesExecutable)
+- [`chmod-sh.sh`](./os.md#makeShellFilesExecutable) - Same as [
+  `makeShellFilesExecutable`](./os.md#makeShellFilesExecutable)
 - [`identical-check.sh`](./identical.md#identicalCheck) - Same as [`identicalCheck`](./identical.md#identicalCheck)
 - [`map.sh`](./text.md#mapEnvironment) - Same as [`mapEnvironment`](./text.md#mapEnvironment)
 - [`new-release.sh`](./version.md#newRelease) - Same as [`newRelease`](./version.md#newRelease)
@@ -41,6 +42,7 @@ Modify the last line of this file when installing at a different project depth:
 
     __installPackageConfiguration ../.. "$@"
 
-The `../..` is the relative path from the script to the project root directory. - [function {fn}]({documentationPath}) - [{summary}]({sourceLink}) will do this for you.
+The `../..` is the relative path from the script to the project root
+directory. - [function {fn}]({documentationPath}) - [{summary}]({sourceLink}) will do this for you.
 
 {__installBinBuildURL}

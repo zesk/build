@@ -2,11 +2,14 @@
 
 It makes sense to follow various patterns in our `bash` coding.
 
-Code here has been written by evolution so older code shows signs of older patterns; know that the intent is to get everything to the same standard.
+Code here has been written by evolution so older code shows signs of older patterns; know that the intent is to get
+everything to the same standard.
 
 ## Use the `example.sh` and `IDENTICAL` tags
 
-Our `example.sh` code is kept up to date and is literally copied regularly for new functions and the `IDENTICAL` (and `_IDENTICAL_`) functionality helps to keep code synchronized. Use these patterns found in the `identical` directories in your code as they have been adapted over time.
+Our `example.sh` code is kept up to date and is literally copied regularly for new functions and the `IDENTICAL` (and
+`_IDENTICAL_`) functionality helps to keep code synchronized. Use these patterns found in the `identical` directories in
+your code as they have been adapted over time.
 
 ## Validate arguments
 
@@ -30,21 +33,28 @@ For internal functions (usually prefixed with one or more underscores `_`)
 
 ## `pre-commit` Filters
 
-Run `pre-commit` filters on all code which formats and cleans it up and checks for errors. Every project should have this TBH. You can add this to any project here by doing:
+Run `pre-commit` filters on all code which formats and cleans it up and checks for errors. Every project should have
+this TBH. You can add this to any project here by doing:
 
     `gitInstallHooks`
 
-And then add your own `bin/hooks/pre-commit.sh` to run anything you want on the incoming files. See [git tools](../tools/git.md) and specifically [`gitPreCommitHasExtension`](../tools/git.md#gitPreCommitHasExtension) amd [`gitPreCommitListExtension`](../tools/git.md#gitPreCommitListExtension) to process files (this has been already called when `pre-commit`
+And then add your own `bin/hooks/pre-commit.sh` to run anything you want on the incoming files.
+See [git tools](../tools/git.md) and specifically [`gitPreCommitHasExtension`](../tools/git.md#gitPreCommitHasExtension)
+amd [`gitPreCommitListExtension`](../tools/git.md#gitPreCommitListExtension) to process files (this has been already
+called when `pre-commit`
 is run).
 
 ## `local` stays local
 
-Upon first using `bash` it made sense to put `local` a the top of a function to have them in one place. Unfortunately this leads to moving declarations far away from usages at times and so we have shifted to doing `local` declarations at the scope needed as well as as near to its initial usage as possible. This leads to easier refactorings and better
+Upon first using `bash` it made sense to put `local` a the top of a function to have them in one place. Unfortunately
+this leads to moving declarations far away from usages at times and so we have shifted to doing `local` declarations at
+the scope needed as well as as near to its initial usage as possible. This leads to easier refactorings and better
 readability all around.
 
 ## Avoid depending on `set -eou pipefail`
 
-Again, this is good for testing scripts but should be avoided in production as it does not work as a good method to catch errors; code should catch errors itself using the `|| return $?` structures you see everywhere.
+Again, this is good for testing scripts but should be avoided in production as it does not work as a good method to
+catch errors; code should catch errors itself using the `|| return $?` structures you see everywhere.
 
 In short - good for debugging but scripts internally should NOT depend on this behavior unless they set it and unset it.
 
@@ -54,13 +64,16 @@ So much so there is a `pre-commit` filter set up to avoid doing this. (For `.sh`
 
 ## Avoid exit like the plague
 
-`exit` in bash functions is not recommended largely because it can exit the shell or another program inadvertently when `exit` is called incorrectly or a file is `source`d when it should be run as a subprocess.
+`exit` in bash functions is not recommended largely because it can exit the shell or another program inadvertently when
+`exit` is called incorrectly or a file is `source`d when it should be run as a subprocess.
 
-The use of `return` to pass exit status is always preferred; and when `exit` is required the addition of a function to wrap it (see above) can avoid `exit` again.
+The use of `return` to pass exit status is always preferred; and when `exit` is required the addition of a function to
+wrap it (see above) can avoid `exit` again.
 
 ## Check *all* results
 
-Even commands piped to a file - if the file descriptor becomes invalid or *gasp* the disk becomes full – it will fail. The sooner it gets handled the cleaner things are.
+Even commands piped to a file - if the file descriptor becomes invalid or *gasp* the disk becomes full – it will fail.
+The sooner it gets handled the cleaner things are.
 
 So just do:
 
@@ -77,7 +90,8 @@ or
 
 ## Clean up after ourselves, `||` statements to fail are more succinct
 
-Use `_clean` and `_undo` to back out of functions. If you create temp files, create them as close as possible to needing them and make sure to delete them on return.
+Use `_clean` and `_undo` to back out of functions. If you create temp files, create them as close as possible to needing
+them and make sure to delete them on return.
 
 Commands typically are:
 
@@ -104,7 +118,8 @@ Pattern:
       usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
     }
 
-Typically, any defined function `deployApplication` has a mirror underscore-prefixed `usageDocument` function used for error handling:
+Typically, any defined function `deployApplication` has a mirror underscore-prefixed `usageDocument` function used for
+error handling:
 
     deployApplication() {
         ...
@@ -118,11 +133,13 @@ The function signature is identical:
 
     _usageFunction exitCode [ message ... ]
 
-And it **ALWAYS** returns the `exitCode` passed into it, so you can guaranteed a non-zero exit code will fail and this pattern will always work:
+And it **ALWAYS** returns the `exitCode` passed into it, so you can guaranteed a non-zero exit code will fail and this
+pattern will always work:
 
     _usageFunction "$errorEnvironment" "S N A F U" || return $?
 
-The above code **MUST always** return `$errorEnvironment` - coding your usage function in any other way will cause problems.
+The above code **MUST always** return `$errorEnvironment` - coding your usage function in any other way will cause
+problems.
 
 ## Standard error codes
 
@@ -131,7 +148,8 @@ Two types of errors prevail in `Zesk Build` and those are:
 - **Environment errors** - anything having to do with the system environment, file system, or resources in the system
 - **Argument errors** - anything having to do with bash functions being called incorrectly or with the wrong parameters
 
-Additional errors typically extend these two types with more specific information or specific error codes for specific applications.
+Additional errors typically extend these two types with more specific information or specific error codes for specific
+applications.
 
 ### Environment errors (Exit Code `1`)
 
@@ -184,25 +202,34 @@ Usage:
 
 - [`usageArgumentDirectory`](./tools/usage.md#usageArgumentDirectory) - Argument must be a valid directory
 - [`usageArgumentFile`](./tools/usage.md#usageArgumentFile) - Argument must be a valid file
-- [`usageArgumentFileDirectory`](./tools/usage.md#usageArgumentFileDirectory) - Argument must be a file which may or may not exist in a directory which exists
+- [`usageArgumentFileDirectory`](./tools/usage.md#usageArgumentFileDirectory) - Argument must be a file which may or may
+  not exist in a directory which exists
 - [`usageArgumentDirectory`](./tools/usage.md#usageArgumentDirectory) - Argument must be a directory
-- [`usageArgumentRealDirectory`](./tools/usage.md#usageArgumentRealDirectory) - Argument must be a directory and converted to the real path
+- [`usageArgumentRealDirectory`](./tools/usage.md#usageArgumentRealDirectory) - Argument must be a directory and
+  converted to the real path
 - [`usageArgumentFile`](./tools/usage.md#usageArgumentFile) - Argument must be a valid file
-- [`usageArgumentFileDirectory`](./tools/usage.md#usageArgumentFileDirectory) - Argument must be a file path which is a directory that exists
+- [`usageArgumentFileDirectory`](./tools/usage.md#usageArgumentFileDirectory) - Argument must be a file path which is a
+  directory that exists
 - [`usageArgumentInteger`](./tools/usage.md#usageArgumentInteger) - Argument must be an integer
-- [`usageArgumentPositiveInteger`](./tools/usage.md#usageArgumentPositiveInteger) - Argument must be a positive integer (1 or greater)
-- [`usageArgumentUnsignedInteger`](./tools/usage.md#usageArgumentUnsignedInteger) - Argument must be an unsigned integer (0 or greater)
-- [`usageArgumentLoadEnvironmentFile`](./tools/usage.md#usageArgumentLoadEnvironmentFile) - Argument must be an environment file which is also loaded immediately.
+- [`usageArgumentPositiveInteger`](./tools/usage.md#usageArgumentPositiveInteger) - Argument must be a positive
+  integer (1 or greater)
+- [`usageArgumentUnsignedInteger`](./tools/usage.md#usageArgumentUnsignedInteger) - Argument must be an unsigned
+  integer (0 or greater)
+- [`usageArgumentLoadEnvironmentFile`](./tools/usage.md#usageArgumentLoadEnvironmentFile) - Argument must be an
+  environment file which is also loaded immediately.
 - [`usageArgumentMissing`](./tools/usage.md#usageArgumentMissing) - Fails with an argument is missing error
 - [`usageArgumentString`](./tools/usage.md#usageArgumentString) - Argument must be a non-blank string
 - [`usageArgumentEmptyString`](./tools/usage.md#usageArgumentEmptyString) - Argument may be anything
 - [`usageArgumentBoolean`](./tools/usage.md#usageArgumentBoolean) - Argument must be a boolean value (`true` or `false`)
-- [`usageArgumentEnvironmentVariable`](./tools/usage.md#usageArgumentEnvironmentVariable) - Argument must be a valid environment variable name
+- [`usageArgumentEnvironmentVariable`](./tools/usage.md#usageArgumentEnvironmentVariable) - Argument must be a valid
+  environment variable name
 - [`usageArgumentURL`](./tools/usage.md#usageArgumentURL) - Argument must be a valid URL
 - [`usageArgumentUnknown`](./tools/usage.md#usageArgumentUnknown) - Fails with an unknown argument error
-- [`usageArgumentCallable`](./tools/usage.md#usageArgumentCallable) - Argument must be callable (a function or executable)
+- [`usageArgumentCallable`](./tools/usage.md#usageArgumentCallable) - Argument must be callable (a function or
+  executable)
 - [`usageArgumentFunction`](./tools/usage.md#usageArgumentFunction) - Argument must be a function
-- [`usageArgumentExecutable`](./tools/usage.md#usageArgumentExecutable) - Argument must be a binary which can be executed
+- [`usageArgumentExecutable`](./tools/usage.md#usageArgumentExecutable) - Argument must be a binary which can be
+  executed
 
 ### See
 

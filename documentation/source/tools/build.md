@@ -33,7 +33,8 @@
 
 These tools are if you wish to write your own installer for your own software in `bash` using **Zesk Build**.
 
-Copy `install-bin-build.sh` and rename, keep up to date in your own project with `bin/build/identical-repair.sh --internal`.
+Copy `install-bin-build.sh` and rename, keep up to date in your own project with
+`bin/build/identical-repair.sh --internal`.
 
 {_installRemotePackage}
 {installInstallBinary}

@@ -6,8 +6,10 @@
 - `BUILD_VERSION_SUFFIX` - Default suffix used in `gitTagVersion`
 - `BUILD_MAXIMUM_TAGS_PER_VERSION` - Integer. Default 1000. Affects `git-tag-version.sh`
 
-- `BUILD_DEBUG` - Enable debugging globally in the build scripts. Set to a comma (`,`) delimited list string to enable specific debugging, or `true` for ALL debugging, `false` (or blank) for NO debugging.
-- `BUILD_COLORS` - Force (`export BUILD_COLORS=true` or disable `export BUILD_COLORS=false` build and console colors). See `colors.sh`.
+- `BUILD_DEBUG` - Enable debugging globally in the build scripts. Set to a comma (`,`) delimited list string to enable
+  specific debugging, or `true` for ALL debugging, `false` (or blank) for NO debugging.
+- `BUILD_COLORS` - Force (`export BUILD_COLORS=true` or disable `export BUILD_COLORS=false` build and console colors).
+  See `colors.sh`.
 - `CI` - If this value is non-blank, then console `statusMessage`s are just output normally.
 
 # Git
@@ -16,8 +18,10 @@
 
 # Tool versioning
 
-- `BUILD_COMPOSER_VERSION` - String. Default `latest`. Version of composer to use for building vendor directory. ({See:phpComposer})
-- `BUILD_NPM_VERSION` - String. Default `latest`. Version of npm to install using native `npm` binary. (Affects [`npm.sh`](npm.md))
+- `BUILD_COMPOSER_VERSION` - String. Default `latest`. Version of composer to use for building vendor directory. ({See:
+  phpComposer})
+- `BUILD_NPM_VERSION` - String. Default `latest`. Version of npm to install using native `npm` binary. (Affects [
+  `npm.sh`](npm.md))
 - `HOSTTYPE` - String. Affects which version of the AWS cli is installed (arm64 or amd64) (See `aws.sh`). OS-specific.
 
 # GitHub Releases
@@ -50,5 +54,6 @@ Tools: `awsIPAccess`
 
 # Generated
 
-- `APPLICATION_ID` - Code checksum representing the unique version of the application code (git commit SHA or equivalent)
+- `APPLICATION_ID` - Code checksum representing the unique version of the application code (git commit SHA or
+  equivalent)
 - `APPLICATION_TAG` - Tag of deployed code (longer version, if not supplied same as `APPLICATION_ID`)

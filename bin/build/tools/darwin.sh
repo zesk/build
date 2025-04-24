@@ -51,17 +51,17 @@ darwinSoundInstall() {
     local argument="$1" __index=$((__count - $# + 1))
     [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-      # _IDENTICAL_ --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      --create)
-        createFlag=true
-        ;;
-      *)
-        soundFiles+=("$(usageArgumentFile "$usage" "soundFile" "${1-}")") || return $?
-        ;;
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    --create)
+      createFlag=true
+      ;;
+    *)
+      soundFiles+=("$(usageArgumentFile "$usage" "soundFile" "${1-}")") || return $?
+      ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
     shift
@@ -115,29 +115,29 @@ darwinNotification() {
     local argument="$1" __index=$((__count - $# + 1))
     [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-      # _IDENTICAL_ --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      --title)
-        shift
-        title="$(usageArgumentString "$usage" "$argument" "${1-}")" || return $?
-        ;;
-      --sound)
-        shift
-        soundName="$(usageArgumentString "$usage" "$argument" "${1-}")" || return $?
-        darwinSoundValid "$soundName" || __throwArgument "$usage" "Sound name $(decorate value "$soundName") not valid, ignoring: $(darwinSoundNames)" || :
-        ;;
-      --)
-        shift
-        message=("$@")
-        set --
-        break
-        ;;
-      *)
-        message+=("$1")
-        ;;
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    --title)
+      shift
+      title="$(usageArgumentString "$usage" "$argument" "${1-}")" || return $?
+      ;;
+    --sound)
+      shift
+      soundName="$(usageArgumentString "$usage" "$argument" "${1-}")" || return $?
+      darwinSoundValid "$soundName" || __throwArgument "$usage" "Sound name $(decorate value "$soundName") not valid, ignoring: $(darwinSoundNames)" || :
+      ;;
+    --)
+      shift
+      message=("$@")
+      set --
+      break
+      ;;
+    *)
+      message+=("$1")
+      ;;
     esac
     shift
   done
@@ -183,49 +183,49 @@ darwinDialog() {
     local argument="$1" __index=$((__count - $# + 1))
     [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-      # _IDENTICAL_ --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      --choice)
-        shift
-        choices+=("$(usageArgumentString "$usage" "$argument" "${1-}")") || return $?
-        ;;
-      --title)
-        shift
-        title="$(usageArgumentString "$usage" "$argument" "${1-}")" || return $?
-        ;;
-      --icon)
-        shift
-        icon=$(usageArgumentFile "$usage" "$argument" "${1-}") || return $?
-        ;;
-      --ok)
-        choices+=("Ok")
-        ;;
-      --cancel)
-        choices+=("Cancel")
-        ;;
-      --timeout)
-        shift
-        timeout=$(usageArgumentPositiveInteger "$usage" "$argument" $"${1-}") || return $?
-        ;;
-      --debug)
-        debugFlag=true
-        ;;
-      --default)
-        shift
-        defaultButton="$(usageArgumentUnsignedInteger "$usage" "$argument" "${1-}")" || return $?
-        ;;
-      --)
-        shift
-        message=("$@")
-        set --
-        break
-        ;;
-      *)
-        message+=("$1")
-        ;;
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    --choice)
+      shift
+      choices+=("$(usageArgumentString "$usage" "$argument" "${1-}")") || return $?
+      ;;
+    --title)
+      shift
+      title="$(usageArgumentString "$usage" "$argument" "${1-}")" || return $?
+      ;;
+    --icon)
+      shift
+      icon=$(usageArgumentFile "$usage" "$argument" "${1-}") || return $?
+      ;;
+    --ok)
+      choices+=("Ok")
+      ;;
+    --cancel)
+      choices+=("Cancel")
+      ;;
+    --timeout)
+      shift
+      timeout=$(usageArgumentPositiveInteger "$usage" "$argument" $"${1-}") || return $?
+      ;;
+    --debug)
+      debugFlag=true
+      ;;
+    --default)
+      shift
+      defaultButton="$(usageArgumentUnsignedInteger "$usage" "$argument" "${1-}")" || return $?
+      ;;
+    --)
+      shift
+      message=("$@")
+      set --
+      break
+      ;;
+    *)
+      message+=("$1")
+      ;;
     esac
     shift
   done
@@ -268,16 +268,16 @@ darwinDialog() {
       value="$(trimSpace "$value")"
       ! $debugFlag || decorate pair "$name" "$value"
       case "$name" in
-        "button returned")
-          button="$value"
-          ;;
-        "gave up")
-          isBoolean "$value" || __throwEnvironment "$usage" "gave up should be a boolean: $value" || return $?
-          ! "$value" || _return "$(_code timeout)" "Dialog timed out" || return $?
-          ;;
-        *)
-          __throwEnvironment "$usage" "Unknown return value from dialog: $(decorate label "$name"): $(decorate value "$value")" || return $?
-          ;;
+      "button returned")
+        button="$value"
+        ;;
+      "gave up")
+        isBoolean "$value" || __throwEnvironment "$usage" "gave up should be a boolean: $value" || return $?
+        ! "$value" || _return "$(_code timeout)" "Dialog timed out" || return $?
+        ;;
+      *)
+        __throwEnvironment "$usage" "Unknown return value from dialog: $(decorate label "$name"): $(decorate value "$value")" || return $?
+        ;;
       esac
     done <<<"$result"
     printf "%s\n" "$button"

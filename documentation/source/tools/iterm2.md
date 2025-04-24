@@ -1,15 +1,16 @@
 # iTerm2 Tools
 
-[iTerm2](https://iterm2.com) is a terminal program with some exceptional features written and maintained by George Nachman and contributors.
+[iTerm2](https://iterm2.com) is a terminal program with some exceptional features written and maintained by George
+Nachman and contributors.
 
 Features which make it nice:
 
 - Profiles and hot keys to connect to your favorite hosts
 - Terminal colorization and background images, badges and animation
-- Apparently amazing `tmux` integration 
-- Tons of other features 
+- Apparently amazing `tmux` integration
+- Tons of other features
 
-**iTerm2** provides shell integration directly which has been implemented, largely, with this library. 
+**iTerm2** provides shell integration directly which has been implemented, largely, with this library.
 
 You can do some pretty cool things like:
 

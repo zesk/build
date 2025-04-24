@@ -55,36 +55,36 @@ dumpBinary() {
     local argument="$1" __index=$((__count - $# + 1))
     [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-      # _IDENTICAL_ --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      --vanish)
-        shift
-        vanishFiles+=("$(usageArgumentFile "$usage" "$argument" "${1-}")") || return $?
-        ;;
-      --head)
-        endBinary="head"
-        ;;
-      --tail)
-        endBinary="tail"
-        ;;
-      --symbol)
-        shift
-        symbol="$1"
-        ;;
-      --bytes)
-        shift
-        # Allow BLANK
-        if [ -n "$1" ]; then
-          showBytes=$(usageArgumentUnsignedInteger "$usage" "bytes" "$1") || return $?
-        fi
-        ;;
-      *)
-        names+=("$argument")
-        break
-        ;;
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    --vanish)
+      shift
+      vanishFiles+=("$(usageArgumentFile "$usage" "$argument" "${1-}")") || return $?
+      ;;
+    --head)
+      endBinary="head"
+      ;;
+    --tail)
+      endBinary="tail"
+      ;;
+    --symbol)
+      shift
+      symbol="$1"
+      ;;
+    --bytes)
+      shift
+      # Allow BLANK
+      if [ -n "$1" ]; then
+        showBytes=$(usageArgumentUnsignedInteger "$usage" "bytes" "$1") || return $?
+      fi
+      ;;
+    *)
+      names+=("$argument")
+      break
+      ;;
     esac
     shift || __throwArgument "$usage" shift || return $?
   done

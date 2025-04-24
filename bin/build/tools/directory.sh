@@ -136,15 +136,15 @@ directoryIsEmpty() {
   while [ $# -gt 0 ]; do
     argument="$1"
     case "$argument" in
-      # _IDENTICAL_ --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      *)
-        [ -d "$argument" ] || __throwArgument "$usage" "Not a directory $(decorate code "$argument")" || return $?
-        find "$argument" -mindepth 1 -maxdepth 1 | read -r && return 1 || return 0
-        ;;
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    *)
+      [ -d "$argument" ] || __throwArgument "$usage" "Not a directory $(decorate code "$argument")" || return $?
+      find "$argument" -mindepth 1 -maxdepth 1 | read -r && return 1 || return 0
+      ;;
     esac
   done
 }
@@ -210,25 +210,25 @@ __directoryParent() {
     local argument="$1" __index=$((__count - $# + 1))
     [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-      # _IDENTICAL_ --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      --pattern)
-        [ -z "$filePattern" ] || __throwArgument "$usage" "$argument already specified" || return $?
-        shift
-        filePattern=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
-        ;;
-      --test)
-        shift
-        testExpressions+=("$(usageArgumentString "$usage" "$argument" "${1-}")") || return $?
-        ;;
-      *)
-        [ -z "$startingDirectory" ] || __throwArgument "$usage" "startingDirectory $(decorate code "$argument") was already specified $(decorate value "$startingDirectory") (Arguments: $(decorate each code "${usage#_}" "${__saved[@]}"))" || return $?
-        [ -n "$argument" ] || argument=$(__catchEnvironment "$usage" pwd) || return $?
-        startingDirectory=$(usageArgumentRealDirectory "$usage" startingDirectory "$argument") || return $?
-        ;;
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    --pattern)
+      [ -z "$filePattern" ] || __throwArgument "$usage" "$argument already specified" || return $?
+      shift
+      filePattern=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
+      ;;
+    --test)
+      shift
+      testExpressions+=("$(usageArgumentString "$usage" "$argument" "${1-}")") || return $?
+      ;;
+    *)
+      [ -z "$startingDirectory" ] || __throwArgument "$usage" "startingDirectory $(decorate code "$argument") was already specified $(decorate value "$startingDirectory") (Arguments: $(decorate each code "${usage#_}" "${__saved[@]}"))" || return $?
+      [ -n "$argument" ] || argument=$(__catchEnvironment "$usage" pwd) || return $?
+      startingDirectory=$(usageArgumentRealDirectory "$usage" startingDirectory "$argument") || return $?
+      ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
     shift

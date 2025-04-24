@@ -288,19 +288,19 @@ gitTagVersion() {
     local argument="$1" __index=$((__count - $# + 1))
     [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-      # _IDENTICAL_ --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      --suffix)
-        shift || __throwArgument "$usage" "missing $argument argument" || return $?
-        versionSuffix="${1-}"
-        [ -n "$versionSuffix" ] || __throwArgument "$usage" "Blank $argument argument" || return $?
-        ;;
-      *)
-        __throwArgument "$usage" "unknown argument: $argument" || return $?
-        ;;
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    --suffix)
+      shift || __throwArgument "$usage" "missing $argument argument" || return $?
+      versionSuffix="${1-}"
+      [ -n "$versionSuffix" ] || __throwArgument "$usage" "Blank $argument argument" || return $?
+      ;;
+    *)
+      __throwArgument "$usage" "unknown argument: $argument" || return $?
+      ;;
     esac
     shift || __throwArgument "$usage" "shift $argument" || return $?
   done
@@ -408,28 +408,28 @@ gitCommit() {
     local argument="$1" __index=$((__count - $# + 1))
     [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-      # _IDENTICAL_ --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      --home)
-        shift
-        home=$(usageArgumentDirectory "$usage" "home" "${1-}") || return $?
-        ;;
-      --)
-        updateReleaseNotes=false
-        ;;
-      --last)
-        appendLast=true
-        ;;
-      --open-links)
-        openLinks=true
-        ;;
-      *)
-        comment="$*"
-        break
-        ;;
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    --home)
+      shift
+      home=$(usageArgumentDirectory "$usage" "home" "${1-}") || return $?
+      ;;
+    --)
+      updateReleaseNotes=false
+      ;;
+    --last)
+      appendLast=true
+      ;;
+    --open-links)
+      openLinks=true
+      ;;
+    *)
+      comment="$*"
+      break
+      ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
     shift
@@ -521,17 +521,17 @@ gitMainly() {
     argument="$1"
     [ -n "$argument" ] || __throwArgument "$usage" "blank argument" || return $?
     case "$argument" in
-      # _IDENTICAL_ --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      --verbose)
-        verboseFlag=true
-        ;;
-      *)
-        __throwArgument "$usage" "unknown argument: $(decorate value "$argument")" || return $?
-        ;;
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    --verbose)
+      verboseFlag=true
+      ;;
+    *)
+      __throwArgument "$usage" "unknown argument: $(decorate value "$argument")" || return $?
+      ;;
     esac
     shift || __throwArgument "$usage" "missing argument $(decorate label "$argument")" || return $?
   done
@@ -539,48 +539,48 @@ gitMainly() {
   errorLog=$(mktemp)
   branch=$(git rev-parse --abbrev-ref HEAD) || _environment "Git not present" || return $?
   case "$branch" in
-    main | staging)
-      __throwEnvironment "$usage" "Already in branch $(decorate code "$branch")" || return $?
-      ;;
-    HEAD)
-      __throwEnvironment "$usage" "Ignore branches named $(decorate code "$branch")" || return $?
-      ;;
-    *)
-      returnCode=0
-      for updateOther in staging main; do
-        ! $verboseFlag || decorate info git checkout "$updateOther"
-        if ! git checkout "$updateOther" >"$errorLog" 2>&1; then
-          printf -- "%s %s\n" "$(decorate error "Unable to checkout branch")" "$(decorate code "$updateOther")" 1>&2
-          returnCode=1
-          __environment git status -s || :
-          break
-        else
-          ! $verboseFlag || decorate info git pull "# ($updateOther)"
-          if ! __environment git pull >"$errorLog" 2>&1; then
-            returnCode=1
-            break
-          fi
-        fi
-      done
-      if [ "$returnCode" -ne 0 ]; then
-        __environment git checkout -f "$branch" || :
-        return "$returnCode"
-      fi
-      ! $verboseFlag || decorate info git checkout "$branch"
-      if ! __environment git checkout "$branch" >"$errorLog" 2>&1; then
-        printf -- "%s %s\n" "$(decorate error "Unable to switch BACK to branch")" "$(decorate code "$updateOther")" 1>&2
-        rm -rf "$errorLog"
-        return 1
-      fi
-      ! $verboseFlag || decorate info git merge -m
-      __environment git merge -m "Merging staging and main with $branch" origin/staging origin/main || return $?
-      if grep -q 'Already' "$errorLog"; then
-        printf -- "%s %s\n" "$(decorate info "Already up to date")" "$(decorate code "$branch")"
+  main | staging)
+    __throwEnvironment "$usage" "Already in branch $(decorate code "$branch")" || return $?
+    ;;
+  HEAD)
+    __throwEnvironment "$usage" "Ignore branches named $(decorate code "$branch")" || return $?
+    ;;
+  *)
+    returnCode=0
+    for updateOther in staging main; do
+      ! $verboseFlag || decorate info git checkout "$updateOther"
+      if ! git checkout "$updateOther" >"$errorLog" 2>&1; then
+        printf -- "%s %s\n" "$(decorate error "Unable to checkout branch")" "$(decorate code "$updateOther")" 1>&2
+        returnCode=1
+        __environment git status -s || :
+        break
       else
-        printf -- "%s %s\n" "$(decorate info "Merged staging and main into branch")" "$(decorate code "$branch")"
+        ! $verboseFlag || decorate info git pull "# ($updateOther)"
+        if ! __environment git pull >"$errorLog" 2>&1; then
+          returnCode=1
+          break
+        fi
       fi
+    done
+    if [ "$returnCode" -ne 0 ]; then
+      __environment git checkout -f "$branch" || :
+      return "$returnCode"
+    fi
+    ! $verboseFlag || decorate info git checkout "$branch"
+    if ! __environment git checkout "$branch" >"$errorLog" 2>&1; then
+      printf -- "%s %s\n" "$(decorate error "Unable to switch BACK to branch")" "$(decorate code "$updateOther")" 1>&2
       rm -rf "$errorLog"
-      ;;
+      return 1
+    fi
+    ! $verboseFlag || decorate info git merge -m
+    __environment git merge -m "Merging staging and main with $branch" origin/staging origin/main || return $?
+    if grep -q 'Already' "$errorLog"; then
+      printf -- "%s %s\n" "$(decorate info "Already up to date")" "$(decorate code "$branch")"
+    else
+      printf -- "%s %s\n" "$(decorate info "Merged staging and main into branch")" "$(decorate code "$branch")"
+    fi
+    rm -rf "$errorLog"
+    ;;
   esac
 }
 _gitMainly() {
@@ -672,29 +672,29 @@ gitInstallHooks() {
     local argument="$1" __index=$((__count - $# + 1))
     [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-      # _IDENTICAL_ --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      --copy)
-        execute=false
-        ;;
-      --verbose)
-        verbose=true
-        ;;
-      --application)
-        shift || __throwArgument "$usage" "missing $argument argument" || return $?
-        home=$(usageArgumentDirectory "$usage" "applicationHome" "$1") || return $?
-        ;;
-      *)
-        hook="$argument"
-        if inArray "$hook" "${types[@]}"; then
-          hookNames+=("$hook")
-        else
-          __throwArgument "$usage" "Unknown hook:" "$argument" "Allowed:" "${types[@]}" || return $?
-        fi
-        ;;
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    --copy)
+      execute=false
+      ;;
+    --verbose)
+      verbose=true
+      ;;
+    --application)
+      shift || __throwArgument "$usage" "missing $argument argument" || return $?
+      home=$(usageArgumentDirectory "$usage" "applicationHome" "$1") || return $?
+      ;;
+    *)
+      hook="$argument"
+      if inArray "$hook" "${types[@]}"; then
+        hookNames+=("$hook")
+      else
+        __throwArgument "$usage" "Unknown hook:" "$argument" "Allowed:" "${types[@]}" || return $?
+      fi
+      ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
     shift
@@ -740,48 +740,48 @@ gitInstallHook() {
     argument="$1"
     [ -n "$argument" ] || __throwArgument "$usage" "blank argument" || return $?
     case "$argument" in
-      --copy)
-        execute=false
-        ;;
-      --verbose)
-        verbose=true
-        ;;
-      # _IDENTICAL_ --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      --application)
-        shift || __throwArgument "$usage" "missing $argument argument" || return $?
-        home=$(usageArgumentDirectory "$usage" "applicationHome" "$1") || return $?
-        ;;
-      *)
-        if inArray "$argument" "${types[@]}"; then
-          hasHook --application "$home" "git-$argument" || __throwArgument "$usage" "Hook git-$argument does not exist (Home: $home)" || return $?
-          fromTo=("$(whichHook --application "$home" "git-$argument")" "$home/.git/hooks/$argument") || __throwEnvironment "$usage" "Unable to whichHook git-$argument (Home: $home)" || rewturn $?
-          relFromTo=()
-          home="${home%/}/"
-          for item in "${fromTo[@]}"; do
-            item="${item#"$home"}"
-            relFromTo+=("./$item")
-          done
-          if [ -f "${fromTo[1]}" ]; then
-            if diff -q "${fromTo[@]}" >/dev/null; then
-              ! $verbose || decorate pair 15 "No changes:" "${relFromTo[@]}"
-              return 0
-            fi
-            ! $verbose || decorate pair 15 "Changed:" "${relFromTo[@]}"
-          else
-            ! $verbose || decorate pair 15 "Installing" "${relFromTo[1]}"
+    --copy)
+      execute=false
+      ;;
+    --verbose)
+      verbose=true
+      ;;
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    --application)
+      shift || __throwArgument "$usage" "missing $argument argument" || return $?
+      home=$(usageArgumentDirectory "$usage" "applicationHome" "$1") || return $?
+      ;;
+    *)
+      if inArray "$argument" "${types[@]}"; then
+        hasHook --application "$home" "git-$argument" || __throwArgument "$usage" "Hook git-$argument does not exist (Home: $home)" || return $?
+        fromTo=("$(whichHook --application "$home" "git-$argument")" "$home/.git/hooks/$argument") || __throwEnvironment "$usage" "Unable to whichHook git-$argument (Home: $home)" || rewturn $?
+        relFromTo=()
+        home="${home%/}/"
+        for item in "${fromTo[@]}"; do
+          item="${item#"$home"}"
+          relFromTo+=("./$item")
+        done
+        if [ -f "${fromTo[1]}" ]; then
+          if diff -q "${fromTo[@]}" >/dev/null; then
+            ! $verbose || decorate pair 15 "No changes:" "${relFromTo[@]}"
+            return 0
           fi
-          statusMessage --last printf "%s %s -> %s\n" "$(decorate success "git hook:")" "$(decorate warning "${relFromTo[0]}")" "$(decorate code "${relFromTo[1]}")" || :
-          __catchEnvironment "$usage" cp -f "${fromTo[@]}" || return $?
-          ! $execute || __catchEnvironment "$usage" exec "${fromTo[1]}" "$@" || return $?
-          return 0
+          ! $verbose || decorate pair 15 "Changed:" "${relFromTo[@]}"
         else
-          __throwArgument "$usage" "Unknown hook:" "$argument" "Allowed:" "${types[@]}" || return $?
+          ! $verbose || decorate pair 15 "Installing" "${relFromTo[1]}"
         fi
-        ;;
+        statusMessage --last printf "%s %s -> %s\n" "$(decorate success "git hook:")" "$(decorate warning "${relFromTo[0]}")" "$(decorate code "${relFromTo[1]}")" || :
+        __catchEnvironment "$usage" cp -f "${fromTo[@]}" || return $?
+        ! $execute || __catchEnvironment "$usage" exec "${fromTo[1]}" "$@" || return $?
+        return 0
+      else
+        __throwArgument "$usage" "Unknown hook:" "$argument" "Allowed:" "${types[@]}" || return $?
+      fi
+      ;;
     esac
     shift
   done
@@ -1014,21 +1014,21 @@ gitBranchMergeCurrent() {
     local argument="$1" __index=$((__count - $# + 1))
     [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-      # _IDENTICAL_ --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      --skip-ip)
-        addIP=false
-        ;;
-      --comment)
-        shift
-        comment=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
-        ;;
-      *)
-        targetBranch="$(usageArgumentString "$usage" "$argument" "$1")" || return $?
-        ;;
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    --skip-ip)
+      addIP=false
+      ;;
+    --comment)
+      shift
+      comment=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
+      ;;
+    *)
+      targetBranch="$(usageArgumentString "$usage" "$argument" "$1")" || return $?
+      ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
     shift

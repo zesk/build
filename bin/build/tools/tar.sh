@@ -26,29 +26,29 @@ tarExtractPattern() {
     local argument="$1" __index=$((__count - $# + 1))
     [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-      # _IDENTICAL_ --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      *)
-        local pattern="$argument"
-        shift || __throwArgument "No pattern supplied" || return $?
-        # -h means follow symlinks
-        if tar --version | grep -q GNU; then
-          # GNU
-          # > tar --version
-          # tar (GNU tar) 1.34
-          # ...
-          tar -O -zx --wildcards "$pattern" "$@"
-        else
-          # BSD
-          # > tar --version
-          # bsdtar 3.5.3 - libarchive 3.5.3 zlib/1.2.11 liblzma/5.0.5 bz2lib/1.0.8
-          tar -O -zx "$pattern" "$@"
-        fi
-        return 0
-        ;;
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    *)
+      local pattern="$argument"
+      shift || __throwArgument "No pattern supplied" || return $?
+      # -h means follow symlinks
+      if tar --version | grep -q GNU; then
+        # GNU
+        # > tar --version
+        # tar (GNU tar) 1.34
+        # ...
+        tar -O -zx --wildcards "$pattern" "$@"
+      else
+        # BSD
+        # > tar --version
+        # bsdtar 3.5.3 - libarchive 3.5.3 zlib/1.2.11 liblzma/5.0.5 bz2lib/1.0.8
+        tar -O -zx "$pattern" "$@"
+      fi
+      return 0
+      ;;
     esac
   done
 }
@@ -79,29 +79,29 @@ tarCreate() {
     local argument="$1" __index=$((__count - $# + 1))
     [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-      # _IDENTICAL_ --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      *)
-        target="$argument"
-        shift || __throwArgument "No files supplied" || return $?
-        # -h means follow symlinks
-        if tar --version | grep -q GNU; then
-          # GNU
-          # > tar --version
-          # tar (GNU tar) 1.34
-          # ...
-          tar -czf "$target" --owner=0 --group=0 --no-xattrs -h "$@"
-        else
-          # BSD
-          # > tar --version
-          # bsdtar 3.5.3 - libarchive 3.5.3 zlib/1.2.11 liblzma/5.0.5 bz2lib/1.0.8
-          tar -czf "$target" --uid 0 --gid 0 --no-acls --no-fflags --no-xattrs -h "$@"
-        fi
-        return 0
-        ;;
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    *)
+      target="$argument"
+      shift || __throwArgument "No files supplied" || return $?
+      # -h means follow symlinks
+      if tar --version | grep -q GNU; then
+        # GNU
+        # > tar --version
+        # tar (GNU tar) 1.34
+        # ...
+        tar -czf "$target" --owner=0 --group=0 --no-xattrs -h "$@"
+      else
+        # BSD
+        # > tar --version
+        # bsdtar 3.5.3 - libarchive 3.5.3 zlib/1.2.11 liblzma/5.0.5 bz2lib/1.0.8
+        tar -czf "$target" --uid 0 --gid 0 --no-acls --no-fflags --no-xattrs -h "$@"
+      fi
+      return 0
+      ;;
     esac
   done
 }

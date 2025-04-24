@@ -164,19 +164,19 @@ iTerm2ColorNames() {
 # Is it a color name?
 iTerm2IsColorName() {
   case "$1" in
-    black | red | green | yellow | blue | magenta | cyan | white) return 0 ;; *) return 1 ;;
+  black | red | green | yellow | blue | magenta | cyan | white) return 0 ;; *) return 1 ;;
   esac
 }
 
 # This is faster than inArray etc.
 iTerm2IsColorType() {
   case "$1" in
-    fg | bg | selbg | selfg | curbg | curfg) return 0 ;;
-    bold | link | underline) return 0 ;;
-    tab) return 0 ;;
-    black | red | green | yellow | blue | magenta | cyan | white) return 0 ;;
-    br_black | br_red | br_green | br_yellow | br_blue | br_magenta | br_cyan | br_white) return 0 ;;
-    *) return 1 ;;
+  fg | bg | selbg | selfg | curbg | curfg) return 0 ;;
+  bold | link | underline) return 0 ;;
+  tab) return 0 ;;
+  black | red | green | yellow | blue | magenta | cyan | white) return 0 ;;
+  br_black | br_red | br_green | br_yellow | br_blue | br_magenta | br_cyan | br_white) return 0 ;;
+  *) return 1 ;;
   esac
 }
 
@@ -205,13 +205,13 @@ __iTerm2SetColors() {
     colorSpace=""
   else
     case "$colorSpace" in
-      srgb | rgb | p3) ;; *) __throwArgument "$usage" "Invalid color space $(decorate error "$colorSpace") in $(decorate code "$colorValue")" || return $? ;;
+    srgb | rgb | p3) ;; *) __throwArgument "$usage" "Invalid color space $(decorate error "$colorSpace") in $(decorate code "$colorValue")" || return $? ;;
     esac
   fi
   colorCode=$(uppercase "$colorCode")
   case "$colorCode" in
-    [[:xdigit:]]*) ;;
-    *) __throwArgument "$usage" "Invalid hexadecimal color: $(decorate error "$colorCode") in $(decorate code "$colorValue")" || return $? ;;
+  [[:xdigit:]]*) ;;
+  *) __throwArgument "$usage" "Invalid hexadecimal color: $(decorate error "$colorCode") in $(decorate code "$colorValue")" || return $? ;;
   esac
   ! $verboseFlag || statusMessage decorate info "Setting color $(decorate label "$colorType") to $(decorate value "$colorCode")"
   _iTerm2_setValue SetColors "$colorType=$colorCode"
@@ -229,36 +229,36 @@ iTerm2Image() {
     local argument="$1" __index=$((__count - $# + 1))
     [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-      # _IDENTICAL_ --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      --width)
-        shift
-        width=$(usageArgumentPositiveInteger "$usage" "$argument" "${1-}") || return $?
-        ;;
-      --height)
-        shift
-        height=$(usageArgumentPositiveInteger "$usage" "$argument" "${1-}") || return $?
-        ;;
-      --scale)
-        aspectRatio=false
-        ;;
-      --preserve-aspect-ratio)
-        aspectRatio=true
-        ;;
-      # IDENTICAL case-iTerm2ignore 3
-      --ignore | -i)
-        ignoreErrors=true
-        ;;
-      -*)
-        # _IDENTICAL_ argumentUnknown 1
-        __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
-        ;;
-      *)
-        images+=("$(usageArgumentFile "$usage" "imageFile" "$1")" "$(__iTerm2ImageExtras "$width" "$height" "$aspectRatio")") || return $?
-        ;;
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    --width)
+      shift
+      width=$(usageArgumentPositiveInteger "$usage" "$argument" "${1-}") || return $?
+      ;;
+    --height)
+      shift
+      height=$(usageArgumentPositiveInteger "$usage" "$argument" "${1-}") || return $?
+      ;;
+    --scale)
+      aspectRatio=false
+      ;;
+    --preserve-aspect-ratio)
+      aspectRatio=true
+      ;;
+    # IDENTICAL case-iTerm2ignore 3
+    --ignore | -i)
+      ignoreErrors=true
+      ;;
+    -*)
+      # _IDENTICAL_ argumentUnknown 1
+      __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
+      ;;
+    *)
+      images+=("$(usageArgumentFile "$usage" "imageFile" "$1")" "$(__iTerm2ImageExtras "$width" "$height" "$aspectRatio")") || return $?
+      ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
     shift
@@ -329,26 +329,26 @@ iTerm2Download() {
     local argument="$1" __index=$((__count - $# + 1))
     [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-      # _IDENTICAL_ --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      --name)
-        shift
-        name="$(usageArgumentString "$usage" "$argument" "${1-}")" || return $?
-        ;;
-      # IDENTICAL case-iTerm2ignore 3
-      --ignore | -i)
-        ignoreErrors=true
-        ;;
-      -*)
-        # _IDENTICAL_ argumentUnknown 1
-        __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
-        ;;
-      *)
-        files+=("$(usageArgumentFile "$usage" "imageFile" "$1")") || return $?
-        ;;
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    --name)
+      shift
+      name="$(usageArgumentString "$usage" "$argument" "${1-}")" || return $?
+      ;;
+    # IDENTICAL case-iTerm2ignore 3
+    --ignore | -i)
+      ignoreErrors=true
+      ;;
+    -*)
+      # _IDENTICAL_ argumentUnknown 1
+      __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
+      ;;
+    *)
+      files+=("$(usageArgumentFile "$usage" "imageFile" "$1")") || return $?
+      ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
     shift
@@ -414,31 +414,31 @@ iTerm2SetColors() {
     local argument="$1" __index=$((__count - $# + 1))
     [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-      # _IDENTICAL_ --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      --skip-errors)
-        skipColorErrors=true
-        ;;
-      --fill)
-        fillMissing=true
-        ;;
-      --verbose | -v)
-        verboseFlag=true
-        ;;
-      # IDENTICAL case-iTerm2ignore 3
-      --ignore | -i)
-        ignoreErrors=true
-        ;;
-      -*)
-        # _IDENTICAL_ argumentUnknown 1
-        __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
-        ;;
-      *)
-        colorSettings+=("$(usageArgumentString "$usage" "colorSetting" "$1")") || return $?
-        ;;
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    --skip-errors)
+      skipColorErrors=true
+      ;;
+    --fill)
+      fillMissing=true
+      ;;
+    --verbose | -v)
+      verboseFlag=true
+      ;;
+    # IDENTICAL case-iTerm2ignore 3
+    --ignore | -i)
+      ignoreErrors=true
+      ;;
+    -*)
+      # _IDENTICAL_ argumentUnknown 1
+      __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
+      ;;
+    *)
+      colorSettings+=("$(usageArgumentString "$usage" "colorSetting" "$1")") || return $?
+      ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
     shift
@@ -526,58 +526,58 @@ iTerm2Attention() {
     local argument="$1" __index=$((__count - $# + 1))
     [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-      # _IDENTICAL_ --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      --verbose | -v)
-        verboseFlag=true
-        ;;
-      # IDENTICAL case-iTerm2ignore 3
-      --ignore | -i)
-        ignoreErrors=true
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    --verbose | -v)
+      verboseFlag=true
+      ;;
+    # IDENTICAL case-iTerm2ignore 3
+    --ignore | -i)
+      ignoreErrors=true
+      ;;
+    *)
+      # IDENTICAL handle-iTerm2ignore 4
+      if ! isiTerm2; then
+        ! $ignoreErrors || return 0
+        __throwEnvironment "$usage" "Not iTerm2" || return $?
+      fi
+
+      local result=0
+
+      parseBoolean "$argument" || result=$?
+      case "$result" in 0 | 1)
+        ! $verboseFlag || statusMessage decorate info "Requesting attention: $result"
+        # Success (exit code 0) sends 1 to start attraction
+        # 0 -> 1, 1 -> 0
+        _iTerm2_setValue RequestAttention "$((result - 1))"
+        didSomething=true
         ;;
       *)
-        # IDENTICAL handle-iTerm2ignore 4
-        if ! isiTerm2; then
-          ! $ignoreErrors || return 0
-          __throwEnvironment "$usage" "Not iTerm2" || return $?
-        fi
-
-        local result=0
-
-        parseBoolean "$argument" || result=$?
-        case "$result" in 0 | 1)
-          ! $verboseFlag || statusMessage decorate info "Requesting attention: $result"
-          # Success (exit code 0) sends 1 to start attraction
-          # 0 -> 1, 1 -> 0
-          _iTerm2_setValue RequestAttention "$((result - 1))"
+        case "$argument" in
+        "start")
+          _iTerm2_setValue RequestAttention 1
+          didSomething=true
+          ;;
+        "stop")
+          _iTerm2_setValue RequestAttention 1
+          didSomething=true
+          ;;
+        "!" | "fireworks")
+          ! $verboseFlag || statusMessage decorate info "Requesting fireworks"
+          _iTerm2_setValue RequestAttention "fireworks"
           didSomething=true
           ;;
         *)
-          case "$argument" in
-            "start")
-              _iTerm2_setValue RequestAttention 1
-              didSomething=true
-              ;;
-            "stop")
-              _iTerm2_setValue RequestAttention 1
-              didSomething=true
-              ;;
-            "!" | "fireworks")
-              ! $verboseFlag || statusMessage decorate info "Requesting fireworks"
-              _iTerm2_setValue RequestAttention "fireworks"
-              didSomething=true
-              ;;
-            *)
-              # _IDENTICAL_ argumentUnknown 1
-              __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
-              ;;
-          esac
+          # _IDENTICAL_ argumentUnknown 1
+          __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
           ;;
         esac
         ;;
+      esac
+      ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
     shift
@@ -606,18 +606,18 @@ iTerm2Badge() {
     local argument="$1" __index=$((__count - $# + 1))
     [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-      # _IDENTICAL_ --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      # IDENTICAL case-iTerm2ignore 3
-      --ignore | -i)
-        ignoreErrors=true
-        ;;
-      *)
-        message+=("$argument")
-        ;;
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    # IDENTICAL case-iTerm2ignore 3
+    --ignore | -i)
+      ignoreErrors=true
+      ;;
+    *)
+      message+=("$argument")
+      ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
     shift
@@ -664,19 +664,19 @@ iTerm2Version() {
     local argument="$1" __index=$((__count - $# + 1))
     [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-      # _IDENTICAL_ --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      # IDENTICAL case-iTerm2ignore 3
-      --ignore | -i)
-        ignoreErrors=true
-        ;;
-      *)
-        # _IDENTICAL_ argumentUnknown 1
-        __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
-        ;;
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    # IDENTICAL case-iTerm2ignore 3
+    --ignore | -i)
+      ignoreErrors=true
+      ;;
+    *)
+      # _IDENTICAL_ argumentUnknown 1
+      __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
+      ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
     shift
@@ -703,14 +703,14 @@ iTerm2Version() {
   local version
   version=$(__iTerm2Version)
   case "$version" in
-    "0" | "3")
-      stty "$savedTTY" || :
-      __throwEnvironment "$usage" "iTerm2 did not respond to DSR 1337: $version" || return $?
-      ;;
-    *)
-      # Read device status
-      muzzle __iTerm2Version || :
-      ;;
+  "0" | "3")
+    stty "$savedTTY" || :
+    __throwEnvironment "$usage" "iTerm2 did not respond to DSR 1337: $version" || return $?
+    ;;
+  *)
+    # Read device status
+    muzzle __iTerm2Version || :
+    ;;
   esac
   stty "$savedTTY" || :
   printf "%s\n" "$version"
@@ -743,19 +743,19 @@ iTerm2Init() {
     local argument="$1" __index=$((__count - $# + 1))
     [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-      # _IDENTICAL_ --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      # IDENTICAL case-iTerm2ignore 3
-      --ignore | -i)
-        ignoreErrors=true
-        ;;
-      *)
-        # _IDENTICAL_ argumentUnknown 1
-        __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
-        ;;
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    # IDENTICAL case-iTerm2ignore 3
+    --ignore | -i)
+      ignoreErrors=true
+      ;;
+    *)
+      # _IDENTICAL_ argumentUnknown 1
+      __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
+      ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
     shift

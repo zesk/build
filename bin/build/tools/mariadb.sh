@@ -36,41 +36,41 @@ mariadbDump() {
     local argument="$1" __index=$((__count - $# + 1))
     [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-      # _IDENTICAL_ --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      --print)
-        printFlag=true
-        ;;
-      --binary)
-        shift
-        binary=$(usageArgumentExecutable "$usage" "$argument" "${1-}") || return $?
-        ;;
-      --lock)
-        options+=(--lock-tables)
-        ;;
-      --user)
-        shift
-        options+=("--user=$(usageArgumentString "$usage" "$argument" "${1-}")") || return $?
-        ;;
-      --password)
-        shift
-        options+=("--password=$(usageArgumentString "$usage" "$argument" "${1-}")") || return $?
-        ;;
-      --port)
-        shift
-        options+=("--port=$(usageArgumentInteger "$usage" "$argument" "${1-}")") || return $?
-        ;;
-      --host)
-        shift
-        options+=("--host=$(usageArgumentString "$usage" "$argument" "${1-}")") || return $?
-        ;;
-      *)
-        # _IDENTICAL_ argumentUnknown 1
-        __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
-        ;;
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    --print)
+      printFlag=true
+      ;;
+    --binary)
+      shift
+      binary=$(usageArgumentExecutable "$usage" "$argument" "${1-}") || return $?
+      ;;
+    --lock)
+      options+=(--lock-tables)
+      ;;
+    --user)
+      shift
+      options+=("--user=$(usageArgumentString "$usage" "$argument" "${1-}")") || return $?
+      ;;
+    --password)
+      shift
+      options+=("--password=$(usageArgumentString "$usage" "$argument" "${1-}")") || return $?
+      ;;
+    --port)
+      shift
+      options+=("--port=$(usageArgumentInteger "$usage" "$argument" "${1-}")") || return $?
+      ;;
+    --host)
+      shift
+      options+=("--host=$(usageArgumentString "$usage" "$argument" "${1-}")") || return $?
+      ;;
+    *)
+      # _IDENTICAL_ argumentUnknown 1
+      __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
+      ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
     shift
@@ -105,24 +105,24 @@ mariadbConnect() {
     local argument="$1" __index=$((__count - $# + 1))
     [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-      # _IDENTICAL_ --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      --binary)
-        shift
-        binary=$(usageArgumentCallable "$usage" "$argument" "${1-}") || return $?
-        ;;
-      --print)
-        printFlag=true
-        ;;
-      *)
-        urlValid "$argument" || __throwArgument "dsn is not valid: ${#argument} chars" || return $?
-        dsn="$argument"
-        shift
-        break
-        ;;
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    --binary)
+      shift
+      binary=$(usageArgumentCallable "$usage" "$argument" "${1-}") || return $?
+      ;;
+    --print)
+      printFlag=true
+      ;;
+    *)
+      urlValid "$argument" || __throwArgument "dsn is not valid: ${#argument} chars" || return $?
+      dsn="$argument"
+      shift
+      break
+      ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
     shift

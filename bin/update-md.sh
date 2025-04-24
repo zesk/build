@@ -89,13 +89,13 @@ __updateMarkdown() {
     argument="$1"
     [ -n "$argument" ] || __throwArgument "$usage" "blank argument" || return $?
     case "$argument" in
-      --skip-commit)
-        flagSkipCommit=true
-        statusMessage decorate warning "Skipping commit ..."
-        ;;
-      *)
-        __throwArgument "$usage" "unknown argument: $(decorate value "$argument")" || return $?
-        ;;
+    --skip-commit)
+      flagSkipCommit=true
+      statusMessage decorate warning "Skipping commit ..."
+      ;;
+    *)
+      __throwArgument "$usage" "unknown argument: $(decorate value "$argument")" || return $?
+      ;;
     esac
     shift || __throwArgument "$usage" "shift argument $(decorate label "$argument")" || return $?
   done

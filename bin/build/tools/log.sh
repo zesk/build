@@ -36,24 +36,24 @@ rotateLog() {
     local argument="$1" __index=$((__count - $# + 1))
     [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-      # _IDENTICAL_ --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      --dry-run)
-        dryRun=true
-        ;;
-      *)
-        if [ -z "$logFile" ]; then
-          logFile="$argument"
-        elif [ -z "$count" ]; then
-          count="$argument"
-        else
-          # _IDENTICAL_ argumentUnknown 1
-          __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
-        fi
-        ;;
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    --dry-run)
+      dryRun=true
+      ;;
+    *)
+      if [ -z "$logFile" ]; then
+        logFile="$argument"
+      elif [ -z "$count" ]; then
+        count="$argument"
+      else
+        # _IDENTICAL_ argumentUnknown 1
+        __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
+      fi
+      ;;
     esac
     shift
   done
@@ -115,23 +115,23 @@ rotateLogs() {
     local argument="$1" __index=$((__count - $# + 1))
     [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-      # _IDENTICAL_ --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      --dry-run)
-        dryRunArgs=(--dry-run)
-        ;;
-      *)
-        if [ -z "$logPath" ]; then
-          logPath="$(usageArgumentDirectory "$usage" logPath "$logPath") || return $?"
-        elif [ -z "$count" ]; then
-          count="$(usageArgumentPositiveInteger "$usage" "count" "$argument")" || return $?
-        else
-          __throwArgument "$usage" "$this Unknown argument $argument" || return $?
-        fi
-        ;;
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    --dry-run)
+      dryRunArgs=(--dry-run)
+      ;;
+    *)
+      if [ -z "$logPath" ]; then
+        logPath="$(usageArgumentDirectory "$usage" logPath "$logPath") || return $?"
+      elif [ -z "$count" ]; then
+        count="$(usageArgumentPositiveInteger "$usage" "count" "$argument")" || return $?
+      else
+        __throwArgument "$usage" "$this Unknown argument $argument" || return $?
+      fi
+      ;;
     esac
     shift || __throwArgument "$usage" "shift argument $(decorate code "$argument")" || return $?
   done

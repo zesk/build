@@ -64,70 +64,70 @@ identicalCheck() {
     local argument="$1" __index=$((__count - $# + 1))
     [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-      # _IDENTICAL_ --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      --no-map)
-        mapFile=false
-        ;;
-      --debug)
-        debug=true
-        ;;
-      --cd)
-        shift
-        rootDir=$(usageArgumentDirectory "$usage" "$argument" "${1-}") || return $?
-        ;;
-      --repair)
-        shift
-        repairSources+=("$(usageArgumentRealDirectory "$usage" "repairSource" "${1-}")") || return $?
-        ;;
-      --extension)
-        shift
-        findArgs+=("-name" "*.$(usageArgumentString "$usage" "$argument" "${1-}")") || return $?
-        extensionText="$extensionText .$1"
-        ;;
-      --exec)
-        shift
-        binary=$(usageArgumentCallable "$usage" "$argument" "$1") || return $?
-        ;;
-      --skip)
-        shift
-        skipFiles+=("$(usageArgumentFile "$usage" "$argument" "${1-}")") || return $?
-        ;;
-      --singles)
-        local singleFile
-        shift
-        singleFile=$(usageArgumentFile "$usage" singlesFile "${1-}") || return $?
-        while read -r single; do
-          single="${single#"${single%%[![:space:]]*}"}"
-          single="${single%"${single##*[![:space:]]}"}"
-          if [ "${single###}" = "${single}" ]; then
-            singles+=("$single")
-          fi
-        done <"$singleFile"
-        ;;
-      --single)
-        shift
-        singles+=("$1")
-        ;;
-      --prefix)
-        shift
-        prefixes+=("$1")
-        ;;
-      --ignore-singles)
-        ignoreSingles=true
-        ;;
-      --exclude)
-        shift
-        [ -n "$1" ] || __throwArgument "$usage" "Empty $(decorate code "$argument") argument" || return $?
-        excludes+=(! -path "$1")
-        ;;
-      *)
-        # _IDENTICAL_ argumentUnknown 1
-        __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
-        ;;
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    --no-map)
+      mapFile=false
+      ;;
+    --debug)
+      debug=true
+      ;;
+    --cd)
+      shift
+      rootDir=$(usageArgumentDirectory "$usage" "$argument" "${1-}") || return $?
+      ;;
+    --repair)
+      shift
+      repairSources+=("$(usageArgumentRealDirectory "$usage" "repairSource" "${1-}")") || return $?
+      ;;
+    --extension)
+      shift
+      findArgs+=("-name" "*.$(usageArgumentString "$usage" "$argument" "${1-}")") || return $?
+      extensionText="$extensionText .$1"
+      ;;
+    --exec)
+      shift
+      binary=$(usageArgumentCallable "$usage" "$argument" "$1") || return $?
+      ;;
+    --skip)
+      shift
+      skipFiles+=("$(usageArgumentFile "$usage" "$argument" "${1-}")") || return $?
+      ;;
+    --singles)
+      local singleFile
+      shift
+      singleFile=$(usageArgumentFile "$usage" singlesFile "${1-}") || return $?
+      while read -r single; do
+        single="${single#"${single%%[![:space:]]*}"}"
+        single="${single%"${single##*[![:space:]]}"}"
+        if [ "${single###}" = "${single}" ]; then
+          singles+=("$single")
+        fi
+      done <"$singleFile"
+      ;;
+    --single)
+      shift
+      singles+=("$1")
+      ;;
+    --prefix)
+      shift
+      prefixes+=("$1")
+      ;;
+    --ignore-singles)
+      ignoreSingles=true
+      ;;
+    --exclude)
+      shift
+      [ -n "$1" ] || __throwArgument "$usage" "Empty $(decorate code "$argument") argument" || return $?
+      excludes+=(! -path "$1")
+      ;;
+    *)
+      # _IDENTICAL_ argumentUnknown 1
+      __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
+      ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
     shift
@@ -317,31 +317,31 @@ identicalCheckShell() {
     argument="$1"
     [ -n "$argument" ] || __throwArgument "$usage" "blank argument" || return $?
     case "$argument" in
-      --internal-only)
-        pp=(--prefix '# ''DOC TEMPLATE:' --prefix '# ''_IDENTICAL_')
-        addDefaultPrefixes=false
-        ;;
-      --internal)
-        if [ "${#pp[@]}" -eq 0 ]; then
-          # Ordering here matters so declare from inside scope to outside scope
-          pp+=(--prefix '# ''DOC TEMPLATE:' --prefix '# ''_IDENTICAL_')
-        fi
-        ;;
-      --interactive)
-        aa+=("$argument")
-        ;;
-      --repair | --single | --exec | --prefix | --exclude | --extension | --skip | --singles)
-        shift
-        aa+=("$argument" "${1-}")
-        ;;
-      # _IDENTICAL_ --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      *)
-        break
-        ;;
+    --internal-only)
+      pp=(--prefix '# ''DOC TEMPLATE:' --prefix '# ''_IDENTICAL_')
+      addDefaultPrefixes=false
+      ;;
+    --internal)
+      if [ "${#pp[@]}" -eq 0 ]; then
+        # Ordering here matters so declare from inside scope to outside scope
+        pp+=(--prefix '# ''DOC TEMPLATE:' --prefix '# ''_IDENTICAL_')
+      fi
+      ;;
+    --interactive)
+      aa+=("$argument")
+      ;;
+    --repair | --single | --exec | --prefix | --exclude | --extension | --skip | --singles)
+      shift
+      aa+=("$argument" "${1-}")
+      ;;
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    *)
+      break
+      ;;
     esac
     shift || :
   done

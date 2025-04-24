@@ -45,74 +45,74 @@ __deprecatedCleanup() {
     local argument="$1" __index=$((__count - $# + 1))
     [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-      # _IDENTICAL_ --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      --configuration)
-        doConfiguration=true
-        ;;
-      --no-configuration)
-        doConfiguration=false
-        ;;
-      --just-configuration)
-        doConfiguration="true"
-        doCannon=false
-        doSpelling=false
-        doTokens=false
-        ;;
-      --cannon)
-        doCannon=true
-        ;;
-      --no-cannon)
-        doCannon=false
-        ;;
-      --just-cannon)
-        doConfiguration=false
-        doCannon="true"
-        doSpelling=false
-        doTokens=false
-        ;;
-      --tokens)
-        doTokens=true
-        ;;
-      --no-tokens)
-        doTokens=false
-        ;;
-      --just-tokens)
-        doConfiguration=false
-        doCannon=false
-        doTokens="true"
-        doSpelling=false
-        ;;
-      --spelling)
-        doSpelling=true
-        ;;
-      --no-spelling)
-        doSpelling=false
-        ;;
-      --just-spelling)
-        doConfiguration=false
-        doCannon=false
-        doTokens=false
-        doSpelling="true"
-        ;;
-      --find)
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    --configuration)
+      doConfiguration=true
+      ;;
+    --no-configuration)
+      doConfiguration=false
+      ;;
+    --just-configuration)
+      doConfiguration="true"
+      doCannon=false
+      doSpelling=false
+      doTokens=false
+      ;;
+    --cannon)
+      doCannon=true
+      ;;
+    --no-cannon)
+      doCannon=false
+      ;;
+    --just-cannon)
+      doConfiguration=false
+      doCannon="true"
+      doSpelling=false
+      doTokens=false
+      ;;
+    --tokens)
+      doTokens=true
+      ;;
+    --no-tokens)
+      doTokens=false
+      ;;
+    --just-tokens)
+      doConfiguration=false
+      doCannon=false
+      doTokens="true"
+      doSpelling=false
+      ;;
+    --spelling)
+      doSpelling=true
+      ;;
+    --no-spelling)
+      doSpelling=false
+      ;;
+    --just-spelling)
+      doConfiguration=false
+      doCannon=false
+      doTokens=false
+      doSpelling="true"
+      ;;
+    --find)
+      shift
+      while [ $# -gt 0 ]; do
+        if [ "$1" = "--" ]; then
+          break
+        fi
+        ignoreExtras+=("$1")
         shift
-        while [ $# -gt 0 ]; do
-          if [ "$1" = "--" ]; then
-            break
-          fi
-          ignoreExtras+=("$1")
-          shift
-        done
-        [ $# -eq 0 ] || shift
-        ;;
-      *)
-        # _IDENTICAL_ argumentUnknown 1
-        __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
-        ;;
+      done
+      [ $# -eq 0 ] || shift
+      ;;
+    *)
+      # _IDENTICAL_ argumentUnknown 1
+      __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
+      ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
     shift

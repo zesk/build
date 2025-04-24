@@ -22,10 +22,10 @@
 dockerPlatformDefault() {
   local os=linux chip
   case "$(uname -m)" in
-    *arm*) chip=arm64 ;;
-    *mips*) chip=mips64 ;;
-    *x86* | *amd*) chip=amd64 ;;
-    *) chip=default ;;
+  *arm*) chip=arm64 ;;
+  *mips*) chip=mips64 ;;
+  *x86* | *amd*) chip=amd64 ;;
+  *) chip=default ;;
   esac
   printf -- "%s/%s" "$os" "$chip"
 }
@@ -191,23 +191,23 @@ _dockerEnvToBashPipe() {
   index=0
   while IFS="" read -r envLine; do
     case "$envLine" in
-      [[:space:]]*[#]* | [#]* | "")
-        # Comment line
-        printf -- "%s\n" "$envLine"
-        ;;
-      *)
-        name="${envLine%%=*}"
-        value="${envLine#*=}"
-        if [ -n "$name" ] && [ "$name" != "$envLine" ]; then
-          if [ -z "$(printf -- "%s" "$name" | sed 's/^[A-Za-z][0-9A-Za-z_]*$//g')" ]; then
-            printf -- "%s=\"%s\"\n" "$name" "$(escapeDoubleQuotes "$value")"
-          else
-            _argument "Invalid name at line $index: $name" || result=$?
-          fi
+    [[:space:]]*[#]* | [#]* | "")
+      # Comment line
+      printf -- "%s\n" "$envLine"
+      ;;
+    *)
+      name="${envLine%%=*}"
+      value="${envLine#*=}"
+      if [ -n "$name" ] && [ "$name" != "$envLine" ]; then
+        if [ -z "$(printf -- "%s" "$name" | sed 's/^[A-Za-z][0-9A-Za-z_]*$//g')" ]; then
+          printf -- "%s=\"%s\"\n" "$name" "$(escapeDoubleQuotes "$value")"
         else
-          _argument "Invalid line $index: $envLine" || result=$?
+          _argument "Invalid name at line $index: $name" || result=$?
         fi
-        ;;
+      else
+        _argument "Invalid line $index: $envLine" || result=$?
+      fi
+      ;;
     esac
     index=$((index + 1))
   done
@@ -287,47 +287,47 @@ dockerLocalContainer() {
     local argument="$1" __index=$((__count - $# + 1))
     [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-      # _IDENTICAL_ --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      --image)
-        shift
-        imageName=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
-        ;;
-      --local)
-        shift
-        localPath=$(usageArgumentDirectory "$usage" "$argument" "${1-}") || return $?
-        ;;
-      --path)
-        shift
-        imageApplicationPath=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
-        envFiles+=("-w" "$imageApplicationPath")
-        ;;
-      --env)
-        shift
-        envPair=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
-        if [ "${envPair#*=}" = "$envPair" ]; then
-          decorate warning "$argument does not look like a variable: $(decorate error "$envPair")" 1>&2
-        fi
-        ee+=("$argument" "$envPair")
-        ;;
-      --env-file)
-        shift
-        envFile=$(usageArgumentFile "$usage" "envFile" "$1") || return $?
-        tempEnv=$(fileTemporaryName "$usage") || return $?
-        __catchArgument "$usage" anyEnvToDockerEnv "$envFile" >"$tempEnv" || return $?
-        tempEnvs+=("$tempEnv")
-        ee+=("$argument" "$tempEnv")
-        ;;
-      --platform)
-        shift
-        platform=$(usageArgumentString "$usage" "$argument" "$1") || return $?
-        ;;
-      *)
-        extraArgs+=("$1")
-        ;;
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    --image)
+      shift
+      imageName=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
+      ;;
+    --local)
+      shift
+      localPath=$(usageArgumentDirectory "$usage" "$argument" "${1-}") || return $?
+      ;;
+    --path)
+      shift
+      imageApplicationPath=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
+      envFiles+=("-w" "$imageApplicationPath")
+      ;;
+    --env)
+      shift
+      envPair=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
+      if [ "${envPair#*=}" = "$envPair" ]; then
+        decorate warning "$argument does not look like a variable: $(decorate error "$envPair")" 1>&2
+      fi
+      ee+=("$argument" "$envPair")
+      ;;
+    --env-file)
+      shift
+      envFile=$(usageArgumentFile "$usage" "envFile" "$1") || return $?
+      tempEnv=$(fileTemporaryName "$usage") || return $?
+      __catchArgument "$usage" anyEnvToDockerEnv "$envFile" >"$tempEnv" || return $?
+      tempEnvs+=("$tempEnv")
+      ee+=("$argument" "$tempEnv")
+      ;;
+    --platform)
+      shift
+      platform=$(usageArgumentString "$usage" "$argument" "$1") || return $?
+      ;;
+    *)
+      extraArgs+=("$1")
+      ;;
     esac
     shift
   done
@@ -375,20 +375,20 @@ dockerImages() {
     local argument="$1" __index=$((__count - $# + 1))
     [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-      # _IDENTICAL_ --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      --filter)
-        shift
-        [ 0 -eq "${#filter[@]}" ] || __throwArgument "$usage" "--filter passed twice: #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
-        filter+=("--filter" "reference=$(usageArgumentString "$usage" "$argument" "${1-}")") || return $?
-        ;;
-      *)
-        # _IDENTICAL_ argumentUnknown 1
-        __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
-        ;;
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    --filter)
+      shift
+      [ 0 -eq "${#filter[@]}" ] || __throwArgument "$usage" "--filter passed twice: #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
+      filter+=("--filter" "reference=$(usageArgumentString "$usage" "$argument" "${1-}")") || return $?
+      ;;
+    *)
+      # _IDENTICAL_ argumentUnknown 1
+      __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
+      ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
     shift
@@ -442,9 +442,7 @@ _dockerImages() {
 #       --tree            List multi-platform images as a tree (EXPERIMENTAL)
 #
 
-
 ## --------------------------------------------------------------------------------------------------------------------------------------------
-
 
 # Does a docker volume exist with name?
 # Argument: name - String. Required.

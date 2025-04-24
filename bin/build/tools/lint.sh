@@ -37,21 +37,21 @@ bashLint() {
     argument="$1"
     [ -n "$argument" ] || __throwArgument "$usage" "blank argument" || return $?
     case "$argument" in
-      --verbose)
-        exec 3>&1
-        exec 4>/dev/null
-        ;;
-      *)
-        [ -f "$argument" ] || __throwArgument "$usage" "$(printf -- "%s: %s PWD: %s" "Not a item" "$(decorate code "$argument")" "$(pwd)")" || return $?
-        # shellcheck disable=SC2210
-        __catchEnvironment "$usage" bash -n "$argument" 1>&3 2>&3 || _undo $? printf "%s\n" "bash -n failed" 1>&4 || return $?
-        # shellcheck disable=SC2210
-        __catchEnvironment "$usage" shellcheck "$argument" 1>&3 2>&3 || _undo $? printf "%s\n" "shellcheck" 1>&4 || return $?
-        local found
-        if found=$(pcregrep -n -l -M '\n\}\n#' "$argument"); then
-          __throwEnvironment "$usage" "found }\\n#: $(decorate code "$found")" 1>&3 2>&3 || _undo $? printf "%s\n" "comment following brace" 1>&4 || return $?
-        fi
-        ;;
+    --verbose)
+      exec 3>&1
+      exec 4>/dev/null
+      ;;
+    *)
+      [ -f "$argument" ] || __throwArgument "$usage" "$(printf -- "%s: %s PWD: %s" "Not a item" "$(decorate code "$argument")" "$(pwd)")" || return $?
+      # shellcheck disable=SC2210
+      __catchEnvironment "$usage" bash -n "$argument" 1>&3 2>&3 || _undo $? printf "%s\n" "bash -n failed" 1>&4 || return $?
+      # shellcheck disable=SC2210
+      __catchEnvironment "$usage" shellcheck "$argument" 1>&3 2>&3 || _undo $? printf "%s\n" "shellcheck" 1>&4 || return $?
+      local found
+      if found=$(pcregrep -n -l -M '\n\}\n#' "$argument"); then
+        __throwEnvironment "$usage" "found }\\n#: $(decorate code "$found")" 1>&3 2>&3 || _undo $? printf "%s\n" "comment following brace" 1>&4 || return $?
+      fi
+      ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
     shift
@@ -88,25 +88,25 @@ bashLintFiles() {
     local argument="$1" __index=$((__count - $# + 1))
     [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-      # _IDENTICAL_ --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      --verbose)
-        verbose=true
-        ;;
-      --exec)
-        shift
-        binary="$(usageArgumentCallable "$usage" "$argument" "${1-}")" || return $?
-        ii+=("$argument" "$binary")
-        ;;
-      --interactive)
-        interactive=true
-        ;;
-      *)
-        checkedFiles+=("$(usageArgumentFile "$usage" "checkFile" "$argument")") || return $?
-        ;;
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    --verbose)
+      verbose=true
+      ;;
+    --exec)
+      shift
+      binary="$(usageArgumentCallable "$usage" "$argument" "${1-}")" || return $?
+      ii+=("$argument" "$binary")
+      ;;
+    --interactive)
+      interactive=true
+      ;;
+    *)
+      checkedFiles+=("$(usageArgumentFile "$usage" "checkFile" "$argument")") || return $?
+      ;;
     esac
     shift || __throwArgument "$usage" "shift after $argument failed" || return $?
   done
@@ -191,23 +191,23 @@ bashLintFilesInteractive() {
     local argument="$1" __index=$((__count - $# + 1))
     [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-      # _IDENTICAL_ --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      --exec)
-        shift
-        binary="$(usageArgumentCallable "$argument" "${1-}")" || return $?
-        ;;
-      --delay)
-        shift
-        sleepDelay=$(usageArgumentUnsignedInteger "$usage" "$argument" "${1-}") || return $?
-        ;;
-      *)
-        # _IDENTICAL_ argumentUnknown 1
-        __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
-        ;;
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    --exec)
+      shift
+      binary="$(usageArgumentCallable "$argument" "${1-}")" || return $?
+      ;;
+    --delay)
+      shift
+      sleepDelay=$(usageArgumentUnsignedInteger "$usage" "$argument" "${1-}") || return $?
+      ;;
+    *)
+      # _IDENTICAL_ argumentUnknown 1
+      __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
+      ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
     shift
@@ -281,18 +281,18 @@ findUncaughtAssertions() {
     argument="$1"
     [ -n "$argument" ] || __throwArgument "$usage" "blank argument" || return $?
     case "$argument" in
-      --exec)
-        shift || __throwArgument "$usage" "$argument missing argument" || return $?
-        [ -n "$1" ] || __throwArgument "$usage" "$argument argument blank" || return $?
-        binary="$1"
-        ;;
-      --list)
-        listFlag=true
-        ;;
-      *)
-        [ -z "$directory" ] || __throwArgument "$usage" "$this: Unknown argument" || return $?
-        directory=$(usageArgumentDirectory "$usage" "directory" "$1") || return $?
-        ;;
+    --exec)
+      shift || __throwArgument "$usage" "$argument missing argument" || return $?
+      [ -n "$1" ] || __throwArgument "$usage" "$argument argument blank" || return $?
+      binary="$1"
+      ;;
+    --list)
+      listFlag=true
+      ;;
+    *)
+      [ -z "$directory" ] || __throwArgument "$usage" "$this: Unknown argument" || return $?
+      directory=$(usageArgumentDirectory "$usage" "directory" "$1") || return $?
+      ;;
     esac
     shift || __throwArgument "$usage" "shift argument $(decorate code "$argument")" || return $?
   done
@@ -471,30 +471,30 @@ validateFileContents() {
     local argument="$1" __index=$((__count - $# + 1))
     [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-      # _IDENTICAL_ --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      --)
-        shift || __throwArgument "$usage" "shift argument $(decorate code "$argument")" || return $?
-        break
-        ;;
-      --verbose)
-        verboseMode=true
-        ;;
-      --exec)
-        shift || __throwArgument "$usage" "shift argument $(decorate code "$argument")" || return $?
-        binary="$1"
-        isCallable "$binary" || __throwArgument "$usage" "--exec $binary Not callable" || return $?
-        ;;
-      -)
-        fileArgs=()
-        ;;
-      *)
-        usageArgumentFile "$usage" "file${#fileArgs[@]}" "$1" >/dev/null || return $?
-        fileArgs+=("$1")
-        ;;
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    --)
+      shift || __throwArgument "$usage" "shift argument $(decorate code "$argument")" || return $?
+      break
+      ;;
+    --verbose)
+      verboseMode=true
+      ;;
+    --exec)
+      shift || __throwArgument "$usage" "shift argument $(decorate code "$argument")" || return $?
+      binary="$1"
+      isCallable "$binary" || __throwArgument "$usage" "--exec $binary Not callable" || return $?
+      ;;
+    -)
+      fileArgs=()
+      ;;
+    *)
+      usageArgumentFile "$usage" "file${#fileArgs[@]}" "$1" >/dev/null || return $?
+      fileArgs+=("$1")
+      ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
     shift
@@ -505,13 +505,13 @@ validateFileContents() {
     local argument="$1"
     [ -n "$argument" ] || __throwArgument "$usage" "Zero size text match passed" || return $?
     case "$argument" in
-      --)
-        shift || __throwArgument "$usage" "shift argument $(decorate code "$argument")" || return $?
-        break
-        ;;
-      *)
-        textMatches+=("$1")
-        ;;
+    --)
+      shift || __throwArgument "$usage" "shift argument $(decorate code "$argument")" || return $?
+      break
+      ;;
+    *)
+      textMatches+=("$1")
+      ;;
     esac
     shift || __throwArgument "$usage" "shift argument $(decorate code "$argument")" || return $?
   done
