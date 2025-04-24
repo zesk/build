@@ -126,9 +126,13 @@ bashPrompt() {
       --first | --last | --debug)
         addArguments+=("$argument")
         ;;
+      --order)
+        shift
+        order=$(usageArgumentUnsignedInteger "$usage" "$argument" "${1-}") || return $?
+        addArguments+=("$argument" "$order")
+        ;;
       --verbose)
         verbose=true
-        addArguments+=("$argument")
         ;;
       *)
         addArguments+=("$argument")
@@ -309,6 +313,7 @@ __bashPromptList() {
   __bashPromptSanity
 
   for promptCommand in "${__BASH_PROMPT_MODULES[@]+"${__BASH_PROMPT_MODULES[@]}"}"; do
+    promptCommand=${promptCommand#[0-9]:}
     if isFunction "$promptCommand"; then
       printf -- "- %s (%s)\n" "$(decorate code "$promptCommand")" "$(decorate orange "function")"
     else
@@ -324,7 +329,7 @@ __bashPromptList() {
 __bashPromptAdd() {
   local usage="$1" && shift
 
-  local first=false last=false verbose=false found
+  local order=5  found
 
   __bashPromptSanity
 
@@ -334,44 +339,25 @@ __bashPromptAdd() {
     local argument="$1" __index=$((__count - $# + 1))
     [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-      --verbose)
-        verbose=true
+      --order)
+        shift
+        order=$(usageArgumentUnsignedInteger "$usage" "$argument" "${1-}") || return $?
+        [ "$order" -lt 10 ] || order=9
         ;;
       --first)
-        first=true
-        last=false
+        order=0
         ;;
       --last)
-        first=false
-        last=true
+        order=9
         ;;
       *)
-        local found=""
-        isCallable "$argument" || __throwArgument "$usage" "$argument must be executable or a function" || return $?
-        ! inArray "$argument" "${__BASH_PROMPT_MODULES[@]+"${__BASH_PROMPT_MODULES[@]}"}" || found="$argument"
-        if $first; then
-          if [ -n "$found" ]; then
-            if [ "${__BASH_PROMPT_MODULES[0]-}" = "$found" ]; then
-              return 0
-            fi
-            __bashPromptRemove "$usage" "$found" || return $?
-            ! $verbose || decorate info "Moving bash module to first: $(decorate code "$argument")"
-          else
-            ! $verbose || decorate info "Added bash module: $(decorate code "$argument")"
-          fi
-          __BASH_PROMPT_MODULES=("$argument" "${__BASH_PROMPT_MODULES[@]+"${__BASH_PROMPT_MODULES[@]}"}")
-        else
-          if [ -n "$found" ]; then
-            if ! $last || [ "${__BASH_PROMPT_MODULES[${#__BASH_PROMPT_MODULES[@]} - 1]}" = "$argument" ]; then
-              return 0
-            fi
-            __bashPromptRemove "$usage" "$found" || return $?
-            ! $verbose || decorate info "Moving bash module to last: $(decorate code "$argument")"
-          else
-            ! $verbose || decorate info "Added bash module: $(decorate code "$argument")"
-          fi
-          __BASH_PROMPT_MODULES=("${__BASH_PROMPT_MODULES[@]+"${__BASH_PROMPT_MODULES[@]}"}" "$argument")
-        fi
+        local module modules=() found=false
+        export __BASH_PROMPT_MODULES
+        for module in "${__BASH_PROMPT_MODULES[@]+"${__BASH_PROMPT_MODULES[@]}"}"; do
+          [ "${argument}" = "${module#[0-9]:}" ] ||  modules+=("$module")
+        done
+        modules+=("$order:$argument")
+        __bashPromptModulesSave "${modules[@]}"
         ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
@@ -379,6 +365,36 @@ __bashPromptAdd() {
   done
   return 0
 }
+
+__bashPromptModulesSave() {
+  export __BASH_PROMPT_MODULES
+  IFS=$'\n' read -d '' -r -a __BASH_PROMPT_MODULES < <(printf "%s\n" "$@" | sort -n | sort -u) || :
+}
+
+# Usage: {fn} usageFunction removeModule
+# Fails if not found
+# Requires: isArray read inArray decorate listJoin
+__bashPromptRemove() {
+  local usage="$1" module="$2" current modules=() found=false
+
+  __bashPromptSanity
+
+  for current in "${__BASH_PROMPT_MODULES[@]+"${__BASH_PROMPT_MODULES[@]}"}"; do
+    if [ "$module" = "${current#[0-9]:}" ]; then
+      found=true
+    else
+      modules+=("$current")
+    fi
+  done
+
+  if ! $found; then
+    local moduleList
+    [ "${#__BASH_PROMPT_MODULES[@]}" -eq 0 ] && moduleList="$(decorate warning none)" || moduleList=$(decorate each code "${__BASH_PROMPT_MODULES[@]}")
+    __throwEnvironment "$usage" "$module was not found in modules: $moduleList" || return $?
+  fi
+  __BASH_PROMPT_MODULES=("${modules[@]+"${modules[@]}"}")
+}
+
 
 #
 # Given a list of color names, generate the color codes in a :-separated list
@@ -400,31 +416,6 @@ bashPromptColorsFormat() {
   done
   colors+=("$(decorate reset --)")
   printf "%s\n" "$(listJoin ":" "${colors[@]}")"
-}
-
-# Usage: {fn} usageFunction removeModule
-# Fails if not found
-# Requires: isArray read inArray decorate listJoin
-__bashPromptRemove() {
-  local usage="$1" module="$2" current modules=() found=false
-
-  __bashPromptSanity
-
-  for current in "${__BASH_PROMPT_MODULES[@]+"${__BASH_PROMPT_MODULES[@]}"}"; do
-
-    if [ "$module" = "$current" ]; then
-      found=true
-    else
-      modules+=("$current")
-    fi
-  done
-
-  if ! $found; then
-    local moduleList
-    [ "${#__BASH_PROMPT_MODULES[@]}" -eq 0 ] && moduleList="$(decorate warning none)" || moduleList=$(decorate each code "${__BASH_PROMPT_MODULES[@]}")
-    __throwEnvironment "$usage" "$module was not found in modules: $moduleList" || return $?
-  fi
-  __BASH_PROMPT_MODULES=("${modules[@]+"${modules[@]}"}")
 }
 
 __bashPromptFormat() {
@@ -503,6 +494,7 @@ __bashPromptCommand() {
 
   local promptCommand start
   for promptCommand in "${__BASH_PROMPT_MODULES[@]}"; do
+    promptCommand="${promptCommand#[0-9]:}"
     if isFunction "$promptCommand"; then
       ! $debug || statusMessage decorate warning "Running $(decorate code "$promptCommand") "
       start=$(timingStart)

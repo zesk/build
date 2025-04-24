@@ -40,7 +40,7 @@ buildContainer() {
   local image="${1-ubuntu:latest}"
   local name="${image%:latest}"
   local ee=(
-    "bashPrompt --label \"$name\" bashPromptModule_binBuild bashPromptModule_ApplicationPath bashPromptModule_dotFilesWatcher bashPromptModule_iTerm2Colors"
+    "bashPrompt --label \"$name\" bashPromptModule_binBuild bashPromptModule_ApplicationPath bashPromptModule_dotFilesWatcher --order 8 bashPromptModule_iTerm2Colors"
     "approved=\$(dotFilesApprovedFile)"
     "[ -f \"\$approved\" ] || dotFilesApproved bash mysql >>\$approved"
     "packageWhich --verbose shasum apt-rdepends"
