@@ -159,7 +159,7 @@ __installPackageConfiguration() {
   _installRemotePackage "$rel" "bin/build" "install-bin-build.sh" --version-function __installBinBuildVersion --url-function __installBinBuildURL --check-function __installBinBuildCheck --name "Zesk Build" "$@"
 }
 
-# IDENTICAL _installRemotePackage 350
+# IDENTICAL _installRemotePackage 362
 
 # Installs {name} in a local project directory if not installed. Also
 # will overwrite {source} with the latest version after installation.
@@ -206,7 +206,7 @@ __installPackageConfiguration() {
 # Argument: --version-function urlFunction - Optional. Function. Function to compare live version to local version. Exits 0 if they match. Output version text if you want. INTERNAL.
 # Argument: --url-function urlFunction - Optional. Function. Function to return the URL to download. INTERNAL.
 # Argument: --check-function checkFunction - Optional. Function. Function to check the installation and output the version number or package name. INTERNAL.
-# Argument: --installer installer - Optional. Executable. Multiple. Binary to run after installation succeeds. Can be supplied multiple times.
+# Argument: --installer installer - Optional. Executable. Multiple. Binary to run after installation succeeds. Can be supplied multiple times. If `installer` begins with a `@` then any errors by the installer are ignored.
 # Argument: --replace fie - Optional. Flag. Replace the target file with this script and delete this one. Internal only, do not use. INTERNAL.
 # Argument: --debug - Optional. Flag. Debugging is on. INTERNAL.
 # Argument: --force - Optional. Flag. Force installation even if file is up to date.
@@ -287,7 +287,7 @@ _installRemotePackage() {
     --replace)
       shift
       newName=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
-      decorate bold-blue "Replacing $(decorate orange "${BASH_SOURCE[0]}") -> $(decorate bold-orange "$newName")"
+      decorate bold-blue "Updating -> $(decorate bold-orange "$newName")"
       __catchEnvironment "$usage" cp -f "${BASH_SOURCE[0]}" "$newName" || return $?
       __catchEnvironment "$usage" rm -rf "${BASH_SOURCE[0]}" || return $?
       return 0
@@ -395,17 +395,29 @@ _installRemotePackage() {
         __throwEnvironment "$usage" "$installer is not executable" || exitCode=$?
         continue
       fi
-      decorate info "Running installer $(decorate code "$installer") ..."
+      local ignoreErrors=false
+      if [ "${installer#@}" != "$installer" ]; then
+        ignoreErrors=true
+        installer="${installer#@}"
+      fi
+      decorate info "Running installer $(decorate code "$installer") ($ignoreErrors) ..."
       __catchEnvironment "$usage" "$installer" >"$installerLog" 2>&1 || lastExit=$?
       if [ $lastExit -gt 0 ]; then
-        decorate error "Installer $(decorate code "$installer") failed [$(decorate error "$lastExit")]" 1>&2
-        decorate code <"$installerLog" 1>&2
+        if $ignoreErrors; then
+          decorate warning "Installer $(decorate code "$installer") did not succeed [$(decorate value "$lastExit")]"
+          decorate code <"$installerLog"
+        else
+          decorate error "Installer $(decorate code "$installer") failed [$(decorate value "$lastExit")]" 1>&2
+          decorate code <"$installerLog" 1>&2
+          exitCode=$lastExit || :
+        fi
         printf -- "" >"$installerLog" || :
-        exitCode=$lastExit || :
       fi
     done
+
     rm -f "$installerLog" || :
     if [ "$exitCode" != 0 ]; then
+      # Exit before replacing script below
       return "$exitCode"
     fi
   fi

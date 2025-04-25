@@ -98,8 +98,9 @@ __packageCheckFunction() {
 # Argument: --version-function urlFunction - Optional. Function. Function to compare live version to local version. Exits 0 if they match. Output version text if you want. INTERNAL.
 # Argument: --url-function urlFunction - Optional. Function. Function to return the URL to download. INTERNAL.
 # Argument: --check-function checkFunction - Optional. Function. Function to check the installation and output the version number or package name. INTERNAL.
-# Argument: --installer installer - Optional. Executable. Multiple. Binary to run after installation succeeds. Can be supplied multiple times.
-# Argument: --replace fie - Optional. Flag. Replace the target file with this script and delete this one. Internal only, do not use. INTERNAL.
+# Argument: --installer installer - Optional. Executable. Multiple. Binary to run after installation succeeds. Can be supplied multiple times. If `installer` begins with a `@` then any errors by the installer are ignored.
+# Argument: --replace file - Optional. File. Replace the target file with this script and delete this one. Internal only, do not use. INTERNAL.
+# Argument: --finalize file - Optional. File. Remove the temporary file and exit 0. INTERNAL.
 # Argument: --debug - Optional. Flag. Debugging is on. INTERNAL.
 # Argument: --force - Optional. Flag. Force installation even if file is up to date.
 # Argument: --diff - Optional. Flag. Show differences between old and new file.
@@ -176,12 +177,33 @@ _installRemotePackage() {
       shift
       installers+=("$(usageArgumentString "$usage" "$argument" "${1-}")") || return $?
       ;;
+    #
+    # I believe this ensures that the process running does not modify its source script directly
+    #
+    # 1. Copy new script to bin/installer.sh.$$
+    # 2. Run exec bin/installer.sh.$$ --replace bin/installer.sh
+    # 3. Memory reloaded with "new" version of script
+    # 4. New version copies itself (.sh.$$) to old installer (.sh version), and runs
+    # 4. exec bin/installer.sh --finalize bin/installer.sh.$$
+    # 5. Loads NEW version of script, and then deletes `bin/installer.sh.$$` and exits
+    #
+    # But I could be wrong.
+    #
     --replace)
+      local newName
       shift
       newName=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
-      decorate bold-blue "Replacing $(decorate orange "${BASH_SOURCE[0]}") -> $(decorate bold-orange "$newName")"
+      decorate bold-blue "Updating -> $(decorate bold-orange "$newName")"
       __catchEnvironment "$usage" cp -f "${BASH_SOURCE[0]}" "$newName" || return $?
-      __catchEnvironment "$usage" rm -rf "${BASH_SOURCE[0]}" || return $?
+      __catchEnvironment "$usage" chmod +x "$newName" || return $?
+      exec "$newName" --finalize "${BASH_SOURCE[0]}" || return $?
+      return 0
+      ;;
+    --finalize)
+      local oldName
+      shift
+      oldName=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
+      __catchEnvironment "$usage" rm -rf "$oldName" || return $?
       return 0
       ;;
     --debug)
@@ -287,17 +309,29 @@ _installRemotePackage() {
         __throwEnvironment "$usage" "$installer is not executable" || exitCode=$?
         continue
       fi
-      decorate info "Running installer $(decorate code "$installer") ..."
+      local ignoreErrors=false
+      if [ "${installer#@}" != "$installer" ]; then
+        ignoreErrors=true
+        installer="${installer#@}"
+      fi
+      decorate info "Running installer $(decorate code "$installer") ($ignoreErrors) ..."
       __catchEnvironment "$usage" "$installer" >"$installerLog" 2>&1 || lastExit=$?
       if [ $lastExit -gt 0 ]; then
-        decorate error "Installer $(decorate code "$installer") failed [$(decorate error "$lastExit")]" 1>&2
-        decorate code <"$installerLog" 1>&2
+        if $ignoreErrors; then
+          decorate warning "Installer $(decorate code "$installer") did not succeed [$(decorate value "$lastExit")]"
+          decorate code <"$installerLog"
+        else
+          decorate error "Installer $(decorate code "$installer") failed [$(decorate value "$lastExit")]" 1>&2
+          decorate code <"$installerLog" 1>&2
+          exitCode=$lastExit || :
+        fi
         printf -- "" >"$installerLog" || :
-        exitCode=$lastExit || :
       fi
     done
+
     rm -f "$installerLog" || :
     if [ "$exitCode" != 0 ]; then
+      # Exit before replacing script below
       return "$exitCode"
     fi
   fi
