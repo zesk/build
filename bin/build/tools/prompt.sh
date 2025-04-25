@@ -19,6 +19,7 @@
 # Argument: --label promptLabel - String. Optional. The prompt format string. See PROMPT FORMATTING below
 # Argument: --colors colorsText - String. Optional. Set the prompt colors. See COLORS below.
 # Argument: --skip-terminal - Flag. Optional. Skip the check for a terminal attached to `stdin`.
+# Argument: --skip-prompt - Flag. Optional. Do not modify the prompt.
 # DOC TEMPLATE: --help 1
 # Argument: --help - Optional. Flag. Display this help.
 #
@@ -65,7 +66,7 @@
 bashPrompt() {
   local usage="_${FUNCNAME[0]}"
 
-  local addArguments=() colorsText="" resetFlag=false verbose=false skipTerminal=false listFlag=false
+  local addArguments=() colorsText="" resetFlag=false verbose=false skipTerminal=false listFlag=false skipPrompt=false
 
   export __BASH_PROMPT_PREVIOUS
   isArray __BASH_PROMPT_PREVIOUS || __BASH_PROMPT_PREVIOUS=()
@@ -111,6 +112,9 @@ bashPrompt() {
       ;;
     --skip-terminal)
       skipTerminal=true
+      ;;
+    --skip-prompt)
+      skipPrompt=true
       ;;
     --reset)
       resetFlag=true
@@ -175,12 +179,18 @@ bashPrompt() {
     __bashPromptList
   fi
 
+  # Skip prompt early
+  ! $skipPrompt || [ -n "$colorsText" ] || return 0
+
   __catchEnvironment "$usage" buildEnvironmentLoad BUILD_PROMPT_COLORS || return $?
 
   if [ -z "${BUILD_PROMPT_COLORS-}" ] || [ -n "$colorsText" ] || $resetFlag; then
     [ -n "$colorsText" ] || colorsText=$(bashPromptColorScheme default)
     BUILD_PROMPT_COLORS=$(bashPromptColorsFormat "${colorsText}")
   fi
+
+  # Skip prompt on time
+  ! $skipPrompt || return 0
 
   local theCommand="__bashPromptCommand"
   if [ -n "${PROMPT_COMMAND-}" ]; then

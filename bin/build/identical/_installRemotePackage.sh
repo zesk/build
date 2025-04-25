@@ -293,7 +293,7 @@ _installRemotePackage() {
   message="$message (local)$binName"
   printf -- "%s\n" "$message"
 
-  local lastExit=0
+  local exitCode=0
 
   if [ "${#installers[@]}" -gt 0 ]; then
     local installer lastExit=0 installerLog
@@ -301,6 +301,11 @@ _installRemotePackage() {
     installerLog=$(fileTemporaryName "$usage") || return $?
 
     for installer in "${installers[@]}"; do
+      local ignoreErrors=false
+      if [ "${installer#@}" != "$installer" ]; then
+        ignoreErrors=true
+        installer="${installer#@}"
+      fi
       if [ ! -f "$installer" ]; then
         __throwEnvironment "$usage" "$installer is missing" || exitCode=$?
         continue
@@ -308,11 +313,6 @@ _installRemotePackage() {
       if [ ! -x "$installer" ]; then
         __throwEnvironment "$usage" "$installer is not executable" || exitCode=$?
         continue
-      fi
-      local ignoreErrors=false
-      if [ "${installer#@}" != "$installer" ]; then
-        ignoreErrors=true
-        installer="${installer#@}"
       fi
       decorate info "Running installer $(decorate code "$installer") ($ignoreErrors) ..."
       __catchEnvironment "$usage" "$installer" >"$installerLog" 2>&1 || lastExit=$?
@@ -330,6 +330,7 @@ _installRemotePackage() {
     done
 
     rm -f "$installerLog" || :
+
     if [ "$exitCode" != 0 ]; then
       # Exit before replacing script below
       return "$exitCode"

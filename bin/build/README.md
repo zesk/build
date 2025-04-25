@@ -2,10 +2,12 @@
 
 Pipeline, build, and operations tools useful for any project.
 
-- `bash` functions work on all Unix-style operating systems
+- `bash` functions which work on all Unix-style operating systems with a common argument set
 - Build, deployment and management tools for pipelines and production systems (system setup, services, cron, permissions
   separations)
 - Operating system differences in many tools supported automatically
+- Powerful tools for development workflows - automatic documentation for Bash scripts and functions, completions, and
+  interactivity
 
 This code toolkit depends solely on [`bash`](https://www.gnu.org/software/bash/manual/bash.html) and a few other
 binaries (`jq`) and a conscientious decision has been made to not depend on any other language libraries, as of 2025
@@ -32,7 +34,7 @@ To use in your pipeline:
 
 To install it in the operating system:
 
-- Copy `bin/build/install-bin-build.sh` to `/usr/local/bin/build/` and running it as `root`
+- Copy `bin/build/install-bin-build.sh` to `/usr/local/bin/build/` and `sudo /usr/local/bin/build/install-bin-build.sh`
 
 ## Main entry points
 
@@ -116,7 +118,7 @@ required, however).
 
 ## Run tests in docker
 
-Scripts are written by loading an environment values file and then run commands directly in a test container:
+Scripts support loading an environment files and running commands directly in a test container:
 
     bin/build/bitbucket-container.sh --env-file .env.MYTESTENV bin/test.sh
 
@@ -175,6 +177,6 @@ platform, [report an issue](https://github.com/zesk/build/issues).
 
 License is [MIT License](LICENSE.md). Source can be found online at [GitHub](https://github.com/zesk/build).
 
-Reviewed: 2025-03-29
+Reviewed: 2025-04-25
 
 (this file is a copy - please modify the original)
