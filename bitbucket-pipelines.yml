@@ -42,8 +42,8 @@ pipelines:
           artifacts:
             - test.stats
           script:
-            - bin/test.sh --skip-tag package-install
             - bin/build.sh
+            - bin/test.sh --skip-tag package-install
             - bin/deploy.sh
     deploy:
       - step:
@@ -79,6 +79,7 @@ pipelines:
           services:
             - docker
           script:
+            - bin/build.sh
             - bin/test.sh --coverage
             - ls -la coverage.stats
             - sort < coverage.stats | uniq -c | sort -rn > coverage.stats.uniq
