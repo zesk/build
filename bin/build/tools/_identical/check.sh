@@ -327,10 +327,10 @@ identicalCheckShell() {
         pp+=(--prefix '# ''DOC TEMPLATE:' --prefix '# ''_IDENTICAL_')
       fi
       ;;
-    --interactive)
+    --interactive | --ignore-singles | --no-map)
       aa+=("$argument")
       ;;
-    --repair | --single | --exec | --prefix | --exclude | --extension | --skip | --singles)
+    --repair | --single | --exec | --prefix | --exclude | --extension | --skip | --singles | --cd)
       shift
       aa+=("$argument" "${1-}")
       ;;

@@ -15,6 +15,7 @@ testDumpPipe() {
   assertFileDoesNotExist "$ff" || return $?
 }
 
+# Tag: slow
 testDumpEnvironmentSafe() {
   export PRIVATE_THING
 
@@ -46,6 +47,7 @@ testDumpEnvironmentSafe() {
   unset PRIVATE_THING
 }
 
+# Tag: slow
 testDumpEnvironmentUnsafe() {
   export PRIVATE_THING
 

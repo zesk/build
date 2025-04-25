@@ -41,6 +41,7 @@ testBuildApplicationTools() {
   __environment muzzle popd || return $?
 }
 
+# Tag: slow
 testBuildEnvironmentLoadAll() {
   local usage="_return"
   local home loadIt nonBlankEnvs=(
