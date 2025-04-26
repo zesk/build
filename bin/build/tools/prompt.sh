@@ -10,7 +10,7 @@
 # Argument: module - Executable. Optional. Module to enable or disable.
 # Argument: --remove module - Optional. Remove the module specified (should match exactly)
 # Argument: --reset - Flag. Optional. Remove all prompt modules.
-# Argument: --list - Flag. Optional. List the current modules.
+# Argument: --list - Flag. Optional. List the current modules. Modules are also added or removed, otherwise no changes are made.
 # Argument: --first - Flag. Optional. Add all subsequent modules first to the list.
 # Argument: --last - Flag. Optional. Add all subsequent modules last to the list.
 # Argument: --order order - UnsignedInteger. Optional. Set the order index for this prompt. 0 is first, higher numbers are later.
@@ -147,6 +147,15 @@ bashPrompt() {
     shift
   done
 
+  if [ ${#addArguments[@]} -gt 0 ]; then
+    __bashPromptAdd "$usage" "${addArguments[@]+"${addArguments[@]}"}" || return $?
+  fi
+
+  if $listFlag; then
+    __bashPromptList
+    return 0
+  fi
+
   if [ -z "$successPrompt" ] || $resetFlag; then
     successPrompt=">"
   fi
@@ -165,16 +174,6 @@ bashPrompt() {
     __BASH_PROMPT_MODULES=()
     addArguments=()
     ! $verbose || decorate info "Prompt modules reset to empty list."
-  fi
-
-  # IDENTICAL bashPromptAddArguments 3
-  if [ ${#addArguments[@]} -gt 0 ]; then
-    __bashPromptAdd "$usage" "${addArguments[@]+"${addArguments[@]}"}" || return $?
-  fi
-
-  if $listFlag; then
-    __bashPromptList
-    return 0
   fi
 
   # Skip prompt early
@@ -321,8 +320,8 @@ __bashPromptList() {
   __bashPromptSanity
 
   for promptCommand in "${__BASH_PROMPT_MODULES[@]+"${__BASH_PROMPT_MODULES[@]}"}"; do
-    promptCommand=${promptCommand#[0-9]*:}
     local order=${promptCommand%%:*}
+    promptCommand=${promptCommand#[0-9]*:}
     if isFunction "$promptCommand"; then
       printf -- "- %s (%s) %s\n" "$(decorate code "$promptCommand")" "$(decorate orange "function")" "$(decorate subtle "[$order]")"
     else
@@ -339,7 +338,7 @@ __bashPromptList() {
 __bashPromptAdd() {
   local usage="$1" && shift
 
-  local order=5 found
+  local order=50 found
 
   __bashPromptSanity
 
