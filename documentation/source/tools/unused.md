@@ -8,3 +8,9 @@ Hides these from [New and uncategorized functions](./todo.md)
 {exampleFunction}
 {wrapLines}
 {listFileModificationTimes}
+
+{debugOpenFiles}
+{githubURLsToCSV}
+{processOpenPipes}
+{isExecutableHack}
+{mapEnvironment2}

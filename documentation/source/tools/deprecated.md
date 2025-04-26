@@ -5,3 +5,4 @@
 {deprecatedCannonFile}
 {deprecatedFind}
 {deprecatedCannon}
+{deprecatedTokensFile}

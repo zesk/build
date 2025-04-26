@@ -35,6 +35,7 @@
 
 {bashSanitize}
 {bashLintFiles}
+{bashLintFilesInteractive}
 {bashLint}
 
 ## Debug
