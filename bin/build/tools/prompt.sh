@@ -166,18 +166,15 @@ bashPrompt() {
     addArguments=()
     ! $verbose || decorate info "Prompt modules reset to empty list."
   fi
+
   # IDENTICAL bashPromptAddArguments 3
   if [ ${#addArguments[@]} -gt 0 ]; then
     __bashPromptAdd "$usage" "${addArguments[@]+"${addArguments[@]}"}" || return $?
   fi
 
   if $listFlag; then
-    # IDENTICAL bashPromptAddArguments 3
-    if [ ${#addArguments[@]} -gt 0 ]; then
-      __bashPromptAdd "$usage" "${addArguments[@]+"${addArguments[@]}"}" || return $?
-    fi
-    addArguments=()
     __bashPromptList
+    return 0
   fi
 
   # Skip prompt early
@@ -194,7 +191,7 @@ bashPrompt() {
   ! $skipPrompt || return 0
 
   local theCommand="__bashPromptCommand"
-  if [ -n "${PROMPT_COMMAND-}" ]; then
+  if [ -n "${PROMPT_COMMAND-}" ] && [ "${PROMPT_COMMAND#*"$theCommand"}" = "$PROMPT_COMMAND" ]; then
     local commands=() command updated=()
     IFS=";" read -r -a commands <<<"${PROMPT_COMMAND-}"
     updated=("$theCommand")
@@ -421,7 +418,7 @@ bashPromptColorsFormat() {
   for index in "${!colors[@]}"; do
     color="${colors[index]}"
     if inArray "$color" "${all[@]}"; then
-      colors[index]="$(decorate "$color")"
+      colors[index]="$(decorate "$color" --)"
     else
       colors[index]=""
     fi
