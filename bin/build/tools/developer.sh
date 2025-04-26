@@ -182,6 +182,8 @@ _developerTrack() {
 }
 
 # Add a development link to the local version of Zesk Build for testing in local projects
+# DOC TEMPLATE: developerDevelopmentLink 2
+# Argument: --copy - Flag. Optional. Copy the files instead of creating a link - more compatible with Docker but slower and requires synchronization.
 # Argument: --reset - Flag. Optional. Revert the link and reinstall using the original binary.
 buildDevelopmentLink() {
   local usage="_${FUNCNAME[0]}"
@@ -216,15 +218,16 @@ _buildDevelopmentLink() {
 
 # Link a current library with another version being developed nearby using a link
 # Does not work inside docker containers unless you explicitly do some magic with paths (maybe we will add this)
-# Argument: --binary - String. Optional. The binary to install the library remotely if needed to revert back.
-# Argument: --composer composerPackage - String. Optional. The composer package to convert to a link (or copy.)
-# Argument: --path applicationPath - ApplicationDirectory. Required. The library path to convert to a link (or copy).
-# Argument: --development-path developmentPath- Directory. Optional. Path in the target development directory to link (or copy) to the path.
-# Argument: --version-json jsonFile - ApplicationFile. Required. The library JSON file to check.
-# Argument: --version-selector jsonFile - String. Optional. Query to extract version from JSON file (defaults to `.version`)
-# Argument: --variable variableNameValue - EnvironmentVariable. Required. The environment variable which represents the local path of the library to link to.
+# DOC TEMPLATE: developerDevelopmentLink 2
 # Argument: --copy - Flag. Optional. Copy the files instead of creating a link - more compatible with Docker but slower and requires synchronization.
 # Argument: --reset - Flag. Optional. Revert the link and reinstall using the original binary.
+# Argument: --development-path developmentPath- Directory. Optional. Path in the target development directory to link (or copy) to the path.
+# Argument: --version-json jsonFile - ApplicationFile. Required. The library JSON file to check.
+# Argument: --version-selector jsonFile - String. Optional. Query to extract version from JSON file (defaults to `.version`). API.
+# Argument: --variable variableNameValue - EnvironmentVariable. Required. The environment variable which represents the local path of the library to link to. API.
+# Argument: --binary - String. Optional. The binary to install the library remotely if needed to revert back. API.
+# Argument: --composer composerPackage - String. Optional. The composer package to convert to a link (or copy.). API.
+# Argument: --path applicationPath - ApplicationDirectory. Required. The library path to convert to a link (or copy). API.
 # Test: TODO
 developerDevelopmentLink() {
   local usage="_${FUNCNAME[0]}"

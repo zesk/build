@@ -197,12 +197,12 @@ documentationIndex_Generate() {
   local newestFileState="$cacheDirectory/newest" cachedSavedNewestFileModified newestFile
 
   [ -f "$newestFileState" ] || __catchEnvironment "$usage" touch "$newestFileState" || return $?
-  cachedSavedNewestFileModified="$(head -n 1 "$newestFile")"
+  cachedSavedNewestFileModified="$(head -n 1 "$newestFileState")"
 
   if newestFile=$(directoryNewestFile --find -name '*.sh' -- "$codePath") && ! $forceFlag; then
     local newestFileModified seconds
     if newestFileModified=$(modificationTime "$newestFile") && isUnsignedInteger "$cachedSavedNewestFileModified"; then
-      if [ "$newestFileModified" -lt "$cachedSavedNewestFileModified" ]; then
+      if isInteger "$cachedSavedNewestFileModified" && [ "$newestFileModified" -lt "$cachedSavedNewestFileModified" ]; then
         statusMessage decorate info "$(decorate file "$codePath") nothing changed"
         return 0
       fi
