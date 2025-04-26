@@ -31,7 +31,7 @@ source "${BASH_SOURCE[0]%/*}/../tools.sh"
 # Argument: --help - Optional. Flag. Display this help.
 # DOC TEMPLATE: --env-file 1
 # Argument: --env-file envFile - Optional. File. Environment file to load - can handle any format.
-# DOC TEMPLATE: assert-common 16
+# DOC TEMPLATE: assert-common 18
 # Argument: --help - Optional. Flag. Display this help.
 # Argument: --line lineNumber - Optional. Integer. Line number of calling function.
 # Argument: --line-depth depth - Optional. Integer. The depth in the stack of function calls to find the line number of the calling function.
@@ -48,6 +48,8 @@ source "${BASH_SOURCE[0]%/*}/../tools.sh"
 # Argument: --skip-plumber - Optional. Flag. Skip plumber check for function calls.
 # Argument: --dump - Optional. Flag. Output stderr and stdout after test regardless.
 # Argument: --dump-binary - Optional. Flag. Output stderr and stdout after test regardless, and output binary.
+# Argument: --head - Optional. Flag. When outputting stderr or stdout, output the head of the file.
+# Argument: --tail - Optional. Flag. When outputting stderr or stdout, output the tail of the file. (Default)
 # This function serves as a sample for all other templates. DOES NOT NEED TO MAKE SENSE. Do not add a Requires: to this function.
 __documentTemplateFunction() {
   local usage="_${FUNCNAME[0]}"

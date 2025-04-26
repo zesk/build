@@ -128,7 +128,7 @@ _assertSuccess() {
 }
 
 # Core condition assertion handler
-# DOC TEMPLATE: assert-common 16
+# DOC TEMPLATE: assert-common 18
 # Argument: --help - Optional. Flag. Display this help.
 # Argument: --line lineNumber - Optional. Integer. Line number of calling function.
 # Argument: --line-depth depth - Optional. Integer. The depth in the stack of function calls to find the line number of the calling function.
@@ -145,6 +145,8 @@ _assertSuccess() {
 # Argument: --skip-plumber - Optional. Flag. Skip plumber check for function calls.
 # Argument: --dump - Optional. Flag. Output stderr and stdout after test regardless.
 # Argument: --dump-binary - Optional. Flag. Output stderr and stdout after test regardless, and output binary.
+# Argument: --head - Optional. Flag. When outputting stderr or stdout, output the head of the file.
+# Argument: --tail - Optional. Flag. When outputting stderr or stdout, output the tail of the file. (Default)
 # Exit code: 1 - If the assertions fails
 # Exit code: 0 - If the assertion succeeds
 _assertConditionHelper() {
@@ -153,7 +155,7 @@ _assertConditionHelper() {
   local pairs=() debugFlag=false
   local success=true file="" lineDepth="" lineNumber="" displayName="" tester="" formatter="__resultFormatter"
   local outputContains=() outputNotContains=() stderrContains=() stderrNotContains=()
-  local doPlumber="" leaks=()
+  local doPlumber="" leaks=() whichEnd="tail"
   local errorsOk=false dumpFlag=false dumpBinaryFlag=false expectedExitCode=0 code1=false debugLines=false
   local message result testPassed runner exitCode outputFile errorFile stderrTitle stdoutTitle
 
@@ -237,6 +239,12 @@ _assertConditionHelper() {
       ;;
     --plumber)
       doPlumber=true
+      ;;
+    --head)
+      whichEnd="head"
+      ;;
+    --tail)
+      whichEnd="tail"
       ;;
     --skip-plumber)
       doPlumber=false
@@ -366,8 +374,8 @@ _assertConditionHelper() {
       dumpBinary "$stdoutTitle" <"$outputFile" || :
       dumpBinary "$stderrTitle" <"$errorFile" || :
     else
-      dumpPipe --tail "$stdoutTitle" <"$outputFile" || :
-      dumpPipe --tail "$stderrTitle" <"$errorFile" || :
+      dumpPipe "--$whichEnd" "$stdoutTitle" <"$outputFile" || :
+      dumpPipe "--$whichEnd" "$stderrTitle" <"$errorFile" || :
     fi
   fi
   return $exitCode

@@ -15,7 +15,7 @@
 # If this fails it will output an error and exit.
 #
 # Usage: assertEquals expected actual [ message ]
-# DOC TEMPLATE: assert-common 16
+# DOC TEMPLATE: assert-common 18
 # Argument: --help - Optional. Flag. Display this help.
 # Argument: --line lineNumber - Optional. Integer. Line number of calling function.
 # Argument: --line-depth depth - Optional. Integer. The depth in the stack of function calls to find the line number of the calling function.
@@ -32,6 +32,8 @@
 # Argument: --skip-plumber - Optional. Flag. Skip plumber check for function calls.
 # Argument: --dump - Optional. Flag. Output stderr and stdout after test regardless.
 # Argument: --dump-binary - Optional. Flag. Output stderr and stdout after test regardless, and output binary.
+# Argument: --head - Optional. Flag. When outputting stderr or stdout, output the head of the file.
+# Argument: --tail - Optional. Flag. When outputting stderr or stdout, output the tail of the file. (Default)
 # Argument: expected - Expected string
 # Argument: actual - Actual string
 # Argument: message - Message to output if the assertion fails
@@ -50,7 +52,7 @@ _assertEquals() {
 # If this fails it will output an error and exit.
 # Summary: Assert two strings are not equal
 # Usage: assertNotEquals expected actual [ message ]
-# DOC TEMPLATE: assert-common 16
+# DOC TEMPLATE: assert-common 18
 # Argument: --help - Optional. Flag. Display this help.
 # Argument: --line lineNumber - Optional. Integer. Line number of calling function.
 # Argument: --line-depth depth - Optional. Integer. The depth in the stack of function calls to find the line number of the calling function.
@@ -67,6 +69,8 @@ _assertEquals() {
 # Argument: --skip-plumber - Optional. Flag. Skip plumber check for function calls.
 # Argument: --dump - Optional. Flag. Output stderr and stdout after test regardless.
 # Argument: --dump-binary - Optional. Flag. Output stderr and stdout after test regardless, and output binary.
+# Argument: --head - Optional. Flag. When outputting stderr or stdout, output the head of the file.
+# Argument: --tail - Optional. Flag. When outputting stderr or stdout, output the tail of the file. (Default)
 # Argument: expected - Required. Expected string.
 # Argument: actual - Required. Actual string.
 # Argument: message - Message to output if the assertion fails. Optional.
@@ -90,7 +94,7 @@ _assertNotEquals() {
 # Argument: expectedExitCode - A numeric exit code expected from the command
 # Argument: command - The command to run
 # Argument: arguments - Any arguments to pass to the command to run
-# DOC TEMPLATE: assert-common 16
+# DOC TEMPLATE: assert-common 18
 # Argument: --help - Optional. Flag. Display this help.
 # Argument: --line lineNumber - Optional. Integer. Line number of calling function.
 # Argument: --line-depth depth - Optional. Integer. The depth in the stack of function calls to find the line number of the calling function.
@@ -107,6 +111,8 @@ _assertNotEquals() {
 # Argument: --skip-plumber - Optional. Flag. Skip plumber check for function calls.
 # Argument: --dump - Optional. Flag. Output stderr and stdout after test regardless.
 # Argument: --dump-binary - Optional. Flag. Output stderr and stdout after test regardless, and output binary.
+# Argument: --head - Optional. Flag. When outputting stderr or stdout, output the head of the file.
+# Argument: --tail - Optional. Flag. When outputting stderr or stdout, output the tail of the file. (Default)
 # Examples:     assertExitCode 0 hasHook version-current
 # Reviewed: 2023-11-12
 # Exit code: 0 - If the process exits with the provided exit code
@@ -128,7 +134,7 @@ _assertExitCode() {
 # Argument: expectedExitCode - A numeric exit code not expected from the command
 # Argument: command - The command to run
 # Argument: arguments - Any arguments to pass to the command to run
-# DOC TEMPLATE: assert-common 16
+# DOC TEMPLATE: assert-common 18
 # Argument: --help - Optional. Flag. Display this help.
 # Argument: --line lineNumber - Optional. Integer. Line number of calling function.
 # Argument: --line-depth depth - Optional. Integer. The depth in the stack of function calls to find the line number of the calling function.
@@ -145,6 +151,8 @@ _assertExitCode() {
 # Argument: --skip-plumber - Optional. Flag. Skip plumber check for function calls.
 # Argument: --dump - Optional. Flag. Output stderr and stdout after test regardless.
 # Argument: --dump-binary - Optional. Flag. Output stderr and stdout after test regardless, and output binary.
+# Argument: --head - Optional. Flag. When outputting stderr or stdout, output the head of the file.
+# Argument: --tail - Optional. Flag. When outputting stderr or stdout, output the tail of the file. (Default)
 # Examples:     {fn} 0 hasHook make-cash-quickly
 # Reviewed: 2023-11-12
 # Exit code: 0 - If the process exits with a different exit code
@@ -162,7 +170,7 @@ _assertNotExitCode() {
 #
 # Usage: {fn} needle haystack
 #
-# DOC TEMPLATE: assert-common 16
+# DOC TEMPLATE: assert-common 18
 # Argument: --help - Optional. Flag. Display this help.
 # Argument: --line lineNumber - Optional. Integer. Line number of calling function.
 # Argument: --line-depth depth - Optional. Integer. The depth in the stack of function calls to find the line number of the calling function.
@@ -179,6 +187,8 @@ _assertNotExitCode() {
 # Argument: --skip-plumber - Optional. Flag. Skip plumber check for function calls.
 # Argument: --dump - Optional. Flag. Output stderr and stdout after test regardless.
 # Argument: --dump-binary - Optional. Flag. Output stderr and stdout after test regardless, and output binary.
+# Argument: --head - Optional. Flag. When outputting stderr or stdout, output the head of the file.
+# Argument: --tail - Optional. Flag. When outputting stderr or stdout, output the tail of the file. (Default)
 # Argument: needle - String. Text we are looking for.
 # Argument: haystack ... - String. One or more strings to find `needle` in - it must be found in all haystacks.
 # Exit Code: 0 - The assertion succeeded
@@ -197,7 +207,7 @@ _assertContains() {
 #
 # Usage: {fn} needle haystack
 #
-# DOC TEMPLATE: assert-common 16
+# DOC TEMPLATE: assert-common 18
 # Argument: --help - Optional. Flag. Display this help.
 # Argument: --line lineNumber - Optional. Integer. Line number of calling function.
 # Argument: --line-depth depth - Optional. Integer. The depth in the stack of function calls to find the line number of the calling function.
@@ -214,6 +224,8 @@ _assertContains() {
 # Argument: --skip-plumber - Optional. Flag. Skip plumber check for function calls.
 # Argument: --dump - Optional. Flag. Output stderr and stdout after test regardless.
 # Argument: --dump-binary - Optional. Flag. Output stderr and stdout after test regardless, and output binary.
+# Argument: --head - Optional. Flag. When outputting stderr or stdout, output the head of the file.
+# Argument: --tail - Optional. Flag. When outputting stderr or stdout, output the tail of the file. (Default)
 # Argument: needle - String. Text we are looking for.
 # Argument: haystack ... - String. One or more strings to find `needle` in - it must be found in no haystacks.
 # Exit Code: 0 - The assertion succeeded
@@ -238,7 +250,7 @@ _assertNotContains() {
 #
 # Usage: assertDirectoryExists directory [ message ... ]
 #
-# DOC TEMPLATE: assert-common 16
+# DOC TEMPLATE: assert-common 18
 # Argument: --help - Optional. Flag. Display this help.
 # Argument: --line lineNumber - Optional. Integer. Line number of calling function.
 # Argument: --line-depth depth - Optional. Integer. The depth in the stack of function calls to find the line number of the calling function.
@@ -255,6 +267,8 @@ _assertNotContains() {
 # Argument: --skip-plumber - Optional. Flag. Skip plumber check for function calls.
 # Argument: --dump - Optional. Flag. Output stderr and stdout after test regardless.
 # Argument: --dump-binary - Optional. Flag. Output stderr and stdout after test regardless, and output binary.
+# Argument: --head - Optional. Flag. When outputting stderr or stdout, output the head of the file.
+# Argument: --tail - Optional. Flag. When outputting stderr or stdout, output the tail of the file. (Default)
 # Argument: directory - Directory that should exist
 # Argument: message - An error message if this fails
 # Exit code: 0 - If the assertion succeeds
@@ -274,7 +288,7 @@ _assertDirectoryExists() {
 #
 # Usage: assertDirectoryDoesNotExist directory [ message ... ]
 #
-# DOC TEMPLATE: assert-common 16
+# DOC TEMPLATE: assert-common 18
 # Argument: --help - Optional. Flag. Display this help.
 # Argument: --line lineNumber - Optional. Integer. Line number of calling function.
 # Argument: --line-depth depth - Optional. Integer. The depth in the stack of function calls to find the line number of the calling function.
@@ -291,6 +305,8 @@ _assertDirectoryExists() {
 # Argument: --skip-plumber - Optional. Flag. Skip plumber check for function calls.
 # Argument: --dump - Optional. Flag. Output stderr and stdout after test regardless.
 # Argument: --dump-binary - Optional. Flag. Output stderr and stdout after test regardless, and output binary.
+# Argument: --head - Optional. Flag. When outputting stderr or stdout, output the head of the file.
+# Argument: --tail - Optional. Flag. When outputting stderr or stdout, output the tail of the file. (Default)
 # Argument: directory - Directory that should NOT exist
 # Argument: message - An error message if this fails
 # Exit code: 0 - If the assertion succeeds
@@ -311,7 +327,7 @@ _assertDirectoryDoesNotExist() {
 #
 # Usage: {fn} directory [ message ... ]
 #
-# DOC TEMPLATE: assert-common 16
+# DOC TEMPLATE: assert-common 18
 # Argument: --help - Optional. Flag. Display this help.
 # Argument: --line lineNumber - Optional. Integer. Line number of calling function.
 # Argument: --line-depth depth - Optional. Integer. The depth in the stack of function calls to find the line number of the calling function.
@@ -328,6 +344,8 @@ _assertDirectoryDoesNotExist() {
 # Argument: --skip-plumber - Optional. Flag. Skip plumber check for function calls.
 # Argument: --dump - Optional. Flag. Output stderr and stdout after test regardless.
 # Argument: --dump-binary - Optional. Flag. Output stderr and stdout after test regardless, and output binary.
+# Argument: --head - Optional. Flag. When outputting stderr or stdout, output the head of the file.
+# Argument: --tail - Optional. Flag. When outputting stderr or stdout, output the tail of the file. (Default)
 # Argument: directory - Directory that should exist and be empty
 # Argument: message - An error message if this fails
 # Exit code: 0 - If the assertion succeeds
@@ -348,7 +366,7 @@ _assertDirectoryEmpty() {
 #
 # Usage: {fn} directory [ message ... ]
 #
-# DOC TEMPLATE: assert-common 16
+# DOC TEMPLATE: assert-common 18
 # Argument: --help - Optional. Flag. Display this help.
 # Argument: --line lineNumber - Optional. Integer. Line number of calling function.
 # Argument: --line-depth depth - Optional. Integer. The depth in the stack of function calls to find the line number of the calling function.
@@ -365,6 +383,8 @@ _assertDirectoryEmpty() {
 # Argument: --skip-plumber - Optional. Flag. Skip plumber check for function calls.
 # Argument: --dump - Optional. Flag. Output stderr and stdout after test regardless.
 # Argument: --dump-binary - Optional. Flag. Output stderr and stdout after test regardless, and output binary.
+# Argument: --head - Optional. Flag. When outputting stderr or stdout, output the head of the file.
+# Argument: --tail - Optional. Flag. When outputting stderr or stdout, output the tail of the file. (Default)
 # Argument: directory - Directory that should exist and not be empty
 # Argument: message - An error message if this fails
 # Exit code: 0 - If the assertion succeeds
@@ -393,7 +413,7 @@ _assertDirectoryNotEmpty() {
 #
 # Usage: {fn} item [ message ... ]
 #
-# DOC TEMPLATE: assert-common 16
+# DOC TEMPLATE: assert-common 18
 # Argument: --help - Optional. Flag. Display this help.
 # Argument: --line lineNumber - Optional. Integer. Line number of calling function.
 # Argument: --line-depth depth - Optional. Integer. The depth in the stack of function calls to find the line number of the calling function.
@@ -410,6 +430,8 @@ _assertDirectoryNotEmpty() {
 # Argument: --skip-plumber - Optional. Flag. Skip plumber check for function calls.
 # Argument: --dump - Optional. Flag. Output stderr and stdout after test regardless.
 # Argument: --dump-binary - Optional. Flag. Output stderr and stdout after test regardless, and output binary.
+# Argument: --head - Optional. Flag. When outputting stderr or stdout, output the head of the file.
+# Argument: --tail - Optional. Flag. When outputting stderr or stdout, output the tail of the file. (Default)
 # Argument: item - File that should exist
 # Argument: message - An error message if this fails
 # Exit code: 0 - If the assertion succeeds
@@ -429,7 +451,7 @@ _assertFileExists() {
 #
 # Usage: {fn} item [ message ... ]
 #
-# DOC TEMPLATE: assert-common 16
+# DOC TEMPLATE: assert-common 18
 # Argument: --help - Optional. Flag. Display this help.
 # Argument: --line lineNumber - Optional. Integer. Line number of calling function.
 # Argument: --line-depth depth - Optional. Integer. The depth in the stack of function calls to find the line number of the calling function.
@@ -446,6 +468,8 @@ _assertFileExists() {
 # Argument: --skip-plumber - Optional. Flag. Skip plumber check for function calls.
 # Argument: --dump - Optional. Flag. Output stderr and stdout after test regardless.
 # Argument: --dump-binary - Optional. Flag. Output stderr and stdout after test regardless, and output binary.
+# Argument: --head - Optional. Flag. When outputting stderr or stdout, output the head of the file.
+# Argument: --tail - Optional. Flag. When outputting stderr or stdout, output the tail of the file. (Default)
 # Argument: file - File that should NOT exist
 # Argument: message - An error message if this fails
 # Exit code: 0 - If the assertion succeeds
@@ -476,7 +500,7 @@ _assertFileDoesNotExist() {
 # If this fails it will output an error and exit.
 #
 # Usage: assertOutputEquals expected binary [ parameters ]
-# DOC TEMPLATE: assert-common 16
+# DOC TEMPLATE: assert-common 18
 # Argument: --help - Optional. Flag. Display this help.
 # Argument: --line lineNumber - Optional. Integer. Line number of calling function.
 # Argument: --line-depth depth - Optional. Integer. The depth in the stack of function calls to find the line number of the calling function.
@@ -493,6 +517,8 @@ _assertFileDoesNotExist() {
 # Argument: --skip-plumber - Optional. Flag. Skip plumber check for function calls.
 # Argument: --dump - Optional. Flag. Output stderr and stdout after test regardless.
 # Argument: --dump-binary - Optional. Flag. Output stderr and stdout after test regardless, and output binary.
+# Argument: --head - Optional. Flag. When outputting stderr or stdout, output the head of the file.
+# Argument: --tail - Optional. Flag. When outputting stderr or stdout, output the tail of the file. (Default)
 # Argument: expected - Expected string
 # Argument: binary - Binary to run and evaluate output
 # Argument: parameters - Any additional parameters to binary
@@ -512,7 +538,7 @@ _assertOutputEquals() {
 # If this fails it will output the command result to stdout.
 #
 # Usage: {fn} expected command [ arguments ... ]
-# DOC TEMPLATE: assert-common 16
+# DOC TEMPLATE: assert-common 18
 # Argument: --help - Optional. Flag. Display this help.
 # Argument: --line lineNumber - Optional. Integer. Line number of calling function.
 # Argument: --line-depth depth - Optional. Integer. The depth in the stack of function calls to find the line number of the calling function.
@@ -529,6 +555,8 @@ _assertOutputEquals() {
 # Argument: --skip-plumber - Optional. Flag. Skip plumber check for function calls.
 # Argument: --dump - Optional. Flag. Output stderr and stdout after test regardless.
 # Argument: --dump-binary - Optional. Flag. Output stderr and stdout after test regardless, and output binary.
+# Argument: --head - Optional. Flag. When outputting stderr or stdout, output the head of the file.
+# Argument: --tail - Optional. Flag. When outputting stderr or stdout, output the tail of the file. (Default)
 # Argument: expected - A string to expect in the output
 # Argument: command - The command to run
 # Argument: arguments - Any arguments to pass to the command to run
@@ -552,7 +580,7 @@ _assertOutputContains() {
 # If this fails it will output the command result to stdout.
 #
 # Usage: assertOutputDoesNotContain expected command [ arguments ... ]
-# DOC TEMPLATE: assert-common 16
+# DOC TEMPLATE: assert-common 18
 # Argument: --help - Optional. Flag. Display this help.
 # Argument: --line lineNumber - Optional. Integer. Line number of calling function.
 # Argument: --line-depth depth - Optional. Integer. The depth in the stack of function calls to find the line number of the calling function.
@@ -569,6 +597,8 @@ _assertOutputContains() {
 # Argument: --skip-plumber - Optional. Flag. Skip plumber check for function calls.
 # Argument: --dump - Optional. Flag. Output stderr and stdout after test regardless.
 # Argument: --dump-binary - Optional. Flag. Output stderr and stdout after test regardless, and output binary.
+# Argument: --head - Optional. Flag. When outputting stderr or stdout, output the head of the file.
+# Argument: --tail - Optional. Flag. When outputting stderr or stdout, output the tail of the file. (Default)
 # Argument: expected - A string to NOT expect in the output
 # Argument: command - The command to run
 # Argument: arguments - Any arguments to pass to the command to run
@@ -590,7 +620,7 @@ _assertOutputDoesNotContain() {
 # Assert a file contains one or more strings
 # Usage: {fn} fileName string0 [ ... ]
 #
-# DOC TEMPLATE: assert-common 16
+# DOC TEMPLATE: assert-common 18
 # Argument: --help - Optional. Flag. Display this help.
 # Argument: --line lineNumber - Optional. Integer. Line number of calling function.
 # Argument: --line-depth depth - Optional. Integer. The depth in the stack of function calls to find the line number of the calling function.
@@ -607,6 +637,8 @@ _assertOutputDoesNotContain() {
 # Argument: --skip-plumber - Optional. Flag. Skip plumber check for function calls.
 # Argument: --dump - Optional. Flag. Output stderr and stdout after test regardless.
 # Argument: --dump-binary - Optional. Flag. Output stderr and stdout after test regardless, and output binary.
+# Argument: --head - Optional. Flag. When outputting stderr or stdout, output the head of the file.
+# Argument: --tail - Optional. Flag. When outputting stderr or stdout, output the tail of the file. (Default)
 # Argument: fileName - File to search
 # Argument: string0 ... - One or more strings which must be found on at least one line in the file
 #
@@ -628,7 +660,7 @@ _assertFileContains() {
 # Assert a file does not contains any occurrence of one or more strings
 # Usage: {fn} fileName string0 [ ... ]
 #
-# DOC TEMPLATE: assert-common 16
+# DOC TEMPLATE: assert-common 18
 # Argument: --help - Optional. Flag. Display this help.
 # Argument: --line lineNumber - Optional. Integer. Line number of calling function.
 # Argument: --line-depth depth - Optional. Integer. The depth in the stack of function calls to find the line number of the calling function.
@@ -645,6 +677,8 @@ _assertFileContains() {
 # Argument: --skip-plumber - Optional. Flag. Skip plumber check for function calls.
 # Argument: --dump - Optional. Flag. Output stderr and stdout after test regardless.
 # Argument: --dump-binary - Optional. Flag. Output stderr and stdout after test regardless, and output binary.
+# Argument: --head - Optional. Flag. When outputting stderr or stdout, output the head of the file.
+# Argument: --tail - Optional. Flag. When outputting stderr or stdout, output the tail of the file. (Default)
 # Argument: fileName - File to search
 # Argument: string0 ... - One or more strings which must NOT be found anywhere in `fileName`
 # Exit code: 1 - If the assertions fails
@@ -663,7 +697,7 @@ _assertFileDoesNotContain() {
 # Assert a file has an expected size in bytes
 # Usage: {fn} expectedSize [ fileName ... ]
 #
-# DOC TEMPLATE: assert-common 16
+# DOC TEMPLATE: assert-common 18
 # Argument: --help - Optional. Flag. Display this help.
 # Argument: --line lineNumber - Optional. Integer. Line number of calling function.
 # Argument: --line-depth depth - Optional. Integer. The depth in the stack of function calls to find the line number of the calling function.
@@ -680,6 +714,8 @@ _assertFileDoesNotContain() {
 # Argument: --skip-plumber - Optional. Flag. Skip plumber check for function calls.
 # Argument: --dump - Optional. Flag. Output stderr and stdout after test regardless.
 # Argument: --dump-binary - Optional. Flag. Output stderr and stdout after test regardless, and output binary.
+# Argument: --head - Optional. Flag. When outputting stderr or stdout, output the head of the file.
+# Argument: --tail - Optional. Flag. When outputting stderr or stdout, output the tail of the file. (Default)
 # Argument: expectedSize - Integer file size which `fileName` should be, in bytes.
 # Argument: fileName ... - One ore more file which should be `expectedSize` bytes in size.
 # Exit code: 1 - If the assertions fails
@@ -698,7 +734,7 @@ _assertFileSize() {
 # Assert a file does NOT have an expected size in bytes
 # Usage: {fn} expectedSize [ fileName ... ]
 #
-# DOC TEMPLATE: assert-common 16
+# DOC TEMPLATE: assert-common 18
 # Argument: --help - Optional. Flag. Display this help.
 # Argument: --line lineNumber - Optional. Integer. Line number of calling function.
 # Argument: --line-depth depth - Optional. Integer. The depth in the stack of function calls to find the line number of the calling function.
@@ -715,6 +751,8 @@ _assertFileSize() {
 # Argument: --skip-plumber - Optional. Flag. Skip plumber check for function calls.
 # Argument: --dump - Optional. Flag. Output stderr and stdout after test regardless.
 # Argument: --dump-binary - Optional. Flag. Output stderr and stdout after test regardless, and output binary.
+# Argument: --head - Optional. Flag. When outputting stderr or stdout, output the head of the file.
+# Argument: --tail - Optional. Flag. When outputting stderr or stdout, output the tail of the file. (Default)
 # Argument: expectedSize - Integer file size which `fileName` should NOT be, in bytes.
 # Argument: fileName ... - Required. File. One ore more file which should NOT be `expectedSize` bytes in size.
 # Exit code: 1 - If the assertions fails
@@ -733,7 +771,7 @@ _assertNotFileSize() {
 # Assert a file is empty (zero sized)
 # Usage: {fn} [ fileName ... ]
 #
-# DOC TEMPLATE: assert-common 16
+# DOC TEMPLATE: assert-common 18
 # Argument: --help - Optional. Flag. Display this help.
 # Argument: --line lineNumber - Optional. Integer. Line number of calling function.
 # Argument: --line-depth depth - Optional. Integer. The depth in the stack of function calls to find the line number of the calling function.
@@ -750,6 +788,8 @@ _assertNotFileSize() {
 # Argument: --skip-plumber - Optional. Flag. Skip plumber check for function calls.
 # Argument: --dump - Optional. Flag. Output stderr and stdout after test regardless.
 # Argument: --dump-binary - Optional. Flag. Output stderr and stdout after test regardless, and output binary.
+# Argument: --head - Optional. Flag. When outputting stderr or stdout, output the head of the file.
+# Argument: --tail - Optional. Flag. When outputting stderr or stdout, output the tail of the file. (Default)
 # Argument: - fileName ... - Required. File. One ore more file which should be zero bytes in size.
 # Exit code: 1 - If the assertions fails
 # Exit code: 0 - If the assertion succeeds
@@ -767,7 +807,7 @@ _assertZeroFileSize() {
 # Assert a file is non-empty (non-zero sized)
 # Usage: {fn} [ fileName ... ]
 #
-# DOC TEMPLATE: assert-common 16
+# DOC TEMPLATE: assert-common 18
 # Argument: --help - Optional. Flag. Display this help.
 # Argument: --line lineNumber - Optional. Integer. Line number of calling function.
 # Argument: --line-depth depth - Optional. Integer. The depth in the stack of function calls to find the line number of the calling function.
@@ -784,6 +824,8 @@ _assertZeroFileSize() {
 # Argument: --skip-plumber - Optional. Flag. Skip plumber check for function calls.
 # Argument: --dump - Optional. Flag. Output stderr and stdout after test regardless.
 # Argument: --dump-binary - Optional. Flag. Output stderr and stdout after test regardless, and output binary.
+# Argument: --head - Optional. Flag. When outputting stderr or stdout, output the head of the file.
+# Argument: --tail - Optional. Flag. When outputting stderr or stdout, output the tail of the file. (Default)
 # Argument: - fileName ... - Required. File. One ore more file which should NOT be zero bytes in size.
 # Exit code: 1 - If the assertions fails
 # Exit code: 0 - If the assertion succeeds
@@ -809,7 +851,7 @@ _assertNotZeroFileSize() {
 #
 # Assert `leftValue > rightValue`
 #
-# DOC TEMPLATE: assert-common 16
+# DOC TEMPLATE: assert-common 18
 # Argument: --help - Optional. Flag. Display this help.
 # Argument: --line lineNumber - Optional. Integer. Line number of calling function.
 # Argument: --line-depth depth - Optional. Integer. The depth in the stack of function calls to find the line number of the calling function.
@@ -826,6 +868,8 @@ _assertNotZeroFileSize() {
 # Argument: --skip-plumber - Optional. Flag. Skip plumber check for function calls.
 # Argument: --dump - Optional. Flag. Output stderr and stdout after test regardless.
 # Argument: --dump-binary - Optional. Flag. Output stderr and stdout after test regardless, and output binary.
+# Argument: --head - Optional. Flag. When outputting stderr or stdout, output the head of the file.
+# Argument: --tail - Optional. Flag. When outputting stderr or stdout, output the tail of the file. (Default)
 # Usage: {fn} expected actual [ message ]
 # Argument: leftValue - Value to compare on the left hand side of the comparison
 # Argument: rightValue - Value to compare on the right hand side of the comparison
@@ -842,7 +886,7 @@ _assertGreaterThan() {
 
 # Assert `leftValue >= rightValue`
 #
-# DOC TEMPLATE: assert-common 16
+# DOC TEMPLATE: assert-common 18
 # Argument: --help - Optional. Flag. Display this help.
 # Argument: --line lineNumber - Optional. Integer. Line number of calling function.
 # Argument: --line-depth depth - Optional. Integer. The depth in the stack of function calls to find the line number of the calling function.
@@ -859,6 +903,8 @@ _assertGreaterThan() {
 # Argument: --skip-plumber - Optional. Flag. Skip plumber check for function calls.
 # Argument: --dump - Optional. Flag. Output stderr and stdout after test regardless.
 # Argument: --dump-binary - Optional. Flag. Output stderr and stdout after test regardless, and output binary.
+# Argument: --head - Optional. Flag. When outputting stderr or stdout, output the head of the file.
+# Argument: --tail - Optional. Flag. When outputting stderr or stdout, output the tail of the file. (Default)
 # Usage: {fn} expected actual [ message ]
 # Argument: leftValue - Value to compare on the left hand side of the comparison
 # Argument: rightValue - Value to compare on the right hand side of the comparison
@@ -876,7 +922,7 @@ _assertGreaterThanOrEqual() {
 #
 # Assert `leftValue < rightValue`
 #
-# DOC TEMPLATE: assert-common 16
+# DOC TEMPLATE: assert-common 18
 # Argument: --help - Optional. Flag. Display this help.
 # Argument: --line lineNumber - Optional. Integer. Line number of calling function.
 # Argument: --line-depth depth - Optional. Integer. The depth in the stack of function calls to find the line number of the calling function.
@@ -893,6 +939,8 @@ _assertGreaterThanOrEqual() {
 # Argument: --skip-plumber - Optional. Flag. Skip plumber check for function calls.
 # Argument: --dump - Optional. Flag. Output stderr and stdout after test regardless.
 # Argument: --dump-binary - Optional. Flag. Output stderr and stdout after test regardless, and output binary.
+# Argument: --head - Optional. Flag. When outputting stderr or stdout, output the head of the file.
+# Argument: --tail - Optional. Flag. When outputting stderr or stdout, output the tail of the file. (Default)
 # Usage: {fn} expected actual [ message ]
 # Argument: leftValue - Value to compare on the left hand side of the comparison
 # Argument: rightValue - Value to compare on the right hand side of the comparison
@@ -911,7 +959,7 @@ _assertLessThan() {
 # Assert `leftValue <= rightValue`
 #
 # Usage: {fn} leftValue rightValue [ message ]
-# DOC TEMPLATE: assert-common 16
+# DOC TEMPLATE: assert-common 18
 # Argument: --help - Optional. Flag. Display this help.
 # Argument: --line lineNumber - Optional. Integer. Line number of calling function.
 # Argument: --line-depth depth - Optional. Integer. The depth in the stack of function calls to find the line number of the calling function.
@@ -928,6 +976,8 @@ _assertLessThan() {
 # Argument: --skip-plumber - Optional. Flag. Skip plumber check for function calls.
 # Argument: --dump - Optional. Flag. Output stderr and stdout after test regardless.
 # Argument: --dump-binary - Optional. Flag. Output stderr and stdout after test regardless, and output binary.
+# Argument: --head - Optional. Flag. When outputting stderr or stdout, output the head of the file.
+# Argument: --tail - Optional. Flag. When outputting stderr or stdout, output the tail of the file. (Default)
 # Argument: leftValue - Value to compare on the left hand side of the comparison
 # Argument: rightValue - Value to compare on the right hand side of the comparison
 # Argument: message - Message to output if the assertion fails
