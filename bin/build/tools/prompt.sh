@@ -13,6 +13,7 @@
 # Argument: --list - Flag. Optional. List the current modules.
 # Argument: --first - Flag. Optional. Add all subsequent modules first to the list.
 # Argument: --last - Flag. Optional. Add all subsequent modules last to the list.
+# Argument: --order order - UnsignedInteger. Optional. Set the order index for this prompt. 0 is first, higher numbers are later.
 # Argument: --format promptFormat - String. Optional. Display this label on each prompt.
 # Argument: --success successText - EmptyString. Optional. Text to display in the prompt when the previous command succeeded.
 # Argument: --failure failureText - EmptyString. Optional. Text to display in the prompt when the previous command failed.
@@ -323,11 +324,12 @@ __bashPromptList() {
   __bashPromptSanity
 
   for promptCommand in "${__BASH_PROMPT_MODULES[@]+"${__BASH_PROMPT_MODULES[@]}"}"; do
-    promptCommand=${promptCommand#[0-9]:}
+    promptCommand=${promptCommand#[0-9]*:}
+    local order=${promptCommand%%:*}
     if isFunction "$promptCommand"; then
-      printf -- "- %s (%s)\n" "$(decorate code "$promptCommand")" "$(decorate orange "function")"
+      printf -- "- %s (%s) %s\n" "$(decorate code "$promptCommand")" "$(decorate orange "function")" "$(decorate subtle "[$order]")"
     else
-      printf -- "- %s (%s)\n" "$(decorate value "$promptCommand")" "$(decorate blue "file")"
+      printf -- "- %s (%s) %s\n" "$(decorate value "$promptCommand")" "$(decorate blue "file")" "$(decorate subtle "[$order]")"
     fi
   done
 }
@@ -335,6 +337,7 @@ __bashPromptList() {
 # Usage: {fn} [ --first | --last | module ]
 # Argument: --first - Flag. Optional. All subsequent modules are added first to the list.
 # Argument: --last - Flag. Optional. ALl subsequent modules are added to the end of the list.
+# Argument: --order ordering - UnsignedInteger. Ordering of the prompt call. 0 is first, higher numbers are last. Capped at 99.
 # Argument: module - Callable. Required. The module to add
 __bashPromptAdd() {
   local usage="$1" && shift
@@ -352,27 +355,28 @@ __bashPromptAdd() {
     --order)
       shift
       order=$(usageArgumentUnsignedInteger "$usage" "$argument" "${1-}") || return $?
-      [ "$order" -lt 10 ] || order=9
+      [ "$order" -lt 0 ] || order=0
+      [ "$order" -gt 99 ] || order=99
       ;;
     --first)
       order=0
       ;;
     --last)
-      order=9
+      order=99
       ;;
     *)
       local module modules=() found=false
       export __BASH_PROMPT_MODULES
       for module in "${__BASH_PROMPT_MODULES[@]+"${__BASH_PROMPT_MODULES[@]}"}"; do
-        [ "${argument}" = "${module#[0-9]:}" ] || modules+=("$module")
+        [ "${argument}" = "${module#[0-9]*:}" ] || modules+=("$module")
       done
       modules+=("$order:$argument")
-      __bashPromptModulesSave "${modules[@]}"
       ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
     shift
   done
+  __bashPromptModulesSave "${modules[@]}"
   return 0
 }
 
@@ -390,7 +394,7 @@ __bashPromptRemove() {
   __bashPromptSanity
 
   for current in "${__BASH_PROMPT_MODULES[@]+"${__BASH_PROMPT_MODULES[@]}"}"; do
-    if [ "$module" = "${current#[0-9]:}" ]; then
+    if [ "$module" = "${current#[0-9]*:}" ]; then
       found=true
     else
       modules+=("$current")
@@ -430,9 +434,11 @@ bashPromptColorsFormat() {
 __bashPromptFormat() {
   local formatString="$1"
 
-  while read -r token replacement; do
-    formatString=$(stringReplace "{${token}}" "$replacement" "$formatString")
-  done < <(__bashPromptCode)
+  if [ -n "$formatString" ]; then
+    while read -r token replacement && [ "${formatString#*{}" != "$formatString" ]; do
+      formatString=$(stringReplace "{${token}}" "$replacement" "$formatString")
+    done < <(__bashPromptCode)
+  fi
   printf -- "%s%s%s" "\[\${__BASH_PROMPT_MARKERS[0]-}\]" "$formatString" "\[\${__BASH_PROMPT_MARKERS[1]-}\]"
 }
 
@@ -503,7 +509,7 @@ __bashPromptCommand() {
 
   local promptCommand start
   for promptCommand in "${__BASH_PROMPT_MODULES[@]}"; do
-    promptCommand="${promptCommand#[0-9]:}"
+    promptCommand="${promptCommand#[0-9]*:}"
     if isFunction "$promptCommand"; then
       ! $debug || statusMessage decorate warning "Running $(decorate code "$promptCommand") "
       start=$(timingStart)
