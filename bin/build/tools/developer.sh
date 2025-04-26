@@ -271,7 +271,7 @@ developerDevelopmentLink() {
       ;;
     --version-json)
       shift
-      versionJSON=$(usageArgumentApplicationFile "$usage" "$argument" "${1-}") || return $?
+      versionJSON=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
       ;;
     --version-selector)
       shift

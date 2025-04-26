@@ -338,9 +338,12 @@ __bashPromptList() {
 __bashPromptAdd() {
   local usage="$1" && shift
 
-  local order=50 found
+  local order=50
 
   __bashPromptSanity
+
+  export __BASH_PROMPT_MODULES
+  local modules=("${__BASH_PROMPT_MODULES[@]+"${__BASH_PROMPT_MODULES[@]}"}")
 
   # _IDENTICAL_ argument-case-header 5
   local __saved=("$@") __count=$#
@@ -361,18 +364,18 @@ __bashPromptAdd() {
       order=99
       ;;
     *)
-      local module modules=() found=false
-      export __BASH_PROMPT_MODULES
-      for module in "${__BASH_PROMPT_MODULES[@]+"${__BASH_PROMPT_MODULES[@]}"}"; do
-        [ "${argument}" = "${module#[0-9]*:}" ] || modules+=("$module")
+      local module mm=()
+      for module in "${modules[@]+"${modules[@]}"}"; do
+        [ "${argument}" = "${module#[0-9]*:}" ] || mm+=("$module")
       done
-      modules+=("$order:$argument")
+      modules=("${mm[@]+"${mm[@]}"}" "$order:$argument")
       ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
     shift
   done
-  __bashPromptModulesSave "${modules[@]}"
+
+  __catchEnvironment "$usage" __bashPromptModulesSave "${modules[@]}" || return $?
   return 0
 }
 
