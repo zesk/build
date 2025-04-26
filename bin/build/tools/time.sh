@@ -50,39 +50,73 @@ _timingFormat() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# Outputs the timing in magenta optionally prefixed by a message in green
+# Outputs the timing optionally prefixed by a message.
 #
-# Usage: timingReport "$startTime" outputText...
 # Summary: Output the time elapsed
 # Outputs a nice colorful message showing the number of seconds elapsed as well as your custom message.
-# Usage: timingReport start [ message ... ]
-# Argument: start - Unix timestamp seconds of start timestamp
+# Argument: --color color - Make text this color (default is `green`)
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
+# DOC TEMPLATE: --handler 1
+# Argument: --handler handler - Optional. Function. Use this error handler instead of the default error handler.
+# Argument: start - Unix timestamp milliseconds. See `timingStart`.
 # Argument: message - Any additional arguments are output before the elapsed value computed
 # Exit code: 0 - Exits with exit code zero
+# See: timingStart
 # Example:    init=$(timingStart)
 # Example:    ...
 # Example:    timingReport "$init" "Deploy completed in"
 timingReport() {
   local usage="_${FUNCNAME[0]}"
 
-  local start="${1-}"
-  shift
+  local color="green" start=""
+
+  # _IDENTICAL_ argument-case-header 5
+  local __saved=("$@") __count=$#
+  while [ $# -gt 0 ]; do
+    local argument="$1" __index=$((__count - $# + 1))
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
+    case "$argument" in
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    # _IDENTICAL_ --handler 4
+    --handler)
+      shift
+      usage=$(usageArgumentFunction "$usage" "$argument" "${1-}") || return $?
+      ;;
+    --color)
+      shift
+      color=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
+      ;;
+    *)
+      start="$argument"
+      shift
+      break
+      ;;
+    esac
+    # _IDENTICAL_ argument-esac-shift 1
+    shift
+  done
+
   if isUnsignedInteger "$start"; then
     local prefix=""
     if [ $# -gt 0 ]; then
-      prefix="$(decorate green "$@") "
+      prefix="$(decorate "$color" "$@") "
     fi
     local value end delta
     end=$(timingStart)
     delta=$((end - start))
     if [ "$delta" -lt 0 ]; then
-      printf "%s%s\n" "$prefix" "$(decorate red "$end - $start => $delta NEGATIVE")"
+      printf "%s%s\n" "$prefix" "$(decorate bold-red "$end - $start => $delta NEGATIVE")"
     else
       value=$(timingFormat "$delta") || :
       printf "%s%s\n" "$prefix" "$(decorate bold-magenta "$value $(plural "$value" second seconds)")"
     fi
   else
-    printf "%s %s %s\n" "$*" "$(decorate red "$start")" "$(decorate warning "(not integer)")"
+    printf "%s %s %s\n" "$*" "$(decorate bold-red "$start")" "$(decorate warning "(not integer)")"
   fi
 }
 _timingReport() {
