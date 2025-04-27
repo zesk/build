@@ -3,4 +3,4 @@
 # Copyright &copy; 2025 Market Acumen, Inc.
 # Category: Development
 # Type: ApplicationDirectory
-export BUILD_RELEASE_NOTES=${BUILD_RELEASE_NOTES:-./documentation/source/release}
+export BUILD_RELEASE_NOTES=./documentation/source/release
