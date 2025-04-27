@@ -78,16 +78,16 @@ testReleaseNotes() {
   export BUILD_RELEASE_NOTES
 
   BUILD_RELEASE_NOTES=./foo
-  __assertPathsEquals "$LINENO" "$home/foo/1.0.md" "$(releaseNotes "1.0")" || return $?
+  __assertPathsEquals "$LINENO" "$home/documentation/source/release/1.0.md" "$(releaseNotes "1.0")" || return $?
 
   BUILD_RELEASE_NOTES=./foo/
-  __assertPathsEquals "$LINENO" "$home/foo/1.0.md" "$(releaseNotes "1.0")" || return $?
+  __assertPathsEquals "$LINENO" "$home/documentation/source/release/1.0.md" "$(releaseNotes "1.0")" || return $?
 
   BUILD_RELEASE_NOTES=/foo/
-  __assertPathsEquals "$LINENO" "/foo/1.0.md" "$(releaseNotes "1.0")" || return $?
+  __assertPathsEquals "$LINENO" "$home/documentation/source/release/1.0.md" "$(releaseNotes "1.0")" || return $?
 
   BUILD_RELEASE_NOTES=/foo
-  __assertPathsEquals "$LINENO" "/foo/1.0.md" "$(releaseNotes "1.0")" || return $?
+  __assertPathsEquals "$LINENO" "$home/documentation/source/release/1.0.md" "$(releaseNotes "1.0")" || return $?
 
   unset BUILD_RELEASE_NOTES
   # BUILD DOCS DEFAULT PATH
