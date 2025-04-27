@@ -122,6 +122,48 @@ __interactiveApproveClear() {
 # Maybe move this to its own thing if needed later
 # Usage: {fn} usage timeout attempts extras message
 __interactiveCountdownReadBoolean() {
+  local tempResult
+
+  [ $# -eq 5 ] || __throwArgument "$1" "Missing arguments: $# less than 5" || return $?
+  tempResult=$(fileTemporaryName "$1") || return $?
+
+  __interactiveCountdownReadCharacter "$usage" "$@" "__confirmYesNoValidate" "$tempResult" || _clean $? "$tempResult" || return $?
+  value=$(__catchEnvironment "$usage" cat "$tempResult") || _clean $? "$tempResult" || return $?
+  __catchEnvironment "$usage" rm -rf "$tempResult" || return $?
+  "$value"
+}
+
+__confirmYesNoValidate() {
+  local value="$1" result="$2" && shift 2
+  local exitCode=0
+  parseBoolean "$value" || exitCode=$?
+  case "$exitCode" in
+  0)
+    printf "%s\n" true >"$result"
+    return 0
+    ;;
+  1)
+    printf "%s\n" false >"$result"
+    return 0
+    ;;
+  2) return 1 ;;
+  esac
+}
+
+# Maybe move this to its own thing if needed later
+# Usage: {fn} usage timeout attempts extras message parser
+# Argument: usage - Function. Error handler
+# Argument: timeout - UnsignedInteger|Empty. Milliseconds to time out after.
+# Argument: attempts - Integer. Number ot attempts to allow.
+# Argument: extras - EmptyString. Extra text to add to the prompt.
+# Argument: message - EmptyString. The message to show to prompt the user.
+# Argument: parser ... - Function. Function to call to check the input if it's valid and arguments to add.
+# Exit code: 10 - Timeout
+# Exit code: 11 - Attempts ran out
+# Exit code: 0 - All good, print character
+# Exit code: 1 - Error
+# Exit code: 2 - Error
+__interactiveCountdownReadCharacter() {
   local usage="$1" && shift
   local timeout="" rr=() extras icon="⏳" attempts prompt width=0
 
@@ -139,22 +181,23 @@ __interactiveCountdownReadBoolean() {
 
   extras="${1-}" && shift
 
-  local value start now elapsed=0 message="$*" counter=1 exitCode=0 prefix="" timingSuffix=""
-  start=$(__environment timingStart) || return $?
+  local value start elapsed=0 message="$1" counter=1 prefix="" timingSuffix="" && shift
+  local parser="$1" && shift
+
+  start=$(timingStart)
 
   # IDENTICAL __interactiveCountdownReadBooleanStatus 3
   [ "$attempts" -le 1 ] || prefix="$(decorate value "[ 🧪 $counter of $attempts ]") "
   [ "$timeout" = "" ] || timingSuffix="$(printf " %s %s" "$icon" "$(alignRight "$width" "$(((timeout - elapsed + 500) / 1000))")")"
   prompt=$(printf -- "%s%s%s%s" "$prefix" "$message" "$extras" "$timingSuffix")
 
-  exitCode=2
-  while [ "$exitCode" -ge 2 ]; do
+  while true; do
+    statusMessage printf -- ""
     while ! value=$(bashUserInput -p "$prompt" -n 1 -s "${rr[@]+"${rr[@]}"}"); do
       if [ -z "$timeout" ]; then
         return 2
       fi
-      now=$(__environment timingStart) || return $?
-      elapsed=$((now - start))
+      elapsed=$(($(timingStart) - start))
       if [ "$elapsed" -gt "$timeout" ]; then
         return 10
       fi
@@ -162,12 +205,12 @@ __interactiveCountdownReadBoolean() {
       [ "$attempts" -le 1 ] || prefix="$(decorate value "[ 🧪 $counter of $attempts ]") "
       [ "$timeout" = "" ] || timingSuffix="$(printf " %s %s" "$icon" "$(alignRight "$width" "$(((timeout - elapsed + 500) / 1000))")")"
       prompt=$(printf -- "%s%s%s%s" "$prefix" "$message" "$extras" "$timingSuffix")
-      statusMessage printf -- "%s" ""
+      statusMessage printf -- ""
     done
-    statusMessage printf -- "%s" ""
-    exitCode=0
-    parseBoolean "$value" || exitCode=$?
-    [ "$exitCode" -ge 2 ] || break
+    statusMessage printf -- ""
+    if [ -n "$value" ] && "$parser" "$value" "$@"; then
+      return 0
+    fi
     counter=$((counter + 1))
     if [ "$attempts" -gt 0 ]; then
       if [ $counter -gt "$attempts" ]; then
@@ -179,5 +222,5 @@ __interactiveCountdownReadBoolean() {
       prompt=$(printf -- "%s%s%s%s" "$prefix" "$message" "$extras" "$timingSuffix")
     fi
   done
-  return "$exitCode"
+  return 1
 }

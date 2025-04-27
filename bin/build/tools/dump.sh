@@ -440,6 +440,7 @@ dumpHex() {
 
   local size="" arguments=()
   local runner=(od -w32 -A n -t xz -v)
+  local runner=(od -t xCc)
 
   # _IDENTICAL_ argument-case-header 5
   local __saved=("$@") __count=$#

@@ -232,7 +232,7 @@ bashUserInput() {
   printf "%s" "${__BASH_PROMPT_MARKERS[0]-}" >>/dev/tty
   read -r "$@" word </dev/tty || exitCode=$?
   printf "%s" "${__BASH_PROMPT_MARKERS[1]-}" >>/dev/tty
-  printf "%s\n" "$word"
+  printf "%s" "$word"
   return $exitCode
 }
 _bashUserInput() {

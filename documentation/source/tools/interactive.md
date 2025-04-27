@@ -13,6 +13,7 @@
 {loopExecute}
 {interactiveCountdown}
 {confirmYesNo}
+{confirmMenu}
 {pause}
 {interactiveBashSource}
 

@@ -603,6 +603,122 @@ _confirmYesNo() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
+#
+# Ask the user for a menu of options
+#
+# Exit code: interrupt - Attempts exceeded
+# Exit code: timeout - Timeout
+# Argument: --choice choiceCharacter - Required. String. Character to accept.
+# Argument: --default default - Optional. String. Character to choose when there is a timeout or other failure.
+# Argument: --result resultFile - Required. File. File to write the result to.
+# Argument: --attempts attemptCount - Optional. PositiveInteger. Number of attempts to try and get valid unput from the user.
+# Argument: --timeout timeoutSeconds - Optional. PositiveInteger. Number of seconds to wait for user input before stopping.
+# Argument: --prompt promptString - Optional. String. String to suffix the prompt with (usually tells the user what to do)
+# Argument: message - Optional. String. Display this message as the confirmation menu.
+confirmMenu() {
+  local usage="_${FUNCNAME[0]}"
+  local default="" message="" timeout="" extras="" attempts=-1 allowed=() resultFile=""
+
+  # _IDENTICAL_ argument-case-header 5
+  local __saved=("$@") __count=$#
+  while [ $# -gt 0 ]; do
+    local argument="$1" __index=$((__count - $# + 1))
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
+    case "$argument" in
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    --prompt)
+      shift
+      extras=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
+      extras=" $(decorate subtle "$extras") "
+      ;;
+    --result)
+      shift
+      resultFile=$(usageArgumentFile "$usage" "$argument" "${1-}") || return $?
+      ;;
+    --attempts)
+      shift
+      attempts=$(usageArgumentPositiveInteger "$usage" "$argument" "${1-}") || return $?
+      ;;
+    --timeout)
+      shift
+      timeout=$(usageArgumentPositiveInteger "$usage" "$argument" "${1-}") || return $?
+      ;;
+    --choice)
+      shift
+      allowed+=("$(usageArgumentString "$usage" "$argument" "${1-}")") || return $?
+      ;;
+    --default)
+      shift
+      default="$(usageArgumentString "$usage" "$argument" "${1-}")" || return $?
+      ;;
+    -*)
+      # _IDENTICAL_ argumentUnknown 1
+      __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
+      ;;
+    *)
+      message="$*"
+      break
+      ;;
+    esac
+    # _IDENTICAL_ argument-esac-shift 1
+    shift
+  done
+
+  [ "${#allowed[@]}" -gt 0 ] || __throwArgument "$usage" "Need at least one --choice" || return $?
+  [ -z "$default" ] || inArray "$default" "${allowed[@]}" || __throwArgument "$usage" "Default $default is not in menu: ${allowed[*]}" || return $?
+  [ -n "$resultFile" ] || __throwArgument "$usage" "No --result given" || return $?
+
+  local exitCode=0 value="" defaultOk=false
+
+  while __interactiveCountdownReadCharacter "$usage" "$timeout" "$attempts" "$extras" "$message" __confirmMenuValidate "$resultFile" "${allowed[@]}" || exitCode=$?; do
+    case "$exitCode" in
+    0)
+      return $exitCode
+      ;;
+    2 | 10)
+      value="TIMEOUT"
+      defaultOk=true
+      exitCode=$(_code timeout)
+      break
+      ;;
+    1 | 11)
+      value="ATTEMPTS"
+      defaultOk=true
+      exitCode=$(_code interrupt)
+      break
+      ;;
+    *)
+      value="UNKNOWN: $exitCode"
+      break
+      ;;
+    esac
+    exitCode=0
+  done
+  if $defaultOk && [ -n "$default" ]; then
+    value="$default"
+    exitCode=0
+  fi
+  printf "%s\n" "$value" >"$resultFile"
+  return $exitCode
+}
+
+__confirmMenuValidate() {
+  local value="$1" result="$2" && shift 2
+  if inArray "$value" "$@"; then
+    printf "%s\n" "$value" >"$result"
+    return 0
+  fi
+  return 1
+}
+_confirmMenu() {
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
 interactiveCountdown() {
   local usage="_${FUNCNAME[0]}"
 
