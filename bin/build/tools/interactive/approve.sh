@@ -122,12 +122,12 @@ __interactiveApproveClear() {
 # Maybe move this to its own thing if needed later
 # Usage: {fn} usage timeout attempts extras message
 __interactiveCountdownReadBoolean() {
-  local tempResult
+  local usage="$1" tempResult
 
-  [ $# -eq 5 ] || __throwArgument "$1" "Missing arguments: $# less than 5" || return $?
-  tempResult=$(fileTemporaryName "$1") || return $?
+  [ $# -eq 5 ] || __throwArgument "$usage" "Missing arguments: $# less than 5" || return $?
+  tempResult=$(fileTemporaryName "$usage") || return $?
 
-  __interactiveCountdownReadCharacter "$usage" "$@" "__confirmYesNoValidate" "$tempResult" || _clean $? "$tempResult" || return $?
+  __interactiveCountdownReadCharacter "$@" "__confirmYesNoValidate" "$tempResult" || _clean $? "$tempResult" || return $?
   value=$(__catchEnvironment "$usage" cat "$tempResult") || _clean $? "$tempResult" || return $?
   __catchEnvironment "$usage" rm -rf "$tempResult" || return $?
   "$value"
