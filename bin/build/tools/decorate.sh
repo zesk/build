@@ -193,6 +193,7 @@ __decorateExtensionEach() {
       local done=false
       while ! $done; do
         IFS='' read -r item || done=true
+        ! $done || [ -n "$item" ] || break
         ! $addIndex || prefix="$index:"
         formatted+=("$prefix$(decorate "$code" "$byte$item")")
         byte=""

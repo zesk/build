@@ -53,13 +53,20 @@ EOF
 }
 
 testDecorateSize() {
-  local results=() IFS
+  local results=() IFS sizes=()
 
   while read -r size result; do
     assertEquals "$result" "$(decorate size "$size")" || return $?
+    sizes+=("$size")
     results+=("$result")
   done < <(__dataDecorateSize)
 
-  IFS=" "
-  assertEquals "${results[*]}" "$(__dataDecorateSize | awk '{ print $1 }' | decorate size)" || return $?
+  # Test size via args
+  assertEquals "$(printf "%s\n" "${results[@]}")" "$(decorate size "${sizes[@]}")" || return $?
+
+  # Test size via stdin
+  assertEquals "$(printf "%s\n" "${results[@]}")" "$(printf "%s\n" "${sizes[@]}" | decorate size)" || return $?
+
+  # Test each size via args
+  assertEquals "${results[*]}" "$(decorate each size "${sizes[@]}")" || return $?
 }
