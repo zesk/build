@@ -81,12 +81,20 @@ mariadbDump() {
   if $printFlag; then
     printf "%s\n" "$binary ${options[*]-}"
   else
-    "$binary" "${options[@]}"
+    "$binary" "${options[@]}" | mariadbDumpClean
   fi
 }
 _mariadbDump() {
   # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+# Clean mariadb dumps of the dreaded
+# Code: /*!999999\- enable the sandbox mode */
+# stdin: mariadbDump
+# stdout: mariadbDump (cleaned)
+mariadbDumpClean() {
+  sed '/^\/\*M!999999/d'
 }
 
 # Connect to a mariadb-type database using a URL

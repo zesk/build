@@ -49,3 +49,16 @@ testMariaDBDump() {
 testMariaDBInstallation() {
   __checkFunctionInstallsAndUninstallsBinary mariadb mariadbInstall mariadbUninstall || return $?
 }
+
+testMariaDBDumpClean() {
+  local usage="_return"
+  local home
+
+  home=$(__catchEnvironment "$usage" buildHome) || return $?
+
+  local sql
+
+  sql="$home/test/example/mariadb-dump.sql"
+  assertFileContains "$sql" "sandbox" "!999999" || return $?
+  assertExitCode --stdout-no-match "sandbox" --stdout-no-match ""!999999"" 0 mariadbDumpClean <"$sql" || return $?
+}
