@@ -127,7 +127,7 @@ quoteGrepPattern() {
 # Argument: replace - String. Optional. Replacement string for newlines.
 newlineHide() {
   local text="${1-}" replace="${2-"␤"}"
-  printf -- "%s\n" "${text//$'\n'/"$replace"}"
+  printf -- "%s\n" "${text//$'\n'/$replace}"
 }
 
 #

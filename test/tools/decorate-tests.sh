@@ -40,3 +40,26 @@ testDecorateArgs() {
   reset=$(printf -- '\e[0m')
   assertEquals "$(decorate reset --)" "$reset" || return $?
 }
+
+__dataDecorateSize() {
+  cat <<EOF
+0 0b
+1 1b
+4096 4k (4096)
+5123012 4M (5123012)
+491239123 468M (491239123)
+55012031023 51G (55012031023)
+EOF
+}
+
+testDecorateSize() {
+  local results=() IFS
+
+  while read -r size result; do
+    assertEquals "$result" "$(decorate size "$size")" || return $?
+    results+=("$result")
+  done < <(__dataDecorateSize)
+
+  IFS=" "
+  assertEquals "${results[*]}" "$(__dataDecorateSize | awk '{ print $1 }' | decorate size)" || return $?
+}

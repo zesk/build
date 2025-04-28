@@ -17,9 +17,10 @@ __resultText() {
   length="${#text}"
 
   # Hide newlines
-  text=$(newlineHide "$text")
   if stringContains "$text" $'\e'; then
     text="$(dumpHex --size "$max" "$text")"
+  else
+    text=$(newlineHide "$text")
   fi
   [ "$length" -lt "$max" ] || text="${text:0:$max} ..."
   if [ "$length" -eq 0 ]; then
@@ -44,13 +45,13 @@ __resultTextSize() {
   text="$*"
   length="${#text}"
 
-  printf "%s %s\n" "$(__resultText "$passed" "$text")" "$(decorate subtle "$(alignRight 9 "$length $(plural "$length" char chars)")")"
+  printf -- "%s %s\n" "$(__resultText "$passed" "$text")" "$(decorate subtle "$(alignRight 9 "$length $(plural "$length" char chars)")")"
 }
 
 ___printResultPair() {
   local label="$1" resultStatus="$2" result="$3" suffix="${4-}"
   [ -z "$suffix" ] || suffix=" ${suffix# }"
-  printf "%s: %s%s\n" "$label" "$(__resultTextSize "$resultStatus" "$result")" "$suffix"
+  printf -- "%s: %s%s\n" "$label" "$(__resultTextSize "$resultStatus" "$result")" "$suffix"
 }
 
 # Save and report the timing since the last call
@@ -79,7 +80,7 @@ _assertTiming() {
   else
     decorate info "First test ($__BUILD_SAVED_CACHE_DIRECTORY)"
   fi
-  timingStart 1>&2 >"$timingFile" && sync -f 1>&2 >>"$timingFile" || printf "%s\n" "$? error from timingStart/sync" >>"$timingFile" || :
+  timingStart 1>&2 >"$timingFile" && sync -f 1>&2 >>"$timingFile" || printf -- "%s\n" "$? error from timingStart/sync" >>"$timingFile" || :
 }
 
 __assertedFunctions() {
@@ -114,10 +115,14 @@ _symbolFail() {
   printf %s "❌ "
 }
 _assertFailure() {
-  local function="${1-None}"
+  local function="${1-None}" ll=() message newline=$'\n'
   incrementor assert-failure >/dev/null
   shift || :
-  statusMessage printf -- "%s %s %s [%s] " "$(_symbolFail)" "$(decorate error "$function")" "$*" "$(_assertTiming)" 1>&2 || return $?
+  message="$*"
+  if [ "${message#*"$newline"}" != "$message" ]; then
+    ll=(--last)
+  fi
+  statusMessage "${ll[@]+"${ll[@]}"}" printf -- "%s %s %s [%s] " "$(_symbolFail)" "$(decorate error "$function")" "$message" "$(_assertTiming)" 1>&2 || return $?
   return "$(_code assert)"
 }
 _assertSuccess() {
@@ -338,7 +343,7 @@ _assertConditionHelper() {
   # shellcheck disable=SC2059
   message="$(printf "$(decorate label %s) %s, " "${pairs[@]+"${pairs[@]}"}")"
   message="${message%, }"
-  message="$(printf -- "%s ➡️ %s -> (%s)" "$linePrefix" "$result" "$message")"
+  message="$(printf -- "%s ➡️ %s -> %s\n" "$linePrefix" "$message" "$result")"
   if $code1 || [ "$expectedExitCode" -ne 0 ]; then
     message="$message -> $exitCode ($(_choose "$success" "=" "!=") expected $expectedExitCode), $(__resultText "$testPassed" "$(_choose "$testPassed" correct incorrect)")"
   fi
@@ -522,9 +527,9 @@ ___assertIsEqualFormat() {
   else
     compare="$(decorate warning "$(_choose "$success" "DOES NOT EQUAL" "EQUALS")")"
     decorate error "Test for $(_choose "$success" "equality" "inequality") failed:"
-    ___printResultPair "Expected" true "$left" "$compare"
-    ___printResultPair "  Actual" "$testPassed" "$right"
+    printf -- "%s\n%s\n" "$(___printResultPair "Expected" true "$left" "$compare")" "$(___printResultPair "  Actual" "$testPassed" "$right")"
   fi
+
 }
 
 #=== === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === ===
