@@ -93,6 +93,7 @@ _mariadbDump() {
 # Code: /*!999999\- enable the sandbox mode */
 # stdin: mariadbDump
 # stdout: mariadbDump (cleaned)
+# See: https://mariadb.org/mariadb-dump-file-compatibility-change/
 mariadbDumpClean() {
   sed '/^\/\*M!999999/d'
 }
