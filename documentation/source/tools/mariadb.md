@@ -9,3 +9,5 @@ any installation which is compatible with **MariaDB** or **MySQL**.
 
 {mariadbDump}
 {mariadbConnect}
+
+{mariadbDumpClean}
