@@ -947,7 +947,7 @@ _isFunction() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# IDENTICAL decorate 217
+# IDENTICAL decorate 218
 
 # Sets the environment variable `BUILD_COLORS` if not set, uses `TERM` to calculate
 #
@@ -1136,6 +1136,7 @@ __decorateExtensionEach() {
       local done=false
       while ! $done; do
         IFS='' read -r item || done=true
+        [ -n "$byte$item" ] || ! $done || break
         ! $addIndex || prefix="$index:"
         formatted+=("$prefix$(decorate "$code" "$byte$item")")
         byte=""
