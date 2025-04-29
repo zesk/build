@@ -14,3 +14,4 @@ Hides these from [New and uncategorized functions](./todo.md)
 {processOpenPipes}
 {isExecutableHack}
 {mapEnvironment2}
+{inputConfigurationAdd}
