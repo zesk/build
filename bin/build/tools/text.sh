@@ -104,12 +104,15 @@ _parseBoolean() {
 
 # Quote grep -e patterns for shell use
 #
+# Quotes: " . [ ] | \n with a backslash
 # Argument: text - EmptyString. Required. Text to quote.
 # Output: string quoted and appropriate to insert in a grep search or replacement phrase
 # Example:     grep -e "$(quoteGrepPattern "$pattern")" < "$filterFile"
 # Requires: printf sed
 quoteGrepPattern() {
   local value="${1-}"
+  #value="${value//\\/\\\\}"
+  value="${value//\"/\\\"}"
   value="${value//./\\.}"
   value="${value//[/\\[}"
   value="${value//]/\\]}"

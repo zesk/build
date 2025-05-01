@@ -204,11 +204,13 @@ EOF
 __dataQuoteGrepPattern() {
   cat <<'EOF'
 # This is a quote (hello)^# This is a quote (hello)
-This | or | that^This \| or \| that
+This | or | that.^This \| or \| that\.
 [Bob]^\[Bob\]
 \.*+?^\\.*+?
+\"quotes\"^\\"quotes\\"
 EOF
 }
+
 testQuoteGrepPattern() {
   local usage="_return"
 
