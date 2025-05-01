@@ -513,7 +513,7 @@ gitMainly() {
   local usage="_${FUNCNAME[0]}"
   local argument
   local branch returnCode updateOther
-  local verboseFlag
+  local verboseFlag remote="origin"
   local errorLog
 
   verboseFlag=false
