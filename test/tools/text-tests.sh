@@ -200,3 +200,26 @@ __testUnquoteData() {
 boo booLoveboo Love
 EOF
 }
+
+__dataQuoteGrepPattern() {
+  cat <<'EOF'
+# This is a quote (hello)^# This is a quote (hello)
+This | or | that^This \| or \| that
+[Bob]^\[Bob\]
+\.*+?^\\.*+?
+EOF
+}
+testQuoteGrepPattern() {
+  local usage="_return"
+
+  temp=$(fileTemporaryName "$usage") || return $?
+
+  local value mappedValue
+  while IFS='^' read -r text expected; do
+    assertEquals "$expected" "$(quoteGrepPattern "$text")" || return $?
+    printf "%s\n" "$text" >"$temp"
+    assertExitCode 0 grep -q -e "$(quoteGrepPattern "$text")" <"$temp" || return $?
+  done < <(__dataQuoteGrepPattern)
+
+  __catchEnvironment "$usage" rm -rf "$temp" || return $?
+}

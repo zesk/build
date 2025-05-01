@@ -102,8 +102,6 @@ _parseBoolean() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# _IDENTICAL_ _text 18
-
 # Quote grep -e patterns for shell use
 #
 # Argument: text - EmptyString. Required. Text to quote.
@@ -112,11 +110,9 @@ _parseBoolean() {
 # Requires: printf sed
 quoteGrepPattern() {
   local value="${1-}"
-  value=$(printf "%s\n" "$value" | sed 's/\([\\.*+?]\)/\\\1/g')
+  value="${value//./\\.}"
   value="${value//[/\\[}"
   value="${value//]/\\]}"
-  value="${value//)/\\)}"
-  value="${value//(/\\(}"
   value="${value//|/\\|}"
   value="${value//$'\n'/\\n}"
   printf "%s\n" "$value"
