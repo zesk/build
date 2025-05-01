@@ -557,7 +557,8 @@ gitMainly() {
       else
         ! $verboseFlag || decorate info git pull "# ($updateOther)"
         if ! __environment git pull >"$errorLog" 2>&1; then
-          ! $verboseFlag || decorate error git pull FAILED "$(dumpPipe errors <"$errorLog")"
+          printf -- "%s %s\n" "$(decorate error "Unable to pull branch")" "$(decorate code "$updateOther")" 1>&2
+          ! $verboseFlag || dumpPipe errors <"$errorLog"
           returnCode=1
           break
         fi
