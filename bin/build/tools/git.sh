@@ -526,6 +526,10 @@ gitMainly() {
       "$usage" 0
       return $?
       ;;
+    --remote)
+      shift
+      remote=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
+      ;;
     --verbose)
       verboseFlag=true
       ;;
@@ -556,7 +560,7 @@ gitMainly() {
         break
       else
         ! $verboseFlag || decorate info git pull "# ($updateOther)"
-        if ! __environment git pull >"$errorLog" 2>&1; then
+        if ! __environment git pull "$remote" "$updateOther" >"$errorLog" 2>&1; then
           printf -- "%s %s\n" "$(decorate error "Unable to pull branch")" "$(decorate code "$updateOther")" 1>&2
           ! $verboseFlag || dumpPipe errors <"$errorLog"
           returnCode=1
@@ -582,7 +586,7 @@ gitMainly() {
     else
       printf -- "%s %s\n" "$(decorate info "Merged staging and main into branch")" "$(decorate code "$branch")"
     fi
-    rm -rf "$errorLog" || :
+    rm -rf "$errorLog"
     ;;
   esac
 }
