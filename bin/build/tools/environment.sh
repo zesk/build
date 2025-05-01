@@ -44,7 +44,7 @@ environmentValueWriteArray() {
   name=$(usageArgumentEnvironmentVariable "$usage" "name" "${1-}") || return $?
   shift
   if [ $# -eq 0 ]; then
-    printf "%s=%s\n" "$name" "''"
+    printf "%s=%s\n" "$name" "()"
   else
     value=("$@")
     result="$(__environmentValueClean "$(declare -pa value)")" || return $?
