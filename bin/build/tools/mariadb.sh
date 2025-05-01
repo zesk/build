@@ -95,6 +95,8 @@ _mariadbDump() {
 # stdout: mariadbDump (cleaned)
 # See: https://mariadb.org/mariadb-dump-file-compatibility-change/
 mariadbDumpClean() {
+  # Without LC_CTYPE and LAND it outputs the error:
+  # - 'sed: RE error: illegal byte sequence' when encountering unicode byte sequences in a text stream
   LC_CTYPE=C LANG=C sed '/^\/\*M!999999/d'
 }
 
