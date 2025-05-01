@@ -556,11 +556,11 @@ gitMainly() {
       if ! git checkout "$updateOther" >"$errorLog" 2>&1; then
         printf -- "%s %s\n" "$(decorate error "Unable to checkout branch")" "$(decorate code "$updateOther")" 1>&2
         returnCode=1
-        __environment git status -s || :
+        __catchEnvironment "$usage" git status -s || :
         break
       else
         ! $verboseFlag || decorate info git pull "# ($updateOther)"
-        if ! __environment git pull "$remote" "$updateOther" >"$errorLog" 2>&1; then
+        if ! __catchEnvironment "$usage" git pull "$remote" "$updateOther" >"$errorLog" 2>&1; then
           printf -- "%s %s\n" "$(decorate error "Unable to pull branch")" "$(decorate code "$updateOther")" 1>&2
           ! $verboseFlag || dumpPipe errors <"$errorLog"
           returnCode=1
@@ -569,18 +569,18 @@ gitMainly() {
       fi
     done
     if [ "$returnCode" -ne 0 ]; then
-      __environment git checkout -f "$branch" || :
+      __catchEnvironment "$usage" git checkout -f "$branch" || :
       rm -rf "$errorLog"
       return "$returnCode"
     fi
     ! $verboseFlag || decorate info git checkout "$branch"
-    if ! __environment git checkout "$branch" >"$errorLog" 2>&1; then
+    if ! __catchEnvironment "$usage" git checkout "$branch" >"$errorLog" 2>&1; then
       printf -- "%s %s\n" "$(decorate error "Unable to switch BACK to branch")" "$(decorate code "$updateOther")" 1>&2
       rm -rf "$errorLog"
       return 1
     fi
     ! $verboseFlag || decorate info git merge -m
-    __environment git merge -m "Merging staging and main with $branch" origin/staging origin/main || return $?
+    __catchEnvironment "$usage" muzzle git merge -m "Merging staging and main with $branch" origin/staging origin/main || return $?
     if grep -q 'Already' "$errorLog"; then
       printf -- "%s %s\n" "$(decorate info "Already up to date")" "$(decorate code "$branch")"
     else
