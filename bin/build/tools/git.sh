@@ -565,6 +565,7 @@ gitMainly() {
     done
     if [ "$returnCode" -ne 0 ]; then
       __environment git checkout -f "$branch" || :
+      rm -rf "$errorLog"
       return "$returnCode"
     fi
     ! $verboseFlag || decorate info git checkout "$branch"
