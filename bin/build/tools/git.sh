@@ -514,7 +514,7 @@ gitMainly() {
   local argument
   local branch returnCode updateOther
   local verboseFlag
-  local errorLog
+  local errorLog remote="origin"
 
   verboseFlag=false
   while [ $# -gt 0 ]; do
@@ -525,6 +525,10 @@ gitMainly() {
     --help)
       "$usage" 0
       return $?
+      ;;
+    --remote)
+      shift
+      remote=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
       ;;
     --verbose)
       verboseFlag=true
@@ -556,7 +560,7 @@ gitMainly() {
         break
       else
         ! $verboseFlag || decorate info git pull "# ($updateOther)"
-        if ! __environment git pull >"$errorLog" 2>&1; then
+        if ! __environment git pull "$remote" "$updateOther" >"$errorLog" 2>&1; then
           returnCode=1
           break
         fi
