@@ -111,7 +111,6 @@ _parseBoolean() {
 # Requires: printf sed
 quoteGrepPattern() {
   local value="${1-}"
-  #value="${value//\\/\\\\}"
   value="${value//\"/\\\"}"
   value="${value//./\\.}"
   value="${value//[/\\[}"
