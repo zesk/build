@@ -557,6 +557,7 @@ gitMainly() {
       else
         ! $verboseFlag || decorate info git pull "# ($updateOther)"
         if ! __environment git pull >"$errorLog" 2>&1; then
+          ! $verboseFlag || decorate error git pull FAILED "$(dumpPipe errors <"$errorLog")"
           returnCode=1
           break
         fi
@@ -579,7 +580,7 @@ gitMainly() {
     else
       printf -- "%s %s\n" "$(decorate info "Merged staging and main into branch")" "$(decorate code "$branch")"
     fi
-    rm -rf "$errorLog"
+    rm -rf "$errorLog" || :
     ;;
   esac
 }
