@@ -95,7 +95,7 @@ _mariadbDump() {
 # stdout: mariadbDump (cleaned)
 # See: https://mariadb.org/mariadb-dump-file-compatibility-change/
 mariadbDumpClean() {
-  sed '/^\/\*M!999999/d'
+  LC_CTYPE=C LANG=C sed '/^\/\*M!999999/d'
 }
 
 # Connect to a mariadb-type database using a URL
