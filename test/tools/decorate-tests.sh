@@ -70,3 +70,10 @@ testDecorateSize() {
   # Test each size via args
   assertEquals "${results[*]}" "$(decorate each size "${sizes[@]}")" || return $?
 }
+
+testDecorateWrapNone() {
+  assertOutputDoesNotContain $'\1' decorate wrap "HELLO " < <(printf "%s\n" "Hi" "THERE") || return $?
+  assertOutputDoesNotContain $'\1' decorate wrap < <(printf "%s\n" "Hi" "THERE") || return $?
+  assertOutputContains "HELLO THERE" decorate wrap "HELLO " < <(printf "%s\n" "Hi" "THERE") || return $?
+  assertOutputContains "THERE" decorate wrap < <(printf "%s\n" "Hi" "THERE") || return $?
+}

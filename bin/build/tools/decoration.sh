@@ -382,10 +382,8 @@ _lineFill() {
 #
 __decorateExtensionWrap() {
   local usage="_${FUNCNAME[0]}"
-  local argument fill prefix suffix width actualWidth strippedText cleanLine pad line
+  local argument fill prefix=$'\1' suffix width
 
-  prefix=$'\1'
-  suffix=$'\1'
   fill=
   width=
   while [ $# -gt 0 ]; do
@@ -410,19 +408,27 @@ __decorateExtensionWrap() {
     *)
       if [ "$prefix" = $'\1' ]; then
         prefix="$1"
-      elif [ "$suffix" = $'\1' ]; then
-        suffix="$1"
-      else
-        suffix="$suffix $1"
+        shift
+        suffix="${*-}"
+        [ $# -gt 0 ] || break
       fi
       ;;
     esac
-    shift || __throwArgument "$usage" shift || return $?
+    # _IDENTICAL_ argument-esac-shift 1
+    shift
   done
+
+  if [ "$prefix" = $'\1' ]; then
+    __catchEnvironment "$usage" cat || return $?
+    return 0
+  fi
   if ! isUnsignedInteger "$width"; then
     width=$(consoleColumns) || __throwEnvironment "$usage" "consoleColumns" || return $?
   fi
+
+  local actualWidth
   if [ -n "$width" ]; then
+    local strippedText
     strippedText="$(printf "%s" "$prefix$suffix" | stripAnsi)"
     actualWidth=$((width - ${#strippedText}))
     if [ "$actualWidth" -lt 0 ]; then
@@ -433,9 +439,10 @@ __decorateExtensionWrap() {
       fill=
     fi
   fi
-  pad=
+  local pad="" line
   while IFS= read -r line; do
     if [ -n "$fill" ]; then
+      local cleanLine
       cleanLine="$(printf "%s" "$line" | stripAnsi)"
       padWidth=$((actualWidth - ${#cleanLine}))
       if [ $padWidth -gt 0 ]; then
