@@ -117,7 +117,7 @@ _bashLibrary() {
 bashSourcePath() {
   local usage="_${FUNCNAME[0]}"
 
-  [ $# -gt 0 ] || __throwArgument "$usage" "Requires a directory" || return $?
+  local ff=() foundOne=false
 
   # _IDENTICAL_ argument-case-header 5
   local __saved=("$@") __count=$#
@@ -130,8 +130,14 @@ bashSourcePath() {
       "$usage" 0
       return $?
       ;;
+    --exclude)
+      shift
+      ff+=("!" "-path" "$(usageArgumentString "$usage" "$argument" "${1-}")") || return $?
+      ;;
     *)
       local path
+
+      foundOne=true
       path=$(usageArgumentDirectory "$usage" "directory" "$argument") || return $?
       # shellcheck disable=SC2015
       while read -r tool; do
@@ -140,12 +146,13 @@ bashSourcePath() {
         [ -x "$path/$tool" ] || __throwEnvironment "$usage" "$path/$tool is not executable" || return $?
         # shellcheck source=/dev/null
         source "$path/$tool" || __throwEnvironment "$usage" "source $path/$tool" || return $?
-      done < <(cd "$path" && find "." -type f -name '*.sh' ! -path "*/.*/*" || :)
+      done < <(cd "$path" && find "." -type f -name '*.sh' ! -path "*/.*/*" "${ff[@]+"${ff[@]}"}" || :)
       ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
     shift
   done
+  $foundOne || __throwArgument "$usage" "Requires a directory" || return $?
 }
 _bashSourcePath() {
   # _IDENTICAL_ usageDocument 1
