@@ -60,6 +60,42 @@ testBashSourcePath() {
   unset ZESK_BUILD
 }
 
+testBashSourcePathExclude() {
+  local usage="_return"
+  local testPath
+
+  testPath=$(__environment mktemp -d) || return $?
+
+  __catchEnvironment "$usage" printf "%s\n" "!#/usr/bin/env bash" "echo \"\${BASH_SOURCE[0]}\";" >"$testPath/one" || return $?
+  __catchEnvironment "$usage" chmod +x "$testPath/one" || return $?
+  __catchEnvironment "$usage" cp "$testPath/one" "$testPath/two" || return $?
+  __catchEnvironment "$usage" cp "$testPath/one" "$testPath/__ignore.sh" || return $?
+
+  assertExitCode --stdout-match "__ignore.sh" "one" "two" 0 bashSourcePath "$testPath/" || return $?
+  assertExitCode --stdout-match "__ignore.sh" "one" "two" --stdout-no-match "__ignore.sh" 0 bashSourcePath --exclude "__ignore.sh" "$testPath/" || return $?
+
+  printf "%s\n" "#!/usr/bin/env bash" "rm \${BASH_SOURCE[0]%/*}/2.sh" >"$testPath/1.sh"
+  printf "%s\n" "#!/usr/bin/env bash" "rm \${BASH_SOURCE[0]%/*}/1.sh" >"$testPath/2.sh"
+  # Regardless of order someone will not exist
+
+  assertNotExitCode --stderr-match "not executable" 0 bashSourcePath "$testPath" || return $?
+  __environment muzzle makeShellFilesExecutable "$testPath" || return $?
+  assertNotExitCode --stderr-match "not a bash source" 0 bashSourcePath "$testPath" || return $?
+
+  __environment rm -rf "$testPath/"*.sh || return $?
+
+  assertEquals "${ZESK_BUILD-}" "" || return $?
+  printf "%s\n" "#!/usr/bin/env bash" "export ZESK_BUILD=true" >"$testPath/1.sh"
+  printf "%s\n" "#!/usr/bin/env bash" "_testZeskBuildFunction() {" "    decorate green Not easy being green." "}" >"$testPath/2.sh"
+  __environment muzzle makeShellFilesExecutable "$testPath" || return $?
+
+  assertExitCode --leak ZESK_BUILD 0 bashSourcePath "$testPath" || return $?
+
+  assertEquals "${ZESK_BUILD-}" "true" || return $?
+  assertExitCode 0 isFunction _testZeskBuildFunction || return $?
+
+  unset ZESK_BUILD
+}
 testBashSourcePathDot() {
   local testPath testPasses=false
 

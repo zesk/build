@@ -109,7 +109,7 @@ _bashLibrary() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# Usage: {fn} [ directory ... ]
+# Argument: --exclude pattern - Optional. String. String passed to `! -path pattern` in `find`
 # Argument: directory ... - Required. Directory. Directory to `source` all `.sh` files used.
 # Security: Loads bash files
 # Load a directory of `.sh` files using `source` to make the code available.
@@ -146,7 +146,7 @@ bashSourcePath() {
         [ -x "$path/$tool" ] || __throwEnvironment "$usage" "$path/$tool is not executable" || return $?
         # shellcheck source=/dev/null
         source "$path/$tool" || __throwEnvironment "$usage" "source $path/$tool" || return $?
-      done < <(cd "$path" && find "." -type f -name '*.sh' ! -path "*/.*/*" "${ff[@]+"${ff[@]}"}" || :)
+      done < <(cd "$path" && find "." -type f -name '*.sh' ! -path "*/.*/*" "${ff[@]+"${ff[@]}"}" | sort || :)
       ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
