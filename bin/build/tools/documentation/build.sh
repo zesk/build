@@ -40,7 +40,8 @@ documentationBuild() {
   __catchEnvironment "$usage" buildEnvironmentLoad APPLICATION_CODE APPLICATION_NAME BUILD_COMPANY BUILD_COMPANY_LINK || return $?
 
   home=$(__catchEnvironment "$usage" buildHome) || return $?
-  __catchEnvironment "$usage" packageWhich pcregrep pcregrep || return $?
+
+  __pcregrepInstall
 
   local start
   start=$(timingStart) || __throwEnvironment "$usage" timingStart || return $?

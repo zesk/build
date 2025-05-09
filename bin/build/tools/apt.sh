@@ -330,7 +330,7 @@ ___aptAvailableList() {
 # See: _packageStandardPackages
 # package.sh: true
 __aptStandardPackages() {
-  printf "%s\n" apt-utils toilet toilet-fonts jq pcregrep
+  printf "%s\n" apt-utils toilet toilet-fonts jq pcre2grep
   export BUILD_TEXT_BINARY
   [ -n "${BUILD_TEXT_BINARY-}" ] || BUILD_TEXT_BINARY="toilet"
 }

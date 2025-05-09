@@ -384,8 +384,11 @@ packageInstall() {
     shift
   done
 
+  export BUILD_PACKAGE_MANAGER
+  __catchEnvironment "$usage" buildEnvironmentLoad BUILD_PACKAGE_MANAGER || return $?
+
   # IDENTICAL managerArgumentValidation 2
-  [ -n "$manager" ] || manager=$(packageManagerDefault) || __throwEnvironment "$usage" "No package manager" || return $?
+  [ -n "$manager" ] || manager=$(packageManagerDefault "${BUILD_PACKAGE_MANAGER-}") || __throwEnvironment "$usage" "No package manager" || return $?
   whichExists "$manager" || __throwEnvironment "$usage" "$manager does not exist" || return $?
 
   local __start quietLog installed
@@ -565,7 +568,7 @@ _packageStandardPackages() {
 # Is the package manager supported?
 packageManagerValid() {
   case "$1" in
-  apk | apt | brew) return 0 ;;
+  apk | apt | brew | port) return 0 ;;
   *) return 1 ;;
   esac
 }

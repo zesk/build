@@ -16,7 +16,16 @@ __fileModificationTimes() {
 
 # Requires: printf
 __packageManagerDefault() {
-  printf "%s\n" "brew"
+  local manager managers=(port brew)
+  for manager in "${managers[@]}"; do
+    if whichExists "$manager"; then
+      printf "%s\n" "$manager"
+      return 0
+    fi
+  done
+  manager="${1-}"
+  [ -n "$manager" ] || manager="${managers[0]}"
+  printf "%s\n" "$manager"
 }
 
 # Requires: xargs sed

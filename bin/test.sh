@@ -33,7 +33,7 @@ __buildTestSuite() {
   # Custom HERE 3 lines
   __environment packageInstall || return $?
   __environment packageWhich shellcheck || return $?
-  __environment packageWhich pcregrep || return $?
+  __environment packageWhich pcre2grep || return $?
 
   # Custom HERE 1 line
   __catchEnvironment "$usage" testTools testSuite --delete-common --tests "$testHome/test/tools/" "$@" || return $?

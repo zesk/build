@@ -1097,3 +1097,14 @@ _stringReplace() {
   # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
+
+#
+# Wrapper around all pcregrep calls so we can change it globally
+#
+__pcregrep() {
+  pcre2grep "$@"
+}
+
+__pcregrepInstall() {
+  __catchEnvironment "$usage" packageWhich pcre2grep pcre2grep || return $?
+}

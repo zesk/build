@@ -27,7 +27,6 @@ bashLint() {
   local usage="_${FUNCNAME[0]}"
 
   __catchEnvironment "$usage" packageWhich shellcheck shellcheck || return $?
-  __catchEnvironment "$usage" packageWhich pcregrep pcregrep || return $?
 
   # Open 3 and 4 to aliases so we can change them
   exec 3>/dev/null
@@ -48,7 +47,7 @@ bashLint() {
       # shellcheck disable=SC2210
       __catchEnvironment "$usage" shellcheck "$argument" 1>&3 2>&3 || _undo $? printf "%s\n" "shellcheck" 1>&4 || return $?
       local found
-      if found=$(pcregrep -n -l -M '\n\}\n#' "$argument"); then
+      if found=$(__pcregrep -n -l -M '\n\}\n#' "$argument"); then
         __throwEnvironment "$usage" "found }\\n#: $(decorate code "$found")" 1>&3 2>&3 || _undo $? printf "%s\n" "comment following brace" 1>&4 || return $?
       fi
       ;;

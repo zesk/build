@@ -70,7 +70,7 @@ documentationIndex_SeeLinker() {
   seeVariablesFile=$(fileTemporaryName "$usage") || return $?
   linkPatternFile="$seeVariablesFile.linkPatterns"
   variablesSedFile="$seeVariablesFile.variablesSedFile"
-  if ! find "$documentationDirectory" -name '*.md' -type f "$@" -print0 | xargs -0 pcregrep -l "$seePattern" | while read -r matchingFile; do
+  if ! find "$documentationDirectory" -name '*.md' -type f "$@" -print0 | xargs -0 __pcregrep -l "$seePattern" | while read -r matchingFile; do
     statusMessage decorate success "$matchingFile Found"
     pcre2grep -o1 "$seePattern" "$matchingFile" | while read -r matchingToken; do
       statusMessage decorate success "$matchingFile: $(decorate cyan "$matchingToken") Found"
