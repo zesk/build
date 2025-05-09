@@ -3,15 +3,15 @@
 Hides these from [New and uncategorized functions](./todo.md)
 
 {beginTiming}
-{reportTiming}
-
-{exampleFunction}
-{wrapLines}
-{listFileModificationTimes}
-
 {debugOpenFiles}
+{deprecatedTokensFile}
+{exampleFunction}
 {githubURLsToCSV}
-{processOpenPipes}
-{isExecutableHack}
-{mapEnvironment2}
 {inputConfigurationAdd}
+{isExecutableHack}
+{isType}
+{listFileModificationTimes}
+{mapEnvironment2}
+{processOpenPipes}
+{reportTiming}
+{wrapLines}
