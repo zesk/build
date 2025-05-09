@@ -553,7 +553,7 @@ validateFileContents() {
     if [ -n "$binary" ]; then
       "$binary" "${failedFiles[@]}"
     fi
-    __throwEnvironment "$usage" "$this failed" || return $?
+    __throwEnvironment "$usage" "${FUNCNAME[0]} failed" || return $?
   else
     statusMessage decorate success "All scripts passed"
   fi
