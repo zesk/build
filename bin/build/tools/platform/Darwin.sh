@@ -76,3 +76,11 @@ __testPlatformName() {
 __bigTextBinary() {
   printf "%s\n" "figlet"
 }
+
+__pcregrep() {
+  pcre2grep "$@"
+}
+
+__pcregrepInstall() {
+  packageWhich pcre2grep pcre2grep || return $?
+}

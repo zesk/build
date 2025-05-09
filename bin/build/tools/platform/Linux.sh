@@ -104,3 +104,11 @@ __bigTextBinary() {
     printf "%s\n" "figlet"
   fi
 }
+
+__pcregrep() {
+  pcregrep "$@"
+}
+
+__pcregrepInstall() {
+  packageWhich pcregrep pcregrep || return $?
+}
