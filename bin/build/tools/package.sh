@@ -384,11 +384,8 @@ packageInstall() {
     shift
   done
 
-  export BUILD_PACKAGE_MANAGER
-  __catchEnvironment "$usage" buildEnvironmentLoad BUILD_PACKAGE_MANAGER || return $?
-
   # IDENTICAL managerArgumentValidation 2
-  [ -n "$manager" ] || manager=$(packageManagerDefault "${BUILD_PACKAGE_MANAGER-}") || __throwEnvironment "$usage" "No package manager" || return $?
+  [ -n "$manager" ] || manager=$(packageManagerDefault) || __throwEnvironment "$usage" "No package manager" || return $?
   whichExists "$manager" || __throwEnvironment "$usage" "$manager does not exist" || return $?
 
   local __start quietLog installed
@@ -586,7 +583,9 @@ _packageDebugging() {
 # Determine the default manager
 # See: platform
 packageManagerDefault() {
-  __packageManagerDefault
+  export BUILD_PACKAGE_MANAGER
+  __environment buildEnvironmentLoad BUILD_PACKAGE_MANAGER || return $?
+  __packageManagerDefault "${BUILD_PACKAGE_MANAGER-}"
 }
 
 # List installed packages on this system using package manager
