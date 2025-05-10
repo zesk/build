@@ -185,7 +185,7 @@ _packageUpdate() {
 packageDefault() {
   local usage="_${FUNCNAME[0]}"
 
-  local lookup=()
+  local lookup=() manager=""
 
   # _IDENTICAL_ argument-case-header 5
   local __saved=("$@") __count=$#
@@ -231,7 +231,6 @@ _packageDefault() {
   # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
-
 
 # Installs an apt package if a binary does not exist in the which path.
 # The assumption here is that `packageInstallPackage` will install the desired `binary`.
