@@ -15,6 +15,10 @@ __portWrapper() {
   port "$@"
 }
 __sudoPortWrapper() {
+  # Detect if sudo has a cached password from prior calls (hide messages in this case)
+  if ! muzzle sudo -n -v; then
+    printf "%s%s\n" "$(decorate code MacPorts)" "$(decorate warning ": Attempting to $* ...")"
+  fi
   sudo port "$@"
 }
 
@@ -28,12 +32,53 @@ __sudoPortWrapper() {
 
 # Install macports packages
 __portInstall() {
-  __sudoPortWrapper install "$@"
+  local packages=() selections=()
+  IFS="" read -d $'\n' -r -a packages < <(__portPackageNames "$@")
+  __sudoPortWrapper install "${packages[@]}"
+  IFS="" read -d $'\n' -r -a selections < <(__portPackageSelections "$@")
+  set - "${selections[@]+${selections[@]}}"
+  while [ $# -gt 0 ]; do
+    __sudoPortWrapper select --set "$1" "$2"
+    shift 2
+  done
 }
 
 # Uninstall macports packages
 __portUninstall() {
+  local packages=()
+  IFS="" read -d $'\n' -r -a packages < <(__portPackageFilter "$@")
   __sudoPortWrapper uninstall "$@"
+}
+
+__portPackageNames() {
+  while [ $# -gt 0 ]; do
+    case "$1" in
+    aws)
+      printf "%s\n" "py313-awscli2"
+      awscli py313-awscli2
+      ;;
+    terraform)
+      printf "%s\n" "terraform-1.11"
+      ;;
+    *)
+      printf "%s\n" "$1"
+      ;;
+    esac
+  done
+}
+
+__portPackageSelections() {
+  while [ $# -gt 0 ]; do
+    case "$1" in
+    aws)
+      printf "%s\n" "awscli py313-awscli2"
+      ;;
+    terraform)
+      printf "%s\n" "terraform" "terraform-1.11"
+      ;;
+    *) ;;
+    esac
+  done
 }
 
 #
