@@ -70,7 +70,6 @@ testBuildEnvironmentLoadAll() {
     DAEMONTOOLS_HOME
     GIT_REMOTE
     HOME
-    MARIADB_BINARY_DUMP
     OSTYPE
     PATH
   )
