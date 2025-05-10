@@ -185,6 +185,8 @@ _packageUpdate() {
 packageDefault() {
   local usage="_${FUNCNAME[0]}"
 
+  local lookup=()
+
   # _IDENTICAL_ argument-case-header 5
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
