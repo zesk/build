@@ -273,6 +273,17 @@ __aptInstall() {
   aptNonInteractive install -y "$@" 2> >(grep -v 'apt-utils is not installed' 1>&2) || return $?
 }
 
+__aptDefault() {
+  while [ $# -gt 0 ]; do
+    case "$1" in
+    mysqldump) printf -- "%s\n" "mariadb-dump" ;;
+    mysql) printf -- "%s\n" "mariadb" ;;
+    *) printf -- "%s\n" "$1" ;;
+    esac
+    shift
+  done
+}
+
 # Uninstall apt packages
 __aptUninstall() {
   aptNonInteractive remove -y "$@"

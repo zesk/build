@@ -30,6 +30,17 @@ __brewInstall() {
   __brewWrapper install "$@"
 }
 
+__brewDefault() {
+  while [ $# -gt 0 ]; do
+    case "$1" in
+    mysqldump) printf -- "%s\n" "mariadb-dump" ;;
+    mysql) printf -- "%s\n" "mariadb" ;;
+    *) printf -- "%s\n" "$1" ;;
+    esac
+    shift
+  done
+}
+
 # Uninstall brew packages
 __brewUninstall() {
   __brewWrapper uninstall "$@"

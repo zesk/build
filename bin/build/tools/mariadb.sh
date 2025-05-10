@@ -23,13 +23,6 @@ mariadbDump() {
 
   local options=() printFlag=false binary
 
-  export MARIADB_BINARY_DUMP
-
-  __catchEnvironment "$usage" buildEnvironmentLoad MARIADB_BINARY_DUMP || return $?
-
-  binary="${MARIADB_BINARY_DUMP-}"
-  [ -n "$binary" ] || binary=mariadbdump
-
   # _IDENTICAL_ argument-case-header 5
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
@@ -75,6 +68,12 @@ mariadbDump() {
     # _IDENTICAL_ argument-esac-shift 1
     shift
   done
+
+  export MARIADB_BINARY_DUMP
+  [ -n "$binary" ] || binary=$(buildEnvironmentGet MARIADB_BINARY_DUMP) || return $?
+  [ -n "$binary" ] || binary=$(packageDefault mysqldump)
+  [ -n "$binary" ] || __throwArgument "$usage" "--binary not supplied and MARIADB_BINARY_DUMP is blank - at least one is required (MARIADB_BINARY_DUMP=${MARIADB_BINARY_DUMP-})" || return $?
+
   whichExists "$binary" || __catchEnvironment "$usage" "$binary not found in PATH: $PATH" || return $?
   options+=(--add-drop-table -c)
 
@@ -142,6 +141,7 @@ mariadbConnect() {
   export MARIADB_BINARY_CONNECT
 
   [ -n "$binary" ] || binary=$(buildEnvironmentGet MARIADB_BINARY_CONNECT) || return $?
+  [ -n "$binary" ] || binary=$(packageDefault mysql)
   [ -n "$binary" ] || __throwArgument "$usage" "--binary not supplied and MARIADB_BINARY_CONNECT is blank - at least one is required (MARIADB_BINARY_CONNECT=${MARIADB_BINARY_CONNECT-})" || return $?
   $printFlag || isCallable "$binary" || __throwArgument "$usage" "binary $binary is not executable (MARIADB_BINARY_CONNECT=${MARIADB_BINARY_CONNECT-})" || return $?
 

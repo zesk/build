@@ -178,6 +178,59 @@ _packageUpdate() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
+# Fetch the binary name for the default package in a group
+# Groups are:
+# - mysql
+# - mysqldump
+packageDefault() {
+  local usage="_${FUNCNAME[0]}"
+
+  # _IDENTICAL_ argument-case-header 5
+  local __saved=("$@") __count=$#
+  while [ $# -gt 0 ]; do
+    local argument="$1" __index=$((__count - $# + 1))
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
+    case "$argument" in
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    # IDENTICAL managerArgumentHandler 5
+    --manager)
+      shift
+      manager=$(usageArgumentString "$usage" "$argument" "${1-}")
+      packageManagerValid "$manager" || __throwArgument "$usage" "Manager is invalid: $(decorate code "$manager")" || return $?
+      ;;
+    -*)
+      # _IDENTICAL_ argumentUnknown 1
+      __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
+      ;;
+    *)
+      lookup+=("$(usageArgumentString "$usage" "binary" "$argument")") || return $?
+      ;;
+    esac
+    # _IDENTICAL_ argument-esac-shift 1
+    shift
+  done
+  [ "${#lookup[@]}" -gt 0 ] || __throwArgument "$usage" "Need at least one name" || return $?
+
+  # IDENTICAL managerArgumentValidation 2
+  [ -n "$manager" ] || manager=$(packageManagerDefault) || __throwEnvironment "$usage" "No package manager" || return $?
+  whichExists "$manager" || __throwEnvironment "$usage" "$manager does not exist" || return $?
+
+  local function="__${manager}Default"
+  if ! isFunction "$function"; then
+    __throwEnvironment "$usage" "Missing $function implementation for $manager" || return $?
+  fi
+  "$function" "${lookup[@]}"
+}
+_packageDefault() {
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+
 # Installs an apt package if a binary does not exist in the which path.
 # The assumption here is that `packageInstallPackage` will install the desired `binary`.
 #

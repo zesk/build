@@ -64,6 +64,17 @@ __apkInstall() {
   apk add "$@"
 }
 
+__apkDefault() {
+  while [ $# -gt 0 ]; do
+    case "$1" in
+    mysqldump) printf -- "%s\n" "mariadb-dump" ;;
+    mysql) printf -- "%s\n" "mariadb" ;;
+    *) printf -- "%s\n" "$1" ;;
+    esac
+    shift
+  done
+}
+
 # Uninstall apt packages
 __apkUninstall() {
   apk del "$@"
