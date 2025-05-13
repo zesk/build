@@ -286,7 +286,10 @@ __newRelease() {
   fi
   notes="$(__catchEnvironment "$usage" releaseNotes "$newVersion")" || return $?
   if [ ! -f "$notes" ]; then
-    __newReleaseNotes "$newVersion" "$currentVersion" >"$notes"
+    __catchEnvironment "$usage" hookRunOptional version-notes "$newVersion" "$currentVersion" >"$notes" || _clean $? "$notes" || return $?
+    if isEmptyFile "$notes"; then
+      __newReleaseNotes "$newVersion" "$currentVersion" >"$notes"
+    fi
     decorate success "Version $newVersion ready - release notes: $notes"
     if $isInteractive; then
       __catchEnvironment "$usage" hookRun version-created "$newVersion" "$notes" || return $?
