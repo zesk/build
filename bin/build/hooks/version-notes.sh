@@ -24,6 +24,6 @@ __hookVersionNotes() {
     company=$(buildEnvironmentGet BUILD_COMPANY)
     printf "%s\n" "> Copyright &copy; $year $company" ""
   fi
-  printf "%s\n" "- Previous version: $oldVersion" ""
+  printf "%s\n" "- Previous version: $oldVersion"
 }
 __hookVersionNotes "$@"
