@@ -10,27 +10,6 @@
 #
 # Debugging: 73b0bd4ba49583263542da725669003fc821eb63
 
-# Environment: Needs internet access and creates a directory `./bin/build`
-# Usage: {fn} relativePath installPath url urlFunction [ --local localPackageDirectory ] [ --debug ] [ --force ] [ --diff ]
-# fn: {base}
-# Installs a remote package system in a local project directory if not installed. Also
-# will overwrite the installation binary with the latest version after installation.
-#
-# Determines the most recent version using GitHub API unless --url or --local is specified
-#
-# Argument: --local localPackageDirectory - Optional. Directory. Directory of an existing bin/build installation to mock behavior for testing
-# Argument: --url url - Optional. URL. URL of a tar.gz. file. Download source code from here.
-# Argument: --debug - Optional. Flag. Debugging is on.
-# Argument: --force - Optional. Flag. Force installation even if file is up to date.
-# Argument: --diff - Optional. Flag. Show differences between old and new file.
-# Exit Code: 1 - Environment error
-# Exit Code: 2 - Argument error
-__installPackageConfiguration() {
-  local rel="$1"
-  shift
-  _installRemotePackage "$rel" "bin/build" "install-bin-build.sh" --version-function __installBinBuildVersion --url-function __installBinBuildURL --check-function __installBinBuildCheck --name "Zesk Build" "$@"
-}
-
 # URL of latest release
 __installBinBuildLatest() {
   printf -- "%s\n" "https://api.github.com/repos/zesk/build/releases/latest"
@@ -157,6 +136,27 @@ __installCheck() {
   read -r version id < <(jq -r "($versionSelector + \" \" + $idSelector)" <"$versionFile" || :) || :
   [ -n "$version" ] && [ -n "$id" ] || __throwEnvironment "$usage" "$versionFile missing version: \"$version\" or id: \"$id\"" || return $?
   printf "%s %s (%s)\n" "$(decorate bold-blue "$name")" "$(decorate code "$version")" "$(decorate orange "$id")"
+}
+
+# Environment: Needs internet access and creates a directory `./bin/build`
+# Usage: {fn} relativePath installPath url urlFunction [ --local localPackageDirectory ] [ --debug ] [ --force ] [ --diff ]
+# fn: {base}
+# Installs a remote package system in a local project directory if not installed. Also
+# will overwrite the installation binary with the latest version after installation.
+#
+# Determines the most recent version using GitHub API unless --url or --local is specified
+#
+# Argument: --local localPackageDirectory - Optional. Directory. Directory of an existing bin/build installation to mock behavior for testing
+# Argument: --url url - Optional. URL. URL of a tar.gz. file. Download source code from here.
+# Argument: --debug - Optional. Flag. Debugging is on.
+# Argument: --force - Optional. Flag. Force installation even if file is up to date.
+# Argument: --diff - Optional. Flag. Show differences between old and new file.
+# Exit Code: 1 - Environment error
+# Exit Code: 2 - Argument error
+__installPackageConfiguration() {
+  local rel="$1"
+  shift
+  _installRemotePackage "$rel" "bin/build" "install-bin-build.sh" --version-function __installBinBuildVersion --url-function __installBinBuildURL --check-function __installBinBuildCheck --name "Zesk Build" "$@"
 }
 
 # IDENTICAL _installRemotePackage 396
