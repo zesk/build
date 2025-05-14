@@ -10,6 +10,19 @@ set -eou pipefail
 # shellcheck source=/dev/null
 source "${BASH_SOURCE[0]%/*}/../tools.sh"
 
+__hookNotifySoundName() {
+  local usage="$1" soundName="$2"
+
+  if ! darwinSoundValid "$soundName"; then
+    local home original
+    home=$(__catchEnvironment "$usage" buildHome) || return $?
+    original="$home/etc/$soundName.mp3"
+    [ -f "$original" ] || __throwArgument "usage" "No sound installed with name $(decorate code "$soundName")" || return $?
+    __catchEnvironment "$usage" darwinSoundInstall --create "$home/etc/$soundName.mp3" || return $?
+  fi
+  printf "%s\n" "$soundName"
+}
+
 # fn: {base}
 #
 # Run for notifying the user of something rather important or time-consuming.
@@ -56,21 +69,15 @@ __hookNotify() {
       if [ "$soundName" = "-" ]; then
         ss=()
       else
-        darwinSoundValid "$soundName" || __throwArgument "$usage" "$soundName is not a valid Darwin sound name" || return $?
+        soundName=$(__hookNotifySoundName "$usage" "$soundName") || return $?
         ss=(--sound "$soundName")
       fi
     else
       soundName=$(buildEnvironmentGet BUILD_NOTIFY_SOUND)
       if [ -n "$soundName" ] && [ "$soundName" != "-" ]; then
-        if ! darwinSoundValid "$soundName"; then
-          local home original
-          home=$(__catchEnvionment "$usage" buildHome) || return $?
-          original="$home/etc/$soundName.mp3"
-          [ -f "$original" ] || __throwArgument "usage" "No sound installed with name $(decorate code "$soundName")" || return $?
-          __catchEnvionment "$usage" darwinSoundInstall --create "$home/etc/$soundName.mp3" || return $?
-        fi
+        soundName=$(__hookNotifySoundName "$usage" "$soundName") || return $?
+        ss=(--sound "$soundName")
       fi
-      ss=(--sound "$soundName")
     fi
     muzzle darwinNotification "${ss[@]+"${ss[@]}"}" --title "$title" "$(stripAnsi <<<"$*")"
   else
