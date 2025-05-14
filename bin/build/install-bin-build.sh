@@ -10,6 +10,27 @@
 #
 # Debugging: 73b0bd4ba49583263542da725669003fc821eb63
 
+# Environment: Needs internet access and creates a directory `./bin/build`
+# Usage: {fn} relativePath installPath url urlFunction [ --local localPackageDirectory ] [ --debug ] [ --force ] [ --diff ]
+# fn: {base}
+# Installs a remote package system in a local project directory if not installed. Also
+# will overwrite the installation binary with the latest version after installation.
+#
+# Determines the most recent version using GitHub API unless --url or --local is specified
+#
+# Argument: --local localPackageDirectory - Optional. Directory. Directory of an existing bin/build installation to mock behavior for testing
+# Argument: --url url - Optional. URL. URL of a tar.gz. file. Download source code from here.
+# Argument: --debug - Optional. Flag. Debugging is on.
+# Argument: --force - Optional. Flag. Force installation even if file is up to date.
+# Argument: --diff - Optional. Flag. Show differences between old and new file.
+# Exit Code: 1 - Environment error
+# Exit Code: 2 - Argument error
+__installPackageConfiguration() {
+  local rel="$1"
+  shift
+  _installRemotePackage "$rel" "bin/build" "install-bin-build.sh" --version-function __installBinBuildVersion --url-function __installBinBuildURL --check-function __installBinBuildCheck --name "Zesk Build" "$@"
+}
+
 # URL of latest release
 __installBinBuildLatest() {
   printf -- "%s\n" "https://api.github.com/repos/zesk/build/releases/latest"
@@ -138,28 +159,7 @@ __installCheck() {
   printf "%s %s (%s)\n" "$(decorate bold-blue "$name")" "$(decorate code "$version")" "$(decorate orange "$id")"
 }
 
-# Environment: Needs internet access and creates a directory `./bin/build`
-# Usage: {fn} relativePath installPath url urlFunction [ --local localPackageDirectory ] [ --debug ] [ --force ] [ --diff ]
-# fn: {base}
-# Installs a remote package system in a local project directory if not installed. Also
-# will overwrite the installation binary with the latest version after installation.
-#
-# Determines the most recent version using GitHub API unless --url or --local is specified
-#
-# Argument: --local localPackageDirectory - Optional. Directory. Directory of an existing bin/infrastructure installation to mock behavior for testing
-# Argument: --url url - Optional. URL. URL of a tar.gz. file. Download source code from here.
-# Argument: --debug - Optional. Flag. Debugging is on.
-# Argument: --force - Optional. Flag. Force installation even if file is up to date.
-# Argument: --diff - Optional. Flag. Show differences between old and new file.
-# Exit Code: 1 - Environment error
-# Exit Code: 2 - Argument error
-__installPackageConfiguration() {
-  local rel="$1"
-  shift
-  _installRemotePackage "$rel" "bin/build" "install-bin-build.sh" --version-function __installBinBuildVersion --url-function __installBinBuildURL --check-function __installBinBuildCheck --name "Zesk Build" "$@"
-}
-
-# IDENTICAL _installRemotePackage 385
+# IDENTICAL _installRemotePackage 396
 
 # Installs {name} in a local project directory if not installed. Also
 # will overwrite {source} with the latest version after installation.
@@ -196,6 +196,11 @@ __installPackageConfiguration() {
 # INTERNAL:
 # DOC TEMPLATE: --help 1
 # Argument: --help - Optional. Flag. Display this help.
+# Argument: relative - Required. RelativePath. Path from this script to our application root. INTERNAL.
+# Argument: defaultPackagePath - Required. RelativePath. Path from application root to where the package should be installed. INTERNAL.
+# Argument: packageInstallerName - Required. ApplicationFile. The new installer file, post installation, relative to the `installationPath`. INTERNAL.
+# Argument: installationPath - Optional. ApplicationDirectory. Path to where the package should be installed instead of the defaultPackagePath.
+# Argument: --help - Optional. Flag. Display this help.
 # Argument: --source source - Optional. String. Source to display for the binary name. INTERNAL.
 # Argument: --name name - Optional. String. Name to display for the remote package name. INTERNAL.
 # Argument: --local localPackageDirectory - Optional. Directory. Directory of an existing installation to mock behavior for testing. INTERNAL.
@@ -211,6 +216,7 @@ __installPackageConfiguration() {
 # Argument: --finalize file - Optional. File. Remove the temporary file and exit 0. INTERNAL.
 # Argument: --debug - Optional. Flag. Debugging is on. INTERNAL.
 # Argument: --force - Optional. Flag. Force installation even if file is up to date.
+# Argument: --skip-self - Optional. Flag. Skip the installation script self-update. (By default it is enabled.)
 # Argument: --diff - Optional. Flag. Show differences between old and new file.
 # Exit Code: 1 - Environment error
 # Exit Code: 2 - Argument error
@@ -218,14 +224,15 @@ __installPackageConfiguration() {
 _installRemotePackage() {
   local usage="_${FUNCNAME[0]}"
 
-  local relative="${1-}" packagePath="${2-}" packageInstallerName="${3-}"
+  local relative="${1-}" defaultPackagePath="${2-}" packageInstallerName="${3-}"
 
   shift 3
 
   case "${BUILD_DEBUG-}" in 1 | true) __installRemotePackageDebug BUILD_DEBUG ;; esac
 
-  local installArgs=() url="" localPath="" forceFlag=false installReason="" urlFunction="" checkFunction="" fetchArguments=()
-  local name="${FUNCNAME[1]}"
+  local source="" name="${FUNCNAME[1]}"
+  local localPath="" fetchArguments=() url="" versionFunction="" urlFunction="" checkFunction="" installers=()
+  local installPath="" installArgs=() forceFlag=false installReason="" skipSelf=false
 
   # _IDENTICAL_ argument-case-header 5
   local __saved=("$@") __count=$#
@@ -251,7 +258,6 @@ _installRemotePackage() {
       shift
       [ -n "${1-}" ] || __throwArgument "$usage" "$argument blank argument #$__index" || return $?
       localPath="$(__catchArgument "$usage" realPath "${1%/}")" || return $?
-      [ -x "$localPath/tools.sh" ] || __throwArgument "$usage" "$argument argument (\"$(decorate code "$localPath")\") must be path to bin/build containing tools.sh" || return $?
       ;;
     --user | --header | --password)
       shift
@@ -317,6 +323,9 @@ _installRemotePackage() {
     --debug)
       __installRemotePackageDebug "$argument"
       ;;
+    --skip-self)
+      skipSelf=true
+      ;;
     --force)
       forceFlag=true
       installReason="--force specified"
@@ -325,7 +334,7 @@ _installRemotePackage() {
       installArgs+=("$argument")
       ;;
     *)
-      __throwArgument "$usage" "unknown argument #$__index: $argument" || return $?
+      installPath=$(usageArgumentString "$usage" "installPath" "$1") || return $?
       ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
@@ -336,9 +345,9 @@ _installRemotePackage() {
   local myBinary myPath applicationHome installPath
   # Move to starting point
   myBinary=$(__catchEnvironment "$usage" realPath "${BASH_SOURCE[0]}") || return $?
-  myPath="$(__catchEnvironment "$usage" dirname "$myBinary")" || return $?
+  myPath="${myBinary%/*}" || return $?
   applicationHome=$(__catchEnvironment "$usage" realPath "$myPath/$relative") || return $?
-  installPath="$applicationHome/$packagePath"
+  [ -n "$installPath" ] || installPath="$applicationHome/$defaultPackagePath"
 
   if [ -z "$url" ]; then
     if [ -n "$urlFunction" ]; then
@@ -362,7 +371,7 @@ _installRemotePackage() {
     local newVersion=""
     if newVersion=$("$versionFunction" "$usage" "$applicationHome" "$installPath"); then
       printf "%s %s %s\n" "$(decorate value "$name")" "$(decorate info "Newest version installed")" "$newVersion"
-      __installRemotePackageGitCheck "$applicationHome" "$packagePath" || :
+      __installRemotePackageGitCheck "$applicationHome" "$installPath" || :
       return 0
     fi
     forceFlag=true
@@ -377,13 +386,13 @@ _installRemotePackage() {
   if $installFlag; then
     local start
     start=$(($(__catchEnvironment "$usage" date +%s) + 0)) || return $?
-    __installRemotePackageDirectory "$usage" "$packagePath" "$applicationHome" "$url" "$localPath" "${fetchArguments[@]+"${fetchArguments[@]}"}" || return $?
-    [ -d "$installPath" ] || __throwEnvironment "$usage" "Unable to download and install $packagePath ($installPath not a directory, still)" || return $?
+    __installRemotePackageDirectory "$usage" "$installPath" "$applicationHome" "$url" "$localPath" "${fetchArguments[@]+"${fetchArguments[@]}"}" || return $?
+    [ -d "$installPath" ] || __throwEnvironment "$usage" "Unable to download and install $installPath (not a directory, still)" || return $?
     messageFile=$(fileTemporaryName "$usage") || return $?
     if [ -n "$checkFunction" ]; then
       "$checkFunction" "$usage" "$installPath" >"$messageFile" 2>&1 || return $?
     else
-      __catchEnvironment "$usage" printf -- "%s\n" "$packagePath" >"$messageFile" || return $?
+      __catchEnvironment "$usage" printf -- "%s\n" "$installPath" >"$messageFile" || return $?
     fi
     message="Installed $(cat "$messageFile") in $(($(date +%s) - start)) seconds$binName"
     __catchEnvironment "$usage" rm -f "$messageFile" || return $?
@@ -392,12 +401,12 @@ _installRemotePackage() {
     if [ -n "$checkFunction" ]; then
       "$checkFunction" "$usage" "$installPath" >"$messageFile" 2>&1 || return $?
     else
-      __catchEnvironment "$usage" printf -- "%s\n" "$packagePath" >"$messageFile" || return $?
+      __catchEnvironment "$usage" printf -- "%s\n" "$installPath" >"$messageFile" || return $?
     fi
     message="$(cat "$messageFile") already installed"
     rm -f "$messageFile" || :
   fi
-  __installRemotePackageGitCheck "$applicationHome" "$packagePath" || :
+  __installRemotePackageGitCheck "$applicationHome" "$installPath" || :
   message="$message (local)$binName"
   printf -- "%s\n" "$message"
 
@@ -444,8 +453,7 @@ _installRemotePackage() {
       return "$exitCode"
     fi
   fi
-
-  __installRemotePackageLocal "$installPath/$packageInstallerName" "$myBinary" "$relative"
+  $skipSelf || __installRemotePackageLocal "$installPath/$packageInstallerName" "$myBinary" "$relative"
 }
 
 # Error handler for _installRemotePackage
@@ -542,7 +550,10 @@ __installRemotePackageLocal() {
     grep -v -e '^__installPackageConfiguration ' <"$source"
     printf "%s %s \"%s\"\n" "__installPackageConfiguration" "$relTop" '$@'
   } >"$myBinary.$$"
-  chmod +x "$myBinary.$$" || _environment "chmod +x failed" || return $?
+  if ! chmod +x "$myBinary.$$"; then
+    rm -rf "$myBinary.$$" || :
+    _environment "chmod +x failed" || return $?
+  fi
   exec "$myBinary.$$" --replace "$myBinary"
 }
 
