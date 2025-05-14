@@ -233,14 +233,16 @@ _installRemotePackage() {
     shift
   done
 
-  local installFlag=false message
-  local myBinary myPath applicationHome installPath
+  local installFlag=false
+  local myBinary myPath applicationHome installPath packagePath
   # Move to starting point
   myBinary=$(__catchEnvironment "$usage" realPath "${BASH_SOURCE[0]}") || return $?
   myPath="${myBinary%/*}" || return $?
   applicationHome=$(__catchEnvironment "$usage" realPath "$myPath/$relative") || return $?
   [ -n "$installPath" ] || installPath="$applicationHome/$defaultPackagePath"
+  packagePath="${installPath#"$applicationHome"}"
 
+  __catchEnvironment "$usage" pushd "$applicationHome" || return $?
   if [ -z "$url" ]; then
     if [ -n "$urlFunction" ]; then
       url=$(__catchEnvironment "$usage" "$urlFunction" "$usage") || return $?
@@ -261,9 +263,9 @@ _installRemotePackage() {
     installFlag=true
   elif ! $forceFlag && [ -n "$versionFunction" ]; then
     local newVersion=""
-    if newVersion=$("$versionFunction" "$usage" "$applicationHome" "$installPath"); then
+    if newVersion=$("$versionFunction" "$usage" "$applicationHome" "$packagePath"); then
       printf "%s %s %s\n" "$(decorate value "$name")" "$(decorate info "Newest version installed")" "$newVersion"
-      __installRemotePackageGitCheck "$applicationHome" "$installPath" || :
+      __installRemotePackageGitCheck "$applicationHome" "$packagePath" || :
       return 0
     fi
     forceFlag=true
@@ -275,30 +277,29 @@ _installRemotePackage() {
     installFlag=true
   fi
   binName=" ($(decorate bold-blue "$(basename "$myBinary")"))"
+
+  local message suffix
   if $installFlag; then
     local start
     start=$(($(__catchEnvironment "$usage" date +%s) + 0)) || return $?
-    __installRemotePackageDirectory "$usage" "$installPath" "$applicationHome" "$url" "$localPath" "${fetchArguments[@]+"${fetchArguments[@]}"}" || return $?
-    [ -d "$installPath" ] || __throwEnvironment "$usage" "Unable to download and install $installPath (not a directory, still)" || return $?
-    messageFile=$(fileTemporaryName "$usage") || return $?
-    if [ -n "$checkFunction" ]; then
-      "$checkFunction" "$usage" "$installPath" >"$messageFile" 2>&1 || return $?
-    else
-      __catchEnvironment "$usage" printf -- "%s\n" "$installPath" >"$messageFile" || return $?
-    fi
-    message="Installed $(cat "$messageFile") in $(($(date +%s) - start)) seconds$binName"
-    __catchEnvironment "$usage" rm -f "$messageFile" || return $?
+    __installRemotePackageDirectory "$usage" "$packagePath" "$applicationHome" "$url" "$localPath" "${fetchArguments[@]+"${fetchArguments[@]}"}" || return $?
+    [ -d "$packagePath" ] || __throwEnvironment "$usage" "Unable to download and install $packagePath (not a directory, still)" || return $?
+    message="Installed "
+    suffix="in $(($(date +%s) - start)) seconds$binName"
   else
-    messageFile=$(fileTemporaryName "$usage") || return $?
-    if [ -n "$checkFunction" ]; then
-      "$checkFunction" "$usage" "$installPath" >"$messageFile" 2>&1 || return $?
-    else
-      __catchEnvironment "$usage" printf -- "%s\n" "$installPath" >"$messageFile" || return $?
-    fi
-    message="$(cat "$messageFile") already installed"
-    rm -f "$messageFile" || :
+    message=""
+    suffix="already installed"
   fi
-  __installRemotePackageGitCheck "$applicationHome" "$installPath" || :
+  local messageFile
+  messageFile=$(fileTemporaryName "$usage") || return $?
+  if [ -n "$checkFunction" ]; then
+    "$checkFunction" "$usage" "$packagePath" >"$messageFile" 2>&1 || return $?
+  else
+    __catchEnvironment "$usage" printf -- "%s\n" "$packagePath" >"$messageFile" || return $?
+  fi
+  message="${message}Installed $(cat "$messageFile") $suffix"
+  __catchEnvironment "$usage" rm -f "$messageFile" || return $?
+  __installRemotePackageGitCheck "$applicationHome" "$packagePath" || :
   message="$message (local)$binName"
   printf -- "%s\n" "$message"
 
