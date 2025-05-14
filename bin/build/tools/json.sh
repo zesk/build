@@ -41,8 +41,9 @@ jsonField() {
 # Argument: --status - Flag. Optional. When set, returns 0 when te version was updated successfully and $(_code identical) when the files are the same
 # Argument: --quiet - Flag. Optional. Do not output anything to stdout and just do the action and exit.
 # Argument: --generator - Function. Optional. Function to generate the value. Defaults to `hookVersionCurrent`.
-# Argument: --value - String. Optional. Value to set in JSON file.
-# Argument: --key - String. Required. Key to set in JSON file.
+# Argument: --value - String. Optional. Value to set in JSON file. (Skips generation)
+# Argument: --key - String. Optional. Key to set in JSON file. Defaults to `version`.
+# Argument: key - Required. If not specified as `--key`, specify it here.
 # Argument: file - File. Required. Modify and update this file
 # Exit Code: 0 - File was updated successfully.
 # Exit Code: 1 - Environment error
@@ -50,7 +51,7 @@ jsonField() {
 # Exit Code: 105 - Identical files (only when --status is passed)
 jsonSetValue() {
   local usage="_${FUNCNAME[0]}"
-  local value="" statusFlag=false quietFlag=false file="" key=""
+  local value="" statusFlag=false quietFlag=false file="" key="version"
   local generator="hookVersionCurrent" filter="versionNoVee"
 
   # _IDENTICAL_ argument-case-header 5
@@ -87,8 +88,6 @@ jsonSetValue() {
       filter="$(usageArgumentFunction "$usage" "$argument" "${1-}")" || return $?
       ;;
     *)
-      [ -n "$key" ] || __throwArgument "$usage" "--key is required" || return $?
-
       file="$(usageArgumentFile "$usage" "$argument" "${1-}")" || return $?
       if [ -z "$value" ]; then
         if [ -z "$generator" ]; then
@@ -136,6 +135,7 @@ __jsonSetValue() {
 
   if muzzle diff -q "$json" "$newJSON"; then
     $quietFlag || statusMessage --last decorate info "$decoratedJSON $key is $decoratedValue (up to date)"
+    __catchEnvironment "$usage" rm -rf "$newJSON" || return $?
     ! $statusFlag || return "$(_code identical)"
   else
     __catchEnvironment "$usage" mv -f "$newJSON" "$json" || _clean $? "$newJSON" || return $?
