@@ -38,3 +38,10 @@ listFileModificationTimes() {
   _deprecated "${FUNCNAME[0]}"
   fileModificationTimes "$@"
 }
+
+# DEPRECATED 2025-04-09
+# nounAction naming
+sshAddKnownHost() {
+  _deprecated "${FUNCNAME[@]}"
+  sshKnownHostAdd "$@"
+}

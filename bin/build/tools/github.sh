@@ -244,7 +244,7 @@ githubRelease() {
   __catchEnvironment "$usage" packageWhich curl curl || return $?
 
   host=github.com
-  __catchEnvironment "$usage" sshAddKnownHost "$host" || return $?
+  __catchEnvironment "$usage" sshKnownHostAdd "$host" || return $?
 
   if git remote | grep -q github; then
     printf "%s %s %s" "$(decorate info Remote)" "$(decorate magenta github)" "$(decorate info exists, not adding again.) " || :

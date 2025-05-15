@@ -15,3 +15,4 @@ Hides these from [New and uncategorized functions](./todo.md)
 {processOpenPipes}
 {reportTiming}
 {wrapLines}
+{sshAddKnownHost}

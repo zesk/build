@@ -28,7 +28,7 @@ _gitAddRemotesToSSHKnown() {
       continue
     fi
     statusMessage decorate info "Adding $remoteHost to SSH known hosts ..."
-    __environment sshAddKnownHost "$remoteHost" || return $?
+    __environment sshKnownHostAdd "$remoteHost" || return $?
   done
   clearLine
 }

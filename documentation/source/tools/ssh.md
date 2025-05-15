@@ -4,5 +4,5 @@
 [⬅ Parent ](../index.md)
 <hr />
 
-{sshAddKnownHost}
+{sshKnownHostAdd}
 {sshSetup}

@@ -625,10 +625,10 @@ deployToRemote() {
   [ -n "$currentIP" ] || __throwEnvironment "$usage" "IP address lookup blank" || return $?
 
   if $addSSHHosts; then
-    # sshAddKnownHost
+    # sshKnownHostAdd
     for userHost in "${userHosts[@]}"; do
       host="${userHost##*@}"
-      __environment sshAddKnownHost "$host" || return $?
+      __environment sshKnownHostAdd "$host" || return $?
     done
   fi
 
