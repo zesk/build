@@ -665,7 +665,7 @@ awsSecurityGroupIPModify() {
       return 0
     else
       __awsSGOutput "$(decorate info "Removing old IP:")" "$foundIP" "$group" "$port"
-      __catchEnvironment "$usage" __awsWrapper "${pp[@]+"${pp[@]}"}" --output json ec2 revoke-security-group-ingress --region "$region" --group-id "$group" --protocol tcp --port "$port" --cidr "$foundIP" || return $?
+      __catchEnvironment "$usage" __awsWrapper "${pp[@]+"${pp[@]}"}" --output json ec2 revoke-security-group-ingress --region "$region" --group-id "$group" --protocol tcp --port "$port" --cidr "$foundIP" | __awsReturnTrue || return $?
     fi
   fi
   if [ "$mode" != "--remove" ]; then
@@ -673,7 +673,7 @@ awsSecurityGroupIPModify() {
     json="[{\"IpProtocol\": \"tcp\", \"FromPort\": $port, \"ToPort\": $port, \"IpRanges\": [{\"CidrIp\": \"$ip\", \"Description\": \"$description\"}]}]"
     __awsSGOutput "$(decorate info "$verb new IP:")" "$ip" "$group" "$port"
 
-    if ! __awsWrapper "${pp[@]+"${pp[@]}"}" --output json ec2 authorize-security-group-ingress --region "$region" --group-id "$group" --ip-permissions "$json" 2>"$tempErrorFile"; then
+    if ! __awsWrapper "${pp[@]+"${pp[@]}"}" --output json ec2 authorize-security-group-ingress --region "$region" --group-id "$group" --ip-permissions "$json" 2>"$tempErrorFile" | __awsReturnTrue; then
       if grep -q "Duplicate" "$tempErrorFile"; then
         printf "%s\n" "$(decorate yellow "duplicate")"
         rm -f "$tempErrorFile"
@@ -685,6 +685,11 @@ awsSecurityGroupIPModify() {
 }
 _awsSecurityGroupIPModify() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+# Pipe output into this
+__awsReturnTrue() {
+  [ "$(jq ".Return")" = "true" ]
 }
 
 # Helper for awsSecurityGroupIPModify
