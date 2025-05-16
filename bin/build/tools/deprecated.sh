@@ -18,6 +18,18 @@
 #             |_|
 #
 
+bashPromptModule_iTerm2Colors() {
+  _deprecated "${FUNCNAME[0]}"
+  bashPromptModule_TermColors "$@"
+}
+
+# DEPRECATED 2025-05-15
+# nounAction naming
+sshAddKnownHost() {
+  _deprecated "${FUNCNAME[@]}"
+  sshKnownHostAdd "$@"
+}
+
 # DEPRECATED 2025-04-22
 # See: readlineConfigurationAdd
 inputConfigurationAdd() {
@@ -37,11 +49,4 @@ wrapLines() {
 listFileModificationTimes() {
   _deprecated "${FUNCNAME[0]}"
   fileModificationTimes "$@"
-}
-
-# DEPRECATED 2025-04-09
-# nounAction naming
-sshAddKnownHost() {
-  _deprecated "${FUNCNAME[@]}"
-  sshKnownHostAdd "$@"
 }

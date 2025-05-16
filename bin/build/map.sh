@@ -335,7 +335,7 @@ usageArgumentString() {
   printf "%s\n" "$1"
 }
 
-# IDENTICAL decorate 227
+# IDENTICAL decorate 231
 
 # Sets the environment variable `BUILD_COLORS` if not set, uses `TERM` to calculate
 #
@@ -457,9 +457,12 @@ _decorateStyle() {
 }
 
 # Default array styles, override if you wish
-__decorateStyles() {
-  __decorateStylesDefault
-}
+if ! isFunction __decorateStyles; then
+  # This sets __BUILD_COLORS to the styles strings
+  __decorateStyles() {
+    __decorateStylesDefault
+  }
+fi
 
 # Default array styles, override if you wish
 __decorateStylesDefault() {
@@ -498,7 +501,8 @@ error=1;91 - ERROR
 subtle=1;38;5;252 1;38;5;240
 label=34;103 1;96
 value=1;40;97 1;97
-decoration=45;97 45;30"
+decoration=45;97 45;30
+"
   export __BUILD_COLORS
   __BUILD_COLORS="$styles"
 }

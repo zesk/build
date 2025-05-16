@@ -22,6 +22,8 @@ if source "${BASH_SOURCE[0]%/*}/tools.sh"; then
     reloadChanges --name "Zesk Build" bin/build/tools.sh bin/build/tools
     buildCompletion
 
+    bashPrompt --skip-prompt bashPromptModule_TermColors
+
     developerAnnounce < <(__applicationToolsList)
   }
 
@@ -32,4 +34,7 @@ if source "${BASH_SOURCE[0]%/*}/tools.sh"; then
   __buildConfigure
 
   unset __buildConfigure
+else
+  printf "%s\n" "Loading ${BASH_SOURCE[0]%/*}/tools.sh failed" 1>&2
+  false
 fi

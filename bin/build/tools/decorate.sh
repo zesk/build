@@ -3,7 +3,7 @@
 # Copyright &copy; 2025 Market Acumen, Inc.
 #
 
-# IDENTICAL decorate 227
+# IDENTICAL decorate 231
 
 # Sets the environment variable `BUILD_COLORS` if not set, uses `TERM` to calculate
 #
@@ -120,12 +120,13 @@ _decorateStyle() {
   original="${__BUILD_COLORS}"
   style="${__BUILD_COLORS#*"$pattern"}"
   [ "$style" != "$original" ] || return 1
-  style="${style%$'\n'*}"
-  printf "%s\n" "$style"
+  style="${style%%$'\n'*}"
+  printf -- "%s\n" "$style"
 }
 
 # Default array styles, override if you wish
 if ! isFunction __decorateStyles; then
+  # This sets __BUILD_COLORS to the styles strings
   __decorateStyles() {
     __decorateStylesDefault
   }
@@ -168,7 +169,8 @@ error=1;91 - ERROR
 subtle=1;38;5;252 1;38;5;240
 label=34;103 1;96
 value=1;40;97 1;97
-decoration=45;97 45;30"
+decoration=45;97 45;30
+"
   export __BUILD_COLORS
   __BUILD_COLORS="$styles"
 }
@@ -232,32 +234,4 @@ __decorateExtensionQuote() {
   text="${text//\"/\\\"}"
   text="${text//\$/\\\$}"
   printf -- "\"%s\"\n" "$text"
-}
-
-# fn: decorate size
-# Argument: size - UnsignedInteger. Optional. Size to display.
-# Mostly $ and " are problematic within a string
-# Requires: printf decorate isUnsignedInteger
-__decorateExtensionSize() {
-  while [ $# -gt 0 ]; do
-    local size="$1"
-
-    # Skip any `--`
-    [ "$size" != "--" ] || continue
-
-    if isUnsignedInteger "$size"; then
-      if [ "$size" -lt 4096 ]; then
-        printf "%db\n" "$size"
-      elif [ "$size" -lt 4194304 ]; then
-        printf "%dk (%d)\n" "$((size / 1024))" "$size"
-      elif [ "$size" -lt 4294967296 ]; then
-        printf "%dM (%d)\n" "$((size / 1048576))" "$size"
-      else
-        printf "%dG (%d)\n" "$((size / 1073741824))" "$size"
-      fi
-    else
-      printf "%s\n" "[SIZE $size]\n"
-    fi
-    shift
-  done
 }

@@ -828,6 +828,7 @@ interactiveBashSource() {
       if "$clearFlag"; then
         __interactiveApproveClear "$usage" "$sourcePath" || return $?
         ! $verboseFlag || statusMessage --last printf -- "%s %s" "$(decorate info "Cleared approval for")" "$displayPath"
+        interactiveBashSource "${aa[@]+"${aa[@]}"}" "$sourcePath" || return $?
         return 0
       fi
       if [ -f "$sourcePath" ]; then

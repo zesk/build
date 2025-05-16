@@ -8,6 +8,6 @@
 
 if isFunction __buildConfigureUndo; then
   __buildConfigureUndo
-fi
 
-unset __buildConfigureUndo 2>/dev/null
+  unset __buildConfigureUndo 2>/dev/null
+fi

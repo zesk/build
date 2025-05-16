@@ -1,39 +1,43 @@
 #!/usr/bin/env bash
 #
-# Bash Prompt Module: iTerm2Colors
+# Bash Prompt Module: TermColors
 #
 # Copyright &copy; 2025 Market Acumen, Inc.
 
 # Sets the console colors based on the project you are currently in.
-# Place an iterm2 colors configuration file (values of `bg=FFF` etc. one per line, comments allowed)
+# Define your color configuration file (values of `bg=FFF` etc. one per line, comments allowed)
 #
 # Will fill in missing bright or non-bright colors which are unspecified. (`blue` implies `br_blue` and so on)
 #
 # Sets `BUILD_COLORS_MODE` based on background color
+# Sets `decorateStyle` for valid styles
+#
 # See: consoleConfigureColorMode
 # File: ./etc/iterm2-colors.conf
-# File: ./.iterm2-colors.conf
+# File: ./etc/term-colors.conf
+# File: ./.term-colors.conf
 #
-# Example:     bashPrompt --order 80 bashPromptModule_iTerm2Colors
+# Example:     bashPrompt --order 80 bashPromptModule_TermColors
 # Requires: buildHome statusMessage buildEnvironmentGetDirectory requireDirectory cachedShaPipe decorate buildDebugEnabled iTerm2SetColors consoleConfigureColorMode
-# BUILD_DEBUG: iterm2-colors - When `bashPromptModule_iTerm2Colors` is enabled, will show colors and how they are applied
-bashPromptModule_iTerm2Colors() {
-  local debug=false home start
+# BUILD_DEBUG: term-colors - When `bashPromptModule_TermColors` is enabled, will show colors and how they are applied
+#
+# Support for iTerm2 is built-in and automatic
+bashPromptModule_TermColors() {
+  local debug=false home start usage="_return"
 
   home=$(buildHome 2>/dev/null) || return 0
 
-  ! buildDebugEnabled iterm2-colors || debug=true
+  ! buildDebugEnabled term-colors || debug=true
 
   export __BUILD_ITERM2_COLORS BUILD_COLORS_MODE
 
   local schemeFile
-  for schemeFile in "$home/.iterm2-colors.conf" "$home/etc/iterm2-colors.conf"; do
+  # Deprecated files
+  for schemeFile in "$home/.term-colors.conf" "$home/etc/term-colors.conf" "$home/.iterm2-colors.conf" "$home/etc/iterm2-colors.conf"; do
     ! $debug || statusMessage decorate info "Looking at $schemeFile"
     if [ -f "$schemeFile" ]; then
       local hash cacheDir
-      # cacheDir=$(buildEnvironmentGetDirectory --subdirectory ".iTerm2Colors" XDG_CACHE_HOME) || break
-      cacheDir=$(buildEnvironmentGetDirectory XDG_CACHE_HOME) || break
-      cacheDir=$(requireDirectory "$cacheDir/.iTerm2Colors") || break
+      cacheDir=$(buildEnvironmentGetDirectory XDG_CACHE_HOME --subdirectory ".TermColors") || break
 
       hash=$(cachedShaPipe "$cacheDir" <"$schemeFile") || :
       ! $debug || statusMessage --last decorate info "$schemeFile -> \"$hash\""
@@ -45,10 +49,21 @@ bashPromptModule_iTerm2Colors() {
       ! $debug || statusMessage decorate info "Applying colors from $(decorate file "$schemeFile") ... "
 
       start=$(timingStart)
-      saveBackground=$(fileTemporaryName _return) || return 0
-      iTerm2SetColors --fill --ignore --skip-errors < <(grep -v -e '^#' "$schemeFile" | sed '/^$/d' | tee "$saveBackground") || :
-      bg="$(grep -e '^bg=' "$saveBackground" | tail -n 1 | cut -f 2 -d =)"
-      rm -rf "$saveBackground"
+      colorsFile=$(fileTemporaryName _return) || return 0
+      __catchEnvironment "$usage" grepSafe -v -e '^#' "$schemeFile" | __catchEnvironment "$usage" sed '/^$/d' | __catchEnvironment "$usage" muzzle tee "$colorsFile" || return $?
+      local it2=false iTerm2=false
+      ! isiTerm2 || it2=true
+      while IFS="=" read -r name value; do
+        if $it2 && iTerm2IsColorType "$name"; then
+          iTerm2=true
+        fi
+        if decorateStyle "$name"; then
+          decorateStyle "$name" "$value"
+        fi
+      done <"$colorsFile"
+      ! $iTerm2 || iTerm2SetColors --fill --ignore --skip-errors <"$colorsFile" || :
+      bg="$(grep -e '^bg=' "$colorsFile" | tail -n 1 | cut -f 2 -d =)"
+      __catchEnvironment "$usage" rm -rf "$colorsFile" || return $?
 
       ! $debug || timingReport "$start"
 
