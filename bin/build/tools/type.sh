@@ -113,13 +113,20 @@ isType() {
   esac
 }
 
+# _IDENTICAL_ isArray 14
+
 # Is a variable declared as an array?
-# Usage: {fn} variableName
 # Argument: variableName - Required. String. Variable to check is an array.
 isArray() {
-  local typeLine
-  read -r typeLine < <(isType "$1")
-  [ "$typeLine" = "array" ]
+  while [ $# -gt 0 ]; do
+    [ -n "${1-}" ] || return 1
+    case "$(declare -p "${1-}" 2>/dev/null)" in
+    *"declare -a"*) ;;
+    *) return 1 ;;
+    esac
+    shift
+  done
+  return 0
 }
 
 # IDENTICAL _type 45

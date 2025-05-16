@@ -20,6 +20,7 @@ Wrapper around [apt](./apt.md), [apk](./apk.md), and [brew](./brew.md) currently
 
 ## Package lists
 
+{packageDefault}
 {packageIsInstalled}
 {packageInstalledList}
 {packageAvailableList}

@@ -70,6 +70,7 @@ bashPrompt() {
   local addArguments=() colorsText="" resetFlag=false verbose=false skipTerminal=false listFlag=false skipPrompt=false
 
   export __BASH_PROMPT_PREVIOUS
+
   isArray __BASH_PROMPT_PREVIOUS || __BASH_PROMPT_PREVIOUS=()
 
   local promptFormat="" successPrompt="${__BASH_PROMPT_PREVIOUS[0]-}" failurePrompt="${__BASH_PROMPT_PREVIOUS[1]-}" label="${__BASH_PROMPT_PREVIOUS[2]-}"
@@ -186,6 +187,12 @@ bashPrompt() {
     BUILD_PROMPT_COLORS=$(bashPromptColorsFormat "${colorsText}")
   fi
 
+  local colors=()
+  IFS=":" read -r -a colors <<<"${BUILD_PROMPT_COLORS-}"
+
+  isArray __BASH_PROMPT_PREVIOUS || __BASH_PROMPT_PREVIOUS=()
+  __BASH_PROMPT_PREVIOUS=("$successPrompt" "$failurePrompt" "$label" 0 "${colors[0]}" "$successPrompt" "")
+
   # Skip prompt on time
   ! $skipPrompt || return 0
 
@@ -205,11 +212,7 @@ bashPrompt() {
   else
     PROMPT_COMMAND="$theCommand"
   fi
-  local colors=()
-  IFS=":" read -r -a colors <<<"${BUILD_PROMPT_COLORS-}"
-
-  isArray __BASH_PROMPT_PREVIOUS || __BASH_PROMPT_PREVIOUS=()
-  __BASH_PROMPT_PREVIOUS=("$successPrompt" "$failurePrompt" "$label" 0 "${colors[0]}" "$successPrompt" "")
+  export PS1
   PS1="$(__bashPromptGeneratePS1 "$promptFormat")"
 }
 _bashPrompt() {
@@ -307,8 +310,6 @@ __bashPromptSanity() {
   export __BASH_PROMPT_MODULES __BASH_PROMPT_PREVIOUS
   if ! isArray "__BASH_PROMPT_MODULES"; then
     __BASH_PROMPT_MODULES=()
-  fi
-  if ! isArray "__BASH_PROMPT_PREVIOUS"; then
     __BASH_PROMPT_PREVIOUS=()
   fi
 }
@@ -480,12 +481,11 @@ __bashPromptCode() {
 __bashPromptCommand() {
   local exitCode=$?
 
-  __bashPromptSanity
+  export BUILD_PROMPT_COLORS __BASH_PROMPT_PREVIOUS
 
   # Index 0 1 2 3
   __BASH_PROMPT_PREVIOUS=("${__BASH_PROMPT_PREVIOUS[0]-}" "${__BASH_PROMPT_PREVIOUS[1]-}" "${__BASH_PROMPT_PREVIOUS[2]-}" "$exitCode")
   local colors
-  export BUILD_PROMPT_COLORS
   IFS=":" read -r -a colors <<<"${BUILD_PROMPT_COLORS-}" || :
   if [ "$exitCode" -eq 0 ]; then
     # Index 4 - color
@@ -505,6 +505,7 @@ __bashPromptCommand() {
 
   local debug=false
   ! buildDebugEnabled bashPrompt || debug=true
+  ! $debug || statusMessage decorate warning "Running $(decorate each --count code "${__BASH_PROMPT_MODULES[@]}") "
 
   local promptCommand start
   for promptCommand in "${__BASH_PROMPT_MODULES[@]}"; do

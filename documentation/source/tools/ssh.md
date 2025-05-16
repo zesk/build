@@ -6,3 +6,5 @@
 
 {sshKnownHostAdd}
 {sshSetup}
+{sshKnownHostRemove}
+{sshKnownHostsFile}

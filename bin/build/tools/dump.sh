@@ -373,7 +373,7 @@ dumpEnvironment() {
   local usage="_${FUNCNAME[0]}"
   __internalDumpEnvironment "$usage" "$@" || return $?
 }
-_dumpEnvironmentSafe() {
+_dumpEnvironment() {
   # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
