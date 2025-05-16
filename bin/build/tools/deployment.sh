@@ -791,7 +791,7 @@ __deployCommandsFile() {
 
 __deploySSHOptions() {
   if buildDebugEnabled; then
-    if [ "$BUILD_DEBUG" -ge 3 ]; then
+    if isInteger "${BUILD_DEBUG-}" && [ "${BUILD_DEBUG-}" -ge 3 ]; then
       # Triple verbosity
       printf %s "-vvv"
     else

@@ -67,13 +67,13 @@
 bashPrompt() {
   local usage="_${FUNCNAME[0]}"
 
-  local addArguments=() colorsText="" resetFlag=false verbose=false skipTerminal=false listFlag=false skipPrompt=false
+  local addArguments=() resetFlag=false verbose=false skipTerminal=false listFlag=false skipPrompt=false
 
   export __BASH_PROMPT_PREVIOUS
 
   isArray __BASH_PROMPT_PREVIOUS || __BASH_PROMPT_PREVIOUS=()
 
-  local promptFormat="" successPrompt="${__BASH_PROMPT_PREVIOUS[0]-}" failurePrompt="${__BASH_PROMPT_PREVIOUS[1]-}" label="${__BASH_PROMPT_PREVIOUS[2]-}"
+  local promptFormat="" successPrompt="${__BASH_PROMPT_PREVIOUS[0]-}" failurePrompt="${__BASH_PROMPT_PREVIOUS[1]-}" colorsText="${__BASH_PROMPT_PREVIOUS[2]-}" label="${__BASH_PROMPT_PREVIOUS[3]-}"
 
   # _IDENTICAL_ argument-case-header 5
   local __saved=("$@") __count=$#
@@ -140,8 +140,12 @@ bashPrompt() {
     --verbose)
       verbose=true
       ;;
+    -*)
+      # _IDENTICAL_ argumentUnknown 1
+      __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
+      ;;
     *)
-      addArguments+=("$argument")
+      addArguments+=("$(usageArgumentCallable "$usage" "module" "$argument")") || return $?
       ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
@@ -177,21 +181,23 @@ bashPrompt() {
     ! $verbose || decorate info "Prompt modules reset to empty list."
   fi
 
-  # Skip prompt early
-  ! $skipPrompt || [ -n "$colorsText" ] || return 0
-
-  __catchEnvironment "$usage" buildEnvironmentLoad BUILD_PROMPT_COLORS || return $?
-
-  if [ -z "${BUILD_PROMPT_COLORS-}" ] || [ -n "$colorsText" ] || $resetFlag; then
-    [ -n "$colorsText" ] || colorsText=$(bashPromptColorScheme default)
-    BUILD_PROMPT_COLORS=$(bashPromptColorsFormat "${colorsText}")
+  local colorsTextFormatted="::::"
+  if [ -z "$colorsText" ] || $resetFlag; then
+    if ! $resetFlag; then
+      __catchEnvironment "$usage" buildEnvironmentLoad BUILD_PROMPT_COLORS || return $?
+      [ -z "${BUILD_PROMPT_COLORS-}" ] || colorsText="$BUILD_PROMPT_COLORS"
+    fi
+    if $resetFlag || [ -z "$colorsText" ]; then
+      colorsText=$(bashPromptColorScheme default)
+    fi
   fi
+  colorsTextFormatted=$(bashPromptColorsFormat "${colorsText}")
 
   local colors=()
-  IFS=":" read -r -a colors <<<"${BUILD_PROMPT_COLORS-}"
+  IFS=":" read -r -a colors <<<"$colorsTextFormatted"
 
   isArray __BASH_PROMPT_PREVIOUS || __BASH_PROMPT_PREVIOUS=()
-  __BASH_PROMPT_PREVIOUS=("$successPrompt" "$failurePrompt" "$label" 0 "${colors[0]}" "$successPrompt" "")
+  __BASH_PROMPT_PREVIOUS=("$successPrompt" "$failurePrompt" "$colorsTextFormatted" "$label" 0 "${colors[0]}" "$successPrompt" "")
 
   # Skip prompt on time
   ! $skipPrompt || return 0
@@ -213,7 +219,7 @@ bashPrompt() {
     PROMPT_COMMAND="$theCommand"
   fi
   export PS1
-  PS1="$(__bashPromptGeneratePS1 "$promptFormat")"
+  PS1="$(__bashPromptGeneratePS1 "$promptFormat" "$colorsTextFormatted")"
 }
 _bashPrompt() {
   # _IDENTICAL_ usageDocument 1
@@ -310,6 +316,8 @@ __bashPromptSanity() {
   export __BASH_PROMPT_MODULES __BASH_PROMPT_PREVIOUS
   if ! isArray "__BASH_PROMPT_MODULES"; then
     __BASH_PROMPT_MODULES=()
+  fi
+  if ! isArray "__BASH_PROMPT_PREVIOUS"; then
     __BASH_PROMPT_PREVIOUS=()
   fi
 }
@@ -432,12 +440,13 @@ bashPromptColorsFormat() {
 }
 
 __bashPromptFormat() {
-  local formatString="$1"
+  local formatString="$1" && shift || _argument "${FUNCNAME[0]}:$LINENO" || return $?
+  local colorsTextFormatted="${2-}" && shift || _argument "${FUNCNAME[0]}:$LINENO" || return $?
 
   if [ -n "$formatString" ]; then
     while read -r token replacement && [ "${formatString#*{}" != "$formatString" ]; do
       formatString=$(stringReplace "{${token}}" "$replacement" "$formatString")
-    done < <(__bashPromptCode)
+    done < <(__bashPromptCode "${colorsTextFormatted}")
   fi
   printf -- "%s%s%s" "\[\${__BASH_PROMPT_MARKERS[0]-}\]" "$formatString" "\[\${__BASH_PROMPT_MARKERS[1]-}\]"
 }
@@ -450,27 +459,28 @@ __bashPromptGeneratePS1() {
 #
 # __BASH_PROMPT_PREVIOUS[0] - successText
 # __BASH_PROMPT_PREVIOUS[1] - failureText
-# __BASH_PROMPT_PREVIOUS[2] - label
-# __BASH_PROMPT_PREVIOUS[3] - return code
-# __BASH_PROMPT_PREVIOUS[4] - return color
-# __BASH_PROMPT_PREVIOUS[5] - return text
-# __BASH_PROMPT_PREVIOUS[6] - return string
+# __BASH_PROMPT_PREVIOUS[2] - colors
+# __BASH_PROMPT_PREVIOUS[3] - label
+# __BASH_PROMPT_PREVIOUS[4] - return code
+# __BASH_PROMPT_PREVIOUS[5] - return color
+# __BASH_PROMPT_PREVIOUS[6] - return text
+# __BASH_PROMPT_PREVIOUS[7] - return string
 
 __bashPromptHideEscapes() {
   printf -- "\[%s\]%s\[%s\]" "$1" "$2" "$3"
 }
 
+# Environment: __BASH_PROMPT_PREVIOUS
 __bashPromptCode() {
-  local colors=() reset
+  local colors=() reset colorFormat="${1-}" && shift || return $?
   reset="$(decorate reset --)"
-  export BUILD_PROMPT_COLORS __BASH_PROMPT_PREVIOUS
-  IFS=":" read -r -a colors <<<"${BUILD_PROMPT_COLORS-}" || :
+  IFS=":" read -r -a colors <<<"$colorFormat" || :
   printf "%s %s\n" \
-    "$" "$(__bashPromptHideEscapes "\${__BASH_PROMPT_PREVIOUS[4]-}" "\$" "$reset")" \
-    "code" "$(__bashPromptHideEscapes "\${__BASH_PROMPT_PREVIOUS[4]-}" "\${__BASH_PROMPT_PREVIOUS[3]#0}" "$reset")" \
-    "return" "$(__bashPromptHideEscapes "\${__BASH_PROMPT_PREVIOUS[4]-}" "\${__BASH_PROMPT_PREVIOUS[6]}" "$reset")" \
-    "status" "$(__bashPromptHideEscapes "\${__BASH_PROMPT_PREVIOUS[4]-}" "\${__BASH_PROMPT_PREVIOUS[5]-}" "$reset")" \
-    "label" "\${__BASH_PROMPT_PREVIOUS[2]-}" \
+    "$" "$(__bashPromptHideEscapes "\${__BASH_PROMPT_PREVIOUS[5]-}" "\$" "$reset")" \
+    "code" "$(__bashPromptHideEscapes "\${__BASH_PROMPT_PREVIOUS[5]-}" "\${__BASH_PROMPT_PREVIOUS[4]#0}" "$reset")" \
+    "return" "$(__bashPromptHideEscapes "\${__BASH_PROMPT_PREVIOUS[5]-}" "\${__BASH_PROMPT_PREVIOUS[7]}" "$reset")" \
+    "status" "$(__bashPromptHideEscapes "\${__BASH_PROMPT_PREVIOUS[5]-}" "\${__BASH_PROMPT_PREVIOUS[6]-}" "$reset")" \
+    "label" "\${__BASH_PROMPT_PREVIOUS[3]-}" \
     "user" "$(__bashPromptHideEscapes "${colors[2]-}" "\u" "$reset")" \
     "host" "$(__bashPromptHideEscapes "${colors[3]-}" "\h" "$reset")" \
     "directory" "$(__bashPromptHideEscapes "${colors[4]-}" "\w" "$reset")" \
@@ -481,25 +491,25 @@ __bashPromptCode() {
 __bashPromptCommand() {
   local exitCode=$?
 
-  export BUILD_PROMPT_COLORS __BASH_PROMPT_PREVIOUS
+  export __BASH_PROMPT_PREVIOUS
 
-  # Index 0 1 2 3
-  __BASH_PROMPT_PREVIOUS=("${__BASH_PROMPT_PREVIOUS[0]-}" "${__BASH_PROMPT_PREVIOUS[1]-}" "${__BASH_PROMPT_PREVIOUS[2]-}" "$exitCode")
+  # Index 0 1 2 3 4
+  __BASH_PROMPT_PREVIOUS=("${__BASH_PROMPT_PREVIOUS[0]-}" "${__BASH_PROMPT_PREVIOUS[1]-}" "${__BASH_PROMPT_PREVIOUS[2]-}" "${__BASH_PROMPT_PREVIOUS[3]-}" "$exitCode")
   local colors
-  IFS=":" read -r -a colors <<<"${BUILD_PROMPT_COLORS-}" || :
+  IFS=":" read -r -a colors <<<"${__BASH_PROMPT_PREVIOUS[2]-}" || :
   if [ "$exitCode" -eq 0 ]; then
-    # Index 4 - color
+    # Index 5 - color
     __BASH_PROMPT_PREVIOUS+=("${colors[0]-}")
-    # Index 5 - text
+    # Index 6 - text
     __BASH_PROMPT_PREVIOUS+=("${__BASH_PROMPT_PREVIOUS[0]-}")
-    # Index 6 - code text
+    # Index 7 - code text
     __BASH_PROMPT_PREVIOUS+=("")
   else
-    # Index 4 - color
+    # Index 5 - color
     __BASH_PROMPT_PREVIOUS+=("${colors[1]-}")
-    # Index 5 - text
+    # Index 6 - text
     __BASH_PROMPT_PREVIOUS+=("${__BASH_PROMPT_PREVIOUS[1]-}")
-    # Index 6 - code text
+    # Index 7 - code text
     __BASH_PROMPT_PREVIOUS+=("$(exitString "$exitCode")")
   fi
 

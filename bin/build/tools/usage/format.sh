@@ -42,6 +42,13 @@ usageTemplate() {
   exitCode=$(usageArgumentUnsignedInteger "$usage" "exitCode" "$5") || return $?
   shift 5 || __throwArgument "$usage" "shift 5" || return $?
 
+  if ! muzzle decorateStyle bold-green; then
+    export __BUILD_COLORS
+    dumpPipe __BUILD_COLORS <<<"${__BUILD_COLORS-}"
+    debuggingStack
+    __decorateStylesDefault
+  fi
+
   local usageString
   if [ "$exitCode" -eq 0 ]; then
     usageString="$(decorate bold-green Usage)"
