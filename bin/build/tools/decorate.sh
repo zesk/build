@@ -3,7 +3,7 @@
 # Copyright &copy; 2025 Market Acumen, Inc.
 #
 
-# IDENTICAL decorate 231
+# IDENTICAL decorate 232
 
 # Sets the environment variable `BUILD_COLORS` if not set, uses `TERM` to calculate
 #
@@ -120,8 +120,9 @@ _decorateStyle() {
   original="${__BUILD_COLORS}"
   style="${__BUILD_COLORS#*"$pattern"}"
   [ "$style" != "$original" ] || return 1
-  style="${style%%$'\n'*}"
-  printf -- "%s\n" "$style"
+  style="${style#$'\n'}"
+  style="${style%$'\n'*}"
+  printf "%s\n" "$style"
 }
 
 # Default array styles, override if you wish
