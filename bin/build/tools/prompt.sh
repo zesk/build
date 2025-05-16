@@ -355,8 +355,8 @@ __bashPromptAdd() {
     --order)
       shift
       order=$(usageArgumentUnsignedInteger "$usage" "$argument" "${1-}") || return $?
-      [ "$order" -lt 0 ] || order=0
-      [ "$order" -gt 99 ] || order=99
+      [ "$order" -gt 0 ] || order=0
+      [ "$order" -lt 99 ] || order=99
       ;;
     --first)
       order=0
