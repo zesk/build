@@ -73,7 +73,7 @@ bashPrompt() {
 
   isArray __BASH_PROMPT_PREVIOUS || __BASH_PROMPT_PREVIOUS=()
 
-  local promptFormat="" successPrompt="${__BASH_PROMPT_PREVIOUS[0]-}" failurePrompt="${__BASH_PROMPT_PREVIOUS[1]-}" colorsText="${__BASH_PROMPT_PREVIOUS[2]-}" label="${__BASH_PROMPT_PREVIOUS[3]-}"
+  local promptFormat="" successPrompt="${__BASH_PROMPT_PREVIOUS[0]-}" failurePrompt="${__BASH_PROMPT_PREVIOUS[1]-}" colorsTextFormatted="${__BASH_PROMPT_PREVIOUS[2]-}" label="${__BASH_PROMPT_PREVIOUS[3]-}"
 
   # _IDENTICAL_ argument-case-header 5
   local __saved=("$@") __count=$#
@@ -128,6 +128,7 @@ bashPrompt() {
       IFS=":" read -r -a colors <<<"$colorsText" || :
       [ "${#colors[@]}" -ge 2 ] || __throwArgument "$usage" "$argument should be min 2 colors separated by a colon: $(decorate code "$colorsText")" || return $?
       [ "${#colors[@]}" -le 5 ] || __throwArgument "$usage" "$argument should be max 5 colors separated by a colon: $(decorate code "$colorsText")" || return $?
+      colorsTextFormatted=$(bashPromptColorsFormat "${colorsText}")
       ;;
     --first | --last | --debug)
       addArguments+=("$argument")
@@ -181,8 +182,7 @@ bashPrompt() {
     ! $verbose || decorate info "Prompt modules reset to empty list."
   fi
 
-  local colorsTextFormatted="::::"
-  if [ -z "$colorsText" ] || $resetFlag; then
+  if [ -z "$colorsTextFormatted" ] || $resetFlag; then
     if ! $resetFlag; then
       __catchEnvironment "$usage" buildEnvironmentLoad BUILD_PROMPT_COLORS || return $?
       [ -z "${BUILD_PROMPT_COLORS-}" ] || colorsText="$BUILD_PROMPT_COLORS"
@@ -190,8 +190,8 @@ bashPrompt() {
     if $resetFlag || [ -z "$colorsText" ]; then
       colorsText=$(bashPromptColorScheme default)
     fi
+    colorsTextFormatted=$(bashPromptColorsFormat "${colorsText}")
   fi
-  colorsTextFormatted=$(bashPromptColorsFormat "${colorsText}")
 
   local colors=()
   IFS=":" read -r -a colors <<<"$colorsTextFormatted"
@@ -219,7 +219,7 @@ bashPrompt() {
     PROMPT_COMMAND="$theCommand"
   fi
   export PS1
-  PS1="$(__bashPromptGeneratePS1 "$promptFormat" "$colorsTextFormatted")"
+  PS1="$(__bashPromptFormat "$promptFormat" "$colorsTextFormatted")"
 }
 _bashPrompt() {
   # _IDENTICAL_ usageDocument 1
@@ -440,19 +440,15 @@ bashPromptColorsFormat() {
 }
 
 __bashPromptFormat() {
-  local formatString="$1" && shift || _argument "${FUNCNAME[0]}:$LINENO" || return $?
-  local colorsTextFormatted="${2-}" && shift || _argument "${FUNCNAME[0]}:$LINENO" || return $?
+  local formatString="${1-}" && shift || _argument "${FUNCNAME[0]}:$LINENO" || return $?
+  local colorsTextFormatted="${1-}" && shift || _argument "${FUNCNAME[0]}:$LINENO" || return $?
 
   if [ -n "$formatString" ]; then
     while read -r token replacement && [ "${formatString#*{}" != "$formatString" ]; do
       formatString=$(stringReplace "{${token}}" "$replacement" "$formatString")
-    done < <(__bashPromptCode "${colorsTextFormatted}")
+    done < <(__bashPromptCode "$colorsTextFormatted")
   fi
   printf -- "%s%s%s" "\[\${__BASH_PROMPT_MARKERS[0]-}\]" "$formatString" "\[\${__BASH_PROMPT_MARKERS[1]-}\]"
-}
-
-__bashPromptGeneratePS1() {
-  __bashPromptFormat "$@"
 }
 
 # Internal documentation - do not depend on this external of this file:

@@ -10,6 +10,7 @@ decorateStyle() {
   local usage="_${FUNCNAME[0]}"
   local style="" newFormat="" oldFormat
 
+  _decorateInitialize || return $?
   # _IDENTICAL_ argument-case-header 5
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do

@@ -193,11 +193,8 @@ iTerm2ColorTypes() {
 
 # Usage: {fn} handler verboseFlag colorSetting
 __iTerm2SetColors() {
-  local usage="$1" verboseFlag="$2" argument="$3"
+  local usage="$1" verboseFlag="$2" colorType="$3" colorValue="$4"
 
-  local colorType colorValue
-  IFS="=" read -r colorType colorValue <<<"$argument" || :
-  iTerm2IsColorType "$colorType" || __throwArgument "$usage" "Unknown color type: $(decorate code "$colorType")" || return $?
   local colorSpace colorCode=""
   IFS=":" read -r colorSpace colorCode <<<"$colorValue" || :
   if [ -z "$colorCode" ]; then
@@ -463,34 +460,35 @@ iTerm2SetColors() {
 
   local didColors=() needColors=() exitCode=0
   for colorSetting in "${colorSettings[@]+"${colorSettings[@]}"}"; do
-    if __iTerm2SetColors "$usage" "$verboseFlag" "$colorSetting"; then
+    local colorType="${colorSetting%%=*}" colorValue="${colorSetting#*=}"
+    if ! iTerm2IsColorType "$colorType"; then
+      $skipColorErrors || __throwArgument "$usage" "Invalid color $(decorate value "$colorType")" || return $?
+    else
+      __iTerm2SetColors "$usage" "$verboseFlag" "$colorType" "$colorValue" || return $?
       if $fillMissing; then
-        local colorName="${colorSetting%%=*}" colorValue="${colorSetting#*=}"
-        local nonBrightColorName="${colorName#br_}"
-        if iTerm2IsColorName "$colorName"; then
-          needColors+=("br_$colorName" "$colorValue")
+        local nonBrightColorName="${colorType#br_}"
+        if iTerm2IsColorName "$colorType"; then
+          needColors+=("br_$colorType" "$colorValue")
         elif iTerm2IsColorName "$nonBrightColorName"; then
           needColors+=("$nonBrightColorName" "$colorValue")
         fi
-        didColors+=("$colorName")
+        didColors+=("$colorType")
       fi
-    else
-      exitCode=$?
-      $skipColorErrors || return $exitCode
     fi
   done
 
-  ! $verboseFlag || statusMessage decorate info "Need colors: $(decorate each code "${needColors[@]+"${needColors[@]}"}")"
+  ! $verboseFlag || statusMessage decorate info "Need colors: $(decorate each --count --index code "${needColors[@]+"${needColors[@]}"}")"
   if ! "$fillMissing" || [ ${#needColors[@]} -eq 0 ]; then
     return $exitCode
   fi
 
-  ! $verboseFlag || statusMessage decorate info "Filling in missing colors: $(decorate each code "${needColors[@]}")"
+  ! $verboseFlag || statusMessage decorate info "Filling in missing colors: $(decorate each --count --index code "${needColors[@]}")"
   set -- "${needColors[@]}"
   while [ $# -gt 0 ]; do
     local colorName="$1" colorValue colorMod
     if inArray "$colorName" "${didColors[@]}"; then
       ! $verboseFlag || statusMessage decorate notice "No need to fill $(decorate value "$colorName")"
+      shift 2
       continue
     fi
     if [ "${colorName#br_}" != "$colorName" ]; then
@@ -499,9 +497,9 @@ iTerm2SetColors() {
       colorMod=1.3
     fi
     colorValue="$(colorParse <<<"$colorValue" | colorMultiply "$colorMod" | colorFormat)"
-    __iTerm2SetColors "$usage" "$verboseFlag" "$colorName=$colorValue" || exitCode=$?
+    __iTerm2SetColors "$usage" "$verboseFlag" "$colorName" "$colorValue" || exitCode=$?
     ! $verboseFlag || statusMessage decorate notice "Filled $(decorate code "$colorName") with $(decorate value "$colorMod") $(decorate blue "$2") -> $(decorate bold-blue "$colorValue")"
-    shift 2
+    shift 2 || __throwEnvironment "$usage" "${FUNCNAME[0]}:$LINENO" || return $?
   done
 
   return $exitCode

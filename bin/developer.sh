@@ -8,13 +8,6 @@
 
 # shellcheck source=/dev/null
 if source "${BASH_SOURCE[0]%/*}/tools.sh"; then
-  __decorateExtensionBold_green() {
-    debuggingStack 1>&2
-    if confirmYesNo "Exit?"; then
-      exit 1
-    fi
-    return 1
-  }
   __buildConfigure() {
     local home
 

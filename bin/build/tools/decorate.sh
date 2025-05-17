@@ -109,14 +109,19 @@ _decorate() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
+_decorateInitialize() {
+  export __BUILD_COLORS
+  [ -n "${__BUILD_COLORS-}" ] || __decorateStyles || return $?
+}
+
 # Fetch the requested style as a string: lp dp text
 # dp may be a dash for simpler parsing - dp=lp when dp is blank or dash
 # text is optional, lp is required to be non-blank
 # Requires: isArray __decorateStyles
 _decorateStyle() {
-  export __BUILD_COLORS
-  [ -n "${__BUILD_COLORS-}" ] || __decorateStyles || return $?
   local original style pattern=$'\n'"$1="
+
+  _decorateInitialize || return $?
   original="${__BUILD_COLORS}"
   style="${__BUILD_COLORS#*"$pattern"}"
   [ "$style" != "$original" ] || return 1

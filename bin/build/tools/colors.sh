@@ -626,12 +626,15 @@ __colorParseArgument() {
 
 # Take r g b decimal values and convert them to hex color values
 # stdin: list:UnsignedInteger
+# Argument: format - String. Optional. Formatting string.
 # Argument: red - UnsignedInteger. Optional. Red component.
 # Argument: green - UnsignedInteger. Optional. Blue component.
 # Argument: blue - UnsignedInteger. Optional. Green component.
 # Takes arguments or stdin values in groups of 3.
 colorFormat() {
   local usage="_${FUNCNAME[0]}" format="%0.2X%0.2X%0.2X\n"
+
+  [ $# -eq 0 ] || format="$1" && shift
   if [ $# -gt 0 ]; then
     while [ $# -gt 0 ]; do
       local r g b

@@ -78,4 +78,12 @@ __buildTools() {
   [ $# -eq 0 ] || __execute "$@"
 }
 
+__decorateExtensionBold_green() {
+  debuggingStack 1>&2
+  if confirmYesNo "Exit?"; then
+    exit 1
+  fi
+  return 1
+}
+
 __buildTools "$@"
