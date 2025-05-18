@@ -31,6 +31,7 @@ __buildTestSuite() {
   [ ! -d "$testHome/test/support" ] || __catchEnvironment "$usage" bashSourcePath "$testHome/test/support" || return $?
 
   # Custom HERE 3 lines
+  __environment packageWhich figlet || return $?
   __environment packageWhich shellcheck || return $?
   __environment __pcregrepInstall || return $?
 

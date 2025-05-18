@@ -159,7 +159,7 @@ __installPackageConfiguration() {
   _installRemotePackage "$rel" "bin/build" "install-bin-build.sh" --version-function __installBinBuildVersion --url-function __installBinBuildURL --check-function __installBinBuildCheck --name "Zesk Build" "$@"
 }
 
-# IDENTICAL _installRemotePackage 397
+# IDENTICAL _installRemotePackage 400
 
 # Installs {name} in a local project directory if not installed. Also
 # will overwrite {source} with the latest version after installation.
@@ -335,6 +335,7 @@ _installRemotePackage() {
       ;;
     *)
       installPath=$(usageArgumentString "$usage" "installPath" "$1") || return $?
+      installPath="${installPath%/}"
       ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
@@ -347,8 +348,10 @@ _installRemotePackage() {
   myBinary=$(__catchEnvironment "$usage" realPath "${BASH_SOURCE[0]}") || return $?
   myPath="${myBinary%/*}" || return $?
   applicationHome=$(__catchEnvironment "$usage" realPath "$myPath/$relative") || return $?
+  applicationHome="${applicationHome%/}"
   [ -n "$installPath" ] || installPath="$applicationHome/$defaultPackagePath"
   packagePath="${installPath#"$applicationHome"}"
+  packagePath="${packagePath#/}"
 
   __catchEnvironment "$usage" pushd "$applicationHome" || return $?
   if [ -z "$url" ]; then
