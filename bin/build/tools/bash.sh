@@ -190,7 +190,7 @@ bashFunctionDefined() {
   [ -n "$function" ] || __throwArgument "$usage" "functionName is required" || retrun $?
   [ ${#files[@]} -gt 0 ] || __throwArgument "$usage" "Requires at least one file" || retrun $?
 
-  grep -q -e "^$(quoteGrepPattern "$function")() {" "${files[@]}"
+  grep -q -e "^\s*$(quoteGrepPattern "$function")() {" "${files[@]}"
 }
 _bashFunctionDefined() {
   # _IDENTICAL_ usageDocument 1
