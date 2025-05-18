@@ -16,7 +16,7 @@ __portWrapper() {
 }
 __sudoPortWrapper() {
   # Detect if sudo has a cached password from prior calls (hide messages in this case)
-  if ! muzzle sudo -n -v; then
+  if ! sudo -n -v 2>/dev/null; then
     printf "%s%s\n" "$(decorate code MacPorts)" "$(decorate warning ": Attempting to $* ...")"
   fi
   sudo port "$@"
