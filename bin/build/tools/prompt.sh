@@ -73,6 +73,7 @@ bashPrompt() {
 
   isArray __BASH_PROMPT_PREVIOUS || __BASH_PROMPT_PREVIOUS=()
 
+  local colorsText=""
   local promptFormat="" successPrompt="${__BASH_PROMPT_PREVIOUS[0]-}" failurePrompt="${__BASH_PROMPT_PREVIOUS[1]-}" colorsTextFormatted="${__BASH_PROMPT_PREVIOUS[2]-}" label="${__BASH_PROMPT_PREVIOUS[3]-}"
 
   # _IDENTICAL_ argument-case-header 5

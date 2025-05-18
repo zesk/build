@@ -24,7 +24,7 @@ testIterm2() {
   TERM=xterm
 
   assertExitCode 0 isiTerm2 || return $?
-  assertExitCode --dump-binary --stdout-match "Zm9v" 0 iTerm2Badge "foo" </dev/null || return $?
+  assertExitCode --stdout-match "Zm9v" 0 iTerm2Badge "foo" </dev/null || return $?
   if [ -t 0 ]; then
     # TODO How to test this in pipeline with no terminal. Fake one?
     assertExitCode 0 iTerm2Init || return $?
