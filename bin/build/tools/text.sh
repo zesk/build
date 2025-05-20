@@ -968,7 +968,7 @@ _removeFields() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# IDENTICAL quoteSedPattern 29
+# IDENTICAL quoteSedPattern 31
 
 # Summary: Quote sed search strings for shell use
 # Quote a string to be used in a sed pattern on the command line.
@@ -994,9 +994,10 @@ quoteSedPattern() {
 # Example:     needSlash=$(quoteSedPattern '$.*/[\]^')
 # Requires: printf sed
 quoteSedReplacement() {
-  local value separator="${2-/}"
-  value=$(printf -- "%s\n" "${1-}" | sed 's~\([\&'"$separator"']\)~\\\1~g')
+  local value="${1-}" separator="${2-/}"
   value="${value//$'\n'/\\n}"
+  # shellcheck disable=SC2001
+  value=$(sed 's~\([\&'"$separator"']\)~\\\1~g' <<<"$value")
   printf -- "%s\n" "$value"
 }
 
