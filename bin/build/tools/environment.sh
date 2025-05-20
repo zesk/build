@@ -590,33 +590,6 @@ _environmentFileApplicationVerify() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# Output all exported environment variables, hiding secure ones and ones prefixed with underscore
-# See: environmentSecureVariables
-environmentOutput() {
-  local hideSecure="_" secureVar
-  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return 0
-  while read -r secureVar; do
-    hideSecure="$hideSecure\|$secureVar"
-  done < <(environmentSecureVariables)
-  declare -px | removeFields 2 | grep '=' | grep -v -e "^($hideSecure)=" | grep -v '^_'
-}
-_environmentOutput() {
-  # _IDENTICAL_ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
-}
-
-# IDENTICAL environmentVariables 10
-
-# Output a list of environment variables and ignore function definitions
-#
-# both `set` and `env` output functions and this is an easy way to just output
-# exported variables
-#
-# Requires: declare grep cut
-environmentVariables() {
-  declare -px | grep 'declare -x ' | cut -f 1 -d= | cut -f 3 -d' '
-}
-
 # Adds an environment variable file to a project
 environmentAddFile() {
   local usage="_${FUNCNAME[0]}"
@@ -667,6 +640,140 @@ environmentAddFile() {
   done
 }
 _environmentAddFile() {
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+# IDENTICAL environmentVariables 10
+
+# Output a list of environment variables and ignore function definitions
+#
+# both `set` and `env` output functions and this is an easy way to just output
+# exported variables
+#
+# Requires: declare grep cut
+environmentVariables() {
+  declare -px | grep 'declare -x ' | cut -f 1 -d= | cut -f 3 -d' '
+}
+
+# Output all exported environment variables, hiding secure ones and ones prefixed with underscore.
+# Any values which contain a newline are also skipped.
+#
+# See: environmentSecureVariables
+# Requires: __throwArgument decorate environmentSecureVariables grepSafe env removeFields
+# Argument: --underscore - Flag. Include environment variables which begin with underscore `_`.
+# Argument: --secure - Flag. Include environment variables which are in `environmentSecureVariables`
+environmentOutput() {
+  local usage="_${FUNCNAME[0]}"
+  local skipSecure=true skipUnderscore=true
+
+  # _IDENTICAL_ argument-case-header 5
+  local __saved=("$@") __count=$#
+  while [ $# -gt 0 ]; do
+    local argument="$1" __index=$((__count - $# + 1))
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
+    case "$argument" in
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    --underscore)
+      skipUnderscore=false
+      ;;
+    --secure)
+      skipSecure=false
+      ;;
+    *)
+      # _IDENTICAL_ argumentUnknown 1
+      __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
+      ;;
+    esac
+    # _IDENTICAL_ argument-esac-shift 1
+    shift
+  done
+
+  local hideArgs=()
+  if $skipSecure; then
+    local hideSecure="^_" secureVar
+    while read -r secureVar; do
+      hideSecure="^$hideSecure\|^$(quoteGrepPattern "$secureVar")"
+    done < <(environmentSecureVariables)
+    hideArgs+=(-e "($hideSecure)=")
+  fi
+  if $skipUnderscore; then
+    hideArgs+=(-e '^_')
+  fi
+  local filter=(cat)
+  [ ${#hideArgs[@]} -eq 0 ] || filter=(grepSafe -z -v "${hideArgs[@]}")
+  while IFS="=" read -r -d $'\0' name value; do
+    if [ "${value#*$'\n'}" != "$value" ]; then
+      # newline values are skipped
+      continue
+    fi
+    environmentValueWrite "$name" "$value"
+  done < <(env -0 | "${filter[@]}")
+}
+_environmentOutput() {
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+# Load an environment file and evaluate it using bash and output the changed environment variables after running
+# Do not perform this operation on files which are untrusted.
+# Argument: --underscore - Flag. Include environment variables which begin with underscore `_`.
+# Argument: --secure - Flag. Include environment variables which are in `environmentSecureVariables`
+# Argument: environmentFile - File. Required. Environment file to load, evaluate, and output in raw form (Bash-compatible).
+# Security: source
+environmentCompile() {
+  local usage="_${FUNCNAME[0]}"
+
+  local environmentFiles=() aa=()
+
+  # _IDENTICAL_ argument-case-header 5
+  local __saved=("$@") __count=$#
+  while [ $# -gt 0 ]; do
+    local argument="$1" __index=$((__count - $# + 1))
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
+    case "$argument" in
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    --underscore | --secure)
+      if [ ${#aa[@]} -eq 0 ] || ! inArray "$argument" "${aa[@]}"; then
+        aa+=("$argument")
+      fi
+      ;;
+    *)
+      environmentFiles+=("$(usageArgumentFile "$usage" "environmentFile" "$1")") || return $?
+      ;;
+    esac
+    # _IDENTICAL_ argument-esac-shift 1
+    shift
+  done
+  [ ${#environmentFiles[@]} -gt 0 ] || __throwArgument "$usage" "Need at least one environment file" || return $?
+
+  local tempEnv
+  tempEnv=$(fileTemporaryName "$usage") || return $?
+
+  local clean=("$tempEnv" "$tempEnv.after")
+  __catchEnvironment "$usage" environmentOutput "${aa[@]+"${aa[@]}"}" | sort >"$tempEnv" || _clean $? "${clean[@]}" || return $?
+  (
+    local environmentFile
+    for environmentFile in "${environmentFiles[@]}"; do
+      set -a
+      # shellcheck source=/dev/null
+      source "$environmentFile" 2>/dev/null || __throwEnvironment "$usage" "$environmentFile failed to load" || _clean $? "${clean[@]}" || return $?
+      set +a
+    done
+    __catchEnvironment "$usage" environmentOutput "${aa[@]+"${aa[@]}"}" | sort >"$tempEnv.after" || _clean $? "${clean[@]}" || return $?
+  ) || _clean $? "${clean[@]}" || return $?
+  diff -U0 "$tempEnv" "$tempEnv.after" | grepSafe '^+' | cut -c 2- | grepSafe -v '^+' || _clean $? "${clean[@]}" || return 0
+  __catchEnvironment "$usage" rm -f "${clean[@]}" || return $?
+}
+_environmentCompile() {
   # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

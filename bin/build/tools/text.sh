@@ -978,9 +978,10 @@ _removeFields() {
 # Example:     needSlash=$(quoteSedPattern '$.*/[\]^')
 # Requires: printf sed
 quoteSedPattern() {
-  local value
-  value=$(printf -- "%s\n" "${1-}" | sed 's~\([][$/'$'\t''^\\.*+?]\)~\\\1~g')
+  local value="${1-}"
   value="${value//$'\n'/\\n}"
+  # shellcheck disable=SC2001
+  value=$(sed 's~\([][$/'$'\t''^\\.*+?]\)~\\\1~g' <<<"$value")
   printf -- "%s\n" "$value"
 }
 

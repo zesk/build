@@ -292,3 +292,79 @@ testEnvironmentOutput() {
 
   __environment rm -rf "$envFile" || return $?
 }
+
+testEnvironmentApacheCompile() {
+  local usage="_return"
+  local envFile
+
+  envFile="$(__catchEnvironment "$usage" buildHome)/test/example/apache.env" || return $?
+
+  local matches
+
+  matches=(
+    --stdout-match "APACHE_LOG_DIR="
+    --stdout-match "APACHE_MODULES="
+    --stdout-match "APACHE_CONFS="
+  )
+  assertExitCode "${matches[@]}" 0 environmentCompile "$envFile" || return $?
+}
+
+testEnvironmentCompile() {
+  local usage="_return"
+  local envFile
+
+  envFile=$(fileTemporaryName "$usage") || return $?
+
+  __catchEnvironment "$usage" printf "%s\n" "A=1" "B=2" "C=\$((A + B))" "HOME=secure" "_A=\$A" "_B=\$B" "_C=42" "USER=root" >"$envFile" || return $?
+
+  local matches
+
+  matches=(
+    --stdout-match "A=\"1\""
+    --stdout-match "B=\"2\""
+    --stdout-match "C=\"3\""
+    --stdout-no-match "HOME="
+    --stdout-match "_A=\"1\""
+    --stdout-match "_B=\"2\""
+    --stdout-match "_C=\"42\""
+    --stdout-no-match "USER="
+  )
+  assertExitCode "${matches[@]}" 0 environmentCompile --underscore "$envFile" || return $?
+
+  matches=(
+    --stdout-match "A=\"1\""
+    --stdout-match "B=\"2\""
+    --stdout-match "C=\"3\""
+    --stdout-match "HOME=\"secure\""
+    --stdout-match "_A=\"1\""
+    --stdout-match "_B=\"2\""
+    --stdout-match "_C=\"42\""
+    --stdout-match "USER=\"root\""
+  )
+  assertExitCode "${matches[@]}" 0 environmentCompile --underscore --secure "$envFile" || return $?
+
+  matches=(
+    --stdout-match "A=\"1\""
+    --stdout-match "B=\"2\""
+    --stdout-match "C=\"3\""
+    --stdout-match "HOME="
+    --stdout-no-match "_A="
+    --stdout-no-match "_B="
+    --stdout-no-match "_C="
+    --stdout-match "USER="
+  )
+  assertExitCode "${matches[@]}" 0 environmentCompile --secure "$envFile" || return $?
+  matches=(
+    --stdout-match "A=\"1\""
+    --stdout-match "B=\"2\""
+    --stdout-match "C=\"3\""
+    --stdout-no-match "HOME="
+    --stdout-no-match "_A="
+    --stdout-no-match "_B="
+    --stdout-no-match "_C="
+    --stdout-no-match "USER="
+  )
+  assertExitCode "${matches[@]}" 0 environmentCompile "$envFile" || return $?
+
+  __catchEnvironment "$usage" rm -rf "$envFile" || return $?
+}

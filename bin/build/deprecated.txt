@@ -1,3 +1,5 @@
+# v0.34.1
+
 # v0.34.0
 sshAddKnownHost|sshKnownHostAdd
 bashPromptModule_iTerm2Colors|bashPromptModule_TermColors

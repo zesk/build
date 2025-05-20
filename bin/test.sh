@@ -30,12 +30,15 @@ __buildTestSuite() {
   # Include our own test support files if needed
   [ ! -d "$testHome/test/support" ] || __catchEnvironment "$usage" bashSourcePath "$testHome/test/support" || return $?
 
-  # Custom HERE 3 lines
-  __environment packageWhich figlet || return $?
-  __environment packageWhich shellcheck || return $?
-  __environment __pcregrepInstall || return $?
+  # CUSTOM BEGIN
+  local bigBinary
+  bigBinary=$(__catchEnvironment "$usage" __bigTextBinary) || return $?
+  [ -n "$bigBinary" ] || bigBinary="toilet"
+  __catchEnvironment "$usage" packageWhich "$bigBinary" "$bigBinary" || return $?
+  __catchEnvironment "$usage" packageWhich shellcheck shellcheck || return $?
+  __catchEnvironment "$usage" __pcregrepInstall || return $?
+  # CUSTOM END
 
-  # Custom HERE 1 line
   __catchEnvironment "$usage" testTools testSuite --delete-common --tests "$testHome/test/tools/" "$@" || return $?
 }
 ___buildTestSuite() {
