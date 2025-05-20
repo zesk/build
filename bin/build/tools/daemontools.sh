@@ -156,7 +156,7 @@ _daemontoolsInstallService() {
 _daemontoolsInstallServiceRun() {
   local usage="$1" source="$2" target="$3" args
   shift 3 || __throwArgument "$usage" "Missing arguments" || return $?
-  __catchEnvironment "$usage" requireDirectory "$target" || return $?
+  __catchEnvironment "$usage" muzzle requireDirectory "$target" || return $?
   args=(--map "$source" "$target/run")
   if copyFileWouldChange "${args[@]}"; then
     __catchEnvironment "$usage" copyFile "$@" "${args[@]}" || return $?
