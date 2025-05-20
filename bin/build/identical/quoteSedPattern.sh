@@ -15,10 +15,9 @@
 # Example:     needSlash=$(quoteSedPattern '$.*/[\]^')
 # Requires: printf sed
 quoteSedPattern() {
-  local value="${1-}"
+  local value
+  value=$(printf -- "%s\n" "${1-}" | sed 's~\([][$/'$'\t''^\\.*+?]\)~\\\1~g')
   value="${value//$'\n'/\\n}"
-  # shellcheck disable=SC2001
-  value=$(sed 's~\([][$/'$'\t''^\\.*+?]\)~\\\1~g' <<<"$value")
   printf -- "%s\n" "$value"
 }
 
@@ -31,9 +30,8 @@ quoteSedPattern() {
 # Example:     needSlash=$(quoteSedPattern '$.*/[\]^')
 # Requires: printf sed
 quoteSedReplacement() {
-  local value="${1-}" separator="${2-/}"
+  local value separator="${2-/}"
+  value=$(printf -- "%s\n" "${1-}" | sed 's~\([\&'"$separator"']\)~\\\1~g')
   value="${value//$'\n'/\\n}"
-  # shellcheck disable=SC2001
-  value=$(sed 's~\([\&'"$separator"']\)~\\\1~g' <<<"$value")
   printf -- "%s\n" "$value"
 }

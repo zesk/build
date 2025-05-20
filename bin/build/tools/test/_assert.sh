@@ -22,7 +22,8 @@ __resultText() {
   else
     text=$(newlineHide "$text")
   fi
-  [ "$length" -lt "$max" ] || text="${text:0:$max} ..."
+  local half=$((max / 2))
+  [ "$length" -lt "$max" ] || text="${text:0:$half} ... ${text:$((length - half)):$((length - 1))}"
   if [ "$length" -eq 0 ]; then
     text="(blank)"
     if $passed; then
