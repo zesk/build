@@ -83,6 +83,7 @@ EOF
 
 testQuoteSedPattern() {
   local value mappedValue
+  assertEquals "\\\\n" "$(quoteSedPattern $'\n')" || return $?
   assertEquals "\\[" "$(quoteSedPattern "[")" || return $?
   assertEquals "\\]" "$(quoteSedPattern "]")" || return $?
   # shellcheck disable=SC1003

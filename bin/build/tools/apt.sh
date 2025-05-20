@@ -343,5 +343,5 @@ ___aptAvailableList() {
 __aptStandardPackages() {
   printf "%s\n" apt-utils toilet toilet-fonts jq pcregrep
   export BUILD_TEXT_BINARY
-  [ -n "${BUILD_TEXT_BINARY-}" ] || BUILD_TEXT_BINARY="toilet"
+  [ -n "${BUILD_TEXT_BINARY-}" ] || BUILD_TEXT_BINARY="$(__bigTextBinary)"
 }
