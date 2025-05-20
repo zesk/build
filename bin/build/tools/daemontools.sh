@@ -39,31 +39,39 @@ daemontoolsInstall() {
 # Argument: --home serviceHome - Optional. Path. Override `DAEMONTOOLS_HOME` which defaults to `/etc/service`. Specify once.
 # Argument: serviceFile - Required. Binary. The daemon to run. The user of this file will be used to run this file and will run as this user and group.
 # Argument: serviceName - Optional. String. The daemon service name. If not specified uses the `basename` of `serviceFile` with any extension removed.
+# Argument: --name serviceName - Optional. String. The daemon service name. If not specified uses the `basename` of `serviceFile` with any extension removed.
 # Argument: --log logHome - Optional. Path. The root logging directory where a directory called `serviceName` will be created which contains the `multilog` output `current`
 # Argument: --escalate - Optional. Flag. Only if the source file is owned by a non-root user.
-# Argument: -- ... - Arguments. Optional. Pass these arguments to the "serviceFile".
+# Argument: --log-arguments ... -- - Optional. ArgumentsList. List of arguments for the logger.
+# Argument: --arguments ... -- - Optional. ArgumentsList. List of arguments for the service.
+# Argument: -- ... - Arguments. Optional. List of arguments for the service.
 #
 daemontoolsInstallService() {
   local usage="_${FUNCNAME[0]}"
 
   local logTarget appUser binaryPath
   local elapsed here
+  local debugFlag=false
 
   here="$(dirname "${BASH_SOURCE[0]}")"
 
   __catchEnvironment "$usage" buildEnvironmentLoad DAEMONTOOLS_HOME || return $?
 
-  local serviceHome="${DAEMONTOOLS_HOME}" serviceName="" serviceFile="" extras=() logHome="" arguments=()
+  local serviceHome="${DAEMONTOOLS_HOME}" serviceName="" serviceFile="" extras=() logHome="" arguments=() logArguments=()
   # _IDENTICAL_ argument-case-header 5
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
+    ! $debugFlag || echo "Processing $argument ($__index/$__count) arg:${#arguments[@]} log:${#logArguments[@]}" 1>&2
     case "$argument" in
     # _IDENTICAL_ --help 4
     --help)
       "$usage" 0
       return $?
+      ;;
+    --debug)
+      debugFlag=true
       ;;
     --home)
       shift
@@ -74,8 +82,24 @@ daemontoolsInstallService() {
       ;;
     --)
       shift
-      arguments=("$@")
+      arguments+=("$@")
       break
+      ;;
+    --arguments)
+      shift
+      # shellcheck disable=SC2015
+      while [ $# -gt 0 ]; do [ "$1" != "--" ] && arguments+=("$1") && shift || break; done
+      [ $# -gt 0 ] || break
+      ;;
+    --log-arguments)
+      shift
+      # shellcheck disable=SC2015
+      while [ $# -gt 0 ]; do [ "$1" != "--" ] && logArguments+=("$1") && shift || break; done
+      [ $# -gt 0 ] || break
+      ;;
+    --name)
+      shift
+      serviceName=$(usageArgumentString "$usage" "serviceName" "${1-}") || return $?
       ;;
     --log)
       shift
@@ -109,11 +133,14 @@ daemontoolsInstallService() {
   target="$serviceHome/$serviceName"
   logTarget="$serviceHome/$serviceName/log"
 
-  local args=""
+  local args="" logArgs=""
   [ "${#arguments[@]}" -eq 0 ] || args=" $(decorate each quote "${arguments[@]}")"
-  ARGUMENTS="$args" LOG_HOME=$logHome APPLICATION_USER=$appUser BINARY=$binaryPath _daemontoolsInstallServiceRun "$usage" "$here/daemontools/_service.sh" "$target" "${extras[@]+"${extras[@]}"}" || return $?
+  ! $debugFlag || printf -- "- %s\n" "ARGUMENTS" "${#arguments[@]}" "${arguments[@]+"${arguments[@]}"}" 1>&2
+  ! $debugFlag || printf -- "- %s %s\n" "args" "$args" 1>&2
+  ARGUMENTS="$args" LOG_HOME="$logHome" APPLICATION_USER="$appUser" BINARY="$binaryPath" _daemontoolsInstallServiceRun "$usage" "$here/daemontools/_service.sh" "$target" "${extras[@]+"${extras[@]}"}" || return $?
   if [ -d "$logHome" ]; then
-    LOG_HOME=$logHome APPLICATION_USER=$appUser BINARY=$binaryPath _daemontoolsInstallServiceRun "$usage" "$here/daemontools/_log.sh" "$logTarget" "${extras[@]+"${extras[@]}"}" || return $?
+    [ "${#logArguments[@]}" -eq 0 ] || logArgs=" $(decorate each quote "${logArguments[@]}")"
+    ARGUMENTS="$logArgs" LOG_HOME="$logHome" APPLICATION_USER="$appUser" BINARY="$binaryPath" _daemontoolsInstallServiceRun "$usage" "$here/daemontools/_log.sh" "$logTarget" "${extras[@]+"${extras[@]}"}" || return $?
   fi
 
   _daemontoolsSuperviseWait "$usage" "$target" || return $?

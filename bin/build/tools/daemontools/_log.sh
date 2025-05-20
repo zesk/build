@@ -93,7 +93,7 @@ _logger() {
   __execute chmod 775 "$logHome" || return $?
   __execute cd "$logHome" || return $?
 
-  exec setuidgid "$user" multilog t "$logHome" "$@"
+  exec setuidgid "$user" multilog t "$@" "$logHome"
 }
 
 # shellcheck disable=SC1083

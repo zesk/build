@@ -29,11 +29,13 @@ testDaemontools() {
   decorate info "logPath is $logPath"
   __environment requireDirectory "$logPath" >/dev/null || return $?
 
-  daemontoolsInstallService --log "$logPath" "./test/example/lemon.sh" || return $?
-  assertExitCode --leak DAEMONTOOLS_HOME 0 daemontoolsInstallService --log "$logPath" "./test/example/lemon.sh" || return $?
+  assertExitCode --leak DAEMONTOOLS_HOME 0 daemontoolsInstallService --log "$logPath" "./test/example/lemon.sh" --arguments "orange" "grape" "lemon" -- --log-arguments "n10" || return $?
 
   assertFileExists "/etc/service/lemon/run" || return $?
+  assertFileContains "/etc/service/lemon/run" "\"orange\" \"grape\" \"lemon\"" || return $?
+
   assertFileExists "/etc/service/lemon/log/run" || return $?
+  assertFileContains "/etc/service/lemon/log/run" "\"n10\"" || return $?
 
   assertDirectoryExists "/etc/service/lemon/supervise" || return $?
   assertDirectoryExists "/etc/service/lemon/log/supervise" || return $?
