@@ -68,4 +68,5 @@ __daemontoolsService() {
   exec setuidgid "$user" "{BINARY}" "$@" || _return $? "Unable to load {BINARY} $*" || return $?
 }
 
-__daemontoolsService "{APPLICATION_USER}" "$@"
+# shellcheck disable=SC1083
+__daemontoolsService "{APPLICATION_USER}"{ARGUMENTS}

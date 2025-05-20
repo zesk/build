@@ -60,24 +60,24 @@ _home() {
   printf -- "%s\n" "$home"
 }
 
-# Usage: {fn} user logPath
-# Make `user` owner of all files in `logPath`
+# Usage: {fn} user logHome
+# Make `user` owner of all files in `logHome`
 _ownFiles() {
-  local user="$1" logPath="$2"
-  if [ -n "$(find "$logPath" -type f -print -quit)" ]; then
-    if ! find "$logPath" -type f -or -type d -print0 | xargs -0 chown "$user:"; then
-      printf "%s: %s (%s)\n" "No files found in" "$logPath" "$user"
+  local user="$1" logHome="$2"
+  if [ -n "$(find "$logHome" -type f -print -quit)" ]; then
+    if ! find "$logHome" -type f -or -type d -print0 | xargs -0 chown "$user:"; then
+      printf "%s: %s (%s)\n" "No files found in" "$logHome" "$user"
     else
-      printf "%s: %s -> %s\n" "Owner of files in" "$logPath" "$user"
+      printf "%s: %s -> %s\n" "Owner of files in" "$logHome" "$user"
     fi
   fi
 }
 
-# Usage: {fn} user logPath
+# Usage: {fn} user logHome
 # Argument: user - User to run as
-# Argument: logPath - Directory to log to
+# Argument: logHome - Directory to log to
 _logger() {
-  local user="${1-}" name logPath="${2-}" user
+  local user="${1-}" name logHome="${2-}" user
   export HOME APPLICATION_USER
 
   name="$(basename "$(dirname "$(pwd)")")" || _return $? determining name || return $?
@@ -85,15 +85,15 @@ _logger() {
   HOME=$(_home "$user") || _return $?
   APPLICATION_USER=$user
 
-  [ -d "$logPath" ] || _return 4 "$logPath is not a directory" || return $?
-  __execute _ownFiles "$user" "$logPath" || return $?
-  logPath="$logPath/$name"
-  [ -d "$logPath" ] || __execute mkdir -p "$logPath" || return $?
-  __execute chown -R "$user:" "$logPath" || return $?
-  __execute chmod 775 "$logPath" || return $?
-  __execute cd "$logPath" || return $?
+  [ -d "$logHome" ] || _return 4 "$logHome is not a directory" || return $?
+  __execute _ownFiles "$user" "$logHome" || return $?
+  logHome="$logHome/$name"
+  [ -d "$logHome" ] || __execute mkdir -p "$logHome" || return $?
+  __execute chown -R "$user:" "$logHome" || return $?
+  __execute chmod 775 "$logHome" || return $?
+  __execute cd "$logHome" || return $?
 
-  exec setuidgid "$user" multilog t "$logPath"
+  exec setuidgid "$user" multilog t "$logHome"
 }
 
-_logger "{APPLICATION_USER}" "{LOG_PATH}"
+_logger "{APPLICATION_USER}" "{LOG_HOME}"

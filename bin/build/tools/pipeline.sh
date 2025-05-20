@@ -39,7 +39,7 @@ buildFailed() {
   shift
   failBar="$(decorate reset --)$(decorate magenta "$(repeat 80 "❌")")"
   statusMessage printf -- "%s" ""
-  bigText "Failed" | decorate error | decorate wrap "" " " | decorate wrap --fill "*"
+  bigText "Failed" | decorate error | decorate wrap "" " " | decorate wrap --fill "*" ""
   # shellcheck disable=SC2094
   statusMessage --last printf -- "%s\n" "$failBar"
   # shellcheck disable=SC2094

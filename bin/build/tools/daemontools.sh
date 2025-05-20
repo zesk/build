@@ -39,8 +39,9 @@ daemontoolsInstall() {
 # Argument: --home serviceHome - Optional. Path. Override `DAEMONTOOLS_HOME` which defaults to `/etc/service`. Specify once.
 # Argument: serviceFile - Required. Binary. The daemon to run. The user of this file will be used to run this file and will run as this user and group.
 # Argument: serviceName - Optional. String. The daemon service name. If not specified uses the `basename` of `serviceFile` with any extension removed.
-# Argument: --log logPath - Optional. Path. The root logging directory where a directory called `serviceName` will be created which contains the `multilog` output `current`
+# Argument: --log logHome - Optional. Path. The root logging directory where a directory called `serviceName` will be created which contains the `multilog` output `current`
 # Argument: --escalate - Optional. Flag. Only if the source file is owned by a non-root user.
+# Argument: -- ... - Arguments. Optional. Pass these arguments to the "serviceFile".
 #
 daemontoolsInstallService() {
   local usage="_${FUNCNAME[0]}"
@@ -52,7 +53,7 @@ daemontoolsInstallService() {
 
   __catchEnvironment "$usage" buildEnvironmentLoad DAEMONTOOLS_HOME || return $?
 
-  local serviceHome="${DAEMONTOOLS_HOME}" serviceName="" serviceFile="" extras=() logPath=""
+  local serviceHome="${DAEMONTOOLS_HOME}" serviceName="" serviceFile="" extras=() logHome="" arguments=()
   # _IDENTICAL_ argument-case-header 5
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
@@ -71,9 +72,14 @@ daemontoolsInstallService() {
     --escalate)
       extras+=("$argument")
       ;;
+    --)
+      shift
+      arguments=("$@")
+      break
+      ;;
     --log)
       shift
-      logPath="$(usageArgumentDirectory "$usage" "$argument" "${1-}")" || return $?
+      logHome="$(usageArgumentDirectory "$usage" "$argument" "${1-}")" || return $?
       ;;
     *)
       if [ -z "$serviceFile" ]; then
@@ -103,16 +109,16 @@ daemontoolsInstallService() {
   target="$serviceHome/$serviceName"
   logTarget="$serviceHome/$serviceName/log"
 
-  LOG_PATH=$logPath APPLICATION_USER=$appUser BINARY=$binaryPath _daemontoolsInstallServiceRun "$usage" "$here/daemontools/_service.sh" "$target" "${extras[@]+"${extras[@]}"}" || return $?
-  if [ -d "$logPath" ]; then
-    LOG_PATH=$logPath APPLICATION_USER=$appUser BINARY=$binaryPath _daemontoolsInstallServiceRun "$usage" "$here/daemontools/_log.sh" "$logTarget" "${extras[@]+"${extras[@]}"}" || return $?
+  local args=""
+  [ "${#arguments[@]}" -eq 0 ] || args=" $(decorate each quote "${arguments[@]}")"
+  ARGUMENTS="$args" LOG_HOME=$logHome APPLICATION_USER=$appUser BINARY=$binaryPath _daemontoolsInstallServiceRun "$usage" "$here/daemontools/_service.sh" "$target" "${extras[@]+"${extras[@]}"}" || return $?
+  if [ -d "$logHome" ]; then
+    LOG_HOME=$logHome APPLICATION_USER=$appUser BINARY=$binaryPath _daemontoolsInstallServiceRun "$usage" "$here/daemontools/_log.sh" "$logTarget" "${extras[@]+"${extras[@]}"}" || return $?
   fi
 
   _daemontoolsSuperviseWait "$usage" "$target" || return $?
-  __catchEnvironment "$usage" svc -t "$target" || return $?
-  if [ -d "$logPath" ]; then
+  if [ -d "$logHome" ]; then
     _daemontoolsSuperviseWait "$usage" "$logTarget" || return $?
-    __catchEnvironment "$usage" svc -t "$logTarget" || return $?
   fi
 }
 _daemontoolsInstallService() {
@@ -123,7 +129,7 @@ _daemontoolsInstallService() {
 _daemontoolsInstallServiceRun() {
   local usage="$1" source="$2" target="$3" args
   shift 3 || __throwArgument "$usage" "Missing arguments" || return $?
-  __catchEnvironment "$usage" requireDirectory "$target" || return $?
+  __catchEnvironment "$usage" mrequireDirectory "$target" || return $?
   args=(--map "$source" "$target/run")
   if copyFileWouldChange "${args[@]}"; then
     __catchEnvironment "$usage" copyFile "$@" "${args[@]}" || return $?
@@ -136,19 +142,19 @@ _daemontoolsSuperviseWait() {
   local usage="$1" && shift
   local total=10 stayQuietFor=5
 
-  local start
+  statusMessage decorate info "Waiting for $(decorate file "$1/supervise") (START) ..."
+  local start target="$1"
   start=$(__catchEnvironment "$usage" date +%s) || return $?
-  while [ ! -d "$1/supervise" ]; do
+  while [ ! -d "$target/supervise" ]; do
     sleep 1 || __throwEnvironment "$usage" "interrupted" || return $?
     local elapsed
     elapsed=$(($(__catchEnvironment "$usage" date +%s) - start)) || return $?
     if [ $elapsed -gt "$total" ]; then
       __throwEnvironment "$usage" "supervise is not running - $target/supervise never found after $total seconds" || return $?
     elif [ $elapsed -gt "$stayQuietFor" ]; then
-      statusMessage decorate info "Waiting for $(decorate file "$1/supervise") ($elapsed) ..."
+      statusMessage decorate info "Waiting for $(decorate file "$target/supervise") ($elapsed) ..."
     fi
   done
-  statusMessage --last decorate info "Supervise waiting completed" || return $?
 }
 
 #

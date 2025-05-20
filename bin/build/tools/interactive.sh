@@ -64,22 +64,13 @@ _copyFileEscalated() {
 #
 _copyFileRegular() {
   local displaySource="$1" source="$2" destination="$3" verb="$4"
-  decorate reset || _copyFilePrompt "OVERRIDE $displaySource" "$destination" "$verb" || :
+  _copyFilePrompt "OVERRIDE $displaySource" "$destination" "$verb" || :
   __execute cp "$source" "$destination" || return $?
 }
 
 _copyFilePrompt() {
   local source="$1" destination="$2" verb="$3"
   printf "%s -> %s %s\n" "$(decorate green "$source")" "$(decorate red "$destination")" "$(decorate cyan "$verb")"
-}
-
-# Usage: {fn} source destination verb
-# Argument: displaySource - Source path
-# Argument: displayDestination - Destination path
-# Argument: verb - Descriptive verb of what's up
-_copyFileShow() {
-  _copyFilePrompt "$@"
-  decorate code
 }
 
 #
@@ -92,7 +83,8 @@ _copyFileShow() {
 _copyFileShowNew() {
   local displaySource="$1" source="$2" destination="$3"
   local lines
-  head -10 "$source" | _copyFileShow "$displaySource" "$destination" "Created"
+  _copyFilePrompt "$displaySource" "$destination" "Created"
+  head -10 "$source" | decorate code
   lines=$(($(wc -l <"$source") + 0))
   decorate info "$(printf "%d %s total" "$lines" "$(plural "$lines" line lines)")"
 }
@@ -121,72 +113,72 @@ copyFile() {
     local argument="$1" __index=$((__count - $# + 1))
     [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-    # _IDENTICAL_ --help 4
-    --help)
-      "$usage" 0
-      return $?
-      ;;
-    --map)
-      mapFlag=true
-      ;;
-    --escalate)
-      copyFunction=_copyFileEscalated
-      ;;
-    --owner)
-      shift
-      usageArgumentString "$usage" "$argument" "${1-}" || return $?
-      owner="$1"
-      ;;
-    --mode)
-      shift
-      usageArgumentString "$usage" "$argument" "${1-}" || return $?
-      mode="$1"
-      ;;
-    *)
-      local source destination actualSource verb prefix
-      source="$1"
-      [ -f "$source" ] || __throwEnvironment "$usage" "source \"$source\" does not exist" || return $?
-      shift
-      destination=$(usageArgumentFileDirectory _argument "destination" "${1-}") || return $?
-      shift
-      [ $# -eq 0 ] || __catchArgument "$usage" "unknown argument $1" || return $?
-      if $mapFlag; then
-        actualSource=$(mktemp)
-        if ! mapEnvironment <"$source" >"$actualSource"; then
-          rm "$actualSource" || :
-          __catchEnvironment "$usage" "Failed to mapEnvironment $source" || return $?
-        fi
-        verb=" (mapped)"
-      else
-        actualSource="$source"
-        verb=""
-      fi
-      if [ -f "$destination" ]; then
-        if ! diff -q "$actualSource" "$destination" >/dev/null; then
-          prefix="$(decorate subtle "$(basename "$source")"): "
-          _copyFilePrompt "$source" "$destination" "Changes" || :
-          diff "$actualSource" "$destination" | sed '1d' | decorate code | decorate wrap "$prefix"
-          verb="File changed${verb}"
+      # _IDENTICAL_ --help 4
+      --help)
+        "$usage" 0
+        return $?
+        ;;
+      --map)
+        mapFlag=true
+        ;;
+      --escalate)
+        copyFunction=_copyFileEscalated
+        ;;
+      --owner)
+        shift
+        usageArgumentString "$usage" "$argument" "${1-}" || return $?
+        owner="$1"
+        ;;
+      --mode)
+        shift
+        usageArgumentString "$usage" "$argument" "${1-}" || return $?
+        mode="$1"
+        ;;
+      *)
+        local source destination actualSource verb prefix
+        source="$1"
+        [ -f "$source" ] || __throwEnvironment "$usage" "source \"$source\" does not exist" || return $?
+        shift
+        destination=$(usageArgumentFileDirectory _argument "destination" "${1-}") || return $?
+        shift
+        [ $# -eq 0 ] || __catchArgument "$usage" "unknown argument $1" || return $?
+        if $mapFlag; then
+          actualSource=$(mktemp)
+          if ! mapEnvironment <"$source" >"$actualSource"; then
+            rm "$actualSource" || :
+            __catchEnvironment "$usage" "Failed to mapEnvironment $source" || return $?
+          fi
+          verb=" (mapped)"
         else
-          return 0
+          actualSource="$source"
+          verb=""
         fi
-      else
-        _copyFileShowNew "$source" "$actualSource" "$destination" || :
-        verb="File created${verb}"
-      fi
-      "$copyFunction" "$source" "$actualSource" "$destination" "$verb"
-      exitCode=$?
-      if [ $exitCode -eq 0 ] && [ -n "$owner" ]; then
-        __catchEnvironment "$usage" chown "$owner" "$destination" || exitCode=$?
-      fi
-      if [ $exitCode -eq 0 ] && [ -n "$mode" ]; then
-        __catchEnvironment "$usage" chmod "$mode" "$destination" || exitCode=$?
-      fi
-      if $mapFlag; then
-        rm "$actualSource" || :
-      fi
-      return $exitCode
-      ;;
+        if [ -f "$destination" ]; then
+          if ! diff -q "$actualSource" "$destination" >/dev/null; then
+            prefix="$(decorate subtle "$(basename "$source")"): "
+            _copyFilePrompt "$source" "$destination" "Changes" || :
+            diff "$actualSource" "$destination" | sed '1d' | decorate code | decorate wrap "$prefix"
+            verb="File changed${verb}"
+          else
+            return 0
+          fi
+        else
+          _copyFileShowNew "$source" "$actualSource" "$destination" || :
+          verb="File created${verb}"
+        fi
+        "$copyFunction" "$source" "$actualSource" "$destination" "$verb"
+        exitCode=$?
+        if [ $exitCode -eq 0 ] && [ -n "$owner" ]; then
+          __catchEnvironment "$usage" chown "$owner" "$destination" || exitCode=$?
+        fi
+        if [ $exitCode -eq 0 ] && [ -n "$mode" ]; then
+          __catchEnvironment "$usage" chmod "$mode" "$destination" || exitCode=$?
+        fi
+        if $mapFlag; then
+          rm "$actualSource" || :
+        fi
+        return $exitCode
+        ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
     shift
@@ -215,46 +207,46 @@ copyFileWouldChange() {
     local argument="$1" __index=$((__count - $# + 1))
     [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-    # _IDENTICAL_ --help 4
-    --help)
-      "$usage" 0
-      return $?
-      ;;
-    --map)
-      mapFlag=true
-      ;;
-    *)
-      if [ -z "$source" ]; then
-        source=$(usageArgumentFile "$usage" "source" "$1") || return $?
-      else
-        local actualSource destination
-
-        destination=$(usageArgumentFileDirectory "$usage" "destination" "$1") || return $?
-        shift
-        if [ $# -gt 0 ]; then
-          # _IDENTICAL_ argumentUnknown 1
-          __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
-        fi
-        if [ ! -f "$destination" ]; then
-          return 0
-        fi
-        local exitCode=1
-        if $mapFlag; then
-          actualSource=$(fileTemporaryName "$usage") || return $?
-          __catchEnvironment "$usage" mapEnvironment <"$source" >"$actualSource" || _clean $? "$actualSource" || return $?
-          if ! diff -q "$actualSource" "$destination" >/dev/null; then
-            exitCode=0
-          fi
-          __catchEnvironment "$usage" rm -f "$actualSource" || return $?
+      # _IDENTICAL_ --help 4
+      --help)
+        "$usage" 0
+        return $?
+        ;;
+      --map)
+        mapFlag=true
+        ;;
+      *)
+        if [ -z "$source" ]; then
+          source=$(usageArgumentFile "$usage" "source" "$1") || return $?
         else
-          actualSource="$source"
-          if ! diff -q "$actualSource" "$destination" >/dev/null; then
-            exitCode=0
+          local actualSource destination
+
+          destination=$(usageArgumentFileDirectory "$usage" "destination" "$1") || return $?
+          shift
+          if [ $# -gt 0 ]; then
+            # _IDENTICAL_ argumentUnknown 1
+            __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
           fi
+          if [ ! -f "$destination" ]; then
+            return 0
+          fi
+          local exitCode=1
+          if $mapFlag; then
+            actualSource=$(fileTemporaryName "$usage") || return $?
+            __catchEnvironment "$usage" mapEnvironment <"$source" >"$actualSource" || _clean $? "$actualSource" || return $?
+            if ! diff -q "$actualSource" "$destination" >/dev/null; then
+              exitCode=0
+            fi
+            __catchEnvironment "$usage" rm -f "$actualSource" || return $?
+          else
+            actualSource="$source"
+            if ! diff -q "$actualSource" "$destination" >/dev/null; then
+              exitCode=0
+            fi
+          fi
+          return "$exitCode"
         fi
-        return "$exitCode"
-      fi
-      ;;
+        ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
     shift
@@ -285,30 +277,30 @@ loopExecute() {
     local argument="$1" __index=$((__count - $# + 1))
     [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-    # _IDENTICAL_ --help 4
-    --help)
-      "$usage" 0
-      return $?
-      ;;
-    --title)
-      shift
-      title=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
-      ;;
-    --until)
-      shift
-      until+=("$(usageArgumentUnsignedInteger "$usage" "$argument" "${1-}")") || return $?
-      ;;
-    --delay)
-      shift
-      sleepDelay=$(usageArgumentUnsignedInteger "$usage" "$argument" "${1-}") || return $?
-      ;;
-    *)
-      if [ -z "$loopCallable" ]; then
-        loopCallable=$(usageArgumentCallable "$usage" "loopCallable" "$1") || return $?
+      # _IDENTICAL_ --help 4
+      --help)
+        "$usage" 0
+        return $?
+        ;;
+      --title)
         shift
-        break
-      fi
-      ;;
+        title=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
+        ;;
+      --until)
+        shift
+        until+=("$(usageArgumentUnsignedInteger "$usage" "$argument" "${1-}")") || return $?
+        ;;
+      --delay)
+        shift
+        sleepDelay=$(usageArgumentUnsignedInteger "$usage" "$argument" "${1-}") || return $?
+        ;;
+      *)
+        if [ -z "$loopCallable" ]; then
+          loopCallable=$(usageArgumentCallable "$usage" "loopCallable" "$1") || return $?
+          shift
+          break
+        fi
+        ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
     shift
@@ -411,30 +403,30 @@ interactiveManager() {
     local argument="$1" __index=$((__count - $# + 1))
     [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-    # _IDENTICAL_ --help 4
-    --help)
-      "$usage" 0
-      return $?
-      ;;
-    --exec)
-      shift
-      binary="$(usageArgumentCallable "$argument" "${1-}")" || return $?
-      ;;
-    --delay)
-      shift
-      sleepDelay=$(usageArgumentUnsignedInteger "$usage" "$argument" "${1-}") || return $?
-      ;;
-    --repair)
-      shift
-      repairFunction=$(usageArgumentCallable "$usage" "$argument" "${1-}") || return $?
-      ;;
-    *)
-      if [ -z "$loopCallable" ]; then
-        loopCallable=$(usageArgumentCallable "$usage" "loopCallable" "$1") || return $?
-      else
-        files+=("$(usageArgumentFile "$usage" "fileToCheck" "$1")") || return $?
-      fi
-      ;;
+      # _IDENTICAL_ --help 4
+      --help)
+        "$usage" 0
+        return $?
+        ;;
+      --exec)
+        shift
+        binary="$(usageArgumentCallable "$argument" "${1-}")" || return $?
+        ;;
+      --delay)
+        shift
+        sleepDelay=$(usageArgumentUnsignedInteger "$usage" "$argument" "${1-}") || return $?
+        ;;
+      --repair)
+        shift
+        repairFunction=$(usageArgumentCallable "$usage" "$argument" "${1-}") || return $?
+        ;;
+      *)
+        if [ -z "$loopCallable" ]; then
+          loopCallable=$(usageArgumentCallable "$usage" "loopCallable" "$1") || return $?
+        else
+          files+=("$(usageArgumentFile "$usage" "fileToCheck" "$1")") || return $?
+        fi
+        ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
     shift
@@ -507,9 +499,9 @@ __confirmYesNo() {
 
   parseBoolean "${1-}" || exitCode=$?
   case "$exitCode" in
-  0) statusMessage printf -- "%s%s" "$prefix" "$(decorate success "Yes") $exitCode" ;;
-  1) statusMessage printf -- "%s%s" "$prefix" "$(decorate warning "[ ** NO ** ]") $exitCode" ;;
-  *) return 2 ;;
+    0) statusMessage printf -- "%s%s" "$prefix" "$(decorate success "Yes") $exitCode" ;;
+    1) statusMessage printf -- "%s%s" "$prefix" "$(decorate warning "[ ** NO ** ]") $exitCode" ;;
+    *) return 2 ;;
   esac
   return "$exitCode"
 }
@@ -541,33 +533,33 @@ confirmYesNo() {
     local argument="$1" __index=$((__count - $# + 1))
     [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-    # _IDENTICAL_ --help 4
-    --help)
-      "$usage" 0
-      return $?
-      ;;
-    --info)
-      extras=" $(decorate subtle "Type Y or N") "
-      ;;
-    --attempts)
-      shift
-      attempts=$(usageArgumentPositiveInteger "$usage" "$argument" "${1-}") || return $?
-      ;;
-    --timeout)
-      shift
-      timeout=$(usageArgumentPositiveInteger "$usage" "$argument" "${1-}") || return $?
-      ;;
-    --yes) default=yes ;;
-    --no) default=no ;;
-    --default)
-      shift
-      default="$(usageArgumentString "$usage" "$argument" "${1-}")" || return $?
-      parseBoolean "$default" || [ $? -ne 2 ] || __throwArgument "$usage" "Can not parse $(decorate code "$1") as a boolean" || return $?
-      ;;
-    *)
-      message="$*"
-      break
-      ;;
+      # _IDENTICAL_ --help 4
+      --help)
+        "$usage" 0
+        return $?
+        ;;
+      --info)
+        extras=" $(decorate subtle "Type Y or N") "
+        ;;
+      --attempts)
+        shift
+        attempts=$(usageArgumentPositiveInteger "$usage" "$argument" "${1-}") || return $?
+        ;;
+      --timeout)
+        shift
+        timeout=$(usageArgumentPositiveInteger "$usage" "$argument" "${1-}") || return $?
+        ;;
+      --yes) default=yes ;;
+      --no) default=no ;;
+      --default)
+        shift
+        default="$(usageArgumentString "$usage" "$argument" "${1-}")" || return $?
+        parseBoolean "$default" || [ $? -ne 2 ] || __throwArgument "$usage" "Can not parse $(decorate code "$1") as a boolean" || return $?
+        ;;
+      *)
+        message="$*"
+        break
+        ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
     shift
@@ -577,22 +569,22 @@ confirmYesNo() {
 
   while __interactiveCountdownReadBoolean "$usage" "$timeout" "$attempts" "$extras" "$message" || exitCode=$?; do
     case "$exitCode" in
-    0 | 1)
-      __confirmYesNo "$((exitCode - 1))"
-      return $exitCode
-      ;;
-    2 | 10)
-      reason="TIMEOUT"
-      break
-      ;;
-    11)
-      reason="ATTEMPTS"
-      break
-      ;;
-    *)
-      reason="UNKNOWN: $exitCode"
-      break
-      ;;
+      0 | 1)
+        __confirmYesNo "$((exitCode - 1))"
+        return $exitCode
+        ;;
+      2 | 10)
+        reason="TIMEOUT"
+        break
+        ;;
+      11)
+        reason="ATTEMPTS"
+        break
+        ;;
+      *)
+        reason="UNKNOWN: $exitCode"
+        break
+        ;;
     esac
     exitCode=0
   done
@@ -625,44 +617,44 @@ confirmMenu() {
     local argument="$1" __index=$((__count - $# + 1))
     [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-    # _IDENTICAL_ --help 4
-    --help)
-      "$usage" 0
-      return $?
-      ;;
-    --prompt)
-      shift
-      extras=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
-      extras=" $(decorate subtle "$extras") "
-      ;;
-    --result)
-      shift
-      resultFile=$(usageArgumentFile "$usage" "$argument" "${1-}") || return $?
-      ;;
-    --attempts)
-      shift
-      attempts=$(usageArgumentPositiveInteger "$usage" "$argument" "${1-}") || return $?
-      ;;
-    --timeout)
-      shift
-      timeout=$(usageArgumentPositiveInteger "$usage" "$argument" "${1-}") || return $?
-      ;;
-    --choice)
-      shift
-      allowed+=("$(usageArgumentString "$usage" "$argument" "${1-}")") || return $?
-      ;;
-    --default)
-      shift
-      default="$(usageArgumentString "$usage" "$argument" "${1-}")" || return $?
-      ;;
-    -*)
-      # _IDENTICAL_ argumentUnknown 1
-      __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
-      ;;
-    *)
-      message="$*"
-      break
-      ;;
+      # _IDENTICAL_ --help 4
+      --help)
+        "$usage" 0
+        return $?
+        ;;
+      --prompt)
+        shift
+        extras=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
+        extras=" $(decorate subtle "$extras") "
+        ;;
+      --result)
+        shift
+        resultFile=$(usageArgumentFile "$usage" "$argument" "${1-}") || return $?
+        ;;
+      --attempts)
+        shift
+        attempts=$(usageArgumentPositiveInteger "$usage" "$argument" "${1-}") || return $?
+        ;;
+      --timeout)
+        shift
+        timeout=$(usageArgumentPositiveInteger "$usage" "$argument" "${1-}") || return $?
+        ;;
+      --choice)
+        shift
+        allowed+=("$(usageArgumentString "$usage" "$argument" "${1-}")") || return $?
+        ;;
+      --default)
+        shift
+        default="$(usageArgumentString "$usage" "$argument" "${1-}")" || return $?
+        ;;
+      -*)
+        # _IDENTICAL_ argumentUnknown 1
+        __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
+        ;;
+      *)
+        message="$*"
+        break
+        ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
     shift
@@ -676,25 +668,25 @@ confirmMenu() {
 
   while __interactiveCountdownReadCharacter "$usage" "$timeout" "$attempts" "$extras" "$message" __confirmMenuValidate "$resultFile" "${allowed[@]}" || exitCode=$?; do
     case "$exitCode" in
-    0)
-      return $exitCode
-      ;;
-    2 | 10)
-      value="TIMEOUT"
-      defaultOk=true
-      exitCode=$(_code timeout)
-      break
-      ;;
-    1 | 11)
-      value="ATTEMPTS"
-      defaultOk=true
-      exitCode=$(_code interrupt)
-      break
-      ;;
-    *)
-      value="UNKNOWN: $exitCode"
-      break
-      ;;
+      0)
+        return $exitCode
+        ;;
+      2 | 10)
+        value="TIMEOUT"
+        defaultOk=true
+        exitCode=$(_code timeout)
+        break
+        ;;
+      1 | 11)
+        value="ATTEMPTS"
+        defaultOk=true
+        exitCode=$(_code interrupt)
+        break
+        ;;
+      *)
+        value="UNKNOWN: $exitCode"
+        break
+        ;;
     esac
     exitCode=0
   done
@@ -730,26 +722,26 @@ interactiveCountdown() {
     local argument="$1" __index=$((__count - $# + 1))
     [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-    # _IDENTICAL_ --help 4
-    --help)
-      "$usage" 0
-      return $?
-      ;;
-    --prefix)
-      shift
-      prefix="$(usageArgumentEmptyString "$usage" "$argument" "${1-}")" || return $?
-      ;;
-    --badge)
-      runner=(bigTextAt "-5" "5")
-      ;;
-    *)
-      if [ -z "$counter" ]; then
-        counter=$(usageArgumentPositiveInteger "$usage" "counter" "$1") || return $?
-      else
-        binary=$(usageArgumentCallable "$usage" "callable" "$1") || return $?
-        break
-      fi
-      ;;
+      # _IDENTICAL_ --help 4
+      --help)
+        "$usage" 0
+        return $?
+        ;;
+      --prefix)
+        shift
+        prefix="$(usageArgumentEmptyString "$usage" "$argument" "${1-}")" || return $?
+        ;;
+      --badge)
+        runner=(bigTextAt "-5" "5")
+        ;;
+      *)
+        if [ -z "$counter" ]; then
+          counter=$(usageArgumentPositiveInteger "$usage" "counter" "$1") || return $?
+        else
+          binary=$(usageArgumentCallable "$usage" "callable" "$1") || return $?
+          break
+        fi
+        ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
     shift
@@ -800,58 +792,58 @@ interactiveBashSource() {
     local argument="$1" __index=$((__count - $# + 1))
     [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-    # _IDENTICAL_ --help 4
-    --help)
-      "$usage" 0
-      return $?
-      ;;
-    --info)
-      aa=(--info)
-      ;;
-    --no-info)
-      aa=()
-      ;;
-    --clear)
-      clearFlag=true
-      ;;
-    --verbose)
-      verboseFlag=true
-      ;;
-    --prefix)
-      # shift here never fails as [ #$ -gt 0 ]
-      shift
-      prefix="$(usageArgumentString "$usage" "$argument" "${1-}")" || return $?
-      ;;
-    *)
-      local sourcePath="$argument" verb="" approved=false
-      displayPath="$(decorate file "$sourcePath")"
-      if "$clearFlag"; then
-        __interactiveApproveClear "$usage" "$sourcePath" || return $?
-        ! $verboseFlag || statusMessage --last printf -- "%s %s" "$(decorate info "Cleared approval for")" "$displayPath"
-        interactiveBashSource "${aa[@]+"${aa[@]}"}" "$sourcePath" || return $?
-        return 0
-      fi
-      if [ -f "$sourcePath" ]; then
-        verb="file"
-        if __interactiveApprove "$usage" "$sourcePath" "Load" "${aa[@]+"${aa[@]}"}" "${bb[@]}"; then
-          ! $verboseFlag || statusMessage --last printf -- "%s %s %s" "$(decorate info "$prefix")" "$(decorate label "$verb")" "$displayPath"
-          __catchEnvironment "$usage" source "$sourcePath" || return $?
-          approved=true
+      # _IDENTICAL_ --help 4
+      --help)
+        "$usage" 0
+        return $?
+        ;;
+      --info)
+        aa=(--info)
+        ;;
+      --no-info)
+        aa=()
+        ;;
+      --clear)
+        clearFlag=true
+        ;;
+      --verbose)
+        verboseFlag=true
+        ;;
+      --prefix)
+        # shift here never fails as [ #$ -gt 0 ]
+        shift
+        prefix="$(usageArgumentString "$usage" "$argument" "${1-}")" || return $?
+        ;;
+      *)
+        local sourcePath="$argument" verb="" approved=false
+        displayPath="$(decorate file "$sourcePath")"
+        if "$clearFlag"; then
+          __interactiveApproveClear "$usage" "$sourcePath" || return $?
+          ! $verboseFlag || statusMessage --last printf -- "%s %s" "$(decorate info "Cleared approval for")" "$displayPath"
+          interactiveBashSource "${aa[@]+"${aa[@]}"}" "$sourcePath" || return $?
+          return 0
         fi
-      elif [ -d "$sourcePath" ]; then
-        verb="path"
-        if __interactiveApprove "$usage" "$sourcePath/" "Load path" "${aa[@]+"${aa[@]}"}" "${bb[@]}"; then
-          ! $verboseFlag || statusMessage --last printf -- "%s %s %s" "$(decorate info "$prefix")" "$(decorate label "$verb")" "$displayPath"
-          __catchEnvironment "$usage" bashSourcePath "$sourcePath" || return $?
-          approved=true
+        if [ -f "$sourcePath" ]; then
+          verb="file"
+          if __interactiveApprove "$usage" "$sourcePath" "Load" "${aa[@]+"${aa[@]}"}" "${bb[@]}"; then
+            ! $verboseFlag || statusMessage --last printf -- "%s %s %s" "$(decorate info "$prefix")" "$(decorate label "$verb")" "$displayPath"
+            __catchEnvironment "$usage" source "$sourcePath" || return $?
+            approved=true
+          fi
+        elif [ -d "$sourcePath" ]; then
+          verb="path"
+          if __interactiveApprove "$usage" "$sourcePath/" "Load path" "${aa[@]+"${aa[@]}"}" "${bb[@]}"; then
+            ! $verboseFlag || statusMessage --last printf -- "%s %s %s" "$(decorate info "$prefix")" "$(decorate label "$verb")" "$displayPath"
+            __catchEnvironment "$usage" bashSourcePath "$sourcePath" || return $?
+            approved=true
+          fi
+        else
+          __throwEnvironment "$usage" "Not a file or directory? $displayPath is a $(decorate value "$(betterType "$sourcePath")")" || return $?
         fi
-      else
-        __throwEnvironment "$usage" "Not a file or directory? $displayPath is a $(decorate value "$(betterType "$sourcePath")")" || return $?
-      fi
-      if $verboseFlag && ! $approved; then
-        statusMessage --last decorate subtle "Skipping unapproved $verb $(decorate file "$sourcePath")" || :
-      fi
-      ;;
+        if $verboseFlag && ! $approved; then
+          statusMessage --last decorate subtle "Skipping unapproved $verb $(decorate file "$sourcePath")" || :
+        fi
+        ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
     shift
