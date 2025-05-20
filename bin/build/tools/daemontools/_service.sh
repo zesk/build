@@ -65,8 +65,9 @@ __daemontoolsService() {
   export HOME APPLICATION_USER
   HOME=$(_home "$user") || _return $? "No home for {APPLICATION_USER}" || return $?
   APPLICATION_USER="$user"
+  exec 2>&1
   exec setuidgid "$user" "{BINARY}" "$@" || _return $? "Unable to load {BINARY} $*" || return $?
 }
 
 # shellcheck disable=SC1083
-__daemontoolsService "{APPLICATION_USER}"{ARGUMENTS}
+__daemontoolsService "{APPLICATION_USER}"{ARGUMENTS} "$@"

@@ -77,7 +77,7 @@ _ownFiles() {
 # Argument: user - User to run as
 # Argument: logHome - Directory to log to
 _logger() {
-  local user="${1-}" name logHome="${2-}" user
+  local user="${1-}" name logHome="${2-}" user && shift 2
   export HOME APPLICATION_USER
 
   name="$(basename "$(dirname "$(pwd)")")" || _return $? determining name || return $?
@@ -93,7 +93,8 @@ _logger() {
   __execute chmod 775 "$logHome" || return $?
   __execute cd "$logHome" || return $?
 
-  exec setuidgid "$user" multilog t "$logHome"
+  exec setuidgid "$user" multilog t "$logHome" "$@"
 }
 
-_logger "{APPLICATION_USER}" "{LOG_HOME}"
+# shellcheck disable=SC1083
+_logger "{APPLICATION_USER}" "{LOG_HOME}"{ARGUMENTS} "$@"
