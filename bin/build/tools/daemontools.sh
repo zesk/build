@@ -46,8 +46,8 @@ daemontoolsInstall() {
 daemontoolsInstallService() {
   local usage="_${FUNCNAME[0]}"
 
-  local source target logTarget appUser binaryPath
-  local start elapsed here
+  local logTarget appUser binaryPath
+  local elapsed here
 
   here="$(dirname "${BASH_SOURCE[0]}")"
 
