@@ -624,6 +624,13 @@ __colorParseArgument() {
   esac
 }
 
+_colorRange() {
+  local c="$1"
+  isUnsignedInteger "$c" || return 1
+  [ "$c" -le 255 ] || c=255
+  printf "%d" "$c"
+}
+
 # Take r g b decimal values and convert them to hex color values
 # stdin: list:UnsignedInteger
 # Argument: format - String. Optional. Formatting string.
@@ -634,14 +641,15 @@ __colorParseArgument() {
 colorFormat() {
   local usage="_${FUNCNAME[0]}" format="%0.2X%0.2X%0.2X\n"
 
-  [ $# -eq 0 ] || format="$1" && shift
+  if [ $# -gt 0 ]; then format="${1:-"$format"}" && shift; fi
   if [ $# -gt 0 ]; then
     while [ $# -gt 0 ]; do
-      local r g b
+      local r="${1-}" g="${2-}" b="${3-}"
+      shift 3 2>/dev/null || __throwArgument "$usage" "Arguments must be in threes after format" || return $?
 
-      r=$(usageArgumentUnsignedInteger "$usage" "red" "${1-}") && shift || return $?
-      g=$(usageArgumentUnsignedInteger "$usage" "green" "${1-}") && shift || return $?
-      b=$(usageArgumentUnsignedInteger "$usage" "blue" "${1-}") && shift || return $?
+      r=$(_colorRange "$r") || __throwArgument "$usage" "Invalid r $r value" || return $?
+      g=$(_colorRange "$g") || __throwArgument "$usage" "Invalid g $g value" || return $?
+      b=$(_colorRange "$b") || __throwArgument "$usage" "Invalid b $b value" || return $?
 
       # shellcheck disable=SC2059
       printf -- "$format" "$r" "$g" "$b"
@@ -650,8 +658,10 @@ colorFormat() {
     local done=false
     while ! $done; do
       IFS=$'\n' read -d "" -r r g b || done=true
-      # shellcheck disable=SC2059
-      isUnsignedInteger "$r" && isUnsignedInteger "$g" && isUnsignedInteger "$b" && printf -- "$format" "$r" "$g" "$b"
+      if r=$(_colorRange "$r") && g=$(_colorRange "$g") && b=$(_colorRange "$b"); then
+        # shellcheck disable=SC2059
+        printf -- "$format" "$r" "$g" "$b"
+      fi
     done
   fi
 }

@@ -60,3 +60,46 @@ testColorComboTest() {
   echo "BOLD"
   colorComboTest --bold " ZESK "
 }
+
+__dataColorFormatDefault() {
+  cat <<'EOF'
+000000 0 0 0
+010203 1 2 3
+45472A 69 71 42
+FFFFFF 255 255 255
+EOF
+}
+
+__dataColorFormat() {
+  cat <<'EOF'
+0;0;0 %d;%d;%d 0 0 0
+1;2;3 %d;%d;%d 1 2 3
+255;255;255 %d;%d;%d 255 255 255
+ffffff %0.2x%0.2x%0.2x 255 255 255
+45472a %0.2x%0.2x%0.2x 69 71 42
+EOF
+}
+
+testColorFormat() {
+  local expected format r g b
+
+  # Empty format argument
+  while read -r expected r g b; do
+    assertEquals "$expected" "$(colorFormat "" "$r" "$g" "$b")" || return $?
+  done < <(__dataColorFormatDefault)
+  # Empty format argument
+  while read -r expected r g b; do
+    assertEquals "$expected" "$(printf "%d\n" "$r" "$g" "$b" | colorFormat "")" || return $?
+  done < <(__dataColorFormatDefault)
+  # No arguments - read stdin
+  while read -r expected r g b; do
+    assertEquals "$expected" "$(printf "%d\n" "$r" "$g" "$b" | colorFormat)" || return $?
+  done < <(__dataColorFormatDefault)
+
+  while read -r expected format r g b; do
+    assertEquals "$expected" "$(colorFormat "$format" "$r" "$g" "$b")" || return $?
+  done < <(__dataColorFormat)
+  while read -r expected format r g b; do
+    assertEquals "$expected" "$(printf "%d\n" "$r" "$g" "$b" | colorFormat "$format")" || return $?
+  done < <(__dataColorFormat)
+}

@@ -402,7 +402,7 @@ _iTerm2Download() {
 iTerm2SetColors() {
   local usage="_${FUNCNAME[0]}"
 
-  local verboseFlag=false skipColorErrors=false ignoreErrors=false fillMissing=false
+  local verboseFlag=true skipColorErrors=false ignoreErrors=false fillMissing=false
   local colorSettings=()
 
   # _IDENTICAL_ argument-case-header 5
