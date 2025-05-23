@@ -118,7 +118,6 @@ __packageUpFunction() {
 
   local name
   name="$(__catchEnvironment "$usage" buildCacheDirectory)/.packageUpdate" || return $?
-  __catchEnvironment "$usage" requireFileDirectory "$name" || return $?
 
   if $forceFlag; then
     ! $verboseFlag || statusMessage decorate info "Forcing $manager $verb ..."

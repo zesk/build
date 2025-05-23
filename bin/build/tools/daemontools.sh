@@ -235,7 +235,9 @@ daemontoolsIsRunning() {
   local usage="_${FUNCNAME[0]}"
   local processIds processId
 
+  # IDENTICAL rootUser 1
   [ "$(id -u 2>/dev/null)" = "0" ] || __throwEnvironment "$usage" "Must be root" || return $?
+
   processIds=()
   while read -r processId; do processIds+=("$processId"); done < <(daemontoolsProcessIds)
   [ 0 -ne "${#processIds[@]}" ] || return 1
@@ -261,24 +263,23 @@ daemontoolsHome() {
 # Usage: {fn}
 # Run the daemontools root daemon
 daemontoolsExecute() {
-  local this usage
+  local usage="_${FUNCNAME[0]}"
   local home
 
-  this="${FUNCNAME[0]}"
-  usage="_$this"
-  [ "$(id -u)" -eq 0 ] || __throwEnvironment "$usage" "$this: Must be root" || return $?
-  home="$(daemontoolsHome)" || __throwEnvironment "$usage" daemontoolsHome || return $?
+  # IDENTICAL rootUser 1
+  [ "$(id -u 2>/dev/null)" = "0" ] || __throwEnvironment "$usage" "Must be root" || return $?
+
+  home="$(__catchEnvironment "$usage" daemontoolsHome)" || return $?
   usageRequireBinary "$usage" svscanboot id svc svstat || return $?
-  __environment requireDirectory "$home" >/dev/null || return $?
-  __environment chmod 775 "$home" || return $?
-  __environment chown root:root "$home" || return $?
-  __environment muzzle nohup bash -c 'svscanboot &' 2>&1 || return $?
+  __throwEnvironment "$usage" muzzle requireDirectory --mode 0775 --owner root:root "$home" || return $?
+  __throwEnvironment "$usage" muzzle nohup bash -c 'svscanboot &' 2>&1 || return $?
 }
 _daemontoolsExecute() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # List any processes associated with daemontools supervisors
+# Requires: pgrep read printf
 daemontoolsProcessIds() {
   local processIds processId
   processIds=()
@@ -293,21 +294,24 @@ daemontoolsProcessIds() {
 # Terminate daemontools as gracefully as possible
 # Usage: {fn} [ --timeout seconds ]
 # Argument: --timeout seconds - Integer. Optional.
+# Requires: __throwArgument decorate usageArgumentInteger __throwEnvironment __catchEnvironment usageRequireBinary statusMessage
+# Requires: svscanboot id svc svstat
 daemontoolsTerminate() {
-  local this usage argument
-  local home service processIds processId remaining timeout
+  local usage="_${FUNCNAME[0]}"
 
-  this="${FUNCNAME[0]}"
-  usage="_$this"
-  [ "$(id -u)" -eq 0 ] || __throwEnvironment "$usage" "$this: Must be root" || return $?
-  home="$(daemontoolsHome)" || __throwEnvironment "$usage" daemontoolsHome || return $?
-  home="${home%/}"
-  usageRequireBinary "$usage" svscanboot id svc svstat || return $?
+  local timeout=""
 
+  # _IDENTICAL_ argument-case-header 5
+  local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
-    argument="$1"
-    [ -n "$argument" ] || __throwArgument "$usage" "blank argument" || return $?
+    local argument="$1" __index=$((__count - $# + 1))
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
     --timeout)
       shift || __throwArgument "$usage" "missing $argument argument" || return $?
       timeout=$(usageArgumentInteger "$usage" "seconds" "$1") || return $?
@@ -316,29 +320,42 @@ daemontoolsTerminate() {
       __throwArgument "$usage" "unknown argument $(decorate value "$argument")" || return $?
       ;;
     esac
-    shift || __throwArgument "$usage" "shift argument $(decorate code "$argument")" || return $?
+    # _IDENTICAL_ argument-esac-shift 1
+    shift
   done
+
+  local home
+
+  # IDENTICAL rootUser 1
+  [ "$(id -u 2>/dev/null)" = "0" ] || __throwEnvironment "$usage" "Must be root" || return $?
+
+  home="$(__catchEnvironment "$usage" daemontoolsHome)" || return $?
+  home="${home%/}"
+  usageRequireBinary "$usage" svscanboot id svc svstat || return $?
+
   statusMessage decorate warning "Shutting down services ..."
+  local service
   while read -r service; do
     service="${service%/}"
     if [ "$service" = "$home" ]; then
       continue
     fi
     statusMessage decorate warning "Shutting down $service ..."
-    __environment svc -dx "$service" || return $?
+    __catchEnvironment "$usage" svc -dx "$service" || return $?
     [ ! -d "$service/log" ] || __environment svc -dx "$service/log" || return $?
   done < <(find "$home" -maxdepth 1 -type d)
-  processIds=()
+  local processId processIds=()
   while read -r processId; do processIds+=("$processId"); done < <(daemontoolsProcessIds)
   if [ ${#processIds[@]} -eq 0 ]; then
     statusMessage --last decorate warning "daemontools is not running"
   else
     statusMessage decorate warning "Shutting down processes ..."
     printf "%s\n%s\n" "processIds" "$(printf -- "- %s\n" "${processIds[@]}")"
-    __environment processWait --verbose --signals TERM,QUIT,KILL --timeout "$timeout" "${processIds[@]}" || return $?
+    __catchEnvironment "$usage" processWait --verbose --signals TERM,QUIT,KILL --timeout "$timeout" "${processIds[@]}" || return $?
+    local remaining
     remaining="$(daemontoolsProcessIds)"
     if [ -n "$remaining" ]; then
-      _environment "daemontools processes still exist: $remaining" || return $?
+      __throwEnvironment "$usage" "daemontools processes still exist: $remaining" || return $?
     fi
     statusMessage --last decorate success "Terminated daemontools"
   fi
@@ -351,16 +368,40 @@ _daemontoolsTerminate() {
 # Restart the daemontools processes from scratch.
 # Dangerous. Stops any running services and restarts them.
 daemontoolsRestart() {
+  local usage="_${FUNCNAME[0]}"
+
+  # _IDENTICAL_ argument-case-header 5
+  local __saved=("$@") __count=$#
+  while [ $# -gt 0 ]; do
+    local argument="$1" __index=$((__count - $# + 1))
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
+    case "$argument" in
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    *)
+      # _IDENTICAL_ argumentUnknown 1
+      __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
+      ;;
+    esac
+    # _IDENTICAL_ argument-esac-shift 1
+    shift
+  done
+
+  local home
+
+  # IDENTICAL rootUser 1
+  [ "$(id -u 2>/dev/null)" = "0" ] || __throwEnvironment "$usage" "Must be root" || return $?
+
+  home="$(__catchEnvironment "$usage" daemontoolsHome)" || return $?
+  home="${home%/}"
+  usageRequireBinary "$usage" svscanboot id svc svstat || return $?
+
   local killLoop foundOne maxLoops
 
-  local usage
-
-  usage="_${FUNCNAME[0]}"
-
-  export DAEMONTOOLS_HOME
-
-  __throwEnvironment "$usage" buildEnvironmentLoad DAEMONTOOLS_HOME || return $?
-  statusMessage decorate info "Restarting daemontools ..."
+  statusMessage decorate info "Restarting daemontools [$(decorate file "$home")]..."
   killLoop=0
   maxLoops=4
   foundOne=true
@@ -374,15 +415,21 @@ daemontoolsRestart() {
     killLoop=$((killLoop + 1))
     [ $killLoop -le $maxLoops ] || __throwEnvironment "$usage" "Unable to kill svscan processes after $maxLoops attempts" || return $?
   done
-  pkill svscan -t KILL
-  svc -dx /etc/service/* /etc/service/*/log
+  __catchEnvironment "$usage" pkill svscan -t KILL || return $?
+  __catchEnvironment "$usage" svc -dx "$home"/* "$home"/*/log || return $?
 
-  nohup svscanboot 2>/dev/null &
+  local bootPid
 
-  echo "Waiting 5 seconds ..."
-  sleep 5
-  svstat /etc/service
-  echo "Done."
+  bootPid="$(
+    nohup svscanboot 2>/dev/null &
+    printf -- "%d" $!
+  )"
+  isPositiveInteger "$bootPid" || __throwEnvironment "$usage" "No svscanboot PID: $bootPid [${#bootPid}]" || return $?
+  statusMessage decorate warning "Waiting 5 seconds ..."
+  sleep 5 || __throwEnvironment "$usage" "Killed during sleep" || return $?
+  kill -0 "$bootPid" || __throwEnvironment "$usage" "Unable to signal svscanboot PID $bootPid" || return $?
+  __catchEnvironment "$usage" svstat "$home" || return $?
+  statusMessage --last decorate success "Successfully restarted daemontools [$bootPid]"
 }
 _daemontoolsRestart() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"

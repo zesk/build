@@ -473,7 +473,8 @@ _buildEnvironmentGet() {
 # Usage: {fn} [ envName ... ]
 # Argument: envName - Optional. String. Name of the environment value to load. Afterwards this should be defined (possibly blank) and `export`ed.
 # Argument: --subdirectory subdirectory - Optional. String. Name of a subdirectory to return "beneath" the value of environment variable. Created if the flag is set.
-#
+# Argument: --mode fileMode - String. Optional. Enforce the mode for `mkdir --mode` and `chmod`. Use special mode `-` to mean no mode enforcement.
+# Argument: --owner ownerName - String. Optional. Enforce the owner of the directory. Use special ownerName `-` to mean no owner enforcement.
 # If BOTH files exist, both are sourced, so application environments should anticipate values
 # created by build's default.
 #
@@ -485,7 +486,7 @@ _buildEnvironmentGet() {
 buildEnvironmentGetDirectory() {
   local usage="_${FUNCNAME[0]}"
 
-  local createFlag=true existsFlag=false subdirectory=""
+  local createFlag=true existsFlag=false subdirectory="" rr=()
 
   [ $# -gt 0 ] || __throwArgument "$usage" "Requires at least one environment variable" || return $?
   # _IDENTICAL_ argument-case-header 5
@@ -506,6 +507,11 @@ buildEnvironmentGetDirectory() {
       shift
       subdirectory=$(usageArgumentString "$usage" "$argument" "${1-}")
       ;;
+    --owner | --mode)
+      shift
+      rr+=("$argument" "$(usageArgumentString "$usage" "$argument" "${1-}")") || return $?
+      createFlag=true
+      ;;
     --no-create)
       createFlag=false
       ;;
@@ -514,7 +520,7 @@ buildEnvironmentGetDirectory() {
       path=$(__catchEnvironment "$usage" buildEnvironmentGet "$argument" 2>/dev/null) || return $?
       [ -z "$subdirectory" ] || subdirectory="${subdirectory#/}"
       subdirectory="${path%/}/$subdirectory"
-      ! $createFlag || path=$(__catchEnvironment "$usage" requireDirectory "$subdirectory") || return $?
+      ! $createFlag || path=$(__catchEnvironment "$usage" requireDirectory "${rr[@]+"${rr[@]}"}" "$subdirectory") || return $?
       ! $existsFlag || [ -d "$subdirectory" ] || __throwEnvironment "$usage" "$argument -> $subdirectory does not exist" || return $?
       printf "%s\n" "${subdirectory%/}"
       ;;
@@ -556,7 +562,7 @@ buildQuietLog() {
     *)
       local logFile
       logFile="$(__catchEnvironment "$usage" buildCacheDirectory)/${1#_}.log" || return $?
-      ! "$flagMake" || __catchEnvironment "$usage" requireFileDirectory "$logFile" || return $?
+      ! "$flagMake" || logFile=$(__catchEnvironment "$usage" requireFileDirectory "$logFile") || return $?
       __catchEnvironment "$usage" printf -- "%s\n" "$logFile" || return $?
       return 0
       ;;

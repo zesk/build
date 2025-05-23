@@ -89,7 +89,7 @@ __assertedFunctions() {
   local logFile
 
   logFile="$(__catchEnvironment "$usage" buildCacheDirectory)/$usage" || return $?
-  __catchEnvironment "$usage" requireFileDirectory "$logFile" || return $?
+  logFile="$(__catchEnvironment "$usage" requireFileDirectory "$logFile")" || return $?
   if [ $# -eq 0 ]; then
     __catchEnvironment "$usage" touch "$logFile" || return $?
     if [ -f "$logFile.dirty" ]; then

@@ -196,7 +196,7 @@ __bashCoverageReportProcessStats() {
     commandFile="$(printf -- "%s\n" "$command" | shaPipe)"
     printf -- "%s\n" "$command" >"$dataPath/$commandFile" || __throwEnvironment "$usage" "Writing $commandFile" || return $?
     targetFile="$reportBase/$file.html"
-    requireFileDirectory "$targetFile" || return $?
+    targetFile=$(__catchEnvironment "$usage" requireFileDirectory "$targetFile") || return $?
     [ -f "$targetFile" ] || __catchEnvironment "$usage" touch "$targetFile" || return $?
     __catchEnvironment "$usage" printf -- "%s\n" "$file" >>"$reportCache/all" || return $?
     index=$((index + 1))

@@ -267,7 +267,7 @@ __buildDocumentationBuild() {
     while IFS="" read -r file; do
       file=${file#"$sourceHome"}
       statusMessage decorate notice "Updating $file ..."
-      __catchEnvironment "$usage" requireFileDirectory "$targetHome/$file" || return $?
+      __catchEnvironment "$usage" muzzle requireFileDirectory "$targetHome/$file" || return $?
       __catchEnvironment "$usage" cp -f "$sourceHome/$file" "$targetHome/$file" || return $?
     done < <(
       find "$sourceHome" -type f -name "*.md" ! -path "*/tools/*" ! -path "*/env/*"

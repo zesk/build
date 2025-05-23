@@ -182,8 +182,6 @@ testSuite() {
   allTestStart=$(timingStart) || return $?
 
   quietLog="$(__catchEnvironment "$usage" buildQuietLog "$usage")" || return $?
-
-  __catchEnvironment "$usage" requireFileDirectory "$quietLog" || return $?
   __catchEnvironment "$usage" touch "$quietLog" || return $?
 
   # Start tracing
@@ -239,8 +237,6 @@ testSuite() {
     done
     runTestSuites=("${foundTests[@]+"${foundTests[@]}"}")
   fi
-
-  __catchEnvironment "$usage" requireFileDirectory "$quietLog" || return $?
 
   local testFunctions
   testFunctions=$(fileTemporaryName "$usage") || return $?
@@ -868,7 +864,7 @@ __testRun() {
   __testSection "$__test" || :
   printf "%s %s ...\n" "$(decorate info "Running")" "$(decorate code "$__test")"
 
-  __environment requireFileDirectory "$quietLog" || return $?
+  __catchEnvironment "$usage" muzzle requireFileDirectory "$quietLog" || return $?
 
   printf "%s\n" "Running $__test" >>"$quietLog"
 

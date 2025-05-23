@@ -91,7 +91,7 @@ requireFileDirectory() {
       owner=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
       ;;
     *)
-      rr+=("$(__catchEnvironment "$usage" dirname "$argument")") || return $?
+      rr+=(--output "$argument" "$(__catchEnvironment "$usage" dirname "$argument")") || return $?
       ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
@@ -141,7 +141,7 @@ _fileDirectoryExists() {
 requireDirectory() {
   local usage="_${FUNCNAME[0]}"
 
-  local mode=() owner="" directories=() noun="directory"
+  local mode=() owner="" directories=() noun="directory" output=""
 
   # _IDENTICAL_ argument-case-header 5
   local __saved=("$@") __count=$#
@@ -173,6 +173,10 @@ requireDirectory() {
       shift
       noun=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
       ;;
+    --output)
+      shift
+      output=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
+      ;;
     *)
       name="$argument"
       if [ -d "$name" ]; then
@@ -181,8 +185,10 @@ requireDirectory() {
         __catchEnvironment "$usage" mkdir -p "${mode[@]+}" "$name" || return $?
       fi
       [ -z "$owner" ] || __catchEnvironment "$usage" chown "$owner" "$name" || return $?
-      printf "%s\n" "$name"
       directories+=("$name")
+      [ -z "$output" ] || name="$output"
+      printf "%s\n" "$name"
+      output=""
       ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1

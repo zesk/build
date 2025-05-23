@@ -37,6 +37,16 @@ testRequireFileDirectory() {
   assertExitCode 0 requireFileDirectory "$testDir/place" || return $?
   assertDirectoryExists --line "$LINENO" "$testDir" || return $?
 
+  assertExitCode 0 requireFileDirectory --mode 0700 "$testDir/place" || return $?
+  assertDirectoryExists --line "$LINENO" "$testDir" || return $?
+  assertOutputContains "drwx------" ls -lad "$testDir/" || return $?
+
+  assertExitCode 0 requireFileDirectory --mode 0750 "$testDir/place" || return $?
+  assertOutputContains "drwxr-x---" ls -lad "$testDir/" || return $?
+
+  assertExitCode 0 requireFileDirectory --mode 0707 "$testDir/place" || return $?
+  assertOutputContains "drwx---rwx" ls -lad "$testDir/" || return $?
+
   assertExitCode 0 rm -rf "$testDir" || return $?
 }
 
