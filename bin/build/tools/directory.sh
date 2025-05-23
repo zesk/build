@@ -63,17 +63,41 @@ _directoryClobber() {
 # Usage: {fn} file1 file2 ...
 # Example:     logFile=./.build/$me.log
 # Example:     {fn} "$logFile"
-#
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
+# Argument: --mode fileMode - String. Optional. Enforce the directory mode for `mkdir --mode` and `chmod`. Affects directories after it in the command line; supply multiple modes and order your directories if needed. Set to `-` to reset to no value.
+# Argument: --owner ownerName - String. Optional. Enforce the directory owner the directory. Affects all directories supplied AFTER it on the command line. Set to `-` to reset to no value.
+# Argument: fileDirectory ... - FileDirectory. Required. Test if file directory exists (file does not have to exist)
+# Requires: chmod __throwArgument usageArgumentString decorate __catchEnvironment dirname
 requireFileDirectory() {
-  local name
-  local argument usage="_${FUNCNAME[0]}"
+  local usage="_${FUNCNAME[0]}"
+
+  local name="" rr=()
+
+  # _IDENTICAL_ argument-case-header 5
+  local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
-    argument="$1"
-    [ -n "$argument" ] || __throwArgument "$usage" "blank argument" || return $?
-    name="$(dirname "$1")" || __throwEnvironment "$usage" "dirname $argument" || return $?
-    [ -d "$name" ] || mkdir -p "$name" || __throwEnvironment "$usage" "Unable to create directory \"$(decorate code "$name")\"" || return $?
-    shift || __throwArgument "$usage" shift || return $?
+    local argument="$1" __index=$((__count - $# + 1))
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
+    case "$argument" in
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    --owner | --mode)
+      shift
+      rr+=("$argument" "$(usageArgumentString "$usage" "$argument" "${1-}")")
+      owner=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
+      ;;
+    *)
+      rr+=("$(__catchEnvironment "$usage" dirname "$argument")") || return $?
+      ;;
+    esac
+    # _IDENTICAL_ argument-esac-shift 1
+    shift
   done
+  requireDirectory --handler "$usage" --noun "file directory" "${rr[@]+"${rr[@]}"}" || return $?
 }
 _requireFileDirectory() {
   # _IDENTICAL_ usageDocument 1
@@ -84,7 +108,7 @@ _requireFileDirectory() {
 # Does the file's directory exist?
 #
 # Usage: {fn} directory
-# Argument: directory - Test if file directory exists (file does not have to exist)
+# Argument: directory - Directory. Required. Test if file directory exists (file does not have to exist)
 fileDirectoryExists() {
   local path
   local argument usage="_${FUNCNAME[0]}"
@@ -108,17 +132,63 @@ _fileDirectoryExists() {
 # Usage: {fn} dir1 [ dir2 ... ]
 # Argument: dir1 - One or more directories to create
 # Example:     {fn} "$cachePath"
-#
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
+# Argument: --mode fileMode - String. Optional. Enforce the directory mode for `mkdir --mode` and `chmod`. Affects directories after it in the command line; supply multiple modes and order your directories if needed. Set to `-` to reset to no value.
+# Argument: --owner ownerName - String. Optional. Enforce the directory owner the directory. Affects all directories supplied AFTER it on the command line. Set to `-` to reset to no value.
+# Requires: __throwArgument usageArgumentFunction usageArgumentString decorate __catchEnvironment dirname
+# Requires: chmod chown
 requireDirectory() {
-  local name
   local usage="_${FUNCNAME[0]}"
+
+  local mode=() owner="" directories=() noun="directory"
+
+  # _IDENTICAL_ argument-case-header 5
+  local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
-    name="$1"
-    [ -n "$name" ] || __throwArgument "$usage" "blank argument" || return $?
-    [ -d "$name" ] || mkdir -p "$name" || __throwEnvironment "$usage" "Unable to create directory \"$(decorate code "$name")\"" || return $?
-    printf "%s\n" "$name"
-    shift || __throwArgument "$usage" shift || return $?
+    local argument="$1" __index=$((__count - $# + 1))
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
+    case "$argument" in
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    # _IDENTICAL_ --handler 4
+    --handler)
+      shift
+      usage=$(usageArgumentFunction "$usage" "$argument" "${1-}") || return $?
+      ;;
+    --owner)
+      shift
+      owner=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
+      [ "$owner" != "-" ] || owner=""
+      ;;
+    --mode)
+      shift
+      mode=("$argument" "$(usageArgumentString "$usage" "$argument" "${1-}")") || return $?
+      [ "${mode[1]}" != "-" ] || mode=()
+      ;;
+    --noun)
+      shift
+      noun=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
+      ;;
+    *)
+      name="$argument"
+      if [ -d "$name" ]; then
+        [ 0 -eq "${#mode[@]}" ] || __catchEnvironment "$usage" chmod "${mode[1]}" "$name" || return $?
+      else
+        __catchEnvironment "$usage" mkdir -p "${mode[@]+}" "$name" || return $?
+      fi
+      [ -z "$owner" ] || __catchEnvironment "$usage" chown "$owner" "$name" || return $?
+      printf "%s\n" "$name"
+      directories+=("$name")
+      ;;
+    esac
+    # _IDENTICAL_ argument-esac-shift 1
+    shift
   done
+  [ ${#directories[@]} -gt 0 ] || __throwArgument "$usage" "Need at least one $noun" || return $?
 }
 _requireDirectory() {
   # _IDENTICAL_ usageDocument 1
