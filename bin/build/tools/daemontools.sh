@@ -63,7 +63,6 @@ daemontoolsInstallService() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
-    ! $debugFlag || echo "Processing $argument ($__index/$__count) arg:${#arguments[@]} log:${#logArguments[@]}" 1>&2
     case "$argument" in
     # _IDENTICAL_ --help 4
     --help)
