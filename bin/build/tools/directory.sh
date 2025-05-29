@@ -182,7 +182,7 @@ requireDirectory() {
       if [ -d "$name" ]; then
         [ 0 -eq "${#mode[@]}" ] || __catchEnvironment "$usage" chmod "${mode[1]}" "$name" || return $?
       else
-        __catchEnvironment "$usage" mkdir -p "${mode[@]+}" "$name" || return $?
+        __catchEnvironment "$usage" mkdir -p "${mode[@]+"${mode[@]}"}" "$name" || return $?
       fi
       [ -z "$owner" ] || __catchEnvironment "$usage" chown "$owner" "$name" || return $?
       directories+=("$name")
