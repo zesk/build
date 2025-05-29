@@ -270,8 +270,8 @@ daemontoolsExecute() {
 
   home="$(__catchEnvironment "$usage" daemontoolsHome)" || return $?
   usageRequireBinary "$usage" svscanboot id svc svstat || return $?
-  __throwEnvironment "$usage" muzzle requireDirectory --mode 0775 --owner root:root "$home" || return $?
-  __throwEnvironment "$usage" muzzle nohup bash -c 'svscanboot &' 2>&1 || return $?
+  __catchEnvironment "$usage" muzzle requireDirectory --mode 0775 --owner root:root "$home" || return $?
+  __catchEnvironment "$usage" muzzle nohup bash -c 'svscanboot &' 2>&1 || return $?
 }
 _daemontoolsExecute() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
