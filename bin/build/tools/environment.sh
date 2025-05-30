@@ -765,7 +765,7 @@ environmentCompile() {
     for environmentFile in "${environmentFiles[@]}"; do
       set -a
       # shellcheck source=/dev/null
-      source "$environmentFile" 2>/dev/null || __throwEnvironment "$usage" "$environmentFile failed to load" || _clean $? "${clean[@]}" || return $?
+      source "$environmentFile" >(outputTrigger source "$environmentFile") 2>&1 || _clean $? "${clean[@]}" || return $?
       set +a
     done
     __catchEnvironment "$usage" environmentOutput "${aa[@]+"${aa[@]}"}" | sort >"$tempEnv.after" || _clean $? "${clean[@]}" || return $?
