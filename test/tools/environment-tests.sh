@@ -368,3 +368,62 @@ testEnvironmentCompile() {
 
   __catchEnvironment "$usage" rm -rf "$envFile" || return $?
 }
+
+#
+testEnvironmentClean() {
+  local usage="_return"
+
+  local saveEnv
+
+  #
+  # Preserve environment locally here for this test
+  #
+
+  saveEnv=$(fileTemporaryName "$usage") || return $?
+  __catchEnvironment "$usage" environmentOutput --underscore --secure >"$saveEnv" || return $?
+
+  local item keepers=(A B C DEE EEE FFF GGG) removed=()
+
+  export A B C DEE EEE FFF GGG
+
+  A=1
+  B=2
+  C=3
+  DEE=4
+  EEE="Hello"
+  FFF=(1 2 3)
+  GGG=("Hello" "World")
+  PS1=FOOBAR
+
+  assertExitCode 0 environmentClean "${keepers[@]}" || return $?
+
+  for item in "${keepers[@]}"; do
+    assertStringNotEmpty "${!item}" || return $?
+  done
+
+  keepers=(A DEE FFF GGG)
+  removed=(B C EEE)
+
+  assertExitCode 0 environmentClean "${keepers[@]}" || return $?
+
+  for item in "${keepers[@]}" PATH HOME; do
+    assertStringNotEmpty "${!item-}" || return $?
+  done
+  for item in "${removed[@]}"; do
+    assertStringEmpty "${!item-}" || return $?
+  done
+  removed+=("${keepers[@]}")
+  keepers=()
+
+  assertExitCode 0 environmentClean || return $?
+
+  for item in "${removed[@]}"; do
+    assertStringEmpty "${!item-}" || return $?
+  done
+
+  # Restore deleted environment
+  set -a
+  # shellcheck source=/dev/null
+  source "$saveEnv"
+  set +a
+}

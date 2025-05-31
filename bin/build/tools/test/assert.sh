@@ -47,6 +47,82 @@ _assertEquals() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
+#
+# Assert a string is non-empty.
+#
+# If this fails it will output an error and exit.
+#
+# Usage: assertEquals expected actual [ message ]
+# DOC TEMPLATE: assert-common 18
+# Argument: --help - Optional. Flag. Display this help.
+# Argument: --line lineNumber - Optional. Integer. Line number of calling function.
+# Argument: --line-depth depth - Optional. Integer. The depth in the stack of function calls to find the line number of the calling function.
+# Argument: --debug - Optional. Flag. Debugging enabled for the assertion function.
+# Argument: --debug-lines - Optional. Flag. Debugging of SOLELY differences between --line passed in and the computed line from the --line-depth parameter.
+# Argument: --display - Optional. String. Display name for the condition.
+# Argument: --success - Optional. Boolean. Whether the assertion should pass (`true`) or fail (`false`)
+# Argument: --stderr-match - Optional. String. One or more strings which must match stderr. Implies `--stderr-ok`
+# Argument: --stdout-no-match - Optional. String. One or more strings which must match stderr.
+# Argument: --stdout-match - Optional. String. One or more strings which must match stdout.
+# Argument: --stdout-no-match - Optional. String. One or more strings which must match stdout.
+# Argument: --stderr-ok - Optional. Flag. Output to stderr will not cause the test to fail.
+# Argument: --leak globalName - Zero or more. String. Allow global leaks for these globals.
+# Argument: --skip-plumber - Optional. Flag. Skip plumber check for function calls.
+# Argument: --dump - Optional. Flag. Output stderr and stdout after test regardless.
+# Argument: --dump-binary - Optional. Flag. Output stderr and stdout after test regardless, and output binary.
+# Argument: --head - Optional. Flag. When outputting stderr or stdout, output the head of the file.
+# Argument: --tail - Optional. Flag. When outputting stderr or stdout, output the tail of the file. (Default)
+# Argument: expected - Expected string
+# Argument: actual - Actual string
+# Argument: message - Message to output if the assertion fails
+# Example:     assertEquals "$(alignRight 4 "hi")" "  hi" "alignRight not working"
+# Reviewed: 2023-11-12
+#
+assertStringNotEmpty() {
+  _assertStringEmptyHelper "${FUNCNAME[0]}" --success false "$@" || return $?
+}
+_assertStringNotEmpty() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+#
+# Assert a string is empty.
+#
+# If this fails it will output an error and exit.
+#
+# Usage: assertEquals expected actual [ message ]
+# DOC TEMPLATE: assert-common 18
+# Argument: --help - Optional. Flag. Display this help.
+# Argument: --line lineNumber - Optional. Integer. Line number of calling function.
+# Argument: --line-depth depth - Optional. Integer. The depth in the stack of function calls to find the line number of the calling function.
+# Argument: --debug - Optional. Flag. Debugging enabled for the assertion function.
+# Argument: --debug-lines - Optional. Flag. Debugging of SOLELY differences between --line passed in and the computed line from the --line-depth parameter.
+# Argument: --display - Optional. String. Display name for the condition.
+# Argument: --success - Optional. Boolean. Whether the assertion should pass (`true`) or fail (`false`)
+# Argument: --stderr-match - Optional. String. One or more strings which must match stderr. Implies `--stderr-ok`
+# Argument: --stdout-no-match - Optional. String. One or more strings which must match stderr.
+# Argument: --stdout-match - Optional. String. One or more strings which must match stdout.
+# Argument: --stdout-no-match - Optional. String. One or more strings which must match stdout.
+# Argument: --stderr-ok - Optional. Flag. Output to stderr will not cause the test to fail.
+# Argument: --leak globalName - Zero or more. String. Allow global leaks for these globals.
+# Argument: --skip-plumber - Optional. Flag. Skip plumber check for function calls.
+# Argument: --dump - Optional. Flag. Output stderr and stdout after test regardless.
+# Argument: --dump-binary - Optional. Flag. Output stderr and stdout after test regardless, and output binary.
+# Argument: --head - Optional. Flag. When outputting stderr or stdout, output the head of the file.
+# Argument: --tail - Optional. Flag. When outputting stderr or stdout, output the tail of the file. (Default)
+# Argument: expected - Expected string
+# Argument: actual - Actual string
+# Argument: message - Message to output if the assertion fails
+# Example:     assertEquals "$(alignRight 4 "hi")" "  hi" "alignRight not working"
+# Reviewed: 2023-11-12
+#
+assertStringEmpty() {
+  _assertStringEmptyHelper "${FUNCNAME[0]}" --success true "$@" || return $?
+}
+_assertStringEmpty() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
 # Assert two strings are not equal.
 #
 # If this fails it will output an error and exit.

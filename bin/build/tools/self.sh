@@ -290,10 +290,9 @@ _buildEnvironmentPath() {
   local paths=() home
 
   export BUILD_ENVIRONMENT_DIRS BUILD_HOME
-  if [ -z "$BUILD_HOME" ]; then
+  home="${BUILD_HOME-}"
+  if [ -z "$home" ]; then
     home=$(__environment buildHome) || return $?
-  else
-    home="$BUILD_HOME"
   fi
   # shellcheck source=/dev/null
   source "$home/bin/build/env/BUILD_ENVIRONMENT_DIRS.sh" || _environment "BUILD_ENVIRONMENT_DIRS.sh fail" || return $?

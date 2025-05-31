@@ -535,6 +535,55 @@ ___assertIsEqualFormat() {
 
 #=== === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === ===
 #
+# assert equals
+#
+#=== === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === ===
+
+_assertStringEmptyHelper() {
+  local this="$1"
+  shift
+  _assertConditionHelper "$this" --line-depth 2 --test ___assertIsEmpty --formatter ___assertIsEmptyFormat "$@" || return $?
+}
+
+___assertIsEmpty() {
+  while [ $# -gt 0 ]; do
+    [ -z "${1-}" ] || return 1
+    shift
+  done
+}
+
+___assertIsEmptyFormat() {
+  local testPassed="${1-}" success="${2-}"
+  shift && shift
+  if $testPassed; then
+    if $success; then
+      decorate green "empty"
+    else
+      local index=1
+      while [ $# -gt 0 ]; do
+        if [ -n "${1-}" ]; then
+          printf "%s %s (%s)" "$(decorate green "not empty")" "$(__resultTextSize true "$1")" "$(decorate value "#$index")"
+        fi
+        index=$((index + 1))
+        shift
+      done
+    fi
+  else
+    local compare verb
+    while [ $# -gt 0 ]; do
+      if $success && [ -n "${1-}" ]; then
+        printf "%s %s (%s)" "$(__resultTextSize true "$1")" "$(decorate red "not empty")" "$(decorate value "#$index")"
+      elif ! $success && [ -z "${1-}" ]; then
+        printf "%s (%s)" "$(decorate red "empty")" "$(decorate value "#$index")"
+      fi
+      index=$((index + 1))
+      shift
+    done
+  fi
+}
+
+#=== === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === ===
+#
 # assert numeric
 #
 #=== === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === ===

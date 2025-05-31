@@ -10,6 +10,7 @@
 {environmentVariableNameValid}
 {environmentOutput}
 {environmentCompile}
+{environmentClean}
 {environmentAddFile}
 
 ## Variable lists
