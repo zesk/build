@@ -13,13 +13,20 @@ Examples:
 
 ## Color Mode
 
-Zesk Build now supports two color modes for light and dark terminals with related contrasts. To set use
-`consoleColorMode`.
+Zesk Build supports customizations of all decoration colors to custom values.
 
 {decorate}
+
 {decorations}
 
+{decorateStyle}
+
 {__decorateExtensionEach}
+
+{__decorateExtensionPair}
+
+{__decorateExtensionWrap}
+
 {__decorateExtensionQuote}
 
 # Semantic color commands
@@ -72,6 +79,8 @@ Colors vary depending on the console and the terminal. Try `colorTest` to see al
 - `decorate pair name value`
 - `decorate pair 40 name value`
 - `decorate each code item1 item2`
+- `decorate each --count code item1 item2 item3`
+- `decorate each --index code item1 item2 item3`
 
 # Additional commands
 

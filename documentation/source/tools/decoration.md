@@ -8,7 +8,6 @@ Typically used to output text to the console using pretty colors and ANSI art.
 
 {repeat}
 {echoBar}
-{decorate wrap}
 {alignRight}
 {alignLeft}
 {boxedHeading}
