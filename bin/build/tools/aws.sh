@@ -695,7 +695,7 @@ __awsReturnTrue() {
 # Helper for awsSecurityGroupIPModify
 __awsSGOutput() {
   local title="$1" ip="$2" group="$3" port="$4"
-  printf "%s %s %s %s %s %s\n" "$title" "$(decorate red "$foundIP")" "$(decorate label "in group-id:")" "$(decorate value "$group")" "$(decorate label "port:")" "$(decorate value "$port")"
+  printf "%s %s %s %s %s %s\n" "$title" "$(decorate red "$ip")" "$(decorate label "in group-id:")" "$(decorate value "$group")" "$(decorate label "port:")" "$(decorate value "$port")"
 }
 
 # Requires: aws env
