@@ -163,16 +163,16 @@ testDeployToRemote() {
     assertExitCode "${matches[@]}" 0 deployToRemote "${args[@]}" || return $?
 
     matches=(--stdout-match "deployRemoteFinish" --stdout-match "--revert" --stdout-match "tools.sh")
-    assertExitCode --dump "${matches[@]}" 0 deployToRemote --revert "${args[@]}" || return $?
+    assertExitCode "${matches[@]}" 0 deployToRemote --revert "${args[@]}" || return $?
 
     matches=(--stdout-match "deployRemoteFinish" --stdout-match "--cleanup" --stdout-match "tools.sh")
-    assertExitCode --dump "${matches[@]}" 0 deployToRemote --cleanup "${args[@]}" || return $?
+    assertExitCode "${matches[@]}" 0 deployToRemote --cleanup "${args[@]}" || return $?
   }
 
   matches=(--stderr-match twice)
   for onlyOne in --application --id --home --target; do
     args=("$onlyOne" "$sampleApplication" "$onlyOne" "$sampleApplication")
-    assertExitCode --dump "${matches[@]}" 2 deployToRemote "${args[@]}" || return $?
+    assertExitCode "${matches[@]}" 2 deployToRemote "${args[@]}" || return $?
   done
   for onlyOne in --deploy --revert --cleanup; do
     args=("$onlyOne" "$onlyOne")

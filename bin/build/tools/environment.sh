@@ -253,7 +253,7 @@ _dotEnvConfigure() {
 # Argument: --ignore environmentName - Optional. String. Environment value to ignore on load.
 # Argument: --secure environmentName - Optional. String. If found in a loaded file, entire file fails.
 # Argument: --secure-defaults - Flag. Optional. Add a list of environment variables considered security risks to the `--ignore` list.
-# Argument: --execute arguments ... - Executable. Optional. All additional arguments are passed to executable after loading environment files.
+# Argument: --execute arguments ... - Callable. Optional. All additional arguments are passed to callable after loading environment files.
 # Exit code: 2 - if file does not exist; outputs an error
 # Exit code: 0 - if files are loaded successfully
 environmentFileLoad() {
@@ -303,7 +303,7 @@ environmentFileLoad() {
       ;;
     --execute)
       shift
-      binary=$(usageArgumentExecutable "$usage" "$argument" "${1-}") || return $?
+      binary=$(usageArgumentCallable "$usage" "$argument" "${1-}") || return $?
       shift
       execute=("$binary" "$@")
       break
