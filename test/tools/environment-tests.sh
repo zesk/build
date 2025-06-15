@@ -427,3 +427,27 @@ testEnvironmentClean() {
   source "$saveEnv"
   set +a
 }
+
+__testEchoEnv() {
+  printf "%s" "[${!1-}]"
+}
+
+testEnvironmentFileLoadExecute() {
+  local usage="_return"
+
+  local clean=() testEnv
+
+  testEnv=$(fileTemporaryName "$usage") || return $?
+  clean+=("$testEnv")
+
+  __catchEnvironment "$usage" environmentValueWrite HELLO World >>"$testEnv" || return $?
+
+  export TEST_THING=Transient
+  assertEquals "[Transient]" "$(environmentFileLoad "$testEnv" --execute __testEchoEnv TEST_THING)" || return $?
+  assertEquals "[World]" "$(environmentFileLoad "$testEnv" --execute __testEchoEnv HELLO)" || return $?
+  __catchEnvironment "$usage" environmentValueWrite TEST_THING Winner >>"$testEnv" || return $?
+  assertEquals "[Winner]" "$(environmentFileLoad "$testEnv" --execute __testEchoEnv TEST_THING)" || return $?
+  assertEquals "[World]" "$(environmentFileLoad "$testEnv" --execute __testEchoEnv HELLO)" || return $?
+
+  __catchEnvironment "$usage" rm -rf "${clean[@]}" || return $?
+}

@@ -57,6 +57,7 @@ phpComposer() {
       [ -d "$argument" ] || __throwArgument "$usage" "Directory does not exist: $argument" || return $?
       composerDirectory="$argument"
       statusMessage decorate info "Composer directory: $(decorate file "$composerDirectory")"
+      break
       ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1

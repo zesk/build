@@ -253,13 +253,14 @@ _dotEnvConfigure() {
 # Argument: --ignore environmentName - Optional. String. Environment value to ignore on load.
 # Argument: --secure environmentName - Optional. String. If found in a loaded file, entire file fails.
 # Argument: --secure-defaults - Flag. Optional. Add a list of environment variables considered security risks to the `--ignore` list.
+# Argument: --execute arguments ... - Executable. Optional. All additional arguments are passed to executable after loading environment files.
 # Exit code: 2 - if file does not exist; outputs an error
 # Exit code: 0 - if files are loaded successfully
 environmentFileLoad() {
   local usage="_${FUNCNAME[0]}"
 
   local ff=() environmentFile environmentLine name value required=true ignoreList=() secureList=() toExport=() line=1
-  local verboseMode=false debugMode=false hasOne=false
+  local verboseMode=false debugMode=false hasOne=false execute=()
 
   # _IDENTICAL_ argument-case-header 5
   local __saved=("$@") __count=$#
@@ -299,6 +300,13 @@ environmentFileLoad() {
     --optional)
       required=false
       ! $debugMode || printf -- "Current: %s\n" "$argument"
+      ;;
+    --execute)
+      shift
+      binary=$(usageArgumentExecutable "$usage" "$argument" "${1-}") || return $?
+      shift
+      execute=("$binary" "$@")
+      break
       ;;
     *)
       hasOne=true
@@ -362,6 +370,7 @@ environmentFileLoad() {
       export "${name?}"="$value"
     done
   fi
+  [ ${#execute[@]} -eq 0 ] || __catchEnvironment "$usage" "${execute[@]}"
 }
 _environmentFileLoad() {
   # _IDENTICAL_ usageDocument 1
