@@ -449,5 +449,8 @@ testEnvironmentFileLoadExecute() {
   assertEquals "[Winner]" "$(environmentFileLoad "$testEnv" --execute __testEchoEnv TEST_THING)" || return $?
   assertEquals "[World]" "$(environmentFileLoad "$testEnv" --execute __testEchoEnv HELLO)" || return $?
 
+  assertEquals "" "${HELLO-}" || return $?
+  assertEquals "Transient" "$TEST_THING" || return $?
+
   __catchEnvironment "$usage" rm -rf "${clean[@]}" || return $?
 }
