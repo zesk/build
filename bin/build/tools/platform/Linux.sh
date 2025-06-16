@@ -98,11 +98,7 @@ else
 fi
 
 __bigTextBinary() {
-  if apkIsInstalled; then
     printf "%s\n" "toilet"
-  else
-    printf "%s\n" "figlet"
-  fi
 }
 
 __pcregrep() {
