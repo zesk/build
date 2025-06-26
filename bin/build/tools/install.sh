@@ -36,8 +36,6 @@ mariadbUninstall() {
 #
 # If this fails it will output the installation log.
 #
-# Usage: {fn} [ package ]
-# Argument: package - Additional packages to install
 # Summary: Install `python`
 # When this tool succeeds the `python` binary is available in the local operating system.
 # Exit Code: 1 - If installation fails
@@ -48,7 +46,7 @@ pythonInstall() {
   local usage="_${FUNCNAME[0]}"
 
   if ! whichExists python; then
-    __catchEnvironment "$usage" packageGroupInstall python || return $?
+    __catchEnvironment "$usage" packageGroupInstall "$@" python || return $?
   fi
   if ! whichExists pip; then
     __catchEnvironment "$usage" python -m ensurepip --upgrade || return $?
@@ -62,7 +60,7 @@ _pythonInstall() {
 
 # Uninstall python
 pythonUninstall() {
-  packageWhichUninstall python python-is-python3 python3 python3-pip "$@"
+  packageGroupUninstall "$@" python
 }
 
 # Utility to install python dependencies via pip

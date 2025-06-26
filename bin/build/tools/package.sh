@@ -717,12 +717,66 @@ packageGroupInstall() {
 
   [ 0 -lt "${#groups[@]}" ] || __throwArgument "$usage" "Requires at least one package to map" || return $?
 
+  # IDENTICAL managerArgumentValidation 2
+  [ -n "$manager" ] || manager=$(packageManagerDefault) || __throwEnvironment "$usage" "No package manager" || return $?
+  whichExists "$manager" || __throwEnvironment "$usage" "$manager does not exist" || return $?
+
   local package group
   for group in "${groups[@]}"; do
     local packages=()
     while read -r package; do packages+=("$package"); done < <(packageMapping --manager "$manager" "$group")
-    __catchEnvironment "$usage" packageInstall "${packages[@]}" || return $?
+    __catchEnvironment "$usage" packageInstall --manager "$manager" "${packages[@]}" || return $?
   done
+}
+_packageGroupInstall() {
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+packageGroupUninstall() {
+  local groups=() manager=""
+
+  # _IDENTICAL_ argument-case-header 5
+  local __saved=("$@") __count=$#
+  while [ $# -gt 0 ]; do
+    local argument="$1" __index=$((__count - $# + 1))
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
+    case "$argument" in
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    # IDENTICAL managerArgumentHandler 5
+    --manager)
+      shift
+      manager=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
+      packageManagerValid "$manager" || __throwArgument "$usage" "Manager is invalid: $(decorate code "$manager")" || return $?
+      ;;
+    *)
+      groups+=("$(usageArgumentString "$usage" "group" "$argument")") || return $?
+      ;;
+    esac
+    # _IDENTICAL_ argument-esac-shift 1
+    shift
+  done
+
+  [ 0 -lt "${#groups[@]}" ] || __throwArgument "$usage" "Requires at least one package to map" || return $?
+
+  # IDENTICAL managerArgumentValidation 2
+  [ -n "$manager" ] || manager=$(packageManagerDefault) || __throwEnvironment "$usage" "No package manager" || return $?
+  whichExists "$manager" || __throwEnvironment "$usage" "$manager does not exist" || return $?
+
+  local package group
+  for group in "${groups[@]}"; do
+    local packages=()
+    while read -r package; do packages+=("$package"); done < <(packageMapping --manager "$manager" "$group")
+    __catchEnvironment "$usage" packageUninstall --manager "$manager" "${packages[@]}" || return $?
+  done
+}
+_packageGroupUninstall() {
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Argument: packageName - A simple package name which will be expanded to specific platform or package-manager specific package names
