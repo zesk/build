@@ -87,8 +87,9 @@ requireFileDirectory() {
       ;;
     --owner | --mode)
       shift
-      rr+=("$argument" "$(usageArgumentString "$usage" "$argument" "${1-}")")
-      owner=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
+      local value
+      value=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
+      rr+=("$argument" "$value") || return $?
       ;;
     *)
       rr+=(--output "$argument" "$(__catchEnvironment "$usage" dirname "$argument")") || return $?

@@ -320,7 +320,7 @@ echoBar() {
       barText="$argument"
       shift
       if [ -n "${1-}" ]; then
-        delta=$(usageArgumentInteger "$usage" "delta" "$1")
+        delta=$(usageArgumentInteger "$usage" "delta" "$1") || return $?
       else
         delta=0
         break

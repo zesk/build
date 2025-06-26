@@ -293,15 +293,20 @@ __buildDocumentationBuild() {
     if ! whichExists mkdocs; then
       __catchEnvironment "$usage" pythonInstall || return $?
 
-      whichExists pip || __failEnvioronment "$usage" "python does not install pip?" || return $?
-      whichExists mkdocs || __catchEnvironment "$usage" pip install mkdocs || return $?
-      whichExists mkdocs || __failEnvioronment "$usage" "mkdocs not found after installation?" || return $?
+      if [ ! -d "$home/.venv" ]; then
+        whichExists mkdocs || __catchEnvironment "$usage" python -m pip install venv || return $?
+        __catchEnvironment "$usage" python -m venv "$home/.venv" || return $?
+      fi
+      __catchEnvironment "$usage" "$home/.venv/bin/activate" || return $?
+      whichExists mkdocs || __catchEnvironment "$usage" python -m pip install mkdocs || return $?
+      whichExists mkdocs || __throwEnvironment "$usage" "mkdocs not found after installation?" || return $?
     fi
     __catchEnvironment "$usage" muzzle pushd "./documentation" || return $?
     __mkdocsConfiguration "$usage" || return $?
 
     __catchEnvironment "$usage" mkdocs build || return $?
     __catchEnvironment "$usage" muzzle popd || return $?
+    __catchEnvironment "$usage" "$home/.venv/bin/deactivate" || return $?
   fi
 
   statusMessage --last timingReport "$start" "$(basename "${BASH_SOURCE[0]}") completed in"

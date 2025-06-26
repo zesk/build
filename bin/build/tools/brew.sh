@@ -136,3 +136,14 @@ __brewStandardPackages() {
   export BUILD_TEXT_BINARY
   [ -n "${BUILD_TEXT_BINARY-}" ] || BUILD_TEXT_BINARY="toilet"
 }
+
+__brewPackageMapping() {
+  case "$1" in
+  "python")
+    printf "%s\n" python3
+    ;;
+  *)
+    printf "%s\n" "$1"
+    ;;
+  esac
+}

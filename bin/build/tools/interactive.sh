@@ -435,7 +435,7 @@ interactiveManager() {
   [ -n "$loopCallable" ] || __throwArgument "$usage" "No loopCallable" || return $?
 
   if [ "${#files[@]}" -eq 0 ]; then
-    while read -r file; do files+=("$(usageArgumentFile "$usage" "fileToCheck (stdin)" "$1")"); done
+    while read -r file; do files+=("$(usageArgumentFile "$usage" "fileToCheck (stdin)" "$1")") || return $?; done
     [ "${#files[@]}" -gt 0 ] || return 0
   fi
 

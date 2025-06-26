@@ -95,7 +95,7 @@ testBuildEnvironmentLoadAll() {
       local type
       type=$(grep -m 1 -e "^# Type:" "$envFile" | cut -f 2 -d : | trimSpace)
 
-      validator="usageArgument$type"
+      validator="usage""Argument$type"
       isFunction "$validator" || _environment "$type is not a known type in $(decorate file "$envFile")" || return $?
     ) || return $?
   done < <(find "$home" -type f -name '*.sh' -path '*/env/*' ! -path '*/test/*' ! -path '*/.*/*' -exec basename {} \; | cut -d . -f 1) || return $?

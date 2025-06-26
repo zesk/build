@@ -338,7 +338,7 @@ buildEnvironmentLoad() {
     *)
       local env found="" paths=() path file=""
 
-      env="$(usageArgumentEnvironmentVariable "$usage" "environmentVariable" "$1")"
+      env="$(usageArgumentEnvironmentVariable "$usage" "environmentVariable" "$1")" || return $?
       IFS=$'\n' read -d '' -r -a paths < <(_buildEnvironmentPath) || :
       for path in "${paths[@]}"; do
         [ -d "$path" ] || continue
@@ -504,7 +504,7 @@ buildEnvironmentGetDirectory() {
       ;;
     --subdirectory)
       shift
-      subdirectory=$(usageArgumentString "$usage" "$argument" "${1-}")
+      subdirectory=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
       ;;
     --owner | --mode)
       shift

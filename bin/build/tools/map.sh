@@ -65,11 +65,11 @@ mapValue() {
       ;;
     --prefix)
       shift
-      prefix=$(usageArgumentString "$usage" "$argument" "${1-}")
+      prefix=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
       ;;
     --suffix)
       shift
-      suffix=$(usageArgumentString "$usage" "$argument" "${1-}")
+      suffix=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
       ;;
     --search-filter)
       shift
@@ -253,11 +253,11 @@ cannon() {
       ;;
     --path)
       shift
-      cannonPath=$(usageArgumentDirectory "$usage" "$argument cannonPath" "${1-}")
+      cannonPath=$(usageArgumentDirectory "$usage" "$argument cannonPath" "${1-}") || return $?
       ;;
     *)
       if [ -z "$search" ]; then
-        search="$(usageArgumentString "$usage" "searchText" "$argument")"
+        search="$(usageArgumentString "$usage" "searchText" "$argument")" || return $?
       elif [ -z "$replace" ]; then
         replace="$argument"
         shift

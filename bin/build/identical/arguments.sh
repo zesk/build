@@ -25,7 +25,7 @@ ___documentTemplateFunction() {
     # IDENTICAL managerArgumentHandler 5
     --manager)
       shift
-      manager=$(usageArgumentString "$usage" "$argument" "${1-}")
+      manager=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
       packageManagerValid "$manager" || __throwArgument "$usage" "Manager is invalid: $(decorate code "$manager")" || return $?
       ;;
     *)

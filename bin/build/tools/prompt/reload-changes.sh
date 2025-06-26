@@ -217,7 +217,7 @@ __reloadChangesShow() {
     if [ -z "$source" ]; then
       source="$(usageArgumentRealFile "$usage" "config-source" "$argument")" || return $?
     elif [ -z "$name" ]; then
-      name=$(usageArgumentString "$usage" "config-name" "$argument")
+      name=$(usageArgumentString "$usage" "config-name" "$argument") || return $?
     elif [ "$argument" != "--" ]; then
       paths+=("$(usageArgumentRealDirectory "$usage" "config-path" "$argument")") || return $?
     else
@@ -242,7 +242,7 @@ __reloadChangesRemove() {
     if [ -z "$source" ]; then
       source="$(usageArgumentRealFile "$usage" "config-source" "$argument")" || _clean $? "$target" || return $?
     elif [ -z "$name" ]; then
-      name=$(usageArgumentString "$usage" "config-name" "$argument")
+      name=$(usageArgumentString "$usage" "config-name" "$argument") || return $?
     elif [ "$argument" = "--" ]; then
       if [ "$source" != "$matchSource" ]; then
         __catchEnvironment "$usage" printf -- "%s\n" "$source" "$name" "${paths[@]}" "--" >>"$target" || _clean $? "$target" || return $?

@@ -45,11 +45,11 @@ mapEnvironment2() {
       ;;
     --prefix)
       shift
-      __prefix=$(usageArgumentString "$usage" "$argument" "${1-}")
+      __prefix=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
       ;;
     --suffix)
       shift
-      __suffix=$(usageArgumentString "$usage" "$argument" "${1-}")
+      __suffix=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
       ;;
     --search-filter)
       shift
@@ -64,7 +64,7 @@ mapEnvironment2() {
       muzzle usageArgumentLoadEnvironmentFile "$usage" "$argument" "${1-}" || return $?
       ;;
     *)
-      __ee+=("$(usageArgumentEnvironmentValue "$usage" "environmentVariableName" "$argument")")
+      __ee+=("$(usageArgumentEnvironmentValue "$usage" "environmentVariableName" "$argument")") || return $?
       ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1

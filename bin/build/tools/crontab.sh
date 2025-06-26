@@ -88,7 +88,7 @@ crontabApplicationUpdate() {
     --env-file)
       [ -z "$rootEnv" ] || __throwArgument "$usage" "$argument already" || return $?
       shift
-      rootEnv=$(usageArgumentFile "$usage" "rootEnv" "$1")
+      rootEnv=$(usageArgumentFile "$usage" "rootEnv" "$1") || return $?
       ;;
     --mapper)
       [ -z "$environmentMapper" ] || __throwArgument "$usage" "$argument already" || return $?
@@ -106,7 +106,7 @@ crontabApplicationUpdate() {
       flagDiff=true
       ;;
     *)
-      appPath="$(usageArgumentDirectory "$usage" "applicationPath" "$argument")"
+      appPath="$(usageArgumentDirectory "$usage" "applicationPath" "$argument")" || return $?
       ;;
     esac
     shift

@@ -178,7 +178,7 @@ _assertConditionHelper() {
       ;;
     --exit)
       shift
-      expectedExitCode=$(usageArgumentUnsignedInteger "$usage" "$argument" "${1-}")
+      expectedExitCode=$(usageArgumentUnsignedInteger "$usage" "$argument" "${1-}") || return $?
       pairs+=("Exit" "$(decorate bold-magenta " $expectedExitCode ")")
       ;;
     --display)
@@ -302,7 +302,7 @@ _assertConditionHelper() {
 
   if $code1; then
     [ "$expectedExitCode" -eq 0 ] || __catchArgument "$usage" "--exit and --code1 and mutually exclusive for non-zero --exit" || return $?
-    expectedExitCode="$(usageArgumentUnsignedInteger "$usage" "exitCode" "${1-}")"
+    expectedExitCode="$(usageArgumentUnsignedInteger "$usage" "exitCode" "${1-}")" || return $?
     shift
   fi
   if $doPlumber; then

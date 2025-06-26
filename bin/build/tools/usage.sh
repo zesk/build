@@ -585,7 +585,7 @@ usageArgumentMissing() {
 # Argument: argument - Required. String. Name of the argument used in error messages.
 # Exit Code: 2 - Always
 usageArgumentSecret() {
-  usageArgumentString "$@"
+  usageArgumentString "$@" || return $?
 }
 
 # List delimited with commas `,`
@@ -594,7 +594,7 @@ usageArgumentSecret() {
 # Argument: argument - Required. String. Name of the argument used in error messages.
 # Exit Code: 2 - Always
 usageArgumentCommaDelimitedList() {
-  usageArgumentEmptyString "$@"
+  usageArgumentEmptyString "$@" || return $?
 }
 
 # List delimited with colons `:`
@@ -603,7 +603,7 @@ usageArgumentCommaDelimitedList() {
 # Argument: argument - Required. String. Name of the argument used in error messages.
 # Exit Code: 2 - Always
 usageArgumentColonDelimitedList() {
-  usageArgumentEmptyString "$@"
+  usageArgumentEmptyString "$@" || return $?
 }
 
 # List delimited with spaces ` `
@@ -612,7 +612,7 @@ usageArgumentColonDelimitedList() {
 # Argument: argument - Required. String. Name of the argument used in error messages.
 # Exit Code: 2 - Always
 usageArgumentList() {
-  usageArgumentEmptyString "$@"
+  usageArgumentEmptyString "$@" || return $?
 }
 
 # Placeholder for array types
@@ -621,7 +621,7 @@ usageArgumentList() {
 # Argument: argument - Required. String. Name of the argument used in error messages.
 # Exit Code: 2 - Always
 usageArgumentArray() {
-  usageArgumentEmptyString "$@"
+  usageArgumentEmptyString "$@" || return $?
 }
 
 # A remote path is one which exists in another file system

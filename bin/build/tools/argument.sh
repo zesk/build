@@ -81,7 +81,7 @@ _arguments() {
         dumpPipe stateFile <"$stateFile" 1>&2
         __throwArgument "$usage" "unhandled argument type \"$type\" #$__index: $argument" || _clean "$?" "${clean[@]}" || return $?
       fi
-      checkFunction="usageArgument${type}"
+      checkFunction="usage""Argument${type}"
       value="$("$checkFunction" "$usage" "$argumentName" "$argument")" || _clean "$?" || return $?
       __catchEnvironment "$usage" environmentValueWrite "$argumentName" "$value" >>"$stateFile" || _clean "$?" || return $?
       ;;

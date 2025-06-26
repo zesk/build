@@ -567,15 +567,15 @@ awsSecurityGroupIPModify() {
       ;;
     --group)
       shift
-      group=$(usageArgumentString "$usage" "$argument" "${1-}")
+      group=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
       ;;
     --port)
       shift
-      port=$(usageArgumentPositiveInteger "$usage" "$argument" "${1-}")
+      port=$(usageArgumentPositiveInteger "$usage" "$argument" "${1-}") || return $?
       ;;
     --description)
       shift
-      description=$(usageArgumentString "$usage" "$argument" "${1-}")
+      description=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
       ;;
     --ip)
       shift

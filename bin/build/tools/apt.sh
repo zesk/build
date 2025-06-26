@@ -345,3 +345,14 @@ __aptStandardPackages() {
   export BUILD_TEXT_BINARY
   [ -n "${BUILD_TEXT_BINARY-}" ] || BUILD_TEXT_BINARY="$(__bigTextBinary)"
 }
+
+__aptPackageMapping() {
+  case "$1" in
+  "python")
+    printf "%s\n" python-is-python3 python3 python3-pip
+    ;;
+  *)
+    printf "%s\n" "$1"
+    ;;
+  esac
+}

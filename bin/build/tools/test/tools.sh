@@ -147,7 +147,7 @@ testSuite() {
       trap '__testCleanupMess true' EXIT QUIT TERM
       ;;
     *)
-      matchTests+=("$(usageArgumentString "$usage" "match" "$1")")
+      matchTests+=("$(usageArgumentString "$usage" "match" "$1")") || return $?
       ;;
     esac
     shift || __throwArgument "$usage" "shift argument $(decorate label "$argument")" || return $?

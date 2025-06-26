@@ -222,7 +222,7 @@ processOpenPipes() {
   local usage="_${FUNCNAME[0]}"
   local pid
   while [ $# -gt 0 ]; do
-    pid="$(usageArgumentInteger "$usage" "pid" "$1")"
+    pid="$(usageArgumentInteger "$usage" "pid" "$1")" || return $?
     lsof -c 9999 -g "$pid" -l -F ckns
     shift
   done

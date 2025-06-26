@@ -239,7 +239,7 @@ __identicalCheckGenerateSearchFiles() {
       shift
       break
     fi
-    repairSources+=("$(usageArgumentDirectory "$usage" repairSource "${1%/}/")")
+    repairSources+=("$(usageArgumentDirectory "$usage" repairSource "${1%/}/")") || return $?
     shift # repairSource
   done
   directory=$(usageArgumentDirectory "$usage" "directory" "${1-%/}") || return $?

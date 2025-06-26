@@ -71,7 +71,7 @@ urlContentLength() {
       return $?
       ;;
     *)
-      url=$(usageArgumentURL "$usage" "url" "$1")
+      url=$(usageArgumentURL "$usage" "url" "$1") || return $?
       tempFile=$(fileTemporaryName "$usage") || return $?
       __catchEnvironment "$usage" curl -s -I "$url" >"$tempFile" || _clean $? "$tempFile" || return $?
       remoteSize=$(grep -q -i 'Content-Length' "$tempFile" | awk '{ print $2 }') || __throwEnvironment "$usage" "Remote URL did not return Content-Length" || return $?

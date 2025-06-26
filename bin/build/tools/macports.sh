@@ -166,3 +166,15 @@ __portStandardPackages() {
   export BUILD_TEXT_BINARY
   [ -n "${BUILD_TEXT_BINARY-}" ] || BUILD_TEXT_BINARY="toilet"
 }
+
+
+__portPackageStandard() {
+  case "$1" in
+  "python")
+    printf "%s\n" python313 py313-pip
+    ;;
+  *)
+    printf "%s\n" "$1"
+    ;;
+  esac
+}

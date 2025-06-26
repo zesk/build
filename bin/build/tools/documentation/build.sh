@@ -74,11 +74,11 @@ documentationBuild() {
       ;;
     --company)
       shift
-      company=$(usageArgumentString "$usage" "$argument" "${1-}")
+      company=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
       ;;
     --name)
       shift
-      applicationName=$(usageArgumentString "$usage" "$argument" "${1-}")
+      applicationName=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
       ;;
     --filter)
       docArgs+=("$argument")
@@ -89,38 +89,38 @@ documentationBuild() {
     --template)
       [ -z "$templatePath" ] || __throwArgument "$usage" "$argument already supplied" || return $?
       shift
-      templatePath=$(usageArgumentRealDirectory "$usage" "$argument" "${1-}")
+      templatePath=$(usageArgumentRealDirectory "$usage" "$argument" "${1-}") || return $?
       ;;
     --page-template)
       [ -z "$pageTemplate" ] || __throwArgument "$usage" "$argument already supplied" || return $?
       shift
-      pageTemplate=$(usageArgumentFile "$usage" "$argument" "${1-}")
+      pageTemplate=$(usageArgumentFile "$usage" "$argument" "${1-}") || return $?
       ;;
     --function-template)
       [ -z "$functionTemplate" ] || __throwArgument "$usage" "$argument already supplied" || return $?
       shift
-      functionTemplate=$(usageArgumentFile "$usage" "$argument" "${1-}")
+      functionTemplate=$(usageArgumentFile "$usage" "$argument" "${1-}") || return $?
       ;;
     --source)
       shift
-      sourcePaths+=("$(usageArgumentRealDirectory "$usage" "$argument" "${1-}")")
+      sourcePaths+=("$(usageArgumentRealDirectory "$usage" "$argument" "${1-}")") || return $?
       ;;
     --target)
       shift
-      targetPath="$(usageArgumentDirectory "$usage" "$argument" "${1-}")"
+      targetPath="$(usageArgumentDirectory "$usage" "$argument" "${1-}")" || return $?
       targetPath="${targetPath#"$home"/}"
       ;;
     --company-link)
       shift
-      companyLink=$(usageArgumentString "$usage" "$argument" "${1-}")
+      companyLink=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
       ;;
     --unlinked-template)
       shift
-      unlinkedTemplate=$(usageArgumentFile "$usage" "$argument" "${1-}")
+      unlinkedTemplate=$(usageArgumentFile "$usage" "$argument" "${1-}") || return $?
       ;;
     --unlinked-target)
       shift
-      unlinkedTarget=$(usageArgumentFileDirectory "$usage" "$argument" "${1-}")
+      unlinkedTarget=$(usageArgumentFileDirectory "$usage" "$argument" "${1-}") || return $?
       ;;
     --clean)
       indexArgs+=("$argument")

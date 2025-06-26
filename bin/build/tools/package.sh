@@ -36,7 +36,7 @@ __packageListFunction() {
     # IDENTICAL managerArgumentHandler 5
     --manager)
       shift
-      manager=$(usageArgumentString "$usage" "$argument" "${1-}")
+      manager=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
       packageManagerValid "$manager" || __throwArgument "$usage" "Manager is invalid: $(decorate code "$manager")" || return $?
       ;;
     *)
@@ -89,7 +89,7 @@ __packageUpFunction() {
     # IDENTICAL managerArgumentHandler 5
     --manager)
       shift
-      manager=$(usageArgumentString "$usage" "$argument" "${1-}")
+      manager=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
       packageManagerValid "$manager" || __throwArgument "$usage" "Manager is invalid: $(decorate code "$manager")" || return $?
       ;;
     --force)
@@ -200,7 +200,7 @@ packageDefault() {
     # IDENTICAL managerArgumentHandler 5
     --manager)
       shift
-      manager=$(usageArgumentString "$usage" "$argument" "${1-}")
+      manager=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
       packageManagerValid "$manager" || __throwArgument "$usage" "Manager is invalid: $(decorate code "$manager")" || return $?
       ;;
     -*)
@@ -268,7 +268,7 @@ packageWhich() {
     # IDENTICAL managerArgumentHandler 5
     --manager)
       shift
-      manager=$(usageArgumentString "$usage" "$argument" "${1-}")
+      manager=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
       packageManagerValid "$manager" || __throwArgument "$usage" "Manager is invalid: $(decorate code "$manager")" || return $?
       ;;
     -*)
@@ -340,7 +340,7 @@ packageWhichUninstall() {
     # IDENTICAL managerArgumentHandler 5
     --manager)
       shift
-      manager=$(usageArgumentString "$usage" "$argument" "${1-}")
+      manager=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
       packageManagerValid "$manager" || __throwArgument "$usage" "Manager is invalid: $(decorate code "$manager")" || return $?
       ;;
     --verbose)
@@ -415,7 +415,7 @@ packageInstall() {
     # IDENTICAL managerArgumentHandler 5
     --manager)
       shift
-      manager=$(usageArgumentString "$usage" "$argument" "${1-}")
+      manager=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
       packageManagerValid "$manager" || __throwArgument "$usage" "Manager is invalid: $(decorate code "$manager")" || return $?
       ;;
     --force)
@@ -549,6 +549,7 @@ _packageIsInstalled() {
 # Example:     {fn} shellcheck
 # Summary: Removes packages using package manager
 # Argument: package - String. Required. One or more packages to uninstall
+# Argument: --manager packageManager - Optional. String. Package manager to use. (apk, apt, brew)
 packageUninstall() {
   local usage="_${FUNCNAME[0]}"
 
@@ -568,7 +569,7 @@ packageUninstall() {
     # IDENTICAL managerArgumentHandler 5
     --manager)
       shift
-      manager=$(usageArgumentString "$usage" "$argument" "${1-}")
+      manager=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
       packageManagerValid "$manager" || __throwArgument "$usage" "Manager is invalid: $(decorate code "$manager")" || return $?
       ;;
     *)
@@ -682,6 +683,91 @@ packageNeedRestartFlag() {
   fi
 }
 _packageNeedRestartFlag() {
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+packageGroupInstall() {
+  local groups=() manager=""
+
+  # _IDENTICAL_ argument-case-header 5
+  local __saved=("$@") __count=$#
+  while [ $# -gt 0 ]; do
+    local argument="$1" __index=$((__count - $# + 1))
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
+    case "$argument" in
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    # IDENTICAL managerArgumentHandler 5
+    --manager)
+      shift
+      manager=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
+      packageManagerValid "$manager" || __throwArgument "$usage" "Manager is invalid: $(decorate code "$manager")" || return $?
+      ;;
+    *)
+      groups+=("$(usageArgumentString "$usage" "group" "$argument")") || return $?
+      ;;
+    esac
+    # _IDENTICAL_ argument-esac-shift 1
+    shift
+  done
+
+  [ 0 -lt "${#groups[@]}" ] || __throwArgument "$usage" "Requires at least one package to map" || return $?
+
+  local package group
+  for group in "${groups[@]}"; do
+    local packages=()
+    while read -r package; do packages+=("$package"); done < <(packageMapping --manager "$manager" "$group")
+    __catchEnvironment "$usage" packageInstall "${packages[@]}" || return $?
+  done
+}
+
+# Argument: packageName - A simple package name which will be expanded to specific platform or package-manager specific package names
+# Argument: --manager packageManager - Optional. String. Package manager to use. (apk, apt, brew)
+packageMapping() {
+  local packages=() manager=""
+
+  # _IDENTICAL_ argument-case-header 5
+  local __saved=("$@") __count=$#
+  while [ $# -gt 0 ]; do
+    local argument="$1" __index=$((__count - $# + 1))
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
+    case "$argument" in
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    # IDENTICAL managerArgumentHandler 5
+    --manager)
+      shift
+      manager=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
+      packageManagerValid "$manager" || __throwArgument "$usage" "Manager is invalid: $(decorate code "$manager")" || return $?
+      ;;
+    *)
+      packages+=("$argument")
+      ;;
+    esac
+    # _IDENTICAL_ argument-esac-shift 1
+    shift
+  done
+
+  # IDENTICAL managerArgumentValidation 2
+  [ -n "$manager" ] || manager=$(packageManagerDefault) || __throwEnvironment "$usage" "No package manager" || return $?
+  whichExists "$manager" || __throwEnvironment "$usage" "$manager does not exist" || return $?
+
+  [ 0 -lt "${#packages[@]}" ] || __throwArgument "$usage" "Requires at least one package to map" || return $?
+  local method="__${manager}PackageMapping"
+  isFunction "$method" || __throwEnvironment "$usage" "Missing method $method for package manager $manager" || return $?
+  local package
+  for package in "${packages[@]}"; do
+    __catchEnvironment "$usage" "$method" "$package" || return $?
+  done
+}
+_packageMapping() {
   # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

@@ -16,3 +16,4 @@ Hides these from [New and uncategorized functions](./todo.md)
 {reportTiming}
 {wrapLines}
 {sshAddKnownHost}
+{bashPromptModule_iTerm2Colors}

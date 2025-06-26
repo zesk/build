@@ -45,7 +45,19 @@ mariadbUninstall() {
 # Binary: python.sh
 #
 pythonInstall() {
-  packageWhich python python-is-python3 python3 python3-pip "$@"
+  local usage="_${FUNCNAME[0]}"
+
+  if ! whichExists python; then
+    __catchEnvironment "$usage" packageGroupInstall python || return $?
+  fi
+  if ! whichExists pip; then
+    __catchEnvironment "$usage" python -m ensurepip --upgrade || return $?
+  fi
+  __catchEnvironment "$usage" python -m pip install --upgrade pip || return $?
+}
+_pythonInstall() {
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Uninstall python
@@ -60,7 +72,7 @@ _pipInstall() {
   local quietLog start name
 
   shift
-  name="$(usageArgumentString "$usage" "name" "${1-}")"
+  name="$(usageArgumentString "$usage" "name" "${1-}")" || return $?
   shift
   if whichExists "$name"; then
     return 0
@@ -81,7 +93,7 @@ _pipUninstall() {
   local quietLog start
 
   shift
-  name="$(usageArgumentString "$usage" "name" "${1-}")"
+  name="$(usageArgumentString "$usage" "name" "${1-}")" || return $?
   shift
   if ! whichExists "$name"; then
     return 0

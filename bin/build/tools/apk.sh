@@ -158,3 +158,14 @@ ___apkAvailableList() {
   # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
+
+__apkPackageMapping() {
+  case "$1" in
+  "python")
+    printf "%s\n" python-is-python3 python3 python3-pip
+    ;;
+  *)
+    printf "%s\n" "$1"
+    ;;
+  esac
+}
