@@ -24,6 +24,7 @@ A package group represents software which often is installed using different pac
 
 {packageGroupInstall}
 {packageGroupUninstall}
+{packageMapping}
 
 ## Package lists
 
