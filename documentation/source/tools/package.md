@@ -18,6 +18,13 @@ Wrapper around [apt](./apt.md), [apk](./apk.md), and [brew](./brew.md) currently
 {packageInstall}
 {packageUninstall}
 
+## Package groups
+
+A package group represents software which often is installed using different package manager names.
+
+{packageGroupInstall}
+{packageGroupUninstall}
+
 ## Package lists
 
 {packageDefault}

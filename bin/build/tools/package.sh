@@ -687,6 +687,10 @@ _packageNeedRestartFlag() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
+#
+# Install a package group
+# Argument: group - String. Required. Currently allowed: "python"
+# Any unrecognized groups are installed using the name as-is.
 packageGroupInstall() {
   local groups=() manager=""
 
@@ -733,6 +737,10 @@ _packageGroupInstall() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
+#
+# Uninstall a package group
+# Argument: group - String. Required. Currently allowed: "python"
+# Any unrecognized groups are uninstalled using the name as-is.
 packageGroupUninstall() {
   local groups=() manager=""
 
