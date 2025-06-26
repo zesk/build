@@ -584,3 +584,58 @@ __urlOpen() {
   [ $# -gt 0 ] || __catchArgument "$usage" "Require at least one URL" || return $?
   __environment "$binary" "$@" || return $?
 }
+
+#
+# Argument: url
+# Expand a URL into environment variable parts
+urlToVariables() {
+  local usage="_${FUNCNAME[0]}"
+
+  local lowerCase=false prefix="" foundOne=false
+
+  # _IDENTICAL_ argument-case-header 5
+  local __saved=("$@") __count=$#
+  while [ $# -gt 0 ]; do
+    local argument="$1" __index=$((__count - $# + 1))
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
+    case "$argument" in
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    # _IDENTICAL_ --handler 4
+    --handler)
+      shift
+      usage=$(usageArgumentFunction "$usage" "$argument" "${1-}") || return $?
+      ;;
+    --lower)
+      lowerCase=true
+      ;;
+    --prefix)
+      shift
+      prefix=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
+      ;;
+    *)
+      local url part temp
+      url="$(usageArgumentURL "$usage" "$argument" "${1-}")" || return $?
+      temp=$(fileTemporaryName "$usage") || return $?
+      __catchEnvironment "$usage" urlParse "$url" >"$temp" || _clean $? "$temp" || return $?
+      for part in user host name password; do
+        local variable="$part"
+        $lowerCase || variable=$(uppercase "$variable")
+        printf "%s%s=%s\n" "$prefix" "$variable" "{__URL_$part}"
+      done | __catchEnvironment "$usage" environmentFileLoad --prefix "__URL_" "$temp" --execute mapEnvironment || _clean $? "$temp" || return $?
+      foundOne=true
+      __catchEnvironment "$usage" rm -f "$temp" || return $?
+      ;;
+    esac
+    # _IDENTICAL_ argument-esac-shift 1
+    shift
+  done
+  $foundOne || __throwArgument "$usage" "At least one URL is required" || return $?
+}
+_urlToVariables() {
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}

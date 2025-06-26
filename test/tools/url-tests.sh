@@ -122,3 +122,13 @@ testFetch() {
   assertFileContains --line "$LINENO" "$targetFile" "https://www.iana.org/domains/example" || return $?
   __environment rm -rf "$targetFile" || return $?
 }
+
+testUrlToVariables() {
+  local matches=(
+  --stdout-match "DSN_USER=user"
+  --stdout-match "DSN_HOST=localhost"
+  --stdout-match "DSN_NAME=theDude"
+  --stdout-match "DSN_PASSWORD=who-would-guess-this"
+  )
+  assertExitCode "${matches[@]}" 0 urlToVariables --prefix DSN_ "https://user:who-would-guess-this@localhost/theDude" || return $?
+}

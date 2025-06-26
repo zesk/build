@@ -14,20 +14,20 @@ testDotEnvConfigure() {
   magic=$(randomString)
   tempDir="$(__environment buildCacheDirectory)/$$.dotEnvConfig" || return $?
 
-  __environment mkdir -p "$tempDir" || return $?
+  __environment requireDirectory "$tempDir" || return $?
   __environment muzzle pushd "$tempDir" || return $?
-  decorate info "$(pwd)"
   assertNotExitCode --stderr-match "is not file" 0 environmentFileLoad .env --optional .env.local || return $?
 
   tempEnv="$tempDir/.env"
+
   __environment touch "$tempEnv" || return $?
   __environment environmentValueWrite TESTENVWORKS "$magic" >>"$tempEnv" || return $?
 
   assertEquals "" "${TESTENVWORKS-}" || return $?
   assertEquals "" "${TESTENVLOCALWORKS-}" || return $?
 
-  assertExitCode --leak TESTENVWORKS 0 environmentFileLoad .env --optional .env.local "$tempDir" || return $?
-  environmentFileLoad .env --optional .env.local "$tempDir" || return $?
+  assertExitCode --leak TESTENVWORKS 0 environmentFileLoad .env --optional .env.local || return $?
+  environmentFileLoad .env --optional .env.local || return $?
 
   # Support no files
   assertExitCode 0 environmentFileLoad --optional .env.local.Never .env.whatever.local || return $?
@@ -40,8 +40,7 @@ testDotEnvConfigure() {
   __environment environmentValueWrite TESTENVWORKS "NEW-$magic" >>"$tempEnv" || return $?
   __environment touch "$tempDir/.env.local" || return $?
 
-  #echo "PWD is $(pwd)"
-  #environmentFileLoad --debug .env --optional .env.local || return $?
+  environmentFileLoad .env --optional .env.local || return $?
   assertExitCode 0 environmentFileLoad .env --optional .env.local || return $?
 
   assertEquals "NEW-$magic" "${TESTENVWORKS-}" || return $?

@@ -181,8 +181,7 @@ testSuite() {
   startString="$(__catchEnvironment "$usage" date +"%F %T")" || return $?
   allTestStart=$(timingStart) || return $?
 
-  quietLog="$(__catchEnvironment "$usage" buildQuietLog "$usage")" || return $?
-  __catchEnvironment "$usage" touch "$quietLog" || return $?
+  quietLog="$(fileTemporaryName "$usage")" || return $?
 
   # Start tracing
   __catchEnvironment "$usage" printf -- "%s\n" "$__TEST_SUITE_TRACE" >>"$quietLog" || return $?
@@ -988,6 +987,8 @@ __testCleanup() {
     # Added debugging to see if I can locate why - seems to be a race condition
     # Delete non-dot files
     __environment find "$cache" -type f ! -path '*/.build/.*/*' -delete || _undo $? printf "find -delete FAILED ON LINE %d (files)" "$LINENO" 1>&2 || return $?
+  fi
+  if [ -d "$cache" ]; then
     # Delete empty directories
     __environment find "$cache" -depth -type d ! -path '*/.build/.*/*' -empty -delete || _undo $? printf "find -delete FAILED ON LINE %d (empty directories)" "$LINENO" 1>&2 || return $?
   fi
