@@ -975,23 +975,12 @@ __testFailed() {
 # Usage: {fn}
 #
 __testCleanup() {
-  local home cache
+  local home
   home=$(__environment buildHome) || return $?
-  cache=$(__environment buildCacheDirectory) || return $?
   shopt -u failglob
   export __TEST_CLEANUP_DIRS
 
   __environment rm -rf "$home/test."*/ "$home/.test"*/ "${__TEST_CLEANUP_DIRS[@]+"${__TEST_CLEANUP_DIRS[@]}"}" || return $?
-  if [ -d "$cache" ]; then
-    # Been getting errors, I think, in this function in testing on Darwin
-    # Added debugging to see if I can locate why - seems to be a race condition
-    # Delete non-dot files
-    __environment find "$cache" -type f ! -path '*/.build/.*/*' -delete || _undo $? printf "find -delete FAILED ON LINE %d (files)" "$LINENO" 1>&2 || return $?
-  fi
-  if [ -d "$cache" ]; then
-    # Delete empty directories
-    __environment find "$cache" -depth -type d ! -path '*/.build/.*/*' -empty -delete || _undo $? printf "find -delete FAILED ON LINE %d (empty directories)" "$LINENO" 1>&2 || return $?
-  fi
 }
 
 __testCleanupMess() {
