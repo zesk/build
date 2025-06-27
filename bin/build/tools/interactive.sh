@@ -829,6 +829,8 @@ interactiveBashSource() {
           ! $verboseFlag || statusMessage --last printf -- "%s %s %s" "$(decorate info "$prefix")" "$(decorate label "$verb")" "$displayPath"
           __catchEnvironment "$usage" source "$sourcePath" || return $?
           approved=true
+        else
+          decorate subtle "Skipping unapproved file $(decorate file "$sourcePath") Undo: $(decorate code "${FUNCNAME[0]} --clear \"$sourcePath\"")"
         fi
       elif [ -d "$sourcePath" ]; then
         verb="path"
@@ -836,6 +838,8 @@ interactiveBashSource() {
           ! $verboseFlag || statusMessage --last printf -- "%s %s %s" "$(decorate info "$prefix")" "$(decorate label "$verb")" "$displayPath"
           __catchEnvironment "$usage" bashSourcePath "$sourcePath" || return $?
           approved=true
+        else
+          decorate subtle "Skipping unapproved directory $(decorate file "$sourcePath") Undo: $(decorate code "${FUNCNAME[0]} --clear \"$sourcePath\"")"
         fi
       else
         __throwEnvironment "$usage" "Not a file or directory? $displayPath is a $(decorate value "$(betterType "$sourcePath")")" || return $?

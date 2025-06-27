@@ -320,6 +320,7 @@ _buildEnvironmentPath() {
 buildEnvironmentLoad() {
   local usage="_${FUNCNAME[0]}"
 
+  home=$(__catchEnvironment "$usage" buildHome) || return $?
   printFlag=false
   # _IDENTICAL_ argument-case-header 5
   local __saved=("$@") __count=$#
@@ -341,7 +342,12 @@ buildEnvironmentLoad() {
       env="$(usageArgumentEnvironmentVariable "$usage" "environmentVariable" "$1")" || return $?
       IFS=$'\n' read -d '' -r -a paths < <(_buildEnvironmentPath) || :
       for path in "${paths[@]}"; do
+        if ! isAbsolutePath "$path"; then
+          # All relative paths are relative to the application root, so correct
+          path="$home/$path"
+        fi
         [ -d "$path" ] || continue
+        # Maybe warn here or something as if absolute and missing should not be in the list
         file="$path/$env.sh"
         if [ -x "$file" ]; then
           export "${env?}" || __throwEnvironment "$usage" "export $env failed" || return $?
@@ -352,7 +358,7 @@ buildEnvironmentLoad() {
           set +a || :
         fi
       done
-      [ -n "$found" ] || __throwEnvironment "$usage" "Missing $env" || return $?
+      [ -n "$found" ] || __throwEnvironment "$usage" "Missing $env in $(decorate each --index --count code "${paths[@]}")" || return $?
       ! $printFlag || __catchEnvironment "$usage" printf -- "%s\n" "$found" || return $?
       ;;
     esac
