@@ -5,6 +5,7 @@
 - Continue migration to local `local` usage instead of head of function (`example.sh` arguments handling)
 - Move `docs` to something not Bash-based perhaps
 - Start writing some tutorials on how to get it set up and working (video?)
+- Need to determine if any other functions which depend on current directory being the app home and fix that (e.g. `buildEnvironmentLoad`)
 
 ## Done
 
