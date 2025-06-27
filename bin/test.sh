@@ -39,7 +39,7 @@ __buildTestSuite() {
   __catchEnvironment "$usage" __pcregrepInstall || return $?
   # CUSTOM END
 
-  __catchEnvironment "$usage" testTools testSuite --delete-common --tests "$testHome/test/tools/" "$@" || return $?
+  __catchEnvironment "$usage" testTools testSuite --cd-away --delete-common --tests "$testHome/test/tools/" "$@" || return $?
 }
 ___buildTestSuite() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"

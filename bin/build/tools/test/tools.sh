@@ -29,6 +29,7 @@ export globalTestFailure=
 # Argument: --messy - Optional. Do not delete test artifact files afterwards.
 # Argument: --fail executor - Optional. Callable. One or more programs to run on the failed test files. Takes arguments: testName testFile testLine
 # Argument: --show-tags - Optional. Flag. Of the matched tests, display the tags that they have, if any. Unique list.
+# Argument: --cd-away - Optional. Flag. Change directories to a temporary directory before each test.
 # Argument: --skip-tag tagName - Optional. String. Skip tests tagged with this name.
 # Argument: --tag tagName - Optional. String. Include tests (only) tagged with this name.
 # Argument: --env-file environmentFile - Optional. EnvironmentFile. Load one ore more environment files prior to running tests
@@ -48,6 +49,7 @@ testSuite() {
 
   local tags=() skipTags=() runner=()
   local beQuiet=false listFlag=false verboseMode=false continueFlag=false doStats=true showFlag=false showTags=false tapFile="" cleanFlag=false
+  local cdAway=false
   local testPaths=() messyOption="" runTestSuites=() matchTests=() failExecutors=()
   local startTest=""
 
@@ -94,6 +96,9 @@ testSuite() {
       shift
       muzzle usageArgumentLoadEnvironmentFile "$usage" "envFile" "${1-}" || return $?
       decorate info "Loaded environment file $(decorate code "$1")"
+      ;;
+    --cd-away)
+      cdAway=true
       ;;
     --tests)
       shift
@@ -356,6 +361,15 @@ testSuite() {
   local runTime testsRun=()
   if [ ${#filteredTests[@]} -gt 0 ]; then
     __TEST_SUITE_TRACE=options
+    local testHome saveHome
+
+    saveHome=$(pwd)
+
+    if $cdAway; then
+      testHome="$(fileTemporaryName -d)"
+    else
+      testHome="$saveHome"
+    fi
     local sectionName="" sectionNameHeading="" sectionFile
     for item in "${filteredTests[@]}"; do
       if [ "$item" != "${item#\#}" ]; then
@@ -385,6 +399,7 @@ testSuite() {
       testLine=$(__testGetLine "$item" <"$sectionFile") || :
       flags=$(__testLoadFlags "$sectionFile" "$item")
       testsRun+=("$item")
+      __catchEnvironment "$usage" cd "$testHome" || return $?
       "${runner[@]+"${runner[@]}"}" __testRun "$quietLog" "$item" "$flags" || __testSuiteExecutor "$item" "$sectionFile" "$testLine" "$flags" "${failExecutors[@]+"${failExecutors[@]}"}" || __testFailed "$sectionName" "$item" || return $?
       [ -z "$tapFile" ] || __testSuiteTAP_ok "$tapFile" "$item" "$sectionFile" "$testLine" "$flags" || return $?
 
@@ -900,6 +915,7 @@ __testRun() {
       fi
     fi
     rm -rf "$captureStderr" || :
+    usage="_${FUNCNAME[0]}"
   fi
 
   # So, `usage` can be overridden if it is made global somehow, declare -r prevents changing here

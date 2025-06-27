@@ -19,7 +19,7 @@ testTools() {
   local usage="_${FUNCNAME[0]}"
   local home testCode
 
-  __help "$usage" "$@" || return 0
+  __help "$usage" "${1-}" || return 0
 
   home=$(__catchEnvironment "$usage" buildHome) || return $?
 
@@ -32,7 +32,7 @@ testTools() {
 
   [ $# -ne 0 ] || return 0
   isCallable "$1" || __throwArgument "$usage" "$1 is not callable" || return $?
-  __environment "$@" || return $?
+  __catchEnvironment "$usage" "$@" || return $?
 }
 _testTools() {
   # _IDENTICAL_ usageDocument 1
