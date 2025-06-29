@@ -366,7 +366,7 @@ testSuite() {
     saveHome=$(pwd)
 
     if $cdAway; then
-      testHome="$(fileTemporaryName -d)"
+      testHome="$(fileTemporaryName "$usage" -d)"
     else
       testHome="$saveHome"
     fi

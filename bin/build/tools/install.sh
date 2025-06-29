@@ -48,10 +48,6 @@ pythonInstall() {
   if ! whichExists python; then
     __catchEnvironment "$usage" packageGroupInstall "$@" python || return $?
   fi
-  if ! whichExists pip; then
-    __catchEnvironment "$usage" python -m ensurepip --upgrade || return $?
-  fi
-  __catchEnvironment "$usage" python -m pip install --upgrade pip || return $?
 }
 _pythonInstall() {
   # _IDENTICAL_ usageDocument 1
@@ -78,6 +74,9 @@ _pipInstall() {
   start=$(timingStart) || return $?
   quietLog=$(__catchEnvironment "$usage" buildQuietLog "$usage") || return $?
   __catchEnvironment "$usage" pythonInstall || return $?
+  if ! whichExists pip; then
+    __catchEnvironment "$usage" python -m ensurepip --upgrade || return $?
+  fi
   statusMessage decorate info "Installing $name ... "
   __catchEnvironmentQuiet "$usage" "$quietLog" pip install "$name" "$@" || return $?
   whichExists "$name" || __throwEnvironment "$usage" "$name not found after install" || return $?

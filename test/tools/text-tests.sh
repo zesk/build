@@ -148,13 +148,14 @@ __testIsCharacterClass() {
 }
 
 testValidateCharacterClass() {
-  local temp
+  local temp home usage="_return"
 
+  home=$(__catchEnvironment "$usage" buildHome) || return $?
   temp=$(mktemp) || return $?
   __testIsCharacterClass | tee "$temp" || return $?
-  if ! diff -q "$temp" "./test/example/isCharacterClass.txt"; then
+  if ! diff -q "$temp" "$home/test/example/isCharacterClass.txt"; then
     decorate error "Classifications changed:"
-    diff "$temp" "./test/example/isCharacterClass.txt"
+    diff "$temp" "$home/test/example/isCharacterClass.txt"
     return 1
   fi
   rm "$temp" || :

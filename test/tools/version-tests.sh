@@ -24,7 +24,14 @@ EOF
 }
 
 testNewRelease() {
+  local usage="_return" home
+
+  home=$(__catchEnvironment "$usage" buildHome) || return $?
+  __catchEnvironment "$usage" muzzle pushd "$home" || return $?
+
   assertExitCode 0 newRelease --non-interactive || return $?
+
+  __catchEnvironment "$usage" muzzle popd || return $?
 }
 
 testIsVersion() {
@@ -34,8 +41,15 @@ testIsVersion() {
 }
 
 testReleaseNotesSimple() {
+  local usage="_return" home
+
+  home=$(__catchEnvironment "$usage" buildHome) || return $?
+  __catchEnvironment "$usage" muzzle pushd "$home" || return $?
+
   assertExitCode --leak BUILD_RELEASE_NOTES --stdout-match "documentation/source/release" 0 releaseNotes || return $?
   unset BUILD_RELEASE_NOTES
+
+  __catchEnvironment "$usage" muzzle popd || return $?
 }
 
 testVersionNext() {
@@ -69,9 +83,10 @@ __assertPathsEquals() {
 }
 
 testReleaseNotes() {
-  local home
+  local usage="_return" home
 
-  home=$(buildHome)
+  home=$(__catchEnvironment "$usage" buildHome) || return $?
+  __catchEnvironment "$usage" muzzle pushd "$home" || return $?
 
   # BUILD DOCS DEFAULT PATH
   __assertPathsEquals "$LINENO" "$home/documentation/source/release/1.0.md" "$(releaseNotes "1.0")" || return $?
@@ -92,5 +107,6 @@ testReleaseNotes() {
   unset BUILD_RELEASE_NOTES
   # BUILD DOCS DEFAULT PATH
   __assertPathsEquals "$LINENO" "$home/documentation/source/release/1.0.md" "$(releaseNotes "1.0")" || return $?
+  __catchEnvironment "$usage" muzzle popd || return $?
 
 }

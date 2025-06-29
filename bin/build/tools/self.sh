@@ -416,7 +416,7 @@ Build() {
   [ -n "$startDirectory" ] || startDirectory=$(__catchEnvironment "$usage" pwd) || return $?
 
   local home code=0
-  if home=$(bashLibraryHome "$run" "$startDirectory" 2>/dev/null); then
+  if ! home=$(bashLibraryHome "$run" "$startDirectory" 2>/dev/null); then
     home=$(__catchEnvironment "$usage" buildHome) || return $?
     ! $verboseFlag || statusMessage decorate info "Running $(decorate file "$home/$run")" "$(decorate each code "$@")"
     "$home/$run" "$@" || code=$?

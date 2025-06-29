@@ -9,6 +9,11 @@
 # Test: o bin/build/tools/type.sh
 
 testBinaryTypes() {
+  local home usage="_return"
+
+  home=$(__catchEnvironment "$usage" buildHome) || return $?
+  __catchEnvironment "$usage" muzzle pushd "$home" || return $?
+
   assertExitCode 0 isExecutable ./bin/build/map.sh || return $?
   assertExitCode 0 isExecutable ./bin/build/tools.sh || return $?
 
@@ -16,6 +21,8 @@ testBinaryTypes() {
   assertNotExitCode 0 isCallable ./bin/MISSING || return $?
   assertNotExitCode 0 isExecutable ./bin/build/LICENSE.md || return $?
   assertNotExitCode 0 isExecutable ./bin/MISSING || return $?
+
+  __catchEnvironment "$usage" muzzle popd || return $?
 }
 _testLineLabel() {
   printf "%s %s " "$(decorate info "$1")" "$(decorate code "$2")"
@@ -125,11 +132,18 @@ testNotExecutable() {
 }
 
 testExecutableCallable() {
+  local usage="_return" home
+
+  home=$(__catchEnvironment "$usage" buildHome) || return $?
+  __catchEnvironment "$usage" muzzle pushd "$home" || return $?
+
   _dataCallableExecutables | _testValidateExecutable || return $?
   _dataCallableExecutables | _testValidateCallable || return $?
   _dataCallableExecutables | _testValidateNotFunction || return $?
   _dataCallableFunctions | grep -v echo | _testValidateNotExecutable || return $?
   _dataCallableFunctions | _testValidateCallable || return $?
+
+  __catchEnvironment "$usage" muzzle popd || return $?
 }
 
 _dataSignedIntegerSamples() {

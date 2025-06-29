@@ -82,8 +82,13 @@ testMapPortability() {
 
 # Tag: slow
 testAdditionalBins() {
+  local usage="_return"
   local binTest
   local aa
+
+  local home
+  home="$(__catchEnvironment "$usage" buildHome)" || return $?
+  __catchEnvironment "$usage" cd "$home" || return $?
 
   for binTest in ./test/bin/*.sh; do
     __testSection "$(basename "$binTest")"
