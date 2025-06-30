@@ -187,7 +187,12 @@ mariadbConnect() {
   isPositiveInteger "$port" || port=3306
   : "$url $path $error"
   [ -n "$user" ] && [ -n "$password" ] && [ -n "$name" ] && [ -n "$host" ] || __throwArgument "$usage" "Unable to parse DSN: dsn=(${#dsn} chars)" "name=$name" "host=$host" "user=$user" "password=(${#password} chars)" || return $?
-  local aa=(-u "$user" "-p$password" "--port=$port" -h "$host" "$name" "$@")
+  local aa=(-u "$user" "-p$password" -h "$host")
+  if [ $port != 3306 ]; then
+    # Excluding port with localhost connects via socket so only include if non-standard
+    aa+=("--port=$port")
+  fi
+  aa+=("$name" "$@")
   if $printFlag; then
     printf "%s %s\n" "$binary" "${aa[*]}"
   else
@@ -198,3 +203,11 @@ _mariadbConnect() {
   # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
+
+# Darwin: macports Notes
+#
+#
+# sudo -u _mysql /opt/local/lib/mariadb-11.4/bin/mariadb-install-db
+#
+# You can start the MariaDB daemon with:
+# cd '/opt/local' ; /opt/local/lib/mariadb-11.4/bin/mariadbd-safe --datadir='/opt/local/var/db/mariadb-11.4'

@@ -56,27 +56,41 @@ __testInstallInstallBuild() {
 }
 
 testMapBin() {
-  local expected actual
+
+  local usage="_return" home
+
+  home=$(buildHome)
+  home=$(__catchEnvironment "$usage" buildHome) || return $?
+  __catchEnvironment "$usage" muzzle pushd "$home" || return $?
 
   __testSection testMap
+
+  local expected actual
 
   actual="$(echo "{FOO}{BAR}{foo}{bar}{BAR}" | FOO=test BAR=goob bin/build/map.sh)"
 
   expected="testgoob{foo}{bar}goob"
 
   assertEquals "$expected" "$actual" || return $?
+
+  __catchEnvironment "$usage" muzzle popd || return $?
 }
 
 testMapPortability() {
   local tempDir
 
+  local usage="_return" home
+
+  home=$(buildHome)
+  home=$(__catchEnvironment "$usage" buildHome) || return $?
+
   tempDir="./random.$$/"
-  mkdir -p "$tempDir" || :
-  cp ./bin/build/map.sh "./random.$$/"
+  __catchEnvironment "$usage" mkdir -p "$tempDir" || return $?
+  __catchEnvironment "$usage" cp "$home/bin/build/map.sh" "./random.$$/" || return $?
   export DUDE=ax
   export WILD=m
   assertEquals "$(echo "{WILD}{DUDE}i{WILD}u{WILD}" | ./random.$$/map.sh)" "maximum" || return $?
-  rm -rf "$tempDir"
+  __catchEnvironment "$usage" rm -rf "$tempDir" || return $?
   unset DUDE WILD
 }
 

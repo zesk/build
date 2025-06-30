@@ -19,6 +19,53 @@
 #------------------------------------------------------------------------------
 #
 
+# Output the port for the given scheme
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
+# DOC TEMPLATE: --handler 1
+# Argument: --handler handler - Optional. Function. Use this error handler instead of the default error handler.
+# Argument: scheme - Required. String. Scheme to look up the default port used for that scheme.
+urlSchemeDefaultPort() {
+  local usage="_${FUNCNAME[0]}"
+
+  # _IDENTICAL_ argument-case-header 5
+  local __saved=("$@") __count=$#
+  while [ $# -gt 0 ]; do
+    local argument="$1" __index=$((__count - $# + 1)) port=""
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
+    case "$argument" in
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    # _IDENTICAL_ --handler 4
+    --handler)
+      shift
+      usage=$(usageArgumentFunction "$usage" "$argument" "${1-}") || return $?
+      ;;
+    ftp) port=21 ;;
+    ssh) port=22 ;;
+    http) port=80 ;;
+    https) port=443 ;;
+    ldap) port=389 ;;
+    ldapa) port=636 ;;
+    mysql*) port=3306 ;;
+    postgres*) port=5432 ;;
+    *)
+      __throwArgument "$usage" "unknown scheme #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
+      ;;
+    esac
+    printf "%d\n" "$port"
+    # _IDENTICAL_ argument-esac-shift 1
+    shift
+  done
+}
+_urlSchemeDefaultPort() {
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
 #
 # Simplistic URL parsing. Converts a `url` into values which can be parsed or evaluated:
 #
@@ -37,13 +84,15 @@
 # Exit Code: 1 - If parsing fails
 # Summary: Simple Database URL Parsing
 # Usage: urlParse url
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
 # Argument: url - a Uniform Resource Locator used to specify a database connection
 # Argument: --prefix prefix - String. Optional. Prefix variable names with this string.
 # Argument: --uppercase - Flag. Optional. Output variable names in uppercase, not lowercase (the default).
 # Example:     eval "$(urlParse scheme://user:password@host:port/path)"
 # Example:     echo $name
 urlParse() {
-  local usage="_${FUNCNAME[0]}" upperCase=false prefix=""
+  local usage="_${FUNCNAME[0]}" upperCase=false prefix="" intPort=false
 
   # _IDENTICAL_ argument-case-header 5
   local __saved=("$@") __count=$#
@@ -55,6 +104,9 @@ urlParse() {
     --help)
       "$usage" 0
       return $?
+      ;;
+    --integer-port)
+      intPort=true
       ;;
     --uppercase)
       upperCase=true
@@ -104,6 +156,7 @@ urlParse() {
           host="${host%:*}"
         fi
         error=""
+        ! $intPort || isPositiveInteger "$port" || port=$(urlSchemeDefaultPort --handler "$usage" "$scheme") || return $?
       else
         error="no-scheme"
         scheme=""
@@ -596,4 +649,3 @@ __urlOpen() {
   [ $# -gt 0 ] || __catchArgument "$usage" "Require at least one URL" || return $?
   __environment "$binary" "$@" || return $?
 }
-

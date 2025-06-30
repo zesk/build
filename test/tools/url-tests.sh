@@ -44,7 +44,15 @@ testUrlParse() {
   assertEquals "$password" hard-to-type || return $?
   assertEquals "$error" "" || return $?
   assertEquals "$scheme" "mysql" || return $?
-  decorate success testUrlParse OK || return $?
+
+  eval "$(urlParse --integer-port "$u")" || return $?
+  assertEquals "$port" "3306" || return $?
+  eval "$(urlParse "http://example.com/")" || return $?
+  assertEquals "$port" "" || return $?
+  eval "$(urlParse --integer-port "http://example.com/")" || return $?
+  assertEquals "$port" "80" || return $?
+  eval "$(urlParse --integer-port "https://example.com/")" || return $?
+  assertEquals "$port" "443" || return $?
 
 }
 
@@ -125,17 +133,17 @@ testFetch() {
 
 testUrlToVariables() {
   local matches=(
-  --stdout-match "DSN_USER=user"
-  --stdout-match "DSN_HOST=localhost"
-  --stdout-match "DSN_NAME=theDude"
-  --stdout-match "DSN_PASSWORD=who-would-guess-this"
+    --stdout-match "DSN_USER=user"
+    --stdout-match "DSN_HOST=localhost"
+    --stdout-match "DSN_NAME=theDude"
+    --stdout-match "DSN_PASSWORD=who-would-guess-this"
   )
   assertExitCode "${matches[@]}" 0 urlParse --uppercase --prefix DSN_ "https://user:who-would-guess-this@localhost/theDude" || return $?
   local matches=(
-  --stdout-match "DSN_user=user"
-  --stdout-match "DSN_host=localhost"
-  --stdout-match "DSN_name=theDude"
-  --stdout-match "DSN_password=who-would-guess-this"
+    --stdout-match "DSN_user=user"
+    --stdout-match "DSN_host=localhost"
+    --stdout-match "DSN_name=theDude"
+    --stdout-match "DSN_password=who-would-guess-this"
   )
   assertExitCode "${matches[@]}" 0 urlParse --prefix DSN_ "https://user:who-would-guess-this@localhost/theDude" || return $?
 }
