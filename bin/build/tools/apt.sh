@@ -346,10 +346,23 @@ __aptStandardPackages() {
   [ -n "${BUILD_TEXT_BINARY-}" ] || BUILD_TEXT_BINARY="$(__bigTextBinary)"
 }
 
+# See: brew.sh apk.sh apt.sh macports.sh
 __aptPackageMapping() {
   case "$1" in
   "python")
     printf "%s\n" python-is-python3 python3 python3-pip
+    ;;
+  "mariadb")
+    printf "%s\n" mariadb mariadb-common mariadb-client
+    ;;
+  "mariadb-server")
+    printf "%s\n" mariadb-server
+    ;;
+  "mysql")
+    printf "%s\n" mysql-client
+    ;;
+  "mysql-server")
+    printf "%s\n" mysql-server
     ;;
   *)
     printf "%s\n" "$1"

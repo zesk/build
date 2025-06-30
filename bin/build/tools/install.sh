@@ -24,12 +24,12 @@
 # Binary: mariadb-client.sh
 #
 mariadbInstall() {
-  packageWhich mariadb mariadb-common mariadb-client "$@"
+  packageGroupInstall mariadb
 }
 
 # Uninstall mariadb
 mariadbUninstall() {
-  packageWhichUninstall mariadb mariadb-common mariadb-client "$@"
+  packageGroupUninstall mariadb
 }
 
 # Install `python`

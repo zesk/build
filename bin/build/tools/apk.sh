@@ -162,7 +162,19 @@ ___apkAvailableList() {
 __apkPackageMapping() {
   case "$1" in
   "python")
-    printf "%s\n" python-is-python3 python3 python3-pip
+    printf "%s\n" python3
+    ;;
+  "mariadb")
+    printf "%s\n" mariadb-client mariadb-common
+    ;;
+  "mariadb-server")
+    printf "%s\n" mariadb-server mariadb-common mariadb-server-utils
+    ;;
+  "mysql")
+    printf "%s\n" mysql-client
+    ;;
+  "mysql-server")
+    printf "%s\n" mysql-server
     ;;
   *)
     printf "%s\n" "$1"

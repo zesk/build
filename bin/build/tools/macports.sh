@@ -167,11 +167,22 @@ __portStandardPackages() {
   [ -n "${BUILD_TEXT_BINARY-}" ] || BUILD_TEXT_BINARY="toilet"
 }
 
-
-__portPackageStandard() {
+__portPackageMapping() {
   case "$1" in
   "python")
     printf "%s\n" python313 py313-pip
+    ;;
+  "mariadb")
+    printf "%s\n" mariadb
+    ;;
+  "mariadb-server")
+    printf "%s\n" mariadb-server
+    ;;
+  "mysql")
+    printf "%s\n" mysql8
+    ;;
+  "mysql-server")
+    printf "%s\n" mysql8-server
     ;;
   *)
     printf "%s\n" "$1"

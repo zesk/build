@@ -142,6 +142,18 @@ __brewPackageMapping() {
   "python")
     printf "%s\n" python3
     ;;
+  "mariadb")
+    printf "%s\n" mariadb
+    ;;
+  "mariadb-server")
+    printf "%s\n" mariadb-server
+    ;;
+  "mysql")
+    printf "%s\n" mysql
+    ;;
+  "mysql-server")
+    printf "%s\n" mysql-server
+    ;;
   *)
     printf "%s\n" "$1"
     ;;
