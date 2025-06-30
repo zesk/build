@@ -8,6 +8,39 @@
 # Docs: ./documentation/source/tools/mariadb.md
 # Test: ./test/tools/mariadb-tests.sh
 
+# Install `mariadb`
+#
+# If this fails it will output the installation log.
+#
+# Usage: mariadbInstall [ package ]
+# Usage: {fn} [ package ... ]
+# Argument: package - Additional packages to install
+# Summary: Install `mariadb`
+# When this tool succeeds the `mariadb` binary is available in the local operating system.
+# Environment: - `BUILD_NPM_VERSION` - String. Default to `latest`. Used to install `npm -i npm@$BUILD_NPM_VERSION` on install.
+# Exit Code: 1 - If installation fails
+# Exit Code: 0 - If installation succeeds
+# Binary: mariadb-client.sh
+#
+mariadbInstall() {
+  local usage="_${FUNCNAME[0]}"
+  __catchEnvironment "$usage" packageGroupInstall mariadb || return $?
+}
+_mariadbInstall() {
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+# Uninstall mariadb
+mariadbUninstall() {
+  local usage="_${FUNCNAME[0]}"
+  __catchEnvironment "$usage" packageGroupUninstall mariadb || return $?
+}
+_mariadbUninstall() {
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
 # Dump a MariaDB database to raw SQL
 # DOC TEMPLATE: --help 1
 # Argument: --help - Optional. Flag. Display this help.

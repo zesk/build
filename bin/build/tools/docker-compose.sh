@@ -5,6 +5,56 @@
 # Docs: ./documentation/source/tools/docker-compose.md
 # Test: ./test/tools/docker-compose-tests.sh
 
+# Install `docker-compose`
+#
+# If this fails it will output the installation log.
+#
+# Usage: {fn} [ package ... ]
+# Argument: package - Additional packages to install (using apt)
+# Summary: Install `docker-compose`
+# When this tool succeeds the `docker-compose` binary is available in the local operating system.
+# Exit Code: 1 - If installation fails
+# Exit Code: 0 - If installation succeeds
+# Binary: docker-compose.sh
+#
+dockerComposeInstall() {
+  _pipInstall "_${FUNCNAME[0]}" "docker-compose" "$@"
+}
+_dockerComposeInstall() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+# Install `docker-compose`
+#
+# If this fails it will output the installation log.
+#
+# Usage: {fn} [ package ... ]
+# Argument: package - Additional packages to install (using apt)
+# Summary: Install `docker-compose`
+# When this tool succeeds the `docker-compose` binary is available in the local operating system.
+# Exit Code: 1 - If installation fails
+# Exit Code: 0 - If installation succeeds
+# Binary: docker-compose.sh
+#
+dockerComposeUninstall() {
+  local usage="_${FUNCNAME[0]}"
+  local quietLog start name="docker-compose"
+
+  if ! whichExists "$name"; then
+    return 0
+  fi
+  packageWhich pip python3-pip || __throwEnvironment "$usage" "Need pip to uninstall - not found?" || return $?
+  start=$(timingStart) || return $?
+  quietLog=$(__catchEnvironment "$usage" buildQuietLog "$usage") || return $?
+  statusMessage decorate info "Removing $name ... "
+  __catchEnvironmentQuiet "$usage" "$quietLog" pip uninstall "$name" || return $?
+  ! whichExists "$name" || __throwEnvironment "$usage" "$name was still found after uninstall" || return $?
+  statusMessage --last timingReport "$start" "Uninstalled $name in"
+}
+_dockerComposeUninstall() {
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
 # Is docker compose currently running?
 # DOC TEMPLATE: --help 1
 # Argument: --help - Optional. Flag. Display this help.

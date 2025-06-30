@@ -692,6 +692,7 @@ _packageNeedRestartFlag() {
 # Argument: group - String. Required. Currently allowed: "python"
 # Any unrecognized groups are installed using the name as-is.
 packageGroupInstall() {
+  local usage="_${FUNCNAME[0]}"
   local groups=() manager=""
 
   # _IDENTICAL_ argument-case-header 5
@@ -742,6 +743,7 @@ _packageGroupInstall() {
 # Argument: group - String. Required. Currently allowed: "python"
 # Any unrecognized groups are uninstalled using the name as-is.
 packageGroupUninstall() {
+  local usage="_${FUNCNAME[0]}"
   local groups=() manager=""
 
   # _IDENTICAL_ argument-case-header 5
@@ -790,6 +792,7 @@ _packageGroupUninstall() {
 # Argument: packageName - A simple package name which will be expanded to specific platform or package-manager specific package names
 # Argument: --manager packageManager - Optional. String. Package manager to use. (apk, apt, brew)
 packageMapping() {
+  local usage="_${FUNCNAME[0]}"
   local packages=() manager=""
 
   # _IDENTICAL_ argument-case-header 5
