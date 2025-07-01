@@ -6,6 +6,7 @@
 
 {urlParse}
 {urlParseItem}
+{urlSchemeDefaultPort}
 {urlValid}
 {urlOpen}
 {urlOpener}
