@@ -152,6 +152,10 @@ _anyEnvToBashEnv() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
+dockerListContext() {
+  printf 'FROM scratch\nCOPY . /\n' | DOCKER_BUILDKIT=1 docker build -q -f- -o- . | tar t
+}
+
 #
 # Ensure an environment file is compatible with non-quoted docker environment files
 # May take a list of files to convert or stdin piped in

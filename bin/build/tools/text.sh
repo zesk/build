@@ -17,6 +17,46 @@
 #------------------------------------------------------------------------------
 #
 
+# Extract a range of lines from a file
+# Argument: startLine - Integer. Required. Starting line number.
+# Argument: endLine - Integer. Required. Ending line number.
+fileExtractLines() {
+  local usage="_${FUNCNAME[0]}"
+
+  local start="" end=""
+
+  # _IDENTICAL_ argument-case-header 5
+  local __saved=("$@") __count=$#
+  while [ $# -gt 0 ]; do
+    local argument="$1" __index=$((__count - $# + 1))
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
+    case "$argument" in
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    *)
+      if [ -z "$start" ]; then
+        start="$(usageArgumentPositiveInteger "$usage" "start" "$1")" || return $?
+      elif [ -z "$end" ]; then
+        end="$(usageArgumentPositiveInteger "$usage" "end" "$1")" || return $?
+      else
+        # _IDENTICAL_ argumentUnknown 1
+        __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
+      fi
+      ;;
+    esac
+    # _IDENTICAL_ argument-esac-shift 1
+    shift
+  done
+  sed -n "${start},${end}p;${end}q"
+}
+_fileExtractLines() {
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
 # `grep` but returns 0 when nothing matches
 # See: grep
 # Allow blank files or no matches

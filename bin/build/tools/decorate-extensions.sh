@@ -201,7 +201,7 @@ __decorateExtensionSize() {
         printf "%dG (%d)\n" "$((size / 1073741824))" "$size"
       fi
     else
-      printf "%s\n" "[SIZE $size]\n"
+      printf "%s\n" "[SIZE $size]"
     fi
     shift
   done

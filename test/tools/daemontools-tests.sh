@@ -9,8 +9,12 @@
 
 # Test-Platform: !alpine
 testDaemontools() {
+  local usage="_return"
   local logPath start waitFor logWaitFor
 
+  local home
+
+  home=$(__catchEnvironment "$usage" buildHome) || return $?
   assertExitCode --stderr-match "not production" 0 daemontoolsInstall || return $?
 
   if ! daemontoolsIsRunning; then
@@ -29,7 +33,7 @@ testDaemontools() {
   decorate info "logPath is $logPath"
   __environment requireDirectory "$logPath" >/dev/null || return $?
 
-  assertExitCode --leak DAEMONTOOLS_HOME 0 daemontoolsInstallService --log "$logPath" "./test/example/lemon.sh" --arguments "orange" "grape" "lemon" -- --log-arguments "n10" || return $?
+  assertExitCode --leak DAEMONTOOLS_HOME 0 daemontoolsInstallService --log "$logPath" "$home/test/example/lemon.sh" --arguments "orange" "grape" "lemon" -- --log-arguments "n10" || return $?
 
   assertFileExists "/etc/service/lemon/run" || return $?
   assertFileContains "/etc/service/lemon/run" "\"orange\" \"grape\" \"lemon\"" || return $?
