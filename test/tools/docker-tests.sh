@@ -37,8 +37,11 @@ testDockerEnvToBash() {
   out=$(fileTemporaryName "$usage") || return $?
   err="$out.err"
 
+  local home
+  home=$(__catchEnvironment "$usage" buildHome) || return $?
+
   decorate info "PWD is $(pwd)"
-  if dockerEnvToBash ./test/example/test.env >"$out" 2>"$err"; then
+  if dockerEnvToBash "$home/test/example/test.env" >"$out" 2>"$err"; then
     __throwEnvironment "$usage" "dockerEnvToBash SHOULD fail" || return $?
   fi
 
@@ -47,7 +50,7 @@ testDockerEnvToBash() {
   # Different than testDockerEnvToBashPipe
   assertFileContains "$err" "01234" "+A" "*A" "+a" "*a" "?a" "test.env" "Invalid name" || return $?
 
-  dockerEnvToBash ./test/example/docker.env >"$out" 2>"$err" || return $?
+  dockerEnvToBash "$home/test/example/docker.env" >"$out" 2>"$err" || return $?
   assertEquals 0 "$(fileSize "$err")" || return $?
   assertFileContains "$out" "host=" "application=\"golden goose\"" "uname=\"localhost\"" "location=" || return $?
 
@@ -62,8 +65,11 @@ testDockerEnvToBashPipe() {
   out=$(fileTemporaryName "$usage") || return $?
   err="$out.err"
 
+  local home
+  home=$(__catchEnvironment "$usage" buildHome) || return $?
+
   decorate info "PWD is $(pwd)"
-  if dockerEnvToBash <./test/example/test.env >"$out" 2>"$err"; then
+  if dockerEnvToBash <"$home/test/example/test.env" >"$out" 2>"$err"; then
     __throwEnvironment "$usage" "dockerEnvToBash SHOULD fail" || return $?
   fi
 
@@ -73,7 +79,7 @@ testDockerEnvToBashPipe() {
   # Different than testDockerEnvToBash
   assertFileDoesNotContain "$err" "test.env" || return $?
 
-  dockerEnvToBash <./test/example/docker.env >"$out" 2>"$err" || return $?
+  dockerEnvToBash <"$home/test/example/docker.env" >"$out" 2>"$err" || return $?
   assertEquals 0 "$(fileSize "$err")" || return $?
   assertFileContains "$out" "host=" "application=\"golden goose\"" "uname=\"localhost\"" "location=" || return $?
 
@@ -84,15 +90,18 @@ testDockerEnvFromBash() {
   local usage="_return"
   local out err
 
-  assertExitCode --stderr-ok 2 dockerEnvFromBashEnv ./test/example/bad.env || return $?
+  local home
+  home=$(__catchEnvironment "$usage" buildHome) || return $?
 
-  assertExitCode --stdout-match "host=" --stdout-match "application=beanstalk" --stdout-match "uname=" 0 dockerEnvFromBashEnv ./test/example/bash.env || return $?
+  assertExitCode --stderr-ok 2 dockerEnvFromBashEnv "$home/test/example/bad.env" || return $?
+
+  assertExitCode --stdout-match "host=" --stdout-match "application=beanstalk" --stdout-match "uname=" 0 dockerEnvFromBashEnv "$home/test/example/bash.env" || return $?
 
   out=$(fileTemporaryName "$usage") || eturn $?
   err=$(fileTemporaryName "$usage") || return $?
 
-  dockerEnvFromBashEnv ./test/example/bash.env >"$out" 2>"$err" || return 1
-  dumpPipe "ERRORS dockerEnvFromBashEnv ./test/example/docker.env" <"$err"
+  dockerEnvFromBashEnv "$home/test/example/bash.env" >"$out" 2>"$err" || return 1
+  dumpPipe "ERRORS dockerEnvFromBashEnv $home/test/example/bash.env" <"$err"
   assertEquals 0 "$(fileSize "$err")" || return $?
   assertFileContains "$out" "host=" "today=" "uname=" || return $?
 
@@ -101,9 +110,11 @@ testDockerEnvFromBash() {
 
 testAnyEnvToDockerEnv() {
   local usage="_return"
-  local testEnv home
+  local testEnv
 
   testEnv=$(fileTemporaryName "$usage") || return $?
+
+  local home
   home=$(__catchEnvironment "$usage" buildHome) || return $?
 
   __environment anyEnvToDockerEnv "$testEnv" >"$testEnv.result" || return $?
@@ -126,9 +137,11 @@ testAnyEnvToDockerEnv() {
 
 testAnyEnvToBashEnv() {
   local usage="_return"
-  local testEnv home
+  local testEnv
 
   testEnv=$(fileTemporaryName "$usage") || return $?
+
+  local home
   home=$(__catchEnvironment "$usage" buildHome) || return $?
 
   __catchEnvironment "$usage" anyEnvToDockerEnv "$testEnv" >"$testEnv.result" || _environment "Failed @ $LINENO" || return $?
