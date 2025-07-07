@@ -56,5 +56,5 @@ testBuildFunctionsCoverage() {
       statusMessage decorate info "$testFiles $(plural "$testFiles" test tests) written for $(decorate code "$function")"
     fi
   done < <(buildFunctions)
-  [ "${#missing[@]}" -gt 0 ] || __throwEnvironment "$usage" "Functions require tests:"$'\n'"$(printf "%s\n" "${missing[@]}" | decorate code | decorate wrap "- ")"
+  [ "${#missing[@]}" -eq 0 ] || __throwEnvironment "$usage" "Functions require tests:"$'\n'"$(printf "%s\n" "${missing[@]}" | decorate code | decorate wrap "- ")"
 }
