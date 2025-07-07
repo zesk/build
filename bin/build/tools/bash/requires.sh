@@ -62,7 +62,12 @@ _bashGetRequires() {
 # If all requirements are met, exit status of 0.
 # If any requirements are not met, exit status of 1 and a list of unmet requirements are listed
 #
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
+# Argument: --ignore-prefix prefix. String. Optional. Ignore function names which match the prefix and do not check them.
+# Argument: --report - Flag. Optional. Output a report of various functions and usage after processing is complete.
 # Argument: --require - Flag. Optional. Requires at least one or more requirements to be listed and met to pass
+# Argument: --unused - Flag. Optional. Check for unused functions and report on them.
 bashCheckRequires() {
   local usage="_${FUNCNAME[0]}"
 

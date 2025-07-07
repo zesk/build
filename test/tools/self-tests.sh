@@ -16,10 +16,10 @@ testBinBuildRequires() {
 
   home=$(__environment buildHome) || return $?
 
-  bashCheckRequires --ignore-prefix __decorateExtension --require --unused --report "$home/bin/build/install.sample.sh" || return $?
-  bashCheckRequires --ignore-prefix __decorateExtension --require --unused --report "$home/bin/build/install-bin-build.sh" || return $?
-  bashCheckRequires --ignore-prefix __decorateExtension --require --unused --report "$home/bin/build/map.sh" || return $?
-  bashCheckRequires --require --unused --report "$home/bin/build/need-bash.sh" || return $?
+  assertExitCode 0 bashCheckRequires --require --unused --report "$home/bin/build/install.sample.sh" || return $?
+  assertExitCode 0 bashCheckRequires --require --unused --report "$home/bin/build/install-bin-build.sh" || return $?
+  assertExitCode 0 bashCheckRequires --ignore-prefix __decorateExtension --require --unused --report "$home/bin/build/map.sh" || return $?
+  assertExitCode 0 bashCheckRequires --require --unused --report "$home/bin/build/need-bash.sh" || return $?
 }
 
 testBuildApplicationTools() {

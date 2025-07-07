@@ -35,38 +35,45 @@ __installJSON() {
   printf "%s\n" "$jsonFile"
 }
 
-# Requires: __installJSON __githubInstallationURL rm __throwArgument printf
+# Requires: __installJSON rm __throwArgument printf
 __installURL() {
   local usage="$1" jsonFile
 
-  export ___TEMP_BIN_BUILD_URL
-  if [ -n "${___TEMP_BIN_BUILD_URL-}" ]; then
-    printf "%s\n" "$___TEMP_BIN_BUILD_URL"
-    return 0
-  fi
   jsonFile=$(__installJSON "$usage") || return $?
   url=$(__installLatestURL "$usage" "$jsonFile") || return $?
-  rm -rf "$jsonFile" || :
+  rm -f "$jsonFile" || :
   [ "${url#https://}" != "$url" ] || __throwArgument "$usage" "URL must begin with https://" || return $?
-  ___TEMP_BIN_BUILD_URL="$url"
   printf -- "%s\n" "$url"
 }
 
-# Requires: __installJSON jsonField jq versionSort decorate __githubInstallationURL __throwArgument
+# Used to check the remote version against the local version of a package to be installed.
+# fn: packageVersionFunction
+# Argument: handler - Function. Required. Function to call when an error occurs. Signature `errorHandler`.
+# Argument: applicationHome - Directory. Required. Path to the application home where target will be installed, or is installed. (e.g. myApp/)
+# Argument: installPath - Directory. Required. Path to the installPath home where target will be installed, or is installed. (e.g. myApp/bin/build)
+# Exit Code: 0 - Do not upgrade, version is same as remote (stdout is found, current version)
+# Exit Code: 1 - Do upgrade, version changed. (stdout is version change details)
+# See: _installRemotePackage
+# Requires: __installJSON jsonField jq versionSort decorate __installLatestVersion __throwArgument
 __installFetchVersion() {
-  # Return 0 to print version (installation matches)
-  # Return 1 and output the change in version (installation needs to continue)
   local usage="$1" installPath="$2" packagePath="$3" jsonFile version url upIcon="☝️" okIcon="👌"
 
-  export ___TEMP_BIN_BUILD_URL
+  whichExists jq || __throwEnvironment "$usage" "Requires jq to install" || return $?
+  jsonFile=$(fileTemporaryName "$usage") || return $?
 
-  jsonFile=$(__installJSON "$usage") || return $?
+  if ! urlFetch "$(__installLatestVersion)" "$jsonFile"; then
+    local message
+    message="$(printf -- "%s\n%s\n" "Unable to fetch version JSON:" "$(cat "$jsonFile")")"
+    rm -f "$jsonFile" || :
+    __throwEnvironment "$usage" "$message" || return $?
+  fi
 
   # Version comparison
-  version=$(jsonField "$usage" "$jsonFile" .tag_name) || return $?
-  if [ -d "$packagePath" ] && [ -f "$packagePath/build.json" ]; then
+  version=$(jsonField "$usage" "$jsonFile" .version) || _clean $? "$jsonFile" || return $?
+  rm -f "$jsonFile" || :
+  if [ -d "$packagePath" ] && [ -f "$packagePath/package.json" ]; then
     local latest
-    myVersion=$(jq -r .version <"$packagePath/build.json")
+    myVersion=$(jq -r .version <"$packagePath/package.json")
     # shellcheck disable=SC2119
     latest=$(printf "%s\n" "$myVersion" "$version" | versionSort | tail -n 1)
     if [ "$myVersion" = "$latest" ]; then
@@ -75,12 +82,6 @@ __installFetchVersion() {
     fi
     printf -- "%s %s️ %s" "$(decorate error "$myVersion")" "$upIcon" "$(decorate success "$version")"
   fi
-
-  # URL caching
-  url=$(__githubInstallationURL "$usage" "$jsonFile") || return $?
-  [ "${url#https://}" != "$url" ] || __throwArgument "$usage" "URL must begin with https://" || return $?
-  ___TEMP_BIN_BUILD_URL="$url"
-
   return 1
 }
 
@@ -197,7 +198,7 @@ __installCheck() {
 # Argument: --diff - Optional. Flag. Show differences between old and new file.
 # Exit Code: 1 - Environment error
 # Exit Code: 2 - Argument error
-# Requires: cp rm cat printf realPath whichExists _return fileTemporaryName __catchArgument __throwArgument __catchEnvironment decorate usageArgumentString isFunction
+# Requires: cp rm cat printf realPath whichExists _return fileTemporaryName __catchArgument __throwArgument __catchEnvironment decorate usageArgumentString isFunction __decorateExtensionQuote
 _installRemotePackage() {
   local usage="_${FUNCNAME[0]}"
 
