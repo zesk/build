@@ -361,15 +361,6 @@ testSuite() {
   local runTime testsRun=()
   if [ ${#filteredTests[@]} -gt 0 ]; then
     __TEST_SUITE_TRACE=options
-    local testHome saveHome
-
-    saveHome=$(pwd)
-
-    if $cdAway; then
-      testHome="$(fileTemporaryName "$usage" -d)"
-    else
-      testHome="$saveHome"
-    fi
     local sectionName="" sectionNameHeading="" sectionFile
     for item in "${filteredTests[@]}"; do
       if [ "$item" != "${item#\#}" ]; then
@@ -398,14 +389,36 @@ testSuite() {
 
       testLine=$(__testGetLine "$item" <"$sectionFile") || :
       flags=$(__testLoadFlags "$sectionFile" "$item")
+
+      ! $verboseMode || statusMessage decorate info "$item flags is $(decorate code "${flags:-none specified}")" || return $?
+
+      local testHome saveHome clean=()
+
+      saveHome=$(pwd)
+
+      if $cdAway; then
+        if isSubstringInsensitive ";Build-Home:true;" ";$flags;"; then
+          ! $verboseMode || statusMessage decorate info "--cd-away is explicitly ignored for $item" || return $?
+          testHome="$home"
+        else
+          testHome="$(fileTemporaryName "$usage" -d)" || return $?
+          clean+=("$testHome")
+        fi
+      else
+        testHome="$saveHome"
+      fi
       testsRun+=("$item")
       __catchEnvironment "$usage" cd "$testHome" || return $?
-      "${runner[@]+"${runner[@]}"}" __testRun "$quietLog" "$item" "$flags" || __testSuiteExecutor "$item" "$sectionFile" "$testLine" "$flags" "${failExecutors[@]+"${failExecutors[@]}"}" || __testFailed "$sectionName" "$item" || return $?
+      "${runner[@]+"${runner[@]}"}" __testRun "$quietLog" "$item" "$flags" || __testSuiteExecutor "$item" "$sectionFile" "$testLine" "$flags" "${failExecutors[@]+"${failExecutors[@]}"}" || __testFailed "$sectionName" "$item" || _undo $? cd "$saveHome" || return $?
+      __catchEnvironment "$usage" cd "$saveHome" || return $?
+
       [ -z "$tapFile" ] || __testSuiteTAP_ok "$tapFile" "$item" "$sectionFile" "$testLine" "$flags" || return $?
 
       runTime=$(($(timingStart) - __testStart))
       ! $doStats || printf "%s %s\n" "$runTime" "$item" >>"$statsFile"
       __catchEnvironment "$usage" hookRunOptional bash-test-pass "$sectionName" "$item" "$flags" || __throwEnvironment "$usage" "... continuing" || :
+
+      [ "${#clean[@]}" -eq 0 ] || __catchEnvironment "$usage" rm -rf "${clean[@]}" || return $?
     done
     [ ${#matchTests[@]} -eq 0 ] || [ ${#testsRun[@]} -gt 0 ] || __throwArgument "$usage" "Match not found: $(decorate each code "${matchTests[@]}")" || return $?
     bigText --bigger Passed | decorate wrap "" "    " | decorate success | decorate wrap --fill "*" "    "

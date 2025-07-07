@@ -50,9 +50,14 @@ testIdenticalCheckAndRepairMap() {
 }
 
 testIdenticalRepair() {
+  local usage="_return"
+
+  local home
+  home=$(__catchEnvironment "$usage" buildHome) || return $?
+
   local output source token target expectedTarget testPath prefix
 
-  testPath="test/example"
+  testPath="$home/test/example"
 
   for token in eoftarget foetarget maptarget; do
     prefix="${token%target}"
@@ -76,7 +81,7 @@ testIdenticalRepair() {
     assertFileExists "$expectedTarget" || return $?
     __environment cp "$target" "$output" || return $?
     assertExitCode 0 identicalRepair --prefix '# ''SAME-SAME' --token "$token" "$source" "$output" || return $?
-    assertExitCode 0 diff "$output" "$(dirname $target)/$token-$(basename $target)" || return $?
+    assertExitCode 0 diff "$output" "$(dirname "$target")/$token-$(basename "$target")" || return $?
     rm "$output" || :
   done
 }
@@ -126,7 +131,11 @@ testIdenticalChecks() {
 }
 
 testIdenticalCheckSingles() {
+  local usage="_return"
   local identicalCheckArgs identicalError singles
+
+  local home
+  home=$(__catchEnvironment "$usage" buildHome) || return $?
 
   identicalError=$(_code identical)
 
@@ -135,7 +144,7 @@ testIdenticalCheckSingles() {
   #
   # Unusual quoting here is to avoid matching the word uh, IDENTICAL with the comment here
   #
-  identicalCheckArgs=(--cd "test/example" --extension 'txt' --prefix '# ''singleIDENTICAL')
+  identicalCheckArgs=(--cd "$home/test/example" --extension 'txt' --prefix '# ''singleIDENTICAL')
 
   singles=()
   assertExitCode --stderr-match single1 --stderr-match single2 "$identicalError" identicalCheck "${identicalCheckArgs[@]}" "${singles[@]+"${singles[@]}"}" || return $?
@@ -144,7 +153,7 @@ testIdenticalCheckSingles() {
   assertExitCode --stderr-no-match single1 --stderr-match single2 "$identicalError" identicalCheck "${identicalCheckArgs[@]}" "${singles[@]+"${singles[@]}"}" || return $?
 
   singles=(--single single1 --single single2)
-  assertExitCode "0" identicalCheck "${singles[@]+"${singles[@]}"}" --extension txt --prefix '# ''singleIDENTICAL' || return $?
+  assertExitCode "0" identicalCheck "${identicalCheckArgs[@]}" "${singles[@]+"${singles[@]}"}" || return $?
 }
 
 # Simple case when an identical directory exists and is supplied but contains no matching files

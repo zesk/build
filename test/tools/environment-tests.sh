@@ -104,6 +104,12 @@ testEnvironmentFileLoad() {
 
 testEnvironmentFileMake() {
   local v
+  local usage="_return"
+
+  local home
+  home=$(__catchEnvironment "$usage" buildHome) || return $?
+
+  __catchEnvironment muzzle pushd "$home" || return $?
   (
     set -eou pipefail
 
@@ -129,6 +135,7 @@ testEnvironmentFileMake() {
     decorate green application-environment.sh works AOK
     rm .env
   )
+  __catchEnvironment muzzle popd || return $?
 }
 
 testEnvironmentVariables() {
@@ -257,7 +264,7 @@ testEnvironmentValueReadDefault() {
 
   assertExitCode --stdout-match World 0 environmentValueRead "$envFile" Target || return $?
 
-  assertExitCode --stderr-ok 1 environmentValueRead "$envFile" TARGET || return $?
+  assertExitCode 1 environmentValueRead "$envFile" TARGET || return $?
   assertExitCode 0 environmentValueRead "$envFile" TARGET "" || return $?
   assertExitCode --stdout-match "Paris" 0 environmentValueRead "$envFile" TARGET "Paris" || return $?
 
@@ -374,11 +381,13 @@ testEnvironmentClean() {
 
   local saveEnv
 
+  echo $LINENO
   #
   # Preserve environment locally here for this test
   #
 
   saveEnv=$(fileTemporaryName "$usage") || return $?
+
   __catchEnvironment "$usage" environmentOutput --underscore --secure >"$saveEnv" || return $?
 
   local item keepers=(A B C DEE EEE FFF GGG) removed=()
@@ -394,11 +403,21 @@ testEnvironmentClean() {
   GGG=("Hello" "World")
   PS1=FOOBAR
 
-  assertExitCode 0 environmentClean "${keepers[@]}" || return $?
+  echo $LINENO
+
+  __echo environmentClean "${keepers[@]}" || return $?
+
+  echo $LINENO
+
+  __echo assertExitCode 0 environmentClean "${keepers[@]}" || return $?
+
+  echo $LINENO
 
   for item in "${keepers[@]}"; do
     assertStringNotEmpty "${!item}" || return $?
   done
+
+  echo $LINENO
 
   keepers=(A DEE FFF GGG)
   removed=(B C EEE)

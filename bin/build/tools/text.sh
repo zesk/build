@@ -437,7 +437,8 @@ isSubstringInsensitive() {
   [ -n "$element" ] || __throwArgument "$usage" "needle is blank" || return $?
   shift || return 1
   for arrayElement; do
-    if [ "${arrayElement#"*$element"}" != "$arrayElement" ]; then
+    arrayElement=$(lowercase "$arrayElement")
+    if [ "${arrayElement#*"$element"}" != "$arrayElement" ]; then
       return 0
     fi
   done

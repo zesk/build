@@ -28,6 +28,8 @@
 urlSchemeDefaultPort() {
   local usage="_${FUNCNAME[0]}"
 
+  local port=""
+
   # _IDENTICAL_ argument-case-header 5
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
@@ -56,7 +58,8 @@ urlSchemeDefaultPort() {
       __throwArgument "$usage" "unknown scheme #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
       ;;
     esac
-    printf "%d\n" "$port"
+    [ -z "$port" ] || printf "%d\n" "$port"
+    port=""
     # _IDENTICAL_ argument-esac-shift 1
     shift
   done
@@ -119,7 +122,7 @@ urlParse() {
       local u="${1-}"
 
       # parts
-      local url="$u" path="" name="" user="" password="" host="" port="" error=""
+      local url="$u" path="" name="" user="" password="" host="" port="" portDefault="" error=""
       local scheme="${u%%://*}"
 
       if [ "$scheme" != "$url" ] && [ -n "$scheme" ]; then
@@ -156,18 +159,18 @@ urlParse() {
           host="${host%:*}"
         fi
         error=""
-        ! $intPort || isPositiveInteger "$port" || port=$(urlSchemeDefaultPort --handler "$usage" "$scheme") || return $?
+        portDefault="$(urlSchemeDefaultPort --handler "$usage" "$scheme" 2>/dev/null || :)"
+        ! $intPort || isPositiveInteger "$port" || port="$portDefault" || return $?
       else
         error="no-scheme"
         scheme=""
       fi
       local variable part
-      for part in url path name scheme user password host port error; do
+      for part in url path name scheme user password host port portDefault error; do
         variable="$part"
         ! $upperCase || variable=$(uppercase "$part")
         printf "%s%s=%s\n" "$prefix" "$variable" "$(quoteBashString "${!part}")"
       done
-      printf -- "\n"
       : "$path" # usage warning
       # Exit code 1 if failed
       [ -z "$error" ] || return 1

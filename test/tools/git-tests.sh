@@ -33,6 +33,7 @@ _gitAddRemotesToSSHKnown() {
   clearLine
 }
 
+# Test-Build-Home: true
 testGitVersionList() {
   if ! gitHasAnyRefs; then
     _gitAddRemotesToSSHKnown || return $?

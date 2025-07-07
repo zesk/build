@@ -19,16 +19,19 @@ source "${BASH_SOURCE[0]%/*}/../tools.sh"
 #
 __hookVersionCurrent() {
   export BUILD_RELEASE_NOTES
-  local usage
+  local usage="_${FUNCNAME[0]}"
+  local home
 
-  usage="_${FUNCNAME[0]}"
+  home=$(__catchEnvironment "$usage" buildHome) || return $?
 
+  __catchEnvironment "$usage" muzzle pushd "$home" || return $?
   __catchEnvironment "$usage" buildEnvironmentLoad BUILD_RELEASE_NOTES || return $?
   __catchEnvironment "$usage" cd "${BUILD_RELEASE_NOTES}" || return $?
   for f in *.md; do
     f=${f%.md}
     echo "$f"
   done | versionSort -r | head -1
+  __catchEnvironment "$usage" muzzle popd || return $?
 }
 ___hookVersionCurrent() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"

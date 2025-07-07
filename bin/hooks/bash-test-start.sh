@@ -75,8 +75,9 @@ isUnsignedInteger() {
 __hookBashTestStart() {
   local module="$1" testFunction="$2" name
   name=$(buildEnvironmentGet APPLICATION_NAME)
-  [ -z "$name" ] || name="🍎 ${name}\n"
-  iTerm2Badge -i "${name}👀 ${module} \n➡️ ${testFunction}"
+  [ -z "$name" ] || name="🍎 ${name}"
+  iTerm2Badge -i "${name}\n👀 ${module} \n➡️ ${testFunction}"
+  consoleSetTitle "$name Testing : $module ➡️ $testFunction"
 }
 
 __tools ../.. __hookBashTestStart "$@"

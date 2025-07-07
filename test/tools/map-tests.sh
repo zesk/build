@@ -52,18 +52,21 @@ testIsMappable() {
 }
 
 testMapTokens() {
+  local usage="_return" home
+
   local COLUMNS LINES
+  home=$(__catchEnvironment "$usage" buildHome) || return $?
 
   echo | assertExitCode 0 mapTokens || return $?
   assertEquals "" "$(echo | mapTokens)" || return $?
   assertEquals "$(printf "%s\n" a b c)" "$(echo '{a}{b}{c}' | mapTokens)" || return $?
-  assertEquals "$(printf "%s\n" confirmYesNo copyFileWouldChange copyFile 'args[@]' 'args[@]')" "$(mapTokens <"./test/example/mapTokensBad.md")" || return $?
+  assertEquals "$(printf "%s\n" confirmYesNo copyFileWouldChange copyFile 'args[@]' 'args[@]')" "$(mapTokens <"$home/test/example/mapTokensBad.md")" || return $?
 }
 
 testMapPrefixSuffix() {
   local itemIndex=1 binary
 
-  for binary in mapEnvironment bin/build/map.sh; do
+  for binary in mapEnvironment "$(buildHome)/bin/build/map.sh"; do
     assertEquals "Hello, world." "$(echo "[NAME], [PLACE]." | NAME=Hello PLACE=world "$binary" --prefix '[' --suffix ']')" "#$itemIndex failed" || return $?
     itemIndex=$((itemIndex + 1))
     assertEquals "Hello, world." "$(echo "{NAME}, {PLACE}." | NAME=Hello PLACE=world "$binary")" "#$itemIndex failed" || return $?

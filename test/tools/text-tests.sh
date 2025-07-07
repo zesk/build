@@ -7,6 +7,13 @@
 # Copyright &copy; 2025 Market Acumen, Inc.
 #
 
+testIsSubstringInsensitive() {
+  assertExitCode 1 isSubstringInsensitive "abc" "ABd" "bcd" "abed" || return $?
+  assertExitCode 0 isSubstringInsensitive ";Build-Home:true;" ";Build-Home:true;" || return $?
+  assertExitCode 0 isSubstringInsensitive ";Build-Home:true;" ";build-home:true;" || return $?
+  assertExitCode 0 isSubstringInsensitive ";build-home:true;" ";Build-Home:true;" || return $?
+}
+
 testSubstringFound() {
   assertExitCode 0 stringContains haystack needle needle needle needle needle aystac needle || return $?
   assertExitCode 0 stringContains haystack needle needle needle needle needle haystac needle || return $?

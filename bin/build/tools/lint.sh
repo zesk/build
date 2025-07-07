@@ -263,6 +263,9 @@ _bashLintInteractiveCheck() {
 
 # Usage: {fn} [ --exec binary ] [ directory ]
 # Search bash files for assertions which do not terminate a function and are likely an error
+# Argument: --exec binary - Executable. Optional. For each failed file run this command.
+# Argument: directory - Directory. Optional. Where to search for files to check.
+# Argument: --list - Flag. Optional. List files which fail. (Default is simply to exit silently.)
 findUncaughtAssertions() {
   local argument listFlag binary directory problemFiles lastProblemFile problemLine problemLines
   local usage
@@ -289,7 +292,10 @@ findUncaughtAssertions() {
       listFlag=true
       ;;
     *)
-      [ -z "$directory" ] || __throwArgument "$usage" "$this: Unknown argument" || return $?
+      if [ -n "$directory" ]; then
+        # _IDENTICAL_ argumentUnknown 1
+        __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
+      fi
       directory=$(usageArgumentDirectory "$usage" "directory" "$1") || return $?
       ;;
     esac
@@ -319,7 +325,7 @@ findUncaughtAssertions() {
   } >"$tempFile"
 
   if [ -s "$tempFile" ]; then
-    if [ -n "$binary" ] || test $listFlag; then
+    if [ -n "$binary" ] || $listFlag; then
       problemFile=
       lastProblemFile=
       while IFS='' read -r problemFile; do
@@ -377,7 +383,7 @@ _findUncaughtAssertions() {
 # Exit Code: 2 - Arguments error (missing extension or text)
 #
 validateFileExtensionContents() {
-  local this usage total text
+  local usage="_${FUNCNAME[0]}" total text
   local failedReasons item foundFiles
   local extensionArgs textMatches extensions
 
@@ -436,10 +442,14 @@ validateFileExtensionContents() {
       echo "    $(decorate magenta "$item")$(decorate info ", ")" 1>&2
     done
     decorate error "done." 1>&2
-    __throwEnvironment "$usage" "$this failed" || return $?
+    __throwEnvironment "$usage" "${FUNCNAME[0]} failed" || return $?
   else
     statusMessage decorate success "All scripts passed"
   fi
+}
+_validateFileExtensionContents() {
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Search for item extensions and ensure that text is found in each item.

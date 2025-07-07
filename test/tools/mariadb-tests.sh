@@ -16,7 +16,7 @@ testMariadbConnect() {
   assertContains --line "$LINENO" "-p""password" "$testString" || return $?
   assertContains --line "$LINENO" "-h host" "$testString" || return $?
   assertContains --line "$LINENO" " dbname" "$testString" || return $?
-  assertContains --line "$LINENO" " --port=3306" "$testString" || return $?
+  assertNotContains --line "$LINENO" " --port=3306" "$testString" || return $?
   testString=$(mariadbConnect --binary __justEcho "mysqli://user:password@remote:9876/better-app") || return $?
   assertContains --line "$LINENO" "-u user" "$testString" || return $?
   assertContains --line "$LINENO" "-p""password" "$testString" || return $?

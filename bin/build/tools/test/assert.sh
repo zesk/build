@@ -44,6 +44,7 @@ assertEquals() {
   _assertEqualsHelper "${FUNCNAME[0]}" --success true "$@" || return $?
 }
 _assertEquals() {
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -82,6 +83,7 @@ assertStringNotEmpty() {
   _assertStringEmptyHelper "${FUNCNAME[0]}" --success false "$@" || return $?
 }
 _assertStringNotEmpty() {
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -120,6 +122,7 @@ assertStringEmpty() {
   _assertStringEmptyHelper "${FUNCNAME[0]}" --success true "$@" || return $?
 }
 _assertStringEmpty() {
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -157,6 +160,7 @@ assertNotEquals() {
   _assertEqualsHelper "${FUNCNAME[0]}" --success false "$@" || return $?
 }
 _assertNotEquals() {
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -198,6 +202,7 @@ assertExitCode() {
   _assertExitCodeHelper "${FUNCNAME[0]}" --success true "$@" || return $?
 }
 _assertExitCode() {
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -238,6 +243,7 @@ assertNotExitCode() {
   _assertExitCodeHelper "${FUNCNAME[0]}" --success false "$@" || return $?
 }
 _assertNotExitCode() {
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -275,6 +281,7 @@ assertContains() {
   _assertContainsHelper "${FUNCNAME[0]}" --success true "$@" || return $?
 }
 _assertContains() {
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -312,6 +319,7 @@ assertNotContains() {
   _assertContainsHelper "${FUNCNAME[0]}" --success false "$@" || return $?
 }
 _assertNotContains() {
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -358,6 +366,7 @@ assertDirectoryExists() {
   _assertDirectoryExistsHelper "${FUNCNAME[0]}" "$@" || return $?
 }
 _assertDirectoryExists() {
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -397,6 +406,7 @@ assertDirectoryDoesNotExist() {
   _assertDirectoryExistsHelper "${FUNCNAME[0]}" --success false "$@" || return $?
 }
 _assertDirectoryDoesNotExist() {
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -436,6 +446,7 @@ assertDirectoryEmpty() {
   _assertDirectoryEmptyHelper "${FUNCNAME[0]}" "$@" || return $?
 }
 _assertDirectoryEmpty() {
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -475,6 +486,7 @@ assertDirectoryNotEmpty() {
   _assertDirectoryEmptyHelper "${FUNCNAME[0]}" --success false "$@" || return $?
 }
 _assertDirectoryNotEmpty() {
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -521,6 +533,7 @@ assertFileExists() {
   _assertFileExistsHelper "${FUNCNAME[0]}" "$@" || return $?
 }
 _assertFileExists() {
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -560,6 +573,7 @@ assertFileDoesNotExist() {
   _assertFileExistsHelper "${FUNCNAME[0]}" --success false "$@" || return $?
 }
 _assertFileDoesNotExist() {
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -605,6 +619,7 @@ assertOutputEquals() {
   _assertOutputEqualsHelper "${FUNCNAME[0]}" "$@" || return $?
 }
 _assertOutputEquals() {
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -647,6 +662,7 @@ assertOutputContains() {
   _assertOutputContainsHelper "${FUNCNAME[0]}" --success true "$@" || return $?
 }
 _assertOutputContains() {
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -690,6 +706,7 @@ assertOutputDoesNotContain() {
   _assertOutputContainsHelper "${FUNCNAME[0]}" --success false "$@" || return $?
 }
 _assertOutputDoesNotContain() {
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -730,6 +747,7 @@ assertFileContains() {
   __assertFileContainsThis "${FUNCNAME[0]}" --line-depth 2 "$@" || return $?
 }
 _assertFileContains() {
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -767,6 +785,7 @@ assertFileDoesNotContain() {
   __assertFileDoesNotContainThis "${FUNCNAME[0]}" "$@" || return $?
 }
 _assertFileDoesNotContain() {
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -804,6 +823,7 @@ assertFileSize() {
   _assertFileSizeHelper "${FUNCNAME[0]}" "$@" || return $?
 }
 _assertFileSize() {
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -841,6 +861,7 @@ assertNotFileSize() {
   _assertFileSizeHelper "${FUNCNAME[0]}" --success false "$@" || return $?
 }
 _assertNotFileSize() {
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -877,6 +898,7 @@ assertZeroFileSize() {
   assertFileSize 0 "$@" || return $?
 }
 _assertZeroFileSize() {
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -913,6 +935,7 @@ assertNotZeroFileSize() {
   assertNotFileSize 0 "$@" || return $?
 }
 _assertNotZeroFileSize() {
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -957,6 +980,7 @@ assertGreaterThan() {
   _assertNumericHelper "${FUNCNAME[0]}" "$@" -gt || return $?
 }
 _assertGreaterThan() {
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -992,6 +1016,7 @@ assertGreaterThanOrEqual() {
   _assertNumericHelper "${FUNCNAME[0]}" "$@" -ge || return $?
 }
 _assertGreaterThanOrEqual() {
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -1029,6 +1054,7 @@ assertLessThan() {
   _assertNumericHelper "${FUNCNAME[0]}" "$@" -lt || return $?
 }
 _assertLessThan() {
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -1066,5 +1092,6 @@ assertLessThanOrEqual() {
   _assertNumericHelper "${FUNCNAME[0]}" "$@" -le || return $?
 }
 _assertLessThanOrEqual() {
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

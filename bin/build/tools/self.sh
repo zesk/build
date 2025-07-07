@@ -274,9 +274,14 @@ buildHome() {
   export BUILD_HOME
   [ $# -eq 0 ] || __help --only "$usage" "$@" || return 0
   if [ -z "${BUILD_HOME-}" ]; then
-    # shellcheck source=/dev/null
-    source "$(dirname "${BASH_SOURCE[0]}")/../env/BUILD_HOME.sh" || __throwEnvironment "$usage" "BUILD_HOME.sh failed" || return $?
-    [ -n "${BUILD_HOME-}" ] || __throwEnvironment "$usage" "BUILD_HOME STILL blank" || return $?
+    local homeEnv="${BASH_SOURCE[0]%/*}/../env/BUILD_HOME.sh"
+    if [ -f "$homeEnv" ]; then
+      # shellcheck source=/dev/null
+      source "${BASH_SOURCE[0]%/*}/../env/BUILD_HOME.sh" || __throwEnvironment "$usage" "BUILD_HOME.sh failed" || return $?
+      [ -n "${BUILD_HOME-}" ] || __throwEnvironment "$usage" "BUILD_HOME STILL blank" || return $?
+    else
+      __throwEnvironment "$usage" "Unable to locate $homeEnv from $(pwd)"$'\n'"$(decorate each code "${BASH_SOURCE[@]}")" || return $?
+    fi
   fi
   printf "%s\n" "${BUILD_HOME%/}"
 }

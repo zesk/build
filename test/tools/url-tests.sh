@@ -8,7 +8,7 @@
 #
 
 testUrlParse() {
-  local parsed u url user name password host port path error scheme
+  local parsed u url user name password host port portDefault path error scheme
 
   __testSection testUrlParse
 
@@ -28,6 +28,7 @@ testUrlParse() {
   assertEquals "$name" dbname || return $?
   assertEquals "$host" identity || return $?
   assertEquals "$port" 4232 || return $?
+  assertEquals "$portDefault" "" || return $?
   assertEquals "$password" hard-to-type || return $?
   assertEquals "$error" "" || return $?
   assertEquals "$scheme" "foo" || return $?
@@ -41,6 +42,7 @@ testUrlParse() {
   assertEquals "$name" dbname || return $?
   assertEquals "$host" identity || return $?
   assertEquals "$port" "" || return $?
+  assertEquals "$portDefault" "3306" || return $?
   assertEquals "$password" hard-to-type || return $?
   assertEquals "$error" "" || return $?
   assertEquals "$scheme" "mysql" || return $?
@@ -51,9 +53,18 @@ testUrlParse() {
   assertEquals "$port" "" || return $?
   eval "$(urlParse --integer-port "http://example.com/")" || return $?
   assertEquals "$port" "80" || return $?
+  assertEquals "$portDefault" "80" || return $?
   eval "$(urlParse --integer-port "https://example.com/")" || return $?
   assertEquals "$port" "443" || return $?
+  assertEquals "$portDefault" "443" || return $?
 
+  # Valid but probably a bad idea
+  eval "$(urlParse --integer-port "https://example.com:80/")" || return $?
+  assertEquals "$port" "80" || return $?
+  assertEquals "$portDefault" "443" || return $?
+  eval "$(urlParse --integer-port "http://example.com:443/")" || return $?
+  assertEquals "$port" "443" || return $?
+  assertEquals "$portDefault" "80" || return $?
 }
 
 testGitUrlParse() {

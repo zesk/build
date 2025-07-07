@@ -886,18 +886,20 @@ _environmentCompile() {
 }
 
 # Clean *most* exported variables from the current context except a few important ones:
-# - PATH LD_LIBRARY USER HOME PS1 PS2
+# - BUILD_HOME PATH LD_LIBRARY USER HOME PS1 PS2
 # Calls unset on any variable in the global environment and exported.
 # Use with caution. Any additional environment variables you wish to preserve, simply pass those on the command line
 # Arguments: keepEnvironment - EnvironmentVariable. Optional. Keep this environment variable. ZeroOrMore.
 environmentClean() {
-  local variable keepers=(PATH LD_LIBRARY USER HOME PS1 PS2 "$@")
-  while read -r variable; do
+  local usage="_${FUNCNAME[0]}"
+  local done=false variable keepers=(PATH LD_LIBRARY USER HOME PS1 PS2 BUILD_HOME "$@")
+  while ! $done; do
+    read -r variable || done=true
     [ -n "$variable" ] || continue
     if inArray "$variable" "${keepers[@]}"; then
       continue
     fi
-    unset "${variable?}"
+    unset "${variable?}" || :
   done < <(declare -x | removeFields 2 | cut -f 1 -d =)
 }
 _environmentClean() {

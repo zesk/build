@@ -142,8 +142,19 @@ testHooksWhichSeemBenign() {
   find "$home/test/example" -type f ! -path "*/.*/*" | extensionLists --clean "$cache"
 
   assertExitCode 0 gitPreCommitHeader || return $?
-  for hook in application-environment application-id application-tag pre-commit-php pre-commit-sh version-current; do
-    APPLICATION_ID=abc APPLICATION_TAG=def assertExitCode 0 hookRun "$hook" || return $?
+  for hook in application-environment application-id application-tag version-current; do
+    APPLICATION_ID=abc APPLICATION_TAG=def assertExitCode 0 hookRun --application "$home" "$hook" || return $?
   done
   assertExitCode 0 gitPreCommitCleanup || return $?
+}
+
+#
+# Test-Build-Home: true
+#
+testHooksWhichSeemBenignHome() {
+  local hook
+
+  for hook in application-environment application-id application-tag version-current; do
+    APPLICATION_ID=abc APPLICATION_TAG=def assertExitCode 0 hookRun "$hook" || return $?
+  done
 }

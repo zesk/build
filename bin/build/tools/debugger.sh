@@ -133,6 +133,10 @@ __bashDebugWhere() {
 # See: bashDebug
 _bashDebugTrap() {
   export __BUILD_BASH_STEP_CONTROL
+
+  if ! isArray __BUILD_BASH_STEP_CONTROL; then
+    __BUILD_BASH_STEP_CONTROL=()
+  fi
   if [ "${#__BUILD_BASH_STEP_CONTROL[@]}" -gt 0 ]; then
     [ "${BASH_SOURCE[1]}" != "${BASH_SOURCE[0]}" ] || return 0
     if __bashDebugStep "${BASH_SOURCE[1]}" "${FUNCNAME[1]}" $((BASH_LINENO[0] + 1)) "${__BUILD_BASH_STEP_CONTROL[@]}"; then
