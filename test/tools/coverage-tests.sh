@@ -36,3 +36,25 @@ testCoverageReportThing() {
   expected='&nbsp;&nbsp;<em>[&nbsp;$#&nbsp;-gt&nbsp;0&nbsp;]</em>&nbsp;||&nbsp;return&nbsp;1'
   assertEquals "$(__bashCoveragePartialLine '  [ $# -gt 0 ] || return 1' "$codes" "$template")" "$expected" || return $?
 }
+
+testBuildFunctionsCoverage() {
+  local usage="_return"
+  local home
+
+  home=$(__catchEnvironment "$usage" buildHome) || return $?
+
+  local function missing=()
+  while read -r function; do
+    testFiles=$(find "$home/test/tools" -type f -name '*.sh' -print0 | xargs -0 grep -l "$(quoteGrepPattern "$function")" | fileLineCount)
+    if [ "$testFiles" -eq 0 ]; then
+      if [ "$(date +%s)" -gt "$(dateToTimestamp '2025-08-01')" ]; then
+        missing+=("$function")
+      else
+        statusMessage --last decorate warning "No tests written for $(decorate code "$function")"
+      fi
+    else
+      statusMessage decorate info "$testFiles $(plural "$testFiles" test tests) written for $(decorate code "$function")"
+    fi
+  done < <(buildFunctions)
+  [ "${#missing[@]}" -gt 0 ] || __throwEnvironment "$usage" "Functions require tests:"$'\n'"$(printf "%s\n" "${missing[@]}" | decorate code | decorate wrap "- ")"
+}

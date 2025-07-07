@@ -187,6 +187,7 @@ _waitForValue() {
 }
 
 # Tag: slow deployment php-install package-install
+# Test-Build-Home: true
 testDeployApplication() {
   exec 2>&1
 

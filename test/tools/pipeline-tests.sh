@@ -7,6 +7,21 @@
 # Copyright &copy; 2025 Market Acumen, Inc.
 #
 
+__assertVersionSort() {
+  assertEquals "$(printf "%s\n" "$1" "$2")" "$(printf "%s\n" "$2" "$1" | versionSort)" || return $?
+  assertEquals "$(printf "%s\n" "$1" "$2")" "$(printf "%s\n" "$1" "$2" | versionSort)" || return $?
+}
+testVersionSort() {
+  __assertVersionSort "v1.2.3" "v1.2.4" || return $?
+  __assertVersionSort "v1.2.3" "v1.2.3" || return $?
+  __assertVersionSort "v1.2.3" "v1.3.3" || return $?
+  __assertVersionSort "v1.2.3" "v2.1.3" || return $?
+  __assertVersionSort "v100.100.100" "v100.100.1001" || return $?
+  __assertVersionSort "v100.100.100" "v100.101.0" || return $?
+  __assertVersionSort "v100.100.100" "v101.0.0" || return $?
+  __assertVersionSort "v100.100.100" "v1000.100.100" || return $?
+}
+
 testIsUpToDate() {
   local thisYear thisMonth expirationDays start testDate
 

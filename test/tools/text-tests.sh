@@ -7,6 +7,18 @@
 # Copyright &copy; 2025 Market Acumen, Inc.
 #
 
+__dataStringReplace() {
+  cat <<EOF
+Redundant|871|un|Red871dant
+1A11LE|Z|1|ZAZZLE
+zAzzLE|Z|1|zAzzLE
+EOF
+}
+testStringReplace() {
+  while IFS="|" read -r expected needle replacement haystack; do
+    assertEquals "$expected" "$(stringReplace "$needle" "$replacement" "$haystack")" || return $?
+  done < <(__dataStringReplace)
+}
 testIsSubstringInsensitive() {
   assertExitCode 1 isSubstringInsensitive "abc" "ABd" "bcd" "abed" || return $?
   assertExitCode 0 isSubstringInsensitive ";Build-Home:true;" ";Build-Home:true;" || return $?
