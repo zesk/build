@@ -6,8 +6,6 @@ Install software as `root` or superuser.
 [⬅ Parent ](../index.md)
 <hr />
 
-{packageInstall}
-
 {awsInstall}
 
 {dockerComposeInstall}
@@ -22,7 +20,7 @@ Install software as `root` or superuser.
 
 {phpInstall}
 
-pythonInstall}
+{pythonInstall}
 
 {terraformInstall}
 
