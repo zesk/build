@@ -261,8 +261,11 @@ _bashLintInteractiveCheck() {
   return 1
 }
 
-# Usage: {fn} [ --exec binary ] [ directory ]
 # Search bash files for assertions which do not terminate a function and are likely an error
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
+# DOC TEMPLATE: --handler 1
+# Argument: --handler handler - Optional. Function. Use this error handler instead of the default error handler.
 # Argument: --exec binary - Executable. Optional. For each failed file run this command.
 # Argument: directory - Directory. Optional. Where to search for files to check.
 # Argument: --list - Flag. Optional. List files which fail. (Default is simply to exit silently.)
@@ -283,6 +286,16 @@ findUncaughtAssertions() {
     argument="$1"
     [ -n "$argument" ] || __throwArgument "$usage" "blank argument" || return $?
     case "$argument" in
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    # _IDENTICAL_ --handler 4
+    --handler)
+      shift
+      usage=$(usageArgumentFunction "$usage" "$argument" "${1-}") || return $?
+      ;;
     --exec)
       shift || __throwArgument "$usage" "$argument missing argument" || return $?
       [ -n "$1" ] || __throwArgument "$usage" "$argument argument blank" || return $?
