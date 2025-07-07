@@ -49,7 +49,7 @@ documentationBuild() {
   local seeFunction seeFile seePrefix
 
   cacheDirectory="$(__catchEnvironment "$usage" buildCacheDirectory ".${FUNCNAME[0]}/${APPLICATION_CODE-default}/")" || return $?
-  cacheDirectory=$(__catchEnvironment "$usage" requireDirectory "$cacheDirectory") || return $?
+  cacheDirectory=$(__catchEnvironment "$usage" directoryRequire "$cacheDirectory") || return $?
   seeFunction=$(__catchEnvironment "$usage" documentationTemplate seeFunction) || return $?
   seeFile=$(__catchEnvironment "$usage" documentationTemplate seeFile) || return $?
   seePrefix="./docs"
@@ -164,7 +164,7 @@ documentationBuild() {
     timingReport "$start" "Emptied documentation cache in" || :
     return 0
   fi
-  cacheDirectory=$(requireDirectory "$cacheDirectory") || __throwEnvironment "$usage" "Unable to create $cacheDirectory" || return $?
+  cacheDirectory=$(directoryRequire "$cacheDirectory") || __throwEnvironment "$usage" "Unable to create $cacheDirectory" || return $?
 
   [ -n "$functionTemplate" ] || __throwArgument "$usage" "--function-template required" || return $?
   [ -n "$pageTemplate" ] || __throwArgument "$usage" "--page-template required" || return $?

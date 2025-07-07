@@ -13,12 +13,12 @@ testBasicFileStuff() {
 
   testFile="$testDir/$(randomString).$$"
   __environment touch "$testFile" || return $?
-  assertExitCode 0 modificationTime "$testFile" || return $?
-  assertExitCode 0 modificationSeconds "$testFile" || return $?
+  assertExitCode 0 fileModificationTime "$testFile" || return $?
+  assertExitCode 0 fileModificationSeconds "$testFile" || return $?
 }
 
 _assertBetterType() {
-  assertEquals --line "$1" "$2" "$(betterType "$3")" "$2 != betterType $3 $(decorate red "=> $(betterType "$3")")" || return $?
+  assertEquals --line "$1" "$2" "$(fileType "$3")" "$2 != fileType $3 $(decorate red "=> $(fileType "$3")")" || return $?
 }
 
 testBetterType() {
@@ -31,7 +31,7 @@ testBetterType() {
 
   local d
   d=$(mktemp -d) || return $?
-  requireDirectory "$d/food" >/dev/null || return $?
+  directoryRequire "$d/food" >/dev/null || return $?
   ln -s "$d/food" "$d/food-link" || return $?
 
   touch "$d/goof" || return $?
@@ -224,6 +224,36 @@ testLinkCreate() {
   assertExitCode 0 test -L "$home/bin/build/$target.FINAL" || return $?
   assertNotExitCode --stderr-match "Can not link to another link" --line "$LINENO" 0 "$home/bin/build/$target.ALT" linkCreate "$home/bin/build/$target.FINAL" "$target.NoLinkyLinks" || return $?
   assertExitCode 0 test -L "$home/bin/build/$target.FINAL" || return $?
-  assertEquals "$((0 + $(find "$home/bin/build" -name "wacky.*" | wc -l)))" "3" || return $?
+  assertEquals "$(find "$home/bin/build" -name "wacky.*" | fileLineCount)" "3" || return $?
   __environment rm -rf "$home/bin/build/$target*" || return $?
+}
+
+testFileLineCount() {
+  local usage="_return"
+  local temp
+
+  temp=$(fileTemporaryName "$usage") || return $?
+
+  assertEquals 0 "$(fileLineCount "$temp")" || return $?
+  assertEquals 0 "$(fileLineCount <"$temp")" || return $?
+
+  __catchEnvironment "$usage" printf "%s\n" "$(randomString)" >>"$temp" || return $?
+
+  assertEquals 1 "$(fileLineCount "$temp")" || return $?
+  assertEquals 1 "$(fileLineCount <"$temp")" || return $?
+
+  local total=1 i r
+
+  for i in 1 2 3 4 5; do
+    r=$((RANDOM % 10))
+    total=$((total + r))
+    while [ "$r" -gt 0 ]; do
+      __catchEnvironment "$usage" printf "%d: %s\n" "$i" "$(randomString)" >>"$temp" || return $?
+      r=$((r - 1))
+    done
+    assertEquals "$total" "$(fileLineCount "$temp")" || return $?
+    assertEquals "$total" "$(fileLineCount <"$temp")" || return $?
+  done
+
+  __catchEnvironment "$usage" rm "$temp" || return $?
 }

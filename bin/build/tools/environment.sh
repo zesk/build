@@ -732,7 +732,7 @@ environmentAddFile() {
   company=$(buildEnvironmentGet BUILD_COMPANY)
   for name in "${environmentNames[@]}"; do
     local path="$home/bin/env/$name.sh"
-    if [ -f "$path" ] && ! isEmptyFile "$path"; then
+    if [ -f "$path" ] && ! fileIsEmpty "$path"; then
       if [ ! -x "$path" ]; then
         statusMessage --last decorate warning "Making $(decorate file "$path") executable ..."
         __catchEnvironment "$usage" chmod +x "$path" || return $?

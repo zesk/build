@@ -4,8 +4,6 @@
 [⬅ Parent ](../index.md)
 <hr />
 
-# BitBucket Functions
-
 {getFromPipelineYML}
 {bitbucketContainer}
 {isBitBucketPipeline}

@@ -85,7 +85,7 @@ __hookPreCommit() {
   statusMessage decorate success Making shell files executable ...
   __catchEnvironment "$usage" makeShellFilesExecutable | printfOutputPrefix -- "\n" || return $?
 
-  if [ "$(newestFile "$original" "$nonOriginal")" = "$nonOriginal" ]; then
+  if [ "$(fileNewest "$original" "$nonOriginal")" = "$nonOriginal" ]; then
     nonOriginalWithEOF=$(fileTemporaryName "$usage") || return $?
     __catchEnvironment "$usage" sed -e 's/IDENTICAL _sugar [0-9][0-9]*/IDENTICAL _sugar EOF/g' -e 's/DO NOT EDIT/EDIT/g' <"$nonOriginal" >"$nonOriginalWithEOF" || return $?
     fileCopies=("$nonOriginalWithEOF" "$original")

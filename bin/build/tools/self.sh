@@ -525,7 +525,7 @@ buildEnvironmentGetDirectory() {
       path=$(__catchEnvironment "$usage" buildEnvironmentGet "$argument" 2>/dev/null) || return $?
       [ -z "$subdirectory" ] || subdirectory="${subdirectory#/}"
       subdirectory="${path%/}/$subdirectory"
-      ! $createFlag || path=$(__catchEnvironment "$usage" requireDirectory "${rr[@]+"${rr[@]}"}" "$subdirectory") || return $?
+      ! $createFlag || path=$(__catchEnvironment "$usage" directoryRequire "${rr[@]+"${rr[@]}"}" "$subdirectory") || return $?
       ! $existsFlag || [ -d "$subdirectory" ] || __throwEnvironment "$usage" "$argument -> $subdirectory does not exist" || return $?
       printf "%s\n" "${subdirectory%/}"
       ;;
@@ -567,7 +567,7 @@ buildQuietLog() {
     *)
       local logFile
       logFile="$(__catchEnvironment "$usage" buildCacheDirectory)/${1#_}.log" || return $?
-      ! "$flagMake" || logFile=$(__catchEnvironment "$usage" requireFileDirectory "$logFile") || return $?
+      ! "$flagMake" || logFile=$(__catchEnvironment "$usage" fileDirectoryRequire "$logFile") || return $?
       __catchEnvironment "$usage" printf -- "%s\n" "$logFile" || return $?
       return 0
       ;;

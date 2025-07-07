@@ -100,7 +100,7 @@ testAnyEnvToDockerEnv() {
 
   __environment anyEnvToDockerEnv "$testEnv" >"$testEnv.result" || return $?
   dumpPipe "Result - should be blank" <"$testEnv.result"
-  assertExitCode 0 isEmptyFile "$testEnv.result" || return $?
+  assertExitCode 0 fileIsEmpty "$testEnv.result" || return $?
 
   __environment cp "$home/test/example/bash.env" "$testEnv" || return $?
 
@@ -124,7 +124,7 @@ testAnyEnvToBashEnv() {
 
   __environment anyEnvToDockerEnv "$testEnv" >"$testEnv.result" || _environment "Failed @ $LINENO" || return $?
   __environment anyEnvToBashEnv "$testEnv" >"$testEnv.result" || _environment "Failed @ $LINENO" || return $?
-  assertExitCode 0 isEmptyFile "$testEnv.result" || return $?
+  assertExitCode 0 fileIsEmpty "$testEnv.result" || return $?
 
   __environment cp "$home/test/example/docker.env" "$testEnv" || return $?
 

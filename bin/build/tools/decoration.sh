@@ -214,7 +214,7 @@ labeledBigText() {
 
   local banner nLines
   banner="$(bigText "$@")"
-  nLines=$(printf -- "%s\n" "$banner" | wc -l)
+  nLines=$(printf -- "%s\n" "$banner" | fileLineCount)
   plainLabel="$(printf -- "%s\n" "$label" | stripAnsi)"
   tweenNonLabel="$(repeat "$((${#plainLabel}))" " ")$tweenNonLabel"
   if $isBottom; then

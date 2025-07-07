@@ -155,7 +155,7 @@ _daemontoolsInstallService() {
 _daemontoolsInstallServiceRun() {
   local usage="$1" source="$2" target="$3" args
   shift 3 || __throwArgument "$usage" "Missing arguments" || return $?
-  __catchEnvironment "$usage" muzzle requireDirectory "$target" || return $?
+  __catchEnvironment "$usage" muzzle directoryRequire "$target" || return $?
   args=(--map "$source" "$target/run")
   if copyFileWouldChange "${args[@]}"; then
     __catchEnvironment "$usage" copyFile "$@" "${args[@]}" || return $?
@@ -270,7 +270,7 @@ daemontoolsExecute() {
 
   home="$(__catchEnvironment "$usage" daemontoolsHome)" || return $?
   usageRequireBinary "$usage" svscanboot id svc svstat || return $?
-  __catchEnvironment "$usage" muzzle requireDirectory --mode 0775 --owner root:root "$home" || return $?
+  __catchEnvironment "$usage" muzzle directoryRequire --mode 0775 --owner root:root "$home" || return $?
   __catchEnvironment "$usage" muzzle nohup bash -c 'svscanboot &' 2>&1 || return $?
 }
 _daemontoolsExecute() {

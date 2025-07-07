@@ -10,14 +10,19 @@
 
 {directoryIsEmpty}
 
-{fileDirectoryExists}
+{fileDirectoryRequire}
 
-{requireFileDirectory}
-
-{requireDirectory}
+{directoryRequire}
 
 {directoryClobber}
 
 {__directoryParent}
 
 {directoryParent}
+
+{directoryPathSimplify}
+
+{directoryNewestFile}
+
+{directoryOldestFile}
+

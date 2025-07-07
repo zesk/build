@@ -200,7 +200,7 @@ deployLink() {
           if [ ! -L "$applicationLinkPath" ]; then
             [ ! -d "$applicationLinkPath" ] || __throwArgument "$usage" "$applicationLinkPath is directory (should be a link)" || return $?
             # Not a link or directory
-            __throwArgument "$usage" "Unknown file type $(betterType "$applicationLinkPath")" || return $?
+            __throwArgument "$usage" "Unknown file type $(fileType "$applicationLinkPath")" || return $?
           fi
         else
           applicationLinkPath=$(usageArgumentFileDirectory "$usage" applicationLinkPath "$applicationLinkPath") || return $?
@@ -226,7 +226,7 @@ deployLink() {
   fi
   local newApplicationLinkPath
   newApplicationLinkPath="$applicationLinkPath.READY.$$"
-  if ! ln -sf "$currentApplicationHome" "$newApplicationLinkPath" || ! renameLink "$newApplicationLinkPath" "$applicationLinkPath"; then
+  if ! ln -sf "$currentApplicationHome" "$newApplicationLinkPath" || ! linkRename "$newApplicationLinkPath" "$applicationLinkPath"; then
     rm -rf "$newApplicationLinkPath" 2>/dev/null
     __throwEnvironment "$usage" "Unable to link and rename" || return $?
   fi

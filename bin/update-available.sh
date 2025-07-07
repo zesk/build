@@ -121,7 +121,7 @@ __updateAvailable() {
     statusMessage decorate info "No brew manager available ..."
     # TODO look at OS X inside Docker
   fi
-  requireDirectory "$home/etc/packages/" || return $?
+  directoryRequire "$home/etc/packages/" || return $?
 
   __catchEnvironment muzzle pushd "$home/etc/packages" || return $?
 
@@ -134,7 +134,7 @@ __updateAvailable() {
     isFunction "$generator" || __throwEnvironment "$usage" "$generator is not a function" || return $?
     if [ -f "$manager" ] && ! $forceFlag; then
       local ageInSeconds
-      ageInSeconds=$(__catchEnvironment "$usage" modificationSeconds "$manager") || return $?
+      ageInSeconds=$(__catchEnvironment "$usage" fileModificationSeconds "$manager") || return $?
       if [ "$ageInSeconds" -lt 3600 ]; then
         statusMessage decorate warning "Skipping generated $manager ($((ageInSeconds / 60)) minutes old ..."
         continue
@@ -165,7 +165,7 @@ __commonGenerator() {
   local forceFlag="$1" target="$2"
 
   shift 2
-  if $forceFlag || [ ! -f "$target" ] || ! isNewestFile "$target" "$@"; then
+  if $forceFlag || [ ! -f "$target" ] || ! fileIsNewest "$target" "$@"; then
     statusMessage decorate info "Generating $(basename "$target") ..."
     cat "$@" | sort | uniq -c | grep -e "^[[:space:]]*$# " | awk '{ print $2 }' | tee "$target" >/dev/null
   else

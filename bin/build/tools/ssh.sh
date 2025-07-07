@@ -30,7 +30,7 @@ sshKnownHostsFile() {
       local sshHome
       sshHome=$(__catchEnvironment "$usage" dirname "$sshKnown") || return $?
       if [ ! -d "$sshHome" ]; then
-        sshHome=$(__catchEnvironment "$usage" requireDirectory "$sshHome") || return $?
+        sshHome=$(__catchEnvironment "$usage" directoryRequire "$sshHome") || return $?
       fi
       [ -f "$sshKnown" ] || touch "$sshKnown" || __throwEnvironment "$usage" "Unable to create $sshKnown" || return $?
       __catchEnvironment "$usage" chmod 700 "$sshHome" || return $?

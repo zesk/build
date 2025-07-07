@@ -19,27 +19,27 @@ testNewestAndOldest() {
   sleep "$waitSeconds"
   date >"c"
 
-  aTime=$(modificationTime "a") || _environment modificationTime a failed || return $?
-  bTime=$(modificationTime "b") || _environment modificationTime b failed || return $?
-  cTime=$(modificationTime "c") || _environment modificationTime c failed || return $?
+  aTime=$(fileModificationTime "a") || _environment fileModificationTime a failed || return $?
+  bTime=$(fileModificationTime "b") || _environment fileModificationTime b failed || return $?
+  cTime=$(fileModificationTime "c") || _environment fileModificationTime c failed || return $?
 
-  if ! assertOutputEquals "a" oldestFile "a" "b" "c" ||
-    ! assertOutputEquals "a" oldestFile "c" "b" "a" ||
-    ! assertOutputEquals "a" oldestFile "c" "a" "b" ||
-    ! assertOutputEquals --line "$LINENO" "c" newestFile "a" "b" "c" ||
-    ! assertOutputEquals --line "$LINENO" "c" newestFile "c" "b" "a" ||
-    ! assertOutputEquals --line "$LINENO" "c" newestFile "c" "a" "b"; then
+  if ! assertOutputEquals "a" fileOldest "a" "b" "c" ||
+    ! assertOutputEquals "a" fileOldest "c" "b" "a" ||
+    ! assertOutputEquals "a" fileOldest "c" "a" "b" ||
+    ! assertOutputEquals --line "$LINENO" "c" fileNewest "a" "b" "c" ||
+    ! assertOutputEquals --line "$LINENO" "c" fileNewest "c" "b" "a" ||
+    ! assertOutputEquals --line "$LINENO" "c" fileNewest "c" "a" "b"; then
     return 1
   fi
 
   if ! assertGreaterThan --line "$LINENO" "$bTime" "$aTime" "bTime > aTime" ||
     ! assertGreaterThan --line "$LINENO" "$cTime" "$aTime" "cTime > aTime" ||
-    ! assertExitCode 0 isNewestFile "c" "a" ||
-    ! assertExitCode 0 isNewestFile "c" "b" ||
-    ! assertExitCode 0 isNewestFile "b" "a" ||
-    ! assertExitCode 1 isNewestFile "b" "c" ||
-    ! assertExitCode 1 isNewestFile "a" "c" ||
-    ! assertExitCode 1 isNewestFile "a" "b"; then
+    ! assertExitCode 0 fileIsNewest "c" "a" ||
+    ! assertExitCode 0 fileIsNewest "c" "b" ||
+    ! assertExitCode 0 fileIsNewest "b" "a" ||
+    ! assertExitCode 1 fileIsNewest "b" "c" ||
+    ! assertExitCode 1 fileIsNewest "a" "c" ||
+    ! assertExitCode 1 fileIsNewest "a" "b"; then
     return 1
   fi
 }

@@ -64,7 +64,7 @@ documentationBuildEnvironment() {
     __catchEnvironment "$usage" find "$cacheDirectory" -type f -exec rm -f {} \; || return $?
     return 0
   fi
-  __catchEnvironment "$usage" muzzle requireDirectory "$target" || return $?
+  __catchEnvironment "$usage" muzzle directoryRequire "$target" || return $?
   __catchEnvironment "$usage" cat "$source" >"$target/index.md" || return $?
   local envFile categories=()
 
@@ -91,7 +91,7 @@ documentationBuildEnvironment() {
     name="${name%.sh}"
     envTarget="$cacheDirectory/$name"
     moreTarget="$cacheDirectory/more.$name"
-    if ! $forceFlag && [ -f "$envTarget" ] && isNewestFile "$envTarget" "$envFile" "$lineTemplate" "$moreTemplate"; then
+    if ! $forceFlag && [ -f "$envTarget" ] && fileIsNewest "$envTarget" "$envFile" "$lineTemplate" "$moreTemplate"; then
       statusMessage decorate notice "Cached $(basename "$envFile") ..."
       continue
     else
@@ -100,7 +100,7 @@ documentationBuildEnvironment() {
 
     local description type lines more="" shortDesc
     description=$(sed -n '/^[[:space:]]*#/!q; p' "$envFile" | grep -v -e '^#!\|\&copy;' | cut -c 3- | grep -v '^[[:alpha:]][[:alnum:]]*: ')
-    lines=$(($(printf "%s\n" "$description" | wc -l) + 0))
+    lines=$(printf "%s\n" "$description" | __catchEnvironment "$usage" fileLineCount) || return $?
 
     local categoryName categoryFileName
 

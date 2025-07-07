@@ -18,22 +18,133 @@
 #             |_|
 #
 
+# DEPRECATED 2025-07-07
+modifiedDays() {
+  _deprecated "${FUNCNAME[0]}"
+  fileModifiedDays "$@"
+}
+
+# DEPRECATED 2025-07-07
+modifiedSeconds() {
+  _deprecated "${FUNCNAME[0]}"
+  fileModifiedSeconds "$@"
+}
+
+# DEPRECATED 2025-07-07
+requireFileDirectory() {
+  _deprecated "${FUNCNAME[0]}"
+  fileDirectoryRequire "$@"
+}
+
+# DEPRECATED 2025-07-07
+requireDirectory() {
+  _deprecated "${FUNCNAME[0]}"
+  directoryRequire "$@"
+}
+
+# DEPRECATED 2025-07-07
+mostRecentlyModifiedFile() {
+  _deprecated "${FUNCNAME[0]}"
+  fileModifiedRecentlyName "$@"
+}
+
+# DEPRECATED 2025-07-07
+mostRecentlyModifiedTimestamp() {
+  _deprecated "${FUNCNAME[0]}"
+  fileModifiedRecentlyTimestamp "$@"
+}
+
+# DEPRECATED 2025-07-07
+betterType() {
+  _deprecated "${FUNCNAME[0]}"
+  fileType "$@"
+}
+
+# DEPRECATED 2025-07-07
+simplifyPath() {
+  _deprecated "${FUNCNAME[0]}"
+  directoryPathSimplify "$@"
+}
+
+# DEPRECATED 2025-07-07
+renameFiles() {
+  _deprecated "${FUNCNAME[0]}"
+  filesRename "$@"
+}
+
+# DEPRECATED 2025-07-07
+reverseFileLines() {
+  _deprecated "${FUNCNAME[0]}"
+  fileReverseLines "$@"
+}
+
+# DEPRECATED 2025-07-07
+renameLink() {
+  _deprecated "${FUNCNAME[0]}"
+  linkRename "$@"
+}
+
+# DEPRECATED 2025-07-07
+modificationTime() {
+  _deprecated "${FUNCNAME[0]}"
+  fileModificationTime "$@"
+}
+
+# DEPRECATED 2025-07-07
+modificationSeconds() {
+  _deprecated "${FUNCNAME[0]}"
+  fileModificationSeconds "$@"
+}
+
+# DEPRECATED 2025-07-07
+isEmptyFile() {
+  _deprecated "${FUNCNAME[0]}"
+  fileIsEmpty "$@"
+}
+
+# DEPRECATED 2025-07-07
+isNewestFile() {
+  _deprecated "${FUNCNAME[0]}"
+  fileIsNewest "$@"
+}
+
+# DEPRECATED 2025-07-07
+isOldestFile() {
+  _deprecated "${FUNCNAME[0]}"
+  fileIsOldest "$@"
+}
+
+# DEPRECATED 2025-07-07
+oldestFile() {
+  _deprecated "${FUNCNAME[0]}"
+  fileOldest "$@"
+}
+
+# DEPRECATED 2025-07-07
+newestFile() {
+  _deprecated "${FUNCNAME[0]}"
+  fileNewest "$@"
+}
+
+# DEPRECATED 2025-07-07
 truncateFloat() {
   _deprecated "${FUNCNAME[0]}"
   floatTruncate "$@"
 }
 
+# DEPRECATED 2025-07-07
 roundFloat() {
   _deprecated "${FUNCNAME[0]}"
   floatRound "$@"
 }
 
+# DEPRECATED 2025-07-07
 timestampToDate() {
   _deprecated "${FUNCNAME[0]}"
   dateFromTimestamp "$@"
 }
 
-# DEPRECATED 2025-07-05
+# DEPRECATED 2025-07-07
 hostIPList() {
   _deprecated "${FUNCNAME[0]}"
   networkIPList "$@"

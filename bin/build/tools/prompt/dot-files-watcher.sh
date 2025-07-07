@@ -17,7 +17,7 @@ bashPromptModule_dotFilesWatcher() {
   for item in dataFile askFile; do
     [ -f "${!item}" ] || touch "${!item}" || _environment "Can not create $item: ${!item}" || return 1
   done
-  [ "$(modificationSeconds "$askFile")" -lt 60 ] || printf -- "" >"$askFile"
+  [ "$(fileModificationSeconds "$askFile")" -lt 60 ] || printf -- "" >"$askFile"
 
   local item ok=() asked=()
   while read -r item; do ok+=("$item"); done < <(sort -u "$dataFile")
@@ -39,7 +39,7 @@ bashPromptModule_dotFilesWatcher() {
       fi
       inArray "$base" "${asked[@]}" && foundFiles+=("$base") || askFiles+=("$base")
     else
-      decorate warning "Unknown handled dot file type: $(decorate value "$(betterType "$item")")"
+      decorate warning "Unknown handled dot file type: $(decorate value "$(fileType "$item")")"
       continue
     fi
     unapproved+=("$base")

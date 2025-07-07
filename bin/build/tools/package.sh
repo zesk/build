@@ -123,7 +123,7 @@ __packageUpFunction() {
     ! $verboseFlag || statusMessage decorate info "Forcing $manager $verb ..."
   elif [ -f "$name" ]; then
     local lastModified
-    lastModified="$(modificationSeconds "$name")"
+    lastModified="$(fileModificationSeconds "$name")"
     # once an hour, technically
     local threshold=3600
     if [ "$lastModified" -lt "$threshold" ]; then

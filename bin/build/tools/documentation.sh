@@ -264,19 +264,21 @@ documentationTemplateCompile() {
   #
   # Look at source file for each function
   #
-  if ! envChecksumCache=$(requireDirectory "$cacheDirectory/envChecksum"); then
+  if ! envChecksumCache=$(directoryRequire "$cacheDirectory/envChecksum"); then
     __throwEnvironment "$usage" "create $cacheDirectory/envChecksum failed" || _clean $? "${clean[@]}" || return $?
   fi
   envChecksumCache="$envChecksumCache/$envChecksum"
   if [ ! -f "$envChecksumCache" ]; then
     touch "$envChecksumCache"
   fi
-  compiledTemplateCache=$(__catchEnvironment "$usage" requireDirectory "$cacheDirectory/compiledTemplateCache") || _clean $? "${clean[@]}" || return $?
+  compiledTemplateCache=$(__catchEnvironment "$usage" directoryRequire "$cacheDirectory/compiledTemplateCache") || _clean $? "${clean[@]}" || return $?
   # Environment change will affect this template
   # Function template change will affect this template
 
   # As well, document template change will affect this template
-  if [ $(($(wc -l <"$documentTokensFile") + 0)) -eq 0 ]; then
+  local tempCount
+  tempCount=$(__catchEnvironment "$usage" fileLineCount "$documentTokensFile") || return $?
+  if [ "$tempCount" -eq 0 ]; then
     if [ ! -f "$targetFile" ] || ! diff -q "$mappedDocumentTemplate" "$targetFile" >/dev/null; then
       printf "%s (mapped) -> %s %s" "$(decorate warning "$documentTemplate")" "$(decorate success "$targetFile")" "$(decorate error "(no tokens found)")"
       __catchEnvironment "$usage" cp "$mappedDocumentTemplate" "$targetFile" || _clean $? "${clean[@]}" || return $?
@@ -297,7 +299,7 @@ documentationTemplateCompile() {
         checkFiles+=("$settingsFile")
       fi
     done <"$documentTokensFile"
-    if $forceFlag || isEmptyFile "$targetFile" || ! isNewestFile "$targetFile" "${checkFiles[@]+"${checkFiles[@]}"}" "$documentTemplate"; then
+    if $forceFlag || fileIsEmpty "$targetFile" || ! fileIsNewest "$targetFile" "${checkFiles[@]+"${checkFiles[@]}"}" "$documentTemplate"; then
       message="Generated"
       compiledFunctionEnv=$(fileTemporaryName "$usage") || return $?
       # subshell to hide environment tokens
@@ -307,7 +309,7 @@ documentationTemplateCompile() {
           __catchEnvironment "$usage" printf "%s\n" "Function not found: $tokenName" >"$compiledFunctionTarget" || _clean $? "${clean[@]}" || return $?
           continue
         fi
-        if ! $forceFlag && [ -f "$compiledFunctionTarget" ] && isNewestFile "$compiledFunctionTarget" "$settingsFile" "$envChecksumCache" "$functionTemplate"; then
+        if ! $forceFlag && [ -f "$compiledFunctionTarget" ] && fileIsNewest "$compiledFunctionTarget" "$settingsFile" "$envChecksumCache" "$functionTemplate"; then
           statusMessage decorate info "Skip $tokenName and use cache"
         else
           __catchEnvironment "$usage" documentationTemplateFunctionCompile "${envFileArgs[@]+${envFileArgs[@]}}" "$cacheDirectory" "$tokenName" "$functionTemplate" | trimTail >"$compiledFunctionTarget" || _clean $? "${clean[@]}" || return $?
@@ -850,7 +852,7 @@ bashDocumentation_FindFunctionDefinitions() {
     done
     shift
   done | tee "$foundOne"
-  linesOutput=$(wc -l <"$foundOne")
+  linesOutput=$(fileLineCount "$foundOne")
   [ "$phraseCount" -eq "$linesOutput" ]
 }
 

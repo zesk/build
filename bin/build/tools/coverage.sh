@@ -101,7 +101,7 @@ bashCoverageReport() {
   if [ -z "$reportCache" ]; then
     reportCache=$(__catchEnvironment "$usage" buildCacheDirectory ".bashCoverageReport") || return $?
   fi
-  target=$(__catchEnvironment "$usage" requireDirectory "$target") || return $?
+  target=$(__catchEnvironment "$usage" directoryRequire "$target") || return $?
 
   decorate info "$reportCache"
   decorate info "Report: $target"
@@ -176,7 +176,7 @@ __bashCoverageReportFile() {
 
   tempFile=$(fileTemporaryName "$usage") || return $?
   sort -u >"$tempFile"
-  lineCount=$(($(wc -l <"$tempFile") + 0))
+  lineCount=$(__catchEnvironment "$usage" fileLineCount "$tempFile") || return $?
   __bashCoverageReportProcessStats "$usage" "$reportCache" "$target" "$lineCount" <"$tempFile" || _clean $? "$tempFile" || return $?
   __catchEnvironment "$usage" rm -rf "$tempFile" || return $?
 }
@@ -192,11 +192,11 @@ __bashCoverageReportProcessStats() {
   while read -r fileLine command; do
     file="${fileLine%:*}"
     line="${fileLine##*:}"
-    dataPath=$(__catchEnvironment "$usage" requireDirectory "$reportCache/$file/$line/") || return $?
+    dataPath=$(__catchEnvironment "$usage" directoryRequire "$reportCache/$file/$line/") || return $?
     commandFile="$(printf -- "%s\n" "$command" | shaPipe)"
     printf -- "%s\n" "$command" >"$dataPath/$commandFile" || __throwEnvironment "$usage" "Writing $commandFile" || return $?
     targetFile="$reportBase/$file.html"
-    targetFile=$(__catchEnvironment "$usage" requireFileDirectory "$targetFile") || return $?
+    targetFile=$(__catchEnvironment "$usage" fileDirectoryRequire "$targetFile") || return $?
     [ -f "$targetFile" ] || __catchEnvironment "$usage" touch "$targetFile" || return $?
     __catchEnvironment "$usage" printf -- "%s\n" "$file" >>"$reportCache/all" || return $?
     index=$((index + 1))

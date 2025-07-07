@@ -512,8 +512,13 @@ maximumLineLength() {
   printf "%d" "$max"
 }
 
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
+# DOC TEMPLATE: --handler 1
+# Argument: --handler handler - Optional. Function. Use this error handler instead of the default error handler.
+# Argument: file - Optional. File. Output line count for each file specified. If not files specified, uses stdin.
 fileLineCount() {
-  local usage="_${FUNCNAME[0]}"
+  local usage="_${FUNCNAME[0]}" fileArgument=false
 
   # _IDENTICAL_ argument-case-header 5
   local __saved=("$@") __count=$#
@@ -534,12 +539,14 @@ fileLineCount() {
     *)
       local file
       file="$(usageArgumentFile "$usage" "$argument" "${1-}")" || return $?
-      printf "%d\n" "$(wc -l <"$file")"
+      printf "%d\n" "$(__catchEnvironment "$usage" wc -l <"$file")" || return $?
+      fileArgument=true
       ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
     shift
   done
+  $fileArgument || printf "%d\n" "$(__catchEnvironment "$usage" wc -l)" || return $?
 }
 _fileLineCount() {
   # _IDENTICAL_ usageDocument 1
@@ -558,12 +565,11 @@ _fileLineCount() {
 #
 # Exit code: 1 - If count is non-numeric
 # Exit code: 0 - If count is numeric
-# Example:     count=$(($(wc -l < $foxSightings) + 0))
+# Example:     count=$(__environment fileLineCount "$foxSightings") || return $?
 # Example:     printf "We saw %d %s.\n" "$count" "$(plural $count fox foxes)"
 # Example:
 # Example:     n=$(($(date +%s)) - start))
 # Example:     printf "That took %d %s" "$n" "$(plural "$n" second seconds)"
-#
 plural() {
   local count=${1-}
   if [ "$count" -eq "$count" ] 2>/dev/null; then
@@ -711,8 +717,8 @@ cachedShaPipe() {
       [ -n "$argument" ] || __throwArgument "$usage" "blank argument" || return $?
       [ -f "$argument" ] || __throwArgument "$usage" "not a file $(decorate label "$argument")" || return $?
       cacheFile="$cacheDirectory/${argument#/}"
-      cacheFile=$(__catchEnvironment "$usage" requireFileDirectory "$cacheFile") || return $?
-      if [ -f "$cacheFile" ] && isNewestFile "$cacheFile" "$1"; then
+      cacheFile=$(__catchEnvironment "$usage" fileDirectoryRequire "$cacheFile") || return $?
+      if [ -f "$cacheFile" ] && fileIsNewest "$cacheFile" "$1"; then
         printf "%s\n" "$(cat "$cacheFile")"
       else
         __catchEnvironment "$usage" shaPipe "$argument" | __catchEnvironment "$usage" tee "$cacheFile" || return $?

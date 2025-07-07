@@ -63,9 +63,9 @@ testStatusMessageLast() {
   statusMessage decorate warning "Mocking console animation (true)"
   __mockConsoleAnimation true
 
-  assertEquals 0 "$(($(statusMessage --first printf -- "%s" "$phrase" | wc -l) + 0))" || return $?
-  assertEquals 0 "$(($(statusMessage printf -- "%s" "$phrase" | wc -l) + 0))" || return $?
-  assertEquals 1 "$(($(statusMessage --last printf -- "%s" "$phrase" | wc -l) + 0))" || return $?
+  assertEquals 0 "$(statusMessage --first printf -- "%s" "$phrase" | fileLineCount)" || return $?
+  assertEquals 0 "$(statusMessage printf -- "%s" "$phrase" | fileLineCount)" || return $?
+  assertEquals 1 "$(statusMessage --last printf -- "%s" "$phrase" | fileLineCount)" || return $?
 
   statusMessage decorate warning "Ending mocked console animation"
   __mockConsoleAnimation --end
@@ -73,9 +73,9 @@ testStatusMessageLast() {
   statusMessage decorate warning "Mocking console animation (false)"
   __mockConsoleAnimation false
 
-  assertEquals 0 "$(($(statusMessage --first printf -- "%s" "$phrase" | wc -l) + 0))" || return $?
-  assertEquals 1 "$(($(statusMessage printf -- "%s" "$phrase" | wc -l) + 0))" || return $?
-  assertEquals 1 "$(($(statusMessage --last printf -- "%s" "$phrase" | wc -l) + 0))" || return $?
+  assertEquals 0 "$(statusMessage --first printf -- "%s" "$phrase" | fileLineCount)" || return $?
+  assertEquals 1 "$(statusMessage printf -- "%s" "$phrase" | fileLineCount)" || return $?
+  assertEquals 1 "$(statusMessage --last printf -- "%s" "$phrase" | fileLineCount)" || return $?
 
   __mockConsoleAnimation --end
   statusMessage decorate warning "Ending mocked console animation"

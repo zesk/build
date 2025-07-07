@@ -10,17 +10,17 @@
 #
 
 # TODO suggest rename
-#mostRecentlyModifiedFile|fileRecentlyModified
-#mostRecentlyModifiedTimestamp|fileTimestampRecentlyModified
-#isNewestFile|fileIsNewest
-#isOldestFile|fileIsOldest
-#oldestFile|fileOldest
-#newestFile|fileNewest
-#modifiedSeconds|fileModifiedSeconds
-#modifiedDays|fileModifiedDays
-#modificationSeconds|fileModificationSeconds
-#modificationTime|fileModificationTime
-#renameFiles|filesRename
+#fileModifiedRecentlyName|fileRecentlyModified
+#fileModifiedRecentlyTimestamp|fileTimestampRecentlyModified
+#fileIsNewest|fileIsNewest
+#fileIsOldest|fileIsOldest
+#fileOldest|fileOldest
+#fileNewest|fileNewest
+#fileModifiedSeconds|fileModifiedSeconds
+#fileModifiedDays|fileModifiedDays
+#fileModificationSeconds|fileModificationSeconds
+#fileModificationTime|fileModificationTime
+#filesRename|filesRename
 
 #
 # Renames "$file0$oldSuffix" to "$file0$newSuffix" if file exists and outputs a message using the actionVerb
@@ -41,7 +41,7 @@
 # Example:     ...
 # Example:     {fn} ".$$.backup" "" restoring etc/app.json etc/config.json
 #
-renameFiles() {
+filesRename() {
   local usage="_${FUNCNAME[0]}"
 
   local old new verb
@@ -57,19 +57,19 @@ renameFiles() {
     fi
   done
 }
-_renameFiles() {
+_filesRename() {
   # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Fetch the modification time of a file as a timestamp
 #
-# Usage: modificationTime filename0 [ filename1 ... ]
+# Usage: fileModificationTime filename0 [ filename1 ... ]
 # Exit Code: 2 - If file does not exist
 # Exit Code: 0 - If file exists and modification times are output, one per line
-# Example:     modificationTime ~/.bash_profile
+# Example:     fileModificationTime ~/.bash_profile
 #
-modificationTime() {
+fileModificationTime() {
   local usage="_${FUNCNAME[0]}"
   local argument
   while [ $# -gt 0 ]; do
@@ -80,7 +80,7 @@ modificationTime() {
     shift || __throwArgument "$usage" "shift" || return $?
   done
 }
-_modificationTime() {
+_fileModificationTime() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -89,9 +89,9 @@ _modificationTime() {
 # Usage: {fn} filename0 [ filename1 ... ]
 # Exit Code: 2 - If file does not exist
 # Exit Code: 0 - If file exists and modification times are output, one per line
-# Example:     modificationTime ~/.bash_profile
+# Example:     fileModificationTime ~/.bash_profile
 #
-modificationSeconds() {
+fileModificationSeconds() {
   local usage="_${FUNCNAME[0]}"
   local now_
 
@@ -100,11 +100,11 @@ modificationSeconds() {
   while [ $# -gt 0 ]; do
     local argument
     argument="$(usageArgumentFile "$usage" "argument #$((__count - $# + 1))" "${1-}")" || return $?
-    __catchEnvironment "$usage" printf "%d\n" "$((now_ - $(modificationTime "$argument")))" || return $?
+    __catchEnvironment "$usage" printf "%d\n" "$((now_ - $(fileModificationTime "$argument")))" || return $?
     shift
   done
 }
-_modificationSeconds() {
+_fileModificationSeconds() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -139,14 +139,14 @@ _fileModificationTimes() {
 # Usage: {fn} directory [ findArgs ... ]
 # Argument: directory - Required. Directory. Must exists - directory to list.
 # Argument: findArgs - Optional additional arguments to modify the find query
-mostRecentlyModifiedFile() {
+fileModifiedRecentlyName() {
   local usage="_${FUNCNAME[0]}"
   directory="$1"
   [ -d "$directory" ] || __throwArgument "$usage" "Not a directory $(decorate code "$directory")" || return $?
   shift || :
   fileModificationTimes "$directory" -type f "$@" | sort -r | head -1 | cut -f2- -d" "
 }
-_mostRecentlyModifiedFile() {
+_fileModifiedRecentlyName() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -154,14 +154,14 @@ _mostRecentlyModifiedFile() {
 # Usage: {fn} directory [ findArgs ... ]
 # Argument: directory - Required. Directory. Must exists - directory to list.
 # Argument: findArgs - Optional additional arguments to modify the find query
-mostRecentlyModifiedTimestamp() {
+fileModifiedRecentlyTimestamp() {
   local usage="_${FUNCNAME[0]}"
   directory="$1"
   [ -d "$directory" ] || __throwArgument "$usage" "Not a directory $(decorate code "$directory")" || return $?
   shift || :
   fileModificationTimes "$directory" -type f "$@" | sort -r | head -1 | cut -f1 -d" "
 }
-_mostRecentlyModifiedTimestamp() {
+_fileModifiedRecentlyTimestamp() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -178,11 +178,11 @@ _mostRecentlyModifiedTimestamp() {
 # Exit code: 1 - `sourceFile`, 'targetFile' does not exist, or
 # Exit code: 0 - All files exist and `sourceFile` is the oldest file
 #
-isNewestFile() {
+fileIsNewest() {
   if [ $# -eq 0 ]; then
     return 1
   fi
-  [ "$1" = "$(newestFile "$@")" ]
+  [ "$1" = "$(fileNewest "$@")" ]
 }
 
 #
@@ -198,15 +198,15 @@ isNewestFile() {
 # Exit code: 1 - `sourceFile`, 'targetFile' does not exist, or
 # Exit code: 0 - All files exist and `sourceFile` is the oldest file
 #
-isOldestFile() {
+fileIsOldest() {
   if [ $# -eq 0 ]; then
     return 1
   fi
-  [ "$1" = "$(oldestFile "$@")" ]
+  [ "$1" = "$(fileOldest "$@")" ]
 }
 
 #
-# oldestFile and newestFile refactor
+# fileOldest and fileNewest refactor
 #
 __gamutFile() {
   local usage="$1" comparison="$2"
@@ -220,7 +220,7 @@ __gamutFile() {
     local argument="$1" __index=$((__count - $# + 1)) tempTime
     [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
     [ -f "$argument" ] || __throwArgument "$usage" "Not a file: $(decorate code "$argument"): #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
-    tempTime=$(modificationTime "$argument") || __throwEnvironment "#$__index/$__count: modificationTime $argument: #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
+    tempTime=$(fileModificationTime "$argument") || __throwEnvironment "#$__index/$__count: fileModificationTime $argument: #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
     if [ -z "$theFile" ] || test "$tempTime" "$comparison" "$gamutTime"; then
       theFile="$1"
       gamutTime="$tempTime"
@@ -236,10 +236,10 @@ __gamutFile() {
 # Usage: {fn} file0 [ file1 ... ]
 # Argument: file0 - One or more files to examine
 #
-oldestFile() {
+fileOldest() {
   __gamutFile "_${FUNCNAME[0]}" -lt "$@"
 }
-_oldestFile() {
+_fileOldest() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -249,10 +249,10 @@ _oldestFile() {
 # Usage: {fn} file0 [ file1 ... ]
 # Argument: file0 - One or more files to examine
 #
-newestFile() {
+fileNewest() {
   __gamutFile "_${FUNCNAME[0]}" -gt "$@"
 }
-_newestFile() {
+_fileNewest() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -262,14 +262,14 @@ _newestFile() {
 # Exit Code: 0 - Success
 # Exit Code: 2 - Can not get modification time
 #
-modifiedSeconds() {
+fileModifiedSeconds() {
   local usage="_${FUNCNAME[0]}"
   local timestamp
 
-  timestamp=$(modificationTime "$1") || __throwArgument "$usage" modificationTime "$1" || return $?
+  timestamp=$(fileModificationTime "$1") || __throwArgument "$usage" fileModificationTime "$1" || return $?
   printf %d "$(($(date +%s) - timestamp))"
 }
-_modifiedSeconds() {
+_fileModifiedSeconds() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -279,14 +279,14 @@ _modifiedSeconds() {
 # Exit Code: 0 - Success
 # Exit Code: 2 - Can not get modification time
 #
-modifiedDays() {
+fileModifiedDays() {
   local usage="_${FUNCNAME[0]}"
   local timestamp
 
-  timestamp=$(modifiedSeconds "$1") || __throwArgument "$usage" modifiedSeconds "$1" || return $?
+  timestamp=$(fileModifiedSeconds "$1") || __throwArgument "$usage" fileModifiedSeconds "$1" || return $?
   printf %d "$((timestamp / 86400))"
 }
-_modifiedDays() {
+_fileModifiedDays() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -308,7 +308,7 @@ realPath() {
 # Argument: path ... - Required. File. One or more paths to simplify
 # Normalizes segments of `/./` and `/../` in a path without using `realPath`
 # Removes dot and dot-dot paths from a path correctly
-simplifyPath() {
+directoryPathSimplify() {
   local path elements=() segment dot=0 result IFS="/"
   while [ $# -gt 0 ]; do
     path="$1"
@@ -361,8 +361,8 @@ _fileSize() {
 #
 # Outputs one of `type` output or enhancements:
 # - `builtin`. `function`, `alias`, `file`
-# - `link-directory`, `link-file`, `directory`, `integer`, `unknown`
-betterType() {
+# - `link-directory`, `link-file`, `link-dead`, `directory`, `integer`, `unknown`
+fileType() {
   local t
   while [ $# -gt 0 ]; do
     t="$(type -t "$1")" || :
@@ -370,9 +370,9 @@ betterType() {
       if [ -L "$1" ]; then
         local ll
         if ! ll=$(readlink "$1"); then
-          t="link-fail"
+          t="link-dead"
         elif [ -e "$ll" ]; then
-          t="link-$(betterType "$ll")"
+          t="link-$(fileType "$ll")"
         else
           t="link-unknown"
         fi
@@ -396,7 +396,7 @@ betterType() {
 #
 # Renames a link forcing replacement, and works on different versions of `mv` which differs between systems.
 # See: mv
-renameLink() {
+linkRename() {
   local usage="_${FUNCNAME[0]}"
 
   local from="" to=""
@@ -414,9 +414,9 @@ renameLink() {
       ;;
     *)
       if [ -z "$from" ]; then
-        from=$(usageArgumentLink "$usage" "from $(betterType "$1")" "$1") || return $?
+        from=$(usageArgumentLink "$usage" "from $(fileType "$1")" "$1") || return $?
       elif [ -z "$to" ]; then
-        to=$(usageArgumentString "$usage" "to $(betterType "$1")" "$1") || return $?
+        to=$(usageArgumentString "$usage" "to $(fileType "$1")" "$1") || return $?
       else
         # _IDENTICAL_ argumentUnknown 1
         __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
@@ -428,9 +428,9 @@ renameLink() {
   done
   [ -n "$from" ] || __throwArgument "$usage" "Need a \"from\" argument" || return $?
   [ -n "$to" ] || __throwArgument "$usage" "Need a \"to\" argument" || return $?
-  __renameLink "$from" "$to"
+  __linkRename "$from" "$to"
 }
-_renameLink() {
+_linkRename() {
   # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
@@ -567,7 +567,7 @@ _fileMatchesHelper() {
       fi
       if $success; then
         if grep -n -e "$pattern" "$file" >"$foundLines"; then
-          if ! isEmptyFile "$foundLines"; then
+          if ! fileIsEmpty "$foundLines"; then
             found=true
             decorate wrap "$file: " <"$foundLines"
           fi
@@ -590,7 +590,7 @@ _fileMatchesHelper() {
 # Argument: file - File. Optional. One or more files, all of which must be empty.
 # DOC TEMPLATE: --help 1
 # Argument: --help - Optional. Flag. Display this help.
-isEmptyFile() {
+fileIsEmpty() {
   local usage="_${FUNCNAME[0]}"
 
   # _IDENTICAL_ argument-case-header 5
@@ -613,7 +613,7 @@ isEmptyFile() {
     shift
   done
 }
-_isEmptyFile() {
+_fileIsEmpty() {
   # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
@@ -738,7 +738,7 @@ linkCreate() {
   local link="$path/$linkName"
   if [ ! -L "$link" ]; then
     if [ -e "$link" ]; then
-      __throwEnvironment "$usage" "$(decorate file "$link") exists and was not a link $(decorate code "$(betterType "$link")")" || :
+      __throwEnvironment "$usage" "$(decorate file "$link") exists and was not a link $(decorate code "$(fileType "$link")")" || :
       __catchEnvironment "$usage" mv "$link" "$link.createLink.$$.backup" || return $?
       clean+=("$link.$$.backup")
     fi

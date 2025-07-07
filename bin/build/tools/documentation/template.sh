@@ -56,7 +56,7 @@ _documentationTemplateUpdateUnlinked() {
   unlinkedFunctions=$(fileTemporaryName "$usage") || return $?
   clean+=("$unlinkedFunctions")
   documentationIndex_SetUnlinkedDocumentationPath "$cacheDirectory" "$target" | IFS="" awk '{ print "{" $1 "}" }' >"$unlinkedFunctions" || __throwEnvironment "$usage" "Unable to documentationIndex_SetUnlinkedDocumentationPath" || _clean $? "${clean[@]}" || return $?
-  total=$(wc -l <"$unlinkedFunctions" | trimSpace)
+  total=$(__catchEnvironment "$usage" fileLineCount "$unlinkedFunctions") || return $?
 
   # Subshell hide globals
   (
@@ -159,7 +159,7 @@ documentationUnlinked() {
   local cacheDirectory
 
   cacheDirectory="$(__catchEnvironment "$usage" buildCacheDirectory)" || return $?
-  cacheDirectory=$(__catchEnvironment "$usage" requireDirectory "$cacheDirectory") || return $?
+  cacheDirectory=$(__catchEnvironment "$usage" directoryRequire "$cacheDirectory") || return $?
 
   __catchEnvironment "$usage" documentationIndex_ShowUnlinked "$cacheDirectory" || return $?
 }

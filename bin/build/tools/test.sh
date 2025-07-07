@@ -105,7 +105,7 @@ dumpBinary() {
 
   local name="" nLines nBytes
   [ ${#names[@]} -eq 0 ] || name=$(decorate info "${names[*]}: ")
-  nLines=$(($(wc -l <"$item") + 0))
+  nLines=$(($(fileLineCount "$item") + 0))
   nBytes=$(($(wc -c <"$item") + 0))
   [ ${#symbol} -eq 0 ] || symbol="$symbol "
   if [ $nBytes -eq 0 ]; then

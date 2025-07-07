@@ -14,7 +14,7 @@ testDotEnvConfigure() {
   magic=$(randomString)
   tempDir="$(__environment buildCacheDirectory)/$$.dotEnvConfig" || return $?
 
-  __environment requireDirectory "$tempDir" || return $?
+  __environment directoryRequire "$tempDir" || return $?
   __environment muzzle pushd "$tempDir" || return $?
   assertNotExitCode --stderr-match "is not file" 0 environmentFileLoad .env --optional .env.local || return $?
 

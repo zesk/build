@@ -67,7 +67,7 @@ dockerComposeIsRunning() {
   temp=$(fileTemporaryName "$usage") || return $?
   __catchEnvironment "$usage" dockerCompose ps --format json >"$temp" || _clean $? "$temp" || return $?
   local exitCode=1
-  isEmptyFile "$temp" || exitCode=0
+  fileIsEmpty "$temp" || exitCode=0
   __catchEnvironment "$usage" rm -rf "$temp" || return $?
   return $exitCode
 }

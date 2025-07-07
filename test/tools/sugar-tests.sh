@@ -142,7 +142,7 @@ testSugar() {
   code=99
   assertExitCode --stderr-match "$code" "$code" __execute _wasRun || return $?
   assertFileExists "$SUGAR_FILE" || return $?
-  assertEquals $(($(wc -l <"$SUGAR_FILE") + 0)) 2 || return $?
+  assertEquals $(($(fileLineCount "$SUGAR_FILE") + 0)) 2 || return $?
   __environment rm -rf "$SUGAR_FILE" || return $?
   assertFileDoesNotExist --line "$LINENO" "$SUGAR_FILE" || return $?
   code=0
@@ -153,7 +153,7 @@ testSugar() {
   assertFileExists "$SUGAR_FILE" || return $?
   code=99
   assertExitCode --stderr-match "$code" "$code" __execute _wasRun || return $?
-  assertEquals $(($(wc -l <"$SUGAR_FILE") + 0)) 3 || return $?
+  assertEquals $(($(fileLineCount "$SUGAR_FILE") + 0)) 3 || return $?
   rm -rf "$SUGAR_FILE"
   unset SUGAR_FILE
 

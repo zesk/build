@@ -50,7 +50,7 @@ __dateFromTimestamp() {
 }
 
 # Requires: mv
-__renameLink() {
+__linkRename() {
   mv -fh "$@"
 }
 

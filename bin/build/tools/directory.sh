@@ -69,7 +69,7 @@ _directoryClobber() {
 # Argument: --owner ownerName - String. Optional. Enforce the directory owner the directory. Affects all directories supplied AFTER it on the command line. Set to `-` to reset to no value.
 # Argument: fileDirectory ... - FileDirectory. Required. Test if file directory exists (file does not have to exist)
 # Requires: chmod __throwArgument usageArgumentString decorate __catchEnvironment dirname
-requireFileDirectory() {
+fileDirectoryRequire() {
   local usage="_${FUNCNAME[0]}"
 
   local name="" rr=()
@@ -98,9 +98,9 @@ requireFileDirectory() {
     # _IDENTICAL_ argument-esac-shift 1
     shift
   done
-  requireDirectory --handler "$usage" --noun "file directory" "${rr[@]+"${rr[@]}"}" || return $?
+  directoryRequire --handler "$usage" --noun "file directory" "${rr[@]+"${rr[@]}"}" || return $?
 }
-_requireFileDirectory() {
+_fileDirectoryRequire() {
   # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
@@ -139,7 +139,7 @@ _fileDirectoryExists() {
 # Argument: --owner ownerName - String. Optional. Enforce the directory owner the directory. Affects all directories supplied AFTER it on the command line. Set to `-` to reset to no value.
 # Requires: __throwArgument usageArgumentFunction usageArgumentString decorate __catchEnvironment dirname
 # Requires: chmod chown
-requireDirectory() {
+directoryRequire() {
   local usage="_${FUNCNAME[0]}"
 
   local mode=() owner="" directories=() noun="directory" output=""
@@ -197,7 +197,7 @@ requireDirectory() {
   done
   [ ${#directories[@]} -gt 0 ] || __throwArgument "$usage" "Need at least one $noun" || return $?
 }
-_requireDirectory() {
+_directoryRequire() {
   # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

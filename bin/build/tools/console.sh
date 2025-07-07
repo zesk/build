@@ -180,7 +180,7 @@ consoleFileLink() {
   else
     local path="$1"
     if [ "${path:0:1}" != "/" ]; then
-      path="$(pwd)/$(simplifyPath "$path")"
+      path="$(pwd)/$(directoryPathSimplify "$path")"
     fi
     consoleLink "file://$HOSTNAME$path" "$(decoratePath "${2-$1}")"
   fi

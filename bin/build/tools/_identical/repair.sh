@@ -72,7 +72,7 @@ identicalRepair() {
   identicalLine="$(grep -m 1 -n -e "$grepPattern" <"$source")" || __throwArgument "$usage" "\"$prefix $token\" not found in source $(decorate code "$source")" || return $?
   [ $(($(grep -c -e "$grepPattern" <"$destination") + 0)) -gt 0 ] || __throwArgument "$usage" "\"$prefix $token\" not found in destination $(decorate code "$destination")" || return $?
   # totalLines is *source* lines
-  totalLines="$(($(wc -l <"$source") + 0))"
+  totalLines=$(__catchEnvironment "$usage" fileLineCount <"$source") || return $?
   parsed=$(__identicalLineParse "$source" "$prefix" "$identicalLine") || __throwArgument "$usage" "$source" return $?
   IFS=" " read -r lineNumber token count < <(printf -- "%s\n" "$parsed") || :
   count=$(__identicalLineCount "$count" "$((totalLines - lineNumber))") || __throwEnvironment "$usage" "\"$identicalLine\" invalid count: $count" || return $?
@@ -100,7 +100,7 @@ identicalRepair() {
   local currentLineNumber=0 undo=("exec" "3>&-" --)
 
   # totalLines is *$destination* lines
-  totalLines=$(wc -l <"$destination")
+  totalLines=$(__catchEnvironment "$usage" fileLineCount "$destination") || return $?
   while read -r identicalLine; do
     local isEOF=false
     parsed=$(__catchArgument "$usage" __identicalLineParse "$destination" "$prefix" "$identicalLine") || _undo $? "${undo[@]}" || return $?

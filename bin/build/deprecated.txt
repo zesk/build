@@ -1,8 +1,28 @@
+# v0.37.0
+
 # v0.36.2
 hostIPList|networkIPList
 timestampToDate|dateFromTimestamp
 truncateFloat|floatTruncate
 roundFloat|floatRound
+mostRecentlyModifiedFile|fileModifiedRecentlyName
+mostRecentlyModifiedTimestamp|fileModifiedRecentlyTimestamp
+betterType|fileType
+simplifyPath|directoryPathSimplify
+renameFiles|filesRename
+reverseFileLines|fileReverseLines
+renameLink|linkRename
+modificationTime|fileModificationTime
+modificationSeconds|fileModificationSeconds
+isEmptyFile|fileIsEmpty
+isNewestFile|fileIsNewest
+isOldestFile|fileIsOldest
+oldestFile|fileOldest
+newestFile|fileNewest
+modifiedDays|fileModifiedDays
+modifiedSeconds|fileModifiedSeconds
+requireFileDirectory|fileDirectoryRequire
+requireDirectory|directoryRequire
 
 # v0.36.1
 

@@ -86,7 +86,7 @@ __releaseNotes() {
   home=$(__catchEnvironment "$usage" buildHome) || return $?
   [ -n "${BUILD_RELEASE_NOTES}" ] || __throwEnvironment "$usage" "BUILD_RELEASE_NOTES is blank" || return $?
   releasePath="${BUILD_RELEASE_NOTES%/}"
-  isAbsolutePath "$releasePath" || releasePath=$(simplifyPath "$home/$releasePath")
+  isAbsolutePath "$releasePath" || releasePath=$(directoryPathSimplify "$home/$releasePath")
   printf "%s/%s.md\n" "${releasePath%/}" "$version"
 }
 _releaseNotes() {
@@ -287,7 +287,7 @@ __newRelease() {
   notes="$(__catchEnvironment "$usage" releaseNotes "$newVersion")" || return $?
   if [ ! -f "$notes" ]; then
     __catchEnvironment "$usage" hookRunOptional version-notes "$newVersion" "$currentVersion" >"$notes" || _clean $? "$notes" || return $?
-    if isEmptyFile "$notes"; then
+    if fileIsEmpty "$notes"; then
       __newReleaseNotes "$newVersion" "$currentVersion" >"$notes"
     fi
     decorate success "Version $newVersion ready - release notes: $notes"

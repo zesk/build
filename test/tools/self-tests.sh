@@ -28,9 +28,9 @@ testBuildApplicationTools() {
 
   testApp=$(fileTemporaryName "$usage" -d) || return $?
 
-  muzzle requireDirectory "$testApp/bin" || return $?
-  muzzle requireDirectory "$testApp/docs/release" || return $?
-  muzzle requireDirectory "$testApp/bin/tools" || return $?
+  muzzle directoryRequire "$testApp/bin" || return $?
+  muzzle directoryRequire "$testApp/docs/release" || return $?
+  muzzle directoryRequire "$testApp/bin/tools" || return $?
 
   __environment touch "$testApp/docs/release/v1.2.3.md" || return $?
   assertExitCode 0 installInstallBuild "$testApp/bin" "$testApp" || return $?

@@ -197,7 +197,9 @@ testCrontabApplicationSync() {
     cat "$results"
   fi
   if test $verboseFlag; then
-    echo "Results file has $(($(wc -l <"$results") + 0)) lines"
+    local number
+    number=$(fileLineCount "$results")
+    echo "Results file has $number $(plural "$number" line lines)"
   fi
 
   dumpPipe "Cron results" <"$results"

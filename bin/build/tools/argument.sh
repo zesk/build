@@ -156,7 +156,7 @@ _commentArgumentSpecification() {
   functionCache="$functionCache/$functionName"
 
   cacheFile="$functionCache/documentation"
-  argumentDirectory=$(__catchEnvironment "$usage" requireDirectory "$functionCache/parsed") || return $?
+  argumentDirectory=$(__catchEnvironment "$usage" directoryRequire "$functionCache/parsed") || return $?
   __catchEnvironment "$usage" touch "$functionCache/.magic" || return $?
   if [ ! -f "$functionDefinitionFile" ] && ! isAbsolutePath "$functionDefinitionFile"; then
     local home
@@ -167,14 +167,14 @@ _commentArgumentSpecification() {
   fi
   [ -f "$functionDefinitionFile" ] || __throwArgument "$usage" "$functionDefinitionFile does not exist" || return $?
   [ -n "$functionName" ] || __throwArgument "$usage" "functionName is blank" || return $?
-  if [ ! -f "$cacheFile" ] || [ "$(newestFile "$cacheFile" "$functionDefinitionFile")" = "$functionDefinitionFile" ]; then
+  if [ ! -f "$cacheFile" ] || [ "$(fileNewest "$cacheFile" "$functionDefinitionFile")" = "$functionDefinitionFile" ]; then
     __catchEnvironment "$usage" bashDocumentation_Extract "$functionDefinitionFile" "$functionName" >"$cacheFile" || return $?
     for file in "$(__commentArgumentSpecification__required "$functionCache")" "$(__commentArgumentSpecification__defaults "$functionCache")"; do
       __catchEnvironment "$usage" printf "" >"$file" || return $?
     done
   fi
   argumentsFile="$functionCache/arguments"
-  if [ ! -f "$argumentsFile" ] || [ "$(newestFile "$cacheFile" "$argumentsFile")" = "$cacheFile" ]; then
+  if [ ! -f "$argumentsFile" ] || [ "$(fileNewest "$cacheFile" "$argumentsFile")" = "$cacheFile" ]; then
     (
       local argument
       argument=

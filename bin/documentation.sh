@@ -72,21 +72,21 @@ __buildDocumentationBuildDirectory() {
   local prefix="$home/documentation/source"
   while read -r markdownFile; do
     target="$home/documentation/docs${markdownFile#"$prefix"}"
-    __catchEnvironment "$usage" muzzle requireFileDirectory "$target" || return $?
+    __catchEnvironment "$usage" muzzle fileDirectoryRequire "$target" || return $?
     __catchEnvironment "$usage" cp "$markdownFile" "$target" || return $?
   done < <(find "$prefix" -name '*.md' ! -path '*/tools/*')
 
   source="$home/documentation/source/tools"
   target="$home/documentation/docs/tools"
 
-  __catchEnvironment "$usage" muzzle requireDirectory "$target" || return $?
+  __catchEnvironment "$usage" muzzle directoryRequire "$target" || return $?
 
   local markdownFile
   while read -r markdownFile; do
     markdownFile=${markdownFile#"$source"}
     markdownFile="${target}/${markdownFile#/}"
     if [ ! -f "$markdownFile" ]; then
-      __catchEnvironment "$usage" muzzle requireFileDirectory "$markdownFile" || return $?
+      __catchEnvironment "$usage" muzzle fileDirectoryRequire "$markdownFile" || return $?
       __catchEnvironment "$usage" touch "$markdownFile" || return $?
     fi
   done < <(find "$source" -type f -name '*.md' ! -path "*/.*/*")
@@ -234,14 +234,14 @@ __buildDocumentationBuild() {
   fi
 
   # Ensure we have our target
-  __catchEnvironment "$usage" muzzle requireDirectory "$home/documentation/docs" || return $?
+  __catchEnvironment "$usage" muzzle directoryRequire "$home/documentation/docs" || return $?
 
   # Templates should be up-to-date if making documentation
   if ! $updateTemplates && $makeDocumentation; then
     local newestTemplate newestDocs
     newestTemplate=$(directoryNewestFile "$home/documentation/template")
     newestDocs=$(directoryNewestFile "$home/documentation/source")
-    if isNewestFile "$newestTemplate" "$newestDocs"; then
+    if fileIsNewest "$newestTemplate" "$newestDocs"; then
       updateTemplates=true
     fi
   fi
@@ -267,7 +267,7 @@ __buildDocumentationBuild() {
     while IFS="" read -r file; do
       file=${file#"$sourceHome"}
       statusMessage decorate notice "Updating $file ..."
-      __catchEnvironment "$usage" muzzle requireFileDirectory "$targetHome/$file" || return $?
+      __catchEnvironment "$usage" muzzle fileDirectoryRequire "$targetHome/$file" || return $?
       __catchEnvironment "$usage" cp -f "$sourceHome/$file" "$targetHome/$file" || return $?
     done < <(
       find "$sourceHome" -type f -name "*.md" ! -path "*/tools/*" ! -path "*/env/*"

@@ -18,7 +18,7 @@
 # File: ./.term-colors.conf
 #
 # Example:     bashPrompt --order 80 bashPromptModule_TermColors
-# Requires: buildHome statusMessage buildEnvironmentGetDirectory requireDirectory cachedShaPipe decorate buildDebugEnabled iTerm2SetColors consoleConfigureColorMode
+# Requires: buildHome statusMessage buildEnvironmentGetDirectory directoryRequire cachedShaPipe decorate buildDebugEnabled iTerm2SetColors consoleConfigureColorMode
 # BUILD_DEBUG: term-colors - When `bashPromptModule_TermColors` is enabled, will show colors and how they are applied
 #
 # Support for iTerm2 is built-in and automatic

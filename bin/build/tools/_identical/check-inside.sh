@@ -114,11 +114,11 @@ _identicalCheckInsideLoop() {
   mapFile=$(__catchEnvironment "$usage" environmentValueRead "$stateFile" mapFile) || return $?
   repairSources=() && while read -r item; do repairSources+=("$item"); done < <(__catchEnvironment "$usage" environmentValueReadArray "$stateFile" "repairSources") || return $?
 
-  __catchEnvironment "$usage" muzzle requireDirectory "$tempDirectory/$prefixIndex" || return $?
+  __catchEnvironment "$usage" muzzle directoryRequire "$tempDirectory/$prefixIndex" || return $?
 
   local totalLines identicalLine badFiles=()
 
-  totalLines=$(($(wc -l <"$searchFile") + 0))
+  totalLines=$(($(__catchEnvironment "$usage" fileLineCount "$searchFile") + 0)) || return $?
 
   statusMessage decorate info "#$((prefixIndex + 1)): Looking for \"$(decorate code "$prefix")\" Reading $(decorate file "$searchFile")"
 

@@ -15,7 +15,7 @@ _gitAddRemotesToSSHKnown() {
   source "./bin/build/env/HOME.sh"
 
   sshKnown="$HOME/$sshKnown"
-  requireFileDirectory "$sshKnown" || return $?
+  fileDirectoryRequire "$sshKnown" || return $?
 
   [ -f "$sshKnown" ] || touch "$sshKnown"
   __environment chmod 700 "$HOME/.ssh" || return $?
@@ -40,14 +40,6 @@ testGitVersionList() {
     git pull --tags >/dev/null 2>&1 || _environment "Unable to pull git tags ... failed" || return $?
     decorate success " done"
   fi
-
-  #  echo "PWD: $(pwd)"
-  #  echo Version List:
-  #  gitVersionList
-  #  echo "Count: \"$(gitVersionList | wc -l)\""
-  #  echo "CountT: \"$(gitVersionList | wc -l | trimSpace)\""
-  #  echo "Count0: \"$(($(gitVersionList | wc -l) + 0))\""
-  #  echo "Count1: \"$(($(gitVersionList | wc -l) + 0))\""
   assertGreaterThan $(($(gitVersionList | wc -l | trimSpace) + 0)) 0 || return $?
 }
 

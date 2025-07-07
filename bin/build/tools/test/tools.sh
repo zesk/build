@@ -599,7 +599,7 @@ __testStats() {
   printf -- "\n"
   boxedHeading "Functions asserted (cumulative)"
   cat "$(__assertedFunctions)"
-  lines=$(($(wc -l <"$(__assertedFunctions)") + 0))
+  lines=$(__catchEnvironment "$usage" fileLineCount "$(__assertedFunctions)") || return $?
   decorate info "$lines $(plural "$lines" "function" "functions")"
   printf -- "\n"
 }
@@ -793,7 +793,7 @@ __testLoad() {
     set -a
     # shellcheck source=/dev/null
     source "$1" >"$__errors" 2>&1 || __throwEnvironment source "$1" || _clean $? "$__beforeFunctions" "$__testFunctions" || return $?
-    isEmptyFile "$__errors" || __throwEnvironment "produced output: $(dumpPipe "source $1" <"$__errors")"
+    fileIsEmpty "$__errors" || __throwEnvironment "produced output: $(dumpPipe "source $1" <"$__errors")"
     set +a
     if [ "${#tests[@]}" -gt 0 ]; then
       for __test in "${tests[@]}"; do
@@ -878,7 +878,7 @@ __testRun() {
   __testSection "$__test" || :
   printf "%s %s ...\n" "$(decorate info "Running")" "$(decorate code "$__test")"
 
-  __catchEnvironment "$usage" muzzle requireFileDirectory "$quietLog" || return $?
+  __catchEnvironment "$usage" muzzle fileDirectoryRequire "$quietLog" || return $?
 
   printf "%s\n" "Running $__test" >>"$quietLog"
 
@@ -897,7 +897,7 @@ __testRun() {
     #     ▞▘  ▐ ▖▛▀ ▝▀▖▐ ▖
     #          ▀ ▝▀▘▀▀  ▀
     if plumber "$__test" "$quietLog" 2> >(tee -a "$captureStderr"); then
-      if isEmptyFile "$captureStderr"; then
+      if fileIsEmpty "$captureStderr"; then
         printf "%s\n" "SUCCESS $__test" >>"$quietLog"
       else
         resultCode=97
@@ -909,7 +909,7 @@ __testRun() {
       resultCode=$?
       stickyCode=$errorTest
       printf "%s\n" "FAILED [$resultCode] $__test" | tee -a "$quietLog"
-      if ! isEmptyFile "$captureStderr" && isSubstringInsensitive ";stderr-FAILED;" ";$__flags;"; then
+      if ! fileIsEmpty "$captureStderr" && isSubstringInsensitive ";stderr-FAILED;" ";$__flags;"; then
         printf "%s\n" "stderr-FAILED [$resultCode] $__test ALSO has STDERR:" | tee -a "$quietLog"
         dumpPipe <"$captureStderr" | tee -a "$quietLog"
       fi

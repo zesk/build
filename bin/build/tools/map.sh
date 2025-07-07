@@ -284,7 +284,7 @@ cannon() {
 
   local exitCode=0 count
 
-  count="$(($(wc -l <"$cannonLog.found") + 0))"
+  count="$(($(__catchEnvironment "$usage" fileLineCount "$cannonLog.found") + 0))" || return $?
   if [ "$count" -eq 0 ]; then
     statusMessage --inline decorate warning "Modified (NO) files"
   else

@@ -812,8 +812,8 @@ gitPreCommitSetup() {
 
   directory=$(__catchEnvironment "$usage" __gitPreCommitCache true) || return $?
   __catchEnvironment "$usage" git diff --name-only --cached --diff-filter=ACMR | __catchEnvironment "$usage" extensionLists --clean "$directory" || return $?
-  total=$(($(wc -l <"$directory/@") + 0)) || __throwEnvironment "$usage" "wc -l" || return $?
-  [ $total -ne 0 ]
+  total=$(__catchEnvironment "$usage" fileLineCount "$directory/@") || return $?
+  [ "$total" -ne 0 ]
 }
 _gitPreCommitSetup() {
   # _IDENTICAL_ usageDocument 1
@@ -827,13 +827,13 @@ gitPreCommitHeader() {
 
   directory=$(__catchEnvironment "$usage" __gitPreCommitCache true) || return $?
   [ -f "$directory/@" ] || __throwEnvironment "$usage" "$directory/@ missing" || return $?
-  total=$(($(__catchEnvironment "$usage" wc -l <"$directory/@") + 0)) || return $?
+  total=$(__catchEnvironment "$usage" fileLineCount "$directory/@") || return $?
   statusMessage --last printf -- "%s: %s\n" "$(decorate success "$(alignRight "$width" "all")")" "$(decorate info "$total $(plural "$total" file files) changed")"
   while [ $# -gt 0 ]; do
     total=0
     color="warning"
     if [ -f "$directory/$1" ]; then
-      total=$(($(wc -l <"$directory/$1") + 0))
+      total=$(__catchEnvironment "$usage" fileLineCount "$directory/$1") || return $?
       color="success"
     fi
     # shellcheck disable=SC2015

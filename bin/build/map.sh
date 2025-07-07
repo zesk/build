@@ -199,15 +199,15 @@ usageDocumentSimple() {
 #
 # Argument: source - File. Required. File where the function is defined.
 # Argument: functionName - String. Required. The name of the bash function to extract the documentation for.
-# Requires: grep cut reverseFileLines __help
+# Requires: grep cut fileReverseLines __help
 # Requires: usageDocument
 bashFunctionComment() {
   local source="${1-}" functionName="${2-}"
   local maxLines=1000
   __help "_${FUNCNAME[0]}" "$@" || return 0
   grep -m 1 -B $maxLines "^$functionName() {" "$source" | grep -v -e '( IDENTICAL | _IDENTICAL_ |DOC TEMPLATE:|Internal:|INTERNAL:)' |
-    reverseFileLines | grep -B "$maxLines" -m 1 -E '^\s*$' |
-    reverseFileLines | grep -E '^#' | cut -c 3-
+    fileReverseLines | grep -B "$maxLines" -m 1 -E '^\s*$' |
+    fileReverseLines | grep -E '^#' | cut -c 3-
 }
 _bashFunctionComment() {
   # _IDENTICAL_ usageDocument 1
@@ -616,7 +616,7 @@ __executeInputSupport() {
   fi
 }
 
-# IDENTICAL reverseFileLines 12
+# IDENTICAL fileReverseLines 12
 
 # Reverses a pipe's input lines to output using an awk trick.
 #
@@ -626,7 +626,7 @@ __executeInputSupport() {
 # Source: https://web.archive.org/web/20090208232311/http://student.northpark.edu/pemente/awk/awk1line.txt
 # Credits: Eric Pement
 # Depends: awk
-reverseFileLines() {
+fileReverseLines() {
   awk '{a[i++]=$0} END {for (j=i-1; j>=0;) print a[j--] }'
 }
 

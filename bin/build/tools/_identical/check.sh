@@ -214,10 +214,10 @@ identicalCheck() {
   if $debug; then
     printf "%s %s\n" "$(decorate warning "Keeping directory")" "$(decorate file "$tempDirectory")"
   fi
-  if [ $(($(wc -l <"$resultsFile") + 0)) -ne 0 ]; then
+  if [ $(($(fileLineCount "$resultsFile") + 0)) -ne 0 ]; then
     exitCode=$failureCode
   fi
-  isEmptyFile "$resultsFile" || cat "$resultsFile" 1>&2
+  fileIsEmpty "$resultsFile" || cat "$resultsFile" 1>&2
   rm -rf "$resultsFile" "$searchFileList"
   statusMessage --last timingReport "$start" "Completed in"
   return "$exitCode"

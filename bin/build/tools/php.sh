@@ -47,7 +47,7 @@ phpTailLog() {
   if [ ! -f "$logFile" ]; then
     statusMessage printf -- "%s %s" "$(decorate file "$logFile")" "$(decorate warning "does not exist - creating")" 1>&2
     __catchEnvironment "$usage" touch "$logFile" || return $?
-  elif isEmptyFile "$logFile"; then
+  elif fileIsEmpty "$logFile"; then
     statusMessage printf -- "%s %s" "$(decorate file "$logFile")" "$(decorate warning "is empty")" 1>&2
   fi
   tail "$@" "$logFile"
@@ -419,7 +419,7 @@ _phpTest() {
 _phpTestSetup() {
   local usage="$1" home="$2"
 
-  __catchEnvironment "$usage" renameFiles "" ".$$.backup" hiding "$home/.env" "$home/.env.local"
+  __catchEnvironment "$usage" filesRename "" ".$$.backup" hiding "$home/.env" "$home/.env.local"
 }
 _phpTestCleanup() {
   local usage="$1" item
@@ -428,7 +428,7 @@ _phpTestCleanup() {
       __catchEnvironment "$usage" rm -rf "$item" || return $?
     fi
   done
-  __catchEnvironment "$usage" renameFiles ".$$.backup" "" restoring "$home/.env" "$home/.env.local" || :
+  __catchEnvironment "$usage" filesRename ".$$.backup" "" restoring "$home/.env" "$home/.env.local" || :
 }
 _phpTestResult() {
   local message=$1 color=$2 top=$3 bottom=$4 width=${5-16} thick="${6-3}"

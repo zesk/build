@@ -45,7 +45,7 @@ bashPromptModule_reloadChanges() {
       continue
     fi
 
-    local newestFile path pathStateFile modified=0 filename="" prefix=""
+    local fileNewest path pathStateFile modified=0 filename="" prefix=""
 
     path=$(usageArgumentString "$usage" "path" "$argument") || return $?
 
@@ -82,17 +82,17 @@ bashPromptModule_reloadChanges() {
     fi
 
     [ "${path:0:1}" = "/" ] || path="$home/$path"
-    newestFile=$(directoryNewestFile "$path" --find -name '*.sh') || return $?
-    newestModified=$(modificationTime "$newestFile") || return $?
-    ! $debug || decorate pair newestFile "$(decorate file "$newestFile")"
-    if [ "$newestModified" -gt "$modified" ] && [ "$newestFile" != "$filename" ]; then
-      ! $debug || decorate info "$newestModified ($newestFile) -gt $modified ($filename)"
+    fileNewest=$(directoryNewestFile "$path" --find -name '*.sh') || return $?
+    newestModified=$(fileModificationTime "$fileNewest") || return $?
+    ! $debug || decorate pair fileNewest "$(decorate file "$fileNewest")"
+    if [ "$newestModified" -gt "$modified" ] && [ "$fileNewest" != "$filename" ]; then
+      ! $debug || decorate info "$newestModified ($fileNewest) -gt $modified ($filename)"
       prefix=""
       [ -z "$filename" ] || prefix="$(decorate file "$filename") -> "
-      [ "$filename" != "$newestFile" ] || prefix="✏️"
-      printf "%s %s\n" "$(decorate value "$name")" "$(decorate info "code changed, reloading $(decorate file "$source") [$prefix$(decorate file "$newestFile")]")"
-      ! $debug || decorate info "Saving new state file $newestModified $newestFile"
-      printf "%s\n" "$newestModified" "$newestFile" >"$pathStateFile"
+      [ "$filename" != "$fileNewest" ] || prefix="✏️"
+      printf "%s %s\n" "$(decorate value "$name")" "$(decorate info "code changed, reloading $(decorate file "$source") [$prefix$(decorate file "$fileNewest")]")"
+      ! $debug || decorate info "Saving new state file $newestModified $fileNewest"
+      printf "%s\n" "$newestModified" "$fileNewest" >"$pathStateFile"
       if isInteger "${__BASH_PROMPT_RELOAD_CHANGES-}" && [ "$__BASH_PROMPT_RELOAD_CHANGES" -lt "$newestModified" ]; then
         __BASH_PROMPT_RELOAD_CHANGES="$newestModified"
       fi

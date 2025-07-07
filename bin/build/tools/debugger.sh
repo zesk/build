@@ -124,7 +124,7 @@ __bashDebugWhere() {
   local index="${1:-0}" __where
   export BUILD_HOME
   __where="${BASH_SOURCE[index + 2]}"
-  __where="$(simplifyPath "$__where")"
+  __where="$(directoryPathSimplify "$__where")"
   __where="${__where#"$BUILD_HOME"}"
   printf -- "%s:%s\n" "$(decorate value "$__where")" "$(decorate bold-blue "${BASH_LINENO[index + 1]}")"
 }

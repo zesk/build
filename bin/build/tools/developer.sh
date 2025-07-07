@@ -396,7 +396,7 @@ __developerDevelopmentRevert() {
     local binary="$1" installer
     installer="$developmentHome/$relPath/$binary"]
     [ -x "$installer" ] || __throwEnvironment "$usage" "$installer does not exist" || return $?
-    __catchEnvironment "$usage" requireDirectory "$target" || return $?
+    __catchEnvironment "$usage" directoryRequire "$target" || return $?
     __catchEnvironment "$usage" cp "$installer" "$target/$binary" || return $?
     set -- "$target/$binary"
   fi

@@ -52,7 +52,7 @@ __dateFromTimestamp() {
 }
 
 # Requires: mv
-__renameLink() {
+__linkRename() {
   # gnu version supports -T
   mv -fT "$@"
 }

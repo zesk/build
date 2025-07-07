@@ -411,9 +411,9 @@ validateFileExtensionContents() {
   foundFiles=$(mktemp)
   # Final arguments for find
   find . "${extensionArgs[@]}" ! -path "*/.*/*" "$@" >"$foundFiles"
-  total=$(($(wc -l <"$foundFiles") + 0))
+  total=$(__catchEnvironment "$usage" fileLineCount "$foundFiles") || return $?
   # shellcheck disable=SC2059
-  statusMessage decorate info "Searching $total $(plural $total item files) (ext: ${extensions[*]}) for text: $(printf -- " $(decorate reset --)\"$(decorate code "%s")\"" "${textMatches[@]}")"
+  statusMessage decorate info "Searching $total $(plural "$total" item files) (ext: ${extensions[*]}) for text: $(printf -- " $(decorate reset --)\"$(decorate code "%s")\"" "${textMatches[@]}")"
 
   total=0
   while IFS= read -r item; do
@@ -427,7 +427,7 @@ validateFileExtensionContents() {
       fi
     done
   done <"$foundFiles"
-  statusMessage decorate info "Checked $total $(plural $total item files) for ${#textMatches[@]} $(plural ${#textMatches[@]} phrase phrases)"
+  statusMessage decorate info "Checked $total $(plural "$total" item files) for ${#textMatches[@]} $(plural ${#textMatches[@]} phrase phrases)"
   rm "$foundFiles"
 
   if [ "${#failedReasons[@]}" -gt 0 ]; then

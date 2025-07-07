@@ -51,7 +51,7 @@ _runCount() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# IDENTICAL reverseFileLines 12
+# IDENTICAL fileReverseLines 12
 
 # Reverses a pipe's input lines to output using an awk trick.
 #
@@ -61,7 +61,7 @@ _runCount() {
 # Source: https://web.archive.org/web/20090208232311/http://student.northpark.edu/pemente/awk/awk1line.txt
 # Credits: Eric Pement
 # Depends: awk
-reverseFileLines() {
+fileReverseLines() {
   awk '{a[i++]=$0} END {for (j=i-1; j>=0;) print a[j--] }'
 }
 

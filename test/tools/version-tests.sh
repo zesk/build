@@ -79,7 +79,7 @@ testVersionNext() {
 }
 
 __assertPathsEquals() {
-  assertEquals --line "$1" "$(simplifyPath "$2")" "$(simplifyPath "$3")" || return $?
+  assertEquals --line "$1" "$(directoryPathSimplify "$2")" "$(directoryPathSimplify "$3")" || return $?
 }
 
 testReleaseNotes() {

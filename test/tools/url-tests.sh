@@ -107,8 +107,8 @@ testUrlOpen() {
   BUILD_URL_BINARY="echo"
   assertEquals "$(urlOpen "$url")" "$url" || return $?
   assertEquals "$(urlOpen --ignore '*bad*url*' "$url")" "$url" || return $?
-  assertEquals "1" "$(urlOpen "$url" "$url" | wc -l | trimSpace)" || return $?
-  assertEquals "2" "$(urlOpen --wait "$url" "$url" | wc -l | trimSpace)" || return $?
+  assertEquals "1" "$(urlOpen "$url" "$url" | fileLineCount)" || return $?
+  assertEquals "2" "$(urlOpen --wait "$url" "$url" | fileLineCount)" || return $?
 
   assertNotExitCode --stderr-match 'Invalid URL' --stderr-match 'bad-url' --line "$LINENO" 0 urlOpen "bad-url" || return $?
   assertExitCode 0 urlOpen --ignore "bad-url" || return $?

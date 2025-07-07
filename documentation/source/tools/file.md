@@ -8,33 +8,29 @@
 
 ### Modification time
 
-{modificationTime}
+{fileModificationTime}
 
-{modificationSeconds}
+{fileModificationSeconds}
 
-{isEmptyFile}
+{fileIsEmpty}
 
-{isNewestFile}
+{fileIsNewest}
 
-{isOldestFile}
+{fileIsOldest}
 
-{oldestFile}
+{fileOldest}
 
-{newestFile}
+{fileNewest}
 
-{modifiedDays}
+{fileModifiedDays}
 
-{modifiedSeconds}
+{fileModifiedSeconds}
 
 {fileModificationTimes}
 
-{mostRecentlyModifiedFile}
+{fileModifiedRecentlyName}
 
-{mostRecentlyModifiedTimestamp}
-
-{directoryNewestFile}
-
-{directoryOldestFile}
+{fileModifiedRecentlyTimestamp}
 
 ### Owner Group Size Type
 
@@ -44,23 +40,25 @@
 
 {fileSize}
 
-{betterType}
+{fileType}
 
 ## Platform
 
 {realPath}
 
-{renameLink}
-
-{simplifyPath}
-
 ## Utilities
+
+{fileDirectoryExists}
 
 {fileTemporaryName}
 
-{renameFiles}
+{filesRename}
 
-{reverseFileLines}
+{fileReverseLines}
+
+{fileExtractLines}
+
+{fileLineCount}
 
 ## Finding
 
@@ -71,3 +69,6 @@
 ## Links
 
 {linkCreate}
+
+{linkRename}
+

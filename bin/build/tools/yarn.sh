@@ -59,7 +59,7 @@ yarnInstall() {
 
   version="${1-${BUILD_YARN_VERSION:-stable}}"
   quietLog=$(buildQuietLog "$usage") || __throwEnvironment "buildQuietLog $usage"
-  __catchEnvironment "$usage" requireFileDirectory "$quietLog" || return $?
+  __catchEnvironment "$usage" fileDirectoryRequire "$quietLog" || return $?
   quietLog=$(__catchEnvironment "$usage" buildQuietLog "$usage") || return $?
   statusMessage --first decorate info "Installing node ... " || return $?
   __catchEnvironment "$usage" nodeInstall || return $?

@@ -43,7 +43,7 @@ incrementor() {
   local name value counterFile
 
   cacheDirectory=$(__catchEnvironment "$usage" buildCacheDirectory "$this/$$") || return $?
-  cacheDirectory="$(__catchEnvironment "$usage" requireDirectory "$cacheDirectory")" || return $?
+  cacheDirectory="$(__catchEnvironment "$usage" directoryRequire "$cacheDirectory")" || return $?
   name=""
   value=""
   # _IDENTICAL_ argument-case-header 5

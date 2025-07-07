@@ -85,7 +85,7 @@ _copyFileShowNew() {
   local lines
   _copyFilePrompt "$displaySource" "$destination" "Created"
   head -10 "$source" | decorate code
-  lines=$(($(wc -l <"$source") + 0))
+  lines=$(__environment fileLineCount "$source") || return $?
   decorate info "$(printf "%d %s total" "$lines" "$(plural "$lines" line lines)")"
 }
 
@@ -345,7 +345,7 @@ loopExecute() {
 
     # Compute status line
     local elapsed seconds nLines stamp
-    nLines=$(($(wc -l <"$outputBuffer") + 0))
+    nLines=$(__catchEnvironment "$usage" fileLineCount "$outputBuffer") || return $?
     elapsed=$(($(__catchEnvironment "$usage" timingStart) - start)) || return $?
     seconds=$(timingFormat "$elapsed")
     seconds="$seconds $(plural "$seconds" second seconds)"
@@ -842,7 +842,7 @@ interactiveBashSource() {
           decorate subtle "Skipping unapproved directory $(decorate file "$sourcePath") Undo: $(decorate code "${FUNCNAME[0]} --clear \"$sourcePath\"")"
         fi
       else
-        __throwEnvironment "$usage" "Not a file or directory? $displayPath is a $(decorate value "$(betterType "$sourcePath")")" || return $?
+        __throwEnvironment "$usage" "Not a file or directory? $displayPath is a $(decorate value "$(fileType "$sourcePath")")" || return $?
       fi
       if $verboseFlag && ! $approved; then
         statusMessage --last decorate subtle "Skipping unapproved $verb $(decorate file "$sourcePath")" || :
