@@ -420,7 +420,10 @@ testDeployApplication() {
 }
 
 testDeployPackageName() {
-  local saveTarget
+  local usage="_return"
+  local saveTarget home
+
+  home=$(__catchEnvironment "$usage" buildHome) || return $?
 
   saveTarget=${BUILD_TARGET-NONE}
 
@@ -428,7 +431,7 @@ testDeployPackageName() {
   assertEquals "app.tar.gz" "$(deployPackageName)" || return $?
 
   # shellcheck source=/dev/null
-  source bin/build/env/BUILD_TARGET.sh || return $?
+  source "$home/bin/build/env/BUILD_TARGET.sh" || return $?
 
   export BUILD_TARGET
 
