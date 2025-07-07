@@ -813,7 +813,7 @@ gitPreCommitSetup() {
   directory=$(__catchEnvironment "$usage" __gitPreCommitCache true) || return $?
   __catchEnvironment "$usage" git diff --name-only --cached --diff-filter=ACMR | __catchEnvironment "$usage" extensionLists --clean "$directory" || return $?
   total=$(__catchEnvironment "$usage" fileLineCount "$directory/@") || return $?
-  [ "$total" -ne 0 ]
+  [ "$total" -ge 0 ]
 }
 _gitPreCommitSetup() {
   # _IDENTICAL_ usageDocument 1
