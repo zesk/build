@@ -1,0 +1,4 @@
+# Network functions
+
+{networkIPList}
+{networkMACAddressList}

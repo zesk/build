@@ -7,10 +7,13 @@ Hooks are called to enable custom actions at specific times which can be overwri
 <hr />
 
 {hasHook}
+
 {hookRun}
+
 {hookSource}
 
 {hookRunOptional}
+
 {hookSourceOptional}
 
 {whichHook}

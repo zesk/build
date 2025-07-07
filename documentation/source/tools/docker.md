@@ -5,15 +5,25 @@
 <hr />
 
 {dumpDockerTestFile}
+
 {insideDocker}
+
 {checkDockerEnvFile}
+
 {anyEnvToBashEnv}
+
 {anyEnvToDockerEnv}
 
 {dockerLocalContainer}
+
 {dockerEnvFromBashEnv}
+
 {dockerEnvToBash}
+
 {dockerPlatformDefault}
+
 {dockerImages}
+
 {dockerVolumeDelete}
+
 {dockerVolumeExists}

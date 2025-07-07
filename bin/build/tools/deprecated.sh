@@ -18,6 +18,28 @@
 #             |_|
 #
 
+truncateFloat() {
+  _deprecated "${FUNCNAME[0]}"
+  floatTruncate "$@"
+}
+
+roundFloat() {
+  _deprecated "${FUNCNAME[0]}"
+  floatRound "$@"
+}
+
+timestampToDate() {
+  _deprecated "${FUNCNAME[0]}"
+  dateFromTimestamp "$@"
+}
+
+# DEPRECATED 2025-07-05
+hostIPList() {
+  _deprecated "${FUNCNAME[0]}"
+  networkIPList "$@"
+}
+
+# DEPRECATED 2025-05-16
 bashPromptModule_iTerm2Colors() {
   _deprecated "${FUNCNAME[0]}"
   bashPromptModule_TermColors "$@"

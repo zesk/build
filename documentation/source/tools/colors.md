@@ -81,29 +81,38 @@ Colors vary depending on the console and the terminal. Try `colorTest` to see al
 - `decorate each code item1 item2`
 - `decorate each --count code item1 item2 item3`
 - `decorate each --index code item1 item2 item3`
+- `decorate size 100`
 
 # Additional commands
 
 {consoleColorMode}
 
 {clearLine}
+
 {statusMessage}
 
 {hasColors}
+
 {hasConsoleAnimation}
-{simpleMarkdownToConsole}
 
 # Color tests
 
 {colorComboTest}
+
 {allColorTest}
+
 {colorTest}
+
 {semanticColorTest}
 
 # Color tools
 
 {colorFormat}
+
 {colorMultiply}
+
 {colorNormalize}
+
 {colorParse}
+
 {colorBrightness}

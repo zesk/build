@@ -4,11 +4,22 @@
 [⬅ Parent ](../index.md)
 <hr />
 
+## Date Functions
+
 {dateAdd}
+
 {dateValid}
+
 {dateToFormat}
+
 {dateToTimestamp}
-{timestampToDate}
+
+{dateFromTimestamp}
+
+# Now Relative
+
 {todayDate}
+
 {yesterdayDate}
+
 {tomorrowDate}

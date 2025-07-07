@@ -1,5 +1,7 @@
 # Application Development
 
+This is a development tool and tracks the state of the "current" project you are working on.
+
 The concept of the `Application Home` is the current project you are working on in your system. The value is stored in a
 cache file and can be updated using `applicationHome` or the (default) aliases `g` and `G`.
 

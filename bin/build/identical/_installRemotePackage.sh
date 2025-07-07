@@ -186,12 +186,12 @@ _installRemotePackage() {
     #
     # I believe this ensures that the process running does not modify its source script directly
     #
-    # 1. Copy new script to bin/installer.sh.$$
-    # 2. Run exec bin/installer.sh.$$ --replace bin/installer.sh
+    # 1. Copy new script to bin/install.sample.sh.$$
+    # 2. Run exec bin/install.sample.sh.$$ --replace bin/install.sample.sh
     # 3. Memory reloaded with "new" version of script
     # 4. New version copies itself (.sh.$$) to old installer (.sh version), and runs
-    # 4. exec bin/installer.sh --finalize bin/installer.sh.$$
-    # 5. Loads NEW version of script, and then deletes `bin/installer.sh.$$` and exits
+    # 4. exec bin/install.sample.sh --finalize bin/install.sample.sh.$$
+    # 5. Loads NEW version of script, and then deletes `bin/install.sample.sh.$$` and exits
     #
     # But I could be wrong.
     #

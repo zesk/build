@@ -16,6 +16,7 @@ testBinBuildRequires() {
 
   home=$(__environment buildHome) || return $?
 
+  bashCheckRequires --ignore-prefix __decorateExtension --require --unused --report "$home/bin/build/install.sample.sh" || return $?
   bashCheckRequires --ignore-prefix __decorateExtension --require --unused --report "$home/bin/build/install-bin-build.sh" || return $?
   bashCheckRequires --ignore-prefix __decorateExtension --require --unused --report "$home/bin/build/map.sh" || return $?
   bashCheckRequires --require --unused --report "$home/bin/build/need-bash.sh" || return $?

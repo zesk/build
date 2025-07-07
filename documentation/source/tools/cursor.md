@@ -5,6 +5,9 @@
 <hr />
 
 {cursorGet}
+
 {cursorSet}
+
 {plasterLines}
+
 {bigTextAt}

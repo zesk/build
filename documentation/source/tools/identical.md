@@ -5,5 +5,7 @@
 <hr />
 
 {identicalRepair}
+
 {identicalCheck}
+
 {identicalCheckShell}

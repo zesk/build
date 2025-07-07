@@ -51,23 +51,23 @@ dateToTimestamp() {
 #
 # Converts an integer date to a date formatted timestamp (e.g. %Y-%m-%d %H:%M:%S)
 #
-# timestampToDate 1681966800 %F
+# dateFromTimestamp 1681966800 %F
 #
-# Usage: timestampToDate integerTimestamp format
+# Usage: dateFromTimestamp integerTimestamp format
 # Argument: integerTimestamp - Integer timestamp offset (unix timestamp, same as `$(date +%s)`)
 # Argument: format - How to output the date (e.g. `%F` - no `+` is required)
 # Environment: Compatible with BSD and GNU date.
 # Exit codes: If parsing fails, non-zero exit code.
-# Example:     dateField=$(timestampToDate $init %Y)
-timestampToDate() {
+# Example:     dateField=$(dateFromTimestamp $init %Y)
+dateFromTimestamp() {
   local usage="_${FUNCNAME[0]}"
   if [ $# -lt 1 ] || [ $# -gt 2 ]; then
     __throwArgument "$usage" "${FUNCNAME[0]} requires 1 or 2 arguments: integerTimestamp [ format ] –- Passed $#:" "$@" || return $?
   fi
   local format="${2:-%F}"
-  __timestampToDate "$1" "$format"
+  __dateFromTimestamp "$1" "$format"
 }
-_timestampToDate() {
+_dateFromTimestamp() {
   # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
@@ -78,7 +78,7 @@ _timestampToDate() {
 # Summary: Yesterday's date
 # Example:     rotated="$log.$({fn})"
 yesterdayDate() {
-  timestampToDate "$(($(date -u +%s) - 86400))" %F
+  dateFromTimestamp "$(($(date -u +%s) - 86400))" %F
 }
 
 # Returns tomorrow's date, in YYYY-MM-DD format. (same as `%F`)
@@ -88,7 +88,7 @@ yesterdayDate() {
 # Summary: Tomorrow's date
 # Example:     rotated="$log.$({fn})"
 tomorrowDate() {
-  timestampToDate "$(($(date -u +%s) + 86400))" %F
+  dateFromTimestamp "$(($(date -u +%s) + 86400))" %F
 }
 
 # Summary: Today's date
@@ -147,7 +147,7 @@ dateAdd() {
       ;;
     *)
       timestamp=$(__catchArgument "$usage" dateToTimestamp "$argument") || return $?
-      __catchArgument "$usage" timestampToDate "$((timestamp + (86400 * days)))" || return $?
+      __catchArgument "$usage" dateFromTimestamp "$((timestamp + (86400 * days)))" || return $?
       ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1

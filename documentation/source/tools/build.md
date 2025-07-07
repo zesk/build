@@ -10,11 +10,17 @@
 <hr />
 
 {buildHome}
+
 {buildEnvironmentGet}
+
 {buildEnvironmentLoad}
+
 {buildEnvironmentContext}
+
 {buildFunctions}
+
 {buildCacheDirectory}
+
 {buildQuietLog}
 
 # Running commands

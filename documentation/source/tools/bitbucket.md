@@ -8,3 +8,4 @@
 
 {getFromPipelineYML}
 {bitbucketContainer}
+{isBitBucketPipeline}

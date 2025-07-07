@@ -190,7 +190,7 @@ isUpToDate() {
 
   accessKeyTimestamp=$((keyTimestamp + ((23 * 60) + 59) * 60))
   expireTimestamp=$((accessKeyTimestamp + 86400 * upToDateDays))
-  expireDate=$(timestampToDate "$expireTimestamp" '%A, %B %d, %Y %R')
+  expireDate=$(dateFromTimestamp "$expireTimestamp" '%A, %B %d, %Y %R')
   deltaDays=$(((todayTimestamp - accessKeyTimestamp) / 86400))
   daysAgo=$((deltaDays - upToDateDays))
   if [ "$todayTimestamp" -gt "$expireTimestamp" ]; then

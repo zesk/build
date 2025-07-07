@@ -10,7 +10,7 @@
 
 # Usage: {fn} float
 # Convert float to nearest integer
-roundFloat() {
+floatRound() {
   while [ $# -gt 0 ]; do
     LC_ALL=C printf '%.0f' "$1"
     shift || :
@@ -19,7 +19,7 @@ roundFloat() {
 
 # Usage: {fn} float
 # Convert float to an integer, round down always
-truncateFloat() {
+floatTruncate() {
   while [ $# -gt 0 ]; do
     LC_ALL=C printf '%d\n' "${1%.*}"
     shift || :

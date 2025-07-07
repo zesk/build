@@ -7,11 +7,19 @@ Dump things for debugging
 <hr />
 
 {dumpEnvironmentUnsafe}
+
 {dumpEnvironment}
+
 {dumpPipe}
+
 {dumpBinary}
+
 {dumpHex}
+
 {dumpFile}
+
 {dumpEnvironmentSafe}
+
 {dumpLoadAverages}
+
 {debuggingStack}

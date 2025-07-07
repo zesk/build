@@ -45,7 +45,7 @@ __dateToFormat() {
 }
 
 # Requires: date
-__timestampToDate() {
+__dateFromTimestamp() {
   date -u -r "$1" "+$2"
 }
 

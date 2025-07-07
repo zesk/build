@@ -8,5 +8,4 @@
 {isPHPStorm}
 {isPyCharm}
 {isVisualStudioCode}
-{isBitBucketPipeline}
 {showContext}

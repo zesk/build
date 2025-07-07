@@ -10,7 +10,7 @@
 testRoundFloat() {
   local expected testValue
   _testRoundFloatData | while read -r expected testValue; do
-    assertEquals "$expected" "$(roundFloat "$testValue")" "roundFloat $testValue" || return $?
+    assertEquals "$expected" "$(floatRound "$testValue")" "floatRound $testValue" || return $?
   done
 }
 
@@ -30,7 +30,7 @@ EOF
 testTruncateFloat() {
   local expected testValue
   _testTruncateFloatData | while read -r expected testValue; do
-    assertEquals "$expected" "$(truncateFloat "$testValue")" "truncateFloat $testValue" || return $?
+    assertEquals "$expected" "$(floatTruncate "$testValue")" "floatTruncate $testValue" || return $?
   done
 }
 

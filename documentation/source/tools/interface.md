@@ -20,4 +20,6 @@ The `$handler` is defined here:
 
 These are all used in - [function {fn}]({documentationPath}) - [{summary}]({sourceLink}).
 
-{__packageVersionFunction} {__packageUrlFunction} {__packageCheckFunction}
+{__packageVersionFunction} 
+{__packageUrlFunction} 
+{__packageCheckFunction}

@@ -7,15 +7,23 @@ Tools to work with [D.J. Bernstein's Daemontools](https://cr.yp.to/daemontools.h
 <hr />
 
 {daemontoolsHome}
+
 {daemontoolsInstall}
+
 {daemontoolsInstallService}
+
 {daemontoolsIsRunning}
+
 {daemontoolsProcessIds}
+
 {daemontoolsRemoveService}
+
 {daemontoolsRestart}
+
 {daemontoolsManager}
 
 # Non-production starting/stopping
 
 {daemontoolsExecute}
+
 {daemontoolsTerminate}

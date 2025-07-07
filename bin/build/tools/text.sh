@@ -512,6 +512,40 @@ maximumLineLength() {
   printf "%d" "$max"
 }
 
+fileLineCount() {
+  local usage="_${FUNCNAME[0]}"
+
+  # _IDENTICAL_ argument-case-header 5
+  local __saved=("$@") __count=$#
+  while [ $# -gt 0 ]; do
+    local argument="$1" __index=$((__count - $# + 1))
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
+    case "$argument" in
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    # _IDENTICAL_ --handler 4
+    --handler)
+      shift
+      usage=$(usageArgumentFunction "$usage" "$argument" "${1-}") || return $?
+      ;;
+    *)
+      local file
+      file="$(usageArgumentFile "$usage" "$argument" "${1-}")" || return $?
+      printf "%d\n" "$(wc -l <"$file")"
+      ;;
+    esac
+    # _IDENTICAL_ argument-esac-shift 1
+    shift
+  done
+}
+_fileLineCount() {
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
 #
 # Outputs the `singular` value to standard out when the value of `number` is one.
 # Otherwise, outputs the `plural` value to standard out.

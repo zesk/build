@@ -6,6 +6,6 @@
 
 {urlMatchesLocalFileSize}
 {urlContentLength}
-{hostIPList}
+{networkIPList}
 {hostTTFB}
 {websiteScrape}

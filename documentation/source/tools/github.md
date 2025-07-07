@@ -5,8 +5,13 @@
 <hr />
 
 {githubLatest}
+
 {githubLatestRelease}
+
 {githubRelease}
+
 {githubPublishDate}
+
 {githubURLParse}
+
 {githubProjectJSON}

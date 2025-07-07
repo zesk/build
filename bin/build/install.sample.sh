@@ -1,28 +1,33 @@
 #!/usr/bin/env bash
 #
-# Since scripts may copy this file directly, must replicate until deprecated
-#
-# Load build system - part of zesk/build
-#
-# Copy this into your project to install the build system during development and in pipelines
+# Copy this into your project and customize for your own installer process.
 #
 # Copyright &copy; 2025 Market Acumen, Inc.
 #
 # Debugging: 73b0bd4ba49583263542da725669003fc821eb63
 
+__installPackageConfiguration() {
+  local rel="$1"
+  shift
+  _installRemotePackage "$rel" "{APPLICATION_RELATIVE_PATH}" "${BASH_SOURCE[0]##*/}" --version-function __installFetchVersion --url-function __installURL --check-function _installCheck --name "Zesk Build" "$@"
+}
+
 # URL of latest release
-__installBinBuildLatest() {
-  printf -- "%s\n" "https://api.github.com/repos/zesk/build/releases/latest"
+__installLatestVersion() {
+  printf -- "%s\n" "https://localhost/latest.json"
+}
+__installLatestURL() {
+  printf -- "%s\n" "https://localhost/latest.tar.gz"
 }
 
 # Download remote JSON as a temporary file (delete it)
-# Requires: whichExists __throwEnvironment fileTemporaryName __installBinBuildLatest curl urlFetch printf
-__installBinBuildJSON() {
+# Requires: whichExists __throwEnvironment fileTemporaryName __installLatestVersion curl urlFetch printf
+__installJSON() {
   local usage="$1" jsonFile message
 
   whichExists jq || __throwEnvironment "$usage" "Requires jq to install" || return $?
   jsonFile=$(fileTemporaryName "$usage") || return $?
-  if ! urlFetch "$(__installBinBuildLatest)" "$jsonFile"; then
+  if ! urlFetch "$(__installLatestVersion)" "$jsonFile"; then
     message="$(printf -- "%s\n%s\n" "Unable to fetch latest JSON:" "$(cat "$jsonFile")")"
     rm -rf "$jsonFile" || :
     __throwEnvironment "$usage" "$message" || return $?
@@ -30,16 +35,8 @@ __installBinBuildJSON() {
   printf "%s\n" "$jsonFile"
 }
 
-# Requires: jsonField printf
-__githubInstallationURL() {
-  local usage="$1" jsonFile="$2"
-  url=$(jsonField "$usage" "$jsonFile" .tarball_url) || return $?
-  printf -- "%s\n" "$url"
-}
-
-# Installs Zesk Build from GitHub
-# Requires: __installBinBuildJSON __githubInstallationURL rm __throwArgument printf
-__installBinBuildURL() {
+# Requires: __installJSON __githubInstallationURL rm __throwArgument printf
+__installURL() {
   local usage="$1" jsonFile
 
   export ___TEMP_BIN_BUILD_URL
@@ -47,22 +44,23 @@ __installBinBuildURL() {
     printf "%s\n" "$___TEMP_BIN_BUILD_URL"
     return 0
   fi
-  jsonFile=$(__installBinBuildJSON "$usage") || return $?
-  url=$(__githubInstallationURL "$usage" "$jsonFile") || return $?
+  jsonFile=$(__installJSON "$usage") || return $?
+  url=$(__installLatestURL "$usage" "$jsonFile") || return $?
   rm -rf "$jsonFile" || :
   [ "${url#https://}" != "$url" ] || __throwArgument "$usage" "URL must begin with https://" || return $?
   ___TEMP_BIN_BUILD_URL="$url"
   printf -- "%s\n" "$url"
 }
 
-# Checks Zesk Build version on GitHub
-# Requires: __installBinBuildJSON jsonField jq versionSort decorate __githubInstallationURL __throwArgument
-__installBinBuildVersion() {
+# Requires: __installJSON jsonField jq versionSort decorate __githubInstallationURL __throwArgument
+__installFetchVersion() {
+  # Return 0 to print version (installation matches)
+  # Return 1 and output the change in version (installation needs to continue)
   local usage="$1" installPath="$2" packagePath="$3" jsonFile version url upIcon="☝️" okIcon="👌"
 
   export ___TEMP_BIN_BUILD_URL
 
-  jsonFile=$(__installBinBuildJSON "$usage") || return $?
+  jsonFile=$(__installJSON "$usage") || return $?
 
   # Version comparison
   version=$(jsonField "$usage" "$jsonFile" .tag_name) || return $?
@@ -88,7 +86,7 @@ __installBinBuildVersion() {
 
 # Check the install directory after installation and output the version
 # Requires: __installCheck
-__installBinBuildCheck() {
+_installCheck() {
   __installCheck "zesk/build" "build.json" "$@"
 }
 
@@ -136,27 +134,6 @@ __installCheck() {
   read -r version id < <(jq -r "($versionSelector + \" \" + $idSelector)" <"$versionFile" || :) || :
   [ -n "$version" ] && [ -n "$id" ] || __throwEnvironment "$usage" "$versionFile missing version: \"$version\" or id: \"$id\"" || return $?
   printf "%s %s (%s)\n" "$(decorate bold-blue "$name")" "$(decorate code "$version")" "$(decorate orange "$id")"
-}
-
-# Environment: Needs internet access and creates a directory `./bin/build`
-# Usage: {fn} relativePath installPath url urlFunction [ --local localPackageDirectory ] [ --debug ] [ --force ] [ --diff ]
-# fn: {base}
-# Installs a remote package system in a local project directory if not installed. Also
-# will overwrite the installation binary with the latest version after installation.
-#
-# Determines the most recent version using GitHub API unless --url or --local is specified
-#
-# Argument: --local localPackageDirectory - Optional. Directory. Directory of an existing bin/build installation to mock behavior for testing
-# Argument: --url url - Optional. URL. URL of a tar.gz. file. Download source code from here.
-# Argument: --debug - Optional. Flag. Debugging is on.
-# Argument: --force - Optional. Flag. Force installation even if file is up to date.
-# Argument: --diff - Optional. Flag. Show differences between old and new file.
-# Exit Code: 1 - Environment error
-# Exit Code: 2 - Argument error
-__installPackageConfiguration() {
-  local rel="$1"
-  shift
-  _installRemotePackage "$rel" "bin/build" "install-bin-build.sh" --version-function __installBinBuildVersion --url-function __installBinBuildURL --check-function __installBinBuildCheck --name "Zesk Build" "$@"
 }
 
 # IDENTICAL _installRemotePackage 400

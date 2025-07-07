@@ -90,7 +90,7 @@ isTrue() {
     1 | true | yes | enabled | y) ;;
     "" | 0 | false | no | disabled | n | null | nil | "0.0") return 1 ;;
     *)
-      ! isInteger "$value" || [ "$value" -ne 0 ] || ! isNumber "$value" || [ "$(truncateFloat "$value")" -ne 0 ] || return 1
+      ! isInteger "$value" || [ "$value" -ne 0 ] || ! isNumber "$value" || [ "$(floatTruncate "$value")" -ne 0 ] || return 1
       ;;
     esac
     shift

@@ -7,21 +7,33 @@ Install software as `root` or superuser.
 <hr />
 
 {packageInstall}
+
 {awsInstall}
 
 {dockerComposeInstall}
+
 {dockerComposeUninstall}
 
 {gitInstall}
+
 {mariadbInstall}
+
 {npmInstall}
+
 {phpInstall}
-{pythonInstall}
+
+pythonInstall}
+
 {terraformInstall}
 
 {gitUninstall}
+
 {mariadbUninstall}
+
 {npmUninstall}
+
 {phpUninstall}
+
 {pythonUninstall}
+
 {terraformUninstall}

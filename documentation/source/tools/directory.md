@@ -5,12 +5,15 @@
 <hr />
 
 {directoryRelativePath}
+
 {isAbsolutePath}
+
 {directoryIsEmpty}
 
 {fileDirectoryExists}
 
 {requireFileDirectory}
+
 {requireDirectory}
 
 {directoryClobber}

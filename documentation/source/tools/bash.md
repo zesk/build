@@ -11,34 +11,49 @@
 ## Loading
 
 {bashLibrary}
+
 {bashLibraryHome}
+
 {bashSourcePath}
 
 ## Code analysis
 
 {bashFunctionDefined}
+
 {bashGetRequires}
+
 {bashCheckRequires}
+
 {bashStripComments}
+
 {bashShowUsage}
+
 {bashListFunctions}
+
 {bashFunctionComment}
+
 {bashFunctionCommentVariable}
+
 {bashCommentFilter}
 
 ## Builtins
 
 {isBashBuiltin}
+
 {bashBuiltins}
 
 ## Linting
 
 {bashSanitize}
+
 {bashLintFiles}
+
 {bashLintFilesInteractive}
+
 {bashLint}
 
 ## Debug
 
 {bashDebugInterruptFile}
+
 {bashRecursionDebug}
