@@ -19,15 +19,12 @@ testVersionLive() {
 
 # Tag: slow
 testHookSystem() {
+  local usage="_return"
   local testDir here randomApp randomDefault path
   local hook exitCode f
 
-  if ! testDir=$(mktemp -d); then
-    return 1
-  fi
-  if ! here=$(pwd); then
-    return 1
-  fi
+  testDir=$(fileTemporaryName "$usage" -d) || return $?
+  here=$(__catchEnvironment "$usage" buildHome) || return $?
 
   randomApp=$(randomString)
   randomDefault=$(randomString)
@@ -118,7 +115,7 @@ testHookSystem() {
   assertExitCode --leak BUILD_DEBUG --stderr-ok 2 hookRun --application "$testDir" test3 || _hookTestFailed "$testDir" || return $?
 
   for hook in result reflect; do
-    for exitCode in $(seq 0 7 245); do
+    for exitCode in $(seq 0 17 245); do
       statusMessage decorate info "hookRun $hook $exitCode"
       assertExitCode --leak BUILD_DEBUG "$exitCode" hookRun --application "$testDir" "$hook" "$exitCode" || _hookTestFailed "$testDir" || return $?
     done
