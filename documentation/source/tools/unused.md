@@ -35,3 +35,7 @@ Hides these from [New and uncategorized functions](./todo.md)
 {isOldestFile}
 {oldestFile}
 {newestFile}
+{modifiedDays}
+{modifiedSeconds}
+{requireDirectory}
+{requireFileDirectory}
