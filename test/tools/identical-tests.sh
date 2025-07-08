@@ -94,10 +94,14 @@ testIdenticalLineParsing() {
 
 # Tag: slow
 testIdenticalChecks() {
+  local usage="_return"
+  local home
+
+  home=$(__catchEnvironment "$usage" buildHome) || return $?
   local identicalCheckArgs identicalError
 
   identicalError=$(_code identical)
-  identicalCheckArgs=(--cd "test/example" --extension 'txt')
+  identicalCheckArgs=(--cd "$home/test/example" --extension 'txt')
 
   clearLine && decorate info "same file match"
   assertExitCode --stdout-match Verified 0 identicalCheck "${identicalCheckArgs[@]}" --prefix '# eIDENTICAL' || return $?
