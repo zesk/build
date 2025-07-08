@@ -1382,7 +1382,7 @@ __execute() {
 
 # Run a function and preserve exit code
 # Returns `exitCode`
-# Argument: exitCode - Required. Integer. Exit code to return.
+# Argument: exitCode - Required. UnsignedInteger. Exit code to return.
 # Argument: undoFunction - Optional. Command to run to undo something. Return status is ignored.
 # Argument: -- - Flag. Optional. Used to delimit multiple commands.
 # As a caveat, your command to `undo` can NOT take the argument `--` as a parameter.
@@ -1396,7 +1396,7 @@ __execute() {
 _undo() {
   local __count=$# __saved=("$@") __usage="_${FUNCNAME[0]}" exitCode="${1-}" args=()
   shift
-  isPositiveInteger "$exitCode" || [ "$exitCode" = "0" ] || __catchArgument "$__usage" "Not an integer $(decorate value "$exitCode") (#$__count: $(decorate each code "${__saved[@]+"${__saved[@]}"}"))" || return $?
+  isUnsignedInteger "$exitCode" || __catchArgument "$__usage" "Not an integer $(decorate value "$exitCode") (#$__count: $(decorate each code "${__saved[@]+"${__saved[@]}"}"))" || return $?
   while [ $# -gt 0 ]; do
     case "$1" in
     --)
