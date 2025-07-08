@@ -43,18 +43,30 @@ testBuildFunctionsCoverage() {
 
   home=$(__catchEnvironment "$usage" buildHome) || return $?
 
+  local deprecatedFunctions
+  deprecatedFunctions=$(fileTemporaryName "$usage") || return $?
+
+  __catchEnvironment "$usage" cut -f 1 -d '|' <"$home/bin/build/deprecated.txt" | grep -v '#' | grep -v ' ' | grep -v '/' | sort -u >"$deprecatedFunctions" || return $?
+
   local function missing=()
   while read -r function; do
-    testFiles=$(find "$home/test/tools" -type f -name '*.sh' -print0 | xargs -0 grep -l "$(quoteGrepPattern "$function")" | fileLineCount)
-    if [ "$testFiles" -eq 0 ]; then
-      if [ "$(date +%s)" -gt "$(dateToTimestamp '2025-08-01')" ]; then
-        missing+=("$function")
-      else
-        statusMessage --last decorate warning "No tests written for $(decorate code "$function")"
-      fi
+    statusMessage decorate info "Looking at $function"
+    if grep -q -e "^$(quoteGrepPattern "$function")" <"$deprecatedFunctions"; then
+      statusMessage decorate info "Deprecated function: $(decorate code "$function")"
     else
-      statusMessage decorate info "$testFiles $(plural "$testFiles" test tests) written for $(decorate code "$function")"
+      testFiles=$(find "$home/test/tools" -type f -name '*.sh' -print0 | xargs -0 grep -l "$(quoteGrepPattern "$function")" | fileLineCount) || :
+      echo "$function -> $testFiles"
+      if [ "$testFiles" -eq 0 ]; then
+        if [ "$(date +%s)" -gt "$(dateToTimestamp '2025-08-01')" ]; then
+          missing+=("$function")
+        else
+          statusMessage --last decorate warning "No tests written for $(decorate code "$function")"
+        fi
+      else
+        statusMessage decorate info "$testFiles $(plural "$testFiles" test tests) written for $(decorate code "$function")"
+      fi
     fi
   done < <(buildFunctions)
+  __catchEnvironment "$usage" rm -f "$deprecatedFunctions" || return $?
   [ "${#missing[@]}" -eq 0 ] || __throwEnvironment "$usage" "Functions require tests:"$'\n'"$(printf "%s\n" "${missing[@]}" | decorate code | decorate wrap "- ")"
 }

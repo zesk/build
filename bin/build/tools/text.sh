@@ -290,6 +290,7 @@ trimSpace() {
   fi
 }
 _trimSpace() {
+  false || trimSpace "" # SC2120 fix
   # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
@@ -540,14 +541,16 @@ fileLineCount() {
     *)
       local file
       file="$(usageArgumentFile "$usage" "$argument" "${1-}")" || return $?
-      printf "%d\n" "$(__catchEnvironment "$usage" wc -l <"$file")" || return $?
+      # shellcheck disable=SC2119
+      printf "%d\n" "$(__catchEnvironment "$usage" wc -l <"$file" | trimSpace)" || return $?
       fileArgument=true
       ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
     shift
   done
-  $fileArgument || printf "%d\n" "$(__catchEnvironment "$usage" wc -l)" || return $?
+  # shellcheck disable=SC2119
+  $fileArgument || printf "%d\n" "$(__catchEnvironment "$usage" wc -l | trimSpace)" || return $?
 }
 _fileLineCount() {
   # _IDENTICAL_ usageDocument 1
@@ -582,7 +585,7 @@ plural() {
   elif isNumber "$count"; then
     printf %s "${3-}"
   else
-    printf "%s: %s\n" "plural argument is not numeric" "$count" 1>&2
+    printf "%s: \"%s\"\n" "plural argument is not numeric" "$count" 1>&2
     return 1
   fi
 }

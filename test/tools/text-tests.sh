@@ -7,6 +7,22 @@
 # Copyright &copy; 2025 Market Acumen, Inc.
 #
 
+__dataTrimSpace() {
+  cat <<'EOF'
+trimSpace| trimSpace   |
+|     |
+a b c|  a b c        |
+EOF
+}
+
+testTrimSpace() {
+  while IFS="|" read -r expected test remainder; do
+    assertEquals "$expected" "$(trimSpace "$test")" || return $?
+    assertEquals "$expected" "$(trimSpace <<<"$test")" || return $?
+    : "$remainder"
+  done < <(__dataTrimSpace)
+}
+
 __dataStringReplace() {
   cat <<EOF
 Redundant|871|un|Red871dant
@@ -14,6 +30,7 @@ Redundant|871|un|Red871dant
 zAzzLE|Z|1|zAzzLE
 EOF
 }
+
 testStringReplace() {
   while IFS="|" read -r expected needle replacement haystack; do
     assertEquals "$expected" "$(stringReplace "$needle" "$replacement" "$haystack")" || return $?
