@@ -44,9 +44,20 @@ testBuildFunctionsCoverage() {
   home=$(__catchEnvironment "$usage" buildHome) || return $?
 
   local deprecatedFunctions
-  deprecatedFunctions=$(fileTemporaryName "$usage") || return $?
+  local allTestFiles
 
+  deprecatedFunctions=$(fileTemporaryName "$usage") || return $?
+  allTestFiles=$(fileTemporaryName "$usage") || return $?
+
+  clean+=("$deprecatedFunctions")
+  clean+=("$allTestFiles")
   __catchEnvironment "$usage" cut -f 1 -d '|' <"$home/bin/build/deprecated.txt" | grep -v '#' | grep -v ' ' | grep -v '/' | sort -u >"$deprecatedFunctions" || return $?
+
+  __catchEnvironment "$usage" find "$home/test/tools" -type f -name '*.sh' -print0 >"$allTestFiles" || return $?
+
+  local requireCoverageDate
+  requireCoverageDate=$(buildEnvironmentGet BUILD_COVERAGE_REQUIRED_DATE) || return $?
+  assertExitCode 0 isDate "$requireCoverageDate" || return $?
 
   local function missing=()
   while read -r function; do
@@ -54,18 +65,26 @@ testBuildFunctionsCoverage() {
     if grep -q -e "^$(quoteGrepPattern "$function")" <"$deprecatedFunctions"; then
       statusMessage decorate info "Deprecated function: $(decorate code "$function")"
     else
-      testFiles=$(find "$home/test/tools" -type f -name '*.sh' -print0 | xargs -0 grep -l "$(quoteGrepPattern "$function")" | fileLineCount) || :
-      if [ "$testFiles" -eq 0 ]; then
-        if [ "$(date +%s)" -gt "$(dateToTimestamp '2025-08-01')" ]; then
+      local foundCount matchingTests
+
+      # grep returns 1 when nothing matches
+      matchingTests=$(xargs -r -0 grep -l "$(quoteGrepPattern "$function")" <"$allTestFiles" || mapReturn $? 1 0) || return $?
+      foundCount=$(__catchEnvironment "$usage" fileLineCount <<<"$matchingTests") || return $?
+
+      if ! isInteger "$foundCount"; then
+        statusMessage --last decorate error "$(dumpPipe foundCount <<<"$foundCount") NOT INTEGER for $(decorate code "$function")"
+        decorate code "find \"$home/test/tools\" -type f -name \"*.sh\" -print0 | xargs -0 grep -l \"\$(quoteGrepPattern \"$function\")\" | fileLineCount"
+      elif [ "$foundCount" -eq 0 ]; then
+        if [ "$(date +%s)" -gt "$(dateToTimestamp "$requireCoverageDate")" ]; then
           missing+=("$function")
         else
           statusMessage --last decorate warning "No tests written for $(decorate code "$function")"
         fi
       else
-        statusMessage decorate info "$testFiles $(plural "$testFiles" test tests) written for $(decorate code "$function")"
+        statusMessage decorate info "$foundCount $(plural "$foundCount" test tests) written for $(decorate code "$function")"
       fi
     fi
   done < <(buildFunctions)
-  __catchEnvironment "$usage" rm -f "$deprecatedFunctions" || return $?
-  [ "${#missing[@]}" -eq 0 ] || __throwEnvironment "$usage" "Functions require tests:"$'\n'"$(printf "%s\n" "${missing[@]}" | decorate code | decorate wrap "- ")"
+  __catchEnvironment "$usage" rm -f "${clean[@]}" || return $?
+  [ "${#missing[@]}" -eq 0 ] || __throwEnvironment "$usage" "Functions require tests ($(decorate magenta "after $requireCoverageDate")):"$'\n'"$(printf "%s\n" "${missing[@]}" | decorate code | decorate wrap "- ")"
 }

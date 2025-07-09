@@ -518,7 +518,7 @@ maximumLineLength() {
 # Argument: --help - Optional. Flag. Display this help.
 # DOC TEMPLATE: --handler 1
 # Argument: --handler handler - Optional. Function. Use this error handler instead of the default error handler.
-# Argument: file - Optional. File. Output line count for each file specified. If not files specified, uses stdin.
+# Argument: file - Optional. File. Output line count for each file specified. If no files specified, uses stdin.
 fileLineCount() {
   local usage="_${FUNCNAME[0]}" fileArgument=false
 

@@ -7,6 +7,34 @@
 # Copyright &copy; 2025 Market Acumen, Inc.
 #
 
+__dataTrimBoth() {
+  cat <<EOF
+this is a line|
+
+
+
+this is a line
+
+
+
+;single|
+
+
+single;solo|solo
+
+
+
+;
+EOF
+}
+
+testTrimBoth() {
+  local expected test
+  while IFS="|" read -d ';' -r expected test; do
+    assertEquals "$expected" "$(trimBoth <<<"$test")" || return $?
+  done < <(__dataTrimBoth)
+}
+
 __dataTrimSpace() {
   cat <<'EOF'
 trimSpace| trimSpace   |
@@ -16,6 +44,7 @@ EOF
 }
 
 testTrimSpace() {
+  local expected test remainder
   while IFS="|" read -r expected test remainder; do
     assertEquals "$expected" "$(trimSpace "$test")" || return $?
     assertEquals "$expected" "$(trimSpace <<<"$test")" || return $?
