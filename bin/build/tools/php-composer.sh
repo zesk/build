@@ -90,11 +90,11 @@ phpComposer() {
 
   __catchEnvironment "$usage" muzzle pushd "$composerDirectory" || return $?
   printf "%s\n" "Running: ${composerBin[*]} validate" >>"$quietLog"
-  "${composerBin[@]}" validate >>"$quietLog" 2>&1 || _undo $? muzzle popd || buildFailed "$quietLog" || return $?
+  "${composerBin[@]}" validate >>"$quietLog" 2>&1 || returnUndo $? muzzle popd || buildFailed "$quietLog" || return $?
 
   $quietFlag || statusMessage decorate info "Application packages ... " || :
   printf "%s\n" "Running: ${composerBin[*]} install ${installArgs[*]}" >>"$quietLog" || :
-  "${composerBin[@]}" install "${installArgs[@]}" >>"$quietLog" 2>&1 || _undo $? muzzle popd || buildFailed "$quietLog" || return $?
+  "${composerBin[@]}" install "${installArgs[@]}" >>"$quietLog" 2>&1 || returnUndo $? muzzle popd || buildFailed "$quietLog" || return $?
   __catchEnvironment "$usage" muzzle popd || return $?
   $quietFlag || statusMessage --last timingReport "$start" "${FUNCNAME[0]} completed in" || :
 }
@@ -108,9 +108,9 @@ phpComposerInstall() {
   ! whichExists composer || return 0
   local target="/usr/local/bin/composer"
   local tempBinary="$target.$$"
-  __catchEnvironment "$usage" urlFetch "https://getcomposer.org/composer.phar" "$tempBinary" || _clean $? "$tempBinary" || return $?
-  __catchEnvironment "$usage" mv -f "$tempBinary" "$target" || _clean $? "$tempBinary" || return $?
-  __catchEnvironment "$usage" chmod +x "$target" || _clean $? "$tempBinary" || return $?
+  __catchEnvironment "$usage" urlFetch "https://getcomposer.org/composer.phar" "$tempBinary" || returnClean $? "$tempBinary" || return $?
+  __catchEnvironment "$usage" mv -f "$tempBinary" "$target" || returnClean $? "$tempBinary" || return $?
+  __catchEnvironment "$usage" chmod +x "$target" || returnClean $? "$tempBinary" || return $?
 }
 _phpComposerInstall() {
   # _IDENTICAL_ usageDocument 1
@@ -125,7 +125,7 @@ _phpComposerInstall() {
 #
 # Argument: --version - String. Use this version instead of current version.
 # Argument: --home - Directory. Optional. Use this directory for the location of `composer.json`.
-# Argument: --status - Flag. Optional. When set, returns 0 when te version was updated successfully and $(_code identical) when the files are the same
+# Argument: --status - Flag. Optional. When set, returns 0 when te version was updated successfully and $(returnCode identical) when the files are the same
 # Argument: --quiet - Flag. Optional. Do not output anything to stdout and just do the action and exit.
 # Exit Code: 0 - File was updated successfully.
 # Exit Code: 1 - Environment error

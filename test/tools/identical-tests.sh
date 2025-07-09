@@ -100,7 +100,7 @@ testIdenticalChecks() {
   home=$(__catchEnvironment "$usage" buildHome) || return $?
   local identicalCheckArgs identicalError
 
-  identicalError=$(_code identical)
+  identicalError=$(returnCode identical)
   identicalCheckArgs=(--cd "$home/test/example" --extension 'txt')
 
   clearLine && decorate info "same file match"
@@ -141,7 +141,7 @@ testIdenticalCheckSingles() {
   local home
   home=$(__catchEnvironment "$usage" buildHome) || return $?
 
-  identicalError=$(_code identical)
+  identicalError=$(returnCode identical)
 
   assertEquals 105 "$identicalError" || return $?
 

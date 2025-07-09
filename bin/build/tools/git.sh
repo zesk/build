@@ -347,7 +347,7 @@ gitTagVersion() {
   # rc is for release candidate
   versionSuffix=${versionSuffix:-${BUILD_VERSION_SUFFIX:-rc}}
   tagPrefix="${currentVersion}${versionSuffix}"
-  __catchEnvironment "$usage" git show-ref --tags | removeFields 1 | __catchEnvironment "$usage" muzzle tee -a "$tagFile" || _clean $? "${clean[@]}" || return $?
+  __catchEnvironment "$usage" git show-ref --tags | removeFields 1 | __catchEnvironment "$usage" muzzle tee -a "$tagFile" || returnClean $? "${clean[@]}" || return $?
   index=0
   while true; do
     tryVersion="$tagPrefix$index"
@@ -355,7 +355,7 @@ gitTagVersion() {
       break
     fi
     index=$((index + 1))
-    [ $index -lt "$maximumTagsPerVersion" ] || __throwEnvironment "$usage" "Tag version exceeded maximum of $maximumTagsPerVersion" || _clean $? "${clean[@]}" || return $?
+    [ $index -lt "$maximumTagsPerVersion" ] || __throwEnvironment "$usage" "Tag version exceeded maximum of $maximumTagsPerVersion" || returnClean $? "${clean[@]}" || return $?
   done
   __catchEnvironment "$usage" rm -rf "${clean[@]}" || return $?
 
@@ -1054,8 +1054,8 @@ gitBranchMergeCurrent() {
     __throwEnvironment "$usage" "Already on $(decorate code "$targetBranch") branch" || return $?
   fi
   __catchEnvironment "$usage" git checkout "$targetBranch" || return $?
-  __catchEnvironment "$usage" git merge -m "$comment" "$branch" || _undo $? git checkout --force "$branch" || return $?
-  __catchEnvironment "$usage" git push || _undo $? git checkout --force "$branch" || return $?
+  __catchEnvironment "$usage" git merge -m "$comment" "$branch" || returnUndo $? git checkout --force "$branch" || return $?
+  __catchEnvironment "$usage" git push || returnUndo $? git checkout --force "$branch" || return $?
   __catchEnvironment "$usage" git checkout "$branch" || return $?
 }
 _gitUpdateBranch() {

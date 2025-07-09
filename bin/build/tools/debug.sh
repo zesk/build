@@ -173,14 +173,14 @@ bashDebugInterruptFile() {
 
   local currentTraps installed=()
   currentTraps=$(fileTemporaryName "$usage") || return $?
-  trap >"$currentTraps" || _clean "$?" "$currentTraps" || __throwEnvironment "trap listing failed" || return $?
+  trap >"$currentTraps" || returnClean "$?" "$currentTraps" || __throwEnvironment "trap listing failed" || return $?
   for trap in "${traps[@]}"; do
     if grep "$name" "$currentTraps" | grep -q " SIG${trap}"; then
       installed+=("$trap")
     fi
   done
   if [ "${#installed[@]}" -eq "${#traps[@]}" ]; then
-    __throwEnvironment "$usage" "Already installed" || _clean $? "$currentTraps" || return $?
+    __throwEnvironment "$usage" "Already installed" || returnClean $? "$currentTraps" || return $?
   fi
   __catchEnvironment "$usage" rm -rf "$currentTraps" || return $?
   __catchEnvironment "$usage" trap __bashDebugInterruptFile "${traps[@]}" || return $?
@@ -277,7 +277,7 @@ plumber() {
     fi
     if [ -n "$__changed" ]; then
       printf "%s\n" "$__changed" | dumpPipe "$(decorate bold-orange "found leak"): $__cmd: $__rawChanged" 1>&2
-      __result=$(_code leak)
+      __result=$(returnCode leak)
     fi
   else
     __result=$?
@@ -365,7 +365,7 @@ housekeeper() {
     __cmd=$(decorate each code "$@")
     if [ -n "$__changed" ]; then
       printf "%s\n" "$__changed" | dumpPipe "$__cmd modified files" 1>&2
-      __result=$(_code leak)
+      __result=$(returnCode leak)
     fi
   else
     __result=$?

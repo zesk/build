@@ -74,7 +74,7 @@ usageDocumentComplex() {
   variablesFile=$(fileTemporaryName "$usage") || return $?
   if ! bashDocumentation_Extract "$functionDefinitionFile" "$functionName" >"$variablesFile"; then
     dumpPipe "variablesFile" <"$variablesFile"
-    __throwArgument "$usage" "Unable to extract \"$functionName\" from \"$functionDefinitionFile\"" || _clean $? "$variablesFile" || return $?
+    __throwArgument "$usage" "Unable to extract \"$functionName\" from \"$functionDefinitionFile\"" || returnClean $? "$variablesFile" || return $?
   fi
   (
     local description="" argument="" base exit_code=""
@@ -85,7 +85,7 @@ usageDocumentComplex() {
     source "$variablesFile"
     set +a
 
-    [ "$exitCode" -eq 0 ] || exec 1>&2 && color="error"
+    [ "$exit_code" -eq 0 ] || exec 1>&2 && color="error"
     local bashDebug=false
     if isBashDebug; then
       bashDebug=true
@@ -98,7 +98,7 @@ usageDocumentComplex() {
       formatted="$(printf "%s\n%s\n" "Exit codes:" "$(decorate wrap "- " "" <<<"$(trimSpace "$exit_code")")")"
       description="$(trimTail <<<"$description")"$'\n'$'\n'"$formatted"
     fi
-    usageTemplate "$(mapEnvironment <<<"$fn")" "$(printf "%s\n" "$argument" | sed 's/ - /^/1')" "^" "$description" "$exitCode" "$@"
+    usageTemplate "$(mapEnvironment <<<"$fn")" "$(printf "%s\n" "$argument" | sed 's/ - /^/1')" "^" "$description" "$exit_code" "$@"
     if $bashDebug; then
       __buildDebugEnable
     fi
@@ -237,7 +237,7 @@ documentationTemplateCompile() {
   documentTokensFile=$(fileTemporaryName "$usage") || return $?
   clean+=("$documentTokensFile")
 
-  mappedDocumentTemplate=$(fileTemporaryName "$usage") || _clean $? "${clean[@]}" return $?
+  mappedDocumentTemplate=$(fileTemporaryName "$usage") || returnClean $? "${clean[@]}" return $?
 
   clean+=("$mappedDocumentTemplate")
 
@@ -256,22 +256,22 @@ documentationTemplateCompile() {
       printf %s 'no-environment'
     fi
   ); then
-    __throwEnvironment "$usage" "mapTokens failed" || _clean $? "${clean[@]}" return $?
+    __throwEnvironment "$usage" "mapTokens failed" || returnClean $? "${clean[@]}" return $?
   fi
   if ! mapTokens <"$mappedDocumentTemplate" >"$documentTokensFile"; then
-    __throwEnvironment "$usage" "mapTokens failed" || _clean $? "${clean[@]}" return $?
+    __throwEnvironment "$usage" "mapTokens failed" || returnClean $? "${clean[@]}" return $?
   fi
   #
   # Look at source file for each function
   #
   if ! envChecksumCache=$(directoryRequire "$cacheDirectory/envChecksum"); then
-    __throwEnvironment "$usage" "create $cacheDirectory/envChecksum failed" || _clean $? "${clean[@]}" || return $?
+    __throwEnvironment "$usage" "create $cacheDirectory/envChecksum failed" || returnClean $? "${clean[@]}" || return $?
   fi
   envChecksumCache="$envChecksumCache/$envChecksum"
   if [ ! -f "$envChecksumCache" ]; then
     touch "$envChecksumCache"
   fi
-  compiledTemplateCache=$(__catchEnvironment "$usage" directoryRequire "$cacheDirectory/compiledTemplateCache") || _clean $? "${clean[@]}" || return $?
+  compiledTemplateCache=$(__catchEnvironment "$usage" directoryRequire "$cacheDirectory/compiledTemplateCache") || returnClean $? "${clean[@]}" || return $?
   # Environment change will affect this template
   # Function template change will affect this template
 
@@ -281,7 +281,7 @@ documentationTemplateCompile() {
   if [ "$tempCount" -eq 0 ]; then
     if [ ! -f "$targetFile" ] || ! diff -q "$mappedDocumentTemplate" "$targetFile" >/dev/null; then
       printf "%s (mapped) -> %s %s" "$(decorate warning "$documentTemplate")" "$(decorate success "$targetFile")" "$(decorate error "(no tokens found)")"
-      __catchEnvironment "$usage" cp "$mappedDocumentTemplate" "$targetFile" || _clean $? "${clean[@]}" || return $?
+      __catchEnvironment "$usage" cp "$mappedDocumentTemplate" "$targetFile" || returnClean $? "${clean[@]}" || return $?
     fi
   else
     local checkTokens=()
@@ -306,14 +306,14 @@ documentationTemplateCompile() {
       while read -r tokenName; do
         compiledFunctionTarget="$compiledTemplateCache/$tokenName"
         if ! settingsFile=$(documentationIndex_Lookup --source "$cacheDirectory" "$tokenName"); then
-          __catchEnvironment "$usage" printf "%s\n" "Function not found: $tokenName" >"$compiledFunctionTarget" || _clean $? "${clean[@]}" || return $?
+          __catchEnvironment "$usage" printf "%s\n" "Function not found: $tokenName" >"$compiledFunctionTarget" || returnClean $? "${clean[@]}" || return $?
           continue
         fi
         if ! $forceFlag && [ -f "$compiledFunctionTarget" ] && fileIsNewest "$compiledFunctionTarget" "$settingsFile" "$envChecksumCache" "$functionTemplate"; then
           statusMessage decorate info "Skip $tokenName and use cache"
         else
-          __catchEnvironment "$usage" documentationTemplateFunctionCompile "${envFileArgs[@]+${envFileArgs[@]}}" "$cacheDirectory" "$tokenName" "$functionTemplate" | trimTail >"$compiledFunctionTarget" || _clean $? "${clean[@]}" || return $?
-          __catchEnvironment "$usage" printf "\n" >>"$compiledFunctionTarget" || _clean $? "${clean[@]}" || return $?
+          __catchEnvironment "$usage" documentationTemplateFunctionCompile "${envFileArgs[@]+${envFileArgs[@]}}" "$cacheDirectory" "$tokenName" "$functionTemplate" | trimTail >"$compiledFunctionTarget" || returnClean $? "${clean[@]}" || return $?
+          __catchEnvironment "$usage" printf "\n" >>"$compiledFunctionTarget" || returnClean $? "${clean[@]}" || return $?
         fi
         environmentValueWrite "$tokenName" "$(cat "$compiledFunctionTarget")" >>"$compiledFunctionEnv"
       done <"$documentTokensFile"
@@ -325,7 +325,7 @@ documentationTemplateCompile() {
         #shellcheck source=/dev/null
         source "$compiledFunctionEnv" || __throwEnvironment "$usage" "source $compiledFunctionEnv compiled for $targetFile" || return $?
         mapEnvironment "${tokenNames[@]}" <"$mappedDocumentTemplate" >"$targetFile"
-      ) || __throwEnvironment "$usage" "mapEnvironment $tokenName" || _clean $? "${clean[@]}" || return $?
+      ) || __throwEnvironment "$usage" "mapEnvironment $tokenName" || returnClean $? "${clean[@]}" || return $?
       __catchEnvironment "$usage" cp "$compiledFunctionEnv" "$envChecksumCache" || return $?
     else
       message="Cached"
@@ -560,9 +560,9 @@ _bashDocumentFunction() {
 # name matches the variable name (lowercase alphanumeric characters and underscores).
 #
 # Filter functions should modify the input/output pipe; an example can be found in `{applicationFile}` by looking at
-# sample function `_bashDocumentationFormatter_exit_code`.
+# sample function `_bashDocumentationFormatter_exitCode`.
 #
-# See: _bashDocumentationFormatter_exit_code
+# See: _bashDocumentationFormatter_exitCode
 # Usage: {fn} template [ settingsFile ...
 # Argument: template - Required. A markdown template to use to map values. Post-processed with `markdown_removeUnfinishedSections`
 # Argument: settingsFile - Required. Settings file to be loaded.
@@ -677,7 +677,7 @@ __dumpAliasedValue() {
 # - `base` - The basename of the file
 # - `file` - The relative path name of the file from the application root
 # - `summary` - Defaults to first ten words of `description`
-# - `exit_code` - Defaults to `0 - Always succeeds`
+# - `exitCode` - Defaults to `0 - Always succeeds`
 # - `reviewed"  - Defaults to `Never`
 # - `environment"  - Defaults to `No environment dependencies or modifications.`
 #
@@ -784,8 +784,8 @@ bashDocumentation_Extract() {
     __dumpNameValue "description" "No documentation for \`$fn\`."
     __dumpNameValue "summary" "undocumented"
   fi
-  if ! inArray "exit_code" "${foundNames[@]+"${foundNames[@]}"}"; then
-    __dumpNameValue "exit_code" '0 - Success' '1 - Environment error' '2 - Argument error' "" ""
+  if ! inArray "exitCode" "${foundNames[@]+"${foundNames[@]}"}"; then
+    __dumpNameValue "exitCode" '0 - Success' '1 - Environment error' '2 - Argument error' "" ""
   fi
   if ! inArray "fn" "${foundNames[@]+"${foundNames[@]}"}"; then
     __dumpNameValue "fn" "$fn"
@@ -893,7 +893,7 @@ bashDocumentation_FindFunctionDefinition() {
 #
 # Format code blocks (does markdown_FormatList)
 #
-_bashDocumentationFormatter_exit_code() {
+_bashDocumentationFormatter_exitCode() {
   markdown_FormatList
 }
 

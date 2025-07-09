@@ -30,18 +30,36 @@ __alwaysFail() {
   return 1
 }
 
+__dataExitString() {
+  cat <<EOF
+success 0
+interrupt 141
+user-interrupt 130
+environment 1
+assert 97
+unknown 254
+not-found 127
+EOF
+}
+
+testExitString() {
+  while read -r expected test; do
+    assertEquals --display "exitString \"$test\"" "$expected" "$(exitString "$test")" || return $?
+  done < <(__dataExitString)
+}
+
 testReturn() {
   assertExitCode --stderr-match "99" 99 _return 99 || return $?
   assertExitCode 0 _return 0 || return $?
 }
 
 testUndo() {
-  assertExitCode 1 _undo 1 || return $?
-  assertExitCode --stdout-match Hello --stdout-no-match world 1 _undo 1 printf "%s\n" "Hello" || return $?
-  assertExitCode --stdout-match Hello --stdout-no-match world 1 _undo 1 printf "%s\n" "Hello" -- || return $?
-  assertExitCode --stdout-match Hello --stdout-no-match world 1 _undo 1 printf "%s\n" "Hello" -- -- -- || return $?
-  assertExitCode --stdout-match Hello --stdout-match world 1 _undo 1 printf "%s\n" "Hello" -- printf "%s\n" "world" || return $?
-  assertExitCode --stdout-match Hello --stdout-match world 1 _undo 1 printf "%s\n" "Hello" -- printf "%s\n" "world" -- || return $?
+  assertExitCode 1 returnUndo 1 || return $?
+  assertExitCode --stdout-match Hello --stdout-no-match world 1 returnUndo 1 printf "%s\n" "Hello" || return $?
+  assertExitCode --stdout-match Hello --stdout-no-match world 1 returnUndo 1 printf "%s\n" "Hello" -- || return $?
+  assertExitCode --stdout-match Hello --stdout-no-match world 1 returnUndo 1 printf "%s\n" "Hello" -- -- -- || return $?
+  assertExitCode --stdout-match Hello --stdout-match world 1 returnUndo 1 printf "%s\n" "Hello" -- printf "%s\n" "world" || return $?
+  assertExitCode --stdout-match Hello --stdout-match world 1 returnUndo 1 printf "%s\n" "Hello" -- printf "%s\n" "world" -- || return $?
 }
 
 testMapReturn() {
@@ -98,23 +116,23 @@ testChoose() {
 testExitCode() {
   local code char digit
 
-  assertEquals 1 "$(_code environment)" || return $?
-  assertEquals 2 "$(_code argument)" || return $?
-  assertEquals "" "$(_code)" || return $?
-  assertEquals "97" "$(_code assert)" || return $?
-  assertEquals "$(printf "%d\n" 97 97)" "$(_code assert assert)" || return $?
-  assertEquals "105" "$(_code identical)" || return $?
-  assertEquals "108" "$(_code leak)" || return $?
-  assertEquals "116" "$(_code timeout)" || return $?
-  assertEquals "253" "$(_code internal)" || return $?
-  assertEquals "254" "$(_code adsfa01324kjadksfj)" || return $?
-  assertEquals "254" "$(_code adsfa01324kjadksfj1)" || return $?
+  assertEquals 1 "$(returnCode environment)" || return $?
+  assertEquals 2 "$(returnCode argument)" || return $?
+  assertEquals "" "$(returnCode)" || return $?
+  assertEquals "97" "$(returnCode assert)" || return $?
+  assertEquals "$(printf "%d\n" 97 97)" "$(returnCode assert assert)" || return $?
+  assertEquals "105" "$(returnCode identical)" || return $?
+  assertEquals "108" "$(returnCode leak)" || return $?
+  assertEquals "116" "$(returnCode timeout)" || return $?
+  assertEquals "253" "$(returnCode internal)" || return $?
+  assertEquals "254" "$(returnCode adsfa01324kjadksfj)" || return $?
+  assertEquals "254" "$(returnCode adsfa01324kjadksfj1)" || return $?
 
-  assertExitCode --stderr-match non-integer --stderr-match "message for return" "$(_code argument)" _return notInt "message for return"
+  assertExitCode --stderr-match non-integer --stderr-match "message for return" "$(returnCode argument)" _return notInt "message for return"
 
   for code in assert identical leak "timeout"; do
     char="${code:0:1}"
-    digit=$(_code "$code")
+    digit=$(returnCode "$code")
     assertEquals "$digit" "$(characterToInteger "$char")" characterToInteger "$char" || return $?
     assertEquals "$char" "$(characterFromInteger "$digit")" characterFromInteger "$digit" || return $?
   done
@@ -123,10 +141,10 @@ testExitCode() {
 testExitCodeCase() {
   local code char digit
 
-  assertEquals "254" "$(_code EnViRoNmEnT)" || return $?
-  assertEquals "254" "$(_code Internal)" || return $?
-  assertEquals "254" "$(_code adsFa01324kjadksfj)" || return $?
-  assertEquals "254" "$(_code adsfa01324kjadksfj1)" || return $?
+  assertEquals "254" "$(returnCode EnViRoNmEnT)" || return $?
+  assertEquals "254" "$(returnCode Internal)" || return $?
+  assertEquals "254" "$(returnCode adsFa01324kjadksfj)" || return $?
+  assertEquals "254" "$(returnCode adsfa01324kjadksfj1)" || return $?
 }
 
 testSugar() {
@@ -184,8 +202,8 @@ testSugar() {
 testMoreSugar() {
   local usageMock=__testMoreSugarUsage
 
-  assertExitCode --stderr-match whoops "$(_code environment)" __catchEnvironment "$usageMock" _argument "whoops" || return $?
-  assertExitCode --stderr-match a-daisy "$(_code argument)" __catchArgument "$usageMock" _environment "a-daisy" || return $?
+  assertExitCode --stderr-match whoops "$(returnCode environment)" __catchEnvironment "$usageMock" _argument "whoops" || return $?
+  assertExitCode --stderr-match a-daisy "$(returnCode argument)" __catchArgument "$usageMock" _environment "a-daisy" || return $?
 }
 __testMoreSugarUsage() {
   return "$1"
@@ -194,12 +212,12 @@ __testMoreSugarUsage() {
 testArgEnvStuff() {
   local k usage="_return"
 
-  k=$(_code environment)
+  k=$(returnCode environment)
   assertExitCode --stderr-match foo "$k" _environment "foo" || return $?
   assertExitCode --stderr-match foo "$k" __throwEnvironment _return "foo" || return $?
   assertExitCode --stderr-match foo "$k" __catchEnvironment "$usage" _return 99 foo || return $?
 
-  k=$(_code argument)
+  k=$(returnCode argument)
   assertExitCode --stderr-match foo "$k" _argument "foo" || return $?
   assertExitCode --stderr-match foo "$k" __throwArgument _return "foo" || return $?
   assertExitCode --stderr-match foo "$k" __catchArgument "$usage" _return 99 foo || return $?

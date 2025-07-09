@@ -189,8 +189,8 @@ _urlParse() {
 # Gets the component of one or more URLs
 # Summary: Get a database URL component directly
 # Usage: urlParseItem component url0 [ url1 ... ]
-# Argument: url0 - String. URL. Required. A Uniform Resource Locator used to specify a database connection
 # Argument: component - the url component to get: `name`, `user`, `password`, `host`, `port`, `failed`
+# Argument: url0 - String. URL. Required. A Uniform Resource Locator used to specify a database connection
 # Example:     decorate info "Connecting as $(urlParseItem user "$url")"
 #
 urlParseItem() {

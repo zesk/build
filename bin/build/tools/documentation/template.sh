@@ -55,14 +55,14 @@ _documentationTemplateUpdateUnlinked() {
 
   unlinkedFunctions=$(fileTemporaryName "$usage") || return $?
   clean+=("$unlinkedFunctions")
-  documentationIndex_SetUnlinkedDocumentationPath "$cacheDirectory" "$target" | IFS="" awk '{ print "{" $1 "}" }' >"$unlinkedFunctions" || __throwEnvironment "$usage" "Unable to documentationIndex_SetUnlinkedDocumentationPath" || _clean $? "${clean[@]}" || return $?
+  documentationIndex_SetUnlinkedDocumentationPath "$cacheDirectory" "$target" | IFS="" awk '{ print "{" $1 "}" }' >"$unlinkedFunctions" || __throwEnvironment "$usage" "Unable to documentationIndex_SetUnlinkedDocumentationPath" || returnClean $? "${clean[@]}" || return $?
   total=$(__catchEnvironment "$usage" fileLineCount "$unlinkedFunctions") || return $?
 
   # Subshell hide globals
   (
     content="$(sort <"$unlinkedFunctions")"
     content=$content total=$total mapEnvironment content total <"$todoTemplate" >"$template.$$"
-  ) || _clean $? "${clean[@]}" || return $?
+  ) || returnClean $? "${clean[@]}" || return $?
 
   __catchEnvironment "$usage" rm -rf "${clean[@]}" || return $?
 

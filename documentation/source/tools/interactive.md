@@ -16,6 +16,7 @@
 {confirmMenu}
 {pause}
 {interactiveBashSource}
+{notify}
 
 ## Copy files
 

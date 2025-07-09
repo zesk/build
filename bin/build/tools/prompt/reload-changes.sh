@@ -240,19 +240,19 @@ __reloadChangesRemove() {
   __catchEnvironment "$usage" touch "$target" || return $?
   while IFS="" read -r argument; do
     if [ -z "$source" ]; then
-      source="$(usageArgumentRealFile "$usage" "config-source" "$argument")" || _clean $? "$target" || return $?
+      source="$(usageArgumentRealFile "$usage" "config-source" "$argument")" || returnClean $? "$target" || return $?
     elif [ -z "$name" ]; then
       name=$(usageArgumentString "$usage" "config-name" "$argument") || return $?
     elif [ "$argument" = "--" ]; then
       if [ "$source" != "$matchSource" ]; then
-        __catchEnvironment "$usage" printf -- "%s\n" "$source" "$name" "${paths[@]}" "--" >>"$target" || _clean $? "$target" || return $?
+        __catchEnvironment "$usage" printf -- "%s\n" "$source" "$name" "${paths[@]}" "--" >>"$target" || returnClean $? "$target" || return $?
       fi
       name=""
       source=""
       paths=()
       continue
     else
-      paths+=("$(usageArgumentRealDirectory "$usage" "config-path" "$argument")") || _clean $? "$target" || return $?
+      paths+=("$(usageArgumentRealDirectory "$usage" "config-path" "$argument")") || returnClean $? "$target" || return $?
     fi
   done <"$cacheFile"
   __catchEnvironment "$usage" mv -f "$target" "$cacheFile" || return $?

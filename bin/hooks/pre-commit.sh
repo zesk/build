@@ -91,7 +91,7 @@ __hookPreCommit() {
     fileCopies=("$nonOriginalWithEOF" "$original")
     # Can not be trusted to not edit the right one
     if ! diff -q "${fileCopies[@]}" 2>/dev/null; then
-      __catchEnvironment "$usage" cp "${fileCopies[@]}" || _clean "$nonOriginalWithEOF" || return $?
+      __catchEnvironment "$usage" cp "${fileCopies[@]}" || returnClean "$nonOriginalWithEOF" || return $?
       decorate warning "Someone edited non-original file $nonOriginal"
       touch "${fileCopies[0]}" # make newer
     fi

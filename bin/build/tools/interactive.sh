@@ -233,7 +233,7 @@ copyFileWouldChange() {
         local exitCode=1
         if $mapFlag; then
           actualSource=$(fileTemporaryName "$usage") || return $?
-          __catchEnvironment "$usage" mapEnvironment <"$source" >"$actualSource" || _clean $? "$actualSource" || return $?
+          __catchEnvironment "$usage" mapEnvironment <"$source" >"$actualSource" || returnClean $? "$actualSource" || return $?
           if ! diff -q "$actualSource" "$destination" >/dev/null; then
             exitCode=0
           fi
@@ -477,7 +477,7 @@ interactiveManager() {
       if [ -n "$binary" ]; then
         "$binary" "$file"
       fi
-      sleep "$sleepDelay" || __throwEnvironment "$usage" "Interrupt ..." || _clean $? "$output" || return $?
+      sleep "$sleepDelay" || __throwEnvironment "$usage" "Interrupt ..." || returnClean $? "$output" || return $?
     done
     index=$((index + 1))
   done
@@ -674,13 +674,13 @@ confirmMenu() {
     2 | 10)
       value="TIMEOUT"
       defaultOk=true
-      exitCode=$(_code timeout)
+      exitCode=$(returnCode timeout)
       break
       ;;
     1 | 11)
       value="ATTEMPTS"
       defaultOk=true
-      exitCode=$(_code interrupt)
+      exitCode=$(returnCode interrupt)
       break
       ;;
     *)
@@ -854,6 +854,92 @@ interactiveBashSource() {
   done
 }
 _interactiveBashSource() {
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+# Notify after running a binary
+#
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
+# DOC TEMPLATE: --handler 1
+# Argument: --handler handler - Optional. Function. Use this error handler instead of the default error handler.
+# Argument: --verbose - Flag. Optional. Be verbose.
+# Argument: --title title - String. Optional. Sets the title for the notification.
+# Argument: --sound soundName - String. Optional. Sets the sound played for the notification.
+# Argument: --fail-title title - String. Optional. Sets the title for the notification if the binary fails.
+# Argument: --fail-sound soundName - String. Optional. Sets the sound played for the notification if the binary fails.
+notify() {
+  local usage="_${FUNCNAME[0]}"
+  local message="" verboseFlag=false nn=()
+
+  # _IDENTICAL_ argument-case-header 5
+  local __saved=("$@") __count=$#
+  while [ $# -gt 0 ]; do
+    local argument="$1" __index=$((__count - $# + 1))
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
+    case "$argument" in
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    # _IDENTICAL_ --handler 4
+    --handler)
+      shift
+      usage=$(usageArgumentFunction "$usage" "$argument" "${1-}") || return $?
+      ;;
+    -m | --message)
+      shift
+      message="$(usageArgumentString "$usage" "$argument" "${1-}")" || return $?
+      ;;
+    --verbose)
+      verboseFlag=true
+      ;;
+    --title)
+      shift
+      nn+=("$argument" "$(usageArgumentString "$usage" "$argument" "${1-}")") || return $?
+      ;;
+    --sound)
+      shift
+      nn+=("$argument" "$(usageArgumentString "$usage" "$argument" "${1-}")") || return $?
+      ;;
+    --fail-title)
+      shift
+      nnFail+=("--title" "$(usageArgumentString "$usage" "$argument" "${1-}")") || return $?
+      ;;
+    --fail-sound)
+      nnFail+=("--sound" "$(usageArgumentString "$usage" "$argument" "${1-}")") || return $?
+      ;;
+    *)
+      binary="$(usageArgumentCallable "$usage" "$argument" "$1")" || return $?
+      shift
+      break
+      ;;
+    esac
+    # _IDENTICAL_ argument-esac-shift 1
+    shift
+  done
+  [ -n "$binary" ] || __throwArgument "$usage" "Missing binary" || return $?
+  [ -n "$message" ] || message="$binary"
+
+  local home
+  home=$(__catchEnvironment "$usage" buildHome) || return $?
+  $verboseFlag || statusMessage decorate info "Running $(decorate each code "$binary" "$@") ... [$(decorate magenta "$message")]" || return $?
+  local start tempOut tempErr dialog
+  start=$(timingStart)
+  tempOut=$(fileTemporaryName "$usage") || return $?
+  tempErr="$tempOut.err"
+  if CI=1 __catchEnvironment "$usage" "$binary" "$@" 2>"$tempErr" | tee "$tempOut"; then
+    dialog=$(printf "%s\n" "Exit Code: $?" "Exit String: $(exitString $?)" "Elapsed: $(timingReport "$start")" "" "stdout:" "$(tail -n 10 "$tempOut")")
+    hookRun --application "$home" notify --title "$binary Succeeded" --sound zesk-build-notification "${nn[@]+"${nn[@]}"}" "Elapsed: $(timingReport "$start")"
+  else
+    dialog=$(printf "%s\n" "Exit Code: $?" "Exit String: $(exitString $?)" "Elapsed: $(timingReport "$start")" "" "stderr:" "$(tail -n 10 "$tempErr")" "" "stdout:" "$(tail -n 10 "$tempOut")")
+    hookRun --application "$home" notify --title "$binary FAILED" --sound zesk-build-failed "${nn[@]+"${nn[@]}"}" "${nnFail[@]+"${nnFail[@]}"}" "$dialog"
+  fi
+  __catchEnvironment "$usage" rm -f "$tempErr" "$tempOut" || return $?
+}
+_notify() {
   # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

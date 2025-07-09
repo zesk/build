@@ -57,7 +57,7 @@ documentationIndex_Lookup() {
       __throwEnvironment "$usage" "No index exists" || return $?
     fi
     if [ ! -f "$indexRoot/$1" ]; then
-      return "$(_code exit)"
+      return "$(returnCode exit)"
     fi
     cat "$indexRoot/$1"
     return 0
@@ -70,7 +70,7 @@ documentationIndex_Lookup() {
     _argument "${FUNCNAME[0]} cacheDirectory function - missing function" || return $?
   fi
   if [ ! -f "$indexRoot/$1" ]; then
-    return "$(_code exit)"
+    return "$(returnCode exit)"
   fi
   sourceFile="$(head -n 1 "$indexRoot/$1")"
   lineNumber="$(tail -n 1 "$indexRoot/$1")"

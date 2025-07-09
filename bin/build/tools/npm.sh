@@ -59,8 +59,8 @@ npmInstall() {
 
   quietLog=$(__catchEnvironment "$usage" buildQuietLog "$usage") || return $?
   clean+=("$quietLog")
-  __catchEnvironmentQuiet "$usage" "$quietLog" packageInstall npm || _clean $? "${clean[@]}" || return $?
-  __catchEnvironmentQuiet "$usage" "$quietLog" npm install -g "npm@$version" --force 2>&1 || _clean $? "${clean[@]}" || return $?
+  __catchEnvironmentQuiet "$usage" "$quietLog" packageInstall npm || returnClean $? "${clean[@]}" || return $?
+  __catchEnvironmentQuiet "$usage" "$quietLog" npm install -g "npm@$version" --force 2>&1 || returnClean $? "${clean[@]}" || return $?
   __catchEnvironment "$usage" rm -rf "${clean[@]}" || return $?
 }
 _npmInstall() {

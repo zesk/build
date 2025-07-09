@@ -409,7 +409,7 @@ testSuite() {
       fi
       testsRun+=("$item")
       __catchEnvironment "$usage" cd "$testHome" || return $?
-      "${runner[@]+"${runner[@]}"}" __testRun "$quietLog" "$item" "$flags" || __testSuiteExecutor "$item" "$sectionFile" "$testLine" "$flags" "${failExecutors[@]+"${failExecutors[@]}"}" || __testFailed "$sectionName" "$item" || _undo $? cd "$saveHome" || return $?
+      "${runner[@]+"${runner[@]}"}" __testRun "$quietLog" "$item" "$flags" || __testSuiteExecutor "$item" "$sectionFile" "$testLine" "$flags" "${failExecutors[@]+"${failExecutors[@]}"}" || __testFailed "$sectionName" "$item" || returnUndo $? cd "$saveHome" || return $?
       __catchEnvironment "$usage" cd "$saveHome" || return $?
 
       [ -z "$tapFile" ] || __testSuiteTAP_ok "$tapFile" "$item" "$sectionFile" "$testLine" "$flags" || return $?
@@ -799,13 +799,13 @@ __testLoad() {
   __testFunctions="$__beforeFunctions.after"
   __tests=()
   while [ "$#" -gt 0 ]; do
-    __catchEnvironment "$usage" isExecutable "$1" || _clean $? "$__beforeFunctions" "$__testFunctions" || return $?
+    __catchEnvironment "$usage" isExecutable "$1" || returnClean $? "$__beforeFunctions" "$__testFunctions" || return $?
 
     declare -pF | awk '{ print $3 }' | sort -u >"$__beforeFunctions"
     tests=()
     set -a
     # shellcheck source=/dev/null
-    source "$1" >"$__errors" 2>&1 || __throwEnvironment source "$1" || _clean $? "$__beforeFunctions" "$__testFunctions" || return $?
+    source "$1" >"$__errors" 2>&1 || __throwEnvironment source "$1" || returnClean $? "$__beforeFunctions" "$__testFunctions" || return $?
     fileIsEmpty "$__errors" || __throwEnvironment "produced output: $(dumpPipe "source $1" <"$__errors")"
     set +a
     if [ "${#tests[@]}" -gt 0 ]; then
@@ -878,7 +878,7 @@ __testRun() {
   platform="$(_testPlatform)"
   [ -n "$platform" ] || __throwEnvironment "$usage" "No platform defined?" || return $?
 
-  errorTest=$(_code assert)
+  errorTest=$(returnCode assert)
   stickyCode=0
   shift 3 || :
 
@@ -937,7 +937,7 @@ __testRun() {
   __catchEnvironment "_${FUNCNAME[0]}" cd "$__testDirectory" || return $?
   local timingText
   timingText="$(timingReport "$__testStart")"
-  if [ "$resultCode" = "$(_code leak)" ]; then
+  if [ "$resultCode" = "$(returnCode leak)" ]; then
     resultCode=0
     printf "%s %s %s ...\n" "$(decorate code "$__test")" "$(decorate warning "passed with leaks")" "$timingText"
   elif [ "$resultCode" -eq 0 ]; then
@@ -989,7 +989,7 @@ __testFailed() {
 
   __catchEnvironment "$usage" hookRunOptional bash-test-fail "$sectionName" "$item" || __throwEnvironment "$usage" "... continuing" || :
 
-  errorCode="$(_code assert)"
+  errorCode="$(returnCode assert)"
   printf "%s: %s - %s %s (%s)\n" "$(decorate error "Exit")" "$(decorate bold-red "$errorCode")" "$(decorate error "Failed running")" "$(decorate info "$item")" "$(decorate magenta "$sectionName")" || :
 
   dumpEnvironment || :

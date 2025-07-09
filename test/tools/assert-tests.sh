@@ -14,7 +14,7 @@ testOutputEquals() {
 testAssertEquality() {
   local errorCode
 
-  errorCode=$(_code assert)
+  errorCode=$(returnCode assert)
   assertExitCode 0 assertEquals "aaa" "aaa" || return $?
   assertExitCode --stderr-ok "$errorCode" assertEquals "aaa" "aab" || return $?
   assertExitCode "0" assertContains "foo" "food distribution" || return $?

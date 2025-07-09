@@ -19,6 +19,30 @@
 #
 
 # DEPRECATED 2025-07-07
+_code() {
+  _deprecated "${FUNCNAME[0]}"
+  returnCode "$@"
+}
+
+# DEPRECATED 2025-07-07
+getFromPipelineYML() {
+  _deprecated "${FUNCNAME[0]}"
+  bitbucketGetVariable "$@"
+}
+
+# DEPRECATED 2025-07-07
+_clean() {
+  _deprecated "${FUNCNAME[0]}"
+  returnClean "$@"
+}
+
+# DEPRECATED 2025-07-07
+_undo() {
+  _deprecated "${FUNCNAME[0]}"
+  returnUndo "$@"
+}
+
+# DEPRECATED 2025-07-07
 modifiedDays() {
   _deprecated "${FUNCNAME[0]}"
   fileModifiedDays "$@"

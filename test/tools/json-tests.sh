@@ -52,7 +52,7 @@ testJSONSetValue() {
   assertExitCode --stdout-match 54321 --stdout-match "up to date" 0 "${runner[@]}" jsonSetValue --key "gatekeeper" --value "54321" "$target" || return $?
   assertFileContains "$target" "3.2.2" "version" "54321" "gatekeeper" || return $?
 
-  assertExitCode --stdout-match 54321 --stdout-match "up to date" "$(_code identical)" "${runner[@]}" jsonSetValue --status --key "gatekeeper" --value "54321" "$target" || return $?
+  assertExitCode --stdout-match 54321 --stdout-match "up to date" "$(returnCode identical)" "${runner[@]}" jsonSetValue --status --key "gatekeeper" --value "54321" "$target" || return $?
   assertFileContains "$target" "3.2.2" "version" "54321" "gatekeeper" || return $?
 
   __catchEnvironment "$handler" rm -rf "$tempDir" || return $?

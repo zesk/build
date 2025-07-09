@@ -381,8 +381,8 @@ testAWSProfiles() {
   assertExitCode 0 awsCredentialsRemove --comments "$firstName" || return $?
 
   __environment awsProfilesList >"$list" || return $?
-  assertFileDoesNotContain --line "$LINENO" "$list" "$firstName" || _undo $? dumpPipe awsProfilesList <"$list" || return $?
-  assertFileDoesNotContain --line "$LINENO" "$list" "$secondName" || _undo $? dumpPipe awsProfilesList <"$list" || return $?
+  assertFileDoesNotContain --line "$LINENO" "$list" "$firstName" || returnUndo $? dumpPipe awsProfilesList <"$list" || return $?
+  assertFileDoesNotContain --line "$LINENO" "$list" "$secondName" || returnUndo $? dumpPipe awsProfilesList <"$list" || return $?
 
   local testKey="AKIAZ0123456789ABCDE" testPassword="haaaaaaanrNGhaaaaaaanrNGhaaaaaaanrNGABYU"
 

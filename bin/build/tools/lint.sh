@@ -43,12 +43,12 @@ bashLint() {
     *)
       [ -f "$argument" ] || __throwArgument "$usage" "$(printf -- "%s: %s PWD: %s" "Not a item" "$(decorate code "$argument")" "$(pwd)")" || return $?
       # shellcheck disable=SC2210
-      __catchEnvironment "$usage" bash -n "$argument" 1>&3 2>&3 || _undo $? printf "%s\n" "bash -n failed" 1>&4 || return $?
+      __catchEnvironment "$usage" bash -n "$argument" 1>&3 2>&3 || returnUndo $? printf "%s\n" "bash -n failed" 1>&4 || return $?
       # shellcheck disable=SC2210
-      __catchEnvironment "$usage" shellcheck "$argument" 1>&3 2>&3 || _undo $? printf "%s\n" "shellcheck" 1>&4 || return $?
+      __catchEnvironment "$usage" shellcheck "$argument" 1>&3 2>&3 || returnUndo $? printf "%s\n" "shellcheck" 1>&4 || return $?
       local found
       if found=$(__pcregrep -n -l -M '\n\}\n#' "$argument"); then
-        __throwEnvironment "$usage" "found }\\n#: $(decorate code "$found")" 1>&3 2>&3 || _undo $? printf "%s\n" "comment following brace" 1>&4 || return $?
+        __throwEnvironment "$usage" "found }\\n#: $(decorate code "$found")" 1>&3 2>&3 || returnUndo $? printf "%s\n" "comment following brace" 1>&4 || return $?
       fi
       ;;
     esac

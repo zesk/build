@@ -510,7 +510,7 @@ __installRemotePackageDirectory() {
 
 # Install the build directory from a copy
 # Requires: rm mv cp mkdir
-# Requires: _undo __catchEnvironment __throwEnvironment
+# Requires: returnUndo __catchEnvironment __throwEnvironment
 __installRemotePackageDirectoryLocal() {
   local usage="$1" packagePath="$2" applicationHome="$3" localPath="$4" installPath tempPath
 
@@ -520,7 +520,7 @@ __installRemotePackageDirectoryLocal() {
     tempPath="$installPath.aboutToDelete.$$"
     __catchEnvironment "$usage" rm -rf "$tempPath" || return $?
     __catchEnvironment "$usage" mv -f "$installPath" "$tempPath" || return $?
-    __catchEnvironment "$usage" cp -r "$localPath" "$installPath" || _undo $? rf -f "$installPath" -- mv -f "$tempPath" "$installPath" || return $?
+    __catchEnvironment "$usage" cp -r "$localPath" "$installPath" || returnUndo $? rf -f "$installPath" -- mv -f "$tempPath" "$installPath" || return $?
     __catchEnvironment "$usage" rm -rf "$tempPath" || :
   else
     tempPath=$(__catchEnvironment "$usage" dirname "$installPath") || return $?
@@ -1264,7 +1264,7 @@ isArray() {
 # Argument: code ... - UnsignedInteger. String. Exit code value to output.
 # stdout: exitCodeToken, one per line
 exitString() {
-  local k="" && while [ $# -gt 0 ]; do case "$1" in 0) k="success" ;; 1) k="environment" ;; 2) k="argument" ;; 97) k="assert" ;; 105) k="identical" ;; 108) k="leak" ;; 116) k="timeout" ;; 120) k="exit" ;; 127) k="not-found" ;; 141) k="interrupt" ;; 253) k="internal" ;; 254) k="unknown" ;; *) k="[exitString unknown \"$1\"]" ;; esac && [ -n "$k" ] || k="$1" && printf "%s\n" "$k" && shift; done
+  local k="" && while [ $# -gt 0 ]; do case "$1" in 0) k="success" ;; 1) k="environment" ;; 2) k="argument" ;; 97) k="assert" ;; 105) k="identical" ;; 108) k="leak" ;; 116) k="timeout" ;; 120) k="exit" ;; 127) k="not-found" ;; 130) k="user-interrupt" ;; 141) k="interrupt" ;; 253) k="internal" ;; 254) k="unknown" ;; *) k="[exitString unknown \"$1\"]" ;; esac && [ -n "$k" ] || k="$1" && printf "%s\n" "$k" && shift; done
 }
 
 # IDENTICAL _return 27
@@ -1296,7 +1296,7 @@ isUnsignedInteger() {
 
 # <-- END of IDENTICAL _return
 
-# IDENTICAL _tinySugar 73
+# IDENTICAL _tinySugar 77
 
 # Run `handler` with an argument error
 # Usage: {fn} handler ...
@@ -1362,13 +1362,17 @@ __environment() {
   "$@" || _environment "$@" || return $?
 }
 
-# Usage: {fn} exitCode item ...
+# _IDENTICAL_ returnClean 11
+
+# Delete files or directories and return the same exit code passed in.
 # Argument: exitCode - Required. Integer. Exit code to return.
 # Argument: item - Optional. One or more files or folders to delete, failures are logged to stderr.
-# Requires: rm
-_clean() {
-  local r="${1-}" && shift && rm -rf "$@"
-  return "$r"
+# Requires: isUnsignedInteger _argument __environment
+returnClean() {
+  local exitCode="${1-}" && shift
+  isUnsignedInteger "$exitCode" || _argument "${FUNCNAME[0]} $exitCode (not an integer) $*" || return $?
+  __environment rm -rf "$@" || return "$exitCode"
+  return "$exitCode"
 }
 
 # Argument: binary ... - Required. Executable. Any arguments are passed to `binary`.
@@ -1378,7 +1382,7 @@ __execute() {
   "$@" || _return "$?" "$@" || return $?
 }
 
-# IDENTICAL _undo 37
+# IDENTICAL returnUndo 37
 
 # Run a function and preserve exit code
 # Returns `exitCode`
@@ -1389,11 +1393,11 @@ __execute() {
 # Example:     local undo thing
 # Example:     thing=$(__catchEnvironment "$handler" createLargeResource) || return $?
 # Example:     undo+=(-- deleteLargeResource "$thing")
-# Example:     thing=$(__catchEnvironment "$handler" createMassiveResource) || _undo $? "${undo[@]}" || return $?
+# Example:     thing=$(__catchEnvironment "$handler" createMassiveResource) || returnUndo $? "${undo[@]}" || return $?
 # Example:     undo+=(-- deleteMassiveResource "$thing")
 # Requires: isPositiveInteger __catchArgument decorate __execute
 # Requires: usageDocument
-_undo() {
+returnUndo() {
   local __count=$# __saved=("$@") __usage="_${FUNCNAME[0]}" exitCode="${1-}" args=()
   shift
   isUnsignedInteger "$exitCode" || __catchArgument "$__usage" "Not an integer $(decorate value "$exitCode") (#$__count: $(decorate each code "${__saved[@]+"${__saved[@]}"}"))" || return $?
@@ -1412,7 +1416,7 @@ _undo() {
   [ "${#args[@]}" -eq 0 ] || __execute "${args[@]}" || :
   return "$exitCode"
 }
-__undo() {
+_returnUndo() {
   # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

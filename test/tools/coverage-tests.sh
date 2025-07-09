@@ -59,21 +59,24 @@ testBuildFunctionsCoverage() {
 
   local function missing=()
   while read -r function; do
+    if [ "${function#test}" != "$function" ]; then
+      continue
+    fi
     # statusMessage decorate info "Looking at $function"
     if grep -q -e "^$(quoteGrepPattern "$function")$" <"$deprecatedFunctions"; then
       statusMessage decorate subtle "Deprecated function: $(decorate code "$function")"
     else
-      local matchingTests foundCount
+      local matchingTests foundCount=0
 
       # grep returns 1 when nothing matches
-      matchingTests=$(xargs -r -0 grep -l "$(quoteGrepPattern "$function")" <"$allTestFiles" || mapReturn $? 1 0) || return $?
-      foundCount=$(__catchEnvironment "$usage" fileLineCount <<<"$matchingTests") || return $?
+      matchingTests=$(xargs -r -0 grep -l "$(quoteGrepPattern "$function")" <"$allTestFiles" || mapReturn $? 1 0 | trimBoth) || return $?
+      [ -z "$matchingTests" ] || foundCount=$(__catchEnvironment "$usage" fileLineCount <<<"$matchingTests") || return $?
 
       if [ "$foundCount" -eq 0 ]; then
         missing+=("$function")
         statusMessage --last decorate warning "No references found for $(decorate code "$function")"
       else
-        statusMessage decorate info "$foundCount $(plural "$foundCount" reference references) to $(decorate code "$function")"
+        statusMessage decorate info "$foundCount $(plural "$foundCount" reference references) to $(decorate code "$function"): $(head -n 1 <<<"$matchingTests")"
       fi
     fi
   done < <(buildFunctions)

@@ -124,7 +124,7 @@ _assertFailure() {
     ll=(--last)
   fi
   statusMessage "${ll[@]+"${ll[@]}"}" printf -- "%s %s %s [%s] " "$(_symbolFail)" "$(decorate error "$function")" "$message" "$(_assertTiming)" 1>&2 || return $?
-  return "$(_code assert)"
+  return "$(returnCode assert)"
 }
 _assertSuccess() {
   local function="${1-None}"
@@ -744,15 +744,15 @@ ___assertOutputEquals() {
   if output=$(plumber "$binary" "$@" 2>"$stderr"); then
     if [ -s "$stderr" ]; then
       dumpPipe "$(decorate error Produced stderr): $binary" "$@" <"$stderr" 1>&2
-      _clean 1 "$stderr" || return $?
+      returnClean 1 "$stderr" || return $?
     fi
     [ "$output" = "$expected" ] || exitCode=1
     printf "%s\n" "$output"
   else
     exitCode=$?
-    [ "$exitCode" -eq "$(_code leak)" ] && ! _environment "Leak:" "$binary" "$!" || _environment "Exit code: $?" "$binary" "$@" || exitCode=$?
+    [ "$exitCode" -eq "$(returnCode leak)" ] && ! _environment "Leak:" "$binary" "$!" || _environment "Exit code: $?" "$binary" "$@" || exitCode=$?
   fi
-  _clean "$exitCode" "$stderr" || return $?
+  returnClean "$exitCode" "$stderr" || return $?
 }
 ___assertOutputEqualsFormat() {
   local testPassed="${1-}" success="${2-}" verb expected="$3" binary="$4"

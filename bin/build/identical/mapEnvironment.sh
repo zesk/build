@@ -66,8 +66,8 @@ mapEnvironment() {
     while read -r __e; do __ee+=("$__e"); done < <(environmentVariables)
   fi
   __sedFile=$(__catchEnvironment "$__usage" mktemp) || return $?
-  __catchEnvironment "$__usage" _mapEnvironmentGenerateSedFile "$__prefix" "$__suffix" "${__ee[@]}" >"$__sedFile" || _clean $? "$__sedFile" || return $?
-  __catchEnvironment "$__usage" sed -f "$__sedFile" || __throwEnvironment "$__usage" "$(cat "$__sedFile")" || _clean $? "$__sedFile" || return $?
+  __catchEnvironment "$__usage" _mapEnvironmentGenerateSedFile "$__prefix" "$__suffix" "${__ee[@]}" >"$__sedFile" || returnClean $? "$__sedFile" || return $?
+  __catchEnvironment "$__usage" sed -f "$__sedFile" || __throwEnvironment "$__usage" "$(cat "$__sedFile")" || returnClean $? "$__sedFile" || return $?
   __catchEnvironment "$__usage" rm -rf "$__sedFile" || return $?
 }
 _mapEnvironment() {

@@ -190,8 +190,8 @@ mapEnvironment() {
     while read -r __e; do __ee+=("$__e"); done < <(environmentVariables)
   fi
   __sedFile=$(__catchEnvironment "$__usage" mktemp) || return $?
-  __catchEnvironment "$__usage" _mapEnvironmentGenerateSedFile "$__prefix" "$__suffix" "${__ee[@]}" >"$__sedFile" || _clean $? "$__sedFile" || return $?
-  __catchEnvironment "$__usage" sed -f "$__sedFile" || __throwEnvironment "$__usage" "$(cat "$__sedFile")" || _clean $? "$__sedFile" || return $?
+  __catchEnvironment "$__usage" _mapEnvironmentGenerateSedFile "$__prefix" "$__suffix" "${__ee[@]}" >"$__sedFile" || returnClean $? "$__sedFile" || return $?
+  __catchEnvironment "$__usage" sed -f "$__sedFile" || __throwEnvironment "$__usage" "$(cat "$__sedFile")" || returnClean $? "$__sedFile" || return $?
   __catchEnvironment "$__usage" rm -rf "$__sedFile" || return $?
 }
 _mapEnvironment() {
@@ -288,7 +288,7 @@ cannon() {
   if [ "$count" -eq 0 ]; then
     statusMessage --inline decorate warning "Modified (NO) files"
   else
-    __catchEnvironment "$usage" __xargsSedInPlaceReplace -e "s/$searchQuoted/$replaceQuoted/g" <"$cannonLog.found" || _clean $? "$cannonLog" || return $?
+    __catchEnvironment "$usage" __xargsSedInPlaceReplace -e "s/$searchQuoted/$replaceQuoted/g" <"$cannonLog.found" || returnClean $? "$cannonLog" || return $?
     statusMessage --inline decorate success "Modified $(decorate code "$count $(plural "$count" file files)")"
     exitCode=1
   fi

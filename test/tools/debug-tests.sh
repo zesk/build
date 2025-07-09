@@ -118,7 +118,7 @@ __leakyPipe() {
 testPlumber() {
   local leakCode
 
-  leakCode=$(_code leak)
+  leakCode=$(returnCode leak)
   assertEquals 108 "$leakCode" || return $?
   assertEquals 108 "$leakCode" || return $?
   assertEquals 108 "$leakCode" || return $?
@@ -146,7 +146,7 @@ testHousekeeper() {
   local testDir testFile
 
   export BUILD_HOME
-  leakCode=$(_code leak)
+  leakCode=$(returnCode leak)
 
   buildEnvironmentLoad BUILD_HOME || return $?
 

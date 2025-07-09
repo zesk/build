@@ -42,10 +42,10 @@ deprecatedFilePrependVersion() {
 
   local newTarget
 
-  newTarget=$(fileTemporaryName "$usage") || _clean $? "$newTarget" || return $?
-  __catchEnvironment "$usage" printf -- "%s\n\n" "# $version" >"$newTarget" || _clean $? "$newTarget" || return $?
-  __catchEnvironment "$usage" cat "$target" >>"$newTarget" || _clean $? "$newTarget" || return $?
-  __catchEnvironment "$usage" mv -f "$newTarget" "$target" || _clean $? "$newTarget" || return $?
+  newTarget=$(fileTemporaryName "$usage") || returnClean $? "$newTarget" || return $?
+  __catchEnvironment "$usage" printf -- "%s\n\n" "# $version" >"$newTarget" || returnClean $? "$newTarget" || return $?
+  __catchEnvironment "$usage" cat "$target" >>"$newTarget" || returnClean $? "$newTarget" || return $?
+  __catchEnvironment "$usage" mv -f "$newTarget" "$target" || returnClean $? "$newTarget" || return $?
 }
 _deprecatedFilePrependVersion() {
   # _IDENTICAL_ usageDocument 1

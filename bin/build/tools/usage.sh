@@ -456,7 +456,7 @@ usageArgumentLoadEnvironmentFile() {
   usageFunction="$1"
   envFile=$(usageArgumentFile "$@") || return $?
   bashEnv=$(__catchEnvironment "$usageFunction" mktemp) || return $?
-  __catchEnvironment "$usageFunction" anyEnvToBashEnv "$envFile" >"$bashEnv" || _clean $? "$bashEnv" || return $?
+  __catchEnvironment "$usageFunction" anyEnvToBashEnv "$envFile" >"$bashEnv" || returnClean $? "$bashEnv" || return $?
   set -a
   # shellcheck source=/dev/null
   source "$bashEnv"

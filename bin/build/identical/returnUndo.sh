@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 #
-# Original of _undo
+# Original of returnUndo
 #
 # EDIT THIS FILE
 #
 # Copyright &copy; 2025 Market Acumen, Inc.
 
-# IDENTICAL _undo EOF
+# IDENTICAL returnUndo EOF
 
 # Run a function and preserve exit code
 # Returns `exitCode`
@@ -17,11 +17,11 @@
 # Example:     local undo thing
 # Example:     thing=$(__catchEnvironment "$handler" createLargeResource) || return $?
 # Example:     undo+=(-- deleteLargeResource "$thing")
-# Example:     thing=$(__catchEnvironment "$handler" createMassiveResource) || _undo $? "${undo[@]}" || return $?
+# Example:     thing=$(__catchEnvironment "$handler" createMassiveResource) || returnUndo $? "${undo[@]}" || return $?
 # Example:     undo+=(-- deleteMassiveResource "$thing")
 # Requires: isPositiveInteger __catchArgument decorate __execute
 # Requires: usageDocument
-_undo() {
+returnUndo() {
   local __count=$# __saved=("$@") __usage="_${FUNCNAME[0]}" exitCode="${1-}" args=()
   shift
   isUnsignedInteger "$exitCode" || __catchArgument "$__usage" "Not an integer $(decorate value "$exitCode") (#$__count: $(decorate each code "${__saved[@]+"${__saved[@]}"}"))" || return $?
@@ -40,7 +40,7 @@ _undo() {
   [ "${#args[@]}" -eq 0 ] || __execute "${args[@]}" || :
   return "$exitCode"
 }
-__undo() {
+_returnUndo() {
   # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

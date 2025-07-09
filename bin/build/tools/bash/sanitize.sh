@@ -81,24 +81,24 @@ bashSanitize() {
   local shellFile
   while read -r shellFile; do
     statusMessage decorate info "+x $(decorate file "$shellFile")"
-  done < <(__catchEnvironment "$usage" makeShellFilesExecutable) || _undo $? "${undo[@]}" || return $?
+  done < <(__catchEnvironment "$usage" makeShellFilesExecutable) || returnUndo $? "${undo[@]}" || return $?
 
   if [ ${#checkAssertions[@]} -eq 0 ]; then
     checkAssertions+=("$(pwd)")
   fi
 
   statusMessage --last decorate success Checking assertions ...
-  _bashSanitizeCheckAssertions "$usage" "${checkAssertions[@]+"${checkAssertions[@]}"}" || _undo $? "${undo[@]}" || return $?
+  _bashSanitizeCheckAssertions "$usage" "${checkAssertions[@]+"${checkAssertions[@]}"}" || returnUndo $? "${undo[@]}" || return $?
 
   # Operates on specific files
   statusMessage decorate success Checking syntax ...
-  _bashSanitizeCheckLint "$usage" <"$fileList" || _undo $? "${undo[@]}" || _clean $? "$fileList" || return $?
+  _bashSanitizeCheckLint "$usage" <"$fileList" || returnUndo $? "${undo[@]}" || returnClean $? "$fileList" || return $?
 
   statusMessage decorate success Checking copyright ...
-  _bashSanitizeCheckCopyright "$usage" <"$fileList" || _undo $? "${undo[@]}" || _clean $? "$fileList" || return $?
+  _bashSanitizeCheckCopyright "$usage" <"$fileList" || returnUndo $? "${undo[@]}" || returnClean $? "$fileList" || return $?
 
   statusMessage decorate success Checking debugging ...
-  _bashSanitizeCheckDebugging "$usage" <"$fileList" || _undo $? "${undo[@]}" || _clean $? "$fileList" || return $?
+  _bashSanitizeCheckDebugging "$usage" <"$fileList" || returnUndo $? "${undo[@]}" || returnClean $? "$fileList" || return $?
   rm -rf "$fileList" || :
   __catchEnvironment "$usage" "${undo[@]}" || return $?
   statusMessage decorate success Completed ...
@@ -151,7 +151,7 @@ _bashSanitizeCheckCopyright() {
     while IFS=":" read -r file pattern; do
       error="$(decorate error "No pattern used")" pattern="$(decorate value "$pattern")" file="$(decorate code "$file")" mapEnvironment <<<"{error}: {pattern} missing from {file}"
     done <"$matches"
-    __throwEnvironment "$usage" "File pattern check failed" || _clean $? "$matches" || return $?
+    __throwEnvironment "$usage" "File pattern check failed" || returnClean $? "$matches" || return $?
   fi
   set +v
 }

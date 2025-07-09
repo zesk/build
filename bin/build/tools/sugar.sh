@@ -101,7 +101,7 @@ _deprecated() {
 # Argument: command - Required. Callable. Thing to muzzle.
 # Argument: ... - Optional. Arguments. Additional arguments.
 # Example:     {fn} pushd
-# Example:     __catchEnvironment "$handler" phpBuild || _undo $? {fn} popd || return $?
+# Example:     __catchEnvironment "$handler" phpBuild || returnUndo $? {fn} popd || return $?
 muzzle() {
   "$@" >/dev/null
 }
@@ -116,7 +116,7 @@ muzzle() {
 # Argument: to - Integer. The value to return when `from` matches `value`
 # Argument: ... - Additional from-to pairs can be passed, first matching value is used, all values will be examined if none match
 mapReturn() {
-  local usage="_${FUNCNAME[0]}" value="" from="" to=""
+  local usage="___${FUNCNAME[0]}" value="" from="" to=""
 
   # _IDENTICAL_ argument-case-header 5
   local __saved=("$@") __count=$#
@@ -148,7 +148,9 @@ mapReturn() {
   done
   return "${value:-0}"
 }
-_mapReturn() {
+
+# Hide this one explicitly from buildFunctions
+___mapReturn() {
   # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
@@ -162,7 +164,7 @@ __execute() {
   "$@" || _return "$?" "$@" || return $?
 }
 
-# IDENTICAL _undo 37
+# IDENTICAL returnUndo 37
 
 # Run a function and preserve exit code
 # Returns `exitCode`
@@ -173,11 +175,11 @@ __execute() {
 # Example:     local undo thing
 # Example:     thing=$(__catchEnvironment "$handler" createLargeResource) || return $?
 # Example:     undo+=(-- deleteLargeResource "$thing")
-# Example:     thing=$(__catchEnvironment "$handler" createMassiveResource) || _undo $? "${undo[@]}" || return $?
+# Example:     thing=$(__catchEnvironment "$handler" createMassiveResource) || returnUndo $? "${undo[@]}" || return $?
 # Example:     undo+=(-- deleteMassiveResource "$thing")
 # Requires: isPositiveInteger __catchArgument decorate __execute
 # Requires: usageDocument
-_undo() {
+returnUndo() {
   local __count=$# __saved=("$@") __usage="_${FUNCNAME[0]}" exitCode="${1-}" args=()
   shift
   isUnsignedInteger "$exitCode" || __catchArgument "$__usage" "Not an integer $(decorate value "$exitCode") (#$__count: $(decorate each code "${__saved[@]+"${__saved[@]}"}"))" || return $?
@@ -196,7 +198,7 @@ _undo() {
   [ "${#args[@]}" -eq 0 ] || __execute "${args[@]}" || :
   return "$exitCode"
 }
-__undo() {
+_returnUndo() {
   # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

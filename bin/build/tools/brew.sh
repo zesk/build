@@ -66,14 +66,14 @@ __brewUpgrade() {
   clean+=("$quietLog" "$upgradeLog")
   __catchEnvironmentQuiet "$quietLog" packageUpdate || return $?
   __catchEnvironmentQuiet "$quietLog" packageInstall || return $?
-  __catchEnvironment "$usage" __brewWrapper upgrade --overwrite --greedy | tee -a "$upgradeLog" >>"$quietLog" || _undo $? dumpPipe "apk upgrade failed" <"$quietLog" || _clean $? "${clean[@]}" || return $?
+  __catchEnvironment "$usage" __brewWrapper upgrade --overwrite --greedy | tee -a "$upgradeLog" >>"$quietLog" || returnUndo $? dumpPipe "apk upgrade failed" <"$quietLog" || returnClean $? "${clean[@]}" || return $?
   if ! muzzle packageNeedRestartFlag; then
     if grep -q " restart " "$upgradeLog" || grep -qi needrestart "$upgradeLog" || grep -qi need-restart "$upgradeLog"; then
-      __catchEnvironment "$usage" pacakgeNeedRestartFlag "true" || _clean $? "${clean[@]}" || return $?
+      __catchEnvironment "$usage" pacakgeNeedRestartFlag "true" || returnClean $? "${clean[@]}" || return $?
     fi
     result=restart
   else
-    __catchEnvironment "$usage" pacakgeNeedRestartFlag "" || _clean $? "${clean[@]}" || return $?
+    __catchEnvironment "$usage" pacakgeNeedRestartFlag "" || returnClean $? "${clean[@]}" || return $?
     result=ok
   fi
   __catchEnvironment "$usage" rm -rf "${clean[@]}" || return $?

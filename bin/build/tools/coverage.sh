@@ -177,7 +177,7 @@ __bashCoverageReportFile() {
   tempFile=$(fileTemporaryName "$usage") || return $?
   sort -u >"$tempFile"
   lineCount=$(__catchEnvironment "$usage" fileLineCount "$tempFile") || return $?
-  __bashCoverageReportProcessStats "$usage" "$reportCache" "$target" "$lineCount" <"$tempFile" || _clean $? "$tempFile" || return $?
+  __bashCoverageReportProcessStats "$usage" "$reportCache" "$target" "$lineCount" <"$tempFile" || returnClean $? "$tempFile" || return $?
   __catchEnvironment "$usage" rm -rf "$tempFile" || return $?
 }
 

@@ -98,16 +98,27 @@ _darwinSoundNames() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
+__osascriptClean() {
+  local text
+  text="$(stripAnsi <<<"$1")"
+  text="${text//$'\n'/\\n}"
+  text="${text//$'\r'/}"
+  text="$(escapeDoubleQuotes "$text")"
+  printf "%s" "$text"
+}
+
 # Display a notification for the user
 # Argument: --title - String. Optional. Title of the notification.
-# Argument: --sound - String. Optional. Sound to play with the notification. Represents a sound base name found in `/Library/Sounds/`.
+# Argument: --debug - Flag. Optional. Output the osascript as `darwinNotification.debug` at the application root after this call.
+# Argument: --sound soundName - String. Optional. Sound to play with the notification. Represents a sound base name found in `/Library/Sounds/`.
+# Argument: message ... - String. Optional. Message to display to the user in the dialog.
 darwinNotification() {
   local usage="_${FUNCNAME[0]}"
 
   export OSTYPE
   usageRequireBinary "$usage" osascript || return $?
 
-  local message=() title="" soundName=""
+  local message=() title="" soundName="" debugFlag=false
 
   # _IDENTICAL_ argument-case-header 5
   local __saved=("$@") __count=$#
@@ -119,6 +130,9 @@ darwinNotification() {
     --help)
       "$usage" 0
       return $?
+      ;;
+    --debug)
+      debugFlag=true
       ;;
     --title)
       shift
@@ -143,14 +157,18 @@ darwinNotification() {
   done
 
   [ -n "$title" ] || title="Zesk Build Notification"
-  local messageText="${message[*]}"
-  messageText="$(escapeDoubleQuotes "$messageText")"
-  title="$(escapeDoubleQuotes "$title")"
+  local messageText
+
+  messageText="$(__osascriptClean "${message[*]}")"
+  title="$(__osascriptClean "$title")"
 
   # https://developer.apple.com/library/archive/documentation/AppleScript/Conceptual/AppleScriptLangGuide/reference/ASLR_cmds.html#//apple_ref/doc/uid/TP40000983-CH216-SW224
   script="display notification \"${messageText}\" with title \"$title\""
   [ -z "$soundName" ] || script="$script sound name \"$(escapeDoubleQuotes "$soundName")\""
 
+  if $debugFlag; then
+    printf "%s\n" "$script" >"$(buildHome)/${FUNCNAME[0]}.debug"
+  fi
   __catchEnvironment "$usage" /usr/bin/osascript -e "$script" || return $?
 }
 
@@ -257,7 +275,7 @@ darwinDialog() {
     # [ -z "$icon" ] || script="$script with icon \"$(escapeDoubleQuotes "$icon")\""
     IFS=','
     ! $debugFlag || printf "\n\n    %s\n\n" "$(decorate code "$script")"
-    result="$(__catchEnvironment "$usage" osascript -e "$script" 2>"$quietErrors")" || _undo $? cat "$quietErrors" || return $?
+    result="$(__catchEnvironment "$usage" osascript -e "$script" 2>"$quietErrors")" || returnUndo $? cat "$quietErrors" || return $?
     rm -rf "$quietErrors" || :
     local name value button="none" done=false IFS
     while ! $done; do
@@ -273,7 +291,7 @@ darwinDialog() {
         ;;
       "gave up")
         isBoolean "$value" || __throwEnvironment "$usage" "gave up should be a boolean: $value" || return $?
-        ! "$value" || _return "$(_code timeout)" "Dialog timed out" || return $?
+        ! "$value" || _return "$(returnCode timeout)" "Dialog timed out" || return $?
         ;;
       *)
         __throwEnvironment "$usage" "Unknown return value from dialog: $(decorate label "$name"): $(decorate value "$value")" || return $?
@@ -281,7 +299,7 @@ darwinDialog() {
       esac
     done <<<"$result"
     printf "%s\n" "$button"
-  ) || _clean $? "$quietErrors" || return $?
+  ) || returnClean $? "$quietErrors" || return $?
 }
 _darwinDialog() {
   # _IDENTICAL_ usageDocument 1

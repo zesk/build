@@ -76,11 +76,15 @@ __environment() {
   "$@" || _environment "$@" || return $?
 }
 
-# Usage: {fn} exitCode item ...
+# _IDENTICAL_ returnClean 11
+
+# Delete files or directories and return the same exit code passed in.
 # Argument: exitCode - Required. Integer. Exit code to return.
 # Argument: item - Optional. One or more files or folders to delete, failures are logged to stderr.
-# Requires: rm
-_clean() {
-  local r="${1-}" && shift && rm -rf "$@"
-  return "$r"
+# Requires: isUnsignedInteger _argument __environment
+returnClean() {
+  local exitCode="${1-}" && shift
+  isUnsignedInteger "$exitCode" || _argument "${FUNCNAME[0]} $exitCode (not an integer) $*" || return $?
+  __environment rm -rf "$@" || return "$exitCode"
+  return "$exitCode"
 }

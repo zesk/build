@@ -23,6 +23,9 @@ modifiedDays|fileModifiedDays
 modifiedSeconds|fileModifiedSeconds
 requireFileDirectory|fileDirectoryRequire
 requireDirectory|directoryRequire
+_clean |returnClean |
+_undo |returnUndo |
+getFromPipelineYML|bitbucketGetVariable
 
 # v0.36.1
 
@@ -243,5 +246,4 @@ usageWhich |usageRequireBinary usage |
 markdownListify|markdown_FormatList
 
 # v0.3.12 and before
-failed "|' 'buildFailed "|-name|*.sh
 release-check-version.sh|git-tag-version.sh

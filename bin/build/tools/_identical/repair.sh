@@ -103,12 +103,12 @@ identicalRepair() {
   totalLines=$(__catchEnvironment "$usage" fileLineCount "$destination") || return $?
   while read -r identicalLine; do
     local isEOF=false
-    parsed=$(__catchArgument "$usage" __identicalLineParse "$destination" "$prefix" "$identicalLine") || _undo $? "${undo[@]}" || return $?
+    parsed=$(__catchArgument "$usage" __identicalLineParse "$destination" "$prefix" "$identicalLine") || returnUndo $? "${undo[@]}" || return $?
     IFS=" " read -r lineNumber token count < <(printf -- "%s\n" "$parsed") || :
     if [ "$count" = "EOF" ]; then
       isEOF=true
     fi
-    count=$(__identicalLineCount "$count" "$((totalLines - lineNumber))") || __throwEnvironment "$usage" "\"$identicalLine\" invalid count: $count" || _undo $? "${undo[@]}" || return $?
+    count=$(__identicalLineCount "$count" "$((totalLines - lineNumber))") || __throwEnvironment "$usage" "\"$identicalLine\" invalid count: $count" || returnUndo $? "${undo[@]}" || return $?
     if [ "$lineNumber" -gt 1 ]; then
       if [ "$currentLineNumber" -eq 0 ]; then
         head -n $((lineNumber - 1)) <"$destination" >&3

@@ -866,18 +866,18 @@ environmentCompile() {
   tempEnv=$(fileTemporaryName "$usage") || return $?
 
   local clean=("$tempEnv" "$tempEnv.after")
-  __catchEnvironment "$usage" environmentOutput "${aa[@]+"${aa[@]}"}" | sort >"$tempEnv" || _clean $? "${clean[@]}" || return $?
+  __catchEnvironment "$usage" environmentOutput "${aa[@]+"${aa[@]}"}" | sort >"$tempEnv" || returnClean $? "${clean[@]}" || return $?
   (
     local environmentFile
     for environmentFile in "${environmentFiles[@]}"; do
       set -a
       # shellcheck source=/dev/null
-      source "$environmentFile" >(outputTrigger source "$environmentFile") 2>&1 || _clean $? "${clean[@]}" || return $?
+      source "$environmentFile" >(outputTrigger source "$environmentFile") 2>&1 || returnClean $? "${clean[@]}" || return $?
       set +a
     done
-    __catchEnvironment "$usage" environmentOutput "${aa[@]+"${aa[@]}"}" | sort >"$tempEnv.after" || _clean $? "${clean[@]}" || return $?
-  ) || _clean $? "${clean[@]}" || return $?
-  diff -U0 "$tempEnv" "$tempEnv.after" | grepSafe '^+' | cut -c 2- | grepSafe -v '^+' || _clean $? "${clean[@]}" || return 0
+    __catchEnvironment "$usage" environmentOutput "${aa[@]+"${aa[@]}"}" | sort >"$tempEnv.after" || returnClean $? "${clean[@]}" || return $?
+  ) || returnClean $? "${clean[@]}" || return $?
+  diff -U0 "$tempEnv" "$tempEnv.after" | grepSafe '^+' | cut -c 2- | grepSafe -v '^+' || returnClean $? "${clean[@]}" || return 0
   __catchEnvironment "$usage" rm -f "${clean[@]}" || return $?
 }
 _environmentCompile() {

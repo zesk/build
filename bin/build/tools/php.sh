@@ -236,12 +236,12 @@ phpBuild() {
 
   clean+=("$dotEnv")
   if hasHook application-environment; then
-    __catchEnvironment "$usage" hookRun --application "$home" application-environment "${environments[@]}" -- "${optionals[@]}" >"$dotEnv" || _clean $? "${clean[@]}" || return $?
+    __catchEnvironment "$usage" hookRun --application "$home" application-environment "${environments[@]}" -- "${optionals[@]}" >"$dotEnv" || returnClean $? "${clean[@]}" || return $?
   else
-    __catchEnvironment "$usage" environmentFileApplicationMake "${environments[@]}" -- "${optionals[@]}" >"$dotEnv" || _clean $? "${clean[@]}" || return $?
+    __catchEnvironment "$usage" environmentFileApplicationMake "${environments[@]}" -- "${optionals[@]}" >"$dotEnv" || returnClean $? "${clean[@]}" || return $?
   fi
   if ! grep -q APPLICATION "$dotEnv"; then
-    buildFailed "$dotEnv" || __throwEnvironment "$usage" "$dotEnv file seems to be invalid:" || _clean $? "${clean[@]}" || return $?
+    buildFailed "$dotEnv" || __throwEnvironment "$usage" "$dotEnv file seems to be invalid:" || returnClean $? "${clean[@]}" || return $?
   fi
   local environment
   for environment in "${environments[@]}" "${optionals[@]}"; do
@@ -254,16 +254,16 @@ phpBuild() {
 
   environmentFileShow "${environments[@]}" -- "${optionals[@]}" || :
 
-  [ ! -d "$home/.deploy" ] || __catchEnvironment "$usage" rm -rf "$home/.deploy" || _clean $? "${clean[@]}" || return $?
+  [ ! -d "$home/.deploy" ] || __catchEnvironment "$usage" rm -rf "$home/.deploy" || returnClean $? "${clean[@]}" || return $?
 
-  __catchEnvironment "$usage" mkdir -p "$home/.deploy" || _clean $? "${clean[@]}" || return $?
+  __catchEnvironment "$usage" mkdir -p "$home/.deploy" || returnClean $? "${clean[@]}" || return $?
   clean+=("$home/.deploy")
 
-  APPLICATION_ID=$(_deploymentGenerateValue "$usage" "$home" APPLICATION_ID application-id) || _clean $? "${clean[@]}" || return $?
-  APPLICATION_TAG=$(_deploymentGenerateValue "$usage" "$home" APPLICATION_TAG application-tag) || _clean $? "${clean[@]}" || return $?
+  APPLICATION_ID=$(_deploymentGenerateValue "$usage" "$home" APPLICATION_ID application-id) || returnClean $? "${clean[@]}" || return $?
+  APPLICATION_TAG=$(_deploymentGenerateValue "$usage" "$home" APPLICATION_TAG application-tag) || returnClean $? "${clean[@]}" || return $?
 
   # Save clean build environment to .build.env for other steps
-  __catchEnvironment "$usage" declare -px >"$home/.build.env" || _clean $? "${clean[@]}" || return $?
+  __catchEnvironment "$usage" declare -px >"$home/.build.env" || returnClean $? "${clean[@]}" || return $?
   clean+=("$home/.build.env")
 
   #==========================================================================================
@@ -272,15 +272,15 @@ phpBuild() {
   #
   if [ -d "$home/vendor" ] || $optClean; then
     statusMessage decorate warning "vendor directory should not exist before composer, deleting"
-    __catchEnvironment "$usage" rm -rf "$home/vendor" || _clean $? "${clean[@]}" || return $?
+    __catchEnvironment "$usage" rm -rf "$home/vendor" || returnClean $? "${clean[@]}" || return $?
     clean+=("$home/vendor")
   fi
 
   statusMessage decorate info "Running PHP composer ..."
   # shellcheck disable=SC2119
-  __catchEnvironment "$usage" phpComposer "$home" "${composerArgs[@]+${composerArgs[@]}}" || _clean $? "${clean[@]}" || return $?
+  __catchEnvironment "$usage" phpComposer "$home" "${composerArgs[@]+${composerArgs[@]}}" || returnClean $? "${clean[@]}" || return $?
 
-  [ -d "$home/vendor" ] || __throwEnvironment "$usage" "Composer step did not create the vendor directory" || _clean $? "${clean[@]}" || return $?
+  [ -d "$home/vendor" ] || __throwEnvironment "$usage" "Composer step did not create the vendor directory" || returnClean $? "${clean[@]}" || return $?
 
   _phpEchoBar
   _phpBuildBanner "Application ID" "$APPLICATION_ID"
@@ -288,9 +288,9 @@ phpBuild() {
   _phpBuildBanner "Application Tag" "$APPLICATION_TAG"
   _phpEchoBar
 
-  __catchEnvironment "$usage" muzzle pushd "$home" || _clean $? "${clean[@]}" || return $?
-  __catchEnvironment "$usage" tarCreate "$targetName" .env vendor/ .deploy/ "$@" || _undo $? muzzle popd || _clean $? "${clean[@]}" || return $?
-  __catchEnvironment "$usage" muzzle popd || _clean $? "${clean[@]}" || return $?
+  __catchEnvironment "$usage" muzzle pushd "$home" || returnClean $? "${clean[@]}" || return $?
+  __catchEnvironment "$usage" tarCreate "$targetName" .env vendor/ .deploy/ "$@" || returnUndo $? muzzle popd || returnClean $? "${clean[@]}" || return $?
+  __catchEnvironment "$usage" muzzle popd || returnClean $? "${clean[@]}" || return $?
 
   statusMessage --last timingReport "$initTime" "PHP built $(decorate code "$targetName") in"
 }
@@ -379,15 +379,15 @@ phpTest() {
 
   __catchEnvironment "$usage" muzzle pushd "$home" || return $?
   undo+=(muzzle popd)
-  __catchEnvironment "$usage" hookRunOptional test-setup || _undo "$?" "${undo[@]}" || return $?
+  __catchEnvironment "$usage" hookRunOptional test-setup || returnUndo "$?" "${undo[@]}" || return $?
 
-  __catchEnvironmentQuiet "$usage" "$quietLog" docker-compose "${dca[@]}" build || _undo "$?" "${undo[@]}" || return $?
+  __catchEnvironmentQuiet "$usage" "$quietLog" docker-compose "${dca[@]}" build || returnUndo "$?" "${undo[@]}" || return $?
   statusMessage timingReport "$start" "Built in" || :
 
-  statusMessage decorate info "Bringing up containers ..." || _undo "$?" "${undo[@]}" || return $?
+  statusMessage decorate info "Bringing up containers ..." || returnUndo "$?" "${undo[@]}" || return $?
 
-  start=$(__catchEnvironment "$usage" timingStart) || _undo "$?" "${undo[@]}" || return $?
-  __catchEnvironmentQuiet "$usage" "$quietLog" docker-compose "${dca[@]}" up -d || _undo "$?" "${undo[@]}" || return $?
+  start=$(__catchEnvironment "$usage" timingStart) || returnUndo "$?" "${undo[@]}" || return $?
+  __catchEnvironmentQuiet "$usage" "$quietLog" docker-compose "${dca[@]}" up -d || returnUndo "$?" "${undo[@]}" || return $?
   statusMessage timingReport "$start" "Up in" || :
 
   start=$(timingStart) || return $?

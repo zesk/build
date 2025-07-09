@@ -7,6 +7,14 @@
 # Copyright &copy; 2025 Market Acumen, Inc.
 #
 
+testBashBuiltins() {
+  local item type
+  while read -r item; do
+    type=$(type -t "$item")
+    assertExitCode --display "Type of $item" 0 inArray "$type" "builtin" "keyword" || return $?
+  done < <(bashBuiltins)
+}
+
 testBashBasics() {
   # Bizarre logic precedence
 

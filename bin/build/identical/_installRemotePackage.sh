@@ -402,7 +402,7 @@ __installRemotePackageDirectory() {
 
 # Install the build directory from a copy
 # Requires: rm mv cp mkdir
-# Requires: _undo __catchEnvironment __throwEnvironment
+# Requires: returnUndo __catchEnvironment __throwEnvironment
 __installRemotePackageDirectoryLocal() {
   local usage="$1" packagePath="$2" applicationHome="$3" localPath="$4" installPath tempPath
 
@@ -412,7 +412,7 @@ __installRemotePackageDirectoryLocal() {
     tempPath="$installPath.aboutToDelete.$$"
     __catchEnvironment "$usage" rm -rf "$tempPath" || return $?
     __catchEnvironment "$usage" mv -f "$installPath" "$tempPath" || return $?
-    __catchEnvironment "$usage" cp -r "$localPath" "$installPath" || _undo $? rf -f "$installPath" -- mv -f "$tempPath" "$installPath" || return $?
+    __catchEnvironment "$usage" cp -r "$localPath" "$installPath" || returnUndo $? rf -f "$installPath" -- mv -f "$tempPath" "$installPath" || return $?
     __catchEnvironment "$usage" rm -rf "$tempPath" || :
   else
     tempPath=$(__catchEnvironment "$usage" dirname "$installPath") || return $?

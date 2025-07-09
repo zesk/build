@@ -59,16 +59,16 @@ awsInstall() {
     local buildDir quietLog clean=()
     buildDir="$(__catchEnvironment "$usage" buildCacheDirectory awsCache.$$)" || return $?
     clean+=("$buildDir")
-    quietLog="$(__catchEnvironment "$usage" buildQuietLog awsInstall)" || _clean $? "${clean[@]}" || return $?
+    quietLog="$(__catchEnvironment "$usage" buildQuietLog awsInstall)" || returnClean $? "${clean[@]}" || return $?
     clean+=("$quietLog")
-    buildDir=$(__catchEnvironment "$usage" directoryRequire "$buildDir") || _clean $? "${clean[@]}" || return $?
+    buildDir=$(__catchEnvironment "$usage" directoryRequire "$buildDir") || returnClean $? "${clean[@]}" || return $?
     clean+=("$buildDir")
 
     local zipFile=awscliv2.zip version
-    __catchEnvironmentQuiet "$usage" "$quietLog" curl -s "$url" -o "$buildDir/$zipFile" || _clean $? "${clean[@]}" || return $?
-    __catchEnvironmentQuiet "$usage" "$quietLog" unzip -d "$buildDir" "$buildDir/$zipFile" || _clean $? "${clean[@]}" || return $?
-    __catchEnvironmentQuiet "$usage" "$quietLog" "$buildDir/aws/install" || _clean $? "${clean[@]}" || return $?
-    version="$(__catchEnvironment "$usage" __awsWrapper --version)" || _clean $? "${clean[@]}" || return $?
+    __catchEnvironmentQuiet "$usage" "$quietLog" curl -s "$url" -o "$buildDir/$zipFile" || returnClean $? "${clean[@]}" || return $?
+    __catchEnvironmentQuiet "$usage" "$quietLog" unzip -d "$buildDir" "$buildDir/$zipFile" || returnClean $? "${clean[@]}" || return $?
+    __catchEnvironmentQuiet "$usage" "$quietLog" "$buildDir/aws/install" || returnClean $? "${clean[@]}" || return $?
+    version="$(__catchEnvironment "$usage" __awsWrapper --version)" || returnClean $? "${clean[@]}" || return $?
     printf "%s %s\n" "$version" "$(__catchEnvironment "$usage" timingReport "$start" OK)" || return $?
     __catchEnvironment "$usage" rm -rf "${clean[@]}" || return $?
   }
@@ -524,8 +524,8 @@ _awsCredentialsRemoveSectionInPlace() {
   local usage="$1" credentials="$2" profileName="$3" newCredentials="${4-}"
 
   temp=$(fileTemporaryName "$usage") || return $?
-  _awsCredentialsRemoveSection "$usage" "$credentials" "$profileName" "$newCredentials" | trimBoth >"$temp" || _clean $? "$temp" || return $?
-  __catchEnvironment "$usage" cp "$temp" "$credentials" || _clean $? "$temp" || return $?
+  _awsCredentialsRemoveSection "$usage" "$credentials" "$profileName" "$newCredentials" | trimBoth >"$temp" || returnClean $? "$temp" || return $?
+  __catchEnvironment "$usage" cp "$temp" "$credentials" || returnClean $? "$temp" || return $?
   __catchEnvironment "$usage" rm -rf "$temp" || return $?
 }
 
@@ -647,7 +647,7 @@ awsSecurityGroupIPModify() {
   # Fetch our current IP registered with this description
   #
   if [ "$mode" != "--add" ]; then
-    __catchEnvironment "$usage" __awsWrapper "${pp[@]+"${pp[@]}"}" ec2 describe-security-groups --region "$region" --group-id "$group" --output text --query "SecurityGroups[*].IpPermissions[*]" >"$tempErrorFile" || _clean "$?" "$tempErrorFile" || return $?
+    __catchEnvironment "$usage" __awsWrapper "${pp[@]+"${pp[@]}"}" ec2 describe-security-groups --region "$region" --group-id "$group" --output text --query "SecurityGroups[*].IpPermissions[*]" >"$tempErrorFile" || returnClean "$?" "$tempErrorFile" || return $?
 
     foundIP=$(grep -e "$(quoteGrepPattern "$description")" <"$tempErrorFile" | head -1 | awk '{ print $2 }') || :
 
@@ -678,7 +678,7 @@ awsSecurityGroupIPModify() {
         printf "%s\n" "$(decorate yellow "duplicate")"
         rm -f "$tempErrorFile"
       else
-        __throwEnvironment "$usage" "Failed to authorize-security-group-ingress $(dumpPipe "Errors:" <"$tempErrorFile")" || _clean $? "$tempErrorFile" || return $?
+        __throwEnvironment "$usage" "Failed to authorize-security-group-ingress $(dumpPipe "Errors:" <"$tempErrorFile")" || returnClean $? "$tempErrorFile" || return $?
       fi
     fi
   fi

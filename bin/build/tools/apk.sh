@@ -98,7 +98,7 @@ __apkUpgrade() {
   quietLog=$(__catchEnvironment "$usage" buildQuietLog "$usage") || return $?
   upgradeLog=$(__catchEnvironment "$usage" buildQuietLog "upgrade_${usage#_}") || return $?
   clean+=("$quietLog" "$upgradeLog")
-  __catchEnvironment "$usage" apk upgrade | tee -a "$upgradeLog" >>"$quietLog" || _undo $? dumpPipe "apk upgrade failed" <"$quietLog" || _clean $? "${clean[@]}" || return $?
+  __catchEnvironment "$usage" apk upgrade | tee -a "$upgradeLog" >>"$quietLog" || returnUndo $? dumpPipe "apk upgrade failed" <"$quietLog" || returnClean $? "${clean[@]}" || return $?
   if ! muzzle packageNeedRestartFlag; then
     if grep -q " restart " "$upgradeLog" || grep -qi needrestart "$upgradeLog" || grep -qi need-restart "$upgradeLog"; then
       __catchEnvironment "$usage" pacakgeNeedRestartFlag "true" || return $?

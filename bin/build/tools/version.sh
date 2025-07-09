@@ -236,9 +236,9 @@ __newRelease() {
       if [ -f "$newNotes" ]; then
         __throwEnvironment "$usage" "$(decorate file "$notes") and $(decorate file "$newNotes") both exist - can not re-version" || return $?
       fi
-      __catchEnvironment "$usage" sed "s/$(quoteSedPattern "$currentVersion")/$(quoteSedReplacement "$newVersion")/g" <"$notes" >"$notes.fixed" || _clean $? "$notes.fixed" || return $?
-      __catchEnvironment "$usage" git mv "$notes" "$newNotes" || _clean $? "$notes.fixed" || return $?
-      __catchEnvironment "$usage" mv -f "$notes.fixed" "$newNotes" || _clean $? "$notes.fixed" || return $?
+      __catchEnvironment "$usage" sed "s/$(quoteSedPattern "$currentVersion")/$(quoteSedReplacement "$newVersion")/g" <"$notes" >"$notes.fixed" || returnClean $? "$notes.fixed" || return $?
+      __catchEnvironment "$usage" git mv "$notes" "$newNotes" || returnClean $? "$notes.fixed" || return $?
+      __catchEnvironment "$usage" mv -f "$notes.fixed" "$newNotes" || returnClean $? "$notes.fixed" || return $?
     fi
     currentVersion="$newVersion"
     notes="$(__catchEnvironment "$usage" releaseNotes "$currentVersion")" || return $?
@@ -286,7 +286,7 @@ __newRelease() {
   fi
   notes="$(__catchEnvironment "$usage" releaseNotes "$newVersion")" || return $?
   if [ ! -f "$notes" ]; then
-    __catchEnvironment "$usage" hookRunOptional version-notes "$newVersion" "$currentVersion" >"$notes" || _clean $? "$notes" || return $?
+    __catchEnvironment "$usage" hookRunOptional version-notes "$newVersion" "$currentVersion" >"$notes" || returnClean $? "$notes" || return $?
     if fileIsEmpty "$notes"; then
       __newReleaseNotes "$newVersion" "$currentVersion" >"$notes"
     fi

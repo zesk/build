@@ -112,7 +112,7 @@ bashCheckRequires() {
 
   requirements=$(fileTemporaryName "$usage")
 
-  cat "${files[@]}" | __catchEnvironment "$usage" bashGetRequires >"$requirements" || _clean $? "$requirements" || return $?
+  cat "${files[@]}" | __catchEnvironment "$usage" bashGetRequires >"$requirements" || returnClean $? "$requirements" || return $?
 
   local functionName binaries=() total=0 defined=() missing=() required=() ignored=()
   while read -r functionName; do

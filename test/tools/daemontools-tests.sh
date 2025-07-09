@@ -59,7 +59,7 @@ testDaemontools() {
   assertFileExists "$logPath/lemon/current" || return $?
   # I assume this is to give time to the background process
   sleep 4
-  assertFileContains "$logPath/lemon/current" "lemon.sh" || _undo $? ls -la "$logPath/lemon" || return $?
+  assertFileContains "$logPath/lemon/current" "lemon.sh" || returnUndo $? ls -la "$logPath/lemon" || return $?
 
   assertOutputContains " up " svstat /etc/service/lemon/ || return $?
   assertOutputContains " seconds" svstat /etc/service/lemon/ || return $?

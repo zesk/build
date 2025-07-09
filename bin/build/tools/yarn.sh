@@ -64,9 +64,9 @@ yarnInstall() {
   statusMessage --first decorate info "Installing node ... " || return $?
   __catchEnvironment "$usage" nodeInstall || return $?
   __catchEnvironment "$usage" muzzle pushd "$home" || return $?
-  __catchEnvironment "$usage" yarn set version "$version" || _undo $? muzzle popd || return $?
+  __catchEnvironment "$usage" yarn set version "$version" || returnUndo $? muzzle popd || return $?
   statusMessage decorate info "Installing yarn ... " || return $?
-  __catchEnvironment "$usage" yarn install || _undo $? muzzle popd || return $?
+  __catchEnvironment "$usage" yarn install || returnUndo $? muzzle popd || return $?
   __catchEnvironment "$usage" muzzle popd || return $?
   statusMessage --last timingReport "$start" "Installed yarn in" || return $?
 }

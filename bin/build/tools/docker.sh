@@ -115,7 +115,7 @@ __anyEnvToFunctionEnv() {
     local temp
     temp=$(fileTemporaryName "$usage") || return $?
     __catchEnvironment "$usage" muzzle tee "$temp" || return $?
-    __catchEnvironment "$usage" __anyEnvToFunctionEnv "$usage" "$passConvertFunction" "$failConvertFunction" "$temp" || _clean $? "$temp" || return $?
+    __catchEnvironment "$usage" __anyEnvToFunctionEnv "$usage" "$passConvertFunction" "$failConvertFunction" "$temp" || returnClean $? "$temp" || return $?
     __catchEnvironment "$usage" rm "$temp" || return $?
     return 0
   fi
@@ -232,13 +232,13 @@ dockerEnvFromBashEnv() {
   tempFile=$(fileTemporaryName "$usage") || return $?
   clean=("$tempFile")
   if [ $# -eq 0 ]; then
-    __catchEnvironment "$usage" muzzle tee "$tempFile.bash" || _clean $? "${clean[@]}" || return $?
+    __catchEnvironment "$usage" muzzle tee "$tempFile.bash" || returnClean $? "${clean[@]}" || return $?
     clean+=("$tempFile.bash")
     set -- "$tempFile.bash"
   fi
   for file in "$@"; do
-    [ -f "$file" ] || __throwArgument "$usage" "Not a file $file" || _clean $? "${clean[@]}" || return $?
-    env -i bash -c "set -eoua pipefail; source \"$file\"; declare -px; declare -pa" >"$tempFile" 2>&1 | outputTrigger --name "$file" || __throwArgument "$usage" "$file is not a valid bash file" || _clean $? "${clean[@]}" || return $?
+    [ -f "$file" ] || __throwArgument "$usage" "Not a file $file" || returnClean $? "${clean[@]}" || return $?
+    env -i bash -c "set -eoua pipefail; source \"$file\"; declare -px; declare -pa" >"$tempFile" 2>&1 | outputTrigger --name "$file" || __throwArgument "$usage" "$file is not a valid bash file" || returnClean $? "${clean[@]}" || return $?
   done
   while IFS='' read -r envLine; do
     local name=${envLine%%=*} value=${envLine#*=}

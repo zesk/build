@@ -239,8 +239,8 @@ testStringValidate() {
 }
 
 testCharacterFromInteger() {
-  assertEquals l "$(characterFromInteger "$(_code leak)")" || return $?
-  assertEquals a "$(characterFromInteger "$(_code assert)")" || return $?
+  assertEquals l "$(characterFromInteger "$(returnCode leak)")" || return $?
+  assertEquals a "$(characterFromInteger "$(returnCode assert)")" || return $?
 }
 
 testPrintfOutput() {

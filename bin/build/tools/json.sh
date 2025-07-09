@@ -38,7 +38,7 @@ jsonField() {
 # Typically the version is copied in without the leading `v`.
 #
 # Argument: --filter - Function. Optional. Run value through this filter prior to inserting into the JSON file.
-# Argument: --status - Flag. Optional. When set, returns 0 when te version was updated successfully and $(_code identical) when the files are the same
+# Argument: --status - Flag. Optional. When set, returns 0 when te version was updated successfully and $(returnCode identical) when the files are the same
 # Argument: --quiet - Flag. Optional. Do not output anything to stdout and just do the action and exit.
 # Argument: --generator - Function. Optional. Function to generate the value. Defaults to `hookVersionCurrent`.
 # Argument: --value - String. Optional. Value to set in JSON file. (Skips generation)
@@ -128,7 +128,7 @@ __jsonSetValue() {
 
   oldValue="$(__catchEnvironment "$usage" jq ".$key" <"$json")" || return $?
 
-  __catchEnvironment "$usage" jq --arg value "$value" ". + { $key: \$value }" <"$json" >"$newJSON" || _clean $? "$newJSON" || return $?
+  __catchEnvironment "$usage" jq --arg value "$value" ". + { $key: \$value }" <"$json" >"$newJSON" || returnClean $? "$newJSON" || return $?
 
   decoratedValue=$(decorate value "$value")
   decoratedOldValue=$(decorate value "$oldValue")
@@ -136,9 +136,9 @@ __jsonSetValue() {
   if muzzle diff -q "$json" "$newJSON"; then
     $quietFlag || statusMessage --last decorate info "$decoratedJSON $key is $decoratedValue (up to date)"
     __catchEnvironment "$usage" rm -rf "$newJSON" || return $?
-    ! $statusFlag || return "$(_code identical)"
+    ! $statusFlag || return "$(returnCode identical)"
   else
-    __catchEnvironment "$usage" mv -f "$newJSON" "$json" || _clean $? "$newJSON" || return $?
+    __catchEnvironment "$usage" mv -f "$newJSON" "$json" || returnClean $? "$newJSON" || return $?
     $quietFlag || statusMessage --last decorate info "$decoratedJSON $key updated to $decoratedValue (old value $decoratedOldValue)"
   fi
 }

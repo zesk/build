@@ -6,6 +6,47 @@
 #
 # Copyright &copy; 2025 Market Acumen, Inc.
 #
+__dataUrlSchemeDefaultPort() {
+  cat <<EOF
+80 http
+443 https
+3306 mysqli
+3306 mysql+does+not+matter
+5432 postgres
+EOF
+}
+testUrlSchemeDefaultPort() {
+  while read -r expected scheme; do
+    assertEquals "$expected" "$(urlSchemeDefaultPort "$scheme")" || return $?
+  done < <(__dataUrlSchemeDefaultPort)
+}
+testUrlParseItem() {
+  local url=foo://user:hard-to-type@identity:4232/dbname
+
+  assertEquals "$url" "$(urlParseItem "url" "$url")" || return $?
+  assertEquals user "$(urlParseItem "user" "$url")" || return $?
+  assertEquals /dbname "$(urlParseItem "path" "$url")" || return $?
+  assertEquals dbname "$(urlParseItem "name" "$url")" || return $?
+  assertEquals identity "$(urlParseItem "host" "$url")" || return $?
+  assertEquals 4232 "$(urlParseItem "port" "$url")" || return $?
+  assertEquals "" "$(urlParseItem "portDefault" "$url")" || return $?
+  assertEquals hard-to-type "$(urlParseItem "password" "$url")" || return $?
+  assertEquals "" "$(urlParseItem "error" "$url")" || return $?
+  assertEquals "foo" "$(urlParseItem "scheme" "$url")" || return $?
+
+  url="https://george:soma@identity:1984/orwell"
+
+  assertEquals "$url" "$(urlParseItem "url" "$url")" || return $?
+  assertEquals george "$(urlParseItem "user" "$url")" || return $?
+  assertEquals /orwell "$(urlParseItem "path" "$url")" || return $?
+  assertEquals orwell "$(urlParseItem "name" "$url")" || return $?
+  assertEquals identity "$(urlParseItem "host" "$url")" || return $?
+  assertEquals 1984 "$(urlParseItem "port" "$url")" || return $?
+  assertEquals 443 "$(urlParseItem "portDefault" "$url")" || return $?
+  assertEquals soma "$(urlParseItem "password" "$url")" || return $?
+  assertEquals "" "$(urlParseItem "error" "$url")" || return $?
+  assertEquals "https" "$(urlParseItem "scheme" "$url")" || return $?
+}
 
 testUrlParse() {
   local parsed u url user name password host port portDefault path error scheme
@@ -107,7 +148,7 @@ testUrlFilter() {
   output=$(__environment mktemp) || return $?
   source="$home/test/example/urlFilter.source.html"
   urlFilter "$source" >"$output" || _environment "urlFilter $source failed" || return $?
-  assertExitCode 0 diff "$output" "$home/test/example/urlFilter.output.txt" || _undo $? dumpPipe "urlFilter $source" <"$output" || _undo $? rm -rf "$output" || return $?
+  assertExitCode 0 diff "$output" "$home/test/example/urlFilter.output.txt" || returnUndo $? dumpPipe "urlFilter $source" <"$output" || returnUndo $? rm -rf "$output" || return $?
 }
 
 testUrlOpen() {

@@ -127,8 +127,8 @@ __interactiveCountdownReadBoolean() {
   [ $# -eq 5 ] || __throwArgument "$usage" "Missing arguments: $# less than 5" || return $?
   tempResult=$(fileTemporaryName "$usage") || return $?
 
-  __interactiveCountdownReadCharacter "$@" "__confirmYesNoValidate" "$tempResult" || _clean $? "$tempResult" || return $?
-  value=$(__catchEnvironment "$usage" cat "$tempResult") || _clean $? "$tempResult" || return $?
+  __interactiveCountdownReadCharacter "$@" "__confirmYesNoValidate" "$tempResult" || returnClean $? "$tempResult" || return $?
+  value=$(__catchEnvironment "$usage" cat "$tempResult") || returnClean $? "$tempResult" || return $?
   __catchEnvironment "$usage" rm -rf "$tempResult" || return $?
   "$value"
 }

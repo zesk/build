@@ -217,7 +217,7 @@ documentationBuild() {
     ! $verbose || decorate warning "No --unlinked-template supplied"
   fi
 
-  __catchEnvironment "$usage" documentationTemplateDirectoryCompile "${docArgs[@]+"${docArgs[@]}"}" "$cacheDirectory" "$templatePath" "$functionTemplate" "$targetPath" || _clean $? "${clean[@]+"${clean[@]}"}" || return $?
+  __catchEnvironment "$usage" documentationTemplateDirectoryCompile "${docArgs[@]+"${docArgs[@]}"}" "$cacheDirectory" "$templatePath" "$functionTemplate" "$targetPath" || returnClean $? "${clean[@]+"${clean[@]}"}" || return $?
   [ ${#clean[@]} -eq 0 ] || __catchEnvironment "$usage" rm -rf "${clean[@]}" || return $?
   clean=()
 

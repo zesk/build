@@ -691,7 +691,7 @@ iTerm2Version() {
   savedTTY=$(__catchEnvironment "$usage" stty -g) || return $?
   undo=(stty "$savedTTY")
 
-  stty -echo -icanon raw || _undo $? "${undo[@]}" || return $?
+  stty -echo -icanon raw || returnUndo $? "${undo[@]}" || return $?
 
   # [1337n - iTerm version
   # [5n - Device status - (Responds with esc [ 0 n.) All terminals support this.

@@ -88,7 +88,7 @@ __hookPreCommitPHP() {
 
   fixResults=$(fileTemporaryName "$usage") || return $?
 
-  "$home/vendor/bin/php-cs-fixer" fix --config "$home/.php-cs-fixer.php" "${changed[@]}" >"$fixResults" 2>&1 || __throwEnvironment "$usage" "php-cs-fixer failed: $(cat "$fixResults")" || _clean $? "$fixResults" || return $?
+  "$home/vendor/bin/php-cs-fixer" fix --config "$home/.php-cs-fixer.php" "${changed[@]}" >"$fixResults" 2>&1 || __throwEnvironment "$usage" "php-cs-fixer failed: $(cat "$fixResults")" || returnClean $? "$fixResults" || return $?
   if grep -q 'not fixed' "$fixResults"; then
     statusMessage --last decorate error "some files not fixed"
     dumpPipe --lines 100 'not fixed' <"$fixResults"

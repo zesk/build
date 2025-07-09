@@ -79,7 +79,10 @@ __hookNotify() {
         ss=(--sound "$soundName")
       fi
     fi
-    muzzle darwinNotification "${ss[@]+"${ss[@]}"}" --title "$title" "$(stripAnsi <<<"$*")"
+    local message
+    message="$(__catchEnvironment "$usage" stripAnsi <<<"$*")" || return $?
+    [ -n "$message" ] || message="Silence is golden."
+    muzzle darwinNotification "${ss[@]+"${ss[@]}"}" --title "$title" "$message"
   else
     decorate notice "NOTIFY: $title"
     printf "%s\n" "$*" | decorate info | decorate wrap "$(decorate notice "NOTIFY:")"

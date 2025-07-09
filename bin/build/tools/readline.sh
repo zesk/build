@@ -19,7 +19,7 @@ readlineConfigurationAdd() {
   pattern="^$(quoteGrepPattern "\"$keyStroke\":")"
   if grep -q -e "$pattern" <"$target"; then
     grep -v "$pattern" >"$target.new" <"$target"
-    __catchEnvironment "$usage" mv -f "$target.new" "$target" || _clean $? "$target.new" || return $?
+    __catchEnvironment "$usage" mv -f "$target.new" "$target" || returnClean $? "$target.new" || return $?
   fi
   __catchEnvironment "$usage" printf "\"%s\": %s\n" "$keyStroke" "$action" >>"$target" || return $?
 }

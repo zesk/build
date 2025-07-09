@@ -191,7 +191,7 @@ _identicalCheckSinglesChecker() {
 
   local tempDirectory singles=() item resultsFile identicalCode
 
-  identicalCode=$(_code identical)
+  identicalCode=$(returnCode identical)
   # Fetch from state file
   tempDirectory=$(__catchEnvironment "$usage" environmentValueRead "$stateFile" tempDirectory) || return $?
   resultsFile=$(__catchEnvironment "$usage" environmentValueRead "$stateFile" resultsFile) || return $?

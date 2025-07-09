@@ -57,7 +57,7 @@ __nodeInstall_corepackEnable() {
   local home
   home=$(__catchEnvironment "$usage" buildHome) || return $?
   __catchEnvironment "$usage" muzzle pushd "$home" || return $?
-  __catchEnvironment "$usage" corepack enable || _undo $? muzzle popd || return $?
+  __catchEnvironment "$usage" corepack enable || returnUndo $? muzzle popd || return $?
   __catchEnvironment "$usage" muzzle popd || return $?
 }
 

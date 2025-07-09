@@ -348,10 +348,11 @@ _fileSize() {
 }
 
 # Usage: {fn} [ thing ]
+# Argument: item - Thing to classify
 # Better type handling of shell objects
 #
 # Outputs one of `type` output or enhancements:
-# - `builtin`. `function`, `alias`, `file`
+# - `builtin`, `function`, `alias`, `file`
 # - `link-directory`, `link-file`, `link-dead`, `directory`, `integer`, `unknown`
 fileType() {
   local t
@@ -546,11 +547,11 @@ _fileMatchesHelper() {
   foundLines="$fileList.found"
   clean=("$fileList" "$foundLines")
   if [ "$1" = "-" ]; then
-    __catchEnvironment "$usage" cat >"$fileList" || _clean $? "${clean[@]}" || return $?
+    __catchEnvironment "$usage" cat >"$fileList" || returnClean $? "${clean[@]}" || return $?
   fi
   for pattern in "${patterns[@]}"; do
     if [ "$1" != "-" ]; then
-      __catchEnvironment "$usage" printf "%s\n" "$@" >"$fileList" || _clean $? "${clean[@]}" || return $?
+      __catchEnvironment "$usage" printf "%s\n" "$@" >"$fileList" || returnClean $? "${clean[@]}" || return $?
     fi
     while read -r file; do
       if [ "${#exceptions[@]}" -gt 0 ] && stringContains "$file" "${exceptions[@]}"; then
@@ -571,7 +572,7 @@ _fileMatchesHelper() {
       fi
     done <"$fileList"
   done
-  _clean 0 "$fileList" || return $?
+  returnClean 0 "$fileList" || return $?
   $found
 }
 
@@ -743,7 +744,7 @@ linkCreate() {
     clean+=("$link.$$.badLink")
   fi
   __catchEnvironment "$usage" muzzle pushd "$path" || return $?
-  __catchEnvironment "$usage" ln -s "$target" "$linkName" || _undo $? muzzle popd || return $?
+  __catchEnvironment "$usage" ln -s "$target" "$linkName" || returnUndo $? muzzle popd || return $?
   __catchEnvironment "$usage" muzzle popd || return $?
   $backupFlag || __catchEnvironment "$usage" rm -rf "${clean[@]}" || return $?
 }

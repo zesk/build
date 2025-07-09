@@ -45,7 +45,7 @@ isUnsignedInteger() {
 
 # <-- END of IDENTICAL _return
 
-# IDENTICAL _tinySugar 73
+# IDENTICAL _tinySugar 77
 
 # Run `handler` with an argument error
 # Usage: {fn} handler ...
@@ -111,13 +111,17 @@ __environment() {
   "$@" || _environment "$@" || return $?
 }
 
-# Usage: {fn} exitCode item ...
+# _IDENTICAL_ returnClean 11
+
+# Delete files or directories and return the same exit code passed in.
 # Argument: exitCode - Required. Integer. Exit code to return.
 # Argument: item - Optional. One or more files or folders to delete, failures are logged to stderr.
-# Requires: rm
-_clean() {
-  local r="${1-}" && shift && rm -rf "$@"
-  return "$r"
+# Requires: isUnsignedInteger _argument __environment
+returnClean() {
+  local exitCode="${1-}" && shift
+  isUnsignedInteger "$exitCode" || _argument "${FUNCNAME[0]} $exitCode (not an integer) $*" || return $?
+  __environment rm -rf "$@" || return "$exitCode"
+  return "$exitCode"
 }
 
 # IDENTICAL quoteSedPattern 29
@@ -130,8 +134,8 @@ _clean() {
 # Example:     needSlash=$(quoteSedPattern '$.*/[\]^')
 # Requires: printf sed
 quoteSedPattern() {
-  local value
-  value=$(printf -- "%s\n" "${1-}" | sed 's~\([][$/'$'\t''^\\.*+?]\)~\\\1~g')
+  local value="${1-}"
+  value=$(printf -- "%s\n" "$value" | sed 's~\([][$/'$'\t''^\\.*+?]\)~\\\1~g')
   value="${value//$'\n'/\\n}"
   printf -- "%s\n" "$value"
 }
@@ -145,8 +149,8 @@ quoteSedPattern() {
 # Example:     needSlash=$(quoteSedPattern '$.*/[\]^')
 # Requires: printf sed
 quoteSedReplacement() {
-  local value separator="${2-/}"
-  value=$(printf -- "%s\n" "${1-}" | sed 's~\([\&'"$separator"']\)~\\\1~g')
+  local value="${1-}" separator="${2-/}"
+  value=$(printf -- "%s\n" "$value" | sed 's~\([\&'"$separator"']\)~\\\1~g')
   value="${value//$'\n'/\\n}"
   printf -- "%s\n" "$value"
 }
@@ -319,7 +323,7 @@ isArray() {
 # Argument: code ... - UnsignedInteger. String. Exit code value to output.
 # stdout: exitCodeToken, one per line
 exitString() {
-  local k="" && while [ $# -gt 0 ]; do case "$1" in 0) k="success" ;; 1) k="environment" ;; 2) k="argument" ;; 97) k="assert" ;; 105) k="identical" ;; 108) k="leak" ;; 116) k="timeout" ;; 120) k="exit" ;; 127) k="not-found" ;; 141) k="interrupt" ;; 253) k="internal" ;; 254) k="unknown" ;; *) k="[exitString unknown \"$1\"]" ;; esac && [ -n "$k" ] || k="$1" && printf "%s\n" "$k" && shift; done
+  local k="" && while [ $# -gt 0 ]; do case "$1" in 0) k="success" ;; 1) k="environment" ;; 2) k="argument" ;; 97) k="assert" ;; 105) k="identical" ;; 108) k="leak" ;; 116) k="timeout" ;; 120) k="exit" ;; 127) k="not-found" ;; 130) k="user-interrupt" ;; 141) k="interrupt" ;; 253) k="internal" ;; 254) k="unknown" ;; *) k="[exitString unknown \"$1\"]" ;; esac && [ -n "$k" ] || k="$1" && printf "%s\n" "$k" && shift; done
 }
 
 # IDENTICAL usageArgumentCore 13
@@ -687,8 +691,8 @@ mapEnvironment() {
     while read -r __e; do __ee+=("$__e"); done < <(environmentVariables)
   fi
   __sedFile=$(__catchEnvironment "$__usage" mktemp) || return $?
-  __catchEnvironment "$__usage" _mapEnvironmentGenerateSedFile "$__prefix" "$__suffix" "${__ee[@]}" >"$__sedFile" || _clean $? "$__sedFile" || return $?
-  __catchEnvironment "$__usage" sed -f "$__sedFile" || __throwEnvironment "$__usage" "$(cat "$__sedFile")" || _clean $? "$__sedFile" || return $?
+  __catchEnvironment "$__usage" _mapEnvironmentGenerateSedFile "$__prefix" "$__suffix" "${__ee[@]}" >"$__sedFile" || returnClean $? "$__sedFile" || return $?
+  __catchEnvironment "$__usage" sed -f "$__sedFile" || __throwEnvironment "$__usage" "$(cat "$__sedFile")" || returnClean $? "$__sedFile" || return $?
   __catchEnvironment "$__usage" rm -rf "$__sedFile" || return $?
 }
 _mapEnvironment() {

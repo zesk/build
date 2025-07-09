@@ -37,6 +37,6 @@ _identicalMapAttributesFile() {
   file=$(usageArgumentFile "$usage" "file" "${1-}") || return $?
   shift
   temp="$file.$$"
-  _identicalMapAttributesFilter "$usage" "${1-}" <"$file" >"$temp" || _clean $? "$temp" || return $?
-  __catchEnvironment "$usage" mv -f "$temp" "$file" || _clean "$?" "$temp" || return $?
+  _identicalMapAttributesFilter "$usage" "${1-}" <"$file" >"$temp" || returnClean $? "$temp" || return $?
+  __catchEnvironment "$usage" mv -f "$temp" "$file" || returnClean "$?" "$temp" || return $?
 }

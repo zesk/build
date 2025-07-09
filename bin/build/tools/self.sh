@@ -119,24 +119,24 @@ installInstallBinary() {
       urlValid "$url" || __throwEnvironment "$urlFunction failed to generate a VALID URL: $url" || return $?
     fi
     if ! curl -s -o - "$url" >"$temp"; then
-      __throwEnvironment "$usage" "Unable to download $(decorate code "$url")" || _clean $? "$temp" || return $?
+      __throwEnvironment "$usage" "Unable to download $(decorate code "$url")" || returnClean $? "$temp" || return $?
     fi
   fi
   if _installInstallBinaryCanCustomize "$temp"; then
-    __catchEnvironment "$usage" _installInstallBinaryCustomize "$relTop" <"$temp" >"$temp.custom" || _clean $? "$temp" "$temp.custom" || return $?
-    __catchEnvironment "$usage" mv -f "$temp.custom" "$temp" || _clean $? "$temp" "$temp.custom" || return $?
+    __catchEnvironment "$usage" _installInstallBinaryCustomize "$relTop" <"$temp" >"$temp.custom" || returnClean $? "$temp" "$temp.custom" || return $?
+    __catchEnvironment "$usage" mv -f "$temp.custom" "$temp" || returnClean $? "$temp" "$temp.custom" || return $?
   fi
   if [ -n "$postFunction" ]; then
-    __catchEnvironment "$usage" "$postFunction" <"$temp" >"$temp.custom" || _clean $? "$temp" "$temp.custom" || return $?
-    __catchEnvironment "$usage" mv -f "$temp.custom" "$temp" || _clean $? "$temp" "$temp.custom" || return $?
+    __catchEnvironment "$usage" "$postFunction" <"$temp" >"$temp.custom" || returnClean $? "$temp" "$temp.custom" || return $?
+    __catchEnvironment "$usage" mv -f "$temp.custom" "$temp" || returnClean $? "$temp" "$temp.custom" || return $?
   fi
 
   verb=Installed
   [ ! -f "$target" ] || verb=Updated
   # Show diffs
-  ! $showDiffFlag || _installInstallBinaryDiffer "$usage" "$temp" "$target" || _clean $? "$temp" || return $?
+  ! $showDiffFlag || _installInstallBinaryDiffer "$usage" "$temp" "$target" || returnClean $? "$temp" || return $?
   # Copy to target
-  __catchEnvironment "$usage" cp "$temp" "$target" || _clean $? "$temp" || return $?
+  __catchEnvironment "$usage" cp "$temp" "$target" || returnClean $? "$temp" || return $?
   rm -rf "$temp" || :
   # Clean up and make executable
   __catchEnvironment "$usage" chmod +x "$target" || exitCode=$?
@@ -195,7 +195,7 @@ __installInstallBinaryLegacy() {
   temp=$(__environment mktemp) || return $?
   cat >"$temp"
   if __installInstallBinaryIsLegacy <"$temp"; then
-    __catchEnvironment "$usage" __installInstallBinaryCustomizeLegacy "$relTop" <"$temp" || _clean $? "$temp" || return $?
+    __catchEnvironment "$usage" __installInstallBinaryCustomizeLegacy "$relTop" <"$temp" || returnClean $? "$temp" || return $?
   else
     __environment cat "$temp" || return $?
   fi
@@ -236,7 +236,7 @@ buildFunctions() {
   local home
   home=$(__catchEnvironment "$usage" buildHome) || return $?
   {
-    cat "$home/bin/build/tools/_sugar.sh" "$home/bin/build/tools/sugar.sh" | grep -e '^_.*() {' | cut -d '(' -f 1
+    cat "$home/bin/build/tools/_sugar.sh" "$home/bin/build/tools/sugar.sh" | grep -e '^_.*() {' | cut -d '(' -f 1 | grep -v '^___'
     "$home/bin/build/tools.sh" declare -F | cut -d ' ' -f 3 | grep -v -e '^_'
   }
 }

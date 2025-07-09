@@ -95,7 +95,7 @@ them and make sure to delete them on return.
 
 Commands typically are:
 
-    condition || action || _undo $? command ... || _clean $? fileToDelete directoryToDelete || return $?
+    condition || action || returnUndo $? command ... || returnClean $? fileToDelete directoryToDelete || return $?
 
 ## Standard usage and error handling with underscore usage function
 

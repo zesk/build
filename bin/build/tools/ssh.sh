@@ -266,13 +266,13 @@ sshSetup() {
     local newKeys=("$keyName" "${keyName}.pub")
     statusMessage decorate info "Generating $keyName (keyType $keyType $keyBits keyBits)"
     __catchEnvironment "$usage" muzzle pushd "$sshHomePath" || return $?
-    __catchEnvironment "$usage" ssh-keygen -f "$keyName" -t "$keyType" -b "$keyBits" -C "$keyName" -q -N "" || _undo $? muzzle popd || return $?
-    __catchEnvironment "$usage" muzzle popd || _clean $? "${newKeys[@]}" || return $?
+    __catchEnvironment "$usage" ssh-keygen -f "$keyName" -t "$keyType" -b "$keyBits" -C "$keyName" -q -N "" || returnUndo $? muzzle popd || return $?
+    __catchEnvironment "$usage" muzzle popd || returnClean $? "${newKeys[@]}" || return $?
 
     targetKeys=("id_${keyType}" "id_${keyType}.pub")
     local index
     for index in "${!targetKeys[@]}"; do
-      __catchEnvironment "$usage" cp "${newKeys[index]}" "${targetKeys[index]}" || _clean $? "${targetKeys[@]}" "${newKeys[@]}" || return $?
+      __catchEnvironment "$usage" cp "${newKeys[index]}" "${targetKeys[index]}" || returnClean $? "${targetKeys[@]}" "${newKeys[@]}" || return $?
     done
   fi
   local server

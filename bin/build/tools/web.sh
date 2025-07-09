@@ -74,8 +74,8 @@ urlContentLength() {
       ;;
     *)
       url=$(usageArgumentURL "$usage" "url" "$1") || return $?
-      __catchEnvironment "$usage" curl -s -I "$url" >"$tempFile" || _clean $? "$tempFile" || return $?
-      remoteSize=$(grep -i 'Content-Length' "$tempFile" | awk '{ print $2 }') || __throwEnvironment "$usage" "Remote URL did not return Content-Length" || _clean $? "$tempFile" || return $?
+      __catchEnvironment "$usage" curl -s -I "$url" >"$tempFile" || returnClean $? "$tempFile" || return $?
+      remoteSize=$(grep -i 'Content-Length' "$tempFile" | awk '{ print $2 }') || __throwEnvironment "$usage" "Remote URL did not return Content-Length" || returnClean $? "$tempFile" || return $?
       remoteSize="$(trimSpace "$remoteSize")"
       printf "%d\n" $((remoteSize + 0))
       ;;
@@ -151,7 +151,7 @@ websiteScrape() {
   pid=$(
     wget "${aa[@]}" "$url" 2>&1 | tee "$logFile" | grep -E '^--' >"$progressFile" &
     printf "%d" $!
-  ) || _clean $? "$logFile" || return $?
+  ) || returnClean $? "$logFile" || return $?
   statusMessage decorate success "Launched scraping process $(decorate code "$pid") ($progressFile)"
   _watchFile "$progressFile"
 }
