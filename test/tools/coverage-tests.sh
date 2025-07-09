@@ -37,54 +37,50 @@ testCoverageReportThing() {
   assertEquals "$(__bashCoveragePartialLine '  [ $# -gt 0 ] || return 1' "$codes" "$template")" "$expected" || return $?
 }
 
+# Tag: slow-30-seconds slow
 testBuildFunctionsCoverage() {
   local usage="_return"
-  local home
 
+  local home
   home=$(__catchEnvironment "$usage" buildHome) || return $?
 
-  local deprecatedFunctions
-  local allTestFiles
-
+  local deprecatedFunctions allTestFiles clean=()
   deprecatedFunctions=$(fileTemporaryName "$usage") || return $?
   allTestFiles=$(fileTemporaryName "$usage") || return $?
-
   clean+=("$deprecatedFunctions")
   clean+=("$allTestFiles")
-  __catchEnvironment "$usage" cut -f 1 -d '|' <"$home/bin/build/deprecated.txt" | grep -v '#' | grep -v ' ' | grep -v '/' | sort -u >"$deprecatedFunctions" || return $?
 
+  __catchEnvironment "$usage" cut -f 1 -d '|' <"$home/bin/build/deprecated.txt" | grep -v '#' | grep -v ' ' | grep -v '/' | sort -u >"$deprecatedFunctions" || return $?
   __catchEnvironment "$usage" find "$home/test/tools" -type f -name '*.sh' -print0 >"$allTestFiles" || return $?
 
   local requireCoverageDate
   requireCoverageDate=$(buildEnvironmentGet BUILD_COVERAGE_REQUIRED_DATE) || return $?
-  assertExitCode 0 isDate "$requireCoverageDate" || return $?
+  assertExitCode 0 dateValid "$requireCoverageDate" || return $?
 
   local function missing=()
   while read -r function; do
     # statusMessage decorate info "Looking at $function"
-    if grep -q -e "^$(quoteGrepPattern "$function")" <"$deprecatedFunctions"; then
-      statusMessage decorate info "Deprecated function: $(decorate code "$function")"
+    if grep -q -e "^$(quoteGrepPattern "$function")$" <"$deprecatedFunctions"; then
+      statusMessage decorate subtle "Deprecated function: $(decorate code "$function")"
     else
-      local foundCount matchingTests
+      local matchingTests foundCount
 
       # grep returns 1 when nothing matches
       matchingTests=$(xargs -r -0 grep -l "$(quoteGrepPattern "$function")" <"$allTestFiles" || mapReturn $? 1 0) || return $?
       foundCount=$(__catchEnvironment "$usage" fileLineCount <<<"$matchingTests") || return $?
 
-      if ! isInteger "$foundCount"; then
-        statusMessage --last decorate error "$(dumpPipe foundCount <<<"$foundCount") NOT INTEGER for $(decorate code "$function")"
-        decorate code "find \"$home/test/tools\" -type f -name \"*.sh\" -print0 | xargs -0 grep -l \"\$(quoteGrepPattern \"$function\")\" | fileLineCount"
-      elif [ "$foundCount" -eq 0 ]; then
-        if [ "$(date +%s)" -gt "$(dateToTimestamp "$requireCoverageDate")" ]; then
-          missing+=("$function")
-        else
-          statusMessage --last decorate warning "No tests written for $(decorate code "$function")"
-        fi
+      if [ "$foundCount" -eq 0 ]; then
+        missing+=("$function")
+        statusMessage --last decorate warning "No references found for $(decorate code "$function")"
       else
-        statusMessage decorate info "$foundCount $(plural "$foundCount" test tests) written for $(decorate code "$function")"
+        statusMessage decorate info "$foundCount $(plural "$foundCount" reference references) to $(decorate code "$function")"
       fi
     fi
   done < <(buildFunctions)
   __catchEnvironment "$usage" rm -f "${clean[@]}" || return $?
-  [ "${#missing[@]}" -eq 0 ] || __throwEnvironment "$usage" "Functions require tests ($(decorate magenta "after $requireCoverageDate")):"$'\n'"$(printf "%s\n" "${missing[@]}" | decorate code | decorate wrap "- ")"
+  if [ "$(date +%s)" -lt "$(dateToTimestamp "$requireCoverageDate")" ]; then
+    [ "${#missing[@]}" -eq 0 ] || printf "%s %s\n%s\n" "$(decorate notice "This test will FAIL")" "$(decorate magenta "after $requireCoverageDate")" "$(printf "%s\n" "${missing[@]}" | decorate code | decorate wrap "- ")"
+  else
+    [ "${#missing[@]}" -eq 0 ] || __throwEnvironment "$usage" "Functions require at least 1 test: ($(decorate magenta "after $requireCoverageDate")):"$'\n'"$(printf "%s\n" "${missing[@]}" | decorate code | decorate wrap "- ")"
+  fi
 }
