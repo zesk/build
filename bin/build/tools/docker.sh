@@ -51,7 +51,8 @@ dumpDockerTestFile() {
 # Exit Code: 1 - No
 #
 # TODO: This changed 2023 ...
-#
+# Checked: 2025-07-09
+# TODO: Write a test to check this date every oh, say, 3 months
 insideDocker() {
   if [ ! -f /proc/1/cmdline ]; then
     # Not inside

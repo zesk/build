@@ -43,7 +43,7 @@ buildContainer() {
     "bashPrompt --label \"$name\" bashPromptModule_binBuild bashPromptModule_ApplicationPath bashPromptModule_dotFilesWatcher --order 80 bashPromptModule_TermColors"
     "approved=\$(dotFilesApprovedFile)"
     "[ -f \"\$approved\" ] || dotFilesApproved bash mysql >>\$approved"
-    "packageWhich --verbose shasum apt-rdepends"
+    "packageWhich --verbose sha1sum apt-rdepends"
     "cd ~/build"
   )
   dockerLocalContainer --image "$image" --path /root/build --env-file .STAGING.env /root/build/bin/build/bash-build.sh --rc-extras "${ee[@]}" -- "$@"

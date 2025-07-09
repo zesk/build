@@ -364,6 +364,9 @@ __aptPackageMapping() {
   "mysql-server")
     printf "%s\n" mysql-server
     ;;
+  "sha1sum")
+    printf "%s\n" "coreutils"
+    ;;
   *)
     printf "%s\n" "$1"
     ;;

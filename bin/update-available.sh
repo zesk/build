@@ -114,12 +114,18 @@ __updateAvailable() {
   home="$(__catchEnvironment "$usage" buildHome)" || return $?
 
   local managers=(apk debian ubuntu) allKnown=false
-  if isDarwin && whichExists brew; then
-    managers+=(brew)
-    allKnown=true
+  if isDarwin; then
+    if whichExists brew; then
+      managers+=(brew)
+      allKnown=true
+    fi
+    if whichExists port; then
+      managers+=(port)
+      allKnown=true
+    fi
   else
     statusMessage decorate info "No brew manager available ..."
-    # TODO look at OS X inside Docker
+    # TODO can we put OS X inside Docker?
   fi
   directoryRequire "$home/etc/packages/" || return $?
 

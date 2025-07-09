@@ -76,10 +76,10 @@ if isAlpine; then
   # uptime hack here (yes)
   __timestamp() {
     local sec ms
+    sec=$(date '+%s')
     IFS="." read -d ' ' -r upsec ms </proc/uptime || :
     : "$upsec"
-    sec=$(date '+%s')
-    printf "%d%s0\n" "$ms" "$sec"
+    printf "%s%s0\n" "$sec" "$ms"
   }
 
   __testPlatformName() {
@@ -98,7 +98,7 @@ else
 fi
 
 __bigTextBinary() {
-    printf "%s\n" "toilet"
+  isAlpine && printf -- "%s\n" "figlet" || printf -- "%s\n" "toilet"
 }
 
 __pcregrep() {

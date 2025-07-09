@@ -12,15 +12,6 @@
 # TODO suggest rename
 #fileModifiedRecentlyName|fileRecentlyModified
 #fileModifiedRecentlyTimestamp|fileTimestampRecentlyModified
-#fileIsNewest|fileIsNewest
-#fileIsOldest|fileIsOldest
-#fileOldest|fileOldest
-#fileNewest|fileNewest
-#fileModifiedSeconds|fileModifiedSeconds
-#fileModifiedDays|fileModifiedDays
-#fileModificationSeconds|fileModificationSeconds
-#fileModificationTime|fileModificationTime
-#filesRename|filesRename
 
 #
 # Renames "$file0$oldSuffix" to "$file0$newSuffix" if file exists and outputs a message using the actionVerb

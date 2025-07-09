@@ -294,7 +294,7 @@ _plumber() {
 _housekeeperAccountant() {
   local path
   for path in "$@"; do
-    find "$path" -type f -print0 | xargs -0 shasum
+    find "$path" -type f -print0 | xargs -0 sha1sum
   done | sort
 }
 

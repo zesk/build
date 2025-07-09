@@ -650,7 +650,7 @@ plainLength() {
 #
 # Usage: shaPipe [ filename ... ]
 # Argument: filename - One or more filenames to generate a checksum for
-# Depends: shasum
+# Depends: sha1sum
 # Summary: SHA1 checksum of standard input
 # Example:     shaPipe < "$fileName"
 # Example:     shaPipe "$fileName0" "$fileName1"
@@ -660,6 +660,7 @@ plainLength() {
 shaPipe() {
   local usage="_${FUNCNAME[0]}"
   local argument
+  whichExists sha1sum || __throwEnvironment "$usage" "Need packageGroupInstall sha1sum" || return $?
   if [ -n "$*" ]; then
     while [ $# -gt 0 ]; do
       argument="$1"
@@ -668,14 +669,14 @@ shaPipe() {
       if test "${DEBUG_SHAPIPE-}"; then
         printf "%s: %s\n" "$(date +"%FT%T")" "$argument" >shaPipe.log
       fi
-      shasum <"$argument" | cut -f 1 -d ' '
+      sha1sum <"$argument" | cut -f 1 -d ' '
       shift || __throwArgument "$usage" "shift failed" || return $?
     done
   else
     if test "${DEBUG_SHAPIPE-}"; then
       printf "%s: stdin\n" "$(date +"%FT%T")" >shaPipe.log
     fi
-    shasum | cut -f 1 -d ' ' || __throwEnvironment "$usage" "shasum" || return $?
+    sha1sum | cut -f 1 -d ' ' || __throwEnvironment "$usage" "sha1sum" || return $?
   fi
 }
 _shaPipe() {
@@ -693,7 +694,7 @@ _shaPipe() {
 #
 # Usage: cachedShaPipe cacheDirectory [ filename ]
 # Argument: cacheDirectory - Optional. Directory. The directory where cache files can be stored exclusively for this function. Supports a blank value to disable caching, otherwise, it must be a valid directory.
-# Depends: shasum shaPipe
+# Depends: sha1sum shaPipe
 # Summary: SHA1 checksum of standard input
 # Example:     cachedShaPipe "$cacheDirectory" < "$fileName"
 # Example:     cachedShaPipe "$cacheDirectory" "$fileName0" "$fileName1"
@@ -741,13 +742,13 @@ _cachedShaPipe() {
 #
 # Usage: randomString [ ... ]
 # Arguments: Ignored
-# Depends: shasum, /dev/random
+# Depends: sha1sum, /dev/random
 # Description: Outputs 40 random hexadecimal characters, lowercase.
 # Example:     testPassword="$(randomString)"
 # Output: cf7861b50054e8c680a9552917b43ec2b9edae2b
 #
 randomString() {
-  head --bytes=64 /dev/random | shasum | cut -f 1 -d ' '
+  head --bytes=64 /dev/random | sha1sum | cut -f 1 -d ' '
 }
 
 #
@@ -1062,8 +1063,8 @@ _removeFields() {
 # Example:     needSlash=$(quoteSedPattern '$.*/[\]^')
 # Requires: printf sed
 quoteSedPattern() {
-  local value
-  value=$(printf -- "%s\n" "${1-}" | sed 's~\([][$/'$'\t''^\\.*+?]\)~\\\1~g')
+  local value="${1-}"
+  value=$(printf -- "%s\n" "$value" | sed 's~\([][$/'$'\t''^\\.*+?]\)~\\\1~g')
   value="${value//$'\n'/\\n}"
   printf -- "%s\n" "$value"
 }
@@ -1077,8 +1078,8 @@ quoteSedPattern() {
 # Example:     needSlash=$(quoteSedPattern '$.*/[\]^')
 # Requires: printf sed
 quoteSedReplacement() {
-  local value separator="${2-/}"
-  value=$(printf -- "%s\n" "${1-}" | sed 's~\([\&'"$separator"']\)~\\\1~g')
+  local value="${1-}" separator="${2-/}"
+  value=$(printf -- "%s\n" "$value" | sed 's~\([\&'"$separator"']\)~\\\1~g')
   value="${value//$'\n'/\\n}"
   printf -- "%s\n" "$value"
 }

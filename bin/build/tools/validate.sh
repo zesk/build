@@ -12,6 +12,41 @@
 # Argument: type - Type. Required. Type to validate.
 # Argument: name - String. Required. Name of the variable which is being validated.
 # Argument: value - EmptyString. Required. Value to validate.
+#
+# Types are equivalent on each line:
+#
+#    String                    string
+#    EmptyString               string?
+#    Array                     array
+#    List                      list
+#    ColonDelimitedList        list:
+#    CommaDelimitedList        list,
+#    UnsignedInteger           uint unsigned
+#    PositiveInteger           positive
+#    Integer                   int integer
+#    Number                    number
+#    Function                  function
+#    Callable                  callable
+#    Executable                bin executable
+#    ApplicationDirectory      appdir
+#    ApplicationFile           appfile
+#    ApplicationDirectoryList  appdirlist
+#    Boolean                   boolean bool
+#    BooleanLike               boolean? bool?
+#    Date                      date
+#    DirectoryList             dirlist
+#    EnvironmentVariable       env
+#    Exists                    exists
+#    File                      file
+#    Directory                 directory dir
+#    Link                      link
+#    FileDirectory             parent
+#    RealDirectory             realdir
+#    RealFile                  real
+#    RemoteDirectory           remotedirectory | remotedir
+#    Secret                    secret
+#    URL                       url
+#
 # You can repeat the `type` `name` `value` more than once in the arguments and each will be checked until one fails
 # Exit Code: 0 - Valid is valid, stdout is a filtered version of the value to be used
 # Exit Code: 2 - Valid is invalid, output reason to stderr
@@ -26,6 +61,7 @@ validate() {
 
   while [ $# -ge 3 ]; do
     local type="$1" name="$2" value="$3"
+    type=$(_validateTypeMapper "$type")
     local typeFunction="$prefix$type"
     isFunction "$typeFunction" || __throwArgument "$usage" "validate $type is not a valid type:"$'\n'"$(validateTypeList)" || return $?
     if ! value=$("$typeFunction" "$value" 2>&1); then
@@ -36,6 +72,10 @@ validate() {
     __catchEnvironment "$usage" printf -- "%s\n" "$value" || return $?
     shift 3
   done
+}
+_validate() {
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # List types which can be validated
@@ -72,9 +112,99 @@ isValidateType() {
   done
 }
 
+_validateTypeAliases() {
+  cat <<'EOF'
+String string
+EmptyString string?
+Array
+List 
+ColonDelimitedList list:
+CommaDelimitedList list,
+UnsignedInteger uint | unsigned
+PositiveInteger positive
+Integer int 
+Number
+Function
+Callable
+Executable bin
+ApplicationDirectory appdir
+ApplicationFile appfile
+ApplicationDirectoryList appdirlist
+Boolean bool
+BooleanLike boolean? bool?
+Date
+DirectoryList dirlist
+EnvironmentVariable env
+Exists
+File
+Directory dir
+Link
+FileDirectory parent
+RealDirectory realdir
+RealFile  real
+RemoteDirectory remotedir
+Secret
+URL
+EOF
+}
+
+#
+#   _   _      _
+#  | | | | ___| |_ __   ___ _ __ ___
+#  | |_| |/ _ \ | '_ \ / _ \ '__/ __|
+#  |  _  |  __/ | |_) |  __/ |  \__ \
+#  |_| |_|\___|_| .__/ \___|_|  |___/
+#               |_|
+#
+
+# Convert from short type to long type
+_validateTypeMapper() {
+  read -r type aliases < <(_validateTypeAliases | grepSafe -i -e "\b$(quoteGrepPattern "$1")\b")
+  [ -n "$type" ] || type="$1"
+  printf "%s\n" "$type"
+  : "$aliases"
+}
+
+_validateHelperApplicationTest() {
+  local test="$1" home="$2" item="$3"
+  [ -n "$item" ] || _validateThrow "blank" || return $?
+  item="${item#./}"
+  item="${item#/}"
+  test "$test" "$home/$item" || _validateThrow || return $?
+  printf "%s\n" "$item"
+}
+
+# Utility function for `test`
+_validateHelperTest() {
+  _validateHelperCheck "$@" && shift || return $?
+  printf "%s\n" "$@"
+}
+
+# Utility function for `test`
+_validateHelperCheck() {
+  local testFlag="$1" && shift
+  [ -n "${1-}" ] || _validateThrow "blank" || return $?
+  test "$testFlag" "$@" || _validateThrow || return $?
+  printf "%s\n" "$@"
+}
+
+# output arguments to stderr and return the argument error
+# Return: 2
+# Exit Code: 2 - Argument error
+_validateThrow() {
+  printf -- "%s\n" "$@" 1>&2
+  return 2
+}
+
+#  __     __    _ _     _       _         _____                 _   _
+#  \ \   / /_ _| (_) __| | __ _| |_ ___  |  ___|   _ _ __   ___| |_(_) ___  _ __  ___
+#   \ \ / / _` | | |/ _` |/ _` | __/ _ \ | |_ | | | | '_ \ / __| __| |/ _ \| '_ \/ __|
+#    \ V / (_| | | | (_| | (_| | ||  __/ |  _|| |_| | | | | (__| |_| | (_) | | | \__ \
+#     \_/ \__,_|_|_|\__,_|\__,_|\__\___| |_|   \__,_|_| |_|\___|\__|_|\___/|_| |_|___/
+
 # Non-empty string
 __validateTypeString() {
-  [ -n "${1-}" ] || __throwValidate "blank" || return $?
+  [ -n "${1-}" ] || _validateThrow "blank" || return $?
   printf "%s\n" "${1-}"
 }
 
@@ -107,59 +237,50 @@ __validateTypeCommaDelimitedList() {
 
 # unsigned integer is greater than or equal to zero
 __validateTypeUnsignedInteger() {
-  isUnsignedInteger "${1-}" || __throwValidate || return $?
+  isUnsignedInteger "${1-}" || _validateThrow || return $?
   printf "%s\n" "${1#+}"
 }
 
 __validateTypePositiveInteger() {
-  isPositiveInteger "${1-}" || __throwValidate || return $?
+  isPositiveInteger "${1-}" || _validateThrow || return $?
   printf "%s\n" "${1#+}"
 }
 
 __validateTypeInteger() {
-  isInteger "${1-}" || __throwValidate || return $?
+  isInteger "${1-}" || _validateThrow || return $?
   printf "%s\n" "${1#+}"
 }
 
 __validateTypeNumber() {
-  isNumber "${1-}" || __throwValidate || return $?
+  isNumber "${1-}" || _validateThrow || return $?
   printf "%s\n" "${1#+}"
 }
 
 __validateTypeFunction() {
-  isFunction "${1-}" || __throwValidate || return $?
+  isFunction "${1-}" || _validateThrow || return $?
   printf "%s\n" "${1-}"
 }
 
 __validateTypeCallable() {
-  isCallable "${1-}" || __throwValidate || return $?
+  isCallable "${1-}" || _validateThrow || return $?
   printf "%s\n" "${1-}"
 }
 
 __validateTypeExecutable() {
-  isExecutable "${1-}" || __throwValidate || return $?
+  isExecutable "${1-}" || _validateThrow || return $?
   printf "%s\n" "${1-}"
-}
-
-___validateTypeApplicationTest() {
-  local test="$1" home="$2" item="$3"
-  [ -n "$item" ] || __throwValidate "blank" || return $?
-  item="${item#./}"
-  item="${item#/}"
-  test "$test" "$home/$item" || __throwValidate || return $?
-  printf "%s\n" "$item"
 }
 
 __validateTypeApplicationDirectory() {
   local home directory="${1-}"
   home=$(buildHome) || return $?
-  ___validateTypeApplicationTest -d "$home" "${directory%/}" || return $?
+  _validateHelperApplicationTest -d "$home" "${directory%/}" || return $?
 }
 
 __validateTypeApplicationFile() {
   local home file="${1-}"
   home=$(buildHome) || return $?
-  ___validateTypeApplicationTest -f "$home" "$file" || return $?
+  _validateHelperApplicationTest -f "$home" "$file" || return $?
 }
 
 __validateTypeApplicationDirectoryList() {
@@ -170,7 +291,7 @@ __validateTypeApplicationDirectoryList() {
   home="${home%/}"
   IFS=":" read -r -a directories <<<"$value" || :
   for directory in "${directories[@]+"${directories[@]}"}"; do
-    directory="$(___validateTypeApplicationDirectory "$home" "$directory")" || __throwValidate "element #$index ($(decorate error "$directory"): $(decorate value "$value")" || return $?
+    directory="$(___validateTypeApplicationDirectory "$home" "$directory")" || _validateThrow "element #$index ($(decorate error "$directory"): $(decorate value "$value")" || return $?
     result+=("$directory")
     index=$((index + 1))
   done
@@ -179,7 +300,7 @@ __validateTypeApplicationDirectoryList() {
 
 # Strict boolean `false` or `true`
 __validateTypeBoolean() {
-  isBoolean "${1-}" || __throwValidate || return $?
+  isBoolean "${1-}" || _validateThrow || return $?
   printf "%s\n" "$1"
 }
 
@@ -190,14 +311,14 @@ __validateTypeBooleanLike() {
   case "$rs" in
   0) rs="true" ;;
   1) rs="false" ;;
-  *) __throwValidate "parse boolean failed" || return $? ;;
+  *) _validateThrow "parse boolean failed" || return $? ;;
   esac
   printf "%s\n" "$rs"
 }
 
 # Date formatted like YYYY-MM-DD
 __validateTypeDate() {
-  dateValid "${1-}" || __throwValidate || return $?
+  dateValid "${1-}" || _validateThrow || return $?
   printf "%s\n" "${1-}"
 }
 
@@ -208,7 +329,7 @@ __validateTypeDirectoryList() {
   IFS=":" read -r -a directories <<<"$value" || :
   for directory in "${directories[@]+"${directories[@]}"}"; do
     [ -n "$directory" ] || continue
-    [ -d "$directory" ] || __throwValidate "element #$index not directory $(decorate code "$directory"): $(decorate value "$value")" || return $?
+    [ -d "$directory" ] || _validateThrow "element #$index not directory $(decorate code "$directory"): $(decorate value "$value")" || return $?
     result+=("$directory")
     index=$((index + 1))
   done
@@ -217,73 +338,59 @@ __validateTypeDirectoryList() {
 
 # A valid environment variable name
 __validateTypeEnvironmentVariable() {
-  [ -n "${1-}" ] || __throwValidate "blank" || return $?
-  environmentVariableNameValid "${1-}" || __throwValidate || return $?
+  [ -n "${1-}" ] || _validateThrow "blank" || return $?
+  environmentVariableNameValid "${1-}" || _validateThrow || return $?
   printf "%s\n" "${1-}"
-}
-
-# Utility function for `test`
-___validateTypeTest() {
-  ___validateTypeCheck "$@" && shift || return $?
-  printf "%s\n" "$@"
-}
-
-# Utility function for `test`
-___validateTypeCheck() {
-  local testFlag="$1" && shift
-  [ -n "${1-}" ] || __throwValidate "blank" || return $?
-  test "$testFlag" "$@" || __throwValidate || return $?
-  printf "%s\n" "$@"
 }
 
 # Validates a value is not blank and exists in the file system
 __validateTypeExists() {
-  ___validateTypeTest -e "$@"
+  _validateHelperTest -e "$@" || return $?
 }
 
 # A file exists
 __validateTypeFile() {
-  ___validateTypeTest -f "$@"
+  _validateHelperTest -f "$@" || return $?
 }
 
 # A directory exists
 __validateTypeDirectory() {
-  ___validateTypeCheck -d "$@"
+  _validateHelperCheck -d "$@" || return $?
   printf "%s\n" "${1%/}"
 }
 
 # A link exists
 __validateTypeLink() {
-  ___validateTypeTest -L "$@"
+  _validateHelperTest -L "$@" || return $?
 }
 
 # A file directory exists (file may exist or not)
 __validateTypeFileDirectory() {
-  [ -n "${1-}" ] || __throwValidate "blank" || return $?
-  fileDirectoryExists "${1-}"
+  [ -n "${1-}" ] || _validateThrow "blank" || return $?
+  fileDirectoryExists "${1-}" || _validateThrow "Parent directory does not exist for $1" || return $?
   printf "%s\n" "${1-}"
 }
 
 # A real path for a directory
 __validateTypeRealDirectory() {
   local value="${1-}"
-  [ -n "$value" ] || __throwValidate "blank" || return $?
-  value=$(realPath "$value") || __throwValidate "realPath failed" || return $?
-  [ -d "$value" ] || __throwValidate || return $?
+  [ -n "$value" ] || _validateThrow "blank" || return $?
+  value=$(realPath "$value") || _validateThrow "realPath failed" || return $?
+  [ -d "$value" ] || _validateThrow || return $?
   printf "%s\n" "${value%/}"
 }
 
 # A real path for a file
 __validateTypeRealFile() {
   local value="${1-}"
-  [ -n "$value" ] || __throwValidate "blank" || return $?
-  value=$(realPath "$value") || __throwValidate "realPath failed" || return $?
+  [ -n "$value" ] || _validateThrow "blank" || return $?
+  value=$(realPath "$value") || _validateThrow "realPath failed" || return $?
   printf "%s\n" "$value"
 }
 
 # A path which is on a remote system
 __validateTypeRemoteDirectory() {
-  [ "${1:0:1}" = "/" ] || __throwValidate "begins with a slash" || return $?
+  [ "${1:0:1}" = "/" ] || _validateThrow "begins with a slash" || return $?
   printf "%s\n" "${1%/}"
 }
 
@@ -294,14 +401,6 @@ __validateTypeSecret() {
 
 # An URL
 __validateTypeURL() {
-  urlValid "${1-}" || __throwValidate || return $?
+  urlValid "${1-}" || _validateThrow || return $?
   printf "%s\n" "${1-}"
-}
-
-# output arguments to stderr and return the argument error
-# Return: 2
-# Exit Code: 2 - Argument error
-__throwValidate() {
-  printf -- "%s\n" "$@" 1>&2
-  return 2
 }

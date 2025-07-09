@@ -159,6 +159,9 @@ ___apkAvailableList() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
+#
+# See: https://pkgs.alpinelinux.org/contents?file=sha1sum
+#
 __apkPackageMapping() {
   case "$1" in
   "python")
@@ -175,6 +178,9 @@ __apkPackageMapping() {
     ;;
   "mysql-server")
     printf "%s\n" mysql-server
+    ;;
+  "sha1sum")
+    printf "%s\n" "coreutils"
     ;;
   *)
     printf "%s\n" "$1"

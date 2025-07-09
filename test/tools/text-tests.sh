@@ -156,9 +156,9 @@ testQuoteSedPattern() {
   assertEquals '\\' "$(quoteSedPattern '\')" || return $?
   assertEquals "\\/" "$(quoteSedPattern "/")" || return $?
   # Fails in code somewhere
-  IFS="" read -d "" -r value < <(__testQuoteSedPatternData)
+  value="$(__testQuoteSedPatternData)"
 
-  mappedValue="$(name="$value" mapEnvironment <<<"{name}")"$'\n'
+  mappedValue="$(name="$value" mapEnvironment <<<"{name}")"
   assertEquals "$mappedValue" "$value" || return $?
 }
 
@@ -172,7 +172,7 @@ testQuoteSedReplacement() {
   assertEquals "\\/" "$(quoteSedReplacement "/")" || return $?
   assertEquals "/" "$(quoteSedReplacement "/" "~")" || return $?
   # Fails in code somewhere
-  read -d "" -r value < <(__testQuoteSedPatternData)
+  value="$(__testQuoteSedPatternData)"
 
   mappedValue="$(printf %s "{name}" | name=$value mapEnvironment)"
   assertEquals "$mappedValue" "$value" || return $?
