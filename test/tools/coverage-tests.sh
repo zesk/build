@@ -50,12 +50,11 @@ testBuildFunctionsCoverage() {
 
   local function missing=()
   while read -r function; do
-    statusMessage decorate info "Looking at $function"
+    # statusMessage decorate info "Looking at $function"
     if grep -q -e "^$(quoteGrepPattern "$function")" <"$deprecatedFunctions"; then
       statusMessage decorate info "Deprecated function: $(decorate code "$function")"
     else
       testFiles=$(find "$home/test/tools" -type f -name '*.sh' -print0 | xargs -0 grep -l "$(quoteGrepPattern "$function")" | fileLineCount) || :
-      echo "$function -> $testFiles"
       if [ "$testFiles" -eq 0 ]; then
         if [ "$(date +%s)" -gt "$(dateToTimestamp '2025-08-01')" ]; then
           missing+=("$function")

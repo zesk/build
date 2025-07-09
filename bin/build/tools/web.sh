@@ -59,6 +59,8 @@ urlContentLength() {
   local url remoteSize
   local tempFile
 
+  tempFile=$(fileTemporaryName "$usage") || return $?
+
   # _IDENTICAL_ argument-case-header 5
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
@@ -72,15 +74,17 @@ urlContentLength() {
       ;;
     *)
       url=$(usageArgumentURL "$usage" "url" "$1") || return $?
-      tempFile=$(fileTemporaryName "$usage") || return $?
       __catchEnvironment "$usage" curl -s -I "$url" >"$tempFile" || _clean $? "$tempFile" || return $?
-      remoteSize=$(grep -q -i 'Content-Length' "$tempFile" | awk '{ print $2 }') || __throwEnvironment "$usage" "Remote URL did not return Content-Length" || return $?
+      remoteSize=$(grep -i 'Content-Length' "$tempFile" | awk '{ print $2 }') || __throwEnvironment "$usage" "Remote URL did not return Content-Length" || _clean $? "$tempFile" || return $?
+      remoteSize="$(trimSpace "$remoteSize")"
       printf "%d\n" $((remoteSize + 0))
       ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
     shift
   done
+
+  __catchEnvironment "$usage" rm -f "$tempFile" || return $?
 }
 _urlContentLength() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
