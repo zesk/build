@@ -231,7 +231,7 @@ On a "2x" machine:
 - fileReverseLines
 - filesRename
 - findUncaughtAssertions
-- getFromPipelineYML
+- bitbucketGetVariable
 - gitBranchExists
 - gitBranchExistsLocal
 - gitBranchExistsRemote

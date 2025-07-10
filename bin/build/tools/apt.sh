@@ -347,6 +347,7 @@ __aptStandardPackages() {
 }
 
 # See: brew.sh apk.sh apt.sh macports.sh
+# See: https://packages.ubuntu.com/search?mode=filename&section=all&arch=any&searchon=contents&keywords=sha1sum
 __aptPackageMapping() {
   case "$1" in
   "python")
