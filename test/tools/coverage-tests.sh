@@ -138,10 +138,7 @@ testBuildFunctionsHelpCoverage() {
         continue
       fi
     fi
-    if [ "${fun#test}" != "$fun" ]; then
-      continue
-    fi
-    if [ "${fun#_}" != "$fun" ]; then
+    if [ "${fun#test}" != "$fun" ] || [ "${fun#_}" != "$fun" ] || [ "${fun#usageArgument}" != "$fun" ]; then
       continue
     fi
     if grep -q -e "^$(quoteGrepPattern "$fun")$" "$deprecatedFunctions"; then
@@ -156,7 +153,6 @@ testBuildFunctionsHelpCoverage() {
         # "$fun" --help | dumpPipe "$fun --help"
         if ! assertExitCode --stdout-match "$fun" --stdout-match "Usage" 0 "$fun" --help; then
           missing+=("$fun")
-          break
         else
           if [ "${#missing[@]}" -eq 0 ]; then
             __catchEnvironment "$usage" printf "%s\n" "$fun" >"$lastPassedCache" || return $?

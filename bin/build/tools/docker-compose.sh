@@ -39,6 +39,7 @@ _dockerComposeInstall() {
 #
 dockerComposeUninstall() {
   local usage="_${FUNCNAME[0]}"
+  [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
   local quietLog start name="docker-compose"
 
   if ! whichExists "$name"; then

@@ -428,8 +428,7 @@ __bashPromptRemove() {
 bashPromptColorsFormat() {
   local index color colors=()
   local all=()
-
-  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return 0
+  [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
   while read -r color; do all+=("$color"); done < <(decorations)
   IFS=":" read -r -a colors <<<"$1:::::" || :
   for index in "${!colors[@]}"; do

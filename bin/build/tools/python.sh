@@ -39,12 +39,12 @@ pythonUninstall() {
 # Utility to install python dependencies via pip
 # Usage: {fn} pipPackage [ ... additional packages ]
 _pipInstall() {
-  local usage="${1-}"
+  local usage="${1-}" && shift
   local quietLog start name
 
-  shift
   name="$(usageArgumentString "$usage" "name" "${1-}")" || return $?
   shift
+  [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
   if whichExists "$name"; then
     return 0
   fi
@@ -80,4 +80,3 @@ _pipUninstall() {
   ! whichExists "$name" || __throwEnvironment "$usage" "$name was still found after uninstall" || return $?
   statusMessage --last timingReport "$start" "Uninstalled $name in"
 }
-

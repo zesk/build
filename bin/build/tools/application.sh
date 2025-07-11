@@ -125,7 +125,7 @@ applicationHomeAliases() {
     shift
   done
   [ -n "$goAlias" ] || goAlias="g"
-  [ -n "$setAlias" ] || goAlias="G"
+  [ -n "$setAlias" ] || setAlias="G"
 
   # shellcheck disable=SC2139
   alias "$goAlias"='applicationHome --go' || __throwEnvironment "$usage" "alias $goAlias failed" || return $?

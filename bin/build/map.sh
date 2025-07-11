@@ -455,7 +455,7 @@ decorate() {
   [ "$what" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
   shift && [ -n "$what" ] || __catchArgument "$usage" "Requires at least one argument: \"$*\"" || return $?
 
-  if ! style=$(_decorateStyle "$what"); then
+  if ! style=$(__decorateStyle "$what"); then
     local extend func="${what/-/_}"
     extend="__decorateExtension$(printf "%s" "${func:0:1}" | awk '{print toupper($0)}')${func:1}"
     # When this next line calls `__catchArgument` it results in an infinite loop, so don't - use _argument
@@ -484,7 +484,7 @@ _decorateInitialize() {
 # dp may be a dash for simpler parsing - dp=lp when dp is blank or dash
 # text is optional, lp is required to be non-blank
 # Requires: isArray __decorateStyles
-_decorateStyle() {
+__decorateStyle() {
   local original style pattern=$'\n'"$1="
 
   _decorateInitialize || return $?

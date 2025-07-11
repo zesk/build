@@ -28,7 +28,7 @@ decorateStyle() {
       else
         export __BUILD_COLORS
         newFormat=$(usageArgumentString "$usage" "newFormat" "$1") || return $?
-        if oldFormat=$(_decorateStyle "$style"); then
+        if oldFormat=$(__decorateStyle "$style"); then
           __BUILD_COLORS="$(_decorateStyleReplace "$__BUILD_COLORS" "$style" "$newFormat")"
         else
           __BUILD_COLORS="$__BUILD_COLORS$style=$newFormat"$'\n'
@@ -40,11 +40,15 @@ decorateStyle() {
     shift
   done
   if [ -n "$style" ]; then
-    if ! oldFormat=$(_decorateStyle "$style"); then
+    if ! oldFormat=$(__decorateStyle "$style"); then
       return 1
     fi
     printf "%s\n" "$oldFormat"
   fi
+}
+_decorateStyle() {
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Argument: styleList - String. Required. Structure to modify.

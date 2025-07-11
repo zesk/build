@@ -523,6 +523,7 @@ _boxedHeading() {
 
 # Replace an absolute path prefix with an icon if it matches HOME or BUILD_HOME
 decoratePath() {
+  [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
   export HOME BUILD_HOME
   while [ $# -gt 0 ]; do
     local display="$1"
@@ -531,4 +532,8 @@ decoratePath() {
     printf "%s\n" "$display"
     shift
   done
+}
+_decoratePath() {
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

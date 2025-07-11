@@ -489,15 +489,8 @@ _daemontoolsRestart() {
 daemontoolsManager() {
   local usage="_${FUNCNAME[0]}"
 
-  __catchEnvironment "$usage" buildEnvironmentLoad DAEMONTOOLS_HOME || return $?
-
   local services=() files=() actions=()
   local currentActions=("restart") intervalSeconds=10 chirpSeconds=0 statFile="" serviceHome="${DAEMONTOOLS_HOME-}" svcBin statBin service="" file=""
-
-  usageRequireBinary "$usage" svc svstat || return $?
-
-  svcBin=$(__catchEnvironment "$usage" which svc) || return $?
-  statBin=$(__catchEnvironment "$usage" which svstat) || return $?
 
   # _IDENTICAL_ argument-case-header 5
   local __saved=("$@") __count=$#
@@ -552,6 +545,13 @@ daemontoolsManager() {
     esac
     shift
   done
+
+  __catchEnvironment "$usage" buildEnvironmentLoad DAEMONTOOLS_HOME || return $?
+
+  usageRequireBinary "$usage" svc svstat || return $?
+
+  svcBin=$(__catchEnvironment "$usage" which svc) || return $?
+  statBin=$(__catchEnvironment "$usage" which svstat) || return $?
 
   [ "${#services[@]}" -gt 0 ] || __throwArgument "$usage" "Need at least one service and file pair" || return $?
 

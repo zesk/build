@@ -304,11 +304,11 @@ realPath() {
   fi
 }
 
-# Usage: {fn} path ...
 # Argument: path ... - Required. File. One or more paths to simplify
 # Normalizes segments of `/./` and `/../` in a path without using `realPath`
 # Removes dot and dot-dot paths from a path correctly
 directoryPathSimplify() {
+  [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
   local path elements=() segment dot=0 result IFS="/"
   while [ $# -gt 0 ]; do
     path="$1"
@@ -329,6 +329,10 @@ directoryPathSimplify() {
     shift
   done
 }
+_directoryPathSimplify() {
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
 
 # Outputs value of virtual memory allocated for a process, value is in kilobytes
 # Usage: {fn} file
@@ -336,8 +340,10 @@ directoryPathSimplify() {
 # Exit Code: 0 - Success
 # Exit Code: 1 - Environment error
 fileSize() {
-  local size opts
   local usage="_${FUNCNAME[0]}"
+  [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
+
+  local size opts
 
   export OSTYPE
   __catchEnvironment "$usage" buildEnvironmentLoad OSTYPE || return $?

@@ -628,7 +628,9 @@ plural() {
 lowercase() {
   local usage="_${FUNCNAME[0]}"
   [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
+  [ "${1-}" != "--" ] || shift
   while [ $# -gt 0 ]; do
+
     if [ -n "$1" ]; then
       printf "%s\n" "$1" | tr '[:upper:]' '[:lower:]'
     fi
@@ -649,6 +651,7 @@ _lowercase() {
 uppercase() {
   local usage="_${FUNCNAME[0]}"
   [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
+  [ "${1-}" != "--" ] || shift
   while [ $# -gt 0 ]; do
     if [ -n "$1" ]; then
       printf "%s\n" "$1" | tr '[:lower:]' '[:upper:]'

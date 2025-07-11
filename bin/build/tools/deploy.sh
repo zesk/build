@@ -24,7 +24,8 @@
 #
 deployApplicationVersion() {
   local usage="_${FUNCNAME[0]}"
-  local p=$1 value
+  [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
+  local p="${1-}" value
   local tryVariables=(APPLICATION_ID APPLICATION_TAG)
   local deployFile
 
@@ -66,6 +67,7 @@ _deployApplicationVersion() {
 # Environment: BUILD_TARGET
 deployPackageName() {
   local usage="_${FUNCNAME[0]}"
+  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return 0
 
   export BUILD_TARGET
   __catchEnvironment "$usage" buildEnvironmentLoad BUILD_TARGET || return $?
@@ -73,6 +75,7 @@ deployPackageName() {
   printf "%s\n" "${BUILD_TARGET-}"
 }
 _deployPackageName() {
+  true || deployPackageName --help
   # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
@@ -88,6 +91,7 @@ deployHasVersion() {
   local usage="_${FUNCNAME[0]}"
   local deployHome versionName targetPackage
 
+  [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
   deployHome=$(usageArgumentDirectory "$usage" deployHome "${1-}") || return $?
   versionName="${2-}"
   [ -n "$versionName" ] || __throwArgument "$usage" "blank versionName" || return $?
@@ -109,10 +113,11 @@ _applicationIdLink() {
   local usageFunction fileSuffix deployHome versionName targetPackage
   usageFunction="${1-}"
   fileSuffix="${2-}"
+  shift 2
   [ -n "$fileSuffix" ] || __throwArgument "$usageFunction" "Internal fileSuffix is blank" || return $?
-  deployHome="$(usageArgumentDirectory "$usageFunction" deployHome "${3-}")" || return $?
-  versionName="${4-}"
-  [ -n "$versionName" ] || __throwArgument "$usageFunction" "Version name is required to be non-blank" || return $?
+  [ "${1-}" != "--help" ] || __help "$usageFunction" "$@" || return 0
+  deployHome="$(usageArgumentDirectory "$usageFunction" deployHome "${1-}")" && shift || return $?
+  versionName=$(usageArgumentString "$usageFunction" "versionName" "${1-}") && shift || return $?
   [ -f "$deployHome/$versionName.$fileSuffix" ] && cat "$deployHome/$versionName.$fileSuffix"
 }
 
@@ -152,11 +157,10 @@ _deployNextVersion() {
 # Deploy current application to target path
 #
 deployMove() {
+  local usage="_${FUNCNAME[0]}"
+
+  [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
   local applicationPath newApplicationSource
-  local usage
-
-  usage="_${FUNCNAME[0]}"
-
   applicationPath=$(usageArgumentDirectory "$usage" applicationPath "${1-}") || return $?
   shift || __throwArgument "$usage" "missing argument" || return $?
   newApplicationSource=$(pwd) || __throwEnvironment "$usage" "Unable to get pwd" || return $?
@@ -190,9 +194,11 @@ deployLink() {
   local usage="_${FUNCNAME[0]}"
 
   local applicationLinkPath="" currentApplicationHome=""
+  # _IDENTICAL_ argument-case-header 5
+  local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
-    local argument="$1"
-    [ -n "$argument" ] || __throwArgument "$usage" "blank argument" || return $?
+    local argument="$1" __index=$((__count - $# + 1))
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ --help 4
     --help)
@@ -218,12 +224,15 @@ deployLink() {
           decorate warning "currentApplicationHome $currentApplicationHome points to a non-existent directory"
         fi
       else
-        __throwArgument "$usage" "unknown argument $(decorate value "$argument")" || return $?
+        # _IDENTICAL_ argumentUnknown 1
+        __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
       fi
       ;;
     esac
-    shift || :
+    # _IDENTICAL_ argument-esac-shift 1
+    shift
   done
+
   if [ -z "$applicationLinkPath" ]; then
     __catchArgument "$usage" "Missing applicationLinkPath" || return $?
   fi
@@ -247,17 +256,16 @@ _deployLink() {
 # Automatically convert application deployments using non-links to links.
 #
 deployMigrateDirectoryToLink() {
-  local start deployHome applicationPath tempAppLink appVersion argument
-  local usage
-
-  usage="_${FUNCNAME[0]}"
+  local start
+  local usage="_${FUNCNAME[0]}"
 
   start=$(timingStart) || :
-  deployHome=
-  applicationPath=
+  local deployHome="" applicationPath=""
+  # _IDENTICAL_ argument-case-header 5
+  local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
-    argument="$1"
-    [ -n "$argument" ] || __throwArgument "$usage" "blank argument" || return $?
+    local argument="$1" __index=$((__count - $# + 1))
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ --help 4
     --help)
@@ -276,6 +284,8 @@ deployMigrateDirectoryToLink() {
       ;;
     esac
   done
+
+  local tempAppLink appVersion
   appVersion=$(deployApplicationVersion "$applicationPath") || __throwEnvironment "$usage" "No application deployment version" || return $?
   if [ -L "$applicationPath" ]; then
     printf "%s %s %s\n" "$(decorate code "$applicationPath")" "$(decorate success "is already a link to")" "$(decorate red "$appVersion")"

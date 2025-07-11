@@ -29,35 +29,15 @@
 # Exit Code: 2 - Argument error
 documentationBuild() {
   local usage="_${FUNCNAME[0]}"
-  local cacheDirectory start indexArgs=()
-  local functionLinkPattern fileLinkPattern documentationTemplate
+
   local home
-
-  export BUILD_COLORS_MODE BUILD_COMPANY BUILD_COMPANY_LINK BUILD_HOME APPLICATION_NAME APPLICATION_CODE
-
-  BUILD_COLORS_MODE=$(consoleConfigureColorMode) || :
-
-  __catchEnvironment "$usage" buildEnvironmentLoad APPLICATION_CODE APPLICATION_NAME BUILD_COMPANY BUILD_COMPANY_LINK || return $?
-
   home=$(__catchEnvironment "$usage" buildHome) || return $?
 
-  __pcregrepInstall
+  local company="" applicationName="" docArgs=() companyLink="" applicationName=""
 
-  local start
-  start=$(timingStart) || __throwEnvironment "$usage" timingStart || return $?
-
-  local seeFunction seeFile seePrefix
-
-  cacheDirectory="$(__catchEnvironment "$usage" buildCacheDirectory ".${FUNCNAME[0]}/${APPLICATION_CODE-default}/")" || return $?
-  cacheDirectory=$(__catchEnvironment "$usage" directoryRequire "$cacheDirectory") || return $?
-  seeFunction=$(__catchEnvironment "$usage" documentationTemplate seeFunction) || return $?
-  seeFile=$(__catchEnvironment "$usage" documentationTemplate seeFile) || return $?
-  seePrefix="./docs"
-
-  local company=${BUILD_COMPANY-} companyLink=${BUILD_COMPANY_LINK-} applicationName="${APPLICATION_NAME-}"
   local sourcePaths=() cleanFlag=false
   local targetPath="" actionFlag="" unlinkedTemplate="" unlinkedTarget="" actionFlag="" verbose=false pageTemplate=""
-  local docArgs=() templatePath="" company="" applicationName="" functionTemplate=""
+  local docArgs=() indexArgs=() templatePath="" company="" applicationName="" functionTemplate="" seePrefix="-"
 
   # Default option settings
   while [ $# -gt 0 ]; do
@@ -158,6 +138,44 @@ documentationBuild() {
     esac
     shift
   done
+
+  export BUILD_COLORS_MODE BUILD_COMPANY BUILD_COMPANY_LINK BUILD_HOME APPLICATION_NAME APPLICATION_CODE
+
+  BUILD_COLORS_MODE=$(consoleConfigureColorMode) || :
+
+  __catchEnvironment "$usage" buildEnvironmentLoad APPLICATION_CODE APPLICATION_NAME BUILD_COMPANY BUILD_COMPANY_LINK || return $?
+
+  #
+  # Defaults
+  #
+
+  [ -n "$companyLink" ] || companyLink="${BUILD_COMPANY_LINK-}"
+  [ -n "$applicationName" ] || applicationName="${APPLICATION_NAME-}"
+  [ "$seePrefix" != '-' ] || seePrefix="./docs"
+
+  #
+  # Check requirements
+  #
+
+  [ -z "$companyLink" ] || __throwArgument "$usage" "Need --company-link" || return $?
+  [ -z "$applicationName" ] || __throwArgument "$usage" "Need --name" || return $?
+  [ -n "$functionTemplate" ] || __throwArgument "$usage" "--function-template required" || return $?
+  [ -n "$pageTemplate" ] || __throwArgument "$usage" "--page-template required" || return $?
+  [ -n "$targetPath" ] || __throwArgument "$usage" "--target required" || return $?
+  [ 0 -lt "${#sourcePaths[@]}" ] || __throwArgument "$usage" "--source required" || return $?
+
+  local start
+  start=$(timingStart) || __throwEnvironment "$usage" timingStart || return $?
+
+  __catchEnvironment "$usage" __pcregrepInstall || return $?
+
+  local cacheDirectory seeFunction seeFile seePrefix
+
+  cacheDirectory="$(__catchEnvironment "$usage" buildCacheDirectory ".${FUNCNAME[0]}/${APPLICATION_CODE-default}/")" || return $?
+  cacheDirectory=$(__catchEnvironment "$usage" directoryRequire "$cacheDirectory") || return $?
+  seeFunction=$(__catchEnvironment "$usage" documentationTemplate seeFunction) || return $?
+  seeFile=$(__catchEnvironment "$usage" documentationTemplate seeFile) || return $?
+
   bashDebugInterruptFile
   if $cleanFlag; then
     __catchEnvironment "$usage" rm -rf "$cacheDirectory" || return $?
@@ -165,11 +183,6 @@ documentationBuild() {
     return 0
   fi
   cacheDirectory=$(directoryRequire "$cacheDirectory") || __throwEnvironment "$usage" "Unable to create $cacheDirectory" || return $?
-
-  [ -n "$functionTemplate" ] || __throwArgument "$usage" "--function-template required" || return $?
-  [ -n "$pageTemplate" ] || __throwArgument "$usage" "--page-template required" || return $?
-  [ -n "$targetPath" ] || __throwArgument "$usage" "--target required" || return $?
-  [ 0 -lt "${#sourcePaths[@]}" ] || __throwArgument "$usage" "--source required" || return $?
 
   if [ "$actionFlag" = "--unlinked-update" ]; then
     for argument in unlinkedTemplate unlinkedTarget; do
@@ -190,8 +203,9 @@ documentationBuild() {
   #
   # Update indexes with function -> documentationPath
   #
-  find "$templatePath" -type f -name '*.md' ! -path '*/__*' | while read -r documentationTemplate; do
-    __catchEnvironment "$usage" documentationIndex_LinkDocumentationPaths "$cacheDirectory" "$documentationTemplate" "$targetPath${documentationTemplate#"$templatePath"}" || return $?
+  local template
+  find "$templatePath" -type f -name '*.md' ! -path '*/__*' | while read -r template; do
+    __catchEnvironment "$usage" documentationIndex_LinkDocumentationPaths "$cacheDirectory" "$template" "$targetPath${template#"$templatePath"}" || return $?
   done
   statusMessage --last timingReport "$start" "Indexes completed in" || :
 
@@ -225,6 +239,7 @@ documentationBuild() {
   # {SEE:foo} gets linked in final documentation where it exists (rewrites file currently)
   #
   (
+    local functionLinkPattern fileLinkPattern
     __catchEnvironment "$usage" buildEnvironmentLoad BUILD_DOCUMENTATION_SOURCE_LINK_PATTERN || return $?
     functionLinkPattern=${BUILD_DOCUMENTATION_SOURCE_LINK_PATTERN-}
     # Remove line

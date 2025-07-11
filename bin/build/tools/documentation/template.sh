@@ -149,11 +149,16 @@ _buildDocumentationGenerateEnvironment() {
 
 # Get an internal template name
 documentationTemplate() {
+  [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
   local source="${BASH_SOURCE[0]%/*}"
   local template="$source/__${1-}.md"
 
   [ -f "$template" ] || _argument "No template \"${1-}\" at $template" || return $?
   printf "%s\n" "$template"
+}
+_documentationTemplate() {
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # List unlinked functions in documentation index

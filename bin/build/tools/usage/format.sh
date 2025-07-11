@@ -163,7 +163,7 @@ usageGenerator() {
     if [ -z "$(trimSpace "$line")" ]; then
       blankLine=true
     else
-      capsLine="$(lowercase "$line")"
+      capsLine="$(lowercase -- "$line")"
       if [ "${capsLine##*required}" != "$capsLine" ]; then
         labelPrefix=$labelRequiredPrefix
       else

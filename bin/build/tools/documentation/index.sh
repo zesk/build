@@ -28,8 +28,18 @@ documentationIndex_Lookup() {
 
   cacheDirectory=
   mode=settings
+  # _IDENTICAL_ argument-case-header 5
+  local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
-    case "$1" in
+    local argument="$1" __index=$((__count - $# + 1))
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
+    case "$argument" in
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+
     --file) mode="file" ;;
     --combined) mode="combined" ;;
     --settings) mode="settings" ;;
@@ -275,6 +285,7 @@ _documentationIndex_Generate() {
 # See: documentationIndex_FunctionIterator
 #
 documentationIndex_ShowUnlinked() {
+  [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
   local cacheDirectory=$1
   local functionName settingsFile
   local documentationPath documentationPathUnlinked ignore
@@ -299,6 +310,10 @@ documentationIndex_ShowUnlinked() {
     fi
   done
 }
+_documentationIndex_ShowUnlinked() {
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
 
 #
 # Set the unlinked documentation path
@@ -308,6 +323,7 @@ documentationIndex_ShowUnlinked() {
 # Argument: target - Required. String. Path to document path where unlinked functions should link.
 #
 documentationIndex_SetUnlinkedDocumentationPath() {
+  [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
   local cacheDirectory="$1" target="$2"
   local functionName settingsFile
   target="$(trimSpace "$target")"
@@ -318,6 +334,10 @@ documentationIndex_SetUnlinkedDocumentationPath() {
     fi
     printf '%s %s\n' "$functionName" "$settingsFile"
   done
+}
+_documentationIndex_SetUnlinkedDocumentationPath() {
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
@@ -333,8 +353,17 @@ documentationIndex_UnlinkedIterator() {
   local cacheDirectory
   local functionName settingsFile
   local flagUnderscore=false
+  # _IDENTICAL_ argument-case-header 5
+  local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
-    case $1 in
+    local argument="$1" __index=$((__count - $# + 1))
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
+    case "$argument" in
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
     --underscore)
       flagUnderscore=true
       ;;
@@ -379,8 +408,17 @@ documentationIndex_FunctionIterator() {
   local usage="_${FUNCNAME[0]}"
 
   local cacheDirectory="" functionIndexPath=""
+  # _IDENTICAL_ argument-case-header 5
+  local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
-    case "$1" in
+    local argument="$1" __index=$((__count - $# + 1))
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
+    case "$argument" in
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
     *)
       if [ -z "$cacheDirectory" ]; then
         cacheDirectory="$1"

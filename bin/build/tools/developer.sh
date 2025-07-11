@@ -68,6 +68,7 @@ _developerAnnounce() {
 # Undo a set of developer functions or aliases
 # stdin: List of functions and aliases to remove from the current environment
 developerUndo() {
+  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return 0
   local item
   while read -r item; do
     [ -n "$item" ] || continue
@@ -83,6 +84,10 @@ developerUndo() {
       ;;
     esac
   done
+}
+_developerUndo() {
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Track changes to the bash environment

@@ -31,6 +31,8 @@ _isAbsolutePath() {
 #
 directoryClobber() {
   local usage="_${FUNCNAME[0]}"
+  [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
+
   local source target targetPath targetName sourceStage targetBackup
 
   source=$(usageArgumentDirectory "$usage" source "$1") || return $?
@@ -202,12 +204,13 @@ _directoryRequire() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# Usage: {fn} directory
+# Argument: directory - Directory. Optional. Directory to check if empty.
 # Does a directory exist and is it empty?
 # Exit code: 2 - Directory does not exist
 # Exit code: 1 - Directory is not empty
 # Exit code: 0 - Directory is empty
 directoryIsEmpty() {
+  local usage="_${FUNCNAME[0]}"
   local argument
 
   while [ $# -gt 0 ]; do
@@ -242,6 +245,7 @@ _directoryIsEmpty() {
 # Argument: directory - String. A path to convert.
 # stdout: Relative paths, one per line
 directoryRelativePath() {
+  [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
   local relTop
   while [ $# -gt 0 ]; do
     if [ -z "$1" ]; then
@@ -253,6 +257,10 @@ directoryRelativePath() {
     printf "%s\n" "$relTop"
     shift
   done
+}
+_directoryRelativePath() {
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Usage: {fn} startingDirectory filePattern [ testExpression ... ]

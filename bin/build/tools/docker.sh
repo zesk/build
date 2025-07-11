@@ -20,6 +20,7 @@
 # Fetch the default platform for docker
 # Outputs one of: `linux/arm64`, `linux/mips64`, `linux/amd64`
 dockerPlatformDefault() {
+  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return 0
   local os=linux chip
   case "$(uname -m)" in
   *arm*) chip=arm64 ;;
@@ -29,12 +30,18 @@ dockerPlatformDefault() {
   esac
   printf -- "%s/%s" "$os" "$chip"
 }
+_dockerPlatformDefault() {
+  true || dockerPlatformDefault --help
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
 
 #
 # Debugging, dumps the proc1file which is used to figure out if we
 # are insideDocker or not; use this to confirm platform implementation
 #
 dumpDockerTestFile() {
+  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return 0
   local proc1File=/proc/1/sched
 
   if [ -f "$proc1File" ]; then
@@ -43,6 +50,11 @@ dumpDockerTestFile() {
   else
     decorate warning "Missing $proc1File"
   fi
+}
+_dumpDockerTestFile() {
+  true || dumpDockerTestFile --help
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Are we inside a docker container right now?
@@ -54,6 +66,7 @@ dumpDockerTestFile() {
 # Checked: 2025-07-09
 # TODO: Write a test to check this date every oh, say, 3 months
 insideDocker() {
+  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return 0
   if [ ! -f /proc/1/cmdline ]; then
     # Not inside
     return 1
@@ -64,6 +77,11 @@ insideDocker() {
   fi
   # inside
   return 0
+}
+_insideDocker() {
+  true || insideDocker --help
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Ensure an environment file is compatible with non-quoted docker environment files
@@ -162,8 +180,14 @@ _anyEnvToBashEnv() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
+# List the files which would be included in the docker image
 dockerListContext() {
+  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return 0
   printf 'FROM scratch\nCOPY . /\n' | DOCKER_BUILDKIT=1 docker build -q -f- -o- . | tar t
+}
+_dockerListContext() {
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
@@ -485,13 +509,17 @@ _dockerVolumeExists() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# Does a docker volume exist with name?
-# Argument: name - String. Required.
+# Delete a docker volume
+# Argument: name - String. Required. Volume name to delete.
 dockerVolumeDelete() {
   local usage="_${FUNCNAME[0]}"
   __help "$usage" "$@" || return 0
   [ $# -eq 1 ] || __throwArgument "$usage" "Requires a volume name" || return $?
   docker volume ls --format json | jq .Name | grep -q "$1"
+}
+_dockerVolumeDelete() {
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 __dockerVolumeDeleteInteractive() {
