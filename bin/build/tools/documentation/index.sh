@@ -343,16 +343,14 @@ _documentationIndex_SetUnlinkedDocumentationPath() {
 #
 # List of functions which are not linked to anywhere in the documentation index
 #
-# Usage: {fn} cacheDirectory
 # Argument: cacheDirectory - Required. Directory. Index cache directory.
 # Argument: --underscore - Flag. Optional. List underscore functions.
-# Exit Code: 0 - The settings file is unlinked within the documentation (not defined anywhere)
-# Exit Code: 1 - The settings file is linked within the documentation
-#
 documentationIndex_UnlinkedIterator() {
-  local cacheDirectory
-  local functionName settingsFile
+  local usage="_${FUNCNAME[0]}"
+
+  local cacheDirectory=""
   local flagUnderscore=false
+
   # _IDENTICAL_ argument-case-header 5
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
@@ -376,6 +374,10 @@ documentationIndex_UnlinkedIterator() {
     shift
   done
 
+  [ -z "$cacheDirectory" ] || __throwArgument "$usage" "Need cacheDirectory" || return $?
+
+  local functionName settingsFile
+
   documentationIndex_FunctionIterator "$cacheDirectory" | while read -r functionName settingsFile; do
     # Skip functions beginning with underscores always
     if ! $flagUnderscore && [ "$functionName" != "${functionName#_}" ]; then
@@ -388,7 +390,7 @@ documentationIndex_UnlinkedIterator() {
     fi
   done
 }
-_documentationIndex_UnlinkedIteratorUsage() {
+_documentationIndex_UnlinkedIterator() {
   # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

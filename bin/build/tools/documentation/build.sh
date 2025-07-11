@@ -259,11 +259,13 @@ __documentationBuild() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
+# Get the cache directory for the documentation
 # Argument: suffix - String. Optional. Directory suffix - created if does not exist.
 documentationBuildCache() {
+  [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
   local code
-  code=$(buildEnvironmentGet "APPLICATION_CODE") || return $?
-  buildCacheDirectory ".documentationBuild/${code-default}/${1-}"
+  code=$(__catchEnvironment "$usage" buildEnvironmentGet "APPLICATION_CODE") || return $?
+  __catchEnvironment "$usage" buildCacheDirectory ".documentationBuild/${code-default}/${1-}" || return $?
 }
 _documentationBuildCache() {
   # _IDENTICAL_ usageDocument 1

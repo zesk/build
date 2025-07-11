@@ -229,36 +229,55 @@ replaceFirstPattern() {
 }
 
 # Trim whitespace from beginning and end of a stream
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
 # Explained:
 # 1. `-e :a`: Creates a label `a` for looping
 # 2. `/./,$!d` deletes all lines until the first non-blank line is found (`/./` matches any non-blank line).
 # 3. `/./!{N;ba}`: For blank lines at the end, it appends lines to the pattern space (`N`) until a non-blank line is found, then loops back to label `a`.
 trimBoth() {
+  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return 0
   sed -e :a -e '/./,$!d' -e '/^\n*$/{$d;N;ba' -e '}'
 }
+_trimBoth() {
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
 
-#
-# Usage: {fn}
 # Removes any blank lines from the beginning of a stream
-#
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
 trimHead() {
+  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return 0
   sed -e "/./!d" -e :r -e n -e br
 }
-
-#
-# Usage: {fn}
-# Removes any blank lines from the end of a stream
-#
-trimTail() {
-  sed -e :a -e '/^\n*$/{$d;N;ba' -e '}'
+_trimHead() {
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-#
-# Usage: {fn}
+# Removes any blank lines from the end of a stream
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
+trimTail() {
+  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return 0
+  sed -e :a -e '/^\n*$/{$d;N;ba' -e '}'
+}
+_trimTail() {
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
 # Ensures blank lines are singular
-#
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
 singleBlankLines() {
+  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return 0
   sed '/^$/N;/^\n$/D'
+}
+_singleBlankLines() {
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
@@ -338,6 +357,7 @@ inArray() {
 # Summary: Find whether a substring exists in one or more strings
 # Does needle exist as a substring of haystack?
 stringContains() {
+  [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
   local haystack="${1-}"
 
   [ -n "$haystack" ] || return 1
@@ -350,6 +370,10 @@ stringContains() {
   done
   return 1
 }
+_stringContains() {
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
 
 # Usage: {fn} haystack needle ...
 # Argument: haystack - Required. String. String to search.
@@ -359,6 +383,7 @@ stringContains() {
 # Summary: Find whether a substring exists in one or more strings
 # Does needle exist as a substring of haystack?
 stringContainsInsensitive() {
+  [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
   local haystack="${1-}"
 
   [ -n "$haystack" ] || return 1
@@ -373,6 +398,10 @@ stringContainsInsensitive() {
   done
   return 1
 }
+_stringContainsInsensitive() {
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
 
 # Usage: {fn} text prefixText ...
 # Argument: text - Optional. String. String to match.
@@ -381,9 +410,9 @@ stringContainsInsensitive() {
 # Does text have one or more prefixes?
 beginsWith() {
   local usage="_${FUNCNAME[0]}"
-  local text="${1-}"
-
   [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
+
+  local text="${1-}"
   [ -n "$text" ] || __throwArgument "$usage" "Empty text" || return $?
 
   shift
@@ -412,8 +441,8 @@ _beginsWith() {
 #
 isSubstring() {
   local usage="_${FUNCNAME[0]}"
-  local needle=${1-}
   [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
+  local needle=${1-}
   shift || return 1
   for haystack; do
     [ "${haystack#*"$needle"}" = "$haystack" ] || return 0
@@ -438,9 +467,10 @@ _isSubstring() {
 #
 isSubstringInsensitive() {
   local usage="_${FUNCNAME[0]}"
+  [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
+
   local element arrayElement
 
-  [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
   element="$(lowercase "${1-}")"
   [ -n "$element" ] || __throwArgument "$usage" "needle is blank" || return $?
   shift || return 1

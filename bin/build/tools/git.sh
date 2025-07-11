@@ -176,7 +176,12 @@ _veeGitTag() {
 # usually have to `git push --force`
 #
 gitRemoveFileFromHistory() {
+  [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
   git filter-branch --index-filter "git rm -rf --cached --ignore-unmatch $1" HEAD
+}
+_gitRemoveFileFromHistory() {
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
@@ -188,7 +193,13 @@ gitRemoveFileFromHistory() {
 # Credit: Chris Johnsen
 #
 gitRepositoryChanged() {
+  [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
   ! git diff-index --quiet HEAD 2>/dev/null
+}
+_gitRepositoryChanged() {
+  true || gitRepositoryChanged --help
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
@@ -201,7 +212,12 @@ gitRepositoryChanged() {
 # Credit: Chris Johnsen
 #
 gitShowChanges() {
+  [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
   git diff-index --name-only HEAD
+}
+_gitShowChanges() {
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
@@ -225,7 +241,12 @@ gitShowChanges() {
 # Credit: Chris Johnsen
 #
 gitShowStatus() {
+  [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
   git diff-index --name-status "$@" HEAD
+}
+_gitShowStatus() {
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
@@ -239,7 +260,12 @@ gitShowStatus() {
 # Exit Code: 1 - We are NOT, semantically, inside a git hook
 #
 gitInsideHook() {
+  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return 0
   [ -n "${GIT_EXEC_PATH-}" ] && [ -n "${GIT_INDEX_FILE-}" ]
+}
+_gitInsideHook() {
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
@@ -247,6 +273,7 @@ gitInsideHook() {
 # Parses `user@host:path/project.git` and extracts `host`
 #
 gitRemoteHosts() {
+  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return 0
   local remoteUrl host
   while read -r remoteUrl; do
     host=$(urlParseItem host "$remoteUrl") || host=$(urlParseItem host "git://$remoteUrl") || __throwArgument "$usage" "Unable to extract host from \"$remoteUrl\"" || return $?
@@ -381,7 +408,9 @@ _gitTagVersion() {
 # Finds `.git` directory above or at `startingDirectory`
 # See: findFileHome
 gitFindHome() {
-  __directoryParent "_${FUNCNAME[0]}" --pattern ".git" "$@"
+  local usage="_${FUNCNAME[0]}"
+  [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
+  __directoryParent "$usage" --pattern ".git" "$@"
 }
 _gitFindHome() {
   # _IDENTICAL_ usageDocument 1
@@ -604,7 +633,7 @@ _gitMainly() {
 # Get the commit hash
 gitCommitHash() {
   local usage="_${FUNCNAME[0]}"
-  [ $# -eq 0 ] || __throwArgument "$usage" "No arguments allowed" || return $?
+  [ $# -eq 0 ] || __help --only "$usage" "$@" || return 0
   __catchEnvironment "$usage" git rev-parse --short HEAD || return $?
 }
 _gitCommitHash() {
@@ -617,7 +646,7 @@ _gitCommitHash() {
 #
 gitCurrentBranch() {
   local usage="_${FUNCNAME[0]}"
-
+  [ $# -eq 0 ] || __help --only "$usage" "$@" || return 0
   # git rev-parse --abbrev-ref HEAD
   __catchEnvironment "$usage" git symbolic-ref --short HEAD || return $?
 }
@@ -630,12 +659,14 @@ _gitCurrentBranch() {
 # May need to `git pull --tags`, or no tags exist.
 gitHasAnyRefs() {
   local usage="_${FUNCNAME[0]}"
+  [ $# -eq 0 ] || __help --only "$usage" "$@" || return 0
   local count
 
   count=$(__catchEnvironment "$usage" git show-ref | grep -c refs/tags) || return $?
   [ $((0 + count)) -gt 0 ]
 }
 _gitHasAnyRefs() {
+  true || gitHasAnyRefs --help
   # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
@@ -911,6 +942,7 @@ gitBranchExists() {
 
   [ $# -gt 0 ] || __throwArgument "$usage" "Requires at least one branch name" || return $?
   while [ $# -gt 0 ]; do
+    [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
     if ! gitBranchExistsLocal "$1" && ! gitBranchExistsRemote "$1"; then
       return 1
     fi
@@ -933,6 +965,7 @@ gitBranchExistsLocal() {
 
   [ $# -gt 0 ] || __throwArgument "$usage" "Requires at least one branch name" || return $?
   while [ $# -gt 0 ]; do
+    [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
     branch=$(__catchEnvironment "$usage" git branch --list "$1") || return $?
     [ -n "$branch" ] || return 1
     shift
@@ -959,6 +992,7 @@ gitBranchExistsRemote() {
 
   [ $# -gt 0 ] || __throwArgument "$usage" "Requires at least one branch name" || return $?
   while [ $# -gt 0 ]; do
+    [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
     branch=$(__catchEnvironment "$usage" git ls-remote --heads "$GIT_REMOTE" "$1") || return $?
     [ -n "$branch" ] || return 1
     shift
@@ -980,6 +1014,7 @@ _gitBranchExistsRemote() {
 #
 gitBranchify() {
   local usage="_${FUNCNAME[0]}"
+  [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
   local version user format branchName currentBranch
 
   export GIT_BRANCH_FORMAT GIT_REMOTE

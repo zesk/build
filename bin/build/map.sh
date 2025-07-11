@@ -169,16 +169,22 @@ _quoteSedReplacement() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# IDENTICAL environmentVariables 10
+# IDENTICAL environmentVariables 16
 
 # Output a list of environment variables and ignore function definitions
 #
 # both `set` and `env` output functions and this is an easy way to just output
 # exported variables
 #
-# Requires: declare grep cut
+# Requires: declare grep cut usageDocument __help
 environmentVariables() {
+  [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
   declare -px | grep 'declare -x ' | cut -f 1 -d= | cut -f 3 -d' '
+}
+_environmentVariables() {
+  true || environmentVariables --help
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 usageDocument() {
@@ -338,7 +344,7 @@ isArray() {
   return 0
 }
 
-# _IDENTICAL_ _exitString 10
+# _IDENTICAL_ exitString 10
 
 # Output the exit code as a string
 # Winner of the one-line bash award 10 years running
@@ -648,7 +654,7 @@ __executeInputSupport() {
   fi
 }
 
-# IDENTICAL fileReverseLines 12
+# IDENTICAL fileReverseLines 18
 
 # Reverses a pipe's input lines to output using an awk trick.
 #
@@ -659,7 +665,13 @@ __executeInputSupport() {
 # Credits: Eric Pement
 # Depends: awk
 fileReverseLines() {
+  [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
   awk '{a[i++]=$0} END {for (j=i-1; j>=0;) print a[j--] }'
+}
+_fileReverseLines() {
+  true || fileReverseLines --help
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # IDENTICAL mapEnvironment 81

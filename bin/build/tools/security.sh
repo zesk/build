@@ -59,7 +59,7 @@ __doEvalCheck() {
 # Check files to ensure `eval`s in code have been checked
 evalCheck() {
   local usage="_${FUNCNAME[0]}"
-
+  [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
   local fileName
   if [ $# -gt 0 ]; then
     __doEvalCheck "$usage" "$@" || return $?
@@ -69,4 +69,8 @@ evalCheck() {
       __doEvalCheck "$usage" "$fileName" || return $?
     done
   fi
+}
+_evalCheck() {
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

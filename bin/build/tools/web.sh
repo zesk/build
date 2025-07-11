@@ -93,9 +93,14 @@ _urlContentLength() {
 }
 
 # Fetch Time to First Byte and other stats
+# Argument: url - URL. Required. URL to check.
 hostTTFB() {
   __help "_${FUNCNAME[0]}" "$@" || return 0
   curl -L -s -o /dev/null -w "connect=%{time_connect}\n""ttfb: %{time_starttransfer}\n""total: %{time_total} \n" "$@"
+}
+_hostTTFB() {
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 _watchFile() {

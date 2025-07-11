@@ -13,6 +13,7 @@
 # Usage: ... - Optional. EmptyString. Additional values, when supplied, write this value as an array.
 environmentValueWrite() {
   local usage="_${FUNCNAME[0]}" name
+  [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
   local value
 
   name=$(usageArgumentEnvironmentVariable "$usage" "name" "${1-}") || return $?
@@ -40,6 +41,7 @@ _environmentValueWrite() {
 #
 environmentValueWriteArray() {
   local usage="_${FUNCNAME[0]}"
+  [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
   local name value result search="'" replace="'\''"
 
   name=$(usageArgumentEnvironmentVariable "$usage" "name" "${1-}") || return $?
@@ -79,6 +81,7 @@ __environmentValueWrite() {
 # Exit Code: 0 - If value
 environmentValueRead() {
   local usage="_${FUNCNAME[0]}"
+  [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
   local stateFile name default="${3---}" value
   stateFile=$(usageArgumentFile "$usage" "stateFile" "${1-}") || return $?
   name=$(usageArgumentEnvironmentVariable "$usage" "name" "${2-}") || return $?
@@ -104,6 +107,7 @@ _environmentValueRead() {
 # Usage: {fn} encodedValue
 environmentValueConvertArray() {
   local usage="_${FUNCNAME[0]}"
+  [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
   local value prefix='([0]="' suffix='")'
 
   value=$(__unquote "${1-}")
@@ -125,23 +129,25 @@ _environmentValueConvertArray() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-#
-#
-# Usage: {fn} variableName ...
-# variableName - String. Required. Exit status 0 if all variables names are valid ones.
-# Validates an environment variable name
+# Argument: variableName ... - String. Required. Exit status 0 if all variables names are valid ones.
+# Validates zero or more environment variable names.
 #
 # - alpha
 # - digit
 # - underscore
 #
 # First letter MUST NOT be a digit
-#
 environmentVariableNameValid() {
+  local usage="_${FUNCNAME[0]}"
   local name
   while [ $# -gt 0 ]; do
     [ -n "$1" ] || return 1
     case "$1" in
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
     *[!A-Za-z0-9_]*)
       return 1
       ;;
@@ -155,6 +161,10 @@ environmentVariableNameValid() {
     shift
   done
 }
+_environmentVariableNameValid() {
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
 
 #
 # Read an array value from a state file
@@ -164,6 +174,7 @@ environmentVariableNameValid() {
 # Outputs array elements, one per line.
 environmentValueReadArray() {
   local usage="_${FUNCNAME[0]}"
+  [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
   local stateFile="${1-}" name value
 
   name=$(usageArgumentEnvironmentVariable "$usage" "name" "${2-}") || return $?
@@ -178,13 +189,25 @@ _environmentValueReadArray() {
 # Usage: {fn} < "$stateFile"
 # List names of environment values set in a bash state file
 environmentNames() {
+  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return 0
   environmentLines | cut -f 1 -d =
+}
+_environmentNames() {
+  true || environmentNames --help
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Usage: {fn} < "$stateFile"
 # List lines of environment values set in a bash state file
 environmentLines() {
+  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return 0
   grepSafe -e "^[A-Za-z][A-Z0-9_a-z]*="
+}
+_environmentLines() {
+  true || environmentLines --help
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
@@ -479,12 +502,24 @@ _environmentFileLoad() {
 
 # List environment variables related to security
 environmentSecureVariables() {
+  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return 0
   printf -- "%s\n" PATH LD_LIBRARY USER HOME HOSTNAME LANG PS1 PS2 PS3 CWD PWD SHELL SHLVL TERM TMPDIR VISUAL EDITOR
+}
+_environmentSecureVariables() {
+  true || environmentSecureVariables --help
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # List environment variables related to application deployments
 environmentApplicationVariables() {
+  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return 0
   printf -- "%s\n" BUILD_TIMESTAMP APPLICATION_BUILD_DATE APPLICATION_VERSION APPLICATION_ID APPLICATION_TAG
+}
+_environmentApplicationVariables() {
+  true || environmentApplicationVariables --help
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
@@ -496,6 +531,7 @@ environmentApplicationVariables() {
 # Environment: APPLICATION_TAG
 environmentApplicationLoad() {
   local usage="_${FUNCNAME[0]}"
+  [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
   local hook home env
   local variables=()
 
@@ -544,30 +580,39 @@ environmentFileShow() {
   local usage="_${FUNCNAME[0]}"
   local name
   local width=40
-  local variables=()
+  local extras=()
+
+  # _IDENTICAL_ argument-case-header 5
+  local __saved=("$@") __count=$#
+  while [ $# -gt 0 ]; do
+    local argument="$1" __index=$((__count - $# + 1))
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
+    case "$argument" in
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    --)
+      shift
+      break
+      ;;
+    *)
+      extras+=("$(usageArgumentEnvironmentVariable "$usage" "variableName" "$argument")") || return $?
+      ;;
+    esac
+    shift
+  done
+  local buildEnvironment=("$@")
 
   IFS=$'\n' read -d '' -r -a variables < <(environmentApplicationVariables) || :
-  for name in "${variables[@]+"${variables[@]}"}"; do
+  for name in "${variables[@]+"${variables[@]}"}" "${extras[@]+"${extras[@]}"}"; do
     environmentVariableNameValid "$name" || __catchArgument "$usage" "Invalid environment name $(decorate code "$name")" 1>&2
   done
   export "${variables[@]}"
 
   __catchEnvironment "$usage" muzzle environmentApplicationLoad || return $?
 
-  # Will be exported to the environment file, only if defined
-  while [ $# -gt 0 ]; do
-    case $1 in
-    --)
-      shift
-      break
-      ;;
-    *)
-      variables+=("$(usageArgumentEnvironmentVariable "$usage" "variableName" "$1")") || return $?
-      ;;
-    esac
-    shift
-  done
-  local buildEnvironment=("$@")
   environmentVariableNameValid "$@" || __catchArgument "$usage" "Invalid variable name" || return $?
 
   printf -- "%s %s %s %s%s\n" "$(decorate info "Application")" "$(decorate magenta "$APPLICATION_VERSION")" "$(decorate info "on")" "$(decorate bold-red "$APPLICATION_BUILD_DATE")" "$(decorate info "...")"
@@ -678,15 +723,32 @@ _environmentFileApplicationMake() {
 environmentFileApplicationVerify() {
   local usage="_${FUNCNAME[0]}"
   local missing name requireEnvironment
-  local requireEnvironment=()
+  local requireEnvironment=() extras=()
 
-  IFS=$'\n' read -d '' -r -a requireEnvironment < <(environmentApplicationVariables) || :
+  # _IDENTICAL_ argument-case-header 5
+  local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
-    case "$1" in --) shift && break ;; *) requireEnvironment+=("$1") ;; esac
+    local argument="$1" __index=$((__count - $# + 1))
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
+    case "$argument" in
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    --)
+      shift && break
+      ;;
+    *)
+      extras+=("$1")
+      ;;
+    esac
     shift
   done
+
+  IFS=$'\n' read -d '' -r -a requireEnvironment < <(environmentApplicationVariables) || :
   missing=()
-  for name in "${requireEnvironment[@]}"; do
+  for name in "${requireEnvironment[@]}" "${extras[@]+"${extras[@]}"}"; do
     environmentVariableNameValid "$name" || __throwEnvironment "$usage" "Invalid environment name found: $(decorate code "$name")" || return $?
     if [ -z "${!name:-}" ]; then
       missing+=("$name")
@@ -753,16 +815,22 @@ _environmentAddFile() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# IDENTICAL environmentVariables 10
+# IDENTICAL environmentVariables 16
 
 # Output a list of environment variables and ignore function definitions
 #
 # both `set` and `env` output functions and this is an easy way to just output
 # exported variables
 #
-# Requires: declare grep cut
+# Requires: declare grep cut usageDocument __help
 environmentVariables() {
+  [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
   declare -px | grep 'declare -x ' | cut -f 1 -d= | cut -f 3 -d' '
+}
+_environmentVariables() {
+  true || environmentVariables --help
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Output all exported environment variables, hiding secure ones and ones prefixed with underscore.
@@ -894,6 +962,7 @@ _environmentCompile() {
 # Arguments: keepEnvironment - EnvironmentVariable. Optional. Keep this environment variable. ZeroOrMore.
 environmentClean() {
   local usage="_${FUNCNAME[0]}"
+  [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
   local done=false variable keepers=(PATH LD_LIBRARY USER HOME PS1 PS2 BUILD_HOME "$@")
   while ! $done; do
     read -r variable || done=true

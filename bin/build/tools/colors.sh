@@ -112,9 +112,15 @@ _consoleColorMode() {
 # Exit Code: 0 - Supports console animation
 # Exit Code: 1 - Does not support console animation
 hasConsoleAnimation() {
+  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return 0
   # Important: This can *not* use buildEnvironmentLoad - leads to infinite loops
   export CI
   [ -z "${CI-}" ]
+}
+_hasConsoleAnimation() {
+  true || hasConsoleAnimation --help
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Fake `hasConsoleAnimation` for testing
@@ -443,7 +449,9 @@ _statusMessage() {
 }
 
 # Quiet test for a TTY.
-# Environment: - __BUILD_HAS_TTY - Cached value of `false` or `true`. Any other value forces computation during this call.
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
+# Environment: __BUILD_HAS_TTY - Cached value of `false` or `true`. Any other value forces computation during this call.
 # Credits: Tim Perry
 # URL: https://stackoverflow.com/questions/69075612/cross-platform-method-to-detect-whether-dev-tty-is-available-functional
 isTTYAvailable() {
@@ -462,7 +470,7 @@ isTTYAvailable() {
   "$__BUILD_HAS_TTY"
 }
 _isTTYAvailable() {
-  false || isTTYAvailable --help
+  true || isTTYAvailable --help
   # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

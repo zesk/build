@@ -9,10 +9,6 @@
 #
 #
 
-# TODO suggest rename
-#fileModifiedRecentlyName|fileRecentlyModified
-#fileModifiedRecentlyTimestamp|fileTimestampRecentlyModified
-
 #
 # Renames "$file0$oldSuffix" to "$file0$newSuffix" if file exists and outputs a message using the actionVerb
 #
@@ -34,6 +30,7 @@
 #
 filesRename() {
   local usage="_${FUNCNAME[0]}"
+  [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
 
   local old new verb
 
@@ -41,11 +38,13 @@ filesRename() {
   new=$(usageArgumentEmptyString "$usage" "newSuffix" "${1-}") && shift || return $?
   verb="${1-}" && shift || return $?
 
-  for i in "$@"; do
-    if [ -f "$i$old" ]; then
-      __catchEnvironment "$usage" mv "$i$old" "$i$new" || return $?
-      __catchEnvironment "$usage" statusMessage --last decorate info "$verb $(decorate file "$i$old") -> $(decorate file "$i$new")" || return $?
+  while [ $# -gt 0 ]; do
+    local prefix="$1"
+    if [ -f "$prefix$old" ]; then
+      __catchEnvironment "$usage" mv "$prefix$old" "$prefix$new" || return $?
+      __catchEnvironment "$usage" statusMessage --last decorate info "$verb $(decorate file "$prefix$old") -> $(decorate file "$prefix$new")" || return $?
     fi
+    shift
   done
 }
 _filesRename() {
@@ -64,6 +63,7 @@ fileModificationTime() {
   local usage="_${FUNCNAME[0]}"
   local argument
   while [ $# -gt 0 ]; do
+    [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
     argument="$1"
     [ -n "$argument" ] || __throwArgument "$usage" "blank argument" || return $?
     [ -f "$argument" ] || __throwArgument "$usage" "$argument is not a file" || return $?
@@ -90,6 +90,7 @@ fileModificationSeconds() {
   now_="$(__catchEnvironment "$usage" date +%s)" || return $?
   local __count=$#
   while [ $# -gt 0 ]; do
+    [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
     local argument
     argument="$(usageArgumentFile "$usage" "argument #$((__count - $# + 1))" "${1-}")" || return $?
     __catchEnvironment "$usage" printf "%d\n" "$((now_ - $(fileModificationTime "$argument")))" || return $?
@@ -116,11 +117,9 @@ _fileModificationSeconds() {
 #
 fileModificationTimes() {
   local usage="_${FUNCNAME[0]}"
-  local directory
-
-  directory="$1"
+  [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
+  local directory="${1-}" && shift
   [ -d "$directory" ] || __throwArgument "$usage" "Not a directory $(decorate code "$directory")" || return $?
-  shift || :
   # See: platform
   __fileModificationTimes "$directory" "$@"
 }
@@ -135,9 +134,9 @@ _fileModificationTimes() {
 # Argument: findArgs - Optional additional arguments to modify the find query
 fileModifiedRecentlyName() {
   local usage="_${FUNCNAME[0]}"
-  directory="$1"
+  [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
+  local directory="${1-}" && shift
   [ -d "$directory" ] || __throwArgument "$usage" "Not a directory $(decorate code "$directory")" || return $?
-  shift || :
   fileModificationTimes "$directory" -type f "$@" | sort -r | head -1 | cut -f2- -d" "
 }
 _fileModifiedRecentlyName() {
@@ -151,9 +150,9 @@ _fileModifiedRecentlyName() {
 # Argument: findArgs - Optional additional arguments to modify the find query
 fileModifiedRecentlyTimestamp() {
   local usage="_${FUNCNAME[0]}"
-  directory="$1"
+  [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
+  local directory="${1-}" && shift
   [ -d "$directory" ] || __throwArgument "$usage" "Not a directory $(decorate code "$directory")" || return $?
-  shift || :
   fileModificationTimes "$directory" -type f "$@" | sort -r | head -1 | cut -f1 -d" "
 }
 _fileModifiedRecentlyTimestamp() {
@@ -175,10 +174,16 @@ _fileModifiedRecentlyTimestamp() {
 # Exit code: 0 - All files exist and `sourceFile` is the oldest file
 #
 fileIsNewest() {
+  [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
+
   if [ $# -eq 0 ]; then
     return 1
   fi
   [ "$1" = "$(fileNewest "$@")" ]
+}
+_fileIsNewest() {
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
@@ -195,10 +200,15 @@ fileIsNewest() {
 # Exit code: 0 - All files exist and `sourceFile` is the oldest file
 #
 fileIsOldest() {
+  [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
   if [ $# -eq 0 ]; then
     return 1
   fi
   [ "$1" = "$(fileOldest "$@")" ]
+}
+_fileIsOldest() {
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
@@ -208,6 +218,8 @@ __gamutFile() {
   local usage="$1" comparison="$2"
 
   shift 2 || _argument "${FUNCNAME[0]} used incorrectly" || return $?
+
+  [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
 
   local gamutTime="" theFile=""
 
@@ -262,6 +274,8 @@ _fileNewest() {
 #
 fileModifiedSeconds() {
   local usage="_${FUNCNAME[0]}"
+  [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
+
   local timestamp
 
   timestamp=$(fileModificationTime "$1") || __throwArgument "$usage" fileModificationTime "$1" || return $?
@@ -280,6 +294,8 @@ _fileModifiedSeconds() {
 #
 fileModifiedDays() {
   local usage="_${FUNCNAME[0]}"
+  [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
+
   local timestamp
 
   timestamp=$(fileModifiedSeconds "$1") || __throwArgument "$usage" fileModifiedSeconds "$1" || return $?
@@ -290,18 +306,23 @@ _fileModifiedDays() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# IDENTICAL _realPath 12
+# IDENTICAL _realPath 17
 
 # Usage: realPath argument
 # Argument: file ... - Required. File. One or more files to `realpath`.
-# Requires: whichExists realpath
+# Requires: whichExists realpath __help usageDocument _argument
 realPath() {
+  [ "${1-}" != "--help" ] || __help "$_${FUNCNAME[0]}" "$@" || return 0
   [ -e "$1" ] || _argument "Not a file: $1" || return $?
   if whichExists realpath; then
     realpath "$@"
   else
     readlink -f -n "$@"
   fi
+}
+_realPath() {
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Argument: path ... - Required. File. One or more paths to simplify

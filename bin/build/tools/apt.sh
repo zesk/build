@@ -67,13 +67,6 @@ aptKeyAdd() {
   local name url host index IFS file listTarget
   local start ring sourcesPath keyFile skipUpdate signFiles signFileText sourceType sourceTypes=(deb)
 
-  start=$(timingStart) || return $?
-  sourcesPath="$(_usageAptSourcesPath "$usage")" || return $?
-  ring=$(_usageAptKeyRings "$usage") || return $?
-
-  # apt-key is deprecated for good reasons
-  # https://stackoverflow.com/questions/68992799/warning-apt-key-is-deprecated-manage-keyring-files-in-trusted-gpg-d-instead
-
   # _IDENTICAL_ argument-case-header 5
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
@@ -124,6 +117,14 @@ aptKeyAdd() {
     # _IDENTICAL_ argument-esac-shift 1
     shift
   done
+
+  start=$(timingStart) || return $?
+  sourcesPath="$(_usageAptSourcesPath "$usage")" || return $?
+  ring=$(_usageAptKeyRings "$usage") || return $?
+
+  # apt-key is deprecated for good reasons
+  # https://stackoverflow.com/questions/68992799/warning-apt-key-is-deprecated-manage-keyring-files-in-trusted-gpg-d-instead
+
 
   [ "${#names[@]}" -gt 0 ] || __throwArgument "$usage" "Need at least one --name" || return $?
   [ "${#remoteUrls[@]}" -gt 0 ] || __throwArgument "$usage" "Need at least one --url" || return $?

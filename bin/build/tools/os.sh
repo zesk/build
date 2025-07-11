@@ -52,7 +52,7 @@ _runCount() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# IDENTICAL fileReverseLines 12
+# IDENTICAL fileReverseLines 18
 
 # Reverses a pipe's input lines to output using an awk trick.
 #
@@ -63,7 +63,13 @@ _runCount() {
 # Credits: Eric Pement
 # Depends: awk
 fileReverseLines() {
+  [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
   awk '{a[i++]=$0} END {for (j=i-1; j>=0;) print a[j--] }'
+}
+_fileReverseLines() {
+  true || fileReverseLines --help
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Makes all `*.sh` files executable

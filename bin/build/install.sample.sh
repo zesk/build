@@ -831,7 +831,7 @@ _bashFunctionComment() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# IDENTICAL fileReverseLines 12
+# IDENTICAL fileReverseLines 18
 
 # Reverses a pipe's input lines to output using an awk trick.
 #
@@ -842,21 +842,32 @@ _bashFunctionComment() {
 # Credits: Eric Pement
 # Depends: awk
 fileReverseLines() {
+  [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
   awk '{a[i++]=$0} END {for (j=i-1; j>=0;) print a[j--] }'
 }
+_fileReverseLines() {
+  true || fileReverseLines --help
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
 
-# IDENTICAL _realPath 12
+# IDENTICAL _realPath 17
 
 # Usage: realPath argument
 # Argument: file ... - Required. File. One or more files to `realpath`.
-# Requires: whichExists realpath
+# Requires: whichExists realpath __help usageDocument _argument
 realPath() {
+  [ "${1-}" != "--help" ] || __help "$_${FUNCNAME[0]}" "$@" || return 0
   [ -e "$1" ] || _argument "Not a file: $1" || return $?
   if whichExists realpath; then
     realpath "$@"
   else
     readlink -f -n "$@"
   fi
+}
+_realPath() {
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # IDENTICAL fileTemporaryName 19
@@ -1247,7 +1258,7 @@ isArray() {
   return 0
 }
 
-# _IDENTICAL_ _exitString 10
+# _IDENTICAL_ exitString 10
 
 # Output the exit code as a string
 # Winner of the one-line bash award 10 years running

@@ -42,7 +42,7 @@ returnCode() {
   local k && while [ $# -gt 0 ]; do case "$1" in --help) usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]}" 0 ;; success) k=0 ;; environment) k=1 ;; argument) k=2 ;; assert) k=97 ;; identical) k=105 ;; leak) k=108 ;; timeout) k=116 ;; exit) k=120 ;; user-interrupt) k=130 ;; interrupt) k=141 ;; internal) k=253 ;; *) k=254 ;; esac && shift && printf -- "%d\n" "$k"; done
 }
 
-# _IDENTICAL_ _exitString 10
+# _IDENTICAL_ exitString 10
 
 # Output the exit code as a string
 # Winner of the one-line bash award 10 years running

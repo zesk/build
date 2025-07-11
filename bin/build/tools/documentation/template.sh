@@ -12,14 +12,16 @@
 # Map template files using our identical functionality
 # Usage: {fn} templatePath repairPath
 documentationTemplateUpdate() {
-  local templatePath="$1" repairArgs=() failCount
+  local usage="_${FUNCNAME[0]}"
+  [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
 
-  shift
+  local templatePath repairArgs=() failCount=0
+  templatePath=$(usageArgumentDirectory "$usage" "templatePath" "${1-}") && shift || return $?
+
   while [ $# -gt 0 ]; do
     repairArgs+=("--repair" "$1")
     shift
   done
-  failCount=0
   while ! identicalCheck "${repairArgs[@]}" --ignore-singles --extension md --prefix '<!-- TEMPLATE' --cd "$templatePath"; do
     failCount=$((failCount + 1))
     if [ $failCount -gt 4 ]; then
@@ -164,6 +166,8 @@ _documentationTemplate() {
 # List unlinked functions in documentation index
 documentationUnlinked() {
   local usage="_${FUNCNAME[0]}"
+  [ $# -eq 0 ] || __help --only "$usage" "$@" || return 0
+
   local cacheDirectory
 
   cacheDirectory="$(__catchEnvironment "$usage" buildCacheDirectory)" || return $?

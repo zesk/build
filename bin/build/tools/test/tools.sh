@@ -984,6 +984,7 @@ __testMatches() {
 }
 
 # Our test failed
+# BUILD_DEBUG: test-dump-environment - When set tests will dump the environment at the end.
 __testFailed() {
   local errorCode sectionName="$1" item="$2"
 
@@ -992,7 +993,7 @@ __testFailed() {
   errorCode="$(returnCode assert)"
   printf "%s: %s - %s %s (%s)\n" "$(decorate error "Exit")" "$(decorate bold-red "$errorCode")" "$(decorate error "Failed running")" "$(decorate info "$item")" "$(decorate magenta "$sectionName")" || :
 
-  dumpEnvironment || :
+  ! buildDebugEnabled "test-dump-environment" || dumpEnvironment || :
   dumpLoadAverages || :
 
   decorate info "$(decorate magenta "$sectionName") $(decorate code "$item") failed on $(decorate value "$(date +"%F %T")")" || :

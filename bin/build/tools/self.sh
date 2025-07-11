@@ -36,6 +36,11 @@ installInstallBinary() {
       "$usage" 0
       return $?
       ;;
+    # _IDENTICAL_ --handler 4
+    --handler)
+      shift
+      usage=$(usageArgumentFunction "$usage" "$argument" "${1-}") || return $?
+      ;;
     --bin)
       shift
       installBinName=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
@@ -171,7 +176,7 @@ installInstallBuild() {
   local binName="install-bin-build.sh"
 
   home=$(__catchEnvironment "$usage" buildHome) || return $?
-  installInstallBinary "$@" --bin "$binName" --source "$home/bin/build/$binName" --url-function __installInstallBuildRemote --post __installInstallBinaryLegacy
+  installInstallBinary --handler "$usage" "$@" --bin "$binName" --source "$home/bin/build/$binName" --url-function __installInstallBuildRemote --post __installInstallBinaryLegacy
 }
 _installInstallBuild() {
   # _IDENTICAL_ usageDocument 1

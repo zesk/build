@@ -153,6 +153,7 @@ testBuildFunctionsHelpCoverage() {
         # "$fun" --help | dumpPipe "$fun --help"
         if ! assertExitCode --stdout-match "$fun" --stdout-match "Usage" 0 "$fun" --help; then
           missing+=("$fun")
+          break
         else
           if [ "${#missing[@]}" -eq 0 ]; then
             __catchEnvironment "$usage" printf "%s\n" "$fun" >"$lastPassedCache" || return $?
@@ -173,7 +174,16 @@ testBuildFunctionsHelpCoverage() {
 __dataBuildFunctionsWithoutHelp() {
   cat <<EOF
 returnClean
+exitString
 clearLine
 plasterLines
+escapeBash
+escapeDoubleQuotes
+escapeSingleQuotes
+escapeQuotes
+replaceFirstPattern
+trimSpace
+quoteBashString
+inArray
 EOF
 }

@@ -223,24 +223,37 @@ _hookSourceOptional() {
 # Environment: BUILD_HOOK_DIRS
 hasHook() {
   local usage="_${FUNCNAME[0]}"
-  local argument
-  local binary
+
   local applicationHome
 
   applicationHome="$(__catchEnvironment "$usage" buildHome)" || return $?
+  # _IDENTICAL_ argument-case-header 5
+  local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
-    argument="$1"
-    [ -n "$argument" ] || __throwArgument "$usage" "blank argument" || return $?
-    case "$1" in
+    local argument="$1" __index=$((__count - $# + 1))
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
+    case "$argument" in
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    # _IDENTICAL_ --handler 4
+    --handler)
+      shift
+      usage=$(usageArgumentFunction "$usage" "$argument" "${1-}") || return $?
+      ;;
     --application)
       shift || :
       applicationHome=$(usageArgumentDirectory "$usage" applicationHome "${1-}") || return $?
       ;;
     *)
+      local binary
       binary="$(whichHook --application "$applicationHome" "$argument")" || return 1
+      [ -n "$binary" ] || return 1
       ;;
     esac
-    shift || :
+    shift
   done
 }
 _hasHook() {
@@ -267,20 +280,33 @@ _hasHook() {
 # Test: testHookSystem
 whichHook() {
   local usage="_${FUNCNAME[0]}"
-  local argument
-  local applicationHome binary hookPath extension hookPaths=() nextSource=""
+  local applicationHome hookPaths=() hookExtensions=() nextSource=""
 
   export BUILD_HOOK_DIRS
-  __catchEnvironment "$usage" buildEnvironmentLoad BUILD_HOOK_DIRS || return $?
+  __catchEnvironment "$usage" buildEnvironmentLoad BUILD_HOOK_DIRS BUILD_HOOK_EXTENSIONS || return $?
 
   IFS=":" read -r -a hookPaths <<<"$BUILD_HOOK_DIRS" || :
   [ ${#hookPaths[@]} -gt 0 ] || __throwEnvironment "$usage" "BUILD_HOOK_DIRS is blank" || return $?
 
+  IFS=":" read -r -a hookExtensions <<<"$BUILD_HOOK_EXTENSIONS" || :
+  [ ${#hookExtensions[@]} -gt 0 ] || __throwEnvironment "$usage" "BUILD_HOOK_EXTENSIONS is blank" || return $?
+
   applicationHome="$(__catchEnvironment "$usage" buildHome)" || return $?
+  local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
-    argument="$1"
-    [ -n "$argument" ] || __throwArgument "$usage" "blank argument" || return $?
+    local argument="$1" __index=$((__count - $# + 1))
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    # _IDENTICAL_ --handler 4
+    --handler)
+      shift
+      usage=$(usageArgumentFunction "$usage" "$argument" "${1-}") || return $?
+      ;;
     --application)
       shift
       applicationHome=$(usageArgumentDirectory "$usage" "$argument" "${1-}") || return $?
@@ -291,11 +317,15 @@ whichHook() {
       nextSource=$(__catchEnvironment "$usage" realPath "$nextSource") || return $?
       ;;
     *)
+      local hookPath
       for hookPath in "${hookPaths[@]}"; do
         local appPath="${applicationHome%/}/${hookPath%/}"
         [ -d "$appPath" ] || continue
-        for extension in "" ".sh"; do
-          binary="$appPath/$1$extension"
+        local extension
+        for extension in "${hookExtensions[@]}"; do
+          extension="${extension#.}"
+          [ -z "$extension" ] || extension=".$extension"
+          local binary="$appPath/$argument$extension"
           if [ -x "$binary" ]; then
             if [ -n "$nextSource" ]; then
               if [ "$binary" = "$nextSource" ]; then
@@ -312,7 +342,7 @@ whichHook() {
       return 1
       ;;
     esac
-    shift || :
+    shift
   done
   __throwArgument "$usage" "no arguments" || return $?
 }
