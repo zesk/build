@@ -18,6 +18,8 @@ bashPromptModule_binBuild() {
   local home gitHome tools="bin/build/tools.sh" version="bin/build/build.json" oldVersion newMessage buildMessage currentVersion showHome showGitHome
   export HOME
 
+  [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
+
   __environment buildEnvironmentLoad HOME || return $?
   home=$(__environment buildHome) || return $?
   showHome="${home//$HOME/~}"
@@ -61,4 +63,8 @@ bashPromptModule_binBuild() {
   [ -z "$pathSuffix" ] || pathSuffix=" $(decorate warning "PATH:")$pathSuffix"
 
   printf -- "%s %s %s@ %s%s\n" "$newMessage" "$(decorate code "$currentVersion")" "$buildMessage" "$(decorate code "$(decorate file "$(buildHome)")")" "$pathSuffix"
+}
+_bashPromptModule_binBuild() {
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

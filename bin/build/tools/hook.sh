@@ -131,6 +131,7 @@ hookRun() {
   __hookRunner "_${FUNCNAME[0]}" --require -- "$@"
 }
 _hookRun() {
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -154,6 +155,7 @@ hookRunOptional() {
   __hookRunner "_${FUNCNAME[0]}" -- "$@"
 }
 _hookRunOptional() {
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -242,6 +244,7 @@ hasHook() {
   done
 }
 _hasHook() {
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -314,5 +317,6 @@ whichHook() {
   __throwArgument "$usage" "no arguments" || return $?
 }
 _whichHook() {
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

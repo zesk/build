@@ -133,6 +133,7 @@ __updateMarkdown() {
   fi
 }
 _updateMarkdown() {
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 

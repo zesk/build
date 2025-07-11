@@ -127,5 +127,6 @@ documentationIndex_SeeLinker() {
   statusMessage --last timingReport "$start" "See completed in" || :
 }
 _documentationIndex_SeeLinker() {
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

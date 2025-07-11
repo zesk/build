@@ -31,11 +31,17 @@ bashLint() {
   # Open 3 and 4 to aliases so we can change them
   exec 3>/dev/null
   exec 4>&1
-  local argument
+  # _IDENTICAL_ argument-case-header 5
+  local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
-    argument="$1"
-    [ -n "$argument" ] || __throwArgument "$usage" "blank argument" || return $?
+    local argument="$1" __index=$((__count - $# + 1))
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
     --verbose)
       exec 3>&1
       exec 4>/dev/null
@@ -231,6 +237,7 @@ bashLintFilesInteractive() {
   done
 }
 _bashLintFilesInteractive() {
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 

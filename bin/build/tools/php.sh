@@ -295,7 +295,8 @@ phpBuild() {
   statusMessage --last timingReport "$initTime" "PHP built $(decorate code "$targetName") in"
 }
 _phpBuild() {
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@" || return $?
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 _phpBuildBanner() {
   local label="$1"

@@ -31,6 +31,7 @@ __hookPreCommitShell() {
   __catchEnvironment "$usage" bashSanitize "${changed[@]+"${changed[@]}"}" || return $?
 }
 ___hookPreCommitShell() {
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 

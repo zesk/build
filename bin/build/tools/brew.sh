@@ -13,8 +13,17 @@ __brewWrapper() {
 }
 
 # Install Homebrew
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
+# Platform: Darwin
 brewInstall() {
+  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return 0
+  isDarwin || __throwEnvironment "$usage" "Only on Darwin (Mac OS X)" || return $?
   /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+}
+_brewInstall() {
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 ################################################################################################################################

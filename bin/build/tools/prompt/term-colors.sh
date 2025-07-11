@@ -23,6 +23,8 @@
 #
 # Support for iTerm2 is built-in and automatic
 bashPromptModule_TermColors() {
+  [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
+
   local home start
   start=$(timingStart)
   home=$(buildHome 2>/dev/null) || return 0
@@ -46,6 +48,10 @@ bashPromptModule_TermColors() {
       break
     fi
   done
+}
+_bashPromptModule_TermColors() {
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 __bashPromptModule_LoadColors() {

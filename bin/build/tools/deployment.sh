@@ -201,6 +201,7 @@ __deployBuildEnvironment() {
   __throwEnvironment "$usage" deployToRemote --deploy "$@" failed || return $?
 }
 _deployBuildEnvironment() {
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -350,6 +351,7 @@ deployRemoteFinish() {
   statusMessage --last timingReport "$start" "Remote deployment finished in"
 }
 _deployRemoteFinish() {
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -423,6 +425,7 @@ _deployRevertApplication() {
   return 0
 }
 __deployRevertApplication() {
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -755,6 +758,7 @@ deployToRemote() {
   return "$exitCode"
 }
 _deployToRemote() {
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 

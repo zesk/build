@@ -48,6 +48,7 @@ runCount() {
 
 }
 _runCount() {
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -249,9 +250,13 @@ _whichExists() {
 #
 # Format something neatly as JSON
 # Usage: JSON < inputFile > outputFile
-# Depend: python
 JSON() {
-  python -c "import sys, json; print(json.dumps(json.load(sys.stdin), indent=4))"
+  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return 0
+  jq .
+}
+_JSON() {
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Hard-coded services for:
@@ -291,6 +296,7 @@ serviceToStandardPort() {
   done
 }
 _serviceToStandardPort() {
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -339,6 +345,7 @@ serviceToPort() {
   done
 }
 _serviceToPort() {
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 

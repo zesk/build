@@ -16,15 +16,21 @@
 # Argument: message ... - Optional. String. Message to display to the user.
 # Requires: bashFunctionComment decorate read printf exitString
 usageDocumentSimple() {
-  local source="${1-}" functionName="${2-}" exitCode="${3-}" color helpColor="info" icon="❌" line prefix="" done=false skip=false && shift 3
+  local source="${1-}" functionName="${2-}" returnCode="${3-}" color helpColor="info" icon="❌" line prefix="" done=false skip=false && shift 3
 
-  case "$exitCode" in 0) icon="🏆" && color="info" && [ $# -ne 0 ] || skip=true ;; 1) color="error" ;; 2) color="bold-red" ;; *) color="orange" ;; esac
-  [ $# -eq 0 ] || [ "$exitCode" -ne 0 ]
-  $skip || printf -- "%s [%s] %s\n" "$icon" "$(decorate "code" "$(exitString "$exitCode")")" "$(decorate "$color" "$*")"
+  case "$returnCode" in 0) icon="🏆" && color="info" && [ $# -ne 0 ] || skip=true ;; 1) color="error" ;; 2) color="bold-red" ;; *) color="orange" ;; esac
+  [ $# -eq 0 ] || [ "$returnCode" -ne 0 ]
+  $skip || printf -- "%s [%s] %s\n" "$icon" "$(decorate "code" "$(exitString "$returnCode")")" "$(decorate "$color" "$*")"
+  if [ ! -f "$source" ]; then
+    export BUILD_HOME
+    [ -d "${BUILD_HOME-}" ] || _argument "Unable to locate $source (${PWD-})" || return $?
+    source="$BUILD_HOME/$source"
+    [ -f "$source" ] || _argument "Unable to locate $source (${PWD-})" || return $?
+  fi
   while ! $done; do
     IFS='' read -r line || done=true
     printf "%s%s\n" "$prefix" "$(decorate "$helpColor" "$line")"
     prefix=""
-  done < <(bashFunctionComment "$source" "$functionName")
-  return "$exitCode"
+  done < <(bashFunctionComment "$source" "$functionName" | sed "s/{fn}/$functionName/g")
+  return "$returnCode"
 }

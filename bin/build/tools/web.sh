@@ -48,6 +48,7 @@ urlMatchesLocalFileSize() {
   [ "$localSize" -eq "$remoteSize" ]
 }
 _urlMatchesLocalFileSize() {
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -87,6 +88,7 @@ urlContentLength() {
   __catchEnvironment "$usage" rm -f "$tempFile" || return $?
 }
 _urlContentLength() {
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -156,5 +158,6 @@ websiteScrape() {
   _watchFile "$progressFile"
 }
 _websiteScrape() {
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

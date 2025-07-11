@@ -292,6 +292,7 @@ sshSetup() {
   done
 }
 _sshSetup() {
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 _generateSSHKeyPair() {

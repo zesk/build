@@ -65,6 +65,7 @@ gitEnsureSafeDirectory() {
   done
 }
 _gitEnsureSafeDirectory() {
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -92,6 +93,7 @@ gitTagDelete() {
   return "$exitCode"
 }
 _gitTagDelete() {
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -129,6 +131,7 @@ gitVersionList() {
   __catchEnvironment "$usage" git tag | grep -e '^v[0-9.]*$' | versionSort "$@" || return $?
 }
 _gitVersionList() {
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -161,6 +164,7 @@ veeGitTag() {
   __catchEnvironment "$usage" git fetch -q --prune --prune-tags || return $?
 }
 _veeGitTag() {
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -250,6 +254,7 @@ gitRemoteHosts() {
   done < <(git remote -v | awk '{ print $2 }')
 }
 _gitRemoteHosts() {
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -497,6 +502,7 @@ __gitCommitReleaseNotesGetLastComment() {
   grep -e '^- ' "$notes" | tail -n 1 | cut -c 3-
 }
 _gitCommit() {
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -591,6 +597,7 @@ gitMainly() {
   esac
 }
 _gitMainly() {
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -601,6 +608,7 @@ gitCommitHash() {
   __catchEnvironment "$usage" git rev-parse --short HEAD || return $?
 }
 _gitCommitHash() {
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -614,6 +622,7 @@ gitCurrentBranch() {
   __catchEnvironment "$usage" git symbolic-ref --short HEAD || return $?
 }
 _gitCurrentBranch() {
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -627,6 +636,7 @@ gitHasAnyRefs() {
   [ $((0 + count)) -gt 0 ]
 }
 _gitHasAnyRefs() {
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -717,6 +727,7 @@ gitInstallHooks() {
   done
 }
 _gitInstallHooks() {
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -794,6 +805,7 @@ gitInstallHook() {
   done
 }
 _gitInstallHook() {
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 

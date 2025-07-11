@@ -20,30 +20,28 @@
 #
 # aws Command-Line install
 #
-# Installs x86 or aarch64 binary based on `$HOSTTYPE`.
+# Installs x86 or aarch64 binary based on `HOSTTYPE`.
 #
-# Usage: awsInstall [ package ... ]
-# Argument: package - One or more packages to install using `apt-get` prior to installing AWS
-# Exit Code: if `packageInstall` fails, the exit code is returned
-# Depends: apt-get
+# Requires: packageInstall urlFetch
 #
 # shellcheck disable=SC2120
 awsInstall() {
   local usage="_${FUNCNAME[0]}"
+
+  [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
 
   if whichExists aws; then
     return 0
   fi
 
   if isAlpine; then
-    packageInstall aws-cli "$@" || return $?
+    packageInstall aws-cli || return $?
     return 0
   fi
 
   local start
   start=$(timingStart) || return $?
   __catchEnvironment "$usage" packageWhich unzip unzip || return $?
-  __catchEnvironment "$usage" packageWhich curl curl "$@" || return $?
 
   local url
   statusMessage decorate info "Installing aws-cli ... " || :
@@ -65,7 +63,7 @@ awsInstall() {
     clean+=("$buildDir")
 
     local zipFile=awscliv2.zip version
-    __catchEnvironmentQuiet "$usage" "$quietLog" curl -s "$url" -o "$buildDir/$zipFile" || returnClean $? "${clean[@]}" || return $?
+    __catchEnvironmentQuiet "$usage" "$quietLog" urlFetch "$url" "$buildDir/$zipFile" || returnClean $? "${clean[@]}" || return $?
     __catchEnvironmentQuiet "$usage" "$quietLog" unzip -d "$buildDir" "$buildDir/$zipFile" || returnClean $? "${clean[@]}" || return $?
     __catchEnvironmentQuiet "$usage" "$quietLog" "$buildDir/aws/install" || returnClean $? "${clean[@]}" || return $?
     version="$(__catchEnvironment "$usage" __awsWrapper --version)" || returnClean $? "${clean[@]}" || return $?
@@ -74,6 +72,7 @@ awsInstall() {
   }
 }
 _awsInstall() {
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -162,6 +161,7 @@ awsCredentialsFile() {
   return 0
 }
 _awsCredentialsFile() {
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -190,15 +190,22 @@ _awsCredentialsFile() {
 # Environment: AWS_ACCESS_KEY_DATE - Read-only. Date. A `YYYY-MM-DD` formatted date which represents the date that the key was generated.
 #
 awsIsKeyUpToDate() {
+  [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
   export AWS_ACCESS_KEY_DATE
   __environment buildEnvironmentLoad AWS_ACCESS_KEY_DATE || return $?
   isUpToDate "${AWS_ACCESS_KEY_DATE-}" "$@"
+}
+_awsIsKeyUpToDate() {
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
 # This tests `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` and if both are non-empty, returns exit code 0 (success), otherwise returns exit code 1.
 # Fails if either `AWS_ACCESS_KEY_ID` or `AWS_SECRET_ACCESS_KEY` is blank
 #
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
 # Exit Code: 0 - If environment needs to be updated
 # Exit Code: 1 - If the environment seems to be set already
 # Environment: AWS_ACCESS_KEY_ID - Read-only. If blank, this function succeeds (environment needs to be updated)
@@ -210,6 +217,7 @@ awsIsKeyUpToDate() {
 #
 awsHasEnvironment() {
   local usage="_${FUNCNAME[0]}"
+  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return 0
   export AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY
   # shellcheck source=/dev/null
   __catchEnvironment "$usage" buildEnvironmentLoad AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY || return $?
@@ -221,11 +229,14 @@ _awsHasEnvironment() {
 }
 
 # List AWS profiles available in the credentials file
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
 # See: awsCredentialsFile
 awsProfilesList() {
   local usage="_${FUNCNAME[0]}"
   local file
 
+  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return 0
   file=$(__catchEnvironment "$usage" awsCredentialsFile --path) || return $?
   [ -f "$file" ] || return 0
   grep -e '\[[^]]*\]' "$file" | sed 's/[]\[]//g' | sort -u || :
@@ -322,6 +333,7 @@ awsCredentialsHasProfile() {
   local usage="_${FUNCNAME[0]}"
   local credentials profileName=${1:-default} name value
   local foundValues=()
+  __help "$usage" "$@" || return 0
   [ -n "$profileName" ] || __throwArgument "$usage" "profileName is somehow blank" || return $?
   credentials="$(__catchEnvironment "$usage" awsCredentialsFile)" || return $?
   while read -r name value; do
@@ -497,6 +509,7 @@ _awsCredentialsRemove() {
 awsCredentialsFromEnvironment() {
   local usage="_${FUNCNAME[0]}"
 
+  __help "$usage" "$@" || return 0
   export AWS_PROFILE AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY
   __catchEnvironment "$usage" buildEnvironmentLoad AWS_PROFILE AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY || return $?
   awsHasEnvironment || __throwEnvironment "$usage" "Requires AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY" || return $?
@@ -684,6 +697,7 @@ awsSecurityGroupIPModify() {
   fi
 }
 _awsSecurityGroupIPModify() {
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -862,6 +876,7 @@ awsIPAccess() {
   done
 }
 _awsIPAccess() {
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -874,9 +889,19 @@ _awsIPAccess() {
 # Exit Code: 1 - One or more regions are NOT a valid AWS region
 # Checked: 2024-09-02
 awsRegionValid() {
-  [ $# -gt 0 ] || return 1
+  local usage="_${FUNCNAME[0]}"
+  [ $# -gt 0 ] || __throwArgument "$usage" "Requires at least one region" || return 1
+  # _IDENTICAL_ argument-case-header 5
+  local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
-    case "$1" in
+    local argument="$1" __index=$((__count - $# + 1))
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
+    case "$argument" in
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
     eu-north-1) ;;
     eu-central-1) ;;
     eu-west-1 | eu-west-2 | eu-west-3) ;;
@@ -893,4 +918,8 @@ awsRegionValid() {
     shift
   done
   return 0
+}
+_awsRegionValid() {
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

@@ -759,7 +759,7 @@ _urlFetch() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# IDENTICAL __help 33
+# IDENTICAL __help 35
 
 # Simple help argument handler.
 #
@@ -774,6 +774,8 @@ _urlFetch() {
 # Argument: arguments ... - Arguments. Optional. Arguments passed to calling function to check for `--help` argument.
 # Example:     __help "_${FUNCNAME[0]}" "$@" || return 0
 # Example:     __help "$usage" "$@" || return 0
+# Example:     [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
+# Example:     [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
 # Example:     [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return 0
 # Example:     [ $# -eq 0 ] || __help --only "$usage" "$@" || return 0
 # Requires: __throwArgument
@@ -798,7 +800,7 @@ usageDocument() {
   usageDocumentSimple "$@"
 }
 
-# IDENTICAL usageDocumentSimple 20
+# IDENTICAL usageDocumentSimple 26
 
 # Output a simple error message for a function
 # Argument: source - File. Required. File where documentation exists.
@@ -807,17 +809,23 @@ usageDocument() {
 # Argument: message ... - Optional. String. Message to display to the user.
 # Requires: bashFunctionComment decorate read printf exitString
 usageDocumentSimple() {
-  local source="${1-}" functionName="${2-}" exitCode="${3-}" color helpColor="info" icon="❌" line prefix="" done=false skip=false && shift 3
+  local source="${1-}" functionName="${2-}" returnCode="${3-}" color helpColor="info" icon="❌" line prefix="" done=false skip=false && shift 3
 
-  case "$exitCode" in 0) icon="🏆" && color="info" && [ $# -ne 0 ] || skip=true ;; 1) color="error" ;; 2) color="bold-red" ;; *) color="orange" ;; esac
-  [ $# -eq 0 ] || [ "$exitCode" -ne 0 ]
-  $skip || printf -- "%s [%s] %s\n" "$icon" "$(decorate "code" "$(exitString "$exitCode")")" "$(decorate "$color" "$*")"
+  case "$returnCode" in 0) icon="🏆" && color="info" && [ $# -ne 0 ] || skip=true ;; 1) color="error" ;; 2) color="bold-red" ;; *) color="orange" ;; esac
+  [ $# -eq 0 ] || [ "$returnCode" -ne 0 ]
+  $skip || printf -- "%s [%s] %s\n" "$icon" "$(decorate "code" "$(exitString "$returnCode")")" "$(decorate "$color" "$*")"
+  if [ ! -f "$source" ]; then
+    export BUILD_HOME
+    [ -d "${BUILD_HOME-}" ] || _argument "Unable to locate $source (${PWD-})" || return $?
+    source="$BUILD_HOME/$source"
+    [ -f "$source" ] || _argument "Unable to locate $source (${PWD-})" || return $?
+  fi
   while ! $done; do
     IFS='' read -r line || done=true
     printf "%s%s\n" "$prefix" "$(decorate "$helpColor" "$line")"
     prefix=""
-  done < <(bashFunctionComment "$source" "$functionName")
-  return "$exitCode"
+  done < <(bashFunctionComment "$source" "$functionName" | sed "s/{fn}/$functionName/g")
+  return "$returnCode"
 }
 
 # IDENTICAL bashFunctionComment 23
@@ -962,11 +970,13 @@ _isFunction() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# IDENTICAL decorate 236
+# IDENTICAL decorate 240
 
 # Sets the environment variable `BUILD_COLORS` if not set, uses `TERM` to calculate
 #
 # Usage: hasColors
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
 # Exit Code: 0 - Console or output supports colors
 # Exit Code: 1 - Colors are likely not supported by console
 # Environment: BUILD_COLORS - Optional. Boolean. Whether the build system will output ANSI colors.
@@ -976,7 +986,8 @@ hasColors() {
   local termColors
   export BUILD_COLORS TERM
 
-  [ "${1-}" != "--help" ] || ! "$usage" 0 || return 0
+  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return 0
+
   # Values allowed for this global are true and false
   # Important - must not use buildEnvironmentLoad BUILD_COLORS TERM; then
   BUILD_COLORS="${BUILD_COLORS-}"
@@ -1043,15 +1054,16 @@ _decorations() {
 # Argument: style - String. Required. One of: reset underline no-underline bold no-bold black black-contrast blue cyan green magenta orange red white yellow bold-black bold-black-contrast bold-blue bold-cyan bold-green bold-magenta bold-orange bold-red bold-white bold-yellow code info notice success warning error subtle label value decoration
 # Argument: text - Text to output. If not supplied, outputs a code to change the style to the new style.
 # stdout: Decorated text
-# Requires: isFunction _argument awk __catchEnvironment usageDocument __executeInputSupport
+# Requires: isFunction _argument awk __catchEnvironment usageDocument __executeInputSupport __help
 decorate() {
   local usage="_${FUNCNAME[0]}" text="" what="${1-}" lp dp style
+  [ "$what" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
   shift && [ -n "$what" ] || __catchArgument "$usage" "Requires at least one argument: \"$*\"" || return $?
 
   if ! style=$(_decorateStyle "$what"); then
     local extend func="${what/-/_}"
     extend="__decorateExtension$(printf "%s" "${func:0:1}" | awk '{print toupper($0)}')${func:1}"
-    # When this next line calls `__catchArgument` it results in an infinite loop
+    # When this next line calls `__catchArgument` it results in an infinite loop, so don't - use _argument
     # shellcheck disable=SC2119
     isFunction "$extend" || _argument printf -- "%s\n%s\n" "Unknown decoration name: $what ($extend)" "$(decorations)" || return $?
     __executeInputSupport "$usage" "$extend" -- "$@" || return $?
@@ -1257,14 +1269,16 @@ isArray() {
   return 0
 }
 
-# _IDENTICAL_ _exitString 8
+# _IDENTICAL_ _exitString 10
 
 # Output the exit code as a string
 # Winner of the one-line bash award 10 years running
 # Argument: code ... - UnsignedInteger. String. Exit code value to output.
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
 # stdout: exitCodeToken, one per line
 exitString() {
-  local k="" && while [ $# -gt 0 ]; do case "$1" in 0) k="success" ;; 1) k="environment" ;; 2) k="argument" ;; 97) k="assert" ;; 105) k="identical" ;; 108) k="leak" ;; 116) k="timeout" ;; 120) k="exit" ;; 127) k="not-found" ;; 130) k="user-interrupt" ;; 141) k="interrupt" ;; 253) k="internal" ;; 254) k="unknown" ;; *) k="[exitString unknown \"$1\"]" ;; esac && [ -n "$k" ] || k="$1" && printf "%s\n" "$k" && shift; done
+  local k="" && while [ $# -gt 0 ]; do case "$1" in 0) k="success" ;; 1) k="environment" ;; 2) k="argument" ;; 97) k="assert" ;; 105) k="identical" ;; 108) k="leak" ;; 116) k="timeout" ;; 120) k="exit" ;; 127) k="not-found" ;; 130) k="user-interrupt" ;; 141) k="interrupt" ;; 253) k="internal" ;; 254) k="unknown" ;; --help) usageDocument "${FUNCNAME[0]}" "${BASH_SOURCE[0]}" 0 ;; *) k="[exitString unknown \"$1\"]" ;; esac && [ -n "$k" ] || k="$1" && printf "%s\n" "$k" && shift; done
 }
 
 # IDENTICAL _return 27
@@ -1296,7 +1310,7 @@ isUnsignedInteger() {
 
 # <-- END of IDENTICAL _return
 
-# IDENTICAL _tinySugar 77
+# IDENTICAL _tinySugar 81
 
 # Run `handler` with an argument error
 # Usage: {fn} handler ...
@@ -1362,17 +1376,21 @@ __environment() {
   "$@" || _environment "$@" || return $?
 }
 
-# _IDENTICAL_ returnClean 11
+# _IDENTICAL_ returnClean 15
 
 # Delete files or directories and return the same exit code passed in.
 # Argument: exitCode - Required. Integer. Exit code to return.
 # Argument: item - Optional. One or more files or folders to delete, failures are logged to stderr.
-# Requires: isUnsignedInteger _argument __environment
+# Requires: isUnsignedInteger _argument __environment usageDocument
 returnClean() {
   local exitCode="${1-}" && shift
-  isUnsignedInteger "$exitCode" || _argument "${FUNCNAME[0]} $exitCode (not an integer) $*" || return $?
-  __environment rm -rf "$@" || return "$exitCode"
-  return "$exitCode"
+  if ! isUnsignedInteger "$exitCode"; then
+    local this="${FUNCNAME[0]}"
+    [ "$exitCode" = "--help" ] && usageDocument "$this" "${BASH_SOURCE[0]}" 0 || _argument "$this $exitCode (not an integer) $*" || return $?
+  else
+    __environment rm -rf "$@" || return "$exitCode"
+    return "$exitCode"
+  fi
 }
 
 # Argument: binary ... - Required. Executable. Any arguments are passed to `binary`.

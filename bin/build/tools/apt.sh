@@ -11,22 +11,43 @@
 # Is apt-get installed?
 #
 aptIsInstalled() {
+  [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
   whichExists apt apt-get dpkg && [ -f /etc/debian_version ]
 }
+_aptIsInstalled() {
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
 
-# Run apt non-interactively
+# Run apt-get non-interactively
+# Argument: ... - Pass through arguments to `apt-get`
 aptNonInteractive() {
+  [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
   DEBIAN_FRONTEND=noninteractive NEEDRESTART_MODE=l apt-get "$@"
+}
+_aptNonInteractive() {
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Get key ring directory path
 aptKeyRingDirectory() {
+  [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
   printf "%s\n" "/etc/apt/keyrings"
+}
+_aptKeyRingDirectory() {
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Get APT source list path
 aptSourcesDirectory() {
+  [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
   printf "%s\n" "/etc/apt/sources.list.d"
+}
+_aptSourcesDirectory() {
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #

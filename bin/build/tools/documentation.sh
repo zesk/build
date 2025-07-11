@@ -30,7 +30,7 @@ usageDocument() {
 usageDocumentComplex() {
   local usage="_${FUNCNAME[0]}"
 
-  local functionDefinitionFile="$1" functionName="$2" exitCode="${3-NONE}" home
+  local functionDefinitionFile="$1" functionName="$2" returnCode="${3-NONE}" home
 
   home=$(__catchEnvironment "$usage" buildHome) || return $?
 
@@ -48,25 +48,25 @@ usageDocumentComplex() {
   fi
   [ -n "$functionName" ] || __throwArgument "$usage" "functionName is blank" || return $?
 
-  if [ "$exitCode" = "NONE" ]; then
+  if [ "$returnCode" = "NONE" ]; then
     decorate error "NO EXIT CODE" 1>&2
-    exitCode=1
+    returnCode=1
   fi
-  __catchArgument "$usage" isInteger "$exitCode" || __catchArgument "$usage" "$(debuggingStack)" || return $?
+  __catchArgument "$usage" isInteger "$returnCode" || __catchArgument "$usage" "$(debuggingStack)" || return $?
 
   local color="success"
-  case "$exitCode" in
+  case "$returnCode" in
   0 | 2)
     if buildDebugEnabled "fast-usage"; then
-      [ "$exitCode" -eq 0 ] || exec 1>&2 && color="warning"
-      printf -- "%s%s %s\n" "$(decorate value "[$exitCode]")" "$(decorate code " $functionName ")" "$(decorate "$color" "$@")"
-      return "$exitCode"
+      [ "$returnCode" -eq 0 ] || exec 1>&2 && color="warning"
+      printf -- "%s%s %s\n" "$(decorate value "[$returnCode]")" "$(decorate code " $functionName ")" "$(decorate "$color" "$@")"
+      return "$returnCode"
     fi
     ;;
   *)
-    [ "$exitCode" -eq 0 ] || exec 1>&2 && color="error"
-    printf -- "%s%s %s\n" "$(decorate value "[$exitCode]")" "$(decorate code " $functionName ")" "$(decorate "$color" "$@")"
-    return "$exitCode"
+    [ "$returnCode" -eq 0 ] || exec 1>&2 && color="error"
+    printf -- "%s%s %s\n" "$(decorate value "[$returnCode]")" "$(decorate code " $functionName ")" "$(decorate "$color" "$@")"
+    return "$returnCode"
     ;;
   esac
 
@@ -77,15 +77,16 @@ usageDocumentComplex() {
     __throwArgument "$usage" "Unable to extract \"$functionName\" from \"$functionDefinitionFile\"" || returnClean $? "$variablesFile" || return $?
   fi
   (
-    local description="" argument="" base exit_code=""
+    local description="" argument="" base exit_code="" environment="" stdin="" stdout="" example=""
 
     set -a
     base="$(basename "$functionDefinitionFile")"
     # shellcheck source=/dev/null
     source "$variablesFile"
     set +a
+    : "$exit_code $environment $stdin $stdout $example are referenced here and with \${!variable} below"
 
-    [ "$exit_code" -eq 0 ] || exec 1>&2 && color="error"
+    [ "$returnCode" -eq 0 ] || exec 1>&2 && color="error"
     local bashDebug=false
     if isBashDebug; then
       bashDebug=true
@@ -93,25 +94,42 @@ usageDocumentComplex() {
       __buildDebugDisable
     fi
     bashRecursionDebug
-    if [ -n "$exit_code" ]; then
-      local formatted
-      formatted="$(printf "%s\n%s\n" "Exit codes:" "$(decorate wrap "- " "" <<<"$(trimSpace "$exit_code")")")"
-      description="$(trimTail <<<"$description")"$'\n'$'\n'"$formatted"
-    fi
-    usageTemplate "$(mapEnvironment <<<"$fn")" "$(printf "%s\n" "$argument" | sed 's/ - /^/1')" "^" "$description" "$exit_code" "$@"
+    local variable prefix label done=false suffix=""
+    while ! $done; do
+      IFS="|" read -r variable prefix label || done=true
+      [ -n "$variable" ] || continue
+      local value="${!variable}"
+      if [ -n "$value" ]; then
+        local formatted
+        formatted="$(printf "\n\n%s\n%s\n" "$label:" "$(decorate wrap "$prefix" "" <<<"$(trimSpace "$value")")")"
+        suffix="$suffix$formatted"
+      fi
+    done < <(__usageDocumentComplexSections)
+    description=$(trimTail <<<"$description")
+    usageTemplate "$(mapEnvironment <<<"$fn")" "$(printf "%s\n" "$argument" | sed 's/ - /^/1')" "^" "$description$suffix" "$returnCode" "$@"
     if $bashDebug; then
       __buildDebugEnable
     fi
     bashRecursionDebug --end
   )
-  return "$exitCode"
+  return "$returnCode"
 }
 _usageDocumentComplex() {
-  # _IDENTICAL_ usageDocumentSimple 1
-  usageDocumentSimple "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# IDENTICAL usageDocumentSimple 20
+__usageDocumentComplexSections() {
+  cat <<'EOF'
+exit_code|- |Exit codes
+environment|- |Environment variables
+stdin||Reads from `stdin`
+stdout||Writes to `stdout`
+example||Example
+EOF
+}
+
+# IDENTICAL usageDocumentSimple 26
 
 # Output a simple error message for a function
 # Argument: source - File. Required. File where documentation exists.
@@ -120,17 +138,23 @@ _usageDocumentComplex() {
 # Argument: message ... - Optional. String. Message to display to the user.
 # Requires: bashFunctionComment decorate read printf exitString
 usageDocumentSimple() {
-  local source="${1-}" functionName="${2-}" exitCode="${3-}" color helpColor="info" icon="❌" line prefix="" done=false skip=false && shift 3
+  local source="${1-}" functionName="${2-}" returnCode="${3-}" color helpColor="info" icon="❌" line prefix="" done=false skip=false && shift 3
 
-  case "$exitCode" in 0) icon="🏆" && color="info" && [ $# -ne 0 ] || skip=true ;; 1) color="error" ;; 2) color="bold-red" ;; *) color="orange" ;; esac
-  [ $# -eq 0 ] || [ "$exitCode" -ne 0 ]
-  $skip || printf -- "%s [%s] %s\n" "$icon" "$(decorate "code" "$(exitString "$exitCode")")" "$(decorate "$color" "$*")"
+  case "$returnCode" in 0) icon="🏆" && color="info" && [ $# -ne 0 ] || skip=true ;; 1) color="error" ;; 2) color="bold-red" ;; *) color="orange" ;; esac
+  [ $# -eq 0 ] || [ "$returnCode" -ne 0 ]
+  $skip || printf -- "%s [%s] %s\n" "$icon" "$(decorate "code" "$(exitString "$returnCode")")" "$(decorate "$color" "$*")"
+  if [ ! -f "$source" ]; then
+    export BUILD_HOME
+    [ -d "${BUILD_HOME-}" ] || _argument "Unable to locate $source (${PWD-})" || return $?
+    source="$BUILD_HOME/$source"
+    [ -f "$source" ] || _argument "Unable to locate $source (${PWD-})" || return $?
+  fi
   while ! $done; do
     IFS='' read -r line || done=true
     printf "%s%s\n" "$prefix" "$(decorate "$helpColor" "$line")"
     prefix=""
-  done < <(bashFunctionComment "$source" "$functionName")
-  return "$exitCode"
+  done < <(bashFunctionComment "$source" "$functionName" | sed "s/{fn}/$functionName/g")
+  return "$returnCode"
 }
 
 # Summary: Convert a template file to a documentation file using templates
@@ -335,7 +359,8 @@ documentationTemplateCompile() {
   statusMessage decorate info "$(timingReport "$start" "$message" "$targetFile" in)"
 }
 _documentationTemplateCompile() {
-  usageDocument "${BASH_SOURCE[0]}" "documentationTemplateCompile" "$@"
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Summary: Generate a function documentation block using `functionTemplate` for `functionName`
@@ -405,6 +430,7 @@ documentationTemplateFunctionCompile() {
   __catchEnvironment "$usage" _bashDocumentation_Template "$functionTemplate" "${envFiles[@]+"${envFiles[@]}"}" "$settingsFile" || return $?
 }
 _documentationTemplateFunctionCompile() {
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -517,6 +543,7 @@ documentationTemplateDirectoryCompile() {
   return $exitCode
 }
 _documentationTemplateDirectoryCompile() {
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -536,14 +563,45 @@ _documentationTemplateDirectoryCompile() {
 # Requires: __throwArgument fileTemporaryName __catchEnvironment bashDocumentation_Extract __dumpNameValue  _bashDocumentation_Template rm
 bashDocumentFunction() {
   local usage="_${FUNCNAME[0]}"
-  local envFile file=$1 fn=$2 template=$3 home exitCode
 
-  [ -f "$template" ] || __throwArgument "$usage" "$template is not a file" || return $?
+  local file="" fn="" template=""
+  # _IDENTICAL_ argument-case-header 5
+  local __saved=("$@") __count=$#
+  while [ $# -gt 0 ]; do
+    local argument="$1" __index=$((__count - $# + 1))
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
+    case "$argument" in
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    *)
+      if [ -z "$file" ]; then
+        file=$(usageArgumentFile "$usage" "file" "$argument") || return $?
+      elif [ -z "$fn" ]; then
+        fn=$(usageArgumentString "$usage" "fn" "$argument") || return $?
+      elif [ -z "$template" ]; then
+        template=$(usageArgumentFile "$usage" "template" "$argument") || return $?
+      else
+        # _IDENTICAL_ argumentUnknown 1
+        __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
+      fi
+      ;;
+    esac
+    # _IDENTICAL_ argument-esac-shift 1
+    shift
+  done
+
+  local envFile
+
   envFile=$(fileTemporaryName "$usage") || return $?
   __catchEnvironment "$usage" printf "%s\n%s\n" "#!/usr/bin/env bash" "%s\n" "set -eou pipefail" >>"$envFile" || return $?
   if ! bashDocumentation_Extract "$file" "$fn" >>"$envFile"; then
     __dumpNameValue "error" "$fn was not found" >>"$envFile"
   fi
+
+  local exitCode
   _bashDocumentation_Template "$template" "$envFile"
   exitCode=$?
   __catchEnvironment "$usage" rm -rf "$envFile" || return $?
@@ -677,8 +735,8 @@ __dumpAliasedValue() {
 # - `base` - The basename of the file
 # - `file` - The relative path name of the file from the application root
 # - `summary` - Defaults to first ten words of `description`
-# - `exitCode` - Defaults to `0 - Always succeeds`
-# - `reviewed"  - Defaults to `Never`
+# - `exit_code` - Defaults to `0 - Always succeeds`
+# - `reviewed`  - Defaults to `Never`
 # - `environment"  - Defaults to `No environment dependencies or modifications.`
 #
 # Otherwise the assumed variables (in addition to above) to define functions are:
@@ -689,17 +747,16 @@ __dumpAliasedValue() {
 # - `depends` - Any dependencies (list)
 #
 # Summary: Generate a set of name/value pairs to document bash functions
-# Usage: {fn} definitionFile function
-# Argument: `definitionFile` - File in which function is defined
-# Argument: `function` - Function defined in `file`
-#
+# Argument: definitionFile - File. Required. File in which function is defined
+# Argument: function - String. Required. Function defined in `file`
 bashDocumentation_Extract() {
   local usage="_${FUNCNAME[0]}"
-  local definitionFile="$1" fn="$2" definitionFile
+  local definitionFile fn
   local home tempDoc docMap base
 
-  [ -f "$definitionFile" ] || __throwArgument "$usage" "$definitionFile is not a file" || return $?
-  [ -n "$fn" ] || __throwArgument "function name is blank" || return $?
+  [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
+  definitionFile=$(usageArgumentFile "$usage" "definitionFile" "${1-}") && shift || return $?
+  fn=$(usageArgumentString "$usage" "fn" "${1-}") && shift || return $?
 
   set +o pipefail
 
@@ -793,7 +850,7 @@ bashDocumentation_Extract() {
   # Trims trailing space from `fn`
   printf '%s\n' "fn=\"\${fn%\$'\n'}\""
   if ! inArray "argument" "${foundNames[@]+${foundNames[@]}}"; then
-    __dumpNameValue "argument" "No arguments."
+    __dumpNameValue "argument" "none"
     __dumpAliasedValue "usage" "fn"
   else
     if ! inArray "usage" "${foundNames[@]+"${foundNames[@]}"}"; then
@@ -807,8 +864,8 @@ bashDocumentation_Extract() {
   printf "%s %s\n" "# Found Names:" "$(printf "%s " "${foundNames[@]+"${foundNames[@]}"}")"
 }
 _bashDocumentation_Extract() {
-  # _IDENTICAL_ usageDocumentSimple 1
-  usageDocumentSimple "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Formats arguments for markdown
@@ -836,10 +893,13 @@ __bashDocumentationDefaultArguments() {
 # Summary: Find where a function is defined in a directory of shell scripts
 #
 bashDocumentation_FindFunctionDefinitions() {
-  local directory="${1%%/}"
-  local functionPattern fn linesOutput phraseCount f
+  local usage="_${FUNCNAME[0]}"
 
-  shift
+  local directory functionPattern fn linesOutput phraseCount f
+
+  [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
+  directory=$(usageArgumentDirectory "$usage" "directory" "${1-}") && shift || return $?
+
   phraseCount=${#@}
   foundOne=$(mktemp)
   while [ "$#" -gt 0 ]; do
@@ -854,6 +914,10 @@ bashDocumentation_FindFunctionDefinitions() {
   done | tee "$foundOne"
   linesOutput=$(fileLineCount "$foundOne")
   [ "$phraseCount" -eq "$linesOutput" ]
+}
+_bashDocumentation_FindFunctionDefinitions() {
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
@@ -872,10 +936,12 @@ bashDocumentation_FindFunctionDefinitions() {
 # Summary: Find single location where a function is defined in a directory of shell scripts
 # See: bashDocumentation_FindFunctionDefinitions
 bashDocumentation_FindFunctionDefinition() {
-  local definitionFiles directory="${1%%/}" fn="$2"
+  local usage="_${FUNCNAME[0]}"
+  local definitionFiles directory fn
 
-  [ -d "$directory" ] || _argument "$directory is not a directory" || return $?
-  [ -n "$fn" ] || _argument "Need a function to find is not a directory" || return $?
+  [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
+  directory=$(usageArgumentDirectory "$usage" "directory" "${1-}") && shift || return $?
+  fn=$(usageArgumentString "$usage" "fn" "${1-}") && shift || return $?
 
   definitionFiles=$(mktemp)
   if ! bashDocumentation_FindFunctionDefinitions "$directory" "$fn" >"$definitionFiles"; then
@@ -888,6 +954,10 @@ bashDocumentation_FindFunctionDefinition() {
     _environment "No files found for $fn in $directory" || return $?
   fi
   printf %s "$definitionFile"
+}
+_bashDocumentation_FindFunctionDefinition() {
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #

@@ -22,6 +22,8 @@
 # Argument: arguments ... - Arguments. Optional. Arguments passed to calling function to check for `--help` argument.
 # Example:     __help "_${FUNCNAME[0]}" "$@" || return 0
 # Example:     __help "$usage" "$@" || return 0
+# Example:     [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
+# Example:     [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
 # Example:     [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return 0
 # Example:     [ $# -eq 0 ] || __help --only "$usage" "$@" || return 0
 # Requires: __throwArgument

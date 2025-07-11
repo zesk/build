@@ -21,6 +21,7 @@
 # Exit Code: 0 - if parsing succeeds
 dateToFormat() {
   local usage="_${FUNCNAME[0]}"
+  [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
   local format="${2-"%Y-%m-%d"}"
   if [ $# -lt 1 ] || [ $# -gt 2 ]; then
     __throwArgument "$usage" "${FUNCNAME[0]} requires 1 or 2 arguments: date [ format ] –- Passed $#:" "$@" || return $?
@@ -31,6 +32,10 @@ dateToFormat() {
   #  else
   #    date -u -jf '%F %T' "$1 00:00:00" "+$format" 2>/dev/null
   #  fi
+}
+_dateToFormat() {
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
@@ -45,7 +50,12 @@ dateToFormat() {
 # Example:     timestamp=$(dateToTimestamp '2023-10-15')
 #
 dateToTimestamp() {
+  [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
   dateToFormat "$1" %s
+}
+_dateToTimestamp() {
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
@@ -61,6 +71,7 @@ dateToTimestamp() {
 # Example:     dateField=$(dateFromTimestamp $init %Y)
 dateFromTimestamp() {
   local usage="_${FUNCNAME[0]}"
+  [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
   if [ $# -lt 1 ] || [ $# -gt 2 ]; then
     __throwArgument "$usage" "${FUNCNAME[0]} requires 1 or 2 arguments: integerTimestamp [ format ] –- Passed $#:" "$@" || return $?
   fi
@@ -78,7 +89,12 @@ _dateFromTimestamp() {
 # Summary: Yesterday's date
 # Example:     rotated="$log.$({fn})"
 yesterdayDate() {
+  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return 0
   dateFromTimestamp "$(($(date -u +%s) - 86400))" %F
+}
+_yesterdayDate() {
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Returns tomorrow's date, in YYYY-MM-DD format. (same as `%F`)
@@ -88,7 +104,12 @@ yesterdayDate() {
 # Summary: Tomorrow's date
 # Example:     rotated="$log.$({fn})"
 tomorrowDate() {
+  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return 0
   dateFromTimestamp "$(($(date -u +%s) + 86400))" %F
+}
+_tomorrowDate() {
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Summary: Today's date
@@ -99,11 +120,17 @@ tomorrowDate() {
 # Example:     date="$({fn})"
 #
 todayDate() {
+  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return 0
   date -u +%F
+}
+_todayDate() {
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Is a date valid?
 dateValid() {
+  [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
   local date="${1-}"
   __environment [ "${date:4:1}${date:7:1}" = "--" ] || return 1
   local year="${date:0:4}" month="${date:5:2}" day="${date:8:2}"

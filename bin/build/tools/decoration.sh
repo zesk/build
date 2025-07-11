@@ -54,6 +54,8 @@
 bigText() {
   local usage="_${FUNCNAME[0]}"
 
+  [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
+
   local fonts binary index=0
 
   binary=$(__catchEnvironment "$usage" buildEnvironmentGet BUILD_TEXT_BINARY) || return $?
@@ -70,7 +72,7 @@ bigText() {
     decorate green "BIG TEXT: $*"
     return 0
   fi
-  if [ "$1" = "--bigger" ]; then
+  if [ "${1-}" = "--bigger" ]; then
     index=1
     shift
   fi
@@ -371,27 +373,35 @@ _lineFill() {
 #
 # Usage: alignRight characterWidth text [ ... ]
 # Summary: align text right
-# Argument: `characterWidth` - Characters to align right
-# Argument: `text ...` - Text to align right
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
+# Argument: characterWidth - Characters to align right
+# Argument: text ... - Text to align right
 # Example:     printf "%s: %s\n" "$(alignRight 20 Name)" "$name"
 # Example:     printf "%s: %s\n" "$(alignRight 20 Profession)" "$occupation"
 # Example:                 Name: Juanita
 # Example:           Profession: Engineer
 #
 alignRight() {
-  local n=$(($1 + 0))
-  shift
+  local usage="_${FUNCNAME[0]}"
+  local n
+  __help "$usage" "$@" || return 0
+  n=$(usageArgumentUnsignedInteger "$usage" "characterWidth" "${1-}") && shift || return $?
   printf "%${n}s" "$*"
+}
+_alignRight() {
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
 # Format text and align it left using spaces.
 #
-# Usage: alignLeft characterWidth text [ ... ]
-#
 # Summary: align text left
-# Argument: - characterWidth - Characters to align left
-# Argument: - `text ...` - Text to align left
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
+# Argument: characterWidth - Characters to align left
+# Argument: text ... - Text to align left
 #
 # Example:     printf "%s: %s\n" "$(alignLeft 14 Name)" "$name"
 # Example:     printf "%s: %s\n" "$(alignLeft 14 Profession)" "$occupation"
@@ -399,17 +409,26 @@ alignRight() {
 # Example:     Profession    : Engineer
 #
 alignLeft() {
-  local n=$(($1 + 0))
-  shift
+  local usage="_${FUNCNAME[0]}"
+  local n
+  __help "$usage" "$@" || return 0
+  n=$(usageArgumentUnsignedInteger "$usage" "characterWidth" "${1-}") && shift || return $?
   printf "%-${n}s" "$*"
+}
+_alignLeft() {
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
 # Heading for section output
 #
 # Summary: Text heading decoration
-# Usage: boxedHeading [ --size size ] text [ ... ]
 # Argument: --size size - Optional. Integer. Number of liens to output. Defaults to 1.
+# Argument: --outside outsideStyle - Optional. String. Style to apply to the outside border.
+# Argument: --inside insideStyle - Optional. String. Style to apply to the inside spacing.
+# Argument: --shrink characterCount - Optional. UnsignedInteger. Reduce the box by this many characters wide.
+# Argument: --size lineCount - Optional. UnsignedInteger. Print this many blank lines between the header and title.
 # Argument: text ... - Text to put in the box
 # Example:     boxedHeading Moving ...
 # Output: +================================================================================================+

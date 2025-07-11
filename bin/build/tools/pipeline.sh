@@ -34,6 +34,9 @@
 # Exit Code: 1 - Always fails
 # Output: stdout
 buildFailed() {
+  local usage="_${FUNCNAME[0]}"
+  [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
+
   local quietLog="${1-}" showLines=100 failBar
 
   shift
@@ -45,6 +48,10 @@ buildFailed() {
   # shellcheck disable=SC2094
   dumpPipe --lines "$showLines" --tail "$(basename "$quietLog")" "$@" <"$quietLog"
   _environment "Failed:" "$@" || return $?
+}
+_buildFailed() {
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # IDENTICAL versionSort 51
@@ -220,5 +227,6 @@ isUpToDate() {
   return 0
 }
 _isUpToDate() {
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

@@ -234,6 +234,7 @@ bashUserInput() {
   local usage="_${FUNCNAME[0]}"
   local word="" exitCode=0
 
+  [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
   if ! isTTYAvailable; then
     __throwEnvironment "$usage" "No TTY available for user input" || return $?
   fi
@@ -299,9 +300,12 @@ _bashPromptMarkers() {
 # - dark
 bashPromptColorScheme() {
   local colors exitColor
-  __help "$usage" "$@" || return 0
   exitColor="bold-green:bold-red"
   case "${1-}" in
+  --help)
+    usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]}" 0
+    return $?
+    ;;
   forest) colors="bold-cyan:bold-magenta:green:orange:code" ;;
   light) colors="$exitColor:magenta:blue:bold-black" ;;
   dark) colors="$exitColor:magenta:blue:bold-white" ;;
@@ -425,6 +429,7 @@ bashPromptColorsFormat() {
   local index color colors=()
   local all=()
 
+  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return 0
   while read -r color; do all+=("$color"); done < <(decorations)
   IFS=":" read -r -a colors <<<"$1:::::" || :
   for index in "${!colors[@]}"; do
@@ -438,6 +443,10 @@ bashPromptColorsFormat() {
   done
   colors+=("$(decorate reset --)")
   printf "%s\n" "$(listJoin ":" "${colors[@]}")"
+}
+_bashPromptColorsFormat() {
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 __bashPromptFormat() {

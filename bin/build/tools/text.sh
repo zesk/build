@@ -380,9 +380,12 @@ stringContainsInsensitive() {
 # Exit Code: 0 - If `text` has any prefix
 # Does text have one or more prefixes?
 beginsWith() {
+  local usage="_${FUNCNAME[0]}"
   local text="${1-}"
 
-  [ -n "$text" ] || return 1
+  [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
+  [ -n "$text" ] || __throwArgument "$usage" "Empty text" || return $?
+
   shift
   while [ $# -gt 0 ]; do
     if [ -n "$1" ]; then
@@ -408,7 +411,9 @@ _beginsWith() {
 # Tested: No
 #
 isSubstring() {
+  local usage="_${FUNCNAME[0]}"
   local needle=${1-}
+  [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
   shift || return 1
   for haystack; do
     [ "${haystack#*"$needle"}" = "$haystack" ] || return 0
@@ -432,8 +437,10 @@ _isSubstring() {
 # Tested: No
 #
 isSubstringInsensitive() {
+  local usage="_${FUNCNAME[0]}"
   local element arrayElement
 
+  [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
   element="$(lowercase "${1-}")"
   [ -n "$element" ] || __throwArgument "$usage" "needle is blank" || return $?
   shift || return 1
@@ -460,6 +467,10 @@ _isSubstringInsensitive() {
 # Tested: No
 #
 trimWords() {
+  local usage="_${FUNCNAME[0]}"
+
+  [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
+
   local wordCount=$((${1-0} + 0)) words=() result
   shift || return 0
   while [ $# -gt 0 ] && [ ${#words[@]} -lt $wordCount ]; do
@@ -489,6 +500,10 @@ trimWords() {
 # Example:     usageOptions | usageGenerator $(usageOptions | maximumFieldLength 1 ;) ;
 #
 maximumFieldLength() {
+  local usage="_${FUNCNAME[0]}"
+
+  [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
+
   local index=$((${1-1} + 0)) separatorChar=${2-}
 
   if [ -n "$separatorChar" ]; then
@@ -498,13 +513,20 @@ maximumFieldLength() {
   fi
   awk "${separatorChar[@]}" "{ print length(\$$index) }" | sort -rn | head -1
 }
+_maximumFieldLength() {
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
 
 #
 # Usage: {fn}
 # Outputs the maximum line length passed into stdin
 #
 maximumLineLength() {
+  local usage="_${FUNCNAME[0]}"
   local max
+
+  [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
   max=0
   while IFS= read -r line; do
     if [ "${#line}" -gt "$max" ]; then
@@ -512,6 +534,10 @@ maximumLineLength() {
     fi
   done
   printf "%d" "$max"
+}
+_maximumLineLength() {
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # DOC TEMPLATE: --help 1
@@ -575,6 +601,9 @@ _fileLineCount() {
 # Example:     n=$(($(date +%s)) - start))
 # Example:     printf "That took %d %s" "$n" "$(plural "$n" second seconds)"
 plural() {
+  local usage="_${FUNCNAME[0]}"
+  [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
+
   local count=${1-}
   if [ "$count" -eq "$count" ] 2>/dev/null; then
     if [ "$((${1-} + 0))" -eq 1 ]; then
@@ -597,12 +626,18 @@ plural() {
 # Arguments: text - text to convert to lowercase
 #
 lowercase() {
+  local usage="_${FUNCNAME[0]}"
+  [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
   while [ $# -gt 0 ]; do
     if [ -n "$1" ]; then
       printf "%s\n" "$1" | tr '[:upper:]' '[:lower:]'
     fi
     shift
   done
+}
+_lowercase() {
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
@@ -612,12 +647,18 @@ lowercase() {
 # Arguments: text - text to convert to uppercase
 #
 uppercase() {
+  local usage="_${FUNCNAME[0]}"
+  [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
   while [ $# -gt 0 ]; do
     if [ -n "$1" ]; then
       printf "%s\n" "$1" | tr '[:lower:]' '[:upper:]'
     fi
     shift
   done
+}
+_uppercase() {
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
@@ -634,14 +675,27 @@ uppercase() {
 # Depends: sed
 #
 stripAnsi() {
+  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return 0
   sed $'s,\x1B\[[0-9;]*[a-zA-Z],,g'
+}
+_stripAnsi() {
+  true || stripAnsi --help
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Length of an unformatted string
 plainLength() {
+  local usage="_${FUNCNAME[0]}"
+  [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
+
   local text
   text="$(stripAnsi <<<"$*")"
   printf "%d\n" "${#text}"
+}
+_plainLength() {
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Generates a checksum of standard input and outputs a SHA1 checksum in hexadecimal without any extra stuff
@@ -664,6 +718,7 @@ shaPipe() {
   if [ -n "$*" ]; then
     while [ $# -gt 0 ]; do
       argument="$1"
+      [ "$argument" != "--help" ] || __help "$usage" "$@" || return 0
       [ -f "$1" ] || __throwArgument "$usage" "$1 is not a file" || return $?
       [ -n "$argument" ] || __throwArgument "$usage" "blank argument" || return $?
       if test "${DEBUG_SHAPIPE-}"; then
@@ -702,8 +757,9 @@ _shaPipe() {
 #
 cachedShaPipe() {
   local usage="_${FUNCNAME[0]}"
-  local argument
+  [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
 
+  local argument
   local cacheDirectory="${1-}"
 
   shift || __throwArgument "$usage" "Missing cacheDirectory" || return $?
@@ -719,6 +775,7 @@ cachedShaPipe() {
   if [ $# -gt 0 ]; then
     while [ $# -gt 0 ]; do
       argument="$1"
+      [ "$argument" != "--help" ] || __help "$usage" "$@" || return 0
       [ -n "$argument" ] || __throwArgument "$usage" "blank argument" || return $?
       [ -f "$argument" ] || __throwArgument "$usage" "not a file $(decorate label "$argument")" || return $?
       cacheFile="$cacheDirectory/${argument#/}"
@@ -741,22 +798,28 @@ _cachedShaPipe() {
 
 #
 # Usage: randomString [ ... ]
-# Arguments: Ignored
 # Depends: sha1sum, /dev/random
 # Description: Outputs 40 random hexadecimal characters, lowercase.
 # Example:     testPassword="$(randomString)"
 # Output: cf7861b50054e8c680a9552917b43ec2b9edae2b
-#
 randomString() {
+  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return 0
   head --bytes=64 /dev/random | sha1sum | cut -f 1 -d ' '
+}
+_randomString() {
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
 # Usage: stringOffset needle haystack
 # Outputs the integer offset of `needle` if found as substring in `haystack`
 # If `haystack` is not found, -1 is output
-#
+# Argument: offset - Integer. Required.
+# Argument: needle - String. Required.
+# Argument: haystack - String. Required.
 stringOffset() {
+  [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
   local length=${#2}
   local substring="${2/${1-}*/}"
   local offset="${#substring}"
@@ -765,10 +828,20 @@ stringOffset() {
   fi
   printf %d "$offset"
 }
+_stringOffset() {
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
 
 # List the valid character classes allowed in `isCharacterClass`
 characterClasses() {
+  [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
   printf "%s\n" alnum alpha ascii blank cntrl digit graph lower print punct space upper word xdigit
+}
+_characterClasses() {
+  true || characterClasses --help
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
@@ -783,6 +856,8 @@ characterClasses() {
 #     print   punct   space   upper   word    xdigit
 #
 isCharacterClass() {
+  [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
+
   local class="${1-}" classes character
   local usage
 
@@ -814,12 +889,11 @@ _isCharacterClass() {
 # Argument: class0 - Optional. A class name or a character to match. If more than is supplied, a single value must match to succeed (any).
 #
 isCharacterClasses() {
-  local character class
-  local usage
+  local usage="_${FUNCNAME[0]}"
+  [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
 
-  usage="_${FUNCNAME[0]}"
+  local character="${1-}" class
 
-  character="${1-}"
   [ "${#character}" -eq 1 ] || __throwArgument "$usage" "Non-single character: \"$character\"" || return $?
   if ! shift || [ $# -eq 0 ]; then
     __throwArgument "$usage" "Need at least one class" || return $?
@@ -848,18 +922,31 @@ _isCharacterClasses() {
 # Source: https://mywiki.wooledge.org/BashFAQ/071
 characterFromInteger() {
   local usage="_${FUNCNAME[0]}"
-  local arg
+
+  # _IDENTICAL_ argument-case-header 5
+  local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
-    arg="$1"
-    __catchArgument "$usage" isUnsignedInteger "$arg" || return $?
-    [ "$arg" -lt 256 ] || __throwArgument "$usage" "Integer out of range: \"$arg\"" || return $?
-    if [ "$arg" -eq 0 ]; then
-      printf "%s\n" $'\0'
-    else
-      # shellcheck disable=SC2059
-      printf "\\$(printf '%03o' "$arg")"
-    fi
-    shift || __throwArgument "$usage" "shift $arg failed" || return $?
+    local argument="$1" __index=$((__count - $# + 1))
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
+    case "$argument" in
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    *)
+      isUnsignedInteger "$argument" || __throwArgument "$usage" "Argument is not unsigned integer: $(decorate code "$argument")" || return $?
+      [ "$argument" -lt 256 ] || __throwArgument "$usage" "Integer out of range: \"$argument\"" || return $?
+      if [ "$argument" -eq 0 ]; then
+        printf "%s\n" $'\0'
+      else
+        # shellcheck disable=SC2059
+        printf "\\$(printf '%03o' "$argument")"
+      fi
+      ;;
+    esac
+    # _IDENTICAL_ argument-esac-shift 1
+    shift
   done
 }
 _characterFromInteger() {
@@ -874,6 +961,9 @@ _characterFromInteger() {
 # Note: This is slow.
 stringValidate() {
   local usage="_${FUNCNAME[0]}"
+
+  [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
+
   local text character
 
   text="${1-}"
@@ -900,6 +990,7 @@ characterToInteger() {
 
   index=0
   while [ $# -gt 0 ]; do
+    [ "$1" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
     index=$((index + 1))
     [ "${#1}" = 1 ] || __throwArgument "$usage" "Single characters only (argument #$index): \"$1\" (${#1} characters)" || return $?
     LC_CTYPE=C printf '%d' "'$1" || __throwEnvironment "$usage" "Single characters only (argument #$index): \"$1\" (${#1} characters)" || return $?
@@ -1050,10 +1141,11 @@ removeFields() {
   done
 }
 _removeFields() {
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# IDENTICAL quoteSedPattern 29
+# IDENTICAL quoteSedPattern 39
 
 # Summary: Quote sed search strings for shell use
 # Quote a string to be used in a sed pattern on the command line.
@@ -1061,12 +1153,17 @@ _removeFields() {
 # Output: string quoted and appropriate to insert in a sed search or replacement phrase
 # Example:     sed "s/$(quoteSedPattern "$1")/$(quoteSedPattern "$2")/g"
 # Example:     needSlash=$(quoteSedPattern '$.*/[\]^')
-# Requires: printf sed
+# Requires: printf sed usageDocument __help
 quoteSedPattern() {
+  [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
   local value="${1-}"
   value=$(printf -- "%s\n" "$value" | sed 's~\([][$/'$'\t''^\\.*+?]\)~\\\1~g')
   value="${value//$'\n'/\\n}"
   printf -- "%s\n" "$value"
+}
+_quoteSedPattern() {
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Summary: Quote sed replacement strings for shell use
@@ -1076,12 +1173,17 @@ quoteSedPattern() {
 # Output: string quoted and appropriate to insert in a sed search or replacement phrase
 # Example:     sed "s/$(quoteSedPattern "$1")/$(quoteSedReplacement "$2")/g"
 # Example:     needSlash=$(quoteSedPattern '$.*/[\]^')
-# Requires: printf sed
+# Requires: printf sed usageDocument __help
 quoteSedReplacement() {
+  [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
   local value="${1-}" separator="${2-/}"
   value=$(printf -- "%s\n" "$value" | sed 's~\([\&'"$separator"']\)~\\\1~g')
   value="${value//$'\n'/\\n}"
   printf -- "%s\n" "$value"
+}
+_quoteSedReplacement() {
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Usage: {fn} printfArguments

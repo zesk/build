@@ -21,6 +21,7 @@ dockerComposeInstall() {
   _pipInstall "_${FUNCNAME[0]}" "docker-compose" "$@"
 }
 _dockerComposeInstall() {
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -52,6 +53,7 @@ dockerComposeUninstall() {
   statusMessage --last timingReport "$start" "Uninstalled $name in"
 }
 _dockerComposeUninstall() {
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 

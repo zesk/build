@@ -26,6 +26,7 @@ environmentValueWrite() {
   fi
 }
 _environmentValueWrite() {
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -57,6 +58,7 @@ environmentValueWriteArray() {
   fi
 }
 _environmentValueWriteArray() {
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 

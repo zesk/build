@@ -11,6 +11,8 @@
 bashPromptModule_dotFilesWatcher() {
   local askFile dataFile
 
+  [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
+
   askFile="$(buildEnvironmentGetDirectory "XDG_STATE_HOME")/dotFilesWatcher-asked" 2>/dev/null || return 1
   dataFile="$(dotFilesApprovedFile)" || return 1
 
@@ -70,6 +72,10 @@ bashPromptModule_dotFilesWatcher() {
     fi
   fi
   rm -f "$askFile.$$" || :
+}
+_bashPromptModule_dotFilesWatcher() {
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # The dot files approved file. Add files to this to approve.

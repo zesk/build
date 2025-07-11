@@ -77,12 +77,17 @@ checkDockerEnvFile() {
 
   pattern='\$|="|='"'"
   for f in "$@"; do
+    [ "$f" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
     if grep -q -E "$pattern" "$f"; then
       grep -E "$pattern" "$f" 1>&2
       result=1
     fi
   done
   return "$result"
+}
+_checkDockerEnvFile() {
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
@@ -103,6 +108,10 @@ __anyEnvToFunctionEnv() {
   if [ $# -gt 0 ]; then
     local file
     for file in "$@"; do
+      if [ "$file" = "--help" ]; then
+        "$usage" 0
+        return 0
+      fi
       if checkDockerEnvFile "$file" 2>/dev/null; then
         # printf -- "%s\n" "checkDockerEnvFile=true" "converter=$passConvertFunction"
         __catchEnvironment "$usage" "$passConvertFunction" <"$file" || return $?
@@ -177,6 +186,10 @@ dockerEnvToBash() {
     _dockerEnvToBashPipe
   else
     for file in "$@"; do
+      if [ "$file" = "--help" ]; then
+        "$usage" 0
+        return $?
+      fi
       [ -f "$file" ] || __throwArgument "$usage" "Not a file $file" || return $?
       _dockerEnvToBashPipe <"$file" || __throwArgument "$usage" "Invalid file: $file" || return $?
     done
@@ -237,6 +250,10 @@ dockerEnvFromBashEnv() {
     set -- "$tempFile.bash"
   fi
   for file in "$@"; do
+    if [ "$file" = "--help" ]; then
+      "$usage" 0
+      return $?
+    fi
     [ -f "$file" ] || __throwArgument "$usage" "Not a file $file" || returnClean $? "${clean[@]}" || return $?
     env -i bash -c "set -eoua pipefail; source \"$file\"; declare -px; declare -pa" >"$tempFile" 2>&1 | outputTrigger --name "$file" || __throwArgument "$usage" "$file is not a valid bash file" || returnClean $? "${clean[@]}" || return $?
   done
@@ -255,9 +272,10 @@ _dockerEnvFromBashEnv() {
 #
 # Runs ARM64 by default.
 #
-# fn: {base}
-# Usage: {fn} imageName imageApplicationPath [ envFile ... ] [ extraArgs ... ]
-# Argument: --help - Optional. Flag. This help.
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
+# DOC TEMPLATE: --handler 1
+# Argument: --handler handler - Optional. Function. Use this error handler instead of the default error handler.
 # Argument: --image imageName - Optional. String. Docker image name to run. Defaults to `BUILD_DOCKER_IMAGE`.
 # Argument: --path imageApplicationPath - Path. Docker image path to map to current directory. Defaults to `BUILD_DOCKER_PATH`.
 # Argument: --platform platform - Optional. String. Platform to run (arm vs intel).
@@ -296,6 +314,11 @@ dockerLocalContainer() {
     --help)
       "$usage" 0
       return $?
+      ;;
+    # _IDENTICAL_ --handler 4
+    --handler)
+      shift
+      usage=$(usageArgumentFunction "$usage" "$argument" "${1-}") || return $?
       ;;
     --image)
       shift

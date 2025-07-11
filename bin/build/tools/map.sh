@@ -117,6 +117,7 @@ mapValue() {
   )
 }
 _mapValue() {
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -130,6 +131,7 @@ mapValueTrim() {
   mapValue --replace-filter trimSpace "$@"
 }
 _mapValueTrim() {
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -296,5 +298,6 @@ cannon() {
   return "$exitCode"
 }
 _cannon() {
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

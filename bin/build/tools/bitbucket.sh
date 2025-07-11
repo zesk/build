@@ -39,25 +39,24 @@
 #
 bitbucketGetVariable() {
   local usage="_${FUNCNAME[0]}"
-  local value
-  local yml
+  [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
 
-  local home
+  local value yml home
+
   home=$(__catchEnvironment "$usage" buildHome) || return $?
   yml="$home/bitbucket-pipelines.yml"
-  [ -f "$yml" ] || __throwEnvironment "$usage" "Missing $yml" || return $?
 
+  [ -f "$yml" ] || __throwEnvironment "$usage" "Missing $yml" || return $?
   value=$(grep "$1" "$yml" | awk '{ print $2 }')
   value=${value:-$2}
 
   printf "%s" "$value"
 }
 _bitbucketGetVariable() {
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-
-# fn: {base}
 # Usage: {fn} [ envFile ... ] [ extraArgs ... ]
 # Argument: envFile - One or more environment files which are suitable to load for docker; must be valid
 # Argument: extraArgs - The first non-file argument to `{fn}` is passed directly through to `docker run` as arguments
@@ -74,9 +73,10 @@ bitbucketContainer() {
   if ! buildEnvironmentLoad BUILD_DOCKER_BITBUCKET_IMAGE BUILD_DOCKER_BITBUCKET_PATH; then
     return 1
   fi
-  dockerLocalContainer --image "${BUILD_DOCKER_BITBUCKET_IMAGE}" --path "${BUILD_DOCKER_BITBUCKET_PATH}" "$@"
+  dockerLocalContainer --handler "_${FUNCNAME[0]}" --image "${BUILD_DOCKER_BITBUCKET_IMAGE}" --path "${BUILD_DOCKER_BITBUCKET_PATH}" "$@"
 }
 _bitbucketContainer() {
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 

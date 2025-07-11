@@ -12,9 +12,15 @@
 bashPromptModule_ApplicationPath() {
   local folderIcon="📂"
   local path applicationPath
+  [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
+
   path=$(__environment pwd) || return $?
   applicationPath=$(decoratePath "$path")
   if [ "$applicationPath" != "$path" ]; then
     iTerm2Badge -i "$(printf -- "%s\n%s %s\n" "$(buildEnvironmentGet APPLICATION_NAME)" "$folderIcon" "$applicationPath")"
   fi
+}
+_bashPromptModule_ApplicationPath() {
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

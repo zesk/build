@@ -13,6 +13,8 @@ bashPromptModule_reloadChanges() {
   local usage="_return"
   local home removeSources=() cacheFile debug=false
 
+  [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
+
   export __BASH_PROMPT_RELOAD_CHANGES
 
   home=$(buildHome) || return $?
@@ -110,6 +112,10 @@ bashPromptModule_reloadChanges() {
   for name in "${removeSources[@]+"${removeSources[@]+}"}"; do
     __reloadChangesRemove "$usage" "$cacheFile" "$source" || return $?
   done
+}
+_bashPromptModule_reloadChanges() {
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Watch or more directories for changes in a file extension and reload a source file if any changes occur.

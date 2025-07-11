@@ -83,6 +83,7 @@ consoleGetColor() {
 
 }
 _consoleGetColor() {
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -96,9 +97,14 @@ _consoleGetColor() {
 # Exit Code: 0 - Success
 # Exit Code: 1 - A problem occurred with `consoleGetColor`
 consoleBrightness() {
+  [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
   if ! colorBrightness < <(consoleGetColor "$@") 2>/dev/null; then
     return 1
   fi
+}
+_consoleBrightness() {
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
@@ -107,6 +113,7 @@ consoleBrightness() {
 # Print the suggested color mode for the current environment
 #
 consoleConfigureColorMode() {
+  [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
   local colorMode="light" color="${1-}" brightness
   if [ -n "$color" ]; then
     brightness=$(colorParse <<<"$color" | colorBrightness)
@@ -122,10 +129,15 @@ consoleConfigureColorMode() {
   fi
   printf -- "%s\n" "$colorMode"
 }
+_consoleConfigureColorMode() {
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
 
 # Set the title of the window for the console
 consoleSetTitle() {
   local usage="_${FUNCNAME[0]}"
+  [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
   [ -t 0 ] || __throwEnvironment "$usage" "stdin is not a terminal" || return $?
   printf -- "\e%s\007" "]0;$*"
 }
@@ -138,6 +150,7 @@ _consoleSetTitle() {
 # Argument: None
 consoleDefaultTitle() {
   local usage="_${FUNCNAME[0]}"
+  [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
   [ -t 0 ] || __throwEnvironment "$usage" "stdin is not a terminal" || return $?
   consoleSetTitle "${USER}@${HOSTNAME%%.*}: ${PWD/#$HOME/~}"
 }
@@ -151,15 +164,21 @@ _consoleDefaultTitle() {
 # No way to test ability, I think. Maybe `tput`.
 # Usage: {fn} link [ text ]
 consoleLink() {
+  [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
   local link="$1" text="${2-$1}" OSC="\e]" ST="\e\\"
   local OSC8="${OSC}8;;"
   printf -- "${OSC8}%s${ST}%s${OSC8}${ST}" "$link" "$text"
+}
+_consoleLink() {
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Are console links (likely) supported?
 # Unfortunately there's no way to test for this feature currently
 consoleLinksSupported() {
   local usage="_${FUNCNAME[0]}"
+  [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
   export HOSTNAME
   [ -n "${HOSTNAME-}" ] || return 1
   hasConsoleAnimation || return 1
@@ -167,6 +186,7 @@ consoleLinksSupported() {
   ! isiTerm2 || return 0
 }
 _consoleLinksSupported() {
+  ! false || consoleLinksSupported --help
   # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
@@ -174,6 +194,8 @@ _consoleLinksSupported() {
 # Output a local file link to the console
 # Usage: file [ text ]
 consoleFileLink() {
+  local usage="_${FUNCNAME[0]}"
+  [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
   export HOSTNAME HOME
   if ! consoleLinksSupported; then
     printf -- "%s\n" "$(decoratePath "$1")"
@@ -184,6 +206,10 @@ consoleFileLink() {
     fi
     consoleLink "file://$HOSTNAME$path" "$(decoratePath "${2-$1}")"
   fi
+}
+_consoleFileLink() {
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # decorate extension for `file`

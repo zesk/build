@@ -10,6 +10,7 @@
 # Install daemontools and dependencies
 # Platform: `docker` containers will not install `daemontools-run` as it kills the container
 daemontoolsInstall() {
+  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return 0
   local packages
 
   if isAlpine; then
@@ -28,6 +29,10 @@ daemontoolsInstall() {
     decorate warning "daemontools run in background - not production" 1>&2
     __environment daemontoolsExecute || return $?
   fi
+}
+_daemontoolsInstall() {
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Install a daemontools service which runs a binary as the file owner.
@@ -148,6 +153,7 @@ daemontoolsInstallService() {
   fi
 }
 _daemontoolsInstallService() {
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -189,21 +195,23 @@ _daemontoolsSuperviseWait() {
 # Usage: {fn} serviceName
 # Argument: serviceName - String. Required. Service name to remove.
 daemontoolsRemoveService() {
-  local this usage arg serviceHome serviceName
+  local usage="_${FUNCNAME[0]}"
+  local serviceHome="" serviceName=""
 
-  this="${FUNCNAME[0]}"
-  usage="_$this"
-  __environment buildEnvironmentLoad DAEMONTOOLS_HOME || return $?
-  serviceHome="${DAEMONTOOLS_HOME}"
-  serviceName=
-
+  # _IDENTICAL_ argument-case-header 5
+  local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
-    arg=$1
-    [ -n "$arg" ] || __throwArgument "$usage" "blank argument" || return $?
-    case "$arg" in
+    local argument="$1" __index=$((__count - $# + 1))
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
+    case "$argument" in
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
     --home)
-      shift || :
-      serviceHome="${1-}"
+      shift
+      serviceHome=$(usageArgumentDirectory "$usage" "$argument" "${1-}") || return $?
       ;;
     *)
       if [ -z "$serviceName" ]; then
@@ -213,9 +221,14 @@ daemontoolsRemoveService() {
       fi
       ;;
     esac
-    shift || __throwArgument "$usage" "Failed after $arg" || return $?
+    # _IDENTICAL_ argument-esac-shift 1
+    shift
   done
 
+  if [ -z "$serviceHome" ]; then
+    __environment buildEnvironmentLoad DAEMONTOOLS_HOME || return $?
+    serviceHome="${DAEMONTOOLS_HOME}"
+  fi
   [ -d "$serviceHome" ] || __throwEnvironment "$usage" "daemontools home \"$serviceHome\" is not a directory" || return $?
   [ -d "$serviceHome/$serviceName" ] || __throwEnvironment "$usage" "$serviceHome/$serviceName does not exist" || return $?
 
@@ -225,6 +238,7 @@ daemontoolsRemoveService() {
   __catchEnvironment "$usage" popd >/dev/null || return $?
 }
 _daemontoolsRemoveService() {
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -232,6 +246,8 @@ _daemontoolsRemoveService() {
 # Is daemontools running?
 daemontoolsIsRunning() {
   local usage="_${FUNCNAME[0]}"
+  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return 0
+
   local processIds processId
 
   # IDENTICAL rootUser 1
@@ -244,6 +260,7 @@ daemontoolsIsRunning() {
   return 1
 }
 _daemontoolsIsRunning() {
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -251,10 +268,15 @@ _daemontoolsIsRunning() {
 # Exit code: 0 - success
 # Exit code: 1 - No environment file found
 daemontoolsHome() {
+  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return 0
   local home
   export DAEMONTOOLS_HOME
   buildEnvironmentLoad DAEMONTOOLS_HOME || _environment DAEMONTOOLS_HOME || return $?
   printf "%s\n" "${DAEMONTOOLS_HOME-}"
+}
+_daemontoolsHome() {
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Launch the daemontools daemon
@@ -263,30 +285,40 @@ daemontoolsHome() {
 # Run the daemontools root daemon
 daemontoolsExecute() {
   local usage="_${FUNCNAME[0]}"
-  local home
+  [ $# -eq 0 ] || __help --only "$usage" "$@" || return 0
 
   # IDENTICAL rootUser 1
   [ "$(id -u 2>/dev/null)" = "0" ] || __throwEnvironment "$usage" "Must be root" || return $?
 
+  local home
   home="$(__catchEnvironment "$usage" daemontoolsHome)" || return $?
+
   usageRequireBinary "$usage" svscanboot id svc svstat || return $?
   __catchEnvironment "$usage" muzzle directoryRequire --mode 0775 --owner root:root "$home" || return $?
   __catchEnvironment "$usage" muzzle nohup bash -c 'svscanboot &' 2>&1 || return $?
 }
 _daemontoolsExecute() {
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # List any processes associated with daemontools supervisors
 # Requires: pgrep read printf
 daemontoolsProcessIds() {
-  local processIds processId
-  processIds=()
+  local usage="_${FUNCNAME[0]}"
+  [ $# -eq 0 ] || __help --only "$usage" "$@" || return 0
+
+  local processIds=() processId
   while read -r processId; do processIds+=("$processId"); done < <(pgrep 'svscan*')
   if [ ${#processIds[@]} -eq 0 ]; then
     return 0
   fi
   printf "%s\n" "${processIds[@]}"
+}
+_daemontoolsProcessIds() {
+  ! false || daemontoolsProcessIds --help
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
@@ -360,6 +392,7 @@ daemontoolsTerminate() {
   fi
 }
 _daemontoolsTerminate() {
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -431,6 +464,7 @@ daemontoolsRestart() {
   statusMessage --last decorate success "Successfully restarted daemontools [$bootPid]"
 }
 _daemontoolsRestart() {
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -587,5 +621,6 @@ daemontoolsManager() {
   done
 }
 _daemontoolsManager() {
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

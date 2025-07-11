@@ -146,6 +146,7 @@ installInstallBinary() {
   return 0
 }
 _installInstallBinary() {
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -173,6 +174,7 @@ installInstallBuild() {
   installInstallBinary "$@" --bin "$binName" --source "$home/bin/build/$binName" --url-function __installInstallBuildRemote --post __installInstallBinaryLegacy
 }
 _installInstallBuild() {
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -256,6 +258,7 @@ _buildFunctions() {
 # Environment: XDG_CACHE_HOME
 buildCacheDirectory() {
   local usage="_${FUNCNAME[0]}"
+  [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
   local suffix
   suffix="$(printf "%s/" ".build" "$@")"
   __catchEnvironment "$usage" buildEnvironmentGetDirectory --subdirectory "$suffix" XDG_CACHE_HOME || return $?
@@ -372,20 +375,17 @@ buildEnvironmentLoad() {
   done
 }
 _buildEnvironmentLoad() {
-  local exitCode
-  exitCode="${1-}"
-  shift || :
-  printf "bin/build/env ERROR: %s\n" "$@" 1>&2
-  # debuggingStack
-  return "$exitCode"
+  usageDocumentSimple "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Run zesk/build command or load it
 #
-# Example:     Build buildEnvironmentGet APPLICATION_NAME
-# Example:
-# Example:
-# Example:
+# Argument: --help
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
+# Argument: --start startDirectory - Directory. Optional. Start searching for a build installation at this location and searching upwards in the file hierarchy.
+# Argument: --verbose - Flag. Optional. Be verbose.
+# Argument: ... - Executable. Optional. Run this command after loading in the current build context.
 Build() {
   local usage="_${FUNCNAME[0]}"
 

@@ -37,7 +37,7 @@
 # `h` or `?`  - This help
 #
 bashDebug() {
-  __help "$@" || return 0
+  [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
   bashDebuggerEnable
   "$@"
   bashDebuggerDisable
@@ -47,12 +47,14 @@ _bashDebug() {
   usageDocumentSimple "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
+# Usage: {fn}
 # Enables the debugger immediately
-# See: bashDebug
-# See: bashDebuggerDisable
 # Saves file descriptors 0 1 and 2 as 20, 21 and 22 respectively
+# See: bashDebug bashDebuggerDisable
 bashDebuggerEnable() {
   export __BUILD_BASH_DEBUG_WATCH __BUILD_BASH_STEP_CONTROL __BUILD_BASH_DEBUG_LAST
+
+  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return 0
 
   __BUILD_BASH_DEBUG_WATCH=()
   __BUILD_BASH_STEP_CONTROL=()
@@ -69,12 +71,18 @@ bashDebuggerEnable() {
   shopt -s extdebug
   trap _bashDebugTrap DEBUG
 }
+_bashDebuggerEnable() {
+  # _IDENTICAL_ usageDocumentSimple 1
+  usageDocumentSimple "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
 
+# Usage: {fn}
 # Disables the debugger immediately
-# See: bashDebug
-# See: bashDebuggerEnable
 # Restores file descriptors 0 1 and 2 from 20, 21 and 22 respectively
+# See: bashDebug bashDebuggerEnable
 bashDebuggerDisable() {
+  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return 0
+
   trap - DEBUG
   unset __BUILD_BASH_DEBUG_WATCH __BUILD_BASH_STEP_CONTROL __BUILD_BASH_DEBUG_LAST
   shopt -u extdebug
@@ -85,6 +93,12 @@ bashDebuggerDisable() {
 
   # Close ORIGINAL FDs
   exec 20<&- 21>&- 22>&-
+
+  true || bashDebuggerEnable --help
+}
+_bashDebuggerDisable() {
+  # _IDENTICAL_ usageDocumentSimple 1
+  usageDocumentSimple "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Display the watch variables, if any

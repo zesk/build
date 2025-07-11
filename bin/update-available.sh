@@ -164,6 +164,7 @@ __updateAvailable() {
   statusMessage --last timingReport "$start" "completed in"
 }
 ___updateAvailable() {
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 

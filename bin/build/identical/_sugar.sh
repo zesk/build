@@ -37,30 +37,34 @@
 #
 # Requires: usageDocument printf
 # See: exitString
-# Exit Code: 0
+# Exit Code: 0 - success
 returnCode() {
   local k && while [ $# -gt 0 ]; do case "$1" in --help) usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]}" 0 ;; success) k=0 ;; environment) k=1 ;; argument) k=2 ;; assert) k=97 ;; identical) k=105 ;; leak) k=108 ;; timeout) k=116 ;; exit) k=120 ;; user-interrupt) k=130 ;; interrupt) k=141 ;; internal) k=253 ;; *) k=254 ;; esac && shift && printf -- "%d\n" "$k"; done
 }
 
-# _IDENTICAL_ _exitString 8
+# _IDENTICAL_ _exitString 10
 
 # Output the exit code as a string
 # Winner of the one-line bash award 10 years running
 # Argument: code ... - UnsignedInteger. String. Exit code value to output.
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
 # stdout: exitCodeToken, one per line
 exitString() {
-  local k="" && while [ $# -gt 0 ]; do case "$1" in 0) k="success" ;; 1) k="environment" ;; 2) k="argument" ;; 97) k="assert" ;; 105) k="identical" ;; 108) k="leak" ;; 116) k="timeout" ;; 120) k="exit" ;; 127) k="not-found" ;; 130) k="user-interrupt" ;; 141) k="interrupt" ;; 253) k="internal" ;; 254) k="unknown" ;; *) k="[exitString unknown \"$1\"]" ;; esac && [ -n "$k" ] || k="$1" && printf "%s\n" "$k" && shift; done
+  local k="" && while [ $# -gt 0 ]; do case "$1" in 0) k="success" ;; 1) k="environment" ;; 2) k="argument" ;; 97) k="assert" ;; 105) k="identical" ;; 108) k="leak" ;; 116) k="timeout" ;; 120) k="exit" ;; 127) k="not-found" ;; 130) k="user-interrupt" ;; 141) k="interrupt" ;; 253) k="internal" ;; 254) k="unknown" ;; --help) usageDocument "${FUNCNAME[0]}" "${BASH_SOURCE[0]}" 0 ;; *) k="[exitString unknown \"$1\"]" ;; esac && [ -n "$k" ] || k="$1" && printf "%s\n" "$k" && shift; done
 }
 
 # Boolean test
 # Returns 0 if `value` is boolean `false` or `true`.
-# Usage: {fn} value
 # Is this a boolean? (`true` or `false`)
 # Exit Code: 0 - if value is a boolean
 # Exit Code: 1 - if value is not a boolean
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
+# Argument: value - Optional. String. Value to check if it is a boolean.
 # Requires: usageDocument printf
 isBoolean() {
-  case "${1-}" in true | false) ;; *) return 1 ;; esac
+  case "${1-}" in true | false) ;; --help) usageDocument "${FUNCNAME[0]}" "${BASH_SOURCE[0]}" 0 ;; *) return 1 ;; esac
 }
 
 # Boolean selector
@@ -74,17 +78,21 @@ _choose() {
   "$testValue" && printf -- "%s\n" "${1-}" || printf -- "%s\n" "${2-}"
 }
 
-# _IDENTICAL_ returnClean 11
+# _IDENTICAL_ returnClean 15
 
 # Delete files or directories and return the same exit code passed in.
 # Argument: exitCode - Required. Integer. Exit code to return.
 # Argument: item - Optional. One or more files or folders to delete, failures are logged to stderr.
-# Requires: isUnsignedInteger _argument __environment
+# Requires: isUnsignedInteger _argument __environment usageDocument
 returnClean() {
   local exitCode="${1-}" && shift
-  isUnsignedInteger "$exitCode" || _argument "${FUNCNAME[0]} $exitCode (not an integer) $*" || return $?
-  __environment rm -rf "$@" || return "$exitCode"
-  return "$exitCode"
+  if ! isUnsignedInteger "$exitCode"; then
+    local this="${FUNCNAME[0]}"
+    [ "$exitCode" = "--help" ] && usageDocument "$this" "${BASH_SOURCE[0]}" 0 || _argument "$this $exitCode (not an integer) $*" || return $?
+  else
+    __environment rm -rf "$@" || return "$exitCode"
+    return "$exitCode"
+  fi
 }
 
 # _IDENTICAL_ _errors 16

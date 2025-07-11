@@ -14,6 +14,7 @@
 # Example:     IFS=$'\n' read -r -d '' saveX saveY < <(cursorGet)
 cursorGet() {
   local usage="_${FUNCNAME[0]}"
+  [ $# -eq 0 ] || __help --only "$usage" "$@" || return 0
 
   isTTYAvailable || __throwEnvironment "$usage" "no tty" || return $?
 
@@ -38,6 +39,7 @@ _cursorGet() {
 # Argument: y - Required. UnsignedInteger. Row to place the cursor.
 cursorSet() {
   local usage="_${FUNCNAME[0]}"
+  [ $# -eq 0 ] || __help --only "$usage" "$@" || return 0
 
   isTTYAvailable || __throwEnvironment "$usage" "no tty" || return $?
 

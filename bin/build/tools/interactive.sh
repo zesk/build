@@ -186,6 +186,7 @@ copyFile() {
   __throwArgument "$usage" "Missing source" || return $?
 }
 _copyFile() {
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 

@@ -8,12 +8,19 @@
 
 # Are we on Mac OS X?
 isDarwin() {
+  [ $# -eq 0 ] || __help --only "$usage" "$@" || return 0
   [ "$(uname -s)" = "Darwin" ]
+}
+_isDarwin() {
+  true || isDarwin --help
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Directory for user sounds
 darwinSoundDirectory() {
   local usage="_${FUNCNAME[0]}" home
+  [ $# -eq 0 ] || __help --only "$usage" "$@" || return 0
 
   isDarwin || __throwEnvironment "$usage" "Only on Darwin" || return $?
   home=$(__catchEnvironment "$usage" userHome) || return $?
@@ -26,12 +33,18 @@ _darwinSoundDirectory() {
 
 # Is a Darwin sound name valid?
 darwinSoundValid() {
+  [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
   local sound sounds=()
   while read -r sound; do sounds+=("$sound"); done < <(darwinSoundNames)
   while [ $# -gt 0 ]; do
+
     inArray "$1" "${sounds[@]}" || return 1
     shift
   done
+}
+_darwinSoundValid() {
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Install a sound file for notifications
@@ -86,6 +99,7 @@ _darwinSoundInstall() {
 # List valid sound names usable for notifications in Darwin
 darwinSoundNames() {
   local usage="_${FUNCNAME[0]}" soundDirectory
+  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return 0
 
   soundDirectory=$(__catchEnvironment "$usage" darwinSoundDirectory) || return $?
   [ -d "$soundDirectory" ] || __throwEnvironment "$usage" "No $soundDirectory" || return $?
@@ -94,6 +108,7 @@ darwinSoundNames() {
   done
 }
 _darwinSoundNames() {
+  ! false || darwinSoundNames --help
   # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
@@ -114,9 +129,6 @@ __osascriptClean() {
 # Argument: message ... - String. Optional. Message to display to the user in the dialog.
 darwinNotification() {
   local usage="_${FUNCNAME[0]}"
-
-  export OSTYPE
-  usageRequireBinary "$usage" osascript || return $?
 
   local message=() title="" soundName="" debugFlag=false
 
@@ -156,6 +168,8 @@ darwinNotification() {
     shift
   done
 
+  usageRequireBinary "$usage" osascript || return $?
+
   [ -n "$title" ] || title="Zesk Build Notification"
   local messageText
 
@@ -187,11 +201,9 @@ _darwinNotification() {
 # Argument: message ... - Required. String. The message to display in the dialog.
 # Display a dialog using `osascript` with the choices provided. Typically this is found on Mac OS X.
 # Outputs the selected button text upon exit.
+# Platform: Darwin
 darwinDialog() {
   local usage="_${FUNCNAME[0]}"
-
-  export OSTYPE
-  usageRequireBinary "$usage" osascript || return $?
 
   local message=() defaultButton=0 choices=() title="" icon="-" timeout="" debugFlag=false
 
@@ -247,6 +259,8 @@ darwinDialog() {
     esac
     shift
   done
+
+  usageRequireBinary "$usage" osascript || return $?
 
   [ "$icon" != "-" ] || icon="$(buildHome)/etc/zesk-build-icon.png"
 

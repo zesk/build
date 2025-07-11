@@ -72,6 +72,7 @@ fileModificationTime() {
   done
 }
 _fileModificationTime() {
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -96,6 +97,7 @@ fileModificationSeconds() {
   done
 }
 _fileModificationSeconds() {
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -123,6 +125,7 @@ fileModificationTimes() {
   __fileModificationTimes "$directory" "$@"
 }
 _fileModificationTimes() {
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -138,6 +141,7 @@ fileModifiedRecentlyName() {
   fileModificationTimes "$directory" -type f "$@" | sort -r | head -1 | cut -f2- -d" "
 }
 _fileModifiedRecentlyName() {
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -153,6 +157,7 @@ fileModifiedRecentlyTimestamp() {
   fileModificationTimes "$directory" -type f "$@" | sort -r | head -1 | cut -f1 -d" "
 }
 _fileModifiedRecentlyTimestamp() {
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -231,6 +236,7 @@ fileOldest() {
   __gamutFile "_${FUNCNAME[0]}" -lt "$@"
 }
 _fileOldest() {
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -244,6 +250,7 @@ fileNewest() {
   __gamutFile "_${FUNCNAME[0]}" -gt "$@"
 }
 _fileNewest() {
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -261,6 +268,7 @@ fileModifiedSeconds() {
   printf %d "$(($(date +%s) - timestamp))"
 }
 _fileModifiedSeconds() {
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -278,6 +286,7 @@ fileModifiedDays() {
   printf %d "$((timestamp / 86400))"
 }
 _fileModifiedDays() {
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -344,6 +353,7 @@ fileSize() {
   done
 }
 _fileSize() {
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -459,6 +469,7 @@ fileOwner() {
   __fileListColumn "_${FUNCNAME[0]}" 3 "$@"
 }
 _fileOwner() {
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -473,6 +484,7 @@ fileGroup() {
   __fileListColumn "_${FUNCNAME[0]}" 4 "$@"
 }
 _fileGroup() {
+  # _IDENTICAL_ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 

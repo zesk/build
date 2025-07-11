@@ -174,10 +174,12 @@ __consoleEscape1() {
 #
 # Summary: Alternate color output
 # If you want to explore what colors are available in your terminal, try this.
-#
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
 allColorTest() {
   local i j n
 
+  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return 0
   if ! hasColors; then
     printf "no colors\n"
     return 0
@@ -197,10 +199,19 @@ allColorTest() {
     i=$((i + 1))
   done
 }
+_allColorTest() {
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
 
+# Show combinations of foreground and background colors in the console.
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
 colorComboTest() {
   local fg bg text extra padding
   local top3=37
+
+  __help "_${FUNCNAME[0]}" "$@" || return 0
 
   extra="0;"
   if [ "$1" = "--bold" ]; then
@@ -222,11 +233,16 @@ colorComboTest() {
     printf "\n"
   done
 }
+_colorComboTest() {
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
 
 # Summary: Output colors
 # Outputs sample sentences for the `consoleAction` commands to see what they look like.
 #
 colorTest() {
+  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return 0
   local i colors=(
     red bold-red
     green bold-green
@@ -254,12 +270,18 @@ colorTest() {
     printf -- "%s%s\n" "$(decorate reset --)" "$(decorate "$i" "$i: The quick brown fox jumped over the lazy dog.")"
   done
 }
+_colorTest() {
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
 
 # Summary: Output colors
 # Outputs sample sentences for the `action` commands to see what they look like.
 #
 semanticColorTest() {
   local extra
+
+  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return 0
 
   if ! buildEnvironmentLoad BUILD_COLORS_MODE; then
     return 1
@@ -290,6 +312,10 @@ semanticColorTest() {
     decorate reset --
     decorate "$i" "$i: The quick brown fox jumped over the lazy dog."
   done
+}
+_semanticColorTest() {
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
@@ -423,6 +449,7 @@ _statusMessage() {
 isTTYAvailable() {
   export __BUILD_HAS_TTY
 
+  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return 0
   if [ "${__BUILD_HAS_TTY-}" != "true" ] && [ "${__BUILD_HAS_TTY-}" != "false" ]; then
     if bash -c ": >/dev/tty" >/dev/null 2>/dev/null; then
       __BUILD_HAS_TTY=true
@@ -433,6 +460,11 @@ isTTYAvailable() {
     fi
   fi
   "$__BUILD_HAS_TTY"
+}
+_isTTYAvailable() {
+  false || isTTYAvailable --help
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
@@ -446,6 +478,7 @@ isTTYAvailable() {
 # Environment: LINES - May be defined after calling this
 # Side Effect: MAY define two environment variables
 consoleColumns() {
+  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return 0
   if ! isTTYAvailable; then
     printf "%d" 120
   else
@@ -453,6 +486,11 @@ consoleColumns() {
     IFS=" " read -r -a size < <(stty size </dev/tty 2>/dev/null) || :
     isInteger "${size[1]}" && printf "%d" "${size[1]}" || printf "%d" 120
   fi
+}
+_consoleColumns() {
+  true || consoleColumns --help
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
@@ -466,6 +504,8 @@ consoleColumns() {
 # Environment: LINES - May be defined after calling this
 # Side Effect: MAY define two environment variables
 consoleRows() {
+  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return 0
+
   if ! isTTYAvailable; then
     printf "%d" 120
   else
@@ -474,6 +514,11 @@ consoleRows() {
     isInteger "$rows" && printf "%d" "$rows" || printf "%d" 80
   fi
 }
+_consoleRows() {
+  ! false || consoleRows --help
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
 
 #
 # Converts backticks, bold and italic to console colors.
@@ -481,8 +526,13 @@ consoleRows() {
 # Usage: simpleMarkdownToConsole < $markdownFile
 #
 simpleMarkdownToConsole() {
+  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return 0
   # shellcheck disable=SC2119
   _toggleCharacterToColor '`' "$(decorate code --)" | _toggleCharacterToColor '**' "$(decorate red --)" | _toggleCharacterToColor '*' "$(decorate cyan --)"
+}
+_simpleMarkdownToConsole() {
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Argument: r - UnsignedInteger. Required.
@@ -520,6 +570,7 @@ colorBrightness() {
       fi
     done
   elif [ $# -lt 3 ]; then
+    [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
     __throwArgument "$usage" "Requires 3 arguments" || return $?
   fi
   while [ $# -ge 3 ]; do
@@ -573,6 +624,7 @@ colorNormalize() {
     done
   else
     while [ $# -gt 0 ]; do
+      [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
       red=$(usageArgumentUnsignedInteger "$usage" "redValue" "${1-}") && shift || return $?
       green=$(usageArgumentUnsignedInteger "$usage" "greenValue" "${1-}") && shift || return $?
       blue=$(usageArgumentUnsignedInteger "$usage" "blueValue" "${1-}") && shift || return $?
@@ -586,7 +638,12 @@ _colorNormalize() {
 }
 
 # Clamp digits between two integers
+# Reads stdin digits, one per line, and outputs only integer values between $min and $max
+# Argument: minimum - Integer|Empty. Minimum integer value to output.
+# Argument: maximum - Integer|Empty. Maximum integer value to output.
 clampDigits() {
+  [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
+
   local min="${1-}" max="${2-}" number
 
   while read -r number; do
@@ -600,6 +657,10 @@ clampDigits() {
     fi
     shift
   done
+}
+_clampDigits() {
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 __colorHexToInteger() {
@@ -641,6 +702,7 @@ _colorRange() {
 colorFormat() {
   local usage="_${FUNCNAME[0]}" format="%0.2X%0.2X%0.2X\n"
 
+  [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
   if [ $# -gt 0 ]; then format="${1:-"$format"}" && shift; fi
   if [ $# -gt 0 ]; then
     while [ $# -gt 0 ]; do
@@ -676,6 +738,7 @@ _colorFormat() {
 # Takes arguments or stdin.
 colorParse() {
   if [ $# -gt 0 ]; then
+    [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
     while [ $# -gt 0 ]; do
       __colorParseArgument "$1" || return $?
       shift
@@ -692,6 +755,7 @@ _colorParse() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
+# Multiply color values by a factor and return the new values
 # Argument: factor - floatValue. Required. Red RGB value (0-255)
 # Argument: redValue - Integer. Required. Red RGB value (0-255)
 # Argument: greenValue - Integer. Required. Red RGB value (0-255)
@@ -700,6 +764,7 @@ colorMultiply() {
   local usage="_${FUNCNAME[0]}"
   local factor colors=()
 
+  [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
   __catchEnvironment "$usage" packageWhich bc bc || return $?
   factor=$(usageArgumentString "$usage" "factor" "${1-}") && shift || return $?
 

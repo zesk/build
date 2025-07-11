@@ -39,12 +39,21 @@ _isAlpine() {
 }
 
 # Open an Alpine container shell
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
+# Argument: --env-file envFile - Optional. File. One or more environment files which are suitable to load for docker; must be valid
+# Argument: --env envVariable=envValue - Optional. File. One or more environment variables to set.
+# Argument: --platform platform - Optional. String. Platform to run (arm vs intel).
+# Argument: extraArgs - Optional. Mixed. The first non-file argument to `{fn}` is passed directly through to `docker run` as arguments
+# Exit Code: 1 - If already inside docker, or the environment file passed is not valid
+# Exit Code: 0 - Success
+# Exit Code: Any - `docker run` error code is returned if non-zero
 alpineContainer() {
   local usage="_${FUNCNAME[0]}"
 
   export LC_TERMINAL TERM
   __catchEnvironment "$usage" buildEnvironmentLoad LC_TERMINAL TERM || return $?
-  __catchEnvironment "$usage" dockerLocalContainer --image alpine:latest --path /root/build --env LC_TERMINAL="$LC_TERMINAL" --env TERM="$TERM" /root/build/bin/build/need-bash.sh Alpine apk add bash ncurses -- "$@" || return $?
+  __catchEnvironment "$usage" dockerLocalContainer --handler "$usage" --image alpine:latest --path /root/build --env LC_TERMINAL="$LC_TERMINAL" --env TERM="$TERM" /root/build/bin/build/need-bash.sh Alpine apk add bash ncurses -- "$@" || return $?
 }
 _alpineContainer() {
   # _IDENTICAL_ usageDocument 1

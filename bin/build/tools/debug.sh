@@ -19,6 +19,8 @@
 # Example:     BUILD_DEBUG=usage,documentation # Debug usage and documentation calls
 # Requires: -
 buildDebugEnabled() {
+  [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
+
   # NOTE: This allows runtime changing of this value
   export BUILD_DEBUG
 
@@ -43,6 +45,10 @@ buildDebugEnabled() {
   done
   # Debugging is not enabled
   return 1
+}
+_buildDebugEnabled() {
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # For __buildDebugEnable
@@ -83,10 +89,15 @@ __buildDebugDisable() {
 # Example:     buildDebugStop || :. -
 # Requires: buildDebugEnabled
 buildDebugStart() {
+  [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
   if ! buildDebugEnabled "$@"; then
     return 1
   fi
   __buildDebugEnable
+}
+_buildDebugStart() {
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
@@ -95,10 +106,15 @@ buildDebugStart() {
 # See: buildDebugStart
 # Requires: buildDebugEnabled
 buildDebugStop() {
+  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return 0
   if ! buildDebugEnabled "$@"; then
     return 1
   fi
   __buildDebugDisable
+}
+_buildDebugStop() {
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
@@ -107,8 +123,13 @@ buildDebugStop() {
 # Useful if you need to temporarily enable or disable it.
 # Depends: -
 isBashDebug() {
+  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return 0
   case $- in *x*) return 0 ;; esac
   return 1
+}
+_isBashDebug() {
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Place this in code where you suspect an infinite loop occurs
@@ -118,22 +139,37 @@ isBashDebug() {
 # Requires: printf unset  export debuggingStack exit
 # Environment: __BUILD_RECURSION
 bashRecursionDebug() {
+  local usage="_${FUNCNAME[0]}"
+
   export __BUILD_RECURSION
 
+  [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
+
+  local cacheFile
+
+  cacheFile="$(__catchEnvironment "$usage" buildCacheDirectory)/.${FUNCNAME[0]}" || return $?
   if [ "${__BUILD_RECURSION-}" = "true" ]; then
     if [ "${1-}" = "--end" ]; then
       unset __BUILD_RECURSION
+      __catchEnvironment "$usage" rm -f "$cacheFile" || return $?
       return 0
     fi
-    printf "%s%s\n" "RECURSION FAILURE" "$(debuggingStack)" 1>&2
+    printf "%s\n" "RECURSION FAILURE" "$(debuggingStack)" "" "INITIAL CALL" "$(decorate code <"$cacheFile")" 1>&2
+    __catchEnvironment "$usage" rm -f "$cacheFile" || return $?
     exit 91
   fi
   if [ "${1-}" = "--end" ]; then
-    printf "%s%s\n" "RECURSION FAILURE (end without start)" "$(debuggingStack)" 1>&2
+    printf "%s\n" "RECURSION FAILURE (end without start)" "$(debuggingStack)" 1>&2
+    __catchEnvironment "$usage" rm -f "$cacheFile" || return $?
     exit 91
   fi
 
   __BUILD_RECURSION=true
+  __catchEnvironment "$usage" debuggingStack >"$cacheFile" || return $?
+}
+_bashRecursionDebug() {
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Adds a trap to capture the debugging stack on interrupt
@@ -213,9 +249,15 @@ __bashDebugInterruptFile() {
 # Outputs `1` always
 # Requires: -
 isErrorExit() {
+  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return 0
   # printf "isErrorExit: %s\n" "$-" 1>&2
   case "$-" in *e* | *E*) return 0 ;; esac
   return 1
+}
+_isErrorExit() {
+  ! false || isErrorExit --help
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
