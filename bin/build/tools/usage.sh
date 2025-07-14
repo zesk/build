@@ -40,7 +40,7 @@ usageRequireBinary() {
   done
 }
 _usageRequireBinary() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -66,7 +66,7 @@ usageRequireEnvironment() {
   done
 }
 _usageRequireEnvironment() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 

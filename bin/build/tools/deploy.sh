@@ -52,7 +52,7 @@ deployApplicationVersion() {
   __throwEnvironment "$usage" "No application version found" || return $?
 }
 _deployApplicationVersion() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -76,7 +76,7 @@ deployPackageName() {
 }
 _deployPackageName() {
   true || deployPackageName --help
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -100,7 +100,7 @@ deployHasVersion() {
   [ -f "$deployHome/$versionName/$targetPackage" ]
 }
 _deployHasVersion() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -132,7 +132,7 @@ deployPreviousVersion() {
   _applicationIdLink "_${FUNCNAME[0]}" previous "$@"
 }
 _deployPreviousVersion() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -145,7 +145,7 @@ deployNextVersion() {
   _applicationIdLink "_${FUNCNAME[0]}" next "$@"
 }
 _deployNextVersion() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -167,7 +167,7 @@ deployMove() {
   directoryClobber "$newApplicationSource" "$applicationPath"
 }
 _deployMove() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -247,7 +247,7 @@ deployLink() {
   fi
 }
 _deployLink() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -328,6 +328,6 @@ deployMigrateDirectoryToLink() {
   timingReport "$start" "Completed in"
 }
 _deployMigrateDirectoryToLink() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

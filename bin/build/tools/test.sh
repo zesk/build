@@ -35,7 +35,7 @@ testTools() {
   __catchEnvironment "$usage" "$@" || return $?
 }
 _testTools() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -135,6 +135,6 @@ dumpBinary() {
   return 0
 }
 _dumpBinary() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

@@ -96,7 +96,7 @@ __hookMaintenance() {
   printf "%s %s - %s\n" "$(decorate "$messageColor" "Maintenance")" "$messageValue" "$messageSuffix"
 }
 _hookMaintenance() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 __hookMaintenance "$@"

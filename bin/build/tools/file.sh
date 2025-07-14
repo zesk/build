@@ -48,7 +48,7 @@ filesRename() {
   done
 }
 _filesRename() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -72,7 +72,7 @@ fileModificationTime() {
   done
 }
 _fileModificationTime() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -98,7 +98,7 @@ fileModificationSeconds() {
   done
 }
 _fileModificationSeconds() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -124,7 +124,7 @@ fileModificationTimes() {
   __fileModificationTimes "$directory" "$@"
 }
 _fileModificationTimes() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -140,7 +140,7 @@ fileModifiedRecentlyName() {
   fileModificationTimes "$directory" -type f "$@" | sort -r | head -1 | cut -f2- -d" "
 }
 _fileModifiedRecentlyName() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -156,7 +156,7 @@ fileModifiedRecentlyTimestamp() {
   fileModificationTimes "$directory" -type f "$@" | sort -r | head -1 | cut -f1 -d" "
 }
 _fileModifiedRecentlyTimestamp() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -182,7 +182,7 @@ fileIsNewest() {
   [ "$1" = "$(fileNewest "$@")" ]
 }
 _fileIsNewest() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -207,7 +207,7 @@ fileIsOldest() {
   [ "$1" = "$(fileOldest "$@")" ]
 }
 _fileIsOldest() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -248,7 +248,7 @@ fileOldest() {
   __gamutFile "_${FUNCNAME[0]}" -lt "$@"
 }
 _fileOldest() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -262,7 +262,7 @@ fileNewest() {
   __gamutFile "_${FUNCNAME[0]}" -gt "$@"
 }
 _fileNewest() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -282,7 +282,7 @@ fileModifiedSeconds() {
   printf %d "$(($(date +%s) - timestamp))"
 }
 _fileModifiedSeconds() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -302,7 +302,7 @@ fileModifiedDays() {
   printf %d "$((timestamp / 86400))"
 }
 _fileModifiedDays() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -321,7 +321,7 @@ realPath() {
   fi
 }
 _realPath() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -351,7 +351,7 @@ directoryPathSimplify() {
   done
 }
 _directoryPathSimplify() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -380,12 +380,11 @@ fileSize() {
   done
 }
 _fileSize() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# Usage: {fn} [ thing ]
-# Argument: item - Thing to classify
+# Argument: item - String. Optional. Thing to classify
 # Better type handling of shell objects
 #
 # Outputs one of `type` output or enhancements:
@@ -394,6 +393,7 @@ _fileSize() {
 fileType() {
   local t
   while [ $# -gt 0 ]; do
+    [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
     t="$(type -t "$1")" || :
     if [ -z "$t" ]; then
       if [ -L "$1" ]; then
@@ -416,8 +416,12 @@ fileType() {
       fi
     fi
     printf "%s\n" "$t" || return $?
-    shift || :
+    shift
   done
+}
+_fileType() {
+  # __IDENTICAL__ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
@@ -460,7 +464,7 @@ linkRename() {
   __linkRename "$from" "$to"
 }
 _linkRename() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -476,6 +480,7 @@ __fileListColumn() {
 
   shift 2
   while [ $# -gt 0 ]; do
+    [ "${1-}" != "--help" ] || __help "$usageFunction" "$@" || return 0
     # shellcheck disable=SC2012
     if ! result="$(ls -ld "$1" | awk '{ print $'"$column"' }')"; then
       __throwEnvironment "$usageFunction" "Running ls -ld \"$1\"" || return $?
@@ -496,7 +501,7 @@ fileOwner() {
   __fileListColumn "_${FUNCNAME[0]}" 3 "$@"
 }
 _fileOwner() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -511,7 +516,7 @@ fileGroup() {
   __fileListColumn "_${FUNCNAME[0]}" 4 "$@"
 }
 _fileGroup() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -529,7 +534,7 @@ fileNotMatches() {
   _fileMatchesHelper "_${FUNCNAME[0]}" false "$@"
 }
 _fileNotMatches() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -547,7 +552,7 @@ fileMatches() {
   _fileMatchesHelper "_${FUNCNAME[0]}" true "$@"
 }
 _fileMatches() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -645,7 +650,7 @@ fileIsEmpty() {
   done
 }
 _fileIsEmpty() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -703,7 +708,7 @@ directoryOldestFile() {
   _directoryGamutFileWrapper "_${FUNCNAME[0]}" head "$@"
 }
 _directoryOldestFile() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -714,7 +719,7 @@ directoryNewestFile() {
   _directoryGamutFileWrapper "_${FUNCNAME[0]}" tail "$@"
 }
 _directoryNewestFile() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -788,7 +793,7 @@ linkCreate() {
   $backupFlag || __catchEnvironment "$usage" rm -rf "${clean[@]}" || return $?
 }
 _linkCreate() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -807,7 +812,7 @@ fileTemporaryName() {
   __catchEnvironment "$handler" mktemp "$@" || return $?
 }
 _fileTemporaryName() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 

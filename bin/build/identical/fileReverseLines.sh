@@ -23,6 +23,6 @@ fileReverseLines() {
 }
 _fileReverseLines() {
   true || fileReverseLines --help
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

@@ -27,7 +27,7 @@ environmentValueWrite() {
   fi
 }
 _environmentValueWrite() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -60,7 +60,7 @@ environmentValueWriteArray() {
   fi
 }
 _environmentValueWriteArray() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -98,7 +98,7 @@ environmentValueRead() {
   fi
 }
 _environmentValueRead() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -125,7 +125,7 @@ environmentValueConvertArray() {
   printf -- "%s\n" "${value[@]+"${value[@]}"}"
 }
 _environmentValueConvertArray() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -162,7 +162,7 @@ environmentVariableNameValid() {
   done
 }
 _environmentVariableNameValid() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -182,7 +182,7 @@ environmentValueReadArray() {
   environmentValueConvertArray "$value" || return $?
 }
 _environmentValueReadArray() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -194,7 +194,7 @@ environmentNames() {
 }
 _environmentNames() {
   true || environmentNames --help
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -206,7 +206,7 @@ environmentLines() {
 }
 _environmentLines() {
   true || environmentLines --help
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -264,7 +264,7 @@ dotEnvConfigure() {
   __catchEnvironment "$usage" environmentFileLoad "${aa[@]}" "$@" || return $?
 }
 _dotEnvConfigure() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -391,7 +391,7 @@ environmentLoad() {
   [ ${#execute[@]} -eq 0 ] || __catchEnvironment "$usage" "${execute[@]}"
 }
 _environmentLoad() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -496,7 +496,7 @@ environmentFileLoad() {
   [ ${#execute[@]} -eq 0 ] || __catchEnvironment "$usage" "${execute[@]}"
 }
 _environmentFileLoad() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -507,7 +507,7 @@ environmentSecureVariables() {
 }
 _environmentSecureVariables() {
   true || environmentSecureVariables --help
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -518,7 +518,7 @@ environmentApplicationVariables() {
 }
 _environmentApplicationVariables() {
   true || environmentApplicationVariables --help
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -566,7 +566,7 @@ environmentApplicationLoad() {
 }
 _environmentApplicationLoad() {
   ! false || environmentApplicationLoad --help
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -640,7 +640,7 @@ environmentFileShow() {
   [ ${#missing[@]} -eq 0 ] || __throwEnvironment "$usage" "Missing environment $(decorate each code "${missing[@]}")" || return $?
 }
 _environmentFileShow() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -710,7 +710,7 @@ environmentFileApplicationMake() {
   done
 }
 _environmentFileApplicationMake() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -757,7 +757,7 @@ environmentFileApplicationVerify() {
   [ ${#missing[@]} -eq 0 ] || __throwEnvironment "$usage" "Missing environment values:" "${missing[@]}" || return $?
 }
 _environmentFileApplicationVerify() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -811,7 +811,7 @@ environmentAddFile() {
   done
 }
 _environmentAddFile() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -829,7 +829,7 @@ environmentVariables() {
 }
 _environmentVariables() {
   true || environmentVariables --help
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -892,7 +892,7 @@ environmentOutput() {
   done < <(env -0 | "${filter[@]}")
 }
 _environmentOutput() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -951,7 +951,7 @@ environmentCompile() {
   __catchEnvironment "$usage" rm -f "${clean[@]}" || return $?
 }
 _environmentCompile() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -974,6 +974,6 @@ environmentClean() {
   done < <(declare -x | removeFields 2 | cut -f 1 -d =)
 }
 _environmentClean() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

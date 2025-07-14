@@ -159,7 +159,7 @@ packageUpgrade() {
   __packageUpFunction "_${FUNCNAME[0]}" Upgrade "$@"
 }
 _packageUpgrade() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -173,7 +173,7 @@ packageUpdate() {
   __packageUpFunction "_${FUNCNAME[0]}" Update "$@"
 }
 _packageUpdate() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -227,7 +227,7 @@ packageDefault() {
   "$function" "${lookup[@]}"
 }
 _packageDefault() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -303,7 +303,7 @@ packageWhich() {
   whichExists "$binary" || __throwEnvironment "$usage" "$manager packages \"${packages[*]}\" did not add $binary to the PATH: ${PATH-}" || return $?
 }
 _packageWhich() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -373,7 +373,7 @@ packageWhichUninstall() {
   fi
 }
 _packageWhichUninstall() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -495,7 +495,7 @@ packageInstall() {
   ! $verboseFlag || printf -- " %s\n" "($(timingReport "$__start" "total"))"
 }
 _packageInstall() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -539,7 +539,7 @@ packageIsInstalled() {
   __catchEnvironment "$usage" rm -rf "$installed" || return $?
 }
 _packageIsInstalled() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -605,7 +605,7 @@ packageUninstall() {
   statusMessage --last timingReport "$start" "Uninstallation of ${packages[*]} completed in" || :
 }
 _packageUninstall() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -647,7 +647,7 @@ packageInstalledList() {
   __packageListFunction "_${FUNCNAME[0]}" "Installed" "$@"
 }
 _packageInstalledList() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -656,7 +656,7 @@ packageAvailableList() {
   __packageListFunction "_${FUNCNAME[0]}" "Available" --before packageUpdate "$@"
 }
 _packageAvailableList() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -683,7 +683,7 @@ packageNeedRestartFlag() {
   fi
 }
 _packageNeedRestartFlag() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -734,7 +734,7 @@ packageGroupInstall() {
   done
 }
 _packageGroupInstall() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -785,7 +785,7 @@ packageGroupUninstall() {
   done
 }
 _packageGroupUninstall() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -833,6 +833,6 @@ packageMapping() {
   done
 }
 _packageMapping() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

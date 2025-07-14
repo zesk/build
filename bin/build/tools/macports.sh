@@ -110,7 +110,7 @@ __portUpgrade() {
   printf "%s\n" "$result"
 }
 ___portUpgrade() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -140,7 +140,7 @@ __portInstalledList() {
   __portWrapper installed | grep -v 'currently installed' | awk '{ print $1 }'
 }
 ___portInstalledList() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -153,7 +153,7 @@ __portAvailableList() {
   __portWrapper list | awk '{ print $1 }'
 }
 ___portAvailableList() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 

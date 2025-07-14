@@ -74,7 +74,7 @@ bashPromptModule_dotFilesWatcher() {
   rm -f "$askFile.$$" || :
 }
 _bashPromptModule_dotFilesWatcher() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -88,7 +88,7 @@ dotFilesApprovedFile() {
 }
 _dotFilesApprovedFile() {
   true || dotFilesApprovedFile --help
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -141,6 +141,6 @@ dotFilesApproved() {
   __dotFilesApproved bash
 }
 _dotFilesApproved() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

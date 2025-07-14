@@ -30,7 +30,7 @@ documentationTemplateUpdate() {
   done
 }
 _documentationTemplateUpdate() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -78,7 +78,7 @@ _documentationTemplateUpdateUnlinked() {
   fi
 }
 __documentationTemplateUpdateUnlinked() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -101,7 +101,7 @@ _buildDocumentation_MergeWithDocsBranch() {
   __catchEnvironment "$usage" git checkout "$branch" || return $?
 }
 __buildDocumentation_MergeWithDocsBranch() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -159,7 +159,7 @@ documentationTemplate() {
   printf "%s\n" "$template"
 }
 _documentationTemplate() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -176,6 +176,6 @@ documentationUnlinked() {
   __catchEnvironment "$usage" documentationIndex_ShowUnlinked "$cacheDirectory" || return $?
 }
 _documentationUnlinked() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

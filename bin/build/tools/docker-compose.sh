@@ -21,7 +21,7 @@ dockerComposeInstall() {
   _pipInstall "_${FUNCNAME[0]}" "docker-compose" "$@"
 }
 _dockerComposeInstall() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -54,7 +54,7 @@ dockerComposeUninstall() {
   statusMessage --last timingReport "$start" "Uninstalled $name in"
 }
 _dockerComposeUninstall() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -75,7 +75,7 @@ dockerComposeIsRunning() {
   return $exitCode
 }
 _dockerComposeIsRunning() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -91,7 +91,7 @@ dockerComposeCommandList() {
 }
 _dockerComposeCommandList() {
   ! false || dockerComposeCommandList --help
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -113,7 +113,7 @@ isDockerComposeCommand() {
   grep -q -e "$(quoteGrepPattern "$command")" < <(dockerComposeCommandList)
 }
 _isDockerComposeCommand() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -270,7 +270,7 @@ dockerCompose() {
   statusMessage --last timingReport "$start" "Completed $name in"
 }
 _dockerCompose() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 

@@ -223,7 +223,7 @@ bashPrompt() {
   PS1="$(__bashPromptFormat "$promptFormat" "$colorsTextFormatted")"
 }
 _bashPrompt() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -247,7 +247,7 @@ bashUserInput() {
   return $exitCode
 }
 _bashUserInput() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -288,7 +288,7 @@ bashPromptMarkers() {
   printf "%s\n" "${__BASH_PROMPT_MARKERS[@]}"
 }
 _bashPromptMarkers() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -444,7 +444,7 @@ bashPromptColorsFormat() {
   printf "%s\n" "$(listJoin ":" "${colors[@]}")"
 }
 _bashPromptColorsFormat() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 

@@ -104,7 +104,7 @@ consoleColorMode() {
   printf "%s\n" "${BUILD_COLORS_MODE-}"
 }
 _consoleColorMode() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -119,7 +119,7 @@ hasConsoleAnimation() {
 }
 _hasConsoleAnimation() {
   true || hasConsoleAnimation --help
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -206,7 +206,7 @@ allColorTest() {
   done
 }
 _allColorTest() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -240,7 +240,7 @@ colorComboTest() {
   done
 }
 _colorComboTest() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -277,7 +277,7 @@ colorTest() {
   done
 }
 _colorTest() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -320,7 +320,7 @@ semanticColorTest() {
   done
 }
 _semanticColorTest() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -363,7 +363,7 @@ plasterLines() {
   printf "\n"
 }
 _plasterLines() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -444,7 +444,7 @@ statusMessage() {
   clearLine "$("$@")${lastMessage}"
 }
 _statusMessage() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -471,7 +471,7 @@ isTTYAvailable() {
 }
 _isTTYAvailable() {
   true || isTTYAvailable --help
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -497,7 +497,7 @@ consoleColumns() {
 }
 _consoleColumns() {
   true || consoleColumns --help
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -524,7 +524,7 @@ consoleRows() {
 }
 _consoleRows() {
   ! false || consoleRows --help
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -539,7 +539,7 @@ simpleMarkdownToConsole() {
   _toggleCharacterToColor '`' "$(decorate code --)" | _toggleCharacterToColor '**' "$(decorate red --)" | _toggleCharacterToColor '*' "$(decorate cyan --)"
 }
 _simpleMarkdownToConsole() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -587,7 +587,7 @@ colorBrightness() {
   done
 }
 _colorBrightness() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -641,7 +641,7 @@ colorNormalize() {
   fi
 }
 _colorNormalize() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -667,7 +667,7 @@ clampDigits() {
   done
 }
 _clampDigits() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -736,7 +736,7 @@ colorFormat() {
   fi
 }
 _colorFormat() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -759,7 +759,7 @@ colorParse() {
   fi
 }
 _colorParse() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -793,7 +793,7 @@ colorMultiply() {
   done
 }
 _colorMultiply() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 

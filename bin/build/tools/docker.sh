@@ -32,7 +32,7 @@ dockerPlatformDefault() {
 }
 _dockerPlatformDefault() {
   true || dockerPlatformDefault --help
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -53,7 +53,7 @@ dumpDockerTestFile() {
 }
 _dumpDockerTestFile() {
   true || dumpDockerTestFile --help
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -80,7 +80,7 @@ insideDocker() {
 }
 _insideDocker() {
   true || insideDocker --help
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -104,7 +104,7 @@ checkDockerEnvFile() {
   return "$result"
 }
 _checkDockerEnvFile() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -159,7 +159,7 @@ anyEnvToDockerEnv() {
   __anyEnvToFunctionEnv "_${FUNCNAME[0]}" bashCommentFilter dockerEnvFromBashEnv "$@" || return $?
 }
 _anyEnvToDockerEnv() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -176,7 +176,7 @@ anyEnvToBashEnv() {
   __anyEnvToFunctionEnv "_${FUNCNAME[0]}" dockerEnvToBash cat "$@" || return $?
 }
 _anyEnvToBashEnv() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -186,7 +186,7 @@ dockerListContext() {
   printf 'FROM scratch\nCOPY . /\n' | DOCKER_BUILDKIT=1 docker build -q -f- -o- . | tar t
 }
 _dockerListContext() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -220,7 +220,7 @@ dockerEnvToBash() {
   fi
 }
 _dockerEnvToBash() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -288,7 +288,7 @@ dockerEnvFromBashEnv() {
   __catchEnvironment "$usage" rm -rf "$tempFile" || return $?
 }
 _dockerEnvFromBashEnv() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -410,7 +410,7 @@ dockerLocalContainer() {
   return $exitCode
 }
 _dockerLocalContainer() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -452,7 +452,7 @@ dockerImages() {
   docker images "${filter[@]+"${filter[@]}"}" | awk '{ print $1 ":" $2 }' | grep -v 'REPOSITORY:'
 }
 _dockerImages() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -505,7 +505,7 @@ dockerVolumeExists() {
   docker volume ls --format json | jq .Name | grep -q "$1"
 }
 _dockerVolumeExists() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -518,7 +518,7 @@ dockerVolumeDelete() {
   docker volume ls --format json | jq .Name | grep -q "$1"
 }
 _dockerVolumeDelete() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 

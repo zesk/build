@@ -16,7 +16,7 @@ bashBuiltins() {
     "ulimit" "umask" "unalias" "unset" "until" "wait" "while"
 }
 _bashBuiltins() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -43,7 +43,7 @@ isBashBuiltin() {
   esac
 }
 _isBashBuiltin() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -64,7 +64,7 @@ bashLibraryHome() {
   printf "%s\n" "$home"
 }
 _bashLibraryHome() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -113,7 +113,7 @@ bashLibrary() {
   return 0
 }
 _bashLibrary() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -163,7 +163,7 @@ bashSourcePath() {
   $foundOne || __throwArgument "$usage" "Requires a directory" || return $?
 }
 _bashSourcePath() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -201,7 +201,7 @@ bashFunctionDefined() {
   grep -q -e "^\s*$(quoteGrepPattern "$function")() {" "${files[@]}"
 }
 _bashFunctionDefined() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -212,7 +212,7 @@ bashStripComments() {
 }
 _bashStripComments() {
   true || bashStripComments --help
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -260,7 +260,7 @@ bashShowUsage() {
   cat "${files[@]+"${files[@]}"}" | bashStripComments | grep -v "^${quoted}()" | grep "${checkFlags[@]+"${checkFlags[@]}"}" -e "\b${quoted}\b"
 }
 _bashShowUsage() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -297,7 +297,7 @@ bashListFunctions() {
   done
 }
 _bashListFunctions() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -362,15 +362,15 @@ bashFunctionCommentVariable() {
 }
 
 _bashFunctionCommentVariable() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# IDENTICAL bashFunctionComment 23
+# IDENTICAL bashFunctionComment 29
 
 # Extract a bash comment from a file. Excludes lines containing the following tokens:
 #
-# - `" IDENTICAL "` or `" _IDENTICAL_ "`
+# - `" IDENTICAL "` or `"_IDENTICAL_"`
 # - `"Internal:"` or `"INTERNAL:"`
 # - `"DOC TEMPLATE:"`
 #
@@ -382,12 +382,18 @@ bashFunctionComment() {
   local source="${1-}" functionName="${2-}"
   local maxLines=1000
   __help "_${FUNCNAME[0]}" "$@" || return 0
-  grep -m 1 -B $maxLines "^$functionName() {" "$source" | grep -v -e '( IDENTICAL | _IDENTICAL_ |DOC TEMPLATE:|Internal:|INTERNAL:)' |
-    fileReverseLines | grep -B "$maxLines" -m 1 -E '^\s*$' |
-    fileReverseLines | grep -E '^#' | cut -c 3-
+  grep -m 1 -B $maxLines "^$functionName() {" "$source" | grep -v -e '( IDENTICAL |_IDENTICAL_|DOC TEMPLATE:|Internal:|INTERNAL:)' | fileReverseLines | sed -n -e '1d' -e '/^#/!q; p' | fileReverseLines | cut -c 3-
+  # Explained:
+  # - grep -m 1 ... - Finds the `function() {` string in the file and all lines afterwards
+  # - grep -v ... - Removes internal documentation and anything we want to hide from the user
+  # - fileReverseLines - First reversal to get that comment, file lines are reverse ordered
+  # - sed 1d - Deletes the first line (e.g. the `function() { ` which was the LAST thing in the line and is now our first line
+  # - sed -n '/^#/!q; p' - `-n` - disables automatic printing. /^#/!q quits when it does not match a '#' comment and prints all `#` lines (effectively outputting just the comment lines)
+  # - fileReverseLines - File is back to normal
+  # - cut -c 3- - Delete the first 2 characters on each line
 }
 _bashFunctionComment() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -427,6 +433,6 @@ bashCommentFilter() {
   grepSafe "${ff[@]+"${ff[@]}"}" -e '^[[:space:]]*#' "${files[@]+"${files[@]}"}"
 }
 _bashCommentFilter() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

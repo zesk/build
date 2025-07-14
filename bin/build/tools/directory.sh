@@ -13,14 +13,14 @@
 # Exit Code: 1 - one ore more paths are not absolute paths
 isAbsolutePath() {
   local usage="_${FUNCNAME[0]}"
-  [ $# -gt 0 ] || __throwArgument "$usage" "Need at least one argument" || return $?
+  [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
   while [ $# -gt 0 ]; do
     [ "$1" != "${1#/}" ] || return 1
     shift || :
   done
 }
 _isAbsolutePath() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -53,7 +53,7 @@ directoryClobber() {
   __catchEnvironment "$usage" rm -rf "$targetBackup" || return $?
 }
 _directoryClobber() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -103,29 +103,39 @@ fileDirectoryRequire() {
   directoryRequire --handler "$usage" --noun "file directory" "${rr[@]+"${rr[@]}"}" || return $?
 }
 _fileDirectoryRequire() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
 # Does the file's directory exist?
 #
-# Usage: {fn} directory
 # Argument: directory - Directory. Required. Test if file directory exists (file does not have to exist)
 fileDirectoryExists() {
-  local path
-  local argument usage="_${FUNCNAME[0]}"
-  [ $# -gt 0 ] || _argument "No arguments" || return $?
+  local usage="_${FUNCNAME[0]}"
+  # _IDENTICAL_ argument-case-header 5
+  local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
-    argument="$1"
-    [ -n "$argument" ] || __throwArgument "$usage" "blank argument" || return $?
-    path=$(dirname "$argument") || __throwEnvironment "$usage" "dirname $argument" || return $?
-    [ -d "$path" ] || return 1
-    shift || __throwArgument "$usage" shift || return $?
+    local argument="$1" __index=$((__count - $# + 1))
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
+    case "$argument" in
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    *)
+      local path
+      path=$(dirname "$argument") || __throwEnvironment "$usage" "dirname $argument" || return $?
+      [ -d "$path" ] || return 1
+      ;;
+    esac
+    # _IDENTICAL_ argument-esac-shift 1
+    shift
   done
 }
 _fileDirectoryExists() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -200,7 +210,7 @@ directoryRequire() {
   [ ${#directories[@]} -gt 0 ] || __throwArgument "$usage" "Need at least one $noun" || return $?
 }
 _directoryRequire() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -229,7 +239,7 @@ directoryIsEmpty() {
   done
 }
 _directoryIsEmpty() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -259,7 +269,7 @@ directoryRelativePath() {
   done
 }
 _directoryRelativePath() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -272,7 +282,7 @@ directoryParent() {
   __directoryParent "_${FUNCNAME[0]}" "$@"
 }
 _directoryParent() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 

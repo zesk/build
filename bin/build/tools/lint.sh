@@ -17,6 +17,11 @@
 #     # Hey
 #
 # Example:     bashLint goo.sh
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
+# Argument: --fix - Optional. Flag. Fix files when possible.
+# Argument: script - File. Optional. Shell script to validate
+# Argument: verbose - Flag. Optional. Be verbose.
 # Argument: script - File. Optional. Shell script to validate
 # Side-effect: shellcheck is installed
 # Side-effect: Status written to stdout, errors written to stderr
@@ -24,46 +29,54 @@
 # Exit Code: 1 - One or more files did not pass
 # Output: This outputs `statusMessage`s to `stdout` and errors to `stderr`.
 bashLint() {
-  local usage="_${FUNCNAME[0]}"
+  local usage="_${FUNCNAME[0]}" fixFlag=false verboseFlag=false undo=("exec" "3>&-" "4>&1")
 
   __catchEnvironment "$usage" packageWhich shellcheck shellcheck || return $?
 
   # Open 3 and 4 to aliases so we can change them
-  exec 3>/dev/null
-  exec 4>&1
+  exec 3>/dev/null 4>&1
   # _IDENTICAL_ argument-case-header 5
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || returnUndo $? "${undo[@]}" || return $?
     case "$argument" in
     # _IDENTICAL_ --help 4
     --help)
       "$usage" 0
       return $?
       ;;
+    --fix)
+      fixFlag=true
+      ;;
     --verbose)
-      exec 3>&1
-      exec 4>/dev/null
+      exec 3>&1 4>/dev/null
+      verboseFlag=true
       ;;
     *)
-      [ -f "$argument" ] || __throwArgument "$usage" "$(printf -- "%s: %s PWD: %s" "Not a item" "$(decorate code "$argument")" "$(pwd)")" || return $?
+      [ -f "$argument" ] || __throwArgument "$usage" "$(printf -- "%s: %s PWD: %s" "Not a item" "$(decorate code "$argument")" "$(pwd)")" || returnUndo $? "${undo[@]}" || return $?
       # shellcheck disable=SC2210
-      __catchEnvironment "$usage" bash -n "$argument" 1>&3 2>&3 || returnUndo $? printf "%s\n" "bash -n failed" 1>&4 || return $?
+      __catchEnvironment "$usage" bash -n "$argument" 1>&3 2>&3 || returnUndo $? printf "%s\n" "bash -n failed" 1>&4 || returnUndo $? "${undo[@]}" || return $?
       # shellcheck disable=SC2210
-      __catchEnvironment "$usage" shellcheck "$argument" 1>&3 2>&3 || returnUndo $? printf "%s\n" "shellcheck" 1>&4 || return $?
+      __catchEnvironment "$usage" shellcheck "$argument" 1>&3 2>&3 || returnUndo $? printf "%s\n" "shellcheck" 1>&4 || returnUndo $? "${undo[@]}" || return $?
       local found
       if found=$(__pcregrep -n -l -M '\n\}\n#' "$argument"); then
-        __throwEnvironment "$usage" "found }\\n#: $(decorate code "$found")" 1>&3 2>&3 || returnUndo $? printf "%s\n" "comment following brace" 1>&4 || return $?
+        if $fixFlag; then
+          __catchEnvironment "$usage" sed -i ':a;N;$!ba;s/'$'\n'"}"$'\n'"#/"$'\n'"}$'\n'$'\n'#/g" "$argument" || returnUndo $? "${undo[@]}" || return $?
+          $verboseFlag
+        else
+          __throwEnvironment "$usage" "found }\\n#: $(decorate code "$found")" 1>&3 2>&3 || returnUndo $? printf "%s\n" "comment following brace" 1>&4 || returnUndo $? "${undo[@]}" || return $?
+        fi
       fi
       ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
     shift
   done
+  exec 3>&- 4>&1
 }
 _bashLint() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -71,6 +84,8 @@ _bashLint() {
 #
 # Usage: bashLintFiles [ --exec binary ] [ file0 ... ]
 # Example:     if bashLintFiles; then git commit -m "saving things" -a; fi
+# Argument: --verbose - Flag. Optional. Verbose mode.
+# Argument: --fix - Flag. Optional. Fix errors when possible.
 # Argument: --interactive - Flag. Optional. Interactive mode on fixing errors.
 # Argument: --exec binary - Run binary with files as an argument for any failed files. Only works if you pass in item names.
 # Argument: --delay - Optional. Integer. Delay between checks in interactive mode.
@@ -85,7 +100,7 @@ _bashLint() {
 bashLintFiles() {
   local usage="_${FUNCNAME[0]}"
 
-  local verbose=false failedReasons=() failedFiles=() checkedFiles=() binary="" sleepDelay=7 ii=() interactive=false
+  local verbose=false failedReasons=() failedFiles=() checkedFiles=() binary="" sleepDelay=7 ii=() interactive=false ff=()
 
   # _IDENTICAL_ argument-case-header 5
   local __saved=("$@") __count=$#
@@ -100,6 +115,9 @@ bashLintFiles() {
       ;;
     --verbose)
       verbose=true
+      ;;
+    --fix)
+      ff=("$argument")
       ;;
     --exec)
       shift
@@ -145,7 +163,7 @@ bashLintFiles() {
     {
       statusMessage --last printf -- "%s\n" "$(decorate warning "${#failedFiles[@]} $(plural ${#failedFiles[@]} file files) failed:")"
       for failedFile in "${failedFiles[@]}"; do
-        bashLint --verbose "$failedFile" 2>/dev/null | dumpPipe "$(decorate warning "$(lineFill "•" "••[ $(decorate file "$failedFile") ]")")"
+        bashLint "${ff[@]+"${ff[@]}"}" --verbose "$failedFile" 2>/dev/null | dumpPipe "$(decorate warning "$(lineFill "•" "••[ $(decorate file "$failedFile") ]")")"
       done
     } 1>&2
     if $interactive; then
@@ -161,7 +179,7 @@ bashLintFiles() {
   printf -- "\n"
 }
 _bashLintFiles() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -237,7 +255,7 @@ bashLintFilesInteractive() {
   done
 }
 _bashLintFilesInteractive() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -377,7 +395,7 @@ findUncaughtAssertions() {
   [ ${#problemFiles[@]} -eq 0 ]
 }
 _findUncaughtAssertions() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -468,7 +486,7 @@ validateFileExtensionContents() {
   fi
 }
 _validateFileExtensionContents() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -589,6 +607,6 @@ validateFileContents() {
   fi
 }
 _validateFileContents() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

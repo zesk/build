@@ -54,6 +54,6 @@ versionSort() {
 _versionSort() {
   # Fix SC2120
   ! false || versionSort --help
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

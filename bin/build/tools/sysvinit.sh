@@ -53,7 +53,7 @@ sysvInitScriptInstall() {
   done
 }
 _sysvInitScriptInstall() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -95,7 +95,7 @@ sysvInitScriptUninstall() {
   done
 }
 _sysvInitScriptUninstall() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 

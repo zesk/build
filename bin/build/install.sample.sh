@@ -588,7 +588,7 @@ versionSort() {
 _versionSort() {
   # Fix SC2120
   ! false || versionSort --help
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -733,11 +733,11 @@ urlFetch() {
   esac
 }
 _urlFetch() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# IDENTICAL __help 35
+# IDENTICAL __help 37
 
 # Simple help argument handler.
 #
@@ -751,10 +751,12 @@ _urlFetch() {
 # Argument: usageFunction - Function. Required. Must be first or second parameter. If calling function ONLY takes the `--help` parameter then throw an argument error if the argument is anything but `--help`.
 # Argument: arguments ... - Arguments. Optional. Arguments passed to calling function to check for `--help` argument.
 # Example:     __help "_${FUNCNAME[0]}" "$@" || return 0
-# Example:     __help "$usage" "$@" || return 0
 # Example:     [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
-# Example:     [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
 # Example:     [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return 0
+# Example:
+# Example:     local usage="_${FUNCNAME[0]}"
+# Example:     __help "$usage" "$@" || return 0
+# Example:     [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
 # Example:     [ $# -eq 0 ] || __help --only "$usage" "$@" || return 0
 # Requires: __throwArgument
 __help() {
@@ -806,11 +808,11 @@ usageDocumentSimple() {
   return "$returnCode"
 }
 
-# IDENTICAL bashFunctionComment 23
+# IDENTICAL bashFunctionComment 29
 
 # Extract a bash comment from a file. Excludes lines containing the following tokens:
 #
-# - `" IDENTICAL "` or `" _IDENTICAL_ "`
+# - `" IDENTICAL "` or `"_IDENTICAL_"`
 # - `"Internal:"` or `"INTERNAL:"`
 # - `"DOC TEMPLATE:"`
 #
@@ -822,12 +824,18 @@ bashFunctionComment() {
   local source="${1-}" functionName="${2-}"
   local maxLines=1000
   __help "_${FUNCNAME[0]}" "$@" || return 0
-  grep -m 1 -B $maxLines "^$functionName() {" "$source" | grep -v -e '( IDENTICAL | _IDENTICAL_ |DOC TEMPLATE:|Internal:|INTERNAL:)' |
-    fileReverseLines | grep -B "$maxLines" -m 1 -E '^\s*$' |
-    fileReverseLines | grep -E '^#' | cut -c 3-
+  grep -m 1 -B $maxLines "^$functionName() {" "$source" | grep -v -e '( IDENTICAL |_IDENTICAL_|DOC TEMPLATE:|Internal:|INTERNAL:)' | fileReverseLines | sed -n -e '1d' -e '/^#/!q; p' | fileReverseLines | cut -c 3-
+  # Explained:
+  # - grep -m 1 ... - Finds the `function() {` string in the file and all lines afterwards
+  # - grep -v ... - Removes internal documentation and anything we want to hide from the user
+  # - fileReverseLines - First reversal to get that comment, file lines are reverse ordered
+  # - sed 1d - Deletes the first line (e.g. the `function() { ` which was the LAST thing in the line and is now our first line
+  # - sed -n '/^#/!q; p' - `-n` - disables automatic printing. /^#/!q quits when it does not match a '#' comment and prints all `#` lines (effectively outputting just the comment lines)
+  # - fileReverseLines - File is back to normal
+  # - cut -c 3- - Delete the first 2 characters on each line
 }
 _bashFunctionComment() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -847,7 +855,7 @@ fileReverseLines() {
 }
 _fileReverseLines() {
   true || fileReverseLines --help
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -866,7 +874,7 @@ realPath() {
   fi
 }
 _realPath() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -885,7 +893,7 @@ fileTemporaryName() {
   __catchEnvironment "$handler" mktemp "$@" || return $?
 }
 _fileTemporaryName() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -908,7 +916,7 @@ whichExists() {
   done
 }
 _whichExists() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -935,7 +943,7 @@ isPositiveInteger() {
   return 1
 }
 _isPositiveInteger() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -955,7 +963,7 @@ isFunction() {
   case "$(type -t "$1")" in function | builtin) [ "$1" != "." ] || return 1 ;; *) return 1 ;; esac
 }
 _isFunction() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -997,7 +1005,7 @@ hasColors() {
   [ "${BUILD_COLORS-}" = "true" ]
 }
 _hasColors() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
   ! false || hasColors --help
 }
@@ -1034,7 +1042,7 @@ decorations() {
 }
 _decorations() {
   ! false || decorations --help
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -1065,7 +1073,7 @@ decorate() {
   __executeInputSupport "$usage" __decorate "$text" "${p}${lp}m" "${p}${dp:-$lp}m" "${p}0m" -- "$@" || return $?
 }
 _decorate() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -1242,11 +1250,12 @@ __executeInputSupport() {
   fi
 }
 
-# _IDENTICAL_ isArray 14
+# _IDENTICAL_ isArray 19
 
 # Is a variable declared as an array?
 # Argument: variableName - Required. String. Variable to check is an array.
 isArray() {
+  [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
   while [ $# -gt 0 ]; do
     [ -n "${1-}" ] || return 1
     case "$(declare -p "${1-}" 2>/dev/null)" in
@@ -1257,8 +1266,12 @@ isArray() {
   done
   return 0
 }
+_isArray() {
+  # __IDENTICAL__ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
 
-# _IDENTICAL_ exitString 10
+# _IDENTICAL_ exitString 18
 
 # Output the exit code as a string
 # Winner of the one-line bash award 10 years running
@@ -1267,7 +1280,15 @@ isArray() {
 # Argument: --help - Optional. Flag. Display this help.
 # stdout: exitCodeToken, one per line
 exitString() {
-  local k="" && while [ $# -gt 0 ]; do case "$1" in 0) k="success" ;; 1) k="environment" ;; 2) k="argument" ;; 97) k="assert" ;; 105) k="identical" ;; 108) k="leak" ;; 116) k="timeout" ;; 120) k="exit" ;; 127) k="not-found" ;; 130) k="user-interrupt" ;; 141) k="interrupt" ;; 253) k="internal" ;; 254) k="unknown" ;; --help) usageDocument "${FUNCNAME[0]}" "${BASH_SOURCE[0]}" 0 ;; *) k="[exitString unknown \"$1\"]" ;; esac && [ -n "$k" ] || k="$1" && printf "%s\n" "$k" && shift; done
+  local k="" && while [ $# -gt 0 ]; do case "$1" in 0) k="success" ;; 1) k="environment" ;; 2) k="argument" ;; 97) k="assert" ;; 105) k="identical" ;; 108) k="leak" ;; 116) k="timeout" ;; 120) k="exit" ;; 127) k="not-found" ;; 130) k="user-interrupt" ;; 141) k="interrupt" ;; 253) k="internal" ;; 254) k="unknown" ;; --help)
+    usageDocument "${FUNCNAME[0]}" "${BASH_SOURCE[0]}" 0
+    return 0
+    ;;
+  *) k="[exitString unknown \"$1\"]" ;; esac && [ -n "$k" ] || k="$1" && printf "%s\n" "$k" && shift; done
+}
+_exitString() {
+  # __IDENTICAL__ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # IDENTICAL _return 27
@@ -1424,7 +1445,7 @@ returnUndo() {
   return "$exitCode"
 }
 _returnUndo() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 

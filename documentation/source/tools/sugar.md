@@ -31,10 +31,11 @@ This is universally used throughout.
 {__catchCode}
 {__catchEnvironment}
 {__catchEnvironmentQuiet}
+
 {__catchArgument}
 {__throwEnvironment}
 {__throwArgument}
-{_undo}
+
 {muzzle}
 {mapReturn}
 

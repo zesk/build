@@ -31,7 +31,7 @@ daemontoolsInstall() {
   fi
 }
 _daemontoolsInstall() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -153,7 +153,7 @@ daemontoolsInstallService() {
   fi
 }
 _daemontoolsInstallService() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -238,7 +238,7 @@ daemontoolsRemoveService() {
   __catchEnvironment "$usage" popd >/dev/null || return $?
 }
 _daemontoolsRemoveService() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -260,7 +260,7 @@ daemontoolsIsRunning() {
   return 1
 }
 _daemontoolsIsRunning() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -275,7 +275,7 @@ daemontoolsHome() {
   printf "%s\n" "${DAEMONTOOLS_HOME-}"
 }
 _daemontoolsHome() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -298,7 +298,7 @@ daemontoolsExecute() {
   __catchEnvironment "$usage" muzzle nohup bash -c 'svscanboot &' 2>&1 || return $?
 }
 _daemontoolsExecute() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -317,7 +317,7 @@ daemontoolsProcessIds() {
 }
 _daemontoolsProcessIds() {
   ! false || daemontoolsProcessIds --help
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -392,7 +392,7 @@ daemontoolsTerminate() {
   fi
 }
 _daemontoolsTerminate() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -464,7 +464,7 @@ daemontoolsRestart() {
   statusMessage --last decorate success "Successfully restarted daemontools [$bootPid]"
 }
 _daemontoolsRestart() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -621,6 +621,6 @@ daemontoolsManager() {
   done
 }
 _daemontoolsManager() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

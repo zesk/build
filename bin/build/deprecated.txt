@@ -128,6 +128,7 @@ __failArgument|__throwArgument
 __failEnvironment|__throwEnvironment
 __usageEnvironment|__catchEnvironment
 __usageArgument|__catchArgument
+_IDENTICAL_ usageDocument|__IDENTICAL__ usageDocument
 
 # v0.18.6
 consoleReset|decorate reset

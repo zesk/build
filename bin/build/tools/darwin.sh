@@ -13,7 +13,7 @@ isDarwin() {
 }
 _isDarwin() {
   true || isDarwin --help
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -27,7 +27,7 @@ darwinSoundDirectory() {
   printf "%s\n" "$home/Library/Sounds"
 }
 _darwinSoundDirectory() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -43,7 +43,7 @@ darwinSoundValid() {
   done
 }
 _darwinSoundValid() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -92,7 +92,7 @@ darwinSoundInstall() {
   __catchEnvironment "$usage" cp "${soundFiles[@]+"${soundFiles[@]}"}" "${soundDirectory%/}/" || return $?
 }
 _darwinSoundInstall() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -109,7 +109,7 @@ darwinSoundNames() {
 }
 _darwinSoundNames() {
   ! false || darwinSoundNames --help
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -187,7 +187,7 @@ darwinNotification() {
 }
 
 _darwinNotification() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -316,6 +316,6 @@ darwinDialog() {
   ) || returnClean $? "$quietErrors" || return $?
 }
 _darwinDialog() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

@@ -48,7 +48,7 @@ runCount() {
 
 }
 _runCount() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -68,7 +68,7 @@ fileReverseLines() {
 }
 _fileReverseLines() {
   true || fileReverseLines --help
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -116,7 +116,7 @@ makeShellFilesExecutable() {
   ) || return $?
 }
 _makeShellFilesExecutable() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -166,7 +166,7 @@ manPathCleanDuplicates() {
   MANPATH="$newPath"
 }
 _manPathCleanDuplicates() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -183,7 +183,7 @@ pathRemove() {
   PATH="$tempPath"
 }
 _pathRemove() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -202,7 +202,7 @@ pathConfigure() {
   PATH="$tempPath"
 }
 _pathConfigure() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -228,7 +228,7 @@ pathCleanDuplicates() {
   PATH="$newPath"
 }
 _pathCleanDuplicates() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -249,7 +249,7 @@ whichExists() {
   done
 }
 _whichExists() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -261,7 +261,7 @@ JSON() {
   jq .
 }
 _JSON() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -302,7 +302,7 @@ serviceToStandardPort() {
   done
 }
 _serviceToStandardPort() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -351,7 +351,7 @@ serviceToPort() {
   done
 }
 _serviceToPort() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -434,7 +434,7 @@ extensionLists() {
   fi
 }
 _extensionLists() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -458,6 +458,6 @@ loadAverage() {
   printf "%s\n" "${averages[@]}"
 }
 _loadAverage() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

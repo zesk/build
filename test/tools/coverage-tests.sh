@@ -173,6 +173,7 @@ testBuildFunctionsHelpCoverage() {
 
 __dataBuildFunctionsWithoutHelp() {
   cat <<EOF
+grepSafe
 returnClean
 exitString
 clearLine

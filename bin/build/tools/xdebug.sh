@@ -33,7 +33,7 @@ xdebugInstall() {
   date | muzzle __catchEnvironment "$handler" tee "$artifact" || return $?
 }
 _xdebugInstall() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -51,7 +51,7 @@ xdebugEnable() {
   decorate success "xdebug debugging $(decorate value "[ENABLED]")"
 }
 _xdebugEnable() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -66,6 +66,6 @@ xdebugDisable() {
   decorate info "xdebug debugging $(decorate value "(disabled)")"
 }
 _xdebugDisable() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

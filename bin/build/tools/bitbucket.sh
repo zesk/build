@@ -53,7 +53,7 @@ bitbucketGetVariable() {
   printf "%s" "$value"
 }
 _bitbucketGetVariable() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -76,7 +76,7 @@ bitbucketContainer() {
   dockerLocalContainer --handler "_${FUNCNAME[0]}" --image "${BUILD_DOCKER_BITBUCKET_IMAGE}" --path "${BUILD_DOCKER_BITBUCKET_PATH}" "$@"
 }
 _bitbucketContainer() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 

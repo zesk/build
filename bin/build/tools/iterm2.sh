@@ -5,9 +5,17 @@
 #     | | | |  __/ |  | | | | | |/ __/
 #     |_| |_|\___|_|  |_| |_| |_|_____|
 #
-# by George Nachman and Contributors
+# Terminal program written by George Nachman and Contributors
 #
 # URL: https://iterm2.com/
+#
+# Code to integrate with this terminal specifically.
+#
+# Features:
+# - Change colors in the current terminal
+# - Display graphics
+# - Attract attention
+# - Prompt support with highlighting of commands and output
 #
 # Copyright &copy; 2025 Market Acumen, Inc.
 #
@@ -24,30 +32,30 @@ isiTerm2() {
 
 # Internal
 # iTerm "os command" perhaps?
-function _iTerm2_osc {
+_iTerm2_osc() {
   printf "\033]%s\007" "$1"
 }
 
 # Set an iTerm name to value
 # Usage: name value
-function _iTerm2_setValue {
+_iTerm2_setValue() {
   _iTerm2_osc "$(printf "1337;%s=%s" "$@")"
 }
 
 # e.g. SetBadgeFormat
-function _iTerm2_setBase64Value {
+_iTerm2_setBase64Value() {
   local name="${1-}"
   [ -n "$name" ] || _argument "${FUNCNAME[0]} name is blank" || return $?
   shift && _iTerm2_setValue "$name" "$(printf "%s\n" "$@" | base64 | tr -d '\n')"
 }
 
 # Run before pre-exec functions (in other implementation)
-function __iTerm2PreExecution() {
+__iTerm2PreExecution() {
   _iTerm2_osc "133;C;"
 }
 
-# Usage: iTerm2SetUserVariable key value
-function iTerm2SetUserVariable() {
+# Usage: __iTerm2SetUserVariable key value
+__iTerm2SetUserVariable() {
   local name="${1-}" value="${2-}"
 
   name=$(usageArgumentEnrivonmentVariable "$usage" "name" "$name") || return $?
@@ -93,6 +101,8 @@ __iTerm2UpdateState() {
 # select it.
 # It also reports the host, user and current directory back to iTerm2 on every prompt command.
 #
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
 # See: bashPrompt
 # Requires: __catchEnvironment muzzle bashPrompt bashPromptMarkers iTerm2UpdateState
 # Requires: __iTerm2_mark __iTerm2_suffix __iTerm2UpdateState
@@ -101,11 +111,12 @@ __iTerm2UpdateState() {
 iTerm2PromptSupport() {
   local usage="_${FUNCNAME[0]}"
 
+  [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
   __catchEnvironment "$usage" bashPrompt --skip-prompt --skip-terminal --first __iTerm2PreExecution --last __iTerm2UpdateState || return $?
   __catchEnvironment "$usage" muzzle bashPromptMarkers "$(__iTerm2_mark)" "$(__iTerm2_suffix)" || return $?
 }
 _iTerm2PromptSupport() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -129,9 +140,11 @@ _iTerm2PromptSupport() {
 # - `it2attention` - `iTerm2Attention`
 # - `it2dl` - `iTerm2Download`
 # - `it2setcolor` - `iTerm2SetColors`
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
 iTerm2Aliases() {
   local usage="_${FUNCNAME[0]}"
-  [ $# -eq 0 ] || __help --only "$@" || return 0
+  [ $# -eq 0 ] || __help --only "$usage" "$@" || return 0
 
   local home skipped=()
 
@@ -151,26 +164,53 @@ iTerm2Aliases() {
   [ ${#skipped[@]} -eq 0 ] || decorate subtle "Skipped $(decorate each code "${skipped[@]}")" 1>&2
 }
 _iTerm2Aliases() {
-  ! false || iTerm2Aliases --help
-  # _IDENTICAL_ usageDocument 1
+  true || iTerm2Aliases --help
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Solely the color names (e.g blue), not anything else
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
 iTerm2ColorNames() {
+  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return 0
   printf "%s\n" black red green yellow blue magenta cyan white
+}
+_iTerm2ColorNames() {
+  true || iTerm2ColorNames --help
+  # __IDENTICAL__ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Is it a color name?
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
 iTerm2IsColorName() {
-  case "$1" in
+  local usage="_${FUNCNAME[0]}"
+  case "${1-}" in
+  # _IDENTICAL_ --help 4
+  --help)
+    "$usage" 0
+    return $?
+    ;;
   black | red | green | yellow | blue | magenta | cyan | white) return 0 ;; *) return 1 ;;
   esac
+}
+_iTerm2IsColorName() {
+  true || iTerm2ColorNames --help
+  # __IDENTICAL__ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # This is faster than inArray etc.
 iTerm2IsColorType() {
-  case "$1" in
+  local usage="_${FUNCNAME[0]}"
+  case "${1-}" in
+  # _IDENTICAL_ --help 4
+  --help)
+    "$usage" 0
+    return $?
+    ;;
   fg | bg | selbg | selfg | curbg | curfg) return 0 ;;
   bold | link | underline) return 0 ;;
   tab) return 0 ;;
@@ -179,9 +219,15 @@ iTerm2IsColorType() {
   *) return 1 ;;
   esac
 }
+_iTerm2IsColorType() {
+  # __IDENTICAL__ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
 
 # Colors for various UI elements
 iTerm2ColorTypes() {
+  local usage="_${FUNCNAME[0]}"
+  [ $# -eq 0 ] || __help --only "$usage" "$@" || return 0
   local colors
   printf "%s\n" fg bg selbg selfg curbg curfg # Selection and maybe current line?
   printf "%s\n" bold link underline           # Formatting
@@ -189,6 +235,11 @@ iTerm2ColorTypes() {
   read -r -d "" -a colors < <(iTerm2ColorNames)
   printf -- "%s\n" "${colors[@]}"
   printf -- "%s\n" "${colors[@]}" | decorate wrap "br_" ""
+}
+_iTerm2ColorTypes() {
+  true || iTerm2ColorTypes --help
+  # __IDENTICAL__ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Usage: {fn} handler verboseFlag colorSetting
@@ -283,7 +334,7 @@ iTerm2Image() {
   fi
 }
 _iTerm2Image() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -373,7 +424,7 @@ iTerm2Download() {
   fi
 }
 _iTerm2Download() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -505,7 +556,7 @@ iTerm2SetColors() {
   return $exitCode
 }
 _iTerm2SetColors() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -584,7 +635,7 @@ iTerm2Attention() {
   $didSomething || __throwArgument "$usage" "Requires at least one argument" || return $?
 }
 _iTerm2Attention() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -630,7 +681,7 @@ iTerm2Badge() {
   _iTerm2_setBase64Value "SetBadgeFormat" "${message[@]}"
 }
 _iTerm2Badge() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -714,7 +765,7 @@ iTerm2Version() {
   printf "%s\n" "$version"
 }
 _iTerm2Version() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -722,8 +773,13 @@ _iTerm2Version() {
 # Argument: message - String. Required. Text to display.
 iTerm2Notify() {
   local usage="_${FUNCNAME[0]}"
+  [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
   [ -t 0 ] || __throwEnvironment "$usage" "stdin is not a terminal" || return $?
   printf "\e]9;%s\007" "$*"
+}
+_iTerm2Notify() {
+  # __IDENTICAL__ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Add iTerm2 support to console
@@ -780,6 +836,6 @@ iTerm2Init() {
   [ ! -d "$home/.iterm2" ] || __catchEnvironment "$usage" iTerm2Aliases || return $?
 }
 _iTerm2Init() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

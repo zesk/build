@@ -103,7 +103,7 @@ __assertedFunctions() {
   __catchEnvironment "$usage" touch "$logFile.dirty" || return $?
 }
 ___assertedFunctions() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 

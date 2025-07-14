@@ -48,7 +48,7 @@ deprecatedFilePrependVersion() {
   __catchEnvironment "$usage" mv -f "$newTarget" "$target" || returnClean $? "$newTarget" || return $?
 }
 _deprecatedFilePrependVersion() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -84,7 +84,7 @@ deprecatedIgnore() {
     "${__BUILD_DEPRECATED_EXTRAS[@]+"${__BUILD_DEPRECATED_EXTRAS[@]}"}"
 }
 _deprecatedIgnore() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -152,7 +152,7 @@ deprecatedTokensFile() {
   statusMessage --last timingReport "$start" "Deprecated token scan took"
 }
 _deprecatedTokensFile() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -238,7 +238,7 @@ deprecatedCannonFile() {
   return "$exitCode"
 }
 _deprecatedCannonFile() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -289,7 +289,7 @@ deprecatedFind() {
   return 1
 }
 _deprecatedFind() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -344,6 +344,6 @@ deprecatedCannon() {
   cannon --path "$cannonPath" "$search" "$replace" "$@" "${aa[@]}"
 }
 _deprecatedCannon() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

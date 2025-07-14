@@ -115,7 +115,7 @@ usageDocumentComplex() {
   return "$returnCode"
 }
 _usageDocumentComplex() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -359,7 +359,7 @@ documentationTemplateCompile() {
   statusMessage decorate info "$(timingReport "$start" "$message" "$targetFile" in)"
 }
 _documentationTemplateCompile() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -430,7 +430,7 @@ documentationTemplateFunctionCompile() {
   __catchEnvironment "$usage" _bashDocumentation_Template "$functionTemplate" "${envFiles[@]+"${envFiles[@]}"}" "$settingsFile" || return $?
 }
 _documentationTemplateFunctionCompile() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -543,7 +543,7 @@ documentationTemplateDirectoryCompile() {
   return $exitCode
 }
 _documentationTemplateDirectoryCompile() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -608,7 +608,7 @@ bashDocumentFunction() {
   return $exitCode
 }
 _bashDocumentFunction() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -864,7 +864,7 @@ bashDocumentation_Extract() {
   printf "%s %s\n" "# Found Names:" "$(printf "%s " "${foundNames[@]+"${foundNames[@]}"}")"
 }
 _bashDocumentation_Extract() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -916,7 +916,7 @@ bashDocumentation_FindFunctionDefinitions() {
   [ "$phraseCount" -eq "$linesOutput" ]
 }
 _bashDocumentation_FindFunctionDefinitions() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -956,7 +956,7 @@ bashDocumentation_FindFunctionDefinition() {
   printf %s "$definitionFile"
 }
 _bashDocumentation_FindFunctionDefinition() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 

@@ -86,7 +86,7 @@ applicationHome() {
   __applicationHomeGo "$usage" "${__saved[0]-} Application home set to" || return $?
 }
 _applicationHome() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -133,6 +133,6 @@ applicationHomeAliases() {
   alias "$setAlias"=applicationHome || __throwEnvironment "$usage" "alias $setAlias failed" || return $?
 }
 _applicationHomeAliases() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

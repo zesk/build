@@ -50,7 +50,7 @@ buildFailed() {
   _environment "Failed:" "$@" || return $?
 }
 _buildFailed() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -103,15 +103,20 @@ versionSort() {
 _versionSort() {
   # Fix SC2120
   ! false || versionSort --help
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
 # Get the current IP address of a host
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
+# Environment: IP_URL - URL. Required. of remote IP service; returns JSON or text (the IP).
+# Environment: IP_URL_FILTER - String. Optional. Filter for JSON to get IP - if blank returns remote contents directly.
 ipLookup() {
   local usage="_${FUNCNAME[0]}"
 
+  [ $# -eq 0 ] || __help --only "$usage" "$@" || return 0
   local url jqFilter
   if ! packageWhich curl curl; then
     __throwEnvironment "$usage" "Requires curl to operate" || return $?
@@ -125,7 +130,7 @@ ipLookup() {
   __catchEnvironment "$usage" curl -s "$url" | "${pp[@]}" || return $?
 }
 _ipLookup() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -154,28 +159,29 @@ _ipLookup() {
 # Example:     fi
 #
 isUpToDate() {
-  local keyDate upToDateDays=${1:-90} accessKeyTimestamp todayTimestamp
-  local label deltaDays maxDays daysAgo expireTimestamp expireDate keyTimestamp
-  local name argument timeText
-  local usage
+  local usage="_${FUNCNAME[0]}"
 
-  usage="_${FUNCNAME[0]}"
-
-  name=Key
-  keyDate=
+  local name="Key" keyDate="" upToDateDays=""
+  # _IDENTICAL_ argument-case-header 5
+  local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
-    argument="$1"
-    [ -n "$argument" ] || __throwArgument "$usage" "blank argument" || return $?
+    local argument="$1" __index=$((__count - $# + 1))
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
     --name)
       shift || :
       name="$1"
       ;;
     *)
       if [ -z "$keyDate" ]; then
-        keyDate="$argument"
+        keyDate=$(usageArgumentString "$usage" "keyDate" "$argument") || return $?
       elif [ -n "$upToDateDays" ]; then
-        upToDateDays="$argument"
+        upToDateDays=$(usageArgumentInteger "$usage" "upToDateDays" "$argument") || return $?
       else
         __throwArgument "$usage" "unknown argument $(decorate value "$argument")" || return $?
       fi
@@ -183,10 +189,14 @@ isUpToDate() {
     esac
     shift || __throwArgument "shift $argument" || return $?
   done
+  [ -n "$keyDate" ] || __throwArgument "$usage" "missing keyDate" || return $?
+  [ -n "$upToDateDays" ] || upToDateDays=90
+
   keyDate="${keyDate:0:10}"
   [ -z "$name" ] || name="$name "
   todayTimestamp=$(dateToTimestamp "$(todayDate)") || __throwEnvironment "$usage" "Unable to generate todayDate" || return $?
-  [ -n "$keyDate" ] || __throwArgument "$usage" "missing keyDate" || return $?
+
+  local keyTimestamp maxDays
 
   keyTimestamp=$(dateToTimestamp "$keyDate") || __throwArgument "$usage" "Invalid date $keyDate" || return $?
   isInteger "$upToDateDays" || __throwArgument "$usage" "upToDateDays is not an integer ($upToDateDays)" || return $?
@@ -195,12 +205,15 @@ isUpToDate() {
   [ "$upToDateDays" -le "$maxDays" ] || __throwArgument "$usage" "isUpToDate $keyDate $upToDateDays - values not allowed greater than $maxDays" || return $?
   [ "$upToDateDays" -ge 0 ] || __throwArgument "$usage" "isUpToDate $keyDate $upToDateDays - negative values not allowed" || return $?
 
+  local accessKeyTimestamp expireTimestamp expireDate deltaDays daysAgo todayTimestamp
+
   accessKeyTimestamp=$((keyTimestamp + ((23 * 60) + 59) * 60))
   expireTimestamp=$((accessKeyTimestamp + 86400 * upToDateDays))
   expireDate=$(dateFromTimestamp "$expireTimestamp" '%A, %B %d, %Y %R')
   deltaDays=$(((todayTimestamp - accessKeyTimestamp) / 86400))
   daysAgo=$((deltaDays - upToDateDays))
   if [ "$todayTimestamp" -gt "$expireTimestamp" ]; then
+    local label timeText
     label=$(printf "%s %s\n" "$(decorate error "${name}expired on ")" "$(decorate red "$keyDate")")
     case "$daysAgo" in
     0) timeText="Today" ;;
@@ -227,6 +240,6 @@ isUpToDate() {
   return 0
 }
 _isUpToDate() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

@@ -53,7 +53,7 @@ fileExtractLines() {
   sed -n "${start},${end}p;${end}q"
 }
 _fileExtractLines() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -113,7 +113,7 @@ isMappable() {
   return 1
 }
 _isMappable() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -138,7 +138,7 @@ parseBoolean() {
   return 2
 }
 _parseBoolean() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -240,7 +240,7 @@ trimBoth() {
   sed -e :a -e '/./,$!d' -e '/^\n*$/{$d;N;ba' -e '}'
 }
 _trimBoth() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -252,7 +252,7 @@ trimHead() {
   sed -e "/./!d" -e :r -e n -e br
 }
 _trimHead() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -264,7 +264,7 @@ trimTail() {
   sed -e :a -e '/^\n*$/{$d;N;ba' -e '}'
 }
 _trimTail() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -276,7 +276,7 @@ singleBlankLines() {
   sed '/^$/N;/^\n$/D'
 }
 _singleBlankLines() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -310,7 +310,7 @@ trimSpace() {
 }
 _trimSpace() {
   false || trimSpace "" # SC2120 fix
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -371,7 +371,7 @@ stringContains() {
   return 1
 }
 _stringContains() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -399,7 +399,7 @@ stringContainsInsensitive() {
   return 1
 }
 _stringContainsInsensitive() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -425,7 +425,7 @@ beginsWith() {
   return 1
 }
 _beginsWith() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -451,7 +451,7 @@ isSubstring() {
   return 1
 }
 _isSubstring() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -483,7 +483,7 @@ isSubstringInsensitive() {
   return 1
 }
 _isSubstringInsensitive() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -544,7 +544,7 @@ maximumFieldLength() {
   awk "${separatorChar[@]}" "{ print length(\$$index) }" | sort -rn | head -1
 }
 _maximumFieldLength() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -566,7 +566,7 @@ maximumLineLength() {
   printf "%d" "$max"
 }
 _maximumLineLength() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -609,7 +609,7 @@ fileLineCount() {
   $fileArgument || printf "%d\n" "$(__catchEnvironment "$usage" wc -l | trimSpace)" || return $?
 }
 _fileLineCount() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -668,7 +668,7 @@ lowercase() {
   done
 }
 _lowercase() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -690,7 +690,7 @@ uppercase() {
   done
 }
 _uppercase() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -713,7 +713,7 @@ stripAnsi() {
 }
 _stripAnsi() {
   true || stripAnsi --help
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -727,7 +727,7 @@ plainLength() {
   printf "%d\n" "${#text}"
 }
 _plainLength() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -768,7 +768,7 @@ shaPipe() {
   fi
 }
 _shaPipe() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -825,7 +825,7 @@ cachedShaPipe() {
   fi
 }
 _cachedShaPipe() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -840,7 +840,7 @@ randomString() {
   head --bytes=64 /dev/random | sha1sum | cut -f 1 -d ' '
 }
 _randomString() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -862,7 +862,7 @@ stringOffset() {
   printf %d "$offset"
 }
 _stringOffset() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -873,7 +873,7 @@ characterClasses() {
 }
 _characterClasses() {
   true || characterClasses --help
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -910,7 +910,7 @@ isCharacterClass() {
   done
 }
 _isCharacterClass() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -945,7 +945,7 @@ isCharacterClasses() {
   return 1
 }
 _isCharacterClasses() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -983,7 +983,7 @@ characterFromInteger() {
   done
 }
 _characterFromInteger() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -1009,7 +1009,7 @@ stringValidate() {
   done
 }
 _stringValidate() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -1031,7 +1031,7 @@ characterToInteger() {
   done
 }
 _characterToInteger() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -1136,7 +1136,7 @@ characterClassReport() {
   __catchEnvironment "$usage" ulimit -n "$savedLimit" || return $?
 }
 _characterClassReport() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -1174,7 +1174,7 @@ removeFields() {
   done
 }
 _removeFields() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -1195,7 +1195,7 @@ quoteSedPattern() {
   printf -- "%s\n" "$value"
 }
 _quoteSedPattern() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -1215,7 +1215,7 @@ quoteSedReplacement() {
   printf -- "%s\n" "$value"
 }
 _quoteSedReplacement() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -1314,6 +1314,6 @@ stringReplace() {
   sed -e "$sedCommand"
 }
 _stringReplace() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

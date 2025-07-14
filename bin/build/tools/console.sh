@@ -83,7 +83,7 @@ consoleGetColor() {
 
 }
 _consoleGetColor() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -103,7 +103,7 @@ consoleBrightness() {
   fi
 }
 _consoleBrightness() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -130,7 +130,7 @@ consoleConfigureColorMode() {
   printf -- "%s\n" "$colorMode"
 }
 _consoleConfigureColorMode() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -142,7 +142,7 @@ consoleSetTitle() {
   printf -- "\e%s\007" "]0;$*"
 }
 _consoleSetTitle() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -155,7 +155,7 @@ consoleDefaultTitle() {
   consoleSetTitle "${USER}@${HOSTNAME%%.*}: ${PWD/#$HOME/~}"
 }
 _consoleDefaultTitle() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -170,7 +170,7 @@ consoleLink() {
   printf -- "${OSC8}%s${ST}%s${OSC8}${ST}" "$link" "$text"
 }
 _consoleLink() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -187,7 +187,7 @@ consoleLinksSupported() {
 }
 _consoleLinksSupported() {
   ! false || consoleLinksSupported --help
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -208,7 +208,7 @@ consoleFileLink() {
   fi
 }
 _consoleFileLink() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 

@@ -31,7 +31,7 @@ __hookProjectActivate() {
   statusMessage --last printf -- "%s %s %s %s\n" "$symbol" "$(decorate subtle "$otherName")" "➜" "$(decorate info "$name")"
 }
 ___hookProjectActivate() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -44,7 +44,7 @@ __hookProjectActivateContext() {
   [ ${#items[@]} -eq 0 ] || interactiveBashSource --verbose --prefix "Activate" "${items[@]}" || return $?
 }
 ___hookProjectActivateContext() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 

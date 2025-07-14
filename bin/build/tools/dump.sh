@@ -73,7 +73,7 @@ debuggingStack() {
 }
 _debuggingStack() {
   true || debuggingStack --help
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -193,7 +193,7 @@ dumpPipe() {
   rm -rf "$item" || :
 }
 _dumpPipe() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -250,7 +250,7 @@ __dumpFile() {
   _dumpFile "$exitCode" "$@"
 }
 _dumpFile() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -374,7 +374,7 @@ dumpEnvironment() {
   __internalDumpEnvironment "$usage" "$@" || return $?
 }
 _dumpEnvironment() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -394,7 +394,7 @@ dumpEnvironmentUnsafe() {
   __internalDumpEnvironment "$usage" "$@" --secure-match - --secure-suffix ""
 }
 _dumpEnvironmentUnsafe() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -429,7 +429,7 @@ dumpLoadAverages() {
   __catchEnvironment "$usage" decorate pair "Load averages:" "$(decorate each code "${averages[@]+"${averages[@]}"}")" || return $?
 }
 _dumpLoadAverages() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -478,6 +478,6 @@ dumpHex() {
   fi
 }
 _dumpHex() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

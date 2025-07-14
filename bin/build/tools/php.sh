@@ -63,7 +63,7 @@ phpLog() {
   php -r "echo ini_get('error_log');" 2>/dev/null || __throwEnvironment "$usage" "php installation issue" || return $?
 }
 _phpLog() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -77,7 +77,7 @@ phpIniFile() {
   php -r "echo get_cfg_var('cfg_file_path');" 2>/dev/null || __throwEnvironment "$usage" "php installation issue" || return $?
 }
 _phpIniFile() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -295,7 +295,7 @@ phpBuild() {
   statusMessage --last timingReport "$initTime" "PHP built $(decorate code "$targetName") in"
 }
 _phpBuild() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 _phpBuildBanner() {
@@ -414,7 +414,7 @@ phpTest() {
   statusMessage timingReport "$init" "PHP Test completed in" || return $?
 }
 _phpTest() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 _phpTestSetup() {

@@ -22,6 +22,7 @@
 __githubAPI() {
   local handler="$1" query="$2" suffix="${3-}" && shift 3
 
+  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
   [ $# -gt 0 ] || __throwArgument "$handler" "projectName required" || return $?
 
   if ! packageWhich curl curl; then
@@ -99,7 +100,7 @@ githubURLParse() {
   done
 }
 _githubURLParse() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -110,7 +111,7 @@ githubPublishDate() {
   __githubLatestVariable "$usage" ".published_at" "$@"
 }
 _githubPublishDate() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -125,17 +126,18 @@ githubLatestRelease() {
   __githubLatestVariable "$usage" ".name" "$@"
 }
 _githubLatestRelease() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Get a project JSON structure
 # Environment: GITHUB_ACCESS_TOKEN
 githubProjectJSON() {
+  local usage="_${FUNCNAME[0]}"
   __githubLatestVariable "$usage" "." "$@"
 }
 _githubProjectJSON() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -149,13 +151,17 @@ githubLatest() {
   __githubAPI "$usage" "." "" "$@"
 }
 _githubLatest() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
 # Summary: Generate a release on GitHub using API
 # Usage: {fn} [ --token token ] [ --owner owner ] [ --name name ] [ --expire expire ] descriptionFilePath releaseName commitish
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
+# DOC TEMPLATE: --handler 1
+# Argument: --handler handler - Optional. Function. Use this error handler instead of the default error handler.
 # Argument: --token token - Optional. Uses `GITHUB_ACCESS_TOKEN` if not supplied. Access token for GitHub REST API.
 # Argument: --owner owner - Optional. Uses `GITHUB_REPOSITORY_OWNER` if not supplied. Repository owner of release.
 # Argument: --name name - Optional. Uses `GITHUB_REPOSITORY_NAME` if not supplied. Repository name to release.
@@ -194,10 +200,22 @@ githubRelease() {
   accessToken="${GITHUB_ACCESS_TOKEN-}"
   repoOwner="${GITHUB_REPOSITORY_OWNER-}"
   repoName="${GITHUB_REPOSITORY_NAME-}"
+  # _IDENTICAL_ argument-case-header 5
+  local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
-    argument="$1"
-    [ -n "$argument" ] || __throwArgument "$usage" "blank argument" || return $?
+    local argument="$1" __index=$((__count - $# + 1))
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    # _IDENTICAL_ --handler 4
+    --handler)
+      shift
+      usage=$(usageArgumentFunction "$usage" "$argument" "${1-}") || return $?
+      ;;
     --token)
       shift
       [ -n "${1-}" ] || __throwArgument "$usage" "Blank $argument argument" || return $?
@@ -222,7 +240,8 @@ githubRelease() {
       extras+=("$1")
       ;;
     esac
-    shift || __throwArgument "$usage" "missing argument $(decorate label "$argument")" || return $?
+    # _IDENTICAL_ argument-esac-shift 1
+    shift
   done
 
   [ ${#extras[@]} -eq 3 ] || __throwArgument "$usage" "Need: descriptionFile releaseName commitish, found ${#extras[@]} arguments" || return $?
@@ -305,6 +324,6 @@ githubRelease() {
   rm "$resultsFile" || :
 }
 _githubRelease() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

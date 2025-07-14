@@ -19,7 +19,7 @@ aptKeyAddHashicorp() {
   __environment aptKeyAdd --title Hashicorp --name hashicorp --url https://apt.releases.hashicorp.com/gpg || return $?
 }
 _aptKeyAddHashicorp() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -35,7 +35,7 @@ aptKeyRemoveHashicorp() {
   __environment aptKeyRemove hashicorp "$@" || return $?
 }
 _aptKeyRemoveHashicorp() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -58,7 +58,7 @@ terraformInstall() {
   whichExists "$binary" || __throwEnvironment "$usage" "No $binary binary found - installation failed" || return $?
 }
 _terraformInstall() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -78,6 +78,6 @@ terraformUninstall() {
   __catchEnvironment "$usage" packageUpdate --force || return $?
 }
 _terraformUninstall() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

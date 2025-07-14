@@ -26,7 +26,7 @@ isPHPStorm() {
   [ "${xpc%%PhpStorm*}" != "${xpc}" ] || [ "${cfb%%PhpStorm*}" != "${cfb}" ]
 }
 _isPHPStorm() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -44,7 +44,7 @@ isPyCharm() {
   [ "${xpc%%pycharm*}" != "${xpc}" ]
 }
 _isPyCharm() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -62,7 +62,7 @@ isVisualStudioCode() {
   [ "${VSCODE_SHELL_INTEGRATION-}" = "1" ]
 }
 _isVisualStudioCode() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -94,7 +94,7 @@ contextOpen() {
   fi
 }
 _contextOpen() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -122,6 +122,6 @@ showContext() {
   fi
 }
 _showContext() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

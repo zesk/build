@@ -27,7 +27,7 @@ mariadbInstall() {
   __catchEnvironment "$usage" packageGroupInstall mariadb || return $?
 }
 _mariadbInstall() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -37,7 +37,7 @@ mariadbUninstall() {
   __catchEnvironment "$usage" packageGroupUninstall mariadb || return $?
 }
 _mariadbUninstall() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -117,7 +117,7 @@ mariadbDump() {
   fi
 }
 _mariadbDump() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -200,7 +200,7 @@ mariadbConnect() {
   fi
 }
 _mariadbConnect() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 

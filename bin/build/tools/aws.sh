@@ -72,7 +72,7 @@ awsInstall() {
   }
 }
 _awsInstall() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -161,7 +161,7 @@ awsCredentialsFile() {
   return 0
 }
 _awsCredentialsFile() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -196,7 +196,7 @@ awsIsKeyUpToDate() {
   isUpToDate "${AWS_ACCESS_KEY_DATE-}" "$@"
 }
 _awsIsKeyUpToDate() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -224,7 +224,7 @@ awsHasEnvironment() {
   [ -n "${AWS_ACCESS_KEY_ID-}" ] && [ -n "${AWS_SECRET_ACCESS_KEY-}" ]
 }
 _awsHasEnvironment() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -242,7 +242,7 @@ awsProfilesList() {
   grep -e '\[[^]]*\]' "$file" | sed 's/[]\[]//g' | sort -u || :
 }
 _awsProfilesList() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -304,7 +304,7 @@ awsEnvironmentFromCredentials() {
   done < <(__awsCredentialsExtractProfile "$profileName" <"$credentials")
 }
 _awsEnvironmentFromCredentials() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -346,7 +346,7 @@ awsCredentialsHasProfile() {
   inArray AWS_ACCESS_KEY_ID "${foundValues[@]}" && inArray AWS_SECRET_ACCESS_KEY "${foundValues[@]}"
 }
 _awsCredentialsHasProfile() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -427,7 +427,7 @@ awsCredentialsAdd() {
   fi
 }
 _awsCredentialsAdd() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -493,7 +493,7 @@ awsCredentialsRemove() {
   fi
 }
 _awsCredentialsRemove() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -517,7 +517,7 @@ awsCredentialsFromEnvironment() {
 }
 
 _awsCredentialsFromEnvironment() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -697,7 +697,7 @@ awsSecurityGroupIPModify() {
   fi
 }
 _awsSecurityGroupIPModify() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -876,7 +876,7 @@ awsIPAccess() {
   done
 }
 _awsIPAccess() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -920,6 +920,6 @@ awsRegionValid() {
   return 0
 }
 _awsRegionValid() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

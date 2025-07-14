@@ -186,7 +186,7 @@ copyFile() {
   __throwArgument "$usage" "Missing source" || return $?
 }
 _copyFile() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -255,7 +255,7 @@ copyFileWouldChange() {
   __throwArgument "$usage" "Missing source" || return $?
 }
 _copyFileWouldChange() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -382,7 +382,7 @@ loopExecute() {
   __catchEnvironment "$usage" rm -rf "$outputBuffer" || return $?
 }
 _loopExecute() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -489,7 +489,7 @@ interactiveManager() {
   fi
 }
 _interactiveManager() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -592,7 +592,7 @@ confirmYesNo() {
   __confirmYesNo "$default" "$reason" || return $?
 }
 _confirmYesNo() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -708,7 +708,7 @@ __confirmMenuValidate() {
   return 1
 }
 _confirmMenu() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -768,7 +768,7 @@ interactiveCountdown() {
   fi
 }
 _interactiveCountdown() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -855,11 +855,17 @@ interactiveBashSource() {
   done
 }
 _interactiveBashSource() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# Notify after running a binary
+# Notify after running a binary. Uses the `notify` hook with some handy paramters which are inherited
+# between "success" and "failure":
+#
+# - Upon success uses: `--message` `--title` `--sound`
+# - Upon failure uses: `--fail-message` `--fail-title` `--fail-sound`
+#
+# If a value is not specified for failure, it will use the `success` value.
 #
 # DOC TEMPLATE: --help 1
 # Argument: --help - Optional. Flag. Display this help.
@@ -867,12 +873,14 @@ _interactiveBashSource() {
 # Argument: --handler handler - Optional. Function. Use this error handler instead of the default error handler.
 # Argument: --verbose - Flag. Optional. Be verbose.
 # Argument: --title title - String. Optional. Sets the title for the notification.
+# Argument: --message message - String. Optional. Display this message (alias is `-m`)
+# Argument: --fail failMessage - String. Optional. Display this message in console and dialog upon failure.
 # Argument: --sound soundName - String. Optional. Sets the sound played for the notification.
 # Argument: --fail-title title - String. Optional. Sets the title for the notification if the binary fails.
 # Argument: --fail-sound soundName - String. Optional. Sets the sound played for the notification if the binary fails.
 notify() {
   local usage="_${FUNCNAME[0]}"
-  local message="" verboseFlag=false nn=()
+  local failMessage="" message="" verboseFlag=false nn=()
 
   # _IDENTICAL_ argument-case-header 5
   local __saved=("$@") __count=$#
@@ -890,9 +898,13 @@ notify() {
       shift
       usage=$(usageArgumentFunction "$usage" "$argument" "${1-}") || return $?
       ;;
-    -m | --message)
+    --message)
       shift
       message="$(usageArgumentString "$usage" "$argument" "${1-}")" || return $?
+      ;;
+    --fail-message)
+      shift
+      failMessage="$(usageArgumentString "$usage" "$argument" "${1-}")" || return $?
       ;;
     --verbose)
       verboseFlag=true
@@ -932,15 +944,16 @@ notify() {
   tempOut=$(fileTemporaryName "$usage") || return $?
   tempErr="$tempOut.err"
   if CI=1 __catchEnvironment "$usage" "$binary" "$@" 2>"$tempErr" | tee "$tempOut"; then
-    dialog=$(printf "%s\n" "Exit Code: $?" "Exit String: $(exitString $?)" "Elapsed: $(timingReport "$start")" "" "stdout:" "$(tail -n 10 "$tempOut")")
+    dialog=$(printf "%s\n" "$message" "" "Exit Code: $?" "Exit String: $(exitString $?)" "Elapsed: $(timingReport "$start")" "" "stdout:" "$(tail -n 10 "$tempOut")")
     hookRun --application "$home" notify --title "$binary Succeeded" --sound zesk-build-notification "${nn[@]+"${nn[@]}"}" "Elapsed: $(timingReport "$start")"
   else
-    dialog=$(printf "%s\n" "Exit Code: $?" "Exit String: $(exitString $?)" "Elapsed: $(timingReport "$start")" "" "stderr:" "$(tail -n 10 "$tempErr")" "" "stdout:" "$(tail -n 10 "$tempOut")")
+    [ -n "$failMessage" ] || failMessage="$message"
+    dialog=$(printf "%s\n" "$failMessage" "" "Exit Code: $?" "Exit String: $(exitString $?)" "Elapsed: $(timingReport "$start")" "" "stderr:" "$(tail -n 10 "$tempErr")" "" "stdout:" "$(tail -n 10 "$tempOut")")
     hookRun --application "$home" notify --title "$binary FAILED" --sound zesk-build-failed "${nn[@]+"${nn[@]}"}" "${nnFail[@]+"${nnFail[@]}"}" "$dialog"
   fi
   __catchEnvironment "$usage" rm -f "$tempErr" "$tempOut" || return $?
 }
 _notify() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

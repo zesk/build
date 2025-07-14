@@ -22,7 +22,7 @@ brewInstall() {
   /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 }
 _brewInstall() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -89,7 +89,7 @@ __brewUpgrade() {
   printf "%s\n" "$result"
 }
 ___brewUpgrade() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -119,7 +119,7 @@ __brewInstalledList() {
   __brewWrapper list -1 | grep -v '^[^A-Za-z]'
 }
 ___brewInstalledList() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -132,7 +132,7 @@ __brewAvailableList() {
   __brewWrapper search --formula '/.*/'
 }
 ___brewAvailableList() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 

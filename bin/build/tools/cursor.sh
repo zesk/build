@@ -29,7 +29,7 @@ cursorGet() {
   printf "%d\n" "$x" "$y"
 }
 _cursorGet() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -54,6 +54,6 @@ cursorSet() {
   printf "\e%s%d;%dH" "[" "$y" "$x" >/dev/tty
 }
 _cursorSet() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

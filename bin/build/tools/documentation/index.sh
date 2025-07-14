@@ -105,7 +105,7 @@ documentationIndex_Lookup() {
   return 0
 }
 _documentationIndex_Lookup() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -123,7 +123,7 @@ _documentationIndex_GeneratePath() {
   printf -- "%s" "${cacheDirectory%%/}/documentationIndex_Generate"
 }
 __documentationIndex_GeneratePath() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -261,7 +261,7 @@ documentationIndex_Generate() {
   statusMessage --last printf -- "%s %s %s\n" "$(decorate info "Generated index for ")" "$(decorate code "$(decorate file "$codePath")")" "$(timingReport "$start" in)"
 }
 _documentationIndex_Generate() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -311,7 +311,7 @@ documentationIndex_ShowUnlinked() {
   done
 }
 _documentationIndex_ShowUnlinked() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -336,7 +336,7 @@ documentationIndex_SetUnlinkedDocumentationPath() {
   done
 }
 _documentationIndex_SetUnlinkedDocumentationPath() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -391,7 +391,7 @@ documentationIndex_UnlinkedIterator() {
   done
 }
 _documentationIndex_UnlinkedIterator() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -450,7 +450,7 @@ documentationIndex_FunctionIterator() {
   done
 }
 _documentationIndex_FunctionIterator() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -555,6 +555,6 @@ documentationIndex_LinkDocumentationPaths() {
   statusMessage decorate info "$(printf "%s %s %s %s %s %s %s %s\n" "$(decorate cyan Indexed)" "$(decorate bold-red "$processed")" "$(decorate green "of $total")" "$(decorate cyan "$(plural "$processed" function functions)")" "for" "$(decorate code "$documentationPath")" "in" "$(timingReport "$start")")"
 }
 _documentationIndex_LinkDocumentationPaths() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

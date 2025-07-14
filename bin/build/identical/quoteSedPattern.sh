@@ -22,7 +22,7 @@ quoteSedPattern() {
   printf -- "%s\n" "$value"
 }
 _quoteSedPattern() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -42,6 +42,6 @@ quoteSedReplacement() {
   printf -- "%s\n" "$value"
 }
 _quoteSedReplacement() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

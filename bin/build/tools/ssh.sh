@@ -47,7 +47,7 @@ sshKnownHostsFile() {
   printf "%s\n" "$sshKnown"
 }
 _sshKnownHostsFile() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -118,7 +118,7 @@ sshKnownHostAdd() {
   return $exitCode
 }
 _sshKnownHostAdd() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -197,7 +197,7 @@ sshKnownHostRemove() {
   buildDebugStop ssh || :
 }
 _sshKnownHostRemove() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -292,7 +292,7 @@ sshSetup() {
   done
 }
 _sshSetup() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 _generateSSHKeyPair() {

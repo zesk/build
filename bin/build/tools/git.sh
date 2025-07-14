@@ -29,7 +29,12 @@
 # Summary: Install git if needed
 #
 gitInstall() {
+  __help "_${FUNCNAME[0]}" "$@" || return 0
   packageWhich git git "$@"
+}
+_gitInstall() {
+  # __IDENTICAL__ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
@@ -39,7 +44,12 @@ gitInstall() {
 # Summary: Uninstall git
 #
 gitUninstall() {
+  __help "_${FUNCNAME[0]}" "$@" || return 0
   packageWhichUninstall git git "$@"
+}
+_gitUninstall() {
+  # __IDENTICAL__ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
@@ -48,7 +58,8 @@ gitUninstall() {
 #
 # This adds the directory passed to that directory in the local user's environment
 #
-# Usage: gitEnsureSafeDirectory [ directory ... ]
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
 # Argument: directory - Required. Directory. The directory to add to the `git` `safe.directory` configuration directive
 # Exit Code: 0 - Success
 # Exit Code: 2 - Argument is not a valid directory
@@ -57,6 +68,7 @@ gitUninstall() {
 gitEnsureSafeDirectory() {
   local usage="_${FUNCNAME[0]}"
   while [ $# -gt 0 ]; do
+    [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
     [ -d "$1" ] || __throwArgument "$usage" "$1 is not a directory" || return $?
     if ! git config --global --get safe.directory | grep -q "$1"; then
       __catchEnvironment "$usage" git config --global --add safe.directory "$1" || return $?
@@ -65,14 +77,15 @@ gitEnsureSafeDirectory() {
   done
 }
 _gitEnsureSafeDirectory() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
 # Delete git tag locally and at origin
 #
-# Usage: gitTagDelete [ tag ... ]
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
 # Argument: tag - The tag to delete locally and at origin
 # Exit Code: argument - Any stage fails will result in this exit code. Partial deletion may occur.
 #
@@ -83,17 +96,30 @@ gitTagDelete() {
 
   __catchEnvironment "$usage" buildEnvironmentLoad GIT_REMOTE || return $?
   usageRequireEnvironment "$usage" GIT_REMOTE || return $?
+  # _IDENTICAL_ argument-case-header 5
+  local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
-    # Deleting local tag
-    __catchArgument "$usage" git tag -d "$1" || exitCode=$?
-    # Deleting remote tag
-    __catchArgument "$usage" git push "$GIT_REMOTE" :"$1" || exitCode=$?
+    local argument="$1" __index=$((__count - $# + 1))
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
+    case "$argument" in
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    *)
+      # Deleting local tag
+      __catchArgument "$usage" git tag -d "$argument" || exitCode=$?
+      # Deleting remote tag
+      __catchArgument "$usage" git push "$GIT_REMOTE" :"$argument" || exitCode=$?
+      ;;
+    esac
     shift
   done
   return "$exitCode"
 }
 _gitTagDelete() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -106,8 +132,10 @@ _gitTagDelete() {
 #
 gitTagAgain() {
   local usage="_${FUNCNAME[0]}" a=("$@")
-  [ $# -eq 0 ] || __throwArgument "$usage" "No arguments" || return $?
+
+  [ $# -gt 0 ] || __throwArgument "$usage" "No arguments" || return $?
   while [ $# -gt 0 ]; do
+    [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
     statusMessage decorate info "Deleting tag $1 ..."
     __catchArgument "$usage" gitTagDelete "$1" || return $?
     statusMessage decorate info "Tagging again $1 ..."
@@ -115,6 +143,10 @@ gitTagAgain() {
     __catchArgument "$usage" git push --tags || return $?
   done
   statusMessage --last decorate info "All tags completed" "$(decorate orange "${a[@]}")"
+}
+_gitTagAgain() {
+  # __IDENTICAL__ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
@@ -127,11 +159,12 @@ gitTagAgain() {
 #
 gitVersionList() {
   local usage="_${FUNCNAME[0]}"
+  [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
   [ -d "./.git" ] || __throwEnvironment "$usage" "No .git directory at $(pwd), stopping" || return $?
   __catchEnvironment "$usage" git tag | grep -e '^v[0-9.]*$' | versionSort "$@" || return $?
 }
 _gitVersionList() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -139,6 +172,8 @@ _gitVersionList() {
 # Usage: gitVersionLast [ ignorePattern ]
 # Argument: ignorePattern - Optional. Specify a grep pattern to ignore; allows you to ignore current version
 gitVersionLast() {
+  local usage="_${FUNCNAME[0]}"
+  [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
   local skip
   if [ -n "${1-}" ]; then
     skip="$1"
@@ -148,6 +183,10 @@ gitVersionLast() {
     gitVersionList "$@" | tail -1
   fi
 }
+_gitVersionLast() {
+  # __IDENTICAL__ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
 
 #
 # Given a tag in the form "1.1.3" convert it to "v1.1.3" so it has a character prefix "v"
@@ -155,7 +194,10 @@ gitVersionLast() {
 #
 veeGitTag() {
   local usage="_${FUNCNAME[0]}"
-  local tagName="$1"
+  [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
+
+  local tagName
+  tagName=$(usageArgumentString "$usage" "tagName" "${1-}") || return $?
 
   [ "$tagName" = "${tagName#v}" ] || __throwArgument "$usage" "already v'd': $(decorate value "$tagName")" || return $?
   __catchEnvironment "$usage" git tag "v$tagName" "$tagName" || return $?
@@ -164,7 +206,7 @@ veeGitTag() {
   __catchEnvironment "$usage" git fetch -q --prune --prune-tags || return $?
 }
 _veeGitTag() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -180,7 +222,7 @@ gitRemoveFileFromHistory() {
   git filter-branch --index-filter "git rm -rf --cached --ignore-unmatch $1" HEAD
 }
 _gitRemoveFileFromHistory() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -198,7 +240,7 @@ gitRepositoryChanged() {
 }
 _gitRepositoryChanged() {
   true || gitRepositoryChanged --help
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -216,7 +258,7 @@ gitShowChanges() {
   git diff-index --name-only HEAD
 }
 _gitShowChanges() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -245,7 +287,7 @@ gitShowStatus() {
   git diff-index --name-status "$@" HEAD
 }
 _gitShowStatus() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -264,7 +306,7 @@ gitInsideHook() {
   [ -n "${GIT_EXEC_PATH-}" ] && [ -n "${GIT_INDEX_FILE-}" ]
 }
 _gitInsideHook() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -281,7 +323,7 @@ gitRemoteHosts() {
   done < <(git remote -v | awk '{ print $2 }')
 }
 _gitRemoteHosts() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -400,7 +442,7 @@ gitTagVersion() {
   statusMessage --last timingReport "$init" "Tagged version completed in" || return $?
 }
 _gitTagVersion() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -413,7 +455,7 @@ gitFindHome() {
   __directoryParent "$usage" --pattern ".git" "$@"
 }
 _gitFindHome() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -531,7 +573,7 @@ __gitCommitReleaseNotesGetLastComment() {
   grep -e '^- ' "$notes" | tail -n 1 | cut -c 3-
 }
 _gitCommit() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -626,7 +668,7 @@ gitMainly() {
   esac
 }
 _gitMainly() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -637,7 +679,7 @@ gitCommitHash() {
   __catchEnvironment "$usage" git rev-parse --short HEAD || return $?
 }
 _gitCommitHash() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -651,7 +693,7 @@ gitCurrentBranch() {
   __catchEnvironment "$usage" git symbolic-ref --short HEAD || return $?
 }
 _gitCurrentBranch() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -667,7 +709,7 @@ gitHasAnyRefs() {
 }
 _gitHasAnyRefs() {
   true || gitHasAnyRefs --help
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -683,7 +725,13 @@ _gitHasAnyRefs() {
 # - post-update
 # - post-commit
 gitHookTypes() {
+  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return 0
   printf -- "%s " pre-commit pre-push pre-merge-commit pre-rebase pre-receive update post-update post-commit
+}
+_gitHookTypes() {
+  true || gitHookTypes --help
+  # __IDENTICAL__ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Install one or more git hooks from Zesk Build hooks.
@@ -758,7 +806,7 @@ gitInstallHooks() {
   done
 }
 _gitInstallHooks() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -836,7 +884,7 @@ gitInstallHook() {
   done
 }
 _gitInstallHook() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -851,6 +899,8 @@ __gitPreCommitCache() {
 # Set up a pre-commit hook
 gitPreCommitSetup() {
   local usage="_${FUNCNAME[0]}"
+  [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
+
   local directory total=0
 
   directory=$(__catchEnvironment "$usage" __gitPreCommitCache true) || return $?
@@ -859,13 +909,15 @@ gitPreCommitSetup() {
   [ "$total" -ge 0 ]
 }
 _gitPreCommitSetup() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Output a display for pre-commit files changed
 gitPreCommitHeader() {
   local usage="_${FUNCNAME[0]}" width=5
+  [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
+
   local directory total color
 
   directory=$(__catchEnvironment "$usage" __gitPreCommitCache true) || return $?
@@ -885,7 +937,7 @@ gitPreCommitHeader() {
   done
 }
 _gitPreCommitHeader() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -895,18 +947,20 @@ gitPreCommitHasExtension() {
   local directory
   directory=$(__catchEnvironment "$usage" __gitPreCommitCache true) || return $?
   while [ $# -gt 0 ]; do
+    [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
     [ -f "$directory/$1" ] || return 1
     shift
   done
 }
 _gitPreCommitHasExtension() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # List the file(s) of an extension
 gitPreCommitListExtension() {
   local usage="_${FUNCNAME[0]}"
+  [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
   local directory
   directory=$(__catchEnvironment "$usage" __gitPreCommitCache true) || return $?
   while [ $# -gt 0 ]; do
@@ -916,19 +970,20 @@ gitPreCommitListExtension() {
   done | sort
 }
 _gitPreCommitListExtension() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Clean up after our pre-commit (deletes cache directory)
 gitPreCommitCleanup() {
   local usage="_${FUNCNAME[0]}"
+  [ $# -eq 0 ] || __help --only "$usage" "$@" || return 0
   local directory
   directory=$(__catchEnvironment "$usage" __gitPreCommitCache) || return $?
   [ ! -d "$directory" ] || __catchEnvironment "$usage" rm -rf "$directory" || return $?
 }
 _gitPreCommitCleanup() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -950,7 +1005,7 @@ gitBranchExists() {
   done
 }
 _gitBranchExists() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -972,7 +1027,7 @@ gitBranchExistsLocal() {
   done
 }
 _gitBranchExistsLocal() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -999,7 +1054,7 @@ gitBranchExistsRemote() {
   done
 }
 _gitBranchExistsRemote() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -1049,7 +1104,7 @@ gitBranchify() {
 
 }
 _gitBranchify() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -1105,8 +1160,8 @@ gitBranchMergeCurrent() {
   __catchEnvironment "$usage" git push || returnUndo $? git checkout --force "$branch" || return $?
   __catchEnvironment "$usage" git checkout "$branch" || return $?
 }
-_gitUpdateBranch() {
-  # _IDENTICAL_ usageDocument 1
+_gitBranchMergeCurrent() {
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 

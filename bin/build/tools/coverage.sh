@@ -54,7 +54,7 @@ bashCoverage() {
   ! $verbose || timingReport "$start" "Coverage completed in"
 }
 _bashCoverage() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -121,7 +121,7 @@ bashCoverageReport() {
   __bashCoverageReportConvertFiles "$usage" "$reportCache" "$target" || return $?
 }
 _bashCoverageReport() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 

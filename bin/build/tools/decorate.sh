@@ -41,7 +41,7 @@ hasColors() {
   [ "${BUILD_COLORS-}" = "true" ]
 }
 _hasColors() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
   ! false || hasColors --help
 }
@@ -78,7 +78,7 @@ decorations() {
 }
 _decorations() {
   ! false || decorations --help
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -109,7 +109,7 @@ decorate() {
   __executeInputSupport "$usage" __decorate "$text" "${p}${lp}m" "${p}${dp:-$lp}m" "${p}0m" -- "$@" || return $?
 }
 _decorate() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 

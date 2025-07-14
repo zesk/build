@@ -41,6 +41,6 @@ __applicationDevelopmentLink() {
   developerDevelopmentLink --handler "$usage" --binary "install-application.sh" --path "bin/application" --development-path "bin/application" --version-json "bin/application/version.json" --variable "BUILD_MY_HOME" "${__saved[@]+"${__saved[@]}"}"
 }
 ___applicationDevelopmentLink() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

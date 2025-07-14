@@ -90,7 +90,7 @@ __releaseNotes() {
   printf "%s/%s.md\n" "${releasePath%/}" "$version"
 }
 _releaseNotes() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -134,7 +134,7 @@ nextMinorVersion() {
   done
 }
 _nextMinorVersion() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -303,7 +303,7 @@ __newRelease() {
   git add "$notes"
 }
 _newRelease() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 

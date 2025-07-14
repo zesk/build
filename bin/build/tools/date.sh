@@ -34,7 +34,7 @@ dateToFormat() {
   #  fi
 }
 _dateToFormat() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -54,7 +54,7 @@ dateToTimestamp() {
   dateToFormat "$1" %s
 }
 _dateToTimestamp() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -79,7 +79,7 @@ dateFromTimestamp() {
   __dateFromTimestamp "$1" "$format"
 }
 _dateFromTimestamp() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -93,7 +93,7 @@ yesterdayDate() {
   dateFromTimestamp "$(($(date -u +%s) - 86400))" %F
 }
 _yesterdayDate() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -108,7 +108,7 @@ tomorrowDate() {
   dateFromTimestamp "$(($(date -u +%s) + 86400))" %F
 }
 _tomorrowDate() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -124,7 +124,7 @@ todayDate() {
   date -u +%F
 }
 _todayDate() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -144,7 +144,7 @@ dateValid() {
   __environment [ "${day#0}" -le 31 ] || return $?
 }
 _dateValid() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -182,6 +182,6 @@ dateAdd() {
   done
 }
 _dateAdd() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

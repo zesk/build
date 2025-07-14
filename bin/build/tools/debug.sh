@@ -47,7 +47,7 @@ buildDebugEnabled() {
   return 1
 }
 _buildDebugEnabled() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -96,7 +96,7 @@ buildDebugStart() {
   __buildDebugEnable
 }
 _buildDebugStart() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -113,7 +113,7 @@ buildDebugStop() {
   __buildDebugDisable
 }
 _buildDebugStop() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -128,7 +128,7 @@ isBashDebug() {
   return 1
 }
 _isBashDebug() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -168,7 +168,7 @@ bashRecursionDebug() {
   __catchEnvironment "$usage" debuggingStack >"$cacheFile" || return $?
 }
 _bashRecursionDebug() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -223,7 +223,7 @@ bashDebugInterruptFile() {
 }
 _bashDebugInterruptFile() {
   ! false || bashDebugInterruptFile --help
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -256,7 +256,7 @@ isErrorExit() {
 }
 _isErrorExit() {
   ! false || isErrorExit --help
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -328,7 +328,7 @@ plumber() {
   return "$__result"
 }
 _plumber() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -416,7 +416,7 @@ housekeeper() {
   return "$__result"
 }
 _housekeeper() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -481,7 +481,7 @@ outputTrigger() {
   __throwEnvironment "$usage" "stderr found in $(decorate code "$name") $(decorate value "$lineText"): " "$@" "$message" || return $?
 }
 _outputTrigger() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -527,6 +527,6 @@ debugOpenFiles() {
   done
 }
 _debugOpenFiles() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

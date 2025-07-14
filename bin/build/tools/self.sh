@@ -151,7 +151,7 @@ installInstallBinary() {
   return 0
 }
 _installInstallBinary() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -179,7 +179,7 @@ installInstallBuild() {
   installInstallBinary --handler "$usage" "$@" --bin "$binName" --source "$home/bin/build/$binName" --url-function __installInstallBuildRemote --post __installInstallBinaryLegacy
 }
 _installInstallBuild() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -248,7 +248,7 @@ buildFunctions() {
   }
 }
 _buildFunctions() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -269,7 +269,7 @@ buildCacheDirectory() {
   __catchEnvironment "$usage" buildEnvironmentGetDirectory --subdirectory "$suffix" XDG_CACHE_HOME || return $?
 }
 _buildCacheDirectory() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -294,7 +294,7 @@ buildHome() {
   printf "%s\n" "${BUILD_HOME%/}"
 }
 _buildHome() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -437,7 +437,7 @@ Build() {
   return $code
 }
 _Build() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -479,7 +479,7 @@ buildEnvironmentGet() {
   done
 }
 _buildEnvironmentGet() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -545,7 +545,7 @@ buildEnvironmentGetDirectory() {
   done
 }
 _buildEnvironmentGetDirectory() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -587,7 +587,7 @@ buildQuietLog() {
   __throwArgument "$usage" "No arguments" || return $?
 }
 _buildQuietLog() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -613,6 +613,6 @@ buildEnvironmentContext() {
   __environment "$@" || return $?
 }
 _buildEnvironmentContext() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

@@ -61,7 +61,7 @@ developerAnnounce() {
   ! $debugFlag || [ "${#unknowns[@]}" -eq 0 ] || decorate info "Unknowns: $(decorate error "${#unknowns[@]}")"
 }
 _developerAnnounce() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -86,7 +86,7 @@ developerUndo() {
   done
 }
 _developerUndo() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -182,7 +182,7 @@ __developerTrack() {
   environmentVariables | sort -u >"$path/environment" || return $?
 }
 _developerTrack() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -217,7 +217,7 @@ buildDevelopmentLink() {
   developerDevelopmentLink --handler "$usage" --binary "install-bin-build.sh" --path "bin/build" --development-path "bin/build" --version-json "bin/build/build.json" --variable "BUILD_DEVELOPMENT_HOME" "${__saved[@]+"${__saved[@]}"}"
 }
 _buildDevelopmentLink() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -384,7 +384,7 @@ developerDevelopmentLink() {
 }
 
 _developerDevelopmentLink() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 

@@ -114,7 +114,7 @@ bashPromptModule_reloadChanges() {
   done
 }
 _bashPromptModule_reloadChanges() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -233,7 +233,7 @@ __reloadChangesShow() {
   done <"$cacheFile"
 }
 _reloadChanges() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 __reloadChangesRemove() {

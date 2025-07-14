@@ -79,7 +79,7 @@ bigText() {
   "$binary" -w "$(consoleColumns)" -f "${fonts[index]}" "$@"
 }
 _bigText() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -136,7 +136,7 @@ bigTextAt() {
   __catchEnvironment "$usage" cursorSet "$saveX" "$saveY" || return $?
 }
 _bigTextAt() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -230,7 +230,7 @@ labeledBigText() {
   fi
 }
 _labeledBigText() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -285,7 +285,7 @@ repeat() {
   __throwArgument "$usage" "missing repeat string" || return $?
 }
 _repeat() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -341,7 +341,7 @@ echoBar() {
   printf -- "%s\n" "$(repeat "$count" "$barText")"
 }
 _echoBar() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -364,7 +364,7 @@ lineFill() {
   fi
 }
 _lineFill() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -390,7 +390,7 @@ alignRight() {
   printf "%${n}s" "$*"
 }
 _alignRight() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -416,7 +416,7 @@ alignLeft() {
   printf "%-${n}s" "$*"
 }
 _alignLeft() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -517,7 +517,7 @@ boxedHeading() {
   printf "%s\n" "$bar"
 }
 _boxedHeading() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -534,6 +534,6 @@ decoratePath() {
   done
 }
 _decoratePath() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

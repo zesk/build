@@ -107,7 +107,7 @@ _arguments() {
   ARGUMENTS="$stateFile" || return $?
 }
 __arguments() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -197,7 +197,7 @@ _commentArgumentSpecification() {
   printf "%s\n" "$functionCache"
 }
 __commentArgumentSpecification() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -243,7 +243,7 @@ _commentArgumentSpecificationDefaults() {
   fi
 }
 __commentArgumentSpecificationDefaults() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -372,7 +372,7 @@ _commentArgumentSpecificationParseLine() {
   fi
 }
 __commentArgumentSpecificationParseLine() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -447,7 +447,7 @@ _commentArgumentName() {
   return 0
 }
 ___commentArgumentName() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -499,7 +499,7 @@ _commentArgumentType() {
   return 0
 }
 __commentArgumentType() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -529,7 +529,7 @@ _commentArgumentsRemainder() {
   printf "%s\n" "$stateFile" "$@"
 }
 
-# IDENTICAL __help 35
+# IDENTICAL __help 37
 
 # Simple help argument handler.
 #
@@ -543,10 +543,12 @@ _commentArgumentsRemainder() {
 # Argument: usageFunction - Function. Required. Must be first or second parameter. If calling function ONLY takes the `--help` parameter then throw an argument error if the argument is anything but `--help`.
 # Argument: arguments ... - Arguments. Optional. Arguments passed to calling function to check for `--help` argument.
 # Example:     __help "_${FUNCNAME[0]}" "$@" || return 0
-# Example:     __help "$usage" "$@" || return 0
 # Example:     [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
-# Example:     [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
 # Example:     [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return 0
+# Example:
+# Example:     local usage="_${FUNCNAME[0]}"
+# Example:     __help "$usage" "$@" || return 0
+# Example:     [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
 # Example:     [ $# -eq 0 ] || __help --only "$usage" "$@" || return 0
 # Requires: __throwArgument
 __help() {

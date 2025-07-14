@@ -99,7 +99,7 @@ phpComposer() {
   $quietFlag || statusMessage --last timingReport "$start" "${FUNCNAME[0]} completed in" || :
 }
 _phpComposer() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -113,7 +113,7 @@ phpComposerInstall() {
   __catchEnvironment "$usage" chmod +x "$target" || returnClean $? "$tempBinary" || return $?
 }
 _phpComposerInstall() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -178,6 +178,6 @@ phpComposerSetVersion() {
   __catchEnvironment "$usage" jsonSetValue "${aa[@]+"${aa[@]}"}" --key version --generator hookVersionCurrent --filter versionNoVee "$composerJSON" || return $?
 }
 _phpComposerSetVersion() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

@@ -15,7 +15,7 @@ aptIsInstalled() {
   whichExists apt apt-get dpkg && [ -f /etc/debian_version ]
 }
 _aptIsInstalled() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -26,7 +26,7 @@ aptNonInteractive() {
   DEBIAN_FRONTEND=noninteractive NEEDRESTART_MODE=l apt-get "$@"
 }
 _aptNonInteractive() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -36,7 +36,7 @@ aptKeyRingDirectory() {
   printf "%s\n" "/etc/apt/keyrings"
 }
 _aptKeyRingDirectory() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -46,7 +46,7 @@ aptSourcesDirectory() {
   printf "%s\n" "/etc/apt/sources.list.d"
 }
 _aptSourcesDirectory() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -170,7 +170,7 @@ aptKeyAdd() {
   statusMessage --last timingReport "$start" "Added $title to sources in"
 }
 _aptKeyAdd() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -245,7 +245,7 @@ aptKeyRemove() {
   ! $verboseFlag || statusMessage timingReport "$start" "Removed ${names[*]} from sources in "
 }
 _aptKeyRemove() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -342,7 +342,7 @@ __aptInstalledList() {
   dpkg --get-selections | grep -v deinstall | awk '{ print $1 }'
 }
 ___aptInstalledList() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -354,7 +354,7 @@ __aptAvailableList() {
   apt-cache pkgnames
 }
 ___aptAvailableList() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 

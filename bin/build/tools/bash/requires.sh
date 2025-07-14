@@ -44,7 +44,7 @@ bashGetRequires() {
   done < <(grep -e '[[:space:]]*#[[:space:]]*Requires:[[:space:]]*' "${files[@]+"${files[@]}"}" | trimSpace) | sort -u
 }
 _bashGetRequires() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -192,7 +192,7 @@ bashCheckRequires() {
   fi
 }
 _bashCheckRequires() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 __bashCheckReport() {

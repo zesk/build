@@ -75,7 +75,7 @@ hookVersionCurrent() {
   _hookContextWrapper "_${FUNCNAME[0]}" "version-current" "$@"
 }
 _hookVersionCurrent() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -88,6 +88,6 @@ hookVersionLive() {
   _hookContextWrapper "_${FUNCNAME[0]}" "version-live" "$@"
 }
 _hookVersionLive() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

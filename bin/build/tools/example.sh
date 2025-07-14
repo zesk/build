@@ -13,16 +13,16 @@
 # - Any code unwrap functions add a `_` to function beginning (see `deployment.sh` for example)
 
 _usageFunction() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
 # DOC TEMPLATE: --help 1
 # Argument: --help - Optional. Flag. Display this help.
-# Argument: --easy - Optional. Flag. Easy mode.
 # DOC TEMPLATE: --handler 1
 # Argument: --handler handler - Optional. Function. Use this error handler instead of the default error handler.
+# Argument: --easy - Optional. Flag. Easy mode.
 # Argument: binary - Required. String. The binary to look for.
 # Argument: remoteUrl - Required. URL. Remote URL.
 # Argument: --target target - Optional. File. File to create. File must exist.
@@ -100,7 +100,7 @@ exampleFunction() {
   timingReport "$start" "Completed in"
 }
 _exampleFunction() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -218,7 +218,7 @@ __hookGitPostCommit() {
   __catchEnvironment "$usage" git push origin || return $?
 }
 ___hookGitPostCommit() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 

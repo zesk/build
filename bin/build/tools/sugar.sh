@@ -21,7 +21,7 @@ __catch() {
   "$command" "$@" || "$handler" "$?" "$command" "$@" || return $?
 }
 ___catch() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -40,7 +40,7 @@ __catchCode() {
   "$command" "$@" || "$handler" "$code" "$(decorate each code "$command" "$@")" || return $?
 }
 ___catchCode() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -151,7 +151,7 @@ mapReturn() {
 
 # Hide this one explicitly from buildFunctions
 ___mapReturn() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -199,7 +199,7 @@ returnUndo() {
   return "$exitCode"
 }
 _returnUndo() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 

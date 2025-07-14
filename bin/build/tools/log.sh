@@ -96,7 +96,7 @@ rotateLog() {
   fi
 }
 _rotateLog() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -147,6 +147,6 @@ rotateLogs() {
   statusMessage --last decorate info "Rotated log files in path $(decorate file "$logPath")"
 }
 _rotateLogs() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

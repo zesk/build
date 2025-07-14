@@ -105,15 +105,15 @@ bashSanitize() {
   printf "\n"
 }
 _bashSanitize() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 _bashSanitizeCheckLint() {
   local usage="$1" && shift
 
-  statusMessage decorate success "Running shellcheck ..." || :
-  __catchEnvironment "$usage" bashLintFiles || return $?
+  statusMessage decorate success "Running bashLintFiles ..." || :
+  __catchEnvironment "$usage" bashLintFiles --fix || return $?
 }
 
 _bashSanitizeCheckAssertions() {

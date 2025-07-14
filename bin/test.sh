@@ -42,7 +42,7 @@ __buildTestSuite() {
   __catchEnvironment "$usage" testTools testSuite --cd-away --delete-common --tests "$testHome/test/tools/" "$@" || return $?
 }
 ___buildTestSuite() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 

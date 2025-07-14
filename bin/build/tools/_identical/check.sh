@@ -223,7 +223,7 @@ identicalCheck() {
   return "$exitCode"
 }
 _identicalCheck() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -295,9 +295,10 @@ __identicalCheckMatchFile() {
 #
 # This allows for overlapping identical sections within templates with the intent:
 #
-# - `IDENTICAL` - used in most cases
-# - `_IDENTICAL_` - used in templates which must be included in OTHER templates
-# - `DOC TEMPLATE:` - used in documentation templates for functions - is handled by internal document generator
+# - `IDENTICAL` - used in most cases (not internal)
+# - `_IDENTICAL_` - used in templates which must be included in IDENTICAL templates (INTERNAL)
+# - `__IDENTICAL__` - used in templates which must be included in _IDENTICAL_ templates (INTERNAL)
+# - `DOC TEMPLATE:` - used in documentation templates for functions - is handled by internal document generator (INTERNAL)
 #
 # Usage: {fn} [ --repair repairSource ] [ --help ] [ --interactive ] [ --check checkDirectory ] ...
 # DOC TEMPLATE: --help 1
@@ -306,11 +307,14 @@ __identicalCheckMatchFile() {
 # Argument: --single singleToken - Optional. String. One or more tokens which cam be singles.
 # Argument: --repair directory - Optional. Directory. Any files in onr or more directories can be used to repair other files.
 # Argument: --internal - Flag. Optional. Do updates for `# _IDENTICAL_` and `# DOC TEMPLATE:` prefixes first.
+# Argument: --internal-only - Flag. Optional. Just do `--internal` repairs.
 # Argument: --interactive - Flag. Optional. Interactive mode on fixing errors.
 # Argument: ... - Optional. Additional arguments are passed directly to `identicalCheck`.
 identicalCheckShell() {
   local usage="_${FUNCNAME[0]}"
   local argument single singleFile aa=() pp=() addDefaultPrefixes=true
+
+  local internalPrefixes=(--prefix '# ''DOC TEMPLATE:' --prefix '# ''__IDENTICAL__' --prefix '# ''_IDENTICAL_')
 
   singles=()
   while [ $# -gt 0 ]; do
@@ -318,13 +322,13 @@ identicalCheckShell() {
     [ -n "$argument" ] || __throwArgument "$usage" "blank argument" || return $?
     case "$argument" in
     --internal-only)
-      pp=(--prefix '# ''DOC TEMPLATE:' --prefix '# ''_IDENTICAL_')
+      pp=("${internalPrefixes[@]}")
       addDefaultPrefixes=false
       ;;
     --internal)
       if [ "${#pp[@]}" -eq 0 ]; then
         # Ordering here matters so declare from inside scope to outside scope
-        pp+=(--prefix '# ''DOC TEMPLATE:' --prefix '# ''_IDENTICAL_')
+        pp=("${internalPrefixes[@]}")
       fi
       ;;
     --interactive | --ignore-singles | --no-map)
@@ -349,6 +353,6 @@ identicalCheckShell() {
   __catchEnvironment "$usage" identicalCheck "${aa[@]+"${aa[@]}"}" "${pp[@]}" --extension sh "$@" || return $?
 }
 _identicalCheckShell() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

@@ -250,12 +250,12 @@ documentationBuild() {
   hookRunOptional documentation-complete "$message" || return $?
 }
 _documentationBuild() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 __documentationBuild() {
   hookRunOptional documentation-error "$@" || :
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -268,6 +268,6 @@ documentationBuildCache() {
   __catchEnvironment "$usage" buildCacheDirectory ".documentationBuild/${code-default}/${1-}" || return $?
 }
 _documentationBuildCache() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

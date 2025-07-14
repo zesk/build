@@ -42,7 +42,7 @@ nodeInstall() {
   __nodeInstall_corepackEnable "$usage" || return $?
 }
 _nodeInstall() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -97,7 +97,7 @@ nodeUninstall() {
   statusMessage timingReport "$start" "Uninstalled $name in" || return $?
 }
 _nodeUninstall() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -164,7 +164,7 @@ nodePackageManager() {
   fi
 }
 _nodePackageManager() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -182,7 +182,7 @@ nodePackageManagerInstall() {
   __catchEnvironment "$usage" "$method" "$@" || return $?
 }
 _nodePackageManagerInstall() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -200,7 +200,7 @@ nodePackageManagerUninstall() {
   __catchEnvironment "$usage" "$method" "$@" || return $?
 }
 _nodePackageManagerUninstall() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 

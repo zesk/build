@@ -50,15 +50,15 @@ Run-related:
 
 {isBoolean}
 
-{_code}
+{returnCode}
 {exitString}
 
 {_choose}
 
 ## Cleanup
 
-{_clean}
-{_undo}
+{returnClean}
+{returnUndo}
 
 ## Fail with an error code
 

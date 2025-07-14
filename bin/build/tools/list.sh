@@ -50,7 +50,7 @@ listRemove() {
   printf "%s\n" "$listValue"
 }
 _listRemove() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -104,7 +104,7 @@ listAppend() {
   printf "%s\n" "$listValue"
 }
 _listAppend() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -171,6 +171,6 @@ listCleanDuplicates() {
   fi
 }
 _listCleanDuplicates() {
-  # _IDENTICAL_ usageDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
