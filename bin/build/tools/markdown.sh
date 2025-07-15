@@ -78,6 +78,7 @@ _markdownIndentHeading() {
 #
 markdown_removeUnfinishedSections() {
   local line section=() foundVar=false blankContent=true
+  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return 0
   while IFS='' read -r line; do
     if [ "${line:0:1}" = "#" ]; then
       if ! $foundVar && ! $blankContent; then
@@ -104,6 +105,11 @@ markdown_removeUnfinishedSections() {
     printf '%s\n' "${section[@]+${section[@]}}"
   fi
 }
+_markdown_removeUnfinishedSections() {
+  true || markdown_removeUnfinishedSections --help
+  # __IDENTICAL__ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
 
 #
 # Simple function to make list-like things more list-like in Markdown
@@ -111,8 +117,10 @@ markdown_removeUnfinishedSections() {
 # 1. remove leading "dash space" if it exists (`- `)
 # 2. Semantically, if the phrase matches `[word]+[space][dash][space]`. backtick quote the `[word]`, otherwise skip
 # 3. Prefix each line with a "dash space" (`- `)
-#
+# stdin: reads input from stdin
+# stdout: formatted markdown list
 markdown_FormatList() {
+  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return 0
   local wordClass='[-.`_A-Za-z0-9[:space:]]' spaceClass='[[:space:]]'
   # shellcheck disable=SC2016
   sed \
@@ -120,4 +128,9 @@ markdown_FormatList() {
     -e "s/\`\($wordClass*\)\`${spaceClass}-${spaceClass}/\1 - /1" \
     -e "s/\($wordClass*\)${spaceClass}-${spaceClass}/- \`\1\` - /1" \
     -e "s/^\([^-]\)/- \1/1"
+}
+_markdown_FormatList() {
+  true || markdown_FormatList --help
+  # __IDENTICAL__ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

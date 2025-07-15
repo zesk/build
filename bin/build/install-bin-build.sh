@@ -92,9 +92,11 @@ __installBinBuildCheck() {
   __installCheck "zesk/build" "build.json" "$@"
 }
 
-# _IDENTICAL_ jsonField 22
+# _IDENTICAL_ jsonField 29
 
 # Fetch a non-blank field from a JSON file with error handling
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
 # Argument: handler - Function. Required. Error handler.
 # Argument: jsonFile - File. Required. A JSON file to parse
 # Argument: ... - Arguments. Optional. Passed directly to jq
@@ -104,6 +106,7 @@ __installBinBuildCheck() {
 # Exit Code: 1 - Field was not found or is blank
 # Requires: jq whichExists __throwEnvironment printf rm decorate head
 jsonField() {
+  [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
   local handler="$1" jsonFile="$2" value message && shift 2
 
   [ -f "$jsonFile" ] || __throwEnvironment "$handler" "$jsonFile is not a file" || return $?
@@ -114,6 +117,10 @@ jsonField() {
   fi
   [ -n "$value" ] || __throwEnvironment "$handler" "$(printf -- "%s\n%s\n" "Selector $(decorate each code "$@") was blank from JSON:" "$(head -n 100 "$jsonFile")")" || return $?
   printf -- "%s\n" "$value"
+}
+_jsonField() {
+  # __IDENTICAL__ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # IDENTICAL __installCheck 20
@@ -159,7 +166,7 @@ __installPackageConfiguration() {
   _installRemotePackage "$rel" "bin/build" "install-bin-build.sh" --version-function __installBinBuildVersion --url-function __installBinBuildURL --check-function __installBinBuildCheck --name "Zesk Build" "$@"
 }
 
-# IDENTICAL _installRemotePackage 400
+# IDENTICAL _installRemotePackage 402
 
 # Installs {name} in a local project directory if not installed. Also
 # will overwrite {source} with the latest version after installation.
@@ -561,6 +568,8 @@ __installRemotePackageLocal() {
   exec "$myBinary.$$" --replace "$myBinary"
 }
 
+# <-- END of IDENTICAL _installRemotePackage
+
 # IDENTICAL versionSort 51
 
 # Summary: Sort versions in the format v0.0.0
@@ -759,7 +768,7 @@ _urlFetch() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# IDENTICAL __help 37
+# IDENTICAL __help 55
 
 # Simple help argument handler.
 #
@@ -768,20 +777,34 @@ _urlFetch() {
 # Useful for utilities which single argument types, single arguments, and no arguments (except for `--help`)
 #
 # Oddly one of the few functions we can not offer the `--help` flag for.
-#
+# DOC TEMPLATE: noArgumentsForHelp 1
+# Without arguments, displays help.
 # Argument: --only - Flag. Optional. Must be first parameter. If calling function ONLY takes the `--help` parameter then throw an argument error if the argument is anything but `--help`.
 # Argument: usageFunction - Function. Required. Must be first or second parameter. If calling function ONLY takes the `--help` parameter then throw an argument error if the argument is anything but `--help`.
 # Argument: arguments ... - Arguments. Optional. Arguments passed to calling function to check for `--help` argument.
+#
+# Example:     # NOT DEFINED usage local usage="_${FUNCNAME[0]}"
+# Example:
 # Example:     __help "_${FUNCNAME[0]}" "$@" || return 0
+# Example:     [ "$1" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
 # Example:     [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
 # Example:     [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return 0
 # Example:
+# Example:     # DEFINED usage
+# Example:
 # Example:     local usage="_${FUNCNAME[0]}"
 # Example:     __help "$usage" "$@" || return 0
+# Example:     [ "$1" != "--help" ] || __help "$usage" "$@" || return 0
 # Example:     [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
 # Example:     [ $# -eq 0 ] || __help --only "$usage" "$@" || return 0
-# Requires: __throwArgument
+# Example:
+# Example:     # Blank Arguments for help
+# Example:     [ $# -gt 0 ] || __help "_${FUNCNAME[0]}" --help || return 0
+# Example:     [ $# -gt 0 ] || __help "$usage" --help || return 0
+#
+# Requires: __throwArgument usageDocument
 __help() {
+  [ $# -gt 0 ] || ! ___help 0 || return 0
   local usage="${1-}" && shift
   if [ "$usage" = "--only" ]; then
     usage="${1-}" && shift
@@ -796,6 +819,10 @@ __help() {
     shift
   done
   return 0
+}
+___help() {
+  # __IDENTICAL__ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 usageDocument() {
@@ -846,7 +873,7 @@ bashFunctionComment() {
   local source="${1-}" functionName="${2-}"
   local maxLines=1000
   __help "_${FUNCNAME[0]}" "$@" || return 0
-  grep -m 1 -B $maxLines "^$functionName() {" "$source" | grep -v -e '( IDENTICAL |_IDENTICAL_|DOC TEMPLATE:|Internal:|INTERNAL:)' | fileReverseLines | sed -n -e '1d' -e '/^#/!q; p' | fileReverseLines | cut -c 3-
+  grep -m 1 -B $maxLines "^$functionName() {" "$source" | grep -v -e '\( IDENTICAL \|_IDENTICAL_\|DOC TEMPLATE:\|Internal:\|INTERNAL:\)' | fileReverseLines | sed -n -e '1d' -e '/^#/!q; p' | fileReverseLines | cut -c 3-
   # Explained:
   # - grep -m 1 ... - Finds the `function() {` string in the file and all lines afterwards
   # - grep -v ... - Removes internal documentation and anything we want to hide from the user
@@ -881,14 +908,17 @@ _fileReverseLines() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# IDENTICAL _realPath 17
+# IDENTICAL _realPath 20
 
-# Usage: realPath argument
+# Find the full, actual path of a file avoiding symlinks or redirection.
+# See: readlink realpath
+# DOC TEMPLATE: noArgumentsForHelp 1
+# Without arguments, displays help.
 # Argument: file ... - Required. File. One or more files to `realpath`.
 # Requires: whichExists realpath __help usageDocument _argument
 realPath() {
-  [ "${1-}" != "--help" ] || __help "$_${FUNCNAME[0]}" "$@" || return 0
-  [ -e "$1" ] || _argument "Not a file: $1" || return $?
+  # __IDENTICAL__ --help-when-blank 1
+  [ $# -gt 0 ] || __help "_${FUNCNAME[0]}" --help || return 0
   if whichExists realpath; then
     realpath "$@"
   else
@@ -969,7 +999,6 @@ _isPositiveInteger() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-#
 # Test if argument are bash functions
 # Argument: string - Required. String to test if it is a bash function. Builtins are supported. `.` is explicitly not supported to disambiguate it from the current directory `.`.
 # If no arguments are passed, returns exit code 1.
@@ -980,6 +1009,7 @@ isFunction() {
   # _IDENTICAL_ functionSignatureSingleArgument 2
   local usage="_${FUNCNAME[0]}"
   [ $# -eq 1 ] || __catchArgument "$usage" "Single argument only: $*" || return $?
+  [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
   # Skip illegal options "--" and "-foo"
   [ "$1" = "${1#-}" ] || return 1
   case "$(type -t "$1")" in function | builtin) [ "$1" != "." ] || return 1 ;; *) return 1 ;; esac
@@ -989,7 +1019,7 @@ _isFunction() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# IDENTICAL decorate 240
+# IDENTICAL decorate 242
 
 # Sets the environment variable `BUILD_COLORS` if not set, uses `TERM` to calculate
 #
@@ -1231,6 +1261,8 @@ __decorateExtensionQuote() {
   printf -- "\"%s\"\n" "$text"
 }
 
+# <-- END of IDENTICAL decorate
+
 # _IDENTICAL_ __executeInputSupport 39
 
 # Support arguments and stdin as arguments to an executor
@@ -1293,7 +1325,7 @@ _isArray() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# _IDENTICAL_ exitString 18
+# _IDENTICAL_ exitString 19
 
 # Output the exit code as a string
 # Winner of the one-line bash award 10 years running
@@ -1312,6 +1344,7 @@ _exitString() {
   # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
+
 
 # IDENTICAL _return 27
 
@@ -1337,12 +1370,12 @@ _return() {
 # Requires: _return
 isUnsignedInteger() {
   [ $# -eq 1 ] || _return 2 "Single argument only: $*" || return $?
-  case "${1#+}" in '' | *[!0-9]*) return 1 ;; esac
+  case "${1#+}" in --help) usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]}" 0 ;; '' | *[!0-9]*) return 1 ;; esac
 }
 
 # <-- END of IDENTICAL _return
 
-# IDENTICAL _tinySugar 81
+# IDENTICAL _tinySugar 83
 
 # Run `handler` with an argument error
 # Usage: {fn} handler ...
@@ -1425,6 +1458,8 @@ returnClean() {
   fi
 }
 
+# <-- END of IDENTICAL _tinySugar
+
 # Argument: binary ... - Required. Executable. Any arguments are passed to `binary`.
 # Run binary and output failed command upon error
 # Requires: _return
@@ -1432,10 +1467,12 @@ __execute() {
   "$@" || _return "$?" "$@" || return $?
 }
 
-# IDENTICAL returnUndo 37
+# IDENTICAL returnUndo 40
 
 # Run a function and preserve exit code
 # Returns `exitCode`
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
 # Argument: exitCode - Required. UnsignedInteger. Exit code to return.
 # Argument: undoFunction - Optional. Command to run to undo something. Return status is ignored.
 # Argument: -- - Flag. Optional. Used to delimit multiple commands.
@@ -1448,6 +1485,7 @@ __execute() {
 # Requires: isPositiveInteger __catchArgument decorate __execute
 # Requires: usageDocument
 returnUndo() {
+  [ "$1" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
   local __count=$# __saved=("$@") __usage="_${FUNCNAME[0]}" exitCode="${1-}" args=()
   shift
   isUnsignedInteger "$exitCode" || __catchArgument "$__usage" "Not an integer $(decorate value "$exitCode") (#$__count: $(decorate each code "${__saved[@]+"${__saved[@]}"}"))" || return $?

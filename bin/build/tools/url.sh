@@ -196,8 +196,6 @@ _urlParse() {
 urlParseItem() {
   local usage="_${FUNCNAME[0]}"
 
-  [ $# -ge 2 ] || __throwArgument "$usage" "Need at least one URL" || return $?
-
   local component="" url=""
 
   # _IDENTICAL_ argument-case-header 5
@@ -229,6 +227,7 @@ urlParseItem() {
     # _IDENTICAL_ argument-esac-shift 1
     shift
   done
+  [ -n "$url" ] || __throwArgument "$usage" "Need at least one URL" || return $?
 }
 _urlParseItem() {
   # __IDENTICAL__ usageDocument 1
@@ -237,11 +236,13 @@ _urlParseItem() {
 
 #
 # Checks a URL is valid
-# Usage: {fn} url ...
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
 # Argument: url ... - String. URL. Required. A Uniform Resource Locator
+# Exit Code: 0 - all URLs passed in are valid
+# Exit Code: 1 - at least one URL passed in is not a valid URL
 urlValid() {
-  [ $# -gt 0 ] || return 1
-
+  [ $# -gt 0 ] || __throwArgument "$usage" "No arguments" || return $?
   # _IDENTICAL_ argument-case-header 5
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do

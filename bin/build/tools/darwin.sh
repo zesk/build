@@ -8,7 +8,7 @@
 
 # Are we on Mac OS X?
 isDarwin() {
-  [ $# -eq 0 ] || __help --only "$usage" "$@" || return 0
+  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return 0
   [ "$(uname -s)" = "Darwin" ]
 }
 _isDarwin() {

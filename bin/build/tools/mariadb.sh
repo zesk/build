@@ -10,33 +10,32 @@
 
 # Install `mariadb`
 #
-# If this fails it will output the installation log.
-#
-# Usage: mariadbInstall [ package ]
-# Usage: {fn} [ package ... ]
-# Argument: package - Additional packages to install
-# Summary: Install `mariadb`
 # When this tool succeeds the `mariadb` binary is available in the local operating system.
-# Environment: - `BUILD_NPM_VERSION` - String. Default to `latest`. Used to install `npm -i npm@$BUILD_NPM_VERSION` on install.
 # Exit Code: 1 - If installation fails
 # Exit Code: 0 - If installation succeeds
-# Binary: mariadb-client.sh
-#
 mariadbInstall() {
   local usage="_${FUNCNAME[0]}"
+  [ $# -eq 0 ] || __help --only "$usage" "$@" || return 0
   __catchEnvironment "$usage" packageGroupInstall mariadb || return $?
 }
 _mariadbInstall() {
+  true || mariadbInstall --help
   # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# Uninstall mariadb
+# Uninstall `mariadb`
+#
+# When this tool succeeds the `mariadb` binary will no longer be available in the local operating system.
+# Exit Code: 1 - If uninstallation fails
+# Exit Code: 0 - If uninstallation succeeds
 mariadbUninstall() {
   local usage="_${FUNCNAME[0]}"
+  [ $# -eq 0 ] || __help --only "$usage" "$@" || return 0
   __catchEnvironment "$usage" packageGroupUninstall mariadb || return $?
 }
 _mariadbUninstall() {
+  true || mariadbUninstall --help
   # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
@@ -127,9 +126,15 @@ _mariadbDump() {
 # stdout: mariadbDump (cleaned)
 # See: https://mariadb.org/mariadb-dump-file-compatibility-change/
 mariadbDumpClean() {
+  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return 0
   # Without LC_CTYPE and LAND it outputs the error:
   # - 'sed: RE error: illegal byte sequence' when encountering unicode byte sequences in a text stream
   LC_CTYPE=C LANG=C sed '/^\/\*M!999999/d'
+}
+_mariadbDumpClean() {
+  true || mariadbDumpClean --help
+  # __IDENTICAL__ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Connect to a mariadb-type database using a URL

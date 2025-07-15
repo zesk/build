@@ -111,6 +111,10 @@ isValidateType() {
     shift
   done
 }
+_isValidateType() {
+  # __IDENTICAL__ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
 
 _validateTypeAliases() {
   cat <<'EOF'

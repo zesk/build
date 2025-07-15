@@ -274,8 +274,8 @@ _hasHook() {
 # If a file named `hookName` with the extension `.sh` is found which is executable, it is output.
 # Usage: {fn} [ --application applicationHome ] hookName0 [ hookName1 ... ]
 # Argument: --application applicationHome - Path. Optional. Directory of alternate application home. Can be specified more than once to change state.
-# Arguments: hookName0 - Required. String. Hook to locate
-# Arguments: hookName1 - Optional. String. Additional hooks to locate.
+# Argument: hookName0 - Required. String. Hook to locate
+# Argument: hookName1 - Optional. String. Additional hooks to locate.
 #
 # Test: testHookSystem
 whichHook() {

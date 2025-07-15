@@ -13,9 +13,8 @@
 sysvInitScriptInstall() {
   local usage="_${FUNCNAME[0]}"
 
-  local initHome
+  local initHome=""
 
-  initHome=$(__sysvInitScriptInitHome "$usage") || return $?
   # _IDENTICAL_ argument-case-header 5
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
@@ -29,6 +28,9 @@ sysvInitScriptInstall() {
       ;;
     *)
       local baseName target
+      if [ -z "$initHome" ]; then
+        initHome=$(__sysvInitScriptInitHome "$usage") || return $?
+      fi
       baseName=$(__catchArgument "$usage" basename "$argument") || return $?
       target="$initHome/$baseName"
       [ -x "$argument" ] || __throwArgument "$usage" "Not executable: $argument" || return $?
@@ -63,9 +65,7 @@ _sysvInitScriptInstall() {
 sysvInitScriptUninstall() {
   local usage="_${FUNCNAME[0]}"
 
-  local initHome
-
-  initHome=$(__sysvInitScriptInitHome "$usage") || return $?
+  local initHome=""
 
   # _IDENTICAL_ argument-case-header 5
   local __saved=("$@") __count=$#
@@ -80,6 +80,9 @@ sysvInitScriptUninstall() {
       ;;
     *)
       local baseName target
+      if [ -z "$initHome" ]; then
+        initHome=$(__sysvInitScriptInitHome "$usage") || return $?
+      fi
       baseName=$(__catchArgument "$usage" basename "$argument") || return $?
       target="$initHome/$baseName"
       if [ -f "$target" ]; then

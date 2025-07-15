@@ -149,7 +149,11 @@ _parseBoolean() {
 # Output: string quoted and appropriate to insert in a grep search or replacement phrase
 # Example:     grep -e "$(quoteGrepPattern "$pattern")" < "$filterFile"
 # Requires: printf sed
+# DOC TEMPLATE: noArgumentsForHelp 1
+# Without arguments, displays help.
 quoteGrepPattern() {
+  # __IDENTICAL__ --help-when-blank 1
+  [ $# -gt 0 ] || __help "_${FUNCNAME[0]}" --help || return 0
   local value="${1-}"
   value="${value//\"/\\\"}"
   value="${value//./\\.}"
@@ -159,13 +163,25 @@ quoteGrepPattern() {
   value="${value//$'\n'/\\n}"
   printf "%s\n" "$value"
 }
+_quoteGrepPattern() {
+  # __IDENTICAL__ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
 
 # Hide newlines in text (to ensure single-line output or other manipulation)
 # Argument: text - String. Required. Text to replace.
 # Argument: replace - String. Optional. Replacement string for newlines.
+# DOC TEMPLATE: noArgumentsForHelp 1
+# Without arguments, displays help.
 newlineHide() {
+  # __IDENTICAL__ --help-when-blank 1
+  [ $# -gt 0 ] || __help "_${FUNCNAME[0]}" --help || return 0
   local text="${1-}" replace="${2-"␤"}"
   printf -- "%s\n" "${text//$'\n'/$replace}"
+}
+_newlineHide() {
+  # __IDENTICAL__ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
@@ -173,19 +189,27 @@ newlineHide() {
 # Usage: escapeSingleQuotes text
 # Argument: text - Text to quote
 # Output: Single quotes are prefixed with a backslash
-# Example:     escapeSingleQuotes "Now I can't not include this in a bash string."
-#
+# Example:     {fn} "Now I can't not include this in a bash string."
+# DOC TEMPLATE: noArgumentsForHelp 1
+# Without arguments, displays help.
 escapeDoubleQuotes() {
+  # __IDENTICAL__ --help-when-blank 1
+  [ $# -gt 0 ] || __help "_${FUNCNAME[0]}" --help || return 0
   while [ $# -gt 0 ]; do
     printf "%s\n" "${1//\"/\\\"}"
     shift
   done
 }
+_escapeDoubleQuotes() {
+  # __IDENTICAL__ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
 
 #
-# Usage: {fn} [ text }
 # Converts strings to shell escaped strings
-#
+# Argument: string - String. Optional. String to convert to a bash-compatible string.
+# stdin: text - Optional.
+# stdout: bash-compatible string
 escapeBash() {
   local jqArgs
 
@@ -196,45 +220,64 @@ escapeBash() {
     jq "${jqArgs[@]}"
   fi
 }
+_escapeBash() {
+  # __IDENTICAL__ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
 
 #
 # Quote strings for inclusion in shell quoted strings
-# Usage: escapeSingleQuotes text
+#
+# Without arguments, displays help.
 # Argument: text - Text to quote
 # Output: Single quotes are prefixed with a backslash
-# Example:     escapeSingleQuotes "Now I can't not include this in a bash string."
-#
+# Example:     {fn} "Now I can't not include this in a bash string."
 escapeSingleQuotes() {
+  [ $# -gt 0 ] || __help "_${FUNCNAME[0]}" 0 || return 0
   printf "%s\n" "$@" | sed "s/'/\\\'/g"
 }
-
-#
-# Quote strings for inclusion in shell quoted strings
-# Usage: escapeSingleQuotes text
-# Argument: text - Text to quote
-# Output: Single quotes are prefixed with a backslash
-# Example:     escapeSingleQuotes "Now I can't not include this in a bash string."
-#
-escapeQuotes() {
-  printf %s "$(escapeDoubleQuotes "$(escapeSingleQuotes "$1")")"
+_escapeSingleQuotes() {
+  # __IDENTICAL__ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
-# Usage: replaceFirstPattern pattern replacement
-#
+# Quote strings for inclusion in shell quoted strings
+# Argument: text - Text to quote
+# Output: Single quotes are prefixed with a backslash
+# Example:     {fn} "Now I can't not include this in a bash string."
+# DOC TEMPLATE: noArgumentsForHelp 1
+# Without arguments, displays help.
+escapeQuotes() {
+  # __IDENTICAL__ --help-when-blank 1
+  [ $# -gt 0 ] || __help "_${FUNCNAME[0]}" --help || return 0
+  printf %s "$(escapeDoubleQuotes "$(escapeSingleQuotes "$1")")"
+}
+_escapeQuotes() {
+  # __IDENTICAL__ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
 # Replaces the first and only the first occurrence of a pattern in a line with a replacement string.
-#
+# DOC TEMPLATE: noArgumentsForHelp 1
+# Without arguments, displays help.
 replaceFirstPattern() {
+  # __IDENTICAL__ --help-when-blank 1
+  [ $# -gt 0 ] || __help "_${FUNCNAME[0]}" --help || return 0
   sed "s/$(quoteSedPattern "$1")/$(quoteSedPattern "$2")/1"
+}
+_replaceFirstPattern() {
+  # __IDENTICAL__ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Trim whitespace from beginning and end of a stream
 # DOC TEMPLATE: --help 1
 # Argument: --help - Optional. Flag. Display this help.
-# Explained:
-# 1. `-e :a`: Creates a label `a` for looping
-# 2. `/./,$!d` deletes all lines until the first non-blank line is found (`/./` matches any non-blank line).
-# 3. `/./!{N;ba}`: For blank lines at the end, it appends lines to the pattern space (`N`) until a non-blank line is found, then loops back to label `a`.
+# INTERNAL: Explained
+# INTERNAL: 1. `-e :a`: Creates a label `a` for looping
+# INTERNAL: 2. `/./,$!d` deletes all lines until the first non-blank line is found (`/./` matches any non-blank line).
+# INTERNAL: 3. `/./!{N;ba}`: For blank lines at the end, it appends lines to the pattern space (`N`) until a non-blank line is found, then loops back to label `a`.
 trimBoth() {
   [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return 0
   sed -e :a -e '/./,$!d' -e '/^\n*$/{$d;N;ba' -e '}'
@@ -280,7 +323,6 @@ _singleBlankLines() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-#
 # Trim spaces and only spaces from arguments or a pipe
 # Usage: {fn} text
 # Argument: text - Text to remove spaces
@@ -289,23 +331,21 @@ _singleBlankLines() {
 # Summary: Trim whitespace of a bash argument
 # Source: https://web.archive.org/web/20121022051228/http://codesnippets.joyent.com/posts/show/1816
 # Credits: Chris F.A. Johnson (2008)
-#
 trimSpace() {
-  local var
-  local usage
-
-  usage="_${FUNCNAME[0]}"
+  local usage="_${FUNCNAME[0]}"
 
   if [ $# -gt 0 ]; then
     while [ $# -gt 0 ]; do
+      local var
       var="$1"
       # remove leading whitespace characters
       var="${var#"${var%%[![:space:]]*}"}"
       # remove trailing whitespace characters
-      shift && printf %s "${var%"${var##*[![:space:]]}"}" || __throwEnvironment "$usage" "printf failed" || return $?
+      __catchEnvironment "$usage" printf -- "%s" "${var%"${var##*[![:space:]]}"}" || return $?
+      shift
     done
   else
-    awk '{$1=$1};NF'
+    __catchEnvironment "$usage" awk "{\$1=\$1};NF" || return $?
   fi
 }
 _trimSpace() {
@@ -516,6 +556,10 @@ trimWords() {
   result=$(printf '%s ' "${words[@]+${words[@]}}")
   printf %s "${result%% }"
 }
+_trimWords() {
+  # __IDENTICAL__ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
 
 #
 # Usage: maximumFieldLength [ fieldIndex [ separatorChar ] ] < fieldBasedFile
@@ -648,13 +692,20 @@ plural() {
     return 1
   fi
 }
+_plural() {
+  # __IDENTICAL__ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
 
 #
 # Convert text to lowercase
 #
 # Usage: {fn} [ text ... ]
-# Arguments: text - text to convert to lowercase
-#
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
+# Argument: text - text to convert to lowercase
+# DOC TEMPLATE: dashDashAllowsHelpParameters 1
+# Argument: -- - Optional. Flag. Stops command processing to enable arbitrary text to be passed as additional arguments without special meaning.
 lowercase() {
   local usage="_${FUNCNAME[0]}"
   [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
@@ -676,8 +727,11 @@ _lowercase() {
 # Convert text to uppercase
 #
 # Usage: {fn} [ text ... ]
-# Arguments: text - text to convert to uppercase
-#
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
+# DOC TEMPLATE: dashDashAllowsHelpParameters 1
+# Argument: -- - Optional. Flag. Stops command processing to enable arbitrary text to be passed as additional arguments without special meaning.
+# Argument: text - text to convert to uppercase
 uppercase() {
   local usage="_${FUNCNAME[0]}"
   [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
@@ -1219,23 +1273,39 @@ _quoteSedReplacement() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# Usage: {fn} printfArguments
 # Pipe to output some text before any output, otherwise, nothing is output.
+# Argument: ... - Required. Arguments. printf arguments.
+# DOC TEMPLATE: noArgumentsForHelp 1
+# Without arguments, displays help.
+# stdin: text (Optional)
+# stdout: printf output and then the stdin text IFF stdin text is non-blank
 printfOutputPrefix() {
-  local prefixed=false
+  # __IDENTICAL__ --help-when-blank 1
+  [ $# -gt 0 ] || __help "_${FUNCNAME[0]}" --help || return 0
+  local output=false
   while read -r line; do
-    if ! $prefixed; then
+    if ! $output; then
       # shellcheck disable=SC2059
       printf "$@"
-      prefixed=true
+      output=true
     fi
     printf "%s\n" "$line"
   done
 }
+_printfOutputPrefix() {
+  # __IDENTICAL__ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
 
-# Usage: {fn} printfArguments
 # Pipe to output some text after any output, otherwise, nothing is output.
+# Argument: ... - Required. Arguments. printf arguments.
+# DOC TEMPLATE: noArgumentsForHelp 1
+# Without arguments, displays help.
+# stdin: text (Optional)
+# stdout: stdin text and then printf output IFF stdin text is non-blank
 printfOutputSuffix() {
+  # __IDENTICAL__ --help-when-blank 1
+  [ $# -gt 0 ] || __help "_${FUNCNAME[0]}" --help || return 0
   local output=false
   while read -r line; do
     if ! $output; then
@@ -1246,17 +1316,26 @@ printfOutputSuffix() {
   # shellcheck disable=SC2059
   ! $output || printf "$@"
 }
+_printfOutputSuffix() {
+  # __IDENTICAL__ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
 
 # Unquote a string
 # Argument: quote - String. Required. Must match beginning and end of string.
 # Argument: value - String. Required. Value to unquote.
 unquote() {
+  [ "$1" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
   local quote="$1" value="$2"
   if [ "$value" != "${value#"$quote"}" ] && [ "$value" != "${value%"$quote"}" ]; then
     value="${value#"$quote"}"
     value="${value%"$quote"}"
   fi
   printf "%s\n" "$value"
+}
+_unquote() {
+  # __IDENTICAL__ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Primary case to unquote quoted things "" ''

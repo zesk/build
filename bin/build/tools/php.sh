@@ -20,7 +20,13 @@
 # Exit Code: 1 - If installation fails
 # Exit Code: 0 - If installation succeeds
 phpInstall() {
-  packageWhich php php-common php-cli "$@"
+  local usage="_${FUNCNAME[0]}"
+  [ $# -eq 0 ] || __help --only "$usage" "$@" || return 0
+  __catchEnvironment "$usage" packageWhich php php-common php-cli "$@" || return $?
+}
+_phpInstall() {
+  # __IDENTICAL__ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Uninstall `php`
@@ -34,13 +40,22 @@ phpInstall() {
 # Exit Code: 1 - If uninstallation fails
 # Exit Code: 0 - If uninstallation succeeds
 phpUninstall() {
-  packageWhichUninstall php php-common php-cli "$@"
+  local usage="_${FUNCNAME[0]}"
+  [ $# -eq 0 ] || __help --only "$usage" "$@" || return 0
+  __catchEnvironment "$usage" packageWhichUninstall php php-common php-cli "$@" || return $?
+}
+_phpUninstall() {
+  # __IDENTICAL__ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Tail the PHP log
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
 # See: tail
 phpTailLog() {
   local usage="_${FUNCNAME[0]}"
+  [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
   local logFile
   logFile=$(__catchEnvironment "$usage" phpLog) || return $?
   [ -n "$logFile" ] || __throwEnvironment "$usage" "PHP log file is blank" || return $?
@@ -52,6 +67,10 @@ phpTailLog() {
   fi
   tail "$@" "$logFile"
 }
+_phpTailLog() {
+  # __IDENTICAL__ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
 
 #
 # Usage: {fn}
@@ -59,6 +78,7 @@ phpTailLog() {
 #
 phpLog() {
   local usage="_${FUNCNAME[0]}"
+  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return 0
   whichExists php || __throwEnvironment "$usage" "php not installed" || return $?
   php -r "echo ini_get('error_log');" 2>/dev/null || __throwEnvironment "$usage" "php installation issue" || return $?
 }
@@ -73,6 +93,7 @@ _phpLog() {
 #
 phpIniFile() {
   local usage="_${FUNCNAME[0]}"
+  [ $# -eq 0 ] || __help --only "$usage" "$@" || return 0
   whichExists php || __throwEnvironment "$usage" "php not installed" || return $?
   php -r "echo get_cfg_var('cfg_file_path');" 2>/dev/null || __throwEnvironment "$usage" "php installation issue" || return $?
 }

@@ -617,11 +617,27 @@ _packageStandardPackages() {
 }
 
 # Is the package manager supported?
+# Checks the package manager to be a valid, supported one.
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
+# Argument: packageManager - String. Manager to check.
+# Exit Code: 0 - The package manager is valid.
+# Exit Code: 1 - The package manager is not valid.
 packageManagerValid() {
-  case "$1" in
+  local usage="_${FUNCNAME[0]}"
+  case "${1-}" in
+  # _IDENTICAL_ --help 4
+  --help)
+    "$usage" 0
+    return $?
+    ;;
   apk | apt | brew | port) return 0 ;;
   *) return 1 ;;
   esac
+}
+_packageManagerValid() {
+  # __IDENTICAL__ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 _packageDebugging() {
@@ -634,12 +650,20 @@ _packageDebugging() {
   ls -lad /etc/ | dumpPipe "/etc/ listing"
 }
 
-# Determine the default manager
+# Determine the default package manager on this platform.
+# Output is one of:
+# - apk apt brew port
 # See: platform
 packageManagerDefault() {
+  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return 0
   export BUILD_PACKAGE_MANAGER
   __environment buildEnvironmentLoad BUILD_PACKAGE_MANAGER || return $?
   __packageManagerDefault "${BUILD_PACKAGE_MANAGER-}"
+}
+_packageManagerDefault() {
+  true || packageManagerDefault --help
+  # __IDENTICAL__ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # List installed packages on this system using package manager
@@ -665,20 +689,21 @@ _packageAvailableList() {
 # Argument: value - Set the restart flag to this value (blank to remove)
 packageNeedRestartFlag() {
   local usage="_${FUNCNAME[0]}"
-  local quietLog restartFlag
+  local quietLog restartFile
 
-  restartFlag="$(__catchEnvironment "$usage" buildCacheDirectory)/.needRestart" || return $?
+  restartFile="$(__catchEnvironment "$usage" buildCacheDirectory)/.needRestart" || return $?
   if [ $# -eq 0 ]; then
-    if [ -f "$restartFlag" ]; then
-      __catchEnvironment "$usage" cat "$restartFlag" || return $?
+    if [ -f "$restartFile" ]; then
+      __catchEnvironment "$usage" cat "$restartFile" || return $?
     else
       return 1
     fi
   else
+    [ "$1" != "--help" ] || __help "$usage" "$@" || return 0
     if [ "$1" = "" ]; then
-      rm -f "$restartFlag" || :
+      __catchEnvironment "$usage" rm -f "$restartFile" || return $?
     else
-      printf "%s\n" "$@" >"$restartFlag" || __throwEnvironment "$usage" "Unable to write $restartFlag" || return $?
+      printf "%s\n" "$@" >"$restartFile" || __throwEnvironment "$usage" "Unable to write $restartFile" || return $?
     fi
   fi
 }

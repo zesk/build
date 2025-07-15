@@ -35,7 +35,6 @@ _isPositiveInteger() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-#
 # Test if argument are bash functions
 # Argument: string - Required. String to test if it is a bash function. Builtins are supported. `.` is explicitly not supported to disambiguate it from the current directory `.`.
 # If no arguments are passed, returns exit code 1.
@@ -46,6 +45,7 @@ isFunction() {
   # _IDENTICAL_ functionSignatureSingleArgument 2
   local usage="_${FUNCNAME[0]}"
   [ $# -eq 1 ] || __catchArgument "$usage" "Single argument only: $*" || return $?
+  [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
   # Skip illegal options "--" and "-foo"
   [ "$1" = "${1#-}" ] || return 1
   case "$(type -t "$1")" in function | builtin) [ "$1" != "." ] || return 1 ;; *) return 1 ;; esac

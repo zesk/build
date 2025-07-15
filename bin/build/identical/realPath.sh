@@ -7,12 +7,15 @@
 
 # IDENTICAL _realPath EOF
 
-# Usage: realPath argument
+# Find the full, actual path of a file avoiding symlinks or redirection.
+# See: readlink realpath
+# DOC TEMPLATE: noArgumentsForHelp 1
+# Without arguments, displays help.
 # Argument: file ... - Required. File. One or more files to `realpath`.
 # Requires: whichExists realpath __help usageDocument _argument
 realPath() {
-  [ "${1-}" != "--help" ] || __help "$_${FUNCNAME[0]}" "$@" || return 0
-  [ -e "$1" ] || _argument "Not a file: $1" || return $?
+  # __IDENTICAL__ --help-when-blank 1
+  [ $# -gt 0 ] || __help "_${FUNCNAME[0]}" --help || return 0
   if whichExists realpath; then
     realpath "$@"
   else

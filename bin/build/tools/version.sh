@@ -10,16 +10,25 @@
 # Test: o ./test/tools/version-tests.sh
 
 # Check if something matches a version
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
+# Argument: binary - Required. String. The binary to look for.
 isVersion() {
   local part parts
   [ $# -gt 0 ] || return 1
+  [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
   while [ $# -gt 0 ]; do
+    [ -n "$1" ] || return 1
     IFS=. read -r -a parts < <(printf "%s\n" "$1") || :
     for part in "${parts[@]}"; do
       isUnsignedInteger "$part" || return 1
     done
     shift
   done
+}
+_isVersion() {
+  # __IDENTICAL__ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Take one or more versions and strip the leading `v`

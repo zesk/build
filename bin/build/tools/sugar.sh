@@ -96,14 +96,19 @@ _deprecated() {
   [ ! -d "$BUILD_HOME" ] || printf -- "$(date "+%F %T"),%s\n%s\n" "$*" "$(debuggingStack)" >>"${BUILD_HOME}/.deprecated"
 }
 
-# Usage: {fn} command ...
-# Suppress stdout without piping. Handy when you just want a behavior not the output. e.g. `muzzle pushd`
+# Suppress stdout without piping. Handy when you just want a behavior not the output.
 # Argument: command - Required. Callable. Thing to muzzle.
 # Argument: ... - Optional. Arguments. Additional arguments.
 # Example:     {fn} pushd
 # Example:     __catchEnvironment "$handler" phpBuild || returnUndo $? {fn} popd || return $?
+# stdout: - No output from stdout ever from this function
 muzzle() {
+  [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
   "$@" >/dev/null
+}
+_muzzle() {
+  # __IDENTICAL__ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
@@ -164,10 +169,12 @@ __execute() {
   "$@" || _return "$?" "$@" || return $?
 }
 
-# IDENTICAL returnUndo 37
+# IDENTICAL returnUndo 40
 
 # Run a function and preserve exit code
 # Returns `exitCode`
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
 # Argument: exitCode - Required. UnsignedInteger. Exit code to return.
 # Argument: undoFunction - Optional. Command to run to undo something. Return status is ignored.
 # Argument: -- - Flag. Optional. Used to delimit multiple commands.
@@ -180,6 +187,7 @@ __execute() {
 # Requires: isPositiveInteger __catchArgument decorate __execute
 # Requires: usageDocument
 returnUndo() {
+  [ "$1" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
   local __count=$# __saved=("$@") __usage="_${FUNCNAME[0]}" exitCode="${1-}" args=()
   shift
   isUnsignedInteger "$exitCode" || __catchArgument "$__usage" "Not an integer $(decorate value "$exitCode") (#$__count: $(decorate each code "${__saved[@]+"${__saved[@]}"}"))" || return $?

@@ -92,3 +92,5 @@ returnClean() {
     return "$exitCode"
   fi
 }
+
+# <-- END of IDENTICAL _tinySugar

@@ -19,6 +19,8 @@
 # Short description: list mappable variables in a file (without prefix or suffix)
 # Depends: sed quoteSedPattern
 mapTokens() {
+  local usage="_${FUNCNAME[0]}"
+  [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
   local prefix prefixQ suffix suffixQ removeQuotesPattern argument
 
   prefix="${1-"{"}"
@@ -36,12 +38,18 @@ mapTokens() {
   # tokens may be any character except prefix or suffix or nul
   sed -e "s/$prefixQ/\n$(quoteSedReplacement "$prefix")/g" -e "s/$suffixQ/$(quoteSedReplacement "$suffix")\n)/g" | sed -e "/$prefixQ/!d" -e "/$suffixQ/!d" -e "$removeQuotesPattern"
 }
+_mapTokens() {
+  # __IDENTICAL__ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
 
 # Maps a string using an environment file
 #
 # Usage: mapValue mapFile [ value ... ]
 # DOC TEMPLATE: --help 1
 # Argument: --help - Optional. Flag. Display this help.
+# DOC TEMPLATE: --handler 1
+# Argument: --handler handler - Optional. Function. Use this error handler instead of the default error handler.
 # Argument: mapFile - Required. File. a file containing bash environment definitions
 # Argument: value - Optional. String. One or more values to map using said environment file
 # Argument: --prefix - Optional. String. Token prefix defaults to `{`.
@@ -62,6 +70,11 @@ mapValue() {
     --help)
       "$usage" 0
       return $?
+      ;;
+    # _IDENTICAL_ --handler 4
+    --handler)
+      shift
+      usage=$(usageArgumentFunction "$usage" "$argument" "${1-}") || return $?
       ;;
     --prefix)
       shift
@@ -128,7 +141,7 @@ _mapValue() {
 # Argument: value - Optional. String. One or more values to map using said environment file.
 #
 mapValueTrim() {
-  mapValue --replace-filter trimSpace "$@"
+  mapValue --handler "_${FUNCNAME[0]}" --replace-filter trimSpace "$@"
 }
 _mapValueTrim() {
   # __IDENTICAL__ usageDocument 1

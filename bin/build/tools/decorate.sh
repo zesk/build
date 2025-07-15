@@ -3,7 +3,7 @@
 # Copyright &copy; 2025 Market Acumen, Inc.
 #
 
-# IDENTICAL decorate 240
+# IDENTICAL decorate 242
 
 # Sets the environment variable `BUILD_COLORS` if not set, uses `TERM` to calculate
 #
@@ -244,3 +244,5 @@ __decorateExtensionQuote() {
   text="${text//\$/\\\$}"
   printf -- "\"%s\"\n" "$text"
 }
+
+# <-- END of IDENTICAL decorate

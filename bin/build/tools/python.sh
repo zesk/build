@@ -21,7 +21,7 @@
 #
 pythonInstall() {
   local usage="_${FUNCNAME[0]}"
-
+  [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
   if ! whichExists python; then
     __catchEnvironment "$usage" packageGroupInstall "$@" python || return $?
   fi
@@ -33,7 +33,13 @@ _pythonInstall() {
 
 # Uninstall python
 pythonUninstall() {
-  packageGroupUninstall "$@" python
+  local usage="_${FUNCNAME[0]}"
+  [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
+  __catchEnvironment "$usage" packageGroupUninstall "$@" python || return $?
+}
+_pythonUninstall() {
+  # __IDENTICAL__ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Utility to install python dependencies via pip

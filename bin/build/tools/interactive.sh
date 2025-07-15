@@ -24,10 +24,21 @@
 ####################################################################################################
 
 # Pause for user input
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
+# DOC TEMPLATE: dashDashAllowsHelpParameters 1
+# Argument: -- - Optional. Flag. Stops command processing to enable arbitrary text to be passed as additional arguments without special meaning.
+# Argument: message ... - Display this message while pausing
 pause() {
+  [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
+  [ "${1-}" != "--" ] || shift
   local prompt="${1-"PAUSE > "}"
   statusMessage printf -- "%s" "$prompt"
   bashUserInput
+}
+_pause() {
+  # __IDENTICAL__ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 ####################################################################################################
@@ -938,13 +949,17 @@ notify() {
 
   local home
   home=$(__catchEnvironment "$usage" buildHome) || return $?
-  $verboseFlag || statusMessage decorate info "Running $(decorate each code "$binary" "$@") ... [$(decorate magenta "$message")]" || return $?
+  ! $verboseFlag || statusMessage --last decorate info "Running $(decorate each code "$binary" "$@") ... [$(decorate magenta "$message")]" || return $?
   local start tempOut tempErr dialog
   start=$(timingStart)
   tempOut=$(fileTemporaryName "$usage") || return $?
   tempErr="$tempOut.err"
   if CI=1 __catchEnvironment "$usage" "$binary" "$@" 2>"$tempErr" | tee "$tempOut"; then
-    dialog=$(printf "%s\n" "$message" "" "Exit Code: $?" "Exit String: $(exitString $?)" "Elapsed: $(timingReport "$start")" "" "stdout:" "$(tail -n 10 "$tempOut")")
+    local returnValue=$?
+    ! $verboseFlag || statusMessage --last decorate "Exit Code:" "$returnValue"
+    ! $verboseFlag || statusMessage --last decorate "Elapsed:" "$(timingReport "$start")"
+    ! $verboseFlag || statusMessage --last decorate "stdout:" "$(tail -n 10 "$tempOut")"
+    dialog=$(printf "%s\n" "$message" "" "Exit Code: $returnValue" "Exit String: $(exitString $returnValue)" "Elapsed: $(timingReport "$start")" "" "stdout:" "$(tail -n 10 "$tempOut")")
     hookRun --application "$home" notify --title "$binary Succeeded" --sound zesk-build-notification "${nn[@]+"${nn[@]}"}" "Elapsed: $(timingReport "$start")"
   else
     [ -n "$failMessage" ] || failMessage="$message"

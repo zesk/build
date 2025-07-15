@@ -129,8 +129,14 @@ _todayDate() {
 }
 
 # Is a date valid?
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
+# DOC TEMPLATE: dashDashAllowsHelpParameters 1
+# Argument: -- - Optional. Flag. Stops command processing to enable arbitrary text to be passed as additional arguments without special meaning.
+# Argument: text - String. Required. Text to validate as a date after the year 1600. Does not validate month and day combinations.
 dateValid() {
   [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
+  [ "${1-}" != "--" ] || shift
   local date="${1-}"
   __environment [ "${date:4:1}${date:7:1}" = "--" ] || return 1
   local year="${date:0:4}" month="${date:5:2}" day="${date:8:2}"

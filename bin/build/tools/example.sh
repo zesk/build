@@ -20,8 +20,10 @@ _usageFunction() {
 #
 # DOC TEMPLATE: --help 1
 # Argument: --help - Optional. Flag. Display this help.
+#
 # DOC TEMPLATE: --handler 1
 # Argument: --handler handler - Optional. Function. Use this error handler instead of the default error handler.
+#
 # Argument: --easy - Optional. Flag. Easy mode.
 # Argument: binary - Required. String. The binary to look for.
 # Argument: remoteUrl - Required. URL. Remote URL.
@@ -33,6 +35,10 @@ _usageFunction() {
 # Argument: --callable callable - Optional. Callable. Function to call when url is downloaded.
 # This is a sample function with example code and patterns used in Zesk Build.
 #
+# DOC TEMPLATE: noArgumentsForHelp 1
+# Without arguments, displays help.
+# DOC TEMPLATE: dashDashAllowsHelpParameters 1
+# Argument: -- - Optional. Flag. Stops command processing to enable arbitrary text to be passed as additional arguments without special meaning.
 exampleFunction() {
   local usage="_${FUNCNAME[0]}"
   local name="" easyFlag=false width=50 target=""
@@ -161,7 +167,7 @@ _return() {
 # Requires: _return
 isUnsignedInteger() {
   [ $# -eq 1 ] || _return 2 "Single argument only: $*" || return $?
-  case "${1#+}" in '' | *[!0-9]*) return 1 ;; esac
+  case "${1#+}" in --help) usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]}" 0 ;; '' | *[!0-9]*) return 1 ;; esac
 }
 
 # <-- END of IDENTICAL _return

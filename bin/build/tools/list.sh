@@ -18,9 +18,14 @@
 # Argument: separator - Required. EmptyString. Single character to join elements. If a multi-character string is used only the first character is used as the delimiter.
 # Argument: text0 - Optional. String. One or more strings to join
 listJoin() {
+  [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
   local IFS="${1-:0:1}"
   shift || :
   printf "%s" "$*"
+}
+_listJoin() {
+  # __IDENTICAL__ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Remove one or more items from a text-delimited list
@@ -30,6 +35,7 @@ listJoin() {
 # Argument: item - the item to be removed from the `listValue`
 listRemove() {
   local usage="_${FUNCNAME[0]}"
+  [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
   local argument listValue="${1-}" separator="${2-}"
 
   shift 2 || __throwArgument "$usage" "Missing arguments" || return $?
@@ -64,6 +70,7 @@ _listRemove() {
 # Add an item to the beginning or end of a text-delimited list
 listAppend() {
   local usage="_${FUNCNAME[0]}"
+  [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
   local argument listValue="${1-}" separator="${2-}"
 
   [ ${#separator} -eq 1 ] || __throwArgument "$usage" "character-length separator required: ${#separator} $(decorate code "$separator")" || return $?

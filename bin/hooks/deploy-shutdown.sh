@@ -68,7 +68,7 @@ _return() {
 # Requires: _return
 isUnsignedInteger() {
   [ $# -eq 1 ] || _return 2 "Single argument only: $*" || return $?
-  case "${1#+}" in '' | *[!0-9]*) return 1 ;; esac
+  case "${1#+}" in --help) usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]}" 0 ;; '' | *[!0-9]*) return 1 ;; esac
 }
 
 # <-- END of IDENTICAL _return

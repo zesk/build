@@ -5,11 +5,15 @@
 # Copyright &copy; 2025 Market Acumen, Inc.
 
 # Add configuration to `~/.inputrc` for a key binding
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
 # Argument: keyStroke - Required. String.
 # Argument: action - Required. String.
 # Example: readlineConfigurationAdd "\ep" history-search-backward
 readlineConfigurationAdd() {
   local usage="_${FUNCNAME[0]}"
+  [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
+
   local target=".input""rc" keyStroke="${1-}" action="${2-}" pattern
   local home
 

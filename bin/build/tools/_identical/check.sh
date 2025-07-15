@@ -16,6 +16,7 @@
 # Argument: --exclude pattern - Optional. String. One or more patterns of paths to exclude. Similar to pattern used in `find`.
 # Argument: --cd directory - Optional. Directory. Change to this directory before running. Defaults to current directory.
 # Argument: --repair directory - Optional. Directory. Any files in onr or more directories can be used to repair other files.
+# Argument: --token token - Optional. String. ONLY do this token. May be specified more than once.
 # Argument: --skip file - Optional. Directory. Ignore this file for repairs.
 # Argument: --ignore-singles - Optional. Flag. Skip the check to see if single entries exist.
 # Argument: --no-map - Optional. Flag. Do not map __BASE__, __FILE__, __DIR__ tokens.
@@ -56,7 +57,7 @@ identicalCheck() {
 
   local mapFile=true debug=false rootDir="."
   local repairSources=() excludes=() prefixes=() singles=() binary="" ignoreSingles=false
-  local findArgs=() extensionText="" skipFiles=()
+  local findArgs=() extensionText="" skipFiles=() tokens=()
 
   # _IDENTICAL_ argument-case-header 5
   local __saved=("$@") __count=$#
@@ -124,6 +125,10 @@ identicalCheck() {
       [ -n "$1" ] || __throwArgument "$usage" "Empty $(decorate code "$argument") argument" || return $?
       excludes+=(! -path "$1")
       ;;
+    --token)
+      shift
+      tokens+=("$(usageArgumentString "$usage" "$argument" "${1-}")") || return $?
+      ;;
     *)
       # _IDENTICAL_ argumentUnknown 1
       __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
@@ -155,6 +160,12 @@ identicalCheck() {
   if [ ! -s "$searchFileList" ]; then
     __throwEnvironment "$usage" "No files found in $(decorate file "$rootDir") with${extensionText}" || returnClean $? "${clean[@]}" || return $?
   fi
+  clean+=("$searchFileList.smaller")
+  if [ "${#tokens[@]}" -gt 0 ]; then
+    xargs grep -l -e "$(listJoin '|' "${tokens[@]}")" <"$searchFileList" >"$searchFileList.smaller" || returnClean $? "${clean[@]}" || return $?
+    __catchEnvironment "$usage" mv "$searchFileList.smaller" "$searchFileList" || returnClean $? "${clean[@]}" || return $?
+  fi
+  find searchFileList
   ! $debug || dumpPipe "searchFileList" <"$searchFileList" || returnClean $? "${clean[@]}" || return $?
 
   local variable stateFile
@@ -172,11 +183,13 @@ identicalCheck() {
   __catchEnvironment "$usage" environmentValueWriteArray "prefixes" "${prefixes[@]+"${prefixes[@]}"}" >>"$stateFile" || returnClean $? "${clean[@]}" || return $?
   __catchEnvironment "$usage" environmentValueWriteArray "skipFiles" "${skipFiles[@]+"${skipFiles[@]}"}" >>"$stateFile" || returnClean $? "${clean[@]}" || return $?
   __catchEnvironment "$usage" environmentValueWriteArray "singles" "${singles[@]+"${singles[@]}"}" >>"$stateFile" || returnClean $? "${clean[@]}" || return $?
+  __catchEnvironment "$usage" environmentValueWriteArray "tokens" "${tokens[@]+"${tokens[@]}"}" >>"$stateFile" || returnClean $? "${clean[@]}" || return $?
 
   local prefix prefixIndex=0
   for prefix in "${prefixes[@]}"; do
-    local __line=1
+    local __line=1 searchFile
     while read -r searchFile; do
+      local realFile
       [ -f "$searchFile" ] || __throwEnvironment "$usage" "Invalid searchFileList $searchFileList line $__line: $(decorate value "$searchFile")"
       realFile=$(__catchEnvironment "$usage" realPath "$searchFile") || returnClean $? "${clean[@]}" || return $?
       if [ "${#skipFiles[@]}" -gt 0 ] && inArray "$realFile" "${skipFiles[@]}"; then
@@ -203,6 +216,7 @@ identicalCheck() {
       fi
     fi
   fi
+
   #
   # Singles checks
   #

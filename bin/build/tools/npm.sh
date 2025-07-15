@@ -73,7 +73,12 @@ _npmInstall() {
 # Core as part of some systems - so this succeeds and it still exists
 #
 npmUninstall() {
+  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return 0
   packageWhichUninstall npm npm "$@"
+}
+_npmUninstall() {
+  # __IDENTICAL__ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 __nodePackageManagerArguments_npm() {

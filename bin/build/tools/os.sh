@@ -74,11 +74,11 @@ _fileReverseLines() {
 
 # Makes all `*.sh` files executable
 #
-# Usage: {fn} [ findArguments ... ]
-# Argument: findArguments - Optional. Add arguments to exclude files or paths.
+# Argument: --find findArguments - Optional. Add arguments to exclude files or paths. SPACE-delimited for multiple options.
+# Argument: path ... - Optional. Directory. One or more paths to scan for shell files. Uses PWD if not specified.
 # Environment: Works from the current directory
 # See: makeShellFilesExecutable
-# fn: chmod-sh.sh
+# See: chmod-sh.sh
 makeShellFilesExecutable() {
   local usage="_${FUNCNAME[0]}"
 
@@ -122,30 +122,46 @@ _makeShellFilesExecutable() {
 
 # Modify the MANPATH environment variable to add a path.
 # See: manPathRemove
-# Usage: {fn} [ --first | --last | path ] ...
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
 # Argument: --first - Optional. Place any paths after this flag first in the list
 # Argument: --last - Optional. Place any paths after this flag last in the list. Default.
 # Argument: path - the path to be added to the `MANPATH` environment
 #
 manPathConfigure() {
+  local usage="_${FUNCNAME[0]}"
+  [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
+
   local tempPath
   export MANPATH
 
-  __environment buildEnvironmentLoad MANPATH || return $?
-  tempPath="$(listAppend "$MANPATH" ':' "$@")" || _environment listAppend "$MANPATH" ':' "$@" || return $?
+  __catchEnvironment "$usage" buildEnvironmentLoad MANPATH || return $?
+  tempPath="$(__catchEnvironment "$usage" listAppend "$MANPATH" ':' "$@")" || return $?
   MANPATH="$tempPath"
+}
+_manPathConfigure() {
+  # __IDENTICAL__ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Remove a path from the MANPATH environment variable
-# Usage: {fn} path ...
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
 # Argument: path - Directory. Required. The path to be removed from the `MANPATH` environment
 manPathRemove() {
+  local usage="_${FUNCNAME[0]}"
+  [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
+
   local tempPath
   export MANPATH
 
-  __environment buildEnvironmentLoad MANPATH || return $?
+  __catchEnvironment "$usage" buildEnvironmentLoad MANPATH || return $?
   tempPath="$(__catchEnvironment "$usage" listRemove "$MANPATH" ':' "$@")" || return $?
   MANPATH="$tempPath"
+}
+_manPathRemove() {
+  # __IDENTICAL__ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
@@ -153,10 +169,12 @@ manPathRemove() {
 #
 # Maintains ordering.
 #
-# Usage: manPathCleanDuplicates
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
 # No-Arguments: default
 manPathCleanDuplicates() {
   local usage="_${FUNCNAME[0]}" newPath
+  [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
   export MANPATH
 
   __catchEnvironment "$usage" buildEnvironmentLoad MANPATH || return $?
@@ -171,10 +189,12 @@ _manPathCleanDuplicates() {
 }
 
 # Remove a path from the PATH environment variable
-# Usage: {fn} path ...
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
 # Argument: path - Requires. String. The path to be removed from the `PATH` environment.
 pathRemove() {
   local usage="_${FUNCNAME[0]}"
+  [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
   local tempPath
   export PATH
 
@@ -188,12 +208,14 @@ _pathRemove() {
 }
 
 # Modify the PATH environment variable to add a path.
-# Usage: {fn} [ --first | --last | path ] ...
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
 # Argument: --first - Optional. Place any paths after this flag first in the list
 # Argument: --last - Optional. Place any paths after this flag last in the list. Default.
 # Argument: path - the path to be added to the `PATH` environment
 pathConfigure() {
   local usage="_${FUNCNAME[0]}"
+  [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
   local tempPath
   export PATH
 
@@ -212,15 +234,16 @@ _pathIsDirectory() {
   [ -d "${1-}" ] || return 1
 }
 
-#
 # Cleans the path and removes non-directory entries and duplicates
 #
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
 # Maintains ordering.
 #
-# Usage: pathCleanDuplicates
-#
+# Environment: PATH
 pathCleanDuplicates() {
   local usage="_${FUNCNAME[0]}" newPath
+  [ $# -eq 0 ] || __help --only "$usage" "$@" || return 0
   export PATH
 
   newPath=$(__catchEnvironment "$usage" listCleanDuplicates --test _pathIsDirectory ':' "${PATH-}") || return $?
@@ -253,7 +276,8 @@ _whichExists() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-#
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
 # Format something neatly as JSON
 # Usage: JSON < inputFile > outputFile
 JSON() {
@@ -276,8 +300,9 @@ _JSON() {
 #
 # Backup when `/etc/services` does not exist.
 #
-# Usage: {fn} service [ ... ]
-# Argument: service - A unix service typically found in `/etc/services`
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
+# Argument: service ... - String. Optional. A unix service typically found in `/etc/services`
 # Output: Port number of associated service (integer) one per line
 # Exit Code: 1 - service not found
 # Exit Code: 0 - service found and output is an integer
@@ -285,20 +310,30 @@ _JSON() {
 #
 serviceToStandardPort() {
   local usage="_${FUNCNAME[0]}"
-  local port service
+
   [ $# -gt 0 ] || __throwArgument "$usage" "No arguments" || return $?
+  local port
+
+  # _IDENTICAL_ argument-case-header 5
+  local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
-    service="$(trimSpace "${1-}")"
-    case "$service" in
+    local argument="$1" __index=$((__count - $# + 1))
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
+    case "$argument" in
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
     ssh) port=22 ;;
     http) port=80 ;;
     https) port=443 ;;
     mariadb | mysql) port=3306 ;;
     postgres) port=5432 ;;
-    *) __throwEnvironment "$usage" "$service unknown" || return $? ;;
+    *) __throwEnvironment "$usage" "$argument unknown" || return $? ;;
     esac
     printf "%d\n" "$port"
-    shift || __throwArgument "$usage" shift "$argument" "$@" || return $?
+    shift
   done
 }
 _serviceToStandardPort() {
@@ -318,17 +353,20 @@ _serviceToStandardPort() {
 #
 serviceToPort() {
   local usage="_${FUNCNAME[0]}"
-  local argument
-  local port servicesFile service
+  local port servicesFile=/etc/services service
 
-  servicesFile=/etc/services
   [ $# -gt 0 ] || __throwArgument "$usage" "Require at least one service" || return $?
+  # _IDENTICAL_ argument-case-header 5
+  local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
-    argument="$1"
-    [ -n "$argument" ] || __throwArgument "$usage" "blank argument" || return $?
-    argument="$(trimSpace "$argument")"
-    [ -n "$argument" ] || __throwArgument "$usage" "argument is whitespace" || return $?
+    local argument="$1" __index=$((__count - $# + 1))
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
     --services)
       shift || __throwArgument "$usage" "missing $argument argument" || return $?
       servicesFile=$(usageArgumentFile "$usage" "servicesFile" "$1") || return $?

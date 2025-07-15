@@ -111,7 +111,6 @@ _versionSort() {
 # Get the current IP address of a host
 # DOC TEMPLATE: --help 1
 # Argument: --help - Optional. Flag. Display this help.
-# Environment: IP_URL - URL. Required. of remote IP service; returns JSON or text (the IP).
 # Environment: IP_URL_FILTER - String. Optional. Filter for JSON to get IP - if blank returns remote contents directly.
 ipLookup() {
   local usage="_${FUNCNAME[0]}"

@@ -11,7 +11,7 @@
 #
 # -- CUT BELOW HERE --
 
-# IDENTICAL _sugar 148
+# IDENTICAL _sugar 153
 
 # Argument: name ... - Optional. String. Exit code value to output.
 # Print one or more return codes by name.
@@ -42,7 +42,7 @@ returnCode() {
   local k && while [ $# -gt 0 ]; do case "$1" in --help) usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]}" 0 ;; success) k=0 ;; environment) k=1 ;; argument) k=2 ;; assert) k=97 ;; identical) k=105 ;; leak) k=108 ;; timeout) k=116 ;; exit) k=120 ;; user-interrupt) k=130 ;; interrupt) k=141 ;; internal) k=253 ;; *) k=254 ;; esac && shift && printf -- "%d\n" "$k"; done
 }
 
-# _IDENTICAL_ exitString 18
+# _IDENTICAL_ exitString 19
 
 # Output the exit code as a string
 # Winner of the one-line bash award 10 years running
@@ -62,17 +62,20 @@ _exitString() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
+
 # Boolean test
+# If you want "true-ish" use `isTrue`.
 # Returns 0 if `value` is boolean `false` or `true`.
 # Is this a boolean? (`true` or `false`)
 # Exit Code: 0 - if value is a boolean
 # Exit Code: 1 - if value is not a boolean
+# See: isTrue parseBoolean
 # DOC TEMPLATE: --help 1
 # Argument: --help - Optional. Flag. Display this help.
 # Argument: value - Optional. String. Value to check if it is a boolean.
 # Requires: usageDocument printf
 isBoolean() {
-  case "${1-}" in true | false) ;; --help) usageDocument "${FUNCNAME[0]}" "${BASH_SOURCE[0]}" 0 ;; *) return 1 ;; esac
+  case "${1-}" in true | false) ;; --help) usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]}" 0 ;; *) return 1 ;; esac
 }
 
 # Boolean selector
@@ -160,3 +163,5 @@ __environment() {
 __argument() {
   "$@" || _argument "$@" || return $?
 }
+
+# <-- END of IDENTICAL _sugar

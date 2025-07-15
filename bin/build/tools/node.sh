@@ -123,12 +123,12 @@ nodePackageManager() {
 
     local arguments=() flags=() action="" debugFlag=false
 
-  # _IDENTICAL_ argument-case-header 5
-  local __saved=("$@") __count=$#
-  while [ $# -gt 0 ]; do
-    local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
-    case "$argument" in
+    # _IDENTICAL_ argument-case-header 5
+    local __saved=("$@") __count=$#
+    while [ $# -gt 0 ]; do
+      local argument="$1" __index=$((__count - $# + 1))
+      [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
+      case "$argument" in
       # _IDENTICAL_ --help 4
       --help)
         "$usage" 0
@@ -171,6 +171,8 @@ _nodePackageManager() {
 # Installs the selected package manager for node
 nodePackageManagerInstall() {
   local usage="_${FUNCNAME[0]}"
+  [ $# -eq 0 ] || __help --only "$usage" "$@" || return 0
+
   local manager
 
   manager=$(__catchEnvironment "$usage" nodePackageManager) || return $?
@@ -189,6 +191,7 @@ _nodePackageManagerInstall() {
 # Installs the selected package manager for node
 nodePackageManagerUninstall() {
   local usage="_${FUNCNAME[0]}"
+  [ $# -eq 0 ] || __help --only "$usage" "$@" || return 0
   local manager
 
   manager=$(__catchEnvironment "$usage" nodePackageManager) || return $?
@@ -205,14 +208,43 @@ _nodePackageManagerUninstall() {
 }
 
 # Is the passed node package manager name valid?
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
+# Argument: managerName - Required. String. The node package manager name to check.
+# Without arguments, shows the valid package manager names.
+# Exit Code: 0 - Yes, it's a valid package manager name.
+# Exit Code: 1 - No, it's not a valid package manager name.
+# Valid names are: npm yarn
 nodePackageManagerValid() {
+  local usage="_${FUNCNAME[0]}"
+
   local valid=("npm" "yarn")
+
   if [ $# -eq 0 ]; then
     printf -- "%s\n" "${valid[@]}"
     return 0
   fi
+
+  # _IDENTICAL_ argument-case-header 5
+  local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
-    isFunction "${1}Install" || return 1
+    local argument="$1" __index=$((__count - $# + 1))
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
+    case "$argument" in
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    *)
+      isFunction "${1}Install" || return 1
+      ;;
+    esac
+    # _IDENTICAL_ argument-esac-shift 1
     shift
   done
+}
+_nodePackageManagerValid() {
+  # __IDENTICAL__ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

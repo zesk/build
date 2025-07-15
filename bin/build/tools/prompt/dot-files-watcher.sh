@@ -81,7 +81,6 @@ _bashPromptModule_dotFilesWatcher() {
 # The dot files approved file. Add files to this to approve.
 # DOC TEMPLATE: --help 1
 # Argument: --help - Optional. Flag. Display this help.
-# Environment: XDG_DATA_HOME
 dotFilesApprovedFile() {
   [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return 0
   printf "%s\n" "$(buildEnvironmentGetDirectory "XDG_DATA_HOME")/dotFilesWatcher"

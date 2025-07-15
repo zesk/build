@@ -95,14 +95,12 @@ testBuildFunctionsHelpCoverage() {
   local home
   home=$(__catchEnvironment "$usage" buildHome) || return $?
 
-  local deprecatedFunctions clean=() skipFunctions
+  local deprecatedFunctions clean=()
   deprecatedFunctions=$(fileTemporaryName "$usage") || return $?
-  skipFunctions=$(fileTemporaryName "$usage") || return $?
 
   clean+=("$deprecatedFunctions")
 
   __catchEnvironment "$usage" cut -f 1 -d '|' <"$home/bin/build/deprecated.txt" | grep -v '#' | grep -v ' ' | grep -v '/' | sort -u >"$deprecatedFunctions" || return $?
-  __catchEnvironment "$usage" __dataBuildFunctionsWithoutHelp | sort -u >"$skipFunctions" || return $?
 
   local requireCoverageDate
   requireCoverageDate=$(buildEnvironmentGet BUILD_COVERAGE_REQUIRED_DATE) || return $?
@@ -112,13 +110,33 @@ testBuildFunctionsHelpCoverage() {
 
   [ "$(date +%s)" -lt "$(dateToTimestamp "$requireCoverageDate")" ] || coverageRequired=true
 
-  local done=false missing=() functions=()
+  local eof fun missing=() functions=() blanks=() helpless=()
 
-  local fun
-  while ! $done; do
-    read -r fun || done=true
+  eof=false
+  while ! $eof; do
+    read -r fun || eof=true
     [ -z "$fun" ] || functions+=("$fun")
-  done < <(buildFunctions)
+  done < <(buildFunctions && __dataBuildFunctionsWithBlankHelp | sort -u)
+
+  eof=false
+  while ! $eof; do
+    read -r fun || eof=true
+    [ -z "$fun" ] || blanks+=("$fun")
+  done < <(__dataBuildFunctionsWithBlankHelp)
+
+  eof=false
+  while ! $eof; do
+    read -r fun || eof=true
+    if [ -n "$fun" ]; then
+      helpless+=("$fun")
+      if inArray "$fun" "${blanks[@]}"; then
+        __throwEnvironment "$usage" "$fun is in without-help and blank-help lists, pick one" || return $?
+      fi
+      if ! inArray "$fun" "${functions[@]}"; then
+        __throwEnvironment "$usage" "$fun is no longer part of core" || return $?
+      fi
+    fi
+  done < <(__dataBuildFunctionsWithoutHelp)
 
   __mockValue BUILD_DEBUG
 
@@ -130,6 +148,9 @@ testBuildFunctionsHelpCoverage() {
   lastPassedCache="$(__catchEnvironment "$usage" buildCacheDirectory)/.${FUNCNAME[0]}.lastPassed" || return $?
 
   [ ! -f "$lastPassedCache" ] || lastPassed=""$(head -n 1 "$lastPassedCache")
+  local missingFile
+  missingFile="$(buildHome)/.testBuildFunctionsHelpCoverage.log"
+  __catchEnvironment "$usage" printf "%s" "" >"$missingFile" || return $?
   for fun in "${functions[@]}"; do
     if [ -n "$lastPassed" ]; then
       if [ "$fun" = "$lastPassed" ]; then
@@ -143,17 +164,21 @@ testBuildFunctionsHelpCoverage() {
     fi
     if grep -q -e "^$(quoteGrepPattern "$fun")$" "$deprecatedFunctions"; then
       statusMessage decorate subtle "Deprecated function: $(decorate code "$fun")"
-    elif grep -q -e "^$(quoteGrepPattern "$fun")$" "$skipFunctions"; then
+    elif inArray "$fun" "${helpless[@]}"; then
       statusMessage decorate info "Function has no --help: $(decorate code "$fun")"
     else
+      local helpCall=("$fun" --help)
+      if inArray "$fun" "${blanks[@]}"; then
+        helpCall=("$fun")
+      fi
       if $coverageRequired; then
-        assertExitCode --stdout-match "$fun" --stdout-match "Usage" 0 "$fun" --help || return $?
+        assertExitCode --stdout-match "$fun" --stdout-match "Usage" 0 "${helpCall[@]}" || return $?
       else
-        statusMessage decorate info "Attempting $(decorate code "$fun") ..."
+        statusMessage decorate info "Attempting $(decorate each code "${helpCall[@]}") ..."
         # "$fun" --help | dumpPipe "$fun --help"
-        if ! assertExitCode --stdout-match "$fun" --stdout-match "Usage" 0 "$fun" --help; then
+        if ! assertExitCode --stdout-match "$fun" --stdout-match "Usage" 0 "${helpCall[@]}"; then
           missing+=("$fun")
-          break
+          __catchEnvironment "$usage" printf "%s\n" "$fun" >>"$missingFile" || return $?
         else
           if [ "${#missing[@]}" -eq 0 ]; then
             __catchEnvironment "$usage" printf "%s\n" "$fun" >"$lastPassedCache" || return $?
@@ -176,15 +201,28 @@ __dataBuildFunctionsWithoutHelp() {
 grepSafe
 returnClean
 exitString
+trimSpace
 clearLine
 plasterLines
 escapeBash
+quoteBashString
+inArray
+EOF
+}
+
+__dataBuildFunctionsWithBlankHelp() {
+  cat <<EOF
+__help
+quoteGrepPattern
 escapeDoubleQuotes
 escapeSingleQuotes
 escapeQuotes
 replaceFirstPattern
-trimSpace
-quoteBashString
-inArray
+printfOutputSuffix
+printfOutputPrefix
+quoteGrepPattern
+sedReplacePattern
+newlineHide
+realPath
 EOF
 }

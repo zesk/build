@@ -959,7 +959,7 @@ _environmentCompile() {
 # - BUILD_HOME PATH LD_LIBRARY USER HOME PS1 PS2
 # Calls unset on any variable in the global environment and exported.
 # Use with caution. Any additional environment variables you wish to preserve, simply pass those on the command line
-# Arguments: keepEnvironment - EnvironmentVariable. Optional. Keep this environment variable. ZeroOrMore.
+# Argument: keepEnvironment - EnvironmentVariable. Optional. Keep this environment variable. ZeroOrMore.
 environmentClean() {
   local usage="_${FUNCNAME[0]}"
   [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0

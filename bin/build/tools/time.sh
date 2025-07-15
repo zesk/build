@@ -30,6 +30,7 @@ _timingStart() {
 # Format a timout output (milliseconds) as seconds using a decimal
 timingFormat() {
   local usage="_${FUNCNAME[0]}"
+  [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
   while [ $# -gt 0 ]; do
     local delta="$1" seconds remainder text
     if isUnsignedInteger "$delta"; then

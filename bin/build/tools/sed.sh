@@ -8,11 +8,13 @@
 #
 
 # Quote a sed command for search and replace
+# Argument: searchPattern - Required. String. The string to search for.
+# Argument: replacePattern - Required. String. The replacement to replace with.
+# DOC TEMPLATE: noArgumentsForHelp 1
+# Without arguments, displays help.
 sedReplacePattern() {
-  local usage="_${FUNCNAME[0]}"
-  if [ $# -eq 0 ]; then
-    __throwArgument "$usage" "find replace - no find" || return $?
-  fi
+  # __IDENTICAL__ --help-when-blank 1
+  [ $# -gt 0 ] || __help "_${FUNCNAME[0]}" --help || return 0
   printf "s/%s/%s/g\n" "$(quoteSedPattern "$1")" "$(quoteSedReplacement "${2-}")"
 }
 _sedReplacePattern() {

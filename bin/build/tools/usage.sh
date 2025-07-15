@@ -70,12 +70,12 @@ _usageRequireEnvironment() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# Arguments: defaultNoun - Required. String. Default noun if user noun is empty
-# Arguments: usageFunction - Required. Function. Error handler
-# Arguments: variableName - Required. String. Name to test
-# Arguments: variableValue - Required. EmptyString. Value to test
-# Arguments: noun - Required. EmptyString. Noun passed by user
-# Arguments: testCommand ... - Required. Callable. Test command to run on value.
+# Argument: defaultNoun - Required. String. Default noun if user noun is empty
+# Argument: usageFunction - Required. Function. Error handler
+# Argument: variableName - Required. String. Name to test
+# Argument: variableValue - Required. EmptyString. Value to test
+# Argument: noun - Required. EmptyString. Noun passed by user
+# Argument: testCommand ... - Required. Callable. Test command to run on value.
 # Utility function to handle all usage
 #
 __catchArgumentHelper() {

@@ -452,3 +452,5 @@ __installRemotePackageLocal() {
   fi
   exec "$myBinary.$$" --replace "$myBinary"
 }
+
+# <-- END of IDENTICAL _installRemotePackage

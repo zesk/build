@@ -346,22 +346,30 @@ _echoBar() {
 }
 
 # Output a line and fill columns with a character
+# Argument: barText - String. Required. Text to fill line with, repeated. If not specified uses `-`
+# Argument: displayText - String. Optional.  Text to display on the line before the fill bar.
 lineFill() {
   local usage="_${FUNCNAME[0]}"
+  [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
+
   local text cleanText width barText
 
   width=$(__catchEnvironment "$usage" consoleColumns) || return $?
-  barText="${1:--}"
+  barText=$(usageArgumentString "$usage" "$barText" "${1:--}") || return $?
   shift || :
+
   text="$*"
   cleanText=$(stripAnsi <<<"$text")
-  count=$((width - ${#cleanText}))
-  count=$((count / ${#barText}))
-  if [ $count -gt 0 ]; then
-    printf "%s%s\n" "$text" "$(repeat "$count" "$barText")"
-  else
-    printf "%s\n" "${text:0:$width}"
+  local barWidth=$((width - ${#cleanText}))
+  if [ $barWidth -gt 0 ]; then
+    local count=$((barWidth / ${#barText}))
+    if [ $count -gt 0 ]; then
+      barText="$(repeat "$((count + 1))" "$barText")"
+      printf "%s%s\n" "$text" "${barText:0:$barWidth}"
+      return 0
+    fi
   fi
+  printf "%s\n" "${text:0:$width}"
 }
 _lineFill() {
   # __IDENTICAL__ usageDocument 1

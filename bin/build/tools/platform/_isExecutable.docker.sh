@@ -18,7 +18,7 @@ isExecutable() {
   isExecutableHack "$@"
 }
 
-#
+# fn: isExecutable*
 # Test if all arguments are executable binaries
 # Usage: {fn} string0 [ string1 ... ]
 # Argument: string - Required. Path to binary to test if it is executable.
@@ -31,6 +31,7 @@ isExecutableHack() {
   local lsMask
 
   [ $# -eq 1 ] || _argument "Single argument only: $*" || return $?
+
   # Skip illegal options "--" and "-foo"
   [ "$1" = "${1#-}" ] || return 1
   if [ -f "$1" ]; then
@@ -48,4 +49,8 @@ isExecutableHack() {
     return 1
   fi
   return 0
+}
+_isExecutableHack() {
+  # __IDENTICAL__ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

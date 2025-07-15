@@ -167,15 +167,28 @@ _processWait() {
 # Exit Code: 2 - Argument error
 processMemoryUsage() {
   local usage="_${FUNCNAME[0]}"
-  local pid
+  # _IDENTICAL_ argument-case-header 5
+  local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
-    pid="$1"
-    __catchArgument "$usage" isInteger "$pid" || return $?
-    # ps -o '%cpu %mem pid vsz rss tsiz %mem comm' -p "$pid" | tail -n 1
-    value="$(ps -o rss -p "$pid" | tail -n 1 | trimSpace)" || __throwEnvironment "$usage" "Failed to get process status for $pid" || return $?
-    isInteger "$value" || __throwEnvironment "$usage" "Bad memory value for $pid: $value" || return $?
-    printf %d $((value * 1))
-    shift || __throwArgument "$usage" "shift" || return $?
+    local argument="$1" __index=$((__count - $# + 1))
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
+    case "$argument" in
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    *)
+      local pid="$argument"
+      __catchArgument "$usage" isInteger "$pid" || return $?
+      # ps -o '%cpu %mem pid vsz rss tsiz %mem comm' -p "$pid" | tail -n 1
+      value="$(ps -o rss -p "$pid" | tail -n 1 | trimSpace)" || __throwEnvironment "$usage" "Failed to get process status for $pid" || return $?
+      isInteger "$value" || __throwEnvironment "$usage" "Bad memory value for $pid: $value" || return $?
+      printf %d $((value * 1))
+      ;;
+    esac
+    # _IDENTICAL_ argument-esac-shift 1
+    shift
   done
 }
 _processMemoryUsage() {
@@ -186,7 +199,8 @@ _processMemoryUsage() {
 #
 # Outputs value of virtual memory allocated for a process, value is in kilobytes
 #
-# Usage: {fn} pid
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
 # Argument: pid - Process ID of running process
 # Example:     {fn} 23
 # Output: 423
@@ -194,14 +208,27 @@ _processMemoryUsage() {
 # Exit Code: 2 - Argument error
 processVirtualMemoryAllocation() {
   local usage="_${FUNCNAME[0]}"
-  local pid value
+  # _IDENTICAL_ argument-case-header 5
+  local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
-    pid="$1"
-    __catchArgument "$usage" isInteger "$pid" || return $?
-    value="$(ps -o vsz -p "$pid" | tail -n 1 | trimSpace)"
-    isInteger "$value" || __throwEnvironment "$usage" "ps returned non-integer: \"$(decorate code "$value")\"" || return $?
-    printf %d $((value * 1))
-    shift || __throwArgument "$usage" "shift" || return $?
+    local argument="$1" __index=$((__count - $# + 1))
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
+    case "$argument" in
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    *)
+      local pid="$argument" value
+      __catchArgument "$usage" isInteger "$pid" || return $?
+      value="$(ps -o vsz -p "$pid" | tail -n 1 | trimSpace)"
+      isInteger "$value" || __throwEnvironment "$usage" "ps returned non-integer: \"$(decorate code "$value")\"" || return $?
+      printf %d $((value * 1))
+      ;;
+    esac
+    # _IDENTICAL_ argument-esac-shift 1
+    shift
   done
 }
 _processVirtualMemoryAllocation() {
@@ -212,19 +239,36 @@ _processVirtualMemoryAllocation() {
 # TODO: This is in progress
 # Output the number of open files for a process ID or group
 # Not completed yet
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
 processOpenPipes() {
-  # -c n - character width of COMMAND output
-  # -F field format
-  # -g pid | -p pid - process or group to list
-  # -l - Do not translate uid to login
-  # -n - Do not translate IPs to names
-  # -s - Show SIZE always
-  # -s - Show SIZE always
   local usage="_${FUNCNAME[0]}"
-  local pid
+  # _IDENTICAL_ argument-case-header 5
+  local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
-    pid="$(usageArgumentInteger "$usage" "pid" "$1")" || return $?
-    lsof -c 9999 -g "$pid" -l -F ckns
+    local argument="$1" __index=$((__count - $# + 1))
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
+    case "$argument" in
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    *)
+      local pid
+      pid="$(usageArgumentInteger "$usage" "pid" "$argument")" || return $?
+      lsof -c 9999 -g "$pid" -l -F ckns
+      # -c n - character width of COMMAND output
+      # -F field format
+      # -g pid | -p pid - process or group to list
+      # -l - Do not translate uid to login
+      # -n - Do not translate IPs to names
+      # -s - Show SIZE always
+      # -s - Show SIZE always
+      ;;
+
+    esac
+    # _IDENTICAL_ argument-esac-shift 1
     shift
   done
 }

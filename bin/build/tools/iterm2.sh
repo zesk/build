@@ -23,11 +23,20 @@
 # Test: ./test/tools/iterm2-tests.sh
 
 # Is the current console iTerm2?
-# Fails if LC_TERMINAL is `iTerm2`
-# Fails also if TERM is `screen`
+# Succeeds when LC_TERMINAL is `iTerm2` AND TERM is NOT `screen`
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
+# Environment: LC_TERMINAL
+# Environment: TERM
 isiTerm2() {
+  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return 0
   export LC_TERMINAL TERM
   [ "${LC_TERMINAL-}" = "iTerm2" ] && [ "${TERM-}" != "screen" ]
+}
+_isiTerm2() {
+  true || isiTerm2 --help
+  # __IDENTICAL__ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Internal

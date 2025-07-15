@@ -17,6 +17,7 @@
 # Requires: _argument which
 isExecutable() {
   [ $# -eq 1 ] || _argument "Single argument only: $*" || return $?
+  [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
   # Skip illegal options "--" and "-foo"
   [ "$1" = "${1#-}" ] || return 1
   if [ -f "$1" ]; then
@@ -28,4 +29,8 @@ isExecutable() {
     return 1
   fi
   return 0
+}
+_isExecutable() {
+  # __IDENTICAL__ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

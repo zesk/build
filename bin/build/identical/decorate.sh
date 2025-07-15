@@ -254,3 +254,5 @@ __decorateExtensionQuote() {
   text="${text//\$/\\\$}"
   printf -- "\"%s\"\n" "$text"
 }
+
+# <-- END of IDENTICAL decorate

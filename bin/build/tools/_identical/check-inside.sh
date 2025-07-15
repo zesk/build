@@ -109,10 +109,11 @@ _identicalCheckInsideLoop() {
     return 0
   fi
 
-  local tempDirectory repairSources=() item
+  local tempDirectory repairSources=() item tokens=()
   tempDirectory=$(__catchEnvironment "$usage" environmentValueRead "$stateFile" tempDirectory) || return $?
   mapFile=$(__catchEnvironment "$usage" environmentValueRead "$stateFile" mapFile) || return $?
   repairSources=() && while read -r item; do repairSources+=("$item"); done < <(__catchEnvironment "$usage" environmentValueReadArray "$stateFile" "repairSources") || return $?
+  tokens=() && while read -r item; do tokens+=("$item"); done < <(__catchEnvironment "$usage" environmentValueReadArray "$stateFile" "tokens") || return $?
 
   __catchEnvironment "$usage" muzzle directoryRequire "$tempDirectory/$prefixIndex" || return $?
 
@@ -129,6 +130,7 @@ _identicalCheckInsideLoop() {
       continue
     fi
     IFS=' ' read -r lineNumber token count <<<"$(printf -- "%s\n" "$parsed")" || :
+    [ ${#tokens[@]} -eq 0 ] || inArray "$token" "${tokens[@]}" || continue
     if ! count=$(__identicalLineCount "$count" "$((totalLines - lineNumber))") && ! __throwEnvironment "$usage" "\"$identicalLine\" invalid count: $count"; then
       continue
     fi

@@ -29,7 +29,7 @@
 #
 isUnsignedNumber() {
   [ $# -eq 1 ] || _argument "Single argument only: $*" || return $?
-  case ${1#+} in '' | . | *[!0-9.]* | *.*.*) return 1 ;; esac
+  case ${1#+} in --help) usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]}" 0 ;; '' | . | *[!0-9.]* | *.*.*) return 1 ;; esac
 }
 
 #
@@ -44,7 +44,8 @@ isUnsignedNumber() {
 #
 isNumber() {
   [ $# -eq 1 ] || _argument "Single argument only: $*" || return $?
-  case ${1#[-+]} in '' | . | *[!0-9.]* | *.*.*) return 1 ;; esac
+  # `-help` match is EXPLICIT as the case removes the first dash
+  case ${1#[-+]} in -help) usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]}" 0 ;; '' | . | *[!0-9.]* | *.*.*) return 1 ;; esac
 }
 
 #
@@ -59,7 +60,8 @@ isNumber() {
 #
 isInteger() {
   [ $# -eq 1 ] || _argument "Single argument only: $*" || return $?
-  case ${1#[-+]} in '' | *[!0-9]*) return 1 ;; esac
+  # `-help` match is EXPLICIT as the case removes the first dash
+  case ${1#[-+]} in -help) usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]}" 0 ;; '' | *[!0-9]*) return 1 ;; esac
 }
 
 # isExecutable defined in platform
@@ -72,21 +74,34 @@ isInteger() {
 # Exit code: 1 - One or or more arguments are callable as a command
 isCallable() {
   [ $# -eq 1 ] || _argument "Single argument only: $*" || return $?
+  [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
   if ! isFunction "$1" && ! isExecutable "$1"; then
     return 1
   fi
 }
+_isCallable() {
+  # __IDENTICAL__ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
 
 # True-ish
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
 # Argument: value ... - EmptyString. One or more values to test.
-# Usage: {fn} value ...
 # Succeeds when all arguments are "true"-ish
 isTrue() {
-  local value
+  local usage="_${FUNCNAME[0]}"
   [ $# -gt 0 ] || return 1
   while [ $# -gt 0 ]; do
-    value=$(lowercase "$1")
+    local value
+    # -- removes special meaning from `--help
+    value=$(lowercase -- "$1")
     case "$value" in
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
     1 | true | yes | enabled | y) ;;
     "" | 0 | false | no | disabled | n | null | nil | "0.0") return 1 ;;
     *)
@@ -97,11 +112,16 @@ isTrue() {
   done
   return 0
 }
+_isTrue() {
+  # __IDENTICAL__ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
 
 # Bash types beyond `type -t`
 isType() {
   local text
-  text=$(declare -p "$1" 2>/dev/null) || return 1
+  [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
+  text=$(declare -p "${1-}" 2>/dev/null) || return 1
   case "$text" in
   *"declare -ax "*) printf -- "%s\n" "array" "export" ;;
   *"declare -a "*) printf -- "%s\n" "array" "local" ;;
@@ -111,6 +131,10 @@ isType() {
   *"declare -f "*) printf -- "%s\n" "function" "local" ;;
   *) __throwArgument "$usage" "Unknown type: $1 -> \"$text\"" || return $? ;;
   esac
+}
+_isType() {
+  # __IDENTICAL__ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # _IDENTICAL_ isArray 19
@@ -161,7 +185,6 @@ _isPositiveInteger() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-#
 # Test if argument are bash functions
 # Argument: string - Required. String to test if it is a bash function. Builtins are supported. `.` is explicitly not supported to disambiguate it from the current directory `.`.
 # If no arguments are passed, returns exit code 1.
@@ -172,6 +195,7 @@ isFunction() {
   # _IDENTICAL_ functionSignatureSingleArgument 2
   local usage="_${FUNCNAME[0]}"
   [ $# -eq 1 ] || __catchArgument "$usage" "Single argument only: $*" || return $?
+  [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
   # Skip illegal options "--" and "-foo"
   [ "$1" = "${1#-}" ] || return 1
   case "$(type -t "$1")" in function | builtin) [ "$1" != "." ] || return 1 ;; *) return 1 ;; esac
