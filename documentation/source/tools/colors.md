@@ -31,7 +31,7 @@ Zesk Build supports customizations of all decoration colors to custom values.
 
 # Semantic color commands
 
-Color commands intended to convey status of messages. Try `semanticColorSampleStyles` to see all colors.
+Color commands intended to convey status of messages. Try `colorSampleSemanticStyles` to see all colors.
 
 - `decorate info` - Informational messages
 - `decorate notice` - Notice messages
@@ -103,7 +103,7 @@ Colors vary depending on the console and the terminal. Try `colorSampleStyles` t
 
 {colorSampleStyles}
 
-{semanticColorSampleStyles}
+{colorSampleSemanticStyles}
 
 # Color tools
 

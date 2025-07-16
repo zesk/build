@@ -14,24 +14,6 @@ image: atlassian/default-image:4
 
 pipelines:
   branches:
-    docs:
-      - step:
-          deployment: documentation
-          name: Build documentation
-          size: 2x
-          services:
-            - docker
-          script:
-            - bin/documentation.sh
-    staging:
-      - step:
-          deployment: staging
-          name: Build and Test
-          services:
-            - docker
-          script:
-            - bin/build.sh
-            - bin/test.sh --skip-tag package-install --skip-tag slow
     main:
       - step:
           deployment: production
@@ -42,14 +24,23 @@ pipelines:
           artifacts:
             - test.stats
           script:
-            - bin/build.sh
+            - bin/build.sh --commit
             - bin/test.sh --skip-tag package-install
-            - bin/deploy.sh
+            - bin/deploy.sh --release
+    staging:
+      - step:
+          deployment: staging
+          name: Build and Test
+          services:
+            - docker
+          script:
+            - bin/build.sh --documentation --commit
+            - bin/test.sh --skip-tag package-install --skip-tag slow
+            - bin/deploy.sh --documentation --no-release
     deploy:
       - step:
           deployment: deploy
           name: Just Deploy
-          size: 2x
           services:
             - docker
           script:
@@ -68,6 +59,15 @@ pipelines:
           script:
             - IFS=' ' read -r -a aa < <(printf "%s\n" "${BUILD_TEST_ARGUMENTS-}")
             - TEST_PLUMBER=true BUILD_DEBUG="${BUILD_DEBUG-%,},usage" bin/test.sh "${aa[@]+"${aa[@]}"}"
+    docs:
+      - step:
+          deployment: documentation
+          name: Build documentation
+          services:
+            - docker
+          script:
+            - bin/build.sh --documentation --commit
+            - bin/deploy.sh --documentation --no-release
     coverage:
       - step:
           deployment: coverage
@@ -79,8 +79,9 @@ pipelines:
           services:
             - docker
           script:
-            - bin/build.sh
-            - bin/test.sh --coverage
+            - IFS=' ' read -r -a aa < <(printf "%s\n" "${BUILD_TEST_ARGUMENTS-}")
+            - bin/build.sh --no-documentation --no-commit --debug
+            - BUILD_DEBUG="${BUILD_DEBUG-%,},usage" bin/test.sh --coverage "${aa[@]+"${aa[@]}"}"
             - ls -la coverage.stats
             - sort < coverage.stats | uniq -c | sort -rn > coverage.stats.uniq
             - mv -f coverage.stats.uniq coverage.stats

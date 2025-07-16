@@ -34,6 +34,7 @@ colorComboTest|colorSampleCombinations
 ColorComboTest|ColorSampleCombinations
 IDENTICAL usageDocument |__IDENTICAL__ usageDocument |
 _IDENTICAL_ usageDocument|__IDENTICAL__ usageDocument|
+semanticColorSampleStyles|colorSampleSemanticStyles
 
 # v0.36.2
 

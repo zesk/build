@@ -7,10 +7,6 @@
 # Copyright &copy; 2025 Market Acumen, Inc.
 #
 
-declare -a tests
-
-tests+=(colorSampleStyles)
-
 testColorSampleCodes() {
   assertExitCode 0 colorSampleCodes || return $?
   assertNotExitCode 0 colorSampleCodes --no-arguments-really-allowed || return $?
@@ -23,7 +19,7 @@ testSemanticColorSampleStyles() {
   local mode
   export BUILD_COLORS_MODE
   for mode in light dark; do
-    BUILD_COLORS_MODE=$mode semanticColorSampleStyles
+    BUILD_COLORS_MODE=$mode colorSampleSemanticStyles
   done
   unset BUILD_COLORS_MODE
 }

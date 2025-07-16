@@ -284,7 +284,7 @@ _colorSampleStyles() {
 # Summary: Output colors
 # Outputs sample sentences for the `action` commands to see what they look like.
 #
-semanticColorSampleStyles() {
+colorSampleSemanticStyles() {
   local extra
 
   [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return 0
@@ -319,7 +319,7 @@ semanticColorSampleStyles() {
     decorate "$i" "$i: The quick brown fox jumped over the lazy dog."
   done
 }
-_semanticColorSampleStyles() {
+_colorSampleSemanticStyles() {
   # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

@@ -86,10 +86,15 @@ __buildDebugColors() {
 # Build Zesk Build
 #
 # Argument: --debug - Flag. Debug TERM info.
+# Argument: --documentation - Flag. Build the documentation.
+# Argument: --no-documentation - Flag. Do not build the documentation. (Default)
+# Argument: --commit - Flag. Commit any changes found.
+# Argument: --no-commit - Flag. Do not commit any changes found, but leave the local repository modified. (Default)
+# Argument: --debug - Flag. Debug TERM info.
 __buildBuild() {
   local usage="_${FUNCNAME[0]}"
 
-  local debugFlag=false makeDocumentation=false
+  local debugFlag=false makeDocumentation=false commitChanges=false
 
   export BUILD_COLORS
 
@@ -106,6 +111,15 @@ __buildBuild() {
       ;;
     --documentation)
       makeDocumentation=true
+      ;;
+    --no-documentation)
+      makeDocumentation=false
+      ;;
+    --commit)
+      commitChanges=true
+      ;;
+    --no-commit)
+      commitChanges=false
       ;;
     --debug)
       __buildDebugColors
@@ -154,15 +168,16 @@ __buildBuild() {
     [ -d "$rootPath" ] || __throwEnvironment "$usage" "Documentation failed to create $rootShow" || return $?
   fi
 
-  if gitRepositoryChanged; then
+  if $commitChanges && gitRepositoryChanged; then
     ! $debugFlag || statusMessage decorate info "Repository changed, committing ..."
     printf -- "%s\n" "CHANGES:" || :
     gitShowChanges | decorate code | decorate wrap "    "
-    git commit -m "Build version $(hookRun version-current)" -a || :
-    git push origin || :
-    ! $debugFlag || statusMessage decorate warning "commit or push Failures are ignored ..."
+    {
+      ! git commit -m "Build version $(hookRun version-current)" -a && git push origin
+    } || statusMessage --last decorate error "Commit or push failed. Continuing."
+  elif gitRepositoryChanged; then
+    ! $debugFlag || statusMessage --last decorate warning "Local repository changed."
   fi
-
   statusMessage --last "$start" "Built successfully in"
 }
 ___buildBuild() {

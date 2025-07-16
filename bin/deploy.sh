@@ -70,10 +70,16 @@ isUnsignedInteger() {
 #
 # Deploy Zesk Build
 #
+# Argument: --debug - Flag. Debug TERM info.
+# Argument: --documentation - Flag. Deploy the documentation.
+# Argument: --no-documentation - Flag. Do not deploy the documentation. (Default)
+# Argument: --release - Flag. Push the release to GitHub.
+# Argument: --no-release - Flag. Do not push the release to GitHub.
+# Argument: --debug - Flag. Debug TERM info.
 __buildDeploy() {
   local usage="_${FUNCNAME[0]}"
 
-  local debugFlag=false makeDocumentation=false
+  local debugFlag=false makeDocumentation=false makeRelease=false
 
   export BUILD_COLORS
 
@@ -90,6 +96,9 @@ __buildDeploy() {
       ;;
     --documentation)
       makeDocumentation=true
+      ;;
+    --release)
+      makeRelease=true
       ;;
     --debug)
       __buildDebugColors
@@ -160,7 +169,7 @@ __buildDeploy() {
     __catchEnvironment "$usage" aws cloudfront create-invalidation --distribution-id "$cloudFrontID" --paths / || return $?
   fi
 
-  if ! githubRelease "$notes" "$currentVersion" "$appId"; then
+  if $makeRelease && ! githubRelease "$notes" "$currentVersion" "$appId"; then
     decorate warning "Deleting tagged version ... " || :
     gitTagDelete "$currentVersion" || decorate error "gitTagDelete $currentVersion ALSO failed but continuing ..." || :
     __throwEnvironment "$usage" "githubRelease" || return $?
