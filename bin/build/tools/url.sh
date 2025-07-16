@@ -242,6 +242,7 @@ _urlParseItem() {
 # Exit Code: 0 - all URLs passed in are valid
 # Exit Code: 1 - at least one URL passed in is not a valid URL
 urlValid() {
+  local usage="_${FUNCNAME[0]}"
   [ $# -gt 0 ] || __throwArgument "$usage" "No arguments" || return $?
   # _IDENTICAL_ argument-case-header 5
   local __saved=("$@") __count=$#
@@ -261,6 +262,10 @@ urlValid() {
     # _IDENTICAL_ argument-esac-shift 1
     shift
   done
+}
+_urlValid() {
+  # __IDENTICAL__ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Open URLs which appear in a stream

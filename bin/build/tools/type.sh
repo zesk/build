@@ -158,7 +158,7 @@ _isArray() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# IDENTICAL _type 45
+# IDENTICAL _type 41
 
 # Test if an argument is a positive integer (non-zero)
 # Takes one argument only.
@@ -169,13 +169,9 @@ _isArray() {
 isPositiveInteger() {
   # _IDENTICAL_ functionSignatureSingleArgument 2
   local usage="_${FUNCNAME[0]}"
-  [ $# -eq 1 ] || __catchArgument "$usage" "Single argument only: $*" || return $?
-  if isUnsignedInteger "$1"; then
+  [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
+  if isUnsignedInteger "${1-}"; then
     [ "$1" -gt 0 ] || return 1
-    return 0
-  fi
-  if [ "$1" = "--help" ]; then
-    "$usage" 0
     return 0
   fi
   return 1

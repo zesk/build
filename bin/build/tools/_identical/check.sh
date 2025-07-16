@@ -165,7 +165,6 @@ identicalCheck() {
     xargs grep -l -e "$(listJoin '|' "${tokens[@]}")" <"$searchFileList" >"$searchFileList.smaller" || returnClean $? "${clean[@]}" || return $?
     __catchEnvironment "$usage" mv "$searchFileList.smaller" "$searchFileList" || returnClean $? "${clean[@]}" || return $?
   fi
-  find searchFileList
   ! $debug || dumpPipe "searchFileList" <"$searchFileList" || returnClean $? "${clean[@]}" || return $?
 
   local variable stateFile

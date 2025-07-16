@@ -80,8 +80,14 @@ _validate() {
 
 # List types which can be validated
 validateTypeList() {
+  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return 0
   local prefix="__validateType"
   declare -F | removeFields 2 | grepSafe -e "^$prefix" | cut -c "$((${#prefix} + 1))"- | sort
+}
+_validateTypeList() {
+  true || validateTypeList --help
+  # __IDENTICAL__ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Are all arguments passed a valid validate type?

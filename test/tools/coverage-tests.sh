@@ -139,9 +139,12 @@ testBuildFunctionsHelpCoverage() {
   done < <(__dataBuildFunctionsWithoutHelp)
 
   __mockValue BUILD_DEBUG
+  __mockValue TEST_TRACK_ASSERTIONS
 
   export BUILD_DEBUG
+  export TEST_TRACK_ASSERTIONS
   BUILD_DEBUG=""
+  TEST_TRACK_ASSERTIONS=false
 
   local lastPassedCache lastPassed=""
 
@@ -187,7 +190,11 @@ testBuildFunctionsHelpCoverage() {
       fi
     fi
   done
+  [ "${#missing[@]}" -gt 0 ] || clean+=("$missingFile")
+  __catchEnvironment "$usage" rm -f "${clean[@]}" || return $?
+
   __mockValue BUILD_DEBUG "" --end
+  __mockValue TEST_TRACK_ASSERTIONS "" --end
 
   statusMessage decorate info "Exiting ${FUNCNAME[0]}..."
   if ! $coverageRequired; then
@@ -198,9 +205,6 @@ testBuildFunctionsHelpCoverage() {
 
 __dataBuildFunctionsWithoutHelp() {
   cat <<EOF
-grepSafe
-returnClean
-exitString
 trimSpace
 clearLine
 plasterLines

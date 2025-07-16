@@ -99,8 +99,12 @@ __assertedFunctions() {
     printf -- "%s\n" "$logFile"
     return 0
   fi
-  __catchEnvironment "$usage" printf -- "%s\n" "$@" >>"$logFile" || return $?
-  __catchEnvironment "$usage" touch "$logFile.dirty" || return $?
+  local track
+  track=$(__catchEnvironment "$usage" buildEnvironmentGet TEST_TRACK_ASSERTIONS) || return $?
+  if [ "$track" != "false" ]; then
+    __catchEnvironment "$usage" printf -- "%s\n" "$@" >>"$logFile" || return $?
+    __catchEnvironment "$usage" touch "$logFile.dirty" || return $?
+  fi
 }
 ___assertedFunctions() {
   # __IDENTICAL__ usageDocument 1

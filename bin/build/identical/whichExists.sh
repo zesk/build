@@ -7,12 +7,16 @@
 
 # IDENTICAL whichExists EOF
 
+# Summary: Does a binary exist in the PATH?
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
 # Argument: binary ... - Required. String. One or more Binaries to find in the system `PATH`.
 # Exit code: 0 - If all values are found
 # Exit code: 1 - If any value is not found
 # Requires: __throwArgument which decorate __decorateExtensionEach
 whichExists() {
   local usage="_${FUNCNAME[0]}"
+  [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
   local __saved=("$@") __count=$#
   [ $# -gt 0 ] || __throwArgument "$usage" "no arguments" || return $?
   while [ $# -gt 0 ]; do

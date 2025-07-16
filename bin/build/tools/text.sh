@@ -65,7 +65,12 @@ _fileExtractLines() {
 # Argument: ... - Arguments. Passed directly to `grep`.
 # Requires: grep mapReturn
 grepSafe() {
+  [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
   grep "$@" || mapReturn $? 1 0 || return $?
+}
+_grepSafe() {
+  # __IDENTICAL__ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Check if text contains mappable tokens
@@ -228,12 +233,14 @@ _escapeBash() {
 #
 # Quote strings for inclusion in shell quoted strings
 #
+# DOC TEMPLATE: noArgumentsForHelp 1
 # Without arguments, displays help.
 # Argument: text - Text to quote
 # Output: Single quotes are prefixed with a backslash
 # Example:     {fn} "Now I can't not include this in a bash string."
 escapeSingleQuotes() {
-  [ $# -gt 0 ] || __help "_${FUNCNAME[0]}" 0 || return 0
+  # __IDENTICAL__ --help-when-blank 1
+  [ $# -gt 0 ] || __help "_${FUNCNAME[0]}" --help || return 0
   printf "%s\n" "$@" | sed "s/'/\\\'/g"
 }
 _escapeSingleQuotes() {

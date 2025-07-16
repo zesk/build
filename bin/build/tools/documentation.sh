@@ -12,11 +12,14 @@
 # Test: o ./test/tools/documentation-tests.sh
 
 usageDocument() {
-  usageDocumentComplex "$@"
+  __usageDocumentComplex "$@"
 }
 
-# Summary: Universal error handler for functions
-# Usage: usageDocument functionDefinitionFile functionName exitCode [ message ... ]
+# fn: usageDocument
+# Summary: Universal error handler for functions (with formatting)
+#
+# Actual function is called `{functionName}`.
+#
 # Argument: functionDefinitionFile - Required. File. The file in which the function is defined. If you don't know, use `bashDocumentation_FindFunctionDefinitions` or `bashDocumentation_FindFunctionDefinition`.
 # Argument: functionName - Required. String. The function which actually defines our usage syntax. Documentation is extracted from this function, regardless.
 # Argument: exitCode - Required. Integer. The function which actually defines our usage syntax. Documentation is extracted from this function, regardless.
@@ -26,15 +29,17 @@ usageDocument() {
 #
 # Simplifies documentation and keeps it with the code.
 #
+# Environment: *BUILD_DEBUG* - Add `fast-usage` to make this quicker when you do not care about usage/failure.
 # BUILD_DEBUG: fast-usage - `usageDocumentComplex` does not output formatted help for performance reasons
-usageDocumentComplex() {
+__usageDocumentComplex() {
   local usage="_${FUNCNAME[0]}"
+
+  [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
+  [ $# -ge 2 ] || __throwArgument "$usage" "Expected 2 arguments, got $#:$(printf -- " \"%s\"" "$@")" || return $?
 
   local functionDefinitionFile="$1" functionName="$2" returnCode="${3-NONE}" home
 
   home=$(__catchEnvironment "$usage" buildHome) || return $?
-
-  [ $# -ge 2 ] || __throwArgument "$usage" "Expected 2 arguments, got $#:$(printf -- " \"%s\"" "$@")" || return $?
 
   shift 3 || __throwArgument "$usage" "Missing arguments" || return $?
 
@@ -77,7 +82,7 @@ usageDocumentComplex() {
     __throwArgument "$usage" "Unable to extract \"$functionName\" from \"$functionDefinitionFile\"" || returnClean $? "$variablesFile" || return $?
   fi
   (
-    local description="" argument="" base exit_code="" environment="" stdin="" stdout="" example=""
+    local description="" argument="" base exit_code="" environment="" stdin="" stdout="" example="" build_debug=""
 
     set -a
     base="$(basename "$functionDefinitionFile")"
@@ -85,6 +90,7 @@ usageDocumentComplex() {
     source "$variablesFile"
     set +a
     : "$exit_code $environment $stdin $stdout $example are referenced here and with \${!variable} below"
+    : "$build_debug"
 
     [ "$returnCode" -eq 0 ] || exec 1>&2 && color="error"
     local bashDebug=false
@@ -106,7 +112,7 @@ usageDocumentComplex() {
       fi
     done < <(__usageDocumentComplexSections)
     description=$(trimTail <<<"$description")
-    usageTemplate "$(mapEnvironment <<<"$fn")" "$(printf "%s\n" "$argument" | sed 's/ - /^/1')" "^" "$description$suffix" "$returnCode" "$@"
+    usageTemplate "$fn" "$(printf "%s\n" "$argument" | sed 's/ - /^/1')" "^" "$description$suffix" "$returnCode" "$@" | functionName="$functionName" fn="$fn" mapEnvironment
     if $bashDebug; then
       __buildDebugEnable
     fi
@@ -114,7 +120,7 @@ usageDocumentComplex() {
   )
   return "$returnCode"
 }
-_usageDocumentComplex() {
+___usageDocumentComplex() {
   # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
@@ -126,18 +132,22 @@ environment|- |Environment variables
 stdin||Reads from `stdin`
 stdout||Writes to `stdout`
 example||Example
+build_debug|- |`BUILD_DEBUG` settings
 EOF
 }
 
-# IDENTICAL usageDocumentSimple 26
+# IDENTICAL usageDocumentSimple 33
 
 # Output a simple error message for a function
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
 # Argument: source - File. Required. File where documentation exists.
 # Argument: function - String. Required. Function to document.
 # Argument: returnCode - UnsignedInteger. Required. Exit code to return.
 # Argument: message ... - Optional. String. Message to display to the user.
-# Requires: bashFunctionComment decorate read printf exitString
+# Requires: bashFunctionComment decorate read printf exitString __help usageDocument
 usageDocumentSimple() {
+  [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
   local source="${1-}" functionName="${2-}" returnCode="${3-}" color helpColor="info" icon="❌" line prefix="" done=false skip=false && shift 3
 
   case "$returnCode" in 0) icon="🏆" && color="info" && [ $# -ne 0 ] || skip=true ;; 1) color="error" ;; 2) color="bold-red" ;; *) color="orange" ;; esac
@@ -155,6 +165,10 @@ usageDocumentSimple() {
     prefix=""
   done < <(bashFunctionComment "$source" "$functionName" | sed "s/{fn}/$functionName/g")
   return "$returnCode"
+}
+_usageDocumentSimple() {
+  # __IDENTICAL__ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Summary: Convert a template file to a documentation file using templates

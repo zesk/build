@@ -10,8 +10,11 @@ __xdebugInstallationArtifact() {
   printf -- "%s\n" "/etc/xdebug-enabled"
 }
 
+# Install the xdebug PHP Debugger
 xdebugInstall() {
   local handler="_${FUNCNAME[0]}"
+  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
+
   local iniFile
 
   __catchEnvironment "$handler" phpInstall php-pear || return $?
@@ -46,6 +49,7 @@ __xdebug_Require() {
 # Environment: XDEBUG_ENABLED
 xdebugEnable() {
   local handler="_${FUNCNAME[0]}"
+  [ $# -eq 0 ] || __help --only "$handler" "$@" || return 0
   __xdebug_Require "$handler" || return $?
   export XDEBUG_ENABLED=true
   decorate success "xdebug debugging $(decorate value "[ENABLED]")"
@@ -60,6 +64,7 @@ _xdebugEnable() {
 xdebugDisable() {
   local handler="_${FUNCNAME[0]}"
 
+  [ $# -eq 0 ] || __help --only "$handler" "$@" || return 0
   __xdebug_Require "$handler" || return $?
   export XDEBUG_ENABLED
   unset XDEBUG_ENABLED

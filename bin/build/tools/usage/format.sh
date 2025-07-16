@@ -34,6 +34,7 @@
 usageTemplate() {
   local usage="_${FUNCNAME[0]}" __saved=("$@")
 
+  [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
   [ $# -ge 5 ] || __throwArgument "$usage" "Requires 5 or more arguments" || return $?
 
   local binName options="$2" delimiter="$3" description="$4" exitCode
@@ -101,6 +102,8 @@ _usageTemplate() {
 # Argument: delimiter - Required. String. The character to separate name value pairs in the input
 usageFormatArguments() {
   local handler="_${FUNCNAME[0]}"
+  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
+
   [ $# -le 3 ] || __throwArgument "$handler" "Requires 3 or fewer arguments" || return $?
 
   local separatorChar="${1-" "}" optionalDecoration="${2-blue}" requiredDecoration="${3-bold-magenta}"
@@ -134,6 +137,10 @@ usageFormatArguments() {
     fi
   done
 }
+_usageFormatArguments() {
+  # __IDENTICAL__ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
 
 # Formats name value pairs separated by separatorChar (default " ") and uses
 # $nSpaces width for first field
@@ -142,11 +149,14 @@ usageFormatArguments() {
 #
 # use with maximumFieldLength 1 to generate widths
 #
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
 # Argument: nSpaces - Required. Integer. Number of spaces to indent arguments.
 # Argument: separatorChar - Optional. String. Default is space.
 # Argument: labelPrefix - Optional. String. Defaults to blue color text.
 # Argument: valuePrefix - Optional. String. Defaults to red color text.
 usageGenerator() {
+  [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
   local nSpaces=$((${1-30} + 0)) separatorChar=${2-" "} labelPrefix valuePrefix labelOptionalPrefix labelRequiredPrefix capsLine lastLine
 
   labelOptionalPrefix=${3-"$(decorate blue --)"}
@@ -179,4 +189,8 @@ usageGenerator() {
       break
     fi
   done
+}
+_usageGenerator() {
+  # __IDENTICAL__ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

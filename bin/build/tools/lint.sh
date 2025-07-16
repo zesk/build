@@ -421,12 +421,10 @@ _findUncaughtAssertions() {
 # Exit Code: 2 - Arguments error (missing extension or text)
 #
 validateFileExtensionContents() {
-  local usage="_${FUNCNAME[0]}" total text
-  local failedReasons item foundFiles
-  local extensionArgs textMatches extensions
+  local usage="_${FUNCNAME[0]}"
+  [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
 
-  extensionArgs=()
-  extensions=()
+  local extensionArgs=() extensions=()
   while [ $# -gt 0 ]; do
     if [ "$1" == "--" ]; then
       shift
@@ -438,7 +436,7 @@ validateFileExtensionContents() {
   done
   unset 'extensionArgs['$((${#extensionArgs[@]} - 1))']'
 
-  textMatches=()
+  local textMatches=()
   while [ $# -gt 0 ]; do
     if [ "$1" == "--" ]; then
       shift
@@ -450,9 +448,8 @@ validateFileExtensionContents() {
   [ "${#extensions[@]}" -gt 0 ] || __throwArgument "$usage" "No extension arguments" || return $?
   [ "${#textMatches[@]}" -gt 0 ] || __throwArgument "$usage" "No text match arguments" || return $?
 
-  failedReasons=()
-  total=0
-  foundFiles=$(mktemp)
+  local failedReasons=() total=0 foundFiles
+  foundFiles=$(fileTemporaryName "$usage")
   # Final arguments for find
   find . "${extensionArgs[@]}" ! -path "*/.*/*" "$@" >"$foundFiles"
   total=$(__catchEnvironment "$usage" fileLineCount "$foundFiles") || return $?
@@ -460,8 +457,10 @@ validateFileExtensionContents() {
   statusMessage decorate info "Searching $total $(plural "$total" item files) (ext: ${extensions[*]}) for text: $(printf -- " $(decorate reset --)\"$(decorate code "%s")\"" "${textMatches[@]}")"
 
   total=0
+  local item
   while IFS= read -r item; do
     total=$((total + 1))
+    local text
     for text in "${textMatches[@]}"; do
       if ! grep -q "$text" "$item"; then
         failedReasons+=("$item missing \"$text\"")

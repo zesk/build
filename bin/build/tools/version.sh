@@ -33,10 +33,15 @@ _isVersion() {
 
 # Take one or more versions and strip the leading `v`
 versionNoVee() {
+  [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
   while [ $# -gt 0 ]; do
     printf "%s\n" "${1#v}"
     shift
   done
+}
+_versionNoVee() {
+  # __IDENTICAL__ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Summary: Output path to current release notes

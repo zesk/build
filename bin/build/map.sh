@@ -45,7 +45,7 @@ isUnsignedInteger() {
 
 # <-- END of IDENTICAL _return
 
-# IDENTICAL _tinySugar 83
+# IDENTICAL _tinySugar 88
 
 # Run `handler` with an argument error
 # Usage: {fn} handler ...
@@ -111,21 +111,26 @@ __environment() {
   "$@" || _environment "$@" || return $?
 }
 
-# _IDENTICAL_ returnClean 15
+# _IDENTICAL_ returnClean 20
 
 # Delete files or directories and return the same exit code passed in.
 # Argument: exitCode - Required. Integer. Exit code to return.
 # Argument: item - Optional. One or more files or folders to delete, failures are logged to stderr.
 # Requires: isUnsignedInteger _argument __environment usageDocument
 returnClean() {
+  local usage="_${FUNCNAME[0]}"
+  [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
   local exitCode="${1-}" && shift
   if ! isUnsignedInteger "$exitCode"; then
-    local this="${FUNCNAME[0]}"
-    [ "$exitCode" = "--help" ] && usageDocument "$this" "${BASH_SOURCE[0]}" 0 || _argument "$this $exitCode (not an integer) $*" || return $?
+    __throwArgument "$usage" "$exitCode (not an integer) $*" || return $?
   else
     __environment rm -rf "$@" || return "$exitCode"
     return "$exitCode"
   fi
+}
+_returnClean() {
+  # __IDENTICAL__ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # <-- END of IDENTICAL _tinySugar
@@ -193,15 +198,18 @@ usageDocument() {
   usageDocumentSimple "$@"
 }
 
-# IDENTICAL usageDocumentSimple 26
+# IDENTICAL usageDocumentSimple 33
 
 # Output a simple error message for a function
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
 # Argument: source - File. Required. File where documentation exists.
 # Argument: function - String. Required. Function to document.
 # Argument: returnCode - UnsignedInteger. Required. Exit code to return.
 # Argument: message ... - Optional. String. Message to display to the user.
-# Requires: bashFunctionComment decorate read printf exitString
+# Requires: bashFunctionComment decorate read printf exitString __help usageDocument
 usageDocumentSimple() {
+  [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
   local source="${1-}" functionName="${2-}" returnCode="${3-}" color helpColor="info" icon="❌" line prefix="" done=false skip=false && shift 3
 
   case "$returnCode" in 0) icon="🏆" && color="info" && [ $# -ne 0 ] || skip=true ;; 1) color="error" ;; 2) color="bold-red" ;; *) color="orange" ;; esac
@@ -219,6 +227,10 @@ usageDocumentSimple() {
     prefix=""
   done < <(bashFunctionComment "$source" "$functionName" | sed "s/{fn}/$functionName/g")
   return "$returnCode"
+}
+_usageDocumentSimple() {
+  # __IDENTICAL__ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # IDENTICAL bashFunctionComment 29
@@ -309,7 +321,7 @@ ___help() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# IDENTICAL _type 45
+# IDENTICAL _type 41
 
 # Test if an argument is a positive integer (non-zero)
 # Takes one argument only.
@@ -320,13 +332,9 @@ ___help() {
 isPositiveInteger() {
   # _IDENTICAL_ functionSignatureSingleArgument 2
   local usage="_${FUNCNAME[0]}"
-  [ $# -eq 1 ] || __catchArgument "$usage" "Single argument only: $*" || return $?
-  if isUnsignedInteger "$1"; then
+  [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
+  if isUnsignedInteger "${1-}"; then
     [ "$1" -gt 0 ] || return 1
-    return 0
-  fi
-  if [ "$1" = "--help" ]; then
-    "$usage" 0
     return 0
   fi
   return 1
@@ -377,26 +385,22 @@ _isArray() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# _IDENTICAL_ exitString 19
+# _IDENTICAL_ exitString 15
 
 # Output the exit code as a string
-# Winner of the one-line bash award 10 years running
+#
+# INTERNAL: Winner of the one-line bash award 10 years running
 # Argument: code ... - UnsignedInteger. String. Exit code value to output.
 # DOC TEMPLATE: --help 1
 # Argument: --help - Optional. Flag. Display this help.
 # stdout: exitCodeToken, one per line
 exitString() {
-  local k="" && while [ $# -gt 0 ]; do case "$1" in 0) k="success" ;; 1) k="environment" ;; 2) k="argument" ;; 97) k="assert" ;; 105) k="identical" ;; 108) k="leak" ;; 116) k="timeout" ;; 120) k="exit" ;; 127) k="not-found" ;; 130) k="user-interrupt" ;; 141) k="interrupt" ;; 253) k="internal" ;; 254) k="unknown" ;; --help)
-    usageDocument "${FUNCNAME[0]}" "${BASH_SOURCE[0]}" 0
-    return 0
-    ;;
-  *) k="[exitString unknown \"$1\"]" ;; esac && [ -n "$k" ] || k="$1" && printf "%s\n" "$k" && shift; done
+  local k="" && while [ $# -gt 0 ]; do case "$1" in 0) k="success" ;; 1) k="environment" ;; 2) k="argument" ;; 97) k="assert" ;; 105) k="identical" ;; 108) k="leak" ;; 116) k="timeout" ;; 120) k="exit" ;; 127) k="not-found" ;; 130) k="user-interrupt" ;; 141) k="interrupt" ;; 253) k="internal" ;; 254) k="unknown" ;; --help) "_${FUNCNAME[0]}" 0 && return $? || return $? ;; *) k="[exitString unknown \"$1\"]" ;; esac && [ -n "$k" ] || k="$1" && printf "%s\n" "$k" && shift; done
 }
 _exitString() {
   # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
-
 
 # IDENTICAL usageArgumentCore 13
 

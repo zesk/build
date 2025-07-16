@@ -11,13 +11,19 @@
 # Argument: exitCode - Required. Integer. Exit code to return.
 # Argument: item - Optional. One or more files or folders to delete, failures are logged to stderr.
 # Requires: isUnsignedInteger _argument __environment usageDocument
+# Group: Sugar
 returnClean() {
+  local usage="_${FUNCNAME[0]}"
+  [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
   local exitCode="${1-}" && shift
   if ! isUnsignedInteger "$exitCode"; then
-    local this="${FUNCNAME[0]}"
-    [ "$exitCode" = "--help" ] && usageDocument "$this" "${BASH_SOURCE[0]}" 0 || _argument "$this $exitCode (not an integer) $*" || return $?
+    __throwArgument "$usage" "$exitCode (not an integer) $*" || return $?
   else
     __environment rm -rf "$@" || return "$exitCode"
     return "$exitCode"
   fi
+}
+_returnClean() {
+  # __IDENTICAL__ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

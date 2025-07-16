@@ -29,9 +29,11 @@ usageArgumentUnknown() {
 # Runs `usage` on failure
 #
 usageRequireBinary() {
-  # IDENTICAL usageFunctionHeader 4
-  local usage="_${FUNCNAME[0]}" usageFunction="${1-}" && shift
-  if [ "$(type -t "$usage")" != "function" ]; then
+  # IDENTICAL usageFunctionHeader 6
+  local usage="_${FUNCNAME[0]}"
+  [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
+  local usageFunction="${1-}" && shift
+  if [ "$(type -t "$usageFunction")" != "function" ]; then
     __catchArgument "$usage" "$(decorate code "$usage") must be a valid function" || return $?
   fi
   local binary
@@ -53,9 +55,11 @@ _usageRequireBinary() {
 # Deprecated: 2024-01-01
 #
 usageRequireEnvironment() {
-  # IDENTICAL usageFunctionHeader 4
-  local usage="_${FUNCNAME[0]}" usageFunction="${1-}" && shift
-  if [ "$(type -t "$usage")" != "function" ]; then
+  # IDENTICAL usageFunctionHeader 6
+  local usage="_${FUNCNAME[0]}"
+  [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
+  local usageFunction="${1-}" && shift
+  if [ "$(type -t "$usageFunction")" != "function" ]; then
     __catchArgument "$usage" "$(decorate code "$usage") must be a valid function" || return $?
   fi
   local environmentVariable
