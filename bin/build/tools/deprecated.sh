@@ -18,6 +18,30 @@
 #             |_|
 #
 
+# DEPRECATED 2025-07-16
+allColorTest() {
+  _deprecated "${FUNCNAME[0]}"
+  colorSampleCodes "$@"
+}
+
+# DEPRECATED 2025-07-16
+colorTest() {
+  _deprecated "${FUNCNAME[0]}"
+  colorSampleStyles "$@"
+}
+
+# DEPRECATED 2025-07-16
+semanticColorTest() {
+  _deprecated "${FUNCNAME[0]}"
+  colorSampleSemanticStyles "$@"
+}
+
+# DEPRECATED 2025-07-16
+colorComboTest() {
+  _deprecated "${FUNCNAME[0]}"
+  colorSampleCombinations "$@"
+}
+
 # DEPRECATED 2025-07-07
 _code() {
   _deprecated "${FUNCNAME[0]}"

@@ -1,9 +1,44 @@
-# Bash Coding
+# Bash Coding Patterns
+
+These patterns are adopted to make coding in Bash less error prone and more enjoyable.
 
 It makes sense to follow various patterns in our `bash` coding.
 
 Code here has been written by evolution so older code shows signs of older patterns; know that the intent is to get
 everything to the same standard.
+
+## Handle even the most mundane errors
+
+And yes, talking about worrying about `date` not being installed. Or rather, not within the `PATH`. 
+
+## Clean up after ourselves (still in progress)
+
+Always delete temporary files and write tests which monitor the entire file system to ensure that all successes and
+failures do not leave stray artifacts.
+
+In cases where clean up is impossible, document that temporary directories will be polluted to
+ensure that clean up occurs either by a background or maintenance task or by the operating system on reboot.
+
+An audit needs to be performed on the entire code base but can be accomplished by wrapping suites with `housekeeper`
+calls to the temporary directory.
+
+## Error Handlers via underscore functions
+
+Simply this pattern is that every function which is exported has an error handler function which is the same name
+prefixed with an underscore:
+
+    usefulThing() {
+      local handler="_${FUNCNAME[0]}"
+      ...
+       __catchEnvironment "$handler" ...
+    }
+    _usefulThing() {
+      # __IDENTICAL__ usageDocument 1
+      usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+    }
+
+The underscore error handler acts as an effective "pointer" which allows us to reference the source document where the
+function resides and then do some magic to automatically output the documentation for a function.
 
 ## Use the `example.sh` and `IDENTICAL` tags
 

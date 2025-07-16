@@ -348,7 +348,7 @@ trimSpace() {
       # remove leading whitespace characters
       var="${var#"${var%%[![:space:]]*}"}"
       # remove trailing whitespace characters
-      __catchEnvironment "$usage" printf -- "%s" "${var%"${var##*[![:space:]]}"}" || return $?
+      printf -- "%s" "${var%"${var##*[![:space:]]}"}"
       shift
     done
   else

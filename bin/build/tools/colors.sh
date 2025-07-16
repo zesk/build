@@ -182,7 +182,7 @@ __consoleEscape1() {
 # If you want to explore what colors are available in your terminal, try this.
 # DOC TEMPLATE: --help 1
 # Argument: --help - Optional. Flag. Display this help.
-allColorTest() {
+colorSampleCodes() {
   local i j n
 
   [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return 0
@@ -205,7 +205,7 @@ allColorTest() {
     i=$((i + 1))
   done
 }
-_allColorTest() {
+_colorSampleCodes() {
   # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
@@ -213,7 +213,7 @@ _allColorTest() {
 # Show combinations of foreground and background colors in the console.
 # DOC TEMPLATE: --help 1
 # Argument: --help - Optional. Flag. Display this help.
-colorComboTest() {
+colorSampleCombinations() {
   local fg bg text extra padding
   local top3=37
 
@@ -239,7 +239,7 @@ colorComboTest() {
     printf "\n"
   done
 }
-_colorComboTest() {
+_colorSampleCombinations() {
   # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
@@ -247,7 +247,7 @@ _colorComboTest() {
 # Summary: Output colors
 # Outputs sample sentences for the `consoleAction` commands to see what they look like.
 #
-colorTest() {
+colorSampleStyles() {
   [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return 0
   local i colors=(
     red bold-red
@@ -276,7 +276,7 @@ colorTest() {
     printf -- "%s%s\n" "$(decorate reset --)" "$(decorate "$i" "$i: The quick brown fox jumped over the lazy dog.")"
   done
 }
-_colorTest() {
+_colorSampleStyles() {
   # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
@@ -284,7 +284,7 @@ _colorTest() {
 # Summary: Output colors
 # Outputs sample sentences for the `action` commands to see what they look like.
 #
-semanticColorTest() {
+semanticColorSampleStyles() {
   local extra
 
   [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return 0
@@ -319,7 +319,7 @@ semanticColorTest() {
     decorate "$i" "$i: The quick brown fox jumped over the lazy dog."
   done
 }
-_semanticColorTest() {
+_semanticColorSampleStyles() {
   # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
@@ -414,7 +414,7 @@ statusMessage() {
     --first)
       if ! hasConsoleAnimation; then
         shift
-        __catchEnvironment "$usage" printf -- "%s" "$("$@")" || return $?
+        printf -- "%s" "$("$@")"
         return 0
       fi
       ;;
@@ -422,7 +422,7 @@ statusMessage() {
       shift
       local suffix="\n"
       ! hasConsoleAnimation || suffix=""
-      __catchEnvironment "$usage" printf -- "%s$suffix" "$("$@")" || return $?
+      printf -- "%s$suffix" "$("$@")"
       return 0
       ;;
     --last)
@@ -687,9 +687,9 @@ __colorParse() {
 __colorParseArgument() {
   local argument="${1-}"
   case "$argument" in
-  [[:xdigit:]]*) __colorParse "$argument" || return 1 ;;
-  [[:alpha:]]*:[[:xdigit:]]*) __colorParse "${argument#*:}" || return 1 ;;
-  *) printf -- "%s\n" "invalid-color" 1>&2 && return 1 ;;
+  [[:xdigit:]]*) __colorParse "$argument" || return $? ;;
+  [[:alpha:]]*:[[:xdigit:]]*) __colorParse "${argument#*:}" || return $? ;;
+  *) printf -- "%s\n" "invalid-color" 1>&2 || : && return 1 ;;
   esac
 }
 

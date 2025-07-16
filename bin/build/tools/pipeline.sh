@@ -179,10 +179,11 @@ isUpToDate() {
     *)
       if [ -z "$keyDate" ]; then
         keyDate=$(usageArgumentString "$usage" "keyDate" "$argument") || return $?
-      elif [ -n "$upToDateDays" ]; then
+      elif [ -z "$upToDateDays" ]; then
         upToDateDays=$(usageArgumentInteger "$usage" "upToDateDays" "$argument") || return $?
       else
-        __throwArgument "$usage" "unknown argument $(decorate value "$argument")" || return $?
+        # _IDENTICAL_ argumentUnknown 1
+        __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
       fi
       ;;
     esac

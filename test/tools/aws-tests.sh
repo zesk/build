@@ -184,11 +184,11 @@ testAwsRegionValid() {
 
   for r in us-east-1 us-east-2 us-west-1 us-west-2; do
     assertExitCode 0 awsRegionValid "$r" || return $?
-    assertNotExitCode 0 awsRegionValid "$r" "FAKE" || return $?
+    assertExitCode 1 awsRegionValid "$r" "FAKE" || return $?
   done
-  assertNotExitCode 0 awsRegionValid || return $?
-  assertNotExitCode 0 awsRegionValid bad || return $?
-  assertNotExitCode 0 awsRegionValid us-east-1000 || return $?
+  assertExitCode --stderr-match "Requires at least one region" 2 awsRegionValid || return $?
+  assertExitCode 1 awsRegionValid bad || return $?
+  assertExitCode 1 awsRegionValid us-east-1000 || return $?
 }
 
 testAwsEnvironmentFromCredentials() {

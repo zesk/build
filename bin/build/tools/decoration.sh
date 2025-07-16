@@ -129,7 +129,7 @@ bigTextAt() {
   local outputLine
   while read -r outputLine; do
     __catchEnvironment "$usage" cursorSet "$theX" "$theY" || return $?
-    __catchEnvironment "$usage" printf "%s" "$outputLine" || return $?
+    printf -- "%s" "$outputLine"
     theY=$((theY + 1))
     [ "$theY" -le "$maxY" ] || break
   done < <(printf "%s\n" "$message")

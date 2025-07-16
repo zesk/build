@@ -526,11 +526,11 @@ _awsCredentialsRemoveSection() {
   local pattern="\[\s*$profileName\s*\]" temp lines total
   total=$((0 + $(__catchEnvironment "$usage" fileLineCount "$credentials"))) || return $?
   exec 3>&1
-  lines=$(__catchEnvironment "$usage" grepSafe -m 1 -B 32767 "$credentials" -e "$pattern" | __catchEnvironment "$usage" grepSafe -v -e "$pattern" | trimTail | tee >(cat >&3) | fileLineCount) || return $?
-  [ -z "$newCredentials" ] || __catchEnvironment "$usage" printf -- "\n%s\n" "$newCredentials" | trimTail || return $?
+  lines=$(__catchEnvironment "$usage" grepSafe -m 1 -B 32767 "$credentials" -e "$pattern" | __catchEnvironment "$usage" grepSafe -v -e "$pattern" | __catchEnvironment "$usage" trimTail | tee >(cat >&3) | fileLineCount) || return $?
+  [ -z "$newCredentials" ] || printf -- "\n%s\n" "$newCredentials" | __catchEnvironment "$usage" trimTail || return $?
   local remain=$((total - lines - 2))
   printf -- "\n"
-  tail -n "$remain" <"$credentials" | awk '/\[[^]]+\]/{flag=1} flag' | trimTail || return $?
+  tail -n "$remain" <"$credentials" | awk '/\[[^]]+\]/{flag=1} flag' | __catchEnvironment "$usage" trimTail || return $?
 }
 
 _awsCredentialsRemoveSectionInPlace() {
@@ -890,7 +890,7 @@ _awsIPAccess() {
 # Checked: 2024-09-02
 awsRegionValid() {
   local usage="_${FUNCNAME[0]}"
-  [ $# -gt 0 ] || __throwArgument "$usage" "Requires at least one region" || return 1
+  [ $# -gt 0 ] || __throwArgument "$usage" "Requires at least one region" || return $?
   # _IDENTICAL_ argument-case-header 5
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do

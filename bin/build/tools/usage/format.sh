@@ -90,7 +90,7 @@ usageTemplate() {
   return "$exitCode"
 }
 _usageTemplate() {
-  # _IDENTICAL_ usageDocumentSimple 1
+  # __IDENTICAL__ usageDocumentSimple 1
   usageDocumentSimple "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 

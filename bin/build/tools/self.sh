@@ -372,7 +372,7 @@ buildEnvironmentLoad() {
         fi
       done
       [ -n "$found" ] || __throwEnvironment "$usage" "Missing $env in $(decorate each --index --count code "${paths[@]}")" || return $?
-      ! $printFlag || __catchEnvironment "$usage" printf -- "%s\n" "$found" || return $?
+      ! $printFlag || printf -- "%s\n" "$found"
       ;;
     esac
     # _IDENTICAL_ argument-esac-shift 1
@@ -578,7 +578,7 @@ buildQuietLog() {
       local logFile
       logFile="$(__catchEnvironment "$usage" buildCacheDirectory)/${1#_}.log" || return $?
       ! "$flagMake" || logFile=$(__catchEnvironment "$usage" fileDirectoryRequire "$logFile") || return $?
-      __catchEnvironment "$usage" printf -- "%s\n" "$logFile" || return $?
+      printf -- "%s\n" "$logFile"
       return 0
       ;;
     esac

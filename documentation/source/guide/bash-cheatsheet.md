@@ -167,3 +167,5 @@ real user and group ids.
   problems; use the pattern: `local done=false; while ! $done; do read -r line || done=true; ...` and then test the
   value of `line` for non-empty values and handle when `$done` becomes `true`.
   [Source](https://github.com/zesk/build/docs/bash-cheatsheet.md)
+- Problems with `&&` or `||` precedence leads to errors
+

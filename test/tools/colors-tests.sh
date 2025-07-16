@@ -9,14 +9,21 @@
 
 declare -a tests
 
-tests+=(colorTest)
-tests+=(allColorTest)
+tests+=(colorSampleStyles)
 
-testSemanticColorTest() {
+testColorSampleCodes() {
+  assertExitCode 0 colorSampleCodes || return $?
+  assertNotExitCode 0 colorSampleCodes --no-arguments-really-allowed || return $?
+}
+testColorSampleStyles() {
+  assertExitCode 0 colorSampleStyles || return $?
+  assertNotExitCode 0 colorSampleStyles --no-arguments-really-allowed || return $?
+}
+testSemanticColorSampleStyles() {
   local mode
   export BUILD_COLORS_MODE
   for mode in light dark; do
-    BUILD_COLORS_MODE=$mode semanticColorTest
+    BUILD_COLORS_MODE=$mode semanticColorSampleStyles
   done
   unset BUILD_COLORS_MODE
 }
@@ -54,11 +61,11 @@ testSimpleMarkdownToConsole() {
   assertEquals "$actual" "$expected" || return $?
 }
 
-testColorComboTest() {
+testColorSampleCombinations() {
   echo "NOT BOLD"
-  colorComboTest " ZESK "
+  colorSampleCombinations " ZESK "
   echo "BOLD"
-  colorComboTest --bold " ZESK "
+  colorSampleCombinations --bold " ZESK "
 }
 
 __dataColorFormatDefault() {

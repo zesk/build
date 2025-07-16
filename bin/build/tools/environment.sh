@@ -702,7 +702,7 @@ environmentFileApplicationMake() {
   local loaded
 
   loaded="$(__catchEnvironment "$usage" environmentApplicationLoad "$@" && __catchEnvironment "$usage" environmentFileApplicationVerify "$@")" || return $?
-  __catchEnvironment "$usage" printf -- "%s\n" "$loaded" || return $?
+  printf -- "%s\n" "$loaded"
 
   local name
   for name in "$@" "${optional[@]+"${optional[@]}"}"; do

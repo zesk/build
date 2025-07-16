@@ -116,7 +116,7 @@ _deploymentGenerateValue() {
   if [ -z "${!variableName}" ]; then
     __catchEnvironment "$usage" hookRun --application "$home" "$hook" | __catchEnvironment "$usage" tee "$home/.deploy/$variableName" || return $?
   else
-    __catchEnvironment "$usage" printf %s "${!variableName}" | __catchEnvironment "$usage" tee "$home/.deploy/$variableName" || return $?
+    printf -- "%s" "${!variableName}" | __catchEnvironment "$usage" tee "$home/.deploy/$variableName" || return $?
   fi
 }
 

@@ -43,7 +43,7 @@ bashDebug() {
   bashDebuggerDisable
 }
 _bashDebug() {
-  # _IDENTICAL_ usageDocumentSimple 1
+  # __IDENTICAL__ usageDocumentSimple 1
   usageDocumentSimple "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -72,7 +72,7 @@ bashDebuggerEnable() {
   trap _bashDebugTrap DEBUG
 }
 _bashDebuggerEnable() {
-  # _IDENTICAL_ usageDocumentSimple 1
+  # __IDENTICAL__ usageDocumentSimple 1
   usageDocumentSimple "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -97,7 +97,7 @@ bashDebuggerDisable() {
   true || bashDebuggerEnable --help
 }
 _bashDebuggerDisable() {
-  # _IDENTICAL_ usageDocumentSimple 1
+  # __IDENTICAL__ usageDocumentSimple 1
   usageDocumentSimple "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 

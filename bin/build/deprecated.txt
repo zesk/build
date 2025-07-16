@@ -1,6 +1,4 @@
 # v0.37.0
-
-# v0.36.2
 hostIPList|networkIPList
 timestampToDate|dateFromTimestamp
 truncateFloat|floatTruncate
@@ -26,6 +24,18 @@ requireDirectory|directoryRequire
 _clean |returnClean |
 _undo |returnUndo |
 getFromPipelineYML|bitbucketGetVariable
+allColorTest|colorSampleCodes
+AllColorTest|ColorSampleCodes
+colorTest|colorSampleStyles
+ColorTest|ColorSampleStyles
+semanticColorTest|colorSampleSemanticStyles
+SemanticColorTest|ColorSampleSemanticStyles
+colorComboTest|colorSampleCombinations
+ColorComboTest|ColorSampleCombinations
+IDENTICAL usageDocument |__IDENTICAL__ usageDocument |
+_IDENTICAL_ usageDocument|__IDENTICAL__ usageDocument|
+
+# v0.36.2
 
 # v0.36.1
 
@@ -89,7 +99,6 @@ IDENTICAL argument-esac-shift|_IDENTICAL_ argument-esac-shift
 IDENTICAL argument-case-header|_IDENTICAL_ argument-case-header
 IDENTICAL argument-case-header-blank|_IDENTICAL_ argument-case-blank-argument-header
 IDENTICAL argument-case-blank-argument-header|_IDENTICAL_ argument-case-blank-argument-header
-IDENTICAL usageDocument |_IDENTICAL_ usageDocument |
 
 # v0.25.5
 argument-case-header-blank|argument-case-blank-argument-header
@@ -128,7 +137,6 @@ __failArgument|__throwArgument
 __failEnvironment|__throwEnvironment
 __usageEnvironment|__catchEnvironment
 __usageArgument|__catchArgument
-_IDENTICAL_ usageDocument|__IDENTICAL__ usageDocument
 
 # v0.18.6
 consoleReset|decorate reset

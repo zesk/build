@@ -462,7 +462,7 @@ _commentArgumentTypeFromSpec() {
 
   argumentType=$(__catchEnvironment "$usage" environmentValueRead "$specification" argumentType undefined) || return $?
   [ -n "$argumentRepeat" ] || argumentRepeat=$(__catchEnvironment "$usage" environmentValueRead "$specification" argumentRepeat false) || return $?
-  __catchEnvironment "$usage" printf "%s%s%s" "$3" "$argumentType" "$(_choose "$argumentRepeat" '*' '')" || return $?
+  printf "%s%s%s" "$3" "$argumentType" "$(__catchEnvironment "$usage" _choose "$argumentRepeat" '*' '')" || return $?
 }
 
 # Argument: specification - Required. String.

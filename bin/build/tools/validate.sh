@@ -69,7 +69,7 @@ validate() {
       [ -z "$value" ] || suffix=" $(decorate error "$value")"
       __throwArgument "$handler" "$name ($(decorate each code "$@")) is not type $(decorate label "$type")$suffix" || return $?
     fi
-    __catchEnvironment "$usage" printf -- "%s\n" "$value" || return $?
+    printf -- "%s\n" "$value"
     shift 3
   done
 }
@@ -122,6 +122,7 @@ _isValidateType() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
+# Do not use anything with special meanings in bash (like `*`) for type aliases.
 _validateTypeAliases() {
   cat <<'EOF'
 String string
@@ -224,6 +225,7 @@ __validateTypeEmptyString() {
   return 0
 }
 
+# Boolean parsing
 # Arrays can be zero-length so any value passes
 __validateTypeArray() {
   __validateTypeEmptyString "$@"
@@ -238,6 +240,11 @@ __validateTypeList() {
 __validateTypeColonDelimitedList() {
   __validateTypeEmptyString "$@"
 
+}
+
+# Zero or more additional arguments
+__validateTypeArguments() {
+  __validateTypeEmptyString "$@"
 }
 
 # `,`-delimited list
@@ -306,6 +313,12 @@ __validateTypeApplicationDirectoryList() {
     index=$((index + 1))
   done
   printf "%s\n" "$(listJoin ":" "${result[@]+"${result[@]}"}")"
+}
+
+# Flags are command line options which set a value to true, usually
+# Placeholder to add type to list
+__validateTypeFlag() {
+  return 0
 }
 
 # Strict boolean `false` or `true`

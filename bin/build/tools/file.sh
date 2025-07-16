@@ -93,7 +93,8 @@ fileModificationSeconds() {
     [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
     local argument
     argument="$(usageArgumentFile "$usage" "argument #$((__count - $# + 1))" "${1-}")" || return $?
-    __catchEnvironment "$usage" printf "%d\n" "$((now_ - $(fileModificationTime "$argument")))" || return $?
+    argument=$(__catchEnvironment "$usage" fileModificationTime "$argument") || return $?
+    printf "%d\n" "$((now_ - argument))"
     shift
   done
 }
