@@ -260,7 +260,7 @@ _commentArgumentSpecificationParseLine() {
   shift 2
 
   local argument file
-  local required saveRequired argumentType argumentName argumentDefault="" argumentFlag=false
+  local required argumentType argumentName argumentDefault="" argumentFlag=false
 
   local argumentName="" argumentIndex="" argumentFinder="" argumentRepeat=false doubleDashDelimit=false
   local savedLine
@@ -321,22 +321,12 @@ _commentArgumentSpecificationParseLine() {
   # Blank line
   [ $# -eq 0 ] && return 0
   [ $# -ge 1 ] || _argument "$argumentId missing type: $savedLine" || return $?
-  saveRequired="${1%.}"
-  shift || :
-  required=
-  if required=$(_commentArgumentParseRequired "$saveRequired"); then
+  local rawType="${1%.}" maybeRequired="${2%.}"
+  if required=$(_commentArgumentParseRequired "$maybeRequired" "$rawType"); then
     case "$required" in required) required=true ;; *) required=false ;; esac
   fi
-  argumentType="${1%.}"
-  if [ -z "$required" ] && ! _commentArgumentTypeValid "$argumentType"; then
-    if _commentArgumentTypeValid "$saveRequired"; then
-      argumentType=$saveRequired
-      required=false
-    else
-      _argument "Invalid argument type: \"$argumentType\" (Required was \"$saveRequired\")" || return $?
-    fi
-  else
-    shift || :
+  if ! argumentType=$(_commentArgumentTypeValid "$rawType" "$maybeRequired"); then
+    _argument "Invalid argument type in: \"$rawType\" \"$maybeRequired\" (Required was \"$required\")" || return $?
   fi
   description="$*"
   if ! $argumentRemainder || [ -n "$argumentName" ]; then
@@ -376,50 +366,66 @@ __commentArgumentSpecificationParseLine() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# Argument: text - Optional. String. Text to test
-# If starts with "req" then prints "required"
-# If starts with "opt" then prints "optional"
+# Argument: text ... - Optional. String. Text to test
+# If starts with "required" then prints "required"
+# If starts with "optional" then prints "optional"
 # Otherwise fails with return code 1
 _commentArgumentParseRequired() {
-  local text
-  text="$(lowercase "${1-}")"
-  if [ "${text#req}" != "$text" ]; then
-    printf "%s\n" "required"
-  elif [ "${text#opt}" != "$text" ]; then
-    printf "%s\n" "optional"
-  else
-    return 1
-  fi
+  while [ $# -gt 0 ]; do
+    local text
+    text="$(lowercase "${1-}")"
+    if [ "${text#required}" != "$text" ]; then
+      printf "%s\n" "required"
+      return 0
+    fi
+    if [ "${text#optional}" != "$text" ]; then
+      printf "%s\n" "optional"
+      return 0
+    fi
+    shift
+  done
+  return 1
 }
 
 # Is the argument type valid?
 _commentArgumentTypeValid() {
-  local type="${1-}"
-  case "$type" in
-  # File system
-  File | FileDirectory | Directory | LoadEnvironmentFile | RealDirectory)
-    return 0
-    ;;
-  # Strings
-  EmptyString | String | EnvironmentVariable)
-    return 0
-    ;;
-  # Types
-  Flag | Boolean | PositiveInteger | Integer | UnsignedInteger | Number)
-    return 0
-    ;;
-  # Functional
-  Executable | Callable | Function)
-    return 0
-    ;;
-  # Internet
-  URL)
-    return 0
-    ;;
-  *)
-    return 1
-    ;;
-  esac
+  while [ $# -gt 0 ]; do
+    local type="${1-}"
+    case "$type" in
+    # File system
+    File | FileDirectory | Directory | LoadEnvironmentFile | RealDirectory)
+      printf "%s\n" "$type"
+      return 0
+      ;;
+    # Strings
+    EmptyString | String | EnvironmentVariable)
+      printf "%s\n" "$type"
+      return 0
+      ;;
+    # Types
+    Flag | Boolean | PositiveInteger | Integer | UnsignedInteger | Number)
+      printf "%s\n" "$type"
+      return 0
+      ;;
+    # Functional
+    Executable | Callable | Function)
+      printf "%s\n" "$type"
+      return 0
+      ;;
+    # Internet
+    URL)
+      printf "%s\n" "$type"
+      return 0
+      ;;
+    # Misc
+    Arguments)
+      printf "%s\n" "$type"
+      return 0
+      ;;
+    esac
+    shift
+  done
+  return 1
 }
 
 # Usage: specification argumentIndex argumentValue

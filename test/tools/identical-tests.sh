@@ -7,6 +7,17 @@
 # Copyright &copy; 2025 Market Acumen, Inc.
 #
 
+testIdenticalCheckHelpKeepsWords() {
+  __mockValue BUILD_DEBUG
+
+  export BUILD_DEBUG
+  BUILD_DEBUG=
+
+  assertExitCode --stdout-match '# IDENTICAL' 0 identicalCheck --help || return $?
+
+  __mockValue BUILD_DEBUG "" --end
+}
+
 testIdenticalEofWithBracket() {
   local temp home
 

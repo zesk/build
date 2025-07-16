@@ -8,7 +8,6 @@
 # Docs: ./documentation/source/tools/usage.md
 
 # Throw an unknown argument error
-# Usage: {fn} usage argument
 # Argument: usage - Required. Function. Usage function to call upon failure.
 # Argument: argument - Required. String. Name of the argument used in error messages.
 # Exit Code: 2 - Always
@@ -573,10 +572,8 @@ usageArgumentEnvironmentVariable() {
 }
 
 # Throw an missing argument error
-# Usage: {fn} usage argument
 # Argument: usage - Required. Function. Usage function to call upon failure.
 # Argument: argument - Required. String. Name of the argument used in error messages.
-# Exit Code: 2 - Always
 usageArgumentMissing() {
   local usage="$1" argument="$2"
   shift 2 || :
@@ -584,52 +581,56 @@ usageArgumentMissing() {
 }
 
 # Secrets are things which should be kept secret
-# Usage: {fn} usage argument
 # Argument: usage - Required. Function. Usage function to call upon failure.
 # Argument: argument - Required. String. Name of the argument used in error messages.
-# Exit Code: 2 - Always
 usageArgumentSecret() {
   usageArgumentString "$@" || return $?
 }
 
 # List delimited with commas `,`
-# Usage: {fn} usage argument
 # Argument: usage - Required. Function. Usage function to call upon failure.
 # Argument: argument - Required. String. Name of the argument used in error messages.
-# Exit Code: 2 - Always
 usageArgumentCommaDelimitedList() {
   usageArgumentEmptyString "$@" || return $?
 }
 
 # List delimited with colons `:`
-# Usage: {fn} usage argument
 # Argument: usage - Required. Function. Usage function to call upon failure.
 # Argument: argument - Required. String. Name of the argument used in error messages.
-# Exit Code: 2 - Always
 usageArgumentColonDelimitedList() {
   usageArgumentEmptyString "$@" || return $?
 }
 
-# List delimited with spaces ` `
-# Usage: {fn} usage argument
+# List delimited with colons `:`
 # Argument: usage - Required. Function. Usage function to call upon failure.
 # Argument: argument - Required. String. Name of the argument used in error messages.
-# Exit Code: 2 - Always
+usageArgumentFlag() {
+  usageArgumentEmptyString "$@" || return $?
+}
+
+# List delimited with spaces ` `
+# Argument: usage - Required. Function. Usage function to call upon failure.
+# Argument: argument - Required. String. Name of the argument used in error messages.
 usageArgumentList() {
   usageArgumentEmptyString "$@" || return $?
 }
 
 # Placeholder for array types
-# Usage: {fn} usage argument
 # Argument: usage - Required. Function. Usage function to call upon failure.
 # Argument: argument - Required. String. Name of the argument used in error messages.
-# Exit Code: 2 - Always
 usageArgumentArray() {
   usageArgumentEmptyString "$@" || return $?
 }
 
+# Placeholder for additional arguments
+# Argument: usage - Required. Function. Usage function to call upon failure.
+# Argument: argument - Required. String. Name of the argument used in error messages.
+# Argument: value ... - Optional. Arguments. Additional arguments.
+usageArgumentArguments() {
+  usageArgumentEmptyString "$@" || return $?
+}
+
 # A remote path is one which exists in another file system
-# Usage: {fn} usage argument
 # Argument: usage - Required. Function. Usage function to call upon failure.
 # Argument: argument - Required. String. Name of the argument used in error messages.
 # Exit Code: 2 - Always
@@ -642,7 +643,6 @@ usageArgumentRemoteDirectory() {
 }
 
 # A remote path is one which exists in another file system
-# Usage: {fn} usage argument
 # Argument: usage - Required. Function. Usage function to call upon failure.
 # Argument: argument - Required. String. Name of the argument used in error messages.
 # Exit Code: 2 - Always

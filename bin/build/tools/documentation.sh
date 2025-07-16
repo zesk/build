@@ -112,7 +112,7 @@ __usageDocumentComplex() {
       fi
     done < <(__usageDocumentComplexSections)
     description=$(trimTail <<<"$description")
-    usageTemplate "$fn" "$(printf "%s\n" "$argument" | sed 's/ - /^/1')" "^" "$description$suffix" "$returnCode" "$@" | functionName="$functionName" fn="$fn" mapEnvironment
+    usageTemplate "$fn" "$(printf "%s\n" "$argument" | sed 's/ - /^/1')" "^" "$description$suffix" "$returnCode" "$@" | identical=IDENTICAL functionName="$functionName" fn="$fn" mapEnvironment
     if $bashDebug; then
       __buildDebugEnable
     fi
