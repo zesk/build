@@ -193,6 +193,8 @@ isUpToDate() {
 
   keyDate="${keyDate:0:10}"
   [ -z "$name" ] || name="$name "
+
+  local todayTimestamp
   todayTimestamp=$(dateToTimestamp "$(todayDate)") || __throwEnvironment "$usage" "Unable to generate todayDate" || return $?
 
   local keyTimestamp maxDays
@@ -204,13 +206,12 @@ isUpToDate() {
   [ "$upToDateDays" -le "$maxDays" ] || __throwArgument "$usage" "isUpToDate $keyDate $upToDateDays - values not allowed greater than $maxDays" || return $?
   [ "$upToDateDays" -ge 0 ] || __throwArgument "$usage" "isUpToDate $keyDate $upToDateDays - negative values not allowed" || return $?
 
-  local accessKeyTimestamp expireTimestamp expireDate deltaDays daysAgo todayTimestamp
-
-  accessKeyTimestamp=$((keyTimestamp + ((23 * 60) + 59) * 60))
-  expireTimestamp=$((accessKeyTimestamp + 86400 * upToDateDays))
+  local expireDate
+  local accessKeyTimestamp=$((keyTimestamp + ((23 * 60) + 59) * 60))
+  local expireTimestamp=$((accessKeyTimestamp + 86400 * upToDateDays))
   expireDate=$(dateFromTimestamp "$expireTimestamp" '%A, %B %d, %Y %R')
-  deltaDays=$(((todayTimestamp - accessKeyTimestamp) / 86400))
-  daysAgo=$((deltaDays - upToDateDays))
+  local deltaDays=$(((todayTimestamp - accessKeyTimestamp) / 86400))
+  local daysAgo=$((deltaDays - upToDateDays))
   if [ "$todayTimestamp" -gt "$expireTimestamp" ]; then
     local label timeText
     label=$(printf "%s %s\n" "$(decorate error "${name}expired on ")" "$(decorate red "$keyDate")")
