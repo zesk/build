@@ -97,7 +97,6 @@ fileDirectoryRequire() {
       rr+=(--output "$argument" "$(__catchEnvironment "$usage" dirname "$argument")") || return $?
       ;;
     esac
-    # _IDENTICAL_ argument-esac-shift 1
     shift
   done
   directoryRequire --handler "$usage" --noun "file directory" "${rr[@]+"${rr[@]}"}" || return $?
@@ -130,7 +129,6 @@ fileDirectoryExists() {
       [ -d "$path" ] || return 1
       ;;
     esac
-    # _IDENTICAL_ argument-esac-shift 1
     shift
   done
 }
@@ -204,7 +202,6 @@ directoryRequire() {
       output=""
       ;;
     esac
-    # _IDENTICAL_ argument-esac-shift 1
     shift
   done
   [ ${#directories[@]} -gt 0 ] || __throwArgument "$usage" "Need at least one $noun" || return $?
@@ -325,7 +322,6 @@ __directoryParent() {
       startingDirectory=$(usageArgumentRealDirectory "$usage" startingDirectory "$argument") || return $?
       ;;
     esac
-    # _IDENTICAL_ argument-esac-shift 1
     shift
   done
 

@@ -442,7 +442,6 @@ dockerImages() {
       __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
       ;;
     esac
-    # _IDENTICAL_ argument-esac-shift 1
     shift
   done
 

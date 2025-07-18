@@ -76,7 +76,6 @@ darwinSoundInstall() {
       soundFiles+=("$(usageArgumentFile "$usage" "soundFile" "${1-}")") || return $?
       ;;
     esac
-    # _IDENTICAL_ argument-esac-shift 1
     shift
   done
   [ "${#soundFiles[@]}" -gt 0 ] || __throwArgument "$usage" "Need at least one sound file" || return $?

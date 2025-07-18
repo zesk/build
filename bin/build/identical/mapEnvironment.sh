@@ -29,46 +29,43 @@
 # Requires: __throwArgument read environmentVariables decorate sed cat rm __throwEnvironment __catchEnvironment _clean
 # Requires: usageArgumentString
 mapEnvironment() {
-  local usage="_${FUNCNAME[0]}"
+  local handler="_${FUNCNAME[0]}"
   local __sedFile __prefix='{' __suffix='}'
 
-  # _IDENTICAL_ argument-case-header 5
+  # _IDENTICAL_ argumentNonBlankLoopHandler 5
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-    # _IDENTICAL_ --help 4
-    --help)
-      "$usage" 0
-      return $?
-      ;;
+    # _IDENTICAL_ helpHandler 1
+    --help) ! "$handler" 0 || return $? ;;
     --prefix)
       shift
-      __prefix="$(usageArgumentString "$usage" "$argument" "${1-}")" || return $?
+      __prefix="$(usageArgumentString "$handler" "$argument" "${1-}")" || return $?
       ;;
     --suffix)
       shift
-      __suffix="$(usageArgumentString "$usage" "$argument" "${1-}")" || return $?
+      __suffix="$(usageArgumentString "$handler" "$argument" "${1-}")" || return $?
       ;;
     *)
       break
       ;;
     esac
-    # _IDENTICAL_ argument-esac-shift 1
     shift
   done
 
-  local __ee=("$@") __e __usage="$usage"
-  unset usage
+  local __ee=("$@") __e __handler="$handler"
+  # Allows the name `handler` to exist as a variable to map
+  unset handler
 
   if [ $# -eq 0 ]; then
     while read -r __e; do __ee+=("$__e"); done < <(environmentVariables)
   fi
-  __sedFile=$(__catchEnvironment "$__usage" mktemp) || return $?
-  __catchEnvironment "$__usage" _mapEnvironmentGenerateSedFile "$__prefix" "$__suffix" "${__ee[@]}" >"$__sedFile" || returnClean $? "$__sedFile" || return $?
-  __catchEnvironment "$__usage" sed -f "$__sedFile" || __throwEnvironment "$__usage" "$(cat "$__sedFile")" || returnClean $? "$__sedFile" || return $?
-  __catchEnvironment "$__usage" rm -rf "$__sedFile" || return $?
+  __sedFile=$(__catchEnvironment "$__handler" mktemp) || return $?
+  __catchEnvironment "$__handler" _mapEnvironmentGenerateSedFile "$__prefix" "$__suffix" "${__ee[@]}" >"$__sedFile" || returnClean $? "$__sedFile" || return $?
+  __catchEnvironment "$__handler" sed -f "$__sedFile" || __throwEnvironment "$__handler" "$(cat "$__sedFile")" || returnClean $? "$__sedFile" || return $?
+  __catchEnvironment "$__handler" rm -rf "$__sedFile" || return $?
 }
 _mapEnvironment() {
   # __IDENTICAL__ usageDocument 1

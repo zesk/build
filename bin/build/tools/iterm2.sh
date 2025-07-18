@@ -317,7 +317,6 @@ iTerm2Image() {
       images+=("$(usageArgumentFile "$usage" "imageFile" "$1")" "$(__iTerm2ImageExtras "$width" "$height" "$aspectRatio")") || return $?
       ;;
     esac
-    # _IDENTICAL_ argument-esac-shift 1
     shift
   done
 
@@ -407,7 +406,6 @@ iTerm2Download() {
       files+=("$(usageArgumentFile "$usage" "imageFile" "$1")") || return $?
       ;;
     esac
-    # _IDENTICAL_ argument-esac-shift 1
     shift
   done
 
@@ -497,7 +495,6 @@ iTerm2SetColors() {
       colorSettings+=("$(usageArgumentString "$usage" "colorSetting" "$1")") || return $?
       ;;
     esac
-    # _IDENTICAL_ argument-esac-shift 1
     shift
   done
 
@@ -637,7 +634,6 @@ iTerm2Attention() {
       esac
       ;;
     esac
-    # _IDENTICAL_ argument-esac-shift 1
     shift
   done
 
@@ -677,7 +673,6 @@ iTerm2Badge() {
       message+=("$argument")
       ;;
     esac
-    # _IDENTICAL_ argument-esac-shift 1
     shift
   done
 
@@ -736,7 +731,6 @@ iTerm2Version() {
       __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
       ;;
     esac
-    # _IDENTICAL_ argument-esac-shift 1
     shift
   done
 
@@ -820,7 +814,6 @@ iTerm2Init() {
       __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
       ;;
     esac
-    # _IDENTICAL_ argument-esac-shift 1
     shift
   done
 

@@ -131,7 +131,6 @@ awsCredentialsFile() {
       __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
       ;;
     esac
-    # _IDENTICAL_ argument-esac-shift 1
     shift
   done
 
@@ -293,7 +292,6 @@ awsEnvironmentFromCredentials() {
       profileName="$1"
       ;;
     esac
-    # _IDENTICAL_ argument-esac-shift 1
     shift
   done
   [ -n "$profileName" ] || profileName="default"
@@ -399,7 +397,6 @@ awsCredentialsAdd() {
       fi
       ;;
     esac
-    # _IDENTICAL_ argument-esac-shift 1
     shift
   done
   # IDENTICAL profileNameArgumentValidation 4
@@ -476,7 +473,6 @@ awsCredentialsRemove() {
       fi
       ;;
     esac
-    # _IDENTICAL_ argument-esac-shift 1
     shift
   done
   # IDENTICAL profileNameArgumentValidation 4
@@ -616,7 +612,6 @@ awsSecurityGroupIPModify() {
       __throwArgument "unknown argument: $argument" || return $?
       ;;
     esac
-    # _IDENTICAL_ argument-esac-shift 1
     shift
   done
 

@@ -60,7 +60,6 @@ urlSchemeDefaultPort() {
     esac
     [ -z "$port" ] || printf "%d\n" "$port"
     port=""
-    # _IDENTICAL_ argument-esac-shift 1
     shift
   done
 }
@@ -176,7 +175,6 @@ urlParse() {
       [ -z "$error" ] || return 1
       ;;
     esac
-    # _IDENTICAL_ argument-esac-shift 1
     shift
   done
 }
@@ -224,7 +222,6 @@ urlParseItem() {
       fi
       ;;
     esac
-    # _IDENTICAL_ argument-esac-shift 1
     shift
   done
   [ -n "$url" ] || __throwArgument "$usage" "Need at least one URL" || return $?
@@ -259,7 +256,6 @@ urlValid() {
       urlParse "$1" >/dev/null || return 1
       ;;
     esac
-    # _IDENTICAL_ argument-esac-shift 1
     shift
   done
 }
@@ -298,7 +294,6 @@ urlOpener() {
       __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
       ;;
     esac
-    # _IDENTICAL_ argument-esac-shift 1
     shift
   done
 
@@ -391,7 +386,6 @@ urlFilter() {
       files+=("$(usageArgumentFile "$usage" "file" "$1")") || return $?
       ;;
     esac
-    # _IDENTICAL_ argument-esac-shift 1
     shift
   done
   if [ "${#files[@]}" -gt 0 ]; then
@@ -451,7 +445,6 @@ urlOpen() {
       urls+=("$(usageArgumentString "$usage" "url" "$1")") || return $?
       ;;
     esac
-    # _IDENTICAL_ argument-esac-shift 1
     shift
   done
 
@@ -606,7 +599,6 @@ urlFetch() {
       fi
       ;;
     esac
-    # _IDENTICAL_ argument-esac-shift 1
     shift
   done
 

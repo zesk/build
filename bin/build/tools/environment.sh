@@ -253,7 +253,6 @@ dotEnvConfigure() {
       where=$(usageArgumentDirectory "$usage" "where" "$1") || return $?
       ;;
     esac
-    # _IDENTICAL_ argument-esac-shift 1
     shift
   done
 
@@ -345,7 +344,6 @@ environmentLoad() {
       __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
       ;;
     esac
-    # _IDENTICAL_ argument-esac-shift 1
     shift
   done
 
@@ -480,7 +478,6 @@ environmentFileLoad() {
       fi
       ;;
     esac
-    # _IDENTICAL_ argument-esac-shift 1
     shift
   done
   $hasOne || __throwArgument "$usage" "Requires at least one environmentFile" || return $?
@@ -693,7 +690,6 @@ environmentFileApplicationMake() {
       fi
       ;;
     esac
-    # _IDENTICAL_ argument-esac-shift 1
     shift
   done
 
@@ -715,10 +711,11 @@ _environmentFileApplicationMake() {
 }
 
 # Check application environment is populated correctly.
-# Usage: {fn} [ requiredEnvironment ... ] [ -- optionalEnvironment ...] "
-# Argument: requiredEnvironment ... - Optional. One or more environment variables which should be non-blank and included in the `.env` file.
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
+# Argument: requiredEnvironment ... - Optional. EnvironmentName. One or more environment variables which should be non-blank and included in the `.env` file.
 # Argument: -- - Optional. Divider. Divides the requiredEnvironment values from the optionalEnvironment
-# Argument: optionalEnvironment ... - Optional. One or more environment variables which are included if blank or not
+# Argument: optionalEnvironment ... - EnvironmentName. Optional. One or more environment variables which are included if blank or not
 # Also verifies that `environmentApplicationVariables` and `environmentApplicationLoad` are defined.
 environmentFileApplicationVerify() {
   local usage="_${FUNCNAME[0]}"
@@ -762,6 +759,9 @@ _environmentFileApplicationVerify() {
 }
 
 # Adds an environment variable file to a project
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
+# Argument: environmentName ... - EnvironmentName. Required. One or more environment variable names to add to this project.
 environmentAddFile() {
   local usage="_${FUNCNAME[0]}"
   local name environmentNames=()
@@ -782,7 +782,6 @@ environmentAddFile() {
       environmentNames+=("$name")
       ;;
     esac
-    # _IDENTICAL_ argument-esac-shift 1
     shift
   done
 
@@ -804,7 +803,7 @@ environmentAddFile() {
         statusMessage --last decorate info "Exists: $(decorate file "$path")"
       fi
     else
-      __catchEnvironment "$usage" printf -- "%s\n" "#!/usr/bin/env bash" "# Copyright &copy; $year $company" "# Type: String" "# All about $name and how it is used" "export $name" "$name=\"\${$name-}\"" >"$path" || return $?
+      __catchEnvironment "$usage" printf -- "%s\n" "#!/usr/bin/env bash" "# Copyright &copy; $year $company" "# Type: String" "# Category: Application" "# All about $name and how it is used" "export $name" "$name=\"\${$name-}\"" >"$path" || return $?
       __catchEnvironment "$usage" chmod +x "$path" || return $?
       statusMessage --last decorate success "Created $(decorate file "$path")"
     fi
@@ -866,7 +865,6 @@ environmentOutput() {
       __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
       ;;
     esac
-    # _IDENTICAL_ argument-esac-shift 1
     shift
   done
 
@@ -927,7 +925,6 @@ environmentCompile() {
       environmentFiles+=("$(usageArgumentFile "$usage" "environmentFile" "$1")") || return $?
       ;;
     esac
-    # _IDENTICAL_ argument-esac-shift 1
     shift
   done
   [ ${#environmentFiles[@]} -gt 0 ] || __throwArgument "$usage" "Need at least one environment file" || return $?

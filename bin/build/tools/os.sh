@@ -104,7 +104,6 @@ makeShellFilesExecutable() {
       paths+=("$(usageArgumentDirectory "$usage" "directory" "$1")") || return $?
       ;;
     esac
-    # _IDENTICAL_ argument-esac-shift 1
     shift
   done
   [ "${#paths[@]}" -gt 0 ] || paths+=("$(__catchEnvironment "$usage" pwd)") || return $?
@@ -456,7 +455,6 @@ extensionLists() {
       fi
       ;;
     esac
-    # _IDENTICAL_ argument-esac-shift 1
     shift
   done
   [ -n "$directory" ] || __throwArgument "$usage" "No directory supplied" || return $?

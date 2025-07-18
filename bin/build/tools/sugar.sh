@@ -148,7 +148,6 @@ mapReturn() {
       fi
       ;;
     esac
-    # _IDENTICAL_ argument-esac-shift 1
     shift
   done
   return "${value:-0}"
@@ -197,7 +196,6 @@ convertValue() {
       fi
       ;;
     esac
-    # _IDENTICAL_ argument-esac-shift 1
     shift
   done
   printf "%s\n" "${value:-0}"

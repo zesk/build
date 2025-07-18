@@ -113,7 +113,6 @@ isValidateType() {
       isFunction "$prefix$argument" || __throwArgument "$usage" "Invalid type $argument" || return $?
       ;;
     esac
-    # _IDENTICAL_ argument-esac-shift 1
     shift
   done
 }

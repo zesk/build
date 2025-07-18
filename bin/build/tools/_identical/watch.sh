@@ -71,7 +71,6 @@ identicalWatch() {
       __catchEnvironment "$usage" identicalCheck "$@" || rweturn $?
       ;;
     esac
-    # _IDENTICAL_ argument-esac-shift 1
     shift
   done
 }

@@ -44,7 +44,6 @@ __packageListFunction() {
       __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
       ;;
     esac
-    # _IDENTICAL_ argument-esac-shift 1
     shift
   done
 
@@ -105,7 +104,6 @@ __packageUpFunction() {
       break
       ;;
     esac
-    # _IDENTICAL_ argument-esac-shift 1
     shift
   done
 
@@ -211,7 +209,6 @@ packageDefault() {
       lookup+=("$(usageArgumentString "$usage" "binary" "$argument")") || return $?
       ;;
     esac
-    # _IDENTICAL_ argument-esac-shift 1
     shift
   done
   [ "${#lookup[@]}" -gt 0 ] || __throwArgument "$usage" "Need at least one name" || return $?
@@ -283,7 +280,6 @@ packageWhich() {
       fi
       ;;
     esac
-    # _IDENTICAL_ argument-esac-shift 1
     shift
   done
 
@@ -354,7 +350,6 @@ packageWhichUninstall() {
       fi
       ;;
     esac
-    # _IDENTICAL_ argument-esac-shift 1
     shift
   done
 
@@ -433,7 +428,6 @@ packageInstall() {
       fi
       ;;
     esac
-    # _IDENTICAL_ argument-esac-shift 1
     shift
   done
 
@@ -522,7 +516,6 @@ packageIsInstalled() {
       packages+=("$argument")
       ;;
     esac
-    # _IDENTICAL_ argument-esac-shift 1
     shift
   done
   [ "${#packages[@]}" -gt 0 ] || __throwArgument "$usage" "Requires at least one package" || return $?
@@ -576,7 +569,6 @@ packageUninstall() {
       packages+=("$argument")
       ;;
     esac
-    # _IDENTICAL_ argument-esac-shift 1
     shift
   done
 
@@ -741,7 +733,6 @@ packageGroupInstall() {
       groups+=("$(usageArgumentString "$usage" "group" "$argument")") || return $?
       ;;
     esac
-    # _IDENTICAL_ argument-esac-shift 1
     shift
   done
 
@@ -792,7 +783,6 @@ packageGroupUninstall() {
       groups+=("$(usageArgumentString "$usage" "group" "$argument")") || return $?
       ;;
     esac
-    # _IDENTICAL_ argument-esac-shift 1
     shift
   done
 
@@ -841,7 +831,6 @@ packageMapping() {
       packages+=("$argument")
       ;;
     esac
-    # _IDENTICAL_ argument-esac-shift 1
     shift
   done
 

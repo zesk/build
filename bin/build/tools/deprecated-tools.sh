@@ -33,7 +33,6 @@ deprecatedFilePrependVersion() {
       fi
       ;;
     esac
-    # _IDENTICAL_ argument-esac-shift 1
     shift
   done
 
@@ -117,7 +116,6 @@ deprecatedTokensFile() {
       fi
       ;;
     esac
-    # _IDENTICAL_ argument-esac-shift 1
     shift
   done
 
@@ -202,7 +200,6 @@ deprecatedCannonFile() {
       fi
       ;;
     esac
-    # _IDENTICAL_ argument-esac-shift 1
     shift
   done
 
@@ -283,7 +280,6 @@ deprecatedFind() {
       fi
       ;;
     esac
-    # _IDENTICAL_ argument-esac-shift 1
     shift
   done
   return 1
@@ -330,7 +326,6 @@ deprecatedCannon() {
       fi
       ;;
     esac
-    # _IDENTICAL_ argument-esac-shift 1
     shift
   done
   [ -n "$cannonPath" ] || cannonPath=$(__catchEnvironment "$usage" buildHome) || return $?

@@ -150,7 +150,6 @@ bashPrompt() {
       addArguments+=("$(usageArgumentCallable "$usage" "module" "$argument")") || return $?
       ;;
     esac
-    # _IDENTICAL_ argument-esac-shift 1
     shift
   done
 
@@ -280,7 +279,6 @@ bashPromptMarkers() {
       markers+=("$1")
       ;;
     esac
-    # _IDENTICAL_ argument-esac-shift 1
     shift
   done
   [ "${#markers[@]}" -le 2 ] || __throwArgument "$usage" "Maximum two markers supported (prefix suffix)"
@@ -385,7 +383,6 @@ __bashPromptAdd() {
       modules=("${mm[@]+"${mm[@]}"}" "$order:$argument")
       ;;
     esac
-    # _IDENTICAL_ argument-esac-shift 1
     shift
   done
 

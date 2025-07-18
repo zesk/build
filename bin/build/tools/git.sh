@@ -507,7 +507,6 @@ gitCommit() {
       break
       ;;
     esac
-    # _IDENTICAL_ argument-esac-shift 1
     shift
   done
 
@@ -792,7 +791,6 @@ gitInstallHooks() {
       fi
       ;;
     esac
-    # _IDENTICAL_ argument-esac-shift 1
     shift
   done
   if [ ${#hookNames[@]} -eq 0 ]; then
@@ -1139,7 +1137,6 @@ gitBranchMergeCurrent() {
       targetBranch="$(usageArgumentString "$usage" "$argument" "$1")" || return $?
       ;;
     esac
-    # _IDENTICAL_ argument-esac-shift 1
     shift
   done
 

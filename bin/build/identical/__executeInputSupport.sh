@@ -20,7 +20,7 @@
 # Argument: -- - Alone after the executor forces `stdin` to be ignored. The `--` flag is also removed from the arguments passed to the executor.
 # Argument: ... - Any additional arguments are passed directly to the executor
 __executeInputSupport() {
-  local usage="$1" executor=() && shift
+  local handler="$1" executor=() && shift
 
   while [ $# -gt 0 ]; do
     if [ "$1" = "--" ]; then
@@ -37,19 +37,19 @@ __executeInputSupport() {
   if [ $# -eq 0 ] && IFS="" read -r -t 1 -n 1 byte; then
     local line done=false
     if [ "$byte" = $'\n' ]; then
-      __catchEnvironment "$usage" "${executor[@]}" "" || return $?
+      __catchEnvironment "$handler" "${executor[@]}" "" || return $?
       byte=""
     fi
     while ! $done; do
       IFS="" read -r line || done=true
       [ -n "$byte$line" ] || ! $done || break
-      __catchEnvironment "$usage" "${executor[@]}" "$byte$line" || return $?
+      __catchEnvironment "$handler" "${executor[@]}" "$byte$line" || return $?
       byte=""
     done
   else
     if [ "${1-}" = "--" ]; then
       shift
     fi
-    __catchEnvironment "$usage" "${executor[@]}" "$@" || return $?
+    __catchEnvironment "$handler" "${executor[@]}" "$@" || return $?
   fi
 }

@@ -29,7 +29,6 @@ bashGetRequires() {
       files+=("$(usageArgumentFile "$usage" "checkFile" "${1-}")") || return $?
       ;;
     esac
-    # _IDENTICAL_ argument-esac-shift 1
     shift
   done
 
@@ -101,7 +100,6 @@ bashCheckRequires() {
       files+=("$(usageArgumentFile "$usage" "checkFile" "${1-}")") || return $?
       ;;
     esac
-    # _IDENTICAL_ argument-esac-shift 1
     shift
   done
 

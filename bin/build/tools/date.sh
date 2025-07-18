@@ -183,7 +183,6 @@ dateAdd() {
       __catchArgument "$usage" dateFromTimestamp "$((timestamp + (86400 * days)))" || return $?
       ;;
     esac
-    # _IDENTICAL_ argument-esac-shift 1
     shift
   done
 }

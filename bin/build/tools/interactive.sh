@@ -191,7 +191,6 @@ copyFile() {
       return $exitCode
       ;;
     esac
-    # _IDENTICAL_ argument-esac-shift 1
     shift
   done
   __throwArgument "$usage" "Missing source" || return $?
@@ -260,7 +259,6 @@ copyFileWouldChange() {
       fi
       ;;
     esac
-    # _IDENTICAL_ argument-esac-shift 1
     shift
   done
   __throwArgument "$usage" "Missing source" || return $?
@@ -314,7 +312,6 @@ loopExecute() {
       fi
       ;;
     esac
-    # _IDENTICAL_ argument-esac-shift 1
     shift
   done
 
@@ -440,7 +437,6 @@ interactiveManager() {
       fi
       ;;
     esac
-    # _IDENTICAL_ argument-esac-shift 1
     shift
   done
 
@@ -573,7 +569,6 @@ confirmYesNo() {
       break
       ;;
     esac
-    # _IDENTICAL_ argument-esac-shift 1
     shift
   done
 
@@ -668,7 +663,6 @@ confirmMenu() {
       break
       ;;
     esac
-    # _IDENTICAL_ argument-esac-shift 1
     shift
   done
 
@@ -755,7 +749,6 @@ interactiveCountdown() {
       fi
       ;;
     esac
-    # _IDENTICAL_ argument-esac-shift 1
     shift
   done
   [ -n "$counter" ] || __throwArgument "$usage" "counter is required" || return $?
@@ -861,7 +854,6 @@ interactiveBashSource() {
       fi
       ;;
     esac
-    # _IDENTICAL_ argument-esac-shift 1
     shift
   done
 }
@@ -941,7 +933,6 @@ notify() {
       break
       ;;
     esac
-    # _IDENTICAL_ argument-esac-shift 1
     shift
   done
   [ -n "$binary" ] || __throwArgument "$usage" "Missing binary" || return $?

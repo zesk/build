@@ -252,7 +252,6 @@ documentationTemplateCompile() {
       fi
       ;;
     esac
-    # _IDENTICAL_ argument-esac-shift 1
     shift
   done
 
@@ -429,7 +428,6 @@ documentationTemplateFunctionCompile() {
       fi
       ;;
     esac
-    # _IDENTICAL_ argument-esac-shift 1
     shift
   done
 
@@ -521,7 +519,6 @@ documentationTemplateDirectoryCompile() {
       fi
       ;;
     esac
-    # _IDENTICAL_ argument-esac-shift 1
     shift
   done
 
@@ -603,7 +600,6 @@ bashDocumentFunction() {
       fi
       ;;
     esac
-    # _IDENTICAL_ argument-esac-shift 1
     shift
   done
 

@@ -80,7 +80,6 @@ incrementor() {
       fi
       ;;
     esac
-    # _IDENTICAL_ argument-esac-shift 1
     shift
   done
   [ -n "$name" ] || name=default
@@ -144,7 +143,6 @@ pipeRunner() {
       fi
       ;;
     esac
-    # _IDENTICAL_ argument-esac-shift 1
     shift
   done
   [ -n "$namedPipe" ] || __throwArgument "$usage" "No namedPipe supplied" || return $?

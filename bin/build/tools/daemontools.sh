@@ -119,7 +119,6 @@ daemontoolsInstallService() {
       fi
       ;;
     esac
-    # _IDENTICAL_ argument-esac-shift 1
     shift
   done
 
@@ -221,7 +220,6 @@ daemontoolsRemoveService() {
       fi
       ;;
     esac
-    # _IDENTICAL_ argument-esac-shift 1
     shift
   done
 
@@ -351,7 +349,6 @@ daemontoolsTerminate() {
       __throwArgument "$usage" "unknown argument $(decorate value "$argument")" || return $?
       ;;
     esac
-    # _IDENTICAL_ argument-esac-shift 1
     shift
   done
 
@@ -418,7 +415,6 @@ daemontoolsRestart() {
       __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
       ;;
     esac
-    # _IDENTICAL_ argument-esac-shift 1
     shift
   done
 

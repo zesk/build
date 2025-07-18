@@ -98,11 +98,11 @@ _choose() {
 # Requires: isUnsignedInteger _argument __environment usageDocument
 # Group: Sugar
 returnClean() {
-  local usage="_${FUNCNAME[0]}"
-  [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
+  local handler="_${FUNCNAME[0]}"
+  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
   local exitCode="${1-}" && shift
   if ! isUnsignedInteger "$exitCode"; then
-    __throwArgument "$usage" "$exitCode (not an integer) $*" || return $?
+    __throwArgument "$handler" "$exitCode (not an integer) $*" || return $?
   else
     __environment rm -rf "$@" || return "$exitCode"
     return "$exitCode"

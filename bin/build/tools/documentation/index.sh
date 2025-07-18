@@ -184,7 +184,6 @@ documentationIndex_Generate() {
       fi
       ;;
     esac
-    # _IDENTICAL_ argument-esac-shift 1
     shift
   done
   if [ -z "$codePath" ]; then
@@ -366,7 +365,7 @@ documentationIndex_UnlinkedIterator() {
       flagUnderscore=true
       ;;
     *)
-      if ! cacheDirectory=$(usageArgumentDirectory _documentationIndex_UnlinkedIteratorUsage cacheDirectory "$1"); then
+      if ! cacheDirectory=$(usageArgumentDirectory "$usage" "cacheDirectory" "$1"); then
         return $?
       fi
       ;;
@@ -510,7 +509,6 @@ documentationIndex_LinkDocumentationPaths() {
       fi
       ;;
     esac
-    # _IDENTICAL_ argument-esac-shift 1
     shift
   done
   [ -n "$cacheDirectory" ] || __throwArgument "$usage" "cacheDirectory required" || return $?

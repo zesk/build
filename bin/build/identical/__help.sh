@@ -7,6 +7,12 @@
 # Copyright &copy; 2025 Market Acumen, Inc.
 #
 
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
+#
+# DOC TEMPLATE: --handler 1
+# Argument: --handler handler - Optional. Function. Use this error handler instead of the default error handler.
+
 # IDENTICAL __help EOF
 
 # Simple help argument handler.
@@ -44,20 +50,17 @@
 # DEPRECATED-Example: [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return $?
 # DEPRECATED-Example: [ $# -eq 0 ] || __help --only "$usage" "$@" || return $?
 #
-# Requires: __throwArgument usageDocument
+# Requires: __throwArgument usageDocument ___help
 __help() {
   [ $# -gt 0 ] || ! ___help 0 || return 0
-  local usage="${1-}" && shift
-  if [ "$usage" = "--only" ]; then
-    usage="${1-}" && shift
+  local handler="${1-}" && shift
+  if [ "$handler" = "--only" ]; then
+    handler="${1-}" && shift
     [ $# -gt 0 ] || return 0
-    [ "$#" -eq 1 ] && [ "${1-}" = "--help" ] || __throwArgument "$usage" "Only argument allowed is --help: \"${1-}\"" || return $?
+    [ "$#" -eq 1 ] && [ "${1-}" = "--help" ] || __throwArgument "$handler" "Only argument allowed is --help: \"${1-}\"" || return $?
   fi
   while [ $# -gt 0 ]; do
-    if [ "$1" = "--help" ]; then
-      "$usage" 0
-      return 1
-    fi
+    [ "$1" != "--help" ] || ! "$handler" 0 || return 1
     shift
   done
   return 0

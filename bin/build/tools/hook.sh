@@ -40,7 +40,6 @@ __hookRunner() {
       __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
       ;;
     esac
-    # _IDENTICAL_ argument-esac-shift 1
     shift
   done
 
@@ -94,7 +93,6 @@ __hookRunner() {
       return 0
       ;;
     esac
-    # _IDENTICAL_ argument-esac-shift 1
     shift
   done
   __throwArgument "$usage" "No hook name passed (Arguments: $(decorate each code "${__saved[@]}"))" || return $?

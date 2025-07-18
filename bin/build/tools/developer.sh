@@ -29,7 +29,6 @@ developerAnnounce() {
       source=$(usageArgumentRealFile "$usage" "source" "${1-}") || return $?
       ;;
     esac
-    # _IDENTICAL_ argument-esac-shift 1
     shift
   done
 
@@ -120,7 +119,6 @@ developerTrack() {
       source=$(usageArgumentRealFile "$usage" "source" "${1-}") || return $?
       ;;
     esac
-    # _IDENTICAL_ argument-esac-shift 1
     shift
   done
   [ -n "$source" ] || __throwArgument "$usage" "source required" || return $?
@@ -211,7 +209,6 @@ buildDevelopmentLink() {
       __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
       ;;
     esac
-    # _IDENTICAL_ argument-esac-shift 1
     shift
   done
   developerDevelopmentLink --handler "$usage" --binary "install-bin-build.sh" --path "bin/build" --development-path "bin/build" --version-json "bin/build/build.json" --variable "BUILD_DEVELOPMENT_HOME" "${__saved[@]+"${__saved[@]}"}"
@@ -294,7 +291,6 @@ developerDevelopmentLink() {
       __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
       ;;
     esac
-    # _IDENTICAL_ argument-esac-shift 1
     shift
   done
 

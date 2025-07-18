@@ -41,7 +41,6 @@ sshKnownHostsFile() {
       __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
       ;;
     esac
-    # _IDENTICAL_ argument-esac-shift 1
     shift
   done
   printf "%s\n" "$sshKnown"
@@ -110,7 +109,6 @@ sshKnownHostAdd() {
       fi
       ;;
     esac
-    # _IDENTICAL_ argument-esac-shift 1
     shift
   done
   buildDebugStop ssh || :
@@ -191,7 +189,6 @@ sshKnownHostRemove() {
       fi
       ;;
     esac
-    # _IDENTICAL_ argument-esac-shift 1
     shift
   done
   buildDebugStop ssh || :
@@ -251,7 +248,6 @@ sshSetup() {
       servers+=("$arg")
       ;;
     esac
-    # _IDENTICAL_ argument-esac-shift 1
     shift
   done
 

@@ -45,7 +45,6 @@ bashCoverage() {
       break
       ;;
     esac
-    # _IDENTICAL_ argument-esac-shift 1
     shift
   done
   [ -n "$target" ] || target="$home/coverage.stats"
@@ -93,7 +92,6 @@ bashCoverageReport() {
       files+=("$(usageArgumentFile "$usage" "coverageFile" "$1")") || return $?
       ;;
     esac
-    # _IDENTICAL_ argument-esac-shift 1
     shift
   done
 

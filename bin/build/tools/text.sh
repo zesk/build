@@ -47,7 +47,6 @@ fileExtractLines() {
       fi
       ;;
     esac
-    # _IDENTICAL_ argument-esac-shift 1
     shift
   done
   sed -n "${start},${end}p;${end}q"
@@ -112,7 +111,6 @@ isMappable() {
       fi
       ;;
     esac
-    # _IDENTICAL_ argument-esac-shift 1
     shift
   done
   return 1
@@ -653,7 +651,6 @@ fileLineCount() {
       fileArgument=true
       ;;
     esac
-    # _IDENTICAL_ argument-esac-shift 1
     shift
   done
   # shellcheck disable=SC2119
@@ -1039,7 +1036,6 @@ characterFromInteger() {
       fi
       ;;
     esac
-    # _IDENTICAL_ argument-esac-shift 1
     shift
   done
 }
@@ -1131,7 +1127,6 @@ characterClassReport() {
       __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
       ;;
     esac
-    # _IDENTICAL_ argument-esac-shift 1
     shift
   done
   classList=()
@@ -1225,7 +1220,6 @@ removeFields() {
       fieldCount="$(usageArgumentPositiveInteger "$usage" "fieldCount" "$argument")" || return $?
       ;;
     esac
-    # _IDENTICAL_ argument-esac-shift 1
     shift
   done
   fieldCount=${fieldCount:-1}
@@ -1389,7 +1383,6 @@ stringReplace() {
       fi
       ;;
     esac
-    # _IDENTICAL_ argument-esac-shift 1
     shift
   done
   if $hasTextArguments; then

@@ -114,7 +114,6 @@ jsonSetValue() {
       __jsonSetValue "$usage" "$file" "$key" "$value" "$quietFlag" "$statusFlag" || return $?
       ;;
     esac
-    # _IDENTICAL_ argument-esac-shift 1
     shift
   done
   [ -n "$file" ] || __throwArgument "$usage" "file is required" || return $?

@@ -81,7 +81,6 @@ processWait() {
       processIds+=("$processId")
       ;;
     esac
-    # _IDENTICAL_ argument-esac-shift 1
     shift
   done
 
@@ -187,7 +186,6 @@ processMemoryUsage() {
       printf %d $((value * 1))
       ;;
     esac
-    # _IDENTICAL_ argument-esac-shift 1
     shift
   done
 }
@@ -227,7 +225,6 @@ processVirtualMemoryAllocation() {
       printf %d $((value * 1))
       ;;
     esac
-    # _IDENTICAL_ argument-esac-shift 1
     shift
   done
 }
@@ -268,7 +265,6 @@ processOpenPipes() {
       ;;
 
     esac
-    # _IDENTICAL_ argument-esac-shift 1
     shift
   done
 }

@@ -15,12 +15,14 @@
 # Exit code: 1 - If any value is not found
 # Requires: __throwArgument which decorate __decorateExtensionEach
 whichExists() {
-  local usage="_${FUNCNAME[0]}"
-  [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
+  local handler="_${FUNCNAME[0]}"
+  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
   local __saved=("$@") __count=$#
-  [ $# -gt 0 ] || __throwArgument "$usage" "no arguments" || return $?
+  [ $# -gt 0 ] || __throwArgument "$handler" "no arguments" || return $?
   while [ $# -gt 0 ]; do
-    [ -n "${1-}" ] || __throwArgument "$usage" "blank argument #$((__count - $# + 1)) ($(decorate each code "${__saved[@]}"))" || return $?
+    local argument="$1" __index=$((__count - $# + 1))
+    # __IDENTICAL__ argumentBlankCheck 1
+    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     which "$1" >/dev/null || return 1
     shift
   done

@@ -70,7 +70,6 @@ bashLint() {
       fi
       ;;
     esac
-    # _IDENTICAL_ argument-esac-shift 1
     shift
   done
   exec 3>&- 4>&1
@@ -232,7 +231,6 @@ bashLintFilesInteractive() {
       __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
       ;;
     esac
-    # _IDENTICAL_ argument-esac-shift 1
     shift
   done
 
@@ -542,7 +540,6 @@ validateFileContents() {
       fileArgs+=("$1")
       ;;
     esac
-    # _IDENTICAL_ argument-esac-shift 1
     shift
   done
 

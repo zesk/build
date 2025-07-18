@@ -202,7 +202,6 @@ bashDebugInterruptFile() {
       __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
       ;;
     esac
-    # _IDENTICAL_ argument-esac-shift 1
     shift
   done
   [ "${#traps[@]}" -gt 0 ] || traps+=("INT")
@@ -293,7 +292,6 @@ plumber() {
       break
       ;;
     esac
-    # _IDENTICAL_ argument-esac-shift 1
     shift
   done
 
@@ -381,7 +379,6 @@ housekeeper() {
       fi
       ;;
     esac
-    # _IDENTICAL_ argument-esac-shift 1
     shift
   done
 
@@ -456,7 +453,6 @@ outputTrigger() {
       break
       ;;
     esac
-    # _IDENTICAL_ argument-esac-shift 1
     shift
   done
 
@@ -513,7 +509,6 @@ debugOpenFiles() {
       return $?
       ;;
     esac
-    # _IDENTICAL_ argument-esac-shift 1
     shift
   done
   printf "%s\n" "PID: $$"

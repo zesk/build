@@ -83,7 +83,6 @@ releaseNotes() {
       fi
       ;;
     esac
-    # _IDENTICAL_ argument-esac-shift 1
     shift
   done
   buildEnvironmentContext __releaseNotes "$usage" "$version"
@@ -143,7 +142,6 @@ nextMinorVersion() {
       printf "%s%s" "$prefix" "$last"
       ;;
     esac
-    # _IDENTICAL_ argument-esac-shift 1
     shift
   done
 }
@@ -204,7 +202,6 @@ newRelease() {
       newVersion="v$newVersion"
       ;;
     esac
-    # _IDENTICAL_ argument-esac-shift 1
     shift
   done
 

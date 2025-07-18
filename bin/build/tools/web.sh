@@ -36,7 +36,6 @@ urlMatchesLocalFileSize() {
       fi
       ;;
     esac
-    # _IDENTICAL_ argument-esac-shift 1
     shift
   done
 
@@ -81,7 +80,6 @@ urlContentLength() {
       printf "%d\n" $((remoteSize + 0))
       ;;
     esac
-    # _IDENTICAL_ argument-esac-shift 1
     shift
   done
 
@@ -139,7 +137,6 @@ websiteScrape() {
       break
       ;;
     esac
-    # _IDENTICAL_ argument-esac-shift 1
     shift
   done
 

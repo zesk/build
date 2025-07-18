@@ -25,9 +25,9 @@
 # Requires: usageDocument
 returnUndo() {
   [ "$1" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
-  local __count=$# __saved=("$@") __usage="_${FUNCNAME[0]}" exitCode="${1-}" args=()
+  local __count=$# __saved=("$@") __handler="_${FUNCNAME[0]}" exitCode="${1-}" args=()
   shift
-  isUnsignedInteger "$exitCode" || __catchArgument "$__usage" "Not an integer $(decorate value "$exitCode") (#$__count: $(decorate each code "${__saved[@]+"${__saved[@]}"}"))" || return $?
+  isUnsignedInteger "$exitCode" || __catchArgument "$__handler" "Not an integer $(decorate value "$exitCode") (#$__count: $(decorate each code "${__saved[@]+"${__saved[@]}"}"))" || return $?
   while [ $# -gt 0 ]; do
     case "$1" in
     --)

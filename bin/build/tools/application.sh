@@ -77,7 +77,6 @@ applicationHome() {
       here=$(usageArgumentDirectory "$usage" "directory" "$argument") || return $?
       ;;
     esac
-    # _IDENTICAL_ argument-esac-shift 1
     shift
   done
   [ -n "$here" ] || here=$(__catchEnvironment "$usage" pwd) || return $?
@@ -121,7 +120,6 @@ applicationHomeAliases() {
       fi
       ;;
     esac
-    # _IDENTICAL_ argument-esac-shift 1
     shift
   done
   [ -n "$goAlias" ] || goAlias="g"

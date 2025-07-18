@@ -142,13 +142,19 @@ documentationBuild() {
   #
   # --clean actually does not require much to run so just handle that first
   #
+  local cacheDirectory
+
   cacheDirectory="$(__catchEnvironment "$usage" buildCacheDirectory ".${FUNCNAME[0]}/${APPLICATION_CODE-default}/")" || return $?
+  echo "$LINENO: cacheDirectory=$cacheDirectory "
   cacheDirectory=$(__catchEnvironment "$usage" directoryRequire "$cacheDirectory") || return $?
+  echo "$LINENO: cacheDirectory=$cacheDirectory "
   if $cleanFlag; then
     __catchEnvironment "$usage" rm -rf "$cacheDirectory" || return $?
     timingReport "$start" "Emptied documentation cache in" || :
     return 0
   fi
+
+  bashDebugInterruptFile
 
   export BUILD_COLORS_MODE BUILD_COMPANY BUILD_COMPANY_LINK BUILD_HOME APPLICATION_NAME APPLICATION_CODE
 
@@ -179,13 +185,10 @@ documentationBuild() {
 
   __catchEnvironment "$usage" __pcregrepInstall || return $?
 
-  local cacheDirectory seeFunction seeFile seePrefix
+  local seeFunction seeFile seePrefix
 
   seeFunction=$(__catchEnvironment "$usage" documentationTemplate seeFunction) || return $?
   seeFile=$(__catchEnvironment "$usage" documentationTemplate seeFile) || return $?
-
-  bashDebugInterruptFile
-  cacheDirectory=$(directoryRequire "$cacheDirectory") || __throwEnvironment "$usage" "Unable to create $cacheDirectory" || return $?
 
   if [ "$actionFlag" = "--unlinked-update" ]; then
     for argument in unlinkedTemplate unlinkedTarget; do
@@ -207,6 +210,7 @@ documentationBuild() {
   # Update indexes with function -> documentationPath
   #
   local template
+  echo "$LINENO: cacheDirectory=$cacheDirectory "
   find "$templatePath" -type f -name '*.md' ! -path '*/__*' | while read -r template; do
     __catchEnvironment "$usage" documentationIndex_LinkDocumentationPaths "$cacheDirectory" "$template" "$targetPath${template#"$templatePath"}" || return $?
   done
@@ -220,8 +224,10 @@ documentationBuild() {
   if [ -n "$unlinkedTemplate" ]; then
     [ -n "$unlinkedTarget" ] || __throwArgument "$usage" "--unlinked-target required with --unlinked-template" || return $?
     ! $verbose || decorate info "Update unlinked document $unlinkedTarget"
+    echo "$LINENO: cacheDirectory=$cacheDirectory "
     local envFile
     envFile=$(_buildDocumentationGenerateEnvironment "$company" "$companyLink" "$applicationName") || return $?
+    echo "$LINENO: cacheDirectory=$cacheDirectory "
     __catchEnvironment "$usage" _documentationTemplateUpdateUnlinked "$cacheDirectory" "$envFile" "$unlinkedTemplate" "$unlinkedTarget" "$pageTemplate" || return $?
     docArgs+=(--env-file "$envFile")
     if [ "$actionFlag" = "--unlinked-update" ]; then

@@ -460,7 +460,6 @@ linkRename() {
       fi
       ;;
     esac
-    # _IDENTICAL_ argument-esac-shift 1
     shift
   done
   [ -n "$from" ] || __throwArgument "$usage" "Need a \"from\" argument" || return $?
@@ -649,7 +648,6 @@ fileIsEmpty() {
       [ ! -s "$argument" ] || return 1
       ;;
     esac
-    # _IDENTICAL_ argument-esac-shift 1
     shift
   done
 }
@@ -696,7 +694,6 @@ _directoryGamutFileWrapper() {
       directory="$(usageArgumentDirectory "$usage" "$argument" "${1-}")" || return $?
       ;;
     esac
-    # _IDENTICAL_ argument-esac-shift 1
     shift
   done
   [ -n "$directory" ] || __throwArgument "$usage" "directory is required" || return $?
@@ -762,7 +759,6 @@ linkCreate() {
       fi
       ;;
     esac
-    # _IDENTICAL_ argument-esac-shift 1
     shift
   done
 

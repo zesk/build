@@ -95,7 +95,6 @@ githubURLParse() {
       printf "%s/%s\n" "$owner" "$repository"
       ;;
     esac
-    # _IDENTICAL_ argument-esac-shift 1
     shift
   done
 }
@@ -240,7 +239,6 @@ githubRelease() {
       extras+=("$1")
       ;;
     esac
-    # _IDENTICAL_ argument-esac-shift 1
     shift
   done
 

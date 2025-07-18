@@ -345,7 +345,6 @@ _installRemotePackage() {
       installPath="${installPath%/}"
       ;;
     esac
-    # _IDENTICAL_ argument-esac-shift 1
     shift
   done
 
@@ -611,7 +610,6 @@ versionSort() {
       __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
       ;;
     esac
-    # _IDENTICAL_ argument-esac-shift 1
     shift
   done
   sort -t . -k "1.2,1n$reverse" -k "2,2n$reverse" -k "3,3n$reverse"
@@ -736,7 +734,6 @@ urlFetch() {
       fi
       ;;
     esac
-    # _IDENTICAL_ argument-esac-shift 1
     shift
   done
 

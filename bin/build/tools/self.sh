@@ -78,7 +78,6 @@ installInstallBinary() {
       fi
       ;;
     esac
-    # _IDENTICAL_ argument-esac-shift 1
     shift
   done
 
@@ -375,7 +374,6 @@ buildEnvironmentLoad() {
       ! $printFlag || printf -- "%s\n" "$found"
       ;;
     esac
-    # _IDENTICAL_ argument-esac-shift 1
     shift
   done
 }
@@ -419,7 +417,6 @@ Build() {
       break
       ;;
     esac
-    # _IDENTICAL_ argument-esac-shift 1
     shift
   done
 
@@ -474,7 +471,6 @@ buildEnvironmentGet() {
       printf "%s\n" "${!argument-}"
       ;;
     esac
-    # _IDENTICAL_ argument-esac-shift 1
     shift
   done
 }
@@ -540,7 +536,6 @@ buildEnvironmentGetDirectory() {
       printf "%s\n" "${subdirectory%/}"
       ;;
     esac
-    # _IDENTICAL_ argument-esac-shift 1
     shift
   done
 }

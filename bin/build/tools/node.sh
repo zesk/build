@@ -25,7 +25,6 @@ nodeInstall() {
       __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
       ;;
     esac
-    # _IDENTICAL_ argument-esac-shift 1
     shift
   done
 
@@ -81,7 +80,6 @@ nodeUninstall() {
       __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
       ;;
     esac
-    # _IDENTICAL_ argument-esac-shift 1
     shift
   done
 
@@ -142,7 +140,6 @@ nodePackageManager() {
       packages+=("$argument")
       ;;
     esac
-    # _IDENTICAL_ argument-esac-shift 1
     shift
   done
 
@@ -242,7 +239,6 @@ nodePackageManagerValid() {
       isFunction "${1}Install" || return 1
       ;;
     esac
-    # _IDENTICAL_ argument-esac-shift 1
     shift
   done
 }

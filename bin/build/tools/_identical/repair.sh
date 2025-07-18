@@ -56,7 +56,6 @@ identicalRepair() {
       fi
       ;;
     esac
-    # _IDENTICAL_ argument-esac-shift 1
     shift
   done
 

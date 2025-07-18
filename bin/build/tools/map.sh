@@ -103,7 +103,6 @@ mapValue() {
       fi
       ;;
     esac
-    # _IDENTICAL_ argument-esac-shift 1
     shift
   done
   [ -n "$mapFile" ] || __throwArgument "$usage" "mapFile required" || return $?
@@ -194,7 +193,6 @@ mapEnvironment() {
       break
       ;;
     esac
-    # _IDENTICAL_ argument-esac-shift 1
     shift
   done
 
@@ -280,7 +278,6 @@ cannon() {
       fi
       ;;
     esac
-    # _IDENTICAL_ argument-esac-shift 1
     shift
   done
 

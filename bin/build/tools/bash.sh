@@ -95,7 +95,6 @@ bashLibrary() {
       break
       ;;
     esac
-    # _IDENTICAL_ argument-esac-shift 1
     shift
   done
 
@@ -157,7 +156,6 @@ bashSourcePath() {
       done < <(cd "$path" && find "." -type f -name '*.sh' ! -path "*/.*/*" "${ff[@]+"${ff[@]}"}" | sort || :)
       ;;
     esac
-    # _IDENTICAL_ argument-esac-shift 1
     shift
   done
   $foundOne || __throwArgument "$usage" "Requires a directory" || return $?
@@ -192,7 +190,6 @@ bashFunctionDefined() {
       fi
       ;;
     esac
-    # _IDENTICAL_ argument-esac-shift 1
     shift
   done
   [ -n "$function" ] || __throwArgument "$usage" "functionName is required" || retrun $?
@@ -250,7 +247,6 @@ bashShowUsage() {
       fi
       ;;
     esac
-    # _IDENTICAL_ argument-esac-shift 1
     shift
   done
 
@@ -292,7 +288,6 @@ bashListFunctions() {
       __bashListFunctions <"$file"
       ;;
     esac
-    # _IDENTICAL_ argument-esac-shift 1
     shift
   done
 }
@@ -345,7 +340,6 @@ bashFunctionCommentVariable() {
       fi
       ;;
     esac
-    # _IDENTICAL_ argument-esac-shift 1
     shift
   done
 
@@ -426,7 +420,6 @@ bashCommentFilter() {
       files+=("$(usageArgumentFile "$usage" "file" "$1")") || return $?
       ;;
     esac
-    # _IDENTICAL_ argument-esac-shift 1
     shift
   done
 
