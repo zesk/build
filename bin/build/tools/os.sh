@@ -243,7 +243,7 @@ _pathIsDirectory() {
 # Environment: PATH
 pathCleanDuplicates() {
   local usage="_${FUNCNAME[0]}" newPath
-  [ $# -eq 0 ] || __help --only "$usage" "$@" || return 0
+  [ $# -eq 0 ] || __help --only "$usage" "$@" || return "$(convertValue $? 1 0)"
   export PATH
 
   newPath=$(__catchEnvironment "$usage" listCleanDuplicates --test _pathIsDirectory ':' "${PATH-}") || return $?
@@ -285,7 +285,7 @@ _whichExists() {
 # Format something neatly as JSON
 # Usage: JSON < inputFile > outputFile
 JSON() {
-  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return 0
+  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
   jq .
 }
 _JSON() {
@@ -488,7 +488,7 @@ _extensionLists() {
 loadAverage() {
   local usage="_${FUNCNAME[0]}"
   local text
-  [ $# -eq 0 ] || __help --only "$usage" "$@" || return 0
+  [ $# -eq 0 ] || __help --only "$usage" "$@" || return "$(convertValue $? 1 0)"
   text=$(__catchEnvironment "$usage" uptime) || return $?
   text="${text##*average}"
   text="${text##*:}"

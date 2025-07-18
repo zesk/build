@@ -73,7 +73,7 @@ _npmInstall() {
 # Core as part of some systems - so this succeeds and it still exists
 #
 npmUninstall() {
-  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return 0
+  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
   packageWhichUninstall npm npm "$@"
 }
 _npmUninstall() {

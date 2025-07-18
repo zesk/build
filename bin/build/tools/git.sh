@@ -302,7 +302,7 @@ _gitShowStatus() {
 # Exit Code: 1 - We are NOT, semantically, inside a git hook
 #
 gitInsideHook() {
-  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return 0
+  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
   [ -n "${GIT_EXEC_PATH-}" ] && [ -n "${GIT_INDEX_FILE-}" ]
 }
 _gitInsideHook() {
@@ -315,7 +315,7 @@ _gitInsideHook() {
 # Parses `user@host:path/project.git` and extracts `host`
 #
 gitRemoteHosts() {
-  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return 0
+  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
   local remoteUrl host
   while read -r remoteUrl; do
     host=$(urlParseItem host "$remoteUrl") || host=$(urlParseItem host "git://$remoteUrl") || __throwArgument "$usage" "Unable to extract host from \"$remoteUrl\"" || return $?
@@ -675,7 +675,7 @@ _gitMainly() {
 # Get the commit hash
 gitCommitHash() {
   local usage="_${FUNCNAME[0]}"
-  [ $# -eq 0 ] || __help --only "$usage" "$@" || return 0
+  [ $# -eq 0 ] || __help --only "$usage" "$@" || return "$(convertValue $? 1 0)"
   __catchEnvironment "$usage" git rev-parse --short HEAD || return $?
 }
 _gitCommitHash() {
@@ -688,7 +688,7 @@ _gitCommitHash() {
 #
 gitCurrentBranch() {
   local usage="_${FUNCNAME[0]}"
-  [ $# -eq 0 ] || __help --only "$usage" "$@" || return 0
+  [ $# -eq 0 ] || __help --only "$usage" "$@" || return "$(convertValue $? 1 0)"
   # git rev-parse --abbrev-ref HEAD
   __catchEnvironment "$usage" git symbolic-ref --short HEAD || return $?
 }
@@ -701,7 +701,7 @@ _gitCurrentBranch() {
 # May need to `git pull --tags`, or no tags exist.
 gitHasAnyRefs() {
   local usage="_${FUNCNAME[0]}"
-  [ $# -eq 0 ] || __help --only "$usage" "$@" || return 0
+  [ $# -eq 0 ] || __help --only "$usage" "$@" || return "$(convertValue $? 1 0)"
   local count
 
   count=$(__catchEnvironment "$usage" git show-ref | grep -c refs/tags) || return $?
@@ -725,7 +725,7 @@ _gitHasAnyRefs() {
 # - post-update
 # - post-commit
 gitHookTypes() {
-  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return 0
+  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
   printf -- "%s " pre-commit pre-push pre-merge-commit pre-rebase pre-receive update post-update post-commit
 }
 _gitHookTypes() {
@@ -977,7 +977,7 @@ _gitPreCommitListExtension() {
 # Clean up after our pre-commit (deletes cache directory)
 gitPreCommitCleanup() {
   local usage="_${FUNCNAME[0]}"
-  [ $# -eq 0 ] || __help --only "$usage" "$@" || return 0
+  [ $# -eq 0 ] || __help --only "$usage" "$@" || return "$(convertValue $? 1 0)"
   local directory
   directory=$(__catchEnvironment "$usage" __gitPreCommitCache) || return $?
   [ ! -d "$directory" ] || __catchEnvironment "$usage" rm -rf "$directory" || return $?

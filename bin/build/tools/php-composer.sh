@@ -106,7 +106,7 @@ _phpComposer() {
 # Install composer for PHP
 phpComposerInstall() {
   local usage="_${FUNCNAME[0]}"
-  [ $# -eq 0 ] || __help --only "$usage" "$@" || return 0
+  [ $# -eq 0 ] || __help --only "$usage" "$@" || return "$(convertValue $? 1 0)"
   ! whichExists composer || return 0
   local target="/usr/local/bin/composer"
   local tempBinary="$target.$$"

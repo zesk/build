@@ -8,7 +8,7 @@
 
 # Are we on Mac OS X?
 isDarwin() {
-  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return 0
+  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
   [ "$(uname -s)" = "Darwin" ]
 }
 _isDarwin() {
@@ -20,7 +20,7 @@ _isDarwin() {
 # Directory for user sounds
 darwinSoundDirectory() {
   local usage="_${FUNCNAME[0]}" home
-  [ $# -eq 0 ] || __help --only "$usage" "$@" || return 0
+  [ $# -eq 0 ] || __help --only "$usage" "$@" || return "$(convertValue $? 1 0)"
 
   isDarwin || __throwEnvironment "$usage" "Only on Darwin" || return $?
   home=$(__catchEnvironment "$usage" userHome) || return $?
@@ -99,7 +99,7 @@ _darwinSoundInstall() {
 # List valid sound names usable for notifications in Darwin
 darwinSoundNames() {
   local usage="_${FUNCNAME[0]}" soundDirectory
-  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return 0
+  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
 
   soundDirectory=$(__catchEnvironment "$usage" darwinSoundDirectory) || return $?
   [ -d "$soundDirectory" ] || __throwEnvironment "$usage" "No $soundDirectory" || return $?

@@ -17,9 +17,10 @@
 # Exit Code: exitCode
 # Requires: isUnsignedInteger printf _return
 _return() {
-  local code="${1:-1}" && shift 2>/dev/null
+  local to=1 icon="✅" code="${1:-1}" && shift 2>/dev/null
   isUnsignedInteger "$code" || _return 2 "${FUNCNAME[1]-none}:${BASH_LINENO[1]-} -> ${FUNCNAME[0]} non-integer \"$code\"" "$@" || return $?
-  [ "$code" -eq 0 ] && printf -- "✅ %s\n" "${*-§}" && return 0 || printf -- "❌ [%d] %s\n" "$code" "${*-§}" 1>&2
+  [ "$code" -eq 0 ] || icon="❌ [$code]" && to=2
+  printf -- "%s %s\n" "$icon" "${*-§}" 1>&"$to"
   return "$code"
 }
 

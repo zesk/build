@@ -112,7 +112,7 @@ _consoleColorMode() {
 # Exit Code: 0 - Supports console animation
 # Exit Code: 1 - Does not support console animation
 hasConsoleAnimation() {
-  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return 0
+  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
   # Important: This can *not* use buildEnvironmentLoad - leads to infinite loops
   export CI
   [ -z "${CI-}" ]
@@ -185,7 +185,7 @@ __consoleEscape1() {
 colorSampleCodes() {
   local i j n
 
-  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return 0
+  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
   if ! hasColors; then
     printf "no colors\n"
     return 0
@@ -248,7 +248,7 @@ _colorSampleCombinations() {
 # Outputs sample sentences for the `consoleAction` commands to see what they look like.
 #
 colorSampleStyles() {
-  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return 0
+  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
   local i colors=(
     red bold-red
     green bold-green
@@ -287,7 +287,7 @@ _colorSampleStyles() {
 colorSampleSemanticStyles() {
   local extra
 
-  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return 0
+  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
 
   if ! buildEnvironmentLoad BUILD_COLORS_MODE; then
     return 1
@@ -457,7 +457,7 @@ _statusMessage() {
 isTTYAvailable() {
   export __BUILD_HAS_TTY
 
-  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return 0
+  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
   if [ "${__BUILD_HAS_TTY-}" != "true" ] && [ "${__BUILD_HAS_TTY-}" != "false" ]; then
     if bash -c ": >/dev/tty" >/dev/null 2>/dev/null; then
       __BUILD_HAS_TTY=true
@@ -486,7 +486,7 @@ _isTTYAvailable() {
 # Environment: LINES - May be defined after calling this
 # Side Effect: MAY define two environment variables
 consoleColumns() {
-  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return 0
+  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
   if ! isTTYAvailable; then
     printf "%d" 120
   else
@@ -512,7 +512,7 @@ _consoleColumns() {
 # Environment: LINES - May be defined after calling this
 # Side Effect: MAY define two environment variables
 consoleRows() {
-  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return 0
+  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
 
   if ! isTTYAvailable; then
     printf "%d" 120
@@ -534,7 +534,7 @@ _consoleRows() {
 # Usage: simpleMarkdownToConsole < $markdownFile
 #
 simpleMarkdownToConsole() {
-  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return 0
+  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
   # shellcheck disable=SC2119
   _toggleCharacterToColor '`' "$(decorate code --)" | _toggleCharacterToColor '**' "$(decorate red --)" | _toggleCharacterToColor '*' "$(decorate cyan --)"
 }

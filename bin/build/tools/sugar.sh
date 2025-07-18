@@ -121,7 +121,7 @@ _muzzle() {
 # Argument: to - Integer. The value to return when `from` matches `value`
 # Argument: ... - Additional from-to pairs can be passed, first matching value is used, all values will be examined if none match
 mapReturn() {
-  local usage="___${FUNCNAME[0]}" value="" from="" to=""
+  local usage="_${FUNCNAME[0]}" value="" from="" to=""
 
   # _IDENTICAL_ argument-case-header 5
   local __saved=("$@") __count=$#
@@ -153,9 +153,56 @@ mapReturn() {
   done
   return "${value:-0}"
 }
+_mapReturn() {
+  # __IDENTICAL__ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
 
-# Hide this one explicitly from buildFunctions
-___mapReturn() {
+# map a value from one value to another given from-to pairs
+#
+# Prints the mapped value to stdout
+#
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
+# Argument: value - String. A value.
+# Argument: from - String. When value matches `from`, instead print `to`
+# Argument: to - String. The value to print when `from` matches `value`
+# Argument: ... - Additional from-to pairs can be passed, first matching value is used, all values will be examined if none match
+convertValue() {
+  local usage="_${FUNCNAME[0]}" value="" from="" to=""
+
+  # _IDENTICAL_ argument-case-header 5
+  local __saved=("$@") __count=$#
+  while [ $# -gt 0 ]; do
+    local argument="$1" __index=$((__count - $# + 1))
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
+    case "$argument" in
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    *)
+      if [ -z "$value" ]; then
+        value=$(usageArgumentString "$usage" "value" "$1") || return $?
+      elif [ -z "$from" ]; then
+        from=$(usageArgumentString "$usage" "from" "$1") || return $?
+      elif [ -z "$to" ]; then
+        to=$(usageArgumentString "$usage" "to" "$1") || return $?
+        if [ "$value" = "$from" ]; then
+          printf "%s\n" "$to"
+          return 0
+        fi
+        from="" && to=""
+      fi
+      ;;
+    esac
+    # _IDENTICAL_ argument-esac-shift 1
+    shift
+  done
+  printf "%s\n" "${value:-0}"
+}
+_convertValue() {
   # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

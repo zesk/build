@@ -286,7 +286,7 @@ _replaceFirstPattern() {
 # INTERNAL: 2. `/./,$!d` deletes all lines until the first non-blank line is found (`/./` matches any non-blank line).
 # INTERNAL: 3. `/./!{N;ba}`: For blank lines at the end, it appends lines to the pattern space (`N`) until a non-blank line is found, then loops back to label `a`.
 trimBoth() {
-  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return 0
+  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
   sed -e :a -e '/./,$!d' -e '/^\n*$/{$d;N;ba' -e '}'
 }
 _trimBoth() {
@@ -298,7 +298,7 @@ _trimBoth() {
 # DOC TEMPLATE: --help 1
 # Argument: --help - Optional. Flag. Display this help.
 trimHead() {
-  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return 0
+  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
   sed -e "/./!d" -e :r -e n -e br
 }
 _trimHead() {
@@ -310,7 +310,7 @@ _trimHead() {
 # DOC TEMPLATE: --help 1
 # Argument: --help - Optional. Flag. Display this help.
 trimTail() {
-  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return 0
+  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
   sed -e :a -e '/^\n*$/{$d;N;ba' -e '}'
 }
 _trimTail() {
@@ -322,7 +322,7 @@ _trimTail() {
 # DOC TEMPLATE: --help 1
 # Argument: --help - Optional. Flag. Display this help.
 singleBlankLines() {
-  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return 0
+  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
   sed '/^$/N;/^\n$/D'
 }
 _singleBlankLines() {
@@ -769,7 +769,7 @@ _uppercase() {
 # Depends: sed
 #
 stripAnsi() {
-  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return 0
+  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
   sed $'s,\x1B\[[0-9;]*[a-zA-Z],,g'
 }
 _stripAnsi() {
@@ -897,7 +897,7 @@ _cachedShaPipe() {
 # Example:     testPassword="$(randomString)"
 # Output: cf7861b50054e8c680a9552917b43ec2b9edae2b
 randomString() {
-  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return 0
+  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
   head --bytes=64 /dev/random | sha1sum | cut -f 1 -d ' '
 }
 _randomString() {

@@ -65,7 +65,7 @@ _dockerComposeUninstall() {
 # Exit Code: 0 - Running
 dockerComposeIsRunning() {
   local usage="_${FUNCNAME[0]}"
-  [ $# -eq 0 ] || __help --only "$usage" "$@" || return 0
+  [ $# -eq 0 ] || __help --only "$usage" "$@" || return "$(convertValue $? 1 0)"
   local temp
   temp=$(fileTemporaryName "$usage") || return $?
   __catchEnvironment "$usage" dockerCompose ps --format json >"$temp" || returnClean $? "$temp" || return $?
@@ -85,7 +85,7 @@ _dockerComposeIsRunning() {
 # DOC TEMPLATE: --help 1
 # Argument: --help - Optional. Flag. Display this help.
 dockerComposeCommandList() {
-  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return 0
+  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
   # Sampled 2025
   printf -- "%s\n" attach build commit config cp create down events exec export images kill logs ls pause port ps pull push restart rm run scale start stats stop top unpause up version wait watch | sort -u
 }

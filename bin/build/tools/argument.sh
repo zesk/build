@@ -555,7 +555,7 @@ _commentArgumentsRemainder() {
 # Example:     __help "_${FUNCNAME[0]}" "$@" || return 0
 # Example:     [ "$1" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
 # Example:     [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
-# Example:     [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return 0
+# Example:     [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
 # Example:
 # Example:     # DEFINED usage
 # Example:

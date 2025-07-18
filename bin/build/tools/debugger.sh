@@ -54,7 +54,7 @@ _bashDebug() {
 bashDebuggerEnable() {
   export __BUILD_BASH_DEBUG_WATCH __BUILD_BASH_STEP_CONTROL __BUILD_BASH_DEBUG_LAST
 
-  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return 0
+  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
 
   __BUILD_BASH_DEBUG_WATCH=()
   __BUILD_BASH_STEP_CONTROL=()
@@ -81,7 +81,7 @@ _bashDebuggerEnable() {
 # Restores file descriptors 0 1 and 2 from 20, 21 and 22 respectively
 # See: bashDebug bashDebuggerEnable
 bashDebuggerDisable() {
-  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return 0
+  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
 
   trap - DEBUG
   unset __BUILD_BASH_DEBUG_WATCH __BUILD_BASH_STEP_CONTROL __BUILD_BASH_DEBUG_LAST

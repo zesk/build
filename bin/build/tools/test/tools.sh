@@ -13,29 +13,29 @@ export globalTestFailure=
 # Supports argument flags in tests:
 # `TAP-Directive` `Test-Skip` `TODO`
 # Filters (`--tag` and `--skip-tag`) are applied in order after the function pattern or suite filter.
-# Argument: --suite testSuite - Optional. Add one test suite to run.
-# Argument: --show - Optional. Flag. List all test suites.
-# Argument: -l - Optional. Flag. List all test suites.
 # Argument: --help - Optional. This help.
 # Argument: --clean - Optional. Delete test artifact files and exit. (No tests run)
+# Argument: --list - Optional. Flag. List all test names (which match if applicable).
+# Argument: --env-file environmentFile - Optional. EnvironmentFile. Load one ore more environment files prior to running tests
 # Argument: --continue - Optional. Flag. Continue from last successful test.
+# Argument: -c - Optional. Flag. Continue from last successful test.
 # Argument: --delete directoryOrFile - Optional. FileDirectory. A file or directory to delete when the test suite terminates.
 # Argument: --delete-common - Flag. Delete `./vendor` and `./node_modules` (and other temporary build directories) by default.
-# Argument: -c - Optional. Flag. Continue from last successful test.
 # Argument: --verbose - Optional. Flag. Be verbose.
 # Argument: --coverage - Optional. Flag. Feature in progress - generate a coverage file for tests.
 # Argument: --no-stats - Optional. Flag. Do not generate a test.stats file showing test timings when completed.
-# Argument: --list - Optional. Flag. List all test names (which match if applicable).
 # Argument: --messy - Optional. Do not delete test artifact files afterwards.
 # Argument: --fail executor - Optional. Callable. One or more programs to run on the failed test files. Takes arguments: testName testFile testLine
-# Argument: --show-tags - Optional. Flag. Of the matched tests, display the tags that they have, if any. Unique list.
 # Argument: --cd-away - Optional. Flag. Change directories to a temporary directory before each test.
-# Argument: --skip-tag tagName - Optional. String. Skip tests tagged with this name.
-# Argument: --tag tagName - Optional. String. Include tests (only) tagged with this name.
-# Argument: --env-file environmentFile - Optional. EnvironmentFile. Load one ore more environment files prior to running tests
 # Argument: --tap tapFile - Optional. FileDirectory. Output test results in TAP format to `tapFile`.
+# Argument: --show - Optional. Flag. List all test suites.
+# Argument: -l - Optional. Flag. List all test suites.
 # Argument: --one testSuite - Optional. Add one test suite to run. (Synonym for `--suite`)
+# Argument: --suite testSuite - Optional. Add one test suite to run.
 # Argument: -1 testSuite - Optional. Add one test suite to run. (Synonym for `--suite`)
+# Argument: --tag tagName - Optional. String. Include tests (only) tagged with this name.
+# Argument: --show-tags - Optional. Flag. Of the matched tests, display the tags that they have, if any. Unique list.
+# Argument: --skip-tag tagName - Optional. String. Skip tests tagged with this name.
 # Argument: testFunctionPattern - Optional. String. Test function (or substring of function name) to run.
 # Hook: bash-test-start
 # Hook: bash-test-pass
@@ -301,6 +301,7 @@ testSuite() {
       if [ -n "$startTest" ]; then
         if [ "$item" = "$startTest" ]; then
           startTest=
+          actualTest="-"
           clearLine
           $beQuiet || decorate warning "Continuing at test $(decorate code "$item") ..."
         else
@@ -318,8 +319,13 @@ testSuite() {
     fi
     filteredTests+=("$item")
   done
-  [ -n "$actualTest" ] || __throwArgument "$usage" "No tests match $(decorate code "${matchTests[@]}")" || return $?
-  [ -z "$startTest" ] || __throwEnvironment "$usage" "$continueFile contains an unknown test: $startTest, starting from beginning" || :
+  if [ -n "$startTest" ]; then
+    statusMessage --last decorate warning "$continueFile contains an unknown test: $startTest, starting from beginning"
+    filteredTests=("${tests[@]}")
+    startTest=""
+  else
+    [ -n "$actualTest" ] || __throwArgument "$usage" "No tests match $(decorate code "${matchTests[@]}")" || return $?
+  fi
 
   # Filter by tags
   if [ ${#filteredTests[@]} -gt 0 ] && [ $((${#tags[@]} + ${#skipTags[@]})) -gt 0 ]; then
@@ -493,10 +499,13 @@ __testSuiteShowTags() {
 # Filters tests by tags
 # Usage: {fn} [ tags ... ] -- [ skipTags ... ] -- tests ...
 __testSuiteFilterTags() {
-  local current=() tags=() skipTags=() gotTags=false
+  local current=() tags=() skipTags=() gotTags=false debugMode=false
 
   while [ $# -gt 0 ]; do
     case "$1" in
+    --debug)
+      debugMode=true
+      ;;
     "--")
       if $gotTags; then
         skipTags=("${current[@]+"${current[@]}"}")
@@ -514,27 +523,57 @@ __testSuiteFilterTags() {
     esac
     shift
   done
-  local lastSectionFile="" sectionFile debugFilters=false
+  local lastSectionFile="" sectionFile
+  local tempComment home filtersFile="/dev/null"
+
+  home=$(__catchEnvironment "$usage" buildHome) || return $?
+
+  ! $debugMode || filtersFile="$home/${FUNCNAME[0]}.debug"
+
+  ! $debugMode || printf "%s" "" >"$home/${FUNCNAME[0]}.debug"
+
+  ! $debugMode || printf "%s %s\n" "Included: " "$(decorate each --count quote -- "${tags[@]+"${tags[@]}"}")" >>"$filtersFile"
+  ! $debugMode || printf "%s %s\n" "Excluded: " "$(decorate each --count quote -- "${skipTags[@]+"${skipTags[@]}"}")" >>"$filtersFile"
+
+  tempComment=$(fileTemporaryName "$usage") || return $?
+  local clean=("$tempComment")
+
   while [ $# -gt 0 ]; do
     local item="$1"
     if [ "$item" != "${item#\#}" ]; then
       sectionFile="${item#\#}"
     else
       local testTag testTags=() defaultKeepIt=true
-      read -r -a testTags < <(bashFunctionComment "$sectionFile" "$item" | grep "Tag:" | removeFields 1 | tr ' ' '\n') || :
+
       [ ${#tags[@]} -eq 0 ] || defaultKeepIt=false
-      local keepIt="$defaultKeepIt"
+      __catchEnvironment "$usage" bashFunctionComment "$sectionFile" "$item" >"$tempComment" || returnClean $? "${clean[@]}" || return $?
+      IFS=$'\n' read -r -d "" -a testTags < <(grepSafe "Tag:" <"$tempComment" | removeFields 1 | tr ' ' '\n' | printfOutputSuffix "\n") || :
+      ! $debugMode || printf "%s\n" "$(date "+%F %T"): $item" >>"$filtersFile"
+      if [ "${#testTags[@]}" -gt 0 ]; then
+        ! $debugMode || printf "%s\n" "bashFunctionComment \"$sectionFile\" \"$item\" > tempFile" >>"$filtersFile"
+        ! $debugMode || printf "%s: %s\n" "$(date "+%F %T")" "read -r -a testTags < <(grepSafe \"Tag:\" <\"tempFile\" | removeFields 1 | tr ' ' '\n' | printfOutputSuffix \"\n\") || :" >>"$filtersFile"
+      fi
+      if [ "${testTags[0]-}" = "Stack:" ]; then
+        statusMessage --last decorate error "Failed in function $item"
+        decorate code
+        decorate each --count quote -- "${testTags[@]}" | decorate blue | printfOutputPrefix "%s" "$(decorate info "Match $item:")"
+        __bashDebugInterruptFile || exit $?
+      fi
+      local keepIt="$defaultKeepIt" keepNote="by default"
       for testTag in "${testTags[@]+"${testTags[@]}"}"; do
         if [ ${#tags[@]} -gt 0 ] && inArray "$testTag" "${tags[@]}"; then
           keepIt=true
-          ! $debugFilters || printf "%s\n" "$item kept with tag $testTag" >>"$home/${FUNCNAME[0]}.debug"
+          keepNote="** with tag $testTag **"
         elif [ ${#skipTags[@]} -gt 0 ] && inArray "$testTag" "${skipTags[@]}"; then
           keepIt=false
-          ! $debugFilters || printf "%s\n" "$item excluded with tag $testTag: ${skipTags[*]}" >>"$home/${FUNCNAME[0]}.debug"
-        elif ! $keepIt; then
-          ! $debugFilters || printf "%s\n" "$item excluded as include tags exist: ${tags[*]}" >>"$home/${FUNCNAME[0]}.debug"
+          keepNote="** excluded by tag $testTag **"
         fi
       done
+      if $keepIt; then
+        ! $debugMode || printf "%s\n" "+ $item kept $keepNote Mine: ($(decorate each --count quote -- "${testTags[@]+"${testTags[@]}"}")) Keep: ($(decorate each --count quote -- "${tags[@]+"${tags[@]}"}"))" >>"$filtersFile"
+      else
+        ! $debugMode || printf "%s\n" "- $item excluded $keepNote Mine: ($(decorate each --count quote -- "${testTags[@]+"${testTags[@]}"}")) Skip: ($(decorate each --count quote -- "${skipTags[@]+"${skipTags[@]}"}"))" >>"$filtersFile"
+      fi
       if $keepIt; then
         if [ "$lastSectionFile" != "$sectionFile" ]; then
           printf "#%s\n" "$sectionFile"
@@ -545,6 +584,7 @@ __testSuiteFilterTags() {
     fi
     shift
   done
+  __catchEnvironment "$usage" rm -f "${clean[@]}" || return $?
 }
 
 __testSuiteListTests() {

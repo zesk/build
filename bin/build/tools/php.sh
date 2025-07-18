@@ -21,7 +21,7 @@
 # Exit Code: 0 - If installation succeeds
 phpInstall() {
   local usage="_${FUNCNAME[0]}"
-  [ $# -eq 0 ] || __help --only "$usage" "$@" || return 0
+  [ $# -eq 0 ] || __help --only "$usage" "$@" || return "$(convertValue $? 1 0)"
   __catchEnvironment "$usage" packageWhich php php-common php-cli "$@" || return $?
 }
 _phpInstall() {
@@ -41,7 +41,7 @@ _phpInstall() {
 # Exit Code: 0 - If uninstallation succeeds
 phpUninstall() {
   local usage="_${FUNCNAME[0]}"
-  [ $# -eq 0 ] || __help --only "$usage" "$@" || return 0
+  [ $# -eq 0 ] || __help --only "$usage" "$@" || return "$(convertValue $? 1 0)"
   __catchEnvironment "$usage" packageWhichUninstall php php-common php-cli "$@" || return $?
 }
 _phpUninstall() {
@@ -78,7 +78,7 @@ _phpTailLog() {
 #
 phpLog() {
   local usage="_${FUNCNAME[0]}"
-  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return 0
+  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
   whichExists php || __throwEnvironment "$usage" "php not installed" || return $?
   php -r "echo ini_get('error_log');" 2>/dev/null || __throwEnvironment "$usage" "php installation issue" || return $?
 }
@@ -93,7 +93,7 @@ _phpLog() {
 #
 phpIniFile() {
   local usage="_${FUNCNAME[0]}"
-  [ $# -eq 0 ] || __help --only "$usage" "$@" || return 0
+  [ $# -eq 0 ] || __help --only "$usage" "$@" || return "$(convertValue $? 1 0)"
   whichExists php || __throwEnvironment "$usage" "php not installed" || return $?
   php -r "echo get_cfg_var('cfg_file_path');" 2>/dev/null || __throwEnvironment "$usage" "php installation issue" || return $?
 }

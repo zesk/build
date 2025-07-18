@@ -105,63 +105,65 @@ _nodeUninstall() {
 # Provides an abstraction to libraries to support any node package manager.
 # Optionally will output the current node package manager when no arguments are passed.
 # Argument: action - Optional. Action to perform: install run update uninstall
-# Argument: * - Required. Argument. Passed to the node package manager. Required when action is provided.
+# Argument: ... - Required. Arguments. Passed to the node package manager. Required when action is provided.
 # No-Argument: Outputs the current node package manager code name
 nodePackageManager() {
   local usage="_${FUNCNAME[0]}"
 
+  local arguments=() flags=() action="" debugFlag=false
+
+  # _IDENTICAL_ argument-case-header 5
+  local __saved=("$@") __count=$#
+  while [ $# -gt 0 ]; do
+    local argument="$1" __index=$((__count - $# + 1))
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
+    case "$argument" in
+    # _IDENTICAL_ --help 4
+    --help)
+      "$usage" 0
+      return $?
+      ;;
+    --debug)
+      debugFlag=true
+      ;;
+    --global)
+      flags+=("$argument")
+      ;;
+    install | run | update | uninstall)
+      [ -z "$action" ] || __throwArgument "$usage" "Only a single action allowed: $argument (already: $action)"
+      action="$argument"
+      ;;
+    -*)
+      # _IDENTICAL_ argumentUnknown 1
+      __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
+      ;;
+    *)
+      [ -n "$action" ] || __throwArgument "$usage" "Requires an action" || return $?
+      packages+=("$argument")
+      ;;
+    esac
+    # _IDENTICAL_ argument-esac-shift 1
+    shift
+  done
+
+  local manager
+
   manager=$(__catchEnvironment "$usage" buildEnvironmentGet NODE_PACKAGE_MANAGER) || return $?
   [ -n "$manager" ] || __throwEnvironment "$usage" "NODE_PACKAGE_MANAGER is blank" || return $?
   nodePackageManagerValid "$manager" || __throwEnvironment "$usage" "NODE_PACKAGE_MANAGER is not valid: $manager not in $(nodePackageManagerValid)" || return $?
-
-  if [ $# -eq 0 ]; then
+  isExecutable "$manager" || __throwEnvironment "$usage" "$(decorate code "$manager") is not an executable" || return $?
+  if [ -z "$action" ]; then
     printf "%s\n" "$manager"
-  else
-    isExecutable "$manager" || __throwEnvironment "$usage" "$(decorate code "$manager") is not an executable" || return $?
-    local managerArgumentFormatter="__nodePackageManagerArguments_$manager"
-    isFunction "$managerArgumentFormatter" || __throwEnvironment "$usage" "$managerArgumentFormatter is not defined, failing" || return $?
-
-    local arguments=() flags=() action="" debugFlag=false
-
-    # _IDENTICAL_ argument-case-header 5
-    local __saved=("$@") __count=$#
-    while [ $# -gt 0 ]; do
-      local argument="$1" __index=$((__count - $# + 1))
-      [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
-      case "$argument" in
-      # _IDENTICAL_ --help 4
-      --help)
-        "$usage" 0
-        return $?
-        ;;
-      --debug)
-        debugFlag=true
-        ;;
-      --global)
-        flags+=("$argument")
-        ;;
-      install | run | update | uninstall)
-        [ -z "$action" ] || __throwArgument "$usage" "Only a single action allowed: $argument (already: $action)"
-        action="$argument"
-        ;;
-      -*)
-        # _IDENTICAL_ argumentUnknown 1
-        __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
-        ;;
-      *)
-        [ -n "$action" ] || __throwArgument "$usage" "Requires an action" || return $?
-        packages+=("$argument")
-        ;;
-      esac
-      # _IDENTICAL_ argument-esac-shift 1
-      shift
-    done
-    local managerArgumentFormatter="__nodePackageManagerArguments_$manager"
-    isFunction "$managerArgumentFormatter" || __throwEnvironment "$usage" "$managerArgumentFormatter is not defined, failing" || return $?
-    IFS=$'\n' read -r -d "" -a arguments < <("$managerArgumentFormatter" "$usage" "$action" "${flags[@]+"${flags[@]}"}") || :
-    ! $debugFlag || decorate each code "$manager" "${arguments[@]+"${arguments[@]}"}" "${packages[@]+"${packages[@]}"}" || :
-    __catchEnvironment "$usage" "$manager" "${arguments[@]+"${arguments[@]}"}" "${packages[@]+"${packages[@]}"}" || return $?
+    return 0
   fi
+
+  local managerArgumentFormatter="__nodePackageManagerArguments_$manager"
+
+  isFunction "$managerArgumentFormatter" || __throwEnvironment "$usage" "$managerArgumentFormatter is not defined, failing" || return $?
+  IFS=$'\n' read -r -d "" -a arguments < <("$managerArgumentFormatter" "$usage" "$action" "${flags[@]+"${flags[@]}"}") || :
+
+  ! $debugFlag || decorate each code "$manager" "${arguments[@]+"${arguments[@]}"}" "${packages[@]+"${packages[@]}"}" || :
+  __catchEnvironment "$usage" "$manager" "${arguments[@]+"${arguments[@]}"}" "${packages[@]+"${packages[@]}"}" || return $?
 }
 _nodePackageManager() {
   # __IDENTICAL__ usageDocument 1
@@ -171,7 +173,7 @@ _nodePackageManager() {
 # Installs the selected package manager for node
 nodePackageManagerInstall() {
   local usage="_${FUNCNAME[0]}"
-  [ $# -eq 0 ] || __help --only "$usage" "$@" || return 0
+  [ $# -eq 0 ] || __help --only "$usage" "$@" || return "$(convertValue $? 1 0)"
 
   local manager
 
@@ -191,7 +193,7 @@ _nodePackageManagerInstall() {
 # Installs the selected package manager for node
 nodePackageManagerUninstall() {
   local usage="_${FUNCNAME[0]}"
-  [ $# -eq 0 ] || __help --only "$usage" "$@" || return 0
+  [ $# -eq 0 ] || __help --only "$usage" "$@" || return "$(convertValue $? 1 0)"
   local manager
 
   manager=$(__catchEnvironment "$usage" nodePackageManager) || return $?

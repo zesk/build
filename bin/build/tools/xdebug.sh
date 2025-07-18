@@ -13,11 +13,11 @@ __xdebugInstallationArtifact() {
 # Install the xdebug PHP Debugger
 xdebugInstall() {
   local handler="_${FUNCNAME[0]}"
-  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
+  [ $# -eq 0 ] || __help --only "$handler" "$@" || return "$(convertValue $? 1 0)"
 
   local iniFile
 
-  __catchEnvironment "$handler" phpInstall php-pear || return $?
+  __catchEnvironment "$handler" phpInstall || return $?
   __catchEnvironment "$handler" packageWhich pear php-pear || return $?
   __catchEnvironment "$handler" packageWhich phpize php-dev || return $?
   usageRequireBinary "$handler" pear pecl || return $?
@@ -49,7 +49,7 @@ __xdebug_Require() {
 # Environment: XDEBUG_ENABLED
 xdebugEnable() {
   local handler="_${FUNCNAME[0]}"
-  [ $# -eq 0 ] || __help --only "$handler" "$@" || return 0
+  [ $# -eq 0 ] || __help --only "$handler" "$@" || return "$(convertValue $? 1 0)"
   __xdebug_Require "$handler" || return $?
   export XDEBUG_ENABLED=true
   decorate success "xdebug debugging $(decorate value "[ENABLED]")"
@@ -64,7 +64,7 @@ _xdebugEnable() {
 xdebugDisable() {
   local handler="_${FUNCNAME[0]}"
 
-  [ $# -eq 0 ] || __help --only "$handler" "$@" || return 0
+  [ $# -eq 0 ] || __help --only "$handler" "$@" || return "$(convertValue $? 1 0)"
   __xdebug_Require "$handler" || return $?
   export XDEBUG_ENABLED
   unset XDEBUG_ENABLED

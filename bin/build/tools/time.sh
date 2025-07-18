@@ -18,7 +18,7 @@
 # Should never fail, unless date is not installed
 timingStart() {
   local usage="_${FUNCNAME[0]}"
-  [ $# -eq 0 ] || __help --only "$usage" "$@" || return 0
+  [ $# -eq 0 ] || __help --only "$usage" "$@" || return "$(convertValue $? 1 0)"
   __timestamp
 }
 _timingStart() {

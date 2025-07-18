@@ -115,7 +115,7 @@ _versionSort() {
 ipLookup() {
   local usage="_${FUNCNAME[0]}"
 
-  [ $# -eq 0 ] || __help --only "$usage" "$@" || return 0
+  [ $# -eq 0 ] || __help --only "$usage" "$@" || return "$(convertValue $? 1 0)"
   local url jqFilter
   if ! packageWhich curl curl; then
     __throwEnvironment "$usage" "Requires curl to operate" || return $?

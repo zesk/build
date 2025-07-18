@@ -17,7 +17,7 @@ __brewWrapper() {
 # Argument: --help - Optional. Flag. Display this help.
 # Platform: Darwin
 brewInstall() {
-  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return 0
+  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
   isDarwin || __throwEnvironment "$usage" "Only on Darwin (Mac OS X)" || return $?
   /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 }

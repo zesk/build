@@ -280,7 +280,7 @@ _buildCacheDirectory() {
 buildHome() {
   local usage="_${FUNCNAME[0]}"
   export BUILD_HOME
-  [ $# -eq 0 ] || __help --only "$usage" "$@" || return 0
+  [ $# -eq 0 ] || __help --only "$usage" "$@" || return "$(convertValue $? 1 0)"
   if [ -z "${BUILD_HOME-}" ]; then
     local homeEnv="${BASH_SOURCE[0]%/*}/../env/BUILD_HOME.sh"
     if [ -f "$homeEnv" ]; then

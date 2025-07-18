@@ -68,7 +68,7 @@ _developerAnnounce() {
 # Undo a set of developer functions or aliases
 # stdin: List of functions and aliases to remove from the current environment
 developerUndo() {
-  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return 0
+  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
   local item
   while read -r item; do
     [ -n "$item" ] || continue

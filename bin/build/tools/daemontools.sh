@@ -10,7 +10,7 @@
 # Install daemontools and dependencies
 # Platform: `docker` containers will not install `daemontools-run` as it kills the container
 daemontoolsInstall() {
-  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return 0
+  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
   local packages
 
   if isAlpine; then
@@ -246,7 +246,7 @@ _daemontoolsRemoveService() {
 # Is daemontools running?
 daemontoolsIsRunning() {
   local usage="_${FUNCNAME[0]}"
-  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return 0
+  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
 
   local processIds processId
 
@@ -268,7 +268,7 @@ _daemontoolsIsRunning() {
 # Exit code: 0 - success
 # Exit code: 1 - No environment file found
 daemontoolsHome() {
-  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return 0
+  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
   local home
   export DAEMONTOOLS_HOME
   buildEnvironmentLoad DAEMONTOOLS_HOME || _environment DAEMONTOOLS_HOME || return $?
@@ -285,7 +285,7 @@ _daemontoolsHome() {
 # Run the daemontools root daemon
 daemontoolsExecute() {
   local usage="_${FUNCNAME[0]}"
-  [ $# -eq 0 ] || __help --only "$usage" "$@" || return 0
+  [ $# -eq 0 ] || __help --only "$usage" "$@" || return "$(convertValue $? 1 0)"
 
   # IDENTICAL rootUser 1
   [ "$(id -u 2>/dev/null)" = "0" ] || __throwEnvironment "$usage" "Must be root" || return $?
@@ -306,7 +306,7 @@ _daemontoolsExecute() {
 # Requires: pgrep read printf
 daemontoolsProcessIds() {
   local usage="_${FUNCNAME[0]}"
-  [ $# -eq 0 ] || __help --only "$usage" "$@" || return 0
+  [ $# -eq 0 ] || __help --only "$usage" "$@" || return "$(convertValue $? 1 0)"
 
   local processIds=() processId
   while read -r processId; do processIds+=("$processId"); done < <(pgrep 'svscan*')

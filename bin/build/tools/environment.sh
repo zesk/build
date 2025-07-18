@@ -189,7 +189,7 @@ _environmentValueReadArray() {
 # Usage: {fn} < "$stateFile"
 # List names of environment values set in a bash state file
 environmentNames() {
-  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return 0
+  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
   environmentLines | cut -f 1 -d =
 }
 _environmentNames() {
@@ -201,7 +201,7 @@ _environmentNames() {
 # Usage: {fn} < "$stateFile"
 # List lines of environment values set in a bash state file
 environmentLines() {
-  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return 0
+  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
   grepSafe -e "^[A-Za-z][A-Z0-9_a-z]*="
 }
 _environmentLines() {
@@ -502,7 +502,7 @@ _environmentFileLoad() {
 
 # List environment variables related to security
 environmentSecureVariables() {
-  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return 0
+  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
   printf -- "%s\n" PATH LD_LIBRARY USER HOME HOSTNAME LANG PS1 PS2 PS3 CWD PWD SHELL SHLVL TERM TMPDIR VISUAL EDITOR
 }
 _environmentSecureVariables() {
@@ -513,7 +513,7 @@ _environmentSecureVariables() {
 
 # List environment variables related to application deployments
 environmentApplicationVariables() {
-  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return 0
+  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
   printf -- "%s\n" BUILD_TIMESTAMP APPLICATION_BUILD_DATE APPLICATION_VERSION APPLICATION_ID APPLICATION_TAG
 }
 _environmentApplicationVariables() {

@@ -37,6 +37,18 @@ testCoverageReportThing() {
   assertEquals "$(__bashCoveragePartialLine '  [ $# -gt 0 ] || return 1' "$codes" "$template")" "$expected" || return $?
 }
 
+# Tag: test-tags slow
+testSlowTagsWorkCorrectly() {
+  local usage="_return"
+
+  local home
+  home=$(__catchEnvironment "$usage" buildHome) || return $?
+
+  local ee=("PATH=$PATH" "HOME=$HOME")
+  assertExitCode --stdout-match "testBuildFunctionsCoverage" --stdout-match "${FUNCNAME[0]}" 0 /usr/bin/env -i "${ee[@]}" "$home/bin/test.sh" --tag slow --list || return $?
+  assertExitCode --stdout-match "${FUNCNAME[0]}" 0 /usr/bin/env -i "${ee[@]}" "$home/bin/test.sh" --tag test-tags --list || return $?
+}
+
 # Tag: slow-30-seconds slow
 testBuildFunctionsCoverage() {
   local usage="_return"
@@ -139,11 +151,25 @@ testBuildFunctionsHelpCoverage() {
   done < <(__dataBuildFunctionsWithoutHelp)
 
   __mockValue BUILD_DEBUG
+  __mockValue BUILD_COLORS
   __mockValue TEST_TRACK_ASSERTIONS
 
+  # BUILD_COLORS on vs off
+  # ON:
+  #   real	16m0.432s
+  #   user	7m6.802s
+  #   sys	  16m1.870s
+  #
+  # OFF:
+  #   real	15m26.865s
+  #   user	6m46.296s
+  #   sys	  14m43.790s
+
   export BUILD_DEBUG
+  export BUILD_COLORS
   export TEST_TRACK_ASSERTIONS
   BUILD_DEBUG=""
+  BUILD_COLORS=false
   TEST_TRACK_ASSERTIONS=false
 
   local lastPassedCache lastPassed=""
@@ -195,6 +221,7 @@ testBuildFunctionsHelpCoverage() {
 
   __mockValue BUILD_DEBUG "" --end
   __mockValue TEST_TRACK_ASSERTIONS "" --end
+  __mockValue BUILD_COLORS "" --end
 
   statusMessage decorate info "Exiting ${FUNCNAME[0]}..."
   if ! $coverageRequired; then
@@ -228,5 +255,130 @@ quoteGrepPattern
 sedReplacePattern
 newlineHide
 realPath
+EOF
+}
+
+# Tag: slow
+testBuildFunctionsHelpOnly() {
+  local usage="_return"
+  local fun
+  export BUILD_DEBUG
+  export BUILD_COLORS
+  export TEST_TRACK_ASSERTIONS
+
+  __mockValue BUILD_DEBUG
+  __mockValue BUILD_COLORS
+  __mockValue TEST_TRACK_ASSERTIONS
+
+  BUILD_DEBUG="fast-usage"
+  BUILD_COLORS=false
+  TEST_TRACK_ASSERTIONS=false
+
+  while read -r fun; do
+    assertExitCode --stderr-match "Only argument allowed is --help" 2 "$fun" "--never" || return $?
+  done < <(__dataBuildFunctionsHelpIsTheOnlyOption)
+
+  __mockValue BUILD_DEBUG "" --end
+  __mockValue TEST_TRACK_ASSERTIONS "" --end
+  __mockValue BUILD_COLORS "" --end
+
+}
+
+__dataBuildFunctionsHelpIsTheOnlyOption() {
+  cat <<EOF
+isiTerm2
+buildHome
+bashDebuggerEnable
+bashDebuggerDisable
+awsHasEnvironment
+awsProfilesList
+bashBuiltins
+bashStripComments
+isBitBucketPipeline
+brewInstall
+hasConsoleAnimation
+colorSampleCodes
+colorSampleStyles
+colorSampleSemanticStyles
+isTTYAvailable
+consoleColumns
+consoleRows
+simpleMarkdownToConsole
+cursorGet
+daemontoolsInstall
+daemontoolsIsRunning
+daemontoolsHome
+daemontoolsExecute
+daemontoolsProcessIds
+isDarwin
+darwinSoundDirectory
+darwinSoundNames
+yesterdayDate
+tomorrowDate
+todayDate
+buildDebugStop
+isBashDebug
+isErrorExit
+bashDebuggerEnable
+bashDebuggerDisable
+hasColors
+decorations
+deployPackageName
+deprecatedIgnore
+developerUndo
+dockerComposeIsRunning
+dockerComposeCommandList
+dockerPlatformDefault
+dumpDockerTestFile
+insideDocker
+dockerListContext
+environmentNames
+environmentLines
+environmentSecureVariables
+environmentApplicationVariables
+gitInsideHook
+gitRemoteHosts
+gitCommitHash
+gitCurrentBranch
+gitHasAnyRefs
+gitHookTypes
+gitPreCommitCleanup
+hostnameFull
+bashDebuggerDisable
+isiTerm2
+iTerm2Aliases
+iTerm2ColorNames
+iTerm2ColorTypes
+mariadbInstall
+mariadbUninstall
+mariadbDumpClean
+markdown_removeUnfinishedSections
+markdown_FormatList
+nodePackageManagerInstall
+nodePackageManagerUninstall
+npmUninstall
+pathCleanDuplicates
+JSON
+loadAverage
+packageManagerDefault
+phpComposerInstall
+phpInstall
+phpUninstall
+phpLog
+phpIniFile
+ipLookup
+rsyncInstall
+buildHome
+trimBoth
+trimHead
+trimTail
+singleBlankLines
+stripAnsi
+randomString
+timingStart
+validateTypeList
+xdebugInstall
+xdebugEnable
+xdebugDisable
 EOF
 }

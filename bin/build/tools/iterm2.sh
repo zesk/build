@@ -29,7 +29,7 @@
 # Environment: LC_TERMINAL
 # Environment: TERM
 isiTerm2() {
-  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return 0
+  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
   export LC_TERMINAL TERM
   [ "${LC_TERMINAL-}" = "iTerm2" ] && [ "${TERM-}" != "screen" ]
 }
@@ -153,7 +153,7 @@ _iTerm2PromptSupport() {
 # Argument: --help - Optional. Flag. Display this help.
 iTerm2Aliases() {
   local usage="_${FUNCNAME[0]}"
-  [ $# -eq 0 ] || __help --only "$usage" "$@" || return 0
+  [ $# -eq 0 ] || __help --only "$usage" "$@" || return "$(convertValue $? 1 0)"
 
   local home skipped=()
 
@@ -182,7 +182,7 @@ _iTerm2Aliases() {
 # DOC TEMPLATE: --help 1
 # Argument: --help - Optional. Flag. Display this help.
 iTerm2ColorNames() {
-  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return 0
+  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
   printf "%s\n" black red green yellow blue magenta cyan white
 }
 _iTerm2ColorNames() {
@@ -236,7 +236,7 @@ _iTerm2IsColorType() {
 # Colors for various UI elements
 iTerm2ColorTypes() {
   local usage="_${FUNCNAME[0]}"
-  [ $# -eq 0 ] || __help --only "$usage" "$@" || return 0
+  [ $# -eq 0 ] || __help --only "$usage" "$@" || return "$(convertValue $? 1 0)"
   local colors
   printf "%s\n" fg bg selbg selfg curbg curfg # Selection and maybe current line?
   printf "%s\n" bold link underline           # Formatting

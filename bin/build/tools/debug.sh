@@ -106,7 +106,7 @@ _buildDebugStart() {
 # See: buildDebugStart
 # Requires: buildDebugEnabled
 buildDebugStop() {
-  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return 0
+  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
   if ! buildDebugEnabled "$@"; then
     return 1
   fi
@@ -123,7 +123,7 @@ _buildDebugStop() {
 # Useful if you need to temporarily enable or disable it.
 # Depends: -
 isBashDebug() {
-  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return 0
+  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
   case $- in *x*) return 0 ;; esac
   return 1
 }
@@ -249,7 +249,7 @@ __bashDebugInterruptFile() {
 # Outputs `1` always
 # Requires: -
 isErrorExit() {
-  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return 0
+  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
   # printf "isErrorExit: %s\n" "$-" 1>&2
   case "$-" in *e* | *E*) return 0 ;; esac
   return 1

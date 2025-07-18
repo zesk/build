@@ -25,35 +25,30 @@
 # Environment: BUILD_COLORS - Optional. Boolean. Whether the build system will output ANSI colors.
 # Requires: isPositiveInteger tput
 hasColors() {
-  local usage="_${FUNCNAME[0]}"
-  local termColors
-  export BUILD_COLORS TERM
-
-  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return 0
+  # --help is only argument allowed
+  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
 
   # Values allowed for this global are true and false
-  # Important - must not use buildEnvironmentLoad BUILD_COLORS TERM; then
-  BUILD_COLORS="${BUILD_COLORS-}"
-  if [ -z "$BUILD_COLORS" ]; then
+  # Important: DO NOT use buildEnvironmentLoad BUILD_COLORS TERM
+  export BUILD_COLORS
+  if [ -z "${BUILD_COLORS-}" ]; then
     BUILD_COLORS=false
     case "${TERM-}" in "" | "dumb" | "unknown") BUILD_COLORS=true ;; *)
+      local termColors
       termColors="$(tput colors 2>/dev/null)"
       isPositiveInteger "$termColors" || termColors=2
       [ "$termColors" -lt 8 ] || BUILD_COLORS=true
       ;;
     esac
-  elif [ "$BUILD_COLORS" = "1" ]; then
-    # Backwards
-    BUILD_COLORS=true
-  elif [ -n "$BUILD_COLORS" ] && [ "$BUILD_COLORS" != "true" ]; then
+  elif [ "${BUILD_COLORS-}" != "true" ]; then
     BUILD_COLORS=false
   fi
   [ "${BUILD_COLORS-}" = "true" ]
 }
 _hasColors() {
+  true || hasColors --help
   # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
-  ! false || hasColors --help
 }
 
 #
@@ -79,7 +74,7 @@ __decorate() {
 # DOC TEMPLATE: --help 1
 # Argument: --help - Optional. Flag. Display this help.
 decorations() {
-  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return 0
+  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
   printf "%s\n" reset \
     underline no-underline bold no-bold \
     black black-contrast blue cyan green magenta orange red white yellow \
@@ -200,8 +195,10 @@ decoration=45;97 45;30
 # Also supports formatting input lines instead (on the same line)
 # Example:     decorate each code "$@"
 # Requires: decorate printf
+# Argument: style - String. Required. The style to decorate each element.
+# Argument: -- - Flag. Optional. Pass as the first argument after the style to avoid reading arguments from stdin.
 # Argument: --index - Flag. Optional. Show the index of each item before with a colon. `0:first 1:second` etc.
-# Argument: --count - Flag. Optional. Show the count of the items at the end in brackets `[11]`.
+# Argument: --count - Flag. Optional. Show the count of items in the list after the list is generated.
 __decorateExtensionEach() {
   local formatted=() item addIndex=false showCount=false index=0 prefix=""
 
@@ -232,6 +229,7 @@ __decorateExtensionEach() {
       done
     fi
   else
+    [ "${1-}" != "--" ] || shift
     while [ $# -gt 0 ]; do
       ! $addIndex || prefix="$index:"
       item="$1"

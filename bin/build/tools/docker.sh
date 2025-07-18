@@ -20,7 +20,7 @@
 # Fetch the default platform for docker
 # Outputs one of: `linux/arm64`, `linux/mips64`, `linux/amd64`
 dockerPlatformDefault() {
-  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return 0
+  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
   local os=linux chip
   case "$(uname -m)" in
   *arm*) chip=arm64 ;;
@@ -41,7 +41,7 @@ _dockerPlatformDefault() {
 # are insideDocker or not; use this to confirm platform implementation
 #
 dumpDockerTestFile() {
-  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return 0
+  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
   local proc1File=/proc/1/sched
 
   if [ -f "$proc1File" ]; then
@@ -66,7 +66,7 @@ _dumpDockerTestFile() {
 # Checked: 2025-07-09
 # TODO: Write a test to check this date every oh, say, 3 months
 insideDocker() {
-  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return 0
+  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
   if [ ! -f /proc/1/cmdline ]; then
     # Not inside
     return 1
@@ -182,7 +182,7 @@ _anyEnvToBashEnv() {
 
 # List the files which would be included in the docker image
 dockerListContext() {
-  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return 0
+  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
   printf 'FROM scratch\nCOPY . /\n' | DOCKER_BUILDKIT=1 docker build -q -f- -o- . | tar t
 }
 _dockerListContext() {

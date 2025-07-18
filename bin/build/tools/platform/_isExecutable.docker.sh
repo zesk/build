@@ -20,6 +20,9 @@ isExecutable() {
 
 # fn: isExecutable*
 # Test if all arguments are executable binaries
+#
+# a.k.a. isExecutableHack - this version is slow and works around a bug in Docker's mapped volumes.
+#
 # Usage: {fn} string0 [ string1 ... ]
 # Argument: string - Required. Path to binary to test if it is executable.
 # If no arguments are passed, returns exit code 1.
@@ -31,6 +34,7 @@ isExecutableHack() {
   local lsMask
 
   [ $# -eq 1 ] || _argument "Single argument only: $*" || return $?
+  [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
 
   # Skip illegal options "--" and "-foo"
   [ "$1" = "${1#-}" ] || return 1

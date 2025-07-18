@@ -89,7 +89,7 @@ _dateFromTimestamp() {
 # Summary: Yesterday's date
 # Example:     rotated="$log.$({fn})"
 yesterdayDate() {
-  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return 0
+  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
   dateFromTimestamp "$(($(date -u +%s) - 86400))" %F
 }
 _yesterdayDate() {
@@ -104,7 +104,7 @@ _yesterdayDate() {
 # Summary: Tomorrow's date
 # Example:     rotated="$log.$({fn})"
 tomorrowDate() {
-  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return 0
+  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
   dateFromTimestamp "$(($(date -u +%s) + 86400))" %F
 }
 _tomorrowDate() {
@@ -120,7 +120,7 @@ _tomorrowDate() {
 # Example:     date="$({fn})"
 #
 todayDate() {
-  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return 0
+  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
   date -u +%F
 }
 _todayDate() {

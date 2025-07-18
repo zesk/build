@@ -9,11 +9,11 @@
 
 testColorSampleCodes() {
   assertExitCode 0 colorSampleCodes || return $?
-  assertNotExitCode 0 colorSampleCodes --no-arguments-really-allowed || return $?
+  assertNotExitCode --stderr-match "Only argument allowed is --help" 0 colorSampleCodes --no-arguments-really-allowed || return $?
 }
 testColorSampleStyles() {
   assertExitCode 0 colorSampleStyles || return $?
-  assertNotExitCode 0 colorSampleStyles --no-arguments-really-allowed || return $?
+  assertNotExitCode --stderr-match "Only argument allowed is --help" 0 colorSampleStyles --no-arguments-really-allowed || return $?
 }
 testSemanticColorSampleStyles() {
   local mode
@@ -25,14 +25,12 @@ testSemanticColorSampleStyles() {
 }
 
 testSimpleMarkdownToConsole() {
-  local saveBC actual expected testString
+  local actual expected testString
   local this=${FUNCNAME[0]}
 
   export BUILD_COLORS
 
-  __environment buildEnvironmentLoad BUILD_COLORS || return $?
-
-  saveBC=${BUILD_COLORS-}
+  __mockValue BUILD_COLORS
 
   BUILD_COLORS=true
 
@@ -51,7 +49,8 @@ testSimpleMarkdownToConsole() {
 
   BUILD_COLORS=false
   actual="$(printf "%s" "$testString" | simpleMarkdownToConsole)"
-  BUILD_COLORS="$saveBC"
+
+  __mockValue BUILD_COLORS "" --end
 
   expected="Code text is italic and bold"
   assertEquals "$actual" "$expected" || return $?

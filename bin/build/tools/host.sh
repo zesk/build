@@ -11,7 +11,7 @@
 hostnameFull() {
   local usage="_${FUNCNAME[0]}"
 
-  [ $# -eq 0 ] || __help --only "$usage" "$@" || return 0
+  [ $# -eq 0 ] || __help --only "$usage" "$@" || return "$(convertValue $? 1 0)"
   __catchEnvironment "$usage" __hostname || return $?
 }
 _hostnameFull() {

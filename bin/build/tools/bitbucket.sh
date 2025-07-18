@@ -85,7 +85,7 @@ _bitbucketContainer() {
 # Exit Code: 1 - Not a BitBucket pipeline
 #
 isBitBucketPipeline() {
-  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return 0
+  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
   export BUILD_DEBUG BITBUCKET_WORKSPACE CI
   if ! buildEnvironmentLoad BITBUCKET_WORKSPACE CI; then
     return 1

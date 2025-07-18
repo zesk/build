@@ -67,7 +67,7 @@ _deployApplicationVersion() {
 # Environment: BUILD_TARGET
 deployPackageName() {
   local usage="_${FUNCNAME[0]}"
-  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return 0
+  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
 
   export BUILD_TARGET
   __catchEnvironment "$usage" buildEnvironmentLoad BUILD_TARGET || return $?

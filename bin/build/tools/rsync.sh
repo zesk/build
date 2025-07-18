@@ -14,7 +14,7 @@
 # DOC TEMPLATE: --help 1
 # Argument: --help - Optional. Flag. Display this help.
 rsyncInstall() {
-  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return 0
+  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
   packageWhich rsync
 }
 _rsyncInstall() {
