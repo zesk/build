@@ -3,7 +3,7 @@
 # Copyright &copy; 2025 Market Acumen, Inc.
 #
 
-# IDENTICAL decorate 245
+# IDENTICAL decorate 240
 
 # Sets the environment variable `BUILD_COLORS` if not set, uses `TERM` to calculate
 #
@@ -15,27 +15,22 @@
 # Environment: BUILD_COLORS - Optional. Boolean. Whether the build system will output ANSI colors.
 # Requires: isPositiveInteger tput
 hasColors() {
-  local usage="_${FUNCNAME[0]}"
-  local termColors
-  export BUILD_COLORS TERM
-
+  # --help is only argument allowed
   [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
 
   # Values allowed for this global are true and false
-  # Important - must not use buildEnvironmentLoad BUILD_COLORS TERM; then
-  BUILD_COLORS="${BUILD_COLORS-}"
-  if [ -z "$BUILD_COLORS" ]; then
+  # Important: DO NOT use buildEnvironmentLoad BUILD_COLORS TERM
+  export BUILD_COLORS
+  if [ -z "${BUILD_COLORS-}" ]; then
     BUILD_COLORS=false
     case "${TERM-}" in "" | "dumb" | "unknown") BUILD_COLORS=true ;; *)
+      local termColors
       termColors="$(tput colors 2>/dev/null)"
       isPositiveInteger "$termColors" || termColors=2
       [ "$termColors" -lt 8 ] || BUILD_COLORS=true
       ;;
     esac
-  elif [ "$BUILD_COLORS" = "1" ]; then
-    # Backwards
-    BUILD_COLORS=true
-  elif [ -n "$BUILD_COLORS" ] && [ "$BUILD_COLORS" != "true" ]; then
+  elif [ "${BUILD_COLORS-}" != "true" ]; then
     BUILD_COLORS=false
   fi
   [ "${BUILD_COLORS-}" = "true" ]

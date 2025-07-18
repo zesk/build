@@ -139,6 +139,17 @@ documentationBuild() {
     shift
   done
 
+  #
+  # --clean actually does not require much to run so just handle that first
+  #
+  cacheDirectory="$(__catchEnvironment "$usage" buildCacheDirectory ".${FUNCNAME[0]}/${APPLICATION_CODE-default}/")" || return $?
+  cacheDirectory=$(__catchEnvironment "$usage" directoryRequire "$cacheDirectory") || return $?
+  if $cleanFlag; then
+    __catchEnvironment "$usage" rm -rf "$cacheDirectory" || return $?
+    timingReport "$start" "Emptied documentation cache in" || :
+    return 0
+  fi
+
   export BUILD_COLORS_MODE BUILD_COMPANY BUILD_COMPANY_LINK BUILD_HOME APPLICATION_NAME APPLICATION_CODE
 
   BUILD_COLORS_MODE=$(consoleConfigureColorMode) || :
@@ -156,9 +167,8 @@ documentationBuild() {
   #
   # Check requirements
   #
-
-  [ -z "$companyLink" ] || __throwArgument "$usage" "Need --company-link" || return $?
-  [ -z "$applicationName" ] || __throwArgument "$usage" "Need --name" || return $?
+  [ -n "$companyLink" ] || __throwArgument "$usage" "Need --company-link" || return $?
+  [ -n "$applicationName" ] || __throwArgument "$usage" "Need --name" || return $?
   [ -n "$functionTemplate" ] || __throwArgument "$usage" "--function-template required" || return $?
   [ -n "$pageTemplate" ] || __throwArgument "$usage" "--page-template required" || return $?
   [ -n "$targetPath" ] || __throwArgument "$usage" "--target required" || return $?
@@ -171,17 +181,10 @@ documentationBuild() {
 
   local cacheDirectory seeFunction seeFile seePrefix
 
-  cacheDirectory="$(__catchEnvironment "$usage" buildCacheDirectory ".${FUNCNAME[0]}/${APPLICATION_CODE-default}/")" || return $?
-  cacheDirectory=$(__catchEnvironment "$usage" directoryRequire "$cacheDirectory") || return $?
   seeFunction=$(__catchEnvironment "$usage" documentationTemplate seeFunction) || return $?
   seeFile=$(__catchEnvironment "$usage" documentationTemplate seeFile) || return $?
 
   bashDebugInterruptFile
-  if $cleanFlag; then
-    __catchEnvironment "$usage" rm -rf "$cacheDirectory" || return $?
-    timingReport "$start" "Emptied documentation cache in" || :
-    return 0
-  fi
   cacheDirectory=$(directoryRequire "$cacheDirectory") || __throwEnvironment "$usage" "Unable to create $cacheDirectory" || return $?
 
   if [ "$actionFlag" = "--unlinked-update" ]; then

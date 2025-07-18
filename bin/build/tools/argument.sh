@@ -535,7 +535,7 @@ _commentArgumentsRemainder() {
   printf "%s\n" "$stateFile" "$@"
 }
 
-# IDENTICAL __help 55
+# IDENTICAL __help 58
 
 # Simple help argument handler.
 #
@@ -563,11 +563,14 @@ _commentArgumentsRemainder() {
 # Example:     __help "$usage" "$@" || return 0
 # Example:     [ "$1" != "--help" ] || __help "$usage" "$@" || return 0
 # Example:     [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
-# Example:     [ $# -eq 0 ] || __help --only "$usage" "$@" || return 0
+# Example:     [ $# -eq 0 ] || __help --only "$usage" "$@" || return "$(convertValue $? 1 0)"
 # Example:
 # Example:     # Blank Arguments for help
 # Example:     [ $# -gt 0 ] || __help "_${FUNCNAME[0]}" --help || return 0
 # Example:     [ $# -gt 0 ] || __help "$usage" --help || return 0
+#
+# DEPRECATED-Example: [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return $?
+# DEPRECATED-Example: [ $# -eq 0 ] || __help --only "$usage" "$@" || return $?
 #
 # Requires: __throwArgument usageDocument
 __help() {

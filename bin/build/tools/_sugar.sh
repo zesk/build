@@ -11,7 +11,7 @@
 #
 # -- CUT BELOW HERE --
 
-# IDENTICAL _sugar 159
+# IDENTICAL _sugar 160
 
 # Argument: name ... - Optional. String. Exit code value to output.
 # Print one or more return codes by name.
@@ -35,7 +35,7 @@
 #
 # See: https://stackoverflow.com/questions/1101957/are-there-any-standard-exit-status-codes-in-linux
 # File: bin/build/errno.txt
-#
+# INTERNAL: Runner-up for the one-line bash award.
 # Requires: usageDocument printf
 # See: exitString
 # Exit Code: 0 - success
@@ -90,12 +90,13 @@ _choose() {
   "$testValue" && printf -- "%s\n" "${1-}" || printf -- "%s\n" "${2-}"
 }
 
-# _IDENTICAL_ returnClean 20
+# _IDENTICAL_ returnClean 21
 
 # Delete files or directories and return the same exit code passed in.
 # Argument: exitCode - Required. Integer. Exit code to return.
 # Argument: item - Optional. One or more files or folders to delete, failures are logged to stderr.
 # Requires: isUnsignedInteger _argument __environment usageDocument
+# Group: Sugar
 returnClean() {
   local usage="_${FUNCNAME[0]}"
   [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0

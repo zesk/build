@@ -746,7 +746,7 @@ _urlFetch() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# IDENTICAL __help 55
+# IDENTICAL __help 58
 
 # Simple help argument handler.
 #
@@ -774,11 +774,14 @@ _urlFetch() {
 # Example:     __help "$usage" "$@" || return 0
 # Example:     [ "$1" != "--help" ] || __help "$usage" "$@" || return 0
 # Example:     [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
-# Example:     [ $# -eq 0 ] || __help --only "$usage" "$@" || return 0
+# Example:     [ $# -eq 0 ] || __help --only "$usage" "$@" || return "$(convertValue $? 1 0)"
 # Example:
 # Example:     # Blank Arguments for help
 # Example:     [ $# -gt 0 ] || __help "_${FUNCNAME[0]}" --help || return 0
 # Example:     [ $# -gt 0 ] || __help "$usage" --help || return 0
+#
+# DEPRECATED-Example: [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return $?
+# DEPRECATED-Example: [ $# -eq 0 ] || __help --only "$usage" "$@" || return $?
 #
 # Requires: __throwArgument usageDocument
 __help() {
@@ -1004,7 +1007,7 @@ _isFunction() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# IDENTICAL decorate 245
+# IDENTICAL decorate 240
 
 # Sets the environment variable `BUILD_COLORS` if not set, uses `TERM` to calculate
 #
@@ -1016,27 +1019,22 @@ _isFunction() {
 # Environment: BUILD_COLORS - Optional. Boolean. Whether the build system will output ANSI colors.
 # Requires: isPositiveInteger tput
 hasColors() {
-  local usage="_${FUNCNAME[0]}"
-  local termColors
-  export BUILD_COLORS TERM
-
+  # --help is only argument allowed
   [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
 
   # Values allowed for this global are true and false
-  # Important - must not use buildEnvironmentLoad BUILD_COLORS TERM; then
-  BUILD_COLORS="${BUILD_COLORS-}"
-  if [ -z "$BUILD_COLORS" ]; then
+  # Important: DO NOT use buildEnvironmentLoad BUILD_COLORS TERM
+  export BUILD_COLORS
+  if [ -z "${BUILD_COLORS-}" ]; then
     BUILD_COLORS=false
     case "${TERM-}" in "" | "dumb" | "unknown") BUILD_COLORS=true ;; *)
+      local termColors
       termColors="$(tput colors 2>/dev/null)"
       isPositiveInteger "$termColors" || termColors=2
       [ "$termColors" -lt 8 ] || BUILD_COLORS=true
       ;;
     esac
-  elif [ "$BUILD_COLORS" = "1" ]; then
-    # Backwards
-    BUILD_COLORS=true
-  elif [ -n "$BUILD_COLORS" ] && [ "$BUILD_COLORS" != "true" ]; then
+  elif [ "${BUILD_COLORS-}" != "true" ]; then
     BUILD_COLORS=false
   fi
   [ "${BUILD_COLORS-}" = "true" ]
@@ -1360,7 +1358,7 @@ isUnsignedInteger() {
 
 # <-- END of IDENTICAL _return
 
-# IDENTICAL _tinySugar 88
+# IDENTICAL _tinySugar 89
 
 # Run `handler` with an argument error
 # Usage: {fn} handler ...
@@ -1426,12 +1424,13 @@ __environment() {
   "$@" || _environment "$@" || return $?
 }
 
-# _IDENTICAL_ returnClean 20
+# _IDENTICAL_ returnClean 21
 
 # Delete files or directories and return the same exit code passed in.
 # Argument: exitCode - Required. Integer. Exit code to return.
 # Argument: item - Optional. One or more files or folders to delete, failures are logged to stderr.
 # Requires: isUnsignedInteger _argument __environment usageDocument
+# Group: Sugar
 returnClean() {
   local usage="_${FUNCNAME[0]}"
   [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
@@ -1448,6 +1447,7 @@ _returnClean() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
+# <-- END of IDENTICAL _tinySugar
 # <-- END of IDENTICAL _tinySugar
 
 # Argument: binary ... - Required. Executable. Any arguments are passed to `binary`.

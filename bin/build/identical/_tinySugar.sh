@@ -76,12 +76,13 @@ __environment() {
   "$@" || _environment "$@" || return $?
 }
 
-# _IDENTICAL_ returnClean 20
+# _IDENTICAL_ returnClean 21
 
 # Delete files or directories and return the same exit code passed in.
 # Argument: exitCode - Required. Integer. Exit code to return.
 # Argument: item - Optional. One or more files or folders to delete, failures are logged to stderr.
 # Requires: isUnsignedInteger _argument __environment usageDocument
+# Group: Sugar
 returnClean() {
   local usage="_${FUNCNAME[0]}"
   [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0

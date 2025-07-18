@@ -4,4 +4,4 @@
 # Category: Application
 # Type: URL
 export BUILD_COMPANY_LINK
-BUILD_COMPANY_LINK="${BUILD_COMPANY_LINK:-"https://marketacumen.com?crcat=code&crsource=zesk/build&crcampaign=docs&crkw="}"
+BUILD_COMPANY_LINK="${BUILD_COMPANY_LINK:-"https://marketacumen.com/?crcat=code&crsource=zesk/build&crcampaign=docs&crkw="}"
