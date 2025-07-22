@@ -32,14 +32,15 @@ mapEnvironment() {
   local handler="_${FUNCNAME[0]}"
   local __sedFile __prefix='{' __suffix='}'
 
-  # _IDENTICAL_ argumentNonBlankLoopHandler 5
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
+    # __IDENTICAL__ argumentBlankCheck 1
     [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
-    --help) ! "$handler" 0 || return $? ;;
+    --help) "$handler" 0 && return $? || return $? ;;
     --prefix)
       shift
       __prefix="$(usageArgumentString "$handler" "$argument" "${1-}")" || return $?

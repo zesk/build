@@ -10,7 +10,7 @@
 function __argumentsWithNonBlanksHandler() {
   local handler="_${FUNCNAME[0]}"
 
-  # _IDENTICAL_ argumentNonBlankLoopHandler 5
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
@@ -18,7 +18,9 @@ function __argumentsWithNonBlanksHandler() {
     [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
-    --help) ! "$handler" 0 || return $? ;;
+    --help) "$handler" 0 && return $? || return $? ;;
+    # _IDENTICAL_ handlerHandler 1
+    --handler) shift && handler=$(usageArgumentFunction "$handler" "$argument" "${1-}") || return $? ;;
     *)
       # _IDENTICAL_ argumentUnknownHandler 1
       __throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
@@ -37,7 +39,7 @@ function __argumentsWithBlanksHandler() {
     local argument="$1" __index=$((__count - $# + 1))
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
-    --help) ! "$handler" 0 || return $? ;;
+    --help) "$handler" 0 && return $? || return $? ;;
     *)
       # _IDENTICAL_ argumentUnknownHandler 1
       __throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?

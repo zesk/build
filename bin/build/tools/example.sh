@@ -40,44 +40,39 @@ _usageFunction() {
 # DOC TEMPLATE: dashDashAllowsHelpParameters 1
 # Argument: -- - Optional. Flag. Stops command processing to enable arbitrary text to be passed as additional arguments without special meaning.
 exampleFunction() {
-  local usage="_${FUNCNAME[0]}"
+  local handler="_${FUNCNAME[0]}"
   local name="" easyFlag=false width=50 target=""
 
-  # _IDENTICAL_ argument-case-header 5
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
+    # __IDENTICAL__ argumentBlankCheck 1
+    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-    # _IDENTICAL_ --help 4
-    --help)
-      "$usage" 0
-      return $?
-      ;;
-    # _IDENTICAL_ --handler 4
-    --handler)
-      shift
-      usage=$(usageArgumentFunction "$usage" "$argument" "${1-}") || return $?
-      ;;
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
+    # _IDENTICAL_ handlerHandler 1
+    --handler) shift && handler=$(usageArgumentFunction "$handler" "$argument" "${1-}") || return $? ;;
     --easy)
       easyFlag=true
       ;;
     --name)
       # shift here never fails as [ #$ -gt 0 ]
       shift
-      name="$(usageArgumentString "$usage" "$argument" "${1-}")" || return $?
+      name="$(usageArgumentString "$handler" "$argument" "${1-}")" || return $?
       ;;
     --path)
       shift
-      path="$(usageArgumentDirectory "$usage" "$argument" "${1-}")" || return $?
+      path="$(usageArgumentDirectory "$handler" "$argument" "${1-}")" || return $?
       ;;
     --target)
       shift
-      target="$(usageArgumentFileDirectory "$usage" "$argument" "${1-}")" || return $?
+      target="$(usageArgumentFileDirectory "$handler" "$argument" "${1-}")" || return $?
       ;;
     *)
-      # _IDENTICAL_ argumentUnknown 1
-      __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
+      # _IDENTICAL_ argumentUnknownHandler 1
+      __throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
       ;;
     esac
     shift
@@ -90,15 +85,15 @@ exampleFunction() {
 
   # Load MANPATH environment
   export MANPATH
-  __catchEnvironment "$usage" buildEnvironmentLoad MANPATH || return $?
+  __catchEnvironment "$handler" buildEnvironmentLoad MANPATH || return $?
 
-  ! $easyFlag || __catchEnvironment "$usage" decorate pair "$width" "$name: Easy mode enabled" || return $?
-  ! $easyFlag || __catchEnvironment "$usage" decorate pair "path" "$path" || return $?
-  ! $easyFlag || __catchEnvironment "$usage" decorate pair "target" "$target" || return $?
+  ! $easyFlag || __catchEnvironment "$handler" decorate pair "$width" "$name: Easy mode enabled" || return $?
+  ! $easyFlag || __catchEnvironment "$handler" decorate pair "path" "$path" || return $?
+  ! $easyFlag || __catchEnvironment "$handler" decorate pair "target" "$target" || return $?
 
   # Trouble debugging
 
-  whichExists library-which-should-be-there || __throwEnvironment "$usage" "missing thing" || return $?
+  whichExists library-which-should-be-there || __throwEnvironment "$handler" "missing thing" || return $?
 
   # DEBUG LINE
   printf -- "%s:%s %s\n" "$(decorate code "${BASH_SOURCE[0]}")" "$(decorate magenta "$LINENO")" "$(decorate each code "$@")" # DEBUG LINE

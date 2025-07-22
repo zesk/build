@@ -84,9 +84,9 @@ _decorations() {
 # stdout: Decorated text
 # Requires: isFunction _argument awk __catchEnvironment usageDocument __executeInputSupport __help
 decorate() {
-  local usage="_${FUNCNAME[0]}" text="" what="${1-}" lp dp style
+  local handler="_${FUNCNAME[0]}" text="" what="${1-}" lp dp style
   [ "$what" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
-  shift && [ -n "$what" ] || __catchArgument "$usage" "Requires at least one argument: \"$*\"" || return $?
+  shift && [ -n "$what" ] || __catchArgument "$handler" "Requires at least one argument: \"$*\"" || return $?
 
   if ! style=$(__decorateStyle "$what"); then
     local extend func="${what/-/_}"
@@ -94,14 +94,14 @@ decorate() {
     # When this next line calls `__catchArgument` it results in an infinite loop, so don't - use _argument
     # shellcheck disable=SC2119
     isFunction "$extend" || _argument printf -- "%s\n%s\n" "Unknown decoration name: $what ($extend)" "$(decorations)" || return $?
-    __executeInputSupport "$usage" "$extend" -- "$@" || return $?
+    __executeInputSupport "$handler" "$extend" -- "$@" || return $?
     return 0
   fi
   IFS=" " read -r lp dp text <<<"$style" || :
   [ "$dp" != "-" ] || dp="$lp"
   local p='\033['
 
-  __executeInputSupport "$usage" __decorate "$text" "${p}${lp}m" "${p}${dp:-$lp}m" "${p}0m" -- "$@" || return $?
+  __executeInputSupport "$handler" __decorate "$text" "${p}${lp}m" "${p}${dp:-$lp}m" "${p}0m" -- "$@" || return $?
 }
 _decorate() {
   # __IDENTICAL__ usageDocument 1

@@ -120,11 +120,11 @@ __environment() {
 # Requires: isUnsignedInteger _argument __environment usageDocument
 # Group: Sugar
 returnClean() {
-  local usage="_${FUNCNAME[0]}"
-  [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
+  local handler="_${FUNCNAME[0]}"
+  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
   local exitCode="${1-}" && shift
   if ! isUnsignedInteger "$exitCode"; then
-    __throwArgument "$usage" "$exitCode (not an integer) $*" || return $?
+    __throwArgument "$handler" "$exitCode (not an integer) $*" || return $?
   else
     __environment rm -rf "$@" || return "$exitCode"
     return "$exitCode"
@@ -267,7 +267,7 @@ _bashFunctionComment() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# IDENTICAL __help 58
+# IDENTICAL __help 55
 
 # Simple help argument handler.
 #
@@ -304,20 +304,17 @@ _bashFunctionComment() {
 # DEPRECATED-Example: [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return $?
 # DEPRECATED-Example: [ $# -eq 0 ] || __help --only "$usage" "$@" || return $?
 #
-# Requires: __throwArgument usageDocument
+# Requires: __throwArgument usageDocument ___help
 __help() {
   [ $# -gt 0 ] || ! ___help 0 || return 0
-  local usage="${1-}" && shift
-  if [ "$usage" = "--only" ]; then
-    usage="${1-}" && shift
+  local handler="${1-}" && shift
+  if [ "$handler" = "--only" ]; then
+    handler="${1-}" && shift
     [ $# -gt 0 ] || return 0
-    [ "$#" -eq 1 ] && [ "${1-}" = "--help" ] || __throwArgument "$usage" "Only argument allowed is --help: \"${1-}\"" || return $?
+    [ "$#" -eq 1 ] && [ "${1-}" = "--help" ] || __throwArgument "$handler" "Only argument allowed is --help: \"${1-}\"" || return $?
   fi
   while [ $# -gt 0 ]; do
-    if [ "$1" = "--help" ]; then
-      "$usage" 0
-      return 1
-    fi
+    [ "$1" != "--help" ] || ! "$handler" 0 || return 1
     shift
   done
   return 0
@@ -337,8 +334,8 @@ ___help() {
 # Requires: __catchArgument isUnsignedInteger usageDocument
 isPositiveInteger() {
   # _IDENTICAL_ functionSignatureSingleArgument 2
-  local usage="_${FUNCNAME[0]}"
-  [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
+  local handler="_${FUNCNAME[0]}"
+  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
   if isUnsignedInteger "${1-}"; then
     [ "$1" -gt 0 ] || return 1
     return 0
@@ -358,9 +355,9 @@ _isPositiveInteger() {
 # Requires: __catchArgument isUnsignedInteger usageDocument type
 isFunction() {
   # _IDENTICAL_ functionSignatureSingleArgument 2
-  local usage="_${FUNCNAME[0]}"
-  [ $# -eq 1 ] || __catchArgument "$usage" "Single argument only: $*" || return $?
-  [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
+  local handler="_${FUNCNAME[0]}"
+  [ $# -eq 1 ] || __catchArgument "$handler" "Single argument only: $*" || return $?
+  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
   # Skip illegal options "--" and "-foo"
   [ "$1" = "${1#-}" ] || return 1
   case "$(type -t "$1")" in function | builtin) [ "$1" != "." ] || return 1 ;; *) return 1 ;; esac
@@ -411,15 +408,15 @@ _exitString() {
 # IDENTICAL usageArgumentCore 13
 
 # Require an argument to be non-blank
-# Argument: usage - Required. Function. Usage function to call upon failure.
+# Argument: handler - Required. Function. Usage function to call upon failure.
 # Argument: argument - Required. String. Name of the argument used in error messages.
 # Argument: value - Optional. String, Value which should be non-blank otherwise an argument error is thrown.
 # Exit Code: 2 - If `value` is blank
 # Exit code: 0 - If `value` is non-blank
 usageArgumentString() {
-  local usage="$1" argument="$2"
+  local handler="$1" argument="$2"
   shift 2 || :
-  [ -n "${1-}" ] || __throwArgument "$usage" "blank" "$argument" || return $?
+  [ -n "${1-}" ] || __throwArgument "$handler" "blank" "$argument" || return $?
   printf "%s\n" "$1"
 }
 
@@ -504,9 +501,9 @@ _decorations() {
 # stdout: Decorated text
 # Requires: isFunction _argument awk __catchEnvironment usageDocument __executeInputSupport __help
 decorate() {
-  local usage="_${FUNCNAME[0]}" text="" what="${1-}" lp dp style
+  local handler="_${FUNCNAME[0]}" text="" what="${1-}" lp dp style
   [ "$what" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
-  shift && [ -n "$what" ] || __catchArgument "$usage" "Requires at least one argument: \"$*\"" || return $?
+  shift && [ -n "$what" ] || __catchArgument "$handler" "Requires at least one argument: \"$*\"" || return $?
 
   if ! style=$(__decorateStyle "$what"); then
     local extend func="${what/-/_}"
@@ -514,14 +511,14 @@ decorate() {
     # When this next line calls `__catchArgument` it results in an infinite loop, so don't - use _argument
     # shellcheck disable=SC2119
     isFunction "$extend" || _argument printf -- "%s\n%s\n" "Unknown decoration name: $what ($extend)" "$(decorations)" || return $?
-    __executeInputSupport "$usage" "$extend" -- "$@" || return $?
+    __executeInputSupport "$handler" "$extend" -- "$@" || return $?
     return 0
   fi
   IFS=" " read -r lp dp text <<<"$style" || :
   [ "$dp" != "-" ] || dp="$lp"
   local p='\033['
 
-  __executeInputSupport "$usage" __decorate "$text" "${p}${lp}m" "${p}${dp:-$lp}m" "${p}0m" -- "$@" || return $?
+  __executeInputSupport "$handler" __decorate "$text" "${p}${lp}m" "${p}${dp:-$lp}m" "${p}0m" -- "$@" || return $?
 }
 _decorate() {
   # __IDENTICAL__ usageDocument 1
@@ -672,7 +669,7 @@ __decorateExtensionQuote() {
 # Argument: -- - Alone after the executor forces `stdin` to be ignored. The `--` flag is also removed from the arguments passed to the executor.
 # Argument: ... - Any additional arguments are passed directly to the executor
 __executeInputSupport() {
-  local usage="$1" executor=() && shift
+  local handler="$1" executor=() && shift
 
   while [ $# -gt 0 ]; do
     if [ "$1" = "--" ]; then
@@ -689,20 +686,20 @@ __executeInputSupport() {
   if [ $# -eq 0 ] && IFS="" read -r -t 1 -n 1 byte; then
     local line done=false
     if [ "$byte" = $'\n' ]; then
-      __catchEnvironment "$usage" "${executor[@]}" "" || return $?
+      __catchEnvironment "$handler" "${executor[@]}" "" || return $?
       byte=""
     fi
     while ! $done; do
       IFS="" read -r line || done=true
       [ -n "$byte$line" ] || ! $done || break
-      __catchEnvironment "$usage" "${executor[@]}" "$byte$line" || return $?
+      __catchEnvironment "$handler" "${executor[@]}" "$byte$line" || return $?
       byte=""
     done
   else
     if [ "${1-}" = "--" ]; then
       shift
     fi
-    __catchEnvironment "$usage" "${executor[@]}" "$@" || return $?
+    __catchEnvironment "$handler" "${executor[@]}" "$@" || return $?
   fi
 }
 
@@ -726,7 +723,7 @@ _fileReverseLines() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# IDENTICAL mapEnvironment 81
+# IDENTICAL mapEnvironment 79
 
 # Summary: Convert tokens in files to environment variable values
 #
@@ -746,27 +743,25 @@ _fileReverseLines() {
 # Requires: __throwArgument read environmentVariables decorate sed cat rm __throwEnvironment __catchEnvironment _clean
 # Requires: usageArgumentString
 mapEnvironment() {
-  local usage="_${FUNCNAME[0]}"
+  local handler="_${FUNCNAME[0]}"
   local __sedFile __prefix='{' __suffix='}'
 
-  # _IDENTICAL_ argument-case-header 5
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
+    # __IDENTICAL__ argumentBlankCheck 1
+    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-    # _IDENTICAL_ --help 4
-    --help)
-      "$usage" 0
-      return $?
-      ;;
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
     --prefix)
       shift
-      __prefix="$(usageArgumentString "$usage" "$argument" "${1-}")" || return $?
+      __prefix="$(usageArgumentString "$handler" "$argument" "${1-}")" || return $?
       ;;
     --suffix)
       shift
-      __suffix="$(usageArgumentString "$usage" "$argument" "${1-}")" || return $?
+      __suffix="$(usageArgumentString "$handler" "$argument" "${1-}")" || return $?
       ;;
     *)
       break
@@ -775,16 +770,17 @@ mapEnvironment() {
     shift
   done
 
-  local __ee=("$@") __e __usage="$usage"
-  unset usage
+  local __ee=("$@") __e __handler="$handler"
+  # Allows the name `handler` to exist as a variable to map
+  unset handler
 
   if [ $# -eq 0 ]; then
     while read -r __e; do __ee+=("$__e"); done < <(environmentVariables)
   fi
-  __sedFile=$(__catchEnvironment "$__usage" mktemp) || return $?
-  __catchEnvironment "$__usage" _mapEnvironmentGenerateSedFile "$__prefix" "$__suffix" "${__ee[@]}" >"$__sedFile" || returnClean $? "$__sedFile" || return $?
-  __catchEnvironment "$__usage" sed -f "$__sedFile" || __throwEnvironment "$__usage" "$(cat "$__sedFile")" || returnClean $? "$__sedFile" || return $?
-  __catchEnvironment "$__usage" rm -rf "$__sedFile" || return $?
+  __sedFile=$(__catchEnvironment "$__handler" mktemp) || return $?
+  __catchEnvironment "$__handler" _mapEnvironmentGenerateSedFile "$__prefix" "$__suffix" "${__ee[@]}" >"$__sedFile" || returnClean $? "$__sedFile" || return $?
+  __catchEnvironment "$__handler" sed -f "$__sedFile" || __throwEnvironment "$__handler" "$(cat "$__sedFile")" || returnClean $? "$__sedFile" || return $?
+  __catchEnvironment "$__handler" rm -rf "$__sedFile" || return $?
 }
 _mapEnvironment() {
   # __IDENTICAL__ usageDocument 1

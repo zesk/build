@@ -12,14 +12,15 @@ ___documentTemplateFunction() {
 
   local manager=""
 
-  # _IDENTICAL_ argumentNonBlankLoopHandler 5
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
+    # __IDENTICAL__ argumentBlankCheck 1
     [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
-    --help) ! "$handler" 0 || return $? ;;
+    --help) "$handler" 0 && return $? || return $? ;;
     # IDENTICAL managerArgumentHandler 5
     --manager)
       shift
@@ -27,7 +28,7 @@ ___documentTemplateFunction() {
       packageManagerValid "$manager" || __throwArgument "$handler" "Manager is invalid: $(decorate code "$manager")" || return $?
       ;;
     *)
-      # _IDENTICAL_ argumentUnknown 1
+      # _IDENTICAL_ argumentUnknownHandler 1
       __throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
       ;;
     esac

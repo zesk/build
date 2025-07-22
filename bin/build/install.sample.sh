@@ -144,7 +144,7 @@ __installCheck() {
   printf "%s %s (%s)\n" "$(decorate bold-blue "$name")" "$(decorate code "$version")" "$(decorate orange "$id")"
 }
 
-# IDENTICAL _installRemotePackage 402
+# IDENTICAL _installRemotePackage 399
 
 # Installs {name} in a local project directory if not installed. Also
 # will overwrite {source} with the latest version after installation.
@@ -207,7 +207,7 @@ __installCheck() {
 # Exit Code: 2 - Argument error
 # Requires: cp rm cat printf realPath whichExists _return fileTemporaryName __catchArgument __throwArgument __catchEnvironment decorate usageArgumentString isFunction __decorateExtensionQuote
 _installRemotePackage() {
-  local usage="_${FUNCNAME[0]}"
+  local handler="_${FUNCNAME[0]}"
 
   local relative="${1-}" defaultPackagePath="${2-}" packageInstallerName="${3-}"
 
@@ -219,62 +219,60 @@ _installRemotePackage() {
   local localPath="" fetchArguments=() url="" versionFunction="" urlFunction="" checkFunction="" installers=()
   local installPath="" installArgs=() forceFlag=false installReason="" skipSelf=false
 
-  # _IDENTICAL_ argument-case-header 5
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
+    # __IDENTICAL__ argumentBlankCheck 1
+    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-    # _IDENTICAL_ --help 4
-    --help)
-      "$usage" 0
-      return $?
-      ;;
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
     --source)
       shift
-      source=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
+      source=$(usageArgumentString "$handler" "$argument" "${1-}") || return $?
       ;;
     --name)
       shift
-      name=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
+      name=$(usageArgumentString "$handler" "$argument" "${1-}") || return $?
       ;;
     --mock | --local)
-      [ -z "$localPath" ] || __throwArgument "$usage" "$argument already" || return $?
+      [ -z "$localPath" ] || __throwArgument "$handler" "$argument already" || return $?
       shift
-      [ -n "${1-}" ] || __throwArgument "$usage" "$argument blank argument #$__index" || return $?
-      localPath="$(__catchArgument "$usage" realPath "${1%/}")" || return $?
+      [ -n "${1-}" ] || __throwArgument "$handler" "$argument blank argument #$__index" || return $?
+      localPath="$(__catchArgument "$handler" realPath "${1%/}")" || return $?
       ;;
     --user | --header | --password)
       shift
-      fetchArguments+=("$argument" "$(usageArgumentString "$usage" "$argument" "${1-}")") || return $?
+      fetchArguments+=("$argument" "$(usageArgumentString "$handler" "$argument" "${1-}")") || return $?
       ;;
     --url)
       shift
-      [ -z "$url" ] || __throwArgument "$usage" "$argument already" || return $?
-      [ -n "${1-}" ] || __throwArgument "$usage" "$argument blank argument" || return $?
+      [ -z "$url" ] || __throwArgument "$handler" "$argument already" || return $?
+      [ -n "${1-}" ] || __throwArgument "$handler" "$argument blank argument" || return $?
       url="$1"
       ;;
     --version-function)
       shift
-      [ -z "$versionFunction" ] || __throwArgument "$usage" "$argument already" || return $?
-      isFunction "${1-}" || __throwArgument "$usage" "$argument not callable: ${1-}" || return $?
+      [ -z "$versionFunction" ] || __throwArgument "$handler" "$argument already" || return $?
+      isFunction "${1-}" || __throwArgument "$handler" "$argument not callable: ${1-}" || return $?
       versionFunction="$1"
       ;;
     --url-function)
       shift
-      [ -z "$urlFunction" ] || __throwArgument "$usage" "$argument already" || return $?
-      isFunction "${1-}" || __throwArgument "$usage" "$argument not callable: ${1-}" || return $?
+      [ -z "$urlFunction" ] || __throwArgument "$handler" "$argument already" || return $?
+      isFunction "${1-}" || __throwArgument "$handler" "$argument not callable: ${1-}" || return $?
       urlFunction="$1"
       ;;
     --check-function)
       shift
-      [ -z "$checkFunction" ] || __throwArgument "$usage" "$argument already" || return $?
-      isFunction "${1-}" || __throwArgument "$usage" "$argument not callable: ${1-}" || return $?
+      [ -z "$checkFunction" ] || __throwArgument "$handler" "$argument already" || return $?
+      isFunction "${1-}" || __throwArgument "$handler" "$argument not callable: ${1-}" || return $?
       checkFunction="$1"
       ;;
     --installer)
       shift
-      installers+=("$(usageArgumentString "$usage" "$argument" "${1-}")") || return $?
+      installers+=("$(usageArgumentString "$handler" "$argument" "${1-}")") || return $?
       ;;
     #
     # I believe this ensures that the process running does not modify its source script directly
@@ -291,18 +289,18 @@ _installRemotePackage() {
     --replace)
       local newName
       shift
-      newName=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
+      newName=$(usageArgumentString "$handler" "$argument" "${1-}") || return $?
       decorate bold-blue "Updating -> $(decorate bold-orange "$newName")"
-      __catchEnvironment "$usage" cp -f "${BASH_SOURCE[0]}" "$newName" || return $?
-      __catchEnvironment "$usage" chmod +x "$newName" || return $?
+      __catchEnvironment "$handler" cp -f "${BASH_SOURCE[0]}" "$newName" || return $?
+      __catchEnvironment "$handler" chmod +x "$newName" || return $?
       exec "$newName" --finalize "${BASH_SOURCE[0]}" || return $?
       return 0
       ;;
     --finalize)
       local oldName
       shift
-      oldName=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
-      __catchEnvironment "$usage" rm -rf "$oldName" || return $?
+      oldName=$(usageArgumentString "$handler" "$argument" "${1-}") || return $?
+      __catchEnvironment "$handler" rm -rf "$oldName" || return $?
       return 0
       ;;
     --debug)
@@ -319,7 +317,7 @@ _installRemotePackage() {
       installArgs+=("$argument")
       ;;
     *)
-      installPath=$(usageArgumentString "$usage" "installPath" "$1") || return $?
+      installPath=$(usageArgumentString "$handler" "installPath" "$1") || return $?
       installPath="${installPath%/}"
       ;;
     esac
@@ -329,25 +327,25 @@ _installRemotePackage() {
   local installFlag=false
   local myBinary myPath applicationHome installPath packagePath
   # Move to starting point
-  myBinary=$(__catchEnvironment "$usage" realPath "${BASH_SOURCE[0]}") || return $?
+  myBinary=$(__catchEnvironment "$handler" realPath "${BASH_SOURCE[0]}") || return $?
   myPath="${myBinary%/*}" || return $?
-  applicationHome=$(__catchEnvironment "$usage" realPath "$myPath/$relative") || return $?
+  applicationHome=$(__catchEnvironment "$handler" realPath "$myPath/$relative") || return $?
   applicationHome="${applicationHome%/}"
   [ -n "$installPath" ] || installPath="$applicationHome/$defaultPackagePath"
   packagePath="${installPath#"$applicationHome"}"
   packagePath="${packagePath#/}"
 
-  __catchEnvironment "$usage" pushd "$applicationHome" || return $?
+  __catchEnvironment "$handler" pushd "$applicationHome" || return $?
   if [ -z "$url" ]; then
     if [ -n "$urlFunction" ]; then
-      url=$(__catchEnvironment "$usage" "$urlFunction" "$usage") || return $?
+      url=$(__catchEnvironment "$handler" "$urlFunction" "$handler") || return $?
       if [ -z "$url" ]; then
-        __throwArgument "$usage" "$urlFunction failed" || return $?
+        __throwArgument "$handler" "$urlFunction failed" || return $?
       fi
     fi
   fi
   if [ -z "$url" ] && [ -z "$localPath" ]; then
-    __throwArgument "$usage" "--local or --url|--url-function is required" || return $?
+    __throwArgument "$handler" "--local or --url|--url-function is required" || return $?
   fi
 
   if [ ! -d "$installPath" ]; then
@@ -358,7 +356,7 @@ _installRemotePackage() {
     installFlag=true
   elif ! $forceFlag && [ -n "$versionFunction" ]; then
     local newVersion=""
-    if newVersion=$("$versionFunction" "$usage" "$applicationHome" "$packagePath"); then
+    if newVersion=$("$versionFunction" "$handler" "$applicationHome" "$packagePath"); then
       printf "%s %s %s\n" "$(decorate value "$name")" "$(decorate info "Newest version installed")" "$newVersion"
       __installRemotePackageGitCheck "$applicationHome" "$packagePath" || :
       return 0
@@ -376,9 +374,9 @@ _installRemotePackage() {
   local message suffix
   if $installFlag; then
     local start
-    start=$(($(__catchEnvironment "$usage" date +%s) + 0)) || return $?
-    __installRemotePackageDirectory "$usage" "$packagePath" "$applicationHome" "$url" "$localPath" "${fetchArguments[@]+"${fetchArguments[@]}"}" || return $?
-    [ -d "$packagePath" ] || __throwEnvironment "$usage" "Unable to download and install $packagePath (not a directory, still)" || return $?
+    start=$(($(__catchEnvironment "$handler" date +%s) + 0)) || return $?
+    __installRemotePackageDirectory "$handler" "$packagePath" "$applicationHome" "$url" "$localPath" "${fetchArguments[@]+"${fetchArguments[@]}"}" || return $?
+    [ -d "$packagePath" ] || __throwEnvironment "$handler" "Unable to download and install $packagePath (not a directory, still)" || return $?
     message="Installed "
     suffix="in $(($(date +%s) - start)) seconds$binName"
   else
@@ -386,14 +384,14 @@ _installRemotePackage() {
     suffix="already installed"
   fi
   local messageFile
-  messageFile=$(fileTemporaryName "$usage") || return $?
+  messageFile=$(fileTemporaryName "$handler") || return $?
   if [ -n "$checkFunction" ]; then
-    "$checkFunction" "$usage" "$packagePath" >"$messageFile" 2>&1 || return $?
+    "$checkFunction" "$handler" "$packagePath" >"$messageFile" 2>&1 || return $?
   else
-    __catchEnvironment "$usage" printf -- "%s\n" "$packagePath" >"$messageFile" || return $?
+    __catchEnvironment "$handler" printf -- "%s\n" "$packagePath" >"$messageFile" || return $?
   fi
   message="${message}Installed $(cat "$messageFile") $suffix"
-  __catchEnvironment "$usage" rm -f "$messageFile" || return $?
+  __catchEnvironment "$handler" rm -f "$messageFile" || return $?
   __installRemotePackageGitCheck "$applicationHome" "$packagePath" || :
   message="$message (local)$binName"
   printf -- "%s\n" "$message"
@@ -403,7 +401,7 @@ _installRemotePackage() {
   if [ "${#installers[@]}" -gt 0 ]; then
     local installer lastExit=0 installerLog
 
-    installerLog=$(fileTemporaryName "$usage") || return $?
+    installerLog=$(fileTemporaryName "$handler") || return $?
 
     for installer in "${installers[@]}"; do
       local ignoreErrors=false
@@ -412,15 +410,15 @@ _installRemotePackage() {
         installer="${installer#@}"
       fi
       if [ ! -f "$installer" ]; then
-        __throwEnvironment "$usage" "$installer is missing" || exitCode=$?
+        __throwEnvironment "$handler" "$installer is missing" || exitCode=$?
         continue
       fi
       if [ ! -x "$installer" ]; then
-        __throwEnvironment "$usage" "$installer is not executable" || exitCode=$?
+        __throwEnvironment "$handler" "$installer is not executable" || exitCode=$?
         continue
       fi
       decorate info "Running installer $(decorate code "$installer") ($ignoreErrors) ..."
-      __catchEnvironment "$usage" "$installer" >"$installerLog" 2>&1 || lastExit=$?
+      __catchEnvironment "$handler" "$installer" >"$installerLog" 2>&1 || lastExit=$?
       if [ $lastExit -gt 0 ]; then
         if $ignoreErrors; then
           decorate warning "Installer $(decorate code "$installer") did not succeed [$(decorate value "$lastExit")]"
@@ -467,17 +465,17 @@ __installRemotePackageDebug() {
 # Requires: uname pushd popd rm tar dirname
 # Requires: __catchEnvironment __throwEnvironment urlFetch
 __installRemotePackageDirectory() {
-  local usage="$1" packagePath="$2" applicationHome="$3" url="$4" localPath="$5"
+  local handler="$1" packagePath="$2" applicationHome="$3" url="$4" localPath="$5"
   local start tarArgs osName
   local target="$applicationHome/.$$.package.tar.gz"
 
   shift 5
   if [ -n "$localPath" ]; then
-    __installRemotePackageDirectoryLocal "$usage" "$packagePath" "$applicationHome" "$localPath"
+    __installRemotePackageDirectoryLocal "$handler" "$packagePath" "$applicationHome" "$localPath"
     return $?
   fi
-  __catchEnvironment "$usage" urlFetch "$url" "$target" || return $?
-  [ -f "$target" ] || __throwEnvironment "$usage" "$target does not exist after download from $url" || return $?
+  __catchEnvironment "$handler" urlFetch "$url" "$target" || return $?
+  [ -f "$target" ] || __throwEnvironment "$handler" "$target does not exist after download from $url" || return $?
   packagePath=${packagePath%/}
   packagePath=${packagePath#/}
   if ! osName="$(uname)" || [ "$osName" != "Darwin" ]; then
@@ -485,10 +483,10 @@ __installRemotePackageDirectory() {
   else
     tarArgs=(--include="*$packagePath/*")
   fi
-  __catchEnvironment "$usage" pushd "$(dirname "$target")" >/dev/null || return $?
-  __catchEnvironment "$usage" rm -rf "$packagePath" || return $?
-  __catchEnvironment "$usage" tar xf "$target" --strip-components=1 "${tarArgs[@]}" || return $?
-  __catchEnvironment "$usage" popd >/dev/null || return $?
+  __catchEnvironment "$handler" pushd "$(dirname "$target")" >/dev/null || return $?
+  __catchEnvironment "$handler" rm -rf "$packagePath" || return $?
+  __catchEnvironment "$handler" tar xf "$target" --strip-components=1 "${tarArgs[@]}" || return $?
+  __catchEnvironment "$handler" popd >/dev/null || return $?
   rm -f "$target" || :
 }
 
@@ -496,20 +494,20 @@ __installRemotePackageDirectory() {
 # Requires: rm mv cp mkdir
 # Requires: returnUndo __catchEnvironment __throwEnvironment
 __installRemotePackageDirectoryLocal() {
-  local usage="$1" packagePath="$2" applicationHome="$3" localPath="$4" installPath tempPath
+  local handler="$1" packagePath="$2" applicationHome="$3" localPath="$4" installPath tempPath
 
   installPath="${applicationHome%/}/${packagePath#/}"
   # Clean target regardless
   if [ -d "$installPath" ]; then
     tempPath="$installPath.aboutToDelete.$$"
-    __catchEnvironment "$usage" rm -rf "$tempPath" || return $?
-    __catchEnvironment "$usage" mv -f "$installPath" "$tempPath" || return $?
-    __catchEnvironment "$usage" cp -r "$localPath" "$installPath" || returnUndo $? rf -f "$installPath" -- mv -f "$tempPath" "$installPath" || return $?
-    __catchEnvironment "$usage" rm -rf "$tempPath" || :
+    __catchEnvironment "$handler" rm -rf "$tempPath" || return $?
+    __catchEnvironment "$handler" mv -f "$installPath" "$tempPath" || return $?
+    __catchEnvironment "$handler" cp -r "$localPath" "$installPath" || returnUndo $? rf -f "$installPath" -- mv -f "$tempPath" "$installPath" || return $?
+    __catchEnvironment "$handler" rm -rf "$tempPath" || :
   else
-    tempPath=$(__catchEnvironment "$usage" dirname "$installPath") || return $?
-    [ -d "$tempPath" ] || __catchEnvironment "$usage" mkdir -p "$tempPath" || return $?
-    __catchEnvironment "$usage" cp -r "$localPath" "$installPath" || return $?
+    tempPath=$(__catchEnvironment "$handler" dirname "$installPath") || return $?
+    [ -d "$tempPath" ] || __catchEnvironment "$handler" mkdir -p "$tempPath" || return $?
+    __catchEnvironment "$handler" cp -r "$localPath" "$installPath" || return $?
   fi
 }
 
@@ -546,8 +544,7 @@ __installRemotePackageLocal() {
 }
 
 # <-- END of IDENTICAL _installRemotePackage
-
-# IDENTICAL versionSort 51
+# IDENTICAL versionSort 48
 
 # Summary: Sort versions in the format v0.0.0
 #
@@ -565,27 +562,25 @@ __installRemotePackageLocal() {
 # Example:    git tag | grep -e '^v[0-9.]*$' | versionSort
 # Requires: __throwArgument sort usageDocument
 versionSort() {
-  local usage="_${FUNCNAME[0]}"
+  local handler="_${FUNCNAME[0]}"
 
   local reverse=""
 
-  # _IDENTICAL_ argument-case-header 5
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
+    # __IDENTICAL__ argumentBlankCheck 1
+    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-    # _IDENTICAL_ --help 4
-    --help)
-      "$usage" 0
-      return $?
-      ;;
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
     -r | --reverse)
       reverse="r"
       ;;
     *)
-      # _IDENTICAL_ argumentUnknown 1
-      __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
+      # _IDENTICAL_ argumentUnknownHandler 1
+      __throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
       ;;
     esac
     shift
@@ -602,19 +597,19 @@ _versionSort() {
 # IDENTICAL usageArgumentCore 13
 
 # Require an argument to be non-blank
-# Argument: usage - Required. Function. Usage function to call upon failure.
+# Argument: handler - Required. Function. Usage function to call upon failure.
 # Argument: argument - Required. String. Name of the argument used in error messages.
 # Argument: value - Optional. String, Value which should be non-blank otherwise an argument error is thrown.
 # Exit Code: 2 - If `value` is blank
 # Exit code: 0 - If `value` is non-blank
 usageArgumentString() {
-  local usage="$1" argument="$2"
+  local handler="$1" argument="$2"
   shift 2 || :
-  [ -n "${1-}" ] || __throwArgument "$usage" "blank" "$argument" || return $?
+  [ -n "${1-}" ] || __throwArgument "$handler" "blank" "$argument" || return $?
   printf "%s\n" "$1"
 }
 
-# IDENTICAL urlFetch 128
+# IDENTICAL urlFetch 125
 
 # Fetch URL content
 # DOC TEMPLATE: --help 1
@@ -633,30 +628,28 @@ usageArgumentString() {
 # Requires: __throwArgument __catchArgument
 # Requires: __throwEnvironment __catchEnvironment
 urlFetch() {
-  local usage="_${FUNCNAME[0]}"
+  local handler="_${FUNCNAME[0]}"
 
   local wgetArgs=() curlArgs=() headers wgetExists binary="" userHasColons=false user="" password="" format="" url="" target=""
 
   wgetExists=$(whichExists wget && printf true || printf false)
 
-  # _IDENTICAL_ argument-case-header 5
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
+    # __IDENTICAL__ argumentBlankCheck 1
+    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-    # _IDENTICAL_ --help 4
-    --help)
-      "$usage" 0
-      return $?
-      ;;
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
     --header)
       shift
       local name value
       name="${1%%:}"
       value="${1#*:}"
       if [ "$name" = "$1" ] || [ "$value" = "$1" ]; then
-        __catchArgument "$usage" "Invalid $argument $1 passed" || return $?
+        __catchArgument "$handler" "Invalid $argument $1 passed" || return $?
       fi
       headers+=("$1")
       curlArgs+=("--header" "$1")
@@ -670,12 +663,12 @@ urlFetch() {
       ;;
     --binary)
       shift
-      binary=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
-      whichExists "$binary" || __throwArgument "$usage" "$binary must be in PATH: $PATH" || return $?
+      binary=$(usageArgumentString "$handler" "$argument" "${1-}") || return $?
+      whichExists "$binary" || __throwArgument "$handler" "$binary must be in PATH: $PATH" || return $?
       ;;
     --argument-format)
-      format=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
-      case "$format" in curl | wget) ;; *) __throwArgument "$usage" "$argument must be curl or wget" || return $? ;; esac
+      format=$(usageArgumentString "$handler" "$argument" "${1-}") || return $?
+      case "$format" in curl | wget) ;; *) __throwArgument "$handler" "$argument must be curl or wget" || return $? ;; esac
       ;;
     --password)
       shift
@@ -683,7 +676,7 @@ urlFetch() {
       ;;
     --user)
       shift
-      user=$(usageArgumentString "$usage" "$argument (user)" "$user") || return $?
+      user=$(usageArgumentString "$handler" "$argument (user)" "$user") || return $?
       if [ "$user" != "${user#*:}" ]; then
         userHasColons=true
       fi
@@ -694,7 +687,7 @@ urlFetch() {
     --agent)
       shift
       local agent="$1"
-      [ -n "$agent" ] || __throwArgument "$usage" "$argument must be non-blank" || return $?
+      [ -n "$agent" ] || __throwArgument "$handler" "$argument must be non-blank" || return $?
       wgetArgs+=("--user-agent=$1")
       curlArgs+=("--user-agent" "$1")
       genericArgs+=("$argument" "$1")
@@ -707,8 +700,8 @@ urlFetch() {
         shift
         break
       else
-        # _IDENTICAL_ argumentUnknown 1
-        __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
+      # _IDENTICAL_ argumentUnknownHandler 1
+      __throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
       fi
       ;;
     esac
@@ -721,7 +714,7 @@ urlFetch() {
     genericArgs+=("--user" "$user" "--password" "$password")
   fi
   if [ "$binary" = "curl" ] && $userHasColons; then
-    __throwArgument "$usage" "$argument: Users ($argument \"$(decorate code "$user")\") with colons are not supported by curl, use wget" || return $?
+    __throwArgument "$handler" "$argument: Users ($argument \"$(decorate code "$user")\") with colons are not supported by curl, use wget" || return $?
   fi
   if [ -z "$binary" ]; then
     if $wgetExists; then
@@ -730,12 +723,12 @@ urlFetch() {
       binary="curl"
     fi
   fi
-  [ -n "$binary" ] || __throwEnvironment "$usage" "wget or curl required" || return $?
+  [ -n "$binary" ] || __throwEnvironment "$handler" "wget or curl required" || return $?
   [ -n "$format" ] || format="$binary"
   case "$format" in
-  wget) __catchEnvironment "$usage" "$binary" -q --output-document="$target" --timeout=10 "${wgetArgs[@]+"${wgetArgs[@]}"}" "$url" "$@" || return $? ;;
-  curl) __catchEnvironment "$usage" "$binary" -L -s "$url" "$@" -o "$target" "${curlArgs[@]+"${curlArgs[@]}"}" || return $? ;;
-  *) __throwEnvironment "$usage" "No handler for binary format $(decorate value "$format") (binary is $(decorate code "$binary")) $(decorate each value "${genericArgs[@]}")" || return $? ;;
+  wget) __catchEnvironment "$handler" "$binary" -q --output-document="$target" --timeout=10 "${wgetArgs[@]+"${wgetArgs[@]}"}" "$url" "$@" || return $? ;;
+  curl) __catchEnvironment "$handler" "$binary" -L -s "$url" "$@" -o "$target" "${curlArgs[@]+"${curlArgs[@]}"}" || return $? ;;
+  *) __throwEnvironment "$handler" "No handler for binary format $(decorate value "$format") (binary is $(decorate code "$binary")) $(decorate each value "${genericArgs[@]}")" || return $? ;;
   esac
 }
 _urlFetch() {
@@ -743,7 +736,7 @@ _urlFetch() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# IDENTICAL __help 58
+# IDENTICAL __help 55
 
 # Simple help argument handler.
 #
@@ -780,20 +773,17 @@ _urlFetch() {
 # DEPRECATED-Example: [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return $?
 # DEPRECATED-Example: [ $# -eq 0 ] || __help --only "$usage" "$@" || return $?
 #
-# Requires: __throwArgument usageDocument
+# Requires: __throwArgument usageDocument ___help
 __help() {
   [ $# -gt 0 ] || ! ___help 0 || return 0
-  local usage="${1-}" && shift
-  if [ "$usage" = "--only" ]; then
-    usage="${1-}" && shift
+  local handler="${1-}" && shift
+  if [ "$handler" = "--only" ]; then
+    handler="${1-}" && shift
     [ $# -gt 0 ] || return 0
-    [ "$#" -eq 1 ] && [ "${1-}" = "--help" ] || __throwArgument "$usage" "Only argument allowed is --help: \"${1-}\"" || return $?
+    [ "$#" -eq 1 ] && [ "${1-}" = "--help" ] || __throwArgument "$handler" "Only argument allowed is --help: \"${1-}\"" || return $?
   fi
   while [ $# -gt 0 ]; do
-    if [ "$1" = "--help" ]; then
-      "$usage" 0
-      return 1
-    fi
+    [ "$1" != "--help" ] || ! "$handler" 0 || return 1
     shift
   done
   return 0
@@ -936,7 +926,7 @@ _fileTemporaryName() {
 
 # <-- END of IDENTICAL fileTemporaryName
 
-# IDENTICAL whichExists 23
+# IDENTICAL whichExists 25
 
 # Summary: Does a binary exist in the PATH?
 # DOC TEMPLATE: --help 1
@@ -946,12 +936,14 @@ _fileTemporaryName() {
 # Exit code: 1 - If any value is not found
 # Requires: __throwArgument which decorate __decorateExtensionEach
 whichExists() {
-  local usage="_${FUNCNAME[0]}"
-  [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
+  local handler="_${FUNCNAME[0]}"
+  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
   local __saved=("$@") __count=$#
-  [ $# -gt 0 ] || __throwArgument "$usage" "no arguments" || return $?
+  [ $# -gt 0 ] || __throwArgument "$handler" "no arguments" || return $?
   while [ $# -gt 0 ]; do
-    [ -n "${1-}" ] || __throwArgument "$usage" "blank argument #$((__count - $# + 1)) ($(decorate each code "${__saved[@]}"))" || return $?
+    local argument="$1" __index=$((__count - $# + 1))
+    # __IDENTICAL__ argumentBlankCheck 1
+    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     which "$1" >/dev/null || return 1
     shift
   done
@@ -971,8 +963,8 @@ _whichExists() {
 # Requires: __catchArgument isUnsignedInteger usageDocument
 isPositiveInteger() {
   # _IDENTICAL_ functionSignatureSingleArgument 2
-  local usage="_${FUNCNAME[0]}"
-  [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
+  local handler="_${FUNCNAME[0]}"
+  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
   if isUnsignedInteger "${1-}"; then
     [ "$1" -gt 0 ] || return 1
     return 0
@@ -992,9 +984,9 @@ _isPositiveInteger() {
 # Requires: __catchArgument isUnsignedInteger usageDocument type
 isFunction() {
   # _IDENTICAL_ functionSignatureSingleArgument 2
-  local usage="_${FUNCNAME[0]}"
-  [ $# -eq 1 ] || __catchArgument "$usage" "Single argument only: $*" || return $?
-  [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
+  local handler="_${FUNCNAME[0]}"
+  [ $# -eq 1 ] || __catchArgument "$handler" "Single argument only: $*" || return $?
+  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
   # Skip illegal options "--" and "-foo"
   [ "$1" = "${1#-}" ] || return 1
   case "$(type -t "$1")" in function | builtin) [ "$1" != "." ] || return 1 ;; *) return 1 ;; esac
@@ -1085,9 +1077,9 @@ _decorations() {
 # stdout: Decorated text
 # Requires: isFunction _argument awk __catchEnvironment usageDocument __executeInputSupport __help
 decorate() {
-  local usage="_${FUNCNAME[0]}" text="" what="${1-}" lp dp style
+  local handler="_${FUNCNAME[0]}" text="" what="${1-}" lp dp style
   [ "$what" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
-  shift && [ -n "$what" ] || __catchArgument "$usage" "Requires at least one argument: \"$*\"" || return $?
+  shift && [ -n "$what" ] || __catchArgument "$handler" "Requires at least one argument: \"$*\"" || return $?
 
   if ! style=$(__decorateStyle "$what"); then
     local extend func="${what/-/_}"
@@ -1095,14 +1087,14 @@ decorate() {
     # When this next line calls `__catchArgument` it results in an infinite loop, so don't - use _argument
     # shellcheck disable=SC2119
     isFunction "$extend" || _argument printf -- "%s\n%s\n" "Unknown decoration name: $what ($extend)" "$(decorations)" || return $?
-    __executeInputSupport "$usage" "$extend" -- "$@" || return $?
+    __executeInputSupport "$handler" "$extend" -- "$@" || return $?
     return 0
   fi
   IFS=" " read -r lp dp text <<<"$style" || :
   [ "$dp" != "-" ] || dp="$lp"
   local p='\033['
 
-  __executeInputSupport "$usage" __decorate "$text" "${p}${lp}m" "${p}${dp:-$lp}m" "${p}0m" -- "$@" || return $?
+  __executeInputSupport "$handler" __decorate "$text" "${p}${lp}m" "${p}${dp:-$lp}m" "${p}0m" -- "$@" || return $?
 }
 _decorate() {
   # __IDENTICAL__ usageDocument 1
@@ -1253,7 +1245,7 @@ __decorateExtensionQuote() {
 # Argument: -- - Alone after the executor forces `stdin` to be ignored. The `--` flag is also removed from the arguments passed to the executor.
 # Argument: ... - Any additional arguments are passed directly to the executor
 __executeInputSupport() {
-  local usage="$1" executor=() && shift
+  local handler="$1" executor=() && shift
 
   while [ $# -gt 0 ]; do
     if [ "$1" = "--" ]; then
@@ -1270,20 +1262,20 @@ __executeInputSupport() {
   if [ $# -eq 0 ] && IFS="" read -r -t 1 -n 1 byte; then
     local line done=false
     if [ "$byte" = $'\n' ]; then
-      __catchEnvironment "$usage" "${executor[@]}" "" || return $?
+      __catchEnvironment "$handler" "${executor[@]}" "" || return $?
       byte=""
     fi
     while ! $done; do
       IFS="" read -r line || done=true
       [ -n "$byte$line" ] || ! $done || break
-      __catchEnvironment "$usage" "${executor[@]}" "$byte$line" || return $?
+      __catchEnvironment "$handler" "${executor[@]}" "$byte$line" || return $?
       byte=""
     done
   else
     if [ "${1-}" = "--" ]; then
       shift
     fi
-    __catchEnvironment "$usage" "${executor[@]}" "$@" || return $?
+    __catchEnvironment "$handler" "${executor[@]}" "$@" || return $?
   fi
 }
 
@@ -1429,11 +1421,11 @@ __environment() {
 # Requires: isUnsignedInteger _argument __environment usageDocument
 # Group: Sugar
 returnClean() {
-  local usage="_${FUNCNAME[0]}"
-  [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
+  local handler="_${FUNCNAME[0]}"
+  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
   local exitCode="${1-}" && shift
   if ! isUnsignedInteger "$exitCode"; then
-    __throwArgument "$usage" "$exitCode (not an integer) $*" || return $?
+    __throwArgument "$handler" "$exitCode (not an integer) $*" || return $?
   else
     __environment rm -rf "$@" || return "$exitCode"
     return "$exitCode"
@@ -1473,9 +1465,9 @@ __execute() {
 # Requires: usageDocument
 returnUndo() {
   [ "$1" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
-  local __count=$# __saved=("$@") __usage="_${FUNCNAME[0]}" exitCode="${1-}" args=()
+  local __count=$# __saved=("$@") __handler="_${FUNCNAME[0]}" exitCode="${1-}" args=()
   shift
-  isUnsignedInteger "$exitCode" || __catchArgument "$__usage" "Not an integer $(decorate value "$exitCode") (#$__count: $(decorate each code "${__saved[@]+"${__saved[@]}"}"))" || return $?
+  isUnsignedInteger "$exitCode" || __catchArgument "$__handler" "Not an integer $(decorate value "$exitCode") (#$__count: $(decorate each code "${__saved[@]+"${__saved[@]}"}"))" || return $?
   while [ $# -gt 0 ]; do
     case "$1" in
     --)

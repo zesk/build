@@ -12,32 +12,30 @@
 # Argument: --force - Optional. Flag. Force even if it seems to be installed.
 # Argument: --before beforeFunction - Optional. Function. One or more functions to run before list function. `muzzle`d.
 __packageListFunction() {
-  local usage="$1" functionVerb="$2"
+  local handler="$1" functionVerb="$2"
   local manager=""
   local beforeFunctions=()
 
   shift 2
 
-  # _IDENTICAL_ argument-case-header 5
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
+    # __IDENTICAL__ argumentBlankCheck 1
+    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-    # _IDENTICAL_ --help 4
-    --help)
-      "$usage" 0
-      return $?
-      ;;
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
     --before)
       shift
-      beforeFunctions+=("$(usageArgumentFunction "$usage" "$argument" "${1-}")") || return $?
+      beforeFunctions+=("$(usageArgumentFunction "$handler" "$argument" "${1-}")") || return $?
       ;;
     # IDENTICAL managerArgumentHandler 5
     --manager)
       shift
-      manager=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
-      packageManagerValid "$manager" || __throwArgument "$usage" "Manager is invalid: $(decorate code "$manager")" || return $?
+      manager=$(usageArgumentString "$handler" "$argument" "${1-}") || return $?
+      packageManagerValid "$manager" || __throwArgument "$handler" "Manager is invalid: $(decorate code "$manager")" || return $?
       ;;
     *)
       # _IDENTICAL_ argumentUnknown 1
@@ -48,16 +46,16 @@ __packageListFunction() {
   done
 
   # IDENTICAL managerArgumentValidation 2
-  [ -n "$manager" ] || manager=$(packageManagerDefault) || __throwEnvironment "$usage" "No package manager" || return $?
-  whichExists "$manager" || __throwEnvironment "$usage" "$manager does not exist" || return $?
+  [ -n "$manager" ] || manager=$(packageManagerDefault) || __throwEnvironment "$handler" "No package manager" || return $?
+  whichExists "$manager" || __throwEnvironment "$handler" "$manager does not exist" || return $?
 
   local listFunction="__${manager}${functionVerb}List"
-  isFunction "$listFunction" || __throwEnvironment "$usage" "$listFunction is not defined" || return $?
+  isFunction "$listFunction" || __throwEnvironment "$handler" "$listFunction is not defined" || return $?
   local beforeFunction
   [ ${#beforeFunctions[@]} -eq 0 ] || for beforeFunction in "${beforeFunctions[@]}"; do
-    __catchEnvironment "$usage" muzzle "$beforeFunction" || return $?
+    __catchEnvironment "$handler" muzzle "$beforeFunction" || return $?
   done
-  __catchEnvironment "$usage" "$listFunction" || return $?
+  __catchEnvironment "$handler" "$listFunction" || return $?
 }
 
 # Usage: {fn} usageFunction functionSuffix [ --help ] [ --manager packageManager ] [ --force ] ...
@@ -88,8 +86,8 @@ __packageUpFunction() {
     # IDENTICAL managerArgumentHandler 5
     --manager)
       shift
-      manager=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
-      packageManagerValid "$manager" || __throwArgument "$usage" "Manager is invalid: $(decorate code "$manager")" || return $?
+      manager=$(usageArgumentString "$handler" "$argument" "${1-}") || return $?
+      packageManagerValid "$manager" || __throwArgument "$handler" "Manager is invalid: $(decorate code "$manager")" || return $?
       ;;
     --force)
       forceFlag=true
@@ -108,8 +106,8 @@ __packageUpFunction() {
   done
 
   # IDENTICAL managerArgumentValidation 2
-  [ -n "$manager" ] || manager=$(packageManagerDefault) || __throwEnvironment "$usage" "No package manager" || return $?
-  whichExists "$manager" || __throwEnvironment "$usage" "$manager does not exist" || return $?
+  [ -n "$manager" ] || manager=$(packageManagerDefault) || __throwEnvironment "$handler" "No package manager" || return $?
+  whichExists "$manager" || __throwEnvironment "$handler" "$manager does not exist" || return $?
 
   local packageFunction="__${manager}${suffix}"
   isFunction "$packageFunction" || __throwEnvironment "$usage" "$packageFunction is not a defined function" || return $?
@@ -198,8 +196,8 @@ packageDefault() {
     # IDENTICAL managerArgumentHandler 5
     --manager)
       shift
-      manager=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
-      packageManagerValid "$manager" || __throwArgument "$usage" "Manager is invalid: $(decorate code "$manager")" || return $?
+      manager=$(usageArgumentString "$handler" "$argument" "${1-}") || return $?
+      packageManagerValid "$manager" || __throwArgument "$handler" "Manager is invalid: $(decorate code "$manager")" || return $?
       ;;
     -*)
       # _IDENTICAL_ argumentUnknown 1
@@ -214,8 +212,8 @@ packageDefault() {
   [ "${#lookup[@]}" -gt 0 ] || __throwArgument "$usage" "Need at least one name" || return $?
 
   # IDENTICAL managerArgumentValidation 2
-  [ -n "$manager" ] || manager=$(packageManagerDefault) || __throwEnvironment "$usage" "No package manager" || return $?
-  whichExists "$manager" || __throwEnvironment "$usage" "$manager does not exist" || return $?
+  [ -n "$manager" ] || manager=$(packageManagerDefault) || __throwEnvironment "$handler" "No package manager" || return $?
+  whichExists "$manager" || __throwEnvironment "$handler" "$manager does not exist" || return $?
 
   local function="__${manager}Default"
   if ! isFunction "$function"; then
@@ -265,8 +263,8 @@ packageWhich() {
     # IDENTICAL managerArgumentHandler 5
     --manager)
       shift
-      manager=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
-      packageManagerValid "$manager" || __throwArgument "$usage" "Manager is invalid: $(decorate code "$manager")" || return $?
+      manager=$(usageArgumentString "$handler" "$argument" "${1-}") || return $?
+      packageManagerValid "$manager" || __throwArgument "$handler" "Manager is invalid: $(decorate code "$manager")" || return $?
       ;;
     -*)
       # _IDENTICAL_ argumentUnknown 1
@@ -284,8 +282,8 @@ packageWhich() {
   done
 
   # IDENTICAL managerArgumentValidation 2
-  [ -n "$manager" ] || manager=$(packageManagerDefault) || __throwEnvironment "$usage" "No package manager" || return $?
-  whichExists "$manager" || __throwEnvironment "$usage" "$manager does not exist" || return $?
+  [ -n "$manager" ] || manager=$(packageManagerDefault) || __throwEnvironment "$handler" "No package manager" || return $?
+  whichExists "$manager" || __throwEnvironment "$handler" "$manager does not exist" || return $?
   [ "${#packages[@]}" -gt 0 ] || packages+=("$binary")
 
   if ! $forceFlag; then
@@ -336,8 +334,8 @@ packageWhichUninstall() {
     # IDENTICAL managerArgumentHandler 5
     --manager)
       shift
-      manager=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
-      packageManagerValid "$manager" || __throwArgument "$usage" "Manager is invalid: $(decorate code "$manager")" || return $?
+      manager=$(usageArgumentString "$handler" "$argument" "${1-}") || return $?
+      packageManagerValid "$manager" || __throwArgument "$handler" "Manager is invalid: $(decorate code "$manager")" || return $?
       ;;
     --verbose)
       vv=("$argument")
@@ -354,8 +352,8 @@ packageWhichUninstall() {
   done
 
   # IDENTICAL managerArgumentValidation 2
-  [ -n "$manager" ] || manager=$(packageManagerDefault) || __throwEnvironment "$usage" "No package manager" || return $?
-  whichExists "$manager" || __throwEnvironment "$usage" "$manager does not exist" || return $?
+  [ -n "$manager" ] || manager=$(packageManagerDefault) || __throwEnvironment "$handler" "No package manager" || return $?
+  whichExists "$manager" || __throwEnvironment "$handler" "$manager does not exist" || return $?
 
   [ -n "$binary" ] || __throwArgument "$usage" "Missing binary" || return $?
   [ 0 -lt "${#packages[@]}" ] || __throwArgument "$usage" "Missing packages" || return $?
@@ -410,8 +408,8 @@ packageInstall() {
     # IDENTICAL managerArgumentHandler 5
     --manager)
       shift
-      manager=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
-      packageManagerValid "$manager" || __throwArgument "$usage" "Manager is invalid: $(decorate code "$manager")" || return $?
+      manager=$(usageArgumentString "$handler" "$argument" "${1-}") || return $?
+      packageManagerValid "$manager" || __throwArgument "$handler" "Manager is invalid: $(decorate code "$manager")" || return $?
       ;;
     --force)
       forceFlag=true
@@ -432,8 +430,8 @@ packageInstall() {
   done
 
   # IDENTICAL managerArgumentValidation 2
-  [ -n "$manager" ] || manager=$(packageManagerDefault) || __throwEnvironment "$usage" "No package manager" || return $?
-  whichExists "$manager" || __throwEnvironment "$usage" "$manager does not exist" || return $?
+  [ -n "$manager" ] || manager=$(packageManagerDefault) || __throwEnvironment "$handler" "No package manager" || return $?
+  whichExists "$manager" || __throwEnvironment "$handler" "$manager does not exist" || return $?
 
   local __start quietLog installed
 
@@ -562,8 +560,8 @@ packageUninstall() {
     # IDENTICAL managerArgumentHandler 5
     --manager)
       shift
-      manager=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
-      packageManagerValid "$manager" || __throwArgument "$usage" "Manager is invalid: $(decorate code "$manager")" || return $?
+      manager=$(usageArgumentString "$handler" "$argument" "${1-}") || return $?
+      packageManagerValid "$manager" || __throwArgument "$handler" "Manager is invalid: $(decorate code "$manager")" || return $?
       ;;
     *)
       packages+=("$argument")
@@ -573,8 +571,8 @@ packageUninstall() {
   done
 
   # IDENTICAL managerArgumentValidation 2
-  [ -n "$manager" ] || manager=$(packageManagerDefault) || __throwEnvironment "$usage" "No package manager" || return $?
-  whichExists "$manager" || __throwEnvironment "$usage" "$manager does not exist" || return $?
+  [ -n "$manager" ] || manager=$(packageManagerDefault) || __throwEnvironment "$handler" "No package manager" || return $?
+  whichExists "$manager" || __throwEnvironment "$handler" "$manager does not exist" || return $?
 
   [ 0 -lt "${#packages[@]}" ] || __throwArgument "$usage" "Requires at least one package to uninstall" || return $?
 
@@ -726,8 +724,8 @@ packageGroupInstall() {
     # IDENTICAL managerArgumentHandler 5
     --manager)
       shift
-      manager=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
-      packageManagerValid "$manager" || __throwArgument "$usage" "Manager is invalid: $(decorate code "$manager")" || return $?
+      manager=$(usageArgumentString "$handler" "$argument" "${1-}") || return $?
+      packageManagerValid "$manager" || __throwArgument "$handler" "Manager is invalid: $(decorate code "$manager")" || return $?
       ;;
     *)
       groups+=("$(usageArgumentString "$usage" "group" "$argument")") || return $?
@@ -739,8 +737,8 @@ packageGroupInstall() {
   [ 0 -lt "${#groups[@]}" ] || __throwArgument "$usage" "Requires at least one package to map" || return $?
 
   # IDENTICAL managerArgumentValidation 2
-  [ -n "$manager" ] || manager=$(packageManagerDefault) || __throwEnvironment "$usage" "No package manager" || return $?
-  whichExists "$manager" || __throwEnvironment "$usage" "$manager does not exist" || return $?
+  [ -n "$manager" ] || manager=$(packageManagerDefault) || __throwEnvironment "$handler" "No package manager" || return $?
+  whichExists "$manager" || __throwEnvironment "$handler" "$manager does not exist" || return $?
 
   local package group
   for group in "${groups[@]}"; do
@@ -776,8 +774,8 @@ packageGroupUninstall() {
     # IDENTICAL managerArgumentHandler 5
     --manager)
       shift
-      manager=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
-      packageManagerValid "$manager" || __throwArgument "$usage" "Manager is invalid: $(decorate code "$manager")" || return $?
+      manager=$(usageArgumentString "$handler" "$argument" "${1-}") || return $?
+      packageManagerValid "$manager" || __throwArgument "$handler" "Manager is invalid: $(decorate code "$manager")" || return $?
       ;;
     *)
       groups+=("$(usageArgumentString "$usage" "group" "$argument")") || return $?
@@ -789,8 +787,8 @@ packageGroupUninstall() {
   [ 0 -lt "${#groups[@]}" ] || __throwArgument "$usage" "Requires at least one package to map" || return $?
 
   # IDENTICAL managerArgumentValidation 2
-  [ -n "$manager" ] || manager=$(packageManagerDefault) || __throwEnvironment "$usage" "No package manager" || return $?
-  whichExists "$manager" || __throwEnvironment "$usage" "$manager does not exist" || return $?
+  [ -n "$manager" ] || manager=$(packageManagerDefault) || __throwEnvironment "$handler" "No package manager" || return $?
+  whichExists "$manager" || __throwEnvironment "$handler" "$manager does not exist" || return $?
 
   local package group
   for group in "${groups[@]}"; do
@@ -824,8 +822,8 @@ packageMapping() {
     # IDENTICAL managerArgumentHandler 5
     --manager)
       shift
-      manager=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
-      packageManagerValid "$manager" || __throwArgument "$usage" "Manager is invalid: $(decorate code "$manager")" || return $?
+      manager=$(usageArgumentString "$handler" "$argument" "${1-}") || return $?
+      packageManagerValid "$manager" || __throwArgument "$handler" "Manager is invalid: $(decorate code "$manager")" || return $?
       ;;
     *)
       packages+=("$argument")
@@ -835,8 +833,8 @@ packageMapping() {
   done
 
   # IDENTICAL managerArgumentValidation 2
-  [ -n "$manager" ] || manager=$(packageManagerDefault) || __throwEnvironment "$usage" "No package manager" || return $?
-  whichExists "$manager" || __throwEnvironment "$usage" "$manager does not exist" || return $?
+  [ -n "$manager" ] || manager=$(packageManagerDefault) || __throwEnvironment "$handler" "No package manager" || return $?
+  whichExists "$manager" || __throwEnvironment "$handler" "$manager does not exist" || return $?
 
   [ 0 -lt "${#packages[@]}" ] || __throwArgument "$usage" "Requires at least one package to map" || return $?
   local method="__${manager}PackageMapping"
