@@ -12,8 +12,7 @@
 #
 
 __identicalCheckInsideLoopLineHandler() {
-  local usage="$1" && shift
-  local extendedPattern="$1" && shift
+  local handler="$1" && shift
   local searchFile="$1" && shift
   local totalLines="$1" && shift
   local lineNumber="$1" && shift
@@ -27,7 +26,7 @@ __identicalCheckInsideLoopLineHandler() {
 
   if [ ! -f "$tokenFile" ]; then
     printf -- "%s\n%d\n%s\n" "$count" "$lineNumber" "$searchFile" >"$tokenFile"
-    __catchEnvironment "$usage" __identicalCheckMatchFile "$searchFile" "$totalLines" "$lineNumber" "$count" >"$countFile" || return $?
+    __catchEnvironment "$handler" __identicalCheckMatchFile "$searchFile" "$totalLines" "$lineNumber" "$count" >"$countFile" || return $?
     if [ "$token" = "" ]; then
       dumpPipe "token countFile $token $countFile" <"$countFile" 1>&2
     fi
@@ -47,7 +46,7 @@ __identicalCheckInsideLoopLineHandler() {
     touch "$countFile.compare" || :
     touch "$tokenDirectory/$tokenLineCount@$token.match.compare" || :
   elif ! isUnsignedInteger "$count"; then
-    __catchEnvironment "$usage" __identicalCheckMatchFile "$searchFile" "$totalLines" "$lineNumber" "1" >"$countFile" || return $?
+    __catchEnvironment "$handler" __identicalCheckMatchFile "$searchFile" "$totalLines" "$lineNumber" "1" >"$countFile" || return $?
     badFiles+=("$searchFile")
     printf -- "%s\n" "$(decorate code "$searchFile:$lineNumber") - not integers: $(decorate value "$identicalLine")"
   else
@@ -57,17 +56,17 @@ __identicalCheckInsideLoopLineHandler() {
     # 10 lines in file, line 1 means: tail -n 10
     # 10 lines in file, line 9 means: tail -n 2
     # 10 lines in file, line 10 means: tail -n 1
-    __catchEnvironment "$usage" __identicalCheckMatchFile "$searchFile" "$totalLines" "$lineNumber" "$count" >"$compareFile" || return $?
-    if [ "$(grep -c -E "$extendedPattern" "$compareFile")" -gt 0 ]; then
+    __catchEnvironment "$handler" __identicalCheckMatchFile "$searchFile" "$totalLines" "$lineNumber" "$count" >"$compareFile" || return $?
+    if [ "$(identicalFindTokens --prefix "$prefix" "$compareFile" | fileLineCount)" != "0" ]; then
       dumpPipe compareFile <"$compareFile"
       badFiles+=("$searchFile")
       {
         statusMessage --last printf -- "%s: %s\n< %s\n" "$(decorate info "$token")" "$(decorate warning "Identical sections overlap:")" "$(decorate success "$(decorate file "$searchFile")")"
-        grepSafe -e "$extendedPattern" "$compareFile" | decorate code | decorate wrap "    "
+        identicalFindTokens --prefix "$prefix" "$compareFile" | decorate code | decorate wrap "    "
         statusMessage --first decorate reset
       } 1>&2
     elif $mapFile; then
-      _identicalMapAttributesFilter "$usage" "$searchFile" <"$countFile" >"$countFile.mapped" || return $?
+      _identicalMapAttributesFilter "$handler" "$searchFile" <"$countFile" >"$countFile.mapped" || return $?
       countFile="$countFile.mapped"
     fi
     if ! diff -b -q "$countFile" "$compareFile" >/dev/null; then
@@ -84,42 +83,38 @@ __identicalCheckInsideLoopLineHandler() {
   ! $isBadFile || return 1
 }
 
-# Usage: {fn} usage stateFile prefixIndex prefix searchFile
+# Usage: {fn} handler stateFile prefixIndex prefix searchFile
 _identicalCheckInsideLoop() {
-  local usage="$1" && shift
+  local handler="$1" && shift
 
   local stateFile prefixIndex prefix searchFile
 
-  local foundLines
-
-  foundLines=$(fileTemporaryName "$usage") || return $?
-
   # Arguments
-  stateFile=$(usageArgumentFile "$usage" stateFile "${1-}") && shift || return $?
-  prefixIndex=$(usageArgumentInteger "$usage" prefixIndex "${1-}") && shift || return $?
-  prefix=$(usageArgumentString "$usage" prefix "${1-}") && shift || return $?
-  searchFile=$(usageArgumentString "$usage" searchFile "${1-}") && shift || return $?
+  stateFile=$(usageArgumentFile "$handler" stateFile "${1-}") && shift || return $?
+  prefixIndex=$(usageArgumentInteger "$handler" prefixIndex "${1-}") && shift || return $?
+  prefix=$(usageArgumentString "$handler" prefix "${1-}") && shift || return $?
+  searchFile=$(usageArgumentString "$handler" searchFile "${1-}") && shift || return $?
 
   # State file
-  local extendedPattern
-  extendedPattern="^\s*$(quoteGrepPattern "$prefix")\s\s*[-a-zA-Z0-9_.][-a-zA-Z0-9_.]*\s\s*(\S*)"
-
-  if ! grep -n -E "$extendedPattern" <"$searchFile" >"$foundLines"; then
-    __catchEnvironment "$usage" rm -rf "$foundLines" || return $?
+  local foundLines
+  foundLines=$(fileTemporaryName "$handler") || return $?
+  local clean=("$foundLines")
+  if ! __identicalFindPrefixes "$handler" "$prefix" <"$searchFile" >"$foundLines"; then
+    __catchEnvironment "$handler" rm -f "${clean[@]}" || return $?
     return 0
   fi
 
   local tempDirectory repairSources=() item tokens=()
-  tempDirectory=$(__catchEnvironment "$usage" environmentValueRead "$stateFile" tempDirectory) || return $?
-  mapFile=$(__catchEnvironment "$usage" environmentValueRead "$stateFile" mapFile) || return $?
-  repairSources=() && while read -r item; do repairSources+=("$item"); done < <(__catchEnvironment "$usage" environmentValueReadArray "$stateFile" "repairSources") || return $?
-  tokens=() && while read -r item; do tokens+=("$item"); done < <(__catchEnvironment "$usage" environmentValueReadArray "$stateFile" "tokens") || return $?
+  tempDirectory=$(__catchEnvironment "$handler" environmentValueRead "$stateFile" tempDirectory) || returnClean $? "${clean[@]}" || return $?
+  mapFile=$(__catchEnvironment "$handler" environmentValueRead "$stateFile" mapFile) || returnClean $? "${clean[@]}" || return $?
+  repairSources=() && while read -r item; do repairSources+=("$item"); done < <(__catchEnvironment "$handler" environmentValueReadArray "$stateFile" "repairSources") || returnClean $? "${clean[@]}" || return $?
+  tokens=() && while read -r item; do tokens+=("$item"); done < <(__catchEnvironment "$handler" environmentValueReadArray "$stateFile" "tokens") || returnClean $? "${clean[@]}" || return $?
 
-  __catchEnvironment "$usage" muzzle directoryRequire "$tempDirectory/$prefixIndex" || return $?
+  __catchEnvironment "$handler" muzzle directoryRequire "$tempDirectory/$prefixIndex" || returnClean $? "${clean[@]}" || return $?
 
   local totalLines identicalLine badFiles=()
 
-  totalLines=$(($(__catchEnvironment "$usage" fileLineCount "$searchFile") + 0)) || return $?
+  totalLines=$(($(__catchEnvironment "$handler" fileLineCount "$searchFile") + 0)) || returnClean $? "${clean[@]}" || return $?
 
   statusMessage decorate info "#$((prefixIndex + 1)): Looking for \"$(decorate code "$prefix")\" Reading $(decorate file "$searchFile")"
 
@@ -131,11 +126,11 @@ _identicalCheckInsideLoop() {
     fi
     IFS=' ' read -r lineNumber token count <<<"$(printf -- "%s\n" "$parsed")" || :
     [ ${#tokens[@]} -eq 0 ] || inArray "$token" "${tokens[@]}" || continue
-    if ! count=$(__identicalLineCount "$count" "$((totalLines - lineNumber))") && ! __throwEnvironment "$usage" "\"$identicalLine\" invalid count: $count"; then
+    if ! count=$(__identicalLineCount "$count" "$((totalLines - lineNumber))") && ! __throwEnvironment "$handler" "\"$identicalLine\" invalid count: $count"; then
       continue
     fi
 
-    if ! __identicalCheckInsideLoopLineHandler "$usage" "$extendedPattern" "$searchFile" "$totalLines" "$lineNumber" "$token" "$count" "$tempDirectory/$prefixIndex"; then
+    if ! __identicalCheckInsideLoopLineHandler "$handler" "$searchFile" "$totalLines" "$lineNumber" "$token" "$count" "$tempDirectory/$prefixIndex"; then
       if [ ${#repairSources[@]} -gt 0 ]; then
         # statusMessage --last decorate info repairSources "${#repairSources[@]}" "${repairSources[@]+"${repairSources[@]}"}"
         statusMessage --last decorate warning "Repairing $token in $(decorate code "$(decorate file "$searchFile")") from \"$(decorate value "$(decorate file "$tokenFileName")")\" (${#repairSources[@]} repair $(plural ${#repairSources[@]} directory directories))"
@@ -153,7 +148,7 @@ _identicalCheckInsideLoop() {
       fi
     fi
   done <"$foundLines"
-  __catchEnvironment "$usage" rm -rf "$foundLines" || return $?
+  __catchEnvironment "$handler" rm -f "$foundLines" || return $?
 
   [ ${#badFiles[@]} -eq 0 ] || environmentValueWriteArray "badFiles" "${badFiles[@]+"${badFiles[@]}"}" >>"$stateFile" || return $?
   [ ${#badFiles[@]} -eq 0 ]
@@ -186,18 +181,18 @@ __identicalCheckRepair() {
 }
 
 _identicalCheckSinglesChecker() {
-  local usage="$1" stateFile && shift
+  local handler="$1" stateFile && shift
 
   # Arguments
-  stateFile=$(usageArgumentFile "$usage" stateFile "${1-}") && shift || return $?
+  stateFile=$(usageArgumentFile "$handler" stateFile "${1-}") && shift || return $?
 
   local tempDirectory singles=() item resultsFile identicalCode
 
   identicalCode=$(returnCode identical)
   # Fetch from state file
-  tempDirectory=$(__catchEnvironment "$usage" environmentValueRead "$stateFile" tempDirectory) || return $?
-  resultsFile=$(__catchEnvironment "$usage" environmentValueRead "$stateFile" resultsFile) || return $?
-  while read -r item; do singles+=("$item"); done < <(__catchEnvironment "$usage" environmentValueReadArray "$stateFile" "singles") || return $?
+  tempDirectory=$(__catchEnvironment "$handler" environmentValueRead "$stateFile" tempDirectory) || return $?
+  resultsFile=$(__catchEnvironment "$handler" environmentValueRead "$stateFile" resultsFile) || return $?
+  while read -r item; do singles+=("$item"); done < <(__catchEnvironment "$handler" environmentValueReadArray "$stateFile" "singles") || return $?
 
   local tokenFile targetFile matchFile exitCode=0 done=false
   local allSingles=() knownSingles=() knownSinglesReport=() lonelySingles=() lonelySinglesReport=() lonelySinglesFiles=()
@@ -235,10 +230,10 @@ _identicalCheckSinglesChecker() {
   if [ -n "$binary" ] && [ "${#lonelySinglesFiles[@]}" -gt 0 ]; then
     "$binary" "${lonelySinglesFiles[@]}"
   fi
-  __catchEnvironment "$usage" environmentValueWriteArray "allSingles" "${allSingles[@]+"${allSingles[@]}"}" >>"$stateFile" || return $?
-  __catchEnvironment "$usage" environmentValueWriteArray "knownSingles" "${knownSingles[@]+"${knownSingles[@]}"}" >>"$stateFile" || return $?
-  __catchEnvironment "$usage" environmentValueWriteArray "lonelySingles" "${lonelySingles[@]+"${lonelySingles[@]}"}" >>"$stateFile" || return $?
-  __catchEnvironment "$usage" environmentValueWriteArray "lonelySinglesFiles" "${lonelySinglesFiles[@]+"${lonelySinglesFiles[@]}"}" >>"$stateFile" || return $?
+  __catchEnvironment "$handler" environmentValueWriteArray "allSingles" "${allSingles[@]+"${allSingles[@]}"}" >>"$stateFile" || return $?
+  __catchEnvironment "$handler" environmentValueWriteArray "knownSingles" "${knownSingles[@]+"${knownSingles[@]}"}" >>"$stateFile" || return $?
+  __catchEnvironment "$handler" environmentValueWriteArray "lonelySingles" "${lonelySingles[@]+"${lonelySingles[@]}"}" >>"$stateFile" || return $?
+  __catchEnvironment "$handler" environmentValueWriteArray "lonelySinglesFiles" "${lonelySinglesFiles[@]+"${lonelySinglesFiles[@]}"}" >>"$stateFile" || return $?
 
   for token in "${singles[@]+"${singles[@]}"}"; do
     if ! inArray "$token" "${knownSingles[@]+"${knownSingles[@]}"}"; then

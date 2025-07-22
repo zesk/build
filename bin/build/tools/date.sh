@@ -22,7 +22,7 @@
 dateToFormat() {
   local usage="_${FUNCNAME[0]}"
   [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
-  local format="${2-"%Y-%m-%d"}"
+  local format="${2-"%F %T"}"
   if [ $# -lt 1 ] || [ $# -gt 2 ]; then
     __throwArgument "$usage" "${FUNCNAME[0]} requires 1 or 2 arguments: date [ format ] –- Passed $#:" "$@" || return $?
   fi
@@ -75,7 +75,7 @@ dateFromTimestamp() {
   if [ $# -lt 1 ] || [ $# -gt 2 ]; then
     __throwArgument "$usage" "${FUNCNAME[0]} requires 1 or 2 arguments: integerTimestamp [ format ] –- Passed $#:" "$@" || return $?
   fi
-  local format="${2:-%F}"
+  local format="${2-"%F %T"}"
   __dateFromTimestamp "$1" "$format"
 }
 _dateFromTimestamp() {
@@ -180,7 +180,7 @@ dateAdd() {
       ;;
     *)
       timestamp=$(__catchArgument "$usage" dateToTimestamp "$argument") || return $?
-      __catchArgument "$usage" dateFromTimestamp "$((timestamp + (86400 * days)))" || return $?
+      __catchArgument "$usage" dateFromTimestamp "$((timestamp + (86400 * days)))" "%F" || return $?
       ;;
     esac
     shift

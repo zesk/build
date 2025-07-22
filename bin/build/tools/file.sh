@@ -350,7 +350,7 @@ directoryPathSimplify() {
         result+=("$segment")
       fi
     done
-    printf "%s\n" "${result[*]}"
+    printf "%s\n" "${result[*]-}"
     shift
   done
 }

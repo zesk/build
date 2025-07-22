@@ -11,7 +11,7 @@
 #
 # -- CUT BELOW HERE --
 
-# IDENTICAL _sugar 160
+# IDENTICAL _sugar 168
 
 # Argument: name ... - Optional. String. Exit code value to output.
 # Print one or more return codes by name.
@@ -129,6 +129,14 @@ _argument() {
 # Requires: _return
 _environment() {
   _return 1 "$@" || return $?
+}
+
+# Run binary and catch errors with handler
+# Argument: handler - Required. Function. Error handler.
+# Argument: binary ... - Required. Executable. Any arguments are passed to `binary`.
+__catch() {
+  local handler="${1-}" && shift || _argument "Missing handler" || return $?
+  "$@" || "$handler" "$?" "$@" || return $?
 }
 
 # _IDENTICAL_ __execute 7

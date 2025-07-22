@@ -131,6 +131,14 @@ _environment() {
   _return 1 "$@" || return $?
 }
 
+# Run binary and catch errors with handler
+# Argument: handler - Required. Function. Error handler.
+# Argument: binary ... - Required. Executable. Any arguments are passed to `binary`.
+__catch() {
+  local handler="${1-}" && shift || _argument "Missing handler" || return $?
+  "$@" || "$handler" "$?" "$@" || return $?
+}
+
 # _IDENTICAL_ __execute 7
 
 # Argument: binary ... - Required. Executable. Any arguments are passed to `binary`.

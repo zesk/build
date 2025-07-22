@@ -72,6 +72,9 @@ identicalCheck() {
       "$usage" 0
       return $?
       ;;
+    --watch)
+      __catch "$usage" identicalWatch "${__saved[@]}" && return $? || return $?
+      ;;
     --no-map)
       mapFile=false
       ;;
@@ -129,7 +132,10 @@ identicalCheck() {
       ;;
     --token)
       shift
-      tokens+=("$(usageArgumentString "$usage" "$argument" "${1-}")") || return $?
+      local token
+      token="$(usageArgumentString "$usage" "$argument" "${1-}")" || return $?
+      tokens+=("$token")
+      escapedTokens+=("$(quoteGrepPattern "$token")") || return $?
       ;;
     *)
       # _IDENTICAL_ argumentUnknown 1
@@ -154,16 +160,17 @@ identicalCheck() {
   tempDirectory="$(fileTemporaryName "$usage" -d)" || return $?
   resultsFile=$(fileTemporaryName "$usage") || return $?
   searchFileList=$(fileTemporaryName "$usage") || return $?
-  clean+=("$searchFileList")
+  $debug || clean+=("$searchFileList")
   $debug || clean+=("$tempDirectory")
 
+  ! $debug || decorate info "$LINENO: Generate search files"
   __identicalCheckGenerateSearchFiles "$usage" "${repairSources[@]+"${repairSources[@]}"}" -- "$rootDir" "${findArgs[@]}" ! -path "*/.*/*" "${excludes[@]+${excludes[@]}}" >"$searchFileList" || returnClean $? "${clean[@]}" || return $?
   if [ ! -s "$searchFileList" ]; then
     __throwEnvironment "$usage" "No files found in $(decorate file "$rootDir") with${extensionText}" || returnClean $? "${clean[@]}" || return $?
   fi
   clean+=("$searchFileList.smaller")
   if [ "${#tokens[@]}" -gt 0 ]; then
-    xargs grep -l -e "$(listJoin '|' "${tokens[@]}")" <"$searchFileList" >"$searchFileList.smaller" || returnClean $? "${clean[@]}" || return $?
+    xargs grep -l -E "$(listJoin '|' "${escapedTokens[@]}")" <"$searchFileList" >"$searchFileList.smaller" || returnClean $? "${clean[@]}" || return $?
     __catchEnvironment "$usage" mv "$searchFileList.smaller" "$searchFileList" || returnClean $? "${clean[@]}" || return $?
   fi
   ! $debug || dumpPipe "searchFileList" <"$searchFileList" || returnClean $? "${clean[@]}" || return $?
@@ -188,6 +195,8 @@ identicalCheck() {
   local prefix prefixIndex=0
   for prefix in "${prefixes[@]}"; do
     local __line=1 searchFile
+    ! $debug || decorate info "$LINENO: Processing prefix $prefix"
+
     while read -r searchFile; do
       local realFile
       [ -f "$searchFile" ] || __throwEnvironment "$usage" "Invalid searchFileList $searchFileList line $__line: $(decorate value "$searchFile")"
@@ -196,6 +205,8 @@ identicalCheck() {
         statusMessage decorate notice "Skipping $(decorate file "$realFile")" || returnClean $? "${clean[@]}" || return $?
         continue
       fi
+      ! $debug || decorate info "$LINENO: _identicalCheckInsideLoop"
+
       if ! _identicalCheckInsideLoop "$usage" "$stateFile" "$prefixIndex" "$prefix" "$realFile"; then
         exitCode="$failureCode"
       fi
@@ -244,9 +255,9 @@ _identicalCheck() {
 # Usage: {fn} usage repairSource ... -- directory findArgs ...
 # stdout: list of files
 __identicalCheckGenerateSearchFiles() {
-  local usage="$1" searchFileList directory directories filter IFS
+  local usage="$1" && shift
+  local searchFileList directory directories filter IFS
 
-  shift # usage
   local repairSources=()
   while [ $# -gt 0 ]; do
     if [ "$1" = "--" ]; then
@@ -345,7 +356,7 @@ identicalCheckShell() {
         pp=("${internalPrefixes[@]}")
       fi
       ;;
-    --interactive | --ignore-singles | --no-map)
+    --interactive | --ignore-singles | --no-map | --watch)
       aa+=("$argument")
       ;;
     --repair | --single | --exec | --prefix | --exclude | --extension | --skip | --singles | --cd)
