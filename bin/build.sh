@@ -157,7 +157,7 @@ __buildBuild() {
   if $makeDocumentation; then
     local path rootShow rootPath="$home/documentation/site"
     rootShow=$(decorate file "$rootPath")
-    for path in "$rootPath" "$home/documentation/docs"; do
+    for path in "$rootPath" "$home/documentation/.docs"; do
       if [ -d "$path" ]; then
         statusMessage decorate warning "Removing $path for build" || return $?
         __catchEnvironment "$usage" rm -rf "$path" || return $?

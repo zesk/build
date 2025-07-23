@@ -56,7 +56,7 @@ documentationBuildEnvironment() {
   lineTemplate="$home/documentation/template/env-line.md"
   moreTemplate="$home/documentation/template/env-more.md"
   source="$home/documentation/source/env/index.md"
-  target="$home/documentation/docs/env"
+  target="$home/documentation/.docs/env"
   cacheDirectory=$(__catchEnvironment "$usage" documentationBuildCache .environmentVariables) || return $?
 
   if "$cleanFlag"; then

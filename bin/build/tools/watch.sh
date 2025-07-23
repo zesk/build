@@ -13,7 +13,7 @@
 # Argument: --target target - Optional. File. File to create. File must exist.
 # Argument: --verbose - Optional. Flag. Be verbose.
 # Argument: --file modifiedFile - Optional. File. Last known modified file in this directory.
-# Argument: --modified modificationTime - Optional. UnsignedInteger. Last known modification timestamp in this directory.
+# Argument: --modified modifiedTimestamp - Optional. UnsignedInteger. Last known modification timestamp in this directory.
 # Argument: --timeout secondsToRun - Optional. UnsignedInteger. Last known modification timestamp in this directory.
 # Argument: --state stateFile - Optional. File. Output of `fileModificationTimes` will be saved here (and modified)
 # Argument: directory - Required. Directory. Directory to watch
@@ -32,9 +32,8 @@ watchDirectory() {
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
-    # _IDENTICAL_ handlerHandler 2
+    # _IDENTICAL_ handlerHandler 1
     --handler) shift && handler=$(usageArgumentFunction "$handler" "$argument" "${1-}") || return $? ;;
-
     --verbose) verboseFlag=true ;;
     --file) shift && lastFile=$(usageArgumentString "$handler" "$argument" "${1-}") || return $? ;;
     --modified) shift && lastTimestamp=$(usageArgumentUnsignedInteger "$handler" "$argument" "${1-}") || return $? ;;

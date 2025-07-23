@@ -163,7 +163,7 @@ identicalCheck() {
   $debug || clean+=("$searchFileList")
   $debug || clean+=("$tempDirectory")
 
-  ! $debug || decorate info "$LINENO: Generate search files"
+  # ! $debug || decorate info "$LINENO: Generate search files"
   # ! $debug || decorate each quote __identicalCheckGenerateSearchFiles "$usage" "${repairSources[@]+"${repairSources[@]}"}" -- "$rootDir" "${findArgs[@]}" ! -path "*/.*/*" "${excludes[@]+${excludes[@]}}"
   __identicalCheckGenerateSearchFiles "$usage" "${repairSources[@]+"${repairSources[@]}"}" -- "$rootDir" "${findArgs[@]}" ! -path "*/.*/*" "${excludes[@]+${excludes[@]}}" >"$searchFileList" || returnClean $? "${clean[@]}" || return $?
   if [ ! -s "$searchFileList" ]; then
@@ -196,7 +196,7 @@ identicalCheck() {
   local prefix prefixIndex=0
   for prefix in "${prefixes[@]}"; do
     local __line=1 searchFile
-    ! $debug || decorate info "$LINENO: Processing prefix $prefix"
+    # ! $debug || decorate info "$LINENO: Processing prefix $prefix"
 
     while read -r searchFile; do
       local realFile
@@ -206,7 +206,7 @@ identicalCheck() {
         statusMessage decorate notice "Skipping $(decorate file "$realFile")" || returnClean $? "${clean[@]}" || return $?
         continue
       fi
-      ! $debug || decorate info "$LINENO: _identicalCheckInsideLoop"
+      # ! $debug || decorate info "$LINENO: _identicalCheckInsideLoop"
 
       if ! _identicalCheckInsideLoop "$usage" "$stateFile" "$prefixIndex" "$prefix" "$realFile"; then
         exitCode="$failureCode"

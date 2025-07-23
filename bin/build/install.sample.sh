@@ -985,7 +985,7 @@ _isPositiveInteger() {
 isFunction() {
   # _IDENTICAL_ functionSignatureSingleArgument 2
   local handler="_${FUNCNAME[0]}"
-  [ $# -eq 1 ] || __catchArgument "$handler" "Single argument only: $*" || return $?
+  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
   [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
   # Skip illegal options "--" and "-foo"
   [ "$1" = "${1#-}" ] || return 1

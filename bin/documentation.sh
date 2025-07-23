@@ -72,13 +72,13 @@ __buildDocumentationBuildDirectory() {
 
   local prefix="$home/documentation/source"
   while read -r markdownFile; do
-    target="$home/documentation/docs${markdownFile#"$prefix"}"
+    target="$home/documentation/.docs${markdownFile#"$prefix"}"
     __catchEnvironment "$usage" muzzle fileDirectoryRequire "$target" || return $?
     __catchEnvironment "$usage" cp "$markdownFile" "$target" || return $?
   done < <(find "$prefix" -name '*.md' ! -path '*/tools/*')
 
   source="$home/documentation/source/tools"
-  target="$home/documentation/docs/tools"
+  target="$home/documentation/.docs/tools"
 
   __catchEnvironment "$usage" muzzle directoryRequire "$target" || return $?
 
@@ -96,9 +96,9 @@ __buildDocumentationBuildDirectory() {
 
   aa+=(--source "$home/bin")
   aa+=(--template "$source")
-  aa+=(--unlinked-template "$home/documentation/source/tools/todo.md" --unlinked-target "$home/documentation/docs/tools/todo.md")
+  aa+=(--unlinked-template "$home/documentation/source/tools/todo.md" --unlinked-target "$home/documentation/.docs/tools/todo.md")
   aa+=("--function-template" "$functionTemplate" --page-template "$home/documentation/template/__main.md")
-  aa+=(--see-prefix "./documentation/docs")
+  aa+=(--see-prefix "./documentation/.docs")
   aa+=(--target "$target")
 
   documentationBuild "${aa[@]}" "$@" || return $?
@@ -106,7 +106,7 @@ __buildDocumentationBuildDirectory() {
 
 __buildDocumentationBuildRelease() {
   local usage="$1" home="$2" release currentNotes notesPath
-  local target="$home/documentation/docs/release/index.md"
+  local target="$home/documentation/.docs/release/index.md"
   local recentNotes=10 index
 
   currentNotes=$(releaseNotes)
@@ -234,7 +234,7 @@ __buildDocumentationBuild() {
   fi
 
   # Ensure we have our target
-  __catchEnvironment "$usage" muzzle directoryRequire "$home/documentation/docs" || return $?
+  __catchEnvironment "$usage" muzzle directoryRequire "$home/documentation/.docs" || return $?
 
   # Templates should be up-to-date if making documentation
   if ! $updateTemplates && $makeDocumentation; then
@@ -263,7 +263,7 @@ __buildDocumentationBuild() {
     __mkdocsConfiguration "$usage" || return $?
     __catchEnvironment "$usage" muzzle popd || return $?
 
-    local sourceHome="$home/documentation/source" targetHome="$home/documentation/docs"
+    local sourceHome="$home/documentation/source" targetHome="$home/documentation/.docs"
     while IFS="" read -r file; do
       file=${file#"$sourceHome"}
       statusMessage decorate notice "Updating $file ..."
@@ -279,7 +279,7 @@ __buildDocumentationBuild() {
     local example
 
     example="$(decorate wrap "    " <"$home/bin/build/tools/example.sh")" || __throwEnvironment "$usage" "generating example" || return $?
-    example="$example" __catchEnvironment "$usage" mapEnvironment <"$home/documentation/source/guide/coding.md" >"$home/documentation/docs/guide/coding.md" || return $?
+    example="$example" __catchEnvironment "$usage" mapEnvironment <"$home/documentation/source/guide/coding.md" >"$home/documentation/.docs/guide/coding.md" || return $?
 
     statusMessage decorate notice "Updating env/index.md ..."
     __catchEnvironment "$usage" documentationBuildEnvironment --verbose "${ea[@]+"${ea[@]}"}" || return $?
