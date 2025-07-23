@@ -35,6 +35,8 @@ ColorComboTest|ColorSampleCombinations
 IDENTICAL usageDocument |__IDENTICAL__ usageDocument |
 _IDENTICAL_ usageDocument|__IDENTICAL__ usageDocument|
 semanticColorSampleStyles|colorSampleSemanticStyles
+__catchEnvironment "$usage" buildHome|__catch "$usage" buildHome|
+__catchEnvironment "$handler" buildHome|__catch "$handler" buildHome|
 
 # v0.36.2
 

@@ -314,28 +314,27 @@ _JSON() {
 # See: serviceToPort
 #
 serviceToStandardPort() {
-  local usage="_${FUNCNAME[0]}"
+  local handler="_${FUNCNAME[0]}"
 
-  [ $# -gt 0 ] || __throwArgument "$usage" "No arguments" || return $?
+  [ $# -gt 0 ] || __throwArgument "$handler" "No arguments" || return $?
   local port
 
-  # _IDENTICAL_ argument-case-header 5
+  # _IDENTICAL_ argumentTrimBlankLoopHandler 8
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
+    argument=$(__catch "$handler" trimSpace "$argument") || return $?
+    # __IDENTICAL__ argumentBlankCheck 1
+    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-    # _IDENTICAL_ --help 4
-    --help)
-      "$usage" 0
-      return $?
-      ;;
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
     ssh) port=22 ;;
     http) port=80 ;;
     https) port=443 ;;
     mariadb | mysql) port=3306 ;;
     postgres) port=5432 ;;
-    *) __throwEnvironment "$usage" "$argument unknown" || return $? ;;
+    *) __throwEnvironment "$handler" "$argument unknown" || return $? ;;
     esac
     printf "%d\n" "$port"
     shift
@@ -357,40 +356,40 @@ _serviceToStandardPort() {
 # Exit Code: 0 - service found and output is an integer
 #
 serviceToPort() {
-  local usage="_${FUNCNAME[0]}"
+  local handler="_${FUNCNAME[0]}"
   local port servicesFile=/etc/services service
 
-  [ $# -gt 0 ] || __throwArgument "$usage" "Require at least one service" || return $?
-  # _IDENTICAL_ argument-case-header 5
+  [ $# -gt 0 ] || __throwArgument "$handler" "Require at least one service" || return $?
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
+    # __IDENTICAL__ argumentBlankCheck 1
+    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-    # _IDENTICAL_ --help 4
-    --help)
-      "$usage" 0
-      return $?
-      ;;
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
+    # _IDENTICAL_ handlerHandler 1
     --services)
-      shift || __throwArgument "$usage" "missing $argument argument" || return $?
-      servicesFile=$(usageArgumentFile "$usage" "servicesFile" "$1") || return $?
+      shift || __throwArgument "$handler" "missing $argument argument" || return $?
+      servicesFile=$(usageArgumentFile "$handler" "servicesFile" "$1") || return $?
       ;;
     *)
       if [ ! -f "$servicesFile" ]; then
-        __catchEnvironment "$usage" serviceToStandardPort "$@" || return $?
+        __catchEnvironment "$handler" serviceToStandardPort "$@" || return $?
       else
-        service="$(trimSpace "${1-}")"
+        service="$(trimSpace "$argument")"
+        [ -n "$service" ] || __throwArgument "$handler" "whitespace argument: $(decorate quote "$argument") #$__index/$__count" || return $?
         if port="$(grep /tcp "$servicesFile" | grep "^$service\s" | awk '{ print $2 }' | cut -d / -f 1)"; then
-          isInteger "$port" || __throwEnvironment "$usage" "Port found in $servicesFile is not an integer: $port" || return $?
+          isInteger "$port" || __throwEnvironment "$handler" "Port found in $servicesFile is not an integer: $port" || return $?
         else
-          port="$(serviceToStandardPort "$service")" || __throwEnvironment "$usage" serviceToStandardPort "$service" || return $?
+          port="$(serviceToStandardPort "$service")" || __throwEnvironment "$handler" serviceToStandardPort "$service" || return $?
         fi
         printf "%d\n" "$port"
       fi
       ;;
     esac
-    shift || __throwArgument "$usage" "shift argument $argument" || return $?
+    shift || __throwArgument "$handler" "shift argument $argument" || return $?
   done
 }
 _serviceToPort() {

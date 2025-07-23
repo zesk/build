@@ -229,8 +229,11 @@ _bashDebugInterruptFile() {
 __bashDebugInterruptFile() {
   export BUILD_HOME BASH_LINENO BASH_SOURCE BASH_ARGC BASH_ARGV FUNCNAME
   {
-    printf "%s\n" "--- $BUILD_HOME terminated $(date) ------------------------------------------"
+    local now
+    now=$(date)
+    printf "%s\n" "--- $BUILD_HOME terminated $now ------------------------------------------"
     debuggingStack -x --me
+    printf "%s\n" "END --- $BUILD_HOME terminated $now ------------------------------------------" ""
   } >>"$BUILD_HOME/.interrupt.log" || :
   return 122
 }
