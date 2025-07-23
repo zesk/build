@@ -98,7 +98,7 @@ testDocSections() {
   home=$(__environment buildHome) || return $?
   doc=$(__environment mktemp) || return $?
   __environment bashDocumentFunction "$home/bin/build/tools/git.sh" gitMainly "$home/bin/build/tools/documentation/__function.md" >"$doc" || return $?
-  assertFileContains "$doc" 'No arguments' || return $?
+  assertFileContains "$doc" '- none' || return $?
 
   __environment bashDocumentFunction "$home/bin/build/tools/git.sh" gitCommit "$home/bin/build/tools/documentation/__function.md" >"$doc" || return $?
   assertFileContains "$doc" '### Arguments' '--help' || return $?

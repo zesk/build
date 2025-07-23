@@ -164,13 +164,14 @@ identicalCheck() {
   $debug || clean+=("$tempDirectory")
 
   ! $debug || decorate info "$LINENO: Generate search files"
+  # ! $debug || decorate each quote __identicalCheckGenerateSearchFiles "$usage" "${repairSources[@]+"${repairSources[@]}"}" -- "$rootDir" "${findArgs[@]}" ! -path "*/.*/*" "${excludes[@]+${excludes[@]}}"
   __identicalCheckGenerateSearchFiles "$usage" "${repairSources[@]+"${repairSources[@]}"}" -- "$rootDir" "${findArgs[@]}" ! -path "*/.*/*" "${excludes[@]+${excludes[@]}}" >"$searchFileList" || returnClean $? "${clean[@]}" || return $?
   if [ ! -s "$searchFileList" ]; then
     __throwEnvironment "$usage" "No files found in $(decorate file "$rootDir") with${extensionText}" || returnClean $? "${clean[@]}" || return $?
   fi
   clean+=("$searchFileList.smaller")
   if [ "${#tokens[@]}" -gt 0 ]; then
-    xargs grep -l -E "$(listJoin '|' "${escapedTokens[@]}")" <"$searchFileList" >"$searchFileList.smaller" || returnClean $? "${clean[@]}" || return $?
+    xargs grep -l -E "($(listJoin '|' "${escapedTokens[@]}"))" <"$searchFileList" >"$searchFileList.smaller" || returnClean $? "${clean[@]}" || return $?
     __catchEnvironment "$usage" mv "$searchFileList.smaller" "$searchFileList" || returnClean $? "${clean[@]}" || return $?
   fi
   ! $debug || dumpPipe "searchFileList" <"$searchFileList" || returnClean $? "${clean[@]}" || return $?
@@ -280,7 +281,7 @@ __identicalCheckGenerateSearchFiles() {
     fi
     filter=("cat")
     if $startExclude && [ "${#ignorePatterns[@]}" -gt 0 ]; then
-      filter=("grep" "-v" "${ignorePatterns[@]}")
+      filter=("grepSafe" "-v" "${ignorePatterns[@]}")
     fi
     if ! find "$directory" "$@" | sort | "${filter[@]}" >>"$searchFileList"; then
       # decorate warning "No matching files found in $directory" 1>&2
@@ -356,7 +357,7 @@ identicalCheckShell() {
         pp=("${internalPrefixes[@]}")
       fi
       ;;
-    --interactive | --ignore-singles | --no-map | --watch)
+    --interactive | --ignore-singles | --no-map | --watch | --debug | --verbose)
       aa+=("$argument")
       ;;
     --repair | --single | --exec | --prefix | --exclude | --extension | --skip | --singles | --cd)

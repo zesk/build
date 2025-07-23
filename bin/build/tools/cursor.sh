@@ -39,7 +39,7 @@ _cursorGet() {
 # Argument: y - Required. UnsignedInteger. Row to place the cursor.
 cursorSet() {
   local usage="_${FUNCNAME[0]}"
-  [ $# -eq 0 ] || __help --only "$usage" "$@" || return "$(convertValue $? 1 0)"
+  [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
 
   isTTYAvailable || __throwEnvironment "$usage" "no tty" || return $?
 

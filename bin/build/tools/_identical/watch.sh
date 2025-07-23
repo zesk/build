@@ -181,6 +181,7 @@ identicalWatch() {
         local files=() currentTimestamp currentFile
         while read -r currentTimestamp currentFile; do
           if [ -n "$lastTimestamp" ] && [ "$currentTimestamp" -gt "$lastTimestamp" ]; then
+            files+=("$currentFile")
             statusMessage decorate info "Stopping at $currentTimestamp $(decorate file "$currentFile") ($(__identicalWatchDecorateDate "$currentTimestamp") > $(__identicalWatchDecorateDate "$lastTimestamp"))"
             break
           fi
@@ -200,8 +201,12 @@ identicalWatch() {
               tokens+=("--token" "$token")
             done < <(identicalFindTokens "${ff[@]}" "${files[@]}")
           fi
-          ! $debugFlag || statusMessage decorate info "Replacing tokens $(decorate each code "${tokens[@]}")"
-          __catch "$handler" identicalCheck "${rr[@]}" "${tokens[@]}" || return $?
+          if [ "${#tokens[@]}" -gt 0 ]; then
+            ! $debugFlag || statusMessage decorate info "Replacing tokens $(decorate each code "${tokens[@]}")"
+            __catch "$handler" identicalCheck "${rr[@]}" "${tokens[@]}" || return $?
+          else
+            statusMessage decorate info "No tokens found in $(decorate each file "${files[@]}")"
+          fi
         fi
         read -r lastTimestamp lastFile <"$fileList" || :
       fi
