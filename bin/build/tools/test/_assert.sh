@@ -88,8 +88,8 @@ __assertedFunctions() {
   local usage="_${FUNCNAME[0]}"
   local logFile
 
-  logFile="$(__catchEnvironment "$usage" buildCacheDirectory)/$usage" || return $?
-  logFile="$(__catchEnvironment "$usage" fileDirectoryRequire "$logFile")" || return $?
+  logFile="$(__catch "$usage" buildCacheDirectory)/$usage" || return $?
+  logFile="$(__catch "$usage" fileDirectoryRequire "$logFile")" || return $?
   if [ $# -eq 0 ]; then
     __catchEnvironment "$usage" touch "$logFile" || return $?
     if [ -f "$logFile.dirty" ]; then
@@ -100,7 +100,7 @@ __assertedFunctions() {
     return 0
   fi
   local track
-  track=$(__catchEnvironment "$usage" buildEnvironmentGet TEST_TRACK_ASSERTIONS) || return $?
+  track=$(__catch "$usage" buildEnvironmentGet TEST_TRACK_ASSERTIONS) || return $?
   if [ "$track" != "false" ]; then
     __catchEnvironment "$usage" printf -- "%s\n" "$@" >>"$logFile" || return $?
     __catchEnvironment "$usage" touch "$logFile.dirty" || return $?

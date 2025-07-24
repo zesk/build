@@ -20,14 +20,14 @@
 
 ## Copy files
 
-{copyFileWouldChange} {copyFile}
+{fileCopyWouldChange} {fileCopy}
 
 ## Examples
 
 Example:
 
     args=(--map configure/sshd_config /etc/ssh/sshd_config)
-    if copyFileWouldChange "${args[@]}"; then
-        __environment copyFile "${args[@]}" || return $?
+    if fileCopyWouldChange "${args[@]}"; then
+        __environment fileCopy "${args[@]}" || return $?
         __environment service ssh restart || return $?
     fi

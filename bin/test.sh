@@ -24,7 +24,7 @@ __buildTestSuite() {
   local usage="_${FUNCNAME[0]}"
   local testHome
 
-  testHome="$(__catchEnvironment "$usage" buildHome)" || return $?
+  testHome="$(__catch "$usage" buildHome)" || return $?
   [ -d "$testHome/test" ] || __throwArgument "$usage" "Missing test directory" || return $?
 
   # Include our own test support files if needed
@@ -32,11 +32,11 @@ __buildTestSuite() {
 
   # CUSTOM BEGIN
   local bigBinary
-  bigBinary=$(__catchEnvironment "$usage" __bigTextBinary) || return $?
+  bigBinary=$(__catch "$usage" __bigTextBinary) || return $?
   [ -n "$bigBinary" ] || bigBinary="toilet"
-  __catchEnvironment "$usage" packageWhich "$bigBinary" "$bigBinary" || return $?
-  __catchEnvironment "$usage" packageWhich shellcheck shellcheck || return $?
-  __catchEnvironment "$usage" __pcregrepInstall || return $?
+  __catch "$usage" packageWhich "$bigBinary" "$bigBinary" || return $?
+  __catch "$usage" packageWhich shellcheck shellcheck || return $?
+  __catch "$usage" __pcregrepInstall || return $?
   # CUSTOM END
 
   __catchEnvironment "$usage" testTools testSuite --cd-away --delete-common --tests "$testHome/test/tools/" "$@" || return $?

@@ -54,7 +54,7 @@ __hookPreCommitPHP() {
 
   local home mode
 
-  home=$(__catchEnvironment "$usage" buildHome) || return $?
+  home=$(__catch "$usage" buildHome) || return $?
   mode=$(_choose "$readOnly" 0440 0640)
 
   statusMessage --last decorate info ".php script mode -> $(decorate code "$mode")"

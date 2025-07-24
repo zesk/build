@@ -15,7 +15,7 @@ __hookNotifySoundName() {
 
   if ! darwinSoundValid "$soundName"; then
     local home original
-    home=$(__catchEnvironment "$usage" buildHome) || return $?
+    home=$(__catch "$usage" buildHome) || return $?
     original="$home/etc/$soundName.mp3"
     [ -f "$original" ] || __throwArgument "usage" "No sound installed with name $(decorate code "$soundName")" || return $?
     __catchEnvironment "$usage" darwinSoundInstall --create "$home/etc/$soundName.mp3" || return $?

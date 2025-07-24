@@ -31,7 +31,7 @@ documentationBuild() {
   local usage="_${FUNCNAME[0]}"
 
   local home
-  home=$(__catchEnvironment "$usage" buildHome) || return $?
+  home=$(__catch "$usage" buildHome) || return $?
 
   local company="" applicationName="" docArgs=() companyLink="" applicationName=""
 
@@ -144,9 +144,9 @@ documentationBuild() {
   #
   local cacheDirectory
 
-  cacheDirectory="$(__catchEnvironment "$usage" buildCacheDirectory ".${FUNCNAME[0]}/${APPLICATION_CODE-default}/")" || return $?
+  cacheDirectory="$(__catch "$usage" buildCacheDirectory ".${FUNCNAME[0]}/${APPLICATION_CODE-default}/")" || return $?
   echo "$LINENO: cacheDirectory=$cacheDirectory "
-  cacheDirectory=$(__catchEnvironment "$usage" directoryRequire "$cacheDirectory") || return $?
+  cacheDirectory=$(__catch "$usage" directoryRequire "$cacheDirectory") || return $?
   echo "$LINENO: cacheDirectory=$cacheDirectory "
   if $cleanFlag; then
     __catchEnvironment "$usage" rm -rf "$cacheDirectory" || return $?
@@ -160,7 +160,7 @@ documentationBuild() {
 
   BUILD_COLORS_MODE=$(consoleConfigureColorMode) || :
 
-  __catchEnvironment "$usage" buildEnvironmentLoad APPLICATION_CODE APPLICATION_NAME BUILD_COMPANY BUILD_COMPANY_LINK || return $?
+  __catch "$usage" buildEnvironmentLoad APPLICATION_CODE APPLICATION_NAME BUILD_COMPANY BUILD_COMPANY_LINK || return $?
 
   #
   # Defaults
@@ -183,12 +183,12 @@ documentationBuild() {
   local start
   start=$(timingStart) || __throwEnvironment "$usage" timingStart || return $?
 
-  __catchEnvironment "$usage" __pcregrepInstall || return $?
+  __catch "$usage" __pcregrepInstall || return $?
 
   local seeFunction seeFile seePrefix
 
-  seeFunction=$(__catchEnvironment "$usage" documentationTemplate seeFunction) || return $?
-  seeFile=$(__catchEnvironment "$usage" documentationTemplate seeFile) || return $?
+  seeFunction=$(__catch "$usage" documentationTemplate seeFunction) || return $?
+  seeFile=$(__catch "$usage" documentationTemplate seeFile) || return $?
 
   if [ "$actionFlag" = "--unlinked-update" ]; then
     for argument in unlinkedTemplate unlinkedTarget; do
@@ -203,7 +203,7 @@ documentationBuild() {
   # Generate or update indexes
   #
   for sourcePath in "${sourcePaths[@]}"; do
-    __catchEnvironment "$usage" documentationIndex_Generate "${indexArgs[@]+${indexArgs[@]}}" "$sourcePath" "$cacheDirectory" || return $?
+    __catch "$usage" documentationIndex_Generate "${indexArgs[@]+${indexArgs[@]}}" "$sourcePath" "$cacheDirectory" || return $?
   done
 
   #
@@ -212,7 +212,7 @@ documentationBuild() {
   local template
   echo "$LINENO: cacheDirectory=$cacheDirectory "
   find "$templatePath" -type f -name '*.md' ! -path '*/__*' | while read -r template; do
-    __catchEnvironment "$usage" documentationIndex_LinkDocumentationPaths "$cacheDirectory" "$template" "$targetPath${template#"$templatePath"}" || return $?
+    __catch "$usage" documentationIndex_LinkDocumentationPaths "$cacheDirectory" "$template" "$targetPath${template#"$templatePath"}" || return $?
   done
   statusMessage --last timingReport "$start" "Indexes completed in" || :
 
@@ -240,7 +240,7 @@ documentationBuild() {
     ! $verbose || decorate warning "No --unlinked-template supplied"
   fi
 
-  __catchEnvironment "$usage" documentationTemplateDirectoryCompile "${docArgs[@]+"${docArgs[@]}"}" "$cacheDirectory" "$templatePath" "$functionTemplate" "$targetPath" || returnClean $? "${clean[@]+"${clean[@]}"}" || return $?
+  __catch "$usage" documentationTemplateDirectoryCompile "${docArgs[@]+"${docArgs[@]}"}" "$cacheDirectory" "$templatePath" "$functionTemplate" "$targetPath" || returnClean $? "${clean[@]+"${clean[@]}"}" || return $?
   [ ${#clean[@]} -eq 0 ] || __catchEnvironment "$usage" rm -rf "${clean[@]}" || return $?
   clean=()
 
@@ -249,13 +249,13 @@ documentationBuild() {
   #
   (
     local functionLinkPattern fileLinkPattern
-    __catchEnvironment "$usage" buildEnvironmentLoad BUILD_DOCUMENTATION_SOURCE_LINK_PATTERN || return $?
+    __catch "$usage" buildEnvironmentLoad BUILD_DOCUMENTATION_SOURCE_LINK_PATTERN || return $?
     functionLinkPattern=${BUILD_DOCUMENTATION_SOURCE_LINK_PATTERN-}
     # Remove line
     fileLinkPattern=${functionLinkPattern%%#.*}
-    __catchEnvironment "$usage" documentationIndex_SeeLinker "$cacheDirectory" "$seePrefix" "$seeFunction" "$functionLinkPattern" "$seeFile" "$fileLinkPattern" || return $?
+    __catch "$usage" documentationIndex_SeeLinker "$cacheDirectory" "$seePrefix" "$seeFunction" "$functionLinkPattern" "$seeFile" "$fileLinkPattern" || return $?
   ) || return $?
-  message=$(__catchEnvironment "$usage" timingReport "$start" "in") || return $?
+  message=$(__catch "$usage" timingReport "$start" "in") || return $?
   hookRunOptional documentation-complete "$message" || return $?
 }
 _documentationBuild() {
@@ -273,8 +273,8 @@ __documentationBuild() {
 documentationBuildCache() {
   [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
   local code
-  code=$(__catchEnvironment "$usage" buildEnvironmentGet "APPLICATION_CODE") || return $?
-  __catchEnvironment "$usage" buildCacheDirectory ".documentationBuild/${code-default}/${1-}" || return $?
+  code=$(__catch "$usage" buildEnvironmentGet "APPLICATION_CODE") || return $?
+  __catch "$usage" buildCacheDirectory ".documentationBuild/${code-default}/${1-}" || return $?
 }
 _documentationBuildCache() {
   # __IDENTICAL__ usageDocument 1

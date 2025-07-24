@@ -22,7 +22,7 @@
 phpInstall() {
   local usage="_${FUNCNAME[0]}"
   [ $# -eq 0 ] || __help --only "$usage" "$@" || return "$(convertValue $? 1 0)"
-  __catchEnvironment "$usage" packageWhich php php-common php-cli "$@" || return $?
+  __catch "$usage" packageWhich php php-common php-cli "$@" || return $?
 }
 _phpInstall() {
   # __IDENTICAL__ usageDocument 1
@@ -42,7 +42,7 @@ _phpInstall() {
 phpUninstall() {
   local usage="_${FUNCNAME[0]}"
   [ $# -eq 0 ] || __help --only "$usage" "$@" || return "$(convertValue $? 1 0)"
-  __catchEnvironment "$usage" packageWhichUninstall php php-common php-cli "$@" || return $?
+  __catch "$usage" packageWhichUninstall php php-common php-cli "$@" || return $?
 }
 _phpUninstall() {
   # __IDENTICAL__ usageDocument 1
@@ -213,12 +213,12 @@ phpBuild() {
     shift
   done
 
-  [ -n "$home" ] || home=$(__catchEnvironment "$usage" buildHome) || return $?
+  [ -n "$home" ] || home=$(__catch "$usage" buildHome) || return $?
   [ -n "$targetName" ] || __throwArgument "$usage" "--name argument blank" || return $?
   [ $# -gt 0 ] || __throwArgument "$usage" "Need to supply a list of files for application $(decorate code "$targetName")" || return $?
 
   usageRequireBinary "$usage" tar || return $?
-  __catchEnvironment "$usage" buildEnvironmentLoad "${environments[@]}" "${optionals[@]}" || return $?
+  __catch "$usage" buildEnvironmentLoad "${environments[@]}" "${optionals[@]}" || return $?
 
   local missingFile tarFile
   missingFile=()
@@ -243,7 +243,7 @@ phpBuild() {
   statusMessage --first decorate info "Installing build tools ..." || :
 
   # Ensure we're up to date
-  __catchEnvironment "$usage" packageInstall || return $?
+  __catch "$usage" packageInstall || return $?
 
   # shellcheck disable=SC2119
   __catchEnvironment "$usage" phpInstall || return $?
@@ -259,7 +259,7 @@ phpBuild() {
   if hasHook application-environment; then
     __catchEnvironment "$usage" hookRun --application "$home" application-environment "${environments[@]}" -- "${optionals[@]}" >"$dotEnv" || returnClean $? "${clean[@]}" || return $?
   else
-    __catchEnvironment "$usage" environmentFileApplicationMake "${environments[@]}" -- "${optionals[@]}" >"$dotEnv" || returnClean $? "${clean[@]}" || return $?
+    __catch "$usage" environmentFileApplicationMake "${environments[@]}" -- "${optionals[@]}" >"$dotEnv" || returnClean $? "${clean[@]}" || return $?
   fi
   if ! grep -q APPLICATION "$dotEnv"; then
     buildFailed "$dotEnv" || __throwEnvironment "$usage" "$dotEnv file seems to be invalid:" || returnClean $? "${clean[@]}" || return $?
@@ -372,7 +372,7 @@ phpTest() {
     shift
   done
 
-  [ -n "$home" ] || home=$(__catchEnvironment "$usage" buildHome) || return $?
+  [ -n "$home" ] || home=$(__catch "$usage" buildHome) || return $?
 
   [ -f "$home/docker-compose.yml" ] || __catchEnvironment "$usage" "Requires $(decorate code "$home/docker-compose.yml")" || return $?
 
@@ -385,7 +385,7 @@ phpTest() {
   local init quietLog
 
   init=$(timingStart) || return $?
-  quietLog="$(__catchEnvironment "$usage" buildQuietLog "$usage")" || return $?
+  quietLog="$(__catch "$usage" buildQuietLog "$usage")" || return $?
 
   buildDebugStart "${FUNCNAME[0]}" || :
 
@@ -407,7 +407,7 @@ phpTest() {
 
   statusMessage decorate info "Bringing up containers ..." || returnUndo "$?" "${undo[@]}" || return $?
 
-  start=$(__catchEnvironment "$usage" timingStart) || returnUndo "$?" "${undo[@]}" || return $?
+  start=$(__catch "$usage" timingStart) || returnUndo "$?" "${undo[@]}" || return $?
   __catchEnvironmentQuiet "$usage" "$quietLog" docker-compose "${dca[@]}" up -d || returnUndo "$?" "${undo[@]}" || return $?
   statusMessage timingReport "$start" "Up in" || :
 

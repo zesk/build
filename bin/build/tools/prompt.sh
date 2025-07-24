@@ -184,7 +184,7 @@ bashPrompt() {
 
   if [ -z "$colorsTextFormatted" ] || $resetFlag; then
     if ! $resetFlag; then
-      __catchEnvironment "$usage" buildEnvironmentLoad BUILD_PROMPT_COLORS || return $?
+      __catch "$usage" buildEnvironmentLoad BUILD_PROMPT_COLORS || return $?
       [ -z "${BUILD_PROMPT_COLORS-}" ] || colorsText="$BUILD_PROMPT_COLORS"
     fi
     if $resetFlag || [ -z "$colorsText" ]; then
@@ -262,7 +262,7 @@ bashPromptMarkers() {
   local markers=()
 
   export __BASH_PROMPT_MARKERS
-  __catchEnvironment "$usage" buildEnvironmentLoad __BASH_PROMPT_MARKERS || return $?
+  __catch "$usage" buildEnvironmentLoad __BASH_PROMPT_MARKERS || return $?
 
   # _IDENTICAL_ argument-case-header 5
   local __saved=("$@") __count=$#
@@ -386,7 +386,7 @@ __bashPromptAdd() {
     shift
   done
 
-  __catchEnvironment "$usage" __bashPromptModulesSave "${modules[@]}" || return $?
+  __catch "$usage" __bashPromptModulesSave "${modules[@]}" || return $?
   return 0
 }
 

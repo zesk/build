@@ -55,12 +55,12 @@ testMapTokens() {
   local usage="_return" home
 
   local COLUMNS LINES
-  home=$(__catchEnvironment "$usage" buildHome) || return $?
+  home=$(__catch "$usage" buildHome) || return $?
 
   echo | assertExitCode 0 mapTokens || return $?
   assertEquals "" "$(echo | mapTokens)" || return $?
   assertEquals "$(printf "%s\n" a b c)" "$(echo '{a}{b}{c}' | mapTokens)" || return $?
-  assertEquals "$(printf "%s\n" confirmYesNo copyFileWouldChange copyFile 'args[@]' 'args[@]')" "$(mapTokens <"$home/test/example/mapTokensBad.md")" || return $?
+  assertEquals "$(printf "%s\n" confirmYesNo fileCopyWouldChange fileCopy 'args[@]' 'args[@]')" "$(mapTokens <"$home/test/example/mapTokensBad.md")" || return $?
 }
 
 testMapPrefixSuffix() {

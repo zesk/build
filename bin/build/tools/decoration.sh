@@ -58,8 +58,8 @@ bigText() {
 
   local fonts binary index=0
 
-  binary=$(__catchEnvironment "$usage" buildEnvironmentGet BUILD_TEXT_BINARY) || return $?
-  [ -n "$binary" ] || binary="$(__catchEnvironment "$usage" __bigTextBinary)" || return $?
+  binary=$(__catch "$usage" buildEnvironmentGet BUILD_TEXT_BINARY) || return $?
+  [ -n "$binary" ] || binary="$(__catch "$usage" __bigTextBinary)" || return $?
   [ -n "$binary" ] || __throwEnvironment "$usage" "Need BUILD_TEXT_BINARY" || return $?
   case "$binary" in
   figlet) fonts=("standard" "big") ;;
@@ -116,8 +116,8 @@ bigTextAt() {
   [ -n "$x" ] || __throwArgument "$usage" "Missing x" || return $?
   [ -n "$y" ] || __throwArgument "$usage" "Missing y" || return $?
   local maxX maxY theX="$x" theY="$y" saveX saveY
-  maxX=$(__catchEnvironment "$usage" consoleColumns) || return $?
-  maxY=$(__catchEnvironment "$usage" consoleRows) || return $?
+  maxX=$(__catch "$usage" consoleColumns) || return $?
+  maxY=$(__catch "$usage" consoleRows) || return $?
   [ "$x" -lt "$maxX" ] || __throwArgument "$usage" "$x -gt $maxX exceeds column width" || return $?
   [ "$y" -lt "$maxY" ] || __throwArgument "$usage" "$y -gt $maxY exceeds row height" || return $?
   [ "$x" -gt "-$maxX" ] || __throwArgument "$usage" "$x -lt -$maxX exceeds negative column width" || return $?
@@ -351,7 +351,7 @@ lineFill() {
 
   local text cleanText width barText
 
-  width=$(__catchEnvironment "$usage" consoleColumns) || return $?
+  width=$(__catch "$usage" consoleColumns) || return $?
   barText=$(usageArgumentString "$usage" "$barText" "${1:--}") || return $?
   shift || :
 

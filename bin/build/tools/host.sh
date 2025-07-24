@@ -12,7 +12,7 @@ hostnameFull() {
   local usage="_${FUNCNAME[0]}"
 
   [ $# -eq 0 ] || __help --only "$usage" "$@" || return "$(convertValue $? 1 0)"
-  __catchEnvironment "$usage" __hostname || return $?
+  __catch "$usage" __hostname || return $?
 }
 _hostnameFull() {
   # __IDENTICAL__ usageDocument 1

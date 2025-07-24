@@ -35,7 +35,7 @@ nodeInstall() {
 
   local quietLog
 
-  quietLog=$(__catchEnvironment "$usage" buildQuietLog "$usage") || return $?
+  quietLog=$(__catch "$usage" buildQuietLog "$usage") || return $?
   statusMessage --first decorate info "Installing nodejs ... " || return $?
   __catchEnvironmentQuiet "$usage" "$quietLog" packageInstall nodejs || return $?
   __nodeInstall_corepackEnable "$usage" || return $?
@@ -54,7 +54,7 @@ __nodeInstall_corepackEnable() {
     whichExists corepack || __throwEnvironment "$usage" "corepack not found after global installation - failing: PATH=$PATH" || return $?
   fi
   local home
-  home=$(__catchEnvironment "$usage" buildHome) || return $?
+  home=$(__catch "$usage" buildHome) || return $?
   __catchEnvironment "$usage" muzzle pushd "$home" || return $?
   __catchEnvironment "$usage" corepack enable || returnUndo $? muzzle popd || return $?
   __catchEnvironment "$usage" muzzle popd || return $?
@@ -89,7 +89,7 @@ nodeUninstall() {
   local start name quietLog
   name=$(decorate code node)
   start=$(timingStart) || return $?
-  quietLog=$(__catchEnvironment "$usage" buildQuietLog "$usage") || return $?
+  quietLog=$(__catch "$usage" buildQuietLog "$usage") || return $?
   statusMessage --first decorate info "Uninstalling $name ... " || return $?
   __catchEnvironmentQuiet "$usage" "$quietLog" packageUninstall nodejs || return $?
   statusMessage timingReport "$start" "Uninstalled $name in" || return $?
@@ -145,7 +145,7 @@ nodePackageManager() {
 
   local manager
 
-  manager=$(__catchEnvironment "$usage" buildEnvironmentGet NODE_PACKAGE_MANAGER) || return $?
+  manager=$(__catch "$usage" buildEnvironmentGet NODE_PACKAGE_MANAGER) || return $?
   [ -n "$manager" ] || __throwEnvironment "$usage" "NODE_PACKAGE_MANAGER is blank" || return $?
   nodePackageManagerValid "$manager" || __throwEnvironment "$usage" "NODE_PACKAGE_MANAGER is not valid: $manager not in $(nodePackageManagerValid)" || return $?
   isExecutable "$manager" || __throwEnvironment "$usage" "$(decorate code "$manager") is not an executable" || return $?

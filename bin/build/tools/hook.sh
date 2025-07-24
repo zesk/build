@@ -224,7 +224,7 @@ hasHook() {
 
   local applicationHome
 
-  applicationHome="$(__catchEnvironment "$usage" buildHome)" || return $?
+  applicationHome="$(__catch "$usage" buildHome)" || return $?
   # _IDENTICAL_ argument-case-header 5
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
@@ -281,7 +281,7 @@ whichHook() {
   local applicationHome hookPaths=() hookExtensions=() nextSource=""
 
   export BUILD_HOOK_DIRS
-  __catchEnvironment "$usage" buildEnvironmentLoad BUILD_HOOK_DIRS BUILD_HOOK_EXTENSIONS || return $?
+  __catch "$usage" buildEnvironmentLoad BUILD_HOOK_DIRS BUILD_HOOK_EXTENSIONS || return $?
 
   IFS=":" read -r -a hookPaths <<<"$BUILD_HOOK_DIRS" || :
   [ ${#hookPaths[@]} -gt 0 ] || __throwEnvironment "$usage" "BUILD_HOOK_DIRS is blank" || return $?
@@ -289,7 +289,7 @@ whichHook() {
   IFS=":" read -r -a hookExtensions <<<"$BUILD_HOOK_EXTENSIONS" || :
   [ ${#hookExtensions[@]} -gt 0 ] || __throwEnvironment "$usage" "BUILD_HOOK_EXTENSIONS is blank" || return $?
 
-  applicationHome="$(__catchEnvironment "$usage" buildHome)" || return $?
+  applicationHome="$(__catch "$usage" buildHome)" || return $?
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))

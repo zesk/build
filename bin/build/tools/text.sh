@@ -870,11 +870,11 @@ cachedShaPipe() {
       [ -n "$argument" ] || __throwArgument "$usage" "blank argument" || return $?
       [ -f "$argument" ] || __throwArgument "$usage" "not a file $(decorate label "$argument")" || return $?
       cacheFile="$cacheDirectory/${argument#/}"
-      cacheFile=$(__catchEnvironment "$usage" fileDirectoryRequire "$cacheFile") || return $?
+      cacheFile=$(__catch "$usage" fileDirectoryRequire "$cacheFile") || return $?
       if [ -f "$cacheFile" ] && fileIsNewest "$cacheFile" "$1"; then
         printf "%s\n" "$(cat "$cacheFile")"
       else
-        __catchEnvironment "$usage" shaPipe "$argument" | __catchEnvironment "$usage" tee "$cacheFile" || return $?
+        __catch "$usage" shaPipe "$argument" | __catchEnvironment "$usage" tee "$cacheFile" || return $?
       fi
       shift
     done

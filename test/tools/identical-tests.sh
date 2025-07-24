@@ -64,7 +64,7 @@ testIdenticalRepair() {
   local usage="_return"
 
   local home
-  home=$(__catchEnvironment "$usage" buildHome) || return $?
+  home=$(__catch "$usage" buildHome) || return $?
 
   local output source token target expectedTarget testPath prefix
 
@@ -108,7 +108,7 @@ testIdenticalChecks() {
   local usage="_return"
   local home
 
-  home=$(__catchEnvironment "$usage" buildHome) || return $?
+  home=$(__catch "$usage" buildHome) || return $?
   local identicalCheckArgs identicalError
 
   identicalError=$(returnCode identical)
@@ -150,7 +150,7 @@ testIdenticalCheckSingles() {
   local identicalCheckArgs identicalError singles
 
   local home
-  home=$(__catchEnvironment "$usage" buildHome) || return $?
+  home=$(__catch "$usage" buildHome) || return $?
 
   identicalError=$(returnCode identical)
 

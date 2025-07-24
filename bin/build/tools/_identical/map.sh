@@ -11,7 +11,7 @@
 _identicalMapAttributesFilter() {
   local usage="${1-}" file="${2-}" base home full dir aa=()
 
-  home=$(__catchEnvironment "$usage" buildHome) || return $?
+  home=$(__catch "$usage" buildHome) || return $?
   home="${home%/}/"
   full=$(__catchEnvironment "$usage" realPath "$file") || return $?
   aa+=(-e 's/__FULL__/'"$(quoteSedReplacement "$full")"'/g')

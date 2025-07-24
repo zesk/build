@@ -5,6 +5,8 @@ truncateFloat|floatTruncate
 roundFloat|floatRound
 mostRecentlyModifiedFile|fileModifiedRecentlyName
 mostRecentlyModifiedTimestamp|fileModifiedRecentlyTimestamp
+copyFile|fileCopy
+copyFileWouldChange|fileChange
 betterType|fileType
 simplifyPath|directoryPathSimplify
 renameFiles|filesRename
@@ -37,6 +39,41 @@ _IDENTICAL_ usageDocument|__IDENTICAL__ usageDocument|
 semanticColorSampleStyles|colorSampleSemanticStyles
 __catchEnvironment "$usage" buildHome|__catch "$usage" buildHome|
 __catchEnvironment "$handler" buildHome|__catch "$handler" buildHome|
+__catchEnvironment "$usage" bashDoc|__catch "$usage" bashDoc
+__catchEnvironment "$usage" fileL|__catch "$usage" fileL|
+__catchEnvironment "$usage" fileD|__catch "$usage" fileD|
+__catchEnvironment "$usage" fileS|__catch "$usage" fileS|
+__catchEnvironment "$usage" build|__catch "$usage" build|
+__catchEnvironment "$usage" url|__catch "$usage" url|
+__catchEnvironment "$usage" package|__catch "$usage" package|
+__catchEnvironment "$usage" directory|__catch "$usage" directory|
+__catchEnvironment "$usage" nodeI|__catch "$usage" nodeI|
+__catchEnvironment "$usage" gitE|__catch "$usage" gitE|
+__catchEnvironment "$usage" shaP|__catch "$usage" shaP|
+__catchEnvironment "$usage" aptK|__catch "$usage" aptK|
+__catchEnvironment "$usage" environment|__catch "$usage" environment|
+__catchEnvironment "$usage" _comment|__catch "$usage" _comment|
+__catchEnvironment "$usage" __|__catch "$usage" __|
+__catchEnvironment "$usage" awsI|__catch "$usage" awsI|
+__catchEnvironment "$usage" awsS|__catch "$usage" awsS
+__catchEnvironment "$usage" userH|__catch "$usage" userH|
+__catchEnvironment "$usage" awsC|__catch "$usage" awsC|
+__catchEnvironment "$usage" awsC|__catch "$usage" awsC|
+__catchEnvironment "$usage" document|__catch "$usage" document|
+__catchEnvironment "$usage" timing|__catch "$usage" timing|
+__catchEnvironment "$usage" identical|__catch "$usage" identical|
+__catchEnvironment "$usage" console|__catch "$usage" console|
+__catchEnvironment "$usage" confirm|__catch "$usage" confirm|
+__catchEnvironment "$usage" interactive|__catch "$usage" interactive|
+__catchEnvironment "$usage" map|__catch "$usage" map|
+__catchEnvironment "$usage" any|__catch "$usage" any|
+anyEnvToDockerEnv|environmentFileToDocker
+AnyEnvToDockerEnv|EnvironmentFileToDocker
+anyEnvToBashEnv|environmentFileToBashCompatible
+dockerEnvToBash|environmentFileDockerToBashCompatible
+DockerEnvToBash|EnvironmentFileDockerToBashCompatible
+dockerEnvFromBashEnv|environmentFileBashCompatibleToDocker
+DockerEnvFromBashEnv|EnvironmentFileBashCompatibleToDocker
 
 # v0.36.2
 

@@ -424,7 +424,7 @@ testDeployPackageName() {
   local usage="_return"
   local saveTarget home
 
-  home=$(__catchEnvironment "$usage" buildHome) || return $?
+  home=$(__catch "$usage" buildHome) || return $?
 
   saveTarget=${BUILD_TARGET-NONE}
 

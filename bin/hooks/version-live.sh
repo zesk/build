@@ -16,10 +16,10 @@ else
     local usage="_${FUNCNAME[0]}"
 
     local name owner
-    name=$(__catchEnvironment "$usage" buildEnvironmentGet GITHUB_REPOSITORY_NAME) || return $?
+    name=$(__catch "$usage" buildEnvironmentGet GITHUB_REPOSITORY_NAME) || return $?
     [ -n "$name" ] || __throwEnvironment "$usage" "GITHUB_REPOSITORY_NAME is blank" || return $?
 
-    owner=$(__catchEnvironment "$usage" buildEnvironmentGet GITHUB_REPOSITORY_OWNER) || return $?
+    owner=$(__catch "$usage" buildEnvironmentGet GITHUB_REPOSITORY_OWNER) || return $?
     [ -n "$owner" ] || __throwEnvironment "$usage" "GITHUB_REPOSITORY_OWNER is blank" || return $?
     __catchEnvironment "$usage" githubLatestRelease "$owner/$name" "$@" || return $?
   }

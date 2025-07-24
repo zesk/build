@@ -27,7 +27,7 @@ __buildTestSuite() {
   local usage="_${FUNCNAME[0]}"
   local testHome
 
-  testHome="$(__catchEnvironment "$usage" buildHome)" || return $?
+  testHome="$(__catch "$usage" buildHome)" || return $?
   [ -d "$testHome/test" ] || __throwArgument "$usage" "Missing test directory" || return $?
 
   # Include our own test support files if needed

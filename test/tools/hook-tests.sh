@@ -24,7 +24,7 @@ testHookSystem() {
   local hook exitCode f
 
   testDir=$(fileTemporaryName "$usage" -d) || return $?
-  here=$(__catchEnvironment "$usage" buildHome) || return $?
+  here=$(__catch "$usage" buildHome) || return $?
 
   randomApp=$(randomString)
   randomDefault=$(randomString)

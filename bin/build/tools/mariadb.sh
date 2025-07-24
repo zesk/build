@@ -16,7 +16,7 @@
 mariadbInstall() {
   local usage="_${FUNCNAME[0]}"
   [ $# -eq 0 ] || __help --only "$usage" "$@" || return "$(convertValue $? 1 0)"
-  __catchEnvironment "$usage" packageGroupInstall mariadb || return $?
+  __catch "$usage" packageGroupInstall mariadb || return $?
 }
 _mariadbInstall() {
   true || mariadbInstall --help
@@ -32,7 +32,7 @@ _mariadbInstall() {
 mariadbUninstall() {
   local usage="_${FUNCNAME[0]}"
   [ $# -eq 0 ] || __help --only "$usage" "$@" || return "$(convertValue $? 1 0)"
-  __catchEnvironment "$usage" packageGroupUninstall mariadb || return $?
+  __catch "$usage" packageGroupUninstall mariadb || return $?
 }
 _mariadbUninstall() {
   true || mariadbUninstall --help

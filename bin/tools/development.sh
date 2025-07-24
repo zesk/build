@@ -8,7 +8,7 @@
 buildAddTool() {
   local usage="_return" home file
 
-  home=$(__catchEnvironment "$usage" buildHome) || return $?
+  home=$(__catch "$usage" buildHome) || return $?
 
   while [ $# -gt 0 ]; do
     case "$1" in

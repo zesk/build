@@ -14,7 +14,7 @@ testDaemontools() {
 
   local home
 
-  home=$(__catchEnvironment "$usage" buildHome) || return $?
+  home=$(__catch "$usage" buildHome) || return $?
   assertExitCode --stderr-match "not production" 0 daemontoolsInstall || return $?
 
   if ! daemontoolsIsRunning; then

@@ -17,7 +17,7 @@ testBashFunctionComment() {
     --stdout-match "--name name"
   )
 
-  home=$(__catchEnvironment "$usage" buildHome) || return $?
+  home=$(__catch "$usage" buildHome) || return $?
 
   assertExitCode "${matches[@]}" 0 bashFunctionComment "$home/bin/build/tools/prompt/reload-changes.sh" reloadChanges || return $?
 }
@@ -28,7 +28,7 @@ testDocumentation() {
   local usage="_return"
 
   local home
-  home=$(__catchEnvironment "$usage" buildHome) || return $?
+  home=$(__catch "$usage" buildHome) || return $?
 
   testOutput=$(mktemp)
   assertExitCode 0 inArray "summary" summary usage argument example reviewed || return $?
@@ -62,7 +62,7 @@ __isolateTest() {
   local usage="_return"
 
   local home
-  home=$(__catchEnvironment "$usage" buildHome) || return $?
+  home=$(__catch "$usage" buildHome) || return $?
 
   bashDocumentation_Extract "$(bashDocumentation_FindFunctionDefinition "$home" assertNotEquals)" assertNotEquals >"$testOutput" || return $?
   set -a

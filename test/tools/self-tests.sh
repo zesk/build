@@ -138,7 +138,7 @@ testInstallBinBuildNetwork() {
   local testDir testBinBuild section home matches
   local handler=_return
 
-  home=$(__catchEnvironment "$handler" buildHome) || return $?
+  home=$(__catch "$handler" buildHome) || return $?
 
   testDir=$(mktemp -d)
   testBinBuild="$testDir/bin/pipeline/install-bin-build.sh"
@@ -164,7 +164,7 @@ testInstallBinBuild() {
   local handler="_${FUNCNAME[0]}"
   local testDir testBinBuild section home matches
 
-  home=$(__catchEnvironment "$handler" buildHome) || return $?
+  home=$(__catch "$handler" buildHome) || return $?
   assertDirectoryExists "$BUILD_HOME" || return $?
   section=0
   testDir=$(mktemp -d)

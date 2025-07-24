@@ -478,7 +478,7 @@ urlOpen() {
       shift
     done
   fi
-  $waitFlag || [ "${#urls[@]}" -eq 0 ] || __catchEnvironment "$usage" __urlOpen "${urls[@]}" || return $?
+  $waitFlag || [ "${#urls[@]}" -eq 0 ] || __catch "$usage" __urlOpen "${urls[@]}" || return $?
   return 0
 }
 _urlOpen() {
@@ -495,7 +495,7 @@ __urlOpenInnerLoop() {
     return 0
   fi
   if $waitFlag; then
-    __catchEnvironment "$usage" __urlOpen "$url" || return $?
+    __catch "$usage" __urlOpen "$url" || return $?
   else
     return 120
   fi
@@ -631,13 +631,13 @@ _urlFetch() {
 __urlOpen() {
   local usage="${FUNCNAME[0]#_}" binary
 
-  binary=$(__catchEnvironment "$usage" buildEnvironmentGet BUILD_URL_BINARY) || return $?
+  binary=$(__catch "$usage" buildEnvironmentGet BUILD_URL_BINARY) || return $?
   if [ -z "$binary" ]; then
     while IFS='' read -d$'\n' -r binary; do
       if whichExists "$binary"; then
         break
       fi
-    done < <(__catchEnvironment "$usage" __urlBinary) || return $?
+    done < <(__catch "$usage" __urlBinary) || return $?
     if [ -z "$binary" ]; then
       printf "%s %s\n" "OPEN: " "$(consoleLink "$url")"
       return 0

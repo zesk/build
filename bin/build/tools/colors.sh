@@ -66,7 +66,7 @@ consoleColorMode() {
 
   export BUILD_COLORS_MODE
 
-  __catchEnvironment "$usage" buildEnvironmentLoad BUILD_COLORS_MODE || return $?
+  __catch "$usage" buildEnvironmentLoad BUILD_COLORS_MODE || return $?
 
   # _IDENTICAL_ argument-case-header 5
   local __saved=("$@") __count=$#
@@ -349,8 +349,8 @@ plasterLines() {
   IFS=$'\n' read -r -d '' curX curY < <(cursorGet) || :
   isUnsignedInteger "$curX" || __throwEnvironment "$usage" "cursorGet returned $curX $curY" || return $?
   isUnsignedInteger "$curY" || __throwEnvironment "$usage" "cursorGet returned $curX $curY" || return $?
-  rows=$(__catchEnvironment "$usage" consoleRows) || return $?
-  columns=$(__catchEnvironment "$usage" consoleColumns) || return $?
+  rows=$(__catch "$usage" consoleRows) || return $?
+  columns=$(__catch "$usage" consoleColumns) || return $?
   while IFS="" read -r line; do
     __catchEnvironment "$usage" cursorSet 1 "$curY" || return $?
     printf "%s" "$line"
@@ -617,7 +617,7 @@ __colorNormalize() {
 colorNormalize() {
   local usage="_${FUNCNAME[0]}"
 
-  __catchEnvironment "$usage" packageWhich bc bc || return $?
+  __catch "$usage" packageWhich bc bc || return $?
   local red green blue
   if [ $# -eq 0 ]; then
     local done=false
@@ -771,7 +771,7 @@ colorMultiply() {
   local factor colors=()
 
   [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
-  __catchEnvironment "$usage" packageWhich bc bc || return $?
+  __catch "$usage" packageWhich bc bc || return $?
   factor=$(usageArgumentString "$usage" "factor" "${1-}") && shift || return $?
 
   local red green blue

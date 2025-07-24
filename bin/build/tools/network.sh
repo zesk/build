@@ -23,7 +23,7 @@ __networkConfigurationFiltered() {
       return $?
       ;;
     --install)
-      __catchEnvironment "$usage" packageWhich ifconfig net-tools || return $?
+      __catch "$usage" packageWhich ifconfig net-tools || return $?
       ;;
     *)
       # _IDENTICAL_ argumentUnknown 1
@@ -35,7 +35,7 @@ __networkConfigurationFiltered() {
 
   export OSTYPE
 
-  __catchEnvironment "$usage" buildEnvironmentLoad OSTYPE || return $?
+  __catch "$usage" buildEnvironmentLoad OSTYPE || return $?
 
   whichExists ifconfig || __throwEnvironment "$usage" "Need ifconfig (net-tools) installed. not available in PATH: $PATH" || return $?
 

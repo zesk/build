@@ -94,7 +94,7 @@ gitTagDelete() {
   local exitCode=0
   export GIT_REMOTE
 
-  __catchEnvironment "$usage" buildEnvironmentLoad GIT_REMOTE || return $?
+  __catch "$usage" buildEnvironmentLoad GIT_REMOTE || return $?
   usageRequireEnvironment "$usage" GIT_REMOTE || return $?
   # _IDENTICAL_ argument-case-header 5
   local __saved=("$@") __count=$#
@@ -347,7 +347,7 @@ gitTagVersion() {
   local usage="_${FUNCNAME[0]}"
   local maximumTagsPerVersion
 
-  __catchEnvironment "$usage" buildEnvironmentLoad BUILD_MAXIMUM_TAGS_PER_VERSION || return $?
+  __catch "$usage" buildEnvironmentLoad BUILD_MAXIMUM_TAGS_PER_VERSION || return $?
 
   maximumTagsPerVersion="$BUILD_MAXIMUM_TAGS_PER_VERSION"
   local init start versionSuffix
@@ -511,7 +511,7 @@ gitCommit() {
   done
 
   if ! isBoolean "$openLinks"; then
-    openLinks=$(__catchEnvironment "$usage" buildEnvironmentGet GIT_OPEN_LINKS) || return $?
+    openLinks=$(__catch "$usage" buildEnvironmentGet GIT_OPEN_LINKS) || return $?
   fi
   isBoolean "$openLinks" || openLinks=false
 
@@ -533,7 +533,7 @@ gitCommit() {
   notes="$(releaseNotes)" || __throwEnvironment "$usage" "No releaseNotes?" || return $?
   if $updateReleaseNotes && [ -n "$comment" ]; then
     statusMessage decorate info "Updating release notes ..."
-    __catchEnvironment "$usage" __gitCommitReleaseNotesUpdate "$usage" "$notes" "$comment" || return $?
+    __catch "$usage" __gitCommitReleaseNotesUpdate "$usage" "$notes" "$comment" || return $?
   elif [ -z "$comment" ]; then
     comment=$(__gitCommitReleaseNotesGetLastComment "$usage" "$notes") || return $?
     [ -z "$comment" ] || printf -- "%s %s:\n%s\n" "$(decorate info "Using last release note line from")" "$(decorate file "$notes")" "$(boxedHeading "$comment")"
@@ -554,7 +554,7 @@ __gitCommitReleaseNotesUpdate() {
   local usage="$1" notes="$2" comment="$3"
   local pattern
 
-  home=$(__catchEnvironment "$usage" buildHome) || return $?
+  home=$(__catch "$usage" buildHome) || return $?
   pattern="$(quoteGrepPattern "$comment")"
   __catchEnvironment "$usage" statusMessage --last printf -- "%s%s\n" "$(lineFill '.' "$(decorate label "Release notes") $(decorate file "$notes") $(decorate decoration --)")" "$(decorate reset --)" || return $?
   if ! grep -q -e "$pattern" "$notes"; then
@@ -756,7 +756,7 @@ gitInstallHooks() {
   local usage="_${FUNCNAME[0]}"
   local types home
 
-  home=$(__catchEnvironment "$usage" buildHome) || return $?
+  home=$(__catch "$usage" buildHome) || return $?
 
   local verbose=false hookNames=()
 
@@ -828,7 +828,7 @@ gitInstallHook() {
   local types
 
   read -r -a types < <(gitHookTypes) || :
-  home=$(__catchEnvironment "$usage" buildHome) || return $?
+  home=$(__catch "$usage" buildHome) || return $?
   execute=true
   verbose=false
   while [ $# -gt 0 ]; do
@@ -901,9 +901,9 @@ gitPreCommitSetup() {
 
   local directory total=0
 
-  directory=$(__catchEnvironment "$usage" __gitPreCommitCache true) || return $?
+  directory=$(__catch "$usage" __gitPreCommitCache true) || return $?
   __catchEnvironment "$usage" git diff --name-only --cached --diff-filter=ACMR | __catchEnvironment "$usage" extensionLists --clean "$directory" || return $?
-  total=$(__catchEnvironment "$usage" fileLineCount "$directory/@") || return $?
+  total=$(__catch "$usage" fileLineCount "$directory/@") || return $?
   [ "$total" -ge 0 ]
 }
 _gitPreCommitSetup() {
@@ -918,15 +918,15 @@ gitPreCommitHeader() {
 
   local directory total color
 
-  directory=$(__catchEnvironment "$usage" __gitPreCommitCache true) || return $?
+  directory=$(__catch "$usage" __gitPreCommitCache true) || return $?
   [ -f "$directory/@" ] || __throwEnvironment "$usage" "$directory/@ missing" || return $?
-  total=$(__catchEnvironment "$usage" fileLineCount "$directory/@") || return $?
+  total=$(__catch "$usage" fileLineCount "$directory/@") || return $?
   statusMessage --last printf -- "%s: %s\n" "$(decorate success "$(alignRight "$width" "all")")" "$(decorate info "$total $(plural "$total" file files) changed")"
   while [ $# -gt 0 ]; do
     total=0
     color="warning"
     if [ -f "$directory/$1" ]; then
-      total=$(__catchEnvironment "$usage" fileLineCount "$directory/$1") || return $?
+      total=$(__catch "$usage" fileLineCount "$directory/$1") || return $?
       color="success"
     fi
     # shellcheck disable=SC2015
@@ -943,7 +943,7 @@ _gitPreCommitHeader() {
 gitPreCommitHasExtension() {
   local usage="_${FUNCNAME[0]}"
   local directory
-  directory=$(__catchEnvironment "$usage" __gitPreCommitCache true) || return $?
+  directory=$(__catch "$usage" __gitPreCommitCache true) || return $?
   while [ $# -gt 0 ]; do
     [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
     [ -f "$directory/$1" ] || return 1
@@ -960,7 +960,7 @@ gitPreCommitListExtension() {
   local usage="_${FUNCNAME[0]}"
   [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
   local directory
-  directory=$(__catchEnvironment "$usage" __gitPreCommitCache true) || return $?
+  directory=$(__catch "$usage" __gitPreCommitCache true) || return $?
   while [ $# -gt 0 ]; do
     [ -f "$directory/$1" ] || __throwEnvironment "$usage" "No files with extension $1" || return $?
     __catchEnvironment "$usage" cat "$directory/$1" || return $?
@@ -977,7 +977,7 @@ gitPreCommitCleanup() {
   local usage="_${FUNCNAME[0]}"
   [ $# -eq 0 ] || __help --only "$usage" "$@" || return "$(convertValue $? 1 0)"
   local directory
-  directory=$(__catchEnvironment "$usage" __gitPreCommitCache) || return $?
+  directory=$(__catch "$usage" __gitPreCommitCache) || return $?
   [ ! -d "$directory" ] || __catchEnvironment "$usage" rm -rf "$directory" || return $?
 }
 _gitPreCommitCleanup() {
@@ -1040,7 +1040,7 @@ gitBranchExistsRemote() {
 
   export GIT_REMOTE
 
-  __catchEnvironment "$usage" buildEnvironmentLoad GIT_REMOTE || return $?
+  __catch "$usage" buildEnvironmentLoad GIT_REMOTE || return $?
   [ -n "$GIT_REMOTE" ] || __catchEnvironment "$usage" "GIT_REMOTE requires a value" || return $?
 
   [ $# -gt 0 ] || __throwArgument "$usage" "Requires at least one branch name" || return $?
@@ -1073,7 +1073,7 @@ gitBranchify() {
   export GIT_BRANCH_FORMAT GIT_REMOTE
 
   usageRequireBinary "$usage" whoami || return $?
-  __catchEnvironment "$usage" buildEnvironmentLoad GIT_BRANCH_FORMAT GIT_REMOTE || return $?
+  __catch "$usage" buildEnvironmentLoad GIT_BRANCH_FORMAT GIT_REMOTE || return $?
   [ -n "$GIT_REMOTE" ] || __catchEnvironment "$usage" "GIT_REMOTE requires a value" || return $?
 
   version=$(__catchEnvironment "$usage" hookVersionCurrent) || return $?

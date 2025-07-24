@@ -67,7 +67,7 @@ __crontabGenerate() {
 crontabApplicationUpdate() {
   local usage="_${FUNCNAME[0]}"
 
-  __catchEnvironment "$usage" packageWhich crontab cron || return $?
+  __catch "$usage" packageWhich crontab cron || return $?
 
   local rootEnv="" appPath="" user
   user=$(whoami) || __throwEnvironment "$usage" whoami || return $?

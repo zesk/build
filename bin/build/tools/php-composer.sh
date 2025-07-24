@@ -67,7 +67,7 @@ phpComposer() {
 
   local installArgs=("--ignore-platform-reqs") quietLog
 
-  quietLog="$(__catchEnvironment "$usage" buildQuietLog "$usage")" || return $?
+  quietLog="$(__catch "$usage" buildQuietLog "$usage")" || return $?
   printf "%s\n" "Install vendor" >>"$quietLog"
 
   local butFirst="" composerBin=(composer)
@@ -109,7 +109,7 @@ phpComposerInstall() {
   ! whichExists composer || return 0
   local target="/usr/local/bin/composer"
   local tempBinary="$target.$$"
-  __catchEnvironment "$usage" urlFetch "https://getcomposer.org/composer.phar" "$tempBinary" || returnClean $? "$tempBinary" || return $?
+  __catch "$usage" urlFetch "https://getcomposer.org/composer.phar" "$tempBinary" || returnClean $? "$tempBinary" || return $?
   __catchEnvironment "$usage" mv -f "$tempBinary" "$target" || returnClean $? "$tempBinary" || return $?
   __catchEnvironment "$usage" chmod +x "$target" || returnClean $? "$tempBinary" || return $?
 }
@@ -167,7 +167,7 @@ phpComposerSetVersion() {
     shift
   done
 
-  [ -n "$home" ] || home=$(__catchEnvironment "$usage" buildHome) || return $?
+  [ -n "$home" ] || home=$(__catch "$usage" buildHome) || return $?
 
   local composerJSON="$home/composer.json" decoratedComposerJSON
 

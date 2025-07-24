@@ -39,8 +39,8 @@ urlMatchesLocalFileSize() {
     shift
   done
 
-  localSize=$(__catchEnvironment "$usage" fileSize "$file") || return $?
-  remoteSize=$(__catchEnvironment "$usage" urlContentLength "$url") || return $?
+  localSize=$(__catch "$usage" fileSize "$file") || return $?
+  remoteSize=$(__catch "$usage" urlContentLength "$url") || return $?
   localSize=$((localSize + 0))
   isPositiveInteger "$remoteSize" || __throwEnvironment "$usage" "Remote size is not integer: $(decorate value "$remoteSize")" || return $?
 
@@ -140,10 +140,10 @@ websiteScrape() {
     shift
   done
 
-  logFile=$(__catchEnvironment "$usage" buildQuietLog "$usage.$$.log") || return $?
-  progressFile=$(__catchEnvironment "$usage" buildQuietLog "$usage.$$.progress.log") || return $?
+  logFile=$(__catch "$usage" buildQuietLog "$usage.$$.log") || return $?
+  progressFile=$(__catch "$usage" buildQuietLog "$usage.$$.progress.log") || return $?
 
-  __catchEnvironment "$usage" packageWhich wget wget || return $?
+  __catch "$usage" packageWhich wget wget || return $?
 
   aa=()
   aa+=(-e robots=off)

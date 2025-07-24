@@ -13,7 +13,7 @@ source "${BASH_SOURCE[0]%/*}/../tools.sh"
 __hookProjectDeactivateContext() {
   local usage="_${FUNCNAME[0]}" home item items=() candidates=("$home/bin/developer-undo.sh" "$home/bin/developer-undo/")
 
-  home=$(__catchEnvironment "$usage" buildHome) || return $?
+  home=$(__catch "$usage" buildHome) || return $?
   for item in "${candidates[@]}"; do [ ! -e "$home/$item" ] || items+=("$home/$item"); done
 
   [ ${#items[@]} -eq 0 ] || interactiveBashSource --prefix "Deactivate" "${items[@]}" || return $?

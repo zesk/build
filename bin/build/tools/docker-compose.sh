@@ -47,7 +47,7 @@ dockerComposeUninstall() {
   fi
   packageWhich pip python3-pip || __throwEnvironment "$usage" "Need pip to uninstall - not found?" || return $?
   start=$(timingStart) || return $?
-  quietLog=$(__catchEnvironment "$usage" buildQuietLog "$usage") || return $?
+  quietLog=$(__catch "$usage" buildQuietLog "$usage") || return $?
   statusMessage decorate info "Removing $name ... "
   __catchEnvironmentQuiet "$usage" "$quietLog" pip uninstall "$name" || return $?
   ! whichExists "$name" || __throwEnvironment "$usage" "$name was still found after uninstall" || return $?
@@ -224,7 +224,7 @@ dockerCompose() {
   if [ -z "$databaseVolume" ]; then
     local home dockerName
 
-    home=$(__catchEnvironment "$usage" buildHome) || return $?
+    home=$(__catch "$usage" buildHome) || return $?
     dockerName=$(basename "$home")
 
     databaseVolume="${dockerName}_database_data"
@@ -275,7 +275,7 @@ _dockerCompose() {
 
 __dockerCompose() {
   local usage="$1" home && shift
-  home=$(__catchEnvironment "$usage" buildHome) || return $?
+  home=$(__catch "$usage" buildHome) || return $?
   [ -f "$home/docker-compose.yml" ] || __throwEnvironment "$usage" "Missing $(decorate file "$home/docker-compose.yml")" || return $?
   COMPOSE_BAKE=true docker compose -f "$home/docker-compose.yml" "$@"
 }
@@ -290,7 +290,7 @@ __dockerComposeEnvironmentSetup() {
   local usage="$1" deployment="$2" && shift 2
 
   local home deploymentEnv envFile
-  home=$(__catchEnvironment "$usage" buildHome) || return $?
+  home=$(__catch "$usage" buildHome) || return $?
 
   deploymentEnv=".$(uppercase "$deployment").env"
   [ -f "$home/$deploymentEnv" ] || __throwEnvironment "$usage" "Missing $deploymentEnv" || return $?
@@ -319,7 +319,7 @@ __dockerComposeEnvironmentSetup() {
     envValue=$(environmentValueRead "$envFile" "$variable") || :
     if [ -z "$envValue" ]; then
       decorate info "Writing $(decorate file "$envFile") $icon $(decorate code "$variable") $(decorate value "$value") (default)"
-      __catchEnvironment "$usage" environmentValueWrite "$variable" "$value" >>"$envFile" || return $?
+      __catch "$usage" environmentValueWrite "$variable" "$value" >>"$envFile" || return $?
     fi
     shift 2
   done

@@ -51,13 +51,13 @@ documentationBuildEnvironment() {
     shift
   done
 
-  home=$(__catchEnvironment "$usage" buildHome) || return $?
+  home=$(__catch "$usage" buildHome) || return $?
   envSource="$home/bin/build/env"
   lineTemplate="$home/documentation/template/env-line.md"
   moreTemplate="$home/documentation/template/env-more.md"
   source="$home/documentation/source/env/index.md"
   target="$home/documentation/.docs/env"
-  cacheDirectory=$(__catchEnvironment "$usage" documentationBuildCache .environmentVariables) || return $?
+  cacheDirectory=$(__catch "$usage" documentationBuildCache .environmentVariables) || return $?
 
   if "$cleanFlag"; then
     __catchEnvironment "$usage" find "$cacheDirectory" -type f -exec rm -f {} \; || return $?
@@ -99,7 +99,7 @@ documentationBuildEnvironment() {
 
     local description type lines more="" shortDesc
     description=$(sed -n '/^[[:space:]]*#/!q; p' "$envFile" | grep -v -e '^#!\|\&copy;' | cut -c 3- | grep -v '^[[:alpha:]][[:alnum:]]*: ')
-    lines=$(printf "%s\n" "$description" | __catchEnvironment "$usage" fileLineCount) || return $?
+    lines=$(printf "%s\n" "$description" | __catch "$usage" fileLineCount) || return $?
 
     local categoryName categoryFileName
 

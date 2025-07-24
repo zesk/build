@@ -334,7 +334,7 @@ usageArgumentApplicationDirectoryList() {
 
   local home directories=() directory result=() index=0
 
-  home=$(__catchEnvironment "$usage" buildHome) || return $?
+  home=$(__catch "$usage" buildHome) || return $?
   IFS=":" read -r -a directories <<<"$3" || :
   for directory in "${directories[@]+"${directories[@]}"}"; do
     [ -n "$directory" ] || continue
@@ -367,7 +367,7 @@ usageArgumentApplicationDirectory() {
   local home directory="$3"
 
   [ -n "$directory" ] || __throwArgument "$usage" "$directory is blank" || return $?
-  home=$(__catchEnvironment "$usage" buildHome) || return $?
+  home=$(__catch "$usage" buildHome) || return $?
 
   directory="${directory#./}"
   directory="${directory#/}"
@@ -394,7 +394,7 @@ usageArgumentApplicationFile() {
   [ -n "$file" ] || __throwArgument "$usage" "$directory is blank" || return $?
 
   local home
-  home=$(__catchEnvironment "$usage" buildHome) || return $?
+  home=$(__catch "$usage" buildHome) || return $?
 
   file="${file#./}"
   file="${file#/}"

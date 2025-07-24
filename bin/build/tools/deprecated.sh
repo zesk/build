@@ -18,6 +18,42 @@
 #             |_|
 #
 
+# DEPRECATED 2025-07-23
+anyEnvToDockerEnv() {
+  _deprecated "${FUNCNAME[0]}"
+  anyEnvToDockerEnv "$@"
+}
+
+# DEPRECATED 2025-07-23
+anyEnvToBashEnv() {
+  _deprecated "${FUNCNAME[0]}"
+  environmentFileToBashCompatible "$@"
+}
+
+# DEPRECATED 2025-07-23
+dockerEnvToBash() {
+  _deprecated "${FUNCNAME[0]}"
+  environmentFileDockerToBashCompatible "$@"
+}
+
+# DEPRECATED 2025-07-23
+dockerEnvFromBashEnv() {
+  _deprecated "${FUNCNAME[0]}"
+  environmentFileBashCompatibleToDocker "$@"
+}
+
+# DEPRECATED 2025-07-23
+copyFile() {
+  _deprecated "${FUNCNAME[0]}"
+  fileCopy "$@"
+}
+
+# DEPRECATED 2025-07-23
+copyFileWouldChange() {
+  _deprecated "${FUNCNAME[0]}"
+  fileChange "$@"
+}
+
 # DEPRECATED 2025-07-16
 allColorTest() {
   _deprecated "${FUNCNAME[0]}"

@@ -54,12 +54,12 @@ _documentationTemplateUpdateUnlinked() {
   target=$(usageArgumentFileDirectory "$usage" "target" "${4-}") || return $?
   # Not used I guess
   muzzle usageArgumentFile "$usage" "pageTemplate" "${5-}" || return $?
-  todoTemplate=$(__catchEnvironment "$usage" documentationTemplate "${6-todo}") || return $?
+  todoTemplate=$(__catch "$usage" documentationTemplate "${6-todo}") || return $?
 
   unlinkedFunctions=$(fileTemporaryName "$usage") || return $?
   clean+=("$unlinkedFunctions")
   documentationIndex_SetUnlinkedDocumentationPath "$cacheDirectory" "$target" | IFS="" awk '{ print "{" $1 "}" }' >"$unlinkedFunctions" || __throwEnvironment "$usage" "Unable to documentationIndex_SetUnlinkedDocumentationPath" || returnClean $? "${clean[@]}" || return $?
-  total=$(__catchEnvironment "$usage" fileLineCount "$unlinkedFunctions") || return $?
+  total=$(__catch "$usage" fileLineCount "$unlinkedFunctions") || return $?
 
   # Subshell hide globals
   (
@@ -170,10 +170,10 @@ documentationUnlinked() {
 
   local cacheDirectory
 
-  cacheDirectory="$(__catchEnvironment "$usage" buildCacheDirectory)" || return $?
-  cacheDirectory=$(__catchEnvironment "$usage" directoryRequire "$cacheDirectory") || return $?
+  cacheDirectory="$(__catch "$usage" buildCacheDirectory)" || return $?
+  cacheDirectory=$(__catch "$usage" directoryRequire "$cacheDirectory") || return $?
 
-  __catchEnvironment "$usage" documentationIndex_ShowUnlinked "$cacheDirectory" || return $?
+  __catch "$usage" documentationIndex_ShowUnlinked "$cacheDirectory" || return $?
 }
 _documentationUnlinked() {
   # __IDENTICAL__ usageDocument 1

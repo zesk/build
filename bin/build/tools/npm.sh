@@ -50,13 +50,13 @@ npmInstall() {
   if whichExists npm; then
     return 0
   fi
-  __catchEnvironment "$usage" buildEnvironmentLoad BUILD_NPM_VERSION || return $?
+  __catch "$usage" buildEnvironmentLoad BUILD_NPM_VERSION || return $?
 
   local clean=() quietLog
 
   version="${1-${BUILD_NPM_VERSION:-latest}}"
 
-  quietLog=$(__catchEnvironment "$usage" buildQuietLog "$usage") || return $?
+  quietLog=$(__catch "$usage" buildQuietLog "$usage") || return $?
   clean+=("$quietLog")
   __catchEnvironmentQuiet "$usage" "$quietLog" packageInstall npm || returnClean $? "${clean[@]}" || return $?
   __catchEnvironmentQuiet "$usage" "$quietLog" npm install -g "npm@$version" --force 2>&1 || returnClean $? "${clean[@]}" || return $?

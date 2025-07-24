@@ -27,7 +27,7 @@ aptKeyAddOpenTofu() {
     --source deb-src
   )
   __help "$usage" "$@" || return 0
-  __catchEnvironment "$usage" aptKeyAdd "${args[@]}" || return $?
+  __catch "$usage" aptKeyAdd "${args[@]}" || return $?
 }
 _aptKeyAddOpenTofu() {
   # __IDENTICAL__ usageDocument 1
@@ -44,7 +44,7 @@ _aptKeyAddOpenTofu() {
 aptKeyRemoveOpenTofu() {
   local usage="_${FUNCNAME[0]}"
   __help "$usage" "$@" || return 0
-  __catchEnvironment "$usage" aptKeyRemove opentofu "$@" || return $?
+  __catch "$usage" aptKeyRemove opentofu "$@" || return $?
 }
 _aptKeyRemoveOpenTofu() {
   # __IDENTICAL__ usageDocument 1
@@ -62,9 +62,9 @@ tofuInstall() {
 
   __help "$usage" "$@" || return 0
   ! whichExists "$binary" || return 0
-  __catchEnvironment "$usage" packageInstall apt-transport-https ca-certificates curl gnupg || return $?
-  __catchEnvironment "$usage" aptKeyAddOpenTofu || return $?
-  __catchEnvironment "$usage" packageInstall "$binary" "$@" || return $?
+  __catch "$usage" packageInstall apt-transport-https ca-certificates curl gnupg || return $?
+  __catch "$usage" aptKeyAddOpenTofu || return $?
+  __catch "$usage" packageInstall "$binary" "$@" || return $?
   whichExists "$binary" || __throwEnvironment "$usage" "No $binary binary found - installation failed" || return $?
 }
 _tofuInstall() {
@@ -82,9 +82,9 @@ tofuUninstall() {
   local usage="_${FUNCNAME[0]}"
 
   __help "$usage" "$@" || return 0
-  __catchEnvironment "$usage" packageWhichUninstall tofu tofu "$@" || return $?
-  __catchEnvironment "$usage" aptKeyRemoveOpenTofu || return $?
-  __catchEnvironment "$usage" packageUpdate --force || return $?
+  __catch "$usage" packageWhichUninstall tofu tofu "$@" || return $?
+  __catch "$usage" aptKeyRemoveOpenTofu || return $?
+  __catch "$usage" packageUpdate --force || return $?
 }
 _tofuUninstall() {
   # __IDENTICAL__ usageDocument 1

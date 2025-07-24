@@ -71,7 +71,7 @@ identicalRepair() {
   identicalLine="$(grep -m 1 -n -e "$grepPattern" <"$source")" || __throwArgument "$usage" "\"$prefix $token\" not found in source $(decorate code "$source")" || return $?
   [ $(($(grep -c -e "$grepPattern" <"$destination") + 0)) -gt 0 ] || __throwArgument "$usage" "\"$prefix $token\" not found in destination $(decorate code "$destination")" || return $?
   # totalLines is *source* lines
-  totalLines=$(__catchEnvironment "$usage" fileLineCount <"$source") || return $?
+  totalLines=$(__catch "$usage" fileLineCount <"$source") || return $?
   parsed=$(__identicalLineParse "$source" "$prefix" "$identicalLine") || __throwArgument "$usage" "$source" return $?
   IFS=" " read -r lineNumber token count < <(printf -- "%s\n" "$parsed") || :
   count=$(__identicalLineCount "$count" "$((totalLines - lineNumber))") || __throwEnvironment "$usage" "\"$identicalLine\" invalid count: $count" || return $?
@@ -84,8 +84,8 @@ identicalRepair() {
   sourceText=$(fileTemporaryName "$usage") || return $?
 
   # Include header but map EOF to count on the first line
-  __catchEnvironment "$usage" __identicalCheckMatchFile "$source" "$totalLines" "$((lineNumber - 1))" 1 | sed -e "s/[[:space:]]EOF\$/ $count/g" -e "s/[[:space:]]EOF[[:space:]]/ $count /g" >"$sourceText" || return $?
-  __catchEnvironment "$usage" __identicalCheckMatchFile "$source" "$totalLines" "$lineNumber" "$count" >>"$sourceText" || return $?
+  __catch "$usage" __identicalCheckMatchFile "$source" "$totalLines" "$((lineNumber - 1))" 1 | sed -e "s/[[:space:]]EOF\$/ $count/g" -e "s/[[:space:]]EOF[[:space:]]/ $count /g" >"$sourceText" || return $?
+  __catch "$usage" __identicalCheckMatchFile "$source" "$totalLines" "$lineNumber" "$count" >>"$sourceText" || return $?
   if $fileMap; then
     _identicalMapAttributesFile "$usage" "$sourceText" "$destination" || return $?
   fi
@@ -99,7 +99,7 @@ identicalRepair() {
   local currentLineNumber=0 undo=("exec" "3>&-" --)
 
   # totalLines is *$destination* lines
-  totalLines=$(__catchEnvironment "$usage" fileLineCount "$destination") || return $?
+  totalLines=$(__catch "$usage" fileLineCount "$destination") || return $?
   while read -r identicalLine; do
     local isEOF=false
     parsed=$(__catchArgument "$usage" __identicalLineParse "$destination" "$prefix" "$identicalLine") || returnUndo $? "${undo[@]}" || return $?

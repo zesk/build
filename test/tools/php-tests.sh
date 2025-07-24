@@ -158,7 +158,7 @@ testPHPBuild() {
 testPHPComposerSetVersion() {
   local home testHome usage="_return"
 
-  home=$(__catchEnvironment "$usage" buildHome) || return $?
+  home=$(__catch "$usage" buildHome) || return $?
 
   testHome=$(fileTemporaryName "$usage" -d) || return $?
 

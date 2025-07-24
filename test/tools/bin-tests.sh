@@ -60,7 +60,7 @@ testMapBin() {
   local usage="_return" home
 
   home=$(buildHome)
-  home=$(__catchEnvironment "$usage" buildHome) || return $?
+  home=$(__catch "$usage" buildHome) || return $?
   __catchEnvironment "$usage" muzzle pushd "$home" || return $?
 
   __testSection testMap
@@ -82,7 +82,7 @@ testMapPortability() {
   local usage="_return" home
 
   home=$(buildHome)
-  home=$(__catchEnvironment "$usage" buildHome) || return $?
+  home=$(__catch "$usage" buildHome) || return $?
 
   tempDir="./random.$$/"
   __catchEnvironment "$usage" mkdir -p "$tempDir" || return $?
@@ -101,7 +101,7 @@ testAdditionalBins() {
   local aa
 
   local home
-  home="$(__catchEnvironment "$usage" buildHome)" || return $?
+  home="$(__catch "$usage" buildHome)" || return $?
   __catchEnvironment "$usage" cd "$home" || return $?
 
   for binTest in ./test/bin/*.sh; do

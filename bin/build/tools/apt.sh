@@ -162,7 +162,7 @@ aptKeyAdd() {
   __catchEnvironment "$usage" chmod a+r "$listTarget" || return $?
   if ! $skipUpdate; then
     statusMessage --first decorate success "updating ... "
-    __catchEnvironment "$usage" packageUpdate --force || return $?
+    __catch "$usage" packageUpdate --force || return $?
   else
     statusMessage --first decorate success "skipped ... "
   fi
@@ -236,7 +236,7 @@ aptKeyRemove() {
   done
   if ! $skipUpdate; then
     ! $verboseFlag || statusMessage decorate success "Updating apt sources ... "
-    __catchEnvironment "$usage" packageUpdate --force || return $?
+    __catch "$usage" packageUpdate --force || return $?
   else
     ! $verboseFlag || statusMessage decorate success "Skipped update ... "
   fi
@@ -260,7 +260,7 @@ _usageAptSourcesPath() {
 _usageAptKeyRings() {
   local usage="$1" ring
   # In case this changes later and may fail
-  ring=$(__catchEnvironment "$usage" aptKeyRingDirectory) || return $?
+  ring=$(__catch "$usage" aptKeyRingDirectory) || return $?
   if ! [ -d "$ring" ]; then
     __catchEnvironment "$usage" mkdir -p "$ring" || return $?
     __catchEnvironment "$usage" chmod 0755 "$ring" || return $?

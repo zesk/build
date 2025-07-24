@@ -23,7 +23,7 @@ pythonInstall() {
   local usage="_${FUNCNAME[0]}"
   [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
   if ! whichExists python; then
-    __catchEnvironment "$usage" packageGroupInstall "$@" python || return $?
+    __catch "$usage" packageGroupInstall "$@" python || return $?
   fi
 }
 _pythonInstall() {
@@ -35,7 +35,7 @@ _pythonInstall() {
 pythonUninstall() {
   local usage="_${FUNCNAME[0]}"
   [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
-  __catchEnvironment "$usage" packageGroupUninstall "$@" python || return $?
+  __catch "$usage" packageGroupUninstall "$@" python || return $?
 }
 _pythonUninstall() {
   # __IDENTICAL__ usageDocument 1
@@ -55,7 +55,7 @@ _pipInstall() {
     return 0
   fi
   start=$(timingStart) || return $?
-  quietLog=$(__catchEnvironment "$usage" buildQuietLog "$usage") || return $?
+  quietLog=$(__catch "$usage" buildQuietLog "$usage") || return $?
   __catchEnvironment "$usage" pythonInstall || return $?
   if ! whichExists pip; then
     __catchEnvironment "$usage" python -m ensurepip --upgrade || return $?
@@ -80,7 +80,7 @@ _pipUninstall() {
   fi
   packageWhich pip python3-pip || __throwEnvironment "$usage" "Need pip to uninstall - not found?" || return $?
   start=$(timingStart) || return $?
-  quietLog=$(__catchEnvironment "$usage" buildQuietLog "$usage") || return $?
+  quietLog=$(__catch "$usage" buildQuietLog "$usage") || return $?
   statusMessage decorate info "Removing $name ... "
   __catchEnvironmentQuiet "$usage" "$quietLog" pip uninstall "$name" || return $?
   ! whichExists "$name" || __throwEnvironment "$usage" "$name was still found after uninstall" || return $?

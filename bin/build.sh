@@ -138,10 +138,10 @@ __buildBuild() {
   start=$(timingStart)
 
   ! $debugFlag || statusMessage decorate info "Installing AWS ..."
-  __catchEnvironment "$usage" awsInstall || return $?
+  __catch "$usage" awsInstall || return $?
 
   local home
-  home=$(__catchEnvironment "$usage" buildHome) || return $?
+  home=$(__catch "$usage" buildHome) || return $?
 
   ! $debugFlag || statusMessage decorate info "Updating markdown ..."
   if ! "$home/bin/update-md.sh" --skip-commit; then

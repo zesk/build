@@ -13,7 +13,7 @@
 sshKnownHostsFile() {
   local usage="_${FUNCNAME[0]}"
 
-  sshKnown=$(__catchEnvironment "$usage" userHome ".ssh/known_hosts") || return $?
+  sshKnown=$(__catch "$usage" userHome ".ssh/known_hosts") || return $?
 
   # _IDENTICAL_ argument-case-header 5
   local __saved=("$@") __count=$#
@@ -30,7 +30,7 @@ sshKnownHostsFile() {
       local sshHome
       sshHome=$(__catchEnvironment "$usage" dirname "$sshKnown") || return $?
       if [ ! -d "$sshHome" ]; then
-        sshHome=$(__catchEnvironment "$usage" directoryRequire "$sshHome") || return $?
+        sshHome=$(__catch "$usage" directoryRequire "$sshHome") || return $?
       fi
       [ -f "$sshKnown" ] || touch "$sshKnown" || __throwEnvironment "$usage" "Unable to create $sshKnown" || return $?
       __catchEnvironment "$usage" chmod 700 "$sshHome" || return $?
@@ -215,7 +215,7 @@ sshSetup() {
   local sshHomePath flagForce servers keyType keyBits
   local usage="_${FUNCNAME[0]}"
 
-  home=$(__catchEnvironment "$usage" userHome) || return $?
+  home=$(__catch "$usage" userHome) || return $?
 
   local sshHomePath="$home/.ssh/" flagForce=false servers=() keyType=ed25519 keyBits=2048
 

@@ -303,7 +303,7 @@ __validateTypeApplicationDirectoryList() {
   local value="${1-}"
   local home directories=() directory result=() index=0
 
-  home=$(__catchEnvironment "$usage" buildHome) || return $?
+  home=$(__catch "$usage" buildHome) || return $?
   home="${home%/}"
   IFS=":" read -r -a directories <<<"$value" || :
   for directory in "${directories[@]+"${directories[@]}"}"; do

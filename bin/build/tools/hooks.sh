@@ -44,7 +44,7 @@ _hookContextWrapper() {
 
   local start home
 
-  home=$(__catchEnvironment "$usage" buildHome) || return $?
+  home=$(__catch "$usage" buildHome) || return $?
   start="$(pwd -P 2>/dev/null)" || __throwEnvironment "$usage" "Failed to get pwd" || return $?
   start=$(__catchEnvironment "$usage" realPath "$start") || return $?
 

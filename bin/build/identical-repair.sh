@@ -77,7 +77,7 @@ __buildIdenticalRepair() {
   local usage="_${FUNCNAME[0]}"
   local item aa home
 
-  home=$(__catchEnvironment "$usage" buildHome) || return $?
+  home=$(__catch "$usage" buildHome) || return $?
   __catchEnvironment "$usage" muzzle cd "$home" || return $?
   local done=false aa=()
   while ! $done; do
@@ -91,7 +91,7 @@ __buildIdenticalRepair() {
   done < <(find "$home" -type d -name identical ! -path "*/.*/*")
   bashDebugInterruptFile --error --interrupt
   set -eou pipefail
-  __catchEnvironment "$usage" identicalCheckShell --skip "$(realPath "${BASH_SOURCE[0]}")" "${aa[@]+"${aa[@]}"}" --exec contextOpen "$@" || return $?
+  __catch "$usage" identicalCheckShell --skip "$(realPath "${BASH_SOURCE[0]}")" "${aa[@]+"${aa[@]}"}" --exec contextOpen "$@" || return $?
 }
 ___buildIdenticalRepair() {
   # __IDENTICAL__ usageDocument 1

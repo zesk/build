@@ -39,7 +39,7 @@ __usageDocumentComplex() {
 
   local functionDefinitionFile="$1" functionName="$2" returnCode="${3-NONE}" home
 
-  home=$(__catchEnvironment "$usage" buildHome) || return $?
+  home=$(__catch "$usage" buildHome) || return $?
 
   shift 3 || __throwArgument "$usage" "Missing arguments" || return $?
 
@@ -308,13 +308,13 @@ documentationTemplateCompile() {
   if [ ! -f "$envChecksumCache" ]; then
     touch "$envChecksumCache"
   fi
-  compiledTemplateCache=$(__catchEnvironment "$usage" directoryRequire "$cacheDirectory/compiledTemplateCache") || returnClean $? "${clean[@]}" || return $?
+  compiledTemplateCache=$(__catch "$usage" directoryRequire "$cacheDirectory/compiledTemplateCache") || returnClean $? "${clean[@]}" || return $?
   # Environment change will affect this template
   # Function template change will affect this template
 
   # As well, document template change will affect this template
   local tempCount
-  tempCount=$(__catchEnvironment "$usage" fileLineCount "$documentTokensFile") || return $?
+  tempCount=$(__catch "$usage" fileLineCount "$documentTokensFile") || return $?
   if [ "$tempCount" -eq 0 ]; then
     if [ ! -f "$targetFile" ] || ! diff -q "$mappedDocumentTemplate" "$targetFile" >/dev/null; then
       printf "%s (mapped) -> %s %s" "$(decorate warning "$documentTemplate")" "$(decorate success "$targetFile")" "$(decorate error "(no tokens found)")"
@@ -349,7 +349,7 @@ documentationTemplateCompile() {
         if ! $forceFlag && [ -f "$compiledFunctionTarget" ] && fileIsNewest "$compiledFunctionTarget" "$settingsFile" "$envChecksumCache" "$functionTemplate"; then
           statusMessage decorate info "Skip $tokenName and use cache"
         else
-          __catchEnvironment "$usage" documentationTemplateFunctionCompile "${envFileArgs[@]+${envFileArgs[@]}}" "$cacheDirectory" "$tokenName" "$functionTemplate" | trimTail >"$compiledFunctionTarget" || returnClean $? "${clean[@]}" || return $?
+          __catch "$usage" documentationTemplateFunctionCompile "${envFileArgs[@]+${envFileArgs[@]}}" "$cacheDirectory" "$tokenName" "$functionTemplate" | trimTail >"$compiledFunctionTarget" || returnClean $? "${clean[@]}" || return $?
           __catchEnvironment "$usage" printf "\n" >>"$compiledFunctionTarget" || returnClean $? "${clean[@]}" || return $?
         fi
         environmentValueWrite "$tokenName" "$(cat "$compiledFunctionTarget")" >>"$compiledFunctionEnv"
@@ -770,7 +770,7 @@ bashDocumentation_Extract() {
 
   set +o pipefail
 
-  home=$(__catchEnvironment "$usage" buildHome) || return $?
+  home=$(__catch "$usage" buildHome) || return $?
   base="$(__catchEnvironment "$usage" basename "$definitionFile")" || return $?
   tempDoc=$(fileTemporaryName "$usage") || return $?
   docMap=$(fileTemporaryName "$usage") || return $?

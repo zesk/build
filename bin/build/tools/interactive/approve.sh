@@ -81,7 +81,7 @@ __interactiveApproveRegisterCacheFile() {
 # Argument: usage - Function. Required.
 __interactiveApproveHome() {
   local usage="$1" approvedHome
-  approvedHome=$(__catchEnvironment "$usage" buildEnvironmentGetDirectory --subdirectory ".interactiveApproved" "XDG_STATE_HOME") || return $?
+  approvedHome=$(__catch "$usage" buildEnvironmentGetDirectory --subdirectory ".interactiveApproved" "XDG_STATE_HOME") || return $?
   printf "%s\n" "$approvedHome"
 }
 
@@ -94,7 +94,7 @@ __interactiveApproveCacheFile() {
   local usage="$1" approvedHome="$2" sourceFile="$3" cacheFile
 
   [ -f "$sourceFile" ] || __throwArgument "$usage" "File does not exist: $sourceFile" || return $?
-  cacheFile="$approvedHome/$(__catchEnvironment "$usage" shaPipe <"$sourceFile")" || return $?
+  cacheFile="$approvedHome/$(__catch "$usage" shaPipe <"$sourceFile")" || return $?
   printf "%s\n" "$cacheFile"
 }
 

@@ -157,7 +157,7 @@ iTerm2Aliases() {
 
   local home skipped=()
 
-  home=$(__catchEnvironment "$usage" userHome) || return $?
+  home=$(__catch "$usage" userHome) || return $?
 
   [ -d "$home/.iterm2" ] || __throwEnvironment "$usage" "Missing ~/.iterm2" || return $?
 
@@ -329,7 +329,7 @@ iTerm2Image() {
   if [ "${#images[@]}" -gt 0 ]; then
     set -- "${images[@]}"
     while [ $# -gt 1 ]; do
-      __catchEnvironment "$usage" __iTerm2Image "$1" "$1" "$2" || return $?
+      __catch "$usage" __iTerm2Image "$1" "$1" "$2" || return $?
       shift 2
     done
   else
@@ -337,7 +337,7 @@ iTerm2Image() {
 
     image=$(fileTemporaryName "$usage") || return $?
     __catchEnvironment "$usage" cat >"$image" || return $?
-    __catchEnvironment "$usage" __iTerm2Image "$image" "$(__iTerm2ImageExtras "$width" "$height" "$aspectRatio")" || return $?
+    __catch "$usage" __iTerm2Image "$image" "$(__iTerm2ImageExtras "$width" "$height" "$aspectRatio")" || return $?
     __catchEnvironment "$usage" rm -rf "$image" || return $?
   fi
 }
@@ -418,7 +418,7 @@ iTerm2Download() {
   if [ "${#files[@]}" -gt 0 ]; then
     set -- "${files[@]}"
     while [ $# -gt 0 ]; do
-      __catchEnvironment "$usage" __iTerm2Download "$1" "$1" || return $?
+      __catch "$usage" __iTerm2Download "$1" "$1" || return $?
       shift
     done
   else
@@ -426,7 +426,7 @@ iTerm2Download() {
 
     file=$(fileTemporaryName "$usage") || return $?
     __catchEnvironment "$usage" cat >"$file" || return $?
-    __catchEnvironment "$usage" __iTerm2Download "$file" "$name" || return $?
+    __catch "$usage" __iTerm2Download "$file" "$name" || return $?
     __catchEnvironment "$usage" rm -rf "$file" || return $?
   fi
 }
@@ -824,8 +824,8 @@ iTerm2Init() {
   fi
 
   local home
-  __catchEnvironment "$usage" buildEnvironmentLoad TERM || return $?
-  home=$(__catchEnvironment "$usage" userHome) || return $?
+  __catch "$usage" buildEnvironmentLoad TERM || return $?
+  home=$(__catch "$usage" userHome) || return $?
 
   # iTerm2 customizations
   local ii=()

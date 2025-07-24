@@ -65,7 +65,7 @@ deprecatedIgnore() {
 
   isArray __BUILD_DEPRECATED_EXTRAS || __BUILD_DEPRECATED_EXTRAS=()
 
-  notes=$(__catchEnvironment "$usage" buildEnvironmentGet BUILD_RELEASE_NOTES) || return $?
+  notes=$(__catch "$usage" buildEnvironmentGet BUILD_RELEASE_NOTES) || return $?
   if [ -z "$notes" ]; then
     __throwEnvironment "$usage" "BUILD_RELEASE_NOTES is blank?" || return $?
   fi
@@ -120,7 +120,7 @@ deprecatedTokensFile() {
   done
 
   [ -n "$findArgumentFunction" ] || __throwArgument "$usage" "findArgumentFunction required" || return $?
-  [ -n "$cannonPath" ] || cannonPath=$(__catchEnvironment "$usage" buildHome) || return $?
+  [ -n "$cannonPath" ] || cannonPath=$(__catch "$usage" buildHome) || return $?
 
   local line tokens=()
   local exitCode=0 start results comment="" commentText="(start of file)"
@@ -204,7 +204,7 @@ deprecatedCannonFile() {
   done
 
   [ -n "$findArgumentFunction" ] || __throwArgument "$usage" "findArgumentFunction required" || return $?
-  [ -n "$cannonPath" ] || cannonPath=$(__catchEnvironment "$usage" buildHome) || return $?
+  [ -n "$cannonPath" ] || cannonPath=$(__catch "$usage" buildHome) || return $?
 
   local start
   start=$(__environment timingStart) || return $?
@@ -271,7 +271,7 @@ deprecatedFind() {
         local aa=()
         read -d '' -r -a aa < <("$findArgumentFunction") || [ "${#aa[@]}" -gt 0 ] || __throwArgument "$usage" "$findArgumentFunction returned empty" || return $?
       else
-        [ -n "$cannonPath" ] || cannonPath=$(__catchEnvironment "$usage" buildHome) || return $?
+        [ -n "$cannonPath" ] || cannonPath=$(__catch "$usage" buildHome) || return $?
         search="$(usageArgumentString "$usage" "search" "${1-}")" || return $?
         search="$(quoteGrepPattern "$search")"
         if find "$cannonPath" -type f "${aa[@]}" -print0 | xargs -0 grep -n -l -e "$search"; then
@@ -328,7 +328,7 @@ deprecatedCannon() {
     esac
     shift
   done
-  [ -n "$cannonPath" ] || cannonPath=$(__catchEnvironment "$usage" buildHome) || return $?
+  [ -n "$cannonPath" ] || cannonPath=$(__catch "$usage" buildHome) || return $?
   [ -n "$findArgumentFunction" ] || __throwArgument "$usage" "findArgumentFunction required" || return $?
   [ -n "$search" ] || __throwArgument "$usage" "search required" || return $?
   [ -n "$replace" ] || __throwArgument "$usage" "replace required" || return $?

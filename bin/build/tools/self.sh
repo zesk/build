@@ -112,7 +112,7 @@ installInstallBinary() {
   # Get installation binary
   temp="$path/.downloaded.$$"
   if $localFlag; then
-    home=$(__catchEnvironment "$usage" buildHome) || return $?
+    home=$(__catch "$usage" buildHome) || return $?
     [ -x "$source" ] || __throwEnvironment "$usage" "$source is not executable" || return $?
     __catchEnvironment "$usage" cp "$source" "$temp" || return $?
   else
@@ -174,7 +174,7 @@ installInstallBuild() {
   local home
   local binName="install-bin-build.sh"
 
-  home=$(__catchEnvironment "$usage" buildHome) || return $?
+  home=$(__catch "$usage" buildHome) || return $?
   installInstallBinary --handler "$usage" "$@" --bin "$binName" --source "$home/bin/build/$binName" --url-function __installInstallBuildRemote --post __installInstallBinaryLegacy
 }
 _installInstallBuild() {
@@ -187,8 +187,8 @@ __installInstallBuildRemote() {
   local usage="$1"
   export BUILD_INSTALL_URL
 
-  __catchEnvironment "$usage" packageWhich curl curl || return $?
-  __catchEnvironment "$usage" buildEnvironmentLoad BUILD_INSTALL_URL || return $?
+  __catch "$usage" packageWhich curl curl || return $?
+  __catch "$usage" buildEnvironmentLoad BUILD_INSTALL_URL || return $?
   urlParse "${BUILD_INSTALL_URL-}" >/dev/null || __throwEnvironment "$usage" "BUILD_INSTALL_URL ($BUILD_INSTALL_URL) is not a valid URL" || return $?
 
   printf "%s\n" "${BUILD_INSTALL_URL}"
@@ -201,7 +201,7 @@ __installInstallBinaryLegacy() {
   temp=$(__environment mktemp) || return $?
   cat >"$temp"
   if __installInstallBinaryIsLegacy <"$temp"; then
-    __catchEnvironment "$usage" __installInstallBinaryCustomizeLegacy "$relTop" <"$temp" || returnClean $? "$temp" || return $?
+    __catch "$usage" __installInstallBinaryCustomizeLegacy "$relTop" <"$temp" || returnClean $? "$temp" || return $?
   else
     __environment cat "$temp" || return $?
   fi
@@ -240,7 +240,7 @@ _installInstallBinaryDifferFilter() {
 buildFunctions() {
   local usage="_${FUNCNAME[0]}"
   local home
-  home=$(__catchEnvironment "$usage" buildHome) || return $?
+  home=$(__catch "$usage" buildHome) || return $?
   {
     cat "$home/bin/build/tools/_sugar.sh" "$home/bin/build/tools/sugar.sh" | grep -e '^_.*() {' | cut -d '(' -f 1 | grep -v '^___'
     "$home/bin/build/tools.sh" declare -F | cut -d ' ' -f 3 | grep -v -e '^_'
@@ -265,7 +265,7 @@ buildCacheDirectory() {
   [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
   local suffix
   suffix="$(printf "%s/" ".build" "$@")"
-  __catchEnvironment "$usage" buildEnvironmentGetDirectory --subdirectory "$suffix" XDG_CACHE_HOME || return $?
+  __catch "$usage" buildEnvironmentGetDirectory --subdirectory "$suffix" XDG_CACHE_HOME || return $?
 }
 _buildCacheDirectory() {
   # __IDENTICAL__ usageDocument 1
@@ -332,7 +332,7 @@ _buildEnvironmentPath() {
 buildEnvironmentLoad() {
   local usage="_${FUNCNAME[0]}"
 
-  home=$(__catchEnvironment "$usage" buildHome) || return $?
+  home=$(__catch "$usage" buildHome) || return $?
   printFlag=false
   # _IDENTICAL_ argument-case-header 5
   local __saved=("$@") __count=$#
@@ -424,7 +424,7 @@ Build() {
 
   local home code=0
   if ! home=$(bashLibraryHome "$run" "$startDirectory" 2>/dev/null); then
-    home=$(__catchEnvironment "$usage" buildHome) || return $?
+    home=$(__catch "$usage" buildHome) || return $?
     ! $verboseFlag || statusMessage decorate info "Running $(decorate file "$home/$run")" "$(decorate each code "$@")"
     "$home/$run" "$@" || code=$?
   else
@@ -467,7 +467,7 @@ buildEnvironmentGet() {
       return $?
       ;;
     *)
-      __catchEnvironment "$usage" buildEnvironmentLoad "$argument" || return $?
+      __catch "$usage" buildEnvironmentLoad "$argument" || return $?
       printf "%s\n" "${!argument-}"
       ;;
     esac
@@ -528,10 +528,10 @@ buildEnvironmentGetDirectory() {
       ;;
     *)
       local path
-      path=$(__catchEnvironment "$usage" buildEnvironmentGet "$argument" 2>/dev/null) || return $?
+      path=$(__catch "$usage" buildEnvironmentGet "$argument" 2>/dev/null) || return $?
       [ -z "$subdirectory" ] || subdirectory="${subdirectory#/}"
       subdirectory="${path%/}/$subdirectory"
-      ! $createFlag || path=$(__catchEnvironment "$usage" directoryRequire "${rr[@]+"${rr[@]}"}" "$subdirectory") || return $?
+      ! $createFlag || path=$(__catch "$usage" directoryRequire "${rr[@]+"${rr[@]}"}" "$subdirectory") || return $?
       ! $existsFlag || [ -d "$subdirectory" ] || __throwEnvironment "$usage" "$argument -> $subdirectory does not exist" || return $?
       printf "%s\n" "${subdirectory%/}"
       ;;
@@ -571,8 +571,8 @@ buildQuietLog() {
       ;;
     *)
       local logFile
-      logFile="$(__catchEnvironment "$usage" buildCacheDirectory)/${1#_}.log" || return $?
-      ! "$flagMake" || logFile=$(__catchEnvironment "$usage" fileDirectoryRequire "$logFile") || return $?
+      logFile="$(__catch "$usage" buildCacheDirectory)/${1#_}.log" || return $?
+      ! "$flagMake" || logFile=$(__catch "$usage" fileDirectoryRequire "$logFile") || return $?
       printf -- "%s\n" "$logFile"
       return 0
       ;;
@@ -597,7 +597,7 @@ buildEnvironmentContext() {
 
   local start codeHome home
   start="$(pwd -P 2>/dev/null)" || __throwEnvironment "$usage" "Failed to get pwd" || return $?
-  codeHome=$(__catchEnvironment "$usage" buildHome) || return $?
+  codeHome=$(__catch "$usage" buildHome) || return $?
   home=$(__catchEnvironment "$usage" gitFindHome "$start") || return $?
   if [ "$codeHome" != "$home" ]; then
     decorate warning "Build home is $(decorate code "$codeHome") - running locally at $(decorate code "$home")"

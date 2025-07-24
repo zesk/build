@@ -117,14 +117,14 @@ __buildDeploy() {
   start=$(timingStart)
 
   ! $debugFlag || statusMessage decorate info "Installing AWS ..."
-  __catchEnvironment "$usage" awsInstall || return $?
+  __catch "$usage" awsInstall || return $?
 
   local target cloudFrontID
   target=$(buildEnvironmentGet "DOCUMENTATION_S3_PREFIX") || return $?
   cloudFrontID=$(buildEnvironmentGet "DOCUMENTATION_CLOUDFRONT_ID") || return $?
 
   local home
-  home=$(__catchEnvironment "$usage" buildHome) || return $?
+  home=$(__catch "$usage" buildHome) || return $?
 
   local appId notes
 

@@ -92,7 +92,7 @@ __buildDocumentationBuildDirectory() {
     fi
   done < <(find "$source" -type f -name '*.md' ! -path "*/.*/*")
 
-  functionTemplate="$(__catchEnvironment "$usage" documentationTemplate "function")" || return $?
+  functionTemplate="$(__catch "$usage" documentationTemplate "function")" || return $?
 
   aa+=(--source "$home/bin")
   aa+=(--template "$source")
@@ -137,7 +137,7 @@ __mkdocsConfiguration() {
   while IFS="" read -r token; do
     # skip lowercase
     [ "$token" != "$(lowercase "$token")" ] || continue
-    __catchEnvironment "$usage" buildEnvironmentLoad "$token" || return $?
+    __catch "$usage" buildEnvironmentLoad "$token" || return $?
     export "${token?}"
   done < <(mapTokens <"$source")
   __catchEnvironment "$usage" mapEnvironment <"$source" >"$target" || return $?
@@ -220,14 +220,14 @@ __buildDocumentationBuild() {
   done
 
   # Greeting
-  __catchEnvironment "$usage" buildEnvironmentLoad APPLICATION_NAME || return $?
+  __catch "$usage" buildEnvironmentLoad APPLICATION_NAME || return $?
   statusMessage lineFill . "$(decorate info "${APPLICATION_NAME} documentation started on $(decorate value "$(date +"%F %T")")") "
   home=$(cd "$here/.." && pwd || _environment cd failed) || return $?
 
   # --clean
   if $cleanFlag; then
     # Clean env cache
-    __catchEnvironment "$usage" documentationBuildEnvironment --clean || return $?
+    __catch "$usage" documentationBuildEnvironment --clean || return $?
     # Clean reference cache
     __buildDocumentationBuildDirectory "$usage" "$home" --clean || return $?
     return 0
@@ -282,11 +282,11 @@ __buildDocumentationBuild() {
     example="$example" __catchEnvironment "$usage" mapEnvironment <"$home/documentation/source/guide/coding.md" >"$home/documentation/.docs/guide/coding.md" || return $?
 
     statusMessage decorate notice "Updating env/index.md ..."
-    __catchEnvironment "$usage" documentationBuildEnvironment --verbose "${ea[@]+"${ea[@]}"}" || return $?
+    __catch "$usage" documentationBuildEnvironment --verbose "${ea[@]+"${ea[@]}"}" || return $?
   fi
 
   if "$updateReference"; then
-    __catchEnvironment "$usage" __buildDocumentationBuildDirectory "$usage" "$home" "$@" "${da[@]+"${da[@]}"}" || return $?
+    __catch "$usage" __buildDocumentationBuildDirectory "$usage" "$home" "$@" "${da[@]+"${da[@]}"}" || return $?
   fi
 
   if "$makeDocumentation"; then

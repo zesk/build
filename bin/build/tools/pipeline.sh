@@ -117,9 +117,9 @@ ipLookup() {
   if ! packageWhich curl curl; then
     __throwEnvironment "$usage" "Requires curl to operate" || return $?
   fi
-  url=$(__catchEnvironment "$usage" buildEnvironmentGet IP_URL) || return $?
+  url=$(__catch "$usage" buildEnvironmentGet IP_URL) || return $?
   [ -n "$url" ] || __throwEnvironment "$usage" "$(decorate value "IP_URL") is required for $(decorate code "${usage#_}")" || return $?
-  jqFilter=$(__catchEnvironment "$usage" buildEnvironmentGet IP_URL_FILTER) || return $?
+  jqFilter=$(__catch "$usage" buildEnvironmentGet IP_URL_FILTER) || return $?
   urlValid "$url" || __throwEnvironment "$usage" "URL $(decorate error "$url") is not a valid URL" || return $?
   local pp=(cat)
   [ -z "$jqFilter" ] || pp=(jq "$jqFilter")

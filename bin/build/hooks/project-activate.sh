@@ -25,8 +25,8 @@ __hookProjectActivate() {
     otherName=$("$otherHome/$tools" buildEnvironmentGet APPLICATION_NAME)
   fi
   [ -n "$otherName" ] || otherName="${otherHome##*/}"
-  name=$(__catchEnvironment "$usage" buildEnvironmentGet APPLICATION_NAME) || return $?
-  home=$(__catchEnvironment "$usage" buildHome) || return $?
+  name=$(__catch "$usage" buildEnvironmentGet APPLICATION_NAME) || return $?
+  home=$(__catch "$usage" buildHome) || return $?
   [ -n "$name" ] || name="${home##*/}"
   statusMessage --last printf -- "%s %s %s %s\n" "$symbol" "$(decorate subtle "$otherName")" "➜" "$(decorate info "$name")"
 }
@@ -38,7 +38,7 @@ ___hookProjectActivate() {
 __hookProjectActivateContext() {
   local usage="_${FUNCNAME[0]}" home item items=() candidates=("bin/developer.sh" "bin/developer/")
 
-  home=$(__catchEnvironment "$usage" buildHome) || return $?
+  home=$(__catch "$usage" buildHome) || return $?
   for item in "${candidates[@]}"; do [ ! -e "$home/$item" ] || items+=("$home/$item"); done
 
   [ ${#items[@]} -eq 0 ] || interactiveBashSource --verbose --prefix "Activate" "${items[@]}" || return $?

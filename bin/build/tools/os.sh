@@ -134,7 +134,7 @@ manPathConfigure() {
   local tempPath
   export MANPATH
 
-  __catchEnvironment "$usage" buildEnvironmentLoad MANPATH || return $?
+  __catch "$usage" buildEnvironmentLoad MANPATH || return $?
   tempPath="$(__catchEnvironment "$usage" listAppend "$MANPATH" ':' "$@")" || return $?
   MANPATH="$tempPath"
 }
@@ -154,7 +154,7 @@ manPathRemove() {
   local tempPath
   export MANPATH
 
-  __catchEnvironment "$usage" buildEnvironmentLoad MANPATH || return $?
+  __catch "$usage" buildEnvironmentLoad MANPATH || return $?
   tempPath="$(__catchEnvironment "$usage" listRemove "$MANPATH" ':' "$@")" || return $?
   MANPATH="$tempPath"
 }
@@ -176,7 +176,7 @@ manPathCleanDuplicates() {
   [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
   export MANPATH
 
-  __catchEnvironment "$usage" buildEnvironmentLoad MANPATH || return $?
+  __catch "$usage" buildEnvironmentLoad MANPATH || return $?
 
   newPath=$(__catchEnvironment "$usage" listCleanDuplicates --test _pathIsDirectory ':' "${PATH-}") || return $?
 
@@ -197,7 +197,7 @@ pathRemove() {
   local tempPath
   export PATH
 
-  __catchEnvironment "$usage" buildEnvironmentLoad PATH || return $?
+  __catch "$usage" buildEnvironmentLoad PATH || return $?
   tempPath="$(__catchEnvironment "$usage" listRemove "$PATH" ':' "$@")" || return $?
   PATH="$tempPath"
 }
@@ -218,7 +218,7 @@ pathConfigure() {
   local tempPath
   export PATH
 
-  __catchEnvironment "$usage" buildEnvironmentLoad PATH || return $?
+  __catch "$usage" buildEnvironmentLoad PATH || return $?
   tempPath="$(__catchEnvironment "$usage" listAppend "$PATH" ':' "$@")" || return $?
   PATH="$tempPath"
 }
@@ -465,12 +465,12 @@ extensionLists() {
   local name
   if [ ${#names[@]} -gt 0 ]; then
     for name in "${names[@]}"; do
-      __catchEnvironment "$usage" __extensionListsLog "$directory" "$name" || return $?
+      __catch "$usage" __extensionListsLog "$directory" "$name" || return $?
     done
   else
     __catchEnvironment "$usage" touch "$directory/@" || return $?
     while read -r name; do
-      __catchEnvironment "$usage" __extensionListsLog "$directory" "$name" || return $?
+      __catch "$usage" __extensionListsLog "$directory" "$name" || return $?
     done
   fi
 }

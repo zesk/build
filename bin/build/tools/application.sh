@@ -25,7 +25,7 @@ __applicationHomeGo() {
   fi
   [ -d "$home" ] || __throwEnvironment "$usage" "Application home directory deleted $(decorate code "$home")" || return $?
 
-  oldHome=$(__catchEnvironment "$usage" buildHome) || return $?
+  oldHome=$(__catch "$usage" buildHome) || return $?
 
   if [ -d "$oldHome" ] && [ "$oldHome" != "$home" ]; then
     hookSourceOptional --application "$oldHome" project-deactivate || :

@@ -53,15 +53,15 @@ yarnInstall() {
   local home start
 
   start=$(timingStart) || return $?
-  home=$(__catchEnvironment "$usage" buildHome) || return $?
-  __catchEnvironment "$usage" buildEnvironmentLoad BUILD_YARN_VERSION || return $?
+  home=$(__catch "$usage" buildHome) || return $?
+  __catch "$usage" buildEnvironmentLoad BUILD_YARN_VERSION || return $?
 
   version="${1-${BUILD_YARN_VERSION:-stable}}"
   quietLog=$(buildQuietLog "$usage") || __throwEnvironment "buildQuietLog $usage"
-  __catchEnvironment "$usage" fileDirectoryRequire "$quietLog" || return $?
-  quietLog=$(__catchEnvironment "$usage" buildQuietLog "$usage") || return $?
+  __catch "$usage" fileDirectoryRequire "$quietLog" || return $?
+  quietLog=$(__catch "$usage" buildQuietLog "$usage") || return $?
   statusMessage --first decorate info "Installing node ... " || return $?
-  __catchEnvironment "$usage" nodeInstall || return $?
+  __catch "$usage" nodeInstall || return $?
   __catchEnvironment "$usage" muzzle pushd "$home" || return $?
   __catchEnvironment "$usage" yarn set version "$version" || returnUndo $? muzzle popd || return $?
   statusMessage decorate info "Installing yarn ... " || return $?

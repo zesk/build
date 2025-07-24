@@ -11,7 +11,7 @@
 testBinaryTypes() {
   local home usage="_return"
 
-  home=$(__catchEnvironment "$usage" buildHome) || return $?
+  home=$(__catch "$usage" buildHome) || return $?
   __catchEnvironment "$usage" muzzle pushd "$home" || return $?
 
   assertExitCode 0 isExecutable ./bin/build/map.sh || return $?
@@ -134,7 +134,7 @@ testNotExecutable() {
 testExecutableCallable() {
   local usage="_return" home
 
-  home=$(__catchEnvironment "$usage" buildHome) || return $?
+  home=$(__catch "$usage" buildHome) || return $?
   __catchEnvironment "$usage" muzzle pushd "$home" || return $?
 
   _dataCallableExecutables | _testValidateExecutable || return $?

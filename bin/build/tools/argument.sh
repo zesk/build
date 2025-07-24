@@ -59,7 +59,7 @@ _arguments() {
     case "$type" in
     Flag)
       argumentName="$(_commentArgumentName "$spec" "$stateFile" "$__index" "$argument")" || returnClean "$?" "${clean[@]}" || return $?
-      __catchEnvironment "$usage" environmentValueWrite "$argumentName" "true" >>"$stateFile" || returnClean "$?" "${clean[@]}" || return $?
+      __catch "$usage" environmentValueWrite "$argumentName" "true" >>"$stateFile" || returnClean "$?" "${clean[@]}" || return $?
       if ! inArray "$argumentName" "${flags[@]+"${flags[@]}"}"; then
         flags+=("$argumentName")
       fi
@@ -83,7 +83,7 @@ _arguments() {
       fi
       checkFunction="usage""Argument${type}"
       value="$("$checkFunction" "$usage" "$argumentName" "$argument")" || returnClean "$?" || return $?
-      __catchEnvironment "$usage" environmentValueWrite "$argumentName" "$value" >>"$stateFile" || returnClean "$?" || return $?
+      __catch "$usage" environmentValueWrite "$argumentName" "$value" >>"$stateFile" || returnClean "$?" || return $?
       ;;
     esac
     shift || __throwArgument "$usage" "missing argument #$__index: $argument" || returnClean "$?" "${clean[@]}" || return $?
@@ -102,7 +102,7 @@ _arguments() {
     return 0
   fi
   if [ "${#flags[@]}" -gt 0 ]; then
-    __catchEnvironment "$usage" environmentValueWrite "_flags" "${flags[@]}" >>"$stateFile" || return $?
+    __catch "$usage" environmentValueWrite "_flags" "${flags[@]}" >>"$stateFile" || return $?
   fi
   ARGUMENTS="$stateFile" || return $?
 }
@@ -152,15 +152,15 @@ _commentArgumentSpecification() {
   local functionDefinitionFile="${1-}" functionName="${2-}"
   local functionCache cacheFile argumentIndex argumentDirectory argumentLine
 
-  functionCache=$(__catchEnvironment "$usage" buildCacheDirectory "ARGUMENTS") || return $?
+  functionCache=$(__catch "$usage" buildCacheDirectory "ARGUMENTS") || return $?
   functionCache="$functionCache/$functionName"
 
   cacheFile="$functionCache/documentation"
-  argumentDirectory=$(__catchEnvironment "$usage" directoryRequire "$functionCache/parsed") || return $?
+  argumentDirectory=$(__catch "$usage" directoryRequire "$functionCache/parsed") || return $?
   __catchEnvironment "$usage" touch "$functionCache/.magic" || return $?
   if [ ! -f "$functionDefinitionFile" ] && ! isAbsolutePath "$functionDefinitionFile"; then
     local home
-    home=$(__catchEnvironment "$usage" buildHome) || return $?
+    home=$(__catch "$usage" buildHome) || return $?
     if [ -f "$home/$functionDefinitionFile" ]; then
       functionDefinitionFile="$home/$functionDefinitionFile"
     fi
@@ -168,7 +168,7 @@ _commentArgumentSpecification() {
   [ -f "$functionDefinitionFile" ] || __throwArgument "$usage" "$functionDefinitionFile does not exist" || return $?
   [ -n "$functionName" ] || __throwArgument "$usage" "functionName is blank" || return $?
   if [ ! -f "$cacheFile" ] || [ "$(fileNewest "$cacheFile" "$functionDefinitionFile")" = "$functionDefinitionFile" ]; then
-    __catchEnvironment "$usage" bashDocumentation_Extract "$functionDefinitionFile" "$functionName" >"$cacheFile" || return $?
+    __catch "$usage" bashDocumentation_Extract "$functionDefinitionFile" "$functionName" >"$cacheFile" || return $?
     for file in "$(__commentArgumentSpecification__required "$functionCache")" "$(__commentArgumentSpecification__defaults "$functionCache")"; do
       __catchEnvironment "$usage" printf "" >"$file" || return $?
     done
@@ -188,7 +188,7 @@ _commentArgumentSpecification() {
     __catchEnvironment "$usage" printf "%s" "" >"$functionCache/flags" || return $?
     argumentId=1
     while IFS=" " read -r -a argumentLine; do
-      __catchEnvironment "$usage" _commentArgumentSpecificationParseLine "$functionCache" "$argumentId" "${argumentLine[@]+"${argumentLine[@]}"}" || return $?
+      __catch "$usage" _commentArgumentSpecificationParseLine "$functionCache" "$argumentId" "${argumentLine[@]+"${argumentLine[@]}"}" || return $?
       argumentId=$((argumentId + 1))
     done <"$argumentsFile"
     __catchEnvironment "$usage" date >"$argumentDirectory/@" || return $?
@@ -460,8 +460,8 @@ ___commentArgumentName() {
 _commentArgumentTypeFromSpec() {
   local usage="$1" specification="$2" argumentType argumentRepeat="${4-}"
 
-  argumentType=$(__catchEnvironment "$usage" environmentValueRead "$specification" argumentType undefined) || return $?
-  [ -n "$argumentRepeat" ] || argumentRepeat=$(__catchEnvironment "$usage" environmentValueRead "$specification" argumentRepeat false) || return $?
+  argumentType=$(__catch "$usage" environmentValueRead "$specification" argumentType undefined) || return $?
+  [ -n "$argumentRepeat" ] || argumentRepeat=$(__catch "$usage" environmentValueRead "$specification" argumentRepeat false) || return $?
   printf "%s%s%s" "$3" "$argumentType" "$(__catchEnvironment "$usage" _choose "$argumentRepeat" '*' '')" || return $?
 }
 
@@ -498,7 +498,7 @@ _commentArgumentType() {
     argumentRepeat="$(environmentValueRead "$argumentSpec" argumentRepeat false)"
     isBoolean "$argumentRepeat" || __throwEnvironment "$usage" "$argumentSpec non-boolean argumentRepeat" || return $?
     if $argumentRepeat; then
-      __catchEnvironment "$usage" environmentValueWrite argumentRepeatName "$argumentNamed" >>"$stateFile" || return $?
+      __catch "$usage" environmentValueWrite argumentRepeatName "$argumentNamed" >>"$stateFile" || return $?
     fi
   fi
   _commentArgumentTypeFromSpec "$usage" "$argumentSpec" "!" "$argumentRepeat" || return $?
@@ -520,14 +520,14 @@ _commentArgumentsRemainder() {
   while ! $done; do
     read -d '' -r name || done=true
     [ -n "$name" ] || continue
-    value="$(__catchEnvironment "$usage" environmentValueRead "$stateFile" "$name" "")" || return $?
+    value="$(__catch "$usage" environmentValueRead "$stateFile" "$name" "")" || return $?
     if [ -z "$value" ]; then
       __throwArgument "$usage" "$name is required" || return $?
     fi
   done <"$(__commentArgumentSpecification__required "$specification")"
   if [ $# -gt 0 ]; then
     if [ -f "$specification/remainder" ]; then
-      __catchEnvironment "$usage" environmentValueWrite _remainder "$@" >>"$stateFile" || return $?
+      __catch "$usage" environmentValueWrite _remainder "$@" >>"$stateFile" || return $?
     else
       __throwArgument "$usage" "Unknown arguments $#: $(decorate each code "$@")" || return $?
     fi

@@ -536,7 +536,7 @@ __testSuiteFilterTags() {
   local lastSectionFile="" sectionFile
   local tempComment home filtersFile="/dev/null"
 
-  home=$(__catchEnvironment "$handler" buildHome) || return $?
+  home=$(__catch "$handler" buildHome) || return $?
 
   ! $debugMode || filtersFile="$home/${FUNCNAME[0]}.debug"
 

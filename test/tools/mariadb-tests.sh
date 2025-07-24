@@ -54,7 +54,7 @@ testMariaDBDumpClean() {
   local usage="_return"
   local home
 
-  home=$(__catchEnvironment "$usage" buildHome) || return $?
+  home=$(__catch "$usage" buildHome) || return $?
 
   local sql
 

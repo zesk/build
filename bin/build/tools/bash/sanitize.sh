@@ -28,7 +28,7 @@ bashSanitize() {
 
   local home checkAssertions=() executor=contextOpen
 
-  home=$(__catchEnvironment "$usage" buildHome) || return $?
+  home=$(__catch "$usage" buildHome) || return $?
 
   # _IDENTICAL_ argument-case-header 5
   local __saved=("$@") __count=$#
@@ -141,7 +141,7 @@ _bashSanitizeCheckCopyright() {
     done <"$file"
   done < <(find . -name ".skip-copyright" -type f ! -path "*/.*/*")
   export BUILD_COMPANY
-  __catchEnvironment "$usage" buildEnvironmentLoad BUILD_COMPANY || return $?
+  __catch "$usage" buildEnvironmentLoad BUILD_COMPANY || return $?
 
   year="$(date +%Y)"
   statusMessage decorate warning "Checking $year and $BUILD_COMPANY ..." || :

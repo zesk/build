@@ -51,9 +51,9 @@ _pause() {
 ####################################################################################################
 
 #
-# Usage: _copyFileEscalated displaySource source destination verb
+# Usage: _fileCopyEscalated displaySource source destination verb
 #
-_copyFileEscalated() {
+_fileCopyEscalated() {
   decorate reset
   printf "\n%s -> %s: %s\n\n" "$(decorate green "$1")" "$(decorate red "$3")" "$(decorate bold-red "$4")"
   if confirmYesNo --yes "$(printf "%s: %s\n(%s/%s - default %s)? " \
@@ -73,13 +73,13 @@ _copyFileEscalated() {
 #
 # Copy a file with no privilege escalation
 #
-_copyFileRegular() {
+_fileCopyRegular() {
   local displaySource="$1" source="$2" destination="$3" verb="$4"
-  _copyFilePrompt "OVERRIDE $displaySource" "$destination" "$verb" || :
+  _fileCopyPrompt "OVERRIDE $displaySource" "$destination" "$verb" || :
   __execute cp "$source" "$destination" || return $?
 }
 
-_copyFilePrompt() {
+_fileCopyPrompt() {
   local source="$1" destination="$2" verb="$3"
   printf "%s -> %s %s\n" "$(decorate green "$source")" "$(decorate red "$destination")" "$(decorate cyan "$verb")"
 }
@@ -91,10 +91,10 @@ _copyFilePrompt() {
 # Argument: displaySource - Source path to show
 # Argument: source - Actual source path
 # Argument: destination - Destination path
-_copyFileShowNew() {
+_fileCopyShowNew() {
   local displaySource="$1" source="$2" destination="$3"
   local lines
-  _copyFilePrompt "$displaySource" "$destination" "Created"
+  _fileCopyPrompt "$displaySource" "$destination" "Created"
   head -10 "$source" | decorate code
   lines=$(__environment fileLineCount "$source") || return $?
   decorate info "$(printf "%d %s total" "$lines" "$(plural "$lines" line lines)")"
@@ -113,10 +113,10 @@ _copyFileShowNew() {
 # Argument: destination - File. Required. Destination path
 # Exit Code: 0 - Success
 # Exit Code: 1 - Failed
-copyFile() {
+fileCopy() {
   local usage="_${FUNCNAME[0]}"
 
-  local mapFlag=false copyFunction="_copyFileRegular" owner="" mode="" source="" destination=""
+  local mapFlag=false copyFunction="_fileCopyRegular" owner="" mode="" source="" destination=""
 
   # _IDENTICAL_ argument-case-header 5
   local __saved=("$@") __count=$#
@@ -133,7 +133,7 @@ copyFile() {
       mapFlag=true
       ;;
     --escalate)
-      copyFunction=_copyFileEscalated
+      copyFunction=_fileCopyEscalated
       ;;
     --owner)
       shift
@@ -167,14 +167,14 @@ copyFile() {
       if [ -f "$destination" ]; then
         if ! diff -q "$destination" "$actualSource" >/dev/null; then
           prefix="$(decorate subtle "$(basename "$source")"): "
-          _copyFilePrompt "$source" "$destination" "Changes" || :
+          _fileCopyPrompt "$source" "$destination" "Changes" || :
           diff "$destination" "$actualSource" | sed '1d' | decorate code | decorate wrap "$prefix"
           verb="File changed${verb}"
         else
           return 0
         fi
       else
-        _copyFileShowNew "$source" "$actualSource" "$destination" || :
+        _fileCopyShowNew "$source" "$actualSource" "$destination" || :
         verb="File created${verb}"
       fi
       "$copyFunction" "$source" "$actualSource" "$destination" "$verb"
@@ -195,7 +195,7 @@ copyFile() {
   done
   __throwArgument "$usage" "Missing source" || return $?
 }
-_copyFile() {
+_fileCopy() {
   # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
@@ -208,7 +208,7 @@ _copyFile() {
 # Argument: destination - File. Required. Destination path
 # Exit Code: 0 - Something would change
 # Exit Code: 1 - Nothing would change
-copyFileWouldChange() {
+fileCopyWouldChange() {
   local usage="_${FUNCNAME[0]}"
 
   local mapFlag=false source=""
@@ -263,7 +263,7 @@ copyFileWouldChange() {
   done
   __throwArgument "$usage" "Missing source" || return $?
 }
-_copyFileWouldChange() {
+_fileCopyWouldChange() {
   # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
@@ -354,8 +354,8 @@ loopExecute() {
 
     # Compute status line
     local elapsed seconds nLines stamp
-    nLines=$(__catchEnvironment "$usage" fileLineCount "$outputBuffer") || return $?
-    elapsed=$(($(__catchEnvironment "$usage" timingStart) - start)) || return $?
+    nLines=$(__catch "$usage" fileLineCount "$outputBuffer") || return $?
+    elapsed=$(($(__catch "$usage" timingStart) - start)) || return $?
     seconds=$(timingFormat "$elapsed")
     seconds="$seconds $(plural "$seconds" second seconds)"
     stamp=$(date "+%F %T")
@@ -381,7 +381,7 @@ loopExecute() {
       elapsed=$((elapsed / 1000))
       if [ "$elapsed" -lt "$sleepDelay" ]; then
         cursorSet 1 "$((saveY - 1))"
-        __catchEnvironment "$usage" interactiveCountdown --prefix "$statusLine, running $title in " "$((sleepDelay - elapsed))" || return $?
+        __catch "$usage" interactiveCountdown --prefix "$statusLine, running $title in " "$((sleepDelay - elapsed))" || return $?
       fi
     fi
     iterations=$((iterations + 1))
@@ -453,7 +453,7 @@ interactiveManager() {
 
   local rowsAllowed output index=1 didClear=false triedRepair
 
-  rowsAllowed=$(__catchEnvironment "$usage" consoleRows) || return $?
+  rowsAllowed=$(__catch "$usage" consoleRows) || return $?
   rowsAllowed=$((rowsAllowed - 4))
   output=$(fileTemporaryName "$usage") || return $?
   index=1
@@ -939,7 +939,7 @@ notify() {
   [ -n "$message" ] || message="$binary"
 
   local home
-  home=$(__catchEnvironment "$usage" buildHome) || return $?
+  home=$(__catch "$usage" buildHome) || return $?
   ! $verboseFlag || statusMessage --last decorate info "Running $(decorate each code "$binary" "$@") ... [$(decorate magenta "$message")]" || return $?
   local start tempOut tempErr dialog
   start=$(timingStart)

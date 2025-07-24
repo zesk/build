@@ -42,7 +42,7 @@ testSlowTagsWorkCorrectly() {
   local usage="_return"
 
   local home
-  home=$(__catchEnvironment "$usage" buildHome) || return $?
+  home=$(__catch "$usage" buildHome) || return $?
 
   local ee=("PATH=$PATH" "HOME=$HOME")
   assertExitCode --stdout-match "testBuildFunctionsCoverage" --stdout-match "${FUNCNAME[0]}" 0 /usr/bin/env -i "${ee[@]}" "$home/bin/test.sh" --tag slow --list || return $?
@@ -54,7 +54,7 @@ testBuildFunctionsCoverage() {
   local usage="_return"
 
   local home
-  home=$(__catchEnvironment "$usage" buildHome) || return $?
+  home=$(__catch "$usage" buildHome) || return $?
 
   local deprecatedFunctions allTestFiles clean=()
   deprecatedFunctions=$(fileTemporaryName "$usage") || return $?
@@ -82,7 +82,7 @@ testBuildFunctionsCoverage() {
 
       # grep returns 1 when nothing matches
       matchingTests=$(xargs -r -0 grep -l "$(quoteGrepPattern "$function")" <"$allTestFiles" || mapReturn $? 1 0 | trimBoth) || return $?
-      [ -z "$matchingTests" ] || foundCount=$(__catchEnvironment "$usage" fileLineCount <<<"$matchingTests") || return $?
+      [ -z "$matchingTests" ] || foundCount=$(__catch "$usage" fileLineCount <<<"$matchingTests") || return $?
 
       if [ "$foundCount" -eq 0 ]; then
         missing+=("$function")
@@ -105,7 +105,7 @@ testBuildFunctionsHelpCoverage() {
   local usage="_return"
 
   local home
-  home=$(__catchEnvironment "$usage" buildHome) || return $?
+  home=$(__catch "$usage" buildHome) || return $?
 
   local deprecatedFunctions clean=()
   deprecatedFunctions=$(fileTemporaryName "$usage") || return $?
@@ -174,7 +174,7 @@ testBuildFunctionsHelpCoverage() {
 
   local lastPassedCache lastPassed=""
 
-  lastPassedCache="$(__catchEnvironment "$usage" buildCacheDirectory)/.${FUNCNAME[0]}.lastPassed" || return $?
+  lastPassedCache="$(__catch "$usage" buildCacheDirectory)/.${FUNCNAME[0]}.lastPassed" || return $?
 
   [ ! -f "$lastPassedCache" ] || lastPassed=""$(head -n 1 "$lastPassedCache")
   local missingFile

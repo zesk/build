@@ -111,7 +111,7 @@ mapValue() {
 
     value="$*"
     while read -r environment; do
-      environmentValue=$(__catchEnvironment "$usage" environmentValueRead "$mapFile" "$environment") || return $?
+      environmentValue=$(__catch "$usage" environmentValueRead "$mapFile" "$environment") || return $?
       searchToken="$prefix$environment$suffix"
       if [ ${#searchFilters[@]} -gt 0 ]; then
         for filter in "${searchFilters[@]}"; do
@@ -295,11 +295,11 @@ cannon() {
 
   local exitCode=0 count
 
-  count="$(($(__catchEnvironment "$usage" fileLineCount "$cannonLog.found") + 0))" || return $?
+  count="$(($(__catch "$usage" fileLineCount "$cannonLog.found") + 0))" || return $?
   if [ "$count" -eq 0 ]; then
     statusMessage --inline decorate warning "Modified (NO) files"
   else
-    __catchEnvironment "$usage" __xargsSedInPlaceReplace -e "s/$searchQuoted/$replaceQuoted/g" <"$cannonLog.found" || returnClean $? "$cannonLog" || return $?
+    __catch "$usage" __xargsSedInPlaceReplace -e "s/$searchQuoted/$replaceQuoted/g" <"$cannonLog.found" || returnClean $? "$cannonLog" || return $?
     statusMessage --inline decorate success "Modified $(decorate code "$count $(plural "$count" file files)")"
     exitCode=1
   fi

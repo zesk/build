@@ -371,7 +371,7 @@ fileSize() {
   local size opts
 
   export OSTYPE
-  __catchEnvironment "$usage" buildEnvironmentLoad OSTYPE || return $?
+  __catch "$usage" buildEnvironmentLoad OSTYPE || return $?
 
   case "$(lowercase "${OSTYPE}")" in
   *darwin*) opts=("-f" "%z") ;;

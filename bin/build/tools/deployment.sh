@@ -503,7 +503,7 @@ deployToRemote() {
   local usage="_${FUNCNAME[0]}"
   local initTime
 
-  __catchEnvironment "$usage" buildEnvironmentLoad HOME BUILD_DEBUG || return $?
+  __catch "$usage" buildEnvironmentLoad HOME BUILD_DEBUG || return $?
 
   initTime=$(timingStart) || return $?
 
@@ -692,7 +692,7 @@ deployToRemote() {
 
     # reset artifact file
     printf "" >"$deployedHostArtifact"
-    __catchEnvironment "$usage" __deployUploadPackage "$applicationPath" "$deployHome/$applicationId" "$buildTarget" "${userHosts[@]}" || return $?
+    __catch "$usage" __deployUploadPackage "$applicationPath" "$deployHome/$applicationId" "$buildTarget" "${userHosts[@]}" || return $?
 
     for userHost in "${userHosts[@]}"; do
       local start
@@ -716,7 +716,7 @@ deployToRemote() {
     return 0
   fi
 
-  __catchEnvironment "$usage" __deployCommandsFile "$deployHome/$applicationId/app" "$deployArg" "${commonArguments[@]}" >"$temporaryCommandsFile" || return $?
+  __catch "$usage" __deployCommandsFile "$deployHome/$applicationId/app" "$deployArg" "${commonArguments[@]}" >"$temporaryCommandsFile" || return $?
   if $showCommands; then
     __catchEnvironment "$usage" cat "$temporaryCommandsFile" || return $?
     rm -rf "$temporaryCommandsFile" || :

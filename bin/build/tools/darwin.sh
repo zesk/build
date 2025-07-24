@@ -23,7 +23,7 @@ darwinSoundDirectory() {
   [ $# -eq 0 ] || __help --only "$usage" "$@" || return "$(convertValue $? 1 0)"
 
   isDarwin || __throwEnvironment "$usage" "Only on Darwin" || return $?
-  home=$(__catchEnvironment "$usage" userHome) || return $?
+  home=$(__catch "$usage" userHome) || return $?
   printf "%s\n" "$home/Library/Sounds"
 }
 _darwinSoundDirectory() {

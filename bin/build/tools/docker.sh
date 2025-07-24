@@ -142,7 +142,7 @@ __anyEnvToFunctionEnv() {
     local temp
     temp=$(fileTemporaryName "$usage") || return $?
     __catchEnvironment "$usage" muzzle tee "$temp" || return $?
-    __catchEnvironment "$usage" __anyEnvToFunctionEnv "$usage" "$passConvertFunction" "$failConvertFunction" "$temp" || returnClean $? "$temp" || return $?
+    __catch "$usage" __anyEnvToFunctionEnv "$usage" "$passConvertFunction" "$failConvertFunction" "$temp" || returnClean $? "$temp" || return $?
     __catchEnvironment "$usage" rm "$temp" || return $?
     return 0
   fi
@@ -320,7 +320,7 @@ dockerLocalContainer() {
 
   export BUILD_DOCKER_PLATFORM BUILD_DOCKER_PATH BUILD_DOCKER_IMAGE
 
-  __catchEnvironment "$usage" buildEnvironmentLoad BUILD_DOCKER_PLATFORM BUILD_DOCKER_IMAGE BUILD_DOCKER_PATH || return $?
+  __catch "$usage" buildEnvironmentLoad BUILD_DOCKER_PLATFORM BUILD_DOCKER_IMAGE BUILD_DOCKER_PATH || return $?
 
   platform=${BUILD_DOCKER_PLATFORM}
   imageApplicationPath=${BUILD_DOCKER_PATH}

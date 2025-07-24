@@ -111,7 +111,7 @@ __updateAvailable() {
   done
 
   local home
-  home="$(__catchEnvironment "$usage" buildHome)" || return $?
+  home="$(__catch "$usage" buildHome)" || return $?
 
   local managers=(apk debian ubuntu) allKnown=false
   if isDarwin; then

@@ -95,8 +95,8 @@ __releaseNotes() {
     [ -n "$version" ] || __throwEnvironment "$usage" "version-current hook returned blank" || return $?
   fi
   export BUILD_RELEASE_NOTES
-  __catchEnvironment "$usage" buildEnvironmentLoad BUILD_RELEASE_NOTES || return $?
-  home=$(__catchEnvironment "$usage" buildHome) || return $?
+  __catch "$usage" buildEnvironmentLoad BUILD_RELEASE_NOTES || return $?
+  home=$(__catch "$usage" buildHome) || return $?
   [ -n "${BUILD_RELEASE_NOTES}" ] || __throwEnvironment "$usage" "BUILD_RELEASE_NOTES is blank" || return $?
   releasePath="${BUILD_RELEASE_NOTES%/}"
   isAbsolutePath "$releasePath" || releasePath=$(directoryPathSimplify "$home/$releasePath")

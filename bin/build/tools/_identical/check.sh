@@ -181,17 +181,17 @@ identicalCheck() {
 
   # Write strings to state
   for variable in tempDirectory resultsFile rootDir failureCode searchFileList mapFile; do
-    __catchEnvironment "$usage" environmentValueWrite "$variable" "${!variable}" >>"$stateFile" || returnClean $? "${clean[@]}" || return $?
+    __catch "$usage" environmentValueWrite "$variable" "${!variable}" >>"$stateFile" || returnClean $? "${clean[@]}" || return $?
   done
   # Line exists here largely so $mapFile is "used"
-  __catchEnvironment "$usage" environmentValueWrite "mapFile" "$mapFile" >>"$stateFile" || returnClean $? "${clean[@]}" || return $?
+  __catch "$usage" environmentValueWrite "mapFile" "$mapFile" >>"$stateFile" || returnClean $? "${clean[@]}" || return $?
 
   # Write array values to state
-  __catchEnvironment "$usage" environmentValueWriteArray "repairSources" "${repairSources[@]+"${repairSources[@]}"}" >>"$stateFile" || returnClean $? "${clean[@]}" || return $?
-  __catchEnvironment "$usage" environmentValueWriteArray "prefixes" "${prefixes[@]+"${prefixes[@]}"}" >>"$stateFile" || returnClean $? "${clean[@]}" || return $?
-  __catchEnvironment "$usage" environmentValueWriteArray "skipFiles" "${skipFiles[@]+"${skipFiles[@]}"}" >>"$stateFile" || returnClean $? "${clean[@]}" || return $?
-  __catchEnvironment "$usage" environmentValueWriteArray "singles" "${singles[@]+"${singles[@]}"}" >>"$stateFile" || returnClean $? "${clean[@]}" || return $?
-  __catchEnvironment "$usage" environmentValueWriteArray "tokens" "${tokens[@]+"${tokens[@]}"}" >>"$stateFile" || returnClean $? "${clean[@]}" || return $?
+  __catch "$usage" environmentValueWriteArray "repairSources" "${repairSources[@]+"${repairSources[@]}"}" >>"$stateFile" || returnClean $? "${clean[@]}" || return $?
+  __catch "$usage" environmentValueWriteArray "prefixes" "${prefixes[@]+"${prefixes[@]}"}" >>"$stateFile" || returnClean $? "${clean[@]}" || return $?
+  __catch "$usage" environmentValueWriteArray "skipFiles" "${skipFiles[@]+"${skipFiles[@]}"}" >>"$stateFile" || returnClean $? "${clean[@]}" || return $?
+  __catch "$usage" environmentValueWriteArray "singles" "${singles[@]+"${singles[@]}"}" >>"$stateFile" || returnClean $? "${clean[@]}" || return $?
+  __catch "$usage" environmentValueWriteArray "tokens" "${tokens[@]+"${tokens[@]}"}" >>"$stateFile" || returnClean $? "${clean[@]}" || return $?
 
   local prefix prefixIndex=0
   for prefix in "${prefixes[@]}"; do
@@ -218,7 +218,7 @@ identicalCheck() {
 
   if [ "$exitCode" -ne 0 ]; then
     local badFiles=() item
-    while read -r item; do badFiles+=("$item"); done < <(__catchEnvironment "$usage" environmentValueReadArray "$stateFile" "badFiles") || return $?
+    while read -r item; do badFiles+=("$item"); done < <(__catch "$usage" environmentValueReadArray "$stateFile" "badFiles") || return $?
 
     if [ ${#badFiles[@]} -gt 0 ]; then
       exitCode=$failureCode
@@ -376,7 +376,7 @@ identicalCheckShell() {
     shift || :
   done
   ! $addDefaultPrefixes || pp+=(--prefix '# ''IDENTICAL')
-  __catchEnvironment "$usage" identicalCheck "${aa[@]+"${aa[@]}"}" "${pp[@]}" --extension sh "$@" || return $?
+  __catch "$usage" identicalCheck "${aa[@]+"${aa[@]}"}" "${pp[@]}" --extension sh "$@" || return $?
 }
 _identicalCheckShell() {
   # __IDENTICAL__ usageDocument 1

@@ -113,7 +113,7 @@ __packageUpFunction() {
   isFunction "$packageFunction" || __throwEnvironment "$usage" "$packageFunction is not a defined function" || return $?
 
   local name
-  name="$(__catchEnvironment "$usage" buildCacheDirectory)/.packageUpdate" || return $?
+  name="$(__catch "$usage" buildCacheDirectory)/.packageUpdate" || return $?
 
   if $forceFlag; then
     ! $verboseFlag || statusMessage decorate info "Forcing $manager $verb ..."
@@ -132,7 +132,7 @@ __packageUpFunction() {
 
   if ! $showLog; then
     local quietLog
-    quietLog=$(__catchEnvironment "$usage" buildQuietLog "${usage#_}${suffix}") || return $?
+    quietLog=$(__catch "$usage" buildQuietLog "${usage#_}${suffix}") || return $?
     exec 3>&1
     exec 1>"$quietLog"
   fi
@@ -360,7 +360,7 @@ packageWhichUninstall() {
   if ! whichExists "$binary"; then
     return 0
   fi
-  __catchEnvironment "$usage" packageUninstall "${vv[@]+"${vv[@]}"}" --manager "$manager" "${packages[@]}" || return $?
+  __catch "$usage" packageUninstall "${vv[@]+"${vv[@]}"}" --manager "$manager" "${packages[@]}" || return $?
   if foundPath="$(which "$binary")" && [ -n "$foundPath" ]; then
     __throwEnvironment "$usage" "packageUninstall ($manager) \"${packages[*]}\" did not remove $(decorate code "$foundPath") FROM the PATH: $(decorate value "${PATH-}")" || return $?
   fi
@@ -437,10 +437,10 @@ packageInstall() {
 
   __start=$(timingStart) || return $?
   installed="$(__catchEnvironment "$usage" mktemp)" || return $?
-  __catchEnvironment "$usage" packageUpdate "${vv[@]+"${vv[@]}"}" || return $?
+  __catch "$usage" packageUpdate "${vv[@]+"${vv[@]}"}" || return $?
   local __installStart
   __installStart=$(timingStart) || return $?
-  __catchEnvironment "$usage" packageInstalledList --manager "$manager" >"$installed" || return $?
+  __catch "$usage" packageInstalledList --manager "$manager" >"$installed" || return $?
 
   local standardPackages=() actualPackages=() package installed installFunction
   # Loads BUILD_TEXT_BINARY
@@ -475,7 +475,7 @@ packageInstall() {
 
   if ! $showLog; then
     local quietLog
-    quietLog=$(__catchEnvironment "$usage" buildQuietLog "${FUNCNAME[0]}") || return $?
+    quietLog=$(__catch "$usage" buildQuietLog "${FUNCNAME[0]}") || return $?
     exec 3>&1
     exec 1>"$quietLog"
   fi
@@ -519,7 +519,7 @@ packageIsInstalled() {
   [ "${#packages[@]}" -gt 0 ] || __throwArgument "$usage" "Requires at least one package" || return $?
   local installed
   installed=$(fileTemporaryName "$usage") || return $?
-  __catchEnvironment "$usage" packageInstalledList >"$installed" || return $?
+  __catch "$usage" packageInstalledList >"$installed" || return $?
   local package
   for package in "${packages[@]}"; do
     if ! grep -q -e "^$(quoteGrepPattern "$package")$" "$installed"; then
@@ -579,7 +579,7 @@ packageUninstall() {
   local start quietLog standardPackages=()
 
   start=$(timingStart) || return $?
-  quietLog=$(__catchEnvironment "$usage" buildQuietLog "$usage") || return $?
+  quietLog=$(__catch "$usage" buildQuietLog "$usage") || return $?
   IFS=$'\n' read -d '' -r -a standardPackages < <(_packageStandardPackages "$manager") || :
   local package
   for package in "${packages[@]}"; do
@@ -681,7 +681,7 @@ packageNeedRestartFlag() {
   local usage="_${FUNCNAME[0]}"
   local quietLog restartFile
 
-  restartFile="$(__catchEnvironment "$usage" buildCacheDirectory)/.needRestart" || return $?
+  restartFile="$(__catch "$usage" buildCacheDirectory)/.needRestart" || return $?
   if [ $# -eq 0 ]; then
     if [ -f "$restartFile" ]; then
       __catchEnvironment "$usage" cat "$restartFile" || return $?
@@ -744,7 +744,7 @@ packageGroupInstall() {
   for group in "${groups[@]}"; do
     local packages=()
     while read -r package; do packages+=("$package"); done < <(packageMapping --manager "$manager" "$group")
-    __catchEnvironment "$usage" packageInstall --manager "$manager" "${packages[@]}" || return $?
+    __catch "$usage" packageInstall --manager "$manager" "${packages[@]}" || return $?
   done
 }
 _packageGroupInstall() {
@@ -794,7 +794,7 @@ packageGroupUninstall() {
   for group in "${groups[@]}"; do
     local packages=()
     while read -r package; do packages+=("$package"); done < <(packageMapping --manager "$manager" "$group")
-    __catchEnvironment "$usage" packageUninstall --manager "$manager" "${packages[@]}" || return $?
+    __catch "$usage" packageUninstall --manager "$manager" "${packages[@]}" || return $?
   done
 }
 _packageGroupUninstall() {

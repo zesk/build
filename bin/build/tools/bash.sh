@@ -60,7 +60,7 @@ bashLibraryHome() {
   run=$(usageArgumentString "$usage" "libraryRelativePath" "${1-}") || return $?
   [ -n "$startDirectory" ] || startDirectory=$(__catchEnvironment "$usage" pwd) || return $?
   startDirectory=$(usageArgumentDirectory "$usage" "startDirectory" "$startDirectory") || return $?
-  home=$(__catchEnvironment "$usage" directoryParent --pattern "$run" --test -f --test -x "$startDirectory") || return $?
+  home=$(__catch "$usage" directoryParent --pattern "$run" --test -f --test -x "$startDirectory") || return $?
   printf "%s\n" "$home"
 }
 _bashLibraryHome() {

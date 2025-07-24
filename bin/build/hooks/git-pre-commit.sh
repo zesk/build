@@ -99,7 +99,7 @@ __hookGitPreCommit() {
   start=$(timingStart) || return $?
 
   export BUILD_PRECOMMIT_EXTENSIONS APPLICATION_NAME
-  __catchEnvironment "$usage" buildEnvironmentLoad APPLICATION_NAME BUILD_PRECOMMIT_EXTENSIONS || return $?
+  __catch "$usage" buildEnvironmentLoad APPLICATION_NAME BUILD_PRECOMMIT_EXTENSIONS || return $?
 
   statusMessage --first printf -- "%s %s" "$(decorate info "[$hookName]")" "$(decorate info "Installing ...")"
   __catchEnvironment "$usage" gitInstallHook --copy "$hookName" || return $?

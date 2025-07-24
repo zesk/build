@@ -107,7 +107,7 @@ testEnvironmentFileMake() {
   local usage="_return"
 
   local home
-  home=$(__catchEnvironment "$usage" buildHome) || return $?
+  home=$(__catch "$usage" buildHome) || return $?
 
   __catchEnvironment muzzle pushd "$home" || return $?
   (
@@ -303,7 +303,7 @@ testEnvironmentApacheCompile() {
   local usage="_return"
   local envFile
 
-  envFile="$(__catchEnvironment "$usage" buildHome)/test/example/apache.env" || return $?
+  envFile="$(__catch "$usage" buildHome)/test/example/apache.env" || return $?
 
   local matches
 
@@ -388,7 +388,7 @@ testEnvironmentClean() {
 
   saveEnv=$(fileTemporaryName "$usage") || return $?
 
-  __catchEnvironment "$usage" environmentOutput --underscore --secure >"$saveEnv" || return $?
+  __catch "$usage" environmentOutput --underscore --secure >"$saveEnv" || return $?
 
   local item keepers=(A B C DEE EEE FFF GGG) removed=()
 
@@ -458,12 +458,12 @@ testEnvironmentFileLoadExecute() {
   testEnv=$(fileTemporaryName "$usage") || return $?
   clean+=("$testEnv")
 
-  __catchEnvironment "$usage" environmentValueWrite HELLO World >>"$testEnv" || return $?
+  __catch "$usage" environmentValueWrite HELLO World >>"$testEnv" || return $?
 
   export TEST_THING=Transient
   assertEquals "[Transient]" "$(environmentFileLoad "$testEnv" --execute __testEchoEnv TEST_THING)" || return $?
   assertEquals "[World]" "$(environmentFileLoad "$testEnv" --execute __testEchoEnv HELLO)" || return $?
-  __catchEnvironment "$usage" environmentValueWrite TEST_THING Winner >>"$testEnv" || return $?
+  __catch "$usage" environmentValueWrite TEST_THING Winner >>"$testEnv" || return $?
   assertEquals "[Winner]" "$(environmentFileLoad "$testEnv" --execute __testEchoEnv TEST_THING)" || return $?
   assertEquals "[World]" "$(environmentFileLoad "$testEnv" --execute __testEchoEnv HELLO)" || return $?
 

@@ -126,7 +126,7 @@ developerTrack() {
   local cachePath
 
   hash=$(shaPipe <<<"$source")
-  cachePath=$(__catchEnvironment "$usage" buildCacheDirectory "${FUNCNAME[0]}" "$hash") || return $?
+  cachePath=$(__catch "$usage" buildCacheDirectory "${FUNCNAME[0]}" "$hash") || return $?
   ! $verboseFlag || statusMessage decorate info "Cache path is $(decorate file "$cachePath")"
   exportMarker="__DEVELOPER_TRACK_MARKER_$hash"
 
@@ -297,7 +297,7 @@ developerDevelopmentLink() {
   [ -n "$versionSelector" ] || versionSelector=".version"
 
   local home target
-  home=$(__catchEnvironment "$usage" buildHome) || return $?
+  home=$(__catch "$usage" buildHome) || return $?
   home=$(__catchEnvironment "$usage" realPath "${home%/}") || return $?
 
   if [ -z "$composerPackage" ]; then
@@ -323,7 +323,7 @@ developerDevelopmentLink() {
   showName=$(decorate label "$showName")
 
   # developmentHome
-  developmentHome=$(__catchEnvironment "$usage" buildEnvironmentGet "$variable") || return $?
+  developmentHome=$(__catch "$usage" buildEnvironmentGet "$variable") || return $?
   if [ -n "$developmentHome" ]; then
     developmentHome=$(__catchEnvironment "$usage" realPath "${developmentHome%/}") || return $?
   fi
@@ -397,7 +397,7 @@ __developerDevelopmentRevert() {
     local binary="$1" installer
     installer="$developmentHome/$relPath/$binary"]
     [ -x "$installer" ] || __throwEnvironment "$usage" "$installer does not exist" || return $?
-    __catchEnvironment "$usage" directoryRequire "$target" || return $?
+    __catch "$usage" directoryRequire "$target" || return $?
     __catchEnvironment "$usage" cp "$installer" "$target/$binary" || return $?
     set -- "$target/$binary"
   fi

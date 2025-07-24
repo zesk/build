@@ -13,6 +13,7 @@
 
 __identicalCheckInsideLoopLineHandler() {
   local handler="$1" && shift
+  local prefix="$1" && shift
   local searchFile="$1" && shift
   local totalLines="$1" && shift
   local lineNumber="$1" && shift
@@ -130,7 +131,7 @@ _identicalCheckInsideLoop() {
       continue
     fi
 
-    if ! __identicalCheckInsideLoopLineHandler "$handler" "$searchFile" "$totalLines" "$lineNumber" "$token" "$count" "$tempDirectory/$prefixIndex"; then
+    if ! __identicalCheckInsideLoopLineHandler "$handler" "$prefix" "$searchFile" "$totalLines" "$lineNumber" "$token" "$count" "$tempDirectory/$prefixIndex"; then
       if [ ${#repairSources[@]} -gt 0 ]; then
         # statusMessage --last decorate info repairSources "${#repairSources[@]}" "${repairSources[@]+"${repairSources[@]}"}"
         statusMessage --last decorate warning "Repairing $token in $(decorate code "$(decorate file "$searchFile")") from \"$(decorate value "$(decorate file "$tokenFileName")")\" (${#repairSources[@]} repair $(plural ${#repairSources[@]} directory directories))"

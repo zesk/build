@@ -21,7 +21,7 @@ testTools() {
 
   __help "$usage" "${1-}" || return 0
 
-  home=$(__catchEnvironment "$usage" buildHome) || return $?
+  home=$(__catch "$usage" buildHome) || return $?
 
   for testCode in tools _assert assert mock; do
     testCode="$home/bin/build/tools/test/$testCode.sh"

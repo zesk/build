@@ -17,7 +17,7 @@ readlineConfigurationAdd() {
   local target=".input""rc" keyStroke="${1-}" action="${2-}" pattern
   local home
 
-  home="$(__catchEnvironment "$usage" userHome)" || return $?
+  home="$(__catch "$usage" userHome)" || return $?
   target="$home/$target"
   [ -f "$target" ] || __catchEnvironment "$usage" touch "$target" || return $?
   pattern="^$(quoteGrepPattern "\"$keyStroke\":")"

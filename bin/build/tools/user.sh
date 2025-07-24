@@ -14,7 +14,7 @@
 userHome() {
   local usage="_${FUNCNAME[0]}"
   __help "_${FUNCNAME[0]}" "$@" || return 0
-  home=$(__catchEnvironment "$usage" buildEnvironmentGet HOME) || return $?
+  home=$(__catch "$usage" buildEnvironmentGet HOME) || return $?
   [ -d "$home" ] || __throwEnvironment "$usage" "HOME is not a directory: $HOME" || return $?
   home="$(printf "%s%s" "$home" "$(printf "/%s" "$@")")"
   printf "%s\n" "${home%/}"

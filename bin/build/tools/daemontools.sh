@@ -60,7 +60,7 @@ daemontoolsInstallService() {
 
   here="$(dirname "${BASH_SOURCE[0]}")"
 
-  __catchEnvironment "$usage" buildEnvironmentLoad DAEMONTOOLS_HOME || return $?
+  __catch "$usage" buildEnvironmentLoad DAEMONTOOLS_HOME || return $?
 
   local serviceHome="${DAEMONTOOLS_HOME}" serviceName="" serviceFile="" extras=() logHome="" arguments=() logArguments=()
   # _IDENTICAL_ argument-case-header 5
@@ -162,8 +162,8 @@ _daemontoolsInstallServiceRun() {
   shift 3 || __throwArgument "$usage" "Missing arguments" || return $?
   __catchEnvironment "$usage" muzzle directoryRequire "$target" || return $?
   args=(--map "$source" "$target/run")
-  if copyFileWouldChange "${args[@]}"; then
-    __catchEnvironment "$usage" copyFile "$@" "${args[@]}" || return $?
+  if fileCopyWouldChange "${args[@]}"; then
+    __catchEnvironment "$usage" fileCopy "$@" "${args[@]}" || return $?
     __catchEnvironment "$usage" chmod 700 "$target" "$target/run" || return $?
   fi
 }
@@ -542,7 +542,7 @@ daemontoolsManager() {
     shift
   done
 
-  __catchEnvironment "$usage" buildEnvironmentLoad DAEMONTOOLS_HOME || return $?
+  __catch "$usage" buildEnvironmentLoad DAEMONTOOLS_HOME || return $?
 
   usageRequireBinary "$usage" svc svstat || return $?
 

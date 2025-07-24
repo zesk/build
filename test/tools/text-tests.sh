@@ -215,7 +215,7 @@ __testIsCharacterClass() {
 testValidateCharacterClass() {
   local temp home usage="_return"
 
-  home=$(__catchEnvironment "$usage" buildHome) || return $?
+  home=$(__catch "$usage" buildHome) || return $?
   temp=$(mktemp) || return $?
   __testIsCharacterClass | tee "$temp" || return $?
   if ! diff -q "$temp" "$home/test/example/isCharacterClass.txt"; then

@@ -11,7 +11,7 @@ testCheckDockerEnvFile() {
   local usage="_return"
   local out home
 
-  home=$(__catchEnvironment "$usage" buildHome) || return $?
+  home=$(__catch "$usage" buildHome) || return $?
 
   local testFile="$home/test/example/bad.env"
 
@@ -38,7 +38,7 @@ testDockerEnvToBash() {
   err="$out.err"
 
   local home
-  home=$(__catchEnvironment "$usage" buildHome) || return $?
+  home=$(__catch "$usage" buildHome) || return $?
 
   decorate info "PWD is $(pwd)"
   if dockerEnvToBash "$home/test/example/test.env" >"$out" 2>"$err"; then
@@ -66,7 +66,7 @@ testDockerEnvToBashPipe() {
   err="$out.err"
 
   local home
-  home=$(__catchEnvironment "$usage" buildHome) || return $?
+  home=$(__catch "$usage" buildHome) || return $?
 
   decorate info "PWD is $(pwd)"
   if dockerEnvToBash <"$home/test/example/test.env" >"$out" 2>"$err"; then
@@ -91,7 +91,7 @@ testDockerEnvFromBash() {
   local out err
 
   local home
-  home=$(__catchEnvironment "$usage" buildHome) || return $?
+  home=$(__catch "$usage" buildHome) || return $?
 
   assertExitCode --stderr-ok 2 dockerEnvFromBashEnv "$home/test/example/bad.env" || return $?
 
@@ -115,7 +115,7 @@ testAnyEnvToDockerEnv() {
   testEnv=$(fileTemporaryName "$usage") || return $?
 
   local home
-  home=$(__catchEnvironment "$usage" buildHome) || return $?
+  home=$(__catch "$usage" buildHome) || return $?
 
   __environment anyEnvToDockerEnv "$testEnv" >"$testEnv.result" || return $?
   dumpPipe "Result - should be blank" <"$testEnv.result"
@@ -142,7 +142,7 @@ testAnyEnvToBashEnv() {
   testEnv=$(fileTemporaryName "$usage") || return $?
 
   local home
-  home=$(__catchEnvironment "$usage" buildHome) || return $?
+  home=$(__catch "$usage" buildHome) || return $?
 
   __catchEnvironment "$usage" anyEnvToDockerEnv "$testEnv" >"$testEnv.result" || _environment "Failed @ $LINENO" || return $?
   __catchEnvironment "$usage" anyEnvToBashEnv "$testEnv" >"$testEnv.result" || _environment "Failed @ $LINENO" || return $?
@@ -166,7 +166,7 @@ testDotEnvCommentHandling() {
   local testEnv home tab=$'\t'
 
   testEnv=$(fileTemporaryName "$usage") || return $?
-  home=$(__catchEnvironment "$usage" buildHome) || return $?
+  home=$(__catch "$usage" buildHome) || return $?
 
   __environment printf "%s\n" "# COMMENT=yes" "     # COMMENT_LEADING_SPACES=yes" "${tab}${tab}${tab}#${tab}COMMENT_LEADING_TABS=yes" "${tab} #${tab} COMMENT_LEADING_BOTH=yes" "BAZ=FIZ" "FIZZ=BUZZ" >"$testEnv" || return $?
   assertExitCode --stdout-match "COMMENT=yes" --stdout-match "COMMENT_LEADING_SPACES=yes" --stdout-match "COMMENT_LEADING_TABS=yes" --stdout-match "BAZ=\"FIZ\"" 0 dockerEnvToBash <"$testEnv" || return $?

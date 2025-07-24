@@ -249,7 +249,7 @@ documentationIndex_Generate() {
     done || :
     local count
     touch "$fileCacheMarker/.marker"
-    count="$(find "$fileCacheMarker" -type f | __catchEnvironment "$usage" fileLineCount)" || return $?
+    count="$(find "$fileCacheMarker" -type f | __catch "$usage" fileLineCount)" || return $?
     count=$((count - 1))
     statusMessage decorate success "Generated $count functions for $shellFile "
   done < <(find "$codePath" -type f -name '*.sh' ! -path '*/.*/*')
@@ -545,10 +545,10 @@ documentationIndex_LinkDocumentationPaths() {
     fi
     checkFiles+=("$settingsFile")
   done <"$documentTokensFile"
-  if ! processed=$(__catchEnvironment "$usage" fileSize "$modifiedCountFile"); then
+  if ! processed=$(__catch "$usage" fileSize "$modifiedCountFile"); then
     processed=0
   fi
-  total="$(__catchEnvironment "$usage" fileLineCount "$documentTokensFile")" || return $?
+  total="$(__catch "$usage" fileLineCount "$documentTokensFile")" || return $?
   rm "$documentTokensFile" "$modifiedCountFile" 2>/dev/null || :
   statusMessage decorate info "$(printf "%s %s %s %s %s %s %s %s\n" "$(decorate cyan Indexed)" "$(decorate bold-red "$processed")" "$(decorate green "of $total")" "$(decorate cyan "$(plural "$processed" function functions)")" "for" "$(decorate code "$documentationPath")" "in" "$(timingReport "$start")")"
 }

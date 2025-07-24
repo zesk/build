@@ -258,7 +258,7 @@ githubRelease() {
   #
   # Preflight our environment to make sure we have the basics defined in the calling script
   #
-  __catchEnvironment "$usage" packageWhich curl curl || return $?
+  __catch "$usage" packageWhich curl curl || return $?
 
   host=github.com
   __catchEnvironment "$usage" sshKnownHostAdd "$host" || return $?
