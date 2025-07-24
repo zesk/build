@@ -10,15 +10,15 @@
 
 {checkDockerEnvFile}
 
-{anyEnvToBashEnv}
+{environmentFileToBashCompatible}
 
-{anyEnvToDockerEnv}
+{environmentFileToDocker}
 
 {dockerLocalContainer}
 
-{dockerEnvFromBashEnv}
+{environmentFileBashCompatibleToDocker}
 
-{dockerEnvToBash}
+{environmentFileDockerToBashCompatible}
 
 {dockerPlatformDefault}
 

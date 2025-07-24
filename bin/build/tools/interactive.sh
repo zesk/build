@@ -244,7 +244,7 @@ fileCopyWouldChange() {
         local exitCode=1
         if $mapFlag; then
           actualSource=$(fileTemporaryName "$usage") || return $?
-          __catchEnvironment "$usage" mapEnvironment <"$source" >"$actualSource" || returnClean $? "$actualSource" || return $?
+          __catch "$usage" mapEnvironment <"$source" >"$actualSource" || returnClean $? "$actualSource" || return $?
           if ! diff -q "$actualSource" "$destination" >/dev/null; then
             exitCode=0
           fi

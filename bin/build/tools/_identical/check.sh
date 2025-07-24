@@ -59,7 +59,7 @@ identicalCheck() {
 
   local mapFile=true debug=false rootDir="."
   local repairSources=() excludes=() prefixes=() singles=() binary="" ignoreSingles=false
-  local findArgs=() extensionText="" skipFiles=() tokens=()
+  local findArgs=() extensionText="" skipFiles=() tokens=() tempDirectory=""
 
   # _IDENTICAL_ argument-case-header 5
   local __saved=("$@") __count=$#
@@ -130,6 +130,7 @@ identicalCheck() {
       [ -n "$1" ] || __throwArgument "$usage" "Empty $(decorate code "$argument") argument" || return $?
       excludes+=(! -path "$1")
       ;;
+    --cache) shift && tempDirectory=$(usageArgumentDirectory "$usage" "$argument" "${1-}") || return $? ;;
     --token)
       shift
       local token
@@ -155,11 +156,13 @@ identicalCheck() {
   failureCode="$(returnCode identical)"
 
   rootDir=$(__catchEnvironment "$usage" realPath "$rootDir") || return $?
-  local tempDirectory resultsFile searchFileList
+  local resultsFile searchFileList clean=()
 
-  tempDirectory="$(fileTemporaryName "$usage" -d)" || return $?
-  resultsFile=$(fileTemporaryName "$usage") || return $?
-  searchFileList=$(fileTemporaryName "$usage") || return $?
+  if [ -z "$tempDirectory" ]; then
+    tempDirectory="$(fileTemporaryName "$usage" -d)" || return $?
+    clean+=("$tempDirectory")
+  fi
+  local resultsFile="$tempDirectory/results" searchFileList="$tempDirectory/searchFileList"
   $debug || clean+=("$searchFileList")
   $debug || clean+=("$tempDirectory")
 
@@ -253,132 +256,3 @@ _identicalCheck() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# Usage: {fn} usage repairSource ... -- directory findArgs ...
-# stdout: list of files
-__identicalCheckGenerateSearchFiles() {
-  local usage="$1" && shift
-  local searchFileList directory directories filter IFS
-
-  local repairSources=()
-  while [ $# -gt 0 ]; do
-    if [ "$1" = "--" ]; then
-      shift
-      break
-    fi
-    repairSources+=("$(usageArgumentDirectory "$usage" repairSource "${1%/}/")") || return $?
-    shift # repairSource
-  done
-  directory=$(usageArgumentDirectory "$usage" "directory" "${1-%/}") || return $?
-  directories=("${repairSources[@]+"${repairSources[@]}"}" -- "$directory") && shift
-
-  searchFileList=$(fileTemporaryName "$usage") || return $?
-  local ignorePatterns=() startExclude=false
-  for directory in "${directories[@]}"; do
-    directory="${directory%/}"
-    if [ "$directory" = "--" ]; then
-      startExclude=true
-      continue
-    fi
-    filter=("cat")
-    if $startExclude && [ "${#ignorePatterns[@]}" -gt 0 ]; then
-      filter=("grepSafe" "-v" "${ignorePatterns[@]}")
-    fi
-    if ! find "$directory" "$@" | sort | "${filter[@]}" >>"$searchFileList"; then
-      # decorate warning "No matching files found in $directory" 1>&2
-      : Do nothing for now
-    fi
-    ignorePatterns+=(-e "$(quoteGrepPattern "$directory/")")
-  done
-  __catchEnvironment "$usage" cat "$searchFileList" || returnClean "$?" "$searchFileList" || return $?
-  __catchEnvironment "$usage" rm -rf "$searchFileList" || return $?
-}
-
-# Usage: {fn} searchFile lineNumber totalLines count
-# Generate the match file given the search file
-# TODO: This returns error 1 inside a container, so forced return 0. KMD 2024-09-16
-# Should not likely have return 0 but this avoids the error
-# The errors in question is
-# 1. #1: Processing /opt/atlassian/bitbucketci/agent/build/OMNI/domains.tf:9:  # IDENTICAL domainSuffix 6 ... __identicalCheckMatchFile "/opt/atlassian/bitbucketci/agent/build/OMNI/domains.tf" "320" "9" "6" (->  1 )
-# 1. /opt/atlassian/bitbucketci/agent/build/bin/build/tools.sh "identicalCheck" "--ignore-singles" "--repair" "./bin/infrastructure/identical" "--repair" "/opt/atlassian/bitbucketci/agent/build/etc/identical" "--extension" "tf" "--prefix" "# IDENTICAL" "./GLOBAL" "./infrastructure" "./modules" (->  1 )
-# 1. maiIdentical "" (->  1 )
-# File contains 320 lines, so
-# > tail -n $((320 - 9)) /opt/atlassian/bitbucketci/agent/build/OMNI/domains.tf | head -n 6
-# Works AOK anywhere else. So maybe mounted file system error in Docker?
-__identicalCheckMatchFile() {
-  local searchFile="$1" totalLines="$2" lineNumber="$3" count="$4"
-  tail -n $((totalLines - lineNumber)) <"$searchFile" | head -n "$count"
-  return 0
-}
-
-#
-# Identical check for shell files
-#
-# Looks for up to three tokens in code:
-#
-# - `# ``IDENTICAL tokenName 1`
-# - `# ``_IDENTICAL_ tokenName 1`, and
-# - `# ``DOC TEMPLATE: tokenName 1`
-#
-# This allows for overlapping identical sections within templates with the intent:
-#
-# - `IDENTICAL` - used in most cases (not internal)
-# - `_IDENTICAL_` - used in templates which must be included in IDENTICAL templates (INTERNAL)
-# - `__IDENTICAL__` - used in templates which must be included in _IDENTICAL_ templates (INTERNAL)
-# - `DOC TEMPLATE:` - used in documentation templates for functions - is handled by internal document generator (INTERNAL)
-#
-# Usage: {fn} [ --repair repairSource ] [ --help ] [ --interactive ] [ --check checkDirectory ] ...
-# DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
-# Argument: --singles singlesFiles - Optional. File. One or more files which contain a list of allowed `IDENTICAL` singles, one per line.
-# Argument: --single singleToken - Optional. String. One or more tokens which cam be singles.
-# Argument: --repair directory - Optional. Directory. Any files in onr or more directories can be used to repair other files.
-# Argument: --internal - Flag. Optional. Do updates for `# _IDENTICAL_` and `# DOC TEMPLATE:` prefixes first.
-# Argument: --internal-only - Flag. Optional. Just do `--internal` repairs.
-# Argument: --interactive - Flag. Optional. Interactive mode on fixing errors.
-# Argument: ... - Optional. Additional arguments are passed directly to `identicalCheck`.
-identicalCheckShell() {
-  local usage="_${FUNCNAME[0]}"
-  local argument single singleFile aa=() pp=() addDefaultPrefixes=true
-
-  local internalPrefixes=(--prefix '# ''DOC TEMPLATE:' --prefix '# ''__IDENTICAL__' --prefix '# ''_IDENTICAL_')
-
-  singles=()
-  while [ $# -gt 0 ]; do
-    argument="$1"
-    [ -n "$argument" ] || __throwArgument "$usage" "blank argument" || return $?
-    case "$argument" in
-    --internal-only)
-      pp=("${internalPrefixes[@]}")
-      addDefaultPrefixes=false
-      ;;
-    --internal)
-      if [ "${#pp[@]}" -eq 0 ]; then
-        # Ordering here matters so declare from inside scope to outside scope
-        pp=("${internalPrefixes[@]}")
-      fi
-      ;;
-    --interactive | --ignore-singles | --no-map | --watch | --debug | --verbose)
-      aa+=("$argument")
-      ;;
-    --repair | --single | --exec | --prefix | --exclude | --extension | --skip | --singles | --cd)
-      shift
-      aa+=("$argument" "${1-}")
-      ;;
-    # _IDENTICAL_ --help 4
-    --help)
-      "$usage" 0
-      return $?
-      ;;
-    *)
-      break
-      ;;
-    esac
-    shift || :
-  done
-  ! $addDefaultPrefixes || pp+=(--prefix '# ''IDENTICAL')
-  __catch "$usage" identicalCheck "${aa[@]+"${aa[@]}"}" "${pp[@]}" --extension sh "$@" || return $?
-}
-_identicalCheckShell() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
-}

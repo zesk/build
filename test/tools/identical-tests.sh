@@ -98,9 +98,11 @@ testIdenticalRepair() {
 }
 
 testIdenticalLineParsing() {
-  assertEquals "$(__identicalLineParse foo '<!-- IDENTICAL' '3:<!-- IDENTICAL header 4 5 -->')" "3 header 1" || return $?
-  assertEquals "$(__identicalLineParse foo '<!-- IDENTICAL' '3:<!-- IDENTICAL header 4 FOO -->')" "3 header 4" || return $?
-  assertEquals "$(__identicalLineParse foo '<!-- IDENTICAL' '31:<!-- IDENTICAL header 2 -->')" "31 header 2" || return $?
+  local handler="_return"
+
+  assertEquals "$(__identicalLineParse "$handler" foo '<!-- IDENTICAL' '3:<!-- IDENTICAL header 4 5 -->')" "3 header 1" || return $?
+  assertEquals "$(__identicalLineParse "$handler" foo '<!-- IDENTICAL' '3:<!-- IDENTICAL header 4 FOO -->')" "3 header 4" || return $?
+  assertEquals "$(__identicalLineParse "$handler" foo '<!-- IDENTICAL' '31:<!-- IDENTICAL header 2 -->')" "31 header 2" || return $?
 }
 
 # Tag: slow

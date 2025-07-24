@@ -144,7 +144,7 @@ Given that your project may use one or both, it's best to support any implementa
 > format which works in your projects.
 >
 > We _detect_ whether an environment values file is formatted to support **Docker** or not and _convert it_
-> appropriately on-the-fly as needed. See: `anyEnvToDockerEnv` and `anyEnvToBashEnv`
+> appropriately on-the-fly as needed. See: `environmentFileToDocker` and `environmentFileToBashCompatible`
 
 ## Tested operating systems
 

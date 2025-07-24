@@ -155,10 +155,10 @@ __anyEnvToFunctionEnv() {
 # Usage: {fn} envFile [ ... ]
 # Argument: envFile - Required. File. One or more files to convert.
 #
-anyEnvToDockerEnv() {
-  __anyEnvToFunctionEnv "_${FUNCNAME[0]}" bashCommentFilter dockerEnvFromBashEnv "$@" || return $?
+environmentFileToDocker() {
+  __anyEnvToFunctionEnv "_${FUNCNAME[0]}" bashCommentFilter environmentFileBashCompatibleToDocker "$@" || return $?
 }
-_anyEnvToDockerEnv() {
+_environmentFileToDocker() {
   # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
@@ -172,10 +172,10 @@ _anyEnvToDockerEnv() {
 # Argument: filename - Optional. File. One or more files to convert.
 # stdin: environment file
 # stdout: bash-compatible environment statements
-anyEnvToBashEnv() {
-  __anyEnvToFunctionEnv "_${FUNCNAME[0]}" dockerEnvToBash cat "$@" || return $?
+environmentFileToBashCompatible() {
+  __anyEnvToFunctionEnv "_${FUNCNAME[0]}" environmentFileDockerToBashCompatible cat "$@" || return $?
 }
-_anyEnvToBashEnv() {
+_environmentFileToBashCompatible() {
   # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
@@ -203,11 +203,11 @@ _dockerListContext() {
 # Exit Code: 1 - if errors occur
 # Exit Code: 0 - if file is valid
 #
-dockerEnvToBash() {
+environmentFileDockerToBashCompatible() {
   local usage="_${FUNCNAME[0]}"
   local file index envLine result=0
   if [ $# -eq 0 ]; then
-    _dockerEnvToBashPipe
+    __internalEnvironmentFileDockerToBashCompatiblePipe
   else
     for file in "$@"; do
       if [ "$file" = "--help" ]; then
@@ -215,19 +215,19 @@ dockerEnvToBash() {
         return $?
       fi
       [ -f "$file" ] || __throwArgument "$usage" "Not a file $file" || return $?
-      _dockerEnvToBashPipe <"$file" || __throwArgument "$usage" "Invalid file: $file" || return $?
+      __internalEnvironmentFileDockerToBashCompatiblePipe <"$file" || __throwArgument "$usage" "Invalid file: $file" || return $?
     done
   fi
 }
-_dockerEnvToBash() {
+_environmentFileDockerToBashCompatible() {
   # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
-# Utility for dockerEnvToBash to handle both pipes and files
+# Utility for environmentFileDockerToBashCompatible to handle both pipes and files
 #
-_dockerEnvToBashPipe() {
+__internalEnvironmentFileDockerToBashCompatiblePipe() {
   local file index envLine result name value
   result=0
   index=0
@@ -262,7 +262,7 @@ _dockerEnvToBashPipe() {
 # Exit Code: 1 - if errors occur
 # Exit Code: 0 - if file is valid
 #
-dockerEnvFromBashEnv() {
+environmentFileBashCompatibleToDocker() {
   local usage="_${FUNCNAME[0]}"
   local file envLine tempFile clean=()
 
@@ -287,7 +287,7 @@ dockerEnvFromBashEnv() {
   done < <(removeFields 2 <"$tempFile" | grep -E -v '^(UID|OLDPWD|PWD|_|SHLVL|FUNCNAME|PIPESTATUS|DIRSTACK|GROUPS)\b|^(BASH_)' || :)
   __catchEnvironment "$usage" rm -rf "$tempFile" || return $?
 }
-_dockerEnvFromBashEnv() {
+_environmentFileBashCompatibleToDocker() {
   # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
@@ -369,7 +369,7 @@ dockerLocalContainer() {
       shift
       envFile=$(usageArgumentFile "$usage" "envFile" "$1") || return $?
       tempEnv=$(fileTemporaryName "$usage") || return $?
-      __catchArgument "$usage" anyEnvToDockerEnv "$envFile" >"$tempEnv" || return $?
+      __catchArgument "$usage" environmentFileToDocker "$envFile" >"$tempEnv" || return $?
       tempEnvs+=("$tempEnv")
       ee+=("$argument" "$tempEnv")
       ;;

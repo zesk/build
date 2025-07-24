@@ -140,7 +140,7 @@ __mkdocsConfiguration() {
     __catch "$usage" buildEnvironmentLoad "$token" || return $?
     export "${token?}"
   done < <(mapTokens <"$source")
-  __catchEnvironment "$usage" mapEnvironment <"$source" >"$target" || return $?
+  __catch "$usage" mapEnvironment <"$source" >"$target" || return $?
 }
 
 # Build the build documentation
@@ -273,13 +273,13 @@ __buildDocumentationBuild() {
       find "$sourceHome" -type f -name "*.md" ! -path "*/tools/*" ! -path "*/env/*"
       printf "%s\n" "$sourceHome/tools/index.md"
     )
-    version=$(hookVersionCurrent) timestamp="$(date -u "+%F %T") UTC" __catchEnvironment "$usage" mapEnvironment <"$sourceHome/index.md" >"$targetHome/index.md" || return $?
+    version=$(hookVersionCurrent) timestamp="$(date -u "+%F %T") UTC" __catch "$usage" mapEnvironment <"$sourceHome/index.md" >"$targetHome/index.md" || return $?
 
     # Coding
     local example
 
     example="$(decorate wrap "    " <"$home/bin/build/tools/example.sh")" || __throwEnvironment "$usage" "generating example" || return $?
-    example="$example" __catchEnvironment "$usage" mapEnvironment <"$home/documentation/source/guide/coding.md" >"$home/documentation/.docs/guide/coding.md" || return $?
+    example="$example" __catch "$usage" mapEnvironment <"$home/documentation/source/guide/coding.md" >"$home/documentation/.docs/guide/coding.md" || return $?
 
     statusMessage decorate notice "Updating env/index.md ..."
     __catch "$usage" documentationBuildEnvironment --verbose "${ea[@]+"${ea[@]}"}" || return $?
