@@ -13,24 +13,23 @@
 # Usage: {fn} usage repairSource ... -- directory findArgs ...
 # stdout: list of files
 __identicalCheckGenerateSearchFiles() {
-  local usage="$1" && shift
+  local handler="$1" && shift
+  local directory
+
+  directory=$(usageArgumentDirectory "$handler" "directory" "${1-%/}") && shift || return $?
 
   local repairSources=()
   while [ $# -gt 0 ]; do
-    if [ "$1" = "--" ]; then
-      shift
-      break
-    fi
-    repairSources+=("$(usageArgumentDirectory "$usage" repairSource "${1%/}/")") || return $?
-    shift # repairSource
+    if [ "$1" = "--" ]; then shift && break; fi
+    repairSources+=("$(usageArgumentDirectory "$handler" repairSource "$1")") && shift || return $?
   done
 
-    local searchFileList directory directories
+  local searchFileList directory directories
 
-  directory=$(usageArgumentDirectory "$usage" "directory" "${1-%/}") || return $?
-  local directories=("${repairSources[@]+"${repairSources[@]}"}" -- "$directory") && shift
+  local directories=("${repairSources[@]+"${repairSources[@]}"}" -- "$directory")
 
-  searchFileList=$(fileTemporaryName "$usage") || return $?
+  searchFileList=$(fileTemporaryName "$handler") || return $?
+  local clean=("$searchFileList")
   local ignorePatterns=() startExclude=false
   for directory in "${directories[@]}"; do
     directory="${directory%/}"
@@ -42,12 +41,14 @@ __identicalCheckGenerateSearchFiles() {
     if $startExclude && [ "${#ignorePatterns[@]}" -gt 0 ]; then
       filter=("grepSafe" "-v" "${ignorePatterns[@]}")
     fi
-    if ! find "$directory" "$@" | sort | "${filter[@]}" >>"$searchFileList"; then
+    directory=$(__catch "$handler" realPath "$directory") || returnClean $? "${clean[@]}" || return $?
+
+    if ! __catch "$handler" directoryChange "$directory" find . "$@" | sort | "${filter[@]}" | cut -c 3- | decorate wrap "${directory%/}/" >>"$searchFileList"; then
       # decorate warning "No matching files found in $directory" 1>&2
       : Do nothing for now
     fi
     ignorePatterns+=(-e "$(quoteGrepPattern "$directory/")")
   done
-  __catchEnvironment "$usage" cat "$searchFileList" || returnClean "$?" "$searchFileList" || return $?
-  __catchEnvironment "$usage" rm -rf "$searchFileList" || return $?
+  __catchEnvironment "$handler" cat "$searchFileList" || returnClean $? "${clean[@]}" || return $?
+  __catchEnvironment "$handler" rm -f "${clean[@]}" || return $?
 }

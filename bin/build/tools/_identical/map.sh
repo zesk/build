@@ -24,6 +24,7 @@ _identicalMapAttributesFilter() {
   aa+=(-e 's/__FILE__/'"$(quoteSedReplacement "$file")"'/g')
 
   dir=$(__catchEnvironment "$usage" dirname -- "$file") || return $?
+  aa+=(-e 's/__DIR__/'"$(quoteSedReplacement "$dir")"'/g')
   aa+=(-e 's/__DIRECTORY__/'"$(quoteSedReplacement "$dir")"'/g')
 
   __catchEnvironment "$usage" sed "${aa[@]}" || return $?

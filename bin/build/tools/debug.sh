@@ -139,33 +139,33 @@ _isBashDebug() {
 # Requires: printf unset  export debuggingStack exit
 # Environment: __BUILD_RECURSION
 bashRecursionDebug() {
-  local usage="_${FUNCNAME[0]}"
+  local handler="_${FUNCNAME[0]}"
 
   export __BUILD_RECURSION
 
-  [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
+  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
 
   local cacheFile
 
-  cacheFile="$(__catch "$usage" buildCacheDirectory)/.${FUNCNAME[0]}" || return $?
+  cacheFile="$(__catch "$handler" buildCacheDirectory)/.${FUNCNAME[0]}" || return $?
   if [ "${__BUILD_RECURSION-}" = "true" ]; then
     if [ "${1-}" = "--end" ]; then
       unset __BUILD_RECURSION
-      __catchEnvironment "$usage" rm -f "$cacheFile" || return $?
+      __catchEnvironment "$handler" rm -f "$cacheFile" || return $?
       return 0
     fi
     printf "%s\n" "RECURSION FAILURE" "$(debuggingStack)" "" "INITIAL CALL" "$(decorate code <"$cacheFile")" 1>&2
-    __catchEnvironment "$usage" rm -f "$cacheFile" || return $?
+    __catchEnvironment "$handler" rm -f "$cacheFile" || return $?
     exit 91
   fi
   if [ "${1-}" = "--end" ]; then
     printf "%s\n" "RECURSION FAILURE (end without start)" "$(debuggingStack)" 1>&2
-    __catchEnvironment "$usage" rm -f "$cacheFile" || return $?
+    __catchEnvironment "$handler" rm -f "$cacheFile" || return $?
     exit 91
   fi
 
   __BUILD_RECURSION=true
-  __catchEnvironment "$usage" debuggingStack >"$cacheFile" || return $?
+  __catchEnvironment "$handler" debuggingStack >"$cacheFile" || return $?
 }
 _bashRecursionDebug() {
   # __IDENTICAL__ usageDocument 1
@@ -178,19 +178,18 @@ _bashRecursionDebug() {
 # Requires: trap
 # Argument: --help
 bashDebugInterruptFile() {
-  local usage="_${FUNCNAME[0]}" name="__bashDebugInterruptFile" traps=()
+  local handler="_${FUNCNAME[0]}"
+  local name="__bashDebugInterruptFile" traps=()
 
-  # _IDENTICAL_ argument-case-header 5
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
+    # __IDENTICAL__ argumentBlankCheck 1
+    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-    # _IDENTICAL_ --help 4
-    --help)
-      "$usage" 0
-      return $?
-      ;;
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
     --interrupt)
       inArray INT "${traps[@]+"${traps[@]}"}" || traps+=("INT")
       ;;
@@ -199,7 +198,7 @@ bashDebugInterruptFile() {
       ;;
     *)
       # _IDENTICAL_ argumentUnknown 1
-      __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
+      __throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
       ;;
     esac
     shift
@@ -207,7 +206,7 @@ bashDebugInterruptFile() {
   [ "${#traps[@]}" -gt 0 ] || traps+=("INT")
 
   local currentTraps installed=()
-  currentTraps=$(fileTemporaryName "$usage") || return $?
+  currentTraps=$(fileTemporaryName "$handler") || return $?
   trap >"$currentTraps" || returnClean "$?" "$currentTraps" || __throwEnvironment "trap listing failed" || return $?
   for trap in "${traps[@]}"; do
     if grep "$name" "$currentTraps" | grep -q " SIG${trap}"; then
@@ -215,10 +214,10 @@ bashDebugInterruptFile() {
     fi
   done
   if [ "${#installed[@]}" -eq "${#traps[@]}" ]; then
-    __throwEnvironment "$usage" "Already installed" || returnClean $? "$currentTraps" || return $?
+    __throwEnvironment "$handler" "Already installed" || returnClean $? "$currentTraps" || return $?
   fi
-  __catchEnvironment "$usage" rm -rf "$currentTraps" || return $?
-  __catchEnvironment "$usage" trap __bashDebugInterruptFile "${traps[@]}" || return $?
+  __catchEnvironment "$handler" rm -rf "$currentTraps" || return $?
+  __catchEnvironment "$handler" trap __bashDebugInterruptFile "${traps[@]}" || return $?
 }
 _bashDebugInterruptFile() {
   ! false || bashDebugInterruptFile --help
@@ -269,27 +268,28 @@ _isErrorExit() {
 # Requires: __throwArgument decorate usageArgumentString isCallable
 # Requires: fileTemporaryName removeFields
 plumber() {
-  local usage="_${FUNCNAME[0]}"
+  local handler="_${FUNCNAME[0]}"
 
-  local __before __after __changed __ignore __pattern __cmd
+  export TMPDIR
+
+  local __before __after __changed __ignore __pattern __cmd __tempDir=$TMPDIR
   local __result=0
   local __ignore=(OLDPWD _ resultCode LINENO PWD BASH_COMMAND BASH_ARGC BASH_ARGV BUILD_DEBUG)
 
   # BASH_COMMAND for DEBUG
-  # _IDENTICAL_ argument-case-header 5
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
+    # __IDENTICAL__ argumentBlankCheck 1
+    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-    # _IDENTICAL_ --help 4
-    --help)
-      "$usage" 0
-      return $?
-      ;;
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
+    --temporary) shift && __tempDir=$(usageArgumentDirectory "$handler" "$argument" "${1-}") || return $? ;;
     --leak)
       shift
-      __ignore+=("$(usageArgumentString "$usage" "globalName" "${1-}")") || return $?
+      __ignore+=("$(usageArgumentString "$handler" "globalName" "${1-}")") || return $?
       ;;
     *)
       break
@@ -299,9 +299,9 @@ plumber() {
   done
 
   [ $# -gt 0 ] || return 0
-  isCallable "${1-}" || __throwArgument "$usage" "$1 is not callable" "$@" || return $?
+  isCallable "${1-}" || __throwArgument "$handler" "$1 is not callable" "$@" || return $?
 
-  __after=$(fileTemporaryName "$usage") || return $?
+  __after=$(TMPDIR=$__tempDir fileTemporaryName "$handler") || return $?
   __before="$__after.before"
   __after="$__after.after"
 
@@ -345,33 +345,36 @@ _housekeeperAccountant() {
 # Usage: {fn} [ --help ] [ --ignore grepPattern ] [ --path path ] [ path ... ] callable
 # Argument: --path path - Optional. Directory. One or more directories to watch. If no directories are supplied uses current working directory.
 housekeeper() {
-  local usage="_${FUNCNAME[0]}"
+  local handler="_${FUNCNAME[0]}"
+
+  export TMPDIR
 
   local watchPaths path
-  local __before __after __changed __ignore __pattern __cmd
+  local __before __after __changed __ignore __pattern __cmd __tempDir=$TMPDIR
   local __result=0
   local __ignore=()
 
   watchPaths=()
-  # _IDENTICAL_ argument-case-header 5
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
+    # __IDENTICAL__ argumentBlankCheck 1
+    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-    # _IDENTICAL_ --help 4
-    --help)
-      "$usage" 0
-      return $?
-      ;;
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
+    # _IDENTICAL_ handlerHandler 1
+    --handler) shift && handler=$(usageArgumentFunction "$handler" "$argument" "${1-}") || return $? ;;
+    --temporary) shift && __tempDir=$(usageArgumentDirectory "$handler" "$argument" "${1-}") || return $? ;;
     --ignore)
       shift
-      __pattern="$(usageArgumentString "$usage" "grepPattern" "${1-}")" || return $?
+      __pattern="$(usageArgumentString "$handler" "grepPattern" "${1-}")" || return $?
       __ignore+=(-e "$__pattern")
       ;;
     --path)
       shift
-      path="$(usageArgumentDirectory "$usage" "path" "${1-}")" || return $?
+      path="$(usageArgumentDirectory "$handler" "path" "${1-}")" || return $?
       watchPaths+=("$path")
       ;;
     *)
@@ -386,13 +389,13 @@ housekeeper() {
   done
 
   if [ "${#watchPaths[@]}" -eq 0 ]; then
-    path=$(__catchEnvironment "$usage" pwd) || return $?
+    path=$(__catchEnvironment "$handler" pwd) || return $?
     watchPaths+=("$path")
   fi
   [ $# -gt 0 ] || return 0
-  isCallable "${1-}" || __throwArgument "$usage" "$1 is not callable" "$@" || return $?
+  isCallable "${1-}" || __throwArgument "$handler" "$1 is not callable" "$@" || return $?
 
-  __after=$(mktemp) || _environment mktemp || return $?
+  __after=$(TMPDIR="$__tempDir" fileTemporaryName "$handler") || _environment mktemp || return $?
   __before="$__after.before"
   __after="$__after.after"
 
@@ -429,27 +432,25 @@ _housekeeper() {
 # # shellcheck source=/dev/null
 # Example:     source "$include" > >(outputTrigger source "$include") || return $?
 outputTrigger() {
-  local usage="_${FUNCNAME[0]}"
+  local handler="_${FUNCNAME[0]}"
 
   local name="${FUNCNAME[1]}}" verbose=false
 
-  # _IDENTICAL_ argument-case-header 5
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
+    # __IDENTICAL__ argumentBlankCheck 1
+    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-    # _IDENTICAL_ --help 4
-    --help)
-      "$usage" 0
-      return $?
-      ;;
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
     --verbose)
       verbose=true
       ;;
     --name)
-      shift || __throwArgument "$usage" "missing $argument argument" || return $?
-      [ -n "$1" ] || __throwArgument "$usage" "Blank $argument argument" || return $?
+      shift || __throwArgument "$handler" "missing $argument argument" || return $?
+      [ -n "$1" ] || __throwArgument "$handler" "Blank $argument argument" || return $?
       name="$1"
       ;;
     *)
@@ -461,7 +462,7 @@ outputTrigger() {
 
   local error lineCount=0
 
-  error=$(fileTemporaryName "$usage") || return $?
+  error=$(fileTemporaryName "$handler") || return $?
   while read -r line; do
     printf "%s\n" "$line" >>"$error"
     lineCount=$((lineCount + 1))
@@ -476,8 +477,8 @@ outputTrigger() {
   fi
 
   local message
-  message=$(__catchEnvironment "$usage" dumpPipe --vanish "$error") || return $?
-  __throwEnvironment "$usage" "stderr found in $(decorate code "$name") $(decorate value "$lineText"): " "$@" "$message" || return $?
+  message=$(__catchEnvironment "$handler" dumpPipe --vanish "$error") || return $?
+  __throwEnvironment "$handler" "stderr found in $(decorate code "$name") $(decorate value "$lineText"): " "$@" "$message" || return $?
 }
 _outputTrigger() {
   # __IDENTICAL__ usageDocument 1
@@ -495,25 +496,25 @@ __processChildrenIDs() {
 # Output current open files
 # stdout
 debugOpenFiles() {
-  local usage="_${FUNCNAME[0]}"
+  local handler="_${FUNCNAME[0]}"
 
   local name="${FUNCNAME[1]}}"
 
-  muzzle packageWhich lsof || return $?
-  # _IDENTICAL_ argument-case-header 5
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
+    # __IDENTICAL__ argumentBlankCheck 1
+    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-    # _IDENTICAL_ --help 4
-    --help)
-      "$usage" 0
-      return $?
-      ;;
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
     esac
     shift
   done
+
+  muzzle packageWhich lsof || return $?
+
   printf "%s\n" "PID: $$"
   __filesOpenList "$$"
   local child children=()

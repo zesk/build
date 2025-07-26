@@ -142,7 +142,7 @@ bashSourcePath() {
       ff+=("!" "-path" "$(usageArgumentString "$usage" "$argument" "${1-}")") || return $?
       ;;
     *)
-      local path
+      local path tool
 
       foundOne=true
       path=$(usageArgumentDirectory "$usage" "directory" "$argument") || return $?

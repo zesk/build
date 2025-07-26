@@ -51,6 +51,7 @@ _identicalFindTokens() {
 }
 
 __identicalFindPrefixes() {
+  local patterns=()
   while [ $# -gt 0 ]; do
     local extendedPattern
     extendedPattern="^\s*$(quoteGrepPattern "$1")\s\s*[-a-zA-Z0-9_.][-a-zA-Z0-9_.]*\s\s*(\S*)"

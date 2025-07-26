@@ -10,8 +10,6 @@
 # Docs: o ./documentation/source/tools/deployment.md
 # Test: o ./test/tools/deployment-tests.sh
 
-deployedHostArtifact="./.deployed-hosts"
-
 # Deploy to a host
 #
 # DOC TEMPLATE: --env-file 1
@@ -429,10 +427,15 @@ __deployRevertApplication() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
+__deployedHostArtifact() {
+  printf "%s\n" "./.deployed-hosts"
+}
+
 _deploySuccessful() {
+
   bigText Deployed AOK | decorate green
   echo
-  decorate warning "No $deployedHostArtifact file found ..."
+  decorate warning "No $(__deployedHostArtifact) file found ..."
   decorate success "Nothing deployed or clean exit."
 }
 
@@ -690,8 +693,11 @@ deployToRemote() {
       done
     } || :
 
+    local artifactFile
+
+    artifactFile="$(__deployedHostArtifact)"
     # reset artifact file
-    printf "" >"$deployedHostArtifact"
+    printf "" >"$artifactFile"
     __catch "$usage" __deployUploadPackage "$applicationPath" "$deployHome/$applicationId" "$buildTarget" "${userHosts[@]}" || return $?
 
     for userHost in "${userHosts[@]}"; do
@@ -708,7 +714,7 @@ deployToRemote() {
         __throwEnvironment "$usage" "Unable to deploy to $host" || return $?
       fi
       decorate info "::: END $host output"
-      printf "%s\n" "$host" >>"$deployedHostArtifact" || __throwEnvironment "$usage" "Unable to write $host to $deployedHostArtifact" || return $?
+      printf "%s\n" "$host" >>"$artifactFile" || __throwEnvironment "$usage" "Unable to write $host to $artifactFile" || return $?
       statusMessage timingReport "$start" "Deployed to $(decorate green "$userHost")" || :
     done
 
@@ -723,12 +729,12 @@ deployToRemote() {
     return 0
   fi
   bigText "$verb" | decorate "$color"
-  if [ ! -f "$deployedHostArtifact" ]; then
+  if [ ! -f "$artifactFile" ]; then
     if $revertFlag; then
       _deploySuccessful
       return 0
     else
-      __throwEnvironment "$usage" "$(decorate file "$deployedHostArtifact") file NOT found ... no remotes changed" || return $?
+      __throwEnvironment "$usage" "$(decorate file "$artifactFile") file NOT found ... no remotes changed" || return $?
     fi
   fi
   #
@@ -742,7 +748,7 @@ deployToRemote() {
   for userHost in "${userHosts[@]}"; do
     start=$(timingStart)
     host="${userHost##*@}"
-    if grep -q "$host" "$deployedHostArtifact"; then
+    if grep -q "$host" "$artifactFile"; then
       printf "%s %s (%s) " "$(decorate success "$verb")" "$(decorate code "$userHost")" "$(decorate bold-red "$applicationPath")"
       if ! ssh -T "$userHost" bash --noprofile -s -e <"$temporaryCommandsFile"; then
         printf "%s %s %s\n" "$(decorate error "$verb failed on")" "$(decorate code "$userHost")" "$(decorate error "- continuing")"

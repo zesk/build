@@ -24,6 +24,49 @@ _isAbsolutePath() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
+# Argument: directory - Directory. Required. Directory to change to prior to running command.
+# Argument: command - Callable. Required. Thing to do in this directory.
+# Argument: ... - Arguments. Optional. Arguments to `command`.
+# Run a command after changing directory to it and then returning to the previous directory afterwards.
+# Requires: pushd popd
+directoryChange() {
+  local handler="_${FUNCNAME[0]}"
+
+  local directory="" command=""
+
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
+  local __saved=("$@") __count=$#
+  while [ $# -gt 0 ]; do
+    local argument="$1" __index=$((__count - $# + 1))
+    # __IDENTICAL__ argumentBlankCheck 1
+    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
+    case "$argument" in
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
+    # _IDENTICAL_ handlerHandler 1
+    --handler) shift && handler=$(usageArgumentFunction "$handler" "$argument" "${1-}") || return $? ;;
+    *)
+      if [ -z "$directory" ]; then
+        directory=$(usageArgumentDirectory "$handler" "directory" "$1") || return $?
+      elif [ -z "$command" ]; then
+        command=$(usageArgumentCallable "$handler" "command" "$1") && shift || return $?
+        __catchEnvironment "$handler" muzzle pushd "$directory" || return $?
+        __catchEnvironment "$handler" "$command" "$@" || returnUndo $? muzzle popd || return $?
+        __catchEnvironment "$handler" muzzle popd || return $?
+        return 0
+      fi
+      ;;
+    esac
+    shift
+  done
+  [ -n "$directory" ] || __throwArgument "$handler" "Missing directory" || return $?
+  __throwArgument "$handler" "Missing command" || return $?
+}
+_directoryChange() {
+  # __IDENTICAL__ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
 #
 # Usage: {fn} source target
 #

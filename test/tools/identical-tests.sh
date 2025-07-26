@@ -78,7 +78,7 @@ testIdenticalRepair() {
     expectedTarget="$testPath/$token-$(basename "$target")"
     assertFileExists "$expectedTarget" || return $?
     __environment cp "$target" "$output" || return $?
-    assertExitCode 0 identicalRepair --prefix '# ''IDENTICAL' --token "$token" "$source" "$output" || return $?
+    assertExitCode 0 identicalRepair --prefix '# ''IDENTICAL' --token "$token" "$source" "$output" || r eturn $?
     assertExitCode 0 diff "$output" "$expectedTarget" || return $?
     assertFileDoesNotContain "$output" EOF || return $?
     rm "$output" || :
@@ -126,7 +126,7 @@ testIdenticalChecks() {
   assertExitCode --stderr-match 'overlap' "$identicalError" identicalCheck "${identicalCheckArgs[@]}" --prefix '# aIDENTICAL' || return $?
 
   clearLine && decorate info "bad number failure"
-  assertExitCode --stderr-match 'invalid count: NAN' "$identicalError" identicalCheck "${identicalCheckArgs[@]}" --prefix '# bIDENTICAL' || return $?
+  assertExitCode --stderr-match 'Invalid token count: NAN' "$identicalError" identicalCheck "${identicalCheckArgs[@]}" --prefix '# bIDENTICAL' || return $?
 
   clearLine && decorate info "single instance failure"
   assertExitCode --stderr-match 'Single token' "$identicalError" identicalCheck "${identicalCheckArgs[@]}" --prefix '# cIDENTICAL' || return $?
@@ -158,6 +158,12 @@ testIdenticalCheckSingles() {
 
   assertEquals 105 "$identicalError" || return $?
 
+  export BUILD_DEBUG
+
+  __mockValue BUILD_DEBUG
+
+  # BUILD_DEBUG=temp - logs all fileTemporaryName calls and stack to app root
+
   #
   # Unusual quoting here is to avoid matching the word uh, IDENTICAL with the comment here
   #
@@ -171,6 +177,8 @@ testIdenticalCheckSingles() {
 
   singles=(--single single1 --single single2)
   assertExitCode "0" identicalCheck "${identicalCheckArgs[@]}" "${singles[@]+"${singles[@]}"}" || return $?
+
+  __mockValue BUILD_DEBUG "" --end
 }
 
 # Simple case when an identical directory exists and is supplied but contains no matching files

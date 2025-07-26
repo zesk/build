@@ -619,42 +619,41 @@ _maximumLineLength() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
+# stdout: UnsignedInteger
+# Outputs the number of lines read from stdin (or supplied files) until EOF. For multiple files passed on the command line - each one is output separately.
+# This is essentially a wrapper around `wc -l` which strips whitespace and does type checking.
 # DOC TEMPLATE: --help 1
 # Argument: --help - Optional. Flag. Display this help.
 # DOC TEMPLATE: --handler 1
 # Argument: --handler handler - Optional. Function. Use this error handler instead of the default error handler.
 # Argument: file - Optional. File. Output line count for each file specified. If no files specified, uses stdin.
 fileLineCount() {
-  local usage="_${FUNCNAME[0]}" fileArgument=false
+  local handler="_${FUNCNAME[0]}"
+  local fileArgument=false
 
-  # _IDENTICAL_ argument-case-header 5
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
+    # __IDENTICAL__ argumentBlankCheck 1
+    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-    # _IDENTICAL_ --help 4
-    --help)
-      "$usage" 0
-      return $?
-      ;;
-    # _IDENTICAL_ --handler 4
-    --handler)
-      shift
-      usage=$(usageArgumentFunction "$usage" "$argument" "${1-}") || return $?
-      ;;
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
+    # _IDENTICAL_ handlerHandler 1
+    --handler) shift && handler=$(usageArgumentFunction "$handler" "$argument" "${1-}") || return $? ;;
     *)
       local file
-      file="$(usageArgumentFile "$usage" "$argument" "${1-}")" || return $?
+      file="$(usageArgumentFile "$handler" "$argument" "${1-}")" || return $?
       # shellcheck disable=SC2119
-      printf "%d\n" "$(__catchEnvironment "$usage" wc -l <"$file" | trimSpace)" || return $?
+      printf "%d\n" "$(__catchEnvironment "$handler" wc -l <"$file" | trimSpace)" || return $?
       fileArgument=true
       ;;
     esac
     shift
   done
   # shellcheck disable=SC2119
-  $fileArgument || printf "%d\n" "$(__catchEnvironment "$usage" wc -l | trimSpace)" || return $?
+  $fileArgument || printf "%d\n" "$(__catchEnvironment "$handler" wc -l | trimSpace)" || return $?
 }
 _fileLineCount() {
   # __IDENTICAL__ usageDocument 1
@@ -679,8 +678,8 @@ _fileLineCount() {
 # Example:     n=$(($(date +%s)) - start))
 # Example:     printf "That took %d %s" "$n" "$(plural "$n" second seconds)"
 plural() {
-  local usage="_${FUNCNAME[0]}"
-  [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
+  local handler="_${FUNCNAME[0]}"
+  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
 
   local count=${1-}
   if [ "$count" -eq "$count" ] 2>/dev/null; then
@@ -692,7 +691,7 @@ plural() {
   elif isNumber "$count"; then
     printf %s "${3-}"
   else
-    printf "%s: \"%s\"\n" "plural argument is not numeric" "$count" 1>&2
+    __throwArgument "$handler" "plural argument: \"$count\" is not numeric" || return $?
     return 1
   fi
 }
@@ -704,15 +703,15 @@ _plural() {
 #
 # Convert text to lowercase
 #
-# Usage: {fn} [ text ... ]
+# DOC TEMPLATE: dashDashAllowsHelpParameters 1
+# Argument: -- - Optional. Flag. Stops command processing to enable arbitrary text to be passed as additional arguments without special meaning.
 # DOC TEMPLATE: --help 1
 # Argument: --help - Optional. Flag. Display this help.
-# Argument: text - text to convert to lowercase
+# Argument: text - EmptyString. Required. Text to convert to lowercase
 # DOC TEMPLATE: dashDashAllowsHelpParameters 1
 # Argument: -- - Optional. Flag. Stops command processing to enable arbitrary text to be passed as additional arguments without special meaning.
 lowercase() {
-  local usage="_${FUNCNAME[0]}"
-  [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
+  [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
   [ "${1-}" != "--" ] || shift
   while [ $# -gt 0 ]; do
 
@@ -730,15 +729,15 @@ _lowercase() {
 #
 # Convert text to uppercase
 #
-# Usage: {fn} [ text ... ]
+# DOC TEMPLATE: dashDashAllowsHelpParameters 1
+# Argument: -- - Optional. Flag. Stops command processing to enable arbitrary text to be passed as additional arguments without special meaning.
 # DOC TEMPLATE: --help 1
 # Argument: --help - Optional. Flag. Display this help.
 # DOC TEMPLATE: dashDashAllowsHelpParameters 1
 # Argument: -- - Optional. Flag. Stops command processing to enable arbitrary text to be passed as additional arguments without special meaning.
-# Argument: text - text to convert to uppercase
+# Argument: text - EmptyString. Required. text to convert to uppercase
 uppercase() {
-  local usage="_${FUNCNAME[0]}"
-  [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
+  [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
   [ "${1-}" != "--" ] || shift
   while [ $# -gt 0 ]; do
     if [ -n "$1" ]; then

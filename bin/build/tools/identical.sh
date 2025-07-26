@@ -34,8 +34,9 @@ __identicalLineParse() {
   # And whitespace
   identicalLine="$(trimSpace "$identicalLine")"
 
-  local token line0 line1
-  read -r token line0 line1 <<<"$identicalLine" || :
+  local token line0 line1 _extras
+  read -r token line0 line1 _extras <<<"$identicalLine" || :
+  : "$_extras"
   local count
   if [ "$line0" = "EOF" ]; then
     count="EOF"

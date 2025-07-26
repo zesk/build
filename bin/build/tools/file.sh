@@ -797,7 +797,7 @@ _linkCreate() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# IDENTICAL fileTemporaryName 19
+# IDENTICAL fileTemporaryName 99
 
 # Generate a temporary file name using mktemp, and fail using a function
 # Argument: handler - Function. Required. Function to call if mktemp fails. Function Type: _return
@@ -809,7 +809,16 @@ fileTemporaryName() {
   local handler="_${FUNCNAME[0]}"
   __help "$handler" "$@" || return 0
   handler="$1" && shift
-  __catchEnvironment "$handler" mktemp "$@" || return $?
+  if buildDebugEnabled temp; then
+    local target
+    target="$(buildHome)/${FUNCNAME[0]}"
+    printf "%s" "fileTemporaryName: " >>"$target"
+    __catchEnvironment "$handler" mktemp "$@" | tee -a "$target" || return $?
+    debuggingStack >>"$target"
+    printf "%s\n" "-- END" >>"$target"
+  else
+    __catchEnvironment "$handler" mktemp "$@" || return $?
+  fi
 }
 _fileTemporaryName() {
   # __IDENTICAL__ usageDocument 1

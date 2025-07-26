@@ -123,7 +123,7 @@ developerTrack() {
   done
   [ -n "$source" ] || __throwArgument "$usage" "source required" || return $?
 
-  local cachePath
+  local cachePath hash
 
   hash=$(shaPipe <<<"$source")
   cachePath=$(__catch "$usage" buildCacheDirectory "${FUNCNAME[0]}" "$hash") || return $?

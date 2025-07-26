@@ -302,7 +302,6 @@ _assertConditionHelper() {
 
   outputFile=$(fileTemporaryName "$usage") || return $?
   errorFile="$outputFile.err"
-  outputFile="$outputFile.out"
 
   if $code1; then
     [ "$expectedExitCode" -eq 0 ] || __catchArgument "$usage" "--exit and --code1 and mutually exclusive for non-zero --exit" || return $?
@@ -319,6 +318,7 @@ _assertConditionHelper() {
     __buildDebugEnable v
   fi
   exitCode=0
+  local clean=("$outputFile" "$errorFile")
   "${runner[@]}" "$@" >"$outputFile" 2>"$errorFile" || exitCode=$?
 
   if $debugFlag; then
@@ -373,6 +373,7 @@ _assertConditionHelper() {
       dumpPipe "--$whichEnd" "$stderrTitle" <"$errorFile" || :
     fi
   fi
+  __catchEnvironment "$usage" rm -f "${clean[@]}" || return $?
   return $exitCode
 }
 

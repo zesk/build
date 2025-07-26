@@ -410,7 +410,9 @@ testSuite() {
 
       saveHome=$(pwd)
 
+      # --cd-away handling
       if $cdAway; then
+        # Force it off for functions which flag it
         if isSubstringInsensitive ";Build-Home:true;" ";$flags;"; then
           ! $verboseMode || statusMessage decorate info "--cd-away is explicitly ignored for $item" || return $?
           testHome="$home"
@@ -961,10 +963,10 @@ __testRun() {
     #     ▞▘  ▐ ▖▛▀ ▝▀▖▐ ▖
     #          ▀ ▝▀▘▀▀  ▀
     local savedTMPDIR
-    export TMPDUIR
+    export TMPDIR
     savedTMPDIR=$TMPDIR
     TMPDIR="$tempDirectory"
-    if plumber "$__test" housekeeper --path "$TMPDIR" "$quietLog" 2> >(tee -a "$captureStderr"); then
+    if plumber --temporary "$savedTMPDIR" housekeeper --temporary "$savedTMPDIR" --path "$TMPDIR" "$__test" "$quietLog" 2> >(tee -a "$captureStderr"); then
       TMPDIR="$savedTMPDIR"
       if fileIsEmpty "$captureStderr"; then
         printf "%s\n" "SUCCESS $__test" >>"$quietLog"
