@@ -8,10 +8,12 @@
 #
 
 testApplicationHome() {
+  local handler="_return"
+
   __mockValue XDG_STATE_HOME
   export XDG_STATE_HOME
 
-  XDG_STATE_HOME=$(__environment mktemp -d) || return $?
+  XDG_STATE_HOME=$(fileTemporaryName "$handler" -d) || return $?
 
   decorate info "New XDG_STATE_HOME is $XDG_STATE_HOME"
   assertFileDoesNotExist "$XDG_STATE_HOME/.applicationHome" || return $?

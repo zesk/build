@@ -8,8 +8,10 @@
 #
 
 _testDeployApplicationSetup() {
-  local home="$1" ts
-  d=$(__environment mktemp -d) || return $?
+  local handler="_return"
+  local home="$1" ts d
+
+  d=$(fileTemporaryName "$handler" -d) || return $?
 
   cd "$d" || exit
   # OLD METHOD

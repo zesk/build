@@ -23,10 +23,10 @@ testBinBuildRequires() {
 }
 
 testBuildApplicationTools() {
-  local
+  local handler="_return"
   local testApp
 
-  testApp=$(fileTemporaryName "$usage" -d) || return $?
+  testApp=$(fileTemporaryName "$handler" -d) || return $?
 
   muzzle directoryRequire "$testApp/bin" || return $?
   muzzle directoryRequire "$testApp/docs/release" || return $?
@@ -44,7 +44,7 @@ testBuildApplicationTools() {
 
 # Tag: slow
 testBuildEnvironmentLoadAll() {
-  local usage="_return"
+  local handler="_return"
   local home loadIt nonBlankEnvs=(
     APACHE_HOME
     APPLICATION_BUILD_DATE
@@ -75,8 +75,8 @@ testBuildEnvironmentLoadAll() {
     PATH
   )
 
-  home=$(__environment buildHome) || return $?
-  tempFile=$(fileTemporaryName "$usage")
+  home=$(__catchEnvironment "$handler" buildHome) || return $?
+  tempFile=$(fileTemporaryName "$handler")
 
   find "$home" -type f -name '*.sh' -path '*/env/*' ! -path '*/test/*' ! -path '*/.*/*' -exec basename {} \; | cut -d . -f 1 | dumpPipe "All env files found"
   while read -r loadIt; do
@@ -100,13 +100,14 @@ testBuildEnvironmentLoadAll() {
       isFunction "$validator" || _environment "$type is not a known type in $(decorate file "$envFile")" || return $?
     ) || return $?
   done < <(find "$home" -type f -name '*.sh' -path '*/env/*' ! -path '*/test/*' ! -path '*/.*/*' -exec basename {} \; | cut -d . -f 1) || return $?
-  __catchEnvironment "$usage" rm -rf "$tempFile" || return $?
+  __catchEnvironment "$handler" rm -f "$tempFile" || return $?
 }
 
 testBuildFunctions() {
+  local handler="_return"
   local fun
 
-  fun=$(__environment mktemp) || return $?
+  fun=$(fileTemporaryName "$handler") || return $?
   buildFunctions >"$fun" || _environment "buildFunctions failed" || return $?
 
   assertFileContains "$fun" buildFunctions __environment _argument _environment __catch housekeeper || return $?
@@ -115,10 +116,11 @@ testBuildFunctions() {
 }
 
 testInstallInstallBuildSelf() {
+  local handler="_return"
   local tempD
   export BUILD_COMPANY
 
-  tempD=$(mktemp -d) || _environment mktemp || return $?
+  tempD=$(fileTemporaryName "$handler" -d) || return $?
 
   __environment buildEnvironmentLoad BUILD_COMPANY || return $?
   __environment mkdir -p "$tempD/a/b/c/d/e/f" || return $?
@@ -140,7 +142,7 @@ testInstallBinBuildNetwork() {
 
   home=$(__catch "$handler" buildHome) || return $?
 
-  testDir=$(mktemp -d)
+  testDir=$(fileTemporaryName "$handler" -d)
   testBinBuild="$testDir/bin/pipeline/install-bin-build.sh"
   __catchEnvironment "$handler" cd "$testDir" || return $?
 
@@ -167,7 +169,7 @@ testInstallBinBuild() {
   home=$(__catch "$handler" buildHome) || return $?
   assertDirectoryExists "$BUILD_HOME" || return $?
   section=0
-  testDir=$(mktemp -d)
+  testDir=$(fileTemporaryName "$handler" -d)
   testBinBuild="$testDir/bin/pipeline/install-bin-build.sh"
   __catchEnvironment "$handler" cd "$testDir" || return $?
 
@@ -300,9 +302,10 @@ _testInstallBinBuild() {
 }
 
 testBuildEnvironmentLoad() {
+  local handler="_return"
   local tempDir target
 
-  tempDir=$(__environment mktemp -d) || return $?
+  tempDir=$(fileTemporaryName "$handler" -d) || return $?
 
   target="$tempDir/FOO.sh"
   BUILD_ENVIRONMENT_DIRS="$tempDir" assertNotExitCode --stderr-match Missing --line "$LINENO" 0 buildEnvironmentLoad FOO || return $?
@@ -324,9 +327,10 @@ testBuildEnvironmentLoad() {
 }
 
 testBuildEnvironmentGet() {
+  local handler="_return"
   local tempDir target
 
-  tempDir=$(__environment mktemp -d) || return $?
+  tempDir=$(fileTemporaryName "$handler" -d) || return $?
 
   target="$tempDir/FOO.sh"
   BUILD_ENVIRONMENT_DIRS="$tempDir" assertNotExitCode --stderr-match Missing --line "$LINENO" 0 buildEnvironmentGet FOO || return $?
@@ -349,10 +353,11 @@ testBuildEnvironmentGet() {
 
 # Tag: package-install php-install simple-php
 testUnderscoreUnderscoreBuild() {
+  local handler="_return"
   local testPath home
 
   home=$(__environment buildHome) || return $?
-  testPath=$(__environment mktemp -d) || return $?
+  testPath=$(fileTemporaryName "$handler" -d) || return $?
   __environment cp -R "$home/test/example/simple-php" "$testPath/app" || return $?
   assertExitCode 0 installInstallBuild --local "$testPath/app/bin" "$testPath/app" || return $?
   __environment cp -R "$home/bin/build" "$testPath/app/bin/build" || return $?

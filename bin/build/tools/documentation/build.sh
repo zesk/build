@@ -226,7 +226,7 @@ documentationBuild() {
     ! $verbose || decorate info "Update unlinked document $unlinkedTarget"
     echo "$LINENO: cacheDirectory=$cacheDirectory "
     local envFile
-    envFile=$(_buildDocumentationGenerateEnvironment "$company" "$companyLink" "$applicationName") || return $?
+    envFile=$(_buildDocumentationGenerateEnvironment "$usage" "$company" "$companyLink" "$applicationName") || return $?
     echo "$LINENO: cacheDirectory=$cacheDirectory "
     __catchEnvironment "$usage" _documentationTemplateUpdateUnlinked "$cacheDirectory" "$envFile" "$unlinkedTemplate" "$unlinkedTarget" "$pageTemplate" || return $?
     docArgs+=(--env-file "$envFile")

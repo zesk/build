@@ -740,11 +740,12 @@ _assertOutputEqualsHelper() {
   _assertConditionHelper "$this" --line-depth 2 --test ___assertOutputEquals --formatter ___assertOutputEqualsFormat "$@" || return $?
 }
 ___assertOutputEquals() {
+  local handler="_return"
   local expected="${1-}" binary="${2-}" output stderr exitCode=0
 
   shift 2 || :
-  stderr=$(__environment mktemp) || return $?
-  isCallable "$binary" || _environment "$binary is not callable: $*" || return $?
+  stderr=$(fileTemporaryName "$handler") || return $?
+  isCallable "$binary" || __throwEnvironment "$handler" "$binary is not callable: $*" || return $?
   if output=$(plumber "$binary" "$@" 2>"$stderr"); then
     if [ -s "$stderr" ]; then
       dumpPipe "$(decorate error Produced stderr): $binary" "$@" <"$stderr" 1>&2
@@ -754,7 +755,7 @@ ___assertOutputEquals() {
     printf "%s\n" "$output"
   else
     exitCode=$?
-    [ "$exitCode" -eq "$(returnCode leak)" ] && ! _environment "Leak:" "$binary" "$!" || _environment "Exit code: $?" "$binary" "$@" || exitCode=$?
+    [ "$exitCode" -eq "$(returnCode leak)" ] && ! __throwEnvironment "$handler" "Leak:" "$binary" "$!" || __throwEnvironment "$handler" "Exit code: $?" "$binary" "$@" || exitCode=$?
   fi
   returnClean "$exitCode" "$stderr" || return $?
 }
@@ -846,11 +847,12 @@ _assertOutputContainsHelper() {
   _assertConditionHelper "$this" --line-depth 2 --test ___assertOutputContainsTest --formatter ___assertOutputContainsFormat "$@" || return $?
 }
 ___assertOutputContainsTest() {
+  local handler="_return"
   local contains="${1-}" binary="${2-}" captureOut exitCode
   shift 1
-  [ -n "$contains" ] || _argument "contains is blank: $*" || return $?
-  isCallable "$binary" || _argument "$binary is not callable: $*" || return $?
-  captureOut=$(__environment mktemp) || return $?
+  [ -n "$contains" ] || __throwArgument "$handler" "contains is blank: $*" || return $?
+  isCallable "$binary" || __throwArgument "$handler" "$binary is not callable: $*" || return $?
+  captureOut=$(fileTemporaryName "$handler") || return $?
   exitCode=1
   ! isFunction "$binary" || __assertedFunctions "$binary" || return $?
   if "$@" >"$captureOut"; then

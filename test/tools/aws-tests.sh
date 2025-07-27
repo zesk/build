@@ -29,6 +29,7 @@ __awsTestCleanup() {
 
 # Tag: slow
 testAWSIPAccess() {
+  local handler="_return"
   local quietLog=$1 id key start
 
   if [ -z "$quietLog" ]; then
@@ -43,7 +44,7 @@ testAWSIPAccess() {
 
   __awsTestSetup
 
-  HOME=$(__environment mktemp -d) || return $?
+  HOME=$(fileTemporaryName "$handler" -d) || return $?
   usageRequireEnvironment _return TEST_AWS_SECURITY_GROUP AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY AWS_REGION HOME || return $?
 
   if [ -d "$HOME/.aws" ]; then
@@ -192,11 +193,13 @@ testAwsRegionValid() {
 }
 
 testAwsEnvironmentFromCredentials() {
+  local handler="_return"
   local credFile firstKey firstId year matches
 
   export HOME AWS_PROFILE AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY
 
   # copy env to locals
+  # HOME is saved
   __awsTestSetup
 
   AWS_ACCESS_KEY_ID=
@@ -205,7 +208,7 @@ testAwsEnvironmentFromCredentials() {
   year=$(date +%Y)
   # Fake home
 
-  HOME=$(__environment mktemp -d) || return $?
+  HOME=$(fileTemporaryName "$handler" -d) || return $?
 
   credFile="$HOME/.aws/credentials"
 
@@ -355,6 +358,7 @@ testAWSCredentialsEdit() {
 }
 
 testAWSProfiles() {
+  local handler="_return"
   local list firstName='test-aws' secondName='never-gonna-let-you-down'
 
   muzzle buildCacheDirectory || return $?
@@ -364,9 +368,9 @@ testAWSProfiles() {
 
   export HOME AWS_PROFILE
 
-  HOME=$(__environment mktemp -d) || return $?
+  HOME=$(fileTemporaryName "$handler" -d) || return $?
 
-  list=$(__environment mktemp) || return $?
+  list=$(fileTemporaryName "$handler") || return $?
 
   AWS_PROFILE=
 

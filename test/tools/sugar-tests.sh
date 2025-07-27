@@ -148,11 +148,12 @@ testExitCodeCase() {
 }
 
 testSugar() {
+  local handler="_return"
   local code
 
   # __execute running stuff
   export SUGAR_FILE
-  SUGAR_FILE=$(mktemp) || _environment mktemp || return $?
+  SUGAR_FILE=$(fileTemporaryName "$handler") || return $?
   assertFileExists "$SUGAR_FILE" || return $?
   code=98
   assertExitCode --stderr-match "$code" "$code" __execute _wasRun || return $?

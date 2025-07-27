@@ -19,10 +19,11 @@ testIdenticalCheckHelpKeepsWords() {
 }
 
 testIdenticalEofWithBracket() {
+  local handler="_return"
   local temp home
 
   home=$(__environment buildHome) || return $?
-  temp=$(__environment mktemp -d) || return $?
+  temp=$(fileTemporaryName "$handler" -d) || return $?
   __environment cp -R "$home/test/example/similar" "$temp/similar" || return $?
   assertDirectoryExists "$temp/similar" "$temp/similar/fix" || return $?
   assertExitCode 0 identicalCheck --repair "$temp/similar/fix" --prefix '# ''IDENTICAL' --extension txt --cd "$temp/similar" || return $?
@@ -30,10 +31,11 @@ testIdenticalEofWithBracket() {
 }
 
 testIdenticalCheckAndRepairMap() {
+  local handler="_return"
   local testPath home name
 
   home=$(__environment buildHome) || return $?
-  testPath=$(__environment mktemp -d) || return $?
+  testPath=$(fileTemporaryName "$handler" -d) || return $?
   decorate info "HOME is $home"
   __environment mkdir -p "$testPath/identical" || return $?
   __environment mkdir -p "$testPath/tests" || return $?
@@ -183,9 +185,10 @@ testIdenticalCheckSingles() {
 
 # Simple case when an identical directory exists and is supplied but contains no matching files
 testIdenticalCheckRepairWithEmptyDir() {
+  local handler="_return"
   local temp
 
-  temp=$(__environment mktemp -d) || return $?
+  temp=$(fileTemporaryName "$handler" -d) || return $?
 
   mkdir -p "$temp/foo/identical/"
   mkdir -p "$temp/bar/identical/"

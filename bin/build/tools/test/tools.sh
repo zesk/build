@@ -279,7 +279,7 @@ testSuite() {
   done
 
   local statsFile=""
-  ! $doStats || statsFile=$(__environment mktemp) || return $?
+  ! $doStats || statsFile=$(fileTemporaryName "$handler") || return $?
   rm -f "$testFunctions" || :
 
   # Set up continue file if needed (remove it if we are *NOT* continuing)

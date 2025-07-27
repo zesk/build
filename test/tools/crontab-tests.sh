@@ -12,8 +12,8 @@ testCrontabApplicationUpdate() {
   local emptyPath envFile
   # empty test
 
-  envFile=$(mktemp) || _environment mktemp || return $?
-  emptyPath=$(mktemp -d) || _environment mktemp -d || return $?
+  envFile=$(fileTemporaryName "$usage") || return $?
+  emptyPath=$(fileTemporaryName "$usage" -d) || return $?
   __environment mkdir -p "$emptyPath/hello" || return $?
   printf "APP=test\n" >>"$emptyPath/hello/.env"
   assertExitCode 0 crontabApplicationUpdate --env-file "$envFile" "$emptyPath" || return $?

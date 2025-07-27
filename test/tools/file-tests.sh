@@ -8,8 +8,9 @@
 testBasicFileStuff() {
   local testDir
   local testFile
+  local handler="_return"
 
-  testDir=$(__environment mktemp -d) || return $?
+  testDir=$(fileTemporaryName "$handler" -d) || return $?
 
   testFile="$testDir/$(randomString).$$"
   __environment touch "$testFile" || return $?
@@ -22,6 +23,8 @@ _assertBetterType() {
 }
 
 testBetterType() {
+  local handler="_return"
+
   _assertBetterType "$LINENO" "builtin" return || return $?
   _assertBetterType "$LINENO" "builtin" . || return $?
   _assertBetterType "$LINENO" "function" testBetterType || return $?
@@ -30,13 +33,14 @@ testBetterType() {
   _assertBetterType "$LINENO" "unknown" fairElections || return $?
 
   local d
-  d=$(mktemp -d) || return $?
-  directoryRequire "$d/food" >/dev/null || return $?
-  ln -s "$d/food" "$d/food-link" || return $?
+  d=$(fileTemporaryName "$handler" -d) || return $?
 
-  touch "$d/goof" || return $?
-  ln -s "$d/no-goof" "$d/no-goof-link" || return $?
-  ln -s "$d/goof" "$d/goof-link" || return $?
+  __catch "$handler" directoryRequire "$d/food" >/dev/null || return $?
+  __catchEnvironment "$handler" ln -s "$d/food" "$d/food-link" || return $?
+
+  __catchEnvironment "$handler" touch "$d/goof" || return $?
+  __catchEnvironment "$handler" ln -s "$d/no-goof" "$d/no-goof-link" || return $?
+  __catchEnvironment "$handler" ln -s "$d/goof" "$d/goof-link" || return $?
 
   _assertBetterType "$LINENO" "directory" "$d/food" || return $?
   _assertBetterType "$LINENO" "link-directory" "$d/food-link" || return $?
@@ -44,7 +48,7 @@ testBetterType() {
   _assertBetterType "$LINENO" "link-unknown" "$d/no-goof-link" || return $?
   _assertBetterType "$LINENO" "link-file" "$d/goof-link" || return $?
 
-  rm -rf "$d" || return $?
+  __catchEnvironment "$handler" rm -rf "$d" || return $?
 }
 
 _invertMatches() {
@@ -67,11 +71,12 @@ _invertMatches() {
 }
 
 testFileMatches() {
+  local handler="_return"
   local home matchFiles match matches invertedMatches ex pattern neverMatches
 
   ex=()
-  matchFiles=$(__environment mktemp) || return $?
-  home=$(__environment buildHome) || return $?
+  matchFiles=$(fileTemporaryName "$handler") || return $?
+  home=$(__catch "$handler" buildHome) || return $?
 
   __environment find "$home/test/matches" -type f >"$matchFiles" || return $?
 

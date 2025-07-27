@@ -911,7 +911,7 @@ bashDocumentation_FindFunctionDefinitions() {
   directory=$(usageArgumentDirectory "$usage" "directory" "${1-}") && shift || return $?
 
   phraseCount=${#@}
-  foundOne=$(mktemp)
+  foundOne=$(fileTemporaryName "$usage") || return $?
   while [ "$#" -gt 0 ]; do
     fn=$1
     functionPattern="^$fn\(\) \{|^function $fn \{"
@@ -953,7 +953,7 @@ bashDocumentation_FindFunctionDefinition() {
   directory=$(usageArgumentDirectory "$usage" "directory" "${1-}") && shift || return $?
   fn=$(usageArgumentString "$usage" "fn" "${1-}") && shift || return $?
 
-  definitionFiles=$(mktemp)
+  definitionFiles=$(fileTemporaryName "$usage") || return $?
   if ! bashDocumentation_FindFunctionDefinitions "$directory" "$fn" >"$definitionFiles"; then
     rm "$definitionFiles"
     _environment "$fn not found in $directory" || return $?

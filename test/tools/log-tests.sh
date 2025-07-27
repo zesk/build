@@ -6,13 +6,12 @@
 #
 
 testLogFileRotate() {
+  local handler="_return"
   local tempDir
   local count=5 n
   local name="${FUNCNAME[0]}"
 
-  if ! tempDir=$(mktemp -d); then
-    return $?
-  fi
+  tempDir=$(fileTemporaryName "$handler" -d) || return $?
 
   n=1
 
@@ -119,9 +118,10 @@ testLogFileRotate() {
 }
 
 testLogFileRotate1() {
+  local handler="_return"
   local tempDir count=1 i n
 
-  if ! tempDir=$(mktemp -d); then
+  if ! tempDir=$(fileTemporaryName "$handler" -d); then
     return $?
   fi
 

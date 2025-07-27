@@ -8,12 +8,13 @@
 #
 
 testReadlineConfigurationAdd() {
+  local handler="_return"
   local savedHome
 
   export HOME
   savedHome=$HOME
 
-  HOME=$(__environment mktemp -d) || return $?
+  HOME=$(fileTemporaryName "$handler" -d) || return $?
   assertFileDoesNotExist "$HOME/.input""rc" || return $?
   assertExitCode 0 readlineConfigurationAdd "\ep" "history-search-backward" || return $?
 

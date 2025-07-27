@@ -8,9 +8,10 @@
 # Covers: tarCreate
 # Covers: tarExtractPattern
 testTarExtractFilePattern() {
+  local handler="_return"
   local temp base content IFS
 
-  temp=$(__environment mktemp -d) || return $?
+  temp=$(fileTemporaryName "$handler" -d) || return $?
 
   base="$temp/base"
   __environment mkdir -p "$base/a/b/c/d" || return $?

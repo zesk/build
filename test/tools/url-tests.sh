@@ -142,10 +142,11 @@ testUrlValid() {
 }
 
 testUrlFilter() {
+  local handler="_return"
   local home output source
 
   home=$(__environment buildHome) || return $?
-  output=$(__environment mktemp) || return $?
+  output=$(fileTemporaryName "$handler") || return $?
   source="$home/test/example/urlFilter.source.html"
   urlFilter "$source" >"$output" || _environment "urlFilter $source failed" || return $?
   assertExitCode 0 diff "$output" "$home/test/example/urlFilter.output.txt" || returnUndo $? dumpPipe "urlFilter $source" <"$output" || returnUndo $? rm -rf "$output" || return $?
@@ -169,11 +170,12 @@ testUrlOpen() {
 }
 
 testFetch() {
+  local handler="_return"
   local targetFile
 
   assertExitCode 0 urlFetch --help || return $?
 
-  targetFile=$(mktemp)
+  targetFile=$(fileTemporaryName "$handler")
   assertFileExists "$targetFile" || return $?
   assertFileSize --line "$LINENO" 0 "$targetFile" || return $?
   assertExitCode 0 urlFetch 'https://example.com' "$targetFile" || return $?

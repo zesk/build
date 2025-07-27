@@ -114,21 +114,21 @@ _fileCopyShowNew() {
 # Exit Code: 0 - Success
 # Exit Code: 1 - Failed
 fileCopy() {
-  local usage="_${FUNCNAME[0]}"
+  local handler="_${FUNCNAME[0]}"
 
   local mapFlag=false copyFunction="_fileCopyRegular" owner="" mode="" source="" destination=""
 
-  # _IDENTICAL_ argument-case-header 5
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
+    # __IDENTICAL__ argumentBlankCheck 1
+    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-    # _IDENTICAL_ --help 4
-    --help)
-      "$usage" 0
-      return $?
-      ;;
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
+    # _IDENTICAL_ handlerHandler 1
+    --handler) shift && handler=$(usageArgumentFunction "$handler" "$argument" "${1-}") || return $? ;;
     --map)
       mapFlag=true
       ;;
@@ -137,27 +137,27 @@ fileCopy() {
       ;;
     --owner)
       shift
-      usageArgumentString "$usage" "$argument" "${1-}" || return $?
+      usageArgumentString "$handler" "$argument" "${1-}" || return $?
       owner="$1"
       ;;
     --mode)
       shift
-      usageArgumentString "$usage" "$argument" "${1-}" || return $?
+      usageArgumentString "$handler" "$argument" "${1-}" || return $?
       mode="$1"
       ;;
     *)
       local source destination actualSource verb prefix
       source="$1"
-      [ -f "$source" ] || __throwEnvironment "$usage" "source \"$source\" does not exist" || return $?
+      [ -f "$source" ] || __throwEnvironment "$handler" "source \"$source\" does not exist" || return $?
       shift
       destination=$(usageArgumentFileDirectory _argument "destination" "${1-}") || return $?
       shift
-      [ $# -eq 0 ] || __catchArgument "$usage" "unknown argument $1" || return $?
+      [ $# -eq 0 ] || __catchArgument "$handler" "unknown argument $1" || return $?
       if $mapFlag; then
-        actualSource=$(mktemp)
+        actualSource=$(fileTemporaryName "$handler")
         if ! mapEnvironment <"$source" >"$actualSource"; then
           rm "$actualSource" || :
-          __catchEnvironment "$usage" "Failed to mapEnvironment $source" || return $?
+          __catchEnvironment "$handler" "Failed to mapEnvironment $source" || return $?
         fi
         verb=" (mapped)"
       else
@@ -180,10 +180,10 @@ fileCopy() {
       "$copyFunction" "$source" "$actualSource" "$destination" "$verb"
       exitCode=$?
       if [ $exitCode -eq 0 ] && [ -n "$owner" ]; then
-        __catchEnvironment "$usage" chown "$owner" "$destination" || exitCode=$?
+        __catchEnvironment "$handler" chown "$owner" "$destination" || exitCode=$?
       fi
       if [ $exitCode -eq 0 ] && [ -n "$mode" ]; then
-        __catchEnvironment "$usage" chmod "$mode" "$destination" || exitCode=$?
+        __catchEnvironment "$handler" chmod "$mode" "$destination" || exitCode=$?
       fi
       if $mapFlag; then
         rm "$actualSource" || :
@@ -193,7 +193,7 @@ fileCopy() {
     esac
     shift
   done
-  __throwArgument "$usage" "Missing source" || return $?
+  __throwArgument "$handler" "Missing source" || return $?
 }
 _fileCopy() {
   # __IDENTICAL__ usageDocument 1
@@ -209,46 +209,46 @@ _fileCopy() {
 # Exit Code: 0 - Something would change
 # Exit Code: 1 - Nothing would change
 fileCopyWouldChange() {
-  local usage="_${FUNCNAME[0]}"
+  local handler="_${FUNCNAME[0]}"
 
   local mapFlag=false source=""
-  # _IDENTICAL_ argument-case-header 5
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
+    # __IDENTICAL__ argumentBlankCheck 1
+    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-    # _IDENTICAL_ --help 4
-    --help)
-      "$usage" 0
-      return $?
-      ;;
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
+    # _IDENTICAL_ handlerHandler 1
+    --handler) shift && handler=$(usageArgumentFunction "$handler" "$argument" "${1-}") || return $? ;;
     --map)
       mapFlag=true
       ;;
     *)
       if [ -z "$source" ]; then
-        source=$(usageArgumentFile "$usage" "source" "$1") || return $?
+        source=$(usageArgumentFile "$handler" "source" "$1") || return $?
       else
         local actualSource destination
 
-        destination=$(usageArgumentFileDirectory "$usage" "destination" "$1") || return $?
+        destination=$(usageArgumentFileDirectory "$handler" "destination" "$1") || return $?
         shift
         if [ $# -gt 0 ]; then
           # _IDENTICAL_ argumentUnknown 1
-          __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
+          __throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
         fi
         if [ ! -f "$destination" ]; then
           return 0
         fi
         local exitCode=1
         if $mapFlag; then
-          actualSource=$(fileTemporaryName "$usage") || return $?
-          __catch "$usage" mapEnvironment <"$source" >"$actualSource" || returnClean $? "$actualSource" || return $?
+          actualSource=$(fileTemporaryName "$handler") || return $?
+          __catch "$handler" mapEnvironment <"$source" >"$actualSource" || returnClean $? "$actualSource" || return $?
           if ! diff -q "$actualSource" "$destination" >/dev/null; then
             exitCode=0
           fi
-          __catchEnvironment "$usage" rm -f "$actualSource" || return $?
+          __catchEnvironment "$handler" rm -f "$actualSource" || return $?
         else
           actualSource="$source"
           if ! diff -q "$actualSource" "$destination" >/dev/null; then
@@ -261,7 +261,7 @@ fileCopyWouldChange() {
     esac
     shift
   done
-  __throwArgument "$usage" "Missing source" || return $?
+  __throwArgument "$handler" "Missing source" || return $?
 }
 _fileCopyWouldChange() {
   # __IDENTICAL__ usageDocument 1
@@ -275,38 +275,38 @@ _fileCopyWouldChange() {
 # Argument: arguments ... - Optional. Arguments to loopCallable
 # Run checks interactively until errors are all fixed.
 loopExecute() {
-  local usage="_${FUNCNAME[0]}"
+  local handler="_${FUNCNAME[0]}"
 
   local loopCallable="" sleepDelay=10 title="" until=()
 
   bashDebugInterruptFile --error --interrupt
 
-  # _IDENTICAL_ argument-case-header 5
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
+    # __IDENTICAL__ argumentBlankCheck 1
+    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-    # _IDENTICAL_ --help 4
-    --help)
-      "$usage" 0
-      return $?
-      ;;
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
+    # _IDENTICAL_ handlerHandler 1
+    --handler) shift && handler=$(usageArgumentFunction "$handler" "$argument" "${1-}") || return $? ;;
     --title)
       shift
-      title=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
+      title=$(usageArgumentString "$handler" "$argument" "${1-}") || return $?
       ;;
     --until)
       shift
-      until+=("$(usageArgumentUnsignedInteger "$usage" "$argument" "${1-}")") || return $?
+      until+=("$(usageArgumentUnsignedInteger "$handler" "$argument" "${1-}")") || return $?
       ;;
     --delay)
       shift
-      sleepDelay=$(usageArgumentUnsignedInteger "$usage" "$argument" "${1-}") || return $?
+      sleepDelay=$(usageArgumentUnsignedInteger "$handler" "$argument" "${1-}") || return $?
       ;;
     *)
       if [ -z "$loopCallable" ]; then
-        loopCallable=$(usageArgumentCallable "$usage" "loopCallable" "$1") || return $?
+        loopCallable=$(usageArgumentCallable "$handler" "loopCallable" "$1") || return $?
         shift
         break
       fi
@@ -315,13 +315,13 @@ loopExecute() {
     shift
   done
 
-  [ -n "$loopCallable" ] || __throwArgument "$usage" "No loopCallable" || return $?
+  [ -n "$loopCallable" ] || __throwArgument "$handler" "No loopCallable" || return $?
   [ -n "$title" ] || title="$(decorate each code "$loopCallable" "$@")"
   [ ${#until[@]} -gt 0 ] || until=("0")
 
   local done=false exitCode=0 outputBuffer statusLine rowCount outsideColor
   outsideColor="code"
-  outputBuffer=$(fileTemporaryName "$usage") || return $?
+  outputBuffer=$(fileTemporaryName "$handler") || return $?
   iterations=1
   statusLine="Running first iteration ..."
   rowCount=$(consoleRows)
@@ -336,7 +336,7 @@ loopExecute() {
       suffix=$(decorate warning "(loading)")
     fi
 
-    __catchEnvironment "$usage" boxedHeading --outside "$outsideColor" --inside "$outsideColor" "$title $suffix" | plasterLines || return $?
+    __catchEnvironment "$handler" boxedHeading --outside "$outsideColor" --inside "$outsideColor" "$title $suffix" | plasterLines || return $?
     printf "%s\n" "$statusLine" | plasterLines
     IFS=$'\n' read -r -d '' _ saveY < <(cursorGet)
 
@@ -354,8 +354,8 @@ loopExecute() {
 
     # Compute status line
     local elapsed seconds nLines stamp
-    nLines=$(__catch "$usage" fileLineCount "$outputBuffer") || return $?
-    elapsed=$(($(__catch "$usage" timingStart) - start)) || return $?
+    nLines=$(__catch "$handler" fileLineCount "$outputBuffer") || return $?
+    elapsed=$(($(__catch "$handler" timingStart) - start)) || return $?
     seconds=$(timingFormat "$elapsed")
     seconds="$seconds $(plural "$seconds" second seconds)"
     stamp=$(date "+%F %T")
@@ -365,14 +365,14 @@ loopExecute() {
     cursorSet 1 1
 
     if inArray "$exitCode" "${until[@]}"; then
-      __catchEnvironment "$usage" boxedHeading --outside "$outsideColor" --inside success "$title (SUCCESS)" | plasterLines || return $?
+      __catchEnvironment "$handler" boxedHeading --outside "$outsideColor" --inside success "$title (SUCCESS)" | plasterLines || return $?
       printf "%s\n" "$statusLine" | plasterLines || return $?
-      __catchEnvironment "$usage" plasterLines <"$outputBuffer" || return $?
+      __catchEnvironment "$handler" plasterLines <"$outputBuffer" || return $?
       cursorSet 1 "$((rowCount - 1))"
       bigText "Success"
       done=true
     else
-      __catchEnvironment "$usage" boxedHeading --outside "$outsideColor" --inside "$outsideColor" "$title $(decorate orange "(looping)")" || echo "EXIT CODE: $?"
+      __catchEnvironment "$handler" boxedHeading --outside "$outsideColor" --inside "$outsideColor" "$title $(decorate orange "(looping)")" || echo "EXIT CODE: $?"
       printf "%s\n" "$statusLine" | plasterLines || return $?
       (
         tail -n "$showRows" <"$outputBuffer"
@@ -381,13 +381,13 @@ loopExecute() {
       elapsed=$((elapsed / 1000))
       if [ "$elapsed" -lt "$sleepDelay" ]; then
         cursorSet 1 "$((saveY - 1))"
-        __catch "$usage" interactiveCountdown --prefix "$statusLine, running $title in " "$((sleepDelay - elapsed))" || return $?
+        __catch "$handler" interactiveCountdown --prefix "$statusLine, running $title in " "$((sleepDelay - elapsed))" || return $?
       fi
     fi
     iterations=$((iterations + 1))
     rowCount=$(consoleRows)
   done
-  __catchEnvironment "$usage" rm -rf "$outputBuffer" || return $?
+  __catchEnvironment "$handler" rm -rf "$outputBuffer" || return $?
 }
 _loopExecute() {
   # __IDENTICAL__ usageDocument 1

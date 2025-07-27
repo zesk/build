@@ -616,7 +616,7 @@ gitMainly() {
     shift || __throwArgument "$usage" "missing argument $(decorate label "$argument")" || return $?
   done
 
-  errorLog=$(mktemp)
+  errorLog=$(fileTemporaryName "$usage") || return $?
   branch=$(git rev-parse --abbrev-ref HEAD) || _environment "Git not present" || return $?
   case "$branch" in
   main | staging)

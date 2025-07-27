@@ -45,7 +45,7 @@ _arguments() {
     shift
     noneFlag=true
   fi
-  stateFile=$(__catchEnvironment "$_usage_" mktemp) || return $?
+  stateFile=$(fileTemporaryName "$_usage_") || return $?
   spec=$(__catchEnvironment "$_usage_" _commentArgumentSpecification "$source" "$this") || return $?
   __catchEnvironment "$_usage_" _commentArgumentSpecificationDefaults "$spec" >"$stateFile" || return $?
   IFS=$'\n' read -d '' -r -a required <"$(__commentArgumentSpecification__required "$spec")" || :

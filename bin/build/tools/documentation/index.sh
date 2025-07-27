@@ -518,7 +518,7 @@ documentationIndex_LinkDocumentationPaths() {
   local documentTemplate
   if ! documentTokensFile=$(fileTemporaryName "$usage") || ! modifiedCountFile=$(fileTemporaryName "$usage"); then
     rm -f "$documentTokensFile" "$modifiedCountFile" 2>/dev/null || :
-    __throwEnvironment "$usage" "mktemp failed" || return $?
+    __throwEnvironment "$usage" "Creating temporary file failed" || return $?
   fi
   # subshell to hide environment tokens
   if ! mapTokens <"$documentTemplate" >"$documentTokensFile"; then

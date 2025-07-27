@@ -6,9 +6,10 @@
 #
 
 testNewestAndOldest() {
+  local handler="_return"
   local waitSeconds=1 place aTime bTime cTime
 
-  place=$(mktemp -d) || _environment mktemp || return $?
+  place=$(fileTemporaryName "$handler" -d) || return $?
   __environment cd "$place" || return $?
 
   date >"a"
@@ -113,6 +114,7 @@ testServiceToPort() {
 }
 
 testExtensionLists() {
+  local handler="_return"
   local target me
 
   me=$(__environment realPath "${BASH_SOURCE[0]}") || return $?
@@ -120,7 +122,7 @@ testExtensionLists() {
   export BUILD_HOME
   assertExitCode 0 buildEnvironmentLoad BUILD_HOME || return $?
 
-  target=$(mktemp -d) || _environment "mktemp -d" || return $?
+  target=$(fileTemporaryName "$handler" -d) || return $?
 
   assertDirectoryEmpty --line "$LINENO" "$target" || return $?
   find "$BUILD_HOME/test" -type f ! -path '*/.*/*' | extensionLists --clean "$target"

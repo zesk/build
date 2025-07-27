@@ -133,9 +133,10 @@ __buildDocumentation_Recommit() {
 }
 
 _buildDocumentationGenerateEnvironment() {
+  local handler="$1" && shift
   export APPLICATION_NAME
   buildEnvironmentLoad APPLICATION_NAME || :
-  envFile=$(mktemp) || __throwEnvironment "$usage" "mktemp failed" || return $?
+  envFile=$(fileTemporaryName "$handler") || return $?
   {
     __dumpNameValue summary "{fn}"
     __dumpNameValue vendor "$1"
@@ -145,7 +146,7 @@ _buildDocumentationGenerateEnvironment() {
     __dumpNameValue BUILD_COMPANY_LINK "$2"
 
     __dumpNameValue year "$(date +%Y)"
-  } >>"$envFile" || __throwEnvironment "$usage" "Saving to $envFile failed" || return $?
+  } >>"$envFile" || __throwEnvironment "$handler" "Saving to $envFile failed" || return $?
   printf "%s\n" "$envFile"
 }
 

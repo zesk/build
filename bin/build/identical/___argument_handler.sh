@@ -52,7 +52,7 @@ function __argumentsWithBlanksHandler() {
 function __argumentsTrimNonBlanksHandler() {
   local handler="_${FUNCNAME[0]}"
 
-  # _IDENTICAL_ argumentTrimBlankLoopHandler 8
+  # _IDENTICAL_ argumentTrimBlankLoopHandler 7
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))

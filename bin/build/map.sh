@@ -335,7 +335,7 @@ ___help() {
 isPositiveInteger() {
   # _IDENTICAL_ functionSignatureSingleArgument 2
   local handler="_${FUNCNAME[0]}"
-  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
+  [ $# -eq 1 ] || __catchArgument "$handler" "Single argument only: $*" || return $?
   if isUnsignedInteger "${1-}"; then
     [ "$1" -gt 0 ] || return 1
     return 0
@@ -356,7 +356,7 @@ _isPositiveInteger() {
 isFunction() {
   # _IDENTICAL_ functionSignatureSingleArgument 2
   local handler="_${FUNCNAME[0]}"
-  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
+  [ $# -eq 1 ] || __catchArgument "$handler" "Single argument only: $*" || return $?
   [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
   # Skip illegal options "--" and "-foo"
   [ "$1" = "${1#-}" ] || return 1
@@ -741,7 +741,7 @@ _fileReverseLines() {
 # Environment: Argument-passed or entire environment variables which are exported are used and mapped to the destination.
 # Example:     printf %s "{NAME}, {PLACE}.\n" | NAME=Hello PLACE=world mapEnvironment NAME PLACE
 # Requires: __throwArgument read environmentVariables decorate sed cat rm __throwEnvironment __catchEnvironment _clean
-# Requires: usageArgumentString
+# Requires: usageArgumentString fileTemporaryName
 mapEnvironment() {
   local handler="_${FUNCNAME[0]}"
   local __sedFile __prefix='{' __suffix='}'
@@ -777,10 +777,10 @@ mapEnvironment() {
   if [ $# -eq 0 ]; then
     while read -r __e; do __ee+=("$__e"); done < <(environmentVariables)
   fi
-  __sedFile=$(__catchEnvironment "$__handler" mktemp) || return $?
+  __sedFile=$(fileTemporaryName "$__handler") || return $?
   __catchEnvironment "$__handler" _mapEnvironmentGenerateSedFile "$__prefix" "$__suffix" "${__ee[@]}" >"$__sedFile" || returnClean $? "$__sedFile" || return $?
   __catchEnvironment "$__handler" sed -f "$__sedFile" || __throwEnvironment "$__handler" "$(cat "$__sedFile")" || returnClean $? "$__sedFile" || return $?
-  __catchEnvironment "$__handler" rm -rf "$__sedFile" || return $?
+  __catchEnvironment "$__handler" rm -f "$__sedFile" || return $?
 }
 _mapEnvironment() {
   # __IDENTICAL__ usageDocument 1

@@ -30,9 +30,10 @@ _testBuildDebugEnabledExit() {
 }
 
 testBuildDebugEnabled() {
+  local handler="_return"
   local quietLog
 
-  quietLog=$(mktemp)
+  quietLog=$(fileTemporaryName "$handler") || return $?
 
   export BUILD_DEBUG
 
@@ -142,6 +143,7 @@ __writeTo() {
 }
 
 testHousekeeper() {
+  local handler="_return"
   local leakCode matches testFiles
   local testDir testFile
 
@@ -150,7 +152,7 @@ testHousekeeper() {
 
   buildEnvironmentLoad BUILD_HOME || return $?
 
-  testDir=$(__environment mktemp -d) || return $?
+  testDir=$(fileTemporaryName "$handler" -d) || return $?
 
   statusMessage decorate info Copying "${BUILD_HOME-"(blank)"}" to test location
   __environment cp -r "$BUILD_HOME" "$testDir" || return $?

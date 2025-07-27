@@ -86,8 +86,9 @@ testMapPrefixSuffix() {
 
 testMapValue() {
   local tempEnv
+  local handler="_return"
 
-  tempEnv=$(__environment mktemp) || return $?
+  tempEnv=$(fileTemporaryName "$handler" -d) || return $?
 
   assertEquals "{foo}" "$(mapValue "$tempEnv" "{foo}")" || return $?
 

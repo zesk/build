@@ -38,9 +38,10 @@ testBashBasics() {
 }
 
 testBashSourcePath() {
+  local handler="_return"
   local testPath
 
-  testPath=$(__environment mktemp -d) || return $?
+  testPath=$(fileTemporaryName "$handler" -d) || return $?
 
   assertNotExitCode --stderr-match "Requires a directory" 0 bashSourcePath || return $?
   assertNotExitCode --stderr-match "not directory" 0 bashSourcePath "$testPath/does-not-exist-i-hope" || return $?
@@ -109,9 +110,10 @@ testBashSourcePathExclude() {
 }
 
 testBashSourcePathDot() {
+  local handler="_return"
   local testPath testPasses=false
 
-  testPath=$(__environment mktemp -d) || return $?
+  testPath=$(fileTemporaryName "$handler" -d) || return $?
 
   __environment mkdir -p "$testPath/.foobar/.eefo/.dots" || return $?
   printf "%s\n" "testPasses=dots" >"$testPath/.foobar/.eefo/.dots/test.sh" || return $?
@@ -155,11 +157,12 @@ _pipeRan() {
   tee "$@"
 }
 testBashPipeBehavior() {
+  local handler="_return"
   local temp
 
   export TEST_PIPE_RAN PIPE_RAN_FILE
 
-  temp=$(mktemp) || return $?
+  temp=$(fileTemporaryName "$handler") || return $?
 
   PIPE_RAN_FILE="$temp.ran"
 

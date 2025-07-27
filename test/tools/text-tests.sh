@@ -216,7 +216,7 @@ testValidateCharacterClass() {
   local temp home usage="_return"
 
   home=$(__catch "$usage" buildHome) || return $?
-  temp=$(mktemp) || return $?
+  temp=$(fileTemporaryName "$usage") || return $?
   __testIsCharacterClass | tee "$temp" || return $?
   if ! diff -q "$temp" "$home/test/example/isCharacterClass.txt"; then
     decorate error "Classifications changed:"

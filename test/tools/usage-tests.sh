@@ -34,9 +34,10 @@ EOF
 }
 
 testUsageArguments1() {
+  local handler="_return"
   local results
 
-  results=$(__environment mktemp) || return $?
+  results=$(fileTemporaryName "$handler") || return $?
   __sampleArgs | usageFormatArguments "^" "" "" >"$results"
 
   assertEquals " --name --thing thing [ --value name ]" "$(cat "$results")" || return $?
@@ -106,9 +107,10 @@ _testUsageArgumentHelperFail() {
 
 # Tag: slow
 testUsageArgumentFunctions() {
+  local handler="_return"
   local d intTests unsignedIntTests positiveIntTests
 
-  d=$(mktemp -d) || return $?
+  d=$(fileTemporaryName "$handler" -d) || return $?
 
   export TEST_USAGE="$d/artifact"
 

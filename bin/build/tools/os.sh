@@ -319,7 +319,7 @@ serviceToStandardPort() {
   [ $# -gt 0 ] || __throwArgument "$handler" "No arguments" || return $?
   local port
 
-  # _IDENTICAL_ argumentTrimBlankLoopHandler 8
+  # _IDENTICAL_ argumentTrimBlankLoopHandler 7
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))

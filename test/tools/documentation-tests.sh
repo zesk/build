@@ -8,7 +8,7 @@
 #
 
 testBashFunctionComment() {
-  local usage="_return"
+  local handler="_return"
   local home
   local matches=(
     --stdout-match "Stop watching changes"
@@ -17,7 +17,7 @@ testBashFunctionComment() {
     --stdout-match "--name name"
   )
 
-  home=$(__catch "$usage" buildHome) || return $?
+  home=$(__catch "$handler" buildHome) || return $?
 
   assertExitCode "${matches[@]}" 0 bashFunctionComment "$home/bin/build/tools/prompt/reload-changes.sh" reloadChanges || return $?
 }
@@ -25,12 +25,12 @@ testBashFunctionComment() {
 testDocumentation() {
   local testOutput
   local summary description
-  local usage="_return"
+  local handler="_return"
 
   local home
-  home=$(__catch "$usage" buildHome) || return $?
+  home=$(__catch "$handler" buildHome) || return $?
 
-  testOutput=$(mktemp)
+  testOutput=$(fileTemporaryName "$handler") || return $?
   assertExitCode 0 inArray "summary" summary usage argument example reviewed || return $?
   (
     bashDocumentation_Extract "$(bashDocumentation_FindFunctionDefinition "$home" assertNotEquals)" assertNotEquals >"$testOutput" || return $?
@@ -54,15 +54,15 @@ testDocumentation() {
     echoBar '='
     assertEquals $'Assert two strings are equal.\n' "${summary}" || return $?
   ) || return $?
-  __catchEnvironment "$usage" rm "$testOutput" || return $?
+  __catchEnvironment "$handler" rm "$testOutput" || return $?
 }
 
 __isolateTest() {
   local testOutput="$1"
-  local usage="_return"
+  local handler="_return"
 
   local home
-  home=$(__catch "$usage" buildHome) || return $?
+  home=$(__catch "$handler" buildHome) || return $?
 
   bashDocumentation_Extract "$(bashDocumentation_FindFunctionDefinition "$home" assertNotEquals)" assertNotEquals >"$testOutput" || return $?
   set -a
@@ -93,10 +93,11 @@ __isolateTest() {
 # ✅ : assertFileContains Line 52: /tmp/tmp.nzr2txaaOC contains strings: ("#### Arguments" "--help" ) [4 seconds]
 
 testDocSections() {
+  local handler="_return"
   local doc home
 
-  home=$(__environment buildHome) || return $?
-  doc=$(__environment mktemp) || return $?
+  home=$(__catch "$handler" buildHome) || return $?
+  doc=$(fileTemporaryName "$handler") || return $?
   __environment bashDocumentFunction "$home/bin/build/tools/git.sh" gitMainly "$home/bin/build/tools/documentation/__function.md" >"$doc" || return $?
   assertFileContains "$doc" '- none' || return $?
 

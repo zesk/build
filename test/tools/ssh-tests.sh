@@ -8,6 +8,7 @@
 #
 
 testSSHAddKnownHosts() {
+  local handler="_return"
   local tempHome
   local sampleDomainA sampleDomainB
 
@@ -15,7 +16,7 @@ testSSHAddKnownHosts() {
 
   export HOME
 
-  tempHome="$(mktemp -d)" || return $?
+  tempHome="$(fileTemporaryName "$handler" -d)" || return $?
 
   HOME="$tempHome"
 
@@ -45,6 +46,7 @@ testSSHAddKnownHosts() {
 }
 
 testSSHRemoveKnownHosts() {
+  local handler="_return"
   local tempHome debugFlag=false
   local sampleDomainA sampleDomainB sampleDomainC
 
@@ -52,7 +54,7 @@ testSSHRemoveKnownHosts() {
 
   export HOME
 
-  tempHome="$(mktemp -d)" || return $?
+  tempHome="$(fileTemporaryName "$handler" -d)" || return $?
 
   HOME="$tempHome"
 

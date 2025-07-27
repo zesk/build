@@ -169,6 +169,7 @@ _isArray() {
 isPositiveInteger() {
   # _IDENTICAL_ functionSignatureSingleArgument 2
   local handler="_${FUNCNAME[0]}"
+  [ $# -eq 1 ] || __catchArgument "$handler" "Single argument only: $*" || return $?
   [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
   if isUnsignedInteger "${1-}"; then
     [ "$1" -gt 0 ] || return 1
@@ -190,7 +191,7 @@ _isPositiveInteger() {
 isFunction() {
   # _IDENTICAL_ functionSignatureSingleArgument 2
   local handler="_${FUNCNAME[0]}"
-  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
+  [ $# -eq 1 ] || __catchArgument "$handler" "Single argument only: $*" || return $?
   [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
   # Skip illegal options "--" and "-foo"
   [ "$1" = "${1#-}" ] || return 1

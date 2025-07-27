@@ -927,19 +927,30 @@ _realPath() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# IDENTICAL fileTemporaryName 19
+# IDENTICAL fileTemporaryName 30
 
-# Generate a temporary file name using mktemp, and fail using a function
-# Argument: handler - Function. Required. Function to call if mktemp fails. Function Type: _return
+# Wrapper for `mktemp`. Generate a temporary file name, and fail using a function
+# Argument: handler - Function. Required. Function to call on failure. Function Type: _return
 # DOC TEMPLATE: --help 1
 # Argument: --help - Optional. Flag. Display this help.
-# Argument: ... - Optional. Arguments. Any additional arguments are passed through to mktemp.
-# Requires: __help __catchEnvironment mktemp usageDocument
+# Argument: ... - Optional. Arguments. Any additional arguments are passed through.
+# Requires: mktemp __help __catchEnvironment usageDocument
+# BUILD_DEBUG: temp - Logs backtrace of all temporary files to a file in application root named after this function to detect and clean up leaks
 fileTemporaryName() {
   local handler="_${FUNCNAME[0]}"
   __help "$handler" "$@" || return 0
   handler="$1" && shift
-  __catchEnvironment "$handler" mktemp "$@" || return $?
+  local debug=";${BUILD_DEBUG-};"
+  if [ "${debug#*;temp;}" != "$debug" ]; then
+    local target
+    target="$(buildHome)/.${FUNCNAME[0]}"
+    printf "%s" "fileTemporaryName: " >>"$target"
+    __catchEnvironment "$handler" mktemp "$@" | tee -a "$target" || return $?
+    debuggingStack >>"$target"
+    printf "%s\n" "-- END" >>"$target"
+  else
+    __catchEnvironment "$handler" mktemp "$@" || return $?
+  fi
 }
 _fileTemporaryName() {
   # __IDENTICAL__ usageDocument 1
@@ -986,7 +997,7 @@ _whichExists() {
 isPositiveInteger() {
   # _IDENTICAL_ functionSignatureSingleArgument 2
   local handler="_${FUNCNAME[0]}"
-  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
+  [ $# -eq 1 ] || __catchArgument "$handler" "Single argument only: $*" || return $?
   if isUnsignedInteger "${1-}"; then
     [ "$1" -gt 0 ] || return 1
     return 0

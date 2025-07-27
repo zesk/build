@@ -197,7 +197,7 @@ bashDebugInterruptFile() {
       inArray ERR "${traps[@]+"${traps[@]}"}" || traps+=("ERR")
       ;;
     *)
-      # _IDENTICAL_ argumentUnknown 1
+      # _IDENTICAL_ argumentUnknownHandler 1
       __throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
       ;;
     esac
@@ -395,7 +395,7 @@ housekeeper() {
   [ $# -gt 0 ] || return 0
   isCallable "${1-}" || __throwArgument "$handler" "$1 is not callable" "$@" || return $?
 
-  __after=$(TMPDIR="$__tempDir" fileTemporaryName "$handler") || _environment mktemp || return $?
+  __after=$(TMPDIR="$__tempDir" fileTemporaryName "$handler") || return $?
   __before="$__after.before"
   __after="$__after.after"
 

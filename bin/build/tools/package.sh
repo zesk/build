@@ -436,7 +436,7 @@ packageInstall() {
   local __start quietLog installed
 
   __start=$(timingStart) || return $?
-  installed="$(__catchEnvironment "$usage" mktemp)" || return $?
+  installed="$(fileTemporaruName "$usage")" || return $?
   __catch "$usage" packageUpdate "${vv[@]+"${vv[@]}"}" || return $?
   local __installStart
   __installStart=$(timingStart) || return $?

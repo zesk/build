@@ -31,6 +31,7 @@ __prepareSampleApplicationDeployment() {
 # deployRemoteFinish
 #
 testDeployRemoteFinish() {
+  local handler="_return"
   local tempDirectory id oldId matches finishArgs
 
   export BUILD_HOME
@@ -38,7 +39,7 @@ testDeployRemoteFinish() {
   __environment buildEnvironmentLoad BUILD_HOME || return $?
 
   id=abcdef
-  tempDirectory=$(mktemp -d) || __throwEnvironment mktemp || return $?
+  tempDirectory=$(fileTemporaryName "$handler" -d) || return $?
 
   printf "%s %s\n" "$(decorate success "testDeployRemoteFinish:")" "$(decorate code "$tempDirectory")"
 
@@ -215,6 +216,8 @@ testDeployToRemote() {
 #
 # Tag: slow
 testDeployBuildEnvironment() {
+  local handler="_return"
+
   local d args matches
   local sampleHome sampleId sampleApplication
 
@@ -225,7 +228,7 @@ testDeployBuildEnvironment() {
     export APPLICATION_ID DEPLOY_REMOTE_HOME APPLICATION_REMOTE_HOME DEPLOY_USER_HOSTS BUILD_TARGET
     unset APPLICATION_ID DEPLOY_REMOTE_HOME APPLICATION_REMOTE_HOME DEPLOY_USER_HOSTS BUILD_TARGET
 
-    d=$(mktemp -d)
+    d=$(fileTemporaryName "$handler" -d) || return $?
     __environment pushd "$d" >/dev/null || return $?
 
     assertExitCode --stderr-match "blank" 2 deployBuildEnvironment --id || return $?

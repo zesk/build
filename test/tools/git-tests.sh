@@ -45,10 +45,11 @@ testGitVersionList() {
 }
 
 testGitCommitFailures() {
+  local handler="_return"
   local tempDirectory
 
   assertNotExitCode --stderr-ok 0 gitCommit "" || return $?
-  tempDirectory="$(mktemp -d)/a/deep/one" || _environment "mktemp" || return $?
+  tempDirectory="$(fileTemporaryName "$handler" -d)/a/deep/one" || return $?
   assertNotExitCode --stderr-match "$tempDirectory" 0 gitCommit --home "$tempDirectory" last || return $?
   rm -rf "$tempDirectory" || :
 }

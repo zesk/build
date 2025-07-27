@@ -257,7 +257,7 @@ _awsProfilesList() {
 # Argument: --profile profileName - String. Optional. The credentials profile to load (default value is `default` and loads section identified by `[default]` in `~/.aws/credentials`)
 # Argument: --comments - Flag. Optional. Write comments to the credentials file (in addition to updating the record).
 # Both forms can be used, but the profile should be supplied once and only once.
-# Example:     setFile=$(mktemp)
+# Example:     setFile=$(fileTemporaryName "$handler") || return $?
 # Example:     if awsEnvironment "$profile" > "$setFile"; then
 # Example:     eval $(cat "$setFile")
 # Example:     rm "$setFile"
@@ -319,7 +319,7 @@ __awsCredentialsExtractProfile() {
 # Summary: Get credentials and output environment variables for AWS authentication
 # Usage: awsEnvironment profileName
 # Argument: profileName - The credentials profile to load (default value is `default` and loads section identified by `[default]` in `~/.aws/credentials`)
-# Example:     setFile=$(mktemp)
+# Example:     setFile=$(fileTemporaryName "$handler") || return $?
 # Example:     if awsEnvironment "$profile" > "$setFile"; then
 # Example:     eval $(cat "$setFile")
 # Example:     rm "$setFile"

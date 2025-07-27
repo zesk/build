@@ -640,7 +640,7 @@ deployToRemote() {
 
   local verb color deployArg temporaryCommandsFile commonArguments
 
-  temporaryCommandsFile=$(mktemp) || __throwEnvironment "$usage" "mktemp failed" || return $?
+  temporaryCommandsFile=$(fileTemporaruName "$usage") || return $?
   commonArguments=("${firstFlags[@]+${firstFlags[@]}}" "--target" "$buildTarget" "--home" "$deployHome" "--id" "$applicationId" "--application" "$applicationPath")
   if $revertFlag; then
     verb=Revert

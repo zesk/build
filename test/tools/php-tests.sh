@@ -11,14 +11,16 @@ testPHPInstallation() {
 }
 
 _testComposerTempDirectory() {
+  local handler="_return"
+
   export BITBUCKET_CLONE_DIR
   # MUST be in BITBUCKET_CLONE_DIR if we're in that CI
   buildEnvironmentLoad BITBUCKET_CLONE_DIR || return $?
   if [ -z "$BITBUCKET_CLONE_DIR" ]; then
-    mktemp -d
+    fileTemporaryName "$handler" -d || return $?
   else
-    [ -d "$BITBUCKET_CLONE_DIR" ] || _environment "BITBUCKET_CLONE_DIR=$BITBUCKET_CLONE_DIR is not a directory" || return $?
-    mktemp -d --tmpdir="$BITBUCKET_CLONE_DIR"
+    [ -d "$BITBUCKET_CLONE_DIR" ] || __throwEnvironment "$handler" "BITBUCKET_CLONE_DIR=$BITBUCKET_CLONE_DIR is not a directory" || return $?
+    fileTemporaryName "$handler" -d --tmpdir="$BITBUCKET_CLONE_DIR" || return $?
   fi
 }
 
@@ -55,14 +57,15 @@ testPHPComposerInstallation() {
 # Tag: php-install simple-php
 # Tag: package-install
 testPHPBuild() {
+  local handler="_return"
   local here testPath manifest appName home
 
   if __testFunctionWasTested --verbose phpBuild; then
     return 0
   fi
 
-  home=$(__environment buildHome) || return $?
-  here=$(__environment pwd) || return $?
+  home=$(__catch "$handler" buildHome) || return $?
+  here=$(__catchEnvironment "$handler" pwd) || return $?
 
   #
   # This MUST be inside the source tree root to run docker in pipelines
@@ -71,8 +74,8 @@ testPHPBuild() {
   testPath="${testPath:0:8}"
   appName="sublimeApplication"
   testPath="$here/.test.PHPBuild.$testPath/$appName"
-  __environment mkdir -p "$(dirname "$testPath")" || return $?
-  __environment cp -r ./test/example/simple-php "$testPath" || return $?
+  __catchEnvironment "$handler" mkdir -p "$(dirname "$testPath")" || return $?
+  __catchEnvironment "$handler" cp -r ./test/example/simple-php "$testPath" || return $?
 
   buildEnvironmentLoad BUILD_TARGET BUILD_TIMESTAMP
 
@@ -82,11 +85,11 @@ testPHPBuild() {
   assertExitCode 0 installInstallBuild "$testPath/bin" "$testPath" || return $?
   assertFileExists "$testPath/bin/install-bin-build.sh" || return $?
   assertFileContains "$testPath/bin/install-bin-build.sh" " .. " || return $?
-  here=$(pwd) || _environment pwd || return $?
+  here=$(__catchEnvironment "$handler" pwd) || return $?
 
   decorate info "Test build directory is: $testPath" || :
 
-  __environment cd "$testPath" || return $?
+  __catchEnvironment "$handler" cd "$testPath" || return $?
   assertFileDoesNotExist "./app.tar.gz" || return $?
   assertDirectoryDoesNotExist "$testPath/bin/build" || return $?
 
@@ -108,44 +111,44 @@ testPHPBuild() {
 
   bin/build.sh || return $?
   assertFileExists "$testPath/app.tar.gz" || return $?
-  rm ./app.tar.gz || return $?
+  __catchEnvironment "$handler" rm ./app.tar.gz || return $?
 
   export APP_THING=secret
 
   # Add an environment
   printf "\n"
-  __environment bin/build.sh APP_THING || return $?
+  __catchEnvironment "$handler" bin/build.sh APP_THING || return $?
   assertFileExists "$testPath/app.tar.gz" || return $?
 
   BUILD_TARGET=alternate.tar.gz
   printf "\n"
-  __environment bin/build.sh || return $?
+  __catchEnvironment "$handler" bin/build.sh || return $?
   assertFileExists "$testPath/$BUILD_TARGET" || return $?
 
-  mkdir ./compare-app || return $?
-  mkdir ./compare-alternate || return $?
-  cd ./compare-app || return $?
+  __catchEnvironment "$handler" mkdir ./compare-app || return $?
+  __catchEnvironment "$handler" mkdir ./compare-alternate || return $?
+  __catchEnvironment "$handler" cd ./compare-app || return $?
 
   decorate info "Extracting app.tar.gz ... "
-  tar xf ../app.tar.gz || return $?
+  __catchEnvironment "$handler" tar xf ../app.tar.gz || return $?
   # Vendor has random numbers in the classnames
-  rm -rf ./vendor || return $?
-  cd .. || return $?
+  __catchEnvironment "$handler" rm -rf ./vendor || return $?
+  __catchEnvironment "$handler" cd .. || return $?
 
-  cd ./compare-alternate || return $?
+  __catchEnvironment "$handler" cd ./compare-alternate || return $?
 
   decorate info "Extracting alternate.tar.gz ... "
-  tar xf ../alternate.tar.gz || return $?
-  rm -rf ./vendor || return $?
-  cd .. || return $?
+  __catchEnvironment "$handler" tar xf ../alternate.tar.gz || return $?
+  __catchEnvironment "$handler" rm -rf ./vendor || return $?
+  __catchEnvironment "$handler" cd .. || return $?
 
   assertExitCode --stdout-match 'APP_THING="secret"' 1 diff -r ./compare-app ./compare-alternate || return $?
 
-  manifest=$(mktemp) || return $?
+  manifest=$(fileTemporaryName "$handler") || return $?
 
   decorate info "Extracting app.tar.gz manifest ... "
-  tar tf app.tar.gz >"$manifest.complete" || return $?
-  grep -v 'vendor/' "$manifest.complete" >"$manifest" || return $?
+  __catchEnvironment "$handler" tar tf app.tar.gz >"$manifest.complete" || return $?
+  __catchEnvironment "$handler" grep -v 'vendor/' "$manifest.complete" >"$manifest" || return $?
   assertFileContains "$manifest" .deploy .deploy/APPLICATION_ID .deploy/APPLICATION_TAG simple.application.php src/Application.php .env || return $?
   assertFileDoesNotContain "$manifest" composer.lock composer.json bitbucket-pipelines.yml || return $?
   assertFileContains "$manifest.complete" vendor/zesk vendor/composer || return $?

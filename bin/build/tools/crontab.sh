@@ -125,7 +125,7 @@ crontabApplicationUpdate() {
     return 0
   fi
   local newCrontab returnCode
-  newCrontab=$(mktemp)
+  newCrontab=$(fileTemporaryName "$usage")
   __crontabGenerate "$rootEnv" "$appPath" "$user" "$environmentMapper" >"$newCrontab" || return $?
 
   if [ ! -s "$newCrontab" ]; then

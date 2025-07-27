@@ -140,7 +140,10 @@ testEnvironmentFileMake() {
 
 testEnvironmentVariables() {
   local e
-  e=$(mktemp)
+  local handler="_return"
+
+  e=$(fileTemporaryName "$handler") || return $?
+
   export BUILD_TEST_UNIQUE=1
   if ! environmentVariables >"$e"; then
     decorate error environmentVariables failed
@@ -163,8 +166,9 @@ EOF
 
 testEnvironmentValueReadWrite() {
   local foo
+  local handler="_return"
 
-  foo=$(__environment mktemp) || return $?
+  foo=$(fileTemporaryName "$handler") || return $?
 
   __testEnvironmentValueReadWriteData | while read -r testName testValue; do
     __environment environmentValueWrite "$testName" "$testValue" >>"$foo" || return $?
@@ -175,8 +179,9 @@ testEnvironmentValueReadWrite() {
 
 testEnvironmentValueWriteArray() {
   local testArrayText testArray testArrays index envFile restoredValue item
+  local handler="_return"
 
-  envFile=$(__environment mktemp) || return $?
+  envFile=$(fileTemporaryName "$handler") || return $?
   testArrays=(
     "1:2:3:4:5"
     "a:b:c:de"
@@ -250,8 +255,9 @@ testEnvironmentNameValid() {
 
 testEnvironmentValueReadDefault() {
   local envFile
+  local handler="_return"
 
-  envFile=$(__environment mktemp) || return $?
+  envFile=$(fileTemporaryName "$handler") || return $?
 
   __environment environmentValueWrite Greeting Hello >>"$envFile" || return $?
   __environment environmentValueWrite Target World >>"$envFile" || return $?
