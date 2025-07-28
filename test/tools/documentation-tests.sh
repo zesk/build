@@ -27,6 +27,7 @@ testDocumentation() {
   local summary description
   local handler="_return"
 
+  export BUILD_DEBUG="fast-usage;usage"
   local home
   home=$(__catch "$handler" buildHome) || return $?
 
@@ -103,4 +104,6 @@ testDocSections() {
 
   __environment bashDocumentFunction "$home/bin/build/tools/git.sh" gitCommit "$home/bin/build/tools/documentation/__function.md" >"$doc" || return $?
   assertFileContains "$doc" '### Arguments' '--help' || return $?
+
+  __catch "$handler" rm "$doc" || return $?
 }

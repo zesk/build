@@ -24,10 +24,10 @@ testDeprecatedFind() {
 
 # Coverage: deprecatedCannon
 testDeprecatedCannon() {
-  local home tempDir usage="_return"
+  local home tempDir handler="_return"
 
-  home=$(__environment buildHome) || return $?
-  tempDir=$(fileTemporaryName "$usage" -d) || return $?
+  home=$(__catch "$handler" buildHome) || return $?
+  tempDir=$(fileTemporaryName "$handler" -d) || return $?
   __environment cp -R "$home/test/example/deprecated/" "$tempDir/deprecated" || return $?
 
   local target="$tempDir/deprecated/hello.txt"
@@ -36,7 +36,7 @@ testDeprecatedCannon() {
   assertFileContains --line "$LINENO" "$target" "oldFunction" || return $?
   assertFileDoesNotContain --line "$LINENO" "$target" "newFunction" || return $?
 
-  assertExitCode 1 deprecatedCannon --path "$tempDir" deprecatedIgnore oldFunction newFunction || return $?
+  assertExitCode --stdout-match "Modified" --stdout-match "1 file" 1 deprecatedCannon --path "$tempDir" deprecatedIgnore oldFunction newFunction || return $?
 
   assertFileContains --line "$LINENO" "$target" "newFunction" || return $?
   assertFileDoesNotContain --line "$LINENO" "$target" "oldFunction" || return $?

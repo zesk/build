@@ -8,10 +8,10 @@
 #
 
 testSysvInitScript() {
-  local usage="_return"
+  local handler="_return"
   local home
 
-  home=$(__catch "$usage" buildHome) || return $?
+  home=$(__catch "$handler" buildHome) || return $?
   sysvInitScriptUninstall install-bin-build.sh || :
 
   assertFileDoesNotExist --line "$LINENO" /etc/init.d/install-bin-build.sh || return $?

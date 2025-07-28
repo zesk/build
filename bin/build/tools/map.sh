@@ -19,8 +19,8 @@
 # Short description: list mappable variables in a file (without prefix or suffix)
 # Depends: sed quoteSedPattern
 mapTokens() {
-  local usage="_${FUNCNAME[0]}"
-  [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
+  local handler="_${FUNCNAME[0]}"
+  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
   local prefix prefixQ suffix suffixQ removeQuotesPattern argument
 
   prefix="${1-"{"}"
@@ -57,70 +57,65 @@ _mapTokens() {
 # Argument: --search-filter - Zero or more. Callable. Filter for search tokens. (e.g. `lowercase`)
 # Argument: --replace-filter - Zero or more. Callable. Filter for replacement strings. (e.g. `trimSpace`)
 mapValue() {
-  local usage="_${FUNCNAME[0]}"
+  local handler="_${FUNCNAME[0]}"
 
   local searchFilters=() replaceFilters=() mapFile="" prefix='{' suffix='}'
-  # _IDENTICAL_ argument-case-header 5
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
+    # __IDENTICAL__ argumentBlankCheck 1
+    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-    # _IDENTICAL_ --help 4
-    --help)
-      "$usage" 0
-      return $?
-      ;;
-    # _IDENTICAL_ --handler 4
-    --handler)
-      shift
-      usage=$(usageArgumentFunction "$usage" "$argument" "${1-}") || return $?
-      ;;
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
+    # _IDENTICAL_ handlerHandler 1
+    --handler) shift && handler=$(usageArgumentFunction "$handler" "$argument" "${1-}") || return $? ;;
     --prefix)
       shift
-      prefix=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
+      prefix=$(usageArgumentString "$handler" "$argument" "${1-}") || return $?
       ;;
     --suffix)
       shift
-      suffix=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
+      suffix=$(usageArgumentString "$handler" "$argument" "${1-}") || return $?
       ;;
     --search-filter)
       shift
-      searchFilters+=("$(usageArgumentCallable "$usage" "searchFilter" "${1-}")") || return $?
+      searchFilters+=("$(usageArgumentCallable "$handler" "searchFilter" "${1-}")") || return $?
       ;;
     --replace-filter)
       shift
-      replaceFilters+=("$(usageArgumentCallable "$usage" "replaceFilter" "${1-}")") || return $?
+      replaceFilters+=("$(usageArgumentCallable "$handler" "replaceFilter" "${1-}")") || return $?
       ;;
     *)
       if [ -z "$mapFile" ]; then
-        mapFile=$(usageArgumentFile "$usage" "mapFile" "${1-}") || return $?
+        mapFile=$(usageArgumentFile "$handler" "mapFile" "${1-}") || return $?
         shift
         break
       else
         # _IDENTICAL_ argumentUnknown 1
-        __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
+        __throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
       fi
       ;;
     esac
     shift
   done
-  [ -n "$mapFile" ] || __throwArgument "$usage" "mapFile required" || return $?
+  [ -n "$mapFile" ] || __throwArgument "$handler" "mapFile required" || return $?
   (
     local value environment searchToken environmentValue filter
 
     value="$*"
     while read -r environment; do
-      environmentValue=$(__catch "$usage" environmentValueRead "$mapFile" "$environment") || return $?
+      environmentValue=$(__catch "$handler" environmentValueRead "$mapFile" "$environment") || return $?
       searchToken="$prefix$environment$suffix"
       if [ ${#searchFilters[@]} -gt 0 ]; then
         for filter in "${searchFilters[@]}"; do
-          searchToken=$(__catchEnvironment "$usage" "$filter" "$searchToken") || return $?
+          searchToken=$(__catchEnvironment "$handler" "$filter" "$searchToken") || return $?
         done
       fi
       if [ ${#replaceFilters[@]} -gt 0 ]; then
         for filter in "${replaceFilters[@]}"; do
-          environmentValue=$(__catchEnvironment "$usage" "$filter" "$environmentValue") || return $?
+          environmentValue=$(__catchEnvironment "$handler" "$filter" "$environmentValue") || return $?
         done
       fi
       value="${value/${searchToken}/${environmentValue}}"
@@ -248,28 +243,27 @@ _mapEnvironmentGenerateSedFile() {
 # Exit Code: 2 - Arguments are identical
 # See: cannon.sh
 cannon() {
-  local usage="_${FUNCNAME[0]}"
+  local handler="_${FUNCNAME[0]}"
 
   local search="" cannonPath="." replace=""
 
-  # _IDENTICAL_ argument-case-header 5
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
+    # __IDENTICAL__ argumentBlankCheck 1
+    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-    # _IDENTICAL_ --help 4
-    --help)
-      "$usage" 0
-      return $?
-      ;;
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
+    # _IDENTICAL_ handlerHandler 1
     --path)
       shift
-      cannonPath=$(usageArgumentDirectory "$usage" "$argument cannonPath" "${1-}") || return $?
+      cannonPath=$(usageArgumentDirectory "$handler" "$argument cannonPath" "${1-}") || return $?
       ;;
     *)
       if [ -z "$search" ]; then
-        search="$(usageArgumentString "$usage" "searchText" "$argument")" || return $?
+        search="$(usageArgumentString "$handler" "searchText" "$argument")" || return $?
       elif [ -z "$replace" ]; then
         replace="$argument"
         shift
@@ -284,27 +278,29 @@ cannon() {
 
   searchQuoted=$(quoteSedPattern "$search")
   replaceQuoted=$(quoteSedPattern "$replace")
-  [ "$searchQuoted" != "$replaceQuoted" ] || __throwArgument "$usage" "from = to \"$search\" are identical" || return $?
-  cannonLog=$(fileTemporaryName "$usage") || return $?
-  if ! find "$cannonPath" -type f ! -path "*/.*/*" "$@" -print0 >"$cannonLog"; then
+  [ "$searchQuoted" != "$replaceQuoted" ] || __throwArgument "$handler" "from = to \"$search\" are identical" || return $?
+  cannonLog=$(fileTemporaryName "$handler") || return $?
+  local undo=(muzzle popd -- rm -f "$cannonLog" "$cannonLog.found" --)
+  __catchEnvironment "$handler" muzzle pushd "$cannonPath" || return $?
+  if ! find "." -type f ! -path "*/.*/*" "$@" -print0 >"$cannonLog"; then
     printf "%s" "$(decorate success "# \"")$(decorate code "$1")$(decorate success "\" Not found")"
-    rm "$cannonLog" || :
-    return 0
+    returnUndo 0 "${undo[@]}"
+    return $?
   fi
   xargs -0 grep -l "$search" <"$cannonLog" >"$cannonLog.found" || :
 
   local exitCode=0 count
 
-  count="$(($(__catch "$usage" fileLineCount "$cannonLog.found") + 0))" || return $?
+  count="$(($(__catch "$handler" fileLineCount "$cannonLog.found") + 0))" || returnUndo 0 "${undo[@]}" || return $?
   if [ "$count" -eq 0 ]; then
     statusMessage --inline decorate warning "Modified (NO) files"
   else
-    __catch "$usage" __xargsSedInPlaceReplace -e "s/$searchQuoted/$replaceQuoted/g" <"$cannonLog.found" || returnClean $? "$cannonLog" || return $?
+    __catch "$handler" __xargsSedInPlaceReplace -e "s/$searchQuoted/$replaceQuoted/g" <"$cannonLog.found" || returnUndo 0 "${undo[@]}" || return $?
     statusMessage --inline decorate success "Modified $(decorate code "$count $(plural "$count" file files)")"
     exitCode=1
   fi
-  __catchEnvironment "$usage" rm -f "$cannonLog" "$cannonLog.found" || return $?
-  return "$exitCode"
+  returnUndo "$exitCode" "${undo[@]}" || return $?
+  return $?
 }
 _cannon() {
   # __IDENTICAL__ usageDocument 1

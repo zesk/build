@@ -906,25 +906,25 @@ __bashDocumentationDefaultArguments() {
 bashDocumentation_FindFunctionDefinitions() {
   local handler="_${FUNCNAME[0]}"
 
-  local directory functionPattern fn linesOutput phraseCount f
+  local directory
 
   [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
   directory=$(usageArgumentDirectory "$handler" "directory" "${1-}") && shift || return $?
 
-  phraseCount=${#@}
-  foundOne=$(fileTemporaryName "$handler") || return $?
+  local foundCount=0 phraseCount=${#@}
   while [ "$#" -gt 0 ]; do
-    fn=$1
-    functionPattern="^$fn\(\) \{|^function $fn \{"
-    find "$directory" -type f -name '*.sh' ! -path "*/.*/*" | while read -r f; do
-      if grep -E -q "$functionPattern" "$f"; then
-        printf "%s\n" "$f"
+    local fn=$1 file escaped
+    escaped=$(quoteGrepPattern "$fn")
+    local functionPattern="^$escaped\(\) \{|^function $escaped \{"
+    while read -r file; do
+      if grep -E -q -e "$functionPattern" "$file"; then
+        printf "%s\n" "$file"
+        foundCount=$((foundCount + 1))
       fi
-    done
+    done < <(find "$directory" -type f -name '*.sh' ! -path "*/.*/*")
     shift
-  done | tee "$foundOne"
-  linesOutput=$(fileLineCount "$foundOne")
-  [ "$phraseCount" -eq "$linesOutput" ]
+  done
+  [ "$phraseCount" -eq "$foundCount" ]
 }
 _bashDocumentation_FindFunctionDefinitions() {
   # __IDENTICAL__ usageDocument 1
@@ -948,23 +948,18 @@ _bashDocumentation_FindFunctionDefinitions() {
 # See: bashDocumentation_FindFunctionDefinitions
 bashDocumentation_FindFunctionDefinition() {
   local handler="_${FUNCNAME[0]}"
-  local definitionFiles directory fn
+  local directory fn
 
   [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
   directory=$(usageArgumentDirectory "$handler" "directory" "${1-}") && shift || return $?
   fn=$(usageArgumentString "$handler" "fn" "${1-}") && shift || return $?
 
-  definitionFiles=$(fileTemporaryName "$handler") || return $?
-  if ! bashDocumentation_FindFunctionDefinitions "$directory" "$fn" >"$definitionFiles"; then
-    rm "$definitionFiles"
-    _environment "$fn not found in $directory" || return $?
-  fi
-  definitionFile="$(head -1 "$definitionFiles")"
-  rm "$definitionFiles"
+  local definitionFile
+  definitionFile=$(__catch "$handler" bashDocumentation_FindFunctionDefinitions "$directory" "$fn" | head -n 1) || return $?
   if [ -z "$definitionFile" ]; then
-    _environment "No files found for $fn in $directory" || return $?
+    __throwEnvironment "$handler" "No files found for $fn in $directory" || return $?
   fi
-  printf %s "$definitionFile"
+  printf "%s\n" "$definitionFile"
 }
 _bashDocumentation_FindFunctionDefinition() {
   # __IDENTICAL__ usageDocument 1

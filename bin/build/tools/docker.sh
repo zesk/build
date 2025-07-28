@@ -141,7 +141,7 @@ __anyEnvToFunctionEnv() {
   else
     local temp
     temp=$(fileTemporaryName "$usage") || return $?
-    __catchEnvironment "$usage" muzzle tee "$temp" || return $?
+    __catchEnvironment "$usage" muzzle tee "$temp" || returnClean $? "$temp" || return $?
     __catch "$usage" __anyEnvToFunctionEnv "$usage" "$passConvertFunction" "$failConvertFunction" "$temp" || returnClean $? "$temp" || return $?
     __catchEnvironment "$usage" rm "$temp" || return $?
     return 0
@@ -285,7 +285,7 @@ environmentFileBashCompatibleToDocker() {
     local name=${envLine%%=*} value=${envLine#*=}
     printf -- "%s=%s\n" "$name" "$(unquote "\"" "$value")"
   done < <(removeFields 2 <"$tempFile" | grep -E -v '^(UID|OLDPWD|PWD|_|SHLVL|FUNCNAME|PIPESTATUS|DIRSTACK|GROUPS)\b|^(BASH_)' || :)
-  __catchEnvironment "$usage" rm -rf "$tempFile" || return $?
+  __catchEnvironment "$usage" rm -f "${clean[@]}" || return $?
 }
 _environmentFileBashCompatibleToDocker() {
   # __IDENTICAL__ usageDocument 1

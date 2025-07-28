@@ -22,7 +22,7 @@
 /etc/packages/
 /.idea/*/
 ORIGINALS/
-/documentation/docs/
+/documentation/.docs/
 /documentation/mkdocs.yml
 /documentation/site/
 /documentation/source/*.csv

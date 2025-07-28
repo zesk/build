@@ -10,12 +10,12 @@ testUrlContentLength() {
 }
 
 testUrlFetch() {
-  local usage="_return"
+  local handler="_return"
   local temp
 
-  temp=$(fileTemporaryName "$usage") || return $?
+  temp=$(fileTemporaryName "$handler") || return $?
 
   assertExitCode --stdout-match "Test file for Zesk Build" --stdout-match "Hello, world." --stdout-match "<h1>" 0 urlFetch "https://marketacumen.com/zesk-build.html" "-" || return $?
 
-  __catchEnvironment "$usage" rm -f "$temp" || return $?
+  __catchEnvironment "$handler" rm -f "$temp" || return $?
 }

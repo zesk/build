@@ -2,7 +2,6 @@
 #
 # Copyright &copy; 2025 Market Acumen, Inc.
 #
-# Depends: assert.sh usage.sh
 #
 
 testIncrementor() {
