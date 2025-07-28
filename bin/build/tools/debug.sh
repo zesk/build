@@ -303,7 +303,6 @@ plumber() {
 
   __after=$(TMPDIR=$__tempDir fileTemporaryName "$handler") || return $?
   __before="$__after.before"
-  __after="$__after.after"
 
   declare -p >"$__before"
   if "$@"; then
@@ -397,7 +396,6 @@ housekeeper() {
 
   __after=$(TMPDIR="$__tempDir" fileTemporaryName "$handler") || return $?
   __before="$__after.before"
-  __after="$__after.after"
 
   _housekeeperAccountant "${watchPaths[@]}" >"$__before"
   if "$@"; then
@@ -409,7 +407,7 @@ housekeeper() {
     fi
     __cmd=$(decorate each code "$@")
     if [ -n "$__changed" ]; then
-      printf "%s\n" "$__changed" | dumpPipe "$__cmd modified files" 1>&2
+      printf "%s\n" "$(decorate code "$__cmd") modified files:" "$(printf "%s\n" "$__changed" | decorate wrap "- ")" "Watching:" "$(printf "%s\n" "${watchPaths[@]}" | decorate wrap "- ")" 1>&2
       __result=$(returnCode leak)
     fi
   else

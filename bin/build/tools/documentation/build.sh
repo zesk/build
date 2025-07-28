@@ -145,9 +145,7 @@ documentationBuild() {
   local cacheDirectory
 
   cacheDirectory="$(__catch "$usage" buildCacheDirectory ".${FUNCNAME[0]}/${APPLICATION_CODE-default}/")" || return $?
-  echo "$LINENO: cacheDirectory=$cacheDirectory "
   cacheDirectory=$(__catch "$usage" directoryRequire "$cacheDirectory") || return $?
-  echo "$LINENO: cacheDirectory=$cacheDirectory "
   if $cleanFlag; then
     __catchEnvironment "$usage" rm -rf "$cacheDirectory" || return $?
     timingReport "$start" "Emptied documentation cache in" || :

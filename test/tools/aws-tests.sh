@@ -312,14 +312,18 @@ testAwsEnvironmentFromCredentials() {
 testAWSCredentialsEdit() {
   local usage="_return"
   local testCredentials
-  local testResults home
+  local testResults home clean=()
 
   local profileName="staging-widgets-robot-build"
 
   home=$(buildHome) || return $?
 
   testHome=$(fileTemporaryName "$usage" -d) || return $?
-  testResults=$(fileTemporaryName "$usage") || return $?
+  testResults="$testHome/results"
+
+  clean+=("$testResults")
+  clean+=("$testHome")
+
   testCredentials="$home/test/example/aws/fake.credentials.txt"
   _awsCredentialsRemoveSection _return "$testCredentials" "$profileName" "" >"$testResults" || return $?
   assertExitCode 0 diff -u "$testResults" "$home/test/example/aws/fake.credentials.0.txt" || return $?
@@ -354,12 +358,15 @@ testAWSCredentialsEdit() {
   assertExitCode 0 awsCredentialsAdd --force --profile "consolidated-devops" "AKIA0000000000009999" "deadbeef" || return $?
   assertExitCode 0 diff -u "$testAWSCredentials" "$home/test/example/aws/fake.credentials.5.txt" || return $?
 
+  __catchEnvironment "$usage" rm -rf "${clean[@]}" || return $?
+
   __mockValue HOME "" --end
 }
 
 testAWSProfiles() {
   local handler="_return"
   local list firstName='test-aws' secondName='never-gonna-let-you-down'
+  local clean=()
 
   muzzle buildCacheDirectory || return $?
 
@@ -371,6 +378,8 @@ testAWSProfiles() {
   HOME=$(fileTemporaryName "$handler" -d) || return $?
 
   list=$(fileTemporaryName "$handler") || return $?
+
+  clean+=("$list" "$HOME")
 
   AWS_PROFILE=
 
@@ -430,6 +439,8 @@ testAWSProfiles() {
   __environment awsProfilesList >"$list" || return $?
   assertFileDoesNotContain --line "$LINENO" "$list" "$firstName" || return $?
   assertFileDoesNotContain --line "$LINENO" "$list" "$secondName" || return $?
+
+  __catchEnvironment "$usage" rm -rf "${clean[@]}" || return $?
 
   __mockValue HOME "" --end
   __mockValue AWS_PROFILE "" --end

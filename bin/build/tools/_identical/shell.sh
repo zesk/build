@@ -38,7 +38,7 @@
 # Argument: ... - Optional. Additional arguments are passed directly to `identicalCheck`.
 identicalCheckShell() {
   local usage="_${FUNCNAME[0]}"
-  local argument  aa=() pp=() addDefaultPrefixes=true
+  local argument aa=() pp=() addDefaultPrefixes=true
 
   local internalPrefixes=(--prefix '# ''DOC TEMPLATE:' --prefix '# ''__IDENTICAL__' --prefix '# ''_IDENTICAL_')
 

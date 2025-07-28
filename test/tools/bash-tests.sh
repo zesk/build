@@ -39,9 +39,10 @@ testBashBasics() {
 
 testBashSourcePath() {
   local handler="_return"
-  local testPath
+  local testPath clean=()
 
   testPath=$(fileTemporaryName "$handler" -d) || return $?
+  clean+=("$testPath")
 
   assertNotExitCode --stderr-match "Requires a directory" 0 bashSourcePath || return $?
   assertNotExitCode --stderr-match "not directory" 0 bashSourcePath "$testPath/does-not-exist-i-hope" || return $?
@@ -65,6 +66,8 @@ testBashSourcePath() {
 
   assertEquals "${ZESK_BUILD-}" "true" || return $?
   assertExitCode 0 isFunction _testZeskBuildFunction || return $?
+
+  __catchEnvironment "$handler" rm -rf "${clean[@]}" || return $?
 
   unset ZESK_BUILD
 }
@@ -112,8 +115,11 @@ testBashSourcePathExclude() {
 testBashSourcePathDot() {
   local handler="_return"
   local testPath testPasses=false
+  local clean=()
 
   testPath=$(fileTemporaryName "$handler" -d) || return $?
+
+  clean+=("$testPath")
 
   __environment mkdir -p "$testPath/.foobar/.eefo/.dots" || return $?
   printf "%s\n" "testPasses=dots" >"$testPath/.foobar/.eefo/.dots/test.sh" || return $?
@@ -139,6 +145,7 @@ testBashSourcePathDot() {
   assertExitCode --leak testPasses --line "$LINENO" 0 bashSourcePath "$testPath/.foobar" || return $?
   assertEquals "$testPasses" "foobar" || return $?
 
+  __catchEnvironment "$handler" rm -rf "${clean[@]}" || return $?
   # Behavior is correct - ignore .dot directories within the bashSourcePath but not above it
 }
 

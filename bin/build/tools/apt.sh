@@ -124,7 +124,6 @@ aptKeyAdd() {
   # apt-key is deprecated for good reasons
   # https://stackoverflow.com/questions/68992799/warning-apt-key-is-deprecated-manage-keyring-files-in-trusted-gpg-d-instead
 
-
   [ "${#names[@]}" -gt 0 ] || __throwArgument "$usage" "Need at least one --name" || return $?
   [ "${#remoteUrls[@]}" -gt 0 ] || __throwArgument "$usage" "Need at least one --url" || return $?
   [ "${#names[@]}" -eq "${#remoteUrls[@]}" ] || __throwArgument "$usage" "Mismatched --name and --url pairs: ${#names[@]} != ${#remoteUrls[@]}" || return $?

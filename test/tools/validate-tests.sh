@@ -55,7 +55,7 @@ _testValidateArgumentHelperFail() {
 
 # Tag: slow
 testValidateFunctions() {
-    local handler="_return"
+  local handler="_return"
 
   local d intTests unsignedIntTests positiveIntTests
 

@@ -16,7 +16,7 @@ source "${BASH_SOURCE[0]%/*}/../tools.sh"
 # Hook to return the current version
 #
 # Defaults to the last version numerically found in `docs/release` directory.
-#
+# Requires: __catch __catchEnvironment muzzle pushd cd printf versionSort popd usageDocument
 __hookVersionCurrent() {
   export BUILD_RELEASE_NOTES
   local usage="_${FUNCNAME[0]}"
@@ -29,7 +29,7 @@ __hookVersionCurrent() {
   __catchEnvironment "$usage" cd "${BUILD_RELEASE_NOTES}" || return $?
   for f in *.md; do
     f=${f%.md}
-    echo "$f"
+    printf -- "%s\n" "$f"
   done | versionSort -r | head -1
   __catchEnvironment "$usage" muzzle popd || return $?
 }

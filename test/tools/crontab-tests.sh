@@ -22,7 +22,7 @@ testCrontabApplicationUpdate() {
   printf "* * * * * echo {APP} {APPLICATION_NAME} {APPLICATION_PATH}\n" >>"$emptyPath/hello/root.crontab"
   assertExitCode --stdout-match "test hello" --stdout-match "$emptyPath/hello" 0 crontabApplicationUpdate --user root --env-file "$envFile" "$emptyPath" --show || return $?
 
-  rm -rf "$emptyPath" || :
+  __catchEnvironment "$usage" rm -rf "$emptyPath" "$envFile" || return $?
 }
 
 testCrontabDeprecatedArgument() {

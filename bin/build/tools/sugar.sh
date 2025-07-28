@@ -14,9 +14,9 @@
 # Argument: command - Callable. Required. Command to run.
 # Argument: ... - Arguments. Optional. Any additional arguments to `command`.
 __catch() {
-  local __count=$# __saved=("$@") handler="$1" command="$2"
+  local __count=$# __saved=("$@") handler="${1-}" command="${2-}"
+  isCallable "$handler" || _argument "handler not callable $(decorate code "$handler")" || return $?
   shift 2 || __throwArgument "$handler" "missing arguments #$__count $(decorate each code "${__saved[@]}")" || return $?
-  isCallable "$handler" || __throwArgument "$handler" "handler not callable $(decorate code "$handler")" || return $?
   isCallable "$command" || __throwArgument "$handler" "command Not callable $(decorate code "$command")" || return $?
   "$command" "$@" || "$handler" "$?" "$command" "$@" || return $?
 }

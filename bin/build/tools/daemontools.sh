@@ -52,28 +52,23 @@ _daemontoolsInstall() {
 # Argument: -- ... - Arguments. Optional. List of arguments for the service.
 #
 daemontoolsInstallService() {
-  local usage="_${FUNCNAME[0]}"
+  local handler="_${FUNCNAME[0]}"
 
   local logTarget appUser binaryPath
   local elapsed here
   local debugFlag=false
 
-  here="$(dirname "${BASH_SOURCE[0]}")"
+  local serviceHome="" serviceName="" serviceFile="" extras=() logHome="" arguments=() logArguments=()
 
-  __catch "$usage" buildEnvironmentLoad DAEMONTOOLS_HOME || return $?
-
-  local serviceHome="${DAEMONTOOLS_HOME}" serviceName="" serviceFile="" extras=() logHome="" arguments=() logArguments=()
-  # _IDENTICAL_ argument-case-header 5
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
+    # __IDENTICAL__ argumentBlankCheck 1
+    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-    # _IDENTICAL_ --help 4
-    --help)
-      "$usage" 0
-      return $?
-      ;;
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
     --debug)
       debugFlag=true
       ;;
@@ -103,35 +98,41 @@ daemontoolsInstallService() {
       ;;
     --name)
       shift
-      serviceName=$(usageArgumentString "$usage" "serviceName" "${1-}") || return $?
+      serviceName=$(usageArgumentString "$handler" "serviceName" "${1-}") || return $?
       ;;
     --log)
       shift
-      logHome="$(usageArgumentDirectory "$usage" "$argument" "${1-}")" || return $?
+      logHome="$(usageArgumentDirectory "$handler" "$argument" "${1-}")" || return $?
       ;;
     *)
       if [ -z "$serviceFile" ]; then
-        serviceFile=$(usageArgumentExecutable "$usage" "serviceFile" "$1") || return $?
+        serviceFile=$(usageArgumentExecutable "$handler" "serviceFile" "$1") || return $?
       elif [ -z "$serviceName" ]; then
-        serviceName=$(usageArgumentString "$usage" "serviceName" "$1") || return $?
+        serviceName=$(usageArgumentString "$handler" "serviceName" "$1") || return $?
       else
-        __throwArgument "$usage" "Extra argument $1" || return $?
+        __throwArgument "$handler" "Extra argument $1" || return $?
       fi
       ;;
     esac
     shift
   done
 
-  [ -d "$serviceHome" ] || __throwEnvironment "$usage" "daemontools home \"$serviceHome\" is not a directory" || return $?
-  [ -n "$serviceFile" ] || __throwArgument "$usage" "$serviceFile is required" || return $?
+  here="$(__catch "$handler" buildHome)/bin/build/tools" || return $?
+
+  __catch "$handler" buildEnvironmentLoad DAEMONTOOLS_HOME || return $?
+
+  [ -n "$serviceHome" ] || serviceHome=${DAEMONTOOLS_HOME-}
+  [ -d "$serviceHome" ] || __throwEnvironment "$handler" "daemontools home \"$serviceHome\" is not a directory" || return $?
+
+  [ -n "$serviceFile" ] || __throwArgument "$handler" "$serviceFile is required" || return $?
   if [ -z "$serviceName" ]; then
     serviceName="$(basename "$serviceFile")"
     serviceName="${serviceName%%.*}"
   fi
-  appUser=$(__catch "$usage" fileOwner "$serviceFile") || return $?
-  [ -n "$appUser" ] || __throwEnvironment "$usage" "fileOwner $serviceFile returned blank" || return $?
+  appUser=$(__catch "$handler" fileOwner "$serviceFile") || return $?
+  [ -n "$appUser" ] || __throwEnvironment "$handler" "fileOwner $serviceFile returned blank" || return $?
 
-  binaryPath=$(realPath "$serviceFile") || __throwEnvironment "$usage" "realPath $serviceFile" || return $?
+  binaryPath=$(realPath "$serviceFile") || __throwEnvironment "$handler" "realPath $serviceFile" || return $?
 
   target="$serviceHome/$serviceName"
   logTarget="$serviceHome/$serviceName/log"
@@ -140,15 +141,15 @@ daemontoolsInstallService() {
   [ "${#arguments[@]}" -eq 0 ] || args=" $(decorate each quote "${arguments[@]}")"
   ! $debugFlag || printf -- "- %s\n" "ARGUMENTS" "${#arguments[@]}" "${arguments[@]+"${arguments[@]}"}" 1>&2
   ! $debugFlag || printf -- "- %s %s\n" "args" "$args" 1>&2
-  ARGUMENTS="$args" LOG_HOME="$logHome" APPLICATION_USER="$appUser" BINARY="$binaryPath" _daemontoolsInstallServiceRun "$usage" "$here/daemontools/_service.sh" "$target" "${extras[@]+"${extras[@]}"}" || return $?
+  ARGUMENTS="$args" LOG_HOME="$logHome" APPLICATION_USER="$appUser" BINARY="$binaryPath" _daemontoolsInstallServiceRun "$handler" "$here/daemontools/_service.sh" "$target" "${extras[@]+"${extras[@]}"}" || return $?
   if [ -d "$logHome" ]; then
     [ "${#logArguments[@]}" -eq 0 ] || logArgs=" $(decorate each quote "${logArguments[@]}")"
-    ARGUMENTS="$logArgs" LOG_HOME="$logHome" APPLICATION_USER="$appUser" BINARY="$binaryPath" _daemontoolsInstallServiceRun "$usage" "$here/daemontools/_log.sh" "$logTarget" "${extras[@]+"${extras[@]}"}" || return $?
+    ARGUMENTS="$logArgs" LOG_HOME="$logHome" APPLICATION_USER="$appUser" BINARY="$binaryPath" _daemontoolsInstallServiceRun "$handler" "$here/daemontools/_log.sh" "$logTarget" "${extras[@]+"${extras[@]}"}" || return $?
   fi
 
-  _daemontoolsSuperviseWait "$usage" "$target" || return $?
+  _daemontoolsSuperviseWait "$handler" "$target" || return $?
   if [ -d "$logHome" ]; then
-    _daemontoolsSuperviseWait "$usage" "$logTarget" || return $?
+    _daemontoolsSuperviseWait "$handler" "$logTarget" || return $?
   fi
 }
 _daemontoolsInstallService() {
@@ -158,30 +159,30 @@ _daemontoolsInstallService() {
 
 # Copy run file to a service target
 _daemontoolsInstallServiceRun() {
-  local usage="$1" source="$2" target="$3" args
-  shift 3 || __throwArgument "$usage" "Missing arguments" || return $?
-  __catch "$usage" muzzle directoryRequire "$target" || return $?
+  local handler="$1" source="$2" target="$3" args
+  shift 3 || __throwArgument "$handler" "Missing arguments" || return $?
+  __catch "$handler" muzzle directoryRequire "$target" || return $?
   args=(--map "$source" "$target/run")
   if fileCopyWouldChange "${args[@]}"; then
-    __catchEnvironment "$usage" fileCopy "$@" "${args[@]}" || return $?
-    __catchEnvironment "$usage" chmod 700 "$target" "$target/run" || return $?
+    __catchEnvironment "$handler" fileCopy "$@" "${args[@]}" || return $?
+    __catchEnvironment "$handler" chmod 700 "$target" "$target/run" || return $?
   fi
 }
 
 # Wait for supervise directory to appear
 _daemontoolsSuperviseWait() {
-  local usage="$1" && shift
+  local handler="$1" && shift
   local total=10 stayQuietFor=5
 
   statusMessage decorate info "Waiting for $(decorate file "$1/supervise") (START) ..."
   local start target="$1"
-  start=$(__catchEnvironment "$usage" date +%s) || return $?
+  start=$(__catchEnvironment "$handler" date +%s) || return $?
   while [ ! -d "$target/supervise" ]; do
-    sleep 1 || __throwEnvironment "$usage" "interrupted" || return $?
+    sleep 1 || __throwEnvironment "$handler" "interrupted" || return $?
     local elapsed
-    elapsed=$(($(__catchEnvironment "$usage" date +%s) - start)) || return $?
+    elapsed=$(($(__catchEnvironment "$handler" date +%s) - start)) || return $?
     if [ $elapsed -gt "$total" ]; then
-      __throwEnvironment "$usage" "supervise is not running - $target/supervise never found after $total seconds" || return $?
+      __throwEnvironment "$handler" "supervise is not running - $target/supervise never found after $total seconds" || return $?
     elif [ $elapsed -gt "$stayQuietFor" ]; then
       statusMessage decorate info "Waiting for $(decorate file "$target/supervise") ($elapsed) ..."
     fi
@@ -194,29 +195,27 @@ _daemontoolsSuperviseWait() {
 # Usage: {fn} serviceName
 # Argument: serviceName - String. Required. Service name to remove.
 daemontoolsRemoveService() {
-  local usage="_${FUNCNAME[0]}"
+  local handler="_${FUNCNAME[0]}"
   local serviceHome="" serviceName=""
 
-  # _IDENTICAL_ argument-case-header 5
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
+    # __IDENTICAL__ argumentBlankCheck 1
+    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-    # _IDENTICAL_ --help 4
-    --help)
-      "$usage" 0
-      return $?
-      ;;
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
     --home)
       shift
-      serviceHome=$(usageArgumentDirectory "$usage" "$argument" "${1-}") || return $?
+      serviceHome=$(usageArgumentDirectory "$handler" "$argument" "${1-}") || return $?
       ;;
     *)
       if [ -z "$serviceName" ]; then
         serviceName="$1"
       else
-        __throwArgument "$usage" "Extra argument $1" || return $?
+        __throwArgument "$handler" "Extra argument $1" || return $?
       fi
       ;;
     esac
@@ -227,13 +226,13 @@ daemontoolsRemoveService() {
     __environment buildEnvironmentLoad DAEMONTOOLS_HOME || return $?
     serviceHome="${DAEMONTOOLS_HOME}"
   fi
-  [ -d "$serviceHome" ] || __throwEnvironment "$usage" "daemontools home \"$serviceHome\" is not a directory" || return $?
-  [ -d "$serviceHome/$serviceName" ] || __throwEnvironment "$usage" "$serviceHome/$serviceName does not exist" || return $?
+  [ -d "$serviceHome" ] || __throwEnvironment "$handler" "daemontools home \"$serviceHome\" is not a directory" || return $?
+  [ -d "$serviceHome/$serviceName" ] || __throwEnvironment "$handler" "$serviceHome/$serviceName does not exist" || return $?
 
-  __catchEnvironment "$usage" pushd "$serviceHome/$serviceName" >/dev/null || return $?
-  __catchEnvironment "$usage" muzzle svc -dx . log 2>&1 || return $?
-  __catchEnvironment "$usage" rm -rf "$serviceHome/$serviceName" || return $?
-  __catchEnvironment "$usage" popd >/dev/null || return $?
+  __catchEnvironment "$handler" pushd "$serviceHome/$serviceName" >/dev/null || return $?
+  __catchEnvironment "$handler" muzzle svc -dx . log 2>&1 || return $?
+  __catchEnvironment "$handler" rm -rf "$serviceHome/$serviceName" || return $?
+  __catchEnvironment "$handler" popd >/dev/null || return $?
 }
 _daemontoolsRemoveService() {
   # __IDENTICAL__ usageDocument 1
@@ -243,13 +242,13 @@ _daemontoolsRemoveService() {
 # Usage: {fn}
 # Is daemontools running?
 daemontoolsIsRunning() {
-  local usage="_${FUNCNAME[0]}"
+  local handler="_${FUNCNAME[0]}"
   [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
 
   local processIds processId
 
   # IDENTICAL rootUser 1
-  [ "$(id -u 2>/dev/null)" = "0" ] || __throwEnvironment "$usage" "Must be root" || return $?
+  [ "$(id -u 2>/dev/null)" = "0" ] || __throwEnvironment "$handler" "Must be root" || return $?
 
   processIds=()
   while read -r processId; do processIds+=("$processId"); done < <(daemontoolsProcessIds)
@@ -292,7 +291,7 @@ daemontoolsExecute() {
   local home
   home="$(__catch "$handler" daemontoolsHome)" || return $?
 
-  handlerRequireBinary "$handler" svscanboot id svc svstat || return $?
+  usageRequireBinary "$handler" svscanboot id svc svstat || return $?
   __catch "$handler" muzzle directoryRequire --mode 0775 --owner root:root "$home" || return $?
   __catchEnvironment "$handler" muzzle nohup bash -c 'svscanboot &' 2>&1 || return $?
 }

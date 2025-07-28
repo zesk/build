@@ -370,6 +370,7 @@ serviceToPort() {
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
     # _IDENTICAL_ handlerHandler 1
+    --handler) shift && handler=$(usageArgumentFunction "$handler" "$argument" "${1-}") || return $? ;;
     --services)
       shift || __throwArgument "$handler" "missing $argument argument" || return $?
       servicesFile=$(usageArgumentFile "$handler" "servicesFile" "$1") || return $?

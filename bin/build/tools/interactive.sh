@@ -236,7 +236,7 @@ fileCopyWouldChange() {
         shift
         if [ $# -gt 0 ]; then
           # _IDENTICAL_ argumentUnknown 1
-          __throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
+          __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
         fi
         if [ ! -f "$destination" ]; then
           return 0

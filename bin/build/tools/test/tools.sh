@@ -966,7 +966,7 @@ __testRun() {
     export TMPDIR
     savedTMPDIR=$TMPDIR
     TMPDIR="$tempDirectory"
-    if plumber --temporary "$savedTMPDIR" housekeeper --temporary "$savedTMPDIR" --path "$TMPDIR" "$__test" "$quietLog" 2> >(tee -a "$captureStderr"); then
+    if plumber --temporary "$savedTMPDIR" housekeeper --temporary "$savedTMPDIR" --path "$TMPDIR" --path "$(buildHome)" "$__test" "$quietLog" 2> >(tee -a "$captureStderr"); then
       TMPDIR="$savedTMPDIR"
       if fileIsEmpty "$captureStderr"; then
         printf "%s\n" "SUCCESS $__test" >>"$quietLog"

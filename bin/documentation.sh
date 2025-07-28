@@ -111,6 +111,8 @@ __buildDocumentationBuildRelease() {
 
   currentNotes=$(releaseNotes)
 
+  __catch "$usage" fileDirectoryRequire "$target" || return $?
+
   printf -- "%s\n" "# Release Notes" "" >"$target"
 
   index=0

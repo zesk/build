@@ -75,7 +75,7 @@ testBuildEnvironmentLoadAll() {
     PATH
   )
 
-  home=$(__catchEnvironment "$handler" buildHome) || return $?
+  home=$(__catch "$handler" buildHome) || return $?
   tempFile=$(fileTemporaryName "$handler")
 
   find "$home" -type f -name '*.sh' -path '*/env/*' ! -path '*/test/*' ! -path '*/.*/*' -exec basename {} \; | cut -d . -f 1 | dumpPipe "All env files found"

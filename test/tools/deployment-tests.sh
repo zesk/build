@@ -134,6 +134,8 @@ testDeployRemoteFinish() {
   assertExitCode 0 test -L "$tempDirectory/app" || return $?
 
   unset BUILD_DEBUG_LINES
+
+  __catchEnvironment "$handler" rm -rf "$tempDirectory" || return $?
   return 0
 }
 

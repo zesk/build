@@ -17,7 +17,7 @@
 debuggingStack() {
   local usage="_${FUNCNAME[0]}"
 
-  local index count sources=() showExports=false addMe=false
+  local index count sources=() showExports=false addMe=false exitFlag=false
 
   # _IDENTICAL_ argument-case-header 5
   local __saved=("$@") __count=$#
@@ -35,6 +35,9 @@ debuggingStack() {
       ;;
     --me)
       addMe=true
+      ;;
+    --exit)
+      exitFlag=true
       ;;
     *)
       # _IDENTICAL_ argumentUnknown 1
@@ -69,6 +72,7 @@ debuggingStack() {
     printf -- "EXPORTS:\n"
     declare -px | removeFields 2
   fi
+  ! $exitFlag || exit 0
 }
 _debuggingStack() {
   true || debuggingStack --help

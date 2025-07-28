@@ -43,4 +43,3 @@ testDeprecatedCannon() {
 
   __environment rm -rf "$tempDir" || return $?
 }
-

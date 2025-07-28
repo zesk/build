@@ -29,9 +29,9 @@ testDaemontools() {
 
   assertExitCode 0 daemontoolsIsRunning || return $?
 
-  logPath=$(__environment buildCacheDirectory "${FUNCNAME[0]}") || return $?
+  logPath=$(__catchEnvironment "$usage" buildCacheDirectory "${FUNCNAME[0]}") || return $?
   decorate info "logPath is $logPath"
-  __environment directoryRequire "$logPath" >/dev/null || return $?
+  __catchEnvironment "$usage" directoryRequire "$logPath" >/dev/null || return $?
 
   assertExitCode --leak DAEMONTOOLS_HOME 0 daemontoolsInstallService --log "$logPath" "$home/test/example/lemon.sh" --arguments "orange" "grape" "lemon" -- --log-arguments "n10" || return $?
 

@@ -436,15 +436,15 @@ packageInstall() {
   local __start quietLog installed
 
   __start=$(timingStart) || return $?
-  installed="$(fileTemporaruName "$usage")" || return $?
+  installed="$(fileTemporaryName "$usage")" || return $?
   __catch "$usage" packageUpdate "${vv[@]+"${vv[@]}"}" || return $?
-  local __installStart
+  local __installStart clean=()
   __installStart=$(timingStart) || return $?
   __catch "$usage" packageInstalledList --manager "$manager" >"$installed" || return $?
-
-  local standardPackages=() actualPackages=() package installed installFunction
+  clean+=("$installed")
+  local standardPackages=() actualPackages=() package installFunction
   # Loads BUILD_TEXT_BINARY
-  muzzle _packageStandardPackages "$manager" || __throwEnvironment "$usage" "Unable to fetch standard packages" || return $?
+  muzzle _packageStandardPackages "$manager" || __throwEnvironment "$usage" "Unable to fetch standard packages" || returnClean $? "${clean[@]}" || return $?
   IFS=$'\n' read -d '' -r -a standardPackages < <(_packageStandardPackages "$manager") || :
   if "$forceFlag"; then
     actualPackages=("${packages[@]}")
@@ -463,6 +463,7 @@ packageInstall() {
       fi
     done
   fi
+  __catchEnvironment "$usage" rm -f "$installed" || return $?
   if [ "${#actualPackages[@]}" -eq 0 ]; then
     if [ "${#packages[@]}" -gt 0 ]; then
       ! $verboseFlag || statusMessage --last decorate success "Already installed: ${packages[*]}"
