@@ -1016,5 +1016,5 @@ _bashDocumentationFormatter_see() {
         printf "{SEE:%s}\n" "$seeItem"
       fi
     done
-  done || :
+  done
 }

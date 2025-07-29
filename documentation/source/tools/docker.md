@@ -8,17 +8,7 @@
 
 {insideDocker}
 
-{checkDockerEnvFile}
-
-{environmentFileToBashCompatible}
-
-{environmentFileToDocker}
-
 {dockerLocalContainer}
-
-{environmentFileBashCompatibleToDocker}
-
-{environmentFileDockerToBashCompatible}
 
 {dockerPlatformDefault}
 

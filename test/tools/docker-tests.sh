@@ -15,11 +15,11 @@ testCheckDockerEnvFile() {
 
   local testFile="$home/test/example/bad.env"
 
-  assertExitCode --stderr-ok 1 checkDockerEnvFile "$testFile" || return $?
-  assertExitCode --stderr-match TEST_AWS_SECURITY_GROUP 1 checkDockerEnvFile "$testFile" || return $?
-  assertExitCode --stderr-match DOLLAR 1 checkDockerEnvFile "$testFile" || return $?
-  assertExitCode --stderr-no-match GOOD 1 checkDockerEnvFile "$testFile" || return $?
-  assertExitCode --stderr-no-match HELLO 1 checkDockerEnvFile "$testFile" || return $?
+  assertExitCode --stderr-ok 1 environmentFileIsDocker "$testFile" || return $?
+  assertExitCode --stderr-match TEST_AWS_SECURITY_GROUP 1 environmentFileIsDocker "$testFile" || return $?
+  assertExitCode --stderr-match DOLLAR 1 environmentFileIsDocker "$testFile" || return $?
+  assertExitCode --stderr-no-match GOOD 1 environmentFileIsDocker "$testFile" || return $?
+  assertExitCode --stderr-no-match HELLO 1 environmentFileIsDocker "$testFile" || return $?
 
   assertExitCode 0 environmentFileDockerToBashCompatible "$testFile" || return $?
 
@@ -185,12 +185,10 @@ testEnvCommentHandling() {
   __catchEnvironment "$usage" printf -- "%s\n" "# Comment" "WORD=born" >"$testEnvDocker" || return $?
   __catchEnvironment "$usage" printf -- "%s\n" "# Comment" "WORD=\"born\"" >"$testEnvBash" || return $?
 
-  assertExitCode 0 checkDockerEnvFile "$testEnvDocker" || return $?
-  assertNotExitCode --stderr-match "WORD=\"born\"" 0 checkDockerEnvFile "$testEnvBash" || return $?
+  assertExitCode 0 environmentFileIsDocker "$testEnvDocker" || return $?
+  assertNotExitCode --stderr-match "WORD=\"born\"" 0 environmentFileIsDocker "$testEnvBash" || return $?
 
   for testFile in "$testEnvDocker" "$testEnvBash"; do
-    #    statusMessage --last __echo environmentFileToBashCompatible <"$testFile"
-    #    statusMessage --last __echo environmentFileToDocker <"$testFile"
     assertExitCode --stdout-match "WORD=\"born\"" --stdout-match "# Comment" 0 environmentFileToBashCompatible "$testFile" || return $?
     assertExitCode --stdout-match "WORD=born" --stdout-no-match "# Comment" 0 environmentFileToDocker "$testFile" || return $?
   done

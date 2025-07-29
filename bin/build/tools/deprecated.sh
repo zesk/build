@@ -18,6 +18,12 @@
 #             |_|
 #
 
+# DEPRECATED 2025-07-29
+checkDockerEnvFile() {
+  _deprecated "${FUNCNAME[0]}"
+  environmentFileIsDocker "$@"
+}
+
 # DEPRECATED 2025-07-23
 anyEnvToDockerEnv() {
   _deprecated "${FUNCNAME[0]}"

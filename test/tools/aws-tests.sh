@@ -399,9 +399,9 @@ testAWSProfiles() {
 
   local testKey="AKIAZ0123456789ABCDE" testPassword="haaaaaaanrNGhaaaaaaanrNGhaaaaaaanrNGABYU"
 
-  __echo assertExitCode 0 awsCredentialsAdd --profile "$firstName" "$testKey" "$testPassword" || return $?
-  __echo assertFileContains --line "$LINENO" "$credentials" "$testKey" "$testPassword" || return $?
-  __echo assertFileDoesNotContain --line "$LINENO" "$credentials" "# awsCredentialsAdd" || return $?
+  assertExitCode 0 awsCredentialsAdd --profile "$firstName" "$testKey" "$testPassword" || return $?
+  assertFileContains --line "$LINENO" "$credentials" "$testKey" "$testPassword" || return $?
+  assertFileDoesNotContain --line "$LINENO" "$credentials" "# awsCredentialsAdd" || return $?
 
   # Exists
   assertNotExitCode --stderr-match 'exists in' --line "$LINENO" 0 awsCredentialsAdd --comments --profile "$firstName" "$testKey" "$testPassword" || return $?

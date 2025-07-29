@@ -175,6 +175,8 @@ testEnvironmentValueReadWrite() {
     value=$(__environment environmentValueRead "$foo" "$testName" "*default*") || return $?
     assertEquals "$testValue" "$value" "Read write value changed" || return $?
   done
+
+  __catch "$handler" rm "$foo" || return $?
 }
 
 testEnvironmentValueWriteArray() {
@@ -210,6 +212,8 @@ testEnvironmentValueWriteArray() {
     assertEquals "${testArray[*]}" "${restoredValue[*]}" || return $?
     index=$((index + 1))
   done
+
+  __catch "$handler" rm -f "$envFile" || return $?
 }
 
 __testEnvironmentNameValidPassValues() {
@@ -387,7 +391,6 @@ testEnvironmentClean() {
 
   local saveEnv
 
-  echo $LINENO
   #
   # Preserve environment locally here for this test
   #
@@ -409,21 +412,13 @@ testEnvironmentClean() {
   GGG=("Hello" "World")
   PS1=FOOBAR
 
-  echo $LINENO
+  # environmentClean "${keepers[@]}" || return $?
 
-  __echo environmentClean "${keepers[@]}" || return $?
-
-  echo $LINENO
-
-  __echo assertExitCode 0 environmentClean "${keepers[@]}" || return $?
-
-  echo $LINENO
+  assertExitCode 0 environmentClean "${keepers[@]}" || return $?
 
   for item in "${keepers[@]}"; do
     assertStringNotEmpty "${!item}" || return $?
   done
-
-  echo $LINENO
 
   keepers=(A DEE FFF GGG)
   removed=(B C EEE)
@@ -450,6 +445,8 @@ testEnvironmentClean() {
   # shellcheck source=/dev/null
   source "$saveEnv"
   set +a
+
+  __catch "$usage" rm -f "$saveEnv" || return $?
 }
 
 __testEchoEnv() {

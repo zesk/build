@@ -74,6 +74,7 @@ dockerEnvToBash|environmentFileDockerToBashCompatible
 DockerEnvToBash|EnvironmentFileDockerToBashCompatible
 dockerEnvFromBashEnv|environmentFileBashCompatibleToDocker
 DockerEnvFromBashEnv|EnvironmentFileBashCompatibleToDocker
+checkDockerEnvFile|environmentFileIsDocker|
 
 # v0.36.2
 

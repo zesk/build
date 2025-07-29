@@ -197,14 +197,14 @@ __deprecatedConfiguration() {
   [ -d "$HOME" ] || _environment HOME is not set || return $?
 
   if [ -f "$HOME/.applicationHome" ]; then
-    __echo mv "$HOME/.applicationHome" "$newHome"
+    mv "$HOME/.applicationHome" "$newHome"
   fi
   local oldHome="$HOME/.build"
   if [ -d "$oldHome" ]; then
     if [ -d "$newHome" ]; then
       decorate warning "Both $oldHome and $newHome exist - merge manually"
     else
-      __echo mv "$oldHome" "$newHome"
+      mv "$oldHome" "$newHome"
     fi
   fi
 
@@ -218,7 +218,7 @@ __deprecatedConfiguration() {
     newName="${fileName#.env.}"
     suffix="${newName#*.}"
     newName="${newName%%.*}"
-    __echo mv "$directory/$fileName" "$directory/.$suffix.$newName.env"
+    mv "$directory/$fileName" "$directory/.$suffix.$newName.env"
   done < <(find "$home" -name '.env.STAGING.*' -or -name '.env.PRODUCTION.*' -name '.env.staging.*' -or -name '.env.production.*')
 
   local exitCode=0

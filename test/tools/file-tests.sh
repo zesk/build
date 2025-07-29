@@ -16,6 +16,8 @@ testBasicFileStuff() {
   __environment touch "$testFile" || return $?
   assertExitCode 0 fileModificationTime "$testFile" || return $?
   assertExitCode 0 fileModificationSeconds "$testFile" || return $?
+
+  __catch "$handler" rm -rf "$testDir" || return $?
 }
 
 _assertBetterType() {
