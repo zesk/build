@@ -9,16 +9,21 @@
 
 testReadlineConfigurationAdd() {
   local handler="_return"
-  local savedHome
+  local tempHome
+
+  __mockValue HOME
 
   export HOME
-  savedHome=$HOME
 
-  HOME=$(fileTemporaryName "$handler" -d) || return $?
+  tempHome=$(fileTemporaryName "$handler" -d) || return $?
+
+  HOME=$tempHome
   assertFileDoesNotExist "$HOME/.input""rc" || return $?
   assertExitCode 0 readlineConfigurationAdd "\ep" "history-search-backward" || return $?
 
   assertFileContains "$HOME/.input""rc" history-search-backward || return $?
 
-  HOME=$savedHome
+  __catch "$handler" rm -rf "$tempHome" || return $?
+
+  __mockValue HOME "" --end
 }

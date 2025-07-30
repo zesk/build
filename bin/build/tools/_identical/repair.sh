@@ -81,18 +81,20 @@ identicalRepair() {
     __throwEnvironment "$handler" "$(decorate code "$source") not an integer: \"$(decorate value "$identicalLine")\"" || return $?
   fi
 
-  local sourceText
+  local sourceText clean=()
   sourceText=$(fileTemporaryName "$handler") || return $?
+  clean+=("$sourceText")
 
   # Include header but map EOF to count on the first line
-  __catch "$handler" __identicalCheckMatchFile "$source" "$totalLines" "$((lineNumber - 1))" 1 | sed -e "s/[[:space:]]EOF\$/ $count/g" -e "s/[[:space:]]EOF[[:space:]]/ $count /g" >"$sourceText" || return $?
-  __catch "$handler" __identicalCheckMatchFile "$source" "$totalLines" "$lineNumber" "$count" >>"$sourceText" || return $?
+  __catch "$handler" __identicalCheckMatchFile "$source" "$totalLines" "$((lineNumber - 1))" 1 | sed -e "s/[[:space:]]EOF\$/ $count/g" -e "s/[[:space:]]EOF[[:space:]]/ $count /g" >"$sourceText" || returnClean $? "${clean[@]}" || return $?
+  __catch "$handler" __identicalCheckMatchFile "$source" "$totalLines" "$lineNumber" "$count" >>"$sourceText" || returnClean $? "${clean[@]}" || return $?
   if $fileMap; then
-    _identicalMapAttributesFile "$handler" "$sourceText" "$destination" || return $?
+    _identicalMapAttributesFile "$handler" "$sourceText" "$destination" || returnClean $? "${clean[@]}" || return $?
   fi
   if ! $stdout; then
     local targetFile
-    targetFile=$(fileTemporaryName "$handler") || return $?
+    targetFile=$(fileTemporaryName "$handler") || returnClean $? "${clean[@]}" || return $?
+    clean+=("$targetFile")
     exec 3>"$targetFile"
   else
     exec 3>&1
@@ -100,15 +102,15 @@ identicalRepair() {
   local currentLineNumber=0 undo=("exec" "3>&-" --)
 
   # totalLines is *$destination* lines
-  totalLines=$(__catch "$handler" fileLineCount "$destination") || return $?
+  totalLines=$(__catch "$handler" fileLineCount "$destination") || returnClean $? "${clean[@]}" || return $?
   while read -r identicalLine; do
     local isEOF=false
-    parsed=$(__identicalLineParse "$handler" "$destination" "$prefix" "$identicalLine") || returnUndo $? "${undo[@]}" || return $?
+    parsed=$(__identicalLineParse "$handler" "$destination" "$prefix" "$identicalLine") || returnUndo $? "${undo[@]}" || returnClean $? "${clean[@]}" || return $?
     IFS=" " read -r lineNumber token count < <(printf -- "%s\n" "$parsed") || :
     if [ "$count" = "EOF" ]; then
       isEOF=true
     fi
-    count=$(__identicalLineCount "$count" "$((totalLines - lineNumber))") || __throwEnvironment "$handler" "\"$identicalLine\" invalid count: $count" || returnUndo $? "${undo[@]}" || return $?
+    count=$(__identicalLineCount "$count" "$((totalLines - lineNumber))") || __throwEnvironment "$handler" "\"$identicalLine\" invalid count: $count" || returnUndo $? "${undo[@]}" || returnClean $? "${clean[@]}" || return $?
     if [ "$lineNumber" -gt 1 ]; then
       if [ "$currentLineNumber" -eq 0 ]; then
         head -n $((lineNumber - 1)) <"$destination" >&3
@@ -129,9 +131,9 @@ identicalRepair() {
   fi
   exec 3>&-
   if ! $stdout; then
-    __catchEnvironment "$handler" cp -f "$targetFile" "$destination" || return $?
-    rm -f "$targetFile" || :
+    __catchEnvironment "$handler" cp -f "$targetFile" "$destination" || returnClean $? "${clean[@]}" || return $?
   fi
+  returnClean 0 "${clean[@]}" || return $?
 }
 _identicalRepair() {
   # __IDENTICAL__ usageDocument 1

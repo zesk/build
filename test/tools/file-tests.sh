@@ -211,6 +211,8 @@ testFileMatches() {
 
   assertExitCode "${matches[@]}" 0 fileMatches "$pattern" -- "${ex[@]+"${ex[@]}"}" -- - <"$matchFiles" || return $?
   assertExitCode "${invertedMatches[@]}" 0 fileNotMatches "$pattern" -- "${ex[@]+"${ex[@]}"}" -- - <"$matchFiles" || return $?
+
+  __catch "$handler" rm -f "$matchFiles" || return $?
 }
 
 testLinkCreate() {

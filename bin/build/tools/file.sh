@@ -619,7 +619,7 @@ _fileMatchesHelper() {
       fi
     done <"$fileList"
   done
-  returnClean 0 "$fileList" || return $?
+  returnClean 0 "${clean[@]}" || return $?
   $found
 }
 

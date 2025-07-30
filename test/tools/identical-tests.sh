@@ -28,6 +28,8 @@ testIdenticalEofWithBracket() {
   assertDirectoryExists "$temp/similar" "$temp/similar/fix" || return $?
   assertExitCode 0 identicalCheck --repair "$temp/similar/fix" --prefix '# ''IDENTICAL' --extension txt --cd "$temp/similar" || return $?
   assertFileContains "$temp/similar/eofbug-target.txt" "}" || return $?
+
+  __catch "$handler" rm -rf "$temp" || return $?
 }
 
 testIdenticalCheckAndRepairMap() {
@@ -60,6 +62,8 @@ testIdenticalCheckAndRepairMap() {
     assertFileContains "$testPath/alternate/$name.txt" "- FILE" "alternate/$name.txt" || return $?
     assertFileContains "$testPath/alternate/$name.txt" "- BASE $name.txt" || return $?
   done
+
+  __catch "$handler" rm -rf "$testPath" || return $?
 }
 
 testIdenticalRepair() {
@@ -194,4 +198,6 @@ testIdenticalCheckRepairWithEmptyDir() {
   mkdir -p "$temp/bar/identical/"
   touch "$temp/hey.sh"
   assertExitCode 0 identicalCheck --cd "$temp" --repair "$temp/foo/identical/" --repair "$temp/bar/identical/" --prefix '# ''IDENTICAL' --extension sh || return $?
+
+  __catch "$handler" rm -rf "$temp" || return $?
 }

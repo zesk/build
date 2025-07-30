@@ -88,7 +88,7 @@ testMapValue() {
   local tempEnv
   local handler="_return"
 
-  tempEnv=$(fileTemporaryName "$handler" -d) || return $?
+  tempEnv=$(fileTemporaryName "$handler") || return $?
 
   assertEquals "{foo}" "$(mapValue "$tempEnv" "{foo}")" || return $?
 
@@ -96,5 +96,5 @@ testMapValue() {
 
   assertEquals "bar" "$(mapValue "$tempEnv" "{foo}")" || return $?
 
-  __environment rm "$tempEnv" || return $?
+  __catch "$handler" rm -f "$tempEnv" || return $?
 }
