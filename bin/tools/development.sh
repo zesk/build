@@ -48,3 +48,18 @@ buildContainer() {
   )
   dockerLocalContainer --image "$image" --path /root/build --env-file .STAGING.env /root/build/bin/build/bash-build.sh --rc-extras "${ee[@]}" -- "$@"
 }
+
+# Run tests (and continue from last failure point) but skip slow and package installation tests.
+buildQuickTest() {
+  local handler="_${FUNCNAME[0]}"
+  local home
+
+  __help "$handler" "$@" || return 0
+
+  home=$(__catch "$handler" buildHome) || return $?
+  "$home/bin/test.sh" -c --skip-tag slow --skip-tag package-install "$@"
+}
+_buildQuickTest() {
+  # __IDENTICAL__ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}

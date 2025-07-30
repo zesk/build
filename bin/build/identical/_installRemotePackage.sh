@@ -436,7 +436,7 @@ __installRemotePackageGitCheck() {
 
 # Usage: {fn} _installRemotePackageSource targetBinary relativePath
 # Requires: grep printf chmod wait
-# Requires: _environment isUnsignedInteger cat _clean
+# Requires: _environment isUnsignedInteger cat returnClean
 __installRemotePackageLocal() {
   local source="$1" myBinary="$2" relTop="$3"
   {

@@ -26,7 +26,7 @@
 # Argument: --help - Optional. Flag. Display this help.
 # Environment: Argument-passed or entire environment variables which are exported are used and mapped to the destination.
 # Example:     printf %s "{NAME}, {PLACE}.\n" | NAME=Hello PLACE=world mapEnvironment NAME PLACE
-# Requires: __throwArgument read environmentVariables decorate sed cat rm __throwEnvironment __catchEnvironment _clean
+# Requires: __throwArgument read environmentVariables decorate sed cat rm __throwEnvironment __catchEnvironment returnClean
 # Requires: usageArgumentString fileTemporaryName
 mapEnvironment() {
   local handler="_${FUNCNAME[0]}"

@@ -244,3 +244,4 @@ __decorateExtensionQuote() {
 }
 
 # <-- END of IDENTICAL decorate
+

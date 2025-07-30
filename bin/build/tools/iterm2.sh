@@ -278,7 +278,7 @@ __iTerm2SetColors() {
 iTerm2Image() {
   local usage="_${FUNCNAME[0]}"
 
-  local ignoreErrors=true images=() width="" height="" aspectRatio=true
+  local ignoreErrors=false images=() width="" height="" aspectRatio=true
 
   # _IDENTICAL_ argument-case-header 5
   local __saved=("$@") __count=$#

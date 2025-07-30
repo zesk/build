@@ -279,32 +279,32 @@ _bashFunctionComment() {
 # DOC TEMPLATE: noArgumentsForHelp 1
 # Without arguments, displays help.
 # Argument: --only - Flag. Optional. Must be first parameter. If calling function ONLY takes the `--help` parameter then throw an argument error if the argument is anything but `--help`.
-# Argument: usageFunction - Function. Required. Must be first or second parameter. If calling function ONLY takes the `--help` parameter then throw an argument error if the argument is anything but `--help`.
+# Argument: handlerFunction - Function. Required. Must be first or second parameter. If calling function ONLY takes the `--help` parameter then throw an argument error if the argument is anything but `--help`.
 # Argument: arguments ... - Arguments. Optional. Arguments passed to calling function to check for `--help` argument.
 #
-# Example:     # NOT DEFINED usage local usage="_${FUNCNAME[0]}"
+# Example:     # NOT DEFINED handler
 # Example:
 # Example:     __help "_${FUNCNAME[0]}" "$@" || return 0
 # Example:     [ "$1" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
 # Example:     [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
 # Example:     [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
 # Example:
-# Example:     # DEFINED usage
+# Example:     # DEFINED handler
 # Example:
-# Example:     local usage="_${FUNCNAME[0]}"
-# Example:     __help "$usage" "$@" || return 0
-# Example:     [ "$1" != "--help" ] || __help "$usage" "$@" || return 0
-# Example:     [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
-# Example:     [ $# -eq 0 ] || __help --only "$usage" "$@" || return "$(convertValue $? 1 0)"
+# Example:     local handler="_${FUNCNAME[0]}"
+# Example:     __help "$handler" "$@" || return 0
+# Example:     [ "$1" != "--help" ] || __help "$handler" "$@" || return 0
+# Example:     [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
+# Example:     [ $# -eq 0 ] || __help --only "$handler" "$@" || return "$(convertValue $? 1 0)"
 # Example:
 # Example:     # Blank Arguments for help
 # Example:     [ $# -gt 0 ] || __help "_${FUNCNAME[0]}" --help || return 0
-# Example:     [ $# -gt 0 ] || __help "$usage" --help || return 0
+# Example:     [ $# -gt 0 ] || __help "$handler" --help || return 0
 #
 # DEPRECATED-Example: [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return $?
-# DEPRECATED-Example: [ $# -eq 0 ] || __help --only "$usage" "$@" || return $?
+# DEPRECATED-Example: [ $# -eq 0 ] || __help --only "$handler" "$@" || return $?
 #
-# Requires: __throwArgument usageDocument ___help
+# Requires: __throwArgument handlerDocument ___help
 __help() {
   [ $# -gt 0 ] || ! ___help 0 || return 0
   local handler="${1-}" && shift
@@ -320,7 +320,7 @@ __help() {
   return 0
 }
 ___help() {
-  # __IDENTICAL__ usageDocument 1
+  # __IDENTICAL__ handlerDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -773,7 +773,7 @@ _fileReverseLines() {
 # Argument: --help - Optional. Flag. Display this help.
 # Environment: Argument-passed or entire environment variables which are exported are used and mapped to the destination.
 # Example:     printf %s "{NAME}, {PLACE}.\n" | NAME=Hello PLACE=world mapEnvironment NAME PLACE
-# Requires: __throwArgument read environmentVariables decorate sed cat rm __throwEnvironment __catchEnvironment _clean
+# Requires: __throwArgument read environmentVariables decorate sed cat rm __throwEnvironment __catchEnvironment returnClean
 # Requires: usageArgumentString fileTemporaryName
 mapEnvironment() {
   local handler="_${FUNCNAME[0]}"

@@ -198,7 +198,7 @@ _usageDocumentSimple() {
 # Exit Code: 1 - Issue with file generation
 # Exit Code: 2 - Argument error
 # Requires: __catchEnvironment timingStart __throwArgument usageArgumentFile usageArgumentDirectory usageArgumentFileDirectory
-# Requires: basename decorate statusMessage fileTemporaryName rm grep cut source mapTokens _clean
+# Requires: basename decorate statusMessage fileTemporaryName rm grep cut source mapTokens returnClean
 # Requires: mapEnvironment shaPipe printf
 documentationTemplateCompile() {
   local handler="_${FUNCNAME[0]}"

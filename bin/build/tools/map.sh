@@ -93,8 +93,8 @@ mapValue() {
         shift
         break
       else
-        # _IDENTICAL_ argumentUnknown 1
-        __throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
+      # _IDENTICAL_ argumentUnknownHandler 1
+      __throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
       fi
       ;;
     esac
@@ -159,7 +159,7 @@ _mapValueTrim() {
 # Argument: --help - Optional. Flag. Display this help.
 # Environment: Argument-passed or entire environment variables which are exported are used and mapped to the destination.
 # Example:     printf %s "{NAME}, {PLACE}.\n" | NAME=Hello PLACE=world mapEnvironment NAME PLACE
-# Requires: __throwArgument read environmentVariables decorate sed cat rm __throwEnvironment __catchEnvironment _clean
+# Requires: __throwArgument read environmentVariables decorate sed cat rm __throwEnvironment __catchEnvironment returnClean
 # Requires: usageArgumentString fileTemporaryName
 mapEnvironment() {
   local handler="_${FUNCNAME[0]}"
@@ -232,6 +232,8 @@ _mapEnvironmentGenerateSedFile() {
 # Example:     {fn} master main ! -path '*/old-version/*')
 # DOC TEMPLATE: --help 1
 # Argument: --help - Optional. Flag. Display this help.
+# DOC TEMPLATE: --handler 1
+# Argument: --handler handler - Optional. Function. Use this error handler instead of the default error handler.
 # Argument: --path cannonPath - Optional. Directory. Run cannon operation starting in this directory.
 # Argument: fromText - Required. String of text to search for.
 # Argument: toText - Required. String of text to replace.
@@ -257,6 +259,7 @@ cannon() {
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
     # _IDENTICAL_ handlerHandler 1
+    --handler) shift && handler=$(usageArgumentFunction "$handler" "$argument" "${1-}") || return $? ;;
     --path)
       shift
       cannonPath=$(usageArgumentDirectory "$handler" "$argument cannonPath" "${1-}") || return $?
