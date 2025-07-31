@@ -287,7 +287,6 @@ testSuite() {
   # Are we continuing? -> Do nothing. Continue file may or may not be there.
   # Otherwise, we are NOT continuing. Does the continue file NOT exist? -> No need to delete.
   # Otherwise, delete the continue file.
-  $continueFlag || [ ! -f "$continueFile" ] || __catchEnvironment "$handler" rm "$continueFile" || return $?
 
   if $continueFlag; then
     if [ -z "$startTest" ]; then
@@ -363,6 +362,8 @@ testSuite() {
     __TEST_SUITE_CLEAN_EXIT=true
     return 0
   fi
+
+  $continueFlag || [ ! -f "$continueFile" ] || __catchEnvironment "$handler" rm "$continueFile" || return $?
 
   #    ▀▛▘     ▐  ▗        ▜
   #     ▌▞▀▖▞▀▘▜▀ ▄ ▛▀▖▞▀▌ ▐ ▞▀▖▞▀▖▛▀▖

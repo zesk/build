@@ -660,6 +660,7 @@ _fileIsEmpty() {
 _directoryGamutFile() {
   local clipper="$1" directory="${2-.}" modified file && shift 2
   read -r modified file < <(__fileModificationTimes "$directory" -type f ! -path "*/.*/*" "$@" | sort -n | "$clipper" -n 1) || :
+  [ -n "$modified" ] || return 0
   isPositiveInteger "$modified" || __throwEnvironment "$usage" "__fileModificationTimes output a non-integer: \"$modified\" \"$file\"" || return $?
   printf "%s\n" "$file"
 }
@@ -797,7 +798,7 @@ _linkCreate() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# IDENTICAL fileTemporaryName 30
+# IDENTICAL fileTemporaryName 33
 
 # Wrapper for `mktemp`. Generate a temporary file name, and fail using a function
 # Argument: handler - Function. Required. Function to call on failure. Function Type: _return
@@ -812,12 +813,15 @@ fileTemporaryName() {
   handler="$1" && shift
   local debug=";${BUILD_DEBUG-};"
   if [ "${debug#*;temp;}" != "$debug" ]; then
-    local target
-    target="$(buildHome)/.${FUNCNAME[0]}"
+    local target="${BUILD_HOME-.}/.${FUNCNAME[0]}"
     printf "%s" "fileTemporaryName: " >>"$target"
     __catchEnvironment "$handler" mktemp "$@" | tee -a "$target" || return $?
-    debuggingStack >>"$target"
-    printf "%s\n" "-- END" >>"$target"
+    local sources=() count=${#FUNCNAME[@]} index=0
+    while [ "$index" -lt "$count" ]; do
+      sources+=("${BASH_SOURCE[index + 1]-}:${BASH_LINENO[index]-"$LINENO"} - ${FUNCNAME[index]-}")
+      index=$((index + 1))
+    done
+    printf "%s\n" "${sources[@]}" "-- END" >>"$target"
   else
     __catchEnvironment "$handler" mktemp "$@" || return $?
   fi

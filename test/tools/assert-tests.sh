@@ -7,14 +7,8 @@
 # Copyright &copy; 2025 Market Acumen, Inc.
 #
 testOutputEquals() {
-  __mockValue BUILD_DEBUG
-
-  export BUILD_DEBUG=temp
-
   assertExitCode 0 assertOutputEquals --line "$LINENO" "a" printf "a" || return $?
   assertNotExitCode --stderr-ok --line "$LINENO" 0 assertOutputEquals --line "$LINENO" "a" printf "b" || return $?
-
-  __mockValue BUILD_DEBUG "" --end
 }
 
 testAssertEquality() {

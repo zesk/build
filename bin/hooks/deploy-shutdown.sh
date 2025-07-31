@@ -54,7 +54,7 @@ __tools() {
 _return() {
   local to=1 icon="✅" code="${1:-1}" && shift 2>/dev/null
   isUnsignedInteger "$code" || _return 2 "${FUNCNAME[1]-none}:${BASH_LINENO[1]-} -> ${FUNCNAME[0]} non-integer \"$code\"" "$@" || return $?
-  [ "$code" -eq 0 ] || icon="❌ [$code]" && to=2
+  if [ "$code" -gt 0 ]; then icon="❌ [$code]" && to=2; fi
   printf -- "%s %s\n" "$icon" "${*-§}" 1>&"$to"
   return "$code"
 }

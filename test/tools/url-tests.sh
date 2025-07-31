@@ -150,6 +150,8 @@ testUrlFilter() {
   source="$home/test/example/urlFilter.source.html"
   urlFilter "$source" >"$output" || _environment "urlFilter $source failed" || return $?
   assertExitCode 0 diff "$output" "$home/test/example/urlFilter.output.txt" || returnUndo $? dumpPipe "urlFilter $source" <"$output" || returnUndo $? rm -rf "$output" || return $?
+
+  __catch "$handler" rm -f "$output" || return $?
 }
 
 testUrlOpen() {
@@ -182,7 +184,7 @@ testFetch() {
   assertFileExists "$targetFile" || return $?
   assertNotFileSize --line "$LINENO" 0 "$targetFile" || return $?
   assertFileContains --line "$LINENO" "$targetFile" "https://www.iana.org/domains/example" || return $?
-  __environment rm -rf "$targetFile" || return $?
+  __environment rm -f "$targetFile" || return $?
 }
 
 testUrlToVariables() {

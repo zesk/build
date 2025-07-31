@@ -63,7 +63,7 @@ testEnvironmentFileLoad() {
 
   assertExitCode --stderr-match "Requires at least one environmentFile" --stderr-match "Safely load an environment file" 2 environmentFileLoad || return $?
 
-  __mockValue BUILD_DEBUG "" --end
+  __mockValueStop BUILD_DEBUG
 
   tempDir="$(__environment buildCacheDirectory)/$$.${FUNCNAME[0]}" || return $?
 

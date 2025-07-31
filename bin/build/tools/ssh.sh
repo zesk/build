@@ -71,48 +71,46 @@ _sshKnownHostsFile() {
 # If no arguments are passed, the default behavior is to set up the `~/.ssh` directory and create the known hosts file.
 #
 sshKnownHostAdd() {
-  local usage="_${FUNCNAME[0]}"
+  local handler="_${FUNCNAME[0]}"
 
-  local exitCode=0 verbose=false
+  local exitCode=0 verbose=false sshKnown=""
 
-  sshKnown="$(__catchEnvironment "$usage" sshKnownHostsFile --create)" || return $?
-
-  local output
-  output=$(fileTemporaryName "$usage") || return $?
-
-  buildDebugStart ssh || :
-  # _IDENTICAL_ argument-case-header 5
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
+    # __IDENTICAL__ argumentBlankCheck 1
+    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-    # _IDENTICAL_ --help 4
-    --help)
-      "$usage" 0
-      return $?
-      ;;
-    --verbose)
-      verbose=true
-      ;;
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
+    --verbose) verbose=true ;;
     *)
-      local remoteHost
-      remoteHost="$1"
+      [ -n "$sshKnown" ] || sshKnown="$(__catchEnvironment "$usage" sshKnownHostsFile --create)" || return $?
+
+      local remoteHost="$1"
+
       if grep -q "$remoteHost" "$sshKnown"; then
         ! $verbose || decorate info "Host $remoteHost already known"
-      elif ssh-keyscan "${verboseArgs[@]+"${verboseArgs[@]+}"}" "$remoteHost" >"$output" 2>&1; then
-        cat "$output" >>"$sshKnown"
-        ! $verbose || decorate success "Added $remoteHost to $sshKnown"
       else
-        exitCode=$?
-        printf "%s: %s\nOUTPUT:\n%s\nEND OUTPUT\n" "$(decorate error "Failed to add $remoteHost to $sshKnown")" "$(decorate code "$exitCode")" "$(decorate code <"$output" | decorate wrap ">> ")" 1>&2
+        local output
+        output=$(fileTemporaryName "$usage") || return $?
+        if ssh-keyscan "${verboseArgs[@]+"${verboseArgs[@]+}"}" "$remoteHost" >"$output" 2>&1; then
+          __catchEnvironment "$handler" cat "$output" >>"$sshKnown" || returnClean $? "$output" || return $?
+          __catch "$handler" rm -f "$output" || return $?
+          ! $verbose || decorate success "Added $remoteHost to $sshKnown"
+        else
+          exitCode=$?
+          __catch "$handler" rm -f "$output" || return $?
+          printf "%s: %s\nOUTPUT:\n%s\nEND OUTPUT\n" "$(decorate error "Failed to add $remoteHost to $sshKnown")" "$(decorate code "$exitCode")" "$(decorate code <"$output" | decorate wrap ">> ")" 1>&2
+        fi
       fi
       ;;
     esac
     shift
   done
-  buildDebugStop ssh || :
-  rm "$output" 2>/dev/null || :
+  [ -n "$sshKnown" ] || __throwArgument "$handler" "Need at least one host to add" || return $?
+
   return $exitCode
 }
 _sshKnownHostAdd() {
@@ -143,24 +141,19 @@ _sshKnownHostAdd() {
 # If no arguments are passed, the default behavior is to set up the `~/.ssh` directory and create the known hosts file.
 #
 sshKnownHostRemove() {
-  local usage="_${FUNCNAME[0]}"
+  local handler="_${FUNCNAME[0]}"
 
-  local sshKnown exitCode=0 verbose=false verboseArgs=() backupFlag=true
+  local sshKnown="" exitCode=0 verbose=false verboseArgs=() backupFlag=true
 
-  sshKnown="$(__catchEnvironment "$usage" sshKnownHostsFile)" || return $?
-
-  buildDebugStart ssh || :
-  # _IDENTICAL_ argument-case-header 5
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
+    # __IDENTICAL__ argumentBlankCheck 1
+    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-    # _IDENTICAL_ --help 4
-    --help)
-      "$usage" 0
-      return $?
-      ;;
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
     --skip-backup | --no-backup)
       backupFlag=false
       ;;
@@ -169,8 +162,9 @@ sshKnownHostRemove() {
       verboseArgs=("-v")
       ;;
     *)
-      local remoteHost
-      remoteHost="$1"
+      [ -n "$sshKnown" ] || sshKnown="$(__catchEnvironment "$usage" sshKnownHostsFile)" || return $?
+
+      local remoteHost="$1"
       if ! grepSafe -q -e "$(quoteGrepPattern "$remoteHost")" <"$sshKnown"; then
         ! $verbose || decorate info "Host $remoteHost already removed"
       else
@@ -191,7 +185,7 @@ sshKnownHostRemove() {
     esac
     shift
   done
-  buildDebugStop ssh || :
+  [ -n "$sshKnown" ] || __throwArgument "$handler" "Need at least one host to remove" || return $?
 }
 _sshKnownHostRemove() {
   # __IDENTICAL__ usageDocument 1

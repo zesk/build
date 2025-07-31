@@ -21,5 +21,5 @@ testApplicationHome() {
   assertFileContains --line "$LINENO" "$XDG_STATE_HOME/.applicationHome" "$HOME" || return $?
   __environment rm -rf "$XDG_STATE_HOME" || return $?
 
-  __mockValue XDG_STATE_HOME "" --end
+  __mockValueStop XDG_STATE_HOME
 }

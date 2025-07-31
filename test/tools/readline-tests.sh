@@ -25,5 +25,5 @@ testReadlineConfigurationAdd() {
 
   __catch "$handler" rm -rf "$tempHome" || return $?
 
-  __mockValue HOME "" --end
+  __mockValueStop HOME
 }

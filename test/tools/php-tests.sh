@@ -186,7 +186,7 @@ testPHPComposerSetVersion() {
   noVeeVersion=$(versionNoVee "$version") || return $?
   assertFileContains --line "$LINENO" "$testVersionFile" "$noVeeVersion" || return $?
 
-  __mockValue BUILD_HOME "" --end
+  __mockValueStop BUILD_HOME
 
   __catchEnvironment "$usage" rm -rf "$testHome" || return $?
 }

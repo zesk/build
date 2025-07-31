@@ -8,8 +8,6 @@
 #
 
 testAPITools() {
-  __mockValue BUILD_DEBUG
-  export BUILD_DEBUG=temp
   assertEquals "$(plural 0 singular plural)" "plural" || return $?
   assertEquals "$(plural 1 singular plural)" "singular" || return $?
   assertEquals "$(plural 2 singular plural)" "plural" || return $?
@@ -23,7 +21,6 @@ testAPITools() {
   assertEquals "$(dateToFormat 2023-04-20 %s)" "1681948800" || return $?
   assertEquals "$(dateToFormat 2023-04-20 %Y-%m-%d)" "2023-04-20" || return $?
   assertEquals "$(dateToTimestamp 2023-04-20)" "1681948800" || return $?
-  __mockValue BUILD_DEBUG "" --end
 }
 
 testHooks() {

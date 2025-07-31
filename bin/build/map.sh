@@ -26,7 +26,7 @@
 _return() {
   local to=1 icon="✅" code="${1:-1}" && shift 2>/dev/null
   isUnsignedInteger "$code" || _return 2 "${FUNCNAME[1]-none}:${BASH_LINENO[1]-} -> ${FUNCNAME[0]} non-integer \"$code\"" "$@" || return $?
-  [ "$code" -eq 0 ] || icon="❌ [$code]" && to=2
+  if [ "$code" -gt 0 ]; then icon="❌ [$code]" && to=2; fi
   printf -- "%s %s\n" "$icon" "${*-§}" 1>&"$to"
   return "$code"
 }
@@ -304,7 +304,7 @@ _bashFunctionComment() {
 # DEPRECATED-Example: [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return $?
 # DEPRECATED-Example: [ $# -eq 0 ] || __help --only "$handler" "$@" || return $?
 #
-# Requires: __throwArgument handlerDocument ___help
+# Requires: __throwArgument usageDocument ___help
 __help() {
   [ $# -gt 0 ] || ! ___help 0 || return 0
   local handler="${1-}" && shift
@@ -320,7 +320,7 @@ __help() {
   return 0
 }
 ___help() {
-  # __IDENTICAL__ handlerDocument 1
+  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -704,7 +704,7 @@ __executeInputSupport() {
   fi
 }
 
-# IDENTICAL fileTemporaryName 30
+# IDENTICAL fileTemporaryName 33
 
 # Wrapper for `mktemp`. Generate a temporary file name, and fail using a function
 # Argument: handler - Function. Required. Function to call on failure. Function Type: _return
@@ -719,12 +719,15 @@ fileTemporaryName() {
   handler="$1" && shift
   local debug=";${BUILD_DEBUG-};"
   if [ "${debug#*;temp;}" != "$debug" ]; then
-    local target
-    target="$(buildHome)/.${FUNCNAME[0]}"
+    local target="${BUILD_HOME-.}/.${FUNCNAME[0]}"
     printf "%s" "fileTemporaryName: " >>"$target"
     __catchEnvironment "$handler" mktemp "$@" | tee -a "$target" || return $?
-    debuggingStack >>"$target"
-    printf "%s\n" "-- END" >>"$target"
+    local sources=() count=${#FUNCNAME[@]} index=0
+    while [ "$index" -lt "$count" ]; do
+      sources+=("${BASH_SOURCE[index + 1]-}:${BASH_LINENO[index]-"$LINENO"} - ${FUNCNAME[index]-}")
+      index=$((index + 1))
+    done
+    printf "%s\n" "${sources[@]}" "-- END" >>"$target"
   else
     __catchEnvironment "$handler" mktemp "$@" || return $?
   fi

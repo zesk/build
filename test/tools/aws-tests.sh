@@ -21,16 +21,17 @@ __awsTestSetup() {
 
 __awsTestCleanup() {
   # restore all set for other tests
-  __mockValue HOME "" --end
-  __mockValue AWS_PROFILE "" --end
-  __mockValue AWS_ACCESS_KEY_ID "" --end
-  __mockValue AWS_SECRET_ACCESS_KEY "" --end
+  __mockValueStop HOME
+  __mockValueStop AWS_PROFILE
+  __mockValueStop AWS_ACCESS_KEY_ID
+  __mockValueStop AWS_SECRET_ACCESS_KEY
 }
 
 # Tag: slow
 testAWSIPAccess() {
   local handler="_return"
   local quietLog=$1 id key start
+  local tempHome
 
   if [ -z "$quietLog" ]; then
     _argument "testAWSIPAccess missing log" || return $?
@@ -44,7 +45,8 @@ testAWSIPAccess() {
 
   __awsTestSetup
 
-  HOME=$(fileTemporaryName "$handler" -d) || return $?
+  tempHome=$(fileTemporaryName "$handler" -d) || return $?
+  HOME="$tempHome"
   usageRequireEnvironment _return TEST_AWS_SECURITY_GROUP AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY AWS_REGION HOME || return $?
 
   if [ -d "$HOME/.aws" ]; then
@@ -87,7 +89,7 @@ testAWSIPAccess() {
   assertExitCode 0 awsIPAccess --services ssh,http --id robot@zesk/build-autoip --group "$TEST_AWS_SECURITY_GROUP" || return $?
   assertExitCode 0 awsIPAccess --revoke --services ssh,http --id robot@zesk/build-autoip --group "$TEST_AWS_SECURITY_GROUP" || return $?
 
-  rm -rf "$HOME"
+  rm -rf "$tempHome"
 
   # restore all set for other tests
   __awsTestCleanup
@@ -360,7 +362,7 @@ testAWSCredentialsEdit() {
 
   __catchEnvironment "$usage" rm -rf "${clean[@]}" || return $?
 
-  __mockValue HOME "" --end
+  __mockValueStop HOME
 }
 
 testAWSProfiles() {
@@ -442,6 +444,6 @@ testAWSProfiles() {
 
   __catchEnvironment "$usage" rm -rf "${clean[@]}" || return $?
 
-  __mockValue HOME "" --end
-  __mockValue AWS_PROFILE "" --end
+  __mockValueStop HOME
+  __mockValueStop AWS_PROFILE
 }

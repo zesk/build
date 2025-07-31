@@ -14,7 +14,7 @@ testIsAlpine() {
 
   assertExitCode --stdout-match "an Alpine system" 0 isAlpine --help || return $?
 
-  __mockValue BUILD_DEBUG "" --end
+  __mockValueStop BUILD_DEBUG
 }
 
 testIsApkInstalled() {
@@ -31,7 +31,7 @@ testIsApkInstalled() {
   fi
   #  echo "${BASH_SOURCE[0]}:$LINENO"
 
-  __mockValue BUILD_DEBUG "" --end
+  __mockValueStop BUILD_DEBUG
 
 }
 

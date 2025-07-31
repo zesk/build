@@ -7,7 +7,7 @@
 set -eou pipefail
 
 width=50
-savedValue=$(fileTemporaryName _return)
+savedValue=$(mktemp)
 
 _loadTools() {
   # shellcheck source=/dev/null

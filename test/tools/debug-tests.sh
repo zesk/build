@@ -80,7 +80,7 @@ testBuildDebugEnabled() {
 
   __buildDebugDisable
 
-  __mockValue BUILD_DEBUG "" --end
+  __mockValueStop BUILD_DEBUG
 
   _testBuildDebugEnabledExit 0 "$quietLog" "$LINENO"
 }

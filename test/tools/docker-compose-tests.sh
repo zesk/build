@@ -27,6 +27,6 @@ testIsDockerComposeRunning() {
     __catchEnvironment "$usage" touch "$BUILD_HOME/.STAGING.env" || return $?
     assertNotExitCode --stderr-match "Missing" --stderr-match "docker-compose.yml" 0 dockerComposeIsRunning || return $?
 
-    __mockValue BUILD_HOME "" --end
+    __mockValueStop BUILD_HOME
   fi
 }

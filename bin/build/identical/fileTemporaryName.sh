@@ -22,12 +22,15 @@ fileTemporaryName() {
   handler="$1" && shift
   local debug=";${BUILD_DEBUG-};"
   if [ "${debug#*;temp;}" != "$debug" ]; then
-    local target
-    target="$(buildHome)/.${FUNCNAME[0]}"
+    local target="${BUILD_HOME-.}/.${FUNCNAME[0]}"
     printf "%s" "fileTemporaryName: " >>"$target"
     __catchEnvironment "$handler" mktemp "$@" | tee -a "$target" || return $?
-    debuggingStack >>"$target"
-    printf "%s\n" "-- END" >>"$target"
+    local sources=() count=${#FUNCNAME[@]} index=0
+    while [ "$index" -lt "$count" ]; do
+      sources+=("${BASH_SOURCE[index + 1]-}:${BASH_LINENO[index]-"$LINENO"} - ${FUNCNAME[index]-}")
+      index=$((index + 1))
+    done
+    printf "%s\n" "${sources[@]}" "-- END" >>"$target"
   else
     __catchEnvironment "$handler" mktemp "$@" || return $?
   fi

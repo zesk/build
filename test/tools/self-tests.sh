@@ -40,6 +40,8 @@ testBuildApplicationTools() {
 
   assertEquals "$("$testApp/bin/tools.sh" hookVersionCurrent --application "$testApp")" "v1.2.3" || return $?
   __environment muzzle popd || return $?
+
+  __catch "$handler" rm -rf "$testApp" || return $?
 }
 
 # Tag: slow
@@ -130,9 +132,11 @@ testInstallInstallBuildSelf() {
   assertFileExists "$tempD/a/b/c/d/e/f/install-bin-build.sh" || return $?
   assertFileContains "$tempD/a/b/c/d/e/f/install-bin-build.sh" "${BUILD_COMPANY}" || return $?
 
-  rm -rf "$tempD" || :
 
   unset BUILD_COMPANY
+
+    __catch "$handler" rm -rf "$tempD" || return $?
+
 }
 
 # Test that urlFetch works for remote installs
@@ -156,6 +160,8 @@ testInstallBinBuildNetwork() {
   assertExitCode 0 "$testBinBuild" --force --url 'https://github.com/zesk/build/archive/refs/tags/v0.21.0.tar.gz' || return $?
   assertDirectoryExists "$testDir/bin/build" || return $?
   assertFileExists "$testDir/bin/build/tools.sh" || return $?
+
+  __catch "$handler" rm -rf "$testDir" || return $?
 }
 
 #
@@ -206,9 +212,7 @@ testInstallBinBuild() {
   assertFileDoesNotContain --line "$LINENO" "$testBinBuild" "make the file different" || return $?
   assertFileContains --line "$LINENO" "$testBinBuild" "__installPackageConfiguration ../.. " || return $?
 
-  rm -rf bin/build || return $?
-
-  decorate success Success
+  __catch "$handler" rm -rf "$testDir/bin/build" || return $?
 
   # --------------------------------------------------------------------------------
   #
@@ -293,12 +297,10 @@ testInstallBinBuild() {
   assertExitCode --dump --line "$LINENO" "${matches[@]}" 0 bin/pipeline/we-like-head-rubs.sh --mock "$home/bin/build" || return $?
   # Check
 
-  rm -rf "$testDir" || :
-
-  decorate success Success
+  __catch "$handler" rm -rf "$testDir" || return $?
 }
 _testInstallBinBuild() {
-  handlerDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 testBuildEnvironmentLoad() {
@@ -324,6 +326,8 @@ testBuildEnvironmentLoad() {
   assertEquals "${FOO-}" "hello" || return $?
 
   unset FOO
+
+  __catch "$handler" rm -rf "$tempDir" || return $?
 }
 
 testBuildEnvironmentGet() {
@@ -349,6 +353,8 @@ testBuildEnvironmentGet() {
   assertEquals "${FOO-}" "hello" || return $?
 
   unset FOO
+
+  __catch "$handler" rm -rf "$tempDir" || return $?
 }
 
 # Tag: package-install php-install simple-php

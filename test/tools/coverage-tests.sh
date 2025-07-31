@@ -10,7 +10,14 @@
 # Leak: BASH_ARGC
 # Leak: BASH_ARGV
 testCoverageBasics() {
-  assertExitCode --dump --stdout-match "Collecting coverage to" --stdout-match "Coverage completed" 0 bashCoverage --verbose isInteger 2 || return $?
+  local handler="_return"
+
+  tempCoverage=$(fileTemporaryName "$handler") || return $?
+  assertExitCode --dump --stdout-match "Collecting coverage to" --stdout-match "Coverage completed" 0 bashCoverage --target "$tempCoverage" --verbose isInteger 2 || return $?
+
+  assertFileExists "$tempCoverage" || return $?
+
+  __catch "$handler" rm -f "$tempCoverage" || return $?
 }
 
 #
@@ -51,19 +58,19 @@ testSlowTagsWorkCorrectly() {
 
 # Tag: slow-30-seconds slow
 testBuildFunctionsCoverage() {
-  local usage="_return"
+  local handler="_return"
 
   local home
-  home=$(__catch "$usage" buildHome) || return $?
+  home=$(__catch "$handler" buildHome) || return $?
 
   local deprecatedFunctions allTestFiles clean=()
-  deprecatedFunctions=$(fileTemporaryName "$usage") || return $?
-  allTestFiles=$(fileTemporaryName "$usage") || return $?
+  deprecatedFunctions=$(fileTemporaryName "$handler") || return $?
+  allTestFiles=$(fileTemporaryName "$handler") || return $?
   clean+=("$deprecatedFunctions")
   clean+=("$allTestFiles")
 
-  __catchEnvironment "$usage" cut -f 1 -d '|' <"$home/bin/build/deprecated.txt" | grep -v '#' | grep -v ' ' | grep -v '/' | sort -u >"$deprecatedFunctions" || return $?
-  __catchEnvironment "$usage" find "$home/test/tools" -type f -name '*.sh' -print0 >"$allTestFiles" || return $?
+  __catchEnvironment "$handler" cut -f 1 -d '|' <"$home/bin/build/deprecated.txt" | grep -v '#' | grep -v ' ' | grep -v '/' | sort -u >"$deprecatedFunctions" || return $?
+  __catchEnvironment "$handler" find "$home/test/tools" -type f -name '*.sh' -print0 >"$allTestFiles" || return $?
 
   local requireCoverageDate
   requireCoverageDate=$(buildEnvironmentGet BUILD_COVERAGE_REQUIRED_DATE) || return $?
@@ -74,15 +81,20 @@ testBuildFunctionsCoverage() {
     if [ "${function#test}" != "$function" ]; then
       continue
     fi
-    # statusMessage decorate info "Looking at $function"
-    if grep -q -e "^$(quoteGrepPattern "$function")$" <"$deprecatedFunctions"; then
+    statusMessage decorate info "Looking at $function"
+    local pattern
+    pattern=$(quoteGrepPattern "$function")
+
+    if grep -q -e "^$pattern\$" <"$deprecatedFunctions"; then
       statusMessage decorate subtle "Deprecated function: $(decorate code "$function")"
     else
       local matchingTests foundCount=0
 
       # grep returns 1 when nothing matches
-      matchingTests=$(xargs -r -0 grep -l "$(quoteGrepPattern "$function")" <"$allTestFiles" || mapReturn $? 1 0 | trimBoth) || return $?
-      [ -z "$matchingTests" ] || foundCount=$(__catch "$usage" fileLineCount <<<"$matchingTests") || return $?
+
+      matchingTests=$(xargs -0 grep -l -e "$pattern" <"$allTestFiles" 2>/dev/null || mapReturn $? 1 0 123 0 | trimBoth) || return $?
+      [ -z "$matchingTests" ] || foundCount=$(__catch "$handler" fileLineCount <<<"$matchingTests") || return $?
+      # statusMessage decorate error "Matches $foundCount: $matchingTests"
 
       if [ "$foundCount" -eq 0 ]; then
         missing+=("$function")
@@ -92,11 +104,11 @@ testBuildFunctionsCoverage() {
       fi
     fi
   done < <(buildFunctions)
-  __catchEnvironment "$usage" rm -f "${clean[@]}" || return $?
+  __catchEnvironment "$handler" rm -f "${clean[@]}" || return $?
   if [ "$(date +%s)" -lt "$(dateToTimestamp "$requireCoverageDate")" ]; then
     [ "${#missing[@]}" -eq 0 ] || printf "%s %s\n%s\n" "$(decorate notice "This test will FAIL")" "$(decorate magenta "after $requireCoverageDate")" "$(printf "%s\n" "${missing[@]}" | decorate code | decorate wrap "- ")"
   else
-    [ "${#missing[@]}" -eq 0 ] || __throwEnvironment "$usage" "Functions require at least 1 test: ($(decorate magenta "after $requireCoverageDate")):"$'\n'"$(printf "%s\n" "${missing[@]}" | decorate code | decorate wrap "- ")"
+    [ "${#missing[@]}" -eq 0 ] || __throwEnvironment "$handler" "Functions require at least 1 test: ($(decorate magenta "after $requireCoverageDate")):"$'\n'"$(printf "%s\n" "${missing[@]}" | decorate code | decorate wrap "- ")"
   fi
 }
 
@@ -219,9 +231,9 @@ testBuildFunctionsHelpCoverage() {
   [ "${#missing[@]}" -gt 0 ] || clean+=("$missingFile")
   __catchEnvironment "$usage" rm -f "${clean[@]}" || return $?
 
-  __mockValue BUILD_DEBUG "" --end
-  __mockValue TEST_TRACK_ASSERTIONS "" --end
-  __mockValue BUILD_COLORS "" --end
+  __mockValueStop BUILD_DEBUG
+  __mockValueStop TEST_TRACK_ASSERTIONS
+  __mockValueStop BUILD_COLORS
 
   statusMessage decorate info "Exiting ${FUNCNAME[0]}..."
   if ! $coverageRequired; then
@@ -278,9 +290,9 @@ testBuildFunctionsHelpOnly() {
     assertExitCode --stderr-match "Only argument allowed is --help" 2 "$fun" "--never" || return $?
   done < <(__dataBuildFunctionsHelpIsTheOnlyOption)
 
-  __mockValue BUILD_DEBUG "" --end
-  __mockValue TEST_TRACK_ASSERTIONS "" --end
-  __mockValue BUILD_COLORS "" --end
+  __mockValueStop BUILD_DEBUG
+  __mockValueStop TEST_TRACK_ASSERTIONS
+  __mockValueStop BUILD_COLORS
 
 }
 

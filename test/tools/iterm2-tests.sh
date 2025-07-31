@@ -31,6 +31,6 @@ testIterm2() {
   else
     assertExitCode 0 iTerm2Init --ignore || return $?
   fi
-  __mockValue LC_TERMINAL "" --end
-  __mockValue TERM "" --end
+  __mockValueStop LC_TERMINAL
+  __mockValueStop TERM
 }

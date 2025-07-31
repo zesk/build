@@ -50,7 +50,7 @@ testSimpleMarkdownToConsole() {
   BUILD_COLORS=false
   actual="$(printf "%s" "$testString" | simpleMarkdownToConsole)"
 
-  __mockValue BUILD_COLORS "" --end
+  __mockValueStop BUILD_COLORS
 
   expected="Code text is italic and bold"
   assertEquals "$actual" "$expected" || return $?

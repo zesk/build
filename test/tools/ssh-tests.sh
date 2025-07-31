@@ -25,22 +25,25 @@ testSSHAddKnownHosts() {
 
   assertDirectoryDoesNotExist "$tempHome/.ssh" || return $?
 
-  assertExitCode 0 sshKnownHostAdd || return $?
+  assertExitCode --stderr-match "Need at least one host" 2 sshKnownHostAdd || return $?
+
+  assertDirectoryDoesNotExist "$tempHome/.ssh" || return $?
+
+  assertExitCode 0 sshKnownHostAdd "$sampleDomainA" || return $?
 
   assertDirectoryExists "$tempHome/.ssh" || return $?
   assertFileExists "$tempHome/.ssh/known_hosts" || return $?
-  assertFileDoesNotContain "$tempHome/.ssh/known_hosts" $sampleDomainA || return $?
-  assertFileDoesNotContain "$tempHome/.ssh/known_hosts" $sampleDomainB || return $?
 
-  assertExitCode 0 sshKnownHostAdd "$sampleDomainA" || return $?
-  assertFileContains "$tempHome/.ssh/known_hosts" $sampleDomainA || return $?
-  assertFileDoesNotContain "$tempHome/.ssh/known_hosts" $sampleDomainB || return $?
+  assertFileContains "$tempHome/.ssh/known_hosts" "$sampleDomainA" || return $?
+  assertFileDoesNotContain "$tempHome/.ssh/known_hosts" "$sampleDomainB" || return $?
 
   assertExitCode 0 sshKnownHostAdd "$sampleDomainB" || return $?
-  assertFileContains "$tempHome/.ssh/known_hosts" $sampleDomainA || return $?
-  assertFileContains "$tempHome/.ssh/known_hosts" $sampleDomainB || return $?
+  assertFileContains "$tempHome/.ssh/known_hosts" "$sampleDomainA" || return $?
+  assertFileContains "$tempHome/.ssh/known_hosts" "$sampleDomainB" || return $?
 
-  __mockValue HOME "" --end
+  __catch "$handler" rm -rf "$tempHome" || return $?
+
+  __mockValueStop HOME
 
   return 0
 }
@@ -66,6 +69,8 @@ testSSHRemoveKnownHosts() {
 
   assertDirectoryDoesNotExist "$tempHome/.ssh" || return $?
 
+  assertExitCode --stderr-match "Need at least one host" 2 sshKnownHostRemove || return $?
+
   assertExitCode 0 sshKnownHostAdd "$sampleDomainA" "$sampleDomainB" "$sampleDomainC" || return $?
   ! $debugFlag || dumpPipe "Added ALL domains" <"$authFile"
 
@@ -88,7 +93,9 @@ testSSHRemoveKnownHosts() {
   ! $debugFlag || dumpPipe "Removed $sampleDomainC" <"$authFile"
   assertFileDoesNotContain "$authFile" "$sampleDomainA" "$sampleDomainB" "$sampleDomainC" || return $?
 
-  __mockValue HOME "" --end
+  __mockValueStop HOME
+
+  __catch "$handler" rm -rf "$tempHome" || return $?
 
   return 0
 

@@ -12,11 +12,11 @@
 # Map template files using our identical functionality
 # Usage: {fn} templatePath repairPath
 documentationTemplateUpdate() {
-  local usage="_${FUNCNAME[0]}"
-  [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
+  local handler="_${FUNCNAME[0]}"
+  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
 
   local templatePath repairArgs=() failCount=0
-  templatePath=$(usageArgumentDirectory "$usage" "templatePath" "${1-}") && shift || return $?
+  templatePath=$(usageArgumentDirectory "$handler" "templatePath" "${1-}") && shift || return $?
 
   while [ $# -gt 0 ]; do
     repairArgs+=("--repair" "$1")
@@ -25,7 +25,7 @@ documentationTemplateUpdate() {
   while ! identicalCheck "${repairArgs[@]}" --ignore-singles --extension md --prefix '<!-- TEMPLATE' --cd "$templatePath"; do
     failCount=$((failCount + 1))
     if [ $failCount -gt 4 ]; then
-      __catchEnvironment "$usage" "identicalCheck --repair failed" || return $?
+      __catchEnvironment "$handler" "identicalCheck --repair failed" || return $?
     fi
   done
 }
@@ -44,22 +44,22 @@ _documentationTemplateUpdate() {
 # Argument: todoTemplateCode - Optional. File. Template code for template.
 #
 _documentationTemplateUpdateUnlinked() {
-  local usage="_${FUNCNAME[0]}"
+  local handler="_${FUNCNAME[0]}"
   local cacheDirectory envFile template target unlinkedFunctions todoTemplate template total clean content
 
   clean=()
-  cacheDirectory=$(usageArgumentDirectory "$usage" "cacheDirectory" "${1-}") || return $?
-  envFile=$(usageArgumentFile "$usage" "envFile" "${2-}") || return $?
-  template=$(usageArgumentFile "$usage" "template" "${3-}") || return $?
-  target=$(usageArgumentFileDirectory "$usage" "target" "${4-}") || return $?
+  cacheDirectory=$(usageArgumentDirectory "$handler" "cacheDirectory" "${1-}") || return $?
+  envFile=$(usageArgumentFile "$handler" "envFile" "${2-}") || return $?
+  template=$(usageArgumentFile "$handler" "template" "${3-}") || return $?
+  target=$(usageArgumentFileDirectory "$handler" "target" "${4-}") || return $?
   # Not used I guess
-  muzzle usageArgumentFile "$usage" "pageTemplate" "${5-}" || return $?
-  todoTemplate=$(__catch "$usage" documentationTemplate "${6-todo}") || return $?
+  muzzle usageArgumentFile "$handler" "pageTemplate" "${5-}" || return $?
+  todoTemplate=$(__catch "$handler" documentationTemplate "${6-todo}") || return $?
 
-  unlinkedFunctions=$(fileTemporaryName "$usage") || return $?
+  unlinkedFunctions=$(fileTemporaryName "$handler") || return $?
   clean+=("$unlinkedFunctions")
-  documentationIndex_SetUnlinkedDocumentationPath "$cacheDirectory" "$target" | IFS="" awk '{ print "{" $1 "}" }' >"$unlinkedFunctions" || __throwEnvironment "$usage" "Unable to documentationIndex_SetUnlinkedDocumentationPath" || returnClean $? "${clean[@]}" || return $?
-  total=$(__catch "$usage" fileLineCount "$unlinkedFunctions") || return $?
+  __catch "$handler" documentationIndex_SetUnlinkedDocumentationPath "$cacheDirectory" "$target" | IFS="" awk '{ print "{" $1 "}" }' >"$unlinkedFunctions" || returnClean $? "${clean[@]}" || return $?
+  total=$(__catch "$handler" fileLineCount "$unlinkedFunctions") || return $?
 
   # Subshell hide globals
   (
@@ -67,13 +67,13 @@ _documentationTemplateUpdateUnlinked() {
     content=$content total=$total mapEnvironment content total <"$todoTemplate" >"$template.$$"
   ) || returnClean $? "${clean[@]}" || return $?
 
-  __catchEnvironment "$usage" rm -rf "${clean[@]}" || return $?
+  __catchEnvironment "$handler" rm -rf "${clean[@]}" || return $?
 
   if [ -f "$template" ] && diff -q "$template" "$template.$$" >/dev/null; then
     statusMessage decorate info "Not updating $template - unchanged $total unlinked $(plural "$total" function functions)"
-    __catchEnvironment "$usage" rm -f "$template.$$" || return $?
+    __catchEnvironment "$handler" rm -f "$template.$$" || return $?
   else
-    __catchEnvironment "$usage" mv -f "$template.$$" "$template" || return $?
+    __catchEnvironment "$handler" mv -f "$template.$$" "$template" || return $?
     statusMessage decorate info "Updated $(decorate file "$template") with $total unlinked $(plural "$total" function functions)"
   fi
 }
@@ -88,17 +88,16 @@ __documentationTemplateUpdateUnlinked() {
 _buildDocumentation_MergeWithDocsBranch() {
   local docsBranch="${1-docs}"
   local branch
-  local this="${FUNCNAME[0]}"
-  local usage="_$this"
+  local handler="_${FUNCNAME[0]}"
 
-  branch=$(__catchEnvironment "$usage" gitCurrentBranch) || return $?
+  branch=$(__catchEnvironment "$handler" gitCurrentBranch) || return $?
   if [ "$branch" = "$docsBranch" ]; then
-    __throwEnvironment "$usage" "Already on docs branch" || return $?
+    __throwEnvironment "$handler" "Already on docs branch" || return $?
   fi
-  __catchEnvironment "$usage" git checkout "$docsBranch" || return $?
-  __catchEnvironment "$usage" git merge -m "$this" "$branch" || return $?
-  __catchEnvironment "$usage" git push || return $?
-  __catchEnvironment "$usage" git checkout "$branch" || return $?
+  __catchEnvironment "$handler" git checkout "$docsBranch" || return $?
+  __catchEnvironment "$handler" git merge -m "${FUNCNAME[0]}" "$branch" || return $?
+  __catchEnvironment "$handler" git push || return $?
+  __catchEnvironment "$handler" git checkout "$branch" || return $?
 }
 __buildDocumentation_MergeWithDocsBranch() {
   # __IDENTICAL__ usageDocument 1
@@ -110,19 +109,19 @@ __buildDocumentation_MergeWithDocsBranch() {
 #
 _buildDocumentation_Recommit() {
   local branch
-  local usage
+  local handler
 
-  usage="_${FUNCNAME[0]}"
+  handler="_${FUNCNAME[0]}"
 
-  branch=$(gitCurrentBranch) || __throwEnvironment "$usage" gitCurrentBranch || return $?
+  branch=$(gitCurrentBranch) || __throwEnvironment "$handler" gitCurrentBranch || return $?
   if [ "$branch" = "docs" ]; then
-    __throwEnvironment "$usage" "Already on docs branch" || return $?
+    __throwEnvironment "$handler" "Already on docs branch" || return $?
   fi
   if gitRepositoryChanged; then
     statusMessage decorate warning "Committing to branch $branch ..."
-    __catchEnvironment "$usage" git commit -m "Updated docs in pipeline on $(date +"%F %T")" -a || return $?
+    __catchEnvironment "$handler" git commit -m "Updated docs in pipeline on $(date +"%F %T")" -a || return $?
     statusMessage decorate info "Pushing branch $branch ..."
-    __catchEnvironment "$usage" git push || return $?
+    __catchEnvironment "$handler" git push || return $?
     statusMessage decorate success "Documentation committed"
   else
     decorate info "Branch $branch is unchanged"
@@ -166,15 +165,15 @@ _documentationTemplate() {
 
 # List unlinked functions in documentation index
 documentationUnlinked() {
-  local usage="_${FUNCNAME[0]}"
-  [ $# -eq 0 ] || __help --only "$usage" "$@" || return "$(convertValue $? 1 0)"
+  local handler="_${FUNCNAME[0]}"
+  [ $# -eq 0 ] || __help --only "$handler" "$@" || return "$(convertValue $? 1 0)"
 
   local cacheDirectory
 
-  cacheDirectory="$(__catch "$usage" buildCacheDirectory)" || return $?
-  cacheDirectory=$(__catch "$usage" directoryRequire "$cacheDirectory") || return $?
+  cacheDirectory="$(__catch "$handler" buildCacheDirectory)" || return $?
+  cacheDirectory=$(__catch "$handler" directoryRequire "$cacheDirectory") || return $?
 
-  __catch "$usage" documentationIndex_ShowUnlinked "$cacheDirectory" || return $?
+  __catch "$handler" documentationIndex_ShowUnlinked "$cacheDirectory" || return $?
 }
 _documentationUnlinked() {
   # __IDENTICAL__ usageDocument 1

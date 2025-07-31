@@ -642,8 +642,6 @@ awsSecurityGroupIPModify() {
     done
   fi
 
-  tempErrorFile=$(fileTemporaryName "$usage") || return $?
-
   #
   # 3 modes: Add, Remove, Register
   #
@@ -655,10 +653,9 @@ awsSecurityGroupIPModify() {
   # Fetch our current IP registered with this description
   #
   if [ "$mode" != "--add" ]; then
+    tempErrorFile=$(fileTemporaryName "$usage") || return $?
     __catch "$usage" __awsWrapper "${pp[@]+"${pp[@]}"}" ec2 describe-security-groups --region "$region" --group-id "$group" --output text --query "SecurityGroups[*].IpPermissions[*]" >"$tempErrorFile" || returnClean "$?" "$tempErrorFile" || return $?
-
     foundIP=$(grep -e "$(quoteGrepPattern "$description")" <"$tempErrorFile" | head -1 | awk '{ print $2 }') || :
-
     __catchEnvironment "$usage" rm -f "$tempErrorFile" || return $?
 
     if [ -z "$foundIP" ]; then
@@ -681,14 +678,15 @@ awsSecurityGroupIPModify() {
     json="[{\"IpProtocol\": \"tcp\", \"FromPort\": $port, \"ToPort\": $port, \"IpRanges\": [{\"CidrIp\": \"$ip\", \"Description\": \"$description\"}]}]"
     __awsSGOutput "$(decorate info "$verb new IP:")" "$ip" "$group" "$port"
 
+    tempErrorFile=$(fileTemporaryName "$usage") || return $?
     if ! __awsWrapper "${pp[@]+"${pp[@]}"}" --output json ec2 authorize-security-group-ingress --region "$region" --group-id "$group" --ip-permissions "$json" 2>"$tempErrorFile" | __awsReturnTrue; then
       if grep -q "Duplicate" "$tempErrorFile"; then
         printf "%s\n" "$(decorate yellow "duplicate")"
-        rm -f "$tempErrorFile"
       else
         __throwEnvironment "$usage" "Failed to authorize-security-group-ingress $(dumpPipe "Errors:" <"$tempErrorFile")" || returnClean $? "$tempErrorFile" || return $?
       fi
     fi
+    __catchEnvironment "$usage" rm -f "$tempErrorFile" || return $?
   fi
 }
 _awsSecurityGroupIPModify() {

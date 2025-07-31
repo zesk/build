@@ -26,5 +26,5 @@ testUserHome() {
   assertEquals "$cleanHome/extra/dir/to/look" "$(userHome extra dir to look)" || return $?
   assertEquals "$cleanHome/extra/dir/to/look" "$(userHome extra/dir/to/look/)" || return $?
 
-  __mockValue HOME "" --end
+  __mockValueStop HOME
 }
