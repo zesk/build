@@ -322,8 +322,11 @@ _documentationIndex_ShowUnlinked() {
 # Argument: target - Required. String. Path to document path where unlinked functions should link.
 #
 documentationIndex_SetUnlinkedDocumentationPath() {
-  [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
-  local cacheDirectory="$1" target="$2"
+  local handler="_${FUNCNAME[0]}"
+  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
+  local cacheDirectory target
+  cacheDirectory=$(usageArgumentDirectory "$handler" "cacheDirectory" "${1-}") && shift || return $?
+  target=$(usageArgumentString "$handler" "cacheDirectory" "${1-}") && shift || return $?
   local functionName settingsFile
   target="$(trimSpace "$target")"
   documentationIndex_UnlinkedIterator "$cacheDirectory" | while read -r functionName settingsFile; do
@@ -373,7 +376,7 @@ documentationIndex_UnlinkedIterator() {
     shift
   done
 
-  [ -z "$cacheDirectory" ] || __throwArgument "$usage" "Need cacheDirectory" || return $?
+  [ -n "$cacheDirectory" ] || __throwArgument "$usage" "Need cacheDirectory" || return $?
 
   local functionName settingsFile
 
