@@ -9,14 +9,28 @@
 # shellcheck source=/dev/null
 source "${BASH_SOURCE[0]%/*}/../tools.sh"
 
-# Run the developer-undo.sh file or developer-undo/ directory of shell files
+# Run the deactivate function
 __hookProjectDeactivateContext() {
-  local usage="_${FUNCNAME[0]}" home item items=() candidates=("$home/bin/developer-undo.sh" "$home/bin/developer-undo/")
+  local newHome
+  local handler="_${FUNCNAME[0]}"
 
-  home=$(__catch "$usage" buildHome) || return $?
-  for item in "${candidates[@]}"; do [ ! -e "$home/$item" ] || items+=("$home/$item"); done
+  newHome=$(usageArgumentDirectory "$handler" "newProjectHome" "${1-}") || return $?
 
-  [ ${#items[@]} -eq 0 ] || interactiveBashSource --prefix "Deactivate" "${items[@]}" || return $?
+  # Warning about deprecated scripts
+  local home item candidates=("bin/developer-undo.sh" "bin/developer/")
+  home=$(__catch "$handler" buildHome) || return $?
+  for item in "${candidates[@]}"; do [ ! -e "$home/$item" ] || decorate warning "$item exists and is deprecated"; done
+
+  local func
+
+  func=$(__catch "$handler" buildEnvironmentGet BUILD_PROJECT_DEACTIVATE) || return $?
+
+  if isFunction "$func"; then
+    statusMessage decorate warning "Deactivating old project with $(decorate code "$func") $(decorate file "$newHome")"
+    __catch "$handler" "$func" "$newHome" || return $?
+
+    unset BUILD_PROJECT_DEACTIVATE
+  fi
 }
 ___hookProjectDeactivateContext() {
   # __IDENTICAL__ usageDocument 1
@@ -24,5 +38,9 @@ ___hookProjectDeactivateContext() {
 }
 
 if [ "$(basename "${0##-}")" != "$(basename "${BASH_SOURCE[0]}")" ]; then
-  __hookProjectDeactivateContext || decorate warning "Project context deactivation failed" || :
+  # sourced
+  __hookProjectDeactivateContext "$@" || printf "%s\n" "Project context deactivation failed" 1>&2 || :
+else
+  # run
+  decorate warning "$(basename "${BASH_SOURCE[0]}") does nothing when hookRun - use hookSource" 1>&2
 fi

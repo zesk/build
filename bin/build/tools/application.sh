@@ -28,7 +28,7 @@ __applicationHomeGo() {
   oldHome=$(__catch "$usage" buildHome) || return $?
 
   if [ -d "$oldHome" ] && [ "$oldHome" != "$home" ]; then
-    hookSourceOptional --application "$oldHome" project-deactivate || :
+    hookSourceOptional --application "$oldHome" project-deactivate "$home" || :
   fi
   __catchEnvironment "$usage" cd "$home" || return $?
   label="Working in"
@@ -38,7 +38,7 @@ __applicationHomeGo() {
   fi
   userHome="${HOME%/}"
   printf "%s %s\n" "$(decorate label "$label")" "$(decorate value "${home//"$userHome"/~}")"
-  hookSourceOptional --application "$home" project-activate || :
+  hookSourceOptional --application "$home" project-activate "$oldHome" || :
   return 0
 }
 

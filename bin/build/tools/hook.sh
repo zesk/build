@@ -85,8 +85,9 @@ __hookRunner() {
         statusMessage decorate success "Running hook $(decorate code "$binary") $*"
       fi
       if "$sourceHook"; then
-        set --
-        __catchEnvironment "$usage" source "$hook" || return $?
+        set -- "$@"
+        # shellcheck disable=SC1090
+        source "$hook" || __throwEnvironment "$usage" "source $hook failed" || return $?
       else
         "$hook" "$@" || return $?
       fi

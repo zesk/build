@@ -95,89 +95,68 @@ _developerUndo() {
 # Argument: --list - Flag. Optional. Show the list of what has changed since the first invocation.
 # stdout: list of function|alias|environment
 developerTrack() {
-  local usage="_${FUNCNAME[0]}"
-  local source="" listChanges=false verboseFlag=false exportMarker
+  local handler="_${FUNCNAME[0]}"
+  local source="" verboseFlag=false profileFlag=false
 
-  # _IDENTICAL_ argument-case-header 5
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
+    # __IDENTICAL__ argumentBlankCheck 1
+    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-    # _IDENTICAL_ --help 4
-    --help)
-      "$usage" 0
-      return $?
-      ;;
-    --list)
-      listChanges=true
-      ;;
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
+    --profile) profileFlag=true ;;
     --verbose)
       verboseFlag=true
       ;;
     *)
-      source=$(usageArgumentRealFile "$usage" "source" "${1-}") || return $?
+      # _IDENTICAL_ argumentUnknownHandler 1
+      __throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
       ;;
     esac
     shift
   done
-  [ -n "$source" ] || __throwArgument "$usage" "source required" || return $?
 
-  local cachePath hash
+  local cachePath
 
-  hash=$(shaPipe <<<"$source")
-  cachePath=$(__catch "$usage" buildCacheDirectory "${FUNCNAME[0]}" "$hash") || return $?
-  ! $verboseFlag || statusMessage decorate info "Cache path is $(decorate file "$cachePath")"
-  exportMarker="__DEVELOPER_TRACK_MARKER_$hash"
-
-  if $listChanges; then
-    local tempPath itemType
-
-    if [ ! -f "$cachePath/function" ]; then
-      __throwEnvironment "$usage" "Finish called but never started: source is $(decorate file "$source")" || return $?
-    fi
-    if ! muzzle isType "${exportMarker?}"; then
-      if [ -f "$cachePath/CHANGES" ]; then
-        cat "$cachePath/CHANGES"
-        return 0
-      fi
-      __throwEnvironment "$usage" "CHANGES missing" || return $?
-    fi
-
-    # shellcheck source=/dev/null
-    source "$cachePath/alias.source" || __throwEnvironment "$usage" "Aliases reload failed" || return $?
-    tempPath=$(fileTemporaryName "$usage" -d) || return $?
-    ! $verboseFlag || statusMessage decorate info "Finishing tracking ... comparing with $tempPath"
-    __developerTrack "$usage" "$tempPath" || return $?
-    printf -- "%s" "" >"$cachePath/CHANGES"
-    for itemType in "alias" "function" "environment"; do
-      ! $verboseFlag || statusMessage decorate info "Running $itemType"
-      diff "$tempPath/$itemType" "$cachePath/$itemType" | grep '^[<>]' | cut -c 3- >>"$cachePath/CHANGES"
-    done
-    __catchEnvironment "$usage" rm -rf "$tempPath" || return $?
-    unset "${exportMarker?}"
-    cat "$cachePath/CHANGES"
-  else
-    if muzzle isType "$exportMarker" && [ -f "$cachePath/functions" ]; then
-      printf "%s\n" "$(timingStart)" >>"$cachePath/reloaded"
-      ! $verboseFlag || statusMessage --last decorate info "Developer tracking reloaded AND no-op"
-    else
-      export "${exportMarker?}"="$source"
-      ! $verboseFlag || statusMessage decorate info "Starting developer tracking"
-      __catchEnvironment "$usage" printf -- "%s\n" "$source" >"$cachePath/source" || return $?
-      __developerTrack "$usage" "$cachePath" || return $?
-      if [ ! -f "$cachePath/function" ]; then
-        __throwEnvironment "$usage" "Track did not write cache file $(decorate file "$cachePath/function")" || return $?
-      fi
-      ! $verboseFlag || statusMessage --last decorate info "Developer tracking on"
-    fi
+  cachePath=$(__catch "$handler" buildCacheDirectory "${FUNCNAME[0]}" "profile") || return $?
+  if $profileFlag; then
+    __developerTrack "$cachePath" || return $?
+    return 0
   fi
+
+  if [ ! -f "$cachePath/functions" ]; then
+    __throwEnvironment "$handler" "developerTrack --profile never called" || return $?
+  fi
+  local tempPath itemType
+
+  # shellcheck source=/dev/null
+  source "$cachePath/alias.source" || __throwEnvironment "$handler" "Aliases reload failed" || return $?
+
+  tempPath=$(fileTemporaryName "$handler" -d) || return $?
+  __developerTrack "$tempPath" || return $?
+
+  ! $verboseFlag || statusMessage decorate info "Finishing tracking ... comparing $cachePath with $tempPath"
+  for itemType in "alias" "environment" "functions"; do comm -13 "$cachePath/$itemType" "$tempPath/$itemType"; done | sort -u
+  __catchEnvironment "$handler" rm -rf "$tempPath" || return $?
 }
 __developerTrack() {
-  local usage="$1" path="$2"
-  alias -p | tee "$path/alias.source" | removeFields 1 | cut -d = -f 1 | sort -u >"$path/alias" || return $?
-  declare -F | cut -d ' ' -f 3 | sort -u >"$path/function" || return $?
-  environmentVariables | sort -u >"$path/environment" || return $?
+  local path="$1"
+  __developerTrackEnvironment >"$path/environment"
+  __developerTrackAliases "$path"
+  __developerTrackFunctions >"$path/functions"
+}
+__developerTrackFunctions() {
+  declare -F | awk '{ print $3 }' | sort -u
+}
+__developerTrackEnvironment() {
+  environmentVariables | sort -u
+}
+__developerTrackAliases() {
+  local path="$1"
+  alias -p | sort -u | tee "$path/alias.source" | removeFields 1 | cut -d = -f 1 >"$path/alias" || return $?
 }
 _developerTrack() {
   # __IDENTICAL__ usageDocument 1

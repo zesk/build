@@ -42,6 +42,7 @@ if source "${BASH_SOURCE[0]%/*}/tools.sh"; then
 
     home=$(__catch "$handler" buildHome) || return $?
 
+    bashDebugInterruptFile --interrupt --error
     local skipWidth=0
     # Logo for iTerm2
     if isiTerm2; then
@@ -56,9 +57,12 @@ if source "${BASH_SOURCE[0]%/*}/tools.sh"; then
       skipWidth="$imageColumnWidth"
       : "$curX" is ignored
     fi
+
     # Title
-    local title
-    title="Zesk Build $(__catch "$handler" hookVersionCurrent)" || return $?
+    local name
+    name=$(__catch "$handler" buildEnvironmentGet APPLICATION_NAME) || return $?
+    [ -n "$name" ] || name=$(basename "$home")
+    title="$name $(__catch "$handler" hookVersionCurrent)" || return $?
     bigText --bigger "$title" | decorate skip "$skipWidth"
 
     # shellcheck disable=SC2139
@@ -68,12 +72,16 @@ if source "${BASH_SOURCE[0]%/*}/tools.sh"; then
     alias IdenticalRepair="$home/bin/build/identical-repair.sh"
 
     printf "%s" "$(decorate warning "Watching ")"
-    reloadChanges --name "Zesk Build" bin/build/tools.sh bin/build/tools
+    reloadChanges --name "$name" bin/build/tools.sh bin/build/tools
     buildCompletion
 
     bashPrompt --skip-prompt bashPromptModule_TermColors
 
-    developerAnnounce < <(__applicationToolsList)
+    pathConfigure --last "$home/bin" "$home/bin/build"
+
+    developerAnnounce < <(developerTrack)
+
+    export BUILD_PROJECT_DEACTIVATE=__buildConfigureUndo
   }
   ___buildConfigure() {
     # __IDENTICAL__ usageDocument 1
@@ -81,7 +89,23 @@ if source "${BASH_SOURCE[0]%/*}/tools.sh"; then
   }
 
   __buildConfigureUndo() {
-    developerUndo < <(__applicationToolsList)
+    local handler="_return"
+    local home
+
+    home=$(__catch "$handler" buildHome) || return $?
+
+    local name
+    name=$(__catch "$handler" directoryChange "$home" buildEnvironmentContext buildEnvironmentGet APPLICATION_NAME) || return $?
+    [ -n "$name" ] || name=$(basename "$home")
+
+    statusMessage decorate notice "Deactivating $name ..."
+
+    pathRemove "$home/bin" "$home/bin/build"
+
+    developerTrack >"$home/.developerUndo"
+    developerUndo < <(developerTrack)
+
+    unset __buildConfigureUndo 2>/dev/null
   }
 
   __buildConfigure

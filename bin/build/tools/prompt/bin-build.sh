@@ -39,10 +39,20 @@ bashPromptModule_binBuild() {
     fi
   fi
 
-  hookRunOptional --application "$home" project-deactivate "$gitHome" || _environment "project-deactivate failed" || :
+  local exitCode=0
+  # After deactivate we should assume Zesk Build has been unloaded
+  hookSourceOptional --application "$home" project-deactivate "$gitHome" || exitCode=1
+
+  # Assume nothing defined here
 
   # shellcheck source=/dev/null
-  source "$gitHome/$tools" || __environment "Failed to load $showGitHome/$tools" || return $?
+  if ! source "$gitHome/$tools"; then
+    printf "%s\n" "Failed to load $showGitHome/$tools" 1>&2
+    return 1
+  fi
+
+  [ "$exitCode" = 0 ] || _environment "project-deactivate failed" || :
+
   # buildHome will be changed here
 
   hookSourceOptional --application "$gitHome" project-activate "$home" || _environment "project-activate failed" || :
