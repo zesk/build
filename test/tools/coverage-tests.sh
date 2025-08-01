@@ -180,21 +180,17 @@ testBuildFunctionsHelpCoverage() {
   export BUILD_DEBUG
   export BUILD_COLORS
   export TEST_TRACK_ASSERTIONS
-  BUILD_DEBUG="temp"
+  BUILD_DEBUG=""
   BUILD_COLORS=false
   TEST_TRACK_ASSERTIONS=false
 
-        export TMPDIR
-
-  local lastPassedCache lastPassed="" stopAfter=10
+  local lastPassedCache lastPassed="" stopAfter=1000000
 
   lastPassedCache="$(__catch "$usage" buildCacheDirectory)/.${FUNCNAME[0]}.lastPassed" || return $?
 
   [ ! -f "$lastPassedCache" ] || lastPassed=""$(head -n 1 "$lastPassedCache")
   local missingFile stopped=false
   missingFile="$(buildHome)/.testBuildFunctionsHelpCoverage.log"
-
-  lastPassed=trimTail
 
   [ -z "$lastPassed" ] || statusMessage --last decorate warning "Starting at $(decorate code "$lastPassed")"
   for fun in "${functions[@]}"; do
