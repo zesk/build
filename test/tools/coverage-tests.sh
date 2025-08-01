@@ -180,18 +180,23 @@ testBuildFunctionsHelpCoverage() {
   export BUILD_DEBUG
   export BUILD_COLORS
   export TEST_TRACK_ASSERTIONS
-  BUILD_DEBUG=""
+  BUILD_DEBUG="temp"
   BUILD_COLORS=false
   TEST_TRACK_ASSERTIONS=false
 
-  local lastPassedCache lastPassed=""
+        export TMPDIR
+
+  local lastPassedCache lastPassed="" stopAfter=10
 
   lastPassedCache="$(__catch "$usage" buildCacheDirectory)/.${FUNCNAME[0]}.lastPassed" || return $?
 
   [ ! -f "$lastPassedCache" ] || lastPassed=""$(head -n 1 "$lastPassedCache")
-  local missingFile
+  local missingFile stopped=false
   missingFile="$(buildHome)/.testBuildFunctionsHelpCoverage.log"
-  __catchEnvironment "$usage" printf "%s" "" >"$missingFile" || return $?
+
+  lastPassed=trimTail
+
+  [ -z "$lastPassed" ] || statusMessage --last decorate warning "Starting at $(decorate code "$lastPassed")"
   for fun in "${functions[@]}"; do
     if [ -n "$lastPassed" ]; then
       if [ "$fun" = "$lastPassed" ]; then
@@ -227,7 +232,13 @@ testBuildFunctionsHelpCoverage() {
         fi
       fi
     fi
+    stopAfter=$((stopAfter - 1))
+    if [ $stopAfter -le 0 ]; then
+      stopped=true
+      break
+    fi
   done
+  ! $stopped || statusMessage --last decorate warning "Stopped at $(decorate code "$fun")"
   [ "${#missing[@]}" -gt 0 ] || clean+=("$missingFile")
   __catchEnvironment "$usage" rm -f "${clean[@]}" || return $?
 
@@ -236,10 +247,10 @@ testBuildFunctionsHelpCoverage() {
   __mockValueStop BUILD_COLORS
 
   statusMessage decorate info "Exiting ${FUNCNAME[0]}..."
+  [ "${#missing[@]}" -gt 0 ] || $stopped || __catchEnvironment "$usage" rm -f "$lastPassedCache" || return $?
   if ! $coverageRequired; then
-    [ "${#missing[@]}" -eq 0 ] && rm -f "$lastPassedCache" || printf "%s %s\n%s\n" "$(decorate notice "Functions require --help support. This test will FAIL")" "$(decorate magenta "after $requireCoverageDate")" "$(printf "%s\n" "${missing[@]}" | decorate code | decorate wrap "- ")"
+    [ "${#missing[@]}" -eq 0 ] || printf "%s %s\n%s\n" "$(decorate notice "Functions require --help support. This test will FAIL")" "$(decorate magenta "after $requireCoverageDate")" "$(printf "%s\n" "${missing[@]}" | decorate code | decorate wrap "- ")"
   fi
-  [ "${#missing[@]}" -gt 0 ] || __catchEnvironment "$usage" rm -f "$lastPassedCache" || return $?
 }
 
 __dataBuildFunctionsWithoutHelp() {

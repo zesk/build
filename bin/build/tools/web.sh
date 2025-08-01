@@ -53,37 +53,41 @@ _urlMatchesLocalFileSize() {
 
 # Get the size of a remote URL
 # Depends: curl
-#
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
+# DOC TEMPLATE: --handler 1
+# Argument: --handler handler - Optional. Function. Use this error handler instead of the default error handler.
+# Argument: url - Required. URL. URL to fetch the Content-Length.
 urlContentLength() {
-  local usage="_${FUNCNAME[0]}"
+  local handler="_${FUNCNAME[0]}"
   local url remoteSize
   local tempFile
 
-  tempFile=$(fileTemporaryName "$usage") || return $?
-
-  # _IDENTICAL_ argument-case-header 5
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
+    # __IDENTICAL__ argumentBlankCheck 1
+    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-    # _IDENTICAL_ --help 4
-    --help)
-      "$usage" 0
-      return $?
-      ;;
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
+    # _IDENTICAL_ handlerHandler 1
+    --handler) shift && handler=$(usageArgumentFunction "$handler" "$argument" "${1-}") || return $? ;;
     *)
-      url=$(usageArgumentURL "$usage" "url" "$1") || return $?
-      __catchEnvironment "$usage" curl -s -I "$url" >"$tempFile" || returnClean $? "$tempFile" || return $?
-      remoteSize=$(grep -i 'Content-Length' "$tempFile" | awk '{ print $2 }') || __throwEnvironment "$usage" "Remote URL did not return Content-Length" || returnClean $? "$tempFile" || return $?
+      local tempFile
+      tempFile=$(fileTemporaryName "$handler") || return $?
+      url=$(usageArgumentURL "$handler" "url" "$1") || return $?
+      __catchEnvironment "$handler" curl -s -I "$url" >"$tempFile" || returnClean $? "$tempFile" || return $?
+      remoteSize=$(grep -i 'Content-Length' "$tempFile" | awk '{ print $2 }') || __throwEnvironment "$handler" "Remote URL did not return Content-Length" || returnClean $? "$tempFile" || return $?
+      __catch "$handler" rm -f "$tempFile" || return $?
       remoteSize="$(trimSpace "$remoteSize")"
+      isUnsignedInteger "$remoteSize" || __throwEnvironment "$handler" "Remote content length was non-integer: $remoteSize" || return $?
       printf "%d\n" $((remoteSize + 0))
       ;;
     esac
     shift
   done
-
-  __catchEnvironment "$usage" rm -f "$tempFile" || return $?
 }
 _urlContentLength() {
   # __IDENTICAL__ usageDocument 1
