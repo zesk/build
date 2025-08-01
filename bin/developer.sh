@@ -37,6 +37,7 @@ if source "${BASH_SOURCE[0]%/*}/tools.sh"; then
   # Adds some aliases (t, tools, IdenticalRepair), adds a bash prompt
   # and shell completions, terminal colors, and outputs banner and shows new functions
   __buildConfigure() {
+    local imageLineHeight=10 imageColumnWidth=25
     local handler="_${FUNCNAME[0]}"
     local home
 
@@ -46,7 +47,7 @@ if source "${BASH_SOURCE[0]%/*}/tools.sh"; then
     local skipWidth=0
     # Logo for iTerm2
     if isiTerm2; then
-      local curX curY imageLineHeight=9 imageColumnWidth=20
+      local curX curY
 
       if iTerm2Image "$home/etc/zesk-build-icon.png"; then
         : "Icon output"
