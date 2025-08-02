@@ -836,6 +836,7 @@ interactiveBashSource() {
           approved=true
         else
           decorate subtle "Skipping unapproved file $(decorate file "$sourcePath") Undo: $(decorate code "${FUNCNAME[0]} --clear \"$sourcePath\"")"
+          approved=true
         fi
       elif [ -d "$sourcePath" ]; then
         verb="path"
