@@ -59,7 +59,9 @@ _iTerm2_setBase64Value() {
 }
 
 # Run before pre-exec functions (in other implementation)
-__iTerm2PreExecution() {
+# I *THINK* this hides output from the terminal or something as the interactive prompt does not work
+# Playing with moving the order around
+__iTerm2HideOutput() {
   _iTerm2_osc "133;C;"
 }
 
@@ -76,7 +78,7 @@ __iTerm2_version() {
 }
 
 # prefix -> mark
-# output is suppressed, I believe, or something
+# output is allowed now? (?), I believe, or something
 __iTerm2_prefix() {
   _iTerm2_osc "133;D;\$?"
 }
@@ -95,7 +97,7 @@ __iTerm2UpdateState() {
   local host=""
   export USER PWD __ITERM2_HOST __ITERM2_HOST_TIME
 
-  __iTerm2_prefix
+  __iTerm2HideOutput
   host=${__ITERM2_HOST-}
   if [ -n "$host" ] || [ "$(date +%s)" -gt $((${__ITERM2_HOST_TIME-0} + 60)) ]; then
     __ITERM2_HOST=$(hostname)
@@ -103,6 +105,7 @@ __iTerm2UpdateState() {
   fi
   _iTerm2_setValue "RemoteHost" "$USER@$__ITERM2_HOST"
   _iTerm2_setValue "CurrentDir" "$PWD"
+  __iTerm2_prefix
 }
 
 # Add support for iTerm2 to bashPrompt
@@ -121,7 +124,7 @@ iTerm2PromptSupport() {
   local usage="_${FUNCNAME[0]}"
 
   [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
-  __catchEnvironment "$usage" bashPrompt --skip-prompt --skip-terminal --first __iTerm2PreExecution --last __iTerm2UpdateState || return $?
+  __catchEnvironment "$usage" bashPrompt --skip-prompt --skip-terminal --last __iTerm2UpdateState || return $?
   __catchEnvironment "$usage" muzzle bashPromptMarkers "$(__iTerm2_mark)" "$(__iTerm2_suffix)" || return $?
 }
 _iTerm2PromptSupport() {

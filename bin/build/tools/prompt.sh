@@ -489,6 +489,10 @@ __bashPromptCode() {
     "reset" "\[$reset\]"
 }
 
+__bashPromptReturnValue() {
+  return "$1"
+}
+
 # This is the main command running each command prompt
 __bashPromptCommand() {
   local exitCode=$?
@@ -525,6 +529,8 @@ __bashPromptCommand() {
     if isFunction "$promptCommand"; then
       ! $debug || statusMessage decorate warning "Running $(decorate code "$promptCommand") "
       start=$(timingStart)
+      set +e
+      __bashPromptReturnValue "$exitCode"
       "$promptCommand"
       ! $debug || timingReport "$start"
     else
