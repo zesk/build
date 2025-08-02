@@ -570,7 +570,6 @@ __testSuiteFilterTags() {
         statusMessage --last decorate error "Failed in function $item"
         decorate code
         decorate each --count quote -- "${testTags[@]}" | decorate blue | printfOutputPrefix "%s" "$(decorate info "Match $item:")"
-        __bashDebugInterruptFile || exit $?
       fi
       local keepIt="$defaultKeepIt" keepNote="by default"
       for testTag in "${testTags[@]+"${testTags[@]}"}"; do
