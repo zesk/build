@@ -18,7 +18,7 @@ pipelines:
       - step:
           deployment: production
           name: Build, Test, and Deploy
-          size: 2x
+          size: 4x
           services:
             - docker
           artifacts:

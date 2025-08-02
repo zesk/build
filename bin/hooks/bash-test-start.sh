@@ -20,7 +20,7 @@
 __source() {
   local here="${BASH_SOURCE[0]%/*}" e=253
   local source="$here/${2:-".."}/${1-}" && shift 2 || _return $e "missing source" || return $?
-  [ -d "${source%/*}" ] || _return $e "${source%/*} is not a directGory" || return $?
+  [ -d "${source%/*}" ] || _return $e "${source%/*} is not a directory" || return $?
   [ -f "$source" ] && [ -x "$source" ] || _return $e "$source not an executable file" "$@" || return $?
   local a=("$@") && set --
   # shellcheck source=/dev/null
