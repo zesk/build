@@ -38,6 +38,7 @@ This is universally used throughout.
 
 {muzzle}
 {mapReturn}
+{convertValue}
 
 ## Deprecated Logging
 

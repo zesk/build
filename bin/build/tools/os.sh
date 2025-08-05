@@ -270,7 +270,7 @@ whichExists() {
   [ $# -gt 0 ] || __throwArgument "$handler" "no arguments" || return $?
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    # __IDENTICAL__ argumentBlankCheck 1
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
     [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     which "$1" >/dev/null || return 1
     shift
@@ -324,7 +324,7 @@ serviceToStandardPort() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     argument=$(__catch "$handler" trimSpace "$argument") || return $?
-    # __IDENTICAL__ argumentBlankCheck 1
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
     [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
@@ -364,7 +364,7 @@ serviceToPort() {
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    # __IDENTICAL__ argumentBlankCheck 1
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
     [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1

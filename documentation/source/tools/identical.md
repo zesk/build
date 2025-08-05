@@ -9,3 +9,7 @@
 {identicalCheck}
 
 {identicalCheckShell}
+
+{identicalFindTokens}
+
+{identicalWatch}

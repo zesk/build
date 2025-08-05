@@ -42,10 +42,12 @@ isUnsignedInteger() {
 
 # Load tools and optionally run a command
 __toolsMain() {
+  export PRODUCTION
+
   local source="${BASH_SOURCE[0]}" internalError=253
   local toolsPath="${source%/*}/tools"
   local toolsFiles=("../env/BUILD_HOME") toolsList="$toolsPath/tools.conf" toolFile
-  local exitCode=0
+  local exitCode=0 production="${PRODUCTION-}"
 
   export BUILD_HOME
   unset BUILD_HOME
@@ -53,11 +55,12 @@ __toolsMain() {
   [ -f "$toolsList" ] || _return $internalError "%s\n" "Missing $toolsList" 1>&2 || return $?
   while read -r toolFile; do [ "$toolFile" != "${toolFile#\#}" ] || toolsFiles+=("$toolFile"); done <"$toolsList"
   toolsFiles+=("platform/$(uname -s)")
+  [ -z "$production" ] || [ ! -t 1 ] || production=true
   for toolFile in "${toolsFiles[@]}"; do
+    [ "$production" = "true" ] || toolFile="${toolFile//-fast/}"
     # shellcheck source=/dev/null
     source "$toolsPath/$toolFile.sh" || _return $internalError "%s\n" "Loading $toolFile.sh failed" || return $?
   done
-
   # shellcheck source=/dev/null
   if [ "$(basename "${0##-}")" = "$(basename "${BASH_SOURCE[0]}")" ] && [ $# -gt 0 ]; then
     # Only require when running as a shell command

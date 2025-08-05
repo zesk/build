@@ -63,3 +63,57 @@ _buildQuickTest() {
   # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
+
+buildFastFiles() {
+  local handler="_${FUNCNAME[0]}"
+  local home
+
+  __help "$handler" "$@" || return 0
+
+  home=$(__catch "$handler" buildHome) || return $?
+
+  local pattern patterns=("__check") aa=() && for pattern in "${patterns[@]}"; do aa+=(-e "/$(quoteSedPattern "# IDENTICAL $pattern")/{N;d;}"); done
+
+  local ff=("$home/bin/build/tools/sugar.sh")
+
+  for f in "${ff[@]}"; do
+    local target="${f%.sh}-fast.sh"
+    local tempTarget="$target.temp"
+    __catchEnvironment "$handler" sed "${aa[@]}" "$f" | grep -v '# \(IDENTICAL\|_IDENTICAL_\|__IDENTICAL__\)' >"$tempTarget" || return $?
+    if [ -f "$target" ]; then
+      if ! diff -q "$tempTarget" "$target"; then
+        diff "$target" "$tempTarget" | dumpPipe "Updated $(decorate file "$target"): < old, > new"
+        __catch "$handler" mv "$tempTarget" "$target" || returnClean $? "$tempTarget" || return $?
+      else
+        __catchEnvironment "$handler" rm -f "$tempTarget" || return $?
+        decorate info "No changes required for $(decorate file "$target")"
+      fi
+    else
+      __catch "$handler" mv "$tempTarget" "$target" || returnClean $? "$tempTarget" || return $?
+      decorate info "Created $(decorate file "$target")"
+    fi
+  done
+}
+_buildFastFiles() {
+  # __IDENTICAL__ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+# Test build timings with different settings
+buildBuildTiming() {
+  local handler="_${FUNCNAME[0]}"
+  local index=1
+  for production in false true; do
+    for colors in false true; do
+      bigText "Test #$index"
+      decorate pair "PRODUCTION" "$production"
+      decorate pair "BUILD_COLORS" "$colors"
+      __catch "$handler" env -i BUILD_DEBUG=usage HOME="$HOME" PATH="$PATH" PRODUCTION=$production BUILD_COLORS=$colors time "$home/bin/build.sh" || return $?
+      index=$((index + 1))
+    done
+  done
+}
+_buildBuildTiming() {
+  # __IDENTICAL__ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}

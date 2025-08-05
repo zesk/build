@@ -37,7 +37,7 @@ if source "${BASH_SOURCE[0]%/*}/tools.sh"; then
   # Adds some aliases (t, tools, IdenticalRepair), adds a bash prompt
   # and shell completions, terminal colors, and outputs banner and shows new functions
   __buildConfigure() {
-    local imageLineHeight=10 imageColumnWidth=25
+    local imageColumnWidth=25
     local handler="_${FUNCNAME[0]}"
     local home
 
@@ -49,21 +49,28 @@ if source "${BASH_SOURCE[0]%/*}/tools.sh"; then
     if isiTerm2; then
       local curX curY
 
+      echo Icon
       if iTerm2Image "$home/etc/zesk-build-icon.png"; then
         : "Icon output"
       fi
-      IFS=$'\n' read -r -d '' curX curY < <(cursorGet) || :
-      [ "$curY" -ge $imageLineHeight ] || curY=$imageLineHeight
-      cursorSet "1" "$((curY - imageLineHeight))"
-      skipWidth="$imageColumnWidth"
-      : "$curX" is ignored
+#      local imageLineHeight=10
+#      echo Get cursor
+#      IFS=$'\n' read -r -d '' curX curY < <(cursorGet) || :
+#      [ "$curY" -ge $imageLineHeight ] || curY=$imageLineHeight
+#      echo Set cursor
+#      cursorSet "1" "$((curY - imageLineHeight))"
+#      skipWidth="$imageColumnWidth"
+#      : "$curX" is ignored
     fi
-
+    echo Title
     # Title
     local name
+    echo GetEnv
     name=$(__catch "$handler" buildEnvironmentGet APPLICATION_NAME) || return $?
     [ -n "$name" ] || name=$(basename "$home")
+    echo hookVersionCurrent
     title="$name $(__catch "$handler" hookVersionCurrent)" || return $?
+    echo bigText
     bigText --bigger "$title" | decorate skip "$skipWidth"
 
     # shellcheck disable=SC2139
@@ -72,11 +79,17 @@ if source "${BASH_SOURCE[0]%/*}/tools.sh"; then
     # shellcheck disable=SC2139
     alias IdenticalRepair="$home/bin/build/identical-repair.sh"
 
+    echo Reload
+
     printf "%s" "$(decorate warning "Watching ")"
     reloadChanges --name "$name" bin/build/tools.sh bin/build/tools
-    buildCompletion
+    # buildCompletion
+
+    echo Prompt
 
     bashPrompt --skip-prompt bashPromptModule_TermColors
+
+    echo Path
 
     pathConfigure --last "$home/bin" "$home/bin/build"
 

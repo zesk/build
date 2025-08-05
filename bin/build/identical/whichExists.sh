@@ -21,7 +21,7 @@ whichExists() {
   [ $# -gt 0 ] || __throwArgument "$handler" "no arguments" || return $?
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    # __IDENTICAL__ argumentBlankCheck 1
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
     [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     which "$1" >/dev/null || return 1
     shift

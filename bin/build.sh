@@ -93,23 +93,23 @@ __buildDebugColors() {
 # Argument: --no-commit - Flag. Do not commit any changes found, but leave the local repository modified. (Default)
 # Argument: --debug - Flag. Debug TERM info.
 __buildBuild() {
-  local usage="_${FUNCNAME[0]}"
+  local handler="_${FUNCNAME[0]}"
 
   local debugFlag=false makeDocumentation=false commitChanges=false
 
   export BUILD_COLORS
 
-  # _IDENTICAL_ argument-case-header 5
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
+    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-    # _IDENTICAL_ --help 4
-    --help)
-      "$usage" 0
-      return $?
-      ;;
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
+    # _IDENTICAL_ handlerHandler 1
+    --handler) shift && handler=$(usageArgumentFunction "$handler" "$argument" "${1-}") || return $? ;;
     --documentation)
       makeDocumentation=true
       ;;
@@ -127,8 +127,8 @@ __buildBuild() {
       debugFlag=true
       ;;
     *)
-      # _IDENTICAL_ argumentUnknown 1
-      __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
+      # _IDENTICAL_ argumentUnknownHandler 1
+      __throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
       ;;
     esac
     shift
@@ -138,21 +138,27 @@ __buildBuild() {
   start=$(timingStart)
 
   ! $debugFlag || statusMessage decorate info "Installing AWS ..."
-  __catch "$usage" awsInstall || return $?
+  __catch "$handler" awsInstall || return $?
 
   local home
-  home=$(__catch "$usage" buildHome) || return $?
+  home=$(__catch "$handler" buildHome) || return $?
 
   ! $debugFlag || statusMessage decorate info "Updating markdown ..."
   if ! "$home/bin/update-md.sh" --skip-commit; then
-    __catchEnvironment "$usage" "Can not update the Markdown files" || return $?
+    __catchEnvironment "$handler" "Can not update the Markdown files" || return $?
   fi
 
   ! $debugFlag || statusMessage decorate warning "Running deprecated ..."
-  "$home/bin/build/deprecated.sh" || __throwEnvironment "$usage" "Deprecated failed" || return $?
+  "$home/bin/build/deprecated.sh" || __throwEnvironment "$handler" "Deprecated failed" || return $?
+
+  ! $debugFlag || statusMessage decorate warning "Building fast files first time ..."
+  __catch "$handler" "$home/bin/tools.sh" buildFastFiles || return $?
 
   ! $debugFlag || statusMessage decorate warning "Running identical ..."
-  "$home/bin/build/identical-repair.sh" || __throwEnvironment "$usage" "Identical repair failed" || return $?
+  "$home/bin/build/identical-repair.sh" --internal || __throwEnvironment "$handler" "Identical repair failed" || return $?
+
+  ! $debugFlag || statusMessage decorate warning "Building fast files ..."
+  __catch "$handler" "$home/bin/tools.sh" buildFastFiles || return $?
 
   if $makeDocumentation; then
     local path rootShow rootPath="$home/documentation/site"
@@ -160,12 +166,12 @@ __buildBuild() {
     for path in "$rootPath" "$home/documentation/.docs"; do
       if [ -d "$path" ]; then
         statusMessage decorate warning "Removing $path for build" || return $?
-        __catchEnvironment "$usage" rm -rf "$path" || return $?
+        __catchEnvironment "$handler" rm -rf "$path" || return $?
       fi
     done
     ! $debugFlag || statusMessage decorate warning "Building documentation ..."
-    "$home/bin/documentation.sh" || __throwEnvironment "$usage" "Documentation failed" || return $?
-    [ -d "$rootPath" ] || __throwEnvironment "$usage" "Documentation failed to create $rootShow" || return $?
+    "$home/bin/documentation.sh" || __throwEnvironment "$handler" "Documentation failed" || return $?
+    [ -d "$rootPath" ] || __throwEnvironment "$handler" "Documentation failed to create $rootShow" || return $?
   fi
 
   if $commitChanges && gitRepositoryChanged; then
@@ -178,7 +184,7 @@ __buildBuild() {
   elif gitRepositoryChanged; then
     ! $debugFlag || statusMessage --last decorate warning "Local repository changed."
   fi
-  statusMessage --last "$start" "Built successfully in"
+  statusMessage --last timingReport "$start" "Built successfully in"
 }
 ___buildBuild() {
   # __IDENTICAL__ usageDocument 1

@@ -10,3 +10,4 @@
 
 {buildAddTool}
 {buildContainer}
+{buildQuickTest}

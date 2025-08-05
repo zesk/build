@@ -220,6 +220,7 @@ bashPrompt() {
   fi
   export PS1
   PS1="$(__bashPromptFormat "$promptFormat" "$colorsTextFormatted")"
+  export __BASH_PROMPT_SKIP_FIRST=true
 }
 _bashPrompt() {
   # __IDENTICAL__ usageDocument 1
@@ -521,6 +522,13 @@ __bashPromptCommand() {
 
   local debug=false
   ! buildDebugEnabled bashPrompt || debug=true
+
+  if [ "${__BASH_PROMPT_SKIP_FIRST-}" = "true" ]; then
+    unset __BASH_PROMPT_SKIP_FIRST
+    ! $debug || statusMessage decorate warning "Skipping first run"
+    return $exitCode
+  fi
+
   ! $debug || statusMessage decorate warning "Running $(decorate each --count code "${__BASH_PROMPT_MODULES[@]}") "
 
   local promptCommand start

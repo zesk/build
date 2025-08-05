@@ -9,10 +9,10 @@
 # IDENTICAL returnUndo EOF
 
 # Run a function and preserve exit code
-# Returns `exitCode`
+# Returns `code`
 # DOC TEMPLATE: --help 1
 # Argument: --help - Optional. Flag. Display this help.
-# Argument: exitCode - Required. UnsignedInteger. Exit code to return.
+# Argument: code - Required. UnsignedInteger. Exit code to return.
 # Argument: undoFunction - Optional. Command to run to undo something. Return status is ignored.
 # Argument: -- - Flag. Optional. Used to delimit multiple commands.
 # As a caveat, your command to `undo` can NOT take the argument `--` as a parameter.
@@ -24,10 +24,12 @@
 # Requires: isPositiveInteger __catchArgument decorate __execute
 # Requires: usageDocument
 returnUndo() {
-  [ "$1" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
-  local __count=$# __saved=("$@") __handler="_${FUNCNAME[0]}" exitCode="${1-}" args=()
+  local __count=$# __saved=("$@") __handler="_${FUNCNAME[0]}" code="${1-}" args=()
+  # __IDENTICAL__ __checkHelp1__handler 1
+  [ "${1-}" != "--help" ] || __help "$__handler" "$@" || return 0
   shift
-  isUnsignedInteger "$exitCode" || __catchArgument "$__handler" "Not an integer $(decorate value "$exitCode") (#$__count: $(decorate each code "${__saved[@]+"${__saved[@]}"}"))" || return $?
+  # __IDENTICAL__ __checkCode__handler 1
+  isInteger "$code" || __throwArgument "$__handler" "Not integer: $(decorate value "[$code]") (#$__count $(decorate each code "${__saved[@]}"))" || return $?
   while [ $# -gt 0 ]; do
     case "$1" in
     --)
@@ -41,7 +43,7 @@ returnUndo() {
     shift
   done
   [ "${#args[@]}" -eq 0 ] || __execute "${args[@]}" || :
-  return "$exitCode"
+  return "$code"
 }
 _returnUndo() {
   # __IDENTICAL__ usageDocument 1

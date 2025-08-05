@@ -15,15 +15,12 @@
 # Argument: ... - Arguments. Optional. Any additional arguments to `command`.
 __catch() {
   local __count=$# __saved=("$@") __handler="${1-}" command="${2-}"
-  # __IDENTICAL__ __checkHandler 1
   isFunction "$__handler" || _argument "handler not callable $(decorate code "$__handler")" || return $?
   shift 2 || __throwArgument "$__handler" "missing arguments #$__count $(decorate each code "${__saved[@]}")" || return $?
-  # __IDENTICAL__ __checkCommand__handler 1
   isCallable "$command" || __throwArgument "$__handler" "Not callable $(decorate code "$command")" || return $?
   "$command" "$@" || "$__handler" "$?" "$command" "$@" || return $?
 }
 ___catch() {
-  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -35,17 +32,13 @@ ___catch() {
 # Requires: isInteger _argument isFunction isCallable
 __catchCode() {
   local __count=$# __saved=("$@") __handler="_${FUNCNAME[0]}" code="${1-0}" __handler="${2-}" command="${3-}"
-  # __IDENTICAL__ __checkCode__handler 1
   isInteger "$code" || __throwArgument "$__handler" "Not integer: $(decorate value "[$code]") (#$__count $(decorate each code "${__saved[@]}"))" || return $?
-  # __IDENTICAL__ __checkHandler 1
   isFunction "$__handler" || _argument "handler not callable $(decorate code "$__handler")" || return $?
-  # __IDENTICAL__ __checkCommand__handler 1
   isCallable "$command" || __throwArgument "$__handler" "Not callable $(decorate code "$command")" || return $?
   shift 3
   "$command" "$@" || "$__handler" "$code" "$(decorate each code "$command" "$@")" || return $?
 }
 ___catchCode() {
-  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -69,7 +62,6 @@ __catchArgument() {
 # Argument: message - Optional. Error message to display.
 __throwEnvironment() {
   local __handler="${1-}"
-  # __IDENTICAL__ __checkHandler 1
   isFunction "$__handler" || _argument "handler not callable $(decorate code "$__handler")" || return $?
   shift && "$__handler" 1 "$@" || return $?
 }
@@ -79,7 +71,6 @@ __throwEnvironment() {
 # Argument: message - Optional. Error message to display.
 __throwArgument() {
   local __handler="${1-}"
-  # __IDENTICAL__ __checkHandler 1
   isFunction "$__handler" || _argument "handler not callable $(decorate code "$__handler")" || return $?
   shift && "$__handler" 2 "$@" || return $?
 }
@@ -89,7 +80,6 @@ __throwArgument() {
 # Requires: isFunction _argument buildFailed debuggingStack __throwEnvironment
 __catchEnvironmentQuiet() {
   local __handler="${1-}" quietLog="${2-}"
-  # __IDENTICAL__ __checkHandler 1
   isFunction "$__handler" || _argument "handler not callable $(decorate code "$__handler")" || return $?
   shift 2 && "$@" >>"$quietLog" 2>&1 || buildFailed "$quietLog" || __throwEnvironment "$__handler" "$@" || return $?
 }
@@ -112,12 +102,10 @@ _deprecated() {
 # Example:     __catchEnvironment "$handler" phpBuild || returnUndo $? {fn} popd || return $?
 # stdout: - No output from stdout ever from this function
 muzzle() {
-  # __IDENTICAL__ __checkHelp1FUNCNAME 1
   [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
   "$@" >/dev/null
 }
 _muzzle() {
-  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -132,7 +120,6 @@ _muzzle() {
 # Argument: ... - Additional from-to pairs can be passed, first matching value is used, all values will be examined if none match
 mapReturn() {
   local handler="_${FUNCNAME[0]}" value="" from="" to=""
-  # __IDENTICAL__ __checkHelp1__handler 1
   [ "${1-}" != "--help" ] || __help "$__handler" "$@" || return 0
 
   while [ $# -gt 0 ]; do
@@ -152,7 +139,6 @@ mapReturn() {
   return "${value:-0}"
 }
 _mapReturn() {
-  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
@@ -168,7 +154,6 @@ _mapReturn() {
 # Argument: ... - Additional from-to pairs can be passed, first matching value is used, all values will be examined if none match
 convertValue() {
   local __handler="_${FUNCNAME[0]}" value="" from="" to=""
-  # __IDENTICAL__ __checkHelp1__handler 1
   [ "${1-}" != "--help" ] || __help "$__handler" "$@" || return 0
 
   while [ $# -gt 0 ]; do
@@ -189,11 +174,9 @@ convertValue() {
   printf "%s\n" "${value:-0}"
 }
 _convertValue() {
-  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# _IDENTICAL_ __execute 7
 
 # Argument: binary ... - Required. Executable. Any arguments are passed to `binary`.
 # Run binary and output failed command upon error
@@ -202,7 +185,6 @@ __execute() {
   "$@" || _return "$?" "$@" || return $?
 }
 
-# IDENTICAL returnUndo 42
 
 # Run a function and preserve exit code
 # Returns `code`
@@ -221,10 +203,8 @@ __execute() {
 # Requires: usageDocument
 returnUndo() {
   local __count=$# __saved=("$@") __handler="_${FUNCNAME[0]}" code="${1-}" args=()
-  # __IDENTICAL__ __checkHelp1__handler 1
   [ "${1-}" != "--help" ] || __help "$__handler" "$@" || return 0
   shift
-  # __IDENTICAL__ __checkCode__handler 1
   isInteger "$code" || __throwArgument "$__handler" "Not integer: $(decorate value "[$code]") (#$__count $(decorate each code "${__saved[@]}"))" || return $?
   while [ $# -gt 0 ]; do
     case "$1" in
@@ -242,11 +222,9 @@ returnUndo() {
   return "$code"
 }
 _returnUndo() {
-  # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# _IDENTICAL_ __executeInputSupport 39
 
 # Support arguments and stdin as arguments to an executor
 # Argument: executor ... -- - The command to run on each line of input or on each additional argument. Arguments to prefix the final variable argument can be supplied prior to an initial `--`.
