@@ -48,7 +48,6 @@ if source "${BASH_SOURCE[0]%/*}/tools.sh"; then
     if isiTerm2; then
       local curX curY
 
-      echo Icon
       if iTerm2Image "$home/etc/zesk-build-icon.png"; then
         : "Icon output"
       fi
@@ -62,15 +61,11 @@ if source "${BASH_SOURCE[0]%/*}/tools.sh"; then
       #      skipWidth="$imageColumnWidth"
       #      : "$curX" is ignored
     fi
-    echo Title
     # Title
     local name
-    echo GetEnv
     name=$(__catch "$handler" buildEnvironmentGet APPLICATION_NAME) || return $?
     [ -n "$name" ] || name=$(basename "$home")
-    echo hookVersionCurrent
     title="$name $(__catch "$handler" hookVersionCurrent)" || return $?
-    echo bigText
     bigText --bigger "$title" | decorate skip "$skipWidth"
 
     # shellcheck disable=SC2139
@@ -79,17 +74,11 @@ if source "${BASH_SOURCE[0]%/*}/tools.sh"; then
     # shellcheck disable=SC2139
     alias IdenticalRepair="$home/bin/build/identical-repair.sh"
 
-    echo Reload
-
     printf "%s" "$(decorate warning "Watching ")"
     reloadChanges --name "$name" bin/build/tools.sh bin/build/tools
     # buildCompletion
 
-    echo Prompt
-
     bashPrompt --skip-prompt bashPromptModule_TermColors
-
-    echo Path
 
     pathConfigure --last "$home/bin" "$home/bin/build"
 
