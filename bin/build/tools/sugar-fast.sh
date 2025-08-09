@@ -177,14 +177,12 @@ _convertValue() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-
 # Argument: binary ... - Required. Executable. Any arguments are passed to `binary`.
 # Run binary and output failed command upon error
 # Requires: _return
 __execute() {
   "$@" || _return "$?" "$@" || return $?
 }
-
 
 # Run a function and preserve exit code
 # Returns `code`
@@ -224,7 +222,6 @@ returnUndo() {
 _returnUndo() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
-
 
 # Support arguments and stdin as arguments to an executor
 # Argument: executor ... -- - The command to run on each line of input or on each additional argument. Arguments to prefix the final variable argument can be supplied prior to an initial `--`.
