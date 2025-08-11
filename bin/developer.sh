@@ -8,31 +8,6 @@
 
 # shellcheck source=/dev/null
 if source "${BASH_SOURCE[0]%/*}/tools.sh"; then
-
-  # This has limited usage aside from the image stuff currently, can add it to core if needed
-  # Argument: count - UnsignedInteger. Required. Number of character to skip on each line.
-  # Argument: text - String. Optional. Text to output, each argument is one per line.
-  __decorateExtensionSkip() {
-    local handler="_${FUNCNAME[0]}"
-    local count="${1-}"
-    shift && isUnsignedInteger "$count" || __throwArgument "$handler" "Integer count required: $count" || retyrn $?
-    __executeInputSupport "$handler" __decorateExtensionMoveRelative "$handler" "$count" -- "$@" || return $?
-  }
-  ___decorateExtensionSkip() {
-    # __IDENTICAL__ usageDocument 1
-    usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
-  }
-  __decorateExtensionMoveRelative() {
-    local handler="$1" && shift
-    local count="$1" && shift
-    local curX curY
-    IFS=$'\n' read -r -d '' curX curY < <(cursorGet) || :
-    while [ $# -gt 0 ]; do
-      __catch "$handler" cursorSet "$((curX + count))" "$curY" && printf -- "%s\n" "$1" && curY=$((curY + 1)) || return $?
-      shift
-    done
-  }
-
   # Configure your shell for build developer
   # Adds some aliases (t, tools, IdenticalRepair), adds a bash prompt
   # and shell completions, terminal colors, and outputs banner and shows new functions
@@ -42,31 +17,18 @@ if source "${BASH_SOURCE[0]%/*}/tools.sh"; then
 
     home=$(__catch "$handler" buildHome) || return $?
 
-    bashDebugInterruptFile --interrupt --error
-    local skipWidth=0
     # Logo for iTerm2
     if isiTerm2; then
-      local curX curY
-
       if iTerm2Image "$home/etc/zesk-build-icon.png"; then
         : "Icon output"
       fi
-      #    local imageColumnWidth=25
-      #      local imageLineHeight=10
-      #      echo Get cursor
-      #      IFS=$'\n' read -r -d '' curX curY < <(cursorGet) || :
-      #      [ "$curY" -ge $imageLineHeight ] || curY=$imageLineHeight
-      #      echo Set cursor
-      #      cursorSet "1" "$((curY - imageLineHeight))"
-      #      skipWidth="$imageColumnWidth"
-      #      : "$curX" is ignored
     fi
     # Title
     local name
     name=$(__catch "$handler" buildEnvironmentGet APPLICATION_NAME) || return $?
     [ -n "$name" ] || name=$(basename "$home")
     title="$name $(__catch "$handler" hookVersionCurrent)" || return $?
-    bigText --bigger "$title" | decorate skip "$skipWidth"
+    bigText --bigger "$title"
 
     # shellcheck disable=SC2139
     alias t="$home/bin/build/tools.sh"
@@ -76,13 +38,13 @@ if source "${BASH_SOURCE[0]%/*}/tools.sh"; then
 
     printf "%s" "$(decorate warning "Watching ")"
     reloadChanges --name "$name" bin/build/tools.sh bin/build/tools
-    # buildCompletion
+    buildCompletion
 
     bashPrompt --skip-prompt bashPromptModule_TermColors
 
     pathConfigure --last "$home/bin" "$home/bin/build"
 
-    # developerAnnounce < <(developerTrack)
+     developerAnnounce < <(developerTrack)
 
     export BUILD_PROJECT_DEACTIVATE=__buildConfigureUndo
   }

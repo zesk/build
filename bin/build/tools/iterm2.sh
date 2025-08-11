@@ -124,8 +124,8 @@ iTerm2PromptSupport() {
   local usage="_${FUNCNAME[0]}"
 
   [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
-  __catchEnvironment "$usage" bashPrompt --skip-prompt --skip-terminal --last __iTerm2UpdateState || return $?
   __catchEnvironment "$usage" muzzle bashPromptMarkers "$(__iTerm2_mark)" "$(__iTerm2_suffix)" || return $?
+  __catchEnvironment "$usage" bashPrompt --skip-prompt --skip-terminal --last __iTerm2UpdateState || return $?
 }
 _iTerm2PromptSupport() {
   # __IDENTICAL__ usageDocument 1
