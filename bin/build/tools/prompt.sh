@@ -239,10 +239,11 @@ bashUserInput() {
     __throwEnvironment "$usage" "No TTY available for user input" || return $?
   fi
   export __BASH_PROMPT_MARKERS
+  stty echo
   # Technically the reading program will not receive these bytes as they will be sent to the tty
-  printf "%s" "${__BASH_PROMPT_MARKERS[0]-}" >>/dev/tty
-  read -r "$@" word </dev/tty || exitCode=$?
-  printf "%s" "${__BASH_PROMPT_MARKERS[1]-}" >>/dev/tty
+  # printf "%s" "${__BASH_PROMPT_MARKERS[0]-}" >>/dev/tty
+  read -r "$@" word </dev/tty 2>>/dev/tty || exitCode=$?
+  # printf "%s" "${__BASH_PROMPT_MARKERS[1]-}" >>/dev/tty
   printf "%s" "$word"
   return $exitCode
 }
