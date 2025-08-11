@@ -208,7 +208,6 @@ documentationBuild() {
   # Update indexes with function -> documentationPath
   #
   local template
-  echo "$LINENO: cacheDirectory=$cacheDirectory "
   find "$templatePath" -type f -name '*.md' ! -path '*/__*' | while read -r template; do
     __catch "$usage" documentationIndex_LinkDocumentationPaths "$cacheDirectory" "$template" "$targetPath${template#"$templatePath"}" || return $?
   done
@@ -222,10 +221,8 @@ documentationBuild() {
   if [ -n "$unlinkedTemplate" ]; then
     [ -n "$unlinkedTarget" ] || __throwArgument "$usage" "--unlinked-target required with --unlinked-template" || return $?
     ! $verbose || decorate info "Update unlinked document $unlinkedTarget"
-    echo "$LINENO: cacheDirectory=$cacheDirectory "
     local envFile
     envFile=$(_buildDocumentationGenerateEnvironment "$usage" "$company" "$companyLink" "$applicationName") || return $?
-    echo "$LINENO: cacheDirectory=$cacheDirectory "
     __catchEnvironment "$usage" _documentationTemplateUpdateUnlinked "$cacheDirectory" "$envFile" "$unlinkedTemplate" "$unlinkedTarget" "$pageTemplate" || return $?
     docArgs+=(--env-file "$envFile")
     if [ "$actionFlag" = "--unlinked-update" ]; then

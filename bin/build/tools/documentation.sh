@@ -82,13 +82,15 @@ __usageDocumentComplex() {
     __throwArgument "$handler" "Unable to extract \"$functionName\" from \"$functionDefinitionFile\"" || returnClean $? "$variablesFile" || return $?
   fi
   (
-    local description="" argument="" base exit_code="" environment="" stdin="" stdout="" example="" build_debug=""
+    local description="" argument="" base exit_code="" environment="" stdin="" stdout="" example="" build_debug="" __handler="$handler"
 
+    declare -r __handler variablesFile
     set -a
     base="$(basename "$functionDefinitionFile")"
     # shellcheck source=/dev/null
-    __catchEnvironment "$handler" source "$variablesFile" || returnClean $? "$variablesFile" || return $?
-    __catchEnvironment "$handler" rm -f "$variablesFile" || return $?
+    __catchEnvironment "$__handler" source "$variablesFile" || returnClean $? "$variablesFile" || return $?
+    # Some variables MAY BE OVERWRITTEN ABOVE .e.g. `__handler`
+    __catchEnvironment "$__handler" rm -f "$variablesFile" || return $?
     set +a
 
     : "$exit_code $environment $stdin $stdout $example are referenced here and with \${!variable} below"
@@ -101,7 +103,7 @@ __usageDocumentComplex() {
       # Hides a lot of unnecessary tracing
       __buildDebugDisable
     fi
-    __catch "$handler" bashRecursionDebug || return $?
+    __catch "$__handler" bashRecursionDebug || return $?
     local variable prefix label done=false suffix=""
     while ! $done; do
       IFS="|" read -r variable prefix label || done=true
@@ -260,11 +262,6 @@ documentationTemplateCompile() {
   documentTemplate="$(usageArgumentFile "$handler" documentTemplate "$documentTemplate")" || return $?
   functionTemplate="$(usageArgumentFile "$handler" functionTemplate "$functionTemplate")" || return $?
   targetFile="$(usageArgumentFileDirectory "$handler" targetFile "$targetFile")" || return $?
-
-  # echo cacheDirectory="$cacheDirectory"
-  # echo documentTemplate="$documentTemplate"
-  # echo functionTemplate="$functionTemplate"
-  # echo targetFile="$targetFile"
 
   base="$(basename "$targetFile")" || __throwArgument "$handler" basename "$targetFile" || return $?
   base="${base%%.md}"

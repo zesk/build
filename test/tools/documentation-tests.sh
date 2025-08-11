@@ -27,7 +27,7 @@ testDocumentation() {
   local summary description
   local handler="_return"
 
-  export BUILD_DEBUG="fast-usage;usage"
+  # export BUILD_DEBUG="fast-usage,usage"
   local home
   home=$(__catch "$handler" buildHome) || return $?
 

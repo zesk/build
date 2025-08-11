@@ -799,14 +799,14 @@ __deployCommandsFile() {
   printf -- "%s/bin/build/tools.sh __environment deployRemoteFinish %s|| exit \$?\n" "$appHome" "$(printf '"%s" ' "$@")" || return $?
 }
 
+# BUILD_DEBUG: ssh - Debug ssh commands with verbose options
+# BUILD_DEBUG: ssh-debug - Debug ssh commands with LOTS of verbose options
 __deploySSHOptions() {
-  if buildDebugEnabled; then
-    if isInteger "${BUILD_DEBUG-}" && [ "${BUILD_DEBUG-}" -ge 3 ]; then
-      # Triple verbosity
-      printf %s "-vvv"
-    else
-      printf %s "-v"
-    fi
+  if buildDebugEnabled ssh; then
+    printf %s "-v"
+  elif buildDebugEnabled ssh-debug; then
+    # Triple verbosity
+    printf %s "-vvv"
   else
     # Quiet mode. Causes most warning and diagnostic messages to be suppressed.
     printf %s "-q"

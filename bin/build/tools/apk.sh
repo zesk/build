@@ -24,7 +24,6 @@ _apkIsInstalled() {
 }
 
 # Is this an Alpine system?
-# Argument: --help
 # DOC TEMPLATE: --help 1
 # Argument: --help - Optional. Flag. Display this help.
 isAlpine() {
@@ -33,9 +32,9 @@ isAlpine() {
   [ -f /etc/alpine-release ]
 }
 _isAlpine() {
+  ! false || isAlpine --help
   # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
-  ! false || isAlpine --help
 }
 
 # Open an Alpine container shell

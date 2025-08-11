@@ -39,7 +39,7 @@ __tools() {
   __source bin/build/tools.sh "$@"
 }
 
-# IDENTICAL _return 28
+# IDENTICAL _return 29
 
 # Return passed in integer return code and output message to `stderr` (non-zero) or `stdout` (zero)
 # Argument: exitCode - Required. UnsignedInteger. Exit code to return. Default is 1.
@@ -58,6 +58,7 @@ _return() {
 # Source: https://stackoverflow.com/questions/806906/how-do-i-test-if-a-variable-is-a-number-in-bash
 # Credits: F. Hauri - Give Up GitHub (isnum_Case)
 # Original: is_uint
+# Argument: value - EmptyString. Value to test if it is an unsigned integer.
 # Usage: {fn} argument ...
 # Exit Code: 0 - if it is an unsigned integer
 # Exit Code: 1 - if it is not an unsigned integer
