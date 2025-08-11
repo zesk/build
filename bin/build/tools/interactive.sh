@@ -279,8 +279,6 @@ loopExecute() {
 
   local loopCallable="" sleepDelay=10 title="" until=()
 
-  bashDebugInterruptFile --error --interrupt
-
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
