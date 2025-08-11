@@ -8,6 +8,7 @@
 #
 
 testAPITools() {
+  # export BUILD_DEBUG=temp
   assertEquals "$(plural 0 singular plural)" "plural" || return $?
   assertEquals "$(plural 1 singular plural)" "singular" || return $?
   assertEquals "$(plural 2 singular plural)" "plural" || return $?
