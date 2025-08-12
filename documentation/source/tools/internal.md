@@ -10,3 +10,7 @@
 {buildAddTool}
 {buildContainer}
 {buildQuickTest}
+
+
+{buildBuildTiming}
+{buildFastFiles}

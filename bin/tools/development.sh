@@ -64,6 +64,8 @@ _buildQuickTest() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
+# Playing with the concept if we remove the type checking that Bash will perform faster
+# Initial tests show that increase in speeds is minor at best which is likely as IO or some other issue is at hand.
 buildFastFiles() {
   local handler="_${FUNCNAME[0]}"
   local home
@@ -100,6 +102,7 @@ _buildFastFiles() {
 }
 
 # Test build timings with different settings
+# See if buildFastFiles makes a difference
 buildBuildTiming() {
   local handler="_${FUNCNAME[0]}"
   local index=1
