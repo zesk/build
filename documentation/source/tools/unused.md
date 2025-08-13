@@ -39,3 +39,15 @@ Hides these from [New and uncategorized functions](./todo.md)
 {modifiedSeconds}
 {requireDirectory}
 {requireFileDirectory}
+
+{anyEnvToBashEnv}
+{anyEnvToDockerEnv}
+{checkDockerEnvFile}
+{colorComboTest}
+{colorTest}
+{copyFile}
+{copyFileWouldChange}
+{dockerEnvFromBashEnv}
+{dockerEnvToBash}
+{getFromPipelineYML}
+{semanticColorTest}
