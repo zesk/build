@@ -74,14 +74,14 @@ buildFastFiles() {
 
   home=$(__catch "$handler" buildHome) || return $?
 
-  local pattern patterns=("__check") aa=() && for pattern in "${patterns[@]}"; do aa+=(-e "/$(quoteSedPattern "# IDENTICAL $pattern")/{N;d;}"); done
+  local pattern patterns=("__check") aa=() && for pattern in "${patterns[@]}"; do aa+=(-e "/# __IDENTICAL__ $(quoteSedPattern "$pattern")/{N;d;}"); done
 
   local ff=("$home/bin/build/tools/sugar.sh")
 
   for f in "${ff[@]}"; do
     local target="${f%.sh}-fast.sh"
     local tempTarget="$target.temp"
-    __catchEnvironment "$handler" sed "${aa[@]}" "$f" | grep -v '# \(IDENTICAL\|_IDENTICAL_\|__IDENTICAL__\)' >"$tempTarget" || return $?
+    __catchEnvironment "$handler" __echo sed "${aa[@]}" "$f" | grep -v '# \(IDENTICAL\|_IDENTICAL_\|__IDENTICAL__\)' >"$tempTarget" || return $?
     if [ -f "$target" ]; then
       if ! diff -q "$tempTarget" "$target"; then
         diff "$target" "$tempTarget" | dumpPipe "Updated $(decorate file "$target"): < old, > new"

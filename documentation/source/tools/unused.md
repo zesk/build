@@ -51,3 +51,5 @@ Hides these from [New and uncategorized functions](./todo.md)
 {dockerEnvToBash}
 {getFromPipelineYML}
 {semanticColorTest}
+
+{allColorTest}
