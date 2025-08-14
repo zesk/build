@@ -5,7 +5,24 @@
 # Docs: ./documentation/source/tools/time.md
 # Test: ./test/tools/time-tests.sh
 
-#
+# Time command, similar to `time` but uses internal functions
+# Argument: command - Required. Executable. Command to run.
+# Outputs time as `timingReport`
+timing() {
+  local handler="_${FUNCNAME[0]}"
+  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
+  local start exitCode=0
+  start=$(timingStart)
+  isCallable "${1-}" || __throwArgument "$handler" "${1-} must be callable" || return $?
+  __catch "$handler" "$@" || exitCode="$?"
+  timingReport "$start" "$@"
+  [ $exitCode = 0 ] || _return "$exitCode" "$@" || return $?
+}
+_timing() {
+  # __IDENTICAL__ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
 # Summary: Start a timer
 #
 # Outputs the offset in milliseconds from January 1, 1970.
@@ -17,8 +34,8 @@
 # Requires: __timestamp, _environment date
 # Should never fail, unless date is not installed
 timingStart() {
-  local usage="_${FUNCNAME[0]}"
-  [ $# -eq 0 ] || __help --only "$usage" "$@" || return "$(convertValue $? 1 0)"
+  local handler="_${FUNCNAME[0]}"
+  [ $# -eq 0 ] || __help --only "$handler" "$@" || return "$(convertValue $? 1 0)"
   __timestamp
 }
 _timingStart() {
@@ -29,8 +46,8 @@ _timingStart() {
 
 # Format a timout output (milliseconds) as seconds using a decimal
 timingFormat() {
-  local usage="_${FUNCNAME[0]}"
-  [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
+  local handler="_${FUNCNAME[0]}"
+  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
   while [ $# -gt 0 ]; do
     local delta="$1" seconds remainder text
     if isUnsignedInteger "$delta"; then
@@ -68,29 +85,24 @@ _timingFormat() {
 # Example:    ...
 # Example:    timingReport "$init" "Deploy completed in"
 timingReport() {
-  local usage="_${FUNCNAME[0]}"
+  local handler="_${FUNCNAME[0]}"
 
   local color="green" start=""
 
-  # _IDENTICAL_ argument-case-header 5
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
+    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-    # _IDENTICAL_ --help 4
-    --help)
-      "$usage" 0
-      return $?
-      ;;
-    # _IDENTICAL_ --handler 4
-    --handler)
-      shift
-      usage=$(usageArgumentFunction "$usage" "$argument" "${1-}") || return $?
-      ;;
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
+    # _IDENTICAL_ handlerHandler 1
+    --handler) shift && handler=$(usageArgumentFunction "$handler" "$argument" "${1-}") || return $? ;;
     --color)
       shift
-      color=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
+      color=$(usageArgumentString "$handler" "$argument" "${1-}") || return $?
       ;;
     *)
       start="$argument"

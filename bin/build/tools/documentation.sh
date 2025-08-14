@@ -57,20 +57,26 @@ __usageDocumentComplex() {
     decorate error "NO EXIT CODE" 1>&2
     returnCode=1
   fi
+
   __catchArgument "$handler" isInteger "$returnCode" || __catchArgument "$handler" "$(debuggingStack)" || return $?
 
   local color="success"
   case "$returnCode" in
   0 | 2)
     if buildDebugEnabled "fast-usage"; then
-      [ "$returnCode" -eq 0 ] || exec 1>&2 && color="warning"
-      printf -- "%s%s %s\n" "$(decorate value "[$returnCode]")" "$(decorate code " $functionName ")" "$(decorate "$color" "$@")"
+      if [ "$returnCode" -ne 0 ]; then
+        exec 1>&2
+        color="warning"
+      fi
+      printf -- "%s%s %s\n" "$(decorate value "[$returnCode]")" "$(decorate code " $functionName ")" "$(decorate "$color" -- "$@")"
       return "$returnCode"
     fi
     ;;
   *)
-    [ "$returnCode" -eq 0 ] || exec 1>&2 && color="error"
-    printf -- "%s%s %s\n" "$(decorate value "[$returnCode]")" "$(decorate code " $functionName ")" "$(decorate "$color" "$@")"
+    if [ "$returnCode" -ne 0 ]; then
+      exec 1>&2 && color="error"
+    fi
+    printf -- "%s%s %s\n" "$(decorate value "[$returnCode]")" "$(decorate code " $functionName ")" "$(decorate "$color" -- "$@")"
     return "$returnCode"
     ;;
   esac

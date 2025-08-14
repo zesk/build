@@ -1199,7 +1199,7 @@ _characterClassReport() {
 # Partial Credit: https://stackoverflow.com/questions/4198138/printing-everything-except-the-first-field-with-awk/31849899#31849899
 removeFields() {
   local usage="_${FUNCNAME[0]}"
-  local fieldCount="" fields=()
+  local fieldCount=""
 
   # _IDENTICAL_ argument-case-header 5
   local __saved=("$@") __count=$#
@@ -1220,10 +1220,11 @@ removeFields() {
     shift
   done
   fieldCount=${fieldCount:-1}
-  #  awk '{for(i=0;i<'"${fieldCount:-1}"';i++){sub($1 FS,"")}}1'
-  while IFS=' ' read -d $'\n' -r -a fields; do
-    echo "${fields[@]:$fieldCount}"
-  done
+  sed -r 's/^([^ ]+ +){'"$fieldCount"'}//'
+  # local fields=()
+  #  while IFS=' ' read -d $'\n' -r -a fields; do
+  #    echo "${fields[@]:$fieldCount}"
+  #  done
 }
 _removeFields() {
   # __IDENTICAL__ usageDocument 1
