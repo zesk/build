@@ -257,6 +257,7 @@ plasterLines
 escapeBash
 quoteBashString
 inArray
+mapReturn
 EOF
 }
 
