@@ -120,7 +120,7 @@ __usageDocumentComplex() {
     if $bashDebug; then
       __buildDebugEnable
     fi
-    __catch "$handler" bashRecursionDebug --end || return $?
+    __catch "$__handler" bashRecursionDebug --end || return $?
   ) || returnClean $? "$variablesFile" || return $?
   return "$returnCode"
 }
