@@ -89,7 +89,7 @@ __buildIdenticalRepair() {
     read -r item || done=true
     [ -z "$item" ] || aa+=(--repair "$item")
   done < <(find "$home" -type d -name identical ! -path "*/.*/*")
-  bashDebugInterruptFile --error --interrupt
+  # bashDebugInterruptFile --error --interrupt
   set -eou pipefail
   __catch "$usage" identicalCheckShell --skip "$(realPath "${BASH_SOURCE[0]}")" "${aa[@]+"${aa[@]}"}" --exec contextOpen "$@" || return $?
 }

@@ -45,7 +45,6 @@ if source "${BASH_SOURCE[0]%/*}/tools.sh"; then
     pathConfigure --last "$home/bin" "$home/bin/build"
 
     developerAnnounce < <(developerTrack)
-    # Kent is cool!!
 
     export BUILD_PROJECT_DEACTIVATE=__buildConfigureUndo
   }

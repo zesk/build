@@ -33,8 +33,9 @@ developerAnnounce() {
   done
 
   IFS=$'\n' read -r -d "" -a skipItems < <(environmentSecureVariables)
-  local aa=() ff=() types=() unknowns=() item itemType
+  local aa=() ff=() types=() unknowns=() item itemType blank
 
+  blank=$(decorate bold-orange "empty")
   while read -r item; do
     [ -n "$item" ] || continue
     [ "$item" = "${item#_}" ] || continue
@@ -46,7 +47,7 @@ developerAnnounce() {
       ! inArray "$item" "${skipItems[@]}" || continue
       if muzzle isType "$item"; then
         local message
-        message="$(decorate info "$(decorate value "$item") is type $(isType "$item" | decorate each code) (item $itemType)")"
+        message="$(decorate info "$(decorate value "$item") is $(decorate bold-magenta "${!item-$blank}") ($(isType "$item" | decorate each code))")"
         types+=("$message")
       else
         unknowns+=("$item")
@@ -56,7 +57,7 @@ developerAnnounce() {
   done
   [ "${#ff[@]}" -eq 0 ] || decorate info "Available functions $(decorate each code "${ff[@]}")"
   [ "${#aa[@]}" -eq 0 ] || decorate info "Available aliases $(decorate each code "${aa[@]}")"
-  [ "${#types[@]}" -eq 0 ] || decorate info "Available types:$(printf "%s\n" "" "${types[@]}")"
+  [ "${#types[@]}" -eq 0 ] || decorate info "Available variables:"$'\n'"$(printf -- "- %s\n" "${types[@]}")"
   ! $debugFlag || [ "${#unknowns[@]}" -eq 0 ] || decorate info "Unknowns: $(decorate error "${#unknowns[@]}")"
 }
 _developerAnnounce() {
@@ -96,7 +97,7 @@ _developerUndo() {
 # stdout: list of function|alias|environment
 developerTrack() {
   local handler="_${FUNCNAME[0]}"
-  local source="" verboseFlag=false profileFlag=false
+  local source="" verboseFlag=false profileFlag=false optionalFlag=false
 
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
@@ -108,6 +109,7 @@ developerTrack() {
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
     --profile) profileFlag=true ;;
+    --developer) profileFlag=true && optionalFlag=true ;;
     --verbose)
       verboseFlag=true
       ;;
@@ -123,6 +125,7 @@ developerTrack() {
 
   cachePath=$(__catch "$handler" buildCacheDirectory "${FUNCNAME[0]}" "profile") || return $?
   if $profileFlag; then
+    ! $optionalFlag || [ ! -f "$cachePath/environment" ] || return 0
     __developerTrack "$cachePath" || return $?
     return 0
   fi
