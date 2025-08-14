@@ -26,3 +26,4 @@ ORIGINALS/
 /documentation/mkdocs.yml
 /documentation/site/
 /documentation/source/*.csv
+/.interrupt.log
