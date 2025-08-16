@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 #
+# TOP-LEVEL PLATFORM INCLUDE
+#
 # Darwin is Apple Inc.'s code name for the underlying operating system of Mac OS X
 #
 # Copyright &copy; 2025 Market Acumen, Inc.
@@ -26,11 +28,6 @@ __packageManagerDefault() {
   manager="${1-}"
   [ -n "$manager" ] || manager="${managers[0]}"
   printf "%s\n" "$manager"
-}
-
-# Requires: xargs sed
-__xargsSedInPlaceReplace() {
-  xargs sed -i '' "$@"
 }
 
 # Requires: printf
