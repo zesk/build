@@ -86,53 +86,51 @@ _bigText() {
 # Experimental
 # Place bigText at a position on the console
 bigTextAt() {
-  local usage="_${FUNCNAME[0]}"
+  local handler="_${FUNCNAME[0]}"
   local message="" x="" y=""
 
-  # _IDENTICAL_ argument-case-header 5
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
+    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-    # _IDENTICAL_ --help 4
-    --help)
-      "$usage" 0
-      return $?
-      ;;
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
     *)
       if [ -z "$x" ]; then
-        x=$(usageArgumentInteger "$usage" "xOffset" "$argument") || return $?
+        x=$(usageArgumentInteger "$handler" "xOffset" "$argument") || return $?
       elif [ -z "$y" ]; then
-        y=$(usageArgumentInteger "$usage" "yOffset" "$argument") || return $?
+        y=$(usageArgumentInteger "$handler" "yOffset" "$argument") || return $?
       else
-        message=$(__catchEnvironment "$usage" bigText "$@") || return $?
+        message=$(__catchEnvironment "$handler" bigText "$@") || return $?
       fi
       ;;
     esac
     shift
   done
 
-  [ -n "$x" ] || __throwArgument "$usage" "Missing x" || return $?
-  [ -n "$y" ] || __throwArgument "$usage" "Missing y" || return $?
+  [ -n "$x" ] || __throwArgument "$handler" "Missing x" || return $?
+  [ -n "$y" ] || __throwArgument "$handler" "Missing y" || return $?
   local maxX maxY theX="$x" theY="$y" saveX saveY
-  maxX=$(__catch "$usage" consoleColumns) || return $?
-  maxY=$(__catch "$usage" consoleRows) || return $?
-  [ "$x" -lt "$maxX" ] || __throwArgument "$usage" "$x -gt $maxX exceeds column width" || return $?
-  [ "$y" -lt "$maxY" ] || __throwArgument "$usage" "$y -gt $maxY exceeds row height" || return $?
-  [ "$x" -gt "-$maxX" ] || __throwArgument "$usage" "$x -lt -$maxX exceeds negative column width" || return $?
-  [ "$y" -gt "-$maxY" ] || __throwArgument "$usage" "$y -lt -$maxY exceeds negative row height" || return $?
+  maxX=$(__catch "$handler" consoleColumns) || return $?
+  maxY=$(__catch "$handler" consoleRows) || return $?
+  [ "$x" -lt "$maxX" ] || __throwArgument "$handler" "$x -gt $maxX exceeds column width" || return $?
+  [ "$y" -lt "$maxY" ] || __throwArgument "$handler" "$y -gt $maxY exceeds row height" || return $?
+  [ "$x" -gt "-$maxX" ] || __throwArgument "$handler" "$x -lt -$maxX exceeds negative column width" || return $?
+  [ "$y" -gt "-$maxY" ] || __throwArgument "$handler" "$y -lt -$maxY exceeds negative row height" || return $?
   IFS=$'\n' read -r -d '' saveX saveY < <(cursorGet)
   [ "$theX" -ge 0 ] || theX=$((maxX + theX))
   [ "$theY" -ge 0 ] || theY=$((maxY + theY))
   local outputLine
   while read -r outputLine; do
-    __catchEnvironment "$usage" cursorSet "$theX" "$theY" || return $?
+    __catchEnvironment "$handler" cursorSet "$theX" "$theY" || return $?
     printf -- "%s" "$outputLine"
     theY=$((theY + 1))
     [ "$theY" -le "$maxY" ] || break
   done < <(printf "%s\n" "$message")
-  __catchEnvironment "$usage" cursorSet "$saveX" "$saveY" || return $?
+  __catchEnvironment "$handler" cursorSet "$saveX" "$saveY" || return $?
 }
 _bigTextAt() {
   # __IDENTICAL__ usageDocument 1
@@ -164,21 +162,19 @@ _bigTextAt() {
 # Example:           ▌ ▌▌ ▌▌ ▌▛▀
 # Example:     Neat: ▀▀ ▝▀ ▘ ▘▝▀▘
 labeledBigText() {
-  local usage="_${FUNCNAME[0]}"
+  local handler="_${FUNCNAME[0]}"
 
   local plainLabel="" label="" isBottom=true linePrefix="" lineSuffix="" tweenLabel="" tweenNonLabel=""
 
-  # _IDENTICAL_ argument-case-header 5
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
+    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-    # _IDENTICAL_ --help 4
-    --help)
-      "$usage" 0
-      return $?
-      ;;
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
     --top)
       isBottom=false
       ;;
@@ -201,10 +197,10 @@ labeledBigText() {
     *)
       if [ "$argument" != "${argument#-}" ]; then
         # _IDENTICAL_ argumentUnknown 1
-        __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
+        __throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
       fi
       label="$argument"
-      plainLabel="$(printf -- "%s\n" "$label" | stripAnsi)" || __throwArgument "$usage" "Unable to clean label" || return $?
+      plainLabel="$(printf -- "%s\n" "$label" | stripAnsi)" || __throwArgument "$handler" "Unable to clean label" || return $?
       shift
       break
       ;;
@@ -242,24 +238,24 @@ _labeledBigText() {
 # Internal: Uses power of 2 strings to minimize the number of print statements. Nerd.
 # Repeat a string
 repeat() {
-  local usage="_${FUNCNAME[0]}"
-  local argument
-  local count
-  local powers
+  local handler="_${FUNCNAME[0]}"
 
-  count=
+  local count=""
+
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
+  local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
-    argument="$1"
+    local argument="$1" __index=$((__count - $# + 1))
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
+    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-    # _IDENTICAL_ --help 4
-    --help)
-      "$usage" 0
-      return $?
-      ;;
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
     *)
       if [ -z "$count" ]; then
         count="$(usageArgumentUnsignedInteger "$usage" "count" "$1")" || return $?
       else
+        local powers curPow
         powers=("$*")
         curPow=${#powers[@]}
         while [ $((2 ** curPow)) -le "$count" ]; do
@@ -278,7 +274,7 @@ repeat() {
       fi
       ;;
     esac
-    shift || __throwArgument "$usage" "shift argument $argument" || return $?
+    shift
   done
   __throwArgument "$usage" "missing repeat string" || return $?
 }
@@ -297,30 +293,27 @@ _repeat() {
 # Example:     decorate success $(echoBar "- Success ")
 # Example:     decorate magenta $(echoBar +-)
 echoBar() {
-  local usage="_${FUNCNAME[0]}"
+  local handler="_${FUNCNAME[0]}"
 
   local barText="" width count delta=""
 
-  width=$(consoleColumns) || __throwEnvironment "$usage" consoleColumns || return $?
-  # _IDENTICAL_ argument-case-blank-argument-header 4
+  width=$(consoleColumns) || __throwEnvironment "$handler" consoleColumns || return $?
+  # _IDENTICAL_ argumentBlankLoopHandler 4
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     case "$argument" in
-    # _IDENTICAL_ --help 4
-    --help)
-      "$usage" 0
-      return $?
-      ;;
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
     *)
       if [ $# -gt 2 ]; then
         # _IDENTICAL_ argumentUnknown 1
-        __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
+        __throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
       fi
       barText="$argument"
       shift
       if [ -n "${1-}" ]; then
-        delta=$(usageArgumentInteger "$usage" "delta" "$1") || return $?
+        delta=$(usageArgumentInteger "$handler" "delta" "$1") || return $?
       else
         delta=0
         break
@@ -334,7 +327,7 @@ echoBar() {
 
   count=$((width / ${#barText}))
   count=$((count + delta))
-  [ $count -gt 0 ] || __throwArgument "$usage" "count $count (delta $delta) less than zero?" || return $?
+  [ $count -gt 0 ] || __throwArgument "$handler" "count $count (delta $delta) less than zero?" || return $?
   printf -- "%s\n" "$(repeat "$count" "$barText")"
 }
 _echoBar() {
@@ -346,13 +339,13 @@ _echoBar() {
 # Argument: barText - String. Required. Text to fill line with, repeated. If not specified uses `-`
 # Argument: displayText - String. Optional.  Text to display on the line before the fill bar.
 lineFill() {
-  local usage="_${FUNCNAME[0]}"
-  [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
+  local handler="_${FUNCNAME[0]}"
+  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
 
   local text cleanText width barText
 
-  width=$(__catch "$usage" consoleColumns) || return $?
-  barText=$(usageArgumentString "$usage" "$barText" "${1:--}") || return $?
+  width=$(__catch "$handler" consoleColumns) || return $?
+  barText=$(usageArgumentString "$handler" "$barText" "${1:--}") || return $?
   shift || :
 
   text="$*"
@@ -388,10 +381,10 @@ _lineFill() {
 # Example:           Profession: Engineer
 #
 alignRight() {
-  local usage="_${FUNCNAME[0]}"
+  local handler="_${FUNCNAME[0]}"
   local n
-  __help "$usage" "$@" || return 0
-  n=$(usageArgumentUnsignedInteger "$usage" "characterWidth" "${1-}") && shift || return $?
+  __help "$handler" "$@" || return 0
+  n=$(usageArgumentUnsignedInteger "$handler" "characterWidth" "${1-}") && shift || return $?
   printf "%${n}s" "$*"
 }
 _alignRight() {
@@ -414,10 +407,10 @@ _alignRight() {
 # Example:     Profession    : Engineer
 #
 alignLeft() {
-  local usage="_${FUNCNAME[0]}"
+  local handler="_${FUNCNAME[0]}"
   local n
-  __help "$usage" "$@" || return 0
-  n=$(usageArgumentUnsignedInteger "$usage" "characterWidth" "${1-}") && shift || return $?
+  __help "$handler" "$@" || return 0
+  n=$(usageArgumentUnsignedInteger "$handler" "characterWidth" "${1-}") && shift || return $?
   printf "%-${n}s" "$*"
 }
 _alignLeft() {
@@ -443,36 +436,34 @@ _alignLeft() {
 # Output: +================================================================================================+
 #
 boxedHeading() {
-  local usage="_${FUNCNAME[0]}"
+  local handler="_${FUNCNAME[0]}"
 
   local text=() decoration="decoration" inside="decoration" shrink=0 nLines=1
 
-  # _IDENTICAL_ argument-case-header 5
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
+    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-    # _IDENTICAL_ --help 4
-    --help)
-      "$usage" 0
-      return $?
-      ;;
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
     --outside)
       shift
-      decoration=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
+      decoration=$(usageArgumentString "$handler" "$argument" "${1-}") || return $?
       ;;
     --inside)
       shift
-      inside=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
+      inside=$(usageArgumentString "$handler" "$argument" "${1-}") || return $?
       ;;
     --shrink)
       shift
-      shrink=$(usageArgumentUnsignedInteger "$usage" "$argument" "${1-}") || return $?
+      shrink=$(usageArgumentUnsignedInteger "$handler" "$argument" "${1-}") || return $?
       ;;
     --size)
       shift
-      nLines=$(usageArgumentUnsignedInteger "$usage" "$argument" "${1-}") || return $?
+      nLines=$(usageArgumentUnsignedInteger "$handler" "$argument" "${1-}") || return $?
       ;;
     *)
       text+=("$1")
@@ -482,6 +473,7 @@ boxedHeading() {
   done
 
   local bar
+
   # Default is -2
   shrink=$((-(shrink + 2)))
   bar="+$(echoBar '' $shrink)+"
