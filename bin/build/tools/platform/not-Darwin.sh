@@ -13,7 +13,7 @@ __fileModificationTimes() {
 
 # Requires: xargs sed
 __xargsSedInPlaceReplace() {
-  xargs sed -i '' "$@"
+  xargs sed --in-place "$@"
 }
 
 # Requires: printf
