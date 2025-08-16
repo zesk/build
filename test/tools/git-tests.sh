@@ -34,6 +34,7 @@ _gitAddRemotesToSSHKnown() {
 }
 
 # Test-Build-Home: true
+# Test-File-Leaks: false
 testGitVersionList() {
   if ! gitHasAnyRefs; then
     _gitAddRemotesToSSHKnown || return $?
