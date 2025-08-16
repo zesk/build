@@ -16,18 +16,9 @@ __fileModificationTimes() {
   find "$directory" -type f "$@" -exec stat -f '%m %N' {} \;
 }
 
-# Requires: printf
-__packageManagerDefault() {
-  local manager managers=(port brew)
-  for manager in "${managers[@]}"; do
-    if whichExists "$manager"; then
-      printf "%s\n" "$manager"
-      return 0
-    fi
-  done
-  manager="${1-}"
-  [ -n "$manager" ] || manager="${managers[0]}"
-  printf "%s\n" "$manager"
+# Requires: xargs sed
+__xargsSedInPlaceReplace() {
+  xargs sed -i '' "$@"
 }
 
 # Requires: printf
@@ -80,4 +71,18 @@ __pcregrep() {
 
 __pcregrepInstall() {
   packageWhich pcre2grep pcre2grep || return $?
+}
+
+# Requires: printf
+__packageManagerDefault() {
+  local manager managers=(port brew)
+  for manager in "${managers[@]}"; do
+    if whichExists "$manager"; then
+      printf "%s\n" "$manager"
+      return 0
+    fi
+  done
+  manager="${1-}"
+  [ -n "$manager" ] || manager="${managers[0]}"
+  printf "%s\n" "$manager"
 }

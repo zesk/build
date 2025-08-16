@@ -33,13 +33,6 @@ __linkRename() {
   mv -fT "$@"
 }
 
-# Requires: mv
-__renameLink() {
-  # gnu version supports -T
-  mv -fT "$@"
-}
-
-
 # Requires: realpath
 __realPath() {
   realpath "$@"
@@ -56,9 +49,3 @@ __hostname() {
 __dateFromTimestamp() {
   date -u -d "@$1" "+$2"
 }
-
-# Requires: date
-__timestampToDate() {
-  date -u -d "@$1" "+$2"
-}
-
