@@ -7,6 +7,9 @@
 # Copyright &copy; 2025 Market Acumen, Inc.
 #
 
+# DOC TEMPLATE: dashDashAllowsHelpParameters 1
+# Argument: -- - Optional. Flag. Stops command processing to enable arbitrary text to be passed as additional arguments without special meaning.
+
 function __argumentsWithNonBlanksHandler() {
   local handler="_${FUNCNAME[0]}"
 
