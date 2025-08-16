@@ -227,28 +227,18 @@ deployRemoteFinish() {
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
-    # _IDENTICAL_ handlerHandler 1
-    --debug)
-      debuggingFlag=true
-      ;;
+    --debug) debuggingFlag=true ;;
+    --cleanup) cleanupFlag=true ;;
+    --revert) revertFlag=true ;;
+    --first) firstFlags+=("$argument") ;;
     --deploy)
       # shellcheck disable=SC2015
       ! $cleanupFlag && ! $revertFlag || __throwArgument "$handler" "$argument is incompatible with --cleanup and --revert" || return $?
       cleanupFlag=false
       revertFlag=false
       ;;
-    --cleanup)
-      cleanupFlag=true
-      ;;
-    --revert)
-      revertFlag=true
-      ;;
-    --first)
-      firstFlags+=("$argument")
-      ;;
     --home)
-      shift
-      deployHome=$(usageArgumentDirectory "$handler" deployHome "${1-}") || return $?
+      shift && deployHome=$(usageArgumentDirectory "$handler" deployHome "${1-}") || return $?
       ;;
     --id)
       shift
@@ -378,8 +368,8 @@ _deployRevertApplication() {
       elif [ -z "$targetPackage" ]; then
         targetPackage="$1"
       else
-      # _IDENTICAL_ argumentUnknownHandler 1
-      __throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
+        # _IDENTICAL_ argumentUnknownHandler 1
+        __throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
       fi
       ;;
     esac
@@ -498,17 +488,22 @@ deployToRemote() {
 
   __catch "$handler" buildEnvironmentLoad HOME BUILD_DEBUG || return $?
 
-  initTime=$(timingStart) || return $?
+  initTime=$(timingStart)
 
   [ -d "$HOME" ] || __throwEnvironment "$handler" "No HOME defined or not a directory: $HOME" || return $?
 
   local deployFlag=false revertFlag=false debuggingFlag=false cleanupFlag=false
   local userHosts=() applicationId="" deployHome="" applicationPath="" buildTarget="" remoteArgs=() firstFlags=() addSSHHosts=true showCommands=false currentIP=""
 
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
+  local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
-    local argument="$1"
-    [ -n "$argument" ] || __throwArgument "$handler" "blank argument" || return $?
+    local argument="$1" __index=$((__count - $# + 1))
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
+    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
     --target)
       shift
       [ -z "$buildTarget" ] || __throwArgument "$handler" "$argument supplied twice" || return $?
@@ -541,11 +536,6 @@ deployToRemote() {
       shift
       [ -z "$applicationId" ] || __throwArgument "$handler" "$argument supplied twice" || return $?
       applicationId="$1"
-      ;;
-    # _IDENTICAL_ --help 4
-    --help)
-      "$handler" 0
-      return $?
       ;;
     --deploy)
       if "$deployFlag"; then
@@ -581,7 +571,7 @@ deployToRemote() {
       IFS=' ' read -r -a userHosts <<<"$1" || :
       ;;
     esac
-    shift || :
+    shift
   done
 
   # Debugging

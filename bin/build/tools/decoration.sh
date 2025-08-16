@@ -52,20 +52,20 @@
 #                ▜█▛▘
 # Environment: BUILD_TEXT_BINARY
 bigText() {
-  local usage="_${FUNCNAME[0]}"
+  local handler="_${FUNCNAME[0]}"
 
-  [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
+  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
 
   local fonts binary index=0
 
-  binary=$(__catch "$usage" buildEnvironmentGet BUILD_TEXT_BINARY) || return $?
-  [ -n "$binary" ] || binary="$(__catch "$usage" __bigTextBinary)" || return $?
-  [ -n "$binary" ] || __throwEnvironment "$usage" "Need BUILD_TEXT_BINARY" || return $?
+  binary=$(__catch "$handler" buildEnvironmentGet BUILD_TEXT_BINARY) || return $?
+  [ -n "$binary" ] || binary="$(__catch "$handler" __bigTextBinary)" || return $?
+  [ -n "$binary" ] || __throwEnvironment "$handler" "Need BUILD_TEXT_BINARY" || return $?
   case "$binary" in
   figlet) fonts=("standard" "big") ;;
   toilet) fonts=("smblock" "smmono12") ;;
   *)
-    __throwEnvironment "$usage" "Unknown BUILD_TEXT_BINARY $(decorate code "$binary")" || return $?
+    __throwEnvironment "$handler" "Unknown BUILD_TEXT_BINARY $(decorate code "$binary")" || return $?
     ;;
   esac
   if ! whichExists "$binary"; then
@@ -196,7 +196,7 @@ labeledBigText() {
       ;;
     *)
       if [ "$argument" != "${argument#-}" ]; then
-        # _IDENTICAL_ argumentUnknown 1
+        # _IDENTICAL_ argumentUnknownHandler 1
         __throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
       fi
       label="$argument"
@@ -253,7 +253,7 @@ repeat() {
     --help) "$handler" 0 && return $? || return $? ;;
     *)
       if [ -z "$count" ]; then
-        count="$(usageArgumentUnsignedInteger "$usage" "count" "$1")" || return $?
+        count="$(usageArgumentUnsignedInteger "$handler" "count" "$1")" || return $?
       else
         local powers curPow
         powers=("$*")
@@ -276,7 +276,7 @@ repeat() {
     esac
     shift
   done
-  __throwArgument "$usage" "missing repeat string" || return $?
+  __throwArgument "$handler" "missing repeat string" || return $?
 }
 _repeat() {
   # __IDENTICAL__ usageDocument 1
@@ -307,7 +307,7 @@ echoBar() {
     --help) "$handler" 0 && return $? || return $? ;;
     *)
       if [ $# -gt 2 ]; then
-        # _IDENTICAL_ argumentUnknown 1
+        # _IDENTICAL_ argumentUnknownHandler 1
         __throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
       fi
       barText="$argument"

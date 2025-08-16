@@ -9,8 +9,7 @@
 
 # DOC TEMPLATE: dashDashAllowsHelpParameters 1
 # Argument: -- - Optional. Flag. Stops command processing to enable arbitrary text to be passed as additional arguments without special meaning.
-
-function __argumentsWithNonBlanksHandler() {
+__argumentsWithNonBlanksHandler() {
   local handler="_${FUNCNAME[0]}"
 
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
@@ -33,7 +32,7 @@ function __argumentsWithNonBlanksHandler() {
   done
 }
 
-function __argumentsWithBlanksHandler() {
+__argumentsWithBlanksHandler() {
   local handler="_${FUNCNAME[0]}"
 
   # _IDENTICAL_ argumentBlankLoopHandler 4
@@ -52,7 +51,7 @@ function __argumentsWithBlanksHandler() {
   done
 }
 
-function __argumentsTrimNonBlanksHandler() {
+__argumentsTrimNonBlanksHandler() {
   local handler="_${FUNCNAME[0]}"
 
   # _IDENTICAL_ argumentTrimBlankLoopHandler 7
