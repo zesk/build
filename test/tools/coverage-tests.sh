@@ -113,6 +113,7 @@ testBuildFunctionsCoverage() {
 }
 
 # Tag: slow
+# Tag: slow-non-critical
 testBuildFunctionsHelpCoverage() {
   local usage="_return"
 

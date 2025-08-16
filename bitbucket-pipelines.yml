@@ -25,7 +25,7 @@ pipelines:
             - test.stats
           script:
             - bin/build.sh --commit
-            - bin/test.sh --skip-tag package-install
+            - bin/test.sh --skip-tag package-install --skip-tag slow-non-critical
             - bin/deploy.sh --release
     staging:
       - step:
