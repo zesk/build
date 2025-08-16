@@ -625,9 +625,9 @@ _bashDocumentFunction() {
 # name matches the variable name (lowercase alphanumeric characters and underscores).
 #
 # Filter functions should modify the input/output pipe; an example can be found in `{applicationFile}` by looking at
-# sample function `_bashDocumentationFormatter_exitCode`.
+# sample function `_bashDocumentationFormatter_exit_code`.
 #
-# See: _bashDocumentationFormatter_exitCode
+# See: _bashDocumentationFormatter_exit_code
 # Usage: {fn} template [ settingsFile ...
 # Argument: template - Required. A markdown template to use to map values. Post-processed with `markdown_removeUnfinishedSections`
 # Argument: settingsFile - Required. Settings file to be loaded.
@@ -972,7 +972,7 @@ _bashDocumentation_FindFunctionDefinition() {
 #
 # Format code blocks (does markdown_FormatList)
 #
-_bashDocumentationFormatter_exitCode() {
+_bashDocumentationFormatter_exit_code() {
   markdown_FormatList
 }
 
