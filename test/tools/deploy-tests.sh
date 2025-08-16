@@ -191,6 +191,8 @@ _waitForValue() {
 # Tag: slow deployment php-install package-install
 # Test-Build-Home: true
 testDeployApplication() {
+  local handler="_return"
+
   exec 2>&1
 
   local d quietLog migrateVersion startingValue firstArgs home lastOne t
@@ -420,6 +422,8 @@ testDeployApplication() {
   PHP_SERVER_ROOT=
   PHP_SERVER_PID=
   unset BUILD_DEBUG
+
+  __catch "$handler" rm -rf "$d" || return $?
 }
 
 testDeployPackageName() {

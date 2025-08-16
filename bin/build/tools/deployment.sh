@@ -31,36 +31,30 @@
 #
 # Test: testDeployBuildEnvironment - INCOMPLETE
 deployBuildEnvironment() {
-  local usage="_${FUNCNAME[0]}"
-  local argument deployArgs deployHome applicationId applicationPath
-  local buildEnv="./.build.env"
-  local envFile envFiles envFilesLoaded dryRun targetPackage userHosts
+  local handler="_${FUNCNAME[0]}"
+  local envFiles=() envFilesLoaded=()
 
+  local deployHome="" applicationPath="" applicationId="" userHosts=() dryRun=false targetPackage="" deployArgs=()
+
+  local buildEnv="./.build.env"
   envFiles=()
   envFilesLoaded=()
   if [ -f "$buildEnv" ]; then
     envFiles=("$buildEnv")
   fi
 
-  deployHome=
-  applicationPath=
-  applicationId=
-  userHosts=()
-  dryRun=false
-  targetPackage=
-  deployArgs=()
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
+  local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
-    argument="$1"
-    [ -n "$argument" ] || __throwArgument "$usage" "blank argument" || return $?
+    local argument="$1" __index=$((__count - $# + 1))
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
+    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-    # _IDENTICAL_ --help 4
-    --help)
-      "$usage" 0
-      return $?
-      ;;
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
     --env-file)
       shift
-      envFiles+=("$(usageArgumentFile "$usage" "envFile" "${1-}")") || return $?
+      envFiles+=("$(usageArgumentFile "$handler" "envFile" "${1-}")") || return $?
       ;;
     --debug)
       debuggingFlag=true
@@ -70,18 +64,15 @@ deployBuildEnvironment() {
       ;;
     --home)
       shift
-      [ -n "${1-}" ] || __throwArgument "$usage" "blank $argument argument" || return $?
-      deployHome="${1-}"
+      deployHome="$(usageArgumentString "$handler" "$argument" "${1-}")" || return $?
       ;;
     --host)
       shift
-      [ -n "${1-}" ] || __throwArgument "$usage" "blank $argument argument" || return $?
-      userHosts+=("$1")
+      userHosts+=("$(usageArgumentString "$handler" "$argument" "${1-}")") || return $?
       ;;
     --id)
       shift
-      [ -n "${1-}" ] || __throwArgument "$usage" "blank $argument argument" || return $?
-      applicationId="$1"
+      applicationId="$(usageArgumentString "$handler" "$argument" "${1-}")" || return $?
       ;;
     --application)
       shift
@@ -89,8 +80,7 @@ deployBuildEnvironment() {
       ;;
     --target)
       shift
-      [ -n "${1-}" ] || __throwArgument "$usage" "blank $argument argument" || return $?
-      targetPackage="${1-}"
+      targetPackage="$(usageArgumentString "$handler" "$argument" "${1-}")" || return $?
       ;;
     --dry-run)
       dryRun=true
@@ -99,15 +89,16 @@ deployBuildEnvironment() {
       userHosts+=("$argument")
       ;;
     esac
-    shift || __throwArgument "$usage" "missing argument $(decorate label "$argument")" || return $?
+    shift
   done
 
   if [ ! -f "$buildEnv" ]; then
     decorate warning "No .build.env found - environment must be already configured" 1>&2
   fi
 
+  local envFile
   for envFile in "${envFiles[@]+${envFiles[@]}}"; do
-    muzzle usageArgumentLoadEnvironmentFile "$usage" "envFile" "$envFile" || return $?
+    muzzle usageArgumentLoadEnvironmentFile "$handler" "envFile" "$envFile" || return $?
     envFilesLoaded+=("$envFile")
   done
 
@@ -119,7 +110,7 @@ deployBuildEnvironment() {
 
   applicationId=${applicationId:-$APPLICATION_ID}
   # shellcheck disable=SC2016
-  [ -n "$applicationId" ] || __throwArgument "$usage" 'Requires non-blank `--id` or `APPLICATION_ID`' || return $?
+  [ -n "$applicationId" ] || __throwArgument "$handler" 'Requires non-blank `--id` or `APPLICATION_ID`' || return $?
 
   ##
   ## $DEPLOY_REMOTE_HOME --home
@@ -127,14 +118,14 @@ deployBuildEnvironment() {
 
   deployHome="${deployHome:-$DEPLOY_REMOTE_HOME}"
   # shellcheck disable=SC2016
-  [ -n "$deployHome" ] || __throwArgument "$usage" 'Requires non-blank `--home` or `DEPLOY_REMOTE_HOME`' || return $?
+  [ -n "$deployHome" ] || __throwArgument "$handler" 'Requires non-blank `--home` or `DEPLOY_REMOTE_HOME`' || return $?
 
   ##
   ## $APPLICATION_REMOTE_HOME --application
   ##
   applicationPath="${applicationPath:-$APPLICATION_REMOTE_HOME}"
   # shellcheck disable=SC2016
-  [ -n "$applicationPath" ] || __throwArgument "$usage" 'Requires non-blank `--application` or `APPLICATION_REMOTE_HOME`' || return $?
+  [ -n "$applicationPath" ] || __throwArgument "$handler" 'Requires non-blank `--application` or `APPLICATION_REMOTE_HOME`' || return $?
 
   ##
   ## $DEPLOY_USER_HOSTS --home or just non-flagged arguments
@@ -144,16 +135,16 @@ deployBuildEnvironment() {
     read -r -a userHosts < <(printf "%s" "$DEPLOY_USER_HOSTS") || :
   fi
   # shellcheck disable=SC2016
-  [ ${#userHosts[@]} -gt 0 ] || __throwArgument "$usage" 'No user hosts supplied on command line, `--host` or in `DEPLOY_USER_HOSTS`' || return $?
+  [ ${#userHosts[@]} -gt 0 ] || __throwArgument "$handler" 'No user hosts supplied on command line, `--host` or in `DEPLOY_USER_HOSTS`' || return $?
   # shellcheck disable=SC2016
-  [ -n "${userHosts[*]}" ] || __throwArgument "$usage" 'Requires non-blank `--host` or `DEPLOY_USER_HOSTS`' || return $?
+  [ -n "${userHosts[*]}" ] || __throwArgument "$handler" 'Requires non-blank `--host` or `DEPLOY_USER_HOSTS`' || return $?
 
   ##
   ## $BUILD_TARGET --target
   ##
   targetPackage="${targetPackage:-$BUILD_TARGET}"
   # shellcheck disable=SC2016
-  [ -n "$targetPackage" ] || __throwArgument "$usage" 'Requires non-blank `--target` or `BUILD_TARGET`' || return $?
+  [ -n "$targetPackage" ] || __throwArgument "$handler" 'Requires non-blank `--target` or `BUILD_TARGET`' || return $?
 
   deployArgs=(--id "$applicationId" --home "${deployHome%/}" --application "${applicationPath%/}" "${userHosts[@]}")
 
@@ -192,11 +183,11 @@ ___deployBuildEnvironment() {
 # Clean up --revert and then exit
 #
 __deployBuildEnvironment() {
-  local usage="${FUNCNAME[0]#_}"
+  local handler="${FUNCNAME[0]#_}"
   if ! deployToRemote --revert "$@"; then
     decorate error "Deployment REVERT failed, system is unstable, intervention required." || :
   fi
-  __throwEnvironment "$usage" deployToRemote --deploy "$@" failed || return $?
+  __throwEnvironment "$handler" deployToRemote --deploy "$@" failed || return $?
 }
 _deployBuildEnvironment() {
   # __IDENTICAL__ usageDocument 1
@@ -223,33 +214,26 @@ _deployBuildEnvironment() {
 # Argument: --target targetPackage - Optional. Filename. Package name, defaults to `app.tar.gz`
 # Test: testDeployRemoteFinish - INCOMPLETE
 deployRemoteFinish() {
-  local argument targetPackage revertFlag cleanupFlag name deployArguments
-  local applicationId applicationPath debuggingFlag start width deployHome firstFlags
-  local usage="_${FUNCNAME[0]}"
+  local handler="_${FUNCNAME[0]}"
+  local targetPackage="" revertFlag=false cleanupFlag=false
+  local applicationId="" applicationPath="" debuggingFlag=false deployHome="" firstFlags=()
 
-  targetPackage=
-  revertFlag=false
-  cleanupFlag=false
-  applicationId=
-  applicationPath=
-  debuggingFlag=false
-  deployHome=
-  firstFlags=()
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
+  local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
-    argument="$1"
-    [ -n "$argument" ] || __throwArgument "$usage" "blank argument" || return $?
+    local argument="$1" __index=$((__count - $# + 1))
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
+    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-    # _IDENTICAL_ --help 4
-    --help)
-      "$usage" 0
-      return $?
-      ;;
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
+    # _IDENTICAL_ handlerHandler 1
     --debug)
       debuggingFlag=true
       ;;
     --deploy)
       # shellcheck disable=SC2015
-      ! $cleanupFlag && ! $revertFlag || __throwArgument "$usage" "$argument is incompatible with --cleanup and --revert" || return $?
+      ! $cleanupFlag && ! $revertFlag || __throwArgument "$handler" "$argument is incompatible with --cleanup and --revert" || return $?
       cleanupFlag=false
       revertFlag=false
       ;;
@@ -264,37 +248,40 @@ deployRemoteFinish() {
       ;;
     --home)
       shift
-      deployHome=$(usageArgumentDirectory "$usage" deployHome "${1-}") || return $?
+      deployHome=$(usageArgumentDirectory "$handler" deployHome "${1-}") || return $?
       ;;
     --id)
       shift
-      [ -n "${1-}" ] || __throwArgument "$usage" "blank $argument $argument" || return $?
+      [ -n "${1-}" ] || __throwArgument "$handler" "blank $argument $argument" || return $?
       applicationId="$1"
       ;;
     --application)
       shift
-      applicationPath=$(usageArgumentFileDirectory "$usage" applicationPath "${1-}") || return $?
+      applicationPath=$(usageArgumentFileDirectory "$handler" applicationPath "${1-}") || return $?
       ;;
     --target)
       shift
-      [ -n "${1-}" ] || __throwArgument "$usage" "blank $argument $argument" || return $?
+      [ -n "${1-}" ] || __throwArgument "$handler" "blank $argument $argument" || return $?
       targetPackage="${1-}"
       ;;
     *)
       __throwArgument "unknown argument: $(decorate value "$argument")" || return $?
       ;;
     esac
-    shift || __throwArgument "$usage" "missing argument $(decorate label "$argument")" || return $?
+    shift || __throwArgument "$handler" "missing argument $(decorate label "$argument")" || return $?
   done
 
+  local start width name deployArguments
+
   # Check arguments are non-blank and actually supplied
+  local name
   for name in deployHome applicationId applicationPath; do
     if [ -z "${!name}" ]; then
-      __throwArgument "$usage" "$name is required" || return $?
+      __throwArgument "$handler" "$name is required" || return $?
     fi
   done
 
-  [ -n "$targetPackage" ] || targetPackage="$(deployPackageName "$deployHome")" || __throwArgument "$usage" "deployPackageName $deployHome failed" || return $?
+  [ -n "$targetPackage" ] || targetPackage="$(__catch "$handler" deployPackageName)" || return $?
 
   if buildDebugStart deployment; then
     debuggingFlag=true
@@ -302,7 +289,7 @@ deployRemoteFinish() {
   fi
 
   if $revertFlag && $cleanupFlag; then
-    __throwArgument "$usage" "--cleanup and --revert are mutually exclusive" || return $?
+    __throwArgument "$handler" "--cleanup and --revert are mutually exclusive" || return $?
   fi
 
   start=$(timingStart)
@@ -313,20 +300,20 @@ deployRemoteFinish() {
   decorate pair $width "Application ID:" "$applicationId"
 
   if $cleanupFlag; then
-    __catchEnvironment "$usage" cd "$applicationPath" || return $?
+    __catchEnvironment "$handler" cd "$applicationPath" || return $?
     decorate info "Cleaning up ... "
     if hasHook --application "$applicationPath" deploy-cleanup; then
-      __catchEnvironment "$usage" hookRun deploy-cleanup || return $?
+      __catchEnvironment "$handler" hookRun deploy-cleanup || return $?
     else
       printf "No %s hook in %s\n" "$(decorate info "deploy-cleanup")" "$(decorate code "$applicationPath")"
     fi
   elif $revertFlag; then
-    __catchEnvironment "$usage" _deployRevertApplication "$deployHome" "$applicationId" "$applicationPath" "$targetPackage" || return $?
+    __catchEnvironment "$handler" _deployRevertApplication "$deployHome" "$applicationId" "$applicationPath" "$targetPackage" || return $?
   else
     if [ -z "$applicationId" ]; then
-      __throwArgument "$usage" "No argument applicationId passed" || return $?
+      __throwArgument "$handler" "No argument applicationId passed" || return $?
     fi
-    __catchEnvironment "$usage" cd "$deployHome" || return $?
+    __catchEnvironment "$handler" cd "$deployHome" || return $?
     deployArguments=(
       "${firstFlags[@]+${firstFlags[@]}}"
       --home "$deployHome"
@@ -344,7 +331,7 @@ deployRemoteFinish() {
     #  ━━ ━━┛┛  ━━┛━━┛ ┛ ┛ ┛┛  ┛  ━━┛┛━━┛┛ ┛ ┛ ┛━━┛┛ ┛
     #
     statusMessage decorate info "Deploying application ..."
-    __catchEnvironment "$usage" deployApplication "${deployArguments[@]}" || return $?
+    __catchEnvironment "$handler" deployApplication "${deployArguments[@]}" || return $?
   fi
   statusMessage --last timingReport "$start" "Remote deployment finished in"
 }
@@ -363,57 +350,60 @@ _deployRemoteFinish() {
 # Argument: targetPackage - Optional. Filename. Package name, defaults to `BUILD_TARGET`
 # See: BUILD_TARGET.sh
 _deployRevertApplication() {
-  local firstDeployment name deployHome versionName previousChecksum targetPackage
-  local usage
+  local handler="_${FUNCNAME[0]}"
 
-  usage="_${FUNCNAME[0]}"
   # --first
-  firstDeployment=false
+  local firstDeployment=false
 
   # Arguments in order
-  deployHome=
-  applicationId=
-  applicationPath=
-  targetPackage=
+  local deployHome="" applicationId="" applicationPath="" targetPackage=""
+
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
+  local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
-    argument="$1"
-    [ -n "$argument" ] || __throwArgument "$usage" "blank argument" || return $?
+    local argument="$1" __index=$((__count - $# + 1))
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
+    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
     --first)
       firstDeployment=true
       ;;
     *)
       if [ -z "$deployHome" ]; then
-        deployHome=$(usageArgumentDirectory "$usage" deployHome "$1") || return $?
+        deployHome=$(usageArgumentDirectory "$handler" deployHome "$1") || return $?
       elif [ -z "$applicationId" ]; then
         applicationId="$1"
       elif [ -z "$applicationPath" ]; then
-        applicationPath=$(usageArgumentDirectory "$usage" applicationPath "$1") || return $?
+        applicationPath=$(usageArgumentDirectory "$handler" applicationPath "$1") || return $?
       elif [ -z "$targetPackage" ]; then
         targetPackage="$1"
       else
-        __throwArgument "unknown argument: $(decorate value "$argument")" || return $?
+      # _IDENTICAL_ argumentUnknownHandler 1
+      __throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
       fi
       ;;
     esac
     shift || :
   done
-  [ -n "$targetPackage" ] || targetPackage="$(deployPackageName "$deployHome")" || __throwArgument "$usage" "deployPackageName \"$deployHome\" failed" || return $?
+  [ -n "$targetPackage" ] || targetPackage="$(__catch "$handler" deployPackageName)" || return $?
+
+  local name
 
   for name in deployHome applicationId applicationPath; do
     if [ -z "${!name}" ]; then
-      __throwArgument "$usage" "$name is required" || return $?
+      __throwArgument "$handler" "$name is required" || return $?
     fi
   done
 
+  local previousChecksum
   if ! previousChecksum=$(deployPreviousVersion "$deployHome" "$applicationId") || [ -z "$previousChecksum" ]; then
     if ! "$firstDeployment"; then
-      __throwEnvironment "$usage" "Unable to get previous checksum for $versionName" || return $?
+      __throwEnvironment "$handler" "Unable to get previous checksum for $applicationId" || return $?
     fi
   else
     printf "%s %s -> %s\n" "$(decorate info "Reverting installation")" "$(decorate orange "$applicationId")" "$(decorate green "$previousChecksum")"
     if ! deployApplication --revert --home "$deployHome" --id "$applicationId" --application "$applicationPath" --target "$targetPackage"; then
-      __throwEnvironment "$usage" "Undo deployment to $previousChecksum failed $applicationPath - system is unstable" || return $?
+      __throwEnvironment "$handler" "Undo deployment to $previousChecksum failed $applicationPath - system is unstable" || return $?
     fi
   fi
   if ! hookRunOptional deploy-revert "$deployHome" "$applicationId"; then
@@ -503,25 +493,25 @@ _deploySuccessful() {
 # Test: testDeployToRemote - INCOMPLETE
 # Environment: BUILD_DEBUG
 deployToRemote() {
-  local usage="_${FUNCNAME[0]}"
+  local handler="_${FUNCNAME[0]}"
   local initTime
 
-  __catch "$usage" buildEnvironmentLoad HOME BUILD_DEBUG || return $?
+  __catch "$handler" buildEnvironmentLoad HOME BUILD_DEBUG || return $?
 
   initTime=$(timingStart) || return $?
 
-  [ -d "$HOME" ] || __throwEnvironment "$usage" "No HOME defined or not a directory: $HOME" || return $?
+  [ -d "$HOME" ] || __throwEnvironment "$handler" "No HOME defined or not a directory: $HOME" || return $?
 
   local deployFlag=false revertFlag=false debuggingFlag=false cleanupFlag=false
   local userHosts=() applicationId="" deployHome="" applicationPath="" buildTarget="" remoteArgs=() firstFlags=() addSSHHosts=true showCommands=false currentIP=""
 
   while [ $# -gt 0 ]; do
     local argument="$1"
-    [ -n "$argument" ] || __throwArgument "$usage" "blank argument" || return $?
+    [ -n "$argument" ] || __throwArgument "$handler" "blank argument" || return $?
     case "$argument" in
     --target)
       shift
-      [ -z "$buildTarget" ] || __throwArgument "$usage" "$argument supplied twice" || return $?
+      [ -z "$buildTarget" ] || __throwArgument "$handler" "$argument supplied twice" || return $?
       buildTarget="$1"
       ;;
     --skip-ssh-host)
@@ -532,7 +522,7 @@ deployToRemote() {
       ;;
     --home)
       shift
-      [ -z "$deployHome" ] || __throwArgument "$usage" "$argument supplied twice" || return $?
+      [ -z "$deployHome" ] || __throwArgument "$handler" "$argument supplied twice" || return $?
       deployHome="$1"
       ;;
     --first)
@@ -540,40 +530,40 @@ deployToRemote() {
       ;;
     --application)
       shift
-      [ -z "$applicationPath" ] || __throwArgument "$usage" "$argument supplied twice" || return $?
+      [ -z "$applicationPath" ] || __throwArgument "$handler" "$argument supplied twice" || return $?
       applicationPath="$1"
       ;;
     --ip)
       shift
-      currentIP=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
+      currentIP=$(usageArgumentString "$handler" "$argument" "${1-}") || return $?
       ;;
     --id)
       shift
-      [ -z "$applicationId" ] || __throwArgument "$usage" "$argument supplied twice" || return $?
+      [ -z "$applicationId" ] || __throwArgument "$handler" "$argument supplied twice" || return $?
       applicationId="$1"
       ;;
     # _IDENTICAL_ --help 4
     --help)
-      "$usage" 0
+      "$handler" 0
       return $?
       ;;
     --deploy)
       if "$deployFlag"; then
-        __throwArgument "$usage" "--deploy arg passed twice" || return $?
+        __throwArgument "$handler" "--deploy arg passed twice" || return $?
       fi
       deployFlag=true
       remoteArgs+=("$1")
       ;;
     --revert)
       if "$revertFlag"; then
-        __throwArgument "$usage" "--revert specified twice" || return $?
+        __throwArgument "$handler" "--revert specified twice" || return $?
       fi
       revertFlag=true
       remoteArgs+=("$1")
       ;;
     --cleanup)
       if "$cleanupFlag"; then
-        __throwArgument "$usage" "--cleanup specified twice" || return $?
+        __throwArgument "$handler" "--cleanup specified twice" || return $?
       fi
       cleanupFlag=true
       remoteArgs+=("$1")
@@ -602,33 +592,33 @@ deployToRemote() {
 
   # Flag semantics
   if "$revertFlag" && "$cleanupFlag"; then
-    __throwArgument "$usage" "--revert and --cleanup are mutually exclusive" || return $?
+    __throwArgument "$handler" "--revert and --cleanup are mutually exclusive" || return $?
   fi
   if "$revertFlag" && "$deployFlag"; then
-    __throwArgument "$usage" "--revert and --deploy are mutually exclusive" || return $?
+    __throwArgument "$handler" "--revert and --deploy are mutually exclusive" || return $?
   fi
   if "$deployFlag" && "$cleanupFlag"; then
-    __throwArgument "$usage" "--deploy and --cleanup are mutually exclusive" || return $?
+    __throwArgument "$handler" "--deploy and --cleanup are mutually exclusive" || return $?
   fi
   # Values are supplied (required)
-  [ -n "$applicationId" ] || __throwArgument "$usage" "missing applicationId" || return $?
+  [ -n "$applicationId" ] || __throwArgument "$handler" "missing applicationId" || return $?
 
-  [ -n "$deployHome" ] || __throwArgument "$usage" "missing deployHome" || return $?
+  [ -n "$deployHome" ] || __throwArgument "$handler" "missing deployHome" || return $?
 
-  [ -n "$applicationPath" ] || __throwArgument "$usage" "missing applicationPath" || return $?
+  [ -n "$applicationPath" ] || __throwArgument "$handler" "missing applicationPath" || return $?
 
   if [ -z "$buildTarget" ]; then
-    buildTarget=$(deployPackageName "$deployHome") || __throwEnvironment "$usage" deployPackageName "$deployHome" || return $?
+    buildTarget=$(__catch "$handler" deployPackageName) || return $?
   fi
   if [ 0 -eq ${#userHosts[@]} ]; then
-    __throwArgument "$usage" "No user hosts provided" || return $?
+    __throwArgument "$handler" "No user hosts provided" || return $?
   fi
 
   #
   # Current IP
   #
-  currentIP=$(__catchEnvironment "$usage" ipLookup) || __throwEnvironment "$usage" "Unable to determine IP address" || return $?
-  [ -n "$currentIP" ] || __throwEnvironment "$usage" "IP address lookup blank" || return $?
+  currentIP=$(__catchEnvironment "$handler" ipLookup) || __throwEnvironment "$handler" "Unable to determine IP address" || return $?
+  [ -n "$currentIP" ] || __throwEnvironment "$handler" "IP address lookup blank" || return $?
 
   if $addSSHHosts; then
     # sshKnownHostAdd
@@ -640,7 +630,7 @@ deployToRemote() {
 
   local verb color deployArg temporaryCommandsFile commonArguments
 
-  temporaryCommandsFile=$(fileTemporaryName "$usage") || return $?
+  temporaryCommandsFile=$(fileTemporaryName "$handler") || return $?
   commonArguments=("${firstFlags[@]+${firstFlags[@]}}" "--target" "$buildTarget" "--home" "$deployHome" "--id" "$applicationId" "--application" "$applicationPath")
   if $revertFlag; then
     verb=Revert
@@ -670,7 +660,7 @@ deployToRemote() {
         "printf '%s\n' \"Cleaning old $applicationId package\" && rm -rf \"$deployHome/$applicationId/app.$$.REPLACING\"$commandSuffix" \
         "--deploy" "${commonArguments[@]}" >"$temporaryCommandsFile"
     then
-      __throwEnvironment "$usage" "Generating commands file for $buildTarget expansion" || return $?
+      __throwEnvironment "$handler" "Generating commands file for $buildTarget expansion" || return $?
     fi
     if $showCommands; then
       cat "$temporaryCommandsFile"
@@ -698,7 +688,7 @@ deployToRemote() {
     artifactFile="$(__deployedHostArtifact)"
     # reset artifact file
     printf "" >"$artifactFile"
-    __catch "$usage" __deployUploadPackage "$applicationPath" "$deployHome/$applicationId" "$buildTarget" "${userHosts[@]}" || return $?
+    __deployUploadPackage "$handler" "$applicationPath" "$deployHome/$applicationId" "$buildTarget" "${userHosts[@]}" || return $?
 
     for userHost in "${userHosts[@]}"; do
       local start
@@ -711,10 +701,10 @@ deployToRemote() {
         decorate code <"$temporaryCommandsFile"
       fi
       if ! ssh "$(__deploySSHOptions)" -T "$userHost" bash --noprofile -s -e <"$temporaryCommandsFile" | decorate bold-bold | decorate wrap "$(decorate orange "$userHost"): "; then
-        __throwEnvironment "$usage" "Unable to deploy to $host" || return $?
+        __throwEnvironment "$handler" "Unable to deploy to $host" || return $?
       fi
       decorate info "::: END $host output"
-      printf "%s\n" "$host" >>"$artifactFile" || __throwEnvironment "$usage" "Unable to write $host to $artifactFile" || return $?
+      printf "%s\n" "$host" >>"$artifactFile" || __throwEnvironment "$handler" "Unable to write $host to $artifactFile" || return $?
       statusMessage timingReport "$start" "Deployed to $(decorate green "$userHost")" || :
     done
 
@@ -722,9 +712,9 @@ deployToRemote() {
     return 0
   fi
 
-  __catch "$usage" __deployCommandsFile "$deployHome/$applicationId/app" "$deployArg" "${commonArguments[@]}" >"$temporaryCommandsFile" || return $?
+  __catch "$handler" __deployCommandsFile "$deployHome/$applicationId/app" "$deployArg" "${commonArguments[@]}" >"$temporaryCommandsFile" || return $?
   if $showCommands; then
-    __catchEnvironment "$usage" cat "$temporaryCommandsFile" || return $?
+    __catchEnvironment "$handler" cat "$temporaryCommandsFile" || return $?
     rm -rf "$temporaryCommandsFile" || :
     return 0
   fi
@@ -734,7 +724,7 @@ deployToRemote() {
       _deploySuccessful
       return 0
     else
-      __throwEnvironment "$usage" "$(decorate file "$artifactFile") file NOT found ... no remotes changed" || return $?
+      __throwEnvironment "$handler" "$(decorate file "$artifactFile") file NOT found ... no remotes changed" || return $?
     fi
   fi
   #
@@ -817,19 +807,19 @@ __deploySSHOptions() {
 # Create base directories and upload package
 __deployUploadPackage() {
   local start userHost
-  local applicationPath=$1 remotePath=$2 buildTarget=$3
+  local handler="$1" applicationPath="$2" remotePath="$3" buildTarget="$4"
 
-  shift 3 || :
+  shift 4 || :
   #
   # Create directories and upload the app.tar.gz
   #
   for userHost in "$@"; do
     start=$(timingStart) || :
     printf "%s: %s\n" "$(decorate green "$userHost")" "$(decorate info "Setting up")"
-    __catchEnvironment "$usage" ssh "$(__deploySSHOptions)" -T "$userHost" bash --noprofile -s -e < <(__deployCreateDirectoryCommands "$applicationPath" "$remotePath") || return $?
+    __catchEnvironment "$handler" ssh "$(__deploySSHOptions)" -T "$userHost" bash --noprofile -s -e < <(__deployCreateDirectoryCommands "$applicationPath" "$remotePath") || return $?
     printf "%s: %s %s\n" "$(decorate green "$userHost")" "$(decorate info "Uploading to")" "$(decorate red "$remotePath/$buildTarget")"
     if ! printf -- '@put %s %s' "$buildTarget" "$remotePath/$buildTarget" | sftp "$(__deploySSHOptions)" "$userHost" 2>/dev/null; then
-      __throwEnvironment "$usage" "Upload $remotePath/$buildTarget to $userHost buildFailed " || return $?
+      __throwEnvironment "$handler" "Upload $remotePath/$buildTarget to $userHost buildFailed " || return $?
     fi
     timingReport "$start" "Deployment setup completed on $(decorate green "$userHost") in " || :
   done
