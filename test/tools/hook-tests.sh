@@ -128,6 +128,8 @@ testHookSystem() {
   assertOutputContains --leak BUILD_DEBUG --line "$LINENO" "$randomDefault" hookRun --application "$testDir" test2 || return $?
   assertOutputContains --leak BUILD_DEBUG --line "$LINENO" "build/hooks" hookRun --application "$testDir" test2 || return $?
 
+  __catch "$usage" rm -rf "$testDir" || return $?
+
   unset BUILD_DEBUG
 }
 
