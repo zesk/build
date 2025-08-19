@@ -6,6 +6,6 @@
 #
 # Copyright &copy; 2025 Market Acumen, Inc.
 # Type: Date
-# Group: Test
+# Category: Test
 export BUILD_COVERAGE_REQUIRED_DATE
 BUILD_COVERAGE_REQUIRED_DATE="2025-09-01"
