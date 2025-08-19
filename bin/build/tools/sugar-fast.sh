@@ -29,7 +29,8 @@ ___catch() {
 # Argument: command - Required. String. Command to run.
 # Requires: isInteger _argument isFunction isCallable
 __catchCode() {
-  local __count=$# __saved=("$@") __handler="_${FUNCNAME[0]}" code="${1-0}" __handler="${2-}" command="${3-}"
+  local __count=$# __saved=("$@") __handler="_${FUNCNAME[0]}" code="${1-0}" command="${3-}"
+  __handler="${2-}"
   shift 3
   "$command" "$@" || "$__handler" "$code" "$(decorate each code "$command" "$@")" || return $?
 }
