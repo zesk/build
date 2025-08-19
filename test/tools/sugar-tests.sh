@@ -74,7 +74,7 @@ testMapReturn() {
 }
 
 test__catchCode() {
-  assertNotExitCode --stderr-match "Not a function" 0 __catchCode || return $?
+  assertNotExitCode --stderr-match "not callable" 0 __catchCode || return $?
   assertNotExitCode --stderr-match "Not integer" 0 __catchCode 12n || return $?
   assertNotExitCode --stderr-match "Not callable" 0 __catchCode 12 _return "not-callable-thing" || return $?
   assertExitCode 0 __catchCode 12 _return printf -- "" || return $?
