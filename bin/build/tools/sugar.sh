@@ -43,7 +43,7 @@ __catchCode() {
   # __IDENTICAL__ __checkCommand__handler 1
   isCallable "$command" || __throwArgument "$__handler" "Not callable $(decorate code "$command")" || return $?
   shift 3
-  "$command" "$@" || "$handler" "$code" "$(decorate each code "$command" "$@")" || return $?
+  "$command" "$@" || "$__handler" "$code" "$(decorate each code "$command" "$@")" || return $?
 }
 ___catchCode() {
   # __IDENTICAL__ usageDocument 1

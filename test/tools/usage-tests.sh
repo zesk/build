@@ -138,6 +138,8 @@ testUsageArgumentFunctions() {
 
   _testUsageArgumentHelperFail usageArgumentPositiveInteger "${intTests[@]}" -1.0 1.0 1d2 jq '9123-' what 0 || return $?
 
+  __catchEnvironment "$handler" rm -f "$TEST_USAGE" || return $?
+
   unset TEST_USAGE
 }
 
