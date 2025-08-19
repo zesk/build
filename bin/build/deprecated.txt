@@ -1,35 +1,37 @@
+# v0.37.1
+
 # v0.37.0
-hostIPList|networkIPList
-timestampToDate|dateFromTimestamp
-truncateFloat|floatTruncate
-roundFloat|floatRound
-mostRecentlyModifiedFile|fileModifiedRecentlyName
-mostRecentlyModifiedTimestamp|fileModifiedRecentlyTimestamp
-copyFile|fileCopy
-copyFileWouldChange|fileChange
-betterType|fileType
-simplifyPath|directoryPathSimplify
-renameFiles|filesRename
-reverseFileLines|fileReverseLines
-renameLink|linkRename
-modificationTime|fileModificationTime
-modificationSeconds|fileModificationSeconds
-isEmptyFile|fileIsEmpty
-isNewestFile|fileIsNewest
-isOldestFile|fileIsOldest
-oldestFile|fileOldest
-newestFile|fileNewest
-modifiedDays|fileModifiedDays
-modifiedSeconds|fileModifiedSeconds
-requireFileDirectory|fileDirectoryRequire
-requireDirectory|directoryRequire
-_clean |returnClean |
-_undo |returnUndo |
-getFromPipelineYML|bitbucketGetVariable
-allColorTest|colorSampleCodes
-AllColorTest|ColorSampleCodes
-colorTest|colorSampleStyles
-ColorTest|ColorSampleStyles
+hostIPList|networkIPList|-name|*.sh
+timestampToDate|dateFromTimestamp|-name|*.sh
+truncateFloat|floatTruncate|-name|*.sh|-name|*.sh
+roundFloat|floatRound|-name|*.sh|-name|*.sh
+mostRecentlyModifiedFile|fileModifiedRecentlyName|-name|*.sh
+mostRecentlyModifiedTimestamp|fileModifiedRecentlyTimestamp|-name|*.sh
+copyFile|fileCopy|-name|*.sh
+copyFileWouldChange|fileChange|-name|*.sh
+betterType|fileType|-name|*.sh
+simplifyPath|directoryPathSimplify|-name|*.sh
+renameFiles|filesRename|-name|*.sh
+reverseFileLines|fileReverseLines|-name|*.sh
+renameLink|linkRename|-name|*.sh
+modificationTime|fileModificationTime|-name|*.sh
+modificationSeconds|fileModificationSeconds|-name|*.sh
+isEmptyFile|fileIsEmpty|-name|*.sh
+isNewestFile|fileIsNewest|-name|*.sh
+isOldestFile|fileIsOldest|-name|*.sh
+oldestFile|fileOldest|-name|*.sh
+newestFile|fileNewest|-name|*.sh
+modifiedDays|fileModifiedDays|-name|*.sh
+modifiedSeconds|fileModifiedSeconds|-name|*.sh
+requireFileDirectory|fileDirectoryRequire|-name|*.sh
+requireDirectory|directoryRequire|-name|*.sh
+_clean |returnClean |-name|*.sh
+_undo |returnUndo |-name|*.sh
+getFromPipelineYML|bitbucketGetVariable|-name|*.sh
+allColorTest|colorSampleCodes|-name|*.sh
+AllColorTest|ColorSampleCodes|-name|*.sh
+colorTest|colorSampleStyles|-name|*.sh
+ColorTest|ColorSampleStyles|-name|*.sh
 semanticColorTest|colorSampleSemanticStyles
 SemanticColorTest|ColorSampleSemanticStyles
 colorComboTest|colorSampleCombinations
