@@ -38,8 +38,8 @@ __packageListFunction() {
       packageManagerValid "$manager" || __throwArgument "$handler" "Manager is invalid: $(decorate code "$manager")" || return $?
       ;;
     *)
-      # _IDENTICAL_ argumentUnknown 1
-      __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
+      # _IDENTICAL_ argumentUnknownHandler 1
+      __throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
       ;;
     esac
     shift
@@ -66,23 +66,21 @@ __packageListFunction() {
 # Argument: --verbose - Optional. Flag. Force even if it seems to be installed.
 # Argument: --show-log - Optional. Flag. Show the log of the package manager.
 __packageUpFunction() {
-  local usage="$1" suffix="$2" verb
+  local handler="$1" suffix="$2" verb
 
   local manager="" forceFlag=false verboseFlag=false start lastModified showLog=false
 
   verb=$(lowercase "$suffix")
   shift 2
-  # _IDENTICAL_ argument-case-header 5
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
+    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-    # _IDENTICAL_ --help 4
-    --help)
-      "$usage" 0
-      return $?
-      ;;
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
     # IDENTICAL managerArgumentHandler 5
     --manager)
       shift
@@ -110,10 +108,10 @@ __packageUpFunction() {
   whichExists "$manager" || __throwEnvironment "$handler" "$manager does not exist" || return $?
 
   local packageFunction="__${manager}${suffix}"
-  isFunction "$packageFunction" || __throwEnvironment "$usage" "$packageFunction is not a defined function" || return $?
+  isFunction "$packageFunction" || __throwEnvironment "$handler" "$packageFunction is not a defined function" || return $?
 
   local name
-  name="$(__catch "$usage" buildCacheDirectory)/.packageUpdate" || return $?
+  name="$(__catch "$handler" buildCacheDirectory)/.packageUpdate" || return $?
 
   if $forceFlag; then
     ! $verboseFlag || statusMessage decorate info "Forcing $manager $verb ..."
@@ -132,11 +130,11 @@ __packageUpFunction() {
 
   if ! $showLog; then
     local quietLog
-    quietLog=$(__catch "$usage" buildQuietLog "${usage#_}${suffix}") || return $?
+    quietLog=$(__catch "$handler" buildQuietLog "${handler#_}${suffix}") || return $?
     exec 3>&1
     exec 1>"$quietLog"
   fi
-  __catchEnvironment "$usage" "$packageFunction" "$@" || return $?
+  __catchEnvironment "$handler" "$packageFunction" "$@" || return $?
   if ! $showLog; then
     exec 1>&3
   fi
@@ -178,21 +176,19 @@ _packageUpdate() {
 # - mysql
 # - mysqldump
 packageDefault() {
-  local usage="_${FUNCNAME[0]}"
+  local handler="_${FUNCNAME[0]}"
 
   local lookup=() manager=""
 
-  # _IDENTICAL_ argument-case-header 5
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
+    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-    # _IDENTICAL_ --help 4
-    --help)
-      "$usage" 0
-      return $?
-      ;;
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
     # IDENTICAL managerArgumentHandler 5
     --manager)
       shift
@@ -200,16 +196,16 @@ packageDefault() {
       packageManagerValid "$manager" || __throwArgument "$handler" "Manager is invalid: $(decorate code "$manager")" || return $?
       ;;
     -*)
-      # _IDENTICAL_ argumentUnknown 1
-      __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
+      # _IDENTICAL_ argumentUnknownHandler 1
+      __throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
       ;;
     *)
-      lookup+=("$(usageArgumentString "$usage" "binary" "$argument")") || return $?
+      lookup+=("$(usageArgumentString "$handler" "binary" "$argument")") || return $?
       ;;
     esac
     shift
   done
-  [ "${#lookup[@]}" -gt 0 ] || __throwArgument "$usage" "Need at least one name" || return $?
+  [ "${#lookup[@]}" -gt 0 ] || __throwArgument "$handler" "Need at least one name" || return $?
 
   # IDENTICAL managerArgumentValidation 2
   [ -n "$manager" ] || manager=$(packageManagerDefault) || __throwEnvironment "$handler" "No package manager" || return $?
@@ -217,7 +213,7 @@ packageDefault() {
 
   local function="__${manager}Default"
   if ! isFunction "$function"; then
-    __throwEnvironment "$usage" "Missing $function implementation for $manager" || return $?
+    __throwEnvironment "$handler" "Missing $function implementation for $manager" || return $?
   fi
   "$function" "${lookup[@]}"
 }
@@ -240,20 +236,18 @@ _packageDefault() {
 # Argument: packageName ... - Optional. String. The package name to install if the binary is not found in the `$PATH`. If not supplied uses the same name as the binary.
 # Environment: Technically this will install the binary and any related files as a package.
 packageWhich() {
-  local usage="_${FUNCNAME[0]}"
+  local handler="_${FUNCNAME[0]}"
   local binary="" packages=() manager="" forceFlag=false vv=()
 
-  # _IDENTICAL_ argument-case-header 5
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
+    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-    # _IDENTICAL_ --help 4
-    --help)
-      "$usage" 0
-      return $?
-      ;;
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
     --force)
       forceFlag=true
       ;;
@@ -268,13 +262,13 @@ packageWhich() {
       ;;
     -*)
       # _IDENTICAL_ argumentUnknown 1
-      __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
+      __throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
       ;;
     *)
       if [ -z "$binary" ]; then
-        binary=$(usageArgumentString "$usage" "binary" "$argument") || return $?
+        binary=$(usageArgumentString "$handler" "binary" "$argument") || return $?
       else
-        packages+=("$(usageArgumentString "$usage" "binary" "$argument")") || return $?
+        packages+=("$(usageArgumentString "$handler" "binary" "$argument")") || return $?
       fi
       ;;
     esac
@@ -287,14 +281,14 @@ packageWhich() {
   [ "${#packages[@]}" -gt 0 ] || packages+=("$binary")
 
   if ! $forceFlag; then
-    [ -n "$binary" ] || __throwArgument "$usage" "Missing binary" || return $?
+    [ -n "$binary" ] || __throwArgument "$handler" "Missing binary" || return $?
     # Already installed
     ! whichExists "$binary" || return 0
   fi
   # Install packages
   __environment packageInstall "${vv[@]+"${vv[@]}"}" --manager "$manager" --force "${packages[@]}" || return $?
   # Ensure binary now exists, otherwise fail
-  whichExists "$binary" || __throwEnvironment "$usage" "$manager packages \"${packages[*]}\" did not add $binary to the PATH: ${PATH-}" || return $?
+  whichExists "$binary" || __throwEnvironment "$handler" "$manager packages \"${packages[*]}\" did not add $binary to the PATH: ${PATH-}" || return $?
 }
 _packageWhich() {
   # __IDENTICAL__ usageDocument 1
@@ -316,21 +310,19 @@ _packageWhich() {
 # Environment: Technically this will uninstall the binary and any related files as a package.
 #
 packageWhichUninstall() {
-  local usage="_${FUNCNAME[0]}"
+  local handler="_${FUNCNAME[0]}"
 
   local binary="" packages=() manager="" foundPath vv=()
 
-  # _IDENTICAL_ argument-case-header 5
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
+    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-    # _IDENTICAL_ --help 4
-    --help)
-      "$usage" 0
-      return $?
-      ;;
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
     # IDENTICAL managerArgumentHandler 5
     --manager)
       shift
@@ -342,9 +334,9 @@ packageWhichUninstall() {
       ;;
     *)
       if [ -z "$binary" ]; then
-        binary=$(usageArgumentString "$usage" "binary" "$argument") || return $?
+        binary=$(usageArgumentString "$handler" "binary" "$argument") || return $?
       else
-        packages+=("$(usageArgumentString "$usage" "binary" "$argument")") || return $?
+        packages+=("$(usageArgumentString "$handler" "binary" "$argument")") || return $?
       fi
       ;;
     esac
@@ -355,14 +347,14 @@ packageWhichUninstall() {
   [ -n "$manager" ] || manager=$(packageManagerDefault) || __throwEnvironment "$handler" "No package manager" || return $?
   whichExists "$manager" || __throwEnvironment "$handler" "$manager does not exist" || return $?
 
-  [ -n "$binary" ] || __throwArgument "$usage" "Missing binary" || return $?
-  [ 0 -lt "${#packages[@]}" ] || __throwArgument "$usage" "Missing packages" || return $?
+  [ -n "$binary" ] || __throwArgument "$handler" "Missing binary" || return $?
+  [ 0 -lt "${#packages[@]}" ] || __throwArgument "$handler" "Missing packages" || return $?
   if ! whichExists "$binary"; then
     return 0
   fi
-  __catch "$usage" packageUninstall "${vv[@]+"${vv[@]}"}" --manager "$manager" "${packages[@]}" || return $?
+  __catch "$handler" packageUninstall "${vv[@]+"${vv[@]}"}" --manager "$manager" "${packages[@]}" || return $?
   if foundPath="$(which "$binary")" && [ -n "$foundPath" ]; then
-    __throwEnvironment "$usage" "packageUninstall ($manager) \"${packages[*]}\" did not remove $(decorate code "$foundPath") FROM the PATH: $(decorate value "${PATH-}")" || return $?
+    __throwEnvironment "$handler" "packageUninstall ($manager) \"${packages[*]}\" did not remove $(decorate code "$foundPath") FROM the PATH: $(decorate value "${PATH-}")" || return $?
   fi
 }
 _packageWhichUninstall() {
@@ -390,21 +382,19 @@ _packageWhichUninstall() {
 # Argument: --force - Optional. Flag. Force even if it was updated recently.
 # Argument: --show-log - Optional. Flag. Show package manager logs.
 packageInstall() {
-  local usage="_${FUNCNAME[0]}"
+  local handler="_${FUNCNAME[0]}"
 
   local forceFlag=false packages=() manager="" verboseFlag=false showLog=false
 
-  # _IDENTICAL_ argument-case-header 5
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
+    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-    # _IDENTICAL_ --help 4
-    --help)
-      "$usage" 0
-      return $?
-      ;;
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
     # IDENTICAL managerArgumentHandler 5
     --manager)
       shift
@@ -436,15 +426,15 @@ packageInstall() {
   local __start quietLog installed
 
   __start=$(timingStart) || return $?
-  installed="$(fileTemporaryName "$usage")" || return $?
-  __catch "$usage" packageUpdate "${vv[@]+"${vv[@]}"}" || return $?
+  installed="$(fileTemporaryName "$handler")" || return $?
+  __catch "$handler" packageUpdate "${vv[@]+"${vv[@]}"}" || return $?
   local __installStart clean=()
   __installStart=$(timingStart) || return $?
-  __catch "$usage" packageInstalledList --manager "$manager" >"$installed" || return $?
+  __catch "$handler" packageInstalledList --manager "$manager" >"$installed" || return $?
   clean+=("$installed")
   local standardPackages=() actualPackages=() package installFunction
   # Loads BUILD_TEXT_BINARY
-  muzzle _packageStandardPackages "$manager" || __throwEnvironment "$usage" "Unable to fetch standard packages" || returnClean $? "${clean[@]}" || return $?
+  muzzle _packageStandardPackages "$manager" || __throwEnvironment "$handler" "Unable to fetch standard packages" || returnClean $? "${clean[@]}" || return $?
   IFS=$'\n' read -d '' -r -a standardPackages < <(_packageStandardPackages "$manager") || :
   if "$forceFlag"; then
     actualPackages=("${packages[@]}")
@@ -463,7 +453,7 @@ packageInstall() {
       fi
     done
   fi
-  __catchEnvironment "$usage" rm -f "$installed" || return $?
+  __catchEnvironment "$handler" rm -f "$installed" || return $?
   if [ "${#actualPackages[@]}" -eq 0 ]; then
     if [ "${#packages[@]}" -gt 0 ]; then
       ! $verboseFlag || statusMessage --last decorate success "Already installed: ${packages[*]}"
@@ -472,15 +462,15 @@ packageInstall() {
   fi
   ! $verboseFlag || statusMessage decorate info "Installing ${packages[*]+"${packages[*]}"} ... "
   local installFunction="__${manager}Install"
-  isFunction "$installFunction" || __throwEnvironment "$usage" "$installFunction is not defined" || return $?
+  isFunction "$installFunction" || __throwEnvironment "$handler" "$installFunction is not defined" || return $?
 
   if ! $showLog; then
     local quietLog
-    quietLog=$(__catch "$usage" buildQuietLog "${FUNCNAME[0]}") || return $?
+    quietLog=$(__catch "$handler" buildQuietLog "${FUNCNAME[0]}") || return $?
     exec 3>&1
     exec 1>"$quietLog"
   fi
-  __catchEnvironment "$usage" "$installFunction" "${actualPackages[@]}" || return $?
+  __catchEnvironment "$handler" "$installFunction" "${actualPackages[@]}" || return $?
   if ! $showLog; then
     exec 1>&3
   fi
@@ -498,37 +488,35 @@ _packageInstall() {
 # Exit Code: 1 - If any packages are not installed
 # Exit Code: 0 - All packages are installed
 packageIsInstalled() {
-  local usage="_${FUNCNAME[0]}"
+  local handler="_${FUNCNAME[0]}"
   local packages=()
-  # _IDENTICAL_ argument-case-header 5
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
+    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-    # _IDENTICAL_ --help 4
-    --help)
-      "$usage" 0
-      return $?
-      ;;
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
     *)
       packages+=("$argument")
       ;;
     esac
     shift
   done
-  [ "${#packages[@]}" -gt 0 ] || __throwArgument "$usage" "Requires at least one package" || return $?
+  [ "${#packages[@]}" -gt 0 ] || __throwArgument "$handler" "Requires at least one package" || return $?
   local installed
-  installed=$(fileTemporaryName "$usage") || return $?
-  __catch "$usage" packageInstalledList >"$installed" || return $?
+  installed=$(fileTemporaryName "$handler") || return $?
+  __catch "$handler" packageInstalledList >"$installed" || return $?
   local package
   for package in "${packages[@]}"; do
     if ! grep -q -e "^$(quoteGrepPattern "$package")$" "$installed"; then
-      __catchEnvironment "$usage" rm -rf "$installed" || return $?
+      __catchEnvironment "$handler" rm -rf "$installed" || return $?
       return 1
     fi
   done
-  __catchEnvironment "$usage" rm -rf "$installed" || return $?
+  __catchEnvironment "$handler" rm -rf "$installed" || return $?
 }
 _packageIsInstalled() {
   # __IDENTICAL__ usageDocument 1
@@ -543,21 +531,19 @@ _packageIsInstalled() {
 # Argument: package - String. Required. One or more packages to uninstall
 # Argument: --manager packageManager - Optional. String. Package manager to use. (apk, apt, brew)
 packageUninstall() {
-  local usage="_${FUNCNAME[0]}"
+  local handler="_${FUNCNAME[0]}"
 
   local packages=() manager=""
 
-  # _IDENTICAL_ argument-case-header 5
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
+    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-    # _IDENTICAL_ --help 4
-    --help)
-      "$usage" 0
-      return $?
-      ;;
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
     # IDENTICAL managerArgumentHandler 5
     --manager)
       shift
@@ -575,24 +561,24 @@ packageUninstall() {
   [ -n "$manager" ] || manager=$(packageManagerDefault) || __throwEnvironment "$handler" "No package manager" || return $?
   whichExists "$manager" || __throwEnvironment "$handler" "$manager does not exist" || return $?
 
-  [ 0 -lt "${#packages[@]}" ] || __throwArgument "$usage" "Requires at least one package to uninstall" || return $?
+  [ 0 -lt "${#packages[@]}" ] || __throwArgument "$handler" "Requires at least one package to uninstall" || return $?
 
   local start quietLog standardPackages=()
 
   start=$(timingStart) || return $?
-  quietLog=$(__catch "$usage" buildQuietLog "$usage") || return $?
+  quietLog=$(__catch "$handler" buildQuietLog "$handler") || return $?
   IFS=$'\n' read -d '' -r -a standardPackages < <(_packageStandardPackages "$manager") || :
   local package
   for package in "${packages[@]}"; do
     if inArray "$package" "${standardPackages[@]}"; then
-      __throwEnvironment "$usage" "Unable to remove standard package $(decorate code "$package")" || return $?
+      __throwEnvironment "$handler" "Unable to remove standard package $(decorate code "$package")" || return $?
     fi
   done
   local uninstallFunction="__${manager}Uninstall"
-  isFunction "$uninstallFunction" || __throwEnvironment "$usage" "$uninstallFunction is not defined" || return $?
+  isFunction "$uninstallFunction" || __throwEnvironment "$handler" "$uninstallFunction is not defined" || return $?
 
   statusMessage decorate info "Uninstalling ${packages[*]} ... "
-  __catchEnvironmentQuiet "$usage" "$quietLog" "$uninstallFunction" "${packages[@]}" || return $?
+  __catchEnvironmentQuiet "$handler" "$quietLog" "$uninstallFunction" "${packages[@]}" || return $?
   statusMessage --last timingReport "$start" "Uninstallation of ${packages[*]} completed in" || :
 }
 _packageUninstall() {
@@ -603,7 +589,7 @@ _packageUninstall() {
 _packageStandardPackages() {
   local manager="$1" packageFunction
   packageFunction="__${1}StandardPackages"
-  isFunction "$packageFunction" || __throwEnvironment "$usage" "$packageFunction is not a defined function" || return $?
+  isFunction "$packageFunction" || __throwEnvironment "$handler" "$packageFunction is not a defined function" || return $?
   __environment "$packageFunction" || return $?
 }
 
@@ -615,13 +601,10 @@ _packageStandardPackages() {
 # Exit Code: 0 - The package manager is valid.
 # Exit Code: 1 - The package manager is not valid.
 packageManagerValid() {
-  local usage="_${FUNCNAME[0]}"
+  local handler="_${FUNCNAME[0]}"
   case "${1-}" in
-  # _IDENTICAL_ --help 4
-  --help)
-    "$usage" 0
-    return $?
-    ;;
+  # _IDENTICAL_ helpHandler 1
+  --help) "$handler" 0 && return $? || return $? ;;
   apk | apt | brew | port) return 0 ;;
   *) return 1 ;;
   esac
@@ -679,22 +662,22 @@ _packageAvailableList() {
 # INTERNAL - has `packageUpdate` set the `restart` flag at some point?
 # Argument: value - Set the restart flag to this value (blank to remove)
 packageNeedRestartFlag() {
-  local usage="_${FUNCNAME[0]}"
+  local handler="_${FUNCNAME[0]}"
   local quietLog restartFile
 
-  restartFile="$(__catch "$usage" buildCacheDirectory)/.needRestart" || return $?
+  restartFile="$(__catch "$handler" buildCacheDirectory)/.needRestart" || return $?
   if [ $# -eq 0 ]; then
     if [ -f "$restartFile" ]; then
-      __catchEnvironment "$usage" cat "$restartFile" || return $?
+      __catchEnvironment "$handler" cat "$restartFile" || return $?
     else
       return 1
     fi
   else
-    [ "$1" != "--help" ] || __help "$usage" "$@" || return 0
+    [ "$1" != "--help" ] || __help "$handler" "$@" || return 0
     if [ "$1" = "" ]; then
-      __catchEnvironment "$usage" rm -f "$restartFile" || return $?
+      __catchEnvironment "$handler" rm -f "$restartFile" || return $?
     else
-      printf "%s\n" "$@" >"$restartFile" || __throwEnvironment "$usage" "Unable to write $restartFile" || return $?
+      printf "%s\n" "$@" >"$restartFile" || __throwEnvironment "$handler" "Unable to write $restartFile" || return $?
     fi
   fi
 }
@@ -708,20 +691,18 @@ _packageNeedRestartFlag() {
 # Argument: group - String. Required. Currently allowed: "python"
 # Any unrecognized groups are installed using the name as-is.
 packageGroupInstall() {
-  local usage="_${FUNCNAME[0]}"
+  local handler="_${FUNCNAME[0]}"
   local groups=() manager=""
 
-  # _IDENTICAL_ argument-case-header 5
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
+    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-    # _IDENTICAL_ --help 4
-    --help)
-      "$usage" 0
-      return $?
-      ;;
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
     # IDENTICAL managerArgumentHandler 5
     --manager)
       shift
@@ -729,13 +710,13 @@ packageGroupInstall() {
       packageManagerValid "$manager" || __throwArgument "$handler" "Manager is invalid: $(decorate code "$manager")" || return $?
       ;;
     *)
-      groups+=("$(usageArgumentString "$usage" "group" "$argument")") || return $?
+      groups+=("$(usageArgumentString "$handler" "group" "$argument")") || return $?
       ;;
     esac
     shift
   done
 
-  [ 0 -lt "${#groups[@]}" ] || __throwArgument "$usage" "Requires at least one package to map" || return $?
+  [ 0 -lt "${#groups[@]}" ] || __throwArgument "$handler" "Requires at least one package to map" || return $?
 
   # IDENTICAL managerArgumentValidation 2
   [ -n "$manager" ] || manager=$(packageManagerDefault) || __throwEnvironment "$handler" "No package manager" || return $?
@@ -745,7 +726,7 @@ packageGroupInstall() {
   for group in "${groups[@]}"; do
     local packages=()
     while read -r package; do packages+=("$package"); done < <(packageMapping --manager "$manager" "$group")
-    __catch "$usage" packageInstall --manager "$manager" "${packages[@]}" || return $?
+    __catch "$handler" packageInstall --manager "$manager" "${packages[@]}" || return $?
   done
 }
 _packageGroupInstall() {
@@ -758,20 +739,18 @@ _packageGroupInstall() {
 # Argument: group - String. Required. Currently allowed: "python"
 # Any unrecognized groups are uninstalled using the name as-is.
 packageGroupUninstall() {
-  local usage="_${FUNCNAME[0]}"
+  local handler="_${FUNCNAME[0]}"
   local groups=() manager=""
 
-  # _IDENTICAL_ argument-case-header 5
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
+    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-    # _IDENTICAL_ --help 4
-    --help)
-      "$usage" 0
-      return $?
-      ;;
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
     # IDENTICAL managerArgumentHandler 5
     --manager)
       shift
@@ -779,13 +758,13 @@ packageGroupUninstall() {
       packageManagerValid "$manager" || __throwArgument "$handler" "Manager is invalid: $(decorate code "$manager")" || return $?
       ;;
     *)
-      groups+=("$(usageArgumentString "$usage" "group" "$argument")") || return $?
+      groups+=("$(usageArgumentString "$handler" "group" "$argument")") || return $?
       ;;
     esac
     shift
   done
 
-  [ 0 -lt "${#groups[@]}" ] || __throwArgument "$usage" "Requires at least one package to map" || return $?
+  [ 0 -lt "${#groups[@]}" ] || __throwArgument "$handler" "Requires at least one package to map" || return $?
 
   # IDENTICAL managerArgumentValidation 2
   [ -n "$manager" ] || manager=$(packageManagerDefault) || __throwEnvironment "$handler" "No package manager" || return $?
@@ -795,7 +774,7 @@ packageGroupUninstall() {
   for group in "${groups[@]}"; do
     local packages=()
     while read -r package; do packages+=("$package"); done < <(packageMapping --manager "$manager" "$group")
-    __catch "$usage" packageUninstall --manager "$manager" "${packages[@]}" || return $?
+    __catch "$handler" packageUninstall --manager "$manager" "${packages[@]}" || return $?
   done
 }
 _packageGroupUninstall() {
@@ -806,20 +785,18 @@ _packageGroupUninstall() {
 # Argument: packageName - A simple package name which will be expanded to specific platform or package-manager specific package names
 # Argument: --manager packageManager - Optional. String. Package manager to use. (apk, apt, brew)
 packageMapping() {
-  local usage="_${FUNCNAME[0]}"
+  local handler="_${FUNCNAME[0]}"
   local packages=() manager=""
 
-  # _IDENTICAL_ argument-case-header 5
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
+    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-    # _IDENTICAL_ --help 4
-    --help)
-      "$usage" 0
-      return $?
-      ;;
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
     # IDENTICAL managerArgumentHandler 5
     --manager)
       shift
@@ -837,12 +814,12 @@ packageMapping() {
   [ -n "$manager" ] || manager=$(packageManagerDefault) || __throwEnvironment "$handler" "No package manager" || return $?
   whichExists "$manager" || __throwEnvironment "$handler" "$manager does not exist" || return $?
 
-  [ 0 -lt "${#packages[@]}" ] || __throwArgument "$usage" "Requires at least one package to map" || return $?
+  [ 0 -lt "${#packages[@]}" ] || __throwArgument "$handler" "Requires at least one package to map" || return $?
   local method="__${manager}PackageMapping"
-  isFunction "$method" || __throwEnvironment "$usage" "Missing method $method for package manager $manager" || return $?
+  isFunction "$method" || __throwEnvironment "$handler" "Missing method $method for package manager $manager" || return $?
   local package
   for package in "${packages[@]}"; do
-    __catchEnvironment "$usage" "$method" "$package" || return $?
+    __catchEnvironment "$handler" "$method" "$package" || return $?
   done
 }
 _packageMapping() {
