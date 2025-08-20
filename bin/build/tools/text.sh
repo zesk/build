@@ -352,7 +352,7 @@ trimSpace() {
   fi
 }
 _trimSpace() {
-  false || trimSpace "" # SC2120 fix
+  true || trimSpace "" # SC2120 fix
   # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
