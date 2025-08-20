@@ -261,7 +261,7 @@ packageWhich() {
       packageManagerValid "$manager" || __throwArgument "$handler" "Manager is invalid: $(decorate code "$manager")" || return $?
       ;;
     -*)
-      # _IDENTICAL_ argumentUnknown 1
+      # _IDENTICAL_ argumentUnknownHandler 1
       __throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
       ;;
     *)
