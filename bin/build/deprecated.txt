@@ -117,7 +117,7 @@ bashPromptModule_iTerm2Colors|bashPromptModule_TermColors
 # v0.33.11
 
 # v0.33.0
-wrapLines|decorate wrap
+wrapLines|decorate wrap|-name|*.sh
 inputConfigurationAdd|readlineConfigurationAdd
 
 # v0.31.1
