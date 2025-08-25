@@ -20,6 +20,7 @@ identicalRepair() {
 
   local source="" destination="" token="" prefix="" stdout=false fileMap=true
 
+  decorate each code "${FUNCNAME[0]}" "$@"
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
@@ -102,8 +103,11 @@ identicalRepair() {
   local currentLineNumber=0 undo=("exec" "3>&-" --)
 
   # totalLines is *$destination* lines
-  totalLines=$(__catch "$handler" fileLineCount "$destination") || returnClean $? "${clean[@]}" || return $?
-  while read -r identicalLine; do
+  totalLines=$(__catch "$handler" fileLineCount --newline "$destination") || returnClean $? "${clean[@]}" || return $?
+  local finished=false
+  while ! $finished; do
+    read -r identicalLine || finished=true
+    [ -n "$identicalLine" ] || continue
     local isEOF=false
     parsed=$(__identicalLineParse "$handler" "$destination" "$prefix" "$identicalLine") || returnUndo $? "${undo[@]}" || returnClean $? "${clean[@]}" || return $?
     IFS=" " read -r lineNumber token count < <(printf -- "%s\n" "$parsed") || :
@@ -126,7 +130,7 @@ identicalRepair() {
     fi
   done < <(grep -n -e "$grepPattern" <"$destination" || :)
 
-  if [ "$currentLineNumber" -lt "$totalLines" ]; then
+  if [ "$currentLineNumber" -le "$totalLines" ]; then
     tail -n $((totalLines - currentLineNumber + 1)) <"$destination" >&3
   fi
   exec 3>&-

@@ -241,4 +241,6 @@ testIdenticalThingEOFProblem() {
   assertFileContains "$temp/2.txt" "HELLO, WORLD" "# IDENTICAL foo 1" "{" "}" || return $?
   assertFileContains "$temp/3.txt" "HELLO, WORLD" "# IDENTICAL foo 1" "{" "}" || return $?
   assertFileContains "$temp/4.txt" "HELLO, WORLD" "# IDENTICAL foo 1" "{" "}" || return $?
+
+  __catchEnvironment "$handler" rm -rf "$temp" || return $?
 }

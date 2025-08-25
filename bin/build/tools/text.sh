@@ -627,7 +627,7 @@ _maximumLineLength() {
 # Argument: file - Optional. File. Output line count for each file specified. If no files specified, uses stdin.
 fileLineCount() {
   local handler="_${FUNCNAME[0]}"
-  local fileArgument=false
+  local fileArgument=false newlineCheck=false
 
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
@@ -640,18 +640,43 @@ fileLineCount() {
     --help) "$handler" 0 && return $? || return $? ;;
     # _IDENTICAL_ handlerHandler 1
     --handler) shift && handler=$(usageArgumentFunction "$handler" "$argument" "${1-}") || return $? ;;
+    --newline) newlineCheck=true ;;
     *)
-      local file
+      local file total
       file="$(usageArgumentFile "$handler" "$argument" "${1-}")" || return $?
-      # shellcheck disable=SC2119
-      printf "%d\n" "$(__catchEnvironment "$handler" wc -l <"$file" | trimSpace)" || return $?
+      total=$(__catchEnvironment "$handler" wc -l <"$file" | trimSpace) || return $?
+      if $newlineCheck; then
+        if [ -s "$file" ]; then
+          # File is not empty
+          if [ -z "$(tail -c 1 "$file")" ]; then
+            # newline at EOF
+            printf "%d\n" "$total"
+          else
+            # NO newline at EOF
+            printf "%d\n" "$((total + 1))"
+          fi
+        else
+          printf "%d\n" 0
+        fi
+      else
+        printf "%d\n" "$total"
+      fi
       fileArgument=true
       ;;
     esac
     shift
   done
-  # shellcheck disable=SC2119
-  $fileArgument || printf "%d\n" "$(__catchEnvironment "$handler" wc -l | trimSpace)" || return $?
+  if ! $fileArgument; then
+    if $newlineCheck; then
+      local temp
+      temp=$(fileTemporaryName "$handler") || return $?
+      __catchEnvironment "$handler" cat >"$temp" || returnClean $? "$temp" || return $?
+      fileLineCount --newline --handler "$handler" "$temp" || return $?
+      __catch "$handler" rm -f "$temp" || return $?
+    else
+      printf "%d\n" "$(__catchEnvironment "$handler" wc -l | trimSpace)" || return $?
+    fi
+  fi
 }
 _fileLineCount() {
   # __IDENTICAL__ usageDocument 1
