@@ -24,60 +24,60 @@
 
 On a "2x" machine:
 
-- 123.617 testBuildEnvironmentLoadAll
-- 107.896 testDeployApplication
-- 105.799 testDeployToRemote
-- 80.488 testDumpEnvironmentUnsafe
-- 78.615 testHookSystem
-- 74.292 testDumpEnvironmentSafe
-- 68.06 testDeployBuildEnvironment
-- 67.409 testAWSIPAccess
-- 66.525 testUsageArgumentFunctions
-- 64.07 testPHPBuild
-- 60.256 testIdenticalChecks
-- 58.65 testWrapperShellScripts
-- 57.774 testIdenticalCheckAndRepairMap
-- 52.701 testAdditionalBins
-- 49.8 testDocSections
-- 49.398 testBadNumericSamples
-- 47.985 testLogFileRotate1
-- 44.375 testLogFileRotate
-- 42.346 testPackageAPI
-- 42.16 testDeployRemoteFinish
-- 37.931 testFileMatches
-- 33.45 testIsUpToDate
-- 30.435 testDaemontools
-- 29.172 testBashPrompt
-- 26.732 testAwsEnvironmentFromCredentials
-- 26.454 testVersionNext
-- 25.426 testValidateCharacterClass
-- 25.303 testUn_dataSignedIntegerSamples
-- 25.214 testHooksWhichSeemBenign
-- 23.901 testUn_dataSignedNumberSamples
-- 22.142 testSignedNumberSamples
-- 21.639 testRunCount
-- 21.415 testServiceToPort
-- 20.431 test__catchCode
-- 20.05 testMapPrefixSuffix
-- 19.738 testProcessWait
-- 19.657 testLinkCreate
-- 18.159 testSugar
-- 17.498 testEnvironmentFileLoad
-- 16.931 testIdenticalCheckSingles
-- 16.827 testExecutableCallable
-- 16.656 testServiceToPortStandard
-- 16.508 testListAppend
-- 16.268 testIsMappable
-- 15.136 testRepeat2
-- 14.934 testNotExecutable
-- 14.927 testTestSuite
-- 14.847 testInstallBinBuild
-- 14.688 testAWSProfiles
-- 14.048 testHousekeeper
-
+- 119.411 testBuildEnvironmentLoadAll
+- 73.942 testBuildFunctionsHelpOnly
+- 66.557 testDumpEnvironmentUnsafe
+- 66.549 testBuildFunctionsCoverage
+- 64.677 testValidateFunctions
+- 64.348 testDeployToRemote
+- 58.649 testUsageArgumentFunctions
+- 55.579 testDumpEnvironmentSafe
+- 51.319 testAdditionalBins
+- 49.296 testIdenticalCheckAndRepairMap
+- 46.397 testAWSIPAccess
+- 45.248 testHookSystem
+- 42.98 testIdenticalChecks
+- 42.84 testUrlParseItem
+- 42.107 testDeployBuildEnvironment
+- 39.784 testLogFileRotate1
+- 38.372 testBadNumericSamples
+- 36.029 testSlowTagsWorkCorrectly
+- 35.744 testLogFileRotate
+- 33.839 testDeployRemoteFinish
+- 32.984 testBashBuiltins
+- 31.729 testFileMatches
+- 28.134 testPackageAPI
+- 27.874 testAwsEnvironmentFromCredentials
+- 27.545 testIsUpToDate
+- 24.631 testWrapperShellScripts
+- 23.574 testColorBrightness
+- 21.886 testAWSExpiration
+- 21.015 testUn_dataSignedNumberSamples
+- 20.95 testSignedNumberSamples
+- 20.416 testServiceToPortStandard
+- 20.368 testProcessWait
+- 20.005 testUn_dataSignedIntegerSamples
+- 18.898 testDaemontools
+- 18.827 testServiceToPort
+- 18.717 testVersionNext
+- 18.593 testBashPrompt
+- 18.283 testGitVersionList
+- 18.097 testValidateCharacterClass
+- 17.962 testDocSections
+- 17.857 testEnvironmentCompile
+- 17.47 testSugar
+- 17.009 testRunCount
+- 16.72 testUrlParse
+- 16.702 testHousekeeper
+- 15.663 testIsMappable
+- 15.277 testInstallBinBuild
+- 14.751 testMapPrefixSuffix
+- 14.641 testNotExecutable
+- 14.526 testExecutableCallable
+ 
 # Tests needed as of 2025-07-09
 
-- _clean
+- returnClean
 - __argument
 - ___catch
 - ___catchCode

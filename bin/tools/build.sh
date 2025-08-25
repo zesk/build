@@ -78,11 +78,18 @@ __buildBuild() {
   local start
   start=$(timingStart)
 
-  ! $debugFlag || statusMessage decorate info "Installing AWS ..."
+  ! $debugFlag || statusMessage decorate info "Installing dependencies ..."
   __catch "$handler" awsInstall || return $?
+  __catch "$handler" packageWhich yq || return $?
 
   local home
   home=$(__catch "$handler" buildHome) || return $?
+
+  local size
+  size=$(yq ".pipelines.branches.main[0].step.size" <"$home/bitbucket-pipelines.yml")
+
+  decorate info "Running ${BITBUCKET_BRANCH-} ${BITBUCKET_DEPLOYMENT_ENVIRONMENT-} ${BITBUCKET_WORKSPACE-} on hardware: $size"
+  dumpEnvironment
 
   ! $debugFlag || statusMessage decorate info "Updating markdown ..."
   if ! "$home/bin/update-md.sh" --skip-commit; then
