@@ -463,7 +463,7 @@ __installRemotePackageDebug() {
 
 # Install the package directory
 # Requires: uname pushd popd rm tar dirname
-# Requires: __catchEnvironment __throwEnvironment urlFetch
+# Requires: __catch __catchEnvironment __throwEnvironment urlFetch
 __installRemotePackageDirectory() {
   local handler="$1" packagePath="$2" applicationHome="$3" url="$4" localPath="$5"
   local start tarArgs osName
@@ -474,7 +474,7 @@ __installRemotePackageDirectory() {
     __installRemotePackageDirectoryLocal "$handler" "$packagePath" "$applicationHome" "$localPath"
     return $?
   fi
-  __catchEnvironment "$handler" urlFetch "$url" "$target" || return $?
+  __catch "$handler" urlFetch "$url" "$target" || return $?
   [ -f "$target" ] || __throwEnvironment "$handler" "$target does not exist after download from $url" || return $?
   packagePath=${packagePath%/}
   packagePath=${packagePath#/}
@@ -1363,20 +1363,20 @@ isUnsignedInteger() {
 
 # <-- END of IDENTICAL _return
 
-# IDENTICAL _tinySugar 89
+# IDENTICAL _tinySugar 107
 
 # Run `handler` with an argument error
-# Usage: {fn} handler ...
+# Argument: handler - Function. Required. Error handler.
+# Argument: message ... - String. Optional. Error message
 __throwArgument() {
-  local handler="${1-}"
-  shift && "$handler" 2 "$@" || return $?
+  __throw 2 "$@" || return $?
 }
 
 # Run `handler` with an environment error
-# Usage: {fn} handler ...
+# Argument: handler - Function. Required. Error handler.
+# Argument: message ... - String. Optional. Error message
 __throwEnvironment() {
-  local handler="${1-}"
-  shift && "$handler" 1 "$@" || return $?
+  __throw 1 "$@" || return $?
 }
 
 # Run `command`, upon failure run `handler` with an argument error
@@ -1399,7 +1399,7 @@ __catchEnvironment() {
   shift && "$@" || __throwEnvironment "$handler" "$@" || return $?
 }
 
-# _IDENTICAL_ _errors 16
+# _IDENTICAL_ _errors 34
 
 # Return `argument` error code. Outputs `message ...` to `stderr`.
 # Argument: message ... - String. Optional. Message to output.
@@ -1415,6 +1415,24 @@ _argument() {
 # Requires: _return
 _environment() {
   _return 1 "$@" || return $?
+}
+
+# Run `handler` with an argument error
+# Argument: exitCode - Integer. Required. Return code.
+# Argument: handler - Function. Required. Error handler.
+# Argument: message ... - String. Optional. Error message
+__throw() {
+  local exitCode="${1-}" && shift || _argument "Missing exit code" || return $?
+  lcoal handler="${1-}" && shift || _argument "Missing error handler" || return $?
+  "$handler" "$exitCode" "$@" || return $?
+}
+
+# Run binary and catch errors with handler
+# Argument: handler - Required. Function. Error handler.
+# Argument: binary ... - Required. Executable. Any arguments are passed to `binary`.
+__catch() {
+  local handler="${1-}" && shift || _argument "Missing handler" || return $?
+  "$@" || "$handler" "$?" "$@" || return $?
 }
 
 # _IDENTICAL_ __environment 10
@@ -1452,7 +1470,6 @@ _returnClean() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# <-- END of IDENTICAL _tinySugar
 # <-- END of IDENTICAL _tinySugar
 
 # Argument: binary ... - Required. Executable. Any arguments are passed to `binary`.

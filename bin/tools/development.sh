@@ -81,7 +81,7 @@ buildFastFiles() {
   for f in "${ff[@]}"; do
     local target="${f%.sh}-fast.sh"
     local tempTarget="$target.temp"
-    __catchEnvironment "$handler" __echo sed "${aa[@]}" "$f" | grep -v '# \(IDENTICAL\|_IDENTICAL_\|__IDENTICAL__\)' >"$tempTarget" || return $?
+    __catch "$handler" sed "${aa[@]}" "$f" | grep -v '# \(IDENTICAL\|_IDENTICAL_\|__IDENTICAL__\)' >"$tempTarget" || return $?
     if [ -f "$target" ]; then
       if ! diff -q "$tempTarget" "$target"; then
         diff "$target" "$tempTarget" | dumpPipe "Updated $(decorate file "$target"): < old, > new"

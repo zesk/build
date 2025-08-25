@@ -79,6 +79,7 @@ identicalCheck() {
       mapFile=false
       ;;
     --debug)
+      bashDebugInterruptFile --error --interrupt
       debug=true
       ;;
     --cd)

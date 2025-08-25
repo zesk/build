@@ -31,16 +31,16 @@ _identicalCheckInsideLoop() {
   fi
 
   local tempDirectory repairSources=() item tokens=()
-  tempDirectory=$(__catchEnvironment "$handler" environmentValueRead "$stateFile" tempDirectory) || returnClean $? "${clean[@]}" || return $?
-  mapFile=$(__catchEnvironment "$handler" environmentValueRead "$stateFile" mapFile) || returnClean $? "${clean[@]}" || return $?
-  repairSources=() && while read -r item; do repairSources+=("$item"); done < <(__catchEnvironment "$handler" environmentValueReadArray "$stateFile" "repairSources") || returnClean $? "${clean[@]}" || return $?
-  tokens=() && while read -r item; do tokens+=("$item"); done < <(__catchEnvironment "$handler" environmentValueReadArray "$stateFile" "tokens") || returnClean $? "${clean[@]}" || return $?
+  tempDirectory=$(__catch "$handler" environmentValueRead "$stateFile" tempDirectory) || returnClean $? "${clean[@]}" || return $?
+  mapFile=$(__catch "$handler" environmentValueRead "$stateFile" mapFile) || returnClean $? "${clean[@]}" || return $?
+  repairSources=() && while read -r item; do repairSources+=("$item"); done < <(__catch "$handler" environmentValueReadArray "$stateFile" "repairSources") || returnClean $? "${clean[@]}" || return $?
+  tokens=() && while read -r item; do tokens+=("$item"); done < <(__catch "$handler" environmentValueReadArray "$stateFile" "tokens") || returnClean $? "${clean[@]}" || return $?
 
   __catchEnvironment "$handler" muzzle directoryRequire "$tempDirectory/$prefixIndex" || returnClean $? "${clean[@]}" || return $?
 
   local totalLines
 
-  totalLines=$(($(__catchEnvironment "$handler" fileLineCount "$searchFile") + 0)) || returnClean $? "${clean[@]}" || return $?
+  totalLines=$(($(__catch "$handler" fileLineCount "$searchFile") + 0)) || returnClean $? "${clean[@]}" || return $?
 
   statusMessage decorate info "#$((prefixIndex + 1)): Looking for \"$(decorate code "$prefix")\" Reading $(decorate file "$searchFile")"
 

@@ -172,7 +172,7 @@ testSuite() {
     return 0
   fi
 
-  __catchEnvironment "$handler" buildEnvironmentLoad BUILD_COLORS_MODE BUILD_COLORS XDG_CACHE_HOME XDG_STATE_HOME HOME || return $?
+  __catch "$handler" buildEnvironmentLoad BUILD_COLORS_MODE BUILD_COLORS XDG_CACHE_HOME XDG_STATE_HOME HOME || return $?
 
   local load home testTemporaryHome testTemporaryInternal testTemporaryTest
 
@@ -201,7 +201,7 @@ testSuite() {
 
   # Color mode
   export BUILD_COLORS BUILD_COLORS_MODE
-  BUILD_COLORS_MODE=$(__catchEnvironment "$handler" consoleConfigureColorMode) || return $?
+  BUILD_COLORS_MODE=$(__catch "$handler" consoleConfigureColorMode) || return $?
 
   [ "${#testPaths[@]}" -gt 0 ] || __throwArgument "$handler" "Need at least one --tests directory ($(decorate each quote "${__saved[@]}"))" || return $?
 
@@ -340,7 +340,7 @@ testSuite() {
 
     ! $verboseMode || statusMessage decorate info "$(printf "%s %d %s and %d %s to skip" "Applying" "${#tags[@]}" "$(plural ${#tags[@]} tag tags)" "${#skipTags[@]}" "$(plural ${#skipTags[@]} tag tags)")"
     sectionStart=$(timingStart) || return $?
-    while read -r item; do tagFilteredTests+=("$item"); done < <(__catchEnvironment "$handler" __testSuiteFilterTags "${tags[@]+"${tags[@]}"}" -- "${skipTags[@]+"${skipTags[@]}"}" -- "${filteredTests[@]}") || return $?
+    while read -r item; do tagFilteredTests+=("$item"); done < <(__catch "$handler" __testSuiteFilterTags "${tags[@]+"${tags[@]}"}" -- "${skipTags[@]+"${skipTags[@]}"}" -- "${filteredTests[@]}") || return $?
     if $verboseMode; then
       beforeCount="$(decorate notice "${#filteredTests[@]} $(plural ${#filteredTests[@]} "test" "tests")")"
       afterCount="$(decorate value "${#tagFilteredTests[@]} $(plural ${#tagFilteredTests[@]} "test" "tests")")"
@@ -351,14 +351,14 @@ testSuite() {
 
   if $showTags; then
     __TEST_SUITE_TRACE="showing-tags"
-    __catchEnvironment "$handler" __testSuiteShowTags "${filteredTests[@]+"${filteredTests[@]}"}" || return $?
+    __catch "$handler" __testSuiteShowTags "${filteredTests[@]+"${filteredTests[@]}"}" || return $?
     __TEST_SUITE_CLEAN_EXIT=true
     return 0
   fi
 
   if $listFlag; then
     __TEST_SUITE_TRACE="listing"
-    __catchEnvironment "$handler" __testSuiteListTests "${filteredTests[@]+"${filteredTests[@]}"}" || return $?
+    __catch "$handler" __testSuiteListTests "${filteredTests[@]+"${filteredTests[@]}"}" || return $?
     __TEST_SUITE_CLEAN_EXIT=true
     return 0
   fi
@@ -664,7 +664,7 @@ __testStats() {
   printf -- "\n"
   boxedHeading "Functions asserted (cumulative)"
   cat "$(__assertedFunctions)"
-  lines=$(__catchEnvironment "$handler" fileLineCount "$(__assertedFunctions)") || return $?
+  lines=$(__catch "$handler" fileLineCount "$(__assertedFunctions)") || return $?
   decorate info "$lines $(plural "$lines" "function" "functions")"
   printf -- "\n"
 }

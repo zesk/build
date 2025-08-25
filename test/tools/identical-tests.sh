@@ -201,3 +201,44 @@ testIdenticalCheckRepairWithEmptyDir() {
 
   __catch "$handler" rm -rf "$temp" || return $?
 }
+
+# Test identical EOF problem
+#
+# Treats an issue where when the replacement and the last line is a } right afterwards it gets stripped
+#  ❌  assertFileContains Line 229: /root/.cache/.build/testSuite.513745/T/tmp.zcrEyCT4zl/2.txt does not contain string: }
+#  /root/.cache/.build/testSuite.513745/T/tmp.zcrEyCT4zl/2.txt: 6 lines, 156 bytes (shown)
+#  ===================================================================================================================================================================================
+#  🐞 88eee1f9776549bd106bc41b2b303df7535bfafd
+#  🐞 64448df376a00174610e1b629b413842ac30ca85
+#  🐞 9140f0164d777926a5d43ac5ff7a81cf5e033976
+#  🐞 {
+#  🐞 # IDENTICAL foo 1
+#  🐞 HELLO, WORLD
+#
+testIdenticalThingEOFProblem() {
+  local handler="_return"
+
+  local temp name="${FUNCNAME[0]}"
+
+  temp=$(fileTemporaryName "$handler" -d) || return $?
+
+  __catch "$handler" mkdir -p "$temp/identical/" || return $?
+
+  printf "%s\n" "# IDENTICAL foo 1" "HELLO, WORLD" "" "" >"$temp/identical/master.txt"
+  printf "%s\n" "$(randomString)" "$(randomString)" "$(randomString)" "" "# IDENTICAL foo 1" "Hello, WORLD" "" "" >"$temp/$(incrementor 0 "$name").txt"
+  printf "%s\n" "$(randomString)" "$(randomString)" "$(randomString)" "{" "    # IDENTICAL foo 1" "    Hello, WORLD" "}" "" >"$temp/$(incrementor "$name").txt"
+  printf "%s\n" "$(randomString)" "$(randomString)" "$(randomString)" "{" "    # IDENTICAL foo 1" "    Hello, WORLD" "}" >"$temp/$(incrementor "$name").txt"
+  printf "%s\n" "$(randomString)" "$(randomString)" "$(randomString)" "{" "    # IDENTICAL foo 1" "    Hello, WORLD" "}" >"$temp/$(incrementor "$name").txt"
+  local newline=$'\n'
+  printf "%s" "$(randomString)$newline" "$(randomString)$newline" "$(randomString)$newline" "{$newline" "    # IDENTICAL foo 1$newline" "    HELLO, WORLD$newline" "}" >"$temp/$(incrementor "$name").txt"
+
+  __catch "$handler" identicalCheck --cd "$temp" --repair "$temp/identical" --extension 'txt' --prefix '# IDENTICAL' || return $?
+
+  assertFileContains "$temp/0.txt" "HELLO, WORLD" "# IDENTICAL foo 1" || return $?
+  assertFileDoesNotContain "$temp/0.txt" "{" "}" || return $?
+
+  assertFileContains "$temp/1.txt" "HELLO, WORLD" "# IDENTICAL foo 1" "{" "}" || return $?
+  assertFileContains "$temp/2.txt" "HELLO, WORLD" "# IDENTICAL foo 1" "{" "}" || return $?
+  assertFileContains "$temp/3.txt" "HELLO, WORLD" "# IDENTICAL foo 1" "{" "}" || return $?
+  assertFileContains "$temp/4.txt" "HELLO, WORLD" "# IDENTICAL foo 1" "{" "}" || return $?
+}

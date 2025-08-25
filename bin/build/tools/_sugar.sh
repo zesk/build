@@ -11,7 +11,7 @@
 #
 # -- CUT BELOW HERE --
 
-# IDENTICAL _sugar 168
+# IDENTICAL _sugar 178
 
 # Argument: name ... - Optional. String. Exit code value to output.
 # Print one or more return codes by name.
@@ -113,7 +113,7 @@ _returnClean() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# _IDENTICAL_ _errors 16
+# _IDENTICAL_ _errors 34
 
 # Return `argument` error code. Outputs `message ...` to `stderr`.
 # Argument: message ... - String. Optional. Message to output.
@@ -129,6 +129,16 @@ _argument() {
 # Requires: _return
 _environment() {
   _return 1 "$@" || return $?
+}
+
+# Run `handler` with an argument error
+# Argument: exitCode - Integer. Required. Return code.
+# Argument: handler - Function. Required. Error handler.
+# Argument: message ... - String. Optional. Error message
+__throw() {
+  local exitCode="${1-}" && shift || _argument "Missing exit code" || return $?
+  lcoal handler="${1-}" && shift || _argument "Missing error handler" || return $?
+  "$handler" "$exitCode" "$@" || return $?
 }
 
 # Run binary and catch errors with handler

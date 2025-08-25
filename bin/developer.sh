@@ -36,6 +36,7 @@ if source "${BASH_SOURCE[0]%/*}/tools.sh"; then
     # shellcheck disable=SC2139
     alias IdenticalRepair="$home/bin/build/identical-repair.sh"
 
+    muzzle reloadChanges --stop 2>&1
     printf "%s" "$(decorate warning "Watching ")"
     reloadChanges --name "$name" bin/build/tools.sh bin/build/tools
     buildCompletion

@@ -30,7 +30,7 @@ __githubAPI() {
   fi
 
   local accessToken hh=() details=()
-  accessToken=$(__catchEnvironment "$handler" buildEnvironmentGet GITHUB_ACCESS_TOKEN) || return $?
+  accessToken=$(__catch "$handler" buildEnvironmentGet GITHUB_ACCESS_TOKEN) || return $?
   if [ -n "$accessToken" ]; then
     hh+=(-H "Authorization: token $accessToken")
     details+=("$(decorate green Authenticated)")

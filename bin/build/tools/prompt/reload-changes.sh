@@ -74,7 +74,14 @@ bashPromptModule_reloadChanges() {
     if [ -f "$pathStateFile" ]; then
       modified="$(head -n 1 "$pathStateFile")"
       filename="$(tail -n 1 "$pathStateFile")"
-      if isInteger "${__BASH_PROMPT_RELOAD_CHANGES-}"; then
+      if ! isInteger "$modified"; then
+        if $debug; then
+          decorate warning "Modified in $pathStateFile is non-integer: \"$modified\""
+        else
+          __catchEnvironment "$usage" rm -f "$pathStateFile" || return $?
+        fi
+        modified=0
+      elif isInteger "${__BASH_PROMPT_RELOAD_CHANGES-}"; then
         if [ "$modified" -gt "${__BASH_PROMPT_RELOAD_CHANGES}" ]; then
           ! $debug || decorate info "Another process detected changes in $(decorate label "$name") [$modified]"
           __BASH_PROMPT_RELOAD_CHANGES="$modified"
@@ -108,6 +115,7 @@ bashPromptModule_reloadChanges() {
       # shellcheck source=/dev/null
       source "$source"
     fi
+    pathIndex=$((pathIndex + 1))
   done <"$cacheFile"
   for name in "${removeSources[@]+"${removeSources[@]+}"}"; do
     __reloadChangesRemove "$usage" "$cacheFile" "$source" || return $?

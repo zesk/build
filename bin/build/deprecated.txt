@@ -1,4 +1,33 @@
 # v0.37.2
+__catchEnvironment "$handler" buildHome|__catch "$handler" buildHome|-name|*.sh
+__catchEnvironment "$handler" bashDoc|__catch "$handler" bashDoc|-name|*.sh
+__catchEnvironment "$handler" fileL|__catch "$handler" fileL|-name|*.sh
+__catchEnvironment "$handler" fileD|__catch "$handler" fileD|-name|*.sh
+__catchEnvironment "$handler" fileS|__catch "$handler" fileS|-name|*.sh
+__catchEnvironment "$handler" build|__catch "$handler" build|-name|*.sh
+__catchEnvironment "$handler" url|__catch "$handler" url|-name|*.sh
+__catchEnvironment "$handler" package|__catch "$handler" package|-name|*.sh
+__catchEnvironment "$handler" directory|__catch "$handler" directory|-name|*.sh
+__catchEnvironment "$handler" nodeI|__catch "$handler" nodeI|-name|*.sh
+__catchEnvironment "$handler" gitE|__catch "$handler" gitE|-name|*.sh
+__catchEnvironment "$handler" shaP|__catch "$handler" shaP|-name|*.sh
+__catchEnvironment "$handler" aptK|__catch "$handler" aptK|-name|*.sh
+__catchEnvironment "$handler" environment|__catch "$handler" environment|-name|*.sh
+__catchEnvironment "$handler" _comment|__catch "$handler" _comment|-name|*.sh
+__catchEnvironment "$handler" __|__catch "$handler" __|-name|*.sh
+__catchEnvironment "$handler" awsI|__catch "$handler" awsI|-name|*.sh
+__catchEnvironment "$handler" awsS|__catch "$handler" awsS|-name|*.sh
+__catchEnvironment "$handler" userH|__catch "$handler" userH|-name|*.sh
+__catchEnvironment "$handler" awsC|__catch "$handler" awsC|-name|*.sh
+__catchEnvironment "$handler" awsC|__catch "$handler" awsC|-name|*.sh
+__catchEnvironment "$handler" document|__catch "$handler" document|-name|*.sh
+__catchEnvironment "$handler" timing|__catch "$handler" timing|-name|*.sh
+__catchEnvironment "$handler" identical|__catch "$handler" identical|-name|*.sh
+__catchEnvironment "$handler" console|__catch "$handler" console|-name|*.sh
+__catchEnvironment "$handler" confirm|__catch "$handler" confirm|-name|*.sh
+__catchEnvironment "$handler" interactive|__catch "$handler" interactive|-name|*.sh
+__catchEnvironment "$handler" map|__catch "$handler" map|-name|*.sh
+__catchEnvironment "$handler" any|__catch "$handler" any|-name|*.sh
 
 # v0.37.1
 

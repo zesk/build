@@ -176,7 +176,10 @@ _bashRecursionDebug() {
 # Use this in a bash script which runs forever or runs in an infinite loop to
 # determine where the problem or loop exists.
 # Requires: trap
-# Argument: --help
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
+# Argument: --error - Flag. Add ERR trap.
+# Argument: --interrupt - Flag. Add INT trap.
 bashDebugInterruptFile() {
   local handler="_${FUNCNAME[0]}"
   local name="__bashDebugInterruptFile" traps=()

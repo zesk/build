@@ -21,9 +21,9 @@ _identicalCheckSinglesChecker() {
 
   identicalCode=$(returnCode identical)
   # Fetch from state file
-  tempDirectory=$(__catchEnvironment "$handler" environmentValueRead "$stateFile" tempDirectory) || return $?
-  resultsFile=$(__catchEnvironment "$handler" environmentValueRead "$stateFile" resultsFile) || return $?
-  while read -r item; do singles+=("$item"); done < <(__catchEnvironment "$handler" environmentValueReadArray "$stateFile" "singles") || return $?
+  tempDirectory=$(__catch "$handler" environmentValueRead "$stateFile" tempDirectory) || return $?
+  resultsFile=$(__catch "$handler" environmentValueRead "$stateFile" resultsFile) || return $?
+  while read -r item; do singles+=("$item"); done < <(__catch "$handler" environmentValueReadArray "$stateFile" "singles") || return $?
 
   local tokenFile targetFile matchFile exitCode=0 done=false
   local allSingles=() knownSingles=() knownSinglesReport=() lonelySingles=() lonelySinglesReport=() lonelySinglesFiles=()
@@ -61,10 +61,10 @@ _identicalCheckSinglesChecker() {
   if [ -n "$binary" ] && [ "${#lonelySinglesFiles[@]}" -gt 0 ]; then
     "$binary" "${lonelySinglesFiles[@]}"
   fi
-  __catchEnvironment "$handler" environmentValueWriteArray "allSingles" "${allSingles[@]+"${allSingles[@]}"}" >>"$stateFile" || return $?
-  __catchEnvironment "$handler" environmentValueWriteArray "knownSingles" "${knownSingles[@]+"${knownSingles[@]}"}" >>"$stateFile" || return $?
-  __catchEnvironment "$handler" environmentValueWriteArray "lonelySingles" "${lonelySingles[@]+"${lonelySingles[@]}"}" >>"$stateFile" || return $?
-  __catchEnvironment "$handler" environmentValueWriteArray "lonelySinglesFiles" "${lonelySinglesFiles[@]+"${lonelySinglesFiles[@]}"}" >>"$stateFile" || return $?
+  __catch "$handler" environmentValueWriteArray "allSingles" "${allSingles[@]+"${allSingles[@]}"}" >>"$stateFile" || return $?
+  __catch "$handler" environmentValueWriteArray "knownSingles" "${knownSingles[@]+"${knownSingles[@]}"}" >>"$stateFile" || return $?
+  __catch "$handler" environmentValueWriteArray "lonelySingles" "${lonelySingles[@]+"${lonelySingles[@]}"}" >>"$stateFile" || return $?
+  __catch "$handler" environmentValueWriteArray "lonelySinglesFiles" "${lonelySinglesFiles[@]+"${lonelySinglesFiles[@]}"}" >>"$stateFile" || return $?
 
   for token in "${singles[@]+"${singles[@]}"}"; do
     if ! inArray "$token" "${knownSingles[@]+"${knownSingles[@]}"}"; then

@@ -211,18 +211,14 @@ _usageDocumentSimple() {
 documentationTemplateCompile() {
   local handler="_${FUNCNAME[0]}"
 
-  local cacheDirectory="" documentTemplate="" functionTemplate="" targetFile=""
-  local start mappedDocumentTemplate checkFiles forceFlag
-  local compiledFunctionTarget tokenNames message
-  local targetDirectory settingsFile base envFiles envFileArgs envFile
-  local tokenName documentTokensFile envChecksum envChecksumCache compiledTemplateCache
+  local start
 
   # IDENTICAL startBeginTiming 1
   start=$(timingStart) || return $?
 
-  forceFlag=false
-  envFiles=()
-  envFileArgs=()
+  local cacheDirectory="" documentTemplate="" functionTemplate="" targetFile=""
+  local forceFlag=false envFiles=() envFileArgs=() verboseFlag=false
+
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
@@ -234,6 +230,7 @@ documentationTemplateCompile() {
     --help) "$handler" 0 && return $? || return $? ;;
     --env-file)
       shift
+      local envFile
       envFile=$(usageArgumentFile "$handler" "envFile" "$1") || return $?
       envFiles+=("$envFile")
       envFileArgs+=("$argument" "$envFile")
@@ -269,19 +266,24 @@ documentationTemplateCompile() {
   functionTemplate="$(usageArgumentFile "$handler" functionTemplate "$functionTemplate")" || return $?
   targetFile="$(usageArgumentFileDirectory "$handler" targetFile "$targetFile")" || return $?
 
+  local base
+
   base="$(basename "$targetFile")" || __throwArgument "$handler" basename "$targetFile" || return $?
   base="${base%%.md}"
   statusMessage decorate info "Generating $(decorate code "$base") $(decorate info "...")"
 
-  local clean=()
+  local clean=() documentTokensFile
   documentTokensFile=$(fileTemporaryName "$handler") || return $?
   clean+=("$documentTokensFile")
 
+  local mappedDocumentTemplate
   mappedDocumentTemplate=$(fileTemporaryName "$handler") || returnClean $? "${clean[@]}" return $?
 
   clean+=("$mappedDocumentTemplate")
 
+  local envChecksum
   if ! envChecksum=$(
+    local title
     set -a
     [ ! -f "$targetFile" ] || title="$(grep -E '^# ' -m 1 <"$targetFile" | cut -c 3-)"
     title="${title:-notitle}"
@@ -304,6 +306,7 @@ documentationTemplateCompile() {
   #
   # Look at source file for each function
   #
+  local envChecksumCache
   if ! envChecksumCache=$(directoryRequire "$cacheDirectory/envChecksum"); then
     __throwEnvironment "$handler" "create $cacheDirectory/envChecksum failed" || returnClean $? "${clean[@]}" || return $?
   fi
@@ -311,21 +314,24 @@ documentationTemplateCompile() {
   if [ ! -f "$envChecksumCache" ]; then
     touch "$envChecksumCache"
   fi
+
+  local compiledTemplateCache
   compiledTemplateCache=$(__catch "$handler" directoryRequire "$cacheDirectory/compiledTemplateCache") || returnClean $? "${clean[@]}" || return $?
   # Environment change will affect this template
   # Function template change will affect this template
 
+  local message="No message"
   # As well, document template change will affect this template
   local tempCount
   tempCount=$(__catch "$handler" fileLineCount "$documentTokensFile") || return $?
   if [ "$tempCount" -eq 0 ]; then
+    message="Empty document"
     if [ ! -f "$targetFile" ] || ! diff -q "$mappedDocumentTemplate" "$targetFile" >/dev/null; then
       printf "%s (mapped) -> %s %s" "$(decorate warning "$documentTemplate")" "$(decorate success "$targetFile")" "$(decorate error "(no tokens found)")"
       __catchEnvironment "$handler" cp "$mappedDocumentTemplate" "$targetFile" || returnClean $? "${clean[@]}" || return $?
     fi
   else
-    local checkTokens=()
-    checkFiles=()
+    local checkTokens=() tokenName checkFiles=()
     while read -r tokenName; do
       if inArray "$tokenName" "${checkTokens[@]+"${checkTokens[@]}"}"; then
         continue
@@ -339,6 +345,7 @@ documentationTemplateCompile() {
         checkFiles+=("$settingsFile")
       fi
     done <"$documentTokensFile"
+
     if $forceFlag || fileIsEmpty "$targetFile" || ! fileIsNewest "$targetFile" "${checkFiles[@]+"${checkFiles[@]}"}" "$documentTemplate"; then
       message="Generated"
       compiledFunctionEnv=$(fileTemporaryName "$handler") || return $?
