@@ -104,7 +104,7 @@ _contextOpen() {
 # Environment: EDITOR - Used as a default editor (first)
 # Environment: VISUAL - Used as another default editor (last)
 #
-showContext() {
+contextShow() {
   __help "_${FUNCNAME[0]}" "$@" || return 0
   # should maybe make this extensible
   if isPHPStorm; then
@@ -121,7 +121,7 @@ showContext() {
     return 1
   fi
 }
-_showContext() {
+_contextShow() {
   # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

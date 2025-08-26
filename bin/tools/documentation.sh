@@ -4,32 +4,32 @@
 #
 
 __buildDocumentationBuildDirectory() {
-  local usage="$1" home="$2" aa=() target
+  local handler="$1" home="$2" aa=() target
   shift 2
 
   local prefix="$home/documentation/source"
   while read -r markdownFile; do
     target="$home/documentation/.docs${markdownFile#"$prefix"}"
-    __catchEnvironment "$usage" muzzle fileDirectoryRequire "$target" || return $?
-    __catchEnvironment "$usage" cp "$markdownFile" "$target" || return $?
+    __catchEnvironment "$handler" muzzle fileDirectoryRequire "$target" || return $?
+    __catchEnvironment "$handler" cp "$markdownFile" "$target" || return $?
   done < <(find "$prefix" -name '*.md' ! -path '*/tools/*')
 
   source="$home/documentation/source/tools"
   target="$home/documentation/.docs/tools"
 
-  __catchEnvironment "$usage" muzzle directoryRequire "$target" || return $?
+  __catchEnvironment "$handler" muzzle directoryRequire "$target" || return $?
 
   local markdownFile
   while read -r markdownFile; do
     markdownFile=${markdownFile#"$source"}
     markdownFile="${target}/${markdownFile#/}"
     if [ ! -f "$markdownFile" ]; then
-      __catchEnvironment "$usage" muzzle fileDirectoryRequire "$markdownFile" || return $?
-      __catchEnvironment "$usage" touch "$markdownFile" || return $?
+      __catchEnvironment "$handler" muzzle fileDirectoryRequire "$markdownFile" || return $?
+      __catchEnvironment "$handler" touch "$markdownFile" || return $?
     fi
   done < <(find "$source" -type f -name '*.md' ! -path "*/.*/*")
 
-  functionTemplate="$(__catch "$usage" documentationTemplate "function")" || return $?
+  functionTemplate="$(__catch "$handler" documentationTemplate "function")" || return $?
 
   aa+=(--source "$home/bin")
   aa+=(--template "$source")
@@ -42,13 +42,13 @@ __buildDocumentationBuildDirectory() {
 }
 
 __buildDocumentationBuildRelease() {
-  local usage="$1" home="$2" release currentNotes notesPath
+  local handler="$1" home="$2" release currentNotes notesPath
   local target="$home/documentation/.docs/release/index.md"
   local recentNotes=10 index
 
   currentNotes=$(releaseNotes)
 
-  __catch "$usage" fileDirectoryRequire "$target" || return $?
+  __catch "$handler" muzzle fileDirectoryRequire "$target" || return $?
 
   printf -- "%s\n" "# Release Notes" "" >"$target"
 
@@ -70,16 +70,16 @@ __buildDocumentationBuildRelease() {
 }
 
 __mkdocsConfiguration() {
-  local usage="$1" token source="mkdocs.template.yml" target="mkdocs.yml"
+  local handler="$1" token source="mkdocs.template.yml" target="mkdocs.yml"
 
-  [ -f "$source" ] || __throwEnvironment "$usage" "missing $source" || return $?
+  [ -f "$source" ] || __throwEnvironment "$handler" "missing $source" || return $?
   while IFS="" read -r token; do
     # skip lowercase
     [ "$token" != "$(lowercase "$token")" ] || continue
-    __catch "$usage" buildEnvironmentLoad "$token" || return $?
+    __catch "$handler" buildEnvironmentLoad "$token" || return $?
     export "${token?}"
   done < <(mapTokens <"$source")
-  __catch "$usage" mapEnvironment <"$source" >"$target" || return $?
+  __catch "$handler" mapEnvironment <"$source" >"$target" || return $?
 }
 
 # Build the build documentation
@@ -90,8 +90,8 @@ __mkdocsConfiguration() {
 # Argument: --clean - Flag. Clean caches.
 # See: documentationBuild
 __buildDocumentationBuild() {
-  local usage="_${FUNCNAME[0]}"
-  local here="${BASH_SOURCE[0]%/*}" home start
+  local handler="_${FUNCNAME[0]}"
+  local start
 
   start=$(timingStart) || return $?
 
@@ -100,17 +100,15 @@ __buildDocumentationBuild() {
   local da=() ea=()
   local cleanFlag=false updateDerived=true updateTemplates=true updateReference=true makeDocumentation=true
 
-  # _IDENTICAL_ argument-case-header 5
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
+    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-    # _IDENTICAL_ --help 4
-    --help)
-      "$usage" 0
-      return $?
-      ;;
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
     --templates-only)
       updateDerived=false
       updateTemplates="true"
@@ -151,29 +149,29 @@ __buildDocumentationBuild() {
       ea+=("$argument")
       ;;
     *)
-      # _IDENTICAL_ argumentUnknown 1
-      __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
+      # _IDENTICAL_ argumentUnknownHandler 1
+      __throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
       ;;
     esac
     shift
   done
 
   # Greeting
-  __catch "$usage" buildEnvironmentLoad APPLICATION_NAME || return $?
+  __catch "$handler" buildEnvironmentLoad APPLICATION_NAME || return $?
   statusMessage lineFill . "$(decorate info "${APPLICATION_NAME} documentation started on $(decorate value "$(date +"%F %T")")") "
-  home=$(cd "$here/.." && pwd || _environment cd failed) || return $?
+  home=$(__catch "$handler" buildHome) || return $?
 
   # --clean
   if $cleanFlag; then
     # Clean env cache
-    __catch "$usage" documentationBuildEnvironment --clean || return $?
+    __catch "$handler" documentationBuildEnvironment --clean || return $?
     # Clean reference cache
-    __buildDocumentationBuildDirectory "$usage" "$home" --clean || return $?
+    __buildDocumentationBuildDirectory "$handler" "$home" --clean || return $?
     return 0
   fi
 
   # Ensure we have our target
-  __catchEnvironment "$usage" muzzle directoryRequire "$home/documentation/.docs" || return $?
+  __catchEnvironment "$handler" muzzle directoryRequire "$home/documentation/.docs" || return $?
 
   # Templates should be up-to-date if making documentation
   if ! $updateTemplates && $makeDocumentation; then
@@ -194,58 +192,62 @@ __buildDocumentationBuild() {
     local file
 
     statusMessage decorate notice "Updating release page ..."
-    __buildDocumentationBuildRelease "$usage" "$home" || return $?
+    __buildDocumentationBuildRelease "$handler" "$home" || return $?
 
     statusMessage decorate notice "Updating mkdocs.yml ..."
 
-    __catchEnvironment "$usage" muzzle pushd "./documentation" || return $?
-    __mkdocsConfiguration "$usage" || return $?
-    __catchEnvironment "$usage" muzzle popd || return $?
+    __catchEnvironment "$handler" muzzle pushd "./documentation" || return $?
+    __mkdocsConfiguration "$handler" || return $?
+    __catchEnvironment "$handler" muzzle popd || return $?
 
     local sourceHome="$home/documentation/source" targetHome="$home/documentation/.docs"
     while IFS="" read -r file; do
       file=${file#"$sourceHome"}
       statusMessage decorate notice "Updating $file ..."
-      __catchEnvironment "$usage" muzzle fileDirectoryRequire "$targetHome/$file" || return $?
-      __catchEnvironment "$usage" cp -f "$sourceHome/$file" "$targetHome/$file" || return $?
+      __catchEnvironment "$handler" muzzle fileDirectoryRequire "$targetHome/$file" || return $?
+      __catchEnvironment "$handler" cp -f "$sourceHome/$file" "$targetHome/$file" || return $?
     done < <(
       find "$sourceHome" -type f -name "*.md" ! -path "*/tools/*" ! -path "*/env/*"
       printf "%s\n" "$sourceHome/tools/index.md"
     )
-    version=$(hookVersionCurrent) timestamp="$(date -u "+%F %T") UTC" __catch "$usage" mapEnvironment <"$sourceHome/index.md" >"$targetHome/index.md" || return $?
+    version=$(hookVersionCurrent) timestamp="$(date -u "+%F %T") UTC" __catch "$handler" mapEnvironment <"$sourceHome/index.md" >"$targetHome/index.md" || return $?
 
     # Coding
     local example
 
-    example="$(decorate wrap "    " <"$home/bin/build/tools/example.sh")" || __throwEnvironment "$usage" "generating example" || return $?
-    example="$example" __catch "$usage" mapEnvironment <"$home/documentation/source/guide/coding.md" >"$home/documentation/.docs/guide/coding.md" || return $?
+    example="$(decorate wrap "    " <"$home/bin/build/tools/example.sh")" || __throwEnvironment "$handler" "generating example" || return $?
+    example="$example" __catch "$handler" mapEnvironment <"$home/documentation/source/guide/coding.md" >"$home/documentation/.docs/guide/coding.md" || return $?
 
     statusMessage decorate notice "Updating env/index.md ..."
-    __catch "$usage" documentationBuildEnvironment --verbose "${ea[@]+"${ea[@]}"}" || return $?
+    __catch "$handler" documentationBuildEnvironment --verbose "${ea[@]+"${ea[@]}"}" || return $?
   fi
 
   if "$updateReference"; then
-    __catch "$usage" __buildDocumentationBuildDirectory "$usage" "$home" "$@" "${da[@]+"${da[@]}"}" || return $?
+    __catch "$handler" __buildDocumentationBuildDirectory "$handler" "$home" "$@" "${da[@]+"${da[@]}"}" || return $?
   fi
 
   if "$makeDocumentation"; then
     if ! whichExists mkdocs; then
-      __catchEnvironment "$usage" pythonInstall || return $?
+      __catchEnvironment "$handler" pythonInstall || return $?
 
       if [ ! -d "$home/.venv" ]; then
-        whichExists mkdocs || __catchEnvironment "$usage" python -m pip install venv || return $?
-        __catchEnvironment "$usage" python -m venv "$home/.venv" || return $?
+        if ! pythonPackageInstalled venv; then
+          __catchEnvironment "$handler" pipWrapper install venv || return $?
+        fi
+        __catchEnvironment "$handler" python -m venv "$home/.venv" || return $?
       fi
-      __catchEnvironment "$usage" "$home/.venv/bin/activate" || return $?
-      whichExists mkdocs || __catchEnvironment "$usage" python -m pip install mkdocs || return $?
-      whichExists mkdocs || __throwEnvironment "$usage" "mkdocs not found after installation?" || return $?
+      __catchEnvironment "$handler" "$home/.venv/bin/activate" || return $?
+      if ! pythonPackageInstalled mkdocs; then
+        __catchEnvironment "$handler" python -m pip install mkdocs mkdocs-material || return $?
+        whichExists mkdocs || __throwEnvironment "$handler" "mkdocs not found after installation?" || return $?
+      fi
     fi
-    __catchEnvironment "$usage" muzzle pushd "./documentation" || return $?
-    __mkdocsConfiguration "$usage" || return $?
+    __catchEnvironment "$handler" muzzle pushd "./documentation" || return $?
+    __mkdocsConfiguration "$handler" || return $?
 
-    __catchEnvironment "$usage" mkdocs build || return $?
-    __catchEnvironment "$usage" muzzle popd || return $?
-    __catchEnvironment "$usage" "$home/.venv/bin/deactivate" || return $?
+    __catchEnvironment "$handler" mkdocs build || return $?
+    __catchEnvironment "$handler" muzzle popd || return $?
+    __catchEnvironment "$handler" "$home/.venv/bin/deactivate" || return $?
   fi
 
   statusMessage --last timingReport "$start" "$(basename "${BASH_SOURCE[0]}") completed in"
@@ -254,4 +256,3 @@ ___buildDocumentationBuild() {
   # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
-

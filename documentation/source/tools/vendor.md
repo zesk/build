@@ -5,7 +5,7 @@
 <hr />
 
 {contextOpen}
+{contextShow}
 {isPHPStorm}
 {isPyCharm}
 {isVisualStudioCode}
-{showContext}

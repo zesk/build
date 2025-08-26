@@ -9,16 +9,22 @@
 #
 # If this fails it will output the installation log.
 #
-# Usage: {fn} [ package ... ]
-# Argument: package - Additional packages to install (using apt)
+# Argument: package - Additional packages to install (using `pipInstall`)
 # Summary: Install `docker-compose`
 # When this tool succeeds the `docker-compose` binary is available in the local operating system.
 # Exit Code: 1 - If installation fails
 # Exit Code: 0 - If installation succeeds
 # Binary: docker-compose.sh
+# See: pipInstall
 #
 dockerComposeInstall() {
-  _pipInstall "_${FUNCNAME[0]}" "docker-compose" "$@"
+  local handler="_${FUNCNAME[0]}"
+  [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
+  local name="docker-compose"
+  if pythonPackageInstalled "$name"; then
+    return 0
+  fi
+  pipInstall --handler "$handler" "docker-compose" "$@"
 }
 _dockerComposeInstall() {
   # __IDENTICAL__ usageDocument 1
@@ -38,20 +44,13 @@ _dockerComposeInstall() {
 # Binary: docker-compose.sh
 #
 dockerComposeUninstall() {
-  local usage="_${FUNCNAME[0]}"
-  [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
-  local quietLog start name="docker-compose"
-
-  if ! whichExists "$name"; then
+  local handler="_${FUNCNAME[0]}"
+  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
+  local name="docker-compose"
+  if ! pythonPackageInstalled "$name"; then
     return 0
   fi
-  packageWhich pip python3-pip || __throwEnvironment "$usage" "Need pip to uninstall - not found?" || return $?
-  start=$(timingStart) || return $?
-  quietLog=$(__catch "$usage" buildQuietLog "$usage") || return $?
-  statusMessage decorate info "Removing $name ... "
-  __catchEnvironmentQuiet "$usage" "$quietLog" pip uninstall "$name" || return $?
-  ! whichExists "$name" || __throwEnvironment "$usage" "$name was still found after uninstall" || return $?
-  statusMessage --last timingReport "$start" "Uninstalled $name in"
+  pipUninstall --handler "$handler" "$name" || return $?
 }
 _dockerComposeUninstall() {
   # __IDENTICAL__ usageDocument 1
@@ -311,6 +310,7 @@ __dockerComposeEnvironmentSetup() {
   fi
   __catchEnvironment "$usage" cp "$deploymentEnv" "$envFile" || return $?
 
+  printf "%s\n" "" "# Added values" >>"$envFile"
   local icon="⬅"
   # Remaining arguments are pairs
   while [ $# -gt 1 ]; do

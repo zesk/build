@@ -27,6 +27,13 @@ __awsTestCleanup() {
   __mockValueStop AWS_SECRET_ACCESS_KEY
 }
 
+testAWSInstall() {
+  if ! whichExists aws; then
+    assertExitCode 0 awsInstall || return $?
+    assertExitCode 0 whichExists aws || return $?
+  fi
+}
+
 # Tag: slow
 testAWSIPAccess() {
   local handler="_return"

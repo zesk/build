@@ -7,6 +7,15 @@
 # Copyright &copy; 2025 Market Acumen, Inc.
 #
 
+testEnvironmentAddFile() {
+  local handler="_return"
+
+  assertFileDoesNotExist "$home/bin/env/FOOBAR.sh" || return $?
+  assertExitCode 0 environmentAddFile FOOBAR || return $?
+  assertFileExists "$home/bin/env/FOOBAR.sh" || return $?
+  __catch "$handler" rm -f "$home/bin/env/FOOBAR.sh" || return $?
+}
+
 testDotEnvConfigure() {
   local tempDir tempEnv magic
   export TESTENVWORKS TESTENVLOCALWORKS

@@ -44,7 +44,7 @@ testBuildApplicationTools() {
   __catch "$handler" rm -rf "$testApp" || return $?
 }
 
-# Tag: slow
+# Tag: slow slow-non-critical
 testBuildEnvironmentLoadAll() {
   local handler="_return"
   local home loadIt nonBlankEnvs=(

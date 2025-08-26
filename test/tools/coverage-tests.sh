@@ -70,6 +70,7 @@ testBuildFunctionsCoverage() {
   clean+=("$allTestFiles")
 
   __catchEnvironment "$handler" cut -f 1 -d '|' <"$home/bin/build/deprecated.txt" | grep -v '#' | grep -v ' ' | grep -v '/' | sort -u >"$deprecatedFunctions" || return $?
+  __deprecatedFunctionsSoon >>"$deprecatedFunctions"
   __catchEnvironment "$handler" find "$home/test/tools" -type f -name '*.sh' -print0 >"$allTestFiles" || return $?
 
   local requireCoverageDate
@@ -110,6 +111,38 @@ testBuildFunctionsCoverage() {
   else
     [ "${#missing[@]}" -eq 0 ] || __throwEnvironment "$handler" "Functions require at least 1 test: ($(decorate magenta "after $requireCoverageDate")):"$'\n'"$(printf "%s\n" "${missing[@]}" | decorate code | decorate wrap "- ")"
   fi
+}
+__deprecatedFunctionsSoon() {
+  cat <<EOF | decorate wrap "usage""Argument"
+ApplicationDirectory
+ApplicationDirectoryList
+ApplicationFile
+Arguments
+Array
+Boolean
+Callable
+ColonDelimitedList
+CommaDelimitedList
+Date
+DirectoryList
+EmptyString
+EnvironmentVariable
+Executable
+Exists
+Flag
+Function
+Link
+List
+LoadEnvironmentFile
+Missing
+Number
+RealDirectory
+RealFile
+RemoteDirectory
+Secret
+String
+URL
+EOF
 }
 
 # Tag: slow
@@ -279,7 +312,7 @@ realPath
 EOF
 }
 
-# Tag: slow
+# Tag: slow slow-non-critical
 testBuildFunctionsHelpOnly() {
   local usage="_return"
   local fun

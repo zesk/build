@@ -29,6 +29,10 @@ _testBuildDebugEnabledExit() {
   return "$code"
 }
 
+testBashDebugInterruptFile() {
+  assertNotExitCode --stderr-match "Already installed" 0 bashDebugInterruptFile || return $?
+}
+
 testBuildDebugEnabled() {
   local handler="_return"
   local quietLog

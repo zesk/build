@@ -7,6 +7,22 @@
 # Copyright &copy; 2025 Market Acumen, Inc.
 #
 
+testBashCommentFilter() {
+  assrtExitCode --stdout-no-match "SSH ""tests" 0 bashCommentFilter <"${BASH_SOURCE[0]}" || return $?
+}
+
+# Requires: A B C
+# Requires: D E F G A a b c d
+testBashGetRequires() {
+  local handler="_return"
+  local temp
+
+  temp=$(fileTemporaryName "$handler") || return $?
+  __catch "$handler" bashGetRequires "${BASH_SOURCE[0]}" >"$temp" || return $?
+  assertFileContains "$temp" A B C D E F G a b c d || return $?
+  __catch "$handler" rm -f "temp" || return $?
+}
+
 testBashBuiltins() {
   local item type
   while read -r item; do
@@ -15,6 +31,7 @@ testBashBuiltins() {
   done < <(bashBuiltins)
 }
 
+# Requires: a b d
 testBashBasics() {
   # Bizarre logic precedence
 

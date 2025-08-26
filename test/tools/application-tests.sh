@@ -23,3 +23,7 @@ testApplicationHome() {
 
   __mockValueStop XDG_STATE_HOME
 }
+
+testApplicationHomeAliases() {
+  assertExitCode 0 applicationHomeAliases xxx XXX || return $?
+}

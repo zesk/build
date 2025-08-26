@@ -95,28 +95,26 @@ _applicationHome() {
 # Argument: goAlias - String. Alias for `applicationHome --go`. Default is `g`.
 # Argument: setAlias - String. Alias for `applicationHome`. Default is `G`.
 applicationHomeAliases() {
-  local usage="_${FUNCNAME[0]}"
+  local handler="_${FUNCNAME[0]}"
   local goAlias="" setAlias=""
 
-  # _IDENTICAL_ argument-case-header 5
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
+    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
     case "$argument" in
-    # _IDENTICAL_ --help 4
-    --help)
-      "$usage" 0
-      return $?
-      ;;
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
     *)
       if [ -z "$goAlias" ]; then
-        goAlias=$(usageArgumentString "$usage" "goAlias" "$argument") || return $?
+        goAlias=$(usageArgumentString "$handler" "goAlias" "$argument") || return $?
       elif [ -z "$setAlias" ]; then
-        setAlias=$(usageArgumentString "$usage" "setAlias" "$argument") || return $?
+        setAlias=$(usageArgumentString "$handler" "setAlias" "$argument") || return $?
       else
         # _IDENTICAL_ argumentUnknown 1
-        __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
+        __throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
       fi
       ;;
     esac
@@ -126,9 +124,9 @@ applicationHomeAliases() {
   [ -n "$setAlias" ] || setAlias="G"
 
   # shellcheck disable=SC2139
-  alias "$goAlias"='applicationHome --go' || __throwEnvironment "$usage" "alias $goAlias failed" || return $?
+  alias "$goAlias"='applicationHome --go' || __throwEnvironment "$handler" "alias $goAlias failed" || return $?
   # shellcheck disable=SC2139
-  alias "$setAlias"=applicationHome || __throwEnvironment "$usage" "alias $setAlias failed" || return $?
+  alias "$setAlias"=applicationHome || __throwEnvironment "$handler" "alias $setAlias failed" || return $?
 }
 _applicationHomeAliases() {
   # __IDENTICAL__ usageDocument 1

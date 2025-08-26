@@ -17,3 +17,5 @@ footer:
 copyright: "Copyright &copy; 2025 Market Acumen, Inc."
 extra_javascript:
   - ./js/build.js
+theme:
+  name: material

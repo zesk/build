@@ -13,6 +13,14 @@ _hookTestFailed() {
   return 1
 }
 
+testWhichHook() {
+  local handler="_return"
+  local home
+
+  home=$(__catch "$handler" buildHome) || return $?
+  assertEquals "$home/bin/build/hooks/version-current.sh" "$(whichHook version-current)" || return $?
+}
+
 testVersionLive() {
   assertExitCode 0 hookRun version-live || return $?
 }

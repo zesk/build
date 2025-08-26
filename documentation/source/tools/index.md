@@ -77,7 +77,6 @@
 
 - [Amazon Web Services](./aws.md)
 - [BitBucket](./bitbucket.md)
-- [brew (HomeBrew)](./brew.md)
 - [Crontab](./crontab.md)
 - [daemontools](./daemontools.md)
 - [Darwin](./darwin.md)
@@ -91,6 +90,7 @@
 - [Node](./node.md)
 - [NPM](./npm.md)
 - [PHP](./php.md)
+- [Python](./python.md)
 - [rsync](./rsync.md)
 - [SSH](./ssh.md)
 - [System V Init](./sysvinit.md)

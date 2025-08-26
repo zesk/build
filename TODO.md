@@ -1,21 +1,26 @@
 # Current plans
 
-- Ensure all temporary files are cleaned up by all functions (Added: July 2025) 
 - Ensure all functions have all code paths executed (Added: July 2025)
 - `usage.sh` and related `usageArgument` will be moved to a less verbose type-checking interface modeled after the
   `decorate` pattern which seemed to work well. Called `valdiate` - tests have been added - need to migrate and
   deprecate. (Added: 2025 - April)
-- Continue migration to local `local` usage instead of head of function (`example.sh` arguments handling) (Added: 2025 - January)
+- Continue migration to local `local` usage instead of head of function (`example.sh` arguments handling) (Added: 2025 -
+  January)
     - Check all files for any occurrences of this and list here.
-- Move `docs` to something not Bash-based perhaps (Added: 2025 - January)
+- Move `docs` generation to a `mkdocs` [plugin](https://www.mkdocs.org/dev-guide/plugins/) perhaps (Added: 2025 -
+  January)
 - Start writing some tutorials on how to get it set up and working (video?) (Added: 2025 - January)
 
 ## Done
 
-- 2025 - February - "Work on 30-minute build timing or make it faster somehow" - Added `--tag` to `testSuite` to skip slow tests each run
+- 2025 - August - Ensure all temporary files are cleaned up by all functions (Added: July 2025)
+- 2025 - February - "Work on 30-minute build timing or make it faster somehow" - Added `--tag` to `testSuite` to skip
+  slow tests each run
 - 2025 - February - "Move away from `.check-assertions`" - now just checks everything - may not be a good choice
-- 2025 - February - Move away from `.debugging` markers - now uses a hash of the file stored in the file itself. (Ignoring the hash line.)
-- 2025 - July - Need to determine if any other functions which depend on current directory being the app home and fix that (e.g.
+- 2025 - February - Move away from `.debugging` markers - now uses a hash of the file stored in the file itself. (
+  Ignoring the hash line.)
+- 2025 - July - Need to determine if any other functions which depend on current directory being the app home and fix
+  that (e.g.
   `buildEnvironmentLoad`) (Added `--cd-away` and enforces it)
 - 2025 - July - Added `# Test-Build-Home: true` flag to require certain tests to start with CWD at `buildHome`
 - 2025 - July - Added `--help` or help to (nearly) all commands
@@ -74,7 +79,7 @@ On a "2x" machine:
 - 14.751 testMapPrefixSuffix
 - 14.641 testNotExecutable
 - 14.526 testExecutableCallable
- 
+
 # Tests needed as of 2025-07-09
 
 - returnClean
@@ -345,7 +350,7 @@ On a "2x" machine:
 - rotateLogs
 - sedReplacePattern
 - shaPipe
-- showContext
+- contextShow
 - sshSetup
 - stringContainsInsensitive
 - stringOffset

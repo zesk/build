@@ -182,7 +182,7 @@ _bashRecursionDebug() {
 # Argument: --interrupt - Flag. Add INT trap.
 bashDebugInterruptFile() {
   local handler="_${FUNCNAME[0]}"
-  local name="__bashDebugInterruptFile" traps=()
+  local name="__bashDebugInterruptFile" traps=() clearFlag=false
 
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
@@ -193,6 +193,7 @@ bashDebugInterruptFile() {
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
+    --clear) clearFlag=true ;;
     --interrupt)
       inArray INT "${traps[@]+"${traps[@]}"}" || traps+=("INT")
       ;;
@@ -208,6 +209,10 @@ bashDebugInterruptFile() {
   done
   [ "${#traps[@]}" -gt 0 ] || traps+=("INT")
 
+  if $clearFlag; then
+    __catchEnvironment "$handler" trap - "${traps[@]}" || return $?
+    return 0
+  fi
   local currentTraps installed=()
   currentTraps=$(fileTemporaryName "$handler") || return $?
   trap >"$currentTraps" || returnClean "$?" "$currentTraps" || __throwEnvironment "trap listing failed" || return $?

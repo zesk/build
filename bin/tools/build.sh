@@ -121,7 +121,7 @@ __buildBuild() {
       fi
     done
     ! $debugFlag || statusMessage decorate warning "Building documentation ..."
-    "$home/bin/documentation.sh" || __throwEnvironment "$handler" "Documentation failed" || return $?
+    __catchEnvironment "$handler" "$home/bin/documentation.sh" || return $?
     [ -d "$rootPath" ] || __throwEnvironment "$handler" "Documentation failed to create $rootShow" || return $?
   fi
 

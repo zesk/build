@@ -48,6 +48,7 @@ testDumpEnvironmentSafe() {
 }
 
 # Tag: slow
+# Tag: slow-non-critical
 testDumpEnvironmentUnsafe() {
   export PRIVATE_THING
 
@@ -63,9 +64,9 @@ testDumpEnvironmentUnsafe() {
   # Case match does NOT filter
   assertExitCode --stdout-match "PRIVATE_THING" --stdout-match "$PRIVATE_THING" 0 dumpEnvironmentUnsafe --skip-env private_thing || return $?
   # Exact match does filter
-  assertExitCode --stdout-no-match "PRIVATE_THING" --stdout-no-match "$PRIVATE_THING" 0 dumpEnvironmentUnsafe --skip-env PRIVATE_THING || return $?
+  assertExitCode --stdout-no-match "[SKIPPED VARIABLES]" --stdout-no-match "PRIVATE_THING" --stdout-no-match "$PRIVATE_THING" 0 dumpEnvironmentUnsafe --skip-env PRIVATE_THING || return $?
   # --show-skipped shows name not value
-  assertExitCode --stdout-match "PRIVATE_THING" --stdout-no-match "$PRIVATE_THING" 0 dumpEnvironmentUnsafe --skip-env PRIVATE_THING --show-skipped || return $?
+  assertExitCode --stdout-match "[SKIPPED VARIABLES]" --stdout-match "PRIVATE_THING" --stdout-no-match "$PRIVATE_THING" 0 dumpEnvironmentUnsafe --skip-env PRIVATE_THING --show-skipped || return $?
 
   unset PRIVATE_THING
 }
