@@ -80,7 +80,10 @@ __buildBuild() {
 
   ! $debugFlag || statusMessage decorate info "Installing dependencies ..."
   __catch "$handler" awsInstall || return $?
-  __catch "$handler" packageWhich yq || return $?
+  if ! whichExists yq; then
+    __catch "$handler" pythonInstall || return $?
+    __catch "$handler" pip install yq || return $?
+  fi
 
   local home
   home=$(__catch "$handler" buildHome) || return $?
