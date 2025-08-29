@@ -23,26 +23,26 @@ __installLatestURL() {
 # Download remote JSON as a temporary file (delete it)
 # Requires: whichExists __throwEnvironment fileTemporaryName __installLatestVersion curl urlFetch printf
 __installJSON() {
-  local usage="$1" jsonFile message
+  local handler="$1" jsonFile message
 
-  whichExists jq || __throwEnvironment "$usage" "Requires jq to install" || return $?
-  jsonFile=$(fileTemporaryName "$usage") || return $?
+  whichExists jq || __throwEnvironment "$handler" "Requires jq to install" || return $?
+  jsonFile=$(fileTemporaryName "$handler") || return $?
   if ! urlFetch "$(__installLatestVersion)" "$jsonFile"; then
     message="$(printf -- "%s\n%s\n" "Unable to fetch latest JSON:" "$(cat "$jsonFile")")"
     rm -rf "$jsonFile" || :
-    __throwEnvironment "$usage" "$message" || return $?
+    __throwEnvironment "$handler" "$message" || return $?
   fi
   printf "%s\n" "$jsonFile"
 }
 
 # Requires: __installJSON rm __throwArgument printf
 __installURL() {
-  local usage="$1" jsonFile
+  local handler="$1" jsonFile
 
-  jsonFile=$(__installJSON "$usage") || return $?
-  url=$(__installLatestURL "$usage" "$jsonFile") || return $?
+  jsonFile=$(__installJSON "$handler") || return $?
+  url=$(__installLatestURL "$handler" "$jsonFile") || return $?
   rm -f "$jsonFile" || :
-  [ "${url#https://}" != "$url" ] || __throwArgument "$usage" "URL must begin with https://" || return $?
+  [ "${url#https://}" != "$url" ] || __throwArgument "$handler" "URL must begin with https://" || return $?
   printf -- "%s\n" "$url"
 }
 
@@ -56,20 +56,20 @@ __installURL() {
 # See: _installRemotePackage
 # Requires: __installJSON jsonField jq versionSort decorate __installLatestVersion __throwArgument
 __installFetchVersion() {
-  local usage="$1" installPath="$2" packagePath="$3" jsonFile version url upIcon="☝️" okIcon="👌"
+  local handler="$1" installPath="$2" packagePath="$3" jsonFile version url upIcon="☝️" okIcon="👌"
 
-  whichExists jq || __throwEnvironment "$usage" "Requires jq to install" || return $?
-  jsonFile=$(fileTemporaryName "$usage") || return $?
+  whichExists jq || __throwEnvironment "$handler" "Requires jq to install" || return $?
+  jsonFile=$(fileTemporaryName "$handler") || return $?
 
   if ! urlFetch "$(__installLatestVersion)" "$jsonFile"; then
     local message
     message="$(printf -- "%s\n%s\n" "Unable to fetch version JSON:" "$(cat "$jsonFile")")"
     rm -f "$jsonFile" || :
-    __throwEnvironment "$usage" "$message" || return $?
+    __throwEnvironment "$handler" "$message" || return $?
   fi
 
   # Version comparison
-  version=$(jsonField "$usage" "$jsonFile" .version) || returnClean $? "$jsonFile" || return $?
+  version=$(jsonField "$handler" "$jsonFile" .version) || returnClean $? "$jsonFile" || return $?
   rm -f "$jsonFile" || :
   if [ -d "$packagePath" ] && [ -f "$packagePath/package.json" ]; then
     local latest
@@ -134,13 +134,13 @@ _jsonField() {
 # Argument: idSelector - String. Optional. Selector to use to extract version from the file.
 # Requires: dirname jq decorate printf __throwEnvironment read jq
 __installCheck() {
-  local name="$1" version="$2" usage="$3" installPath="$4" versionSelector="${5-".version"}" idSelector="${6-".id"}"
+  local name="$1" version="$2" handler="$3" installPath="$4" versionSelector="${5-".version"}" idSelector="${6-".id"}"
   local versionFile="$installPath/$version" id
   if [ ! -f "$versionFile" ]; then
-    __throwEnvironment "$usage" "$(printf "%s: %s\n\n  %s\n  %s\n" "$(decorate error "$name")" "Incorrect version or broken install (can't find $version):" "rm -rf $(dirname "$installPath/$version")" "${BASH_SOURCE[0]}")" || return $?
+    __throwEnvironment "$handler" "$(printf "%s: %s\n\n  %s\n  %s\n" "$(decorate error "$name")" "Incorrect version or broken install (can't find $version):" "rm -rf $(dirname "$installPath/$version")" "${BASH_SOURCE[0]}")" || return $?
   fi
   read -r version id < <(jq -r "($versionSelector + \" \" + $idSelector)" <"$versionFile" || :) || :
-  [ -n "$version" ] && [ -n "$id" ] || __throwEnvironment "$usage" "$versionFile missing version: \"$version\" or id: \"$id\"" || return $?
+  [ -n "$version" ] && [ -n "$id" ] || __throwEnvironment "$handler" "$versionFile missing version: \"$version\" or id: \"$id\"" || return $?
   printf "%s %s (%s)\n" "$(decorate bold-blue "$name")" "$(decorate code "$version")" "$(decorate orange "$id")"
 }
 
@@ -157,7 +157,7 @@ __installCheck() {
 # INTERNAL:
 # INTERNAL: Calling signature for `version-function`:
 # INTERNAL:
-# INTERNAL:    Usage: version-function handler applicationHome installPath
+# INTERNAL:    handler: version-function handler applicationHome installPath
 # INTERNAL:    Argument: handler - Function. Required. Function to call when an error occurs.
 # INTERNAL:    Argument: applicationHome - Directory. Required. Path to the application home where target will be installed, or is installed. (e.g. myApp/)
 # INTERNAL:    Argument: installPath - Directory. Required. Path to the installPath home where target will be installed, or is installed. (e.g. myApp/bin/build)
@@ -166,14 +166,14 @@ __installCheck() {
 # INTERNAL:
 # INTERNAL: Calling signature for `url-function`:
 # INTERNAL:
-# INTERNAL:    Usage: url-function handler
+# INTERNAL:    handler: url-function handler
 # INTERNAL:    Argument: handler - Function. Required. Function to call when an error occurs.
 # INTERNAL:
 # INTERNAL: `url-function` should output a URL and exit 0. Any other return code terminates installation.
 # INTERNAL:
 # INTERNAL: Calling signature for `check-function`:
 # INTERNAL:
-# INTERNAL:    Usage: check-function handler installPath
+# INTERNAL:    handler: check-function handler installPath
 # INTERNAL:    Argument: handler - Function. Required. Function to call when an error occurs.
 # INTERNAL:    Argument: installPath - Directory. Required. Path to the installPath home where target will be installed, or is installed. (e.g. myApp/bin/build)
 # INTERNAL:
@@ -443,7 +443,7 @@ _installRemotePackage() {
 }
 
 # Error handler for _installRemotePackage
-# Usage: {fn} exitCode [ message ... ]
+# handler: {fn} exitCode [ message ... ]
 # Requires: usageDocumentSimple
 __installRemotePackage() {
   local source content
@@ -527,7 +527,7 @@ __installRemotePackageGitCheck() {
   fi
 }
 
-# Usage: {fn} _installRemotePackageSource targetBinary relativePath
+# handler: {fn} _installRemotePackageSource targetBinary relativePath
 # Requires: grep printf chmod wait
 # Requires: _environment isUnsignedInteger cat returnClean
 __installRemotePackageLocal() {
@@ -597,7 +597,7 @@ _versionSort() {
 # IDENTICAL usageArgumentCore 13
 
 # Require an argument to be non-blank
-# Argument: handler - Required. Function. Usage function to call upon failure.
+# Argument: handler - Required. Function. handler function to call upon failure.
 # Argument: argument - Required. String. Name of the argument used in error messages.
 # Argument: value - Optional. String, Value which should be non-blank otherwise an argument error is thrown.
 # Exit Code: 2 - If `value` is blank
@@ -1015,7 +1015,7 @@ _isFunction() {
 
 # Sets the environment variable `BUILD_COLORS` if not set, uses `TERM` to calculate
 #
-# Usage: hasColors
+# handler: hasColors
 # DOC TEMPLATE: --help 1
 # Argument: --help - Optional. Flag. Display this help.
 # Exit Code: 0 - Console or output supports colors
@@ -1052,7 +1052,7 @@ _hasColors() {
 #
 # Semantics-based
 #
-# Usage: {fn} label lightStartCode darkStartCode endCode [ -n ] [ message ]
+# handler: {fn} label lightStartCode darkStartCode endCode [ -n ] [ message ]
 # Requires: hasColors printf
 __decorate() {
   local prefix="$1" start="$2" dp="$3" end="$4" && shift 4
@@ -1086,7 +1086,7 @@ _decorations() {
 }
 
 # Singular decoration function
-# Usage: decorate style [ text ... ]
+# handler: decorate style [ text ... ]
 # Argument: style - String. Required. One of: reset underline no-underline bold no-bold black black-contrast blue cyan green magenta orange red white yellow bold-black bold-black-contrast bold-blue bold-cyan bold-green bold-magenta bold-orange bold-red bold-white bold-yellow code info notice success warning error subtle label value decoration
 # Argument: text - Text to output. If not supplied, outputs a code to change the style to the new style.
 # stdout: Decorated text
@@ -1188,7 +1188,7 @@ decoration=45;97 45;30
 }
 
 # fn: decorate each
-# Usage: decorate each decoration argument1 argument2 ...
+# handler: decorate each decoration argument1 argument2 ...
 # Runs the following command on each subsequent argument for formatting
 # Also supports formatting input lines instead (on the same line)
 # Example:     decorate each code "$@"
@@ -1352,7 +1352,7 @@ _return() {
 # Credits: F. Hauri - Give Up GitHub (isnum_Case)
 # Original: is_uint
 # Argument: value - EmptyString. Value to test if it is an unsigned integer.
-# Usage: {fn} argument ...
+# handler: {fn} argument ...
 # Exit Code: 0 - if it is an unsigned integer
 # Exit Code: 1 - if it is not an unsigned integer
 # Requires: _return
@@ -1363,7 +1363,7 @@ isUnsignedInteger() {
 
 # <-- END of IDENTICAL _return
 
-# IDENTICAL _tinySugar 107
+# IDENTICAL _tinySugar 109
 
 # Run `handler` with an argument error
 # Argument: handler - Function. Required. Error handler.
@@ -1380,7 +1380,7 @@ __throwEnvironment() {
 }
 
 # Run `command`, upon failure run `handler` with an argument error
-# Usage: {fn} handler command ...
+# handler: {fn} handler command ...
 # Argument: handler - Required. String. Failure command
 # Argument: command - Required. Command to run.
 # Requires: __throwArgument
@@ -1390,7 +1390,7 @@ __catchArgument() {
 }
 
 # Run `command`, upon failure run `handler` with an environment error
-# Usage: {fn} handler command ...
+# handler: {fn} handler command ...
 # Argument: handler - Required. String. Failure command
 # Argument: command - Required. Command to run.
 # Requires: __throwEnvironment
@@ -1399,7 +1399,7 @@ __catchEnvironment() {
   shift && "$@" || __throwEnvironment "$handler" "$@" || return $?
 }
 
-# _IDENTICAL_ _errors 34
+# _IDENTICAL_ _errors 36
 
 # Return `argument` error code. Outputs `message ...` to `stderr`.
 # Argument: message ... - String. Optional. Message to output.
@@ -1421,6 +1421,7 @@ _environment() {
 # Argument: exitCode - Integer. Required. Return code.
 # Argument: handler - Function. Required. Error handler.
 # Argument: message ... - String. Optional. Error message
+# Requires: _argument
 __throw() {
   local exitCode="${1-}" && shift || _argument "Missing exit code" || return $?
   lcoal handler="${1-}" && shift || _argument "Missing error handler" || return $?
@@ -1430,6 +1431,7 @@ __throw() {
 # Run binary and catch errors with handler
 # Argument: handler - Required. Function. Error handler.
 # Argument: binary ... - Required. Executable. Any arguments are passed to `binary`.
+# Requires: _argument
 __catch() {
   local handler="${1-}" && shift || _argument "Missing handler" || return $?
   "$@" || "$handler" "$?" "$@" || return $?
@@ -1438,7 +1440,7 @@ __catch() {
 # _IDENTICAL_ __environment 10
 
 # Run `command ...` (with any arguments) and then `_environment` if it fails.
-# Usage: {fn} command ...
+# handler: {fn} command ...
 # Argument: command ... - Any command and arguments to run.
 # Exit Code: 0 - Success
 # Exit Code: 1 - Failed
@@ -1469,6 +1471,8 @@ _returnClean() {
   # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
+
+# <-- END of IDENTICAL _tinySugar
 
 # <-- END of IDENTICAL _tinySugar
 

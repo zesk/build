@@ -52,10 +52,10 @@ testIsMappable() {
 }
 
 testMapTokens() {
-  local usage="_return" home
+  local handler="_return" home
 
   local COLUMNS LINES
-  home=$(__catch "$usage" buildHome) || return $?
+  home=$(__catch "$handler" buildHome) || return $?
 
   echo | assertExitCode 0 mapTokens || return $?
   assertEquals "" "$(echo | mapTokens)" || return $?

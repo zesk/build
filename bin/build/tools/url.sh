@@ -26,26 +26,21 @@
 # Argument: --handler handler - Optional. Function. Use this error handler instead of the default error handler.
 # Argument: scheme - Required. String. Scheme to look up the default port used for that scheme.
 urlSchemeDefaultPort() {
-  local usage="_${FUNCNAME[0]}"
+  local handler="_${FUNCNAME[0]}"
 
   local port=""
 
-  # _IDENTICAL_ argument-case-header 5
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
+    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
-    # _IDENTICAL_ --help 4
-    --help)
-      "$usage" 0
-      return $?
-      ;;
-    # _IDENTICAL_ --handler 4
-    --handler)
-      shift
-      usage=$(usageArgumentFunction "$usage" "$argument" "${1-}") || return $?
-      ;;
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
+    # _IDENTICAL_ handlerHandler 1
+    --handler) shift && handler=$(usageArgumentFunction "$handler" "$argument" "${1-}") || return $? ;;
     ftp) port=21 ;;
     ssh) port=22 ;;
     http) port=80 ;;
@@ -55,7 +50,7 @@ urlSchemeDefaultPort() {
     mysql*) port=3306 ;;
     postgres*) port=5432 ;;
     *)
-      __throwArgument "$usage" "unknown scheme #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
+      __throwArgument "$handler" "unknown scheme #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
       ;;
     esac
     [ -z "$port" ] || printf "%d\n" "$port"
@@ -94,19 +89,19 @@ _urlSchemeDefaultPort() {
 # Example:     eval "$(urlParse scheme://user:password@host:port/path)"
 # Example:     echo $name
 urlParse() {
-  local usage="_${FUNCNAME[0]}" upperCase=false prefix="" intPort=false
+  local handler="_${FUNCNAME[0]}" upperCase=false prefix="" intPort=false
 
-  # _IDENTICAL_ argument-case-header 5
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
+    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
-    # _IDENTICAL_ --help 4
-    --help)
-      "$usage" 0
-      return $?
-      ;;
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
+    # _IDENTICAL_ handlerHandler 1
+    --handler) shift && handler=$(usageArgumentFunction "$handler" "$argument" "${1-}") || return $? ;;
     --integer-port)
       intPort=true
       ;;
@@ -115,7 +110,7 @@ urlParse() {
       ;;
     --prefix)
       shift
-      prefix=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
+      prefix=$(usageArgumentString "$handler" "$argument" "${1-}") || return $?
       ;;
     *)
       local u="${1-}"
@@ -158,7 +153,7 @@ urlParse() {
           host="${host%:*}"
         fi
         error=""
-        portDefault="$(urlSchemeDefaultPort --handler "$usage" "$scheme" 2>/dev/null || :)"
+        portDefault="$(urlSchemeDefaultPort --handler "$handler" "$scheme" 2>/dev/null || :)"
         ! $intPort || isPositiveInteger "$port" || port="$portDefault" || return $?
       else
         error="no-scheme"
@@ -170,7 +165,7 @@ urlParse() {
         ! $upperCase || variable=$(uppercase "$part")
         printf "%s%s=%s\n" "$prefix" "$variable" "$(quoteBashString "${!part}")"
       done
-      : "$path" # usage warning
+      : "$path" # handler warning
       # Exit code 1 if failed
       [ -z "$error" ] || return 1
       ;;
@@ -192,31 +187,31 @@ _urlParse() {
 # Example:     decorate info "Connecting as $(urlParseItem user "$url")"
 #
 urlParseItem() {
-  local usage="_${FUNCNAME[0]}"
+  local handler="_${FUNCNAME[0]}"
 
   local component="" url=""
 
-  # _IDENTICAL_ argument-case-header 5
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
+    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
-    # _IDENTICAL_ --help 4
-    --help)
-      "$usage" 0
-      return $?
-      ;;
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
+    # _IDENTICAL_ handlerHandler 1
+    --handler) shift && handler=$(usageArgumentFunction "$handler" "$argument" "${1-}") || return $? ;;
     *)
       if [ -z "$component" ]; then
-        component=$(usageArgumentString "$usage" "component" "$1") || return $?
+        component=$(usageArgumentString "$handler" "component" "$1") || return $?
       else
         url="$1"
         # subshell hides variable scope
         (
           local url path name scheme user password host port error=""
-          eval "$(urlParse "$url")" || __throwArgument "$usage" "Unable to parse $url" || return $?
-          [ -z "$error" ] || __throwArgument "$usage" "Unable to parse $(decorate code "$url"): $(decorate error "$error")" || return $?
+          eval "$(urlParse "$url")" || __throwArgument "$handler" "Unable to parse $url" || return $?
+          [ -z "$error" ] || __throwArgument "$handler" "Unable to parse $(decorate code "$url"): $(decorate error "$error")" || return $?
           printf "%s\n" "${!component-}"
         ) || return $?
       fi
@@ -224,7 +219,7 @@ urlParseItem() {
     esac
     shift
   done
-  [ -n "$url" ] || __throwArgument "$usage" "Need at least one URL" || return $?
+  [ -n "$url" ] || __throwArgument "$handler" "Need at least one URL" || return $?
 }
 _urlParseItem() {
   # __IDENTICAL__ usageDocument 1
@@ -239,19 +234,19 @@ _urlParseItem() {
 # Exit Code: 0 - all URLs passed in are valid
 # Exit Code: 1 - at least one URL passed in is not a valid URL
 urlValid() {
-  local usage="_${FUNCNAME[0]}"
-  [ $# -gt 0 ] || __throwArgument "$usage" "No arguments" || return $?
-  # _IDENTICAL_ argument-case-header 5
+  local handler="_${FUNCNAME[0]}"
+  [ $# -gt 0 ] || __throwArgument "$handler" "No arguments" || return $?
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
+    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
-    # _IDENTICAL_ --help 4
-    --help)
-      "$usage" 0
-      return $?
-      ;;
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
+    # _IDENTICAL_ handlerHandler 1
+    --handler) shift && handler=$(usageArgumentFunction "$handler" "$argument" "${1-}") || return $? ;;
     *)
       urlParse "$1" >/dev/null || return 1
       ;;
@@ -270,28 +265,28 @@ _urlValid() {
 # stdin: text
 # stdout: text
 urlOpener() {
-  local usage="_${FUNCNAME[0]}"
+  local handler="_${FUNCNAME[0]}"
 
   local binary=""
 
-  # _IDENTICAL_ argument-case-header 5
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
+    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
-    # _IDENTICAL_ --help 4
-    --help)
-      "$usage" 0
-      return $?
-      ;;
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
+    # _IDENTICAL_ handlerHandler 1
+    --handler) shift && handler=$(usageArgumentFunction "$handler" "$argument" "${1-}") || return $? ;;
     --exec)
       shift
-      binary=$(usageArgumentExecutable "$usage" "$argument" "${1-}") || return $?
+      binary=$(usageArgumentExecutable "$handler" "$argument" "${1-}") || return $?
       ;;
     *)
-      # _IDENTICAL_ argumentUnknown 1
-      __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
+      # _IDENTICAL_ argumentUnknownHandler 1
+      __throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
       ;;
     esac
     shift
@@ -356,21 +351,21 @@ _urlExtract() {
 # Takes a text file and outputs any `https://` or `http://` URLs found within.
 # URLs are explicitly trimmed at quote, whitespace and escape boundaries.
 urlFilter() {
-  local usage="_${FUNCNAME[0]}"
+  local handler="_${FUNCNAME[0]}"
 
   local files=() file="" aa=() showFile=false debugFlag=false
 
-  # _IDENTICAL_ argument-case-header 5
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
+    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
-    # _IDENTICAL_ --help 4
-    --help)
-      "$usage" 0
-      return $?
-      ;;
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
+    # _IDENTICAL_ handlerHandler 1
+    --handler) shift && handler=$(usageArgumentFunction "$handler" "$argument" "${1-}") || return $? ;;
     --show-file)
       aa=("$argument")
       showFile=true
@@ -380,10 +375,10 @@ urlFilter() {
       ;;
     --file)
       shift
-      file="$(usageArgumentString "$usage" "$argument" "${1-}")" || return $?
+      file="$(usageArgumentString "$handler" "$argument" "${1-}")" || return $?
       ;;
     *)
-      files+=("$(usageArgumentFile "$usage" "file" "$1")") || return $?
+      files+=("$(usageArgumentFile "$handler" "file" "$1")") || return $?
       ;;
     esac
     shift
@@ -420,21 +415,21 @@ _urlFilter() {
 # stdin: line:URL
 # stdout: none
 urlOpen() {
-  local usage="_${FUNCNAME[0]}"
+  local handler="_${FUNCNAME[0]}"
 
   local urls=() waitFlag=false ignoreFlag=false
 
-  # _IDENTICAL_ argument-case-header 5
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
+    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
-    # _IDENTICAL_ --help 4
-    --help)
-      "$usage" 0
-      return $?
-      ;;
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
+    # _IDENTICAL_ handlerHandler 1
+    --handler) shift && handler=$(usageArgumentFunction "$handler" "$argument" "${1-}") || return $? ;;
     --ignore)
       ignoreFlag=true
       ;;
@@ -442,7 +437,7 @@ urlOpen() {
       waitFlag=true
       ;;
     *)
-      urls+=("$(usageArgumentString "$usage" "url" "$1")") || return $?
+      urls+=("$(usageArgumentString "$handler" "url" "$1")") || return $?
       ;;
     esac
     shift
@@ -453,7 +448,7 @@ urlOpen() {
     # stdin mode
     while IFS=' ' read -d$'\n' -r url; do
       exitCode=0
-      __urlOpenInnerLoop "$usage" "$url" "$ignoreFlag" "$waitFlag" || exitCode=$?
+      __urlOpenInnerLoop "$handler" "$url" "$ignoreFlag" "$waitFlag" || exitCode=$?
       if [ "$exitCode" != 0 ]; then
         if [ "$exitCode" != 120 ]; then
           return $exitCode
@@ -468,7 +463,7 @@ urlOpen() {
     while [ $# -gt 0 ]; do
       url="$1"
       exitCode=0
-      __urlOpenInnerLoop "$usage" "$url" "$ignoreFlag" "$waitFlag" || exitCode=$?
+      __urlOpenInnerLoop "$handler" "$url" "$ignoreFlag" "$waitFlag" || exitCode=$?
       if [ "$exitCode" != 0 ]; then
         if [ "$exitCode" != 120 ]; then
           return $exitCode
@@ -478,7 +473,7 @@ urlOpen() {
       shift
     done
   fi
-  $waitFlag || [ "${#urls[@]}" -eq 0 ] || __catch "$usage" __urlOpen "${urls[@]}" || return $?
+  $waitFlag || [ "${#urls[@]}" -eq 0 ] || __catch "$handler" __urlOpen "${urls[@]}" || return $?
   return 0
 }
 _urlOpen() {
@@ -487,15 +482,15 @@ _urlOpen() {
 }
 
 __urlOpenInnerLoop() {
-  local usage="$1" url="$2" ignoreFlag="$3" waitFlag="$4"
+  local handler="$1" url="$2" ignoreFlag="$3" waitFlag="$4"
   if ! urlValid "$url"; then
     if ! $ignoreFlag; then
-      __throwEnvironment "$usage" "Invalid URL: $(decorate error "$url")" || return $?
+      __throwEnvironment "$handler" "Invalid URL: $(decorate error "$url")" || return $?
     fi
     return 0
   fi
   if $waitFlag; then
-    __catch "$usage" __urlOpen "$url" || return $?
+    __catch "$handler" __urlOpen "$url" || return $?
   else
     return 120
   fi
@@ -629,22 +624,22 @@ _urlFetch() {
 }
 
 __urlOpen() {
-  local usage="${FUNCNAME[0]#_}" binary
+  local handler="${FUNCNAME[0]#_}" binary
 
-  binary=$(__catch "$usage" buildEnvironmentGet BUILD_URL_BINARY) || return $?
+  binary=$(__catch "$handler" buildEnvironmentGet BUILD_URL_BINARY) || return $?
   if [ -z "$binary" ]; then
     while IFS='' read -d$'\n' -r binary; do
       if whichExists "$binary"; then
         break
       fi
-    done < <(__catch "$usage" __urlBinary) || return $?
+    done < <(__catch "$handler" __urlBinary) || return $?
     if [ -z "$binary" ]; then
       printf "%s %s\n" "OPEN: " "$(consoleLink "$url")"
       return 0
     fi
   else
-    binary=$(usageArgumentExecutable "$usage" "BUILD_URL_BINARY" "$binary") || return $?
+    binary=$(usageArgumentExecutable "$handler" "BUILD_URL_BINARY" "$binary") || return $?
   fi
-  [ $# -gt 0 ] || __catchArgument "$usage" "Require at least one URL" || return $?
+  [ $# -gt 0 ] || __catchArgument "$handler" "Require at least one URL" || return $?
   __environment "$binary" "$@" || return $?
 }

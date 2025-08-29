@@ -7,27 +7,25 @@
 # Argument: newFormat - Optional. String. The new style formatting options as a string:
 #   `lp dp label` where
 decorateStyle() {
-  local usage="_${FUNCNAME[0]}"
+  local handler="_${FUNCNAME[0]}"
   local style="" newFormat="" oldFormat
 
   _decorateInitialize || return $?
-  # _IDENTICAL_ argument-case-header 5
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
+    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
-    # _IDENTICAL_ --help 4
-    --help)
-      "$usage" 0
-      return $?
-      ;;
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
     *)
       if [ -z "$style" ]; then
-        style=$(usageArgumentString "$usage" "style" "$1") || return $?
+        style=$(usageArgumentString "$handler" "style" "$1") || return $?
       else
         export __BUILD_COLORS
-        newFormat=$(usageArgumentString "$usage" "newFormat" "$1") || return $?
+        newFormat=$(usageArgumentString "$handler" "newFormat" "$1") || return $?
         if oldFormat=$(__decorateStyle "$style"); then
           __BUILD_COLORS="$(_decorateStyleReplace "$__BUILD_COLORS" "$style" "$newFormat")"
         else
@@ -104,28 +102,28 @@ __decorateExtensionPair() {
 # Example:     cat "$errors" | decorate wrap "    ERROR: [" "]"
 #
 __decorateExtensionWrap() {
-  local usage="_${FUNCNAME[0]}"
-  local argument fill prefix=$'\1' suffix width
+  local handler="_${FUNCNAME[0]}"
+  local prefix=$'\1' suffix
 
-  fill=
-  width=
+  local fill=""  width=""
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
+  local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
-    argument="$1"
+    local argument="$1" __index=$((__count - $# + 1))
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
+    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
-    # _IDENTICAL_ --help 4
-    --help)
-      "$usage" 0
-      return $?
-      ;;
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
     --fill)
-      shift || __throwArgument "$usage" "missing $argument argument" || return $?
-      [ 1 -eq "${#1}" ] || __throwArgument "$usage" "Fill character must be single character" || return $?
+      shift || __throwArgument "$handler" "missing $argument argument" || return $?
+      [ 1 -eq "${#1}" ] || __throwArgument "$handler" "Fill character must be single character" || return $?
       fill="$1"
       width="${width:-needed}"
       ;;
     --width)
-      shift || __throwArgument "$usage" "missing $argument argument" || return $?
-      isUnsignedInteger "$1" && [ "$1" -gt 0 ] || __throwArgument "$usage" "$argument requires positive integer" || return $?
+      shift || __throwArgument "$handler" "missing $argument argument" || return $?
+      isUnsignedInteger "$1" && [ "$1" -gt 0 ] || __throwArgument "$handler" "$argument requires positive integer" || return $?
       width="$1"
       ;;
     *)
@@ -141,11 +139,11 @@ __decorateExtensionWrap() {
   done
 
   if [ "$prefix" = $'\1' ]; then
-    __catchEnvironment "$usage" cat || return $?
+    __catchEnvironment "$handler" cat || return $?
     return 0
   fi
   if ! isUnsignedInteger "$width"; then
-    width=$(consoleColumns) || __throwEnvironment "$usage" "consoleColumns" || return $?
+    width=$(consoleColumns) || __throwEnvironment "$handler" "consoleColumns" || return $?
   fi
 
   local actualWidth
@@ -154,7 +152,7 @@ __decorateExtensionWrap() {
     strippedText="$(printf "%s" "$prefix$suffix" | stripAnsi)"
     actualWidth=$((width - ${#strippedText}))
     if [ "$actualWidth" -lt 0 ]; then
-      __throwArgument "$usage" "$width is too small to support prefix and suffix characters (${#prefix} + ${#suffix}):"$'\n'"prefix=$prefix"$'\n'"suffix=$suffix" || return $?
+      __throwArgument "$handler" "$width is too small to support prefix and suffix characters (${#prefix} + ${#suffix}):"$'\n'"prefix=$prefix"$'\n'"suffix=$suffix" || return $?
     fi
     if [ "$actualWidth" -eq 0 ]; then
       # If we are doing nothing then do not do nothing

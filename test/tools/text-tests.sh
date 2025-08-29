@@ -231,10 +231,10 @@ __testIsCharacterClass() {
 }
 
 testValidateCharacterClass() {
-  local temp home usage="_return"
+  local temp home handler="_return"
 
-  home=$(__catch "$usage" buildHome) || return $?
-  temp=$(fileTemporaryName "$usage") || return $?
+  home=$(__catch "$handler" buildHome) || return $?
+  temp=$(fileTemporaryName "$handler") || return $?
   __testIsCharacterClass | tee "$temp" || return $?
   if ! diff -q "$temp" "$home/test/example/isCharacterClass.txt"; then
     decorate error "Classifications changed:"
@@ -298,9 +298,9 @@ EOF
 }
 
 testQuoteGrepPattern() {
-  local usage="_return"
+  local handler="_return"
 
-  temp=$(fileTemporaryName "$usage") || return $?
+  temp=$(fileTemporaryName "$handler") || return $?
 
   local value mappedValue
   while IFS='^' read -r text expected; do
@@ -309,5 +309,5 @@ testQuoteGrepPattern() {
     assertExitCode 0 grep -q -e "$(quoteGrepPattern "$text")" <"$temp" || return $?
   done < <(__dataQuoteGrepPattern)
 
-  __catchEnvironment "$usage" rm -rf "$temp" || return $?
+  __catchEnvironment "$handler" rm -rf "$temp" || return $?
 }

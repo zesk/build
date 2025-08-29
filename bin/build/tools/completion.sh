@@ -12,34 +12,32 @@
 # This has the side effect of turning on the shell option `expand_aliases`
 # Shell Option: +expand_aliases
 buildCompletion() {
-  local usage="_${FUNCNAME[0]}"
+  local handler="_${FUNCNAME[0]}"
   local aliasName="build" reloadAliasName="" quietFlag=false
 
-  # _IDENTICAL_ argument-case-header 5
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
+    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
-    # _IDENTICAL_ --help 4
-    --help)
-      "$usage" 0
-      return $?
-      ;;
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
     --quiet)
       quietFlag=true
       ;;
     --alias)
       shift
-      aliasName=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
+      aliasName=$(usageArgumentString "$handler" "$argument" "${1-}") || return $?
       ;;
     --reload-alias)
       shift
-      reloadAliasName=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
+      reloadAliasName=$(usageArgumentString "$handler" "$argument" "${1-}") || return $?
       ;;
     *)
-      # _IDENTICAL_ argumentUnknown 1
-      __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
+      # _IDENTICAL_ argumentUnknownHandler 1
+      __throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
       ;;
     esac
     shift
@@ -49,7 +47,7 @@ buildCompletion() {
 
   local home name homeText
 
-  home=$(__catch "$usage" buildHome) || return $?
+  home=$(__catch "$handler" buildHome) || return $?
   name="$(decorate info "$(buildEnvironmentGet APPLICATION_NAME)")"
   homeText="$(decorate code "$home")"
 
@@ -73,7 +71,7 @@ _buildCompletion() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# compgen: usage: compgen [-abcdefgjksuv] [-o option] [-A action] [-G globpat] [-W wordlist] [-P prefix] [-S suffix] [-X filterpat] [-F function] [-C command] [word]
+# compgen [-abcdefgjksuv] [-o option] [-A action] [-G globpat] [-W wordlist] [-P prefix] [-S suffix] [-X filterpat] [-F function] [-C command] [word]
 #
 # -a means names of aliases (-A alias)
 # -b means names of shell builtins (-A builtin)
@@ -113,11 +111,11 @@ __buildCompletionFunction() {
 }
 
 __buildCompletionArguments() {
-  local usage="_return"
+  local handler="_return"
 
   export COMP_WORDS COMP_CWORD COMPREPLY
 
-  [ "$COMP_CWORD" -ge 2 ] || __throwArgument "$usage" "ONLY call for arguments once function selected" || return $?
+  [ "$COMP_CWORD" -ge 2 ] || __throwArgument "$handler" "ONLY call for arguments once function selected" || return $?
 
   local command="${COMP_WORDS[1]}"
   local word="${COMP_WORDS[COMP_CWORD]-}"
@@ -128,7 +126,7 @@ __buildCompletionArguments() {
   fi
 
   if [ -n "$command" ]; then
-    id=$(__buildCompletionFunctionID "$usage" "$command") || return $?
+    id=$(__buildCompletionFunctionID "$handler" "$command") || return $?
     if [ -n "$id" ]; then
       _commentArgumentSpecificationComplete "$id" "$previous" "$word"
     else
@@ -140,7 +138,7 @@ __buildCompletionArguments() {
 }
 
 __buildCompletionFunctionID() {
-  local cache usage="$1" command="$2"
+  local cache handler="$1" command="$2"
 
   cache="$(buildCacheDirectory "COMPLETION")"
   if [ -f "$cache/$command" ]; then
@@ -148,11 +146,11 @@ __buildCompletionFunctionID() {
   else
     local home source
 
-    home=$(__catch "$usage" buildHome) || return $?
+    home=$(__catch "$handler" buildHome) || return $?
     echo HERE
-    source=$(__catch "$usage" bashDocumentation_FindFunctionDefinitions "$home" "$command" | grepSafe -v "/identical" | head -n 1) || return $?
+    source=$(__catch "$handler" bashDocumentation_FindFunctionDefinitions "$home" "$command" | grepSafe -v "/identical" | head -n 1) || return $?
     if [ -n "$source" ]; then
-      id=$(__catch "$usage" _commentArgumentSpecification "$source" "$command") || return $?
+      id=$(__catch "$handler" _commentArgumentSpecification "$source" "$command") || return $?
       if [ -n "$id" ]; then
         printf "%s\n" "$id" | tee "$cache/$command"
       fi

@@ -24,9 +24,9 @@ _bashBuiltins() {
 # Exit Code: 0 - Yes, this string is a bash builtin command.
 # Exit Code: 1 - No, this is not a bash builtin command
 isBashBuiltin() {
-  local usage="_${FUNCNAME[0]}"
-  [ $# -gt 0 ] || __throwArgument "$usage" "Need builtin" || return $?
-  [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
+  local handler="_${FUNCNAME[0]}"
+  [ $# -gt 0 ] || __throwArgument "$handler" "Need builtin" || return $?
+  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
   case "${1-}" in
   ":" | "." | "[" | "alias" | "bg" | "bind" | "break" | "builtin" | "case" | "cd" | "command" | "compgen" | "complete" | "continue" | "declare" | "dirs" | "disown" | "echo" | "enable" | "eval" | "exec" | "exit" | "export" | "fc" | "fg" | "getopts")
     return 0
@@ -54,13 +54,13 @@ _isBashBuiltin() {
 # stdout: Parent path where `libraryRelativePath` exists
 # Example:     libFound=$(bashLibraryHome "bin/watcher/server.py")
 bashLibraryHome() {
-  local usage="_${FUNCNAME[0]}"
+  local handler="_${FUNCNAME[0]}"
   local home run startDirectory="${2-}"
-  [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
-  run=$(usageArgumentString "$usage" "libraryRelativePath" "${1-}") || return $?
-  [ -n "$startDirectory" ] || startDirectory=$(__catchEnvironment "$usage" pwd) || return $?
-  startDirectory=$(usageArgumentDirectory "$usage" "startDirectory" "$startDirectory") || return $?
-  home=$(__catch "$usage" directoryParent --pattern "$run" --test -f --test -x "$startDirectory") || return $?
+  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
+  run=$(usageArgumentString "$handler" "libraryRelativePath" "${1-}") || return $?
+  [ -n "$startDirectory" ] || startDirectory=$(__catchEnvironment "$handler" pwd) || return $?
+  startDirectory=$(usageArgumentDirectory "$handler" "startDirectory" "$startDirectory") || return $?
+  home=$(__catch "$handler" directoryParent --pattern "$run" --test -f --test -x "$startDirectory") || return $?
   printf "%s\n" "$home"
 }
 _bashLibraryHome() {
@@ -71,21 +71,19 @@ _bashLibraryHome() {
 # Run or source a library
 # Usage: {fn} libraryRelativePath [ command ... ]
 bashLibrary() {
-  local usage="_${FUNCNAME[0]}"
+  local handler="_${FUNCNAME[0]}"
 
   local home run="" verboseFlag=false
 
-  # _IDENTICAL_ argument-case-header 5
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
+    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
-    # _IDENTICAL_ --help 4
-    --help)
-      "$usage" 0
-      return $?
-      ;;
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
     --verbose)
       verboseFlag=true
       ;;
@@ -98,12 +96,12 @@ bashLibrary() {
     shift
   done
 
-  [ -n "$run" ] || __throwArgument "$usage" "Missing libraryRelativePath" || return $?
+  [ -n "$run" ] || __throwArgument "$handler" "Missing libraryRelativePath" || return $?
   home=$(bashLibraryHome "$run") || return $?
   if [ $# -eq 0 ]; then
     export HOME
     # shellcheck source=/dev/null
-    source "$home/$run" || __throwEnvironment "$usage" "source ${run//${HOME-}/~} failed" || return $?
+    source "$home/$run" || __throwEnvironment "$handler" "source ${run//${HOME-}/~} failed" || return $?
     ! $verboseFlag || decorate info "Reloaded $(decorate code "$run") @ $(decorate info "${home//${HOME-}/~}")"
   else
     ! $verboseFlag || decorate info "Running $(decorate file "$home/$run")" "$(decorate each code "$@")"
@@ -122,43 +120,41 @@ _bashLibrary() {
 # Load a directory of `.sh` files using `source` to make the code available.
 # Has security implications. Use with caution and ensure your directory is protected.
 bashSourcePath() {
-  local usage="_${FUNCNAME[0]}"
+  local handler="_${FUNCNAME[0]}"
 
   local ff=() foundOne=false
 
-  # _IDENTICAL_ argument-case-header 5
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
+    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
-    # _IDENTICAL_ --help 4
-    --help)
-      "$usage" 0
-      return $?
-      ;;
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
     --exclude)
       shift
-      ff+=("!" "-path" "$(usageArgumentString "$usage" "$argument" "${1-}")") || return $?
+      ff+=("!" "-path" "$(usageArgumentString "$handler" "$argument" "${1-}")") || return $?
       ;;
     *)
       local path tool
 
       foundOne=true
-      path=$(usageArgumentDirectory "$usage" "directory" "$argument") || return $?
+      path=$(usageArgumentDirectory "$handler" "directory" "$argument") || return $?
       # shellcheck disable=SC2015
       while read -r tool; do
         local tool="${tool#./}"
-        [ -f "$path/$tool" ] || __throwEnvironment "$usage" "$path/$tool is not a bash source file" || return $?
-        [ -x "$path/$tool" ] || __throwEnvironment "$usage" "$path/$tool is not executable" || return $?
+        [ -f "$path/$tool" ] || __throwEnvironment "$handler" "$path/$tool is not a bash source file" || return $?
+        [ -x "$path/$tool" ] || __throwEnvironment "$handler" "$path/$tool is not executable" || return $?
         # shellcheck source=/dev/null
-        source "$path/$tool" || __throwEnvironment "$usage" "source $path/$tool" || return $?
+        source "$path/$tool" || __throwEnvironment "$handler" "source $path/$tool" || return $?
       done < <(cd "$path" && find "." -type f -name '*.sh' ! -path "*/.*/*" "${ff[@]+"${ff[@]}"}" | sort || :)
       ;;
     esac
     shift
   done
-  $foundOne || __throwArgument "$usage" "Requires a directory" || return $?
+  $foundOne || __throwArgument "$handler" "Requires a directory" || return $?
 }
 _bashSourcePath() {
   # __IDENTICAL__ usageDocument 1
@@ -167,33 +163,31 @@ _bashSourcePath() {
 
 # Usage: {fn} functionName file1 ...
 bashFunctionDefined() {
-  local usage="_${FUNCNAME[0]}"
+  local handler="_${FUNCNAME[0]}"
 
   local files=() function=""
 
-  # _IDENTICAL_ argument-case-header 5
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
+    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
-    # _IDENTICAL_ --help 4
-    --help)
-      "$usage" 0
-      return $?
-      ;;
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
     *)
       if [ -z "$function" ]; then
-        function="$(usageArgumentString "$usage" "functionName" "${1-}")" || return $?
+        function="$(usageArgumentString "$handler" "functionName" "${1-}")" || return $?
       else
-        files+=("$(usageArgumentFile "$usage" "file" "${1-}")") || return $?
+        files+=("$(usageArgumentFile "$handler" "file" "${1-}")") || return $?
       fi
       ;;
     esac
     shift
   done
-  [ -n "$function" ] || __throwArgument "$usage" "functionName is required" || retrun $?
-  [ ${#files[@]} -gt 0 ] || __throwArgument "$usage" "Requires at least one file" || retrun $?
+  [ -n "$function" ] || __throwArgument "$handler" "functionName is required" || retrun $?
+  [ ${#files[@]} -gt 0 ] || __throwArgument "$handler" "Requires at least one file" || retrun $?
 
   grep -q -e "^\s*$(quoteGrepPattern "$function")() {" "${files[@]}"
 }
@@ -213,37 +207,35 @@ _bashStripComments() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# Show function usage in files
+# Show function handler in files
 # Argument: functionName - String. Required. Function which should be called somewhere within a file.
-# Argument: file - File. Required. File to search for function usage.
+# Argument: file - File. Required. File to search for function handler.
 # Exit code: 0 - Function is used within the file
 # Exit code: 1 - Function is *not* used within the file
 # This check is simplistic and does not verify actual coverage or code paths.
 # Requires: __throwArgument decorate usageArgumentString usageArgumentFile quoteGrepPattern bashStripComments cat grep
 bashShowUsage() {
-  local usage="_${FUNCNAME[0]}"
+  local handler="_${FUNCNAME[0]}"
 
   local functionName="" files=() checkFlags=()
 
-  # _IDENTICAL_ argument-case-header 5
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
+    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
-    # _IDENTICAL_ --help 4
-    --help)
-      "$usage" 0
-      return $?
-      ;;
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
     --check)
       checkFlags=(-q)
       ;;
     *)
       if [ -z "$functionName" ]; then
-        functionName=$(usageArgumentString "$usage" "functionName" "$1") || return $?
+        functionName=$(usageArgumentString "$handler" "functionName" "$1") || return $?
       else
-        files+=("$(usageArgumentFile "$usage" "file" "$1")") || return $?
+        files+=("$(usageArgumentFile "$handler" "file" "$1")") || return $?
       fi
       ;;
     esac
@@ -266,25 +258,23 @@ _bashShowUsage() {
 # Argument: file - File. Optional. File(s) to list bash functions defined within.
 # Requires: __bashListFunctions __throwArgument decorate usageArgumentFile
 bashListFunctions() {
-  local usage="_${FUNCNAME[0]}"
+  local handler="_${FUNCNAME[0]}"
 
   # stdin
   [ $# -gt 0 ] || __bashListFunctions
 
-  # _IDENTICAL_ argument-case-header 5
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
+    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
-    # _IDENTICAL_ --help 4
-    --help)
-      "$usage" 0
-      return $?
-      ;;
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
     *)
       local file
-      file=$(usageArgumentFile "$usage" "file" "$1") || return $?
+      file=$(usageArgumentFile "$handler" "file" "$1") || return $?
       __bashListFunctions <"$file"
       ;;
     esac
@@ -312,31 +302,29 @@ __bashListFunctions() {
 # Argument: --prefix - flag. Optional. Find variables with the prefix `variableName`
 # Gets a list of the variable values from a bash function comment
 bashFunctionCommentVariable() {
-  local usage="_${FUNCNAME[0]}"
+  local handler="_${FUNCNAME[0]}"
 
   local source="" functionName="" variableName="" prefixFlag=false
 
-  # _IDENTICAL_ argument-case-header 5
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
+    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
-    # _IDENTICAL_ --help 4
-    --help)
-      "$usage" 0
-      return $?
-      ;;
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
     --prefix)
       prefixFlag=true
       ;;
     *)
       if [ -z "$source" ]; then
-        source="$(usageArgumentFile "$usage" "source" "${1-}")" || return $?
+        source="$(usageArgumentFile "$handler" "source" "${1-}")" || return $?
       elif [ -z "$functionName" ]; then
-        functionName=$(usageArgumentString "$usage" "functionName" "${1-}") || return $?
+        functionName=$(usageArgumentString "$handler" "functionName" "${1-}") || return $?
       elif [ -z "$variableName" ]; then
-        variableName=$(usageArgumentString "$usage" "variableName" "${1-}") || return $?
+        variableName=$(usageArgumentString "$handler" "variableName" "${1-}") || return $?
       fi
       ;;
     esac
@@ -399,25 +387,23 @@ _bashFunctionComment() {
 # stdin: a bash file
 # stdout: bash file without line-comments `#`
 bashCommentFilter() {
-  local usage="_${FUNCNAME[0]}"
+  local handler="_${FUNCNAME[0]}"
   local ff=(-v) files=()
 
-  # _IDENTICAL_ argument-case-header 5
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
+    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
-    # _IDENTICAL_ --help 4
-    --help)
-      "$usage" 0
-      return $?
-      ;;
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
     --only)
       ff=()
       ;;
     *)
-      files+=("$(usageArgumentFile "$usage" "file" "$1")") || return $?
+      files+=("$(usageArgumentFile "$handler" "file" "$1")") || return $?
       ;;
     esac
     shift

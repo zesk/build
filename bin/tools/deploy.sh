@@ -15,23 +15,21 @@
 # Argument: --no-release - Flag. Do not push the release to GitHub.
 # Argument: --debug - Flag. Debug TERM info.
 __buildDeploy() {
-  local usage="_${FUNCNAME[0]}"
+  local handler="_${FUNCNAME[0]}"
 
   local debugFlag=false makeDocumentation=false makeRelease=false
 
   export BUILD_COLORS
 
-  # _IDENTICAL_ argument-case-header 5
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
+    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
-    # _IDENTICAL_ --help 4
-    --help)
-      "$usage" 0
-      return $?
-      ;;
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
     --documentation)
       makeDocumentation=true
       ;;
@@ -43,8 +41,8 @@ __buildDeploy() {
       debugFlag=true
       ;;
     *)
-      # _IDENTICAL_ argumentUnknown 1
-      __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
+      # _IDENTICAL_ argumentUnknownHandler 1
+      __throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
       ;;
     esac
     shift
@@ -54,29 +52,29 @@ __buildDeploy() {
   start=$(timingStart)
 
   ! $debugFlag || statusMessage decorate info "Installing AWS ..."
-  __catch "$usage" awsInstall || return $?
+  __catch "$handler" awsInstall || return $?
 
   local target cloudFrontID
   target=$(buildEnvironmentGet "DOCUMENTATION_S3_PREFIX") || return $?
   cloudFrontID=$(buildEnvironmentGet "DOCUMENTATION_CLOUDFRONT_ID") || return $?
 
   local home
-  home=$(__catch "$usage" buildHome) || return $?
+  home=$(__catch "$handler" buildHome) || return $?
 
   local appId notes
 
   statusMessage decorate info "Fetching deep copy of repository ..." || :
-  __catchEnvironment "$usage" git fetch --unshallow || return $?
+  __catchEnvironment "$handler" git fetch --unshallow || return $?
 
   statusMessage decorate info "Collecting application version and ID ..." || :
-  currentVersion="$(hookRun version-current)" || __throwEnvironment "$usage" "hookRun version-current" || return $?
-  appId=$(hookRun application-id) || __throwEnvironment "$usage" "hookRun application-id" || return $?
+  currentVersion="$(hookRun version-current)" || __throwEnvironment "$handler" "hookRun version-current" || return $?
+  appId=$(hookRun application-id) || __throwEnvironment "$handler" "hookRun application-id" || return $?
 
-  [ -n "$currentVersion" ] || __throwEnvironment "$usage" "Blank version-current" || return $?
-  [ -n "$appId" ] || __throwEnvironment "$usage" "No application ID (blank?)" || return $?
+  [ -n "$currentVersion" ] || __throwEnvironment "$handler" "Blank version-current" || return $?
+  [ -n "$appId" ] || __throwEnvironment "$handler" "No application ID (blank?)" || return $?
 
-  notes=$(releaseNotes) || __throwEnvironment "$usage" "releaseNotes" || return $?
-  [ -f "$notes" ] || __throwEnvironment "$usage" "$notes does not exist" || return $?
+  notes=$(releaseNotes) || __throwEnvironment "$handler" "releaseNotes" || return $?
+  [ -f "$notes" ] || __throwEnvironment "$handler" "$notes does not exist" || return $?
 
   bigText "$currentVersion" | decorate magenta | decorate wrap "$(decorate green "Zesk BUILD    🛠️️ ")" "$(decorate green " ⚒️ ")"
   decorate info "Deploying a new release ... " || :
@@ -86,30 +84,30 @@ __buildDeploy() {
     rootShow=$(decorate file "$rootPath")
 
     if [ -n "$target" ]; then
-      __throwEnvironment "$usage" "No DOCUMENTATION_S3_PREFIX but --documentation supplied" || return $?
+      __throwEnvironment "$handler" "No DOCUMENTATION_S3_PREFIX but --documentation supplied" || return $?
     fi
     if [ ! -d "$rootPath" ]; then
-      __throwEnvironment "$usage" "$rootShow does not exist but --documentation supplied" || return $?
+      __throwEnvironment "$handler" "$rootShow does not exist but --documentation supplied" || return $?
     fi
 
     # Validate for later (possibly every time in the future)
-    [ -n "$target" ] || __throwEnvironment "$usage" "DOCUMENTATION_S3_PREFIX is blank" || return $?
-    [ "$target" != "${target#s3://}" ] || __throwEnvironment "$usage" "DOCUMENTATION_S3_PREFIX=$(decorate code "$target") is NOT a S3 URL" || return $?
-    [ -n "$cloudFrontID" ] || __throwEnvironment "$usage" "DOCUMENTATION_CLOUDFRONT_ID is blank" || return $?
+    [ -n "$target" ] || __throwEnvironment "$handler" "DOCUMENTATION_S3_PREFIX is blank" || return $?
+    [ "$target" != "${target#s3://}" ] || __throwEnvironment "$handler" "DOCUMENTATION_S3_PREFIX=$(decorate code "$target") is NOT a S3 URL" || return $?
+    [ -n "$cloudFrontID" ] || __throwEnvironment "$handler" "DOCUMENTATION_CLOUDFRONT_ID is blank" || return $?
 
     ! $debugFlag || statusMessage decorate warning "Publishing documentation to $target ..."
 
     # Ideally do this in a way which is more transactional with the release version
     ! $debugFlag || statusMessage decorate warning "Syncing documentation to $target ..."
-    __catchEnvironment "$usage" aws s3 sync --delete "$rootPath" "$target" || return $?
+    __catchEnvironment "$handler" aws s3 sync --delete "$rootPath" "$target" || return $?
     ! $debugFlag || statusMessage decorate warning "Creating invalidation for $(decorate code "$cloudFrontID") ..."
-    __catchEnvironment "$usage" aws cloudfront create-invalidation --distribution-id "$cloudFrontID" --paths / || return $?
+    __catchEnvironment "$handler" aws cloudfront create-invalidation --distribution-id "$cloudFrontID" --paths / || return $?
   fi
 
   if $makeRelease && ! githubRelease "$notes" "$currentVersion" "$appId"; then
     decorate warning "Deleting tagged version ... " || :
     gitTagDelete "$currentVersion" || decorate error "gitTagDelete $currentVersion ALSO failed but continuing ..." || :
-    __throwEnvironment "$usage" "githubRelease" || return $?
+    __throwEnvironment "$handler" "githubRelease" || return $?
   fi
   timingReport "$start" "Release completed in" || :
 }

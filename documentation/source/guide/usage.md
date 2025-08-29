@@ -1,8 +1,8 @@
-# Usage guide
+# handler guide
 
 [⬅ Return to top](../index.md)
 
-Usage is the output that a command generates when an error occurs or the user (typically) uses the `--help` argument
+handler is the output that a command generates when an error occurs or the user (typically) uses the `--help` argument
 with the command.
 
 e.g.
@@ -10,7 +10,7 @@ e.g.
     > bin/build/identical-check.sh --help
     Need to specify at least one extension
 
-    Usage: identical-check.sh --extension extension --prefix prefix [ --cd directory ] [ --help ]
+    handler: identical-check.sh --extension extension --prefix prefix [ --cd directory ] [ --help ]
 
         --extension extension  Required. One or more extensions to search for in the current directory.
         --prefix prefix        Required. A text prefix to search for to identify identical sections (e.g. `# IDENTICAL`) (may specify more than one)
@@ -20,9 +20,9 @@ e.g.
 
 If your terminal supports colors, then colors are used to make the help more readable.
 
-## Usage basics
+## handler basics
 
-Most functions have a 2nd "usage" function which is the function name with a prefixed underscore.
+Most functions have a 2nd "handler" function which is the function name with a prefixed underscore.
 
     _usageFunction exitCode message
 
@@ -32,15 +32,15 @@ e.g.
 
 The `exitCode` is required, and `0` is considered success.
 
-- `usage` implementations SHOULD NEVER `exit`, instead it should return the passed in `exitCode`
+- `handler` implementations SHOULD NEVER `exit`, instead it should return the passed in `exitCode`
 - `message` - Is optional but highly recommended for all errors.
 
 An example:
 
     myFunction() {
-        local usage="_${FUNCNAME[0]}"
+        local handler="_${FUNCNAME[0]}"
         local bigFile="$1" savedFile="$2"
-        __catchEnvironment "$usage" curl -L "$bigFile" -o - > "$savedFile" || return $?
+        __catchEnvironment "$handler" curl -L "$bigFile" -o - > "$savedFile" || return $?
             _myFunction 1 "Unable to download $bigFile" || return $?
         fi
         ..
@@ -49,18 +49,18 @@ An example:
        usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
     }
 
-Extensions to the basic `usage` model typically prefix additional parameters before the `exitCode`.
+Extensions to the basic `handler` model typically prefix additional parameters before the `exitCode`.
 
-## Usage components
+## handler components
 
-Usage for a command typically consists of the following components:
+handler for a command typically consists of the following components:
 
-- An example usage (`Example:` lines)
+- An example handler (`Example:` lines)
 - Arguments to the command and their meanings and descriptions (`Argument:` line)
 - Any further description (`Description:` lines or any lines without a label)
-- The actual `usage` line can be inferred from the `Argument:`
+- The actual `handler` line can be inferred from the `Argument:`
 
-## Usage labels
+## handler labels
 
 ### `Argument:` - Function arguments
 
@@ -117,7 +117,7 @@ Where:
 - `environmentVariableName` is the environment variable name
 - `environmentVariableDescription` is the brief description for how the function interacts with the environment variable
 
-### Usage using comments
+### handler using comments
 
 Any name/value pair to be associated with a `function` but the handler requires access to the current file to generate (
 as the code reads the script to extract the comment):
@@ -132,7 +132,7 @@ as the code reads the script to extract the comment):
     . ./bin/build/tools.sh
 
     # Process a cool file
-    # Usage: myCoolScript
+    # handler: myCoolScript
     # Argument: file - Required. File. The file to cool
     # Argument: directory - Required. Directory. The place to put the file
     # Argument: --help - Show this help and exit
@@ -141,13 +141,13 @@ as the code reads the script to extract the comment):
         file="${1-}"
         # ...
         if [ -z "$file" ]; then
-            _myCoolScriptUsage 1 "Requires a file"
+            _myCoolScripthandler 1 "Requires a file"
         fi
         if [ ! -f "$file" ]; then
-            _myCoolScriptUsage 1 "$file is not a file"
+            _myCoolScripthandler 1 "$file is not a file"
         fi
     }
-    _myCoolScriptUsage() {
+    _myCoolScripthandler() {
        usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
     }
 
@@ -158,7 +158,7 @@ And the output:
     > ./docs/guide/example.sh
     Requires a file
 
-    Usage: myCoolScript file directory [ --help ]
+    handler: myCoolScript file directory [ --help ]
 
         file       Required. File. The file to cool
         directory  Required. Directory. The place to put the file

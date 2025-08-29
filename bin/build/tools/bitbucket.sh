@@ -32,21 +32,21 @@
 #
 # On this file, the value of `$(bitbucketGetVariable MARIADB_ROOT_PASSWORD)` is `super-secret`; it uses `grep` and `sed` to extract the value.
 #
-# Usage: {fn} varName defaultValue
+# handler: {fn} varName defaultValue
 # Argument: varName - Name of the value to extract from `bitbucket-pipelines.yml`
 # Argument: defaultValue - Value if not found in pipelines
 # Example:     MARIADB_ROOT_PASSWORD=${MARIADB_ROOT_PASSWORD:-$(bitbucketGetVariable MARIADB_ROOT_PASSWORD not-in-bitbucket-pipelines.yml)}
 #
 bitbucketGetVariable() {
-  local usage="_${FUNCNAME[0]}"
-  [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
+  local handler="_${FUNCNAME[0]}"
+  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
 
   local value yml home
 
-  home=$(__catch "$usage" buildHome) || return $?
+  home=$(__catch "$handler" buildHome) || return $?
   yml="$home/bitbucket-pipelines.yml"
 
-  [ -f "$yml" ] || __throwEnvironment "$usage" "Missing $yml" || return $?
+  [ -f "$yml" ] || __throwEnvironment "$handler" "Missing $yml" || return $?
   value=$(grep "$1" "$yml" | awk '{ print $2 }')
   value=${value:-$2}
 
@@ -57,7 +57,7 @@ _bitbucketGetVariable() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# Usage: {fn} [ envFile ... ] [ extraArgs ... ]
+# handler: {fn} [ envFile ... ] [ extraArgs ... ]
 # Argument: envFile - One or more environment files which are suitable to load for docker; must be valid
 # Argument: extraArgs - The first non-file argument to `{fn}` is passed directly through to `docker run` as arguments
 # Exit Code: 1 - If already inside docker, or the environment file passed is not valid

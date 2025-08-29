@@ -51,10 +51,10 @@ testMariaDBInstallation() {
 }
 
 testMariaDBDumpClean() {
-  local usage="_return"
+  local handler="_return"
   local home
 
-  home=$(__catch "$usage" buildHome) || return $?
+  home=$(__catch "$handler" buildHome) || return $?
 
   local sql
 

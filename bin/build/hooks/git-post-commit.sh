@@ -90,19 +90,19 @@ isUnsignedInteger() {
 # <-- END of IDENTICAL _return
 
 __gitPushHelper() {
-  local usage="$1"
+  local handler="$1"
   local tempFile
 
-  tempFile=$(fileTemporaryName "$usage") || return $?
+  tempFile=$(fileTemporaryName "$handler") || return $?
   statusMessage --last decorate success "Pushing to remote ..."
-  if ! __catchEnvironment "$usage" git push origin 2>&1 | tee "$tempFile" | grep 'remote:' | removeFields 1 | decorate code | decorate wrap "Remote: "; then
+  if ! __catchEnvironment "$handler" git push origin 2>&1 | tee "$tempFile" | grep 'remote:' | removeFields 1 | decorate code | decorate wrap "Remote: "; then
     if ! grep -q 'up-to-date' "$tempFile"; then
       dumpPipe "git push" <"$tempFile" || :
-      __catchEnvironment "$usage" rm -rf "$tempFile" || :
+      __catchEnvironment "$handler" rm -rf "$tempFile" || :
       return 1
     fi
   fi
-  __catchEnvironment "$usage" rm -rf "$tempFile" || return $?
+  __catchEnvironment "$handler" rm -rf "$tempFile" || return $?
 }
 
 #
@@ -113,14 +113,14 @@ __gitPushHelper() {
 #
 # fn: {base}
 __hookGitPostCommit() {
-  local usage="_${FUNCNAME[0]}" hookName="post-commit" start
+  local handler="_${FUNCNAME[0]}" hookName="post-commit" start
   start=$(timingStart) || return $?
   statusMessage --first printf -- "%s %s" "$(decorate info "[$hookName]")" "$(decorate info "Installing ...")"
-  __catchEnvironment "$usage" gitInstallHook --copy "$hookName" || return $?
+  __catchEnvironment "$handler" gitInstallHook --copy "$hookName" || return $?
   statusMessage --last printf -- "%s %s" "$(decorate info "[$hookName]")" "$(decorate info "Running ...")"
-  __catchEnvironment "$usage" hookRunOptional "$hookName" || return $?
-  __gitPushHelper "$usage" || return $?
-  # __catchEnvironment "$usage" gitMainly && __gitPushHelper "$usage" || return $?
+  __catchEnvironment "$handler" hookRunOptional "$hookName" || return $?
+  __gitPushHelper "$handler" || return $?
+  # __catchEnvironment "$handler" gitMainly && __gitPushHelper "$handler" || return $?
   statusMessage --last printf -- "%s %s" "$(decorate info "[$hookName]")" "$(timingReport "$start" "completed in")"
 }
 ___hookGitPostCommit() {

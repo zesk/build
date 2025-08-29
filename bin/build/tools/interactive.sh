@@ -235,8 +235,8 @@ fileCopyWouldChange() {
         destination=$(usageArgumentFileDirectory "$handler" "destination" "$1") || return $?
         shift
         if [ $# -gt 0 ]; then
-      # _IDENTICAL_ argumentUnknown 1
-      __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
+      # _IDENTICAL_ argumentUnknownHandler 1
+      __throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
         fi
         if [ ! -f "$destination" ]; then
           return 0
@@ -400,60 +400,60 @@ _loopExecute() {
 # Run checks interactively until errors are all fixed.
 # Not ready for prime time yet - written not tested.
 interactiveManager() {
-  local usage="_${FUNCNAME[0]}"
+  local handler="_${FUNCNAME[0]}"
 
   local binary="" repairFunction"" loopCallable="" files=() sleepDelay=15
 
-  # _IDENTICAL_ argument-case-header 5
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
+    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
-    # _IDENTICAL_ --help 4
-    --help)
-      "$usage" 0
-      return $?
-      ;;
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
+    # _IDENTICAL_ handlerHandler 1
+    --handler) shift && handler=$(usageArgumentFunction "$handler" "$argument" "${1-}") || return $? ;;
     --exec)
       shift
       binary="$(usageArgumentCallable "$argument" "${1-}")" || return $?
       ;;
     --delay)
       shift
-      sleepDelay=$(usageArgumentUnsignedInteger "$usage" "$argument" "${1-}") || return $?
+      sleepDelay=$(usageArgumentUnsignedInteger "$handler" "$argument" "${1-}") || return $?
       ;;
     --repair)
       shift
-      repairFunction=$(usageArgumentCallable "$usage" "$argument" "${1-}") || return $?
+      repairFunction=$(usageArgumentCallable "$handler" "$argument" "${1-}") || return $?
       ;;
     *)
       if [ -z "$loopCallable" ]; then
-        loopCallable=$(usageArgumentCallable "$usage" "loopCallable" "$1") || return $?
+        loopCallable=$(usageArgumentCallable "$handler" "loopCallable" "$1") || return $?
       else
-        files+=("$(usageArgumentFile "$usage" "fileToCheck" "$1")") || return $?
+        files+=("$(usageArgumentFile "$handler" "fileToCheck" "$1")") || return $?
       fi
       ;;
     esac
     shift
   done
 
-  [ -n "$loopCallable" ] || __throwArgument "$usage" "No loopCallable" || return $?
+  [ -n "$loopCallable" ] || __throwArgument "$handler" "No loopCallable" || return $?
 
   if [ "${#files[@]}" -eq 0 ]; then
-    while read -r file; do files+=("$(usageArgumentFile "$usage" "fileToCheck (stdin)" "$1")") || return $?; done
+    while read -r file; do files+=("$(usageArgumentFile "$handler" "fileToCheck (stdin)" "$1")") || return $?; done
     [ "${#files[@]}" -gt 0 ] || return 0
   fi
 
-  [ "${#files[@]}" -gt 0 ] || __throwArgument "$usage" "No files supplied" || return $?
+  [ "${#files[@]}" -gt 0 ] || __throwArgument "$handler" "No files supplied" || return $?
 
   # Validation complete
 
   local rowsAllowed output index=1 didClear=false triedRepair
 
-  rowsAllowed=$(__catch "$usage" consoleRows) || return $?
+  rowsAllowed=$(__catch "$handler" consoleRows) || return $?
   rowsAllowed=$((rowsAllowed - 4))
-  output=$(fileTemporaryName "$usage") || return $?
+  output=$(fileTemporaryName "$handler") || return $?
   index=1
 
   local file nextMessage=""
@@ -483,7 +483,7 @@ interactiveManager() {
       if [ -n "$binary" ]; then
         "$binary" "$file"
       fi
-      sleep "$sleepDelay" || __throwEnvironment "$usage" "Interrupt ..." || returnClean $? "$output" || return $?
+      sleep "$sleepDelay" || __throwEnvironment "$handler" "Interrupt ..." || returnClean $? "$output" || return $?
     done
     index=$((index + 1))
   done
@@ -530,37 +530,37 @@ __confirmYesNo() {
 # Example:     confirmYesNo --timeout 10 "Stop the timer!"
 # Example:
 confirmYesNo() {
-  local usage="_${FUNCNAME[0]}"
+  local handler="_${FUNCNAME[0]}"
   local default="no" message="" timeout="" extras="" attempts=-1
 
-  # _IDENTICAL_ argument-case-header 5
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
+    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
-    # _IDENTICAL_ --help 4
-    --help)
-      "$usage" 0
-      return $?
-      ;;
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
+    # _IDENTICAL_ handlerHandler 1
+    --handler) shift && handler=$(usageArgumentFunction "$handler" "$argument" "${1-}") || return $? ;;
     --info)
       extras=" $(decorate subtle "Type Y or N") "
       ;;
     --attempts)
       shift
-      attempts=$(usageArgumentPositiveInteger "$usage" "$argument" "${1-}") || return $?
+      attempts=$(usageArgumentPositiveInteger "$handler" "$argument" "${1-}") || return $?
       ;;
     --timeout)
       shift
-      timeout=$(usageArgumentPositiveInteger "$usage" "$argument" "${1-}") || return $?
+      timeout=$(usageArgumentPositiveInteger "$handler" "$argument" "${1-}") || return $?
       ;;
     --yes) default=yes ;;
     --no) default=no ;;
     --default)
       shift
-      default="$(usageArgumentString "$usage" "$argument" "${1-}")" || return $?
-      parseBoolean "$default" || [ $? -ne 2 ] || __throwArgument "$usage" "Can not parse $(decorate code "$1") as a boolean" || return $?
+      default="$(usageArgumentString "$handler" "$argument" "${1-}")" || return $?
+      parseBoolean "$default" || [ $? -ne 2 ] || __throwArgument "$handler" "Can not parse $(decorate code "$1") as a boolean" || return $?
       ;;
     *)
       message="$*"
@@ -572,7 +572,7 @@ confirmYesNo() {
 
   local exitCode=0
 
-  while __interactiveCountdownReadBoolean "$usage" "$timeout" "$attempts" "$extras" "$message" || exitCode=$?; do
+  while __interactiveCountdownReadBoolean "$handler" "$timeout" "$attempts" "$extras" "$message" || exitCode=$?; do
     case "$exitCode" in
     0 | 1)
       __confirmYesNo "$((exitCode - 1))"
@@ -613,48 +613,46 @@ _confirmYesNo() {
 # Argument: --prompt promptString - Optional. String. String to suffix the prompt with (usually tells the user what to do)
 # Argument: message - Optional. String. Display this message as the confirmation menu.
 confirmMenu() {
-  local usage="_${FUNCNAME[0]}"
+  local handler="_${FUNCNAME[0]}"
   local default="" message="" timeout="" extras="" attempts=-1 allowed=() resultFile=""
 
-  # _IDENTICAL_ argument-case-header 5
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
+    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
-    # _IDENTICAL_ --help 4
-    --help)
-      "$usage" 0
-      return $?
-      ;;
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
     --prompt)
       shift
-      extras=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
+      extras=$(usageArgumentString "$handler" "$argument" "${1-}") || return $?
       extras=" $(decorate subtle "$extras") "
       ;;
     --result)
       shift
-      resultFile=$(usageArgumentFile "$usage" "$argument" "${1-}") || return $?
+      resultFile=$(usageArgumentFile "$handler" "$argument" "${1-}") || return $?
       ;;
     --attempts)
       shift
-      attempts=$(usageArgumentPositiveInteger "$usage" "$argument" "${1-}") || return $?
+      attempts=$(usageArgumentPositiveInteger "$handler" "$argument" "${1-}") || return $?
       ;;
     --timeout)
       shift
-      timeout=$(usageArgumentPositiveInteger "$usage" "$argument" "${1-}") || return $?
+      timeout=$(usageArgumentPositiveInteger "$handler" "$argument" "${1-}") || return $?
       ;;
     --choice)
       shift
-      allowed+=("$(usageArgumentString "$usage" "$argument" "${1-}")") || return $?
+      allowed+=("$(usageArgumentString "$handler" "$argument" "${1-}")") || return $?
       ;;
     --default)
       shift
-      default="$(usageArgumentString "$usage" "$argument" "${1-}")" || return $?
+      default="$(usageArgumentString "$handler" "$argument" "${1-}")" || return $?
       ;;
     -*)
-      # _IDENTICAL_ argumentUnknown 1
-      __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
+      # _IDENTICAL_ argumentUnknownHandler 1
+      __throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
       ;;
     *)
       message="$*"
@@ -664,13 +662,13 @@ confirmMenu() {
     shift
   done
 
-  [ "${#allowed[@]}" -gt 0 ] || __throwArgument "$usage" "Need at least one --choice" || return $?
-  [ -z "$default" ] || inArray "$default" "${allowed[@]}" || __throwArgument "$usage" "Default $default is not in menu: ${allowed[*]}" || return $?
-  [ -n "$resultFile" ] || __throwArgument "$usage" "No --result given" || return $?
+  [ "${#allowed[@]}" -gt 0 ] || __throwArgument "$handler" "Need at least one --choice" || return $?
+  [ -z "$default" ] || inArray "$default" "${allowed[@]}" || __throwArgument "$handler" "Default $default is not in menu: ${allowed[*]}" || return $?
+  [ -n "$resultFile" ] || __throwArgument "$handler" "No --result given" || return $?
 
   local exitCode=0 value="" defaultOk=false
 
-  while __interactiveCountdownReadCharacter "$usage" "$timeout" "$attempts" "$extras" "$message" __confirmMenuValidate "$resultFile" "${allowed[@]}" || exitCode=$?; do
+  while __interactiveCountdownReadCharacter "$handler" "$timeout" "$attempts" "$extras" "$message" __confirmMenuValidate "$resultFile" "${allowed[@]}" || exitCode=$?; do
     case "$exitCode" in
     0)
       return $exitCode
@@ -716,40 +714,38 @@ _confirmMenu() {
 }
 
 interactiveCountdown() {
-  local usage="_${FUNCNAME[0]}"
+  local handler="_${FUNCNAME[0]}"
 
   local prefix="" counter="" binary="" runner=("statusMessage" "printf" -- "%s")
 
-  # _IDENTICAL_ argument-case-header 5
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
+    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
-    # _IDENTICAL_ --help 4
-    --help)
-      "$usage" 0
-      return $?
-      ;;
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
     --prefix)
       shift
-      prefix="$(usageArgumentEmptyString "$usage" "$argument" "${1-}")" || return $?
+      prefix="$(usageArgumentEmptyString "$handler" "$argument" "${1-}")" || return $?
       ;;
     --badge)
       runner=(bigTextAt "-5" "5")
       ;;
     *)
       if [ -z "$counter" ]; then
-        counter=$(usageArgumentPositiveInteger "$usage" "counter" "$1") || return $?
+        counter=$(usageArgumentPositiveInteger "$handler" "counter" "$1") || return $?
       else
-        binary=$(usageArgumentCallable "$usage" "callable" "$1") || return $?
+        binary=$(usageArgumentCallable "$handler" "callable" "$1") || return $?
         break
       fi
       ;;
     esac
     shift
   done
-  [ -n "$counter" ] || __throwArgument "$usage" "counter is required" || return $?
+  [ -n "$counter" ] || __throwArgument "$handler" "counter is required" || return $?
 
   local start end now
 
@@ -759,14 +755,14 @@ interactiveCountdown() {
   [ -z "$prefix" ] || prefix="$prefix "
 
   while [ "$now" -lt "$end" ]; do
-    __catchEnvironment "$usage" "${runner[@]}" "$(printf "%s%s" "$(decorate info "$prefix")" "$(decorate value " $((counter / 1000)) ")")" || return $?
-    sleep 1 || __throwEnvironment "$usage" "Interrupted" || return $?
+    __catchEnvironment "$handler" "${runner[@]}" "$(printf "%s%s" "$(decorate info "$prefix")" "$(decorate value " $((counter / 1000)) ")")" || return $?
+    sleep 1 || __throwEnvironment "$handler" "Interrupted" || return $?
     now=$(timingStart) || return $?
     counter=$((end - now))
   done
   statusMessage printf -- "%s" ""
   if [ -n "$binary" ]; then
-    __catch "$usage" "$@" || return $?
+    __catch "$handler" "$@" || return $?
   fi
 }
 _interactiveCountdown() {
@@ -785,21 +781,19 @@ _interactiveCountdown() {
 # Loads files or a directory of `.sh` files using `source` to make the code available.
 # Has security implications. Use with caution and ensure your directory is protected.
 interactiveBashSource() {
-  local usage="_${FUNCNAME[0]}"
+  local handler="_${FUNCNAME[0]}"
 
   local prefix="Loading" verboseFlag=false aa=(--info) bb=(--attempts 1 --timeout 30) clearFlag=false
 
-  # _IDENTICAL_ argument-case-header 5
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
+    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
-    # _IDENTICAL_ --help 4
-    --help)
-      "$usage" 0
-      return $?
-      ;;
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
     --info)
       aa=(--info)
       ;;
@@ -815,22 +809,22 @@ interactiveBashSource() {
     --prefix)
       # shift here never fails as [ #$ -gt 0 ]
       shift
-      prefix="$(usageArgumentString "$usage" "$argument" "${1-}")" || return $?
+      prefix="$(usageArgumentString "$handler" "$argument" "${1-}")" || return $?
       ;;
     *)
       local sourcePath="$argument" verb="" approved=false
       displayPath="$(decorate file "$sourcePath")"
       if "$clearFlag"; then
-        __interactiveApproveClear "$usage" "$sourcePath" || return $?
+        __interactiveApproveClear "$handler" "$sourcePath" || return $?
         ! $verboseFlag || statusMessage --last printf -- "%s %s" "$(decorate info "Cleared approval for")" "$displayPath"
         interactiveBashSource "${aa[@]+"${aa[@]}"}" "$sourcePath" || return $?
         return 0
       fi
       if [ -f "$sourcePath" ]; then
         verb="file"
-        if __interactiveApprove "$usage" "$sourcePath" "Load" "${aa[@]+"${aa[@]}"}" "${bb[@]}"; then
+        if __interactiveApprove "$handler" "$sourcePath" "Load" "${aa[@]+"${aa[@]}"}" "${bb[@]}"; then
           ! $verboseFlag || statusMessage --last printf -- "%s %s %s" "$(decorate info "$prefix")" "$(decorate label "$verb")" "$displayPath"
-          __catchEnvironment "$usage" source "$sourcePath" || return $?
+          __catchEnvironment "$handler" source "$sourcePath" || return $?
           approved=true
         else
           decorate subtle "Skipping unapproved file $(decorate file "$sourcePath") Undo: $(decorate code "${FUNCNAME[0]} --clear \"$sourcePath\"")"
@@ -838,15 +832,15 @@ interactiveBashSource() {
         fi
       elif [ -d "$sourcePath" ]; then
         verb="path"
-        if __interactiveApprove "$usage" "$sourcePath/" "Load path" "${aa[@]+"${aa[@]}"}" "${bb[@]}"; then
+        if __interactiveApprove "$handler" "$sourcePath/" "Load path" "${aa[@]+"${aa[@]}"}" "${bb[@]}"; then
           ! $verboseFlag || statusMessage --last printf -- "%s %s %s" "$(decorate info "$prefix")" "$(decorate label "$verb")" "$displayPath"
-          __catchEnvironment "$usage" bashSourcePath "$sourcePath" || return $?
+          __catchEnvironment "$handler" bashSourcePath "$sourcePath" || return $?
           approved=true
         else
           decorate subtle "Skipping unapproved directory $(decorate file "$sourcePath") Undo: $(decorate code "${FUNCNAME[0]} --clear \"$sourcePath\"")"
         fi
       else
-        __throwEnvironment "$usage" "Not a file or directory? $displayPath is a $(decorate value "$(fileType "$sourcePath")")" || return $?
+        __throwEnvironment "$handler" "Not a file or directory? $displayPath is a $(decorate value "$(fileType "$sourcePath")")" || return $?
       fi
       if $verboseFlag && ! $approved; then
         statusMessage --last decorate subtle "Skipping unapproved $verb $(decorate file "$sourcePath")" || :
@@ -881,70 +875,65 @@ _interactiveBashSource() {
 # Argument: --fail-title title - String. Optional. Sets the title for the notification if the binary fails.
 # Argument: --fail-sound soundName - String. Optional. Sets the sound played for the notification if the binary fails.
 notify() {
-  local usage="_${FUNCNAME[0]}"
+  local handler="_${FUNCNAME[0]}"
   local failMessage="" message="" verboseFlag=false nn=()
 
-  # _IDENTICAL_ argument-case-header 5
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
+    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
-    # _IDENTICAL_ --help 4
-    --help)
-      "$usage" 0
-      return $?
-      ;;
-    # _IDENTICAL_ --handler 4
-    --handler)
-      shift
-      usage=$(usageArgumentFunction "$usage" "$argument" "${1-}") || return $?
-      ;;
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
+    # _IDENTICAL_ handlerHandler 1
+    --handler) shift && handler=$(usageArgumentFunction "$handler" "$argument" "${1-}") || return $? ;;
     --message)
       shift
-      message="$(usageArgumentString "$usage" "$argument" "${1-}")" || return $?
+      message="$(usageArgumentString "$handler" "$argument" "${1-}")" || return $?
       ;;
     --fail-message)
       shift
-      failMessage="$(usageArgumentString "$usage" "$argument" "${1-}")" || return $?
+      failMessage="$(usageArgumentString "$handler" "$argument" "${1-}")" || return $?
       ;;
     --verbose)
       verboseFlag=true
       ;;
     --title)
       shift
-      nn+=("$argument" "$(usageArgumentString "$usage" "$argument" "${1-}")") || return $?
+      nn+=("$argument" "$(usageArgumentString "$handler" "$argument" "${1-}")") || return $?
       ;;
     --sound)
       shift
-      nn+=("$argument" "$(usageArgumentString "$usage" "$argument" "${1-}")") || return $?
+      nn+=("$argument" "$(usageArgumentString "$handler" "$argument" "${1-}")") || return $?
       ;;
     --fail-title)
       shift
-      nnFail+=("--title" "$(usageArgumentString "$usage" "$argument" "${1-}")") || return $?
+      nnFail+=("--title" "$(usageArgumentString "$handler" "$argument" "${1-}")") || return $?
       ;;
     --fail-sound)
-      nnFail+=("--sound" "$(usageArgumentString "$usage" "$argument" "${1-}")") || return $?
+      nnFail+=("--sound" "$(usageArgumentString "$handler" "$argument" "${1-}")") || return $?
       ;;
     *)
-      binary="$(usageArgumentCallable "$usage" "$argument" "$1")" || return $?
+      binary="$(usageArgumentCallable "$handler" "$argument" "$1")" || return $?
       shift
       break
       ;;
     esac
     shift
   done
-  [ -n "$binary" ] || __throwArgument "$usage" "Missing binary" || return $?
+  [ -n "$binary" ] || __throwArgument "$handler" "Missing binary" || return $?
   [ -n "$message" ] || message="$binary"
 
   local home
-  home=$(__catch "$usage" buildHome) || return $?
+  home=$(__catch "$handler" buildHome) || return $?
   ! $verboseFlag || statusMessage --last decorate info "Running $(decorate each code "$binary" "$@") ... [$(decorate magenta "$message")]" || return $?
   local start tempOut tempErr dialog
   start=$(timingStart)
-  tempOut=$(fileTemporaryName "$usage") || return $?
+  tempOut=$(fileTemporaryName "$handler") || return $?
   tempErr="$tempOut.err"
-  if CI=1 __catchEnvironment "$usage" "$binary" "$@" 2>"$tempErr" | tee "$tempOut"; then
+  if CI=1 __catchEnvironment "$handler" "$binary" "$@" 2>"$tempErr" | tee "$tempOut"; then
     local returnValue=$?
     ! $verboseFlag || statusMessage --last decorate "Exit Code:" "$returnValue"
     ! $verboseFlag || statusMessage --last decorate "Elapsed:" "$(timingReport "$start")"
@@ -956,7 +945,7 @@ notify() {
     dialog=$(printf "%s\n" "$failMessage" "" "Exit Code: $?" "Exit String: $(exitString $?)" "Elapsed: $(timingReport "$start")" "" "stderr:" "$(tail -n 10 "$tempErr")" "" "stdout:" "$(tail -n 10 "$tempOut")")
     hookRun --application "$home" notify --title "$binary FAILED" --sound zesk-build-failed "${nn[@]+"${nn[@]}"}" "${nnFail[@]+"${nnFail[@]}"}" "$dialog"
   fi
-  __catchEnvironment "$usage" rm -f "$tempErr" "$tempOut" || return $?
+  __catchEnvironment "$handler" rm -f "$tempErr" "$tempOut" || return $?
 }
 _notify() {
   # __IDENTICAL__ usageDocument 1

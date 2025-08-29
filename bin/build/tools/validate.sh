@@ -51,11 +51,11 @@
 # Exit Code: 0 - Valid is valid, stdout is a filtered version of the value to be used
 # Exit Code: 2 - Valid is invalid, output reason to stderr
 validate() {
-  local usage="_${FUNCNAME[0]}"
+  local handler="_${FUNCNAME[0]}"
   local prefix="__validateType"
 
-  [ $# -eq 0 ] || __help "$usage" "$@" || return 0
-  [ $# -ge 4 ] || __throwArgument "$usage" "Missing arguments - expect 4 or more (#$#: $(decorate each code "$@"))" || return $?
+  [ $# -eq 0 ] || __help "$handler" "$@" || return 0
+  [ $# -ge 4 ] || __throwArgument "$handler" "Missing arguments - expect 4 or more (#$#: $(decorate each code "$@"))" || return $?
 
   local handler="$1" && shift
 
@@ -63,7 +63,7 @@ validate() {
     local type="$1" name="$2" value="$3"
     type=$(_validateTypeMapper "$type")
     local typeFunction="$prefix$type"
-    isFunction "$typeFunction" || __throwArgument "$usage" "validate $type is not a valid type:"$'\n'"$(validateTypeList)" || return $?
+    isFunction "$typeFunction" || __throwArgument "$handler" "validate $type is not a valid type:"$'\n'"$(validateTypeList)" || return $?
     if ! value=$("$typeFunction" "$value" 2>&1); then
       local suffix=""
       [ -z "$value" ] || suffix=" $(decorate error "$value")"
@@ -94,23 +94,21 @@ _validateTypeList() {
 # DOC TEMPLATE: --help 1
 # Argument: --help - Optional. Flag. Display this help.
 isValidateType() {
-  local usage="_${FUNCNAME[0]}"
+  local handler="_${FUNCNAME[0]}"
 
   local prefix="__validateType"
 
-  # _IDENTICAL_ argument-case-header 5
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
+    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
-    # _IDENTICAL_ --help 4
-    --help)
-      "$usage" 0
-      return $?
-      ;;
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
     *)
-      isFunction "$prefix$argument" || __throwArgument "$usage" "Invalid type $argument" || return $?
+      isFunction "$prefix$argument" || __throwArgument "$handler" "Invalid type $argument" || return $?
       ;;
     esac
     shift
@@ -303,7 +301,7 @@ __validateTypeApplicationDirectoryList() {
   local value="${1-}"
   local home directories=() directory result=() index=0
 
-  home=$(__catch "$usage" buildHome) || return $?
+  home=$(__catch "$handler" buildHome) || return $?
   home="${home%/}"
   IFS=":" read -r -a directories <<<"$value" || :
   for directory in "${directories[@]+"${directories[@]}"}"; do

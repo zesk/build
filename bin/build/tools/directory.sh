@@ -12,8 +12,8 @@
 # Exit Code: 0 - if all paths passed in are absolute paths (begin with `/`).
 # Exit Code: 1 - one ore more paths are not absolute paths
 isAbsolutePath() {
-  local usage="_${FUNCNAME[0]}"
-  [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
+  local handler="_${FUNCNAME[0]}"
+  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
   while [ $# -gt 0 ]; do
     [ "$1" != "${1#/}" ] || return 1
     shift || :
@@ -73,27 +73,27 @@ _directoryChange() {
 # Copy directory over another sort-of-atomically
 #
 directoryClobber() {
-  local usage="_${FUNCNAME[0]}"
-  [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
+  local handler="_${FUNCNAME[0]}"
+  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
 
   local source target targetPath targetName sourceStage targetBackup
 
-  source=$(usageArgumentDirectory "$usage" source "$1") || return $?
+  source=$(usageArgumentDirectory "$handler" source "$1") || return $?
   shift || :
   target="${1-}"
-  targetPath="$(dirname "$target")" || __throwArgument "$usage" "dirname $target" || return $?
-  [ -d "$targetPath" ] || __throwEnvironment "$usage" "$targetPath is not a directory" || return $?
+  targetPath="$(dirname "$target")" || __throwArgument "$handler" "dirname $target" || return $?
+  [ -d "$targetPath" ] || __throwEnvironment "$handler" "$targetPath is not a directory" || return $?
   targetName="$(basename "$target")" || __throwEnvironment basename "$target" || return $?
   sourceStage="$targetPath/.NEW.$$.$targetName"
   targetBackup="$targetPath/.OLD.$$.$targetName"
-  __catchEnvironment "$usage" mv -f "$source" "$sourceStage" || return $?
-  __catchEnvironment "$usage" mv -f "$target" "$targetBackup" || return $?
+  __catchEnvironment "$handler" mv -f "$source" "$sourceStage" || return $?
+  __catchEnvironment "$handler" mv -f "$target" "$targetBackup" || return $?
   if ! mv -f "$sourceStage" "$target"; then
-    mv -f "$targetBackup" "$target" || __throwEnvironment "$usage" "Unable to revert $targetBackup -> $target" || return $?
-    mv -f "$sourceStage" "$source" || __throwEnvironment "$usage" "Unable to revert $sourceStage -> $source" || return $?
-    __throwEnvironment "$usage" "Clobber failed" || return $?
+    mv -f "$targetBackup" "$target" || __throwEnvironment "$handler" "Unable to revert $targetBackup -> $target" || return $?
+    mv -f "$sourceStage" "$source" || __throwEnvironment "$handler" "Unable to revert $sourceStage -> $source" || return $?
+    __throwEnvironment "$handler" "Clobber failed" || return $?
   fi
-  __catchEnvironment "$usage" rm -rf "$targetBackup" || return $?
+  __catchEnvironment "$handler" rm -rf "$targetBackup" || return $?
 }
 _directoryClobber() {
   # __IDENTICAL__ usageDocument 1
@@ -115,34 +115,32 @@ _directoryClobber() {
 # Argument: fileDirectory ... - FileDirectory. Required. Test if file directory exists (file does not have to exist)
 # Requires: chmod __throwArgument usageArgumentString decorate __catchEnvironment dirname
 fileDirectoryRequire() {
-  local usage="_${FUNCNAME[0]}"
+  local handler="_${FUNCNAME[0]}"
 
   local name="" rr=()
 
-  # _IDENTICAL_ argument-case-header 5
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
+    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
-    # _IDENTICAL_ --help 4
-    --help)
-      "$usage" 0
-      return $?
-      ;;
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
     --owner | --mode)
       shift
       local value
-      value=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
+      value=$(usageArgumentString "$handler" "$argument" "${1-}") || return $?
       rr+=("$argument" "$value") || return $?
       ;;
     *)
-      rr+=(--output "$argument" "$(__catchEnvironment "$usage" dirname "$argument")") || return $?
+      rr+=(--output "$argument" "$(__catchEnvironment "$handler" dirname "$argument")") || return $?
       ;;
     esac
     shift
   done
-  directoryRequire --handler "$usage" --noun "file directory" "${rr[@]+"${rr[@]}"}" || return $?
+  directoryRequire --handler "$handler" --noun "file directory" "${rr[@]+"${rr[@]}"}" || return $?
 }
 _fileDirectoryRequire() {
   # __IDENTICAL__ usageDocument 1
@@ -154,21 +152,19 @@ _fileDirectoryRequire() {
 #
 # Argument: directory - Directory. Required. Test if file directory exists (file does not have to exist)
 fileDirectoryExists() {
-  local usage="_${FUNCNAME[0]}"
-  # _IDENTICAL_ argument-case-header 5
+  local handler="_${FUNCNAME[0]}"
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
+    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
-    # _IDENTICAL_ --help 4
-    --help)
-      "$usage" 0
-      return $?
-      ;;
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
     *)
       local path
-      path=$(dirname "$argument") || __throwEnvironment "$usage" "dirname $argument" || return $?
+      path=$(dirname "$argument") || __throwEnvironment "$handler" "dirname $argument" || return $?
       [ -d "$path" ] || return 1
       ;;
     esac
@@ -193,52 +189,47 @@ _fileDirectoryExists() {
 # Requires: __throwArgument usageArgumentFunction usageArgumentString decorate __catchEnvironment dirname
 # Requires: chmod chown
 directoryRequire() {
-  local usage="_${FUNCNAME[0]}"
+  local handler="_${FUNCNAME[0]}"
 
   local mode=() owner="" directories=() noun="directory" output=""
 
-  # _IDENTICAL_ argument-case-header 5
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
+    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
-    # _IDENTICAL_ --help 4
-    --help)
-      "$usage" 0
-      return $?
-      ;;
-    # _IDENTICAL_ --handler 4
-    --handler)
-      shift
-      usage=$(usageArgumentFunction "$usage" "$argument" "${1-}") || return $?
-      ;;
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
+    # _IDENTICAL_ handlerHandler 1
+    --handler) shift && handler=$(usageArgumentFunction "$handler" "$argument" "${1-}") || return $? ;;
     --owner)
       shift
-      owner=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
+      owner=$(usageArgumentString "$handler" "$argument" "${1-}") || return $?
       [ "$owner" != "-" ] || owner=""
       ;;
     --mode)
       shift
-      mode=("$argument" "$(usageArgumentString "$usage" "$argument" "${1-}")") || return $?
+      mode=("$argument" "$(usageArgumentString "$handler" "$argument" "${1-}")") || return $?
       [ "${mode[1]}" != "-" ] || mode=()
       ;;
     --noun)
       shift
-      noun=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
+      noun=$(usageArgumentString "$handler" "$argument" "${1-}") || return $?
       ;;
     --output)
       shift
-      output=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
+      output=$(usageArgumentString "$handler" "$argument" "${1-}") || return $?
       ;;
     *)
       name="$argument"
       if [ -d "$name" ]; then
-        [ 0 -eq "${#mode[@]}" ] || __catchEnvironment "$usage" chmod "${mode[1]}" "$name" || return $?
+        [ 0 -eq "${#mode[@]}" ] || __catchEnvironment "$handler" chmod "${mode[1]}" "$name" || return $?
       else
-        __catchEnvironment "$usage" mkdir -p "${mode[@]+"${mode[@]}"}" "$name" || return $?
+        __catchEnvironment "$handler" mkdir -p "${mode[@]+"${mode[@]}"}" "$name" || return $?
       fi
-      [ -z "$owner" ] || __catchEnvironment "$usage" chown "$owner" "$name" || return $?
+      [ -z "$owner" ] || __catchEnvironment "$handler" chown "$owner" "$name" || return $?
       directories+=("$name")
       [ -z "$output" ] || name="$output"
       printf "%s\n" "$name"
@@ -247,7 +238,7 @@ directoryRequire() {
     esac
     shift
   done
-  [ ${#directories[@]} -gt 0 ] || __throwArgument "$usage" "Need at least one $noun" || return $?
+  [ ${#directories[@]} -gt 0 ] || __throwArgument "$handler" "Need at least one $noun" || return $?
 }
 _directoryRequire() {
   # __IDENTICAL__ usageDocument 1
@@ -260,19 +251,20 @@ _directoryRequire() {
 # Exit code: 1 - Directory is not empty
 # Exit code: 0 - Directory is empty
 directoryIsEmpty() {
-  local usage="_${FUNCNAME[0]}"
+  local handler="_${FUNCNAME[0]}"
   local argument
 
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
+  local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
-    argument="$1"
+    local argument="$1" __index=$((__count - $# + 1))
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
+    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
-    # _IDENTICAL_ --help 4
-    --help)
-      "$usage" 0
-      return $?
-      ;;
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
     *)
-      [ -d "$argument" ] || __throwArgument "$usage" "Not a directory $(decorate code "$argument")" || return $?
+      [ -d "$argument" ] || __throwArgument "$handler" "Not a directory $(decorate code "$argument")" || return $?
       find "$argument" -mindepth 1 -maxdepth 1 | read -r && return 1 || return 0
       ;;
     esac
@@ -334,35 +326,33 @@ _directoryParent() {
 # Argument: --pattern filePattern - Required. RelativePath. The file or directory to find the home for.
 # Argument: --test testExpression - String. Optional. Zero or more. The `test` argument to test the targeted `filePattern`. By default uses `-d`.
 __directoryParent() {
-  local usage="${1-}" && shift
+  local handler="${1-}" && shift
 
   local testExpression directory lastDirectory="" passed passedExpression failedExpression
   local startingDirectory="" filePattern="" testExpressions=() bestFailure=""
 
-  # _IDENTICAL_ argument-case-header 5
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
+    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
-    # _IDENTICAL_ --help 4
-    --help)
-      "$usage" 0
-      return $?
-      ;;
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
     --pattern)
-      [ -z "$filePattern" ] || __throwArgument "$usage" "$argument already specified" || return $?
+      [ -z "$filePattern" ] || __throwArgument "$handler" "$argument already specified" || return $?
       shift
-      filePattern=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
+      filePattern=$(usageArgumentString "$handler" "$argument" "${1-}") || return $?
       ;;
     --test)
       shift
-      testExpressions+=("$(usageArgumentString "$usage" "$argument" "${1-}")") || return $?
+      testExpressions+=("$(usageArgumentString "$handler" "$argument" "${1-}")") || return $?
       ;;
     *)
-      [ -z "$startingDirectory" ] || __throwArgument "$usage" "startingDirectory $(decorate code "$argument") was already specified $(decorate value "$startingDirectory") (Arguments: $(decorate each code "${usage#_}" "${__saved[@]}"))" || return $?
-      [ -n "$argument" ] || argument=$(__catchEnvironment "$usage" pwd) || return $?
-      startingDirectory=$(usageArgumentRealDirectory "$usage" startingDirectory "$argument") || return $?
+      [ -z "$startingDirectory" ] || __throwArgument "$handler" "startingDirectory $(decorate code "$argument") was already specified $(decorate value "$startingDirectory") (Arguments: $(decorate each code "${handler#_}" "${__saved[@]}"))" || return $?
+      [ -n "$argument" ] || argument=$(__catchEnvironment "$handler" pwd) || return $?
+      startingDirectory=$(usageArgumentRealDirectory "$handler" startingDirectory "$argument") || return $?
       ;;
     esac
     shift
@@ -377,7 +367,7 @@ __directoryParent() {
     passedExpression=""
     failedExpression=""
     for testExpression in "${testExpressions[@]+"${testExpressions[@]}"}"; do
-      [ "$testExpression" != "${testExpression#-}" ] || __throwArgument "$usage" "Invalid expression: $(decorate code "$testExpression") (Arguments: $(decorate each code "${usage#_}" "${__saved[@]}"))" || return $?
+      [ "$testExpression" != "${testExpression#-}" ] || __throwArgument "$handler" "Invalid expression: $(decorate code "$testExpression") (Arguments: $(decorate each code "${handler#_}" "${__saved[@]}"))" || return $?
       if ! test "$testExpression" "$directory/$filePattern"; then
         passed=false
         failedExpression="$testExpression"
@@ -396,6 +386,6 @@ __directoryParent() {
     directory="$(dirname "$directory")"
   done
   [ -n "$bestFailure" ] || bestFailure="No $(decorate code "$filePattern") found above $(decorate value "$argument")"
-  __throwEnvironment "$usage" "$bestFailure" || return $?
+  __throwEnvironment "$handler" "$bestFailure" || return $?
   return 1
 }

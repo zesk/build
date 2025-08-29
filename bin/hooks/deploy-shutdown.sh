@@ -64,7 +64,7 @@ _return() {
 # Credits: F. Hauri - Give Up GitHub (isnum_Case)
 # Original: is_uint
 # Argument: value - EmptyString. Value to test if it is an unsigned integer.
-# Usage: {fn} argument ...
+# handler: {fn} argument ...
 # Exit Code: 0 - if it is an unsigned integer
 # Exit Code: 1 - if it is not an unsigned integer
 # Requires: _return
@@ -80,12 +80,12 @@ isUnsignedInteger() {
 #
 # fn: {base}
 __hookDeployShutdown() {
-  local usage="_${FUNCNAME[0]#_}"
+  local handler="_${FUNCNAME[0]#_}"
 
   # shellcheck source=/dev/null
   source "$(dirname "${BASH_SOURCE[0]}")/../../bin/build/tools.sh" || _fail tools.sh || return $?
 
-  decorate success "${BASH_SOURCE[0]} is a no-op." || __throwEnvironment "$usage" "decorate success" || return $?
+  decorate success "${BASH_SOURCE[0]} is a no-op." || __throwEnvironment "$handler" "decorate success" || return $?
   : "$@"
 }
 ___hookDeployShutdown() {

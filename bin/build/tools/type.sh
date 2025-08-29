@@ -21,7 +21,7 @@
 # Test if an argument is a positive floating point number
 # (`1e3` notation NOT supported)
 #
-# Usage: {fn} argument ...
+# handler: {fn} argument ...
 # Exit Code: 0 - if it is a number equal to or greater than zero
 # Exit Code: 1 - if it is not a number equal to or greater than zero
 # Credits: F. Hauri - Give Up GitHub (isnum_Case)
@@ -36,7 +36,7 @@ isUnsignedNumber() {
 # Test if an argument is a floating point number
 # (`1e3` notation NOT supported)
 #
-# Usage: {fn} argument ...
+# handler: {fn} argument ...
 # Exit Code: 0 - if it is a floating point number
 # Exit Code: 1 - if it is not a floating point number
 # Credits: F. Hauri - Give Up GitHub (isnum_Case)
@@ -51,7 +51,7 @@ isNumber() {
 #
 # Test if an argument is a signed integer
 #
-# Usage: {fn} argument ...
+# handler: {fn} argument ...
 # Exit Code: 0 - if it is a signed integer
 # Exit Code: 1 - if it is not a signed integer
 # Argument: value - EmptyString. The value to test.
@@ -67,7 +67,7 @@ isInteger() {
 # isExecutable defined in platform
 
 # Test if all arguments are callable as a command
-# Usage: {fn} string0 [ string1 ... ]
+# handler: {fn} string0 [ string1 ... ]
 # Argument: string - Required. EmptyString. Path to binary to test if it is executable.
 # If no arguments are passed, returns exit code 1.
 # Exit code: 0 - All arguments are callable as a command
@@ -90,18 +90,15 @@ _isCallable() {
 # Argument: value ... - EmptyString. One or more values to test.
 # Succeeds when all arguments are "true"-ish
 isTrue() {
-  local usage="_${FUNCNAME[0]}"
+  local handler="_${FUNCNAME[0]}"
   [ $# -gt 0 ] || return 1
   while [ $# -gt 0 ]; do
     local value
     # -- removes special meaning from `--help
     value=$(lowercase -- "$1")
     case "$value" in
-    # _IDENTICAL_ --help 4
-    --help)
-      "$usage" 0
-      return $?
-      ;;
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
     1 | true | yes | enabled | y) ;;
     "" | 0 | false | no | disabled | n | null | nil | "0.0") return 1 ;;
     *)
@@ -129,7 +126,7 @@ isType() {
   *"declare -- "*) printf -- "%s\n" "string" "local" ;;
   *"declare -fx "*) printf -- "%s\n" "function" "export" ;;
   *"declare -f "*) printf -- "%s\n" "function" "local" ;;
-  *) __throwArgument "$usage" "Unknown type: $1 -> \"$text\"" || return $? ;;
+  *) __throwArgument "$handler" "Unknown type: $1 -> \"$text\"" || return $? ;;
   esac
 }
 _isType() {

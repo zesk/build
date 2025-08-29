@@ -28,10 +28,10 @@
 # Exit Code: 1 - Issue with environment
 # Exit Code: 2 - Argument error
 documentationBuild() {
-  local usage="_${FUNCNAME[0]}"
+  local handler="_${FUNCNAME[0]}"
 
   local home
-  home=$(__catch "$usage" buildHome) || return $?
+  home=$(__catch "$handler" buildHome) || return $?
 
   local company="" applicationName="" docArgs=() companyLink="" applicationName=""
 
@@ -39,11 +39,15 @@ documentationBuild() {
   local targetPath="" actionFlag="" unlinkedTemplate="" unlinkedTarget="" actionFlag="" verbose=false pageTemplate=""
   local docArgs=() indexArgs=() templatePath="" company="" applicationName="" functionTemplate="" seePrefix="-"
 
-  # Default option settings
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
+  local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
-    argument="$1"
-    [ -n "$argument" ] || __throwArgument "$usage" "blank argument" || return $?
+    local argument="$1" __index=$((__count - $# + 1))
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
+    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
     --git)
       _buildDocumentation_MergeWithDocsBranch
       return $?
@@ -54,11 +58,11 @@ documentationBuild() {
       ;;
     --company)
       shift
-      company=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
+      company=$(usageArgumentString "$handler" "$argument" "${1-}") || return $?
       ;;
     --name)
       shift
-      applicationName=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
+      applicationName=$(usageArgumentString "$handler" "$argument" "${1-}") || return $?
       ;;
     --filter)
       docArgs+=("$argument")
@@ -67,40 +71,40 @@ documentationBuild() {
       docArgs+=("--")
       ;;
     --template)
-      [ -z "$templatePath" ] || __throwArgument "$usage" "$argument already supplied" || return $?
+      [ -z "$templatePath" ] || __throwArgument "$handler" "$argument already supplied" || return $?
       shift
-      templatePath=$(usageArgumentRealDirectory "$usage" "$argument" "${1-}") || return $?
+      templatePath=$(usageArgumentRealDirectory "$handler" "$argument" "${1-}") || return $?
       ;;
     --page-template)
-      [ -z "$pageTemplate" ] || __throwArgument "$usage" "$argument already supplied" || return $?
+      [ -z "$pageTemplate" ] || __throwArgument "$handler" "$argument already supplied" || return $?
       shift
-      pageTemplate=$(usageArgumentFile "$usage" "$argument" "${1-}") || return $?
+      pageTemplate=$(usageArgumentFile "$handler" "$argument" "${1-}") || return $?
       ;;
     --function-template)
-      [ -z "$functionTemplate" ] || __throwArgument "$usage" "$argument already supplied" || return $?
+      [ -z "$functionTemplate" ] || __throwArgument "$handler" "$argument already supplied" || return $?
       shift
-      functionTemplate=$(usageArgumentFile "$usage" "$argument" "${1-}") || return $?
+      functionTemplate=$(usageArgumentFile "$handler" "$argument" "${1-}") || return $?
       ;;
     --source)
       shift
-      sourcePaths+=("$(usageArgumentRealDirectory "$usage" "$argument" "${1-}")") || return $?
+      sourcePaths+=("$(usageArgumentRealDirectory "$handler" "$argument" "${1-}")") || return $?
       ;;
     --target)
       shift
-      targetPath="$(usageArgumentDirectory "$usage" "$argument" "${1-}")" || return $?
+      targetPath="$(usageArgumentDirectory "$handler" "$argument" "${1-}")" || return $?
       targetPath="${targetPath#"$home"/}"
       ;;
     --company-link)
       shift
-      companyLink=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
+      companyLink=$(usageArgumentString "$handler" "$argument" "${1-}") || return $?
       ;;
     --unlinked-template)
       shift
-      unlinkedTemplate=$(usageArgumentFile "$usage" "$argument" "${1-}") || return $?
+      unlinkedTemplate=$(usageArgumentFile "$handler" "$argument" "${1-}") || return $?
       ;;
     --unlinked-target)
       shift
-      unlinkedTarget=$(usageArgumentFileDirectory "$usage" "$argument" "${1-}") || return $?
+      unlinkedTarget=$(usageArgumentFileDirectory "$handler" "$argument" "${1-}") || return $?
       ;;
     --clean)
       indexArgs+=("$argument")
@@ -111,7 +115,7 @@ documentationBuild() {
       seePrefix="${1-}"
       ;;
     --unlinked-update)
-      [ -z "$actionFlag" ] || __throwArgument "$usage" "$argument and $actionFlag are mutually exclusive" || return $?
+      [ -z "$actionFlag" ] || __throwArgument "$handler" "$argument and $actionFlag are mutually exclusive" || return $?
       actionFlag="$argument"
       ;;
     --force)
@@ -127,13 +131,9 @@ documentationBuild() {
         indexArgs+=("$argument")
       fi
       ;;
-    # _IDENTICAL_ --help 4
-    --help)
-      "$usage" 0
-      return $?
-      ;;
     *)
-      __throwArgument "$usage" "unknown argument $(decorate value "$argument")" || return $?
+      # _IDENTICAL_ argumentUnknownHandler 1
+      __throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
       ;;
     esac
     shift
@@ -144,10 +144,10 @@ documentationBuild() {
   #
   local cacheDirectory
 
-  cacheDirectory="$(__catch "$usage" buildCacheDirectory ".${FUNCNAME[0]}/${APPLICATION_CODE-default}/")" || return $?
-  cacheDirectory=$(__catch "$usage" directoryRequire "$cacheDirectory") || return $?
+  cacheDirectory="$(__catch "$handler" buildCacheDirectory ".${FUNCNAME[0]}/${APPLICATION_CODE-default}/")" || return $?
+  cacheDirectory=$(__catch "$handler" directoryRequire "$cacheDirectory") || return $?
   if $cleanFlag; then
-    __catchEnvironment "$usage" rm -rf "$cacheDirectory" || return $?
+    __catchEnvironment "$handler" rm -rf "$cacheDirectory" || return $?
     timingReport "$start" "Emptied documentation cache in" || :
     return 0
   fi
@@ -158,7 +158,7 @@ documentationBuild() {
 
   BUILD_COLORS_MODE=$(consoleConfigureColorMode) || :
 
-  __catch "$usage" buildEnvironmentLoad APPLICATION_CODE APPLICATION_NAME BUILD_COMPANY BUILD_COMPANY_LINK || return $?
+  __catch "$handler" buildEnvironmentLoad APPLICATION_CODE APPLICATION_NAME BUILD_COMPANY BUILD_COMPANY_LINK || return $?
 
   #
   # Defaults
@@ -171,37 +171,37 @@ documentationBuild() {
   #
   # Check requirements
   #
-  [ -n "$companyLink" ] || __throwArgument "$usage" "Need --company-link" || return $?
-  [ -n "$applicationName" ] || __throwArgument "$usage" "Need --name" || return $?
-  [ -n "$functionTemplate" ] || __throwArgument "$usage" "--function-template required" || return $?
-  [ -n "$pageTemplate" ] || __throwArgument "$usage" "--page-template required" || return $?
-  [ -n "$targetPath" ] || __throwArgument "$usage" "--target required" || return $?
-  [ 0 -lt "${#sourcePaths[@]}" ] || __throwArgument "$usage" "--source required" || return $?
+  [ -n "$companyLink" ] || __throwArgument "$handler" "Need --company-link" || return $?
+  [ -n "$applicationName" ] || __throwArgument "$handler" "Need --name" || return $?
+  [ -n "$functionTemplate" ] || __throwArgument "$handler" "--function-template required" || return $?
+  [ -n "$pageTemplate" ] || __throwArgument "$handler" "--page-template required" || return $?
+  [ -n "$targetPath" ] || __throwArgument "$handler" "--target required" || return $?
+  [ 0 -lt "${#sourcePaths[@]}" ] || __throwArgument "$handler" "--source required" || return $?
 
   local start
-  start=$(timingStart) || __throwEnvironment "$usage" timingStart || return $?
+  start=$(timingStart) || __throwEnvironment "$handler" timingStart || return $?
 
-  __catch "$usage" __pcregrepInstall || return $?
+  __catch "$handler" __pcregrepInstall || return $?
 
   local seeFunction seeFile seePrefix
 
-  seeFunction=$(__catch "$usage" documentationTemplate seeFunction) || return $?
-  seeFile=$(__catch "$usage" documentationTemplate seeFile) || return $?
+  seeFunction=$(__catch "$handler" documentationTemplate seeFunction) || return $?
+  seeFile=$(__catch "$handler" documentationTemplate seeFile) || return $?
 
   if [ "$actionFlag" = "--unlinked-update" ]; then
     for argument in unlinkedTemplate unlinkedTarget; do
-      [ -n "${!argument-}" ] || __throwArgument "$usage" "$argument is required for $actionFlag" || return $?
+      [ -n "${!argument-}" ] || __throwArgument "$handler" "$argument is required for $actionFlag" || return $?
     done
   fi
 
   # At this point, everything is valid so we call our failure hook on failure
-  usage="__${FUNCNAME[0]}"
+  handler="__${FUNCNAME[0]}"
 
   #
   # Generate or update indexes
   #
   for sourcePath in "${sourcePaths[@]}"; do
-    __catch "$usage" documentationIndex_Generate "${indexArgs[@]+${indexArgs[@]}}" "$sourcePath" "$cacheDirectory" || return $?
+    __catch "$handler" documentationIndex_Generate "${indexArgs[@]+${indexArgs[@]}}" "$sourcePath" "$cacheDirectory" || return $?
   done
 
   #
@@ -209,7 +209,7 @@ documentationBuild() {
   #
   local template
   find "$templatePath" -type f -name '*.md' ! -path '*/__*' | while read -r template; do
-    __catch "$usage" documentationIndex_LinkDocumentationPaths "$cacheDirectory" "$template" "$targetPath${template#"$templatePath"}" || return $?
+    __catch "$handler" documentationIndex_LinkDocumentationPaths "$cacheDirectory" "$template" "$targetPath${template#"$templatePath"}" || return $?
   done
   statusMessage --last timingReport "$start" "Indexes completed in" || :
 
@@ -219,11 +219,11 @@ documentationBuild() {
   local clean=()
 
   if [ -n "$unlinkedTemplate" ]; then
-    [ -n "$unlinkedTarget" ] || __throwArgument "$usage" "--unlinked-target required with --unlinked-template" || return $?
+    [ -n "$unlinkedTarget" ] || __throwArgument "$handler" "--unlinked-target required with --unlinked-template" || return $?
     ! $verbose || decorate info "Update unlinked document $unlinkedTarget"
     local envFile
-    envFile=$(_buildDocumentationGenerateEnvironment "$usage" "$company" "$companyLink" "$applicationName") || return $?
-    __catchEnvironment "$usage" _documentationTemplateUpdateUnlinked "$cacheDirectory" "$envFile" "$unlinkedTemplate" "$unlinkedTarget" "$pageTemplate" || return $?
+    envFile=$(_buildDocumentationGenerateEnvironment "$handler" "$company" "$companyLink" "$applicationName") || return $?
+    __catchEnvironment "$handler" _documentationTemplateUpdateUnlinked "$cacheDirectory" "$envFile" "$unlinkedTemplate" "$unlinkedTarget" "$pageTemplate" || return $?
     docArgs+=(--env-file "$envFile")
     if [ "$actionFlag" = "--unlinked-update" ]; then
       __catchEnvironment rm -rf "$envFile" || return $?
@@ -235,8 +235,8 @@ documentationBuild() {
     ! $verbose || decorate warning "No --unlinked-template supplied"
   fi
 
-  __catch "$usage" documentationTemplateDirectoryCompile "${docArgs[@]+"${docArgs[@]}"}" "$cacheDirectory" "$templatePath" "$functionTemplate" "$targetPath" || returnClean $? "${clean[@]+"${clean[@]}"}" || return $?
-  [ ${#clean[@]} -eq 0 ] || __catchEnvironment "$usage" rm -rf "${clean[@]}" || return $?
+  __catch "$handler" documentationTemplateDirectoryCompile "${docArgs[@]+"${docArgs[@]}"}" "$cacheDirectory" "$templatePath" "$functionTemplate" "$targetPath" || returnClean $? "${clean[@]+"${clean[@]}"}" || return $?
+  [ ${#clean[@]} -eq 0 ] || __catchEnvironment "$handler" rm -rf "${clean[@]}" || return $?
   clean=()
 
   #
@@ -244,13 +244,13 @@ documentationBuild() {
   #
   (
     local functionLinkPattern fileLinkPattern
-    __catch "$usage" buildEnvironmentLoad BUILD_DOCUMENTATION_SOURCE_LINK_PATTERN || return $?
+    __catch "$handler" buildEnvironmentLoad BUILD_DOCUMENTATION_SOURCE_LINK_PATTERN || return $?
     functionLinkPattern=${BUILD_DOCUMENTATION_SOURCE_LINK_PATTERN-}
     # Remove line
     fileLinkPattern=${functionLinkPattern%%#.*}
-    __catch "$usage" documentationIndex_SeeLinker "$cacheDirectory" "$seePrefix" "$seeFunction" "$functionLinkPattern" "$seeFile" "$fileLinkPattern" || return $?
+    __catch "$handler" documentationIndex_SeeLinker "$cacheDirectory" "$seePrefix" "$seeFunction" "$functionLinkPattern" "$seeFile" "$fileLinkPattern" || return $?
   ) || return $?
-  message=$(__catch "$usage" timingReport "$start" "in") || return $?
+  message=$(__catch "$handler" timingReport "$start" "in") || return $?
   hookRunOptional documentation-complete "$message" || return $?
 }
 _documentationBuild() {
@@ -268,8 +268,8 @@ __documentationBuild() {
 documentationBuildCache() {
   [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
   local code
-  code=$(__catch "$usage" buildEnvironmentGet "APPLICATION_CODE") || return $?
-  __catch "$usage" buildCacheDirectory ".documentationBuild/${code-default}/${1-}" || return $?
+  code=$(__catch "$handler" buildEnvironmentGet "APPLICATION_CODE") || return $?
+  __catch "$handler" buildCacheDirectory ".documentationBuild/${code-default}/${1-}" || return $?
 }
 _documentationBuildCache() {
   # __IDENTICAL__ usageDocument 1

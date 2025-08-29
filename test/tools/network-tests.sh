@@ -10,12 +10,12 @@ testNetworkIPList() {
 }
 
 testNetworkMACAddressList() {
-  local usage="_return"
+  local handler="_return"
   local temp
 
-  temp="$(fileTemporaryName "$usage")" || return $?
+  temp="$(fileTemporaryName "$handler")" || return $?
 
-  __catchEnvironment "$usage" networkMACAddressList >"$temp" || return $?
+  __catchEnvironment "$handler" networkMACAddressList >"$temp" || return $?
 
   # Assert 1 < 2
   assertLessThanOrEqual 1 "$(fileLineCount "$temp")" || return $?

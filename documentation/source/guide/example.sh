@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# Sample Usage generation using comments
+# Sample handler generation using comments
 #
 # Copyright &copy; 2025 Market Acumen, Inc.
 #
@@ -17,7 +17,7 @@ source "$(dirname "${BASH_SOURCE[0]}")/tools.sh" || exit 99
 # - Also **bold** and *italic* - but that's it
 # - Lists look like lists in text largely because markdown is just pretty text
 #
-# Usage: myCoolScript
+# handler: myCoolScript
 # Argument: fileArg - Required. File. The file to cool
 # Argument: directoryArg - Required. Directory. The place to put the cool file
 # Argument: --help - Show this help and exit
@@ -27,33 +27,30 @@ source "$(dirname "${BASH_SOURCE[0]}")/tools.sh" || exit 99
 # Example:      myCoolScript another.cool ./coolerOutput/
 #
 myCoolScript() {
-  local argument fileArg directoryArg
-  local usage
+  local handler="_${FUNCNAME[0]}"
 
-  usage="_${FUNCNAME[0]}"
-
-  fileArg=
-  directoryArg=
+  local fileArg="" directoryArg=""
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
+  local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
-    argument="$1"
-    [ -n "$argument" ] || __throwArgument "$usage" "blank argument" || return $?
+    local argument="$1" __index=$((__count - $# + 1))
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
+    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
-    # _IDENTICAL_ --help 4
-    --help)
-      "$usage" 0
-      return $?
-      ;;
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
     *)
       if [ -z "$fileArg" ]; then
-        fileArg="$(usageArgumentFile "$usage" fileArg "$argument")" || return $?
+        fileArg="$(usageArgumentFile "$handler" fileArg "$argument")" || return $?
       elif [ -z "$directoryArg" ]; then
-        directoryArg="$(usageArgumentDirectory "$usage" directoryArg "$argument")" || return $?
+        directoryArg="$(usageArgumentDirectory "$handler" directoryArg "$argument")" || return $?
       else
-        __throwArgument "unknown argument: $argument" || return $?
+        # _IDENTICAL_ argumentUnknownHandler 1
+        __throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
       fi
       ;;
     esac
-    shift || :
+    shift
   done
 
   # cool things

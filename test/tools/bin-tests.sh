@@ -57,11 +57,11 @@ __testInstallInstallBuild() {
 
 testMapBin() {
 
-  local usage="_return" home
+  local handler="_return" home
 
   home=$(buildHome)
-  home=$(__catch "$usage" buildHome) || return $?
-  __catchEnvironment "$usage" muzzle pushd "$home" || return $?
+  home=$(__catch "$handler" buildHome) || return $?
+  __catchEnvironment "$handler" muzzle pushd "$home" || return $?
 
   __testSection testMap
 
@@ -73,36 +73,36 @@ testMapBin() {
 
   assertEquals "$expected" "$actual" || return $?
 
-  __catchEnvironment "$usage" muzzle popd || return $?
+  __catchEnvironment "$handler" muzzle popd || return $?
 }
 
 testMapPortability() {
   local tempDir
 
-  local usage="_return" home
+  local handler="_return" home
 
   home=$(buildHome)
-  home=$(__catch "$usage" buildHome) || return $?
+  home=$(__catch "$handler" buildHome) || return $?
 
   tempDir="./random.$$/"
-  __catchEnvironment "$usage" mkdir -p "$tempDir" || return $?
-  __catchEnvironment "$usage" cp "$home/bin/build/map.sh" "./random.$$/" || return $?
+  __catchEnvironment "$handler" mkdir -p "$tempDir" || return $?
+  __catchEnvironment "$handler" cp "$home/bin/build/map.sh" "./random.$$/" || return $?
   export DUDE=ax
   export WILD=m
   assertEquals "$(echo "{WILD}{DUDE}i{WILD}u{WILD}" | ./random.$$/map.sh)" "maximum" || return $?
-  __catchEnvironment "$usage" rm -rf "$tempDir" || return $?
+  __catchEnvironment "$handler" rm -rf "$tempDir" || return $?
   unset DUDE WILD
 }
 
 # Tag: slow
 testAdditionalBins() {
-  local usage="_return"
+  local handler="_return"
   local binTest
   local aa
 
   local home
-  home="$(__catch "$usage" buildHome)" || return $?
-  __catchEnvironment "$usage" cd "$home" || return $?
+  home="$(__catch "$handler" buildHome)" || return $?
+  __catchEnvironment "$handler" cd "$home" || return $?
 
   for binTest in ./test/bin/*.sh; do
     __testSection "$(basename "$binTest")"

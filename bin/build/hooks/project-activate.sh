@@ -15,18 +15,18 @@ source "${BASH_SOURCE[0]%/*}/../tools.sh"
 # See: bashPromptModule_binBuild
 # Argument: otherHomeDirectory - The old home directory of the project
 __hookProjectActivate() {
-  local usage="_${FUNCNAME[0]}" home otherName="" otherHome tools="bin/build/tools.sh"
+  local handler="_${FUNCNAME[0]}" home otherName="" otherHome tools="bin/build/tools.sh"
   local symbol="🍎"
 
-  otherHome=$(usageArgumentEmptyString "$usage" "otherHomeDirectory" "${1-}") || return $?
+  otherHome=$(usageArgumentEmptyString "$handler" "otherHomeDirectory" "${1-}") || return $?
   otherHome=${otherHome%/} # Strip trailing slash
   if [ -d "$otherHome" ] && [ -x "$otherHome/$tools" ]; then
     # Fetch old application name
     otherName=$("$otherHome/$tools" buildEnvironmentGet APPLICATION_NAME)
   fi
   [ -n "$otherName" ] || otherName="${otherHome##*/}"
-  name=$(__catch "$usage" buildEnvironmentGet APPLICATION_NAME) || return $?
-  home=$(__catch "$usage" buildHome) || return $?
+  name=$(__catch "$handler" buildEnvironmentGet APPLICATION_NAME) || return $?
+  home=$(__catch "$handler" buildHome) || return $?
   [ -n "$name" ] || name="${home##*/}"
 
   statusMessage --last printf -- "%s %s %s %s\n" "$symbol" "$(decorate subtle "$otherName")" "➜" "$(decorate info "$name")"

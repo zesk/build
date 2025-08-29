@@ -113,10 +113,10 @@ testEnvironmentFileLoad() {
 
 testEnvironmentFileMake() {
   local v
-  local usage="_return"
+  local handler="_return"
 
   local home
-  home=$(__catch "$usage" buildHome) || return $?
+  home=$(__catch "$handler" buildHome) || return $?
 
   __catchEnvironment muzzle pushd "$home" || return $?
   (
@@ -319,10 +319,10 @@ testEnvironmentOutput() {
 }
 
 testEnvironmentApacheCompile() {
-  local usage="_return"
+  local handler="_return"
   local envFile
 
-  envFile="$(__catch "$usage" buildHome)/test/example/apache.env" || return $?
+  envFile="$(__catch "$handler" buildHome)/test/example/apache.env" || return $?
 
   local matches
 
@@ -335,12 +335,12 @@ testEnvironmentApacheCompile() {
 }
 
 testEnvironmentCompile() {
-  local usage="_return"
+  local handler="_return"
   local envFile
 
-  envFile=$(fileTemporaryName "$usage") || return $?
+  envFile=$(fileTemporaryName "$handler") || return $?
 
-  __catchEnvironment "$usage" printf "%s\n" "A=1" "B=2" "C=\$((A + B))" "HOME=secure" "_A=\$A" "_B=\$B" "_C=42" "USER=root" >"$envFile" || return $?
+  __catchEnvironment "$handler" printf "%s\n" "A=1" "B=2" "C=\$((A + B))" "HOME=secure" "_A=\$A" "_B=\$B" "_C=42" "USER=root" >"$envFile" || return $?
 
   local matches
 
@@ -391,12 +391,12 @@ testEnvironmentCompile() {
   )
   assertExitCode "${matches[@]}" 0 environmentCompile "$envFile" || return $?
 
-  __catchEnvironment "$usage" rm -rf "$envFile" || return $?
+  __catchEnvironment "$handler" rm -rf "$envFile" || return $?
 }
 
 #
 testEnvironmentClean() {
-  local usage="_return"
+  local handler="_return"
 
   local saveEnv
 
@@ -404,9 +404,9 @@ testEnvironmentClean() {
   # Preserve environment locally here for this test
   #
 
-  saveEnv=$(fileTemporaryName "$usage") || return $?
+  saveEnv=$(fileTemporaryName "$handler") || return $?
 
-  __catch "$usage" environmentOutput --underscore --secure >"$saveEnv" || return $?
+  __catch "$handler" environmentOutput --underscore --secure >"$saveEnv" || return $?
 
   local item keepers=(A B C DEE EEE FFF GGG) removed=()
 
@@ -455,7 +455,7 @@ testEnvironmentClean() {
   source "$saveEnv"
   set +a
 
-  __catch "$usage" rm -f "$saveEnv" || return $?
+  __catch "$handler" rm -f "$saveEnv" || return $?
 }
 
 __testEchoEnv() {
@@ -463,24 +463,24 @@ __testEchoEnv() {
 }
 
 testEnvironmentFileLoadExecute() {
-  local usage="_return"
+  local handler="_return"
 
   local clean=() testEnv
 
-  testEnv=$(fileTemporaryName "$usage") || return $?
+  testEnv=$(fileTemporaryName "$handler") || return $?
   clean+=("$testEnv")
 
-  __catch "$usage" environmentValueWrite HELLO World >>"$testEnv" || return $?
+  __catch "$handler" environmentValueWrite HELLO World >>"$testEnv" || return $?
 
   export TEST_THING=Transient
   assertEquals "[Transient]" "$(environmentFileLoad "$testEnv" --execute __testEchoEnv TEST_THING)" || return $?
   assertEquals "[World]" "$(environmentFileLoad "$testEnv" --execute __testEchoEnv HELLO)" || return $?
-  __catch "$usage" environmentValueWrite TEST_THING Winner >>"$testEnv" || return $?
+  __catch "$handler" environmentValueWrite TEST_THING Winner >>"$testEnv" || return $?
   assertEquals "[Winner]" "$(environmentFileLoad "$testEnv" --execute __testEchoEnv TEST_THING)" || return $?
   assertEquals "[World]" "$(environmentFileLoad "$testEnv" --execute __testEchoEnv HELLO)" || return $?
 
   assertEquals "" "${HELLO-}" || return $?
   assertEquals "Transient" "$TEST_THING" || return $?
 
-  __catchEnvironment "$usage" rm -rf "${clean[@]}" || return $?
+  __catchEnvironment "$handler" rm -rf "${clean[@]}" || return $?
 }

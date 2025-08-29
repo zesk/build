@@ -65,39 +65,37 @@ __crontabGenerate() {
 # Example:     {fn} /etc/myCoolApp.conf /var/www/applications www-data /usr/local/bin/map.sh
 # See: whoami
 crontabApplicationUpdate() {
-  local usage="_${FUNCNAME[0]}"
+  local handler="_${FUNCNAME[0]}"
 
-  __catch "$usage" packageWhich crontab cron || return $?
+  __catch "$handler" packageWhich crontab cron || return $?
 
   local rootEnv="" appPath="" user
-  user=$(whoami) || __throwEnvironment "$usage" whoami || return $?
-  [ -n "$user" ] || __throwEnvironment "$usage" "whoami user is blank" || return $?
+  user=$(whoami) || __throwEnvironment "$handler" whoami || return $?
+  [ -n "$user" ] || __throwEnvironment "$handler" "whoami user is blank" || return $?
 
   local environmentMapper="" flagDiff=false flagShow=false
-  # _IDENTICAL_ argument-case-header 5
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
+    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
-    # _IDENTICAL_ --help 4
-    --help)
-      "$usage" 0
-      return $?
-      ;;
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
     --env-file)
-      [ -z "$rootEnv" ] || __throwArgument "$usage" "$argument already" || return $?
+      [ -z "$rootEnv" ] || __throwArgument "$handler" "$argument already" || return $?
       shift
-      rootEnv=$(usageArgumentFile "$usage" "rootEnv" "$1") || return $?
+      rootEnv=$(usageArgumentFile "$handler" "rootEnv" "$1") || return $?
       ;;
     --mapper)
-      [ -z "$environmentMapper" ] || __throwArgument "$usage" "$argument already" || return $?
+      [ -z "$environmentMapper" ] || __throwArgument "$handler" "$argument already" || return $?
       shift
-      environmentMapper=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
+      environmentMapper=$(usageArgumentString "$handler" "$argument" "${1-}") || return $?
       ;;
     --user)
       shift
-      user="$(usageArgumentString "$usage" "$argument" "${1-}")" || return $?
+      user="$(usageArgumentString "$handler" "$argument" "${1-}")" || return $?
       ;;
     --show)
       flagShow=true
@@ -106,7 +104,7 @@ crontabApplicationUpdate() {
       flagDiff=true
       ;;
     *)
-      appPath="$(usageArgumentDirectory "$usage" "applicationPath" "$argument")" || return $?
+      appPath="$(usageArgumentDirectory "$handler" "applicationPath" "$argument")" || return $?
       ;;
     esac
     shift
@@ -115,17 +113,17 @@ crontabApplicationUpdate() {
   if [ -z "$environmentMapper" ]; then
     environmentMapper=mapEnvironment
   fi
-  isCallable "$environmentMapper" || __throwEnvironment "$usage" "$environmentMapper is not callable" || return $?
+  isCallable "$environmentMapper" || __throwEnvironment "$handler" "$environmentMapper is not callable" || return $?
 
-  [ -n "$appPath" ] || __throwArgument "$usage" "Need to specify application path" || return $?
-  [ -n "$user" ] || __throwArgument "$usage" "Need to specify user" || return $?
+  [ -n "$appPath" ] || __throwArgument "$handler" "Need to specify application path" || return $?
+  [ -n "$user" ] || __throwArgument "$handler" "Need to specify user" || return $?
 
   if $flagShow; then
     __crontabGenerate "$rootEnv" "$appPath" "$user" "$environmentMapper"
     return 0
   fi
   local newCrontab returnCode
-  newCrontab=$(fileTemporaryName "$usage")
+  newCrontab=$(fileTemporaryName "$handler")
   __crontabGenerate "$rootEnv" "$appPath" "$user" "$environmentMapper" >"$newCrontab" || return $?
 
   if [ ! -s "$newCrontab" ]; then
@@ -146,8 +144,8 @@ crontabApplicationUpdate() {
   fi
   statusMessage printf "%s %s ...\n" "$(decorate info "Updating crontab on ")" "$(decorate value "$(date)")"
   returnCode=0
-  __catchEnvironment "$usage" crontab -u "$user" - <"$newCrontab" 2>/dev/null || returnCode=$?
-  __catchEnvironment "$usage" rm -f "$newCrontab" || return $?
+  __catchEnvironment "$handler" crontab -u "$user" - <"$newCrontab" 2>/dev/null || returnCode=$?
+  __catchEnvironment "$handler" rm -f "$newCrontab" || return $?
   [ $returnCode -eq 0 ] || return "$returnCode"
   statusMessage --last printf -- "%s %s on %s\n" "$(decorate info "Updated crontab of ")" "$(decorate code "$user")" "$(decorate value "$(date)")"
   return 0

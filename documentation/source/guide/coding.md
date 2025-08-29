@@ -54,7 +54,7 @@ For most external functions, validate your argument with an argument spinner:
         local argument="$1" 
         case "$argument" in
             --help)
-                "$usage" 0
+                "$handler" 0
                 return $?
                 ;;
             *)
@@ -83,7 +83,7 @@ is run).
 
 Upon first using `bash` it made sense to put `local` a the top of a function to have them in one place. Unfortunately
 this leads to moving declarations far away from usages at times and so we have shifted to doing `local` declarations at
-the scope needed as well as as near to its initial usage as possible. This leads to easier refactorings and better
+the scope needed as well as as near to its initial handler as possible. This leads to easier refactorings and better
 readability all around.
 
 ## Avoid depending on `set -eou pipefail`
@@ -112,11 +112,11 @@ The sooner it gets handled the cleaner things are.
 
 So just do:
 
-    foo=$(__catchEnvironment "$usage" thingWhichFails) || return $?
+    foo=$(__catchEnvironment "$handler" thingWhichFails) || return $?
 
 or
 
-    __catchEnvironment "$usage" thingWhichFails || return $?
+    __catchEnvironment "$handler" thingWhichFails || return $?
 
 **MOST** of the time. When not to?
 
@@ -132,20 +132,19 @@ Commands typically are:
 
     condition || action || returnUndo $? command ... || returnClean $? fileToDelete directoryToDelete || return $?
 
-## Standard usage and error handling with underscore usage function
+## Standard handler and error handling with underscore handler function
 
-Using the `usageDocument` function we can automatically report errors and usage for any `bash` function:
+Using the `usageDocument` function we can automatically report errors and handler for any `bash` function:
 
 Pattern:
 
-    # Usage: {fn}
-    # This describes the usage
+    # This describes the handler
     # Argument: file - Required. File. Description of file argument.
     functionName() {
-        local usage="_${FUNCNAME[0]}"
+        local handler="_${FUNCNAME[0]}"
        ...
         if ! trySomething; then
-            __throwEnvironment "$usage" "Error message why" || return $?
+            __throwEnvironment "$handler" "Error message why" || return $?
         fi
     }
     _functionName() {
@@ -173,7 +172,7 @@ pattern will always work:
 
     _usageFunction "$errorEnvironment" "S N A F U" || return $?
 
-The above code **MUST always** return `$errorEnvironment` - coding your usage function in any other way will cause
+The above code **MUST always** return `$errorEnvironment` - coding your handler function in any other way will cause
 problems.
 
 ## Standard error codes
@@ -200,10 +199,10 @@ Code:
 
     return "$(_code environment)"
 
-Usage:
+handler:
 
-    tempFile=(fileTemporaryName "$usage") || return $?
-    __throwEnvironment "$usage" "No deployment application directory exists" || return $?
+    tempFile=(fileTemporaryName "$handler") || return $?
+    __throwEnvironment "$handler" "No deployment application directory exists" || return $?
 
 See:
 
@@ -228,47 +227,47 @@ Code:
 
     return "$(_code argument)"
 
-Usage:
+handler:
 
-    __catchArgument "$usage" isInteger "$argument" || return $?
-    __throwArgument "$usage" "No deployment application directory exists" || return $?
+    __catchArgument "$handler" isInteger "$argument" || return $?
+    __throwArgument "$handler" "No deployment application directory exists" || return $?
 
 ### Argument utilities
 
-- [`usageArgumentDirectory`](./tools/usage.md#usageArgumentDirectory) - Argument must be a valid directory
-- [`usageArgumentFile`](./tools/usage.md#usageArgumentFile) - Argument must be a valid file
-- [`usageArgumentFileDirectory`](./tools/usage.md#usageArgumentFileDirectory) - Argument must be a file which may or may
+- [`usageArgumentDirectory`](./tools/handler.md#usageArgumentDirectory) - Argument must be a valid directory
+- [`usageArgumentFile`](./tools/handler.md#usageArgumentFile) - Argument must be a valid file
+- [`usageArgumentFileDirectory`](./tools/handler.md#usageArgumentFileDirectory) - Argument must be a file which may or may
   not exist in a directory which exists
-- [`usageArgumentDirectory`](./tools/usage.md#usageArgumentDirectory) - Argument must be a directory
-- [`usageArgumentRealDirectory`](./tools/usage.md#usageArgumentRealDirectory) - Argument must be a directory and
+- [`usageArgumentDirectory`](./tools/handler.md#usageArgumentDirectory) - Argument must be a directory
+- [`usageArgumentRealDirectory`](./tools/handler.md#usageArgumentRealDirectory) - Argument must be a directory and
   converted to the real path
-- [`usageArgumentFile`](./tools/usage.md#usageArgumentFile) - Argument must be a valid file
-- [`usageArgumentFileDirectory`](./tools/usage.md#usageArgumentFileDirectory) - Argument must be a file path which is a
+- [`usageArgumentFile`](./tools/handler.md#usageArgumentFile) - Argument must be a valid file
+- [`usageArgumentFileDirectory`](./tools/handler.md#usageArgumentFileDirectory) - Argument must be a file path which is a
   directory that exists
-- [`usageArgumentInteger`](./tools/usage.md#usageArgumentInteger) - Argument must be an integer
-- [`usageArgumentPositiveInteger`](./tools/usage.md#usageArgumentPositiveInteger) - Argument must be a positive
+- [`usageArgumentInteger`](./tools/handler.md#usageArgumentInteger) - Argument must be an integer
+- [`usageArgumentPositiveInteger`](./tools/handler.md#usageArgumentPositiveInteger) - Argument must be a positive
   integer (1 or greater)
-- [`usageArgumentUnsignedInteger`](./tools/usage.md#usageArgumentUnsignedInteger) - Argument must be an unsigned
+- [`usageArgumentUnsignedInteger`](./tools/handler.md#usageArgumentUnsignedInteger) - Argument must be an unsigned
   integer (0 or greater)
-- [`usageArgumentLoadEnvironmentFile`](./tools/usage.md#usageArgumentLoadEnvironmentFile) - Argument must be an
+- [`usageArgumentLoadEnvironmentFile`](./tools/handler.md#usageArgumentLoadEnvironmentFile) - Argument must be an
   environment file which is also loaded immediately.
-- [`usageArgumentMissing`](./tools/usage.md#usageArgumentMissing) - Fails with an argument is missing error
-- [`usageArgumentString`](./tools/usage.md#usageArgumentString) - Argument must be a non-blank string
-- [`usageArgumentEmptyString`](./tools/usage.md#usageArgumentEmptyString) - Argument may be anything
-- [`usageArgumentBoolean`](./tools/usage.md#usageArgumentBoolean) - Argument must be a boolean value (`true` or `false`)
-- [`usageArgumentEnvironmentVariable`](./tools/usage.md#usageArgumentEnvironmentVariable) - Argument must be a valid
+- [`usageArgumentMissing`](./tools/handler.md#usageArgumentMissing) - Fails with an argument is missing error
+- [`usageArgumentString`](./tools/handler.md#usageArgumentString) - Argument must be a non-blank string
+- [`usageArgumentEmptyString`](./tools/handler.md#usageArgumentEmptyString) - Argument may be anything
+- [`usageArgumentBoolean`](./tools/handler.md#usageArgumentBoolean) - Argument must be a boolean value (`true` or `false`)
+- [`usageArgumentEnvironmentVariable`](./tools/handler.md#usageArgumentEnvironmentVariable) - Argument must be a valid
   environment variable name
-- [`usageArgumentURL`](./tools/usage.md#usageArgumentURL) - Argument must be a valid URL
-- [`usageArgumentUnknown`](./tools/usage.md#usageArgumentUnknown) - Fails with an unknown argument error
-- [`usageArgumentCallable`](./tools/usage.md#usageArgumentCallable) - Argument must be callable (a function or
+- [`usageArgumentURL`](./tools/handler.md#usageArgumentURL) - Argument must be a valid URL
+- [`usageArgumentUnknown`](./tools/handler.md#usageArgumentUnknown) - Fails with an unknown argument error
+- [`usageArgumentCallable`](./tools/handler.md#usageArgumentCallable) - Argument must be callable (a function or
   executable)
-- [`usageArgumentFunction`](./tools/usage.md#usageArgumentFunction) - Argument must be a function
-- [`usageArgumentExecutable`](./tools/usage.md#usageArgumentExecutable) - Argument must be a binary which can be
+- [`usageArgumentFunction`](./tools/handler.md#usageArgumentFunction) - Argument must be a function
+- [`usageArgumentExecutable`](./tools/handler.md#usageArgumentExecutable) - Argument must be a binary which can be
   executed
 
 ### See
 
-- [Usage functions](./tools/usage.md)
+- [handler functions](./tools/handler.md)
 - [`_argument`](./tools/sugar.md#_argument)
 - [`__argument`](./tools/sugar.md#__argument)
 - [`__throwArgument`](./tools/sugar.md#__throwArgument)

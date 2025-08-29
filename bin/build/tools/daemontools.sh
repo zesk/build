@@ -344,7 +344,8 @@ daemontoolsTerminate() {
       timeout=$(handlerArgumentInteger "$handler" "seconds" "$1") || return $?
       ;;
     *)
-      __throwArgument "$handler" "unknown argument $(decorate value "$argument")" || return $?
+      # _IDENTICAL_ argumentUnknownHandler 1
+      __throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
       ;;
     esac
     shift

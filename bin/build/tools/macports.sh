@@ -86,7 +86,7 @@ __portPackageSelections() {
 }
 
 #
-# Usage: {fn}
+# handler: {fn}
 # OS upgrade and potential restart
 # Progress is written to stderr
 # Result is `ok` or `restart` written to stdout
@@ -97,16 +97,16 @@ __portPackageSelections() {
 # Artifact: `packageUpdate.log` is left in the `buildCacheDirectory`
 # Artifact: `packageInstall.log` is left in the `buildCacheDirectory`
 __portUpgrade() {
-  local usage="_${FUNCNAME[0]}"
+  local handler="_${FUNCNAME[0]}"
   local quietLog upgradeLog result clean=()
 
-  quietLog=$(__catch "$usage" buildQuietLog "$usage") || return $?
-  upgradeLog=$(__catch "$usage" buildQuietLog "upgrade_${usage#_}") || return $?
+  quietLog=$(__catch "$handler" buildQuietLog "$handler") || return $?
+  upgradeLog=$(__catch "$handler" buildQuietLog "upgrade_${handler#_}") || return $?
   clean+=("$quietLog" "$upgradeLog")
   __catchEnvironmentQuiet "$quietLog" packageUpdate || return $?
   __catchEnvironmentQuiet "$quietLog" packageInstall || return $?
-  __catch "$usage" __sudoPortWrapper upgrade outdated | tee -a "$upgradeLog" >>"$quietLog" || returnUndo $? dumpPipe "macports upgrade failed" <"$quietLog" || returnClean $? "${clean[@]}" || return $?
-  __catchEnvironment "$usage" rm -rf "${clean[@]}" || return $?
+  __catch "$handler" __sudoPortWrapper upgrade outdated | tee -a "$upgradeLog" >>"$quietLog" || returnUndo $? dumpPipe "macports upgrade failed" <"$quietLog" || returnClean $? "${clean[@]}" || return $?
+  __catchEnvironment "$handler" rm -rf "${clean[@]}" || return $?
   printf "%s\n" "$result"
 }
 ___portUpgrade() {
@@ -118,8 +118,8 @@ ___portUpgrade() {
 # See: packageUpdate
 # package.sh: true
 __portUpdate() {
-  local usage="_return" temp returnCode
-  temp=$(fileTemporaryName "$usage") || return $?
+  local handler="_return" temp returnCode
+  temp=$(fileTemporaryName "$handler") || return $?
   if __sudoPortWrapper sync 2>"$temp"; then
     rm -rf "$temp" || :
     return 0
@@ -130,13 +130,13 @@ __portUpdate() {
   return $returnCode
 }
 
-# Usage: {fn}
+# handler: {fn}
 # List installed packages
 # package.sh: true
 __portInstalledList() {
-  local usage="_${FUNCNAME[0]}"
-  whichExists port || __throwEnvironment "$usage" "port not installed - can not list" || return $?
-  [ $# -eq 0 ] || __throwArgument "$usage" "Unknown argument $*" || return $?
+  local handler="_${FUNCNAME[0]}"
+  whichExists port || __throwEnvironment "$handler" "port not installed - can not list" || return $?
+  [ $# -eq 0 ] || __throwArgument "$handler" "Unknown argument $*" || return $?
   __portWrapper installed | grep -v 'currently installed' | awk '{ print $1 }'
 }
 ___portInstalledList() {
@@ -144,12 +144,12 @@ ___portInstalledList() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# Usage: {fn}
+# handler: {fn}
 # List available bottles
 # package.sh: true
 __portAvailableList() {
-  local usage="_${FUNCNAME[0]}"
-  whichExists port || __throwEnvironment "$usage" "port not installed - can not list" || return $?
+  local handler="_${FUNCNAME[0]}"
+  whichExists port || __throwEnvironment "$handler" "port not installed - can not list" || return $?
   __portWrapper list | awk '{ print $1 }'
 }
 ___portAvailableList() {
@@ -157,7 +157,7 @@ ___portAvailableList() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# Usage: {fn}
+# handler: {fn}
 # Output list of apt standard packages (constant)
 # See: _packageStandardPackages
 # package.sh: true

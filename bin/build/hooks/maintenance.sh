@@ -34,31 +34,27 @@ __hookMaintenanceSetValue() {
 #
 __hookMaintenance() {
   local enable message variable messageVariable messageColor messageValue maintenanceValue
-  local usage
-
-  usage="${FUNCNAME[0]#_}"
+  local handler="_${FUNCNAME[0]}"
 
   export BUILD_MAINTENANCE_VARIABLE BUILD_MAINTENANCE_MESSAGE_VARIABLE
 
-  __catch "$usage" buildEnvironmentLoad BUILD_MAINTENANCE_VARIABLE BUILD_MAINTENANCE_MESSAGE_VARIABLE || return $?
+  __catch "$handler" buildEnvironmentLoad BUILD_MAINTENANCE_VARIABLE BUILD_MAINTENANCE_MESSAGE_VARIABLE || return $?
 
   variable=${BUILD_MAINTENANCE_VARIABLE-}
   messageVariable=${BUILD_MAINTENANCE_MESSAGE_VARIABLE-}
 
-  [ -n "$variable" ] || __throwEnvironment "$usage" "BUILD_MAINTENANCE_VARIABLE is blank, no default behavior" || return $?
+  [ -n "$variable" ] || __throwEnvironment "$handler" "BUILD_MAINTENANCE_VARIABLE is blank, no default behavior" || return $?
   message=
   enable=false
-  # _IDENTICAL_ argument-case-header 5
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
+    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
-    # _IDENTICAL_ --help 4
-    --help)
-      "$usage" 0
-      return $?
-      ;;
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
     on | 1 | true | enable)
       enable=true
       ;;
@@ -73,8 +69,8 @@ __hookMaintenance() {
       message="$1"
       ;;
     *)
-      # _IDENTICAL_ argumentUnknown 1
-      __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
+      # _IDENTICAL_ argumentUnknownHandler 1
+      __throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
       ;;
     esac
     shift
@@ -90,11 +86,11 @@ __hookMaintenance() {
     maintenanceValue=
     messageSuffix=$(decorate bold-magenta "NOW LIVE!")
   fi
-  __hookMaintenanceSetValue "$variable" "$maintenanceValue" || __throwEnvironment "$usage" "Unable to set $variable to $maintenanceValue" || return $?
+  __hookMaintenanceSetValue "$variable" "$maintenanceValue" || __throwEnvironment "$handler" "Unable to set $variable to $maintenanceValue" || return $?
   __hookMaintenanceSetValue "$messageVariable" "$message" || decorate warning "Maintenance message not set, continuing with errors"
   printf "%s %s - %s\n" "$(decorate "$messageColor" "Maintenance")" "$messageValue" "$messageSuffix"
 }
-_hookMaintenance() {
+___hookMaintenance() {
   # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

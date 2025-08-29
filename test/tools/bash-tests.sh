@@ -92,15 +92,15 @@ testBashSourcePath() {
 }
 
 testBashSourcePathExclude() {
-  local usage="_return"
+  local handler="_return"
   local testPath
 
-  testPath=$(fileTemporaryName "$usage" -d) || return $?
+  testPath=$(fileTemporaryName "$handler" -d) || return $?
 
-  __catchEnvironment "$usage" printf "%s\n" "#!/usr/bin/env bash" "echo \"\${BASH_SOURCE[0]}\";" >"$testPath/one.sh" || return $?
-  __catchEnvironment "$usage" chmod +x "$testPath/one.sh" || return $?
-  __catchEnvironment "$usage" cp "$testPath/one.sh" "$testPath/two.sh" || return $?
-  __catchEnvironment "$usage" cp "$testPath/one.sh" "$testPath/__ignore.sh" || return $?
+  __catchEnvironment "$handler" printf "%s\n" "#!/usr/bin/env bash" "echo \"\${BASH_SOURCE[0]}\";" >"$testPath/one.sh" || return $?
+  __catchEnvironment "$handler" chmod +x "$testPath/one.sh" || return $?
+  __catchEnvironment "$handler" cp "$testPath/one.sh" "$testPath/two.sh" || return $?
+  __catchEnvironment "$handler" cp "$testPath/one.sh" "$testPath/__ignore.sh" || return $?
 
   local matches=(
     --stdout-match "__ignore.sh"
@@ -128,7 +128,7 @@ testBashSourcePathExclude() {
   )
   assertExitCode "${matches[@]}" 0 bashSourcePath --exclude "*/__ignore.sh" --exclude "*/*" "$testPath/" || return $?
 
-  __catchEnvironment "$usage" rm -rf "$testPath" || return $?
+  __catchEnvironment "$handler" rm -rf "$testPath" || return $?
 }
 
 testBashSourcePathDot() {

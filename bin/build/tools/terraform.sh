@@ -10,7 +10,7 @@
 #
 # Add keys to enable apt to download terraform directly from hashicorp.com
 #
-# Usage: aptKeyAddHashicorp
+# handler: aptKeyAddHashicorp
 # Exit Code: 1 - if environment is awry
 # Exit Code: 0 - All good to install terraform
 #
@@ -26,7 +26,7 @@ _aptKeyAddHashicorp() {
 #
 # Add keys to enable apt to download terraform directly from hashicorp.com
 #
-# Usage: aptKeyAddHashicorp
+# handler: aptKeyAddHashicorp
 # Exit Code: 1 - if environment is awry
 # Exit Code: 0 - All good to install terraform
 #
@@ -42,20 +42,20 @@ _aptKeyRemoveHashicorp() {
 #
 # Install terraform binary
 #
-# Usage: {fn} [ package ... ]
+# handler: {fn} [ package ... ]
 # Argument: package - Additional packages to install using `packageInstall`
 #
 terraformInstall() {
-  local usage="_${FUNCNAME[0]}" binary="terraform"
+  local handler="_${FUNCNAME[0]}" binary="terraform"
 
-  __help "$usage" "$@" || return 0
+  __help "$handler" "$@" || return 0
   ! whichExists "$binary" || return 0
   if aptIsInstalled; then
-    __catch "$usage" packageInstall gnupg software-properties-common curl figlet || return $?
-    __catch "$usage" aptKeyAddHashicorp || return $?
+    __catch "$handler" packageInstall gnupg software-properties-common curl figlet || return $?
+    __catch "$handler" aptKeyAddHashicorp || return $?
   fi
-  __catch "$usage" packageInstall "$binary" "$@" || return $?
-  whichExists "$binary" || __throwEnvironment "$usage" "No $binary binary found - installation failed" || return $?
+  __catch "$handler" packageInstall "$binary" "$@" || return $?
+  whichExists "$binary" || __throwEnvironment "$handler" "No $binary binary found - installation failed" || return $?
 }
 _terraformInstall() {
   # __IDENTICAL__ usageDocument 1
@@ -65,17 +65,17 @@ _terraformInstall() {
 #
 # Remove terraform binary
 #
-# Usage: {fn} [ package ... ]
+# handler: {fn} [ package ... ]
 # Argument: package - Additional packages to uninstall using `packageUninstall`
 #
 terraformUninstall() {
-  local usage="_${FUNCNAME[0]}"
+  local handler="_${FUNCNAME[0]}"
 
-  __help "$usage" "$@" || return 0
+  __help "$handler" "$@" || return 0
   whichExists terraform || return 0
-  __catch "$usage" packageWhichUninstall terraform terraform "$@" || return $?
-  __catch "$usage" aptKeyRemoveHashicorp || return $?
-  __catch "$usage" packageUpdate --force || return $?
+  __catch "$handler" packageWhichUninstall terraform terraform "$@" || return $?
+  __catch "$handler" aptKeyRemoveHashicorp || return $?
+  __catch "$handler" packageUpdate --force || return $?
 }
 _terraformUninstall() {
   # __IDENTICAL__ usageDocument 1

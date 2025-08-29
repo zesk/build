@@ -67,10 +67,10 @@ testIdenticalCheckAndRepairMap() {
 }
 
 testIdenticalRepair() {
-  local usage="_return"
+  local handler="_return"
 
   local home
-  home=$(__catch "$usage" buildHome) || return $?
+  home=$(__catch "$handler" buildHome) || return $?
 
   local output source token target expectedTarget testPath prefix
 
@@ -113,10 +113,10 @@ testIdenticalLineParsing() {
 
 # Tag: slow
 testIdenticalChecks() {
-  local usage="_return"
+  local handler="_return"
   local home
 
-  home=$(__catch "$usage" buildHome) || return $?
+  home=$(__catch "$handler" buildHome) || return $?
   local identicalCheckArgs identicalError
 
   identicalError=$(returnCode identical)
@@ -154,11 +154,11 @@ testIdenticalChecks() {
 }
 
 testIdenticalCheckSingles() {
-  local usage="_return"
+  local handler="_return"
   local identicalCheckArgs identicalError singles
 
   local home
-  home=$(__catch "$usage" buildHome) || return $?
+  home=$(__catch "$handler" buildHome) || return $?
 
   identicalError=$(returnCode identical)
 

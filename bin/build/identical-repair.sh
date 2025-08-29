@@ -6,7 +6,7 @@
 #
 
 # IDENTICAL __source 19
-# Usage: {fn} source relativeHome  [ command ... ] ]
+# handler: {fn} source relativeHome  [ command ... ] ]
 # Load a source file and run a command
 # Argument: source - Required. File. Path to source relative to application root..
 # Argument: relativeHome - Required. Directory. Path to application root.
@@ -27,7 +27,7 @@ __source() {
 }
 
 # IDENTICAL __tools 8
-# Usage: {fn} [ relativeHome [ command ... ] ]
+# handler: {fn} [ relativeHome [ command ... ] ]
 # Load build tools and run command
 # Argument: relativeHome - Required. Directory. Path to application root.
 # Argument: command ... - Optional. Callable. A command to run and optional arguments.
@@ -37,7 +37,7 @@ __tools() {
 }
 
 # IDENTICAL _return 25
-# Usage: {fn} [ exitCode [ message ... ] ]
+# handler: {fn} [ exitCode [ message ... ] ]
 # Argument: exitCode - Optional. Integer. Exit code to return. Default is 1.
 # Argument: message ... - Optional. String. Message to output to stderr.
 # Exit Code: exitCode
@@ -52,7 +52,7 @@ _return() {
 # Source: https://stackoverflow.com/questions/806906/how-do-i-test-if-a-variable-is-a-number-in-bash
 # Credits: F. Hauri - Give Up GitHub (isnum_Case)
 # Original: is_uint
-# Usage: {fn} argument ...
+# handler: {fn} argument ...
 # Exit Code: 0 - if it is an unsigned integer
 # Exit Code: 1 - if it is not an unsigned integer
 # Requires: _return
@@ -65,20 +65,20 @@ isUnsignedInteger() {
 # <-- END of IDENTICAL _return
 
 # fn: {base}
-# Usage: {fn}
+# handler: {fn}
 # By default will add any directory named `identical` as repair source and any file
 # at `identical/singles.txt` as a singles file.
 #
 # Failures will be opened using `contextOpen`.
 #
-# See `identicalCheckShell` for additional arguments and usage.
+# See `identicalCheckShell` for additional arguments and handler.
 # See: identicalCheckShell
 __buildIdenticalRepair() {
-  local usage="_${FUNCNAME[0]}"
+  local handler="_${FUNCNAME[0]}"
   local item aa home
 
-  home=$(__catch "$usage" buildHome) || return $?
-  __catchEnvironment "$usage" muzzle cd "$home" || return $?
+  home=$(__catch "$handler" buildHome) || return $?
+  __catchEnvironment "$handler" muzzle cd "$home" || return $?
   local done=false aa=()
   while ! $done; do
     read -r item || done=true
@@ -91,7 +91,7 @@ __buildIdenticalRepair() {
   done < <(find "$home" -type d -name identical ! -path "*/.*/*")
   # bashDebugInterruptFile --error --interrupt
   set -eou pipefail
-  __catch "$usage" identicalCheckShell --skip "$(realPath "${BASH_SOURCE[0]}")" "${aa[@]+"${aa[@]}"}" --exec contextOpen "$@" || return $?
+  __catch "$handler" identicalCheckShell --skip "$(realPath "${BASH_SOURCE[0]}")" "${aa[@]+"${aa[@]}"}" --exec contextOpen "$@" || return $?
 }
 ___buildIdenticalRepair() {
   # __IDENTICAL__ usageDocument 1

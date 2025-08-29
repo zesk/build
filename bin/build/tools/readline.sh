@@ -11,21 +11,21 @@
 # Argument: action - Required. String.
 # Example: readlineConfigurationAdd "\ep" history-search-backward
 readlineConfigurationAdd() {
-  local usage="_${FUNCNAME[0]}"
-  [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
+  local handler="_${FUNCNAME[0]}"
+  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
 
   local target=".input""rc" keyStroke="${1-}" action="${2-}" pattern
   local home
 
-  home="$(__catch "$usage" userHome)" || return $?
+  home="$(__catch "$handler" userHome)" || return $?
   target="$home/$target"
-  [ -f "$target" ] || __catchEnvironment "$usage" touch "$target" || return $?
+  [ -f "$target" ] || __catchEnvironment "$handler" touch "$target" || return $?
   pattern="^$(quoteGrepPattern "\"$keyStroke\":")"
   if grep -q -e "$pattern" <"$target"; then
     grep -v "$pattern" >"$target.new" <"$target"
-    __catchEnvironment "$usage" mv -f "$target.new" "$target" || returnClean $? "$target.new" || return $?
+    __catchEnvironment "$handler" mv -f "$target.new" "$target" || returnClean $? "$target.new" || return $?
   fi
-  __catchEnvironment "$usage" printf "\"%s\": %s\n" "$keyStroke" "$action" >>"$target" || return $?
+  __catchEnvironment "$handler" printf "\"%s\": %s\n" "$keyStroke" "$action" >>"$target" || return $?
 }
 _readlineConfigurationAdd() {
   # __IDENTICAL__ usageDocument 1

@@ -46,10 +46,10 @@ testCoverageReportThing() {
 
 # Tag: test-tags slow
 testSlowTagsWorkCorrectly() {
-  local usage="_return"
+  local handler="_return"
 
   local home
-  home=$(__catch "$usage" buildHome) || return $?
+  home=$(__catch "$handler" buildHome) || return $?
 
   local ee=("PATH=$PATH" "HOME=$HOME")
   assertExitCode --stdout-match "testBuildFunctionsCoverage" --stdout-match "${FUNCNAME[0]}" 0 /usr/bin/env -i "${ee[@]}" "$home/bin/test.sh" --tag slow --list || return $?
@@ -113,7 +113,7 @@ testBuildFunctionsCoverage() {
   fi
 }
 __deprecatedFunctionsSoon() {
-  decorate wrap "usage""Argument" <<EOF
+  decorate wrap "handler""Argument" <<EOF
 ApplicationDirectory
 ApplicationDirectoryList
 ApplicationFile
@@ -148,17 +148,17 @@ EOF
 # Tag: slow
 # Tag: slow-non-critical
 testBuildFunctionsHelpCoverage() {
-  local usage="_return"
+  local handler="_return"
 
   local home
-  home=$(__catch "$usage" buildHome) || return $?
+  home=$(__catch "$handler" buildHome) || return $?
 
   local deprecatedFunctions clean=()
-  deprecatedFunctions=$(fileTemporaryName "$usage") || return $?
+  deprecatedFunctions=$(fileTemporaryName "$handler") || return $?
 
   clean+=("$deprecatedFunctions")
 
-  __catchEnvironment "$usage" cut -f 1 -d '|' <"$home/bin/build/deprecated.txt" | grep -v '#' | grep -v ' ' | grep -v '/' | sort -u >"$deprecatedFunctions" || return $?
+  __catchEnvironment "$handler" cut -f 1 -d '|' <"$home/bin/build/deprecated.txt" | grep -v '#' | grep -v ' ' | grep -v '/' | sort -u >"$deprecatedFunctions" || return $?
 
   local requireCoverageDate
   requireCoverageDate=$(buildEnvironmentGet BUILD_COVERAGE_REQUIRED_DATE) || return $?
@@ -188,10 +188,10 @@ testBuildFunctionsHelpCoverage() {
     if [ -n "$fun" ]; then
       helpless+=("$fun")
       if inArray "$fun" "${blanks[@]}"; then
-        __throwEnvironment "$usage" "$fun is in without-help and blank-help lists, pick one" || return $?
+        __throwEnvironment "$handler" "$fun is in without-help and blank-help lists, pick one" || return $?
       fi
       if ! inArray "$fun" "${functions[@]}"; then
-        __throwEnvironment "$usage" "$fun is no longer part of core" || return $?
+        __throwEnvironment "$handler" "$fun is no longer part of core" || return $?
       fi
     fi
   done < <(__dataBuildFunctionsWithoutHelp)
@@ -220,7 +220,7 @@ testBuildFunctionsHelpCoverage() {
 
   local lastPassedCache lastPassed="" stopAfter=1000000
 
-  lastPassedCache="$(__catch "$usage" buildCacheDirectory)/.${FUNCNAME[0]}.lastPassed" || return $?
+  lastPassedCache="$(__catch "$handler" buildCacheDirectory)/.${FUNCNAME[0]}.lastPassed" || return $?
 
   [ ! -f "$lastPassedCache" ] || lastPassed=""$(head -n 1 "$lastPassedCache")
   local missingFile stopped=false
@@ -248,16 +248,16 @@ testBuildFunctionsHelpCoverage() {
         helpCall=("$fun")
       fi
       if $coverageRequired; then
-        assertExitCode --stdout-match "$fun" --stdout-match "Usage" 0 "${helpCall[@]}" || return $?
+        assertExitCode --stdout-match "$fun" --stdout-match "handler" 0 "${helpCall[@]}" || return $?
       else
         statusMessage decorate info "Attempting $(decorate each code "${helpCall[@]}") ..."
         # "$fun" --help | dumpPipe "$fun --help"
-        if ! assertExitCode --stdout-match "$fun" --stdout-match "Usage" 0 "${helpCall[@]}"; then
+        if ! assertExitCode --stdout-match "$fun" --stdout-match "handler" 0 "${helpCall[@]}"; then
           missing+=("$fun")
-          __catchEnvironment "$usage" printf "%s\n" "$fun" >>"$missingFile" || return $?
+          __catchEnvironment "$handler" printf "%s\n" "$fun" >>"$missingFile" || return $?
         else
           if [ "${#missing[@]}" -eq 0 ]; then
-            __catchEnvironment "$usage" printf "%s\n" "$fun" >"$lastPassedCache" || return $?
+            __catchEnvironment "$handler" printf "%s\n" "$fun" >"$lastPassedCache" || return $?
           fi
         fi
       fi
@@ -270,14 +270,14 @@ testBuildFunctionsHelpCoverage() {
   done
   ! $stopped || statusMessage --last decorate warning "Stopped at $(decorate code "$fun")"
   [ "${#missing[@]}" -gt 0 ] || clean+=("$missingFile")
-  __catchEnvironment "$usage" rm -f "${clean[@]}" || return $?
+  __catchEnvironment "$handler" rm -f "${clean[@]}" || return $?
 
   __mockValueStop BUILD_DEBUG
   __mockValueStop TEST_TRACK_ASSERTIONS
   __mockValueStop BUILD_COLORS
 
   statusMessage decorate info "Exiting ${FUNCNAME[0]}..."
-  [ "${#missing[@]}" -gt 0 ] || $stopped || __catchEnvironment "$usage" rm -f "$lastPassedCache" || return $?
+  [ "${#missing[@]}" -gt 0 ] || $stopped || __catchEnvironment "$handler" rm -f "$lastPassedCache" || return $?
   if ! $coverageRequired; then
     [ "${#missing[@]}" -eq 0 ] || printf "%s %s\n%s\n" "$(decorate notice "Functions require --help support. This test will FAIL")" "$(decorate magenta "after $requireCoverageDate")" "$(printf "%s\n" "${missing[@]}" | decorate code | decorate wrap "- ")"
   fi
@@ -314,7 +314,7 @@ EOF
 
 # Tag: slow slow-non-critical
 testBuildFunctionsHelpOnly() {
-  local usage="_return"
+  local handler="_return"
   local fun
   export BUILD_DEBUG
   export BUILD_COLORS
@@ -324,7 +324,7 @@ testBuildFunctionsHelpOnly() {
   __mockValue BUILD_COLORS
   __mockValue TEST_TRACK_ASSERTIONS
 
-  BUILD_DEBUG="fast-usage"
+  BUILD_DEBUG="fast-handler"
   BUILD_COLORS=false
   TEST_TRACK_ASSERTIONS=false
 

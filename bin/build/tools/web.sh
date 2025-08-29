@@ -10,39 +10,37 @@
 # Argument: url - Required. URL. URL to check.
 # Argument: file - Required. File. File to compare.
 urlMatchesLocalFileSize() {
-  local usage="_${FUNCNAME[0]}"
+  local handler="_${FUNCNAME[0]}"
 
   local url file remoteSize localSize
 
-  # _IDENTICAL_ argument-case-header 5
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
+    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
-    # _IDENTICAL_ --help 4
-    --help)
-      "$usage" 0
-      return $?
-      ;;
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
     *)
       if [ -z "$url" ]; then
-        url=$(usageArgumentString "$usage" "url" "$1") || return $?
+        url=$(usageArgumentString "$handler" "url" "$1") || return $?
       elif [ -z "$file" ]; then
-        file="$(usageArgumentFile "$usage" "file" "$1")" || return $?
+        file="$(usageArgumentFile "$handler" "file" "$1")" || return $?
       else
-      # _IDENTICAL_ argumentUnknown 1
-      __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
+        # _IDENTICAL_ argumentUnknownHandler 1
+        __throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
       fi
       ;;
     esac
     shift
   done
 
-  localSize=$(__catch "$usage" fileSize "$file") || return $?
-  remoteSize=$(__catch "$usage" urlContentLength "$url") || return $?
+  localSize=$(__catch "$handler" fileSize "$file") || return $?
+  remoteSize=$(__catch "$handler" urlContentLength "$url") || return $?
   localSize=$((localSize + 0))
-  isPositiveInteger "$remoteSize" || __throwEnvironment "$usage" "Remote size is not integer: $(decorate value "$remoteSize")" || return $?
+  isPositiveInteger "$remoteSize" || __throwEnvironment "$handler" "Remote size is not integer: $(decorate value "$remoteSize")" || return $?
 
   [ "$localSize" -eq "$remoteSize" ]
 }
@@ -122,32 +120,30 @@ _watchFile() {
 # SIte is stored in a directory called `host` for the URL requested
 # This is not final yet and may not work properly.
 websiteScrape() {
-  local usage="_${FUNCNAME[0]}"
+  local handler="_${FUNCNAME[0]}"
   local logFile pid progressFile aa
 
-  # _IDENTICAL_ argument-case-header 5
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
+    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
-    # _IDENTICAL_ --help 4
-    --help)
-      "$usage" 0
-      return $?
-      ;;
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
     *)
-      url=$(usageArgumentURL "$usage" "url" "$1") || return $?
+      url=$(usageArgumentURL "$handler" "url" "$1") || return $?
       break
       ;;
     esac
     shift
   done
 
-  logFile=$(__catch "$usage" buildQuietLog "$usage.$$.log") || return $?
-  progressFile=$(__catch "$usage" buildQuietLog "$usage.$$.progress.log") || return $?
+  logFile=$(__catch "$handler" buildQuietLog "$handler.$$.log") || return $?
+  progressFile=$(__catch "$handler" buildQuietLog "$handler.$$.progress.log") || return $?
 
-  __catch "$usage" packageWhich wget wget || return $?
+  __catch "$handler" packageWhich wget wget || return $?
 
   aa=()
   aa+=(-e robots=off)

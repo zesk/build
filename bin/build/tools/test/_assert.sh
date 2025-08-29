@@ -775,7 +775,7 @@ __assertFileDoesNotContainThis() {
 #
 # If this fails it will output an error and exit.
 #
-# Usage: {fn} usage expectedExitCode command [ arguments ... ]
+# Usage: {fn} handler expectedExitCode command [ arguments ... ]
 #
 # Argument: expectedExitCode - A numeric exit code expected from the command
 # Argument: command - The command to run

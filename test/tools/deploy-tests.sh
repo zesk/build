@@ -427,10 +427,10 @@ testDeployApplication() {
 }
 
 testDeployPackageName() {
-  local usage="_return"
+  local handler="_return"
   local saveTarget home
 
-  home=$(__catch "$usage" buildHome) || return $?
+  home=$(__catch "$handler" buildHome) || return $?
 
   saveTarget=${BUILD_TARGET-NONE}
 

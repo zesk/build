@@ -58,7 +58,7 @@ _return() {
 # Credits: F. Hauri - Give Up GitHub (isnum_Case)
 # Original: is_uint
 # Argument: value - EmptyString. Value to test if it is an unsigned integer.
-# Usage: {fn} argument ...
+# handler: {fn} argument ...
 # Exit Code: 0 - if it is an unsigned integer
 # Exit Code: 1 - if it is not an unsigned integer
 # Requires: _return
@@ -70,7 +70,7 @@ isUnsignedInteger() {
 # <-- END of IDENTICAL _return
 
 __hookPreCommit() {
-  local usage="_${FUNCNAME[0]}"
+  local handler="_${FUNCNAME[0]}"
   # gitPreCommitSetup is already called
   local fileCopies nonOriginalWithEOF nonOriginal original
 
@@ -78,22 +78,22 @@ __hookPreCommit() {
   gitPreCommitHeader sh md json
 
   statusMessage decorate success Updating help files ...
-  __catchEnvironment "$usage" ./bin/update-md.sh --skip-commit || return $?
+  __catchEnvironment "$handler" ./bin/update-md.sh --skip-commit || return $?
 
   statusMessage decorate success Updating _sugar.sh
   original="bin/build/identical/_sugar.sh"
   nonOriginal=bin/build/tools/_sugar.sh
 
   statusMessage decorate success Making shell files executable ...
-  __catchEnvironment "$usage" makeShellFilesExecutable | printfOutputPrefix -- "\n" || return $?
+  __catchEnvironment "$handler" makeShellFilesExecutable | printfOutputPrefix -- "\n" || return $?
 
   if [ "$(fileNewest "$original" "$nonOriginal")" = "$nonOriginal" ]; then
-    nonOriginalWithEOF=$(fileTemporaryName "$usage") || return $?
-    __catchEnvironment "$usage" sed -e 's/IDENTICAL _sugar [0-9][0-9]*/IDENTICAL _sugar EOF/g' -e 's/DO NOT EDIT/EDIT/g' <"$nonOriginal" >"$nonOriginalWithEOF" || return $?
+    nonOriginalWithEOF=$(fileTemporaryName "$handler") || return $?
+    __catchEnvironment "$handler" sed -e 's/IDENTICAL _sugar [0-9][0-9]*/IDENTICAL _sugar EOF/g' -e 's/DO NOT EDIT/EDIT/g' <"$nonOriginal" >"$nonOriginalWithEOF" || return $?
     fileCopies=("$nonOriginalWithEOF" "$original")
     # Can not be trusted to not edit the right one
     if ! diff -q "${fileCopies[@]}" 2>/dev/null; then
-      __catchEnvironment "$usage" cp "${fileCopies[@]}" || returnClean "$nonOriginalWithEOF" || return $?
+      __catchEnvironment "$handler" cp "${fileCopies[@]}" || returnClean "$nonOriginalWithEOF" || return $?
       decorate warning "Someone edited non-original file $nonOriginal"
       touch "${fileCopies[0]}" # make newer
     fi
@@ -104,7 +104,7 @@ __hookPreCommit() {
     while read -r file; do files+=("$file"); done < <(gitPreCommitListExtension)
     if grep -q '# '"IDENTICAL" "${files[@]}"; then
       if ! bin/build/identical-repair.sh && ! bin/build/identical-repair.sh; then
-        __throwEnvironment "$usage" "Identical repair failed twice - manual intervention required" || return $?
+        __throwEnvironment "$handler" "Identical repair failed twice - manual intervention required" || return $?
       fi
     fi
   fi

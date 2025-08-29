@@ -34,15 +34,15 @@ _listJoin() {
 # Argument: separator - Required. Separator string for item values (typically `:`)
 # Argument: item - the item to be removed from the `listValue`
 listRemove() {
-  local usage="_${FUNCNAME[0]}"
-  [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
+  local handler="_${FUNCNAME[0]}"
+  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
   local argument listValue="${1-}" separator="${2-}"
 
-  shift 2 || __throwArgument "$usage" "Missing arguments" || return $?
+  shift 2 || __throwArgument "$handler" "Missing arguments" || return $?
   firstFlag=false
   while [ $# -gt 0 ]; do
     local offset next argument="$1"
-    [ -n "$argument" ] || __throwArgument "$usage" "blank argument" || return $?
+    [ -n "$argument" ] || __throwArgument "$handler" "blank argument" || return $?
     offset="$(stringOffset "$argument$separator" "$separator$separator$listValue$separator")"
     if [ "$offset" -lt 0 ]; then
       shift
@@ -69,25 +69,23 @@ _listRemove() {
 # Argument: item - the path to be added to the `listValue`
 # Add an item to the beginning or end of a text-delimited list
 listAppend() {
-  local usage="_${FUNCNAME[0]}"
-  [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
+  local handler="_${FUNCNAME[0]}"
+  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
   local argument listValue="${1-}" separator="${2-}"
 
-  [ ${#separator} -eq 1 ] || __throwArgument "$usage" "character-length separator required: ${#separator} $(decorate code "$separator")" || return $?
+  [ ${#separator} -eq 1 ] || __throwArgument "$handler" "character-length separator required: ${#separator} $(decorate code "$separator")" || return $?
   shift 2
 
   firstFlag=false
-  # _IDENTICAL_ argument-case-header 5
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
+    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
-    # _IDENTICAL_ --help 4
-    --help)
-      "$usage" 0
-      return $?
-      ;;
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
     --first)
       firstFlag=true
       ;;
@@ -106,7 +104,7 @@ listAppend() {
       fi
       ;;
     esac
-    shift || __throwArgument "$usage" "shift $argument" || return $?
+    shift || __throwArgument "$handler" "shift $argument" || return $?
   done
   printf "%s\n" "$listValue"
 }
@@ -123,24 +121,22 @@ _listAppend() {
 # Argument: --removed - Optional. Flag. Show removed items instead of the new list.
 #
 listCleanDuplicates() {
-  local usage="_${FUNCNAME[0]}"
+  local handler="_${FUNCNAME[0]}"
   local IFS
   local item items removed=() separator="" showRemoved=false IFS
 
-  # _IDENTICAL_ argument-case-header 5
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
+    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
-    # _IDENTICAL_ --help 4
-    --help)
-      "$usage" 0
-      return $?
-      ;;
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
     --test)
       shift
-      test=$(usageArgumentCallable "$usage" "$argument" "${1-}") || return $?
+      test=$(usageArgumentCallable "$handler" "$argument" "${1-}") || return $?
       ;;
     --removed)
       showRemoved=true

@@ -2,42 +2,32 @@
 #
 # Copyright &copy; 2025 Market Acumen, Inc.
 #
-# usage - argument checking code
+# handler - argument checking code
 #
-# Test: ./test/tools/usage-tests.sh
-# Docs: ./documentation/source/tools/usage.md
-
-# Throw an unknown argument error
-# Argument: usage - Required. Function. Usage function to call upon failure.
-# Argument: argument - Required. String. Name of the argument used in error messages.
-# Exit Code: 2 - Always
-usageArgumentUnknown() {
-  local usage="$1" argument="$2"
-  shift 2 || :
-  __throwArgument "$usage" "unknown argument: $(decorate value "$argument")" "$@" || return $?
-}
+# Test: ./test/tools/handler-tests.sh
+# Docs: ./documentation/source/tools/handler.md
 
 #
 # Summary: Check that one or more binaries are installed
-# Usage: {fn} usage binary0 [ ... ]
-# Argument: usageFunction - Required. `bash` function already defined to output usage
+# handler: {fn} handler binary0 [ ... ]
+# Argument: usageFunction - Required. `bash` function already defined to output handler
 # Argument: binary0 - Required. Binary which must have a `which` path.
 # Exit Codes: 1 - If any binary0 are not available within the current path
 # Requires the binaries to be found via `which`
 #
-# Runs `usage` on failure
+# Runs `handler` on failure
 #
 usageRequireBinary() {
   # IDENTICAL usageFunctionHeader 6
-  local usage="_${FUNCNAME[0]}"
-  [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
+  local handler="_${FUNCNAME[0]}"
+  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
   local usageFunction="${1-}" && shift
   if [ "$(type -t "$usageFunction")" != "function" ]; then
-    __catchArgument "$usage" "$(decorate code "$usage") must be a valid function" || return $?
+    __catchArgument "$handler" "$(decorate code "$handler") must be a valid function" || return $?
   fi
   local binary
   for binary in "$@"; do
-    whichExists "$binary" || __throwEnvironment "$usage" "$binary is not available in path, not found: $(decorate code "$PATH")"
+    whichExists "$binary" || __throwEnvironment "$handler" "$binary is not available in path, not found: $(decorate code "$PATH")"
   done
 }
 _usageRequireBinary() {
@@ -46,20 +36,20 @@ _usageRequireBinary() {
 }
 
 #
-# Usage: {fn} usage [ env0 ... ]
+# handler: {fn} handler [ env0 ... ]
 # Requires environment variables to be set and non-blank
-# Argument: usageFunction - Required. `bash` function already defined to output usage
+# Argument: usageFunction - Required. `bash` function already defined to output handler
 # Argument: env0 - Optional. String. One or more environment variables which should be set and non-empty.
 # Exit Codes: 1 - If any env0 variables bre not set or bre empty.
 # Deprecated: 2024-01-01
 #
 usageRequireEnvironment() {
   # IDENTICAL usageFunctionHeader 6
-  local usage="_${FUNCNAME[0]}"
-  [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
+  local handler="_${FUNCNAME[0]}"
+  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
   local usageFunction="${1-}" && shift
   if [ "$(type -t "$usageFunction")" != "function" ]; then
-    __catchArgument "$usage" "$(decorate code "$usage") must be a valid function" || return $?
+    __catchArgument "$handler" "$(decorate code "$handler") must be a valid function" || return $?
   fi
   local environmentVariable
   for environmentVariable in "$@"; do
@@ -79,7 +69,7 @@ _usageRequireEnvironment() {
 # Argument: variableValue - Required. EmptyString. Value to test
 # Argument: noun - Required. EmptyString. Noun passed by user
 # Argument: testCommand ... - Required. Callable. Test command to run on value.
-# Utility function to handle all usage
+# Utility function to handle all handler
 #
 __catchArgumentHelper() {
   local defaultNoun usageFunction variableName variableValue noun
@@ -105,7 +95,7 @@ __catchArgumentHelper() {
 # IDENTICAL usageArgumentCore 13
 
 # Require an argument to be non-blank
-# Argument: handler - Required. Function. Usage function to call upon failure.
+# Argument: handler - Required. Function. handler function to call upon failure.
 # Argument: argument - Required. String. Name of the argument used in error messages.
 # Argument: value - Optional. String, Value which should be non-blank otherwise an argument error is thrown.
 # Exit Code: 2 - If `value` is blank
@@ -118,70 +108,70 @@ usageArgumentString() {
 }
 
 # Validates a value is an integer
-# Usage: {fn} usageFunction variableName variableValue [ noun ]
-# Argument: usageFunction - Required. Function. Run if usage fails
+# handler: {fn} usageFunction variableName variableValue [ noun ]
+# Argument: usageFunction - Required. Function. Run if handler fails
 # Argument: variableName - Required. String. Name of variable being tested
 # Argument: variableValue - Required. String. Required only in that if it's blank, it fails.
 # Argument: noun - Optional. String. Noun used to describe the argument in errors, defaults to `integer`
 # Exit Code: 2 - Argument error
 # Exit Code: 0 - Success
 usageArgumentInteger() {
-  local args usage="$1"
+  local args handler="$1"
   args=("$@")
   args[3]="${4-}"
-  [ ${#args[@]} -eq 4 ] || __throwArgument "$usage" "Need 4 arguments" || return $?
+  [ ${#args[@]} -eq 4 ] || __throwArgument "$handler" "Need 4 arguments" || return $?
   __catchArgumentHelper integer "${args[@]}" isInteger || return $?
 }
 
 # Validates a value is a number
-# Usage: {fn} usageFunction variableName variableValue [ noun ]
-# Argument: usageFunction - Required. Function. Run if usage fails
+# handler: {fn} usageFunction variableName variableValue [ noun ]
+# Argument: usageFunction - Required. Function. Run if handler fails
 # Argument: variableName - Required. String. Name of variable being tested
 # Argument: variableValue - Required. String. Required only in that if it's blank, it fails.
 # Argument: noun - Optional. String. Noun used to describe the argument in errors, defaults to `integer`
 # Exit Code: 2 - Argument error
 # Exit Code: 0 - Success
 usageArgumentNumber() {
-  local args usage="$1"
+  local args handler="$1"
   args=("$@")
   args[3]="${4-}"
-  [ ${#args[@]} -eq 4 ] || __throwArgument "$usage" "Need 4 arguments" || return $?
+  [ ${#args[@]} -eq 4 ] || __throwArgument "$handler" "Need 4 arguments" || return $?
   __catchArgumentHelper integer "${args[@]}" isNumber || return $?
 }
 
 # Validates a value is an unsigned integer
-# Usage: {fn} usageFunction variableName variableValue [ noun ]
-# Argument: usageFunction - Required. Function. Run if usage fails
+# handler: {fn} usageFunction variableName variableValue [ noun ]
+# Argument: usageFunction - Required. Function. Run if handler fails
 # Argument: variableName - Required. String. Name of variable being tested
 # Argument: variableValue - Required. String. Required only in that if it's blank, it fails.
 # Argument: noun - Optional. String. Noun used to describe the argument in errors, defaults to `unsigned integer`
 # Exit Code: 2 - Argument error
 # Exit Code: 0 - Success
 usageArgumentUnsignedInteger() {
-  local usage="$1" args
+  local handler="$1" args
   args=("$@")
   args[3]="${4-}"
   if [ ${#args[@]} -ne 4 ]; then
-    __throwArgument "$usage" "${FUNCNAME[0]} Need at least 3 arguments" || return $?
+    __throwArgument "$handler" "${FUNCNAME[0]} Need at least 3 arguments" || return $?
     return $?
   fi
   __catchArgumentHelper "unsigned integer" "${args[@]}" isUnsignedInteger || return $?
 }
 
 # Validates a value is an unsigned integer and greater than zero (NOT zero)
-# Usage: {fn} usageFunction variableName variableValue [ noun ]
-# Argument: usageFunction - Required. Function. Run if usage fails
+# handler: {fn} usageFunction variableName variableValue [ noun ]
+# Argument: usageFunction - Required. Function. Run if handler fails
 # Argument: variableName - Required. String. Name of variable being tested
 # Argument: variableValue - Required. String. Required only in that if it's blank, it fails.
 # Argument: noun - Optional. String. Noun used to describe the argument in errors, defaults to `unsigned integer`
 # Exit Code: 2 - Argument error
 # Exit Code: 0 - Success
 usageArgumentPositiveInteger() {
-  local usage="$1" args
+  local handler="$1" args
   args=("$@")
   args[3]="${4-}"
   if [ ${#args[@]} -ne 4 ]; then
-    __throwArgument "$usage" "${FUNCNAME[0]} Need at least 3 arguments" || return $?
+    __throwArgument "$handler" "${FUNCNAME[0]} Need at least 3 arguments" || return $?
     return $?
   fi
   __catchArgumentHelper "positive integer" "${args[@]}" isUnsignedInteger >/dev/null && __catchArgumentHelper "positive integer" "${args[@]}" test 0 -lt || return $?
@@ -189,59 +179,59 @@ usageArgumentPositiveInteger() {
 
 # Validates a value is not blank and is a file.
 # Upon success, outputs the file name
-# Usage: {fn} usageFunction variableName variableValue [ noun ]
-# Argument: usageFunction - Required. Function. Run if usage fails
+# handler: {fn} usageFunction variableName variableValue [ noun ]
+# Argument: usageFunction - Required. Function. Run if handler fails
 # Argument: variableName - Required. String. Name of variable being tested
 # Argument: variableValue - Required. String. Value to test.
 # Argument: noun - Optional. String. Noun used to describe the argument in errors, defaults to `file`
 # Exit Code: 2 - Argument error
 # Exit Code: 0 - Success
 usageArgumentFile() {
-  local usage="$1" args
+  local handler="$1" args
   args=("$@")
   args[3]="${4-}"
   if [ ${#args[@]} -ne 4 ]; then
-    __throwArgument "$usage" "${FUNCNAME[0]} Need at least 3 arguments" || return $?
+    __throwArgument "$handler" "${FUNCNAME[0]} Need at least 3 arguments" || return $?
     return $?
   fi
   __catchArgumentHelper "file" "${args[@]}" test -f || return $?
 }
 
 # Validates a value is not blank and is a file and does `realPath` on it.
-# Usage: {fn} usageFunction variableName variableValue [ noun ]
-# Argument: usageFunction - Required. Function. Run if usage fails
+# handler: {fn} usageFunction variableName variableValue [ noun ]
+# Argument: usageFunction - Required. Function. Run if handler fails
 # Argument: variableName - Required. String. Name of variable being tested
 # Argument: variableValue - Required. String. Value to test.
 # Argument: noun - Optional. String. Noun used to describe the argument in errors, defaults to `file`
 # Exit Code: 2 - Argument error
 # Exit Code: 0 - Success
 usageArgumentRealFile() {
-  local usage="$1" args value
+  local handler="$1" args value
   args=("$@")
   args[3]="${4-}"
   if [ ${#args[@]} -ne 4 ]; then
-    __throwArgument "$usage" "${FUNCNAME[0]} Need at least 3 arguments" || return $?
+    __throwArgument "$handler" "${FUNCNAME[0]} Need at least 3 arguments" || return $?
   fi
 
   value="$(__catchArgumentHelper "file" "${args[@]}" test -f)" || return $?
-  __catchEnvironment "$usage" realPath "$value" || return $?
+  __catchEnvironment "$handler" realPath "$value" || return $?
 }
 
 # Validates a value is not blank and exists in the file system
 # Upon success, outputs the file name
-# Usage: {fn} usageFunction variableName variableValue [ noun ]
-# Argument: usageFunction - Required. Function. Run if usage fails
+# handler: {fn} usageFunction variableName variableValue [ noun ]
+# Argument: usageFunction - Required. Function. Run if handler fails
 # Argument: variableName - Required. String. Name of variable being tested
 # Argument: variableValue - Required. String. Required only in that if it's blank, it fails.
 # Argument: noun - Optional. String. Noun used to describe the argument in errors, defaults to `file or directory`
 # Exit Code: 2 - Argument error
 # Exit Code: 0 - Success
 usageArgumentExists() {
-  local usage="$1" args
+  local handler="$1" args
   args=("$@")
   args[3]="${4-}"
   if [ ${#args[@]} -ne 4 ]; then
-    __throwArgument "$usage" "${FUNCNAME[0]} Need at least 3 arguments" || return $?
+    __throwArgument "$handler" "${FUNCNAME[0]} Need at least 3 arguments" || return $?
     return $?
   fi
   __catchArgumentHelper "file or directory" "${args[@]}" test -e || return $?
@@ -249,38 +239,38 @@ usageArgumentExists() {
 
 # Validates a value is not blank and is a link
 # Upon success, outputs the file name
-# Usage: {fn} usageFunction variableName variableValue [ noun ]
-# Argument: usageFunction - Required. Function. Run if usage fails
+# handler: {fn} usageFunction variableName variableValue [ noun ]
+# Argument: usageFunction - Required. Function. Run if handler fails
 # Argument: variableName - Required. String. Name of variable being tested
 # Argument: variableValue - Required. String. Path to a link file.
 # Argument: noun - Optional. String. Noun used to describe the argument in errors, defaults to `link`
 # Exit Code: 2 - Argument error
 # Exit Code: 0 - Success
 usageArgumentLink() {
-  local usage="$1" args
+  local handler="$1" args
   args=("$@")
   args[3]="${4-}"
   if [ ${#args[@]} -ne 4 ]; then
-    __throwArgument "$usage" "${FUNCNAME[0]} Need at least 3 arguments" || return $?
+    __throwArgument "$handler" "${FUNCNAME[0]} Need at least 3 arguments" || return $?
     return $?
   fi
   __catchArgumentHelper "link" "${args[@]}" test -L || return $?
 }
 
 # Validates a value is not blank and is a directory. Upon success, outputs the directory name trailing slash stripped.
-# Usage: {fn} usageFunction variableName variableValue [ noun ]
-# Argument: usageFunction - Required. Function. Run if usage fails
+# handler: {fn} usageFunction variableName variableValue [ noun ]
+# Argument: usageFunction - Required. Function. Run if handler fails
 # Argument: variableName - Required. String. Name of variable being tested
 # Argument: variableValue - Required. String. Required only in that if it's blank, it fails.
 # Argument: noun - Optional. String. Noun used to describe the argument in errors, defaults to `directory`
 # Exit Code: 2 - Argument error
 # Exit Code: 0 - Success
 usageArgumentDirectory() {
-  local usage="$1" args directory
+  local handler="$1" args directory
   args=("$@")
   args[3]="${4-}"
   if [ ${#args[@]} -ne 4 ]; then
-    __throwArgument "$usage" "${FUNCNAME[0]} Need at least 3 arguments" || return $?
+    __throwArgument "$handler" "${FUNCNAME[0]} Need at least 3 arguments" || return $?
     return $?
   fi
   directory="$(__catchArgumentHelper "directory" "${args[@]}" test -d)" || return $?
@@ -289,26 +279,26 @@ usageArgumentDirectory() {
 }
 
 # Validates a value as a directory search list. Upon success, outputs the entire list, cleans up any invalid values or trailing characters.
-# Usage: {fn} usageFunction variableName variableValue [ noun ]
-# Argument: usageFunction - Required. Function. Run if usage fails
+# handler: {fn} usageFunction variableName variableValue [ noun ]
+# Argument: usageFunction - Required. Function. Run if handler fails
 # Argument: variableName - Required. String. Name of variable being tested
 # Argument: variableValue - Required. String. Required only in that if it's blank, it fails.
 # Argument: noun - Optional. String. Noun used to describe the argument in errors, defaults to `directory list`
 # Exit Code: 2 - Argument error
 # Exit Code: 0 - Success
 usageArgumentDirectoryList() {
-  local usage="$1" args
+  local handler="$1" args
   args=("$@")
   args[3]="${4-}"
   if [ ${#args[@]} -ne 4 ]; then
-    __throwArgument "$usage" "${FUNCNAME[0]} Need at least 3 arguments" || return $?
+    __throwArgument "$handler" "${FUNCNAME[0]} Need at least 3 arguments" || return $?
     return $?
   fi
   local directories=() directory result=() index=0
   IFS=":" read -r -a directories <<<"$3" || :
   for directory in "${directories[@]+"${directories[@]}"}"; do
     [ -n "$directory" ] || continue
-    [ -d "$directory" ] || __throwArgument "$usage" "$2 element #$index is not a directory $(decorate code "$directory"): $(decorate value "$3")" || return $?
+    [ -d "$directory" ] || __throwArgument "$handler" "$2 element #$index is not a directory $(decorate code "$directory"): $(decorate value "$3")" || return $?
     result+=("$directory")
     index=$((index + 1))
   done
@@ -316,32 +306,32 @@ usageArgumentDirectoryList() {
 }
 
 # Validates a value as an application-relative directory search list. Upon success, outputs the entire list, cleans up any invalid values or trailing characters.
-# Usage: {fn} usageFunction variableName variableValue [ noun ]
-# Argument: usageFunction - Required. Function. Run if usage fails
+# handler: {fn} usageFunction variableName variableValue [ noun ]
+# Argument: usageFunction - Required. Function. Run if handler fails
 # Argument: variableName - Required. String. Name of variable being tested
 # Argument: variableValue - Required. String. Required only in that if it's blank, it fails.
 # Argument: noun - Optional. String. Noun used to describe the argument in errors, defaults to `directory list`
 # Exit Code: 2 - Argument error
 # Exit Code: 0 - Success
 usageArgumentApplicationDirectoryList() {
-  local usage="$1" args
+  local handler="$1" args
   args=("$@")
   args[3]="${4-}"
   if [ ${#args[@]} -ne 4 ]; then
-    __throwArgument "$usage" "${FUNCNAME[0]} Need at least 3 arguments" || return $?
+    __throwArgument "$handler" "${FUNCNAME[0]} Need at least 3 arguments" || return $?
     return $?
   fi
 
   local home directories=() directory result=() index=0
 
-  home=$(__catch "$usage" buildHome) || return $?
+  home=$(__catch "$handler" buildHome) || return $?
   IFS=":" read -r -a directories <<<"$3" || :
   for directory in "${directories[@]+"${directories[@]}"}"; do
     [ -n "$directory" ] || continue
     directory="${directory#./}"
     directory="${directory#/}"
     directory="${directory%/}"
-    [ -d "${home%/}/$directory" ] || __throwArgument "$usage" "$2 element #$index is not a directory $(decorate code "$home/$directory"): $(decorate value "$3")" || return $?
+    [ -d "${home%/}/$directory" ] || __throwArgument "$handler" "$2 element #$index is not a directory $(decorate code "$home/$directory"): $(decorate value "$3")" || return $?
     result+=("$directory")
     index=$((index + 1))
   done
@@ -349,84 +339,84 @@ usageArgumentApplicationDirectoryList() {
 }
 
 # Validates a value as an application-relative directory. Upon success, outputs relative path.
-# Usage: {fn} usageFunction variableName variableValue [ noun ]
-# Argument: usageFunction - Required. Function. Run if usage fails
+# handler: {fn} usageFunction variableName variableValue [ noun ]
+# Argument: usageFunction - Required. Function. Run if handler fails
 # Argument: variableName - Required. String. Name of variable being tested
 # Argument: variableValue - Required. String. Required only in that if it's blank, it fails.
 # Argument: noun - Optional. String. Noun used to describe the argument in errors, defaults to `directory list`
 # Exit Code: 2 - Argument error
 # Exit Code: 0 - Success
 usageArgumentApplicationDirectory() {
-  local usage="$1" args
+  local handler="$1" args
   args=("$@")
   args[3]="${4-}"
   if [ ${#args[@]} -ne 4 ]; then
-    __throwArgument "$usage" "${FUNCNAME[0]} Need at least 3 arguments" || return $?
+    __throwArgument "$handler" "${FUNCNAME[0]} Need at least 3 arguments" || return $?
     return $?
   fi
   local home directory="$3"
 
-  [ -n "$directory" ] || __throwArgument "$usage" "$directory is blank" || return $?
-  home=$(__catch "$usage" buildHome) || return $?
+  [ -n "$directory" ] || __throwArgument "$handler" "$directory is blank" || return $?
+  home=$(__catch "$handler" buildHome) || return $?
 
   directory="${directory#./}"
   directory="${directory#/}"
   directory="${directory%/}"
-  [ -d "${home%/}/$directory" ] || __throwArgument "$usage" "$2 element #$index is not a directory $(decorate code "$home/$directory"): $(decorate value "$3")" || return $?
+  [ -d "${home%/}/$directory" ] || __throwArgument "$handler" "$2 element #$index is not a directory $(decorate code "$home/$directory"): $(decorate value "$3")" || return $?
   printf "%s\n" "$directory"
 }
 
 # Validates a value as an application-relative file. Upon success, outputs relative path.
-# Usage: {fn} usageFunction variableName variableValue [ noun ]
-# Argument: usageFunction - Required. Function. Run if usage fails
+# handler: {fn} usageFunction variableName variableValue [ noun ]
+# Argument: usageFunction - Required. Function. Run if handler fails
 # Argument: variableName - Required. String. Name of variable being tested
 # Argument: variableValue - Required. String. Value to test.
 # Argument: noun - Optional. String. Noun used to describe the argument in errors, defaults to `directory list`
 # Exit Code: 2 - Argument error
 # Exit Code: 0 - Success
 usageArgumentApplicationFile() {
-  local usage="$1" args
+  local handler="$1" args
   args=("$@")
   args[3]="${4-}"
-  [ ${#args[@]} -eq 4 ] || __throwArgument "$usage" "${FUNCNAME[0]} Need at least 3 arguments" || return $?
+  [ ${#args[@]} -eq 4 ] || __throwArgument "$handler" "${FUNCNAME[0]} Need at least 3 arguments" || return $?
 
   local file="$3"
-  [ -n "$file" ] || __throwArgument "$usage" "$directory is blank" || return $?
+  [ -n "$file" ] || __throwArgument "$handler" "$directory is blank" || return $?
 
   local home
-  home=$(__catch "$usage" buildHome) || return $?
+  home=$(__catch "$handler" buildHome) || return $?
 
   file="${file#./}"
   file="${file#/}"
   local appFile="${home%/}/$file"
-  [ -f "$appFile" ] || __throwArgument "$usage" "$2 element #$index is not a file $(decorate code "$appFile"): $(decorate value "$file")" || return $?
+  [ -f "$appFile" ] || __throwArgument "$handler" "$2 element #$index is not a file $(decorate code "$appFile"): $(decorate value "$file")" || return $?
   printf "%s\n" "$file"
 }
 
 # Validates a value is not blank and is a directory and does `realPath` on it.
-# Usage: {fn} usageFunction variableName variableValue [ noun ]
-# Argument: usageFunction - Required. Function. Run if usage fails
+# handler: {fn} usageFunction variableName variableValue [ noun ]
+# Argument: usageFunction - Required. Function. Run if handler fails
 # Argument: variableName - Required. String. Name of variable being tested
 # Argument: variableValue - Required. String. Required only in that if it's blank, it fails.
 # Argument: noun - Optional. String. Noun used to describe the argument in errors, defaults to `directory`
 # Exit Code: 2 - Argument error
 # Exit Code: 0 - Success
 usageArgumentRealDirectory() {
-  local usage="$1" args directory
+  local handler="$1" args directory
   args=("$@")
   args[3]="${4-}"
   if [ ${#args[@]} -ne 4 ]; then
-    __throwArgument "$usage" "${FUNCNAME[0]} Need at least 3 arguments" || return $?
+    __throwArgument "$handler" "${FUNCNAME[0]} Need at least 3 arguments" || return $?
   fi
 
-  args[2]=$(realPath "${args[2]}") || __throwArgument "$usage" "realPath" "${args[2]}" || return $?
+  args[2]=$(realPath "${args[2]}") || __throwArgument "$handler" "realPath" "${args[2]}" || return $?
   directory="$(__catchArgumentHelper "directory" "${args[@]}" test -d)" || return $?
   printf "%s\n" "${directory%/}"
 }
 
 # Validates a value is not blank and is a file path with a directory that exists. Upon success, outputs the file name.
-# Usage: {fn} usageFunction variableName variableValue [ noun ]
-# Argument: usageFunction - Required. Function. Run if usage fails
+# handler: {fn} usageFunction variableName variableValue [ noun ]
+# Argument: usageFunction - Required. Function. Run if handler fails
 # Argument: variableName - Required. String. Name of variable being tested
 # Argument: variableValue - Required. String. Required only in that if it's blank, it fails.
 # Argument: noun - Optional. String. Noun used to describe the argument in errors, defaults to `file`
@@ -437,7 +427,7 @@ usageArgumentFileDirectory() {
   args=("$@")
   args[3]="${4-}"
   if [ ${#args[@]} -ne 4 ]; then
-    __throwArgument "$usage" "${FUNCNAME[0]} Need at least 3 arguments" || return $?
+    __throwArgument "$handler" "${FUNCNAME[0]} Need at least 3 arguments" || return $?
     return $?
   fi
   __catchArgumentHelper "file" "${args[@]}" fileDirectoryExists || return $?
@@ -445,8 +435,8 @@ usageArgumentFileDirectory() {
 
 # Validates a value is not blank and is an environment file which is loaded immediately.
 #
-# Usage: {fn} processPid usageFunction variableName variableValue [ noun ]
-# Argument: usageFunction - Required. Function. Run if usage fails
+# handler: {fn} processPid usageFunction variableName variableValue [ noun ]
+# Argument: usageFunction - Required. Function. Run if handler fails
 # Argument: variableName - Required. String. Name of variable being tested
 # Argument: variableValue - Required. String. Required only in that if it's blank, it fails.
 # Argument: noun - Optional. String. Noun used to describe the argument in errors, defaults to `file`
@@ -474,156 +464,147 @@ usageArgumentLoadEnvironmentFile() {
 
 #
 # Do not require argument to be non-blank
-# Usage: {fn} usage argument [ value ]
-# Argument: usage - Required. Function. Usage function to call upon failure.
+# handler: {fn} handler argument [ value ]
+# Argument: handler - Required. Function. handler function to call upon failure.
 # Argument: argument - Required. String. Name of the argument used in error messages.
 # Argument: value - Optional. String, Value to output.
 # Exit code: 0 - Always
 usageArgumentEmptyString() {
-  local usage="$1" argument="$2"
+  local handler="$1" argument="$2"
   shift 2 || :
   printf "%s\n" "${1-}"
 }
 
 # Require an argument to be a boolean value
-# Usage: {fn} usage argument [ value ]
-# Argument: usage - Required. Function. Usage function to call upon failure.
+# handler: {fn} handler argument [ value ]
+# Argument: handler - Required. Function. handler function to call upon failure.
 # Argument: argument - Required. String. Name of the argument used in error messages.
 # Argument: value - Optional. String, Value which should be non-blank otherwise an argument error is thrown.
 # Exit Code: 2 - If `value` is not a boolean
 # Exit code: 0 - If `value` is a boolean
 usageArgumentBoolean() {
-  local usage="$1" argument="$2"
+  local handler="$1" argument="$2"
   shift 2 || :
-  isBoolean "${1-}" || __throwArgument "$usage" "$argument not boolean: \"${1-}\"" || return $?
+  isBoolean "${1-}" || __throwArgument "$handler" "$argument not boolean: \"${1-}\"" || return $?
   printf "%s\n" "$1"
 }
 
 # Require an argument to be a URL
-# Usage: {fn} usage argument [ value ]
-# Argument: usage - Required. Function. Usage function to call upon failure.
+# handler: {fn} handler argument [ value ]
+# Argument: handler - Required. Function. handler function to call upon failure.
 # Argument: argument - Required. String. Name of the argument used in error messages.
 # Argument: value - Optional. String, Value which should be a URL otherwise an argument error is thrown.
 # Exit code: 0 - If `value` is `urlValid`
 # Exit Code: 2 - If `value` is not `urlValid`
 usageArgumentURL() {
-  local usage="$1" argument="$2"
+  local handler="$1" argument="$2"
   shift 2 || :
-  urlValid "${1-}" || __throwArgument "$usage" "$argument \"${1-}\" is not a valid URL" || return $?
+  urlValid "${1-}" || __throwArgument "$handler" "$argument \"${1-}\" is not a valid URL" || return $?
   printf "%s\n" "$1"
 }
 
 # Require an argument to be a callable
-# Usage: {fn} usage argument [ value ]
-# Argument: usage - Required. Function. Usage function to call upon failure.
+# handler: {fn} handler argument [ value ]
+# Argument: handler - Required. Function. handler function to call upon failure.
 # Argument: argument - Required. String. Name of the argument used in error messages.
 # Argument: value - Optional. String, Value which should be callable otherwise an argument error is thrown.
 # Exit Code: 2 - If `value` is not `isCallable`
 # Exit code: 0 - If `value` is `isCallable`
 usageArgumentCallable() {
-  local usage="$1" argument="$2"
+  local handler="$1" argument="$2"
   shift 2 || :
-  isCallable "${1-}" || __throwArgument "$usage" "$argument \"${1-}\" is not callable" || return $?
+  isCallable "${1-}" || __throwArgument "$handler" "$argument \"${1-}\" is not callable" || return $?
   printf "%s\n" "$1"
 }
 
 # Require an argument to be a executable
-# Usage: {fn} usage argument [ value ]
-# Argument: usage - Required. Function. Usage function to call upon failure.
+# handler: {fn} handler argument [ value ]
+# Argument: handler - Required. Function. handler function to call upon failure.
 # Argument: argument - Required. String. Name of the argument used in error messages.
 # Argument: value - Optional. String, Value which should be executable otherwise an argument error is thrown.
 # Exit Code: 2 - If `value` is not `isExecutable`
 # Exit code: 0 - If `value` is `isExecutable`
 usageArgumentExecutable() {
-  local usage="$1" argument="$2"
+  local handler="$1" argument="$2"
   shift 2 || :
-  isExecutable "${1-}" || __throwArgument "$usage" "$argument \"${1-}\" is not executable" || return $?
+  isExecutable "${1-}" || __throwArgument "$handler" "$argument \"${1-}\" is not executable" || return $?
   printf "%s\n" "$1"
 }
 
 # Require an argument to be a function
-# Usage: {fn} usage argument [ value ]
-# Argument: usage - Required. Function. Usage function to call upon failure.
+# handler: {fn} handler argument [ value ]
+# Argument: handler - Required. Function. handler function to call upon failure.
 # Argument: argument - Required. String. Name of the argument used in error messages.
 # Argument: value - Optional. String, Value which should be a function otherwise an argument error is thrown.
 # Exit Code: 2 - If `value` is not `isFunction`
 # Exit code: 0 - If `value` is `isFunction`
 usageArgumentFunction() {
-  local usage="$1" argument="$2"
+  local handler="$1" argument="$2"
   shift 2 || :
-  isFunction "${1-}" || __throwArgument "$usage" "$argument \"${1-}\" is not a function" || return $?
+  isFunction "${1-}" || __throwArgument "$handler" "$argument \"${1-}\" is not a function" || return $?
   printf "%s\n" "$1"
 }
 
 # Validates a value is ok for an environment variable name
 # Upon success, outputs the name
-# Usage: {fn} usageFunction variableName variableValue [ noun ]
-# Argument: usageFunction - Required. Function. Run if usage fails
+# handler: {fn} usageFunction variableName variableValue [ noun ]
+# Argument: usageFunction - Required. Function. Run if handler fails
 # Argument: variableName - Required. String. Name of variable being tested
 # Argument: variableValue - Required. String. Environment variable name.
 # Argument: noun - Optional. String. Noun used to describe the argument in errors, defaults to `environment variable`
 # Exit Code: 2 - Argument error
 # Exit Code: 0 - Success
 usageArgumentEnvironmentVariable() {
-  local usage="$1" argument="$2"
+  local handler="$1" argument="$2"
   shift 2 || :
-  environmentVariableNameValid "${1-}" || __throwArgument "$usage" "$argument \"${1-}\" is not a valid environment variable name" || return $?
+  environmentVariableNameValid "${1-}" || __throwArgument "$handler" "$argument \"${1-}\" is not a valid environment variable name" || return $?
   printf "%s\n" "$1"
 }
 
-# Throw an missing argument error
-# Argument: usage - Required. Function. Usage function to call upon failure.
-# Argument: argument - Required. String. Name of the argument used in error messages.
-usageArgumentMissing() {
-  local usage="$1" argument="$2"
-  shift 2 || :
-  __throwArgument "$usage" "missing argument $(decorate label "$argument")" "$@" || return $?
-}
-
 # Secrets are things which should be kept secret
-# Argument: usage - Required. Function. Usage function to call upon failure.
+# Argument: handler - Required. Function. handler function to call upon failure.
 # Argument: argument - Required. String. Name of the argument used in error messages.
 usageArgumentSecret() {
   usageArgumentString "$@" || return $?
 }
 
 # List delimited with commas `,`
-# Argument: usage - Required. Function. Usage function to call upon failure.
+# Argument: handler - Required. Function. handler function to call upon failure.
 # Argument: argument - Required. String. Name of the argument used in error messages.
 usageArgumentCommaDelimitedList() {
   usageArgumentEmptyString "$@" || return $?
 }
 
 # List delimited with colons `:`
-# Argument: usage - Required. Function. Usage function to call upon failure.
+# Argument: handler - Required. Function. handler function to call upon failure.
 # Argument: argument - Required. String. Name of the argument used in error messages.
 usageArgumentColonDelimitedList() {
   usageArgumentEmptyString "$@" || return $?
 }
 
 # List delimited with colons `:`
-# Argument: usage - Required. Function. Usage function to call upon failure.
+# Argument: handler - Required. Function. handler function to call upon failure.
 # Argument: argument - Required. String. Name of the argument used in error messages.
 usageArgumentFlag() {
   usageArgumentEmptyString "$@" || return $?
 }
 
 # List delimited with spaces ` `
-# Argument: usage - Required. Function. Usage function to call upon failure.
+# Argument: handler - Required. Function. handler function to call upon failure.
 # Argument: argument - Required. String. Name of the argument used in error messages.
 usageArgumentList() {
   usageArgumentEmptyString "$@" || return $?
 }
 
 # Placeholder for array types
-# Argument: usage - Required. Function. Usage function to call upon failure.
+# Argument: handler - Required. Function. handler function to call upon failure.
 # Argument: argument - Required. String. Name of the argument used in error messages.
 usageArgumentArray() {
   usageArgumentEmptyString "$@" || return $?
 }
 
 # Placeholder for additional arguments
-# Argument: usage - Required. Function. Usage function to call upon failure.
+# Argument: handler - Required. Function. handler function to call upon failure.
 # Argument: argument - Required. String. Name of the argument used in error messages.
 # Argument: value ... - Optional. Arguments. Additional arguments.
 usageArgumentArguments() {
@@ -631,24 +612,24 @@ usageArgumentArguments() {
 }
 
 # A remote path is one which exists in another file system
-# Argument: usage - Required. Function. Usage function to call upon failure.
+# Argument: handler - Required. Function. handler function to call upon failure.
 # Argument: argument - Required. String. Name of the argument used in error messages.
 # Exit Code: 2 - Always
 usageArgumentRemoteDirectory() {
-  local usage="$1" argument="$2"
+  local handler="$1" argument="$2"
   shift 2 || :
   local path="${1-}"
-  [ "${path:0:1}" = "/" ] || __throwArgument "$usage" "$argument \"${1-}\" is not a valid remote path" || return $?
+  [ "${path:0:1}" = "/" ] || __throwArgument "$handler" "$argument \"${1-}\" is not a valid remote path" || return $?
   printf "%s\n" "${1%/}"
 }
 
 # A remote path is one which exists in another file system
-# Argument: usage - Required. Function. Usage function to call upon failure.
+# Argument: handler - Required. Function. handler function to call upon failure.
 # Argument: argument - Required. String. Name of the argument used in error messages.
 # Exit Code: 2 - Always
 usageArgumentDate() {
-  local usage="$1" argument="$2"
+  local handler="$1" argument="$2"
   shift 2 || :
-  dateValid "${1-}" || __throwArgument "$usage" "$argument \"${1-}\" is not a valid date" || return $?
+  dateValid "${1-}" || __throwArgument "$handler" "$argument \"${1-}\" is not a valid date" || return $?
   printf "%s\n" "$1"
 }

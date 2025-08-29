@@ -33,8 +33,8 @@ debuggingStack() {
     --me) addMe=true ;;
     --exit) exitFlag=true ;;
     *)
-      # _IDENTICAL_ argumentUnknown 1
-      __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
+      # _IDENTICAL_ argumentUnknownHandler 1
+      __throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
       ;;
     esac
     shift
@@ -97,50 +97,48 @@ __debuggingStackCodeList() {
 # stdin: text
 # stdout: formatted text for debugging
 dumpPipe() {
-  local usage="_${FUNCNAME[0]}"
+  local handler="_${FUNCNAME[0]}"
 
   local showLines="" endBinary="head" names=() symbol="🐞" vanishFiles=()
 
-  # _IDENTICAL_ argument-case-header 5
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
+    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
-    # _IDENTICAL_ --help 4
-    --help)
-      "$usage" 0
-      return $?
-      ;;
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
     --head)
       endBinary="head"
       ;;
     --vanish)
       shift
-      vanishFiles+=("$(usageArgumentFile "$usage" "$argument" "${1-}")") || return $?
+      vanishFiles+=("$(usageArgumentFile "$handler" "$argument" "${1-}")") || return $?
       ;;
     --tail)
       endBinary="tail"
       ;;
     --symbol)
-      shift || __throwArgument "$usage" "missing $argument argument" || return $?
+      shift || __throwArgument "$handler" "missing $argument argument" || return $?
       symbol="$1"
       ;;
     --lines)
-      shift || __throwArgument "$usage" "missing $argument argument" || return $?
-      showLines=$(usageArgumentUnsignedInteger "$usage" "showLines" "$1") || return $?
+      shift || __throwArgument "$handler" "missing $argument argument" || return $?
+      showLines=$(usageArgumentUnsignedInteger "$handler" "showLines" "$1") || return $?
       ;;
     *)
       names+=("$argument")
       break
       ;;
     esac
-    shift || __throwArgument "$usage" shift || return $?
+    shift || __throwArgument "$handler" shift || return $?
   done
 
   if [ -z "$showLines" ]; then
     export BUILD_DEBUG_LINES
-    __catch "$usage" buildEnvironmentLoad BUILD_DEBUG_LINES || return $?
+    __catch "$handler" buildEnvironmentLoad BUILD_DEBUG_LINES || return $?
     showLines="${BUILD_DEBUG_LINES:-100}"
     isUnsignedInteger "$showLines" || _environment "BUILD_DEBUG_LINES is not an unsigned integer: $showLines" || showLines=10
   fi
@@ -151,13 +149,13 @@ dumpPipe() {
       local name
       name=$(decorate file "$(basename "$item")" "$item")
       # Recursion - only when --vanish is a parameter
-      __catchEnvironment "$usage" dumpPipe "--${endBinary}" --lines "$showLines" "${names[@]+"${names[@]}"}" "$name" <"$item" || return $?
-      __catchEnvironment "$usage" rm -rf "$item" || return $?
+      __catchEnvironment "$handler" dumpPipe "--${endBinary}" --lines "$showLines" "${names[@]+"${names[@]}"}" "$name" <"$item" || return $?
+      __catchEnvironment "$handler" rm -rf "$item" || return $?
     done
     return 0
   fi
-  item=$(fileTemporaryName "$usage") || return $?
-  __catchEnvironment "$usage" cat >"$item" || return $?
+  item=$(fileTemporaryName "$handler") || return $?
+  __catchEnvironment "$handler" cat >"$item" || return $?
 
   local name="" nLines nBytes
   [ ${#names[@]} -eq 0 ] || name=$(decorate info "${names[*]}: ") || :
@@ -184,7 +182,7 @@ dumpPipe() {
 
   local decoration width
   decoration="$(decorate code "$(echoBar)")"
-  width=$(consoleColumns) || __throwEnvironment "$usage" consoleColumns || return $?
+  width=$(consoleColumns) || __throwEnvironment "$handler" consoleColumns || return $?
   printf -- "%s\n%s\n%s\n" "$decoration" "$("$endBinary" -n "$showLines" "$item" | decorate wrap --width "$((width - 1))" --fill " " "$symbol" "$(decorate reset --)")" "$decoration"
   rm -rf "$item" || :
 }
@@ -199,43 +197,40 @@ _dumpPipe() {
 # stdin: text (optional)
 # stdout: formatted text (optional)
 dumpFile() {
-  local usage="_${FUNCNAME[0]}"
+  local handler="_${FUNCNAME[0]}"
   local files=() dumpArgs=()
 
-  # _IDENTICAL_ argument-case-header 5
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
+    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
-    # _IDENTICAL_ --help 4
-    --help)
-      "$usage" 0
-      return $?
-      ;;
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
     --symbol)
-      shift || __throwArgument "$usage" "shift $argument" || return $?
+      shift || __throwArgument "$handler" "shift $argument" || return $?
       dumpArgs+=("$argument" "$1")
       ;;
     --lines)
-      shift || __throwArgument "$usage" "missing $argument argument" || return $?
+      shift || __throwArgument "$handler" "missing $argument argument" || return $?
       dumpArgs+=("--lines" "$1")
       ;;
     *)
-      [ -f "$argument" ] || __throwArgument "$usage" "$argument is not a item" || return $?
+      [ -f "$argument" ] || __throwArgument "$handler" "$argument is not a item" || return $?
       files+=("$argument")
-      __throwArgument "$usage" "unknown argument: $argument" || return $?
       ;;
     esac
-    shift || __throwArgument "$usage" shift || return $?
+    shift || __throwArgument "$handler" shift || return $?
   done
 
   if [ ${#files[@]} -eq 0 ]; then
-    __catchEnvironment "$usage" dumpPipe "${dumpArgs[@]+${dumpArgs[@]}}" "(stdin)" || return $?
+    __catchEnvironment "$handler" dumpPipe "${dumpArgs[@]+${dumpArgs[@]}}" "(stdin)" || return $?
   else
     for tempFile in "${files[@]}"; do
       # shellcheck disable=SC2094
-      __catchEnvironment "$usage" dumpPipe "${dumpArgs[@]+${dumpArgs[@]}}" "$tempFile" <"$tempFile" || return $?
+      __catchEnvironment "$handler" dumpPipe "${dumpArgs[@]+${dumpArgs[@]}}" "$tempFile" <"$tempFile" || return $?
     done
   fi
 }
@@ -261,7 +256,7 @@ _dumpFile() {
 # DOC TEMPLATE: --help 1
 # Argument: --help - Optional. Flag. Display this help.
 __internalDumpEnvironment() {
-  local usage="$1" && shift
+  local handler="$1" && shift
 
   local maxLen=64 skipEnv=() name matches=() fillMatches=true secureSuffix="- HIDDEN" showSkipped=false
 
@@ -271,27 +266,25 @@ __internalDumpEnvironment() {
     fi
   done < <(environmentSecureVariables) || :
 
-  # _IDENTICAL_ argument-case-header 5
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
+    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
-    # _IDENTICAL_ --help 4
-    --help)
-      "$usage" 0
-      return $?
-      ;;
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
     --show-skipped)
       showSkipped=true
       ;;
     --maximum-length)
       shift
-      maxLen=$(usageArgumentPositiveInteger "$usage" "$argument" "${1-}") || return $?
+      maxLen=$(usageArgumentPositiveInteger "$handler" "$argument" "${1-}") || return $?
       ;;
     --skip-env)
       shift
-      skipEnv+=("$(usageArgumentEnvironmentVariable "$usage" "$argument" "${1-}")") || return $?
+      skipEnv+=("$(usageArgumentEnvironmentVariable "$handler" "$argument" "${1-}")") || return $?
       ;;
     --secure-match)
       shift
@@ -310,8 +303,8 @@ __internalDumpEnvironment() {
       secureSuffix="${1-}"
       ;;
     *)
-      # _IDENTICAL_ argumentUnknown 1
-      __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
+      # _IDENTICAL_ argumentUnknownHandler 1
+      __throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
       ;;
     esac
     shift
@@ -365,8 +358,8 @@ __internalDumpEnvironment() {
 # DOC TEMPLATE: --help 1
 # Argument: --help - Optional. Flag. Display this help.
 dumpEnvironment() {
-  local usage="_${FUNCNAME[0]}"
-  __internalDumpEnvironment "$usage" "$@" || return $?
+  local handler="_${FUNCNAME[0]}"
+  __internalDumpEnvironment "$handler" "$@" || return $?
 }
 _dumpEnvironment() {
   # __IDENTICAL__ usageDocument 1
@@ -381,12 +374,12 @@ _dumpEnvironment() {
 # DOC TEMPLATE: --help 1
 # Argument: --help - Optional. Flag. Display this help.
 dumpEnvironmentUnsafe() {
-  local usage="_${FUNCNAME[0]}" argument
+  local handler="_${FUNCNAME[0]}" argument
   [ $# -eq 0 ] || for argument in "--secure-match" "--secure-suffix"; do
-    ! inArray "$argument" "$@" || __throwArgument "$usage" "Unknown $argument (did you mean dumpEnvironment?)" || return $?
+    ! inArray "$argument" "$@" || __throwArgument "$handler" "Unknown $argument (did you mean dumpEnvironment?)" || return $?
   done
   # Disable the secure features by putting them at the end
-  __internalDumpEnvironment "$usage" "$@" --secure-match - --secure-suffix ""
+  __internalDumpEnvironment "$handler" "$@" --secure-match - --secure-suffix ""
 }
 _dumpEnvironmentUnsafe() {
   # __IDENTICAL__ usageDocument 1
@@ -397,30 +390,28 @@ _dumpEnvironmentUnsafe() {
 # DOC TEMPLATE: --help 1
 # Argument: --help - Optional. Flag. Display this help.
 dumpLoadAverages() {
-  local usage="_${FUNCNAME[0]}"
+  local handler="_${FUNCNAME[0]}"
 
-  # _IDENTICAL_ argument-case-header 5
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
+    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
-    # _IDENTICAL_ --help 4
-    --help)
-      "$usage" 0
-      return $?
-      ;;
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
     *)
-      # _IDENTICAL_ argumentUnknown 1
-      __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
+      # _IDENTICAL_ argumentUnknownHandler 1
+      __throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
       ;;
     esac
     shift
   done
 
   local averages=()
-  IFS=$'\n' read -d '' -r -a averages < <(__catchEnvironment "$usage" loadAverage) || :
-  __catchEnvironment "$usage" decorate pair "Load averages:" "$(decorate each code "${averages[@]+"${averages[@]}"}")" || return $?
+  IFS=$'\n' read -d '' -r -a averages < <(__catchEnvironment "$handler" loadAverage) || :
+  __catchEnvironment "$handler" decorate pair "Load averages:" "$(decorate each code "${averages[@]+"${averages[@]}"}")" || return $?
 }
 _dumpLoadAverages() {
   # __IDENTICAL__ usageDocument 1
@@ -430,26 +421,24 @@ _dumpLoadAverages() {
 # Output to hex
 # Argument: --size size - Integer. Output at most size bytes of data.
 dumpHex() {
-  local usage="_${FUNCNAME[0]}"
+  local handler="_${FUNCNAME[0]}"
 
   local size="" arguments=()
   local runner=(od -w32 -A n -t xz -v)
   local runner=(od -t xCc)
 
-  # _IDENTICAL_ argument-case-header 5
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
+    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
-    # _IDENTICAL_ --help 4
-    --help)
-      "$usage" 0
-      return $?
-      ;;
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
     --size)
       shift
-      size=$(usageArgumentPositiveInteger "$usage" "$argument" "${1-}") || return $?
+      size=$(usageArgumentPositiveInteger "$handler" "$argument" "${1-}") || return $?
       runner+=("-N" "$size")
       ;;
     *)
@@ -459,7 +448,7 @@ dumpHex() {
     shift
   done
 
-  whichExists od || __throwEnvironment "$usage" "od required to be installed" || return $?
+  whichExists od || __throwEnvironment "$handler" "od required to be installed" || return $?
 
   if [ "${#arguments[@]}" -eq 0 ]; then
     "${runner[@]}"

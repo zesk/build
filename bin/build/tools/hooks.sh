@@ -14,26 +14,24 @@
 # Argument: --home home - Optional. Directory. Application home directory.
 # Argument: arguments ... - String. Optional. Arguments to `hookName`'s hook.
 _hookContextWrapper() {
-  local usage="$1" hookName="$2"
+  local handler="$1" hookName="$2"
 
   local application=""
 
   shift 2 || :
 
-  # _IDENTICAL_ argument-case-header 5
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
+    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
-    # _IDENTICAL_ --help 4
-    --help)
-      "$usage" 0
-      return $?
-      ;;
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
     --application)
       shift
-      application=$(usageArgumentDirectory "$usage" "home" "${1-}") || return $?
+      application=$(usageArgumentDirectory "$handler" "home" "${1-}") || return $?
       ;;
     *)
       break
@@ -44,15 +42,15 @@ _hookContextWrapper() {
 
   local start home
 
-  home=$(__catch "$usage" buildHome) || return $?
-  start="$(pwd -P 2>/dev/null)" || __throwEnvironment "$usage" "Failed to get pwd" || return $?
-  start=$(__catchEnvironment "$usage" realPath "$start") || return $?
+  home=$(__catch "$handler" buildHome) || return $?
+  start="$(pwd -P 2>/dev/null)" || __throwEnvironment "$handler" "Failed to get pwd" || return $?
+  start=$(__catchEnvironment "$handler" realPath "$start") || return $?
 
   if [ -z "$application" ]; then
     if [ "${start#"$home"}" = "$start" ]; then
       application="$home"
     else
-      application=$(gitFindHome "$start") || __throwEnvironment "$usage" "Unable to find git home" || return $?
+      application=$(gitFindHome "$start") || __throwEnvironment "$handler" "Unable to find git home" || return $?
       application="${application%/}"
       if [ "${start#"$application"}" = "$start" ]; then
         buildEnvironmentContext hookVersionCurrent --application "$application" "${__saved[@]}" || return $?
@@ -60,7 +58,7 @@ _hookContextWrapper() {
       fi
     fi
   fi
-  __catchEnvironment "$usage" hookRun --application "$application" "$hookName" "$@" || return $?
+  __catchEnvironment "$handler" hookRun --application "$application" "$hookName" "$@" || return $?
 }
 
 # Application current version

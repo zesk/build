@@ -27,12 +27,12 @@ testVersionLive() {
 
 # Tag: slow
 testHookSystem() {
-  local usage="_return"
+  local handler="_return"
   local testDir here randomApp randomDefault path
   local hook exitCode f
 
-  testDir=$(fileTemporaryName "$usage" -d) || return $?
-  here=$(__catch "$usage" buildHome) || return $?
+  testDir=$(fileTemporaryName "$handler" -d) || return $?
+  here=$(__catch "$handler" buildHome) || return $?
 
   randomApp=$(randomString)
   randomDefault=$(randomString)
@@ -136,7 +136,7 @@ testHookSystem() {
   assertOutputContains --leak BUILD_DEBUG --line "$LINENO" "$randomDefault" hookRun --application "$testDir" test2 || return $?
   assertOutputContains --leak BUILD_DEBUG --line "$LINENO" "build/hooks" hookRun --application "$testDir" test2 || return $?
 
-  __catch "$usage" rm -rf "$testDir" || return $?
+  __catch "$handler" rm -rf "$testDir" || return $?
 
   unset BUILD_DEBUG
 }

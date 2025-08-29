@@ -65,7 +65,7 @@
 # Example: bashPrompt --colors "bold-cyan:bold-magenta:green:orange:code" --format "{label} {user}@{host} {status}"
 # Environment: PROMPT_COMMAND
 bashPrompt() {
-  local usage="_${FUNCNAME[0]}"
+  local handler="_${FUNCNAME[0]}"
 
   local addArguments=() resetFlag=false verbose=false skipTerminal=false listFlag=false skipPrompt=false
 
@@ -76,28 +76,26 @@ bashPrompt() {
   local colorsText=""
   local promptFormat="" successPrompt="${__BASH_PROMPT_PREVIOUS[0]-}" failurePrompt="${__BASH_PROMPT_PREVIOUS[1]-}" colorsTextFormatted="${__BASH_PROMPT_PREVIOUS[2]-}" label="${__BASH_PROMPT_PREVIOUS[3]-}"
 
-  # _IDENTICAL_ argument-case-header 5
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
+    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
-    # _IDENTICAL_ --help 4
-    --help)
-      "$usage" 0
-      return $?
-      ;;
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
     --success)
       shift
-      successPrompt=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
+      successPrompt=$(usageArgumentString "$handler" "$argument" "${1-}") || return $?
       ;;
     --failure)
       shift
-      failurePrompt=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
+      failurePrompt=$(usageArgumentString "$handler" "$argument" "${1-}") || return $?
       ;;
     --label)
       shift
-      label="$(usageArgumentEmptyString "$usage" "$argument" "${1-}")" || return $?
+      label="$(usageArgumentEmptyString "$handler" "$argument" "${1-}")" || return $?
       [ -z "$label" ] || label="$label "
       ;;
     --list)
@@ -105,13 +103,13 @@ bashPrompt() {
       ;;
     --format)
       shift
-      promptFormat=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
+      promptFormat=$(usageArgumentString "$handler" "$argument" "${1-}") || return $?
       ;;
     --remove)
       shift
       local module
-      module=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
-      __bashPromptRemove "$usage" "$module" || return $?
+      module=$(usageArgumentString "$handler" "$argument" "${1-}") || return $?
+      __bashPromptRemove "$handler" "$module" || return $?
       ;;
     --skip-terminal)
       skipTerminal=true
@@ -124,11 +122,11 @@ bashPrompt() {
       ;;
     --colors)
       shift
-      colorsText="$(usageArgumentString "$usage" "$argument" "${1-}")" || return $?
+      colorsText="$(usageArgumentString "$handler" "$argument" "${1-}")" || return $?
       local colors
       IFS=":" read -r -a colors <<<"$colorsText" || :
-      [ "${#colors[@]}" -ge 2 ] || __throwArgument "$usage" "$argument should be min 2 colors separated by a colon: $(decorate code "$colorsText")" || return $?
-      [ "${#colors[@]}" -le 5 ] || __throwArgument "$usage" "$argument should be max 5 colors separated by a colon: $(decorate code "$colorsText")" || return $?
+      [ "${#colors[@]}" -ge 2 ] || __throwArgument "$handler" "$argument should be min 2 colors separated by a colon: $(decorate code "$colorsText")" || return $?
+      [ "${#colors[@]}" -le 5 ] || __throwArgument "$handler" "$argument should be max 5 colors separated by a colon: $(decorate code "$colorsText")" || return $?
       colorsTextFormatted=$(bashPromptColorsFormat "${colorsText}")
       ;;
     --first | --last | --debug)
@@ -136,25 +134,25 @@ bashPrompt() {
       ;;
     --order)
       shift
-      order=$(usageArgumentUnsignedInteger "$usage" "$argument" "${1-}") || return $?
+      order=$(usageArgumentUnsignedInteger "$handler" "$argument" "${1-}") || return $?
       addArguments+=("$argument" "$order")
       ;;
     --verbose)
       verbose=true
       ;;
     -*)
-      # _IDENTICAL_ argumentUnknown 1
-      __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
+      # _IDENTICAL_ argumentUnknownHandler 1
+      __throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
       ;;
     *)
-      addArguments+=("$(usageArgumentCallable "$usage" "module" "$argument")") || return $?
+      addArguments+=("$(usageArgumentCallable "$handler" "module" "$argument")") || return $?
       ;;
     esac
     shift
   done
 
   if [ ${#addArguments[@]} -gt 0 ]; then
-    __bashPromptAdd "$usage" "${addArguments[@]+"${addArguments[@]}"}" || return $?
+    __bashPromptAdd "$handler" "${addArguments[@]+"${addArguments[@]}"}" || return $?
   fi
 
   if $listFlag; then
@@ -172,7 +170,7 @@ bashPrompt() {
     promptFormat="{label}{user}@{host} {directory} {return}{status} "
   fi
 
-  $skipTerminal || [ -t 0 ] || __throwEnvironment "$usage" "Requires a terminal" || return $?
+  $skipTerminal || [ -t 0 ] || __throwEnvironment "$handler" "Requires a terminal" || return $?
 
   export PROMPT_COMMAND PS1 __BASH_PROMPT_PREVIOUS __BASH_PROMPT_MODULES BUILD_PROMPT_COLORS
 
@@ -184,7 +182,7 @@ bashPrompt() {
 
   if [ -z "$colorsTextFormatted" ] || $resetFlag; then
     if ! $resetFlag; then
-      __catch "$usage" buildEnvironmentLoad BUILD_PROMPT_COLORS || return $?
+      __catch "$handler" buildEnvironmentLoad BUILD_PROMPT_COLORS || return $?
       [ -z "${BUILD_PROMPT_COLORS-}" ] || colorsText="$BUILD_PROMPT_COLORS"
     fi
     if $resetFlag || [ -z "$colorsText" ]; then
@@ -231,12 +229,12 @@ _bashPrompt() {
 # Arguments are the same as read, except:
 # `-r` is implied and does not need to be specified
 bashUserInput() {
-  local usage="_${FUNCNAME[0]}"
+  local handler="_${FUNCNAME[0]}"
   local word="" exitCode=0
 
-  [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
+  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
   if ! isTTYAvailable; then
-    __throwEnvironment "$usage" "No TTY available for user input" || return $?
+    __throwEnvironment "$handler" "No TTY available for user input" || return $?
   fi
   export __BASH_PROMPT_MARKERS
   stty echo
@@ -259,31 +257,29 @@ _bashUserInput() {
 # Argument: suffix - Optional. EmptyString. Suffix for all prompts.
 # Outputs the current marker settings, one per line (0, 1, or 2 lines will be output).
 bashPromptMarkers() {
-  local usage="_${FUNCNAME[0]}"
+  local handler="_${FUNCNAME[0]}"
 
   local markers=()
 
   export __BASH_PROMPT_MARKERS
-  __catch "$usage" buildEnvironmentLoad __BASH_PROMPT_MARKERS || return $?
+  __catch "$handler" buildEnvironmentLoad __BASH_PROMPT_MARKERS || return $?
 
-  # _IDENTICAL_ argument-case-header 5
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
+    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
-    # _IDENTICAL_ --help 4
-    --help)
-      "$usage" 0
-      return $?
-      ;;
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
     *)
       markers+=("$1")
       ;;
     esac
     shift
   done
-  [ "${#markers[@]}" -le 2 ] || __throwArgument "$usage" "Maximum two markers supported (prefix suffix)"
+  [ "${#markers[@]}" -le 2 ] || __throwArgument "$handler" "Maximum two markers supported (prefix suffix)"
   [ "${#markers[@]}" -eq 0 ] || __BASH_PROMPT_MARKERS=("${markers[@]}")
   printf "%s\n" "${__BASH_PROMPT_MARKERS[@]}"
 }
@@ -350,7 +346,7 @@ __bashPromptList() {
 # Argument: --order ordering - UnsignedInteger. Ordering of the prompt call. 0 is first, higher numbers are last. Capped at 99.
 # Argument: module - Callable. Required. The module to add
 __bashPromptAdd() {
-  local usage="$1" && shift
+  local handler="$1" && shift
 
   local order=50
 
@@ -359,15 +355,16 @@ __bashPromptAdd() {
   export __BASH_PROMPT_MODULES
   local modules=("${__BASH_PROMPT_MODULES[@]+"${__BASH_PROMPT_MODULES[@]}"}")
 
-  # _IDENTICAL_ argument-case-header 5
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
+    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     --order)
       shift
-      order=$(usageArgumentUnsignedInteger "$usage" "$argument" "${1-}") || return $?
+      order=$(usageArgumentUnsignedInteger "$handler" "$argument" "${1-}") || return $?
       [ "$order" -gt 0 ] || order=0
       [ "$order" -lt 99 ] || order=99
       ;;
@@ -388,7 +385,7 @@ __bashPromptAdd() {
     shift
   done
 
-  __catch "$usage" __bashPromptModulesSave "${modules[@]}" || return $?
+  __catch "$handler" __bashPromptModulesSave "${modules[@]}" || return $?
   return 0
 }
 
@@ -401,7 +398,7 @@ __bashPromptModulesSave() {
 # Fails if not found
 # Requires: isArray read inArray decorate listJoin
 __bashPromptRemove() {
-  local usage="$1" module="$2" current modules=() found=false
+  local handler="$1" module="$2" current modules=() found=false
 
   __bashPromptSanity
 
@@ -416,7 +413,7 @@ __bashPromptRemove() {
   if ! $found; then
     local moduleList
     [ "${#__BASH_PROMPT_MODULES[@]}" -eq 0 ] && moduleList="$(decorate warning none)" || moduleList=$(decorate each code "${__BASH_PROMPT_MODULES[@]}")
-    __throwEnvironment "$usage" "$module was not found in modules: $moduleList" || return $?
+    __throwEnvironment "$handler" "$module was not found in modules: $moduleList" || return $?
   fi
   __BASH_PROMPT_MODULES=("${modules[@]+"${modules[@]}"}")
 }

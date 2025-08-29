@@ -20,12 +20,12 @@ source "${BASH_SOURCE[0]%/*}/../tools.sh"
 #
 __hookVersionAlready() {
   local currentVersion releaseNotes
-  local usage="_return"
+  local handler="_return"
 
   export BUILD_VERSION_NO_OPEN
 
-  currentVersion=$(usageArgumentString "$usage" version "${1-}") && shift || return $?
-  releaseNotes=$(usageArgumentFile "$usage" releaseNotes "${1-}") && shift || return $?
+  currentVersion=$(usageArgumentString "$handler" version "${1-}") && shift || return $?
+  releaseNotes=$(usageArgumentFile "$handler" releaseNotes "${1-}") && shift || return $?
 
   if buildEnvironmentLoad BUILD_VERSION_NO_OPEN && ! test "$BUILD_VERSION_NO_OPEN"; then
     printf "%s %s %s %s\n" "$(decorate success "Opening")" "$(decorate code "$currentVersion")" "$(decorate success "release notes at")" "$(decorate value "$releaseNotes")"

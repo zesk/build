@@ -24,16 +24,16 @@ source "${BASH_SOURCE[0]%/*}/tools.sh" || exit 99
 # Once ready, do `testTools testSuite --help`
 #
 __buildTestSuite() {
-  local usage="_${FUNCNAME[0]}"
+  local handler="_${FUNCNAME[0]}"
   local testHome
 
-  testHome="$(__catch "$usage" buildHome)" || return $?
-  [ -d "$testHome/test" ] || __throwArgument "$usage" "Missing test directory" || return $?
+  testHome="$(__catch "$handler" buildHome)" || return $?
+  [ -d "$testHome/test" ] || __throwArgument "$handler" "Missing test directory" || return $?
 
   # Include our own test support files if needed
-  [ ! -d "$testHome/test/support" ] || __catchEnvironment "$usage" bashSourcePath "$testHome/test/support" || return $?
+  [ ! -d "$testHome/test/support" ] || __catchEnvironment "$handler" bashSourcePath "$testHome/test/support" || return $?
 
-  __catchEnvironment "$usage" testTools testSuite --tests "$testHome/test/tests/" "$@" || return $?
+  __catchEnvironment "$handler" testTools testSuite --tests "$testHome/test/tests/" "$@" || return $?
 }
 ___buildTestSuite() {
   # __IDENTICAL__ usageDocument 1

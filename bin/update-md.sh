@@ -58,7 +58,7 @@ _return() {
 # Credits: F. Hauri - Give Up GitHub (isnum_Case)
 # Original: is_uint
 # Argument: value - EmptyString. Value to test if it is an unsigned integer.
-# Usage: {fn} argument ...
+# handler: {fn} argument ...
 # Exit Code: 0 - if it is an unsigned integer
 # Exit Code: 1 - if it is not an unsigned integer
 # Requires: _return
@@ -80,29 +80,31 @@ __addNoteTo() {
 }
 
 #
-# Usage: {fn} [ --skip-commit ]
+# handler: {fn} [ --skip-commit ]
 # Argument: --skip-commit - Skip the commit if the files change
 # Requires: jq __throwArgument statusMessage
 __updateMarkdown() {
-  local usage="${FUNCNAME[0]#_}"
+  local handler="${FUNCNAME[0]#_}"
   local flagSkipCommit buildMarker
   local argument
 
   local flagSkipCommit=false
+  local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
-    argument="$1"
-    argument="$1"
-    [ -n "$argument" ] || __throwArgument "$usage" "blank argument" || return $?
+    local argument="$1" __index=$((__count - $# + 1))
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
+    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     --skip-commit)
       flagSkipCommit=true
       statusMessage decorate warning "Skipping commit ..."
       ;;
     *)
-      __throwArgument "$usage" "unknown argument: $(decorate value "$argument")" || return $?
+      # _IDENTICAL_ argumentUnknownHandler 1
+      __throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
       ;;
     esac
-    shift || __throwArgument "$usage" "shift argument $(decorate label "$argument")" || return $?
+    shift
   done
   __addNoteTo README.md
   __addNoteTo LICENSE.md
@@ -113,7 +115,7 @@ __updateMarkdown() {
   printf -- "%s" "{}" | jq --arg version "$(hookRun version-current)" \
     --arg id "$(hookRun application-id)" \
     '. + {version: $version, id: $id}' >"$buildMarker"
-  __catchEnvironment "$usage" git add "$buildMarker" || return $?
+  __catchEnvironment "$handler" git add "$buildMarker" || return $?
 
   #
   # Disable this to see what environment shows up in commit hooks for GIT*=
@@ -126,8 +128,8 @@ __updateMarkdown() {
     if ! gitInsideHook; then
       if gitRepositoryChanged; then
         statusMessage --last decorate info "Committing build.json"
-        __catchEnvironment "$usage" git commit -m "Updating build.json" "$buildMarker" || return $?
-        __catchEnvironment "$usage" git push origin || return $?
+        __catchEnvironment "$handler" git commit -m "Updating build.json" "$buildMarker" || return $?
+        __catchEnvironment "$handler" git push origin || return $?
       fi
     else
       statusMessage --last decorate warning "Skipping update during commit hook" || :

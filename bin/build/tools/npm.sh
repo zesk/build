@@ -20,28 +20,26 @@
 # Binary: npm.sh
 #
 npmInstall() {
-  local usage="_${FUNCNAME[0]}"
+  local handler="_${FUNCNAME[0]}"
 
   local version quietLog
 
-  # _IDENTICAL_ argument-case-header 5
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
+    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
-    # _IDENTICAL_ --help 4
-    --help)
-      "$usage" 0
-      return $?
-      ;;
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
     --version)
       shift
-      version=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
+      version=$(usageArgumentString "$handler" "$argument" "${1-}") || return $?
       ;;
     *)
-      # _IDENTICAL_ argumentUnknown 1
-      __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
+      # _IDENTICAL_ argumentUnknownHandler 1
+      __throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
       ;;
     esac
     shift
@@ -50,17 +48,17 @@ npmInstall() {
   if whichExists npm; then
     return 0
   fi
-  __catch "$usage" buildEnvironmentLoad BUILD_NPM_VERSION || return $?
+  __catch "$handler" buildEnvironmentLoad BUILD_NPM_VERSION || return $?
 
   local clean=() quietLog
 
   version="${1-${BUILD_NPM_VERSION:-latest}}"
 
-  quietLog=$(__catch "$usage" buildQuietLog "$usage") || return $?
+  quietLog=$(__catch "$handler" buildQuietLog "$handler") || return $?
   clean+=("$quietLog")
-  __catchEnvironmentQuiet "$usage" "$quietLog" packageInstall npm || returnClean $? "${clean[@]}" || return $?
-  __catchEnvironmentQuiet "$usage" "$quietLog" npm install -g "npm@$version" --force 2>&1 || returnClean $? "${clean[@]}" || return $?
-  __catchEnvironment "$usage" rm -rf "${clean[@]}" || return $?
+  __catchEnvironmentQuiet "$handler" "$quietLog" packageInstall npm || returnClean $? "${clean[@]}" || return $?
+  __catchEnvironmentQuiet "$handler" "$quietLog" npm install -g "npm@$version" --force 2>&1 || returnClean $? "${clean[@]}" || return $?
+  __catchEnvironment "$handler" rm -rf "${clean[@]}" || return $?
 }
 _npmInstall() {
   # __IDENTICAL__ usageDocument 1
@@ -81,15 +79,15 @@ _npmUninstall() {
 }
 
 __nodePackageManagerArguments_npm() {
-  local usage="$1" action
+  local handler="$1" action
 
-  action=$(usageArgumentString "$usage" "action" "${2-}") || return $?
+  action=$(usageArgumentString "$handler" "action" "${2-}") || return $?
   shift 2
 
   local globalFlag=false
   while [ $# -gt 0 ]; do
     local argument
-    argument="$(usageArgumentString "$usage" "argument" "$1")" || return $?
+    argument="$(usageArgumentString "$handler" "argument" "$1")" || return $?
     case "$argument" in
     --global)
       globalFlag=true
@@ -100,7 +98,7 @@ __nodePackageManagerArguments_npm() {
 
   case "$action" in
   run)
-    ! $globalFlag || __throwArgument "$usage" "--global makes no sense with run" || return $?
+    ! $globalFlag || __throwArgument "$handler" "--global makes no sense with run" || return $?
     printf "%s\n" "run"
     ;;
   install | update | uninstall)
@@ -111,7 +109,7 @@ __nodePackageManagerArguments_npm() {
     fi
     ;;
   *)
-    __catchArgument "$usage" "Unknown action: $action" || return $?
+    __catchArgument "$handler" "Unknown action: $action" || return $?
     ;;
   esac
 }

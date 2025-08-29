@@ -12,13 +12,13 @@
 # Usage: value - Optional. EmptyString. Value to write.
 # Usage: ... - Optional. EmptyString. Additional values, when supplied, write this value as an array.
 environmentValueWrite() {
-  local usage="_${FUNCNAME[0]}" name
-  [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
+  local handler="_${FUNCNAME[0]}" name
+  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
   local value
 
-  name=$(usageArgumentEnvironmentVariable "$usage" "name" "${1-}") || return $?
+  name=$(usageArgumentEnvironmentVariable "$handler" "name" "${1-}") || return $?
   shift
-  [ $# -ge 1 ] || __throwArgument "$usage" "value required" || return $?
+  [ $# -ge 1 ] || __throwArgument "$handler" "value required" || return $?
   if [ $# -eq 1 ]; then
     value="${1-}"
     __environmentValueWrite "$name" "$(declare -p value)" || return $?
@@ -40,11 +40,11 @@ _environmentValueWrite() {
 #     declare -a foo=([0]="a's" [1]="b" [2]="c")
 #
 environmentValueWriteArray() {
-  local usage="_${FUNCNAME[0]}"
-  [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
+  local handler="_${FUNCNAME[0]}"
+  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
   local name value result search="'" replace="'\''"
 
-  name=$(usageArgumentEnvironmentVariable "$usage" "name" "${1-}") || return $?
+  name=$(usageArgumentEnvironmentVariable "$handler" "name" "${1-}") || return $?
   shift
   if [ $# -eq 0 ]; then
     printf "%s=%s\n" "$name" "()"
@@ -80,12 +80,12 @@ __environmentValueWrite() {
 # Exit Code: 1 - If value is not found and no default argument is supplied (2 arguments)
 # Exit Code: 0 - If value
 environmentValueRead() {
-  local usage="_${FUNCNAME[0]}"
-  [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
+  local handler="_${FUNCNAME[0]}"
+  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
   local stateFile name default="${3---}" value
-  stateFile=$(usageArgumentFile "$usage" "stateFile" "${1-}") || return $?
-  name=$(usageArgumentEnvironmentVariable "$usage" "name" "${2-}") || return $?
-  [ $# -le 3 ] || __throwArgument "$usage" "Extra arguments: $#" || return $?
+  stateFile=$(usageArgumentFile "$handler" "stateFile" "${1-}") || return $?
+  name=$(usageArgumentEnvironmentVariable "$handler" "name" "${2-}") || return $?
+  [ $# -le 3 ] || __throwArgument "$handler" "Extra arguments: $#" || return $?
   if ! value="$(grep -e "^$(quoteGrepPattern "$name")=" "$stateFile" | tail -n 1 | cut -c $((${#name} + 2))-)" || [ -z "$value" ]; then
     if [ $# -le 2 ]; then
       return 1
@@ -106,15 +106,15 @@ _environmentValueRead() {
 # Convert an array value which was loaded already
 # Usage: {fn} encodedValue
 environmentValueConvertArray() {
-  local usage="_${FUNCNAME[0]}"
-  [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
+  local handler="_${FUNCNAME[0]}"
+  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
   local value prefix='([0]="' suffix='")'
 
   value=$(__unquote "${1-}")
   [ "$value" != "()" ] || return 0 # Empty array
   if [ "${value#*=}" != "$value" ]; then
-    [ "${value#"$prefix"}" != "$value" ] || __throwArgument "$usage" "Not an array value (prefix: \"${value:0:4}\")" || return $?
-    [ "${value%"$suffix"}" != "$value" ] || __throwArgument "$usage" "Not an array value (suffix)" || return $?
+    [ "${value#"$prefix"}" != "$value" ] || __throwArgument "$handler" "Not an array value (prefix: \"${value:0:4}\")" || return $?
+    [ "${value%"$suffix"}" != "$value" ] || __throwArgument "$handler" "Not an array value (suffix)" || return $?
     declare -a "value=$value"
   else
     local n=$((${#value} - 1))
@@ -138,16 +138,13 @@ _environmentValueConvertArray() {
 #
 # First letter MUST NOT be a digit
 environmentVariableNameValid() {
-  local usage="_${FUNCNAME[0]}"
+  local handler="_${FUNCNAME[0]}"
   local name
   while [ $# -gt 0 ]; do
     [ -n "$1" ] || return 1
     case "$1" in
-    # _IDENTICAL_ --help 4
-    --help)
-      "$usage" 0
-      return $?
-      ;;
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
     *[!A-Za-z0-9_]*)
       return 1
       ;;
@@ -173,12 +170,12 @@ _environmentVariableNameValid() {
 # Argument: name - Required. EnvironmentVariable. Name to read.
 # Outputs array elements, one per line.
 environmentValueReadArray() {
-  local usage="_${FUNCNAME[0]}"
-  [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
+  local handler="_${FUNCNAME[0]}"
+  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
   local stateFile="${1-}" name value
 
-  name=$(usageArgumentEnvironmentVariable "$usage" "name" "${2-}") || return $?
-  value=$(__catch "$usage" environmentValueRead "$stateFile" "$name" "") || return $?
+  name=$(usageArgumentEnvironmentVariable "$handler" "name" "${2-}") || return $?
+  value=$(__catch "$handler" environmentValueRead "$stateFile" "$name" "") || return $?
   environmentValueConvertArray "$value" || return $?
 }
 _environmentValueReadArray() {
@@ -231,36 +228,34 @@ _environmentLines() {
 # DEPRECATED: 2024-07-20
 # See: environmentFileLoad
 dotEnvConfigure() {
-  local usage="_${FUNCNAME[0]}"
+  local handler="_${FUNCNAME[0]}"
 
   local aa=() where=""
 
-  # _IDENTICAL_ argument-case-header 5
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
+    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
-    # _IDENTICAL_ --help 4
-    --help)
-      "$usage" 0
-      return $?
-      ;;
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
     --verbose | --debug)
       aa+=("$argument")
       ;;
     *)
-      where=$(usageArgumentDirectory "$usage" "where" "$1") || return $?
+      where=$(usageArgumentDirectory "$handler" "where" "$1") || return $?
       ;;
     esac
     shift
   done
 
   if [ -z "$where" ]; then
-    where=$(__catchEnvironment "$usage" pwd) || return $?
+    where=$(__catchEnvironment "$handler" pwd) || return $?
   fi
   aa+=(--require "$where/.env" --optional "$where/.env.local" --require)
-  __catch "$usage" environmentFileLoad "${aa[@]}" "$@" || return $?
+  __catch "$handler" environmentFileLoad "${aa[@]}" "$@" || return $?
 }
 _dotEnvConfigure() {
   # __IDENTICAL__ usageDocument 1
@@ -279,25 +274,23 @@ _dotEnvConfigure() {
 # Exit code: 2 - if file does not exist; outputs an error
 # Exit code: 0 - if files are loaded successfully
 environmentLoad() {
-  local usage="_${FUNCNAME[0]}"
+  local handler="_${FUNCNAME[0]}"
 
   local ff=() required=true ignoreList=() secureList=()
   local verboseMode=false debugMode=false hasOne=false execute=() variablePrefix=""
 
-  # _IDENTICAL_ argument-case-header 5
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
+    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
-    # _IDENTICAL_ --help 4
-    --help)
-      "$usage" 0
-      return $?
-      ;;
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
     --verbose)
       verboseMode=true
-      ! $debugMode || printf -- "VERBOSE MODE on (Call: %s)\n" "$(decorate each code "${usage#_}" "${__saved[@]}")"
+      ! $debugMode || printf -- "VERBOSE MODE on (Call: %s)\n" "$(decorate each code "${handler#_}" "${__saved[@]}")"
       ;;
     --debug)
       debugMode=true
@@ -306,18 +299,18 @@ environmentLoad() {
       ;;
     --secure)
       shift
-      secureList+=("$(usageArgumentString "$usage" "$argument" "${1-}")") || return $?
+      secureList+=("$(usageArgumentString "$handler" "$argument" "${1-}")") || return $?
       ;;
     --prefix)
       shift
-      variablePrefix="$(usageArgumentEnvironmentVariable "$usage" "$argument" "${1-}")" || return $?
+      variablePrefix="$(usageArgumentEnvironmentVariable "$handler" "$argument" "${1-}")" || return $?
       ;;
     --secure-defaults)
       read -d "" -r -a secureList < <(environmentSecureVariables) || :
       ;;
     --ignore)
       shift
-      ignoreList+=("$(usageArgumentString "$usage" "$argument" "${1-}")") || return $?
+      ignoreList+=("$(usageArgumentString "$handler" "$argument" "${1-}")") || return $?
       ;;
     --require)
       required=true
@@ -329,19 +322,19 @@ environmentLoad() {
       ;;
     --context)
       shift
-      context="$(usageArgumentString "$usage" "$argument" "${1-}")" || return $?
+      context="$(usageArgumentString "$handler" "$argument" "${1-}")" || return $?
       ! $debugMode || printf -- "Context: %s\n" "$context"
       ;;
     --execute)
       shift
-      binary=$(usageArgumentCallable "$usage" "$argument" "${1-}") || return $?
+      binary=$(usageArgumentCallable "$handler" "$argument" "${1-}") || return $?
       shift
       execute=("$binary" "$@")
       break
       ;;
     *)
-      # _IDENTICAL_ argumentUnknown 1
-      __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
+      # _IDENTICAL_ argumentUnknownHandler 1
+      __throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
       ;;
     esac
     shift
@@ -363,7 +356,7 @@ environmentLoad() {
       continue
     fi
     # Skip insecure variables
-    [ "${#secureList[@]}" -eq 0 ] || ! inArray "$name" "${secureList[@]}" || __throwEnvironment "$usage" "${environmentFile} contains secure value $(decorate bold-red "$name") [$(decorate each --count code "${secureList[@]}")]" || return $?
+    [ "${#secureList[@]}" -eq 0 ] || ! inArray "$name" "${secureList[@]}" || __throwEnvironment "$handler" "${environmentFile} contains secure value $(decorate bold-red "$name") [$(decorate each --count code "${secureList[@]}")]" || return $?
     # Ignore stuff as a feature
     if [ "${#ignoreList[@]}" -gt 0 ] && inArray "$name" "${ignoreList[@]}"; then
       ! $debugMode || decorate warning "$(decorate code "$name") is ignored ($context:$line)"
@@ -386,7 +379,7 @@ environmentLoad() {
       export "${name?}"="$value"
     done
   fi
-  [ ${#execute[@]} -eq 0 ] || __catchEnvironment "$usage" "${execute[@]}"
+  [ ${#execute[@]} -eq 0 ] || __catchEnvironment "$handler" "${execute[@]}"
 }
 _environmentLoad() {
   # __IDENTICAL__ usageDocument 1
@@ -408,26 +401,24 @@ _environmentLoad() {
 # Exit code: 2 - if file does not exist; outputs an error
 # Exit code: 0 - if files are loaded successfully
 environmentFileLoad() {
-  local usage="_${FUNCNAME[0]}"
+  local handler="_${FUNCNAME[0]}"
 
   local ff=() environmentFile required=true
   local verboseMode=false debugMode=false hasOne=false execute=() variablePrefix="" ee=() pp=()
 
-  # _IDENTICAL_ argument-case-header 5
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
+    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
-    # _IDENTICAL_ --help 4
-    --help)
-      "$usage" 0
-      return $?
-      ;;
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
     --verbose)
       verboseMode=true
       ee+=("$argument")
-      ! $debugMode || printf -- "VERBOSE MODE on (Call: %s)\n" "$(decorate each code "${usage#_}" "${__saved[@]}")"
+      ! $debugMode || printf -- "VERBOSE MODE on (Call: %s)\n" "$(decorate each code "${handler#_}" "${__saved[@]}")"
       ;;
     --debug)
       debugMode=true
@@ -456,7 +447,7 @@ environmentFileLoad() {
       ;;
     --execute)
       shift
-      binary=$(usageArgumentCallable "$usage" "$argument" "${1-}") || return $?
+      binary=$(usageArgumentCallable "$handler" "$argument" "${1-}") || return $?
       shift
       execute=("$binary" "$@")
       break
@@ -465,11 +456,11 @@ environmentFileLoad() {
       hasOne=true
       if $required; then
         ! $debugMode || printf -- "Loading required file: %s\n" "$argument"
-        environmentFile="$(usageArgumentFile "$usage" "environmentFile" "$argument")" || return $?
+        environmentFile="$(usageArgumentFile "$handler" "environmentFile" "$argument")" || return $?
         ff+=("$environmentFile") || return $?
       else
         ! $verboseMode || statusMessage decorate info "Loading optional file: $(decorate file "$argument")"
-        environmentFile=$(usageArgumentFileDirectory "$usage" "environmentFile" "$argument") || return $?
+        environmentFile=$(usageArgumentFileDirectory "$handler" "environmentFile" "$argument") || return $?
         if [ -f "$environmentFile" ]; then
           ff+=("$environmentFile")
         else
@@ -480,7 +471,7 @@ environmentFileLoad() {
     esac
     shift
   done
-  $hasOne || __throwArgument "$usage" "Requires at least one environmentFile" || return $?
+  $hasOne || __throwArgument "$handler" "Requires at least one environmentFile" || return $?
 
   # If all files are optional, do nothing
   [ "${#ff[@]}" -gt 0 ] || return 0
@@ -488,9 +479,9 @@ environmentFileLoad() {
   ! $debugMode || printf -- "Files to actually load: %d %s\n" "${#ff[@]}" "${ff[*]}"
   for environmentFile in "${ff[@]}"; do
     ! $debugMode || printf "%s lines:\n%s\n" "$(decorate code "$environmentFile")" "$(environmentLines <"$environmentFile")"
-    __catch "$usage" environmentLoad --context "$environmentFile" "${pp[@]+"${pp[@]}"}" "${ee[@]+"${ee[@]}"}" < <(environmentLines <"$environmentFile") || return $?
+    __catch "$handler" environmentLoad --context "$environmentFile" "${pp[@]+"${pp[@]}"}" "${ee[@]+"${ee[@]}"}" < <(environmentLines <"$environmentFile") || return $?
   done
-  [ ${#execute[@]} -eq 0 ] || __catchEnvironment "$usage" "${execute[@]}"
+  [ ${#execute[@]} -eq 0 ] || __catchEnvironment "$handler" "${execute[@]}"
 }
 _environmentFileLoad() {
   # __IDENTICAL__ usageDocument 1
@@ -527,38 +518,38 @@ _environmentApplicationVariables() {
 # Environment: APPLICATION_ID
 # Environment: APPLICATION_TAG
 environmentApplicationLoad() {
-  local usage="_${FUNCNAME[0]}"
-  [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
+  local handler="_${FUNCNAME[0]}"
+  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
   local hook home env
   local variables=()
 
   IFS=$'\n' read -d '' -r -a variables < <(environmentApplicationVariables) || :
   export "${variables[@]}"
 
-  here=$(__catch "$usage" buildHome) || return $?
+  here=$(__catch "$handler" buildHome) || return $?
 
   for env in "${variables[@]}"; do
     # shellcheck source=/dev/null
-    source "$here/bin/build/env/$env.sh" || __throwEnvironment "$usage" "source $env.sh" || return $?
+    source "$here/bin/build/env/$env.sh" || __throwEnvironment "$handler" "source $env.sh" || return $?
   done
   if [ -z "${APPLICATION_VERSION-}" ]; then
     hook=version-current
-    APPLICATION_VERSION="$(__catchEnvironment "$usage" hookRun "$hook")" || return $?
+    APPLICATION_VERSION="$(__catchEnvironment "$handler" hookRun "$hook")" || return $?
   fi
   if [ -z "${APPLICATION_ID-}" ]; then
     hook=application-id
-    APPLICATION_ID="$(__catchEnvironment "$usage" hookRun "$hook")" || return $?
+    APPLICATION_ID="$(__catchEnvironment "$handler" hookRun "$hook")" || return $?
   fi
   if [ -z "${APPLICATION_TAG-}" ]; then
     hook=application-tag
-    APPLICATION_TAG="$(__catchEnvironment "$usage" hookRun "$hook")" || return $?
+    APPLICATION_TAG="$(__catchEnvironment "$handler" hookRun "$hook")" || return $?
     if [ -z "${APPLICATION_TAG-}" ]; then
       APPLICATION_TAG=$APPLICATION_ID
     fi
   fi
   local variable
   for variable in "${variables[@]}" "$@"; do
-    __catch "$usage" environmentValueWrite "$variable" "${!variable-}" || return $?
+    __catch "$handler" environmentValueWrite "$variable" "${!variable-}" || return $?
   done
 }
 _environmentApplicationLoad() {
@@ -574,28 +565,26 @@ _environmentApplicationLoad() {
 # Argument: -- - Separator. Optional. Separates requires from optional environment variables
 # Argument: optionalEnvironmentName - EnvironmentVariable. Optional. An optional environment variable name.
 environmentFileShow() {
-  local usage="_${FUNCNAME[0]}"
+  local handler="_${FUNCNAME[0]}"
   local name
   local width=40
   local extras=()
 
-  # _IDENTICAL_ argument-case-header 5
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
+    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
-    # _IDENTICAL_ --help 4
-    --help)
-      "$usage" 0
-      return $?
-      ;;
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
     --)
       shift
       break
       ;;
     *)
-      extras+=("$(usageArgumentEnvironmentVariable "$usage" "variableName" "$argument")") || return $?
+      extras+=("$(usageArgumentEnvironmentVariable "$handler" "variableName" "$argument")") || return $?
       ;;
     esac
     shift
@@ -604,13 +593,13 @@ environmentFileShow() {
 
   IFS=$'\n' read -d '' -r -a variables < <(environmentApplicationVariables) || :
   for name in "${variables[@]+"${variables[@]}"}" "${extras[@]+"${extras[@]}"}"; do
-    environmentVariableNameValid "$name" || __catchArgument "$usage" "Invalid environment name $(decorate code "$name")" 1>&2
+    environmentVariableNameValid "$name" || __catchArgument "$handler" "Invalid environment name $(decorate code "$name")" 1>&2
   done
   export "${variables[@]}"
 
-  __catchEnvironment "$usage" muzzle environmentApplicationLoad || return $?
+  __catchEnvironment "$handler" muzzle environmentApplicationLoad || return $?
 
-  environmentVariableNameValid "$@" || __catchArgument "$usage" "Invalid variable name" || return $?
+  environmentVariableNameValid "$@" || __catchArgument "$handler" "Invalid variable name" || return $?
 
   printf -- "%s %s %s %s%s\n" "$(decorate info "Application")" "$(decorate magenta "$APPLICATION_VERSION")" "$(decorate info "on")" "$(decorate bold-red "$APPLICATION_BUILD_DATE")" "$(decorate info "...")"
   if buildDebugEnabled; then
@@ -634,7 +623,7 @@ environmentFileShow() {
       decorate pair "$width" "$name" "${!name}"
     fi
   done
-  [ ${#missing[@]} -eq 0 ] || __throwEnvironment "$usage" "Missing environment $(decorate each code "${missing[@]}")" || return $?
+  [ ${#missing[@]} -eq 0 ] || __throwEnvironment "$handler" "Missing environment $(decorate each code "${missing[@]}")" || return $?
 }
 _environmentFileShow() {
   # __IDENTICAL__ usageDocument 1
@@ -658,31 +647,29 @@ _environmentFileShow() {
 # Environment: APPLICATION_TAG - reserved and set to `hookRun application-id`
 # Environment: APPLICATION_ID - reserved and set to `hookRun application-tag`
 environmentFileApplicationMake() {
-  local usage="_${FUNCNAME[0]}"
+  local handler="_${FUNCNAME[0]}"
 
   local required=() optional=() isOptional=false variableName="requiredVariable"
 
-  # _IDENTICAL_ argument-case-header 5
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
+    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
-    # _IDENTICAL_ --help 4
-    --help)
-      "$usage" 0
-      return $?
-      ;;
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
     --)
       if $isOptional; then
-        __throwArgument "$usage" "Double -- found in argument list ($(decorate each quote "${__saved[@]}"))" || return $?
+        __throwArgument "$handler" "Double -- found in argument list ($(decorate each quote "${__saved[@]}"))" || return $?
       fi
       isOptional=true
       variableName="optionalVariable"
       ;;
     *)
       local variable
-      variable="$(usageArgumentEnvironmentVariable "$usage" "$variableName" "$1")" || return $?
+      variable="$(usageArgumentEnvironmentVariable "$handler" "$variableName" "$1")" || return $?
       if $isOptional; then
         optional+=("$variable")
       else
@@ -697,12 +684,12 @@ environmentFileApplicationMake() {
 
   local loaded
 
-  loaded="$(__catch "$usage" environmentApplicationLoad "$@" && __catch "$usage" environmentFileApplicationVerify "$@")" || return $?
+  loaded="$(__catch "$handler" environmentApplicationLoad "$@" && __catch "$handler" environmentFileApplicationVerify "$@")" || return $?
   printf -- "%s\n" "$loaded"
 
   local name
   for name in "$@" "${optional[@]+"${optional[@]}"}"; do
-    __catch "$usage" environmentValueWrite "$name" "${!name-}" || return $?
+    __catch "$handler" environmentValueWrite "$name" "${!name-}" || return $?
   done
 }
 _environmentFileApplicationMake() {
@@ -718,21 +705,19 @@ _environmentFileApplicationMake() {
 # Argument: optionalEnvironment ... - EnvironmentName. Optional. One or more environment variables which are included if blank or not
 # Also verifies that `environmentApplicationVariables` and `environmentApplicationLoad` are defined.
 environmentFileApplicationVerify() {
-  local usage="_${FUNCNAME[0]}"
+  local handler="_${FUNCNAME[0]}"
   local missing name requireEnvironment
   local requireEnvironment=() extras=()
 
-  # _IDENTICAL_ argument-case-header 5
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
+    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
-    # _IDENTICAL_ --help 4
-    --help)
-      "$usage" 0
-      return $?
-      ;;
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
     --)
       shift && break
       ;;
@@ -746,12 +731,12 @@ environmentFileApplicationVerify() {
   IFS=$'\n' read -d '' -r -a requireEnvironment < <(environmentApplicationVariables) || :
   missing=()
   for name in "${requireEnvironment[@]}" "${extras[@]+"${extras[@]}"}"; do
-    environmentVariableNameValid "$name" || __throwEnvironment "$usage" "Invalid environment name found: $(decorate code "$name")" || return $?
+    environmentVariableNameValid "$name" || __throwEnvironment "$handler" "Invalid environment name found: $(decorate code "$name")" || return $?
     if [ -z "${!name:-}" ]; then
       missing+=("$name")
     fi
   done
-  [ ${#missing[@]} -eq 0 ] || __throwEnvironment "$usage" "Missing environment values:" "${missing[@]}" || return $?
+  [ ${#missing[@]} -eq 0 ] || __throwEnvironment "$handler" "Missing environment values:" "${missing[@]}" || return $?
 }
 _environmentFileApplicationVerify() {
   # __IDENTICAL__ usageDocument 1
@@ -763,22 +748,20 @@ _environmentFileApplicationVerify() {
 # Argument: --help - Optional. Flag. Display this help.
 # Argument: environmentName ... - EnvironmentName. Required. One or more environment variable names to add to this project.
 environmentAddFile() {
-  local usage="_${FUNCNAME[0]}"
+  local handler="_${FUNCNAME[0]}"
   local name environmentNames=()
 
-  # _IDENTICAL_ argument-case-header 5
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
+    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
-    # _IDENTICAL_ --help 4
-    --help)
-      "$usage" 0
-      return $?
-      ;;
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
     *)
-      name=$(usageArgumentEnvironmentVariable "$usage" "environmentVariable" "$1") || return $?
+      name=$(usageArgumentEnvironmentVariable "$handler" "environmentVariable" "$1") || return $?
       environmentNames+=("$name")
       ;;
     esac
@@ -786,25 +769,25 @@ environmentAddFile() {
   done
 
   local home
-  home=$(__catch "$usage" buildHome) || return $?
-  [ ${#environmentNames[@]} -gt 0 ] || __throwArgument "$usage" "Need at least one $(decorate code environmentVariable)" || return $?
+  home=$(__catch "$handler" buildHome) || return $?
+  [ ${#environmentNames[@]} -gt 0 ] || __throwArgument "$handler" "Need at least one $(decorate code environmentVariable)" || return $?
 
   local year company
 
-  year=$(__catchEnvironment "$usage" date +%Y) || return $?
+  year=$(__catchEnvironment "$handler" date +%Y) || return $?
   company=$(buildEnvironmentGet BUILD_COMPANY)
   for name in "${environmentNames[@]}"; do
     local path="$home/bin/env/$name.sh"
     if [ -f "$path" ] && ! fileIsEmpty "$path"; then
       if [ ! -x "$path" ]; then
         statusMessage --last decorate warning "Making $(decorate file "$path") executable ..."
-        __catchEnvironment "$usage" chmod +x "$path" || return $?
+        __catchEnvironment "$handler" chmod +x "$path" || return $?
       else
         statusMessage --last decorate info "Exists: $(decorate file "$path")"
       fi
     else
-      __catchEnvironment "$usage" printf -- "%s\n" "#!/usr/bin/env bash" "# Copyright &copy; $year $company" "# Type: String" "# Category: Application" "# All about $name and how it is used" "export $name" "$name=\"\${$name-}\"" >"$path" || return $?
-      __catchEnvironment "$usage" chmod +x "$path" || return $?
+      __catchEnvironment "$handler" printf -- "%s\n" "#!/usr/bin/env bash" "# Copyright &copy; $year $company" "# Type: String" "# Category: Application" "# All about $name and how it is used" "export $name" "$name=\"\${$name-}\"" >"$path" || return $?
+      __catchEnvironment "$handler" chmod +x "$path" || return $?
       statusMessage --last decorate success "Created $(decorate file "$path")"
     fi
   done
@@ -840,20 +823,18 @@ _environmentVariables() {
 # Argument: --underscore - Flag. Include environment variables which begin with underscore `_`.
 # Argument: --secure - Flag. Include environment variables which are in `environmentSecureVariables`
 environmentOutput() {
-  local usage="_${FUNCNAME[0]}"
+  local handler="_${FUNCNAME[0]}"
   local skipSecure=true skipUnderscore=true
 
-  # _IDENTICAL_ argument-case-header 5
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
+    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
-    # _IDENTICAL_ --help 4
-    --help)
-      "$usage" 0
-      return $?
-      ;;
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
     --underscore)
       skipUnderscore=false
       ;;
@@ -861,8 +842,8 @@ environmentOutput() {
       skipSecure=false
       ;;
     *)
-      # _IDENTICAL_ argumentUnknown 1
-      __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
+      # _IDENTICAL_ argumentUnknownHandler 1
+      __throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
       ;;
     esac
     shift
@@ -901,39 +882,37 @@ _environmentOutput() {
 # Argument: environmentFile - File. Required. Environment file to load, evaluate, and output in raw form (Bash-compatible).
 # Security: source
 environmentCompile() {
-  local usage="_${FUNCNAME[0]}"
+  local handler="_${FUNCNAME[0]}"
 
   local environmentFiles=() aa=()
 
-  # _IDENTICAL_ argument-case-header 5
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
+    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
-    # _IDENTICAL_ --help 4
-    --help)
-      "$usage" 0
-      return $?
-      ;;
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
     --underscore | --secure)
       if [ ${#aa[@]} -eq 0 ] || ! inArray "$argument" "${aa[@]}"; then
         aa+=("$argument")
       fi
       ;;
     *)
-      environmentFiles+=("$(usageArgumentFile "$usage" "environmentFile" "$1")") || return $?
+      environmentFiles+=("$(usageArgumentFile "$handler" "environmentFile" "$1")") || return $?
       ;;
     esac
     shift
   done
-  [ ${#environmentFiles[@]} -gt 0 ] || __throwArgument "$usage" "Need at least one environment file" || return $?
+  [ ${#environmentFiles[@]} -gt 0 ] || __throwArgument "$handler" "Need at least one environment file" || return $?
 
   local tempEnv
-  tempEnv=$(fileTemporaryName "$usage") || return $?
+  tempEnv=$(fileTemporaryName "$handler") || return $?
 
   local clean=("$tempEnv" "$tempEnv.after")
-  __catch "$usage" environmentOutput "${aa[@]+"${aa[@]}"}" | sort >"$tempEnv" || returnClean $? "${clean[@]}" || return $?
+  __catch "$handler" environmentOutput "${aa[@]+"${aa[@]}"}" | sort >"$tempEnv" || returnClean $? "${clean[@]}" || return $?
   (
     local environmentFile
     for environmentFile in "${environmentFiles[@]}"; do
@@ -942,10 +921,10 @@ environmentCompile() {
       source "$environmentFile" >(outputTrigger source "$environmentFile") 2>&1 || returnClean $? "${clean[@]}" || return $?
       set +a
     done
-    __catch "$usage" environmentOutput "${aa[@]+"${aa[@]}"}" | sort >"$tempEnv.after" || returnClean $? "${clean[@]}" || return $?
+    __catch "$handler" environmentOutput "${aa[@]+"${aa[@]}"}" | sort >"$tempEnv.after" || returnClean $? "${clean[@]}" || return $?
   ) || returnClean $? "${clean[@]}" || return $?
   diff -U0 "$tempEnv" "$tempEnv.after" | grepSafe '^+' | cut -c 2- | grepSafe -v '^+' || returnClean $? "${clean[@]}" || return 0
-  __catchEnvironment "$usage" rm -f "${clean[@]}" || return $?
+  __catchEnvironment "$handler" rm -f "${clean[@]}" || return $?
 }
 _environmentCompile() {
   # __IDENTICAL__ usageDocument 1
@@ -958,8 +937,8 @@ _environmentCompile() {
 # Use with caution. Any additional environment variables you wish to preserve, simply pass those on the command line
 # Argument: keepEnvironment - EnvironmentVariable. Optional. Keep this environment variable. ZeroOrMore.
 environmentClean() {
-  local usage="_${FUNCNAME[0]}"
-  [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
+  local handler="_${FUNCNAME[0]}"
+  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
   local done=false variable keepers=(PATH LD_LIBRARY USER HOME PS1 PS2 BUILD_HOME "$@")
   while ! $done; do
     read -r variable || done=true

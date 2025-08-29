@@ -42,29 +42,29 @@ _environmentFileIsDocker() {
 # stdin: environment file
 # stdout: bash-compatible environment statements
 __anyEnvToFunctionEnv() {
-  local usage="$1" passConvertFunction="$2" failConvertFunction="$3" && shift 3
+  local handler="$1" passConvertFunction="$2" failConvertFunction="$3" && shift 3
 
   if [ $# -gt 0 ]; then
     local file
     for file in "$@"; do
       if [ "$file" = "--help" ]; then
-        "$usage" 0
+        "$handler" 0
         return 0
       fi
       if environmentFileIsDocker "$file" 2>/dev/null; then
         # printf -- "%s\n" "environmentFileIsDocker=true" "converter=$passConvertFunction"
-        __catchEnvironment "$usage" "$passConvertFunction" <"$file" || return $?
+        __catchEnvironment "$handler" "$passConvertFunction" <"$file" || return $?
       else
         # printf -- "%s\n" "environmentFileIsDocker=\"false\"" "converter=\"$failConvertFunction\""
-        __catchEnvironment "$usage" "$failConvertFunction" <"$file" || return $?
+        __catchEnvironment "$handler" "$failConvertFunction" <"$file" || return $?
       fi
     done
   else
     local temp
-    temp=$(fileTemporaryName "$usage") || return $?
-    __catchEnvironment "$usage" muzzle tee "$temp" || returnClean $? "$temp" || return $?
-    __catch "$usage" __anyEnvToFunctionEnv "$usage" "$passConvertFunction" "$failConvertFunction" "$temp" || returnClean $? "$temp" || return $?
-    __catchEnvironment "$usage" rm "$temp" || return $?
+    temp=$(fileTemporaryName "$handler") || return $?
+    __catchEnvironment "$handler" muzzle tee "$temp" || returnClean $? "$temp" || return $?
+    __catch "$handler" __anyEnvToFunctionEnv "$handler" "$passConvertFunction" "$failConvertFunction" "$temp" || returnClean $? "$temp" || return $?
+    __catchEnvironment "$handler" rm "$temp" || return $?
     return 0
   fi
 }
@@ -73,7 +73,7 @@ __anyEnvToFunctionEnv() {
 # Takes any environment file and makes it docker-compatible
 #
 # Outputs the compatible env to stdout
-# Usage: {fn} envFile [ ... ]
+# handler: {fn} envFile [ ... ]
 # Argument: envFile - Required. File. One or more files to convert.
 #
 environmentFileToDocker() {
@@ -89,7 +89,7 @@ _environmentFileToDocker() {
 #
 # Outputs the compatible env to stdout
 #
-# Usage: {fn} filename [ ... ]
+# handler: {fn} filename [ ... ]
 # Argument: filename - Optional. File. One or more files to convert.
 # stdin: environment file
 # stdout: bash-compatible environment statements
@@ -109,24 +109,24 @@ _environmentFileToBashCompatible() {
 # Any output to stdout is considered valid output
 # Any output to stderr is errors in the file but is written to be compatible with a bash
 #
-# Usage: {fn} [ filename ... ]
+# handler: {fn} [ filename ... ]
 # Argument: filename - Docker environment file to check for common issues
 # Exit Code: 1 - if errors occur
 # Exit Code: 0 - if file is valid
 #
 environmentFileDockerToBashCompatible() {
-  local usage="_${FUNCNAME[0]}"
+  local handler="_${FUNCNAME[0]}"
   local file index envLine result=0
   if [ $# -eq 0 ]; then
     __internalEnvironmentFileDockerToBashCompatiblePipe
   else
     for file in "$@"; do
       if [ "$file" = "--help" ]; then
-        "$usage" 0
+        "$handler" 0
         return $?
       fi
-      [ -f "$file" ] || __throwArgument "$usage" "Not a file $file" || return $?
-      __internalEnvironmentFileDockerToBashCompatiblePipe <"$file" || __throwArgument "$usage" "Invalid file: $file" || return $?
+      [ -f "$file" ] || __throwArgument "$handler" "Not a file $file" || return $?
+      __internalEnvironmentFileDockerToBashCompatiblePipe <"$file" || __throwArgument "$handler" "Invalid file: $file" || return $?
     done
   fi
 }
@@ -175,28 +175,28 @@ __internalEnvironmentFileDockerToBashCompatiblePipe() {
 # Exit Code: 0 - if file is valid
 #
 environmentFileBashCompatibleToDocker() {
-  local usage="_${FUNCNAME[0]}"
+  local handler="_${FUNCNAME[0]}"
   local file envLine tempFile clean=()
 
-  tempFile=$(fileTemporaryName "$usage") || return $?
+  tempFile=$(fileTemporaryName "$handler") || return $?
   clean=("$tempFile")
   if [ $# -eq 0 ]; then
-    __catchEnvironment "$usage" muzzle tee "$tempFile.bash" || returnClean $? "${clean[@]}" || return $?
+    __catchEnvironment "$handler" muzzle tee "$tempFile.bash" || returnClean $? "${clean[@]}" || return $?
     clean+=("$tempFile.bash")
     set -- "$tempFile.bash"
   fi
   for file in "$@"; do
     if [ "$file" = "--help" ]; then
-      "$usage" 0 && returnClean $? "${clean[@]}" && return $? || return $?
+      "$handler" 0 && returnClean $? "${clean[@]}" && return $? || return $?
     fi
-    [ -f "$file" ] || __throwArgument "$usage" "Not a file $file" || returnClean $? "${clean[@]}" || return $?
-    env -i bash -c "set -eoua pipefail; source \"$file\"; declare -px; declare -pa" >"$tempFile" 2>&1 | outputTrigger --name "$file" || __throwArgument "$usage" "$file is not a valid bash file" || returnClean $? "${clean[@]}" || return $?
+    [ -f "$file" ] || __throwArgument "$handler" "Not a file $file" || returnClean $? "${clean[@]}" || return $?
+    env -i bash -c "set -eoua pipefail; source \"$file\"; declare -px; declare -pa" >"$tempFile" 2>&1 | outputTrigger --name "$file" || __throwArgument "$handler" "$file is not a valid bash file" || returnClean $? "${clean[@]}" || return $?
   done
   while IFS='' read -r envLine; do
     local name=${envLine%%=*} value=${envLine#*=}
     printf -- "%s=%s\n" "$name" "$(unquote "\"" "$value")"
   done < <(removeFields 2 <"$tempFile" | grep -E -v '^(UID|OLDPWD|PWD|_|SHLVL|FUNCNAME|PIPESTATUS|DIRSTACK|GROUPS)\b|^(BASH_)' || :)
-  __catchEnvironment "$usage" rm -f "${clean[@]}" || return $?
+  __catchEnvironment "$handler" rm -f "${clean[@]}" || return $?
 }
 _environmentFileBashCompatibleToDocker() {
   # __IDENTICAL__ usageDocument 1

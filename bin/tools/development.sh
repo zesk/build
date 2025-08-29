@@ -6,14 +6,14 @@
 
 # Argument: name - String. Optional. Name of tool to add.
 buildAddTool() {
-  local usage="_return" home file
+  local handler="_return" home file
 
-  home=$(__catch "$usage" buildHome) || return $?
+  home=$(__catch "$handler" buildHome) || return $?
 
   while [ $# -gt 0 ]; do
     case "$1" in
     *[^-[:alnum:]]*)
-      __throwArgument "$usage" "Invalid name: $1" || return $?
+      __throwArgument "$handler" "Invalid name: $1" || return $?
       ;;
     esac
     for file in "bin/build/tools/$1.sh" "test/tools/$1-tests.sh"; do
@@ -126,7 +126,7 @@ buildBuildTiming() {
       bigText "Test #$index"
       decorate pair "PRODUCTION" "$production"
       decorate pair "BUILD_COLORS" "$colors"
-      __catch "$handler" env -i BUILD_DEBUG=usage HOME="$HOME" PATH="$PATH" PRODUCTION=$production BUILD_COLORS=$colors time "$home/bin/build.sh" || return $?
+      __catch "$handler" env -i BUILD_DEBUG=handler HOME="$HOME" PATH="$PATH" PRODUCTION=$production BUILD_COLORS=$colors time "$home/bin/build.sh" || return $?
       index=$((index + 1))
     done
   done

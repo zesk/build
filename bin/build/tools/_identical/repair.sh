@@ -54,7 +54,8 @@ identicalRepair() {
       elif [ -z "$destination" ]; then
         destination=$(usageArgumentFile "$handler" "destination" "$argument") || return $?
       else
-        __throwArgument "$handler" "unknown argument: $(decorate value "$argument")" || return $?
+        # _IDENTICAL_ argumentUnknownHandler 1
+        __throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
       fi
       ;;
     esac

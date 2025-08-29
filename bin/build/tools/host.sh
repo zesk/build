@@ -9,10 +9,10 @@
 # Get the full hostname
 # Requires: __help __hostname usageRequireBinary __catchEnvironment
 hostnameFull() {
-  local usage="_${FUNCNAME[0]}"
+  local handler="_${FUNCNAME[0]}"
 
-  [ $# -eq 0 ] || __help --only "$usage" "$@" || return "$(convertValue $? 1 0)"
-  __catch "$usage" __hostname || return $?
+  [ $# -eq 0 ] || __help --only "$handler" "$@" || return "$(convertValue $? 1 0)"
+  __catch "$handler" __hostname || return $?
 }
 _hostnameFull() {
   # __IDENTICAL__ usageDocument 1

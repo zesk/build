@@ -12,21 +12,19 @@
 # Gets a list of the `Requires:` comments in a bash file
 # Returns a unique list of tokens
 bashGetRequires() {
-  local usage="_${FUNCNAME[0]}"
+  local handler="_${FUNCNAME[0]}"
 
-  # _IDENTICAL_ argument-case-header 5
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
+    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
-    # _IDENTICAL_ --help 4
-    --help)
-      "$usage" 0
-      return $?
-      ;;
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
     *)
-      files+=("$(usageArgumentFile "$usage" "checkFile" "${1-}")") || return $?
+      files+=("$(usageArgumentFile "$handler" "checkFile" "${1-}")") || return $?
       ;;
     esac
     shift
@@ -65,7 +63,7 @@ _bashGetRequires() {
 # Argument: --help - Optional. Flag. Display this help.
 # Argument: --ignore prefix. String. Optional. Ignore exact function names.
 # Argument: --ignore-prefix prefix. String. Optional. Ignore function names which match the prefix and do not check them.
-# Argument: --report - Flag. Optional. Output a report of various functions and usage after processing is complete.
+# Argument: --report - Flag. Optional. Output a report of various functions and handler after processing is complete.
 # Argument: --require - Flag. Optional. Requires at least one or more requirements to be listed and met to pass
 # Argument: --unused - Flag. Optional. Check for unused functions and report on them.
 bashCheckRequires() {

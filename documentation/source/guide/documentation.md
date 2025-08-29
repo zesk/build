@@ -2,14 +2,14 @@
 
 Zesk Build has some documentation tools which can be used in any project to document your `bash` code simply.
 
-To add automatic usage for a function, the pattern to use is to add a comment before the function as shown here and add
-a usage handler which is your function name prefixed with a single underscore (`_`):
+To add automatic handler for a function, the pattern to use is to add a comment before the function as shown here and add
+a handler handler which is your function name prefixed with a single underscore (`_`):
 
     # Lay an egg
     layAnEgg() {
-        local usage="_${FUNCNAME[0]}"
+        local handler="_${FUNCNAME[0]}"
         ...
-        [ -n "$hay" ] || __throwEnvironment "$usage" "No hay" || return $?
+        [ -n "$hay" ] || __throwEnvironment "$handler" "No hay" || return $?
         ...
     }
     _layAnEgg() {
@@ -26,7 +26,7 @@ when the
 
     No hay
     
-    Usage: layAnEgg
+    handler: layAnEgg
     
     Lay an egg
 
@@ -49,7 +49,7 @@ Will generate:
 
     All is great
     
-    Usage: makeCryptoThing name [ --debug ]
+    handler: makeCryptoThing name [ --debug ]
     
         name     Required. String. What to name the egg.
         --debug  Optional. Flag. Turn on debugging.`

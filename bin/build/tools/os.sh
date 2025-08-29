@@ -16,34 +16,34 @@
 # Summary: Run a binary count times
 #
 runCount() {
-  local usage="_${FUNCNAME[0]}"
-  local argument index total
+  local handler="_${FUNCNAME[0]}"
 
-  total=
+  local total=""
+
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
+  local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
-    argument="$1"
-    [ -n "$argument" ] || __throwArgument "$usage" "blank argument" || return $?
+    local argument="$1" __index=$((__count - $# + 1))
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
+    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
-    # _IDENTICAL_ --help 4
-    --help)
-      "$usage" 0
-      return $?
-      ;;
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
     *)
       if [ -z "$total" ]; then
-        isUnsignedInteger "$argument" || __throwArgument "$usage" "$argument must be a positive integer" || return $?
+        isUnsignedInteger "$argument" || __throwArgument "$handler" "$argument must be a positive integer" || return $?
         total="$argument"
       else
-        index=0
+        local index=0
         while [ "$index" -lt "$total" ]; do
           index=$((index + 1))
-          "$@" || __throwEnvironment "$usage" "iteration #$index" "$@" return $?
+          "$@" || __throwEnvironment "$handler" "iteration #$index" "$@" return $?
         done
         return 0
       fi
       ;;
     esac
-    shift || __throwArgument "$usage" shift || return $?
+    shift || __throwArgument "$handler" shift || return $?
   done
 
 }
@@ -80,36 +80,34 @@ _fileReverseLines() {
 # See: makeShellFilesExecutable
 # See: chmod-sh.sh
 makeShellFilesExecutable() {
-  local usage="_${FUNCNAME[0]}"
+  local handler="_${FUNCNAME[0]}"
 
   local path findArgs=() tempArgs paths=()
 
-  # _IDENTICAL_ argument-case-header 5
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
+    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
-    # _IDENTICAL_ --help 4
-    --help)
-      "$usage" 0
-      return $?
-      ;;
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
     --find)
       shift
       IFS=' ' read -r -a tempArgs <<<"${1-}" || :
       findArgs+=("${tempArgs[@]+"${tempArgs[@]}"}")
       ;;
     *)
-      paths+=("$(usageArgumentDirectory "$usage" "directory" "$1")") || return $?
+      paths+=("$(usageArgumentDirectory "$handler" "directory" "$1")") || return $?
       ;;
     esac
     shift
   done
-  [ "${#paths[@]}" -gt 0 ] || paths+=("$(__catchEnvironment "$usage" pwd)") || return $?
+  [ "${#paths[@]}" -gt 0 ] || paths+=("$(__catchEnvironment "$handler" pwd)") || return $?
   (
     for path in "${paths[@]}"; do
-      __catchEnvironment "$usage" cd "$path" || return $?
+      __catchEnvironment "$handler" cd "$path" || return $?
       find "." -name '*.sh' -type f ! -path "*/.*/*" "${findArgs[@]+"${findArgs[@]}"}" -exec chmod -v +x {} \;
     done
   ) || return $?
@@ -128,14 +126,14 @@ _makeShellFilesExecutable() {
 # Argument: path - the path to be added to the `MANPATH` environment
 #
 manPathConfigure() {
-  local usage="_${FUNCNAME[0]}"
-  [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
+  local handler="_${FUNCNAME[0]}"
+  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
 
   local tempPath
   export MANPATH
 
-  __catch "$usage" buildEnvironmentLoad MANPATH || return $?
-  tempPath="$(__catchEnvironment "$usage" listAppend "$MANPATH" ':' "$@")" || return $?
+  __catch "$handler" buildEnvironmentLoad MANPATH || return $?
+  tempPath="$(__catchEnvironment "$handler" listAppend "$MANPATH" ':' "$@")" || return $?
   MANPATH="$tempPath"
 }
 _manPathConfigure() {
@@ -148,14 +146,14 @@ _manPathConfigure() {
 # Argument: --help - Optional. Flag. Display this help.
 # Argument: path - Directory. Required. The path to be removed from the `MANPATH` environment
 manPathRemove() {
-  local usage="_${FUNCNAME[0]}"
-  [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
+  local handler="_${FUNCNAME[0]}"
+  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
 
   local tempPath
   export MANPATH
 
-  __catch "$usage" buildEnvironmentLoad MANPATH || return $?
-  tempPath="$(__catchEnvironment "$usage" listRemove "$MANPATH" ':' "$@")" || return $?
+  __catch "$handler" buildEnvironmentLoad MANPATH || return $?
+  tempPath="$(__catchEnvironment "$handler" listRemove "$MANPATH" ':' "$@")" || return $?
   MANPATH="$tempPath"
 }
 _manPathRemove() {
@@ -172,13 +170,13 @@ _manPathRemove() {
 # Argument: --help - Optional. Flag. Display this help.
 # No-Arguments: default
 manPathCleanDuplicates() {
-  local usage="_${FUNCNAME[0]}" newPath
-  [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
+  local handler="_${FUNCNAME[0]}" newPath
+  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
   export MANPATH
 
-  __catch "$usage" buildEnvironmentLoad MANPATH || return $?
+  __catch "$handler" buildEnvironmentLoad MANPATH || return $?
 
-  newPath=$(__catchEnvironment "$usage" listCleanDuplicates --test _pathIsDirectory ':' "${PATH-}") || return $?
+  newPath=$(__catchEnvironment "$handler" listCleanDuplicates --test _pathIsDirectory ':' "${PATH-}") || return $?
 
   MANPATH="$newPath"
 }
@@ -192,13 +190,13 @@ _manPathCleanDuplicates() {
 # Argument: --help - Optional. Flag. Display this help.
 # Argument: path - Requires. String. The path to be removed from the `PATH` environment.
 pathRemove() {
-  local usage="_${FUNCNAME[0]}"
-  [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
+  local handler="_${FUNCNAME[0]}"
+  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
   local tempPath
   export PATH
 
-  __catch "$usage" buildEnvironmentLoad PATH || return $?
-  tempPath="$(__catchEnvironment "$usage" listRemove "$PATH" ':' "$@")" || return $?
+  __catch "$handler" buildEnvironmentLoad PATH || return $?
+  tempPath="$(__catchEnvironment "$handler" listRemove "$PATH" ':' "$@")" || return $?
   PATH="$tempPath"
 }
 _pathRemove() {
@@ -213,13 +211,13 @@ _pathRemove() {
 # Argument: --last - Optional. Place any paths after this flag last in the list. Default.
 # Argument: path - the path to be added to the `PATH` environment
 pathConfigure() {
-  local usage="_${FUNCNAME[0]}"
-  [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
+  local handler="_${FUNCNAME[0]}"
+  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
   local tempPath
   export PATH
 
-  __catch "$usage" buildEnvironmentLoad PATH || return $?
-  tempPath="$(__catchEnvironment "$usage" listAppend "$PATH" ':' "$@")" || return $?
+  __catch "$handler" buildEnvironmentLoad PATH || return $?
+  tempPath="$(__catchEnvironment "$handler" listAppend "$PATH" ':' "$@")" || return $?
   PATH="$tempPath"
 }
 _pathConfigure() {
@@ -241,11 +239,11 @@ _pathIsDirectory() {
 #
 # Environment: PATH
 pathCleanDuplicates() {
-  local usage="_${FUNCNAME[0]}" newPath
-  [ $# -eq 0 ] || __help --only "$usage" "$@" || return "$(convertValue $? 1 0)"
+  local handler="_${FUNCNAME[0]}" newPath
+  [ $# -eq 0 ] || __help --only "$handler" "$@" || return "$(convertValue $? 1 0)"
   export PATH
 
-  newPath=$(__catchEnvironment "$usage" listCleanDuplicates --test _pathIsDirectory ':' "${PATH-}") || return $?
+  newPath=$(__catchEnvironment "$handler" listCleanDuplicates --test _pathIsDirectory ':' "${PATH-}") || return $?
 
   PATH="$newPath"
 }
@@ -390,7 +388,7 @@ serviceToPort() {
       fi
       ;;
     esac
-    shift || __throwArgument "$handler" "shift argument $argument" || return $?
+    shift
   done
 }
 _serviceToPort() {
@@ -432,26 +430,24 @@ __extensionListsLog() {
 # - `foo-bar` -> `"!"``
 #
 extensionLists() {
-  local usage="_${FUNCNAME[0]}"
+  local handler="_${FUNCNAME[0]}"
 
   local names=() directory="" cleanFlag=false
-  # _IDENTICAL_ argument-case-header 5
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
+    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
-    # _IDENTICAL_ --help 4
-    --help)
-      "$usage" 0
-      return $?
-      ;;
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
     --clean)
       cleanFlag=true
       ;;
     *)
       if [ -z "$directory" ]; then
-        directory=$(usageArgumentDirectory "$usage" "directory" "$1") || return $?
+        directory=$(usageArgumentDirectory "$handler" "directory" "$1") || return $?
       else
         names+=("$1")
       fi
@@ -459,19 +455,19 @@ extensionLists() {
     esac
     shift
   done
-  [ -n "$directory" ] || __throwArgument "$usage" "No directory supplied" || return $?
+  [ -n "$directory" ] || __throwArgument "$handler" "No directory supplied" || return $?
 
-  ! $cleanFlag || __catchEnvironment "$usage" find "$directory" -type f -delete || return $?
+  ! $cleanFlag || __catchEnvironment "$handler" find "$directory" -type f -delete || return $?
 
   local name
   if [ ${#names[@]} -gt 0 ]; then
     for name in "${names[@]}"; do
-      __catch "$usage" __extensionListsLog "$directory" "$name" || return $?
+      __catch "$handler" __extensionListsLog "$directory" "$name" || return $?
     done
   else
-    __catchEnvironment "$usage" touch "$directory/@" || return $?
+    __catchEnvironment "$handler" touch "$directory/@" || return $?
     while read -r name; do
-      __catch "$usage" __extensionListsLog "$directory" "$name" || return $?
+      __catch "$handler" __extensionListsLog "$directory" "$name" || return $?
     done
   fi
 }
@@ -486,10 +482,10 @@ _extensionLists() {
 # Uptime output: 05:01:06 up 8 days,  4:03,  0 users,  load average: 3.87, 3.09, 2.71
 # stdout: lines:Number
 loadAverage() {
-  local usage="_${FUNCNAME[0]}"
+  local handler="_${FUNCNAME[0]}"
   local text
-  [ $# -eq 0 ] || __help --only "$usage" "$@" || return "$(convertValue $? 1 0)"
-  text=$(__catchEnvironment "$usage" uptime) || return $?
+  [ $# -eq 0 ] || __help --only "$handler" "$@" || return "$(convertValue $? 1 0)"
+  text=$(__catchEnvironment "$handler" uptime) || return $?
   text="${text##*average}"
   text="${text##*:}"
   text="${text# }"

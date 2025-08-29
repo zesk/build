@@ -7,12 +7,12 @@
 # Test: o ./test/tools/security-tests.sh
 
 __doEvalCheck() {
-  local usage="$1" && shift
+  local handler="$1" && shift
   local file firstLine checkLine checkLineFailed failed tempResults
 
-  tempResults=$(fileTemporaryName "$usage") || return $?
+  tempResults=$(fileTemporaryName "$handler") || return $?
   while [ $# -gt 0 ]; do
-    file=$(usageArgumentFile "$usage" "file" "$1") || return $?
+    file=$(usageArgumentFile "$handler" "file" "$1") || return $?
     shift
     if ! grep -n -B 1 -e '^[^#]*\seval "' <"$file" >"$tempResults"; then
       continue
@@ -28,7 +28,7 @@ __doEvalCheck() {
           firstLine=true
           continue
         fi
-        [ "$lineNo" != "$line" ] || __catchEnvironment "$usage" "Unable to parse line: $line" || return $?
+        [ "$lineNo" != "$line" ] || __catchEnvironment "$handler" "Unable to parse line: $line" || return $?
         line="${line#-*}"
       else
         line="${line#:*}"
@@ -52,21 +52,21 @@ __doEvalCheck() {
       fi
     done <"$tempResults"
   done
-  __catchEnvironment "$usage" rm -rf "$tempResults" || return $?
-  [ "$failed" -eq 0 ] || __throwEnvironment "$usage" "evalCheck failed for $failed $(plural "$failed" file files)" || return $?
+  __catchEnvironment "$handler" rm -rf "$tempResults" || return $?
+  [ "$failed" -eq 0 ] || __throwEnvironment "$handler" "evalCheck failed for $failed $(plural "$failed" file files)" || return $?
 }
 
 # Check files to ensure `eval`s in code have been checked
 evalCheck() {
-  local usage="_${FUNCNAME[0]}"
+  local handler="_${FUNCNAME[0]}"
   [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
   local fileName
   if [ $# -gt 0 ]; then
-    __doEvalCheck "$usage" "$@" || return $?
+    __doEvalCheck "$handler" "$@" || return $?
   else
     while IFS= read -r fileName; do
       statusMessage decorate info "Checking $fileName"
-      __doEvalCheck "$usage" "$fileName" || return $?
+      __doEvalCheck "$handler" "$fileName" || return $?
     done
   fi
 }

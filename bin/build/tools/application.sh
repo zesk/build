@@ -15,22 +15,22 @@ __applicationHomeFile() {
 }
 
 __applicationHomeGo() {
-  local usage="$1" && shift
+  local handler="$1" && shift
   local file home label userHome oldHome=""
 
   file=$(__environment __applicationHomeFile) || return $?
   home=$(trimSpace "$(__environment head -n 1 "$file")") || return $?
   if [ -z "$home" ]; then
-    __throwEnvironment "$usage" "No code home set, try $(decorate code "applicationHome")" || return $?
+    __throwEnvironment "$handler" "No code home set, try $(decorate code "applicationHome")" || return $?
   fi
-  [ -d "$home" ] || __throwEnvironment "$usage" "Application home directory deleted $(decorate code "$home")" || return $?
+  [ -d "$home" ] || __throwEnvironment "$handler" "Application home directory deleted $(decorate code "$home")" || return $?
 
-  oldHome=$(__catch "$usage" buildHome) || return $?
+  oldHome=$(__catch "$handler" buildHome) || return $?
 
   if [ -d "$oldHome" ] && [ "$oldHome" != "$home" ]; then
     hookSourceOptional --application "$oldHome" project-deactivate "$home" || :
   fi
-  __catchEnvironment "$usage" cd "$home" || return $?
+  __catchEnvironment "$handler" cd "$home" || return $?
   label="Working in"
   if [ $# -gt 0 ]; then
     label="${*-}"
@@ -50,39 +50,37 @@ __applicationHomeGo() {
 # Argument: directory - Directory. Optional. Set the application home to this directory.
 # Argument: --go - Flag. Optional. Change to the current saved application home directory.
 applicationHome() {
-  local usage="_${FUNCNAME[0]}"
+  local handler="_${FUNCNAME[0]}"
 
   local here="" home="" buildTools="bin/build/tools.sh"
 
   export HOME
 
-  # _IDENTICAL_ argument-case-header 5
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
+    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
-    # _IDENTICAL_ --help 4
-    --help)
-      "$usage" 0
-      return $?
-      ;;
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
     --go)
       shift
-      __applicationHomeGo "$usage" "$@"
+      __applicationHomeGo "$handler" "$@"
       return 0
       ;;
     *)
-      [ -z "$here" ] || __throwArgument "$usage" "Unknown argument (applicationHome set already to $(decorate code "$here"))"
-      here=$(usageArgumentDirectory "$usage" "directory" "$argument") || return $?
+      [ -z "$here" ] || __throwArgument "$handler" "Unknown argument (applicationHome set already to $(decorate code "$here"))"
+      here=$(usageArgumentDirectory "$handler" "directory" "$argument") || return $?
       ;;
     esac
     shift
   done
-  [ -n "$here" ] || here=$(__catchEnvironment "$usage" pwd) || return $?
+  [ -n "$here" ] || here=$(__catchEnvironment "$handler" pwd) || return $?
   home=$(bashLibraryHome "$buildTools" "$here" 2>/dev/null) || home="$here"
   printf "%s\n" "$home" >"$(__applicationHomeFile)"
-  __applicationHomeGo "$usage" "${__saved[0]-} Application home set to" || return $?
+  __applicationHomeGo "$handler" "${__saved[0]-} Application home set to" || return $?
 }
 _applicationHome() {
   # __IDENTICAL__ usageDocument 1
@@ -113,8 +111,8 @@ applicationHomeAliases() {
       elif [ -z "$setAlias" ]; then
         setAlias=$(usageArgumentString "$handler" "setAlias" "$argument") || return $?
       else
-      # _IDENTICAL_ argumentUnknown 1
-      __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
+      # _IDENTICAL_ argumentUnknownHandler 1
+      __throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
       fi
       ;;
     esac

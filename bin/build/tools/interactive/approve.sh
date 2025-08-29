@@ -18,44 +18,44 @@
 #
 ####################################################################################################
 
-# Usage: {fn} usage sourceFile ...
-# Argument: usage - Function. Required.
+# handler: {fn} handler sourceFile ...
+# Argument: handler - Function. Required.
 # Argument: sourceFile - File. Required.
 # Argument: Prompt - String. Optional.
 # Argument: ... - Arguments. Optional. Passed to `confirmYesNo`
 __interactiveApprove() {
-  local usage="$1" sourcePath="$2" approved displayFile approvedHome
+  local handler="$1" sourcePath="$2" approved displayFile approvedHome
 
-  shift 2 || __catchArgument "$usage" "shift" || return $?
-  approvedHome=$(__interactiveApproveHome "$usage") || return $?
+  shift 2 || __catchArgument "$handler" "shift" || return $?
+  approvedHome=$(__interactiveApproveHome "$handler") || return $?
 
   if [ -d "$sourcePath" ]; then
     sourcePath="${sourcePath%/}"
     local sourceFile approved=true
     while read -r sourceFile; do
-      if ! __interactiveApproveRegisterCacheFile "$usage" "$sourceFile" "$approvedHome" "$@"; then
+      if ! __interactiveApproveRegisterCacheFile "$handler" "$sourceFile" "$approvedHome" "$@"; then
         approved=false
         break
       fi
     done < <(find "$sourcePath" -type f -name '*.sh' ! -path '*/.*/*')
     "$approved"
   else
-    __interactiveApproveRegisterCacheFile "$usage" "$sourcePath" "$approvedHome" "$@"
+    __interactiveApproveRegisterCacheFile "$handler" "$sourcePath" "$approvedHome" "$@"
   fi
 }
 
 # If a file has been seen already, handle it, otherwise ask the user to approve interactively.
 #
-# Argument: usage - Function. Required.
+# Argument: handler - Function. Required.
 # Argument: sourceFile - File. Required.
 # Argument: approvedHome - Directory. Required.
 # Argument: verb - String. Required.
 # Argument: ... - Arguments. Passed to `confirmYesNo`.
 __interactiveApproveRegisterCacheFile() {
-  local usage="$1" sourceFile="$2" approvedHome="$3" verb="$4" approved displayFile approvedHome
+  local handler="$1" sourceFile="$2" approvedHome="$3" verb="$4" approved displayFile approvedHome
 
   shift 4
-  cacheFile="$(__interactiveApproveCacheFile "$usage" "$approvedHome" "$sourceFile")"
+  cacheFile="$(__interactiveApproveCacheFile "$handler" "$approvedHome" "$sourceFile")"
   displayFile=$(decorate file "$sourceFile")
   if [ ! -f "$cacheFile" ]; then
     if confirmYesNo "$@" "$verb $(decorate file "$sourcePath")?"; then
@@ -64,7 +64,7 @@ __interactiveApproveRegisterCacheFile() {
     else
       approved=false
     fi
-    printf -- "%s\n" "$approved" "$(whoami)" "$(date +%s)" "$(date -u)" "$sourceFile" >"$cacheFile" || __throwEnvironment "$usage" "Unable to write $(decorate file "$cacheFile")" || return $?
+    printf -- "%s\n" "$approved" "$(whoami)" "$(date +%s)" "$(date -u)" "$sourceFile" >"$cacheFile" || __throwEnvironment "$handler" "Unable to write $(decorate file "$cacheFile")" || return $?
   fi
   approved=$(head -n 1 "$cacheFile")
   if ! isBoolean "$approved" || ! "$approved"; then
@@ -78,58 +78,58 @@ __interactiveApproveRegisterCacheFile() {
 }
 
 # The home directory for the interactive approved state files
-# Argument: usage - Function. Required.
+# Argument: handler - Function. Required.
 __interactiveApproveHome() {
-  local usage="$1" approvedHome
-  approvedHome=$(__catch "$usage" buildEnvironmentGetDirectory --subdirectory ".interactiveApproved" "XDG_STATE_HOME") || return $?
+  local handler="$1" approvedHome
+  approvedHome=$(__catch "$handler" buildEnvironmentGetDirectory --subdirectory ".interactiveApproved" "XDG_STATE_HOME") || return $?
   printf "%s\n" "$approvedHome"
 }
 
 # Get the cache file for a specific file
-# Argument: usage - Function. Required.
+# Argument: handler - Function. Required.
 # Argument: approvedHome - Directory. Required.
 # Argument: sourceFile - File. Required.
 # stdout: File. Cache file for `sourceFile`
 __interactiveApproveCacheFile() {
-  local usage="$1" approvedHome="$2" sourceFile="$3" cacheFile
+  local handler="$1" approvedHome="$2" sourceFile="$3" cacheFile
 
-  [ -f "$sourceFile" ] || __throwArgument "$usage" "File does not exist: $sourceFile" || return $?
-  cacheFile="$approvedHome/$(__catch "$usage" shaPipe <"$sourceFile")" || return $?
+  [ -f "$sourceFile" ] || __throwArgument "$handler" "File does not exist: $sourceFile" || return $?
+  cacheFile="$approvedHome/$(__catch "$handler" shaPipe <"$sourceFile")" || return $?
   printf "%s\n" "$cacheFile"
 }
 
-# Usage: {fn} usage approvedTarget
+# handler: {fn} handler approvedTarget
 __interactiveApproveClear() {
-  local usage="$1" sourcePath="$2"
+  local handler="$1" sourcePath="$2"
 
-  shift 2 || __catchArgument "$usage" "shift" || return $?
-  approvedHome=$(__interactiveApproveHome "$usage") || return $?
+  shift 2 || __catchArgument "$handler" "shift" || return $?
+  approvedHome=$(__interactiveApproveHome "$handler") || return $?
 
   if [ -d "$sourcePath" ]; then
     local sourceFile
     while read -r sourceFile; do
       local cacheFile
-      cacheFile=$(__interactiveApproveCacheFile "$usage" "$approvedHome" "$sourceFile") || return $?
-      [ ! -f "$cacheFile" ] || __catchEnvironment "$usage" rm -rf "$cacheFile" || return $?
+      cacheFile=$(__interactiveApproveCacheFile "$handler" "$approvedHome" "$sourceFile") || return $?
+      [ ! -f "$cacheFile" ] || __catchEnvironment "$handler" rm -rf "$cacheFile" || return $?
     done < <(find "$sourcePath" -type f -name '*.sh' ! -path '*/.*/*')
   else
     local cacheFile
-    cacheFile=$(__interactiveApproveCacheFile "$usage" "$approvedHome" "$sourcePath") || return $?
-    [ ! -f "$cacheFile" ] || __catchEnvironment "$usage" rm -rf "$cacheFile" || return $?
+    cacheFile=$(__interactiveApproveCacheFile "$handler" "$approvedHome" "$sourcePath") || return $?
+    [ ! -f "$cacheFile" ] || __catchEnvironment "$handler" rm -rf "$cacheFile" || return $?
   fi
 }
 
 # Maybe move this to its own thing if needed later
-# Usage: {fn} usage timeout attempts extras message
+# handler: {fn} handler timeout attempts extras message
 __interactiveCountdownReadBoolean() {
-  local usage="$1" tempResult
+  local handler="$1" tempResult
 
-  [ $# -eq 5 ] || __throwArgument "$usage" "Missing arguments: $# less than 5" || return $?
-  tempResult=$(fileTemporaryName "$usage") || return $?
+  [ $# -eq 5 ] || __throwArgument "$handler" "Missing arguments: $# less than 5" || return $?
+  tempResult=$(fileTemporaryName "$handler") || return $?
 
   __interactiveCountdownReadCharacter "$@" "__confirmYesNoValidate" "$tempResult" || returnClean $? "$tempResult" || return $?
-  value=$(__catchEnvironment "$usage" cat "$tempResult") || returnClean $? "$tempResult" || return $?
-  __catchEnvironment "$usage" rm -rf "$tempResult" || return $?
+  value=$(__catchEnvironment "$handler" cat "$tempResult") || returnClean $? "$tempResult" || return $?
+  __catchEnvironment "$handler" rm -rf "$tempResult" || return $?
   "$value"
 }
 
@@ -151,8 +151,8 @@ __confirmYesNoValidate() {
 }
 
 # Maybe move this to its own thing if needed later
-# Usage: {fn} usage timeout attempts extras message parser
-# Argument: usage - Function. Error handler
+# handler: {fn} handler timeout attempts extras message parser
+# Argument: handler - Function. Error handler
 # Argument: timeout - UnsignedInteger|Empty. Milliseconds to time out after.
 # Argument: attempts - Integer. Number ot attempts to allow.
 # Argument: extras - EmptyString. Extra text to add to the prompt.
@@ -164,12 +164,12 @@ __confirmYesNoValidate() {
 # Exit code: 1 - Error
 # Exit code: 2 - Error
 __interactiveCountdownReadCharacter() {
-  local usage="$1" && shift
+  local handler="$1" && shift
   local timeout="" rr=() extras icon="⏳" attempts prompt width=0
 
   if [ "$1" != "" ]; then
     rr=(-t 1)
-    timeout=$(usageArgumentPositiveInteger "$usage" "timeout" "${1-}") || return $?
+    timeout=$(usageArgumentPositiveInteger "$handler" "timeout" "${1-}") || return $?
     width="$timeout"
     width="${#width}"
     # milliseconds
@@ -177,7 +177,7 @@ __interactiveCountdownReadCharacter() {
   fi
   shift
 
-  attempts=$(usageArgumentInteger "$usage" "attempts" "${1-}") && shift || return $?
+  attempts=$(usageArgumentInteger "$handler" "attempts" "${1-}") && shift || return $?
 
   extras="${1-}" && shift
 

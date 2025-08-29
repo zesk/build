@@ -7,7 +7,7 @@
 # Copyright &copy; 2025 Market Acumen, Inc.
 #
 
-_testAWSIPAccessUsage() {
+_testAWSIPAccesshandler() {
   decorate error "$@"
   return "$1"
 }
@@ -319,7 +319,7 @@ testAwsEnvironmentFromCredentials() {
 }
 
 testAWSCredentialsEdit() {
-  local usage="_return"
+  local handler="_return"
   local testCredentials
   local testResults home clean=()
 
@@ -327,7 +327,7 @@ testAWSCredentialsEdit() {
 
   home=$(buildHome) || return $?
 
-  testHome=$(fileTemporaryName "$usage" -d) || return $?
+  testHome=$(fileTemporaryName "$handler" -d) || return $?
   testResults="$testHome/results"
 
   clean+=("$testResults")
@@ -367,7 +367,7 @@ testAWSCredentialsEdit() {
   assertExitCode 0 awsCredentialsAdd --force --profile "consolidated-devops" "AKIA0000000000009999" "deadbeef" || return $?
   assertExitCode 0 diff -u "$testAWSCredentials" "$home/test/example/aws/fake.credentials.5.txt" || return $?
 
-  __catchEnvironment "$usage" rm -rf "${clean[@]}" || return $?
+  __catchEnvironment "$handler" rm -rf "${clean[@]}" || return $?
 
   __mockValueStop HOME
 }
@@ -449,7 +449,7 @@ testAWSProfiles() {
   assertFileDoesNotContain --line "$LINENO" "$list" "$firstName" || return $?
   assertFileDoesNotContain --line "$LINENO" "$list" "$secondName" || return $?
 
-  __catchEnvironment "$usage" rm -rf "${clean[@]}" || return $?
+  __catchEnvironment "$handler" rm -rf "${clean[@]}" || return $?
 
   __mockValueStop HOME
   __mockValueStop AWS_PROFILE

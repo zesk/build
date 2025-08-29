@@ -9,12 +9,12 @@
 
 # Test-Platform: !alpine
 testDaemontools() {
-  local usage="_return"
+  local handler="_return"
   local logPath start waitFor logWaitFor
 
   local home
 
-  home=$(__catch "$usage" buildHome) || return $?
+  home=$(__catch "$handler" buildHome) || return $?
   assertExitCode --stderr-match "not production" 0 daemontoolsInstall || return $?
 
   if ! daemontoolsIsRunning; then
@@ -29,9 +29,9 @@ testDaemontools() {
 
   assertExitCode 0 daemontoolsIsRunning || return $?
 
-  logPath=$(__catch "$usage" buildCacheDirectory "${FUNCNAME[0]}") || return $?
+  logPath=$(__catch "$handler" buildCacheDirectory "${FUNCNAME[0]}") || return $?
   decorate info "logPath is $logPath"
-  __catch "$usage" directoryRequire "$logPath" >/dev/null || return $?
+  __catch "$handler" directoryRequire "$logPath" >/dev/null || return $?
 
   assertExitCode --leak DAEMONTOOLS_HOME 0 daemontoolsInstallService --log "$logPath" "$home/test/example/lemon.sh" --arguments "orange" "grape" "lemon" -- --log-arguments "n10" || return $?
 

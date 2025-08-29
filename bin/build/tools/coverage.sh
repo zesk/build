@@ -13,33 +13,31 @@
 # Covert resulting files using `bashCoverageReport`
 # See: bashCoverageReport
 bashCoverage() {
-  local usage="_${FUNCNAME[0]}"
+  local handler="_${FUNCNAME[0]}"
 
   local start home target="" verbose=false
 
   # local binPath actualBash
 
-  home=$(__catch "$usage" buildHome) || return $?
+  home=$(__catch "$handler" buildHome) || return $?
   # IDENTICAL startBeginTiming 1
   start=$(timingStart) || return $?
 
-  # _IDENTICAL_ argument-case-header 5
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
+    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
-    # _IDENTICAL_ --help 4
-    --help)
-      "$usage" 0
-      return $?
-      ;;
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
     --verbose)
       verbose=true
       ;;
     --target)
       shift
-      target="$(usageArgumentFileDirectory "$usage" "$argument" "${1-}")" || return $?
+      target="$(usageArgumentFileDirectory "$handler" "$argument" "${1-}")" || return $?
       ;;
     *)
       break
@@ -49,7 +47,7 @@ bashCoverage() {
   done
   [ -n "$target" ] || target="$home/coverage.stats"
   ! $verbose || decorate info "Collecting coverage to $(decorate code "${target#"$home"}")"
-  __catch "$usage" __bashCoverageWrapper "$target" "$@" || return $?
+  __catch "$handler" __bashCoverageWrapper "$target" "$@" || return $?
   ! $verbose || timingReport "$start" "Coverage completed in"
 }
 _bashCoverage() {
@@ -61,35 +59,33 @@ _bashCoverage() {
 # Usage: {fn} [ --help ] [ --cache cacheDirectory ] [ --target targetDirectory ] [ statsFile ]
 # stdin: Accepts a stats file
 bashCoverageReport() {
-  local usage="_${FUNCNAME[0]}"
+  local handler="_${FUNCNAME[0]}"
 
   local reportCache target file line dataPath commandFile files=() home
 
   # IDENTICAL startBeginTiming 1
   start=$(timingStart) || return $?
-  home=$(__catch "$usage" buildHome) || return $?
+  home=$(__catch "$handler" buildHome) || return $?
 
-  # _IDENTICAL_ argument-case-header 5
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
+    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
-    # _IDENTICAL_ --help 4
-    --help)
-      "$usage" 0
-      return $?
-      ;;
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
     --cache)
       shift
-      reportCache="$(usageArgumentDirectory "$usage" "$argument" "${1-}")" || return $?
+      reportCache="$(usageArgumentDirectory "$handler" "$argument" "${1-}")" || return $?
       ;;
     --target)
       shift
-      target="$(usageArgumentFileDirectory "$usage" "$argument" "${1-}")" || return $?
+      target="$(usageArgumentFileDirectory "$handler" "$argument" "${1-}")" || return $?
       ;;
     *)
-      files+=("$(usageArgumentFile "$usage" "coverageFile" "$1")") || return $?
+      files+=("$(usageArgumentFile "$handler" "coverageFile" "$1")") || return $?
       ;;
     esac
     shift
@@ -97,26 +93,26 @@ bashCoverageReport() {
 
   [ -n "$target" ] || target="$home/test-coverage"
   if [ -z "$reportCache" ]; then
-    reportCache=$(__catch "$usage" buildCacheDirectory ".bashCoverageReport") || return $?
+    reportCache=$(__catch "$handler" buildCacheDirectory ".bashCoverageReport") || return $?
   fi
-  target=$(__catch "$usage" directoryRequire "$target") || return $?
+  target=$(__catch "$handler" directoryRequire "$target") || return $?
 
   decorate info "$reportCache"
   decorate info "Report: $target"
 
   if [ "${#files[@]}" -eq 0 ]; then
-    __bashCoverageReportFile "$usage" "$reportCache" "$target"
+    __bashCoverageReportFile "$handler" "$reportCache" "$target"
   else
     for file in "${files[@]}"; do
       statusMessage decorate info "$(pwd) Loading $(decorate code "$file")"
-      __bashCoverageReportFile "$usage" "$reportCache" "$target" <"$file"
+      __bashCoverageReportFile "$handler" "$reportCache" "$target" <"$file"
     done
   fi
   statusMessage decorate info "Reporting to $(decorate code "$target")"
   for file in coverage.css coverage.js; do
-    __catchEnvironment "$usage" cp "$(__bashCoverageReportTemplate "$file")" "$target/$file" || return $?
+    __catchEnvironment "$handler" cp "$(__bashCoverageReportTemplate "$file")" "$target/$file" || return $?
   done
-  __bashCoverageReportConvertFiles "$usage" "$reportCache" "$target" || return $?
+  __bashCoverageReportConvertFiles "$handler" "$reportCache" "$target" || return $?
 }
 _bashCoverageReport() {
   # __IDENTICAL__ usageDocument 1
@@ -170,13 +166,13 @@ __bashCoverageEnd() {
 
 # Sort unique and then import
 __bashCoverageReportFile() {
-  local usage="$1" reportCache="$2" target="$3" tempFile lineCount
+  local handler="$1" reportCache="$2" target="$3" tempFile lineCount
 
-  tempFile=$(fileTemporaryName "$usage") || return $?
+  tempFile=$(fileTemporaryName "$handler") || return $?
   sort -u >"$tempFile"
-  lineCount=$(__catch "$usage" fileLineCount "$tempFile") || return $?
-  __bashCoverageReportProcessStats "$usage" "$reportCache" "$target" "$lineCount" <"$tempFile" || returnClean $? "$tempFile" || return $?
-  __catchEnvironment "$usage" rm -rf "$tempFile" || return $?
+  lineCount=$(__catch "$handler" fileLineCount "$tempFile") || return $?
+  __bashCoverageReportProcessStats "$handler" "$reportCache" "$target" "$lineCount" <"$tempFile" || returnClean $? "$tempFile" || return $?
+  __catchEnvironment "$handler" rm -rf "$tempFile" || return $?
 }
 
 #
@@ -184,23 +180,23 @@ __bashCoverageReportFile() {
 # After: reportBase/all and reportBase/files are lists of sorted files tracked
 #
 __bashCoverageReportProcessStats() {
-  local usage="$1" reportCache="$2" reportBase="$3" totalLines="${4-Unknown}" index=0
+  local handler="$1" reportCache="$2" reportBase="$3" totalLines="${4-Unknown}" index=0
   local fileLine file line dataPath commandFile
 
   while read -r fileLine command; do
     file="${fileLine%:*}"
     line="${fileLine##*:}"
-    dataPath=$(__catch "$usage" directoryRequire "$reportCache/$file/$line/") || return $?
+    dataPath=$(__catch "$handler" directoryRequire "$reportCache/$file/$line/") || return $?
     commandFile="$(printf -- "%s\n" "$command" | shaPipe)"
-    printf -- "%s\n" "$command" >"$dataPath/$commandFile" || __throwEnvironment "$usage" "Writing $commandFile" || return $?
+    printf -- "%s\n" "$command" >"$dataPath/$commandFile" || __throwEnvironment "$handler" "Writing $commandFile" || return $?
     targetFile="$reportBase/$file.html"
-    targetFile=$(__catch "$usage" fileDirectoryRequire "$targetFile") || return $?
-    [ -f "$targetFile" ] || __catchEnvironment "$usage" touch "$targetFile" || return $?
-    __catchEnvironment "$usage" printf -- "%s\n" "$file" >>"$reportCache/all" || return $?
+    targetFile=$(__catch "$handler" fileDirectoryRequire "$targetFile") || return $?
+    [ -f "$targetFile" ] || __catchEnvironment "$handler" touch "$targetFile" || return $?
+    __catchEnvironment "$handler" printf -- "%s\n" "$file" >>"$reportCache/all" || return $?
     index=$((index + 1))
     statusMessage decorate info "Line $index/$totalLines ..."
   done
-  __catchEnvironment "$usage" sort -u <"$reportCache/all" >"$reportCache/files" || return $?
+  __catchEnvironment "$handler" sort -u <"$reportCache/all" >"$reportCache/files" || return $?
 }
 
 #
@@ -220,7 +216,7 @@ __bashCoverageReportTemplate() {
 # After: reportBase/all and reportBase/files are lists of sorted files tracked
 #
 __bashCoverageReportConvertFiles() {
-  local usage="$1" reportCache="$2" reportBase="$3" file dataPath
+  local handler="$1" reportCache="$2" reportBase="$3" file dataPath
   local home content
   local source index line trimmedLine coverableLines notCoverableLines coveredLines notCoveredLines coverable
   local coveredTemplate notCoveredTemplate pageTemplate fileTemplate lineTemplate lineContentFile extra
@@ -230,14 +226,14 @@ __bashCoverageReportConvertFiles() {
   local fileTemplateVariables=(content file_classes total name coverage coveredLines notCoveredLines coverableLines notCoverableLines)
   local pageTemplateVariables=(title content head foot body_classes relativeTop)
 
-  home=$(__catch "$usage" buildHome) || return $?
+  home=$(__catch "$handler" buildHome) || return $?
   coveredTemplate=$(__bashCoverageReportTemplate "covered.html") || return $?
   notCoveredTemplate=$(__bashCoverageReportTemplate "not-covered.html") || return $?
   pageTemplate=$(__bashCoverageReportTemplate "page.html") || return $?
   fileTemplate=$(__bashCoverageReportTemplate "file.html") || return $?
   lineTemplate=$(__bashCoverageReportTemplate "line.html") || return $?
 
-  lineContentFile=$(fileTemporaryName "$usage") || return $?
+  lineContentFile=$(fileTemporaryName "$handler") || return $?
   while read -r file; do
     statusMessage decorate info "Generating $(decorate code "$file")"
     if isAbsolutePath "$file"; then
@@ -325,7 +321,7 @@ __bashCoverageReportConvertFiles() {
       cat "$lineContentFile"
       grep -A 32767 -m 1 "$magic" <"$targetFile.$$" | grep -v "$magic"
     } >"$targetFile"
-    __catchEnvironment "$usage" rm -rf "$targetFile.$$" || return $?
+    __catchEnvironment "$handler" rm -rf "$targetFile.$$" || return $?
     statusMessage --last printf -- "%s %s\n" "$(decorate info "Wrote")" "$(decorate code "$targetFile")"
   done <"$reportCache/files"
 }

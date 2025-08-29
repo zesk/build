@@ -26,7 +26,7 @@
 # - `__IDENTICAL__` - used in templates which must be included in _IDENTICAL_ templates (INTERNAL)
 # - `DOC TEMPLATE:` - used in documentation templates for functions - is handled by internal document generator (INTERNAL)
 #
-# Usage: {fn} [ --repair repairSource ] [ --help ] [ --interactive ] [ --check checkDirectory ] ...
+# handler: {fn} [ --repair repairSource ] [ --help ] [ --interactive ] [ --check checkDirectory ] ...
 # DOC TEMPLATE: --help 1
 # Argument: --help - Optional. Flag. Display this help.
 # Argument: --singles singlesFiles - Optional. File. One or more files which contain a list of allowed `IDENTICAL` singles, one per line.
@@ -37,15 +37,20 @@
 # Argument: --interactive - Flag. Optional. Interactive mode on fixing errors.
 # Argument: ... - Optional. Additional arguments are passed directly to `identicalCheck`.
 identicalCheckShell() {
-  local usage="_${FUNCNAME[0]}"
+  local handler="_${FUNCNAME[0]}"
   local argument aa=() pp=() addDefaultPrefixes=true
 
   local internalPrefixes=(--prefix '# ''DOC TEMPLATE:' --prefix '# ''__IDENTICAL__' --prefix '# ''_IDENTICAL_')
 
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
+  local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
-    argument="$1"
-    [ -n "$argument" ] || __throwArgument "$usage" "blank argument" || return $?
+    local argument="$1" __index=$((__count - $# + 1))
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
+    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
     --internal-only)
       pp=("${internalPrefixes[@]}")
       addDefaultPrefixes=false
@@ -63,11 +68,6 @@ identicalCheckShell() {
       shift
       aa+=("$argument" "${1-}")
       ;;
-    # _IDENTICAL_ --help 4
-    --help)
-      "$usage" 0
-      return $?
-      ;;
     *)
       break
       ;;
@@ -75,7 +75,7 @@ identicalCheckShell() {
     shift || :
   done
   ! $addDefaultPrefixes || pp+=(--prefix '# ''IDENTICAL')
-  __catch "$usage" identicalCheck "${aa[@]+"${aa[@]}"}" "${pp[@]}" --extension sh "$@" || return $?
+  __catch "$handler" identicalCheck "${aa[@]+"${aa[@]}"}" "${pp[@]}" --extension sh "$@" || return $?
 }
 _identicalCheckShell() {
   # __IDENTICAL__ usageDocument 1

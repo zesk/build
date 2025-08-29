@@ -13,17 +13,18 @@
 #
 # BUILD_DEBUG: hook - `hookRun` and `hookSource` and optional versions of the same functions will output additional debugging information
 __hookRunner() {
-  local usage="${1-}" && shift
+  local handler="${1-}" && shift
 
   local requireHook=false sourceHook=false
 
   # Parse internal flags first (this is so users can not accidentally use these, only us)
 
-  # _IDENTICAL_ argument-case-header 5
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
+    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     --require)
       requireHook=true
@@ -36,8 +37,8 @@ __hookRunner() {
       break
       ;;
     *)
-      # _IDENTICAL_ argumentUnknown 1
-      __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
+      # _IDENTICAL_ argumentUnknownHandler 1
+      __throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
       ;;
     esac
     shift
@@ -46,24 +47,22 @@ __hookRunner() {
   # Parse user flags first (this is so users can not accidentally use these, only us)
 
   local applicationHome="" whichArgs=() nextSource=""
-  # _IDENTICAL_ argument-case-header 5
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
+    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
-    # _IDENTICAL_ --help 4
-    --help)
-      "$usage" 0
-      return $?
-      ;;
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
     --next)
       shift
-      whichArgs+=("$argument" "$(usageArgumentFile "$usage" "$argument" "${1-}")") || return $?
+      whichArgs+=("$argument" "$(usageArgumentFile "$handler" "$argument" "${1-}")") || return $?
       ;;
     --application)
       shift || :
-      applicationHome=$(usageArgumentDirectory "$usage" applicationHome "${1-}") || return $?
+      applicationHome=$(usageArgumentDirectory "$handler" applicationHome "${1-}") || return $?
       whichArgs+=(--application "$applicationHome")
       ;;
     *)
@@ -72,7 +71,7 @@ __hookRunner() {
       if ! hook=$(whichHook "${whichArgs[@]+${whichArgs[@]}}" "$binary"); then
         if $requireHook; then
           # hookRun
-          __throwArgument "$usage" "Hook not found $(decorate code "$binary")" || return $?
+          __throwArgument "$handler" "Hook not found $(decorate code "$binary")" || return $?
         else
           if buildDebugEnabled; then
             printf "%s %s %s %s\n" "$(decorate warning "No hook")" "$(decorate code "$binary")" "$(decorate warning "in this project:")" "$(decorate code "$applicationHome")"
@@ -87,7 +86,7 @@ __hookRunner() {
       if "$sourceHook"; then
         set -- "$@"
         # shellcheck disable=SC1090
-        source "$hook" || __throwEnvironment "$usage" "source $hook failed" || return $?
+        source "$hook" || __throwEnvironment "$handler" "source $hook failed" || return $?
       else
         "$hook" "$@" || return $?
       fi
@@ -96,7 +95,7 @@ __hookRunner() {
     esac
     shift
   done
-  __throwArgument "$usage" "No hook name passed (Arguments: $(decorate each code "${__saved[@]}"))" || return $?
+  __throwArgument "$handler" "No hook name passed (Arguments: $(decorate each code "${__saved[@]}"))" || return $?
 }
 
 # Run a hook in the project located at `./bin/hooks/`
@@ -221,33 +220,25 @@ _hookSourceOptional() {
 # Test: testHookSystem
 # Environment: BUILD_HOOK_DIRS
 hasHook() {
-  local usage="_${FUNCNAME[0]}"
+  local handler="_${FUNCNAME[0]}"
 
-  local applicationHome
+  local applicationHome=""
 
-  applicationHome="$(__catch "$usage" buildHome)" || return $?
-  # _IDENTICAL_ argument-case-header 5
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
+    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
-    # _IDENTICAL_ --help 4
-    --help)
-      "$usage" 0
-      return $?
-      ;;
-    # _IDENTICAL_ --handler 4
-    --handler)
-      shift
-      usage=$(usageArgumentFunction "$usage" "$argument" "${1-}") || return $?
-      ;;
-    --application)
-      shift || :
-      applicationHome=$(usageArgumentDirectory "$usage" applicationHome "${1-}") || return $?
-      ;;
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
+    # _IDENTICAL_ handlerHandler 1
+    --handler) shift && handler=$(usageArgumentFunction "$handler" "$argument" "${1-}") || return $? ;;
+    --application) shift && applicationHome=$(usageArgumentDirectory "$handler" applicationHome "${1-}") || return $? ;;
     *)
       local binary
+      [ -n "$applicationHome" ] || applicationHome="$(__catch "$handler" buildHome)" || return $?
       binary="$(whichHook --application "$applicationHome" "$argument")" || return 1
       [ -n "$binary" ] || return 1
       ;;
@@ -278,42 +269,39 @@ _hasHook() {
 #
 # Test: testHookSystem
 whichHook() {
-  local usage="_${FUNCNAME[0]}"
+  local handler="_${FUNCNAME[0]}"
   local applicationHome hookPaths=() hookExtensions=() nextSource=""
 
   export BUILD_HOOK_DIRS
-  __catch "$usage" buildEnvironmentLoad BUILD_HOOK_DIRS BUILD_HOOK_EXTENSIONS || return $?
+  __catch "$handler" buildEnvironmentLoad BUILD_HOOK_DIRS BUILD_HOOK_EXTENSIONS || return $?
 
   IFS=":" read -r -a hookPaths <<<"$BUILD_HOOK_DIRS" || :
-  [ ${#hookPaths[@]} -gt 0 ] || __throwEnvironment "$usage" "BUILD_HOOK_DIRS is blank" || return $?
+  [ ${#hookPaths[@]} -gt 0 ] || __throwEnvironment "$handler" "BUILD_HOOK_DIRS is blank" || return $?
 
   IFS=":" read -r -a hookExtensions <<<"$BUILD_HOOK_EXTENSIONS" || :
-  [ ${#hookExtensions[@]} -gt 0 ] || __throwEnvironment "$usage" "BUILD_HOOK_EXTENSIONS is blank" || return $?
+  [ ${#hookExtensions[@]} -gt 0 ] || __throwEnvironment "$handler" "BUILD_HOOK_EXTENSIONS is blank" || return $?
 
-  applicationHome="$(__catch "$usage" buildHome)" || return $?
+  applicationHome="$(__catch "$handler" buildHome)" || return $?
+  local __saved=("$@") __count=$#
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
+    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
-    # _IDENTICAL_ --help 4
-    --help)
-      "$usage" 0
-      return $?
-      ;;
-    # _IDENTICAL_ --handler 4
-    --handler)
-      shift
-      usage=$(usageArgumentFunction "$usage" "$argument" "${1-}") || return $?
-      ;;
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
+    # _IDENTICAL_ handlerHandler 1
+    --handler) shift && handler=$(usageArgumentFunction "$handler" "$argument" "${1-}") || return $? ;;
     --application)
       shift
-      applicationHome=$(usageArgumentDirectory "$usage" "$argument" "${1-}") || return $?
+      applicationHome=$(usageArgumentDirectory "$handler" "$argument" "${1-}") || return $?
       ;;
     --next)
       shift
-      nextSource=$(usageArgumentFile "$usage" "$argument" "${1-}") || return $?
-      nextSource=$(__catchEnvironment "$usage" realPath "$nextSource") || return $?
+      nextSource=$(usageArgumentFile "$handler" "$argument" "${1-}") || return $?
+      nextSource=$(__catchEnvironment "$handler" realPath "$nextSource") || return $?
       ;;
     *)
       local hookPath
@@ -343,7 +331,7 @@ whichHook() {
     esac
     shift
   done
-  __throwArgument "$usage" "no arguments" || return $?
+  __throwArgument "$handler" "no arguments" || return $?
 }
 _whichHook() {
   # __IDENTICAL__ usageDocument 1

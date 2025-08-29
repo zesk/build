@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# usage - Just the stuff to output console or markdown text
+# handler - Just the stuff to output console or markdown text
 #
 # Copyright &copy; 2025 Market Acumen, Inc.
 #
@@ -16,32 +16,32 @@
 #------------------------------------------------------------------------------
 #
 
-# Output usage messages to console
+# Output handler messages to console
 #
 # Should look into an actual file template, probably
 # See: usageDocument
 #
-# Do not call usage functions here to avoid recursion
-# Usage: {fn} binName options delimiter description exitCode
+# Do not call handler functions here to avoid recursion
+# handler: {fn} binName options delimiter description exitCode
 # Argument: binaryName - String. Required. The function name
 # Argument: argumentsText - String. Required. The argument definition.
 # Argument: argumentsDelimiter - String. Required. The argument delimiter.
 # Argument: description - String. Required. The function description
-# Argument: exitCode - Integer. Required. The exit code of the function prior to showing usage
+# Argument: exitCode - Integer. Required. The exit code of the function prior to showing handler
 # Argument: ... - String. Any additional description - output directly.
 # Requires: exitString __throwArgument trimSpace usageArgumentUnsignedInteger __throwArgument decorate printf
-# BUILD_DEBUG: usage - For all `--help` and any function which uses `usageTemplate` to output documentation (upon error), the stack will be displayed
+# BUILD_DEBUG: handler - For all `--help` and any function which uses `usageTemplate` to output documentation (upon error), the stack will be displayed
 usageTemplate() {
-  local usage="_${FUNCNAME[0]}" __saved=("$@")
+  local handler="_${FUNCNAME[0]}" __saved=("$@")
 
-  [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
-  [ $# -ge 5 ] || __throwArgument "$usage" "Requires 5 or more arguments" || return $?
+  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
+  [ $# -ge 5 ] || __throwArgument "$handler" "Requires 5 or more arguments" || return $?
 
   local binName options="$2" delimiter="$3" description="$4" exitCode
 
   binName="$(trimSpace "$1")"
-  exitCode=$(usageArgumentUnsignedInteger "$usage" "exitCode" "$5") || return $?
-  shift 5 || __throwArgument "$usage" "shift 5" || return $?
+  exitCode=$(usageArgumentUnsignedInteger "$handler" "exitCode" "$5") || return $?
+  shift 5 || __throwArgument "$handler" "shift 5" || return $?
 
   if ! muzzle decorateStyle bold-green; then
     export __BUILD_COLORS
@@ -52,9 +52,9 @@ usageTemplate() {
 
   local usageString
   if [ "$exitCode" -eq 0 ]; then
-    usageString="$(decorate bold-green Usage)"
+    usageString="$(decorate bold-green handler)"
   else
-    usageString="$(decorate bold-red Usage)"
+    usageString="$(decorate bold-red handler)"
   fi
   if [ $# -gt 0 ] && [ -n "$*" ]; then
     if [ "$exitCode" -eq 0 ]; then
@@ -84,7 +84,7 @@ usageTemplate() {
       "$description" |
       trimBoth
   fi
-  if buildDebugEnabled usage; then
+  if buildDebugEnabled handler; then
     debuggingStack
   fi
   return "$exitCode"
@@ -98,7 +98,7 @@ _usageTemplate() {
 # Input is in the format with "{argument}{delimiter}{description}{newline}" and generates a list of arguments (optionally decorated) color-coded based
 # on whether the word "require" appears in the description.
 #
-# Usage: usageFormatArguments delimiter
+# handler: usageFormatArguments delimiter
 # Argument: delimiter - Required. String. The character to separate name value pairs in the input
 usageFormatArguments() {
   local handler="_${FUNCNAME[0]}"

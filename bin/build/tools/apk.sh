@@ -14,8 +14,8 @@
 # Exit Code: 0 - System is an alpine system and apk is installed
 # Exit Code: 1 - System is not an alpine system or apk is not installed
 apkIsInstalled() {
-  local usage="_${FUNCNAME[0]}"
-  __help --only "$usage" "$@" || return 0
+  local handler="_${FUNCNAME[0]}"
+  __help --only "$handler" "$@" || return 0
   isAlpine && whichExists apk
 }
 _apkIsInstalled() {
@@ -27,8 +27,8 @@ _apkIsInstalled() {
 # DOC TEMPLATE: --help 1
 # Argument: --help - Optional. Flag. Display this help.
 isAlpine() {
-  local usage="_${FUNCNAME[0]}"
-  __help --only "$usage" "$@" || return 0
+  local handler="_${FUNCNAME[0]}"
+  __help --only "$handler" "$@" || return 0
   [ -f /etc/alpine-release ]
 }
 _isAlpine() {
@@ -48,11 +48,11 @@ _isAlpine() {
 # Exit Code: 0 - Success
 # Exit Code: Any - `docker run` error code is returned if non-zero
 alpineContainer() {
-  local usage="_${FUNCNAME[0]}"
+  local handler="_${FUNCNAME[0]}"
 
   export LC_TERMINAL TERM
-  __catch "$usage" buildEnvironmentLoad LC_TERMINAL TERM || return $?
-  __catchEnvironment "$usage" dockerLocalContainer --handler "$usage" --image alpine:latest --path /root/build --env LC_TERMINAL="$LC_TERMINAL" --env TERM="$TERM" /root/build/bin/build/need-bash.sh Alpine apk add bash ncurses -- "$@" || return $?
+  __catch "$handler" buildEnvironmentLoad LC_TERMINAL TERM || return $?
+  __catchEnvironment "$handler" dockerLocalContainer --handler "$handler" --image alpine:latest --path /root/build --env LC_TERMINAL="$LC_TERMINAL" --env TERM="$TERM" /root/build/bin/build/need-bash.sh Alpine apk add bash ncurses -- "$@" || return $?
 }
 _alpineContainer() {
   # __IDENTICAL__ usageDocument 1
@@ -89,7 +89,7 @@ __apkUninstall() {
 }
 
 #
-# Usage: {fn}
+# handler: {fn}
 # OS upgrade and potential restart
 # Progress is written to stderr
 # Result is `ok` or `restart` written to stdout
@@ -100,20 +100,20 @@ __apkUninstall() {
 # Artifact: `packageUpdate.log` is left in the `buildCacheDirectory`
 # Artifact: `packageInstall.log` is left in the `buildCacheDirectory`
 __apkUpgrade() {
-  local usage="_${FUNCNAME[0]}"
+  local handler="_${FUNCNAME[0]}"
   local quietLog upgradeLog result clean=()
 
-  quietLog=$(__catch "$usage" buildQuietLog "$usage") || return $?
-  upgradeLog=$(__catch "$usage" buildQuietLog "upgrade_${usage#_}") || return $?
+  quietLog=$(__catch "$handler" buildQuietLog "$handler") || return $?
+  upgradeLog=$(__catch "$handler" buildQuietLog "upgrade_${handler#_}") || return $?
   clean+=("$quietLog" "$upgradeLog")
-  __catchEnvironment "$usage" apk upgrade | tee -a "$upgradeLog" >>"$quietLog" || returnUndo $? dumpPipe "apk upgrade failed" <"$quietLog" || returnClean $? "${clean[@]}" || return $?
+  __catchEnvironment "$handler" apk upgrade | tee -a "$upgradeLog" >>"$quietLog" || returnUndo $? dumpPipe "apk upgrade failed" <"$quietLog" || returnClean $? "${clean[@]}" || return $?
   if ! muzzle packageNeedRestartFlag; then
     if grep -q " restart " "$upgradeLog" || grep -qi needrestart "$upgradeLog" || grep -qi need-restart "$upgradeLog"; then
-      __catch "$usage" packageNeedRestartFlag "true" || return $?
+      __catch "$handler" packageNeedRestartFlag "true" || return $?
     fi
     result=restart
   else
-    __catch "$usage" packageNeedRestartFlag "" || return $?
+    __catch "$handler" packageNeedRestartFlag "" || return $?
     result=ok
   fi
   printf "%s\n" "$result"
@@ -130,12 +130,12 @@ __apkUpdate() {
   apk update
 }
 
-# Usage: {fn}
+# handler: {fn}
 # List installed packages
 # package.sh: true
 __apkInstalledList() {
-  local usage="_${FUNCNAME[0]}"
-  [ $# -eq 0 ] || __throwArgument "$usage" "Unknown argument $*" || return $?
+  local handler="_${FUNCNAME[0]}"
+  [ $# -eq 0 ] || __throwArgument "$handler" "Unknown argument $*" || return $?
   apk list -I -q
 }
 ___apkInstalledList() {
@@ -143,7 +143,7 @@ ___apkInstalledList() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# Usage: {fn}
+# handler: {fn}
 # Output list of apt standard packages (constant)
 # See: _packageStandardPackages
 # package.sh: true
@@ -154,12 +154,12 @@ __apkStandardPackages() {
   [ -n "${BUILD_TEXT_BINARY-}" ] || BUILD_TEXT_BINARY="figlet"
 }
 
-# Usage: {fn}
+# handler: {fn}
 # List available packages
 # package.sh: true
 __apkAvailableList() {
-  local usage="_${FUNCNAME[0]}"
-  [ $# -eq 0 ] || __throwArgument "$usage" "Unknown argument $*" || return $?
+  local handler="_${FUNCNAME[0]}"
+  [ $# -eq 0 ] || __throwArgument "$handler" "Unknown argument $*" || return $?
   apk list -a -q
 }
 ___apkAvailableList() {

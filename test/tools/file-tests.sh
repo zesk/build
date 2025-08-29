@@ -238,15 +238,15 @@ testLinkCreate() {
 }
 
 testFileLineCount() {
-  local usage="_return"
+  local handler="_return"
   local temp
 
-  temp=$(fileTemporaryName "$usage") || return $?
+  temp=$(fileTemporaryName "$handler") || return $?
 
   assertEquals 0 "$(fileLineCount "$temp")" || return $?
   assertEquals 0 "$(fileLineCount <"$temp")" || return $?
 
-  __catchEnvironment "$usage" printf "%s\n" "$(randomString)" >>"$temp" || return $?
+  __catchEnvironment "$handler" printf "%s\n" "$(randomString)" >>"$temp" || return $?
 
   assertEquals 1 "$(fileLineCount "$temp")" || return $?
   assertEquals 1 "$(fileLineCount <"$temp")" || return $?
@@ -257,12 +257,12 @@ testFileLineCount() {
     r=$((RANDOM % 10))
     total=$((total + r))
     while [ "$r" -gt 0 ]; do
-      __catchEnvironment "$usage" printf "%d: %s\n" "$i" "$(randomString)" >>"$temp" || return $?
+      __catchEnvironment "$handler" printf "%d: %s\n" "$i" "$(randomString)" >>"$temp" || return $?
       r=$((r - 1))
     done
     assertEquals "$total" "$(fileLineCount "$temp")" || return $?
     assertEquals "$total" "$(fileLineCount <"$temp")" || return $?
   done
 
-  __catchEnvironment "$usage" rm "$temp" || return $?
+  __catchEnvironment "$handler" rm "$temp" || return $?
 }

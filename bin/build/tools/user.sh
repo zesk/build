@@ -12,10 +12,10 @@
 # Exit code: 1 - Issue with `buildEnvironmentGet HOME` or $HOME is not a directory (say, it's a file)
 # Exit code: 0 - Home directory exists.
 userHome() {
-  local usage="_${FUNCNAME[0]}"
+  local handler="_${FUNCNAME[0]}"
   __help "_${FUNCNAME[0]}" "$@" || return 0
-  home=$(__catch "$usage" buildEnvironmentGet HOME) || return $?
-  [ -d "$home" ] || __throwEnvironment "$usage" "HOME is not a directory: $HOME" || return $?
+  home=$(__catch "$handler" buildEnvironmentGet HOME) || return $?
+  [ -d "$home" ] || __throwEnvironment "$handler" "HOME is not a directory: $HOME" || return $?
   home="$(printf "%s%s" "$home" "$(printf "/%s" "$@")")"
   printf "%s\n" "${home%/}"
 

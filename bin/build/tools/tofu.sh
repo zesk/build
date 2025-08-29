@@ -17,7 +17,7 @@
 # Exit Code: 0 - All good to install terraform
 #
 aptKeyAddOpenTofu() {
-  local usage="_${FUNCNAME[0]}"
+  local handler="_${FUNCNAME[0]}"
   local args=(
     --title OpenTOFU
     --name opentofu --url https://get.opentofu.org/opentofu.gpg
@@ -26,8 +26,8 @@ aptKeyAddOpenTofu() {
     --release any
     --source deb-src
   )
-  __help "$usage" "$@" || return 0
-  __catch "$usage" aptKeyAdd "${args[@]}" || return $?
+  __help "$handler" "$@" || return 0
+  __catch "$handler" aptKeyAdd "${args[@]}" || return $?
 }
 _aptKeyAddOpenTofu() {
   # __IDENTICAL__ usageDocument 1
@@ -42,9 +42,9 @@ _aptKeyAddOpenTofu() {
 # Exit Code: 0 - All good to install tofu
 #
 aptKeyRemoveOpenTofu() {
-  local usage="_${FUNCNAME[0]}"
-  __help "$usage" "$@" || return 0
-  __catch "$usage" aptKeyRemove opentofu "$@" || return $?
+  local handler="_${FUNCNAME[0]}"
+  __help "$handler" "$@" || return 0
+  __catch "$handler" aptKeyRemove opentofu "$@" || return $?
 }
 _aptKeyRemoveOpenTofu() {
   # __IDENTICAL__ usageDocument 1
@@ -58,14 +58,14 @@ _aptKeyRemoveOpenTofu() {
 # Argument: package - Additional packages to install using `packageInstall`
 #
 tofuInstall() {
-  local usage="_${FUNCNAME[0]}" binary="tofu"
+  local handler="_${FUNCNAME[0]}" binary="tofu"
 
-  __help "$usage" "$@" || return 0
+  __help "$handler" "$@" || return 0
   ! whichExists "$binary" || return 0
-  __catch "$usage" packageInstall apt-transport-https ca-certificates curl gnupg || return $?
-  __catch "$usage" aptKeyAddOpenTofu || return $?
-  __catch "$usage" packageInstall "$binary" "$@" || return $?
-  whichExists "$binary" || __throwEnvironment "$usage" "No $binary binary found - installation failed" || return $?
+  __catch "$handler" packageInstall apt-transport-https ca-certificates curl gnupg || return $?
+  __catch "$handler" aptKeyAddOpenTofu || return $?
+  __catch "$handler" packageInstall "$binary" "$@" || return $?
+  whichExists "$binary" || __throwEnvironment "$handler" "No $binary binary found - installation failed" || return $?
 }
 _tofuInstall() {
   # __IDENTICAL__ usageDocument 1
@@ -79,12 +79,12 @@ _tofuInstall() {
 # Argument: package - Additional packages to uninstall using `packageUninstall`
 #
 tofuUninstall() {
-  local usage="_${FUNCNAME[0]}"
+  local handler="_${FUNCNAME[0]}"
 
-  __help "$usage" "$@" || return 0
-  __catch "$usage" packageWhichUninstall tofu tofu "$@" || return $?
-  __catch "$usage" aptKeyRemoveOpenTofu || return $?
-  __catch "$usage" packageUpdate --force || return $?
+  __help "$handler" "$@" || return 0
+  __catch "$handler" packageWhichUninstall tofu tofu "$@" || return $?
+  __catch "$handler" aptKeyRemoveOpenTofu || return $?
+  __catch "$handler" packageUpdate --force || return $?
 }
 _tofuUninstall() {
   # __IDENTICAL__ usageDocument 1

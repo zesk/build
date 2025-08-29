@@ -213,11 +213,11 @@ testHousekeeper() {
 }
 
 testOutputTrigger() {
-  local usage="_return"
+  local handler="_return"
 
   assertExitCode --stderr-match YoYoBaby 1 outputTrigger --name YoYoBaby <<<"Hello" || return $?
   local temp
-  temp=$(fileTemporaryName "$usage") || return $?
+  temp=$(fileTemporaryName "$handler") || return $?
   assertExitCode 0 outputTrigger --name YoYoBaby <"$temp" || return $?
-  __catchEnvironment "$usage" rm -rf "$temp" || return $?
+  __catchEnvironment "$handler" rm -rf "$temp" || return $?
 }

@@ -46,7 +46,7 @@ __catchEnvironment() {
   shift && "$@" || __throwEnvironment "$handler" "$@" || return $?
 }
 
-# _IDENTICAL_ _errors 34
+# _IDENTICAL_ _errors 36
 
 # Return `argument` error code. Outputs `message ...` to `stderr`.
 # Argument: message ... - String. Optional. Message to output.
@@ -68,6 +68,7 @@ _environment() {
 # Argument: exitCode - Integer. Required. Return code.
 # Argument: handler - Function. Required. Error handler.
 # Argument: message ... - String. Optional. Error message
+# Requires: _argument
 __throw() {
   local exitCode="${1-}" && shift || _argument "Missing exit code" || return $?
   lcoal handler="${1-}" && shift || _argument "Missing error handler" || return $?
@@ -77,6 +78,7 @@ __throw() {
 # Run binary and catch errors with handler
 # Argument: handler - Required. Function. Error handler.
 # Argument: binary ... - Required. Executable. Any arguments are passed to `binary`.
+# Requires: _argument
 __catch() {
   local handler="${1-}" && shift || _argument "Missing handler" || return $?
   "$@" || "$handler" "$?" "$@" || return $?

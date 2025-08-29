@@ -57,24 +57,22 @@ _jsonField() {
 # Exit Code: 2 - Argument error
 # Exit Code: 105 - Identical files (only when --status is passed)
 jsonSetValue() {
-  local usage="_${FUNCNAME[0]}"
+  local handler="_${FUNCNAME[0]}"
   local value="" statusFlag=false quietFlag=false file="" key="version"
   local generator="hookVersionCurrent" filter="versionNoVee"
 
-  # _IDENTICAL_ argument-case-header 5
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
+    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
-    # _IDENTICAL_ --help 4
-    --help)
-      "$usage" 0
-      return $?
-      ;;
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
     --generator)
       shift
-      generator="$(usageArgumentFunction "$usage" "$argument" "${1-}")" || return $?
+      generator="$(usageArgumentFunction "$handler" "$argument" "${1-}")" || return $?
       ;;
     --status)
       statusFlag=true
@@ -84,39 +82,39 @@ jsonSetValue() {
       ;;
     --value)
       shift
-      value="$(usageArgumentString "$usage" "$argument" "${1-}")" || return $?
+      value="$(usageArgumentString "$handler" "$argument" "${1-}")" || return $?
       ;;
     --key)
       shift
-      key="$(usageArgumentString "$usage" "$argument" "${1-}")" || return $?
+      key="$(usageArgumentString "$handler" "$argument" "${1-}")" || return $?
       ;;
     --filter)
       shift
-      filter="$(usageArgumentFunction "$usage" "$argument" "${1-}")" || return $?
+      filter="$(usageArgumentFunction "$handler" "$argument" "${1-}")" || return $?
       ;;
     *)
-      file="$(usageArgumentFile "$usage" "$argument" "${1-}")" || return $?
+      file="$(usageArgumentFile "$handler" "$argument" "${1-}")" || return $?
       if [ -z "$value" ]; then
         if [ -z "$generator" ]; then
-          __throwArgument "$usage" "--generator or --value is required" || return $?
+          __throwArgument "$handler" "--generator or --value is required" || return $?
         fi
-        value=$(__catchEnvironment "$usage" "$generator") || return $?
+        value=$(__catchEnvironment "$handler" "$generator") || return $?
         if [ -z "$value" ]; then
-          __throwEnvironment "$usage" "Value returned by --generator $generator hook is blank" || return $?
+          __throwEnvironment "$handler" "Value returned by --generator $generator hook is blank" || return $?
         fi
       fi
       if [ -n "$filter" ]; then
-        value=$(__catchEnvironment "$usage" "$filter" "$value") || return $?
+        value=$(__catchEnvironment "$handler" "$filter" "$value") || return $?
         if [ -z "$value" ]; then
-          __throwEnvironment "$usage" "Value returned by --filter $filter hook is blank" || return $?
+          __throwEnvironment "$handler" "Value returned by --filter $filter hook is blank" || return $?
         fi
       fi
-      __jsonSetValue "$usage" "$file" "$key" "$value" "$quietFlag" "$statusFlag" || return $?
+      __jsonSetValue "$handler" "$file" "$key" "$value" "$quietFlag" "$statusFlag" || return $?
       ;;
     esac
     shift
   done
-  [ -n "$file" ] || __throwArgument "$usage" "file is required" || return $?
+  [ -n "$file" ] || __throwArgument "$handler" "file is required" || return $?
 }
 _jsonSetValue() {
   # __IDENTICAL__ usageDocument 1
@@ -124,7 +122,7 @@ _jsonSetValue() {
 }
 
 __jsonSetValue() {
-  local usage="$1" json="$2" key="$3" value="$4" quietFlag="$5" statusFlag="$6" key
+  local handler="$1" json="$2" key="$3" value="$4" quietFlag="$5" statusFlag="$6" key
 
   local oldValue decoratedJSON newJSON decoratedValue decoratedOldValue
 
@@ -132,19 +130,19 @@ __jsonSetValue() {
   newJSON="$json.${FUNCNAME[0]}.$$"
   key="${key#.}"
 
-  oldValue="$(__catchEnvironment "$usage" jq ".$key" <"$json")" || return $?
+  oldValue="$(__catchEnvironment "$handler" jq ".$key" <"$json")" || return $?
 
-  __catchEnvironment "$usage" jq --arg value "$value" ". + { $key: \$value }" <"$json" >"$newJSON" || returnClean $? "$newJSON" || return $?
+  __catchEnvironment "$handler" jq --arg value "$value" ". + { $key: \$value }" <"$json" >"$newJSON" || returnClean $? "$newJSON" || return $?
 
   decoratedValue=$(decorate value "$value")
   decoratedOldValue=$(decorate value "$oldValue")
 
   if muzzle diff -q "$json" "$newJSON"; then
     $quietFlag || statusMessage --last decorate info "$decoratedJSON $key is $decoratedValue (up to date)"
-    __catchEnvironment "$usage" rm -rf "$newJSON" || return $?
+    __catchEnvironment "$handler" rm -rf "$newJSON" || return $?
     ! $statusFlag || return "$(returnCode identical)"
   else
-    __catchEnvironment "$usage" mv -f "$newJSON" "$json" || returnClean $? "$newJSON" || return $?
+    __catchEnvironment "$handler" mv -f "$newJSON" "$json" || returnClean $? "$newJSON" || return $?
     $quietFlag || statusMessage --last decorate info "$decoratedJSON $key updated to $decoratedValue (old value $decoratedOldValue)"
   fi
 }

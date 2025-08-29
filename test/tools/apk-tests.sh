@@ -38,10 +38,10 @@ testIsApkInstalled() {
 testAlpineContainer() {
   if whichExists docker; then
 
-    local usage="_return" home
+    local handler="_return" home
 
-    home=$(__catch "$usage" buildHome) || return $?
-    __catchEnvironment "$usage" muzzle pushd "$home" || return $?
+    home=$(__catch "$handler" buildHome) || return $?
+    __catchEnvironment "$handler" muzzle pushd "$home" || return $?
 
     # In BitBucket pipelines, only location you can run Alpine volume shares are within the initial build directory
 
@@ -52,7 +52,7 @@ testAlpineContainer() {
 
     assertEquals "$value" "FOO=\"foo\"" || return $?
 
-    __catchEnvironment "$usage" muzzle popd || return $?
+    __catchEnvironment "$handler" muzzle popd || return $?
 
   fi
   return 0

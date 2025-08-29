@@ -44,7 +44,7 @@ __tools() {
 # IDENTICAL __gitHookPath 12
 
 # Summary: Locates application home depending on whether this is running as a git hook or not
-# Usage: {fn}
+# handler: {fn}
 # If current path contains `.git/` then print `../../..` otherwise print `../..`
 # Lets us know if default hooks are in starting directory or are running as a git hook
 # Requires: printf
@@ -75,7 +75,7 @@ _return() {
 # Credits: F. Hauri - Give Up GitHub (isnum_Case)
 # Original: is_uint
 # Argument: value - EmptyString. Value to test if it is an unsigned integer.
-# Usage: {fn} argument ...
+# handler: {fn} argument ...
 # Exit Code: 0 - if it is an unsigned integer
 # Exit Code: 1 - if it is not an unsigned integer
 # Requires: _return
@@ -95,19 +95,19 @@ isUnsignedInteger() {
 # 2. Checks all shell files for errors
 # fn: {base}
 __hookGitPreCommit() {
-  local usage="_${FUNCNAME[0]}" hookName="pre-commit" start
+  local handler="_${FUNCNAME[0]}" hookName="pre-commit" start
 
   start=$(timingStart) || return $?
 
   export BUILD_PRECOMMIT_EXTENSIONS APPLICATION_NAME
-  __catch "$usage" buildEnvironmentLoad APPLICATION_NAME BUILD_PRECOMMIT_EXTENSIONS || return $?
+  __catch "$handler" buildEnvironmentLoad APPLICATION_NAME BUILD_PRECOMMIT_EXTENSIONS || return $?
 
   statusMessage --first printf -- "%s %s" "$(decorate info "[$hookName]")" "$(decorate info "Installing ...")"
-  __catchEnvironment "$usage" gitInstallHook --copy "$hookName" || return $?
+  __catchEnvironment "$handler" gitInstallHook --copy "$hookName" || return $?
   statusMessage --last printf -- "%s %s" "$(decorate info "[$hookName]")" "$(decorate info "Running ...")"
 
-  __catchEnvironment "$usage" gitPreCommitSetup || return $?
-  __catchEnvironment "$usage" hookRunOptional "$hookName" || return $?
+  __catchEnvironment "$handler" gitPreCommitSetup || return $?
+  __catchEnvironment "$handler" hookRunOptional "$hookName" || return $?
 
   statusMessage --last decorate info "$(lineFill '*' "$APPLICATION_NAME $(decorate magenta "$hookName") $(decorate decoration --)")"
 
@@ -116,7 +116,7 @@ __hookGitPreCommit() {
   for extension in "${extensions[@]+${extensions[@]}}"; do
     statusMessage decorate info "Processing $(decorate code "$extension") ..."
     if gitPreCommitHasExtension "$extension"; then
-      __catchEnvironment "$usage" hookRunOptional "pre-commit-$extension" || return $?
+      __catchEnvironment "$handler" hookRunOptional "pre-commit-$extension" || return $?
     fi
   done
 

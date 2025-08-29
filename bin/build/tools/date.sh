@@ -20,11 +20,11 @@
 # Exit Code: 1 - if parsing fails
 # Exit Code: 0 - if parsing succeeds
 dateToFormat() {
-  local usage="_${FUNCNAME[0]}"
-  [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
+  local handler="_${FUNCNAME[0]}"
+  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
   local format="${2-"%F %T"}"
   if [ $# -lt 1 ] || [ $# -gt 2 ]; then
-    __throwArgument "$usage" "${FUNCNAME[0]} requires 1 or 2 arguments: date [ format ] –- Passed $#:" "$@" || return $?
+    __throwArgument "$handler" "${FUNCNAME[0]} requires 1 or 2 arguments: date [ format ] –- Passed $#:" "$@" || return $?
   fi
   __dateToFormat "$1" "$format"
   #  if date --version 2>/dev/null 1>&2; then
@@ -70,10 +70,10 @@ _dateToTimestamp() {
 # Exit codes: If parsing fails, non-zero exit code.
 # Example:     dateField=$(dateFromTimestamp $init %Y)
 dateFromTimestamp() {
-  local usage="_${FUNCNAME[0]}"
-  [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
+  local handler="_${FUNCNAME[0]}"
+  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
   if [ $# -lt 1 ] || [ $# -gt 2 ]; then
-    __throwArgument "$usage" "${FUNCNAME[0]} requires 1 or 2 arguments: integerTimestamp [ format ] –- Passed $#:" "$@" || return $?
+    __throwArgument "$handler" "${FUNCNAME[0]} requires 1 or 2 arguments: integerTimestamp [ format ] –- Passed $#:" "$@" || return $?
   fi
   local format="${2-"%F %T"}"
   __dateFromTimestamp "$1" "$format"
@@ -161,26 +161,24 @@ _dateValid() {
 #
 # Example:     newYearsEve=$(dateAdd --days -1 "2025-01-01")
 dateAdd() {
-  local usage="_${FUNCNAME[0]}" days=1
+  local handler="_${FUNCNAME[0]}" days=1
 
-  # _IDENTICAL_ argument-case-header 5
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
+    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
-    # _IDENTICAL_ --help 4
-    --help)
-      "$usage" 0
-      return $?
-      ;;
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
     --days)
       shift
-      days=$(usageArgumentInteger "$usage" "$argument" "${1-}") || return $?
+      days=$(usageArgumentInteger "$handler" "$argument" "${1-}") || return $?
       ;;
     *)
-      timestamp=$(__catchArgument "$usage" dateToTimestamp "$argument") || return $?
-      __catchArgument "$usage" dateFromTimestamp "$((timestamp + (86400 * days)))" "%F" || return $?
+      timestamp=$(__catchArgument "$handler" dateToTimestamp "$argument") || return $?
+      __catchArgument "$handler" dateFromTimestamp "$((timestamp + (86400 * days)))" "%F" || return $?
       ;;
     esac
     shift

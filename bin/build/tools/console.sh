@@ -2,7 +2,7 @@
 #
 # Copyright &copy; 2025 Market Acumen, Inc.
 #
-# Depends: usage.sh
+# Depends: handler.sh
 # bin: printf stty
 # Docs: o ./documentation/source/tools/console.md
 # Test: o ./test/tools/console-tests.sh
@@ -16,7 +16,7 @@
 # Argument: --foreground - Optional. Flag. Get the console text color.
 # Argument: --background - Optional. Flag. Get the console background color.
 consoleGetColor() {
-  local usage="_${FUNCNAME[0]}"
+  local handler="_${FUNCNAME[0]}"
   local argument
   local xtermCode sttyOld color colors success result noTTY
   local timingTweak
@@ -26,15 +26,15 @@ consoleGetColor() {
   timingTweak=0.1
   noTTY=false
   xtermCode="11"
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
+  local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
-    argument="$1"
-    [ -n "$argument" ] || __throwArgument "$usage" "blank argument" || return $?
+    local argument="$1" __index=$((__count - $# + 1))
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
+    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
-    # _IDENTICAL_ --help 4
-    --help)
-      "$usage" 0
-      return $?
-      ;;
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
     --background)
       xtermCode="11"
       ;;
@@ -42,10 +42,11 @@ consoleGetColor() {
       xtermCode="10"
       ;;
     *)
-      __throwArgument "$usage" "unknown argument: $(decorate value "$argument")" || return $?
+      # _IDENTICAL_ argumentUnknownHandler 1
+      __throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
       ;;
     esac
-    shift || __throwArgument "$usage" "shift argument $(decorate label "$argument")" || return $?
+    shift
   done
   colors=()
   if ! sttyOld=$(stty -g 2>/dev/null); then
@@ -55,7 +56,7 @@ consoleGetColor() {
     read -t 2 -r result
     exitCode=$?
   else
-    __catchEnvironment "$usage" stty raw -echo min 0 time 0 || return $?
+    __catchEnvironment "$handler" stty raw -echo min 0 time 0 || return $?
     printf -- "\e]%d;?\e\\" "${xtermCode}" >/dev/tty || :
     sleep "$timingTweak" || :
     read -t 2 -r result </dev/tty
@@ -69,7 +70,7 @@ consoleGetColor() {
     IFS='/' read -r -a colors < <(printf -- "%s\\n" "$result" | sed 's/[^a-f0-9/]//g') || :
   fi
   if ! "$noTTY" && ! stty "$sttyOld"; then
-    __throwEnvironment "$usage" "stty reset to \"$sttyOld\" failed" || return $?
+    __throwEnvironment "$handler" "stty reset to \"$sttyOld\" failed" || return $?
   fi
   if $success; then
     for color in "${colors[@]+${colors[@]}}"; do
@@ -88,7 +89,7 @@ _consoleGetColor() {
 }
 
 #
-# Usage: {fn} [ --background | --foreground ]
+# handler: {fn} [ --background | --foreground ]
 # Argument: --foreground - Optional. Flag. Get the console text color.
 # Argument: --background - Optional. Flag. Get the console background color.
 # Fetch the brightness of the console using `consoleGetColor`
@@ -108,7 +109,7 @@ _consoleBrightness() {
 }
 
 #
-# Usage: {fn}
+# handler: {fn}
 # Argument: backgroundColor - Optional. String. Background color.
 # Print the suggested color mode for the current environment
 #
@@ -136,9 +137,9 @@ _consoleConfigureColorMode() {
 
 # Set the title of the window for the console
 consoleSetTitle() {
-  local usage="_${FUNCNAME[0]}"
-  [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
-  [ -t 0 ] || __throwEnvironment "$usage" "stdin is not a terminal" || return $?
+  local handler="_${FUNCNAME[0]}"
+  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
+  [ -t 0 ] || __throwEnvironment "$handler" "stdin is not a terminal" || return $?
   printf -- "\e%s\007" "]0;$*"
 }
 _consoleSetTitle() {
@@ -149,9 +150,9 @@ _consoleSetTitle() {
 # Set the title of the window for the console to "user@hostname: pwd"
 # Argument: None
 consoleDefaultTitle() {
-  local usage="_${FUNCNAME[0]}"
-  [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
-  [ -t 0 ] || __throwEnvironment "$usage" "stdin is not a terminal" || return $?
+  local handler="_${FUNCNAME[0]}"
+  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
+  [ -t 0 ] || __throwEnvironment "$handler" "stdin is not a terminal" || return $?
   consoleSetTitle "${USER}@${HOSTNAME%%.*}: ${PWD/#$HOME/~}"
 }
 _consoleDefaultTitle() {
@@ -162,7 +163,7 @@ _consoleDefaultTitle() {
 # Output a hyperlink to the console
 # OSC 8 standard for terminals
 # No way to test ability, I think. Maybe `tput`.
-# Usage: {fn} link [ text ]
+# handler: {fn} link [ text ]
 consoleLink() {
   [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
   local link="$1" text="${2-$1}" OSC="\e]" ST="\e\\"
@@ -177,8 +178,8 @@ _consoleLink() {
 # Are console links (likely) supported?
 # Unfortunately there's no way to test for this feature currently
 consoleLinksSupported() {
-  local usage="_${FUNCNAME[0]}"
-  [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
+  local handler="_${FUNCNAME[0]}"
+  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
   export HOSTNAME
   [ -n "${HOSTNAME-}" ] || return 1
   hasConsoleAnimation || return 1
@@ -192,10 +193,10 @@ _consoleLinksSupported() {
 }
 
 # Output a local file link to the console
-# Usage: file [ text ]
+# handler: file [ text ]
 consoleFileLink() {
-  local usage="_${FUNCNAME[0]}"
-  [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
+  local handler="_${FUNCNAME[0]}"
+  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
   export HOSTNAME HOME
   if ! consoleLinksSupported; then
     printf -- "%s\n" "$(decoratePath "$1")"
@@ -213,7 +214,7 @@ _consoleFileLink() {
 }
 
 # decorate extension for `file`
-# Usage: decorate file fileName [ text ]
+# handler: decorate file fileName [ text ]
 # Argument: fileName - Required. File path to output.
 # Argument: text - Optional. Text to output linked to file.
 __decorateExtensionFile() {
@@ -221,7 +222,7 @@ __decorateExtensionFile() {
 }
 
 # decorate extension for `link`
-# Usage: decorate link url [ text ]
+# handler: decorate link url [ text ]
 # Argument: url - Required. Link to output to the console.
 # Argument: text - Optional. Text to output linked to `url`.
 __decorateExtensionLink() {

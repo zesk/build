@@ -61,87 +61,85 @@ _aptSourcesDirectory() {
 # Exit Code: 0 - Apt key is installed AOK
 #
 aptKeyAdd() {
-  local usage="_${FUNCNAME[0]}"
+  local handler="_${FUNCNAME[0]}"
 
   local names=() title="" remoteUrls=() skipUpdate=false listName="" releaseName="" repoUrl=""
   local name url host index IFS file listTarget
   local start ring sourcesPath keyFile skipUpdate signFiles signFileText sourceType sourceTypes=(deb)
 
-  # _IDENTICAL_ argument-case-header 5
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
+    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
-    # _IDENTICAL_ --help 4
-    --help)
-      "$usage" 0
-      return $?
-      ;;
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
     --name)
       shift
-      names+=("$(usageArgumentString "$usage" "$argument" "${1-}")") || return $?
+      names+=("$(usageArgumentString "$handler" "$argument" "${1-}")") || return $?
       ;;
     --skip)
       skipUpdate=true
       ;;
     --title)
       shift
-      title="$(usageArgumentString "$usage" "$argument" "${1-}")" || return $?
+      title="$(usageArgumentString "$handler" "$argument" "${1-}")" || return $?
       ;;
     --source)
       shift
-      sourceTypes+=("$(usageArgumentString "$usage" "$argument" "${1-}")") || return $?
+      sourceTypes+=("$(usageArgumentString "$handler" "$argument" "${1-}")") || return $?
       ;;
     --repository-url)
       shift
-      repoUrl="$(usageArgumentURL "$usage" "$argument" "${1-}")" || return $?
+      repoUrl="$(usageArgumentURL "$handler" "$argument" "${1-}")" || return $?
       ;;
     --list)
       shift
-      listName="$(usageArgumentString "$usage" "$argument" "${1-}")" || return $?
+      listName="$(usageArgumentString "$handler" "$argument" "${1-}")" || return $?
       ;;
     --release)
       shift
-      releaseName="$(usageArgumentString "$usage" "$argument" "${1-}")" || return $?
+      releaseName="$(usageArgumentString "$handler" "$argument" "${1-}")" || return $?
       ;;
     --url)
       shift
-      remoteUrls+=("$(usageArgumentURL "$usage" "$argument" "${1-}")") || return $?
+      remoteUrls+=("$(usageArgumentURL "$handler" "$argument" "${1-}")") || return $?
       ;;
     *)
-      # _IDENTICAL_ argumentUnknown 1
-      __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
+      # _IDENTICAL_ argumentUnknownHandler 1
+      __throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
       ;;
     esac
     shift
   done
 
   start=$(timingStart) || return $?
-  sourcesPath="$(_usageAptSourcesPath "$usage")" || return $?
-  ring=$(_usageAptKeyRings "$usage") || return $?
+  sourcesPath="$(_usageAptSourcesPath "$handler")" || return $?
+  ring=$(_usageAptKeyRings "$handler") || return $?
 
   # apt-key is deprecated for good reasons
   # https://stackoverflow.com/questions/68992799/warning-apt-key-is-deprecated-manage-keyring-files-in-trusted-gpg-d-instead
 
-  [ "${#names[@]}" -gt 0 ] || __throwArgument "$usage" "Need at least one --name" || return $?
-  [ "${#remoteUrls[@]}" -gt 0 ] || __throwArgument "$usage" "Need at least one --url" || return $?
-  [ "${#names[@]}" -eq "${#remoteUrls[@]}" ] || __throwArgument "$usage" "Mismatched --name and --url pairs: ${#names[@]} != ${#remoteUrls[@]}" || return $?
+  [ "${#names[@]}" -gt 0 ] || __throwArgument "$handler" "Need at least one --name" || return $?
+  [ "${#remoteUrls[@]}" -gt 0 ] || __throwArgument "$handler" "Need at least one --url" || return $?
+  [ "${#names[@]}" -eq "${#remoteUrls[@]}" ] || __throwArgument "$handler" "Mismatched --name and --url pairs: ${#names[@]} != ${#remoteUrls[@]}" || return $?
 
-  [ -n "$releaseName" ] || releaseName="$(__catchEnvironment "$usage" lsb_release -cs)" || return $?
+  [ -n "$releaseName" ] || releaseName="$(__catchEnvironment "$handler" lsb_release -cs)" || return $?
 
-  _usageAptPermissions "$usage" "$sourcesPath" || return $?
+  _usageAptPermissions "$handler" "$sourcesPath" || return $?
 
   index=0
   for name in "${names[@]}"; do
     url="${remoteUrls[index]}"
-    host=$(urlParseItem host "$url") || __throwArgument "$usage" "Unable to get host from $url" || return $?
+    host=$(urlParseItem host "$url") || __throwArgument "$handler" "Unable to get host from $url" || return $?
     title="${title:-"$name"}"
 
     statusMessage decorate info "Fetching $title key ... "
     keyFile="$ring/$name.gpg"
-    __catchEnvironment "$usage" curl -fsSL "$url" | gpg --no-tty --batch --dearmor | tee "$keyFile" >/dev/null || return $?
-    __catchEnvironment "$usage" chmod a+r "$keyFile" || return $?
+    __catchEnvironment "$handler" curl -fsSL "$url" | gpg --no-tty --batch --dearmor | tee "$keyFile" >/dev/null || return $?
+    __catchEnvironment "$handler" chmod a+r "$keyFile" || return $?
     signFiles+=("$keyFile")
     index=$((index + 1))
   done
@@ -152,16 +150,16 @@ aptKeyAdd() {
   statusMessage decorate info "Configuring repository ... "
 
   [ -n "$listName" ] || listName="${names[0]}"
-  sourcesPath=$(_usageAptSourcesPath "$usage") || return $?
+  sourcesPath=$(_usageAptSourcesPath "$handler") || return $?
   listTarget="$sourcesPath/$listName.list"
   printf -- "%s\n" "# Generated by ${FUNCNAME[0]} on $(date "+%F %T")" >"$listTarget"
   for sourceType in "${sourceTypes[@]}"; do
-    __catchEnvironment "$usage" printf -- "%s [signed-by=%s] %s %s %s\n" "$sourceType" "$signFileText" "$repoUrl" "$releaseName" "main" >>"$listTarget" || return $?
+    __catchEnvironment "$handler" printf -- "%s [signed-by=%s] %s %s %s\n" "$sourceType" "$signFileText" "$repoUrl" "$releaseName" "main" >>"$listTarget" || return $?
   done
-  __catchEnvironment "$usage" chmod a+r "$listTarget" || return $?
+  __catchEnvironment "$handler" chmod a+r "$listTarget" || return $?
   if ! $skipUpdate; then
     statusMessage --first decorate success "updating ... "
-    __catch "$usage" packageUpdate --force || return $?
+    __catch "$handler" packageUpdate --force || return $?
   else
     statusMessage --first decorate success "skipped ... "
   fi
@@ -182,52 +180,44 @@ _aptKeyAdd() {
 # Exit Code: 0 - Apt key is installed AOK
 #
 aptKeyRemove() {
-  local usage="_${FUNCNAME[0]}"
+  local handler="_${FUNCNAME[0]}"
 
   local names=() skipUpdate=false verboseFlag=false
 
-  # _IDENTICAL_ argument-case-header 5
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
+    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
-    # _IDENTICAL_ --help 4
-    --help)
-      "$usage" 0
-      return $?
-      ;;
-    --verbose)
-      verboseFlag=true
-      ;;
-    --skip)
-      skipUpdate=true
-      ;;
-    *)
-      names+=("$argument")
-      ;;
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
+    --verbose) verboseFlag=true ;;
+    --skip) skipUpdate=true ;;
+    *) names+=("$argument") ;;
     esac
     shift
   done
 
-  [ "${#names[@]}" -gt 0 ] || __throwArgument "$usage" "No keyNames supplied" || return $?
+  [ "${#names[@]}" -gt 0 ] || __throwArgument "$handler" "No keyNames supplied" || return $?
 
   local start ring sourcesPath
 
   start=$(timingStart) || return $?
 
-  ring=$(_usageAptKeyRings "$usage") || return $?
-  sourcesPath="$(_usageAptSourcesPath "$usage")" || return $?
+  ring=$(_usageAptKeyRings "$handler") || return $?
+  sourcesPath="$(_usageAptSourcesPath "$handler")" || return $?
 
-  [ -d "$ring" ] || __throwEnvironment "$usage" "Unable to remove key as $ring is not a directory" || return $?
+  [ -d "$ring" ] || __throwEnvironment "$handler" "Unable to remove key as $ring is not a directory" || return $?
 
-  _usageAptPermissions "$usage" "$sourcesPath" || return $?
+  _usageAptPermissions "$handler" "$sourcesPath" || return $?
 
   for name in "${names[@]}"; do
     for file in "$ring/$name.gpg" "$sourcesPath/$name.list"; do
       if [ -f "$file" ]; then
         ! $verboseFlag || statusMessage decorate warning "Removing $(decorate code "$file") ... "
-        __catchEnvironment "$usage" rm -f "$file" || return $?
+        __catchEnvironment "$handler" rm -f "$file" || return $?
       else
         ! $verboseFlag || statusMessage decorate success "Already deleted $(decorate code "$file") ... "
       fi
@@ -235,7 +225,7 @@ aptKeyRemove() {
   done
   if ! $skipUpdate; then
     ! $verboseFlag || statusMessage decorate success "Updating apt sources ... "
-    __catch "$usage" packageUpdate --force || return $?
+    __catch "$handler" packageUpdate --force || return $?
   else
     ! $verboseFlag || statusMessage decorate success "Skipped update ... "
   fi
@@ -249,29 +239,29 @@ _aptKeyRemove() {
 # sources constant with checking
 # Usage: {fn} usageFunction
 _usageAptSourcesPath() {
-  local usage="$1" sourcesPath
-  sourcesPath=$(__catchEnvironment "$usage" aptSourcesDirectory) || return $?
-  [ -d "$sourcesPath" ] || __throwEnvironment "$usage" "No $sourcesPath exists - not an apt system" || return $?
+  local handler="$1" sourcesPath
+  sourcesPath=$(__catchEnvironment "$handler" aptSourcesDirectory) || return $?
+  [ -d "$sourcesPath" ] || __throwEnvironment "$handler" "No $sourcesPath exists - not an apt system" || return $?
   printf "%s\n" "$sourcesPath"
 }
 
 # key rings directory constant with creation
 _usageAptKeyRings() {
-  local usage="$1" ring
+  local handler="$1" ring
   # In case this changes later and may fail
-  ring=$(__catch "$usage" aptKeyRingDirectory) || return $?
+  ring=$(__catch "$handler" aptKeyRingDirectory) || return $?
   if ! [ -d "$ring" ]; then
-    __catchEnvironment "$usage" mkdir -p "$ring" || return $?
-    __catchEnvironment "$usage" chmod 0755 "$ring" || return $?
+    __catchEnvironment "$handler" mkdir -p "$ring" || return $?
+    __catchEnvironment "$handler" chmod 0755 "$ring" || return $?
   fi
   printf "%s\n" "$ring"
 }
 
 # permissions check for sourcesPath modifications
 _usageAptPermissions() {
-  local usage="$1" sourcesPath="$2"
-  touch "$sourcesPath/$$.test" 2>/dev/null || __throwEnvironment "$usage" "No permission to modify $sourcesPath, failing" || return $?
-  rm -f "$sourcesPath/$$.test" 2>/dev/null || __throwEnvironment "$usage" "No permission to delete in $sourcesPath, failing" || return $?
+  local handler="$1" sourcesPath="$2"
+  touch "$sourcesPath/$$.test" 2>/dev/null || __throwEnvironment "$handler" "No permission to modify $sourcesPath, failing" || return $?
+  rm -f "$sourcesPath/$$.test" 2>/dev/null || __throwEnvironment "$handler" "No permission to delete in $sourcesPath, failing" || return $?
 }
 
 ################################################################################################################################
@@ -334,8 +324,8 @@ __aptUpdate() {
 # List installed packages
 # package.sh: true
 __aptInstalledList() {
-  local usage="_${FUNCNAME[0]}"
-  [ $# -eq 0 ] || __throwArgument "$usage" "Unknown argument $*" || return $?
+  local handler="_${FUNCNAME[0]}"
+  [ $# -eq 0 ] || __throwArgument "$handler" "Unknown argument $*" || return $?
   dpkg --get-selections | grep -v deinstall | awk '{ print $1 }'
 }
 ___aptInstalledList() {
@@ -347,7 +337,7 @@ ___aptInstalledList() {
 # List available packages
 # package.sh: true
 __aptAvailableList() {
-  local usage="_${FUNCNAME[0]}"
+  local handler="_${FUNCNAME[0]}"
   apt-cache pkgnames
 }
 ___aptAvailableList() {

@@ -13,10 +13,10 @@
 # Escape: ESC `[6n`
 # Example:     IFS=$'\n' read -r -d '' saveX saveY < <(cursorGet)
 cursorGet() {
-  local usage="_${FUNCNAME[0]}"
-  [ $# -eq 0 ] || __help --only "$usage" "$@" || return "$(convertValue $? 1 0)"
+  local handler="_${FUNCNAME[0]}"
+  [ $# -eq 0 ] || __help --only "$handler" "$@" || return "$(convertValue $? 1 0)"
 
-  isTTYAvailable || __throwEnvironment "$usage" "no tty" || return $?
+  isTTYAvailable || __throwEnvironment "$handler" "no tty" || return $?
 
   local x y
 
@@ -38,15 +38,15 @@ _cursorGet() {
 # Argument: x - Required. UnsignedInteger. Column to place the cursor.
 # Argument: y - Required. UnsignedInteger. Row to place the cursor.
 cursorSet() {
-  local usage="_${FUNCNAME[0]}"
-  [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
+  local handler="_${FUNCNAME[0]}"
+  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
 
-  isTTYAvailable || __throwEnvironment "$usage" "no tty" || return $?
+  isTTYAvailable || __throwEnvironment "$handler" "no tty" || return $?
 
   local x y
 
-  x=$(usageArgumentUnsignedInteger "$usage" "x" "${1-}") && shift || return $?
-  y=$(usageArgumentUnsignedInteger "$usage" "y" "${1-}") && shift || return $?
+  x=$(usageArgumentUnsignedInteger "$handler" "x" "${1-}") && shift || return $?
+  y=$(usageArgumentUnsignedInteger "$handler" "y" "${1-}") && shift || return $?
 
   # Set cursor position
   # Escape: ESC `[` <row> `;` <col> `H`

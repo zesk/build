@@ -82,37 +82,35 @@ __addNoteTo() {
 # Requires: __catchEnvironment __throwArgument timingStart isDarwin whichExists statusMessage
 # Requires: decorate __decorateExtensionEach
 __updateAvailable() {
-  local usage="_${FUNCNAME[0]}"
+  local handler="_${FUNCNAME[0]}"
   local packageLists
 
   local start
   start=$(timingStart) || return $?
 
   local forceFlag=false
-  # _IDENTICAL_ argument-case-header 5
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
+    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
-    # _IDENTICAL_ --help 4
-    --help)
-      "$usage" 0
-      return $?
-      ;;
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
     --force)
       forceFlag=true
       ;;
     *)
-      # _IDENTICAL_ argumentUnknown 1
-      __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
+      # _IDENTICAL_ argumentUnknownHandler 1
+      __throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
       ;;
     esac
     shift
   done
 
   local home
-  home="$(__catch "$usage" buildHome)" || return $?
+  home="$(__catch "$handler" buildHome)" || return $?
 
   local managers=(apk debian ubuntu) allKnown=false
   if isDarwin; then
@@ -138,17 +136,17 @@ __updateAvailable() {
     allManagerLists+=("$manager")
     statusMessage decorate info "Generating $manager list ..."
     generator="__${manager}Generator"
-    isFunction "$generator" || __throwEnvironment "$usage" "$generator is not a function" || return $?
+    isFunction "$generator" || __throwEnvironment "$handler" "$generator is not a function" || return $?
     if [ -f "$manager" ] && ! $forceFlag; then
       local ageInSeconds
-      ageInSeconds=$(__catchEnvironment "$usage" fileModificationSeconds "$manager") || return $?
+      ageInSeconds=$(__catchEnvironment "$handler" fileModificationSeconds "$manager") || return $?
       if [ "$ageInSeconds" -lt 3600 ]; then
         statusMessage decorate warning "Skipping generated $manager ($((ageInSeconds / 60)) minutes old ..."
         continue
       fi
     fi
     # Some generate CRLF so delete CR
-    "$generator" "$usage" | tr -d '\015' | sort | tee "$manager" >/dev/null || return $?
+    "$generator" "$handler" | tr -d '\015' | sort | tee "$manager" >/dev/null || return $?
   done
   if ! $allKnown; then
     forceFlag=true

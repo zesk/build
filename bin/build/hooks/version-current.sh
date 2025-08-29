@@ -11,7 +11,7 @@ set -eou pipefail
 source "${BASH_SOURCE[0]%/*}/../tools.sh"
 
 # fn: {base}
-# Usage: {fn}
+# handler: {fn}
 #
 # Hook to return the current version
 #
@@ -19,19 +19,19 @@ source "${BASH_SOURCE[0]%/*}/../tools.sh"
 # Requires: __catch __catchEnvironment muzzle pushd cd printf versionSort popd usageDocument
 __hookVersionCurrent() {
   export BUILD_RELEASE_NOTES
-  local usage="_${FUNCNAME[0]}"
+  local handler="_${FUNCNAME[0]}"
   local home
 
-  home=$(__catch "$usage" buildHome) || return $?
+  home=$(__catch "$handler" buildHome) || return $?
 
-  __catchEnvironment "$usage" muzzle pushd "$home" || return $?
-  __catch "$usage" buildEnvironmentLoad BUILD_RELEASE_NOTES || return $?
-  __catchEnvironment "$usage" cd "${BUILD_RELEASE_NOTES}" || return $?
+  __catchEnvironment "$handler" muzzle pushd "$home" || return $?
+  __catch "$handler" buildEnvironmentLoad BUILD_RELEASE_NOTES || return $?
+  __catchEnvironment "$handler" cd "${BUILD_RELEASE_NOTES}" || return $?
   for f in *.md; do
     f=${f%.md}
     printf -- "%s\n" "$f"
   done | versionSort -r | head -1
-  __catchEnvironment "$usage" muzzle popd || return $?
+  __catchEnvironment "$handler" muzzle popd || return $?
 }
 ___hookVersionCurrent() {
   # __IDENTICAL__ usageDocument 1

@@ -20,28 +20,26 @@
 # Binary: npm.sh
 # Test: testYarnInstallation
 yarnInstall() {
-  local usage="_${FUNCNAME[0]}"
+  local handler="_${FUNCNAME[0]}"
 
   local version quietLog
 
-  # _IDENTICAL_ argument-case-header 5
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
+    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
-    # _IDENTICAL_ --help 4
-    --help)
-      "$usage" 0
-      return $?
-      ;;
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
     --version)
       shift
-      version=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
+      version=$(usageArgumentString "$handler" "$argument" "${1-}") || return $?
       ;;
     *)
-      # _IDENTICAL_ argumentUnknown 1
-      __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
+      # _IDENTICAL_ argumentUnknownHandler 1
+      __throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
       ;;
     esac
     shift
@@ -53,20 +51,20 @@ yarnInstall() {
   local home start
 
   start=$(timingStart) || return $?
-  home=$(__catch "$usage" buildHome) || return $?
-  __catch "$usage" buildEnvironmentLoad BUILD_YARN_VERSION || return $?
+  home=$(__catch "$handler" buildHome) || return $?
+  __catch "$handler" buildEnvironmentLoad BUILD_YARN_VERSION || return $?
 
   version="${1-${BUILD_YARN_VERSION:-stable}}"
-  quietLog=$(buildQuietLog "$usage") || __throwEnvironment "buildQuietLog $usage"
-  __catch "$usage" fileDirectoryRequire "$quietLog" || return $?
-  quietLog=$(__catch "$usage" buildQuietLog "$usage") || return $?
+  quietLog=$(buildQuietLog "$handler") || __throwEnvironment "buildQuietLog $handler"
+  __catch "$handler" fileDirectoryRequire "$quietLog" || return $?
+  quietLog=$(__catch "$handler" buildQuietLog "$handler") || return $?
   statusMessage --first decorate info "Installing node ... " || return $?
-  __catch "$usage" nodeInstall || return $?
-  __catchEnvironment "$usage" muzzle pushd "$home" || return $?
-  __catchEnvironment "$usage" yarn set version "$version" || returnUndo $? muzzle popd || return $?
+  __catch "$handler" nodeInstall || return $?
+  __catchEnvironment "$handler" muzzle pushd "$home" || return $?
+  __catchEnvironment "$handler" yarn set version "$version" || returnUndo $? muzzle popd || return $?
   statusMessage decorate info "Installing yarn ... " || return $?
-  __catchEnvironment "$usage" yarn install || returnUndo $? muzzle popd || return $?
-  __catchEnvironment "$usage" muzzle popd || return $?
+  __catchEnvironment "$handler" yarn install || returnUndo $? muzzle popd || return $?
+  __catchEnvironment "$handler" muzzle popd || return $?
   statusMessage --last timingReport "$start" "Installed yarn in" || return $?
 }
 _yarnInstall() {
@@ -75,15 +73,15 @@ _yarnInstall() {
 }
 
 __nodePackageManagerArguments_yarn() {
-  local usage="$1" action
+  local handler="$1" action
 
-  action=$(usageArgumentString "$usage" "action" "${2-}") || return $?
+  action=$(usageArgumentString "$handler" "action" "${2-}") || return $?
   shift 2
 
   local globalFlag=false
   while [ $# -gt 0 ]; do
     local argument
-    argument="$(usageArgumentString "$usage" "argument" "$1")" || return $?
+    argument="$(usageArgumentString "$handler" "argument" "$1")" || return $?
     case "$argument" in
     --global)
       globalFlag=true
@@ -94,7 +92,7 @@ __nodePackageManagerArguments_yarn() {
 
   case "$action" in
   run)
-    ! $globalFlag || __throwArgument "$usage" "--global makes no sense with run" || return $?
+    ! $globalFlag || __throwArgument "$handler" "--global makes no sense with run" || return $?
     printf "%s\n" "run"
     ;;
   update)
@@ -115,7 +113,7 @@ __nodePackageManagerArguments_yarn() {
     fi
     ;;
   *)
-    __catchArgument "$usage" "Unknown action: $action" || return $?
+    __catchArgument "$handler" "Unknown action: $action" || return $?
     ;;
   esac
 }

@@ -34,8 +34,8 @@
 # Exit Code: 1 - Always fails
 # Output: stdout
 buildFailed() {
-  local usage="_${FUNCNAME[0]}"
-  [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
+  local handler="_${FUNCNAME[0]}"
+  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
 
   local quietLog="${1-}" showLines=100 failBar
 
@@ -110,20 +110,20 @@ _versionSort() {
 # Argument: --help - Optional. Flag. Display this help.
 # Environment: IP_URL_FILTER - String. Optional. Filter for JSON to get IP - if blank returns remote contents directly.
 ipLookup() {
-  local usage="_${FUNCNAME[0]}"
+  local handler="_${FUNCNAME[0]}"
 
-  [ $# -eq 0 ] || __help --only "$usage" "$@" || return "$(convertValue $? 1 0)"
+  [ $# -eq 0 ] || __help --only "$handler" "$@" || return "$(convertValue $? 1 0)"
   local url jqFilter
   if ! packageWhich curl curl; then
-    __throwEnvironment "$usage" "Requires curl to operate" || return $?
+    __throwEnvironment "$handler" "Requires curl to operate" || return $?
   fi
-  url=$(__catch "$usage" buildEnvironmentGet IP_URL) || return $?
-  [ -n "$url" ] || __throwEnvironment "$usage" "$(decorate value "IP_URL") is required for $(decorate code "${usage#_}")" || return $?
-  jqFilter=$(__catch "$usage" buildEnvironmentGet IP_URL_FILTER) || return $?
-  urlValid "$url" || __throwEnvironment "$usage" "URL $(decorate error "$url") is not a valid URL" || return $?
+  url=$(__catch "$handler" buildEnvironmentGet IP_URL) || return $?
+  [ -n "$url" ] || __throwEnvironment "$handler" "$(decorate value "IP_URL") is required for $(decorate code "${handler#_}")" || return $?
+  jqFilter=$(__catch "$handler" buildEnvironmentGet IP_URL_FILTER) || return $?
+  urlValid "$url" || __throwEnvironment "$handler" "URL $(decorate error "$url") is not a valid URL" || return $?
   local pp=(cat)
   [ -z "$jqFilter" ] || pp=(jq "$jqFilter")
-  __catchEnvironment "$usage" curl -s "$url" | "${pp[@]}" || return $?
+  __catchEnvironment "$handler" curl -s "$url" | "${pp[@]}" || return $?
 }
 _ipLookup() {
   # __IDENTICAL__ usageDocument 1
@@ -155,54 +155,52 @@ _ipLookup() {
 # Example:     fi
 #
 isUpToDate() {
-  local usage="_${FUNCNAME[0]}"
+  local handler="_${FUNCNAME[0]}"
 
   local name="Key" keyDate="" upToDateDays=""
-  # _IDENTICAL_ argument-case-header 5
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
+    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
-    # _IDENTICAL_ --help 4
-    --help)
-      "$usage" 0
-      return $?
-      ;;
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
     --name)
       shift || :
       name="$1"
       ;;
     *)
       if [ -z "$keyDate" ]; then
-        keyDate=$(usageArgumentString "$usage" "keyDate" "$argument") || return $?
+        keyDate=$(usageArgumentString "$handler" "keyDate" "$argument") || return $?
       elif [ -z "$upToDateDays" ]; then
-        upToDateDays=$(usageArgumentInteger "$usage" "upToDateDays" "$argument") || return $?
+        upToDateDays=$(usageArgumentInteger "$handler" "upToDateDays" "$argument") || return $?
       else
-      # _IDENTICAL_ argumentUnknown 1
-      __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
+        # _IDENTICAL_ argumentUnknownHandler 1
+        __throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
       fi
       ;;
     esac
     shift || __throwArgument "shift $argument" || return $?
   done
-  [ -n "$keyDate" ] || __throwArgument "$usage" "missing keyDate" || return $?
+  [ -n "$keyDate" ] || __throwArgument "$handler" "missing keyDate" || return $?
   [ -n "$upToDateDays" ] || upToDateDays=90
 
   keyDate="${keyDate:0:10}"
   [ -z "$name" ] || name="$name "
 
   local todayTimestamp
-  todayTimestamp=$(dateToTimestamp "$(todayDate)") || __throwEnvironment "$usage" "Unable to generate todayDate" || return $?
+  todayTimestamp=$(dateToTimestamp "$(todayDate)") || __throwEnvironment "$handler" "Unable to generate todayDate" || return $?
 
   local keyTimestamp maxDays
 
-  keyTimestamp=$(dateToTimestamp "$keyDate") || __throwArgument "$usage" "Invalid date $keyDate" || return $?
-  isInteger "$upToDateDays" || __throwArgument "$usage" "upToDateDays is not an integer ($upToDateDays)" || return $?
+  keyTimestamp=$(dateToTimestamp "$keyDate") || __throwArgument "$handler" "Invalid date $keyDate" || return $?
+  isInteger "$upToDateDays" || __throwArgument "$handler" "upToDateDays is not an integer ($upToDateDays)" || return $?
 
   maxDays=366
-  [ "$upToDateDays" -le "$maxDays" ] || __throwArgument "$usage" "isUpToDate $keyDate $upToDateDays - values not allowed greater than $maxDays" || return $?
-  [ "$upToDateDays" -ge 0 ] || __throwArgument "$usage" "isUpToDate $keyDate $upToDateDays - negative values not allowed" || return $?
+  [ "$upToDateDays" -le "$maxDays" ] || __throwArgument "$handler" "isUpToDate $keyDate $upToDateDays - values not allowed greater than $maxDays" || return $?
+  [ "$upToDateDays" -ge 0 ] || __throwArgument "$handler" "isUpToDate $keyDate $upToDateDays - negative values not allowed" || return $?
 
   local expireDate
   local accessKeyTimestamp=$((keyTimestamp + ((23 * 60) + 59) * 60))

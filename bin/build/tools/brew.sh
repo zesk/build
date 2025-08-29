@@ -18,7 +18,7 @@ __brewWrapper() {
 # Platform: Darwin
 brewInstall() {
   [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
-  isDarwin || __throwEnvironment "$usage" "Only on Darwin (Mac OS X)" || return $?
+  isDarwin || __throwEnvironment "$handler" "Only on Darwin (Mac OS X)" || return $?
   /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 }
 _brewInstall() {
@@ -56,7 +56,7 @@ __brewUninstall() {
 }
 
 #
-# Usage: {fn}
+# handler: {fn}
 # OS upgrade and potential restart
 # Progress is written to stderr
 # Result is `ok` or `restart` written to stdout
@@ -67,25 +67,25 @@ __brewUninstall() {
 # Artifact: `packageUpdate.log` is left in the `buildCacheDirectory`
 # Artifact: `packageInstall.log` is left in the `buildCacheDirectory`
 __brewUpgrade() {
-  local usage="_${FUNCNAME[0]}"
+  local handler="_${FUNCNAME[0]}"
   local quietLog upgradeLog result clean=()
 
-  quietLog=$(__catch "$usage" buildQuietLog "$usage") || return $?
-  upgradeLog=$(__catch "$usage" buildQuietLog "upgrade_${usage#_}") || return $?
+  quietLog=$(__catch "$handler" buildQuietLog "$handler") || return $?
+  upgradeLog=$(__catch "$handler" buildQuietLog "upgrade_${handler#_}") || return $?
   clean+=("$quietLog" "$upgradeLog")
   __catchEnvironmentQuiet "$quietLog" packageUpdate || return $?
   __catchEnvironmentQuiet "$quietLog" packageInstall || return $?
-  __catch "$usage" __brewWrapper upgrade --overwrite --greedy | tee -a "$upgradeLog" >>"$quietLog" || returnUndo $? dumpPipe "apk upgrade failed" <"$quietLog" || returnClean $? "${clean[@]}" || return $?
+  __catch "$handler" __brewWrapper upgrade --overwrite --greedy | tee -a "$upgradeLog" >>"$quietLog" || returnUndo $? dumpPipe "apk upgrade failed" <"$quietLog" || returnClean $? "${clean[@]}" || return $?
   if ! muzzle packageNeedRestartFlag; then
     if grep -q " restart " "$upgradeLog" || grep -qi needrestart "$upgradeLog" || grep -qi need-restart "$upgradeLog"; then
-      __catch "$usage" packageNeedRestartFlag "true" || returnClean $? "${clean[@]}" || return $?
+      __catch "$handler" packageNeedRestartFlag "true" || returnClean $? "${clean[@]}" || return $?
     fi
     result=restart
   else
-    __catch "$usage" packageNeedRestartFlag "" || returnClean $? "${clean[@]}" || return $?
+    __catch "$handler" packageNeedRestartFlag "" || returnClean $? "${clean[@]}" || return $?
     result=ok
   fi
-  __catchEnvironment "$usage" rm -rf "${clean[@]}" || return $?
+  __catchEnvironment "$handler" rm -rf "${clean[@]}" || return $?
   printf "%s\n" "$result"
 }
 ___brewUpgrade() {
@@ -97,8 +97,8 @@ ___brewUpgrade() {
 # See: packageUpdate
 # package.sh: true
 __brewUpdate() {
-  local usage="_return" temp returnCode
-  temp=$(fileTemporaryName "$usage") || return $?
+  local handler="_return" temp returnCode
+  temp=$(fileTemporaryName "$handler") || return $?
   if __brewWrapper update 2>"$temp"; then
     rm -rf "$temp" || :
     return 0
@@ -109,13 +109,13 @@ __brewUpdate() {
   return $returnCode
 }
 
-# Usage: {fn}
+# handler: {fn}
 # List installed packages
 # package.sh: true
 __brewInstalledList() {
-  local usage="_${FUNCNAME[0]}"
-  whichExists brew || __throwEnvironment "$usage" "brew not installed - can not list" || return $?
-  [ $# -eq 0 ] || __throwArgument "$usage" "Unknown argument $*" || return $?
+  local handler="_${FUNCNAME[0]}"
+  whichExists brew || __throwEnvironment "$handler" "brew not installed - can not list" || return $?
+  [ $# -eq 0 ] || __throwArgument "$handler" "Unknown argument $*" || return $?
   __brewWrapper list -1 | grep -v '^[^A-Za-z]'
 }
 ___brewInstalledList() {
@@ -123,12 +123,12 @@ ___brewInstalledList() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# Usage: {fn}
+# handler: {fn}
 # List available bottles
 # package.sh: true
 __brewAvailableList() {
-  local usage="_${FUNCNAME[0]}"
-  whichExists brew || __throwEnvironment "$usage" "brew not installed - can not list" || return $?
+  local handler="_${FUNCNAME[0]}"
+  whichExists brew || __throwEnvironment "$handler" "brew not installed - can not list" || return $?
   __brewWrapper search --formula '/.*/'
 }
 ___brewAvailableList() {
@@ -136,7 +136,7 @@ ___brewAvailableList() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# Usage: {fn}
+# handler: {fn}
 # Output list of apt standard packages (constant)
 # See: _packageStandardPackages
 # package.sh: true

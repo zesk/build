@@ -111,19 +111,19 @@ __dotFilesApproved() {
 # If none specified, returns `bash` list.
 # Special value `all` returns all values
 dotFilesApproved() {
-  local usage="_${FUNCNAME[0]}"
+  local handler="_${FUNCNAME[0]}"
 
-  # _IDENTICAL_ argument-case-header 5
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
+    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
-    # _IDENTICAL_ --help 4
-    --help)
-      "$usage" 0
-      return $?
-      ;;
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
+    # _IDENTICAL_ handlerHandler 1
+    --handler) shift && handler=$(usageArgumentFunction "$handler" "$argument" "${1-}") || return $? ;;
     "all")
       __dotFilesApproved bash darwin git mysql
       return 0
@@ -133,7 +133,7 @@ dotFilesApproved() {
       return 0
       ;;
     *)
-      __throwArgument "$usage" "Unknown approved list: $1" || return $?
+      __throwArgument "$handler" "Unknown approved list: $1" || return $?
       ;;
     esac
   done

@@ -61,28 +61,26 @@ __githubLatestVariable() {
 # Parse a GitHub URL and return the owner and project name
 # Argument: url - URL. Required. URL to parse.
 githubURLParse() {
-  local usage="_${FUNCNAME[0]}"
+  local handler="_${FUNCNAME[0]}"
 
-  [ $# -gt 0 ] || __throwArgument "$usage" "url required" || return $?
+  [ $# -gt 0 ] || __throwArgument "$handler" "url required" || return $?
 
-  # _IDENTICAL_ argument-case-header 5
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
+    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
-    # _IDENTICAL_ --help 4
-    --help)
-      "$usage" 0
-      return $?
-      ;;
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
     *)
       local url path
-      url=$(usageArgumentURL "$usage" "url" "$1") || return $?
+      url=$(usageArgumentURL "$handler" "url" "$1") || return $?
       local host
       host=$(urlParseItem host "$url") || return $?
       if [ "$host" != "github.com" ]; then
-        __throwArgument "$usage" "Not a github site: $(decorate code "$url")" || return $?
+        __throwArgument "$handler" "Not a github site: $(decorate code "$url")" || return $?
       fi
       path=$(urlParseItem path "$url") || return $?
       # Trim ends of slashes
@@ -90,8 +88,8 @@ githubURLParse() {
       path="${path%/}"
       local owner repository _
       IFS='/' read -d '' -r owner repository _ <<<"$path" || :
-      [ -n "$owner" ] || __throwArgument "usage" "Blank owner" || return $?
-      [ -n "$repository" ] || __throwArgument "usage" "Blank repository" || return $?
+      [ -n "$owner" ] || __throwArgument "handler" "Blank owner" || return $?
+      [ -n "$repository" ] || __throwArgument "handler" "Blank repository" || return $?
       printf "%s/%s\n" "$owner" "$repository"
       ;;
     esac
@@ -106,8 +104,8 @@ _githubURLParse() {
 # Output the publish date for the latest release of ownerRepository
 # Argument: ownerRepository - String. Github `owner/repository` string
 githubPublishDate() {
-  local usage="_${FUNCNAME[0]}"
-  __githubLatestVariable "$usage" ".published_at" "$@"
+  local handler="_${FUNCNAME[0]}"
+  __githubLatestVariable "$handler" ".published_at" "$@"
 }
 _githubPublishDate() {
   # __IDENTICAL__ usageDocument 1
@@ -120,9 +118,9 @@ _githubPublishDate() {
 # Argument: projectName - String. Required. Github project name in the form of `owner/repository`
 # Environment: GITHUB_ACCESS_TOKEN
 githubLatestRelease() {
-  local usage="_${FUNCNAME[0]}"
+  local handler="_${FUNCNAME[0]}"
 
-  __githubLatestVariable "$usage" ".name" "$@"
+  __githubLatestVariable "$handler" ".name" "$@"
 }
 _githubLatestRelease() {
   # __IDENTICAL__ usageDocument 1
@@ -132,8 +130,8 @@ _githubLatestRelease() {
 # Get a project JSON structure
 # Environment: GITHUB_ACCESS_TOKEN
 githubProjectJSON() {
-  local usage="_${FUNCNAME[0]}"
-  __githubLatestVariable "$usage" "." "$@"
+  local handler="_${FUNCNAME[0]}"
+  __githubLatestVariable "$handler" "." "$@"
 }
 _githubProjectJSON() {
   # __IDENTICAL__ usageDocument 1
@@ -145,9 +143,9 @@ _githubProjectJSON() {
 # Argument: projectName - String. Required. Github project name in the form of `owner/repository`
 # Environment: GITHUB_ACCESS_TOKEN
 githubLatest() {
-  local usage="_${FUNCNAME[0]}"
+  local handler="_${FUNCNAME[0]}"
 
-  __githubAPI "$usage" "." "" "$@"
+  __githubAPI "$handler" "." "" "$@"
 }
 _githubLatest() {
   # __IDENTICAL__ usageDocument 1
@@ -185,7 +183,7 @@ _githubLatest() {
 # Think of them of the "source" (user) and "target" (ssh key) access. Both must exist to work.
 # Environment: GITHUB_ACCESS_TOKEN
 githubRelease() {
-  local usage="_${FUNCNAME[0]}"
+  local handler="_${FUNCNAME[0]}"
   local start argument descriptionFile releaseName commitish JSON resultsFile accessToken accessTokenExpire repoOwner repoName
   local host
 
@@ -199,40 +197,35 @@ githubRelease() {
   accessToken="${GITHUB_ACCESS_TOKEN-}"
   repoOwner="${GITHUB_REPOSITORY_OWNER-}"
   repoName="${GITHUB_REPOSITORY_NAME-}"
-  # _IDENTICAL_ argument-case-header 5
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
+    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
-    # _IDENTICAL_ --help 4
-    --help)
-      "$usage" 0
-      return $?
-      ;;
-    # _IDENTICAL_ --handler 4
-    --handler)
-      shift
-      usage=$(usageArgumentFunction "$usage" "$argument" "${1-}") || return $?
-      ;;
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
+    # _IDENTICAL_ handlerHandler 1
+    --handler) shift && handler=$(usageArgumentFunction "$handler" "$argument" "${1-}") || return $? ;;
     --token)
       shift
-      [ -n "${1-}" ] || __throwArgument "$usage" "Blank $argument argument" || return $?
+      [ -n "${1-}" ] || __throwArgument "$handler" "Blank $argument argument" || return $?
       accessToken="$1"
       ;;
     --owner)
       shift
-      [ -n "${1-}" ] || __throwArgument "$usage" "Blank $argument argument" || return $?
+      [ -n "${1-}" ] || __throwArgument "$handler" "Blank $argument argument" || return $?
       repoOwner="$1"
       ;;
     --name)
       shift
-      [ -n "${1-}" ] || __throwArgument "$usage" "Blank $argument argument" || return $?
+      [ -n "${1-}" ] || __throwArgument "$handler" "Blank $argument argument" || return $?
       repoName="$1"
       ;;
     --expire)
       shift
-      [ -n "${1-}" ] || __throwArgument "$usage" "Blank $argument argument" || return $?
+      [ -n "${1-}" ] || __throwArgument "$handler" "Blank $argument argument" || return $?
       accessTokenExpire="$1"
       ;;
     *)
@@ -242,36 +235,36 @@ githubRelease() {
     shift
   done
 
-  [ ${#extras[@]} -eq 3 ] || __throwArgument "$usage" "Need: descriptionFile releaseName commitish, found ${#extras[@]} arguments" || return $?
+  [ ${#extras[@]} -eq 3 ] || __throwArgument "$handler" "Need: descriptionFile releaseName commitish, found ${#extras[@]} arguments" || return $?
 
   descriptionFile="${extras[0]}"
   releaseName="${extras[1]}"
   commitish="${extras[2]}"
 
-  isUpToDate --name "GITHUB_ACCESS_TOKEN_EXPIRE" "$accessTokenExpire" 0 || __throwEnvironment "$usage" "Need to update the GitHub access token, expired" || return $?
+  isUpToDate --name "GITHUB_ACCESS_TOKEN_EXPIRE" "$accessTokenExpire" 0 || __throwEnvironment "$handler" "Need to update the GitHub access token, expired" || return $?
   # descriptionFile
-  [ -f "$descriptionFile" ] || __throwEnvironment "$usage" "Description file $descriptionFile is not a file" || return $?
-  [ -n "$repoOwner" ] || __throwArgument "$usage" "Repository owner is blank" || return $?
-  [ -n "$repoName" ] || __throwArgument "$usage" "Repository name is blank" || return $?
-  [ -n "$accessToken" ] || __throwArgument "$usage" "Access token is blank" || return $?
+  [ -f "$descriptionFile" ] || __throwEnvironment "$handler" "Description file $descriptionFile is not a file" || return $?
+  [ -n "$repoOwner" ] || __throwArgument "$handler" "Repository owner is blank" || return $?
+  [ -n "$repoName" ] || __throwArgument "$handler" "Repository name is blank" || return $?
+  [ -n "$accessToken" ] || __throwArgument "$handler" "Access token is blank" || return $?
 
   #
   # Preflight our environment to make sure we have the basics defined in the calling script
   #
-  __catch "$usage" packageWhich curl curl || return $?
+  __catch "$handler" packageWhich curl curl || return $?
 
   host=github.com
-  __catchEnvironment "$usage" sshKnownHostAdd "$host" || return $?
+  __catchEnvironment "$handler" sshKnownHostAdd "$host" || return $?
 
   if git remote | grep -q github; then
     printf "%s %s %s" "$(decorate info Remote)" "$(decorate magenta github)" "$(decorate info exists, not adding again.) " || :
   else
-    __catchEnvironment "$usage" git remote add github "git@github.com:$repoOwner/$repoName.git" || return $?
+    __catchEnvironment "$handler" git remote add github "git@github.com:$repoOwner/$repoName.git" || return $?
   fi
 
-  __catchEnvironment "$usage" hookRunOptional github-release-before || return $?
+  __catchEnvironment "$handler" hookRunOptional github-release-before || return $?
 
-  resultsFile="$(buildCacheDirectory)/results.json" || __throwEnvironment "$usage" "Unable create cache directory" || return $?
+  resultsFile="$(buildCacheDirectory)/results.json" || __throwEnvironment "$handler" "Unable create cache directory" || return $?
 
   decorate decoration "$(echoBar)" || :
   bigText "$releaseName" | decorate magenta
@@ -285,17 +278,17 @@ githubRelease() {
   git push origin ":$releaseName" --quiet 2>/dev/null || :
   git push github ":$releaseName" --quiet 2>/dev/null || :
 
-  __catchEnvironment "$usage" git tag "$releaseName" || return $?
-  __catchEnvironment "$usage" git push origin --tags --quiet || return $?
-  __catchEnvironment "$usage" git push github --tags --force --quiet || return $?
-  __catchEnvironment "$usage" git push github --all --force --quiet || return $?
+  __catchEnvironment "$handler" git tag "$releaseName" || return $?
+  __catchEnvironment "$handler" git push origin --tags --quiet || return $?
+  __catchEnvironment "$handler" git push github --tags --force --quiet || return $?
+  __catchEnvironment "$handler" git push github --all --force --quiet || return $?
   timingReport "$start" "Completed in" || :
 
   # passing commitish in the JSON results in a failure, just tag it beforehand and push to all remotes (mostly just github)
   # that's good enough
 
   JSON='{"draft":false,"prerelease":false,"generate_release_notes":false}'
-  JSON="$(echo "$JSON" | jq --arg name "$releaseName" --rawfile desc "$descriptionFile" '. + {body: $desc, tag_name: $name, name: $name}')" || __throwEnvironment "$usage" "Generating JSON" || return $?
+  JSON="$(echo "$JSON" | jq --arg name "$releaseName" --rawfile desc "$descriptionFile" '. + {body: $desc, tag_name: $name, name: $name}')" || __throwEnvironment "$handler" "Generating JSON" || return $?
 
   decorate info
   if ! curl -s -L \

@@ -218,8 +218,8 @@ deployLink() {
           decorate warning "currentApplicationHome $currentApplicationHome points to a non-existent directory"
         fi
       else
-      # _IDENTICAL_ argumentUnknownHandler 1
-      __throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
+        # _IDENTICAL_ argumentUnknownHandler 1
+        __throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
       fi
       ;;
     esac
@@ -269,7 +269,8 @@ deployMigrateDirectoryToLink() {
       elif [ -z "$applicationPath" ]; then
         applicationPath="$(usageArgumentDirectory "$handler" "applicationPath" "$1")" || return $?
       else
-        __throwArgument "$handler" "unknown argument $(decorate value "$argument")" || return $?
+        # _IDENTICAL_ argumentUnknownHandler 1
+        __throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
       fi
       shift || __throwArgument "$handler" "shift after $argument failed" || return $?
       ;;

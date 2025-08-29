@@ -10,13 +10,13 @@
 # Tools which do not fit anywhere else
 #
 
-# Usage: {fn} [ count | variable ] ...
+# handler: {fn} [ count | variable ] ...
 # Argument: count - Optional. Integer. Sets the value for any following named variables to this value.
 # Argument: variable - Optional. String. Variable to change or increment.
 # Argument: --reset - Optional. Flag. Reset all counters to zero.
 #
 # Set or increment a process-wide incrementor. If no numeric value is supplied the default is to increment the current value and output it.
-# New values are set to 0 by default so will output `1` upon first usage.
+# New values are set to 0 by default so will output `1` upon first handler.
 # If no variable name is supplied it uses the default variable name `default`.
 #
 # Variable names can contain alphanumeric characters, underscore, or dash.
@@ -37,32 +37,29 @@
 # See: buildCacheDirectory
 # shellcheck disable=SC2120
 incrementor() {
-  local this="${FUNCNAME[0]}"
-  local usage="_$this"
+  local handler="_${FUNCNAME[0]}"
   local argument cacheDirectory
   local name value counterFile
 
-  cacheDirectory=$(__catch "$usage" buildCacheDirectory "$this/$$") || return $?
-  cacheDirectory="$(__catch "$usage" directoryRequire "$cacheDirectory")" || return $?
+  cacheDirectory=$(__catch "$handler" buildCacheDirectory "${FUNCNAME[0]}/$$") || return $?
+  cacheDirectory="$(__catch "$handler" directoryRequire "$cacheDirectory")" || return $?
   name=""
   value=""
-  # _IDENTICAL_ argument-case-header 5
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
+    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
-    # _IDENTICAL_ --help 4
-    --help)
-      "$usage" 0
-      return $?
-      ;;
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
     --reset)
       rm -rf "$cacheDirectory" || :
       return 0
       ;;
     *[^-_a-zA-Z0-9]*)
-      __throwArgument "$usage" "Invalid argument or variable name: $argument" || return $?
+      __throwArgument "$handler" "Invalid argument or variable name: $argument" || return $?
       ;;
     *)
       if isInteger "$argument"; then
@@ -90,7 +87,7 @@ _incrementor() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# Usage: {fn} counterFile value
+# handler: {fn} counterFile value
 # When value is non-blank - write it to the counter file
 # When value is blank - load it (if it exists), increment it, and then write it to the counter file
 __incrementor() {
@@ -108,46 +105,44 @@ __incrementor() {
 }
 
 # Single reader, multiple writers
-# Usage: {fn} [ --mode mode ] namedPipe [ --writer line | readerExecutable ... ]
+# handler: {fn} [ --mode mode ] namedPipe [ --writer line | readerExecutable ... ]
 pipeRunner() {
-  local usage="_${FUNCNAME[0]}"
+  local handler="_${FUNCNAME[0]}"
 
   local binary="" namedPipe="" mode="0700"
 
-  # _IDENTICAL_ argument-case-header 5
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
+    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
-    # _IDENTICAL_ --help 4
-    --help)
-      "$usage" 0
-      return $?
-      ;;
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
     --mode)
       shift
-      mode=$(usageArgumentString "$usage" "mode" "${1-}") || return $?
+      mode=$(usageArgumentString "$handler" "mode" "${1-}") || return $?
       ;;
     --writer)
-      [ -z "$namedPipe" ] || __throwArgument "$usage" "No namedPipe supplied" || return $?
-      [ -p "$namedPipe" ] || __throwEnvironment "$usage" "$namedPipe not a named pipe" || return $?
-      __catchEnvironment "$usage" printf "%s\n" "$*" >"$namedPipe" || return $?
+      [ -z "$namedPipe" ] || __throwArgument "$handler" "No namedPipe supplied" || return $?
+      [ -p "$namedPipe" ] || __throwEnvironment "$handler" "$namedPipe not a named pipe" || return $?
+      __catchEnvironment "$handler" printf "%s\n" "$*" >"$namedPipe" || return $?
       ;;
     *)
       if [ -n "$namedPipe" ]; then
-        binary="$(usageArgumentCallable "$usage" "readerExecutable" "$argument")" || return $?
+        binary="$(usageArgumentCallable "$handler" "readerExecutable" "$argument")" || return $?
         break
       else
-        namedPipe=$(usageArgumentFileDirectory "$usage" "namedPipe" "$argument") || return $?
+        namedPipe=$(usageArgumentFileDirectory "$handler" "namedPipe" "$argument") || return $?
       fi
       ;;
     esac
     shift
   done
-  [ -n "$namedPipe" ] || __throwArgument "$usage" "No namedPipe supplied" || return $?
-  [ ! -p "$namedPipe" ] || __throwEnvironment "$usage" "$namedPipe already exists ($binary)" || return $?
-  __catchEnvironment "$usage" mkfifo -m "$mode" "$namedPipe" || return $?
+  [ -n "$namedPipe" ] || __throwArgument "$handler" "No namedPipe supplied" || return $?
+  [ ! -p "$namedPipe" ] || __throwEnvironment "$handler" "$namedPipe already exists ($binary)" || return $?
+  __catchEnvironment "$handler" mkfifo -m "$mode" "$namedPipe" || return $?
   # shellcheck disable=SC2064
   trap "rm -f \"$(quoteBashString "$namedPipe")\" 2>/dev/null 1>&2" EXIT INT HUP || :
   while read -r line; do

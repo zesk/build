@@ -157,7 +157,7 @@ testSuite() {
       matchTests+=("$(usageArgumentString "$handler" "match" "$1")") || return $?
       ;;
     esac
-    shift || __throwArgument "$handler" "shift argument $(decorate label "$argument")" || return $?
+    shift
   done
 
   export TERM

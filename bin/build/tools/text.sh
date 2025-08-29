@@ -36,12 +36,12 @@ fileExtractLines() {
     --help) "$handler" 0 && return $? || return $? ;;
     *)
       if [ -z "$start" ]; then
-        start="$(usageArgumentPositiveInteger "$usage" "start" "$1")" || return $?
+        start="$(usageArgumentPositiveInteger "$handler" "start" "$1")" || return $?
       elif [ -z "$end" ]; then
-        end="$(usageArgumentPositiveInteger "$usage" "end" "$1")" || return $?
+        end="$(usageArgumentPositiveInteger "$handler" "end" "$1")" || return $?
       else
-      # _IDENTICAL_ argumentUnknown 1
-      __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
+      # _IDENTICAL_ argumentUnknownHandler 1
+      __throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
       fi
       ;;
     esac
@@ -77,31 +77,30 @@ _grepSafe() {
 # Argument: --token - Optional. String. Classes permitted in a token
 # Argument: text - Optional. String. Text to search for mapping tokens.
 isMappable() {
-  local usage="_${FUNCNAME[0]}"
+  local handler="_${FUNCNAME[0]}"
   local prefix='{' suffix='}' tokenClasses='[-_A-Za-z0-9:]'
 
-  # _IDENTICAL_ argument-case-header 5
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
+    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
-    # _IDENTICAL_ --help 4
-    --help)
-      "$usage" 0
-      return $?
-      ;;
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
+    # _IDENTICAL_ handlerHandler 1
     --token)
       shift
-      tokenClasses="$(usageArgumentString "$usage" "$argument" "${1-}")" || return $?
+      tokenClasses="$(usageArgumentString "$handler" "$argument" "${1-}")" || return $?
       ;;
     --prefix)
       shift
-      prefix=$(quoteGrepPattern "$(usageArgumentString "$usage" "$argument" "${1-}")") || return $?
+      prefix=$(quoteGrepPattern "$(usageArgumentString "$handler" "$argument" "${1-}")") || return $?
       ;;
     --suffix)
       shift
-      suffix=$(quoteGrepPattern "$(usageArgumentString "$usage" "$argument" "${1-}")") || return $?
+      suffix=$(quoteGrepPattern "$(usageArgumentString "$handler" "$argument" "${1-}")") || return $?
       ;;
     *)
       if printf "%s\n" "$1" | grep -q -e "$prefix$tokenClasses$tokenClasses*$suffix"; then
@@ -335,7 +334,7 @@ _singleBlankLines() {
 # Source: https://web.archive.org/web/20121022051228/http://codesnippets.joyent.com/posts/show/1816
 # Credits: Chris F.A. Johnson (2008)
 trimSpace() {
-  local usage="_${FUNCNAME[0]}"
+  local handler="_${FUNCNAME[0]}"
 
   if [ $# -gt 0 ]; then
     while [ $# -gt 0 ]; do
@@ -348,7 +347,7 @@ trimSpace() {
       shift
     done
   else
-    __catchEnvironment "$usage" awk "{\$1=\$1};NF" || return $?
+    __catchEnvironment "$handler" awk "{\$1=\$1};NF" || return $?
   fi
 }
 _trimSpace() {
@@ -452,11 +451,11 @@ _stringContainsInsensitive() {
 # Exit Code: 0 - If `text` has any prefix
 # Does text have one or more prefixes?
 beginsWith() {
-  local usage="_${FUNCNAME[0]}"
-  [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
+  local handler="_${FUNCNAME[0]}"
+  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
 
   local text="${1-}"
-  [ -n "$text" ] || __throwArgument "$usage" "Empty text" || return $?
+  [ -n "$text" ] || __throwArgument "$handler" "Empty text" || return $?
 
   shift
   while [ $# -gt 0 ]; do
@@ -483,8 +482,8 @@ _beginsWith() {
 # Tested: No
 #
 isSubstring() {
-  local usage="_${FUNCNAME[0]}"
-  [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
+  local handler="_${FUNCNAME[0]}"
+  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
   local needle=${1-}
   shift || return 1
   for haystack; do
@@ -509,13 +508,13 @@ _isSubstring() {
 # Tested: No
 #
 isSubstringInsensitive() {
-  local usage="_${FUNCNAME[0]}"
-  [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
+  local handler="_${FUNCNAME[0]}"
+  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
 
   local element arrayElement
 
   element="$(lowercase "${1-}")"
-  [ -n "$element" ] || __throwArgument "$usage" "needle is blank" || return $?
+  [ -n "$element" ] || __throwArgument "$handler" "needle is blank" || return $?
   shift || return 1
   for arrayElement; do
     arrayElement=$(lowercase "$arrayElement")
@@ -540,9 +539,9 @@ _isSubstringInsensitive() {
 # Tested: No
 #
 trimWords() {
-  local usage="_${FUNCNAME[0]}"
+  local handler="_${FUNCNAME[0]}"
 
-  [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
+  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
 
   local wordCount=$((${1-0} + 0)) words=() result
   shift || return 0
@@ -577,9 +576,9 @@ _trimWords() {
 # Example:     usageOptions | usageGenerator $(usageOptions | maximumFieldLength 1 ;) ;
 #
 maximumFieldLength() {
-  local usage="_${FUNCNAME[0]}"
+  local handler="_${FUNCNAME[0]}"
 
-  [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
+  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
 
   local index=$((${1-1} + 0)) separatorChar=${2-}
 
@@ -600,10 +599,10 @@ _maximumFieldLength() {
 # Outputs the maximum line length passed into stdin
 #
 maximumLineLength() {
-  local usage="_${FUNCNAME[0]}"
+  local handler="_${FUNCNAME[0]}"
   local max
 
-  [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
+  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
   max=0
   while IFS= read -r line; do
     if [ "${#line}" -gt "$max" ]; then
@@ -799,8 +798,8 @@ _stripAnsi() {
 
 # Length of an unformatted string
 plainLength() {
-  local usage="_${FUNCNAME[0]}"
-  [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
+  local handler="_${FUNCNAME[0]}"
+  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
 
   local text
   text="$(stripAnsi <<<"$*")"
@@ -825,26 +824,26 @@ _plainLength() {
 # Environment: DEBUG_SHAPIPE - When set to a truthy value, will output all requested shaPipe calls to log called `shaPipe.log`.
 #
 shaPipe() {
-  local usage="_${FUNCNAME[0]}"
+  local handler="_${FUNCNAME[0]}"
   local argument
-  whichExists sha1sum || __throwEnvironment "$usage" "Need packageGroupInstall sha1sum" || return $?
+  whichExists sha1sum || __throwEnvironment "$handler" "Need packageGroupInstall sha1sum" || return $?
   if [ -n "$*" ]; then
     while [ $# -gt 0 ]; do
       argument="$1"
-      [ "$argument" != "--help" ] || __help "$usage" "$@" || return 0
-      [ -f "$1" ] || __throwArgument "$usage" "$1 is not a file" || return $?
-      [ -n "$argument" ] || __throwArgument "$usage" "blank argument" || return $?
+      [ "$argument" != "--help" ] || __help "$handler" "$@" || return 0
+      [ -f "$1" ] || __throwArgument "$handler" "$1 is not a file" || return $?
+      [ -n "$argument" ] || __throwArgument "$handler" "blank argument" || return $?
       if test "${DEBUG_SHAPIPE-}"; then
         printf "%s: %s\n" "$(date +"%FT%T")" "$argument" >shaPipe.log
       fi
       sha1sum <"$argument" | cut -f 1 -d ' '
-      shift || __throwArgument "$usage" "shift failed" || return $?
+      shift || __throwArgument "$handler" "shift failed" || return $?
     done
   else
     if test "${DEBUG_SHAPIPE-}"; then
       printf "%s: stdin\n" "$(date +"%FT%T")" >shaPipe.log
     fi
-    sha1sum | cut -f 1 -d ' ' || __throwEnvironment "$usage" "sha1sum" || return $?
+    sha1sum | cut -f 1 -d ' ' || __throwEnvironment "$handler" "sha1sum" || return $?
   fi
 }
 _shaPipe() {
@@ -869,13 +868,13 @@ _shaPipe() {
 # Output: cf7861b50054e8c680a9552917b43ec2b9edae2b
 #
 cachedShaPipe() {
-  local usage="_${FUNCNAME[0]}"
-  [ "${1-}" != "--help" ] || __help "$usage" "$@" || return 0
+  local handler="_${FUNCNAME[0]}"
+  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
 
   local argument
   local cacheDirectory="${1-}"
 
-  shift || __throwArgument "$usage" "Missing cacheDirectory" || return $?
+  shift || __throwArgument "$handler" "Missing cacheDirectory" || return $?
 
   # Special case to skip caching
   if [ -z "$cacheDirectory" ]; then
@@ -884,19 +883,19 @@ cachedShaPipe() {
   fi
   cacheDirectory="${cacheDirectory%/}"
 
-  [ -d "$cacheDirectory" ] || __throwArgument "$usage" "cachedShaPipe: cacheDirectory \"$cacheDirectory\" is not a directory" || return $?
+  [ -d "$cacheDirectory" ] || __throwArgument "$handler" "cachedShaPipe: cacheDirectory \"$cacheDirectory\" is not a directory" || return $?
   if [ $# -gt 0 ]; then
     while [ $# -gt 0 ]; do
       argument="$1"
-      [ "$argument" != "--help" ] || __help "$usage" "$@" || return 0
-      [ -n "$argument" ] || __throwArgument "$usage" "blank argument" || return $?
-      [ -f "$argument" ] || __throwArgument "$usage" "not a file $(decorate label "$argument")" || return $?
+      [ "$argument" != "--help" ] || __help "$handler" "$@" || return 0
+      [ -n "$argument" ] || __throwArgument "$handler" "blank argument" || return $?
+      [ -f "$argument" ] || __throwArgument "$handler" "not a file $(decorate label "$argument")" || return $?
       cacheFile="$cacheDirectory/${argument#/}"
-      cacheFile=$(__catch "$usage" fileDirectoryRequire "$cacheFile") || return $?
+      cacheFile=$(__catch "$handler" fileDirectoryRequire "$cacheFile") || return $?
       if [ -f "$cacheFile" ] && fileIsNewest "$cacheFile" "$1"; then
         printf "%s\n" "$(cat "$cacheFile")"
       else
-        __catch "$usage" shaPipe "$argument" | __catchEnvironment "$usage" tee "$cacheFile" || return $?
+        __catch "$handler" shaPipe "$argument" | __catchEnvironment "$handler" tee "$cacheFile" || return $?
       fi
       shift
     done
@@ -972,11 +971,11 @@ isCharacterClass() {
   [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
 
   local class="${1-}" classes character
-  local usage
+  local handler
 
-  usage="_${FUNCNAME[0]}"
+  handler="_${FUNCNAME[0]}"
   IFS=$'\n' read -r -d '' -a classes < <(characterClasses) || :
-  inArray "$class" "${classes[@]}" || __throwArgument "$usage" "Invalid class: $class" || return $?
+  inArray "$class" "${classes[@]}" || __throwArgument "$handler" "Invalid class: $class" || return $?
   shift
   while [ $# -gt 0 ]; do
     character="${1:0:1}"
@@ -986,7 +985,7 @@ isCharacterClass() {
     if ! eval "case $character in [[:$class:]]) ;; *) return 1 ;; esac"; then
       return 1
     fi
-    shift || __throwArgument "$usage" "shift $character failed" || return $?
+    shift || __throwArgument "$handler" "shift $character failed" || return $?
   done
 }
 _isCharacterClass() {
@@ -1002,14 +1001,14 @@ _isCharacterClass() {
 # Argument: class0 - Optional. A class name or a character to match. If more than is supplied, a single value must match to succeed (any).
 #
 isCharacterClasses() {
-  local usage="_${FUNCNAME[0]}"
+  local handler="_${FUNCNAME[0]}"
   [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
 
   local character="${1-}" class
 
-  [ "${#character}" -eq 1 ] || __throwArgument "$usage" "Non-single character: \"$character\"" || return $?
+  [ "${#character}" -eq 1 ] || __throwArgument "$handler" "Non-single character: \"$character\"" || return $?
   if ! shift || [ $# -eq 0 ]; then
-    __throwArgument "$usage" "Need at least one class" || return $?
+    __throwArgument "$handler" "Need at least one class" || return $?
   fi
   while [ "$#" -gt 0 ]; do
     class="$1"
@@ -1020,7 +1019,7 @@ isCharacterClasses() {
     elif isCharacterClass "$class" "$character"; then
       return 0
     fi
-    shift || __throwArgument "$usage" "shift $class failed" || return $?
+    shift || __throwArgument "$handler" "shift $class failed" || return $?
   done
   return 1
 }
@@ -1034,22 +1033,20 @@ _isCharacterClasses() {
 #
 # Source: https://mywiki.wooledge.org/BashFAQ/071
 characterFromInteger() {
-  local usage="_${FUNCNAME[0]}"
+  local handler="_${FUNCNAME[0]}"
 
-  # _IDENTICAL_ argument-case-header 5
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
+    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
-    # _IDENTICAL_ --help 4
-    --help)
-      "$usage" 0
-      return $?
-      ;;
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
     *)
-      isUnsignedInteger "$argument" || __throwArgument "$usage" "Argument is not unsigned integer: $(decorate code "$argument")" || return $?
-      [ "$argument" -lt 256 ] || __throwArgument "$usage" "Integer out of range: \"$argument\"" || return $?
+      isUnsignedInteger "$argument" || __throwArgument "$handler" "Argument is not unsigned integer: $(decorate code "$argument")" || return $?
+      [ "$argument" -lt 256 ] || __throwArgument "$handler" "Integer out of range: \"$argument\"" || return $?
       if [ "$argument" -eq 0 ]; then
         printf "%s\n" $'\0'
       else
@@ -1072,15 +1069,15 @@ _characterFromInteger() {
 # Argument: class0 - One or more character classes that the characters in string should match
 # Note: This is slow.
 stringValidate() {
-  local usage="_${FUNCNAME[0]}"
+  local handler="_${FUNCNAME[0]}"
 
   [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
 
   local text character
 
   text="${1-}"
-  shift || __throwArgument "$usage" "missing text" || return $?
-  [ $# -gt 0 ] || __throwArgument "$usage" "missing class" || return $?
+  shift || __throwArgument "$handler" "missing text" || return $?
+  [ $# -gt 0 ] || __throwArgument "$handler" "missing class" || return $?
   for character in $(printf "%s" "$text" | grep -o .); do
     if ! isCharacterClasses "$character" "$@"; then
       return 1
@@ -1104,9 +1101,9 @@ characterToInteger() {
   while [ $# -gt 0 ]; do
     [ "$1" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
     index=$((index + 1))
-    [ "${#1}" = 1 ] || __throwArgument "$usage" "Single characters only (argument #$index): \"$1\" (${#1} characters)" || return $?
-    LC_CTYPE=C printf '%d' "'$1" || __throwEnvironment "$usage" "Single characters only (argument #$index): \"$1\" (${#1} characters)" || return $?
-    shift || __throwArgument "$usage" "shift failed" || return $?
+    [ "${#1}" = 1 ] || __throwArgument "$handler" "Single characters only (argument #$index): \"$1\" (${#1} characters)" || return $?
+    LC_CTYPE=C printf '%d' "'$1" || __throwEnvironment "$handler" "Single characters only (argument #$index): \"$1\" (${#1} characters)" || return $?
+    shift || __throwArgument "$handler" "shift failed" || return $?
   done
 }
 _characterToInteger() {
@@ -1122,22 +1119,20 @@ _characterToInteger() {
 # Argument: --class - Optional. Flag. Show class and then characters in that class.
 # Argument: --char - Optional. Flag. Show characters and then class for that character.
 characterClassReport() {
-  local usage="_${FUNCNAME[0]}"
+  local handler="_${FUNCNAME[0]}"
 
   local arg character classList indexList outer matched total classOuter=false outerList innerList nouns outerText width=5
   local savedLimit
 
-  # _IDENTICAL_ argument-case-header 5
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
+    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
-    # _IDENTICAL_ --help 4
-    --help)
-      "$usage" 0
-      return $?
-      ;;
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
     --class)
       classOuter=true
       ;;
@@ -1145,8 +1140,8 @@ characterClassReport() {
       classOuter=false
       ;;
     *)
-      # _IDENTICAL_ argumentUnknown 1
-      __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
+      # _IDENTICAL_ argumentUnknownHandler 1
+      __throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
       ;;
     esac
     shift
@@ -1156,8 +1151,8 @@ characterClassReport() {
     classList+=("$arg")
   done
 
-  savedLimit="$(__catchEnvironment "$usage" ulimit -n)" || return $?
-  __catchEnvironment "$usage" ulimit -n 10240 || return $?
+  savedLimit="$(__catchEnvironment "$handler" ulimit -n)" || return $?
+  __catchEnvironment "$handler" ulimit -n 10240 || return $?
   # shellcheck disable=SC2207
   indexList=($(seq 0 127))
 
@@ -1211,7 +1206,7 @@ characterClassReport() {
     total=$((total + matched))
   done
   printf "%s total %s\n" "$(decorate bold-red "$total")" "$(decorate red "$(plural "$total" "${nouns[@]}")")"
-  __catchEnvironment "$usage" ulimit -n "$savedLimit" || return $?
+  __catchEnvironment "$handler" ulimit -n "$savedLimit" || return $?
 }
 _characterClassReport() {
   # __IDENTICAL__ usageDocument 1
@@ -1223,23 +1218,21 @@ _characterClassReport() {
 # Argument: fieldCount - Optional. Integer. Number of field to remove. Default is just first `1`.
 # Partial Credit: https://stackoverflow.com/questions/4198138/printing-everything-except-the-first-field-with-awk/31849899#31849899
 removeFields() {
-  local usage="_${FUNCNAME[0]}"
+  local handler="_${FUNCNAME[0]}"
   local fieldCount=""
 
-  # _IDENTICAL_ argument-case-header 5
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
+    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
-    # _IDENTICAL_ --help 4
-    --help)
-      "$usage" 0
-      return $?
-      ;;
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
     *)
-      [ -z "$fieldCount" ] || __throwArgument "$usage" "Only one fieldCount should be provided argument #$__index: $argument" || return $?
-      fieldCount="$(usageArgumentPositiveInteger "$usage" "fieldCount" "$argument")" || return $?
+      [ -z "$fieldCount" ] || __throwArgument "$handler" "Only one fieldCount should be provided argument #$__index: $argument" || return $?
+      fieldCount="$(usageArgumentPositiveInteger "$handler" "fieldCount" "$argument")" || return $?
       ;;
     esac
     shift
@@ -1379,26 +1372,24 @@ __unquote() {
 # Argument: haystack - EmptyString. EmptyString. String to modify. If not supplied, manipulates stdin.
 # stdout: New string with needle replaced
 stringReplace() {
-  local usage="_${FUNCNAME[0]}"
+  local handler="_${FUNCNAME[0]}"
 
   local needle="" replacement="" sedCommand="" hasTextArguments=false
 
-  # _IDENTICAL_ argument-case-header 5
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
+    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
-    # _IDENTICAL_ --help 4
-    --help)
-      "$usage" 0
-      return $?
-      ;;
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
     *)
       if [ -z "$needle" ]; then
-        needle="$(usageArgumentString "$usage" "$argument" "${1-}")" || return $?
+        needle="$(usageArgumentString "$handler" "$argument" "${1-}")" || return $?
       elif [ -z "$sedCommand" ]; then
-        replacement="$(usageArgumentEmptyString "$usage" "$argument" "${1-}")" || return $?
+        replacement="$(usageArgumentEmptyString "$handler" "$argument" "${1-}")" || return $?
         sedCommand="s/$(quoteSedPattern "$needle")/$(quoteSedReplacement "$replacement")/g"
       else
         sed -e "$sedCommand" <<<"$1"
@@ -1411,8 +1402,8 @@ stringReplace() {
   if $hasTextArguments; then
     return 0
   fi
-  [ -n "$needle" ] || __throwArgument "$usage" "Missing needle" || return $?
-  [ -n "$sedCommand" ] || __throwArgument "$usage" "Missing replacement" || return $?
+  [ -n "$needle" ] || __throwArgument "$handler" "Missing needle" || return $?
+  [ -n "$sedCommand" ] || __throwArgument "$handler" "Missing replacement" || return $?
   sed -e "$sedCommand"
 }
 _stringReplace() {

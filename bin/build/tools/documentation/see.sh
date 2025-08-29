@@ -16,33 +16,23 @@
 # Usage: {fn} cacheDirectory documentationDirectory seeFunctionTemplate seeFunctionLink seeFileTemplate seeFileLink
 #
 documentationIndex_SeeLinker() {
-  local usage="_${FUNCNAME[0]}"
+  local handler="_${FUNCNAME[0]}"
 
-  local cacheDirectory documentationDirectory seeFunctionTemplate seeFunctionLink seeFileTemplate seeFileLink
-  local start linkPattern linkPatternFile
-  local matchingFile matchingToken cleanToken
-  local seePattern='\{SEE:([^}]+)\}'
-
+  local start
   start=$(timingStart)
-  # Argument parsing
-  cacheDirectory=
-  documentationDirectory=
-  seeFunctionTemplate=
-  seeFunctionLink=
-  seeFileTemplate=
-  seeFileLink=
 
-  # _IDENTICAL_ argument-case-header 5
+  # Argument parsing
+  local cacheDirectory="" documentationDirectory="" seeFunctionTemplate="" seeFunctionLink="" seeFileTemplate="" seeFileLink=""
+
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
+    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
-    # _IDENTICAL_ --help 4
-    --help)
-      "$usage" 0
-      return $?
-      ;;
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
     *)
       if [ -z "$cacheDirectory" ]; then
         cacheDirectory=$(usageArgumentDirectory _documentationIndex_SeeLinker "cacheDirectory" "${1%%/}") || return $?
@@ -54,7 +44,7 @@ documentationIndex_SeeLinker() {
         seeFunctionLink="$1"
       elif [ -z "$seeFileTemplate" ]; then
         seeFileTemplate=$(usageArgumentFile _documentationIndex_SeeLinker seeFileTemplate "${1##./}") || return $?
-        shift || __throwArgument "$usage" "seeFileLink required" || return $?
+        shift || __throwArgument "$handler" "seeFileLink required" || return $?
         seeFileLink="$1"
       else
         break
@@ -63,20 +53,29 @@ documentationIndex_SeeLinker() {
     esac
     shift
   done
+
+  local seePattern='\{SEE:([^}]+)\}'
+
+  local arg
   for arg in cacheDirectory documentationDirectory seeFunctionTemplate seeFileTemplate seeFunctionLink seeFileLink; do
-    [ -n "${!arg}" ] || __throwArgument "$usage" "$arg is required" || return $?
+    [ -n "${!arg}" ] || __throwArgument "$handler" "$arg is required" || return $?
   done
-  seeVariablesFile=$(fileTemporaryName "$usage") || return $?
-  linkPatternFile="$seeVariablesFile.linkPatterns"
-  variablesSedFile="$seeVariablesFile.variablesSedFile"
+  local seeVariablesFile
+  seeVariablesFile=$(fileTemporaryName "$handler") || return $?
+  local linkPatternFile="$seeVariablesFile.linkPatterns"
+  local variablesSedFile="$seeVariablesFile.variablesSedFile"
+  local matchingFile
   if ! find "$documentationDirectory" -name '*.md' -type f "$@" -print0 | xargs -0 __pcregrep -l "$seePattern" | while read -r matchingFile; do
     statusMessage decorate success "$matchingFile Found"
+    local matchingToken
     __pcregrep -o1 "$seePattern" "$matchingFile" | while read -r matchingToken; do
       statusMessage decorate success "$matchingFile: $(decorate cyan "$matchingToken") Found"
+      local cleanToken
       cleanToken=$(printf "%s" "$matchingToken" | sed 's/[^A-Za-z0-9_]/_/g')
-      tokenName="SEE_$cleanToken"
+      local tokenName="SEE_$cleanToken"
       sedReplacePattern "{SEE:$matchingToken}" "{$tokenName}" >>"$variablesSedFile"
       {
+        local settingsFile linkPattern templateFile
         if settingsFile=$(documentationIndex_Lookup --settings "$cacheDirectory" "$matchingToken"); then
           cat "$settingsFile"
           linkPattern="$seeFunctionLink"

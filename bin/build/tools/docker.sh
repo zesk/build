@@ -114,7 +114,7 @@ _dockerListContext() {
 # Environment: BUILD_DOCKER_PLATFORM - Optional. Defaults to `linux/arm64`. Affects which image platform is used.
 #
 dockerLocalContainer() {
-  local usage="_${FUNCNAME[0]}"
+  local handler="_${FUNCNAME[0]}"
   local platform imageName imageApplicationPath
   local envFile envPair
   local tempEnv
@@ -122,7 +122,7 @@ dockerLocalContainer() {
 
   export BUILD_DOCKER_PLATFORM BUILD_DOCKER_PATH BUILD_DOCKER_IMAGE
 
-  __catch "$usage" buildEnvironmentLoad BUILD_DOCKER_PLATFORM BUILD_DOCKER_IMAGE BUILD_DOCKER_PATH || return $?
+  __catch "$handler" buildEnvironmentLoad BUILD_DOCKER_PLATFORM BUILD_DOCKER_IMAGE BUILD_DOCKER_PATH || return $?
 
   platform=${BUILD_DOCKER_PLATFORM}
   imageApplicationPath=${BUILD_DOCKER_PATH}
@@ -130,38 +130,33 @@ dockerLocalContainer() {
 
   local exitCode=0 ee=() extraArgs=() tempEnvs=()
 
-  # _IDENTICAL_ argument-case-header 5
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
+    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
-    # _IDENTICAL_ --help 4
-    --help)
-      "$usage" 0
-      return $?
-      ;;
-    # _IDENTICAL_ --handler 4
-    --handler)
-      shift
-      usage=$(usageArgumentFunction "$usage" "$argument" "${1-}") || return $?
-      ;;
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
+    # _IDENTICAL_ handlerHandler 1
+    --handler) shift && handler=$(usageArgumentFunction "$handler" "$argument" "${1-}") || return $? ;;
     --image)
       shift
-      imageName=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
+      imageName=$(usageArgumentString "$handler" "$argument" "${1-}") || return $?
       ;;
     --local)
       shift
-      localPath=$(usageArgumentDirectory "$usage" "$argument" "${1-}") || return $?
+      localPath=$(usageArgumentDirectory "$handler" "$argument" "${1-}") || return $?
       ;;
     --path)
       shift
-      imageApplicationPath=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
+      imageApplicationPath=$(usageArgumentString "$handler" "$argument" "${1-}") || return $?
       envFiles+=("-w" "$imageApplicationPath")
       ;;
     --env)
       shift
-      envPair=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
+      envPair=$(usageArgumentString "$handler" "$argument" "${1-}") || return $?
       if [ "${envPair#*=}" = "$envPair" ]; then
         decorate warning "$argument does not look like a variable: $(decorate error "$envPair")" 1>&2
       fi
@@ -169,15 +164,15 @@ dockerLocalContainer() {
       ;;
     --env-file)
       shift
-      envFile=$(usageArgumentFile "$usage" "envFile" "$1") || return $?
-      tempEnv=$(fileTemporaryName "$usage") || return $?
-      __catchArgument "$usage" environmentFileToDocker "$envFile" >"$tempEnv" || return $?
+      envFile=$(usageArgumentFile "$handler" "envFile" "$1") || return $?
+      tempEnv=$(fileTemporaryName "$handler") || return $?
+      __catchArgument "$handler" environmentFileToDocker "$envFile" >"$tempEnv" || return $?
       tempEnvs+=("$tempEnv")
       ee+=("$argument" "$tempEnv")
       ;;
     --platform)
       shift
-      platform=$(usageArgumentString "$usage" "$argument" "$1") || return $?
+      platform=$(usageArgumentString "$handler" "$argument" "$1") || return $?
       ;;
     *)
       extraArgs+=("$1")
@@ -188,7 +183,7 @@ dockerLocalContainer() {
   [ -n "$platform" ] || platform=$(dockerPlatformDefault)
 
   if [ -z "$localPath" ]; then
-    localPath=$(__catchEnvironment "$usage" pwd) || return $?
+    localPath=$(__catchEnvironment "$handler" pwd) || return $?
   fi
   failedWhy=
   if [ -z "$imageName" ]; then
@@ -200,14 +195,14 @@ dockerLocalContainer() {
   fi
   if [ -n "$failedWhy" ]; then
     [ ${#tempEnvs[@]} -eq 0 ] || rm -f "${tempEnvs[@]}" || :
-    __throwEnvironment "$usage" "$failedWhy" || return $?
+    __throwEnvironment "$handler" "$failedWhy" || return $?
   fi
   local tt=()
   [ ! -t 0 ] || tt=(-it)
   if [ -z "$(dockerImages --filter "$imageName")" ]; then
-    __catchEnvironment "$usage" muzzle docker pull "$imageName" || return $?
+    __catchEnvironment "$handler" muzzle docker pull "$imageName" || return $?
   fi
-  __catchEnvironment "$usage" docker run "${ee[@]+"${ee[@]}"}" --platform "$platform" -v "$localPath:$imageApplicationPath" "${tt[@]+"${tt[@]}"}" --pull never "$imageName" "${extraArgs[@]+"${extraArgs[@]}"}" || exitCode=$?
+  __catchEnvironment "$handler" docker run "${ee[@]+"${ee[@]}"}" --platform "$platform" -v "$localPath:$imageApplicationPath" "${tt[@]+"${tt[@]}"}" --pull never "$imageName" "${extraArgs[@]+"${extraArgs[@]}"}" || exitCode=$?
   [ ${#tempEnvs[@]} -eq 0 ] || rm -f "${tempEnvs[@]}" || :
   return $exitCode
 }
@@ -219,35 +214,33 @@ _dockerLocalContainer() {
 # List docker images which are currently pulled
 # Argument: --filter reference - Optional. Filter list by reference provided.
 dockerImages() {
-  local usage="_${FUNCNAME[0]}"
+  local handler="_${FUNCNAME[0]}"
 
   local filter=()
 
-  # _IDENTICAL_ argument-case-header 5
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
+    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
-    # _IDENTICAL_ --help 4
-    --help)
-      "$usage" 0
-      return $?
-      ;;
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
     --filter)
       shift
-      [ 0 -eq "${#filter[@]}" ] || __throwArgument "$usage" "--filter passed twice: #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
-      filter+=("--filter" "reference=$(usageArgumentString "$usage" "$argument" "${1-}")") || return $?
+      [ 0 -eq "${#filter[@]}" ] || __throwArgument "$handler" "--filter passed twice: #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
+      filter+=("--filter" "reference=$(usageArgumentString "$handler" "$argument" "${1-}")") || return $?
       ;;
     *)
-      # _IDENTICAL_ argumentUnknown 1
-      __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
+      # _IDENTICAL_ argumentUnknownHandler 1
+      __throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
       ;;
     esac
     shift
   done
 
-  usageRequireBinary "$usage" docker || return $?
+  usageRequireBinary "$handler" docker || return $?
 
   # Do not use --format json as it is not backwards compatible
   docker images "${filter[@]+"${filter[@]}"}" | awk '{ print $1 ":" $2 }' | grep -v 'REPOSITORY:'
@@ -300,9 +293,9 @@ _dockerImages() {
 # Does a docker volume exist with name?
 # Argument: name - String. Required.
 dockerVolumeExists() {
-  local usage="_${FUNCNAME[0]}"
-  __help "$usage" "$@" || return 0
-  [ $# -eq 1 ] || __throwArgument "$usage" "Requires a volume name" || return $?
+  local handler="_${FUNCNAME[0]}"
+  __help "$handler" "$@" || return 0
+  [ $# -eq 1 ] || __throwArgument "$handler" "Requires a volume name" || return $?
   docker volume ls --format json | jq .Name | grep -q "$1"
 }
 _dockerVolumeExists() {
@@ -313,9 +306,9 @@ _dockerVolumeExists() {
 # Delete a docker volume
 # Argument: name - String. Required. Volume name to delete.
 dockerVolumeDelete() {
-  local usage="_${FUNCNAME[0]}"
-  __help "$usage" "$@" || return 0
-  [ $# -eq 1 ] || __throwArgument "$usage" "Requires a volume name" || return $?
+  local handler="_${FUNCNAME[0]}"
+  __help "$handler" "$@" || return 0
+  [ $# -eq 1 ] || __throwArgument "$handler" "Requires a volume name" || return $?
   docker volume ls --format json | jq .Name | grep -q "$1"
 }
 _dockerVolumeDelete() {
@@ -324,7 +317,7 @@ _dockerVolumeDelete() {
 }
 
 __dockerVolumeDeleteInteractive() {
-  local usage="$1" databaseVolume="$2" && shift 2
+  local handler="$1" databaseVolume="$2" && shift 2
 
   local running=false suffix=""
 
@@ -337,15 +330,15 @@ __dockerVolumeDeleteInteractive() {
     if confirmYesNo --no --timeout 60 --info "Delete database volume $(decorate code "$databaseVolume")$suffix?"; then
       if $running; then
         statusMessage decorate info "Bringing down container ..."
-        __catchEnvironment "$usage" docker compose down --remove-orphans || return $?
+        __catchEnvironment "$handler" docker compose down --remove-orphans || return $?
       fi
-      __dockerVolumeDelete "$usage" "$databaseVolume" || return $?
+      __dockerVolumeDelete "$handler" "$databaseVolume" || return $?
     fi
   fi
 }
 
 __dockerVolumeDelete() {
-  local usage="$1" databaseVolume="$2" && shift 2
+  local handler="$1" databaseVolume="$2" && shift 2
 
-  __catchEnvironment "$usage" docker volume rm "$databaseVolume" || return $?
+  __catchEnvironment "$handler" docker volume rm "$databaseVolume" || return $?
 }
