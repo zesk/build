@@ -164,7 +164,7 @@ __execute() {
 # Exit Code: Any
 # Requires: printf decorate __execute __decorateExtensionQuote __decorateExtensionEach
 __echo() {
-  printf -- "➡️ %s\n" "$(decorate each quote "$@")" && __execute "$@" || return $?
+  printf -- "➡️ %s\n" "$(decorate each quote -- "$@")" && __execute "$@" || return $?
 }
 
 # _IDENTICAL_  __environment 10

@@ -17,7 +17,7 @@ __catch() {
   local __count=$# __saved=("$@") __handler="${1-}" command="${2-}"
   # __IDENTICAL__ __checkHandler 1
   isFunction "$__handler" || _argument "handler not callable \"$(decorate code "$__handler")\"" || return $?
-  shift 2 || __throwArgument "$__handler" "missing arguments #$__count $(decorate each code "${__saved[@]}")" || return $?
+  shift 2 || __throwArgument "$__handler" "missing arguments #$__count $(decorate each code -- "${__saved[@]}")" || return $?
   # __IDENTICAL__ __checkCommand__handler 1
   isCallable "$command" || __throwArgument "$__handler" "Not callable $(decorate code "$command")" || return $?
   "$command" "$@" || "$__handler" "$?" "$command" "$@" || return $?
@@ -36,7 +36,7 @@ ___catch() {
 __catchCode() {
   local __count=$# __saved=("$@") __handler="_${FUNCNAME[0]}" code="${1-0}" command="${3-}"
   # __IDENTICAL__ __checkCode__handler 1
-  isInteger "$code" || __throwArgument "$__handler" "Not integer: $(decorate value "[$code]") (#$__count $(decorate each code "${__saved[@]}"))" || return $?
+  isInteger "$code" || __throwArgument "$__handler" "Not integer: $(decorate value "[$code]") (#$__count $(decorate each code -- "${__saved[@]}"))" || return $?
   __handler="${2-}"
   # __IDENTICAL__ __checkHandler 1
   isFunction "$__handler" || _argument "handler not callable \"$(decorate code "$__handler")\"" || return $?
@@ -226,7 +226,7 @@ returnUndo() {
   [ "${1-}" != "--help" ] || __help "$__handler" "$@" || return 0
   shift
   # __IDENTICAL__ __checkCode__handler 1
-  isInteger "$code" || __throwArgument "$__handler" "Not integer: $(decorate value "[$code]") (#$__count $(decorate each code "${__saved[@]}"))" || return $?
+  isInteger "$code" || __throwArgument "$__handler" "Not integer: $(decorate value "[$code]") (#$__count $(decorate each code -- "${__saved[@]}"))" || return $?
   while [ $# -gt 0 ]; do
     case "$1" in
     --)

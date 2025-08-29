@@ -113,7 +113,7 @@ testBuildFunctionsCoverage() {
   fi
 }
 __deprecatedFunctionsSoon() {
-  cat <<EOF | decorate wrap "usage""Argument"
+  decorate wrap "usage""Argument" <<EOF
 ApplicationDirectory
 ApplicationDirectoryList
 ApplicationFile

@@ -18,7 +18,7 @@ identicalFindTokens() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -99,7 +99,7 @@ identicalWatch() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -152,7 +152,7 @@ identicalWatch() {
       ;;
     *)
       # _IDENTICAL_ argumentUnknownHandler 1
-      __throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
+      __throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
       ;;
     esac
     shift
@@ -203,10 +203,10 @@ identicalWatch() {
             done < <(identicalFindTokens "${ff[@]}" "${files[@]}")
           fi
           if [ "${#tokens[@]}" -gt 0 ]; then
-            ! $debugFlag || statusMessage decorate info "Replacing tokens $(decorate each code "${tokens[@]}")"
+            ! $debugFlag || statusMessage decorate info "Replacing tokens $(decorate each code -- "${tokens[@]}")"
             __catch "$handler" identicalCheck "${rr[@]}" "${tokens[@]}" || return $?
           else
-            statusMessage decorate info "No tokens found in $(decorate each file "${files[@]}")"
+            statusMessage decorate info "No tokens found in $(decorate each file -- "${files[@]}")"
           fi
         fi
         read -r lastTimestamp lastFile <"$fileList" || :

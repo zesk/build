@@ -189,7 +189,7 @@ bashDebugInterruptFile() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -202,7 +202,7 @@ bashDebugInterruptFile() {
       ;;
     *)
       # _IDENTICAL_ argumentUnknownHandler 1
-      __throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
+      __throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
       ;;
     esac
     shift
@@ -290,7 +290,7 @@ plumber() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -341,10 +341,22 @@ _plumber() {
 }
 
 # List files in paths with a checksum, sorted
+# Use cacheDirectory if specified
 _housekeeperAccountant() {
-  local path
+  local path cacheDirectory
+  cacheDirectory="$1" && shift
   for path in "$@"; do
-    find "$path" -type f -print0 | xargs -0 sha1sum
+    if [ -d "$cacheDirectory" ]; then
+      local saved
+      saved=$(shaPipe <<<"$path")
+      if [ -f "$cacheDirectory/$saved" ]; then
+        cat "$cacheDirectory/$saved"
+      else
+        find "$path" -type f -print0 | xargs -0 sha1sum | tee "$cacheDirectory/$saved"
+      fi
+    else
+      find "$path" -type f -print0 | xargs -0 sha1sum
+    fi
   done | sort
 }
 
@@ -358,7 +370,7 @@ housekeeper() {
 
   local watchPaths path
   local __before __after __changed __ignore __pattern __cmd __tempDir=$TMPDIR
-  local __result=0
+  local __result=0 overheadFlag=false __cacheDirectory=""
   local __ignore=()
 
   watchPaths=()
@@ -367,7 +379,7 @@ housekeeper() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -379,6 +391,8 @@ housekeeper() {
       __pattern="$(usageArgumentString "$handler" "grepPattern" "${1-}")" || return $?
       __ignore+=(-e "$__pattern")
       ;;
+    --cache) shift && __cacheDirectory=$(usageArgumentDirectory "$handler" "$argument" "${1-}") || return $? ;;
+    --overhead) overheadFlag=true ;;
     --path)
       shift
       path="$(usageArgumentDirectory "$handler" "path" "${1-}")" || return $?
@@ -404,10 +418,14 @@ housekeeper() {
 
   __after=$(TMPDIR="$__tempDir" fileTemporaryName "$handler") || return $?
   __before="$__after.before"
-
-  _housekeeperAccountant "${watchPaths[@]}" >"$__before"
+  local start testStart testEnd
+  start=$(timingStart)
+  # Cache the before but NOT the after
+  _housekeeperAccountant "$__cacheDirectory" "${watchPaths[@]}" >"$__before"
+  testStart=$(timingStart)
   if "$@"; then
-    _housekeeperAccountant "${watchPaths[@]}" >"$__after"
+    testEnd=$(timingStart)
+    _housekeeperAccountant "" "${watchPaths[@]}" >"$__after"
     if [ "${#__ignore[@]}" -gt 0 ]; then
       __changed="$(diff "$__before" "$__after" | grep -e '^[<>]' | grep -v "${__ignore[@]+${__ignore[@]}}" || :)"
     else
@@ -422,6 +440,12 @@ housekeeper() {
     __result=$?
   fi
   rm -rf "$__before" "$__after" || :
+  if $overheadFlag; then
+    local end overhead
+    end=$(timingStart)
+    overhead=$((end - start - (testEnd - testStart)))
+    printf -- "housekeeper overhead: %s\n" "$(timingFormat "$overhead")"
+  fi
   return "$__result"
 }
 _housekeeper() {
@@ -447,7 +471,7 @@ outputTrigger() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -511,7 +535,7 @@ debugOpenFiles() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;

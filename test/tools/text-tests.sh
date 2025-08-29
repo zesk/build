@@ -7,6 +7,24 @@
 # Copyright &copy; 2025 Market Acumen, Inc.
 #
 
+__dataStringBegins() {
+  cat <<EOF
+0 Hello Hell No
+1 Whatever WHAT hatever
+0 Whatever What BBB CCC DDD
+0 Whatever BBB CCC DDD What
+1 Whatever BBB CCC DDD AAA
+EOF
+}
+
+testStringBegins() {
+  while read -r expected text remainder; do
+    local args=()
+    IFS=" " read -r -a args <<<"$remainder" || :
+    assertExitCode "$expected" beginsWith "$text" "${args[@]+"${args[@]}"}" || return $?
+  done < <(__dataStringBegins)
+}
+
 __dataTrimBoth() {
   cat <<EOF
 this is a line|

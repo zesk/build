@@ -18,7 +18,7 @@ bashGetRequires() {
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ --help 4
     --help)
@@ -63,6 +63,7 @@ _bashGetRequires() {
 #
 # DOC TEMPLATE: --help 1
 # Argument: --help - Optional. Flag. Display this help.
+# Argument: --ignore prefix. String. Optional. Ignore exact function names.
 # Argument: --ignore-prefix prefix. String. Optional. Ignore function names which match the prefix and do not check them.
 # Argument: --report - Flag. Optional. Output a report of various functions and usage after processing is complete.
 # Argument: --require - Flag. Optional. Requires at least one or more requirements to be listed and met to pass
@@ -70,17 +71,21 @@ _bashGetRequires() {
 bashCheckRequires() {
   local handler="_${FUNCNAME[0]}"
 
-  local requireFlag=false reportFlag=false unusedFlag=false ignorePrefixes=() files=()
+  local requireFlag=false reportFlag=false unusedFlag=false ignorePrefixes=() files=() ignore=()
 
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
+    --ignore)
+      shift
+      ignore+=("$(usageArgumentString "$handler" "$argument" "${1-}")") || return $?
+      ;;
     --ignore-prefix)
       shift
       ignorePrefixes+=("$(usageArgumentString "$handler" "$argument" "${1-}")") || return $?
@@ -115,6 +120,8 @@ bashCheckRequires() {
     [ -n "$functionName" ] || continue
     if [ "${#ignorePrefixes[@]}" -gt 0 ] && beginsWith "$functionName" "${ignorePrefixes[@]}"; then
       ignored+=("$functionName")
+    elif [ "${#ignore[@]}" -gt 0 ] && inArray "$functionName" "${ignore[@]}"; then
+      ignored+=("$functionName")
     else
       total=$((total + 1))
       if ! bashFunctionDefined "$functionName" "${files[@]}"; then
@@ -136,6 +143,8 @@ bashCheckRequires() {
     while read -r functionName; do
       [ -n "$functionName" ] || continue
       if [ "${#ignorePrefixes[@]}" -gt 0 ] && beginsWith "$functionName" "${ignorePrefixes[@]}"; then
+        ignored+=("$functionName")
+      elif [ "${#ignore[@]}" -gt 0 ] && inArray "$functionName" "${ignore[@]}"; then
         ignored+=("$functionName")
       elif inArray "$functionName" "${defined[@]+"${defined[@]}"}"; then
         external+=("$functionName")

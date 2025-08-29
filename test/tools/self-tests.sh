@@ -18,7 +18,7 @@ testBinBuildRequires() {
 
   assertExitCode 0 bashCheckRequires --require --unused --report "$home/bin/build/install.sample.sh" || return $?
   assertExitCode 0 bashCheckRequires --require --unused --report "$home/bin/build/install-bin-build.sh" || return $?
-  assertExitCode 0 bashCheckRequires --ignore-prefix __decorateExtension --require --unused --report "$home/bin/build/map.sh" || return $?
+  assertExitCode 0 bashCheckRequires --ignore __catch --ignore-prefix __decorateExtension --require --unused --report "$home/bin/build/map.sh" || return $?
   assertExitCode 0 bashCheckRequires --require --unused --report "$home/bin/build/need-bash.sh" || return $?
 }
 
@@ -132,10 +132,9 @@ testInstallInstallBuildSelf() {
   assertFileExists "$tempD/a/b/c/d/e/f/install-bin-build.sh" || return $?
   assertFileContains "$tempD/a/b/c/d/e/f/install-bin-build.sh" "${BUILD_COMPANY}" || return $?
 
-
   unset BUILD_COMPANY
 
-    __catch "$handler" rm -rf "$tempD" || return $?
+  __catch "$handler" rm -rf "$tempD" || return $?
 
 }
 

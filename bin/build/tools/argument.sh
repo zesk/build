@@ -529,7 +529,7 @@ _commentArgumentsRemainder() {
     if [ -f "$specification/remainder" ]; then
       __catch "$usage" environmentValueWrite _remainder "$@" >>"$stateFile" || return $?
     else
-      __throwArgument "$usage" "Unknown arguments $#: $(decorate each code "$@")" || return $?
+      __throwArgument "$usage" "Unknown arguments $#: $(decorate each code -- "$@")" || return $?
     fi
   fi
   printf "%s\n" "$stateFile" "$@"

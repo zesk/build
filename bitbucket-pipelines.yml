@@ -25,7 +25,7 @@ pipelines:
             - test.stats
           script:
             - bin/build.sh --commit
-            - bin/test.sh --skip-tag package-install --skip-tag slow-non-critical
+            - BUILD_TEST_FLAGS='Housekeeper:false;Plumber:false' bin/test.sh --skip-tag slow-non-critical
             - bin/deploy.sh --release
     staging:
       - step:
@@ -58,7 +58,7 @@ pipelines:
             - docker
           script:
             - IFS=' ' read -r -a aa < <(printf "%s\n" "${BUILD_TEST_ARGUMENTS-}")
-            - TEST_PLUMBER=true BUILD_DEBUG="${BUILD_DEBUG-%,},usage" bin/test.sh "${aa[@]+"${aa[@]}"}"
+            - BUILD_TEST_FLAGS="${BUILD_TEST_FLAGS-};Plumber:true;Housekeeper:true" BUILD_DEBUG="${BUILD_DEBUG-%,},usage" bin/test.sh "${aa[@]+"${aa[@]}"}"
     docs:
       - step:
           deployment: documentation

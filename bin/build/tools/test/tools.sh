@@ -60,7 +60,7 @@ testSuite() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -148,6 +148,10 @@ testSuite() {
       ;;
     --messy)
       trap '__testCleanupMess true' EXIT QUIT TERM
+      ;;
+    -*)
+      # _IDENTICAL_ argumentUnknownHandler 1
+      __throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
       ;;
     *)
       matchTests+=("$(usageArgumentString "$handler" "match" "$1")") || return $?
@@ -401,9 +405,10 @@ testSuite() {
       #  ▙▄▘▌ ▌▛▀▖▛▀▖▞▀▖▙▀▖
       #  ▌▚ ▌ ▌▌ ▌▌ ▌▛▀ ▌
       #  ▘ ▘▝▀▘▘ ▘▘ ▘▝▀▘▘
-
+      local flags globalFlags
       testLine=$(__testGetLine "$item" <"$sectionFile") || :
       flags=$(__testLoadFlags "$sectionFile" "$item")
+      globalFlags=$(__catch "$handler" buildEnvironmentGet BUILD_TEST_FLAGS) || return $?
 
       ! $verboseMode || statusMessage decorate info "$item flags is $(decorate code "${flags:-none specified}")" || return $?
 
@@ -427,7 +432,7 @@ testSuite() {
       testsRun+=("$item")
       __catchEnvironment "$handler" cd "$testHome" || return $?
 
-      "${runner[@]+"${runner[@]}"}" __testRun "$quietLog" "$testTemporaryTest" "$item" "$flags" || __testSuiteExecutor "$item" "$sectionFile" "$testLine" "$flags" "${failExecutors[@]+"${failExecutors[@]}"}" || __testFailed "$sectionName" "$item" || returnUndo $? cd "$saveHome" || return $?
+      "${runner[@]+"${runner[@]}"}" __testRun "$quietLog" "$testTemporaryTest" "$item" "$flags;$globalFlags" || __testSuiteExecutor "$item" "$sectionFile" "$testLine" "$flags" "${failExecutors[@]+"${failExecutors[@]}"}" || __testFailed "$sectionName" "$item" || returnUndo $? cd "$saveHome" || return $?
 
       __catchEnvironment "$handler" cd "$saveHome" || return $?
 
@@ -956,6 +961,7 @@ __testRun() {
     __TEST_SUITE_RESULT="skip Platform $platform disallowed"
     resultCode=0
   else
+    local doHousekeeper="" doPlumber=""
     local captureStderr
     captureStderr=$(fileTemporaryName "$handler") || return $?
     #     ▖   ▐        ▐
@@ -966,7 +972,26 @@ __testRun() {
     export TMPDIR
     savedTMPDIR=$TMPDIR
     TMPDIR="$tempDirectory"
-    if plumber --temporary "$savedTMPDIR" housekeeper --ignore '/.git/' --temporary "$savedTMPDIR" --path "$TMPDIR" --path "$(buildHome)" "$__test" "$quietLog" 2> >(tee -a "$captureStderr"); then
+
+    local maybe
+    # false wins to ensure disabling a check wins
+    for maybe in true false; do
+      ! isSubstringInsensitive ";Housekeeper:$maybe;" ";$__flags;" || doHousekeeper=$maybe
+      ! isSubstringInsensitive ";Plumber:$maybe;" ";$__flags;" || doPlumber=$maybe
+    done
+
+    local runner=()
+    runner=("$__test" "$quietLog")
+    if $doHousekeeper; then
+      housekeeperCache=$(__catch "$handler" buildCacheDirectory "test-housekeeper.$$") || return $?
+      runner=(--ignore '/.git/' --temporary "$savedTMPDIR" --path "$TMPDIR" --path "$(buildHome)" "${runner[@]}")
+      ! isSubstringInsensitive ";Housekeeper-Overhead:true;" ";$__flags;" || runner=(--overhead "${runner[@]}")
+      runner=(housekeeper --cache "$housekeeperCache" "${runner[@]}")
+    fi
+    if $doPlumber; then
+      runner=(plumber --temporary "$savedTMPDIR" "${runner[@]}")
+    fi
+    if "${runner[@]}" 2> >(tee -a "$captureStderr"); then
       TMPDIR="$savedTMPDIR"
       if fileIsEmpty "$captureStderr"; then
         printf "%s\n" "SUCCESS $__test" >>"$quietLog"

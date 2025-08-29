@@ -7,12 +7,14 @@
 # Copyright &copy; 2025 Market Acumen, Inc.
 #
 
+# Test-Housekeeper-Overhead: true
 testBashCommentFilter() {
-  assrtExitCode --stdout-no-match "SSH ""tests" 0 bashCommentFilter <"${BASH_SOURCE[0]}" || return $?
+  assertExitCode --stdout-no-match "SSH ""tests" --stdout-match "${FUNCNAME[0]}" 0 bashCommentFilter <"${BASH_SOURCE[0]}" || return $?
 }
 
 # Requires: A B C
 # Requires: D E F G A a b c d
+# Test-Housekeeper-Overhead: true
 testBashGetRequires() {
   local handler="_return"
   local temp
@@ -20,7 +22,7 @@ testBashGetRequires() {
   temp=$(fileTemporaryName "$handler") || return $?
   __catch "$handler" bashGetRequires "${BASH_SOURCE[0]}" >"$temp" || return $?
   assertFileContains "$temp" A B C D E F G a b c d || return $?
-  __catch "$handler" rm -f "temp" || return $?
+  __catch "$handler" rm -f "$temp" || return $?
 }
 
 testBashBuiltins() {

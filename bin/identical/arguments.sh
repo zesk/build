@@ -52,35 +52,35 @@ source "${BASH_SOURCE[0]%/*}/../tools.sh"
 # Argument: --tail - Optional. Flag. When outputting stderr or stdout, output the tail of the file. (Default)
 # This function serves as a sample for all other templates. DOES NOT NEED TO MAKE SENSE. Do not add a Requires: to this function.
 __documentTemplateFunction() {
-  local usage="_${FUNCNAME[0]}"
+  local handler="_${FUNCNAME[0]}"
 
-  # _IDENTICAL_ argument-case-header 5
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
+    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
-    # _IDENTICAL_ --help 4
-    --help)
-      "$usage" 0
-      return $?
-      ;;
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
+    # _IDENTICAL_ handlerHandler 1
+    --handler) shift && handler=$(usageArgumentFunction "$handler" "$argument" "${1-}") || return $? ;;
     # IDENTICAL profileNameArgumentHandlerCase 6
     --profile)
       shift
-      [ ${#pp[@]} -eq 0 ] || __throwArgument "$usage" "$argument already specified: ${pp[*]}"
-      profileName="$(usageArgumentString "$usage" "$argument" "$1")" || return $?
+      [ ${#pp[@]} -eq 0 ] || __throwArgument "$handler" "$argument already specified: ${pp[*]}"
+      profileName="$(usageArgumentString "$handler" "$argument" "$1")" || return $?
       pp=("$argument" "$profileName")
       ;;
     # IDENTICAL regionArgumentHandler 5
     --region)
       shift
-      [ -z "$region" ] || __throwArgument "$usage" "$argument already specified: $region"
-      region=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
+      [ -z "$region" ] || __throwArgument "$handler" "$argument already specified: $region"
+      region=$(usageArgumentString "$handler" "$argument" "${1-}") || return $?
       ;;
     *)
-      # _IDENTICAL_ argumentUnknown 1
-      __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
+      # _IDENTICAL_ argumentUnknownHandler 1
+      __throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
       ;;
     esac
     shift
@@ -93,51 +93,48 @@ __documentTemplateFunction() {
 
   # IDENTICAL profileNameArgumentValidation 4
   if [ -z "$profileName" ]; then
-    profileName="$(__catch "$usage" buildEnvironmentGet AWS_PROFILE)" || return $?
+    profileName="$(__catch "$handler" buildEnvironmentGet AWS_PROFILE)" || return $?
     [ -n "$profileName" ] || profileName="default"
   fi
 
   # IDENTICAL regionArgumentValidation 7
   if [ -z "$region" ]; then
     export AWS_REGION
-    __catch "$usage" buildEnvironmentLoad AWS_REGION || return $?
+    __catch "$handler" buildEnvironmentLoad AWS_REGION || return $?
     region="${AWS_REGION-}"
-    [ -n "$region" ] || __throwArgument "$usage" "AWS_REGION or --region is required" || return $?
+    [ -n "$region" ] || __throwArgument "$handler" "AWS_REGION or --region is required" || return $?
   fi
-  awsRegionValid "$region" || __throwArgument "$usage" "--region $region is not a valid region" || return $?
+  awsRegionValid "$region" || __throwArgument "$handler" "--region $region is not a valid region" || return $?
 
   timingReport "$start" "Completed in"
 }
 
 ___documentTemplateFunction() {
-  local usage="_${FUNCNAME[0]}"
+  local handler="_${FUNCNAME[0]}"
 
-  # _IDENTICAL_ argument-case-blank-argument-header 4
+  # _IDENTICAL_ argumentBlankLoopHandler 4
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     case "$argument" in
-    # _IDENTICAL_ --help 4
-    --help)
-      "$usage" 0
-      return $?
-      ;;
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
     # IDENTICAL profileNameArgumentHandlerCase 6
     --profile)
       shift
-      [ ${#pp[@]} -eq 0 ] || __throwArgument "$usage" "$argument already specified: ${pp[*]}"
-      profileName="$(usageArgumentString "$usage" "$argument" "$1")" || return $?
+      [ ${#pp[@]} -eq 0 ] || __throwArgument "$handler" "$argument already specified: ${pp[*]}"
+      profileName="$(usageArgumentString "$handler" "$argument" "$1")" || return $?
       pp=("$argument" "$profileName")
       ;;
     # IDENTICAL regionArgumentHandler 5
     --region)
       shift
-      [ -z "$region" ] || __throwArgument "$usage" "$argument already specified: $region"
-      region=$(usageArgumentString "$usage" "$argument" "${1-}") || return $?
+      [ -z "$region" ] || __throwArgument "$handler" "$argument already specified: $region"
+      region=$(usageArgumentString "$handler" "$argument" "${1-}") || return $?
       ;;
     *)
-      # _IDENTICAL_ argumentUnknown 1
-      __throwArgument "$usage" "unknown #$__index/$__count \"$argument\" ($(decorate each code "${__saved[@]}"))" || return $?
+      # _IDENTICAL_ argumentUnknownHandler 1
+      __throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
       ;;
     esac
     shift
@@ -150,18 +147,18 @@ ___documentTemplateFunction() {
 
   # IDENTICAL profileNameArgumentValidation 4
   if [ -z "$profileName" ]; then
-    profileName="$(__catch "$usage" buildEnvironmentGet AWS_PROFILE)" || return $?
+    profileName="$(__catch "$handler" buildEnvironmentGet AWS_PROFILE)" || return $?
     [ -n "$profileName" ] || profileName="default"
   fi
 
   # IDENTICAL regionArgumentValidation 7
   if [ -z "$region" ]; then
     export AWS_REGION
-    __catch "$usage" buildEnvironmentLoad AWS_REGION || return $?
+    __catch "$handler" buildEnvironmentLoad AWS_REGION || return $?
     region="${AWS_REGION-}"
-    [ -n "$region" ] || __throwArgument "$usage" "AWS_REGION or --region is required" || return $?
+    [ -n "$region" ] || __throwArgument "$handler" "AWS_REGION or --region is required" || return $?
   fi
-  awsRegionValid "$region" || __throwArgument "$usage" "--region $region is not a valid region" || return $?
+  awsRegionValid "$region" || __throwArgument "$handler" "--region $region is not a valid region" || return $?
 
   timingReport "$start" "Completed in"
 }

@@ -29,6 +29,7 @@ _environment() {
 # Argument: exitCode - Integer. Required. Return code.
 # Argument: handler - Function. Required. Error handler.
 # Argument: message ... - String. Optional. Error message
+# Requires: _argument
 __throw() {
   local exitCode="${1-}" && shift || _argument "Missing exit code" || return $?
   lcoal handler="${1-}" && shift || _argument "Missing error handler" || return $?
@@ -38,6 +39,7 @@ __throw() {
 # Run binary and catch errors with handler
 # Argument: handler - Required. Function. Error handler.
 # Argument: binary ... - Required. Executable. Any arguments are passed to `binary`.
+# Requires: _argument
 __catch() {
   local handler="${1-}" && shift || _argument "Missing handler" || return $?
   "$@" || "$handler" "$?" "$@" || return $?

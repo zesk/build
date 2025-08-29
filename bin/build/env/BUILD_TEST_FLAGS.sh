@@ -3,5 +3,5 @@
 # Copyright &copy; 2025 Market Acumen, Inc.
 # Category: Testing
 # Type: Boolean
-export TEST_PLUMBER
-TEST_PLUMBER="${TEST_PLUMBER-}"
+export BUILD_TEST_FLAGS
+BUILD_TEST_FLAGS="${BUILD_TEST_FLAGS-}"

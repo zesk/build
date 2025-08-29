@@ -25,6 +25,257 @@
 - 2025 - July - Added `# Test-Build-Home: true` flag to require certain tests to start with CWD at `buildHome`
 - 2025 - July - Added `--help` or help to (nearly) all commands
 
+## Functions without mention in `*-tests.sh`
+
+### Sugar
+
+- __argument
+- __catchEnvironmentQuiet
+
+# Helpers (why)
+
+- _muzzle
+- _mapReturn
+- _convertValue
+- _returnUndo
+- _returnCode
+- _exitString
+- _returnClean
+
+- __executeInputSupport
+
+### AWS 
+- awsSecurityGroupIPModify
+
+### Bash
+
+- bashDocumentation_FindFunctionDefinitions
+- bashFunctionCommentVariable
+- bashFunctionDefined
+- bashLibrary
+- bashLibraryHome
+- bashLint
+- bashLintFiles
+- bashLintFilesInteractive
+- bashListFunctions
+- bashRecursionDebug
+- bashSanitize
+- bashShowUsage
+- bashUserInput
+
+### Prompt
+
+- bashPromptColorScheme
+- bashPromptColorsFormat
+- bashPromptMarkers
+- bashPromptModule_ApplicationPath
+- bashPromptModule_TermColors
+- bashPromptModule_binBuild
+- bashPromptModule_dotFilesWatcher
+- bashPromptModule_reloadChanges
+
+- bigTextAt
+
+# Docker
+
+- bitbucketContainer
+- bitbucketGetVariable
+
+# Development
+
+- buildDevelopmentLink
+- buildEnvironmentContext
+- buildEnvironmentGetDirectory
+- cachedShaPipe
+- characterClassReport
+- characterClasses
+- clampDigits
+- colorMultiply
+- colorNormalize
+- colorParse
+- confirmMenu
+- consoleBrightness
+- consoleColorMode
+- consoleConfigureColorMode
+- consoleDefaultTitle
+- consoleGetColor
+- consoleLinksSupported
+- consoleSetTitle
+- contextShow
+- convertValue
+- daemontoolsManager
+- daemontoolsRestart
+- daemontoolsTerminate
+- darwinNotification
+- darwinSoundInstall
+- darwinSoundValid
+- debugOpenFiles
+- debuggingStack
+- decoratePath
+- decorateStyle
+- deployLink
+- deployMove
+- deprecatedCannonFile
+- deprecatedFilePrependVersion
+- deprecatedTokensFile
+- developerAnnounce
+- developerDevelopmentLink
+- developerTrack
+- directoryChange
+- directoryClobber
+- directoryIsEmpty
+- directoryNewestFile
+- directoryOldestFile
+- directoryParent
+- dockerComposeUninstall
+- dockerImages
+- dockerLocalContainer
+- dockerVolumeDelete
+- dockerVolumeExists
+- documentationBuild
+- documentationBuildCache
+- documentationBuildEnvironment
+- documentationIndex_FunctionIterator
+- documentationIndex_Generate
+- documentationIndex_LinkDocumentationPaths
+- documentationIndex_Lookup
+- documentationIndex_SeeLinker
+- documentationIndex_SetUnlinkedDocumentationPath
+- documentationIndex_ShowUnlinked
+- documentationIndex_UnlinkedIterator
+- documentationTemplate
+- documentationTemplateCompile
+- documentationTemplateDirectoryCompile
+- documentationTemplateFunctionCompile
+- documentationTemplateUpdate
+- documentationUnlinked
+- dotEnvConfigure
+- dotFilesApproved
+- dotFilesApprovedFile
+- dumpFile
+- dumpHex
+- dumpLoadAverages
+- environmentApplicationLoad
+- environmentFileApplicationVerify
+- environmentFileShow
+- environmentLoad
+- environmentValueConvertArray
+- evalCheck
+- fileExtractLines
+- fileGroup
+- fileIsOldest
+- fileModificationTimes
+- fileModifiedDays
+- fileModifiedRecentlyName
+- fileModifiedRecentlyTimestamp
+- fileModifiedSeconds
+- fileOwner
+- fileReverseLines
+- filesRename
+- findUncaughtAssertions
+- gitBranchExists
+- gitBranchExistsLocal
+- gitBranchExistsRemote
+- gitBranchMergeCurrent
+- gitBranchify
+- gitEnsureSafeDirectory
+- gitFindHome
+- gitInstallHook
+- gitInstallHooks
+- gitPreCommitHasExtension
+- gitPreCommitListExtension
+- gitPreCommitSetup
+- gitRemoveFileFromHistory
+- gitRepositoryChanged
+- gitShowChanges
+- gitShowStatus
+- gitTagAgain
+- gitTagDelete
+- gitTagVersion
+- gitVersionLast
+- githubLatest
+- githubLatestRelease
+- githubProjectJSON
+- githubPublishDate
+- githubRelease
+- hookRunOptional
+- hookSource
+- hookSourceOptional
+- hostTTFB
+- iTerm2Attention
+- iTerm2Download
+- iTerm2Image
+- iTerm2IsColorName
+- iTerm2IsColorType
+- iTerm2Notify
+- iTerm2PromptSupport
+- iTerm2SetColors
+- iTerm2Version
+- identicalCheckShell
+- identicalFindTokens
+- identicalWatch
+- installInstallBinary
+- interactiveBashSource
+- interactiveCountdown
+- interactiveManager
+- isBashBuiltin
+- isCharacterClasses
+- isDockerComposeCommand
+- isExecutableHack
+- isPHPStorm
+- isPyCharm
+- isType
+- isValidateType
+- isVisualStudioCode
+- lineFill
+- linkRename
+- listCleanDuplicates
+- loopExecute
+- manPathCleanDuplicates
+- manPathConfigure
+- manPathRemove
+- mapValueTrim
+- markdownIndentHeading
+- maximumFieldLength
+- maximumLineLength
+- nodePackageManagerValid
+- notify
+- packageAvailableList
+- packageDefault
+- packageGroupInstall
+- packageGroupUninstall
+- packageIsInstalled
+- packageMapping
+- packageUninstall
+- packageUpgrade
+- parseBoolean
+- pathConfigure
+- pathRemove
+- phpTailLog
+- phpTest
+- pipInstall
+- pipUninstall
+- pipWrapper
+- pipeRunner
+- plainLength
+- processOpenPipes
+- pythonPackageInstalled
+- returnClean
+- rotateLogs
+- shaPipe
+- sshSetup
+- stringContainsInsensitive
+- stringOffset
+- urlMatchesLocalFileSize
+- urlOpener
+- usageArgumentUnknown
+- usageDocumentSimple
+- usageGenerator
+- usageRequireBinary
+- validateFileContents
+- veeGitTag
+- websiteScrape
+
 ## Slowest tests 2025
 
 On a "2x" machine:

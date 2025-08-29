@@ -41,7 +41,7 @@
 # Reviewed: 2023-11-12
 #
 assertEquals() {
-  _assertEqualsHelper "${FUNCNAME[0]}" --success true "$@" || return $?
+  _assertEqualsHelper "_${FUNCNAME[0]}" --success true "$@" || return $?
 }
 _assertEquals() {
   # __IDENTICAL__ usageDocument 1
@@ -157,7 +157,7 @@ _assertStringEmpty() {
 # Example:     Single quote break-s
 # Reviewed: 2023-11-12
 assertNotEquals() {
-  _assertEqualsHelper "${FUNCNAME[0]}" --success false "$@" || return $?
+  _assertEqualsHelper "_${FUNCNAME[0]}" --success false "$@" || return $?
 }
 _assertNotEquals() {
   # __IDENTICAL__ usageDocument 1
@@ -199,7 +199,7 @@ _assertNotEquals() {
 # Exit code: 1 - If the process exits with a different exit code
 #
 assertExitCode() {
-  _assertExitCodeHelper "${FUNCNAME[0]}" --success true "$@" || return $?
+  _assertExitCodeHelper "_${FUNCNAME[0]}" --success true "$@" || return $?
 }
 _assertExitCode() {
   # __IDENTICAL__ usageDocument 1
@@ -240,7 +240,7 @@ _assertExitCode() {
 # Exit code: 1 - If the process exits with the provided exit code
 #
 assertNotExitCode() {
-  _assertExitCodeHelper "${FUNCNAME[0]}" --success false "$@" || return $?
+  _assertExitCodeHelper "_${FUNCNAME[0]}" --success false "$@" || return $?
 }
 _assertNotExitCode() {
   # __IDENTICAL__ usageDocument 1
@@ -278,7 +278,7 @@ _assertNotExitCode() {
 # Exit Code: 2 - Bad arguments
 #
 assertContains() {
-  _assertContainsHelper "${FUNCNAME[0]}" --success true "$@" || return $?
+  _assertContainsHelper "_${FUNCNAME[0]}" --success true "$@" || return $?
 }
 _assertContains() {
   # __IDENTICAL__ usageDocument 1
@@ -316,7 +316,7 @@ _assertContains() {
 # Exit Code: 2 - Bad arguments
 # See: assertContains
 assertNotContains() {
-  _assertContainsHelper "${FUNCNAME[0]}" --success false "$@" || return $?
+  _assertContainsHelper "_${FUNCNAME[0]}" --success false "$@" || return $?
 }
 _assertNotContains() {
   # __IDENTICAL__ usageDocument 1
@@ -363,7 +363,7 @@ _assertNotContains() {
 # Summary: Test that a directory exists
 #
 assertDirectoryExists() {
-  _assertDirectoryExistsHelper "${FUNCNAME[0]}" "$@" || return $?
+  _assertDirectoryExistsHelper "_${FUNCNAME[0]}" "$@" || return $?
 }
 _assertDirectoryExists() {
   # __IDENTICAL__ usageDocument 1
@@ -403,7 +403,7 @@ _assertDirectoryExists() {
 # Reviewed: 2023-11-12
 #
 assertDirectoryDoesNotExist() {
-  _assertDirectoryExistsHelper "${FUNCNAME[0]}" --success false "$@" || return $?
+  _assertDirectoryExistsHelper "_${FUNCNAME[0]}" --success false "$@" || return $?
 }
 _assertDirectoryDoesNotExist() {
   # __IDENTICAL__ usageDocument 1
@@ -442,8 +442,8 @@ _assertDirectoryDoesNotExist() {
 # Summary: Test that a directory exists
 #
 assertDirectoryEmpty() {
-  _assertDirectoryExistsHelper "${FUNCNAME[0]}" "$@" || return $?
-  _assertDirectoryEmptyHelper "${FUNCNAME[0]}" "$@" || return $?
+  _assertDirectoryExistsHelper "_${FUNCNAME[0]}" "$@" || return $?
+  _assertDirectoryEmptyHelper "_${FUNCNAME[0]}" "$@" || return $?
 }
 _assertDirectoryEmpty() {
   # __IDENTICAL__ usageDocument 1
@@ -482,8 +482,8 @@ _assertDirectoryEmpty() {
 # Reviewed: 2023-11-12
 #
 assertDirectoryNotEmpty() {
-  _assertDirectoryExistsHelper "${FUNCNAME[0]}" "$@" || return $?
-  _assertDirectoryEmptyHelper "${FUNCNAME[0]}" --success false "$@" || return $?
+  _assertDirectoryExistsHelper "_${FUNCNAME[0]}" "$@" || return $?
+  _assertDirectoryEmptyHelper "_${FUNCNAME[0]}" --success false "$@" || return $?
 }
 _assertDirectoryNotEmpty() {
   # __IDENTICAL__ usageDocument 1
@@ -530,7 +530,7 @@ _assertDirectoryNotEmpty() {
 # Summary: Test that a file exists
 #
 assertFileExists() {
-  _assertFileExistsHelper "${FUNCNAME[0]}" "$@" || return $?
+  _assertFileExistsHelper "_${FUNCNAME[0]}" "$@" || return $?
 }
 _assertFileExists() {
   # __IDENTICAL__ usageDocument 1
@@ -570,7 +570,7 @@ _assertFileExists() {
 # Reviewed: 2023-11-12
 #
 assertFileDoesNotExist() {
-  _assertFileExistsHelper "${FUNCNAME[0]}" --success false "$@" || return $?
+  _assertFileExistsHelper "_${FUNCNAME[0]}" --success false "$@" || return $?
 }
 _assertFileDoesNotExist() {
   # __IDENTICAL__ usageDocument 1
@@ -616,7 +616,7 @@ _assertFileDoesNotExist() {
 # Reviewed: 2023-11-12
 #
 assertOutputEquals() {
-  _assertOutputEqualsHelper "${FUNCNAME[0]}" "$@" || return $?
+  _assertOutputEqualsHelper "_${FUNCNAME[0]}" "$@" || return $?
 }
 _assertOutputEquals() {
   # __IDENTICAL__ usageDocument 1
@@ -659,7 +659,7 @@ _assertOutputEquals() {
 # Reviewed: 2023-11-12
 #
 assertOutputContains() {
-  _assertOutputContainsHelper "${FUNCNAME[0]}" --success true "$@" || return $?
+  _assertOutputContainsHelper "_${FUNCNAME[0]}" --success true "$@" || return $?
 }
 _assertOutputContains() {
   # __IDENTICAL__ usageDocument 1
@@ -703,7 +703,7 @@ _assertOutputContains() {
 # Reviewed: 2023-11-12
 #
 assertOutputDoesNotContain() {
-  _assertOutputContainsHelper "${FUNCNAME[0]}" --success false "$@" || return $?
+  _assertOutputContainsHelper "_${FUNCNAME[0]}" --success false "$@" || return $?
 }
 _assertOutputDoesNotContain() {
   # __IDENTICAL__ usageDocument 1
@@ -744,7 +744,7 @@ _assertOutputDoesNotContain() {
 # Reviewed: 2023-11-12
 #
 assertFileContains() {
-  __assertFileContainsThis "${FUNCNAME[0]}" --line-depth 2 "$@" || return $?
+  __assertFileContainsThis "_${FUNCNAME[0]}" --line-depth 2 "$@" || return $?
 }
 _assertFileContains() {
   # __IDENTICAL__ usageDocument 1
@@ -782,7 +782,7 @@ _assertFileContains() {
 # Example:     assertFileDoesNotContain $logFile warning Warning WARNING
 #
 assertFileDoesNotContain() {
-  __assertFileDoesNotContainThis "${FUNCNAME[0]}" "$@" || return $?
+  __assertFileDoesNotContainThis "_${FUNCNAME[0]}" "$@" || return $?
 }
 _assertFileDoesNotContain() {
   # __IDENTICAL__ usageDocument 1
@@ -820,7 +820,7 @@ _assertFileDoesNotContain() {
 # Example:     {fn} 0 .env
 #
 assertFileSize() {
-  _assertFileSizeHelper "${FUNCNAME[0]}" "$@" || return $?
+  _assertFileSizeHelper "_${FUNCNAME[0]}" "$@" || return $?
 }
 _assertFileSize() {
   # __IDENTICAL__ usageDocument 1
@@ -858,7 +858,7 @@ _assertFileSize() {
 # Example:     {fn} 0 .env
 #
 assertNotFileSize() {
-  _assertFileSizeHelper "${FUNCNAME[0]}" --success false "$@" || return $?
+  _assertFileSizeHelper "_${FUNCNAME[0]}" --success false "$@" || return $?
 }
 _assertNotFileSize() {
   # __IDENTICAL__ usageDocument 1
@@ -977,7 +977,7 @@ _assertNotZeroFileSize() {
 # Reviewed: 2023-11-14
 #
 assertGreaterThan() {
-  _assertNumericHelper "${FUNCNAME[0]}" "$@" -gt || return $?
+  _assertNumericHelper "_${FUNCNAME[0]}" "$@" -gt || return $?
 }
 _assertGreaterThan() {
   # __IDENTICAL__ usageDocument 1
@@ -1013,7 +1013,7 @@ _assertGreaterThan() {
 # Reviewed: 2023-11-12
 # Summary: Assert actual value is greater than or equal to expected value
 assertGreaterThanOrEqual() {
-  _assertNumericHelper "${FUNCNAME[0]}" "$@" -ge || return $?
+  _assertNumericHelper "_${FUNCNAME[0]}" "$@" -ge || return $?
 }
 _assertGreaterThanOrEqual() {
   # __IDENTICAL__ usageDocument 1
@@ -1051,7 +1051,7 @@ _assertGreaterThanOrEqual() {
 # Exit code: 0 - expected less than to actual
 # Exit code: 1 - expected greater than or equal to actual, or invalid numbers
 assertLessThan() {
-  _assertNumericHelper "${FUNCNAME[0]}" "$@" -lt || return $?
+  _assertNumericHelper "_${FUNCNAME[0]}" "$@" -lt || return $?
 }
 _assertLessThan() {
   # __IDENTICAL__ usageDocument 1
@@ -1089,7 +1089,7 @@ _assertLessThan() {
 # Exit code: 1 - expected greater than actual, or invalid numbers
 #
 assertLessThanOrEqual() {
-  _assertNumericHelper "${FUNCNAME[0]}" "$@" -le || return $?
+  _assertNumericHelper "_${FUNCNAME[0]}" "$@" -le || return $?
 }
 _assertLessThanOrEqual() {
   # __IDENTICAL__ usageDocument 1

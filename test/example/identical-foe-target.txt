@@ -1,34 +1,34 @@
 # IDENTICAL foetarget 1
-Waldo
+Waldo1
 
 # IDENTICAL foetarget 2
-Waldo
-Waldo
+Waldo2
+Waldo2
 
 # IDENTICAL foetarget 3
-Waldo
-Waldo
-Waldo
+Waldo3
+Waldo3
+Waldo3
 
 # IDENTICAL foetarget 4
-Waldo
-Waldo
-Waldo
-Waldo
+Waldo4
+Waldo4
+Waldo4
+Waldo4
 
 # IDENTICAL foetarget 5
-Waldo
-Waldo
-Waldo
-Waldo
-Waldo
+Waldo5
+Waldo5
+Waldo5
+Waldo5
+Waldo5
 
 # IDENTICAL foetarget EOF
-Waldo
-Waldo
-Waldo
-Waldo
-Waldo
+WaldoEOF
+WaldoEOF
+WaldoEOF
+WaldoEOF
+WaldoEOF
 
 # IDENTICAL foetarget 11
-Waldo
+Waldo11

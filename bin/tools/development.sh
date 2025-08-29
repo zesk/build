@@ -57,9 +57,24 @@ buildQuickTest() {
   __help "$handler" "$@" || return 0
 
   home=$(__catch "$handler" buildHome) || return $?
-  "$home/bin/test.sh" -c --skip-tag slow --skip-tag package-install "$@"
+  BUILD_TEST_FLAGS='Housekeeper:false;Plumber:false' "$home/bin/test.sh" -c --skip-tag slow --skip-tag package-install "$@"
 }
 _buildQuickTest() {
+  # __IDENTICAL__ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+# Run production tests
+buildProductionTest() {
+  local handler="_${FUNCNAME[0]}"
+  local home
+
+  __help "$handler" "$@" || return 0
+
+  home=$(__catch "$handler" buildHome) || return $?
+  "$home/bin/test.sh" --skip-tag slow-non-critical "$@"
+}
+_buildProductionTest() {
   # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

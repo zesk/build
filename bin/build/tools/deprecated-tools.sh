@@ -10,41 +10,39 @@
 # Argument: target - File. Required. File to update.
 # Argument: version - String. Required. Version to place at the top of the file.
 deprecatedFilePrependVersion() {
-  local usage="_${FUNCNAME[0]}"
+  local handler="_${FUNCNAME[0]}"
 
   local target="" version=""
 
-  # _IDENTICAL_ argument-case-header 5
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
+    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
-    # _IDENTICAL_ --help 4
-    --help)
-      "$usage" 0
-      return $?
-      ;;
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
     *)
       if [ -z "$target" ]; then
-        target="$(usageArgumentFile "$usage" "target" "${1-}")" || return $?
+        target="$(usageArgumentFile "$handler" "target" "${1-}")" || return $?
       elif [ -z "$version" ]; then
-        version="$(usageArgumentString "$usage" "version" "$1")" || return $?
+        version="$(usageArgumentString "$handler" "version" "$1")" || return $?
       fi
       ;;
     esac
     shift
   done
 
-  [ -n "$target" ] || __throwArgument "$usage" "Missing target" || return $?
-  [ -n "$version" ] || __throwArgument "$usage" "Missing version" || return $?
+  [ -n "$target" ] || __throwArgument "$handler" "Missing target" || return $?
+  [ -n "$version" ] || __throwArgument "$handler" "Missing version" || return $?
 
   local newTarget
 
-  newTarget=$(fileTemporaryName "$usage") || returnClean $? "$newTarget" || return $?
-  __catchEnvironment "$usage" printf -- "%s\n\n" "# $version" >"$newTarget" || returnClean $? "$newTarget" || return $?
-  __catchEnvironment "$usage" cat "$target" >>"$newTarget" || returnClean $? "$newTarget" || return $?
-  __catchEnvironment "$usage" mv -f "$newTarget" "$target" || returnClean $? "$newTarget" || return $?
+  newTarget=$(fileTemporaryName "$handler") || returnClean $? "$newTarget" || return $?
+  __catchEnvironment "$handler" printf -- "%s\n\n" "# $version" >"$newTarget" || returnClean $? "$newTarget" || return $?
+  __catchEnvironment "$handler" cat "$target" >>"$newTarget" || returnClean $? "$newTarget" || return $?
+  __catchEnvironment "$handler" mv -f "$newTarget" "$target" || returnClean $? "$newTarget" || return $?
 }
 _deprecatedFilePrependVersion() {
   # __IDENTICAL__ usageDocument 1
@@ -56,7 +54,7 @@ _deprecatedFilePrependVersion() {
 #
 # Environment: BUILD_RELEASE_NOTES
 deprecatedIgnore() {
-  local usage="_${FUNCNAME[0]}"
+  local handler="_${FUNCNAME[0]}"
   [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
 
   local notes
@@ -65,9 +63,9 @@ deprecatedIgnore() {
 
   isArray __BUILD_DEPRECATED_EXTRAS || __BUILD_DEPRECATED_EXTRAS=()
 
-  notes=$(__catch "$usage" buildEnvironmentGet BUILD_RELEASE_NOTES) || return $?
+  notes=$(__catch "$handler" buildEnvironmentGet BUILD_RELEASE_NOTES) || return $?
   if [ -z "$notes" ]; then
-    __throwEnvironment "$usage" "BUILD_RELEASE_NOTES is blank?" || return $?
+    __throwEnvironment "$handler" "BUILD_RELEASE_NOTES is blank?" || return $?
   fi
   # Trim extra stuff from release notes partial path
   notes="${notes#.}"
@@ -89,44 +87,42 @@ _deprecatedIgnore() {
 
 # Run deprecated tokens file search
 deprecatedTokensFile() {
-  local usage="_${FUNCNAME[0]}"
+  local handler="_${FUNCNAME[0]}"
 
   local findArgumentFunction="" files=() cannonPath=""
 
-  # _IDENTICAL_ argument-case-header 5
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
+    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
-    # _IDENTICAL_ --help 4
-    --help)
-      "$usage" 0
-      return $?
-      ;;
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
     --path)
       shift
-      cannonPath=$(usageArgumentDirectory "$usage" "$argument cannonPath" "${1-}") || return $?
+      cannonPath=$(usageArgumentDirectory "$handler" "$argument cannonPath" "${1-}") || return $?
       ;;
     *)
       if [ -z "$findArgumentFunction" ]; then
-        findArgumentFunction=$(usageArgumentFunction "$usage" "ignoreFunction" "$1") || return $?
+        findArgumentFunction=$(usageArgumentFunction "$handler" "ignoreFunction" "$1") || return $?
       else
-        files+=("$(usageArgumentFile "$usage" "cannonFile" "$1")") || return $?
+        files+=("$(usageArgumentFile "$handler" "cannonFile" "$1")") || return $?
       fi
       ;;
     esac
     shift
   done
 
-  [ -n "$findArgumentFunction" ] || __throwArgument "$usage" "findArgumentFunction required" || return $?
-  [ -n "$cannonPath" ] || cannonPath=$(__catch "$usage" buildHome) || return $?
+  [ -n "$findArgumentFunction" ] || __throwArgument "$handler" "findArgumentFunction required" || return $?
+  [ -n "$cannonPath" ] || cannonPath=$(__catch "$handler" buildHome) || return $?
 
   local line tokens=()
   local exitCode=0 start results comment="" commentText="(start of file)"
 
   start=$(timingStart)
-  results=$(fileTemporaryName "$usage") || return $?
+  results=$(fileTemporaryName "$handler") || return $?
   while read -r line; do
     comment="${line#\#}"
     if [ "$comment" != "$line" ]; then
@@ -145,7 +141,7 @@ deprecatedTokensFile() {
       fi
     fi
   done < <(cat "${files[@]+"${files[@]}"}")
-  __catchEnvironment "$usage" rm -rf "$results" || return $?
+  __catchEnvironment "$handler" rm -rf "$results" || return $?
 
   statusMessage --last timingReport "$start" "Deprecated token scan took"
 }
@@ -173,38 +169,36 @@ _deprecatedTokensFile() {
 # Exit Code: 0 - No changes were made in any files.
 # Exit Code: 1 - changes were made in at least one file.
 deprecatedCannonFile() {
-  local usage="_${FUNCNAME[0]}"
+  local handler="_${FUNCNAME[0]}"
 
   local findArgumentFunction="" files=() cannonPath=""
 
-  # _IDENTICAL_ argument-case-header 5
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
+    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
-    # _IDENTICAL_ --help 4
-    --help)
-      "$usage" 0
-      return $?
-      ;;
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
     --path)
       shift
-      cannonPath=$(usageArgumentDirectory "$usage" "$argument cannonPath" "${1-}") || return $?
+      cannonPath=$(usageArgumentDirectory "$handler" "$argument cannonPath" "${1-}") || return $?
       ;;
     *)
       if [ -z "$findArgumentFunction" ]; then
-        findArgumentFunction=$(usageArgumentFunction "$usage" "ignoreFunction" "$1") || return $?
+        findArgumentFunction=$(usageArgumentFunction "$handler" "ignoreFunction" "$1") || return $?
       else
-        files+=("$(usageArgumentFile "$usage" "cannonFile" "$1")") || return $?
+        files+=("$(usageArgumentFile "$handler" "cannonFile" "$1")") || return $?
       fi
       ;;
     esac
     shift
   done
 
-  [ -n "$findArgumentFunction" ] || __throwArgument "$usage" "findArgumentFunction required" || return $?
-  [ -n "$cannonPath" ] || cannonPath=$(__catch "$usage" buildHome) || return $?
+  [ -n "$findArgumentFunction" ] || __throwArgument "$handler" "findArgumentFunction required" || return $?
+  [ -n "$cannonPath" ] || cannonPath=$(__catch "$handler" buildHome) || return $?
 
   local start
   start=$(__environment timingStart) || return $?
@@ -247,32 +241,30 @@ _deprecatedCannonFile() {
 # Argument: --path cannonPath - Optional. Directory. Run cannon operation starting in this directory.
 # See: buildHome
 deprecatedFind() {
-  local usage="_${FUNCNAME[0]}"
+  local handler="_${FUNCNAME[0]}"
   local cannonPath="" search="" findArgumentFunction="" aa=()
 
-  # _IDENTICAL_ argument-case-header 5
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
+    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
-    # _IDENTICAL_ --help 4
-    --help)
-      "$usage" 0
-      return $?
-      ;;
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
     --path)
       shift
-      cannonPath=$(usageArgumentDirectory "$usage" "$argument" "${1-}") || return $?
+      cannonPath=$(usageArgumentDirectory "$handler" "$argument" "${1-}") || return $?
       ;;
     *)
       if [ -z "$findArgumentFunction" ]; then
-        findArgumentFunction=$(usageArgumentFunction "$usage" "ignoreFunction" "$1") || return $?
+        findArgumentFunction=$(usageArgumentFunction "$handler" "ignoreFunction" "$1") || return $?
         local aa=()
-        read -d '' -r -a aa < <("$findArgumentFunction") || [ "${#aa[@]}" -gt 0 ] || __throwArgument "$usage" "$findArgumentFunction returned empty" || return $?
+        read -d '' -r -a aa < <("$findArgumentFunction") || [ "${#aa[@]}" -gt 0 ] || __throwArgument "$handler" "$findArgumentFunction returned empty" || return $?
       else
-        [ -n "$cannonPath" ] || cannonPath=$(__catch "$usage" buildHome) || return $?
-        search="$(usageArgumentString "$usage" "search" "${1-}")" || return $?
+        [ -n "$cannonPath" ] || cannonPath=$(__catch "$handler" buildHome) || return $?
+        search="$(usageArgumentString "$handler" "search" "${1-}")" || return $?
         search="$(quoteGrepPattern "$search")"
         if find "$cannonPath" -type f "${aa[@]}" -print0 | xargs -0 grep -n -l -e "$search"; then
           return 0
@@ -296,31 +288,29 @@ _deprecatedFind() {
 # Argument: replace - String. Required. String to search for
 # Argument: extraCannonArguments - Arguments. Optional. Any additional arguments are passed to `cannon`.
 deprecatedCannon() {
-  local usage="_${FUNCNAME[0]}"
+  local handler="_${FUNCNAME[0]}"
   local search="" replace="" findArgumentFunction="" cannonPath=""
 
-  # _IDENTICAL_ argument-case-header 5
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    [ -n "$argument" ] || __throwArgument "$usage" "blank #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
+    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
-    # _IDENTICAL_ --help 4
-    --help)
-      "$usage" 0
-      return $?
-      ;;
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
     --path)
       shift
-      cannonPath=$(usageArgumentDirectory "$usage" "$argument" "${1-}") || return $?
+      cannonPath=$(usageArgumentDirectory "$handler" "$argument" "${1-}") || return $?
       ;;
     *)
       if [ -z "$findArgumentFunction" ]; then
-        findArgumentFunction=$(usageArgumentFunction "$usage" "ignoreFunction" "$1") || return $?
+        findArgumentFunction=$(usageArgumentFunction "$handler" "ignoreFunction" "$1") || return $?
       elif [ -z "$search" ]; then
-        search="$(usageArgumentString "$usage" "search" "${1-}")" || return $?
+        search="$(usageArgumentString "$handler" "search" "${1-}")" || return $?
       elif [ -z "$replace" ]; then
-        replace="$(usageArgumentString "$usage" "replace" "${1-}")" || return $?
+        replace="$(usageArgumentString "$handler" "replace" "${1-}")" || return $?
       else
         break
       fi
@@ -328,13 +318,13 @@ deprecatedCannon() {
     esac
     shift
   done
-  [ -n "$cannonPath" ] || cannonPath=$(__catch "$usage" buildHome) || return $?
-  [ -n "$findArgumentFunction" ] || __throwArgument "$usage" "findArgumentFunction required" || return $?
-  [ -n "$search" ] || __throwArgument "$usage" "search required" || return $?
-  [ -n "$replace" ] || __throwArgument "$usage" "replace required" || return $?
+  [ -n "$cannonPath" ] || cannonPath=$(__catch "$handler" buildHome) || return $?
+  [ -n "$findArgumentFunction" ] || __throwArgument "$handler" "findArgumentFunction required" || return $?
+  [ -n "$search" ] || __throwArgument "$handler" "search required" || return $?
+  [ -n "$replace" ] || __throwArgument "$handler" "replace required" || return $?
 
   local aa=()
-  read -d '' -r -a aa < <("$findArgumentFunction") || [ "${#aa[@]}" -gt 0 ] || __throwArgument "$usage" "$findArgumentFunction returned empty" || return $?
+  read -d '' -r -a aa < <("$findArgumentFunction") || [ "${#aa[@]}" -gt 0 ] || __throwArgument "$handler" "$findArgumentFunction returned empty" || return $?
   # ignore should go at the end so it has priority over previous entries
   cannon --path "$cannonPath" "$search" "$replace" "$@" "${aa[@]}"
 }
