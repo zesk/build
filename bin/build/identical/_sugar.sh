@@ -192,5 +192,3 @@ __argument() {
 }
 
 # <-- END of IDENTICAL _sugar
-
-# <-- END of IDENTICAL _sugar
