@@ -984,7 +984,7 @@ __testRun() {
     runner=("$__test" "$quietLog")
     if $doHousekeeper; then
       housekeeperCache=$(__catch "$handler" buildCacheDirectory "test-housekeeper.$$") || return $?
-      runner=(--ignore '/.git/' --temporary "$savedTMPDIR" --path "$TMPDIR" --path "$(buildHome)" "${runner[@]}")
+      runner=(--ignore '.last-run-test' --ignore '/.git/' --temporary "$savedTMPDIR" --path "$TMPDIR" --path "$(buildHome)" "${runner[@]}")
       ! isSubstringInsensitive ";Housekeeper-Overhead:true;" ";$__flags;" || runner=(--overhead "${runner[@]}")
       runner=(housekeeper --cache "$housekeeperCache" "${runner[@]}")
     fi
