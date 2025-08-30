@@ -181,7 +181,7 @@ __installPackageConfiguration() {
 # INTERNAL:
 # INTERNAL: Calling signature for `version-function`:
 # INTERNAL:
-# INTERNAL:    handler: version-function handler applicationHome installPath
+# INTERNAL:    Usage: version-function handler applicationHome installPath
 # INTERNAL:    Argument: handler - Function. Required. Function to call when an error occurs.
 # INTERNAL:    Argument: applicationHome - Directory. Required. Path to the application home where target will be installed, or is installed. (e.g. myApp/)
 # INTERNAL:    Argument: installPath - Directory. Required. Path to the installPath home where target will be installed, or is installed. (e.g. myApp/bin/build)
@@ -190,14 +190,14 @@ __installPackageConfiguration() {
 # INTERNAL:
 # INTERNAL: Calling signature for `url-function`:
 # INTERNAL:
-# INTERNAL:    handler: url-function handler
+# INTERNAL:    Usage: url-function handler
 # INTERNAL:    Argument: handler - Function. Required. Function to call when an error occurs.
 # INTERNAL:
 # INTERNAL: `url-function` should output a URL and exit 0. Any other return code terminates installation.
 # INTERNAL:
 # INTERNAL: Calling signature for `check-function`:
 # INTERNAL:
-# INTERNAL:    handler: check-function handler installPath
+# INTERNAL:    Usage: check-function handler installPath
 # INTERNAL:    Argument: handler - Function. Required. Function to call when an error occurs.
 # INTERNAL:    Argument: installPath - Directory. Required. Path to the installPath home where target will be installed, or is installed. (e.g. myApp/bin/build)
 # INTERNAL:
@@ -467,7 +467,7 @@ _installRemotePackage() {
 }
 
 # Error handler for _installRemotePackage
-# handler: {fn} exitCode [ message ... ]
+# Usage: {fn} exitCode [ message ... ]
 # Requires: usageDocumentSimple
 __installRemotePackage() {
   local source content
@@ -551,7 +551,7 @@ __installRemotePackageGitCheck() {
   fi
 }
 
-# handler: {fn} _installRemotePackageSource targetBinary relativePath
+# Usage: {fn} _installRemotePackageSource targetBinary relativePath
 # Requires: grep printf chmod wait
 # Requires: _environment isUnsignedInteger cat returnClean
 __installRemotePackageLocal() {
@@ -621,7 +621,7 @@ _versionSort() {
 # IDENTICAL usageArgumentCore 13
 
 # Require an argument to be non-blank
-# Argument: handler - Required. Function. handler function to call upon failure.
+# Argument: handler - Required. Function. Usage function to call upon failure.
 # Argument: argument - Required. String. Name of the argument used in error messages.
 # Argument: value - Optional. String, Value which should be non-blank otherwise an argument error is thrown.
 # Exit Code: 2 - If `value` is blank
@@ -724,8 +724,8 @@ urlFetch() {
         shift
         break
       else
-      # _IDENTICAL_ argumentUnknownHandler 1
-      __throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
+        # _IDENTICAL_ argumentUnknownHandler 1
+        __throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
       fi
       ;;
     esac
@@ -1039,7 +1039,7 @@ _isFunction() {
 
 # Sets the environment variable `BUILD_COLORS` if not set, uses `TERM` to calculate
 #
-# handler: hasColors
+# Usage: hasColors
 # DOC TEMPLATE: --help 1
 # Argument: --help - Optional. Flag. Display this help.
 # Exit Code: 0 - Console or output supports colors
@@ -1076,7 +1076,7 @@ _hasColors() {
 #
 # Semantics-based
 #
-# handler: {fn} label lightStartCode darkStartCode endCode [ -n ] [ message ]
+# Usage: {fn} label lightStartCode darkStartCode endCode [ -n ] [ message ]
 # Requires: hasColors printf
 __decorate() {
   local prefix="$1" start="$2" dp="$3" end="$4" && shift 4
@@ -1110,7 +1110,7 @@ _decorations() {
 }
 
 # Singular decoration function
-# handler: decorate style [ text ... ]
+# Usage: decorate style [ text ... ]
 # Argument: style - String. Required. One of: reset underline no-underline bold no-bold black black-contrast blue cyan green magenta orange red white yellow bold-black bold-black-contrast bold-blue bold-cyan bold-green bold-magenta bold-orange bold-red bold-white bold-yellow code info notice success warning error subtle label value decoration
 # Argument: text - Text to output. If not supplied, outputs a code to change the style to the new style.
 # stdout: Decorated text
@@ -1212,7 +1212,7 @@ decoration=45;97 45;30
 }
 
 # fn: decorate each
-# handler: decorate each decoration argument1 argument2 ...
+# Usage: decorate each decoration argument1 argument2 ...
 # Runs the following command on each subsequent argument for formatting
 # Also supports formatting input lines instead (on the same line)
 # Example:     decorate each code "$@"
@@ -1376,7 +1376,7 @@ _return() {
 # Credits: F. Hauri - Give Up GitHub (isnum_Case)
 # Original: is_uint
 # Argument: value - EmptyString. Value to test if it is an unsigned integer.
-# handler: {fn} argument ...
+# Usage: {fn} argument ...
 # Exit Code: 0 - if it is an unsigned integer
 # Exit Code: 1 - if it is not an unsigned integer
 # Requires: _return
@@ -1404,7 +1404,7 @@ __throwEnvironment() {
 }
 
 # Run `command`, upon failure run `handler` with an argument error
-# handler: {fn} handler command ...
+# Usage: {fn} handler command ...
 # Argument: handler - Required. String. Failure command
 # Argument: command - Required. Command to run.
 # Requires: __throwArgument
@@ -1414,7 +1414,7 @@ __catchArgument() {
 }
 
 # Run `command`, upon failure run `handler` with an environment error
-# handler: {fn} handler command ...
+# Usage: {fn} handler command ...
 # Argument: handler - Required. String. Failure command
 # Argument: command - Required. Command to run.
 # Requires: __throwEnvironment
@@ -1464,7 +1464,7 @@ __catch() {
 # _IDENTICAL_ __environment 10
 
 # Run `command ...` (with any arguments) and then `_environment` if it fails.
-# handler: {fn} command ...
+# Usage: {fn} command ...
 # Argument: command ... - Any command and arguments to run.
 # Exit Code: 0 - Success
 # Exit Code: 1 - Failed

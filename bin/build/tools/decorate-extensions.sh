@@ -105,7 +105,7 @@ __decorateExtensionWrap() {
   local handler="_${FUNCNAME[0]}"
   local prefix=$'\1' suffix
 
-  local fill=""  width=""
+  local fill="" width=""
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do

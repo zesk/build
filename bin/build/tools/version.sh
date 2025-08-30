@@ -188,8 +188,8 @@ newRelease() {
       ;;
     *)
       if [ -n "$newVersion" ]; then
-      # _IDENTICAL_ argumentUnknownHandler 1
-      __throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
+        # _IDENTICAL_ argumentUnknownHandler 1
+        __throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
       fi
       newVersion="${argument#v}"
       isVersion "$newVersion" || __throwArgument "$handler" "$argument is not a version" || return $?

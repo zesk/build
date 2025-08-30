@@ -11,7 +11,7 @@
 #
 # -- CUT BELOW HERE --
 
-# IDENTICAL _sugar 180
+# IDENTICAL _sugar 182
 
 # Argument: name ... - Optional. String. Exit code value to output.
 # Print one or more return codes by name.
@@ -190,6 +190,8 @@ __environment() {
 __argument() {
   "$@" || _argument "$@" || return $?
 }
+
+# <-- END of IDENTICAL _sugar
 
 # <-- END of IDENTICAL _sugar
 

@@ -65,6 +65,7 @@ _buildQuickTest() {
 }
 
 # Run production tests
+# Argument: ... - Arguments. Optional. Passed to `testSuite`.
 buildProductionTest() {
   local handler="_${FUNCNAME[0]}"
   local home

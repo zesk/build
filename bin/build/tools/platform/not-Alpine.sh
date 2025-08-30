@@ -26,4 +26,3 @@ __packageManagerDefault() {
 __bigTextBinary() {
   printf -- "%s\n" "toilet"
 }
-

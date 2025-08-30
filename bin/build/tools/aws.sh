@@ -457,8 +457,8 @@ awsCredentialsRemove() {
       if [ -z "$profileName" ]; then
         profileName="$(usageArgumentString "$handler" "$argument" "$1")" || return $?
       else
-      # _IDENTICAL_ argumentUnknownHandler 1
-      __throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
+        # _IDENTICAL_ argumentUnknownHandler 1
+        __throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
       fi
       ;;
     esac

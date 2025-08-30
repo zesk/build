@@ -40,8 +40,8 @@ fileExtractLines() {
       elif [ -z "$end" ]; then
         end="$(usageArgumentPositiveInteger "$handler" "end" "$1")" || return $?
       else
-      # _IDENTICAL_ argumentUnknownHandler 1
-      __throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
+        # _IDENTICAL_ argumentUnknownHandler 1
+        __throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
       fi
       ;;
     esac
@@ -89,19 +89,9 @@ isMappable() {
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
-    # _IDENTICAL_ handlerHandler 1
-    --token)
-      shift
-      tokenClasses="$(usageArgumentString "$handler" "$argument" "${1-}")" || return $?
-      ;;
-    --prefix)
-      shift
-      prefix=$(quoteGrepPattern "$(usageArgumentString "$handler" "$argument" "${1-}")") || return $?
-      ;;
-    --suffix)
-      shift
-      suffix=$(quoteGrepPattern "$(usageArgumentString "$handler" "$argument" "${1-}")") || return $?
-      ;;
+    --token) shift && tokenClasses="$(usageArgumentString "$handler" "$argument" "${1-}")" || return $? ;;
+    --prefix) shift && prefix=$(quoteGrepPattern "$(usageArgumentString "$handler" "$argument" "${1-}")") || return $? ;;
+    --suffix) shift && suffix=$(quoteGrepPattern "$(usageArgumentString "$handler" "$argument" "${1-}")") || return $? ;;
     *)
       if printf "%s\n" "$1" | grep -q -e "$prefix$tokenClasses$tokenClasses*$suffix"; then
         return 0
