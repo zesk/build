@@ -65,7 +65,7 @@ documentationIndex_SeeLinker() {
   local linkPatternFile="$seeVariablesFile.linkPatterns"
   local variablesSedFile="$seeVariablesFile.variablesSedFile"
   local matchingFile
-  if ! find "$documentationDirectory" -name '*.md' -type f "$@" -print0 | xargs -0 __pcregrep -l "$seePattern" | while read -r matchingFile; do
+  if ! find "$documentationDirectory" -name '*.md' -type f "$@" -print0 | xargs -0 "$(__pcregrepBinary)" -l "$seePattern" | while read -r matchingFile; do
     statusMessage decorate success "$matchingFile Found"
     local matchingToken
     __pcregrep -o1 "$seePattern" "$matchingFile" | while read -r matchingToken; do

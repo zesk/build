@@ -9,6 +9,10 @@ __pcregrep() {
   pcre2grep "$@"
 }
 
+__pcregrepBinary() {
+  printf "%s\n" pcre2grep
+}
+
 __pcregrepInstall() {
   packageWhich pcre2grep pcre2-utils || return $?
 }

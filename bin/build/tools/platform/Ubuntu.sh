@@ -9,6 +9,10 @@ __pcregrep() {
   pcregrep "$@"
 }
 
+__pcregrepBinary() {
+  printf "%s\n" pcregrep
+}
+
 __pcregrepInstall() {
   packageWhich pcregrep pcregrep || return $?
 }

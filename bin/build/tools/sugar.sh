@@ -132,7 +132,7 @@ _muzzle() {
 # Argument: to - Integer. The value to return when `from` matches `value`
 # Argument: ... - Additional from-to pairs can be passed, first matching value is used, all values will be examined if none match
 mapReturn() {
-  local handler="_${FUNCNAME[0]}" value="" from="" to=""
+  local __handler="_${FUNCNAME[0]}" value="" from="" to=""
   # __IDENTICAL__ __checkHelp1__handler 1
   [ "${1-}" != "--help" ] || __help "$__handler" "$@" || return 0
 
