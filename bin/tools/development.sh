@@ -73,7 +73,7 @@ buildProductionTest() {
   __help "$handler" "$@" || return 0
 
   home=$(__catch "$handler" buildHome) || return $?
-  "$home/bin/test.sh" --skip-tag slow-non-critical "$@"
+  BUILD_TEST_FLAGS='Housekeeper:true;Plumber:true' "$home/bin/test.sh" --skip-tag slow-non-critical "$@"
 }
 _buildProductionTest() {
   # __IDENTICAL__ usageDocument 1

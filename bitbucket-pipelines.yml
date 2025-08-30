@@ -25,7 +25,7 @@ pipelines:
             - test.stats
           script:
             - bin/build.sh --commit
-            - BUILD_TEST_FLAGS='Housekeeper:false;Plumber:false' bin/test.sh --skip-tag slow-non-critical
+            - bin/tools.sh buildProductionTest
             - bin/deploy.sh --release
     staging:
       - step:
@@ -35,7 +35,7 @@ pipelines:
             - docker
           script:
             - bin/build.sh --documentation --commit
-            - bin/test.sh --skip-tag package-install --skip-tag slow
+            - bin/tools.sh buildQuickTest
             - bin/deploy.sh --documentation --no-release
     deploy:
       - step:
@@ -81,7 +81,7 @@ pipelines:
           script:
             - IFS=' ' read -r -a aa < <(printf "%s\n" "${BUILD_TEST_ARGUMENTS-}")
             - bin/build.sh --no-documentation --no-commit --debug
-            - BUILD_DEBUG="${BUILD_DEBUG-%,},usage" bin/test.sh --coverage "${aa[@]+"${aa[@]}"}"
+            - BUILD_TEST_FLAGS="${BUILD_TEST_FLAGS-};Plumber:false;Housekeeper:false" BUILD_DEBUG="${BUILD_DEBUG-%,},usage" bin/test.sh --coverage "${aa[@]+"${aa[@]}"}"
             - ls -la coverage.stats
             - sort < coverage.stats | uniq -c | sort -rn > coverage.stats.uniq
             - mv -f coverage.stats.uniq coverage.stats
