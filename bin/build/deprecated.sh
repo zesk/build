@@ -109,7 +109,8 @@ __deprecatedCleanup() {
 
   home=$(__environment buildHome) || return $?
 
-  # END OF CANNONS
+  local exitCode=0
+
   if $doCannon; then
     statusMessage --last decorate info "Deprecated cannon ..."
     __deprecatedCannonsByVersion "$home" || exitCode=$?
