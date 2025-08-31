@@ -297,11 +297,8 @@ findUncaughtAssertions() {
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
-    # _IDENTICAL_ --handler 4
-    --handler)
-      shift
-      handler=$(usageArgumentFunction "$handler" "$argument" "${1-}") || return $?
-      ;;
+    # _IDENTICAL_ handlerHandler 1
+    --handler) shift && handler=$(usageArgumentFunction "$handler" "$argument" "${1-}") || return $? ;;
     --exec)
       shift || __throwArgument "$handler" "$argument missing argument" || return $?
       [ -n "$1" ] || __throwArgument "$handler" "$argument argument blank" || return $?

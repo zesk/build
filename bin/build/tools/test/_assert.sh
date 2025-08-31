@@ -196,7 +196,6 @@ _assertConditionHelper() {
     --debug)
       debugFlag=true
       ;;
-    # IDENTICAL assert-line-argument-case 8
     --line)
       shift
       lineNumber="${1-}"
