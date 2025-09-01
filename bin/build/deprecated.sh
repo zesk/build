@@ -102,7 +102,7 @@ __deprecatedCleanup() {
   export __BUILD_DEPRECATED_EXTRAS
   __BUILD_DEPRECATED_EXTRAS=("${ignoreExtras[@]+"${ignoreExtras[@]}"}")
 
-  __BUILD_DEPRECATED_EXTRAS+=(! -path '*/documentation/*/release/*' ! -path '*/documentation/site/*')
+  __BUILD_DEPRECATED_EXTRAS+=(! -path '*/documentation/*/release/*' ! -path '*/documentation/site/*' \( -name '*.sh' -or -name '*.md' -or -name '*.txt' -or -name '*.json' -or -name '*.yml' -or -name '*.conf' \))
 
   start=$(__environment timingStart) || return $?
   local home
