@@ -232,7 +232,19 @@ __buildDocumentationBuild() {
 
       if [ ! -d "$home/.venv" ]; then
         if ! pythonPackageInstalled venv; then
-          __catchEnvironment "$handler" pipWrapper install venv || return $?
+          __catchEnvironment "$handler" packageInstall python3-venv || return $?
+
+          #  The virtual environment was not created successfully because ensurepip is not
+          #  available.  On Debian/Ubuntu systems, you need to install the python3-venv
+          #  package using the following command.
+          #      apt install python3.10-venv
+          #  You may need to use sudo with that command.  After installing the python3-venv
+          #  package, recreate your virtual environment.
+          #  Failing command: /opt/atlassian/pipelines/agent/build/.venv/bin/python
+          #  [1] __buildDocumentationBuild  python -m venv /opt/atlassian/pipelines/agent/build/.venv
+          #  [1] __buildBuild  /opt/atlassian/pipelines/agent/build/bin/documentation.sh
+
+          # __catchEnvironment "$handler" pipWrapper install venv || return $?
         fi
         __catchEnvironment "$handler" python -m venv "$home/.venv" || return $?
       fi
