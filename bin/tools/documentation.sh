@@ -232,7 +232,7 @@ __buildDocumentationBuild() {
 
       if [ ! -d "$home/.venv" ]; then
         if ! pythonPackageInstalled venv; then
-          __catchEnvironment "$handler" packageInstall python3-venv || return $?
+          __catch "$handler" packageInstall python3-venv || return $?
 
           #  The virtual environment was not created successfully because ensurepip is not
           #  available.  On Debian/Ubuntu systems, you need to install the python3-venv
