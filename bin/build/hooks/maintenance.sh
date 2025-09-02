@@ -11,15 +11,16 @@ set -eou pipefail
 source "${BASH_SOURCE[0]%/*}/../tools.sh"
 
 __hookMaintenanceSetValue() {
-  local envFile=.env.local
-  local variable=$1 value=$2
+  local handler="$1" envFile="$2" variable="$3" value="$4"
+  local tempEnvFile="$envFile.$$"
   if [ ! -f "$envFile" ]; then
-    touch "$envFile"
+    __catchEnvironment "$handler" environmentValueWrite "BUILD_MAINTENANCE_CREATED_FILE" "true" >>"$tempEnvFile" || returnClean $? "$tempEnvFile" || return $?
     printf "%s %s %s\n" "$(decorate warning "Created")" "$(decorate code "$envFile")" "$(decorate warning "(maintenance - did not exist)")" 1>&2
+  else
+    grep -v "$variable" "$envFile" >"$tempEnvFile" || :
   fi
-  grep -v "$variable" "$envFile" >"$envFile.$$" || :
-  printf "%s=%s\n" "$variable" "$value" >>"$envFile.$$" || _environment "writing temp $envFile" || return $?
-  __environment mv -f "$envFile.$$" "$envFile" || return $?
+  __catch "$handler" environmentValueWrite "$variable" "$value" >>"$envFile.$$" || returnClean $? "$tempEnvFile" || return $?
+  __catchEnvironment "$handler" mv -f "$tempEnvFile" "$envFile" || returnClean $? "$tempEnvFile" || return $?
 }
 
 # fn: {base}
@@ -33,9 +34,10 @@ __hookMaintenanceSetValue() {
 # Environment: BUILD_MAINTENANCE_VARIABLE - If you want to use a different environment variable than `MAINTENANCE`, set this environment variable to the variable you want to use.
 #
 __hookMaintenance() {
-  local enable message variable messageVariable messageColor messageValue maintenanceValue
+  local variable messageVariable
   local handler="_${FUNCNAME[0]}"
 
+  home=$(__catch "$handler" buildHome) || return $?
   export BUILD_MAINTENANCE_VARIABLE BUILD_MAINTENANCE_MESSAGE_VARIABLE
 
   __catch "$handler" buildEnvironmentLoad BUILD_MAINTENANCE_VARIABLE BUILD_MAINTENANCE_MESSAGE_VARIABLE || return $?
@@ -44,8 +46,7 @@ __hookMaintenance() {
   messageVariable=${BUILD_MAINTENANCE_MESSAGE_VARIABLE-}
 
   [ -n "$variable" ] || __throwEnvironment "$handler" "BUILD_MAINTENANCE_VARIABLE is blank, no default behavior" || return $?
-  message=
-  enable=false
+  local message="" enable=false
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
@@ -75,6 +76,9 @@ __hookMaintenance() {
     esac
     shift
   done
+  local envFile="$home/.env.local"
+
+  local messageColor messageValue maintenanceValue deleteFile=false
   if "$enable"; then
     messageColor=success
     maintenanceValue=1
@@ -85,9 +89,25 @@ __hookMaintenance() {
     messageValue=$(decorate bold-green "- off -")
     maintenanceValue=
     messageSuffix=$(decorate bold-magenta "NOW LIVE!")
+    if [ -f "$envFile" ]; then
+      deleteFile=$(__catch "$handler" environmentValueRead "$envFile" BUILD_MAINTENANCE_CREATED_FILE false) || return $?
+      if [ -z "$deleteFile" ]; then
+        deleteFile=false
+        messageSuffix="$messageSuffix deleteFile is blank"
+      else
+        messageSuffix="$messageSuffix deleteFile=$deleteFile"
+      fi
+    else
+      messageSuffix="No env.local - nothing to do to disable"
+    fi
   fi
-  __hookMaintenanceSetValue "$variable" "$maintenanceValue" || __throwEnvironment "$handler" "Unable to set $variable to $maintenanceValue" || return $?
-  __hookMaintenanceSetValue "$messageVariable" "$message" || decorate warning "Maintenance message not set, continuing with errors"
+  if [ -f "$envFile" ]; then
+    __hookMaintenanceSetValue "$handler" "$envFile" "$variable" "$maintenanceValue" || __throwEnvironment "$handler" "Unable to set $variable to $maintenanceValue" || return $?
+    __hookMaintenanceSetValue "$handler" "$envFile" "$messageVariable" "$message" || decorate warning "Maintenance message not set, continuing with errors"
+    if $deleteFile; then
+      __catchEnvironment "$handler" rm -f "$envFile" || return $?
+    fi
+  fi
   printf "%s %s - %s\n" "$(decorate "$messageColor" "Maintenance")" "$messageValue" "$messageSuffix"
 }
 ___hookMaintenance() {
