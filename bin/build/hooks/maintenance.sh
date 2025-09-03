@@ -14,7 +14,7 @@ __hookMaintenanceSetValue() {
   local handler="$1" envFile="$2" variable="$3" value="$4"
   local tempEnvFile="$envFile.$$"
   if [ ! -f "$envFile" ]; then
-    __catchEnvironment "$handler" environmentValueWrite "BUILD_MAINTENANCE_CREATED_FILE" "true" >>"$tempEnvFile" || returnClean $? "$tempEnvFile" || return $?
+    __catch "$handler" environmentValueWrite "BUILD_MAINTENANCE_CREATED_FILE" "true" >>"$tempEnvFile" || returnClean $? "$tempEnvFile" || return $?
     printf "%s %s %s\n" "$(decorate warning "Created")" "$(decorate code "$envFile")" "$(decorate warning "(maintenance - did not exist)")" 1>&2
   else
     grep -v "$variable" "$envFile" >"$tempEnvFile" || :
@@ -23,13 +23,13 @@ __hookMaintenanceSetValue() {
   __catchEnvironment "$handler" mv -f "$tempEnvFile" "$envFile" || returnClean $? "$tempEnvFile" || return $?
 }
 
-# fn: {base}
-# Usage: {fn} [ --message message ] maintenanceSetting
-# Argument: message - Required. String. Maintenance setting: `on | 1 | true | off | 0 | false`
-# Argument: maintenanceSetting - Required. String. Maintenance setting: `on | 1 | true | off | 0 | false`
-# Toggle maintenance on or off. The default version of this modifies
-# the environment files for the application by modifying the `.env.local` file
+# fn: hookRun maintenance
+# Argument: maintenanceSetting - Required. String. Maintenance setting: `on | 1 | true | enable | off | 0 | false | disable`
+# Argument: --message maintenanceMessage - Optional. String. Message to display to the use as to why maintenance is enabled.
+# Toggle maintenance on or off. The default version of this modifies the environment files for the application by modifying the `.env.local` file
 # and dynamically adding or removing any line which matches the MAINTENANCE variable.
+#
+# Note that applications SHOULD load this configuration file dynamically (and monitor it for changes) to enable maintenance at any time.
 #
 # Environment: BUILD_MAINTENANCE_VARIABLE - If you want to use a different environment variable than `MAINTENANCE`, set this environment variable to the variable you want to use.
 #
@@ -102,10 +102,11 @@ __hookMaintenance() {
     fi
   fi
   if [ -f "$envFile" ]; then
-    __hookMaintenanceSetValue "$handler" "$envFile" "$variable" "$maintenanceValue" || __throwEnvironment "$handler" "Unable to set $variable to $maintenanceValue" || return $?
-    __hookMaintenanceSetValue "$handler" "$envFile" "$messageVariable" "$message" || decorate warning "Maintenance message not set, continuing with errors"
     if $deleteFile; then
       __catchEnvironment "$handler" rm -f "$envFile" || return $?
+    else
+      __hookMaintenanceSetValue "$handler" "$envFile" "$variable" "$maintenanceValue" || return $?
+      __hookMaintenanceSetValue "$handler" "$envFile" "$messageVariable" "$message" || return $?
     fi
   fi
   printf "%s %s - %s\n" "$(decorate "$messageColor" "Maintenance")" "$messageValue" "$messageSuffix"
@@ -114,4 +115,5 @@ ___hookMaintenance() {
   # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
+
 __hookMaintenance "$@"
