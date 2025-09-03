@@ -15,7 +15,7 @@
 # Argument: ... - Arguments. Optional. Any additional arguments to `command`.
 __catch() {
   local __count=$# __saved=("$@") __handler="${1-}" command="${2-}"
-  shift 2 || __throwArgument "$__handler" "missing arguments #$__count $(decorate each code "${__saved[@]}")" || return $?
+  shift 2 || __throwArgument "$__handler" "missing arguments #$__count $(decorate each code -- "${__saved[@]}")" || return $?
   "$command" "$@" || "$__handler" "$?" "$command" "$@" || return $?
 }
 ___catch() {
@@ -111,7 +111,7 @@ _muzzle() {
 # Argument: to - Integer. The value to return when `from` matches `value`
 # Argument: ... - Additional from-to pairs can be passed, first matching value is used, all values will be examined if none match
 mapReturn() {
-  local handler="_${FUNCNAME[0]}" value="" from="" to=""
+  local __handler="_${FUNCNAME[0]}" value="" from="" to=""
 
   while [ $# -gt 0 ]; do
     if [ -z "$value" ]; then
@@ -167,12 +167,14 @@ _convertValue() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
+
 # Argument: binary ... - Required. Executable. Any arguments are passed to `binary`.
 # Run binary and output failed command upon error
 # Requires: _return
 __execute() {
   "$@" || _return "$?" "$@" || return $?
 }
+
 
 # Run a function and preserve exit code
 # Returns `code`
@@ -210,6 +212,7 @@ returnUndo() {
 _returnUndo() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
+
 
 # Support arguments and stdin as arguments to an executor
 # Argument: executor ... -- - The command to run on each line of input or on each additional argument. Arguments to prefix the final variable argument can be supplied prior to an initial `--`.
