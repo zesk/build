@@ -40,9 +40,9 @@ __usageDocumentComplex() {
   local functionDefinitionFile="${1-}" functionName="${2-}"
   shift 2 || __throwArgument "$handler" "Missing arguments" || return $?
 
-  home=$(__catch "$handler" buildHome) || return $?
-
   local home returnCode="${1-NONE}"
+
+  home=$(__catch "$handler" buildHome) || return $?
 
   shift 2>/dev/null || :
 
