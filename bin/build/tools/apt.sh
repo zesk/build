@@ -363,10 +363,10 @@ __aptPackageMapping() {
     printf "%s\n" python-is-python3 python3 python3-pip
     ;;
   "mariadb")
-    printf "%s\n" mariadb mariadb-common mariadb-client
+    printf "%s\n" mariadb-common mariadb-client
     ;;
   "mariadb-server")
-    printf "%s\n" mariadb-server
+    printf "%s\n" mariadb-common mariadb-server
     ;;
   "mysql")
     printf "%s\n" mysql-client
