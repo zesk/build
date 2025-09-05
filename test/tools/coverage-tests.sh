@@ -324,7 +324,7 @@ testBuildFunctionsHelpOnly() {
   __mockValue BUILD_COLORS
   __mockValue TEST_TRACK_ASSERTIONS
 
-  BUILD_DEBUG="fast-handler"
+  BUILD_DEBUG="fast-usage"
   BUILD_COLORS=false
   TEST_TRACK_ASSERTIONS=false
 

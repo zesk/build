@@ -28,7 +28,10 @@ _testComposerTempDirectory() {
 # Side-effect: installs scripts
 # Tag: package-install
 testPHPComposerInstallation() {
+  local handler="_return"
   local d oldDir
+
+  home=$(__catch "$handler" buildHome) || return $?
 
   oldDir="${BITBUCKET_CLONE_DIR-NONE}"
 
@@ -39,13 +42,15 @@ testPHPComposerInstallation() {
   # MUST be in BITBUCKET_CLONE_DIR if we're in that CI
 
   d=$(__environment _testComposerTempDirectory) || return $?
-  __environment cp ./test/example/simple-php/composer.json ./test/example/simple-php/composer.lock "$d/" || return $?
+  __environment cp "$home/test/example/simple-php/composer.json" "$home/test/example/simple-php/composer.lock" "$d/" || return $?
   __environment phpComposer "$d" || return $?
   [ -d "$d/vendor" ] && [ -f "$d/composer.lock" ] || _environment "composer failed" || return $?
 
   export BITBUCKET_CLONE_DIR
   BITBUCKET_CLONE_DIR="$oldDir"
   [ "$oldDir" != "NONE" ] || unset BITBUCKET_CLONE_DIR
+
+  __catch "$handler" rm -rf "$d" || return $?
 }
 
 #
@@ -75,7 +80,7 @@ testPHPBuild() {
   appName="sublimeApplication"
   testPath="$here/.test.PHPBuild.$testPath/$appName"
   __catchEnvironment "$handler" mkdir -p "$(dirname "$testPath")" || return $?
-  __catchEnvironment "$handler" cp -r ./test/example/simple-php "$testPath" || return $?
+  __catchEnvironment "$handler" cp -r "$home/test/example/simple-php" "$testPath" || return $?
 
   buildEnvironmentLoad BUILD_TARGET BUILD_TIMESTAMP
 
@@ -152,6 +157,8 @@ testPHPBuild() {
   assertFileContains "$manifest" .deploy .deploy/APPLICATION_ID .deploy/APPLICATION_TAG simple.application.php src/Application.php .env || return $?
   assertFileDoesNotContain "$manifest" composer.lock composer.json bitbucket-pipelines.yml || return $?
   assertFileContains "$manifest.complete" vendor/zesk vendor/composer || return $?
+
+  __catch "$handler" rm -f "$manifest" "$manifest.complete" || return $?
 
   decorate success Passed.
 

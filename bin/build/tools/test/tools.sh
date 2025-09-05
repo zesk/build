@@ -475,9 +475,9 @@ __testSuiteInitialize() {
 
   $beQuiet || statusMessage decorate info "Initializing test suite ..."
 
-  # Add fast-handler to debugging
+  # Add fast-usage to debugging
   export BUILD_DEBUG
-  BUILD_DEBUG="${BUILD_DEBUG-},fast-handler"
+  BUILD_DEBUG="${BUILD_DEBUG-},fast-usage"
   BUILD_DEBUG="${BUILD_DEBUG#,}"
 
   # Stop at 200-depth stacks and fail
