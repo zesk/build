@@ -224,3 +224,113 @@ __interactiveCountdownReadCharacter() {
   done
   return 1
 }
+
+# List approved Bash script sources which can be loaded automatically by project hooks.
+#
+# Argument: --debug - Flag. Optional. Show a lot of information about the approved cache.
+# Argument: --no-delete - Flag. Optional. Do not delete stale approval files.
+# Argument: --delete - Flag. Optional. Delete stale approval files.
+approvedSources() {
+  local handler="_${FUNCNAME[0]}"
+
+  local debugFlag=false deleteFlag=false highlighted=()
+
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
+  local __saved=("$@") __count=$#
+  while [ $# -gt 0 ]; do
+    local argument="$1" __index=$((__count - $# + 1))
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
+    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    case "$argument" in
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
+    --highlight) shift && highlighted+=("$(usageArgumentFile "$handler" "$argument" "${1-}")") || return $? ;;
+    --debug) debugFlag=true ;;
+    --delete) deleteFlag=true ;;
+    --no-delete) deleteFlag=false ;;
+    *)
+      # _IDENTICAL_ argumentUnknownHandler 1
+      __throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
+      ;;
+    esac
+    shift
+  done
+
+  local home
+
+  home=$(__interactiveApproveHome "$handler") || return $?
+  local cacheFile unapprovedBashSources=() approvedBashSources=() handledFiles=() deleteFiles=()
+  while read -r cacheFile; do
+    local displayCacheFile
+    displayCacheFile=$(decorate file "$cacheFile")
+
+    ! $debugFlag || statusMessage decorate info "Processing $displayCacheFile $(decorate green ${#approvedBashSources[@]})/$(decorate red ${#unapprovedBashSources[@]})/$(decorate magenta ${#handledFiles[@]})"
+
+    local approved user timestamp fullDate name why=()
+    if fileIsEmpty "$cacheFile"; then
+      why+=("file is empty:")
+    else
+      IFS=$'\n' read -t 1 -d '' -r approved user timestamp fullDate name <"$cacheFile" || :
+      isBoolean "$approved" || why+=("approved is not boolean")
+      [ -n "$user" ] || why+=("user blank")
+      isPositiveInteger "$timestamp" || why+=("timestamp not integer")
+      [ -n "$fullDate" ] || why+=("date blank")
+
+      local displayName
+      displayName=$(decorate file "$name")
+
+      if [ -f "$name" ]; then
+        local actualCacheFile displayActualCacheFile
+        actualCacheFile=$(__interactiveApproveCacheFile "$handler" "$home" "$name") || return $?
+        displayActualCacheFile=$(decorate file "$displayActualCacheFile")
+        if [ "$actualCacheFile" != "$cacheFile" ]; then
+          why+=("original file $displayName changed")
+        fi
+        if inArray "$name" "${handledFiles[@]}"; then
+          why+=("Already handled $displayName")
+        fi
+      else
+        why+=("file $name not found")
+      fi
+    fi
+    if [ "${#why[@]}" -gt 0 ]; then
+      if $deleteFlag; then
+        deleteFiles+=("$cacheFile")
+        ! $debugFlag || statusMessage --last decorate error "Will delete cache file: $displayCacheFile: $(decorate each code -- "${why[@]}")"
+      else
+        ! $debugFlag || statusMessage --last decorate error "Would delete cache file: $displayCacheFile: $(decorate each code -- "${why[@]}")"
+      fi
+    else
+      local textTime fileText padding nearWidth
+      textTime="$(dateFromTimestamp "$timestamp")"
+      nearWidth="$(stripAnsi <<<"$displayName")"
+      padding=$((60 - ${#nearWidth}))
+      fileText="$displayName"
+      [ ${#highlighted[@]} -eq 0 ] || ! inArray "$name" "${highlighted[@]}" || fileText="$(decorate orange "$displayName")"
+
+      if [ "$padding" -lt 0 ]; then
+        fileText="$fileText ..."
+      else
+        fileText="$fileText$(repeat "$padding" " ")"
+      fi
+      output="$(printf -- "%s %s %s\n" "$name" "$fileText" "$textTime")"
+      if [ "$approved" = true ]; then
+        approvedBashSources+=("$output")
+        ! $debugFlag || statusMessage --last decorate error "Approved $displayName"
+      else
+        unapprovedBashSources+=("$output")
+        ! $debugFlag || statusMessage --last decorate error "Not approved: $displayName"
+      fi
+      handledFiles+=("$name")
+    fi
+  done < <(find "$home" -type f -mindepth 1 -maxdepth 1)
+
+  [ "${#approvedBashSources[@]}" -eq 0 ] || printf "%s\n" "$(decorate info "- Approved:")" "" "${approvedBashSources[@]}" | sort | removeFields 1
+  [ "${#unapprovedBashSources[@]}" -eq 0 ] || printf "%s\n" "$(decorate warning "- Unapproved:")" "" "${unapprovedBashSources[@]}" | sort | removeFields 1
+
+  ! $deleteFlag || __catch "$handler" rm -f "${deleteFiles[@]}" || return $?
+}
+_approvedSources() {
+  # __IDENTICAL__ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}

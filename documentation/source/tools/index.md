@@ -2,6 +2,7 @@
 
 ## Shell Tools
 
+- [Approve](approve.md)
 - [Bash](./bash.md)
 - [Binaries (direct)](./bin.md)
 - [Color](./colors.md)

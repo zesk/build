@@ -47,6 +47,8 @@ if source "${BASH_SOURCE[0]%/*}/tools.sh"; then
 
     developerAnnounce < <(developerTrack)
 
+    CI=1 approvedSources --delete --debug
+
     export BUILD_PROJECT_DEACTIVATE=__buildConfigureUndo
   }
   ___buildConfigure() {

@@ -35,7 +35,7 @@ __hookProjectActivate() {
 
   for item in "${candidates[@]}"; do [ ! -e "$home/$item" ] || items+=("$home/$item"); done
 
-  [ ${#items[@]} -eq 0 ] || interactiveBashSource --verbose --prefix "Activate" "${items[@]}" || return $?
+  [ ${#items[@]} -eq 0 ] || approveBashSource --report --delete --verbose --prefix "Activate" "${items[@]}" || return $?
 }
 ___hookProjectActivate() {
   # __IDENTICAL__ usageDocument 1

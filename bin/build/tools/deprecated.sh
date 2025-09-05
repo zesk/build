@@ -19,6 +19,12 @@
 #
 
 # DEPRECATED 2025-07-29
+interactiveBashSource() {
+  _deprecated "${FUNCNAME[0]}"
+  approveBashSource "$@"
+}
+
+# DEPRECATED 2025-07-29
 checkDockerEnvFile() {
   _deprecated "${FUNCNAME[0]}"
   environmentFileIsDocker "$@"

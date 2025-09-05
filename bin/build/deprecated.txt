@@ -1,68 +1,70 @@
 # v0.37.2
-__catchEnvironment "$handler" buildHome|__catch "$handler" buildHome|-name|*.sh
-__catchEnvironment "$handler" bashDoc|__catch "$handler" bashDoc|-name|*.sh
-__catchEnvironment "$handler" fileL|__catch "$handler" fileL|-name|*.sh
-__catchEnvironment "$handler" fileD|__catch "$handler" fileD|-name|*.sh
-__catchEnvironment "$handler" fileS|__catch "$handler" fileS|-name|*.sh
-__catchEnvironment "$handler" build|__catch "$handler" build|-name|*.sh
-__catchEnvironment "$handler" url|__catch "$handler" url|-name|*.sh
-__catchEnvironment "$handler" package|__catch "$handler" package|-name|*.sh
-__catchEnvironment "$handler" directory|__catch "$handler" directory|-name|*.sh
-__catchEnvironment "$handler" nodeI|__catch "$handler" nodeI|-name|*.sh
-__catchEnvironment "$handler" gitE|__catch "$handler" gitE|-name|*.sh
-__catchEnvironment "$handler" shaP|__catch "$handler" shaP|-name|*.sh
-__catchEnvironment "$handler" aptK|__catch "$handler" aptK|-name|*.sh
-__catchEnvironment "$handler" environment|__catch "$handler" environment|-name|*.sh
-__catchEnvironment "$handler" _comment|__catch "$handler" _comment|-name|*.sh
-__catchEnvironment "$handler" __|__catch "$handler" __|-name|*.sh
-__catchEnvironment "$handler" awsI|__catch "$handler" awsI|-name|*.sh
-__catchEnvironment "$handler" awsS|__catch "$handler" awsS|-name|*.sh
-__catchEnvironment "$handler" userH|__catch "$handler" userH|-name|*.sh
-__catchEnvironment "$handler" awsC|__catch "$handler" awsC|-name|*.sh
-__catchEnvironment "$handler" awsC|__catch "$handler" awsC|-name|*.sh
-__catchEnvironment "$handler" document|__catch "$handler" document|-name|*.sh
-__catchEnvironment "$handler" timing|__catch "$handler" timing|-name|*.sh
-__catchEnvironment "$handler" identical|__catch "$handler" identical|-name|*.sh
-__catchEnvironment "$handler" console|__catch "$handler" console|-name|*.sh
-__catchEnvironment "$handler" confirm|__catch "$handler" confirm|-name|*.sh
-__catchEnvironment "$handler" interactive|__catch "$handler" interactive|-name|*.sh
-__catchEnvironment "$handler" map|__catch "$handler" map|-name|*.sh
-__catchEnvironment "$handler" any|__catch "$handler" any|-name|*.sh
+interactiveBashSource|approveBashSource
+approvedFiles|approvedBashSources
+__catchEnvironment "$handler" buildHome|__catch "$handler" buildHome
+__catchEnvironment "$handler" bashDoc|__catch "$handler" bashDoc
+__catchEnvironment "$handler" fileL|__catch "$handler" fileL
+__catchEnvironment "$handler" fileD|__catch "$handler" fileD
+__catchEnvironment "$handler" fileS|__catch "$handler" fileS
+__catchEnvironment "$handler" build|__catch "$handler" build
+__catchEnvironment "$handler" url|__catch "$handler" url
+__catchEnvironment "$handler" package|__catch "$handler" package
+__catchEnvironment "$handler" directory|__catch "$handler" directory
+__catchEnvironment "$handler" nodeI|__catch "$handler" nodeI
+__catchEnvironment "$handler" gitE|__catch "$handler" gitE
+__catchEnvironment "$handler" shaP|__catch "$handler" shaP
+__catchEnvironment "$handler" aptK|__catch "$handler" aptK
+__catchEnvironment "$handler" environment|__catch "$handler" environment
+__catchEnvironment "$handler" _comment|__catch "$handler" _comment
+__catchEnvironment "$handler" __|__catch "$handler" __
+__catchEnvironment "$handler" awsI|__catch "$handler" awsI
+__catchEnvironment "$handler" awsS|__catch "$handler" awsS
+__catchEnvironment "$handler" userH|__catch "$handler" userH
+__catchEnvironment "$handler" awsC|__catch "$handler" awsC
+__catchEnvironment "$handler" awsC|__catch "$handler" awsC
+__catchEnvironment "$handler" document|__catch "$handler" document
+__catchEnvironment "$handler" timing|__catch "$handler" timing
+__catchEnvironment "$handler" identical|__catch "$handler" identical
+__catchEnvironment "$handler" console|__catch "$handler" console
+__catchEnvironment "$handler" confirm|__catch "$handler" confirm
+__catchEnvironment "$handler" interactive|__catch "$handler" interactive
+__catchEnvironment "$handler" map|__catch "$handler" map
+__catchEnvironment "$handler" any|__catch "$handler" any
 
 # v0.37.1
 
 # v0.37.0
-hostIPList|networkIPList|-name|*.sh
-timestampToDate|dateFromTimestamp|-name|*.sh
-truncateFloat|floatTruncate|-name|*.sh|-name|*.sh
-roundFloat|floatRound|-name|*.sh|-name|*.sh
-mostRecentlyModifiedFile|fileModifiedRecentlyName|-name|*.sh
-mostRecentlyModifiedTimestamp|fileModifiedRecentlyTimestamp|-name|*.sh
-copyFile|fileCopy|-name|*.sh
-copyFileWouldChange|fileChange|-name|*.sh
-betterType|fileType|-name|*.sh
-simplifyPath|directoryPathSimplify|-name|*.sh
-renameFiles|filesRename|-name|*.sh
-reverseFileLines|fileReverseLines|-name|*.sh
-renameLink|linkRename|-name|*.sh
-modificationTime|fileModificationTime|-name|*.sh
-modificationSeconds|fileModificationSeconds|-name|*.sh
-isEmptyFile|fileIsEmpty|-name|*.sh
-isNewestFile|fileIsNewest|-name|*.sh
-isOldestFile|fileIsOldest|-name|*.sh
-oldestFile|fileOldest|-name|*.sh
-newestFile|fileNewest|-name|*.sh
-modifiedDays|fileModifiedDays|-name|*.sh
-modifiedSeconds|fileModifiedSeconds|-name|*.sh
-requireFileDirectory|fileDirectoryRequire|-name|*.sh
-requireDirectory|directoryRequire|-name|*.sh
-_clean |returnClean |-name|*.sh
-_undo |returnUndo |-name|*.sh
-getFromPipelineYML|bitbucketGetVariable|-name|*.sh
-allColorTest|colorSampleCodes|-name|*.sh
-AllColorTest|ColorSampleCodes|-name|*.sh
-colorTest|colorSampleStyles|-name|*.sh
-ColorTest|ColorSampleStyles|-name|*.sh
+hostIPList|networkIPList
+timestampToDate|dateFromTimestamp
+truncateFloat|floatTruncate
+roundFloat|floatRound
+mostRecentlyModifiedFile|fileModifiedRecentlyName
+mostRecentlyModifiedTimestamp|fileModifiedRecentlyTimestamp
+copyFile|fileCopy
+copyFileWouldChange|fileChange
+betterType|fileType
+simplifyPath|directoryPathSimplify
+renameFiles|filesRename
+reverseFileLines|fileReverseLines
+renameLink|linkRename
+modificationTime|fileModificationTime
+modificationSeconds|fileModificationSeconds
+isEmptyFile|fileIsEmpty
+isNewestFile|fileIsNewest
+isOldestFile|fileIsOldest
+oldestFile|fileOldest
+newestFile|fileNewest
+modifiedDays|fileModifiedDays
+modifiedSeconds|fileModifiedSeconds
+requireFileDirectory|fileDirectoryRequire
+requireDirectory|directoryRequire
+_clean |returnClean 
+_undo |returnUndo 
+getFromPipelineYML|bitbucketGetVariable
+allColorTest|colorSampleCodes
+AllColorTest|ColorSampleCodes
+colorTest|colorSampleStyles
+ColorTest|ColorSampleStyles
 semanticColorTest|colorSampleSemanticStyles
 SemanticColorTest|ColorSampleSemanticStyles
 colorComboTest|colorSampleCombinations
@@ -146,7 +148,7 @@ bashPromptModule_iTerm2Colors|bashPromptModule_TermColors
 # v0.33.11
 
 # v0.33.0
-wrapLines|decorate wrap|-name|*.sh
+wrapLines|decorate wrap
 inputConfigurationAdd|readlineConfigurationAdd
 
 # v0.31.1
@@ -197,8 +199,8 @@ BUILD_HOOK_PATH|BUILD_HOOK_DIRS
 consoleNameValue|decorate pair
 
 # v0.21.0
-runOptionalHook|hookRunOptional|-name|*.sh|-or|-name|*.md
-runHook|hookRun|-name|*.sh|-or|-name|*.md
+runOptionalHook|hookRunOptional|-or|-name|*.md
+runHook|hookRun|-or|-name|*.md
 bin/build/install/apt.sh|aptInstall
 bin/build/install/aws.sh|awsInstall
 bin/build/install/docker-compose.sh|dockerComposeInstall
@@ -216,10 +218,10 @@ __usageArgument|__catchArgument
 consoleReset|decorate reset
 
 # v0.18.5
-_boolean|isBoolean|-name|*.sh|-or|-name|*.md
+_boolean|isBoolean|-or|-name|*.md
 
 # v0.17.6
-_integer  |isPositiveInteger |-name|*.sh|-or|-name|*.md
+_integer  |isPositiveInteger |-or|-name|*.md
 confirmYesNo yes|confirmYesNo --yes|
 confirmYesNo true|confirmYesNo --yes|
 confirmYesNo no|confirmYesNo --no|

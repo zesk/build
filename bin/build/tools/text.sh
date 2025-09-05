@@ -778,7 +778,7 @@ _uppercase() {
 #
 stripAnsi() {
   [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
-  sed $'s,\x1B\[[0-9;]*[a-zA-Z],,g'
+  sed -e $'s,\x1B\[[0-9;]*[a-zA-Z],,g' -e $'s,\x1B\][^\x1B]*\x1B\x5c\x5c,,g'
 }
 _stripAnsi() {
   true || stripAnsi --help
@@ -824,14 +824,14 @@ shaPipe() {
       [ -f "$1" ] || __throwArgument "$handler" "$1 is not a file" || return $?
       [ -n "$argument" ] || __throwArgument "$handler" "blank argument" || return $?
       if test "${DEBUG_SHAPIPE-}"; then
-        printf "%s: %s\n" "$(date +"%FT%T")" "$argument" >shaPipe.log
+        printf "%s: %s\n" "$(date +"%FT%T")" "$argument" >>shaPipe.log
       fi
       sha1sum <"$argument" | cut -f 1 -d ' '
       shift || __throwArgument "$handler" "shift failed" || return $?
     done
   else
     if test "${DEBUG_SHAPIPE-}"; then
-      printf "%s: stdin\n" "$(date +"%FT%T")" >shaPipe.log
+      printf "%s: stdin\n" "$(date +"%FT%T")" >>shaPipe.log
     fi
     sha1sum | cut -f 1 -d ' ' || __throwEnvironment "$handler" "sha1sum" || return $?
   fi

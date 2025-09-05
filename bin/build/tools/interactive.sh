@@ -770,68 +770,6 @@ _interactiveCountdown() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-approvedSources() {
-  local handler="_${FUNCNAME[0]}"
-
-  # _IDENTICAL_ argumentNonBlankLoopHandler 6
-  local __saved=("$@") __count=$#
-  while [ $# -gt 0 ]; do
-    local argument="$1" __index=$((__count - $# + 1))
-    # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
-    case "$argument" in
-    # _IDENTICAL_ helpHandler 1
-    --help) "$handler" 0 && return $? || return $? ;;
-    *)
-      # _IDENTICAL_ argumentUnknownHandler 1
-      __throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
-      ;;
-    esac
-    shift
-  done
-
-  local home
-
-  home=$(__interactiveApproveHome "$handler") || return $?
-  local cacheFile unapprovedFiles=() approvedFiles=() handledFiles=()
-  while read -r cacheFile; do
-    local approved user timestamp fullDate name why=()
-    IFS=$'\n' read -d '' -r approved user timestamp fullDate name <"$cacheFile" || :
-    isBoolean "$approved" || why+=("approved is not boolean")
-    [ -n "$user" ] || why+=("user blank")
-    
-    isPositiveInteger "$timestamp" || why+=("timestamp not integer")
-    [ -n "$fullDate" ] || why+=("date blank")
-    [ -f "$name" ] || why+=("file $name not found")
-    if [ "${#why[@]}" -gt 0 ]; then
-      decorate error "Would delete cache file: $cacheFile: $(decorate each code -- "${why[@]}")"
-    else
-      local actualCacheFile
-      actualCacheFile=$(__interactiveApproveCacheFile "$handler" "$home" "$name") || return $?
-      if inArray "$actualCacheFile" "${handledFiles[@]}"; then
-        decorate warning "Would delete $actualCacheFile (handled)"
-        continue
-      fi
-      if [ "$actualCacheFile" = "$cacheFile" ]; then
-        output="$(printf "%s %s\n" "$(alignLeft 30 "$(decorate file "$name")")" "$(dateFromTimestamp "$timestamp")")"
-        if [ "$approved" = true ]; then
-          approvedFiles+=("$output")
-        else
-          unapprovedFiles+=("$output")
-        fi
-        handledFiles+=("$cacheFile")
-      fi
-    fi
-  done < <(find "$home" -type f -mindepth 1 -maxdepth 1)
-
-  [ "${#approvedFiles[@]}" -eq 0 ] || printf "%s\n" "$(decorate info "Approved:")" "" "${approvedFiles[@]}" | sort
-  [ "${#unapprovedFiles[@]}" -eq 0 ] || printf "%s\n" "$(decorate warning "Unapproved:")" "" "${unapprovedFiles[@]}" | sort
-}
-_approvedSources() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
-}
-
 # Usage: {fn} [ directoryOrFile ... ]
 # Argument: directoryOrFile - Required. Exists. Directory or file to `source` `.sh` files found.
 # Argument: --info - Optional. Flag. Show user what they should do (press a key).
@@ -842,10 +780,11 @@ _approvedSources() {
 # Security: Loads bash files
 # Loads files or a directory of `.sh` files using `source` to make the code available.
 # Has security implications. Use with caution and ensure your directory is protected.
-interactiveBashSource() {
+approveBashSource() {
   local handler="_${FUNCNAME[0]}"
 
-  local prefix="Loading" verboseFlag=false aa=(--info) bb=(--attempts 1 --timeout 30) clearFlag=false
+  local prefix="Loading" verboseFlag=false aa=(--info) bb=(--attempts 1 --timeout 30)
+  local clearFlag=false deleteFlag=false reportFlag=false hh=()
 
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
@@ -856,30 +795,20 @@ interactiveBashSource() {
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
-    --info)
-      aa=(--info)
-      ;;
-    --no-info)
-      aa=()
-      ;;
-    --clear)
-      clearFlag=true
-      ;;
-    --verbose)
-      verboseFlag=true
-      ;;
-    --prefix)
-      # shift here never fails as [ #$ -gt 0 ]
-      shift
-      prefix="$(usageArgumentString "$handler" "$argument" "${1-}")" || return $?
-      ;;
+    --info) aa=(--info) ;;
+    --no-info) aa=() ;;
+    --clear) clearFlag=true ;;
+    --verbose) verboseFlag=true ;;
+    --delete) hh+=(--delete) && deleteFlag=true ;;
+    --report) reportFlag=true ;;
+    --prefix) shift && prefix="$(usageArgumentString "$handler" "$argument" "${1-}")" || return $? ;;
     *)
-      local sourcePath="$argument" verb="" approved=false
+      local sourcePath="$argument" verb=""
       displayPath="$(decorate file "$sourcePath")"
       if "$clearFlag"; then
         __interactiveApproveClear "$handler" "$sourcePath" || return $?
         ! $verboseFlag || statusMessage --last printf -- "%s %s" "$(decorate info "Cleared approval for")" "$displayPath"
-        interactiveBashSource "${aa[@]+"${aa[@]}"}" "$sourcePath" || return $?
+        approveBashSource "${aa[@]+"${aa[@]}"}" "$sourcePath" || return $?
         return 0
       fi
       if [ -f "$sourcePath" ]; then
@@ -887,32 +816,32 @@ interactiveBashSource() {
         if __interactiveApprove "$handler" "$sourcePath" "Load" "${aa[@]+"${aa[@]}"}" "${bb[@]}"; then
           ! $verboseFlag || statusMessage --last printf -- "%s %s %s" "$(decorate info "$prefix")" "$(decorate label "$verb")" "$displayPath"
           __catchEnvironment "$handler" source "$sourcePath" || return $?
-          approved=true
         else
           decorate subtle "Skipping unapproved file $(decorate file "$sourcePath") Undo: $(decorate code "${FUNCNAME[0]} --clear \"$sourcePath\"")"
-          approved=true
         fi
       elif [ -d "$sourcePath" ]; then
         verb="path"
         if __interactiveApprove "$handler" "$sourcePath/" "Load path" "${aa[@]+"${aa[@]}"}" "${bb[@]}"; then
           ! $verboseFlag || statusMessage --last printf -- "%s %s %s" "$(decorate info "$prefix")" "$(decorate label "$verb")" "$displayPath"
           __catchEnvironment "$handler" bashSourcePath "$sourcePath" || return $?
-          approved=true
         else
           decorate subtle "Skipping unapproved directory $(decorate file "$sourcePath") Undo: $(decorate code "${FUNCNAME[0]} --clear \"$sourcePath\"")"
         fi
       else
         __throwEnvironment "$handler" "Not a file or directory? $displayPath is a $(decorate value "$(fileType "$sourcePath")")" || return $?
       fi
-      if $verboseFlag && ! $approved; then
-        statusMessage --last decorate subtle "Skipping unapproved $verb $(decorate file "$sourcePath")" || :
-      fi
+      hh+=(--highlight "$sourcePath")
       ;;
     esac
     shift
   done
+  if $reportFlag; then
+    __catch "$handler" approvedSources "${hh[@]+"${hh[@]}"}" || return $?
+  elif $deleteFlag; then
+    __catch "$handler" muzzle approvedSources --delete || return $?
+  fi
 }
-_interactiveBashSource() {
+_approveBashSource() {
   # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

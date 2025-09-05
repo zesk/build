@@ -215,7 +215,7 @@
 - identicalFindTokens
 - identicalWatch
 - installInstallBinary
-- interactiveBashSource
+- approveBashSource
 - interactiveCountdown
 - interactiveManager
 - isBashBuiltin
@@ -543,7 +543,7 @@ On a "2x" machine:
 - identicalCheckShell
 - insideDocker
 - installInstallBinary
-- interactiveBashSource
+- approveBashSource
 - interactiveCountdown
 - interactiveManager
 - ipLookup

@@ -11,16 +11,22 @@
 ## Interactive utilities
 
 {loopExecute}
+
 {interactiveCountdown}
+
 {confirmYesNo}
+
 {confirmMenu}
+
 {pause}
-{interactiveBashSource}
+
 {notify}
 
 ## Copy files
 
-{fileCopyWouldChange} {fileCopy}
+{fileCopyWouldChange} 
+
+{fileCopy}
 
 ## Examples
 
