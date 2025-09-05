@@ -345,7 +345,7 @@ lineFill() {
   local text cleanText width barText
 
   width=$(__catch "$handler" consoleColumns) || return $?
-  barText=$(usageArgumentString "$handler" "$barText" "${1:--}") || return $?
+  barText=$(usageArgumentString "$handler" "barText" "${1:--}") || return $?
   shift || :
 
   text="$*"
