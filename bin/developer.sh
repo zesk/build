@@ -47,9 +47,10 @@ if source "${BASH_SOURCE[0]%/*}/tools.sh"; then
 
     developerAnnounce < <(developerTrack)
 
-    CI=1 approvedSources --delete --debug
-
+    CI=1 approvedSources --delete --highlight "$home/bin/developer.sh"
     export BUILD_PROJECT_DEACTIVATE=__buildConfigureUndo
+
+    unset __buildConfigure
   }
   ___buildConfigure() {
     # __IDENTICAL__ usageDocument 1
@@ -76,8 +77,6 @@ if source "${BASH_SOURCE[0]%/*}/tools.sh"; then
   }
 
   __buildConfigure
-
-  unset __buildConfigure
 else
   printf "%s\n" "Loading ${BASH_SOURCE[0]%/*}/tools.sh failed" 1>&2
   false

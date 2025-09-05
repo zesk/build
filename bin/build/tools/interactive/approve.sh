@@ -270,7 +270,7 @@ approvedSources() {
     if fileIsEmpty "$cacheFile"; then
       why+=("file is empty:")
     else
-      IFS=$'\n' read -t 1 -d '' -r approved user timestamp fullDate name <"$cacheFile" || :
+      IFS=$'\n' read -r -d '' approved user timestamp fullDate name <"$cacheFile" || :
       isBoolean "$approved" || why+=("approved is not boolean")
       [ -n "$user" ] || why+=("user blank")
       isPositiveInteger "$timestamp" || why+=("timestamp not integer")
@@ -306,14 +306,14 @@ approvedSources() {
       nearWidth="$(stripAnsi <<<"$displayName")"
       padding=$((60 - ${#nearWidth}))
       fileText="$displayName"
-      [ ${#highlighted[@]} -eq 0 ] || ! inArray "$name" "${highlighted[@]}" || fileText="$(decorate orange "$displayName")"
+      [ ${#highlighted[@]} -eq 0 ] || ! inArray "$name" "${highlighted[@]}" || fileText="[$(decorate orange "$displayName")]"
 
       if [ "$padding" -lt 0 ]; then
         fileText="$fileText ..."
       else
         fileText="$fileText$(repeat "$padding" " ")"
       fi
-      output="$(printf -- "%s %s %s\n" "$name" "$fileText" "$textTime")"
+      output="$(printf -- "%s|%s %s\n" "$name" "$fileText" "$textTime")"
       if [ "$approved" = true ]; then
         approvedBashSources+=("$output")
         ! $debugFlag || statusMessage --last decorate error "Approved $displayName"
@@ -325,10 +325,10 @@ approvedSources() {
     fi
   done < <(find "$home" -type f -mindepth 1 -maxdepth 1)
 
-  [ "${#approvedBashSources[@]}" -eq 0 ] || printf "%s\n" "$(decorate info "- Approved:")" "" "${approvedBashSources[@]}" | sort | removeFields 1
-  [ "${#unapprovedBashSources[@]}" -eq 0 ] || printf "%s\n" "$(decorate warning "- Unapproved:")" "" "${unapprovedBashSources[@]}" | sort | removeFields 1
+  [ "${#approvedBashSources[@]}" -eq 0 ] || printf "%s\n" "$(decorate info "-|Approved:")" "" "${approvedBashSources[@]}" | sort | awk -F '|' '{ print $2 }'
+  [ "${#unapprovedBashSources[@]}" -eq 0 ] || printf "%s\n" "$(decorate warning "-|Unapproved:")" "" "${unapprovedBashSources[@]}" | sort | awk -F '|' '{ print $2 }'
 
-  ! $deleteFlag || __catch "$handler" rm -f "${deleteFiles[@]}" || return $?
+  ! $deleteFlag || __catchEnvironment "$handler" rm -f "${deleteFiles[@]}" || return $?
 }
 _approvedSources() {
   # __IDENTICAL__ usageDocument 1

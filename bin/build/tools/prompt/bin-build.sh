@@ -56,7 +56,6 @@ bashPromptModule_binBuild() {
   # buildHome will be changed here
 
   hookSourceOptional --application "$gitHome" project-activate "$home" || _environment "project-activate failed" || :
-
   currentVersion="$(hookRunOptional --application "$gitHome" version-current)"
 
   pathSuffix=
@@ -64,11 +63,9 @@ bashPromptModule_binBuild() {
     __environment pathConfigure --last "$gitHome/bin" || return $?
     pathSuffix="$pathSuffix +$(decorate cyan "$showGitHome/bin")"
   fi
-  if isFunction pathRemove; then
-    if [ -d "$home/bin" ]; then
-      pathRemove "$home/bin"
-      pathSuffix="$pathSuffix -$(decorate magenta "$showHome/bin")"
-    fi
+  if [ -d "$home/bin" ]; then
+    pathRemove "$home/bin"
+    pathSuffix="$pathSuffix -$(decorate magenta "$showHome/bin")"
   fi
   [ -z "$pathSuffix" ] || pathSuffix=" $(decorate warning "PATH:")$pathSuffix"
 
