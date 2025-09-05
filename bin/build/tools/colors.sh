@@ -483,11 +483,21 @@ _isTTYAvailable() {
 consoleColumns() {
   [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
   if ! isTTYAvailable; then
-    printf "%d" 120
+    printf -- "%d" 120
   else
+    shopt -s checkwinsize || :
     local size
     IFS=" " read -r -a size < <(stty size </dev/tty 2>/dev/null) || :
-    isInteger "${size[1]}" && printf "%d" "${size[1]}" || printf "%d" 120
+    local width="${size[1]}"
+    if ! isPositiveInteger "$width"; then
+      export COLUMNS
+      if isPositiveInteger "${COLUMNS-}"; then
+        width="$COLUMNS"
+      else
+        width=100
+      fi
+    fi
+    printf -- "%d" "$width"
   fi
 }
 _consoleColumns() {
@@ -510,11 +520,20 @@ consoleRows() {
   [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
 
   if ! isTTYAvailable; then
-    printf "%d" 120
+    printf -- "%d" 60
   else
-    local rows _
-    IFS=" " read -r rows _ < <(stty size </dev/tty 2>/dev/null) || :
-    isInteger "$rows" && printf "%d" "$rows" || printf "%d" 80
+    shopt -s checkwinsize || :
+    local height _
+    IFS=" " read -r height _ < <(stty size </dev/tty 2>/dev/null) || :
+    if ! isPositiveInteger "$height"; then
+      export LINES
+      if isPositiveInteger "${LINES-}"; then
+        height="$LINES"
+      else
+        height=72
+      fi
+    fi
+    printf -- "%d" "$height"
   fi
 }
 _consoleRows() {

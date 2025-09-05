@@ -794,7 +794,7 @@ __testSection() {
 __testHeading() {
   local bar
 
-  bar=$(decorate code "$(decorate orange "$(echoBar '*')")")
+  bar=$(decorate code "$(echoBar '*')")
 
   clearLine
   printf -- "%s\n" "$bar"

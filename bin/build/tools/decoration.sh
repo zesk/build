@@ -297,7 +297,7 @@ echoBar() {
 
   local barText="" width count delta=""
 
-  width=$(consoleColumns) || __throwEnvironment "$handler" consoleColumns || return $?
+  width=$(__catch "$handler" consoleColumns) || return $?
   # _IDENTICAL_ argumentBlankLoopHandler 4
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
