@@ -94,7 +94,7 @@ bashPromptModule_reloadChanges() {
     fileNewest=$(directoryNewestFile "$path" --find -name '*.sh') || return $?
     newestModified=$(fileModificationTime "$fileNewest") || return $?
     ! $debug || decorate pair fileNewest "$(decorate file "$fileNewest")"
-    if [ "$newestModified" -gt "$modified" ] && [ "$fileNewest" != "$filename" ]; then
+    if [ "$newestModified" -ne "$modified" ] || [ "$fileNewest" != "$filename" ]; then
       ! $debug || decorate info "$newestModified ($fileNewest) -gt $modified ($filename)"
       prefix=""
       [ -z "$filename" ] || prefix="$(decorate file "$filename") -> "
@@ -107,7 +107,7 @@ bashPromptModule_reloadChanges() {
       fi
       reloadSource=true
     else
-      ! $debug || decorate error "! $newestModified -gt $modified"
+      ! $debug || decorate error "! $newestModified -eq $modified"
       continue
     fi
 

@@ -770,6 +770,68 @@ _interactiveCountdown() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
+approvedSources() {
+  local handler="_${FUNCNAME[0]}"
+
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
+  local __saved=("$@") __count=$#
+  while [ $# -gt 0 ]; do
+    local argument="$1" __index=$((__count - $# + 1))
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
+    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    case "$argument" in
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
+    *)
+      # _IDENTICAL_ argumentUnknownHandler 1
+      __throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
+      ;;
+    esac
+    shift
+  done
+
+  local home
+
+  home=$(__interactiveApproveHome "$handler") || return $?
+  local cacheFile unapprovedFiles=() approvedFiles=() handledFiles=()
+  while read -r cacheFile; do
+    local approved user timestamp fullDate name why=()
+    IFS=$'\n' read -d '' -r approved user timestamp fullDate name <"$cacheFile" || :
+    isBoolean "$approved" || why+=("approved is not boolean")
+    [ -n "$user" ] || why+=("user blank")
+    
+    isPositiveInteger "$timestamp" || why+=("timestamp not integer")
+    [ -n "$fullDate" ] || why+=("date blank")
+    [ -f "$name" ] || why+=("file $name not found")
+    if [ "${#why[@]}" -gt 0 ]; then
+      decorate error "Would delete cache file: $cacheFile: $(decorate each code -- "${why[@]}")"
+    else
+      local actualCacheFile
+      actualCacheFile=$(__interactiveApproveCacheFile "$handler" "$home" "$name") || return $?
+      if inArray "$actualCacheFile" "${handledFiles[@]}"; then
+        decorate warning "Would delete $actualCacheFile (handled)"
+        continue
+      fi
+      if [ "$actualCacheFile" = "$cacheFile" ]; then
+        output="$(printf "%s %s\n" "$(alignLeft 30 "$(decorate file "$name")")" "$(dateFromTimestamp "$timestamp")")"
+        if [ "$approved" = true ]; then
+          approvedFiles+=("$output")
+        else
+          unapprovedFiles+=("$output")
+        fi
+        handledFiles+=("$cacheFile")
+      fi
+    fi
+  done < <(find "$home" -type f -mindepth 1 -maxdepth 1)
+
+  [ "${#approvedFiles[@]}" -eq 0 ] || printf "%s\n" "$(decorate info "Approved:")" "" "${approvedFiles[@]}" | sort
+  [ "${#unapprovedFiles[@]}" -eq 0 ] || printf "%s\n" "$(decorate warning "Unapproved:")" "" "${unapprovedFiles[@]}" | sort
+}
+_approvedSources() {
+  # __IDENTICAL__ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
 # Usage: {fn} [ directoryOrFile ... ]
 # Argument: directoryOrFile - Required. Exists. Directory or file to `source` `.sh` files found.
 # Argument: --info - Optional. Flag. Show user what they should do (press a key).
