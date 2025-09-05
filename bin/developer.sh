@@ -38,16 +38,15 @@ if source "${BASH_SOURCE[0]%/*}/tools.sh"; then
 
     muzzle reloadChanges --stop 2>&1
     printf "%s" "$(decorate warning "Watching ")"
-    reloadChanges --name "$name" bin/build/tools.sh bin/build/tools
+    reloadChanges --name "$name" bin/developer.sh bin/
     buildCompletion
 
-    bashPrompt --skip-prompt bashPromptModule_TermColors
+    bashPrompt --skip-terminal --skip-prompt bashPromptModule_TermColors
 
     pathConfigure --last "$home/bin" "$home/bin/build"
 
     developerAnnounce < <(developerTrack)
 
-    CI=1 approvedSources --delete --highlight "$home/bin/developer.sh"
     export BUILD_PROJECT_DEACTIVATE=__buildConfigureUndo
 
     unset __buildConfigure

@@ -73,7 +73,7 @@ __hookRunner() {
           # hookRun
           __throwArgument "$handler" "Hook not found $(decorate code "$binary")" || return $?
         else
-          if buildDebugEnabled; then
+          if buildDebugEnabled hook; then
             printf "%s %s %s %s\n" "$(decorate warning "No hook")" "$(decorate code "$binary")" "$(decorate warning "in this project:")" "$(decorate code "$applicationHome")"
           fi
           # hookRunOptional

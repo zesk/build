@@ -306,7 +306,10 @@ approvedSources() {
       nearWidth="$(stripAnsi <<<"$displayName")"
       padding=$((60 - ${#nearWidth}))
       fileText="$displayName"
-      [ ${#highlighted[@]} -eq 0 ] || ! inArray "$name" "${highlighted[@]}" || fileText="[$(decorate orange "$displayName")]"
+      if [ ${#highlighted[@]} -gt 0 ] && inArray "$name" "${highlighted[@]}"; then
+        fileText="[$(decorate orange "$displayName")]"
+        padding=$((padding - 2))
+      fi
 
       if [ "$padding" -lt 0 ]; then
         fileText="$fileText ..."
@@ -325,8 +328,8 @@ approvedSources() {
     fi
   done < <(find "$home" -type f -mindepth 1 -maxdepth 1)
 
-  [ "${#approvedBashSources[@]}" -eq 0 ] || printf "%s\n" "$(decorate info "-|Approved:")" "" "${approvedBashSources[@]}" | sort | awk -F '|' '{ print $2 }'
-  [ "${#unapprovedBashSources[@]}" -eq 0 ] || printf "%s\n" "$(decorate warning "-|Unapproved:")" "" "${unapprovedBashSources[@]}" | sort | awk -F '|' '{ print $2 }'
+  [ "${#approvedBashSources[@]}" -eq 0 ] || printf "%s\n%s\n\n" "$(decorate info "Approved:")" "$(printf -- "%s\n" "${approvedBashSources[@]}" | sort | awk -F '|' '{ print $2 }')"
+  [ "${#unapprovedBashSources[@]}" -eq 0 ] || printf "%s\n%s\n\n" "$(decorate warning "Unapproved:")" "$(printf -- "%s\n" "${unapprovedBashSources[@]}" | sort | awk -F '|' '{ print $2 }')"
 
   ! $deleteFlag || __catchEnvironment "$handler" rm -f "${deleteFiles[@]}" || return $?
 }
