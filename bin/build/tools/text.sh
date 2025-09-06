@@ -70,6 +70,23 @@ _grepSafe() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
+# Check if text contains plaintext only
+# Argument: text - Required. String. Text to search for mapping tokens.
+# No arguments displays help.
+isPlain() {
+  [ $# -gt 0 ] || __help "_${FUNCNAME[0]}" --help || return 0
+
+  while [ $# -gt 0 ]; do
+    case "$1" in *[^[:print:]]*) return 1 ;; esac
+    shift
+  done
+  return 0
+}
+_isPlain() {
+  # __IDENTICAL__ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
 # Check if text contains mappable tokens
 # If any text passed contains a token which can be mapped, succeed.
 # Argument: --prefix - Optional. String. Token prefix defaults to `{`.

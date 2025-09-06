@@ -246,14 +246,14 @@ __reloadChangesRemove() {
 
   [ -f "$cacheFile" ] || return 0
 
-  local argument name="" source="" paths=() target="$cacheFile.$$"
+  local argument name="" source="" paths=() target="$cacheFile.$$.temp"
 
-  __catchEnvironment "$handler" touch "$target" || return $?
+  __catchEnvironment "$handler" touch "$target" || returnClean $? "$target" || return $?
   while IFS="" read -r argument; do
     if [ -z "$source" ]; then
       source="$(usageArgumentRealFile "$handler" "config-source" "$argument")" || returnClean $? "$target" || return $?
     elif [ -z "$name" ]; then
-      name=$(usageArgumentString "$handler" "config-name" "$argument") || return $?
+      name=$(usageArgumentString "$handler" "config-name" "$argument") || returnClean $? "$target" || return $?
     elif [ "$argument" = "--" ]; then
       if [ "$source" != "$matchSource" ]; then
         __catchEnvironment "$handler" printf -- "%s\n" "$source" "$name" "${paths[@]}" "--" >>"$target" || returnClean $? "$target" || return $?
@@ -266,7 +266,8 @@ __reloadChangesRemove() {
       paths+=("$(usageArgumentRealDirectory "$handler" "config-path" "$argument")") || returnClean $? "$target" || return $?
     fi
   done <"$cacheFile"
-  __catchEnvironment "$handler" mv -f "$target" "$cacheFile" || return $?
+  __catchEnvironment "$handler" mv -f "$target" "$cacheFile" || returnClean $? "$target" || return $?
+  __catchEnvironment "$handler" find "$(dirname "$cacheFile")" -name '*.temp' -delete || return $?
 }
 
 __reloadChangesCacheFile() {

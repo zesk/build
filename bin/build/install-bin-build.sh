@@ -833,7 +833,7 @@ usageDocument() {
 # Requires: bashFunctionComment decorate read printf exitString __help usageDocument
 usageDocumentSimple() {
   [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
-  local source="${1-}" functionName="${2-}" returnCode="${3-}" color helpColor="info" icon="❌" line prefix="" done=false skip=false && shift 3
+  local source="${1-}" functionName="${2-}" returnCode="${3-}" color helpColor="info" icon="❌" line prefix="" finished=false skip=false && shift 3
 
   case "$returnCode" in 0) icon="🏆" && color="info" && [ $# -ne 0 ] || skip=true ;; 1) color="error" ;; 2) color="bold-red" ;; *) color="orange" ;; esac
   [ "$returnCode" -eq 0 ] || exec 1>&2
@@ -844,8 +844,8 @@ usageDocumentSimple() {
     source="$BUILD_HOME/$source"
     [ -f "$source" ] || _argument "Unable to locate $source (${PWD-})" || return $?
   fi
-  while ! $done; do
-    IFS='' read -r line || done=true
+  while ! $finished; do
+    IFS='' read -r line || finished=true
     printf "%s%s\n" "$prefix" "$(decorate "$helpColor" "$line")"
     prefix=""
   done < <(bashFunctionComment "$source" "$functionName" | sed "s/{fn}/$functionName/g")

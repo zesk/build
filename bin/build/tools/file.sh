@@ -340,17 +340,21 @@ directoryPathSimplify() {
     path="${path#"./"}"
     path="${path//\/\.\///}"
     read -r -a elements <<<"$path" || :
-    result=()
-    for segment in "${elements[@]+"${elements[@]}"}"; do
-      if [ "$segment" = ".." ]; then
-        dot=$((dot + 1))
-      elif [ $dot -gt 0 ]; then
-        dot=$((dot - 1))
-      else
-        result+=("$segment")
-      fi
-    done
-    printf "%s\n" "${result[*]-}"
+    if [ "${#elements[@]}" -gt 0 ]; then
+      result=()
+      for segment in "${elements[@]+"${elements[@]}"}"; do
+        if [ "$segment" = ".." ]; then
+          dot=$((dot + 1))
+        elif [ $dot -gt 0 ]; then
+          dot=$((dot - 1))
+        else
+          result+=("$segment")
+        fi
+      done
+      printf "%s\n" "${result[*]-}"
+    else
+      printf "\n"
+    fi
     shift
   done
 }

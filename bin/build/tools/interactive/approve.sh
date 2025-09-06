@@ -60,7 +60,7 @@ __interactiveApproveRegisterCacheFile() {
   if [ ! -f "$cacheFile" ]; then
     if confirmYesNo "$@" "$verb $(decorate file "$sourcePath")?"; then
       approved=true
-      statusMessage --last printf "%s [%s] %s" "$(decorate success "Approved")" "$(decorate file "$displayFile")" "$(decorate subtle "(will not ask in the future)")"
+      statusMessage --last printf "%s [%s] %s" "$(decorate success "Approved")" "$displayFile" "$(decorate subtle "(will not ask in the future)")"
     else
       approved=false
     fi
@@ -128,6 +128,7 @@ __interactiveCountdownReadBoolean() {
   tempResult=$(fileTemporaryName "$handler") || return $?
 
   __interactiveCountdownReadCharacter "$@" "__confirmYesNoValidate" "$tempResult" || returnClean $? "$tempResult" || return $?
+
   value=$(__catchEnvironment "$handler" cat "$tempResult") || returnClean $? "$tempResult" || return $?
   __catchEnvironment "$handler" rm -rf "$tempResult" || return $?
   "$value"
@@ -280,9 +281,8 @@ approvedSources() {
       displayName=$(decorate file "$name")
 
       if [ -f "$name" ]; then
-        local actualCacheFile displayActualCacheFile
+        local actualCacheFile
         actualCacheFile=$(__interactiveApproveCacheFile "$handler" "$home" "$name") || return $?
-        displayActualCacheFile=$(decorate file "$displayActualCacheFile")
         if [ "$actualCacheFile" != "$cacheFile" ]; then
           why+=("original file $displayName changed")
         fi
