@@ -35,9 +35,8 @@ _pythonInstall() {
 pythonUninstall() {
   local handler="_${FUNCNAME[0]}"
   [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
-  __catch "$handler" packageGroupUninstall "$@" python || return $?
-  if ! whichExists pip; then
-    __catchEnvironment "$handler" python -m ensurepip --upgrade || return $?
+  if whichExists python; then
+    __catch "$handler" packageGroupUninstall "$@" python || return $?
   fi
 }
 _pythonUninstall() {
