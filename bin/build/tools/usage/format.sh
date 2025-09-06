@@ -52,9 +52,9 @@ usageTemplate() {
 
   local usageString
   if [ "$exitCode" -eq 0 ]; then
-    usageString="$(decorate bold-green handler)"
+    usageString="$(decorate bold-green Usage)"
   else
-    usageString="$(decorate bold-red handler)"
+    usageString="$(decorate bold-red Usage)"
   fi
   if [ $# -gt 0 ] && [ -n "$*" ]; then
     if [ "$exitCode" -eq 0 ]; then

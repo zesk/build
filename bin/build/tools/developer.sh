@@ -88,10 +88,14 @@ _developerUndo() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# Track changes to the bash environment
-# Argument: source - File. Required. Source which we are tracking for changes to bash environment
+# Track changes to the bash environment. WIth no arguments this function returns the new or changed bash functions, variables, or aliases since marks occurred.
+#
+# In general, you will add `{fn} --profile` at the end of your `.bashrc` file, and you will add `{fn} --developer` at the *start* of your `developer.sh` before you define anything.
+#
 # Argument: --verbose - Flag. Optional. Be verbose about what the function is doing.
 # Argument: --list - Flag. Optional. Show the list of what has changed since the first invocation.
+# Argument: --profile - Flag. Optional. Mark the end of profile definitions.
+# Argument: --developer - Flag. Optional. Mark the start of developer definitions.
 # stdout: list of function|alias|environment
 developerTrack() {
   local handler="_${FUNCNAME[0]}"
