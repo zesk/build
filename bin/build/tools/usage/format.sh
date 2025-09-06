@@ -31,7 +31,7 @@
 # Argument: ... - String. Any additional description - output directly.
 # Requires: exitString __throwArgument trimSpace usageArgumentUnsignedInteger __throwArgument decorate printf
 # BUILD_DEBUG: handler - For all `--help` and any function which uses `usageTemplate` to output documentation (upon error), the stack will be displayed
-usageTemplate() {
+__usageTemplate() {
   local handler="_${FUNCNAME[0]}" __saved=("$@")
 
   [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
@@ -74,7 +74,7 @@ usageTemplate() {
       "$usageString" \
       "$(decorate info "$binName")" \
       "$(printf "%s" "$options" | usageFormatArguments "$delimiter")" \
-      "$(printf "%s" "$options" | usageGenerator "$((nSpaces + 2))" "$delimiter" | simpleMarkdownToConsole | trimTail | decorate wrap "    " "$(decorate reset --)")" \
+      "$(printf "%s" "$options" | __usageGenerator "$((nSpaces + 2))" "$delimiter" | simpleMarkdownToConsole | trimTail | decorate wrap "    " "$(decorate reset --)")" \
       "$(simpleMarkdownToConsole <<<"$description")" |
       trimBoth
   else
@@ -89,7 +89,7 @@ usageTemplate() {
   fi
   return "$exitCode"
 }
-_usageTemplate() {
+___usageTemplate() {
   # __IDENTICAL__ usageDocumentSimple 1
   usageDocumentSimple "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
@@ -145,7 +145,7 @@ _usageFormatArguments() {
 # Formats name value pairs separated by separatorChar (default " ") and uses
 # $nSpaces width for first field
 #
-# usageGenerator nSpaces separatorChar labelPrefix valuePrefix < formatFile
+# Example:     {fn} nSpaces separatorChar labelPrefix valuePrefix < formatFile
 #
 # use with maximumFieldLength 1 to generate widths
 #
@@ -155,7 +155,7 @@ _usageFormatArguments() {
 # Argument: separatorChar - Optional. String. Default is space.
 # Argument: labelPrefix - Optional. String. Defaults to blue color text.
 # Argument: valuePrefix - Optional. String. Defaults to red color text.
-usageGenerator() {
+__usageGenerator() {
   [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
   local nSpaces=$((${1-30} + 0)) separatorChar=${2-" "} labelPrefix valuePrefix labelOptionalPrefix labelRequiredPrefix capsLine lastLine
 
@@ -190,7 +190,7 @@ usageGenerator() {
     fi
   done
 }
-_usageGenerator() {
+___usageGenerator() {
   # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

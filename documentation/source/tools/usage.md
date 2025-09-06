@@ -11,12 +11,8 @@ Essentially a `usage` function is a failure handler. If you need a simple `usage
 ## Usage formatting
 
 {usageDocument}
-
 {usageDocumentSimple}
-
 {usageFormatArguments}
-{usageGenerator}
-{usageTemplate}
 
 ## Environment
 

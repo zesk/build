@@ -9,7 +9,7 @@ testUsageTemplate() {
 
   home="$(__catch "$handler" buildHome)" || return $?
 
-  output=$(usageTemplate testThatFunction "--one thing^Required. String. Thing."$'\n'"--another thing^Optional. Integer. Another thing." "^" "Makes the world a better place" 0 | stripAnsi) || __throwEnvironment "$handler" "usageTemplate failed" || return $?
+  output=$(__usageTemplate testThatFunction "--one thing^Required. String. Thing."$'\n'"--another thing^Optional. Integer. Another thing." "^" "Makes the world a better place" 0 | stripAnsi) || __throwEnvironment "$handler" "usageTemplate failed" || return $?
   assertEquals "$output" "$(cat "$home/test/example/usageTemplateSimple.txt")" || return $?
 }
 
