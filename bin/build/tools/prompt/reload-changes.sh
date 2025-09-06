@@ -160,7 +160,7 @@ reloadChanges() {
       ;;
     --stop)
       # If not found we do not care
-      muzzle bashPrompt --remove bashPromptModule_reloadChanges 2>&1 || :
+      muzzle bashPrompt --skip-terminal --remove bashPromptModule_reloadChanges 2>&1 || :
       if cacheFile="$(__reloadChangesCacheFile "$handler")"; then
         __catchEnvironment "$handler" rm -rf "$cacheFile" || return $?
       fi
@@ -214,7 +214,7 @@ reloadChanges() {
   __catchEnvironment "$handler" printf -- "%s\n" "$source" "$name" "${paths[@]}" "--" >>"$cacheFile" || return $?
 
   decorate success "Watching $(decorate each file "${paths[@]}") as $(decorate value "$name")"
-  bashPrompt --first bashPromptModule_reloadChanges
+  bashPrompt --skip-terminal --first bashPromptModule_reloadChanges
 }
 
 __reloadChangesShow() {
