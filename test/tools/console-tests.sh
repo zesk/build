@@ -43,17 +43,22 @@ testColorBrightness() {
 }
 
 testConsoleFileLink() {
-  __mockValue BITBUCKET_WORKSPACE BACKUP_BITBUCKET_WORKSPACE "${BITBUCKET_WORKSPACE-}"
-  __mockValue CI BACKUP_CI "${CI-}"
+  __mockValue BITBUCKET_WORKSPACE
+  __mockValue CI
+  __mockValue BUILD_COLORS
+
+  export BUILD_COLORS=true
+  export CI=
 
   bigText consoleFileLink
   assertExitCode 0 consoleFileLink "${BASH_SOURCE[0]}" || return $?
-  assertExitCode --stderr-match "non-plain" 2 consoleFileLink "$(decorate file "$(pwd)")" || return $?
+  assertExitCode --stderr-match "non-plain" 2 consoleFileLink "$(decorate black "paint it")" || return $?
   assertExitCode 0 consoleLink https://example.com/ Hello || return $?
   assertExitCode 0 consoleFileLink "${BASH_SOURCE[0]}" || return $?
 
-  __mockValue BITBUCKET_WORKSPACE BACKUP_BITBUCKET_WORKSPACE --end
-  __mockValue CI BACKUP_CI --end
+  __mockValueStop BITBUCKET_WORKSPACE
+  __mockValueStop CI
+  __mockValueStop BUILD_COLORS
 }
 
 testStatusMessageLast() {

@@ -19,7 +19,6 @@
 # Argument: --failure failureText - EmptyString. Optional. Text to display in the prompt when the previous command failed.
 # Argument: --label promptLabel - String. Optional. The prompt format string. See PROMPT FORMATTING below
 # Argument: --colors colorsText - String. Optional. Set the prompt colors. See COLORS below.
-# Argument: --skip-terminal - Flag. Optional. Skip the check for a terminal attached to `stdin`.
 # Argument: --skip-prompt - Flag. Optional. Do not modify the prompt.
 # DOC TEMPLATE: --help 1
 # Argument: --help - Optional. Flag. Display this help.
@@ -67,7 +66,7 @@
 bashPrompt() {
   local handler="_${FUNCNAME[0]}"
 
-  local addArguments=() resetFlag=false verbose=false skipTerminal=false listFlag=false skipPrompt=false
+  local addArguments=() resetFlag=false verbose=false listFlag=false skipPrompt=false
 
   export __BASH_PROMPT_PREVIOUS
 
@@ -110,9 +109,6 @@ bashPrompt() {
       local module
       module=$(usageArgumentString "$handler" "$argument" "${1-}") || return $?
       __bashPromptRemove "$handler" "$module" || return $?
-      ;;
-    --skip-terminal)
-      skipTerminal=true
       ;;
     --skip-prompt)
       skipPrompt=true
@@ -169,8 +165,6 @@ bashPrompt() {
   if [ -z "$promptFormat" ] || $resetFlag; then
     promptFormat="{label}{user}@{host} {directory} {return}{status} "
   fi
-
-  $skipTerminal || [ -t 0 ] || __throwEnvironment "$handler" "Requires a terminal" || return $?
 
   export PROMPT_COMMAND PS1 __BASH_PROMPT_PREVIOUS __BASH_PROMPT_MODULES BUILD_PROMPT_COLORS
 

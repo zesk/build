@@ -125,7 +125,7 @@ iTerm2PromptSupport() {
 
   [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
   __catchEnvironment "$handler" muzzle bashPromptMarkers "$(__iTerm2_mark)" "$(__iTerm2_suffix)" || return $?
-  __catchEnvironment "$handler" bashPrompt --skip-prompt --skip-terminal --last __iTerm2UpdateState || return $?
+  __catchEnvironment "$handler" bashPrompt --skip-prompt --last __iTerm2UpdateState || return $?
 }
 _iTerm2PromptSupport() {
   # __IDENTICAL__ usageDocument 1

@@ -41,7 +41,7 @@ if source "${BASH_SOURCE[0]%/*}/tools.sh"; then
     reloadChanges --name "$name" bin/developer.sh bin/
     buildCompletion
 
-    bashPrompt --skip-terminal --skip-prompt bashPromptModule_TermColors
+    bashPrompt --skip-prompt bashPromptModule_TermColors
 
     pathConfigure --last "$home/bin" "$home/bin/build"
 
