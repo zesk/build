@@ -202,6 +202,7 @@ consoleFileLink() {
     printf -- "%s\n" "$(decoratePath "$1")"
   else
     local path="$1"
+    isPlain "$path" || __throwArgument "$handler" "Path contains non-plain characters: $(dumpBinary <<<"$path")" || return $?
     if [ "${path:0:1}" != "/" ]; then
       path="$(pwd)/$(directoryPathSimplify "$path")"
     fi

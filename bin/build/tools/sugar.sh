@@ -269,14 +269,14 @@ __executeInputSupport() {
   local byte
   # On Darwin `read -t 0` DOES NOT WORK as a select on stdin
   if [ $# -eq 0 ] && IFS="" read -r -t 1 -n 1 byte; then
-    local line finished=false
+    local line done=false
     if [ "$byte" = $'\n' ]; then
       __catchEnvironment "$handler" "${executor[@]}" "" || return $?
       byte=""
     fi
-    while ! $finished; do
-      IFS="" read -r line || finished=true
-      [ -n "$byte$line" ] || ! $finished || break
+    while ! $done; do
+      IFS="" read -r line || done=true
+      [ -n "$byte$line" ] || ! $done || break
       __catchEnvironment "$handler" "${executor[@]}" "$byte$line" || return $?
       byte=""
     done

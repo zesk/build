@@ -25,6 +25,25 @@ testStringBegins() {
   done < <(__dataStringBegins)
 }
 
+__dataIsPlain() {
+  local dog
+  dog="$(decorate red dog)"
+  cat <<EOF
+0 Hello Hell No
+1 Whatever WHAT whatever $dog
+0 !@#$%^&*()_+{}:"?><{}[]\
+0 Zesk Build makes easier pipeline platform and project management.
+1 Zesk Build makes easier pipeline platform and project management, $dog.
+0
+EOF
+}
+
+testIsPlain() {
+  while read -r expected text; do
+    assertExitCode "$expected" isPlain "$text" || return $?
+  done < <(__dataIsPlain)
+}
+
 __dataTrimBoth() {
   cat <<EOF
 this is a line|

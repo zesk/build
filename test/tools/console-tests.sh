@@ -47,7 +47,8 @@ testConsoleFileLink() {
   __mockValue CI BACKUP_CI "${CI-}"
 
   bigText consoleFileLink
-  __environment consoleFileLink "${BASH_SOURCE[0]}" || return $?
+  assertExitCode 0 consoleFileLink "${BASH_SOURCE[0]}" || return $?
+  assertExitCode --stderr-match "non-plain" 2 consoleFileLink "$(decorate file "$(pwd)")" || return $?
   assertExitCode 0 consoleLink https://example.com/ Hello || return $?
   assertExitCode 0 consoleFileLink "${BASH_SOURCE[0]}" || return $?
 
