@@ -175,7 +175,7 @@ __documentationBuild() {
   fi
 
   # At this point, everything is valid so we call our failure hook on failure
-  handler="__${FUNCNAME[0]}"
+  #  handler="__${FUNCNAME[0]}"
 
   #
   # Generate or update indexes
@@ -228,9 +228,8 @@ __documentationBuild() {
     functionLinkPattern=${BUILD_DOCUMENTATION_SOURCE_LINK_PATTERN-}
     # Remove line
     fileLinkPattern=${functionLinkPattern%%#.*}
-    __catch "$handler" documentationIndex_SeeLinker "$cacheDirectory" "$seePrefix" "$seeFunction" "$functionLinkPattern" "$seeFile" "$fileLinkPattern" || return $?
+    __catch "$handler" __documentationIndex_SeeLinker "$cacheDirectory" "$seePrefix" "$seeFunction" "$functionLinkPattern" "$seeFile" "$fileLinkPattern" || return $?
   ) || return $?
   message=$(__catch "$handler" timingReport "$start" "in") || return $?
   hookRunOptional documentation-complete "$message" || return $?
 }
-

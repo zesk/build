@@ -28,6 +28,10 @@
 
 {fileCopy}
 
+# Approve
+
+{approvedSources}
+
 ## Examples
 
 Example:

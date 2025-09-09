@@ -15,7 +15,7 @@
 #
 # Usage: {fn} cacheDirectory documentationDirectory seeFunctionTemplate seeFunctionLink seeFileTemplate seeFileLink
 #
-documentationIndex_SeeLinker() {
+__documentationIndex_SeeLinker() {
   local handler="_${FUNCNAME[0]}"
 
   local start
@@ -35,15 +35,15 @@ documentationIndex_SeeLinker() {
     --help) "$handler" 0 && return $? || return $? ;;
     *)
       if [ -z "$cacheDirectory" ]; then
-        cacheDirectory=$(usageArgumentDirectory _documentationIndex_SeeLinker "cacheDirectory" "${1%%/}") || return $?
+        cacheDirectory=$(usageArgumentDirectory "$handler" "cacheDirectory" "${1%%/}") || return $?
       elif [ -z "$documentationDirectory" ]; then
-        documentationDirectory=$(usageArgumentDirectory _documentationIndex_SeeLinker "documentationDirectory" "${1%%/}") || return $?
+        documentationDirectory=$(usageArgumentDirectory "$handler" "documentationDirectory" "${1%%/}") || return $?
       elif [ -z "$seeFunctionTemplate" ]; then
-        seeFunctionTemplate=$(usageArgumentFile _documentationIndex_SeeLinker seeFunctionTemplate "${1##./}") || return $?
+        seeFunctionTemplate=$(usageArgumentFile "$handler" seeFunctionTemplate "${1##./}") || return $?
         shift || :
         seeFunctionLink="$1"
       elif [ -z "$seeFileTemplate" ]; then
-        seeFileTemplate=$(usageArgumentFile _documentationIndex_SeeLinker seeFileTemplate "${1##./}") || return $?
+        seeFileTemplate=$(usageArgumentFile "$handler" seeFileTemplate "${1##./}") || return $?
         shift || __throwArgument "$handler" "seeFileLink required" || return $?
         seeFileLink="$1"
       else
@@ -124,7 +124,7 @@ documentationIndex_SeeLinker() {
   rm -f "$seeVariablesFile" "$linkPatternFile" "$variablesSedFile" 2>/dev/null || :
   statusMessage --last timingReport "$start" "See completed in" || :
 }
-_documentationIndex_SeeLinker() {
+___documentationIndex_SeeLinker() {
   # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

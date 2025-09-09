@@ -10,52 +10,8 @@
 #
 # Thanks for your consideration.
 
-# Usage: {fn} --extension extension0 --prefix prefix0  [ --cd directory ] [ --extension extension1 ... ] [ --prefix prefix1 ... ]
-# Argument: --extension extension - Required. String. One or more extensions to search for in the current directory.
-# Argument: --prefix prefix - Required. String. A text prefix to search for to identify identical sections (e.g. `# IDENTICAL`) (may specify more than one)
-# Argument: --exclude pattern - Optional. String. One or more patterns of paths to exclude. Similar to pattern used in `find`.
-# Argument: --cd directory - Optional. Directory. Change to this directory before running. Defaults to current directory.
-# Argument: --repair directory - Optional. Directory. Any files in onr or more directories can be used to repair other files.
-# Argument: --token token - Optional. String. ONLY do this token. May be specified more than once.
-# Argument: --skip file - Optional. Directory. Ignore this file for repairs.
-# Argument: --ignore-singles - Optional. Flag. Skip the check to see if single entries exist.
-# Argument: --no-map - Optional. Flag. Do not map __BASE__, __FILE__, __DIR__ tokens.
-# Argument: --debug - Optional. Additional debugging information is output.
-# Argument: --help - Optional. Flag. This help.
-# Argument: --singles singlesFiles - Optional. File. One or more files which contain a list of allowed `{identical}` singles, one per line.
-# Argument: --single singleToken - Optional. String. One or more tokens which cam be singles.
-#
-# Exit Code: 2 - Argument error
-# Exit Code: 0 - Success, everything matches
-# Exit Code: 100 - Failures
-#
-# When, for whatever reason, you need code to match between files, add a comment in the form:
-#
-#     # {identical} tokenName n
-#
-# Where `tokenName` is unique to your project, `n` is the number of lines to match. All found sets of lines in this form
-# must match each other set of lines with the same prefix, otherwise errors and details about failures are printed to stdout.
-#
-# The command to then check would be:
-#
-#     {fn} --extension sh --prefix '# {identical}'
-#
-# This is largely useful for projects in which specific functions are replicated between scripts for code independence, yet
-# should remain identical.
-#
-# Mapping also automatically handles file names and paths, so using the token `__FILE__` within your identical source
-# will convert to the target file's application path.
-#
-# Failures are considered:
-#
-# - Partial success, but warnings occurred with an invalid number in a file
-# - Two code instances with the same token were found which were not identical
-# - Two code instances with the same token were found which have different line counts
-#
-# This is best used as a pre-commit check, for example.
-# See: identicalWatch
-identicalCheck() {
-  local handler="_${FUNCNAME[0]}"
+__identicalCheck() {
+  local handler="$1" && shift
 
   local mapFile=true debug=false rootDir="."
   local repairSources=() excludes=() prefixes=() singles=() binary="" ignoreSingles=false
@@ -251,8 +207,4 @@ identicalCheck() {
   __catchEnvironment "$handler" rm -rf "${clean[@]}" || return $?
   statusMessage --last timingReport "$start" "Completed in"
   return "$exitCode"
-}
-_identicalCheck() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

@@ -33,29 +33,16 @@ __awsIPAccess() {
       profileName="$(usageArgumentString "$handler" "$argument" "$1")" || return $?
       pp=("$argument" "$profileName")
       ;;
-    --revoke)
-      optionRevoke=true
-      ;;
-    --verbose)
-      verboseFlag=true
-      ;;
-    --group)
-      shift || __throwArgument "$handler" "missing $argument argument" || return $?
-      securityGroups+=("$1")
-      ;;
-    --ip)
-      shift || __throwArgument "$handler" "missing $argument argument" || return $?
-      currentIP="$1"
-      ;;
-    --id)
-      shift || __throwArgument "$handler" "missing $argument argument" || return $?
-      developerId="$1"
-      ;;
+    --revoke) optionRevoke=true ;;
+    --verbose) verboseFlag=true ;;
+    --group) shift && securityGroups+=("$1") ;;
+    --ip) shift && currentIP="$1" ;;
+    --id) shift && developerId="$1" ;;
     *)
       break
       ;;
     esac
-    shift || __throwArgument "$handler" "shift failed" || return $?
+    shift
   done
 
   [ -n "$developerId" ] || __throwArgument "$handler" "Empty --id or DEVELOPER_ID environment" || return $?

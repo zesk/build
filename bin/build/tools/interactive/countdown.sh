@@ -4,8 +4,8 @@
 #
 # Copyright &copy; 2025 Market Acumen, Inc.
 
-interactiveCountdown() {
-  local handler="_${FUNCNAME[0]}"
+__interactiveCountdown() {
+  local handler="$1" && shift
 
   local prefix="" counter="" binary="" runner=("statusMessage" "printf" -- "%s")
 
@@ -59,5 +59,80 @@ interactiveCountdown() {
 _interactiveCountdown() {
   # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+# Maybe move this to its own thing if needed later
+# handler: {fn} handler timeout attempts extras message parser
+# Argument: handler - Function. Error handler
+# Argument: timeout - UnsignedInteger|Empty. Milliseconds to time out after.
+# Argument: attempts - Integer. Number ot attempts to allow.
+# Argument: extras - EmptyString. Extra text to add to the prompt.
+# Argument: message - EmptyString. The message to show to prompt the user.
+# Argument: parser ... - Function. Function to call to check the input if it's valid and arguments to add.
+# Exit code: 10 - Timeout
+# Exit code: 11 - Attempts ran out
+# Exit code: 0 - All good, print character
+# Exit code: 1 - Error
+# Exit code: 2 - Error
+__interactiveCountdownReadCharacter() {
+  local handler="$1" && shift
+  local timeout="" rr=() extras icon="⏳" attempts prompt width=0
+
+  if [ "$1" != "" ]; then
+    rr=(-t 1)
+    timeout=$(usageArgumentPositiveInteger "$handler" "timeout" "${1-}") || return $?
+    width="$timeout"
+    width="${#width}"
+    # milliseconds
+    timeout=$((timeout * 1000))
+  fi
+  shift
+
+  attempts=$(usageArgumentInteger "$handler" "attempts" "${1-}") && shift || return $?
+
+  extras="${1-}" && shift
+
+  local value start elapsed=0 message="$1" counter=1 prefix="" timingSuffix="" && shift
+  local parser="$1" && shift
+
+  start=$(timingStart)
+
+  # IDENTICAL __interactiveCountdownReadBooleanStatus 3
+  [ "$attempts" -le 1 ] || prefix="$(decorate value "[ 🧪 $counter of $attempts ]") "
+  [ "$timeout" = "" ] || timingSuffix="$(printf " %s %s" "$icon" "$(alignRight "$width" "$(((timeout - elapsed + 500) / 1000))")")"
+  prompt=$(printf -- "%s%s%s%s" "$prefix" "$message" "$extras" "$timingSuffix")
+
+  while true; do
+    statusMessage printf -- ""
+    while ! value=$(bashUserInput -p "$prompt" -n 1 -s "${rr[@]+"${rr[@]}"}"); do
+      if [ -z "$timeout" ]; then
+        return 2
+      fi
+      elapsed=$(($(timingStart) - start))
+      if [ "$elapsed" -gt "$timeout" ]; then
+        return 10
+      fi
+      # IDENTICAL __interactiveCountdownReadBooleanStatus 3
+      [ "$attempts" -le 1 ] || prefix="$(decorate value "[ 🧪 $counter of $attempts ]") "
+      [ "$timeout" = "" ] || timingSuffix="$(printf " %s %s" "$icon" "$(alignRight "$width" "$(((timeout - elapsed + 500) / 1000))")")"
+      prompt=$(printf -- "%s%s%s%s" "$prefix" "$message" "$extras" "$timingSuffix")
+      statusMessage printf -- ""
+    done
+    statusMessage printf -- ""
+    if [ -n "$value" ] && "$parser" "$value" "$@"; then
+      return 0
+    fi
+    counter=$((counter + 1))
+    if [ "$attempts" -gt 0 ]; then
+      if [ $counter -gt "$attempts" ]; then
+        return 11
+      fi
+      # IDENTICAL __interactiveCountdownReadBooleanStatus 3
+      [ "$attempts" -le 1 ] || prefix="$(decorate value "[ 🧪 $counter of $attempts ]") "
+      [ "$timeout" = "" ] || timingSuffix="$(printf " %s %s" "$icon" "$(alignRight "$width" "$(((timeout - elapsed + 500) / 1000))")")"
+      prompt=$(printf -- "%s%s%s%s" "$prefix" "$message" "$extras" "$timingSuffix")
+    fi
+  done
+  return 1
 }
 

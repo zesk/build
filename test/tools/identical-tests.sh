@@ -39,6 +39,7 @@ testIdenticalCheckAndRepairMap() {
   home=$(__environment buildHome) || return $?
   testPath=$(fileTemporaryName "$handler" -d) || return $?
   decorate info "HOME is $home"
+  decorate info "testPath is $testPath"
   __environment mkdir -p "$testPath/identical" || return $?
   __environment mkdir -p "$testPath/tests" || return $?
   __environment mkdir -p "$testPath/alternate" || return $?

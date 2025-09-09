@@ -4,8 +4,9 @@
 #
 
 __buildDocumentationBuildDirectory() {
-  local handler="$1" home="$2" aa=() target
-  shift 2
+  local handler="$1" && shift
+  local home="$1" && shift
+  local aa=() target
 
   local prefix="$home/documentation/source"
   while read -r markdownFile; do
@@ -89,7 +90,7 @@ __mkdocsConfiguration() {
 # Argument: --reference-only - Flag. Just tools documentation.
 # Argument: --clean - Flag. Clean caches.
 # See: documentationBuild
-__buildDocumentationBuild() {
+buildDocumentationBuild() {
   local handler="_${FUNCNAME[0]}"
   local start
 
@@ -185,7 +186,7 @@ __buildDocumentationBuild() {
 
   if $updateTemplates; then
     statusMessage decorate notice "Updating document templates ..."
-    _documentationTemplateUpdate "$home/documentation/source" "$home/documentation/template" || return $?
+    documentationTemplateUpdate "$home/documentation/source" "$home/documentation/template" || return $?
   fi
 
   if $updateDerived; then
@@ -223,7 +224,7 @@ __buildDocumentationBuild() {
   fi
 
   if "$updateReference"; then
-    __catch "$handler" __buildDocumentationBuildDirectory "$handler" "$home" "$@" "${da[@]+"${da[@]}"}" || return $?
+    __buildDocumentationBuildDirectory "$handler" "$home" "$@" "${da[@]+"${da[@]}"}" || return $?
   fi
 
   if "$makeDocumentation"; then
@@ -248,23 +249,73 @@ __buildDocumentationBuild() {
         fi
         __catchEnvironment "$handler" python -m venv "$home/.venv" || return $?
       fi
-      __catchEnvironment "$handler" "$home/.venv/bin/activate" || return $?
+      __catchEnvironment "$handler" source "$home/.venv/bin/activate" || return $?
       if ! pythonPackageInstalled mkdocs; then
         __catchEnvironment "$handler" python -m pip install mkdocs mkdocs-material || return $?
         whichExists mkdocs || __throwEnvironment "$handler" "mkdocs not found after installation?" || return $?
       fi
+    else
+      __catchEnvironment "$handler" source "$home/.venv/bin/activate" || return $?
     fi
     __catchEnvironment "$handler" muzzle pushd "./documentation" || return $?
     __mkdocsConfiguration "$handler" || return $?
 
-    __catchEnvironment "$handler" mkdocs build || return $?
+    __catchEnvironment "$handler" python -m mkdocs build || return $?
     __catchEnvironment "$handler" muzzle popd || return $?
-    __catchEnvironment "$handler" "$home/.venv/bin/deactivate" || return $?
+    __catchEnvironment "$handler" source "$home/.venv/bin/deactivate" || return $?
   fi
 
   statusMessage --last timingReport "$start" "$(basename "${BASH_SOURCE[0]}") completed in"
 }
-___buildDocumentationBuild() {
+_buildDocumentationBuild() {
+  # __IDENTICAL__ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+# Parses input stream and generates an argument documentation list
+# Input is in the format with "{argument}{delimiter}{description}{newline}" and generates a list of arguments (optionally decorated) color-coded based
+# on whether the word "require" appears in the description.
+# INTERNAL: This is solely used internally but should be accessible globally as it is used here and in `usage`
+# handler: __documentationFormatArguments delimiter
+# Argument: delimiter - Required. String. The character to separate name value pairs in the input
+__documentationFormatArguments() {
+  local handler="_${FUNCNAME[0]}"
+  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
+
+  [ $# -le 3 ] || __throwArgument "$handler" "Requires 3 or fewer arguments" || return $?
+
+  local separatorChar="${1-" "}" optionalDecoration="${2-blue}" requiredDecoration="${3-bold-magenta}"
+
+  local lineTokens=() lastLine=false
+  while true; do
+    if ! IFS="$separatorChar" read -r -a lineTokens; then
+      lastLine=true
+    fi
+    if [ ${#lineTokens[@]} -gt 0 ]; then
+      local __value="${lineTokens[0]}"
+
+      # printf "lineTokens-0: %s\n" "${lineTokens[@]}"
+      unset "lineTokens[0]"
+      # printf "lineTokens-1: %s\n" "${lineTokens[@]}"
+      lineTokens=("${lineTokens[@]+${lineTokens[@]}}")
+      local __description
+      # printf "lineTokens-2: %s\n" "${lineTokens[@]}"
+      __description=$(lowercase "${lineTokens[*]-}")
+      # Looks for `Required.` in the description
+      if [ "${__description%*required.*}" = "$__description" ]; then
+        __value="[ $__value ]"
+        [ -z "$optionalDecoration" ] || __value="$(decorate "$optionalDecoration" "$__value")"
+      else
+        [ -z "$requiredDecoration" ] || __value="$(decorate "$requiredDecoration" "$__value")"
+      fi
+      printf " %s" "$__value"
+    fi
+    if $lastLine; then
+      break
+    fi
+  done
+}
+___documentationFormatArguments() {
   # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

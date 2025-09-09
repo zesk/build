@@ -6,22 +6,12 @@
 
 ## Patterns
 
-{isCharacterClass}
+{isPlain}
 
 ## Filters
 
 {grepSafe}
 
-{sedReplacePattern}
-{quoteSedPattern}
-{quoteSedReplacement}
-{quoteBashString}
-{quoteGrepPattern}
-
-{escapeQuotes}
-{escapeSingleQuotes}
-{escapeDoubleQuotes}
-{escapeBash}
 {replaceFirstPattern}
 {removeFields}
 {clampDigits}
@@ -69,16 +59,6 @@
 {cachedShaPipe}
 {cannon}
 {stringReplace}
-
-# Characters
-
-{characterClassReport}
-{characterClasses}
-{characterFromInteger}
-{characterToInteger}
-{isCharacterClasses}
-{stringValidate}
-{unquote}
 
 ## Random
 

@@ -20,6 +20,8 @@
 
 {bashDocumentFunction}
 
+{documentationTemplateUpdate}
+
 {documentationTemplateCompile}
 
 {documentationTemplateFunctionCompile}
@@ -33,4 +35,8 @@
 ## Usage Utilities
 
 {usageDocument}
+
+## Build Documentation
+
+{buildDocumentationBuild}
 

@@ -65,7 +65,7 @@ characterToInteger() {
     index=$((index + 1))
     [ "${#1}" = 1 ] || __throwArgument "$handler" "Single characters only (argument #$index): \"$1\" (${#1} characters)" || return $?
     LC_CTYPE=C printf '%d' "'$1" || __throwEnvironment "$handler" "Single characters only (argument #$index): \"$1\" (${#1} characters)" || return $?
-    shift || __throwArgument "$handler" "shift failed" || return $?
+    shift
   done
 }
 _characterToInteger() {

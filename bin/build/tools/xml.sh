@@ -29,6 +29,8 @@ __xmlAttributeValue() {
     local value="$1"
     value=${value//&/&amp;}
     value=${value//\"/&quot;}
+    printf "%s\n" "$value"
+    shift
   done
 }
 

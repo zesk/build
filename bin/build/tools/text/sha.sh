@@ -7,7 +7,6 @@
 #  ▐ ▖▛▀ ▗▚ ▐ ▖▗▖ ▖ ▌▌ ▌▌ ▌
 #   ▀ ▝▀▘▘ ▘ ▀ ▝▘ ▝▀ ▘ ▘▘ ▘
 
-
 __shaPipe() {
   local handler="$1" && shift
   local argument
@@ -22,7 +21,7 @@ __shaPipe() {
         printf "%s: %s\n" "$(date +"%FT%T")" "$argument" >>shaPipe.log
       fi
       sha1sum <"$argument" | cut -f 1 -d ' '
-      shift || __throwArgument "$handler" "shift failed" || return $?
+      shift
     done
   else
     if test "${DEBUG_SHAPIPE-}"; then

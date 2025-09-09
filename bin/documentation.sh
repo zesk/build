@@ -4,4 +4,4 @@
 #
 
 # shellcheck source=/dev/null
-source "${BASH_SOURCE[0]%/*}/tools.sh" && __buildDocumentationBuild "$@"
+source "${BASH_SOURCE[0]%/*}/tools.sh" && buildDocumentationBuild "$@"

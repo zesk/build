@@ -32,4 +32,8 @@ These functions are for generating jUnit XML output files:
 
 {junitTestCaseErrorClose}
 
+{junitProperties}
+
+{junitPropertyList}
+
 THe intent is to output our test results in a format which is easily consumed and will make it easier to find issues.

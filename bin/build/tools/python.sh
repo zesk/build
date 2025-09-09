@@ -24,6 +24,7 @@ pythonInstall() {
   [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
   if ! whichExists python; then
     __catch "$handler" packageGroupInstall "$@" python || return $?
+    __catch "$handler" python -m pip install --upgrade pip || return $?
   fi
 }
 _pythonInstall() {
@@ -218,7 +219,7 @@ pythonPackageInstalled() {
     # BrokenPipeError: [Errno 32] Broken pipe
     # pip is still writing to stdout when grep quits after finding the package, so simply suppress pip stderr
     # To avoid this, just do the temp file always as shown below
-    pipWrapper list 2>/dev/null | grepSafe -q "$(quoteGrepPattern "${packages[0]}")"
+    pipWrapper list 2>/dev/null | grep -q "$(quoteGrepPattern "${packages[0]}")" || return 1
   else
     local allPackages
     allPackages=$(fileTemporaryName "$handler") || return $?

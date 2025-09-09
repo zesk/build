@@ -50,7 +50,8 @@ isUnsignedInteger() {
 __functionLoader() {
   local __saved=("$@") functionName="${1-}" subdirectory="${2-}" handler="${3-}" command="${4-}"
   shift 4 || __catchArgument "$handler" "Missing arguments: $(decorate each --count code -- "${__saved[@]}")" || return $?
-  isFunction "$functionName" || __catch "$handler" bashSourcePath "${BASH_SOURCE[0]%/*}/tools/$subdirectory/" || return $?
+  export BUILD_HOME
+  isFunction "$functionName" || __catch "$handler" bashSourcePath "${BUILD_HOME-}/bin/build/tools/$subdirectory/" || return $?
   "$command" "$handler" "$@" || return $?
 }
 

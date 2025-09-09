@@ -43,7 +43,7 @@ To enable:
 
     bashPrompt bashPromptModule_binBuild bashPromptModule_ApplicationPath
 
-{bashPromptModule_binBuild}
+{bashPromptModule_BuildProject}
 
 {bashPromptModule_ApplicationPath}
 

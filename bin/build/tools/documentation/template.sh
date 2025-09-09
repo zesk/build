@@ -11,8 +11,8 @@
 
 # Map template files using our identical functionality
 # Usage: {fn} templatePath repairPath
-_documentationTemplateUpdate() {
-  local handler="_${FUNCNAME[0]}"
+__documentationTemplateUpdate() {
+  local handler="$1" && shift
   [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
 
   local templatePath repairArgs=() failCount=0
@@ -28,10 +28,6 @@ _documentationTemplateUpdate() {
       __catchEnvironment "$handler" "identicalCheck --repair failed" || return $?
     fi
   done
-}
-__documentationTemplateUpdate() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #
@@ -149,20 +145,6 @@ _buildDocumentationGenerateEnvironment() {
   printf "%s\n" "$envFile"
 }
 
-# Get an internal template name
-documentationTemplate() {
-  [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
-  local source="${BASH_SOURCE[0]%/*}"
-  local template="$source/__${1-}.md"
-
-  [ -f "$template" ] || _argument "No template \"${1-}\" at $template" || return $?
-  printf "%s\n" "$template"
-}
-_documentationTemplate() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
-}
-
 # List unlinked functions in documentation index
 documentationUnlinked() {
   local handler="_${FUNCNAME[0]}"
@@ -225,6 +207,6 @@ _bashDocumentation_Template() {
 
 # Formats arguments for markdown
 __bashDocumentationDefaultArguments() {
-  printf "%s\n" "$*" | sed 's/ - /^/1' | __usageFormatArguments '^' '' ''
+  printf "%s\n" "$*" | sed 's/ - /^/1' | __documentationFormatArguments '^' '' ''
 }
 

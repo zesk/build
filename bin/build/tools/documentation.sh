@@ -78,6 +78,20 @@ _documentationBuild() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
+# Get an internal template name
+documentationTemplate() {
+  [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
+  local source="${BASH_SOURCE[0]%.sh}"
+  local template="$source/__${1-}.md"
+
+  [ -f "$template" ] || _argument "No template \"${1-}\" at $template" || return $?
+  printf "%s\n" "$template"
+}
+_documentationTemplate() {
+  # __IDENTICAL__ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
 # Build documentation for ./bin/env (or bin/build/env) directory.
 #
 # Creates a cache at `documentationBuildCache`
@@ -105,6 +119,16 @@ documentationBuildCache() {
   __catch "$handler" buildCacheDirectory ".documentationBuild/${code-default}/${1-}" || return $?
 }
 _documentationBuildCache() {
+  # __IDENTICAL__ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+# Map template files using our identical functionality
+# Usage: {fn} templatePath repairPath
+documentationTemplateUpdate() {
+  __documentationLoader "_${FUNCNAME[0]}" "__${FUNCNAME[0]}" "$@"
+}
+_documentationTemplateUpdate() {
   # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
@@ -200,4 +224,3 @@ _documentationTemplateFunctionCompile() {
   # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
-

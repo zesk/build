@@ -12,8 +12,8 @@ test_jUnitBasic() {
   rando=$(__catch "$handler" randomString) || return $?
 
   assertOutputContains "<testsuites " junitOpen "name=Test run" || return $?
-  assertOutputContains "</testsuites> " junitClose "name=Test run" || return $?
-  assertOutputContains "</testsuite> " junitSuiteClose "name=Test run" || return $?
+  assertOutputContains "</testsuites>" junitClose "name=Test run" || return $?
+  assertOutputContains "</testsuite>" junitSuiteClose "name=Test run" || return $?
   assertOutputContains "<testsuite " junitSuiteOpen "name=$rando" || return $?
   local matches=(
     --stdout-match "<properties>"

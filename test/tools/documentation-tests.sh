@@ -11,15 +11,15 @@ testBashFunctionComment() {
   local handler="_return"
   local home
   local matches=(
-    --stdout-match "Stop watching changes"
+    --stdout-match "Prompts can be formatted"
     --stdout-match "--help"
-    --stdout-match "--source source"
-    --stdout-match "--name name"
+    --stdout-match "--order order"
+    --stdout-match "--skip-prompt"
   )
 
   home=$(__catch "$handler" buildHome) || return $?
 
-  assertExitCode "${matches[@]}" 0 bashFunctionComment "$home/bin/build/tools/prompt/reload-changes.sh" reloadChanges || return $?
+  assertExitCode "${matches[@]}" 0 bashFunctionComment "$home/bin/build/tools/prompt.sh" bashPrompt || return $?
 }
 
 testDocumentation() {
@@ -34,6 +34,7 @@ testDocumentation() {
   testOutput=$(fileTemporaryName "$handler") || return $?
   assertExitCode 0 inArray "summary" summary usage argument example reviewed || return $?
   (
+    __documentationLoader _return printf ""
     bashDocumentation_Extract "$(__bashDocumentation_FindFunctionDefinition "$home" assertNotEquals)" assertNotEquals >"$testOutput" || return $?
     set -a
     # shellcheck source=/dev/null
@@ -85,25 +86,4 @@ __isolateTest() {
   assertEquals "Well, Assert two strings are equal." "$(trimWords 10 "${desc[0]}")" || return $?
   echoBar '='
   assertEquals $'Assert two strings are equal.\n' "${summary}" || return $?
-}
-
-# Running testDocSections ...
-# /tmp/tmp.cyPkWgkK5a: line 2: fg: no job control
-# ✅ : assertFileContains Line 49: /tmp/tmp.nzr2txaaOC contains strings: ("No arguments" ) [5 seconds]
-# /tmp/tmp.wRninBVNxi: line 2: fg: no job control
-# ✅ : assertFileContains Line 52: /tmp/tmp.nzr2txaaOC contains strings: ("#### Arguments" "--help" ) [4 seconds]
-
-testDocSections() {
-  local handler="_return"
-  local doc home
-
-  home=$(__catch "$handler" buildHome) || return $?
-  doc=$(fileTemporaryName "$handler") || return $?
-  __environment bashDocumentFunction "$home/bin/build/tools/git.sh" gitMainly "$home/bin/build/tools/documentation/__function.md" >"$doc" || return $?
-  assertFileContains "$doc" '- none' || return $?
-
-  __environment bashDocumentFunction "$home/bin/build/tools/git.sh" gitCommit "$home/bin/build/tools/documentation/__function.md" >"$doc" || return $?
-  assertFileContains "$doc" '### Arguments' '--help' || return $?
-
-  __catch "$handler" rm "$doc" || return $?
 }

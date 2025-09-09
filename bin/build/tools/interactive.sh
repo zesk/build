@@ -197,3 +197,19 @@ _interactiveManager() {
   # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
+
+# Display a message and count down display
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
+# Argument: --badge text - String. Display this text as bigTextAt
+# Argument: --prefix prefix - String.
+# Argument: counter - Integer. Required. Count down from.
+# Argument: binary - Callable. Required. Run this with any additional arguments when the countdown is completed.
+# Argument: ... - Arguments. Optional. Passed to binary.
+interactiveCountdown() {
+  __interactiveLoader "_${FUNCNAME[0]}" "__${FUNCNAME[0]}" "$@"
+}
+_interactiveCountdown() {
+  # __IDENTICAL__ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}

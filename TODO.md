@@ -139,7 +139,7 @@
 - _documentationIndex_Generate
 - _documentationIndex_LinkDocumentationPaths
 - __documentationIndex_Lookup
-- documentationIndex_SeeLinker
+- __documentationIndex_SeeLinker
 - _documentationIndex_SetUnlinkedDocumentationPath
 - _documentationIndex_ShowUnlinked
 - _documentationIndex_UnlinkedIterator
@@ -449,7 +449,7 @@ On a "2x" machine:
 - _documentationIndex_Generate
 - _documentationIndex_LinkDocumentationPaths
 - __documentationIndex_Lookup
-- documentationIndex_SeeLinker
+- __documentationIndex_SeeLinker
 - _documentationIndex_SetUnlinkedDocumentationPath
 - _documentationIndex_ShowUnlinked
 - _documentationIndex_UnlinkedIterator

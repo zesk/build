@@ -48,9 +48,10 @@ __confirmYesNo() {
   local exitCode=0
 
   while __interactiveCountdownReadBoolean "$handler" "$timeout" "$attempts" "$extras" "$message" || exitCode=$?; do
+    reason=""
     case "$exitCode" in
     0 | 1)
-      __confirmYesNo "$((exitCode - 1))"
+      __confirmYesNoParse "$((1 - exitCode))"
       return $exitCode
       ;;
     2 | 10)
@@ -68,9 +69,11 @@ __confirmYesNo() {
     esac
     exitCode=0
   done
-  ___confirmYesNo "$default" "$reason" || return $?
+
+  __confirmYesNoParse "$default" "$reason" || return $?
 }
-___confirmYesNo() {
+
+__confirmYesNoParse() {
   local prefix="${2-}" exitCode=0
 
   [ -z "$prefix" ] || prefix="$(decorate error "$prefix") "
@@ -83,3 +86,36 @@ ___confirmYesNo() {
   esac
   return "$exitCode"
 }
+
+# Maybe move this to its own thing if needed later
+# handler: {fn} handler timeout attempts extras message
+__interactiveCountdownReadBoolean() {
+  local handler="$1" tempResult
+
+  [ $# -eq 5 ] || __throwArgument "$handler" "Missing arguments: $# less than 5" || return $?
+
+  tempResult=$(fileTemporaryName "$handler") || return $?
+  __interactiveCountdownReadCharacter "$@" "__confirmYesNoValidate" "$tempResult" || returnClean $? "$tempResult" || return $?
+
+  value=$(__catchEnvironment "$handler" cat "$tempResult") || returnClean $? "$tempResult" || return $?
+  __catchEnvironment "$handler" rm -rf "$tempResult" || return $?
+  [ "$value" = "true" ]
+}
+
+__confirmYesNoValidate() {
+  local value="$1" result="$2" && shift 2
+  local exitCode=0
+  parseBoolean "$value" || exitCode=$?
+  case "$exitCode" in
+  0)
+    printf "%s\n" true >"$result"
+    return 0
+    ;;
+  1)
+    printf "%s\n" false >"$result"
+    return 0
+    ;;
+  2) return 1 ;;
+  esac
+}
+

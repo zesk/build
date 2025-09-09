@@ -164,8 +164,8 @@ real user and group ids.
 - The lack of default (empty) arrays leads to errors when doing `"${__emptyArray[@]}"` with `set -u` (and leads to ugly
   code like `"${__emptyArray[@]+"${__emptyArray[@]}"}"`)
 - `read` exits 0 on end of file but actually may return a string leading to issues with missing newlines causing
-  problems; use the pattern: `local done=false; while ! $done; do read -r line || done=true; ...` and then test the
-  value of `line` for non-empty values and handle when `$done` becomes `true`.
+  problems; use the pattern: `local finished=false; while ! $finished; do read -r line || finished=true; ...` and then test the
+  value of `line` for non-empty values and handle when `$finished` becomes `true`.
   [Source](https://github.com/zesk/build/docs/bash-cheatsheet.md)
 - Problems with `&&` or `||` precedence leads to errors
 

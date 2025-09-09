@@ -54,3 +54,5 @@ Hides these from [New and uncategorized functions](./todo.md)
 
 {allColorTest}
 {buildProductionTest}
+{bashPromptModule_binBuild}
+{interactiveBashSource}

@@ -127,15 +127,15 @@ testAWSExpiration() {
 
   __testSection null AWS_ACCESS_KEY_DATE
   unset AWS_ACCESS_KEY_DATE
-  _isAWSKeyUpToDateTest "$LINENO" false || return $?
+  assertExitCode --stderr-match "blank" 2 awsIsKeyUpToDate || return $?
 
   __testSection blank AWS_ACCESS_KEY_DATE
   export AWS_ACCESS_KEY_DATE=
-  _isAWSKeyUpToDateTest "$LINENO" false || return $?
+  assertExitCode --stderr-match "blank" 2 awsIsKeyUpToDate || return $?
 
   __testSection bad AWS_ACCESS_KEY_DATE
   AWS_ACCESS_KEY_DATE=99999
-  _isAWSKeyUpToDateTest "$LINENO" false || return $?
+  assertExitCode --stderr-match "Invalid date" 2 awsIsKeyUpToDate || return $?
 
   __testSection OLD AWS_ACCESS_KEY_DATE
   AWS_ACCESS_KEY_DATE=2020-01-01

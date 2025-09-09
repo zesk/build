@@ -7,33 +7,7 @@
 # Docs: ./documentation/source/tools/junit.md
 # Test: ./test/tools/junit-tests.sh
 
-__xmlHeader() {
-  printf "%s\n" '<?xml version="1.0" encoding="UTF-8"?>'
-}
-__xmlTag() {
-  local name="$1" && shift
-  printf -- "<%s%s />\n" "$name" "$(__xmlAttributes "$@")"
-}
-__xmlTagOpen() {
-  local name="$1" && shift
-  printf -- "<%s%s>\n" "$name" "$(__xmlAttributes "$@")"
-}
-__xmlTagClose() {
-  local name="$1" && shift
-  printf -- "</%s>\n" "$name"
-}
-__xmlAttributes() {
-  local attr=()
-  while [ $# -gt 0 ]; do
-    local name value
-    IFS="=" read -r name value <<<"$1" || :
-    attr+=("$(printf -- "%s=%s" "$name" "\"$(quoteBashString "$value")")\"")
-    shift
-  done
-  [ ${#attr[@]} -eq 0 ] || printf -- " %s" "${attr[*]-}"
-}
-
-# # Open tag for `testsuites`
+# Open tag for `testsuites`
 #
 # Example:     <testsuites name="Test run" tests="8" failures="1" errors="1" skipped="1"
 # Example:                assertions="20" time="16.082687" timestamp="2021-04-02T15:48:23">
@@ -51,7 +25,7 @@ junitOpen() {
   __xmlTagOpen testsuites "$@" name="" tests=0 failures=0 errors=0 skipped=0 assertions=0 time=0 timestamp="$(date +%FT%T)"
 }
 
-# Close tag for `testsuite`
+# Close tag for `testsuites`
 junitClose() {
   __xmlTagClose testsuites
 }
@@ -94,7 +68,6 @@ junitSuiteClose() {
 #  Example:         </property>
 #  Example:     </properties>
 junitProperties() {
-  local attr=()
   __xmlTagOpen properties
   junitPropertyList "$@"
   __xmlTagClose properties
@@ -103,7 +76,6 @@ junitProperties() {
 # Output list of `property` tags
 # Argument: nameValue ... - Optional. A list of name value pairs (unquoted) to output as XML `property` tags.
 junitPropertyList() {
-  local attr=()
   while [ $# -gt 0 ]; do
     local name value
     IFS="=" read -r name value <<<"$1" || :
