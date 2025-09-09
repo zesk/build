@@ -99,6 +99,9 @@ __aptUninstall() {
 __aptUpdate() {
   __aptLoader "_return" "_${FUNCNAME[0]}" "$@"
 }
+__aptInstall() {
+  __aptLoader "_return" "_${FUNCNAME[0]}" "$@"
+}
 __aptInstalledList() {
   __aptLoader "_return" "_${FUNCNAME[0]}" "$@"
 }

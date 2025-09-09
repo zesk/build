@@ -17,6 +17,10 @@
 #------------------------------------------------------------------------------
 #
 
+__textLoader() {
+  __functionLoader __shaPipe text "$@"
+}
+
 # Extract a range of lines from a file
 # Argument: startLine - Integer. Required. Starting line number.
 # Argument: endLine - Integer. Required. Ending line number.
@@ -149,32 +153,6 @@ _parseBoolean() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# Quote grep -e patterns for shell use
-#
-# Quotes: " . [ ] | \n with a backslash
-# Argument: text - EmptyString. Required. Text to quote.
-# Output: string quoted and appropriate to insert in a grep search or replacement phrase
-# Example:     grep -e "$(quoteGrepPattern "$pattern")" < "$filterFile"
-# Requires: printf sed
-# DOC TEMPLATE: noArgumentsForHelp 1
-# Without arguments, displays help.
-quoteGrepPattern() {
-  # __IDENTICAL__ --help-when-blank 1
-  [ $# -gt 0 ] || __help "_${FUNCNAME[0]}" --help || return 0
-  local value="${1-}"
-  value="${value//\"/\\\"}"
-  value="${value//./\\.}"
-  value="${value//[/\\[}"
-  value="${value//]/\\]}"
-  value="${value//|/\\|}"
-  value="${value//$'\n'/\\n}"
-  printf "%s\n" "$value"
-}
-_quoteGrepPattern() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
-}
-
 # Hide newlines in text (to ensure single-line output or other manipulation)
 # Argument: text - String. Required. Text to replace.
 # Argument: replace - String. Optional. Replacement string for newlines.
@@ -191,64 +169,6 @@ _newlineHide() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-#
-# Quote strings for inclusion in shell quoted strings
-# Usage: escapeSingleQuotes text
-# Argument: text - Text to quote
-# Output: Single quotes are prefixed with a backslash
-# Example:     {fn} "Now I can't not include this in a bash string."
-# DOC TEMPLATE: noArgumentsForHelp 1
-# Without arguments, displays help.
-escapeDoubleQuotes() {
-  # __IDENTICAL__ --help-when-blank 1
-  [ $# -gt 0 ] || __help "_${FUNCNAME[0]}" --help || return 0
-  while [ $# -gt 0 ]; do
-    printf "%s\n" "${1//\"/\\\"}"
-    shift
-  done
-}
-_escapeDoubleQuotes() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
-}
-
-#
-# Converts strings to shell escaped strings
-# Argument: string - String. Optional. String to convert to a bash-compatible string.
-# stdin: text - Optional.
-# stdout: bash-compatible string
-escapeBash() {
-  local jqArgs
-
-  jqArgs=(-r --raw-input '@sh')
-  if [ $# -gt 0 ]; then
-    printf "%s\n" "$@" | jq "${jqArgs[@]}"
-  else
-    jq "${jqArgs[@]}"
-  fi
-}
-_escapeBash() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
-}
-
-#
-# Quote strings for inclusion in shell quoted strings
-#
-# DOC TEMPLATE: noArgumentsForHelp 1
-# Without arguments, displays help.
-# Argument: text - Text to quote
-# Output: Single quotes are prefixed with a backslash
-# Example:     {fn} "Now I can't not include this in a bash string."
-escapeSingleQuotes() {
-  # __IDENTICAL__ --help-when-blank 1
-  [ $# -gt 0 ] || __help "_${FUNCNAME[0]}" --help || return 0
-  printf "%s\n" "$@" | sed "s/'/\\\'/g"
-}
-_escapeSingleQuotes() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
-}
 
 #
 # Quote strings for inclusion in shell quoted strings
@@ -361,17 +281,6 @@ _trimSpace() {
   true || trimSpace "" # SC2120 fix
   # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
-}
-
-#
-# Quote bash strings for inclusion as single-quoted for eval
-# Usage: quoteBashString text
-# Argument: text - Text to quote
-# Output: string quoted and appropriate to assign to a value in the shell
-# Depends: sed
-# Example:     name="$(quoteBashString "$name")"
-quoteBashString() {
-  printf "%s\n" "$@" | sed 's/\([$`<>'\'']\)/\\\1/g'
 }
 
 #
@@ -831,27 +740,7 @@ _plainLength() {
 # Environment: DEBUG_SHAPIPE - When set to a truthy value, will output all requested shaPipe calls to log called `shaPipe.log`.
 #
 shaPipe() {
-  local handler="_${FUNCNAME[0]}"
-  local argument
-  whichExists sha1sum || __throwEnvironment "$handler" "Need packageGroupInstall sha1sum" || return $?
-  if [ -n "$*" ]; then
-    while [ $# -gt 0 ]; do
-      argument="$1"
-      [ "$argument" != "--help" ] || __help "$handler" "$@" || return 0
-      [ -f "$1" ] || __throwArgument "$handler" "$1 is not a file" || return $?
-      [ -n "$argument" ] || __throwArgument "$handler" "blank argument" || return $?
-      if test "${DEBUG_SHAPIPE-}"; then
-        printf "%s: %s\n" "$(date +"%FT%T")" "$argument" >>shaPipe.log
-      fi
-      sha1sum <"$argument" | cut -f 1 -d ' '
-      shift || __throwArgument "$handler" "shift failed" || return $?
-    done
-  else
-    if test "${DEBUG_SHAPIPE-}"; then
-      printf "%s: stdin\n" "$(date +"%FT%T")" >>shaPipe.log
-    fi
-    sha1sum | cut -f 1 -d ' ' || __throwEnvironment "$handler" "sha1sum" || return $?
-  fi
+  __textLoader "_${FUNCNAME[0]}" "__${FUNCNAME[0]}" "$@"
 }
 _shaPipe() {
   # __IDENTICAL__ usageDocument 1
@@ -875,40 +764,7 @@ _shaPipe() {
 # Output: cf7861b50054e8c680a9552917b43ec2b9edae2b
 #
 cachedShaPipe() {
-  local handler="_${FUNCNAME[0]}"
-  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
-
-  local argument
-  local cacheDirectory="${1-}"
-
-  shift || __throwArgument "$handler" "Missing cacheDirectory" || return $?
-
-  # Special case to skip caching
-  if [ -z "$cacheDirectory" ]; then
-    shaPipe "$@"
-    return $?
-  fi
-  cacheDirectory="${cacheDirectory%/}"
-
-  [ -d "$cacheDirectory" ] || __throwArgument "$handler" "cachedShaPipe: cacheDirectory \"$cacheDirectory\" is not a directory" || return $?
-  if [ $# -gt 0 ]; then
-    while [ $# -gt 0 ]; do
-      argument="$1"
-      [ "$argument" != "--help" ] || __help "$handler" "$@" || return 0
-      [ -n "$argument" ] || __throwArgument "$handler" "blank argument" || return $?
-      [ -f "$argument" ] || __throwArgument "$handler" "not a file $(decorate label "$argument")" || return $?
-      cacheFile="$cacheDirectory/${argument#/}"
-      cacheFile=$(__catch "$handler" fileDirectoryRequire "$cacheFile") || return $?
-      if [ -f "$cacheFile" ] && fileIsNewest "$cacheFile" "$1"; then
-        printf "%s\n" "$(cat "$cacheFile")"
-      else
-        __catch "$handler" shaPipe "$argument" | __catchEnvironment "$handler" tee "$cacheFile" || return $?
-      fi
-      shift
-    done
-  else
-    shaPipe
-  fi
+  __textLoader "_${FUNCNAME[0]}" "__${FUNCNAME[0]}" "$@"
 }
 _cachedShaPipe() {
   # __IDENTICAL__ usageDocument 1
@@ -952,274 +808,6 @@ _stringOffset() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# List the valid character classes allowed in `isCharacterClass`
-characterClasses() {
-  [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
-  printf "%s\n" alnum alpha ascii blank cntrl digit graph lower print punct space upper word xdigit
-}
-_characterClasses() {
-  true || characterClasses --help
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
-}
-
-#
-# Usage: {fn} className character0 [ character1 ... ]
-#
-# Poor-man's bash character class matching
-#
-# Returns true if all `characters` are of `className`
-#
-# `className` can be one of:
-#     alnum   alpha   ascii   blank   cntrl   digit   graph   lower
-#     print   punct   space   upper   word    xdigit
-#
-isCharacterClass() {
-  [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
-
-  local class="${1-}" classes character
-  local handler
-
-  handler="_${FUNCNAME[0]}"
-  IFS=$'\n' read -r -d '' -a classes < <(characterClasses) || :
-  inArray "$class" "${classes[@]}" || __throwArgument "$handler" "Invalid class: $class" || return $?
-  shift
-  while [ $# -gt 0 ]; do
-    character="${1:0:1}"
-    character="$(escapeBash "$character")"
-    # Not sure how you can hack this function with single character eval injections.
-    # evalCheck: SAFE 2024-01-29 KMD
-    if ! eval "case $character in [[:$class:]]) ;; *) return 1 ;; esac"; then
-      return 1
-    fi
-    shift || __throwArgument "$handler" "shift $character failed" || return $?
-  done
-}
-_isCharacterClass() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
-}
-
-#
-# Does this character match one or more character classes?
-#
-# Usage: {fn} character [ class0 class1 ... ]
-# Argument: character - Required. Single character to test.
-# Argument: class0 - Optional. A class name or a character to match. If more than is supplied, a single value must match to succeed (any).
-#
-isCharacterClasses() {
-  local handler="_${FUNCNAME[0]}"
-  [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
-
-  local character="${1-}" class
-
-  [ "${#character}" -eq 1 ] || __throwArgument "$handler" "Non-single character: \"$character\"" || return $?
-  if ! shift || [ $# -eq 0 ]; then
-    __throwArgument "$handler" "Need at least one class" || return $?
-  fi
-  while [ "$#" -gt 0 ]; do
-    class="$1"
-    if [ "${#class}" -eq 1 ]; then
-      if [ "$class" = "$character" ]; then
-        return 0
-      fi
-    elif isCharacterClass "$class" "$character"; then
-      return 0
-    fi
-    shift || __throwArgument "$handler" "shift $class failed" || return $?
-  done
-  return 1
-}
-_isCharacterClasses() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
-}
-
-# Given a list of integers, output the character codes associated with them (e.g. `chr` in other languages)
-# Credit: dsmsk80
-#
-# Source: https://mywiki.wooledge.org/BashFAQ/071
-characterFromInteger() {
-  local handler="_${FUNCNAME[0]}"
-
-  # _IDENTICAL_ argumentNonBlankLoopHandler 6
-  local __saved=("$@") __count=$#
-  while [ $# -gt 0 ]; do
-    local argument="$1" __index=$((__count - $# + 1))
-    # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
-    case "$argument" in
-    # _IDENTICAL_ helpHandler 1
-    --help) "$handler" 0 && return $? || return $? ;;
-    *)
-      isUnsignedInteger "$argument" || __throwArgument "$handler" "Argument is not unsigned integer: $(decorate code "$argument")" || return $?
-      [ "$argument" -lt 256 ] || __throwArgument "$handler" "Integer out of range: \"$argument\"" || return $?
-      if [ "$argument" -eq 0 ]; then
-        printf "%s\n" $'\0'
-      else
-        # shellcheck disable=SC2059
-        printf "\\$(printf '%03o' "$argument")"
-      fi
-      ;;
-    esac
-    shift
-  done
-}
-_characterFromInteger() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
-}
-
-# Ensure that every character in a text string passes all character class tests
-# Usage: {fn} text class0 [ ... ]
-# Argument: text - Text to validate
-# Argument: class0 - One or more character classes that the characters in string should match
-# Note: This is slow.
-stringValidate() {
-  local handler="_${FUNCNAME[0]}"
-
-  [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
-
-  local text character
-
-  text="${1-}"
-  shift || __throwArgument "$handler" "missing text" || return $?
-  [ $# -gt 0 ] || __throwArgument "$handler" "missing class" || return $?
-  for character in $(printf "%s" "$text" | grep -o .); do
-    if ! isCharacterClasses "$character" "$@"; then
-      return 1
-    fi
-  done
-}
-_stringValidate() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
-}
-
-#
-# Usage: {fn} [ character ... ]
-# Convert one or more characters from their ascii representation to an integer value.
-# Requires a single character to be passed
-#
-characterToInteger() {
-  local index
-
-  index=0
-  while [ $# -gt 0 ]; do
-    [ "$1" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
-    index=$((index + 1))
-    [ "${#1}" = 1 ] || __throwArgument "$handler" "Single characters only (argument #$index): \"$1\" (${#1} characters)" || return $?
-    LC_CTYPE=C printf '%d' "'$1" || __throwEnvironment "$handler" "Single characters only (argument #$index): \"$1\" (${#1} characters)" || return $?
-    shift || __throwArgument "$handler" "shift failed" || return $?
-  done
-}
-_characterToInteger() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
-}
-
-#
-# Usage: {fn}
-#
-# Write a report of the character classes
-# Argument: --help - Optional. Flag. Display this help.
-# Argument: --class - Optional. Flag. Show class and then characters in that class.
-# Argument: --char - Optional. Flag. Show characters and then class for that character.
-characterClassReport() {
-  local handler="_${FUNCNAME[0]}"
-
-  local arg character classList indexList outer matched total classOuter=false outerList innerList nouns outerText width=5
-  local savedLimit
-
-  # _IDENTICAL_ argumentNonBlankLoopHandler 6
-  local __saved=("$@") __count=$#
-  while [ $# -gt 0 ]; do
-    local argument="$1" __index=$((__count - $# + 1))
-    # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
-    case "$argument" in
-    # _IDENTICAL_ helpHandler 1
-    --help) "$handler" 0 && return $? || return $? ;;
-    --class)
-      classOuter=true
-      ;;
-    --char)
-      classOuter=false
-      ;;
-    *)
-      # _IDENTICAL_ argumentUnknownHandler 1
-      __throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
-      ;;
-    esac
-    shift
-  done
-  classList=()
-  for arg in $(characterClasses); do
-    classList+=("$arg")
-  done
-
-  savedLimit="$(__catchEnvironment "$handler" ulimit -n)" || return $?
-  __catchEnvironment "$handler" ulimit -n 10240 || return $?
-  # shellcheck disable=SC2207
-  indexList=($(seq 0 127))
-
-  if $classOuter; then
-    outerList=("${classList[@]}")
-    innerList=("${indexList[@]}")
-    nouns=("character" "characters")
-  else
-    # shellcheck disable=SC2207
-    outerList=("${indexList[@]}")
-    innerList=("${classList[@]}")
-    nouns=("class" "classes")
-  fi
-  total=0
-  for outer in "${outerList[@]}"; do
-    matched=0
-    if $classOuter; then
-      class="$outer"
-      outerText="$(decorate label "$(alignRight 10 "$outer")")"
-    else
-      character="$(characterFromInteger "$outer")" 2>/dev/null
-      if ! isCharacterClass print "$character"; then
-        outerText="$(printf "x%x " "$outer")"
-        outerText="$(alignRight 5 "$outerText")"
-        outerText="$(decorate subtle "$outerText")"
-      else
-        outerText="$(decorate blue "$(alignRight 5 "$character")")"
-      fi
-    fi
-    printf "%s: " "$(alignLeft "$width" "$outerText")"
-    for inner in "${innerList[@]}"; do
-      if $classOuter; then
-        character="$(characterFromInteger "$inner")"
-      else
-        class="$inner"
-      fi
-      if isCharacterClass "$class" "$character"; then
-        matched=$((matched + 1))
-        if $classOuter; then
-          if ! isCharacterClass print "$character"; then
-            printf "%s " "$(decorate subtle "$(printf "x%x" "$inner")")"
-          else
-            printf "%s " "$(decorate blue "$(characterFromInteger "$inner")")"
-          fi
-        else
-          printf "%s " "$(decorate blue "$class")"
-        fi
-      fi
-    done
-    printf "[%s %s]\n" "$(decorate bold-magenta "$matched")" "$(decorate subtle "$(plural "$matched" "${nouns[@]}")")"
-    total=$((total + matched))
-  done
-  printf "%s total %s\n" "$(decorate bold-red "$total")" "$(decorate red "$(plural "$total" "${nouns[@]}")")"
-  __catchEnvironment "$handler" ulimit -n "$savedLimit" || return $?
-}
-_characterClassReport() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
-}
-
 # Remove fields from left to right from a text file as a pipe
 # Usage: {fn} fieldCount < input > output
 # Argument: fieldCount - Optional. Integer. Number of field to remove. Default is just first `1`.
@@ -1256,47 +844,6 @@ _removeFields() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# IDENTICAL quoteSedPattern 39
-
-# Summary: Quote sed search strings for shell use
-# Quote a string to be used in a sed pattern on the command line.
-# Argument: text - EmptyString. Required. Text to quote
-# Output: string quoted and appropriate to insert in a sed search or replacement phrase
-# Example:     sed "s/$(quoteSedPattern "$1")/$(quoteSedPattern "$2")/g"
-# Example:     needSlash=$(quoteSedPattern '$.*/[\]^')
-# Requires: printf sed usageDocument __help
-quoteSedPattern() {
-  [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
-  local value="${1-}"
-  value=$(printf -- "%s\n" "$value" | sed 's~\([][$/'$'\t''^\\.*+?]\)~\\\1~g')
-  value="${value//$'\n'/\\n}"
-  printf -- "%s\n" "$value"
-}
-_quoteSedPattern() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
-}
-
-# Summary: Quote sed replacement strings for shell use
-# Usage: quoteSedReplacement text separatorChar
-# Argument: text - EmptyString. Required. Text to quote
-# Argument: separatorChar - The character used to separate the sed pattern and replacement. Defaults to `/`.
-# Output: string quoted and appropriate to insert in a sed search or replacement phrase
-# Example:     sed "s/$(quoteSedPattern "$1")/$(quoteSedReplacement "$2")/g"
-# Example:     needSlash=$(quoteSedPattern '$.*/[\]^')
-# Requires: printf sed usageDocument __help
-quoteSedReplacement() {
-  [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
-  local value="${1-}" separator="${2-/}"
-  value=$(printf -- "%s\n" "$value" | sed 's~\([\&'"$separator"']\)~\\\1~g')
-  value="${value//$'\n'/\\n}"
-  printf -- "%s\n" "$value"
-}
-_quoteSedReplacement() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
-}
-
 # Pipe to output some text before any output, otherwise, nothing is output.
 # Argument: ... - Required. Arguments. printf arguments.
 # DOC TEMPLATE: noArgumentsForHelp 1
@@ -1313,7 +860,7 @@ printfOutputPrefix() {
       printf "$@"
       output=true
     fi
-    printf "%s\n" "$line"
+    printf -- "%s\n" "$line"
   done
 }
 _printfOutputPrefix() {
@@ -1335,7 +882,7 @@ printfOutputSuffix() {
     if ! $output; then
       output=true
     fi
-    printf "%s\n" "$line"
+    printf -- "%s\n" "$line"
   done
   # shellcheck disable=SC2059
   ! $output || printf "$@"
@@ -1343,34 +890,6 @@ printfOutputSuffix() {
 _printfOutputSuffix() {
   # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
-}
-
-# Unquote a string
-# Argument: quote - String. Required. Must match beginning and end of string.
-# Argument: value - String. Required. Value to unquote.
-unquote() {
-  [ "$1" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
-  local quote="$1" value="$2"
-  if [ "$value" != "${value#"$quote"}" ] && [ "$value" != "${value%"$quote"}" ]; then
-    value="${value#"$quote"}"
-    value="${value%"$quote"}"
-  fi
-  printf "%s\n" "$value"
-}
-_unquote() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
-}
-
-# Primary case to unquote quoted things "" ''
-__unquote() {
-  local value="${1-}"
-  case "${value:0:1}" in
-  "'") value="$(unquote "'" "$value")" ;;
-  '"') value="$(unquote '"' "$value")" ;;
-  *) ;;
-  esac
-  printf "%s\n" "$value"
 }
 
 # Replace all occurrences of a string within another string

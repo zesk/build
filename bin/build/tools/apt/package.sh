@@ -15,14 +15,20 @@
 #    ▌  ▝▀▘▝▀ ▘ ▘▝▀▘▗▄▘▝▀▘▝▘▀▀ ▘ ▘
 #
 
+__aptNonInteractive() {
+  local handler="$1" && shift
+  DEBIAN_FRONTEND=noninteractive NEEDRESTART_MODE=l __catchEnvironment "$handler" apt-get "$@" || return $?
+}
+
 # Install apt packages
-__packageInstall() {
+___aptInstall() {
+  local handler="$1" && shift
   # No way to hide the message
   #
   #     debconf: delaying package configuration, since apt-utils is not installed
   #
   # so just hide it always
-  aptNonInteractive install -y "$@" 2> >(grep -v 'apt-utils is not installed' 1>&2) || return $?
+  __aptNonInteractive "$handler" install -y "$@" 2> >(grep -v 'apt-utils is not installed' 1>&2) || return $?
 }
 
 __aptDefault() {
@@ -37,9 +43,9 @@ __aptDefault() {
 }
 
 # Uninstall apt packages
-___packageUninstall() {
+___aptUninstall() {
   local handler="$1" && shift
-  __catch "$handler" aptNonInteractive remove -y "$@" || return $?
+  __aptNonInteractive "$handler" remove -y "$@" || return $?
 }
 
 #
@@ -55,7 +61,7 @@ ___packageUninstall() {
 # Artifact: `packageInstall.log` is left in the `buildCacheDirectory`
 ___aptUpgrade() {
   local handler="$1" && shift
-  __catch "$handler" aptNonInteractive dist-upgrade -y "$@" || return $?
+  __aptNonInteractive "$handler" dist-upgrade -y "$@" || return $?
 }
 
 # Update the global database
@@ -63,16 +69,16 @@ ___aptUpgrade() {
 # package.sh: true
 ___aptUpdate() {
   local handler="$1" && shift
-  __catch "$handler" aptNonInteractive update -y "$@" || return $?
+  __aptNonInteractive "$handler" update -y "$@" || return $?
 }
 
 # Usage: {fn}
 # List installed packages
 # package.sh: true
-___packageInstalledList() {
+___aptInstalledList() {
   local handler="$1" && shift
   [ $# -eq 0 ] || __throwArgument "$handler" "Unknown argument $*" || return $?
-  __catch "$handler" dpkg --get-selections | grepSafe -v deinstall | awk '{ print $1 }' || return $?
+  __catchEnvironment "$handler" dpkg --get-selections | grepSafe -v deinstall | awk '{ print $1 }' || return $?
 }
 
 # Usage: {fn}

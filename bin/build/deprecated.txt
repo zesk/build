@@ -261,12 +261,12 @@ consoleValue|decorate value
 
 # v0.14.6
 aptListInstalled|aptInstalledList
-aptInstall|packageInstall|!|-path|*/apt.sh
-aptUninstall|packageUninstall|!|-path|*/apt.sh
-aptUpdateOnce|packageUpdate|!|-path|*/apt.sh
-whichApt|packageWhich|!|-path|*/apt.sh
-whichAptUninstall|packageWhichUninstall|!|-path|*/apt.sh
-aptNeedRestartFlag|packageNeedRestartFlag|!|-path|*/apt.sh
+aptInstall|packageInstall|!|-path|*/apt.sh|!|-path|*/apt/*
+aptUninstall|packageUninstall|!|-path|*/apt.sh|!|-path|*/apt/*
+aptUpdateOnce|packageUpdate|!|-path|*/apt.sh|!|-path|*/apt/*
+whichApt|packageWhich|!|-path|*/apt.sh|!|-path|*/apt/*
+whichAptUninstall|packageWhichUninstall|!|-path|*/apt.sh|!|-path|*/apt/*
+aptNeedRestartFlag|packageNeedRestartFlag|!|-path|*/apt.sh|!|-path|*/apt/*
 
 # v0.12.2
 awsSecurityGroupIPRegister|awsSecurityGroupIPModify --register|

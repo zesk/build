@@ -110,7 +110,7 @@ _isAWSKeyUpToDateTest() {
   if [ "$pass" = "true" ]; then
     assertExitCode --line "$line" 0 awsIsKeyUpToDate "$@" || return $?
   else
-    assertNotExitCode --line "$line" --stderr-ok 0 awsIsKeyUpToDate "$@" || return $?
+    assertNotExitCode --line "$line" 0 awsIsKeyUpToDate "$@" || return $?
   fi
 }
 
@@ -333,10 +333,6 @@ testAWSCredentialsEdit() {
   clean+=("$testResults")
   clean+=("$testHome")
 
-  testCredentials="$home/test/example/aws/fake.credentials.txt"
-  _awsCredentialsRemoveSection _return "$testCredentials" "$profileName" "" >"$testResults" || return $?
-  assertExitCode 0 diff -u "$testResults" "$home/test/example/aws/fake.credentials.0.txt" || return $?
-
   __mockValue HOME
 
   HOME="$testHome"
@@ -345,6 +341,14 @@ testAWSCredentialsEdit() {
 
   testAWSCredentials=$(__environment awsCredentialsFile --path) || return $?
   assertFileDoesNotExist "$testAWSCredentials" || return $?
+
+  testCredentials="$home/test/example/aws/fake.credentials.txt"
+
+  assertExitCode --stderr-match "No credentials" 1 awsCredentialsFile --verbose || return $?
+  # Internal MUST be after __awsLoader is called by `awsCredentialsFile` above
+  # Note when loaded in a subshell - code is NOT shared
+  _awsCredentialsRemoveSection _return "$testCredentials" "$profileName" "" >"$testResults" || return $?
+  assertExitCode 0 diff -u "$testResults" "$home/test/example/aws/fake.credentials.0.txt" || return $?
 
   assertExitCode 0 awsCredentialsAdd --force --profile "$profileName" "AKIA0123456789001233" "$testPassword" || return $?
 
