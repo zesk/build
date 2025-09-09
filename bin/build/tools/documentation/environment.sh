@@ -16,8 +16,8 @@
 # Exit Code: 0 - Success
 # Exit Code: 1 - Issue with environment
 # Exit Code: 2 - Argument error
-documentationBuildEnvironment() {
-  local handler="_${FUNCNAME[0]}"
+__documentationBuildEnvironment() {
+  local handler="$1" && shift
 
   local cleanFlag=false forceFlag=false verboseFlag=false
 
@@ -153,8 +153,4 @@ documentationBuildEnvironment() {
       cat "$cacheDirectory/more.$name" >>"$targetFile"
     fi
   done < <(sort -u "$cacheDirectory/mores")
-}
-_documentationBuildEnvironment() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

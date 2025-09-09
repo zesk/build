@@ -30,7 +30,9 @@ xdebugInstall() {
 
   statusMessage decorate info "Installing xdebug ..."
   __catchEnvironment "$handler" pecl channel-update pecl.php.net || return $?
-  muzzle __catchEnvironment "$handler" pecl install xdebug || return $?
+  if ! muzzle pecl list-files xdebug; then
+    muzzle __catchEnvironment "$handler" pecl install xdebug || return $?
+  fi
 
   artifact=$(__xdebugInstallationArtifact)
   date | muzzle __catchEnvironment "$handler" tee "$artifact" || return $?

@@ -5,15 +5,8 @@
 # Copyright &copy; 2025 Market Acumen, Inc.
 #
 
-# Usage: {fn} token source destination
-# Repair an identical `token` in `destination` from `source`
-# Argument: --prefix prefix - Required. A text prefix to search for to identify identical sections (e.g. `# {identical}}`) (may specify more than one)
-# Argument: token - String. Required. The token to repair.
-# Argument: source - Required. File. The token file source. First occurrence is used.
-# Argument: destination - Required. File. The token file to repair. Can be same as `source`.
-# Argument: --stdout - Optional. Flag. Output changed file to `stdout`
-identicalRepair() {
-  local handler="_${FUNCNAME[0]}"
+__identicalRepair() {
+  local handler="$1" && shift
 
   # shellcheck disable=SC2059
   arguments="$(printf "\"$(decorate code %s)\" " "$@")"
@@ -139,8 +132,4 @@ identicalRepair() {
     __catchEnvironment "$handler" cp -f "$targetFile" "$destination" || returnClean $? "${clean[@]}" || return $?
   fi
   returnClean 0 "${clean[@]}" || return $?
-}
-_identicalRepair() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

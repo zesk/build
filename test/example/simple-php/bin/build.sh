@@ -9,7 +9,7 @@
 
 # Load build tools (installing if needed) and runs a command
 # Argument: relativeHome - Optional. Directory. Path to application home.
-# Argument: installerPath - Optional. Directory. Path to `install-bin-build.sh` binary. Defaults to `bin`
+# Argument: installerPath - Optional. Directory. Path to `install-BuildProject.sh` binary. Defaults to `bin`
 # Argument: command ... - Optional. Callable. A command to run and optional arguments.
 # Requires: __install
 # Example:     __build ../../.. functionToCall "$@"
@@ -25,7 +25,7 @@ __build() {
 # Argument: source - Required. File. Include file which should exist after installation.
 # Argument: relativeHome - Optional. Directory. Path to application home. Default is `..`.
 # Argument: command ... - Optional. Callable. A command to run and optional arguments.
-# Example:      __install bin/install-bin-build.sh bin/build/tools.sh ../../.. decorate info "$@"
+# Example:      __install bin/install-BuildProject.sh bin/build/tools.sh ../../.. decorate info "$@"
 # Requires: _return __execute
 __install() {
   local installer="${1-}" source="${2-}" relativeHome="${3:-".."}" me="${BASH_SOURCE[0]}"

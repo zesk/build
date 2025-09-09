@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 #
-# Bash Prompt Module: TermColors
-#
 # Copyright &copy; 2025 Market Acumen, Inc.
+#
+
 
 # Sets the console colors based on the project you are currently in.
 # Define your color configuration file (values of `bg=FFF` etc. one per line, comments allowed)

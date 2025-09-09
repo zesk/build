@@ -11,7 +11,7 @@
 
 # Map template files using our identical functionality
 # Usage: {fn} templatePath repairPath
-documentationTemplateUpdate() {
+_documentationTemplateUpdate() {
   local handler="_${FUNCNAME[0]}"
   [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
 
@@ -29,7 +29,7 @@ documentationTemplateUpdate() {
     fi
   done
 }
-_documentationTemplateUpdate() {
+__documentationTemplateUpdate() {
   # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
@@ -43,7 +43,7 @@ _documentationTemplateUpdate() {
 # - Argument: pageTemplate - Required. File. Environment file used as base environment for all template generation.
 # Argument: todoTemplateCode - Optional. File. Template code for template.
 #
-_documentationTemplateUpdateUnlinked() {
+__documentationTemplateUpdateUnlinked() {
   local handler="_${FUNCNAME[0]}"
   local cacheDirectory envFile template target unlinkedFunctions todoTemplate template total clean content
 
@@ -58,7 +58,7 @@ _documentationTemplateUpdateUnlinked() {
 
   unlinkedFunctions=$(fileTemporaryName "$handler") || return $?
   clean+=("$unlinkedFunctions")
-  __catch "$handler" documentationIndex_SetUnlinkedDocumentationPath "$cacheDirectory" "$target" | IFS="" awk '{ print "{" $1 "}" }' >"$unlinkedFunctions" || returnClean $? "${clean[@]}" || return $?
+  __catch "$handler" _documentationIndex_SetUnlinkedDocumentationPath "$cacheDirectory" "$target" | IFS="" awk '{ print "{" $1 "}" }' >"$unlinkedFunctions" || returnClean $? "${clean[@]}" || return $?
   total=$(__catch "$handler" fileLineCount "$unlinkedFunctions") || return $?
 
   # Subshell hide globals
@@ -77,7 +77,7 @@ _documentationTemplateUpdateUnlinked() {
     statusMessage decorate info "Updated $(decorate file "$template") with $total unlinked $(plural "$total" function functions)"
   fi
 }
-__documentationTemplateUpdateUnlinked() {
+___documentationTemplateUpdateUnlinked() {
   # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
@@ -173,9 +173,58 @@ documentationUnlinked() {
   cacheDirectory="$(__catch "$handler" buildCacheDirectory)" || return $?
   cacheDirectory=$(__catch "$handler" directoryRequire "$cacheDirectory") || return $?
 
-  __catch "$handler" documentationIndex_ShowUnlinked "$cacheDirectory" || return $?
+  __catch "$handler" _documentationIndex_ShowUnlinked "$cacheDirectory" || return $?
 }
 _documentationUnlinked() {
   # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
+
+# See: bashDocumentFunction
+# Document a function and generate a function template (markdown). To custom format any
+# of the fields in this, write functions in the form `_bashDocumentationFormatter_${name}Format` such that
+# name matches the variable name (lowercase alphanumeric characters and underscores).
+#
+# Filter functions should modify the input/output pipe; an example can be found in `{applicationFile}` by looking at
+# sample function `_bashDocumentationFormatter_exit_code`.
+#
+# See: _bashDocumentationFormatter_exit_code
+# Usage: {fn} template [ settingsFile ...
+# Argument: template - Required. A markdown template to use to map values. Post-processed with `markdown_removeUnfinishedSections`
+# Argument: settingsFile - Required. Settings file to be loaded.
+# Exit code: 0 - Success
+# Exit code: 1 - Template file not found
+# Short description: Simple bash function documentation
+#
+_bashDocumentation_Template() {
+  local template="$1" envFile
+  [ -f "$template" ] || _argument "Template $template not found" || return $?
+  shift || :
+  set +m
+  (
+    # subshell this does not affect anything except these commands
+    set -aeou pipefail
+    while [ $# -gt 0 ]; do
+      envFile="$1"
+      [ -f "$envFile" ] || _argument "Settings file $envFile not found" || return $?
+      # shellcheck source=/dev/null
+      source "$envFile" || _environment "$envFile Failed: $(dumpPipe "Template envFile failed" <"$envFile")" || return $?
+      shift
+    done
+    # Format our values
+    while read -r envVar; do
+      formatter="_bashDocumentationFormatter_${envVar}"
+      if isFunction "$formatter"; then
+        declare "$envVar"="$(printf "%s\n" "${!envVar}" | "$formatter")"
+      fi
+    done < <(environmentVariables)
+    # shellcheck source=/dev/null
+    mapEnvironment <"$template" | grep -E -v '^shellcheck|# shellcheck' | markdown_removeUnfinishedSections || return $?
+  ) 2>/dev/null || _environment "$template failed" || return $?
+}
+
+# Formats arguments for markdown
+__bashDocumentationDefaultArguments() {
+  printf "%s\n" "$*" | sed 's/ - /^/1' | __usageFormatArguments '^' '' ''
+}
+

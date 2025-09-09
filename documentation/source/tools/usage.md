@@ -11,24 +11,35 @@ Essentially a `usage` function is a failure handler. If you need a simple `usage
 ## Usage formatting
 
 {usageDocument}
+
 {usageDocumentSimple}
-{usageFormatArguments}
+
+{__usageFormatArguments}
 
 ## Environment
 
 {usageRequireBinary}
+
 {usageRequireEnvironment}
 
 ## Argument check: File System
 
 {usageArgumentExists}
+
 {usageArgumentFile}
+
 {usageArgumentRealFile}
+
 {usageArgumentLink}
+
 {usageArgumentFileDirectory}
+
 {usageArgumentDirectory}
+
 {usageArgumentDirectoryList}
+
 {usageArgumentRealDirectory}
+
 {usageArgumentRemoteDirectory}
 
 ## Argument Environment Files
@@ -38,49 +49,67 @@ Essentially a `usage` function is a failure handler. If you need a simple `usage
 ## Argument Application paths
 
 {usageArgumentApplicationFile}
+
 {usageArgumentApplicationDirectory}
+
 {usageArgumentApplicationDirectoryList}
 
 ## Argument check: Strings
 
 {usageArgumentEmptyString}
+
 {usageArgumentString}
+
 {usageArgumentEnvironmentVariable}
 
 ## Argument check: Number and Simple Types
 
 {usageArgumentBoolean}
+
 {usageArgumentNumber}
+
 {usageArgumentInteger}
+
 {usageArgumentPositiveInteger}
+
 {usageArgumentUnsignedInteger}
 
 ## Argument check: Functional
 
 {usageArgumentCallable}
+
 {usageArgumentFunction}
+
 {usageArgumentExecutable}
 
 ## Complex String Types
 
 {usageArgumentURL}
+
 {usageArgumentDate}
+
 {usageArgumentSecret}
 
 ## Argument Errors (fail)
 
 {usageArgumentMissing}
+
 {usageArgumentUnknown}
 
 {buildEnvironmentGetDirectory}
+
 {dateValid}
 
 ## Lists
 
 {usageArgumentArray}
+
 {usageArgumentColonDelimitedList}
+
 {usageArgumentCommaDelimitedList}
+
 {usageArgumentList}
+
 {usageArgumentArguments}
 
 ## Types

@@ -7,24 +7,8 @@
 # Docs: ./documentation/source/tools/bash.md
 # Test: ./test/tools/bash-tests.sh
 
-# Sanitize bash files for code quality.
-#
-# Usage: {fn} [ --help ] [ --interactive ] [ --check checkDirectory ] ...
-# DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
-# Argument: -- - Flag. Optional. Interactive mode on fixing errors.
-# Argument: --home home - Optional. Directory. Sanitize files starting here. (Defaults to `buildHome`)
-# Argument: --interactive - Flag. Optional. Interactive mode on fixing errors.
-# Argument: --check checkDirectory - Optional. Directory. Check shell scripts in this directory for common errors.
-# Argument: ... - Additional arguments are passed to `bashLintFiles` `validateFileContents`
-# Placing a `.debugging` file in your project with a list of permitted files which contain debugging (`set` with `-x`)
-# Configuration File: .debugging (list of file paths which are ok to allow debugging)
-# Configuration File: .check-assertions (location determines check root)
-# Configuration File: .skip-lint (file patterns to skip lint check, one per line)
-# Configuration File: .skip-copyright (file patterns to skip copyright check, one per line)
-# See: buildHome
-bashSanitize() {
-  local handler="_${FUNCNAME[0]}"
+__bashSanitize() {
+  local handler="$1" && shift
 
   local home checkAssertions=() executor=contextOpen
 

@@ -9,8 +9,8 @@
 # Argument: --prefix prefix - Required. String. A text prefix to search for to identify identical sections (e.g. `# IDENTICAL`) (may specify more than one)
 # Argument: file ... - Required. File. A file to search for identical tokens.
 # stdout: tokens, one per line
-identicalFindTokens() {
-  local handler="_${FUNCNAME[0]}"
+__identicalFindTokens() {
+  local handler="$1" && shift
   local prefixes=() files=()
 
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
@@ -45,10 +45,6 @@ identicalFindTokens() {
   fi
   __catchEnvironment "$handler" rm -f "$foundLines" || return $?
 }
-_identicalFindTokens() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
-}
 
 __identicalFindPrefixes() {
   local patterns=()
@@ -78,16 +74,8 @@ __identicalWatchDecorateDate() {
   decorate magenta "$(dateFromTimestamp "$1")"
 }
 
-# DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
-#
-# DOC TEMPLATE: --handler 1
-# Argument: --handler handler - Optional. Function. Use this error handler instead of the default error handler.
-# Argument: ... - Arguments. Required. Arguments to `identicalCheck` for your watch.
-# Watch a project for changes and propagate them immediately upon save. Can be quite dangerous so use with caution.
-# Still a known bug which trims the last end bracket from files
-identicalWatch() {
-  local handler="_${FUNCNAME[0]}"
+__identicalWatch() {
+  local handler="$1" && shift
 
   local repairSources=()
   local findArgs=() rootDir="" days="" debugFlag=false
@@ -225,10 +213,6 @@ identicalWatch() {
   # next file until we find our saved file name or end of list
   # update top mod date and file name
   # done - next loop watches most recently modified and compares to our file, if it fails - repeat
-}
-_identicalWatch() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 __identicalWatchLoop() {

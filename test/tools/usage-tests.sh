@@ -38,7 +38,7 @@ testUsageArguments1() {
   local results
 
   results=$(fileTemporaryName "$handler") || return $?
-  __sampleArgs | usageFormatArguments "^" "" "" >"$results"
+  __sampleArgs | __usageFormatArguments "^" "" "" >"$results"
 
   assertEquals " --name --thing thing [ --value name ]" "$(cat "$results")" || return $?
 
@@ -58,21 +58,21 @@ testUsageArguments() {
 
   IFS= read -r -d '' value < <(__testUsageArgumentsFile)
 
-  assertContains --display "test # $testIndex" "test" "$(printf "%s" "$value" | usageFormatArguments "^")" || return $?
+  assertContains --display "test # $testIndex" "test" "$(printf "%s" "$value" | __usageFormatArguments "^")" || return $?
   testIndex=$((testIndex + 1))
-  assertContains "variable" "$(printf "%s" "$value" | usageFormatArguments "^")" || return $?
+  assertContains "variable" "$(printf "%s" "$value" | __usageFormatArguments "^")" || return $?
   testIndex=$((testIndex + 1))
 
   value="$(printf "%s\n%s\n" "--test^Optional thing." "variable^Another optional thing. newline at end")"
-  assertContains --display "test # $testIndex" "test" "$(printf "%s" "$value" | usageFormatArguments "^")" || return $?
+  assertContains --display "test # $testIndex" "test" "$(printf "%s" "$value" | __usageFormatArguments "^")" || return $?
   testIndex=$((testIndex + 1))
-  assertContains "variable" "$(printf "%s" "$value" | usageFormatArguments "^")" || return $?
+  assertContains "variable" "$(printf "%s" "$value" | __usageFormatArguments "^")" || return $?
   testIndex=$((testIndex + 1))
 
   value="$(printf "%s\n%s" "--test^Optional thing." "variable^Another optional thing.")"
-  assertContains --display "test # $testIndex" "test" "$(printf "%s" "$value" | usageFormatArguments "^")" || return $?
+  assertContains --display "test # $testIndex" "test" "$(printf "%s" "$value" | __usageFormatArguments "^")" || return $?
   testIndex=$((testIndex + 1))
-  assertContains "variable" "$(printf "%s" "$value" | usageFormatArguments "^")" || return $?
+  assertContains "variable" "$(printf "%s" "$value" | __usageFormatArguments "^")" || return $?
   testIndex=$((testIndex + 1))
 }
 

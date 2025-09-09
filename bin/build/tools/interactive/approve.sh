@@ -9,6 +9,68 @@
 # Docs: ./documentation/source/tools/interactive.md
 # Test: ./test/tools/interactive-tests.sh
 
+__approveBashSource() {
+  local handler="$1" && shift
+
+  local prefix="Loading" verboseFlag=false aa=(--info) bb=(--attempts 1 --timeout 30)
+  local clearFlag=false deleteFlag=false reportFlag=false hh=()
+
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
+  local __saved=("$@") __count=$#
+  while [ $# -gt 0 ]; do
+    local argument="$1" __index=$((__count - $# + 1))
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
+    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    case "$argument" in
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
+    --info) aa=(--info) ;;
+    --no-info) aa=() ;;
+    --clear) clearFlag=true ;;
+    --verbose) verboseFlag=true ;;
+    --delete) hh+=(--delete) && deleteFlag=true ;;
+    --report) reportFlag=true ;;
+    --prefix) shift && prefix="$(usageArgumentString "$handler" "$argument" "${1-}")" || return $? ;;
+    *)
+      local sourcePath="$argument" verb=""
+      displayPath="$(decorate file "$sourcePath")"
+      if "$clearFlag"; then
+        __interactiveApproveClear "$handler" "$sourcePath" || return $?
+        ! $verboseFlag || statusMessage --last printf -- "%s %s" "$(decorate info "Cleared approval for")" "$displayPath"
+        approveBashSource "${aa[@]+"${aa[@]}"}" "$sourcePath" || return $?
+        return 0
+      fi
+      if [ -f "$sourcePath" ]; then
+        verb="file"
+        if __interactiveApprove "$handler" "$sourcePath" "Load" "${aa[@]+"${aa[@]}"}" "${bb[@]}"; then
+          ! $verboseFlag || statusMessage --last printf -- "%s %s %s" "$(decorate info "$prefix")" "$(decorate label "$verb")" "$displayPath"
+          __catchEnvironment "$handler" source "$sourcePath" || return $?
+        else
+          decorate subtle "Skipping unapproved file $(decorate file "$sourcePath") Undo: $(decorate code "${FUNCNAME[0]} --clear \"$sourcePath\"")"
+        fi
+      elif [ -d "$sourcePath" ]; then
+        verb="path"
+        if __interactiveApprove "$handler" "$sourcePath/" "Load path" "${aa[@]+"${aa[@]}"}" "${bb[@]}"; then
+          ! $verboseFlag || statusMessage --last printf -- "%s %s %s" "$(decorate info "$prefix")" "$(decorate label "$verb")" "$displayPath"
+          __catchEnvironment "$handler" bashSourcePath "$sourcePath" || return $?
+        else
+          decorate subtle "Skipping unapproved directory $(decorate file "$sourcePath") Undo: $(decorate code "${FUNCNAME[0]} --clear \"$sourcePath\"")"
+        fi
+      else
+        __throwEnvironment "$handler" "Not a file or directory? $displayPath is a $(decorate value "$(fileType "$sourcePath")")" || return $?
+      fi
+      hh+=(--highlight "$sourcePath")
+      ;;
+    esac
+    shift
+  done
+  if $reportFlag; then
+    __catch "$handler" approvedSources "${hh[@]+"${hh[@]}"}" || return $?
+  elif $deleteFlag; then
+    __catch "$handler" muzzle approvedSources --delete || return $?
+  fi
+}
+
 ####################################################################################################
 #
 #  ▜▘   ▐              ▐  ▗       ▞▀▖

@@ -7,6 +7,75 @@
 # Docs: ./documentation/source/tools/bash.md
 # Test: ./test/tools/bash-tests.sh
 
+__bashLoader() {
+  __functionLoader __bashGetRequires bash "$@"
+}
+
+# Sanitize bash files for code quality.
+#
+# Usage: {fn} [ --help ] [ --interactive ] [ --check checkDirectory ] ...
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
+# Argument: -- - Flag. Optional. Interactive mode on fixing errors.
+# Argument: --home home - Optional. Directory. Sanitize files starting here. (Defaults to `buildHome`)
+# Argument: --interactive - Flag. Optional. Interactive mode on fixing errors.
+# Argument: --check checkDirectory - Optional. Directory. Check shell scripts in this directory for common errors.
+# Argument: ... - Additional arguments are passed to `bashLintFiles` `validateFileContents`
+# Placing a `.debugging` file in your project with a list of permitted files which contain debugging (`set` with `-x`)
+# Configuration File: .debugging (list of file paths which are ok to allow debugging)
+# Configuration File: .check-assertions (location determines check root)
+# Configuration File: .skip-lint (file patterns to skip lint check, one per line)
+# Configuration File: .skip-copyright (file patterns to skip copyright check, one per line)
+# See: buildHome
+bashSanitize() {
+  __bashLoader "_${FUNCNAME[0]}" "__${FUNCNAME[0]}" "$@"
+}
+_bashSanitize() {
+  # __IDENTICAL__ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+# Usage: {fn} script ...
+# Argument: script - File. Required. Bash script to fetch requires tokens from.
+# Gets a list of the `Requires:` comments in a bash file
+# Returns a unique list of tokens
+bashGetRequires() {
+  __bashLoader "_${FUNCNAME[0]}" "__${FUNCNAME[0]}" "$@"
+}
+_bashGetRequires() {
+  # __IDENTICAL__ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+# Usage: {fn} script
+# Checks a bash script to ensure all requirements are met, outputs a list of unmet requirements
+# Scans a bash script for lines which look like:
+#
+# Requires: token1 token2
+#
+# Each requirement token is:
+#
+# - a bash function which MUST be defined
+# - a shell script (executable) which must be present
+#
+# If all requirements are met, exit status of 0.
+# If any requirements are not met, exit status of 1 and a list of unmet requirements are listed
+#
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
+# Argument: --ignore prefix. String. Optional. Ignore exact function names.
+# Argument: --ignore-prefix prefix. String. Optional. Ignore function names which match the prefix and do not check them.
+# Argument: --report - Flag. Optional. Output a report of various functions and handler after processing is complete.
+# Argument: --require - Flag. Optional. Requires at least one or more requirements to be listed and met to pass
+# Argument: --unused - Flag. Optional. Check for unused functions and report on them.
+bashCheckRequires() {
+  __bashLoader "_${FUNCNAME[0]}" "__${FUNCNAME[0]}" "$@"
+}
+_bashCheckRequires() {
+  # __IDENTICAL__ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
 # List bash buildin functions, one per line
 # stdout: line:function
 bashBuiltins() {
@@ -157,8 +226,8 @@ bashSourcePath() {
   $foundOne || __throwArgument "$handler" "Requires a directory" || return $?
 }
 _bashSourcePath() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ usageDocumentSimple 1
+  usageDocumentSimple "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Usage: {fn} functionName file1 ...

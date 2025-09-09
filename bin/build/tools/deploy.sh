@@ -13,6 +13,46 @@
 # Docs: o ./documentation/source/tools/deploy.md
 # Test: o ./test/tools/deploy-tests.sh
 
+__deployLoader() {
+  __functionLoader __deployApplication deploy "$@"
+}
+
+# Deploy an application from a deployment repository
+#
+#      ____             _
+#     |  _ \  ___ _ __ | | ___  _   _
+#     | | | |/ _ \ '_ \| |/ _ \| | | |
+#     | |_| |  __/ |_) | | (_) | |_| |
+#     |____/ \___| .__/|_|\___/ \__, |
+#                |_|            |___/
+#
+# This acts on the local file system only but used in tandem with `deployment.sh` functions.
+#
+# handler: {fn} deployHome applicationId applicationPath [ targetPackage ]
+#
+# Argument: --help - Optional. Flag. This help.
+# Argument: --first - Optional. Flag. The first deployment has no prior version and can not be reverted.
+# Argument: --revert - Optional. Flag. Means this is part of the undo process of a deployment.
+# Argument: --home deployHome - Required. Directory. Path where the deployments database is on remote system.
+# Argument: --id applicationId - Required. String. Should match `APPLICATION_ID` or `APPLICATION_TAG` in `.env` or `.deploy/`
+# Argument: --application applicationPath - Required. String. Path on the remote system where the application is live
+# Argument: --target targetPackage - Optional. Filename. Package name, defaults to `BUILD_TARGET`
+# Argument: --message message - Optional. String. Message to display in the maintenance message on systems while upgrade is occurring.
+# Environment: BUILD_TARGET APPLICATION_ID APPLICATION_TAG
+# Example: {fn} --home /var/www/DEPLOY --id 10c2fab1 --application /var/www/apps/cool-app
+# Use-Hook: maintenance
+# Use-Hook: deploy-shutdown
+# Use-Hook: deploy-activate deploy-start deploy-finish
+# See: deployToRemote
+#
+deployApplication() {
+  __deployLoader "_${FUNCNAME[0]}" "__${FUNCNAME[0]}" "$@"
+}
+_deployApplication() {
+  # __IDENTICAL__ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
 #
 # Usage: {fn} applicationHome
 # Argument: applicationHome - Required. Directory. Application home to get the version from.
@@ -169,75 +209,8 @@ _deployMove() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# Usage: {fn} applicationLinkPath
-# Environment: PWD
-# Argument: applicationLinkPath - Path. Required. Path where the link is created.
-# Argument: applicationPath - Path. Optional. Path where the link will point to. If not supplied uses current working directory.
-#
-# Link new version of application.
-#
-# When called, current directory is the **new** application and the `applicationLinkPath` which is
-# passed as an argument is the place where the **new** application should be linked to
-# in order to activate it.
-#
-# Summary: Link deployment to new version of the application
-# Argument: applicationLinkPath - This is the target for the current application
-# Exit code: 0 - Success
-# Exit code: 1 - Environment error
-# Exit code: 2 - Argument error
-#
 deployLink() {
-  local handler="_${FUNCNAME[0]}"
-
-  local applicationLinkPath="" currentApplicationHome=""
-  # _IDENTICAL_ argumentNonBlankLoopHandler 6
-  local __saved=("$@") __count=$#
-  while [ $# -gt 0 ]; do
-    local argument="$1" __index=$((__count - $# + 1))
-    # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
-    case "$argument" in
-    # _IDENTICAL_ helpHandler 1
-    --help) "$handler" 0 && return $? || return $? ;;
-    *)
-      if [ -z "$applicationLinkPath" ]; then
-        applicationLinkPath="$argument"
-        if [ -e "$applicationLinkPath" ]; then
-          if [ ! -L "$applicationLinkPath" ]; then
-            [ ! -d "$applicationLinkPath" ] || __throwArgument "$handler" "$applicationLinkPath is directory (should be a link)" || return $?
-            # Not a link or directory
-            __throwArgument "$handler" "Unknown file type $(fileType "$applicationLinkPath")" || return $?
-          fi
-        else
-          applicationLinkPath=$(usageArgumentFileDirectory "$handler" applicationLinkPath "$applicationLinkPath") || return $?
-        fi
-      elif [ -z "$currentApplicationHome" ]; then
-        # No checking - allows pre-linking
-        currentApplicationHome="$argument"
-        if [ ! -d "$currentApplicationHome" ]; then
-          decorate warning "currentApplicationHome $currentApplicationHome points to a non-existent directory"
-        fi
-      else
-        # _IDENTICAL_ argumentUnknownHandler 1
-        __throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
-      fi
-      ;;
-    esac
-    shift
-  done
-
-  if [ -z "$applicationLinkPath" ]; then
-    __catchArgument "$handler" "Missing applicationLinkPath" || return $?
-  fi
-  if [ -z "$currentApplicationHome" ]; then
-    currentApplicationHome="$(pwd -P 2>/dev/null)" || __throwEnvironment "$handler" "pwd failed" || return $?
-  fi
-  local newApplicationLinkPath
-  newApplicationLinkPath="$applicationLinkPath.READY.$$"
-  if ! ln -sf "$currentApplicationHome" "$newApplicationLinkPath" || ! linkRename "$newApplicationLinkPath" "$applicationLinkPath"; then
-    rm -rf "$newApplicationLinkPath" 2>/dev/null
-    __throwEnvironment "$handler" "Unable to link and rename" || return $?
-  fi
+  __deployLoader "_${FUNCNAME[0]}" "__${FUNCNAME[0]}" "$@"
 }
 _deployLink() {
   # __IDENTICAL__ usageDocument 1
@@ -249,76 +222,9 @@ _deployLink() {
 # Automatically convert application deployments using non-links to links.
 #
 deployMigrateDirectoryToLink() {
-  local start
-  local handler="_${FUNCNAME[0]}"
-
-  start=$(timingStart) || :
-  local deployHome="" applicationPath=""
-  # _IDENTICAL_ argumentNonBlankLoopHandler 6
-  local __saved=("$@") __count=$#
-  while [ $# -gt 0 ]; do
-    local argument="$1" __index=$((__count - $# + 1))
-    # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
-    case "$argument" in
-    # _IDENTICAL_ helpHandler 1
-    --help) "$handler" 0 && return $? || return $? ;;
-    *)
-      if [ -z "$deployHome" ]; then
-        deployHome="$(usageArgumentDirectory "$handler" "deployHome" "$1")" || return $?
-      elif [ -z "$applicationPath" ]; then
-        applicationPath="$(usageArgumentDirectory "$handler" "applicationPath" "$1")" || return $?
-      else
-        # _IDENTICAL_ argumentUnknownHandler 1
-        __throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
-      fi
-      shift || __throwArgument "$handler" "shift after $argument failed" || return $?
-      ;;
-    esac
-  done
-
-  local tempAppLink appVersion
-  appVersion=$(deployApplicationVersion "$applicationPath") || __throwEnvironment "$handler" "No application deployment version" || return $?
-  if [ -L "$applicationPath" ]; then
-    printf "%s %s %s\n" "$(decorate code "$applicationPath")" "$(decorate success "is already a link to")" "$(decorate red "$appVersion")"
-    return 0
-  fi
-  deployHasVersion "$deployHome" "$appVersion" || __throwEnvironment "$handler" "Application version $appVersion not found in $deployHome" || return $?
-
-  [ ! -d "$deployHome/$appVersion/app" ] || __throwEnvironment "$handler" "Old app directory $deployHome/$appVersion/app exists, stopping" || return $?
-  hookRunOptional --application "$applicationPath" maintenance on || __throwEnvironment "$handler" "Unable to enable maintenance" || return $?
-  tempAppLink="$applicationPath.$$.${FUNCNAME[0]}"
-  # Create a temporary link to ensure it works
-  if ! deployLink "$tempAppLink" "$deployHome/$appVersion/app"; then
-    if ! hookRunOptional maintenance off; then
-      decorate error "Maintenance off FAILED, system may be unstable" 1>&2
-    fi
-    __throwEnvironment "$handler" "deployLink failed" || return $?
-  fi
-  # Now move our folder and the link to where the folder was in one fell swoop
-  # or mv -hf
-  __environment mv -f "$applicationPath" "$deployHome/$appVersion/app" || __throwEnvironment "$handler" "Unable to move live application from $applicationPath to $deployHome/$appVersion/app" || return $?
-
-  if ! __environment mv -f "$tempAppLink" "$applicationPath"; then
-    # Like really? Like really? Something is likely F U B A R
-    if ! __environment mv -f "$deployHome/$appVersion/app" "$applicationPath"; then
-      decorate error "Unable to move BACK $deployHome/$appVersion/app $applicationPath - system is UNSTABLE" 1>&2
-    else
-      decorate success "Successfully recovered application to $applicationPath - stable"
-    fi
-    __throwEnvironment "$handler" "Unable to move live link $tempAppLink -> $applicationPath" || return $?
-  fi
-  if ! hookRunOptional --application "$applicationPath" maintenance off; then
-    decorate error "Maintenance ON FAILED, system may be unstable" 1>&2
-  fi
-  {
-    decorate success "Successfully migrated:"
-    decorate pair 20 "Link:" "$applicationPath"
-    decorate pair 20 "Installed:" "$deployHome/$appVersion/app"
-    # Move directory, then re-link
-  }
-  timingReport "$start" "Completed in"
+  __deployLoader "_${FUNCNAME[0]}" "__${FUNCNAME[0]}" "$@"
 }
+
 _deployMigrateDirectoryToLink() {
   # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"

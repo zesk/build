@@ -20,9 +20,9 @@
 # Argument: --file - `lookupPattern` is a file name. Find files which match this base file name.
 # Argument: cacheDirectory - Directory where we can store cached information
 # Argument: lookupPattern - Token to look up in the index
-# See: documentationIndex_Generate
+# See: _documentationIndex_Generate
 #
-documentationIndex_Lookup() {
+__documentationIndex_Lookup() {
   local handler="_${FUNCNAME[0]}"
   local mode cacheDirectory shellFile functionName lineNumber indexRoot sourceFile resultFile
 
@@ -46,7 +46,7 @@ documentationIndex_Lookup() {
       if [ -z "$cacheDirectory" ]; then
         cacheDirectory="${1%%/}"
         shift
-        if ! cacheDirectory="$(_documentationIndex_GeneratePath "$cacheDirectory")"; then
+        if ! cacheDirectory="$(__documentationIndex_GeneratePath "$cacheDirectory")"; then
           return $?
         fi
       fi
@@ -101,7 +101,7 @@ documentationIndex_Lookup() {
   esac
   return 0
 }
-_documentationIndex_Lookup() {
+___documentationIndex_Lookup() {
   # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
@@ -111,15 +111,15 @@ _documentationIndex_Lookup() {
 # Outputs relative path to cacheDirectory for shared handler
 # Exit Code: 1 - passed in directory must exist
 #
-_documentationIndex_GeneratePath() {
+__documentationIndex_GeneratePath() {
   local handler="_${FUNCNAME[0]}"
   cacheDirectory="$1"
   if [ ! -d "$cacheDirectory" ]; then
     __throwEnvironment "$handler" "$cacheDirectory is not a directory" || return $?
   fi
-  printf -- "%s" "${cacheDirectory%%/}/documentationIndex_Generate"
+  printf -- "%s" "${cacheDirectory%%/}/_documentationIndex_Generate"
 }
-__documentationIndex_GeneratePath() {
+___documentationIndex_GeneratePath() {
   # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
@@ -130,14 +130,14 @@ __documentationIndex_GeneratePath() {
 # cacheDirectory/index/functionName
 # cacheDirectory/files/baseName
 #
-# Use with documentationIndex_Lookup
+# Use with __documentationIndex_Lookup
 #
 # Usage: {fn} [ --clean ] codePath cacheDirectory
 #
 # Argument: codePath - Required. Directory. Path where code is stored (should remain identical between invocations)
 # Argument: cacheDirectory - Required. Directory. Store cached information
-# See: documentationIndex_Lookup
-documentationIndex_Generate() {
+# See: __documentationIndex_Lookup
+_documentationIndex_Generate() {
   local handler="_${FUNCNAME[0]}"
 
   local forceFlag=false verboseFlag=false
@@ -172,7 +172,7 @@ documentationIndex_Generate() {
         codePath="${codePath#./}"
         codePath="${codePath%/}"
       elif [ -z "$cacheDirectory" ]; then
-        cacheDirectory="$(__catchEnvironment "$handler" _documentationIndex_GeneratePath "$1")" || return $?
+        cacheDirectory="$(__catchEnvironment "$handler" __documentationIndex_GeneratePath "$1")" || return $?
       else
         # _IDENTICAL_ argumentUnknownHandler 1
         __throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
@@ -254,7 +254,7 @@ documentationIndex_Generate() {
   fi
   statusMessage --last printf -- "%s %s %s\n" "$(decorate info "Generated index for ")" "$(decorate code "$(decorate file "$codePath")")" "$(timingReport "$start" in)"
 }
-_documentationIndex_Generate() {
+__documentationIndex_Generate() {
   # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
@@ -264,7 +264,7 @@ _documentationIndex_Generate() {
 #
 # - Any functions beginning with an **underscore** (`_`) are ignored
 # - Any function which contains ANY `ignore` directive in the comment is ignored
-# - Any function which is unlinked in the source (call `documentationIndex_LinkDocumentationPaths` first)
+# - Any function which is unlinked in the source (call `_documentationIndex_LinkDocumentationPaths` first)
 #
 # Within your function, add an ignore reason if you wish:
 #
@@ -275,16 +275,16 @@ _documentationIndex_Generate() {
 #
 # Usage: {fn} cacheDirectory
 # Argument: cacheDirectory - Required. Directory. Index cache directory.
-# See: documentationIndex_LinkDocumentationPaths
-# See: documentationIndex_FunctionIterator
+# See: _documentationIndex_LinkDocumentationPaths
+# See: _documentationIndex_FunctionIterator
 #
-documentationIndex_ShowUnlinked() {
+_documentationIndex_ShowUnlinked() {
   [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
   local cacheDirectory=$1
   local functionName settingsFile
   local documentationPath documentationPathUnlinked ignore
 
-  documentationIndex_FunctionIterator "$cacheDirectory" | while read -r functionName settingsFile; do
+  _documentationIndex_FunctionIterator "$cacheDirectory" | while read -r functionName settingsFile; do
     if [ "$functionName" = "${functionName#_}" ]; then
       (
         set -a
@@ -304,7 +304,7 @@ documentationIndex_ShowUnlinked() {
     fi
   done
 }
-_documentationIndex_ShowUnlinked() {
+__documentationIndex_ShowUnlinked() {
   # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
@@ -316,7 +316,7 @@ _documentationIndex_ShowUnlinked() {
 # Argument: cacheDirectory - Required. Directory. Index cache directory.
 # Argument: target - Required. String. Path to document path where unlinked functions should link.
 #
-documentationIndex_SetUnlinkedDocumentationPath() {
+_documentationIndex_SetUnlinkedDocumentationPath() {
   local handler="_${FUNCNAME[0]}"
   [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
   local cacheDirectory target
@@ -324,7 +324,7 @@ documentationIndex_SetUnlinkedDocumentationPath() {
   target=$(usageArgumentString "$handler" "cacheDirectory" "${1-}") && shift || return $?
   local functionName settingsFile
   target="$(trimSpace "$target")"
-  documentationIndex_UnlinkedIterator "$cacheDirectory" | while read -r functionName settingsFile; do
+  _documentationIndex_UnlinkedIterator "$cacheDirectory" | while read -r functionName settingsFile; do
     if ! grep -q "'documentationPath'" "$settingsFile"; then
       __dumpNameValue documentationPath "$target" >>"$settingsFile"
       __dumpNameValue documentationPathUnlinked 1 >>"$settingsFile"
@@ -332,7 +332,7 @@ documentationIndex_SetUnlinkedDocumentationPath() {
     printf '%s %s\n' "$functionName" "$settingsFile"
   done
 }
-_documentationIndex_SetUnlinkedDocumentationPath() {
+__documentationIndex_SetUnlinkedDocumentationPath() {
   # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
@@ -342,7 +342,7 @@ _documentationIndex_SetUnlinkedDocumentationPath() {
 #
 # Argument: cacheDirectory - Required. Directory. Index cache directory.
 # Argument: --underscore - Flag. Optional. List underscore functions.
-documentationIndex_UnlinkedIterator() {
+_documentationIndex_UnlinkedIterator() {
   local handler="_${FUNCNAME[0]}"
 
   local cacheDirectory=""
@@ -373,7 +373,7 @@ documentationIndex_UnlinkedIterator() {
 
   local functionName settingsFile
 
-  documentationIndex_FunctionIterator "$cacheDirectory" | while read -r functionName settingsFile; do
+  _documentationIndex_FunctionIterator "$cacheDirectory" | while read -r functionName settingsFile; do
     # Skip functions beginning with underscores always
     if ! $flagUnderscore && [ "$functionName" != "${functionName#_}" ]; then
       continue
@@ -385,7 +385,7 @@ documentationIndex_UnlinkedIterator() {
     fi
   done
 }
-_documentationIndex_UnlinkedIterator() {
+__documentationIndex_UnlinkedIterator() {
   # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
@@ -398,10 +398,10 @@ _documentationIndex_UnlinkedIterator() {
 # Usage: {fn} cacheDirectory
 #
 # Argument: cacheDirectory - Required. Directory. Index cache directory.
-# See: documentationIndex_Lookup
-# See: documentationIndex_LinkDocumentationPaths
+# See: __documentationIndex_Lookup
+# See: _documentationIndex_LinkDocumentationPaths
 #
-documentationIndex_FunctionIterator() {
+_documentationIndex_FunctionIterator() {
   local handler="_${FUNCNAME[0]}"
 
   local cacheDirectory="" functionIndexPath=""
@@ -420,7 +420,7 @@ documentationIndex_FunctionIterator() {
         if [ ! -d "$cacheDirectory" ]; then
           __throwArgument "$handler" "cacheDirectory must be a directory" || return $?
         fi
-        if ! functionIndexPath="$(_documentationIndex_GeneratePath "$cacheDirectory")"; then
+        if ! functionIndexPath="$(__documentationIndex_GeneratePath "$cacheDirectory")"; then
           __throwArgument "$handler" "Unable to generate index at path $(decorate file "$cacheDirectory")" || return $?
         fi
       else
@@ -437,13 +437,13 @@ documentationIndex_FunctionIterator() {
   local functionName settingsFile
   find "$functionIndexPath/index" -type f -print | sort | while read -r functionName; do
     functionName=$(basename "$functionName")
-    if ! settingsFile="$(documentationIndex_Lookup --settings "$cacheDirectory" "$functionName")"; then
+    if ! settingsFile="$(__documentationIndex_Lookup --settings "$cacheDirectory" "$functionName")"; then
       settingsFile='-'
     fi
     printf "%s %s\n" "$functionName" "$settingsFile"
   done
 }
-_documentationIndex_FunctionIterator() {
+__documentationIndex_FunctionIterator() {
   # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
@@ -460,7 +460,7 @@ _documentationIndex_FunctionIterator() {
 #
 # and adds the `documentationPath` to it
 #
-# Use with documentationIndex_Lookup
+# Use with __documentationIndex_Lookup
 #
 # TODO This should probably be a generic "set variable function" and then use it for documentationPath
 #
@@ -468,7 +468,7 @@ _documentationIndex_FunctionIterator() {
 # Exit Code: 1 - Issue with file generation
 # Exit Code: 2 - Argument error
 #
-documentationIndex_LinkDocumentationPaths() {
+_documentationIndex_LinkDocumentationPaths() {
   local handler="_${FUNCNAME[0]}"
   local start checkFiles
   local settingsFile
@@ -521,7 +521,7 @@ documentationIndex_LinkDocumentationPaths() {
   checkFiles=("$documentTemplate")
   __catchEnvironment "$handler" touch "$modifiedCountFile" || return $?
   while read -r token; do
-    if ! settingsFile=$(documentationIndex_Lookup --settings "$cacheDirectory" "$token"); then
+    if ! settingsFile=$(__documentationIndex_Lookup --settings "$cacheDirectory" "$token"); then
       statusMessage --last decorate error "Function $(decorate code "$token") $(decorate error "not defined")" 1>&2
       continue
     fi
@@ -545,7 +545,7 @@ documentationIndex_LinkDocumentationPaths() {
   rm "$documentTokensFile" "$modifiedCountFile" 2>/dev/null || :
   statusMessage decorate info "$(printf "%s %s %s %s %s %s %s %s\n" "$(decorate cyan Indexed)" "$(decorate bold-red "$processed")" "$(decorate green "of $total")" "$(decorate cyan "$(plural "$processed" function functions)")" "for" "$(decorate code "$documentationPath")" "in" "$(timingReport "$start")")"
 }
-_documentationIndex_LinkDocumentationPaths() {
+__documentationIndex_LinkDocumentationPaths() {
   # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

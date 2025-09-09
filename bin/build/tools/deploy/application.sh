@@ -11,36 +11,8 @@
 # Docs: o ./documentation/source/tools/deploy.md
 # Test: o ./test/tools/deploy-tests.sh
 
-# Deploy an application from a deployment repository
-#
-#      ____             _
-#     |  _ \  ___ _ __ | | ___  _   _
-#     | | | |/ _ \ '_ \| |/ _ \| | | |
-#     | |_| |  __/ |_) | | (_) | |_| |
-#     |____/ \___| .__/|_|\___/ \__, |
-#                |_|            |___/
-#
-# This acts on the local file system only but used in tandem with `deployment.sh` functions.
-#
-# handler: {fn} deployHome applicationId applicationPath [ targetPackage ]
-#
-# Argument: --help - Optional. Flag. This help.
-# Argument: --first - Optional. Flag. The first deployment has no prior version and can not be reverted.
-# Argument: --revert - Optional. Flag. Means this is part of the undo process of a deployment.
-# Argument: --home deployHome - Required. Directory. Path where the deployments database is on remote system.
-# Argument: --id applicationId - Required. String. Should match `APPLICATION_ID` or `APPLICATION_TAG` in `.env` or `.deploy/`
-# Argument: --application applicationPath - Required. String. Path on the remote system where the application is live
-# Argument: --target targetPackage - Optional. Filename. Package name, defaults to `BUILD_TARGET`
-# Argument: --message message - Optional. String. Message to display in the maintenance message on systems while upgrade is occurring.
-# Environment: BUILD_TARGET APPLICATION_ID APPLICATION_TAG
-# Example: {fn} --home /var/www/DEPLOY --id 10c2fab1 --application /var/www/apps/cool-app
-# Use-Hook: maintenance
-# Use-Hook: deploy-shutdown
-# Use-Hook: deploy-activate deploy-start deploy-finish
-# See: deployToRemote
-#
-deployApplication() {
-  local handler="_${FUNCNAME[0]}"
+__deployApplication() {
+  local handler="$1" && shift
 
   # Arguments
 
@@ -271,8 +243,4 @@ _unwindDeploy() {
     printf "%s %s %s\n" "$(decorate error "Unwind")" "$(decorate code "$deployedApplicationPath")" "$(decorate error "does not exist")"
   fi
   __throwEnvironment "$handler" "$@" || return $?
-}
-_deployApplication() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

@@ -27,7 +27,7 @@ _return() {
   local to=1 icon="✅" code="${1:-1}" && shift 2>/dev/null
   isUnsignedInteger "$code" || _return 2 "${FUNCNAME[1]-none}:${BASH_LINENO[1]-} -> ${FUNCNAME[0]} non-integer \"$code\"" "$@" || return $?
   if [ "$code" -gt 0 ]; then icon="❌ [$code]" && to=2; fi
-  printf -- "%s %s\n" "$icon" "${*-§}" 1>&"$to"
+  printf -- "%s %s %s\n" "$icon" "${*-§}" "$(debuggingStack)" 1>&"$to"
   return "$code"
 }
 
@@ -109,7 +109,7 @@ _environment() {
 __throw() {
   local exitCode="${1-}" && shift || _argument "Missing exit code" || return $?
   lcoal handler="${1-}" && shift || _argument "Missing error handler" || return $?
-  "$handler" "$exitCode" "$@" || return $?
+  "$handler" "$exitCode" "$@" "$(debuggingStack)" || return $?
 }
 
 # Run binary and catch errors with handler
@@ -118,7 +118,7 @@ __throw() {
 # Requires: _argument
 __catch() {
   local handler="${1-}" && shift || _argument "Missing handler" || return $?
-  "$@" || "$handler" "$?" "$@" || return $?
+  "$@" || "$handler" "$?" "$@" "$(debuggingStack)" || return $?
 }
 
 # _IDENTICAL_ __environment 10

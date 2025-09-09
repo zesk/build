@@ -1,10 +1,8 @@
 #!/usr/bin/env bash
 #
-# Bash Prompt Module: ApplicationPath
-#
 # Copyright &copy; 2025 Market Acumen, Inc.
-
 #
+
 # Show current application and path as a badge
 # Platform: iTerm2
 # Terminal: iTerm2

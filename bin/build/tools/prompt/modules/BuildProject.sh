@@ -4,6 +4,10 @@
 #
 # Copyright &copy; 2025 Market Acumen, Inc.
 
+bashPromptModule_binBuild() {
+  bashPromptModule_BuildProject "$@"
+}
+
 # Check which bin/build we are running and keep local to current project. Activates when we switch between projects.
 # - Re-sources `bin/build` so versions do not conflict.
 # - Runs hook `project-deactivate` in the old project (using that `bin/build` library)
@@ -14,7 +18,7 @@
 #
 # Run-Hook: project-activate
 # Run-Hook: project-deactivate
-bashPromptModule_binBuild() {
+bashPromptModule_BuildProject() {
   local home gitHome tools="bin/build/tools.sh" version="bin/build/build.json" oldVersion newMessage buildMessage currentVersion showHome showGitHome
   export HOME
 
@@ -71,7 +75,7 @@ bashPromptModule_binBuild() {
 
   printf -- "%s %s %s@ %s%s\n" "$newMessage" "$(decorate code "$currentVersion")" "$buildMessage" "$(decorate code "$(decorate file "$(buildHome)")")" "$pathSuffix"
 }
-_bashPromptModule_binBuild() {
+_bashPromptModule_BuildProject() {
   # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

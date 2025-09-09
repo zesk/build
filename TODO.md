@@ -49,7 +49,7 @@
 
 ### Bash
 
-- bashDocumentation_FindFunctionDefinitions
+- __bashDocumentation_FindFunctionDefinitions
 - bashFunctionCommentVariable
 - bashFunctionDefined
 - bashLibrary
@@ -135,14 +135,14 @@
 - documentationBuild
 - documentationBuildCache
 - documentationBuildEnvironment
-- documentationIndex_FunctionIterator
-- documentationIndex_Generate
-- documentationIndex_LinkDocumentationPaths
-- documentationIndex_Lookup
+- _documentationIndex_FunctionIterator
+- _documentationIndex_Generate
+- _documentationIndex_LinkDocumentationPaths
+- __documentationIndex_Lookup
 - documentationIndex_SeeLinker
-- documentationIndex_SetUnlinkedDocumentationPath
-- documentationIndex_ShowUnlinked
-- documentationIndex_UnlinkedIterator
+- _documentationIndex_SetUnlinkedDocumentationPath
+- _documentationIndex_ShowUnlinked
+- _documentationIndex_UnlinkedIterator
 - documentationTemplate
 - documentationTemplateCompile
 - documentationTemplateDirectoryCompile
@@ -360,7 +360,7 @@ On a "2x" machine:
 - bashDebugInterruptFile
 - bashDebuggerDisable
 - bashDebuggerEnable
-- bashDocumentation_FindFunctionDefinitions
+- __bashDocumentation_FindFunctionDefinitions
 - bashFunctionCommentVariable
 - bashFunctionDefined
 - bashGetRequires
@@ -445,14 +445,14 @@ On a "2x" machine:
 - documentationBuild
 - documentationBuildCache
 - documentationBuildEnvironment
-- documentationIndex_FunctionIterator
-- documentationIndex_Generate
-- documentationIndex_LinkDocumentationPaths
-- documentationIndex_Lookup
+- _documentationIndex_FunctionIterator
+- _documentationIndex_Generate
+- _documentationIndex_LinkDocumentationPaths
+- __documentationIndex_Lookup
 - documentationIndex_SeeLinker
-- documentationIndex_SetUnlinkedDocumentationPath
-- documentationIndex_ShowUnlinked
-- documentationIndex_UnlinkedIterator
+- _documentationIndex_SetUnlinkedDocumentationPath
+- _documentationIndex_ShowUnlinked
+- _documentationIndex_UnlinkedIterator
 - documentationTemplate
 - documentationTemplateCompile
 - documentationTemplateDirectoryCompile

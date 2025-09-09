@@ -31,6 +31,10 @@ __argumentsWithNonBlanksHandler() {
     shift
   done
 }
+___argumentsWithNonBlanksHandler() {
+  # __IDENTICAL__ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
 
 __argumentsWithBlanksHandler() {
   local handler="_${FUNCNAME[0]}"
@@ -51,6 +55,10 @@ __argumentsWithBlanksHandler() {
     esac
     shift
   done
+}
+___argumentsWithBlanksHandler() {
+  # __IDENTICAL__ usageDocumentSimple 1
+  usageDocumentSimple "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 __argumentsTrimNonBlanksHandler() {

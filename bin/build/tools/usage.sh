@@ -7,6 +7,72 @@
 # Test: ./test/tools/handler-tests.sh
 # Docs: ./documentation/source/tools/handler.md
 
+# Argument: handler - Function. Required. Error handler.
+# Argument: function - Function. Required. Function to call; first argument will be `handler`.
+# Argument ... - Arguments. Optional. Additional arguments to the function.
+__usageLoader() {
+  __functionLoader __usageDocument usage "$@"
+}
+
+# Summary: Universal error handler for functions (with formatting)
+#
+# Actual function is called `{functionName}`.
+#
+# Argument: functionDefinitionFile - Required. File. The file in which the function is defined. If you don't know, use `__bashDocumentation_FindFunctionDefinitions` or `__bashDocumentation_FindFunctionDefinition`.
+# Argument: functionName - Required. String. The function which actually defines our usage syntax. Documentation is extracted from this function, regardless.
+# Argument: exitCode - Required. Integer. The function which actually defines our usage syntax. Documentation is extracted from this function, regardless.
+# Argument: message - Optional. String. A message.
+#
+# Generates console usage output for a script using documentation tools parsed from the comment of the function identified.
+#
+# Simplifies documentation and keeps it with the code.
+#
+# Environment: *BUILD_DEBUG* - Add `fast-usage` to make this quicker when you do not care about usage/failure.
+# BUILD_DEBUG: fast-usage - `usageDocumentComplex` does not output formatted help for performance reasons
+usageDocument() {
+  #  usageDocumentSimple "$@"
+  __usageLoader "_${FUNCNAME[0]}" "__${FUNCNAME[0]}" "$@"
+}
+_usageDocument() {
+  # __IDENTICAL__ usageDocumentSimple 1
+  usageDocumentSimple "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+# IDENTICAL usageDocumentSimple 33
+
+# Output a simple error message for a function
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
+# Argument: source - File. Required. File where documentation exists.
+# Argument: function - String. Required. Function to document.
+# Argument: returnCode - UnsignedInteger. Required. Exit code to return.
+# Argument: message ... - Optional. String. Message to display to the user.
+# Requires: bashFunctionComment decorate read printf exitString __help usageDocument
+usageDocumentSimple() {
+  [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
+  local source="${1-}" functionName="${2-}" returnCode="${3-}" color helpColor="info" icon="❌" line prefix="" finished=false skip=false && shift 3
+
+  case "$returnCode" in 0) icon="🏆" && color="info" && [ $# -ne 0 ] || skip=true ;; 1) color="error" ;; 2) color="bold-red" ;; *) color="orange" ;; esac
+  [ "$returnCode" -eq 0 ] || exec 1>&2
+  $skip || printf -- "%s [%s] %s\n" "$icon" "$(decorate "code" "$(exitString "$returnCode")")" "$(decorate "$color" "$*")"
+  if [ ! -f "$source" ]; then
+    export BUILD_HOME
+    [ -d "${BUILD_HOME-}" ] || _argument "Unable to locate $source (${PWD-})" || return $?
+    source="$BUILD_HOME/$source"
+    [ -f "$source" ] || _argument "Unable to locate $source (${PWD-})" || return $?
+  fi
+  while ! $finished; do
+    IFS='' read -r line || finished=true
+    printf "%s%s\n" "$prefix" "$(decorate "$helpColor" "$line")"
+    prefix=""
+  done < <(bashFunctionComment "$source" "$functionName" | sed "s/{fn}/$functionName/g")
+  return "$returnCode"
+}
+_usageDocumentSimple() {
+  # __IDENTICAL__ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
 #
 # Summary: Check that one or more binaries are installed
 # handler: {fn} handler binary0 [ ... ]

@@ -1533,9 +1533,9 @@ _returnUndo() {
 #
 # So:
 #
-# - "bin/install-bin-build.sh" -> ".."
-# - "bin/pipeline/install-bin-build.sh" -> "../.."
-# - "bin/app/vendorApp/install-bin-build.sh" -> "../../.."
+# - "bin/install-BuildProject.sh" -> ".."
+# - "bin/pipeline/install-BuildProject.sh" -> "../.."
+# - "bin/app/vendorApp/install-BuildProject.sh" -> "../../.."
 #
 # -- DO NOT EDIT ANYTHING ABOVE THIS LINE IT WILL BE OVERWRITTEN --
 __installPackageConfiguration ../.. "$@"

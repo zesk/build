@@ -159,7 +159,7 @@ IDENTICAL __where|IDENTICAL __gitHookPath|
 listFileModificationTimes|fileModificationTimes
 
 # v0.26.1
-usageArguments|usageFormatArguments|
+usageArguments|__usageFormatArguments|
 
 # v0.25.10
 substringFound|stringContains|

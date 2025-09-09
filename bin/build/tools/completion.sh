@@ -148,7 +148,7 @@ __buildCompletionFunctionID() {
 
     home=$(__catch "$handler" buildHome) || return $?
     echo HERE
-    source=$(__catch "$handler" bashDocumentation_FindFunctionDefinitions "$home" "$command" | grepSafe -v "/identical" | head -n 1) || return $?
+    source=$(__catch "$handler" __bashDocumentation_FindFunctionDefinitions "$home" "$command" | grepSafe -v "/identical" | head -n 1) || return $?
     if [ -n "$source" ]; then
       id=$(__catch "$handler" _commentArgumentSpecification "$source" "$command") || return $?
       if [ -n "$id" ]; then

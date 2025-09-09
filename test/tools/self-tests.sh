@@ -230,7 +230,7 @@ testInstallBinBuild() {
 
   touch "$testDir/.gitignore" || return $?
   testBinBuild=bin/pipeline/we-like-head-rubs.sh
-  assertExitCode 0 mv bin/pipeline/install-bin-build.sh "$testBinBuild" || return $?
+  assertExitCode 0 mv bin/pipeline/install-BuildProject.sh "$testBinBuild" || return $?
   # Test
   matches=(
     --stdout-match "we-like-head-rubs.sh"

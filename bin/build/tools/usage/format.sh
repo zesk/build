@@ -73,7 +73,7 @@ __usageTemplate() {
     printf -- "%s: %s%s\n\n%s\n\n%s\n" \
       "$usageString" \
       "$(decorate info "$binName")" \
-      "$(printf "%s" "$options" | usageFormatArguments "$delimiter")" \
+      "$(printf "%s" "$options" | __usageFormatArguments "$delimiter")" \
       "$(printf "%s" "$options" | __usageGenerator "$((nSpaces + 2))" "$delimiter" | simpleMarkdownToConsole | trimTail | decorate wrap "    " "$(decorate reset --)")" \
       "$(simpleMarkdownToConsole <<<"$description")" |
       trimBoth
@@ -98,9 +98,9 @@ ___usageTemplate() {
 # Input is in the format with "{argument}{delimiter}{description}{newline}" and generates a list of arguments (optionally decorated) color-coded based
 # on whether the word "require" appears in the description.
 #
-# handler: usageFormatArguments delimiter
+# handler: __usageFormatArguments delimiter
 # Argument: delimiter - Required. String. The character to separate name value pairs in the input
-usageFormatArguments() {
+__usageFormatArguments() {
   local handler="_${FUNCNAME[0]}"
   [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
 
@@ -137,7 +137,7 @@ usageFormatArguments() {
     fi
   done
 }
-_usageFormatArguments() {
+___usageFormatArguments() {
   # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
@@ -194,3 +194,4 @@ ___usageGenerator() {
   # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
+

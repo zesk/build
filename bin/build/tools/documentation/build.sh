@@ -7,28 +7,8 @@
 # Docs: o ./documentation/source/tools/documentation.md
 # Test: o ./test/tools/documentation-tests.sh
 
-# Build documentation for Bash functions
-#
-# Given that bash is not an ideal template language, caching is mandatory.
-#
-# Uses a cache at `buildCacheDirectory`
-# See: buildCacheDirectory
-#
-# Argument: --git - Merge current branch in with `docs` branch
-# Argument: --commit - Commit docs to non-docs branch
-# Argument: --force - Force generation, ignore cache directives
-# Argument: --unlinked - Show unlinked functions
-# Argument: --unlinked-update - Update unlinked document file
-# Argument: --clean - Erase the cache before starting.
-# Argument: --help - I need somebody
-# Argument: --company companyName - Optional. Company name (uses `BUILD_COMPANY` if not set)
-# Argument: --company-link companyLink - Optional. Company name (uses `BUILD_COMPANY_LINK` if not set)
-# Artifact: `cacheDirectory` may be created even on non-zero exit code
-# Exit Code: 0 - Success
-# Exit Code: 1 - Issue with environment
-# Exit Code: 2 - Argument error
-documentationBuild() {
-  local handler="_${FUNCNAME[0]}"
+__documentationBuild() {
+  local handler="$1" && shift
 
   local home
   home=$(__catch "$handler" buildHome) || return $?
@@ -201,7 +181,7 @@ documentationBuild() {
   # Generate or update indexes
   #
   for sourcePath in "${sourcePaths[@]}"; do
-    __catch "$handler" documentationIndex_Generate "${indexArgs[@]+${indexArgs[@]}}" "$sourcePath" "$cacheDirectory" || return $?
+    __catch "$handler" _documentationIndex_Generate "${indexArgs[@]+${indexArgs[@]}}" "$sourcePath" "$cacheDirectory" || return $?
   done
 
   #
@@ -209,7 +189,7 @@ documentationBuild() {
   #
   local template
   find "$templatePath" -type f -name '*.md' ! -path '*/__*' | while read -r template; do
-    __catch "$handler" documentationIndex_LinkDocumentationPaths "$cacheDirectory" "$template" "$targetPath${template#"$templatePath"}" || return $?
+    __catch "$handler" _documentationIndex_LinkDocumentationPaths "$cacheDirectory" "$template" "$targetPath${template#"$templatePath"}" || return $?
   done
   statusMessage --last timingReport "$start" "Indexes completed in" || :
 
@@ -223,7 +203,7 @@ documentationBuild() {
     ! $verbose || decorate info "Update unlinked document $unlinkedTarget"
     local envFile
     envFile=$(_buildDocumentationGenerateEnvironment "$handler" "$company" "$companyLink" "$applicationName") || return $?
-    __catchEnvironment "$handler" _documentationTemplateUpdateUnlinked "$cacheDirectory" "$envFile" "$unlinkedTemplate" "$unlinkedTarget" "$pageTemplate" || return $?
+    __catchEnvironment "$handler" __documentationTemplateUpdateUnlinked "$cacheDirectory" "$envFile" "$unlinkedTemplate" "$unlinkedTarget" "$pageTemplate" || return $?
     docArgs+=(--env-file "$envFile")
     if [ "$actionFlag" = "--unlinked-update" ]; then
       __catchEnvironment rm -rf "$envFile" || return $?
@@ -253,25 +233,4 @@ documentationBuild() {
   message=$(__catch "$handler" timingReport "$start" "in") || return $?
   hookRunOptional documentation-complete "$message" || return $?
 }
-_documentationBuild() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
-}
-__documentationBuild() {
-  hookRunOptional documentation-error "$@" || :
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
-}
 
-# Get the cache directory for the documentation
-# Argument: suffix - String. Optional. Directory suffix - created if does not exist.
-documentationBuildCache() {
-  [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
-  local code
-  code=$(__catch "$handler" buildEnvironmentGet "APPLICATION_CODE") || return $?
-  __catch "$handler" buildCacheDirectory ".documentationBuild/${code-default}/${1-}" || return $?
-}
-_documentationBuildCache() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
-}

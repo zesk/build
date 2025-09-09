@@ -11,8 +11,8 @@
 # Argument: script - File. Required. Bash script to fetch requires tokens from.
 # Gets a list of the `Requires:` comments in a bash file
 # Returns a unique list of tokens
-bashGetRequires() {
-  local handler="_${FUNCNAME[0]}"
+__bashGetRequires() {
+  local handler="$1" && shift
 
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
@@ -30,8 +30,6 @@ bashGetRequires() {
     shift
   done
 
-  local requirements
-
   while read -r matchLine; do
     local tokens
     matchLine="${matchLine#*Requires:}"
@@ -40,34 +38,9 @@ bashGetRequires() {
     printf "%s\n" "${tokens[@]}"
   done < <(grep -e '[[:space:]]*#[[:space:]]*Requires:[[:space:]]*' "${files[@]+"${files[@]}"}" | trimSpace) | sort -u
 }
-_bashGetRequires() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
-}
 
-# Usage: {fn} script
-# Checks a bash script to ensure all requirements are met, outputs a list of unmet requirements
-# Scans a bash script for lines which look like:
-#
-# Requires: token1 token2
-#
-# Each requirement token is:
-#
-# - a bash function which MUST be defined
-# - a shell script (executable) which must be present
-#
-# If all requirements are met, exit status of 0.
-# If any requirements are not met, exit status of 1 and a list of unmet requirements are listed
-#
-# DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
-# Argument: --ignore prefix. String. Optional. Ignore exact function names.
-# Argument: --ignore-prefix prefix. String. Optional. Ignore function names which match the prefix and do not check them.
-# Argument: --report - Flag. Optional. Output a report of various functions and handler after processing is complete.
-# Argument: --require - Flag. Optional. Requires at least one or more requirements to be listed and met to pass
-# Argument: --unused - Flag. Optional. Check for unused functions and report on them.
-bashCheckRequires() {
-  local handler="_${FUNCNAME[0]}"
+__bashCheckRequires() {
+  local handler="$1" && shift
 
   local requireFlag=false reportFlag=false unusedFlag=false ignorePrefixes=() files=() ignore=()
 

@@ -12,12 +12,12 @@ testSysvInitScript() {
   local home
 
   home=$(__catch "$handler" buildHome) || return $?
-  sysvInitScriptUninstall install-bin-build.sh || :
+  sysvInitScriptUninstall install-BuildProject.sh || :
 
-  assertFileDoesNotExist --line "$LINENO" /etc/init.d/install-bin-build.sh || return $?
+  assertFileDoesNotExist --line "$LINENO" /etc/init.d/install-BuildProject.sh || return $?
   assertExitCode 0 sysvInitScriptInstall "$home/bin/build/install-bin-build.sh" || return $?
-  assertFileExists /etc/init.d/install-bin-build.sh || return $?
+  assertFileExists /etc/init.d/install-BuildProject.sh || return $?
 
-  assertExitCode 0 sysvInitScriptUninstall install-bin-build.sh || return $?
-  assertFileDoesNotExist --line "$LINENO" /etc/init.d/install-bin-build.sh || return $?
+  assertExitCode 0 sysvInitScriptUninstall install-BuildProject.sh || return $?
+  assertFileDoesNotExist --line "$LINENO" /etc/init.d/install-BuildProject.sh || return $?
 }

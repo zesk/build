@@ -60,7 +60,7 @@ bashLint() {
       local found
       if found=$(__pcregrep -n -l -M '\n\}\n#' "$argument"); then
         if $fixFlag; then
-          __catchEnvironment "$handler" sed -i ':a;N;$!ba;s/'$'\n'"}"$'\n'"#/"$'\n'"}$'\n'$'\n'#/g" "$argument" || returnUndo $? "${undo[@]}" || return $?
+          __catchEnvironment "$handler" sed -i 's/}\n#/}\n\n#/' "$argument" || returnUndo $? "${undo[@]}" || return $?
           $verboseFlag
         else
           __throwEnvironment "$handler" "found }\\n#: $(decorate code "$found")" 1>&3 2>&3 || returnUndo $? printf "%s\n" "comment following brace" 1>&4 || returnUndo $? "${undo[@]}" || return $?

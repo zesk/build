@@ -76,14 +76,14 @@ documentationIndex_SeeLinker() {
       sedReplacePattern "{SEE:$matchingToken}" "{$tokenName}" >>"$variablesSedFile"
       {
         local settingsFile linkPattern templateFile
-        if settingsFile=$(documentationIndex_Lookup --settings "$cacheDirectory" "$matchingToken"); then
+        if settingsFile=$(__documentationIndex_Lookup --settings "$cacheDirectory" "$matchingToken"); then
           cat "$settingsFile"
           linkPattern="$seeFunctionLink"
           templateFile="$seeFunctionTemplate"
           __dumpNameValue "linkType" "function"
-          # __dumpNameValue "file" "$(documentationIndex_Lookup --file "$cacheDirectory" "$matchingToken")"
-          __dumpNameValue "line" "$(documentationIndex_Lookup --line "$cacheDirectory" "$matchingToken")"
-        elif settingsFile=$(documentationIndex_Lookup --file "$cacheDirectory" "$matchingToken"); then
+          # __dumpNameValue "file" "$(__documentationIndex_Lookup --file "$cacheDirectory" "$matchingToken")"
+          __dumpNameValue "line" "$(__documentationIndex_Lookup --line "$cacheDirectory" "$matchingToken")"
+        elif settingsFile=$(__documentationIndex_Lookup --file "$cacheDirectory" "$matchingToken"); then
           linkPattern="$seeFileLink"
           templateFile="$seeFileTemplate"
           __dumpNameValue "linkType" "file"

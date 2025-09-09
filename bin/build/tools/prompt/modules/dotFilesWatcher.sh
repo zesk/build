@@ -78,19 +78,6 @@ _bashPromptModule_dotFilesWatcher() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# The dot files approved file. Add files to this to approve.
-# DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
-dotFilesApprovedFile() {
-  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
-  printf "%s\n" "$(buildEnvironmentGetDirectory "XDG_DATA_HOME")/dotFilesWatcher"
-}
-_dotFilesApprovedFile() {
-  true || dotFilesApprovedFile --help
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
-}
-
 # The lists
 __dotFilesApproved() {
   local items=()

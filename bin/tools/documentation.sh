@@ -185,7 +185,7 @@ __buildDocumentationBuild() {
 
   if $updateTemplates; then
     statusMessage decorate notice "Updating document templates ..."
-    documentationTemplateUpdate "$home/documentation/source" "$home/documentation/template" || return $?
+    _documentationTemplateUpdate "$home/documentation/source" "$home/documentation/template" || return $?
   fi
 
   if $updateDerived; then

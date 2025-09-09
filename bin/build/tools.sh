@@ -25,6 +25,50 @@ _return() {
   return "$code"
 }
 
+# IDENTICAL _type 42
+
+# Test if an argument is a positive integer (non-zero)
+# Takes one argument only.
+# Argument: value - EmptyString. Required. Value to check if it is an unsigned integer
+# Exit Code: 0 - if it is a positive integer
+# Exit Code: 1 - if it is not a positive integer
+# Requires: __catchArgument isUnsignedInteger usageDocument
+isPositiveInteger() {
+  # _IDENTICAL_ functionSignatureSingleArgument 2
+  local handler="_${FUNCNAME[0]}"
+  [ $# -eq 1 ] || __catchArgument "$handler" "Single argument only: $*" || return $?
+  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
+  if isUnsignedInteger "${1-}"; then
+    [ "$1" -gt 0 ] || return 1
+    return 0
+  fi
+  return 1
+}
+_isPositiveInteger() {
+  # __IDENTICAL__ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+# Test if argument are bash functions
+# Argument: string - Required. String to test if it is a bash function. Builtins are supported. `.` is explicitly not supported to disambiguate it from the current directory `.`.
+# If no arguments are passed, returns exit code 1.
+# Exit code: 0 - argument is bash function
+# Exit code: 1 - argument is not a bash function
+# Requires: __catchArgument isUnsignedInteger usageDocument type
+isFunction() {
+  # _IDENTICAL_ functionSignatureSingleArgument 2
+  local handler="_${FUNCNAME[0]}"
+  [ $# -eq 1 ] || __catchArgument "$handler" "Single argument only: $*" || return $?
+  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
+  # Skip illegal options "--" and "-foo"
+  [ "$1" = "${1#-}" ] || return 1
+  case "$(type -t "$1")" in function | builtin) [ "$1" != "." ] || return 1 ;; *) return 1 ;; esac
+}
+_isFunction() {
+  # __IDENTICAL__ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
 # Test if an argument is an unsigned integer
 # Source: https://stackoverflow.com/questions/806906/how-do-i-test-if-a-variable-is-a-number-in-bash
 # Credits: F. Hauri - Give Up GitHub (isnum_Case)
@@ -41,27 +85,63 @@ isUnsignedInteger() {
 
 # <-- END of IDENTICAL _return
 
+# Loads conditional code based on whether a function is defined yet
+# Argument: testFunction - Function. Required. Function which MUST be defined in the subdirectory sources.
+# Argument: subdirectory - RelativeDirectory. Required. Path from /bin/build/tools/ to load files.
+# Argument: handler - Function. Required. Error handler.
+# Argument: function - Function. Required. Function to call; first argument will be `handler`.
+# Argument ... - Arguments. Optional. Additional arguments to the function.
+__functionLoader() {
+  local __saved=("$@") functionName="${1-}" subdirectory="${2-}" handler="${3-}" command="${4-}"
+  shift 4 || __catchArgument "$handler" "Missing arguments: $(decorate each --count code -- "${__saved[@]}")" || return $?
+  isFunction "$functionName" || __catch "$handler" bashSourcePath "${BASH_SOURCE[0]%/*}/tools/$subdirectory/" || return $?
+  "$command" "$handler" "$@" || return $?
+}
+
+__toolsTimingLoad() {
+  local internalError=253 production="$1" toolsPath="$2" && shift 2
+  local start elapsed="undefined"
+  printf "" >"${BASH_SOURCE[0]%/*}/../../.tools.times"
+  while [ "$#" -gt 0 ]; do
+    [ "$production" = "true" ] || toolFile="${1//-fast/}"
+    ! isFunction __timestamp || start=$(__timestamp)
+    # shellcheck source=/dev/null
+    source "$toolsPath/$toolFile.sh" || _return $internalError "%s\n" "Loading $toolFile.sh failed" || return $?
+    ! isFunction __timestamp || elapsed=$(($(__timestamp) - start))
+    printf "%s %s\n" "$elapsed" "$toolFile" >>"${BASH_SOURCE[0]%/*}/../../.tools.times"
+    shift
+  done
+  sort -r "${BASH_SOURCE[0]%/*}/../../.tools.times" >"${BASH_SOURCE[0]%/*}/../../.tools.times.sorted"
+}
+
 # Load tools and optionally run a command
 __toolsMain() {
-  export PRODUCTION
+  export PRODUCTION BUILD_DEBUG
 
-  local source="${BASH_SOURCE[0]}" internalError=253
-  local toolsPath="${source%/*}/tools"
-  local toolsFiles=("../env/BUILD_HOME") toolsList="$toolsPath/tools.conf" toolFile
-  local exitCode=0 production="${PRODUCTION-}"
+  local source="${BASH_SOURCE[0]}"
+  local toolsPath="${source%/*}/tools" internalError=253
+  local toolsFiles=() toolsList="$toolsPath/tools.conf" toolFile
+  local exitCode=0 production="${PRODUCTION-}" debug="${BUILD_DEBUG-}"
 
-  export BUILD_HOME
+  export BUILD_HOME BUILD_DEBUG
   unset BUILD_HOME
 
   [ -f "$toolsList" ] || _return $internalError "%s\n" "Missing $toolsList" 1>&2 || return $?
+  toolsFiles+=("../env/BUILD_HOME")
   while read -r toolFile; do [ "$toolFile" != "${toolFile#\#}" ] || toolsFiles+=("$toolFile"); done <"$toolsList"
   toolsFiles+=("platform/$(uname -s)")
+
   [ -z "$production" ] || [ ! -t 1 ] || production=true
-  for toolFile in "${toolsFiles[@]}"; do
-    [ "$production" = "true" ] || toolFile="${toolFile//-fast/}"
-    # shellcheck source=/dev/null
-    source "$toolsPath/$toolFile.sh" || _return $internalError "%s\n" "Loading $toolFile.sh failed" || return $?
-  done
+  if [ "${debug#;main;*}" != "$debug" ]; then
+    __toolsTimingLoad "$production" "$toolsPath" "${toolsFiles[@]}" || return $?
+  else
+    for toolFile in "${toolsFiles[@]}"; do
+      [ "$production" = "true" ] || toolFile="${toolFile//-fast/}"
+      # shellcheck source=/dev/null
+      source "$toolsPath/$toolFile.sh" || _return $internalError "%s\n" "Loading $toolFile.sh failed" || return $?
+    done
+  fi
+
   # shellcheck source=/dev/null
   if [ "$(basename "${0##-}")" = "$(basename "${BASH_SOURCE[0]}")" ] && [ $# -gt 0 ]; then
     # Only require when running as a shell command

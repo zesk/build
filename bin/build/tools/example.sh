@@ -98,6 +98,10 @@ exampleFunction() {
   # DEBUG LINE
   printf -- "%s:%s %s\n" "$(decorate code "${BASH_SOURCE[0]}")" "$(decorate magenta "$LINENO")" "$(decorate each code "$@")" # DEBUG LINE
   timingReport "$start" "Completed in"
+
+  # LOG ALL CALLS TO A FUNCTION
+  # TO DO REMOVE THIS LATER
+  printf "%s\n" "-- CALLED ARGS:" "$@" "--STACK" "$(debuggingStack)" >>"${BUILD_HOME-}/.${FUNCNAME[0]}.log"
 }
 _exampleFunction() {
   # __IDENTICAL__ usageDocument 1
