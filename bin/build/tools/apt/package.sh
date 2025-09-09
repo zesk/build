@@ -16,7 +16,7 @@
 #
 
 # Install apt packages
-__aptInstall() {
+__packageInstall() {
   # No way to hide the message
   #
   #     debconf: delaying package configuration, since apt-utils is not installed
@@ -37,7 +37,7 @@ __aptDefault() {
 }
 
 # Uninstall apt packages
-___aptUninstall() {
+___packageUninstall() {
   local handler="$1" && shift
   __catch "$handler" aptNonInteractive remove -y "$@" || return $?
 }
@@ -51,8 +51,8 @@ ___aptUninstall() {
 # Exit code: 0 - Success
 # Exit code: 1 - Failed due to issues with environment
 # Artifact: `{fn}.log` is left in the `buildCacheDirectory`
-# Artifact: `aptUpdateOnce.log` is left in the `buildCacheDirectory`
-# Artifact: `aptInstall.log` is left in the `buildCacheDirectory`
+# Artifact: `packageUpdate.log` is left in the `buildCacheDirectory`
+# Artifact: `packageInstall.log` is left in the `buildCacheDirectory`
 ___aptUpgrade() {
   local handler="$1" && shift
   __catch "$handler" aptNonInteractive dist-upgrade -y "$@" || return $?
@@ -69,7 +69,7 @@ ___aptUpdate() {
 # Usage: {fn}
 # List installed packages
 # package.sh: true
-___aptInstalledList() {
+___packageInstalledList() {
   local handler="$1" && shift
   [ $# -eq 0 ] || __throwArgument "$handler" "Unknown argument $*" || return $?
   __catch "$handler" dpkg --get-selections | grepSafe -v deinstall | awk '{ print $1 }' || return $?

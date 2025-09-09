@@ -172,7 +172,7 @@ _documentationIndex_Generate() {
         codePath="${codePath#./}"
         codePath="${codePath%/}"
       elif [ -z "$cacheDirectory" ]; then
-        cacheDirectory="$(__catchEnvironment "$handler" __documentationIndex_GeneratePath "$1")" || return $?
+        cacheDirectory="$(__catch "$handler" __documentationIndex_GeneratePath "$1")" || return $?
       else
         # _IDENTICAL_ argumentUnknownHandler 1
         __throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?

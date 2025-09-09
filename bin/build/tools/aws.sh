@@ -5,6 +5,10 @@
 # Copyright &copy; 2025 Market Acumen, Inc.
 #
 
+__awsLoader() {
+  __functionLoader __awsInstall aws "$@"
+}
+
 ###############################################################################
 #
 # ....▄▄    ▄▄      ▄▄   ▄▄▄▄
@@ -26,50 +30,7 @@
 #
 # shellcheck disable=SC2120
 awsInstall() {
-  local handler="_${FUNCNAME[0]}"
-
-  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
-
-  if whichExists aws; then
-    return 0
-  fi
-
-  if isAlpine; then
-    packageInstall aws-cli || return $?
-    return 0
-  fi
-
-  local start
-  start=$(timingStart) || return $?
-  __catch "$handler" packageWhich unzip unzip || return $?
-
-  local url
-  statusMessage decorate info "Installing aws-cli ... " || :
-  case "${HOSTTYPE-}" in
-  arm64 | aarch64)
-    url="https://awscli.amazonaws.com/awscli-exe-linux-aarch64.zip"
-    ;;
-  *)
-    url="https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip"
-    ;;
-  esac
-  {
-    local buildDir quietLog clean=()
-    buildDir="$(__catch "$handler" buildCacheDirectory awsCache.$$)" || return $?
-    clean+=("$buildDir")
-    quietLog="$(__catch "$handler" buildQuietLog awsInstall)" || returnClean $? "${clean[@]}" || return $?
-    clean+=("$quietLog")
-    buildDir=$(__catch "$handler" directoryRequire "$buildDir") || returnClean $? "${clean[@]}" || return $?
-    clean+=("$buildDir")
-
-    local zipFile=awscliv2.zip version
-    __catchEnvironmentQuiet "$handler" "$quietLog" urlFetch "$url" "$buildDir/$zipFile" || returnClean $? "${clean[@]}" || return $?
-    __catchEnvironmentQuiet "$handler" "$quietLog" unzip -d "$buildDir" "$buildDir/$zipFile" || returnClean $? "${clean[@]}" || return $?
-    __catchEnvironmentQuiet "$handler" "$quietLog" "$buildDir/aws/install" || returnClean $? "${clean[@]}" || return $?
-    version="$(__catch "$handler" __awsWrapper --version)" || returnClean $? "${clean[@]}" || return $?
-    printf "%s %s\n" "$version" "$(timingReport "$start" OK)" || :
-    __catchEnvironment "$handler" rm -rf "${clean[@]}" || return $?
-  }
+  __awsLoader "_${FUNCNAME[0]}" "__${FUNCNAME[0]}" "$@"
 }
 _awsInstall() {
   # __IDENTICAL__ usageDocument 1
@@ -99,64 +60,7 @@ _awsInstall() {
 #
 # shellcheck disable=SC2120
 awsCredentialsFile() {
-  local handler="_${FUNCNAME[0]}"
-
-  local home="" verbose=false createFlag=false checkFlag=true
-
-  # _IDENTICAL_ argumentNonBlankLoopHandler 6
-  local __saved=("$@") __count=$#
-  while [ $# -gt 0 ]; do
-    local argument="$1" __index=$((__count - $# + 1))
-    # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
-    case "$argument" in
-    # _IDENTICAL_ helpHandler 1
-    --help) "$handler" 0 && return $? || return $? ;;
-    --create)
-      createFlag=true
-      ;;
-    --path)
-      checkFlag=false
-      ;;
-    --home)
-      shift
-      home=$(usageArgumentDirectory "$handler" "home" "${1-}") || return $?
-      ;;
-    --verbose)
-      verbose=true
-      ;;
-    *)
-      # _IDENTICAL_ argumentUnknownHandler 1
-      __throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
-      ;;
-    esac
-    shift
-  done
-
-  usageRequireBinary "$handler" mkdir chmod touch || return $?
-
-  if [ -z "$home" ]; then
-    home="$(__catch "$handler" userHome)" || return $?
-  fi
-  if [ ! -d "$home" ]; then
-    # Argument is validated above MUST be environment
-    ! "$verbose" || __throwEnvironment "$handler" "HOME environment \"$(decorate value "$home")\" directory not found" || return $?
-    return 1
-  fi
-  local credentialsPath credentials="$HOME/.aws/credentials"
-  if $checkFlag && [ ! -f "$credentials" ]; then
-    if ! $createFlag; then
-      ! $verbose || __throwEnvironment "$handler" "No credentials file ($(decorate value "$credentials")) found" || return $?
-      return 1
-    fi
-    credentialsPath="${credentials%/*}"
-    __catchEnvironment "$handler" mkdir -p "$credentialsPath" || return $?
-    __catchEnvironment "$handler" chmod 0700 "$credentialsPath" || return $?
-    __catchEnvironment "$handler" touch "$credentials" || return $?
-    __catchEnvironment "$handler" chmod 0600 "$credentials" || return $?
-  fi
-  printf "%s\n" "$credentials"
-  return 0
+  __awsLoader "_${FUNCNAME[0]}" "__${FUNCNAME[0]}" "$@"
 }
 _awsCredentialsFile() {
   # __IDENTICAL__ usageDocument 1
@@ -198,7 +102,6 @@ _awsIsKeyUpToDate() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-#
 # This tests `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` and if both are non-empty, returns exit code 0 (success), otherwise returns exit code 1.
 # Fails if either `AWS_ACCESS_KEY_ID` or `AWS_SECRET_ACCESS_KEY` is blank
 #
@@ -222,6 +125,7 @@ awsHasEnvironment() {
   [ -n "${AWS_ACCESS_KEY_ID-}" ] && [ -n "${AWS_SECRET_ACCESS_KEY-}" ]
 }
 _awsHasEnvironment() {
+  true || awsHasEnvironment --help
   # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
@@ -244,7 +148,6 @@ _awsProfilesList() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-#
 # Load the credentials supplied from the AWS credentials file and output shell commands to set the appropriate `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` values.
 #
 # If the AWS credentials file is not found, returns exit code 1 and outputs nothing.
@@ -265,46 +168,11 @@ _awsProfilesList() {
 # Example:     exit 1
 # Example:     fi
 awsEnvironmentFromCredentials() {
-  local handler="_${FUNCNAME[0]}"
-
-  local credentials profileName="" name value
-
-  # _IDENTICAL_ argumentNonBlankLoopHandler 6
-  local __saved=("$@") __count=$#
-  while [ $# -gt 0 ]; do
-    local argument="$1" __index=$((__count - $# + 1))
-    # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
-    case "$argument" in
-    # _IDENTICAL_ helpHandler 1
-    --help) "$handler" 0 && return $? || return $? ;;
-    # IDENTICAL --profileHandler 5
-    --profile)
-      shift
-      [ -z "$profileName" ] || __throwArgument "$handler" "--profile already specified" || return $?
-      profileName="$(usageArgumentString "$handler" "$argument" "${1-}")" || return $?
-      ;;
-    *)
-      [ -z "$profileName" ] || __throwArgument "$handler" "profileName already supplied" || return $?
-      profileName="$1"
-      ;;
-    esac
-    shift
-  done
-  [ -n "$profileName" ] || profileName="default"
-
-  credentials="$(__catch "$handler" awsCredentialsFile)" || return $?
-  while read -r name value; do
-    __catch "$handler" environmentValueWrite "$(uppercase "$name")" "$value" || return $?
-  done < <(__awsCredentialsExtractProfile "$profileName" <"$credentials")
+  __awsLoader "_${FUNCNAME[0]}" "__${FUNCNAME[0]}" "$@"
 }
 _awsEnvironmentFromCredentials() {
   # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
-}
-
-__awsCredentialsExtractProfile() {
-  grep -v -e '^\s*#' | awk -F= '/\[/{prefix=$0; next} $1 {print prefix " " $0}' | grep "\[$1\]" | awk '{ print $2 " " $4 }' OFS=''
 }
 
 #
@@ -325,20 +193,7 @@ __awsCredentialsExtractProfile() {
 # Example:     exit 1
 # Example:     fi
 awsCredentialsHasProfile() {
-  local handler="_${FUNCNAME[0]}"
-  local credentials profileName=${1:-default} name value
-  local foundValues=()
-  __help "$handler" "$@" || return 0
-  [ -n "$profileName" ] || __throwArgument "$handler" "profileName is somehow blank" || return $?
-  credentials="$(__catch "$handler" awsCredentialsFile)" || return $?
-  while read -r name value; do
-    foundValues+=("$(uppercase "$name")")
-  done < <(__awsCredentialsExtractProfile "$profileName" <"$credentials")
-  [ "${#foundValues[@]}" -gt 0 ] || return 1
-  if [ "${#foundValues[@]}" -lt 2 ]; then
-    __throwEnvironment "$handler" "${#foundValues[@]} minimum 2 values found in $(decorate value "$credentials")" || return $?
-  fi
-  inArray AWS_ACCESS_KEY_ID "${foundValues[@]}" && inArray AWS_SECRET_ACCESS_KEY "${foundValues[@]}"
+  __awsLoader "_${FUNCNAME[0]}" "__${FUNCNAME[0]}" "$@"
 }
 _awsCredentialsHasProfile() {
   # __IDENTICAL__ usageDocument 1
@@ -356,67 +211,7 @@ _awsCredentialsHasProfile() {
 # Argument: key - The AWS_ACCESS_KEY_ID to write
 # Argument: secret - The AWS_SECRET_ACCESS_KEY to write
 awsCredentialsAdd() {
-  local handler="_${FUNCNAME[0]}"
-
-  local forceFlag=false profileName="" key="" secret="" addComments=false
-
-  # _IDENTICAL_ argumentNonBlankLoopHandler 6
-  local __saved=("$@") __count=$#
-  while [ $# -gt 0 ]; do
-    local argument="$1" __index=$((__count - $# + 1))
-    # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
-    case "$argument" in
-    # _IDENTICAL_ helpHandler 1
-    --help) "$handler" 0 && return $? || return $? ;;
-    --force)
-      forceFlag=true
-      ;;
-    --comments)
-      addComments=true
-      ;;
-    # IDENTICAL --profileHandler 5
-    --profile)
-      shift
-      [ -z "$profileName" ] || __throwArgument "$handler" "--profile already specified" || return $?
-      profileName="$(usageArgumentString "$handler" "$argument" "${1-}")" || return $?
-      ;;
-    *)
-      if [ -z "$key" ]; then
-        key=$(usageArgumentString "$handler" "key" "$1") || return $?
-      elif [ -z "$secret" ]; then
-        secret=$(usageArgumentString "$handler" "secret" "$1") || return $?
-      else
-        # _IDENTICAL_ argumentUnknownHandler 1
-        __throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
-      fi
-      ;;
-    esac
-    shift
-  done
-  # IDENTICAL profileNameArgumentValidation 4
-  if [ -z "$profileName" ]; then
-    profileName="$(__catch "$handler" buildEnvironmentGet AWS_PROFILE)" || return $?
-    [ -n "$profileName" ] || profileName="default"
-  fi
-  [ -n "$key" ] || __throwArgument "$handler" "key is required" || return $?
-  [ -n "$secret" ] || __throwArgument "$handler" "secret is required" || return $?
-
-  local lines=(
-    "[$profileName]"
-    "aws_access_key_id = $key"
-    "aws_secret_access_key = $secret"
-  )
-  local credentials
-  credentials="$(__catch "$handler" awsCredentialsFile --create)" || return $?
-  if awsCredentialsHasProfile "$profileName"; then
-    ! "$addComments" || lines+=("# ${FUNCNAME[0]} replaced $profileName on $(date -u)")
-    $forceFlag || __throwEnvironment "$handler" "Profile $(decorate value "$profileName") exists in $(decorate code "$credentials")" || return $?
-    _awsCredentialsRemoveSectionInPlace "$handler" "$credentials" "$profileName" "$(printf -- "%s\n" "${lines[@]}")" || return $?
-  else
-    ! "$addComments" || lines+=("# ${FUNCNAME[0]} added $profileName on $(date -u)") || __throwEnvironment "$handler" "Generating comment line failed" || return $?
-    __catchEnvironment "$handler" printf -- "%s\n" "${lines[@]}" | trimHead >>"$credentials" || return $?
-  fi
+  __awsLoader "_${FUNCNAME[0]}" "__${FUNCNAME[0]}" "$@"
 }
 _awsCredentialsAdd() {
   # __IDENTICAL__ usageDocument 1
@@ -431,56 +226,7 @@ _awsCredentialsAdd() {
 # Argument: --profile profileName - String. Optional. The credentials profile to write (default value is `default`)
 # Argument: --comments - Flag. Optional. Write comments to the credentials file (in addition to updating the record).
 awsCredentialsRemove() {
-  local handler="_${FUNCNAME[0]}"
-
-  local forceFlag=false profileName="" key="" secret="" addComments=false
-
-  # _IDENTICAL_ argumentNonBlankLoopHandler 6
-  local __saved=("$@") __count=$#
-  while [ $# -gt 0 ]; do
-    local argument="$1" __index=$((__count - $# + 1))
-    # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
-    case "$argument" in
-    # _IDENTICAL_ helpHandler 1
-    --help) "$handler" 0 && return $? || return $? ;;
-    # IDENTICAL --profileHandler 5
-    --profile)
-      shift
-      [ -z "$profileName" ] || __throwArgument "$handler" "--profile already specified" || return $?
-      profileName="$(usageArgumentString "$handler" "$argument" "${1-}")" || return $?
-      ;;
-    --comments)
-      addComments=true
-      ;;
-    *)
-      if [ -z "$profileName" ]; then
-        profileName="$(usageArgumentString "$handler" "$argument" "$1")" || return $?
-      else
-        # _IDENTICAL_ argumentUnknownHandler 1
-        __throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
-      fi
-      ;;
-    esac
-    shift
-  done
-
-  # IDENTICAL profileNameArgumentValidation 4
-  if [ -z "$profileName" ]; then
-    profileName="$(__catch "$handler" buildEnvironmentGet AWS_PROFILE)" || return $?
-    [ -n "$profileName" ] || profileName="default"
-  fi
-
-  export AWS_PROFILE
-
-  __catch "$handler" buildEnvironmentLoad AWS_PROFILE || return $?
-
-  local credentials
-  credentials="$(__catch "$handler" awsCredentialsFile --path)" || return $?
-  [ -f "$credentials" ] || return 0
-  if awsCredentialsHasProfile "$profileName"; then
-    _awsCredentialsRemoveSectionInPlace "$handler" "$credentials" "$profileName" "" || return $?
-  fi
+  __awsLoader "_${FUNCNAME[0]}" "__${FUNCNAME[0]}" "$@"
 }
 _awsCredentialsRemove() {
   # __IDENTICAL__ usageDocument 1
@@ -505,31 +251,9 @@ awsCredentialsFromEnvironment() {
   awsHasEnvironment || __throwEnvironment "$handler" "Requires AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY" || return $?
   __catch "$handler" awsCredentialsAdd "$@" "$AWS_ACCESS_KEY_ID" "$AWS_SECRET_ACCESS_KEY" || return $?
 }
-
 _awsCredentialsFromEnvironment() {
   # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
-}
-
-_awsCredentialsRemoveSection() {
-  local handler="$1" credentials="$2" profileName="$3" newCredentials="${4-}"
-  local pattern="\[\s*$profileName\s*\]" temp lines total
-  total=$((0 + $(__catch "$handler" fileLineCount "$credentials"))) || return $?
-  exec 3>&1
-  lines=$(__catchEnvironment "$handler" grepSafe -m 1 -B 32767 "$credentials" -e "$pattern" | __catchEnvironment "$handler" grepSafe -v -e "$pattern" | __catchEnvironment "$handler" trimTail | tee >(cat >&3) | fileLineCount) || return $?
-  [ -z "$newCredentials" ] || printf -- "\n%s\n" "$newCredentials" | __catchEnvironment "$handler" trimTail || return $?
-  local remain=$((total - lines - 2))
-  printf -- "\n"
-  tail -n "$remain" <"$credentials" | awk '/\[[^]]+\]/{flag=1} flag' | __catchEnvironment "$handler" trimTail || return $?
-}
-
-_awsCredentialsRemoveSectionInPlace() {
-  local handler="$1" credentials="$2" profileName="$3" newCredentials="${4-}"
-
-  temp=$(fileTemporaryName "$handler") || return $?
-  _awsCredentialsRemoveSection "$handler" "$credentials" "$profileName" "$newCredentials" | trimBoth >"$temp" || returnClean $? "$temp" || return $?
-  __catchEnvironment "$handler" cp "$temp" "$credentials" || returnClean $? "$temp" || return $?
-  __catchEnvironment "$handler" rm -rf "$temp" || return $?
 }
 
 # Usage: {fn} --add --group group [ --region region ] --port port --description description --ip ip
@@ -545,168 +269,11 @@ _awsCredentialsRemoveSectionInPlace() {
 # Modify an EC2 Security Group and add or remove an IP/port combination to the group.
 # Summary: Modify an EC2 Security Group
 awsSecurityGroupIPModify() {
-  local handler="_${FUNCNAME[0]}"
-  local start
-
-  local pp=() profileName="" group="" port="" description="" ip="" foundIP mode="--add" verb="Adding (default)" tempErrorFile region=""
-
-  local __saved=("$@") __count=$#
-  while [ $# -gt 0 ]; do
-    local argument="$1" __index=$((__count - $# + 1))
-    # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
-    case "$argument" in
-    # _IDENTICAL_ helpHandler 1
-    --help) "$handler" 0 && return $? || return $? ;;
-    # IDENTICAL profileNameArgumentHandlerCase 6
-    --profile)
-      shift
-      [ ${#pp[@]} -eq 0 ] || __throwArgument "$handler" "$argument already specified: ${pp[*]}"
-      profileName="$(usageArgumentString "$handler" "$argument" "$1")" || return $?
-      pp=("$argument" "$profileName")
-      ;;
-    --group)
-      shift
-      group=$(usageArgumentString "$handler" "$argument" "${1-}") || return $?
-      ;;
-    --port)
-      shift
-      port=$(usageArgumentPositiveInteger "$handler" "$argument" "${1-}") || return $?
-      ;;
-    --description)
-      shift
-      description=$(usageArgumentString "$handler" "$argument" "${1-}") || return $?
-      ;;
-    --ip)
-      shift
-      ip=$(usageArgumentString "$handler" "$argument" "${1-}") || return $?
-      ;;
-    --add)
-      verb="Adding"
-      mode="$argument"
-      ;;
-    --remove)
-      verb="Removing"
-      mode="$argument"
-      ;;
-    --register)
-      verb="Registering"
-      mode="$argument"
-      ;;
-    # IDENTICAL regionArgumentHandler 5
-    --region)
-      shift
-      [ -z "$region" ] || __throwArgument "$handler" "$argument already specified: $region"
-      region=$(usageArgumentString "$handler" "$argument" "${1-}") || return $?
-      ;;
-    *)
-      __throwArgument "unknown argument: $argument" || return $?
-      ;;
-    esac
-    shift
-  done
-
-  [ -n "$profileName" ] || awsHasEnvironment || __throwEnvironment "$handler" "Need AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY" || return $?
-
-  ! whichExists aws || __catch "$handler" awsInstall || return $?
-
-  # IDENTICAL regionArgumentValidation 7
-  if [ -z "$region" ]; then
-    export AWS_REGION
-    __catch "$handler" buildEnvironmentLoad AWS_REGION || return $?
-    region="${AWS_REGION-}"
-    [ -n "$region" ] || __throwArgument "$handler" "AWS_REGION or --region is required" || return $?
-  fi
-  awsRegionValid "$region" || __throwArgument "$handler" "--region $region is not a valid region" || return $?
-
-  [ -n "$mode" ] || __throwArgument "$handler" "--add, --remove, or --register is required" || return $?
-
-  for argument in group description region; do
-    if [ -z "${!argument}" ]; then
-      __throwArgument "$handler" "--$argument is required ($(decorate each code "${__saved[@]}"))" || return $?
-    fi
-  done
-
-  if [ "$mode" != "--remove" ]; then
-    for argument in ip port; do
-      [ -n "${!argument}" ] || __throwArgument "$handler" "--$argument is required for $mode (Arguments: $(decorate each code "${handler#_}" "${__saved[@]}"))" || return $?
-    done
-  fi
-
-  #
-  # 3 modes: Add, Remove, Register
-  #
-  # PAGER=cat "aws" "--no-paginate" "ec2" "describe-security-groups" "--region" "us-east-2" "--group-id" "sg-01bbe46ae4419a3ec" "--output" "text" "--query" "SecurityGroups[*].IpPermissions[*]"
-  # PAGER=cat aws --no-paginate ec2 describe-security-groups --region us-east-2 --group-id sg-01bbe46ae4419a3ec --output text --query 'SecurityGroups[*].IpPermissions[*]'
-  #
-  # Remove + Register
-  #
-  # Fetch our current IP registered with this description
-  #
-  if [ "$mode" != "--add" ]; then
-    tempErrorFile=$(fileTemporaryName "$handler") || return $?
-    __catch "$handler" __awsWrapper "${pp[@]+"${pp[@]}"}" ec2 describe-security-groups --region "$region" --group-id "$group" --output text --query "SecurityGroups[*].IpPermissions[*]" >"$tempErrorFile" || returnClean "$?" "$tempErrorFile" || return $?
-    foundIP=$(grep -e "$(quoteGrepPattern "$description")" <"$tempErrorFile" | head -1 | awk '{ print $2 }') || :
-    __catchEnvironment "$handler" rm -f "$tempErrorFile" || return $?
-
-    if [ -z "$foundIP" ]; then
-      # Remove: If no IP found in security group, if we are Removing (NOT adding), we are done
-      if [ "$mode" = '--remove' ]; then
-        return 0
-      fi
-      # Register: No IP found, add it
-      mode="--add"
-    elif [ "$mode" = "--register" ] && [ "$foundIP" = "$ip" ]; then
-      __awsSGOutput "$(decorate success "IP already registered:")" "$foundIP" "$group" "$port"
-      return 0
-    else
-      __awsSGOutput "$(decorate info "Removing old IP:")" "$foundIP" "$group" "$port"
-      __catch "$handler" __awsWrapper "${pp[@]+"${pp[@]}"}" --output json ec2 revoke-security-group-ingress --region "$region" --group-id "$group" --protocol tcp --port "$port" --cidr "$foundIP" | __awsReturnTrue || return $?
-    fi
-  fi
-  if [ "$mode" != "--remove" ]; then
-    local json
-    json="[{\"IpProtocol\": \"tcp\", \"FromPort\": $port, \"ToPort\": $port, \"IpRanges\": [{\"CidrIp\": \"$ip\", \"Description\": \"$description\"}]}]"
-    __awsSGOutput "$(decorate info "$verb new IP:")" "$ip" "$group" "$port"
-
-    tempErrorFile=$(fileTemporaryName "$handler") || return $?
-    if ! __awsWrapper "${pp[@]+"${pp[@]}"}" --output json ec2 authorize-security-group-ingress --region "$region" --group-id "$group" --ip-permissions "$json" 2>"$tempErrorFile" | __awsReturnTrue; then
-      if grep -q "Duplicate" "$tempErrorFile"; then
-        printf "%s\n" "$(decorate yellow "duplicate")"
-      else
-        __throwEnvironment "$handler" "Failed to authorize-security-group-ingress $(dumpPipe "Errors:" <"$tempErrorFile")" || returnClean $? "$tempErrorFile" || return $?
-      fi
-    fi
-    __catchEnvironment "$handler" rm -f "$tempErrorFile" || return $?
-  fi
+  __awsLoader "_${FUNCNAME[0]}" "__${FUNCNAME[0]}" "$@"
 }
 _awsSecurityGroupIPModify() {
   # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
-}
-
-# Pipe output into this
-__awsReturnTrue() {
-  [ "$(jq ".Return")" = "true" ]
-}
-
-# Helper for awsSecurityGroupIPModify
-__awsSGOutput() {
-  local title="$1" ip="$2" group="$3" port="$4"
-  printf "%s %s %s %s %s %s\n" "$title" "$(decorate red "$ip")" "$(decorate label "in group-id:")" "$(decorate value "$group")" "$(decorate label "port:")" "$(decorate value "$port")"
-}
-
-# Requires: aws env
-__awsWrapper() {
-  local command=(aws --no-paginate) configFile=".aws/config"
-
-  # AWS_SHARED_CREDENTIALS_FILE
-  # AWS_CONFIG_FILE
-  home=$(userHome) || return $?
-  [ -f "$configFile" ] || configFile=""
-  # env -u unsets a variable name
-  [ -n "${AWS_PROFILE-}" ] || command=(env -u AWS_PROFILE "${command[@]}")
-  AWS_CONFIG_FILE="$configFile" AWS_PROFILE="${AWS_PROFILE-}" AWS_PAGER="" "${command[@]}" "$@"
 }
 
 # Summary: Grant access to AWS security group for this IP only using Amazon IAM credentials
@@ -733,131 +300,7 @@ __awsWrapper() {
 # Environment: AWS_SECRET_ACCESS_KEY - Amazon IAM Secret
 #
 awsIPAccess() {
-  local handler="_${FUNCNAME[0]}"
-
-  export AWS_ACCESS_KEY_ID
-  export AWS_SECRET_ACCESS_KEY
-
-  local services=() optionRevoke=false currentIP="" developerId="" securityGroups=() verboseFlag=false profileName="" pp=()
-
-  # _IDENTICAL_ argumentNonBlankLoopHandler 6
-  local __saved=("$@") __count=$#
-  while [ $# -gt 0 ]; do
-    local argument="$1" __index=$((__count - $# + 1))
-    # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
-    case "$argument" in
-    # _IDENTICAL_ helpHandler 1
-    --help) "$handler" 0 && return $? || return $? ;;
-    --services)
-      shift || __throwArgument "$handler" "missing $argument argument" || return $?
-      IFS=', ' read -r -a services <<<"$1" || :
-      ;;
-    # IDENTICAL profileNameArgumentHandlerCase 6
-    --profile)
-      shift
-      [ ${#pp[@]} -eq 0 ] || __throwArgument "$handler" "$argument already specified: ${pp[*]}"
-      profileName="$(usageArgumentString "$handler" "$argument" "$1")" || return $?
-      pp=("$argument" "$profileName")
-      ;;
-    --revoke)
-      optionRevoke=true
-      ;;
-    --verbose)
-      verboseFlag=true
-      ;;
-    --group)
-      shift || __throwArgument "$handler" "missing $argument argument" || return $?
-      securityGroups+=("$1")
-      ;;
-    --ip)
-      shift || __throwArgument "$handler" "missing $argument argument" || return $?
-      currentIP="$1"
-      ;;
-    --id)
-      shift || __throwArgument "$handler" "missing $argument argument" || return $?
-      developerId="$1"
-      ;;
-    *)
-      break
-      ;;
-    esac
-    shift || __throwArgument "$handler" "shift failed" || return $?
-  done
-
-  [ -n "$developerId" ] || __throwArgument "$handler" "Empty --id or DEVELOPER_ID environment" || return $?
-
-  [ "${#services[@]}" -gt 0 ] || __throwArgument "$handler" "Supply one or more services" || return $?
-
-  [ ${#securityGroups[@]} -gt 0 ] || __throwArgument "$handler" "One or more --group is required" || return $?
-  if [ -z "$currentIP" ]; then
-    if ! currentIP=$(ipLookup) || [ -z "$currentIP" ]; then
-      __throwEnvironment "$handler" "Unable to determine IP address" || return $?
-    fi
-  fi
-  currentIP="$currentIP/32"
-
-  __catch "$handler" awsInstall || return $?
-
-  if ! awsHasEnvironment; then
-    # IDENTICAL profileNameArgumentValidation 4
-    if [ -z "$profileName" ]; then
-      profileName="$(__catch "$handler" buildEnvironmentGet AWS_PROFILE)" || return $?
-      [ -n "$profileName" ] || profileName="default"
-    fi
-    ! $verboseFlag || statusMessage decorate info "Need AWS credentials: $profileName" || :
-    if awsCredentialsHasProfile "$profileName"; then
-      # __catchEnvironment "$handler" eval "$(awsEnvironmentFromCredentials "$profileName")" || return $?
-      pp=("--profile" "$profileName")
-    else
-      __throwEnvironment "$handler" "No AWS credentials available: $profileName" || return $?
-    fi
-  fi
-
-  if [ ${#pp[@]} -eq 0 ]; then
-    usageRequireEnvironment "$handler" AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY AWS_REGION || return $?
-  fi
-
-  if $verboseFlag; then
-    if $optionRevoke; then
-      bigText "Closing ..." | decorate magenta
-    else
-      bigText "Opening ..." | decorate blue
-    fi
-    local width=40
-
-    decorate pair "$width" ID "$developerId" || :
-    decorate pair "$width" IP "$currentIP" || :
-    decorate pair "$width" "Security Groups" "${securityGroups[@]}" || :
-    decorate pair "$width" Region "$AWS_REGION" || :
-    if [ ${#pp[@]} -eq 0 ]; then
-      decorate pair "$width" AWS_ACCESS_KEY_ID "$AWS_ACCESS_KEY_ID" || :
-      decorate pair "$width" AWS_SECRET_ACCESS_KEY "${#AWS_SECRET_ACCESS_KEY} characters" || :
-    else
-      decorate pair "$width" Profile "${pp[1]-NO PROFILE}" || :
-    fi
-  fi
-  local service
-  for service in "${services[@]}"; do
-    if ! isPositiveInteger "$service" && ! serviceToPort "$service" >/dev/null; then
-      __throwArgument "$handler" "Invalid service $(decorate code "$service")" || return $?
-    fi
-  done
-
-  local securityGroupId sgArgs port
-  for securityGroupId in "${securityGroups[@]}"; do
-    for service in "${services[@]}"; do
-      if isPositiveInteger "$service"; then
-        port="$service"
-      else
-        port=$(serviceToPort "$service") || __throwEnvironment "$handler" "serviceToPort $service failed 2nd round?" || return $?
-      fi
-      sgArgs=(--group "$securityGroupId" --port "$port" --description "$developerId-$service" --ip "$currentIP")
-
-      local actionArg="--register" && ! $optionRevoke || actionArg="--remove"
-      __catch "$handler" awsSecurityGroupIPModify "${pp[@]+"${pp[@]}"}" "$actionArg" "${sgArgs[@]}" || return $?
-    done
-  done
+  __awsLoader "_${FUNCNAME[0]}" "__${FUNCNAME[0]}" "$@"
 }
 _awsIPAccess() {
   # __IDENTICAL__ usageDocument 1

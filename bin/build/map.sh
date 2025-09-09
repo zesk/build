@@ -27,7 +27,7 @@ _return() {
   local to=1 icon="✅" code="${1:-1}" && shift 2>/dev/null
   isUnsignedInteger "$code" || _return 2 "${FUNCNAME[1]-none}:${BASH_LINENO[1]-} -> ${FUNCNAME[0]} non-integer \"$code\"" "$@" || return $?
   if [ "$code" -gt 0 ]; then icon="❌ [$code]" && to=2; fi
-  printf -- "%s %s %s\n" "$icon" "${*-§}" "$(debuggingStack)" 1>&"$to"
+  printf -- "%s %s\n" "$icon" "${*-§}" 1>&"$to"
   return "$code"
 }
 
@@ -109,7 +109,7 @@ _environment() {
 __throw() {
   local exitCode="${1-}" && shift || _argument "Missing exit code" || return $?
   lcoal handler="${1-}" && shift || _argument "Missing error handler" || return $?
-  "$handler" "$exitCode" "$@" "$(debuggingStack)" || return $?
+  "$handler" "$exitCode" "$@" || return $?
 }
 
 # Run binary and catch errors with handler
@@ -118,7 +118,7 @@ __throw() {
 # Requires: _argument
 __catch() {
   local handler="${1-}" && shift || _argument "Missing handler" || return $?
-  "$@" || "$handler" "$?" "$@" "$(debuggingStack)" || return $?
+  "$@" || "$handler" "$?" "$@" || return $?
 }
 
 # _IDENTICAL_ __environment 10
@@ -443,7 +443,7 @@ usageArgumentString() {
   printf "%s\n" "$1"
 }
 
-# IDENTICAL decorate 240
+# IDENTICAL decorate 241
 
 # Sets the environment variable `BUILD_COLORS` if not set, uses `TERM` to calculate
 #
@@ -470,6 +470,7 @@ hasColors() {
       [ "$termColors" -lt 8 ] || BUILD_COLORS=true
       ;;
     esac
+    printf "%s %s %d\n" "$(timingStart)" "$BUILD_COLORS" "$$" >>"${BUILD_HOME-}/hasColors"
   elif [ "${BUILD_COLORS-}" != "true" ]; then
     BUILD_COLORS=false
   fi

@@ -38,7 +38,7 @@ if source "${BASH_SOURCE[0]%/*}/tools.sh"; then
 
     muzzle reloadChanges --stop 2>&1
     printf "%s" "$(decorate warning "Watching ")"
-    reloadChanges --name "$name" bin/developer.sh bin/
+    reloadChanges --name "$name" "$home/bin/developer.sh" "$home/bin/"
     buildCompletion
 
     bashPrompt --skip-prompt bashPromptModule_TermColors

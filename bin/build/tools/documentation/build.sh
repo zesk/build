@@ -203,7 +203,7 @@ __documentationBuild() {
     ! $verbose || decorate info "Update unlinked document $unlinkedTarget"
     local envFile
     envFile=$(_buildDocumentationGenerateEnvironment "$handler" "$company" "$companyLink" "$applicationName") || return $?
-    __catchEnvironment "$handler" __documentationTemplateUpdateUnlinked "$cacheDirectory" "$envFile" "$unlinkedTemplate" "$unlinkedTarget" "$pageTemplate" || return $?
+    __catch "$handler" __documentationTemplateUpdateUnlinked "$cacheDirectory" "$envFile" "$unlinkedTemplate" "$unlinkedTarget" "$pageTemplate" || return $?
     docArgs+=(--env-file "$envFile")
     if [ "$actionFlag" = "--unlinked-update" ]; then
       __catchEnvironment rm -rf "$envFile" || return $?
