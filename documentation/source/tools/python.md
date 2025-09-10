@@ -12,3 +12,6 @@
 
 {pipWrapper}
 
+{pipUpdate}
+
+{pythonVirtual}

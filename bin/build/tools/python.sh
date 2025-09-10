@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# npm functions
+# Title: Python Language Support
 #
 # Copyright &copy; 2025 Market Acumen, Inc.
 #
@@ -10,20 +10,16 @@
 
 # Install `python`
 #
-# If this fails it will output the installation log.
-#
 # Summary: Install `python`
 # When this tool succeeds the `python` binary is available in the local operating system.
 # Exit Code: 1 - If installation fails
 # Exit Code: 0 - If installation succeeds
 # Binary: python.sh
-#
 pythonInstall() {
   local handler="_${FUNCNAME[0]}"
   [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
   if ! whichExists python; then
     __catch "$handler" packageGroupInstall "$@" python || return $?
-    __catch "$handler" python -m pip install --upgrade pip || return $?
   fi
 }
 _pythonInstall() {
@@ -40,6 +36,19 @@ pythonUninstall() {
   fi
 }
 _pythonUninstall() {
+  # __IDENTICAL__ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+# Utility to upgrade pip correctly
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
+pipUpgrade() {
+  local handler="_${FUNCNAME[0]}"
+  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
+  __catch "$handler" pipWrapper install --upgrade pip || return $?
+}
+_pipUpgrade() {
   # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
@@ -240,6 +249,62 @@ pythonPackageInstalled() {
   fi
 }
 _pythonPackageInstalled() {
+  # __IDENTICAL__ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+# Set up a virtual environment for a project and install dependencies
+# Argument: --application directory - Directory. Required. Path to project location.
+# Argument: --require requirements - File. Optional. Requirements file for project.
+# Argument: pipPackage ... - String. Optional. One or more pip packages to install in the virtual environment.
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
+# DOC TEMPLATE: --handler 1
+# Argument: --handler handler - Optional. Function. Use this error handler instead of the default error handler.
+# When completed, a directory `.venv` exists in your project containing dependencies.
+pythonVirtual() {
+  local handler="_${FUNCNAME[0]}"
+
+  local application="" pp=()
+
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
+  local __saved=("$@") __count=$#
+  while [ $# -gt 0 ]; do
+    local argument="$1" __index=$((__count - $# + 1))
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
+    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    case "$argument" in
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
+    # _IDENTICAL_ handlerHandler 1
+    --application) shift && application=$(usageArgumentDirectory "$handler" "$argument" "${1-}") || return $? ;;
+    --handler) shift && handler=$(usageArgumentFunction "$handler" "$argument" "${1-}") || return $? ;;
+    --require) shift && pp+=("--requirement" "$(usageArgumentFile "$handler" "$argument" "${1-}")") || return $? ;;
+    *)
+      pp+=("$(usageArgumentString "$handler" "$argument" "${1-}")") || return $?
+      ;;
+    esac
+    shift
+  done
+
+  [ -n "$application" ] || application=$(__catch "$handler" buildHome) || return $?
+  [ ${#pp[@]} -gt 0 ] || __throwArgument "$handler" "Need at "
+  __catchEnvironment "$handler" pythonInstall || return $?
+
+  local venv="$application/.venv" clean=()
+  if [ ! -d "$venv" ] || [ ! -f "$venv/bin/activate" ]; then
+    if ! pythonPackageInstalled venv; then
+      __catchEnvironment "$handler" pipWrapper install venv || return $?
+    fi
+    __catchEnvironment "$handler" python -m venv "$venv" || return $?
+    [ -d "$venv" ] || __throwEnvironment "$handler" "Unable to create $venv" || return $?
+    clean+=(rm -rf "$venv" --)
+  fi
+  __catchEnvironment "$handler" source "$venv/bin/activate" || returnClean $? "${clean[@]}" || return $?
+  __catch "$handler" pipUpgrade || returnClean $? "${clean[@]}" || return $?
+  __catch "$handler" pipWrapper install "${pp[@]}" || returnClean $? "${clean[@]}" || return $?
+}
+_pythonVirtual() {
   # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

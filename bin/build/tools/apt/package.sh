@@ -107,7 +107,8 @@ ___aptPackageMapping() {
   local handler="$1" && shift
   case "$1" in
   "python")
-    printf "%s\n" python-is-python3 python3 python3-pip
+    # Require venv and pip as part of core
+    printf "%s\n" python-is-python3 python3 python3-pip python3-venv
     ;;
   "mariadb")
     printf "%s\n" mariadb-common mariadb-client

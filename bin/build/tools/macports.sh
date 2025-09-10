@@ -170,7 +170,7 @@ __portStandardPackages() {
 __portPackageMapping() {
   case "$1" in
   "python")
-    printf "%s\n" python313 py313-pip
+    printf "%s\n" python33 py33-pip
     ;;
   "mariadb")
     printf "%s\n" mariadb
