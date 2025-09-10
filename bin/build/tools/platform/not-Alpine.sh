@@ -18,6 +18,8 @@ __testPlatformName() {
 __packageManagerDefault() {
   if aptIsInstalled; then
     printf "%s\n" "apt"
+  elif yumIsInstalled; then
+    printf "%s\n" "yum"
   else
     _environment "Not able to detect package manager $(_packageDebugging)" || return $?
   fi

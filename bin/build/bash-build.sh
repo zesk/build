@@ -19,6 +19,7 @@ __bashRunCommandsAppendIfNeeded() {
 }
 
 __bashBuild() {
+  local handler="_return"
   local tools="${BASH_SOURCE[0]%/*}/tools.sh"
 
   # shellcheck source=/dev/null
@@ -45,6 +46,9 @@ __bashBuild() {
       __bashRunCommandsAppendIfNeeded "$tools" "$rcFile" "${extraCommands[@]+"${extraCommands[@]}"}" || _environment "Failed to update $rcFile" || return $?
     fi
   fi
+  statusMessage decorate info "Setting up operating system ..."
+  __catch "$handler" packageUpdate || return $?
+  __catch "$handler" packageInstall || return $?
   exec bash "$@"
 }
 

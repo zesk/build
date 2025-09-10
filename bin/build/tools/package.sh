@@ -605,7 +605,7 @@ packageManagerValid() {
   case "${1-}" in
   # _IDENTICAL_ helpHandler 1
   --help) "$handler" 0 && return $? || return $? ;;
-  apk | apt | brew | port) return 0 ;;
+  apk | apt | brew | port | yum) return 0 ;;
   *) return 1 ;;
   esac
 }

@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+#
+# yum-tests.sh
+#
+# Yum tests (Fedora?)
+#
+# Copyright &copy; 2025 Market Acumen, Inc.
+#
+
+testIsYum() {
+  isYumInstalled --help >/dev/null || return $?
+
+  __mockValue BUILD_DEBUG
+
+  assertExitCode --stdout-match "Is yum installed" 0 isYumInstalled --help || return $?
+
+  __mockValueStop BUILD_DEBUG
+}
+

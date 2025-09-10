@@ -31,6 +31,9 @@ __loadLinuxFunctions() {
     if [ -f /etc/debian_version ]; then
       # shellcheck source=/dev/null
       source "$here/Debian.sh"
+    elif [ -f /etc/fedora-release ]; then
+      # shellcheck source=/dev/null
+      source "$here/Fedora.sh"
     else
       # shellcheck source=/dev/null
       source "$here/Ubuntu.sh"

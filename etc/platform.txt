@@ -2,3 +2,4 @@ ubuntu:latest
 debian:bookworm
 fedora:40
 atlassian/default-image:4
+alpine:latest

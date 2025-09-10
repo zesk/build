@@ -270,7 +270,7 @@ whichExists() {
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
     [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
-    command which "$1" >/dev/null || return 1
+    command which "$1" >/dev/null 2>&1 || return 1
     shift
   done
 }
@@ -485,15 +485,20 @@ loadAverage() {
   local handler="_${FUNCNAME[0]}"
   local text
   [ $# -eq 0 ] || __help --only "$handler" "$@" || return "$(convertValue $? 1 0)"
-  text=$(__catchEnvironment "$handler" uptime) || return $?
-  text="${text##*average}"
-  text="${text##*:}"
-  text="${text# }"
-  text="${text//,/ }"
-  text="${text//  / }"
   local averages=()
+  if [ -f "/proc/loadavg" ]; then
+    text="$(cat /proc/loadavg)"
+  elif whichExists uptime; then
+    text=$(__catchEnvironment "$handler" uptime) || return $?
+    text="${text##*average}"
+    text="${text##*:}"
+    text="${text# }"
+    text="${text//,/ }"
+    text="${text//  / }"
+    local averages=()
+  fi
   read -r -a averages <<<"$text" || :
-  printf "%s\n" "${averages[@]}"
+  printf "%s\n" "${averages[0]}" "${averages[1]}" "${averages[2]}"
 }
 _loadAverage() {
   # __IDENTICAL__ usageDocument 1

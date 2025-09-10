@@ -16,7 +16,7 @@ __aptLoader() {
 #
 aptIsInstalled() {
   [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
-  whichExists apt apt-get dpkg && [ -f /etc/debian_version ]
+  whichExists apt apt-get dpkg 2>/dev/null && [ -f /etc/debian_version ]
 }
 _aptIsInstalled() {
   # __IDENTICAL__ usageDocument 1
@@ -96,7 +96,7 @@ _aptKeyRemove() {
 __aptUninstall() {
   __aptLoader "_return" "_${FUNCNAME[0]}" "$@"
 }
-__aptDefault() {
+__aptDefaulta() {
   __aptLoader "_return" "_${FUNCNAME[0]}" "$@"
 }
 __aptUpdate() {

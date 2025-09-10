@@ -4,7 +4,6 @@
 #
 # Copyright &copy; 2025 Market Acumen, Inc.
 #
-# Depends: colors.sh os.sh apt.sh
 # bin: npm
 # Binary paths are at bin/build/install
 #
