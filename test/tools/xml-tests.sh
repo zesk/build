@@ -19,8 +19,9 @@ test_XMLBasics() {
   )
   assertExitCode "${matches[@]}" 0 __xmlHeader "version=2.0" || return $?
 
-  assertEquals "<html /> " __xmlTag "name=Test run" || return $?
-  assertEquals "<html name=\"Test run\" /> " __xmlTag html "name=Test run" || return $?
+  assertEquals "<html /> " "$(__xmlTagClose html)" || return $?
+  assertEquals "<html /> " "$(__xmlTagClose html "name=Test run")" || return $?
+  assertEquals "<html name=\"Test run\" /> " "$(__xmlTag html "name=Test run")" || return $?
   assertEquals "<html> " __xmlTagOpen html || return $?
   assertEquals "<html lang=\"fr\"> " __xmlTagOpen html lang=fr || return $?
   assertEquals "</html>" __xmlTagClose html || return $?
@@ -30,11 +31,11 @@ test_XMLBasics() {
     --stdout-match "<property name=\"name\" value=\"$rando\" />"
     --stdout-match "</properties>"
   )
-  assertEquals " name=\"$rando\"" 0 __xmlAttributes "name=$rando" || return $?
-  assertEquals "" 0 __xmlAttributes "" || return $?
-  assertEquals " word" 0 __xmlAttributes "word" || return $?
-  assertEquals " word" 0 __xmlAttributes "word tag thing" || return $?
-  assertEquals " word tag thing" 0 __xmlAttributes "word tag thing" || return $?
+  assertEquals " name=\"$rando\"" "$(__xmlAttributes "name=$rando")" || return $?
+  assertEquals "" "$(__xmlAttributes "")" || return $?
+  assertEquals " word" "$(__xmlAttributes word)" || return $?
+  assertEquals " word" "$(__xmlAttributes word tag thing)" || return $?
+  assertEquals " word tag thing" "$(__xmlAttributes word tag thing)" || return $?
   # Bash removes "what" quotes here
   assertEquals " word=\"what\" tag" 0 __xmlAttributes word="what" tag || return $?
   # Bash does not remove "what" quotes here

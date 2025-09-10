@@ -96,6 +96,9 @@ _aptKeyRemove() {
 __aptUninstall() {
   __aptLoader "_return" "_${FUNCNAME[0]}" "$@"
 }
+__aptDefault() {
+  __aptLoader "_return" "_${FUNCNAME[0]}" "$@"
+}
 __aptUpdate() {
   __aptLoader "_return" "_${FUNCNAME[0]}" "$@"
 }

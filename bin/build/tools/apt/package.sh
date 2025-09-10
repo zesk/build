@@ -31,7 +31,8 @@ ___aptInstall() {
   __aptNonInteractive "$handler" install -y "$@" 2> >(grep -v 'apt-utils is not installed' 1>&2) || return $?
 }
 
-__aptDefault() {
+___aptDefault() {
+  local handler="$1" && shift
   while [ $# -gt 0 ]; do
     case "$1" in
     mysqldump) printf -- "%s\n" "mariadb-dump" ;;

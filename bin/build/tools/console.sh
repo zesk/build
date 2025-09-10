@@ -139,7 +139,6 @@ _consoleConfigureColorMode() {
 consoleSetTitle() {
   local handler="_${FUNCNAME[0]}"
   [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
-  [ -t 0 ] || __throwEnvironment "$handler" "stdin is not a terminal" || return $?
   printf -- "\e%s\007" "]0;$*"
 }
 _consoleSetTitle() {

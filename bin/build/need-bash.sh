@@ -23,7 +23,7 @@ __needBash() {
     install="$install $1"
     shift
   done
-  if [ -z "$(which bash)" ]; then
+  if [ -z "$(command which bash)" ]; then
     ! $verboseFlag || printf -- "%s" "Installing bash ..."
     if ! ${install# } >/dev/null; then
       printf -- "\n%s\n" "Failed installing bash, exiting." 1>&2

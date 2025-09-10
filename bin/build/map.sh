@@ -443,7 +443,7 @@ usageArgumentString() {
   printf "%s\n" "$1"
 }
 
-# IDENTICAL decorate 241
+# IDENTICAL decorate 240
 
 # Sets the environment variable `BUILD_COLORS` if not set, uses `TERM` to calculate
 #
@@ -470,7 +470,6 @@ hasColors() {
       [ "$termColors" -lt 8 ] || BUILD_COLORS=true
       ;;
     esac
-    printf "%s %s %d\n" "$(timingStart)" "$BUILD_COLORS" "$$" >>"${BUILD_HOME-}/hasColors"
   elif [ "${BUILD_COLORS-}" != "true" ]; then
     BUILD_COLORS=false
   fi

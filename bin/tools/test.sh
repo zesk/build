@@ -7,7 +7,17 @@
 # Copyright &copy; 2025 Market Acumen, Inc.
 #
 
-#
+__buildTestRequirements() {
+  local handler="$1" && shift
+
+  local bigBinary
+  bigBinary=$(__catch "$handler" __bigTextBinary) || return $?
+  [ -n "$bigBinary" ] || bigBinary="toilet"
+  __catch "$handler" packageWhich "$bigBinary" "$bigBinary" || return $?
+  __catch "$handler" packageWhich shellcheck shellcheck || return $?
+  __catch "$handler" __pcregrepInstall || return $?
+}
+
 # Standard test layout
 #
 # Test functions prefixed with the word `test` in:
@@ -30,14 +40,7 @@ __buildTestSuite() {
   # Include our own test support files if needed
   [ ! -d "$testHome/test/support" ] || __catchEnvironment "$handler" bashSourcePath "$testHome/test/support" || return $?
 
-  # CUSTOM BEGIN
-  local bigBinary
-  bigBinary=$(__catch "$handler" __bigTextBinary) || return $?
-  [ -n "$bigBinary" ] || bigBinary="toilet"
-  __catch "$handler" packageWhich "$bigBinary" "$bigBinary" || return $?
-  __catch "$handler" packageWhich shellcheck shellcheck || return $?
-  __catch "$handler" __pcregrepInstall || return $?
-  # CUSTOM END
+  __buildTestRequirements "$handler" || return $?
 
   __catchEnvironment "$handler" testTools testSuite --cd-away --delete-common --tests "$testHome/test/tools/" "$@" || return $?
 }

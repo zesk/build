@@ -30,10 +30,10 @@ _installInstallBinary() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# Installs `install-BuildProject.sh` the first time in a new project, and modifies it to work in the application path.
+# Installs `install-bin-build.sh` the first time in a new project, and modifies it to work in the application path.
 # Argument: --help - Optional. Flag. This help.
 # Argument: --diff - Optional. Flag. Show differences between new and old files if changed.
-# Argument: --local - Optional. Flag. Use local copy of `install-BuildProject.sh` instead of downloaded version.
+# Argument: --local - Optional. Flag. Use local copy of `install-bin-build.sh` instead of downloaded version.
 # Argument: path - Optional. Directory. Path to install the binary. Default is `bin`. If ends with `.sh` will name the binary this name.
 # Argument: applicationHome - Optional. Directory. Path to the application home directory. Default is current directory.
 # Usage: {fn} [ --help ] [ --diff ] [ --local ] [ path [ applicationHome ] ]

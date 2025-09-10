@@ -4,7 +4,7 @@
 #
 # Original of _installRemotePackage
 #
-# See: bin/build/install-BuildProject.sh
+# See: bin/build/install-bin-build.sh
 #
 # Copyright &copy; 2025 Market Acumen, Inc.
 

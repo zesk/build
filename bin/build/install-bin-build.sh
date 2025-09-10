@@ -982,7 +982,7 @@ whichExists() {
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
     [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
-    which "$1" >/dev/null || return 1
+    command which "$1" >/dev/null || return 1
     shift
   done
 }
@@ -1035,7 +1035,7 @@ _isFunction() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# IDENTICAL decorate 241
+# IDENTICAL decorate 240
 
 # Sets the environment variable `BUILD_COLORS` if not set, uses `TERM` to calculate
 #
@@ -1062,7 +1062,6 @@ hasColors() {
       [ "$termColors" -lt 8 ] || BUILD_COLORS=true
       ;;
     esac
-    printf "%s %s %d\n" "$(timingStart)" "$BUILD_COLORS" "$$" >>"${BUILD_HOME-}/hasColors"
   elif [ "${BUILD_COLORS-}" != "true" ]; then
     BUILD_COLORS=false
   fi
@@ -1558,9 +1557,9 @@ _returnUndo() {
 #
 # So:
 #
-# - "bin/install-BuildProject.sh" -> ".."
-# - "bin/pipeline/install-BuildProject.sh" -> "../.."
-# - "bin/app/vendorApp/install-BuildProject.sh" -> "../../.."
+# - "bin/install-bin-build.sh" -> ".."
+# - "bin/pipeline/install-bin-build.sh" -> "../.."
+# - "bin/app/vendorApp/install-bin-build.sh" -> "../../.."
 #
 # -- DO NOT EDIT ANYTHING ABOVE THIS LINE IT WILL BE OVERWRITTEN --
 __installPackageConfiguration ../.. "$@"

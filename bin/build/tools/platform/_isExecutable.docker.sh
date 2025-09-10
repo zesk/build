@@ -49,7 +49,7 @@ isExecutableHack() {
         return 1
       fi
     fi
-  elif [ -z "$(which "$1")" ]; then
+  elif [ -z "$(command which "$1")" ]; then
     return 1
   fi
   return 0

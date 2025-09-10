@@ -353,7 +353,7 @@ packageWhichUninstall() {
     return 0
   fi
   __catch "$handler" packageUninstall "${vv[@]+"${vv[@]}"}" --manager "$manager" "${packages[@]}" || return $?
-  if foundPath="$(which "$binary")" && [ -n "$foundPath" ]; then
+  if foundPath="$(command which "$binary")" && [ -n "$foundPath" ]; then
     __throwEnvironment "$handler" "packageUninstall ($manager) \"${packages[*]}\" did not remove $(decorate code "$foundPath") FROM the PATH: $(decorate value "${PATH-}")" || return $?
   fi
 }
@@ -618,7 +618,7 @@ _packageDebugging() {
   local bin
   printf "\n"
   for bin in apk dpkg apt-get; do
-    printf -- "%s: %s\n" "$bin" "$(which "$bin")"
+    printf -- "%s: %s\n" "$bin" "$(command which "$bin")"
   done
   # shellcheck disable=SC2012
   ls -lad /etc/ | dumpPipe "/etc/ listing"

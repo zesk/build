@@ -128,7 +128,7 @@ dockerLocalContainer() {
   imageApplicationPath=${BUILD_DOCKER_PATH}
   imageName=${BUILD_DOCKER_IMAGE}
 
-  local exitCode=0 ee=() extraArgs=() tempEnvs=()
+  local exitCode=0 ee=() extraArgs=() tempEnvs=() verboseFlag=false
 
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
@@ -141,14 +141,9 @@ dockerLocalContainer() {
     --help) "$handler" 0 && return $? || return $? ;;
     # _IDENTICAL_ handlerHandler 1
     --handler) shift && handler=$(usageArgumentFunction "$handler" "$argument" "${1-}") || return $? ;;
-    --image)
-      shift
-      imageName=$(usageArgumentString "$handler" "$argument" "${1-}") || return $?
-      ;;
-    --local)
-      shift
-      localPath=$(usageArgumentDirectory "$handler" "$argument" "${1-}") || return $?
-      ;;
+    --image) shift && imageName=$(usageArgumentString "$handler" "$argument" "${1-}") || return $? ;;
+    --local) shift && localPath=$(usageArgumentDirectory "$handler" "$argument" "${1-}") || return $? ;;
+    --verbose) verboseFlag=true ;;
     --path)
       shift
       imageApplicationPath=$(usageArgumentString "$handler" "$argument" "${1-}") || return $?
@@ -170,13 +165,8 @@ dockerLocalContainer() {
       tempEnvs+=("$tempEnv")
       ee+=("$argument" "$tempEnv")
       ;;
-    --platform)
-      shift
-      platform=$(usageArgumentString "$handler" "$argument" "$1") || return $?
-      ;;
-    *)
-      extraArgs+=("$1")
-      ;;
+    --platform) shift && platform=$(usageArgumentString "$handler" "$argument" "${1}") || return $? ;;
+    *) extraArgs+=("$1") ;;
     esac
     shift
   done
@@ -199,10 +189,15 @@ dockerLocalContainer() {
   fi
   local tt=()
   [ ! -t 0 ] || tt=(-it)
-  if [ -z "$(dockerImages --filter "$imageName")" ]; then
+  if [ -z "$(dockerImages --filter "$imageName" 2>/dev/null || :)" ]; then
+    ! $verboseFlag || statusMessage decorate info "Pulling $imageName ..."
     __catchEnvironment "$handler" muzzle docker pull "$imageName" || return $?
   fi
+  local start
+  start=$(timingStart)
+  ! $verboseFlag || statusMessage decorate info "Running $imageName on $platform ..."
   __catchEnvironment "$handler" docker run "${ee[@]+"${ee[@]}"}" --platform "$platform" -v "$localPath:$imageApplicationPath" "${tt[@]+"${tt[@]}"}" --pull never "$imageName" "${extraArgs[@]+"${extraArgs[@]}"}" || exitCode=$?
+  ! $verboseFlag || statusMessage timingReport "$start" "$imageName ($platform) completed in"
   [ ${#tempEnvs[@]} -eq 0 ] || rm -f "${tempEnvs[@]}" || :
   return $exitCode
 }
