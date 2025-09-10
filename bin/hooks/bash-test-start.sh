@@ -79,7 +79,7 @@ __hookBashTestStart() {
   name=$(buildEnvironmentGet APPLICATION_NAME)
   [ -z "$name" ] || name="🍎 ${name}"
   iTerm2Badge -i "${name}\n👀 ${module} \n➡️ ${testFunction}"
-  consoleSetTitle "$name Testing : $module ➡️ $testFunction"
+  [ ! -t 0 ] || consoleSetTitle "$name Testing : $module ➡️ $testFunction"
 }
 
 __tools ../.. __hookBashTestStart "$@"
