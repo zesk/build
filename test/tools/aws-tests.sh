@@ -7,24 +7,19 @@
 # Copyright &copy; 2025 Market Acumen, Inc.
 #
 
-_testAWSIPAccesshandler() {
+_testAWSIPAccessErrorHandler() {
   decorate error "$@"
   return "$1"
 }
 
 __awsTestSetup() {
-  mockEnvironmentStart HOME
-  mockEnvironmentStart AWS_PROFILE
-  mockEnvironmentStart AWS_ACCESS_KEY_ID "" "$AWS_ACCESS_KEY_ID"
-  mockEnvironmentStart AWS_SECRET_ACCESS_KEY "" "$AWS_SECRET_ACCESS_KEY"
+  export AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY AWS_PROFILE HOME
+  mockEnvironmentStart HOME "" AWS_PROFILE "" AWS_ACCESS_KEY_ID "$AWS_ACCESS_KEY_ID" AWS_SECRET_ACCESS_KEY "$AWS_SECRET_ACCESS_KEY"
 }
 
 __awsTestCleanup() {
   # restore all set for other tests
-  mockEnvironmentStop HOME
-  mockEnvironmentStop AWS_PROFILE
-  mockEnvironmentStop AWS_ACCESS_KEY_ID
-  mockEnvironmentStop AWS_SECRET_ACCESS_KEY
+  mockEnvironmentStop HOME AWS_PROFILE AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY
 }
 
 testAWSInstall() {
@@ -36,7 +31,7 @@ testAWSInstall() {
 
 # Tag: slow
 testAWSIPAccess() {
-  local handler="_return"
+  local handler="_testAWSIPAccessErrorHandler"
   local quietLog=$1 id key start
   local tempHome
 

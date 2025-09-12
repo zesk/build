@@ -36,7 +36,7 @@ testProcessWait() {
 
   timingFactor="$(_timingFactor)"
 
-  mockEnvironmentStart BUILD_DEBUG_LINES "" 9999
+  mockEnvironmentStart BUILD_DEBUG_LINES 9999
   assertNotExitCode --stderr-match Expired 0 processWait --timeout "$((timingFactor / 2))" "$background" || return $?
   assertExitCode 0 kill -0 "$background" || return $?
   assertExitCode 0 processWait --timeout "$timingFactor" "$background" || return $?
