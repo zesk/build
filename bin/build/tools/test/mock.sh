@@ -20,7 +20,7 @@ mockEnvironmentStart() {
     local saveGlobal="__MOCK_$argument"
     statusMessage decorate notice "MOCK: Saving $argument into $(decorate code "$saveGlobal")"
     # shellcheck disable=SC2163
-    export "$saveGlobal"="${!argument-"$me"}"
+    export "$saveGlobal"="${!argument-"$emptyValue"}"
     export "$argument"="$value"
   done
 }
