@@ -14,7 +14,7 @@ testIsDockerComposeRunning() {
 
     oldHome=$(__catch "$handler" buildHome) || return $?
 
-    __mockValue BUILD_HOME
+    mockEnvironmentStart BUILD_HOME
 
     export BUILD_HOME
 
@@ -31,6 +31,6 @@ testIsDockerComposeRunning() {
     assertNotExitCode --stderr-match "Missing" --stderr-match "docker-compose.yml" 0 dockerComposeIsRunning || return $?
 
     __catchEnvironment "$handler" rm -rf "$newHome" || return $?
-    __mockValueStop BUILD_HOME
+    mockEnvironmentStop BUILD_HOME
   fi
 }

@@ -12,7 +12,7 @@ testSSHAddKnownHosts() {
   local tempHome
   local sampleDomainA sampleDomainB
 
-  __mockValue HOME
+  mockEnvironmentStart HOME
 
   export HOME
 
@@ -43,7 +43,7 @@ testSSHAddKnownHosts() {
 
   __catch "$handler" rm -rf "$tempHome" || return $?
 
-  __mockValueStop HOME
+  mockEnvironmentStop HOME
 
   return 0
 }
@@ -53,7 +53,7 @@ testSSHRemoveKnownHosts() {
   local tempHome debugFlag=false
   local sampleDomainA sampleDomainB sampleDomainC
 
-  __mockValue HOME
+  mockEnvironmentStart HOME
 
   export HOME
 
@@ -93,7 +93,7 @@ testSSHRemoveKnownHosts() {
   ! $debugFlag || dumpPipe "Removed $sampleDomainC" <"$authFile"
   assertFileDoesNotContain "$authFile" "$sampleDomainA" "$sampleDomainB" "$sampleDomainC" || return $?
 
-  __mockValueStop HOME
+  mockEnvironmentStop HOME
 
   __catch "$handler" rm -rf "$tempHome" || return $?
 

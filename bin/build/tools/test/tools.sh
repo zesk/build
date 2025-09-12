@@ -991,6 +991,19 @@ __testRun() {
     if $doPlumber; then
       runner=(plumber --temporary "$savedTMPDIR" "${runner[@]}")
     fi
+    ###########################################
+    ###########################################
+    ###########################################
+    ###########################################
+    ###########################################
+    ##########                       ##########
+    ########## Here is the test call ##########
+    ##########                       ##########
+    ###########################################
+    ###########################################
+    ###########################################
+    ###########################################
+    ###########################################
     if "${runner[@]}" 2> >(tee -a "$captureStderr"); then
       TMPDIR="$savedTMPDIR"
       if fileIsEmpty "$captureStderr"; then
@@ -1005,7 +1018,7 @@ __testRun() {
       TMPDIR="$savedTMPDIR"
       resultCode=$?
       stickyCode=$errorTest
-      printf "%s\n" "FAILED [$resultCode] $__test" | tee -a "$quietLog"
+      printf "\n%s\n" "FAILED [$resultCode] $__test" | tee -a "$quietLog"
       if ! fileIsEmpty "$captureStderr" && isSubstringInsensitive ";stderr-FAILED;" ";$__flags;"; then
         printf "%s\n" "stderr-FAILED [$resultCode] $__test ALSO has STDERR:" | tee -a "$quietLog"
         dumpPipe <"$captureStderr" | tee -a "$quietLog"
@@ -1075,7 +1088,7 @@ __testFailed() {
   __catchEnvironment "$handler" hookRunOptional bash-test-fail "$sectionName" "$item" || __throwEnvironment "$handler" "... continuing" || :
 
   errorCode="$(returnCode assert)"
-  printf "%s: %s - %s %s (%s)\n" "$(decorate error "Exit")" "$(decorate bold-red "$errorCode")" "$(decorate error "Failed running")" "$(decorate info "$item")" "$(decorate magenta "$sectionName")" || :
+  printf "\n%s: %s - %s %s (%s)\n" "$(decorate error "Exit")" "$(decorate bold-red "$errorCode")" "$(decorate error "Failed running")" "$(decorate info "$item")" "$(decorate magenta "$sectionName")" || :
 
   ! buildDebugEnabled "test-dump-environment" || dumpEnvironment || :
   dumpLoadAverages || :

@@ -196,9 +196,9 @@ testBuildFunctionsHelpCoverage() {
     fi
   done < <(__dataBuildFunctionsWithoutHelp)
 
-  __mockValue BUILD_DEBUG
-  __mockValue BUILD_COLORS
-  __mockValue TEST_TRACK_ASSERTIONS
+  mockEnvironmentStart BUILD_DEBUG
+  mockEnvironmentStart BUILD_COLORS
+  mockEnvironmentStart TEST_TRACK_ASSERTIONS
 
   # BUILD_COLORS on vs off
   # ON:
@@ -272,9 +272,9 @@ testBuildFunctionsHelpCoverage() {
   [ "${#missing[@]}" -gt 0 ] || clean+=("$missingFile")
   __catchEnvironment "$handler" rm -f "${clean[@]}" || return $?
 
-  __mockValueStop BUILD_DEBUG
-  __mockValueStop TEST_TRACK_ASSERTIONS
-  __mockValueStop BUILD_COLORS
+  mockEnvironmentStop BUILD_DEBUG
+  mockEnvironmentStop TEST_TRACK_ASSERTIONS
+  mockEnvironmentStop BUILD_COLORS
 
   statusMessage decorate info "Exiting ${FUNCNAME[0]}..."
   [ "${#missing[@]}" -gt 0 ] || $stopped || __catchEnvironment "$handler" rm -f "$lastPassedCache" || return $?
@@ -320,9 +320,9 @@ testBuildFunctionsHelpOnly() {
   export BUILD_COLORS
   export TEST_TRACK_ASSERTIONS
 
-  __mockValue BUILD_DEBUG
-  __mockValue BUILD_COLORS
-  __mockValue TEST_TRACK_ASSERTIONS
+  mockEnvironmentStart BUILD_DEBUG
+  mockEnvironmentStart BUILD_COLORS
+  mockEnvironmentStart TEST_TRACK_ASSERTIONS
 
   BUILD_DEBUG="fast-usage"
   BUILD_COLORS=false
@@ -332,9 +332,9 @@ testBuildFunctionsHelpOnly() {
     assertExitCode --stderr-match "Only argument allowed is --help" 2 "$fun" "--never" || return $?
   done < <(__dataBuildFunctionsHelpIsTheOnlyOption)
 
-  __mockValueStop BUILD_DEBUG
-  __mockValueStop TEST_TRACK_ASSERTIONS
-  __mockValueStop BUILD_COLORS
+  mockEnvironmentStop BUILD_DEBUG
+  mockEnvironmentStop TEST_TRACK_ASSERTIONS
+  mockEnvironmentStop BUILD_COLORS
 
 }
 

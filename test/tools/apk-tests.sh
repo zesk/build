@@ -10,15 +10,15 @@
 testIsAlpine() {
   isAlpine --help >/dev/null || return $?
 
-  __mockValue BUILD_DEBUG
+  mockEnvironmentStart BUILD_DEBUG
 
   assertExitCode --stdout-match "an Alpine system" 0 isAlpine --help || return $?
 
-  __mockValueStop BUILD_DEBUG
+  mockEnvironmentStop BUILD_DEBUG
 }
 
 testIsApkInstalled() {
-  __mockValue BUILD_DEBUG
+  mockEnvironmentStart BUILD_DEBUG
 
   apkIsInstalled --help || return $?
   #  echo "${BASH_SOURCE[0]}:$LINENO"
@@ -31,7 +31,7 @@ testIsApkInstalled() {
   fi
   #  echo "${BASH_SOURCE[0]}:$LINENO"
 
-  __mockValueStop BUILD_DEBUG
+  mockEnvironmentStop BUILD_DEBUG
 
 }
 

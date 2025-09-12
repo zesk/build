@@ -13,18 +13,18 @@ _testAWSIPAccesshandler() {
 }
 
 __awsTestSetup() {
-  __mockValue HOME
-  __mockValue AWS_PROFILE
-  __mockValue AWS_ACCESS_KEY_ID "" "$AWS_ACCESS_KEY_ID"
-  __mockValue AWS_SECRET_ACCESS_KEY "" "$AWS_SECRET_ACCESS_KEY"
+  mockEnvironmentStart HOME
+  mockEnvironmentStart AWS_PROFILE
+  mockEnvironmentStart AWS_ACCESS_KEY_ID "" "$AWS_ACCESS_KEY_ID"
+  mockEnvironmentStart AWS_SECRET_ACCESS_KEY "" "$AWS_SECRET_ACCESS_KEY"
 }
 
 __awsTestCleanup() {
   # restore all set for other tests
-  __mockValueStop HOME
-  __mockValueStop AWS_PROFILE
-  __mockValueStop AWS_ACCESS_KEY_ID
-  __mockValueStop AWS_SECRET_ACCESS_KEY
+  mockEnvironmentStop HOME
+  mockEnvironmentStop AWS_PROFILE
+  mockEnvironmentStop AWS_ACCESS_KEY_ID
+  mockEnvironmentStop AWS_SECRET_ACCESS_KEY
 }
 
 testAWSInstall() {
@@ -333,7 +333,7 @@ testAWSCredentialsEdit() {
   clean+=("$testResults")
   clean+=("$testHome")
 
-  __mockValue HOME
+  mockEnvironmentStart HOME
 
   HOME="$testHome"
 
@@ -373,7 +373,7 @@ testAWSCredentialsEdit() {
 
   __catchEnvironment "$handler" rm -rf "${clean[@]}" || return $?
 
-  __mockValueStop HOME
+  mockEnvironmentStop HOME
 }
 
 testAWSProfiles() {
@@ -383,8 +383,8 @@ testAWSProfiles() {
 
   muzzle buildCacheDirectory || return $?
 
-  __mockValue HOME
-  __mockValue AWS_PROFILE
+  mockEnvironmentStart HOME
+  mockEnvironmentStart AWS_PROFILE
 
   export HOME AWS_PROFILE
 
@@ -455,6 +455,6 @@ testAWSProfiles() {
 
   __catchEnvironment "$handler" rm -rf "${clean[@]}" || return $?
 
-  __mockValueStop HOME
-  __mockValueStop AWS_PROFILE
+  mockEnvironmentStop HOME
+  mockEnvironmentStop AWS_PROFILE
 }

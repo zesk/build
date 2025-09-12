@@ -128,7 +128,7 @@ _assertFailure() {
   if [ "${message#*"$newline"}" != "$message" ]; then
     ll=(--last)
   fi
-  statusMessage "${ll[@]+"${ll[@]}"}" printf -- "%s %s %s [%s] " "$(_symbolFail)" "$(decorate error "$function")" "$message" "$(_assertTiming)" 1>&2 || return $?
+  statusMessage --last "${ll[@]+"${ll[@]}"}" printf -- "%s %s %s [%s] " "$(_symbolFail)" "$(decorate error "$function")" "$message" "$(_assertTiming)" 1>&2 || return $?
   return "$(returnCode assert)"
 }
 _assertSuccess() {

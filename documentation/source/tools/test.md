@@ -16,5 +16,7 @@
 
 ## Mocking help
 
-{__mockValue}
-{__mockConsoleAnimation}
+{mockEnvironmentStart}
+{mockEnvironmentStop}
+{mockConsoleAnimationStart}
+{mockConsoleAnimationStop}

@@ -6,7 +6,7 @@
 #
 
 testUserHome() {
-  __mockValue HOME
+  mockEnvironmentStart HOME
 
   export HOME
 
@@ -26,5 +26,5 @@ testUserHome() {
   assertEquals "$cleanHome/extra/dir/to/look" "$(userHome extra dir to look)" || return $?
   assertEquals "$cleanHome/extra/dir/to/look" "$(userHome extra/dir/to/look/)" || return $?
 
-  __mockValueStop HOME
+  mockEnvironmentStop HOME
 }

@@ -120,24 +120,6 @@ _hasConsoleAnimation() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# Fake `hasConsoleAnimation` for testing
-# Usage: {fn} --end | true | false
-# Argument: --end - Flag. Optional. Resets the value for console animation to the saved value.
-# Argument: true | false - Boolean. Force the value of hasConsoleAnimation to this value temporarily. Saves the original value.
-# Developer Note: Keep this here to keep it close to the definition it modifies
-__mockConsoleAnimation() {
-  local handler="_${FUNCNAME[0]}" flag="${1-}"
-
-  shift || __catchArgument "$handler" "Missing argument" || return $?
-  if [ "$flag" = "--end" ]; then
-    __mockValue CI __MOCKED_CI "$flag" "$@"
-    return 0
-  fi
-
-  isBoolean "$flag" || __throwArgument "$handler" "Requires true or false (or --end)" || return $?
-  __mockValue CI __MOCKED_CI "$(_choose "$flag" "" "testCI")" "$@"
-}
-
 # Usage: {fn} prefix suffix [ text ]
 # Argument: prefix - Required. String.
 # Argument: suffix - Required. String.

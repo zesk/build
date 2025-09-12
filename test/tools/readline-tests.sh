@@ -11,7 +11,7 @@ testReadlineConfigurationAdd() {
   local handler="_return"
   local tempHome
 
-  __mockValue HOME
+  mockEnvironmentStart HOME
 
   export HOME
 
@@ -25,5 +25,5 @@ testReadlineConfigurationAdd() {
 
   __catch "$handler" rm -rf "$tempHome" || return $?
 
-  __mockValueStop HOME
+  mockEnvironmentStop HOME
 }

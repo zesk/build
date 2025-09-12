@@ -10,6 +10,7 @@ __aptKeyAdd() {
   local names=() title="" remoteUrls=() skipUpdate=false listName="" releaseName="" repoUrl=""
   local name url host index IFS file listTarget
   local start ring sourcesPath keyFile skipUpdate signFiles signFileText sourceType sourceTypes=(deb)
+  local installFlag=false
 
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
@@ -51,6 +52,7 @@ __aptKeyAdd() {
       shift
       remoteUrls+=("$(usageArgumentURL "$handler" "$argument" "${1-}")") || return $?
       ;;
+    --install) installFlag=true ;;
     *)
       # _IDENTICAL_ argumentUnknownHandler 1
       __throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
@@ -63,12 +65,24 @@ __aptKeyAdd() {
   sourcesPath="$(_usageAptSourcesPath "$handler")" || return $?
   ring=$(_usageAptKeyRings "$handler") || return $?
 
+  local installs=()
+  whichExists gpg || installs+=("gpg")
+  whichExists --any curl wget || installs+=("curl")
+  if [ ${#installs[@]} -gt 0 ]; then
+    if $installFlag; then
+      __catch "$handler" packageInstall "${installs[@]}" || return $?
+    else
+      __throwEnvironment "$handler" "Unable to install packages: $(decorate each "${installs[@]}")" || return $?
+    fi
+  fi
   # apt-key is deprecated for good reasons
   # https://stackoverflow.com/questions/68992799/warning-apt-key-is-deprecated-manage-keyring-files-in-trusted-gpg-d-instead
 
   [ "${#names[@]}" -gt 0 ] || __throwArgument "$handler" "Need at least one --name" || return $?
   [ "${#remoteUrls[@]}" -gt 0 ] || __throwArgument "$handler" "Need at least one --url" || return $?
   [ "${#names[@]}" -eq "${#remoteUrls[@]}" ] || __throwArgument "$handler" "Mismatched --name and --url pairs: ${#names[@]} != ${#remoteUrls[@]}" || return $?
+
+  __catch "$handler" packageWhich lsb_release lsb-release || return $?
 
   [ -n "$releaseName" ] || releaseName="$(__catchEnvironment "$handler" lsb_release -cs)" || return $?
 
@@ -82,7 +96,8 @@ __aptKeyAdd() {
 
     statusMessage decorate info "Fetching $title key ... "
     keyFile="$ring/$name.gpg"
-    __catchEnvironment "$handler" curl -fsSL "$url" | gpg --no-tty --batch --dearmor | tee "$keyFile" >/dev/null || return $?
+    # curl used  -fsSL as options:
+    __catchEnvironment "$handler" urlFetch "$url" | gpg --no-tty --batch --dearmor | tee "$keyFile" >/dev/null || return $?
     __catchEnvironment "$handler" chmod a+r "$keyFile" || return $?
     signFiles+=("$keyFile")
     index=$((index + 1))

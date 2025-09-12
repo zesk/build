@@ -29,7 +29,15 @@ __checkFunctionInstallsPackage() {
 
 # Usage: {fn} checkFunction noun thing installer uninstaller
 __checkFunctionInstallsAndUninstalls() {
-  local checkFunction="$1" noun="$2" thing="$3" installer="$4" uninstaller="$5"
+  local handler="_return"
+  local checkFunction="" noun="" thing="" installer="" uninstaller=""
+
+  checkFunction=$(usageArgumentFunction "$handler" "checkFunction" "${1-}") && shift || return $?
+  noun=$(usageArgumentString "$handler" "noun" "${1-}") && shift || return $?
+  thing=$(usageArgumentString "$handler" "binary" "${1-}") && shift || return $?
+  installer=$(usageArgumentFunction "$handler" "installer" "${1-}") && shift || return $?
+  uninstaller=$(usageArgumentFunction "$handler" "uninstaller" "${1-}") && shift || return $?
+
   local uninstalledAlready=false
 
   if ! __testFunctionWasTested "$installer" "$uninstaller"; then
@@ -49,13 +57,22 @@ __checkFunctionInstallsAndUninstalls() {
 }
 
 # Usage: {fn} checkFunction noun why thing ...
+# Usage: checkFunction - Function. Required.
+# Usage: noun - String. Required.
+# Usage: thing - String. Required. Thing which is going to be installed.
+# Usage: installer - Function. Required. Function to test.
 __checkFunctionInstalls() {
-  local checkFunction="$1" noun="$2" thing="$3" && shift 3 || _argument "Missing arguments" || return $?
+  local checkFunction="" noun="" thing="" installer=""
+
+  checkFunction=$(usageArgumentFunction "$handler" "checkFunction" "${1-}") && shift || return $?
+  noun=$(usageArgumentString "$handler" "noun" "${1-}") && shift || return $?
+  thing=$(usageArgumentString "$handler" "binary" "${1-}") && shift || return $?
+  installer=$(usageArgumentFunction "$handler" "installer" "${1-}") && shift || return $?
 
   __testSection "INSTALL $(decorate value "$noun") $(decorate code "$thing")"
 
   ! "$checkFunction" "$thing" || _environment "$noun" "$(decorate code "$thing")" "is already installed" || return $?
-  __environment "$@" || return $?
+  assertExitCode 0 "$installer" "$@" || return $?
   "$checkFunction" "$thing" || _environment "$noun" "$(decorate code "$thing")" "was not installed by" "$@" || return $?
 }
 

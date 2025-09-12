@@ -6,8 +6,8 @@
 #
 
 testIterm2() {
-  __mockValue LC_TERMINAL
-  __mockValue TERM
+  mockEnvironmentStart LC_TERMINAL
+  mockEnvironmentStart TERM
 
   export LC_TERMINAL
   export TERM
@@ -31,6 +31,6 @@ testIterm2() {
   else
     assertExitCode 0 iTerm2Init --ignore || return $?
   fi
-  __mockValueStop LC_TERMINAL
-  __mockValueStop TERM
+  mockEnvironmentStop LC_TERMINAL
+  mockEnvironmentStop TERM
 }

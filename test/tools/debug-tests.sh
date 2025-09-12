@@ -41,7 +41,7 @@ testBuildDebugEnabled() {
 
   export BUILD_DEBUG
 
-  __mockValue BUILD_DEBUG
+  mockEnvironmentStart BUILD_DEBUG
 
   assertExitCode --skip-plumber 1 buildDebugEnabled || return $?
   assertNotExitCode 0 buildDebugEnabled || return $?
@@ -84,7 +84,7 @@ testBuildDebugEnabled() {
 
   __buildDebugDisable
 
-  __mockValueStop BUILD_DEBUG
+  mockEnvironmentStop BUILD_DEBUG
 
   _testBuildDebugEnabledExit 0 "$quietLog" "$LINENO"
 }

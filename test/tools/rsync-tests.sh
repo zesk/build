@@ -7,5 +7,5 @@
 
 # Tag: package-install
 testRsyncInstall() {
-  rsyncInstall rsync || return $?
+  __checkFunctionInstallsBinary rsync rsyncInstall || return $?
 }

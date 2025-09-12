@@ -10,10 +10,10 @@
 testIsYum() {
   isYumInstalled --help >/dev/null || return $?
 
-  __mockValue BUILD_DEBUG
+  mockEnvironmentStart BUILD_DEBUG
 
   assertExitCode --stdout-match "Is yum installed" 0 isYumInstalled --help || return $?
 
-  __mockValueStop BUILD_DEBUG
+  mockEnvironmentStop BUILD_DEBUG
 }
 

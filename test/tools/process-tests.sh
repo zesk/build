@@ -36,11 +36,11 @@ testProcessWait() {
 
   timingFactor="$(_timingFactor)"
 
-  __mockValue BUILD_DEBUG_LINES "" 9999
+  mockEnvironmentStart BUILD_DEBUG_LINES "" 9999
   assertNotExitCode --stderr-match Expired 0 processWait --timeout "$((timingFactor / 2))" "$background" || return $?
   assertExitCode 0 kill -0 "$background" || return $?
   assertExitCode 0 processWait --timeout "$timingFactor" "$background" || return $?
   assertExitCode 0 processWait --timeout "$timingFactor" "$background" || return $?
   assertNotExitCode --stderr-match "must be alive" 0 processWait --require --timeout "$timingFactor" "$background" || return $?
-  __mockValueStop BUILD_DEBUG_LINES
+  mockEnvironmentStop BUILD_DEBUG_LINES
 }

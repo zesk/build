@@ -10,7 +10,7 @@
 testApplicationHome() {
   local handler="_return"
 
-  __mockValue XDG_STATE_HOME
+  mockEnvironmentStart XDG_STATE_HOME
   export XDG_STATE_HOME
 
   XDG_STATE_HOME=$(fileTemporaryName "$handler" -d) || return $?
@@ -21,7 +21,7 @@ testApplicationHome() {
   assertFileContains --line "$LINENO" "$XDG_STATE_HOME/.applicationHome" "$HOME" || return $?
   __environment rm -rf "$XDG_STATE_HOME" || return $?
 
-  __mockValueStop XDG_STATE_HOME
+  mockEnvironmentStop XDG_STATE_HOME
 }
 
 testApplicationHomeAliases() {

@@ -8,14 +8,14 @@
 #
 
 testIdenticalCheckHelpKeepsWords() {
-  __mockValue BUILD_DEBUG
+  mockEnvironmentStart BUILD_DEBUG
 
   export BUILD_DEBUG
   BUILD_DEBUG=
 
   assertExitCode --stdout-match '# IDENTICAL' 0 identicalCheck --help || return $?
 
-  __mockValueStop BUILD_DEBUG
+  mockEnvironmentStop BUILD_DEBUG
 }
 
 testIdenticalEofWithBracket() {
@@ -167,7 +167,7 @@ testIdenticalCheckSingles() {
 
   export BUILD_DEBUG
 
-  __mockValue BUILD_DEBUG
+  mockEnvironmentStart BUILD_DEBUG
 
   # BUILD_DEBUG=temp - logs all fileTemporaryName calls and stack to app root
 
@@ -185,7 +185,7 @@ testIdenticalCheckSingles() {
   singles=(--single single1 --single single2)
   assertExitCode "0" identicalCheck "${identicalCheckArgs[@]}" "${singles[@]+"${singles[@]}"}" || return $?
 
-  __mockValueStop BUILD_DEBUG
+  mockEnvironmentStop BUILD_DEBUG
 }
 
 # Simple case when an identical directory exists and is supplied but contains no matching files

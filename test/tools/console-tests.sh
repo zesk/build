@@ -43,9 +43,9 @@ testColorBrightness() {
 }
 
 testConsoleFileLink() {
-  __mockValue BITBUCKET_WORKSPACE
-  __mockValue CI
-  __mockValue BUILD_COLORS
+  mockEnvironmentStart BITBUCKET_WORKSPACE
+  mockEnvironmentStart CI
+  mockEnvironmentStart BUILD_COLORS
 
   export BUILD_COLORS=true
   export CI=
@@ -56,9 +56,9 @@ testConsoleFileLink() {
   assertExitCode 0 consoleLink https://example.com/ Hello || return $?
   assertExitCode 0 consoleFileLink "${BASH_SOURCE[0]}" || return $?
 
-  __mockValueStop BITBUCKET_WORKSPACE
-  __mockValueStop CI
-  __mockValueStop BUILD_COLORS
+  mockEnvironmentStop BITBUCKET_WORKSPACE
+  mockEnvironmentStop CI
+  mockEnvironmentStop BUILD_COLORS
 }
 
 testStatusMessageLast() {
@@ -67,22 +67,22 @@ testStatusMessageLast() {
   phrase="Hello, world."
 
   statusMessage decorate warning "Mocking console animation (true)"
-  __mockConsoleAnimation true
+  mockConsoleAnimationStart true
 
   assertEquals 0 "$(statusMessage --first printf -- "%s" "$phrase" | fileLineCount)" || return $?
   assertEquals 0 "$(statusMessage printf -- "%s" "$phrase" | fileLineCount)" || return $?
   assertEquals 1 "$(statusMessage --last printf -- "%s" "$phrase" | fileLineCount)" || return $?
 
   statusMessage decorate warning "Ending mocked console animation"
-  __mockConsoleAnimation --end
+  mockConsoleAnimationStop
 
   statusMessage decorate warning "Mocking console animation (false)"
-  __mockConsoleAnimation false
+  mockConsoleAnimationStart false
 
   assertEquals 0 "$(statusMessage --first printf -- "%s" "$phrase" | fileLineCount)" || return $?
   assertEquals 1 "$(statusMessage printf -- "%s" "$phrase" | fileLineCount)" || return $?
   assertEquals 1 "$(statusMessage --last printf -- "%s" "$phrase" | fileLineCount)" || return $?
 
-  __mockConsoleAnimation --end
+  mockConsoleAnimationStop
   statusMessage decorate warning "Ending mocked console animation"
 }

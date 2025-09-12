@@ -7,35 +7,25 @@
 # Copyright &copy; 2025 Market Acumen, Inc.
 
 # Fake a value for testing
-# Usage: {fn} globalName [ saveGlobalName ] [ --end | value ]
 # Argument: globalName - EnvironmentVariable. Required. Global to change temporarily to a value.
-# Argument: saveGlobalName - EnvironmentVariable. Optional. Resets the `globalName` to the value in `saveGlobalName` if set.
-# Argument: --end - Flag. Optional. Resets the `globalName` to the value in `saveGlobalName` if set.
-# Argument: value - EmptyString. Required. Force the value of `globalName` to this value temporarily. Saves the original value in global `saveGlobalName`.
-__mockValue() {
+# Argument: value - EmptyString. Optional. Force the value of `globalName` to this value temporarily. Saves the original value.
+# Argument: ... - Continue passing pairs of globalName value to mock additional values.
+mockEnvironmentStart() {
   local handler="_${FUNCNAME[0]}"
-  local me="$handler ${1-} ${2-}" global="${1-}"
-  local saveGlobal="${2:-"__MOCK_${global}"}" value="${3-}"
-  [ $# -le 3 ] || IFS=';' __throwArgument "$handler" "$me requires no more than 3 arguments: [$#]: $*" || return $?
-  if [ "$value" = "--end" ]; then
+  while [ $# -gt 0 ]; do
+
+    local argument="${1-}" && shift
+    local emptyValue="$handler $argument"
+    local value="${1-}"
+    [ $# -eq 0 ] || shift
+    local saveGlobal="__MOCK_$argument"
+    statusMessage decorate notice "MOCK: Saving $argument into $(decorate code "$saveGlobal")"
     # shellcheck disable=SC2163
-    export "$saveGlobal"
-    if [ "${!saveGlobal-"$me"}" = "$me" ]; then
-      unset "$global"
-      statusMessage decorate notice "MOCK: Removing $global (was unset)"
-    else
-      export "$global"="${!saveGlobal-}"
-      statusMessage decorate notice "MOCK: Restoring $global from $(decorate code "$saveGlobal")"
-    fi
-    unset "$saveGlobal"
-    return 0
-  fi
-  statusMessage decorate notice "MOCK: Saving $global into $(decorate code "$saveGlobal")"
-  # shellcheck disable=SC2163
-  export "$saveGlobal"="${!global-"$me"}"
-  export "$global"="$value"
+    export "$saveGlobal"="${!argument-"$me"}"
+    export "$argument"="$value"
+  done
 }
-___mockValue() {
+_mockEnvironmentStart() {
   # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
@@ -43,9 +33,51 @@ ___mockValue() {
 # Restore a mocked value. Works solely with the default `saveGlobalName` (e.g. `__MOCK_${globalName}`).
 # Usage: {fn} globalName
 # Argument: globalName ... - EnvironmentVariable. Required. Global to restore from the mocked saved value.
-__mockValueStop() {
+mockEnvironmentStop() {
+  local handler="_${FUNCNAME[0]}"
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
+  local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
-    __mockValue "$1" "" --end
+    local argument="$1" __index=$((__count - $# + 1))
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
+    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    local emptyValue="_mockEnvironmentStart $argument"
+    # shellcheck disable=SC2163
+    export "$argument"
+    if [ "${!argument-"$emptyValue"}" = "$emptyValue" ]; then
+      unset "$argument"
+      statusMessage decorate notice "MOCK: Removing $argument (was unset)"
+    else
+      local saveGlobal="__MOCK_$argument"
+      export "$argument"="${!saveGlobal-}"
+      statusMessage decorate notice "MOCK: Restoring $argument from $(decorate code "$saveGlobal")"
+    fi
+    unset "$saveGlobal"
     shift
   done
+}
+
+# Fake `hasConsoleAnimation` for testing
+# Argument: true | false - Boolean. Force the value of hasConsoleAnimation to this value temporarily. Saves the original value.
+# Developer Note: Keep this here to keep it close to the definition it modifies
+mockConsoleAnimationStart() {
+  local handler="_${FUNCNAME[0]}"
+
+  flag=$(usageArgumentBoolean "$handler" "flag" "${1-}") || return $?
+  mockEnvironmentStart CI "$(_choose "$flag" "" "testCI")" "$@"
+}
+_mockConsoleAnimationStart() {
+  # __IDENTICAL__ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+# Stop faking `hasConsoleAnimation` for testing
+mockConsoleAnimationStop() {
+  local handler="_${FUNCNAME[0]}" flag="${1-}"
+
+  mockEnvironmentStop CI
+}
+_mockConsoleAnimationStop() {
+  # __IDENTICAL__ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

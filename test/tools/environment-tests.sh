@@ -68,11 +68,11 @@ testEnvironmentFileLoad() {
 
   set -eou pipefail
 
-  __mockValue BUILD_DEBUG
+  mockEnvironmentStart BUILD_DEBUG
 
   assertExitCode --stderr-match "Requires at least one environmentFile" --stderr-match "Safely load an environment file" 2 environmentFileLoad || return $?
 
-  __mockValueStop BUILD_DEBUG
+  mockEnvironmentStop BUILD_DEBUG
 
   tempDir="$(__environment buildCacheDirectory)/$$.${FUNCNAME[0]}" || return $?
 

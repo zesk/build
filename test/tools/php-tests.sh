@@ -173,7 +173,7 @@ testPHPComposerSetVersion() {
   testHome=$(fileTemporaryName "$usage" -d) || return $?
 
   __catchEnvironment "$usage" cp -R "$home" "$testHome/testDir" || return $?
-  __mockValue BUILD_HOME
+  mockEnvironmentStart BUILD_HOME
 
   export BUILD_HOME
   BUILD_HOME="$testHome/testDir"
@@ -193,7 +193,7 @@ testPHPComposerSetVersion() {
   noVeeVersion=$(versionNoVee "$version") || return $?
   assertFileContains --line "$LINENO" "$testVersionFile" "$noVeeVersion" || return $?
 
-  __mockValueStop BUILD_HOME
+  mockEnvironmentStop BUILD_HOME
 
   __catchEnvironment "$usage" rm -rf "$testHome" || return $?
 }

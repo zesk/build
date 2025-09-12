@@ -46,9 +46,12 @@ __bashBuild() {
       __bashRunCommandsAppendIfNeeded "$tools" "$rcFile" "${extraCommands[@]+"${extraCommands[@]}"}" || _environment "Failed to update $rcFile" || return $?
     fi
   fi
-  statusMessage decorate info "Setting up operating system ..."
+  local start
+  start=$(timingStart)
+  statusMessage decorate info "Setting up operating system with required base packages ..."
   __catch "$handler" packageUpdate || return $?
   __catch "$handler" packageInstall || return $?
+  statusMessage --last timingReport "$start" "System set up in"
   exec bash "$@"
 }
 
