@@ -626,12 +626,12 @@ usageArgumentString() {
 # Argument: file - Optional. FileDirectory. Target file. Use `-` to send to `stdout`. Default value is `-`.
 # Requires: _return whichExists printf decorate
 # Requires: usageArgumentString
-# Requires: __throwArgument __catchArgument 
+# Requires: __throwArgument __catchArgument
 # Requires: __throwEnvironment __catchEnvironment
 urlFetch() {
   local handler="_${FUNCNAME[0]}"
 
-  local wgetArgs=() curlArgs=() headers wgetExists binary="" userHasColons=false user="" password="" format="" url="" target="-"
+  local wgetArgs=() curlArgs=() headers wgetExists binary="" userHasColons=false user="" password="" format="" url="" target=""
   local maxRedirections=9
 
   wgetExists=$(whichExists wget && printf true || printf false)
@@ -693,9 +693,6 @@ urlFetch() {
         url="$1"
       elif [ -z "$target" ]; then
         target="$1"
-        if [ "$target" != "-" ]; then
-          curlArgs+=("-o" "$target")
-        fi
         shift
         break
       else
@@ -707,9 +704,14 @@ urlFetch() {
     shift
   done
 
+  # URL
   [ -n "$url" ] || __throwArgument "$handler" "URL is required" || return $?
-  [ -n "$target" ] || __throwArgument "$handler" "target is required" || return $?
 
+  # target
+  [ -n "$target" ] || target="-"
+  [ "$target" = "-" ] || curlArgs+=("-o" "$target")
+
+  # User
   if [ -n "$user" ]; then
     curlArgs+=(--user "$user:$password")
     wgetArgs+=("--http-user=$user" "--http-password=$password")
@@ -718,6 +720,8 @@ urlFetch() {
   if [ "$binary" = "curl" ] && $userHasColons; then
     __throwArgument "$handler" "$argument: Users ($argument \"$(decorate code "$user")\") with colons are not supported by curl, use wget" || return $?
   fi
+
+  # Binary
   if [ -z "$binary" ]; then
     if $wgetExists; then
       binary="wget"
@@ -725,23 +729,19 @@ urlFetch() {
       binary="curl"
     fi
   fi
-  # wget options:
-  # -q quiet
-  #  --timeout - seconds to time out
-  wgetArgs+=(--max-redirect "$maxRedirections")
-  wgetArgs+=(-q)
-  wgetArgs+=(--timeout=10)
-  # Curl options:
-  # -s silent
-  # -S show errors
-  # -f FAIL - ignore documents for 4XX or 5XX errors
-  # -L follow redirects
-  curlArgs+=(--max-redirs "$maxRedirections" -s -f -L --no-show-error)
   [ -n "$binary" ] || __throwEnvironment "$handler" "wget or curl required" || return $?
   [ -n "$format" ] || format="$binary"
   case "$format" in
-  wget) __catchEnvironment "$handler" "$binary" --output-document="$target" "${wgetArgs[@]+"${wgetArgs[@]}"}" "$url" "$@" || return $? ;;
-  curl) __catchEnvironment "$handler" "$binary" "$url" "$@" "${curlArgs[@]+"${curlArgs[@]}"}" || return $? ;;
+  wget)
+    # -q - quiet, --timeout - seconds to time out
+    wgetArgs+=(--max-redirect "$maxRedirections" -q --timeout=10)
+    __catchEnvironment "$handler" "$binary" --output-document="$target" "${wgetArgs[@]+"${wgetArgs[@]}"}" "$url" "$@" || return $?
+    ;;
+  curl)
+    # -L - follow redirects, -s - silent, -f - (FAIL) ignore documents for 4XX or 5XX errors
+    curlArgs+=(-L --max-redirs "$maxRedirections" -s -f --no-show-error)
+    __catchEnvironment "$handler" "$binary" "$url" "$@" "${curlArgs[@]+"${curlArgs[@]}"}" || return $?
+    ;;
   *) __throwEnvironment "$handler" "No handler for binary format $(decorate value "$format") (binary is $(decorate code "$binary")) $(decorate each value -- "${genericArgs[@]}")" || return $? ;;
   esac
 }
