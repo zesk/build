@@ -173,7 +173,10 @@ platform, [report an issue](https://github.com/zesk/build/issues).
   permissions are translated, I assume. Workaround falls back to `ls` which is slow but works. See `isExecutable`. Added
   2024-01.
 
-## Copyright &copy; 2025 Market Acumen, Inc
+## Copyright &copy; 2025
+
+All copyrights held by **Market Acumen, Inc.**, a [provider
+of infrastructure expertise.](https://marketacumen.com/executive-technical-assessment-and-reporting/?crcat=code&crsource=zesk-build&crcampaign=README.md&crkw=provider+of+infrastructure+expertise)
 
 License is [MIT License](LICENSE.md). Source can be found online at [GitHub](https://github.com/zesk/build).
 

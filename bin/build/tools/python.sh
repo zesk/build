@@ -277,8 +277,8 @@ pythonVirtual() {
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
     # _IDENTICAL_ handlerHandler 1
-    --application) shift && application=$(usageArgumentDirectory "$handler" "$argument" "${1-}") || return $? ;;
     --handler) shift && handler=$(usageArgumentFunction "$handler" "$argument" "${1-}") || return $? ;;
+    --application) shift && application=$(usageArgumentDirectory "$handler" "$argument" "${1-}") || return $? ;;
     --require) shift && pp+=("--requirement" "$(usageArgumentFile "$handler" "$argument" "${1-}")") || return $? ;;
     *)
       pp+=("$(usageArgumentString "$handler" "$argument" "${1-}")") || return $?

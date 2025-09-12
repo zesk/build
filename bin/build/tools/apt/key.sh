@@ -97,7 +97,7 @@ __aptKeyAdd() {
     statusMessage decorate info "Fetching $title key ... "
     keyFile="$ring/$name.gpg"
     # curl used  -fsSL as options:
-    __catchEnvironment "$handler" urlFetch "$url" | gpg --no-tty --batch --dearmor | tee "$keyFile" >/dev/null || return $?
+    __catch "$handler" urlFetch "$url" | gpg --no-tty --batch --dearmor | tee "$keyFile" >/dev/null || return $?
     __catchEnvironment "$handler" chmod a+r "$keyFile" || return $?
     signFiles+=("$keyFile")
     index=$((index + 1))

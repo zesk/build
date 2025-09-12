@@ -17,11 +17,11 @@ testUrlFetch() {
   clean+=("$temp")
   assertExitCode --stdout-match "Test file for Zesk Build" --stdout-match "Hello, world." --stdout-match "<h1>" 0 urlFetch "https://marketacumen.com/zesk-build.html" "-" || returnClean $? "${clean[@]}" || return $?
 
-  __catchEnvironment "$handler" urlFetch "https://marketacumen.com/zesk-build.html" >"$temp" || returnClean $? "${clean[@]}" || return $?
+  __catch "$handler" urlFetch "https://marketacumen.com/zesk-build.html" >"$temp" || returnClean $? "${clean[@]}" || return $?
   clean+=("$temp.1")
-  __catchEnvironment "$handler" urlFetch "https://marketacumen.com/zesk-build.html" - >"$temp.1" || returnClean $? "${clean[@]}" || return $?
+  __catch "$handler" urlFetch "https://marketacumen.com/zesk-build.html" - >"$temp.1" || returnClean $? "${clean[@]}" || return $?
   clean+=("$temp.2")
-  __catchEnvironment "$handler" urlFetch "https://marketacumen.com/zesk-build.html" "$temp.2" || returnClean $? "${clean[@]}" || return $?
+  __catch "$handler" urlFetch "https://marketacumen.com/zesk-build.html" "$temp.2" || returnClean $? "${clean[@]}" || return $?
 
   assertFileContains "$temp" "Test file for Zesk Build" || returnClean $? "${clean[@]}" || return $?
 

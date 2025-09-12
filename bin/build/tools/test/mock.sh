@@ -13,9 +13,8 @@
 mockEnvironmentStart() {
   local handler="_${FUNCNAME[0]}"
   while [ $# -gt 0 ]; do
-
     local argument="${1-}" && shift
-    local emptyValue="$handler $argument"
+    local emptyValue="__MOCK__ $argument"
     local value="${1-}"
     [ $# -eq 0 ] || shift
     local saveGlobal="__MOCK_$argument"
@@ -31,7 +30,8 @@ _mockEnvironmentStart() {
 }
 
 # Restore a mocked value. Works solely with the default `saveGlobalName` (e.g. `__MOCK_${globalName}`).
-# Usage: {fn} globalName
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
 # Argument: globalName ... - EnvironmentVariable. Required. Global to restore from the mocked saved value.
 mockEnvironmentStop() {
   local handler="_${FUNCNAME[0]}"
@@ -41,18 +41,24 @@ mockEnvironmentStop() {
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
     [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
-    local emptyValue="_mockEnvironmentStart $argument"
-    # shellcheck disable=SC2163
-    export "$argument"
-    if [ "${!argument-"$emptyValue"}" = "$emptyValue" ]; then
-      unset "$argument"
-      statusMessage decorate notice "MOCK: Removing $argument (was unset)"
-    else
-      local saveGlobal="__MOCK_$argument"
-      export "$argument"="${!saveGlobal-}"
-      statusMessage decorate notice "MOCK: Restoring $argument from $(decorate code "$saveGlobal")"
-    fi
-    unset "$saveGlobal"
+    case "$argument" in
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
+    *)
+      local emptyValue="__MOCK__ $argument"
+      # shellcheck disable=SC2163
+      export "$argument"
+      if [ "${!argument-"$emptyValue"}" = "$emptyValue" ]; then
+        unset "$argument"
+        statusMessage decorate notice "MOCK: Removing $argument (was unset)"
+      else
+        local saveGlobal="__MOCK_$argument"
+        export "$argument"="${!saveGlobal-}"
+        statusMessage decorate notice "MOCK: Restoring $argument from $(decorate code "$saveGlobal")"
+      fi
+      unset "$saveGlobal"
+      ;;
+    esac
     shift
   done
 }
