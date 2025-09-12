@@ -14,6 +14,7 @@
 /.test*
 /scratch.txt
 /.last-run-test
+/.last-run-platform
 /test.stats
 /coverage.stats*
 /test-coverage/
