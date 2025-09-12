@@ -3,14 +3,32 @@
 <!-- TEMPLATE header 2 -->
 [⬅ Parent ](../index.md)
 <hr />
+
+## Building
+
 {__buildDocumentationBuild}
+
 {__buildTestSuite}
+
+### Generating fast (?) files
+
+{buildFastFiles}
+
+## Development
+
 {buildPreRelease}
 
 {buildAddTool}
-{buildContainer}
+
+## Testing Wrappers
+
+{buildTestPlatforms}
+
 {buildQuickTest}
 
+{buildProductionTest}
 
 {buildBuildTiming}
-{buildFastFiles}
+
+{buildContainer}
+

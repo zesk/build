@@ -53,6 +53,6 @@ Hides these from [New and uncategorized functions](./todo.md)
 {semanticColorTest}
 
 {allColorTest}
-{buildProductionTest}
 {bashPromptModule_binBuild}
 {interactiveBashSource}
+{documentationIndex_SeeLinker}
