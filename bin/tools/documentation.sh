@@ -262,7 +262,6 @@ buildDocumentationBuild() {
 
     __catchEnvironment "$handler" python -m mkdocs build || return $?
     __catchEnvironment "$handler" muzzle popd || return $?
-    __catchEnvironment "$handler" source "$home/.venv/bin/deactivate" || return $?
   fi
 
   statusMessage --last timingReport "$start" "$(basename "${BASH_SOURCE[0]}") completed in"
