@@ -368,4 +368,6 @@ testUnderscoreUnderscoreBuild() {
   __environment cp -R "$home/bin/build" "$testPath/app/bin/build" || return $?
 
   APPLICATION_ID=testID.$$ assertExitCode --dump --line "$LINENO" 0 "$testPath/app/bin/build.sh" || return $?
+
+  __catchEnvironment "$handler" rm -rf "$testPath" || return $?
 }
