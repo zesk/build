@@ -51,7 +51,11 @@ __functionLoader() {
   local __saved=("$@") functionName="${1-}" subdirectory="${2-}" handler="${3-}" command="${4-}"
   shift 4 || __catchArgument "$handler" "Missing arguments: $(decorate each --count code -- "${__saved[@]}")" || return $?
   export BUILD_HOME
-  isFunction "$functionName" || __catch "$handler" bashSourcePath "${BUILD_HOME-}/bin/build/tools/$subdirectory/" || return $?
+  if ! isFunction "$functionName"; then
+    __catch "$handler" bashSourcePath "${BUILD_HOME-}/bin/build/tools/$subdirectory/" || return $?
+    export __BUILD_LOADER
+    __BUILD_LOADER+=("$functionName")
+  fi
   "$command" "$handler" "$@" || return $?
 }
 
@@ -83,6 +87,9 @@ __toolsMain() {
   export BUILD_HOME BUILD_DEBUG
   unset BUILD_HOME
 
+  export __BUILD_LOADER
+  [ -z "${__BUILD_LOADER-}" ] || unset "${__BUILD_LOADER[@]}"
+  __BUILD_LOADER=()
   [ -f "$toolsList" ] || _return $internalError "%s\n" "Missing $toolsList" 1>&2 || return $?
   toolsFiles+=("../env/BUILD_HOME")
   while read -r toolFile; do [ "$toolFile" != "${toolFile#\#}" ] || toolsFiles+=("$toolFile"); done <"$toolsList"
