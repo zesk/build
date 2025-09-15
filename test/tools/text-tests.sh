@@ -7,6 +7,30 @@
 # Copyright &copy; 2025 Market Acumen, Inc.
 #
 
+testFileEndsWithNewline() {
+  local handler="_return"
+
+  local ff
+  ff=$(fileTemporaryName "$handler") || return $?
+
+  BUILD_DEBUG="" assertExitCode --stdout-match "file end with a newline" 0 fileEndsWithNewline --help || return $?
+  assertExitCode --stderr-match "at least one" 2 fileEndsWithNewline || return $?
+  assertExitCode --stderr-match "not a file" 2 fileEndsWithNewline ".not-a-file" || return $?
+
+  assertExitCode 0 fileEndsWithNewline "$ff" || return $?
+
+  __catchEnvironment "$handler" printf -- "\n" >"$ff" || return $?
+  assertExitCode 0 fileEndsWithNewline "$ff" || return $?
+
+  __catchEnvironment "$handler" printf -- "abc\n\n\n\n" >"$ff" || return $?
+  assertExitCode 0 fileEndsWithNewline "$ff" || return $?
+
+  __catchEnvironment "$handler" printf -- "abc\n\n\n\ndef" >"$ff" || return $?
+  assertExitCode 1 fileEndsWithNewline "$ff" || return $?
+
+  __catchEnvironment "$handler" rm -f "$ff" || return $?
+}
+
 __dataStringBegins() {
   cat <<EOF
 0 Hello Hell No
@@ -172,4 +196,3 @@ testPrintfOutput() {
   assertEquals "$(echo "ab" | printfOutputSuffix "c")" "ab"$'\n'"c" || return $?
   assertEquals "$(printf "" | printfOutputSuffix "c")" "" || return $?
 }
-

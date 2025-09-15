@@ -169,7 +169,6 @@ _newlineHide() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-
 #
 # Quote strings for inclusion in shell quoted strings
 # Argument: text - Text to quote
@@ -532,6 +531,39 @@ _maximumLineLength() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
+# Does a file end with a newline or is empty?
+#
+# Typically used to determine if a newline is needed before appending a file.
+#
+# Argument: file ... - File. Required. File to check if the last character is a newline.
+# Exit Code: 0 - All files ends with a newline
+# Exit Code: 1 - One or more files ends with a non-newline
+# Test: testFileEndsWithNewline
+fileEndsWithNewline() {
+  local handler="_${FUNCNAME[0]}" one=false
+
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
+  local __saved=("$@") __count=$#
+  while [ $# -gt 0 ]; do
+    local argument="$1" __index=$((__count - $# + 1))
+    case "$argument" in
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
+    *)
+      [ -f "$argument" ] || __throwArgument "$handler" "not a file #$__index/$__count ($argument))" || return $?
+      one=true
+      [ -z "$(tail -c 1 "$argument")" ] || return 1
+      ;;
+    esac
+    shift
+  done
+  $one || __throwArgument "$handler" "Requires at least one file $(decorate each code -- "${__saved[@]}")" || return $?
+}
+_fileEndsWithNewline() {
+  # __IDENTICAL__ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
 # stdout: UnsignedInteger
 # Outputs the number of lines read from stdin (or supplied files) until EOF. For multiple files passed on the command line - each one is output separately.
 # This is essentially a wrapper around `wc -l` which strips whitespace and does type checking.
@@ -563,7 +595,7 @@ fileLineCount() {
       if $newlineCheck; then
         if [ -s "$file" ]; then
           # File is not empty
-          if [ -z "$(tail -c 1 "$file")" ]; then
+          if fileEndsWithNewline "$file"; then
             # newline at EOF
             printf "%d\n" "$total"
           else

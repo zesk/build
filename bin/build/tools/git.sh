@@ -553,7 +553,9 @@ __gitCommitReleaseNotesUpdate() {
   pattern="$(quoteGrepPattern "$comment")"
   __catchEnvironment "$handler" statusMessage --last printf -- "%s%s\n" "$(lineFill '.' "$(decorate label "Release notes") $(decorate file "$notes") $(decorate decoration --)")" "$(decorate reset --)" || return $?
   if ! grep -q -e "$pattern" "$notes"; then
-    __catchEnvironment "$handler" printf -- "%s %s\n" "-" "$comment" >>"$notes" || return $?
+    local prefix=""
+    fileEndsWithNewline "$notes" || prefix=$'\n'
+    __catchEnvironment "$handler" printf -- "%s%s %s\n" "$prefix" "-" "$comment" >>"$notes" || return $?
     printf -- "%s %s:\n%s\n" "$(decorate info "Adding comment to")" "$(decorate file "$notes")" "$(boxedHeading "$comment")"
     __catchEnvironment "$handler" git add "$notes" || return $?
     __catchEnvironment "$handler" grep -B 10 -e "$pattern" "$notes" | decorate code || return $?
