@@ -45,6 +45,7 @@
 {stringOffset}
 {maximumFieldLength}
 {maximumLineLength}
+{fileEndsWithNewline}
 
 ## Language-related
 
