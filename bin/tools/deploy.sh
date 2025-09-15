@@ -30,16 +30,11 @@ __buildDeploy() {
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
-    --documentation)
-      makeDocumentation=true
-      ;;
-    --release)
-      makeRelease=true
-      ;;
-    --debug)
-      __buildDebugColors
-      debugFlag=true
-      ;;
+    --documentation) makeDocumentation=true ;;
+    --no-documentation) makeDocumentation=false ;;
+    --no-release) makeRelease=false ;;
+    --release) makeRelease=true ;;
+    --debug) debugFlag=true ;;
     *)
       # _IDENTICAL_ argumentUnknownHandler 1
       __throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
@@ -51,6 +46,7 @@ __buildDeploy() {
   local start
   start=$(timingStart)
 
+  ! $debugFlag || __buildDebugColors
   ! $debugFlag || statusMessage decorate info "Installing AWS ..."
   __catch "$handler" awsInstall || return $?
 
