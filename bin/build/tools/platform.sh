@@ -498,7 +498,7 @@ loadAverage() {
     text="$(cat /proc/loadavg)"
   elif whichExists uptime; then
     text=$(__catchEnvironment "$handler" uptime) || return $?
-    text="${text##*average}"
+    text="${text##*average}"_
     text="${text##*:}"
     text="${text# }"
     text="${text//,/ }"
@@ -508,6 +508,33 @@ loadAverage() {
   printf "%s\n" "${averages[0]}" "${averages[1]-}" "${averages[2]-}"
 }
 _loadAverage() {
+  # __IDENTICAL__ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+# Convert a group name to a group ID
+groupID() {
+  local handler="_${FUNCNAME[0]}"
+
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
+  local __saved=("$@") __count=$#
+  while [ $# -gt 0 ]; do
+    local argument="$1" __index=$((__count - $# + 1))
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
+    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    case "$argument" in
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
+    *)
+      local gid
+      gid="$(getent group "$1" | cut -d: -f3)" || return 1
+      printf "%d\n" "$gid"
+      ;;
+    esac
+    shift
+  done
+}
+_groupID() {
   # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
