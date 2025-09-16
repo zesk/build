@@ -33,8 +33,6 @@ __buildBuild() {
 
   local debugFlag=false makeDocumentation=false commitChanges=false
 
-  export BUILD_COLORS
-
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
@@ -78,11 +76,15 @@ __buildBuild() {
   local start
   start=$(timingStart)
 
+  export BUILD_COLORS BUILD_COLORS_MODE
+
+  [ -n "${BUILD_COLORS_MODE-}" ] || BUILD_COLORS_MODE=$(consoleConfigureColorMode) || :
+
   ! $debugFlag || statusMessage decorate info "Installing dependencies ..."
   __catch "$handler" awsInstall || return $?
   if ! whichExists yq; then
     __catch "$handler" pythonInstall || return $?
-    __catch "$handler" pip install yq || return $?
+    __catch "$handler" pipInstall yq || return $?
   fi
 
   local home
@@ -90,8 +92,13 @@ __buildBuild() {
 
   local size
 
-  size=$(yq ".. | select(has(\"deployment\") and .deployment == \"${BITBUCKET_DEPLOYMENT_ENVIRONMENT-}\")" <"$home/bitbucket-pipelines.yml")
-  [ -n "$size" ] || size="1x"
+  if ! whichExists yq; then
+    decorate warning "no yq can not parse .yml file"
+    size=unknown
+  else
+    size=$(yq ".. | select(has(\"deployment\") and .deployment == \"${BITBUCKET_DEPLOYMENT_ENVIRONMENT-}\")" <"$home/bitbucket-pipelines.yml")
+    [ -n "$size" ] || size="1x"
+  fi
 
   __catch "$handler" bigText "$(buildEnvironmentGet APPLICATION_NAME) $(hookVersionCurrent)" || return $?
   echoBar "."
