@@ -89,10 +89,19 @@ __buildBuild() {
   home=$(__catch "$handler" buildHome) || return $?
 
   local size
-  size=$(yq ".pipelines.branches.main[0].step.size" <"$home/bitbucket-pipelines.yml")
 
-  decorate info "Running ${BITBUCKET_BRANCH-} ${BITBUCKET_DEPLOYMENT_ENVIRONMENT-} ${BITBUCKET_WORKSPACE-} on hardware: $size"
+  size=$(yq ".. | select(has(\"deployment\") and .deployment == \"${BITBUCKET_DEPLOYMENT_ENVIRONMENT-}\")" <"$home/bitbucket-pipelines.yml")
+  [ -n "$size" ] || size="1x"
+
+  __catch "$handler" bigText "$(buildEnvironmentGet APPLICATION_NAME) $(hookVersionCurrent)" || return $?
+  echoBar "."
+  decorate pair Branch "${BITBUCKET_BRANCH-}"
+  decorate pair Deployment "${BITBUCKET_DEPLOYMENT_ENVIRONMENT-}"
+  decorate pair Workspace "${BITBUCKET_WORKSPACE-}"
+  decorate pair Hardware Size "${size}"
+  echoBar "."
   dumpEnvironment
+  echoBar "#"
 
   ! $debugFlag || statusMessage decorate info "Updating markdown ..."
   if ! "$home/bin/update-md.sh" --skip-commit; then

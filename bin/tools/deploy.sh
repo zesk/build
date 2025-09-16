@@ -79,7 +79,7 @@ __buildDeploy() {
     local rootShow rootPath="$home/documentation/site"
     rootShow=$(decorate file "$rootPath")
 
-    if [ -n "$target" ]; then
+    if [ -z "$target" ]; then
       __throwEnvironment "$handler" "No DOCUMENTATION_S3_PREFIX but --documentation supplied" || return $?
     fi
     if [ ! -d "$rootPath" ]; then
