@@ -1,4 +1,8 @@
 {
-  "version": "v0.38.1",
-  "id": "90418350"
+  "version": "v0.38.2",
+  "id": "42be5de2",
+  "identical": {
+    "--internal": "2e510c963641cbf848f67927dbe69f1c29c89fb0"
+  },
+  "deprecated": "fe9932162daf1693d4140fcb2849969c83569ce9"
 }
