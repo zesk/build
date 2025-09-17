@@ -96,7 +96,7 @@ __buildBuild() {
     decorate warning "no yq can not parse .yml file"
     size=unknown
   else
-    size=$(yq ".. | select(has(\"deployment\") and .deployment == \"${BITBUCKET_DEPLOYMENT_ENVIRONMENT-}\")" <"$home/bitbucket-pipelines.yml")
+    size=$(yq ".. | select(has(\"deployment\") and .deployment == \"${BITBUCKET_DEPLOYMENT_ENVIRONMENT-}\") | .size" <"$home/bitbucket-pipelines.yml")
     [ -n "$size" ] || size="1x"
   fi
 
@@ -105,7 +105,7 @@ __buildBuild() {
   decorate pair Branch "${BITBUCKET_BRANCH-}"
   decorate pair Deployment "${BITBUCKET_DEPLOYMENT_ENVIRONMENT-}"
   decorate pair Workspace "${BITBUCKET_WORKSPACE-}"
-  decorate pair Hardware Size "${size}"
+  decorate pair "Hardware Size" "${size}"
   echoBar "."
   dumpEnvironment
   echoBar "#"
