@@ -40,7 +40,7 @@ __identicalCheckInsideLoopLineHandler() {
 
   if [ ! -f "$countFile" ]; then
     {
-      statusMessage --last printf -- "%s: %s\n" "$(decorate info "$token")" "$(decorate error "Token counts do not match:")"
+      statusMessage --last printf -- "%s: %s\n" "$(decorate info "$token")" "$(decorate error "gitToken counts do not match:")"
       printf -- "    [%s] specified in %s\n" "$(decorate success " $tokenLineCount ")" "$(decorate file "$tokenFileName")"
       printf -- "    [%s] specified in %s\n" "$(decorate error " $count ")" "$(decorate file "$searchFile")"
     } 1>&2

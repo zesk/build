@@ -542,7 +542,7 @@ _maximumLineLength() {
 fileEndsWithNewline() {
   local handler="_${FUNCNAME[0]}" one=false
 
-  # _IDENTICAL_ argumentNonBlankLoopHandler 6
+  # _IDENTICAL_ argumentBlankLoopHandler 4
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
