@@ -550,7 +550,7 @@ fileEndsWithNewline() {
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
     *)
-      [ -f "$argument" ] || __throwArgument "$handler" "not a file #$__index/$__count ($argument))" || return $?
+      [ -f "$argument" ] || __throwArgument "$handler" "not a file #$__index/$__count ($argument)" || return $?
       one=true
       [ -z "$(tail -c 1 "$argument")" ] || return 1
       ;;
