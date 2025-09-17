@@ -2,8 +2,8 @@
 #
 # Copyright &copy; 2025 Market Acumen, Inc.
 #
-# Docs: o ./documentation/source/tools/os.md
-# Test: o ./test/tools/os-tests.sh
+# Docs: o ./documentation/source/tools/platform.md
+# Test: o ./test/tools/platform-tests.sh
 
 #
 # Usage: {fn} count binary [ args ... ]
@@ -356,11 +356,12 @@ _serviceToStandardPort() {
 # Usage: {fn} service [ ... ]
 # Argument: service - A unix service typically found in `/etc/services`
 # Argument: --services servicesFile - Optional. File. File like '/etc/services`.
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
 # Output: Port number of associated service (integer) one per line
 # Exit Code: 1 - service not found
 # Exit Code: 2 - bad argument or invalid port
 # Exit Code: 0 - service found and output is an integer
-#
 serviceToPort() {
   local handler="_${FUNCNAME[0]}"
   local port servicesFile=/etc/services service
@@ -422,12 +423,11 @@ __extensionListsLog() {
   printf "%s\n" "$original" | tee -a "$directory/@" >>"$directory/$extension" || _environment "writing $directory/$extension" || return $?
 }
 
-#
-# Usage: {fn} directory file0 ...
-# Argument: --help - Optional. Flag. This help.
 # Argument: --clean - Optional. Flag. Clean directory of all files first.
 # Argument: directory - Required. Directory. Directory to create extension lists.
 # Argument: file0 - Optional. List of files to add to the extension list.
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
 # Input: Takes a list of files, one per line
 # Generates a directory containing files with `extension` as the file names.
 # All files passed to this are added to the `@` file, the `!` file is used for files without extensions.
@@ -489,6 +489,8 @@ _extensionLists() {
 # Uptime output: 0:00  up 30 days,  6:02, 19 users, load averages: 15.01 12.66 11.64
 # Uptime output: 05:01:06 up 8 days,  4:03,  0 users,  load average: 3.87, 3.09, 2.71
 # stdout: lines:Number
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
 loadAverage() {
   local handler="_${FUNCNAME[0]}"
   local text
@@ -513,8 +515,12 @@ _loadAverage() {
 }
 
 # Convert a group name to a group ID
+# Argument: groupName - String. Required. One or more names to find group IDs for.
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
+# stdout: PositiveInteger
 groupID() {
-  local handler="_${FUNCNAME[0]}"
+  local handler="_${FUNCNAME[0]}" one=false
 
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
@@ -527,12 +533,15 @@ groupID() {
     --help) "$handler" 0 && return $? || return $? ;;
     *)
       local gid
-      gid="$(getent group "$1" | cut -d: -f3)" || return 1
+      gid="$(__groupID "$1")" || return 1
+      isPositiveInteger "$gid" || __throwEnvironment "$handler" "No group found: $1" || return $?
       printf "%d\n" "$gid"
+      one=true
       ;;
     esac
     shift
   done
+  $one || __throwArgument "$handler" "Requires a group name" || return $?
 }
 _groupID() {
   # __IDENTICAL__ usageDocument 1

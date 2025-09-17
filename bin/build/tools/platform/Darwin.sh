@@ -90,3 +90,7 @@ __packageManagerDefault() {
   [ -n "$manager" ] || manager="${managers[0]}"
   printf "%s\n" "$manager"
 }
+
+__groupID() {
+  grep -e "^$(quoteGrepPattern "$1"):" /etc/group | cut -d: -f3
+}

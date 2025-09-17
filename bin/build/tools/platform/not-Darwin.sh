@@ -49,3 +49,7 @@ __hostname() {
 __dateFromTimestamp() {
   date -u -d "@$1" "+$2"
 }
+
+__groupID() {
+  getent group "$1" | cut -d: -f3
+}

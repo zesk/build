@@ -46,7 +46,7 @@
 - [Markdown](./markdown.md)
 - [Map](./map.md)
 - [Network](./network.md)
-- [Operating System](./os.md)
+- [Platform](./platform.md)
 - [Process](./process.md)
 - [Text](./text.md)
 - [Type](./type.md)

@@ -2,8 +2,8 @@
 #
 # Copyright &copy; 2025 Market Acumen, Inc.
 #
-# Docs: o ./documentation/source/tools/os.md
-# Test: o ./test/tools/os-tests.sh
+# Docs: o ./documentation/source/tools/tar.md
+# Test: o ./test/tools/tar-tests.sh
 
 #
 # Platform agnostic tar extract with wildcards

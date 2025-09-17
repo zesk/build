@@ -13,8 +13,8 @@ These utilities can be accessed via the shell in the PATH:
 They are intended to be standalone tools useful for a variety of installation and package management functions:
 
 - [`cannon.sh`](./text.md#cannon) - Same as [`cannon`](./text.md#cannon)
-- [`chmod-sh.sh`](./os.md#makeShellFilesExecutable) - Same as [
-  `makeShellFilesExecutable`](./os.md#makeShellFilesExecutable)
+- [`chmod-sh.sh`](./platform.md#makeShellFilesExecutable) - Same as [
+  `makeShellFilesExecutable`](./platform.md#makeShellFilesExecutable)
 - [`identical-check.sh`](./identical.md#identicalCheck) - Same as [`identicalCheck`](./identical.md#identicalCheck)
 - [`map.sh`](./text.md#mapEnvironment) - Same as [`mapEnvironment`](./text.md#mapEnvironment)
 - [`new-release.sh`](./version.md#newRelease) - Same as [`newRelease`](./version.md#newRelease)
