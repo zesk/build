@@ -104,11 +104,26 @@ __deprecatedCleanup() {
 
   __BUILD_DEPRECATED_EXTRAS+=(! -path '*/documentation/*/release/*' ! -path '*/documentation/site/*' \( -name '*.sh' -or -name '*.md' -or -name '*.txt' -or -name '*.json' -or -name '*.yml' -or -name '*.conf' \))
 
-  start=$(__environment timingStart) || return $?
+  start=$(__catch "$handler" timingStart) || return $?
   local home
 
-  home=$(__environment buildHome) || return $?
+  home=$(__catch "$handler" buildHome) || return $?
 
+  local fingerprint="" jsonFile=""
+  if [ $__count -eq 0 ]; then
+    fingerprint=$(__catch "$handler" hookRun application-fingerprint) || return $?
+    jsonFile="$home/$(__catch "$handler" buildEnvironmentGet APPLICATION_JSON)" || return $?
+    if [ -f "$jsonFile" ]; then
+      local savedFingerprint
+      savedFingerprint=$(__catchEnvironment "$handler" jq -r ".deprecated" <"$jsonFile") || return $?
+      if [ "$fingerprint" = "$savedFingerprint" ]; then
+        decorate success "Deprecated already run successfully. $(decorate subtle "$fingerprint")"
+        return 0
+      else
+        decorate error "Files changed: $fingerprint != $savedFingerprint"
+      fi
+    fi
+  fi
   local exitCode=0
 
   if $doCannon; then
@@ -126,6 +141,13 @@ __deprecatedCleanup() {
   if $doConfiguration; then
     statusMessage --last decorate info "Cleaning up configuration ..."
     __deprecatedConfiguration || exitCode=$?
+  fi
+  if [ $exitCode -eq 0 ] && [ -f "$jsonFile" ]; then
+    statusMessage --last decorate info "Saving deprecated fingerprint $(decorate subtle "$fingerprint") ..."
+    __catchEnvironment "$handler" jq ".deprecated = \"$fingerprint\"" <"$jsonFile" >"$jsonFile.new" || returnClean $? "$jsonFile.new" || return $?
+    __catchEnvironment "$handler" mv -f "$jsonFile.new" "$jsonFile" || returnClean $? "$jsonFile.new" || return $?
+  else
+    statusMessage --last timingReport "$start" "Failures occurred, not caching results."
   fi
   statusMessage --last timingReport "$start" "Deprecated process took"
   return "$exitCode"

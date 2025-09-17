@@ -19,6 +19,28 @@ __buildDebugColors() {
 
 }
 
+__buildMarker() {
+  local handler="_return"
+  local home
+
+  home=$(__catch "$handler" buildHome) || return $?
+  local jsonFile
+
+  jsonFile="$home/$(__catch "$handler" buildEnvironmentGet APPLICATION_JSON)" || return $?
+
+  [ -f "$jsonFile" ] || __catchEnvironment "$handler" printf "{}" >"$jsonFile" || return $?
+
+  local version id
+  version="$(__catch "$handler" hookRun version-current)" || return $?
+  id="$(__catch "$handler" hookRun application-id)" || return $?
+  __catchEnvironment "$handler" jq ".version = \"$version\" | .id = \"$id\"" <"$jsonFile" >"$jsonFile.new" || returnClean $? "$jsonFile.new" || return $?
+  __catchEnvironment "$handler" mv -f "$jsonFile.new" "$jsonFile" || returnClean $? "$jsonFile.new" || return $?
+
+  __catchEnvironment "$handler" muzzle git add "$jsonFile" || return $?
+
+  printf "%s\n" "$jsonFile"
+}
+
 #
 # Build Zesk Build
 #
@@ -82,6 +104,7 @@ __buildBuild() {
 
   ! $debugFlag || statusMessage decorate info "Installing dependencies ..."
   __catch "$handler" awsInstall || return $?
+  __catch "$handler" packageInstall || return $?
 
   local home
   home=$(__catch "$handler" buildHome) || return $?

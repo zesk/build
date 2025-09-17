@@ -62,10 +62,7 @@ isUnsignedInteger() {
 }
 
 # <-- END of IDENTICAL _return
-# <-- END of IDENTICAL _return
 
-# fn: {base}
-# handler: {fn}
 # By default will add any directory named `identical` as repair source and any file
 # at `identical/singles.txt` as a singles file.
 #
@@ -90,8 +87,26 @@ __buildIdenticalRepair() {
     [ -z "$item" ] || aa+=(--repair "$item")
   done < <(find "$home" -type d -name identical ! -path "*/.*/*")
   # bashDebugInterruptFile --error --interrupt
+  local fingerprint="" jsonFile=""
+  jsonFile="$home/$(__catch "$handler" buildEnvironmentGet APPLICATION_JSON)" || return $?
+  if [ -f "$jsonFile" ]; then
+    local buildFingerprint argChecksum="default"
+    [ $# -eq 0 ] || argChecksum="$*"
+    fingerprint=$(__catch "$handler" hookRun application-fingerprint) || return $?
+    buildFingerprint="$(jq -r ". + { identical: {} } | .identical.\"$argChecksum\"" <"$home/bin/build/build.json")"
+    if [ "$fingerprint" = "$buildFingerprint" ]; then
+      decorate success "Fingerprint matches [$(decorate code "$fingerprint")] ... skipping."
+      return 0
+    else
+      decorate info "Fingerprint mismatch [ \"$fingerprint\" != \"$buildFingerprint\" ]"
+    fi
+  fi
   set -eou pipefail
   __catch "$handler" identicalCheckShell --skip "$(realPath "${BASH_SOURCE[0]}")" "${aa[@]+"${aa[@]}"}" --exec contextOpen "$@" || return $?
+  __catchEnvironment "$handler" jq ". + { identical: {} } | .identical.\"$argChecksum\" = \"$fingerprint\"" <"$jsonFile" >"$jsonFile.new" || returnClean $? "$jsonFile.new" || return $?
+  __catchEnvironment "$handler" mv -f "$jsonFile.new" "$jsonFile" || returnClean $? "$jsonFile.new" || return $?
+  decorate success "Fingerprint updated."
+
 }
 ___buildIdenticalRepair() {
   # __IDENTICAL__ usageDocument 1
