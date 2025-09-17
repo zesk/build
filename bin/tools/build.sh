@@ -82,10 +82,6 @@ __buildBuild() {
 
   ! $debugFlag || statusMessage decorate info "Installing dependencies ..."
   __catch "$handler" awsInstall || return $?
-  if ! whichExists yq; then
-    __catch "$handler" pythonInstall || return $?
-    __catch "$handler" pipInstall yq || return $?
-  fi
 
   local home
   home=$(__catch "$handler" buildHome) || return $?
@@ -93,12 +89,11 @@ __buildBuild() {
   local size
 
   if ! whichExists yq; then
-    decorate warning "no yq can not parse .yml file"
-    size=unknown
+    size=$(grep -E '(deployment|size):' bitbucket-pipelines.yml | grep -A 1 "${BITBUCKET_DEPLOYMENT_ENVIRONMENT-}" | grep 'size:' | awk '{ print $2 }') || :
   else
-    size=$(yq ".. | select(has(\"deployment\") and .deployment == \"${BITBUCKET_DEPLOYMENT_ENVIRONMENT-}\") | .size" <"$home/bitbucket-pipelines.yml")
-    [ -n "$size" ] || size="1x"
+    size=$(yq ".. | select(has(\"deployment\") and .deployment == \"${BITBUCKET_DEPLOYMENT_ENVIRONMENT-}\") | .size" <"$home/bitbucket-pipelines.yml") || :
   fi
+  [ -n "$size" ] || size="1x"
 
   __catch "$handler" bigText "$(buildEnvironmentGet APPLICATION_NAME) $(hookVersionCurrent)" || return $?
   echoBar "."
