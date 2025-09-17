@@ -23,4 +23,5 @@ To handle a possible `--help` ending the arguments early:
 <hr />
 
 {_arguments}
+
 {_argumentReturn}

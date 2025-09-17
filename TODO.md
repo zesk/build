@@ -13,6 +13,7 @@
 
 ## Done
 
+- 2025 - September - Add loading functions for code sections which are used less frequently.
 - 2025 - August - Ensure all temporary files are cleaned up by all functions (Added: July 2025)
 - 2025 - February - "Work on 30-minute build timing or make it faster somehow" - Added `--tag` to `testSuite` to skip
   slow tests each run
