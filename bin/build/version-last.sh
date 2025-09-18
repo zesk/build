@@ -11,7 +11,7 @@
 # See: gitVersionLast
 # Requires: dirname gitVersionLast
 __binGitVersionLast() {
-  "$(dirname "${BASH_SOURCE[0]}")/tools.sh" gitVersionLast "$@"
+  "${BASH_SOURCE[0]%/*}/tools.sh" gitVersionLast "$@"
 }
 
 __binGitVersionLast "$@"

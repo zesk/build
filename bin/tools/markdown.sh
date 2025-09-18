@@ -22,7 +22,7 @@ __addNoteTo() {
 # Argument: --skip-commit - Skip the commit if the files change
 # Requires: jq __throwArgument statusMessage
 __updateMarkdown() {
-  local handler="${FUNCNAME[0]#_}"
+  local handler="_${FUNCNAME[0]}"
   local flagSkipCommit
   local argument
 
@@ -69,7 +69,7 @@ __updateMarkdown() {
     fi
   fi
 }
-_updateMarkdown() {
+___updateMarkdown() {
   # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

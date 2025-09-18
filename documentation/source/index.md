@@ -54,7 +54,7 @@ To use in your pipeline:
 
 ## Deprecated
 
-- [Deprecated functionality](./tools/deprecated.md)
+- [Deprecated functionality](./guide/deprecated.md)
 
 ## Copyright and License
 

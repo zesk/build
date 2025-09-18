@@ -1,6 +1,7 @@
 # Binaries
 
-These are found in the `bin/build` directory and have equivalent functions.
+These are found in the `bin/build` directory and typically have equivalent functions within Zesk Build which are
+similar.
 
 <!-- TEMPLATE header 2 -->
 [⬅ Parent ](../index.md)
@@ -16,7 +17,28 @@ They are intended to be standalone tools useful for a variety of installation an
 - [`chmod-sh.sh`](./platform.md#makeShellFilesExecutable) - Same as [
   `makeShellFilesExecutable`](./platform.md#makeShellFilesExecutable)
 - [`identical-check.sh`](./identical.md#identicalCheck) - Same as [`identicalCheck`](./identical.md#identicalCheck)
+- [`identical-repair.sh`](./identical.md#identicalCheckShell) - Same as [
+  `identicalCheckShell`](./identical.md#identicalCheckShell) with some extra functionality.
+- `install-bin-build.sh` - Install or upgrdades current version of Zesk Build in `./bin/build` if it is not installed
+  already. Updates itself if required.
 - [`map.sh`](./text.md#mapEnvironment) - Same as [`mapEnvironment`](./text.md#mapEnvironment)
+- `need-bash.sh` - Tool to install `bash` in containers first which do not have it installed automatically (Alpine, for
+- [`crontab-application-update.sh`](./crontab.md/#gitVersionList) - Same as [
+  `crontabApplicationUpdate`](./crontab.md#crontabApplicationUpdate)
+
+## Template scripts
+
+- `test.sample.sh` - Template for your own `test.sh` to run Bash tests (or any test suites)
+- `install.sample.sh` - Template to write your own `install-bin-build.sh` for your project.
+
+## Development tools
+
+- `bash-build.sh` - Tool to install `Zesk Build` in a new container, load it and modify the `.bashrc` to load it every
+  time
+- `bitbucket-container.sh` - Wrapper for `{SEE:bitbucketContainer}`
+- `deprecated.sh` - Do a project-wide replacement of deprecated code with modern updates. May modify or break your code.
+  example)
+- `local-container.sh` - Same as [`dockerLocalContainer`](./docker.md#dockerLocalContainer)
 - [`new-release.sh`](./version.md#newRelease) - Same as [`newRelease`](./version.md#newRelease)
 - [`release-notes.sh`](./git.md#releaseNotes) - Same as [`releaseNotes`](./git.md#releaseNotes)
 - [`version-last.sh`](./git.md#gitVersionLast) - Same as [`gitVersionLast`](./git.md#gitVersionLast)
@@ -45,4 +67,3 @@ Modify the last line of this file when installing at a different project depth:
 The `../..` is the relative path from the script to the project root
 directory. - [function {fn}]({documentationPath}) - [{summary}]({sourceLink}) will do this for you.
 
-{__installBinBuildURL}

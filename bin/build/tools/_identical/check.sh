@@ -48,6 +48,7 @@ __identicalCheck() {
       ;;
     --extension)
       shift
+      [ ${#findArgs[@]} -eq 0 ] || findArgs+=("-or")
       findArgs+=("-name" "*.$(usageArgumentString "$handler" "$argument" "${1-}")") || return $?
       extensionText="$extensionText .$1"
       ;;
@@ -126,7 +127,7 @@ __identicalCheck() {
 
   # ! $debug || decorate info "$LINENO: Generate search files"
   # ! $debug || decorate each quote __identicalCheckGenerateSearchFiles "$handler" "${repairSources[@]+"${repairSources[@]}"}" -- "$rootDir" "${findArgs[@]}" ! -path "*/.*/*" "${excludes[@]+${excludes[@]}}"
-  __identicalCheckGenerateSearchFiles "$handler" "$rootDir" "${repairSources[@]+"${repairSources[@]}"}" -- "${findArgs[@]}" ! -path "*/.*/*" "${excludes[@]+${excludes[@]}}" >"$searchFileList" || returnClean $? "${clean[@]}" || return $?
+  __identicalCheckGenerateSearchFiles "$handler" "$rootDir" "${repairSources[@]+"${repairSources[@]}"}" -- \( "${findArgs[@]}" \) ! -path "*/.*/*" "${excludes[@]+${excludes[@]}}" >"$searchFileList" || returnClean $? "${clean[@]}" || return $?
   if [ ! -s "$searchFileList" ]; then
     __throwEnvironment "$handler" "No files found in $(decorate file "$rootDir") with${extensionText}" || returnClean $? "${clean[@]}" || return $?
   fi
@@ -155,26 +156,20 @@ __identicalCheck() {
   __catch "$handler" environmentValueWriteArray "singles" "${singles[@]+"${singles[@]}"}" >>"$stateFile" || returnClean $? "${clean[@]}" || return $?
   __catch "$handler" environmentValueWriteArray "tokens" "${tokens[@]+"${tokens[@]}"}" >>"$stateFile" || returnClean $? "${clean[@]}" || return $?
 
-  local prefix prefixIndex=0
-  for prefix in "${prefixes[@]}"; do
-    local __line=1 searchFile
-    ! $debug || statusMessage decorate info "$LINENO: Processing prefix $prefix"
+  local __line=1 searchFile
 
-    while read -r searchFile; do
-      [ -f "$searchFile" ] || __throwEnvironment "$handler" "Invalid searchFileList $searchFileList line $__line: $(decorate file "$searchFile")"
-      if [ "${#skipFiles[@]}" -gt 0 ] && inArray "$searchFile" "${skipFiles[@]}"; then
-        statusMessage decorate notice "Skipping $(decorate file "$searchFile")" || returnClean $? "${clean[@]}" || return $?
-        continue
-      fi
-      ! $debug || statusMessage decorate each code _identicalCheckInsideLoop "$handler" "$stateFile" "$prefixIndex" "$prefix" "$searchFile"
-      if ! _identicalCheckInsideLoop "$handler" "$stateFile" "$prefixIndex" "$prefix" "$searchFile"; then
-        exitCode="$failureCode"
-      fi
-      __line=$((__line + 1))
-    done <"$searchFileList"
+  while read -r searchFile; do
+    [ -f "$searchFile" ] || __throwEnvironment "$handler" "Invalid searchFileList $searchFileList line $__line: $(decorate file "$searchFile")"
+    if [ "${#skipFiles[@]}" -gt 0 ] && inArray "$searchFile" "${skipFiles[@]}"; then
+      statusMessage decorate notice "Skipping $(decorate file "$searchFile")" || returnClean $? "${clean[@]}" || return $?
+      continue
+    fi
+    ! $debug || statusMessage decorate each code _identicalCheckInsideLoop "$handler" "$stateFile" "$searchFile" "${prefixes[@]}"
+    if ! _identicalCheckInsideLoop "$handler" "$debug" "$stateFile" "$searchFile" "${prefixes[@]}"; then
+      exitCode="$failureCode"
+    fi
     # searchFileList contains absolute paths from __identicalCheckGenerateSearchFiles
-    prefixIndex=$((prefixIndex + 1))
-  done
+  done <"$searchFileList"
 
   if [ "$exitCode" -ne 0 ]; then
     local badFiles=() item

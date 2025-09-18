@@ -124,10 +124,7 @@ dumpPipe() {
       shift || __throwArgument "$handler" "missing $argument argument" || return $?
       symbol="$1"
       ;;
-    --lines)
-      shift || __throwArgument "$handler" "missing $argument argument" || return $?
-      showLines=$(usageArgumentUnsignedInteger "$handler" "showLines" "$1") || return $?
-      ;;
+    --lines) shift && showLines=$(usageArgumentUnsignedInteger "$handler" "showLines" "$1") || return $? ;;
     *)
       names+=("$argument")
       break

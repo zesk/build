@@ -3,7 +3,6 @@
 # Copyright &copy; 2025 Market Acumen, Inc.
 #
 
-
 # Sets the console colors based on the project you are currently in.
 # Define your color configuration file (values of `bg=FFF` etc. one per line, comments allowed)
 #
@@ -59,10 +58,7 @@ __bashPromptModule_LoadColors() {
 
   export __BUILD_TERM_COLORS BUILD_COLORS_MODE
 
-  local cacheDir hash
-  cacheDir=$(buildEnvironmentGetDirectory XDG_CACHE_HOME --subdirectory ".TermColors") || return 0
-
-  hash=$(cachedShaPipe "$cacheDir" <"$schemeFile") || :
+  hash="$(fileModificationTime "$schemeFile"):$(fileSize "$schemeFile")" || :
   ! $debug || statusMessage --last decorate info "$schemeFile -> \"$hash\" $(decorate code __BUILD_TERM_COLORS) $(timingReport "$start")"
   [ -n "$hash" ] || return 0
 
@@ -120,7 +116,7 @@ __bashPromptModule_LoadColors() {
 
   local mode
   mode=$(__environment consoleConfigureColorMode "$bg") || :
-  [ -z "$mode" ] || BUILD_COLORS_MODE="$mode" && bashPrompt --colors "$(bashPromptColorScheme "$mode")"
+  [ -z "$mode" ] || BUILD_COLORS_MODE="$mode" && bashPrompt --skip-prompt --colors "$(bashPromptColorScheme "$mode")"
 
   ! $debug || timingReport "$start" "Background is now $bg and mode is $mode ... "
 }

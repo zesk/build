@@ -44,7 +44,7 @@ _timingStart() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# Format a timout output (milliseconds) as seconds using a decimal
+# Format a timing output (milliseconds) as seconds using a decimal
 timingFormat() {
   local handler="_${FUNCNAME[0]}"
   [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0

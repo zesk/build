@@ -33,11 +33,13 @@ set -eou pipefail
 # Argument: --no-spelling - Optional. Flag. Search for common (wink) misspellings and fix them.
 # Argument: --just-spelling - Optional. Flag. Just search for common (wink) misspellings and fix them. (Sets all other flags to false)
 # Argument: --spelling - Optional. Flag. Search for common (wink) misspellings and fix them. (other flags remain unchanged)
+# Argument: --check - Optional. Flag. Check if the deprecated fingerprint is up to date and return 0 if it is.
 # MOST RECENT STUFF at the top as it will likely have more hits
 # See: docs/_templates/deprecated.md
 __deprecatedCleanup() {
   local handler="_${FUNCNAME[0]}"
   local doCannon=true doTokens=true doSpelling=true doConfiguration=true ignoreExtras=()
+  local justCheck=false
 
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
@@ -91,6 +93,7 @@ __deprecatedCleanup() {
       done
       [ $# -eq 0 ] || shift
       ;;
+    --check) justCheck=true ;;
     *)
       # _IDENTICAL_ argumentUnknownHandler 1
       __throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
@@ -110,18 +113,29 @@ __deprecatedCleanup() {
   home=$(__catch "$handler" buildHome) || return $?
 
   local fingerprint="" jsonFile=""
-  if [ $__count -eq 0 ]; then
+  if [ $__count -eq 0 ] || $justCheck; then
     fingerprint=$(__catch "$handler" hookRun application-fingerprint) || return $?
     jsonFile="$home/$(__catch "$handler" buildEnvironmentGet APPLICATION_JSON)" || return $?
     if [ -f "$jsonFile" ]; then
       local savedFingerprint
       savedFingerprint=$(__catchEnvironment "$handler" jq -r ".deprecated" <"$jsonFile") || return $?
       if [ "$fingerprint" = "$savedFingerprint" ]; then
-        decorate success "Deprecated already run successfully. $(decorate subtle "$fingerprint")"
+        if $justCheck; then
+          printf "%s\n" "$fingerprint"
+        else
+          decorate success "Deprecated already run successfully. $(decorate subtle "$fingerprint")"
+        fi
         return 0
       else
+        if $justCheck; then
+          printf "%s\n" "$fingerprint"
+          return 1
+        fi
         decorate error "Files changed: $fingerprint != $savedFingerprint"
       fi
+    elif $justCheck; then
+      printf "%s\n" "$fingerprint"
+      return 1
     fi
   fi
   local exitCode=0
