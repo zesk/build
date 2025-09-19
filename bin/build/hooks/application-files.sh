@@ -47,7 +47,7 @@ __hookApplicationFiles() {
   done
   jsonFile=$(__catch "$handler" buildEnvironmentGet APPLICATION_JSON) || return $?
 
-  find "$home" -type f \( "${ff[@]}" \) ! -path '*/.*/*' ! -path "*/$jsonFile" "$@"
+  directoryChange "$home" find "." -type f \( "${ff[@]}" \) ! -path '*/.*/*' ! -path "*/$jsonFile" "$@"
 }
 ___hookApplicationFiles() {
   # __IDENTICAL__ usageDocument 1
