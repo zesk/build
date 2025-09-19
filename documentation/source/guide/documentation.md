@@ -2,7 +2,8 @@
 
 Zesk Build has some documentation tools which can be used in any project to document your `bash` code simply.
 
-To add automatic handler for a function, the pattern to use is to add a comment before the function as shown here and add
+To add automatic handler for a function, the pattern to use is to add a comment before the function as shown here and
+add
 a handler handler which is your function name prefixed with a single underscore (`_`):
 
     # Lay an egg
@@ -39,7 +40,7 @@ You can add arguments, exit codes, summary lines, or even rename the function to
     # Exit Code: 0 - Success
     # Exit Code: 1 - Environment error
     # Exit Code: 2 - Argument error
-    # Example: {fn} newEgg 
+    # Example: {fn[]} newEgg 
     # Output: Eggs laid: 2000
     layAnEgg() {
         ...
@@ -63,3 +64,4 @@ Will generate:
 Additional sections will be added, and the above documentation can also be converted into Markdown documentation.
 
 Valid argument types are:
+

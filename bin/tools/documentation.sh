@@ -89,6 +89,9 @@ __mkdocsConfiguration() {
 # Argument: --derived-only - Flag. Just derived files only.
 # Argument: --reference-only - Flag. Just tools documentation.
 # Argument: --clean - Flag. Clean caches.
+# Argument: --verbose - Flag. Clean caches.
+# Argument: --filter filters ... - DashDashDelimitedArguments. Arguments to filter which reference files are updated.
+# Argument: --force - Flag. Force building of everything.
 # See: documentationBuild
 buildDocumentationBuild() {
   local handler="_${FUNCNAME[0]}"
@@ -202,16 +205,26 @@ buildDocumentationBuild() {
     __catchEnvironment "$handler" muzzle popd || return $?
 
     local sourceHome="$home/documentation/source" targetHome="$home/documentation/.docs"
+    local version timestamp
+
+    version=$(hookVersionCurrent) timestamp="$(date -u "+%F %T") UTC"
+    # Mappable files
     while IFS="" read -r file; do
       file=${file#"$sourceHome"}
       statusMessage decorate notice "Updating $file ..."
       __catchEnvironment "$handler" muzzle fileDirectoryRequire "$targetHome/$file" || return $?
-      __catchEnvironment "$handler" cp -f "$sourceHome/$file" "$targetHome/$file" || return $?
+      timestamp="$timestamp" version="$version" __catch "$handler" mapEnvironment <"$sourceHome/$file" >"$targetHome/$file" || return $?
     done < <(
-      find "$sourceHome" -type f -name "*.md" ! -path "*/tools/*" ! -path "*/env/*"
-      printf "%s\n" "$sourceHome/tools/index.md"
+      find "$sourceHome" -type f -name "*.md" ! -path "*/tools/*" ! -path "*/env/*" -print0 | xargs -0 grep -l '{[A-Za-z][^!]\[}]*}'
     )
-    version=$(hookVersionCurrent) timestamp="$(date -u "+%F %T") UTC" __catch "$handler" mapEnvironment <"$sourceHome/index.md" >"$targetHome/index.md" || return $?
+    while IFS="" read -r file; do
+      file=${file#"$sourceHome"}
+      statusMessage decorate notice "Copying $file ..."
+      __catchEnvironment "$handler" muzzle fileDirectoryRequire "$targetHome/$file" || return $?
+      cp -f "$sourceHome/$file" "$targetHome/$file" || return $?
+    done < <(
+      find "$sourceHome" -type f -name "*.md" ! -path "*/tools/*" ! -path "*/env/*" -print0 | xargs -0 grep -v -l '{[A-Za-z][^!]\[}]*}'
+    )
 
     # Coding
     local example
@@ -270,4 +283,3 @@ _buildDocumentationBuild() {
   # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
-

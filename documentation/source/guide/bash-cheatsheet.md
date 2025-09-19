@@ -46,7 +46,7 @@ Shell options turn features within `bash` on and off interactively.
 
 ### Shell behavior
 
-- `extquote` - Extended quotes will double-quote `$'string'` and `$"string"` within a `${parameter}` expansion. (
+- `extquote` - Extended quotes will double-quote `$'string'` and `$"string"` within a `$parameter` expansion. (
   Recommend `on`. Default is `on`.)
 - `huponexit` - If set, `bash` will send `SIGHUP` to all jobs when an interactive login shell exits. (Recommend `off`)
 - `execfail` - If set, a non-interactive shell will not exit if it cannot execute the file specified as an argument to

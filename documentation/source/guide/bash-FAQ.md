@@ -308,7 +308,7 @@ startup files (~/.profile, ~/.bash_profile) will not be sourced at login.
 To get around this problem, append a line similar to the following to your
 ~/.dtprofile:
 
-	BASH_ENV=${HOME}/.bash_profile ; export BASH_ENV
+	BASH_ENV=$HOME/.bash_profile ; export BASH_ENV
 
 and add the following line to the beginning of ~/.bash_profile:
 
