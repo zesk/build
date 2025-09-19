@@ -174,6 +174,7 @@ _confirmMenu() {
 # Argument: loopCallable - Required. Callable. Call this on each file and a zero result code means passed and non-zero means fails.
 # Argument: --delay delaySeconds - Optional. Integer. Delay in seconds between checks in interactive mode.
 # Argument: --until exitCode - Optional. Integer. Check until exit code matches this.
+# Argument: --title title - Optional. String. Display this title instead of the command.
 # Argument: arguments ... - Optional. Arguments to loopCallable
 # Run checks interactively until errors are all fixed.
 loopExecute() {

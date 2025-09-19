@@ -180,7 +180,7 @@ dumpPipe() {
   local decoration width
   decoration="$(decorate code "$(echoBar)")"
   width=$(consoleColumns) || __throwEnvironment "$handler" consoleColumns || return $?
-  printf -- "%s\n%s\n%s\n" "$decoration" "$("$endBinary" -n "$showLines" "$item" | decorate wrap --width "$((width - 1))" --fill " " "$symbol" "$(decorate reset --)")" "$decoration"
+  printf -- "%s\n%s\n%s\n" "$decoration" "$("$endBinary" -n "$showLines" "$item" | decorate wrap --width "$((width - 2))" --fill " " "$symbol" "$(decorate reset --)")" "$decoration"
   rm -rf "$item" || :
 }
 _dumpPipe() {

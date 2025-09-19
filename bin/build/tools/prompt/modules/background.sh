@@ -75,7 +75,7 @@ __backgroundProcess() {
       return 0
       ;;
     "monitor")
-      loopExecute --until 1 --delay 4 backgroundProcess --report
+      loopExecute --title "Background Process Monitor" --until 1 --delay 5 "$home/bin/build/tools.sh" backgroundProcess --report
       return 0
       ;;
     "watch")
@@ -268,6 +268,23 @@ __backgroundMainTrap() {
   return $e
 }
 
+#
+# Process Directory:
+# - ./state - EnvironmentFile. Has `id`, `home` and all configuration settings: `frequency`, `stopSeconds`, `waitSeconds`, `command`, `condition`
+# - ./waitCheck - UnsignedInteger. Milliseconds time in the future after which we can check the `condition` to see if we need to run our command.
+# - ./waitStop - UnsignedInteger. Milliseconds time in the future after which we can check the `condition` to see if we need to stop our (running) command.
+# - ./pid - UnsignedInteger. Process ID of running background process.
+# - ./run - UnsignedInteger. Milliseconds time of launch time of background process. (Outside the process)
+# - ./start - UnsignedInteger. Milliseconds time of start time of background process. (Inside the process)
+# - ./stop - UnsignedInteger. Milliseconds time of stop time of background process. (Inside the process)
+# - ./passed - UnsignedInteger. Milliseconds time of last successful background process run.
+# - ./failed - UnsignedInteger. Milliseconds time of last successful background process run.
+# - ./elapsed - Float. Elapsed time in seconds of last background process run. (Inside the process)
+# - ./err - File. `stderr` of background process.
+# - ./out - File. `stdout` of background process.
+# - ./exit - UnsignedInteger. Exit code of background process.
+# - ./process-errors - File. Errors terminating processes.
+
 __backgroundProcessManager() {
   local handler="$1" verboseFlag="$2" d="$3" item
   local stateFile="$d/state"
@@ -339,6 +356,7 @@ __backgroundProcessManager() {
         color=warning
         extra=": $(decorate error "$(head -n 1 "$d/err")") $(decorate code "$(head -n 1 "$d/out")")"
         __catchEnvironment "$handler" printf -- "%s\n" "$((now + (waitSeconds * 1000)))" >"$d/waitCheck" || return $?
+        __catchEnvironment "$handler" rm -f "$d/waitStop" || return $?
         __catchEnvironment "$handler" printf -- "%s\n" "$now" >"$d/failed" || return $?
       else
         __catchEnvironment "$handler" printf -- "%s\n" "$now" >"$d/passed" || return $?
@@ -354,6 +372,7 @@ __backgroundProcessManager() {
     __catchEnvironment "$handler" printf "%s\n" "$now" >"$d/run" || return $?
     if [ "$stopSeconds" -gt 0 ]; then
       __catchEnvironment "$handler" printf "%s\n" "$((now + (stopSeconds * 1000)))" >"$d/waitStop" || return $?
+      __catchEnvironment "$handler" rm -f "$d/waitCheck" || return $?
     fi
     ! $verboseFlag || decorate info "$id: Ran background $(decorate value "PID $pid") $(decorate each code "${command[@]}")"
   fi
@@ -380,15 +399,17 @@ __backgroundProcessKill() {
   fi
   __catch "$handler" rm -rf "$d" || return $?
 }
+
 __backgroundProcessExitWrapper() {
   local e=0 home="$1" d="$2" && shift 2
   __environment cd "$home" || return $?
   rm -f "$d/exit"
   local start stop
   start="$(timingStart | tee "$d/start")" || :
-  nohup "$@" >"$d/out" 2>"$d/err" || e=$?
+  export PATH HOME BUILD_HOME
+  nohup env -i "PATH=$PATH" "HOME=$HOME" "BUILD_HOME=$BUILD_HOME" "CI=1" "$@" >"$d/out" 2>"$d/err" || e=$?
   stop="$(timingStart | tee "$d/stop")" || :
-  printf "%d\n" "$((stop - start))" >"$d/elapsed"
+  printf "%s\n" "$(timingFormat "$((stop - start))")" >"$d/elapsed"
   printf "%d\n" "$e" >"$d/exit" || :
   return $e
 }
@@ -424,7 +445,7 @@ __nowRelative() {
   else
     prefix="" && suffix=" ago"
   fi
-  printf -- "%s (%s%s %s%s)\n" "$(dateFromTimestamp "$((time / 1000))")" "$prefix" "$delta" "$(plural "$delta" second seconds)" "$suffix"
+  printf -- "%s (%s%s %s%s)\n" "$(dateFromTimestamp "$((time / 1000))")" "$prefix" "$delta" "$(plural "$delta" sec secs)" "$suffix"
 }
 
 __backgroundMainReport() {
@@ -435,12 +456,11 @@ __backgroundMainReport() {
   [ ! -f "$cache/main.pid" ] || pid="$(cat "$cache/main.pid")"
   isPositiveInteger "$pid" || pid=$(decorate error "not running")
   decorate orange "$(lineFill "*" "Manager")"
-  decorate pair "Main PID" "$pid"
-  # shellcheck disable=SC2015
-  ! isPositiveInteger "$pid" || decorate pair "Main Running" "$(kill -0 "$pid" 2>/dev/null && decorate success "[YES]" || decorate red "[NO]")"
-  [ ! -f "$cache/main.alive" ] || decorate pair "Main Alive" "$(__nowRelative "$now" "$(cat "$cache/main.alive")")"
-  [ ! -f "$cache/main.out" ] || fileIsEmpty "$cache/main.out" || dumpPipe --lines 3 --tail "Main output" <"$cache/main.out"
-  [ ! -f "$cache/main.err" ] || fileIsEmpty "$cache/main.err" || dumpPipe --lines 3 --tail "Main error" <"$cache/main.err"
+  local alive=""
+  [ ! -f "$cache/main.alive" ] || alive=" $(__nowRelative "$now" "$(cat "$cache/main.alive")")"
+  decorate pair "Main PID" "$(__pidStatus "$pid")$alive"
+  __backgroundReportFile "Main output" "$cache/main.out" 3
+  __backgroundReportFile "Main error" "$cache/main.err" 3
 }
 
 __backgroundProcessReport() {
@@ -466,22 +486,41 @@ __backgroundProcessReport() {
   decorate pair Condition "${condition[*]}"
   [ ! -f "$d/condition" ] || decorate pair "Condition Value" "$(tail -n 1 "$d/condition")"
 
-  decorate pair Frequency "$frequency"
-  decorate pair "Stop Check" "$stopSeconds"
-  decorate pair "Wait after stopping" "$waitSeconds"
-  [ ! -f "$d/start" ] || decorate pair Started "$(__nowRelative "$now" "$(cat "$d/start")")"
-  [ ! -f "$d/stop" ] || decorate pair Stopped "$(__nowRelative "$now" "$(cat "$d/stop")")"
-  [ ! -f "$d/elapsed" ] || decorate pair Elapsed "$(__nowRelative "$now" "$(cat "$d/elapsed")")"
-  [ ! -f "$d/failed" ] || decorate pair Failed "$(__nowRelative "$now" "$(tail -n 1 "$d/failed")")"
-  [ ! -f "$d/passed" ] || decorate pair Passed "$(__nowRelative "$now" "$(tail -n 1 "$d/passed")")"
-  decorate pair PID "${pid:-NONE}"
-  # shellcheck disable=SC2015
-  ! isPositiveInteger "$pid" || decorate pair Running "$(kill -0 "$pid" 2>/dev/null && decorate success "[YES]" || decorate red "[NO]")"
-  [ ! -f "$d/run" ] || decorate pair Run "$(__nowRelative "$now" "$(cat "$d/run")")"
-  [ -z "$waitCheck" ] || decorate pair WaitCheck "$(__nowRelative "$now" "$waitCheck")"
-  [ -z "$waitStop" ] || decorate pair WaitStop "$(__nowRelative "$now" "$waitStop")"
-  [ ! -f "$d/out" ] || fileIsEmpty "$d/out" || dumpPipe --lines 10 --tail OUTPUT <"$d/out"
-  [ ! -f "$d/err" ] || fileIsEmpty "$d/err" || dumpPipe --lines 10 --tail ERROR <"$d/err"
+  local config=()
+  config+=("frequency $frequency $(plural "$frequency" sec secs),")
+  config+=("stop check $stopSeconds $(plural "$stopSeconds" sec secs),")
+  config+=("wait after stop $waitSeconds $(plural "$waitSeconds" sec secs)")
+  decorate pair Configuration "$(decorate each code -- "${config[@]}")"
+
+  local status=()
+  status+=("PID $(__pidStatus "$pid")")
+  [ ! -f "$d/run" ] || status+=("Run $(__nowRelative "$now" "$(cat "$d/run")")")
+  [ ! -f "$d/start" ] || status+=("Started $(__nowRelative "$now" "$(cat "$d/start")")")
+  [ ! -f "$d/stop" ] || status+=("Stopped $(__nowRelative "$now" "$(cat "$d/stop")")")
+  [ ${#status[@]} -eq 0 ] || decorate pair Status "$(decorate each info -- "${status[@]}")"
+
+  status=()
+  [ ! -f "$d/failed" ] || status+=("Failed $(__nowRelative "$now" "$(cat "$d/failed")")")
+  [ ! -f "$d/passed" ] || status+=("Passed $(__nowRelative "$now" "$(cat "$d/passed")")")
+  [ ! -f "$d/exit" ] || status+=("Exit $(cat "$d/exit")")
+  [ ! -f "$d/elapsed" ] || status+=("Elapsed $(cat "$d/elapsed")")
+  [ ${#status[@]} -eq 0 ] || decorate pair "Exit Status" "$(decorate each info -- "${status[@]}")"
+
+  local waitStatus=()
+  [ -z "$waitCheck" ] || waitStatus+=("Waiting to check $(__nowRelative "$now" "$waitCheck")")
+  [ -z "$waitStop" ] || waitStatus+=("Waiting to check stop $(__nowRelative "$now" "$waitStop")")
+  [ ${#waitStatus[@]} -eq 0 ] || decorate pair Waiting "$(decorate each warning -- "${waitStatus[@]}")"
+
+  if isPositiveInteger "$pid"; then
+    __backgroundReportFile OUTPUT "$d/out"
+    __backgroundReportFile ERROR "$d/err"
+  fi
+  __backgroundReportFile Process Errors "$d/process-errors"
+}
+
+__backgroundReportFile() {
+  local title="$1" file="$2" lines="${3-10}"
+  [ ! -f "$file" ] || fileIsEmpty "$file" || dumpPipe --lines "$lines" --tail "$title" <"$file"
 }
 
 __backgroundMainSummary() {
