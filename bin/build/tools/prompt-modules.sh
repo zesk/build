@@ -61,37 +61,33 @@ _backgroundProcess() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-__reloadChangesLoader() {
-  __functionLoader __bashPromptModule_reloadChanges prompt/modules/reload-changes "$@"
-}
-
 # Watch or more directories for changes in a file extension and reload a source file if any changes occur.
 # Argument: --source source - Required. File. Source file to source upon change.
 # Argument: --name name - Optional. String. The name to call this when changes occur.
 # Argument: --path path - Required. Directory. OneOrMore. A directory to scan for changes in `.sh` files
+# Argument: --file file - Required. File. OneOrMore. A file to watch.å
 # Argument: --stop - Flag. Optional. Stop watching changes and remove all watches.
 # Argument: --show - Flag. Optional. Show watched settings and exit.
 # Argument: source - File. Optional. If supplied directly on the command line, sets the source.
-# Argument: path ... - Directory. Optional. If `source` supplied, then any other command line argument is treated as a path to scan for changes.
+# Argument: path|file ... - DirectoryOrFile. Optional. If `source` supplied, then any other command line argument is treated as a path to scan for changes.
 # DOC TEMPLATE: --help 1
 # Argument: --help - Optional. Flag. Display this help.
 reloadChanges() {
-  __reloadChangesLoader "_${FUNCNAME[0]}" "__${FUNCNAME[0]}" "$@"
+  __promptLoader "_${FUNCNAME[0]}" "__${FUNCNAME[0]}" "$@"
 }
 _reloadChanges() {
   # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# Check for shell files changing and reload a shell script after any changes and notify the user
+# Maintain the application fingerprint in the `APPLICATION_JSON` file
 #
-# Source-Hook: project-activate
-# Source-Hook: project-deactivate
-# BUILD_DEBUG: reloadChanges - `bashPromptModule_reloadChanges` will show debugging information
-bashPromptModule_reloadChanges() {
-  __reloadChangesLoader "_${FUNCNAME[0]}" "__${FUNCNAME[0]}" "$@" || return $?
+# Example:     bashPrompt bashPromptModule_dotFilesWatcher
+# Requires: sort buildEnvironmentGetDirectory touch _environment read basename inArray decorate printf confirmYesNo statusMessage grep rm
+bashPromptModule_Fingerprint() {
+  __promptLoader "_${FUNCNAME[0]}" "__${FUNCNAME[0]}" "$@"
 }
-_bashPromptModule_reloadChanges() {
+_bashPromptModule_Fingerprint() {
   # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

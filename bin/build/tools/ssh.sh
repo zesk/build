@@ -235,7 +235,7 @@ sshSetup() {
       flagForce=true
       ;;
     *)
-      servers+=("$arg")
+      servers+=("$argument")
       ;;
     esac
     shift

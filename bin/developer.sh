@@ -38,7 +38,7 @@ if source "${BASH_SOURCE[0]%/*}/tools.sh"; then
 
     muzzle reloadChanges --stop 2>&1
     printf "%s" "$(decorate warning "Watching ")"
-    reloadChanges --name "$name" "$home/bin/tools.sh" "$home/bin/"
+    reloadChanges --name "$name" "$home/bin/tools.sh" "$home/bin/build/build.json"
     buildCompletion
 
     bashPrompt --skip-prompt bashPromptModule_TermColors
@@ -47,6 +47,7 @@ if source "${BASH_SOURCE[0]%/*}/tools.sh"; then
 
     developerAnnounce < <(developerTrack)
 
+    backgroundProcess --verbose --stop 30 --wait 90 bin/build/tools.sh fingerprint --check -- bin/build/tools.sh fingerprint
     backgroundProcess --verbose --stop 30 --wait 90 bin/build/deprecated.sh --check -- bin/build/deprecated.sh
     backgroundProcess --verbose --stop 30 --wait 90 bin/build/identical-repair.sh --internal --check -- bin/build/identical-repair.sh --internal
 

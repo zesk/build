@@ -51,23 +51,26 @@ To enable:
 
 {bashPromptModule_TermColors}
 
-{bashPromptModule_reloadChanges}
-
 ## dotFilesWatcher Tools
 
 Example during setup:
 
-dotFilesApproved bash > "$(dotFilesApprovedFile)"
+    dotFilesApproved bash > "$(dotFilesApprovedFile)"
 
 And then in your bash prompt:
 
-bashPrompt bashPromptModule_dotFilesWatcher
+    bashPrompt bashPromptModule_dotFilesWatcher
 
 Any new dot files which appear will then show a warning in your console.
 
 {dotFilesApprovedFile}
+
 {dotFilesApproved}
 
 ## reloadChanges Tools
 
 {reloadChanges}
+
+## Background Process Tools
+
+{backgroundProcess}

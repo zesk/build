@@ -184,7 +184,7 @@ _bashLintFilesHelper() {
 
   ! $verbose || vv+=(--verbose)
   ! $verbose || statusMessage decorate info "👀 Checking \"$file\" ($source) ..." || :
-  if reason=$(bashLint "${vv[@]+"${vv[@]}"}" "$file" 1>/dev/null 2>/dev/null); then
+  if reason=$(bashLint "${vv[@]+"${vv[@]}"}" "$file" 2>/dev/null); then
     ! $verbose || statusMessage --last decorate success "bashLint $file passed"
   else
     ! $verbose || statusMessage --last decorate info "bashLint $file failed: $reason"
