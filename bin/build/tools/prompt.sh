@@ -186,31 +186,3 @@ _bashPromptColorsFormat() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# Run a single process in the background continuously until a condition is met.
-#
-# `condition` and `command` required when an action flag is not specified.
-#
-# Action flags:
-#
-#     --go --report --monitor --verbose-toggle --stop-all
-#
-# Argument: --report - Flag. Optional. Show a report of all processes.
-# Argument: --monitor - Flag. Optional. Interactively show report and refresh.
-# Argument: --verbose-toggle - Flag. Optional. Toggle the global verbose reporting.
-# Argument: --stop-all - Flag. Optional. Stop all processes and delete all records.
-# Argument: --go - Flag. Optional. Check all process states and update them.
-# Argument: --stop stopSeconds - PositiveInteger. Optional. Check every stop seconds after starting to see if should be stopped.
-# Argument: --wait waitSeconds - PositiveInteger. Optional. After stopping, wait this many seconds before trying again.
-# Argument: --frequency checkSeconds - PositiveInteger. Optional. Check condition at this frequency.
-# Argument: condition ... - Callable. Optional. Condition to test. Output of this is compared to see if we should stop process and restart it.
-# Argument: -- - Delimiter. Optional. Separates command.
-# Argument: command ... - Callable. Optional. Function to run in the background.
-# DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
-backgroundProcess() {
-  __promptLoader "_${FUNCNAME[0]}" "__${FUNCNAME[0]}" "$@"
-}
-_backgroundProcess() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
-}

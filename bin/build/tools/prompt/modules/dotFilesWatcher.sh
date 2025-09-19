@@ -4,11 +4,8 @@
 #
 # Copyright &copy; 2025 Market Acumen, Inc.
 
-# Watches your HOME directory for `.` files which are added and unknown to you.
-#
-# Example:     bashPrompt bashPromptModule_dotFilesWatcher
-# Requires: sort buildEnvironmentGetDirectory touch _environment read basename inArray decorate printf confirmYesNo statusMessage grep rm
-bashPromptModule_dotFilesWatcher() {
+__bashPromptModule_dotFilesWatcher() {
+  local handler="$1" && shift
   local askFile dataFile
 
   [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
@@ -73,13 +70,9 @@ bashPromptModule_dotFilesWatcher() {
   fi
   rm -f "$askFile.$$" || :
 }
-_bashPromptModule_dotFilesWatcher() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
-}
 
 # The lists
-__dotFilesApproved() {
+__dotFilesApprovedDefaults() {
   local items=()
   while [ $# -gt 0 ]; do
     case "$1" in
@@ -94,11 +87,8 @@ __dotFilesApproved() {
 }
 
 # Lists of dot files which can be added to the dotFilesApprovedFile
-# Argument: listType - String. Optional. One of `all`, `bash`, `git`, `darwin`, or `mysql`
-# If none specified, returns `bash` list.
-# Special value `all` returns all values
-dotFilesApproved() {
-  local handler="_${FUNCNAME[0]}"
+__dotFilesApproved() {
+  local handler="$1" && shift
 
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
@@ -112,11 +102,11 @@ dotFilesApproved() {
     # _IDENTICAL_ handlerHandler 1
     --handler) shift && handler=$(usageArgumentFunction "$handler" "$argument" "${1-}") || return $? ;;
     "all")
-      __dotFilesApproved bash darwin git mysql
+      __dotFilesApprovedDefaults bash darwin git mysql
       return 0
       ;;
     "bash" | "darwin" | "git" | "mysql")
-      __dotFilesApproved "$1"
+      __dotFilesApprovedDefaults "$1"
       return 0
       ;;
     *)
@@ -124,9 +114,5 @@ dotFilesApproved() {
       ;;
     esac
   done
-  __dotFilesApproved bash
-}
-_dotFilesApproved() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  __dotFilesApprovedDefaults bash
 }
