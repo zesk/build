@@ -1,9 +1,9 @@
 {
   "identical": {
     "default": "97af722bbd66628eb4ae4526f16e7f7b07d55a89",
-    "--internal": "3d9b47babf5f83eb8476bb12dfb2b15cf4505851"
+    "--internal": "c0cc7b269e33ef58212e24eb125fc2491aa59a8b"
   },
   "version": "v0.38.2",
-  "id": "74b6cf94",
-  "deprecated": "3d9b47babf5f83eb8476bb12dfb2b15cf4505851"
+  "id": "8c3b1780",
+  "deprecated": "c0cc7b269e33ef58212e24eb125fc2491aa59a8b"
 }

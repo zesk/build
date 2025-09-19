@@ -4,9 +4,10 @@
 #
 # Copyright &copy; 2025 Market Acumen, Inc.
 
+# Directory where we store everything
 __backgroundProcessCache() {
   local handler="$1" && shift
-  __catch "$handler" directoryRequire "$(__catch "$handler" buildCacheDirectory "${FUNCNAME[0]}")" || return $?
+  __catch "$handler" buildEnvironmentGetDirectory --subdirectory "${FUNCNAME[0]}" XDG_CACHE_HOME || return $?
 }
 
 # Main API interface to this feature
@@ -42,6 +43,7 @@ __backgroundProcess() {
     --go) actionFlag="go" ;;
     *)
       if [ 0 -eq ${#condition[@]} ]; then
+        actionFlag="condition"
         condition=("$(usageArgumentCallable "$handler" "condition" "$argument")") || return $?
         shift
         while [ $# -gt 0 ] && [ "$1" != '--' ]; do condition+=("$1") && shift; done
@@ -62,93 +64,93 @@ __backgroundProcess() {
   local cache
   cache=$(__backgroundProcessCache "$handler") || return $?
 
-  if [ -n "$actionFlag" ]; then
-    case "$actionFlag" in
-    "verbose-toggle")
-      if [ -f "$cache/verbose" ]; then
-        __catchEnvironment "$handler" rm -f "$cache/verbose" || return $?
-        decorate info "Verbose mode is off."
-      else
-        decorate info "Verbose mode is ON."
-        __catchEnvironment "$handler" touch "$cache/verbose" || return $?
-      fi
-      return 0
-      ;;
-    "monitor")
-      loopExecute --title "Background Process Monitor" --until 1 --delay 5 "$home/bin/build/tools.sh" backgroundProcess --report
-      return 0
-      ;;
-    "watch")
-      local x y temp lines
-      temp=$(fileTemporaryName "$handler") || return $?
-      while true; do
-        backgroundProcess --summary | tee "$temp" || break
-        lines=$(fileLineCount "$temp") || break
-        IFS=$'\n' read -d '' -r x y < <(cursorGet) || :
-        sleep 2 || break
-        cursorSet "$x" "$((y - lines))" || break
-      done
-      __catchEnvironment "$handler" rm -f "$temp" || return $?
-      return 0
-      ;;
-    "stop-all")
-      if [ -f "$cache/main.pid" ]; then
-        local pid
+  [ -n "$actionFlag" ] || actionFlag="summary"
+  case "$actionFlag" in
+  "verbose-toggle")
+    if [ -f "$cache/verbose" ]; then
+      __catchEnvironment "$handler" rm -f "$cache/verbose" || return $?
+      decorate info "Verbose mode is off."
+    else
+      decorate info "Verbose mode is ON."
+      __catchEnvironment "$handler" touch "$cache/verbose" || return $?
+    fi
+    return 0
+    ;;
+  "monitor")
+    loopExecute --title "Background Process Monitor" --until 1 --delay 5 "$home/bin/build/tools.sh" backgroundProcess --report
+    return 0
+    ;;
+  "watch")
+    local x y temp lines
+    temp=$(fileTemporaryName "$handler") || return $?
+    while true; do
+      backgroundProcess --summary | tee "$temp" || break
+      lines=$(fileLineCount "$temp") || break
+      IFS=$'\n' read -d '' -r x y < <(cursorGet) || :
+      sleep 2 || break
+      cursorSet "$x" "$((y - lines))" || break
+    done
+    __catchEnvironment "$handler" rm -f "$temp" || return $?
+    return 0
+    ;;
+  "stop-all")
+    if [ -f "$cache/main.pid" ]; then
+      local pid
 
-        pid="$(cat "$cache/main.pid")"
-        if isPositiveInteger "$pid"; then
-          if ! kill -TERM "$pid" 2>/dev/null; then
-            ! $verboseFlag || decorate error "Killing [$pid] failed"
-          else
-            ! $verboseFlag || decorate notice "Main manager terminated [$pid]"
-          fi
+      pid="$(cat "$cache/main.pid")"
+      if isPositiveInteger "$pid"; then
+        if ! kill -TERM "$pid" 2>/dev/null; then
+          ! $verboseFlag || decorate error "Killing [$pid] failed"
+        else
+          ! $verboseFlag || decorate notice "Main manager terminated [$pid]"
         fi
-        rm -f "$cache/main.pid" || :
-      else
-        ! $verboseFlag || decorate notice "No main background process."
       fi
-      if [ -d "$cache/process/" ]; then
-        while read -r processDirectory; do
-          __backgroundProcessKill "$handler" "$processDirectory" "$verboseFlag"
-        done < <(find "$cache/process/" -maxdepth 1 -mindepth 1 -type d)
-      else
-        ! $verboseFlag || decorate notice "No background processes registered."
-      fi
-      __catchEnvironment "$handler" rm -rf "$cache" || return $?
-      bashPrompt --skip-prompt --remove __bashPromptModule_Background 2>/dev/null || :
-      return 0
-      ;;
-    "go")
-      __catch "$handler" __bashPromptModule_Background "${vv[@]+"${vv[@]}"}" || return $?
-      return 0
-      ;;
-    "summary")
-      local now
-      now=$(timingStart)
-      __backgroundMainSummary "$handler" "$now" "$cache"
-      if [ -d "$cache/process/" ]; then
-        while read -r processDirectory; do
-          __backgroundProcessSummary "$handler" "$now" "$processDirectory"
-        done < <(find "$cache/process/" -maxdepth 1 -mindepth 1 -type d)
-      else
-        decorate notice "No background processes registered."
-      fi
-      return 0
-      ;;
-    "report")
-      local now
-      now=$(timingStart)
-      __backgroundMainReport "$handler" "$now" "$cache"
-      if [ -d "$cache/process/" ]; then
-        while read -r processDirectory; do
-          __backgroundProcessReport "$handler" "$now" "$processDirectory"
-        done < <(find "$cache/process/" -maxdepth 1 -mindepth 1 -type d)
-      fi
-      return 0
-      ;;
-    *) __throwEnvironment "$handler" "Unknown actionFlag? $actionFlag" || return $? ;;
-    esac
-  fi
+      rm -f "$cache/main.pid" || :
+    else
+      ! $verboseFlag || decorate notice "No main background process."
+    fi
+    if [ -d "$cache/process/" ]; then
+      while read -r processDirectory; do
+        __backgroundProcessKill "$handler" "$processDirectory" "$verboseFlag"
+      done < <(find "$cache/process/" -maxdepth 1 -mindepth 1 -type d)
+    else
+      ! $verboseFlag || decorate notice "No background processes registered."
+    fi
+    __catchEnvironment "$handler" rm -rf "$cache" || return $?
+    bashPrompt --skip-prompt --remove __bashPromptModule_Background 2>/dev/null || :
+    return 0
+    ;;
+  "go")
+    __catch "$handler" __bashPromptModule_Background "${vv[@]+"${vv[@]}"}" || return $?
+    return 0
+    ;;
+  "summary")
+    local now
+    now=$(timingStart)
+    __backgroundMainSummary "$handler" "$now" "$cache"
+    if [ -d "$cache/process/" ]; then
+      while read -r processDirectory; do
+        __backgroundProcessSummary "$handler" "$now" "$processDirectory"
+      done < <(find "$cache/process/" -maxdepth 1 -mindepth 1 -type d)
+    else
+      decorate notice "No background processes registered."
+    fi
+    return 0
+    ;;
+  "report")
+    local now
+    now=$(timingStart)
+    __backgroundMainReport "$handler" "$now" "$cache"
+    if [ -d "$cache/process/" ]; then
+      while read -r processDirectory; do
+        __backgroundProcessReport "$handler" "$now" "$processDirectory"
+      done < <(find "$cache/process/" -maxdepth 1 -mindepth 1 -type d)
+    fi
+    return 0
+    ;;
+  "condition") ;;
+  *) __throwEnvironment "$handler" "Unknown actionFlag? $actionFlag" || return $? ;;
+  esac
 
   [ ${#condition[@]} -gt 0 ] || __throwArgument "$handler" "Requires a condition" || return $?
   [ ${#command[@]} -gt 0 ] || __throwArgument "$handler" "Requires a command" || return $?
@@ -186,7 +188,7 @@ __bashPromptModule_Background() {
   [ ! -f "$cache/threshold" ] || threshold="$(cat "$cache/threshold")"
 
   local verboseFlag=false
-  [ ! -f "$d/verbose" ] || verboseFlag=true
+  [ ! -f "$cache/verbose" ] || verboseFlag=true
   ! inArray "--verbose" "$@" || verboseFlag=true
 
   isPositiveInteger "$threshold" || threshold=30
@@ -215,6 +217,13 @@ ___bashPromptModule_Background() {
 }
 
 # Daemon which runs the other background processes
+# - ./main.pid - Integer. Process ID.
+# - ./main.alive - Integer. Millisecond timestamp.
+# - ./main.elapsed - Float. Time elapsed to manage all background process in a loop.
+# - ./main.err - `stderr` of main process
+# - ./main.out - `stdout` of main process
+# - ./verbose - If exists, be verbose.
+# - ./threshold - Seconds after which main process is considered "not alive" and we kill it and restart it.
 __backgroundMain() {
   local handler="$1" d="$2" verboseFlag="$3" aliveThreshold="$4" && shift 4
 
@@ -247,16 +256,25 @@ __backgroundMain() {
   trap "__backgroundMainTrap \"$d\"" INT EXIT TERM
   local processDirectory finished=false
   printf "%d\n" "$$" >"$d/main.pid"
+  local delay=5
   while ! $finished; do
+    local start elapsed elapsedInt
     finished=true
     [ -d "$cache/process/" ] || break
-    printf "%s\n" "$(timingStart)" >"$d/main.alive"
+    start="$(timingStart | tee "$d/main.alive")"
     while read -r processDirectory; do
       __backgroundProcessManager "$handler" "$verboseFlag" "$processDirectory"
-      [ -d "$cache/process/" ] || break 2
+      [ -d "$cache/process/" ] || break
       finished=false
     done < <(find "$cache/process/" -maxdepth 1 -mindepth 1 -type d)
-    __catchEnvironment "$handler" sleep 5 || finished=true
+    elapsedInt=$(($(timingStart) - start))
+    elapsed=$(timingFormat "$elapsedInt")
+    printf -- "%s\n" "$elapsed" >"$d/main.elapsed"
+    [ -d "$cache/process/" ] || break
+    elapsedInt=$((elapsedInt / 1000))
+    elapsedInt=$((elapsedInt + delay))
+    elapsedInt=$((elapsedInt - (elapsedInt % delay)))
+    __catchEnvironment "$handler" sleep "$elapsedInt" || finished=true
   done
   __catchEnvironment "$handler" rm -f "$d/main.pid" "$d/main.alive" || return $?
 }
@@ -264,7 +282,7 @@ __backgroundMainTrap() {
   local d="$1" e=$?
   rm -f "$d/main.alive" "$d/main.pid"
   printf "Trap hit with %s\n" "$e" >>"$d/main.err"
-  debuggintStack >>"$d/main.err"
+  debuggingStack >>"$d/main.err"
   return $e
 }
 
@@ -366,12 +384,13 @@ __backgroundProcessManager() {
   fi
 
   if $shouldRun; then
+    printf -- "" | tee "$d/out" | tee "$d/err" || :
+    __catchEnvironment "$handler" printf -- "%s\n" "$now" >"$d/run" || return $?
     __backgroundProcessExitWrapper "$home" "$d" "${command[@]}" &
     pid=$!
-    __catchEnvironment "$handler" printf "%d\n" "$pid" >"$d/pid" || return $?
-    __catchEnvironment "$handler" printf "%s\n" "$now" >"$d/run" || return $?
+    __catchEnvironment "$handler" printf -- "%d\n" "$pid" >"$d/pid" || return $?
     if [ "$stopSeconds" -gt 0 ]; then
-      __catchEnvironment "$handler" printf "%s\n" "$((now + (stopSeconds * 1000)))" >"$d/waitStop" || return $?
+      __catchEnvironment "$handler" printf -- "%s\n" "$((now + (stopSeconds * 1000)))" >"$d/waitStop" || return $?
       __catchEnvironment "$handler" rm -f "$d/waitCheck" || return $?
     fi
     ! $verboseFlag || decorate info "$id: Ran background $(decorate value "PID $pid") $(decorate each code "${command[@]}")"
@@ -456,9 +475,11 @@ __backgroundMainReport() {
   [ ! -f "$cache/main.pid" ] || pid="$(cat "$cache/main.pid")"
   isPositiveInteger "$pid" || pid=$(decorate error "not running")
   decorate orange "$(lineFill "*" "Manager")"
-  local alive=""
+  local alive="" elapsed=""
   [ ! -f "$cache/main.alive" ] || alive=" $(__nowRelative "$now" "$(cat "$cache/main.alive")")"
-  decorate pair "Main PID" "$(__pidStatus "$pid")$alive"
+  [ ! -f "$cache/main.elapsed" ] || elapsed="$(cat "$cache/main.elapsed")"
+  [ -z "$elapsed" ] || elapsed=" $(decorate bold-blue "(loop elapsed: $elapsed $(plural "$elapsed" second seconds))")"
+  decorate pair "Main PID" "$(__pidStatus "$pid")$alive$elapsed"
   __backgroundReportFile "Main output" "$cache/main.out" 3
   __backgroundReportFile "Main error" "$cache/main.err" 3
 }
@@ -550,7 +571,10 @@ __backgroundProcessSummary() {
   [ ! -f "$d/pid" ] || pid="$(cat "$d/pid")"
 
   local extras=()
+  [ ! -f "$d/failed" ] || extras+=("Failed $(__nowRelative "$now" "$(cat "$d/run")")")
+  [ ! -f "$d/passed" ] || extras+=("Passed $(__nowRelative "$now" "$(cat "$d/passed")")")
   [ ! -f "$d/run" ] || extras+=("Ran $(__nowRelative "$now" "$(cat "$d/run")")")
+  [ ! -f "$d/elapsed" ] || extras+=("Elapsed $(cat "$d/elapsed")")
 
   printf "%s %s %s %s %s\n" "$(__pidStatus "$pid")" "$(decorate value "${id:0:6}")" "$(decorate file "$home")" "$(decorate each code "${command[@]}")" "${extras[*]}"
 
