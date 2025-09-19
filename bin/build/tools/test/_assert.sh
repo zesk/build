@@ -292,7 +292,7 @@ _assertConditionHelper() {
   if [ -z "$doPlumber" ]; then
     flags=$(__catch "$handler" buildEnvironmentGet BUILD_TEST_FLAGS) || return $?
     doPlumber=false
-    ! isSubstringInsensitive ";Plumber:true;" ";$flags;" || doPlumber=true
+    ! isSubstringInsensitive ";Assert-Plumber:true;" ";$flags;" || doPlumber=true
   fi
   [ -n "$tester" ] || __throwArgument "$handler" "--test required ($*)" || return $?
 
