@@ -284,7 +284,7 @@ __backgroundMainTrap() {
 # - ./out - File. `stdout` of background process.
 # - ./exit - UnsignedInteger. Exit code of background process.
 # - ./process-errors - File. Errors terminating processes.
-
+# - ./condition - File. The condition output which is saved upon initial run.
 __backgroundProcessManager() {
   local handler="$1" verboseFlag="$2" d="$3" item
   local stateFile="$d/state"
