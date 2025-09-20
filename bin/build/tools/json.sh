@@ -38,6 +38,79 @@ _jsonField() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
+jsonPath() {
+  local paths=()
+  while [ $# -gt 0 ]; do
+    [ -z "$1" ] || paths+=("$1")
+    shift
+  done
+  printf ".%s\n" "$(listJoin "." "${paths[@]}")"
+}
+
+__jqPathClean() {
+  local path="$1"
+  path="${path#.}"
+  path="${path%.}"
+  path=".$path"
+  printf -- "%s\n" "$path"
+}
+
+__jqObject() {
+  local path="$1" jqPrefix="${2-"{}"}"
+  local segments=() segment
+  IFS="." read -r -a segments <<<"${path#.}"
+  local reverse=()
+  for segment in "${segments[@]}"; do
+    reverse=("$segment" "${reverse[@]+"${reverse[@]}"}")
+  done
+  for segment in "${reverse[@]}"; do
+    jqPrefix="{ $segment: $jqPrefix }"
+  done
+  printf "%s\n" "$jqPrefix"
+}
+
+# Get a value in a JSON file
+# Argument: jsonFile - File. Required. File to get value from.
+# Argument: path - String. Required. dot-separated path to get
+jsonFileGet() {
+  local handler="_${FUNCNAME[0]}"
+  local jsonFile path value
+
+  jsonFile=$(usageArgumentFile "$handler" "jsonFile" "${1-}") && shift || return $?
+  path=$(usageArgumentString "$handler" "path" "${1-}") && shift || return $?
+
+  path="$(__jqPathClean "$path")"
+
+  __catch "$handler" jq -r "$(__jqObject "$path") + . | $path" <"$jsonFile" || return $?
+}
+_jsonFileGet() {
+  # __IDENTICAL__ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+# Set a value in a JSON file
+# Argument: jsonFile - File. Required. File to get value from.
+# Argument: path - String. Required. dot-separated path to modify (e.g. `extra.fingerprint`)
+# Argument: value - String. Required. Value to set.
+jsonFileSet() {
+  local handler="_${FUNCNAME[0]}"
+  local jsonFile path value
+
+  jsonFile=$(usageArgumentFile "$handler" "jsonFile" "${1-}") && shift || return $?
+  path=$(usageArgumentString "$handler" "path" "${1-}") && shift || return $?
+  value=$(usageArgumentEmptyString "$handler" "value" "${1-}") && shift || return $?
+
+  whichExists jq || __throwEnvironment "$handler" "Requires jq - not installed" || return $?
+
+  path=$(__jqPathClean "$path")
+  __catchEnvironment "$handler" jq -r "$(__jqObject "$path") + . | $path = \"$value\"" <"$jsonFile" >"$jsonFile.new" || returnClean $? "$jsonFile.new" || return $?
+  __catchEnvironment "$handler" mv -f "$jsonFile.new" "$jsonFile" || returnClean $? "$jsonFile.new" || return $?
+}
+_jsonFileSet() {
+  # __IDENTICAL__ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
 # For any project, ensures the `version` field in a `.json` matches `runHook version-current`
 #
 # Run as a commit hook for any project which stores versions in files.
@@ -60,6 +133,8 @@ jsonSetValue() {
   local handler="_${FUNCNAME[0]}"
   local value="" statusFlag=false quietFlag=false file="" key="version"
   local generator="hookVersionCurrent" filter="versionNoVee"
+
+  whichExists jq || __throwEnvironment "$handler" "Requires jq - not installed" || return $?
 
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#

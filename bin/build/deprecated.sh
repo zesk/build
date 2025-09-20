@@ -113,12 +113,18 @@ __deprecatedCleanup() {
   home=$(__catch "$handler" buildHome) || return $?
 
   local fingerprint="" jsonFile=""
+
   if [ $__count -eq 0 ] || $justCheck; then
     fingerprint=$(__catch "$handler" hookRun application-fingerprint) || return $?
     jsonFile="$home/$(__catch "$handler" buildEnvironmentGet APPLICATION_JSON)" || return $?
+
+    [ -n "$prefix" ] || prefix=$(__catch "$handler" buildEnvironmentGet APPLICATION_JSON_PREFIX) || return $?
+
+    local jqPath
+    jqPath=$(__catch "$handler" jsonPath "$prefix" "deprecated") || return $?
     if [ -f "$jsonFile" ]; then
       local savedFingerprint
-      savedFingerprint=$(__catchEnvironment "$handler" jq -r ".deprecated" <"$jsonFile") || return $?
+      savedFingerprint=$(__catchEnvironment "$handler" jsonFileGet "$jsonFile" "$jqPath") || return $?
       if [ "$fingerprint" = "$savedFingerprint" ]; then
         if $justCheck; then
           printf "%s\n" "$fingerprint"
@@ -158,9 +164,8 @@ __deprecatedCleanup() {
   fi
   if [ $exitCode -eq 0 ] && [ -f "$jsonFile" ]; then
     statusMessage --last decorate info "Saving deprecated fingerprint $(decorate subtle "$fingerprint") ..."
-    __catchEnvironment "$handler" jq ".deprecated = \"$fingerprint\"" <"$jsonFile" >"$jsonFile.new" || returnClean $? "$jsonFile.new" || return $?
-    __catchEnvironment "$handler" mv -f "$jsonFile.new" "$jsonFile" || returnClean $? "$jsonFile.new" || return $?
-  else
+    __catchEnvironment "$handler" jsonFileSet "$jsonFile" "$jqPath" "$fingerprint" || return $?
+    se
     statusMessage --last timingReport "$start" "Failures occurred, not caching results."
   fi
   statusMessage --last timingReport "$start" "Deprecated process took"

@@ -45,13 +45,20 @@ if source "$(dirname "${BASH_SOURCE[0]}")/tools.sh"; then
       [ -z "$item" ] || aa+=(--repair "$item")
     done < <(find "$home" -type d -name identical ! -path "*/.*/*")
     # bashDebugInterruptFile --error --interrupt
-    local fingerprint="" jsonFile=""
+    local fingerprint="" jsonFile="" prefix
     jsonFile="$home/$(__catch "$handler" buildEnvironmentGet APPLICATION_JSON)" || return $?
+
+    prefix=$(__catch "$handler" buildEnvironmentGet APPLICATION_JSON_PREFIX) || return $?
+    prefix="${prefix#.}"
+    prefix="${prefix%.}"
+
     if [ -f "$jsonFile" ]; then
       local buildFingerprint argChecksum="default"
       [ $# -eq 0 ] || argChecksum="$*"
+      local jqPath
+      jqPath=$(__catch "$handler" jsonPath "$prefix" "identical" "\"$argChecksum\"") || return $?
       fingerprint=$(__catch "$handler" hookRun application-fingerprint) || return $?
-      buildFingerprint="$(jq -r "{ identical: {} } + . | .identical.\"$argChecksum\"" <"$home/bin/build/build.json")"
+      buildFingerprint="$(__catch "$handler" jsonFileGet "$jsonFile" "$jqPath")" || return $?
       if [ "$fingerprint" = "$buildFingerprint" ]; then
         if $checkFlag; then
           printf "%s\n" "$fingerprint"
@@ -72,8 +79,7 @@ if source "$(dirname "${BASH_SOURCE[0]}")/tools.sh"; then
     fi
     set -eou pipefail
     __catch "$handler" identicalCheckShell "${aa[@]+"${aa[@]}"}" --exec contextOpen "$@" || return $?
-    __catchEnvironment "$handler" jq "{ identical: {} } + . | .identical.\"$argChecksum\" = \"$fingerprint\"" <"$jsonFile" >"$jsonFile.new" || returnClean $? "$jsonFile.new" || return $?
-    __catchEnvironment "$handler" mv -f "$jsonFile.new" "$jsonFile" || returnClean $? "$jsonFile.new" || return $?
+    __catch "$handler" jsonFileSet "$jsonFile" "$jqPath" "$fingerprint" || return $?
     decorate success "Fingerprint updated."
 
   }

@@ -571,7 +571,7 @@ __backgroundProcessSummary() {
   [ ! -f "$d/pid" ] || pid="$(cat "$d/pid")"
 
   local extras=()
-  [ ! -f "$d/failed" ] || extras+=("Failed $(__nowRelative "$now" "$(cat "$d/run")")")
+  [ ! -f "$d/failed" ] || extras+=("Failed $(__nowRelative "$now" "$(cat "$d/failed")")")
   [ ! -f "$d/passed" ] || extras+=("Passed $(__nowRelative "$now" "$(cat "$d/passed")")")
   [ ! -f "$d/run" ] || extras+=("Ran $(__nowRelative "$now" "$(cat "$d/run")")")
   [ ! -f "$d/elapsed" ] || extras+=("Elapsed $(cat "$d/elapsed")")

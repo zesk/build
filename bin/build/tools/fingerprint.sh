@@ -15,7 +15,7 @@
 # Argument: --key - String. Optional. Update this key in the JSON file.
 fingerprint() {
   local handler="_${FUNCNAME[0]}"
-  local key="" verboseFlag=false checkFlag=false
+  local key="" verboseFlag=false checkFlag=false prefix=""
 
   ! buildDebugEnabled fingerprint || verboseFlag=true
 
@@ -33,6 +33,7 @@ fingerprint() {
     --check) checkFlag=true ;;
     --verbose) verboseFlag=true ;;
     --key) shift && key=$(usageArgumentString "$handler" "$argument" "${1-}") || return $? ;;
+    --prefix) shift && prefix=$(usageArgumentEmptyString "$handler" "$argument" "${1-}") || return $? ;;
     *)
       # _IDENTICAL_ argumentUnknownHandler 1
       __throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
@@ -41,8 +42,11 @@ fingerprint() {
     shift
   done
 
-  [ -n "$key" ] || key=$(__catch "$handler" buildEnvironmentGet APPLICATION_FINGERPRINT_KEY) || return $?
+  [ -n "$prefix" ] || prefix=$(__catch "$handler" buildEnvironmentGet APPLICATION_JSON_PREFIX) || return $?
   [ -n "$key" ] || key="fingerprint"
+
+  local jqPath
+  jqPath=$(__catch "$handler" jsonPath "$prefix" "$key") || return $?
 
   local home
   home=$(__catch "$handler" buildHome) || return $?
@@ -51,7 +55,7 @@ fingerprint() {
   [ -f "$jsonFile" ] || __throwEnvironment "$handler" "Missing $(decorate file "$jsonFile")" || return $?
 
   local fingerprint appFingerprint
-  fingerprint="$(__catch "$handler" jq -r ".$key" <"$jsonFile")" || return $?
+  fingerprint="$(__catch "$handler" jsonFileGet "$jsonFile" "$jqPath")" || return $?
   appFingerprint=$(__catch "$handler" hookRun application-fingerprint) || return $?
   if [ "$appFingerprint" = "$fingerprint" ]; then
     if $checkFlag; then
@@ -65,8 +69,7 @@ fingerprint() {
       printf -- "%s\n" "$appFingerprint"
       return 1
     fi
-    __catchEnvironment "$handler" jq ".$key = \"$appFingerprint\"" <"$jsonFile" >"$jsonFile.new" || returnClean $? "$jsonFile.new" || return $?
-    __catchEnvironment "$handler" mv -f "$jsonFile.new" "$jsonFile" || returnClean $? "$jsonFile.new" || return $?
+    __catchEnvironment "$handler" jsonFileSet "$jsonFile" "$jqPath" "$fingerprint" || return $?
     ! $verboseFlag || decorate subtle "Fingerprint updated to $(decorate code "$appFingerprint") [$fingerprint]."
   fi
 }

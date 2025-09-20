@@ -33,9 +33,8 @@ __buildMarker() {
   local version id
   version="$(__catch "$handler" hookRun version-current)" || return $?
   id="$(__catch "$handler" hookRun application-id)" || return $?
-  __catchEnvironment "$handler" jq ".version = \"$version\" | .id = \"$id\"" <"$jsonFile" >"$jsonFile.new" || returnClean $? "$jsonFile.new" || return $?
-  __catchEnvironment "$handler" mv -f "$jsonFile.new" "$jsonFile" || returnClean $? "$jsonFile.new" || return $?
-
+  __catchEnvironment "$handler" jsonFileSet "$jsonFile" ".version" "$version" || return $?
+  __catchEnvironment "$handler" jsonFileSet "$jsonFile" ".id" "$id" || return $?
   __catchEnvironment "$handler" muzzle git add "$jsonFile" || return $?
 
   printf "%s\n" "$jsonFile"
