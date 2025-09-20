@@ -54,23 +54,23 @@ fingerprint() {
 
   [ -f "$jsonFile" ] || __throwEnvironment "$handler" "Missing $(decorate file "$jsonFile")" || return $?
 
-  local fingerprint appFingerprint
-  fingerprint="$(__catch "$handler" jsonFileGet "$jsonFile" "$jqPath")" || return $?
-  appFingerprint=$(__catch "$handler" hookRun application-fingerprint) || return $?
-  if [ "$appFingerprint" = "$fingerprint" ]; then
+  local savedFingerprint fingerprint
+  savedFingerprint="$(__catch "$handler" jsonFileGet "$jsonFile" "$jqPath")" || return $?
+  fingerprint=$(__catch "$handler" hookRun application-fingerprint) || return $?
+  if [ "$fingerprint" = "$savedFingerprint" ]; then
     if $checkFlag; then
-      printf -- "%s\n" "$appFingerprint"
+      printf -- "%s\n" "$fingerprint"
     else
       ! $verboseFlag || decorate subtle "Fingerprint is unchanged."
     fi
     return 0
   else
     if $checkFlag; then
-      printf -- "%s\n" "$appFingerprint"
+      printf -- "%s\n" "$fingerprint"
       return 1
     fi
     __catchEnvironment "$handler" jsonFileSet "$jsonFile" "$jqPath" "$fingerprint" || return $?
-    ! $verboseFlag || decorate subtle "Fingerprint updated to $(decorate code "$appFingerprint") [$fingerprint]."
+    ! $verboseFlag || decorate subtle "Fingerprint updated to $(decorate code "$fingerprint") [$savedFingerprint]. (path: $(decorate value "$jqPath"))"
   fi
 }
 _fingerprint() {
