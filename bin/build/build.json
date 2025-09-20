@@ -1,10 +1,10 @@
 {
-  "id": "9fd79ab8",
+  "id": "e02238a9",
   "version": "v0.38.2",
-  "deprecated": "02d0573b3d337f9c085436bce642bc29ce6f9a68",
-  "fingerprint": "02d0573b3d337f9c085436bce642bc29ce6f9a68",
+  "deprecated": "ec89068b3cba5f9f0837e4bad7b66a552701d8e7",
+  "fingerprint": "ec89068b3cba5f9f0837e4bad7b66a552701d8e7",
   "identical": {
-    "default": "02d0573b3d337f9c085436bce642bc29ce6f9a68",
-    "--internal": "02d0573b3d337f9c085436bce642bc29ce6f9a68"
+    "default": "ec89068b3cba5f9f0837e4bad7b66a552701d8e7",
+    "--internal": "ec89068b3cba5f9f0837e4bad7b66a552701d8e7"
   }
 }
