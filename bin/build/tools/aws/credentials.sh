@@ -121,4 +121,3 @@ __awsCredentialsHasProfile() {
   fi
   inArray AWS_ACCESS_KEY_ID "${foundValues[@]}" && inArray AWS_SECRET_ACCESS_KEY "${foundValues[@]}"
 }
-

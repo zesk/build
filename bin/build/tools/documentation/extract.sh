@@ -4,7 +4,6 @@
 #
 # Copyright &copy; 2025 Market Acumen, Inc.
 
-
 __bashDocumentation_Extract() {
   local handler="$1" && shift
   local definitionFile fn

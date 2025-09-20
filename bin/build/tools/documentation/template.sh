@@ -209,4 +209,3 @@ _bashDocumentation_Template() {
 __bashDocumentationDefaultArguments() {
   printf "%s\n" "$*" | sed 's/ - /^/1' | __documentationFormatArguments '^' '' ''
 }
-

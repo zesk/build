@@ -23,7 +23,6 @@ quoteBashString() {
   printf "%s\n" "$@" | sed 's/\([$`<>'\'']\)/\\\1/g'
 }
 
-
 # Quote grep -e patterns for shell use
 #
 # Quotes: " . [ ] | \n with a backslash
@@ -136,5 +135,3 @@ __unquote() {
   esac
   printf "%s\n" "$value"
 }
-
-

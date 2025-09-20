@@ -233,7 +233,6 @@ _documentationTemplateFunctionCompile() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-
 __documentationTemplateDirectoryCompile() {
   local handler="$1" && shift
 
@@ -319,4 +318,3 @@ _documentationTemplateDirectoryCompile() {
   # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
-

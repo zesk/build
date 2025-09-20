@@ -16,4 +16,3 @@ __awsWrapper() {
   [ -n "${AWS_PROFILE-}" ] || command=(env -u AWS_PROFILE "${command[@]}")
   AWS_CONFIG_FILE="$configFile" AWS_PROFILE="${AWS_PROFILE-}" AWS_PAGER="" "${command[@]}" "$@"
 }
-

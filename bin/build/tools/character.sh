@@ -50,7 +50,6 @@ _stringValidate() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-
 #
 # Usage: {fn} [ character ... ]
 # Convert one or more characters from their ascii representation to an integer value.
@@ -72,7 +71,6 @@ _characterToInteger() {
   # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
-
 
 #
 # Does this character match one or more character classes?
@@ -155,7 +153,6 @@ _characterClasses() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-
 #
 # Usage: {fn} className character0 [ character1 ... ]
 #
@@ -192,4 +189,3 @@ _isCharacterClass() {
   # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
-

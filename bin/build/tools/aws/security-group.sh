@@ -151,5 +151,3 @@ __awsSGOutput() {
   local title="$1" ip="$2" group="$3" port="$4"
   printf "%s %s %s %s %s %s\n" "$title" "$(decorate red "$ip")" "$(decorate label "in group-id:")" "$(decorate value "$group")" "$(decorate label "port:")" "$(decorate value "$port")"
 }
-
-

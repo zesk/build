@@ -50,7 +50,6 @@ _installInstallBuild() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-
 # Usage: {fn}
 # Environment: BUILD_HOME
 # Prints the list of functions defined in Zesk Build

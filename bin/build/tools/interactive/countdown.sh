@@ -135,4 +135,3 @@ __interactiveCountdownReadCharacter() {
   done
   return 1
 }
-
