@@ -103,7 +103,7 @@ jsonFileSet() {
   whichExists jq || __throwEnvironment "$handler" "Requires jq - not installed" || return $?
 
   path=$(__jqPathClean "$path")
-  __catchEnvironment "$handler" jq -r "$(__jqObject "$path") + . | $path = \"$value\"" <"$jsonFile" >"$jsonFile.new" || returnClean $? "$jsonFile.new" || return $?
+  __catchEnvironment "$handler" jq --sort-keys -r "$(__jqObject "$path") + . | $path = \"$value\"" <"$jsonFile" >"$jsonFile.new" || returnClean $? "$jsonFile.new" || return $?
   __catchEnvironment "$handler" mv -f "$jsonFile.new" "$jsonFile" || returnClean $? "$jsonFile.new" || return $?
 }
 _jsonFileSet() {
@@ -207,7 +207,7 @@ __jsonSetValue() {
 
   oldValue="$(__catchEnvironment "$handler" jq ".$key" <"$json")" || return $?
 
-  __catchEnvironment "$handler" jq --arg value "$value" ". + { $key: \$value }" <"$json" >"$newJSON" || returnClean $? "$newJSON" || return $?
+  __catchEnvironment "$handler" jq --sort-keys --arg value "$value" ". + { $key: \$value }" <"$json" >"$newJSON" || returnClean $? "$newJSON" || return $?
 
   decoratedValue=$(decorate value "$value")
   decoratedOldValue=$(decorate value "$oldValue")
