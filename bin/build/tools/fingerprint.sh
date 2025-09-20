@@ -41,6 +41,7 @@ fingerprint() {
     shift
   done
 
+  [ -n "$key" ] || key=$(__catch "$handler" buildEnvironmentGet APPLICATION_FINGERPRINT_KEY) || return $?
   [ -n "$key" ] || key="fingerprint"
 
   local home
