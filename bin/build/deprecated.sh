@@ -169,7 +169,6 @@ __deprecatedCleanup() {
   if [ $exitCode -eq 0 ] && [ -f "$jsonFile" ]; then
     statusMessage --last decorate info "Saving deprecated fingerprint $(decorate subtle "$fingerprint") ..."
     __catchEnvironment "$handler" jsonFileSet "$jsonFile" "$jqPath" "$fingerprint" || return $?
-    se
     statusMessage --last timingReport "$start" "Failures occurred, not caching results."
   fi
   statusMessage --last timingReport "$start" "Deprecated process took"

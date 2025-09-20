@@ -208,6 +208,14 @@ buildDocumentationBuild() {
     local version timestamp
 
     version=$(hookVersionCurrent) timestamp="$(date -u "+%F %T") UTC"
+    while IFS="" read -r file; do
+      file=${file#"$sourceHome"}
+      statusMessage decorate notice "Copying $file ..."
+      __catchEnvironment "$handler" muzzle fileDirectoryRequire "$targetHome/$file" || return $?
+      cp -f "$sourceHome/$file" "$targetHome/$file" || return $?
+    done < <(
+      find "$sourceHome" -type f -name "*.md" ! -path "*/tools/*" ! -path "*/env/*" -print0 | xargs -0 grep -v -l '{[A-Za-z][^]!\[}]*}'
+    )
     # Mappable files
     while IFS="" read -r file; do
       file=${file#"$sourceHome"}
@@ -215,15 +223,7 @@ buildDocumentationBuild() {
       __catchEnvironment "$handler" muzzle fileDirectoryRequire "$targetHome/$file" || return $?
       timestamp="$timestamp" version="$version" __catch "$handler" mapEnvironment <"$sourceHome/$file" >"$targetHome/$file" || return $?
     done < <(
-      find "$sourceHome" -type f -name "*.md" ! -path "*/tools/*" ! -path "*/env/*" -print0 | xargs -0 grep -l '{[A-Za-z][^!]\[}]*}'
-    )
-    while IFS="" read -r file; do
-      file=${file#"$sourceHome"}
-      statusMessage decorate notice "Copying $file ..."
-      __catchEnvironment "$handler" muzzle fileDirectoryRequire "$targetHome/$file" || return $?
-      cp -f "$sourceHome/$file" "$targetHome/$file" || return $?
-    done < <(
-      find "$sourceHome" -type f -name "*.md" ! -path "*/tools/*" ! -path "*/env/*" -print0 | xargs -0 grep -v -l '{[A-Za-z][^!]\[}]*}'
+      find "$sourceHome" -type f -name "*.md" ! -path "*/tools/*" ! -path "*/env/*" -print0 | xargs -0 grep -l '{[A-Za-z][^]!\[}]*}'
     )
 
     # Coding
