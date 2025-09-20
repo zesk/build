@@ -4,5 +4,5 @@
 #
 
 testFingerprint() {
-  assertEquals 0 fingerprint --help || return $?
+  BUILD_DEBUG="" assertExitCode --stdout-match "with application fingerprint" 0 fingerprint --help || return $?
 }
