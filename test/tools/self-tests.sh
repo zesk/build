@@ -38,6 +38,7 @@ testBuildApplicationTools() {
 
   __environment muzzle pushd "$testApp" || return $?
 
+  __environment chmod +x "$testApp/bin/tools.sh" || return $?
   assertEquals "$("$testApp/bin/tools.sh" hookVersionCurrent --application "$testApp")" "v1.2.3" || return $?
   __environment muzzle popd || return $?
 
