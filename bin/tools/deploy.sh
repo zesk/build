@@ -97,7 +97,7 @@ __buildDeploy() {
     ! $debugFlag || statusMessage decorate warning "Syncing documentation to $target ..."
     __catchEnvironment "$handler" aws s3 sync --delete "$rootPath" "$target" || return $?
     ! $debugFlag || statusMessage decorate warning "Creating invalidation for $(decorate code "$cloudFrontID") ..."
-    __catchEnvironment "$handler" aws cloudfront create-invalidation --distribution-id "$cloudFrontID" --paths / || return $?
+    __catchEnvironment "$handler" aws cloudfront create-invalidation --distribution-id "$cloudFrontID" --paths '/*' || return $?
   fi
 
   if $makeRelease && ! githubRelease "$notes" "$currentVersion" "$appId"; then
