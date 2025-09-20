@@ -21,6 +21,7 @@ set -eou pipefail
 #
 # There are three flags to control the three processes, you can set them using arguments (all three cleanups are by default enabled)
 #
+# Argument: --prefix jsonPrefix - Optional. EmptyString. Use this JSON prefix to update cached values in `APPLICATION_JSON`.
 # Argument: --no-configuration - Optional. Flag. Do not fix any configuration issues from past versions.
 # Argument: --just-configuration - Optional. Flag. Just fix any configuration issues from past versions. (Sets all other flags to false)
 # Argument: --configuration - Optional. Flag. Do the fix any configuration issues from past versions. (other flags remain unchanged)
@@ -36,10 +37,13 @@ set -eou pipefail
 # Argument: --check - Optional. Flag. Check if the deprecated fingerprint is up to date and return 0 if it is.
 # MOST RECENT STUFF at the top as it will likely have more hits
 # See: docs/_templates/deprecated.md
+# Environment: APPLICATION_JSON_PREFIX
 __deprecatedCleanup() {
   local handler="_${FUNCNAME[0]}"
   local doCannon=true doTokens=true doSpelling=true doConfiguration=true ignoreExtras=()
-  local justCheck=false
+  local justCheck=false prefix=""
+
+  prefix=$(__catch "$handler" buildEnvironmentGet APPLICATION_JSON_PREFIX) || return $?
 
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
@@ -94,6 +98,8 @@ __deprecatedCleanup() {
       [ $# -eq 0 ] || shift
       ;;
     --check) justCheck=true ;;
+    --prefix) shift && prefix=$(usageArgumentEmptyString "$handler" "$argument" "${1-}") || return $? ;;
+
     *)
       # _IDENTICAL_ argumentUnknownHandler 1
       __throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
@@ -112,13 +118,11 @@ __deprecatedCleanup() {
 
   home=$(__catch "$handler" buildHome) || return $?
 
-  local fingerprint="" jsonFile=""
+  local fingerprint="" jsonFile="" prefix=""
 
   if [ $__count -eq 0 ] || $justCheck; then
     fingerprint=$(__catch "$handler" hookRun application-fingerprint) || return $?
     jsonFile="$home/$(__catch "$handler" buildEnvironmentGet APPLICATION_JSON)" || return $?
-
-    [ -n "$prefix" ] || prefix=$(__catch "$handler" buildEnvironmentGet APPLICATION_JSON_PREFIX) || return $?
 
     local jqPath
     jqPath=$(__catch "$handler" jsonPath "$prefix" "deprecated") || return $?
