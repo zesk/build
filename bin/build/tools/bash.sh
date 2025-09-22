@@ -139,6 +139,8 @@ _bashLibraryHome() {
 
 # Run or source a library
 # Usage: {fn} libraryRelativePath [ command ... ]
+# Argument: libraryRelativePath - Path. Required. Path to library source file.
+# Argument: command - Callable. Optional. Command to run after loading the library.
 bashLibrary() {
   local handler="_${FUNCNAME[0]}"
 
@@ -231,6 +233,8 @@ _bashSourcePath() {
 }
 
 # Usage: {fn} functionName file1 ...
+# Argument: functionName - String. Required. Name of function to check.
+# Argument: file ... - File. Required. One or more files to check if a function is defined within.
 bashFunctionDefined() {
   local handler="_${FUNCNAME[0]}"
 

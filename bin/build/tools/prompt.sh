@@ -76,7 +76,7 @@ _bashPrompt() {
 }
 
 # Prompt the user properly honoring any attached console
-# Arguments are the same as read, except:
+# Arguments are the same as `read`, except:
 # `-r` is implied and does not need to be specified
 bashUserInput() {
   local handler="_${FUNCNAME[0]}"

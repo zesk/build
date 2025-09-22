@@ -56,6 +56,10 @@ _bashCoverage() {
 }
 
 # Generate a coverage report using the coverage statistics file
+#
+# *This is a work in progress and is unfinished as of September 2025. Plans are to do this in another language.*
+#
+# TODO: this
 # Usage: {fn} [ --help ] [ --cache cacheDirectory ] [ --target targetDirectory ] [ statsFile ]
 # stdin: Accepts a stats file
 bashCoverageReport() {

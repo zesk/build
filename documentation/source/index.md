@@ -1,5 +1,7 @@
 # Zesk Build {version}
 
+Zesk Build is a suite of Bash functions which make software development, deployment, and management easier.
+
 Documentation up to date as of {timestamp}.
 
 ## Contents

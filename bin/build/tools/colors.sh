@@ -428,7 +428,7 @@ _statusMessage() {
 # Quiet test for a TTY.
 # DOC TEMPLATE: --help 1
 # Argument: --help - Optional. Flag. Display this help.
-# Environment: __BUILD_HAS_TTY - Cached value of `false` or `true`. Any other value forces computation during this call.
+# Environment: - `__BUILD_HAS_TTY` - Cached value of `false` or `true`. Any other value forces computation during this call.
 # Credits: Tim Perry
 # URL: https://stackoverflow.com/questions/69075612/cross-platform-method-to-detect-whether-dev-tty-is-available-functional
 isTTYAvailable() {
@@ -456,11 +456,9 @@ _isTTYAvailable() {
 # Column count in current console
 #
 # Output the number of columns in the terminal. Default is 80 if not able to be determined from `TERM`.
-# Usage: consoleColumns
-# Environment: Uses the `tput cols` tool to find the value if `TERM` is non-blank.
 # Example:     repeat $(consoleColumns)
-# Environment: COLUMNS - May be defined after calling this
-# Environment: LINES - May be defined after calling this
+# Environment: - `COLUMNS` - May be defined after calling this
+# Environment: - `LINES` - May be defined after calling this
 # Side Effect: MAY define two environment variables
 consoleColumns() {
   [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
@@ -493,10 +491,9 @@ _consoleColumns() {
 #
 # Output the number of columns in the terminal. Default is 60 if not able to be determined from `TERM`.
 # Usage: consoleColumns
-# Environment: Uses the `tput lines` tool to find the value if `TERM` is non-blank.
 # Example:     tail -n $(consoleRows) "$file"
-# Environment: COLUMNS - May be defined after calling this
-# Environment: LINES - May be defined after calling this
+# Environment: - `COLUMNS` - May be defined after calling this
+# Environment: - `LINES` - May be defined after calling this
 # Side Effect: MAY define two environment variables
 consoleRows() {
   [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
@@ -764,6 +761,7 @@ _colorParse() {
 # Argument: redValue - Integer. Required. Red RGB value (0-255)
 # Argument: greenValue - Integer. Required. Red RGB value (0-255)
 # Argument: blueValue - Integer. Required. Red RGB value (0-255)
+# Requires: bc
 colorMultiply() {
   local handler="_${FUNCNAME[0]}"
   local factor colors=()

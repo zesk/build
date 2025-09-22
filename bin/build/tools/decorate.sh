@@ -116,7 +116,7 @@ _decorateInitialize() {
 # Fetch the requested style as a string: lp dp text
 # dp may be a dash for simpler parsing - dp=lp when dp is blank or dash
 # text is optional, lp is required to be non-blank
-# Requires: isArray __decorateStyles
+# Requires: __decorateStyles
 __decorateStyle() {
   local original style pattern=$'\n'"$1="
 
