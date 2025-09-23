@@ -499,7 +499,7 @@ outputTrigger() {
   done
 
   local lineText
-  lineText="$lineCount $(plural "$lineCount" line lines)"
+  lineText="$(pluralWord "$lineCount" line)"
   if [ ! -s "$error" ]; then
     rm -rf "$error" || :
     ! $verbose || decorate info "No output in $(decorate code "$name") $(decorate value "$lineText")" || :

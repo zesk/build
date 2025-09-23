@@ -50,6 +50,7 @@
 ## Language-related
 
 {plural}
+{pluralWord}
 {parseBoolean}
 
 ## Transformation

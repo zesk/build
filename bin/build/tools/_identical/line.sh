@@ -28,7 +28,7 @@ __identicalCheckInsideLoopLineHandler() {
     if [ "$token" = "" ]; then
       dumpPipe "token countFile $token $countFile" <"$countFile" 1>&2
     fi
-    statusMessage decorate info "$(printf -- "Found %d %s for %s (in %s)" "$count" "$(plural "$count" line lines)" "$(decorate code "$token")" "$(decorate file "$searchFile")")" 1>&2
+    statusMessage decorate info "$(printf -- "Found %s for %s (in %s)" "$(pluralWord "$count" line)" "$(decorate code "$token")" "$(decorate file "$searchFile")")" 1>&2
     return 0
   fi
 

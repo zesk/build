@@ -46,7 +46,7 @@ __resultTextSize() {
   text="$*"
   length="${#text}"
 
-  printf -- "%s %s\n" "$(__resultText "$passed" "$text")" "$(decorate subtle "$(alignRight 9 "$length $(plural "$length" char chars)")")"
+  printf -- "%s %s\n" "$(__resultText "$passed" "$text")" "$(decorate subtle "$(alignRight 9 "$(pluralWord "$length" char)")")"
 }
 
 ___printResultPair() {
@@ -136,6 +136,15 @@ _assertSuccess() {
   incrementor assert-success >/dev/null
   shift || :
   statusMessage printf -- "%s %s %s [%s] " "$(_symbolSuccess)" "$(decorate success "$function")" "$*" "$(_assertTiming)" || return $?
+}
+_assertionStatistics() {
+  local item
+  for item in assert-failure assert-success; do
+    local value
+    value=$(($(incrementor "$item") - 1))
+    printf "%d\n" "$value"
+  done
+  incrementor --reset
 }
 
 # Core condition assertion handler

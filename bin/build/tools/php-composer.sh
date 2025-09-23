@@ -105,6 +105,7 @@ phpComposerInstall() {
   local handler="_${FUNCNAME[0]}"
   [ $# -eq 0 ] || __help --only "$handler" "$@" || return "$(convertValue $? 1 0)"
   ! whichExists composer || return 0
+  __catch "$handler" phpInstall || return $?
   local target="/usr/local/bin/composer"
   local tempBinary="$target.$$"
   __catch "$handler" urlFetch "https://getcomposer.org/composer.phar" "$tempBinary" || returnClean $? "$tempBinary" || return $?

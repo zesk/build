@@ -299,7 +299,7 @@ cannon() {
     statusMessage --inline decorate warning "Modified (NO) files"
   else
     __catch "$handler" __xargsSedInPlaceReplace -e "s/$searchQuoted/$replaceQuoted/g" <"$cannonLog.found" || returnUndo 0 "${undo[@]}" || return $?
-    statusMessage --inline decorate success "Modified $(decorate code "$count $(plural "$count" file files)")"
+    statusMessage --inline decorate success "Modified $(decorate code "$(pluralWord "$count" file)")"
     exitCode=1
   fi
   returnUndo "$exitCode" "${undo[@]}" || return $?

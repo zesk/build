@@ -40,23 +40,23 @@ _identicalCheckSinglesChecker() {
       IFS=$'\n' read -d "" -r lineCount lineNumber targetFile <"$tokenFile"
       allSingles+=("$token")
       local linesNoun
-      linesNoun=$(plural "$lineCount" line lines)
+      linesNoun=$(pluralWord "$lineCount" line)
       if inArray "$token" "${singles[@]+"${singles[@]}"}"; then
         knownSingles+=("$token")
-        knownSinglesReport+=("$(printf -- "%s in %s" "$(decorate code "$token")" "$(decorate info "$(decorate file "$targetFile")")"):$lineNumber ($lineCount $linesNoun)")
+        knownSinglesReport+=("$(printf -- "%s in %s" "$(decorate code "$token")" "$(decorate info "$(decorate file "$targetFile")")"):$lineNumber ($linesNoun)")
       else
         lonelySingles+=("$token")
         lonelySinglesFiles+=("$targetFile")
-        lonelySinglesReport+=("$(printf -- "%s in %s" "$(decorate code "$token")" "$(decorate notice "$(decorate file "$targetFile")")"):$lineNumber ($lineCount $linesNoun)")
+        lonelySinglesReport+=("$(printf -- "%s in %s" "$(decorate code "$token")" "$(decorate notice "$(decorate file "$targetFile")")"):$lineNumber ($linesNoun)")
         exitCode="$identicalCode"
       fi
     fi
   done < <(find "$tempDirectory" -type f -name '*.match' || :)
 
   if [ "${#lonelySinglesReport[@]}" -gt 0 ]; then
-    statusMessage --last printf -- "%s:\n%s" "$(decorate warning "Single $(plural ${#lonelySinglesReport[@]} token tokens)")" "$(printf -- "- %s\n" "${lonelySinglesReport[@]}")" >>"$resultsFile"
+    statusMessage --last printf -- "%s:\n%s" "$(decorate warning "Single $(plural ${#lonelySinglesReport[@]} token)")" "$(printf -- "- %s\n" "${lonelySinglesReport[@]}")" >>"$resultsFile"
   elif [ "${#knownSinglesReport[@]}" -gt 0 ]; then
-    statusMessage --last printf -- "%s:\n%s" "$(decorate notice "Single $(plural ${#knownSinglesReport[@]} token tokens) (known)")" "$(printf -- "- %s\n" "${knownSinglesReport[@]}")"
+    statusMessage --last printf -- "%s:\n%s" "$(decorate notice "Single $(plural ${#knownSinglesReport[@]} token) (known)")" "$(printf -- "- %s\n" "${knownSinglesReport[@]}")"
   fi
   if [ -n "$binary" ] && [ "${#lonelySinglesFiles[@]}" -gt 0 ]; then
     "$binary" "${lonelySinglesFiles[@]}"

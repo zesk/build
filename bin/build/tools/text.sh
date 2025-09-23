@@ -630,20 +630,36 @@ _fileLineCount() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-#
+# Plural word which includes the numeric prefix and the noun.
+# Argument: number - Required. An integer or floating point number
+# Argument: singular - Required. The singular form of a noun
+# Argument: plural - Optional. The plural form of a noun. If not specified uses `singular` plus an ess.
+# Example:     count=$(__environment fileLineCount "$foxSightings") || return $?
+# Example:     printf "We saw %s.\n" "$(pluralWord "$count" fox foxes)"
+pluralWord() {
+  local handler="_${FUNCNAME[0]}"
+  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
+  local word
+  word=$(__catch "$handler" plural "$@") || return $?
+  printf -- "%s %s\n" "$1" "$word" || return $?
+}
+_pluralWord() {
+  # __IDENTICAL__ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
 # Outputs the `singular` value to standard out when the value of `number` is one.
 # Otherwise, outputs the `plural` value to standard out.
 #
 # Short description: Output numeric messages which are grammatically accurate
-# Usage: plural number singular plural
-# Argument: number - An integer or floating point number
-# Argument: singular - The singular form of a noun
-# Argument: plural - The plural form of a noun
+# Argument: number - Required. An integer or floating point number
+# Argument: singular - Required. The singular form of a noun
+# Argument: plural - Optional. The plural form of a noun. If not specified uses `singular` plus an ess.
 #
 # Exit code: 1 - If count is non-numeric
 # Exit code: 0 - If count is numeric
 # Example:     count=$(__environment fileLineCount "$foxSightings") || return $?
-# Example:     printf "We saw %d %s.\n" "$count" "$(plural $count fox foxes)"
+# Example:     printf "We saw %d %s.\n" "$count" "$(plural "$count" fox foxes)"
 # Example:
 # Example:     n=$(($(date +%s)) - start))
 # Example:     printf "That took %d %s" "$n" "$(plural "$n" second seconds)"
@@ -651,15 +667,18 @@ plural() {
   local handler="_${FUNCNAME[0]}"
   [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
 
-  local count=${1-}
+  local count=${1-} plural="${3-"${2}s"}"
   if [ "$count" -eq "$count" ] 2>/dev/null; then
     if [ "$((${1-} + 0))" -eq 1 ]; then
       printf %s "${2-}"
     else
-      printf %s "${3-}"
+      printf %s "$plural"
     fi
   elif isNumber "$count"; then
-    printf %s "${3-}"
+    case "${count#1.}" in
+    *[^0]*) printf %s "$plural" ;;
+    *) printf %s "${2-}" ;;
+    esac
   else
     __throwArgument "$handler" "plural argument: \"$count\" is not numeric" || return $?
     return 1

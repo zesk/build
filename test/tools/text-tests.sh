@@ -7,6 +7,39 @@
 # Copyright &copy; 2025 Market Acumen, Inc.
 #
 
+testAlignRight() {
+  assertEquals "$(alignRight 20 012345)" "              012345" || return $?
+  assertEquals "$(alignRight 5 012345)" "012345" || return $?
+  assertEquals "$(alignRight 0 012345)" "012345" || return $?
+}
+
+
+testPlural() {
+  assertEquals "$(plural 0 singular plural)" "plural" || return $?
+  assertExitCode --stderr-ok 2 plural X singular plural || return $?
+  assertEquals "$(plural 1 singular plural)" "singular" || return $?
+  assertEquals "$(plural 2 singular plural)" "plural" || return $?
+  assertEquals "$(plural -1 singular plural)" "plural" || return $?
+  assertEquals "$(plural -1 singular)" "singulars" || return $?
+  assertEquals "$(plural 1 singular)" "singular" || return $?
+  assertEquals "$(plural 1.0 singular)" "singular" || return $?
+  assertEquals "$(plural 1.0000000000000 singular)" "singular" || return $?
+  assertEquals "$(plural 1.1 singular)" "singulars" || return $?
+}
+
+testPluralWord() {
+  assertEquals "$(pluralWord 0 singular plural)" "0 plural" || return $?
+  assertExitCode --stderr-ok 2 pluralWord X singular plural || return $?
+  assertEquals "$(pluralWord 1 singular plural)" "1 singular" || return $?
+  assertEquals "$(pluralWord 2 singular plural)" "2 plural" || return $?
+  assertEquals "$(pluralWord -1 singular plural)" "-1 plural" || return $?
+  assertEquals "$(pluralWord -1 singular)" "-1 singulars" || return $?
+  assertEquals "$(pluralWord 1 singular)" "1 singular" || return $?
+  assertEquals "$(pluralWord 1.0 singular)" "1.0 singular" || return $?
+  assertEquals "$(pluralWord 1.0000000000000 singular)" "1.0000000000000 singular" || return $?
+  assertEquals "$(pluralWord 1.1 singular)" "1.1 singulars" || return $?
+}
+
 testFileEndsWithNewline() {
   local handler="_return"
 

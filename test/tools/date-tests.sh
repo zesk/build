@@ -44,3 +44,13 @@ testDateAdd() {
   assertEquals "2025-02-28" "$(dateAdd --days 0 "2025-02-28")" || return $?
   assertEquals "2024-02-29" "$(dateAdd --days -365 "2025-02-28")" || return $?
 }
+
+testDateToFormat() {
+  assertEquals "$(dateToFormat 2023-04-20 %s)" "1681948800" || return $?
+  assertEquals "$(dateToFormat 2023-04-20 %Y-%m-%d)" "2023-04-20" || return $?
+}
+
+testDateToTimestamp() {
+  assertEquals "$(dateToTimestamp 2023-04-20)" "1681948800" || return $?
+}
+

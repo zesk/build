@@ -237,7 +237,7 @@ __identicalWatchLoop() {
     fi
 
     elapsed=$(((elapsed + 999) / 1000))
-    statusMessage decorate info "$(decorate subtle "$(date +%T)"): Sleeping for $elapsed $(plural $elapsed second seconds) $(decorate file "$lastFile") modified $(__identicalWatchDecorateDate "$lastTimestamp") ..."
+    statusMessage decorate info "$(decorate subtle "$(date +%T)"): Sleeping for $(pluralWord "$elapsed" second) $(decorate file "$lastFile") modified $(__identicalWatchDecorateDate "$lastTimestamp") ..."
     __catchEnvironment "$handler" sleep "$elapsed" || return $?
   done
 }

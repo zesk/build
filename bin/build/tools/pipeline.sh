@@ -214,7 +214,7 @@ isUpToDate() {
     case "$daysAgo" in
     0) timeText="Today" ;;
     1) timeText="Yesterday" ;;
-    *) timeText="$daysAgo $(plural $daysAgo day days) ago" ;;
+    *) timeText="$(pluralWord $daysAgo day) ago" ;;
     esac
     labeledBigText --prefix "$(decorate reset --)" --top --tween "$(decorate red --)" "$label" "EXPIRED $timeText"
     return 1
@@ -230,7 +230,7 @@ isUpToDate() {
       "$(decorate warning "${name}expires on")" \
       "$(decorate red "$expireDate")" \
       "$(decorate warning ", in")" \
-      "$(decorate magenta "$daysAgo $(plural $daysAgo day days)")"
+      "$(decorate magenta "$(pluralWord $daysAgo day)")"
     return 0
   fi
   return 0

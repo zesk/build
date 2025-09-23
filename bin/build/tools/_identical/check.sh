@@ -179,7 +179,7 @@ __identicalCheck() {
       exitCode=$failureCode
       if [ -n "$binary" ]; then
         __environment "$binary" "${badFiles[@]}" || :
-        statusMessage --last printf -- "%s %s %s %s" "$(decorate success "Sent")" "${#badFiles[@]} $(plural ${#badFiles[@]} file files)" "$(decorate success "to")" "$(decorate code "$binary")"
+        statusMessage --last printf -- "%s %s %s %s" "$(decorate success "Sent")" "$(pluralWord ${#badFiles[@]} file)" "$(decorate success "to")" "$(decorate code "$binary")"
       fi
     fi
   fi
