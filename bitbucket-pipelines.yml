@@ -28,11 +28,14 @@ pipelines:
       - parallel:
           steps:
             - step:
-                script: bin/tools.sh buildProductionTest --skip-tag slow --skip-tag package-install
+                script:
+                 - bin/tools.sh buildProductionTest --skip-tag slow --skip-tag package-install
             - step:
-                script: bin/tools.sh buildProductionTest --tag slow
+                script:
+                 - bin/tools.sh buildProductionTest --tag slow
             - step:
-                script: bin/tools.sh buildProductionTest --tag package-install
+                script:
+                 - bin/tools.sh buildProductionTest --tag package-install
       - step:
           script:
             - bin/deploy.sh --release
