@@ -18,7 +18,7 @@ pipelines:
       - step:
           deployment: production
           name: Production Build
-          size: 4x
+          size: 1x
           services:
             - docker
           artifacts:
@@ -29,16 +29,19 @@ pipelines:
       - parallel:
           steps:
             - step:
-                name: Fast Tests
+                size: 1x
+                name: Fast Tests 1x
                 script:
                   - bin/tools.sh dumpEnvironment
                   - bin/tools.sh buildProductionTest --env-file .build.env --skip-tag slow --skip-tag package-install
             - step:
-                name: Slow Tests
+                size: 2x
+                name: Slow Tests 2x
                 script:
                   - bin/tools.sh buildProductionTest --env-file .build.env --tag slow
             - step:
-                name: Package Tests
+                size: 1x
+                name: Package Tests 1x
                 script:
                   - bin/tools.sh buildProductionTest --env-file .build.env --tag package-install
       - step:
@@ -48,6 +51,7 @@ pipelines:
             - bin/deploy.sh --env-file .build.env --release
     staging:
       - step:
+          size: 1x
           deployment: staging
           name: Build and Test
           services:
@@ -58,6 +62,7 @@ pipelines:
             - bin/deploy.sh --documentation --no-release
     deploy:
       - step:
+          size: 1x
           deployment: deploy
           name: Just Deploy
           services:
