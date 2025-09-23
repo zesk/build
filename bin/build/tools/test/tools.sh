@@ -350,7 +350,7 @@ testSuite() {
 
     ! $verboseMode || statusMessage decorate info "$(printf "%s %d %s and %d %s to skip" "Applying" "${#tags[@]}" "$(plural ${#tags[@]} tag tags)" "${#skipTags[@]}" "$(plural ${#skipTags[@]} tag tags)")"
     sectionStart=$(timingStart) || returnClean $? "${clean[@]}" || return $?
-    while read -r item; do tagFilteredTests+=("$item"); done < <(__catch "$handler" __testSuiteFilterTags "${tags[@]+"${tags[@]}"}" -- "${skipTags[@]+"${skipTags[@]}"}" -- "${filteredTests[@]}") || returnClean $? "${clean[@]}" || return $?
+    while read -r item; do tagFilteredTests+=("$item"); done < <(__testSuiteFilterTags "$handler" "${tags[@]+"${tags[@]}"}" -- "${skipTags[@]+"${skipTags[@]}"}" -- "${filteredTests[@]}") || returnClean $? "${clean[@]}" || return $?
     if $verboseMode; then
       beforeCount="$(decorate notice "${#filteredTests[@]} $(plural ${#filteredTests[@]} "test" "tests")")"
       afterCount="$(decorate value "${#tagFilteredTests[@]} $(plural ${#tagFilteredTests[@]} "test" "tests")")"
@@ -531,6 +531,7 @@ __testSuiteShowTags() {
 # Filters tests by tags
 # Usage: {fn} [ tags ... ] -- [ skipTags ... ] -- tests ...
 __testSuiteFilterTags() {
+  local handler="$1" && shift
   local current=() tags=() skipTags=() gotTags=false debugMode=false
 
   while [ $# -gt 0 ]; do
