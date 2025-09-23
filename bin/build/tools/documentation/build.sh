@@ -99,14 +99,14 @@ __documentationBuild() {
       actionFlag="$argument"
       ;;
     --force)
-      if ! inArray "$argument" "${docArgs[@]}"; then
+      if [ ${#docArgs[@]} -eq 0 ] || ! inArray "$argument" "${docArgs[@]}"; then
         docArgs+=("$argument")
         indexArgs+=("$argument")
       fi
       ;;
     --verbose)
       verbose=true
-      if ! inArray "$argument" "${docArgs[@]}"; then
+      if [ ${#docArgs[@]} -eq 0 ] || ! inArray "$argument" "${docArgs[@]}"; then
         docArgs+=("$argument")
         indexArgs+=("$argument")
       fi
