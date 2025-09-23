@@ -45,14 +45,15 @@ if source "$(dirname "${BASH_SOURCE[0]}")/tools.sh"; then
       [ -z "$item" ] || aa+=(--repair "$item")
     done < <(find "$home" -type d -name identical ! -path "*/.*/*")
     # bashDebugInterruptFile --error --interrupt
-    local fingerprint="" jsonFile="" prefix
+    local fingerprint="" jsonFile="" jqPath=""
     jsonFile="$home/$(__catch "$handler" buildEnvironmentGet APPLICATION_JSON)" || return $?
 
-    prefix=$(__catch "$handler" buildEnvironmentGet APPLICATION_JSON_PREFIX) || return $?
-    prefix="${prefix#.}"
-    prefix="${prefix%.}"
-
     if [ -f "$jsonFile" ]; then
+      local prefix
+      prefix=$(__catch "$handler" buildEnvironmentGet APPLICATION_JSON_PREFIX) || return $?
+      prefix="${prefix#.}"
+      prefix="${prefix%.}"
+
       local buildFingerprint argChecksum="default"
       [ $# -eq 0 ] || argChecksum="$*"
       local jqPath
@@ -79,8 +80,10 @@ if source "$(dirname "${BASH_SOURCE[0]}")/tools.sh"; then
     fi
     set -eou pipefail
     __catch "$handler" identicalCheckShell "${aa[@]+"${aa[@]}"}" --exec contextOpen "$@" || return $?
-    __catch "$handler" jsonFileSet "$jsonFile" "$jqPath" "$fingerprint" || return $?
-    decorate success "Fingerprint updated."
+    if [ -f "$jsonFile" ]; then
+      __catch "$handler" jsonFileSet "$jsonFile" "$jqPath" "$fingerprint" || return $?
+      decorate success "Fingerprint updated."
+    fi
 
   }
   ___buildIdenticalRepair() {
