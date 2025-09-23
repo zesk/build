@@ -36,11 +36,11 @@ pipelines:
             - step:
                 name: Slow Tests
                 script:
-                  - bin/tools.sh buildProductionTest -env-file .build.env --tag slow
+                  - bin/tools.sh buildProductionTest --env-file .build.env --tag slow
             - step:
                 name: Package Tests
                 script:
-                  - bin/tools.sh buildProductionTest -env-file .build.env --tag package-install
+                  - bin/tools.sh buildProductionTest --env-file .build.env --tag package-install
       - step:
           name: Production Deploy
           script:
