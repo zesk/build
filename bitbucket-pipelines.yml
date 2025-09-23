@@ -25,7 +25,16 @@ pipelines:
             - test.stats
           script:
             - bin/build.sh --commit
-            - bin/tools.sh buildProductionTest
+      - parallel:
+          steps:
+            - step:
+                script: bin/tools.sh buildProductionTest --skip-tag slow --skip-tag package-install
+            - step:
+                script: bin/tools.sh buildProductionTest --tag slow
+            - step:
+                script: bin/tools.sh buildProductionTest --tag package-install
+      - step:
+          script:
             - bin/deploy.sh --release
     staging:
       - step:
