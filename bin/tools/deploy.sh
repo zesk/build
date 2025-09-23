@@ -35,6 +35,11 @@ __buildDeploy() {
     --no-release) makeRelease=false ;;
     --release) makeRelease=true ;;
     --debug) debugFlag=true ;;
+    --env-file)
+      shift
+      muzzle usageArgumentLoadEnvironmentFile "$handler" "$argument" "${1-}" || return $?
+      decorate info "Loaded environment file $(decorate file "$1")" || return $?
+      ;;
     *)
       # _IDENTICAL_ argumentUnknownHandler 1
       __throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?

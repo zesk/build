@@ -23,6 +23,7 @@ pipelines:
             - docker
           artifacts:
             - test.stats
+            - .build.env
           script:
             - bin/build.sh --commit
       - parallel:
@@ -30,19 +31,21 @@ pipelines:
             - step:
                 name: Fast Tests
                 script:
-                  - bin/tools.sh buildProductionTest --skip-tag slow --skip-tag package-install
+                  - bin/tools.sh dumpEnvironment
+                  - bin/tools.sh buildProductionTest --env-file .build.env --skip-tag slow --skip-tag package-install
             - step:
                 name: Slow Tests
                 script:
-                  - bin/tools.sh buildProductionTest --tag slow
+                  - bin/tools.sh buildProductionTest -env-file .build.env --tag slow
             - step:
                 name: Package Tests
                 script:
-                  - bin/tools.sh buildProductionTest --tag package-install
+                  - bin/tools.sh buildProductionTest -env-file .build.env --tag package-install
       - step:
           name: Production Deploy
           script:
-            - bin/deploy.sh --release
+            - bin/tools.sh dumpEnvironment
+            - bin/deploy.sh --env-file .build.env --release
     staging:
       - step:
           deployment: staging

@@ -168,6 +168,7 @@ __buildBuild() {
     ! $debugFlag || statusMessage --last decorate warning "Local repository changed."
   fi
   statusMessage --last timingReport "$start" "Built successfully in"
+  env -i >"$home/.build.env"
 }
 ___buildBuild() {
   # __IDENTICAL__ usageDocument 1
