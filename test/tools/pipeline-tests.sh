@@ -22,6 +22,7 @@ testVersionSort() {
   __assertVersionSort "v100.100.100" "v1000.100.100" || return $?
 }
 
+# Tag: slow
 testIsUpToDate() {
   local thisYear thisMonth expirationDays start testDate
 

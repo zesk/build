@@ -5,6 +5,7 @@
 # Copyright &copy; 2025 Market Acumen, Inc.
 #
 
+# Tag: slow
 testLogFileRotate() {
   local handler="_return"
   local tempDir
@@ -117,6 +118,7 @@ testLogFileRotate() {
   bigText "$name OK"
 }
 
+# Tag: slow
 testLogFileRotate1() {
   local handler="_return"
   local tempDir count=1 i n

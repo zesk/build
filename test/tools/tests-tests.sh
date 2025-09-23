@@ -7,6 +7,7 @@
 # Copyright &copy; 2025 Market Acumen, Inc.
 #
 
+# Tag: slow
 testWrapperShellScripts() {
   local findArgs=(! -path '*/vendor/*' ! -path "*/.*/*")
   local thisYear

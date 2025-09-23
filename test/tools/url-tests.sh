@@ -20,6 +20,8 @@ testUrlSchemeDefaultPort() {
     assertEquals "$expected" "$(urlSchemeDefaultPort "$scheme")" || return $?
   done < <(__dataUrlSchemeDefaultPort)
 }
+
+# Tag: slow
 testUrlParseItem() {
   local url=foo://user:hard-to-type@identity:4232/dbname
 

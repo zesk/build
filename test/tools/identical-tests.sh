@@ -32,6 +32,7 @@ testIdenticalEofWithBracket() {
   __catch "$handler" rm -rf "$temp" || return $?
 }
 
+# Tag: slow
 testIdenticalCheckAndRepairMap() {
   local handler="_return"
   local testPath home name
