@@ -47,9 +47,11 @@ __buildDeploy() {
   start=$(timingStart)
 
   ! $debugFlag || __buildDebugColors
-  ! $debugFlag || statusMessage decorate info "Installing AWS ..."
-  __catch "$handler" awsInstall || return $?
 
+  if $makeDocumentation; then
+    ! $debugFlag || statusMessage decorate info "Installing AWS ..."
+    __catch "$handler" awsInstall || return $?
+  fi
   local target cloudFrontID
   target=$(buildEnvironmentGet "DOCUMENTATION_S3_PREFIX") || return $?
   cloudFrontID=$(buildEnvironmentGet "DOCUMENTATION_CLOUDFRONT_ID") || return $?

@@ -102,7 +102,6 @@ __buildBuild() {
   [ -n "${BUILD_COLORS_MODE-}" ] || BUILD_COLORS_MODE=$(consoleConfigureColorMode) || :
 
   ! $debugFlag || statusMessage decorate info "Installing dependencies ..."
-  whichExists aws || __catch "$handler" awsInstall || return $?
   __catch "$handler" packageInstall || return $?
 
   local home
