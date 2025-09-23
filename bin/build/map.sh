@@ -274,7 +274,7 @@ bashFunctionComment() {
   local source="${1-}" functionName="${2-}"
   local maxLines=1000
   __help "_${FUNCNAME[0]}" "$@" || return 0
-  grep -m 1 -B $maxLines "^$functionName() {" "$source" | grep -v -e '\( IDENTICAL \|_IDENTICAL_\|DOC TEMPLATE:\|Internal:\|INTERNAL:\)' | fileReverseLines | sed -n -e '1d' -e '/^#/!q; p' | fileReverseLines | cut -c 3-
+  grep -m 1 -B $maxLines "^$functionName() {" "$source" | grep -v -e '\( IDENTICAL \|_IDENTICAL_\|DOC TEMPLATE:\|Internal:\|INTERNAL:\)' | fileReverseLines | sed -n -e '1d' -e '/^#/!q; p' | fileReverseLines | cut -c 3- || :
   # Explained:
   # - grep -m 1 ... - Finds the `function() {` string in the file and all lines afterwards
   # - grep -v ... - Removes internal documentation and anything we want to hide from the user
