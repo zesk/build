@@ -17,7 +17,7 @@ pipelines:
     main:
       - step:
           deployment: production
-          name: Build, Test, and Deploy
+          name: Production Build
           size: 4x
           services:
             - docker
@@ -40,6 +40,7 @@ pipelines:
                 script:
                   - bin/tools.sh buildProductionTest --tag package-install
       - step:
+          name: Production Deploy
           script:
             - bin/deploy.sh --release
     staging:
