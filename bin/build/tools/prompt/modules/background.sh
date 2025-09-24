@@ -353,7 +353,7 @@ __backgroundProcessManager() {
       if [ "$stopSeconds" -gt 0 ] && [ "$now" -gt "$waitStop" ]; then
         "${condition[@]}" >"$d/condition.stop" || :
         # Just compare
-        if muzzle diff -q "$d/condition" "$d/condition.stop" 2>&1; then
+        if [ -f "$d/condition.stop" ] && muzzle diff -q "$d/condition" "$d/condition.stop" 2>&1; then
           ! $verboseFlag || decorate info "$showId: Stop check - condition is the same, do nothing."
           __catchEnvironment "$handler" rm -f "$d/condition.stop" || return $?
           __catchEnvironment "$handler" printf -- "%s\n" "$((now + (stopSeconds * 1000)))" >"$d/waitStop" || return $?
@@ -425,8 +425,9 @@ __backgroundProcessExitWrapper() {
   rm -f "$d/exit"
   local start stop
   start="$(timingStart | tee "$d/start")" || :
-  export PATH HOME BUILD_HOME
-  nohup env -i "PATH=$PATH" "HOME=$HOME" "BUILD_HOME=$BUILD_HOME" "CI=1" "$@" >"$d/out" 2>"$d/err" || e=$?
+  export PATH HOME BUILD_HOME PWD
+  printf "%s\n" "$d: Running $* at $home" >"$d/out"
+  nohup env -i "PWD=$PWD PATH=$PATH" "HOME=$HOME" "BUILD_HOME=$BUILD_HOME" "CI=1" "$@" >>"$d/out" 2>"$d/err" || e=$?
   stop="$(timingStart | tee "$d/stop")" || :
   printf "%s\n" "$(timingFormat "$((stop - start))")" >"$d/elapsed"
   printf "%d\n" "$e" >"$d/exit" || :

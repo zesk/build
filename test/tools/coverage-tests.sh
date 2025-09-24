@@ -329,7 +329,7 @@ testBuildFunctionsHelpOnly() {
   TEST_TRACK_ASSERTIONS=false
 
   while read -r fun; do
-    assertExitCode --stderr-match "Only argument allowed is --help" 2 "$fun" "--never" || return $?
+    assertExitCode --stderr-match "Only argument allowed is \"--help\"" 2 "$fun" "--never" || return $?
   done < <(__dataBuildFunctionsHelpIsTheOnlyOption)
 
   mockEnvironmentStop BUILD_DEBUG

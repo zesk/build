@@ -9,11 +9,11 @@
 
 testColorSampleCodes() {
   assertExitCode 0 colorSampleCodes || return $?
-  assertNotExitCode --stderr-match "Only argument allowed is --help" 0 colorSampleCodes --no-arguments-really-allowed || return $?
+  assertNotExitCode --stderr-match "Only argument allowed is" --stderr-match "--help" 0 colorSampleCodes --no-arguments-really-allowed || return $?
 }
 testColorSampleStyles() {
   assertExitCode 0 colorSampleStyles || return $?
-  assertNotExitCode --stderr-match "Only argument allowed is --help" 0 colorSampleStyles --no-arguments-really-allowed || return $?
+  assertNotExitCode --stderr-match "Only argument allowed is" --stderr-match "--help" 0 colorSampleStyles --no-arguments-really-allowed || return $?
 }
 testSemanticColorSampleStyles() {
   local mode
