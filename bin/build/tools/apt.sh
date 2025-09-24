@@ -62,8 +62,8 @@ _aptSourcesDirectory() {
 # Argument: --title title - Optional. String. Title of the key.
 # Argument: --name name - Required. String. Name of the key used to generate file names.
 # Argument: --url remoteUrl - Required. URL. Remote URL of gpg key.
-# Exit Code: 1 - if environment is awry
-# Exit Code: 0 - Apt key is installed AOK
+# Return Code: 1 - if environment is awry
+# Return Code: 0 - Apt key is installed AOK
 #
 aptKeyAdd() {
   __aptLoader "_${FUNCNAME[0]}" "__${FUNCNAME[0]}" "$@"
@@ -79,8 +79,8 @@ _aptKeyAdd() {
 # Usage: {fn} keyName [ ... ]
 # Argument: keyName - Required. String. One or more key names to remove.
 # Argument: --skip - Flag. Optional.a Do not do `apt-get update` afterwards to update the database.
-# Exit Code: 1 - if environment is awry
-# Exit Code: 0 - Apt key is installed AOK
+# Return Code: 1 - if environment is awry
+# Return Code: 0 - Apt key is installed AOK
 #
 aptKeyRemove() {
   __aptLoader "_${FUNCNAME[0]}" "__${FUNCNAME[0]}" "$@"

@@ -160,8 +160,8 @@ _processWait() {
 # Argument: pid - Process ID of running process
 # Example:     > {fn} 23
 # Output: 423
-# Exit Code: 0 - Success
-# Exit Code: 2 - Argument error
+# Return Code: 0 - Success
+# Return Code: 2 - Argument error
 processMemoryUsage() {
   local handler="_${FUNCNAME[0]}"
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
@@ -198,8 +198,8 @@ _processMemoryUsage() {
 # Argument: pid - Process ID of running process
 # Example:     {fn} 23
 # Output: 423
-# Exit Code: 0 - Success
-# Exit Code: 2 - Argument error
+# Return Code: 0 - Success
+# Return Code: 2 - Argument error
 processVirtualMemoryAllocation() {
   local handler="_${FUNCNAME[0]}"
   # _IDENTICAL_ argumentNonBlankLoopHandler 6

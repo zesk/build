@@ -9,8 +9,8 @@
 # The current user HOME (must exist)
 # Argument: pathSegment - String. Optional. Add these path segments to the HOME directory returned. Does not create them.
 # No directories *should* be created by calling this, nor should any assumptions be made about the ability to read or write files in this directory.
-# Exit code: 1 - Issue with `buildEnvironmentGet HOME` or $HOME is not a directory (say, it's a file)
-# Exit code: 0 - Home directory exists.
+# Return Code: 1 - Issue with `buildEnvironmentGet HOME` or $HOME is not a directory (say, it's a file)
+# Return Code: 0 - Home directory exists.
 userHome() {
   local handler="_${FUNCNAME[0]}"
   __help "_${FUNCNAME[0]}" "$@" || return 0

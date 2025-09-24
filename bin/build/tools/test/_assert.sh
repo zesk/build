@@ -167,8 +167,8 @@ _assertionStatistics() {
 # Argument: --dump-binary - Optional. Flag. Output stderr and stdout after test regardless, and output binary.
 # Argument: --head - Optional. Flag. When outputting stderr or stdout, output the head of the file.
 # Argument: --tail - Optional. Flag. When outputting stderr or stdout, output the tail of the file. (Default)
-# Exit code: 1 - If the assertions fails
-# Exit code: 0 - If the assertion succeeds
+# Return Code: 1 - If the assertions fails
+# Return Code: 0 - If the assertion succeeds
 _assertConditionHelper() {
   local handler="$1" && shift
   local pairs=() debugFlag=false
@@ -388,8 +388,8 @@ _assertConditionHelper() {
 # Argument: thisName - Reported function for success or failure
 # Argument: fileName - File to search
 # Argument: string0 ... - One or more strings which must NOT be found anywhere in `fileName`
-# Exit code: 1 - If the assertions fails
-# Exit code: 0 - If the assertion succeeds
+# Return Code: 1 - If the assertions fails
+# Return Code: 0 - If the assertion succeeds
 # Environment: If the file does not exist, this will fail.
 # Example:     assertFileDoesNotContain "$logFile" error Error ERROR
 # Example:     assertFileDoesNotContain "$logFile" warning Warning WARNING
@@ -793,8 +793,8 @@ __assertFileDoesNotContainThis() {
 # Environment: None.
 # Examples: assertExitCode 0 hasHook version-current
 # Reviewed: 2023-11-12
-# Exit code: 0 - If the process exits with the provided exit code
-# Exit code: 1 - If the process exits with a different exit code
+# Return Code: 0 - If the process exits with the provided exit code
+# Return Code: 1 - If the process exits with a different exit code
 #
 _assertExitCodeHelper() {
   local handler="$1" && shift
@@ -831,8 +831,8 @@ ___assertExitCodeFormat() {
 # Argument: arguments - Any arguments to pass to the command to run
 # Argument: - `--exit` - Assert exit status of process to be this number
 # Argument: - `--stderr` - Also include standard error in output checking
-# Exit code: 0 - If the output contains at least one occurrence of the string
-# Exit code: 1 - If output does not contain string
+# Return Code: 0 - If the output contains at least one occurrence of the string
+# Return Code: 1 - If output does not contain string
 # Example:     {fn} Success complex-thing.sh --dry-run
 # Reviewed: 2023-11-12
 #

@@ -14,8 +14,8 @@
 # If this fails it will output the installation log.
 # When this tool succeeds the `npm` binary is available in the local operating system.
 # Environment: - `BUILD_NPM_VERSION` - String. Default to `latest`. Used to install `npm -i npm@$BUILD_NPM_VERSION` on install.
-# Exit Code: 1 - If installation of npm fails
-# Exit Code: 0 - If npm is already installed or installed without error
+# Return Code: 1 - If installation of npm fails
+# Return Code: 0 - If npm is already installed or installed without error
 # Binary: npm.sh
 #
 npmInstall() {

@@ -15,8 +15,8 @@
 # Notes: `yarn` is part of node, I think, so no clean uninstall.
 # When this tool succeeds the `yarn` binary is available in the local operating system.
 # Environment: - `BUILD_YARN_VERSION` - String. Default to `latest`.
-# Exit Code: 1 - If installation of yarn fails
-# Exit Code: 0 - If yarn is already installed or installed without error
+# Return Code: 1 - If installation of yarn fails
+# Return Code: 0 - If yarn is already installed or installed without error
 # Binary: npm.sh
 # Test: testYarnInstallation
 yarnInstall() {

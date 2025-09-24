@@ -77,8 +77,8 @@ __environmentValueWrite() {
 # Argument: stateFile - EnvironmentFile. Required. File to read a value from.
 # Argument: name - EnvironmentVariable. Required. Variable to read.
 # Argument: default - EmptyString. Optional. Default value of the environment variable if it does not exist.
-# Exit Code: 1 - If value is not found and no default argument is supplied (2 arguments)
-# Exit Code: 0 - If value
+# Return Code: 1 - If value is not found and no default argument is supplied (2 arguments)
+# Return Code: 0 - If value
 environmentValueRead() {
   local handler="_${FUNCNAME[0]}"
   [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
@@ -223,8 +223,8 @@ _environmentLines() {
 # If `.env.local` exists, it is also loaded in a similar manner.
 #
 # Environment: Loads `.env` and `.env.local`, use with caution on trusted content only
-# Exit code: 1 - if `.env` does not exist; outputs an error
-# Exit code: 0 - if files are loaded successfully
+# Return Code: 1 - if `.env` does not exist; outputs an error
+# Return Code: 0 - if files are loaded successfully
 # DEPRECATED: 2024-07-20
 # See: environmentFileLoad
 dotEnvConfigure() {
@@ -271,8 +271,8 @@ _dotEnvConfigure() {
 # Argument: --secure environmentName - Optional. String. If found, entire load fails.
 # Argument: --secure-defaults - Flag. Optional. Add a list of environment variables considered security risks to the `--ignore` list.
 # Argument: --execute arguments ... - Callable. Optional. All additional arguments are passed to callable after loading environment.
-# Exit code: 2 - if file does not exist; outputs an error
-# Exit code: 0 - if files are loaded successfully
+# Return Code: 2 - if file does not exist; outputs an error
+# Return Code: 0 - if files are loaded successfully
 environmentLoad() {
   local handler="_${FUNCNAME[0]}"
 
@@ -398,8 +398,8 @@ _environmentLoad() {
 # Argument: --secure environmentName - Optional. String. If found in a loaded file, entire file fails.
 # Argument: --secure-defaults - Flag. Optional. Add a list of environment variables considered security risks to the `--ignore` list.
 # Argument: --execute arguments ... - Callable. Optional. All additional arguments are passed to callable after loading environment files.
-# Exit code: 2 - if file does not exist; outputs an error
-# Exit code: 0 - if files are loaded successfully
+# Return Code: 2 - if file does not exist; outputs an error
+# Return Code: 0 - if files are loaded successfully
 environmentFileLoad() {
   local handler="_${FUNCNAME[0]}"
 
@@ -559,8 +559,8 @@ _environmentApplicationLoad() {
 }
 
 # Display and validate application variables.
-# Exit Code: 1 - If any required application variables are blank, the function fails with an environment error
-# Exit Code: 0 - All required application variables are non-blank
+# Return Code: 1 - If any required application variables are blank, the function fails with an environment error
+# Return Code: 0 - All required application variables are non-blank
 # Argument: environmentName - EnvironmentVariable. Optional. A required environment variable name
 # Argument: -- - Separator. Optional. Separates requires from optional environment variables
 # Argument: optionalEnvironmentName - EnvironmentVariable. Optional. An optional environment variable name.

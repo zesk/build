@@ -48,8 +48,8 @@
 #    URL                       url
 #
 # You can repeat the `type` `name` `value` more than once in the arguments and each will be checked until one fails
-# Exit Code: 0 - Valid is valid, stdout is a filtered version of the value to be used
-# Exit Code: 2 - Valid is invalid, output reason to stderr
+# Return Code: 0 - Valid is valid, stdout is a filtered version of the value to be used
+# Return Code: 2 - Valid is invalid, output reason to stderr
 validate() {
   local handler="_${FUNCNAME[0]}"
   local prefix="__validateType"
@@ -198,7 +198,7 @@ _validateHelperCheck() {
 
 # output arguments to stderr and return the argument error
 # Return: 2
-# Exit Code: 2 - Argument error
+# Return Code: 2 - Argument error
 _validateThrow() {
   printf -- "%s\n" "$@" 1>&2
   return 2

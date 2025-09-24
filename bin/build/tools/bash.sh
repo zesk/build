@@ -90,8 +90,8 @@ _bashBuiltins() {
 }
 
 # Argument: builtin - String. Required. String to check if it's a bash builtin.
-# Exit Code: 0 - Yes, this string is a bash builtin command.
-# Exit Code: 1 - No, this is not a bash builtin command
+# Return Code: 0 - Yes, this string is a bash builtin command.
+# Return Code: 1 - No, this is not a bash builtin command
 isBashBuiltin() {
   local handler="_${FUNCNAME[0]}"
   [ $# -gt 0 ] || __throwArgument "$handler" "Need builtin" || return $?
@@ -283,8 +283,8 @@ _bashStripComments() {
 # Show function handler in files
 # Argument: functionName - String. Required. Function which should be called somewhere within a file.
 # Argument: file - File. Required. File to search for function handler.
-# Exit code: 0 - Function is used within the file
-# Exit code: 1 - Function is *not* used within the file
+# Return Code: 0 - Function is used within the file
+# Return Code: 1 - Function is *not* used within the file
 # This check is simplistic and does not verify actual coverage or code paths.
 # Requires: __throwArgument decorate usageArgumentString usageArgumentFile quoteGrepPattern bashStripComments cat grep
 bashShowUsage() {

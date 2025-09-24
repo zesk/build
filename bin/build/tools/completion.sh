@@ -367,7 +367,7 @@ __completionTypeURL() {
 
 # output arguments to stderr and return the argument error
 # Return: 2
-# Exit Code: 2 - Argument error
+# Return Code: 2 - Argument error
 __throwValidate() {
   printf -- "%s\n" "$@" 1>&2
   return 2

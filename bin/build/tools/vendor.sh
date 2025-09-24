@@ -17,8 +17,8 @@ export __CFBundleIdentifier
 #
 # DOC TEMPLATE: --help 1
 # Argument: --help - Optional. Flag. Display this help.
-# Exit Code: 0 - within the PhpStorm terminal
-# Exit Code: 1 - not within the PhpStorm terminal AFAIK
+# Return Code: 0 - within the PhpStorm terminal
+# Return Code: 1 - not within the PhpStorm terminal AFAIK
 # See: contextOpen
 isPHPStorm() {
   __help "_${FUNCNAME[0]}" "$@" || return 0
@@ -35,8 +35,8 @@ _isPHPStorm() {
 #
 # DOC TEMPLATE: --help 1
 # Argument: --help - Optional. Flag. Display this help.
-# Exit Code: 0 - within the PyCharm terminal
-# Exit Code: 1 - not within the PyCharm terminal AFAIK
+# Return Code: 0 - within the PyCharm terminal
+# Return Code: 1 - not within the PyCharm terminal AFAIK
 # See: contextOpen
 isPyCharm() {
   __help "_${FUNCNAME[0]}" "$@" || return 0
@@ -53,8 +53,8 @@ _isPyCharm() {
 #
 # DOC TEMPLATE: --help 1
 # Argument: --help - Optional. Flag. Display this help.
-# Exit Code: 0 - within the Visual Studio Code terminal
-# Exit Code: 1 - not within the Visual Studio Code terminal AFAIK
+# Return Code: 0 - within the Visual Studio Code terminal
+# Return Code: 1 - not within the Visual Studio Code terminal AFAIK
 # See: contextOpen
 #
 isVisualStudioCode() {

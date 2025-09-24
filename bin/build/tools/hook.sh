@@ -119,8 +119,8 @@ __hookRunner() {
 # Argument: arguments - Optional. Arguments are passed to `hookName`.
 # DOC TEMPLATE: --help 1
 # Argument: --help - Optional. Flag. Display this help.
-# Exit code: Any - The hook exit code is returned if it is run
-# Exit code: 1 - is returned if the hook is not found
+# Return Code: Any - The hook exit code is returned if it is run
+# Return Code: 1 - is returned if the hook is not found
 # Example:     version="$({fn} version-current)"
 # See: hooks.md hookRunOptional hookRun hookSource hookSourceOptional
 # Test: testHookSystem
@@ -143,8 +143,8 @@ _hookRun() {
 # Argument: arguments - Optional. Arguments are passed to `hookName`.
 # DOC TEMPLATE: --help 1
 # Argument: --help - Optional. Flag. Display this help.
-# Exit code: Any - The hook exit code is returned if it is run
-# Exit code: 1 - is returned if the hook is not found
+# Return Code: Any - The hook exit code is returned if it is run
+# Return Code: 1 - is returned if the hook is not found
 # Example:     version="$({fn} version-current)"
 # See: hooks.md hookRunOptional hookRun
 # Test: testHookSystem
@@ -175,8 +175,8 @@ _hookRunOptional() {
 # Argument: --application applicationHome - Path. Optional. Directory of alternate application home.
 # Argument: hookName - String. Required. Hook name to run.
 # Argument: arguments - Optional. Arguments are passed to `hookName`.
-# Exit code: Any - The hook exit code is returned if it is run
-# Exit code: 1 - is returned if the hook is not found
+# Return Code: Any - The hook exit code is returned if it is run
+# Return Code: 1 - is returned if the hook is not found
 # Example:     version="$({fn} version-current)"
 # See: hooks.md hookRunOptional
 # Test: testHookSystem
@@ -193,8 +193,8 @@ _hookSource() {
 # Identical to `hookRun` but returns exit code zero if the hook does not exist.
 #
 # Usage: {fn} hookName [ arguments ... ]
-# Exit code: Any - The hook exit code is returned if it is run
-# Exit code: 0 - is returned if the hook is not found
+# Return Code: Any - The hook exit code is returned if it is run
+# Return Code: 0 - is returned if the hook is not found
 # Example:     if ! {fn} test-cleanup >>"$quietLog"; then
 # Example:         buildFailed "$quietLog"
 # Example:     fi
@@ -216,7 +216,7 @@ _hookSourceOptional() {
 # Usage: {fn} [ --application applicationHome ] hookName0 [ hookName1 ... ]
 # Argument: --application applicationHome - Path. Optional. Directory of alternate application home. Can be specified more than once to change state.
 # Argument: hookName0 - one or more hook names which must exist
-# Exit Code: 0 - If all hooks exist
+# Return Code: 0 - If all hooks exist
 # Test: testHookSystem
 # Environment: BUILD_HOOK_DIRS
 hasHook() {

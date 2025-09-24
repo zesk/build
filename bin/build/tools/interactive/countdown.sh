@@ -69,11 +69,11 @@ _interactiveCountdown() {
 # Argument: extras - EmptyString. Extra text to add to the prompt.
 # Argument: message - EmptyString. The message to show to prompt the user.
 # Argument: parser ... - Function. Function to call to check the input if it's valid and arguments to add.
-# Exit code: 10 - Timeout
-# Exit code: 11 - Attempts ran out
-# Exit code: 0 - All good, print character
-# Exit code: 1 - Error
-# Exit code: 2 - Error
+# Return Code: 10 - Timeout
+# Return Code: 11 - Attempts ran out
+# Return Code: 0 - All good, print character
+# Return Code: 1 - Error
+# Return Code: 2 - Error
 __interactiveCountdownReadCharacter() {
   local handler="$1" && shift
   local timeout="" rr=() extras icon="⏳" attempts prompt width=0

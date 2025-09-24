@@ -69,7 +69,7 @@ _markdownIndentHeading() {
 # Usage: markdown_removeUnfinishedSections < inputFile > outputFile
 # Argument: None
 # Depends: read printf
-# Exit Code: 0
+# Return Code: 0
 # Environment: None
 # Example:     map.sh < $templateFile | markdown_removeUnfinishedSections
 #

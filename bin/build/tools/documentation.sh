@@ -66,9 +66,9 @@ _bashDocumentation_Extract() {
 # Argument: --company companyName - Optional. Company name (uses `BUILD_COMPANY` if not set)
 # Argument: --company-link companyLink - Optional. Company name (uses `BUILD_COMPANY_LINK` if not set)
 # Artifact: `cacheDirectory` may be created even on non-zero exit code
-# Exit Code: 0 - Success
-# Exit Code: 1 - Issue with environment
-# Exit Code: 2 - Argument error
+# Return Code: 0 - Success
+# Return Code: 1 - Issue with environment
+# Return Code: 2 - Argument error
 documentationBuild() {
   __documentationLoader "_${FUNCNAME[0]}" "__${FUNCNAME[0]}" "$@"
 }
@@ -98,9 +98,9 @@ _documentationTemplate() {
 #
 # See: documentationBuild
 #
-# Exit Code: 0 - Success
-# Exit Code: 1 - Issue with environment
-# Exit Code: 2 - Argument error
+# Return Code: 0 - Success
+# Return Code: 1 - Issue with environment
+# Return Code: 2 - Argument error
 documentationBuildEnvironment() {
   __documentationLoader "_${FUNCNAME[0]}" "__${FUNCNAME[0]}" "$@"
 }
@@ -154,9 +154,9 @@ _documentationTemplateUpdate() {
 #
 # See: __documentationIndex_Lookup
 # See: documentationIndexIndex
-# Exit Code: 0 - If success
-# Exit Code: 1 - Issue with file generation
-# Exit Code: 2 - Argument error
+# Return Code: 0 - If success
+# Return Code: 1 - Issue with file generation
+# Return Code: 2 - Argument error
 # Requires: __catchEnvironment timingStart __throwArgument usageArgumentFile usageArgumentDirectory usageArgumentFileDirectory
 # Requires: basename decorate statusMessage fileTemporaryName rm grep cut source mapTokens returnClean
 # Requires: mapEnvironment shaPipe printf
@@ -188,9 +188,9 @@ _documentationTemplateCompile() {
 # to regenerate each time.
 #
 # See: documentationTemplateCompile
-# Exit Code: 0 - If success
-# Exit Code: 1 - Any template file failed to generate for any reason
-# Exit Code: 2 - Argument error
+# Return Code: 0 - If success
+# Return Code: 1 - Any template file failed to generate for any reason
+# Return Code: 2 - Argument error
 #
 documentationTemplateDirectoryCompile() {
   __documentationLoader "_${FUNCNAME[0]}" "__${FUNCNAME[0]}" "$@"
@@ -209,9 +209,9 @@ _documentationTemplateDirectoryCompile() {
 #
 # Template is output to stdout.
 #
-# Exit Code: 0 - If success
-# Exit Code: 1 - Issue with file generation
-# Exit Code: 2 - Argument error
+# Return Code: 0 - If success
+# Return Code: 1 - Issue with file generation
+# Return Code: 2 - Argument error
 # Argument: --env-file envFile - Optional. File. One (or more) environment files used during map of `functionTemplate`
 # Argument: cacheDirectory - Required. Cache directory where the indexes live.
 # Argument: functionName - Required. The function name to document.

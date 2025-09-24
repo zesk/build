@@ -103,8 +103,8 @@ __bashDocumentation_Extract() {
     __dumpNameValue "description" "No documentation for \`$fn\`."
     __dumpNameValue "summary" "undocumented"
   fi
-  if ! inArray "exitCode" "${foundNames[@]+"${foundNames[@]}"}"; then
-    __dumpNameValue "exitCode" '0 - Success' '1 - Environment error' '2 - Argument error' "" ""
+  if ! inArray "return_code" "${foundNames[@]+"${foundNames[@]}"}"; then
+    __dumpNameValue "return_code" '0 - Success' '1 - Environment error' '2 - Argument error' "" ""
   fi
   if ! inArray "fn" "${foundNames[@]+"${foundNames[@]}"}"; then
     __dumpNameValue "fn" "$fn"
@@ -113,11 +113,12 @@ __bashDocumentation_Extract() {
   printf '%s\n' "fn=\"\${fn%\$'\n'}\""
   if ! inArray "argument" "${foundNames[@]+${foundNames[@]}}"; then
     __dumpNameValue "argument" "none"
-    __dumpAliasedValue "handler" "fn"
+    __dumpAliasedValue "usage" "fn"
   else
-    if ! inArray "handler" "${foundNames[@]+"${foundNames[@]}"}"; then
-      __dumpAliasedValue handler argument
-      printf "%s\n" "export handler; handler=\"\$fn\$(__bashDocumentationDefaultArguments \"\$handler\")\""
+    if ! inArray "usage" "${foundNames[@]+"${foundNames[@]}"}"; then
+      printf "%s\n" "export usage; usage=\"\$fn\$(__bashDocumentationDefaultArguments \"\$argument\")\""
+    else
+      __dumpAliasedValue "usage" "fn"
     fi
   fi
   __dumpNameValue "foundNames" "${foundNames[*]-}"

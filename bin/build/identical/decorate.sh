@@ -20,8 +20,8 @@
 # Usage: hasColors
 # DOC TEMPLATE: --help 1
 # Argument: --help - Optional. Flag. Display this help.
-# Exit Code: 0 - Console or output supports colors
-# Exit Code: 1 - Colors are likely not supported by console
+# Return Code: 0 - Console or output supports colors
+# Return Code: 1 - Colors are likely not supported by console
 # Environment: BUILD_COLORS - Optional. Boolean. Whether the build system will output ANSI colors.
 # Requires: isPositiveInteger tput
 hasColors() {

@@ -61,9 +61,9 @@ _gitUninstall() {
 # DOC TEMPLATE: --help 1
 # Argument: --help - Optional. Flag. Display this help.
 # Argument: directory - Required. Directory. The directory to add to the `git` `safe.directory` configuration directive
-# Exit Code: 0 - Success
-# Exit Code: 2 - Argument is not a valid directory
-# Exit Code: Other - git config error codes
+# Return Code: 0 - Success
+# Return Code: 2 - Argument is not a valid directory
+# Return Code: Other - git config error codes
 #
 gitEnsureSafeDirectory() {
   local handler="_${FUNCNAME[0]}"
@@ -87,7 +87,7 @@ _gitEnsureSafeDirectory() {
 # DOC TEMPLATE: --help 1
 # Argument: --help - Optional. Flag. Display this help.
 # Argument: tag - The tag to delete locally and at origin
-# Exit Code: argument - Any stage fails will result in this exit code. Partial deletion may occur.
+# Return Code: argument - Any stage fails will result in this exit code. Partial deletion may occur.
 #
 gitTagDelete() {
   local handler="_${FUNCNAME[0]}"
@@ -126,7 +126,7 @@ _gitTagDelete() {
 #
 # Usage: gitTagDelete [ tag ... ]
 # Argument: tag - The tag to delete locally and remote
-# Exit Code: 2 - Any stage fails will result in this exit code. Partial deletion may occur.
+# Return Code: 2 - Any stage fails will result in this exit code. Partial deletion may occur.
 #
 gitTagAgain() {
   local handler="_${FUNCNAME[0]}" a=("$@")
@@ -152,8 +152,8 @@ _gitTagAgain() {
 # them sorted by version correctly.
 #
 # Usage: gitVersionList
-# Exit Code: 1 - If the `.git` directory does not exist
-# Exit Code: 0 - Success
+# Return Code: 1 - If the `.git` directory does not exist
+# Return Code: 0 - Success
 #
 gitVersionList() {
   local handler="_${FUNCNAME[0]}"
@@ -225,8 +225,8 @@ _gitRemoveFileFromHistory() {
 }
 
 #
-# Exit Code: 1 - the repo has NOT been modified
-# Exit Code: 0 - the repo has been modified
+# Return Code: 1 - the repo has NOT been modified
+# Return Code: 0 - the repo has been modified
 #
 # Has a git repository been changed from HEAD?
 # Source: https://stackoverflow.com/questions/3882838/whats-an-easy-way-to-detect-modified-files-in-a-git-workspace/3899339#3899339
@@ -244,8 +244,8 @@ _gitRepositoryChanged() {
 
 #
 # Usage: gitShowChanges
-# Exit Code: 0 - the repo has been modified
-# Exit Code: 1 - the repo has NOT bee modified
+# Return Code: 0 - the repo has been modified
+# Return Code: 1 - the repo has NOT bee modified
 #
 # Show changed files from HEAD
 # Source: https://stackoverflow.com/questions/3882838/whats-an-easy-way-to-detect-modified-files-in-a-git-workspace/3899339#3899339
@@ -262,8 +262,8 @@ _gitShowChanges() {
 
 #
 # Usage: gitShowStatus
-# Exit Code: 0 - the repo has been modified
-# Exit Code: 1 - the repo has NOT bee modified
+# Return Code: 0 - the repo has been modified
+# Return Code: 1 - the repo has NOT bee modified
 #
 # Show changed files from HEAD with their status prefix character:
 #
@@ -296,8 +296,8 @@ _gitShowStatus() {
 #
 # Environment: GIT_EXEC_PATH - Must be set to pass
 # Environment: GIT_INDEX_FILE - Must be set to pass
-# Exit Code: 0 - We are, semantically, inside a git hook
-# Exit Code: 1 - We are NOT, semantically, inside a git hook
+# Return Code: 0 - We are, semantically, inside a git hook
+# Return Code: 1 - We are NOT, semantically, inside a git hook
 #
 gitInsideHook() {
   [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
@@ -574,8 +574,8 @@ _gitCommit() {
 }
 
 # Usage: gitMainly
-# Exit Code: 1 - Already in main, staging, or HEAD, or git merge failed
-# Exit Code: 0 - git merge succeeded
+# Return Code: 1 - Already in main, staging, or HEAD, or git merge failed
+# Return Code: 0 - git merge succeeded
 # Merge `staging` and `main` branches of a git repository into the current branch.
 #
 # Will merge `origin/staging` and `origin/main` after doing a `--pull` for both of them
@@ -814,9 +814,9 @@ _gitInstallHooks() {
 #
 #     gitInstallHook --application "$myHome" pre-commit "$@" || return $?
 #
-# Exit code: 0 - the file was not updated
-# Exit code: 1 - Environment error
-# Exit code: 2 - Argument error
+# Return Code: 0 - the file was not updated
+# Return Code: 1 - Environment error
+# Return Code: 2 - Argument error
 # Environment: BUILD-HOME - The default application home directory used for `.git` and build hooks.
 gitInstallHook() {
   local handler="_${FUNCNAME[0]}"
@@ -982,8 +982,8 @@ _gitPreCommitCleanup() {
 # Does a branch exist locally or remotely?
 # Usage: {fn} branch ...
 # Argument: branch ... - String. Required. List of branch names to check.
-# Exit Code: 0 - All branches passed exist
-# Exit Code: 1 - At least one branch does not exist locally or remotely
+# Return Code: 0 - All branches passed exist
+# Return Code: 1 - At least one branch does not exist locally or remotely
 gitBranchExists() {
   local handler="_${FUNCNAME[0]}"
 
@@ -1004,8 +1004,8 @@ _gitBranchExists() {
 # Does a branch exist locally?
 # Usage: {fn} branch ...
 # Argument: branch ... - String. Required. List of branch names to check.
-# Exit Code: 0 - All branches passed exist
-# Exit Code: 1 - At least one branch does not exist locally
+# Return Code: 0 - All branches passed exist
+# Return Code: 1 - At least one branch does not exist locally
 gitBranchExistsLocal() {
   local handler="_${FUNCNAME[0]}"
   local branch
@@ -1026,8 +1026,8 @@ _gitBranchExistsLocal() {
 # Does a branch exist remotely?
 # Usage: {fn} branch ...
 # Argument: branch ... - String. Required. List of branch names to check.
-# Exit Code: 0 - All branches passed exist
-# Exit Code: 1 - At least one branch does not exist remotely
+# Return Code: 0 - All branches passed exist
+# Return Code: 1 - At least one branch does not exist remotely
 gitBranchExistsRemote() {
   local handler="_${FUNCNAME[0]}"
   local branch

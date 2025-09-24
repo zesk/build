@@ -9,8 +9,8 @@
 
 # Is a path an absolute path?
 # Usage: {fn} path ...
-# Exit Code: 0 - if all paths passed in are absolute paths (begin with `/`).
-# Exit Code: 1 - one ore more paths are not absolute paths
+# Return Code: 0 - if all paths passed in are absolute paths (begin with `/`).
+# Return Code: 1 - one ore more paths are not absolute paths
 isAbsolutePath() {
   local handler="_${FUNCNAME[0]}"
   [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
@@ -247,9 +247,9 @@ _directoryRequire() {
 
 # Argument: directory - Directory. Optional. Directory to check if empty.
 # Does a directory exist and is it empty?
-# Exit code: 2 - Directory does not exist
-# Exit code: 1 - Directory is not empty
-# Exit code: 0 - Directory is empty
+# Return Code: 2 - Directory does not exist
+# Return Code: 1 - Directory is not empty
+# Return Code: 0 - Directory is empty
 directoryIsEmpty() {
   local handler="_${FUNCNAME[0]}"
   local argument

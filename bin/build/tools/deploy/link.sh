@@ -22,9 +22,9 @@
 #
 # Summary: Link deployment to new version of the application
 # Argument: applicationLinkPath - This is the target for the current application
-# Exit code: 0 - Success
-# Exit code: 1 - Environment error
-# Exit code: 2 - Argument error
+# Return Code: 0 - Success
+# Return Code: 1 - Environment error
+# Return Code: 2 - Argument error
 #
 
 __deployLink() {

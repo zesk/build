@@ -17,8 +17,8 @@
 # Argument: package - Additional packages to install
 # Summary: Install `php`
 # When this tool succeeds the `php` binary is available in the local operating system.
-# Exit Code: 1 - If installation fails
-# Exit Code: 0 - If installation succeeds
+# Return Code: 1 - If installation fails
+# Return Code: 0 - If installation succeeds
 phpInstall() {
   local handler="_${FUNCNAME[0]}"
   [ $# -eq 0 ] || __help --only "$handler" "$@" || return "$(convertValue $? 1 0)"
@@ -37,8 +37,8 @@ _phpInstall() {
 # Argument: package - Additional packages to install
 # Summary: Uninstall `php`
 # When this tool succeeds the `php` binary is no longer available in the local operating system.
-# Exit Code: 1 - If uninstallation fails
-# Exit Code: 0 - If uninstallation succeeds
+# Return Code: 1 - If uninstallation fails
+# Return Code: 0 - If uninstallation succeeds
 phpUninstall() {
   local handler="_${FUNCNAME[0]}"
   [ $# -eq 0 ] || __help --only "$handler" "$@" || return "$(convertValue $? 1 0)"

@@ -37,9 +37,9 @@ _identicalRepair() {
 # Argument: --singles singlesFiles - Optional. File. One or more files which contain a list of allowed `{identical}` singles, one per line.
 # Argument: --single singleToken - Optional. String. One or more tokens which cam be singles.
 #
-# Exit Code: 2 - Argument error
-# Exit Code: 0 - Success, everything matches
-# Exit Code: 100 - Failures
+# Return Code: 2 - Argument error
+# Return Code: 0 - Success, everything matches
+# Return Code: 100 - Failures
 #
 # When, for whatever reason, you need code to match between files, add a comment in the form:
 #

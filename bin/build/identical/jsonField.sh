@@ -17,8 +17,8 @@
 # Argument: ... - Arguments. Optional. Passed directly to jq
 # stdout: selected field
 # stderr: error messages
-# Exit Code: 0 - Field was found and was non-blank
-# Exit Code: 1 - Field was not found or is blank
+# Return Code: 0 - Field was found and was non-blank
+# Return Code: 1 - Field was not found or is blank
 # Requires: jq whichExists __throwEnvironment printf rm decorate head
 jsonField() {
   [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0

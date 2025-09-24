@@ -205,8 +205,8 @@ _nodePackageManagerUninstall() {
 # Argument: --help - Optional. Flag. Display this help.
 # Argument: managerName - Required. String. The node package manager name to check.
 # Without arguments, shows the valid package manager names.
-# Exit Code: 0 - Yes, it's a valid package manager name.
-# Exit Code: 1 - No, it's not a valid package manager name.
+# Return Code: 0 - Yes, it's a valid package manager name.
+# Return Code: 1 - No, it's not a valid package manager name.
 # Valid names are: npm yarn
 nodePackageManagerValid() {
   local handler="_${FUNCNAME[0]}"

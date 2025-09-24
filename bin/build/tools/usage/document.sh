@@ -76,7 +76,7 @@ __usageDocument() {
     __throwArgument "$handler" "Unable to extract \"$functionName\" from \"$functionDefinitionFile\"" || returnClean $? "$variablesFile" || return $?
   fi
   (
-    local fn="$functionName" description="" argument="" base exit_code="" environment="" stdin="" stdout="" example="" build_debug=""
+    local fn="$functionName" description="" argument="" base return_code="" environment="" stdin="" stdout="" example="" build_debug=""
 
     declare -r __handler variablesFile
     set -a
@@ -87,7 +87,7 @@ __usageDocument() {
     __catchEnvironment "$__handler" rm -f "$variablesFile" || return $?
     set +a
 
-    : "$base $exit_code $environment $stdin $stdout $example are referenced here and with \${!variable} below"
+    : "$base $return_code $environment $stdin $stdout $example are referenced here and with \${!variable} below"
     : "$build_debug"
 
     [ "$returnCode" -eq 0 ] || exec 1>&2 && color="error"

@@ -11,8 +11,8 @@
 # Is this an Alpine system and is apk installed?
 # DOC TEMPLATE: --help 1
 # Argument: --help - Optional. Flag. Display this help.
-# Exit Code: 0 - System is an alpine system and apk is installed
-# Exit Code: 1 - System is not an alpine system or apk is not installed
+# Return Code: 0 - System is an alpine system and apk is installed
+# Return Code: 1 - System is not an alpine system or apk is not installed
 apkIsInstalled() {
   local handler="_${FUNCNAME[0]}"
   __help --only "$handler" "$@" || return 0
@@ -44,9 +44,9 @@ _isAlpine() {
 # Argument: --env envVariable=envValue - Optional. File. One or more environment variables to set.
 # Argument: --platform platform - Optional. String. Platform to run (arm vs intel).
 # Argument: extraArgs - Optional. Mixed. The first non-file argument to `{fn}` is passed directly through to `docker run` as arguments
-# Exit Code: 1 - If already inside docker, or the environment file passed is not valid
-# Exit Code: 0 - Success
-# Exit Code: Any - `docker run` error code is returned if non-zero
+# Return Code: 1 - If already inside docker, or the environment file passed is not valid
+# Return Code: 0 - Success
+# Return Code: Any - `docker run` error code is returned if non-zero
 alpineContainer() {
   local handler="_${FUNCNAME[0]}"
 
@@ -94,8 +94,8 @@ __apkUninstall() {
 # Progress is written to stderr
 # Result is `ok` or `restart` written to stdout
 #
-# Exit code: 0 - Success
-# Exit code: 1 - Failed due to issues with environment
+# Return Code: 0 - Success
+# Return Code: 1 - Failed due to issues with environment
 # Artifact: `{fn}.log` is left in the `buildCacheDirectory`
 # Artifact: `packageUpdate.log` is left in the `buildCacheDirectory`
 # Artifact: `packageInstall.log` is left in the `buildCacheDirectory`

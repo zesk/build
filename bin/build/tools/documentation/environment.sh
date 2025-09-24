@@ -13,9 +13,9 @@
 #
 # See: documentationBuild
 #
-# Exit Code: 0 - Success
-# Exit Code: 1 - Issue with environment
-# Exit Code: 2 - Argument error
+# Return Code: 0 - Success
+# Return Code: 1 - Issue with environment
+# Return Code: 2 - Argument error
 __documentationBuildEnvironment() {
   local handler="$1" && shift
 

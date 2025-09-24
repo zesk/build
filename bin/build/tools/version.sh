@@ -154,8 +154,8 @@ _nextMinorVersion() {
 # Hook: version-live
 # Hook: version-created
 # Hook: version-already
-# Exit Code: 0 - Release generated or has already been generated
-# Exit Code: 1 - If new version needs to be created and `--non-interactive`
+# Return Code: 0 - Release generated or has already been generated
+# Return Code: 1 - If new version needs to be created and `--non-interactive`
 # **New release** - generates files in system for a new release.
 #
 # *Requires* hook `version-current`, optionally `version-live`

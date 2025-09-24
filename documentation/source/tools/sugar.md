@@ -6,7 +6,7 @@
 
 ## Usage Sugar
 
-See [Sugar Core](./_sugar.md) first.
+See [Sugar Core](./sugar-core.md) first.
 
 This groupings of functions are related to a `usage` function to handle errors:
 

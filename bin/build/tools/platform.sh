@@ -10,9 +10,9 @@
 # Argument: count - The number of times to run the binary
 # Argument: binary - The binary to run
 # Argument: args ... - Any arguments to pass to the binary each run
-# Exit Code: 0 - success
-# Exit Code: 2 - `count` is not an unsigned number
-# Exit Code: Any - If `binary` fails, the exit code is returned
+# Return Code: 0 - success
+# Return Code: 2 - `count` is not an unsigned number
+# Return Code: Any - If `binary` fails, the exit code is returned
 # Summary: Run a binary count times
 #
 runCount() {
@@ -259,8 +259,8 @@ _pathCleanDuplicates() {
 # Argument: binary ... - Required. String. One or more Binaries to find in the system `PATH`.
 # DOC TEMPLATE: --help 1
 # Argument: --help - Optional. Flag. Display this help.
-# Exit code: 0 - If all values are found
-# Exit code: 1 - If any value is not found
+# Return Code: 0 - If all values are found
+# Return Code: 1 - If any value is not found
 # Requires: __throwArgument which decorate __decorateExtensionEach
 whichExists() {
   local handler="_${FUNCNAME[0]}"
@@ -315,8 +315,8 @@ _JSON() {
 # Argument: --help - Optional. Flag. Display this help.
 # Argument: service ... - String. Optional. A unix service typically found in `/etc/services`
 # Output: Port number of associated service (integer) one per line
-# Exit Code: 1 - service not found
-# Exit Code: 0 - service found and output is an integer
+# Return Code: 1 - service not found
+# Return Code: 0 - service found and output is an integer
 # See: serviceToPort
 #
 serviceToStandardPort() {
@@ -359,9 +359,9 @@ _serviceToStandardPort() {
 # DOC TEMPLATE: --help 1
 # Argument: --help - Optional. Flag. Display this help.
 # Output: Port number of associated service (integer) one per line
-# Exit Code: 1 - service not found
-# Exit Code: 2 - bad argument or invalid port
-# Exit Code: 0 - service found and output is an integer
+# Return Code: 1 - service not found
+# Return Code: 2 - bad argument or invalid port
+# Return Code: 0 - service found and output is an integer
 serviceToPort() {
   local handler="_${FUNCNAME[0]}"
   local port servicesFile=/etc/services service

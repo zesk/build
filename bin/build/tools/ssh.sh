@@ -60,8 +60,8 @@ _sshKnownHostsFile() {
 #
 # If this function fails then ~/.ssh/known_hosts may be modified for any hosts which did not fail
 #
-# Exit Code: 1 - Environment errors
-# Exit Code: 0 - All hosts exist in or were successfully added to the known hosts file
+# Return Code: 1 - Environment errors
+# Return Code: 0 - All hosts exist in or were successfully added to the known hosts file
 # Usage: {fn} [ host0 ]
 #
 # Argument: host0 - String. Optional. One ore more hosts to add to the known hosts file
@@ -128,8 +128,8 @@ _sshKnownHostAdd() {
 #
 # If this function fails then ~/.ssh/known_hosts may be modified for any hosts which did not fail
 #
-# Exit Code: 1 - Environment errors
-# Exit Code: 0 - All hosts exist in or were successfully added to the known hosts file
+# Return Code: 1 - Environment errors
+# Return Code: 0 - All hosts exist in or were successfully added to the known hosts file
 # Usage: {fn} [ host0 ]
 #
 # Argument: host0 ... - String. Optional. One ore more hosts to add to the known hosts file

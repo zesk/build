@@ -93,9 +93,9 @@ __decorateExtensionPair() {
 #
 # Summary: Prefix output lines with a string
 # Usage: decorate wrap [ --fill ] [ prefix [ suffix ... ] ] < fileToWrapLines
-# Exit Code: 0 - stdout contains input wrapped with text
-# Exit Code: 1 - Environment error
-# Exit Code: 2 - Argument error
+# Return Code: 0 - stdout contains input wrapped with text
+# Return Code: 1 - Environment error
+# Return Code: 2 - Argument error
 # Argument: prefix - String. Required. Prefix each line with this text
 # Argument: suffix - String. Required. Prefix each line with this text
 # Example:     cat "$file" | decorate wrap "CODE> " " <EOL>"

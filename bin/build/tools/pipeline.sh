@@ -31,7 +31,7 @@
 # Example:         decorate error "Deploy failed"
 # Example:         buildFailed "$quietLog"
 # Example:     fi
-# Exit Code: 1 - Always fails
+# Return Code: 1 - Always fails
 # Output: stdout
 buildFailed() {
   local handler="_${FUNCNAME[0]}"

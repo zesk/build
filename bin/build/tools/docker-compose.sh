@@ -12,8 +12,8 @@
 # Argument: package - Additional packages to install (using `pipInstall`)
 # Summary: Install `docker-compose`
 # When this tool succeeds the `docker-compose` binary is available in the local operating system.
-# Exit Code: 1 - If installation fails
-# Exit Code: 0 - If installation succeeds
+# Return Code: 1 - If installation fails
+# Return Code: 0 - If installation succeeds
 # Binary: docker-compose.sh
 # See: pipInstall
 #
@@ -39,8 +39,8 @@ _dockerComposeInstall() {
 # Argument: package - Additional packages to install (using apt)
 # Summary: Install `docker-compose`
 # When this tool succeeds the `docker-compose` binary is available in the local operating system.
-# Exit Code: 1 - If installation fails
-# Exit Code: 0 - If installation succeeds
+# Return Code: 1 - If installation fails
+# Return Code: 0 - If installation succeeds
 # Binary: docker-compose.sh
 #
 dockerComposeUninstall() {
@@ -60,8 +60,8 @@ _dockerComposeUninstall() {
 # Is docker compose currently running?
 # DOC TEMPLATE: --help 1
 # Argument: --help - Optional. Flag. Display this help.
-# Exit Code: 1 - Not running
-# Exit Code: 0 - Running
+# Return Code: 1 - Not running
+# Return Code: 0 - Running
 dockerComposeIsRunning() {
   local handler="_${FUNCNAME[0]}"
   [ $# -eq 0 ] || __help --only "$handler" "$@" || return "$(convertValue $? 1 0)"
@@ -99,8 +99,8 @@ _dockerComposeCommandList() {
 # See: dockerComposeCommandList
 # DOC TEMPLATE: --help 1
 # Argument: --help - Optional. Flag. Display this help.
-# Exit Code: 0 - Yes, it is.
-# Exit Code: 1 - No, it is not.
+# Return Code: 0 - Yes, it is.
+# Return Code: 1 - No, it is not.
 isDockerComposeCommand() {
   local handler="_${FUNCNAME[0]}" command="${1-}"
 

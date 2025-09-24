@@ -262,8 +262,8 @@ _daemontoolsIsRunning() {
 }
 
 # Print the daemontools service home path
-# Exit code: 0 - success
-# Exit code: 1 - No environment file found
+# Return Code: 0 - success
+# Return Code: 1 - No environment file found
 daemontoolsHome() {
   local handler="_${FUNCNAME[0]}"
   [ $# -eq 0 ] || __help --only "$handler" "$@" || return "$(convertValue $? 1 0)"

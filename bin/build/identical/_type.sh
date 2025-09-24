@@ -13,8 +13,8 @@
 # Test if an argument is a positive integer (non-zero)
 # Takes one argument only.
 # Argument: value - EmptyString. Required. Value to check if it is an unsigned integer
-# Exit Code: 0 - if it is a positive integer
-# Exit Code: 1 - if it is not a positive integer
+# Return Code: 0 - if it is a positive integer
+# Return Code: 1 - if it is not a positive integer
 # Requires: __catchArgument isUnsignedInteger usageDocument
 isPositiveInteger() {
   # _IDENTICAL_ functionSignatureSingleArgument 2
@@ -35,8 +35,8 @@ _isPositiveInteger() {
 # Test if argument are bash functions
 # Argument: string - Required. String to test if it is a bash function. Builtins are supported. `.` is explicitly not supported to disambiguate it from the current directory `.`.
 # If no arguments are passed, returns exit code 1.
-# Exit code: 0 - argument is bash function
-# Exit code: 1 - argument is not a bash function
+# Return Code: 0 - argument is bash function
+# Return Code: 1 - argument is not a bash function
 # Requires: __catchArgument isUnsignedInteger usageDocument type
 isFunction() {
   # _IDENTICAL_ functionSignatureSingleArgument 2

@@ -55,8 +55,8 @@ __yumUninstall() {
 # Progress is written to stderr
 # Result is `ok` or `restart` written to stdout
 #
-# Exit code: 0 - Success
-# Exit code: 1 - Failed due to issues with environment
+# Return Code: 0 - Success
+# Return Code: 1 - Failed due to issues with environment
 # Artifact: `{fn}.log` is left in the `buildCacheDirectory`
 # Artifact: `packageUpdate.log` is left in the `buildCacheDirectory`
 # Artifact: `packageInstall.log` is left in the `buildCacheDirectory`

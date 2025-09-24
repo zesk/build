@@ -163,8 +163,8 @@ _applicationIdLink() {
 # Usage: {fn} deployHome versionName
 #
 # Get the previous version of the supplied version
-# Exit Code: 1 - No version exists
-# Exit Code: 2 - Argument error
+# Return Code: 1 - No version exists
+# Return Code: 2 - Argument error
 #
 deployPreviousVersion() {
   _applicationIdLink "_${FUNCNAME[0]}" previous "$@"

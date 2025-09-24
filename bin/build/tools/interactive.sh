@@ -55,8 +55,8 @@ _pause() {
 # Argument: --escalate - Flag. Optional. The file is a privilege escalation and needs visual confirmation. Requires root privileges.
 # Argument: source - File. Required. Source path
 # Argument: destination - File. Required. Destination path
-# Exit Code: 0 - Success
-# Exit Code: 1 - Failed
+# Return Code: 0 - Success
+# Return Code: 1 - Failed
 fileCopy() {
   __interactiveLoader "_${FUNCNAME[0]}" "__${FUNCNAME[0]}" "$@"
 }
@@ -71,8 +71,8 @@ _fileCopy() {
 # Argument: --map - Flag. Optional. Map environment values into file before copying.
 # Argument: source - File. Required. Source path
 # Argument: destination - File. Required. Destination path
-# Exit Code: 0 - Something would change
-# Exit Code: 1 - Nothing would change
+# Return Code: 0 - Something would change
+# Return Code: 1 - Nothing would change
 fileCopyWouldChange() {
   __interactiveLoader "_${FUNCNAME[0]}" "__${FUNCNAME[0]}" "$@"
 }
@@ -127,8 +127,8 @@ _notify() {
 }
 
 # Read user input and return 0 if the user says yes, or non-zero if they say no
-# Exit Code: 0 - Yes
-# Exit Code: 1 - No
+# Return Code: 0 - Yes
+# Return Code: 1 - No
 # Usage: {fn} [ --default defaultValue ] [ --yes ] [ --no ]
 # Argument: --default defaultValue - Boolean. Optional. Value to return if no value given by user
 # Argument: --attempts attempts - PositiveInteger. Optional. User can give us a bad response this many times before we return the default.
@@ -153,8 +153,8 @@ _confirmYesNo() {
 
 # Ask the user for a menu of options
 #
-# Exit code: interrupt - Attempts exceeded
-# Exit code: timeout - Timeout
+# Return Code: interrupt - Attempts exceeded
+# Return Code: timeout - Timeout
 # Argument: --choice choiceCharacter - Required. String. Character to accept.
 # Argument: --default default - Optional. String. Character to choose when there is a timeout or other failure.
 # Argument: --result resultFile - Required. File. File to write the result to.

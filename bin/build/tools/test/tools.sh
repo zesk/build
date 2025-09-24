@@ -779,8 +779,8 @@ __testSuitesNames() {
 
 # Check our global test failure as a back up to some how missing a failure elsewhere
 # Environment: globalTestFailure
-# Exit Code: 0 - Something failed somewhere
-# Exit Code: 1 - Nothing failed anywhere, we should pass
+# Return Code: 0 - Something failed somewhere
+# Return Code: 1 - Nothing failed anywhere, we should pass
 __testDidAnythingFail() {
   export globalTestFailure
 
@@ -1080,8 +1080,8 @@ ___testRun() {
 # Argument: testPattern - String. Required. Test string to match.
 # Argument: testMatches ... - String. Optional. One or more tests to match with.
 # Performs a case-insensitive anywhere-in-the-string match
-# Exit Code: 0 - Test was found in the list
-# Exit Code: 1 - Test was not found in the list
+# Return Code: 0 - Test was found in the list
+# Return Code: 1 - Test was not found in the list
 __testMatches() {
   local testPattern match
 

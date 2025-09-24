@@ -164,8 +164,8 @@ __catchArgumentHelper() {
 # Argument: handler - Required. Function. Usage function to call upon failure.
 # Argument: argument - Required. String. Name of the argument used in error messages.
 # Argument: value - Optional. String, Value which should be non-blank otherwise an argument error is thrown.
-# Exit Code: 2 - If `value` is blank
-# Exit code: 0 - If `value` is non-blank
+# Return Code: 2 - If `value` is blank
+# Return Code: 0 - If `value` is non-blank
 usageArgumentString() {
   local handler="$1" argument="$2"
   shift 2 || :
@@ -179,8 +179,8 @@ usageArgumentString() {
 # Argument: variableName - Required. String. Name of variable being tested
 # Argument: variableValue - Required. String. Required only in that if it's blank, it fails.
 # Argument: noun - Optional. String. Noun used to describe the argument in errors, defaults to `integer`
-# Exit Code: 2 - Argument error
-# Exit Code: 0 - Success
+# Return Code: 2 - Argument error
+# Return Code: 0 - Success
 usageArgumentInteger() {
   local args handler="$1"
   args=("$@")
@@ -195,8 +195,8 @@ usageArgumentInteger() {
 # Argument: variableName - Required. String. Name of variable being tested
 # Argument: variableValue - Required. String. Required only in that if it's blank, it fails.
 # Argument: noun - Optional. String. Noun used to describe the argument in errors, defaults to `integer`
-# Exit Code: 2 - Argument error
-# Exit Code: 0 - Success
+# Return Code: 2 - Argument error
+# Return Code: 0 - Success
 usageArgumentNumber() {
   local args handler="$1"
   args=("$@")
@@ -211,8 +211,8 @@ usageArgumentNumber() {
 # Argument: variableName - Required. String. Name of variable being tested
 # Argument: variableValue - Required. String. Required only in that if it's blank, it fails.
 # Argument: noun - Optional. String. Noun used to describe the argument in errors, defaults to `unsigned integer`
-# Exit Code: 2 - Argument error
-# Exit Code: 0 - Success
+# Return Code: 2 - Argument error
+# Return Code: 0 - Success
 usageArgumentUnsignedInteger() {
   local handler="$1" args
   args=("$@")
@@ -230,8 +230,8 @@ usageArgumentUnsignedInteger() {
 # Argument: variableName - Required. String. Name of variable being tested
 # Argument: variableValue - Required. String. Required only in that if it's blank, it fails.
 # Argument: noun - Optional. String. Noun used to describe the argument in errors, defaults to `unsigned integer`
-# Exit Code: 2 - Argument error
-# Exit Code: 0 - Success
+# Return Code: 2 - Argument error
+# Return Code: 0 - Success
 usageArgumentPositiveInteger() {
   local handler="$1" args
   args=("$@")
@@ -250,8 +250,8 @@ usageArgumentPositiveInteger() {
 # Argument: variableName - Required. String. Name of variable being tested
 # Argument: variableValue - Required. String. Value to test.
 # Argument: noun - Optional. String. Noun used to describe the argument in errors, defaults to `file`
-# Exit Code: 2 - Argument error
-# Exit Code: 0 - Success
+# Return Code: 2 - Argument error
+# Return Code: 0 - Success
 usageArgumentFile() {
   local handler="$1" args
   args=("$@")
@@ -269,8 +269,8 @@ usageArgumentFile() {
 # Argument: variableName - Required. String. Name of variable being tested
 # Argument: variableValue - Required. String. Value to test.
 # Argument: noun - Optional. String. Noun used to describe the argument in errors, defaults to `file`
-# Exit Code: 2 - Argument error
-# Exit Code: 0 - Success
+# Return Code: 2 - Argument error
+# Return Code: 0 - Success
 usageArgumentRealFile() {
   local handler="$1" args value
   args=("$@")
@@ -290,8 +290,8 @@ usageArgumentRealFile() {
 # Argument: variableName - Required. String. Name of variable being tested
 # Argument: variableValue - Required. String. Required only in that if it's blank, it fails.
 # Argument: noun - Optional. String. Noun used to describe the argument in errors, defaults to `file or directory`
-# Exit Code: 2 - Argument error
-# Exit Code: 0 - Success
+# Return Code: 2 - Argument error
+# Return Code: 0 - Success
 usageArgumentExists() {
   local handler="$1" args
   args=("$@")
@@ -310,8 +310,8 @@ usageArgumentExists() {
 # Argument: variableName - Required. String. Name of variable being tested
 # Argument: variableValue - Required. String. Path to a link file.
 # Argument: noun - Optional. String. Noun used to describe the argument in errors, defaults to `link`
-# Exit Code: 2 - Argument error
-# Exit Code: 0 - Success
+# Return Code: 2 - Argument error
+# Return Code: 0 - Success
 usageArgumentLink() {
   local handler="$1" args
   args=("$@")
@@ -329,8 +329,8 @@ usageArgumentLink() {
 # Argument: variableName - Required. String. Name of variable being tested
 # Argument: variableValue - Required. String. Required only in that if it's blank, it fails.
 # Argument: noun - Optional. String. Noun used to describe the argument in errors, defaults to `directory`
-# Exit Code: 2 - Argument error
-# Exit Code: 0 - Success
+# Return Code: 2 - Argument error
+# Return Code: 0 - Success
 usageArgumentDirectory() {
   local handler="$1" args directory
   args=("$@")
@@ -350,8 +350,8 @@ usageArgumentDirectory() {
 # Argument: variableName - Required. String. Name of variable being tested
 # Argument: variableValue - Required. String. Required only in that if it's blank, it fails.
 # Argument: noun - Optional. String. Noun used to describe the argument in errors, defaults to `directory list`
-# Exit Code: 2 - Argument error
-# Exit Code: 0 - Success
+# Return Code: 2 - Argument error
+# Return Code: 0 - Success
 usageArgumentDirectoryList() {
   local handler="$1" args
   args=("$@")
@@ -377,8 +377,8 @@ usageArgumentDirectoryList() {
 # Argument: variableName - Required. String. Name of variable being tested
 # Argument: variableValue - Required. String. Required only in that if it's blank, it fails.
 # Argument: noun - Optional. String. Noun used to describe the argument in errors, defaults to `directory list`
-# Exit Code: 2 - Argument error
-# Exit Code: 0 - Success
+# Return Code: 2 - Argument error
+# Return Code: 0 - Success
 usageArgumentApplicationDirectoryList() {
   local handler="$1" args
   args=("$@")
@@ -410,8 +410,8 @@ usageArgumentApplicationDirectoryList() {
 # Argument: variableName - Required. String. Name of variable being tested
 # Argument: variableValue - Required. String. Required only in that if it's blank, it fails.
 # Argument: noun - Optional. String. Noun used to describe the argument in errors, defaults to `directory list`
-# Exit Code: 2 - Argument error
-# Exit Code: 0 - Success
+# Return Code: 2 - Argument error
+# Return Code: 0 - Success
 usageArgumentApplicationDirectory() {
   local handler="$1" args
   args=("$@")
@@ -438,8 +438,8 @@ usageArgumentApplicationDirectory() {
 # Argument: variableName - Required. String. Name of variable being tested
 # Argument: variableValue - Required. String. Value to test.
 # Argument: noun - Optional. String. Noun used to describe the argument in errors, defaults to `directory list`
-# Exit Code: 2 - Argument error
-# Exit Code: 0 - Success
+# Return Code: 2 - Argument error
+# Return Code: 0 - Success
 usageArgumentApplicationFile() {
   local handler="$1" args
   args=("$@")
@@ -465,8 +465,8 @@ usageArgumentApplicationFile() {
 # Argument: variableName - Required. String. Name of variable being tested
 # Argument: variableValue - Required. String. Required only in that if it's blank, it fails.
 # Argument: noun - Optional. String. Noun used to describe the argument in errors, defaults to `directory`
-# Exit Code: 2 - Argument error
-# Exit Code: 0 - Success
+# Return Code: 2 - Argument error
+# Return Code: 0 - Success
 usageArgumentRealDirectory() {
   local handler="$1" args directory
   args=("$@")
@@ -486,8 +486,8 @@ usageArgumentRealDirectory() {
 # Argument: variableName - Required. String. Name of variable being tested
 # Argument: variableValue - Required. String. Required only in that if it's blank, it fails.
 # Argument: noun - Optional. String. Noun used to describe the argument in errors, defaults to `file`
-# Exit Code: 2 - Argument error
-# Exit Code: 0 - Success
+# Return Code: 2 - Argument error
+# Return Code: 0 - Success
 usageArgumentFileDirectory() {
   local args
   args=("$@")
@@ -506,8 +506,8 @@ usageArgumentFileDirectory() {
 # Argument: variableName - Required. String. Name of variable being tested
 # Argument: variableValue - Required. String. Required only in that if it's blank, it fails.
 # Argument: noun - Optional. String. Noun used to describe the argument in errors, defaults to `file`
-# Exit Code: 2 - Argument error
-# Exit Code: 0 - Success
+# Return Code: 2 - Argument error
+# Return Code: 0 - Success
 # Upon success, outputs the file name to stdout, outputs a console message to stderr
 usageArgumentLoadEnvironmentFile() {
   local envFile bashEnv usageFunction returnCode
@@ -534,7 +534,7 @@ usageArgumentLoadEnvironmentFile() {
 # Argument: handler - Required. Function. handler function to call upon failure.
 # Argument: argument - Required. String. Name of the argument used in error messages.
 # Argument: value - Optional. String, Value to output.
-# Exit code: 0 - Always
+# Return Code: 0 - Always
 usageArgumentEmptyString() {
   local handler="$1" argument="$2"
   shift 2 || :
@@ -546,8 +546,8 @@ usageArgumentEmptyString() {
 # Argument: handler - Required. Function. handler function to call upon failure.
 # Argument: argument - Required. String. Name of the argument used in error messages.
 # Argument: value - Optional. String, Value which should be non-blank otherwise an argument error is thrown.
-# Exit Code: 2 - If `value` is not a boolean
-# Exit code: 0 - If `value` is a boolean
+# Return Code: 2 - If `value` is not a boolean
+# Return Code: 0 - If `value` is a boolean
 usageArgumentBoolean() {
   local handler="$1" argument="$2"
   shift 2 || :
@@ -560,8 +560,8 @@ usageArgumentBoolean() {
 # Argument: handler - Required. Function. handler function to call upon failure.
 # Argument: argument - Required. String. Name of the argument used in error messages.
 # Argument: value - Optional. String, Value which should be a URL otherwise an argument error is thrown.
-# Exit code: 0 - If `value` is `urlValid`
-# Exit Code: 2 - If `value` is not `urlValid`
+# Return Code: 0 - If `value` is `urlValid`
+# Return Code: 2 - If `value` is not `urlValid`
 usageArgumentURL() {
   local handler="$1" argument="$2"
   shift 2 || :
@@ -574,8 +574,8 @@ usageArgumentURL() {
 # Argument: handler - Required. Function. handler function to call upon failure.
 # Argument: argument - Required. String. Name of the argument used in error messages.
 # Argument: value - Optional. String, Value which should be callable otherwise an argument error is thrown.
-# Exit Code: 2 - If `value` is not `isCallable`
-# Exit code: 0 - If `value` is `isCallable`
+# Return Code: 2 - If `value` is not `isCallable`
+# Return Code: 0 - If `value` is `isCallable`
 usageArgumentCallable() {
   local handler="$1" argument="$2"
   shift 2 || :
@@ -588,8 +588,8 @@ usageArgumentCallable() {
 # Argument: handler - Required. Function. handler function to call upon failure.
 # Argument: argument - Required. String. Name of the argument used in error messages.
 # Argument: value - Optional. String, Value which should be executable otherwise an argument error is thrown.
-# Exit Code: 2 - If `value` is not `isExecutable`
-# Exit code: 0 - If `value` is `isExecutable`
+# Return Code: 2 - If `value` is not `isExecutable`
+# Return Code: 0 - If `value` is `isExecutable`
 usageArgumentExecutable() {
   local handler="$1" argument="$2"
   shift 2 || :
@@ -602,8 +602,8 @@ usageArgumentExecutable() {
 # Argument: handler - Required. Function. handler function to call upon failure.
 # Argument: argument - Required. String. Name of the argument used in error messages.
 # Argument: value - Optional. String, Value which should be a function otherwise an argument error is thrown.
-# Exit Code: 2 - If `value` is not `isFunction`
-# Exit code: 0 - If `value` is `isFunction`
+# Return Code: 2 - If `value` is not `isFunction`
+# Return Code: 0 - If `value` is `isFunction`
 usageArgumentFunction() {
   local handler="$1" argument="$2"
   shift 2 || :
@@ -618,8 +618,8 @@ usageArgumentFunction() {
 # Argument: variableName - Required. String. Name of variable being tested
 # Argument: variableValue - Required. String. Environment variable name.
 # Argument: noun - Optional. String. Noun used to describe the argument in errors, defaults to `environment variable`
-# Exit Code: 2 - Argument error
-# Exit Code: 0 - Success
+# Return Code: 2 - Argument error
+# Return Code: 0 - Success
 usageArgumentEnvironmentVariable() {
   local handler="$1" argument="$2"
   shift 2 || :
@@ -680,7 +680,7 @@ usageArgumentArguments() {
 # A remote path is one which exists in another file system
 # Argument: handler - Required. Function. handler function to call upon failure.
 # Argument: argument - Required. String. Name of the argument used in error messages.
-# Exit Code: 2 - Always
+# Return Code: 2 - Always
 usageArgumentRemoteDirectory() {
   local handler="$1" argument="$2"
   shift 2 || :
@@ -692,7 +692,7 @@ usageArgumentRemoteDirectory() {
 # A remote path is one which exists in another file system
 # Argument: handler - Required. Function. handler function to call upon failure.
 # Argument: argument - Required. String. Name of the argument used in error messages.
-# Exit Code: 2 - Always
+# Return Code: 2 - Always
 usageArgumentDate() {
   local handler="$1" argument="$2"
   shift 2 || :

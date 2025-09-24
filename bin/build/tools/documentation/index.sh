@@ -109,7 +109,7 @@ ___documentationIndex_Lookup() {
 #
 # Usage: fn cacheDirectory
 # Outputs relative path to cacheDirectory for shared handler
-# Exit Code: 1 - passed in directory must exist
+# Return Code: 1 - passed in directory must exist
 #
 __documentationIndex_GeneratePath() {
   local handler="_${FUNCNAME[0]}"
@@ -464,9 +464,9 @@ __documentationIndex_FunctionIterator() {
 #
 # TODO This should probably be a generic "set variable function" and then use it for documentationPath
 #
-# Exit Code: 0 - If success
-# Exit Code: 1 - Issue with file generation
-# Exit Code: 2 - Argument error
+# Return Code: 0 - If success
+# Return Code: 1 - Issue with file generation
+# Return Code: 2 - Argument error
 #
 _documentationIndex_LinkDocumentationPaths() {
   local handler="_${FUNCNAME[0]}"

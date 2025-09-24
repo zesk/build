@@ -11,7 +11,7 @@
 
 # Return `argument` error code. Outputs `message ...` to `stderr`.
 # Argument: message ... - String. Optional. Message to output.
-# Exit Code: 2
+# Return Code: 2
 # Requires: _return
 _argument() {
   _return 2 "$@" || return $?
@@ -19,7 +19,7 @@ _argument() {
 
 # Return `environment` error code. Outputs `message ...` to `stderr`.
 # Argument: message ... - String. Optional. Message to output.
-# Exit Code: 1
+# Return Code: 1
 # Requires: _return
 _environment() {
   _return 1 "$@" || return $?

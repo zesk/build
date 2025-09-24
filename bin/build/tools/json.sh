@@ -17,8 +17,8 @@
 # Argument: ... - Arguments. Optional. Passed directly to jq
 # stdout: selected field
 # stderr: error messages
-# Exit Code: 0 - Field was found and was non-blank
-# Exit Code: 1 - Field was not found or is blank
+# Return Code: 0 - Field was found and was non-blank
+# Return Code: 1 - Field was not found or is blank
 # Requires: jq whichExists __throwEnvironment printf rm decorate head
 jsonField() {
   [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
@@ -125,10 +125,10 @@ _jsonFileSet() {
 # Argument: --key - String. Optional. Key to set in JSON file. Defaults to `version`.
 # Argument: key - Required. If not specified as `--key`, specify it here.
 # Argument: file - File. Required. Modify and update this file
-# Exit Code: 0 - File was updated successfully.
-# Exit Code: 1 - Environment error
-# Exit Code: 2 - Argument error
-# Exit Code: 105 - Identical files (only when --status is passed)
+# Return Code: 0 - File was updated successfully.
+# Return Code: 1 - Environment error
+# Return Code: 2 - Argument error
+# Return Code: 105 - Identical files (only when --status is passed)
 jsonSetValue() {
   local handler="_${FUNCNAME[0]}"
   local value="" statusFlag=false quietFlag=false file="" key="version"

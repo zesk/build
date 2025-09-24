@@ -6,7 +6,7 @@
 #
 # Copyright &copy; 2025 Market Acumen, Inc.
 #
-# Docs: o ./documentation/source/tools/_sugar.md
+# Docs: o ./documentation/source/tools/sugar-core.md
 # Test: o ./test/tools/sugar-tests.sh
 #
 # -- CUT BELOW HERE --
@@ -38,7 +38,7 @@
 # INTERNAL: Runner-up for the one-line bash award.
 # Requires: usageDocument printf
 # See: exitString
-# Exit Code: 0 - success
+# Return Code: 0 - success
 returnCode() {
   local k && while [ $# -gt 0 ]; do case "$1" in --help) ! "_${FUNCNAME[0]}" 0 || return 0 ;; success) k=0 ;; environment) k=1 ;; argument) k=2 ;; assert) k=97 ;; identical) k=105 ;; leak) k=108 ;; timeout) k=116 ;; exit) k=120 ;; user-interrupt) k=130 ;; interrupt) k=141 ;; internal) k=253 ;; *) k=254 ;; esac && shift && printf -- "%d\n" "$k"; done
 }
@@ -68,8 +68,8 @@ _exitString() {
 # If you want "true-ish" use `isTrue`.
 # Returns 0 if `value` is boolean `false` or `true`.
 # Is this a boolean? (`true` or `false`)
-# Exit Code: 0 - if value is a boolean
-# Exit Code: 1 - if value is not a boolean
+# Return Code: 0 - if value is a boolean
+# Return Code: 1 - if value is not a boolean
 # See: isTrue parseBoolean
 # DOC TEMPLATE: --help 1
 # Argument: --help - Optional. Flag. Display this help.
@@ -117,7 +117,7 @@ _returnClean() {
 
 # Return `argument` error code. Outputs `message ...` to `stderr`.
 # Argument: message ... - String. Optional. Message to output.
-# Exit Code: 2
+# Return Code: 2
 # Requires: _return
 _argument() {
   _return 2 "$@" || return $?
@@ -125,7 +125,7 @@ _argument() {
 
 # Return `environment` error code. Outputs `message ...` to `stderr`.
 # Argument: message ... - String. Optional. Message to output.
-# Exit Code: 1
+# Return Code: 1
 # Requires: _return
 _environment() {
   _return 1 "$@" || return $?
@@ -163,7 +163,7 @@ __execute() {
 # Output the `command ...` to stdout prior to running, then `__execute` it
 # Usage: {fn} command ...
 # Argument: command ... - Any command and arguments to run.
-# Exit Code: Any
+# Return Code: Any
 # Requires: printf decorate __execute __decorateExtensionQuote __decorateExtensionEach
 __echo() {
   printf -- "➡️ %s\n" "$(decorate each quote -- "$@")" && __execute "$@" || return $?
@@ -174,8 +174,8 @@ __echo() {
 # Run `command ...` (with any arguments) and then `_environment` if it fails.
 # Usage: {fn} command ...
 # Argument: command ... - Any command and arguments to run.
-# Exit Code: 0 - Success
-# Exit Code: 1 - Failed
+# Return Code: 0 - Success
+# Return Code: 1 - Failed
 # Requires: _environment
 __environment() {
   "$@" || _environment "$@" || return $?
@@ -184,8 +184,8 @@ __environment() {
 # Run `command ...` (with any arguments) and then `_argument` if it fails.
 # Usage: {fn} command ...FUNCNAME
 # Argument: command ... - Any command and arguments to run.
-# Exit Code: 0 - Success
-# Exit Code: 2 - Failed
+# Return Code: 0 - Success
+# Return Code: 2 - Failed
 # Requires: _argument
 __argument() {
   "$@" || _argument "$@" || return $?

@@ -95,8 +95,8 @@ _consoleGetColor() {
 # Fetch the brightness of the console using `consoleGetColor`
 # See: consoleGetColor
 # Output: Integer. between 0 and 100.
-# Exit Code: 0 - Success
-# Exit Code: 1 - A problem occurred with `consoleGetColor`
+# Return Code: 0 - Success
+# Return Code: 1 - A problem occurred with `consoleGetColor`
 consoleBrightness() {
   [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
   if ! colorBrightness < <(consoleGetColor "$@") 2>/dev/null; then

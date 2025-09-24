@@ -4,8 +4,8 @@
 #
 # Copyright &copy; 2025 Market Acumen, Inc.
 
-# Exit Code: 1 - stderr - ERRORS
-# Exit Code: 0 - stderr - console output, stdout -> tokenFileName
+# Return Code: 1 - stderr - ERRORS
+# Return Code: 0 - stderr - console output, stdout -> tokenFileName
 __identicalCheckInsideLoopLineHandler() {
   local handler="$1" && shift
   local prefix="$1" && shift

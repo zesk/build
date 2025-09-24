@@ -8,7 +8,7 @@
 #
 # Format code blocks (does markdown_FormatList)
 #
-_bashDocumentationFormatter_exit_code() {
+_bashDocumentationFormatter_return_code() {
   markdown_FormatList
 }
 

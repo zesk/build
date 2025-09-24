@@ -55,8 +55,8 @@ _filesRename() {
 # Fetch the modification time of a file as a timestamp
 #
 # Usage: fileModificationTime filename0 [ filename1 ... ]
-# Exit Code: 2 - If file does not exist
-# Exit Code: 0 - If file exists and modification times are output, one per line
+# Return Code: 2 - If file does not exist
+# Return Code: 0 - If file exists and modification times are output, one per line
 # Example:     fileModificationTime ~/.bash_profile
 #
 fileModificationTime() {
@@ -79,8 +79,8 @@ _fileModificationTime() {
 # Fetch the modification time in seconds from now of a file as a timestamp
 #
 # Usage: {fn} filename0 [ filename1 ... ]
-# Exit Code: 2 - If file does not exist
-# Exit Code: 0 - If file exists and modification times are output, one per line
+# Return Code: 2 - If file does not exist
+# Return Code: 0 - If file exists and modification times are output, one per line
 # Example:     fileModificationTime ~/.bash_profile
 #
 fileModificationSeconds() {
@@ -171,8 +171,8 @@ _fileModifiedRecentlyTimestamp() {
 # Argument: sourceFile - File to check
 # Argument: targetFile0 - One or more files to compare
 #
-# Exit code: 1 - `sourceFile`, 'targetFile' does not exist, or
-# Exit code: 0 - All files exist and `sourceFile` is the oldest file
+# Return Code: 1 - `sourceFile`, 'targetFile' does not exist, or
+# Return Code: 0 - All files exist and `sourceFile` is the oldest file
 #
 fileIsNewest() {
   [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
@@ -197,8 +197,8 @@ _fileIsNewest() {
 # Argument: sourceFile - File to check
 # Argument: targetFile0 - One or more files to compare
 #
-# Exit code: 1 - `sourceFile`, 'targetFile' does not exist, or
-# Exit code: 0 - All files exist and `sourceFile` is the oldest file
+# Return Code: 1 - `sourceFile`, 'targetFile' does not exist, or
+# Return Code: 0 - All files exist and `sourceFile` is the oldest file
 #
 fileIsOldest() {
   [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
@@ -270,8 +270,8 @@ _fileNewest() {
 #
 # Prints seconds since modified
 # Usage: {fn} file
-# Exit Code: 0 - Success
-# Exit Code: 2 - Can not get modification time
+# Return Code: 0 - Success
+# Return Code: 2 - Can not get modification time
 #
 fileModifiedSeconds() {
   local handler="_${FUNCNAME[0]}"
@@ -290,8 +290,8 @@ _fileModifiedSeconds() {
 #
 # Prints days (integer) since modified
 #
-# Exit Code: 0 - Success
-# Exit Code: 2 - Can not get modification time
+# Return Code: 0 - Success
+# Return Code: 2 - Can not get modification time
 #
 fileModifiedDays() {
   local handler="_${FUNCNAME[0]}"
@@ -366,8 +366,8 @@ _directoryPathSimplify() {
 # Outputs value of virtual memory allocated for a process, value is in kilobytes
 # Usage: {fn} file
 # Argument: file - Required. File to get size of.
-# Exit Code: 0 - Success
-# Exit Code: 1 - Environment error
+# Return Code: 0 - Success
+# Return Code: 1 - Environment error
 fileSize() {
   local handler="_${FUNCNAME[0]}"
   [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
@@ -477,8 +477,8 @@ _linkRename() {
 # Usage: {fn} file ...
 # Argument: file - File to get the owner for
 # Outputs the file owner for each file passed on the command line
-# Exit code: 0 - Success
-# Exit code: 1 - Unable to access file
+# Return Code: 0 - Success
+# Return Code: 1 - Unable to access file
 # Depends: ls
 __fileListColumn() {
   local usageFunction="$1" column="${2-}" result
@@ -499,8 +499,8 @@ __fileListColumn() {
 # Usage: {fn} file ...
 # Argument: file - File to get the owner for
 # Outputs the file owner for each file passed on the command line
-# Exit code: 0 - Success
-# Exit code: 1 - Unable to access file
+# Return Code: 0 - Success
+# Return Code: 1 - Unable to access file
 #
 fileOwner() {
   __fileListColumn "_${FUNCNAME[0]}" 3 "$@"
@@ -514,8 +514,8 @@ _fileOwner() {
 # Usage: {fn} file ...
 # Argument: file - File to get the owner for
 # Outputs the file group for each file passed on the command line
-# Exit code: 0 - Success
-# Exit code: 1 - Unable to access file
+# Return Code: 0 - Success
+# Return Code: 1 - Unable to access file
 #
 fileGroup() {
   __fileListColumn "_${FUNCNAME[0]}" 4 "$@"
@@ -624,8 +624,8 @@ _fileMatchesHelper() {
 }
 
 # Is this an empty (zero-sized) file?
-# Exit code: 0 - if all files passed in are empty files
-# Exit code: 1 - if any files passed in are non-empty files
+# Return Code: 0 - if all files passed in are empty files
+# Return Code: 1 - if any files passed in are non-empty files
 # Argument: file - File. Optional. One or more files, all of which must be empty.
 # DOC TEMPLATE: --help 1
 # Argument: --help - Optional. Flag. Display this help.

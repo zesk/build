@@ -17,8 +17,8 @@
 # Example:     dateToFormat 2023-04-20 %s 1681948800
 # Example:     timestamp=$(dateToFormat '2023-10-15' %s)
 # Environment: Compatible with BSD and GNU date.
-# Exit Code: 1 - if parsing fails
-# Exit Code: 0 - if parsing succeeds
+# Return Code: 1 - if parsing fails
+# Return Code: 0 - if parsing succeeds
 dateToFormat() {
   local handler="_${FUNCNAME[0]}"
   [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
@@ -45,8 +45,8 @@ _dateToFormat() {
 #
 # Argument: date - String in the form `YYYY-MM-DD` (e.g. `2023-10-15`)
 # Environment: Compatible with BSD and GNU date.
-# Exit Code: 1 - if parsing fails
-# Exit Code: 0 - if parsing succeeds
+# Return Code: 1 - if parsing fails
+# Return Code: 0 - if parsing succeeds
 # Example:     timestamp=$(dateToTimestamp '2023-10-15')
 #
 dateToTimestamp() {

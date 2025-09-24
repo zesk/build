@@ -14,9 +14,9 @@
 # Argument: command ... - Optional. Callable. A command to run and optional arguments.
 # Requires: _return
 # Security: source
-# Exit Code: 253 - source failed to load (internal error)
-# Exit Code: 0 - source loaded (and command succeeded)
-# Exit Code: ? - All other codes are returned by the command itself
+# Return Code: 253 - source failed to load (internal error)
+# Return Code: 0 - source loaded (and command succeeded)
+# Return Code: ? - All other codes are returned by the command itself
 __source() {
   local here="${BASH_SOURCE[0]%/*}" e=253
   local source="$here/${2:-".."}/${1-}" && shift 2 || _return $e "missing source" || return $?

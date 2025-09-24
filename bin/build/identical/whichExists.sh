@@ -12,8 +12,8 @@
 # Argument: binary ... - Required. String. One or more Binaries to find in the system `PATH`.
 # DOC TEMPLATE: --help 1
 # Argument: --help - Optional. Flag. Display this help.
-# Exit code: 0 - If all values are found
-# Exit code: 1 - If any value is not found
+# Return Code: 0 - If all values are found
+# Return Code: 1 - If any value is not found
 # Requires: __throwArgument which decorate __decorateExtensionEach
 whichExists() {
   local handler="_${FUNCNAME[0]}"

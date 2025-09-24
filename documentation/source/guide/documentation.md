@@ -37,9 +37,9 @@ You can add arguments, exit codes, summary lines, or even rename the function to
     # Lay an egg. You can use `markdown` in *here*. **Cool**.
     # Argument: name - Required. String. What to name the egg.
     # Argument: --debug - Optional. Flag. Turn on debugging.`
-    # Exit Code: 0 - Success
-    # Exit Code: 1 - Environment error
-    # Exit Code: 2 - Argument error
+    # Return Code: 0 - Success
+    # Return Code: 1 - Environment error
+    # Return Code: 2 - Argument error
     # Example: {fn[]} newEgg 
     # Output: Eggs laid: 2000
     layAnEgg() {

@@ -11,8 +11,8 @@
 # Add keys to enable apt to download terraform directly from hashicorp.com
 #
 # handler: aptKeyAddHashicorp
-# Exit Code: 1 - if environment is awry
-# Exit Code: 0 - All good to install terraform
+# Return Code: 1 - if environment is awry
+# Return Code: 0 - All good to install terraform
 #
 aptKeyAddHashicorp() {
   __help "_${FUNCNAME[0]}" "$@" || return 0
@@ -27,8 +27,8 @@ _aptKeyAddHashicorp() {
 # Add keys to enable apt to download terraform directly from hashicorp.com
 #
 # handler: aptKeyAddHashicorp
-# Exit Code: 1 - if environment is awry
-# Exit Code: 0 - All good to install terraform
+# Return Code: 1 - if environment is awry
+# Return Code: 0 - All good to install terraform
 #
 aptKeyRemoveHashicorp() {
   __help "_${FUNCNAME[0]}" "$@" || return 0

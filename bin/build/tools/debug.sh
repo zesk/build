@@ -11,8 +11,8 @@
 #
 # Usage: {fn} [ moduleName ... ]
 # Argument: moduleName - Optional. String. If `BUILD_DEBUG` contains any token passed, debugging is enabled.
-# Exit Code: 1 - Debugging is not enabled (for any module)
-# Exit Code: 0 - Debugging is enabled
+# Return Code: 1 - Debugging is not enabled (for any module)
+# Return Code: 0 - Debugging is enabled
 # Environment: BUILD_DEBUG - Set to non-blank to enable debugging, blank to disable. `BUILD_DEBUG` may be a comma-separated list of modules to target debugging.
 # Example:     BUILD_DEBUG=false # All debugging disabled
 # Example:     BUILD_DEBUG= # All debugging disabled

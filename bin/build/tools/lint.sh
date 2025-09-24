@@ -25,8 +25,8 @@
 # Argument: script - File. Optional. Shell script to validate
 # Side-effect: shellcheck is installed
 # Side-effect: Status written to stdout, errors written to stderr
-# Exit Code: 0 - All found files pass `shellcheck` and `bash -n` and shell comment syntax
-# Exit Code: 1 - One or more files did not pass
+# Return Code: 0 - All found files pass `shellcheck` and `bash -n` and shell comment syntax
+# Return Code: 1 - One or more files did not pass
 # Output: This outputs `statusMessage`s to `stdout` and errors to `stderr`.
 bashLint() {
   local handler="_${FUNCNAME[0]}" fixFlag=false verboseFlag=false undo=("exec" "3>&-" "4>&1")
@@ -91,8 +91,8 @@ _bashLint() {
 # Side-effect: Status written to stdout, errors written to stderr
 # Environment: This operates in the current working directory
 # Summary: Check files for the existence of a string
-# Exit Code: 0 - All found files pass `shellcheck` and `bash -n`
-# Exit Code: 1 - One or more files did not pass
+# Return Code: 0 - All found files pass `shellcheck` and `bash -n`
+# Return Code: 1 - One or more files did not pass
 # Output: This outputs `statusMessage`s to `stdout` and errors to `stderr`.
 bashLintFiles() {
   local handler="_${FUNCNAME[0]}"
@@ -394,9 +394,9 @@ _findUncaughtAssertions() {
 # Side-effect: Errors written to stderr, status written to stdout
 # Environment: This operates in the current working directory
 # Summary: Check files for the existence of a string
-# Exit Code: 0 - All found files contain all text strings
-# Exit Code: 1 - One or more files does not contain all text strings
-# Exit Code: 2 - Arguments error (missing extension or text)
+# Return Code: 0 - All found files contain all text strings
+# Return Code: 1 - One or more files does not contain all text strings
+# Return Code: 2 - Arguments error (missing extension or text)
 #
 validateFileExtensionContents() {
   local handler="_${FUNCNAME[0]}"
@@ -480,9 +480,9 @@ _validateFileExtensionContents() {
 # Argument: `text0` - Required. Text which must exist in each item
 # Side-effect: Errors written to stderr, status written to stdout
 # Summary: Check files for the existence of a string or strings
-# Exit Code: 0 - All found files contain all text string or strings
-# Exit Code: 1 - One or more files does not contain all text string or strings
-# Exit Code: 2 - Arguments error (missing extension or text)
+# Return Code: 0 - All found files contain all text string or strings
+# Return Code: 1 - One or more files does not contain all text string or strings
+# Return Code: 2 - Arguments error (missing extension or text)
 #
 validateFileContents() {
   local handler="_${FUNCNAME[0]}"

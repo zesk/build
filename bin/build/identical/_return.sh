@@ -14,7 +14,7 @@
 # Return passed in integer return code and output message to `stderr` (non-zero) or `stdout` (zero)
 # Argument: exitCode - Required. UnsignedInteger. Exit code to return. Default is 1.
 # Argument: message ... - Optional. String. Message to output
-# Exit Code: exitCode
+# Return Code: exitCode
 # Requires: isUnsignedInteger printf _return
 _return() {
   local to=1 icon="✅" code="${1:-1}" && shift 2>/dev/null
@@ -30,8 +30,8 @@ _return() {
 # Original: is_uint
 # Argument: value - EmptyString. Value to test if it is an unsigned integer.
 # Usage: {fn} argument ...
-# Exit Code: 0 - if it is an unsigned integer
-# Exit Code: 1 - if it is not an unsigned integer
+# Return Code: 0 - if it is an unsigned integer
+# Return Code: 1 - if it is not an unsigned integer
 # Requires: _return
 isUnsignedInteger() {
   [ $# -eq 1 ] || _return 2 "Single argument only: $*" || return $?

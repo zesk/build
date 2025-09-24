@@ -131,9 +131,9 @@ _isMappable() {
 # Parses text and determines if it's true-ish
 #
 # Usage: {fn} text
-# Exit Code: 0 - true
-# Exit Code: 1 - false
-# Exit Code: 2 - Neither
+# Return Code: 0 - true
+# Return Code: 1 - false
+# Return Code: 2 - Neither
 # Requires: lowercase __help
 #
 parseBoolean() {
@@ -291,8 +291,8 @@ _trimSpace() {
 # Example:     if inArray "$thing" "${things[@]}"; then things+=("$thing");
 # Example:         things+=("$thing")
 # Example:     fi
-# Exit Code: 0 - If element is found in array
-# Exit Code: 1 - If element is NOT found in array
+# Return Code: 0 - If element is found in array
+# Return Code: 1 - If element is NOT found in array
 # Tested: No
 #
 inArray() {
@@ -309,8 +309,8 @@ inArray() {
 # Usage: {fn} haystack needle ...
 # Argument: haystack - Required. String. String to search.
 # Argument: needle ... - Optional. String. One or more strings to find as a substring of `haystack`.
-# Exit Code: 0 - IFF ANY needle matches as a substring of haystack
-# Exit Code: 1 - No needles found in haystack
+# Return Code: 0 - IFF ANY needle matches as a substring of haystack
+# Return Code: 1 - No needles found in haystack
 # Summary: Find whether a substring exists in one or more strings
 # Does needle exist as a substring of haystack?
 stringContains() {
@@ -335,8 +335,8 @@ _stringContains() {
 # Usage: {fn} haystack needle ...
 # Argument: haystack - Required. String. String to search.
 # Argument: needle ... - Optional. String. One or more strings to find as a case-insensitive substring of `haystack`.
-# Exit Code: 0 - IFF ANY needle matches as a substring of haystack
-# Exit Code: 1 - No needles found in haystack
+# Return Code: 0 - IFF ANY needle matches as a substring of haystack
+# Return Code: 1 - No needles found in haystack
 # Summary: Find whether a substring exists in one or more strings
 # Does needle exist as a substring of haystack?
 stringContainsInsensitive() {
@@ -363,7 +363,7 @@ _stringContainsInsensitive() {
 # Usage: {fn} text prefixText ...
 # Argument: text - Optional. String. String to match.
 # Argument: prefixText - Required. String. One or more. Does this prefix exist in our `text`?
-# Exit Code: 0 - If `text` has any prefix
+# Return Code: 0 - If `text` has any prefix
 # Does text have one or more prefixes?
 beginsWith() {
   local handler="_${FUNCNAME[0]}"
@@ -392,8 +392,8 @@ _beginsWith() {
 # Usage: {fn} needle [ haystack ... ]
 # Argument: needle - Required. String. Thing to search for, not blank.
 # Argument: haystack ... - Optional. EmptyString. One or more array elements to match
-# Exit Code: 0 - If element is a substring of any haystack
-# Exit Code: 1 - If element is NOT found as a substring of any haystack
+# Return Code: 0 - If element is a substring of any haystack
+# Return Code: 1 - If element is NOT found as a substring of any haystack
 # Tested: No
 #
 isSubstring() {
@@ -418,8 +418,8 @@ _isSubstring() {
 # Usage: {fn} needle [ haystack ... ]
 # Argument: needle - Required. String. Thing to search for, not blank.
 # Argument: haystack ... - Optional. EmptyString. One or more array elements to match
-# Exit Code: 0 - If element is a substring of any haystack
-# Exit Code: 1 - If element is NOT found as a substring of any haystack
+# Return Code: 0 - If element is a substring of any haystack
+# Return Code: 1 - If element is NOT found as a substring of any haystack
 # Tested: No
 #
 isSubstringInsensitive() {
@@ -536,8 +536,8 @@ _maximumLineLength() {
 # Typically used to determine if a newline is needed before appending a file.
 #
 # Argument: file ... - File. Required. File to check if the last character is a newline.
-# Exit Code: 0 - All files ends with a newline
-# Exit Code: 1 - One or more files ends with a non-newline
+# Return Code: 0 - All files ends with a newline
+# Return Code: 1 - One or more files ends with a non-newline
 # Test: testFileEndsWithNewline
 fileEndsWithNewline() {
   local handler="_${FUNCNAME[0]}" one=false
@@ -656,8 +656,8 @@ _pluralWord() {
 # Argument: singular - Required. The singular form of a noun
 # Argument: plural - Optional. The plural form of a noun. If not specified uses `singular` plus an ess.
 #
-# Exit code: 1 - If count is non-numeric
-# Exit code: 0 - If count is numeric
+# Return Code: 1 - If count is non-numeric
+# Return Code: 0 - If count is numeric
 # Example:     count=$(__environment fileLineCount "$foxSightings") || return $?
 # Example:     printf "We saw %d %s.\n" "$count" "$(plural "$count" fox foxes)"
 # Example:

@@ -195,8 +195,8 @@ _assertNotEquals() {
 # Argument: --tail - Optional. Flag. When outputting stderr or stdout, output the tail of the file. (Default)
 # Examples:     assertExitCode 0 hasHook version-current
 # Reviewed: 2023-11-12
-# Exit code: 0 - If the process exits with the provided exit code
-# Exit code: 1 - If the process exits with a different exit code
+# Return Code: 0 - If the process exits with the provided exit code
+# Return Code: 1 - If the process exits with a different exit code
 #
 assertExitCode() {
   _assertExitCodeHelper "_${FUNCNAME[0]}" --success true "$@" || return $?
@@ -236,8 +236,8 @@ _assertExitCode() {
 # Argument: --tail - Optional. Flag. When outputting stderr or stdout, output the tail of the file. (Default)
 # Examples:     {fn} 0 hasHook make-cash-quickly
 # Reviewed: 2023-11-12
-# Exit code: 0 - If the process exits with a different exit code
-# Exit code: 1 - If the process exits with the provided exit code
+# Return Code: 0 - If the process exits with a different exit code
+# Return Code: 1 - If the process exits with the provided exit code
 #
 assertNotExitCode() {
   _assertExitCodeHelper "_${FUNCNAME[0]}" --success false "$@" || return $?
@@ -273,9 +273,9 @@ _assertNotExitCode() {
 # Argument: --tail - Optional. Flag. When outputting stderr or stdout, output the tail of the file. (Default)
 # Argument: needle - String. Text we are looking for.
 # Argument: haystack ... - String. One or more strings to find `needle` in - it must be found in all haystacks.
-# Exit Code: 0 - The assertion succeeded
-# Exit Code: 1 - Assertion failed
-# Exit Code: 2 - Bad arguments
+# Return Code: 0 - The assertion succeeded
+# Return Code: 1 - Assertion failed
+# Return Code: 2 - Bad arguments
 #
 assertContains() {
   _assertContainsHelper "_${FUNCNAME[0]}" --success true "$@" || return $?
@@ -311,9 +311,9 @@ _assertContains() {
 # Argument: --tail - Optional. Flag. When outputting stderr or stdout, output the tail of the file. (Default)
 # Argument: needle - String. Text we are looking for.
 # Argument: haystack ... - String. One or more strings to find `needle` in - it must be found in no haystacks.
-# Exit Code: 0 - The assertion succeeded
-# Exit Code: 1 - Assertion failed
-# Exit Code: 2 - Bad arguments
+# Return Code: 0 - The assertion succeeded
+# Return Code: 1 - Assertion failed
+# Return Code: 2 - Bad arguments
 # See: assertContains
 assertNotContains() {
   _assertContainsHelper "_${FUNCNAME[0]}" --success false "$@" || return $?
@@ -355,8 +355,8 @@ _assertNotContains() {
 # Argument: --tail - Optional. Flag. When outputting stderr or stdout, output the tail of the file. (Default)
 # Argument: directory - Directory that should exist
 # Argument: message - An error message if this fails
-# Exit code: 0 - If the assertion succeeds
-# Exit code: 1 - If the assertion fails
+# Return Code: 0 - If the assertion succeeds
+# Return Code: 1 - If the assertion fails
 # Local cache: None
 # Environment: - This fails if `directory` is anything but a `directory`
 # Example:     assertDirectoryExists "$HOME" "HOME not found"
@@ -394,8 +394,8 @@ _assertDirectoryExists() {
 # Argument: --tail - Optional. Flag. When outputting stderr or stdout, output the tail of the file. (Default)
 # Argument: directory - Directory that should NOT exist
 # Argument: message - An error message if this fails
-# Exit code: 0 - If the assertion succeeds
-# Exit code: 1 - If the assertion fails
+# Return Code: 0 - If the assertion succeeds
+# Return Code: 1 - If the assertion fails
 # Local cache: None
 # Environment: - This fails if `directory` is anything at all, even a non-directory (such as a link)
 # Examples: assertDirectoryDoesNotExist "$INSTALL_PATH" "INSTALL_PATH should not exist yet"
@@ -434,8 +434,8 @@ _assertDirectoryDoesNotExist() {
 # Argument: --tail - Optional. Flag. When outputting stderr or stdout, output the tail of the file. (Default)
 # Argument: directory - Directory that should exist and be empty
 # Argument: message - An error message if this fails
-# Exit code: 0 - If the assertion succeeds
-# Exit code: 1 - If the assertion fails
+# Return Code: 0 - If the assertion succeeds
+# Return Code: 1 - If the assertion fails
 # Local cache: None
 # Environment: - This fails if `directory` is anything but a `directory`
 # Example:     assertDirectoryExists "$HOME" "HOME not found"
@@ -474,8 +474,8 @@ _assertDirectoryEmpty() {
 # Argument: --tail - Optional. Flag. When outputting stderr or stdout, output the tail of the file. (Default)
 # Argument: directory - Directory that should exist and not be empty
 # Argument: message - An error message if this fails
-# Exit code: 0 - If the assertion succeeds
-# Exit code: 1 - If the assertion fails
+# Return Code: 0 - If the assertion succeeds
+# Return Code: 1 - If the assertion fails
 # Local cache: None
 # Examples: {fn} "$INSTALL_PATH" "INSTALL_PATH should contain files"
 # Summary: Test that a directory does not exist
@@ -522,8 +522,8 @@ _assertDirectoryNotEmpty() {
 # Argument: --tail - Optional. Flag. When outputting stderr or stdout, output the tail of the file. (Default)
 # Argument: item - File that should exist
 # Argument: message - An error message if this fails
-# Exit code: 0 - If the assertion succeeds
-# Exit code: 1 - If the assertion fails
+# Return Code: 0 - If the assertion succeeds
+# Return Code: 1 - If the assertion fails
 # Local cache: None
 # Environment: - This fails if `file` is anything but a `file`
 # Example:     assertDirectoryExists "$HOME" "HOME not found"
@@ -561,8 +561,8 @@ _assertFileExists() {
 # Argument: --tail - Optional. Flag. When outputting stderr or stdout, output the tail of the file. (Default)
 # Argument: file - File that should NOT exist
 # Argument: message - An error message if this fails
-# Exit code: 0 - If the assertion succeeds
-# Exit code: 1 - If the assertion fails
+# Return Code: 0 - If the assertion succeeds
+# Return Code: 1 - If the assertion fails
 # Local cache: None
 # Environment: - This fails if `file` is anything at all, even a non-file (such as a link)
 # Examples: assertDirectoryDoesNotExist "$INSTALL_PATH" "INSTALL_PATH should not exist yet"
@@ -653,8 +653,8 @@ _assertOutputEquals() {
 # Argument: arguments - Any arguments to pass to the command to run
 # Argument: - `--exit` - Assert exit status of process to be this number
 # Argument: - `--stderr` - Also include standard error in output checking
-# Exit code: 0 - If the output contains at least one occurrence of the string
-# Exit code: 1 - If output does not contain string
+# Return Code: 0 - If the output contains at least one occurrence of the string
+# Return Code: 1 - If output does not contain string
 # Example:     {fn} Success complex-thing.sh --dry-run
 # Reviewed: 2023-11-12
 #
@@ -696,8 +696,8 @@ _assertOutputContains() {
 # Argument: arguments - Any arguments to pass to the command to run
 # Argument: - `--exit` - Assert exit status of process to be this number
 # Argument: - `--stderr` - Also include standard error in output checking
-# Exit code: 0 - If the output contains at least one occurrence of the string
-# Exit code: 1 - If output does not contain string
+# Return Code: 0 - If the output contains at least one occurrence of the string
+# Return Code: 1 - If output does not contain string
 # Local cache: None
 # Example:     assertOutputDoesNotContain Success complex-thing.sh --dry-run
 # Reviewed: 2023-11-12
@@ -735,8 +735,8 @@ _assertOutputDoesNotContain() {
 # Argument: fileName - File to search
 # Argument: string0 ... - One or more strings which must be found on at least one line in the file
 #
-# Exit code: 0 - If the assertion succeeds
-# Exit code: 1 - If the assertion fails
+# Return Code: 0 - If the assertion succeeds
+# Return Code: 1 - If the assertion fails
 # Local cache: None
 # Environment: If the file does not exist, this will fail.
 # Example:     assertFileContains $logFile Success
@@ -775,8 +775,8 @@ _assertFileContains() {
 # Argument: --tail - Optional. Flag. When outputting stderr or stdout, output the tail of the file. (Default)
 # Argument: fileName - File to search
 # Argument: string0 ... - One or more strings which must NOT be found anywhere in `fileName`
-# Exit code: 1 - If the assertions fails
-# Exit code: 0 - If the assertion succeeds
+# Return Code: 1 - If the assertions fails
+# Return Code: 0 - If the assertion succeeds
 # Environment: If the file does not exist, this will fail.
 # Example:     assertFileDoesNotContain $logFile error Error ERROR
 # Example:     assertFileDoesNotContain $logFile warning Warning WARNING
@@ -813,8 +813,8 @@ _assertFileDoesNotContain() {
 # Argument: --tail - Optional. Flag. When outputting stderr or stdout, output the tail of the file. (Default)
 # Argument: expectedSize - Integer file size which `fileName` should be, in bytes.
 # Argument: fileName ... - One ore more file which should be `expectedSize` bytes in size.
-# Exit code: 1 - If the assertions fails
-# Exit code: 0 - If the assertion succeeds
+# Return Code: 1 - If the assertions fails
+# Return Code: 0 - If the assertion succeeds
 # Environment: If the file does not exist, this will fail.
 # Example:     {fn} 22 .config
 # Example:     {fn} 0 .env
@@ -851,8 +851,8 @@ _assertFileSize() {
 # Argument: --tail - Optional. Flag. When outputting stderr or stdout, output the tail of the file. (Default)
 # Argument: expectedSize - Integer file size which `fileName` should NOT be, in bytes.
 # Argument: fileName ... - Required. File. One ore more file which should NOT be `expectedSize` bytes in size.
-# Exit code: 1 - If the assertions fails
-# Exit code: 0 - If the assertion succeeds
+# Return Code: 1 - If the assertions fails
+# Return Code: 0 - If the assertion succeeds
 # Environment: If the file does not exist, this will fail.
 # Example:     {fn} 22 .config
 # Example:     {fn} 0 .env
@@ -888,8 +888,8 @@ _assertNotFileSize() {
 # Argument: --head - Optional. Flag. When outputting stderr or stdout, output the head of the file.
 # Argument: --tail - Optional. Flag. When outputting stderr or stdout, output the tail of the file. (Default)
 # Argument: - fileName ... - Required. File. One ore more file which should be zero bytes in size.
-# Exit code: 1 - If the assertions fails
-# Exit code: 0 - If the assertion succeeds
+# Return Code: 1 - If the assertions fails
+# Return Code: 0 - If the assertion succeeds
 # Environment: If the file does not exist, this will fail.
 # Example:     {fn} .config
 # Example:     {fn} /var/www/log/error.log
@@ -925,8 +925,8 @@ _assertZeroFileSize() {
 # Argument: --head - Optional. Flag. When outputting stderr or stdout, output the head of the file.
 # Argument: --tail - Optional. Flag. When outputting stderr or stdout, output the tail of the file. (Default)
 # Argument: - fileName ... - Required. File. One ore more file which should NOT be zero bytes in size.
-# Exit code: 1 - If the assertions fails
-# Exit code: 0 - If the assertion succeeds
+# Return Code: 1 - If the assertions fails
+# Return Code: 0 - If the assertion succeeds
 # Environment: If the file does not exist, this will fail.
 # Example:     {fn} 22 .config
 # Example:     {fn} 0 .env
@@ -1048,8 +1048,8 @@ _assertGreaterThanOrEqual() {
 # Argument: message - Message to output if the assertion fails
 # Example:     assertLessThan 3 $found
 # Reviewed: 2023-11-12
-# Exit code: 0 - expected less than to actual
-# Exit code: 1 - expected greater than or equal to actual, or invalid numbers
+# Return Code: 0 - expected less than to actual
+# Return Code: 1 - expected greater than or equal to actual, or invalid numbers
 assertLessThan() {
   _assertNumericHelper "_${FUNCNAME[0]}" "$@" -lt || return $?
 }
@@ -1085,8 +1085,8 @@ _assertLessThan() {
 # Argument: message - Message to output if the assertion fails
 # Example:     assertLessThanOrEqual 3 $found
 # Reviewed: 2023-11-12
-# Exit code: 0 - expected less than or equal to actual
-# Exit code: 1 - expected greater than actual, or invalid numbers
+# Return Code: 0 - expected less than or equal to actual
+# Return Code: 1 - expected greater than actual, or invalid numbers
 #
 assertLessThanOrEqual() {
   _assertNumericHelper "_${FUNCNAME[0]}" "$@" -le || return $?

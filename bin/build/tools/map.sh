@@ -238,11 +238,11 @@ _mapEnvironmentGenerateSedFile() {
 # Argument: fromText - Required. String of text to search for.
 # Argument: toText - Required. String of text to replace.
 # Argument: findArgs ... - Optional. FindArgument. Any additional arguments are meant to filter files.
-# Exit Code: 0 - Success
-# Exit Code: 1 - --path is not a directory
-# Exit Code: 1 - searchText is not blank
-# Exit Code: 1 - fileTemporaryName failed
-# Exit Code: 2 - Arguments are identical
+# Return Code: 0 - Success
+# Return Code: 1 - --path is not a directory
+# Return Code: 1 - searchText is not blank
+# Return Code: 1 - fileTemporaryName failed
+# Return Code: 2 - Arguments are identical
 # See: cannon.sh
 cannon() {
   local handler="_${FUNCNAME[0]}"

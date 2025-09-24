@@ -10,8 +10,8 @@
 
 # Ensure an environment file is compatible with non-quoted docker environment files
 # Argument: filename - Docker environment file to check for common issues
-# Exit Code: 1 - if errors occur
-# Exit Code: 0 - if file is valid
+# Return Code: 1 - if errors occur
+# Return Code: 0 - if file is valid
 #
 environmentFileIsDocker() {
   local file result=0 pattern='\$|="|='"'"
@@ -111,8 +111,8 @@ _environmentFileToBashCompatible() {
 #
 # handler: {fn} [ filename ... ]
 # Argument: filename - Docker environment file to check for common issues
-# Exit Code: 1 - if errors occur
-# Exit Code: 0 - if file is valid
+# Return Code: 1 - if errors occur
+# Return Code: 0 - if file is valid
 #
 environmentFileDockerToBashCompatible() {
   local handler="_${FUNCNAME[0]}"
@@ -171,8 +171,8 @@ __internalEnvironmentFileDockerToBashCompatiblePipe() {
 # Argument: filename - File. Optional. Docker environment file to check for common issues
 # stdin: text - Optional. Environment file to convert.
 # stdout: text - Only if stdin is supplied and no `filename` arguments.
-# Exit Code: 1 - if errors occur
-# Exit Code: 0 - if file is valid
+# Return Code: 1 - if errors occur
+# Return Code: 0 - if file is valid
 #
 environmentFileBashCompatibleToDocker() {
   local handler="_${FUNCNAME[0]}"

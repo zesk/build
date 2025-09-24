@@ -55,8 +55,8 @@ _awsInstall() {
 # Argument: --create - Optional. Flag. Create the directory and file if it does not exist
 # Argument: --home homeDirectory - Optional. Directory. Home directory to use instead of `$HOME`.
 # Example:     credentials=$(awsCredentialsFile) || __throwEnvironment "$handler" "No credentials file found" || return $?
-# Exit Code: 1 - If `$HOME` is not a directory or credentials file does not exist
-# Exit Code: 0 - If credentials file is found and output to stdout
+# Return Code: 1 - If `$HOME` is not a directory or credentials file does not exist
+# Return Code: 0 - If credentials file is found and output to stdout
 #
 # shellcheck disable=SC2120
 awsCredentialsFile() {
@@ -107,8 +107,8 @@ _awsIsKeyUpToDate() {
 #
 # DOC TEMPLATE: --help 1
 # Argument: --help - Optional. Flag. Display this help.
-# Exit Code: 0 - If environment needs to be updated
-# Exit Code: 1 - If the environment seems to be set already
+# Return Code: 0 - If environment needs to be updated
+# Return Code: 1 - If the environment seems to be set already
 # Environment: AWS_ACCESS_KEY_ID - Read-only. If blank, this function succeeds (environment needs to be updated)
 # Environment: AWS_SECRET_ACCESS_KEY - Read-only. If blank, this function succeeds (environment needs to be updated)
 # Example:     if awsHasEnvironment; then
@@ -312,8 +312,8 @@ _awsIPAccess() {
 # Note that passing no parameters returns success.
 # Usage: {fn} region
 # Argument: region ... - String. Required. The AWS Region to validate.
-# Exit Code: 0 - All regions are valid AWS region
-# Exit Code: 1 - One or more regions are NOT a valid AWS region
+# Return Code: 0 - All regions are valid AWS region
+# Return Code: 1 - One or more regions are NOT a valid AWS region
 # Checked: 2024-09-02
 awsRegionValid() {
   local handler="_${FUNCNAME[0]}"

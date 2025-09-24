@@ -50,7 +50,7 @@ __catchEnvironment() {
 
 # Return `argument` error code. Outputs `message ...` to `stderr`.
 # Argument: message ... - String. Optional. Message to output.
-# Exit Code: 2
+# Return Code: 2
 # Requires: _return
 _argument() {
   _return 2 "$@" || return $?
@@ -58,7 +58,7 @@ _argument() {
 
 # Return `environment` error code. Outputs `message ...` to `stderr`.
 # Argument: message ... - String. Optional. Message to output.
-# Exit Code: 1
+# Return Code: 1
 # Requires: _return
 _environment() {
   _return 1 "$@" || return $?
@@ -89,8 +89,8 @@ __catch() {
 # Run `command ...` (with any arguments) and then `_environment` if it fails.
 # Usage: {fn} command ...
 # Argument: command ... - Any command and arguments to run.
-# Exit Code: 0 - Success
-# Exit Code: 1 - Failed
+# Return Code: 0 - Success
+# Return Code: 1 - Failed
 # Requires: _environment
 __environment() {
   "$@" || _environment "$@" || return $?

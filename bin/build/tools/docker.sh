@@ -59,8 +59,8 @@ _dumpDockerTestFile() {
 
 # Are we inside a docker container right now?
 #
-# Exit Code: 0 - Yes
-# Exit Code: 1 - No
+# Return Code: 0 - Yes
+# Return Code: 1 - No
 #
 # TODO: This changed 2023 ...
 # Checked: 2025-07-09
@@ -108,9 +108,9 @@ _dockerListContext() {
 # Argument: --env-file envFile - Optional. File. One or more environment files which are suitable to load for docker; must be valid
 # Argument: --env envVariable=envValue - Optional. File. One or more environment variables to set.
 # Argument: extraArgs - Optional. Mixed. The first non-file argument to `{fn}` is passed directly through to `docker run` as arguments
-# Exit Code: 1 - If already inside docker, or the environment file passed is not valid
-# Exit Code: 0 - Success
-# Exit Code: Any - `docker run` error code is returned if non-zero
+# Return Code: 1 - If already inside docker, or the environment file passed is not valid
+# Return Code: 0 - Success
+# Return Code: Any - `docker run` error code is returned if non-zero
 # Environment: BUILD_DOCKER_PLATFORM - Optional. Defaults to `linux/arm64`. Affects which image platform is used.
 #
 dockerLocalContainer() {

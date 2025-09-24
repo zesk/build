@@ -79,7 +79,7 @@ _timingFormat() {
 # Argument: --handler handler - Optional. Function. Use this error handler instead of the default error handler.
 # Argument: start - Unix timestamp milliseconds. See `timingStart`.
 # Argument: message - Any additional arguments are output before the elapsed value computed
-# Exit code: 0 - Exits with exit code zero
+# Return Code: 0 - Exits with exit code zero
 # See: timingStart
 # Example:    init=$(timingStart)
 # Example:    ...

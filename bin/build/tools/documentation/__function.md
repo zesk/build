@@ -22,9 +22,9 @@
 
 {output}
 
-### Exit codes
+### Return codes
 
-{exit_code}
+{return_code}
 
 ### Local cache
 
@@ -34,9 +34,9 @@
 
 {environment}
 
-### Depends
+### Requires
 
-{depends}
+{requires}
 
 ### See Also
 

@@ -166,8 +166,8 @@ _deprecatedTokensFile() {
 #     listJoin|listJoin
 #     mapTokens|mapTokens
 #
-# Exit Code: 0 - No changes were made in any files.
-# Exit Code: 1 - changes were made in at least one file.
+# Return Code: 0 - No changes were made in any files.
+# Return Code: 1 - changes were made in at least one file.
 deprecatedCannonFile() {
   local handler="_${FUNCNAME[0]}"
 
@@ -234,8 +234,8 @@ _deprecatedCannonFile() {
 }
 
 # Find files which match a token or tokens
-# Exit code: 0 - One of the search tokens was found in a file (which matches find arguments)
-# Exit code: 1 - Search tokens were not found in any file (which matches find arguments)
+# Return Code: 0 - One of the search tokens was found in a file (which matches find arguments)
+# Return Code: 1 - Search tokens were not found in any file (which matches find arguments)
 # Argument: findArgumentFunction - Function. Required. Find arguments (for `find`) for cannon.
 # Argument: search - String. Required. String to search for (one or more)
 # Argument: --path cannonPath - Optional. Directory. Run cannon operation starting in this directory.

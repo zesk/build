@@ -106,8 +106,8 @@ _consoleColorMode() {
 }
 
 # Does the console support animation?
-# Exit Code: 0 - Supports console animation
-# Exit Code: 1 - Does not support console animation
+# Return Code: 0 - Supports console animation
+# Return Code: 1 - Does not support console animation
 hasConsoleAnimation() {
   [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
   # Important: This can *not* use buildEnvironmentLoad - leads to infinite loops

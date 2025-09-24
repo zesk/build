@@ -127,10 +127,10 @@ _phpComposerInstall() {
 # Argument: --home - Directory. Optional. Use this directory for the location of `composer.json`.
 # Argument: --status - Flag. Optional. When set, returns 0 when te version was updated successfully and $(returnCode identical) when the files are the same
 # Argument: --quiet - Flag. Optional. Do not output anything to stdout and just do the action and exit.
-# Exit Code: 0 - File was updated successfully.
-# Exit Code: 1 - Environment error
-# Exit Code: 2 - Argument error
-# Exit Code: 105 - Identical files (only when --status is passed)
+# Return Code: 0 - File was updated successfully.
+# Return Code: 1 - Environment error
+# Return Code: 2 - Argument error
+# Return Code: 105 - Identical files (only when --status is passed)
 phpComposerSetVersion() {
   local handler="_${FUNCNAME[0]}"
   local home="" aa=()

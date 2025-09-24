@@ -174,8 +174,8 @@ _documentationUnlinked() {
 # Usage: {fn} template [ settingsFile ...
 # Argument: template - Required. A markdown template to use to map values. Post-processed with `markdown_removeUnfinishedSections`
 # Argument: settingsFile - Required. Settings file to be loaded.
-# Exit code: 0 - Success
-# Exit code: 1 - Template file not found
+# Return Code: 0 - Success
+# Return Code: 1 - Template file not found
 # Short description: Simple bash function documentation
 #
 _bashDocumentation_Template() {

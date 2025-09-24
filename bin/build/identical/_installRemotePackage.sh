@@ -17,8 +17,8 @@
 # Argument: installPath - Directory. Required. Path to the installPath home where target will be installed, or is installed. (e.g. myApp/bin/build)
 # `versionFunction` should exit 0 to halt the installation, in addition it should output the current version as a decorated string.
 # stdout: version information
-# Exit Code: 0 - Do not upgrade, version is same as remote (stdout is found, current version)
-# Exit Code: 1 - Do upgrade, version changed. (stdout is version change details)
+# Return Code: 0 - Do not upgrade, version is same as remote (stdout is found, current version)
+# Return Code: 1 - Do upgrade, version changed. (stdout is version change details)
 # See: _installRemotePackage
 __packageVersionFunction() {
   return 0
@@ -110,8 +110,8 @@ __packageCheckFunction() {
 # Argument: --force - Optional. Flag. Force installation even if file is up to date.
 # Argument: --skip-self - Optional. Flag. Skip the installation script self-update. (By default it is enabled.)
 # Argument: --diff - Optional. Flag. Show differences between old and new file.
-# Exit Code: 1 - Environment error
-# Exit Code: 2 - Argument error
+# Return Code: 1 - Environment error
+# Return Code: 2 - Argument error
 # Requires: cp rm cat printf realPath whichExists _return fileTemporaryName __catchArgument __throwArgument __catchEnvironment decorate usageArgumentString isFunction __decorateExtensionQuote
 _installRemotePackage() {
   local handler="_${FUNCNAME[0]}"

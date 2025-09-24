@@ -104,8 +104,8 @@ __installBinBuildCheck() {
 # Argument: ... - Arguments. Optional. Passed directly to jq
 # stdout: selected field
 # stderr: error messages
-# Exit Code: 0 - Field was found and was non-blank
-# Exit Code: 1 - Field was not found or is blank
+# Return Code: 0 - Field was found and was non-blank
+# Return Code: 1 - Field was not found or is blank
 # Requires: jq whichExists __throwEnvironment printf rm decorate head
 jsonField() {
   [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
@@ -160,8 +160,8 @@ __installCheck() {
 # Argument: --debug - Optional. Flag. Debugging is on.
 # Argument: --force - Optional. Flag. Force installation even if file is up to date.
 # Argument: --diff - Optional. Flag. Show differences between old and new file.
-# Exit Code: 1 - Environment error
-# Exit Code: 2 - Argument error
+# Return Code: 1 - Environment error
+# Return Code: 2 - Argument error
 __installPackageConfiguration() {
   local rel="$1"
   shift
@@ -227,8 +227,8 @@ __installPackageConfiguration() {
 # Argument: --force - Optional. Flag. Force installation even if file is up to date.
 # Argument: --skip-self - Optional. Flag. Skip the installation script self-update. (By default it is enabled.)
 # Argument: --diff - Optional. Flag. Show differences between old and new file.
-# Exit Code: 1 - Environment error
-# Exit Code: 2 - Argument error
+# Return Code: 1 - Environment error
+# Return Code: 2 - Argument error
 # Requires: cp rm cat printf realPath whichExists _return fileTemporaryName __catchArgument __throwArgument __catchEnvironment decorate usageArgumentString isFunction __decorateExtensionQuote
 _installRemotePackage() {
   local handler="_${FUNCNAME[0]}"
@@ -624,8 +624,8 @@ _versionSort() {
 # Argument: handler - Required. Function. Usage function to call upon failure.
 # Argument: argument - Required. String. Name of the argument used in error messages.
 # Argument: value - Optional. String, Value which should be non-blank otherwise an argument error is thrown.
-# Exit Code: 2 - If `value` is blank
-# Exit code: 0 - If `value` is non-blank
+# Return Code: 2 - If `value` is blank
+# Return Code: 0 - If `value` is non-blank
 usageArgumentString() {
   local handler="$1" argument="$2"
   shift 2 || :
@@ -985,8 +985,8 @@ _fileTemporaryName() {
 # Argument: binary ... - Required. String. One or more Binaries to find in the system `PATH`.
 # DOC TEMPLATE: --help 1
 # Argument: --help - Optional. Flag. Display this help.
-# Exit code: 0 - If all values are found
-# Exit code: 1 - If any value is not found
+# Return Code: 0 - If all values are found
+# Return Code: 1 - If any value is not found
 # Requires: __throwArgument which decorate __decorateExtensionEach
 whichExists() {
   local handler="_${FUNCNAME[0]}"
@@ -1018,8 +1018,8 @@ _whichExists() {
 # Test if an argument is a positive integer (non-zero)
 # Takes one argument only.
 # Argument: value - EmptyString. Required. Value to check if it is an unsigned integer
-# Exit Code: 0 - if it is a positive integer
-# Exit Code: 1 - if it is not a positive integer
+# Return Code: 0 - if it is a positive integer
+# Return Code: 1 - if it is not a positive integer
 # Requires: __catchArgument isUnsignedInteger usageDocument
 isPositiveInteger() {
   # _IDENTICAL_ functionSignatureSingleArgument 2
@@ -1040,8 +1040,8 @@ _isPositiveInteger() {
 # Test if argument are bash functions
 # Argument: string - Required. String to test if it is a bash function. Builtins are supported. `.` is explicitly not supported to disambiguate it from the current directory `.`.
 # If no arguments are passed, returns exit code 1.
-# Exit code: 0 - argument is bash function
-# Exit code: 1 - argument is not a bash function
+# Return Code: 0 - argument is bash function
+# Return Code: 1 - argument is not a bash function
 # Requires: __catchArgument isUnsignedInteger usageDocument type
 isFunction() {
   # _IDENTICAL_ functionSignatureSingleArgument 2
@@ -1064,8 +1064,8 @@ _isFunction() {
 # Usage: hasColors
 # DOC TEMPLATE: --help 1
 # Argument: --help - Optional. Flag. Display this help.
-# Exit Code: 0 - Console or output supports colors
-# Exit Code: 1 - Colors are likely not supported by console
+# Return Code: 0 - Console or output supports colors
+# Return Code: 1 - Colors are likely not supported by console
 # Environment: BUILD_COLORS - Optional. Boolean. Whether the build system will output ANSI colors.
 # Requires: isPositiveInteger tput
 hasColors() {
@@ -1362,7 +1362,7 @@ _exitString() {
 # Return passed in integer return code and output message to `stderr` (non-zero) or `stdout` (zero)
 # Argument: exitCode - Required. UnsignedInteger. Exit code to return. Default is 1.
 # Argument: message ... - Optional. String. Message to output
-# Exit Code: exitCode
+# Return Code: exitCode
 # Requires: isUnsignedInteger printf _return
 _return() {
   local to=1 icon="✅" code="${1:-1}" && shift 2>/dev/null
@@ -1378,8 +1378,8 @@ _return() {
 # Original: is_uint
 # Argument: value - EmptyString. Value to test if it is an unsigned integer.
 # Usage: {fn} argument ...
-# Exit Code: 0 - if it is an unsigned integer
-# Exit Code: 1 - if it is not an unsigned integer
+# Return Code: 0 - if it is an unsigned integer
+# Return Code: 1 - if it is not an unsigned integer
 # Requires: _return
 isUnsignedInteger() {
   [ $# -eq 1 ] || _return 2 "Single argument only: $*" || return $?
@@ -1428,7 +1428,7 @@ __catchEnvironment() {
 
 # Return `argument` error code. Outputs `message ...` to `stderr`.
 # Argument: message ... - String. Optional. Message to output.
-# Exit Code: 2
+# Return Code: 2
 # Requires: _return
 _argument() {
   _return 2 "$@" || return $?
@@ -1436,7 +1436,7 @@ _argument() {
 
 # Return `environment` error code. Outputs `message ...` to `stderr`.
 # Argument: message ... - String. Optional. Message to output.
-# Exit Code: 1
+# Return Code: 1
 # Requires: _return
 _environment() {
   _return 1 "$@" || return $?
@@ -1467,8 +1467,8 @@ __catch() {
 # Run `command ...` (with any arguments) and then `_environment` if it fails.
 # Usage: {fn} command ...
 # Argument: command ... - Any command and arguments to run.
-# Exit Code: 0 - Success
-# Exit Code: 1 - Failed
+# Return Code: 0 - Success
+# Return Code: 1 - Failed
 # Requires: _environment
 __environment() {
   "$@" || _environment "$@" || return $?

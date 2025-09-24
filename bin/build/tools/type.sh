@@ -22,8 +22,8 @@
 # (`1e3` notation NOT supported)
 #
 # handler: {fn} argument ...
-# Exit Code: 0 - if it is a number equal to or greater than zero
-# Exit Code: 1 - if it is not a number equal to or greater than zero
+# Return Code: 0 - if it is a number equal to or greater than zero
+# Return Code: 1 - if it is not a number equal to or greater than zero
 # Credits: F. Hauri - Give Up GitHub (isnum_Case)
 # Source: https://stackoverflow.com/questions/806906/how-do-i-test-if-a-variable-is-a-number-in-bash
 #
@@ -37,8 +37,8 @@ isUnsignedNumber() {
 # (`1e3` notation NOT supported)
 #
 # handler: {fn} argument ...
-# Exit Code: 0 - if it is a floating point number
-# Exit Code: 1 - if it is not a floating point number
+# Return Code: 0 - if it is a floating point number
+# Return Code: 1 - if it is not a floating point number
 # Credits: F. Hauri - Give Up GitHub (isnum_Case)
 # Source: https://stackoverflow.com/questions/806906/how-do-i-test-if-a-variable-is-a-number-in-bash
 #
@@ -52,8 +52,8 @@ isNumber() {
 # Test if an argument is a signed integer
 #
 # handler: {fn} argument ...
-# Exit Code: 0 - if it is a signed integer
-# Exit Code: 1 - if it is not a signed integer
+# Return Code: 0 - if it is a signed integer
+# Return Code: 1 - if it is not a signed integer
 # Argument: value - EmptyString. The value to test.
 # Credits: F. Hauri - Give Up GitHub (isuint_Case)
 # Source: https://stackoverflow.com/questions/806906/how-do-i-test-if-a-variable-is-a-number-in-bash
@@ -70,8 +70,8 @@ isInteger() {
 # handler: {fn} string0 [ string1 ... ]
 # Argument: string - Required. EmptyString. Path to binary to test if it is executable.
 # If no arguments are passed, returns exit code 1.
-# Exit code: 0 - All arguments are callable as a command
-# Exit code: 1 - One or or more arguments are callable as a command
+# Return Code: 0 - All arguments are callable as a command
+# Return Code: 1 - One or or more arguments are callable as a command
 isCallable() {
   [ $# -eq 1 ] || _argument "Single argument only: $*" || return $?
   [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
@@ -160,8 +160,8 @@ _isArray() {
 # Test if an argument is a positive integer (non-zero)
 # Takes one argument only.
 # Argument: value - EmptyString. Required. Value to check if it is an unsigned integer
-# Exit Code: 0 - if it is a positive integer
-# Exit Code: 1 - if it is not a positive integer
+# Return Code: 0 - if it is a positive integer
+# Return Code: 1 - if it is not a positive integer
 # Requires: __catchArgument isUnsignedInteger usageDocument
 isPositiveInteger() {
   # _IDENTICAL_ functionSignatureSingleArgument 2
@@ -182,8 +182,8 @@ _isPositiveInteger() {
 # Test if argument are bash functions
 # Argument: string - Required. String to test if it is a bash function. Builtins are supported. `.` is explicitly not supported to disambiguate it from the current directory `.`.
 # If no arguments are passed, returns exit code 1.
-# Exit code: 0 - argument is bash function
-# Exit code: 1 - argument is not a bash function
+# Return Code: 0 - argument is bash function
+# Return Code: 1 - argument is not a bash function
 # Requires: __catchArgument isUnsignedInteger usageDocument type
 isFunction() {
   # _IDENTICAL_ functionSignatureSingleArgument 2

@@ -1,8 +1,8 @@
-# handler guide
+# Usage guide
 
 [⬅ Return to top](../index.md)
 
-handler is the output that a command generates when an error occurs or the user (typically) uses the `--help` argument
+`Usage` is the output that a command generates when an error occurs or the user (typically) uses the `--help` argument
 with the command.
 
 e.g.
@@ -10,7 +10,7 @@ e.g.
     > bin/build/identical-check.sh --help
     Need to specify at least one extension
 
-    handler: identical-check.sh --extension extension --prefix prefix [ --cd directory ] [ --help ]
+    Usage: identical-check.sh --extension extension --prefix prefix [ --cd directory ] [ --help ]
 
         --extension extension  Required. One or more extensions to search for in the current directory.
         --prefix prefix        Required. A text prefix to search for to identify identical sections (e.g. `# IDENTICAL`) (may specify more than one)
@@ -20,19 +20,23 @@ e.g.
 
 If your terminal supports colors, then colors are used to make the help more readable.
 
-## handler basics
+## Usage basics
 
-Most functions have a 2nd "handler" function which is the function name with a prefixed underscore.
+Most API functions define their `handler` (error handler) function which is the `function name` with a prefixed
+underscore `_`.
 
-    _usageFunction exitCode message
+When called it takes two arguments:
+
+- `returnCode` - the return code of the failed command
+- `message` - why the command failed
 
 e.g.
 
     _myFunction 1 "Missing file $file"
 
-The `exitCode` is required, and `0` is considered success.
+The `returnCode` is required, and `0` is considered success.
 
-- `handler` implementations SHOULD NEVER `exit`, instead it should return the passed in `exitCode`
+- `handler` implementations SHOULD NEVER `exit`, instead it should return the passed in `returnCode`
 - `message` - Is optional but highly recommended for all errors.
 
 An example:
@@ -41,26 +45,25 @@ An example:
         local handler="_${FUNCNAME[0]}"
         local bigFile="$1" savedFile="$2"
         __catchEnvironment "$handler" curl -L "$bigFile" -o - > "$savedFile" || return $?
-            _myFunction 1 "Unable to download $bigFile" || return $?
-        fi
         ..
     }
     _myFunction() {
        usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
     }
 
-Extensions to the basic `handler` model typically prefix additional parameters before the `exitCode`.
+Extensions to the basic `handler` model typically prefix additional parameters before the `returnCode`.
 
-## handler components
+## Usage components
 
-handler for a command typically consists of the following components:
+You define function usage by embedding comments directly above the function definition.
 
-- An example handler (`Example:` lines)
+Usage for a command typically consists of the following components:
+
 - Arguments to the command and their meanings and descriptions (`Argument:` line)
+- An example handler (`Example:` lines)
 - Any further description (`Description:` lines or any lines without a label)
-- The actual `handler` line can be inferred from the `Argument:`
 
-## handler labels
+## Usage labels
 
 ### `Argument:` - Function arguments
 
@@ -76,7 +79,7 @@ Where:
 - `argumentName` for arguments which take one or more values; the name of the argument expected.
 - `...` for multiple
 - `argumentType` is type such as `String`, `URL`, or `UnsignedInteger`
-- `argumentRequirement` is `Required.` or `Optional.` or `One or more.`
+- `argumentRequirement` is `Required.` or `Optional.` or `One or more.` or `Zero or more.`
 - `argumentDescription` is the brief description for the argument
 
 ### `Example:` - Example code
@@ -97,12 +100,12 @@ Describe the exit codes for a function:
 
 Format is:
 
-    # Exit Code: exitCode - exitCodeDescription
+    # Return Code: exitCode - exitCodeDescription
 
 Where:
 
-- `exitCode` is an integer or an exit code string (see `_code)
-- `exitCodeDescription` is the brief description for the exit code
+- `returnCode` is an integer or a return code string (see `returnCode`)
+- `returnCodeDescription` is the brief description for the reason for any error
 
 ### `Environment` - Environment variables used
 
@@ -117,10 +120,10 @@ Where:
 - `environmentVariableName` is the environment variable name
 - `environmentVariableDescription` is the brief description for how the function interacts with the environment variable
 
-### handler using comments
+### Usage using comments
 
-Any name/value pair to be associated with a `function` but the handler requires access to the current file to generate (
-as the code reads the script to extract the comment):
+Any name/value pair to be associated with a `function` but documentation generator requires access to the current file
+to generate (as the code reads the script to extract the comment):
 
     #!/usr/bin/env bash
 
@@ -132,22 +135,18 @@ as the code reads the script to extract the comment):
     . ./bin/build/tools.sh
 
     # Process a cool file
-    # handler: myCoolScript
-    # Argument: file - Required. File. The file to cool
-    # Argument: directory - Required. Directory. The place to put the file
-    # Argument: --help - Show this help and exit
+    # Argument: file - File. Required. The file to cool
+    # Argument: directory - Directory. Required. The place to put the file
+    # Argument: --help - Flag. Optional. Show this help and exit
     # Example:      myCoolScript my.cool ./coolOutput/
     myCoolScript() {
+        local handler="_${FUNCNAME[0]}"
         file="${1-}"
         # ...
-        if [ -z "$file" ]; then
-            _myCoolScripthandler 1 "Requires a file"
-        fi
-        if [ ! -f "$file" ]; then
-            _myCoolScripthandler 1 "$file is not a file"
-        fi
+        [ -f "$file" ] || __throwArgument "$handler" "Requires a file" || return $?
+        # ...
     }
-    _myCoolScripthandler() {
+    _myCoolScript() {
        usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
     }
 
@@ -158,15 +157,13 @@ And the output:
     > ./docs/guide/example.sh
     Requires a file
 
-    handler: myCoolScript file directory [ --help ]
+    Usage: myCoolScript file directory [ --help ]
 
         file       Required. File. The file to cool
         directory  Required. Directory. The place to put the file
         --help     Show this help and exit
 
     Process a cool file
-
-As additional features are added (using different arguments), the comment method is likely the best bet long-term.
 
 ### Argument Descriptions
 
@@ -178,7 +175,7 @@ With the following specification:
 
 - `argumentName` - Name and one or more value names. May end with `...` if this argument can be repeated infinitely.
 - `-` - The dash separates the name from the type and description.
-- `Optional | Required`. Determines how many of an argument are requried.
+- `Optional | Required`. Determines how many of an argument are required.
 - If a description contains the term `Required` which matches any case, then arguments are assumed to be required.
 
 [⬅ Return to top](../index.md)

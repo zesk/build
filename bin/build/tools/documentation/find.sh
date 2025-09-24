@@ -15,8 +15,8 @@
 # Argument: `directory` - The directory to search
 # Argument: `fnName0` - A function to find the file in which it is defined
 # Argument: `fnName1...` - Additional functions are found are output as well
-# Exit Code: 0 - if one or more function definitions are found
-# Exit Code: 1 - if no function definitions are found
+# Return Code: 0 - if one or more function definitions are found
+# Return Code: 1 - if no function definitions are found
 # Environment: Generates a temporary file which is removed
 # Example:     __bashDocumentation_FindFunctionDefinitions . __bashDocumentation_FindFunctionDefinitions
 # Example:     ./bin/build/tools/autodoc.sh
@@ -60,8 +60,8 @@ ___bashDocumentation_FindFunctionDefinitions() {
 # Usage: __bashDocumentation_FindFunctionDefinition directory fn
 # Argument: `directory` - The directory to search
 # Argument: `fn` - A function to find the file in which it is defined
-# Exit Code: 0 - if one or more function definitions are found
-# Exit Code: 1 - if no function definitions are found
+# Return Code: 0 - if one or more function definitions are found
+# Return Code: 1 - if no function definitions are found
 # Environment: Generates a temporary file which is removed
 # Example:     __bashDocumentation_FindFunctionDefinition . handler
 # Summary: Find single location where a function is defined in a directory of shell scripts

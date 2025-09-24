@@ -60,9 +60,9 @@ _bitbucketGetVariable() {
 # handler: {fn} [ envFile ... ] [ extraArgs ... ]
 # Argument: envFile - One or more environment files which are suitable to load for docker; must be valid
 # Argument: extraArgs - The first non-file argument to `{fn}` is passed directly through to `docker run` as arguments
-# Exit Code: 1 - If already inside docker, or the environment file passed is not valid
-# Exit Code: 0 - Success
-# Exit Code: Any - `docker run` error code is returned if non-zero
+# Return Code: 1 - If already inside docker, or the environment file passed is not valid
+# Return Code: 0 - Success
+# Return Code: Any - `docker run` error code is returned if non-zero
 #
 # Run the default build container for build testing on BitBucket
 #
@@ -81,8 +81,8 @@ _bitbucketContainer() {
 }
 
 # Are we currently in the BitBucket pipeline?
-# Exit Code: 0 - is BitBucket pipeline
-# Exit Code: 1 - Not a BitBucket pipeline
+# Return Code: 0 - is BitBucket pipeline
+# Return Code: 1 - Not a BitBucket pipeline
 #
 isBitBucketPipeline() {
   [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"

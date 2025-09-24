@@ -33,14 +33,16 @@ Error codes:
 
 Return errors:
 
-- `_return code message ...` - Return code always. Outputs `message ...` to `stderr`.
+- `_return code message ...` - Return code always. Outputs `message ...` to `stderr` IFF `code` is non-zero, otherwise
+  output message to `stdout`1.
 - `_environment message ...` - Return `1` always. Outputs `message ...` to `stderr`.
 - `_argument message ...` - Return `2` always. Outputs `message ...` to `stderr`.
 
 Run-related:
 
 - `__execute command ...` - Run `command ...` (with any arguments) and then `_return` if it fails.
-- `__echo command ...` - Output the `command ...` to stdout prior to running, then `__execute` it
+- `__echo command ...` - Output the `command ...` to stdout prior to running, then `__execute` it (helpful to debug
+  statements within other scripts)
 - `__environment command ...` - Run `command ...` (with any arguments) and then `_environment` if it fails.
 - `__argument command ...` - Run `command ...` (with any arguments) and then `_argument` if it fails.
 
@@ -51,6 +53,7 @@ Run-related:
 {isBoolean}
 
 {returnCode}
+
 {exitString}
 
 {_choose}
@@ -62,8 +65,18 @@ Run-related:
 
 ## Fail with an error code
 
-{_return} {_environment} {_argument}
+{_return}
+
+{_environment}
+
+{_argument}
 
 ## Run-related
 
-{__execute} {__echo} {__environment} {__argument}
+{__execute}
+
+{__echo}
+
+{__environment}
+
+{__argument}

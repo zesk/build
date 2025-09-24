@@ -11,8 +11,8 @@
 # Install `mariadb`
 #
 # When this tool succeeds the `mariadb` binary is available in the local operating system.
-# Exit Code: 1 - If installation fails
-# Exit Code: 0 - If installation succeeds
+# Return Code: 1 - If installation fails
+# Return Code: 0 - If installation succeeds
 mariadbInstall() {
   local handler="_${FUNCNAME[0]}"
   [ $# -eq 0 ] || __help --only "$handler" "$@" || return "$(convertValue $? 1 0)"
@@ -27,8 +27,8 @@ _mariadbInstall() {
 # Uninstall `mariadb`
 #
 # When this tool succeeds the `mariadb` binary will no longer be available in the local operating system.
-# Exit Code: 1 - If uninstallation fails
-# Exit Code: 0 - If uninstallation succeeds
+# Return Code: 1 - If uninstallation fails
+# Return Code: 0 - If uninstallation succeeds
 mariadbUninstall() {
   local handler="_${FUNCNAME[0]}"
   [ $# -eq 0 ] || __help --only "$handler" "$@" || return "$(convertValue $? 1 0)"

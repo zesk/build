@@ -372,8 +372,8 @@ _packageWhichUninstall() {
 #
 # Usage: {fn} [ package ... ]
 # Example:     {fn} shellcheck
-# Exit Code: 0 - If `apk` is not installed, returns 0.
-# Exit Code: 1 - If `apk` fails to install the packages
+# Return Code: 0 - If `apk` is not installed, returns 0.
+# Return Code: 1 - If `apk` fails to install the packages
 # Summary: Install packages using a package manager
 # Argument: package - One or more packages to install
 # Artifact: `{fn}.log` is left in the `buildCacheDirectory`
@@ -485,8 +485,8 @@ _packageInstall() {
 # Is a package installed?
 # Usage: {fn} [ package ... ]
 # Argument: package - String. Required. One or more packages to check if they are installed
-# Exit Code: 1 - If any packages are not installed
-# Exit Code: 0 - All packages are installed
+# Return Code: 1 - If any packages are not installed
+# Return Code: 0 - All packages are installed
 packageIsInstalled() {
   local handler="_${FUNCNAME[0]}"
   local packages=()
@@ -598,8 +598,8 @@ _packageStandardPackages() {
 # DOC TEMPLATE: --help 1
 # Argument: --help - Optional. Flag. Display this help.
 # Argument: packageManager - String. Manager to check.
-# Exit Code: 0 - The package manager is valid.
-# Exit Code: 1 - The package manager is not valid.
+# Return Code: 0 - The package manager is valid.
+# Return Code: 1 - The package manager is not valid.
 packageManagerValid() {
   local handler="_${FUNCNAME[0]}"
   case "${1-}" in

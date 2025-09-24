@@ -77,8 +77,8 @@ _urlSchemeDefaultPort() {
 #
 # Now works on multiple URLs, output is separated by a blank line for new entries
 #
-# Exit Code: 0 - If parsing succeeds
-# Exit Code: 1 - If parsing fails
+# Return Code: 0 - If parsing succeeds
+# Return Code: 1 - If parsing fails
 # Summary: Simple Database URL Parsing
 # Usage: urlParse url
 # DOC TEMPLATE: --help 1
@@ -231,8 +231,8 @@ _urlParseItem() {
 # DOC TEMPLATE: --help 1
 # Argument: --help - Optional. Flag. Display this help.
 # Argument: url ... - String. URL. Required. A Uniform Resource Locator
-# Exit Code: 0 - all URLs passed in are valid
-# Exit Code: 1 - at least one URL passed in is not a valid URL
+# Return Code: 0 - all URLs passed in are valid
+# Return Code: 1 - at least one URL passed in is not a valid URL
 urlValid() {
   local handler="_${FUNCNAME[0]}"
   [ $# -gt 0 ] || __throwArgument "$handler" "No arguments" || return $?

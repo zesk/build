@@ -17,4 +17,4 @@ When you write an installer, be sure to run `bashCheckRequries` as part of your 
 
 This ensures that all dependent functions are included in the installation file (as this is necessary to allow copying of the installer script to another project).
 
-To 
+TODO continue and finish this.

@@ -12,8 +12,8 @@
 #
 # Summary: Install `python`
 # When this tool succeeds the `python` binary is available in the local operating system.
-# Exit Code: 1 - If installation fails
-# Exit Code: 0 - If installation succeeds
+# Return Code: 1 - If installation fails
+# Return Code: 0 - If installation succeeds
 # Binary: python.sh
 pythonInstall() {
   local handler="_${FUNCNAME[0]}"
@@ -199,7 +199,7 @@ _pipWrapper() {
 # DOC TEMPLATE: --handler 1
 # Argument: --handler handler - Optional. Function. Use this error handler instead of the default error handler.
 # Argument: --any - Flag. Optional. When specified changes the behavior such that if it returns return code 0 IFF any single package is installed.
-# Exit Code: 0 - IFF all packages are installed.
+# Return Code: 0 - IFF all packages are installed.
 pythonPackageInstalled() {
   local handler="_${FUNCNAME[0]}" packages=() anyMode=false
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
