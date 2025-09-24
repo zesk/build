@@ -20,17 +20,30 @@ if source "$(dirname "${BASH_SOURCE[0]}")/tools.sh"; then
   # See: identicalCheckShell
   __buildIdenticalRepair() {
     local handler="_${FUNCNAME[0]}"
-    local item aa home checkFlag=false
+    local item aa home checkFlag=false doFingerprint=true
 
     local cleaned=()
     while [ $# -gt 0 ]; do
-      if [ "$1" = "--check" ]; then
+      local argument="$1"
+      case "$1" in
+      --check)
         checkFlag=true
-      else
+        ;;
+      --token)
+        local token
+        shift && token=$(usageArgumentString "$handler" "$argument" "${1-}") || return $?
+        cleaned+=("$argument" "$token")
+        doFingerprint=false
+        ;;
+      *)
         cleaned+=("$1")
-      fi
+        ;;
+      esac
       shift
     done
+    if $checkFlag && ! $doFingerprint; then
+      __throwArgument "$handler" "Invalid --check with --token" || return $?
+    fi
     set -- "${cleaned[@]+"${cleaned[@]}"}"
     home=$(__catch "$handler" buildHome) || return $?
     __catchEnvironment "$handler" muzzle cd "$home" || return $?
@@ -47,8 +60,9 @@ if source "$(dirname "${BASH_SOURCE[0]}")/tools.sh"; then
     # bashDebugInterruptFile --error --interrupt
     local fingerprint="" jsonFile="" jqPath=""
     jsonFile="$home/$(__catch "$handler" buildEnvironmentGet APPLICATION_JSON)" || return $?
+    [ -f "$jsonFile" ] || doFingerprint=false
 
-    if [ -f "$jsonFile" ]; then
+    if $doFingerprint; then
       local prefix
       prefix=$(__catch "$handler" buildEnvironmentGet APPLICATION_JSON_PREFIX) || return $?
       prefix="${prefix#.}"
@@ -80,7 +94,7 @@ if source "$(dirname "${BASH_SOURCE[0]}")/tools.sh"; then
     fi
     set -eou pipefail
     __catch "$handler" identicalCheckShell "${aa[@]+"${aa[@]}"}" --exec contextOpen "$@" || return $?
-    if [ -f "$jsonFile" ]; then
+    if $doFingerprint; then
       __catch "$handler" jsonFileSet "$jsonFile" "$jqPath" "$fingerprint" || return $?
       decorate success "Fingerprint updated."
     fi
