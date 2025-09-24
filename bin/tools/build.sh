@@ -167,8 +167,10 @@ __buildBuild() {
   elif gitRepositoryChanged; then
     ! $debugFlag || statusMessage --last decorate warning "Local repository changed."
   fi
+  envFile="$home/.build.env"
+  environmentOutput >"$envFile"
+  decorate info "Wrote $(decorate file "$envFile") $(pluralWord "$(fileSize "$envFile")" byte)" || return $?
   statusMessage --last timingReport "$start" "Built successfully in"
-  env -i >"$home/.build.env"
 }
 ___buildBuild() {
   # __IDENTICAL__ usageDocument 1
