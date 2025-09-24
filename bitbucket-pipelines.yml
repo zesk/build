@@ -32,7 +32,7 @@ pipelines:
                 services:
                   - docker
                 size: 1x
-                name: Fast Tests 1x
+                name: Fast Tests 2x
                 script:
                   - bin/tools.sh dumpEnvironment
                   - bin/tools.sh buildProductionTest --env-file .build.env --skip-tag slow --skip-tag package-install
@@ -40,7 +40,7 @@ pipelines:
                 services:
                   - docker
                 size: 2x
-                name: Slow Tests 2x
+                name: Slow Tests 4x
                 script:
                   - bin/tools.sh buildProductionTest --env-file .build.env --tag slow
             - step:
