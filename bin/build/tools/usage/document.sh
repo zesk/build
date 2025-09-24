@@ -7,7 +7,7 @@
 
 __usageDocumentSections() {
   cat <<'EOF'
-exit_code|- |Exit codes
+return_code|- |Return codes
 environment|- |Environment variables
 stdin||Reads from `stdin`
 stdout||Writes to `stdout`

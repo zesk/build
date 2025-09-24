@@ -333,7 +333,7 @@ __help() {
   if [ "$handler" = "--only" ]; then
     handler="${1-}" && shift
     [ $# -gt 0 ] || return 0
-    [ "$#" -eq 1 ] && [ "${1-}" = "--help" ] || __throwArgument "$handler" "Only argument allowed is --help: \"${1-}\"" || return $?
+    [ "$#" -eq 1 ] && [ "${1-}" = "--help" ] || __throwArgument "$handler" "Only argument allowed is \"--help\": $*" || return $?
   fi
   while [ $# -gt 0 ]; do
     [ "$1" != "--help" ] || ! "$handler" 0 || return 1

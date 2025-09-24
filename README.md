@@ -15,7 +15,8 @@ support for Bash 3 and 4 remains stable.
 
 Depends on:
 
-- `jq` - Parsing JSON files
+- `jq` - Parsing JSON files, some formatting
+- `bc` - Floating-point math
 - `curl` or `wget` - Remote installation
 
 This toolkit assumes:
@@ -30,7 +31,7 @@ To use in your pipeline:
 
 - copy `bin/build/install-bin-build.sh` into your project (changing last line as needed) or use `installInstallBuild` to
   install it.
-- run it before you need this code (will be installed at `bin/build`)
+- run it before you need this code (will be installed at `./bin/build`)
 
 To install it in the operating system:
 
@@ -49,7 +50,7 @@ Zesk Build makes the following assumptions about your project structure:
 - `./bin/build/` - Zesk Build installation location (may *not* be changed)
 - `./bin/hooks/` - Application hook implementation (`hook-name` with `.sh` on the end)
 - `./bin/env/` - Your project's environment variables defaults (`NAME` with `.sh` on the end if you use
-  `buildEnvironmentLoad`)
+  `buildEnvironmentLoad` or `buildEnvironmentGet`)
 - `./docs/release/v1.0.0.md` - Release notes (override by adding `BUILD_RELEASE_NOTES` environment)
 
 ## Zesk Build Project structure
@@ -180,4 +181,4 @@ of infrastructure expertise.](https://marketacumen.com/executive-technical-asses
 
 License is [MIT License](LICENSE.md). Source can be found online at [GitHub](https://github.com/zesk/build).
 
-Reviewed: 2025-08-01
+Reviewed: 2025-09-24
