@@ -48,6 +48,15 @@ __buildDeploy() {
     shift
   done
 
+  __catch "$handler" packageInstall || return $?
+
+  local name
+  name=$(__catch "$handler" buildEnvironmentGet APPLICATION_NAME) || return $?
+  currentVersion="$(__catch "$handler" hookRun version-current)" || return $?
+  [ -n "$currentVersion" ] || __throwEnvironment "$handler" "Blank version-current" || return $?
+  bigText "Deploy $name $currentVersion" | decorate success
+  dumpEnvironment
+
   local start
   start=$(timingStart)
 
@@ -70,10 +79,8 @@ __buildDeploy() {
   __catchEnvironment "$handler" git fetch --unshallow || return $?
 
   statusMessage decorate info "Collecting application version and ID ..." || :
-  currentVersion="$(hookRun version-current)" || __throwEnvironment "$handler" "hookRun version-current" || return $?
   appId=$(hookRun application-id) || __throwEnvironment "$handler" "hookRun application-id" || return $?
 
-  [ -n "$currentVersion" ] || __throwEnvironment "$handler" "Blank version-current" || return $?
   [ -n "$appId" ] || __throwEnvironment "$handler" "No application ID (blank?)" || return $?
 
   notes=$(releaseNotes) || __throwEnvironment "$handler" "releaseNotes" || return $?
