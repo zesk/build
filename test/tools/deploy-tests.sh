@@ -188,7 +188,7 @@ _waitForValue() {
   return $exitCode
 }
 
-# Tag: slow deployment php-install package-install
+# Tag: slow deployment php-install
 # Test-Build-Home: true
 testDeployApplication() {
   local handler="_return"

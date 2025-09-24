@@ -357,7 +357,7 @@ testBuildEnvironmentGet() {
   __catch "$handler" rm -rf "$tempDir" || return $?
 }
 
-# Tag: package-install php-install simple-php
+# Tag: php-install simple-php
 testUnderscoreUnderscoreBuild() {
   local handler="_return"
   local testPath home

@@ -60,7 +60,6 @@ testPHPComposerInstallation() {
 # Argument: --keep - Optional. Flag. Do not delete artifacts when done, print created values.
 # Tag: slow
 # Tag: php-install simple-php
-# Tag: package-install
 testPHPBuild() {
   local handler="_return"
   local here testPath manifest appName home
