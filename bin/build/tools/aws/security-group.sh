@@ -127,7 +127,7 @@ __awsSecurityGroupIPModify() {
   if [ "$mode" != "--remove" ]; then
     local json
     json="[{\"IpProtocol\": \"tcp\", \"FromPort\": $port, \"ToPort\": $port, \"IpRanges\": [{\"CidrIp\": \"$ip\", \"Description\": \"$description\"}]}]"
-    __awsSGOutput "$(decorate info "$verb new IP:")" "$ip" "$group" "$port"
+    __awsSGOutput "$(decorate info "$verb new IP:")" "$ip" "$group" "$port" ""
 
     tempErrorFile=$(fileTemporaryName "$handler") || return $?
     if ! __awsWrapper "${pp[@]+"${pp[@]}"}" --output json ec2 authorize-security-group-ingress --region "$region" --group-id "$group" --ip-permissions "$json" 2>"$tempErrorFile" | __awsReturnTrue; then
@@ -136,6 +136,8 @@ __awsSecurityGroupIPModify() {
       else
         __throwEnvironment "$handler" "Failed to authorize-security-group-ingress $(dumpPipe "Errors:" <"$tempErrorFile")" || returnClean $? "$tempErrorFile" || return $?
       fi
+    else
+      printf "%s\n" "$(decorate success "ok")"
     fi
     __catchEnvironment "$handler" rm -f "$tempErrorFile" || return $?
   fi
@@ -148,6 +150,6 @@ __awsReturnTrue() {
 
 # Helper for awsSecurityGroupIPModify
 __awsSGOutput() {
-  local title="$1" ip="$2" group="$3" port="$4"
-  printf "%s %s %s %s %s %s\n" "$title" "$(decorate red "$ip")" "$(decorate label "in group-id:")" "$(decorate value "$group")" "$(decorate label "port:")" "$(decorate value "$port")"
+  local title="$1" ip="$2" group="$3" port="$4" suffix="${5-$'\n'}"
+  printf "%s %s %s %s %s %s%s" "$title" "$(decorate red "$ip")" "$(decorate label "in group-id:")" "$(decorate value "$group")" "$(decorate label "port:")" "$(decorate value "$port")" "$suffix"
 }
