@@ -132,6 +132,10 @@ __documentationBuildEnvironment() {
   local targetFile
 
   targetFile="$target/index.md"
+
+  if ! fileEndsWithNewline "$targetFile"; then
+    printf "\n\n" >>"$targetFile"
+  fi
   local categoryName
   while IFS="" read -r categoryName; do
     categoryFileName="${categoryName// /_}"
