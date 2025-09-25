@@ -129,16 +129,18 @@ _notify() {
 # Read user input and return 0 if the user says yes, or non-zero if they say no
 # Return Code: 0 - Yes
 # Return Code: 1 - No
-# Usage: {fn} [ --default defaultValue ] [ --yes ] [ --no ]
+# Summary: Read user input and return success on yes
 # Argument: --default defaultValue - Boolean. Optional. Value to return if no value given by user
 # Argument: --attempts attempts - PositiveInteger. Optional. User can give us a bad response this many times before we return the default.
 # Argument: --timeout seconds - PositiveInteger. Optional. Wait this long before choosing the default. If no default, default is --no.
-# Argument: --yes - Boolean. Optional. Short for `--default yes`
-# Argument: --no - Boolean. Optional. Short for `--default no`
-# Example: Will time out after 10 seconds, regardless (user must make valid input in that time):
-# Example:
-# Example:     confirmYesNo --timeout 10 "Stop the timer!"
-# Example:
+# Argument: --info - Flag. Optional. Add `Type Y or N` as instructions to the user.
+# Argument: --yes - Flag. Optional. Short for `--default yes`
+# Argument: --no - Flag. Optional. Short for `--default no`
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
+# DOC TEMPLATE: --handler 1
+# Argument: --handler handler - Optional. Function. Use this error handler instead of the default error handler.
+# Argument: message ... - String. Any additional arguments are considered part of the message.
 # Example: Will time out after 10 seconds, regardless (user must make valid input in that time):
 # Example:
 # Example:     confirmYesNo --timeout 10 "Stop the timer!"
