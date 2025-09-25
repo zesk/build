@@ -60,9 +60,10 @@ _fileExtractLines() {
 
 # `grep` but returns 0 when nothing matches
 # See: grep
-# Allow blank files or no matches
-# grep - 1 - no lines selected
-# grep - 0 - lines selected
+# Allow blank files or no matches -
+# - `grep` - returns 1 - no lines selected
+# - `grep` - returns 0 - lines selected
+# Return Code: 0 - Normal operation
 # Argument: ... - Arguments. Passed directly to `grep`.
 # Requires: grep mapReturn
 grepSafe() {
@@ -77,6 +78,8 @@ _grepSafe() {
 # Check if text contains plaintext only
 # Argument: text - Required. String. Text to search for mapping tokens.
 # No arguments displays help.
+# Return code: - `0` - Text is plain
+# Return code: - `1` - Text contains non-plain characters
 isPlain() {
   [ $# -gt 0 ] || __help "_${FUNCNAME[0]}" --help || return 0
 
@@ -97,6 +100,8 @@ _isPlain() {
 # Argument: --suffix - Optional. String. Token suffix defaults to `}`.
 # Argument: --token - Optional. String. Classes permitted in a token
 # Argument: text - Optional. String. Text to search for mapping tokens.
+# Return code: - `0` - Text contains mapping tokens
+# Return code: - `1` - Text does not contain mapping tokens
 isMappable() {
   local handler="_${FUNCNAME[0]}"
   local prefix='{' suffix='}' tokenClasses='[-_A-Za-z0-9:]'
@@ -135,7 +140,6 @@ _isMappable() {
 # Return Code: 1 - false
 # Return Code: 2 - Neither
 # Requires: lowercase __help
-#
 parseBoolean() {
   __help "_${FUNCNAME[0]}" "$@" || return 0
   case "$(lowercase "$1")" in

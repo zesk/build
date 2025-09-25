@@ -9,7 +9,7 @@
 # requires a lot of stuff
 #
 
-# IDENTICAL mapEnvironment EOF
+# IDENTICAL mapEnvironmentSed EOF
 
 # Summary: Convert tokens in files to environment variable values
 #
@@ -28,7 +28,7 @@
 # Example:     printf %s "{NAME}, {PLACE}.\n" | NAME=Hello PLACE=world mapEnvironment NAME PLACE
 # Requires: __throwArgument read environmentVariables decorate sed cat rm __throwEnvironment __catchEnvironment returnClean
 # Requires: usageArgumentString fileTemporaryName
-mapEnvironment() {
+mapEnvironmentSed() {
   local handler="_${FUNCNAME[0]}"
   local __sedFile __prefix='{' __suffix='}'
 
@@ -68,7 +68,7 @@ mapEnvironment() {
   __catchEnvironment "$__handler" sed -f "$__sedFile" || __throwEnvironment "$__handler" "$(cat "$__sedFile")" || returnClean $? "$__sedFile" || return $?
   __catchEnvironment "$__handler" rm -f "$__sedFile" || return $?
 }
-_mapEnvironment() {
+_mapEnvironmentSed() {
   # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

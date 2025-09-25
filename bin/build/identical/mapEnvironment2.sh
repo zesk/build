@@ -7,7 +7,7 @@
 # Copyright &copy; 2025 Market Acumen, Inc.
 #
 
-# Do not put mapEnvironment2 into this file just yet
+# IDENTICAL mapEnvironment EOF
 
 # Summary: Convert tokens in files to environment variable values
 #
@@ -26,8 +26,9 @@
 # Argument: --replace-filter - Zero or more. Callable. Filter for replacement strings. (e.g. `trimSpace`)
 # Environment: Argument-passed or entire environment variables which are exported are used and mapped to the destination.
 # Example:     printf %s "{NAME}, {PLACE}.\n" | NAME=Hello PLACE=world mapEnvironment NAME PLACE
-# Requires: __throwArgument decorate
-mapEnvironment2() {
+# Requires: environmentVariables cat __throwEnvironment __catchEnvironment
+# Requires: __throwArgument decorate usageArgumentString
+mapEnvironment() {
   local handler="_${FUNCNAME[0]}"
 
   local __prefix='{' __suffix='}' __ee=() __searchFilters=() __replaceFilters=()
@@ -62,7 +63,7 @@ mapEnvironment2() {
       muzzle usageArgumentLoadEnvironmentFile "$handler" "$argument" "${1-}" || return $?
       ;;
     *)
-      __ee+=("$(usageArgumentEnvironmentValue "$handler" "environmentVariableName" "$argument")") || return $?
+      __ee+=("$(usageArgumentString "$handler" "environmentVariableName" "$argument")") || return $?
       ;;
     esac
     shift
@@ -70,7 +71,7 @@ mapEnvironment2() {
 
   # If no environment variables are passed on the command line, then use all of them
   local __e
-  if [ "${#__e[@]}" -eq 0 ]; then
+  if [ "${#__ee[@]}" -eq 0 ]; then
     while read -r __e; do __ee+=("$__e"); done < <(environmentVariables)
   fi
 
@@ -103,7 +104,7 @@ mapEnvironment2() {
     printf "%s\n" "$__value"
   )
 }
-_mapEnvironment2() {
+_mapEnvironment() {
   # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
