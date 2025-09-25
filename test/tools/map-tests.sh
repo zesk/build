@@ -98,3 +98,7 @@ testMapValue() {
 
   __catch "$handler" rm -f "$tempEnv" || return $?
 }
+
+testMapEnvironmentBadNames() {
+  assertEquals "Lovely" "$(A=L B=v C=y D=l E=e o=o mapEnvironment A B C D E o " " "   " "--bad--" <<<"{A}{o}{B}{E}{D}{C}")" || return $?
+}
