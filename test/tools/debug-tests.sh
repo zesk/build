@@ -135,6 +135,7 @@ testPlumber() {
   assertExitCode 0 plumber statusMessage __leakyPipe Cool || return $?
   # Run directly within plumber so catches leaks
   assertExitCode --skip-plumber "0" plumber --leak IS_THIS_GLOBAL --leak wonderful __leakyPipe Cool || return $?
+  assertExitCode --stderr-ok "$leakCode" plumber __leakyPipe Cool || return $?
 
   unset IS_THIS_GLOBAL wonderful
 }
@@ -160,7 +161,7 @@ testHousekeeper() {
 
   statusMessage decorate info Copying "${BUILD_HOME-"(blank)"}" to test location
   __environment cp -r "$BUILD_HOME" "$testDir" || return $?
-  __environment cd "$testDir" || return $?
+  __environment muzzle pushd "$testDir" || return $?
 
   assertEquals 108 "$leakCode" || return $?
 
@@ -209,6 +210,7 @@ testHousekeeper() {
   testFiles=(dust dirt cruft temporary-files)
   assertNotExitCode "${matches[@]}" 0 housekeeper "$testDir" rm -f "${testFiles[@]}" || return $?
 
+  __environment muzzle popd || return $?
   __environment rm -rf "$testDir" || return $?
 }
 

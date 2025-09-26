@@ -73,10 +73,9 @@ _assertEquals() {
 # Argument: --dump-binary - Optional. Flag. Output stderr and stdout after test regardless, and output binary.
 # Argument: --head - Optional. Flag. When outputting stderr or stdout, output the head of the file.
 # Argument: --tail - Optional. Flag. When outputting stderr or stdout, output the tail of the file. (Default)
-# Argument: expected - Expected string
 # Argument: actual - Actual string
 # Argument: message - Message to output if the assertion fails
-# Example:     assertEquals "$(alignRight 4 "hi")" "  hi" "alignRight not working"
+# Example:     assertStringNotEmpty "$string"
 # Reviewed: 2023-11-12
 #
 assertStringNotEmpty() {

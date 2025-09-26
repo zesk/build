@@ -223,7 +223,7 @@ directoryRequire() {
       output=$(usageArgumentString "$handler" "$argument" "${1-}") || return $?
       ;;
     *)
-      name="$argument"
+      local name="$argument"
       if [ -d "$name" ]; then
         [ 0 -eq "${#mode[@]}" ] || __catchEnvironment "$handler" chmod "${mode[1]}" "$name" || return $?
       else

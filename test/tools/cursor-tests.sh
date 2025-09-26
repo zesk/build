@@ -8,6 +8,7 @@
 #
 
 testCursorGetSet() {
+  mockEnvironmentStart __BUILD_HAS_TTY
   if isTTYAvailable; then
     local x y
 
@@ -22,4 +23,5 @@ testCursorGetSet() {
     assertExitCode 0 cursorSet "$(consoleColumns)" "$(consoleRows)" || return $?
     assertExitCode 0 cursorSet "$x" "$y" || return $?
   fi
+  mockEnvironmentStop __BUILD_HAS_TTY
 }

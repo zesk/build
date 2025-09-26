@@ -131,7 +131,7 @@ __awsCredentialsRemove() {
 
 _awsCredentialsRemoveSection() {
   local handler="$1" credentials="$2" profileName="$3" newCredentials="${4-}"
-  local pattern="\[\s*$profileName\s*\]" temp lines total
+  local pattern="\[\s*$profileName\s*\]" lines total
   total=$((0 + $(__catch "$handler" fileLineCount "$credentials"))) || return $?
   exec 3>&1
   lines=$(__catchEnvironment "$handler" grepSafe -m 1 -B 32767 "$credentials" -e "$pattern" | __catchEnvironment "$handler" grepSafe -v -e "$pattern" | __catchEnvironment "$handler" trimTail | tee >(cat >&3) | fileLineCount) || return $?
@@ -144,6 +144,7 @@ _awsCredentialsRemoveSection() {
 _awsCredentialsRemoveSectionInPlace() {
   local handler="$1" credentials="$2" profileName="$3" newCredentials="${4-}"
 
+  local temp
   temp=$(fileTemporaryName "$handler") || return $?
   _awsCredentialsRemoveSection "$handler" "$credentials" "$profileName" "$newCredentials" | trimBoth >"$temp" || returnClean $? "$temp" || return $?
   __catchEnvironment "$handler" cp "$temp" "$credentials" || returnClean $? "$temp" || return $?

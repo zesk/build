@@ -84,7 +84,11 @@ __identicalLineCount() {
 # Argument: count - UnsignedInteger. Required. Number of lines this token should have.
 __identicalCheckMatchFile() {
   local searchFile="$1" totalLines="$2" lineNumber="$3" count="$4"
-  tail -n $((totalLines - lineNumber)) <"$searchFile" | head -n "$count"
+  if fileEndsWithNewline "$searchFile"; then
+    tail -n $((totalLines - lineNumber)) <"$searchFile" | head -n "$count"
+  else
+    tail -n $((totalLines + 1 - lineNumber)) <"$searchFile" | head -n "$count"
+  fi
   return 0
 
   # TODO: This returns error 1 inside a container, so forced return 0. KMD 2024-09-16

@@ -159,6 +159,7 @@ dumpPipe() {
   nLines=$(($(fileLineCount "$item") + 0))
   nBytes=$(($(wc -c <"$item") + 0))
   [ ${#symbol} -eq 0 ] || symbol="$symbol "
+  local suffix=""
   if [ $nBytes -eq 0 ]; then
     suffix=$(decorate orange "(empty)")
   elif [ "$showLines" -lt "$nLines" ]; then

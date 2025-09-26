@@ -18,7 +18,7 @@ mockEnvironmentStart() {
     local value="${1-}"
     [ $# -eq 0 ] || shift
     local saveGlobal="__MOCK_$argument"
-    statusMessage decorate notice "MOCK: Saving $argument into $(decorate code "$saveGlobal")"
+    statusMessage --last decorate notice "MOCK: Saving $argument into $(decorate code "$saveGlobal")"
     # shellcheck disable=SC2163
     export "$saveGlobal"="${!argument-"$emptyValue"}"
     export "$argument"="$value"
@@ -46,15 +46,15 @@ mockEnvironmentStop() {
     --help) "$handler" 0 && return $? || return $? ;;
     *)
       local emptyValue="__MOCK__ $argument"
+      local saveGlobal="__MOCK_$argument"
       # shellcheck disable=SC2163
       export "$argument"
-      if [ "${!argument-"$emptyValue"}" = "$emptyValue" ]; then
+      if [ "${!saveGlobal-"$emptyValue"}" = "$emptyValue" ]; then
         unset "$argument"
-        statusMessage decorate notice "MOCK: Removing $argument (was unset)"
+        statusMessage --last decorate notice "MOCK: Removing $argument (was unset)"
       else
-        local saveGlobal="__MOCK_$argument"
         export "$argument"="${!saveGlobal-}"
-        statusMessage decorate notice "MOCK: Restoring $argument from $(decorate code "$saveGlobal")"
+        statusMessage --last decorate notice "MOCK: Restoring $argument from $(decorate code "$saveGlobal")"
       fi
       unset "$saveGlobal"
       ;;
@@ -67,10 +67,12 @@ mockEnvironmentStop() {
 # Argument: true | false - Boolean. Force the value of hasConsoleAnimation to this value temporarily. Saves the original value.
 # Developer Note: Keep this here to keep it close to the definition it modifies
 mockConsoleAnimationStart() {
-  local handler="_${FUNCNAME[0]}"
+  local handler="_${FUNCNAME[0]}" flag
 
   flag=$(usageArgumentBoolean "$handler" "flag" "${1-}") || return $?
-  mockEnvironmentStart CI "$(_choose "$flag" "" "testCI")" "$@"
+  __catch "$handler" mockEnvironmentStart CI || return $?
+  export CI
+  CI="$(_choose "$flag" "" "testCI")"
 }
 _mockConsoleAnimationStart() {
   # __IDENTICAL__ usageDocument 1

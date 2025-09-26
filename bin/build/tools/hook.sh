@@ -46,7 +46,7 @@ __hookRunner() {
 
   # Parse user flags first (this is so users can not accidentally use these, only us)
 
-  local applicationHome="" whichArgs=() nextSource=""
+  local applicationHome="" whichArgs=() nextSource="" ww=()
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
@@ -60,6 +60,7 @@ __hookRunner() {
       shift
       whichArgs+=("$argument" "$(usageArgumentFile "$handler" "$argument" "${1-}")") || return $?
       ;;
+    --extensions) shift && ww=("$(usageArgumentString "$handler" "$argument" "${1-}")") || return $? ;;
     --application)
       shift || :
       applicationHome=$(usageArgumentDirectory "$handler" applicationHome "${1-}") || return $?
@@ -68,7 +69,7 @@ __hookRunner() {
     *)
       local hook binary="$argument"
       shift
-      if ! hook=$(whichHook "${whichArgs[@]+${whichArgs[@]}}" "$binary"); then
+      if ! hook=$(whichHook "${ww[@]+"${ww[@]}"}" "${whichArgs[@]+${whichArgs[@]}}" "$binary"); then
         if $requireHook; then
           # hookRun
           __throwArgument "$handler" "Hook not found $(decorate code "$binary")" || return $?
@@ -278,8 +279,7 @@ whichHook() {
   IFS=":" read -r -a hookPaths <<<"$BUILD_HOOK_DIRS" || :
   [ ${#hookPaths[@]} -gt 0 ] || __throwEnvironment "$handler" "BUILD_HOOK_DIRS is blank" || return $?
 
-  IFS=":" read -r -a hookExtensions <<<"$BUILD_HOOK_EXTENSIONS" || :
-  [ ${#hookExtensions[@]} -gt 0 ] || __throwEnvironment "$handler" "BUILD_HOOK_EXTENSIONS is blank" || return $?
+  extensionText="${BUILD_HOOK_EXTENSIONS-}"
 
   applicationHome="$(__catch "$handler" buildHome)" || return $?
   local __saved=("$@") __count=$#
@@ -298,16 +298,21 @@ whichHook() {
       shift
       applicationHome=$(usageArgumentDirectory "$handler" "$argument" "${1-}") || return $?
       ;;
+    --extensions) shift && extensionText=$(usageArgumentString "$handler" "$argument" "${1-}") || return $? ;;
     --next)
       shift
       nextSource=$(usageArgumentFile "$handler" "$argument" "${1-}") || return $?
       nextSource=$(__catchEnvironment "$handler" realPath "$nextSource") || return $?
       ;;
     *)
+      IFS=":" read -r -a hookExtensions <<<"$extensionText" || :
+      [ ${#hookExtensions[@]} -gt 0 ] || __throwEnvironment "$handler" "BUILD_HOOK_EXTENSIONS is blank" || return $?
+
       local hookPath
       for hookPath in "${hookPaths[@]}"; do
         local appPath="${applicationHome%/}/${hookPath%/}"
         [ -d "$appPath" ] || continue
+
         local extension
         for extension in "${hookExtensions[@]}"; do
           extension="${extension#.}"

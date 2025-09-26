@@ -6,6 +6,7 @@
 #
 # Copyright &copy; 2025 Market Acumen, Inc.
 #
+
 testOutputEquals() {
   assertExitCode 0 assertOutputEquals --line "$LINENO" "a" printf "a" || return $?
   assertNotExitCode --stderr-ok --line "$LINENO" 0 assertOutputEquals --line "$LINENO" "a" printf "b" || return $?

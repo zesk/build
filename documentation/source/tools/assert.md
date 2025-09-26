@@ -4,7 +4,7 @@
 [⬅ Parent ](../index.md)
 <hr />
 
-These functions are solely available after you call `testSuite`.
+These functions are solely available after you call `testSuite`. Check out our [testing guide](../guide/testing.md)
 
 ## Equality
 

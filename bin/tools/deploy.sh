@@ -75,9 +75,6 @@ __buildDeploy() {
 
   local appId notes
 
-  statusMessage decorate info "Fetching deep copy of repository ..." || :
-  __catchEnvironment "$handler" git fetch --unshallow || return $?
-
   statusMessage decorate info "Collecting application version and ID ..." || :
   appId=$(hookRun application-id) || __throwEnvironment "$handler" "hookRun application-id" || return $?
 
@@ -86,8 +83,12 @@ __buildDeploy() {
   notes=$(releaseNotes) || __throwEnvironment "$handler" "releaseNotes" || return $?
   [ -f "$notes" ] || __throwEnvironment "$handler" "$notes does not exist" || return $?
 
-  bigText "$currentVersion" | decorate magenta | decorate wrap "$(decorate green "Zesk BUILD    🛠️️ ")" "$(decorate green " ⚒️ ")"
-  decorate info "Deploying a new release ... " || :
+  local name
+  name=$(buildEnvironmentGet APPLICATION_NAME)
+  statusMessage --last decorate pair "Application Name" "$name" || :
+  statusMessage --last decorate pair "Application ID" "$appId" || :
+  statusMessage --last decorate pair "Application Version" "$currentVersion" || :
+  bigText "$currentVersion" | decorate magenta | decorate wrap "$(decorate green "$name    🛠️️ ")" "$(decorate green " ⚒️ ")"
 
   if $makeDocumentation; then
     local rootShow rootPath="$home/documentation/site"
@@ -114,10 +115,18 @@ __buildDeploy() {
     __catchEnvironment "$handler" aws cloudfront create-invalidation --distribution-id "$cloudFrontID" --paths '/*' || return $?
   fi
 
-  if $makeRelease && ! githubRelease "$notes" "$currentVersion" "$appId"; then
-    decorate warning "Deleting tagged version ... " || :
-    gitTagDelete "$currentVersion" || decorate error "gitTagDelete $currentVersion ALSO failed but continuing ..." || :
-    __throwEnvironment "$handler" "githubRelease" || return $?
+  if $makeRelease; then
+    statusMessage --last decorate info "Deploying a new release ... " || :
+
+    statusMessage decorate info "Fetching deep copy of repository for release ..." || :
+    __catchEnvironment "$handler" git fetch --unshallow || return $?
+
+    if ! githubRelease "$notes" "$currentVersion" "$appId"; then
+      local exitCode=$?
+      decorate warning "FAILED - Deleting tagged version ... " || :
+      gitTagDelete "$currentVersion" || decorate error "gitTagDelete $currentVersion ALSO failed but continuing ..." || :
+      __throwEnvironment "$handler" "githubRelease FAILED with $exitCode" || return $?
+    fi
   fi
   timingReport "$start" "Release completed in" || :
 }

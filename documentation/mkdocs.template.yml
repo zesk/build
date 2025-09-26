@@ -1,7 +1,7 @@
-site_name: "{APPLICATION_NAME}"
+site_name: "{APPLICATION_NAME} {version}"
 repo_url: https://github.com/{GITHUB_REPOSITORY_OWNER}/{GITHUB_REPOSITORY_NAME}
 # edit_uri_template: "blob/main/documentation/docs/{path}"
-site_description: "Toolkit for build, testing, system management, and deployment written in Bash"
+site_description: "Toolkit for build, testing, system management, and deployment written in Bash. (Version {version})back "
 site_author: "{BUILD_COMPANY}"
 nav:
   - Home: "index.md"

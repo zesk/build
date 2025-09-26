@@ -12,6 +12,8 @@ testDaemontools() {
   local handler="_return"
   local logPath start waitFor logWaitFor
 
+  mockEnvironmentStart DAEMONTOOLS_HOME
+
   local home
 
   home=$(__catch "$handler" buildHome) || return $?
@@ -33,7 +35,7 @@ testDaemontools() {
   decorate info "logPath is $logPath"
   __catch "$handler" directoryRequire "$logPath" >/dev/null || return $?
 
-  assertExitCode --leak DAEMONTOOLS_HOME 0 daemontoolsInstallService --log "$logPath" "$home/test/example/lemon.sh" --arguments "orange" "grape" "lemon" -- --log-arguments "n10" || return $?
+  assertExitCode --leak DAEMONTOOLS_HOME --leak __BUILD_LOADER 0 daemontoolsInstallService --log "$logPath" "$home/test/example/lemon.sh" --arguments "orange" "grape" "lemon" -- --log-arguments "n10" || return $?
 
   assertFileExists "/etc/service/lemon/run" || return $?
   assertFileContains "/etc/service/lemon/run" "\"orange\" \"grape\" \"lemon\"" || return $?
@@ -79,5 +81,5 @@ testDaemontools() {
     assertEquals "$savedSize" "$(fileSize "$logPath/lemon/current")" || return $?
   fi
 
-  unset DAEMONTOOLS_HOME
+  mockEnvironmentStop DAEMONTOOLS_HOME
 }

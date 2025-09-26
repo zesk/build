@@ -14,6 +14,8 @@
 __bashGetRequires() {
   local handler="$1" && shift
 
+  local files=()
+
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do

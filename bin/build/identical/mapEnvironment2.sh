@@ -83,7 +83,7 @@ mapEnvironment() {
     if [ $((${#__replaceFilters[@]} + ${#__searchFilters[@]})) -gt 0 ]; then
       for __e in "${__ee[@]}"; do
         local __search="$__prefix$__e$__suffix"
-        lcoal __replace="${!__e-}" 2>/dev/null || continue
+        local __replace="${!__e-}" 2>/dev/null || continue
         if [ ${#__searchFilters[@]} -gt 0 ]; then
           for __filter in "${__searchFilters[@]}"; do
             __search=$(__catchEnvironment "$__handler" "$__filter" "$__search") || return $?
@@ -94,13 +94,13 @@ mapEnvironment() {
             __replace=$(__catchEnvironment "$__handler" "$__filter" "$__replace") || return $?
           done
         fi
-        __value="${__value/$__search/$__replace}"
+        __value="${__value//$__search/$__replace}"
       done
     else
       for __e in "${__ee[@]}"; do
         local __search="$__prefix$__e$__suffix"
-        lcoal __replace="${!__e-}" 2>/dev/null || continue
-        __value="${__value/$__search/$__replace}"
+        local __replace="${!__e-}" 2>/dev/null || continue
+        __value="${__value//$__search/$__replace}"
       done
     fi
     printf "%s\n" "$__value"

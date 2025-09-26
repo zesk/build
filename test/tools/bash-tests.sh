@@ -148,20 +148,20 @@ testBashSourcePathDot() {
   # Nothing works until chmod +x
   assertNotExitCode --stderr-match 'not executable' 0 bashSourcePath "$testPath/.foobar/.eefo/.dots/" || return $?
   assertNotExitCode --stderr-match 'not executable' 0 bashSourcePath "$testPath/.foobar/.eefo/" || return $?
-  assertNotExitCode --stderr-match 'not executable' --line "$LINENO" 0 bashSourcePath "$testPath/.foobar" || return $?
+  assertNotExitCode --stderr-match 'not executable' 0 bashSourcePath "$testPath/.foobar" || return $?
   assertExitCode --stdout-match test.sh --stdout-match goo.sh --stdout-match beep.sh 0 makeShellFilesExecutable "$testPath/.foobar/.eefo/.dots/" "$testPath/.foobar/.eefo/" "$testPath/.foobar/" || return $?
 
-  assertExitCode --leak testPasses --line "$LINENO" 0 bashSourcePath "$testPath/.foobar/.eefo/.dots/" || return $?
+  assertExitCode --leak testPasses 0 bashSourcePath "$testPath/.foobar/.eefo/.dots/" || return $?
   assertEquals "$testPasses" "dots" || return $?
 
   testPasses=false
 
-  assertExitCode --leak testPasses --line "$LINENO" 0 bashSourcePath "$testPath/.foobar/.eefo/" || return $?
+  assertExitCode --leak testPasses 0 bashSourcePath "$testPath/.foobar/.eefo/" || return $?
   assertEquals "$testPasses" "eefo" || return $?
 
   testPasses=false
 
-  assertExitCode --leak testPasses --line "$LINENO" 0 bashSourcePath "$testPath/.foobar" || return $?
+  assertExitCode --leak testPasses 0 bashSourcePath "$testPath/.foobar" || return $?
   assertEquals "$testPasses" "foobar" || return $?
 
   __catchEnvironment "$handler" rm -rf "${clean[@]}" || return $?
@@ -195,16 +195,16 @@ testBashPipeBehavior() {
   printf -- "" >"$PIPE_RAN_FILE"
 
   set -o pipefail
-  exitCode=0
+  local exitCode=0
   _testFunc | _pipeRan "$temp" || exitCode=$?
   echo "set -o pipefail - exit $exitCode"
 
-  assertNotEquals --line "$LINENO" --display "pipe fail causes both to fail" 0 "$exitCode" || return $?
-  assertFileContains --line "$LINENO" "$temp" hello || return $?
-  assertFileContains --line "$LINENO" "$PIPE_RAN_FILE" yes || return $?
+  assertNotEquals --display "pipe fail causes both to fail" 0 "$exitCode" || return $?
+  assertFileContains "$temp" hello || return $?
+  assertFileContains "$PIPE_RAN_FILE" yes || return $?
 
   printf -- "" >"$PIPE_RAN_FILE"
-  assertFileDoesNotContain --line "$LINENO" "$PIPE_RAN_FILE" yes || return $?
+  assertFileDoesNotContain "$PIPE_RAN_FILE" yes || return $?
 
   set +o pipefail
   exitCode=0
@@ -212,8 +212,8 @@ testBashPipeBehavior() {
   echo "set +o pipefail - exit $exitCode"
 
   assertEquals --display "pipe fail does not matter" 0 "$exitCode" || return $?
-  assertFileContains --line "$LINENO" "$temp" hello || return $?
-  assertFileContains --line "$LINENO" "$PIPE_RAN_FILE" yes || return $?
+  assertFileContains "$temp" hello || return $?
+  assertFileContains "$PIPE_RAN_FILE" yes || return $?
   rm -rf "$temp" "$PIPE_RAN_FILE"
 
   unset TEST_PIPE_RAN PIPE_RAN_FILE

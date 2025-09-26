@@ -10,6 +10,8 @@
 # Install daemontools and dependencies
 # Platform: `docker` containers will not install `daemontools-run` as it kills the container
 daemontoolsInstall() {
+  local handler="_${FUNCNAME[0]}"
+
   [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
   local packages
 
@@ -24,10 +26,10 @@ daemontoolsInstall() {
       packages+=(daemontools-run)
     fi
   fi
-  __environment packageInstall "${packages[@]}" || return $?
+  __catch "$handler" packageInstall "${packages[@]}" || return $?
   if insideDocker; then
     decorate warning "daemontools run in background - not production" 1>&2
-    __environment daemontoolsExecute || return $?
+    __catch "$handler" daemontoolsExecute || return $?
   fi
 }
 _daemontoolsInstall() {
@@ -54,8 +56,6 @@ _daemontoolsInstall() {
 daemontoolsInstallService() {
   local handler="_${FUNCNAME[0]}"
 
-  local logTarget appUser binaryPath
-  local elapsed here
   local debugFlag=false
 
   local serviceHome="" serviceName="" serviceFile="" extras=() logHome="" arguments=() logArguments=()
@@ -117,6 +117,7 @@ daemontoolsInstallService() {
     shift
   done
 
+  local here
   here="$(__catch "$handler" buildHome)/bin/build/tools" || return $?
 
   __catch "$handler" buildEnvironmentLoad DAEMONTOOLS_HOME || return $?
@@ -129,13 +130,14 @@ daemontoolsInstallService() {
     serviceName="$(basename "$serviceFile")"
     serviceName="${serviceName%%.*}"
   fi
+  local appUser
   appUser=$(__catch "$handler" fileOwner "$serviceFile") || return $?
   [ -n "$appUser" ] || __throwEnvironment "$handler" "fileOwner $serviceFile returned blank" || return $?
 
+  local binaryPath
   binaryPath=$(realPath "$serviceFile") || __throwEnvironment "$handler" "realPath $serviceFile" || return $?
 
-  target="$serviceHome/$serviceName"
-  logTarget="$serviceHome/$serviceName/log"
+  local target="$serviceHome/$serviceName" logTarget="$serviceHome/$serviceName/log"
 
   local args="" logArgs=""
   [ "${#arguments[@]}" -eq 0 ] || args=" $(decorate each quote "${arguments[@]}")"
@@ -267,10 +269,7 @@ _daemontoolsIsRunning() {
 daemontoolsHome() {
   local handler="_${FUNCNAME[0]}"
   [ $# -eq 0 ] || __help --only "$handler" "$@" || return "$(convertValue $? 1 0)"
-  local home
-  export DAEMONTOOLS_HOME
-  __catch "$handler" buildEnvironmentLoad DAEMONTOOLS_HOME || return $?
-  printf "%s\n" "${DAEMONTOOLS_HOME-}"
+  __catch "$handler" buildEnvironmentGet DAEMONTOOLS_HOME || return $?
 }
 _daemontoolsHome() {
   # __IDENTICAL__ usageDocument 1
@@ -431,6 +430,7 @@ daemontoolsRestart() {
   maxLoops=4
   foundOne=true
   while $foundOne; do
+    local pid name
     foundOne=false
     while read -r pid name; do
       statusMessage decorate info "$(printf "Killing %s %s " "$name" "$(decorate value "($pid)")")"

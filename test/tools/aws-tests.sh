@@ -316,7 +316,7 @@ testAwsEnvironmentFromCredentials() {
 testAWSCredentialsEdit() {
   local handler="_return"
   local testCredentials
-  local testResults home clean=()
+  local testResults home clean=() testHome
 
   local profileName="staging-widgets-robot-build"
 

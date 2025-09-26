@@ -283,7 +283,7 @@ plumber() {
   local __before __after __changed __ignore __pattern __cmd __tempDir=$TMPDIR
   local __result=0
   local __ignore=(OLDPWD _ resultCode LINENO PWD BASH_COMMAND BASH_ARGC BASH_ARGV BUILD_DEBUG)
-
+  local __verboseFlag=false
   # BASH_COMMAND for DEBUG
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
@@ -295,13 +295,9 @@ plumber() {
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
     --temporary) shift && __tempDir=$(usageArgumentDirectory "$handler" "$argument" "${1-}") || return $? ;;
-    --leak)
-      shift
-      __ignore+=("$(usageArgumentString "$handler" "globalName" "${1-}")") || return $?
-      ;;
-    *)
-      break
-      ;;
+    --leak) shift && __ignore+=("$(usageArgumentString "$handler" "globalName" "${1-}")") || return $? ;;
+    --verbose) __verboseFlag=true ;;
+    *) break ;;
     esac
     shift
   done
@@ -313,11 +309,13 @@ plumber() {
   __before="$__after.before"
 
   declare -p >"$__before"
+  ! $__verboseFlag || dumpPipe "BEFORE" <"$__before"
   if "$@"; then
     local __rawChanged
     declare -p >"$__after"
-    __pattern="$(quoteGrepPattern "^($(listJoin '|' "${__ignore[@]+"${__ignore[@]}"}"))=")"
-    __changed="$(diff "$__before" "$__after" | grep -e '^declare' | grep '=' | grep -v -e 'declare -[-a-z]*r ' | removeFields 2 | grep -v -e "$__pattern" || :)"
+    ! $__verboseFlag || dumpPipe "AFTER $__before $__after" <"$__after"
+    __pattern="$(quoteGrepPattern "^\($(listJoin '|' "${__ignore[@]+"${__ignore[@]}"}")\)=")"
+    __changed="$(diff -U0 "$__before" "$__after" | grep -e '^[-+][^-+]' | cut -c 2- | grep declare | grep '=' | grep -v -e 'declare -[-a-z]*r ' | removeFields 2 | grep -v -e "$__pattern" || :)"
     __rawChanged=$__changed
     __cmd="$(decorate each code "$@")"
     if grep -q -e 'COLUMNS\|LINES' < <(printf "%s\n" "$__changed"); then
@@ -332,7 +330,7 @@ plumber() {
   else
     __result=$?
   fi
-  rm -rf "$__before" "$__after" || :
+  __catchEnvironment "$handler" rm -f "$__before" "$__after" || return $?
   return "$__result"
 }
 _plumber() {

@@ -8,7 +8,7 @@ __aptKeyAdd() {
   local handler="$1" && shift
 
   local names=() title="" remoteUrls=() skipUpdate=false listName="" releaseName="" repoUrl=""
-  local name url host index IFS file listTarget
+  local url host index IFS file listTarget
   local start ring sourcesPath keyFile skipUpdate signFiles signFileText sourceType sourceTypes=(deb)
   local installFlag=false
 
@@ -89,6 +89,7 @@ __aptKeyAdd() {
   _usageAptPermissions "$handler" "$sourcesPath" || return $?
 
   index=0
+  local name
   for name in "${names[@]}"; do
     url="${remoteUrls[index]}"
     host=$(urlParseItem host "$url") || __throwArgument "$handler" "Unable to get host from $url" || return $?
@@ -163,6 +164,7 @@ __aptKeyRemove() {
 
   _usageAptPermissions "$handler" "$sourcesPath" || return $?
 
+  local name
   for name in "${names[@]}"; do
     for file in "$ring/$name.gpg" "$sourcesPath/$name.list"; do
       if [ -f "$file" ]; then

@@ -12,8 +12,10 @@
 testCoverageBasics() {
   local handler="_return"
 
+  local tempCoverage
+
   tempCoverage=$(fileTemporaryName "$handler") || return $?
-  assertExitCode --dump --stdout-match "Collecting coverage to" --stdout-match "Coverage completed" 0 bashCoverage --target "$tempCoverage" --verbose isInteger 2 || return $?
+  assertExitCode --stdout-match "Collecting coverage to" --stdout-match "Coverage completed" 0 bashCoverage --target "$tempCoverage" --verbose isInteger 2 || return $?
 
   assertFileExists "$tempCoverage" || return $?
 

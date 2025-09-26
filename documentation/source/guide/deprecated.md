@@ -2,36 +2,59 @@
 
 [⬅ Return to top](index.md)
 
+## Recent changes (most recent changes first)
+
 This document lists functionality which was removed, why, and when.
+
+### Release v0.38.3
+
+- `Exit Code:` -> `# Return Code:` - 'return code' is more appropriate for functions
+
+### Release v0.37.2
+
+- Renamed `interactiveBashSource` -> `approveBashSource`
+- Renamed `approvedFiles` -> `approvedBashSources`
+- Usage of `__catch` instead of `__catchEnvironment` for internal functions
+
+### Release v0.37.0
+
+- Lots of function renaming to have more functions in the form `nounVerb`
+- Eliminated internal functions for first class ones `_clean` -> `returnClean`, `_undo` -> `returnUndo`
+
+### Release v0.34.0
+
+- `iTerm2Colors` module now `TermColors` as it handles all colors
+
+## Older changes (in order of version)
 
 - `build-setup.sh` - Previous version of `install-bin-build.sh`. Deprecated 2023.
 
-## Release v0.3.12
+### Release v0.3.12
 
 - `failed` -> `buildFailed` - Too generic a name
 
-## Release v0.6.0
+### Release v0.6.0
 
 - `markdown_FormatList` - `markdown_FormatList` - spelling doesn`t like it when we are cute
 
-## Release v0.6.1
+### Release v0.6.1
 
 - `usageWhich` - `usageRequireBinary usage` - Reworked usage functions
 
-## Release v0.7.0
+### Release v0.7.0
 
 - `usageWrapper` and `usageWhich`, `usageEnvironment` going the way of the dinosaur
 
-## Release v0.7.9
+### Release v0.7.9
 
 - `awsHasEnvironment` -> `awsHasEnvironment` - `aws` prefix consistency
 - `isAWSKeyUpToDate` -> `awsIsKeyUpToDate`
 
-## Release v0.7.10
+### Release v0.7.10
 
 - `bin/build/pipeline` files are all deprecated
 
-## Release v0.7.13
+### Release v0.7.13
 
 - `map.sh` - Previous name for `map.sh`. Deprecated 2023. Prefer the shorter name.
 - `copyFileChanged --map` deprecated. Use `copyFileChanged --map` instead.
@@ -39,22 +62,22 @@ This document lists functionality which was removed, why, and when.
 - `copyFileChanged --escalate` deprecated. `copyFileChanged --escalate`
 - `yesNo` -> `parseBoolean`. Better name.
 
-## Release v0.8.4
+### Release v0.8.4
 
 - `copyFile` -> `copyFile`
 
-## Release v0.10.0
+### Release v0.10.0
 
 - `wrapLines` -> `wrapLines` (merged)
   = `trimSpace` -> `trimSpace` (merged)
 
-## Release v0.10.4
+### Release v0.10.4
 
 - `crontabApplicationUpdate` -> `crontabApplicationUpdate` (more accurate name)
 - `usageArgumentMissing` -> `usageArgumentMissing` (consistency)
 - `usageArgumentUnknown` -> `usageArgumentUnknown` (consistency)
 
-## Release v0.11.1
+### Release v0.11.1
 
 - `usageArgumentString` -> `usageArgumentString` (consistent type name after `usageArgument` is a design feature)
 - `usageArgumentString` -> `usageArgumentEmptyString` (support blank arguments)
@@ -66,47 +89,47 @@ This document lists functionality which was removed, why, and when.
 
 - `dotEnvConfigure` deprecated. Use `environmentFileLoad .env --optional .env.local`
 
-## Release v0.11.2
+### Release v0.11.2
 
 - `outputTrigger` -> `outputTrigger` (now part of library)
 
-## Release v0.11.4
+### Release v0.11.4
 
 - Deprecated tokens `ops.sh` `__ops`
 
-## Release v0.11.6
+### Release v0.11.6
 
 - `bashSanitize` `bashSanitize` (naming consistency)
 - `bashLintFiles` `bashLintFiles` (naming consistency)
 - `bashLint` `bashLint` (naming consistency)
 
-## Release v0.11.7
+### Release v0.11.7
 
-## Release v0.11.8
+### Release v0.11.8
 
 - Deprecated tokens `__try`
 
-## Release v0.11.9
+### Release v0.11.9
 
 - `awsRegionValid` `awsRegionValid`
 
-## Release v0.11.10
+### Release v0.11.10
 
 - `__execute` `__execute`
 
-## Release v0.11.14
+### Release v0.11.14
 
 - `tarCreate` `tarCreate`
 
-## Release v0.12.2
+### Release v0.12.2
 
 - `awsSecurityGroupIPModify --register` `awsSecurityGroupIPModify --register`
 
-## Release v0.14.3
+### Release v0.14.3
 
 - `bin/build/pipeline` binaries are all deprecated.
 
-## Release v0.14.6
+### Release v0.14.6
 
 `apt` calls are deprecated for new generic `package` functions:
 
@@ -118,7 +141,7 @@ This document lists functionality which was removed, why, and when.
 - `packageWhichUninstall` `packageWhichUninstall`
 - `packageNeedRestartFlag` `packageNeedRestartFlag`
 
-## Release v0.15.1
+### Release v0.15.1
 
 Single decoration function:
 
@@ -153,13 +176,13 @@ Single decoration function:
 - `decorate label` -> `decorate label`
 - `decorate value` -> `decorate value`
 
-## Release v0.17.0
+### Release v0.17.0
 
 - `--env` is changed for most functions which use it; changed to `--env-file` to match other applications.
 - `confirmYesNo defaultValue` changed to `confirmYesNo --yes` or `confirmYesNo --no` respectively - uses better argument
   parser
 
-## v0.17.6
+### Release v0.17.6
 
 - `_integer` -> `isPositiveInteger`  (more natural naming, short enough)
 - `confirmYesNo --yes` -> `confirmYesNo --yes` (support flags properly)
@@ -167,11 +190,11 @@ Single decoration function:
 - `confirmYesNo --no` -> `confirmYesNo --no`
 - `confirmYesNo --no` -> `confirmYesNo --no`
 
-## v0.18.5
+### Release v0.18.5
 
 - `isBoolean` -> `isBoolean` (more natural naming, short enough)
 
-# v0.18.6
+### Release v0.18.6
 
 - `decorate reset` -> `decorate reset`
 

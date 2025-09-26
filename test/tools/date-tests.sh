@@ -28,6 +28,7 @@ EOF
 }
 
 testDateValid() {
+  local testDate
   while read -r testDate; do
     assertExitCode 0 dateValid "$testDate" || return $?
   done < <(__testDateValidData)

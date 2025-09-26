@@ -411,12 +411,13 @@ testSuite() {
       #  ▙▄▘▌ ▌▛▀▖▛▀▖▞▀▖▙▀▖
       #  ▌▚ ▌ ▌▌ ▌▌ ▌▛▀ ▌
       #  ▘ ▘▝▀▘▘ ▘▘ ▘▝▀▘▘
-      local flags globalFlags
+      local __flags globalFlags
       testLine=$(__testGetLine "$item" <"$sectionFile") || :
-      flags=$(__testLoadFlags "$sectionFile" "$item")
+      __flags=$(__testLoadFlags "$sectionFile" "$item")
       globalFlags=$(__catch "$handler" buildEnvironmentGet BUILD_TEST_FLAGS) || return $?
+      local rawFlags="$__flags;$globalFlags"
 
-      ! $verboseMode || statusMessage decorate info "$item flags is $(decorate code "${flags:-none specified}")" || returnClean $? "${clean[@]}" || return $?
+      ! $verboseMode || statusMessage decorate info "$item flags is $(decorate code "${rawFlags:-none specified}")" || returnClean $? "${clean[@]}" || return $?
 
       local testHome saveHome clean=()
 
@@ -424,9 +425,11 @@ testSuite() {
 
       # --cd-away handling
       if $cdAway; then
+        local buildHomeRequired=false
+        ! isSubstringInsensitive ";Build-Home:true;" ";$__flags;" || buildHomeRequired=true
+
         # Force it off for functions which flag it
-        if isSubstringInsensitive ";Build-Home:true;" ";$flags;"; then
-          ! $verboseMode || statusMessage decorate info "--cd-away is explicitly ignored for $item" || returnClean $? "${clean[@]}" || return $?
+        if $buildHomeRequired; then
           testHome="$home"
         else
           testHome="$(fileTemporaryName "$handler" -d)" || returnClean $? "${clean[@]}" || return $?
@@ -438,15 +441,16 @@ testSuite() {
       testsRun+=("$item")
       __catchEnvironment "$handler" cd "$testHome" || returnClean $? "${clean[@]}" || return $?
 
-      "${runner[@]+"${runner[@]}"}" __testRun "$quietLog" "$testTemporaryTest" "$item" "$flags;$globalFlags" || __testSuiteExecutor "$item" "$sectionFile" "$testLine" "$flags" "${failExecutors[@]+"${failExecutors[@]}"}" || __testFailed "$sectionName" "$item" || returnUndo $? cd "$saveHome" || returnClean $? "${clean[@]}" || return $?
+      ! $verboseMode || statusMessage --last decorate pair "Raw flags" "$rawFlags"
+      "${runner[@]+"${runner[@]}"}" __testRun "$quietLog" "$testTemporaryTest" "$item" "$rawFlags" || __testSuiteExecutor "$item" "$sectionFile" "$testLine" "$__flags" "${failExecutors[@]+"${failExecutors[@]}"}" || __testFailed "$sectionName" "$item" || returnUndo $? cd "$saveHome" || returnClean $? "${clean[@]}" || return $?
 
       __catchEnvironment "$handler" cd "$saveHome" || returnClean $? "${clean[@]}" || return $?
 
-      [ -z "$tapFile" ] || __testSuiteTAP_ok "$tapFile" "$item" "$sectionFile" "$testLine" "$flags" || returnClean $? "${clean[@]}" || return $?
+      [ -z "$tapFile" ] || __testSuiteTAP_ok "$tapFile" "$item" "$sectionFile" "$testLine" "$rawFlags" || returnClean $? "${clean[@]}" || return $?
 
       runTime=$(($(timingStart) - __testStart))
       ! $doStats || printf "%s %s\n" "$runTime" "$item" >>"$statsFile"
-      __catchEnvironment "$handler" hookRunOptional bash-test-pass "$sectionName" "$item" "$flags" || __throwEnvironment "$handler" "... continuing" || :
+      __catchEnvironment "$handler" hookRunOptional bash-test-pass "$sectionName" "$item" "$rawFlags" || __throwEnvironment "$handler" "... continuing" || :
 
       [ "${#clean[@]}" -eq 0 ] || __catchEnvironment "$handler" rm -rf "${clean[@]}" || returnClean $? "${clean[@]}" || return $?
     done
@@ -843,9 +847,9 @@ __testLoadFlags() {
   local source="$1" functionName="$2"
   local values=()
   while read -r variableLine; do
-    local flags flag
-    IFS=" " read -r -a flags <<<"$(trimSpace "${variableLine#*:}")"
-    [ "${#flags[@]}" -eq 0 ] || for flag in "${flags[@]}"; do
+    local __flags=() flag
+    IFS=" " read -r -a __flags <<<"$(trimSpace "${variableLine#*:}")"
+    [ "${#__flags[@]}" -eq 0 ] || for flag in "${__flags[@]}"; do
       [ -z "$flag" ] || values+=("$(trimSpace "${variableLine%%:*}"):$flag")
     done
   done < <(bashFunctionCommentVariable --prefix "$source" "$functionName" "Test-")
@@ -926,7 +930,7 @@ __testRunShellInitialize() {
 # Outputs the platform name
 # Requires: __testPlatformName
 _testPlatform() {
-  printf "%s\n" __testPlatformName
+  __testPlatformName
 }
 
 # Load one or more test files and run the tests defined within
@@ -938,7 +942,7 @@ __testRun() {
   local handler="_${FUNCNAME[0]}"
   local quietLog="${1-}" && shift
   local tempDirectory="${1-}" && shift
-  local __test="${1-}" __flags="${2-}" platform
+  local __test="${1-}" __flagText="${2-}" platform
 
   local tests __testDirectory __TEST_SUITE_RESULT
   local __test __tests tests __testStart
@@ -971,12 +975,12 @@ __testRun() {
   local resultCode=0 stickyCode=0
   __TEST_SUITE_TRACE="$__test"
   __testStart=$(timingStart)
-  if isSubstringInsensitive ";Platform:!$platform;" ";$__flags;"; then
+  if isSubstringInsensitive ";Platform:!$platform;" ";$__flagText;"; then
     printf "%s\n" "Skipping Platform:!$platform $__test" >>"$quietLog"
     __TEST_SUITE_RESULT="skip Platform $platform disallowed"
     resultCode=0
   else
-    local doHousekeeper="" doPlumber=""
+    local doHousekeeper="" doPlumber="" buildHomeRequired=false testActuallyFails=false
     local captureStderr
     captureStderr=$(fileTemporaryName "$handler") || return $?
     #     ▖   ▐        ▐
@@ -991,20 +995,32 @@ __testRun() {
     local maybe
     # false wins to ensure disabling a check wins
     for maybe in true false; do
-      ! isSubstringInsensitive ";Housekeeper:$maybe;" ";$__flags;" || doHousekeeper=$maybe
-      ! isSubstringInsensitive ";Plumber:$maybe;" ";$__flags;" || doPlumber=$maybe
+      ! isSubstringInsensitive ";Housekeeper:$maybe;" ";$__flagText;" || doHousekeeper=$maybe
+      ! isSubstringInsensitive ";Plumber:$maybe;" ";$__flagText;" || doPlumber=$maybe
     done
+    [ -n "$doHousekeeper" ] || doHousekeeper=true
+    [ -n "$doPlumber" ] || doPlumber=true
 
+    ! isSubstringInsensitive ";Build-Home:true;" ";$__flagText;" || buildHomeRequired=true
+    ! isSubstringInsensitive ";Fail:true;" ";$__flagText;" || testActuallyFails=true
+
+    if $verboseMode; then
+      decorate pair "Platform" "$platform"
+      decorate pair "Housekeeper" "$(decorate "$(_choose "$doHousekeeper" green orange)" "$doHousekeeper")"
+      decorate pair "Plumber" "$(decorate "$(_choose "$doPlumber" green orange)" "$doPlumber")"
+      decorate pair "Build-Home" "$(decorate "$(_choose "$buildHomeRequired" green orange)" "$buildHomeRequired")"
+      ! $testActuallyFails || decorate pair "Fail" "$(decorate green "$testActuallyFails")"
+    fi
     local runner=()
     runner=("$__test" "$quietLog")
     if $doHousekeeper; then
       housekeeperCache=$(__catch "$handler" buildCacheDirectory "test-housekeeper.$$") || return $?
       runner=(--ignore '.last-run-test' --ignore '/.git/' --temporary "$savedTMPDIR" --path "$TMPDIR" --path "$(buildHome)" "${runner[@]}")
-      ! isSubstringInsensitive ";Housekeeper-Overhead:true;" ";$__flags;" || runner=(--overhead "${runner[@]}")
+      ! isSubstringInsensitive ";Housekeeper-Overhead:true;" ";$__flagText;" || runner=(--overhead "${runner[@]}")
       runner=(housekeeper --cache "$housekeeperCache" "${runner[@]}")
     fi
     if $doPlumber; then
-      runner=(plumber --temporary "$savedTMPDIR" "${runner[@]}")
+      runner=(plumber --leak __BUILD_LOADER --temporary "$savedTMPDIR" "${runner[@]}")
     fi
     ###########################################
     ###########################################
@@ -1019,6 +1035,7 @@ __testRun() {
     ###########################################
     ###########################################
     ###########################################
+    # ! $verboseMode || decorate each code "${runner[@]}"
     if "${runner[@]}" 2> >(tee -a "$captureStderr"); then
       TMPDIR="$savedTMPDIR"
       if fileIsEmpty "$captureStderr"; then
@@ -1030,11 +1047,11 @@ __testRun() {
         dumpPipe <"$captureStderr" | tee -a "$quietLog"
       fi
     else
-      TMPDIR="$savedTMPDIR"
       resultCode=$?
+      TMPDIR="$savedTMPDIR"
       stickyCode=$errorTest
       printf "\n%s\n" "FAILED [$resultCode] $__test" | tee -a "$quietLog"
-      if ! fileIsEmpty "$captureStderr" && isSubstringInsensitive ";stderr-FAILED;" ";$__flags;"; then
+      if ! fileIsEmpty "$captureStderr" && isSubstringInsensitive ";stderr-FAILED;" ";$__flagText;"; then
         printf "%s\n" "stderr-FAILED [$resultCode] $__test ALSO has STDERR:" | tee -a "$quietLog"
         dumpPipe <"$captureStderr" | tee -a "$quietLog"
       fi
@@ -1042,6 +1059,17 @@ __testRun() {
 
     ! $doHousekeeper || __catchEnvironment "$handler" rm -rf "$housekeeperCache" || return $?
     __catchEnvironment "$handler" rm -rf "$captureStderr" || return $?
+
+    if $testActuallyFails; then
+      if [ $resultCode -eq 0 ]; then
+        decorate error "Test supposed to fail but succeeded?" || return $?
+        resultCode=$(returnCode assert)
+      else
+        decorate success "Test supposed to fail: $resultCode -> 0"
+        resultCode=0 && stickyCode=0
+      fi
+    fi
+
     handler="_${FUNCNAME[0]}"
   fi
 
@@ -1166,14 +1194,14 @@ __testSuiteTAP_line() {
 
   [ -f "$tapFile" ] && shift 1 || __throwEnvironment "$handler" "tapFile does not exist: $tapFile" || return $?
 
-  local functionName="${1-}" source="${2-}" functionLine="${3-}" __flags="${4-}"
+  local functionName="${1-}" source="${2-}" functionLine="${3-}" __flagText="${4-}"
   shift 4 || __throwArgument "$handler" "Missing functionName source or functionLine" || return $?
 
   local directive="" value
-  if isSubstringInsensitive ";Skip:true;" ";$__flags;"; then
+  if isSubstringInsensitive ";Skip:true;" ";$__flagText;"; then
     directive="skip in test comment"
   fi
-  if isSubstringInsensitive ";Ignore:true;" ";$__flags;"; then
+  if isSubstringInsensitive ";Ignore:true;" ";$__flagText;"; then
     directive="TODO Ignore test comment"
   fi
   value=$(bashFunctionCommentVariable "$source" "$functionName" "TODO") || :

@@ -299,6 +299,7 @@ _assertConditionHelper() {
   # -- end IDENTICAL lineDepthComputation
 
   if [ -z "$doPlumber" ]; then
+    local flags
     flags=$(__catch "$handler" buildEnvironmentGet BUILD_TEST_FLAGS) || return $?
     doPlumber=false
     ! isSubstringInsensitive ";Assert-Plumber:true;" ";$flags;" || doPlumber=true

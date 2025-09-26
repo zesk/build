@@ -56,9 +56,7 @@ testConsoleFileLink() {
   assertExitCode 0 consoleLink https://example.com/ Hello || return $?
   assertExitCode 0 consoleFileLink "${BASH_SOURCE[0]}" || return $?
 
-  mockEnvironmentStop BITBUCKET_WORKSPACE
-  mockEnvironmentStop CI
-  mockEnvironmentStop BUILD_COLORS
+  mockEnvironmentStop BITBUCKET_WORKSPACE CI BUILD_COLORS
 }
 
 testStatusMessageLast() {
