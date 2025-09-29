@@ -15,6 +15,7 @@ EOF
 }
 
 testGithubURLParse() {
+  local url expected
   while read -r url expected; do
     assertEquals "$expected" "$(githubURLParse "$url")" || return $?
   done < <(__testGithubURLParseData)

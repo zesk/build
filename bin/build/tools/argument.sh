@@ -158,7 +158,7 @@ _commentArgumentSpecification() {
   cacheFile="$functionCache/documentation"
   argumentDirectory=$(__catch "$handler" directoryRequire "$functionCache/parsed") || return $?
   __catchEnvironment "$handler" touch "$functionCache/.magic" || return $?
-  if [ ! -f "$functionDefinitionFile" ] && ! isAbsolutePath "$functionDefinitionFile"; then
+  if [ ! -f "$functionDefinitionFile" ] && ! pathIsAbsolute "$functionDefinitionFile"; then
     local home
     home=$(__catch "$handler" buildHome) || return $?
     if [ -f "$home/$functionDefinitionFile" ]; then

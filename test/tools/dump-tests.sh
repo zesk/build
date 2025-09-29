@@ -17,9 +17,13 @@ testDumpPipe() {
 
 # Tag: slow
 testDumpEnvironmentSafe() {
+  mockEnvironmentStart PRIVATE_THING
+
   export PRIVATE_THING
 
   PRIVATE_THING="CriticalThinkingIsInShortSupply"
+
+  local matches=()
 
   matches=(
     --stdout-no-match "PRIVATE_THING"
@@ -44,12 +48,14 @@ testDumpEnvironmentSafe() {
   )
   assertExitCode "${matches[@]}" 0 dumpEnvironment || return $?
 
-  unset PRIVATE_THING
+  mockEnvironmentStop PRIVATE_THING
 }
 
 # Tag: slow
 # Tag: slow-non-critical
 testDumpEnvironmentUnsafe() {
+  mockEnvironmentStart PRIVATE_THING
+
   export PRIVATE_THING
 
   PRIVATE_THING="TheDeathOfTheCommons"
@@ -68,5 +74,5 @@ testDumpEnvironmentUnsafe() {
   # --show-skipped shows name not value
   assertExitCode --stdout-match "[SKIPPED VARIABLES]" --stdout-match "PRIVATE_THING" --stdout-no-match "$PRIVATE_THING" 0 dumpEnvironmentUnsafe --skip-env PRIVATE_THING --show-skipped || return $?
 
-  unset PRIVATE_THING
+  mockEnvironmentStop PRIVATE_THING
 }

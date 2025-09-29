@@ -336,6 +336,57 @@ _stringContains() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
+# Argument: haystack - Required. String. String to search.
+# Argument: needle ... - Optional. String. One or more strings to find as the "start" of `haystack`.
+# Return Code: 0 - IFF ANY needle matches as a substring of haystack
+# Return Code: 1 - No needles found in haystack
+# Summary: Find whether a substring exists as teh beginning of one or more strings
+# Does needle exist as a substring of haystack?
+stringBegins() {
+  [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
+  local haystack="${1-}"
+
+  [ -n "$haystack" ] || return 1
+  shift
+  while [ $# -gt 0 ]; do
+    [ -n "$1" ] || continue
+    local needle="$1"
+    [ "${haystack#"$needle"}" = "$haystack" ] || return 0
+    shift
+  done
+  return 1
+}
+_stringBegins() {
+  # __IDENTICAL__ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+# Argument: haystack - Required. String. String to search. (case-insensitive)
+# Argument: needle ... - Optional. String. One or more strings to find as the "start" of `haystack` (case-insensitive)
+# Return Code: 0 - IFF ANY needle matches as a substring of haystack (case-insensitive)
+# Return Code: 1 - No needles found in haystack (case-insensitive)
+# Summary: Find whether a substring exists as teh beginning of one or more strings
+# Does needle exist as a substring of haystack? (case-insensitive)
+stringBeginsInsensitive() {
+  [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
+  local haystack="${1-}"
+
+  [ -n "$haystack" ] || return 1
+  shift
+  while [ $# -gt 0 ]; do
+    [ -n "$1" ] || continue
+    local needle
+    needle=$(lowercase "$1") || :
+    [ "${haystack#"$needle"}" = "$haystack" ] || return 0
+    shift
+  done
+  return 1
+}
+_stringBeginsInsensitive() {
+  # __IDENTICAL__ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
 # Usage: {fn} haystack needle ...
 # Argument: haystack - Required. String. String to search.
 # Argument: needle ... - Optional. String. One or more strings to find as a case-insensitive substring of `haystack`.

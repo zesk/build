@@ -11,7 +11,7 @@
 # Usage: {fn} path ...
 # Return Code: 0 - if all paths passed in are absolute paths (begin with `/`).
 # Return Code: 1 - one ore more paths are not absolute paths
-isAbsolutePath() {
+pathIsAbsolute() {
   local handler="_${FUNCNAME[0]}"
   [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
   while [ $# -gt 0 ]; do
@@ -19,7 +19,7 @@ isAbsolutePath() {
     shift || :
   done
 }
-_isAbsolutePath() {
+_pathIsAbsolute() {
   # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

@@ -97,7 +97,7 @@ __releaseNotes() {
   home=$(__catch "$handler" buildHome) || return $?
   [ -n "${BUILD_RELEASE_NOTES}" ] || __throwEnvironment "$handler" "BUILD_RELEASE_NOTES is blank" || return $?
   releasePath="${BUILD_RELEASE_NOTES%/}"
-  isAbsolutePath "$releasePath" || releasePath=$(directoryPathSimplify "$home/$releasePath")
+  pathIsAbsolute "$releasePath" || releasePath=$(directoryPathSimplify "$home/$releasePath")
   printf "%s/%s.md\n" "${releasePath%/}" "$version"
 }
 _releaseNotes() {

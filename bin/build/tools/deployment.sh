@@ -290,10 +290,9 @@ deployRemoteFinish() {
   decorate pair $width "Application ID:" "$applicationId"
 
   if $cleanupFlag; then
-    __catchEnvironment "$handler" cd "$applicationPath" || return $?
     decorate info "Cleaning up ... "
     if hasHook --application "$applicationPath" deploy-cleanup; then
-      __catchEnvironment "$handler" hookRun deploy-cleanup || return $?
+      __catchEnvironment "$handler" hookRun --application "$applicationPath" deploy-cleanup || return $?
     else
       printf "No %s hook in %s\n" "$(decorate info "deploy-cleanup")" "$(decorate code "$applicationPath")"
     fi
@@ -303,7 +302,6 @@ deployRemoteFinish() {
     if [ -z "$applicationId" ]; then
       __throwArgument "$handler" "No argument applicationId passed" || return $?
     fi
-    __catchEnvironment "$handler" cd "$deployHome" || return $?
     deployArguments=(
       "${firstFlags[@]+${firstFlags[@]}}"
       --home "$deployHome"

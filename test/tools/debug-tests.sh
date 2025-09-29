@@ -123,6 +123,8 @@ __leakyPipe() {
 testPlumber() {
   local leakCode
 
+  mockEnvironmentStart IS_THIS_GLOBAL "" wonderful ""
+
   leakCode=$(returnCode leak)
   assertEquals 108 "$leakCode" || return $?
   assertEquals 108 "$leakCode" || return $?
@@ -135,9 +137,14 @@ testPlumber() {
   assertExitCode 0 plumber statusMessage __leakyPipe Cool || return $?
   # Run directly within plumber so catches leaks
   assertExitCode --skip-plumber "0" plumber --leak IS_THIS_GLOBAL --leak wonderful __leakyPipe Cool || return $?
+
+  mockEnvironmentStop IS_THIS_GLOBAL wonderful
+
+  mockEnvironmentStart IS_THIS_GLOBAL wonderful
+
   assertExitCode --stderr-ok "$leakCode" plumber __leakyPipe Cool || return $?
 
-  unset IS_THIS_GLOBAL wonderful
+  mockEnvironmentStop IS_THIS_GLOBAL wonderful
 }
 
 __writeTo() {

@@ -6,11 +6,18 @@
 #
 
 testIterm2() {
+  mockEnvironmentStart __BASH_PROMPT_MARKERS
+  mockEnvironmentStart __BASH_PROMPT_MODULES
+  mockEnvironmentStart __BASH_PROMPT_PREVIOUS
   mockEnvironmentStart LC_TERMINAL
+  mockEnvironmentStart BUILD_HOOK_DIRS
   mockEnvironmentStart TERM
 
   export LC_TERMINAL
   export TERM
+
+  unset BUILD_HOOK_DIRS
+  buildEnvironmentLoad BUILD_HOOK_DIRS
 
   LC_TERMINAL=wrong
   assertExitCode --stderr-match "Not iTerm2" 1 iTerm2Init || return $?
@@ -32,5 +39,9 @@ testIterm2() {
     assertExitCode 0 iTerm2Init --ignore || return $?
   fi
   mockEnvironmentStop LC_TERMINAL
+  mockEnvironmentStop BUILD_HOOK_DIRS
   mockEnvironmentStop TERM
+  mockEnvironmentStop __BASH_PROMPT_MARKERS
+  mockEnvironmentStop __BASH_PROMPT_MODULES
+  mockEnvironmentStop __BASH_PROMPT_PREVIOUS
 }

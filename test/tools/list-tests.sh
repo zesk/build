@@ -6,7 +6,7 @@
 #
 
 testListAppend() {
-  local item testList="" s=":"
+  local item testList="" s=":" reverseList
 
   for s in : \| ^ ! _; do
     testList=""

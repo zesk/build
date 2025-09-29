@@ -17,7 +17,7 @@ __characterLoader() {
 # Argument: --class - Optional. Flag. Show class and then characters in that class.
 # Argument: --char - Optional. Flag. Show characters and then class for that character.
 characterClassReport() {
-  __functionLoader "_${FUNCNAME[0]}" "__${FUNCNAME[0]}" "$@"
+  __characterLoader "_${FUNCNAME[0]}" "__${FUNCNAME[0]}" "$@"
 }
 _characterClassReport() {
   # __IDENTICAL__ usageDocument 1

@@ -53,7 +53,6 @@ _assertEquals() {
 #
 # If this fails it will output an error and exit.
 #
-# Usage: assertEquals expected actual [ message ]
 # DOC TEMPLATE: assert-common 18
 # Argument: --help - Optional. Flag. Display this help.
 # Argument: --line lineNumber - Optional. Integer. Line number of calling function.
@@ -73,8 +72,7 @@ _assertEquals() {
 # Argument: --dump-binary - Optional. Flag. Output stderr and stdout after test regardless, and output binary.
 # Argument: --head - Optional. Flag. When outputting stderr or stdout, output the head of the file.
 # Argument: --tail - Optional. Flag. When outputting stderr or stdout, output the tail of the file. (Default)
-# Argument: actual - Actual string
-# Argument: message - Message to output if the assertion fails
+# Argument: string ... - Not empty strings
 # Example:     assertStringNotEmpty "$string"
 # Reviewed: 2023-11-12
 #
@@ -91,7 +89,6 @@ _assertStringNotEmpty() {
 #
 # If this fails it will output an error and exit.
 #
-# Usage: assertEquals expected actual [ message ]
 # DOC TEMPLATE: assert-common 18
 # Argument: --help - Optional. Flag. Display this help.
 # Argument: --line lineNumber - Optional. Integer. Line number of calling function.
@@ -111,9 +108,7 @@ _assertStringNotEmpty() {
 # Argument: --dump-binary - Optional. Flag. Output stderr and stdout after test regardless, and output binary.
 # Argument: --head - Optional. Flag. When outputting stderr or stdout, output the head of the file.
 # Argument: --tail - Optional. Flag. When outputting stderr or stdout, output the tail of the file. (Default)
-# Argument: expected - Expected string
-# Argument: actual - Actual string
-# Argument: message - Message to output if the assertion fails
+# Argument: string ... - Empty strings
 # Example:     assertEquals "$(alignRight 4 "hi")" "  hi" "alignRight not working"
 # Reviewed: 2023-11-12
 #
@@ -129,7 +124,6 @@ _assertStringEmpty() {
 #
 # If this fails it will output an error and exit.
 # Summary: Assert two strings are not equal
-# Usage: assertNotEquals expected actual [ message ]
 # DOC TEMPLATE: assert-common 18
 # Argument: --help - Optional. Flag. Display this help.
 # Argument: --line lineNumber - Optional. Integer. Line number of calling function.
@@ -168,11 +162,9 @@ _assertNotEquals() {
 #
 # If this fails it will output an error and exit.
 #
-# Usage: assertExitCode expectedExitCode command [ arguments ... ]
-#
-# Argument: expectedExitCode - A numeric exit code expected from the command
-# Argument: command - The command to run
-# Argument: arguments - Any arguments to pass to the command to run
+# Argument: expectedExitCode - UnsignedInteger. A numeric exit code expected from the command.
+# Argument: command - Callable. The command to run
+# Argument: arguments - Optional. Arguments. Any arguments to pass to the command to run
 # DOC TEMPLATE: assert-common 18
 # Argument: --help - Optional. Flag. Display this help.
 # Argument: --line lineNumber - Optional. Integer. Line number of calling function.
@@ -210,10 +202,9 @@ _assertExitCode() {
 #
 # If this fails it will output an error and exit.
 #
-# Usage: assertNotExitCode expectedExitCode command [ arguments ... ]
-# Argument: expectedExitCode - A numeric exit code not expected from the command
-# Argument: command - The command to run
-# Argument: arguments - Any arguments to pass to the command to run
+# Argument: expectedExitCode - UnsignedInteger. A numeric exit code not expected from the command.
+# Argument: command - Callable. The command to run
+# Argument: arguments - Optional. Arguments. Any arguments to pass to the command to run
 # DOC TEMPLATE: assert-common 18
 # Argument: --help - Optional. Flag. Display this help.
 # Argument: --line lineNumber - Optional. Integer. Line number of calling function.

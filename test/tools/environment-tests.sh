@@ -309,6 +309,7 @@ testEnvironmentOutput() {
   assertFileDoesNotContain "$envFile" "FAIL" || return $?
   assertFileDoesNotContain "$envFile" "HIDE_THIS" || return $?
   assertExitCode 0 grep -e "^ZESK_BUILD_ROCKS=" "$envFile" || return $?
+  local envName
   while read -r envName; do
     assertExitCode 0 grep -v -e "^$envName=" "$envFile" || return $?
   done < <(environmentSecureVariables)
@@ -394,7 +395,7 @@ testEnvironmentCompile() {
   __catchEnvironment "$handler" rm -rf "$envFile" || return $?
 }
 
-#
+# Test-Plumber: false
 testEnvironmentClean() {
   local handler="_return"
 
@@ -423,30 +424,30 @@ testEnvironmentClean() {
 
   # environmentClean "${keepers[@]}" || return $?
 
-  assertExitCode 0 environmentClean "${keepers[@]}" || return $?
+  assertExitCode --skip-plumber 0 environmentClean "${keepers[@]}" || return $?
 
   for item in "${keepers[@]}"; do
-    assertStringNotEmpty "${!item}" || return $?
+    assertStringNotEmpty --display "$item is EMPTY?" "${!item-}" || return $?
   done
 
   keepers=(A DEE FFF GGG)
   removed=(B C EEE)
 
-  assertExitCode 0 environmentClean "${keepers[@]}" || return $?
+  assertExitCode --skip-plumber 0 environmentClean "${keepers[@]}" || return $?
 
   for item in "${keepers[@]}" PATH HOME; do
-    assertStringNotEmpty "${!item-}" || return $?
+    assertStringNotEmpty --display "$item is EMPTY?" "${!item-}" || return $?
   done
   for item in "${removed[@]}"; do
-    assertStringEmpty "${!item-}" || return $?
+    assertStringEmpty --display "$item is NOT empty: ${!item-}" "${!item-}" || return $?
   done
   removed+=("${keepers[@]}")
   keepers=()
 
-  assertExitCode 0 environmentClean || return $?
+  assertExitCode --skip-plumber 0 environmentClean || return $?
 
   for item in "${removed[@]}"; do
-    assertStringEmpty "${!item-}" || return $?
+    assertStringEmpty --display "$item is NOT empty: ${!item-}" "${!item-}" || return $?
   done
 
   # Restore deleted environment
@@ -464,6 +465,8 @@ __testEchoEnv() {
 
 testEnvironmentFileLoadExecute() {
   local handler="_return"
+
+  mockEnvironmentStart TEST_THING
 
   local clean=() testEnv
 
@@ -483,4 +486,6 @@ testEnvironmentFileLoadExecute() {
   assertEquals "Transient" "$TEST_THING" || return $?
 
   __catchEnvironment "$handler" rm -rf "${clean[@]}" || return $?
+
+  mockEnvironmentStop TEST_THING
 }

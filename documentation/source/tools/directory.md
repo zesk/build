@@ -6,7 +6,7 @@
 
 {directoryRelativePath}
 
-{isAbsolutePath}
+{pathIsAbsolute}
 
 {directoryIsEmpty}
 
@@ -15,8 +15,6 @@
 {directoryRequire}
 
 {directoryClobber}
-
-{__directoryParent}
 
 {directoryParent}
 

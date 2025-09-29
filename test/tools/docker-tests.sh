@@ -176,7 +176,7 @@ testDotEnvCommentHandling() {
 
 testEnvCommentHandling() {
   local handler="_return"
-  local testEnvBase home tab=$'\t' testFile testEnvBash
+  local testEnvBase home tab=$'\t' testFile testEnvBash testEnvDocker
 
   testEnvBase=$(fileTemporaryName "$handler") || return $?
   testEnvBash="$testEnvBase.bash" || return $?

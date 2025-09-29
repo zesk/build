@@ -216,6 +216,7 @@ _hookSourceOptional() {
 # Summary: Determine if a hook exists
 # Usage: {fn} [ --application applicationHome ] hookName0 [ hookName1 ... ]
 # Argument: --application applicationHome - Path. Optional. Directory of alternate application home. Can be specified more than once to change state.
+# Argument: --extensions extensionList - ColonSeparatedList. Optional. List of extensions to search, in order for matching files in each hook directory. Defaults to `BUILD_HOOK_EXTENSIONS`.
 # Argument: hookName0 - one or more hook names which must exist
 # Return Code: 0 - If all hooks exist
 # Test: testHookSystem
@@ -223,7 +224,7 @@ _hookSourceOptional() {
 hasHook() {
   local handler="_${FUNCNAME[0]}"
 
-  local applicationHome=""
+  local applicationHome="" ww=()
 
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
@@ -236,11 +237,13 @@ hasHook() {
     --help) "$handler" 0 && return $? || return $? ;;
     # _IDENTICAL_ handlerHandler 1
     --handler) shift && handler=$(usageArgumentFunction "$handler" "$argument" "${1-}") || return $? ;;
+    --extensions) shift && ww+=(--extensions "$(usageArgumentString "$handler" "$argument" "${1-}")") || return $? ;;
+    --debug) ww+=("$argument") ;;
     --application) shift && applicationHome=$(usageArgumentDirectory "$handler" applicationHome "${1-}") || return $? ;;
     *)
       local binary
       [ -n "$applicationHome" ] || applicationHome="$(__catch "$handler" buildHome)" || return $?
-      binary="$(whichHook --application "$applicationHome" "$argument")" || return 1
+      binary="$(whichHook "${ww[@]+${ww[@]}}" --application "$applicationHome" "$argument")" || return 1
       [ -n "$binary" ] || return 1
       ;;
     esac
@@ -265,23 +268,16 @@ _hasHook() {
 # If a file named `hookName` with the extension `.sh` is found which is executable, it is output.
 # Usage: {fn} [ --application applicationHome ] hookName0 [ hookName1 ... ]
 # Argument: --application applicationHome - Path. Optional. Directory of alternate application home. Can be specified more than once to change state.
+# Argument: --extensions extensionList - ColonSeparatedList. Optional. List of extensions to search, in order for matching files in each hook directory. Defaults to `BUILD_HOOK_EXTENSIONS`.
 # Argument: hookName0 - Required. String. Hook to locate
 # Argument: hookName1 - Optional. String. Additional hooks to locate.
-#
+# Environment: BUILD_HOOK_EXTENSIONS - ColonSeparatedList. List of extensions to search, in order for matching files in each hook directory. Defaults to `sh`. Specify no extension with a blank entry, like `sh:` or `:sh` to make it first.
+# Environment: BUILD_HOOK_DIRS - ColonSeparatedList. List of paths to search for hooks.
 # Test: testHookSystem
 whichHook() {
   local handler="_${FUNCNAME[0]}"
-  local applicationHome hookPaths=() hookExtensions=() nextSource=""
+  local applicationHome="" hookPaths=() hookExtensions=() nextSource="" debugFlag=false extensionText=""
 
-  export BUILD_HOOK_DIRS
-  __catch "$handler" buildEnvironmentLoad BUILD_HOOK_DIRS BUILD_HOOK_EXTENSIONS || return $?
-
-  IFS=":" read -r -a hookPaths <<<"$BUILD_HOOK_DIRS" || :
-  [ ${#hookPaths[@]} -gt 0 ] || __throwEnvironment "$handler" "BUILD_HOOK_DIRS is blank" || return $?
-
-  extensionText="${BUILD_HOOK_EXTENSIONS-}"
-
-  applicationHome="$(__catch "$handler" buildHome)" || return $?
   local __saved=("$@") __count=$#
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
@@ -294,24 +290,38 @@ whichHook() {
     --help) "$handler" 0 && return $? || return $? ;;
     # _IDENTICAL_ handlerHandler 1
     --handler) shift && handler=$(usageArgumentFunction "$handler" "$argument" "${1-}") || return $? ;;
-    --application)
-      shift
-      applicationHome=$(usageArgumentDirectory "$handler" "$argument" "${1-}") || return $?
-      ;;
+    --application) shift && applicationHome=$(usageArgumentDirectory "$handler" "$argument" "${1-}") || return $? ;;
     --extensions) shift && extensionText=$(usageArgumentString "$handler" "$argument" "${1-}") || return $? ;;
     --next)
       shift
       nextSource=$(usageArgumentFile "$handler" "$argument" "${1-}") || return $?
       nextSource=$(__catchEnvironment "$handler" realPath "$nextSource") || return $?
       ;;
+    --debug) debugFlag=true ;;
     *)
-      IFS=":" read -r -a hookExtensions <<<"$extensionText" || :
-      [ ${#hookExtensions[@]} -gt 0 ] || __throwEnvironment "$handler" "BUILD_HOOK_EXTENSIONS is blank" || return $?
+      [ -n "$applicationHome" ] || applicationHome="$(__catch "$handler" buildHome)" || return $?
+
+      if [ "${#hookPaths[@]}" -eq 0 ]; then
+        IFS=":" read -r -a hookPaths < <(buildEnvironmentGet --application "$applicationHome" BUILD_HOOK_DIRS) || :
+        [ ${#hookPaths[@]} -gt 0 ] || __throwEnvironment "$handler" "BUILD_HOOK_DIRS is blank" || return $?
+      fi
+      if [ "${#hookExtensions[@]}" -eq 0 ]; then
+        [ -n "$extensionText" ] || extensionText="$(buildEnvironmentGet --application "$applicationHome" BUILD_HOOK_EXTENSIONS)"
+        IFS=":" read -r -a hookExtensions <<<"$extensionText"
+        [ ${#hookExtensions[@]} -gt 0 ] || __throwEnvironment "$handler" "BUILD_HOOK_EXTENSIONS is blank" || return $?
+      fi
 
       local hookPath
+      ! $debugFlag || decorate info "Hook paths ${#hookPaths[@]} x extensions ${#hookExtensions[@]}" 1>&2
       for hookPath in "${hookPaths[@]}"; do
-        local appPath="${applicationHome%/}/${hookPath%/}"
-        [ -d "$appPath" ] || continue
+        local appPath
+        pathIsAbsolute "$hookPath" && appPath="$hookPath" || appPath="${applicationHome%/}/${hookPath%/}"
+        if [ -d "$appPath" ]; then
+          ! $debugFlag || decorate info "Examining path: $appPath" 1>&2
+        else
+          ! $debugFlag || decorate info "Not a directory path: $appPath" 1>&2
+          continue
+        fi
 
         local extension
         for extension in "${hookExtensions[@]}"; do
@@ -322,15 +332,21 @@ whichHook() {
             if [ -n "$nextSource" ]; then
               if [ "$binary" = "$nextSource" ]; then
                 nextSource=""
+                ! $debugFlag || decorate info "$binary matched NEXT" 1>&2
+              else
+                ! $debugFlag || decorate info "$binary did not match $nextSource" 1>&2
               fi
               break
             fi
             printf "%s\n" "$binary"
             return 0
+          else
+            ! $debugFlag || decorate info "$binary $([ -f "$binary" ] && printf "not executable" || printf "not found")" 1>&2
           fi
           [ ! -f "$binary" ] || _environment "$binary exists but is not executable and will be ignored" || return $?
         done
       done
+      ! $debugFlag || decorate info "no more paths" 1>&2
       return 1
       ;;
     esac

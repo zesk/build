@@ -319,12 +319,14 @@ plumber() {
     __rawChanged=$__changed
     __cmd="$(decorate each code "$@")"
     if grep -q -e 'COLUMNS\|LINES' < <(printf "%s\n" "$__changed"); then
-      decorate warning "$__cmd set $(decorate value "COLUMNS, LINES")" 1>&2
+      # decorate warning "$__cmd set $(decorate value "COLUMNS, LINES")"
       unset COLUMNS LINES
-      __changed="$(printf "%s\n" "$__changed" | grep -v -e 'COLUMNS\|LINES' || :)" || _environment "Removing COLUMNS and LINES from $__changed" || return $?
+      __changed="$(printf "%s\n" "$__changed" | grep -v -e 'COLUMNS\|LINES' || :)" || __throwEnvironment "$handler" "Removing COLUMNS and LINES from $__changed" || return $?
     fi
     if [ -n "$__changed" ]; then
-      printf "%s\n" "$__changed" | dumpPipe "$(decorate bold-orange "found leak"): $__cmd: $__rawChanged" 1>&2
+      printf "%s\n" "$__changed" "COMMAND: $__cmd" | dumpPipe "$(decorate bold-orange "found leak"): $__rawChanged" 1>&2
+      dumpPipe BEFORE <"$__before"
+      dumpPipe AFTER <"$__after"
       __result=$(returnCode leak)
     fi
   else
@@ -491,6 +493,7 @@ outputTrigger() {
   local error lineCount=0
 
   error=$(fileTemporaryName "$handler") || return $?
+  local line
   while read -r line; do
     printf "%s\n" "$line" >>"$error"
     lineCount=$((lineCount + 1))

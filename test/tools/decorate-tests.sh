@@ -55,6 +55,7 @@ EOF
 testDecorateSize() {
   local results=() IFS sizes=()
 
+  local size result
   while read -r size result; do
     assertEquals "$result" "$(decorate size "$size")" || return $?
     sizes+=("$size")

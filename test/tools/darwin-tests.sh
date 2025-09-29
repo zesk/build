@@ -17,7 +17,6 @@ testDarwinDialog() {
     assertNotExitCode --stderr-match 'blank' 0 darwinDialog --choice "A" --choice "" || return $?
   else
     (
-      export OSTYPE
       decorate info "${FUNCNAME[0]} skipped, we are not on Darwin -> ${OSTYPE-}"
     ) || :
   fi

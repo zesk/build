@@ -277,7 +277,7 @@ environmentLoad() {
   local handler="_${FUNCNAME[0]}"
 
   local ff=() required=true ignoreList=() secureList=()
-  local verboseMode=false debugMode=false hasOne=false execute=() variablePrefix=""
+  local verboseMode=false debugMode=false hasOne=false execute=() variablePrefix="" context=""
 
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
@@ -849,26 +849,25 @@ environmentOutput() {
     shift
   done
 
-  local hideArgs=()
+  local hideArgs=() skipPrefix=()
   if $skipSecure; then
-    local hideSecure="^_" secureVar
-    while read -r secureVar; do
-      hideSecure="^$hideSecure\|^$(quoteGrepPattern "$secureVar")"
-    done < <(environmentSecureVariables)
-    hideArgs+=(-e "($hideSecure)=")
+    local secureVar && while read -r secureVar; do hideArgs+=("$secureVar"); done < <(environmentSecureVariables)
   fi
   if $skipUnderscore; then
-    hideArgs+=(-e '^_')
+    skipPrefix+=('_')
   fi
-  local filter=(cat)
-  [ ${#hideArgs[@]} -eq 0 ] || filter=(grepSafe -z -v "${hideArgs[@]}")
-  while IFS="=" read -r -d $'\0' name value; do
+  local name value finished=false
+  while ! $finished; do
+    IFS="=" read -r -d $'\0' name value || finished=true
+    [ -n "$name" ] || continue
+    [ "${#hideArgs[@]}" -eq 0 ] || ! inArray "$name" "${hideArgs[@]}" || continue
+    [ "${#skipPrefix[@]}" -eq 0 ] || ! stringBegins "$name" "${skipPrefix[@]}" || continue
     if [ "${value#*$'\n'}" != "$value" ]; then
       # newline values are skipped
       continue
     fi
     environmentValueWrite "$name" "$value"
-  done < <(env -0 | "${filter[@]}")
+  done < <(env -0)
 }
 _environmentOutput() {
   # __IDENTICAL__ usageDocument 1

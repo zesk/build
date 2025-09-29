@@ -31,16 +31,12 @@ __networkConfigurationFiltered() {
     shift
   done
 
-  export OSTYPE
-
-  __catch "$handler" buildEnvironmentLoad OSTYPE || return $?
-
   whichExists ifconfig || __throwEnvironment "$handler" "Need ifconfig (net-tools) installed. not available in PATH: $PATH" || return $?
 
-  case "$(lowercase "$OSTYPE")" in
+  case "$(lowercase "${OSTYPE-}")" in
   linux) ifconfig | grep "$patternNotGNU" | cut -f 2 -d : | trimSpace | cut -f 1 -d ' ' ;;
   linux-gnu | darwin* | freebsd*) ifconfig | grep "$patternGNU " | trimSpace | cut -f 2 -d ' ' ;;
-  *) __throwEnvironment "$handler" "networkIPList Unsupported OSTYPE \"$OSTYPE\"" || return $? ;;
+  *) __throwEnvironment "$handler" "networkIPList Unsupported OSTYPE \"${OSTYPE-}\"" || return $? ;;
   esac
 }
 

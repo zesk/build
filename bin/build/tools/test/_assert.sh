@@ -548,11 +548,11 @@ ___assertIsEmpty() {
 ___assertIsEmptyFormat() {
   local testPassed="${1-}" success="${2-}"
   shift && shift
+  local index=1
   if $testPassed; then
     if $success; then
       decorate green "empty"
     else
-      local index=1
       while [ $# -gt 0 ]; do
         if [ -n "${1-}" ]; then
           printf "%s %s (%s)" "$(decorate green "not empty")" "$(__resultTextSize true "$1")" "$(decorate value "#$index")"

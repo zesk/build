@@ -64,22 +64,24 @@ testMapTokens() {
 }
 
 testMapPrefixSuffix() {
-  local itemIndex=1 binary
+  local itemIndex=1 binary aa=()
 
   for binary in mapEnvironment "$(buildHome)/bin/build/map.sh"; do
-    assertEquals "Hello, world." "$(echo "[NAME], [PLACE]." | NAME=Hello PLACE=world "$binary" --prefix '[' --suffix ']')" "#$itemIndex failed" || return $?
+    aa=(--display "$binary")
+
+    assertEquals "${aa[@]}" "Hello, world." "$(echo "[NAME], [PLACE]." | NAME=Hello PLACE=world "$binary" --prefix '[' --suffix ']')" "#$itemIndex failed" || return $?
     itemIndex=$((itemIndex + 1))
-    assertEquals "Hello, world." "$(echo "{NAME}, {PLACE}." | NAME=Hello PLACE=world "$binary")" "#$itemIndex failed" || return $?
+    assertEquals "${aa[@]}" "Hello, world." "$(echo "{NAME}, {PLACE}." | NAME=Hello PLACE=world "$binary")" "#$itemIndex failed" || return $?
     itemIndex=$((itemIndex + 1))
-    assertEquals "Hello, world." "$(echo "{NAME}, {PLACE}." | NAME=Hello PLACE=world "$binary" NAME PLACE)" "#$itemIndex failed" || return $?
+    assertEquals "${aa[@]}" "Hello, world." "$(echo "{NAME}, {PLACE}." | NAME=Hello PLACE=world "$binary" NAME PLACE)" "#$itemIndex failed" || return $?
     itemIndex=$((itemIndex + 1))
-    assertEquals "Hello, {PLACE}." "$(echo "{NAME}, {PLACE}." | NAME=Hello PLACE=world "$binary" NAME)" "#$itemIndex failed" || return $?
+    assertEquals "${aa[@]}" "Hello, {PLACE}." "$(echo "{NAME}, {PLACE}." | NAME=Hello PLACE=world "$binary" NAME)" "#$itemIndex failed" || return $?
     itemIndex=$((itemIndex + 1))
-    assertEquals "{NAME}, world." "$(echo "{NAME}, {PLACE}." | NAME=Hello PLACE=world "$binary" PLACE)" "#$itemIndex failed" || return $?
+    assertEquals "${aa[@]}" "{NAME}, world." "$(echo "{NAME}, {PLACE}." | NAME=Hello PLACE=world "$binary" PLACE)" "#$itemIndex failed" || return $?
     itemIndex=$((itemIndex + 1))
-    assertEquals "{NAME}, {PLACE}." "$(echo "{NAME}, {PLACE}." | NAME=Hello PLACE=world "$binary" NAM PLAC)" "#$itemIndex failed" || return $?
+    assertEquals "${aa[@]}" "{NAME}, {PLACE}." "$(echo "{NAME}, {PLACE}." | NAME=Hello PLACE=world "$binary" NAM PLAC)" "#$itemIndex failed" || return $?
     itemIndex=$((itemIndex + 1))
-    assertEquals "{NAME}, {PLACE}." "$(echo "{NAME}, {PLACE}." | NAME=Hello PLACE=world "$binary" AME LACE)" "#$itemIndex failed" || return $?
+    assertEquals "${aa[@]}" "{NAME}, {PLACE}." "$(echo "{NAME}, {PLACE}." | NAME=Hello PLACE=world "$binary" AME LACE)" "#$itemIndex failed" || return $?
     itemIndex=$((itemIndex + 1))
   done
 }

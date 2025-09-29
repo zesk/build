@@ -1,4 +1,5 @@
 # v0.38.4
+isAbsolutePath|pathIsAbsolute
 
 # v0.38.3
 # Exit Code:|# Return Code:|

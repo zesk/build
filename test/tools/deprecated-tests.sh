@@ -9,8 +9,12 @@
 
 # Coverage: deprecatedIgnore
 testDeprecatedIgnore() {
+  mockEnvironmentStart __BUILD_DEPRECATED_EXTRAS
+
   assertOutputContains --line "$LINENO" documentation/source deprecatedIgnore || return $?
   assertOutputContains --line "$LINENO" deprecated.sh deprecatedIgnore || return $?
+
+  mockEnvironmentStop __BUILD_DEPRECATED_EXTRAS
 }
 
 # Coverage: deprecatedFind

@@ -18,6 +18,11 @@
 #             |_|
 #
 
+isAbsolutePath() {
+  _deprecated "${FUNCNAME[0]}"
+  pathIsAbsolute "$@"
+}
+
 # DEPRECATED 2025-07-29
 interactiveBashSource() {
   _deprecated "${FUNCNAME[0]}"

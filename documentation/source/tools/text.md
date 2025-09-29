@@ -39,6 +39,8 @@
 {inArray}
 {isSubstring}
 {isSubstringInsensitive}
+{stringBegins}
+{stringBeginsInsensitive}
 {stringContains}
 {stringContainsInsensitive}
 {beginsWith}

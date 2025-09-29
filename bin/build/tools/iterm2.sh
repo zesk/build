@@ -17,6 +17,11 @@
 # - Attract attention
 # - Prompt support with highlighting of commands and output
 #
+# These were originally just reverse engineered from the sample code; but they are actually documented here so
+# maybe check that and add missing features:
+# - https://iterm2.com/documentation-escape-codes.html
+# TODO: Review iTerm2 documentation and implement the missing codes
+#
 # Copyright &copy; 2025 Market Acumen, Inc.
 #
 # Docs: ./documentation/source/tools/iterm2.md

@@ -134,7 +134,7 @@ _buildEnvironmentPath() {
 #
 # Usage: {fn} [ envName ... ]
 # Argument: envName - Optional. String. Name of the environment value to load. Afterwards this should be defined (possibly blank) and `export`ed.
-#
+# Argument: --application applicationHome - Path. Optional. Directory of alternate application home. Can be specified more than once to change state.
 # If BOTH files exist, both are sourced, so application environments should anticipate values
 # created by build's default.
 #
@@ -146,10 +146,10 @@ _buildEnvironmentPath() {
 # Environment: BUILD_ENVIRONMENT_DIRS - `:` separated list of paths to load env files
 #
 buildEnvironmentLoad() {
-  local handler="_${FUNCNAME[0]}"
+  local handler="_${FUNCNAME[0]}" applicationHome printFlag=false
 
-  home=$(__catch "$handler" buildHome) || return $?
-  printFlag=false
+  applicationHome=$(__catch "$handler" buildHome) || return $?
+
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
@@ -164,15 +164,16 @@ buildEnvironmentLoad() {
     --print)
       printFlag=true
       ;;
+    --application) shift && applicationHome=$(usageArgumentDirectory "$handler" "$argument" "${1-}") || return $? ;;
     *)
       local env found="" paths=() path file=""
 
       env="$(usageArgumentEnvironmentVariable "$handler" "environmentVariable" "$1")" || return $?
       IFS=$'\n' read -d '' -r -a paths < <(_buildEnvironmentPath) || :
       for path in "${paths[@]}"; do
-        if ! isAbsolutePath "$path"; then
+        if ! pathIsAbsolute "$path"; then
           # All relative paths are relative to the application root, so correct
-          path="$home/$path"
+          path="$applicationHome/$path"
         fi
         [ -d "$path" ] || continue
         # Maybe warn here or something as if absolute and missing should not be in the list
@@ -259,7 +260,7 @@ _Build() {
 #
 # Usage: {fn} [ envName ... ]
 # Argument: envName - Optional. String. Name of the environment value to load. Afterwards this should be defined (possibly blank) and `export`ed.
-#
+# Argument: --application applicationHome - Path. Optional. Directory of alternate application home. Can be specified more than once to change state.
 # If BOTH files exist, both are sourced, so application environments should anticipate values
 # created by build's default.
 #
@@ -269,7 +270,7 @@ _Build() {
 # Environment: BUILD_ENVIRONMENT_DIRS - `:` separated list of paths to load env files
 #
 buildEnvironmentGet() {
-  local handler="_${FUNCNAME[0]}"
+  local handler="_${FUNCNAME[0]}" ll=()
 
   [ $# -gt 0 ] || __throwArgument "$handler" "Requires at least one environment variable" || return $?
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
@@ -283,8 +284,9 @@ buildEnvironmentGet() {
     --help) "$handler" 0 && return $? || return $? ;;
     # _IDENTICAL_ handlerHandler 1
     --handler) shift && handler=$(usageArgumentFunction "$handler" "$argument" "${1-}") || return $? ;;
+    --application) shift && ll+=("$argument" "${1-}") ;;
     *)
-      __catch "$handler" buildEnvironmentLoad "$argument" || return $?
+      __catch "$handler" buildEnvironmentLoad "${ll[@]+"${ll[@]}"}" "$argument" || return $?
       printf "%s\n" "${!argument-}"
       ;;
     esac

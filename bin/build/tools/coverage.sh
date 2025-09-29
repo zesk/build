@@ -240,7 +240,7 @@ __bashCoverageReportConvertFiles() {
   lineContentFile=$(fileTemporaryName "$handler") || return $?
   while read -r file; do
     statusMessage decorate info "Generating $(decorate code "$file")"
-    if isAbsolutePath "$file"; then
+    if pathIsAbsolute "$file"; then
       source="$file"
     else
       source="${home%/}/${file#/}"

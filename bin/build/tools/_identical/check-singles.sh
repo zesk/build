@@ -29,6 +29,7 @@ _identicalCheckSinglesChecker() {
   local allSingles=() knownSingles=() knownSinglesReport=() lonelySingles=() lonelySinglesReport=() lonelySinglesFiles=()
 
   while ! $done; do
+    local token
     read -r matchFile || done=true
     [ -n "$matchFile" ] || continue
     if [ ! -f "$matchFile.compare" ]; then
@@ -37,6 +38,7 @@ _identicalCheckSinglesChecker() {
       token="${token%%.match}"
       token="${token#*@}"
       tokenFile="$tokenFile/$token"
+      local lineCount
       IFS=$'\n' read -d "" -r lineCount lineNumber targetFile <"$tokenFile"
       allSingles+=("$token")
       local linesNoun

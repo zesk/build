@@ -22,7 +22,7 @@ testIsAbsolutePath() {
   local path exitCode
 
   __testIsAbsolutePathData | while IFS=, read -r path exitCode; do
-    assertExitCode "$exitCode" isAbsolutePath "$path" || return $?
+    assertExitCode "$exitCode" pathIsAbsolute "$path" || return $?
   done
 }
 

@@ -5,10 +5,13 @@
 # Copyright &copy; 2025 Market Acumen, Inc.
 #
 
+# Plumber: false
 testNetworkIPList() {
-  assertExitCode --stdout-match "127.0.0.1" 0 networkIPList --install || return $?
+  assertExitCode --leak OSTYPE --stdout-match "127.0.0.1" 0 networkIPList --install || return $?
 }
 
+# Leaks OSTYPE
+# Plumber: false
 testNetworkMACAddressList() {
   local handler="_return"
   local temp

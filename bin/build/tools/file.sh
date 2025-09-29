@@ -374,10 +374,7 @@ fileSize() {
 
   local size opts
 
-  export OSTYPE
-  __catch "$handler" buildEnvironmentLoad OSTYPE || return $?
-
-  case "$(lowercase "${OSTYPE}")" in
+  case "$(lowercase "${OSTYPE-}")" in
   *darwin*) opts=("-f" "%z") ;;
   *) opts=('-c%s') ;;
   esac

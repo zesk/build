@@ -6,6 +6,16 @@
 #
 # Copyright &copy; 2025 Market Acumen, Inc.
 
+# Saved name should not match grep of argument
+__mockEnvironmentGlobal() {
+  printf "%s\n" "__MOCK_${1:0:1}_${1:1}_"
+}
+
+# Saved value should not match grep of argument
+__mockEnvironmentEmpty() {
+  printf "%s\n" "__EMPTY__ _${1:0:1}_${1:1}_"
+}
+
 # Fake a value for testing
 # Argument: globalName - EnvironmentVariable. Required. Global to change temporarily to a value.
 # Argument: value - EmptyString. Optional. Force the value of `globalName` to this value temporarily. Saves the original value.
@@ -14,11 +24,12 @@ mockEnvironmentStart() {
   local handler="_${FUNCNAME[0]}"
   while [ $# -gt 0 ]; do
     local argument="${1-}" && shift
-    local emptyValue="__MOCK__ $argument"
     local value="${1-}"
     [ $# -eq 0 ] || shift
-    local saveGlobal="__MOCK_$argument"
-    statusMessage --last decorate notice "MOCK: Saving $argument into $(decorate code "$saveGlobal")"
+    local emptyValue saveGlobal
+    emptyValue="$(__mockEnvironmentEmpty "$argument")"
+    saveGlobal="$(__mockEnvironmentGlobal "$argument")"
+    statusMessage --last decorate notice "MOCK: Saving $argument"
     # shellcheck disable=SC2163
     export "$saveGlobal"="${!argument-"$emptyValue"}"
     export "$argument"="$value"
@@ -45,16 +56,18 @@ mockEnvironmentStop() {
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
     *)
-      local emptyValue="__MOCK__ $argument"
-      local saveGlobal="__MOCK_$argument"
+      local emptyValue saveGlobal
+      emptyValue="$(__mockEnvironmentEmpty "$argument")"
+      saveGlobal="$(__mockEnvironmentGlobal "$argument")"
       # shellcheck disable=SC2163
       export "$argument"
       if [ "${!saveGlobal-"$emptyValue"}" = "$emptyValue" ]; then
         unset "$argument"
         statusMessage --last decorate notice "MOCK: Removing $argument (was unset)"
       else
-        export "$argument"="${!saveGlobal-}"
-        statusMessage --last decorate notice "MOCK: Restoring $argument from $(decorate code "$saveGlobal")"
+        local value="${!saveGlobal-}"
+        export "$argument"="$value"
+        statusMessage --last decorate notice "MOCK: Restoring $argument ($(pluralWord "${#value}" character))"
       fi
       unset "$saveGlobal"
       ;;

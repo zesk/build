@@ -135,6 +135,7 @@ __deployApplication() {
   if ! tar -C "$deployedApplicationPath" -xzf "$targetPackageFullPath"; then
     _unwindDeploy "${unwindArgs[@]}" "tar -C \"$deployedApplicationPath\" -xzf \"$targetPackageFullPath\" failed" || return $?
   fi
+  local newApplicationId
   if ! newApplicationId=$(deployApplicationVersion "$deployedApplicationPath"); then
     _unwindDeploy "${unwindArgs[@]}" "deployApplicationVersion $deployedApplicationPath failed" || return $?
   fi

@@ -7,13 +7,13 @@
 
 __identicalRepair() {
   local handler="$1" && shift
+  local arguments
 
   # shellcheck disable=SC2059
   arguments="$(printf "\"$(decorate code %s)\" " "$@")"
 
   local source="" destination="" token="" prefix="" stdout=false fileMap=true
 
-  decorate each code "${FUNCNAME[0]}" "$@"
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do

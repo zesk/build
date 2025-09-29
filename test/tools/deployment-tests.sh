@@ -8,20 +8,23 @@
 #
 
 __prepareSampleApplicationDeployment() {
-  local target="$1"
-  local id="$2"
+  local handler="$1"
+  local target="$2"
+  local id="$3"
 
   export BUILD_HOME
 
   __environment buildEnvironmentLoad BUILD_HOME || return $?
 
-  __environment mkdir -p "$target/app" || return $?
-  __environment cd "$BUILD_HOME/test/example/simple-php" || return $?
-  __environment mkdir ".deploy" || return $?
-  printf "%s\n" "$id" >".deploy/APPLICATION_ID" || return $?
-  __environment tarCreate "$target/app.tar.gz" .webApplication bin docs public src simple.application.php .env .deploy || return $?
-  __environment rm -rf ".deploy" || return $?
-  __environment cd "$target/app" || return $?
+  local tempPath
+  tempPath=$(fileTemporaryName "$handler" -d) || return $?
+  __catch "$handler" directoryRequire "$target/app" || return $?
+  local appRoot=$tempPath/simple-php
+  __catchEnvironment "$handler" cp -r "$BUILD_HOME/test/example/simple-php" "$appRoot" || return $?
+  __catch "$handler" directoryRequire "$appRoot/.deploy" || return $?
+  printf "%s\n" "$id" >"$appRoot/.deploy/APPLICATION_ID" || return $?
+  __catch "$handler" directoryChange "$appRoot" tarCreate "$target/app.tar.gz" .webApplication bin docs public src simple.application.php .env .deploy || return $?
+  __catchEnvironment "$handler" rm -rf "$tempPath" || return $?
 
   # Mock deployment
   __environment tar zxf "$target/app.tar.gz" || return $?
@@ -34,6 +37,7 @@ testDeployRemoteFinish() {
   local handler="_return"
   local tempDirectory id oldId matches finishArgs
 
+  exec 2>&1
   export BUILD_HOME
 
   __environment buildEnvironmentLoad BUILD_HOME || return $?
@@ -54,7 +58,7 @@ testDeployRemoteFinish() {
 
   # $id-stage vs $id produces 'tar file' error
   clearLine
-  __prepareSampleApplicationDeployment "$tempDirectory/deploy/$id" "$id-stage"
+  __prepareSampleApplicationDeployment "$handler" "$tempDirectory/deploy/$id" "$id-stage"
   matches=(--stderr-match 'tar file is likely incorrect')
   finishArgs=(
     --first "--deploy"
@@ -65,12 +69,12 @@ testDeployRemoteFinish() {
   )
   assertExitCode --dump "${matches[@]+${matches[@]}}" 1 deployRemoteFinish "${finishArgs[@]}" || return $?
 
-  __prepareSampleApplicationDeployment "$tempDirectory/deploy/$id" "$id"
+  __prepareSampleApplicationDeployment "$handler" "$tempDirectory/deploy/$id" "$id"
   __environment mkdir -p "$tempDirectory/app" || return $?
   matches=(--stderr-match "should be a link")
   assertExitCode "${matches[@]+${matches[@]}}" 1 deployRemoteFinish --first "--deploy" "--target" "app.tar.gz" "--home" "$tempDirectory/deploy" "--id" "$id" "--application" "$tempDirectory/app" || return $?
 
-  __environment __prepareSampleApplicationDeployment "$tempDirectory/deploy/$id" "$id" || return $?
+  __prepareSampleApplicationDeployment "$handler" "$tempDirectory/deploy/$id" "$id" || return $?
   __environment rm -rf "$tempDirectory/app" || return $?
 
   #
@@ -98,7 +102,7 @@ testDeployRemoteFinish() {
   #
   oldId=$id
   id=deadbeef
-  __environment __prepareSampleApplicationDeployment "$tempDirectory/deploy/$id" "$id" || return $?
+  __prepareSampleApplicationDeployment "$handler" "$tempDirectory/deploy/$id" "$id" || return $?
 
   matches=(--stdout-match "Remote deployment finished")
   assertExitCode --dump "${matches[@]+${matches[@]}}" 0 deployRemoteFinish "--deploy" "--target" "app.tar.gz" "--home" "$tempDirectory/deploy" "--id" "$id" "--application" "$tempDirectory/app" || return $?

@@ -265,4 +265,6 @@ testFileLineCount() {
   done
 
   __catchEnvironment "$handler" rm "$temp" || return $?
+
+  unset RANDOM
 }
