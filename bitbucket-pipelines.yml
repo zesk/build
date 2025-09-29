@@ -55,6 +55,9 @@ pipelines:
             - bin/deploy.sh --env-file .build.env --release
     staging:
       - step:
+          artifacts:
+            - ./documentation/.docs/
+            - ./.build.env
           size: 2x
           deployment: staging
           name: Build and Test 2x
@@ -62,8 +65,33 @@ pipelines:
             - docker
           script:
             - bin/build.sh --documentation --commit
-            - bin/tools.sh buildQuickTest
-            - bin/deploy.sh --documentation --no-release
+      - parallel:
+          steps:
+            - step:
+                services:
+                  - docker
+                size: 2x
+                name: Fast Tests 2x
+                script:
+                  - bin/tools.sh buildStagingTest --env-file .build.env --skip-tag slow --skip-tag package-install
+            - step:
+                services:
+                  - docker
+                size: 2x
+                name: Slow Tests 2x
+                script:
+                  - bin/tools.sh buildStagingTest --env-file .build.env --tag slow
+            - step:
+                services:
+                  - docker
+                size: 1x
+                name: Package Tests 1x
+                script:
+                  - bin/tools.sh buildStagingTest --env-file .build.env --tag package-install
+      - step:
+          name: Staging Deploy
+          script:
+            - bin/deploy.sh --env-file .build.env --documentation --no-release
     deploy:
       - step:
           size: 1x

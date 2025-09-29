@@ -133,29 +133,30 @@ __environment() {
   "$@" || _environment "$@" || return $?
 }
 
-# <-- END of IDENTICAL _tinySugar
+# _IDENTICAL_ returnClean 21
 
-# IDENTICAL environmentVariables 16
-
-# Output a list of environment variables and ignore function definitions
-#
-# both `set` and `env` output functions and this is an easy way to just output
-# exported variables
-#
-# Requires: declare grep cut usageDocument __help
-environmentVariables() {
-  [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
-  declare -px | grep 'declare -x ' | cut -f 1 -d= | cut -f 3 -d' '
+# Delete files or directories and return the same exit code passed in.
+# Argument: exitCode - Required. Integer. Exit code to return.
+# Argument: item - Optional. One or more files or folders to delete, failures are logged to stderr.
+# Requires: isUnsignedInteger _argument __environment usageDocument
+# Group: Sugar
+returnClean() {
+  local handler="_${FUNCNAME[0]}"
+  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
+  local exitCode="${1-}" && shift
+  if ! isUnsignedInteger "$exitCode"; then
+    __throwArgument "$handler" "$exitCode (not an integer) $*" || return $?
+  else
+    __environment rm -rf "$@" || return "$exitCode"
+    return "$exitCode"
+  fi
 }
-_environmentVariables() {
-  true || environmentVariables --help
+_returnClean() {
   # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-usageDocument() {
-  usageDocumentSimple "$@"
-}
+# <-- END of IDENTICAL _tinySugar
 
 # IDENTICAL usageDocumentSimple 33
 

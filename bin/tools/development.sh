@@ -64,6 +64,22 @@ _buildQuickTest() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
+# Run tests (and continue from last failure point)
+# Do not do housekeeper or plumber by default. (faster)
+buildStagingTest() {
+  local handler="_${FUNCNAME[0]}"
+  local home
+
+  __help "$handler" "$@" || return 0
+
+  home=$(__catch "$handler" buildHome) || return $?
+  BUILD_TEST_FLAGS='Housekeeper:false;Plumber:false' "$home/bin/test.sh" -c "$@"
+}
+_buildStagingTest() {
+  # __IDENTICAL__ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
 # Run production tests
 # Argument: ... - Arguments. Optional. Passed to `testSuite`.
 buildProductionTest() {

@@ -128,7 +128,7 @@ dockerLocalContainer() {
   imageApplicationPath=${BUILD_DOCKER_PATH}
   imageName=${BUILD_DOCKER_IMAGE}
 
-  local exitCode=0 ee=() extraArgs=() tempEnvs=() verboseFlag=false
+  local exitCode=0 ee=() extraArgs=() tempEnvs=() verboseFlag=false envFiles=()
 
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#

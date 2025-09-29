@@ -38,6 +38,11 @@ testIsApkInstalled() {
 testAlpineContainer() {
   if whichExists docker; then
 
+    mockEnvironmentStart BUILD_DOCKER_IMAGE
+    mockEnvironmentStart BUILD_DOCKER_PATH
+    mockEnvironmentStart BUILD_DOCKER_PLATFORM
+    mockEnvironmentStart LC_TERMINAL
+
     local handler="_return" home
 
     home=$(__catch "$handler" buildHome) || return $?
@@ -53,6 +58,11 @@ testAlpineContainer() {
     assertEquals "$value" "FOO=\"foo\"" || return $?
 
     __catchEnvironment "$handler" muzzle popd || return $?
+
+    mockEnvironmentStop BUILD_DOCKER_IMAGE
+    mockEnvironmentStop BUILD_DOCKER_PATH
+    mockEnvironmentStop BUILD_DOCKER_PLATFORM
+    mockEnvironmentStop LC_TERMINAL
 
   fi
   return 0
