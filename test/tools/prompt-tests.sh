@@ -16,7 +16,10 @@ __testBashPromptC() {
 }
 
 testBashPrompt() {
-  local matches leak leaks=(PS1 BUILD_PROMPT_COLORS PROMPT_COMMAND __BASH_PROMPT_MODULES __BASH_PROMPT_PREVIOUS) ll=()
+  local matches leak leaks=(PS1 BUILD_PROMPT_COLORS PROMPT_COMMAND __BASH_PROMPT_MODULES __BASH_PROMPT_PREVIOUS __BASH_PROMPT_SKIP_FIRST) ll=()
+
+  mockEnvironmentStart BUILD_PROMPT_COLORS
+  mockEnvironmentStart PROMPT_COMMAND
 
   assertExitCode 0 bashPrompt --help || return $?
 
@@ -57,4 +60,7 @@ testBashPrompt() {
   assertNotExitCode "${ll[@]}" "${matches[@]}" 0 bashPrompt --remove __testBashPromptK --list || return $?
 
   unset "${leaks[@]}"
+
+  mockEnvironmentStop BUILD_PROMPT_COLORS
+  mockEnvironmentStop PROMPT_COMMAND
 }

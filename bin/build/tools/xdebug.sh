@@ -34,6 +34,7 @@ xdebugInstall() {
     muzzle __catchEnvironment "$handler" pecl install xdebug || return $?
   fi
 
+  local artifact
   artifact=$(__xdebugInstallationArtifact)
   date | muzzle __catchEnvironment "$handler" tee "$artifact" || return $?
 }
@@ -43,6 +44,7 @@ _xdebugInstall() {
 }
 
 __xdebug_Require() {
+  local artifact
   artifact=$(__xdebugInstallationArtifact)
   [ -f "$artifact" ] || __throwArgument "$1" "xdebug is not installed on this system" || return $?
 }

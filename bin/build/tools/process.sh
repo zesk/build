@@ -37,7 +37,7 @@ _processSignal() {
 processWait() {
   local handler="_${FUNCNAME[0]}"
 
-  local processIds=() requireFlag=false verboseFlag=false timeout=-1 signalTimeout=1 signals=()
+  local processId processIds=() requireFlag=false verboseFlag=false timeout=-1 signalTimeout=1 signals=()
 
   # IDENTICAL startBeginTiming 1
   start=$(timingStart) || return $?
@@ -85,7 +85,7 @@ processWait() {
   local elapsed lastSignal sinceLastSignal now
   local timeout signalTimeout
   local signals signal
-  local processId processIds aliveIds
+  local processIds aliveIds
   local requireFlag verboseFlag signals signal
   local STATUS_THRESHOLD=10
   local processTemp

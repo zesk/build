@@ -148,7 +148,7 @@ testInstallBinBuildNetwork() {
 
   testDir=$(fileTemporaryName "$handler" -d)
   testBinBuild="$testDir/bin/pipeline/install-bin-build.sh"
-  __catchEnvironment "$handler" cd "$testDir" || return $?
+  __catchEnvironment "$handler" muzzle pushd "$testDir" || return $?
 
   __catchEnvironment "$handler" mkdir -p bin/pipeline || return $?
   __catchEnvironment "$handler" cp "$home/bin/build/install-bin-build.sh" "$testBinBuild" || return $?
@@ -161,6 +161,7 @@ testInstallBinBuildNetwork() {
   assertDirectoryExists "$testDir/bin/build" || return $?
   assertFileExists "$testDir/bin/build/tools.sh" || return $?
 
+  __catchEnvironment "$handler" muzzle popd || return $?
   __catch "$handler" rm -rf "$testDir" || return $?
 }
 
@@ -177,7 +178,7 @@ testInstallBinBuild() {
   section=0
   testDir=$(fileTemporaryName "$handler" -d)
   testBinBuild="$testDir/bin/pipeline/install-bin-build.sh"
-  __catchEnvironment "$handler" cd "$testDir" || return $?
+  __catchEnvironment "$handler" muzzle pushd "$testDir" || return $?
 
   __catchEnvironment "$handler" mkdir -p bin/pipeline || return $?
   __catchEnvironment "$handler" cp "$home/bin/build/install-bin-build.sh" "$testBinBuild" || return $?
@@ -278,6 +279,12 @@ testInstallBinBuild() {
 
   __catchEnvironment "$handler" cp "$home/bin/build/install-bin-build.sh" "$testBinBuild" || return $?
   boxedHeading "Has gitignore (correct), bin/build exists, different name"
+
+  #  ▞▀▖      ▐  ▗           ▌ ▌
+  #  ▚▄ ▞▀▖▞▀▖▜▀ ▄ ▞▀▖▛▀▖ ▟▟▖▚▄▌
+  #  ▖ ▌▛▀ ▌ ▖▐ ▖▐ ▌ ▌▌ ▌ ▟▟▖  ▌
+  #  ▝▀ ▝▀▘▝▀  ▀ ▀▘▝▀ ▘ ▘ ▝▝   ▘
+
   section=$((section + 1))
   bigText "Section #$section"
 
@@ -297,6 +304,7 @@ testInstallBinBuild() {
   assertExitCode --dump --line "$LINENO" "${matches[@]}" 0 bin/pipeline/we-like-head-rubs.sh --mock "$home/bin/build" || return $?
   # Check
 
+  __catchEnvironment "$handler" muzzle popd || return $?
   __catch "$handler" rm -rf "$testDir" || return $?
 }
 _testInstallBinBuild() {

@@ -6,9 +6,9 @@
 #
 
 testUserHome() {
-  mockEnvironmentStart HOME
-
   export HOME
+
+  mockEnvironmentStart HOME "${HOME-}"
 
   HOME=/etc/does-not
 

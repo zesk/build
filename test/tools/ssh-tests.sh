@@ -51,7 +51,6 @@ testSSHAddKnownHosts() {
 testSSHRemoveKnownHosts() {
   local handler="_return"
   local tempHome debugFlag=false
-  local sampleDomainA sampleDomainB sampleDomainC
 
   mockEnvironmentStart HOME
 
@@ -61,10 +60,12 @@ testSSHRemoveKnownHosts() {
 
   HOME="$tempHome"
 
+  local sampleDomainA sampleDomainB sampleDomainC
   sampleDomainA=github.com
   sampleDomainB=bitbucket.org
   sampleDomainC=marketacumen.com
 
+  local authFile
   authFile=$(sshKnownHostsFile) || return $?
 
   assertDirectoryDoesNotExist "$tempHome/.ssh" || return $?

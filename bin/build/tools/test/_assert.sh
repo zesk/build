@@ -341,7 +341,7 @@ _assertConditionHelper() {
   message="${message%, }"
   message="$(printf -- "%s ➡️ %s -> %s\n" "$linePrefix" "$message" "$result")"
   if $code1 || [ "$expectedExitCode" -ne 0 ]; then
-    message="$message -> $exitCode ($(_choose "$success" "=" "!=") expected $expectedExitCode), $(__resultText "$testPassed" "$(_choose "$testPassed" correct incorrect)")"
+    message="$message ($exitCode $(_choose "$success" "=" "!=") expected $expectedExitCode), $(__resultText "$testPassed" "$(_choose "$testPassed" correct incorrect)")"
   fi
   local functionName="${handler#_}"
   if ! "$errorsOk" && [ -s "$errorFile" ]; then
@@ -813,7 +813,7 @@ ___assertExitCodeFormat() {
   shift 2
   # shellcheck disable=SC2059
   command="$(printf "\"$(decorate code %s)\" " "$@")"
-  printf "%s => %s" "${command% }" "$(__resultText "$testPassed" "$(_choose "$testPassed" "correctly" "incorrectly")")"
+  printf "%s => %s" "${command% }" "$(_choose "$testPassed" "☑️" "☹️")"
 }
 
 #=== === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === ===

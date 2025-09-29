@@ -166,6 +166,7 @@ __aptKeyRemove() {
 
   local name
   for name in "${names[@]}"; do
+    local file
     for file in "$ring/$name.gpg" "$sourcesPath/$name.list"; do
       if [ -f "$file" ]; then
         ! $verboseFlag || statusMessage decorate warning "Removing $(decorate code "$file") ... "

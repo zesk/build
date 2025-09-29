@@ -9,6 +9,11 @@ testUsageTemplate() {
 
   home="$(__catch "$handler" buildHome)" || return $?
 
+  # Loads __usageTemplate
+  assertExitCode 0 usageDocument --help || return $?
+
+  # Now test internals
+  local output
   output=$(__usageTemplate testThatFunction "--one thing^Required. String. Thing."$'\n'"--another thing^Optional. Integer. Another thing." "^" "Makes the world a better place" 0 | stripAnsi) || __throwEnvironment "$handler" "usageTemplate failed" || return $?
   assertEquals "$output" "$(cat "$home/test/example/usageTemplateSimple.txt")" || return $?
 }

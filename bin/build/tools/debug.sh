@@ -275,6 +275,7 @@ _isErrorExit() {
 # Requires: declare diff grep
 # Requires: __throwArgument decorate usageArgumentString isCallable
 # Requires: fileTemporaryName removeFields
+# BUILD_DEBUG: plumber-verbose - The plumber outputs the exact variable captures before and after
 plumber() {
   local handler="_${FUNCNAME[0]}"
 
@@ -325,8 +326,10 @@ plumber() {
     fi
     if [ -n "$__changed" ]; then
       printf "%s\n" "$__changed" "COMMAND: $__cmd" | dumpPipe "$(decorate bold-orange "found leak"): $__rawChanged" 1>&2
-      dumpPipe BEFORE <"$__before"
-      dumpPipe AFTER <"$__after"
+      if buildDebugEnabled plumber-verbose; then
+        dumpPipe BEFORE <"$__before"
+        dumpPipe AFTER <"$__after"
+      fi
       __result=$(returnCode leak)
     fi
   else

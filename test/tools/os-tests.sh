@@ -10,7 +10,7 @@ testNewestAndOldest() {
   local waitSeconds=1 place aTime bTime cTime
 
   place=$(fileTemporaryName "$handler" -d) || return $?
-  __environment cd "$place" || return $?
+  __environment muzzle pushd "$place" || return $?
 
   date >"a"
   decorate info "testNewestAndOldest: Sleeping $waitSeconds seconds ..."
@@ -40,6 +40,7 @@ testNewestAndOldest() {
   assertExitCode 1 fileIsNewest "a" "c" || return $?
   assertExitCode 1 fileIsNewest "a" "b" || return $?
 
+  __environment muzzle popd || return $?
   __catch "$handler" rm -rf "$place" || return $?
 }
 

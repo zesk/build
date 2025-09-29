@@ -43,6 +43,7 @@ EOF
 }
 
 testExitString() {
+  local expected test
   while read -r expected test; do
     assertEquals --display "exitString \"$test\"" "$expected" "$(exitString "$test")" || return $?
   done < <(__dataExitString)

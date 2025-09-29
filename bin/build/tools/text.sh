@@ -454,7 +454,7 @@ _beginsWith() {
 isSubstring() {
   local handler="_${FUNCNAME[0]}"
   [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
-  local needle=${1-}
+  local haystack needle=${1-}
   shift || return 1
   for haystack; do
     [ "${haystack#*"$needle"}" = "$haystack" ] || return 0

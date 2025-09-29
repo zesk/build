@@ -54,6 +54,7 @@ testTarExtractFilePattern() {
   IFS=" " content="$(__environment tarExtractPattern '*/b.json' <foo.tar.gz | sort)" || return $?
   content=${content//$'\n'/ }
   assertEquals "$content" "down going let never to you" || return $?
+  __environment muzzle popd || return $?
 
   __catch "$handler" rm -rf "$temp" || return $?
 }

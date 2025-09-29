@@ -48,8 +48,10 @@ EOF
 testQuoteGrepPattern() {
   local handler="_return"
 
+  local temp
   temp=$(fileTemporaryName "$handler") || return $?
 
+  local text expected
   while IFS='^' read -r text expected; do
     assertEquals "$expected" "$(quoteGrepPattern "$text")" || return $?
     printf "%s\n" "$text" >"$temp"

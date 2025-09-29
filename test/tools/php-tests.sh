@@ -187,6 +187,8 @@ testPHPComposerSetVersion() {
   assertFileContains "$testVersionFile" "foobar" || return $?
   assertExitCode 0 phpComposerSetVersion || return $?
 
+  local version noVeeVersion
+
   version=$(hookVersionCurrent) || return $?
   assertFileDoesNotContain "$testVersionFile" "$version" || return $?
   noVeeVersion=$(versionNoVee "$version") || return $?

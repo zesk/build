@@ -133,7 +133,7 @@ _phpComposerInstall() {
 # Return Code: 105 - Identical files (only when --status is passed)
 phpComposerSetVersion() {
   local handler="_${FUNCNAME[0]}"
-  local home="" aa=()
+  local home="" aa=() version=""
 
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#

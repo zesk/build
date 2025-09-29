@@ -15,8 +15,9 @@
 # Return Code: 0 - All good to install terraform
 #
 aptKeyAddHashicorp() {
-  __help "_${FUNCNAME[0]}" "$@" || return 0
-  __environment aptKeyAdd --title Hashicorp --name hashicorp --url https://apt.releases.hashicorp.com/gpg || return $?
+  local handler="_${FUNCNAME[0]}"
+  __help "$handler" "$@" || return 0
+  __catch "$handler" aptKeyAdd --title Hashicorp --name hashicorp --url https://apt.releases.hashicorp.com/gpg || return $?
 }
 _aptKeyAddHashicorp() {
   # __IDENTICAL__ usageDocument 1
@@ -31,8 +32,9 @@ _aptKeyAddHashicorp() {
 # Return Code: 0 - All good to install terraform
 #
 aptKeyRemoveHashicorp() {
-  __help "_${FUNCNAME[0]}" "$@" || return 0
-  __environment aptKeyRemove hashicorp "$@" || return $?
+  local handler="_${FUNCNAME[0]}"
+  __help "$handler" "$@" || return 0
+  __catch "$handler" aptKeyRemove hashicorp "$@" || return $?
 }
 _aptKeyRemoveHashicorp() {
   # __IDENTICAL__ usageDocument 1

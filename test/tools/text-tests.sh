@@ -13,7 +13,6 @@ testAlignRight() {
   assertEquals "$(alignRight 0 012345)" "012345" || return $?
 }
 
-
 testPlural() {
   assertEquals "$(plural 0 singular plural)" "plural" || return $?
   assertExitCode --stderr-ok 2 plural X singular plural || return $?
@@ -75,6 +74,7 @@ EOF
 }
 
 testStringBegins() {
+  local expected text remainder
   while read -r expected text remainder; do
     local args=()
     IFS=" " read -r -a args <<<"$remainder" || :
@@ -96,6 +96,7 @@ EOF
 }
 
 testIsPlain() {
+  local expected text
   while read -r expected text; do
     assertExitCode "$expected" isPlain "$text" || return $?
   done < <(__dataIsPlain)
@@ -155,6 +156,7 @@ EOF
 }
 
 testStringReplace() {
+  local expected needle replacement haystack
   while IFS="|" read -r expected needle replacement haystack; do
     assertEquals "$expected" "$(stringReplace "$needle" "$replacement" "$haystack")" || return $?
   done < <(__dataStringReplace)

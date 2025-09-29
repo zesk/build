@@ -16,6 +16,7 @@ __dataUrlSchemeDefaultPort() {
 EOF
 }
 testUrlSchemeDefaultPort() {
+  local expected scheme
   while read -r expected scheme; do
     assertEquals "$expected" "$(urlSchemeDefaultPort "$scheme")" || return $?
   done < <(__dataUrlSchemeDefaultPort)
@@ -111,7 +112,7 @@ testUrlParse() {
 }
 
 testGitUrlParse() {
-  local parsed u url user name password host port path error scheme
+  local parsed u url user name password host port path error scheme portDefault
 
   u="https://github.com/zesk/build.git"
 

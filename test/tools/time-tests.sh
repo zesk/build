@@ -27,6 +27,8 @@ testTiming() {
   foo=$(timingStart)
   assertExitCode 0 timingStart || return $?
   assertExitCode 0 isUnsignedInteger "$foo" || return $?
+
+  local expected actual
   while read -r expected actual; do
     assertEquals "$expected" "$(timingFormat "$actual")" || return $?
   done < <(__testTimingData)

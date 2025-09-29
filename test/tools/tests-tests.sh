@@ -9,27 +9,27 @@
 
 # Tag: slow
 testWrapperShellScripts() {
+  local handler="_return"
   local findArgs=(! -path '*/vendor/*' ! -path "*/.*/*")
   local thisYear
 
   packageWhich shellcheck || return $?
   export BUILD_COMPANY
 
-  buildEnvironmentLoad BUILD_COMPANY || return $?
-  if ! thisYear=$(date +%Y); then
-    __environment "No year" || return $?
-  fi
-  home=$(__environment buildHome) || return $?
+  __catch "$handler" buildEnvironmentLoad BUILD_COMPANY || return $?
+  thisYear=$(__catchEnvironment "$handler" date +%Y) || return $?
+  home=$(__catchEnvironment "$handler" buildHome) || return $?
   # Part of commit check - keep it quick
   if ! find "$home/bin/build" -name '*.sh' "${findArgs[@]}" -exec "shellcheck" '{}' ';'; then
-    __environment "shellcheck failed" || return $?
+    __catchEnvironment "$handler" "shellcheck failed" || return $?
   fi
+  __catchEnvironment "$handler" muzzle pushd "$home" || return $?
   if ! validateFileExtensionContents sh -- "Copyright &copy; $thisYear" "$BUILD_COMPANY" -- "${findArgs[@]}"; then
     unset BUILD_COMPANY
     __environment "validateFileExtensionContents failed" || return $?
   fi
   unset BUILD_COMPANY
-  decorate success "${FUNCNAME[0]} success"
+  __catchEnvironment "$handler" muzzle popd || return $?
 }
 
 testTestSuite() {
