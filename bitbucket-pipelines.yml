@@ -56,7 +56,7 @@ pipelines:
     staging:
       - step:
           artifacts:
-            - ./.build.env
+            - .build.env
           size: 1x
           deployment: staging
           name: Build 1x
