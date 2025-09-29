@@ -18,7 +18,7 @@ testWrapperShellScripts() {
 
   __catch "$handler" buildEnvironmentLoad BUILD_COMPANY || return $?
   thisYear=$(__catchEnvironment "$handler" date +%Y) || return $?
-  home=$(__catchEnvironment "$handler" buildHome) || return $?
+  home=$(__catch "$handler" buildHome) || return $?
   # Part of commit check - keep it quick
   if ! find "$home/bin/build" -name '*.sh' "${findArgs[@]}" -exec "shellcheck" '{}' ';'; then
     __catchEnvironment "$handler" "shellcheck failed" || return $?
