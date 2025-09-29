@@ -88,7 +88,7 @@ pipelines:
                 script:
                   - bin/tools.sh buildStagingTest --env-file .build.env --tag package-install
       - step:
-          name: Staging Deploy
+          name: Staging Deploy 4x
           size: 4x
           script:
             - bin/build/tools.sh environmentFileLoad .build.env --execute bin/build.sh --documentation --commit
