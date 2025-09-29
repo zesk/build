@@ -56,15 +56,14 @@ pipelines:
     staging:
       - step:
           artifacts:
-            - ./documentation/.docs/
             - ./.build.env
-          size: 2x
+          size: 1x
           deployment: staging
-          name: Build and Test 2x
+          name: Build 1x
           services:
             - docker
           script:
-            - bin/build.sh --documentation --commit
+            - bin/build.sh
       - parallel:
           steps:
             - step:
@@ -90,7 +89,9 @@ pipelines:
                   - bin/tools.sh buildStagingTest --env-file .build.env --tag package-install
       - step:
           name: Staging Deploy
+          size: 4x
           script:
+            - bin/build/tools.sh environmentFileLoad .build.env --execute bin/build.sh --documentation --commit
             - bin/deploy.sh --env-file .build.env --documentation --no-release
     deploy:
       - step:

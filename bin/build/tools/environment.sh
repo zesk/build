@@ -388,7 +388,6 @@ _environmentLoad() {
 
 # Safely load an environment file (no code execution)
 # Usage: {fn} [ --required | --optional ] [ --ignore name ] environmentFile ...
-# Argument: environmentFile - Required. Environment file to load.
 # Argument: --prefix - EnvironmentVariable|Blank. Optional. All subsequent environment variables are prefixed with this prefix.
 # Argument: --require - Flag. Optional. All subsequent environment files on the command line will be required.
 # Argument: --optional - Flag. Optional. All subsequent environment files on the command line will be optional. (If they do not exist, no errors.)
