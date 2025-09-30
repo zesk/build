@@ -168,11 +168,6 @@ testBashSourcePathDot() {
   # Behavior is correct - ignore .dot directories within the bashSourcePath but not above it
 }
 
-testBashSourceInteractive() {
-  export BUILD_PROMPT_MOCK=yes
-
-}
-
 _testFunc() {
   echo hello
   return 1
