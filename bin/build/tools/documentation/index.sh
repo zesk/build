@@ -56,7 +56,7 @@ __documentationIndex_Lookup() {
     shift
   done
   if [ -z "$cacheDirectory" ]; then
-    _argument "${FUNCNAME[0]} cacheDirectory function - missing cacheDirectory" || return $?
+    __throwArgument "$handler" "${FUNCNAME[0]} cacheDirectory function - missing cacheDirectory" || return $?
   fi
   if [ "$mode" = "file" ]; then
     indexRoot="$cacheDirectory/files"
@@ -74,7 +74,7 @@ __documentationIndex_Lookup() {
     __throwEnvironment "$handler" "No index exists" || return $?
   fi
   if [ $# -eq 0 ]; then
-    _argument "${FUNCNAME[0]} cacheDirectory function - missing function" || return $?
+    __throwArgument "$handler" "${FUNCNAME[0]} cacheDirectory function - missing function" || return $?
   fi
   if [ ! -f "$indexRoot/$1" ]; then
     return "$(returnCode exit)"

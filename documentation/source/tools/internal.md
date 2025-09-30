@@ -26,6 +26,8 @@
 
 {buildQuickTest}
 
+{buildStagingTest}
+
 {buildProductionTest}
 
 {buildBuildTiming}

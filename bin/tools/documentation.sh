@@ -271,7 +271,7 @@ buildDocumentationBuild() {
   fi
 
   if "$updateReference"; then
-    statusMessage --last decorate notice "Updating reference ..."
+    statusMessage --last decorate notice "Building Bash documentation and reference ..."
     __buildDocumentationBuildDirectory "$handler" "$home" "$@" "${da[@]+"${da[@]}"}" || return $?
 
     __checkVersionVariable "$handler" true "$LINENO"

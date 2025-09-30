@@ -57,3 +57,4 @@ Hides these from [New and uncategorized functions](./todo.md)
 {interactiveBashSource}
 {documentationIndex_SeeLinker}
 {mapEnvironmentSed}
+{isAbsolutePath}

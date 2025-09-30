@@ -174,9 +174,6 @@ __documentationBuild() {
     done
   fi
 
-  # At this point, everything is valid so we call our failure hook on failure
-  #  handler="__${FUNCNAME[0]}"
-
   #
   # Generate or update indexes
   #
