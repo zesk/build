@@ -35,26 +35,25 @@ __documentationTemplateUpdate() {
 # Argument: cacheDirectory - Required. Directory. Cache directory.
 # Argument: envFile - Required. File. Environment file used as base environment for all template generation.
 # Argument: template - Required. File. Final template file.
-# Argument: target - Required. FileDirectory. Path to documentationPath.
 # - Argument: pageTemplate - Required. File. Environment file used as base environment for all template generation.
 # Argument: todoTemplateCode - Optional. File. Template code for template.
 #
 __documentationTemplateUpdateUnlinked() {
   local handler="_${FUNCNAME[0]}"
-  local cacheDirectory envFile template target unlinkedFunctions todoTemplate template total clean content
+  local cacheDirectory envFile template unlinkedFunctions todoTemplate template total clean content
 
   clean=()
   cacheDirectory=$(usageArgumentDirectory "$handler" "cacheDirectory" "${1-}") || return $?
   envFile=$(usageArgumentFile "$handler" "envFile" "${2-}") || return $?
   template=$(usageArgumentFile "$handler" "template" "${3-}") || return $?
-  target=$(usageArgumentFileDirectory "$handler" "target" "${4-}") || return $?
+
   # Not used I guess
   muzzle usageArgumentFile "$handler" "pageTemplate" "${5-}" || return $?
   todoTemplate=$(__catch "$handler" documentationTemplate "${6-todo}") || return $?
 
   unlinkedFunctions=$(fileTemporaryName "$handler") || return $?
   clean+=("$unlinkedFunctions")
-  __catch "$handler" _documentationIndex_SetUnlinkedDocumentationPath "$cacheDirectory" "$target" | IFS="" awk '{ print "{" $1 "}" }' >"$unlinkedFunctions" || returnClean $? "${clean[@]}" || return $?
+  __catch "$handler" _documentationIndex_UnlinkedFunctions "$cacheDirectory" | grep -v '^_' | decorate wrap "{" "}" >"$unlinkedFunctions" || returnClean $? "${clean[@]}" || return $?
   total=$(__catch "$handler" fileLineCount "$unlinkedFunctions") || return $?
 
   # Subshell hide globals
@@ -133,6 +132,7 @@ _buildDocumentationGenerateEnvironment() {
   buildEnvironmentLoad APPLICATION_NAME || :
   envFile=$(fileTemporaryName "$handler") || return $?
   {
+    __dumpNameValue version "$(hookRun version-current)"
     __dumpNameValue summary "{fn}"
     __dumpNameValue vendor "$1"
     __dumpNameValue APPLICATION_NAME "$3"
@@ -146,16 +146,15 @@ _buildDocumentationGenerateEnvironment() {
 }
 
 # List unlinked functions in documentation index
-documentationUnlinked() {
-  local handler="_${FUNCNAME[0]}"
+__documentationUnlinked() {
+  local handler="$1" && shift
   [ $# -eq 0 ] || __help --only "$handler" "$@" || return "$(convertValue $? 1 0)"
 
   local cacheDirectory
 
-  cacheDirectory="$(__catch "$handler" buildCacheDirectory)" || return $?
-  cacheDirectory=$(__catch "$handler" directoryRequire "$cacheDirectory") || return $?
+  cacheDirectory="$(__catch "$handler" documentationBuildCache)" || return $?
 
-  __catch "$handler" _documentationIndex_ShowUnlinked "$cacheDirectory" || return $?
+  __catch "$handler" _documentationIndex_UnlinkedFunctions "$cacheDirectory" || return $?
 }
 _documentationUnlinked() {
   # __IDENTICAL__ usageDocument 1
@@ -193,15 +192,20 @@ _bashDocumentation_Template() {
       source "$envFile" || _environment "$envFile Failed: $(dumpPipe "Template envFile failed" <"$envFile")" || return $?
       shift
     done
-    # Format our values
-    while read -r envVar; do
-      formatter="_bashDocumentationFormatter_${envVar}"
+    echo "${BASH_SOURCE[0]}:$LINENO"
+
+    while read -r token; do
+      formatter="_bashDocumentationFormatter_${token}"
       if isFunction "$formatter"; then
-        declare "$envVar"="$(printf "%s\n" "${!envVar}" | "$formatter")"
+        echo "${BASH_SOURCE[0]}:$LINENO $formatter"
+        declare "$token"="$(printf "%s\n" "${!token}" | "$formatter")"
+      else
+        echo "${BASH_SOURCE[0]}:$LINENO NOT $formatter"
       fi
-    done < <(environmentVariables)
-    # shellcheck source=/dev/null
+    done < <(mapTokens <"$template" | sort -u)
+    echo "${BASH_SOURCE[0]}:$LINENO"
     mapEnvironment <"$template" | grep -E -v '^shellcheck|# shellcheck' | markdown_removeUnfinishedSections || return $?
+    echo "${BASH_SOURCE[0]}:$LINENO"
   ) 2>/dev/null || _environment "$template failed" || return $?
 }
 

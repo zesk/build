@@ -33,15 +33,12 @@ __bashDocumentation_FindFunctionDefinitions() {
 
   local foundCount=0 phraseCount=${#@}
   while [ "$#" -gt 0 ]; do
-    local fn=$1 file escaped
+    local fn=$1 escaped
     escaped=$(quoteGrepPattern "$fn")
     local functionPattern="^$escaped\(\) \{|^function $escaped \{"
-    while read -r file; do
-      if grep -E -q -e "$functionPattern" "$file"; then
-        printf "%s\n" "$file"
-        foundCount=$((foundCount + 1))
-      fi
-    done < <(find "$directory" -type f -name '*.sh' ! -path "*/.*/*")
+    if find "$directory" -type f -name '*.sh' ! -path "*/.*/*" -print0 | xargs grep -0 -q -l -E "$functionPattern"; then
+      foundCount=$((foundCount + 1))
+    fi
     shift
   done
   [ "$phraseCount" -eq "$foundCount" ]

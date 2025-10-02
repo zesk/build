@@ -71,7 +71,7 @@ buildTestPlatforms() {
     [ $returnCode -eq 0 ] || printf "%s %s %s\n" "$image" "$exitCode" "$elapsed" >>"$lastRunPlatform"
   done <"$platforms"
 
-  [ $returnCode -ne 0 ] || __catchEnvironment rm -rf "${clean[@]}" || return $?
+  [ $returnCode -ne 0 ] || __catchEnvironment "$handler" rm -rf "${clean[@]}" || return $?
   return $returnCode
 }
 _buildTestPlatforms() {

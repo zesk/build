@@ -24,7 +24,8 @@
 # - last 3 lines in build log
 #
 # Usage: buildFailed logFile
-# Argument: logFile - the most recent log from the current script
+# Argument: logFile - File. Required. The most recent log from the current script.
+# Argument: message - String. Optional. Any additional message to output.
 #
 # Example:     quietLog="$(buildQuietLog "$me")"
 # Example:     if ! ./bin/deploy.sh >>"$quietLog"; then
@@ -37,17 +38,21 @@ buildFailed() {
   local handler="_${FUNCNAME[0]}"
   [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
 
-  local quietLog="${1-}" showLines=100 failBar
+  local quietLog="${1-}" && shift
 
-  shift
-  failBar="$(decorate reset --)$(decorate magenta "$(repeat 80 "❌")")"
-  statusMessage printf -- "%s" ""
+  local failBar
+  failBar="$(lineFill "*")"
+  statusMessage --last decorate error "$failBar"
   bigText "Failed" | decorate error | decorate wrap "" " " | decorate wrap --fill "*" ""
   # shellcheck disable=SC2094
-  statusMessage --last printf -- "%s\n" "$failBar"
+  statusMessage --last decorate error "$failBar"
+
+  showLines=$(__catch "$handler" buildEnvironmentGet BUILD_DEBUG_LINES) || return $?
+
+  isUnsignedInteger "$showLines" || showLines=$(($(consoleRows) - 16)) || showLines=40
   # shellcheck disable=SC2094
   dumpPipe --lines "$showLines" --tail "$(basename "$quietLog")" "$@" <"$quietLog"
-  _environment "Failed:" "$@" || return $?
+  __throwEnvironment "$handler" "Failed:" "$@" || return $?
 }
 _buildFailed() {
   # __IDENTICAL__ usageDocument 1

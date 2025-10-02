@@ -519,7 +519,7 @@ gitCommit() {
   start="$(pwd -P 2>/dev/null)" || __throwEnvironment "$handler" "Failed to get pwd" || return $?
   if [ -z "$home" ]; then
     home=$(gitFindHome "$start") || __throwEnvironment "$handler" "Unable to find git home" || return $?
-    buildEnvironmentContext gitCommit --home "$home" "${__saved[@]+"${__saved[@]}"}" || return $?
+    buildEnvironmentContext "$home" gitCommit --home "$home" "${__saved[@]+"${__saved[@]}"}" || return $?
     return 0
   fi
   __catchEnvironment "$handler" cd "$home" || return $?

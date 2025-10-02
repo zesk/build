@@ -1,5 +1,13 @@
 # bash Cheat Sheet
 
+## Function names and special characters
+
+The following are all permitted in function names in addition to `[A-Z0-9a-z_]`:
+
+- "+", ".", "/", ":", "=", "?", "@", "", "", "^", "_", "{", "}", "~", and even some Unicode symbols
+
+However, for portability with POSIX or other shell implementations it is not recommended.
+
 ## Shell Options (`shopt`)
 
 Shell options turn features within `bash` on and off interactively.
@@ -164,7 +172,8 @@ real user and group ids.
 - The lack of default (empty) arrays leads to errors when doing `"${__emptyArray[@]}"` with `set -u` (and leads to ugly
   code like `"${__emptyArray[@]+"${__emptyArray[@]}"}"`)
 - `read` exits 0 on end of file but actually may return a string leading to issues with missing newlines causing
-  problems; use the pattern: `local finished=false; while ! $finished; do read -r line || finished=true; ...` and then test the
+  problems; use the pattern: `local finished=false; while ! $finished; do read -r line || finished=true; ...` and then
+  test the
   value of `line` for non-empty values and handle when `$finished` becomes `true`.
   [Source](https://github.com/zesk/build/docs/bash-cheatsheet.md)
 - Problems with `&&` or `||` precedence leads to errors

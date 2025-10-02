@@ -86,13 +86,21 @@ __throwArgument() {
 }
 
 # Run `handler` with an environment error
-# Usage: {fn} handler quietLog message ...
+# Argument: handler - Required. Function. Failure command
+# Argument: quietLog - Required. File. File to output log to temporarily for this command. If `quietLog` is `-` then creates a temporary file for the command which is deleted automatically.
+# Argument: command ... - Required. Callable. Thing to run and append output to `quietLog`.
 # Requires: isFunction _argument buildFailed debuggingStack __throwEnvironment
 __catchEnvironmentQuiet() {
-  local __handler="${1-}" quietLog="${2-}"
+  local __handler="${1-}" quietLog="${2-}" clean=() && shift 2
   # __IDENTICAL__ __checkHandler 1
   isFunction "$__handler" || _argument "handler not callable \"$(decorate code "$__handler")\"" || return $?
-  shift 2 && "$@" >>"$quietLog" 2>&1 || buildFailed "$quietLog" || __throwEnvironment "$__handler" "$@" || return $?
+  if [ ! -f "$quietLog" ]; then
+    [ "$quietLog" = "-" ] || __throwArgument "$handler" "quietLog is not a file: $quietLog" || return $?
+    quietLog=$(fileTemporaryName "$handler") || return $?
+    clean+=("$quietLog")
+  fi
+  "$@" >>"$quietLog" 2>&1 || buildFailed "$quietLog" || __throwEnvironment "$__handler" "$@" || returnClean $? "${clean[@]+"${clean[@]}"}" || return $?
+  returnClean 0 "${clean[@]}" || return $?
 }
 
 # Logs all deprecated functions to application root in a file called `.deprecated`

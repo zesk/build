@@ -57,7 +57,7 @@ _decorateStyleReplace() {
   # Suffix first
   result="${colors#*"$pattern"}"
   result="${colors%%"$pattern"*}$pattern$newFormat"$'\n'"${result#*$'\n'}"
-  echo "$result"
+  printf "%s\n" "$result"
 }
 
 # fn: decorate pair

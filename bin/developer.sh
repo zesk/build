@@ -67,7 +67,7 @@ if source "${BASH_SOURCE[0]%/*}/tools.sh"; then
     home=$(__catch "$handler" buildHome) || return $?
 
     local name
-    name=$(__catch "$handler" directoryChange "$home" buildEnvironmentContext buildEnvironmentGet APPLICATION_NAME) || return $?
+    name=$(__catch "$handler" buildEnvironmentContext "$home" buildEnvironmentGet APPLICATION_NAME) || return $?
     [ -n "$name" ] || name=$(basename "$home")
 
     statusMessage decorate notice "Deactivating $name ..."

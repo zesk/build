@@ -7,7 +7,7 @@
 # Copyright &copy; 2025 Market Acumen, Inc.
 #
 
-# This function is not used is are here simply to provide documentation.
+# This function is not used. It's here simply to provide documentation.
 
 # fn: errorHandler
 # Argument: exitCode - Integer. Required. The exit code to handle.

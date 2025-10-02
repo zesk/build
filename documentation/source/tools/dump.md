@@ -18,8 +18,6 @@ Dump things for debugging
 
 {dumpFile}
 
-{dumpEnvironmentSafe}
-
 {dumpLoadAverages}
 
 {debuggingStack}

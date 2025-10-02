@@ -1,5 +1,6 @@
 # v0.38.4
 isAbsolutePath|pathIsAbsolute
+bashDocumentation_Extract|bashDocumentationExtract
 
 # v0.38.3
 # Exit Code:|# Return Code:|

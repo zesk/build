@@ -50,10 +50,10 @@ _hookContextWrapper() {
     if [ "${start#"$home"}" = "$start" ]; then
       application="$home"
     else
-      application=$(gitFindHome "$start") || __throwEnvironment "$handler" "Unable to find git home" || return $?
+      application=$(__catch "$handler" bashLibraryHome "bin/build/tools.sh" "$start") || return $?
       application="${application%/}"
       if [ "${start#"$application"}" = "$start" ]; then
-        buildEnvironmentContext hookVersionCurrent --application "$application" "${__saved[@]}" || return $?
+        buildEnvironmentContext "$application" hookRun --application "$application" "$hookName" "$@" || return $?
         return 0
       fi
     fi

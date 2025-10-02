@@ -60,10 +60,9 @@ __hookRunner() {
       shift
       whichArgs+=("$argument" "$(usageArgumentFile "$handler" "$argument" "${1-}")") || return $?
       ;;
-    --extensions) shift && ww=("$(usageArgumentString "$handler" "$argument" "${1-}")") || return $? ;;
+    --extensions) shift && ww+=("$argument" "$(usageArgumentString "$handler" "$argument" "${1-}")") || return $? ;;
     --application)
-      shift || :
-      applicationHome=$(usageArgumentDirectory "$handler" applicationHome "${1-}") || return $?
+      shift && applicationHome=$(usageArgumentDirectory "$handler" applicationHome "${1-}") || return $?
       whichArgs+=(--application "$applicationHome")
       ;;
     *)
@@ -89,7 +88,7 @@ __hookRunner() {
         # shellcheck disable=SC1090
         source "$hook" || __throwEnvironment "$handler" "source $hook failed" || return $?
       else
-        "$hook" "$@" || return $?
+        command env HOME="$HOME" PATH="$PATH" BUILD_HOME="$BUILD_HOME" "$hook" "$@" || return $?
       fi
       return 0
       ;;
@@ -115,9 +114,10 @@ __hookRunner() {
 #
 # Usage: {fn} [ --application applicationHome ] hookName [ arguments ... ]
 # Argument: --application applicationHome - Path. Optional. Directory of alternate application home.
+# Argument: --extensions extensionList - ColonSeparatedList. Optional. List of extensions to search, in order for matching files in each hook directory. Defaults to `BUILD_HOOK_EXTENSIONS`.
 # Argument: --next scriptName - File. Optional. Run the script found *after* the named script, if any. Allows easy chaining of scripts.
 # Argument: hookName - String. Required. Hook name to run.
-# Argument: arguments - Optional. Arguments are passed to `hookName`.
+# Argument: ... - Arguments. Optional. Any arguments to the hook. See each hook implementation for details.
 # DOC TEMPLATE: --help 1
 # Argument: --help - Optional. Flag. Display this help.
 # Return Code: Any - The hook exit code is returned if it is run
@@ -140,8 +140,9 @@ _hookRun() {
 # Usage: {fn} [ --application applicationHome ] hookName [ arguments ... ]
 # Argument: --next scriptName - File. Optional. Run the script found *after* the named script, if any. Allows easy chaining of scripts.
 # Argument: --application applicationHome - Path. Optional. Directory of alternate application home.
+# Argument: --extensions extensionList - ColonSeparatedList. Optional. List of extensions to search, in order for matching files in each hook directory. Defaults to `BUILD_HOOK_EXTENSIONS`.
 # Argument: hookName - String. Required. Hook name to run.
-# Argument: arguments - Optional. Arguments are passed to `hookName`.
+# Argument: ... - Arguments. Optional. Any arguments to the hook. See each hook implementation for details.
 # DOC TEMPLATE: --help 1
 # Argument: --help - Optional. Flag. Display this help.
 # Return Code: Any - The hook exit code is returned if it is run
@@ -174,8 +175,8 @@ _hookRunOptional() {
 #
 # Usage: {fn} [ --application applicationHome ] hookName [ arguments ... ]
 # Argument: --application applicationHome - Path. Optional. Directory of alternate application home.
-# Argument: hookName - String. Required. Hook name to run.
-# Argument: arguments - Optional. Arguments are passed to `hookName`.
+# Argument: --extensions extensionList - ColonSeparatedList. Optional. List of extensions to search, in order for matching files in each hook directory. Defaults to `BUILD_HOOK_EXTENSIONS`.
+# Argument: hookName ... - String. Required. Hook to source.
 # Return Code: Any - The hook exit code is returned if it is run
 # Return Code: 1 - is returned if the hook is not found
 # Example:     version="$({fn} version-current)"
@@ -193,7 +194,9 @@ _hookSource() {
 #
 # Identical to `hookRun` but returns exit code zero if the hook does not exist.
 #
-# Usage: {fn} hookName [ arguments ... ]
+# Argument: --application applicationHome - Path. Optional. Directory of alternate application home.
+# Argument: --extensions extensionList - ColonSeparatedList. Optional. List of extensions to search, in order for matching files in each hook directory. Defaults to `BUILD_HOOK_EXTENSIONS`.
+# Argument: hookName ... - String. Required. Hook to source (if it exists).
 # Return Code: Any - The hook exit code is returned if it is run
 # Return Code: 0 - is returned if the hook is not found
 # Example:     if ! {fn} test-cleanup >>"$quietLog"; then
@@ -217,6 +220,7 @@ _hookSourceOptional() {
 # Usage: {fn} [ --application applicationHome ] hookName0 [ hookName1 ... ]
 # Argument: --application applicationHome - Path. Optional. Directory of alternate application home. Can be specified more than once to change state.
 # Argument: --extensions extensionList - ColonSeparatedList. Optional. List of extensions to search, in order for matching files in each hook directory. Defaults to `BUILD_HOOK_EXTENSIONS`.
+# Argument: --next scriptName - File. Optional. Locate the script found *after* the named script, if any. Allows easy chaining of scripts.
 # Argument: hookName0 - one or more hook names which must exist
 # Return Code: 0 - If all hooks exist
 # Test: testHookSystem
@@ -239,6 +243,7 @@ hasHook() {
     --handler) shift && handler=$(usageArgumentFunction "$handler" "$argument" "${1-}") || return $? ;;
     --extensions) shift && ww+=(--extensions "$(usageArgumentString "$handler" "$argument" "${1-}")") || return $? ;;
     --debug) ww+=("$argument") ;;
+    --next) shift && ww+=("$argument" "$(usageArgumentFile "$handler" "$argument" "${1-}")") || return $? ;;
     --application) shift && applicationHome=$(usageArgumentDirectory "$handler" applicationHome "${1-}") || return $? ;;
     *)
       local binary
@@ -266,9 +271,9 @@ _hasHook() {
 # - `./bin/build/hooks/`
 #
 # If a file named `hookName` with the extension `.sh` is found which is executable, it is output.
-# Usage: {fn} [ --application applicationHome ] hookName0 [ hookName1 ... ]
 # Argument: --application applicationHome - Path. Optional. Directory of alternate application home. Can be specified more than once to change state.
 # Argument: --extensions extensionList - ColonSeparatedList. Optional. List of extensions to search, in order for matching files in each hook directory. Defaults to `BUILD_HOOK_EXTENSIONS`.
+# Argument: --next scriptName - File. Optional. Locate the script found *after* the named script, if any. Allows easy chaining of scripts.
 # Argument: hookName0 - Required. String. Hook to locate
 # Argument: hookName1 - Optional. String. Additional hooks to locate.
 # Environment: BUILD_HOOK_EXTENSIONS - ColonSeparatedList. List of extensions to search, in order for matching files in each hook directory. Defaults to `sh`. Specify no extension with a blank entry, like `sh:` or `:sh` to make it first.

@@ -138,11 +138,9 @@
 - documentationBuildEnvironment
 - _documentationIndex_FunctionIterator
 - _documentationIndex_Generate
-- _documentationIndex_LinkDocumentationPaths
+- _documentationIndex_DocumentationIndex
 - __documentationIndex_Lookup
 - __documentationIndex_SeeLinker
-- _documentationIndex_SetUnlinkedDocumentationPath
-- _documentationIndex_ShowUnlinked
 - _documentationIndex_UnlinkedIterator
 - documentationTemplate
 - documentationTemplateCompile
@@ -448,11 +446,9 @@ On a "2x" machine:
 - documentationBuildEnvironment
 - _documentationIndex_FunctionIterator
 - _documentationIndex_Generate
-- _documentationIndex_LinkDocumentationPaths
+- _documentationIndex_DocumentationIndex
 - __documentationIndex_Lookup
 - __documentationIndex_SeeLinker
-- _documentationIndex_SetUnlinkedDocumentationPath
-- _documentationIndex_ShowUnlinked
 - _documentationIndex_UnlinkedIterator
 - documentationTemplate
 - documentationTemplateCompile

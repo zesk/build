@@ -30,7 +30,7 @@
 
 ## Finding documentation
 
-{bashDocumentation_Extract}
+{bashDocumentationExtract}
 
 ## Usage Utilities
 

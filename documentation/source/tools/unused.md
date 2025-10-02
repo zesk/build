@@ -7,16 +7,9 @@ Hides these from [New and uncategorized functions](./todo.md)
 {deprecatedTokensFile}
 {exampleFunction}
 {githubURLsToCSV}
-{inputConfigurationAdd}
 {isExecutableHack}
 {isType}
-{listFileModificationTimes}
-{mapEnvironment2}
 {processOpenPipes}
-{reportTiming}
-{wrapLines}
-{sshAddKnownHost}
-{bashPromptModule_iTerm2Colors}
 {hostIPList}
 {timestampToDate}
 {truncateFloat}
@@ -55,6 +48,5 @@ Hides these from [New and uncategorized functions](./todo.md)
 {allColorTest}
 {bashPromptModule_binBuild}
 {interactiveBashSource}
-{documentationIndex_SeeLinker}
 {mapEnvironmentSed}
 {isAbsolutePath}

@@ -224,10 +224,10 @@ __gamutFile() {
 
   local gamutTime="" theFile=""
 
-  local __saved=("$@")
+  local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1)) tempTime
-    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
+    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count: $(decorate each code "${__saved[@]}") $(debuggingStack)" || return $?
     [ -f "$argument" ] || __throwArgument "$handler" "Not a file: $(decorate code "$argument"): #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
     tempTime=$(fileModificationTime "$argument") || __throwEnvironment "#$__index/$__count: fileModificationTime $argument: #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
     if [ -z "$theFile" ] || test "$tempTime" "$comparison" "$gamutTime"; then

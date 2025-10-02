@@ -232,9 +232,9 @@ _labeledBigText() {
 # Argument: `count` - Required, integer count of times to repeat
 # Argument: `string` - A sequence of characters to repeat
 # Argument: ... - Additional arguments are output using shell expansion of `$*`
-# Example:     echo $(repeat 80 =)
+# Example:     repeat 80 =
 # Example:     echo Hello world
-# Example:     echo $(repeat 80 -)
+# Example:     repeat 80 -
 # Internal: Uses power of 2 strings to minimize the number of print statements. Nerd.
 # Repeat a string
 repeat() {

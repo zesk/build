@@ -7,6 +7,10 @@ __buildDocumentationBuildDirectory() {
   local handler="$1" && shift
   local home="$1" && shift
   local aa=() target
+  local start
+
+  start=$(timingStart)
+  statusMessage decorate notice "Filling in missing files ..."
 
   # Fill in any missing files
   local prefix="$home/documentation/source"
@@ -22,7 +26,10 @@ __buildDocumentationBuildDirectory() {
   target="$home/documentation/.docs/tools"
 
   __catchEnvironment "$handler" muzzle directoryRequire "$target" || return $?
+  statusMessage --last timingReport "$start" "Filled in missing files in"
 
+  start=$(timingStart)
+  statusMessage decorate notice "Creating skeleton file structure ..."
   local markdownFile
   while read -r markdownFile; do
     markdownFile=${markdownFile#"$source"}
@@ -32,6 +39,7 @@ __buildDocumentationBuildDirectory() {
       __catchEnvironment "$handler" touch "$markdownFile" || return $?
     fi
   done < <(find "$source" -type f -name '*.md' ! -path "*/.*/*")
+  statusMessage --last timingReport "$start" "Created skeleton file structure in"
 
   functionTemplate="$(__catch "$handler" documentationTemplate "function")" || return $?
 
@@ -42,7 +50,17 @@ __buildDocumentationBuildDirectory() {
   aa+=(--see-prefix "./documentation/.docs")
   aa+=(--target "$target")
 
-  documentationBuild "${aa[@]}" "$@" || return $?
+  __catch "$handler" documentationBuild "${aa[@]}" "$@" || return $?
+}
+
+__buildDocumentationCleanDirectory() {
+  local handler="$1" && shift
+  local home="$1" && shift
+
+  aa+=(--source "$home/bin")
+  aa+=(--target "$target")
+
+  __catch "$handler" documentationBuild "${aa[@]}" "--clean" "$@" || return $?
 }
 
 __buildDocumentationBuildRelease() {
@@ -50,7 +68,7 @@ __buildDocumentationBuildRelease() {
   local target="$home/documentation/.docs/release/index.md"
   local recentNotes=10 index
 
-  currentNotes=$(releaseNotes)
+  currentNotes=$(__catch "$handler" releaseNotes --application "$home") || return $?
 
   __catch "$handler" muzzle fileDirectoryRequire "$target" || return $?
 
@@ -134,7 +152,7 @@ buildDocumentationBuild() {
 
   export APPLICATION_NAME
 
-  local da=() ea=()
+  local da=() ea=() vv=()
   local cleanFlag=false updateDerived=true updateTemplates=false updateReference=true makeDocumentation=true
   local verboseFlag=false
 
@@ -162,7 +180,7 @@ buildDocumentationBuild() {
     --no-mkdocs) makeDocumentation=false ;;
     --mkdocs-only) updateDerived=false && updateTemplates=false && updateReference=false && makeDocumentation="true" ;;
     --clean) cleanFlag=true ;;
-    --verbose) da+=("$argument") && ea+=("$argument") && verboseFlag=true ;;
+    --verbose) da+=("$argument") && vv+=("$argument") && ea+=("$argument") && verboseFlag=true ;;
     --filter) da+=("$argument") && while [ $# -gt 0 ] && [ "$1" != "--" ]; do da+=("$1") && shift; done ;;
     --force) da+=("$argument") && ea+=("$argument") ;;
     *)
@@ -173,12 +191,17 @@ buildDocumentationBuild() {
     shift
   done
 
-  if $verboseFlag; then
-    decorate pair "Update Templates" "$updateTemplates"
-    decorate pair "Update Derived" "$updateDerived"
-    decorate pair "Update Reference" "$updateReference"
-    decorate pair "Make Documentation" "$makeDocumentation"
+  # --clean
+  if $cleanFlag; then
+    ! $verboseFlag || statusMessage decorate info "Cleaning documentation ... "
+    # Clean env cache
+    __catch "$handler" documentationBuildEnvironment --clean || return $?
+    # Clean reference cache
+    __buildDocumentationCleanDirectory "$handler" "$home" "${vv[@]+"${vv[@]}"}" || return $?
+    __checkVersionVariable "$handler" true "$LINENO" || return $?
+    return 0
   fi
+
   local version
   version=$(hookVersionCurrent)
   local timestamp
@@ -189,15 +212,11 @@ buildDocumentationBuild() {
   statusMessage lineFill . "$(decorate info "${APPLICATION_NAME} documentation started on $(decorate value "$(date +"%F %T")")") "
   home=$(__catch "$handler" buildHome) || return $?
 
-  # --clean
-  if $cleanFlag; then
-    ! $verboseFlag || statusMessage decorate info "Cleaning documentation ..."
-    # Clean env cache
-    __catch "$handler" documentationBuildEnvironment --clean || return $?
-    # Clean reference cache
-    __buildDocumentationBuildDirectory "$handler" "$home" --clean || return $?
-    __checkVersionVariable "$handler" false "$LINENO" || return $?
-    return 0
+  if $verboseFlag; then
+    decorate pair "Update Templates" "$updateTemplates"
+    decorate pair "Update Derived" "$updateDerived"
+    decorate pair "Update Reference" "$updateReference"
+    decorate pair "Make Documentation" "$makeDocumentation"
   fi
 
   local targetHome="$home/documentation/.docs"
@@ -216,7 +235,7 @@ buildDocumentationBuild() {
     local newestTemplate newestDocs
     newestTemplate=$(directoryNewestFile "$home/documentation/template")
     newestDocs=$(directoryNewestFile "$home/documentation/source")
-    if fileIsNewest "$newestTemplate" "$newestDocs"; then
+    if [ -z "$newestDocs" ] || fileIsNewest "$newestTemplate" "$newestDocs"; then
       updateTemplates=true
       ! $verboseFlag || statusMessage decorate info "Templates were changed, update templates is now automatic"
     fi
@@ -247,6 +266,7 @@ buildDocumentationBuild() {
     done < <(
       find "$sourceHome" -type f -name "*.md" ! -path "*/tools/*" ! -path "*/env/*" -print0 | xargs -0 grep -v -l '{[A-Za-z][^]!\[}]*}'
     )
+
     # Mappable files
     while IFS="" read -r file; do
       file=${file#"$sourceHome"}
@@ -279,8 +299,9 @@ buildDocumentationBuild() {
 
   if "$makeDocumentation"; then
     if ! whichExists mkdocs; then
+
       statusMessage --last decorate notice "Installing python and mkdocs ..."
-      __catchEnvironment "$handler" pythonInstall || return $?
+      __catchEnvironmentQuiet "$handler" - pythonInstall || return $?
 
       if [ ! -d "$home/.venv" ]; then
         if ! pythonPackageInstalled venv; then
@@ -298,16 +319,18 @@ buildDocumentationBuild() {
 
           # __catchEnvironment "$handler" pipWrapper install venv || return $?
         fi
-        __catchEnvironment "$handler" python -m venv "$home/.venv" || return $?
+        __catchEnvironmentQuiet "$handler" - python -m venv "$home/.venv" || return $?
       fi
       __catchEnvironment "$handler" source "$home/.venv/bin/activate" || return $?
       if ! pythonPackageInstalled mkdocs; then
-        __catchEnvironment "$handler" python -m pip install mkdocs mkdocs-material || return $?
+        __catchEnvironmentQuiet "$handler" - python -m pip install mkdocs mkdocs-material || return $?
         whichExists mkdocs || __throwEnvironment "$handler" "mkdocs not found after installation?" || return $?
       fi
     else
+
       __catchEnvironment "$handler" source "$home/.venv/bin/activate" || return $?
     fi
+
     __catchEnvironment "$handler" muzzle pushd "./documentation" || return $?
     statusMessage --last decorate notice "Updating mkdocs.yml ..."
 
@@ -315,7 +338,9 @@ buildDocumentationBuild() {
 
     timestamp="$timestamp" version="$version" __mkdocsConfiguration "$handler" || return $?
     __checkVersionVariable "$handler" true "$LINENO" || return $?
-    __catchEnvironment "$handler" python -m mkdocs build || return $?
+    tempLog=$(fileTemporaryName "$handler") || return $?
+    __catchEnvironmentQuiet "$handler" "$tempLog" python -m mkdocs build || returnUndo $? dumpPipe "mkdocs log" <"$tempLog" || returnClean $? "$tempLog" || return $?
+    __catchEnvironment "$handler" rm -f "$tempLog" || return $?
     __checkVersionVariable "$handler" true "$LINENO" || return $?
     __catchEnvironment "$handler" muzzle popd || return $?
   fi

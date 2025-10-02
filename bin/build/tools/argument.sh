@@ -168,7 +168,7 @@ _commentArgumentSpecification() {
   [ -f "$functionDefinitionFile" ] || __throwArgument "$handler" "$functionDefinitionFile does not exist" || return $?
   [ -n "$functionName" ] || __throwArgument "$handler" "functionName is blank" || return $?
   if [ ! -f "$cacheFile" ] || [ "$(fileNewest "$cacheFile" "$functionDefinitionFile")" = "$functionDefinitionFile" ]; then
-    __catch "$handler" bashDocumentation_Extract "$functionDefinitionFile" "$functionName" >"$cacheFile" || return $?
+    __catch "$handler" bashDocumentationExtract "$functionName" >"$cacheFile" < <(__catch "$handler" bashFunctionComment "$functionDefinitionFile" "$functionName") || return $?
     for file in "$(__commentArgumentSpecification__required "$functionCache")" "$(__commentArgumentSpecification__defaults "$functionCache")"; do
       __catchEnvironment "$handler" printf "" >"$file" || return $?
     done

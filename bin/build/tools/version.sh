@@ -53,7 +53,7 @@ _versionNoVee() {
 # When this tool succeeds it outputs the path to the current release notes file
 #
 # Environment: BUILD_RELEASE_NOTES
-# Usage: {fn} [ version ]
+# Argument: --application application - Optional. Directory. Application home directory.
 # Argument: version - Optional. String. Version for the release notes path. If not specified uses the current version.
 # Output: docs/release/version.md
 # Hook: version-current
@@ -63,7 +63,7 @@ _versionNoVee() {
 releaseNotes() {
   local handler="_${FUNCNAME[0]}"
 
-  local version=""
+  local version="" home=""
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
@@ -73,6 +73,7 @@ releaseNotes() {
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
+    --application) shift && home="$(usageArgumentDirectory "$handler" "$argument" "${1-}")" || return $?;;
     *)
       if [ -n "$version" ]; then
         decorate error "Version $version already specified: $argument"
@@ -83,26 +84,30 @@ releaseNotes() {
     esac
     shift
   done
-  buildEnvironmentContext __releaseNotes "$handler" "$version"
-}
-__releaseNotes() {
-  local handler="$1" version="${2-}" home releasePath
-
-  if [ -z "$version" ]; then
-    version=$(__catchEnvironment "$handler" hookRun version-current) || return $?
-    [ -n "$version" ] || __throwEnvironment "$handler" "version-current hook returned blank" || return $?
-  fi
-  export BUILD_RELEASE_NOTES
-  __catch "$handler" buildEnvironmentLoad BUILD_RELEASE_NOTES || return $?
-  home=$(__catch "$handler" buildHome) || return $?
-  [ -n "${BUILD_RELEASE_NOTES}" ] || __throwEnvironment "$handler" "BUILD_RELEASE_NOTES is blank" || return $?
-  releasePath="${BUILD_RELEASE_NOTES%/}"
-  pathIsAbsolute "$releasePath" || releasePath=$(directoryPathSimplify "$home/$releasePath")
-  printf "%s/%s.md\n" "${releasePath%/}" "$version"
+  [ -n "$home" ] || home="$(__catch "$handler" buildHome)" || return $?
+  __catch "$handler" buildEnvironmentContext "$home" __releaseNotes "$handler" "$version" || return $?
 }
 _releaseNotes() {
   # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+__releaseNotes() {
+  local handler="$1" version="${2-}" home releasePath
+
+  set -eou pipefail
+  local home
+  home=$(__catch "$handler" buildHome) || return $?
+  if [ -z "$version" ]; then
+    version=$(__catchEnvironment "$handler" hookRun --application "$home" version-current) || return $?
+    [ -n "$version" ] || __throwEnvironment "$handler" "version-current hook returned blank" || return $?
+  fi
+  local notes
+  notes=$(__catch "$handler" buildEnvironmentGet --application "$home" BUILD_RELEASE_NOTES) || return $?
+  [ -n "$notes" ] || __throwEnvironment "$handler" "BUILD_RELEASE_NOTES is blank" || return $?
+  releasePath="${notes%/}"
+  pathIsAbsolute "$releasePath" || releasePath=$(__catch "$handler" directoryPathSimplify "$home/$releasePath") || return $?
+  printf "%s/%s.md\n" "${releasePath%/}" "$version"
 }
 
 #
@@ -171,7 +176,7 @@ _nextMinorVersion() {
 newRelease() {
   local handler="_${FUNCNAME[0]}"
 
-  local isInteractive=true newVersion=""
+  local isInteractive=true newVersion="" application=""
 
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
@@ -186,6 +191,7 @@ newRelease() {
       isInteractive=false
       decorate warning "Non-interactive mode set"
       ;;
+    --application) shift && application=$(usageArgumentDirectory "$handler" "$argument" "${1-}") || return $? ;;
     *)
       if [ -n "$newVersion" ]; then
         # _IDENTICAL_ argumentUnknownHandler 1
@@ -198,8 +204,9 @@ newRelease() {
     esac
     shift
   done
+  [ -n "$application" ] || application=$(__catch "$handler" buildHome) || return $?
 
-  buildEnvironmentContext __newRelease "$handler" "$isInteractive" "$newVersion"
+  buildEnvironmentContext "$application" __newRelease "$handler" "$isInteractive" "$newVersion"
 }
 
 __newRelease() {

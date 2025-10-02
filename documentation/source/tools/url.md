@@ -12,4 +12,3 @@
 {urlOpener}
 {urlFilter}
 {urlFetch}
-{urlToVariables}

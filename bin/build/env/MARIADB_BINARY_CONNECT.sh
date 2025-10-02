@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# MariaDB binary for dump
+# MariaDB binary for database connections
 # Default: blank
 # Copyright &copy; 2025 Market Acumen, Inc.
 # Category: Vendor

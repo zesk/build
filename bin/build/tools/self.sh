@@ -407,24 +407,29 @@ _buildQuietLog() {
 
 # Run a command and ensure the build tools context matches the current project
 # Usage: {fn} arguments ...
-# Argument: arguments ... - Required. Command to run in new context.
+# Argument: contextStart - Required. Directory. Context in which the command should run.
+# Argument: command ... - Required. Command to run in new context.
 # Avoid infinite loops here, call down.
 buildEnvironmentContext() {
   local handler="_${FUNCNAME[0]}"
 
   [ $# -eq 0 ] || __help "$handler" "$@" || return 0
 
-  local start codeHome home
-  start="$(pwd -P 2>/dev/null)" || __throwEnvironment "$handler" "Failed to get pwd" || return $?
+  local start
+  start="$(usageArgumentDirectory "$handler" "contextStart" "${1-}")" && shift || return $?
+
+  local codeHome home binTools="bin/build/tools.sh"
   codeHome=$(__catch "$handler" buildHome) || return $?
-  home=$(__catchEnvironment "$handler" gitFindHome "$start") || return $?
+  home=$(__catchEnvironment "$handler" bashLibraryHome "$binTools" "$start") || return $?
+
+
   if [ "$codeHome" != "$home" ]; then
     decorate warning "Build home is $(decorate code "$codeHome") - running locally at $(decorate code "$home")"
-    [ -x "$home/bin/build/tools.sh" ] || __throwEnvironment "Not executable $home/bin/build/tools.sh" || return $?
-    __catchEnvironment "$handler" "$home/bin/build/tools.sh" "$@" || return $?
-    return $?
+    [ -x "$home/$binTools" ] || __throwEnvironment "Not executable $home/$binTools" || return $?
+    __catchEnvironment "$handler" "$home/$binTools" "$@" || return $?
+    return 0
   fi
-  __environment "$@" || return $?
+  __catchEnvironment "$handler" "$@" || return $?
 }
 _buildEnvironmentContext() {
   # __IDENTICAL__ usageDocument 1

@@ -430,7 +430,7 @@ __installRemotePackageGitCheck() {
       "does not ignore" \
       "$(decorate code "$pattern")" \
       "$(decorate error "recommend adding it")" \
-      "$(decorate code "echo $pattern/ >> $ignoreFile")"
+      "$(decorate code "printf \"%s\n\" \"$pattern/\" >> \"$ignoreFile\"")"
   fi
 }
 

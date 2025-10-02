@@ -523,7 +523,7 @@ __installRemotePackageGitCheck() {
       "does not ignore" \
       "$(decorate code "$pattern")" \
       "$(decorate error "recommend adding it")" \
-      "$(decorate code "echo $pattern/ >> $ignoreFile")"
+      "$(decorate code "printf \"%s\n\" \"$pattern/\" >> \"$ignoreFile\"")"
   fi
 }
 
@@ -846,7 +846,19 @@ _usageDocumentSimple() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# IDENTICAL bashFunctionComment 29
+# IDENTICAL bashFunctionComment 41
+
+# Extracts the final comment from a stream
+# Requires: fileReverseLines sed cut grep convertValue
+bashFinalComment() {
+  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
+  grep -v -e '\( IDENTICAL \|_IDENTICAL_\|DOC TEMPLATE:\|Internal:\|INTERNAL:\)' | fileReverseLines | sed -n -e '1d' -e '/^#/!q; p' | fileReverseLines | cut -c 3- || :
+}
+_bashFinalComment() {
+  false || bashFinalComment --help
+  # __IDENTICAL__ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
 
 # Extract a bash comment from a file. Excludes lines containing the following tokens:
 #
@@ -862,7 +874,7 @@ bashFunctionComment() {
   local source="${1-}" functionName="${2-}"
   local maxLines=1000
   __help "_${FUNCNAME[0]}" "$@" || return 0
-  grep -m 1 -B $maxLines "^$functionName() {" "$source" | grep -v -e '\( IDENTICAL \|_IDENTICAL_\|DOC TEMPLATE:\|Internal:\|INTERNAL:\)' | fileReverseLines | sed -n -e '1d' -e '/^#/!q; p' | fileReverseLines | cut -c 3- || :
+  grep -m 1 -B $maxLines "^$functionName() {" "$source" | bashFinalComment
   # Explained:
   # - grep -m 1 ... - Finds the `function() {` string in the file and all lines afterwards
   # - grep -v ... - Removes internal documentation and anything we want to hide from the user

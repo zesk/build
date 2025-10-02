@@ -12,13 +12,10 @@
 # Test: o ./test/tools/documentation-tests.sh
 
 __documentationLoader() {
-  __functionLoader __bashDocumentation_Extract documentation "$@" || return $?
+  __functionLoader __bashDocumentationExtract documentation "$@" || return $?
 }
 
-#
-# Uses `__bashDocumentation_FindFunctionDefinitions` to locate bash function, then
-# extracts the comments preceding the function definition and converts it
-# into a set of name/value pairs.
+# Extract documentation varaibles from a comment stripped of the '# ' prefixes.
 #
 # A few special values are generated/computed:
 #
@@ -39,12 +36,12 @@ __documentationLoader() {
 # - `depends` - Any dependencies (list)
 #
 # Summary: Generate a set of name/value pairs to document bash functions
-# Argument: definitionFile - File. Required. File in which function is defined
 # Argument: function - String. Required. Function defined in `file`
-bashDocumentation_Extract() {
+# stdin: Pipe stripped comments to extract information
+bashDocumentationExtract() {
   __documentationLoader "_${FUNCNAME[0]}" "__${FUNCNAME[0]}" "$@"
 }
-_bashDocumentation_Extract() {
+_bashDocumentationExtract() {
   # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
@@ -74,6 +71,15 @@ documentationBuild() {
 }
 _documentationBuild() {
   hookRunOptional documentation-error "$@" || :
+  # __IDENTICAL__ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+# List unlinked functions in documentation index
+documentationUnlinked() {
+  __documentationLoader "_${FUNCNAME[0]}" "__${FUNCNAME[0]}" "$@"
+}
+_documentationUnlinked() {
   # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
@@ -116,7 +122,7 @@ documentationBuildCache() {
   [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
   local code
   code=$(__catch "$handler" buildEnvironmentGet "APPLICATION_CODE") || return $?
-  __catch "$handler" buildCacheDirectory ".documentationBuild/${code-default}/${1-}" || return $?
+  __catch "$handler" buildCacheDirectory ".documentation/${code-default}/${1-}" || return $?
 }
 _documentationBuildCache() {
   # __IDENTICAL__ usageDocument 1
@@ -138,7 +144,7 @@ _documentationTemplateUpdate() {
 # Usage: {fn} [ --env-file envFile ] cacheDirectory documentTemplate functionTemplate templateFile targetFile
 # Argument: --env-file envFile - Optional. File. One (or more) environment files used to map `documentTemplate` prior to scanning, as defaults prior to each function generation, and after file generation.
 # Argument: cacheDirectory - Required. Cache directory where the indexes live.
-# Argument: documentTemplate - Required. The document template containing functions to define
+# Argument: sourceFile - Required. The document template containing functions to define
 # Argument: functionTemplate - Required. The template for individual functions defined in the `documentTemplate`.
 # Argument: targetFile - Required. Target file to generate
 # Convert a template which contains bash functions into full-fledged documentation.
@@ -153,6 +159,7 @@ _documentationTemplateUpdate() {
 # `cacheDirectory` is required - build an index using `documentationIndexIndex` prior to using this.
 #
 # See: __documentationIndex_Lookup
+# See: __documentationTemplateCompile
 # See: documentationIndexIndex
 # Return Code: 0 - If success
 # Return Code: 1 - Issue with file generation
@@ -172,6 +179,7 @@ _documentationTemplateCompile() {
 # Argument: --filter filterArgs ... --  - Arguments. Optional. Passed to `find` and allows filtering list.
 # Argument: --force - Flag. Optional. Force generation of files.
 # Argument: --verbose - Flag. Optional. Output more messages.
+# Argument: --env-file envFile - Optional. File. One (or more) environment files used during map of `functionTemplate`
 # Argument: cacheDirectory - Required. The directory where function index exists and additional cache files can be stored.
 # Argument: documentDirectory - Required. Directory containing documentation templates
 # Argument: templateFile - Required. Function template file to generate documentation for functions

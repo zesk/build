@@ -1,5 +1,5 @@
-### `{name}` (*{type}*)
+### `{name}`
 
-> Category: {category}
+> **Type**: *{type}* • **Category**: *{category}*
 
 {description}

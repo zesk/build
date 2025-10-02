@@ -71,8 +71,9 @@ __usageDocument() {
 
   local variablesFile
   variablesFile=$(fileTemporaryName "$handler") || return $?
-  if ! bashDocumentation_Extract "$functionDefinitionFile" "$functionName" >"$variablesFile"; then
+  if ! bashDocumentationExtract "$functionName" >"$variablesFile" < <(bashFunctionComment "$functionDefinitionFile" "$functionName"); then
     dumpPipe "variablesFile" <"$variablesFile"
+    dumpPipe "functionDefinitionFile" <"$functionDefinitionFile"
     __throwArgument "$handler" "Unable to extract \"$functionName\" from \"$functionDefinitionFile\"" || returnClean $? "$variablesFile" || return $?
   fi
   (

@@ -158,7 +158,7 @@ __bashCheckRequires() {
       __bashCheckReport "External" blue "${external[@]+"${external[@]}"}"
       __bashCheckReport "Unused" yellow "${unused[@]+"${unused[@]}"}"
       for functionName in "${unused[@]+"${unused[@]}"}"; do
-        printf -- "- %s %s\n" "$functionName" "$(bashShowUsage --check "$functionName" "${files[@]}" && echo 0 || echo $?)"
+        printf -- "- %s %s\n" "$functionName" "$(bashShowUsage --check "$functionName" "${files[@]}" && printf -- "%d" 0 || printf -- "%d" $?)"
       done
     fi
   fi

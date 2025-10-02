@@ -7,6 +7,7 @@
 
 # IDENTICAL zesk-build-hook-header 3
 set -eou pipefail
+
 # shellcheck source=/dev/null
 source "${BASH_SOURCE[0]%/*}/../tools.sh"
 
@@ -24,13 +25,10 @@ __hookVersionCurrent() {
 
   home=$(__catch "$handler" buildHome) || return $?
 
-  __catchEnvironment "$handler" muzzle pushd "$home" || return $?
-  __catch "$handler" buildEnvironmentLoad BUILD_RELEASE_NOTES || return $?
-  __catchEnvironment "$handler" cd "${BUILD_RELEASE_NOTES}" || return $?
-  for f in *.md; do
-    f=${f%.md}
-    printf -- "%s\n" "$f"
-  done | versionSort -r | head -1
+  local notes
+  notes=$(__catch "$handler" buildEnvironmentGet --application "$home" BUILD_RELEASE_NOTES) || return $?
+  __catchEnvironment "$handler" muzzle pushd "$notes" || return $?
+  find . -mindepth 1 -maxdepth 1 -name '*.md' | cut -c 3- | sed 's/.md//g' | versionSort -r | head -n 1 || :
   __catchEnvironment "$handler" muzzle popd || return $?
 }
 ___hookVersionCurrent() {
