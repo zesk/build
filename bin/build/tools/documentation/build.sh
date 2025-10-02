@@ -193,7 +193,7 @@ __documentationBuild() {
 
   if [ -f "$unlinkedTemplate" ]; then
     # First copy
-    __catchEnvironment "$handler" mapEnvironment <"$unlinkedTemplate" >"$unlinkedTarget" || return $?
+    __catch "$handler" mapEnvironment <"$unlinkedTemplate" >"$unlinkedTarget" || return $?
   fi
 
   elapsed=$(timingStart)

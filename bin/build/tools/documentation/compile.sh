@@ -190,7 +190,7 @@ __documentationTemplateFunctionCompile() {
   settingsFile=$(__catch "$handler" __documentationIndex_Lookup "$cacheDirectory" "$functionName") || return $?
 
   echo "${BASH_SOURCE[0]}:$LINENO"
-  __catchEnvironment "$handler" __echo _bashDocumentation_Template "$functionTemplate" "${envFiles[@]+"${envFiles[@]}"}" "$settingsFile" || return $?
+  __catch "$handler" __echo _bashDocumentation_Template "$functionTemplate" "${envFiles[@]+"${envFiles[@]}"}" "$settingsFile" || return $?
 }
 _documentationTemplateFunctionCompile() {
   # __IDENTICAL__ usageDocument 1
