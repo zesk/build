@@ -18,6 +18,33 @@
 #             |_|
 #
 
+# DEPRECATED 2025-10-03
+_home() {
+  _deprecated "${FUNCNAME[0]}"
+  userRecordHome "$@"
+}
+
+_return() {
+  _deprecated "${FUNCNAME[0]}"
+  returnMessage "$@"
+}
+_argument() {
+  _deprecated "${FUNCNAME[0]}"
+  returnArgument "$@"
+}
+_environment() {
+  _deprecated "${FUNCNAME[0]}"
+  returnEnvironment "$@"
+}
+__environment() {
+  _deprecated "${FUNCNAME[0]}"
+  __catchEnvironment "_return" "$@"
+}
+__argument() {
+  _deprecated "${FUNCNAME[0]}"
+  __catchArgument "_return" "$@"
+}
+
 isAbsolutePath() {
   _deprecated "${FUNCNAME[0]}"
   pathIsAbsolute "$@"

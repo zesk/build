@@ -114,6 +114,28 @@ testChoose() {
   assertOutputEquals --line "$LINENO" B _choose false A B || return $?
 }
 
+testReturnClean() {
+  local handler="returnMessage"
+
+  assertExitCode 0 returnClean 0 || return $?
+  assertExitCode 1 returnClean 1 || return $?
+
+  local temp err
+  temp=$(fileTemporaryName "$handler") || return $?
+  for err in 0 1 2 3 4 99; do
+    assertExitCode "$err" returnClean "$err" "$temp.missing" || return $?
+  done
+  assertFileExists "$temp" || return $?
+  assertExitCode "1" returnClean "1" "$temp" || return $?
+  assertFileDoesNotExist "$temp" || return $?
+
+  temp=$(fileTemporaryName "$handler") || return $?
+
+  assertFileExists "$temp" || return $?
+  assertExitCode 0 returnClean 0 "$temp" || return $?
+  assertFileDoesNotExist "$temp" || return $?
+}
+
 testExitCode() {
   local code char digit
 
@@ -149,7 +171,7 @@ testExitCodeCase() {
 }
 
 testSugar() {
-  local handler="_return"
+  local handler="returnMessage"
   local code
 
   # __execute running stuff
@@ -163,7 +185,7 @@ testSugar() {
   assertExitCode --stderr-match "$code" "$code" __execute _wasRun || return $?
   assertFileExists "$SUGAR_FILE" || return $?
   assertEquals $(($(fileLineCount "$SUGAR_FILE") + 0)) 2 || return $?
-  __environment rm -rf "$SUGAR_FILE" || return $?
+  __catchEnvironment "$handler" rm -rf "$SUGAR_FILE" || return $?
   assertFileDoesNotExist --line "$LINENO" "$SUGAR_FILE" || return $?
   code=0
   assertExitCode 0 __execute _wasRun || return $?
@@ -188,17 +210,17 @@ testSugar() {
     assertExitCode --stderr-ok "$code" __execute _return "$code" || return $?
   done
 
-  # _environment
-  # _argument
-  assertExitCode --stderr-ok 1 _environment || return $?
-  assertExitCode --stderr-ok 2 _argument || return $?
+  # returnEnvironment
+  # returnArgument
+  assertExitCode --stderr-ok 1 returnEnvironment || return $?
+  assertExitCode --stderr-ok 2 returnArgument || return $?
 
-  assertExitCode --stderr-ok 1 _environment 1 2 3 || return $?
-  assertExitCode --stderr-ok 2 _argument a b c || return $?
+  assertExitCode --stderr-ok 1 returnEnvironment 1 2 3 || return $?
+  assertExitCode --stderr-ok 2 returnArgument a b c || return $?
 
   # __execute
-  assertExitCode --stderr-match foo 1 __execute _environment "foo" || return $?
-  assertExitCode --stderr-match foo 2 __execute _argument "foo" || return $?
+  assertExitCode --stderr-match foo 1 __execute returnEnvironment "foo" || return $?
+  assertExitCode --stderr-match foo 2 __execute returnArgument "foo" || return $?
   # __echo
   assertExitCode --stdout-match " \"printf\" \"%s\" \"Hello\"" --stdout-match "Hello" 0 __echo printf "%s" "Hello" || return $?
 }
@@ -206,23 +228,23 @@ testSugar() {
 testMoreSugar() {
   local usageMock=__testMoreSugarUsage
 
-  assertExitCode --stderr-match whoops "$(returnCode environment)" __catchEnvironment "$usageMock" _argument "whoops" || return $?
-  assertExitCode --stderr-match a-daisy "$(returnCode argument)" __catchArgument "$usageMock" _environment "a-daisy" || return $?
+  assertExitCode --stderr-match whoops "$(returnCode environment)" __catchEnvironment "$usageMock" returnArgument "whoops" || return $?
+  assertExitCode --stderr-match a-daisy "$(returnCode argument)" __catchArgument "$usageMock" returnEnvironment "a-daisy" || return $?
 }
 __testMoreSugarUsage() {
   return "$1"
 }
 
 testArgEnvStuff() {
-  local k usage="_return"
+  local k usage="returnMessage"
 
   k=$(returnCode environment)
-  assertExitCode --stderr-match foo "$k" _environment "foo" || return $?
+  assertExitCode --stderr-match foo "$k" returnEnvironment "foo" || return $?
   assertExitCode --stderr-match foo "$k" __throwEnvironment _return "foo" || return $?
   assertExitCode --stderr-match foo "$k" __catchEnvironment "$usage" _return 99 foo || return $?
 
   k=$(returnCode argument)
-  assertExitCode --stderr-match foo "$k" _argument "foo" || return $?
+  assertExitCode --stderr-match foo "$k" returnArgument "foo" || return $?
   assertExitCode --stderr-match foo "$k" __throwArgument _return "foo" || return $?
   assertExitCode --stderr-match foo "$k" __catchArgument "$usage" _return 99 foo || return $?
 }
@@ -230,7 +252,7 @@ testArgEnvStuff() {
 testMuzzle() {
   local home mantra="I'm sorry, Dave, I'm afraid I can't do that."
 
-  home=$(__environment buildHome) || return $?
+  home=$(__catchEnvironment "$handler" buildHome) || return $?
 
   # produces nothing
   assertOutputEquals "" muzzle cat "${BASH_SOURCE[0]}" || return $?

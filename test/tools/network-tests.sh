@@ -13,7 +13,7 @@ testNetworkIPList() {
 # Leaks OSTYPE
 # Plumber: false
 testNetworkMACAddressList() {
-  local handler="_return"
+  local handler="returnMessage"
   local temp
 
   temp="$(fileTemporaryName "$handler")" || return $?

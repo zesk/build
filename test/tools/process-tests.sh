@@ -20,7 +20,7 @@ __slowDaemon() {
   timingFactor="$(_timingFactor)"
   this="${FUNCNAME[0]}"
 
-  start=$(timingStart) || _environment "$this timingStart failed" || return $?
+  start=$(timingStart) || returnEnvironment "$this timingStart failed" || return $?
   decorate success "Started $this for $timingFactor seconds"
   sleep "$timingFactor"
   timingReport "$start" "$this finished in"

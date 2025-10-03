@@ -16,7 +16,7 @@
 __catch() {
   local __count=$# __saved=("$@") __handler="${1-}" command="${2-}"
   # __IDENTICAL__ __checkHandler 1
-  isFunction "$__handler" || _argument "handler not callable \"$(decorate code "$__handler")\"" || return $?
+  isFunction "$__handler" || returnArgument "handler not callable \"$(decorate code "$__handler")\" Stack: $(debuggingStack)" || return $?
   shift 2 || __throwArgument "$__handler" "missing arguments #$__count $(decorate each code -- "${__saved[@]}")" || return $?
   # __IDENTICAL__ __checkCommand__handler 1
   isCallable "$command" || __throwArgument "$__handler" "Not callable $(decorate code "$command")" || return $?
@@ -32,14 +32,14 @@ ___catch() {
 # Argument: code - Required. Integer. Exit code to return
 # Argument: handler - Required. Function. Failure command, passed remaining arguments and error code.
 # Argument: command - Required. String. Command to run.
-# Requires: isInteger _argument isFunction isCallable
+# Requires: isInteger returnArgument isFunction isCallable
 __catchCode() {
   local __count=$# __saved=("$@") __handler="_${FUNCNAME[0]}" code="${1-0}" command="${3-}"
   # __IDENTICAL__ __checkCode__handler 1
   isInteger "$code" || __throwArgument "$__handler" "Not integer: $(decorate value "[$code]") (#$__count $(decorate each code -- "${__saved[@]}"))" || return $?
   __handler="${2-}"
   # __IDENTICAL__ __checkHandler 1
-  isFunction "$__handler" || _argument "handler not callable \"$(decorate code "$__handler")\"" || return $?
+  isFunction "$__handler" || returnArgument "handler not callable \"$(decorate code "$__handler")\" Stack: $(debuggingStack)" || return $?
   # __IDENTICAL__ __checkCommand__handler 1
   isCallable "$command" || __throwArgument "$__handler" "Not callable $(decorate code "$command")" || return $?
   shift 3
@@ -71,7 +71,7 @@ __catchArgument() {
 __throwEnvironment() {
   local __handler="${1-}"
   # __IDENTICAL__ __checkHandler 1
-  isFunction "$__handler" || _argument "handler not callable \"$(decorate code "$__handler")\"" || return $?
+  isFunction "$__handler" || returnArgument "handler not callable \"$(decorate code "$__handler")\" Stack: $(debuggingStack)" || return $?
   shift && "$__handler" 1 "$@" || return $?
 }
 
@@ -81,7 +81,7 @@ __throwEnvironment() {
 __throwArgument() {
   local __handler="${1-}"
   # __IDENTICAL__ __checkHandler 1
-  isFunction "$__handler" || _argument "handler not callable \"$(decorate code "$__handler")\"" || return $?
+  isFunction "$__handler" || returnArgument "handler not callable \"$(decorate code "$__handler")\" Stack: $(debuggingStack)" || return $?
   shift && "$__handler" 2 "$@" || return $?
 }
 
@@ -89,18 +89,18 @@ __throwArgument() {
 # Argument: handler - Required. Function. Failure command
 # Argument: quietLog - Required. File. File to output log to temporarily for this command. If `quietLog` is `-` then creates a temporary file for the command which is deleted automatically.
 # Argument: command ... - Required. Callable. Thing to run and append output to `quietLog`.
-# Requires: isFunction _argument buildFailed debuggingStack __throwEnvironment
+# Requires: isFunction returnArgument buildFailed debuggingStack __throwEnvironment
 __catchEnvironmentQuiet() {
   local __handler="${1-}" quietLog="${2-}" clean=() && shift 2
   # __IDENTICAL__ __checkHandler 1
-  isFunction "$__handler" || _argument "handler not callable \"$(decorate code "$__handler")\"" || return $?
+  isFunction "$__handler" || returnArgument "handler not callable \"$(decorate code "$__handler")\" Stack: $(debuggingStack)" || return $?
   if [ ! -f "$quietLog" ]; then
     [ "$quietLog" = "-" ] || __throwArgument "$handler" "quietLog is not a file: $quietLog" || return $?
     quietLog=$(fileTemporaryName "$handler") || return $?
     clean+=("$quietLog")
   fi
   "$@" >>"$quietLog" 2>&1 || buildFailed "$quietLog" || __throwEnvironment "$__handler" "$@" || returnClean $? "${clean[@]+"${clean[@]}"}" || return $?
-  returnClean 0 "${clean[@]}" || return $?
+  returnClean 0 "${clean[@]+"${clean[@]}"}" || return $?
 }
 
 # Logs all deprecated functions to application root in a file called `.deprecated`
@@ -206,9 +206,9 @@ _convertValue() {
 
 # Argument: binary ... - Required. Executable. Any arguments are passed to `binary`.
 # Run binary and output failed command upon error
-# Requires: _return
+# Requires: returnMessage
 __execute() {
-  "$@" || _return "$?" "$@" || return $?
+  "$@" || returnMessage "$?" "$@" || return $?
 }
 
 # IDENTICAL returnUndo 42

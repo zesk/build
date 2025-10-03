@@ -52,7 +52,7 @@ testIsMappable() {
 }
 
 testMapTokens() {
-  local handler="_return" home
+  local handler="returnMessage" home
 
   local COLUMNS LINES
   home=$(__catch "$handler" buildHome) || return $?
@@ -88,7 +88,7 @@ testMapPrefixSuffix() {
 
 testMapValue() {
   local tempEnv
-  local handler="_return"
+  local handler="returnMessage"
 
   tempEnv=$(fileTemporaryName "$handler") || return $?
 

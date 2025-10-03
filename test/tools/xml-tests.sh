@@ -5,7 +5,7 @@
 # Copyright &copy; 2025 Market Acumen, Inc.
 
 test_XMLBasics() {
-  local handler="_return"
+  local handler="returnMessage"
 
   local rando
 

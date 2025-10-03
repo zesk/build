@@ -9,7 +9,7 @@
 
 # Test-Platform: !alpine
 testDaemontools() {
-  local handler="_return"
+  local handler="returnMessage"
   local logPath start waitFor logWaitFor
 
   mockEnvironmentStart DAEMONTOOLS_HOME
@@ -53,7 +53,7 @@ testDaemontools() {
     find "/etc/service/" -type f | dumpPipe "/etc/service"
     assertExitCode 0 sleep 1 || return $?
     if [ $(($(date +%s) - start)) -gt "$waitFor" ]; then
-      _environment "Log path lemon not created after $waitFor seconds" || return $?
+      returnEnvironment "Log path lemon not created after $waitFor seconds" || return $?
     fi
   done
 
@@ -69,14 +69,14 @@ testDaemontools() {
   if false; then
     logWaitFor=4
     statusMessage decorate info "Watching log file grow for $logWaitFor seconds"
-    savedSize=$(fileSize "$logPath/lemon/current") || _environment "fileSize $logPath/lemon/current failed" || return $?
+    savedSize=$(fileSize "$logPath/lemon/current") || returnEnvironment "fileSize $logPath/lemon/current failed" || return $?
     sleep $logWaitFor
     assertGreaterThan "$(fileSize "$logPath/lemon/current")" "$savedSize" || return $?
 
     assertExitCode 0 daemontoolsRemoveService lemon || return $?
 
     statusMessage decorate info "Watching log file NOT grow for $logWaitFor seconds"
-    savedSize=$(fileSize "$logPath/lemon/current") || _environment "fileSize $logPath/lemon/current failed" || return $?
+    savedSize=$(fileSize "$logPath/lemon/current") || returnEnvironment "fileSize $logPath/lemon/current failed" || return $?
     sleep $logWaitFor
     assertEquals "$savedSize" "$(fileSize "$logPath/lemon/current")" || return $?
   fi

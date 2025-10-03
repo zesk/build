@@ -247,7 +247,7 @@ sshSetup() {
   user="$(whoami)" || __throwEnvironment "$handler" "whoami failed" || return $?
   keyName="$user@$(uname -n)" || __throwEnvironment "$handler" "uname -n failed" || return $?
   if $flagForce && [ -f "$keyName" ]; then
-    [ ${#servers[@]} -gt 0 ] || _argument "Key $keyName already exists, exiting." || return $?
+    [ ${#servers[@]} -gt 0 ] || returnArgument "Key $keyName already exists, exiting." || return $?
   else
     local newKeys=("$keyName" "${keyName}.pub")
     statusMessage decorate info "Generating $keyName (keyType $keyType $keyBits keyBits)"

@@ -5,15 +5,27 @@
 <hr />
 
 {inArray}
+
 {isUnsignedNumber}
+
 {isNumber}
+
 {isInteger}
+
 {isUnsignedInteger}
+
 {isPositiveInteger}
+
 {isNumber}
+
 {isFunction}
+
 {isExecutable}
+
 {isCallable}
+
 {isTrue}
+
 {isType}
+
 {isArray}

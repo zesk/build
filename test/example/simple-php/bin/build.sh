@@ -45,19 +45,22 @@ __install() {
   __execute "${a[@]}" || return $?
 }
 
-# IDENTICAL _return 29
+# IDENTICAL _return 32
 
 # Return passed in integer return code and output message to `stderr` (non-zero) or `stdout` (zero)
 # Argument: exitCode - Required. UnsignedInteger. Exit code to return. Default is 1.
 # Argument: message ... - Optional. String. Message to output
 # Return Code: exitCode
 # Requires: isUnsignedInteger printf _return
-_return() {
+returnMessage() {
   local to=1 icon="✅" code="${1:-1}" && shift 2>/dev/null
   isUnsignedInteger "$code" || _return 2 "${FUNCNAME[1]-none}:${BASH_LINENO[1]-} -> ${FUNCNAME[0]} non-integer \"$code\"" "$@" || return $?
   if [ "$code" -gt 0 ]; then icon="❌ [$code]" && to=2; fi
   printf -- "%s %s\n" "$icon" "${*-§}" 1>&"$to"
   return "$code"
+}
+_return() {
+  returnMessage "$@"
 }
 
 # Test if an argument is an unsigned integer
@@ -77,9 +80,10 @@ isUnsignedInteger() {
 # <-- END of IDENTICAL _return
 
 __buildSampleApplication() {
-  clearLine || return $?
-  __environment muzzle pushd "$(buildHome)" || return $?
-  __environment phpBuild "$@" -- simple.application.php public src docs || return $?
+  local handler="returnMessage"
+  statusMessage printf ""
+  __catchEnvironment "$handler" muzzle pushd "$(buildHome)" || return $?
+  __catchEnvironment "$handler" phpBuild "$@" -- simple.application.php public src docs || return $?
 }
 
 __build .. bin __buildSampleApplication "$@"

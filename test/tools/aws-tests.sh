@@ -36,7 +36,7 @@ testAWSIPAccess() {
   local tempHome
 
   if [ -z "$quietLog" ]; then
-    _argument "testAWSIPAccess missing log" || return $?
+    returnArgument "testAWSIPAccess missing log" || return $?
   fi
 
   export HOME AWS_PROFILE AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY
@@ -52,7 +52,7 @@ testAWSIPAccess() {
   usageRequireEnvironment _return TEST_AWS_SECURITY_GROUP AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY AWS_REGION HOME || return $?
 
   if [ -d "$HOME/.aws" ]; then
-    _environment "No .aws directory should exist already" || return $?
+    returnEnvironment "No .aws directory should exist already" || return $?
   fi
 
   # Work using environment variables
@@ -197,7 +197,7 @@ testAwsRegionValid() {
 }
 
 testAwsEnvironmentFromCredentials() {
-  local handler="_return"
+  local handler="returnMessage"
   local credFile firstKey firstId year matches
 
   export HOME AWS_PROFILE AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY
@@ -314,7 +314,7 @@ testAwsEnvironmentFromCredentials() {
 }
 
 testAWSCredentialsEdit() {
-  local handler="_return"
+  local handler="returnMessage"
   local testCredentials
   local testResults home clean=() testHome
 
@@ -334,7 +334,7 @@ testAWSCredentialsEdit() {
 
   local testAWSCredentials testPassword="abcdefghabcdefghabcdefghabcdefghhabcdefgh"
 
-  testAWSCredentials=$(__environment awsCredentialsFile --path) || return $?
+  testAWSCredentials=$(__catchEnvironment "$handler" awsCredentialsFile --path) || return $?
   assertFileDoesNotExist "$testAWSCredentials" || return $?
 
   testCredentials="$home/test/example/aws/fake.credentials.txt"
@@ -350,7 +350,7 @@ testAWSCredentialsEdit() {
   assertFileExists "$testAWSCredentials" || return $?
   assertExitCode 0 diff -u "$testAWSCredentials" "$home/test/example/aws/fake.credentials.1.txt" || return $?
 
-  __environment cp "$testCredentials" "$testAWSCredentials" || return $?
+  __catchEnvironment "$handler" cp "$testCredentials" "$testAWSCredentials" || return $?
   assertExitCode 0 awsCredentialsAdd --force --profile "$profileName" "AKIA0123456789001233" "$testPassword" || return $?
   assertExitCode 0 diff -u "$testAWSCredentials" "$home/test/example/aws/fake.credentials.2.txt" || return $?
 
@@ -372,7 +372,7 @@ testAWSCredentialsEdit() {
 }
 
 testAWSProfiles() {
-  local handler="_return"
+  local handler="returnMessage"
   local list firstName='test-aws' secondName='never-gonna-let-you-down'
   local clean=()
 
@@ -401,7 +401,7 @@ testAWSProfiles() {
 
   assertExitCode 0 awsCredentialsRemove --comments "$firstName" || return $?
 
-  __environment awsProfilesList >"$list" || return $?
+  __catchEnvironment "$handler" awsProfilesList >"$list" || return $?
   assertFileDoesNotContain --line "$LINENO" "$list" "$firstName" || returnUndo $? dumpPipe awsProfilesList <"$list" || return $?
   assertFileDoesNotContain --line "$LINENO" "$list" "$secondName" || returnUndo $? dumpPipe awsProfilesList <"$list" || return $?
 
@@ -417,25 +417,25 @@ testAWSProfiles() {
   assertExitCode 0 awsCredentialsAdd --comments --force --profile "$firstName" "$testKey" "$testPassword" || return $?
   assertFileContains --line "$LINENO" "$credentials" "# awsCredentialsAdd" || return $?
 
-  __environment awsProfilesList >"$list" || return $?
+  __catchEnvironment "$handler" awsProfilesList >"$list" || return $?
   assertFileContains --line "$LINENO" "$list" "$firstName" || return $?
   assertFileDoesNotContain --line "$LINENO" "$list" "$secondName" || return $?
   assertExitCode 0 awsCredentialsAdd --comments --profile "$secondName" "$testKey" "$testPassword" || return $?
 
-  __environment awsProfilesList >"$list" || return $?
+  __catchEnvironment "$handler" awsProfilesList >"$list" || return $?
   assertFileContains --line "$LINENO" "$list" "$firstName" || return $?
   assertFileContains --line "$LINENO" "$list" "$secondName" || return $?
 
   assertExitCode 0 awsCredentialsRemove --comments "$firstName" || return $?
 
-  __environment awsProfilesList >"$list" || return $?
+  __catchEnvironment "$handler" awsProfilesList >"$list" || return $?
   assertFileDoesNotContain --line "$LINENO" "$list" "$firstName" || return $?
   assertFileContains --line "$LINENO" "$list" "$secondName" || return $?
 
   assertExitCode 0 awsCredentialsRemove --comments "$firstName" || return $?
   decorate info removed first name
 
-  __environment awsProfilesList >"$list" || return $?
+  __catchEnvironment "$handler" awsProfilesList >"$list" || return $?
   assertFileDoesNotContain --line "$LINENO" "$list" "$firstName" || return $?
   assertFileContains --line "$LINENO" "$list" "$secondName" || return $?
 
@@ -444,7 +444,7 @@ testAWSProfiles() {
 
   dumpPipe "awsProfiles saved" <"$list"
   dumpPipe "credentials" <"$(awsCredentialsFile)"
-  __environment awsProfilesList >"$list" || return $?
+  __catchEnvironment "$handler" awsProfilesList >"$list" || return $?
   assertFileDoesNotContain --line "$LINENO" "$list" "$firstName" || return $?
   assertFileDoesNotContain --line "$LINENO" "$list" "$secondName" || return $?
 

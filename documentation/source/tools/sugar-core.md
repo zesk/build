@@ -6,15 +6,10 @@
 
 Sugar refers to syntactic sugar - code which makes other code more readable.
 
-The functions are grouped as follows;
-
-- `_` - Single underscore prefixed functions means "return" a failure value
-- `__` - Double underscore prefixed functions means "run the command" and handle the failure value
-
 Most functions are used in the form suffixed with `|| return $?` which takes the returned code and returns immediately
 from the function.
 
-    _return 1 "This failed" || return $?
+    returnMessage 1 "This failed" || return $?
     __argument isInteger "$1" || return $?
 
 Alternately, these can be used within an `if` or other compound statement but the return code should be returned to the
@@ -29,22 +24,22 @@ Quick guide:
 
 Error codes:
 
-- `_code name ...` - Exit codes. Outputs integers based on error names, one per line.
+- `returnCode name ...` - Exit codes. Outputs integers based on error names, one per line.
+- `exitString integer ...` - Exit strings. Reverse of `returnCode`.
 
 Return errors:
 
-- `_return code message ...` - Return code always. Outputs `message ...` to `stderr` IFF `code` is non-zero, otherwise
-  output message to `stdout`1.
-- `_environment message ...` - Return `1` always. Outputs `message ...` to `stderr`.
-- `_argument message ...` - Return `2` always. Outputs `message ...` to `stderr`.
+- `returnMessage code message ...` - Return `code` and outputs `message ...` to `stderr` IFF `code` is non-zero,
+  otherwise output `message ...` to `stdout`.
+- `returnEnvironment message ...` - Return `1` always. Outputs `message ...` to `stderr`.
+- `returnArgument message ...` - Return `2` always. Outputs `message ...` to `stderr`.
 
 Run-related:
 
 - `__execute command ...` - Run `command ...` (with any arguments) and then `_return` if it fails.
 - `__echo command ...` - Output the `command ...` to stdout prior to running, then `__execute` it (helpful to debug
   statements within other scripts)
-- `__environment command ...` - Run `command ...` (with any arguments) and then `_environment` if it fails.
-- `__argument command ...` - Run `command ...` (with any arguments) and then `_argument` if it fails.
+- `__environment command ...` - Run `command ...` (with any arguments) and then `returnEnvironment` if it fails.
 
 # Sugar Functions References
 
@@ -61,15 +56,16 @@ Run-related:
 ## Cleanup
 
 {returnClean}
+
 {returnUndo}
 
 ## Fail with an error code
 
-{_return}
+{returnMessage}
 
-{_environment}
+{returnEnvironment}
 
-{_argument}
+{returnArgument}
 
 ## Run-related
 

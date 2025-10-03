@@ -51,7 +51,7 @@ testMariaDBInstallation() {
 }
 
 testMariaDBDumpClean() {
-  local handler="_return"
+  local handler="returnMessage"
   local home
 
   home=$(__catch "$handler" buildHome) || return $?

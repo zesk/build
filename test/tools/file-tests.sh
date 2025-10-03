@@ -8,12 +8,12 @@
 testBasicFileStuff() {
   local testDir
   local testFile
-  local handler="_return"
+  local handler="returnMessage"
 
   testDir=$(fileTemporaryName "$handler" -d) || return $?
 
   testFile="$testDir/$(randomString).$$"
-  __environment touch "$testFile" || return $?
+  __catchEnvironment "$handler" touch "$testFile" || return $?
   assertExitCode 0 fileModificationTime "$testFile" || return $?
   assertExitCode 0 fileModificationSeconds "$testFile" || return $?
 
@@ -25,7 +25,7 @@ _assertBetterType() {
 }
 
 testBetterType() {
-  local handler="_return"
+  local handler="returnMessage"
 
   _assertBetterType "$LINENO" "builtin" return || return $?
   _assertBetterType "$LINENO" "builtin" . || return $?
@@ -73,14 +73,14 @@ _invertMatches() {
 }
 
 testFileMatches() {
-  local handler="_return"
+  local handler="returnMessage"
   local home matchFiles match matches invertedMatches ex pattern neverMatches
 
   ex=()
   matchFiles=$(fileTemporaryName "$handler") || return $?
   home=$(__catch "$handler" buildHome) || return $?
 
-  __environment find "$home/test/matches" -type f >"$matchFiles" || return $?
+  __catchEnvironment "$handler" find "$home/test/matches" -type f >"$matchFiles" || return $?
 
   # dumpPipe "match file list" <"$matchFiles"
   # zulu simple
@@ -218,7 +218,7 @@ testFileMatches() {
 testLinkCreate() {
   local home target
 
-  home=$(__environment buildHome) || return $?
+  home=$(__catchEnvironment "$handler" buildHome) || return $?
 
   find "$home/bin/build/" -maxdepth 1 -name 'wacky.*' -exec rm {} \; || :
 
@@ -234,11 +234,11 @@ testLinkCreate() {
   assertNotExitCode --stderr-match "Can not link to another link" --line "$LINENO" 0 "$home/bin/build/$target.ALT" linkCreate "$home/bin/build/$target.FINAL" "$target.NoLinkyLinks" || return $?
   assertExitCode 0 test -L "$home/bin/build/$target.FINAL" || return $?
   assertEquals "$(find "$home/bin/build" -name "wacky.*" | fileLineCount)" "3" || return $?
-  __environment rm -rf "$home/bin/build/$target*" || return $?
+  __catchEnvironment "$handler" rm -rf "$home/bin/build/$target*" || return $?
 }
 
 testFileLineCount() {
-  local handler="_return"
+  local handler="returnMessage"
   local temp
 
   temp=$(fileTemporaryName "$handler") || return $?

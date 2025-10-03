@@ -412,7 +412,7 @@ _serviceToPort() {
 __extensionListsLog() {
   local directory="$1" original="$2"
   local name extension
-  name="$(basename "$original")" || _argument "basename $name" || return $?
+  name="$(basename "$original")" || returnArgument "basename $name" || return $?
   extension="${name##*.}"
   # Tests, in order:
   # - Not `.just-extension`
@@ -420,7 +420,7 @@ __extensionListsLog() {
   # - Not `".."` or `"."` or `""`
   # If any of the above - use `!` bucket
   [ "${name%%.*}" != "" ] && [ "$extension" != "$name" ] && [ "$extension" != "." ] && [ "$extension" != ".." ] && [ -n "$extension" ] || extension="!"
-  printf "%s\n" "$original" | tee -a "$directory/@" >>"$directory/$extension" || _environment "writing $directory/$extension" || return $?
+  printf "%s\n" "$original" | tee -a "$directory/@" >>"$directory/$extension" || returnEnvironment "writing $directory/$extension" || return $?
 }
 
 # Argument: --clean - Optional. Flag. Clean directory of all files first.

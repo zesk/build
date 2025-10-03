@@ -8,7 +8,7 @@
 #
 
 testReadlineConfigurationAdd() {
-  local handler="_return"
+  local handler="returnMessage"
   local tempHome
 
   mockEnvironmentStart HOME

@@ -655,5 +655,5 @@ __urlOpen() {
     binary=$(usageArgumentExecutable "$handler" "BUILD_URL_BINARY" "$binary") || return $?
   fi
   [ $# -gt 0 ] || __catchArgument "$handler" "Require at least one URL" || return $?
-  __environment "$binary" "$@" || return $?
+  __catchEnvironment "$handler" "$binary" "$@" || return $?
 }

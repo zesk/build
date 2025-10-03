@@ -5,9 +5,11 @@
 <hr />
 
 {terraformInstall}
+
 {terraformUninstall}
 
 ## Support functions
 
 {aptKeyAddHashicorp}
+
 {aptKeyRemoveHashicorp}

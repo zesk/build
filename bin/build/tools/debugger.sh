@@ -124,7 +124,7 @@ _bashDebugWatch() {
 __bashDebugStep() {
   local source="$1" functionName="$2" line="$3" && shift 3
 
-  [ $(($# % 3)) -eq 0 ] || _argument "__bashDebugStep $1 $2 $3: $# % 3 != 0" || return 1
+  [ $(($# % 3)) -eq 0 ] || returnArgument "__bashDebugStep $1 $2 $3: $# % 3 != 0" || return 1
   while [ $# -gt 0 ]; do
     checkSource="$1" checkFunctionName="$2" checkLine="$3"
     if [ "$checkSource" = "$source" ] && [ "$checkFunctionName" = "$functionName" ] && [ "$line" -gt "$checkLine" ]; then

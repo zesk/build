@@ -83,7 +83,7 @@ _reloadChanges() {
 # Maintain the application fingerprint in the `APPLICATION_JSON` file
 #
 # Example:     bashPrompt bashPromptModule_dotFilesWatcher
-# Requires: sort buildEnvironmentGetDirectory touch _environment read basename inArray decorate printf confirmYesNo statusMessage grep rm
+# Requires: sort buildEnvironmentGetDirectory touch returnEnvironment read basename inArray decorate printf confirmYesNo statusMessage grep rm
 bashPromptModule_Fingerprint() {
   __promptLoader "_${FUNCNAME[0]}" "__${FUNCNAME[0]}" "$@"
 }
@@ -95,7 +95,7 @@ _bashPromptModule_Fingerprint() {
 # Watches your HOME directory for `.` files which are added and unknown to you.
 #
 # Example:     bashPrompt bashPromptModule_dotFilesWatcher
-# Requires: sort buildEnvironmentGetDirectory touch _environment read basename inArray decorate printf confirmYesNo statusMessage grep rm
+# Requires: sort buildEnvironmentGetDirectory touch returnEnvironment read basename inArray decorate printf confirmYesNo statusMessage grep rm
 bashPromptModule_dotFilesWatcher() {
   __promptLoader "_${FUNCNAME[0]}" "__${FUNCNAME[0]}" "$@"
 }

@@ -7,4 +7,5 @@ For systems with an `/etc/init.d` start up script system.
 <hr />
 
 {sysvInitScriptInstall}
+
 {sysvInitScriptUninstall}

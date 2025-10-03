@@ -16,7 +16,7 @@ testBashCommentFilter() {
 # Requires: D E F G A a b c d
 # Test-Housekeeper-Overhead: true
 testBashGetRequires() {
-  local handler="_return"
+  local handler="returnMessage"
   local temp
 
   temp=$(fileTemporaryName "$handler") || return $?
@@ -57,7 +57,7 @@ testBashBasics() {
 }
 
 testBashSourcePath() {
-  local handler="_return"
+  local handler="returnMessage"
   local testPath clean=()
 
   testPath=$(fileTemporaryName "$handler" -d) || return $?
@@ -71,15 +71,15 @@ testBashSourcePath() {
   # Regardless of order someone will not exist
 
   assertNotExitCode --stderr-match "not executable" 0 bashSourcePath "$testPath" || return $?
-  __environment muzzle makeShellFilesExecutable "$testPath" || return $?
+  __catchEnvironment "$handler" muzzle makeShellFilesExecutable "$testPath" || return $?
   assertNotExitCode --stderr-match "not a bash source" 0 bashSourcePath "$testPath" || return $?
 
-  __environment rm -rf "$testPath/"*.sh || return $?
+  __catchEnvironment "$handler" rm -rf "$testPath/"*.sh || return $?
 
   assertEquals "${ZESK_BUILD-}" "" || return $?
   printf "%s\n" "#!/usr/bin/env bash" "export ZESK_BUILD=true" >"$testPath/1.sh"
   printf "%s\n" "#!/usr/bin/env bash" "_testZeskBuildFunction() {" "    decorate green Not easy being green." "}" >"$testPath/2.sh"
-  __environment muzzle makeShellFilesExecutable "$testPath" || return $?
+  __catchEnvironment "$handler" muzzle makeShellFilesExecutable "$testPath" || return $?
 
   assertExitCode --leak ZESK_BUILD 0 bashSourcePath "$testPath" || return $?
 
@@ -92,7 +92,7 @@ testBashSourcePath() {
 }
 
 testBashSourcePathExclude() {
-  local handler="_return"
+  local handler="returnMessage"
   local testPath
 
   testPath=$(fileTemporaryName "$handler" -d) || return $?
@@ -132,7 +132,7 @@ testBashSourcePathExclude() {
 }
 
 testBashSourcePathDot() {
-  local handler="_return"
+  local handler="returnMessage"
   local testPath testPasses=false
   local clean=()
 
@@ -140,7 +140,7 @@ testBashSourcePathDot() {
 
   clean+=("$testPath")
 
-  __environment mkdir -p "$testPath/.foobar/.eefo/.dots" || return $?
+  __catchEnvironment "$handler" mkdir -p "$testPath/.foobar/.eefo/.dots" || return $?
   printf "%s\n" "testPasses=dots" >"$testPath/.foobar/.eefo/.dots/test.sh" || return $?
   printf "%s\n" "testPasses=eefo" >"$testPath/.foobar/.eefo/goo.sh" || return $?
   printf "%s\n" "testPasses=foobar" >"$testPath/.foobar/beep.sh" || return $?
@@ -178,7 +178,7 @@ _pipeRan() {
   tee "$@"
 }
 testBashPipeBehavior() {
-  local handler="_return"
+  local handler="returnMessage"
   local temp
 
   export TEST_PIPE_RAN PIPE_RAN_FILE

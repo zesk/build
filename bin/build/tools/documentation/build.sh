@@ -182,7 +182,7 @@ __documentationBuild() {
   local elapsed
   elapsed=$(timingStart)
   statusMessage decorate info "Generating source indexes ..."
-  __catch "$handler" _documentationIndex_Generate "${indexArgs[@]+${indexArgs[@]}}" "$cacheDirectory" "${sourcePaths[@]}" || return $?
+  __catch "$handler" _documentationIndexGenerate "${indexArgs[@]+${indexArgs[@]}}" "${sourcePaths[@]}" || return $?
   statusMessage --last timingReport "$elapsed" "Indexes took"
   statusMessage timingReport "$start" "Elapsed so far"
 
@@ -194,18 +194,18 @@ __documentationBuild() {
   if [ -f "$unlinkedTemplate" ]; then
     # First copy
     __catch "$handler" mapEnvironment <"$unlinkedTemplate" >"$unlinkedTarget" || return $?
+
+    # Create or update indexes
+    elapsed=$(timingStart)
+    statusMessage decorate info "Generating documentation index ..."
+    __catch "$handler" __documentationIndexDocumentation "$handler" "$cacheDirectory" "${sourcePaths[@]}" || returnClean $? "${clean[@]}" || return $?
+    statusMessage --last timingReport "$elapsed" "Generated documentation index in" || :
   fi
 
   elapsed=$(timingStart)
   statusMessage decorate info "Compiling templates into documentation source ..."
-  __catch "$handler" documentationTemplateDirectoryCompile "${docArgs[@]+"${docArgs[@]}"}" "$cacheDirectory" "$templatePath" "$functionTemplate" "$targetPath" || returnClean $? "${clean[@]}" || return $?
+  __documentationTemplateDirectoryCompile "$handler" "${docArgs[@]+"${docArgs[@]}"}" "$cacheDirectory" "$templatePath" "$functionTemplate" "$targetPath" || returnClean $? "${clean[@]}" || return $?
   statusMessage --last timingReport "$elapsed" "Compiling templates into documentation source took"
-
-  # Create or update indexes
-  elapsed=$(timingStart)
-  statusMessage decorate info "Generating documentation index ..."
-  __catch "$handler" _documentationIndex_DocumentationIndex "$cacheDirectory" "$targetPath" || returnClean $? "${clean[@]}" || return $?
-  statusMessage --last timingReport "$elapsed" "Generated documentation index in" || :
 
   if [ -n "$unlinkedTemplate" ]; then
     ! $verbose || decorate info "Update unlinked document $unlinkedTarget"
@@ -234,7 +234,7 @@ __documentationBuild() {
     functionLinkPattern=${BUILD_DOCUMENTATION_SOURCE_LINK_PATTERN-}
     # Remove line
     fileLinkPattern=${functionLinkPattern%%#.*}
-    __catch "$handler" __documentationIndex_SeeLinker "$cacheDirectory" "$seePrefix" "$seeFunction" "$functionLinkPattern" "$seeFile" "$fileLinkPattern" || return $?
+    __catch "$handler" __documentationIndexSeeLinker "$cacheDirectory" "$seePrefix" "$seeFunction" "$functionLinkPattern" "$seeFile" "$fileLinkPattern" || return $?
   ) || return $?
   message=$(__catch "$handler" timingReport "$start" "in") || return $?
 

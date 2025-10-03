@@ -14,14 +14,14 @@ __testPlatformName() {
   printf -- "%s\n" "linux"
 }
 
-# Requires: apkIsInstalled printf _environment _packageDebugging
+# Requires: apkIsInstalled printf returnEnvironment _packageDebugging
 __packageManagerDefault() {
   if aptIsInstalled; then
     printf "%s\n" "apt"
   elif yumIsInstalled; then
     printf "%s\n" "yum"
   else
-    _environment "Not able to detect package manager $(_packageDebugging)" || return $?
+    returnEnvironment "Not able to detect package manager $(_packageDebugging)" || return $?
   fi
 }
 

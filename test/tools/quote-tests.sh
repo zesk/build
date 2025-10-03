@@ -46,7 +46,7 @@ EOF
 }
 
 testQuoteGrepPattern() {
-  local handler="_return"
+  local handler="returnMessage"
 
   local temp
   temp=$(fileTemporaryName "$handler") || return $?

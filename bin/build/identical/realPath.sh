@@ -12,7 +12,7 @@
 # DOC TEMPLATE: noArgumentsForHelp 1
 # Without arguments, displays help.
 # Argument: file ... - Required. File. One or more files to `realpath`.
-# Requires: whichExists realpath __help usageDocument _argument
+# Requires: whichExists realpath __help usageDocument returnArgument
 realPath() {
   # __IDENTICAL__ --help-when-blank 1
   [ $# -gt 0 ] || __help "_${FUNCNAME[0]}" --help || return 0

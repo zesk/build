@@ -23,7 +23,7 @@ testHasPlumberLeaks() {
 
 # Test-Housekeeper: true
 testHasHousekeeperLeaks() {
-  local handler="_return"
+  local handler="returnMessage"
   local dogma
   dogma=$(fileTemporaryName "$handler") || return $?
   false || __catchEnvironment "$handler" rm -rf "$dogma" || return $?
@@ -42,6 +42,6 @@ testBuildHomeFlagNot() {
 # Test-Housekeeper: false
 # Test-Plumber: false
 testHasLeaks() {
-  local handler="_return"
+  local handler="returnMessage"
   dogma=$(fileTemporaryName "$handler") || return $?
 }

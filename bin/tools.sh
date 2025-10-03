@@ -31,19 +31,19 @@
 # Argument: source - Required. File. Path to source relative to application root..
 # Argument: relativeHome - Optional. Directory. Path to application root. Defaults to `..`
 # Argument: command ... - Optional. Callable. A command to run and optional arguments.
-# Requires: _return
+# Requires: returnMessage
 # Security: source
 # Return Code: 253 - source failed to load (internal error)
 # Return Code: 0 - source loaded (and command succeeded)
 # Return Code: ? - All other codes are returned by the command itself
 __source() {
   local here="${BASH_SOURCE[0]%/*}" e=253
-  local source="$here/${2:-".."}/${1-}" && shift 2 || _return $e "missing source" || return $?
-  [ -d "${source%/*}" ] || _return $e "${source%/*} is not a directory" || return $?
-  [ -f "$source" ] && [ -x "$source" ] || _return $e "$source not an executable file" "$@" || return $?
+  local source="$here/${2:-".."}/${1-}" && shift 2 || returnMessage $e "missing source" || return $?
+  [ -d "${source%/*}" ] || returnMessage $e "${source%/*} is not a directory" || return $?
+  [ -f "$source" ] && [ -x "$source" ] || returnMessage $e "$source not an executable file" "$@" || return $?
   local a=("$@") && set --
   # shellcheck source=/dev/null
-  source "$source" || _return $e source "$source" "$@" || return $?
+  source "$source" || returnMessage $e source "$source" "$@" || return $?
   [ ${#a[@]} -gt 0 ] || return 0
   "${a[@]}" || return $?
 }
@@ -66,21 +66,21 @@ __tools() {
 # Argument: relativeHome - Optional. Directory. Path to application home. Default is `..`.
 # Argument: command ... - Optional. Callable. A command to run and optional arguments.
 # Example:      __install bin/install-bin-build.sh bin/build/tools.sh ../../.. decorate info "$@"
-# Requires: _return __execute
+# Requires: returnMessage __execute
 __install() {
   local installer="${1-}" source="${2-}" relativeHome="${3:-".."}" me="${BASH_SOURCE[0]}"
   local here="${me%/*}" e=253 a
   local install="$here/$relativeHome/$installer" tools="$here/$relativeHome/$source"
-  [ -n "$installer" ] || _return $e "blank installer" || return $?
-  [ -n "$source" ] || _return $e "blank source" || return $?
+  [ -n "$installer" ] || returnMessage $e "blank installer" || return $?
+  [ -n "$source" ] || returnMessage $e "blank source" || return $?
   if [ ! -x "$tools" ]; then
-    "$install" || _return $e "$install failed" || return $?
-    [ -d "${tools%/*}" ] || _return $e "$install failed to create directory ${tools%/*}" || return $?
+    "$install" || returnMessage $e "$install failed" || return $?
+    [ -d "${tools%/*}" ] || returnMessage $e "$install failed to create directory ${tools%/*}" || return $?
   fi
-  [ -x "$tools" ] || _return $e "$install failed to create $tools" "$@" || return $?
+  [ -x "$tools" ] || returnMessage $e "$install failed to create $tools" "$@" || return $?
   shift 3 && a=("$@") && set --
   # shellcheck source=/dev/null
-  source "$tools" || _return "$e" source "$tools" || return $?
+  source "$tools" || returnMessage "$e" source "$tools" || return $?
   [ ${#a[@]} -gt 0 ] || return 0
   __execute "${a[@]}" || return $?
 }
@@ -98,13 +98,13 @@ __build() {
   __install "$installerPath/install-bin-build.sh" "bin/build/tools.sh" "$relative" "$@" || return $?
 }
 
-# IDENTICAL _return 29
+# IDENTICAL returnMessage 29
 
 # Return passed in integer return code and output message to `stderr` (non-zero) or `stdout` (zero)
 # Argument: exitCode - Required. UnsignedInteger. Exit code to return. Default is 1.
 # Argument: message ... - Optional. String. Message to output
 # Return Code: exitCode
-# Requires: isUnsignedInteger printf _return
+# Requires: isUnsignedInteger printf returnMessage
 _return() {
   local to=1 icon="✅" code="${1:-1}" && shift 2>/dev/null
   isUnsignedInteger "$code" || _return 2 "${FUNCNAME[1]-none}:${BASH_LINENO[1]-} -> ${FUNCNAME[0]} non-integer \"$code\"" "$@" || return $?

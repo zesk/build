@@ -21,12 +21,12 @@ __testPlatformName() {
   printf -- "%s\n" "alpine"
 }
 
-# Requires: apkIsInstalled printf _environment _packageDebugging
+# Requires: apkIsInstalled printf returnEnvironment _packageDebugging
 __packageManagerDefault() {
   if apkIsInstalled; then
     printf "%s\n" "apk"
   else
-    _environment "Not able to detect package manager $(_packageDebugging)" || return $?
+    returnEnvironment "Not able to detect package manager $(_packageDebugging)" || return $?
   fi
 }
 

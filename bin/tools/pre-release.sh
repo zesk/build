@@ -5,28 +5,29 @@
 # Copyright &copy; 2025 Market Acumen, Inc.
 
 buildPreRelease() {
+  local handler="_${FUNCNAME[0]}"
   local home
   local exitCode=0
 
-  home=$(__environment buildHome) || return $?
+  home=$(__catchEnvironment "$handler" buildHome) || return $?
 
   statusMessage decorate info "Deprecated cleanup ..."
-  __execute "$home/bin/build/deprecated.sh" || exitCode=$?
+  __catchEnvironment "$handler" "$home/bin/build/deprecated.sh" || exitCode=$?
   [ "$exitCode" = 0 ] || decorate error "Failed but continuing with release steps ..."
   statusMessage decorate info "Identical repair (internal, long) ..."
-  __execute "$home/bin/build/identical-repair.sh" --internal || exitCode=$?
+  __catchEnvironment "$handler" "$home/bin/build/identical-repair.sh" --internal || exitCode=$?
   [ "$exitCode" = 0 ] || decorate error "Failed but continuing with release steps ..."
   statusMessage decorate info "Linting"
   find "$home" -name '*.sh' ! -path '*/.*/*' | bashLintFiles || exitCode=$?
   [ "$exitCode" = 0 ] || decorate error "Failed but continuing with release steps ..."
 
-  # __execute "$home/bin/documentation.sh" --clean || exitCode=$?
-  __execute "$home/bin/documentation.sh" || exitCode=$?
+  # __catchEnvironment "$handler"  "$home/bin/documentation.sh" --clean || exitCode=$?
+  __catchEnvironment "$handler" "$home/bin/documentation.sh" || exitCode=$?
 
   if [ "$exitCode" -eq 0 ]; then
     if gitRepositoryChanged; then
       statusMessage decorate info "Committing changes ..."
-      gitCommit -- "buildPreRelease $(hookVersionCurrent)"
+      __catchEnvironment "$handler" gitCommit -- "buildPreRelease $(hookVersionCurrent)" || return $?
       statusMessage decorate info --last "Committed and ready to release."
     else
       statusMessage decorate info --last "No changes to commit."
@@ -39,4 +40,8 @@ buildPreRelease() {
   fi
   bigText "$text" | decorate "$color"
   return "$exitCode"
+}
+_buildPreRelease() {
+  # __IDENTICAL__ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

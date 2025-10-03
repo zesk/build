@@ -14,7 +14,7 @@ _processSignal() {
   local signal="$1"
   local signals
 
-  shift || _argument "missing signal" || return $?
+  shift || returnArgument "missing signal" || return $?
   signals=()
   while [ $# -gt 0 ]; do
     if kill "-$signal" "$1" 2>/dev/null; then
@@ -100,7 +100,7 @@ processWait() {
 
   processTemp=$(fileTemporaryName "$handler") || return $?
   while [ ${#processIds[@]} -gt 0 ]; do
-    __environment _processSignal 0 "${processIds[@]}" >"$processTemp" || return $?
+    __catchEnvironment "$handler" _processSignal 0 "${processIds[@]}" >"$processTemp" || return $?
     # Reset aliveIds, load them from _processSignal
     aliveIds=()
     while read -r processId; do ! isInteger "$processId" || aliveIds+=("$processId"); done <"$processTemp"
@@ -128,7 +128,7 @@ processWait() {
         sendSignals=("${sendSignals[@]}")
         # Reset aliveIds, load them from _processSignal
         ! $verboseFlag || statusMessage decorate info "Sending $(decorate label "$signal") to $(IFS=, decorate code "${processIds[*]}")"
-        __environment _processSignal "$signal" "${processIds[@]}" >"$processTemp" || return $?
+        __catchEnvironment "$handler" _processSignal "$signal" "${processIds[@]}" >"$processTemp" || return $?
         aliveIds=()
         while read -r processId; do ! isInteger "$processId" || aliveIds+=("$processId"); done <"$processTemp"
         ! $verboseFlag && IFS=, statusMessage decorate info "Processes: ${processIds[*]} -> Alive: $(IFS=, decorate code "${aliveIds[*]-none}")"

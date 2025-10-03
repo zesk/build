@@ -145,13 +145,13 @@ testUrlValid() {
 }
 
 testUrlFilter() {
-  local handler="_return"
+  local handler="returnMessage"
   local home output source
 
-  home=$(__environment buildHome) || return $?
+  home=$(__catchEnvironment "$handler" buildHome) || return $?
   output=$(fileTemporaryName "$handler") || return $?
   source="$home/test/example/urlFilter.source.html"
-  urlFilter "$source" >"$output" || _environment "urlFilter $source failed" || return $?
+  urlFilter "$source" >"$output" || returnEnvironment "urlFilter $source failed" || return $?
   assertExitCode 0 diff "$output" "$home/test/example/urlFilter.output.txt" || returnUndo $? dumpPipe "urlFilter $source" <"$output" || returnUndo $? rm -rf "$output" || return $?
 
   __catch "$handler" rm -f "$output" || return $?
@@ -175,7 +175,7 @@ testUrlOpen() {
 }
 
 testFetch() {
-  local handler="_return"
+  local handler="returnMessage"
   local targetFile
 
   assertExitCode 0 urlFetch --help || return $?
@@ -187,7 +187,7 @@ testFetch() {
   assertFileExists "$targetFile" || return $?
   assertNotFileSize --line "$LINENO" 0 "$targetFile" || return $?
   assertFileContains --line "$LINENO" "$targetFile" "https://www.iana.org/domains/example" || return $?
-  __environment rm -f "$targetFile" || return $?
+  __catchEnvironment "$handler" rm -f "$targetFile" || return $?
 }
 
 testUrlToVariables() {

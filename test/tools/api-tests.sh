@@ -33,8 +33,8 @@ testDates() {
   assertEquals "$(dateFromTimestamp 1697666075 %F)" "2023-10-18" || return $?
   assertEquals "$(todayDate)" "$(date -u +%F)" || return $?
 
-  t="$(todayDate)" || _environment todayDate failed || return $?
-  y="$(yesterdayDate)" || _environment yesterdayDate failed || return $?
+  t="$(todayDate)" || returnEnvironment todayDate failed || return $?
+  y="$(yesterdayDate)" || returnEnvironment yesterdayDate failed || return $?
 
   assertEquals "${#t}" "${#y}" || return $?
 

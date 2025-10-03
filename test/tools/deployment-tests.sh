@@ -14,7 +14,7 @@ __prepareSampleApplicationDeployment() {
 
   export BUILD_HOME
 
-  __environment buildEnvironmentLoad BUILD_HOME || return $?
+  __catchEnvironment "$handler" buildEnvironmentLoad BUILD_HOME || return $?
 
   local tempPath
   tempPath=$(fileTemporaryName "$handler" -d) || return $?
@@ -27,28 +27,28 @@ __prepareSampleApplicationDeployment() {
   __catchEnvironment "$handler" rm -rf "$tempPath" || return $?
 
   # Mock deployment
-  __environment tar zxf "$target/app.tar.gz" || return $?
+  __catchEnvironment "$handler" tar zxf "$target/app.tar.gz" || return $?
 }
 
 #
 # deployRemoteFinish
 #
 testDeployRemoteFinish() {
-  local handler="_return"
+  local handler="returnMessage"
   local tempDirectory id oldId matches finishArgs
 
   exec 2>&1
   export BUILD_HOME
 
-  __environment buildEnvironmentLoad BUILD_HOME || return $?
+  __catchEnvironment "$handler" buildEnvironmentLoad BUILD_HOME || return $?
 
   id=abcdef
   tempDirectory=$(fileTemporaryName "$handler" -d) || return $?
 
   printf "%s %s\n" "$(decorate success "testDeployRemoteFinish:")" "$(decorate code "$tempDirectory")"
 
-  __environment mkdir -p "$tempDirectory/app" || return $?
-  __environment mkdir -p "$tempDirectory/deploy" || return $?
+  __catchEnvironment "$handler" mkdir -p "$tempDirectory/app" || return $?
+  __catchEnvironment "$handler" mkdir -p "$tempDirectory/deploy" || return $?
 
   matches=(--stderr-match "need --first")
   assertExitCode "${matches[@]+${matches[@]}}" 1 deployRemoteFinish "--deploy" "--target" "app.tar.gz" "--home" "$tempDirectory/deploy" "--id" "$id" "--application" "$tempDirectory/app" || return $?
@@ -70,12 +70,12 @@ testDeployRemoteFinish() {
   assertExitCode --dump "${matches[@]+${matches[@]}}" 1 deployRemoteFinish "${finishArgs[@]}" || return $?
 
   __prepareSampleApplicationDeployment "$handler" "$tempDirectory/deploy/$id" "$id"
-  __environment mkdir -p "$tempDirectory/app" || return $?
+  __catchEnvironment "$handler" mkdir -p "$tempDirectory/app" || return $?
   matches=(--stderr-match "should be a link")
   assertExitCode "${matches[@]+${matches[@]}}" 1 deployRemoteFinish --first "--deploy" "--target" "app.tar.gz" "--home" "$tempDirectory/deploy" "--id" "$id" "--application" "$tempDirectory/app" || return $?
 
   __prepareSampleApplicationDeployment "$handler" "$tempDirectory/deploy/$id" "$id" || return $?
-  __environment rm -rf "$tempDirectory/app" || return $?
+  __catchEnvironment "$handler" rm -rf "$tempDirectory/app" || return $?
 
   #
   # --deploy abcdef
@@ -222,7 +222,7 @@ testDeployToRemote() {
 #
 # Tag: slow
 testDeployBuildEnvironment() {
-  local handler="_return"
+  local handler="returnMessage"
 
   local d args matches
   local sampleHome sampleId sampleApplication
@@ -235,7 +235,7 @@ testDeployBuildEnvironment() {
     unset APPLICATION_ID DEPLOY_REMOTE_HOME APPLICATION_REMOTE_HOME DEPLOY_USER_HOSTS BUILD_TARGET
 
     d=$(fileTemporaryName "$handler" -d) || return $?
-    __environment pushd "$d" >/dev/null || return $?
+    __catchEnvironment "$handler" pushd "$d" >/dev/null || return $?
 
     assertExitCode --stderr-match "blank" 2 deployBuildEnvironment --id || return $?
 
@@ -275,7 +275,7 @@ testDeployBuildEnvironment() {
       DEPLOY_REMOTE_HOME="$sampleHome" \
       APPLICATION_ID="$sampleId" assertExitCode "${matches[@]}" 0 deployBuildEnvironment --dry-run || return $?
 
-    __environment popd >/dev/null || return $?
+    __catchEnvironment "$handler" popd >/dev/null || return $?
     rm -rf "$d" || :
 
     export APPLICATION_ID DEPLOY_REMOTE_HOME APPLICATION_REMOTE_HOME DEPLOY_USER_HOSTS BUILD_TARGET

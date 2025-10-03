@@ -9,7 +9,7 @@
 # Test: o bin/build/tools/type.sh
 
 testBinaryTypes() {
-  local home handler="_return"
+  local home handler="returnMessage"
 
   home=$(__catch "$handler" buildHome) || return $?
   __catchEnvironment "$handler" muzzle pushd "$home" || return $?
@@ -132,7 +132,7 @@ testNotExecutable() {
 }
 
 testExecutableCallable() {
-  local handler="_return" home
+  local handler="returnMessage" home
 
   home=$(__catch "$handler" buildHome) || return $?
   __catchEnvironment "$handler" muzzle pushd "$home" || return $?

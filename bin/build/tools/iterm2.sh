@@ -59,7 +59,7 @@ _iTerm2_setValue() {
 # e.g. SetBadgeFormat
 _iTerm2_setBase64Value() {
   local name="${1-}"
-  [ -n "$name" ] || _argument "${FUNCNAME[0]} name is blank" || return $?
+  [ -n "$name" ] || returnArgument "${FUNCNAME[0]} name is blank" || return $?
   shift && _iTerm2_setValue "$name" "$(printf "%s\n" "$@" | base64 | tr -d '\n')"
 }
 

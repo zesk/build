@@ -97,7 +97,7 @@ ___brewUpgrade() {
 # See: packageUpdate
 # package.sh: true
 __brewUpdate() {
-  local handler="_return" temp returnCode
+  local handler="returnMessage" temp returnCode
   temp=$(fileTemporaryName "$handler") || return $?
   if __brewWrapper update 2>"$temp"; then
     rm -rf "$temp" || :

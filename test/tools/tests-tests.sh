@@ -9,7 +9,7 @@
 
 # Tag: slow
 testWrapperShellScripts() {
-  local handler="_return"
+  local handler="returnMessage"
   local findArgs=(! -path '*/vendor/*' ! -path "*/.*/*")
   local thisYear
 
@@ -26,7 +26,7 @@ testWrapperShellScripts() {
   __catchEnvironment "$handler" muzzle pushd "$home" || return $?
   if ! validateFileExtensionContents sh -- "Copyright &copy; $thisYear" "$BUILD_COMPANY" -- "${findArgs[@]}"; then
     unset BUILD_COMPANY
-    __environment "validateFileExtensionContents failed" || return $?
+    __catchEnvironment "$handler" "validateFileExtensionContents failed" || return $?
   fi
   unset BUILD_COMPANY
   __catchEnvironment "$handler" muzzle popd || return $?
@@ -35,7 +35,7 @@ testWrapperShellScripts() {
 testTestSuite() {
   local home
 
-  home=$(__environment buildHome) || return $?
+  home=$(__catchEnvironment "$handler" buildHome) || return $?
   # env -i is to avoid having our functions inherited to parent and no tests found in test/tools when loaded by __testLoad
   assertExitCode --stdout-match testWrapperShellScripts --stdout-match "${FUNCNAME[0]}" 0 env -i "$home/bin/test.sh" --list || return $?
 }

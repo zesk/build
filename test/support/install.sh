@@ -29,7 +29,7 @@ __checkFunctionInstallsPackage() {
 
 # Usage: {fn} checkFunction noun thing installer uninstaller
 __checkFunctionInstallsAndUninstalls() {
-  local handler="_return"
+  local handler="returnMessage"
   local checkFunction="" noun="" thing="" installer="" uninstaller=""
 
   checkFunction=$(usageArgumentFunction "$handler" "checkFunction" "${1-}") && shift || return $?
@@ -71,19 +71,20 @@ __checkFunctionInstalls() {
 
   __testSection "INSTALL $(decorate value "$noun") $(decorate code "$thing")"
 
-  ! "$checkFunction" "$thing" || _environment "$noun" "$(decorate code "$thing")" "is already installed" || return $?
+  ! "$checkFunction" "$thing" || returnEnvironment "$noun" "$(decorate code "$thing")" "is already installed" || return $?
   assertExitCode 0 "$installer" "$@" || return $?
-  "$checkFunction" "$thing" || _environment "$noun" "$(decorate code "$thing")" "was not installed by" "$@" || return $?
+  "$checkFunction" "$thing" || returnEnvironment "$noun" "$(decorate code "$thing")" "was not installed by" "$@" || return $?
 }
 
 # Usage: {fn} why checkFunction noun thing ...
 __checkFunctionUninstalls() {
+  local handler="returnMessage"
   local why="$1" && shift
-  local checkFunction="$1" noun="$2" thing="$3" && shift 3 || _argument "Missing arguments" || return $?
+  local checkFunction="$1" noun="$2" thing="$3" && shift 3 || returnArgument "Missing arguments" || return $?
 
   __testSection "UNINSTALL $(decorate value "$noun") $(decorate code "$thing") ($(decorate bold-red "$why"))"
 
-  "$checkFunction" "$thing" || _environment "$noun" "$(decorate code "$thing")" "is NOT installed, can not uninstall" || return $?
-  __environment "$@" || return $?
-  ! "$checkFunction" "$thing" || _environment "$noun" "$(decorate code "$thing")" "is still installed after uninstallation ($why)" || return $?
+  "$checkFunction" "$thing" || __throwEnvironment "$handler" "$noun" "$(decorate code "$thing")" "is NOT installed, can not uninstall" || return $?
+  __catchEnvironment "$handler" "$@" || return $?
+  ! "$checkFunction" "$thing" || __throwEnvironment "$handler" "$noun" "$(decorate code "$thing")" "is still installed after uninstallation ($why)" || return $?
 }

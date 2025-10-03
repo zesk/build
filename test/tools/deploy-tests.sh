@@ -8,7 +8,7 @@
 #
 
 _testDeployApplicationSetup() {
-  local handler="_return"
+  local handler="returnMessage"
   local home="$1" ts d
 
   d=$(fileTemporaryName "$handler" -d) || return $?
@@ -44,7 +44,7 @@ _testDeployApplicationSetup() {
 _deployShowFiles() {
   local message
   message=$(decorate magenta < <(find "$1" ! -path '*/bin/build/*'))
-  _environment "DEPLOY root files:"$'\n'"$message" || return $?
+  returnEnvironment "DEPLOY root files:"$'\n'"$message" || return $?
 }
 
 _testAssertDeploymentLinkages() {
@@ -71,7 +71,7 @@ _waitForDeath() {
     sleep 0.1s
     delta=$(($(date +%s) - start))
     if [ "$delta" -ge "$wait" ]; then
-      _environment "${FUNCNAME[0]} failed after $wait seconds" || return $?
+      returnEnvironment "${FUNCNAME[0]} failed after $wait seconds" || return $?
     fi
   done
   delta=$(($(date +%s) - start))
@@ -93,10 +93,10 @@ _simplePHPServer() {
     shift || :
   fi
   if [ -z "${PHP_SERVER_ROOT-}" ]; then
-    _environment "PHP_SERVER_ROOT is blank" || return $?
+    returnEnvironment "PHP_SERVER_ROOT is blank" || return $?
   fi
   if [ ! -d "${PHP_SERVER_ROOT-}" ]; then
-    _environment "PHP_SERVER_ROOT is not a directory" || return $?
+    returnEnvironment "PHP_SERVER_ROOT is not a directory" || return $?
   fi
   decoration="$(echoBar ':.')"
   printf "%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n" \
@@ -122,7 +122,7 @@ _simplePHPRequest() {
   local indexFile
   local indexValue
 
-  indexFile="$(__environment buildCacheDirectory)/PHP_REQUEST_INDEX" || return $?
+  indexFile="$(__catchEnvironment "$handler" buildCacheDirectory)/PHP_REQUEST_INDEX" || return $?
   indexValue="$([ -f "$indexFile" ] && cat "$indexFile" || printf 0)"
   indexValue=$((indexValue + 1))
   curl -s "http://$PHP_SERVER_HOST:$PHP_SERVER_PORT/index.php?request=$indexValue"
@@ -137,7 +137,7 @@ _warmupServer() {
     sleep 1
     delta=$(($(timingStart) - start))
     if [ "$delta" -gt 5000 ]; then
-      _environment "_warmupServer failed" || return $?
+      returnEnvironment "_warmupServer failed" || return $?
     fi
     printf "%s" "$(decorate green .)"
   done
@@ -153,7 +153,7 @@ _waitForValueTimeout() {
   statusMessage decorate info "Waiting for value $1 ... "
   while true; do
     if ! value="$(_simplePHPRequest)"; then
-      _environment "request failed" || return $?
+      returnEnvironment "request failed" || return $?
     fi
     clearLine
     if [ -z "$value" ] || [ "$value" != "$1" ]; then
@@ -191,7 +191,7 @@ _waitForValue() {
 # Tag: slow deployment php-install
 # Test-Build-Home: true
 testDeployApplication() {
-  local handler="_return"
+  local handler="returnMessage"
 
   exec 2>&1
 
@@ -201,16 +201,16 @@ testDeployApplication() {
 
   quietLog="$(buildQuietLog "${FUNCNAME[0]}")"
   if ! packageWhich curl curl; then
-    _environment "Failed to install curl" || return $?
+    returnEnvironment "Failed to install curl" || return $?
   fi
   assertExitCode 0 phpInstall || return $?
 
   if ! home=$(pwd -P 2>/dev/null); then
-    _environment "Unable to pwd" || return $?
+    returnEnvironment "Unable to pwd" || return $?
   fi
 
   if ! d="$(_testDeployApplicationSetup "$home")"; then
-    _environment _testDeployApplicationSetup failed || return $?
+    returnEnvironment _testDeployApplicationSetup failed || return $?
   fi
   decorate pair 20 "Deploy Root" "$d"
 
@@ -226,7 +226,7 @@ testDeployApplication() {
   while ! _isSimplePHPServerRunning; do
     elapsed=$(($(timingStart) - start))
     if [ "$elapsed" -gt "$maxWaitTime" ]; then
-      __environment "Simple PHP Server not running after $maxWaitTime seconds, failing" || return $?
+      __catchEnvironment "$handler" "Simple PHP Server not running after $maxWaitTime seconds, failing" || return $?
     fi
   done
   decorate pair 20 "PHP Process" "$PHP_SERVER_PID"
@@ -237,7 +237,7 @@ testDeployApplication() {
   startingValue=start
 
   if ! _waitForValueTimeout "$startingValue"; then
-    _environment "Unable to find starting value $startingValue" || return $?
+    returnEnvironment "Unable to find starting value $startingValue" || return $?
   fi
 
   decorate pair 40 _simplePHPRequest "$(_simplePHPRequest)"
@@ -427,7 +427,7 @@ testDeployApplication() {
 }
 
 testDeployPackageName() {
-  local handler="_return"
+  local handler="returnMessage"
   local saveTarget home
 
   home=$(__catch "$handler" buildHome) || return $?
@@ -455,7 +455,7 @@ testDeployPackageName() {
   export BUILD_TARGET
 
   # shellcheck source=/dev/null
-  __environment buildEnvironmentLoad BUILD_TARGET || return $?
+  __catchEnvironment "$handler" buildEnvironmentLoad BUILD_TARGET || return $?
 
   assertEquals "app.tar.gz" "$(deployPackageName)" || return $?
 

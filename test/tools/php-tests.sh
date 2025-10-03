@@ -11,7 +11,7 @@ testPHPInstallation() {
 }
 
 _testComposerTempDirectory() {
-  local handler="_return"
+  local handler="returnMessage"
 
   export BITBUCKET_CLONE_DIR
   # MUST be in BITBUCKET_CLONE_DIR if we're in that CI
@@ -28,7 +28,7 @@ _testComposerTempDirectory() {
 # Side-effect: installs scripts
 # Tag: package-install
 testPHPComposerInstallation() {
-  local handler="_return"
+  local handler="returnMessage"
   local d oldDir
 
   home=$(__catch "$handler" buildHome) || return $?
@@ -41,10 +41,10 @@ testPHPComposerInstallation() {
   # requires docker
   # MUST be in BITBUCKET_CLONE_DIR if we're in that CI
 
-  d=$(__environment _testComposerTempDirectory) || return $?
-  __environment cp "$home/test/example/simple-php/composer.json" "$home/test/example/simple-php/composer.lock" "$d/" || return $?
-  __environment phpComposer "$d" || return $?
-  [ -d "$d/vendor" ] && [ -f "$d/composer.lock" ] || _environment "composer failed" || return $?
+  d=$(__catchEnvironment "$handler" _testComposerTempDirectory) || return $?
+  __catchEnvironment "$handler" cp "$home/test/example/simple-php/composer.json" "$home/test/example/simple-php/composer.lock" "$d/" || return $?
+  __catchEnvironment "$handler" phpComposer "$d" || return $?
+  [ -d "$d/vendor" ] && [ -f "$d/composer.lock" ] || returnEnvironment "composer failed" || return $?
 
   export BITBUCKET_CLONE_DIR
   BITBUCKET_CLONE_DIR="$oldDir"
@@ -61,7 +61,7 @@ testPHPComposerInstallation() {
 # Tag: slow
 # Tag: php-install simple-php
 testPHPBuild() {
-  local handler="_return"
+  local handler="returnMessage"
   local here testPath manifest appName home
 
   if __testFunctionWasTested --verbose phpBuild; then
@@ -165,7 +165,7 @@ testPHPBuild() {
 }
 
 testPHPComposerSetVersion() {
-  local home testHome usage="_return"
+  local home testHome usage="returnMessage"
 
   home=$(__catch "$usage" buildHome) || return $?
 

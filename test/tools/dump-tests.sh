@@ -6,7 +6,7 @@
 #
 
 testDumpPipe() {
-  local ff usage="_return"
+  local ff usage="returnMessage"
 
   ff=$(fileTemporaryName "$usage") || return $?
   decorate code "Hello, world" >>"$ff"

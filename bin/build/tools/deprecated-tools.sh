@@ -201,16 +201,16 @@ deprecatedCannonFile() {
   [ -n "$cannonPath" ] || cannonPath=$(__catch "$handler" buildHome) || return $?
 
   local start
-  start=$(__environment timingStart) || return $?
+  start=$(__catchEnvironment "$handler" timingStart) || return $?
 
   local exitCode=0 version="No version yet"
 
   while read -r line; do
     local IFS tokens=() trimmed
-    trimmed=$(__environment trimSpace "$line") || return $?
+    trimmed=$(__catchEnvironment "$handler" trimSpace "$line") || return $?
     [ -n "$trimmed" ] || continue
     if [ "${trimmed:0:1}" = "#" ]; then
-      version="$(__environment trimSpace "${trimmed:1}")" || return $?
+      version="$(__catchEnvironment "$handler" trimSpace "${trimmed:1}")" || return $?
       continue
     fi
     IFS="|" read -r -a tokens <<<"$line" || :

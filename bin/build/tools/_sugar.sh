@@ -11,7 +11,7 @@
 #
 # -- CUT BELOW HERE --
 
-# IDENTICAL _sugar 180
+# IDENTICAL _sugar 158
 
 # Argument: name ... - Optional. String. Exit code value to output.
 # Print one or more return codes by name.
@@ -80,13 +80,13 @@ isBoolean() {
 }
 
 # Boolean selector
-# Requires: isBoolean _argument printf
+# Requires: isBoolean returnArgument printf
 # Argument: testValue - Boolean. Required. Test value
 # Argument: trueChoice - EmptyString. Optional. Value to output when testValue is `true`
 # Argument: falseChoice - EmptyString. Optional. Value to output when testValue is `false`
 _choose() {
   local testValue="${1-}" && shift
-  isBoolean "$testValue" || _argument "${BASH_SOURCE[1]-no function name}:${BASH_LINENO[0]-no line} ${FUNCNAME[1]} -> ${FUNCNAME[0]} non-boolean: \"$testValue\"" || return $?
+  isBoolean "$testValue" || returnArgument "${BASH_SOURCE[1]-no function name}:${BASH_LINENO[0]-no line} ${FUNCNAME[1]} -> ${FUNCNAME[0]} non-boolean: \"$testValue\"" || return $?
   "$testValue" && printf -- "%s\n" "${1-}" || printf -- "%s\n" "${2-}"
 }
 
@@ -95,7 +95,7 @@ _choose() {
 # Delete files or directories and return the same exit code passed in.
 # Argument: exitCode - Required. Integer. Exit code to return.
 # Argument: item - Optional. One or more files or folders to delete, failures are logged to stderr.
-# Requires: isUnsignedInteger _argument __environment usageDocument
+# Requires: isUnsignedInteger returnArgument __throwEnvironment usageDocument __throwArgument
 # Group: Sugar
 returnClean() {
   local handler="_${FUNCNAME[0]}"
@@ -104,7 +104,7 @@ returnClean() {
   if ! isUnsignedInteger "$exitCode"; then
     __throwArgument "$handler" "$exitCode (not an integer) $*" || return $?
   else
-    __environment rm -rf "$@" || return "$exitCode"
+    __catchEnvironment "$handler" rm -rf "$@" || return "$exitCode"
     return "$exitCode"
   fi
 }
@@ -118,36 +118,36 @@ _returnClean() {
 # Return `argument` error code. Outputs `message ...` to `stderr`.
 # Argument: message ... - String. Optional. Message to output.
 # Return Code: 2
-# Requires: _return
-_argument() {
-  _return 2 "$@" || return $?
+# Requires: returnMessage
+returnArgument() {
+  returnMessage 2 "$@" || return $?
 }
 
 # Return `environment` error code. Outputs `message ...` to `stderr`.
 # Argument: message ... - String. Optional. Message to output.
 # Return Code: 1
-# Requires: _return
-_environment() {
-  _return 1 "$@" || return $?
+# Requires: returnMessage
+returnEnvironment() {
+  returnMessage 1 "$@" || return $?
 }
 
 # Run `handler` with an argument error
 # Argument: exitCode - Integer. Required. Return code.
 # Argument: handler - Function. Required. Error handler.
 # Argument: message ... - String. Optional. Error message
-# Requires: _argument
+# Requires: returnArgument
 __throw() {
-  local exitCode="${1-}" && shift || _argument "Missing exit code" || return $?
-  lcoal handler="${1-}" && shift || _argument "Missing error handler" || return $?
+  local exitCode="${1-}" && shift || returnArgument "Missing exit code" || return $?
+  lcoal handler="${1-}" && shift || returnArgument "Missing error handler" || return $?
   "$handler" "$exitCode" "$@" || return $?
 }
 
 # Run binary and catch errors with handler
 # Argument: handler - Required. Function. Error handler.
 # Argument: binary ... - Required. Executable. Any arguments are passed to `binary`.
-# Requires: _argument
+# Requires: returnArgument
 __catch() {
-  local handler="${1-}" && shift || _argument "Missing handler" || return $?
+  local handler="${1-}" && shift || returnArgument "Missing handler" || return $?
   "$@" || "$handler" "$?" "$@" || return $?
 }
 
@@ -155,9 +155,9 @@ __catch() {
 
 # Argument: binary ... - Required. Executable. Any arguments are passed to `binary`.
 # Run binary and output failed command upon error
-# Requires: _return
+# Requires: returnMessage
 __execute() {
-  "$@" || _return "$?" "$@" || return $?
+  "$@" || returnMessage "$?" "$@" || return $?
 }
 
 # Output the `command ...` to stdout prior to running, then `__execute` it
@@ -167,28 +167,6 @@ __execute() {
 # Requires: printf decorate __execute __decorateExtensionQuote __decorateExtensionEach
 __echo() {
   printf -- "➡️ %s\n" "$(decorate each quote -- "$@")" && __execute "$@" || return $?
-}
-
-# _IDENTICAL_  __environment 10
-
-# Run `command ...` (with any arguments) and then `_environment` if it fails.
-# Usage: {fn} command ...
-# Argument: command ... - Any command and arguments to run.
-# Return Code: 0 - Success
-# Return Code: 1 - Failed
-# Requires: _environment
-__environment() {
-  "$@" || _environment "$@" || return $?
-}
-
-# Run `command ...` (with any arguments) and then `_argument` if it fails.
-# Usage: {fn} command ...FUNCNAME
-# Argument: command ... - Any command and arguments to run.
-# Return Code: 0 - Success
-# Return Code: 2 - Failed
-# Requires: _argument
-__argument() {
-  "$@" || _argument "$@" || return $?
 }
 
 # <-- END of IDENTICAL _sugar

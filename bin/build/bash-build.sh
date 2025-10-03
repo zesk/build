@@ -19,7 +19,7 @@ __bashRunCommandsAppendIfNeeded() {
 }
 
 __bashBuild() {
-  local handler="_return"
+  local handler="returnMessage"
   local tools="${BASH_SOURCE[0]%/*}/tools.sh"
 
   # shellcheck source=/dev/null
@@ -41,14 +41,14 @@ __bashBuild() {
     fi
     tools="$(realPath "$tools")" || return $?
     if [ ! -f "$rcFile" ]; then
-      __bashRunCommandsDefault "$tools" "${extraCommands[@]+"${extraCommands[@]}"}" >"$rcFile" || _environment "Failed to create $rcFile" || return $?
+      __bashRunCommandsDefault "$tools" "${extraCommands[@]+"${extraCommands[@]}"}" >"$rcFile" || returnEnvironment "Failed to create $rcFile" || return $?
     else
-      __bashRunCommandsAppendIfNeeded "$tools" "$rcFile" "${extraCommands[@]+"${extraCommands[@]}"}" || _environment "Failed to update $rcFile" || return $?
+      __bashRunCommandsAppendIfNeeded "$tools" "$rcFile" "${extraCommands[@]+"${extraCommands[@]}"}" || returnEnvironment "Failed to update $rcFile" || return $?
     fi
   fi
   local start
   start=$(timingStart)
-  statusMessage decorate info "Setting up operating system with required base packages ..."
+  statusMessage decorate suce "Setting up operating system with required base packages ..."
   __catch "$handler" packageUpdate || return $?
   __catch "$handler" packageInstall || return $?
   statusMessage --last timingReport "$start" "System set up in"

@@ -19,13 +19,14 @@ bashPromptModule_binBuild() {
 # Run-Hook: project-activate
 # Run-Hook: project-deactivate
 bashPromptModule_BuildProject() {
+  local handler="returnMessage"
   local home gitHome tools="bin/build/tools.sh" version="bin/build/build.json" oldVersion newMessage buildMessage currentVersion showHome showGitHome
   export HOME
 
   [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
 
-  __environment buildEnvironmentLoad HOME || return $?
-  home=$(__environment buildHome) || return $?
+  __catchEnvironment "$handler" buildEnvironmentLoad HOME || return $?
+  home=$(__catchEnvironment "$handler" buildHome) || return $?
   showHome="${home//$HOME/~}"
   gitHome=$(gitFindHome "$(pwd)" 2>/dev/null) || return 0
   [ "$home" != "$gitHome" ] || return 0
@@ -55,16 +56,16 @@ bashPromptModule_BuildProject() {
     return 1
   fi
 
-  [ "$exitCode" = 0 ] || _environment "project-deactivate failed" || :
+  [ "$exitCode" = 0 ] || returnEnvironment "project-deactivate failed" || :
 
   # buildHome will be changed here
 
-  hookSourceOptional --application "$gitHome" project-activate "$home" || _environment "project-activate failed" || :
+  hookSourceOptional --application "$gitHome" project-activate "$home" || returnEnvironment "project-activate failed" || :
   currentVersion="$(hookRunOptional --application "$gitHome" version-current)"
 
   pathSuffix=
   if [ -d "$gitHome/bin" ]; then
-    __environment pathConfigure --last "$gitHome/bin" || return $?
+    __catchEnvironment "$handler" pathConfigure --last "$gitHome/bin" || return $?
     pathSuffix="$pathSuffix +$(decorate cyan "$showGitHome/bin")"
   fi
   if [ -d "$home/bin" ]; then

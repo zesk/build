@@ -20,7 +20,7 @@ source "${BASH_SOURCE[0]%/*}/../tools.sh"
 #
 __hookVersionAlready() {
   local currentVersion releaseNotes
-  local handler="_return"
+  local handler="returnMessage"
 
   export BUILD_VERSION_NO_OPEN
 

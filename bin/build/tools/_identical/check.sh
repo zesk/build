@@ -178,7 +178,7 @@ __identicalCheck() {
     if [ ${#badFiles[@]} -gt 0 ]; then
       exitCode=$failureCode
       if [ -n "$binary" ]; then
-        __environment "$binary" "${badFiles[@]}" || :
+        __catchEnvironment "$handler" "$binary" "${badFiles[@]}" || :
         statusMessage --last printf -- "%s %s %s %s" "$(decorate success "Sent")" "$(pluralWord ${#badFiles[@]} file)" "$(decorate success "to")" "$(decorate code "$binary")"
       fi
     fi

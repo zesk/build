@@ -286,7 +286,7 @@ packageWhich() {
     ! whichExists "$binary" || return 0
   fi
   # Install packages
-  __environment packageInstall "${vv[@]+"${vv[@]}"}" --manager "$manager" --force "${packages[@]}" || return $?
+  __catchEnvironment "$handler" packageInstall "${vv[@]+"${vv[@]}"}" --manager "$manager" --force "${packages[@]}" || return $?
   # Ensure binary now exists, otherwise fail
   whichExists "$binary" || __throwEnvironment "$handler" "$manager packages \"${packages[*]}\" did not add $binary to the PATH: ${PATH-}" || return $?
 }
@@ -434,8 +434,8 @@ packageInstall() {
   clean+=("$installed")
   local standardPackages=() actualPackages=() package installFunction
   # Loads BUILD_TEXT_BINARY
-  muzzle _packageStandardPackages "$manager" || __throwEnvironment "$handler" "Unable to fetch standard packages" || returnClean $? "${clean[@]}" || return $?
-  IFS=$'\n' read -d '' -r -a standardPackages < <(_packageStandardPackages "$manager") || :
+  muzzle _packageStandardPackages "$handler" "$manager" || __throwEnvironment "$handler" "Unable to fetch standard packages" || returnClean $? "${clean[@]}" || return $?
+  IFS=$'\n' read -d '' -r -a standardPackages < <(_packageStandardPackages "$handler" "$manager") || :
   if "$forceFlag"; then
     actualPackages=("${packages[@]}")
   else
@@ -567,7 +567,7 @@ packageUninstall() {
 
   start=$(timingStart) || return $?
   quietLog=$(__catch "$handler" buildQuietLog "$handler") || return $?
-  IFS=$'\n' read -d '' -r -a standardPackages < <(_packageStandardPackages "$manager") || :
+  IFS=$'\n' read -d '' -r -a standardPackages < <(_packageStandardPackages "$handler" "$manager") || :
   local package
   for package in "${packages[@]}"; do
     if inArray "$package" "${standardPackages[@]}"; then
@@ -586,11 +586,14 @@ _packageUninstall() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
+# Argument: handler - Function. Required.
+# Argument: manager - String. Required.
 _packageStandardPackages() {
+  local handler="$1" && shift
   local manager="$1" packageFunction
   packageFunction="__${1}StandardPackages"
   isFunction "$packageFunction" || __throwEnvironment "$handler" "$packageFunction is not a defined function" || return $?
-  __environment "$packageFunction" || return $?
+  __catchEnvironment "$handler" "$packageFunction" || return $?
 }
 
 # Is the package manager supported?
@@ -629,9 +632,10 @@ _packageDebugging() {
 # - apk apt brew port
 # See: platform
 packageManagerDefault() {
-  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
+  local handler="_${FUNCNAME[0]}"
+  [ $# -eq 0 ] || __help --only "$handler" "$@" || return "$(convertValue $? 1 0)"
   export BUILD_PACKAGE_MANAGER
-  __environment buildEnvironmentLoad BUILD_PACKAGE_MANAGER || return $?
+  __catchEnvironment "$handler" buildEnvironmentLoad BUILD_PACKAGE_MANAGER || return $?
   __packageManagerDefault "${BUILD_PACKAGE_MANAGER-}"
 }
 _packageManagerDefault() {

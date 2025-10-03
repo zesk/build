@@ -118,7 +118,7 @@ ___portUpgrade() {
 # See: packageUpdate
 # package.sh: true
 __portUpdate() {
-  local handler="_return" temp returnCode
+  local handler="returnMessage" temp returnCode
   temp=$(fileTemporaryName "$handler") || return $?
   if __sudoPortWrapper sync 2>"$temp"; then
     rm -rf "$temp" || :

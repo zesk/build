@@ -90,7 +90,7 @@ documentationTemplate() {
   local source="${BASH_SOURCE[0]%.sh}"
   local template="$source/__${1-}.md"
 
-  [ -f "$template" ] || _argument "No template \"${1-}\" at $template" || return $?
+  [ -f "$template" ] || returnArgument "No template \"${1-}\" at $template" || return $?
   printf "%s\n" "$template"
 }
 _documentationTemplate() {
@@ -158,7 +158,7 @@ _documentationTemplateUpdate() {
 #
 # `cacheDirectory` is required - build an index using `documentationIndexIndex` prior to using this.
 #
-# See: __documentationIndex_Lookup
+# See: __documentationIndexLookup
 # See: __documentationTemplateCompile
 # See: documentationIndexIndex
 # Return Code: 0 - If success
@@ -210,8 +210,7 @@ _documentationTemplateDirectoryCompile() {
 
 # Summary: Generate a function documentation block using `functionTemplate` for `functionName`
 #
-#
-# Requires function indexes to be generated in `cacheDirectory`.
+# Requires function indexes to be generated in the documentation cache.
 #
 # Generate documentation for a single function.
 #
@@ -221,7 +220,6 @@ _documentationTemplateDirectoryCompile() {
 # Return Code: 1 - Issue with file generation
 # Return Code: 2 - Argument error
 # Argument: --env-file envFile - Optional. File. One (or more) environment files used during map of `functionTemplate`
-# Argument: cacheDirectory - Required. Cache directory where the indexes live.
 # Argument: functionName - Required. The function name to document.
 # Argument: functionTemplate - Required. The template for individual functions.
 # Usage: {fn} [ --env-file envFile ] cacheDirectory functionName functionTemplate
@@ -277,6 +275,39 @@ __documentationFormatArguments() {
   done
 }
 ___documentationFormatArguments() {
+  # __IDENTICAL__ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+# Looks up information in the function index
+##
+# Argument: --settings - Flag. Optional. `matchText` is a function name. Outputs a file name containing function settings
+# Argument: --comment - Flag. Optional. `matchText` is a function name. Outputs a file name containing function settings
+# Argument: --source - Flag. Optional. `matchText` is a function name. Outputs the source code path to where the function is defined
+# Argument: --line - Flag. Optional. `matchText` is a function name. Outputs the source code line where the function is defined
+# Argument: --combined - Flag. Optional. `matchText` is a function name. Outputs the source code path and line where the function is defined as `path:line`
+# Argument: --file - Flag. Optional. `matchText` is a file name. Find files which match this base file name.
+# Argument: matchText - String. Token to look up in the index.
+documentationIndexLookup() {
+  __documentationLoader "_${FUNCNAME[0]}" "__${FUNCNAME[0]}" "$@"
+}
+_documentationIndexLookup() {
+  # __IDENTICAL__ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+# Generate the documentation index (e.g. functions defined in the documentation)
+# Argument: cacheDirectory - Required. Cache directory where the index will be created.
+# Argument: documentationSource ... - OneOrMore. Documentation source path to find tokens and their definitions.
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
+# Return Code: 0 - If success
+# Return Code: 1 - Issue with file generation
+# Return Code: 2 - Argument error
+documentationIndexDocumentation() {
+  __documentationLoader "_${FUNCNAME[0]}" "__${FUNCNAME[0]}" "$@"
+}
+_documentationIndexDocumentation() {
   # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

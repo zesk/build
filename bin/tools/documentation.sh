@@ -44,11 +44,12 @@ __buildDocumentationBuildDirectory() {
   functionTemplate="$(__catch "$handler" documentationTemplate "function")" || return $?
 
   aa+=(--source "$home/bin")
+  aa+=(--target "$target")
+
   aa+=(--template "$source")
   aa+=(--unlinked-template "$home/documentation/source/tools/todo.md" --unlinked-target "$home/documentation/.docs/tools/todo.md")
   aa+=("--function-template" "$functionTemplate" --page-template "$home/documentation/template/__main.md")
   aa+=(--see-prefix "./documentation/.docs")
-  aa+=(--target "$target")
 
   __catch "$handler" documentationBuild "${aa[@]}" "$@" || return $?
 }
@@ -56,11 +57,14 @@ __buildDocumentationBuildDirectory() {
 __buildDocumentationCleanDirectory() {
   local handler="$1" && shift
   local home="$1" && shift
+  local target="$home/documentation/.docs"
 
   aa+=(--source "$home/bin")
-  aa+=(--target "$target")
 
+  __catch "$handler" muzzle directoryRequire "$target" || return $?
   __catch "$handler" documentationBuild "${aa[@]}" "--clean" "$@" || return $?
+
+  __catchEnvironment "$handler" rm -rf "$target" || return $?
 }
 
 __buildDocumentationBuildRelease() {
@@ -102,26 +106,6 @@ __mkdocsConfiguration() {
     export "${token?}"
   done < <(mapTokens <"$source")
   version="$version" __catch "$handler" mapEnvironment <"$source" >"$target" || return $?
-}
-
-# Argument: pass - Boolean. true if version should be a variable, false if it should be set to a value
-__checkVersionVariable() {
-  local handler="$1" pass="$2" line="$3"
-
-  local home
-  home=$(__catch "$handler" buildHome) || return $?
-  checkFile="$home/documentation/.docs/index.md"
-  if [ -f "$checkFile" ]; then
-    local title
-    title=$(basename "$checkFile")
-    if grep -q '{version}' <"$checkFile"; then
-      [ "$pass" = false ] || __throwEnvironment "$handler" "Version is not a variable ($pass) and should be (line $line)" || returnUndo $? dumpPipe --lines 3 "$title" <"$checkFile" || return $?
-    else
-      [ "$pass" = true ] || __throwEnvironment "$handler" "Version is a {variable} ($pass) and should NOT be (line $line)" || returnUndo $? dumpPipe --lines 3 "$title" <"$checkFile" || return $?
-    fi
-  else
-    [ "$pass" = false ] || __throwEnvironment "$handler" "$(decorate file "$checkFile") is missing and should exist (line $line)" || return $?
-  fi
 }
 
 # Build the build documentation
@@ -191,6 +175,9 @@ buildDocumentationBuild() {
     shift
   done
 
+  local home
+  home=$(__catch "$handler" buildHome) || return $?
+
   # --clean
   if $cleanFlag; then
     ! $verboseFlag || statusMessage decorate info "Cleaning documentation ... "
@@ -198,7 +185,6 @@ buildDocumentationBuild() {
     __catch "$handler" documentationBuildEnvironment --clean || return $?
     # Clean reference cache
     __buildDocumentationCleanDirectory "$handler" "$home" "${vv[@]+"${vv[@]}"}" || return $?
-    __checkVersionVariable "$handler" true "$LINENO" || return $?
     return 0
   fi
 
@@ -210,7 +196,6 @@ buildDocumentationBuild() {
   # Greeting
   __catch "$handler" buildEnvironmentLoad APPLICATION_NAME || return $?
   statusMessage lineFill . "$(decorate info "${APPLICATION_NAME} documentation started on $(decorate value "$(date +"%F %T")")") "
-  home=$(__catch "$handler" buildHome) || return $?
 
   if $verboseFlag; then
     decorate pair "Update Templates" "$updateTemplates"
@@ -224,14 +209,9 @@ buildDocumentationBuild() {
   # Ensure we have our target
   __catchEnvironment "$handler" muzzle directoryRequire "$targetHome" || return $?
 
-  if ! __checkVersionVariable "$handler" false "$LINENO" 2>/dev/null; then
-    ! $verboseFlag || statusMessage decorate warning "Removing index.md which has incorrect version, derived is automatic"
-    __catchEnvironment "$handler" rm -f "$targetHome/index.md" || return $?
-    updateDerived=true
-  fi
-
   # Templates should be up-to-date if making documentation
   if ! $updateTemplates && $makeDocumentation; then
+
     local newestTemplate newestDocs
     newestTemplate=$(directoryNewestFile "$home/documentation/template")
     newestDocs=$(directoryNewestFile "$home/documentation/source")
@@ -240,8 +220,6 @@ buildDocumentationBuild() {
       ! $verboseFlag || statusMessage decorate info "Templates were changed, update templates is now automatic"
     fi
   fi
-
-  __checkVersionVariable "$handler" false "$LINENO" || return $?
 
   if $updateTemplates; then
     statusMessage --last decorate notice "Updating document templates ..."
@@ -254,47 +232,39 @@ buildDocumentationBuild() {
     statusMessage --last decorate notice "Updating release page ..."
     __buildDocumentationBuildRelease "$handler" "$home" || return $?
 
-    __checkVersionVariable "$handler" false "$LINENO" || return $?
-
     local sourceHome="$home/documentation/source"
 
+    statusMessage --last decorate notice "Copying all non-tools ..."
     while IFS="" read -r file; do
       file=${file#"$sourceHome"}
       statusMessage decorate notice "Copying $file ..."
       __catchEnvironment "$handler" muzzle fileDirectoryRequire "$targetHome/$file" || return $?
       cp -f "$sourceHome/$file" "$targetHome/$file" || return $?
     done < <(
-      find "$sourceHome" -type f -name "*.md" ! -path "*/tools/*" ! -path "*/env/*" -print0 | xargs -0 grep -v -l '{[A-Za-z][^]!\[}]*}'
+      find "$sourceHome" -type f -name "*.md" ! -path "*/tools/*" ! -path "*/env/*" -print0 | xargs -0 grep -v -l '{[A-Za-z][^]!\[}]*}' || :
     )
 
+    local example
+
+    example="$(decorate wrap "    " <"$home/bin/build/tools/example.sh")" || __throwEnvironment "$handler" "generating example" || return $?
+
     # Mappable files
+    statusMessage --last decorate notice "Mapping non-tools ..."
     while IFS="" read -r file; do
       file=${file#"$sourceHome"}
       statusMessage decorate notice "Updating $file ..."
       __catchEnvironment "$handler" muzzle fileDirectoryRequire "$targetHome/$file" || return $?
-      timestamp="$timestamp" version="$version" __catch "$handler" mapEnvironment <"$sourceHome/$file" >"$targetHome/$file" || return $?
+      example="$example" timestamp="$timestamp" version="$version" __catch "$handler" mapEnvironment <"$sourceHome/$file" >"$targetHome/$file" || return $?
     done < <(
-      find "$sourceHome" -type f -name "*.md" ! -path "*/tools/*" ! -path "*/env/*" -print0 | xargs -0 grep -l '{[A-Za-z][^]!\[}]*}'
+      find "$sourceHome" -type f -name "*.md" ! -path "*/tools/*" ! -path "*/env/*" -print0 | xargs -0 grep -l '{[A-Za-z][^]!\[}]*}' || :
     )
-    __checkVersionVariable "$handler" true "$LINENO" || return $?
-
-    # Coding
-    local example
-
-    example="$(decorate wrap "    " <"$home/bin/build/tools/example.sh")" || __throwEnvironment "$handler" "generating example" || return $?
-    example="$example" __catch "$handler" mapEnvironment <"$home/documentation/source/guide/coding.md" >"$home/documentation/.docs/guide/coding.md" || return $?
-
-    statusMessage --last decorate notice "Updating env/index.md ..."
+    statusMessage --last decorate notice "Updating environment variables document ..."
     __catch "$handler" documentationBuildEnvironment --verbose "${ea[@]+"${ea[@]}"}" || return $?
-
-    __checkVersionVariable "$handler" true "$LINENO" || return $?
   fi
 
   if "$updateReference"; then
     statusMessage --last decorate notice "Building Bash documentation and reference ..."
     __buildDocumentationBuildDirectory "$handler" "$home" "$@" "${da[@]+"${da[@]}"}" || return $?
-
-    __checkVersionVariable "$handler" true "$LINENO"
   fi
 
   if "$makeDocumentation"; then
@@ -334,14 +304,10 @@ buildDocumentationBuild() {
     __catchEnvironment "$handler" muzzle pushd "./documentation" || return $?
     statusMessage --last decorate notice "Updating mkdocs.yml ..."
 
-    __checkVersionVariable "$handler" true "$LINENO" || return $?
-
     timestamp="$timestamp" version="$version" __mkdocsConfiguration "$handler" || return $?
-    __checkVersionVariable "$handler" true "$LINENO" || return $?
     tempLog=$(fileTemporaryName "$handler") || return $?
     __catchEnvironmentQuiet "$handler" "$tempLog" python -m mkdocs build || returnUndo $? dumpPipe "mkdocs log" <"$tempLog" || returnClean $? "$tempLog" || return $?
     __catchEnvironment "$handler" rm -f "$tempLog" || return $?
-    __checkVersionVariable "$handler" true "$LINENO" || return $?
     __catchEnvironment "$handler" muzzle popd || return $?
   fi
 

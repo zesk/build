@@ -10,7 +10,7 @@
 # Leak: BASH_ARGC
 # Leak: BASH_ARGV
 testCoverageBasics() {
-  local handler="_return"
+  local handler="returnMessage"
 
   local tempCoverage
 
@@ -24,9 +24,10 @@ testCoverageBasics() {
 
 #
 testCoverageNeedToUpdate() {
+  local handler="returnMessage"
   local home
 
-  home=$(__environment buildHome) || return $?
+  home=$(__catchEnvironment "$handler" buildHome) || return $?
   # THIS FAILS - INFINITE LOOP
   # assertExitCode --dump --stdout-match "Target is" --stdout-match "Coverage completed" 0 bashCoverage "$home/bin/build/tools.sh" isInteger 2 || return $?
   assertEquals "$home" "$home" || return $?
@@ -48,7 +49,7 @@ testCoverageReportThing() {
 
 # Tag: test-tags slow
 testSlowTagsWorkCorrectly() {
-  local handler="_return"
+  local handler="returnMessage"
 
   local home
   home=$(__catch "$handler" buildHome) || return $?
@@ -60,7 +61,7 @@ testSlowTagsWorkCorrectly() {
 
 # Tag: slow-30-seconds slow
 testBuildFunctionsCoverage() {
-  local handler="_return"
+  local handler="returnMessage"
 
   local home
   home=$(__catch "$handler" buildHome) || return $?
@@ -150,7 +151,7 @@ EOF
 # Tag: slow
 # Tag: slow-non-critical
 testBuildFunctionsHelpCoverage() {
-  local handler="_return"
+  local handler="returnMessage"
 
   local home
   home=$(__catch "$handler" buildHome) || return $?
@@ -316,7 +317,7 @@ EOF
 
 # Tag: slow slow-non-critical
 testBuildFunctionsHelpOnly() {
-  local handler="_return"
+  local handler="returnMessage"
   local fun
   export BUILD_DEBUG
   export BUILD_COLORS

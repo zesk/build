@@ -18,8 +18,8 @@ _gitAddRemotesToSSHKnown() {
   fileDirectoryRequire "$sshKnown" || return $?
 
   [ -f "$sshKnown" ] || touch "$sshKnown"
-  __environment chmod 700 "$HOME/.ssh" || return $?
-  __environment chmod 600 "$sshKnown" || return $?
+  __catchEnvironment "$handler" chmod 700 "$HOME/.ssh" || return $?
+  __catchEnvironment "$handler" chmod 600 "$sshKnown" || return $?
 
   statusMessage decorate info "Listing remotes ..."
   git remote -v | awk '{ print $2 }' | cut -f 1 -d : | cut -f 2 -d @ | sort -u | while read -r remoteHost; do
@@ -28,7 +28,7 @@ _gitAddRemotesToSSHKnown() {
       continue
     fi
     statusMessage decorate info "Adding $remoteHost to SSH known hosts ..."
-    __environment sshKnownHostAdd "$remoteHost" || return $?
+    __catchEnvironment "$handler" sshKnownHostAdd "$remoteHost" || return $?
   done
   clearLine
 }
@@ -39,14 +39,14 @@ testGitVersionList() {
   if ! gitHasAnyRefs; then
     _gitAddRemotesToSSHKnown || return $?
     statusMessage decorate info "Pulling tags ..."
-    git pull --tags >/dev/null 2>&1 || _environment "Unable to pull git tags ... failed" || return $?
+    git pull --tags >/dev/null 2>&1 || returnEnvironment "Unable to pull git tags ... failed" || return $?
     decorate success " done"
   fi
   assertGreaterThan $(($(gitVersionList | wc -l | trimSpace) + 0)) 0 || return $?
 }
 
 testGitCommitFailures() {
-  local handler="_return"
+  local handler="returnMessage"
   local tempDirectory
 
   assertNotExitCode --stderr-ok 0 gitCommit "" || return $?

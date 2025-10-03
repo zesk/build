@@ -24,7 +24,7 @@ EOF
 }
 
 testNewRelease() {
-  local handler="_return" home
+  local handler="returnMessage" home
 
   home=$(__catch "$handler" buildHome) || return $?
   __catchEnvironment "$handler" muzzle pushd "$home" || return $?
@@ -41,7 +41,7 @@ testIsVersion() {
 }
 
 testReleaseNotesSimple() {
-  local handler="_return" home
+  local handler="returnMessage" home
 
   home=$(__catch "$handler" buildHome) || return $?
   __catchEnvironment "$handler" muzzle pushd "$home" || return $?
@@ -83,7 +83,7 @@ __assertPathsEquals() {
 }
 
 testReleaseNotes() {
-  local handler="_return" home
+  local handler="returnMessage" home
 
   home=$(__catch "$handler" buildHome) || return $?
   __catchEnvironment "$handler" muzzle pushd "$home" || return $?

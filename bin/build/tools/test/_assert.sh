@@ -57,12 +57,13 @@ ___printResultPair() {
 
 # Save and report the timing since the last call
 _assertTiming() {
+  local handler="returnMessage"
   local timingFile
 
   export __BUILD_SAVED_CACHE_DIRECTORY
 
   if [ -z "${__BUILD_SAVED_CACHE_DIRECTORY-}" ]; then
-    __BUILD_SAVED_CACHE_DIRECTORY="$(__environment buildCacheDirectory)" || return $?
+    __BUILD_SAVED_CACHE_DIRECTORY="$(__catchEnvironment "$handler" buildCacheDirectory)" || return $?
   fi
 
   timingFile="$__BUILD_SAVED_CACHE_DIRECTORY/.${FUNCNAME[0]}" || return $?
@@ -588,9 +589,9 @@ _assertNumericHelper() {
 ___assertNumericTest() {
   local leftValue="${1-}" rightValue="${2-}" cmp
   cmp="${!#}"
-  isNumber "$leftValue" || _argument "$leftValue is not numeric ($*)" || return $?
-  isNumber "$rightValue" || _argument "$rightValue is not numeric ($*)" || return $?
-  [ "$cmp" != "${cmp#-}" ] || _argument "$cmp is not a comparison flag ($*)" || return $?
+  isNumber "$leftValue" || returnArgument "$leftValue is not numeric ($*)" || return $?
+  isNumber "$rightValue" || returnArgument "$rightValue is not numeric ($*)" || return $?
+  [ "$cmp" != "${cmp#-}" ] || returnArgument "$cmp is not a comparison flag ($*)" || return $?
   test "$leftValue" "$cmp" "$rightValue"
 }
 ___assertNumericFormat() {
@@ -615,11 +616,11 @@ ___assertContains() {
   local needle haystack
 
   needle="${1-}"
-  [ -n "$needle" ] || _argument "blank needle passed to contains assertion" || return $?
+  [ -n "$needle" ] || returnArgument "blank needle passed to contains assertion" || return $?
   shift
   while [ $# -gt 0 ]; do
     haystack="${1-}"
-    [ -n "$haystack" ] || _argument "blank haystack passed to contains assertion" || return $?
+    [ -n "$haystack" ] || returnArgument "blank haystack passed to contains assertion" || return $?
     [ "${haystack#*"$needle"}" != "$haystack" ] || return 1
     shift
   done
@@ -709,12 +710,12 @@ _assertFileSizeHelper() {
 ___assertFileSize() {
   local expectedSize="${1-}" actualSize
   shift
-  isUnsignedInteger "$expectedSize" || _argument "$expectedSize is not an unsigned integer" || return $?
-  [ "$expectedSize" -ge 0 ] || _argument "$expectedSize is negative" || return $?
-  [ $# -gt 0 ] || _argument "no file arguments supplied" || return $?
+  isUnsignedInteger "$expectedSize" || returnArgument "$expectedSize is not an unsigned integer" || return $?
+  [ "$expectedSize" -ge 0 ] || returnArgument "$expectedSize is negative" || return $?
+  [ $# -gt 0 ] || returnArgument "no file arguments supplied" || return $?
   while [ $# -gt 0 ]; do
     if ! actualSize="$(fileSize "$1")"; then
-      _environment "fileSize \"$(escapeDoubleQuotes "$1")\" failed -> $?" || return $?
+      returnEnvironment "fileSize \"$(escapeDoubleQuotes "$1")\" failed -> $?" || return $?
     fi
     [ "$expectedSize" = "$actualSize" ] || return 1
     shift
@@ -737,7 +738,7 @@ _assertOutputEqualsHelper() {
   _assertConditionHelper "$handler" --line-depth 2 --test ___assertOutputEquals --formatter ___assertOutputEqualsFormat "$@" || return $?
 }
 ___assertOutputEquals() {
-  local handler="_return"
+  local handler="returnMessage"
   local expected="${1-}" binary="${2-}" output stderr exitCode=0
 
   shift 2 || :
@@ -804,7 +805,7 @@ _assertExitCodeHelper() {
 ___assertExitCodeTest() {
   local binary="${1-}"
 
-  isCallable "$binary" || _argument "$binary is not callable: $*" || return $?
+  isCallable "$binary" || returnArgument "$binary is not callable: $*" || return $?
   ! isFunction "$binary" || __assertedFunctions "$binary" || return $?
   "$@"
 }
@@ -842,7 +843,7 @@ _assertOutputContainsHelper() {
   _assertConditionHelper "$handler" --line-depth 2 --test ___assertOutputContainsTest --formatter ___assertOutputContainsFormat "$@" || return $?
 }
 ___assertOutputContainsTest() {
-  local handler="_return"
+  local handler="returnMessage"
   local contains="${1-}" binary="${2-}" captureOut exitCode
   shift 1
   [ -n "$contains" ] || __throwArgument "$handler" "contains is blank: $*" || return $?
@@ -857,7 +858,7 @@ ___assertOutputContainsTest() {
     cat "$captureOut"
   else
     cat "$captureOut"
-    _return "$?" "$@" "FAILED" || exitCode=$?
+    returnMessage "$?" "$@" "FAILED" || exitCode=$?
   fi
   rm -rf "$captureOut" || :
   return "$exitCode"

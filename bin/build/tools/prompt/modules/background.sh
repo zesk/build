@@ -421,7 +421,7 @@ __backgroundProcessKill() {
 
 __backgroundProcessExitWrapper() {
   local e=0 home="$1" d="$2" && shift 2
-  __environment cd "$home" || return $?
+  __catchEnvironment "$handler" cd "$home" || return $?
   rm -f "$d/exit"
   local start stop
   start="$(timingStart | tee "$d/start")" || :

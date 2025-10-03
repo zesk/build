@@ -64,7 +64,7 @@ buildTestPlatforms() {
 
     local start exitCode=0 elapsed
     start=$(timingStart)
-    __echo dockerLocalContainer --local "$safeTestFiles/$pathName" --path "/var/buildTest" --verbose --handler "$handler" --image "$image" "/var/buildTest/bin/test.sh" -c "$@" || exitCode=$?
+    dockerLocalContainer --local "$safeTestFiles/$pathName" --path "/var/buildTest" --verbose --handler "$handler" --image "$image" "/var/buildTest/bin/test.sh" -c "$@" || exitCode=$?
     elapsed=$(($(timingStart) - start))
     __buildTestPlatformOutput "$image" "$exitCode" "$elapsed"
     [ $exitCode -eq 0 ] || returnCode=$exitCode

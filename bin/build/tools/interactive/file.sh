@@ -55,7 +55,7 @@ __fileCopy() {
       source="$1"
       [ -f "$source" ] || __throwEnvironment "$handler" "source \"$source\" does not exist" || return $?
       shift
-      destination=$(usageArgumentFileDirectory _argument "destination" "${1-}") || return $?
+      destination=$(usageArgumentFileDirectory returnArgument "destination" "${1-}") || return $?
       shift
       [ $# -eq 0 ] || __catchArgument "$handler" "unknown argument $1" || return $?
       if $mapFlag; then
@@ -172,7 +172,7 @@ _fileCopyEscalated() {
     return $?
   fi
   printf "%s \"%s\"\n" "$(decorate error "Used declined update of")" "$(decorate red "$3")" 1>&2
-  _argument || return $?
+  returnArgument || return $?
 }
 
 #
@@ -203,6 +203,6 @@ _fileCopyShowNew() {
   local lines
   _fileCopyPrompt "$displaySource" "$destination" "Created"
   head -10 "$source" | decorate code
-  lines=$(__environment fileLineCount "$source") || return $?
+  lines=$(__catchEnvironment "$handler" fileLineCount "$source") || lines="0" || :
   decorate info "$(printf "%d %s total" "$lines" "$(plural "$lines" line lines)")"
 }

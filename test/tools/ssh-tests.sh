@@ -8,7 +8,7 @@
 #
 
 testSSHAddKnownHosts() {
-  local handler="_return"
+  local handler="returnMessage"
   local tempHome
   local sampleDomainA sampleDomainB
 
@@ -49,7 +49,7 @@ testSSHAddKnownHosts() {
 }
 
 testSSHRemoveKnownHosts() {
-  local handler="_return"
+  local handler="returnMessage"
   local tempHome debugFlag=false
 
   mockEnvironmentStart HOME

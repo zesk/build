@@ -14,9 +14,9 @@
 # If no arguments are passed, returns exit code 1.
 # Return Code: 0 - All arguments are executable binaries
 # Return Code: 1 - One or or more arguments are not executable binaries
-# Requires: _argument which
+# Requires: returnArgument which
 isExecutable() {
-  [ $# -eq 1 ] || _argument "Single argument only: $*" || return $?
+  [ $# -eq 1 ] || returnArgument "Single argument only: $*" || return $?
   [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
   # Skip illegal options "--" and "-foo"
   [ "$1" = "${1#-}" ] || return 1

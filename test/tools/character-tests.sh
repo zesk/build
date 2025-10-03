@@ -38,7 +38,7 @@ __testIsCharacterClass() {
 }
 
 testValidateCharacterClass() {
-  local temp home handler="_return"
+  local temp home handler="returnMessage"
 
   home=$(__catch "$handler" buildHome) || return $?
   temp=$(fileTemporaryName "$handler") || return $?

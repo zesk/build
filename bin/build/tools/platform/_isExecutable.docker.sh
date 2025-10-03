@@ -29,11 +29,11 @@ isExecutable() {
 # Return Code: 0 - All arguments are executable binaries
 # Return Code: 1 - One or or more arguments are not executable binaries
 # Workaround: On Mac OS X the Docker environment thinks non-executable files are executable, notably `bin/build/README.md` is considered `[ -x $file ]` when you are inside the container when the directory is mapped from the operating system. If it's a non-mapped directory, it works fine. Seems to be a bug in how permissions are translated, I assume. Workaround falls.
-# Requires: _argument which ls awk
+# Requires: returnArgument which ls awk
 isExecutableHack() {
   local lsMask
 
-  [ $# -eq 1 ] || _argument "Single argument only: $*" || return $?
+  [ $# -eq 1 ] || returnArgument "Single argument only: $*" || return $?
   [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
 
   # Skip illegal options "--" and "-foo"

@@ -5,7 +5,11 @@
 <hr />
 
 {urlMatchesLocalFileSize}
+
 {urlContentLength}
+
 {networkIPList}
+
 {hostTTFB}
+
 {websiteScrape}

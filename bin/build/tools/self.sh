@@ -115,15 +115,16 @@ _buildHome() {
 
 # Parent: buildHome
 _buildEnvironmentPath() {
+  local handler="$1" && shift
   local paths=() home
 
   export BUILD_ENVIRONMENT_DIRS BUILD_HOME
   home="${BUILD_HOME-}"
   if [ -z "$home" ]; then
-    home=$(__environment buildHome) || return $?
+    home=$(__catch "$handler" buildHome) || return $?
   fi
   # shellcheck source=/dev/null
-  source "$home/bin/build/env/BUILD_ENVIRONMENT_DIRS.sh" || _environment "BUILD_ENVIRONMENT_DIRS.sh fail" || return $?
+  source "$home/bin/build/env/BUILD_ENVIRONMENT_DIRS.sh" || __throwEnvironment "$handler" "BUILD_ENVIRONMENT_DIRS.sh fail" || return $?
 
   IFS=":" read -r -a paths <<<"${BUILD_ENVIRONMENT_DIRS-}" || :
   printf "%s\n" "${paths[@]+"${paths[@]}"}" "$home/bin/build/env"
@@ -169,7 +170,7 @@ buildEnvironmentLoad() {
       local env found="" paths=() path file=""
 
       env="$(usageArgumentEnvironmentVariable "$handler" "environmentVariable" "$1")" || return $?
-      IFS=$'\n' read -d '' -r -a paths < <(_buildEnvironmentPath) || :
+      IFS=$'\n' read -d '' -r -a paths < <(_buildEnvironmentPath "$handler") || :
       for path in "${paths[@]}"; do
         if ! pathIsAbsolute "$path"; then
           # All relative paths are relative to the application root, so correct
@@ -421,7 +422,6 @@ buildEnvironmentContext() {
   local codeHome home binTools="bin/build/tools.sh"
   codeHome=$(__catch "$handler" buildHome) || return $?
   home=$(__catchEnvironment "$handler" bashLibraryHome "$binTools" "$start") || return $?
-
 
   if [ "$codeHome" != "$home" ]; then
     decorate warning "Build home is $(decorate code "$codeHome") - running locally at $(decorate code "$home")"

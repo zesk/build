@@ -7,7 +7,7 @@
 
 # Tag: package-install
 testXdebugInstall() {
-  local handler="_return"
+  local handler="returnMessage"
 
   assertExitCode 0 xdebugInstall || return $?
   assertExitCode 0 xdebugEnable || return $?

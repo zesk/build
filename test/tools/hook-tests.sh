@@ -14,7 +14,7 @@ _hookTestFailed() {
 }
 
 testWhichHook() {
-  local handler="_return"
+  local handler="returnMessage"
   local home
 
   home=$(__catch "$handler" buildHome) || return $?
@@ -27,7 +27,7 @@ testVersionLive() {
 
 # Tag: slow
 testHookSystem() {
-  local handler="_return"
+  local handler="returnMessage"
   local testDir savedHome randomApp randomDefault path
   local hook exitCode f
 
@@ -201,10 +201,11 @@ testHookSystem() {
 }
 
 testHooksWhichSeemBenign() {
+  local handler="returnMessage"
   local cache home hook
 
-  home="$(__environment buildHome)" || return $?
-  cache=$(__environment __gitPreCommitCache true) || return $?
+  home="$(__catchEnvironment "$handler" buildHome)" || return $?
+  cache=$(__catchEnvironment "$handler" __gitPreCommitCache true) || return $?
   find "$home/test/example" -type f ! -path "*/.*/*" | extensionLists --clean "$cache"
 
   assertExitCode 0 gitPreCommitHeader || return $?

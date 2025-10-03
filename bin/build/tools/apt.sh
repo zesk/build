@@ -94,26 +94,26 @@ _aptKeyRemove() {
 # See: packageUpdate
 # package.sh: true
 __aptUninstall() {
-  __aptLoader "_return" "_${FUNCNAME[0]}" "$@"
+  __aptLoader "returnMessage" "_${FUNCNAME[0]}" "$@"
 }
 __aptDefault() {
-  __aptLoader "_return" "_${FUNCNAME[0]}" "$@"
+  __aptLoader "returnMessage" "_${FUNCNAME[0]}" "$@"
 }
 __aptUpdate() {
-  __aptLoader "_return" "_${FUNCNAME[0]}" "$@"
+  __aptLoader "returnMessage" "_${FUNCNAME[0]}" "$@"
 }
 __aptInstall() {
-  __aptLoader "_return" "_${FUNCNAME[0]}" "$@"
+  __aptLoader "returnMessage" "_${FUNCNAME[0]}" "$@"
 }
 __aptInstalledList() {
-  __aptLoader "_return" "_${FUNCNAME[0]}" "$@"
+  __aptLoader "returnMessage" "_${FUNCNAME[0]}" "$@"
 }
 __aptPackageMapping() {
-  __aptLoader "_return" "_${FUNCNAME[0]}" "$@"
+  __aptLoader "returnMessage" "_${FUNCNAME[0]}" "$@"
 }
 __aptStandardPackages() {
-  __aptLoader "_return" "_${FUNCNAME[0]}" "$@"
+  __aptLoader "returnMessage" "_${FUNCNAME[0]}" "$@"
 }
 __aptAvailableList() {
-  __aptLoader "_return" "_${FUNCNAME[0]}" "$@"
+  __aptLoader "returnMessage" "_${FUNCNAME[0]}" "$@"
 }

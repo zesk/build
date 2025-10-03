@@ -54,7 +54,8 @@ _bashPromptModule_TermColors() {
 }
 
 __bashPromptModule_LoadColors() {
-  local schemeFile="$1" start="$2" debug="$3" prettySchemeFile="$4" usage="_return" dd=()
+  local handler="returnMessage"
+  local schemeFile="$1" start="$2" debug="$3" prettySchemeFile="$4" dd=()
 
   export __BUILD_TERM_COLORS BUILD_COLORS_MODE
 
@@ -66,7 +67,7 @@ __bashPromptModule_LoadColors() {
   [ "$hash" != "${__BUILD_TERM_COLORS-}" ] || return 0
 
   colorsFile=$(fileTemporaryName _return) || return 0
-  __catchEnvironment "$usage" grepSafe -v -e '^#' "$schemeFile" | __catchEnvironment "$usage" sed '/^$/d' | __catchEnvironment "$usage" muzzle tee "$colorsFile" || return $?
+  __catchEnvironment "$handler" grepSafe -v -e '^#' "$schemeFile" | __catchEnvironment "$handler" sed '/^$/d' | __catchEnvironment "$handler" muzzle tee "$colorsFile" || return $?
   local it2=false iTerm2=false
   ! isiTerm2 || it2=true
   local bgs=()
@@ -80,7 +81,7 @@ __bashPromptModule_LoadColors() {
       colorCode=$(colorParse <<<"$value" | colorFormat "%d;%d;%d")
       newStyle="38;2;$colorCode"
       ! $debug || statusMessage decorate info "Setting style $(decorate value "$name") to $(decorate code "$newStyle")"
-      __catchEnvironment "$usage" muzzle decorateStyle "$name" "$newStyle" || return $?
+      __catchEnvironment "$handler" muzzle decorateStyle "$name" "$newStyle" || return $?
     else
       local bgName="${name%bg}"
       if [ -n "$bgName" ] && [ "$name" != "$bgName" ] && muzzle decorateStyle "$bgName"; then
@@ -98,7 +99,7 @@ __bashPromptModule_LoadColors() {
       newStyle=$(decorateStyle "$name")
       newStyle="${newStyle%%;48;2;*}"
       newStyle="$newStyle;48;2;$value"
-      __catchEnvironment "$usage" muzzle decorateStyle "$name" "$newStyle" || return $?
+      __catchEnvironment "$handler" muzzle decorateStyle "$name" "$newStyle" || return $?
       ! $debug || statusMessage decorate info "Setting background style $(decorate value "$name") \"$(decorate code "$value")\" to $(decorate code "$newStyle")"
       shift 2
     done
@@ -108,14 +109,14 @@ __bashPromptModule_LoadColors() {
   ! $iTerm2 || iTerm2SetColors "${dd[@]+"${dd[@]}"}" --fill --ignore --skip-errors <"$colorsFile" || :
 
   bg="$(grep -e '^bg=' "$colorsFile" | tail -n 1 | cut -f 2 -d =)"
-  __catchEnvironment "$usage" rm -rf "$colorsFile" || return $?
+  __catchEnvironment "$handler" rm -rf "$colorsFile" || return $?
 
   ! $debug || timingReport "$start" Elapsed
 
   __BUILD_TERM_COLORS="$hash"
 
   local mode
-  mode=$(__environment consoleConfigureColorMode "$bg") || :
+  mode=$(__catchEnvironment "$handler" consoleConfigureColorMode "$bg") || :
   [ -z "$mode" ] || BUILD_COLORS_MODE="$mode" && bashPrompt --skip-prompt --colors "$(bashPromptColorScheme "$mode")"
 
   ! $debug || timingReport "$start" "Background is now $bg and mode is $mode ... "

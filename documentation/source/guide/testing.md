@@ -37,7 +37,7 @@ The `plumber` monitors your function and ensures you do not declare a variable w
 occurs when you forget to declare local variables as `local`:
 
     testHasLeaks() {
-        local handler="_return"
+        local handler="returnMessage"
         dogma=$(fileTemporaryName "$handler") || return $?
     }
 
@@ -49,7 +49,7 @@ If you find you need to turn this functionality off, add the tags to disable the
     # Test-Housekeeper: false
     # Test-Plumber: false
     testHasLeaks() {
-        local handler="_return"
+        local handler="returnMessage"
         dogma=$(fileTemporaryName "$handler") || return $?
     }
 

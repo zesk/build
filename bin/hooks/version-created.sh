@@ -19,7 +19,7 @@ source "${BASH_SOURCE[0]%/*}/../build/tools.sh"
 # Environment: BUILD_VERSION_NO_OPEN - Do not open in the default editor. Set this is you do not want the behavior and do not have an override `version-created` hook
 #
 __buildVersionCreated() {
-  local handler="_return"
+  local handler="returnMessage"
   local home
 
   home=$(__catch "$handler" buildHome) || return $?

@@ -92,7 +92,7 @@ _decorations() {
 # Argument: style - String. Required. One of: reset underline no-underline bold no-bold black black-contrast blue cyan green magenta orange red white yellow bold-black bold-black-contrast bold-blue bold-cyan bold-green bold-magenta bold-orange bold-red bold-white bold-yellow code info notice success warning error subtle label value decoration
 # Argument: text - Text to output. If not supplied, outputs a code to change the style to the new style.
 # stdout: Decorated text
-# Requires: isFunction _argument awk __catchEnvironment usageDocument __executeInputSupport __help
+# Requires: isFunction returnArgument awk __catchEnvironment usageDocument __executeInputSupport __help
 decorate() {
   local handler="_${FUNCNAME[0]}" text="" what="${1-}" lp dp style
   [ "$what" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
@@ -101,9 +101,9 @@ decorate() {
   if ! style=$(__decorateStyle "$what"); then
     local extend func="${what/-/_}"
     extend="__decorateExtension$(printf "%s" "${func:0:1}" | awk '{print toupper($0)}')${func:1}"
-    # When this next line calls `__catchArgument` it results in an infinite loop, so don't - use _argument
+    # When this next line calls `__catchArgument` it results in an infinite loop, so don't - use returnArgument
     # shellcheck disable=SC2119
-    isFunction "$extend" || _argument printf -- "%s\n%s\n" "Unknown decoration name: $what ($extend)" "$(decorations)" || return $?
+    isFunction "$extend" || returnArgument printf -- "%s\n%s\n" "Unknown decoration name: $what ($extend)" "$(decorations)" || return $?
     __executeInputSupport "$handler" "$extend" -- "$@" || return $?
     return 0
   fi

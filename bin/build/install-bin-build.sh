@@ -229,7 +229,7 @@ __installPackageConfiguration() {
 # Argument: --diff - Optional. Flag. Show differences between old and new file.
 # Return Code: 1 - Environment error
 # Return Code: 2 - Argument error
-# Requires: cp rm cat printf realPath whichExists _return fileTemporaryName __catchArgument __throwArgument __catchEnvironment decorate usageArgumentString isFunction __decorateExtensionQuote
+# Requires: cp rm cat printf realPath whichExists returnMessage fileTemporaryName __catchArgument __throwArgument __catchEnvironment decorate usageArgumentString isFunction __decorateExtensionQuote
 _installRemotePackage() {
   local handler="_${FUNCNAME[0]}"
 
@@ -553,7 +553,7 @@ __installRemotePackageGitCheck() {
 
 # Usage: {fn} _installRemotePackageSource targetBinary relativePath
 # Requires: grep printf chmod wait
-# Requires: _environment isUnsignedInteger cat returnClean
+# Requires: returnEnvironment isUnsignedInteger cat returnClean
 __installRemotePackageLocal() {
   local source="$1" myBinary="$2" relTop="$3"
   {
@@ -562,7 +562,7 @@ __installRemotePackageLocal() {
   } >"$myBinary.$$"
   if ! chmod +x "$myBinary.$$"; then
     rm -rf "$myBinary.$$" || :
-    _environment "chmod +x failed" || return $?
+    returnEnvironment "chmod +x failed" || return $?
   fi
   exec "$myBinary.$$" --replace "$myBinary"
 }
@@ -648,7 +648,7 @@ usageArgumentString() {
 # Argument: --password password - Optional. String. If supplied along with `--user`, uses HTTP Simple authentication.
 # Argument: url - Required. URL. URL to fetch to target file.
 # Argument: file - Optional. FileDirectory. Target file. Use `-` to send to `stdout`. Default value is `-`.
-# Requires: _return whichExists printf decorate
+# Requires: returnMessage whichExists printf decorate
 # Requires: usageArgumentString
 # Requires: __throwArgument __catchArgument
 # Requires: __throwEnvironment __catchEnvironment
@@ -854,9 +854,9 @@ usageDocumentSimple() {
   $skip || printf -- "%s [%s] %s\n" "$icon" "$(decorate "code" "$(exitString "$returnCode")")" "$(decorate "$color" "$*")"
   if [ ! -f "$source" ]; then
     export BUILD_HOME
-    [ -d "${BUILD_HOME-}" ] || _argument "Unable to locate $source (${PWD-})" || return $?
+    [ -d "${BUILD_HOME-}" ] || returnArgument "Unable to locate $source (${PWD-})" || return $?
     source="$BUILD_HOME/$source"
-    [ -f "$source" ] || _argument "Unable to locate $source (${PWD-})" || return $?
+    [ -f "$source" ] || returnArgument "Unable to locate $source (${PWD-})" || return $?
   fi
   while ! $finished; do
     IFS='' read -r line || finished=true
@@ -870,13 +870,20 @@ _usageDocumentSimple() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# IDENTICAL bashFunctionComment 41
+# IDENTICAL bashFunctionComment 42
 
 # Extracts the final comment from a stream
 # Requires: fileReverseLines sed cut grep convertValue
 bashFinalComment() {
   [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
   grep -v -e '\( IDENTICAL \|_IDENTICAL_\|DOC TEMPLATE:\|Internal:\|INTERNAL:\)' | fileReverseLines | sed -n -e '1d' -e '/^#/!q; p' | fileReverseLines | cut -c 3- || :
+  # Explained:
+  # - grep -v ... - Removes internal documentation and anything we want to hide from the user
+  # - fileReverseLines - First reversal to get that comment, file lines are reverse ordered
+  # - sed 1d - Deletes the first line (e.g. the `function() { ` which was the LAST thing in the line and is now our first line
+  # - sed -n '/^#/!q; p' - `-n` - disables automatic printing. /^#/!q quits when it does not match a '#' comment and prints all `#` lines (effectively outputting just the comment lines)
+  # - fileReverseLines - File is back to normal
+  # - cut -c 3- - Delete the first 2 characters on each line
 }
 _bashFinalComment() {
   false || bashFinalComment --help
@@ -900,13 +907,7 @@ bashFunctionComment() {
   __help "_${FUNCNAME[0]}" "$@" || return 0
   grep -m 1 -B $maxLines "^$functionName() {" "$source" | bashFinalComment
   # Explained:
-  # - grep -m 1 ... - Finds the `function() {` string in the file and all lines afterwards
-  # - grep -v ... - Removes internal documentation and anything we want to hide from the user
-  # - fileReverseLines - First reversal to get that comment, file lines are reverse ordered
-  # - sed 1d - Deletes the first line (e.g. the `function() { ` which was the LAST thing in the line and is now our first line
-  # - sed -n '/^#/!q; p' - `-n` - disables automatic printing. /^#/!q quits when it does not match a '#' comment and prints all `#` lines (effectively outputting just the comment lines)
-  # - fileReverseLines - File is back to normal
-  # - cut -c 3- - Delete the first 2 characters on each line
+  # - grep -m 1 ... - Finds the `function() {` string in the file and all lines beforehand (up to 1000 lines)
 }
 _bashFunctionComment() {
   # __IDENTICAL__ usageDocument 1
@@ -940,7 +941,7 @@ _fileReverseLines() {
 # DOC TEMPLATE: noArgumentsForHelp 1
 # Without arguments, displays help.
 # Argument: file ... - Required. File. One or more files to `realpath`.
-# Requires: whichExists realpath __help usageDocument _argument
+# Requires: whichExists realpath __help usageDocument returnArgument
 realPath() {
   # __IDENTICAL__ --help-when-blank 1
   [ $# -gt 0 ] || __help "_${FUNCNAME[0]}" --help || return 0
@@ -958,7 +959,7 @@ _realPath() {
 # IDENTICAL fileTemporaryName 33
 
 # Wrapper for `mktemp`. Generate a temporary file name, and fail using a function
-# Argument: handler - Function. Required. Function to call on failure. Function Type: _return
+# Argument: handler - Function. Required. Function to call on failure. Function Type: returnMessage
 # DOC TEMPLATE: --help 1
 # Argument: --help - Optional. Flag. Display this help.
 # Argument: ... - Optional. Arguments. Any additional arguments are passed through.
@@ -1148,7 +1149,7 @@ _decorations() {
 # Argument: style - String. Required. One of: reset underline no-underline bold no-bold black black-contrast blue cyan green magenta orange red white yellow bold-black bold-black-contrast bold-blue bold-cyan bold-green bold-magenta bold-orange bold-red bold-white bold-yellow code info notice success warning error subtle label value decoration
 # Argument: text - Text to output. If not supplied, outputs a code to change the style to the new style.
 # stdout: Decorated text
-# Requires: isFunction _argument awk __catchEnvironment usageDocument __executeInputSupport __help
+# Requires: isFunction returnArgument awk __catchEnvironment usageDocument __executeInputSupport __help
 decorate() {
   local handler="_${FUNCNAME[0]}" text="" what="${1-}" lp dp style
   [ "$what" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
@@ -1157,9 +1158,9 @@ decorate() {
   if ! style=$(__decorateStyle "$what"); then
     local extend func="${what/-/_}"
     extend="__decorateExtension$(printf "%s" "${func:0:1}" | awk '{print toupper($0)}')${func:1}"
-    # When this next line calls `__catchArgument` it results in an infinite loop, so don't - use _argument
+    # When this next line calls `__catchArgument` it results in an infinite loop, so don't - use returnArgument
     # shellcheck disable=SC2119
-    isFunction "$extend" || _argument printf -- "%s\n%s\n" "Unknown decoration name: $what ($extend)" "$(decorations)" || return $?
+    isFunction "$extend" || returnArgument printf -- "%s\n%s\n" "Unknown decoration name: $what ($extend)" "$(decorations)" || return $?
     __executeInputSupport "$handler" "$extend" -- "$@" || return $?
     return 0
   fi
@@ -1369,19 +1370,22 @@ _exitString() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# IDENTICAL _return 29
+# IDENTICAL _return 32
 
 # Return passed in integer return code and output message to `stderr` (non-zero) or `stdout` (zero)
 # Argument: exitCode - Required. UnsignedInteger. Exit code to return. Default is 1.
 # Argument: message ... - Optional. String. Message to output
 # Return Code: exitCode
 # Requires: isUnsignedInteger printf _return
-_return() {
+returnMessage() {
   local to=1 icon="✅" code="${1:-1}" && shift 2>/dev/null
   isUnsignedInteger "$code" || _return 2 "${FUNCNAME[1]-none}:${BASH_LINENO[1]-} -> ${FUNCNAME[0]} non-integer \"$code\"" "$@" || return $?
   if [ "$code" -gt 0 ]; then icon="❌ [$code]" && to=2; fi
   printf -- "%s %s\n" "$icon" "${*-§}" 1>&"$to"
   return "$code"
+}
+_return() {
+  returnMessage "$@"
 }
 
 # Test if an argument is an unsigned integer
@@ -1400,7 +1404,7 @@ isUnsignedInteger() {
 
 # <-- END of IDENTICAL _return
 
-# IDENTICAL _tinySugar 109
+# IDENTICAL _tinySugar 97
 
 # Run `handler` with an argument error
 # Argument: handler - Function. Required. Error handler.
@@ -1441,49 +1445,37 @@ __catchEnvironment() {
 # Return `argument` error code. Outputs `message ...` to `stderr`.
 # Argument: message ... - String. Optional. Message to output.
 # Return Code: 2
-# Requires: _return
-_argument() {
-  _return 2 "$@" || return $?
+# Requires: returnMessage
+returnArgument() {
+  returnMessage 2 "$@" || return $?
 }
 
 # Return `environment` error code. Outputs `message ...` to `stderr`.
 # Argument: message ... - String. Optional. Message to output.
 # Return Code: 1
-# Requires: _return
-_environment() {
-  _return 1 "$@" || return $?
+# Requires: returnMessage
+returnEnvironment() {
+  returnMessage 1 "$@" || return $?
 }
 
 # Run `handler` with an argument error
 # Argument: exitCode - Integer. Required. Return code.
 # Argument: handler - Function. Required. Error handler.
 # Argument: message ... - String. Optional. Error message
-# Requires: _argument
+# Requires: returnArgument
 __throw() {
-  local exitCode="${1-}" && shift || _argument "Missing exit code" || return $?
-  lcoal handler="${1-}" && shift || _argument "Missing error handler" || return $?
+  local exitCode="${1-}" && shift || returnArgument "Missing exit code" || return $?
+  lcoal handler="${1-}" && shift || returnArgument "Missing error handler" || return $?
   "$handler" "$exitCode" "$@" || return $?
 }
 
 # Run binary and catch errors with handler
 # Argument: handler - Required. Function. Error handler.
 # Argument: binary ... - Required. Executable. Any arguments are passed to `binary`.
-# Requires: _argument
+# Requires: returnArgument
 __catch() {
-  local handler="${1-}" && shift || _argument "Missing handler" || return $?
+  local handler="${1-}" && shift || returnArgument "Missing handler" || return $?
   "$@" || "$handler" "$?" "$@" || return $?
-}
-
-# _IDENTICAL_ __environment 10
-
-# Run `command ...` (with any arguments) and then `_environment` if it fails.
-# Usage: {fn} command ...
-# Argument: command ... - Any command and arguments to run.
-# Return Code: 0 - Success
-# Return Code: 1 - Failed
-# Requires: _environment
-__environment() {
-  "$@" || _environment "$@" || return $?
 }
 
 # _IDENTICAL_ returnClean 21
@@ -1491,7 +1483,7 @@ __environment() {
 # Delete files or directories and return the same exit code passed in.
 # Argument: exitCode - Required. Integer. Exit code to return.
 # Argument: item - Optional. One or more files or folders to delete, failures are logged to stderr.
-# Requires: isUnsignedInteger _argument __environment usageDocument
+# Requires: isUnsignedInteger returnArgument __throwEnvironment usageDocument __throwArgument
 # Group: Sugar
 returnClean() {
   local handler="_${FUNCNAME[0]}"
@@ -1500,7 +1492,7 @@ returnClean() {
   if ! isUnsignedInteger "$exitCode"; then
     __throwArgument "$handler" "$exitCode (not an integer) $*" || return $?
   else
-    __environment rm -rf "$@" || return "$exitCode"
+    __catchEnvironment "$handler" rm -rf "$@" || return "$exitCode"
     return "$exitCode"
   fi
 }
@@ -1510,18 +1502,6 @@ _returnClean() {
 }
 
 # <-- END of IDENTICAL _tinySugar
-
-# <-- END of IDENTICAL _tinySugar
-
-# Argument: binary ... - Required. Executable. Any arguments are passed to `binary`.
-# Run binary and output failed command upon error
-# Requires: _return
-__execute() {
-  "$@" || _return "$?" "$@" || return $?
-}
-
-# IDENTICAL returnUndo 42
-
 # Run a function and preserve exit code
 # Returns `code`
 # DOC TEMPLATE: --help 1

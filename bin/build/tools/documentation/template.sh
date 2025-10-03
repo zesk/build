@@ -53,12 +53,16 @@ __documentationTemplateUpdateUnlinked() {
 
   unlinkedFunctions=$(fileTemporaryName "$handler") || return $?
   clean+=("$unlinkedFunctions")
-  __catch "$handler" _documentationIndex_UnlinkedFunctions "$cacheDirectory" | grep -v '^_' | decorate wrap "{" "}" >"$unlinkedFunctions" || returnClean $? "${clean[@]}" || return $?
+  __catch "$handler" _documentationIndexUnlinkedFunctions "$cacheDirectory" | grepSafe -v '^_' | decorate wrap "{" "}" >"$unlinkedFunctions" || returnClean $? "${clean[@]}" || return $?
   total=$(__catch "$handler" fileLineCount "$unlinkedFunctions") || return $?
 
   # Subshell hide globals
   (
-    content="$(sort <"$unlinkedFunctions")"
+    if [ "$total" -lt 40 ]; then
+      content="$(sort <"$unlinkedFunctions")"
+    else
+      content="- *ERROR* found more than $total unlinked - something is wrong"
+    fi
     content=$content total=$total mapEnvironment content total <"$todoTemplate" >"$template.$$"
   ) || returnClean $? "${clean[@]}" || return $?
 
@@ -148,13 +152,32 @@ _buildDocumentationGenerateEnvironment() {
 # List unlinked functions in documentation index
 __documentationUnlinked() {
   local handler="$1" && shift
-  [ $# -eq 0 ] || __help --only "$handler" "$@" || return "$(convertValue $? 1 0)"
+
+  local dd=()
+
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
+  local __saved=("$@") __count=$#
+  while [ $# -gt 0 ]; do
+    local argument="$1" __index=$((__count - $# + 1))
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
+    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    case "$argument" in
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
+    --debug) dd+=("$argument") ;;
+    *)
+      # _IDENTICAL_ argumentUnknownHandler 1
+      __throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
+      ;;
+    esac
+    shift
+  done
 
   local cacheDirectory
 
   cacheDirectory="$(__catch "$handler" documentationBuildCache)" || return $?
 
-  __catch "$handler" _documentationIndex_UnlinkedFunctions "$cacheDirectory" || return $?
+  __catch "$handler" _documentationIndexUnlinkedFunctions "$cacheDirectory" "${dd[@]+"${dd[@]}"}" || return $?
 }
 _documentationUnlinked() {
   # __IDENTICAL__ usageDocument 1
@@ -178,35 +201,33 @@ _documentationUnlinked() {
 # Short description: Simple bash function documentation
 #
 _bashDocumentation_Template() {
-  local template="$1" envFile
-  [ -f "$template" ] || _argument "Template $template not found" || return $?
-  shift || :
+  local saved=("$@")
+  local handler="$1" && shift
+  local template="$1" && shift
+
+  [ -f "$template" ] || __throwArgument "$handler" "Template $template not found" || return $?
   set +m
   (
     # subshell this does not affect anything except these commands
-    set -aeou pipefail
+    set -a
     while [ $# -gt 0 ]; do
-      envFile="$1"
-      [ -f "$envFile" ] || _argument "Settings file $envFile not found" || return $?
+      local envFile="$1"
+      [ -f "$envFile" ] || __throwArgument "$handler" "Settings file $envFile not found" || return $?
       # shellcheck source=/dev/null
-      source "$envFile" || _environment "$envFile Failed: $(dumpPipe "Template envFile failed" <"$envFile")" || return $?
+      source "$envFile" || __throwEnvironment "$handler" "SOURCE $envFile Failed: $(dumpPipe "Template envFile failed" <"$envFile")" || return $?
       shift
     done
-    echo "${BASH_SOURCE[0]}:$LINENO"
-
     while read -r token; do
-      formatter="_bashDocumentationFormatter_${token}"
-      if isFunction "$formatter"; then
-        echo "${BASH_SOURCE[0]}:$LINENO $formatter"
-        declare "$token"="$(printf "%s\n" "${!token}" | "$formatter")"
-      else
-        echo "${BASH_SOURCE[0]}:$LINENO NOT $formatter"
+      local value="${!token-}"
+      if [ -n "$value" ]; then
+        formatter="_bashDocumentationFormatter_${token}"
+        if isFunction "$formatter"; then
+          declare "$token"="$(printf "%s\n" "${!token}" | "$formatter")"
+        fi
       fi
     done < <(mapTokens <"$template" | sort -u)
-    echo "${BASH_SOURCE[0]}:$LINENO"
-    mapEnvironment <"$template" | grep -E -v '^shellcheck|# shellcheck' | markdown_removeUnfinishedSections || return $?
-    echo "${BASH_SOURCE[0]}:$LINENO"
-  ) 2>/dev/null || _environment "$template failed" || return $?
+    mapEnvironment <"$template" | grepSafe -E -v '^shellcheck|# shellcheck' || markdown_removeUnfinishedSections | :
+  ) || __throwEnvironment "$handler" "_bashDocumentation_Template failed: ${saved[*]}" || return $?
 }
 
 # Formats arguments for markdown

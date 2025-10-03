@@ -255,8 +255,8 @@ _commentArgumentSpecificationParseLine() {
   local argumentDirectory="${functionCache%/}/parsed"
   local argumentRemainder=false
 
-  [ -d "$argumentDirectory" ] || _argument "$argumentDirectory is not a directory" || return $?
-  isUnsignedInteger "$argumentId" || _argument "$argumentId is not an integer" || return $?
+  [ -d "$argumentDirectory" ] || returnArgument "$argumentDirectory is not a directory" || return $?
+  isUnsignedInteger "$argumentId" || returnArgument "$argumentId is not an integer" || return $?
   shift 2
 
   local argument file
@@ -320,18 +320,18 @@ _commentArgumentSpecificationParseLine() {
   done
   # Blank line
   [ $# -eq 0 ] && return 0
-  [ $# -ge 1 ] || _argument "$argumentId missing type: $savedLine" || return $?
+  [ $# -ge 1 ] || returnArgument "$argumentId missing type: $savedLine" || return $?
   local rawType="${1%.}" maybeRequired="${2%.}"
   if required=$(_commentArgumentParseRequired "$maybeRequired" "$rawType"); then
     case "$required" in required) required=true ;; *) required=false ;; esac
   fi
   if ! argumentType=$(_commentArgumentTypeValid "$rawType" "$maybeRequired"); then
-    _argument "Invalid argument type in: \"$rawType\" \"$maybeRequired\" (Required was \"$required\")" || return $?
+    returnArgument "Invalid argument type in: \"$rawType\" \"$maybeRequired\" (Required was \"$required\")" || return $?
   fi
   description="$*"
   if ! $argumentRemainder || [ -n "$argumentName" ]; then
     for argument in argumentType argumentName argumentFinder; do
-      [ -n "${!argument}" ] || _argument "Require a value for $argument in line: $savedLine" || return $?
+      [ -n "${!argument}" ] || returnArgument "Require a value for $argument in line: $savedLine" || return $?
     done
     {
       environmentValueWrite argumentName "$argumentName"
@@ -343,15 +343,15 @@ _commentArgumentSpecificationParseLine() {
       environmentValueWrite argumentDelimiter "$doubleDashDelimit"
       environmentValueWrite argumentFlag "$argumentFlag"
       environmentValueWrite description "$description"
-    } >"$argumentDirectory/$argumentFinder" || _argument "Unable to write $argumentDirectory/$argumentFinder" || return $?
+    } >"$argumentDirectory/$argumentFinder" || returnArgument "Unable to write $argumentDirectory/$argumentFinder" || return $?
     if $required; then
-      __environment printf "%s\n" "$argumentName" >>"$(__commentArgumentSpecification__required "$functionCache")" || return $?
+      __catchEnvironment "$handler" printf "%s\n" "$argumentName" >>"$(__commentArgumentSpecification__required "$functionCache")" || return $?
     fi
     if inArray "$argumentType" "Boolean" "Flag"; then
       argumentDefault=false
     fi
     if [ -n "$argumentDefault" ]; then
-      __environment environmentValueWrite "${argumentName/-/_}" "$argumentDefault" >>"$(__commentArgumentSpecification__defaults "$functionCache")" || return $?
+      __catchEnvironment "$handler" environmentValueWrite "${argumentName/-/_}" "$argumentDefault" >>"$(__commentArgumentSpecification__defaults "$functionCache")" || return $?
     fi
   fi
   if $argumentRemainder; then
@@ -445,7 +445,7 @@ _commentArgumentName() {
   fi
   argumentNamed="$(environmentValueRead "$stateFile" argumentNamed "")"
   if [ -z "$argumentNamed" ]; then
-    _environment "No current argument" || return $?
+    returnEnvironment "No current argument" || return $?
   fi
   if isUnsignedInteger "$argumentNamed"; then
     environmentValueRead "$specification/#--$argumentNamed" argumentName not-named

@@ -34,7 +34,7 @@
 # Argument: --password password - Optional. String. If supplied along with `--user`, uses HTTP Simple authentication.
 # Argument: url - Required. URL. URL to fetch to target file.
 # Argument: file - Optional. FileDirectory. Target file. Use `-` to send to `stdout`. Default value is `-`.
-# Requires: _return whichExists printf decorate
+# Requires: returnMessage whichExists printf decorate
 # Requires: usageArgumentString
 # Requires: __throwArgument __catchArgument
 # Requires: __throwEnvironment __catchEnvironment

@@ -6,11 +6,11 @@
 #
 
 testNewestAndOldest() {
-  local handler="_return"
+  local handler="returnMessage"
   local waitSeconds=1 place aTime bTime cTime
 
   place=$(fileTemporaryName "$handler" -d) || return $?
-  __environment muzzle pushd "$place" || return $?
+  __catchEnvironment "$handler" muzzle pushd "$place" || return $?
 
   date >"a"
   decorate info "testNewestAndOldest: Sleeping $waitSeconds seconds ..."
@@ -40,7 +40,7 @@ testNewestAndOldest() {
   assertExitCode 1 fileIsNewest "a" "c" || return $?
   assertExitCode 1 fileIsNewest "a" "b" || return $?
 
-  __environment muzzle popd || return $?
+  __catchEnvironment "$handler" muzzle popd || return $?
   __catch "$handler" rm -rf "$place" || return $?
 }
 
@@ -113,10 +113,10 @@ testServiceToPort() {
 }
 
 testExtensionLists() {
-  local handler="_return"
+  local handler="returnMessage"
   local target me
 
-  me=$(__environment realPath "${BASH_SOURCE[0]}") || return $?
+  me=$(__catchEnvironment "$handler" realPath "${BASH_SOURCE[0]}") || return $?
 
   export BUILD_HOME
   assertExitCode 0 buildEnvironmentLoad BUILD_HOME || return $?

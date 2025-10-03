@@ -20,7 +20,7 @@ source "${BASH_SOURCE[0]%/*}/../tools.sh"
 #
 __hookVersionCreated() {
   local currentVersion releaseNotes
-  local handler="_return"
+  local handler="returnMessage"
 
   currentVersion=$(usageArgumentString "$handler" version "${1-}") && shift || return $?
   releaseNotes=$(usageArgumentFile "$handler" releaseNotes "${1-}") && shift || return $?

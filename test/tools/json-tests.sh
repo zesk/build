@@ -6,7 +6,7 @@
 #
 
 testJSONField() {
-  local handler="_return" target
+  local handler="returnMessage" target
 
   target=$(fileTemporaryName "$handler") || return $?
 
@@ -23,7 +23,7 @@ __testJSONSetValue() {
 }
 
 testJSONSetValue() {
-  local handler="_return" tempDir target
+  local handler="returnMessage" tempDir target
 
   tempDir=$(fileTemporaryName "$handler" -d) || return $?
 

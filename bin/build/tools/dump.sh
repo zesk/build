@@ -137,7 +137,7 @@ dumpPipe() {
     export BUILD_DEBUG_LINES
     __catch "$handler" buildEnvironmentLoad BUILD_DEBUG_LINES || return $?
     showLines="${BUILD_DEBUG_LINES:-100}"
-    isUnsignedInteger "$showLines" || _environment "BUILD_DEBUG_LINES is not an unsigned integer: $showLines" || showLines=10
+    isUnsignedInteger "$showLines" || returnEnvironment "BUILD_DEBUG_LINES is not an unsigned integer: $showLines" || showLines=10
   fi
 
   local item
@@ -231,12 +231,6 @@ dumpFile() {
       __catchEnvironment "$handler" dumpPipe "${dumpArgs[@]+${dumpArgs[@]}}" "$tempFile" <"$tempFile" || return $?
     done
   fi
-}
-__dumpFile() {
-  local exitCode="$1" tempFile="$2"
-  shift 2 || _argument "${FUNCNAME[0]} shift 2" || :
-  __environment rm -rf "$tempFile" || :
-  _dumpFile "$exitCode" "$@"
 }
 _dumpFile() {
   # __IDENTICAL__ usageDocument 1

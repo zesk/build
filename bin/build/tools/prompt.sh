@@ -78,6 +78,9 @@ _bashPrompt() {
 # Prompt the user properly honoring any attached console
 # Arguments are the same as `read`, except:
 # `-r` is implied and does not need to be specified
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
+# Argument: ... - Arguments. Optional. Identical arguments to `read` (but includes `-r`)
 bashUserInput() {
   local handler="_${FUNCNAME[0]}"
   local word="" exitCode=0
@@ -86,12 +89,12 @@ bashUserInput() {
   if ! isTTYAvailable; then
     __throwEnvironment "$handler" "No TTY available for user input" || return $?
   fi
-  export __BASH_PROMPT_MARKERS
-  stty echo
+  stty -f /dev/tty echo 2>/dev/null || :
   # Technically the reading program will not receive these bytes as they will be sent to the tty
-  # printf "%s" "${__BASH_PROMPT_MARKERS[0]-}" >>/dev/tty
+  export __BASH_PROMPT_MARKERS
+  printf "%s" "${__BASH_PROMPT_MARKERS[0]-}" >>/dev/tty
   read -r "$@" word </dev/tty 2>>/dev/tty || exitCode=$?
-  # printf "%s" "${__BASH_PROMPT_MARKERS[1]-}" >>/dev/tty
+  printf "%s" "${__BASH_PROMPT_MARKERS[1]-}" >>/dev/tty
   printf "%s" "$word"
   return $exitCode
 }

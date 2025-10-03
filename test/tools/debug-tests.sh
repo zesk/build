@@ -34,7 +34,7 @@ testBashDebugInterruptFile() {
 }
 
 testBuildDebugEnabled() {
-  local handler="_return"
+  local handler="returnMessage"
   local quietLog
 
   quietLog=$(fileTemporaryName "$handler") || return $?
@@ -155,7 +155,7 @@ __writeTo() {
 }
 
 testHousekeeper() {
-  local handler="_return"
+  local handler="returnMessage"
   local leakCode matches testFiles
   local testDir testFile
 
@@ -167,8 +167,8 @@ testHousekeeper() {
   testDir=$(fileTemporaryName "$handler" -d) || return $?
 
   statusMessage decorate info Copying "${BUILD_HOME-"(blank)"}" to test location
-  __environment cp -r "$BUILD_HOME" "$testDir" || return $?
-  __environment muzzle pushd "$testDir" || return $?
+  __catchEnvironment "$handler" cp -r "$BUILD_HOME" "$testDir" || return $?
+  __catchEnvironment "$handler" muzzle pushd "$testDir" || return $?
 
   assertEquals 108 "$leakCode" || return $?
 
@@ -217,12 +217,12 @@ testHousekeeper() {
   testFiles=(dust dirt cruft temporary-files)
   assertNotExitCode "${matches[@]}" 0 housekeeper "$testDir" rm -f "${testFiles[@]}" || return $?
 
-  __environment muzzle popd || return $?
-  __environment rm -rf "$testDir" || return $?
+  __catchEnvironment "$handler" muzzle popd || return $?
+  __catchEnvironment "$handler" rm -rf "$testDir" || return $?
 }
 
 testOutputTrigger() {
-  local handler="_return"
+  local handler="returnMessage"
 
   assertExitCode --stderr-match YoYoBaby 1 outputTrigger --name YoYoBaby <<<"Hello" || return $?
   local temp

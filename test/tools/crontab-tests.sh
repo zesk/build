@@ -8,13 +8,13 @@
 #
 
 testCrontabApplicationUpdate() {
-  local handler="_return"
+  local handler="returnMessage"
   local emptyPath envFile
   # empty test
 
   envFile=$(fileTemporaryName "$handler") || return $?
   emptyPath=$(fileTemporaryName "$handler" -d) || return $?
-  __environment mkdir -p "$emptyPath/hello" || return $?
+  __catchEnvironment "$handler" mkdir -p "$emptyPath/hello" || return $?
   printf "APP=test\n" >>"$emptyPath/hello/.env"
   assertExitCode 0 crontabApplicationUpdate --env-file "$envFile" "$emptyPath" || return $?
   assertExitCode 0 crontabApplicationUpdate --user root --env-file "$envFile" "$emptyPath" || return $?
@@ -26,7 +26,7 @@ testCrontabApplicationUpdate() {
 }
 
 testCrontabDeprecatedArgument() {
-  local handler="_return" envFile
+  local handler="returnMessage" envFile
 
   envFile=$(fileTemporaryName "$handler")
   assertNotExitCode --stderr-ok --line "$LINENO" 0 crontabApplicationUpdate --env "$envFile" || return $?

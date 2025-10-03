@@ -689,7 +689,7 @@ _fileLineCount() {
 # Argument: number - Required. An integer or floating point number
 # Argument: singular - Required. The singular form of a noun
 # Argument: plural - Optional. The plural form of a noun. If not specified uses `singular` plus an ess.
-# Example:     count=$(__environment fileLineCount "$foxSightings") || return $?
+# Example:     count=$(fileLineCount "$foxSightings") || return $?
 # Example:     printf "We saw %s.\n" "$(pluralWord "$count" fox foxes)"
 pluralWord() {
   local handler="_${FUNCNAME[0]}"
@@ -713,7 +713,7 @@ _pluralWord() {
 #
 # Return Code: 1 - If count is non-numeric
 # Return Code: 0 - If count is numeric
-# Example:     count=$(__environment fileLineCount "$foxSightings") || return $?
+# Example:     count=$(fileLineCount "$foxSightings") || return $?
 # Example:     printf "We saw %d %s.\n" "$count" "$(plural "$count" fox foxes)"
 # Example:
 # Example:     n=$(($(date +%s)) - start))

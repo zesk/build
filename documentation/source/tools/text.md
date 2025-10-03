@@ -13,11 +13,15 @@
 {grepSafe}
 
 {replaceFirstPattern}
+
 {removeFields}
+
 {clampDigits}
 
 {printfOutputPrefix}
+
 {printfOutputSuffix}
+
 {newlineHide}
 
 ## Cleanup ANSI text

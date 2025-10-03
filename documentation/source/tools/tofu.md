@@ -5,9 +5,11 @@
 <hr />
 
 {tofuInstall}
+
 {tofuUninstall}
 
 ## Support functions
 
 {aptKeyAddOpenTofu}
+
 {aptKeyRemoveOpenTofu}

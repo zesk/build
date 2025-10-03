@@ -615,7 +615,7 @@ gitMainly() {
   done
 
   errorLog=$(fileTemporaryName "$handler") || return $?
-  branch=$(git rev-parse --abbrev-ref HEAD) || _environment "Git not present" || return $?
+  branch=$(git rev-parse --abbrev-ref HEAD) || returnEnvironment "Git not present" || return $?
   case "$branch" in
   main | staging)
     __throwEnvironment "$handler" "Already in branch $(decorate code "$branch")" || return $?
@@ -881,10 +881,11 @@ _gitInstallHook() {
 }
 
 __gitPreCommitCache() {
+  local handler="$1" && shift
   local directory create="${1-}" name
-  name="pre-commit.$(whoami)" || _environment whoami || return $?
-  directory=$(buildCacheDirectory "$name") || _environment buildCacheDirectory "$name" || return $?
-  [ "$create" != "true" ] || [ -d "$directory" ] || __environment mkdir -p "$directory" || return $?
+  name="pre-commit.$(__catchEnvironment "$handler" whoami)" || return $?
+  directory=$(__catchEnvironment "$handler" buildCacheDirectory "$name") || return $?
+  [ "$create" != "true" ] || [ -d "$directory" ] || __catchEnvironment "$handler" mkdir -p "$directory" || return $?
   printf "%s\n" "$directory"
 }
 
@@ -895,7 +896,7 @@ gitPreCommitSetup() {
 
   local directory total=0
 
-  directory=$(__catch "$handler" __gitPreCommitCache true) || return $?
+  directory=$(__catch "$handler" __gitPreCommitCache "$handler" true) || return $?
   __catchEnvironment "$handler" git diff --name-only --cached --diff-filter=ACMR | __catchEnvironment "$handler" extensionLists --clean "$directory" || return $?
   total=$(__catch "$handler" fileLineCount "$directory/@") || return $?
   [ "$total" -ge 0 ]
@@ -912,7 +913,7 @@ gitPreCommitHeader() {
 
   local directory total color
 
-  directory=$(__catch "$handler" __gitPreCommitCache true) || return $?
+  directory=$(__catch "$handler" __gitPreCommitCache "$handler" true) || return $?
   [ -f "$directory/@" ] || __throwEnvironment "$handler" "$directory/@ missing" || return $?
   total=$(__catch "$handler" fileLineCount "$directory/@") || return $?
   statusMessage --last printf -- "%s: %s\n" "$(decorate success "$(alignRight "$width" "all")")" "$(decorate info "$total $(plural "$total" file files) changed")"
@@ -937,7 +938,7 @@ _gitPreCommitHeader() {
 gitPreCommitHasExtension() {
   local handler="_${FUNCNAME[0]}"
   local directory
-  directory=$(__catch "$handler" __gitPreCommitCache true) || return $?
+  directory=$(__catch "$handler" __gitPreCommitCache "$handler" true) || return $?
   while [ $# -gt 0 ]; do
     [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
     [ -f "$directory/$1" ] || return 1
@@ -954,7 +955,7 @@ gitPreCommitListExtension() {
   local handler="_${FUNCNAME[0]}"
   [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
   local directory
-  directory=$(__catch "$handler" __gitPreCommitCache true) || return $?
+  directory=$(__catch "$handler" __gitPreCommitCache "$handler" true) || return $?
   while [ $# -gt 0 ]; do
     [ -f "$directory/$1" ] || __throwEnvironment "$handler" "No files with extension $1" || return $?
     __catchEnvironment "$handler" cat "$directory/$1" || return $?
@@ -971,7 +972,7 @@ gitPreCommitCleanup() {
   local handler="_${FUNCNAME[0]}"
   [ $# -eq 0 ] || __help --only "$handler" "$@" || return "$(convertValue $? 1 0)"
   local directory
-  directory=$(__catch "$handler" __gitPreCommitCache) || return $?
+  directory=$(__catch "$handler" __gitPreCommitCache "$handler")  || return $?
   [ ! -d "$directory" ] || __catchEnvironment "$handler" rm -rf "$directory" || return $?
 }
 _gitPreCommitCleanup() {

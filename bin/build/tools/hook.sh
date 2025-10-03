@@ -80,9 +80,6 @@ __hookRunner() {
           return 0
         fi
       fi
-      if buildDebugEnabled hook; then
-        statusMessage decorate success "Running hook $(decorate code "$binary") $*"
-      fi
       if "$sourceHook"; then
         set -- "$@"
         # shellcheck disable=SC1090
@@ -348,7 +345,7 @@ whichHook() {
           else
             ! $debugFlag || decorate info "$binary $([ -f "$binary" ] && printf "not executable" || printf "not found")" 1>&2
           fi
-          [ ! -f "$binary" ] || _environment "$binary exists but is not executable and will be ignored" || return $?
+          [ ! -f "$binary" ] || returnEnvironment "$binary exists but is not executable and will be ignored" || return $?
         done
       done
       ! $debugFlag || decorate info "no more paths" 1>&2

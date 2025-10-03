@@ -14,7 +14,7 @@ __bashDocumentationSettingsHeader() {
   # Hides 'unused' messages so shellcheck should succeed
   printf '%s\n' '# shellcheck disable=SC2034'
 
-  __catch "$handler" __dumpNameValue "fn" "$fn" || return $?
+  __catch "$handler" __dumpSimpleValue "fn" "$fn" || return $?
 }
 
 # Argument: handler - Required. Function.
@@ -22,14 +22,18 @@ __bashDocumentationSettingsHeader() {
 __bashDocumentationSettingsFileDetails() {
   local handler="$1" && shift
 
+  local sourceFile="$1" && shift
+  local lineNumber="${2-}"
+
   local home
   home=$(__catch "$handler" buildHome) || return $?
 
-  __catch "$handler" __dumpNameValue "applicationHome" "$home" || return $?
-  definitionFile=$(usageArgumentFile "$handler" "definitionFile" "${1-}") && shift || return $?
-  __catch "$handler" __dumpNameValue "applicationFile" "${definitionFile#"${home%/}"/}" || return $?
-  __catch "$handler" __dumpNameValue "file" "$definitionFile" || return $?
-  __catch "$handler" __dumpNameValue "base" "$(basename "$definitionFile")" || return $?
+  __catch "$handler" __dumpSimpleValue "applicationHome" "$home" || return $?
+  definitionFile=$(usageArgumentFile "$handler" "definitionFile" "$sourceFile") && shift || return $?
+  __catch "$handler" __dumpSimpleValue "applicationFile" "${definitionFile#"${home%/}"/}" || return $?
+  __catch "$handler" __dumpSimpleValue "file" "$definitionFile" || return $?
+  __catch "$handler" __dumpSimpleValue "base" "$(basename "$definitionFile")" || return $?
+  [ -z "$lineNumber" ] || __catch "$handler" __dumpSimpleValue "sourceLine" "$lineNumber" || return $?
 }
 
 __bashDocumentationExtract() {
@@ -102,29 +106,28 @@ __bashDocumentationExtract() {
 
     if [ "${#desc[@]}" -gt 0 ]; then
       __dumpNameValue "description" "${desc[@]}"
-      printf "%s %s\n" "# Found Names:" "$(printf "%s " "${foundNames[@]+"${foundNames[@]}"}")"
       if ! inArray "summary" "${foundNames[@]+"${foundNames[@]}"}"; then
         local summary
         summary="$(trimWords 10 "${desc[0]}")"
         [ -n "$summary" ] || summary="undocumented"
-        __dumpNameValue "summary" "$summary"
+        __dumpSimpleValue "summary" "$summary"
       fi
     elif inArray "summary" "${foundNames[@]+${foundNames[@]}}"; then
       __dumpAliasedValue description summary
     else
       __dumpNameValue "description" "No documentation for \`$fn\`."
-      __dumpNameValue "summary" "undocumented"
+      __dumpSimpleValue "summary" "undocumented"
     fi
     if ! inArray "return_code" "${foundNames[@]+"${foundNames[@]}"}"; then
       __dumpNameValue "return_code" '0 - Success' '1 - Environment error' '2 - Argument error' "" ""
     fi
     if ! inArray "fn" "${foundNames[@]+"${foundNames[@]}"}"; then
-      __dumpNameValue "fn" "$fn"
+      __dumpSimpleValue "fn" "$fn"
     fi
     # Trims trailing space from `fn`
     printf '%s\n' "fn=\"\${fn%\$'\n'}\""
     if ! inArray "argument" "${foundNames[@]+${foundNames[@]}}"; then
-      __dumpNameValue "argument" "none"
+      __dumpSimpleValue "argument" "none"
       __dumpAliasedValue "usage" "fn"
     else
       if ! inArray "usage" "${foundNames[@]+"${foundNames[@]}"}"; then
@@ -133,7 +136,6 @@ __bashDocumentationExtract() {
         __dumpAliasedValue "usage" "fn"
       fi
     fi
-    __dumpNameValue "foundNames" "${foundNames[*]-}"
-    printf "%s %s\n" "# Found Names:" "$(printf "%s " "${foundNames[@]+"${foundNames[@]}"}")"
+    __dumpArrayValue "foundNames" "${foundNames[@]+"${foundNames[@]}"}"
   )
 }

@@ -155,10 +155,10 @@ __internalEnvironmentFileDockerToBashCompatiblePipe() {
         if [ -z "$(printf -- "%s" "$name" | sed 's/^[A-Za-z][0-9A-Za-z_]*$//g')" ]; then
           printf -- "%s=\"%s\"\n" "$name" "$(escapeDoubleQuotes "$value")"
         else
-          _argument "Invalid name at line $index: $name" || result=$?
+          returnArgument "Invalid name at line $index: $name" || result=$?
         fi
       else
-        _argument "Invalid line $index: $envLine" || result=$?
+        returnArgument "Invalid line $index: $envLine" || result=$?
       fi
       ;;
     esac

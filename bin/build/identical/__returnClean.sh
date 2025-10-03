@@ -10,7 +10,7 @@
 # Delete files or directories and return the same exit code passed in.
 # Argument: exitCode - Required. Integer. Exit code to return.
 # Argument: item - Optional. One or more files or folders to delete, failures are logged to stderr.
-# Requires: isUnsignedInteger _argument __environment usageDocument
+# Requires: isUnsignedInteger returnArgument __throwEnvironment usageDocument __throwArgument
 # Group: Sugar
 returnClean() {
   local handler="_${FUNCNAME[0]}"
@@ -19,7 +19,7 @@ returnClean() {
   if ! isUnsignedInteger "$exitCode"; then
     __throwArgument "$handler" "$exitCode (not an integer) $*" || return $?
   else
-    __environment rm -rf "$@" || return "$exitCode"
+    __catchEnvironment "$handler" rm -rf "$@" || return "$exitCode"
     return "$exitCode"
   fi
 }

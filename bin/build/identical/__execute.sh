@@ -11,7 +11,7 @@
 
 # Argument: binary ... - Required. Executable. Any arguments are passed to `binary`.
 # Run binary and output failed command upon error
-# Requires: _return
+# Requires: returnMessage
 __execute() {
-  "$@" || _return "$?" "$@" || return $?
+  "$@" || returnMessage "$?" "$@" || return $?
 }

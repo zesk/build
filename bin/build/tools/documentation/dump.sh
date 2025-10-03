@@ -15,6 +15,14 @@ __dumpNameValue() {
   __dumpNameValuePrefix "" "$@"
 }
 
+__dumpSimpleValue() {
+  printf "export %s\n" "$(environmentValueWrite "${1-}" "$(trimSpace "${2-}")")"
+}
+
+__dumpArrayValue() {
+  printf "export %s\n" "$(environmentValueWriteArray "$@")"
+}
+
 #
 # Export value appending existing value
 #

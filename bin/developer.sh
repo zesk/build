@@ -61,7 +61,7 @@ if source "${BASH_SOURCE[0]%/*}/tools.sh"; then
   }
 
   __buildConfigureUndo() {
-    local handler="_return"
+    local handler="returnMessage"
     local home
 
     home=$(__catch "$handler" buildHome) || return $?

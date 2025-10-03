@@ -9,7 +9,7 @@ _usageArgumentTypeList() {
 }
 
 testValidateMissing() {
-  local handler="_return"
+  local handler="returnMessage"
   local usageTypes validateTypes
 
   usageTypes=$(fileTemporaryName "$handler") || return $?
@@ -47,15 +47,15 @@ _testValidateArgumentHelperFail() {
 
   while [ $# -gt 0 ]; do
     printf "%s" "" >"$_TEST_VALIDATE_HANDLER"
-    assertNotExitCode 0 validate _validateHandlerWasCalled "$validateType" "testName ->" "$1" || _environment "$validateType $(decorate warning "fail $1")" || return $?
-    assertEquals "yes" "$(cat "$_TEST_VALIDATE_HANDLER")" || _environment "$validateType did not write $(decorate code "$_TEST_VALIDATE_HANDLER")" || return $?
+    assertNotExitCode 0 validate _validateHandlerWasCalled "$validateType" "testName ->" "$1" || returnEnvironment "$validateType $(decorate warning "fail $1")" || return $?
+    assertEquals "yes" "$(cat "$_TEST_VALIDATE_HANDLER")" || returnEnvironment "$validateType did not write $(decorate code "$_TEST_VALIDATE_HANDLER")" || return $?
     shift
   done
 }
 
 # Tag: slow
 testValidateFunctions() {
-  local handler="_return"
+  local handler="returnMessage"
 
   local d intTests unsignedIntTests positiveIntTests
 

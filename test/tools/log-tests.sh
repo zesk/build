@@ -7,7 +7,7 @@
 
 # Tag: slow
 testLogFileRotate() {
-  local handler="_return"
+  local handler="returnMessage"
   local tempDir
   local count=5 n
   local name="${FUNCNAME[0]}"
@@ -120,7 +120,7 @@ testLogFileRotate() {
 
 # Tag: slow
 testLogFileRotate1() {
-  local handler="_return"
+  local handler="returnMessage"
   local tempDir count=1 i n
 
   if ! tempDir=$(fileTemporaryName "$handler" -d); then

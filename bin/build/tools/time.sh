@@ -31,7 +31,7 @@ _timing() {
 # Example:     init=$(timingStart)
 # Example:     ...
 # Example:     timingReport "$init" "Completed in"
-# Requires: __timestamp, _environment date
+# Requires: __timestamp, returnEnvironment date
 # Should never fail, unless date is not installed
 timingStart() {
   local handler="_${FUNCNAME[0]}"

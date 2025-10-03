@@ -525,7 +525,7 @@ __testSuiteShowTags() {
     if [ "$item" != "${item#\#}" ]; then
       sectionFile="${item#\#}"
     else
-      [ -n "$sectionFile" ] || _argument "No sectionFile preceding test" || return $?
+      [ -n "$sectionFile" ] || returnArgument "No sectionFile preceding test" || return $?
       bashFunctionComment "$sectionFile" "$item" | grep "Tag:" | removeFields 1 | tr ' ' '\n'
     fi
     shift
@@ -641,9 +641,10 @@ __testSuiteListTests() {
 }
 
 __testFunctionWasTested() {
+  local handler="returnMessage"
   local assertedFunctions verboseMode=false
 
-  assertedFunctions=$(__environment __assertedFunctions) || return $?
+  assertedFunctions=$(__catchEnvironment "$handler" __assertedFunctions) || return $?
   local __fns=()
   while [ $# -gt 0 ]; do
     if [ "$1" = "--verbose" ]; then
@@ -733,7 +734,7 @@ __testSuiteExecutor() {
   local line="${3-}"
   local executor=()
 
-  shift 3 || _argument "Missing item file or line" || return $?
+  shift 3 || returnArgument "Missing item file or line" || return $?
 
   [ -z "$line" ] || line=":$line"
 
@@ -802,7 +803,7 @@ __testDidAnythingFail() {
 # Argument: String. Required. Test heading.
 #
 __testSection() {
-  [ -n "$*" ] || _argument "Blank argument $(debuggingStack)"
+  [ -n "$*" ] || returnArgument "Blank argument $(debuggingStack)"
   clearLine
   boxedHeading --size 0 "$@"
 }
@@ -1147,12 +1148,13 @@ __testFailed() {
 # Usage: {fn}
 #
 __testCleanup() {
+  local handler="returnMessage"
   local home
-  home=$(__environment buildHome) || return $?
+  home=$(__catchEnvironment "$handler" buildHome) || return $?
   shopt -u failglob
   export __TEST_CLEANUP_DIRS
 
-  __environment rm -rf "$home/test."*/ "$home/.test"*/ "${__TEST_CLEANUP_DIRS[@]+"${__TEST_CLEANUP_DIRS[@]}"}" || return $?
+  __catchEnvironment "$handler" rm -rf "$home/test."*/ "$home/.test"*/ "${__TEST_CLEANUP_DIRS[@]+"${__TEST_CLEANUP_DIRS[@]}"}" || return $?
 }
 
 __testCleanupMess() {
@@ -1187,7 +1189,7 @@ __testSuiteTAP_plan() {
 
 __testSuiteTAP_line() {
   local status="$1" && shift
-  local handler="_return"
+  local handler="returnMessage"
   local tapFile="${1-}"
 
   export __TEST_SUITE_RESULT

@@ -19,20 +19,21 @@ testDeprecatedIgnore() {
 
 # Coverage: deprecatedFind
 testDeprecatedFind() {
+  local handler="returnMessage"
   local home
 
-  home=$(__environment buildHome) || return $?
+  home=$(__catchEnvironment "$handler" buildHome) || return $?
   assertExitCode 0 deprecatedFind deprecatedIgnore --path "$home/test/example/deprecated/" oldFunction || return $?
   assertExitCode 1 deprecatedFind deprecatedIgnore --path "$home/test/example/deprecated/" newFunction || return $?
 }
 
 # Coverage: deprecatedCannon
 testDeprecatedCannon() {
-  local home tempDir handler="_return"
+  local home tempDir handler="returnMessage"
 
   home=$(__catch "$handler" buildHome) || return $?
   tempDir=$(fileTemporaryName "$handler" -d) || return $?
-  __environment cp -R "$home/test/example/deprecated/" "$tempDir/deprecated" || return $?
+  __catchEnvironment "$handler" cp -R "$home/test/example/deprecated/" "$tempDir/deprecated" || return $?
 
   local target="$tempDir/deprecated/hello.txt"
   assertFileExists "$target" || return $?
@@ -45,5 +46,5 @@ testDeprecatedCannon() {
   assertFileContains --line "$LINENO" "$target" "newFunction" || return $?
   assertFileDoesNotContain --line "$LINENO" "$target" "oldFunction" || return $?
 
-  __environment rm -rf "$tempDir" || return $?
+  __catchEnvironment "$handler" rm -rf "$tempDir" || return $?
 }

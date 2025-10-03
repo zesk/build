@@ -612,7 +612,7 @@ deployToRemote() {
     # sshKnownHostAdd
     for userHost in "${userHosts[@]}"; do
       host="${userHost##*@}"
-      __environment sshKnownHostAdd "$host" || return $?
+      __catchEnvironment "$handler" sshKnownHostAdd "$host" || return $?
     done
   fi
 
@@ -774,7 +774,7 @@ __deployCommandsFile() {
   # shellcheck disable=SC2016
   printf -- "cd \"%s\" || exit \$?\n" "$appHome"
   # return $? is here for findUncaughtAssertions line
-  printf -- "%s/bin/build/tools.sh __environment deployRemoteFinish %s|| exit \$?\n" "$appHome" "$(printf '"%s" ' "$@")" || return $?
+  printf -- "%s/bin/build/tools.sh __execute deployRemoteFinish %s|| exit \$?\n" "$appHome" "$(printf '"%s" ' "$@")" || return $?
 }
 
 # BUILD_DEBUG: ssh - Debug ssh commands with verbose options

@@ -28,7 +28,7 @@
 # Source: https://stackoverflow.com/questions/806906/how-do-i-test-if-a-variable-is-a-number-in-bash
 #
 isUnsignedNumber() {
-  [ $# -eq 1 ] || _argument "Single argument only: $*" || return $?
+  [ $# -eq 1 ] || returnArgument "Single argument only: $*" || return $?
   case ${1#+} in --help) usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]}" 0 ;; '' | . | *[!0-9.]* | *.*.*) return 1 ;; esac
 }
 
@@ -43,7 +43,7 @@ isUnsignedNumber() {
 # Source: https://stackoverflow.com/questions/806906/how-do-i-test-if-a-variable-is-a-number-in-bash
 #
 isNumber() {
-  [ $# -eq 1 ] || _argument "Single argument only: $*" || return $?
+  [ $# -eq 1 ] || returnArgument "Single argument only: $*" || return $?
   # `-help` match is EXPLICIT as the case removes the first dash
   case ${1#[-+]} in -help) usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]}" 0 ;; '' | . | *[!0-9.]* | *.*.*) return 1 ;; esac
 }
@@ -59,7 +59,7 @@ isNumber() {
 # Source: https://stackoverflow.com/questions/806906/how-do-i-test-if-a-variable-is-a-number-in-bash
 #
 isInteger() {
-  [ $# -eq 1 ] || _argument "Single argument only: $*" || return $?
+  [ $# -eq 1 ] || returnArgument "Single argument only: $*" || return $?
   # `-help` match is EXPLICIT as the case removes the first dash
   case ${1#[-+]} in -help) usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]}" 0 ;; '' | *[!0-9]*) return 1 ;; esac
 }
@@ -73,7 +73,7 @@ isInteger() {
 # Return Code: 0 - All arguments are callable as a command
 # Return Code: 1 - One or or more arguments are callable as a command
 isCallable() {
-  [ $# -eq 1 ] || _argument "Single argument only: $*" || return $?
+  [ $# -eq 1 ] || returnArgument "Single argument only: $*" || return $?
   [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
   if ! isFunction "$1" && ! isExecutable "$1"; then
     return 1

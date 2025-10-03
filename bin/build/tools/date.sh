@@ -135,19 +135,20 @@ _todayDate() {
 # Argument: -- - Optional. Flag. Stops command processing to enable arbitrary text to be passed as additional arguments without special meaning.
 # Argument: text - String. Required. Text to validate as a date after the year 1600. Does not validate month and day combinations.
 dateValid() {
-  [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
+  local handler="_${FUNCNAME[0]}"
+  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
   [ "${1-}" != "--" ] || shift
   local date="${1-}"
-  __environment [ "${date:4:1}${date:7:1}" = "--" ] || return 1
+  __catchEnvironment "$handler" [ "${date:4:1}${date:7:1}" = "--" ] || return 1
   local year="${date:0:4}" month="${date:5:2}" day="${date:8:2}"
-  __environment isUnsignedInteger "$year" || return $?
-  __environment isUnsignedInteger "${month#0}" || return $?
-  __environment isUnsignedInteger "${day#0}" || return $?
-  __environment [ "$year" -gt 1600 ] || return $?
-  __environment [ "${month#0}" -ge 1 ] || return $?
-  __environment [ "${month#0}" -le 12 ] || return $?
-  __environment [ "${day#0}" -ge 1 ] || return $?
-  __environment [ "${day#0}" -le 31 ] || return $?
+  __catchEnvironment "$handler" isUnsignedInteger "$year" || return $?
+  __catchEnvironment "$handler" isUnsignedInteger "${month#0}" || return $?
+  __catchEnvironment "$handler" isUnsignedInteger "${day#0}" || return $?
+  __catchEnvironment "$handler" [ "$year" -gt 1600 ] || return $?
+  __catchEnvironment "$handler" [ "${month#0}" -ge 1 ] || return $?
+  __catchEnvironment "$handler" [ "${month#0}" -le 12 ] || return $?
+  __catchEnvironment "$handler" [ "${day#0}" -ge 1 ] || return $?
+  __catchEnvironment "$handler" [ "${day#0}" -le 31 ] || return $?
 }
 _dateValid() {
   # __IDENTICAL__ usageDocument 1

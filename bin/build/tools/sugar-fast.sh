@@ -27,7 +27,7 @@ ___catch() {
 # Argument: code - Required. Integer. Exit code to return
 # Argument: handler - Required. Function. Failure command, passed remaining arguments and error code.
 # Argument: command - Required. String. Command to run.
-# Requires: isInteger _argument isFunction isCallable
+# Requires: isInteger returnArgument isFunction isCallable
 __catchCode() {
   local __count=$# __saved=("$@") __handler="_${FUNCNAME[0]}" code="${1-0}" command="${3-}"
   __handler="${2-}"
@@ -71,7 +71,7 @@ __throwArgument() {
 
 # Run `handler` with an environment error
 # Usage: {fn} handler quietLog message ...
-# Requires: isFunction _argument buildFailed debuggingStack __throwEnvironment
+# Requires: isFunction returnArgument buildFailed debuggingStack __throwEnvironment
 __catchEnvironmentQuiet() {
   local __handler="${1-}" quietLog="${2-}"
   shift 2 && "$@" >>"$quietLog" 2>&1 || buildFailed "$quietLog" || __throwEnvironment "$__handler" "$@" || return $?

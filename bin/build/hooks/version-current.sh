@@ -7,7 +7,6 @@
 
 # IDENTICAL zesk-build-hook-header 3
 set -eou pipefail
-
 # shellcheck source=/dev/null
 source "${BASH_SOURCE[0]%/*}/../tools.sh"
 

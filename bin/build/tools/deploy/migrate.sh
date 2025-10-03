@@ -52,11 +52,11 @@ __deployMigrateDirectoryToLink() {
   fi
   # Now move our folder and the link to where the folder was in one fell swoop
   # or mv -hf
-  __environment mv -f "$applicationPath" "$deployHome/$appVersion/app" || __throwEnvironment "$handler" "Unable to move live application from $applicationPath to $deployHome/$appVersion/app" || return $?
+  __catchEnvironment "$handler" mv -f "$applicationPath" "$deployHome/$appVersion/app" || __throwEnvironment "$handler" "Unable to move live application from $applicationPath to $deployHome/$appVersion/app" || return $?
 
-  if ! __environment mv -f "$tempAppLink" "$applicationPath"; then
+  if ! __catchEnvironment "$handler" mv -f "$tempAppLink" "$applicationPath"; then
     # Like really? Like really? Something is likely F U B A R
-    if ! __environment mv -f "$deployHome/$appVersion/app" "$applicationPath"; then
+    if ! __catchEnvironment "$handler" mv -f "$deployHome/$appVersion/app" "$applicationPath"; then
       decorate error "Unable to move BACK $deployHome/$appVersion/app $applicationPath - system is UNSTABLE" 1>&2
     else
       decorate success "Successfully recovered application to $applicationPath - stable"

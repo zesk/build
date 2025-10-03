@@ -4,7 +4,7 @@
 #
 
 testUsageTemplate() {
-  local handler="_return"
+  local handler="returnMessage"
   local home
 
   home="$(__catch "$handler" buildHome)" || return $?
@@ -22,12 +22,12 @@ testUsageFunctions() {
   local match
 
   match=$(randomString)
-  assertExitCode --stderr-match "$match" 1 _environment "$match" || return $?
-  assertExitCode --stderr-match "$match" 2 _argument "$match" || return $?
-  assertExitCode --stderr-match "$match" 1 __throwEnvironment _return "$match" || return $?
-  assertExitCode --stderr-match "$match" 2 __throwArgument _return "$match" || return $?
-  assertExitCode --stderr-match "$match" 1 __catchEnvironment _return _return 99 "$match" || return $?
-  assertExitCode --stderr-match "$match" 2 __catchArgument _return _return 99 "$match" || return $?
+  assertExitCode --stderr-match "$match" 1 returnEnvironment "$match" || return $?
+  assertExitCode --stderr-match "$match" 2 returnArgument "$match" || return $?
+  assertExitCode --stderr-match "$match" 1 __throwEnvironment returnMessage "$match" || return $?
+  assertExitCode --stderr-match "$match" 2 __throwArgument returnMessage "$match" || return $?
+  assertExitCode --stderr-match "$match" 1 __catchEnvironment returnMessage returnMessage 99 "$match" || return $?
+  assertExitCode --stderr-match "$match" 2 __catchArgument returnMessage returnMessage 99 "$match" || return $?
 }
 
 __sampleArgs() {
@@ -39,7 +39,7 @@ EOF
 }
 
 testUsageArguments1() {
-  local handler="_return"
+  local handler="returnMessage"
   local results
 
   results=$(fileTemporaryName "$handler") || return $?
@@ -47,7 +47,7 @@ testUsageArguments1() {
 
   assertEquals " --name --thing thing [ --value name ]" "$(cat "$results")" || return $?
 
-  __environment rm "$results" || return $?
+  __catchEnvironment "$handler" rm "$results" || return $?
 }
 
 __testUsageArgumentsFile() {
@@ -104,15 +104,15 @@ _testUsageArgumentHelperFail() {
 
   while [ $# -gt 0 ]; do
     printf "%s" "" >"$TEST_USAGE"
-    assertNotExitCode 0 "$usageFunction" _usageWasCalled "testName ->" "$1" || _environment "$usageFunction $(decorate warning "fail $1")" || return $?
-    assertEquals "yes" "$(cat "$TEST_USAGE")" || _environment "$usageFunction did not write $(decorate code "$TEST_USAGE")" || return $?
+    assertNotExitCode 0 "$usageFunction" _usageWasCalled "testName ->" "$1" || returnEnvironment "$usageFunction $(decorate warning "fail $1")" || return $?
+    assertEquals "yes" "$(cat "$TEST_USAGE")" || returnEnvironment "$usageFunction did not write $(decorate code "$TEST_USAGE")" || return $?
     shift
   done
 }
 
 # Tag: slow
 testUsageArgumentFunctions() {
-  local handler="_return"
+  local handler="returnMessage"
   local d intTests unsignedIntTests positiveIntTests
 
   d=$(fileTemporaryName "$handler" -d) || return $?

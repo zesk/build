@@ -26,9 +26,9 @@ usageDocumentSimple() {
   $skip || printf -- "%s [%s] %s\n" "$icon" "$(decorate "code" "$(exitString "$returnCode")")" "$(decorate "$color" "$*")"
   if [ ! -f "$source" ]; then
     export BUILD_HOME
-    [ -d "${BUILD_HOME-}" ] || _argument "Unable to locate $source (${PWD-})" || return $?
+    [ -d "${BUILD_HOME-}" ] || returnArgument "Unable to locate $source (${PWD-})" || return $?
     source="$BUILD_HOME/$source"
-    [ -f "$source" ] || _argument "Unable to locate $source (${PWD-})" || return $?
+    [ -f "$source" ] || returnArgument "Unable to locate $source (${PWD-})" || return $?
   fi
   while ! $finished; do
     IFS='' read -r line || finished=true

@@ -269,8 +269,8 @@ __bashPromptRemove() {
 
 #
 __bashPromptFormat() {
-  local formatString="${1-}" && shift || _argument "${FUNCNAME[0]}:$LINENO" || return $?
-  local colorsTextFormatted="${1-}" && shift || _argument "${FUNCNAME[0]}:$LINENO" || return $?
+  local formatString="${1-}" && shift || returnArgument "${FUNCNAME[0]}:$LINENO" || return $?
+  local colorsTextFormatted="${1-}" && shift || returnArgument "${FUNCNAME[0]}:$LINENO" || return $?
 
   if [ -n "$formatString" ]; then
     while read -r token replacement && [ "${formatString#*{}" != "$formatString" ]; do

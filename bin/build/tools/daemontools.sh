@@ -225,7 +225,7 @@ daemontoolsRemoveService() {
   done
 
   if [ -z "$serviceHome" ]; then
-    __environment buildEnvironmentLoad DAEMONTOOLS_HOME || return $?
+    __catchEnvironment "$handler" buildEnvironmentLoad DAEMONTOOLS_HOME || return $?
     serviceHome="${DAEMONTOOLS_HOME}"
   fi
   [ -d "$serviceHome" ] || __throwEnvironment "$handler" "daemontools home \"$serviceHome\" is not a directory" || return $?
@@ -368,7 +368,7 @@ daemontoolsTerminate() {
     fi
     statusMessage decorate warning "Shutting down $service ..."
     __catchEnvironment "$handler" svc -dx "$service" || return $?
-    [ ! -d "$service/log" ] || __environment svc -dx "$service/log" || return $?
+    [ ! -d "$service/log" ] || __catchEnvironment "$handler" svc -dx "$service/log" || return $?
   done < <(find "$home" -maxdepth 1 -type d)
   local processId processIds=()
   while read -r processId; do processIds+=("$processId"); done < <(daemontoolsProcessIds)

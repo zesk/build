@@ -112,7 +112,7 @@ __packageCheckFunction() {
 # Argument: --diff - Optional. Flag. Show differences between old and new file.
 # Return Code: 1 - Environment error
 # Return Code: 2 - Argument error
-# Requires: cp rm cat printf realPath whichExists _return fileTemporaryName __catchArgument __throwArgument __catchEnvironment decorate usageArgumentString isFunction __decorateExtensionQuote
+# Requires: cp rm cat printf realPath whichExists returnMessage fileTemporaryName __catchArgument __throwArgument __catchEnvironment decorate usageArgumentString isFunction __decorateExtensionQuote
 _installRemotePackage() {
   local handler="_${FUNCNAME[0]}"
 
@@ -436,7 +436,7 @@ __installRemotePackageGitCheck() {
 
 # Usage: {fn} _installRemotePackageSource targetBinary relativePath
 # Requires: grep printf chmod wait
-# Requires: _environment isUnsignedInteger cat returnClean
+# Requires: returnEnvironment isUnsignedInteger cat returnClean
 __installRemotePackageLocal() {
   local source="$1" myBinary="$2" relTop="$3"
   {
@@ -445,7 +445,7 @@ __installRemotePackageLocal() {
   } >"$myBinary.$$"
   if ! chmod +x "$myBinary.$$"; then
     rm -rf "$myBinary.$$" || :
-    _environment "chmod +x failed" || return $?
+    returnEnvironment "chmod +x failed" || return $?
   fi
   exec "$myBinary.$$" --replace "$myBinary"
 }

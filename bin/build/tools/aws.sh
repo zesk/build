@@ -92,9 +92,10 @@ _awsCredentialsFile() {
 # Environment: AWS_ACCESS_KEY_DATE - Read-only. Date. A `YYYY-MM-DD` formatted date which represents the date that the key was generated.
 #
 awsIsKeyUpToDate() {
-  [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
+  local handler="_${FUNCNAME[0]}"
+  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
   export AWS_ACCESS_KEY_DATE
-  __environment buildEnvironmentLoad AWS_ACCESS_KEY_DATE || return $?
+  __catch "$handler" buildEnvironmentLoad AWS_ACCESS_KEY_DATE || return $?
   isUpToDate "${AWS_ACCESS_KEY_DATE-}" "$@"
 }
 _awsIsKeyUpToDate() {
@@ -118,7 +119,7 @@ _awsIsKeyUpToDate() {
 #
 awsHasEnvironment() {
   local handler="_${FUNCNAME[0]}"
-  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
+  [ $# -eq 0 ] || __help --only "$handler" "$@" || return "$(convertValue $? 1 0)"
   export AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY
   # shellcheck source=/dev/null
   __catch "$handler" buildEnvironmentLoad AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY || return $?
@@ -138,7 +139,7 @@ awsProfilesList() {
   local handler="_${FUNCNAME[0]}"
   local file
 
-  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
+  [ $# -eq 0 ] || __help --only "$handler" "$@" || return "$(convertValue $? 1 0)"
   file=$(__catch "$handler" awsCredentialsFile --path) || return $?
   [ -f "$file" ] || return 0
   grep -e '\[[^]]*\]' "$file" | sed 's/[]\[]//g' | sort -u || :

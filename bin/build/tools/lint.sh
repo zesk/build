@@ -454,7 +454,7 @@ validateFileExtensionContents() {
   if [ "${#failedReasons[@]}" -gt 0 ]; then
     statusMessage --last decorate error "The following scripts failed:" 1>&2
     for item in "${failedReasons[@]}"; do
-      echo "    $(decorate magenta "$item")$(decorate info ", ")" 1>&2
+      printf "    %s\n" "$(decorate magenta "$item")$(decorate info ", ")" 1>&2
     done
     decorate error "done." 1>&2
     __throwEnvironment "$handler" "${FUNCNAME[0]} failed" || return $?
@@ -569,7 +569,7 @@ validateFileContents() {
     statusMessage --last decorate error "The following scripts failed:" 1>&2
     local item
     for item in "${failedReasons[@]}"; do
-      echo "    $(decorate magenta "$item")$(decorate info ", ")" 1>&2
+      printf "    %s\n" "$(decorate magenta "$item")$(decorate info ", ")" 1>&2
     done
     decorate error "done." 1>&2
     if [ -n "$binary" ]; then

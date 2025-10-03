@@ -7,7 +7,7 @@
 # Copyright &copy; 2025 Market Acumen, Inc.
 #
 # Minimum _sugar for install
-# Requires IDENTICAL: _return
+# Requires IDENTICAL: returnMessage
 #
 
 # IDENTICAL _tinySugar EOF
@@ -51,49 +51,37 @@ __catchEnvironment() {
 # Return `argument` error code. Outputs `message ...` to `stderr`.
 # Argument: message ... - String. Optional. Message to output.
 # Return Code: 2
-# Requires: _return
-_argument() {
-  _return 2 "$@" || return $?
+# Requires: returnMessage
+returnArgument() {
+  returnMessage 2 "$@" || return $?
 }
 
 # Return `environment` error code. Outputs `message ...` to `stderr`.
 # Argument: message ... - String. Optional. Message to output.
 # Return Code: 1
-# Requires: _return
-_environment() {
-  _return 1 "$@" || return $?
+# Requires: returnMessage
+returnEnvironment() {
+  returnMessage 1 "$@" || return $?
 }
 
 # Run `handler` with an argument error
 # Argument: exitCode - Integer. Required. Return code.
 # Argument: handler - Function. Required. Error handler.
 # Argument: message ... - String. Optional. Error message
-# Requires: _argument
+# Requires: returnArgument
 __throw() {
-  local exitCode="${1-}" && shift || _argument "Missing exit code" || return $?
-  lcoal handler="${1-}" && shift || _argument "Missing error handler" || return $?
+  local exitCode="${1-}" && shift || returnArgument "Missing exit code" || return $?
+  lcoal handler="${1-}" && shift || returnArgument "Missing error handler" || return $?
   "$handler" "$exitCode" "$@" || return $?
 }
 
 # Run binary and catch errors with handler
 # Argument: handler - Required. Function. Error handler.
 # Argument: binary ... - Required. Executable. Any arguments are passed to `binary`.
-# Requires: _argument
+# Requires: returnArgument
 __catch() {
-  local handler="${1-}" && shift || _argument "Missing handler" || return $?
+  local handler="${1-}" && shift || returnArgument "Missing handler" || return $?
   "$@" || "$handler" "$?" "$@" || return $?
-}
-
-# _IDENTICAL_ __environment 10
-
-# Run `command ...` (with any arguments) and then `_environment` if it fails.
-# Usage: {fn} command ...
-# Argument: command ... - Any command and arguments to run.
-# Return Code: 0 - Success
-# Return Code: 1 - Failed
-# Requires: _environment
-__environment() {
-  "$@" || _environment "$@" || return $?
 }
 
 # _IDENTICAL_ returnClean 21
@@ -101,7 +89,7 @@ __environment() {
 # Delete files or directories and return the same exit code passed in.
 # Argument: exitCode - Required. Integer. Exit code to return.
 # Argument: item - Optional. One or more files or folders to delete, failures are logged to stderr.
-# Requires: isUnsignedInteger _argument __environment usageDocument
+# Requires: isUnsignedInteger returnArgument __throwEnvironment usageDocument __throwArgument
 # Group: Sugar
 returnClean() {
   local handler="_${FUNCNAME[0]}"
@@ -110,7 +98,7 @@ returnClean() {
   if ! isUnsignedInteger "$exitCode"; then
     __throwArgument "$handler" "$exitCode (not an integer) $*" || return $?
   else
-    __environment rm -rf "$@" || return "$exitCode"
+    __catchEnvironment "$handler" rm -rf "$@" || return "$exitCode"
     return "$exitCode"
   fi
 }

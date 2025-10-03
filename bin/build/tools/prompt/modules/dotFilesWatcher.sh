@@ -14,7 +14,7 @@ __bashPromptModule_dotFilesWatcher() {
   dataFile="$(dotFilesApprovedFile)" || return 1
 
   for item in dataFile askFile; do
-    [ -f "${!item}" ] || touch "${!item}" || _environment "Can not create $item: ${!item}" || return 1
+    [ -f "${!item}" ] || touch "${!item}" || returnEnvironment "Can not create $item: ${!item}" || return 1
   done
   [ "$(fileModificationSeconds "$askFile")" -lt 60 ] || printf -- "" >"$askFile"
 

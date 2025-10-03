@@ -6,7 +6,7 @@
 
 # Argument: name - String. Optional. Name of tool to add.
 buildAddTool() {
-  local handler="_return" home file
+  local handler="returnMessage" home file
 
   home=$(__catch "$handler" buildHome) || return $?
 

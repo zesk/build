@@ -111,7 +111,7 @@ __buildCompletionFunction() {
 }
 
 __buildCompletionArguments() {
-  local handler="_return"
+  local handler="returnMessage"
 
   export COMP_WORDS COMP_CWORD COMPREPLY
 

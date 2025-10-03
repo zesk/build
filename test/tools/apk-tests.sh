@@ -43,7 +43,7 @@ testAlpineContainer() {
     mockEnvironmentStart BUILD_DOCKER_PLATFORM
     mockEnvironmentStart LC_TERMINAL
 
-    local handler="_return" home
+    local handler="returnMessage" home
 
     home=$(__catch "$handler" buildHome) || return $?
     __catchEnvironment "$handler" muzzle pushd "$home" || return $?

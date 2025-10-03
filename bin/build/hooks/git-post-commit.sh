@@ -17,19 +17,19 @@
 # Argument: source - Required. File. Path to source relative to application root..
 # Argument: relativeHome - Optional. Directory. Path to application root. Defaults to `..`
 # Argument: command ... - Optional. Callable. A command to run and optional arguments.
-# Requires: _return
+# Requires: returnMessage
 # Security: source
 # Return Code: 253 - source failed to load (internal error)
 # Return Code: 0 - source loaded (and command succeeded)
 # Return Code: ? - All other codes are returned by the command itself
 __source() {
   local here="${BASH_SOURCE[0]%/*}" e=253
-  local source="$here/${2:-".."}/${1-}" && shift 2 || _return $e "missing source" || return $?
-  [ -d "${source%/*}" ] || _return $e "${source%/*} is not a directory" || return $?
-  [ -f "$source" ] && [ -x "$source" ] || _return $e "$source not an executable file" "$@" || return $?
+  local source="$here/${2:-".."}/${1-}" && shift 2 || returnMessage $e "missing source" || return $?
+  [ -d "${source%/*}" ] || returnMessage $e "${source%/*} is not a directory" || return $?
+  [ -f "$source" ] && [ -x "$source" ] || returnMessage $e "$source not an executable file" "$@" || return $?
   local a=("$@") && set --
   # shellcheck source=/dev/null
-  source "$source" || _return $e source "$source" "$@" || return $?
+  source "$source" || returnMessage $e source "$source" "$@" || return $?
   [ ${#a[@]} -gt 0 ] || return 0
   "${a[@]}" || return $?
 }
@@ -58,19 +58,22 @@ __gitHookPath() {
   printf "%s" "../.."
 }
 
-# IDENTICAL _return 29
+# IDENTICAL _return 32
 
 # Return passed in integer return code and output message to `stderr` (non-zero) or `stdout` (zero)
 # Argument: exitCode - Required. UnsignedInteger. Exit code to return. Default is 1.
 # Argument: message ... - Optional. String. Message to output
 # Return Code: exitCode
 # Requires: isUnsignedInteger printf _return
-_return() {
+returnMessage() {
   local to=1 icon="✅" code="${1:-1}" && shift 2>/dev/null
   isUnsignedInteger "$code" || _return 2 "${FUNCNAME[1]-none}:${BASH_LINENO[1]-} -> ${FUNCNAME[0]} non-integer \"$code\"" "$@" || return $?
   if [ "$code" -gt 0 ]; then icon="❌ [$code]" && to=2; fi
   printf -- "%s %s\n" "$icon" "${*-§}" 1>&"$to"
   return "$code"
+}
+_return() {
+  returnMessage "$@"
 }
 
 # Test if an argument is an unsigned integer

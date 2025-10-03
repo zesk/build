@@ -207,11 +207,12 @@ __bashCoverageReportProcessStats() {
 # Gets the path to a template file for the coverage report
 #
 __bashCoverageReportTemplate() {
+  local handler="returnMessage"
   local home path
 
-  home=$(__environment buildHome) || return $?
+  home=$(__catchEnvironment "$handler" buildHome) || return $?
   path="$home/bin/build/tools/coverage/$1"
-  [ -f "$path" ] || _environment "${FUNCNAME[0]} $path not found" || return $?
+  [ -f "$path" ] || returnEnvironment "${FUNCNAME[0]} $path not found" || return $?
   printf -- "%s\n" "$path"
 }
 

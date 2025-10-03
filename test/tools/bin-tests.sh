@@ -8,15 +8,16 @@
 #
 
 __testInstallInstallBuild() {
+  local handler="returnMessage"
   local topDir targetDir marker testBinary
   export BUILD_HOME
 
-  __environment buildEnvironmentLoad BUILD_HOME || return $?
+  __catchEnvironment "$handler" buildEnvironmentLoad BUILD_HOME || return $?
   assertDirectoryExists "$BUILD_HOME" || return $?
 
   topDir="$(pwd)/test.$$"
   targetDir="$topDir/bin/deeper/deepest"
-  __environment mkdir -p "$targetDir" || return $?
+  __catchEnvironment "$handler" mkdir -p "$targetDir" || return $?
   assertDirectoryExists --line "$LINENO" "$targetDir" || return $?
   testBinary="$targetDir/install-bin-build.sh"
   assertExitCode --dump --line "$LINENO" 0 installInstallBuild --local "$targetDir" "$topDir" || return $?
@@ -29,7 +30,7 @@ __testInstallInstallBuild() {
   fi
   assertFileContains --line "$LINENO" "$testBinary" '../../..' || return $?
 
-  __environment cp "$testBinary" "$testBinary.backup" || return $?
+  __catchEnvironment "$handler" cp "$testBinary" "$testBinary.backup" || return $?
 
   assertDirectoryDoesNotExist --line "$LINENO" "$topDir/bin/build" || return $?
 
@@ -47,7 +48,7 @@ __testInstallInstallBuild() {
     return 1
   fi
   # Do not use updated binary as behavior is unpredictable (this is the last version)
-  __environment mv -f "$testBinary.backup" "$testBinary" || return $?
+  __catchEnvironment "$handler" mv -f "$testBinary.backup" "$testBinary" || return $?
 
   assertExitCode --stdout-match "already installed" 0 "$testBinary" || return $?
 
@@ -57,7 +58,7 @@ __testInstallInstallBuild() {
 
 testMapBin() {
 
-  local handler="_return" home
+  local handler="returnMessage" home
 
   home=$(buildHome)
   home=$(__catch "$handler" buildHome) || return $?
@@ -79,7 +80,7 @@ testMapBin() {
 testMapPortability() {
   local tempDir
 
-  local handler="_return" home
+  local handler="returnMessage" home
 
   home=$(buildHome)
   home=$(__catch "$handler" buildHome) || return $?
@@ -96,7 +97,7 @@ testMapPortability() {
 
 # Tag: slow
 testAdditionalBins() {
-  local handler="_return"
+  local handler="returnMessage"
   local binTest
   local aa
 

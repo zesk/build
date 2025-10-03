@@ -40,7 +40,7 @@ testPluralWord() {
 }
 
 testFileEndsWithNewline() {
-  local handler="_return"
+  local handler="returnMessage"
 
   local ff
   ff=$(fileTemporaryName "$handler") || return $?

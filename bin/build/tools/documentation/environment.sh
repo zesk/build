@@ -32,15 +32,9 @@ __documentationBuildEnvironment() {
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
-    --clean)
-      cleanFlag=true
-      ;;
-    --force)
-      forceFlag=true
-      ;;
-    --verbose)
-      verboseFlag=true
-      ;;
+    --clean) cleanFlag=true ;;
+    --force) forceFlag=true ;;
+    --verbose) verboseFlag=true ;;
     *)
       # _IDENTICAL_ argumentUnknownHandler 1
       __throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
@@ -55,10 +49,10 @@ __documentationBuildEnvironment() {
   moreTemplate="$home/documentation/template/env-more.md"
   source="$home/documentation/source/env/index.md"
   target="$home/documentation/.docs/env"
-  cacheDirectory=$(__catch "$handler" documentationBuildCache .environmentVariables) || return $?
+  cacheDirectory=$(__catch "$handler" documentationBuildCache envDocs) || return $?
 
   if "$cleanFlag"; then
-    __catchEnvironment "$handler" find "$cacheDirectory" -type f -exec rm -f {} \; || return $?
+    [ ! -d "$cacheDirectory" ] || __catchEnvironment "$handler" find "$cacheDirectory" -type f -exec rm -f {} \; || return $?
     return 0
   fi
   __catchEnvironment "$handler" muzzle directoryRequire "$target" || return $?

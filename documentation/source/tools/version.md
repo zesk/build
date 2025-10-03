@@ -5,7 +5,11 @@
 <hr />
 
 {releaseNotes}
+
 {newRelease}
+
 {nextMinorVersion}
+
 {isVersion}
+
 {versionNoVee}

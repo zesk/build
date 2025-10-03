@@ -8,7 +8,7 @@
 #
 
 testBashFunctionComment() {
-  local handler="_return"
+  local handler="returnMessage"
   local home
   local matches=(
     --stdout-match "Prompts can be formatted"
@@ -25,7 +25,7 @@ testBashFunctionComment() {
 testDocumentation() {
   local testOutput
   local summary description
-  local handler="_return"
+  local handler="returnMessage"
 
   # export BUILD_DEBUG="fast-usage,usage"
   local home
@@ -65,7 +65,7 @@ testDocumentation() {
 
 __isolateTest() {
   local testOutput="$1"
-  local handler="_return"
+  local handler="returnMessage"
 
   local home
   home=$(__catch "$handler" buildHome) || return $?

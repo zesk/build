@@ -20,11 +20,11 @@
 # Argument: --file - `lookupPattern` is a file name. Find files which match this base file name.
 # Argument: cacheDirectory - Directory where we can store cached information
 # Argument: lookupPattern - Token to look up in the index
-# See: _documentationIndex_Generate
+# See: _documentationIndexGenerate
 #
-__documentationIndex_Lookup() {
-  local handler="_${FUNCNAME[0]}"
-  local mode="settings" cacheDirectory=""
+__documentationIndexLookup() {
+  local handler="$1" && shift
+  local mode="settings"
 
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
@@ -41,18 +41,14 @@ __documentationIndex_Lookup() {
     --source) mode="source" ;;
     --line) mode="line" ;;
     *)
-      cacheDirectory="$(usageArgumentDirectory "$handler" "cacheDirectory" "$argument")" || return $?
-      shift
       break
       ;;
     esac
     shift
   done
-  if [ -z "$cacheDirectory" ]; then
-    __throwArgument "$handler" "${FUNCNAME[0]} cacheDirectory function - missing cacheDirectory" || return $?
-  fi
-  local indexDirectory
-  indexDirectory="$(__documentationIndex_GeneratePath "$cacheDirectory")" || return $?
+  local indexDirectory cacheDirectory
+  indexDirectory="$(__documentationIndexCache)" || return $?
+  cacheDirectory="$(documentationBuildCache)" || return $?
 
   if [ "$mode" = "file" ]; then
     indexRoot="$indexDirectory/files"
@@ -80,27 +76,24 @@ __documentationIndex_Lookup() {
   home=$(__catch "$handler" buildHome) || return $?
   sourceFile="$home/$filePath"
   case $mode in
+  source) printf -- "%s\n" "$sourceFile" ;;
+  line) printf -- "%d\n" "$lineNumber" ;;
   combined) printf -- "%s:%d\n" "$sourceFile" "$lineNumber" ;;
   comment) __documentationIndexCommentFile "$handler" "$indexDirectory" "$functionName" bashFileComment "$sourceFile" "$lineNumber" ;;
   settings)
     local commentFile
-    commentFile=$(__documentationIndexCommentFile "$handler" "$indexDirectory" "$functionName" bashFileComment "$sourceFile" "$lineNumber")
+    commentFile=$(__documentationIndexCommentFile "$handler" "$indexDirectory" "$functionName" bashFileComment "$sourceFile" "$lineNumber") || return $?
     local settingsFile="$indexDirectory/comment/$functionName.settings"
     if [ ! -f "$settingsFile" ] || ! fileIsNewest "$settingsFile" "$commentFile"; then
       __bashDocumentationExtract "$handler" "$functionName" <"$commentFile" >"$settingsFile" || return $?
+      __bashDocumentationSettingsFileDetails "$handler" "$sourceFile" "$lineNumber" >>"$settingsFile"
     fi
     printf "%s\n" "$settingsFile"
-    ;;
-  source)
-    printf -- "%s\n" "$sourceFile"
-    ;;
-  line)
-    printf -- "%d\n" "$lineNumber"
     ;;
   esac
   return 0
 }
-___documentationIndex_Lookup() {
+___documentationIndexLookup() {
   # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

@@ -7,7 +7,7 @@
 
 # Tag: docker
 testIsDockerComposeRunning() {
-  local handler="_return"
+  local handler="returnMessage"
 
   if whichExists docker; then
     local oldHome

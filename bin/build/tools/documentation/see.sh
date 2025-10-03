@@ -15,7 +15,7 @@
 #
 # Usage: {fn} cacheDirectory documentationDirectory seeFunctionTemplate seeFunctionLink seeFileTemplate seeFileLink
 #
-__documentationIndex_SeeLinker() {
+__documentationIndexSeeLinker() {
   local handler="_${FUNCNAME[0]}"
 
   local start
@@ -76,14 +76,14 @@ __documentationIndex_SeeLinker() {
       sedReplacePattern "{SEE:$matchingToken}" "{$tokenName}" >>"$variablesSedFile"
       {
         local settingsFile linkPattern templateFile
-        if settingsFile=$(__documentationIndex_Lookup --settings "$cacheDirectory" "$matchingToken"); then
+        if settingsFile=$(__documentationIndexLookup "$handler" --settings "$matchingToken"); then
           cat "$settingsFile"
           linkPattern="$seeFunctionLink"
           templateFile="$seeFunctionTemplate"
           __dumpNameValue "linkType" "function"
-          # __dumpNameValue "file" "$(__documentationIndex_Lookup --file "$cacheDirectory" "$matchingToken")"
-          __dumpNameValue "line" "$(__documentationIndex_Lookup --line "$cacheDirectory" "$matchingToken")"
-        elif settingsFile=$(__documentationIndex_Lookup --file "$cacheDirectory" "$matchingToken"); then
+          # __dumpNameValue "file" "$(__documentationIndexLookup "$handler" --file "$cacheDirectory" "$matchingToken")"
+          __dumpNameValue "line" "$(__documentationIndexLookup "$handler" --line "$matchingToken")"
+        elif settingsFile=$(__documentationIndexLookup "$handler" --file "$matchingToken"); then
           linkPattern="$seeFileLink"
           templateFile="$seeFileTemplate"
           __dumpNameValue "linkType" "file"
@@ -124,7 +124,7 @@ __documentationIndex_SeeLinker() {
   rm -f "$seeVariablesFile" "$linkPatternFile" "$variablesSedFile" 2>/dev/null || :
   statusMessage --last timingReport "$start" "See completed in" || :
 }
-___documentationIndex_SeeLinker() {
+___documentationIndexSeeLinker() {
   # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

@@ -10,7 +10,7 @@ testUrlContentLength() {
 }
 
 testUrlFetch() {
-  local handler="_return"
+  local handler="returnMessage"
   local temp clean=()
 
   temp=$(fileTemporaryName "$handler") || return $?

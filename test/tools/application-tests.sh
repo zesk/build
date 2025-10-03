@@ -8,7 +8,7 @@
 #
 
 testApplicationHome() {
-  local handler="_return"
+  local handler="returnMessage"
 
   mockEnvironmentStart XDG_STATE_HOME
   export XDG_STATE_HOME
@@ -19,7 +19,7 @@ testApplicationHome() {
   assertFileDoesNotExist "$XDG_STATE_HOME/.applicationHome" || return $?
   assertExitCode --stdout-match "Application home set" 0 applicationHome "$HOME" || return $?
   assertFileContains --line "$LINENO" "$XDG_STATE_HOME/.applicationHome" "$HOME" || return $?
-  __environment rm -rf "$XDG_STATE_HOME" || return $?
+  __catchEnvironment "$handler" rm -rf "$XDG_STATE_HOME" || return $?
 
   mockEnvironmentStop XDG_STATE_HOME
 }

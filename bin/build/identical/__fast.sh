@@ -24,7 +24,7 @@ function __faster() {
   # __IDENTICAL__ __checkCode__handler 1
   isInteger "$code" || __throwArgument "$__handler" "Not integer: $(decorate value "[$code]") (#$__count $(decorate each code -- "${__saved[@]}"))" || return $?
   # __IDENTICAL__ __checkHandler 1
-  isFunction "$__handler" || _argument "handler not callable \"$(decorate code "$__handler")\"" || return $?
+  isFunction "$__handler" || returnArgument "handler not callable \"$(decorate code "$__handler")\" Stack: $(debuggingStack)" || return $?
   # __IDENTICAL__ __checkCommand__handler 1
   isCallable "$command" || __throwArgument "$__handler" "Not callable $(decorate code "$command")" || return $?
 }

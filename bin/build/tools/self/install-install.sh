@@ -147,16 +147,16 @@ __installInstallBuildRemote() {
 # Helper for installInstallBuild
 __installInstallBinaryLegacy() {
   local temp
-  local handler="_return"
+  local handler="returnMessage"
 
   temp=$(fileTemporaryName "$handler") || return $?
   cat >"$temp"
   if __installInstallBinaryIsLegacy <"$temp"; then
     __catch "$handler" __installInstallBinaryCustomizeLegacy "$relTop" <"$temp" || returnClean $? "$temp" || return $?
   else
-    __environment cat "$temp" || return $?
+    __catchEnvironment "$handler" cat "$temp" || return $?
   fi
-  __environment rm "$temp" || return $?
+  __catchEnvironment "$handler" rm "$temp" || return $?
 }
 __installInstallBinaryIsLegacy() {
   grep -q '^relTop=' >/dev/null
