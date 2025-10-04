@@ -27,8 +27,6 @@ __awsLoader() {
 # Installs x86 or aarch64 binary based on `HOSTTYPE`.
 #
 # Requires: packageInstall urlFetch
-#
-# shellcheck disable=SC2120
 awsInstall() {
   __awsLoader "_${FUNCNAME[0]}" "__${FUNCNAME[0]}" "$@"
 }

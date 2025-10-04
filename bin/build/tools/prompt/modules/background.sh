@@ -425,9 +425,11 @@ __backgroundProcessExitWrapper() {
   rm -f "$d/exit"
   local start stop
   start="$(timingStart | tee "$d/start")" || :
-  export PATH HOME BUILD_HOME PWD
+  export PATH HOME PWD
+  local ee=("PWD=$home" "PATH=$PATH" "HOME=$HOME" "BUILD_HOME=$home")
   printf "%s\n" "$d: Running $* at $home" >"$d/out"
-  nohup env -i "PWD=$PWD PATH=$PATH" "HOME=$HOME" "BUILD_HOME=$BUILD_HOME" "CI=1" "$@" >>"$d/out" 2>"$d/err" || e=$?
+  printf "%s\n" "$d: ${ee[*]}" >"$d/out"
+  nohup env -i "${ee[@]}" "$@" >>"$d/out" 2>"$d/err" || e=$?
   stop="$(timingStart | tee "$d/stop")" || :
   printf "%s\n" "$(timingFormat "$((stop - start))")" >"$d/elapsed"
   printf "%d\n" "$e" >"$d/exit" || :

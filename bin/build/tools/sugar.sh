@@ -95,9 +95,12 @@ __catchEnvironmentQuiet() {
   # __IDENTICAL__ __checkHandler 1
   isFunction "$__handler" || returnArgument "handler not callable \"$(decorate code "$__handler")\" Stack: $(debuggingStack)" || return $?
   if [ ! -f "$quietLog" ]; then
-    [ "$quietLog" = "-" ] || __throwArgument "$handler" "quietLog is not a file: $quietLog" || return $?
-    quietLog=$(fileTemporaryName "$handler") || return $?
-    clean+=("$quietLog")
+    if [ "$quietLog" = "-" ]; then
+      quietLog=$(fileTemporaryName "$handler") || return $?
+      clean+=("$quietLog")
+    elif [ ! -d "$(dirname "$quietLog")" ]; then
+      __throwArgument "$handler" "Directory for $(decorate file "$quietLog") does not exist!" || return $?
+    fi
   fi
   "$@" >>"$quietLog" 2>&1 || buildFailed "$quietLog" || __throwEnvironment "$__handler" "$@" || returnClean $? "${clean[@]+"${clean[@]}"}" || return $?
   returnClean 0 "${clean[@]+"${clean[@]}"}" || return $?

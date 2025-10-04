@@ -700,6 +700,24 @@ _fileReverseLines() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
+# IDENTICAL environmentVariables 16
+
+# Output a list of environment variables and ignore function definitions
+#
+# both `set` and `env` output functions and this is an easy way to just output
+# exported variables
+#
+# Requires: declare grep cut usageDocument __help
+environmentVariables() {
+  [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
+  declare -px | grep 'declare -x ' | cut -f 1 -d= | cut -f 3 -d' '
+}
+_environmentVariables() {
+  true || environmentVariables --help
+  # __IDENTICAL__ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
 # IDENTICAL mapEnvironment 104
 
 # Summary: Convert tokens in files to environment variable values
