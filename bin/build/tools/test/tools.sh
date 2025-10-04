@@ -994,8 +994,8 @@ __testRun() {
     TMPDIR="$tempDirectory"
 
     local maybe
-    # false wins to ensure disabling a check wins
-    for maybe in true false; do
+    # Enabling checks wins
+    for maybe in false true; do
       ! isSubstringInsensitive ";Housekeeper:$maybe;" ";$__flagText;" || doHousekeeper=$maybe
       ! isSubstringInsensitive ";Plumber:$maybe;" ";$__flagText;" || doPlumber=$maybe
     done
@@ -1029,7 +1029,11 @@ __testRun() {
     ###########################################
     ###########################################
     ##########                       ##########
+    ##########                       ##########
+    ##########                       ##########
     ########## Here is the test call ##########
+    ##########                       ##########
+    ##########                       ##########
     ##########                       ##########
     ###########################################
     ###########################################

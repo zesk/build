@@ -34,7 +34,7 @@ testDocumentation() {
   testOutput=$(fileTemporaryName "$handler") || return $?
   assertExitCode 0 inArray "summary" summary usage argument example reviewed || return $?
   (
-    __documentationLoader _return printf "" || return $?
+    __documentationLoader returnMessage printf "" || return $?
     local fn
 
     fn="ass""ertNotEquals" # "" hides from findUncaughtAssertions
@@ -58,7 +58,7 @@ testDocumentation() {
     desc=($'Well, Assert two strings are equal.' '' 'If this fails it will output an error and exit.')
     assertEquals "Well, Assert two strings are equal." "$(trimWords 10 "${desc[0]}")" || return $?
     echoBar '='
-    assertEquals $'Assert two strings are equal.\n' "${summary}" || return $?
+    assertEquals "Assert two strings are equal." "${summary}" || return $?
   ) || return $?
   __catchEnvironment "$handler" rm "$testOutput" || return $?
 }
@@ -71,7 +71,7 @@ __isolateTest() {
   home=$(__catch "$handler" buildHome) || return $?
   local fn
 
-    fn="ass""ertNotEquals" # "" hides from findUncaughtAssertions
+  fn="ass""ertNotEquals" # "" hides from findUncaughtAssertions
 
   bashDocumentationExtract "$fn" < <(bashFunctionComment "$(__bashDocumentation_FindFunctionDefinition "$home" "$fn")" "$fn") >"$testOutput" || return $?
   set -a
@@ -81,7 +81,7 @@ __isolateTest() {
   assertEquals "Assert two strings are not equal"$'\n' "${summary}" || return $?
   assertEquals $'Assert two strings are not equal.\n\nIf this fails it will output an error and exit.\n\n' "${description}" || return $?
 
-    fn="ass""ertEquals" # "" hides from findUncaughtAssertions
+  fn="ass""ertEquals" # "" hides from findUncaughtAssertions
   bashDocumentationExtract "$fn" < <(bashFunctionComment "$(__bashDocumentation_FindFunctionDefinition "$home" "$fn")" "$fn") >"$testOutput" || return $?
   set -a
   # shellcheck source=/dev/null
