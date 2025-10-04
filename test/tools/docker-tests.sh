@@ -117,16 +117,16 @@ testEnvironmentFileToDocker() {
   local home
   home=$(__catch "$handler" buildHome) || return $?
 
-  __catchEnvironment "$handler" environmentFileToDocker "$testEnv" >"$testEnv.result" || return $?
+  __catch "$handler" environmentFileToDocker "$testEnv" >"$testEnv.result" || return $?
   dumpPipe "Result - should be blank" <"$testEnv.result"
   assertExitCode 0 fileIsEmpty "$testEnv.result" || return $?
 
   __catchEnvironment "$handler" cp "$home/test/example/bash.env" "$testEnv" || return $?
 
   # mode 1
-  __catchEnvironment "$handler" environmentFileToDocker "$testEnv" >"$testEnv.result" || return $?
+  __catch "$handler" environmentFileToDocker "$testEnv" >"$testEnv.result" || return $?
   # as a pipe
-  __catchEnvironment "$handler" environmentFileToDocker >"$testEnv.result2" <"$testEnv" || return $?
+  __catch "$handler" environmentFileToDocker >"$testEnv.result2" <"$testEnv" || return $?
   assertExitCode --dump 0 diff -w "$testEnv.result2" "$testEnv.result" || return $?
 
   printf -- "%s=%s\n" "NAME" "\"value\"" >"$testEnv"

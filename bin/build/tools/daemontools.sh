@@ -225,7 +225,7 @@ daemontoolsRemoveService() {
   done
 
   if [ -z "$serviceHome" ]; then
-    __catchEnvironment "$handler" buildEnvironmentLoad DAEMONTOOLS_HOME || return $?
+    __catch "$handler" buildEnvironmentLoad DAEMONTOOLS_HOME || return $?
     serviceHome="${DAEMONTOOLS_HOME}"
   fi
   [ -d "$serviceHome" ] || __throwEnvironment "$handler" "daemontools home \"$serviceHome\" is not a directory" || return $?

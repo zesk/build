@@ -12,7 +12,7 @@ __testInstallInstallBuild() {
   local topDir targetDir marker testBinary
   export BUILD_HOME
 
-  __catchEnvironment "$handler" buildEnvironmentLoad BUILD_HOME || return $?
+  __catch "$handler" buildEnvironmentLoad BUILD_HOME || return $?
   assertDirectoryExists "$BUILD_HOME" || return $?
 
   topDir="$(pwd)/test.$$"

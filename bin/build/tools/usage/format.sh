@@ -29,7 +29,7 @@
 # Argument: description - String. Required. The function description
 # Argument: exitCode - Integer. Required. The exit code of the function prior to showing handler
 # Argument: ... - String. Any additional description - output directly.
-# Requires: exitString __throwArgument trimSpace usageArgumentUnsignedInteger __throwArgument decorate printf
+# Requires: returnCodeString __throwArgument trimSpace usageArgumentUnsignedInteger __throwArgument decorate printf
 # BUILD_DEBUG: handler - For all `--help` and any function which uses `usageTemplate` to output documentation (upon error), the stack will be displayed
 __usageTemplate() {
   local handler="_${FUNCNAME[0]}" __saved=("$@")
@@ -60,10 +60,10 @@ __usageTemplate() {
     if [ "$exitCode" -eq 0 ]; then
       printf "%s\n\n" "$(decorate success "$@")"
     elif [ "$exitCode" != 2 ]; then
-      printf "%s %s\n" "$(decorate error "[$(exitString "$exitCode")]")" "$(decorate code "$@")"
+      printf "%s %s\n" "$(decorate error "[$(returnCodeString "$exitCode")]")" "$(decorate code "$@")"
       return "$exitCode"
     else
-      printf "%s %s\n" "$(decorate warning "[$(exitString "$exitCode")]")" "$(decorate code "$@")"
+      printf "%s %s\n" "$(decorate warning "[$(returnCodeString "$exitCode")]")" "$(decorate code "$@")"
     fi
   fi
   description=${description:-"No description"}

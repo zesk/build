@@ -204,8 +204,8 @@ testHooksWhichSeemBenign() {
   local handler="returnMessage"
   local cache home hook
 
-  home="$(__catchEnvironment "$handler" buildHome)" || return $?
-  cache=$(__catchEnvironment "$handler" __gitPreCommitCache true) || return $?
+  home="$(__catch "$handler" buildHome)" || return $?
+  cache=$(__catch "$handler" __gitPreCommitCache true) || return $?
   find "$home/test/example" -type f ! -path "*/.*/*" | extensionLists --clean "$cache"
 
   assertExitCode 0 gitPreCommitHeader || return $?

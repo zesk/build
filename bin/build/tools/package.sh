@@ -286,7 +286,7 @@ packageWhich() {
     ! whichExists "$binary" || return 0
   fi
   # Install packages
-  __catchEnvironment "$handler" packageInstall "${vv[@]+"${vv[@]}"}" --manager "$manager" --force "${packages[@]}" || return $?
+  __catch "$handler" packageInstall "${vv[@]+"${vv[@]}"}" --manager "$manager" --force "${packages[@]}" || return $?
   # Ensure binary now exists, otherwise fail
   whichExists "$binary" || __throwEnvironment "$handler" "$manager packages \"${packages[*]}\" did not add $binary to the PATH: ${PATH-}" || return $?
 }
@@ -635,7 +635,7 @@ packageManagerDefault() {
   local handler="_${FUNCNAME[0]}"
   [ $# -eq 0 ] || __help --only "$handler" "$@" || return "$(convertValue $? 1 0)"
   export BUILD_PACKAGE_MANAGER
-  __catchEnvironment "$handler" buildEnvironmentLoad BUILD_PACKAGE_MANAGER || return $?
+  __catch "$handler" buildEnvironmentLoad BUILD_PACKAGE_MANAGER || return $?
   __packageManagerDefault "${BUILD_PACKAGE_MANAGER-}"
 }
 _packageManagerDefault() {

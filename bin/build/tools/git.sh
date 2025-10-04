@@ -884,7 +884,7 @@ __gitPreCommitCache() {
   local handler="$1" && shift
   local directory create="${1-}" name
   name="pre-commit.$(__catchEnvironment "$handler" whoami)" || return $?
-  directory=$(__catchEnvironment "$handler" buildCacheDirectory "$name") || return $?
+  directory=$(__catch "$handler" buildCacheDirectory "$name") || return $?
   [ "$create" != "true" ] || [ -d "$directory" ] || __catchEnvironment "$handler" mkdir -p "$directory" || return $?
   printf "%s\n" "$directory"
 }

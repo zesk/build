@@ -26,21 +26,21 @@ __build() {
 # Argument: relativeHome - Optional. Directory. Path to application home. Default is `..`.
 # Argument: command ... - Optional. Callable. A command to run and optional arguments.
 # Example:      __install bin/install-bin-build.sh bin/build/tools.sh ../../.. decorate info "$@"
-# Requires: _return __execute
+# Requires: returnMessage __execute
 __install() {
   local installer="${1-}" source="${2-}" relativeHome="${3:-".."}" me="${BASH_SOURCE[0]}"
   local here="${me%/*}" e=253 a
   local install="$here/$relativeHome/$installer" tools="$here/$relativeHome/$source"
-  [ -n "$installer" ] || _return $e "blank installer" || return $?
-  [ -n "$source" ] || _return $e "blank source" || return $?
+  [ -n "$installer" ] || returnMessage $e "blank installer" || return $?
+  [ -n "$source" ] || returnMessage $e "blank source" || return $?
   if [ ! -x "$tools" ]; then
-    "$install" || _return $e "$install failed" || return $?
-    [ -d "${tools%/*}" ] || _return $e "$install failed to create directory ${tools%/*}" || return $?
+    "$install" || returnMessage $e "$install failed" || return $?
+    [ -d "${tools%/*}" ] || returnMessage $e "$install failed to create directory ${tools%/*}" || return $?
   fi
-  [ -x "$tools" ] || _return $e "$install failed to create $tools" "$@" || return $?
+  [ -x "$tools" ] || returnMessage $e "$install failed to create $tools" "$@" || return $?
   shift 3 && a=("$@") && set --
   # shellcheck source=/dev/null
-  source "$tools" || _return "$e" source "$tools" || return $?
+  source "$tools" || returnMessage "$e" source "$tools" || return $?
   [ ${#a[@]} -gt 0 ] || return 0
   __execute "${a[@]}" || return $?
 }

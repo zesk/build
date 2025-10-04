@@ -10,6 +10,18 @@
 
 {usage}
 
+### Reads standard input
+
+{stdin}
+
+### Writes to standard output
+
+{stdout}
+
+### Writes to standard error
+
+{stderr}
+
 ### Arguments
 
 {argument}

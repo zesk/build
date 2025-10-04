@@ -14,7 +14,7 @@ testBuildRunner() {
 testBinBuildRequires() {
   local home
 
-  home=$(__catchEnvironment "$handler" buildHome) || return $?
+  home=$(__catch "$handler" buildHome) || return $?
 
   assertExitCode 0 bashCheckRequires --require --unused --report "$home/bin/build/install.sample.sh" || return $?
   assertExitCode 0 bashCheckRequires --require --unused --report "$home/bin/build/install-bin-build.sh" || return $?
@@ -125,7 +125,7 @@ testInstallInstallBuildSelf() {
 
   tempD=$(fileTemporaryName "$handler" -d) || return $?
 
-  __catchEnvironment "$handler" buildEnvironmentLoad BUILD_COMPANY || return $?
+  __catch "$handler" buildEnvironmentLoad BUILD_COMPANY || return $?
   __catchEnvironment "$handler" mkdir -p "$tempD/a/b/c/d/e/f" || return $?
 
   assertFileDoesNotExist "$tempD/a/b/c/d/e/f/install-bin-build.sh" || return $?
@@ -370,7 +370,7 @@ testUnderscoreUnderscoreBuild() {
   local handler="returnMessage"
   local testPath home
 
-  home=$(__catchEnvironment "$handler" buildHome) || return $?
+  home=$(__catch "$handler" buildHome) || return $?
   testPath=$(fileTemporaryName "$handler" -d) || return $?
   __catchEnvironment "$handler" cp -R "$home/test/example/simple-php" "$testPath/app" || return $?
   assertExitCode 0 installInstallBuild --local "$testPath/app/bin" "$testPath/app" || return $?

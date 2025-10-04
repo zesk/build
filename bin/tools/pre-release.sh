@@ -9,7 +9,7 @@ buildPreRelease() {
   local home
   local exitCode=0
 
-  home=$(__catchEnvironment "$handler" buildHome) || return $?
+  home=$(__catch "$handler" buildHome) || return $?
 
   statusMessage decorate info "Deprecated cleanup ..."
   __catchEnvironment "$handler" "$home/bin/build/deprecated.sh" || exitCode=$?

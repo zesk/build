@@ -351,7 +351,7 @@ _commentArgumentSpecificationParseLine() {
       argumentDefault=false
     fi
     if [ -n "$argumentDefault" ]; then
-      __catchEnvironment "$handler" environmentValueWrite "${argumentName/-/_}" "$argumentDefault" >>"$(__commentArgumentSpecification__defaults "$functionCache")" || return $?
+      __catch "$handler" environmentValueWrite "${argumentName/-/_}" "$argumentDefault" >>"$(__commentArgumentSpecification__defaults "$functionCache")" || return $?
     fi
   fi
   if $argumentRemainder; then

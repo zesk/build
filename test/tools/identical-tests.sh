@@ -22,7 +22,7 @@ testIdenticalEofWithBracket() {
   local handler="returnMessage"
   local temp home
 
-  home=$(__catchEnvironment "$handler" buildHome) || return $?
+  home=$(__catch "$handler" buildHome) || return $?
   temp=$(fileTemporaryName "$handler" -d) || return $?
   __catchEnvironment "$handler" cp -R "$home/test/example/similar" "$temp/similar" || return $?
   assertDirectoryExists "$temp/similar" "$temp/similar/fix" || return $?
@@ -37,7 +37,7 @@ testIdenticalCheckAndRepairMap() {
   local handler="returnMessage"
   local testPath home name
 
-  home=$(__catchEnvironment "$handler" buildHome) || return $?
+  home=$(__catch "$handler" buildHome) || return $?
   testPath=$(fileTemporaryName "$handler" -d) || return $?
   decorate info "HOME is $home"
   decorate info "testPath is $testPath"

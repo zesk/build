@@ -226,7 +226,7 @@ _bashDocumentation_Template() {
         fi
       fi
     done < <(mapTokens <"$template" | sort -u)
-    mapEnvironment <"$template" | grepSafe -E -v '^shellcheck|# shellcheck' || markdown_removeUnfinishedSections | :
+    mapEnvironment <"$template" | grepSafe -E -v '^shellcheck|# shellcheck' | markdown_removeUnfinishedSections || :
   ) || __throwEnvironment "$handler" "_bashDocumentation_Template failed: ${saved[*]}" || return $?
 }
 

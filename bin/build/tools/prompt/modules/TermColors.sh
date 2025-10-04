@@ -116,7 +116,7 @@ __bashPromptModule_LoadColors() {
   __BUILD_TERM_COLORS="$hash"
 
   local mode
-  mode=$(__catchEnvironment "$handler" consoleConfigureColorMode "$bg") || :
+  mode=$(__catch "$handler" consoleConfigureColorMode "$bg") || :
   [ -z "$mode" ] || BUILD_COLORS_MODE="$mode" && bashPrompt --skip-prompt --colors "$(bashPromptColorScheme "$mode")"
 
   ! $debug || timingReport "$start" "Background is now $bg and mode is $mode ... "

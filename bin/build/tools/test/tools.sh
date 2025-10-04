@@ -644,7 +644,7 @@ __testFunctionWasTested() {
   local handler="returnMessage"
   local assertedFunctions verboseMode=false
 
-  assertedFunctions=$(__catchEnvironment "$handler" __assertedFunctions) || return $?
+  assertedFunctions=$(__catch "$handler" __assertedFunctions) || return $?
   local __fns=()
   while [ $# -gt 0 ]; do
     if [ "$1" = "--verbose" ]; then
@@ -1150,7 +1150,7 @@ __testFailed() {
 __testCleanup() {
   local handler="returnMessage"
   local home
-  home=$(__catchEnvironment "$handler" buildHome) || return $?
+  home=$(__catch "$handler" buildHome) || return $?
   shopt -u failglob
   export __TEST_CLEANUP_DIRS
 

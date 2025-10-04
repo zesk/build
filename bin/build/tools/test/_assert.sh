@@ -63,7 +63,7 @@ _assertTiming() {
   export __BUILD_SAVED_CACHE_DIRECTORY
 
   if [ -z "${__BUILD_SAVED_CACHE_DIRECTORY-}" ]; then
-    __BUILD_SAVED_CACHE_DIRECTORY="$(__catchEnvironment "$handler" buildCacheDirectory)" || return $?
+    __BUILD_SAVED_CACHE_DIRECTORY="$(__catch "$handler" buildCacheDirectory)" || return $?
   fi
 
   timingFile="$__BUILD_SAVED_CACHE_DIRECTORY/.${FUNCNAME[0]}" || return $?

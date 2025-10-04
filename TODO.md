@@ -40,7 +40,7 @@
 - _convertValue
 - _returnUndo
 - _returnCode
-- _exitString
+- _returnCodeString
 - _returnClean
 
 - __executeInputSupport

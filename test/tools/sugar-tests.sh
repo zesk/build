@@ -45,7 +45,7 @@ EOF
 testExitString() {
   local expected test
   while read -r expected test; do
-    assertEquals --display "exitString \"$test\"" "$expected" "$(exitString "$test")" || return $?
+    assertEquals --display "returnCodeString \"$test\"" "$expected" "$(returnCodeString "$test")" || return $?
   done < <(__dataExitString)
 }
 
@@ -252,7 +252,7 @@ testArgEnvStuff() {
 testMuzzle() {
   local home mantra="I'm sorry, Dave, I'm afraid I can't do that."
 
-  home=$(__catchEnvironment "$handler" buildHome) || return $?
+  home=$(__catch "$handler" buildHome) || return $?
 
   # produces nothing
   assertOutputEquals "" muzzle cat "${BASH_SOURCE[0]}" || return $?

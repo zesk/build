@@ -201,7 +201,7 @@ deprecatedCannonFile() {
   [ -n "$cannonPath" ] || cannonPath=$(__catch "$handler" buildHome) || return $?
 
   local start
-  start=$(__catchEnvironment "$handler" timingStart) || return $?
+  start=$(__catch "$handler" timingStart) || return $?
 
   local exitCode=0 version="No version yet"
 

@@ -339,7 +339,7 @@ __bashPromptCommand() {
     # Index 6 - text
     __BASH_PROMPT_PREVIOUS+=("${__BASH_PROMPT_PREVIOUS[1]-}")
     # Index 7 - code text
-    __BASH_PROMPT_PREVIOUS+=("$(exitString "$exitCode")")
+    __BASH_PROMPT_PREVIOUS+=("$(returnCodeString "$exitCode")")
   fi
 
   local debug=false

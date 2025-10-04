@@ -27,7 +27,7 @@ testCoverageNeedToUpdate() {
   local handler="returnMessage"
   local home
 
-  home=$(__catchEnvironment "$handler" buildHome) || return $?
+  home=$(__catch "$handler" buildHome) || return $?
   # THIS FAILS - INFINITE LOOP
   # assertExitCode --dump --stdout-match "Target is" --stdout-match "Coverage completed" 0 bashCoverage "$home/bin/build/tools.sh" isInteger 2 || return $?
   assertEquals "$home" "$home" || return $?

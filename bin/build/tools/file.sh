@@ -792,7 +792,7 @@ _linkCreate() {
 # IDENTICAL fileTemporaryName 33
 
 # Wrapper for `mktemp`. Generate a temporary file name, and fail using a function
-# Argument: handler - Function. Required. Function to call on failure. Function Type: _return
+# Argument: handler - Function. Required. Function to call on failure. Function Type: returnMessage
 # DOC TEMPLATE: --help 1
 # Argument: --help - Optional. Flag. Display this help.
 # Argument: ... - Optional. Arguments. Any additional arguments are passed through.

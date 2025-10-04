@@ -48,7 +48,7 @@ __bashBuild() {
   fi
   local start
   start=$(timingStart)
-  statusMessage decorate suce "Setting up operating system with required base packages ..."
+  statusMessage decorate success "Setting up operating system with required base packages ..."
   __catch "$handler" packageUpdate || return $?
   __catch "$handler" packageInstall || return $?
   statusMessage --last timingReport "$start" "System set up in"

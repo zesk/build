@@ -14,7 +14,7 @@ __prepareSampleApplicationDeployment() {
 
   export BUILD_HOME
 
-  __catchEnvironment "$handler" buildEnvironmentLoad BUILD_HOME || return $?
+  __catch "$handler" buildEnvironmentLoad BUILD_HOME || return $?
 
   local tempPath
   tempPath=$(fileTemporaryName "$handler" -d) || return $?
@@ -40,7 +40,7 @@ testDeployRemoteFinish() {
   exec 2>&1
   export BUILD_HOME
 
-  __catchEnvironment "$handler" buildEnvironmentLoad BUILD_HOME || return $?
+  __catch "$handler" buildEnvironmentLoad BUILD_HOME || return $?
 
   id=abcdef
   tempDirectory=$(fileTemporaryName "$handler" -d) || return $?

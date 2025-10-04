@@ -25,8 +25,8 @@ bashPromptModule_BuildProject() {
 
   [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
 
-  __catchEnvironment "$handler" buildEnvironmentLoad HOME || return $?
-  home=$(__catchEnvironment "$handler" buildHome) || return $?
+  __catch "$handler" buildEnvironmentLoad HOME || return $?
+  home=$(__catch "$handler" buildHome) || return $?
   showHome="${home//$HOME/~}"
   gitHome=$(gitFindHome "$(pwd)" 2>/dev/null) || return 0
   [ "$home" != "$gitHome" ] || return 0

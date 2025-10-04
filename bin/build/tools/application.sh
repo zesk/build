@@ -8,7 +8,7 @@
 __applicationHomeFile() {
   local f home
 
-  home=$(__catchEnvironment "$handler" buildEnvironmentGetDirectory XDG_STATE_HOME) || return $?
+  home=$(__catch "$handler" buildEnvironmentGetDirectory XDG_STATE_HOME) || return $?
   f="$home/.applicationHome"
   [ -f "$f" ] || __catchEnvironment "$handler" touch "$f" || return $?
   printf "%s\n" "$f"
@@ -18,7 +18,7 @@ __applicationHomeGo() {
   local handler="$1" && shift
   local file home label userHome oldHome=""
 
-  file=$(__catchEnvironment "$handler" __applicationHomeFile) || return $?
+  file=$(__catch "$handler" __applicationHomeFile) || return $?
   home=$(trimSpace "$(__catchEnvironment "$handler" head -n 1 "$file")") || return $?
   if [ -z "$home" ]; then
     __throwEnvironment "$handler" "No code home set, try $(decorate code "applicationHome")" || return $?

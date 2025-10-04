@@ -218,7 +218,7 @@ testFileMatches() {
 testLinkCreate() {
   local home target
 
-  home=$(__catchEnvironment "$handler" buildHome) || return $?
+  home=$(__catch "$handler" buildHome) || return $?
 
   find "$home/bin/build/" -maxdepth 1 -name 'wacky.*' -exec rm {} \; || :
 

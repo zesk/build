@@ -148,7 +148,7 @@ testUrlFilter() {
   local handler="returnMessage"
   local home output source
 
-  home=$(__catchEnvironment "$handler" buildHome) || return $?
+  home=$(__catch "$handler" buildHome) || return $?
   output=$(fileTemporaryName "$handler") || return $?
   source="$home/test/example/urlFilter.source.html"
   urlFilter "$source" >"$output" || returnEnvironment "urlFilter $source failed" || return $?

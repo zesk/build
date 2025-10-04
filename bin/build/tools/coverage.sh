@@ -210,7 +210,7 @@ __bashCoverageReportTemplate() {
   local handler="returnMessage"
   local home path
 
-  home=$(__catchEnvironment "$handler" buildHome) || return $?
+  home=$(__catch "$handler" buildHome) || return $?
   path="$home/bin/build/tools/coverage/$1"
   [ -f "$path" ] || returnEnvironment "${FUNCNAME[0]} $path not found" || return $?
   printf -- "%s\n" "$path"

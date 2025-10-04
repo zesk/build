@@ -89,9 +89,9 @@ __loopExecute() {
     seconds=$(timingFormat "$elapsed")
     seconds="$seconds $(plural "$seconds" second seconds)"
     stamp=$(date "+%F %T")
-    local exitString
-    exitString="$(decorate value "$exitCode") $(decorate label "[$(exitString "$exitCode")]")"
-    statusLine="$(decorate blue "[#$iterations]") $(decorate yellow "$stamp") $exitString, $nLines $(plural "$nLines" line lines), $seconds"
+    local returnCodeString
+    returnCodeString="$(decorate value "$exitCode") $(decorate label "[$(returnCodeString "$exitCode")]")"
+    statusLine="$(decorate blue "[#$iterations]") $(decorate yellow "$stamp") $returnCodeString, $nLines $(plural "$nLines" line lines), $seconds"
     cursorSet 1 1
 
     if inArray "$exitCode" "${until[@]}"; then

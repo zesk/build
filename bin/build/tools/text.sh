@@ -24,6 +24,8 @@ __textLoader() {
 # Extract a range of lines from a file
 # Argument: startLine - Integer. Required. Starting line number.
 # Argument: endLine - Integer. Required. Ending line number.
+# stdin: Reads lines until EOF
+# stdout: Outputs the selected lines only
 fileExtractLines() {
   local handler="_${FUNCNAME[0]}"
 
@@ -162,6 +164,7 @@ _parseBoolean() {
 # Argument: replace - String. Optional. Replacement string for newlines.
 # DOC TEMPLATE: noArgumentsForHelp 1
 # Without arguments, displays help.
+# stdout: The text with the newline replaced with another character, suitable typically for single-line output
 newlineHide() {
   # __IDENTICAL__ --help-when-blank 1
   [ $# -gt 0 ] || __help "_${FUNCNAME[0]}" --help || return 0
@@ -180,6 +183,7 @@ _newlineHide() {
 # Example:     {fn} "Now I can't not include this in a bash string."
 # DOC TEMPLATE: noArgumentsForHelp 1
 # Without arguments, displays help.
+# stdout: The input text properly quoted
 escapeQuotes() {
   # __IDENTICAL__ --help-when-blank 1
   [ $# -gt 0 ] || __help "_${FUNCNAME[0]}" --help || return 0
@@ -193,6 +197,8 @@ _escapeQuotes() {
 # Replaces the first and only the first occurrence of a pattern in a line with a replacement string.
 # DOC TEMPLATE: noArgumentsForHelp 1
 # Without arguments, displays help.
+# stdin: Reads lines from stdin until EOF
+# stdout: Outputs modified lines
 replaceFirstPattern() {
   # __IDENTICAL__ --help-when-blank 1
   [ $# -gt 0 ] || __help "_${FUNCNAME[0]}" --help || return 0
@@ -206,6 +212,8 @@ _replaceFirstPattern() {
 # Trim whitespace from beginning and end of a stream
 # DOC TEMPLATE: --help 1
 # Argument: --help - Optional. Flag. Display this help.
+# stdin: Reads lines from stdin until EOF
+# stdout: Outputs modified lines
 # INTERNAL: Explained
 # INTERNAL: 1. `-e :a`: Creates a label `a` for looping
 # INTERNAL: 2. `/./,$!d` deletes all lines until the first non-blank line is found (`/./` matches any non-blank line).
@@ -222,6 +230,8 @@ _trimBoth() {
 # Removes any blank lines from the beginning of a stream
 # DOC TEMPLATE: --help 1
 # Argument: --help - Optional. Flag. Display this help.
+# stdin: Reads lines from stdin until EOF
+# stdout: Outputs modified lines
 trimHead() {
   [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
   sed -e "/./!d" -e :r -e n -e br
@@ -234,6 +244,8 @@ _trimHead() {
 # Removes any blank lines from the end of a stream
 # DOC TEMPLATE: --help 1
 # Argument: --help - Optional. Flag. Display this help.
+# stdin: Reads lines from stdin until EOF
+# stdout: Outputs modified lines
 trimTail() {
   [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
   sed -e :a -e '/^\n*$/{$d;N;ba' -e '}'
@@ -244,8 +256,12 @@ _trimTail() {
 }
 
 # Ensures blank lines are singular
+# Used often to clean up markdown `.md` files, but can be used for any line-based configuration file which allows blank lines.
+#
 # DOC TEMPLATE: --help 1
 # Argument: --help - Optional. Flag. Display this help.
+# stdin: Reads lines from stdin until EOF
+# stdout: Outputs modified lines where any blank lines are replaced with a single blank line.
 singleBlankLines() {
   [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
   sed '/^$/N;/^\n$/D'
@@ -256,10 +272,11 @@ _singleBlankLines() {
 }
 
 # Trim spaces and only spaces from arguments or a pipe
-# Usage: {fn} text
-# Argument: text - Text to remove spaces
-# Output: text
+# Argument: text - Optional. EmptyString. Text to remove spaces. If no arguments are supplied it is assumed that input should be read from standard input.
+# stdin: Reads lines from stdin until EOF
+# stdout: Outputs trimmed lines
 # Example:     {fn} "$token"
+# Example:     grep "$tokenPattern" | trimSpace > "$tokensFound"
 # Summary: Trim whitespace of a bash argument
 # Source: https://web.archive.org/web/20121022051228/http://codesnippets.joyent.com/posts/show/1816
 # Credits: Chris F.A. Johnson (2008)
@@ -298,7 +315,6 @@ _trimSpace() {
 # Return Code: 0 - If element is found in array
 # Return Code: 1 - If element is NOT found in array
 # Tested: No
-#
 inArray() {
   local element=${1-} arrayElement
   shift || return 1
@@ -534,17 +550,14 @@ _trimWords() {
 }
 
 #
-# Usage: maximumFieldLength [ fieldIndex [ separatorChar ] ] < fieldBasedFile
-#
 # Given an input file, determine the maximum length of fieldIndex, using separatorChar as a delimiter between fields
 #
 # Defaults to first field (fieldIndex of `1`), space separator (separatorChar is ` `)
 #
-# Argument: - `fieldIndex` - The field to compute the maximum length for
-# Argument: - `separatorChar` - The separator character to delineate fields
-# Argument: - `fieldBasedFile` - A file with fields
-# Example:     usageOptions | usageGenerator $(usageOptions | maximumFieldLength 1 ;) ;
-#
+# Argument: fieldIndex - UnsignedInteger. Required. The field to compute the maximum length for
+# Argument: separatorChar - String. Required. The separator character to delineate fields
+# stdin: Lines are read from standard in and line length is computed for each line
+# stdout: `UnsignedInteger`
 maximumFieldLength() {
   local handler="_${FUNCNAME[0]}"
 
@@ -557,7 +570,7 @@ maximumFieldLength() {
   else
     separatorChar=()
   fi
-  awk "${separatorChar[@]}" "{ print length(\$$index) }" | sort -rn | head -1
+  awk "${separatorChar[@]}" "{ print length(\$$index) }" | sort -rn | head -n 1
 }
 _maximumFieldLength() {
   # __IDENTICAL__ usageDocument 1
@@ -565,9 +578,9 @@ _maximumFieldLength() {
 }
 
 #
-# Usage: {fn}
 # Outputs the maximum line length passed into stdin
-#
+# stdin: Lines are read from standard in and line length is computed for each line
+# stdout: `UnsignedInteger`
 maximumLineLength() {
   local handler="_${FUNCNAME[0]}"
   local max
@@ -627,6 +640,8 @@ _fileEndsWithNewline() {
 # DOC TEMPLATE: --handler 1
 # Argument: --handler handler - Optional. Function. Use this error handler instead of the default error handler.
 # Argument: file - Optional. File. Output line count for each file specified. If no files specified, uses stdin.
+# stdin: Lines are read from standard in and counted
+# stdout: `UnsignedInteger`
 fileLineCount() {
   local handler="_${FUNCNAME[0]}"
   local fileArgument=false newlineCheck=false
@@ -691,6 +706,7 @@ _fileLineCount() {
 # Argument: plural - Optional. The plural form of a noun. If not specified uses `singular` plus an ess.
 # Example:     count=$(fileLineCount "$foxSightings") || return $?
 # Example:     printf "We saw %s.\n" "$(pluralWord "$count" fox foxes)"
+# stdout: `String`. The number (direct) and the plural form for non-1 values. e.g. `$(pluralWord 2 potato potatoes)` = `2 potatoes`
 pluralWord() {
   local handler="_${FUNCNAME[0]}"
   [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
@@ -718,6 +734,7 @@ _pluralWord() {
 # Example:
 # Example:     n=$(($(date +%s)) - start))
 # Example:     printf "That took %d %s" "$n" "$(plural "$n" second seconds)"
+# stdout: `String`. The plural form for non-1 values. e.g. `$(plural 2 potato potatoes)` = `potatoes`
 plural() {
   local handler="_${FUNCNAME[0]}"
   [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
@@ -744,7 +761,6 @@ _plural() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-#
 # Convert text to lowercase
 #
 # DOC TEMPLATE: dashDashAllowsHelpParameters 1
@@ -752,13 +768,12 @@ _plural() {
 # DOC TEMPLATE: --help 1
 # Argument: --help - Optional. Flag. Display this help.
 # Argument: text - EmptyString. Required. Text to convert to lowercase
-# DOC TEMPLATE: dashDashAllowsHelpParameters 1
-# Argument: -- - Optional. Flag. Stops command processing to enable arbitrary text to be passed as additional arguments without special meaning.
+# stdout: `String`. The lowercase version of the `text`.
+# Requires: tr
 lowercase() {
   [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
   [ "${1-}" != "--" ] || shift
   while [ $# -gt 0 ]; do
-
     if [ -n "$1" ]; then
       printf "%s\n" "$1" | tr '[:upper:]' '[:lower:]'
     fi
@@ -770,16 +785,15 @@ _lowercase() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-#
 # Convert text to uppercase
 #
 # DOC TEMPLATE: dashDashAllowsHelpParameters 1
 # Argument: -- - Optional. Flag. Stops command processing to enable arbitrary text to be passed as additional arguments without special meaning.
 # DOC TEMPLATE: --help 1
 # Argument: --help - Optional. Flag. Display this help.
-# DOC TEMPLATE: dashDashAllowsHelpParameters 1
-# Argument: -- - Optional. Flag. Stops command processing to enable arbitrary text to be passed as additional arguments without special meaning.
 # Argument: text - EmptyString. Required. text to convert to uppercase
+# stdout: `String`. The uppercase version of the `text`.
+# Requires: tr
 uppercase() {
   [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
   [ "${1-}" != "--" ] || shift
@@ -797,7 +811,6 @@ _uppercase() {
 
 #
 # Strip ANSI console escape sequences from a file
-# Usage: stripAnsi < input > output
 # Argument: None.
 # Exit Codes: Zero.
 # Local Cache: None.
@@ -807,7 +820,8 @@ _uppercase() {
 # Short description: Remove ANSI escape codes from streams
 # Source: https://stackoverflow.com/questions/6534556/how-to-remove-and-all-of-the-escape-sequences-in-a-file-using-linux-shell-sc
 # Depends: sed
-#
+# stdin: arbitrary text which may contain ANSI escape sequences for the terminal
+# stdout: the same text with those ANSI escape sequences removed
 stripAnsi() {
   [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
   sed -e $'s,\x1B\[[0-9;]*[a-zA-Z],,g' -e $'s,\x1B\][^\x1B]*\x1B\x5c\x5c,,g'
@@ -819,6 +833,8 @@ _stripAnsi() {
 }
 
 # Length of an unformatted string
+# Argument: text - EmptyString. Required. text to determine the plaintext length of.
+# stdout: `UnsignedInteger`. Length of the plain characters in the input arguments.
 plainLength() {
   local handler="_${FUNCNAME[0]}"
   [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
@@ -844,7 +860,8 @@ _plainLength() {
 # Example:     shaPipe "$fileName0" "$fileName1"
 # Output: cf7861b50054e8c680a9552917b43ec2b9edae2b
 # Environment: DEBUG_SHAPIPE - When set to a truthy value, will output all requested shaPipe calls to log called `shaPipe.log`.
-#
+# stdin: any file
+# stdout: `String`. A hexadecimal string which uniquely represents the data in `stdin`.
 shaPipe() {
   __textLoader "_${FUNCNAME[0]}" "__${FUNCNAME[0]}" "$@"
 }
@@ -868,7 +885,8 @@ _shaPipe() {
 # Example:     cachedShaPipe "$cacheDirectory" < "$fileName"
 # Example:     cachedShaPipe "$cacheDirectory" "$fileName0" "$fileName1"
 # Output: cf7861b50054e8c680a9552917b43ec2b9edae2b
-#
+# stdin: any file
+# stdout: `String`. A hexadecimal string which uniquely represents the data in `stdin`.
 cachedShaPipe() {
   __textLoader "_${FUNCNAME[0]}" "__${FUNCNAME[0]}" "$@"
 }
@@ -883,6 +901,7 @@ _cachedShaPipe() {
 # Description: Outputs 40 random hexadecimal characters, lowercase.
 # Example:     testPassword="$(randomString)"
 # Output: cf7861b50054e8c680a9552917b43ec2b9edae2b
+# stdout: `String`. A random hexadecimal string.
 randomString() {
   [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
   head --bytes=64 /dev/random | sha1sum | cut -f 1 -d ' '
@@ -899,6 +918,7 @@ _randomString() {
 # Argument: offset - Integer. Required.
 # Argument: needle - String. Required.
 # Argument: haystack - String. Required.
+# stdout: `UnsignedInteger`. The offset at which the `needle` was found in `haystack`.
 stringOffset() {
   [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
   local length=${#2}
@@ -918,6 +938,8 @@ _stringOffset() {
 # Usage: {fn} fieldCount < input > output
 # Argument: fieldCount - Optional. Integer. Number of field to remove. Default is just first `1`.
 # Partial Credit: https://stackoverflow.com/questions/4198138/printing-everything-except-the-first-field-with-awk/31849899#31849899
+# stdin: A file with fields separated by spaces
+# stdout: The same file with the first `fieldCount` fields removed from each line.
 removeFields() {
   local handler="_${FUNCNAME[0]}"
   local fieldCount=""
@@ -940,10 +962,6 @@ removeFields() {
   done
   fieldCount=${fieldCount:-1}
   sed -r 's/^([^ ]+ +){'"$fieldCount"'}//'
-  # local fields=()
-  #  while IFS=' ' read -d $'\n' -r -a fields; do
-  #    echo "${fields[@]:$fieldCount}"
-  #  done
 }
 _removeFields() {
   # __IDENTICAL__ usageDocument 1
@@ -1000,8 +1018,9 @@ _printfOutputSuffix() {
 
 # Replace all occurrences of a string within another string
 # Argument: needle - String. Required. String to replace.
-# Argument: replacement - EmptyString. c. String to replace needle with.
-# Argument: haystack - EmptyString. EmptyString. String to modify. If not supplied, manipulates stdin.
+# Argument: replacement - EmptyString.  String to replace needle with.
+# Argument: haystack - EmptyString. Optional. String to modify. If not supplied, reads from standard input.
+# stdin: If no haystack supplied reads from standard input and replaces the string on each line read.
 # stdout: New string with needle replaced
 stringReplace() {
   local handler="_${FUNCNAME[0]}"

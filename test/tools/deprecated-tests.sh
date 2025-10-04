@@ -22,7 +22,7 @@ testDeprecatedFind() {
   local handler="returnMessage"
   local home
 
-  home=$(__catchEnvironment "$handler" buildHome) || return $?
+  home=$(__catch "$handler" buildHome) || return $?
   assertExitCode 0 deprecatedFind deprecatedIgnore --path "$home/test/example/deprecated/" oldFunction || return $?
   assertExitCode 1 deprecatedFind deprecatedIgnore --path "$home/test/example/deprecated/" newFunction || return $?
 }

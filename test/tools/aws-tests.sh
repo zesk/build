@@ -334,7 +334,7 @@ testAWSCredentialsEdit() {
 
   local testAWSCredentials testPassword="abcdefghabcdefghabcdefghabcdefghhabcdefgh"
 
-  testAWSCredentials=$(__catchEnvironment "$handler" awsCredentialsFile --path) || return $?
+  testAWSCredentials=$(__catch "$handler" awsCredentialsFile --path) || return $?
   assertFileDoesNotExist "$testAWSCredentials" || return $?
 
   testCredentials="$home/test/example/aws/fake.credentials.txt"

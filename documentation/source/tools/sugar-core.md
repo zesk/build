@@ -25,7 +25,7 @@ Quick guide:
 Error codes:
 
 - `returnCode name ...` - Exit codes. Outputs integers based on error names, one per line.
-- `exitString integer ...` - Exit strings. Reverse of `returnCode`.
+- `returnCodeString integer ...` - Exit strings. Reverse of `returnCode`.
 
 Return errors:
 
@@ -49,7 +49,7 @@ Run-related:
 
 {returnCode}
 
-{exitString}
+{returnCodeString}
 
 {_choose}
 

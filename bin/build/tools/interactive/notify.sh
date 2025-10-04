@@ -68,11 +68,11 @@ __notify() {
     ! $verboseFlag || statusMessage --last decorate "Exit Code:" "$returnValue"
     ! $verboseFlag || statusMessage --last decorate "Elapsed:" "$(timingReport "$start")"
     ! $verboseFlag || statusMessage --last decorate "stdout:" "$(tail -n 10 "$tempOut")"
-    dialog=$(printf "%s\n" "$message" "" "Exit Code: $returnValue" "Exit String: $(exitString $returnValue)" "Elapsed: $(timingReport "$start")" "" "stdout:" "$(tail -n 10 "$tempOut")")
+    dialog=$(printf "%s\n" "$message" "" "Exit Code: $returnValue" "Exit String: $(returnCodeString $returnValue)" "Elapsed: $(timingReport "$start")" "" "stdout:" "$(tail -n 10 "$tempOut")")
     hookRun --application "$home" notify --title "$binary Succeeded" --sound zesk-build-notification "${nn[@]+"${nn[@]}"}" "Elapsed: $(timingReport "$start")"
   else
     [ -n "$failMessage" ] || failMessage="$message"
-    dialog=$(printf "%s\n" "$failMessage" "" "Exit Code: $?" "Exit String: $(exitString $?)" "Elapsed: $(timingReport "$start")" "" "stderr:" "$(tail -n 10 "$tempErr")" "" "stdout:" "$(tail -n 10 "$tempOut")")
+    dialog=$(printf "%s\n" "$failMessage" "" "Exit Code: $?" "Exit String: $(returnCodeString $?)" "Elapsed: $(timingReport "$start")" "" "stderr:" "$(tail -n 10 "$tempErr")" "" "stdout:" "$(tail -n 10 "$tempOut")")
     hookRun --application "$home" notify --title "$binary FAILED" --sound zesk-build-failed "${nn[@]+"${nn[@]}"}" "${nnFail[@]+"${nnFail[@]}"}" "$dialog"
   fi
   __catchEnvironment "$handler" rm -f "$tempErr" "$tempOut" || return $?
