@@ -81,7 +81,7 @@ Binaries are:
 - `map.sh` - `mapEnvironment` wrapper
 - `need-bash.sh` - For Docker image installs which lack bash (usually running `sh`). This script enables install of
   `bash` to run `tools.sh` properly.
-- `new-release.sh` - `newRelease` wrapper
+- `new-release.sh` - `releaseNew` wrapper
 - `release-notes.sh` - `releaseNotes` wrapper
 - `test-tools.sh` - Tools for `testSuite`
 - `version-last.sh` - `gitVersionLast` wrapper

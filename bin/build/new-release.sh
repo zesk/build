@@ -7,10 +7,10 @@
 
 # fn: {base}
 # Usage: {fn}
-# See `newRelease` for arguments and usage.
-# See: newRelease
-__binNewRelease() {
-  "$(dirname "${BASH_SOURCE[0]}")/tools.sh" newRelease "$@"
+# See `releaseNew` for arguments and usage.
+# See: releaseNew
+__binReleaseNew() {
+  "$(dirname "${BASH_SOURCE[0]}")/tools.sh" releaseNew "$@"
 }
 
-__binNewRelease "$@"
+__binReleaseNew "$@"

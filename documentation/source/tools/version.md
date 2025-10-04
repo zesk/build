@@ -6,9 +6,9 @@
 
 {releaseNotes}
 
-{newRelease}
+{releaseNew}
 
-{nextMinorVersion}
+{versionNextMinor}
 
 {isVersion}
 

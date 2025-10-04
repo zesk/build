@@ -23,13 +23,13 @@ ___testIsVersionData() {
 EOF
 }
 
-testNewRelease() {
+testReleaseNew() {
   local handler="returnMessage" home
 
   home=$(__catch "$handler" buildHome) || return $?
   __catchEnvironment "$handler" muzzle pushd "$home" || return $?
 
-  assertExitCode 0 newRelease --non-interactive || return $?
+  assertExitCode 0 releaseNew --non-interactive || return $?
 
   __catchEnvironment "$handler" muzzle popd || return $?
 }
@@ -53,29 +53,29 @@ testReleaseNotesSimple() {
 }
 
 testVersionNext() {
-  assertNotExitCode --stderr-match isInteger 0 nextMinorVersion A || return $?
-  assertEquals "" "$(nextMinorVersion "A" 2>/dev/null || :)" || return $?
-  assertExitCode --stderr-match isInteger 2 nextMinorVersion "A" || return $?
+  assertNotExitCode --stderr-match isInteger 0 versionNextMinor A || return $?
+  assertEquals "" "$(versionNextMinor "A" 2>/dev/null || :)" || return $?
+  assertExitCode --stderr-match isInteger 2 versionNextMinor "A" || return $?
 
-  assertEquals "1" "$(nextMinorVersion "0")" || return $?
-  assertEquals "1.1" "$(nextMinorVersion "1.0")" || return $?
-  assertEquals "A.1" "$(nextMinorVersion "A.0")" || return $?
-  assertEquals "1.0.0.0.0.1" "$(nextMinorVersion "1.0.0.0.0.0")" || return $?
+  assertEquals "1" "$(versionNextMinor "0")" || return $?
+  assertEquals "1.1" "$(versionNextMinor "1.0")" || return $?
+  assertEquals "A.1" "$(versionNextMinor "A.0")" || return $?
+  assertEquals "1.0.0.0.0.1" "$(versionNextMinor "1.0.0.0.0.0")" || return $?
 
-  assertEquals "1000000" "$(nextMinorVersion "999999")" || return $?
-  assertEquals "1.1000000" "$(nextMinorVersion "1.999999")" || return $?
-  assertEquals "A.1000000" "$(nextMinorVersion "A.999999")" || return $?
-  assertEquals "1.0.0.0.0.1000000" "$(nextMinorVersion "1.0.0.0.0.999999")" || return $?
+  assertEquals "1000000" "$(versionNextMinor "999999")" || return $?
+  assertEquals "1.1000000" "$(versionNextMinor "1.999999")" || return $?
+  assertEquals "A.1000000" "$(versionNextMinor "A.999999")" || return $?
+  assertEquals "1.0.0.0.0.1000000" "$(versionNextMinor "1.0.0.0.0.999999")" || return $?
 
-  assertEquals "0" "$(nextMinorVersion "-1")" || return $?
-  assertEquals "1.0" "$(nextMinorVersion "1.-1")" || return $?
-  assertEquals "A.0" "$(nextMinorVersion "A.-1")" || return $?
-  assertEquals "1.0.0.0.0.0" "$(nextMinorVersion "1.0.0.0.0.-1")" || return $?
+  assertEquals "0" "$(versionNextMinor "-1")" || return $?
+  assertEquals "1.0" "$(versionNextMinor "1.-1")" || return $?
+  assertEquals "A.0" "$(versionNextMinor "A.-1")" || return $?
+  assertEquals "1.0.0.0.0.0" "$(versionNextMinor "1.0.0.0.0.-1")" || return $?
 
-  assertEquals "5318008" "$(nextMinorVersion "5318007")" || return $?
-  assertEquals "5318007.5318008" "$(nextMinorVersion "5318007.5318007")" || return $?
-  assertEquals "A.5318008" "$(nextMinorVersion "A.5318007")" || return $?
-  assertEquals "5318005.5318006.5318007.5318008" "$(nextMinorVersion "5318005.5318006.5318007.5318007")" || return $?
+  assertEquals "5318008" "$(versionNextMinor "5318007")" || return $?
+  assertEquals "5318007.5318008" "$(versionNextMinor "5318007.5318007")" || return $?
+  assertEquals "A.5318008" "$(versionNextMinor "A.5318007")" || return $?
+  assertEquals "5318005.5318006.5318007.5318008" "$(versionNextMinor "5318005.5318006.5318007.5318007")" || return $?
 }
 
 __assertPathsEquals() {

@@ -32,6 +32,8 @@ _isVersion() {
 }
 
 # Take one or more versions and strip the leading `v`
+# stdin: Versions containing a preceding `v` character (optionally)
+# stdout: Versions with the initial `v` (if it exists) removed
 versionNoVee() {
   [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
   while [ $# -gt 0 ]; do
@@ -73,7 +75,7 @@ releaseNotes() {
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
-    --application) shift && home="$(usageArgumentDirectory "$handler" "$argument" "${1-}")" || return $?;;
+    --application) shift && home="$(usageArgumentDirectory "$handler" "$argument" "${1-}")" || return $? ;;
     *)
       if [ -n "$version" ]; then
         decorate error "Version $version already specified: $argument"
@@ -111,10 +113,9 @@ __releaseNotes() {
 }
 
 #
-# Usage: {fn} lastVersion
 # Converts vX.Y.N to vX.Y.(N+1) so v1.0.0 to v1.0.1
 # Argument: lastVersion - Required. String. Version to calculate the next minor version.
-nextMinorVersion() {
+versionNextMinor() {
   local handler="_${FUNCNAME[0]}"
 
   [ $# -gt 0 ] || __throwArgument "$handler" "lastVersion required" || return $?
@@ -146,7 +147,7 @@ nextMinorVersion() {
     shift
   done
 }
-_nextMinorVersion() {
+_versionNextMinor() {
   # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
@@ -173,7 +174,7 @@ _nextMinorVersion() {
 # A release notes template file is added at `./docs/release/`. This file is
 # also added to `git` the first time.
 #
-newRelease() {
+releaseNew() {
   local handler="_${FUNCNAME[0]}"
 
   local isInteractive=true newVersion="" application=""
@@ -206,10 +207,10 @@ newRelease() {
   done
   [ -n "$application" ] || application=$(__catch "$handler" buildHome) || return $?
 
-  buildEnvironmentContext "$application" __newRelease "$handler" "$isInteractive" "$newVersion"
+  buildEnvironmentContext "$application" __releaseNew "$handler" "$isInteractive" "$newVersion"
 }
 
-__newRelease() {
+__releaseNew() {
   local handler="$1" isInteractive="$2" newVersion="$3"
   local newVersion readLoop=false currentVersion liveVersion nextVersion notes isInteractive
   local versionOrdering
@@ -230,7 +231,7 @@ __newRelease() {
     liveVersion=$currentVersion
   fi
   notes="$(__catchEnvironment "$handler" releaseNotes "$currentVersion")" || return $?
-  nextVersion=$(nextMinorVersion "$liveVersion")
+  nextVersion=$(versionNextMinor "$liveVersion")
   decorate pair $width "Current:" "$currentVersion"
 
   if [ -n "$newVersion" ] && [ "$currentVersion" != "$newVersion" ]; then
@@ -254,7 +255,7 @@ __newRelease() {
     fi
     currentVersion="$newVersion"
     notes="$(__catchEnvironment "$handler" releaseNotes "$currentVersion")" || return $?
-    nextVersion=$(nextMinorVersion "$liveVersion")
+    nextVersion=$(versionNextMinor "$liveVersion")
     if $isInteractive; then
       __catchEnvironment "$handler" hookRun version-created "$currentVersion" "$notes" || return $?
     fi
@@ -300,7 +301,7 @@ __newRelease() {
   if [ ! -f "$notes" ]; then
     __catchEnvironment "$handler" hookRunOptional version-notes "$newVersion" "$currentVersion" >"$notes" || returnClean $? "$notes" || return $?
     if fileIsEmpty "$notes"; then
-      __newReleaseNotes "$newVersion" "$currentVersion" >"$notes"
+      __releaseNewNotes "$newVersion" "$currentVersion" >"$notes"
     fi
     decorate success "Version $newVersion ready - release notes: $notes"
     if $isInteractive; then
@@ -314,12 +315,12 @@ __newRelease() {
   fi
   git add "$notes"
 }
-_newRelease() {
+_releaseNew() {
   # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-__newReleaseNotes() {
+__releaseNewNotes() {
   local newVersion=$1 currentVersion=$2
   cat <<EOF
 # Release $newVersion

@@ -5,6 +5,10 @@ bashDocumentation_Extract|bashDocumentationExtract
 # IDENTICAL _return |# IDENTICAL returnMessage |
 # _IDENTICAL_ exitString |# _IDENTICAL_ returnString |
 exitString|returnCodeString
+nextMinorVersion|versionNextMinor
+NextMinorVersion|VersionNextMinor
+newRelease|releaseNew
+NewRelease|ReleaseNew
 
 # v0.38.3
 # Exit Code:|# Return Code:|
@@ -118,7 +122,6 @@ __catchEnvironment "$usage" console|__catch "$usage" console|
 __catchEnvironment "$usage" confirm|__catch "$usage" confirm|
 __catchEnvironment "$usage" interactive|__catch "$usage" interactive|
 __catchEnvironment "$usage" map|__catch "$usage" map|
-__catchEnvironment "$usage" any|__catch "$usage" any|
 anyEnvToDockerEnv|environmentFileToDocker
 AnyEnvToDockerEnv|EnvironmentFileToDocker
 anyEnvToBashEnv|environmentFileToBashCompatible
@@ -128,43 +131,10 @@ dockerEnvFromBashEnv|environmentFileBashCompatibleToDocker
 DockerEnvFromBashEnv|EnvironmentFileBashCompatibleToDocker
 checkDockerEnvFile|environmentFileIsDocker|
 
-# v0.36.2
-
-# v0.36.1
-
-# v0.36.0
-
-# v0.35.8
-
-# v0.35.7
-
-# v0.35.6
-
-# v0.35.5
-
-# v0.35.4
-
-# v0.35.3
-
-# v0.35.2
-
-# v0.35.1
-
-# v0.35.0
-
-# v0.34.1
-
 # v0.34.0
 sshAddKnownHost|sshKnownHostAdd
 bashPromptModule_iTerm2Colors|bashPromptModule_TermColors
 
-# v0.33.12
-
-# v0.33.12
-
-# v0.33.11
-
-# v0.33.0
 wrapLines|decorate wrap
 inputConfigurationAdd|readlineConfigurationAdd
 
@@ -212,140 +182,11 @@ DEPLOY_REMOTE_PATH|DEPLOY_REMOTE_HOME
 BUILD_ENVIRONMENT_PATH|BUILD_ENVIRONMENT_DIRS
 BUILD_HOOK_PATH|BUILD_HOOK_DIRS
 
-# v0.22.0
-consoleNameValue|decorate pair
-
 # v0.21.0
 runOptionalHook|hookRunOptional|-or|-name|*.md
 runHook|hookRun|-or|-name|*.md
-bin/build/install/apt.sh|aptInstall
-bin/build/install/aws.sh|awsInstall
-bin/build/install/docker-compose.sh|dockerComposeInstall
-bin/build/install/git.sh|gitInstall
-bin/build/install/mariadb-client.sh|mariadbInstall
-bin/build/install/npm.sh|npmInstall
-bin/build/install/php-cli.sh|phpInstall
-bin/build/install/terraform.sh|terraformInstall
 __failArgument|__throwArgument
 __failEnvironment|__throwEnvironment
 __usageEnvironment|__catchEnvironment
 __usageArgument|__catchArgument
 
-# v0.18.6
-consoleReset|decorate reset
-
-# v0.18.5
-_boolean|isBoolean|-or|-name|*.md
-
-# v0.17.6
-_integer  |isPositiveInteger |-or|-name|*.md
-confirmYesNo yes|confirmYesNo --yes|
-confirmYesNo true|confirmYesNo --yes|
-confirmYesNo no|confirmYesNo --no|
-confirmYesNo false|confirmYesNo --no|
-
-# v0.15.1
-consoleCode|decorate code
-consoleError|decorate error
-consoleOrange|decorate orange
-consoleBoldOrange|decorate bold-orange
-consoleBlue|decorate blue
-consoleBoldBlue|decorate bold-blue
-consoleRed|decorate red
-consoleBoldRed|decorate bold-red
-consoleGreen|decorate green
-consoleBoldGreen|decorate bold-green
-consoleCyan|decorate cyan
-consoleBoldCyan|decorate bold-cyan
-consoleYellow|decorate yellow
-consoleMagenta|decorate magenta
-consoleBlack|decorate black
-consoleBoldBlack|decorate bold-black
-consoleBoldWhite|decorate bold-white
-consoleWhite|decorate white
-consoleBoldMagenta|decorate bold-magenta
-consoleUnderline|decorate underline
-consoleBold|decorate bold
-consoleNoBold|decorate no-bold
-consoleNoUnderline|decorate no-underline
-consoleInfo|decorate info
-consoleWarning|decorate warning
-consoleSuccess|decorate success
-consoleDecoration|decorate decoration
-consoleSubtle|decorate subtle
-consoleLabel|decorate label
-consoleValue|decorate value
-
-# v0.14.6
-aptListInstalled|aptInstalledList
-aptInstall|packageInstall|!|-path|*/apt.sh|!|-path|*/apt/*
-aptUninstall|packageUninstall|!|-path|*/apt.sh|!|-path|*/apt/*
-aptUpdateOnce|packageUpdate|!|-path|*/apt.sh|!|-path|*/apt/*
-whichApt|packageWhich|!|-path|*/apt.sh|!|-path|*/apt/*
-whichAptUninstall|packageWhichUninstall|!|-path|*/apt.sh|!|-path|*/apt/*
-aptNeedRestartFlag|packageNeedRestartFlag|!|-path|*/apt.sh|!|-path|*/apt/*
-
-# v0.12.2
-awsSecurityGroupIPRegister|awsSecurityGroupIPModify --register|
-
-# v0.11.14
-createTarFile|tarCreate
-
-# v0.11.10
-__return|__execute
-
-# v0.11.9
-awsValidRegion|awsRegionValid
-
-# v0.11.8
-aws-cli.sh|aws.sh
-
-# v0.11.6
-gitPreCommitShellFiles|bashSanitize
-validateShellScripts|bashLintFiles
-validateShellScript|bashLint
-
-# v0.11.2
-# _environmentOutput|outputTrigger
-
-# v0.11.1
-showEnvironment|environmentFileShow
-makeEnvironment|environmentFileApplicationMake
-applicationEnvironmentVariables|environmentApplicationVariables
-applicationEnvironment|environmentApplicationLoad
-
-# v0.10.4
-crontabApplicationSync|crontabApplicationUpdate
-usageMissingArgument|usageArgumentMissing
-usageUnknownArgument|usageArgumentUnknown
-
-# v0.10.0
-prefixLines|wrapLines
-trimSpacePipe|trimSpace
-
-# Release v0.8.4
-copyFileChangedQuiet|copyFile
-
-# Release v0.7.13
-envmap.sh|map.sh
-mapCopyFileChanged|copyFileChanged --map
-escalateMapCopyFileChanged|copyFileChanged --map --escalate|
-escalateCopyFileChanged|copyFileChanged --escalate|
-yesNo | parseBoolean |
-
-# v0.7.9
-needAWSEnvironment|awsHasEnvironment
-isAWSKeyUpToDate |awsIsKeyUpToDate |
-
-# v0.7.0
-APPLICATION_CHECKSUM|APPLICATION_ID
-application-checksum|application-id
-
-# v0.6.1
-usageWhich |usageRequireBinary usage |
-
-# v0.6.0
-markdownListify|markdown_FormatList
-
-# v0.3.12 and before
-release-check-version.sh|git-tag-version.sh
