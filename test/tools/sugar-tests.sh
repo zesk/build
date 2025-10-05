@@ -74,7 +74,7 @@ testMapReturn() {
   done
 }
 
-testcatchCode() {
+testCatchCode() {
   assertNotExitCode --stderr-match "not callable" 0 catchCode || return $?
   assertNotExitCode --stderr-match "Not integer" 0 catchCode 12n || return $?
   assertNotExitCode --stderr-match "Not callable" 0 catchCode 12 returnMessage "not-callable-thing" || return $?

@@ -47,9 +47,9 @@ __execute() {
   _deprecated "${FUNCNAME[0]}"
   execute "$@"
 }
-executeEcho() {
+__echo() {
   _deprecated "${FUNCNAME[0]}"
-  __echo "$@"
+  executeEcho "$@"
 }
 _choose() {
   _deprecated "${FUNCNAME[0]}"

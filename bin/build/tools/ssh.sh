@@ -13,7 +13,10 @@
 sshKnownHostsFile() {
   local handler="_${FUNCNAME[0]}"
 
-  sshKnown=$(catchReturn "$handler" userRecordHome ".ssh/known_hosts") || return $?
+  local user
+
+  user=$(catchReturn "$handler" buildEnvironmentGet HOME) || return $?
+  sshKnown="$user/.ssh/known_hosts"
 
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
