@@ -13,8 +13,8 @@ timing() {
   [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
   local start exitCode=0
   start=$(timingStart)
-  isCallable "${1-}" || __throwArgument "$handler" "${1-} must be callable" || return $?
-  __catch "$handler" "$@" || exitCode="$?"
+  isCallable "${1-}" || returnThrowArgument "$handler" "${1-} must be callable" || return $?
+  returnCatch "$handler" "$@" || exitCode="$?"
   timingReport "$start" "$@"
   [ $exitCode = 0 ] || _return "$exitCode" "$@" || return $?
 }
@@ -94,7 +94,7 @@ timingReport() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;

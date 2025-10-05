@@ -20,7 +20,7 @@ buildCompletion() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -37,7 +37,7 @@ buildCompletion() {
       ;;
     *)
       # _IDENTICAL_ argumentUnknownHandler 1
-      __throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
+      returnThrowArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
       ;;
     esac
     shift
@@ -47,7 +47,7 @@ buildCompletion() {
 
   local home name homeText
 
-  home=$(__catch "$handler" buildHome) || return $?
+  home=$(returnCatch "$handler" buildHome) || return $?
   name="$(decorate info "$(buildEnvironmentGet APPLICATION_NAME)")"
   homeText="$(decorate code "$home")"
 
@@ -115,7 +115,7 @@ __buildCompletionArguments() {
 
   export COMP_WORDS COMP_CWORD COMPREPLY
 
-  [ "$COMP_CWORD" -ge 2 ] || __throwArgument "$handler" "ONLY call for arguments once function selected" || return $?
+  [ "$COMP_CWORD" -ge 2 ] || returnThrowArgument "$handler" "ONLY call for arguments once function selected" || return $?
 
   local command="${COMP_WORDS[1]}"
   local word="${COMP_WORDS[COMP_CWORD]-}"
@@ -146,10 +146,10 @@ __buildCompletionFunctionID() {
   else
     local home source
 
-    home=$(__catch "$handler" buildHome) || return $?
-    source=$(__catch "$handler" __bashDocumentation_FindFunctionDefinitions "$home" "$command" | grepSafe -v "/identical" | head -n 1) || return $?
+    home=$(returnCatch "$handler" buildHome) || return $?
+    source=$(returnCatch "$handler" __bashDocumentation_FindFunctionDefinitions "$home" "$command" | grepSafe -v "/identical" | head -n 1) || return $?
     if [ -n "$source" ]; then
-      id=$(__catch "$handler" _commentArgumentSpecification "$source" "$command") || return $?
+      id=$(returnCatch "$handler" _commentArgumentSpecification "$source" "$command") || return $?
       if [ -n "$id" ]; then
         printf "%s\n" "$id" | tee "$cache/$command"
       fi
@@ -303,7 +303,7 @@ __completionTypeBooleanLike() {
 
 # Date formatted like YYYY-MM-DD
 __completionTypeDate() {
-  dateValid "${1-}" || __throwValidate || return $?
+  dateValid "${1-}" || returnThrowValidate || return $?
   printf "%s\n" "${1-}"
 }
 
@@ -354,20 +354,20 @@ __completionTypeRealFile() {
 
 # A path which is on a remote system
 __completionTypeRemoteDirectory() {
-  [ "${1:0:1}" = "/" ] || __throwValidate "begins with a slash" || return $?
+  [ "${1:0:1}" = "/" ] || returnThrowValidate "begins with a slash" || return $?
   printf "%s\n" "${1%/}"
 }
 
 # An URL
 __completionTypeURL() {
-  urlValid "${1-}" || __throwValidate "invalid url" || return $?
+  urlValid "${1-}" || returnThrowValidate "invalid url" || return $?
   printf "%s\n" "${1-}"
 }
 
 # output arguments to stderr and return the argument error
 # Return: 2
 # Return Code: 2 - Argument error
-__throwValidate() {
+returnThrowValidate() {
   printf -- "%s\n" "$@" 1>&2
   return 2
 }

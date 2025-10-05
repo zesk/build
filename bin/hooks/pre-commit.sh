@@ -87,22 +87,22 @@ __hookPreCommit() {
   gitPreCommitHeader sh md json
 
   statusMessage decorate success Updating help files ...
-  __catchEnvironment "$handler" ./bin/update-md.sh --skip-commit || return $?
+  catchEnvironment "$handler" ./bin/update-md.sh --skip-commit || return $?
 
   statusMessage decorate success Updating _sugar.sh
   original="bin/build/identical/_sugar.sh"
   nonOriginal=bin/build/tools/_sugar.sh
 
   statusMessage decorate success Making shell files executable ...
-  __catchEnvironment "$handler" makeShellFilesExecutable | printfOutputPrefix -- "\n" || return $?
+  catchEnvironment "$handler" makeShellFilesExecutable | printfOutputPrefix -- "\n" || return $?
 
   if [ "$(fileNewest "$original" "$nonOriginal")" = "$nonOriginal" ]; then
     nonOriginalWithEOF=$(fileTemporaryName "$handler") || return $?
-    __catchEnvironment "$handler" sed -e 's/IDENTICAL _sugar [0-9][0-9]*/IDENTICAL _sugar EOF/g' -e 's/DO NOT EDIT/EDIT/g' <"$nonOriginal" >"$nonOriginalWithEOF" || return $?
+    catchEnvironment "$handler" sed -e 's/IDENTICAL _sugar [0-9][0-9]*/IDENTICAL _sugar EOF/g' -e 's/DO NOT EDIT/EDIT/g' <"$nonOriginal" >"$nonOriginalWithEOF" || return $?
     fileCopies=("$nonOriginalWithEOF" "$original")
     # Can not be trusted to not edit the right one
     if ! diff -q "${fileCopies[@]}" 2>/dev/null; then
-      __catchEnvironment "$handler" cp "${fileCopies[@]}" || returnClean "$nonOriginalWithEOF" || return $?
+      catchEnvironment "$handler" cp "${fileCopies[@]}" || returnClean "$nonOriginalWithEOF" || return $?
       decorate warning "Someone edited non-original file $nonOriginal"
       touch "${fileCopies[0]}" # make newer
     fi
@@ -113,7 +113,7 @@ __hookPreCommit() {
     while read -r file; do files+=("$file"); done < <(gitPreCommitListExtension)
     if grep -q '# '"IDENTICAL" "${files[@]}"; then
       if ! bin/build/identical-repair.sh && ! bin/build/identical-repair.sh; then
-        __throwEnvironment "$handler" "Identical repair failed twice - manual intervention required" || return $?
+        returnThrowEnvironment "$handler" "Identical repair failed twice - manual intervention required" || return $?
       fi
     fi
   fi

@@ -18,16 +18,16 @@ __hookProjectDeactivateContext() {
 
   # Warning about deprecated scripts
   local home item candidates=("bin/developer-undo.sh" "bin/developer/")
-  home=$(__catch "$handler" buildHome) || return $?
+  home=$(returnCatch "$handler" buildHome) || return $?
   for item in "${candidates[@]}"; do [ ! -e "$home/$item" ] || decorate warning "$item exists and is deprecated"; done
 
   local func
 
-  func=$(__catch "$handler" buildEnvironmentGet BUILD_PROJECT_DEACTIVATE) || return $?
+  func=$(returnCatch "$handler" buildEnvironmentGet BUILD_PROJECT_DEACTIVATE) || return $?
 
   if isFunction "$func"; then
     statusMessage decorate warning "Deactivating old project with $(decorate code "$func") $(decorate file "$newHome")"
-    __catch "$handler" "$func" "$newHome" || return $?
+    returnCatch "$handler" "$func" "$newHome" || return $?
 
     unset BUILD_PROJECT_DEACTIVATE
   fi

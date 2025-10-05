@@ -31,7 +31,7 @@ __documentationIndexLookup() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -53,7 +53,7 @@ __documentationIndexLookup() {
   if [ "$mode" = "file" ]; then
     indexRoot="$indexDirectory/files"
     if [ ! -d "$indexRoot" ]; then
-      __throwEnvironment "$handler" "No file index exists" || return $?
+      returnThrowEnvironment "$handler" "No file index exists" || return $?
     fi
     if [ ! -f "$indexRoot/$1" ]; then
       return "$(returnCode exit)"
@@ -63,17 +63,17 @@ __documentationIndexLookup() {
   fi
   indexRoot="$cacheDirectory/code.index"
   if [ ! -f "$indexRoot" ]; then
-    __throwEnvironment "$handler" "No index exists" || return $?
+    returnThrowEnvironment "$handler" "No index exists" || return $?
   fi
   if [ $# -eq 0 ]; then
-    __throwArgument "$handler" "${FUNCNAME[0]} cacheDirectory function - missing function" || return $?
+    returnThrowArgument "$handler" "${FUNCNAME[0]} cacheDirectory function - missing function" || return $?
   fi
   local functionName filePath lineNumber
   read -r functionName filePath lineNumber < <(grepSafe -m 1 -e "^$1 " <"$indexRoot")
   if [ -z "$functionName" ] || [ -z "$filePath" ] || ! isUnsignedInteger "$lineNumber"; then
     return 1
   fi
-  home=$(__catch "$handler" buildHome) || return $?
+  home=$(returnCatch "$handler" buildHome) || return $?
   sourceFile="$home/$filePath"
   case $mode in
   source) printf -- "%s\n" "$sourceFile" ;;
@@ -99,7 +99,7 @@ __documentationIndexCommentFile() {
   local commentFile="$indexDirectory/comment/$functionName"
   if [ ! -f "$commentFile" ]; then
     if ! bashFileComment "$sourceFile" "$lineNumber" >"$commentFile"; then
-      __throwEnvironment "$handler" "$* failed for $functionName" || returnClean $? "$commentFile" || return $?
+      returnThrowEnvironment "$handler" "$* failed for $functionName" || returnClean $? "$commentFile" || return $?
 
     else
       printf "%s: %s\n" ":sourceFile" "$sourceFile"

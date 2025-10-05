@@ -21,7 +21,7 @@ __bashGetRequires() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -51,7 +51,7 @@ __bashCheckRequires() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -79,14 +79,14 @@ __bashCheckRequires() {
     shift
   done
 
-  ! $requireFlag || [ "${#files[@]}" -gt 0 ] || __throwArgument "$handler" "No files supplied but at least one is required" || return $?
+  ! $requireFlag || [ "${#files[@]}" -gt 0 ] || returnThrowArgument "$handler" "No files supplied but at least one is required" || return $?
   [ "${#files[@]}" -gt 0 ] || return 0
 
   local requirements
 
   requirements=$(fileTemporaryName "$handler")
 
-  cat "${files[@]}" | __catchEnvironment "$handler" bashGetRequires >"$requirements" || returnClean $? "$requirements" || return $?
+  cat "${files[@]}" | catchEnvironment "$handler" bashGetRequires >"$requirements" || returnClean $? "$requirements" || return $?
 
   local functionName binaries=() total=0 defined=() missing=() required=() ignored=()
   while read -r functionName; do
@@ -109,7 +109,7 @@ __bashCheckRequires() {
       required+=("$functionName")
     fi
   done <"$requirements"
-  __catchEnvironment "$handler" rm -rf "$requirements" || return $?
+  catchEnvironment "$handler" rm -rf "$requirements" || return $?
 
   local external=() used=() tempUnused=() unused=() handlers=()
   if "$unusedFlag"; then
@@ -145,7 +145,7 @@ __bashCheckRequires() {
     done
   fi
 
-  ! $requireFlag || [ "$total" -gt 0 ] || __throwEnvironment "$handler" "No requirements used" || return $?
+  ! $requireFlag || [ "$total" -gt 0 ] || returnThrowEnvironment "$handler" "No requirements used" || return $?
 
   if $reportFlag; then
     __bashCheckReport "Functions" green "${defined[@]+"${defined[@]}"}"
@@ -163,10 +163,10 @@ __bashCheckRequires() {
     fi
   fi
   if [ ${#missing[@]} -gt 0 ]; then
-    __throwEnvironment "$handler" "Not defined: $(decorate each code "${missing[@]}")" || return $?
+    returnThrowEnvironment "$handler" "Not defined: $(decorate each code "${missing[@]}")" || return $?
   fi
   if [ ${#unused[@]} -gt 0 ]; then
-    __throwEnvironment "$handler" "Unused: $(decorate each code "${unused[@]}")" || return $?
+    returnThrowEnvironment "$handler" "Unused: $(decorate each code "${unused[@]}")" || return $?
   fi
 }
 

@@ -10,7 +10,7 @@ a handler handler which is your function name prefixed with a single underscore 
     layAnEgg() {
         local handler="_${FUNCNAME[0]}"
         ...
-        [ -n "$hay" ] || __throwEnvironment "$handler" "No hay" || return $?
+        [ -n "$hay" ] || returnThrowEnvironment "$handler" "No hay" || return $?
         ...
     }
     _layAnEgg() {

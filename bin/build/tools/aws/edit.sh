@@ -15,7 +15,7 @@ __awsCredentialsAdd() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -28,7 +28,7 @@ __awsCredentialsAdd() {
     # IDENTICAL --profileHandler 5
     --profile)
       shift
-      [ -z "$profileName" ] || __throwArgument "$handler" "--profile already specified" || return $?
+      [ -z "$profileName" ] || returnThrowArgument "$handler" "--profile already specified" || return $?
       profileName="$(usageArgumentString "$handler" "$argument" "${1-}")" || return $?
       ;;
     *)
@@ -38,7 +38,7 @@ __awsCredentialsAdd() {
         secret=$(usageArgumentString "$handler" "secret" "$1") || return $?
       else
         # _IDENTICAL_ argumentUnknownHandler 1
-        __throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
+        returnThrowArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
       fi
       ;;
     esac
@@ -46,11 +46,11 @@ __awsCredentialsAdd() {
   done
   # IDENTICAL profileNameArgumentValidation 4
   if [ -z "$profileName" ]; then
-    profileName="$(__catch "$handler" buildEnvironmentGet AWS_PROFILE)" || return $?
+    profileName="$(returnCatch "$handler" buildEnvironmentGet AWS_PROFILE)" || return $?
     [ -n "$profileName" ] || profileName="default"
   fi
-  [ -n "$key" ] || __throwArgument "$handler" "key is required" || return $?
-  [ -n "$secret" ] || __throwArgument "$handler" "secret is required" || return $?
+  [ -n "$key" ] || returnThrowArgument "$handler" "key is required" || return $?
+  [ -n "$secret" ] || returnThrowArgument "$handler" "secret is required" || return $?
 
   local lines=(
     "[$profileName]"
@@ -58,14 +58,14 @@ __awsCredentialsAdd() {
     "aws_secret_access_key = $secret"
   )
   local credentials name="${FUNCNAME[0]#__}"
-  credentials="$(__catch "$handler" awsCredentialsFile --create)" || return $?
+  credentials="$(returnCatch "$handler" awsCredentialsFile --create)" || return $?
   if awsCredentialsHasProfile "$profileName"; then
     ! "$addComments" || lines+=("# $name replaced $profileName on $(date -u)")
-    $forceFlag || __throwEnvironment "$handler" "Profile $(decorate value "$profileName") exists in $(decorate code "$credentials")" || return $?
+    $forceFlag || returnThrowEnvironment "$handler" "Profile $(decorate value "$profileName") exists in $(decorate code "$credentials")" || return $?
     _awsCredentialsRemoveSectionInPlace "$handler" "$credentials" "$profileName" "$(printf -- "%s\n" "${lines[@]}")" || return $?
   else
-    ! "$addComments" || lines+=("# $name added $profileName on $(date -u)") || __throwEnvironment "$handler" "Generating comment line failed" || return $?
-    __catchEnvironment "$handler" printf -- "%s\n" "${lines[@]}" | trimHead >>"$credentials" || return $?
+    ! "$addComments" || lines+=("# $name added $profileName on $(date -u)") || returnThrowEnvironment "$handler" "Generating comment line failed" || return $?
+    catchEnvironment "$handler" printf -- "%s\n" "${lines[@]}" | trimHead >>"$credentials" || return $?
   fi
 }
 
@@ -86,14 +86,14 @@ __awsCredentialsRemove() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
     # IDENTICAL --profileHandler 5
     --profile)
       shift
-      [ -z "$profileName" ] || __throwArgument "$handler" "--profile already specified" || return $?
+      [ -z "$profileName" ] || returnThrowArgument "$handler" "--profile already specified" || return $?
       profileName="$(usageArgumentString "$handler" "$argument" "${1-}")" || return $?
       ;;
     --comments)
@@ -104,7 +104,7 @@ __awsCredentialsRemove() {
         profileName="$(usageArgumentString "$handler" "$argument" "$1")" || return $?
       else
         # _IDENTICAL_ argumentUnknownHandler 1
-        __throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
+        returnThrowArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
       fi
       ;;
     esac
@@ -113,16 +113,16 @@ __awsCredentialsRemove() {
 
   # IDENTICAL profileNameArgumentValidation 4
   if [ -z "$profileName" ]; then
-    profileName="$(__catch "$handler" buildEnvironmentGet AWS_PROFILE)" || return $?
+    profileName="$(returnCatch "$handler" buildEnvironmentGet AWS_PROFILE)" || return $?
     [ -n "$profileName" ] || profileName="default"
   fi
 
   export AWS_PROFILE
 
-  __catch "$handler" buildEnvironmentLoad AWS_PROFILE || return $?
+  returnCatch "$handler" buildEnvironmentLoad AWS_PROFILE || return $?
 
   local credentials
-  credentials="$(__catch "$handler" awsCredentialsFile --path)" || return $?
+  credentials="$(returnCatch "$handler" awsCredentialsFile --path)" || return $?
   [ -f "$credentials" ] || return 0
   if awsCredentialsHasProfile "$profileName"; then
     _awsCredentialsRemoveSectionInPlace "$handler" "$credentials" "$profileName" "" || return $?
@@ -132,13 +132,13 @@ __awsCredentialsRemove() {
 _awsCredentialsRemoveSection() {
   local handler="$1" credentials="$2" profileName="$3" newCredentials="${4-}"
   local pattern="\[\s*$profileName\s*\]" lines total
-  total=$((0 + $(__catch "$handler" fileLineCount "$credentials"))) || return $?
+  total=$((0 + $(returnCatch "$handler" fileLineCount "$credentials"))) || return $?
   exec 3>&1
-  lines=$(__catchEnvironment "$handler" grepSafe -m 1 -B 32767 "$credentials" -e "$pattern" | __catchEnvironment "$handler" grepSafe -v -e "$pattern" | __catchEnvironment "$handler" trimTail | tee >(cat >&3) | fileLineCount) || return $?
-  [ -z "$newCredentials" ] || printf -- "\n%s\n" "$newCredentials" | __catchEnvironment "$handler" trimTail || return $?
+  lines=$(catchEnvironment "$handler" grepSafe -m 1 -B 32767 "$credentials" -e "$pattern" | catchEnvironment "$handler" grepSafe -v -e "$pattern" | catchEnvironment "$handler" trimTail | tee >(cat >&3) | fileLineCount) || return $?
+  [ -z "$newCredentials" ] || printf -- "\n%s\n" "$newCredentials" | catchEnvironment "$handler" trimTail || return $?
   local remain=$((total - lines - 2))
   printf -- "\n"
-  tail -n "$remain" <"$credentials" | awk '/\[[^]]+\]/{flag=1} flag' | __catchEnvironment "$handler" trimTail || return $?
+  tail -n "$remain" <"$credentials" | awk '/\[[^]]+\]/{flag=1} flag' | catchEnvironment "$handler" trimTail || return $?
 }
 
 _awsCredentialsRemoveSectionInPlace() {
@@ -147,6 +147,6 @@ _awsCredentialsRemoveSectionInPlace() {
   local temp
   temp=$(fileTemporaryName "$handler") || return $?
   _awsCredentialsRemoveSection "$handler" "$credentials" "$profileName" "$newCredentials" | trimBoth >"$temp" || returnClean $? "$temp" || return $?
-  __catchEnvironment "$handler" cp "$temp" "$credentials" || returnClean $? "$temp" || return $?
-  __catchEnvironment "$handler" rm -rf "$temp" || return $?
+  catchEnvironment "$handler" cp "$temp" "$credentials" || returnClean $? "$temp" || return $?
+  catchEnvironment "$handler" rm -rf "$temp" || return $?
 }

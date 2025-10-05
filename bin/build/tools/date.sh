@@ -24,7 +24,7 @@ dateToFormat() {
   [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
   local format="${2-"%F %T"}"
   if [ $# -lt 1 ] || [ $# -gt 2 ]; then
-    __throwArgument "$handler" "${FUNCNAME[0]} requires 1 or 2 arguments: date [ format ] –- Passed $#:" "$@" || return $?
+    returnThrowArgument "$handler" "${FUNCNAME[0]} requires 1 or 2 arguments: date [ format ] –- Passed $#:" "$@" || return $?
   fi
   __dateToFormat "$1" "$format"
   #  if date --version 2>/dev/null 1>&2; then
@@ -73,7 +73,7 @@ dateFromTimestamp() {
   local handler="_${FUNCNAME[0]}"
   [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
   if [ $# -lt 1 ] || [ $# -gt 2 ]; then
-    __throwArgument "$handler" "${FUNCNAME[0]} requires 1 or 2 arguments: integerTimestamp [ format ] –- Passed $#:" "$@" || return $?
+    returnThrowArgument "$handler" "${FUNCNAME[0]} requires 1 or 2 arguments: integerTimestamp [ format ] –- Passed $#:" "$@" || return $?
   fi
   local format="${2-"%F %T"}"
   __dateFromTimestamp "$1" "$format"
@@ -139,16 +139,16 @@ dateValid() {
   [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
   [ "${1-}" != "--" ] || shift
   local date="${1-}"
-  __catchEnvironment "$handler" [ "${date:4:1}${date:7:1}" = "--" ] || return 1
+  catchEnvironment "$handler" [ "${date:4:1}${date:7:1}" = "--" ] || return 1
   local year="${date:0:4}" month="${date:5:2}" day="${date:8:2}"
-  __catchEnvironment "$handler" isUnsignedInteger "$year" || return $?
-  __catchEnvironment "$handler" isUnsignedInteger "${month#0}" || return $?
-  __catchEnvironment "$handler" isUnsignedInteger "${day#0}" || return $?
-  __catchEnvironment "$handler" [ "$year" -gt 1600 ] || return $?
-  __catchEnvironment "$handler" [ "${month#0}" -ge 1 ] || return $?
-  __catchEnvironment "$handler" [ "${month#0}" -le 12 ] || return $?
-  __catchEnvironment "$handler" [ "${day#0}" -ge 1 ] || return $?
-  __catchEnvironment "$handler" [ "${day#0}" -le 31 ] || return $?
+  catchEnvironment "$handler" isUnsignedInteger "$year" || return $?
+  catchEnvironment "$handler" isUnsignedInteger "${month#0}" || return $?
+  catchEnvironment "$handler" isUnsignedInteger "${day#0}" || return $?
+  catchEnvironment "$handler" [ "$year" -gt 1600 ] || return $?
+  catchEnvironment "$handler" [ "${month#0}" -ge 1 ] || return $?
+  catchEnvironment "$handler" [ "${month#0}" -le 12 ] || return $?
+  catchEnvironment "$handler" [ "${day#0}" -ge 1 ] || return $?
+  catchEnvironment "$handler" [ "${day#0}" -le 31 ] || return $?
 }
 _dateValid() {
   # __IDENTICAL__ usageDocument 1
@@ -169,7 +169,7 @@ dateAdd() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -178,8 +178,8 @@ dateAdd() {
       days=$(usageArgumentInteger "$handler" "$argument" "${1-}") || return $?
       ;;
     *)
-      timestamp=$(__catchArgument "$handler" dateToTimestamp "$argument") || return $?
-      __catchArgument "$handler" dateFromTimestamp "$((timestamp + (86400 * days)))" "%F" || return $?
+      timestamp=$(catchArgument "$handler" dateToTimestamp "$argument") || return $?
+      catchArgument "$handler" dateFromTimestamp "$((timestamp + (86400 * days)))" "%F" || return $?
       ;;
     esac
     shift

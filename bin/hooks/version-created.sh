@@ -22,11 +22,11 @@ __buildVersionCreated() {
   local handler="returnMessage"
   local home
 
-  home=$(__catch "$handler" buildHome) || return $?
-  __catchEnvironment "$handler" gitBranchify || return $?
+  home=$(returnCatch "$handler" buildHome) || return $?
+  catchEnvironment "$handler" gitBranchify || return $?
 
   # deprecated.txt add version comment
-  __catchEnvironment "$handler" deprecatedFilePrependVersion "$home/bin/build/deprecated.txt" "$1" || return $?
+  catchEnvironment "$handler" deprecatedFilePrependVersion "$home/bin/build/deprecated.txt" "$1" || return $?
 
   hookRunOptional --next "${BASH_SOURCE[0]}" "version-created" "$@"
 }

@@ -41,8 +41,8 @@ incrementor() {
   local argument cacheDirectory
   local name value counterFile
 
-  cacheDirectory=$(__catch "$handler" buildCacheDirectory "${FUNCNAME[0]}/$$") || return $?
-  cacheDirectory="$(__catch "$handler" directoryRequire "$cacheDirectory")" || return $?
+  cacheDirectory=$(returnCatch "$handler" buildCacheDirectory "${FUNCNAME[0]}/$$") || return $?
+  cacheDirectory="$(returnCatch "$handler" directoryRequire "$cacheDirectory")" || return $?
   name=""
   value=""
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
@@ -50,7 +50,7 @@ incrementor() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -59,7 +59,7 @@ incrementor() {
       return 0
       ;;
     *[^-_a-zA-Z0-9]*)
-      __throwArgument "$handler" "Invalid argument or variable name: $argument" || return $?
+      returnThrowArgument "$handler" "Invalid argument or variable name: $argument" || return $?
       ;;
     *)
       if isInteger "$argument"; then
@@ -116,7 +116,7 @@ pipeRunner() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -125,9 +125,9 @@ pipeRunner() {
       mode=$(usageArgumentString "$handler" "mode" "${1-}") || return $?
       ;;
     --writer)
-      [ -z "$namedPipe" ] || __throwArgument "$handler" "No namedPipe supplied" || return $?
-      [ -p "$namedPipe" ] || __throwEnvironment "$handler" "$namedPipe not a named pipe" || return $?
-      __catchEnvironment "$handler" printf "%s\n" "$*" >"$namedPipe" || return $?
+      [ -z "$namedPipe" ] || returnThrowArgument "$handler" "No namedPipe supplied" || return $?
+      [ -p "$namedPipe" ] || returnThrowEnvironment "$handler" "$namedPipe not a named pipe" || return $?
+      catchEnvironment "$handler" printf "%s\n" "$*" >"$namedPipe" || return $?
       ;;
     *)
       if [ -n "$namedPipe" ]; then
@@ -140,14 +140,14 @@ pipeRunner() {
     esac
     shift
   done
-  [ -n "$namedPipe" ] || __throwArgument "$handler" "No namedPipe supplied" || return $?
-  [ ! -p "$namedPipe" ] || __throwEnvironment "$handler" "$namedPipe already exists ($binary)" || return $?
-  __catchEnvironment "$handler" mkfifo -m "$mode" "$namedPipe" || return $?
+  [ -n "$namedPipe" ] || returnThrowArgument "$handler" "No namedPipe supplied" || return $?
+  [ ! -p "$namedPipe" ] || returnThrowEnvironment "$handler" "$namedPipe already exists ($binary)" || return $?
+  catchEnvironment "$handler" mkfifo -m "$mode" "$namedPipe" || return $?
   # shellcheck disable=SC2064
   trap "rm -f \"$(quoteBashString "$namedPipe")\" 2>/dev/null 1>&2" EXIT INT HUP || :
   while read -r line; do
     if [ -n "$line" ]; then
-      __execute "$@" "$line" || break
+      execute "$@" "$line" || break
     fi
   done <"$namedPipe"
   rm -f "$namedPipe" || :

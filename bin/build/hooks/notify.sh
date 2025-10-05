@@ -15,10 +15,10 @@ __hookNotifySoundName() {
 
   if ! darwinSoundValid "$soundName"; then
     local home original
-    home=$(__catch "$handler" buildHome) || return $?
+    home=$(returnCatch "$handler" buildHome) || return $?
     original="$home/etc/$soundName.mp3"
-    [ -f "$original" ] || __throwArgument "handler" "No sound installed with name $(decorate code "$soundName")" || return $?
-    __catchEnvironment "$handler" darwinSoundInstall --create "$home/etc/$soundName.mp3" || return $?
+    [ -f "$original" ] || returnThrowArgument "handler" "No sound installed with name $(decorate code "$soundName")" || return $?
+    catchEnvironment "$handler" darwinSoundInstall --create "$home/etc/$soundName.mp3" || return $?
   fi
   printf "%s\n" "$soundName"
 }
@@ -42,7 +42,7 @@ __hookNotify() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -77,7 +77,7 @@ __hookNotify() {
       fi
     fi
     local message
-    message="$(__catchEnvironment "$handler" stripAnsi <<<"$*")" || return $?
+    message="$(catchEnvironment "$handler" stripAnsi <<<"$*")" || return $?
     [ -n "$message" ] || message="Silence is golden."
     muzzle darwinNotification "${ss[@]+"${ss[@]}"}" --title "$title" "$message"
   else

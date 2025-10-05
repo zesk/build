@@ -19,18 +19,18 @@
 # stderr: error messages
 # Return Code: 0 - Field was found and was non-blank
 # Return Code: 1 - Field was not found or is blank
-# Requires: jq whichExists __throwEnvironment printf rm decorate head
+# Requires: jq whichExists returnThrowEnvironment printf rm decorate head
 jsonField() {
   [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
   local handler="$1" jsonFile="$2" value message && shift 2
 
-  [ -f "$jsonFile" ] || __throwEnvironment "$handler" "$jsonFile is not a file" || return $?
-  whichExists jq || __throwEnvironment "$handler" "Requires jq - not installed" || return $?
+  [ -f "$jsonFile" ] || returnThrowEnvironment "$handler" "$jsonFile is not a file" || return $?
+  whichExists jq || returnThrowEnvironment "$handler" "Requires jq - not installed" || return $?
   if ! value=$(jq -r "$@" <"$jsonFile"); then
     message="$(printf -- "%s\n%s\n" "Unable to fetch selector $(decorate each code -- "$@") from JSON:" "$(head -n 100 "$jsonFile")")"
-    __throwEnvironment "$handler" "$message" || return $?
+    returnThrowEnvironment "$handler" "$message" || return $?
   fi
-  [ -n "$value" ] || __throwEnvironment "$handler" "$(printf -- "%s\n%s\n" "Selector $(decorate each code -- "$@") was blank from JSON:" "$(head -n 100 "$jsonFile")")" || return $?
+  [ -n "$value" ] || returnThrowEnvironment "$handler" "$(printf -- "%s\n%s\n" "Selector $(decorate each code -- "$@") was blank from JSON:" "$(head -n 100 "$jsonFile")")" || return $?
   printf -- "%s\n" "$value"
 }
 _jsonField() {

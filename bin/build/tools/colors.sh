@@ -65,14 +65,14 @@ consoleColorMode() {
 
   export BUILD_COLORS_MODE
 
-  __catch "$handler" buildEnvironmentLoad BUILD_COLORS_MODE || return $?
+  returnCatch "$handler" buildEnvironmentLoad BUILD_COLORS_MODE || return $?
 
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -90,13 +90,13 @@ consoleColorMode() {
       ;;
     *)
       # _IDENTICAL_ argumentUnknownHandler 1
-      __throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
+      returnThrowArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
       ;;
     esac
     shift
   done
 
-  [ -n "${BUILD_COLORS_MODE-}" ] || __throwArgument "$handler" "Empty BUILD_COLORS_MODE" || return $?
+  [ -n "${BUILD_COLORS_MODE-}" ] || returnThrowArgument "$handler" "Empty BUILD_COLORS_MODE" || return $?
   printf "%s\n" "${BUILD_COLORS_MODE-}"
 }
 _consoleColorMode() {
@@ -326,12 +326,12 @@ plasterLines() {
 
   local line curX curY rows character=" "
   IFS=$'\n' read -r -d '' curX curY < <(cursorGet) || :
-  isUnsignedInteger "$curX" || __throwEnvironment "$handler" "cursorGet returned $curX $curY" || return $?
-  isUnsignedInteger "$curY" || __throwEnvironment "$handler" "cursorGet returned $curX $curY" || return $?
-  rows=$(__catch "$handler" consoleRows) || return $?
-  columns=$(__catch "$handler" consoleColumns) || return $?
+  isUnsignedInteger "$curX" || returnThrowEnvironment "$handler" "cursorGet returned $curX $curY" || return $?
+  isUnsignedInteger "$curY" || returnThrowEnvironment "$handler" "cursorGet returned $curX $curY" || return $?
+  rows=$(returnCatch "$handler" consoleRows) || return $?
+  columns=$(returnCatch "$handler" consoleColumns) || return $?
   while IFS="" read -r line; do
-    __catchEnvironment "$handler" cursorSet 1 "$curY" || return $?
+    catchEnvironment "$handler" cursorSet 1 "$curY" || return $?
     printf "%s" "$line"
     IFS=$'\n' read -r -d '' curX _ < <(cursorGet) || :
     printf "%s" "$(repeat $((columns - curX)) "$character")"
@@ -383,7 +383,7 @@ statusMessage() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -408,7 +408,7 @@ statusMessage() {
       ;;
     -*)
       # _IDENTICAL_ argumentUnknownHandler 1
-      __throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
+      returnThrowArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
       ;;
     *)
       muzzle usageArgumentCallable "$handler" "command" "${1-}" || return $?
@@ -571,7 +571,7 @@ colorBrightness() {
     done
   elif [ $# -lt 3 ]; then
     [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
-    __throwArgument "$handler" "Requires 3 arguments" || return $?
+    returnThrowArgument "$handler" "Requires 3 arguments" || return $?
   fi
   while [ $# -ge 3 ]; do
     __colorBrightness "$handler" "$1" "$2" "$3" || return $?
@@ -607,11 +607,11 @@ __colorNormalize() {
 }
 
 # Redistribute color values to make brightness adjustments more balanced
-# Requires: bc __catchEnvironment read usageArgumentUnsignedInteger packageWhich __colorNormalize
+# Requires: bc catchEnvironment read usageArgumentUnsignedInteger packageWhich __colorNormalize
 colorNormalize() {
   local handler="_${FUNCNAME[0]}"
 
-  __catch "$handler" packageWhich bc bc || return $?
+  returnCatch "$handler" packageWhich bc bc || return $?
   local red green blue
   if [ $# -eq 0 ]; then
     local done=false
@@ -707,11 +707,11 @@ colorFormat() {
   if [ $# -gt 0 ]; then
     while [ $# -gt 0 ]; do
       local r="${1-}" g="${2-}" b="${3-}"
-      shift 3 2>/dev/null || __throwArgument "$handler" "Arguments must be in threes after format" || return $?
+      shift 3 2>/dev/null || returnThrowArgument "$handler" "Arguments must be in threes after format" || return $?
 
-      r=$(_colorRange "$r") || __throwArgument "$handler" "Invalid r $r value" || return $?
-      g=$(_colorRange "$g") || __throwArgument "$handler" "Invalid g $g value" || return $?
-      b=$(_colorRange "$b") || __throwArgument "$handler" "Invalid b $b value" || return $?
+      r=$(_colorRange "$r") || returnThrowArgument "$handler" "Invalid r $r value" || return $?
+      g=$(_colorRange "$g") || returnThrowArgument "$handler" "Invalid g $g value" || return $?
+      b=$(_colorRange "$b") || returnThrowArgument "$handler" "Invalid b $b value" || return $?
 
       # shellcheck disable=SC2059
       printf -- "$format" "$r" "$g" "$b"
@@ -766,7 +766,7 @@ colorMultiply() {
   local factor colors=()
 
   [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
-  __catch "$handler" packageWhich bc bc || return $?
+  returnCatch "$handler" packageWhich bc bc || return $?
   factor=$(usageArgumentString "$handler" "factor" "${1-}") && shift || return $?
 
   local red green blue

@@ -22,14 +22,14 @@ testIdenticalEofWithBracket() {
   local handler="returnMessage"
   local temp home
 
-  home=$(__catch "$handler" buildHome) || return $?
+  home=$(returnCatch "$handler" buildHome) || return $?
   temp=$(fileTemporaryName "$handler" -d) || return $?
-  __catchEnvironment "$handler" cp -R "$home/test/example/similar" "$temp/similar" || return $?
+  catchEnvironment "$handler" cp -R "$home/test/example/similar" "$temp/similar" || return $?
   assertDirectoryExists "$temp/similar" "$temp/similar/fix" || return $?
   assertExitCode 0 identicalCheck --repair "$temp/similar/fix" --prefix '# ''IDENTICAL' --extension txt --cd "$temp/similar" || return $?
   assertFileContains "$temp/similar/eofbug-target.txt" "}" || return $?
 
-  __catch "$handler" rm -rf "$temp" || return $?
+  returnCatch "$handler" rm -rf "$temp" || return $?
 }
 
 # Tag: slow
@@ -37,17 +37,17 @@ testIdenticalCheckAndRepairMap() {
   local handler="returnMessage"
   local testPath home name
 
-  home=$(__catch "$handler" buildHome) || return $?
+  home=$(returnCatch "$handler" buildHome) || return $?
   testPath=$(fileTemporaryName "$handler" -d) || return $?
   decorate info "HOME is $home"
   decorate info "testPath is $testPath"
-  __catchEnvironment "$handler" mkdir -p "$testPath/identical" || return $?
-  __catchEnvironment "$handler" mkdir -p "$testPath/tests" || return $?
-  __catchEnvironment "$handler" mkdir -p "$testPath/alternate" || return $?
-  __catchEnvironment "$handler" cp "$home/test/example/repair.txt" "$testPath/identical" || return $?
+  catchEnvironment "$handler" mkdir -p "$testPath/identical" || return $?
+  catchEnvironment "$handler" mkdir -p "$testPath/tests" || return $?
+  catchEnvironment "$handler" mkdir -p "$testPath/alternate" || return $?
+  catchEnvironment "$handler" cp "$home/test/example/repair.txt" "$testPath/identical" || return $?
   for name in dog cat bird forest snake duck leopard; do
-    __catchEnvironment "$handler" cp "$home/test/example/repair-target.txt" "$testPath/tests/$name.txt" || return $?
-    __catchEnvironment "$handler" cp "$home/test/example/repair-target.txt" "$testPath/alternate/$name.txt" || return $?
+    catchEnvironment "$handler" cp "$home/test/example/repair-target.txt" "$testPath/tests/$name.txt" || return $?
+    catchEnvironment "$handler" cp "$home/test/example/repair-target.txt" "$testPath/alternate/$name.txt" || return $?
   done
 
   assertExitCode --stderr-ok 0 identicalCheck --cd "$testPath" --repair "$testPath/identical" --extension "txt" --prefix '-- IDENTICAL' || return $?
@@ -65,14 +65,14 @@ testIdenticalCheckAndRepairMap() {
     assertFileContains "$testPath/alternate/$name.txt" "- BASE $name.txt" || return $?
   done
 
-  __catch "$handler" rm -rf "$testPath" || return $?
+  returnCatch "$handler" rm -rf "$testPath" || return $?
 }
 
 testIdenticalRepair() {
   local handler="returnMessage"
 
   local home
-  home=$(__catch "$handler" buildHome) || return $?
+  home=$(returnCatch "$handler" buildHome) || return $?
 
   local output source token target expectedTarget testPath prefix
 
@@ -85,7 +85,7 @@ testIdenticalRepair() {
     output="$testPath/ACTUAL-$token-$(basename "$target")"
     expectedTarget="$testPath/$token-$(basename "$target")"
     assertFileExists "$expectedTarget" || return $?
-    __catchEnvironment "$handler" cp "$target" "$output" || return $?
+    catchEnvironment "$handler" cp "$target" "$output" || return $?
     assertExitCode 0 identicalRepair --prefix '# ''IDENTICAL' --token "$token" "$source" "$output" || r eturn $?
     assertExitCode 0 diff "$output" "$expectedTarget" || return $?
     assertFileDoesNotContain "$output" EOF || return $?
@@ -98,7 +98,7 @@ testIdenticalRepair() {
     output="$testPath/ACTUAL-$token-$(basename "$target")"
     expectedTarget="$testPath/$token-$(basename "$target")"
     assertFileExists "$expectedTarget" || return $?
-    __catchEnvironment "$handler" cp "$target" "$output" || return $?
+    catchEnvironment "$handler" cp "$target" "$output" || return $?
     assertExitCode 0 identicalRepair --prefix '# ''SAME-SAME' --token "$token" "$source" "$output" || return $?
     assertExitCode 0 diff "$output" "$(dirname "$target")/$token-$(basename "$target")" || return $?
     rm "$output" || :
@@ -118,7 +118,7 @@ testIdenticalChecks() {
   local handler="returnMessage"
   local home
 
-  home=$(__catch "$handler" buildHome) || return $?
+  home=$(returnCatch "$handler" buildHome) || return $?
   local identicalCheckArgs identicalError
 
   identicalError=$(returnCode identical)
@@ -160,7 +160,7 @@ testIdenticalCheckSingles() {
   local identicalCheckArgs identicalError singles
 
   local home
-  home=$(__catch "$handler" buildHome) || return $?
+  home=$(returnCatch "$handler" buildHome) || return $?
 
   identicalError=$(returnCode identical)
 
@@ -201,7 +201,7 @@ testIdenticalCheckRepairWithEmptyDir() {
   touch "$temp/hey.sh"
   assertExitCode 0 identicalCheck --cd "$temp" --repair "$temp/foo/identical/" --repair "$temp/bar/identical/" --prefix '# ''IDENTICAL' --extension sh || return $?
 
-  __catch "$handler" rm -rf "$temp" || return $?
+  returnCatch "$handler" rm -rf "$temp" || return $?
 }
 
 # Test identical EOF problem
@@ -224,7 +224,7 @@ testIdenticalThingEOFProblem() {
 
   temp=$(fileTemporaryName "$handler" -d) || return $?
 
-  __catch "$handler" mkdir -p "$temp/identical/" || return $?
+  returnCatch "$handler" mkdir -p "$temp/identical/" || return $?
 
   printf "%s\n" "# IDENTICAL foo 1" "HELLO, WORLD" "" "" >"$temp/identical/master.txt"
   printf "%s\n" "$(randomString)" "$(randomString)" "$(randomString)" "" "# IDENTICAL foo 1" "Hello, WORLD" "" "" >"$temp/$(incrementor 0 "$name").txt"
@@ -234,7 +234,7 @@ testIdenticalThingEOFProblem() {
   local newline=$'\n'
   printf "%s" "$(randomString)$newline" "$(randomString)$newline" "$(randomString)$newline" "{$newline" "    # IDENTICAL foo 1$newline" "    HELLO, WORLD$newline" "}" >"$temp/$(incrementor "$name").txt"
 
-  __catch "$handler" identicalCheck --cd "$temp" --repair "$temp/identical" --extension 'txt' --prefix '# IDENTICAL' || return $?
+  returnCatch "$handler" identicalCheck --cd "$temp" --repair "$temp/identical" --extension 'txt' --prefix '# IDENTICAL' || return $?
 
   assertFileContains "$temp/0.txt" "HELLO, WORLD" "# IDENTICAL foo 1" || return $?
   assertFileDoesNotContain "$temp/0.txt" "{" "}" || return $?
@@ -244,5 +244,5 @@ testIdenticalThingEOFProblem() {
   assertFileContains "$temp/3.txt" "HELLO, WORLD" "# IDENTICAL foo 1" "{" "}" || return $?
   assertFileContains "$temp/4.txt" "HELLO, WORLD" "# IDENTICAL foo 1" "{" "}" || return $?
 
-  __catchEnvironment "$handler" rm -rf "$temp" || return $?
+  catchEnvironment "$handler" rm -rf "$temp" || return $?
 }

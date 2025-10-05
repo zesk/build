@@ -11,7 +11,7 @@ testSysvInitScript() {
   local handler="returnMessage"
   local home
 
-  home=$(__catch "$handler" buildHome) || return $?
+  home=$(returnCatch "$handler" buildHome) || return $?
   sysvInitScriptUninstall install-bin-build.sh || :
 
   assertFileDoesNotExist --line "$LINENO" /etc/init.d/install-bin-build.sh || return $?

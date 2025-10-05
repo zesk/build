@@ -12,7 +12,7 @@ testIsDockerComposeRunning() {
   if whichExists docker; then
     local oldHome
 
-    oldHome=$(__catch "$handler" buildHome) || return $?
+    oldHome=$(returnCatch "$handler" buildHome) || return $?
 
     mockEnvironmentStart BUILD_HOME
 
@@ -22,15 +22,15 @@ testIsDockerComposeRunning() {
     newHome=$(fileTemporaryName "$handler" -d) || return $?
 
     BUILD_HOME=$newHome
-    __catchEnvironment "$handler" mkdir "$BUILD_HOME/bin" || return $?
-    __catchEnvironment "$handler" cp -R "$oldHome/bin/build" "$BUILD_HOME/bin/build" || return $?
-    __catchEnvironment "$handler" pushd "$BUILD_HOME" || return $?
+    catchEnvironment "$handler" mkdir "$BUILD_HOME/bin" || return $?
+    catchEnvironment "$handler" cp -R "$oldHome/bin/build" "$BUILD_HOME/bin/build" || return $?
+    catchEnvironment "$handler" pushd "$BUILD_HOME" || return $?
 
     assertNotExitCode --stderr-match "Missing" --stderr-match ".STAGING.env" 0 dockerComposeIsRunning || return $?
-    __catchEnvironment "$handler" touch "$BUILD_HOME/.STAGING.env" || return $?
+    catchEnvironment "$handler" touch "$BUILD_HOME/.STAGING.env" || return $?
     assertNotExitCode --stderr-match "Missing" --stderr-match "docker-compose.yml" 0 dockerComposeIsRunning || return $?
 
-    __catchEnvironment "$handler" rm -rf "$newHome" || return $?
+    catchEnvironment "$handler" rm -rf "$newHome" || return $?
     mockEnvironmentStop BUILD_HOME
   fi
 }

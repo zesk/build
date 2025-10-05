@@ -30,7 +30,7 @@ returnEnvironment() {
 # Argument: handler - Function. Required. Error handler.
 # Argument: message ... - String. Optional. Error message
 # Requires: returnArgument
-__throw() {
+returnThrow() {
   local exitCode="${1-}" && shift || returnArgument "Missing exit code" || return $?
   lcoal handler="${1-}" && shift || returnArgument "Missing error handler" || return $?
   "$handler" "$exitCode" "$@" || return $?
@@ -40,7 +40,7 @@ __throw() {
 # Argument: handler - Required. Function. Error handler.
 # Argument: binary ... - Required. Executable. Any arguments are passed to `binary`.
 # Requires: returnArgument
-__catch() {
+returnCatch() {
   local handler="${1-}" && shift || returnArgument "Missing handler" || return $?
   "$@" || "$handler" "$?" "$@" || return $?
 }

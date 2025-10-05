@@ -42,11 +42,11 @@ if source "$(dirname "${BASH_SOURCE[0]}")/tools.sh"; then
       shift
     done
     if $checkFlag && ! $doFingerprint; then
-      __throwArgument "$handler" "Invalid --check with --token" || return $?
+      returnThrowArgument "$handler" "Invalid --check with --token" || return $?
     fi
     set -- "${cleaned[@]+"${cleaned[@]}"}"
-    home=$(__catch "$handler" buildHome) || return $?
-    __catchEnvironment "$handler" muzzle cd "$home" || return $?
+    home=$(returnCatch "$handler" buildHome) || return $?
+    catchEnvironment "$handler" muzzle cd "$home" || return $?
     local done=false aa=()
     while ! $done; do
       read -r item || done=true
@@ -59,21 +59,21 @@ if source "$(dirname "${BASH_SOURCE[0]}")/tools.sh"; then
     done < <(find "$home" -type d -name identical ! -path "*/.*/*")
     # bashDebugInterruptFile --error --interrupt
     local fingerprint="" jsonFile="" jqPath=""
-    jsonFile="$home/$(__catch "$handler" buildEnvironmentGet APPLICATION_JSON)" || return $?
+    jsonFile="$home/$(returnCatch "$handler" buildEnvironmentGet APPLICATION_JSON)" || return $?
     [ -f "$jsonFile" ] || doFingerprint=false
 
     if $doFingerprint; then
       local prefix
-      prefix=$(__catch "$handler" buildEnvironmentGet APPLICATION_JSON_PREFIX) || return $?
+      prefix=$(returnCatch "$handler" buildEnvironmentGet APPLICATION_JSON_PREFIX) || return $?
       prefix="${prefix#.}"
       prefix="${prefix%.}"
 
       local buildFingerprint argChecksum="default"
       [ $# -eq 0 ] || argChecksum="$*"
       local jqPath
-      jqPath=$(__catch "$handler" jsonPath "$prefix" "identical" "\"$argChecksum\"") || return $?
-      fingerprint=$(__catch "$handler" hookRun application-fingerprint) || return $?
-      buildFingerprint="$(__catch "$handler" jsonFileGet "$jsonFile" "$jqPath")" || return $?
+      jqPath=$(returnCatch "$handler" jsonPath "$prefix" "identical" "\"$argChecksum\"") || return $?
+      fingerprint=$(returnCatch "$handler" hookRun application-fingerprint) || return $?
+      buildFingerprint="$(returnCatch "$handler" jsonFileGet "$jsonFile" "$jqPath")" || return $?
       if [ "$fingerprint" = "$buildFingerprint" ]; then
         if $checkFlag; then
           printf "%s\n" "$fingerprint"
@@ -89,13 +89,13 @@ if source "$(dirname "${BASH_SOURCE[0]}")/tools.sh"; then
         decorate info "Fingerprint mismatch [ $(decorate green "$fingerprint") != $(decorate subtle "$buildFingerprint") ]"
       fi
     elif $checkFlag; then
-      __catch "$handler" hookRun application-fingerprint || return $?
+      returnCatch "$handler" hookRun application-fingerprint || return $?
       return 0
     fi
     set -eou pipefail
-    __catch "$handler" identicalCheckShell "${aa[@]+"${aa[@]}"}" --exec contextOpen "$@" || return $?
+    returnCatch "$handler" identicalCheckShell "${aa[@]+"${aa[@]}"}" --exec contextOpen "$@" || return $?
     if $doFingerprint; then
-      __catch "$handler" jsonFileSet "$jsonFile" "$jqPath" "$fingerprint" || return $?
+      returnCatch "$handler" jsonFileSet "$jsonFile" "$jqPath" "$fingerprint" || return $?
       decorate success "Fingerprint updated."
     fi
 

@@ -11,7 +11,7 @@ testCheckDockerEnvFile() {
   local handler="returnMessage"
   local out home
 
-  home=$(__catch "$handler" buildHome) || return $?
+  home=$(returnCatch "$handler" buildHome) || return $?
 
   local testFile="$home/test/example/bad.env"
 
@@ -23,11 +23,11 @@ testCheckDockerEnvFile() {
 
   assertExitCode 0 environmentFileDockerToBashCompatible "$testFile" || return $?
 
-  out=$(__catchEnvironment "$handler" fileTemporaryName "$handler") || return $?
+  out=$(catchEnvironment "$handler" fileTemporaryName "$handler") || return $?
 
-  __catch "$handler" environmentFileDockerToBashCompatible "$testFile" >"$out" || return $?
+  returnCatch "$handler" environmentFileDockerToBashCompatible "$testFile" >"$out" || return $?
   assertFileContains "$out" '\"quotes\"' TEST_AWS_SECURITY_GROUP "DOLLAR=" "QUOTE=" "GOOD=" 'HELLO="W' || return $?
-  __catchEnvironment "$handler" rm "$out" || return $?
+  catchEnvironment "$handler" rm "$out" || return $?
 }
 
 testEnvironmentFileDockerToBashCompatible() {
@@ -38,11 +38,11 @@ testEnvironmentFileDockerToBashCompatible() {
   err="$out.err"
 
   local home
-  home=$(__catch "$handler" buildHome) || return $?
+  home=$(returnCatch "$handler" buildHome) || return $?
 
   decorate info "PWD is $(pwd)"
   if environmentFileDockerToBashCompatible "$home/test/example/test.env" >"$out" 2>"$err"; then
-    __throwEnvironment "$handler" "environmentFileDockerToBashCompatible SHOULD fail" || return $?
+    returnThrowEnvironment "$handler" "environmentFileDockerToBashCompatible SHOULD fail" || return $?
   fi
 
   # Different than testEnvironmentFileDockerToBashCompatiblePipe
@@ -54,7 +54,7 @@ testEnvironmentFileDockerToBashCompatible() {
   assertEquals 0 "$(fileSize "$err")" || return $?
   assertFileContains "$out" "host=" "application=\"golden goose\"" "uname=\"localhost\"" "location=" || return $?
 
-  __catchEnvironment "$handler" rm -f "$out" "$err" || return $?
+  catchEnvironment "$handler" rm -f "$out" "$err" || return $?
 }
 
 # Same as above but this is a pipe
@@ -66,11 +66,11 @@ testEnvironmentFileDockerToBashCompatiblePipe() {
   err="$out.err"
 
   local home
-  home=$(__catch "$handler" buildHome) || return $?
+  home=$(returnCatch "$handler" buildHome) || return $?
 
   decorate info "PWD is $(pwd)"
   if environmentFileDockerToBashCompatible <"$home/test/example/test.env" >"$out" 2>"$err"; then
-    __throwEnvironment "$handler" "environmentFileDockerToBashCompatible SHOULD fail" || return $?
+    returnThrowEnvironment "$handler" "environmentFileDockerToBashCompatible SHOULD fail" || return $?
   fi
 
   assertFileContains "$out" "A=" "ABC=" "ABC_D=" "A01234=" "a=" "abc=" "abc_d=" || return $?
@@ -83,7 +83,7 @@ testEnvironmentFileDockerToBashCompatiblePipe() {
   assertEquals 0 "$(fileSize "$err")" || return $?
   assertFileContains "$out" "host=" "application=\"golden goose\"" "uname=\"localhost\"" "location=" || return $?
 
-  __catchEnvironment "$handler" rm -f "$out" "$err" || return $?
+  catchEnvironment "$handler" rm -f "$out" "$err" || return $?
 }
 
 testDockerEnvFromBash() {
@@ -91,7 +91,7 @@ testDockerEnvFromBash() {
   local out err
 
   local home
-  home=$(__catch "$handler" buildHome) || return $?
+  home=$(returnCatch "$handler" buildHome) || return $?
 
   assertExitCode --stderr-ok 2 environmentFileBashCompatibleToDocker "$home/test/example/bad.env" || return $?
 
@@ -105,7 +105,7 @@ testDockerEnvFromBash() {
   assertEquals 0 "$(fileSize "$err")" || return $?
   assertFileContains "$out" "host=" "today=" "uname=" || return $?
 
-  __catchEnvironment "$handler" rm -f "$out" "$err" || return $?
+  catchEnvironment "$handler" rm -f "$out" "$err" || return $?
 }
 
 testEnvironmentFileToDocker() {
@@ -115,18 +115,18 @@ testEnvironmentFileToDocker() {
   testEnv=$(fileTemporaryName "$handler") || return $?
 
   local home
-  home=$(__catch "$handler" buildHome) || return $?
+  home=$(returnCatch "$handler" buildHome) || return $?
 
-  __catch "$handler" environmentFileToDocker "$testEnv" >"$testEnv.result" || return $?
+  returnCatch "$handler" environmentFileToDocker "$testEnv" >"$testEnv.result" || return $?
   dumpPipe "Result - should be blank" <"$testEnv.result"
   assertExitCode 0 fileIsEmpty "$testEnv.result" || return $?
 
-  __catchEnvironment "$handler" cp "$home/test/example/bash.env" "$testEnv" || return $?
+  catchEnvironment "$handler" cp "$home/test/example/bash.env" "$testEnv" || return $?
 
   # mode 1
-  __catch "$handler" environmentFileToDocker "$testEnv" >"$testEnv.result" || return $?
+  returnCatch "$handler" environmentFileToDocker "$testEnv" >"$testEnv.result" || return $?
   # as a pipe
-  __catch "$handler" environmentFileToDocker >"$testEnv.result2" <"$testEnv" || return $?
+  returnCatch "$handler" environmentFileToDocker >"$testEnv.result2" <"$testEnv" || return $?
   assertExitCode --dump 0 diff -w "$testEnv.result2" "$testEnv.result" || return $?
 
   printf -- "%s=%s\n" "NAME" "\"value\"" >"$testEnv"
@@ -142,23 +142,23 @@ testAnyEnvToBashEnv() {
   testEnv=$(fileTemporaryName "$handler") || return $?
 
   local home
-  home=$(__catch "$handler" buildHome) || return $?
+  home=$(returnCatch "$handler" buildHome) || return $?
 
-  __catch "$handler" environmentFileToDocker "$testEnv" >"$testEnv.result" || returnEnvironment "Failed @ $LINENO" || return $?
-  __catch "$handler" environmentFileToBashCompatible "$testEnv" >"$testEnv.result" || returnEnvironment "Failed @ $LINENO" || return $?
+  returnCatch "$handler" environmentFileToDocker "$testEnv" >"$testEnv.result" || returnEnvironment "Failed @ $LINENO" || return $?
+  returnCatch "$handler" environmentFileToBashCompatible "$testEnv" >"$testEnv.result" || returnEnvironment "Failed @ $LINENO" || return $?
   assertExitCode 0 fileIsEmpty "$testEnv.result" || return $?
 
-  __catchEnvironment "$handler" cp "$home/test/example/docker.env" "$testEnv" || return $?
+  catchEnvironment "$handler" cp "$home/test/example/docker.env" "$testEnv" || return $?
 
-  __catch "$handler" environmentFileToBashCompatible "$testEnv" >"$testEnv.result" || return $?
-  __catch "$handler" environmentFileToBashCompatible >"$testEnv.result2" <"$testEnv" || return $?
+  returnCatch "$handler" environmentFileToBashCompatible "$testEnv" >"$testEnv.result" || return $?
+  returnCatch "$handler" environmentFileToBashCompatible >"$testEnv.result2" <"$testEnv" || return $?
 
   assertExitCode 0 diff -w "$testEnv.result2" "$testEnv.result" || return $?
 
-  __catchEnvironment "$handler" printf -- "%s=%s\n" "NAME" "\"value\"" >"$testEnv" || return $?
+  catchEnvironment "$handler" printf -- "%s=%s\n" "NAME" "\"value\"" >"$testEnv" || return $?
   assertExitCode --stdout-match 'NAME=value' 0 environmentFileToDocker "$testEnv" || return $?
 
-  __catchEnvironment "$handler" rm -f "$testEnv" "$testEnv.result" "$testEnv.result2" || return $?
+  catchEnvironment "$handler" rm -f "$testEnv" "$testEnv.result" "$testEnv.result2" || return $?
 }
 
 testDotEnvCommentHandling() {
@@ -166,12 +166,12 @@ testDotEnvCommentHandling() {
   local testEnv home tab=$'\t'
 
   testEnv=$(fileTemporaryName "$handler") || return $?
-  home=$(__catch "$handler" buildHome) || return $?
+  home=$(returnCatch "$handler" buildHome) || return $?
 
-  __catchEnvironment "$handler" printf "%s\n" "# COMMENT=yes" "     # COMMENT_LEADING_SPACES=yes" "${tab}${tab}${tab}#${tab}COMMENT_LEADING_TABS=yes" "${tab} #${tab} COMMENT_LEADING_BOTH=yes" "BAZ=FIZ" "FIZZ=BUZZ" >"$testEnv" || return $?
+  catchEnvironment "$handler" printf "%s\n" "# COMMENT=yes" "     # COMMENT_LEADING_SPACES=yes" "${tab}${tab}${tab}#${tab}COMMENT_LEADING_TABS=yes" "${tab} #${tab} COMMENT_LEADING_BOTH=yes" "BAZ=FIZ" "FIZZ=BUZZ" >"$testEnv" || return $?
   assertExitCode --stdout-match "COMMENT=yes" --stdout-match "COMMENT_LEADING_SPACES=yes" --stdout-match "COMMENT_LEADING_TABS=yes" --stdout-match "BAZ=\"FIZ\"" 0 environmentFileDockerToBashCompatible <"$testEnv" || return $?
 
-  __catchEnvironment "$handler" rm -f "$testEnv" || return $?
+  catchEnvironment "$handler" rm -f "$testEnv" || return $?
 }
 
 testEnvCommentHandling() {
@@ -182,8 +182,8 @@ testEnvCommentHandling() {
   testEnvBash="$testEnvBase.bash" || return $?
   testEnvDocker="$testEnvBase.docker" || return $?
 
-  __catchEnvironment "$handler" printf -- "%s\n" "# Comment" "WORD=born" >"$testEnvDocker" || return $?
-  __catchEnvironment "$handler" printf -- "%s\n" "# Comment" "WORD=\"born\"" >"$testEnvBash" || return $?
+  catchEnvironment "$handler" printf -- "%s\n" "# Comment" "WORD=born" >"$testEnvDocker" || return $?
+  catchEnvironment "$handler" printf -- "%s\n" "# Comment" "WORD=\"born\"" >"$testEnvBash" || return $?
 
   assertExitCode 0 environmentFileIsDocker "$testEnvDocker" || return $?
   assertNotExitCode --stderr-match "WORD=\"born\"" 0 environmentFileIsDocker "$testEnvBash" || return $?
@@ -195,5 +195,5 @@ testEnvCommentHandling() {
   assertExitCode --stdout-match "WORD=\"born\"" --stdout-match "# Comment" 0 environmentFileDockerToBashCompatible "$testEnvDocker" || return $?
   assertExitCode --stdout-match "WORD=born" --stdout-no-match "# Comment" 0 environmentFileBashCompatibleToDocker "$testEnvBash" || return $?
 
-  __catchEnvironment "$handler" rm -rf "$testEnvBase" "$testEnvDocker" "$testEnvBash" || return $?
+  catchEnvironment "$handler" rm -rf "$testEnvBase" "$testEnvDocker" "$testEnvBash" || return $?
 }

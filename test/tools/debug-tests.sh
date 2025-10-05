@@ -167,8 +167,8 @@ testHousekeeper() {
   testDir=$(fileTemporaryName "$handler" -d) || return $?
 
   statusMessage decorate info Copying "${BUILD_HOME-"(blank)"}" to test location
-  __catchEnvironment "$handler" cp -r "$BUILD_HOME" "$testDir" || return $?
-  __catchEnvironment "$handler" muzzle pushd "$testDir" || return $?
+  catchEnvironment "$handler" cp -r "$BUILD_HOME" "$testDir" || return $?
+  catchEnvironment "$handler" muzzle pushd "$testDir" || return $?
 
   assertEquals 108 "$leakCode" || return $?
 
@@ -217,8 +217,8 @@ testHousekeeper() {
   testFiles=(dust dirt cruft temporary-files)
   assertNotExitCode "${matches[@]}" 0 housekeeper "$testDir" rm -f "${testFiles[@]}" || return $?
 
-  __catchEnvironment "$handler" muzzle popd || return $?
-  __catchEnvironment "$handler" rm -rf "$testDir" || return $?
+  catchEnvironment "$handler" muzzle popd || return $?
+  catchEnvironment "$handler" rm -rf "$testDir" || return $?
 }
 
 testOutputTrigger() {
@@ -228,5 +228,5 @@ testOutputTrigger() {
   local temp
   temp=$(fileTemporaryName "$handler") || return $?
   assertExitCode 0 outputTrigger --name YoYoBaby <"$temp" || return $?
-  __catchEnvironment "$handler" rm -rf "$temp" || return $?
+  catchEnvironment "$handler" rm -rf "$temp" || return $?
 }

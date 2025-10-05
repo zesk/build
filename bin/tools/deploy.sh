@@ -26,7 +26,7 @@ __buildDeploy() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -42,18 +42,18 @@ __buildDeploy() {
       ;;
     *)
       # _IDENTICAL_ argumentUnknownHandler 1
-      __throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
+      returnThrowArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
       ;;
     esac
     shift
   done
 
-  __catch "$handler" packageInstall || return $?
+  returnCatch "$handler" packageInstall || return $?
 
   local name
-  name=$(__catch "$handler" buildEnvironmentGet APPLICATION_NAME) || return $?
-  currentVersion="$(__catch "$handler" hookRun version-current)" || return $?
-  [ -n "$currentVersion" ] || __throwEnvironment "$handler" "Blank version-current" || return $?
+  name=$(returnCatch "$handler" buildEnvironmentGet APPLICATION_NAME) || return $?
+  currentVersion="$(returnCatch "$handler" hookRun version-current)" || return $?
+  [ -n "$currentVersion" ] || returnThrowEnvironment "$handler" "Blank version-current" || return $?
   bigText "Deploy $name $currentVersion" | decorate success
   dumpEnvironment
 
@@ -64,24 +64,24 @@ __buildDeploy() {
 
   if $makeDocumentation; then
     ! $debugFlag || statusMessage decorate info "Installing AWS ..."
-    __catch "$handler" awsInstall || return $?
+    returnCatch "$handler" awsInstall || return $?
   fi
   local target cloudFrontID
   target=$(buildEnvironmentGet "DOCUMENTATION_S3_PREFIX") || return $?
   cloudFrontID=$(buildEnvironmentGet "DOCUMENTATION_CLOUDFRONT_ID") || return $?
 
   local home
-  home=$(__catch "$handler" buildHome) || return $?
+  home=$(returnCatch "$handler" buildHome) || return $?
 
   local appId notes
 
   statusMessage decorate info "Collecting application version and ID ..." || :
-  appId=$(hookRun application-id) || __throwEnvironment "$handler" "hookRun application-id" || return $?
+  appId=$(hookRun application-id) || returnThrowEnvironment "$handler" "hookRun application-id" || return $?
 
-  [ -n "$appId" ] || __throwEnvironment "$handler" "No application ID (blank?)" || return $?
+  [ -n "$appId" ] || returnThrowEnvironment "$handler" "No application ID (blank?)" || return $?
 
-  notes=$(releaseNotes) || __throwEnvironment "$handler" "releaseNotes" || return $?
-  [ -f "$notes" ] || __throwEnvironment "$handler" "$notes does not exist" || return $?
+  notes=$(releaseNotes) || returnThrowEnvironment "$handler" "releaseNotes" || return $?
+  [ -f "$notes" ] || returnThrowEnvironment "$handler" "$notes does not exist" || return $?
 
   local name
   name=$(buildEnvironmentGet APPLICATION_NAME)
@@ -95,37 +95,37 @@ __buildDeploy() {
     rootShow=$(decorate file "$rootPath")
 
     if [ -z "$target" ]; then
-      __throwEnvironment "$handler" "No DOCUMENTATION_S3_PREFIX but --documentation supplied" || return $?
+      returnThrowEnvironment "$handler" "No DOCUMENTATION_S3_PREFIX but --documentation supplied" || return $?
     fi
     if [ ! -d "$rootPath" ]; then
-      __throwEnvironment "$handler" "$rootShow does not exist but --documentation supplied" || return $?
+      returnThrowEnvironment "$handler" "$rootShow does not exist but --documentation supplied" || return $?
     fi
 
     # Validate for later (possibly every time in the future)
-    [ -n "$target" ] || __throwEnvironment "$handler" "DOCUMENTATION_S3_PREFIX is blank" || return $?
-    [ "$target" != "${target#s3://}" ] || __throwEnvironment "$handler" "DOCUMENTATION_S3_PREFIX=$(decorate code "$target") is NOT a S3 URL" || return $?
-    [ -n "$cloudFrontID" ] || __throwEnvironment "$handler" "DOCUMENTATION_CLOUDFRONT_ID is blank" || return $?
+    [ -n "$target" ] || returnThrowEnvironment "$handler" "DOCUMENTATION_S3_PREFIX is blank" || return $?
+    [ "$target" != "${target#s3://}" ] || returnThrowEnvironment "$handler" "DOCUMENTATION_S3_PREFIX=$(decorate code "$target") is NOT a S3 URL" || return $?
+    [ -n "$cloudFrontID" ] || returnThrowEnvironment "$handler" "DOCUMENTATION_CLOUDFRONT_ID is blank" || return $?
 
     ! $debugFlag || statusMessage decorate warning "Publishing documentation to $target ..."
 
     # Ideally do this in a way which is more transactional with the release version
     ! $debugFlag || statusMessage decorate warning "Syncing documentation to $target ..."
-    __catchEnvironment "$handler" aws s3 sync --delete "$rootPath" "$target" || return $?
+    catchEnvironment "$handler" aws s3 sync --delete "$rootPath" "$target" || return $?
     ! $debugFlag || statusMessage decorate warning "Creating invalidation for $(decorate code "$cloudFrontID") ..."
-    __catchEnvironment "$handler" aws cloudfront create-invalidation --distribution-id "$cloudFrontID" --paths '/*' || return $?
+    catchEnvironment "$handler" aws cloudfront create-invalidation --distribution-id "$cloudFrontID" --paths '/*' || return $?
   fi
 
   if $makeRelease; then
     statusMessage --last decorate info "Deploying a new release ... " || :
 
     statusMessage decorate info "Fetching deep copy of repository for release ..." || :
-    __catchEnvironment "$handler" git fetch --unshallow || return $?
+    catchEnvironment "$handler" git fetch --unshallow || return $?
 
     if ! githubRelease "$notes" "$currentVersion" "$appId"; then
       local exitCode=$?
       decorate warning "FAILED - Deleting tagged version ... " || :
       gitTagDelete "$currentVersion" || decorate error "gitTagDelete $currentVersion ALSO failed but continuing ..." || :
-      __throwEnvironment "$handler" "githubRelease FAILED with $exitCode" || return $?
+      returnThrowEnvironment "$handler" "githubRelease FAILED with $exitCode" || return $?
     fi
   fi
   timingReport "$start" "Release completed in" || :

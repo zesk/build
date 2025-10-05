@@ -2,7 +2,7 @@
 #
 # Identical template
 #
-# Original of __executeInputSupport
+# Original of executeInputSupport
 #
 # Copyright &copy; 2025 Market Acumen, Inc.
 #
@@ -13,13 +13,13 @@
 # So our hack solution is to read a single byte with a 1-second timeout and then add that into our first line of output
 # if needed. Handle the case when the first line is blank (and is a newline)
 
-# _IDENTICAL_ __executeInputSupport EOF
+# _IDENTICAL_ executeInputSupport EOF
 
 # Support arguments and stdin as arguments to an executor
 # Argument: executor ... -- - The command to run on each line of input or on each additional argument. Arguments to prefix the final variable argument can be supplied prior to an initial `--`.
 # Argument: -- - Alone after the executor forces `stdin` to be ignored. The `--` flag is also removed from the arguments passed to the executor.
 # Argument: ... - Any additional arguments are passed directly to the executor
-__executeInputSupport() {
+executeInputSupport() {
   local handler="$1" executor=() && shift
 
   while [ $# -gt 0 ]; do
@@ -37,19 +37,19 @@ __executeInputSupport() {
   if [ $# -eq 0 ] && IFS="" read -r -t 1 -n 1 byte; then
     local line done=false
     if [ "$byte" = $'\n' ]; then
-      __catchEnvironment "$handler" "${executor[@]}" "" || return $?
+      catchEnvironment "$handler" "${executor[@]}" "" || return $?
       byte=""
     fi
     while ! $done; do
       IFS="" read -r line || done=true
       [ -n "$byte$line" ] || ! $done || break
-      __catchEnvironment "$handler" "${executor[@]}" "$byte$line" || return $?
+      catchEnvironment "$handler" "${executor[@]}" "$byte$line" || return $?
       byte=""
     done
   else
     if [ "${1-}" = "--" ]; then
       shift
     fi
-    __catchEnvironment "$handler" "${executor[@]}" "$@" || return $?
+    catchEnvironment "$handler" "${executor[@]}" "$@" || return $?
   fi
 }

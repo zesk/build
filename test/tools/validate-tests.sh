@@ -15,13 +15,13 @@ testValidateMissing() {
   usageTypes=$(fileTemporaryName "$handler") || return $?
   validateTypes=$(fileTemporaryName "$handler") || return $?
 
-  __catchEnvironment "$handler" _usageArgumentTypeList >"$usageTypes" || return $?
-  __catchEnvironment "$handler" validateTypeList >"$validateTypes" || return $?
+  catchEnvironment "$handler" _usageArgumentTypeList >"$usageTypes" || return $?
+  catchEnvironment "$handler" validateTypeList >"$validateTypes" || return $?
 
   printf "%s %s\n" "$(decorate red "< usage")" "$(decorate green "> validate")"
   diff --suppress-common-lines "$usageTypes" "$validateTypes" | grepSafe -e '^[<>]' || :
 
-  __catchEnvironment "$handler" rm -rf "$usageTypes" "$validateTypes" || return $?
+  catchEnvironment "$handler" rm -rf "$usageTypes" "$validateTypes" || return $?
 }
 
 _testValidateArgumentHelperSuccess() {
@@ -87,7 +87,7 @@ testValidateFunctions() {
 
   _testValidateArgumentHelperFail PositiveInteger "${intTests[@]}" -1.0 1.0 1d2 jq '9123-' what 0 || return $?
 
-  __catchEnvironment "$handler" rm -f "$_TEST_VALIDATE_HANDLER" || return $?
+  catchEnvironment "$handler" rm -f "$_TEST_VALIDATE_HANDLER" || return $?
 
   unset _TEST_VALIDATE_HANDLER
 }

@@ -13,11 +13,11 @@ testBasicFileStuff() {
   testDir=$(fileTemporaryName "$handler" -d) || return $?
 
   testFile="$testDir/$(randomString).$$"
-  __catchEnvironment "$handler" touch "$testFile" || return $?
+  catchEnvironment "$handler" touch "$testFile" || return $?
   assertExitCode 0 fileModificationTime "$testFile" || return $?
   assertExitCode 0 fileModificationSeconds "$testFile" || return $?
 
-  __catch "$handler" rm -rf "$testDir" || return $?
+  returnCatch "$handler" rm -rf "$testDir" || return $?
 }
 
 _assertBetterType() {
@@ -37,12 +37,12 @@ testBetterType() {
   local d
   d=$(fileTemporaryName "$handler" -d) || return $?
 
-  __catch "$handler" directoryRequire "$d/food" >/dev/null || return $?
-  __catchEnvironment "$handler" ln -s "$d/food" "$d/food-link" || return $?
+  returnCatch "$handler" directoryRequire "$d/food" >/dev/null || return $?
+  catchEnvironment "$handler" ln -s "$d/food" "$d/food-link" || return $?
 
-  __catchEnvironment "$handler" touch "$d/goof" || return $?
-  __catchEnvironment "$handler" ln -s "$d/no-goof" "$d/no-goof-link" || return $?
-  __catchEnvironment "$handler" ln -s "$d/goof" "$d/goof-link" || return $?
+  catchEnvironment "$handler" touch "$d/goof" || return $?
+  catchEnvironment "$handler" ln -s "$d/no-goof" "$d/no-goof-link" || return $?
+  catchEnvironment "$handler" ln -s "$d/goof" "$d/goof-link" || return $?
 
   _assertBetterType "$LINENO" "directory" "$d/food" || return $?
   _assertBetterType "$LINENO" "link-directory" "$d/food-link" || return $?
@@ -50,7 +50,7 @@ testBetterType() {
   _assertBetterType "$LINENO" "link-unknown" "$d/no-goof-link" || return $?
   _assertBetterType "$LINENO" "link-file" "$d/goof-link" || return $?
 
-  __catchEnvironment "$handler" rm -rf "$d" || return $?
+  catchEnvironment "$handler" rm -rf "$d" || return $?
 }
 
 _invertMatches() {
@@ -78,9 +78,9 @@ testFileMatches() {
 
   ex=()
   matchFiles=$(fileTemporaryName "$handler") || return $?
-  home=$(__catch "$handler" buildHome) || return $?
+  home=$(returnCatch "$handler" buildHome) || return $?
 
-  __catchEnvironment "$handler" find "$home/test/matches" -type f >"$matchFiles" || return $?
+  catchEnvironment "$handler" find "$home/test/matches" -type f >"$matchFiles" || return $?
 
   # dumpPipe "match file list" <"$matchFiles"
   # zulu simple
@@ -212,13 +212,13 @@ testFileMatches() {
   assertExitCode "${matches[@]}" 0 fileMatches "$pattern" -- "${ex[@]+"${ex[@]}"}" -- - <"$matchFiles" || return $?
   assertExitCode "${invertedMatches[@]}" 0 fileNotMatches "$pattern" -- "${ex[@]+"${ex[@]}"}" -- - <"$matchFiles" || return $?
 
-  __catch "$handler" rm -f "$matchFiles" || return $?
+  returnCatch "$handler" rm -f "$matchFiles" || return $?
 }
 
 testLinkCreate() {
   local home target
 
-  home=$(__catch "$handler" buildHome) || return $?
+  home=$(returnCatch "$handler" buildHome) || return $?
 
   find "$home/bin/build/" -maxdepth 1 -name 'wacky.*' -exec rm {} \; || :
 
@@ -234,7 +234,7 @@ testLinkCreate() {
   assertNotExitCode --stderr-match "Can not link to another link" --line "$LINENO" 0 "$home/bin/build/$target.ALT" linkCreate "$home/bin/build/$target.FINAL" "$target.NoLinkyLinks" || return $?
   assertExitCode 0 test -L "$home/bin/build/$target.FINAL" || return $?
   assertEquals "$(find "$home/bin/build" -name "wacky.*" | fileLineCount)" "3" || return $?
-  __catchEnvironment "$handler" rm -rf "$home/bin/build/$target*" || return $?
+  catchEnvironment "$handler" rm -rf "$home/bin/build/$target*" || return $?
 }
 
 testFileLineCount() {
@@ -246,7 +246,7 @@ testFileLineCount() {
   assertEquals 0 "$(fileLineCount "$temp")" || return $?
   assertEquals 0 "$(fileLineCount <"$temp")" || return $?
 
-  __catchEnvironment "$handler" printf "%s\n" "$(randomString)" >>"$temp" || return $?
+  catchEnvironment "$handler" printf "%s\n" "$(randomString)" >>"$temp" || return $?
 
   assertEquals 1 "$(fileLineCount "$temp")" || return $?
   assertEquals 1 "$(fileLineCount <"$temp")" || return $?
@@ -257,14 +257,14 @@ testFileLineCount() {
     r=$((RANDOM % 10))
     total=$((total + r))
     while [ "$r" -gt 0 ]; do
-      __catchEnvironment "$handler" printf "%d: %s\n" "$i" "$(randomString)" >>"$temp" || return $?
+      catchEnvironment "$handler" printf "%d: %s\n" "$i" "$(randomString)" >>"$temp" || return $?
       r=$((r - 1))
     done
     assertEquals "$total" "$(fileLineCount "$temp")" || return $?
     assertEquals "$total" "$(fileLineCount <"$temp")" || return $?
   done
 
-  __catchEnvironment "$handler" rm "$temp" || return $?
+  catchEnvironment "$handler" rm "$temp" || return $?
 
   unset RANDOM
 }

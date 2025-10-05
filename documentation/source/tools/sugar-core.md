@@ -19,7 +19,7 @@ Quick guide:
 
 - `isPositiveInteger value` - Returns 0 if value passed is an integer, otherwise returns 1.
 - `isBoolean value` - Returns 0 if value passed is `true` or `false`, otherwise returns 1.
-- `_choose testValue trueValue falseValue` - Outputs `trueValue` when `[ "$testValue" = "true" ]` otherwise outputs
+- `booleanChoose testValue trueValue falseValue` - Outputs `trueValue` when `[ "$testValue" = "true" ]` otherwise outputs
   `falseValue`.
 
 Error codes:
@@ -36,8 +36,8 @@ Return errors:
 
 Run-related:
 
-- `__execute command ...` - Run `command ...` (with any arguments) and then `_return` if it fails.
-- `__echo command ...` - Output the `command ...` to stdout prior to running, then `__execute` it (helpful to debug
+- `execute command ...` - Run `command ...` (with any arguments) and then `_return` if it fails.
+- `executeEcho command ...` - Output the `command ...` to stdout prior to running, then `execute` it (helpful to debug
   statements within other scripts)
 - `__environment command ...` - Run `command ...` (with any arguments) and then `returnEnvironment` if it fails.
 
@@ -51,7 +51,7 @@ Run-related:
 
 {returnCodeString}
 
-{_choose}
+{booleanChoose}
 
 ## Cleanup
 
@@ -69,7 +69,7 @@ Run-related:
 
 ## Run-related
 
-{__execute}
+{execute}
 
 {__environment}
 

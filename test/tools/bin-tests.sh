@@ -12,12 +12,12 @@ __testInstallInstallBuild() {
   local topDir targetDir marker testBinary
   export BUILD_HOME
 
-  __catch "$handler" buildEnvironmentLoad BUILD_HOME || return $?
+  returnCatch "$handler" buildEnvironmentLoad BUILD_HOME || return $?
   assertDirectoryExists "$BUILD_HOME" || return $?
 
   topDir="$(pwd)/test.$$"
   targetDir="$topDir/bin/deeper/deepest"
-  __catchEnvironment "$handler" mkdir -p "$targetDir" || return $?
+  catchEnvironment "$handler" mkdir -p "$targetDir" || return $?
   assertDirectoryExists --line "$LINENO" "$targetDir" || return $?
   testBinary="$targetDir/install-bin-build.sh"
   assertExitCode --dump --line "$LINENO" 0 installInstallBuild --local "$targetDir" "$topDir" || return $?
@@ -30,7 +30,7 @@ __testInstallInstallBuild() {
   fi
   assertFileContains --line "$LINENO" "$testBinary" '../../..' || return $?
 
-  __catchEnvironment "$handler" cp "$testBinary" "$testBinary.backup" || return $?
+  catchEnvironment "$handler" cp "$testBinary" "$testBinary.backup" || return $?
 
   assertDirectoryDoesNotExist --line "$LINENO" "$topDir/bin/build" || return $?
 
@@ -48,7 +48,7 @@ __testInstallInstallBuild() {
     return 1
   fi
   # Do not use updated binary as behavior is unpredictable (this is the last version)
-  __catchEnvironment "$handler" mv -f "$testBinary.backup" "$testBinary" || return $?
+  catchEnvironment "$handler" mv -f "$testBinary.backup" "$testBinary" || return $?
 
   assertExitCode --stdout-match "already installed" 0 "$testBinary" || return $?
 
@@ -61,8 +61,8 @@ testMapBin() {
   local handler="returnMessage" home
 
   home=$(buildHome)
-  home=$(__catch "$handler" buildHome) || return $?
-  __catchEnvironment "$handler" muzzle pushd "$home" || return $?
+  home=$(returnCatch "$handler" buildHome) || return $?
+  catchEnvironment "$handler" muzzle pushd "$home" || return $?
 
   __testSection testMap
 
@@ -74,7 +74,7 @@ testMapBin() {
 
   assertEquals "$expected" "$actual" || return $?
 
-  __catchEnvironment "$handler" muzzle popd || return $?
+  catchEnvironment "$handler" muzzle popd || return $?
 }
 
 testMapPortability() {
@@ -83,15 +83,15 @@ testMapPortability() {
   local handler="returnMessage" home
 
   home=$(buildHome)
-  home=$(__catch "$handler" buildHome) || return $?
+  home=$(returnCatch "$handler" buildHome) || return $?
 
   tempDir="./random.$$/"
-  __catchEnvironment "$handler" mkdir -p "$tempDir" || return $?
-  __catchEnvironment "$handler" cp "$home/bin/build/map.sh" "./random.$$/" || return $?
+  catchEnvironment "$handler" mkdir -p "$tempDir" || return $?
+  catchEnvironment "$handler" cp "$home/bin/build/map.sh" "./random.$$/" || return $?
   export DUDE=ax
   export WILD=m
   assertEquals "$(echo "{WILD}{DUDE}i{WILD}u{WILD}" | ./random.$$/map.sh)" "maximum" || return $?
-  __catchEnvironment "$handler" rm -rf "$tempDir" || return $?
+  catchEnvironment "$handler" rm -rf "$tempDir" || return $?
   unset DUDE WILD
 }
 
@@ -102,8 +102,8 @@ testAdditionalBins() {
   local aa
 
   local home
-  home="$(__catch "$handler" buildHome)" || return $?
-  __catchEnvironment "$handler" cd "$home" || return $?
+  home="$(returnCatch "$handler" buildHome)" || return $?
+  catchEnvironment "$handler" cd "$home" || return $?
 
   for binTest in ./test/bin/*.sh; do
     __testSection "$(basename "$binTest")"

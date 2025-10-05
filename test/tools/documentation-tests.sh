@@ -17,7 +17,7 @@ testBashFunctionComment() {
     --stdout-match "--skip-prompt"
   )
 
-  home=$(__catch "$handler" buildHome) || return $?
+  home=$(returnCatch "$handler" buildHome) || return $?
 
   assertExitCode "${matches[@]}" 0 bashFunctionComment "$home/bin/build/tools/prompt.sh" bashPrompt || return $?
 }
@@ -29,7 +29,7 @@ testDocumentation() {
 
   # export BUILD_DEBUG="fast-usage,usage"
   local home
-  home=$(__catch "$handler" buildHome) || return $?
+  home=$(returnCatch "$handler" buildHome) || return $?
 
   testOutput=$(fileTemporaryName "$handler") || return $?
   assertExitCode 0 inArray "summary" summary usage argument example reviewed || return $?
@@ -60,7 +60,7 @@ testDocumentation() {
     echoBar '='
     assertEquals "Assert two strings are equal." "${summary}" || return $?
   ) || return $?
-  __catchEnvironment "$handler" rm "$testOutput" || return $?
+  catchEnvironment "$handler" rm "$testOutput" || return $?
 }
 
 __isolateTest() {
@@ -68,7 +68,7 @@ __isolateTest() {
   local handler="returnMessage"
 
   local home
-  home=$(__catch "$handler" buildHome) || return $?
+  home=$(returnCatch "$handler" buildHome) || return $?
   local fn
 
   fn="ass""ertNotEquals" # "" hides from findUncaughtAssertions

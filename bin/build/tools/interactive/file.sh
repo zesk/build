@@ -28,7 +28,7 @@ __fileCopy() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -53,16 +53,16 @@ __fileCopy() {
     *)
       local source destination actualSource verb prefix
       source="$1"
-      [ -f "$source" ] || __throwEnvironment "$handler" "source \"$source\" does not exist" || return $?
+      [ -f "$source" ] || returnThrowEnvironment "$handler" "source \"$source\" does not exist" || return $?
       shift
       destination=$(usageArgumentFileDirectory returnArgument "destination" "${1-}") || return $?
       shift
-      [ $# -eq 0 ] || __catchArgument "$handler" "unknown argument $1" || return $?
+      [ $# -eq 0 ] || catchArgument "$handler" "unknown argument $1" || return $?
       if $mapFlag; then
         actualSource=$(fileTemporaryName "$handler")
         if ! mapEnvironment <"$source" >"$actualSource"; then
           rm "$actualSource" || :
-          __catchEnvironment "$handler" "Failed to mapEnvironment $source" || return $?
+          catchEnvironment "$handler" "Failed to mapEnvironment $source" || return $?
         fi
         verb=" (mapped)"
       else
@@ -85,10 +85,10 @@ __fileCopy() {
       "$copyFunction" "$source" "$actualSource" "$destination" "$verb"
       exitCode=$?
       if [ $exitCode -eq 0 ] && [ -n "$owner" ]; then
-        __catchEnvironment "$handler" chown "$owner" "$destination" || exitCode=$?
+        catchEnvironment "$handler" chown "$owner" "$destination" || exitCode=$?
       fi
       if [ $exitCode -eq 0 ] && [ -n "$mode" ]; then
-        __catchEnvironment "$handler" chmod "$mode" "$destination" || exitCode=$?
+        catchEnvironment "$handler" chmod "$mode" "$destination" || exitCode=$?
       fi
       if $mapFlag; then
         rm "$actualSource" || :
@@ -98,7 +98,7 @@ __fileCopy() {
     esac
     shift
   done
-  __throwArgument "$handler" "Missing source" || return $?
+  returnThrowArgument "$handler" "Missing source" || return $?
 }
 
 __fileCopyWouldChange() {
@@ -110,7 +110,7 @@ __fileCopyWouldChange() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -128,8 +128,8 @@ __fileCopyWouldChange() {
         destination=$(usageArgumentFileDirectory "$handler" "destination" "$1") || return $?
         shift
         if [ $# -gt 0 ]; then
-          # _IDENTICAL_ argumentUnknownHandler 1
-          __throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
+      # _IDENTICAL_ argumentUnknownHandler 1
+      returnThrowArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
         fi
         if [ ! -f "$destination" ]; then
           return 0
@@ -137,11 +137,11 @@ __fileCopyWouldChange() {
         local exitCode=1
         if $mapFlag; then
           actualSource=$(fileTemporaryName "$handler") || return $?
-          __catch "$handler" mapEnvironment <"$source" >"$actualSource" || returnClean $? "$actualSource" || return $?
+          returnCatch "$handler" mapEnvironment <"$source" >"$actualSource" || returnClean $? "$actualSource" || return $?
           if ! diff -q "$actualSource" "$destination" >/dev/null; then
             exitCode=0
           fi
-          __catchEnvironment "$handler" rm -f "$actualSource" || return $?
+          catchEnvironment "$handler" rm -f "$actualSource" || return $?
         else
           actualSource="$source"
           if ! diff -q "$actualSource" "$destination" >/dev/null; then
@@ -154,7 +154,7 @@ __fileCopyWouldChange() {
     esac
     shift
   done
-  __throwArgument "$handler" "Missing source" || return $?
+  returnThrowArgument "$handler" "Missing source" || return $?
 }
 
 #
@@ -168,7 +168,7 @@ _fileCopyEscalated() {
     "$(decorate code "$3")" \
     "$(decorate red Yes)" \
     "$(decorate green No)" "$(decorate red Yes)")"; then
-    __execute cp "$2" "$3" || return $?
+    execute cp "$2" "$3" || return $?
     return $?
   fi
   printf "%s \"%s\"\n" "$(decorate error "Used declined update of")" "$(decorate red "$3")" 1>&2
@@ -183,7 +183,7 @@ _fileCopyEscalated() {
 _fileCopyRegular() {
   local displaySource="$1" source="$2" destination="$3" verb="$4"
   _fileCopyPrompt "OVERRIDE $displaySource" "$destination" "$verb" || :
-  __execute cp "$source" "$destination" || return $?
+  execute cp "$source" "$destination" || return $?
 }
 
 _fileCopyPrompt() {
@@ -203,6 +203,6 @@ _fileCopyShowNew() {
   local lines
   _fileCopyPrompt "$displaySource" "$destination" "Created"
   head -10 "$source" | decorate code
-  lines=$(__catch "$handler" fileLineCount "$source") || lines="0" || :
+  lines=$(returnCatch "$handler" fileLineCount "$source") || lines="0" || :
   decorate info "$(printf "%d %s total" "$lines" "$(plural "$lines" line lines)")"
 }

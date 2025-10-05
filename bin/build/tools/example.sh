@@ -48,7 +48,7 @@ exampleFunction() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -72,7 +72,7 @@ exampleFunction() {
       ;;
     *)
       # _IDENTICAL_ argumentUnknownHandler 1
-      __throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
+      returnThrowArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
       ;;
     esac
     shift
@@ -85,15 +85,15 @@ exampleFunction() {
 
   # Load MANPATH environment
   export MANPATH
-  __catch "$handler" buildEnvironmentLoad MANPATH || return $?
+  returnCatch "$handler" buildEnvironmentLoad MANPATH || return $?
 
-  ! $easyFlag || __catchEnvironment "$handler" decorate pair "$width" "$name: Easy mode enabled" || return $?
-  ! $easyFlag || __catchEnvironment "$handler" decorate pair "path" "$path" || return $?
-  ! $easyFlag || __catchEnvironment "$handler" decorate pair "target" "$target" || return $?
+  ! $easyFlag || catchEnvironment "$handler" decorate pair "$width" "$name: Easy mode enabled" || return $?
+  ! $easyFlag || catchEnvironment "$handler" decorate pair "path" "$path" || return $?
+  ! $easyFlag || catchEnvironment "$handler" decorate pair "target" "$target" || return $?
 
   # Trouble debugging
 
-  whichExists library-which-should-be-there || __throwEnvironment "$handler" "missing thing" || return $?
+  whichExists library-which-should-be-there || returnThrowEnvironment "$handler" "missing thing" || return $?
 
   # DEBUG LINE
   printf -- "%s:%s %s\n" "$(decorate code "${BASH_SOURCE[0]}")" "$(decorate magenta "$LINENO")" "$(decorate each code "$@")" # DEBUG LINE
@@ -211,23 +211,23 @@ __hookGitPostCommit() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
     *)
       # _IDENTICAL_ argumentUnknownHandler 1
-      __throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
+      returnThrowArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
       ;;
     esac
     shift
   done
 
   timingReport "$start" "Completed in"
-  __catchEnvironment "$handler" gitInstallHook post-commit || return $?
+  catchEnvironment "$handler" gitInstallHook post-commit || return $?
 
-  __catchEnvironment "$handler" gitMainly || return $?
-  __catchEnvironment "$handler" git push origin || return $?
+  catchEnvironment "$handler" gitMainly || return $?
+  catchEnvironment "$handler" git push origin || return $?
 }
 ___hookGitPostCommit() {
   # __IDENTICAL__ usageDocument 1

@@ -18,8 +18,8 @@ _gitAddRemotesToSSHKnown() {
   fileDirectoryRequire "$sshKnown" || return $?
 
   [ -f "$sshKnown" ] || touch "$sshKnown"
-  __catchEnvironment "$handler" chmod 700 "$HOME/.ssh" || return $?
-  __catchEnvironment "$handler" chmod 600 "$sshKnown" || return $?
+  catchEnvironment "$handler" chmod 700 "$HOME/.ssh" || return $?
+  catchEnvironment "$handler" chmod 600 "$sshKnown" || return $?
 
   statusMessage decorate info "Listing remotes ..."
   git remote -v | awk '{ print $2 }' | cut -f 1 -d : | cut -f 2 -d @ | sort -u | while read -r remoteHost; do
@@ -28,7 +28,7 @@ _gitAddRemotesToSSHKnown() {
       continue
     fi
     statusMessage decorate info "Adding $remoteHost to SSH known hosts ..."
-    __catchEnvironment "$handler" sshKnownHostAdd "$remoteHost" || return $?
+    catchEnvironment "$handler" sshKnownHostAdd "$remoteHost" || return $?
   done
   clearLine
 }

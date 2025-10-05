@@ -13,7 +13,7 @@ __confirmMenu() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -44,7 +44,7 @@ __confirmMenu() {
       ;;
     -*)
       # _IDENTICAL_ argumentUnknownHandler 1
-      __throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
+      returnThrowArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
       ;;
     *)
       message="$*"
@@ -54,9 +54,9 @@ __confirmMenu() {
     shift
   done
 
-  [ "${#allowed[@]}" -gt 0 ] || __throwArgument "$handler" "Need at least one --choice" || return $?
-  [ -z "$default" ] || inArray "$default" "${allowed[@]}" || __throwArgument "$handler" "Default $default is not in menu: ${allowed[*]}" || return $?
-  [ -n "$resultFile" ] || __throwArgument "$handler" "No --result given" || return $?
+  [ "${#allowed[@]}" -gt 0 ] || returnThrowArgument "$handler" "Need at least one --choice" || return $?
+  [ -z "$default" ] || inArray "$default" "${allowed[@]}" || returnThrowArgument "$handler" "Default $default is not in menu: ${allowed[*]}" || return $?
+  [ -n "$resultFile" ] || returnThrowArgument "$handler" "No --result given" || return $?
 
   local exitCode=0 value="" defaultOk=false
 

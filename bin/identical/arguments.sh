@@ -59,7 +59,7 @@ __documentTemplateFunction() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -68,19 +68,19 @@ __documentTemplateFunction() {
     # IDENTICAL profileNameArgumentHandlerCase 6
     --profile)
       shift
-      [ ${#pp[@]} -eq 0 ] || __throwArgument "$handler" "$argument already specified: ${pp[*]}"
+      [ ${#pp[@]} -eq 0 ] || returnThrowArgument "$handler" "$argument already specified: ${pp[*]}"
       profileName="$(usageArgumentString "$handler" "$argument" "$1")" || return $?
       pp=("$argument" "$profileName")
       ;;
     # IDENTICAL regionArgumentHandler 5
     --region)
       shift
-      [ -z "$region" ] || __throwArgument "$handler" "$argument already specified: $region"
+      [ -z "$region" ] || returnThrowArgument "$handler" "$argument already specified: $region"
       region=$(usageArgumentString "$handler" "$argument" "${1-}") || return $?
       ;;
     *)
       # _IDENTICAL_ argumentUnknownHandler 1
-      __throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
+      returnThrowArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
       ;;
     esac
     shift
@@ -93,18 +93,18 @@ __documentTemplateFunction() {
 
   # IDENTICAL profileNameArgumentValidation 4
   if [ -z "$profileName" ]; then
-    profileName="$(__catch "$handler" buildEnvironmentGet AWS_PROFILE)" || return $?
+    profileName="$(returnCatch "$handler" buildEnvironmentGet AWS_PROFILE)" || return $?
     [ -n "$profileName" ] || profileName="default"
   fi
 
   # IDENTICAL regionArgumentValidation 7
   if [ -z "$region" ]; then
     export AWS_REGION
-    __catch "$handler" buildEnvironmentLoad AWS_REGION || return $?
+    returnCatch "$handler" buildEnvironmentLoad AWS_REGION || return $?
     region="${AWS_REGION-}"
-    [ -n "$region" ] || __throwArgument "$handler" "AWS_REGION or --region is required" || return $?
+    [ -n "$region" ] || returnThrowArgument "$handler" "AWS_REGION or --region is required" || return $?
   fi
-  awsRegionValid "$region" || __throwArgument "$handler" "--region $region is not a valid region" || return $?
+  awsRegionValid "$region" || returnThrowArgument "$handler" "--region $region is not a valid region" || return $?
 
   timingReport "$start" "Completed in"
 }
@@ -122,19 +122,19 @@ ___documentTemplateFunction() {
     # IDENTICAL profileNameArgumentHandlerCase 6
     --profile)
       shift
-      [ ${#pp[@]} -eq 0 ] || __throwArgument "$handler" "$argument already specified: ${pp[*]}"
+      [ ${#pp[@]} -eq 0 ] || returnThrowArgument "$handler" "$argument already specified: ${pp[*]}"
       profileName="$(usageArgumentString "$handler" "$argument" "$1")" || return $?
       pp=("$argument" "$profileName")
       ;;
     # IDENTICAL regionArgumentHandler 5
     --region)
       shift
-      [ -z "$region" ] || __throwArgument "$handler" "$argument already specified: $region"
+      [ -z "$region" ] || returnThrowArgument "$handler" "$argument already specified: $region"
       region=$(usageArgumentString "$handler" "$argument" "${1-}") || return $?
       ;;
     *)
       # _IDENTICAL_ argumentUnknownHandler 1
-      __throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
+      returnThrowArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
       ;;
     esac
     shift
@@ -147,18 +147,18 @@ ___documentTemplateFunction() {
 
   # IDENTICAL profileNameArgumentValidation 4
   if [ -z "$profileName" ]; then
-    profileName="$(__catch "$handler" buildEnvironmentGet AWS_PROFILE)" || return $?
+    profileName="$(returnCatch "$handler" buildEnvironmentGet AWS_PROFILE)" || return $?
     [ -n "$profileName" ] || profileName="default"
   fi
 
   # IDENTICAL regionArgumentValidation 7
   if [ -z "$region" ]; then
     export AWS_REGION
-    __catch "$handler" buildEnvironmentLoad AWS_REGION || return $?
+    returnCatch "$handler" buildEnvironmentLoad AWS_REGION || return $?
     region="${AWS_REGION-}"
-    [ -n "$region" ] || __throwArgument "$handler" "AWS_REGION or --region is required" || return $?
+    [ -n "$region" ] || returnThrowArgument "$handler" "AWS_REGION or --region is required" || return $?
   fi
-  awsRegionValid "$region" || __throwArgument "$handler" "--region $region is not a valid region" || return $?
+  awsRegionValid "$region" || returnThrowArgument "$handler" "--region $region is not a valid region" || return $?
 
   timingReport "$start" "Completed in"
 }

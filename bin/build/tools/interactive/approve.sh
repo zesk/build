@@ -20,7 +20,7 @@ __approveBashSource() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -44,7 +44,7 @@ __approveBashSource() {
         verb="file"
         if __interactiveApprove "$handler" "$sourcePath" "Load" "${aa[@]+"${aa[@]}"}" "${bb[@]}"; then
           ! $verboseFlag || statusMessage --last printf -- "%s %s %s" "$(decorate info "$prefix")" "$(decorate label "$verb")" "$displayPath"
-          __catchEnvironment "$handler" source "$sourcePath" || return $?
+          catchEnvironment "$handler" source "$sourcePath" || return $?
         else
           decorate subtle "Skipping unapproved file $(decorate file "$sourcePath") Undo: $(decorate code "${FUNCNAME[0]} --clear \"$sourcePath\"")"
         fi
@@ -52,12 +52,12 @@ __approveBashSource() {
         verb="path"
         if __interactiveApprove "$handler" "$sourcePath/" "Load path" "${aa[@]+"${aa[@]}"}" "${bb[@]}"; then
           ! $verboseFlag || statusMessage --last printf -- "%s %s %s" "$(decorate info "$prefix")" "$(decorate label "$verb")" "$displayPath"
-          __catchEnvironment "$handler" bashSourcePath "$sourcePath" || return $?
+          catchEnvironment "$handler" bashSourcePath "$sourcePath" || return $?
         else
           decorate subtle "Skipping unapproved directory $(decorate file "$sourcePath") Undo: $(decorate code "${FUNCNAME[0]} --clear \"$sourcePath\"")"
         fi
       else
-        __throwEnvironment "$handler" "Not a file or directory? $displayPath is a $(decorate value "$(fileType "$sourcePath")")" || return $?
+        returnThrowEnvironment "$handler" "Not a file or directory? $displayPath is a $(decorate value "$(fileType "$sourcePath")")" || return $?
       fi
       hh+=(--highlight "$sourcePath")
       ;;
@@ -65,9 +65,9 @@ __approveBashSource() {
     shift
   done
   if $reportFlag; then
-    __catch "$handler" approvedSources "${hh[@]+"${hh[@]}"}" || return $?
+    returnCatch "$handler" approvedSources "${hh[@]+"${hh[@]}"}" || return $?
   elif $deleteFlag; then
-    __catch "$handler" muzzle approvedSources --delete || return $?
+    returnCatch "$handler" muzzle approvedSources --delete || return $?
   fi
 }
 
@@ -88,7 +88,7 @@ __approveBashSource() {
 __interactiveApprove() {
   local handler="$1" sourcePath="$2" approved displayFile approvedHome
 
-  shift 2 || __catchArgument "$handler" "shift" || return $?
+  shift 2 || catchArgument "$handler" "shift" || return $?
   approvedHome=$(__interactiveApproveHome "$handler") || return $?
 
   if [ -d "$sourcePath" ]; then
@@ -126,7 +126,7 @@ __interactiveApproveRegisterCacheFile() {
     else
       approved=false
     fi
-    printf -- "%s\n" "$approved" "$(whoami)" "$(date +%s)" "$(date -u)" "$sourceFile" >"$cacheFile" || __throwEnvironment "$handler" "Unable to write $(decorate file "$cacheFile")" || return $?
+    printf -- "%s\n" "$approved" "$(whoami)" "$(date +%s)" "$(date -u)" "$sourceFile" >"$cacheFile" || returnThrowEnvironment "$handler" "Unable to write $(decorate file "$cacheFile")" || return $?
   fi
   approved=$(head -n 1 "$cacheFile")
   if ! isBoolean "$approved" || ! "$approved"; then
@@ -143,7 +143,7 @@ __interactiveApproveRegisterCacheFile() {
 # Argument: handler - Function. Required.
 __interactiveApproveHome() {
   local handler="$1" approvedHome
-  approvedHome=$(__catch "$handler" buildEnvironmentGetDirectory --subdirectory ".interactiveApproved" "XDG_STATE_HOME") || return $?
+  approvedHome=$(returnCatch "$handler" buildEnvironmentGetDirectory --subdirectory ".interactiveApproved" "XDG_STATE_HOME") || return $?
   printf "%s\n" "$approvedHome"
 }
 
@@ -155,8 +155,8 @@ __interactiveApproveHome() {
 __interactiveApproveCacheFile() {
   local handler="$1" approvedHome="$2" sourceFile="$3" cacheFile
 
-  [ -f "$sourceFile" ] || __throwArgument "$handler" "File does not exist: $sourceFile" || return $?
-  cacheFile="$approvedHome/$(__catch "$handler" shaPipe <"$sourceFile")" || return $?
+  [ -f "$sourceFile" ] || returnThrowArgument "$handler" "File does not exist: $sourceFile" || return $?
+  cacheFile="$approvedHome/$(returnCatch "$handler" shaPipe <"$sourceFile")" || return $?
   printf "%s\n" "$cacheFile"
 }
 
@@ -164,7 +164,7 @@ __interactiveApproveCacheFile() {
 __interactiveApproveClear() {
   local handler="$1" sourcePath="$2"
 
-  shift 2 || __catchArgument "$handler" "shift" || return $?
+  shift 2 || catchArgument "$handler" "shift" || return $?
   approvedHome=$(__interactiveApproveHome "$handler") || return $?
 
   if [ -d "$sourcePath" ]; then
@@ -172,12 +172,12 @@ __interactiveApproveClear() {
     while read -r sourceFile; do
       local cacheFile
       cacheFile=$(__interactiveApproveCacheFile "$handler" "$approvedHome" "$sourceFile") || return $?
-      [ ! -f "$cacheFile" ] || __catchEnvironment "$handler" rm -rf "$cacheFile" || return $?
+      [ ! -f "$cacheFile" ] || catchEnvironment "$handler" rm -rf "$cacheFile" || return $?
     done < <(find "$sourcePath" -type f -name '*.sh' ! -path '*/.*/*')
   else
     local cacheFile
     cacheFile=$(__interactiveApproveCacheFile "$handler" "$approvedHome" "$sourcePath") || return $?
-    [ ! -f "$cacheFile" ] || __catchEnvironment "$handler" rm -rf "$cacheFile" || return $?
+    [ ! -f "$cacheFile" ] || catchEnvironment "$handler" rm -rf "$cacheFile" || return $?
   fi
 }
 
@@ -196,7 +196,7 @@ approvedSources() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -206,7 +206,7 @@ approvedSources() {
     --no-delete) deleteFlag=false ;;
     *)
       # _IDENTICAL_ argumentUnknownHandler 1
-      __throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
+      returnThrowArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
       ;;
     esac
     shift
@@ -286,7 +286,7 @@ approvedSources() {
   [ "${#approvedBashSources[@]}" -eq 0 ] || printf "%s\n%s\n\n" "$(decorate info "Approved:")" "$(printf -- "%s\n" "${approvedBashSources[@]}" | sort | awk -F '|' '{ print $2 }')"
   [ "${#unapprovedBashSources[@]}" -eq 0 ] || printf "%s\n%s\n\n" "$(decorate warning "Unapproved:")" "$(printf -- "%s\n" "${unapprovedBashSources[@]}" | sort | awk -F '|' '{ print $2 }')"
 
-  ! $deleteFlag || __catchEnvironment "$handler" rm -f "${deleteFiles[@]}" || return $?
+  ! $deleteFlag || catchEnvironment "$handler" rm -f "${deleteFiles[@]}" || return $?
 }
 _approvedSources() {
   # __IDENTICAL__ usageDocument 1

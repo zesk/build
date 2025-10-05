@@ -94,7 +94,7 @@ __hookDeployShutdown() {
   # shellcheck source=/dev/null
   source "$(dirname "${BASH_SOURCE[0]}")/../../bin/build/tools.sh" || _fail tools.sh || return $?
 
-  decorate success "${BASH_SOURCE[0]} is a no-op." || __throwEnvironment "$handler" "decorate success" || return $?
+  decorate success "${BASH_SOURCE[0]} is a no-op." || returnThrowEnvironment "$handler" "decorate success" || return $?
   : "$@"
 }
 ___hookDeployShutdown() {

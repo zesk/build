@@ -51,16 +51,16 @@ testFileEndsWithNewline() {
 
   assertExitCode 0 fileEndsWithNewline "$ff" || return $?
 
-  __catchEnvironment "$handler" printf -- "\n" >"$ff" || return $?
+  catchEnvironment "$handler" printf -- "\n" >"$ff" || return $?
   assertExitCode 0 fileEndsWithNewline "$ff" || return $?
 
-  __catchEnvironment "$handler" printf -- "abc\n\n\n\n" >"$ff" || return $?
+  catchEnvironment "$handler" printf -- "abc\n\n\n\n" >"$ff" || return $?
   assertExitCode 0 fileEndsWithNewline "$ff" || return $?
 
-  __catchEnvironment "$handler" printf -- "abc\n\n\n\ndef" >"$ff" || return $?
+  catchEnvironment "$handler" printf -- "abc\n\n\n\ndef" >"$ff" || return $?
   assertExitCode 1 fileEndsWithNewline "$ff" || return $?
 
-  __catchEnvironment "$handler" rm -f "$ff" || return $?
+  catchEnvironment "$handler" rm -f "$ff" || return $?
 }
 
 __dataStringBegins() {

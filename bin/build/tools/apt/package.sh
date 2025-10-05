@@ -17,7 +17,7 @@
 
 __aptNonInteractive() {
   local handler="$1" && shift
-  DEBIAN_FRONTEND=noninteractive NEEDRESTART_MODE=l __catchEnvironment "$handler" apt-get "$@" || return $?
+  DEBIAN_FRONTEND=noninteractive NEEDRESTART_MODE=l catchEnvironment "$handler" apt-get "$@" || return $?
 }
 
 # Install apt packages
@@ -78,8 +78,8 @@ ___aptUpdate() {
 # package.sh: true
 ___aptInstalledList() {
   local handler="$1" && shift
-  [ $# -eq 0 ] || __throwArgument "$handler" "Unknown argument $*" || return $?
-  __catchEnvironment "$handler" dpkg --get-selections | grepSafe -v deinstall | awk '{ print $1 }' || return $?
+  [ $# -eq 0 ] || returnThrowArgument "$handler" "Unknown argument $*" || return $?
+  catchEnvironment "$handler" dpkg --get-selections | grepSafe -v deinstall | awk '{ print $1 }' || return $?
 }
 
 # Usage: {fn}
@@ -87,7 +87,7 @@ ___aptInstalledList() {
 # package.sh: true
 ___aptAvailableList() {
   local handler="$1" && shift
-  __catchEnvironment "$handler" apt-cache pkgnames || return $?
+  catchEnvironment "$handler" apt-cache pkgnames || return $?
 }
 
 # Usage: {fn}

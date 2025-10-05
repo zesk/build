@@ -15,35 +15,35 @@
 # Run `handler` with an argument error
 # Argument: handler - Function. Required. Error handler.
 # Argument: message ... - String. Optional. Error message
-__throwArgument() {
-  __throw 2 "$@" || return $?
+returnThrowArgument() {
+  returnThrow 2 "$@" || return $?
 }
 
 # Run `handler` with an environment error
 # Argument: handler - Function. Required. Error handler.
 # Argument: message ... - String. Optional. Error message
-__throwEnvironment() {
-  __throw 1 "$@" || return $?
+returnThrowEnvironment() {
+  returnThrow 1 "$@" || return $?
 }
 
 # Run `command`, upon failure run `handler` with an argument error
 # Usage: {fn} handler command ...
 # Argument: handler - Required. String. Failure command
 # Argument: command - Required. Command to run.
-# Requires: __throwArgument
-__catchArgument() {
+# Requires: returnThrowArgument
+catchArgument() {
   local handler="${1-}"
-  shift && "$@" || __throwArgument "$handler" "$@" || return $?
+  shift && "$@" || returnThrowArgument "$handler" "$@" || return $?
 }
 
 # Run `command`, upon failure run `handler` with an environment error
 # Usage: {fn} handler command ...
 # Argument: handler - Required. String. Failure command
 # Argument: command - Required. Command to run.
-# Requires: __throwEnvironment
-__catchEnvironment() {
+# Requires: returnThrowEnvironment
+catchEnvironment() {
   local handler="${1-}"
-  shift && "$@" || __throwEnvironment "$handler" "$@" || return $?
+  shift && "$@" || returnThrowEnvironment "$handler" "$@" || return $?
 }
 
 # _IDENTICAL_ _errors 36
@@ -69,7 +69,7 @@ returnEnvironment() {
 # Argument: handler - Function. Required. Error handler.
 # Argument: message ... - String. Optional. Error message
 # Requires: returnArgument
-__throw() {
+returnThrow() {
   local exitCode="${1-}" && shift || returnArgument "Missing exit code" || return $?
   lcoal handler="${1-}" && shift || returnArgument "Missing error handler" || return $?
   "$handler" "$exitCode" "$@" || return $?
@@ -79,7 +79,7 @@ __throw() {
 # Argument: handler - Required. Function. Error handler.
 # Argument: binary ... - Required. Executable. Any arguments are passed to `binary`.
 # Requires: returnArgument
-__catch() {
+returnCatch() {
   local handler="${1-}" && shift || returnArgument "Missing handler" || return $?
   "$@" || "$handler" "$?" "$@" || return $?
 }

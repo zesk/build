@@ -334,7 +334,7 @@ testAWSCredentialsEdit() {
 
   local testAWSCredentials testPassword="abcdefghabcdefghabcdefghabcdefghhabcdefgh"
 
-  testAWSCredentials=$(__catch "$handler" awsCredentialsFile --path) || return $?
+  testAWSCredentials=$(returnCatch "$handler" awsCredentialsFile --path) || return $?
   assertFileDoesNotExist "$testAWSCredentials" || return $?
 
   testCredentials="$home/test/example/aws/fake.credentials.txt"
@@ -350,7 +350,7 @@ testAWSCredentialsEdit() {
   assertFileExists "$testAWSCredentials" || return $?
   assertExitCode 0 diff -u "$testAWSCredentials" "$home/test/example/aws/fake.credentials.1.txt" || return $?
 
-  __catchEnvironment "$handler" cp "$testCredentials" "$testAWSCredentials" || return $?
+  catchEnvironment "$handler" cp "$testCredentials" "$testAWSCredentials" || return $?
   assertExitCode 0 awsCredentialsAdd --force --profile "$profileName" "AKIA0123456789001233" "$testPassword" || return $?
   assertExitCode 0 diff -u "$testAWSCredentials" "$home/test/example/aws/fake.credentials.2.txt" || return $?
 
@@ -366,7 +366,7 @@ testAWSCredentialsEdit() {
   assertExitCode 0 awsCredentialsAdd --force --profile "consolidated-devops" "AKIA0000000000009999" "deadbeef" || return $?
   assertExitCode 0 diff -u "$testAWSCredentials" "$home/test/example/aws/fake.credentials.5.txt" || return $?
 
-  __catchEnvironment "$handler" rm -rf "${clean[@]}" || return $?
+  catchEnvironment "$handler" rm -rf "${clean[@]}" || return $?
 
   mockEnvironmentStop HOME
 }
@@ -401,7 +401,7 @@ testAWSProfiles() {
 
   assertExitCode 0 awsCredentialsRemove --comments "$firstName" || return $?
 
-  __catchEnvironment "$handler" awsProfilesList >"$list" || return $?
+  catchEnvironment "$handler" awsProfilesList >"$list" || return $?
   assertFileDoesNotContain --line "$LINENO" "$list" "$firstName" || returnUndo $? dumpPipe awsProfilesList <"$list" || return $?
   assertFileDoesNotContain --line "$LINENO" "$list" "$secondName" || returnUndo $? dumpPipe awsProfilesList <"$list" || return $?
 
@@ -417,25 +417,25 @@ testAWSProfiles() {
   assertExitCode 0 awsCredentialsAdd --comments --force --profile "$firstName" "$testKey" "$testPassword" || return $?
   assertFileContains --line "$LINENO" "$credentials" "# awsCredentialsAdd" || return $?
 
-  __catchEnvironment "$handler" awsProfilesList >"$list" || return $?
+  catchEnvironment "$handler" awsProfilesList >"$list" || return $?
   assertFileContains --line "$LINENO" "$list" "$firstName" || return $?
   assertFileDoesNotContain --line "$LINENO" "$list" "$secondName" || return $?
   assertExitCode 0 awsCredentialsAdd --comments --profile "$secondName" "$testKey" "$testPassword" || return $?
 
-  __catchEnvironment "$handler" awsProfilesList >"$list" || return $?
+  catchEnvironment "$handler" awsProfilesList >"$list" || return $?
   assertFileContains --line "$LINENO" "$list" "$firstName" || return $?
   assertFileContains --line "$LINENO" "$list" "$secondName" || return $?
 
   assertExitCode 0 awsCredentialsRemove --comments "$firstName" || return $?
 
-  __catchEnvironment "$handler" awsProfilesList >"$list" || return $?
+  catchEnvironment "$handler" awsProfilesList >"$list" || return $?
   assertFileDoesNotContain --line "$LINENO" "$list" "$firstName" || return $?
   assertFileContains --line "$LINENO" "$list" "$secondName" || return $?
 
   assertExitCode 0 awsCredentialsRemove --comments "$firstName" || return $?
   decorate info removed first name
 
-  __catchEnvironment "$handler" awsProfilesList >"$list" || return $?
+  catchEnvironment "$handler" awsProfilesList >"$list" || return $?
   assertFileDoesNotContain --line "$LINENO" "$list" "$firstName" || return $?
   assertFileContains --line "$LINENO" "$list" "$secondName" || return $?
 
@@ -444,11 +444,11 @@ testAWSProfiles() {
 
   dumpPipe "awsProfiles saved" <"$list"
   dumpPipe "credentials" <"$(awsCredentialsFile)"
-  __catchEnvironment "$handler" awsProfilesList >"$list" || return $?
+  catchEnvironment "$handler" awsProfilesList >"$list" || return $?
   assertFileDoesNotContain --line "$LINENO" "$list" "$firstName" || return $?
   assertFileDoesNotContain --line "$LINENO" "$list" "$secondName" || return $?
 
-  __catchEnvironment "$handler" rm -rf "${clean[@]}" || return $?
+  catchEnvironment "$handler" rm -rf "${clean[@]}" || return $?
 
   mockEnvironmentStop HOME
   mockEnvironmentStop AWS_PROFILE

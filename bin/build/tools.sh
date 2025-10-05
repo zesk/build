@@ -58,10 +58,10 @@ _isUnsignedInteger() {
 # Argument ... - Arguments. Optional. Additional arguments to the function.
 __functionLoader() {
   local __saved=("$@") functionName="${1-}" subdirectory="${2-}" handler="${3-}" command="${4-}"
-  shift 4 || __catchArgument "$handler" "Missing arguments: $(decorate each --count code -- "${__saved[@]}")" || return $?
+  shift 4 || catchArgument "$handler" "Missing arguments: $(decorate each --count code -- "${__saved[@]}")" || return $?
   export BUILD_HOME
   if ! isFunction "$functionName"; then
-    __catch "$handler" bashSourcePath "${BUILD_HOME-}/bin/build/tools/$subdirectory/" || return $?
+    returnCatch "$handler" bashSourcePath "${BUILD_HOME-}/bin/build/tools/$subdirectory/" || return $?
     export __BUILD_LOADER
     __BUILD_LOADER+=("$functionName")
   fi

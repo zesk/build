@@ -16,7 +16,7 @@ testDaemontools() {
 
   local home
 
-  home=$(__catch "$handler" buildHome) || return $?
+  home=$(returnCatch "$handler" buildHome) || return $?
   assertExitCode --stderr-match "not production" 0 daemontoolsInstall || return $?
 
   if ! daemontoolsIsRunning; then
@@ -31,9 +31,9 @@ testDaemontools() {
 
   assertExitCode 0 daemontoolsIsRunning || return $?
 
-  logPath=$(__catch "$handler" buildCacheDirectory "${FUNCNAME[0]}") || return $?
+  logPath=$(returnCatch "$handler" buildCacheDirectory "${FUNCNAME[0]}") || return $?
   decorate info "logPath is $logPath"
-  __catch "$handler" directoryRequire "$logPath" >/dev/null || return $?
+  returnCatch "$handler" directoryRequire "$logPath" >/dev/null || return $?
 
   assertExitCode --leak DAEMONTOOLS_HOME --leak __BUILD_LOADER 0 daemontoolsInstallService --log "$logPath" "$home/test/example/lemon.sh" --arguments "orange" "grape" "lemon" -- --log-arguments "n10" || return $?
 

@@ -22,7 +22,7 @@
 phpInstall() {
   local handler="_${FUNCNAME[0]}"
   [ $# -eq 0 ] || __help --only "$handler" "$@" || return "$(convertValue $? 1 0)"
-  __catch "$handler" packageWhich php php-common php-cli "$@" || return $?
+  returnCatch "$handler" packageWhich php php-common php-cli "$@" || return $?
 }
 _phpInstall() {
   # __IDENTICAL__ usageDocument 1
@@ -42,7 +42,7 @@ _phpInstall() {
 phpUninstall() {
   local handler="_${FUNCNAME[0]}"
   [ $# -eq 0 ] || __help --only "$handler" "$@" || return "$(convertValue $? 1 0)"
-  __catch "$handler" packageWhichUninstall php php-common php-cli "$@" || return $?
+  returnCatch "$handler" packageWhichUninstall php php-common php-cli "$@" || return $?
 }
 _phpUninstall() {
   # __IDENTICAL__ usageDocument 1
@@ -57,11 +57,11 @@ phpTailLog() {
   local handler="_${FUNCNAME[0]}"
   [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
   local logFile
-  logFile=$(__catchEnvironment "$handler" phpLog) || return $?
-  [ -n "$logFile" ] || __throwEnvironment "$handler" "PHP log file is blank" || return $?
+  logFile=$(catchEnvironment "$handler" phpLog) || return $?
+  [ -n "$logFile" ] || returnThrowEnvironment "$handler" "PHP log file is blank" || return $?
   if [ ! -f "$logFile" ]; then
     statusMessage printf -- "%s %s" "$(decorate file "$logFile")" "$(decorate warning "does not exist - creating")" 1>&2
-    __catchEnvironment "$handler" touch "$logFile" || return $?
+    catchEnvironment "$handler" touch "$logFile" || return $?
   elif fileIsEmpty "$logFile"; then
     statusMessage printf -- "%s %s" "$(decorate file "$logFile")" "$(decorate warning "is empty")" 1>&2
   fi
@@ -79,8 +79,8 @@ _phpTailLog() {
 phpLog() {
   local handler="_${FUNCNAME[0]}"
   [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
-  whichExists php || __throwEnvironment "$handler" "php not installed" || return $?
-  php -r "echo ini_get('error_log');" 2>/dev/null || __throwEnvironment "$handler" "php installation issue" || return $?
+  whichExists php || returnThrowEnvironment "$handler" "php not installed" || return $?
+  php -r "echo ini_get('error_log');" 2>/dev/null || returnThrowEnvironment "$handler" "php installation issue" || return $?
 }
 _phpLog() {
   # __IDENTICAL__ usageDocument 1
@@ -94,8 +94,8 @@ _phpLog() {
 phpIniFile() {
   local handler="_${FUNCNAME[0]}"
   [ $# -eq 0 ] || __help --only "$handler" "$@" || return "$(convertValue $? 1 0)"
-  whichExists php || __throwEnvironment "$handler" "php not installed" || return $?
-  php -r "echo get_cfg_var('cfg_file_path');" 2>/dev/null || __throwEnvironment "$handler" "php installation issue" || return $?
+  whichExists php || returnThrowEnvironment "$handler" "php not installed" || return $?
+  php -r "echo get_cfg_var('cfg_file_path');" 2>/dev/null || returnThrowEnvironment "$handler" "php installation issue" || return $?
 }
 _phpIniFile() {
   # __IDENTICAL__ usageDocument 1
@@ -114,9 +114,9 @@ _phpIniFile() {
 _deploymentGenerateValue() {
   local handler="$1" home="$2" variableName="$3" hook="$4"
   if [ -z "${!variableName}" ]; then
-    __catchEnvironment "$handler" hookRun --application "$home" "$hook" | __catchEnvironment "$handler" tee "$home/.deploy/$variableName" || return $?
+    catchEnvironment "$handler" hookRun --application "$home" "$hook" | catchEnvironment "$handler" tee "$home/.deploy/$variableName" || return $?
   else
-    printf -- "%s" "${!variableName}" | __catchEnvironment "$handler" tee "$home/.deploy/$variableName" || return $?
+    printf -- "%s" "${!variableName}" | catchEnvironment "$handler" tee "$home/.deploy/$variableName" || return $?
   fi
 }
 
@@ -127,7 +127,7 @@ _deploymentToSuffix() {
   staging) versionSuffix=s ;;
   test) versionSuffix=t ;;
   *)
-    __throwArgument "$handler" "--deployment $deployment unknown - can not set versionSuffix" || return $?
+    returnThrowArgument "$handler" "--deployment $deployment unknown - can not set versionSuffix" || return $?
     ;;
   esac
   printf "%s\n" "$versionSuffix"
@@ -167,14 +167,14 @@ phpBuild() {
 
   local targetName optClean=false versionSuffix="" composerArgs=() home=""
 
-  targetName="$(__catchEnvironment "$handler" deployPackageName)" || return $?
+  targetName="$(catchEnvironment "$handler" deployPackageName)" || return $?
 
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -211,12 +211,12 @@ phpBuild() {
     shift
   done
 
-  [ -n "$home" ] || home=$(__catch "$handler" buildHome) || return $?
-  [ -n "$targetName" ] || __throwArgument "$handler" "--name argument blank" || return $?
-  [ $# -gt 0 ] || __throwArgument "$handler" "Need to supply a list of files for application $(decorate code "$targetName")" || return $?
+  [ -n "$home" ] || home=$(returnCatch "$handler" buildHome) || return $?
+  [ -n "$targetName" ] || returnThrowArgument "$handler" "--name argument blank" || return $?
+  [ $# -gt 0 ] || returnThrowArgument "$handler" "Need to supply a list of files for application $(decorate code "$targetName")" || return $?
 
   usageRequireBinary "$handler" tar || return $?
-  __catch "$handler" buildEnvironmentLoad "${environments[@]}" "${optionals[@]}" || return $?
+  returnCatch "$handler" buildEnvironmentLoad "${environments[@]}" "${optionals[@]}" || return $?
 
   local missingFile tarFile
   missingFile=()
@@ -225,7 +225,7 @@ phpBuild() {
       missingFile+=("$tarFile")
     fi
   done
-  [ ${#missingFile[@]} -eq 0 ] || __throwEnvironment "$handler" "Missing files: ${missingFile[*]}" || return $?
+  [ ${#missingFile[@]} -eq 0 ] || returnThrowEnvironment "$handler" "Missing files: ${missingFile[*]}" || return $?
 
   local initTime
   initTime=$(timingStart) || return $?
@@ -241,10 +241,10 @@ phpBuild() {
   statusMessage --first decorate info "Installing build tools ..." || :
 
   # Ensure we're up to date
-  __catch "$handler" packageInstall || return $?
+  returnCatch "$handler" packageInstall || return $?
 
   # shellcheck disable=SC2119
-  __catchEnvironment "$handler" phpInstall || return $?
+  catchEnvironment "$handler" phpInstall || return $?
 
   #==========================================================================================
   #
@@ -255,12 +255,12 @@ phpBuild() {
 
   clean+=("$dotEnv")
   if hasHook application-environment; then
-    __catchEnvironment "$handler" hookRun --application "$home" application-environment "${environments[@]}" -- "${optionals[@]}" >"$dotEnv" || returnClean $? "${clean[@]}" || return $?
+    catchEnvironment "$handler" hookRun --application "$home" application-environment "${environments[@]}" -- "${optionals[@]}" >"$dotEnv" || returnClean $? "${clean[@]}" || return $?
   else
-    __catch "$handler" environmentFileApplicationMake "${environments[@]}" -- "${optionals[@]}" >"$dotEnv" || returnClean $? "${clean[@]}" || return $?
+    returnCatch "$handler" environmentFileApplicationMake "${environments[@]}" -- "${optionals[@]}" >"$dotEnv" || returnClean $? "${clean[@]}" || return $?
   fi
   if ! grep -q APPLICATION "$dotEnv"; then
-    buildFailed "$dotEnv" || __throwEnvironment "$handler" "$dotEnv file seems to be invalid:" || returnClean $? "${clean[@]}" || return $?
+    buildFailed "$dotEnv" || returnThrowEnvironment "$handler" "$dotEnv file seems to be invalid:" || returnClean $? "${clean[@]}" || return $?
   fi
   local environment
   for environment in "${environments[@]}" "${optionals[@]}"; do
@@ -273,16 +273,16 @@ phpBuild() {
 
   environmentFileShow "${environments[@]}" -- "${optionals[@]}" || :
 
-  [ ! -d "$home/.deploy" ] || __catchEnvironment "$handler" rm -rf "$home/.deploy" || returnClean $? "${clean[@]}" || return $?
+  [ ! -d "$home/.deploy" ] || catchEnvironment "$handler" rm -rf "$home/.deploy" || returnClean $? "${clean[@]}" || return $?
 
-  __catchEnvironment "$handler" mkdir -p "$home/.deploy" || returnClean $? "${clean[@]}" || return $?
+  catchEnvironment "$handler" mkdir -p "$home/.deploy" || returnClean $? "${clean[@]}" || return $?
   clean+=("$home/.deploy")
 
   APPLICATION_ID=$(_deploymentGenerateValue "$handler" "$home" APPLICATION_ID application-id) || returnClean $? "${clean[@]}" || return $?
   APPLICATION_TAG=$(_deploymentGenerateValue "$handler" "$home" APPLICATION_TAG application-tag) || returnClean $? "${clean[@]}" || return $?
 
   # Save clean build environment to .build.env for other steps
-  __catchEnvironment "$handler" declare -px >"$home/.build.env" || returnClean $? "${clean[@]}" || return $?
+  catchEnvironment "$handler" declare -px >"$home/.build.env" || returnClean $? "${clean[@]}" || return $?
   clean+=("$home/.build.env")
 
   #==========================================================================================
@@ -291,15 +291,15 @@ phpBuild() {
   #
   if [ -d "$home/vendor" ] || $optClean; then
     statusMessage decorate warning "vendor directory should not exist before composer, deleting"
-    __catchEnvironment "$handler" rm -rf "$home/vendor" || returnClean $? "${clean[@]}" || return $?
+    catchEnvironment "$handler" rm -rf "$home/vendor" || returnClean $? "${clean[@]}" || return $?
     clean+=("$home/vendor")
   fi
 
   statusMessage decorate info "Running PHP composer ..."
   # shellcheck disable=SC2119
-  __catchEnvironment "$handler" phpComposer "$home" "${composerArgs[@]+${composerArgs[@]}}" || returnClean $? "${clean[@]}" || return $?
+  catchEnvironment "$handler" phpComposer "$home" "${composerArgs[@]+${composerArgs[@]}}" || returnClean $? "${clean[@]}" || return $?
 
-  [ -d "$home/vendor" ] || __throwEnvironment "$handler" "Composer step did not create the vendor directory" || returnClean $? "${clean[@]}" || return $?
+  [ -d "$home/vendor" ] || returnThrowEnvironment "$handler" "Composer step did not create the vendor directory" || returnClean $? "${clean[@]}" || return $?
 
   _phpEchoBar
   _phpBuildBanner "Application ID" "$APPLICATION_ID"
@@ -307,9 +307,9 @@ phpBuild() {
   _phpBuildBanner "Application Tag" "$APPLICATION_TAG"
   _phpEchoBar
 
-  __catchEnvironment "$handler" muzzle pushd "$home" || returnClean $? "${clean[@]}" || return $?
-  __catchEnvironment "$handler" tarCreate "$targetName" .env vendor/ .deploy/ "$@" || returnUndo $? muzzle popd || returnClean $? "${clean[@]}" || return $?
-  __catchEnvironment "$handler" muzzle popd || returnClean $? "${clean[@]}" || return $?
+  catchEnvironment "$handler" muzzle pushd "$home" || returnClean $? "${clean[@]}" || return $?
+  catchEnvironment "$handler" tarCreate "$targetName" .env vendor/ .deploy/ "$@" || returnUndo $? muzzle popd || returnClean $? "${clean[@]}" || return $?
+  catchEnvironment "$handler" muzzle popd || returnClean $? "${clean[@]}" || return $?
 
   statusMessage --last timingReport "$initTime" "PHP built $(decorate code "$targetName") in"
 }
@@ -347,7 +347,7 @@ phpTest() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -362,15 +362,15 @@ phpTest() {
       ;;
     *)
       # _IDENTICAL_ argumentUnknownHandler 1
-      __throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
+      returnThrowArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
       ;;
     esac
     shift
   done
 
-  [ -n "$home" ] || home=$(__catch "$handler" buildHome) || return $?
+  [ -n "$home" ] || home=$(returnCatch "$handler" buildHome) || return $?
 
-  [ -f "$home/docker-compose.yml" ] || __catchEnvironment "$handler" "Requires $(decorate code "$home/docker-compose.yml")" || return $?
+  [ -f "$home/docker-compose.yml" ] || catchEnvironment "$handler" "Requires $(decorate code "$home/docker-compose.yml")" || return $?
 
   local dca=()
 
@@ -381,30 +381,30 @@ phpTest() {
   local init quietLog
 
   init=$(timingStart) || return $?
-  quietLog="$(__catch "$handler" buildQuietLog "$handler")" || return $?
+  quietLog="$(returnCatch "$handler" buildQuietLog "$handler")" || return $?
 
   buildDebugStart "${FUNCNAME[0]}" || :
 
-  __catchEnvironment "$handler" dockerComposeInstall || return $?
-  __catchEnvironment "$handler" phpComposer "$home" || return $?
+  catchEnvironment "$handler" dockerComposeInstall || return $?
+  catchEnvironment "$handler" phpComposer "$home" || return $?
 
   statusMessage decorate info "Building test container" || :
 
   local start undo=()
   start=$(timingStart) || return $?
-  __catchEnvironment "$handler" _phpTestSetup "$handler" "$home" || return $?
+  catchEnvironment "$handler" _phpTestSetup "$handler" "$home" || return $?
 
-  __catchEnvironment "$handler" muzzle pushd "$home" || return $?
+  catchEnvironment "$handler" muzzle pushd "$home" || return $?
   undo+=(muzzle popd)
-  __catchEnvironment "$handler" hookRunOptional test-setup || returnUndo "$?" "${undo[@]}" || return $?
+  catchEnvironment "$handler" hookRunOptional test-setup || returnUndo "$?" "${undo[@]}" || return $?
 
-  __catchEnvironmentQuiet "$handler" "$quietLog" docker-compose "${dca[@]}" build || returnUndo "$?" "${undo[@]}" || return $?
+  catchEnvironmentQuiet "$handler" "$quietLog" docker-compose "${dca[@]}" build || returnUndo "$?" "${undo[@]}" || return $?
   statusMessage timingReport "$start" "Built in" || :
 
   statusMessage decorate info "Bringing up containers ..." || returnUndo "$?" "${undo[@]}" || return $?
 
-  start=$(__catch "$handler" timingStart) || returnUndo "$?" "${undo[@]}" || return $?
-  __catchEnvironmentQuiet "$handler" "$quietLog" docker-compose "${dca[@]}" up -d || returnUndo "$?" "${undo[@]}" || return $?
+  start=$(returnCatch "$handler" timingStart) || returnUndo "$?" "${undo[@]}" || return $?
+  catchEnvironmentQuiet "$handler" "$quietLog" docker-compose "${dca[@]}" up -d || returnUndo "$?" "${undo[@]}" || return $?
   statusMessage timingReport "$start" "Up in" || :
 
   start=$(timingStart) || return $?
@@ -417,7 +417,7 @@ phpTest() {
   fi
   decorate info "Bringing down containers ..." || :
   start=$(timingStart) || return $?
-  __catchEnvironment "$handler" docker-compose "${dca[@]}" down || _phpTestCleanup "$handler" || __throwEnvironment "$handler" "docker-compose down" || return $?
+  catchEnvironment "$handler" docker-compose "${dca[@]}" down || _phpTestCleanup "$handler" || returnThrowEnvironment "$handler" "docker-compose down" || return $?
 
   # Reset test environment ASAP
   _phpTestCleanup "$handler" || return $?
@@ -425,7 +425,7 @@ phpTest() {
   if ! hookRunOptional test-cleanup; then
     reason="test-cleanup ALSO failed"
   fi
-  [ -z "$reason" ] || __throwEnvironment "$handler" "$reason" || return $?
+  [ -z "$reason" ] || returnThrowEnvironment "$handler" "$reason" || return $?
   buildDebugStop "${FUNCNAME[0]}" || :
   statusMessage timingReport "$init" "PHP Test completed in" || return $?
 }
@@ -436,16 +436,16 @@ _phpTest() {
 _phpTestSetup() {
   local handler="$1" home="$2"
 
-  __catchEnvironment "$handler" filesRename "" ".$$.backup" hiding "$home/.env" "$home/.env.local"
+  catchEnvironment "$handler" filesRename "" ".$$.backup" hiding "$home/.env" "$home/.env.local"
 }
 _phpTestCleanup() {
   local handler="$1" item
   for item in "$home/.env" "$home/.env.local" "$home/vendor"; do
     if [ -f "$item" ] || [ -d "$item" ]; then
-      __catchEnvironment "$handler" rm -rf "$item" || return $?
+      catchEnvironment "$handler" rm -rf "$item" || return $?
     fi
   done
-  __catchEnvironment "$handler" filesRename ".$$.backup" "" restoring "$home/.env" "$home/.env.local" || :
+  catchEnvironment "$handler" filesRename ".$$.backup" "" restoring "$home/.env" "$home/.env.local" || :
 }
 _phpTestResult() {
   local message=$1 color=$2 top=$3 bottom=$4 width=${5-16} thick="${6-3}"

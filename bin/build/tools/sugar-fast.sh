@@ -12,18 +12,18 @@
 # Argument: handler - Required. Function. Failure command
 # Argument: quietLog - Required. File. File to output log to temporarily for this command. If `quietLog` is `-` then creates a temporary file for the command which is deleted automatically.
 # Argument: command ... - Required. Callable. Thing to run and append output to `quietLog`.
-# Requires: isFunction returnArgument buildFailed debuggingStack __throwEnvironment
-__catchEnvironmentQuiet() {
+# Requires: isFunction returnArgument buildFailed debuggingStack returnThrowEnvironment
+catchEnvironmentQuiet() {
   local __handler="${1-}" quietLog="${2-}" clean=() && shift 2
   if [ ! -f "$quietLog" ]; then
     if [ "$quietLog" = "-" ]; then
       quietLog=$(fileTemporaryName "$handler") || return $?
       clean+=("$quietLog")
     elif [ ! -d "$(dirname "$quietLog")" ]; then
-      __throwArgument "$handler" "Directory for $(decorate file "$quietLog") does not exist!" || return $?
+      returnThrowArgument "$handler" "Directory for $(decorate file "$quietLog") does not exist!" || return $?
     fi
   fi
-  "$@" >>"$quietLog" 2>&1 || buildFailed "$quietLog" || __throwEnvironment "$__handler" "$@" || returnClean $? "${clean[@]+"${clean[@]}"}" || return $?
+  "$@" >>"$quietLog" 2>&1 || buildFailed "$quietLog" || returnThrowEnvironment "$__handler" "$@" || returnClean $? "${clean[@]+"${clean[@]}"}" || return $?
   returnClean 0 "${clean[@]+"${clean[@]}"}" || return $?
 }
 
@@ -42,7 +42,7 @@ _deprecated() {
 # Argument: command - Required. Callable. Thing to muzzle.
 # Argument: ... - Optional. Arguments. Additional arguments.
 # Example:     {fn} pushd
-# Example:     __catchEnvironment "$handler" phpBuild || returnUndo $? {fn} popd || return $?
+# Example:     catchEnvironment "$handler" phpBuild || returnUndo $? {fn} popd || return $?
 # stdout: - No output from stdout ever from this function
 muzzle() {
   "$@" >/dev/null
@@ -87,7 +87,7 @@ _mapReturn() {
 # Argument: binary ... - Required. Executable. Any arguments are passed to `binary`.
 # Run binary and output failed command upon error
 # Requires: returnMessage
-__execute() {
+execute() {
   "$@" || returnMessage "$?" "$@" || return $?
 }
 
@@ -101,11 +101,11 @@ __execute() {
 # Argument: -- - Flag. Optional. Used to delimit multiple commands.
 # As a caveat, your command to `undo` can NOT take the argument `--` as a parameter.
 # Example:     local undo thing
-# Example:     thing=$(__catchEnvironment "$handler" createLargeResource) || return $?
+# Example:     thing=$(catchEnvironment "$handler" createLargeResource) || return $?
 # Example:     undo+=(-- deleteLargeResource "$thing")
-# Example:     thing=$(__catchEnvironment "$handler" createMassiveResource) || returnUndo $? "${undo[@]}" || return $?
+# Example:     thing=$(catchEnvironment "$handler" createMassiveResource) || returnUndo $? "${undo[@]}" || return $?
 # Example:     undo+=(-- deleteMassiveResource "$thing")
-# Requires: isPositiveInteger __catchArgument decorate __execute
+# Requires: isPositiveInteger catchArgument decorate execute
 # Requires: usageDocument
 returnUndo() {
   local __count=$# __saved=("$@") __handler="_${FUNCNAME[0]}" code="${1-}" args=()
@@ -113,7 +113,7 @@ returnUndo() {
   while [ $# -gt 0 ]; do
     case "$1" in
     --)
-      [ "${#args[@]}" -eq 0 ] || __execute "${args[@]}" || :
+      [ "${#args[@]}" -eq 0 ] || execute "${args[@]}" || :
       args=()
       ;;
     *)
@@ -122,7 +122,7 @@ returnUndo() {
     esac
     shift
   done
-  [ "${#args[@]}" -eq 0 ] || __execute "${args[@]}" || :
+  [ "${#args[@]}" -eq 0 ] || execute "${args[@]}" || :
   return "$code"
 }
 _returnUndo() {
@@ -134,7 +134,7 @@ _returnUndo() {
 # Argument: executor ... -- - The command to run on each line of input or on each additional argument. Arguments to prefix the final variable argument can be supplied prior to an initial `--`.
 # Argument: -- - Alone after the executor forces `stdin` to be ignored. The `--` flag is also removed from the arguments passed to the executor.
 # Argument: ... - Any additional arguments are passed directly to the executor
-__executeInputSupport() {
+executeInputSupport() {
   local handler="$1" executor=() && shift
 
   while [ $# -gt 0 ]; do
@@ -152,19 +152,19 @@ __executeInputSupport() {
   if [ $# -eq 0 ] && IFS="" read -r -t 1 -n 1 byte; then
     local line done=false
     if [ "$byte" = $'\n' ]; then
-      __catchEnvironment "$handler" "${executor[@]}" "" || return $?
+      catchEnvironment "$handler" "${executor[@]}" "" || return $?
       byte=""
     fi
     while ! $done; do
       IFS="" read -r line || done=true
       [ -n "$byte$line" ] || ! $done || break
-      __catchEnvironment "$handler" "${executor[@]}" "$byte$line" || return $?
+      catchEnvironment "$handler" "${executor[@]}" "$byte$line" || return $?
       byte=""
     done
   else
     if [ "${1-}" = "--" ]; then
       shift
     fi
-    __catchEnvironment "$handler" "${executor[@]}" "$@" || return $?
+    catchEnvironment "$handler" "${executor[@]}" "$@" || return $?
   fi
 }

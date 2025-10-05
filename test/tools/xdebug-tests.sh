@@ -15,5 +15,5 @@ testXdebugInstall() {
 
   export TMPDIR
 
-  [ ! -d "$TMPDIR" ] || [ ! -d "$TMPDIR/pear" ] || __catchEnvironment "$handler" rm -rf "$TMPDIR/pear" || return $?
+  [ ! -d "$TMPDIR" ] || [ ! -d "$TMPDIR/pear" ] || catchEnvironment "$handler" rm -rf "$TMPDIR/pear" || return $?
 }

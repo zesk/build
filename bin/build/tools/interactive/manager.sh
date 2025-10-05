@@ -21,7 +21,7 @@ __interactiveManager() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -50,20 +50,20 @@ __interactiveManager() {
     shift
   done
 
-  [ -n "$loopCallable" ] || __throwArgument "$handler" "No loopCallable" || return $?
+  [ -n "$loopCallable" ] || returnThrowArgument "$handler" "No loopCallable" || return $?
 
   if [ "${#files[@]}" -eq 0 ]; then
     while read -r file; do files+=("$(usageArgumentFile "$handler" "fileToCheck (stdin)" "$1")") || return $?; done
     [ "${#files[@]}" -gt 0 ] || return 0
   fi
 
-  [ "${#files[@]}" -gt 0 ] || __throwArgument "$handler" "No files supplied" || return $?
+  [ "${#files[@]}" -gt 0 ] || returnThrowArgument "$handler" "No files supplied" || return $?
 
   # Validation complete
 
   local rowsAllowed output index=1 didClear=false triedRepair
 
-  rowsAllowed=$(__catch "$handler" consoleRows) || return $?
+  rowsAllowed=$(returnCatch "$handler" consoleRows) || return $?
   rowsAllowed=$((rowsAllowed - 4))
   output=$(fileTemporaryName "$handler") || return $?
   index=1
@@ -95,7 +95,7 @@ __interactiveManager() {
       if [ -n "$binary" ]; then
         "$binary" "$file"
       fi
-      sleep "$sleepDelay" || __throwEnvironment "$handler" "Interrupt ..." || returnClean $? "$output" || return $?
+      sleep "$sleepDelay" || returnThrowEnvironment "$handler" "Interrupt ..." || returnClean $? "$output" || return $?
     done
     index=$((index + 1))
   done

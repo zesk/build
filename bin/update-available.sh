@@ -88,7 +88,7 @@ __addNoteTo() {
 #
 # Usage: {fn} [ --skip-commit ]
 # Argument: --skip-commit - Skip the commit if the files change
-# Requires: __catchEnvironment __throwArgument timingStart isDarwin whichExists statusMessage
+# Requires: catchEnvironment returnThrowArgument timingStart isDarwin whichExists statusMessage
 # Requires: decorate __decorateExtensionEach
 __updateAvailable() {
   local handler="_${FUNCNAME[0]}"
@@ -103,7 +103,7 @@ __updateAvailable() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -112,14 +112,14 @@ __updateAvailable() {
       ;;
     *)
       # _IDENTICAL_ argumentUnknownHandler 1
-      __throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
+      returnThrowArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
       ;;
     esac
     shift
   done
 
   local home
-  home="$(__catch "$handler" buildHome)" || return $?
+  home="$(returnCatch "$handler" buildHome)" || return $?
 
   local managers=(apk debian ubuntu) allKnown=false
   if isDarwin; then
@@ -137,7 +137,7 @@ __updateAvailable() {
   fi
   directoryRequire "$home/etc/packages/" || return $?
 
-  __catchEnvironment muzzle pushd "$home/etc/packages" || return $?
+  catchEnvironment muzzle pushd "$home/etc/packages" || return $?
 
   local target ageInSeconds allManagerLists
   local allManagerLists=() manager generator
@@ -145,10 +145,10 @@ __updateAvailable() {
     allManagerLists+=("$manager")
     statusMessage decorate info "Generating $manager list ..."
     generator="__${manager}Generator"
-    isFunction "$generator" || __throwEnvironment "$handler" "$generator is not a function" || return $?
+    isFunction "$generator" || returnThrowEnvironment "$handler" "$generator is not a function" || return $?
     if [ -f "$manager" ] && ! $forceFlag; then
       local ageInSeconds
-      ageInSeconds=$(__catchEnvironment "$handler" fileModificationSeconds "$manager") || return $?
+      ageInSeconds=$(catchEnvironment "$handler" fileModificationSeconds "$manager") || return $?
       if [ "$ageInSeconds" -lt 3600 ]; then
         statusMessage decorate warning "Skipping generated $manager ($((ageInSeconds / 60)) minutes old ..."
         continue
@@ -167,7 +167,7 @@ __updateAvailable() {
   __commonGenerator "$forceFlag" "_apk-apt" "apk" "debian" "ubuntu" || return $?
   __commonGenerator "$forceFlag" "_debian-ubuntu" "debian" "ubuntu" || return $?
 
-  __catchEnvironment muzzle popd || return $?
+  catchEnvironment muzzle popd || return $?
 
   statusMessage --last timingReport "$start" "completed in"
 }
@@ -189,15 +189,15 @@ __commonGenerator() {
 }
 
 __apkGenerator() {
-  __catchEnvironment "$1" alpineContainer --local "$home" "/root/build/bin/build/tools.sh" "packageAvailableList" || return $?
+  catchEnvironment "$1" alpineContainer --local "$home" "/root/build/bin/build/tools.sh" "packageAvailableList" || return $?
 }
 __debianGenerator() {
-  __catchEnvironment "$1" dockerLocalContainer --local "$home" --image debian:latest --path "/root/build" "/root/build/bin/build/tools.sh" "packageAvailableList" || return $?
+  catchEnvironment "$1" dockerLocalContainer --local "$home" --image debian:latest --path "/root/build" "/root/build/bin/build/tools.sh" "packageAvailableList" || return $?
 }
 __ubuntuGenerator() {
-  __catchEnvironment "$1" dockerLocalContainer --local "$home" --image ubuntu:latest --path "/root/build" "/root/build/bin/build/tools.sh" "packageAvailableList" || return $?
+  catchEnvironment "$1" dockerLocalContainer --local "$home" --image ubuntu:latest --path "/root/build" "/root/build/bin/build/tools.sh" "packageAvailableList" || return $?
 }
 __brewGenerator() {
-  __catchEnvironment "$1" "$home/bin/build/tools.sh" "packageAvailableList" || return $?
+  catchEnvironment "$1" "$home/bin/build/tools.sh" "packageAvailableList" || return $?
 }
 __tools .. __updateAvailable "$@"

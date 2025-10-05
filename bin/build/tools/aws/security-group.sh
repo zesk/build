@@ -14,14 +14,14 @@ __awsSecurityGroupIPModify() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
     # IDENTICAL profileNameArgumentHandlerCase 6
     --profile)
       shift
-      [ ${#pp[@]} -eq 0 ] || __throwArgument "$handler" "$argument already specified: ${pp[*]}"
+      [ ${#pp[@]} -eq 0 ] || returnThrowArgument "$handler" "$argument already specified: ${pp[*]}"
       profileName="$(usageArgumentString "$handler" "$argument" "$1")" || return $?
       pp=("$argument" "$profileName")
       ;;
@@ -56,40 +56,40 @@ __awsSecurityGroupIPModify() {
     # IDENTICAL regionArgumentHandler 5
     --region)
       shift
-      [ -z "$region" ] || __throwArgument "$handler" "$argument already specified: $region"
+      [ -z "$region" ] || returnThrowArgument "$handler" "$argument already specified: $region"
       region=$(usageArgumentString "$handler" "$argument" "${1-}") || return $?
       ;;
     *)
-      __throwArgument "unknown argument: $argument" || return $?
+      returnThrowArgument "unknown argument: $argument" || return $?
       ;;
     esac
     shift
   done
 
-  [ -n "$profileName" ] || awsHasEnvironment || __throwEnvironment "$handler" "Need AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY" || return $?
+  [ -n "$profileName" ] || awsHasEnvironment || returnThrowEnvironment "$handler" "Need AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY" || return $?
 
-  ! whichExists aws || __catch "$handler" awsInstall || return $?
+  ! whichExists aws || returnCatch "$handler" awsInstall || return $?
 
   # IDENTICAL regionArgumentValidation 7
   if [ -z "$region" ]; then
     export AWS_REGION
-    __catch "$handler" buildEnvironmentLoad AWS_REGION || return $?
+    returnCatch "$handler" buildEnvironmentLoad AWS_REGION || return $?
     region="${AWS_REGION-}"
-    [ -n "$region" ] || __throwArgument "$handler" "AWS_REGION or --region is required" || return $?
+    [ -n "$region" ] || returnThrowArgument "$handler" "AWS_REGION or --region is required" || return $?
   fi
-  awsRegionValid "$region" || __throwArgument "$handler" "--region $region is not a valid region" || return $?
+  awsRegionValid "$region" || returnThrowArgument "$handler" "--region $region is not a valid region" || return $?
 
-  [ -n "$mode" ] || __throwArgument "$handler" "--add, --remove, or --register is required" || return $?
+  [ -n "$mode" ] || returnThrowArgument "$handler" "--add, --remove, or --register is required" || return $?
 
   for argument in group description region; do
     if [ -z "${!argument}" ]; then
-      __throwArgument "$handler" "--$argument is required ($(decorate each code "${__saved[@]}"))" || return $?
+      returnThrowArgument "$handler" "--$argument is required ($(decorate each code "${__saved[@]}"))" || return $?
     fi
   done
 
   if [ "$mode" != "--remove" ]; then
     for argument in ip port; do
-      [ -n "${!argument}" ] || __throwArgument "$handler" "--$argument is required for $mode (Arguments: $(decorate each code "${handler#_}" "${__saved[@]}"))" || return $?
+      [ -n "${!argument}" ] || returnThrowArgument "$handler" "--$argument is required for $mode (Arguments: $(decorate each code "${handler#_}" "${__saved[@]}"))" || return $?
     done
   fi
 
@@ -105,9 +105,9 @@ __awsSecurityGroupIPModify() {
   #
   if [ "$mode" != "--add" ]; then
     tempErrorFile=$(fileTemporaryName "$handler") || return $?
-    __catch "$handler" __awsWrapper "${pp[@]+"${pp[@]}"}" ec2 describe-security-groups --region "$region" --group-id "$group" --output text --query "SecurityGroups[*].IpPermissions[*]" >"$tempErrorFile" || returnClean "$?" "$tempErrorFile" || return $?
+    returnCatch "$handler" __awsWrapper "${pp[@]+"${pp[@]}"}" ec2 describe-security-groups --region "$region" --group-id "$group" --output text --query "SecurityGroups[*].IpPermissions[*]" >"$tempErrorFile" || returnClean "$?" "$tempErrorFile" || return $?
     foundIP=$(grep -e "$(quoteGrepPattern "$description")" <"$tempErrorFile" | head -1 | awk '{ print $2 }') || :
-    __catchEnvironment "$handler" rm -f "$tempErrorFile" || return $?
+    catchEnvironment "$handler" rm -f "$tempErrorFile" || return $?
 
     if [ -z "$foundIP" ]; then
       # Remove: If no IP found in security group, if we are Removing (NOT adding), we are done
@@ -121,7 +121,7 @@ __awsSecurityGroupIPModify() {
       return 0
     else
       __awsSGOutput "$(decorate info "Removing old IP:")" "$foundIP" "$group" "$port"
-      __catch "$handler" __awsWrapper "${pp[@]+"${pp[@]}"}" --output json ec2 revoke-security-group-ingress --region "$region" --group-id "$group" --protocol tcp --port "$port" --cidr "$foundIP" | __awsReturnTrue || return $?
+      returnCatch "$handler" __awsWrapper "${pp[@]+"${pp[@]}"}" --output json ec2 revoke-security-group-ingress --region "$region" --group-id "$group" --protocol tcp --port "$port" --cidr "$foundIP" | __awsReturnTrue || return $?
     fi
   fi
   if [ "$mode" != "--remove" ]; then
@@ -134,12 +134,12 @@ __awsSecurityGroupIPModify() {
       if grep -q "Duplicate" "$tempErrorFile"; then
         printf "%s\n" "$(decorate yellow "duplicate")"
       else
-        __throwEnvironment "$handler" "Failed to authorize-security-group-ingress $(dumpPipe "Errors:" <"$tempErrorFile")" || returnClean $? "$tempErrorFile" || return $?
+        returnThrowEnvironment "$handler" "Failed to authorize-security-group-ingress $(dumpPipe "Errors:" <"$tempErrorFile")" || returnClean $? "$tempErrorFile" || return $?
       fi
     else
       printf "%s\n" "$(decorate success "ok")"
     fi
-    __catchEnvironment "$handler" rm -f "$tempErrorFile" || return $?
+    catchEnvironment "$handler" rm -f "$tempErrorFile" || return $?
   fi
 }
 

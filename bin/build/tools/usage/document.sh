@@ -20,14 +20,14 @@ __usageDocument() {
   local handler="$1" __handler="$1" && shift
 
   [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
-  [ $# -ge 2 ] || __throwArgument "$handler" "Expected 2 arguments, got $#:$(printf -- " \"%s\"" "$@")" || return $?
+  [ $# -ge 2 ] || returnThrowArgument "$handler" "Expected 2 arguments, got $#:$(printf -- " \"%s\"" "$@")" || return $?
 
   local functionDefinitionFile="${1-}" functionName="${2-}"
-  shift 2 || __throwArgument "$handler" "Missing arguments" || return $?
+  shift 2 || returnThrowArgument "$handler" "Missing arguments" || return $?
 
   local home returnCode="${1-NONE}"
 
-  home=$(__catch "$handler" buildHome) || return $?
+  home=$(returnCatch "$handler" buildHome) || return $?
 
   shift 2>/dev/null || :
 
@@ -35,18 +35,18 @@ __usageDocument() {
     local tryFile="$home/$functionDefinitionFile"
     if [ ! -f "$tryFile" ]; then
       export PWD
-      __catchArgument "$handler" "functionDefinitionFile $functionDefinitionFile (PWD: ${PWD-}) (Build home: \"$home\") not found" || return $?
+      catchArgument "$handler" "functionDefinitionFile $functionDefinitionFile (PWD: ${PWD-}) (Build home: \"$home\") not found" || return $?
     fi
     functionDefinitionFile="$tryFile"
   fi
-  [ -n "$functionName" ] || __throwArgument "$handler" "functionName is blank" || return $?
+  [ -n "$functionName" ] || returnThrowArgument "$handler" "functionName is blank" || return $?
 
   if [ "$returnCode" = "NONE" ]; then
     decorate error "NO EXIT CODE" 1>&2
     returnCode=1
   fi
 
-  __catchArgument "$handler" isInteger "$returnCode" || __catchArgument "$handler" "$(debuggingStack)" || return $?
+  catchArgument "$handler" isInteger "$returnCode" || catchArgument "$handler" "$(debuggingStack)" || return $?
 
   local color="success"
   case "$returnCode" in
@@ -73,12 +73,12 @@ __usageDocument() {
   variablesFile=$(fileTemporaryName "$handler") || return $?
   local commentFile="$variablesFile.comment"
   local clean=("$variablesFile" "$commentFile")
-  __catch "$handler" bashFunctionComment "$functionDefinitionFile" "$functionName" >"$commentFile" || returnClean $? "${clean[@]}" || return $?
-  if ! __catch "$handler" bashDocumentationExtract "$functionName" >"$variablesFile" <"$commentFile"; then
+  returnCatch "$handler" bashFunctionComment "$functionDefinitionFile" "$functionName" >"$commentFile" || returnClean $? "${clean[@]}" || return $?
+  if ! returnCatch "$handler" bashDocumentationExtract "$functionName" >"$variablesFile" <"$commentFile"; then
     dumpPipe "commentFile" <"$commentFile"
     dumpPipe "variablesFile" <"$variablesFile"
     dumpPipe "functionDefinitionFile" <"$functionDefinitionFile"
-    __throwArgument "$handler" "Unable to extract \"$functionName\" from \"$functionDefinitionFile\"" || returnClean $? "${clean[@]}" || return $?
+    returnThrowArgument "$handler" "Unable to extract \"$functionName\" from \"$functionDefinitionFile\"" || returnClean $? "${clean[@]}" || return $?
   fi
   (
     local fn="$functionName" description="" argument="" base return_code="" environment="" stdin="" stdout="" example="" build_debug=""
@@ -87,9 +87,9 @@ __usageDocument() {
     set -a
     base="$(basename "$functionDefinitionFile")"
     # shellcheck source=/dev/null
-    __catchEnvironment "$__handler" source "$variablesFile" || returnClean $? "${clean[@]}" || return $?
+    catchEnvironment "$__handler" source "$variablesFile" || returnClean $? "${clean[@]}" || return $?
     # Some variables MAY BE OVERWRITTEN ABOVE .e.g. `__handler`
-    __catchEnvironment "$__handler" rm -f "$variablesFile" "$commentFile" || return $?
+    catchEnvironment "$__handler" rm -f "$variablesFile" "$commentFile" || return $?
     set +a
 
     : "$base $return_code $environment $stdin $stdout $example are referenced here and with \${!variable} below"
@@ -102,7 +102,7 @@ __usageDocument() {
       # Hides a lot of unnecessary tracing
       __buildDebugDisable
     fi
-    __catch "$__handler" bashRecursionDebug || return $?
+    returnCatch "$__handler" bashRecursionDebug || return $?
     local variable prefix label done=false suffix=""
     while ! $done; do
       IFS="|" read -r variable prefix label || done=true
@@ -119,7 +119,7 @@ __usageDocument() {
     if $bashDebug; then
       __buildDebugEnable
     fi
-    __catch "$__handler" bashRecursionDebug --end || return $?
+    returnCatch "$__handler" bashRecursionDebug --end || return $?
   ) || returnClean $? "${clean[@]}" || return $?
   return "$returnCode"
 }

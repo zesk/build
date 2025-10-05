@@ -18,7 +18,7 @@ __identicalFindTokens() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -35,15 +35,15 @@ __identicalFindTokens() {
     shift
   done
 
-  [ "${#prefixes[@]}" -gt 0 ] || __throwArgument "$handler" "Need at least one prefix" || return $?
-  [ "${#files[@]}" -gt 0 ] || __throwArgument "$handler" "Need at least one file" || return $?
+  [ "${#prefixes[@]}" -gt 0 ] || returnThrowArgument "$handler" "Need at least one prefix" || return $?
+  [ "${#files[@]}" -gt 0 ] || returnThrowArgument "$handler" "Need at least one file" || return $?
 
   foundLines=$(fileTemporaryName "$handler") || return $?
 
   if cat "${files[@]}" | __identicalFindPrefixes "${prefixes[@]}" | __identicalReplacePrefixes "PREFIX" "${prefixes[@]}" | awk '{ print $2 }' | sort -u >>"$foundLines"; then
     cat "$foundLines"
   fi
-  __catchEnvironment "$handler" rm -f "$foundLines" || return $?
+  catchEnvironment "$handler" rm -f "$foundLines" || return $?
 }
 
 __identicalFindPrefixes() {
@@ -87,7 +87,7 @@ __identicalWatch() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -140,13 +140,13 @@ __identicalWatch() {
       ;;
     *)
       # _IDENTICAL_ argumentUnknownHandler 1
-      __throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
+      returnThrowArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
       ;;
     esac
     shift
   done
 
-  [ -n "$rootDir" ] || rootDir=$(__catch "$handler" buildHome) || return $?
+  [ -n "$rootDir" ] || rootDir=$(returnCatch "$handler" buildHome) || return $?
 
   local fileList finished=false lastTimestamp="" lastFile=""
 
@@ -192,7 +192,7 @@ __identicalWatch() {
           fi
           if [ "${#tokens[@]}" -gt 0 ]; then
             ! $debugFlag || statusMessage decorate info "Replacing tokens $(decorate each code -- "${tokens[@]}")"
-            __catch "$handler" identicalCheck "${rr[@]}" "${tokens[@]}" || return $?
+            returnCatch "$handler" identicalCheck "${rr[@]}" "${tokens[@]}" || return $?
           else
             statusMessage decorate info "No tokens found in $(decorate each file -- "${files[@]}")"
           fi
@@ -204,7 +204,7 @@ __identicalWatch() {
     3) finished=true ;;
     *) return "$why" ;;
     esac
-    __catchEnvironment "$handler" rm -f "${clean[@]}" || return $?
+    catchEnvironment "$handler" rm -f "${clean[@]}" || return $?
   done
 
   # read file and mod date, one per
@@ -226,7 +226,7 @@ __identicalWatchLoop() {
   while $running; do
     printf -- "" >"$fileList"
     start=$(timingStart)
-    __catchEnvironment "$handler" fileModificationTimes "$rootDir" "$@" | sort -rn >>"$fileList" || return $?
+    catchEnvironment "$handler" fileModificationTimes "$rootDir" "$@" | sort -rn >>"$fileList" || return $?
     elapsed=$(($(timingStart) - start))
 
     local newTimestamp newFile
@@ -238,6 +238,6 @@ __identicalWatchLoop() {
 
     elapsed=$(((elapsed + 999) / 1000))
     statusMessage decorate info "$(decorate subtle "$(date +%T)"): Sleeping for $(pluralWord "$elapsed" second) $(decorate file "$lastFile") modified $(__identicalWatchDecorateDate "$lastTimestamp") ..."
-    __catchEnvironment "$handler" sleep "$elapsed" || return $?
+    catchEnvironment "$handler" sleep "$elapsed" || return $?
   done
 }

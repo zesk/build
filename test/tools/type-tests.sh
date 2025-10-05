@@ -11,8 +11,8 @@
 testBinaryTypes() {
   local home handler="returnMessage"
 
-  home=$(__catch "$handler" buildHome) || return $?
-  __catchEnvironment "$handler" muzzle pushd "$home" || return $?
+  home=$(returnCatch "$handler" buildHome) || return $?
+  catchEnvironment "$handler" muzzle pushd "$home" || return $?
 
   assertExitCode 0 isExecutable ./bin/build/map.sh || return $?
   assertExitCode 0 isExecutable ./bin/build/tools.sh || return $?
@@ -22,7 +22,7 @@ testBinaryTypes() {
   assertNotExitCode 0 isExecutable ./bin/build/LICENSE.md || return $?
   assertNotExitCode 0 isExecutable ./bin/MISSING || return $?
 
-  __catchEnvironment "$handler" muzzle popd || return $?
+  catchEnvironment "$handler" muzzle popd || return $?
 }
 _testLineLabel() {
   printf "%s %s " "$(decorate info "$1")" "$(decorate code "$2")"
@@ -134,8 +134,8 @@ testNotExecutable() {
 testExecutableCallable() {
   local handler="returnMessage" home
 
-  home=$(__catch "$handler" buildHome) || return $?
-  __catchEnvironment "$handler" muzzle pushd "$home" || return $?
+  home=$(returnCatch "$handler" buildHome) || return $?
+  catchEnvironment "$handler" muzzle pushd "$home" || return $?
 
   _dataCallableExecutables | _testValidateExecutable || return $?
   _dataCallableExecutables | _testValidateCallable || return $?
@@ -143,7 +143,7 @@ testExecutableCallable() {
   _dataCallableFunctions | grep -v echo | _testValidateNotExecutable || return $?
   _dataCallableFunctions | _testValidateCallable || return $?
 
-  __catchEnvironment "$handler" muzzle popd || return $?
+  catchEnvironment "$handler" muzzle popd || return $?
 }
 
 _dataSignedIntegerSamples() {

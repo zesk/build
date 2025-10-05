@@ -17,15 +17,15 @@ readlineConfigurationAdd() {
   local target=".input""rc" keyStroke="${1-}" action="${2-}" pattern
   local home
 
-  home="$(__catch "$handler" userHome)" || return $?
+  home="$(returnCatch "$handler" userHome)" || return $?
   target="$home/$target"
-  [ -f "$target" ] || __catchEnvironment "$handler" touch "$target" || return $?
+  [ -f "$target" ] || catchEnvironment "$handler" touch "$target" || return $?
   pattern="^$(quoteGrepPattern "\"$keyStroke\":")"
   if grep -q -e "$pattern" <"$target"; then
     grep -v "$pattern" >"$target.new" <"$target"
-    __catchEnvironment "$handler" mv -f "$target.new" "$target" || returnClean $? "$target.new" || return $?
+    catchEnvironment "$handler" mv -f "$target.new" "$target" || returnClean $? "$target.new" || return $?
   fi
-  __catchEnvironment "$handler" printf "\"%s\": %s\n" "$keyStroke" "$action" >>"$target" || return $?
+  catchEnvironment "$handler" printf "\"%s\": %s\n" "$keyStroke" "$action" >>"$target" || return $?
 }
 _readlineConfigurationAdd() {
   # __IDENTICAL__ usageDocument 1

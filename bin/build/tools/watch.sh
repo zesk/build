@@ -28,7 +28,7 @@ watchDirectory() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -48,7 +48,7 @@ watchDirectory() {
     shift
   done
 
-  [ -n "$rootDir" ] || __throwArgument "$handler" "Missing directory" || return $?
+  [ -n "$rootDir" ] || returnThrowArgument "$handler" "Missing directory" || return $?
   local clean=()
   if [ -z "$stateFile" ]; then
     stateFile=$(fileTemporaryName "$handler") || return $?
@@ -60,7 +60,7 @@ watchDirectory() {
   while true; do
     printf -- "" >"$stateFile"
     start=$(timingStart)
-    __catchEnvironment "$handler" fileModificationTimes "$rootDir" "$@" | sort -rn >>"$stateFile" || returnClean $? "${clean[@]}" || return $?
+    catchEnvironment "$handler" fileModificationTimes "$rootDir" "$@" | sort -rn >>"$stateFile" || returnClean $? "${clean[@]}" || return $?
     stop=$(timingStart)
     elapsed=$((stop - start))
 
@@ -75,7 +75,7 @@ watchDirectory() {
     elapsed=$(((elapsed + 999) / 1000))
     [ -z "$secondsToRun" ] || [ $(((stop - init) / 1000)) -lt "$secondsToRun" ] || break
     ! $verboseFlag || statusMessage decorate info "$(decorate subtle "$(date +%T)"): Sleeping for $elapsed $(plural $elapsed second seconds) $(decorate file "$lastFile") modified $(decorate magenta "$lastTimestamp") ..."
-    __catchEnvironment "$handler" sleep "$elapsed" || returnClean $? "${clean[@]}" || return $?
+    catchEnvironment "$handler" sleep "$elapsed" || returnClean $? "${clean[@]}" || return $?
   done
   ! $verboseFlag || statusMessage --last timingReport "$init" "Watch stopped after"
   returnClean 0 "${clean[@]}"

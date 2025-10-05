@@ -28,7 +28,7 @@ npmInstall() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -38,7 +38,7 @@ npmInstall() {
       ;;
     *)
       # _IDENTICAL_ argumentUnknownHandler 1
-      __throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
+      returnThrowArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
       ;;
     esac
     shift
@@ -47,17 +47,17 @@ npmInstall() {
   if whichExists npm; then
     return 0
   fi
-  __catch "$handler" buildEnvironmentLoad BUILD_NPM_VERSION || return $?
+  returnCatch "$handler" buildEnvironmentLoad BUILD_NPM_VERSION || return $?
 
   local clean=() quietLog
 
   version="${1-${BUILD_NPM_VERSION:-latest}}"
 
-  quietLog=$(__catch "$handler" buildQuietLog "$handler") || return $?
+  quietLog=$(returnCatch "$handler" buildQuietLog "$handler") || return $?
   clean+=("$quietLog")
-  __catchEnvironmentQuiet "$handler" "$quietLog" packageInstall npm || returnClean $? "${clean[@]}" || return $?
-  __catchEnvironmentQuiet "$handler" "$quietLog" npm install -g "npm@$version" --force 2>&1 || returnClean $? "${clean[@]}" || return $?
-  __catchEnvironment "$handler" rm -rf "${clean[@]}" || return $?
+  catchEnvironmentQuiet "$handler" "$quietLog" packageInstall npm || returnClean $? "${clean[@]}" || return $?
+  catchEnvironmentQuiet "$handler" "$quietLog" npm install -g "npm@$version" --force 2>&1 || returnClean $? "${clean[@]}" || return $?
+  catchEnvironment "$handler" rm -rf "${clean[@]}" || return $?
 }
 _npmInstall() {
   # __IDENTICAL__ usageDocument 1
@@ -97,7 +97,7 @@ __nodePackageManagerArguments_npm() {
 
   case "$action" in
   run)
-    ! $globalFlag || __throwArgument "$handler" "--global makes no sense with run" || return $?
+    ! $globalFlag || returnThrowArgument "$handler" "--global makes no sense with run" || return $?
     printf "%s\n" "run"
     ;;
   install | update | uninstall)
@@ -108,7 +108,7 @@ __nodePackageManagerArguments_npm() {
     fi
     ;;
   *)
-    __catchArgument "$handler" "Unknown action: $action" || return $?
+    catchArgument "$handler" "Unknown action: $action" || return $?
     ;;
   esac
 }

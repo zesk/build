@@ -122,7 +122,7 @@ _simplePHPRequest() {
   local indexFile
   local indexValue
 
-  indexFile="$(__catch "$handler" buildCacheDirectory)/PHP_REQUEST_INDEX" || return $?
+  indexFile="$(returnCatch "$handler" buildCacheDirectory)/PHP_REQUEST_INDEX" || return $?
   indexValue="$([ -f "$indexFile" ] && cat "$indexFile" || printf 0)"
   indexValue=$((indexValue + 1))
   curl -s "http://$PHP_SERVER_HOST:$PHP_SERVER_PORT/index.php?request=$indexValue"
@@ -226,7 +226,7 @@ testDeployApplication() {
   while ! _isSimplePHPServerRunning; do
     elapsed=$(($(timingStart) - start))
     if [ "$elapsed" -gt "$maxWaitTime" ]; then
-      __catchEnvironment "$handler" "Simple PHP Server not running after $maxWaitTime seconds, failing" || return $?
+      catchEnvironment "$handler" "Simple PHP Server not running after $maxWaitTime seconds, failing" || return $?
     fi
   done
   decorate pair 20 "PHP Process" "$PHP_SERVER_PID"
@@ -423,14 +423,14 @@ testDeployApplication() {
   PHP_SERVER_PID=
   unset BUILD_DEBUG
 
-  __catch "$handler" rm -rf "$d" || return $?
+  returnCatch "$handler" rm -rf "$d" || return $?
 }
 
 testDeployPackageName() {
   local handler="returnMessage"
   local saveTarget home
 
-  home=$(__catch "$handler" buildHome) || return $?
+  home=$(returnCatch "$handler" buildHome) || return $?
 
   saveTarget=${BUILD_TARGET-NONE}
 
@@ -455,7 +455,7 @@ testDeployPackageName() {
   export BUILD_TARGET
 
   # shellcheck source=/dev/null
-  __catch "$handler" buildEnvironmentLoad BUILD_TARGET || return $?
+  returnCatch "$handler" buildEnvironmentLoad BUILD_TARGET || return $?
 
   assertEquals "app.tar.gz" "$(deployPackageName)" || return $?
 

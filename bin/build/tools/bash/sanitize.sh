@@ -12,14 +12,14 @@ __bashSanitize() {
 
   local home checkAssertions=() executor=contextOpen
 
-  home=$(__catch "$handler" buildHome) || return $?
+  home=$(returnCatch "$handler" buildHome) || return $?
 
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -32,7 +32,7 @@ __bashSanitize() {
       home=$(usageArgumentDirectory "$handler" "$argument" "${1-}") || return $?
       ;;
     --check)
-      shift || __throwArgument "$handler" "shift $argument" || return $?
+      shift || returnThrowArgument "$handler" "shift $argument" || return $?
       checkAssertions+=("$(usageArgumentDirectory "$handler" "checkDirectory" "$1")") || return $?
       ;;
     *)
@@ -46,16 +46,16 @@ __bashSanitize() {
 
   fileList=$(fileTemporaryName "$handler") || return $?
   if [ "$#" -eq 0 ]; then
-    __catchEnvironment "$handler" cat >"$fileList" || return $?
+    catchEnvironment "$handler" cat >"$fileList" || return $?
   else
-    __catchEnvironment "$handler" printf "%s\n" "$@" >"$fileList" || return $?
+    catchEnvironment "$handler" printf "%s\n" "$@" >"$fileList" || return $?
   fi
 
   local undo=()
 
   # CHANGE DIRECTORY HERE
-  __catchEnvironment "$handler" muzzle pushd "$home" || return $?
-  [ "$home" = "$(pwd)" ] || __throwEnvironment "$handler" "Unable to cd to $home" || return $?
+  catchEnvironment "$handler" muzzle pushd "$home" || return $?
+  [ "$home" = "$(pwd)" ] || returnThrowEnvironment "$handler" "Unable to cd to $home" || return $?
   undo=(muzzle popd)
 
   statusMessage decorate success Making shell files executable ...
@@ -63,7 +63,7 @@ __bashSanitize() {
   local shellFile
   while read -r shellFile; do
     statusMessage decorate info "+x $(decorate file "$shellFile")"
-  done < <(__catchEnvironment "$handler" makeShellFilesExecutable) || returnUndo $? "${undo[@]}" || return $?
+  done < <(catchEnvironment "$handler" makeShellFilesExecutable) || returnUndo $? "${undo[@]}" || return $?
 
   if [ ${#checkAssertions[@]} -eq 0 ]; then
     checkAssertions+=("$(pwd)")
@@ -82,7 +82,7 @@ __bashSanitize() {
   statusMessage decorate success Checking debugging ...
   _bashSanitizeCheckDebugging "$handler" <"$fileList" || returnUndo $? "${undo[@]}" || returnClean $? "$fileList" || return $?
   rm -rf "$fileList" || :
-  __catchEnvironment "$handler" "${undo[@]}" || return $?
+  catchEnvironment "$handler" "${undo[@]}" || return $?
   statusMessage decorate success Completed ...
   printf "\n"
 }
@@ -91,7 +91,7 @@ _bashSanitizeCheckLint() {
   local handler="$1" && shift
 
   statusMessage decorate success "Running bashLintFiles ..." || :
-  __catchEnvironment "$handler" bashLintFiles --fix || return $?
+  catchEnvironment "$handler" bashLintFiles --fix || return $?
 }
 
 _bashSanitizeCheckAssertions() {
@@ -101,7 +101,7 @@ _bashSanitizeCheckAssertions() {
     if ! findUncaughtAssertions "$1" --list; then
       # When ready - add --interactive here as well
       findUncaughtAssertions "$1" --exec "$executor" &
-      __throwEnvironment "$handler" findUncaughtAssertions "$1" --list || return $?
+      returnThrowEnvironment "$handler" findUncaughtAssertions "$1" --list || return $?
     else
       decorate success "all files passed"
     fi
@@ -119,7 +119,7 @@ _bashSanitizeCheckCopyright() {
     done <"$file"
   done < <(find . -name ".skip-copyright" -type f ! -path "*/.*/*")
   export BUILD_COMPANY
-  __catch "$handler" buildEnvironmentLoad BUILD_COMPANY || return $?
+  returnCatch "$handler" buildEnvironmentLoad BUILD_COMPANY || return $?
 
   year="$(date +%Y)"
   statusMessage decorate warning "Checking $year and $BUILD_COMPANY ..." || :
@@ -129,7 +129,7 @@ _bashSanitizeCheckCopyright() {
     while IFS=":" read -r file pattern; do
       error="$(decorate error "No pattern used")" pattern="$(decorate value "$pattern")" file="$(decorate code "$file")" mapEnvironment <<<"{error}: {pattern} missing from {file}"
     done <"$matches"
-    __throwEnvironment "$handler" "File pattern check failed" || returnClean $? "$matches" || return $?
+    returnThrowEnvironment "$handler" "File pattern check failed" || returnClean $? "$matches" || return $?
   fi
   set +v
 }
@@ -143,7 +143,7 @@ _bashSanitizeCheckDebugging() {
   if fileMatches 'set ["]\?-x' -- -- - >"$matches"; then
     local file line remain debugHash found=false
     while IFS=":" read -r file line remain; do
-      [ -f "$file" ] || __throwEnvironment "$handler" "returned line \"$file $line $remain\" - not a file" || return $?
+      [ -f "$file" ] || returnThrowEnvironment "$handler" "returned line \"$file $line $remain\" - not a file" || return $?
       debugHash="$(sed -e "${line}p" -e d <"$file" | shaPipe)"
       if grep -q -e "Debugging: $debugHash" "$file"; then
         continue
@@ -154,8 +154,8 @@ _bashSanitizeCheckDebugging() {
     done <"$matches"
     $found || return 0
     statusMessage --last dumpPipe "Debugging matches:" "${BASH_SOURCE[0]}" <"$matches"
-    __catchEnvironment "$handler" rm -rf "$matches" || return $?
-    __throwEnvironment "$handler" "Debugging found" || return $?
+    catchEnvironment "$handler" rm -rf "$matches" || return $?
+    returnThrowEnvironment "$handler" "Debugging found" || return $?
   fi
-  __catchEnvironment "$handler" rm -rf "$matches" || return $?
+  catchEnvironment "$handler" rm -rf "$matches" || return $?
 }

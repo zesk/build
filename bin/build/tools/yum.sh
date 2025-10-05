@@ -21,7 +21,7 @@ _yumIsInstalled() {
 
 __yumNonInteractive() {
   local handler="returnMessage"
-  __catchEnvironment "$handler" yum -y -q "$@" || return $?
+  catchEnvironment "$handler" yum -y -q "$@" || return $?
 }
 
 # Install yum packages

@@ -22,13 +22,13 @@ __hookPreCommitShell() {
   local handler="_${FUNCNAME[0]}"
 
   statusMessage --last printf -- "%s %s (%s)\n" "$(decorate info "[pre-commit]")" "$(decorate code ".sh")" "$(decorate label "Shell files")"
-  __catchEnvironment "$handler" gitPreCommitListExtension sh | decorate bold-magenta || return $?
+  catchEnvironment "$handler" gitPreCommitListExtension sh | decorate bold-magenta || return $?
   local done=false changed=() file
   while ! $done; do
     read -r file || done=true
     [ -z "$file" ] || changed+=("$file")
   done < <(gitPreCommitListExtension sh)
-  __catchEnvironment "$handler" bashSanitize "${changed[@]+"${changed[@]}"}" || return $?
+  catchEnvironment "$handler" bashSanitize "${changed[@]+"${changed[@]}"}" || return $?
 }
 ___hookPreCommitShell() {
   # __IDENTICAL__ usageDocument 1

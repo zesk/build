@@ -21,18 +21,18 @@ testTools() {
 
   __help "$handler" "${1-}" || return 0
 
-  home=$(__catch "$handler" buildHome) || return $?
+  home=$(returnCatch "$handler" buildHome) || return $?
 
   for testCode in tools _assert assert mock junit; do
     testCode="$home/bin/build/tools/test/$testCode.sh"
     # shellcheck source=/dev/null
-    source "$testCode" || __throwEnvironment "$handler" "source $testCode" || return $?
+    source "$testCode" || returnThrowEnvironment "$handler" "source $testCode" || return $?
   done
-  __catchEnvironment "$handler" isFunction testSuite || return $?
+  catchEnvironment "$handler" isFunction testSuite || return $?
 
   [ $# -ne 0 ] || return 0
-  isCallable "$1" || __throwArgument "$handler" "$1 is not callable" || return $?
-  __catchEnvironment "$handler" "$@" || return $?
+  isCallable "$1" || returnThrowArgument "$handler" "$1 is not callable" || return $?
+  catchEnvironment "$handler" "$@" || return $?
 }
 _testTools() {
   # __IDENTICAL__ usageDocument 1
@@ -54,7 +54,7 @@ dumpBinary() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -84,7 +84,7 @@ dumpBinary() {
       break
       ;;
     esac
-    shift || __throwArgument "$handler" shift || return $?
+    shift || returnThrowArgument "$handler" shift || return $?
   done
 
   local item
@@ -93,13 +93,13 @@ dumpBinary() {
       local name
       name=$(decorate file "$(basename "$item")" "$item")
       # Recursion - only when --vanish is a parameter
-      __catchEnvironment "$handler" dumpBinary --size "$showBytes" "${names[@]}" "$name" <"$item" || return $?
-      __catchEnvironment "$handler" rm -rf "$item" || return $?
+      catchEnvironment "$handler" dumpBinary --size "$showBytes" "${names[@]}" "$name" <"$item" || return $?
+      catchEnvironment "$handler" rm -rf "$item" || return $?
     done
     return 0
   fi
   item=$(fileTemporaryName "$handler") || return $?
-  __catchEnvironment "$handler" cat >"$item" || return $?
+  catchEnvironment "$handler" cat >"$item" || return $?
 
   local name="" nLines nBytes
   [ ${#names[@]} -eq 0 ] || name=$(decorate info "${names[*]}: ")
@@ -120,7 +120,7 @@ dumpBinary() {
     "$nBytes" "$(plural "$nBytes" byte bytes)" \
     "$suffix"
   if [ $nBytes -eq 0 ]; then
-    __catchEnvironment "$handler" rm -rf "$item" || return $?
+    catchEnvironment "$handler" rm -rf "$item" || return $?
     return 0
   fi
 
@@ -128,8 +128,8 @@ dumpBinary() {
   if [ -n "$showBytes" ]; then
     endPreprocess=("$endBinary" --bytes="$showBytes")
   fi
-  __catchEnvironment "$handler" "${endPreprocess[@]}" <"$item" | __catchEnvironment "$handler" dumpHex | decorate code | decorate wrap "$symbol " || returnClean $? "$item" || return $?
-  __catchEnvironment "$handler" rm -rf "$item" || return $?
+  catchEnvironment "$handler" "${endPreprocess[@]}" <"$item" | catchEnvironment "$handler" dumpHex | decorate code | decorate wrap "$symbol " || returnClean $? "$item" || return $?
+  catchEnvironment "$handler" rm -rf "$item" || return $?
   return 0
 }
 _dumpBinary() {

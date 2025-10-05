@@ -27,7 +27,7 @@ aptKeyAddOpenTofu() {
     --source deb-src
   )
   __help "$handler" "$@" || return 0
-  __catch "$handler" aptKeyAdd "${args[@]}" || return $?
+  returnCatch "$handler" aptKeyAdd "${args[@]}" || return $?
 }
 _aptKeyAddOpenTofu() {
   # __IDENTICAL__ usageDocument 1
@@ -44,7 +44,7 @@ _aptKeyAddOpenTofu() {
 aptKeyRemoveOpenTofu() {
   local handler="_${FUNCNAME[0]}"
   __help "$handler" "$@" || return 0
-  __catch "$handler" aptKeyRemove opentofu "$@" || return $?
+  returnCatch "$handler" aptKeyRemove opentofu "$@" || return $?
 }
 _aptKeyRemoveOpenTofu() {
   # __IDENTICAL__ usageDocument 1
@@ -62,10 +62,10 @@ tofuInstall() {
 
   __help "$handler" "$@" || return 0
   ! whichExists "$binary" || return 0
-  __catch "$handler" packageInstall apt-transport-https ca-certificates curl gnupg || return $?
-  __catch "$handler" aptKeyAddOpenTofu || return $?
-  __catch "$handler" packageInstall "$binary" "$@" || return $?
-  whichExists "$binary" || __throwEnvironment "$handler" "No $binary binary found - installation failed" || return $?
+  returnCatch "$handler" packageInstall apt-transport-https ca-certificates curl gnupg || return $?
+  returnCatch "$handler" aptKeyAddOpenTofu || return $?
+  returnCatch "$handler" packageInstall "$binary" "$@" || return $?
+  whichExists "$binary" || returnThrowEnvironment "$handler" "No $binary binary found - installation failed" || return $?
 }
 _tofuInstall() {
   # __IDENTICAL__ usageDocument 1
@@ -82,9 +82,9 @@ tofuUninstall() {
   local handler="_${FUNCNAME[0]}"
 
   __help "$handler" "$@" || return 0
-  __catch "$handler" packageWhichUninstall tofu tofu "$@" || return $?
-  __catch "$handler" aptKeyRemoveOpenTofu || return $?
-  __catch "$handler" packageUpdate --force || return $?
+  returnCatch "$handler" packageWhichUninstall tofu tofu "$@" || return $?
+  returnCatch "$handler" aptKeyRemoveOpenTofu || return $?
+  returnCatch "$handler" packageUpdate --force || return $?
 }
 _tofuUninstall() {
   # __IDENTICAL__ usageDocument 1

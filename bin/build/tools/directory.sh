@@ -39,7 +39,7 @@ directoryChange() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -50,17 +50,17 @@ directoryChange() {
         directory=$(usageArgumentDirectory "$handler" "directory" "$1") || return $?
       elif [ -z "$command" ]; then
         command=$(usageArgumentCallable "$handler" "command" "$1") && shift || return $?
-        __catchEnvironment "$handler" muzzle pushd "$directory" || return $?
-        __catchEnvironment "$handler" "$command" "$@" || returnUndo $? muzzle popd || return $?
-        __catchEnvironment "$handler" muzzle popd || return $?
+        catchEnvironment "$handler" muzzle pushd "$directory" || return $?
+        catchEnvironment "$handler" "$command" "$@" || returnUndo $? muzzle popd || return $?
+        catchEnvironment "$handler" muzzle popd || return $?
         return 0
       fi
       ;;
     esac
     shift
   done
-  [ -n "$directory" ] || __throwArgument "$handler" "Missing directory" || return $?
-  __throwArgument "$handler" "Missing command" || return $?
+  [ -n "$directory" ] || returnThrowArgument "$handler" "Missing directory" || return $?
+  returnThrowArgument "$handler" "Missing command" || return $?
 }
 _directoryChange() {
   # __IDENTICAL__ usageDocument 1
@@ -81,19 +81,19 @@ directoryClobber() {
   source=$(usageArgumentDirectory "$handler" source "$1") || return $?
   shift || :
   target="${1-}"
-  targetPath="$(dirname "$target")" || __throwArgument "$handler" "dirname $target" || return $?
-  [ -d "$targetPath" ] || __throwEnvironment "$handler" "$targetPath is not a directory" || return $?
-  targetName="$(basename "$target")" || __throwEnvironment basename "$target" || return $?
+  targetPath="$(dirname "$target")" || returnThrowArgument "$handler" "dirname $target" || return $?
+  [ -d "$targetPath" ] || returnThrowEnvironment "$handler" "$targetPath is not a directory" || return $?
+  targetName="$(basename "$target")" || returnThrowEnvironment basename "$target" || return $?
   sourceStage="$targetPath/.NEW.$$.$targetName"
   targetBackup="$targetPath/.OLD.$$.$targetName"
-  __catchEnvironment "$handler" mv -f "$source" "$sourceStage" || return $?
-  __catchEnvironment "$handler" mv -f "$target" "$targetBackup" || return $?
+  catchEnvironment "$handler" mv -f "$source" "$sourceStage" || return $?
+  catchEnvironment "$handler" mv -f "$target" "$targetBackup" || return $?
   if ! mv -f "$sourceStage" "$target"; then
-    mv -f "$targetBackup" "$target" || __throwEnvironment "$handler" "Unable to revert $targetBackup -> $target" || return $?
-    mv -f "$sourceStage" "$source" || __throwEnvironment "$handler" "Unable to revert $sourceStage -> $source" || return $?
-    __throwEnvironment "$handler" "Clobber failed" || return $?
+    mv -f "$targetBackup" "$target" || returnThrowEnvironment "$handler" "Unable to revert $targetBackup -> $target" || return $?
+    mv -f "$sourceStage" "$source" || returnThrowEnvironment "$handler" "Unable to revert $sourceStage -> $source" || return $?
+    returnThrowEnvironment "$handler" "Clobber failed" || return $?
   fi
-  __catchEnvironment "$handler" rm -rf "$targetBackup" || return $?
+  catchEnvironment "$handler" rm -rf "$targetBackup" || return $?
 }
 _directoryClobber() {
   # __IDENTICAL__ usageDocument 1
@@ -113,7 +113,7 @@ _directoryClobber() {
 # Argument: --mode fileMode - String. Optional. Enforce the directory mode for `mkdir --mode` and `chmod`. Affects directories after it in the command line; supply multiple modes and order your directories if needed. Set to `-` to reset to no value.
 # Argument: --owner ownerName - String. Optional. Enforce the directory owner the directory. Affects all directories supplied AFTER it on the command line. Set to `-` to reset to no value.
 # Argument: fileDirectory ... - FileDirectory. Required. Test if file directory exists (file does not have to exist)
-# Requires: chmod __throwArgument usageArgumentString decorate __catchEnvironment dirname
+# Requires: chmod returnThrowArgument usageArgumentString decorate catchEnvironment dirname
 fileDirectoryRequire() {
   local handler="_${FUNCNAME[0]}"
 
@@ -124,7 +124,7 @@ fileDirectoryRequire() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -135,7 +135,7 @@ fileDirectoryRequire() {
       rr+=("$argument" "$value") || return $?
       ;;
     *)
-      rr+=(--output "$argument" "$(__catchEnvironment "$handler" dirname "$argument")") || return $?
+      rr+=(--output "$argument" "$(catchEnvironment "$handler" dirname "$argument")") || return $?
       ;;
     esac
     shift
@@ -158,13 +158,13 @@ fileDirectoryExists() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
     *)
       local path
-      path=$(dirname "$argument") || __throwEnvironment "$handler" "dirname $argument" || return $?
+      path=$(dirname "$argument") || returnThrowEnvironment "$handler" "dirname $argument" || return $?
       [ -d "$path" ] || return 1
       ;;
     esac
@@ -186,7 +186,7 @@ _fileDirectoryExists() {
 # Argument: --help - Optional. Flag. Display this help.
 # Argument: --mode fileMode - String. Optional. Enforce the directory mode for `mkdir --mode` and `chmod`. Affects directories after it in the command line; supply multiple modes and order your directories if needed. Set to `-` to reset to no value.
 # Argument: --owner ownerName - String. Optional. Enforce the directory owner the directory. Affects all directories supplied AFTER it on the command line. Set to `-` to reset to no value.
-# Requires: __throwArgument usageArgumentFunction usageArgumentString decorate __catchEnvironment dirname
+# Requires: returnThrowArgument usageArgumentFunction usageArgumentString decorate catchEnvironment dirname
 # Requires: chmod chown
 directoryRequire() {
   local handler="_${FUNCNAME[0]}"
@@ -198,7 +198,7 @@ directoryRequire() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -225,11 +225,11 @@ directoryRequire() {
     *)
       local name="$argument"
       if [ -d "$name" ]; then
-        [ 0 -eq "${#mode[@]}" ] || __catchEnvironment "$handler" chmod "${mode[1]}" "$name" || return $?
+        [ 0 -eq "${#mode[@]}" ] || catchEnvironment "$handler" chmod "${mode[1]}" "$name" || return $?
       else
-        __catchEnvironment "$handler" mkdir -p "${mode[@]+"${mode[@]}"}" "$name" || return $?
+        catchEnvironment "$handler" mkdir -p "${mode[@]+"${mode[@]}"}" "$name" || return $?
       fi
-      [ -z "$owner" ] || __catchEnvironment "$handler" chown "$owner" "$name" || return $?
+      [ -z "$owner" ] || catchEnvironment "$handler" chown "$owner" "$name" || return $?
       directories+=("$name")
       [ -z "$output" ] || name="$output"
       printf "%s\n" "$name"
@@ -238,7 +238,7 @@ directoryRequire() {
     esac
     shift
   done
-  [ ${#directories[@]} -gt 0 ] || __throwArgument "$handler" "Need at least one $noun" || return $?
+  [ ${#directories[@]} -gt 0 ] || returnThrowArgument "$handler" "Need at least one $noun" || return $?
 }
 _directoryRequire() {
   # __IDENTICAL__ usageDocument 1
@@ -259,12 +259,12 @@ directoryIsEmpty() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
     *)
-      [ -d "$argument" ] || __throwArgument "$handler" "Not a directory $(decorate code "$argument")" || return $?
+      [ -d "$argument" ] || returnThrowArgument "$handler" "Not a directory $(decorate code "$argument")" || return $?
       find "$argument" -mindepth 1 -maxdepth 1 | read -r && return 1 || return 0
       ;;
     esac
@@ -336,12 +336,12 @@ __directoryParent() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
     --pattern)
-      [ -z "$filePattern" ] || __throwArgument "$handler" "$argument already specified" || return $?
+      [ -z "$filePattern" ] || returnThrowArgument "$handler" "$argument already specified" || return $?
       shift
       filePattern=$(usageArgumentString "$handler" "$argument" "${1-}") || return $?
       ;;
@@ -350,8 +350,8 @@ __directoryParent() {
       testExpressions+=("$(usageArgumentString "$handler" "$argument" "${1-}")") || return $?
       ;;
     *)
-      [ -z "$startingDirectory" ] || __throwArgument "$handler" "startingDirectory $(decorate code "$argument") was already specified $(decorate value "$startingDirectory") (Arguments: $(decorate each code "${handler#_}" "${__saved[@]}"))" || return $?
-      [ -n "$argument" ] || argument=$(__catchEnvironment "$handler" pwd) || return $?
+      [ -z "$startingDirectory" ] || returnThrowArgument "$handler" "startingDirectory $(decorate code "$argument") was already specified $(decorate value "$startingDirectory") (Arguments: $(decorate each code "${handler#_}" "${__saved[@]}"))" || return $?
+      [ -n "$argument" ] || argument=$(catchEnvironment "$handler" pwd) || return $?
       startingDirectory=$(usageArgumentRealDirectory "$handler" startingDirectory "$argument") || return $?
       ;;
     esac
@@ -367,7 +367,7 @@ __directoryParent() {
     passedExpression=""
     failedExpression=""
     for testExpression in "${testExpressions[@]+"${testExpressions[@]}"}"; do
-      [ "$testExpression" != "${testExpression#-}" ] || __throwArgument "$handler" "Invalid expression: $(decorate code "$testExpression") (Arguments: $(decorate each code "${handler#_}" "${__saved[@]}"))" || return $?
+      [ "$testExpression" != "${testExpression#-}" ] || returnThrowArgument "$handler" "Invalid expression: $(decorate code "$testExpression") (Arguments: $(decorate each code "${handler#_}" "${__saved[@]}"))" || return $?
       if ! test "$testExpression" "$directory/$filePattern"; then
         passed=false
         failedExpression="$testExpression"
@@ -386,6 +386,6 @@ __directoryParent() {
     directory="$(dirname "$directory")"
   done
   [ -n "$bestFailure" ] || bestFailure="No $(decorate code "$filePattern") found above $(decorate value "$argument")"
-  __throwEnvironment "$handler" "$bestFailure" || return $?
+  returnThrowEnvironment "$handler" "$bestFailure" || return $?
   return 1
 }

@@ -22,8 +22,8 @@ darwinSoundDirectory() {
   local handler="_${FUNCNAME[0]}" home
   [ $# -eq 0 ] || __help --only "$handler" "$@" || return "$(convertValue $? 1 0)"
 
-  isDarwin || __throwEnvironment "$handler" "Only on Darwin" || return $?
-  home=$(__catch "$handler" userHome) || return $?
+  isDarwin || returnThrowEnvironment "$handler" "Only on Darwin" || return $?
+  home=$(returnCatch "$handler" userHome) || return $?
   printf "%s\n" "$home/Library/Sounds"
 }
 _darwinSoundDirectory() {
@@ -63,7 +63,7 @@ darwinSoundInstall() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -76,17 +76,17 @@ darwinSoundInstall() {
     esac
     shift
   done
-  [ "${#soundFiles[@]}" -gt 0 ] || __throwArgument "$handler" "Need at least one sound file" || return $?
+  [ "${#soundFiles[@]}" -gt 0 ] || returnThrowArgument "$handler" "Need at least one sound file" || return $?
 
-  soundDirectory=$(__catchEnvironment "$handler" darwinSoundDirectory) || return $?
+  soundDirectory=$(catchEnvironment "$handler" darwinSoundDirectory) || return $?
   if [ ! -d "$soundDirectory" ]; then
     if "$createFlag"; then
-      __catchEnvironment "$handler" mkdir -p "$soundDirectory" || return $?
+      catchEnvironment "$handler" mkdir -p "$soundDirectory" || return $?
     else
-      __throwEnvironment "$handler" "No $soundDirectory" || return $?
+      returnThrowEnvironment "$handler" "No $soundDirectory" || return $?
     fi
   fi
-  __catchEnvironment "$handler" cp "${soundFiles[@]+"${soundFiles[@]}"}" "${soundDirectory%/}/" || return $?
+  catchEnvironment "$handler" cp "${soundFiles[@]+"${soundFiles[@]}"}" "${soundDirectory%/}/" || return $?
 }
 _darwinSoundInstall() {
   # __IDENTICAL__ usageDocument 1
@@ -98,8 +98,8 @@ darwinSoundNames() {
   local handler="_${FUNCNAME[0]}" soundDirectory
   [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
 
-  soundDirectory=$(__catchEnvironment "$handler" darwinSoundDirectory) || return $?
-  [ -d "$soundDirectory" ] || __throwEnvironment "$handler" "No $soundDirectory" || return $?
+  soundDirectory=$(catchEnvironment "$handler" darwinSoundDirectory) || return $?
+  [ -d "$soundDirectory" ] || returnThrowEnvironment "$handler" "No $soundDirectory" || return $?
   find "$soundDirectory" -type f ! -name '.*' -exec basename {} \; | while read -r file; do
     printf "%s\n" "${file%.*}"
   done
@@ -134,7 +134,7 @@ darwinNotification() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -148,7 +148,7 @@ darwinNotification() {
     --sound)
       shift
       soundName="$(usageArgumentString "$handler" "$argument" "${1-}")" || return $?
-      darwinSoundValid "$soundName" || __throwArgument "$handler" "Sound name $(decorate value "$soundName") not valid, ignoring: $(darwinSoundNames)" || :
+      darwinSoundValid "$soundName" || returnThrowArgument "$handler" "Sound name $(decorate value "$soundName") not valid, ignoring: $(darwinSoundNames)" || :
       ;;
     --)
       shift
@@ -178,7 +178,7 @@ darwinNotification() {
   if $debugFlag; then
     printf "%s\n" "$script" >"$(buildHome)/${FUNCNAME[0]}.debug"
   fi
-  __catchEnvironment "$handler" /usr/bin/osascript -e "$script" || return $?
+  catchEnvironment "$handler" /usr/bin/osascript -e "$script" || return $?
 }
 
 _darwinNotification() {
@@ -207,7 +207,7 @@ darwinDialog() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -267,7 +267,7 @@ darwinDialog() {
   done
   maxChoice=$((${#choices[@]} - 1))
   if [ "$defaultButton" -gt $maxChoice ]; then
-    __throwArgument "$handler" "defaultButton $defaultButton is out of range 0 ... $maxChoice" || return $?
+    returnThrowArgument "$handler" "defaultButton $defaultButton is out of range 0 ... $maxChoice" || return $?
   fi
   messageText="$(escapeDoubleQuotes "$(printf "%s\\\n" "${message[@]}")")"
   quietErrors=$(fileTemporaryName "$handler") || return $?
@@ -282,7 +282,7 @@ darwinDialog() {
     # [ -z "$icon" ] || script="$script with icon \"$(escapeDoubleQuotes "$icon")\""
     IFS=','
     ! $debugFlag || printf "\n\n    %s\n\n" "$(decorate code "$script")"
-    result="$(__catchEnvironment "$handler" osascript -e "$script" 2>"$quietErrors")" || returnUndo $? cat "$quietErrors" || return $?
+    result="$(catchEnvironment "$handler" osascript -e "$script" 2>"$quietErrors")" || returnUndo $? cat "$quietErrors" || return $?
     rm -rf "$quietErrors" || :
     local name value button="none" done=false IFS
     while ! $done; do
@@ -297,11 +297,11 @@ darwinDialog() {
         button="$value"
         ;;
       "gave up")
-        isBoolean "$value" || __throwEnvironment "$handler" "gave up should be a boolean: $value" || return $?
+        isBoolean "$value" || returnThrowEnvironment "$handler" "gave up should be a boolean: $value" || return $?
         ! "$value" || _return "$(returnCode timeout)" "Dialog timed out" || return $?
         ;;
       *)
-        __throwEnvironment "$handler" "Unknown return value from dialog: $(decorate label "$name"): $(decorate value "$value")" || return $?
+        returnThrowEnvironment "$handler" "Unknown return value from dialog: $(decorate label "$name"): $(decorate value "$value")" || return $?
         ;;
       esac
     done <<<"$result"

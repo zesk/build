@@ -23,19 +23,19 @@ __buildMarker() {
   local handler="returnMessage"
   local home
 
-  home=$(__catch "$handler" buildHome) || return $?
+  home=$(returnCatch "$handler" buildHome) || return $?
   local jsonFile
 
-  jsonFile="$home/$(__catch "$handler" buildEnvironmentGet APPLICATION_JSON)" || return $?
+  jsonFile="$home/$(returnCatch "$handler" buildEnvironmentGet APPLICATION_JSON)" || return $?
 
-  [ -f "$jsonFile" ] || __catchEnvironment "$handler" printf "{}" >"$jsonFile" || return $?
+  [ -f "$jsonFile" ] || catchEnvironment "$handler" printf "{}" >"$jsonFile" || return $?
 
   local version id
-  version="$(__catch "$handler" hookRun version-current)" || return $?
-  id="$(__catch "$handler" hookRun application-id)" || return $?
-  __catchEnvironment "$handler" jsonFileSet "$jsonFile" ".version" "$version" || return $?
-  __catchEnvironment "$handler" jsonFileSet "$jsonFile" ".id" "$id" || return $?
-  __catchEnvironment "$handler" muzzle git add "$jsonFile" || return $?
+  version="$(returnCatch "$handler" hookRun version-current)" || return $?
+  id="$(returnCatch "$handler" hookRun application-id)" || return $?
+  catchEnvironment "$handler" jsonFileSet "$jsonFile" ".version" "$version" || return $?
+  catchEnvironment "$handler" jsonFileSet "$jsonFile" ".id" "$id" || return $?
+  catchEnvironment "$handler" muzzle git add "$jsonFile" || return $?
 
   printf "%s\n" "$jsonFile"
 }
@@ -59,7 +59,7 @@ __buildBuild() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -88,7 +88,7 @@ __buildBuild() {
       ;;
     *)
       # _IDENTICAL_ argumentUnknownHandler 1
-      __throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
+      returnThrowArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
       ;;
     esac
     shift
@@ -102,10 +102,10 @@ __buildBuild() {
   [ -n "${BUILD_COLORS_MODE-}" ] || BUILD_COLORS_MODE=$(consoleConfigureColorMode) || :
 
   ! $debugFlag || statusMessage decorate info "Installing dependencies ..."
-  __catch "$handler" packageInstall || return $?
+  returnCatch "$handler" packageInstall || return $?
 
   local home
-  home=$(__catch "$handler" buildHome) || return $?
+  home=$(returnCatch "$handler" buildHome) || return $?
 
   local size
 
@@ -116,7 +116,7 @@ __buildBuild() {
   fi
   [ -n "$size" ] || size="1x"
 
-  __catch "$handler" bigText "$(buildEnvironmentGet APPLICATION_NAME) $(hookVersionCurrent)" || return $?
+  returnCatch "$handler" bigText "$(buildEnvironmentGet APPLICATION_NAME) $(hookVersionCurrent)" || return $?
   echoBar "."
   decorate pair Branch "${BITBUCKET_BRANCH-}"
   decorate pair Deployment "${BITBUCKET_DEPLOYMENT_ENVIRONMENT-}"
@@ -128,20 +128,20 @@ __buildBuild() {
 
   ! $debugFlag || statusMessage decorate info "Updating markdown ..."
   if ! "$home/bin/update-md.sh" --skip-commit; then
-    __catchEnvironment "$handler" "Can not update the Markdown files" || return $?
+    catchEnvironment "$handler" "Can not update the Markdown files" || return $?
   fi
 
   ! $debugFlag || statusMessage decorate warning "Running deprecated ..."
-  "$home/bin/build/deprecated.sh" || __throwEnvironment "$handler" "Deprecated failed" || return $?
+  "$home/bin/build/deprecated.sh" || returnThrowEnvironment "$handler" "Deprecated failed" || return $?
 
   ! $debugFlag || statusMessage decorate warning "Building fast files first time ..."
-  __catch "$handler" "$home/bin/tools.sh" buildFastFiles || return $?
+  returnCatch "$handler" "$home/bin/tools.sh" buildFastFiles || return $?
 
   ! $debugFlag || statusMessage decorate warning "Running identical ..."
-  "$home/bin/build/identical-repair.sh" --internal || __throwEnvironment "$handler" "Identical repair failed" || return $?
+  "$home/bin/build/identical-repair.sh" --internal || returnThrowEnvironment "$handler" "Identical repair failed" || return $?
 
   ! $debugFlag || statusMessage decorate warning "Building fast files ..."
-  __catch "$handler" "$home/bin/tools.sh" buildFastFiles || return $?
+  returnCatch "$handler" "$home/bin/tools.sh" buildFastFiles || return $?
 
   if $makeDocumentation; then
     local path rootShow rootPath="$home/documentation/site"
@@ -149,12 +149,12 @@ __buildBuild() {
     for path in "$rootPath" "$home/documentation/.docs"; do
       if [ -d "$path" ]; then
         statusMessage decorate warning "Removing $path for build" || return $?
-        __catchEnvironment "$handler" rm -rf "$path" || return $?
+        catchEnvironment "$handler" rm -rf "$path" || return $?
       fi
     done
     ! $debugFlag || statusMessage decorate warning "Building documentation ..."
-    __catchEnvironment "$handler" "$home/bin/documentation.sh" || return $?
-    [ -d "$rootPath" ] || __throwEnvironment "$handler" "Documentation failed to create $rootShow" || return $?
+    catchEnvironment "$handler" "$home/bin/documentation.sh" || return $?
+    [ -d "$rootPath" ] || returnThrowEnvironment "$handler" "Documentation failed to create $rootShow" || return $?
   fi
 
   if $commitChanges && gitRepositoryChanged; then

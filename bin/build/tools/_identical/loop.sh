@@ -25,29 +25,29 @@ _identicalCheckInsideLoop() {
 
   local prefix prefixIndex=0 prefixes=("$@")
   local tempDirectory
-  tempDirectory=$(__catch "$handler" environmentValueRead "$stateFile" tempDirectory) || returnClean $? "${clean[@]}" || return $?
+  tempDirectory=$(returnCatch "$handler" environmentValueRead "$stateFile" tempDirectory) || returnClean $? "${clean[@]}" || return $?
 
   for prefix in "${prefixes[@]}"; do
     if ! __identicalFindPrefixes "$handler" "$prefix" <"$searchFile" | decorate wrap "$prefixIndex:" >>"$foundLines"; then
       ! $debug || statusMessage decorate info "No prefix \"$prefix\" found in $(decorate file "$searchFile")"
     fi
-    __catchEnvironment "$handler" muzzle directoryRequire "$tempDirectory/$prefixIndex" || returnClean $? "${clean[@]}" || return $?
+    catchEnvironment "$handler" muzzle directoryRequire "$tempDirectory/$prefixIndex" || returnClean $? "${clean[@]}" || return $?
     prefixIndex=$((prefixIndex + 1))
   done
 
   if fileIsEmpty "$foundLines"; then
     ! $debug || statusMessage decorate info "Did not find anything AT ALL in $searchFile"
-    __catchEnvironment "$handler" rm -f "${clean[@]}" || return $?
+    catchEnvironment "$handler" rm -f "${clean[@]}" || return $?
     return 0
   fi
 
   local repairSources=() item tokens=()
-  mapFile=$(__catch "$handler" environmentValueRead "$stateFile" mapFile) || returnClean $? "${clean[@]}" || return $?
-  repairSources=() && while read -r item; do repairSources+=("$item"); done < <(__catch "$handler" environmentValueReadArray "$stateFile" "repairSources") || returnClean $? "${clean[@]}" || return $?
-  tokens=() && while read -r item; do tokens+=("$item"); done < <(__catch "$handler" environmentValueReadArray "$stateFile" "tokens") || returnClean $? "${clean[@]}" || return $?
+  mapFile=$(returnCatch "$handler" environmentValueRead "$stateFile" mapFile) || returnClean $? "${clean[@]}" || return $?
+  repairSources=() && while read -r item; do repairSources+=("$item"); done < <(returnCatch "$handler" environmentValueReadArray "$stateFile" "repairSources") || returnClean $? "${clean[@]}" || return $?
+  tokens=() && while read -r item; do tokens+=("$item"); done < <(returnCatch "$handler" environmentValueReadArray "$stateFile" "tokens") || returnClean $? "${clean[@]}" || return $?
 
   local totalLines
-  totalLines=$(($(__catch "$handler" fileLineCount "$searchFile") + 0)) || returnClean $? "${clean[@]}" || return $?
+  totalLines=$(($(returnCatch "$handler" fileLineCount "$searchFile") + 0)) || returnClean $? "${clean[@]}" || return $?
 
   local identicalLine badFiles=()
   while read -r identicalLine; do
@@ -63,7 +63,7 @@ _identicalCheckInsideLoop() {
     fi
     IFS=' ' read -r lineNumber token count <<<"$(printf -- "%s\n" "$parsed")" || :
     [ ${#tokens[@]} -eq 0 ] || inArray "$token" "${tokens[@]}" || continue
-    if ! count=$(__identicalLineCount "$count" "$((totalLines - lineNumber))") && ! __throwEnvironment "$handler" "\"$identicalLine\" invalid count: $count"; then
+    if ! count=$(__identicalLineCount "$count" "$((totalLines - lineNumber))") && ! returnThrowEnvironment "$handler" "\"$identicalLine\" invalid count: $count"; then
       continue
     fi
     errorFile="$tempDirectory/$prefixIndex/errors"
@@ -79,24 +79,24 @@ _identicalCheckInsideLoop() {
           badFiles+=("$tokenFileName")
           badFiles+=("$searchFile")
           {
-            __catchEnvironment "$handler" cat "$errorFile" || returnClean $? "${clean[@]}" || return $?
+            catchEnvironment "$handler" cat "$errorFile" || returnClean $? "${clean[@]}" || return $?
             statusMessage --last decorate error "Unable to repair $(decorate value "$token") in $(decorate code "$searchFile")"
           } 1>&2
         else
-          __catchEnvironment "$handler" cat "$errorFile" || returnClean $? "${clean[@]}" || return $?
+          catchEnvironment "$handler" cat "$errorFile" || returnClean $? "${clean[@]}" || return $?
           statusMessage decorate success "Repaired $(decorate value "$token") in $(decorate code "$searchFile")"
         fi
       else
         statusMessage decorate error "Added bad file $(decorate file "$tokenFileName") in $(decorate file "$searchFile")"
         badFiles+=("$tokenFileName")
         badFiles+=("$searchFile")
-        __catchEnvironment "$handler" cat "$errorFile" 1>&2 || returnClean $? "${clean[@]}" || return $?
+        catchEnvironment "$handler" cat "$errorFile" 1>&2 || returnClean $? "${clean[@]}" || return $?
       fi
     else
-      __catchEnvironment "$handler" cat "$errorFile" || returnClean $? "${clean[@]}" || return $?
+      catchEnvironment "$handler" cat "$errorFile" || returnClean $? "${clean[@]}" || return $?
     fi
   done <"$foundLines"
-  __catchEnvironment "$handler" rm -f "${clean[@]}" || return $?
+  catchEnvironment "$handler" rm -f "${clean[@]}" || return $?
 
   if [ ${#badFiles[@]} -gt 0 ]; then
     ! $debug || statusMessage decorate info "badFiles $(decorate each file "${badFiles[@]}")"

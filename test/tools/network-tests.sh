@@ -18,7 +18,7 @@ testNetworkMACAddressList() {
 
   temp="$(fileTemporaryName "$handler")" || return $?
 
-  __catchEnvironment "$handler" networkMACAddressList >"$temp" || return $?
+  catchEnvironment "$handler" networkMACAddressList >"$temp" || return $?
 
   # Assert 1 < 2
   assertLessThanOrEqual 1 "$(fileLineCount "$temp")" || return $?

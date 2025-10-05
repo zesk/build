@@ -9,25 +9,25 @@ buildPreRelease() {
   local home
   local exitCode=0
 
-  home=$(__catch "$handler" buildHome) || return $?
+  home=$(returnCatch "$handler" buildHome) || return $?
 
   statusMessage decorate info "Deprecated cleanup ..."
-  __catchEnvironment "$handler" "$home/bin/build/deprecated.sh" || exitCode=$?
+  catchEnvironment "$handler" "$home/bin/build/deprecated.sh" || exitCode=$?
   [ "$exitCode" = 0 ] || decorate error "Failed but continuing with release steps ..."
   statusMessage decorate info "Identical repair (internal, long) ..."
-  __catchEnvironment "$handler" "$home/bin/build/identical-repair.sh" --internal || exitCode=$?
+  catchEnvironment "$handler" "$home/bin/build/identical-repair.sh" --internal || exitCode=$?
   [ "$exitCode" = 0 ] || decorate error "Failed but continuing with release steps ..."
   statusMessage decorate info "Linting"
   find "$home" -name '*.sh' ! -path '*/.*/*' | bashLintFiles || exitCode=$?
   [ "$exitCode" = 0 ] || decorate error "Failed but continuing with release steps ..."
 
-  # __catchEnvironment "$handler"  "$home/bin/documentation.sh" --clean || exitCode=$?
-  __catchEnvironment "$handler" "$home/bin/documentation.sh" || exitCode=$?
+  # catchEnvironment "$handler"  "$home/bin/documentation.sh" --clean || exitCode=$?
+  catchEnvironment "$handler" "$home/bin/documentation.sh" || exitCode=$?
 
   if [ "$exitCode" -eq 0 ]; then
     if gitRepositoryChanged; then
       statusMessage decorate info "Committing changes ..."
-      __catchEnvironment "$handler" gitCommit -- "buildPreRelease $(hookVersionCurrent)" || return $?
+      catchEnvironment "$handler" gitCommit -- "buildPreRelease $(hookVersionCurrent)" || return $?
       statusMessage decorate info --last "Committed and ready to release."
     else
       statusMessage decorate info --last "No changes to commit."

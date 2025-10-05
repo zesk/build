@@ -63,7 +63,7 @@ _assertTiming() {
   export __BUILD_SAVED_CACHE_DIRECTORY
 
   if [ -z "${__BUILD_SAVED_CACHE_DIRECTORY-}" ]; then
-    __BUILD_SAVED_CACHE_DIRECTORY="$(__catch "$handler" buildCacheDirectory)" || return $?
+    __BUILD_SAVED_CACHE_DIRECTORY="$(returnCatch "$handler" buildCacheDirectory)" || return $?
   fi
 
   timingFile="$__BUILD_SAVED_CACHE_DIRECTORY/.${FUNCNAME[0]}" || return $?
@@ -89,22 +89,22 @@ __assertedFunctions() {
   local handler="_${FUNCNAME[0]}"
   local logFile
 
-  logFile="$(__catch "$handler" buildCacheDirectory)/$handler" || return $?
-  logFile="$(__catch "$handler" fileDirectoryRequire "$logFile")" || return $?
+  logFile="$(returnCatch "$handler" buildCacheDirectory)/$handler" || return $?
+  logFile="$(returnCatch "$handler" fileDirectoryRequire "$logFile")" || return $?
   if [ $# -eq 0 ]; then
-    __catchEnvironment "$handler" touch "$logFile" || return $?
+    catchEnvironment "$handler" touch "$logFile" || return $?
     if [ -f "$logFile.dirty" ]; then
-      __catchEnvironment "$handler" sort -u "$logFile" -o "$logFile" || return $?
-      __catchEnvironment "$handler" rm -f "$logFile.dirty" || return $?
+      catchEnvironment "$handler" sort -u "$logFile" -o "$logFile" || return $?
+      catchEnvironment "$handler" rm -f "$logFile.dirty" || return $?
     fi
     printf -- "%s\n" "$logFile"
     return 0
   fi
   local track
-  track=$(__catch "$handler" buildEnvironmentGet TEST_TRACK_ASSERTIONS) || return $?
+  track=$(returnCatch "$handler" buildEnvironmentGet TEST_TRACK_ASSERTIONS) || return $?
   if [ "$track" != "false" ]; then
-    __catchEnvironment "$handler" printf -- "%s\n" "$@" >>"$logFile" || return $?
-    __catchEnvironment "$handler" touch "$logFile.dirty" || return $?
+    catchEnvironment "$handler" printf -- "%s\n" "$@" >>"$logFile" || return $?
+    catchEnvironment "$handler" touch "$logFile.dirty" || return $?
   fi
 }
 ___assertedFunctions() {
@@ -201,7 +201,7 @@ _assertConditionHelper() {
     --success)
       shift
       success="$(usageArgumentBoolean "$handler" "$argument" "${1-}")" || return $?
-      pairs+=("should" "$(_choose "$success" "succeed" "$(decorate warning "fail")")")
+      pairs+=("should" "$(booleanChoose "$success" "succeed" "$(decorate warning "fail")")")
       ;;
     --debug)
       debugFlag=true
@@ -227,24 +227,24 @@ _assertConditionHelper() {
       ;;
     --stderr-match)
       shift || :
-      [ -n "${1-}" ] || __throwArgument "$handler" "Blank $argument argument" || return $?
+      [ -n "${1-}" ] || returnThrowArgument "$handler" "Blank $argument argument" || return $?
       stderrContains+=("$1")
       errorsOk=true
       ;;
     --stderr-no-match)
       shift || :
-      [ -n "${1-}" ] || __throwArgument "$handler" "Blank $argument argument" || return $?
+      [ -n "${1-}" ] || returnThrowArgument "$handler" "Blank $argument argument" || return $?
       stderrNotContains+=("$1")
       errorsOk=true
       ;;
     --stdout-match)
       shift || :
-      [ -n "${1-}" ] || __throwArgument "$handler" "Blank $argument argument" || return $?
+      [ -n "${1-}" ] || returnThrowArgument "$handler" "Blank $argument argument" || return $?
       outputContains+=("$1")
       ;;
     --stdout-no-match)
       shift || :
-      [ -n "${1-}" ] || __throwArgument "$handler" "Blank $argument argument" || return $?
+      [ -n "${1-}" ] || returnThrowArgument "$handler" "Blank $argument argument" || return $?
       outputNotContains+=("$1")
       ;;
     --dump)
@@ -301,17 +301,17 @@ _assertConditionHelper() {
 
   if [ -z "$doPlumber" ]; then
     local flags
-    flags=$(__catch "$handler" buildEnvironmentGet BUILD_TEST_FLAGS) || return $?
+    flags=$(returnCatch "$handler" buildEnvironmentGet BUILD_TEST_FLAGS) || return $?
     doPlumber=false
     ! isSubstringInsensitive ";Assert-Plumber:true;" ";$flags;" || doPlumber=true
   fi
-  [ -n "$tester" ] || __throwArgument "$handler" "--test required ($*)" || return $?
+  [ -n "$tester" ] || returnThrowArgument "$handler" "--test required ($*)" || return $?
 
   outputFile=$(fileTemporaryName "$handler") || return $?
   errorFile="$outputFile.err"
 
   if $code1; then
-    [ "$expectedExitCode" -eq 0 ] || __catchArgument "$handler" "--exit and --code1 and mutually exclusive for non-zero --exit" || return $?
+    [ "$expectedExitCode" -eq 0 ] || catchArgument "$handler" "--exit and --code1 and mutually exclusive for non-zero --exit" || return $?
     expectedExitCode="$(usageArgumentUnsignedInteger "$handler" "exitCode" "${1-}")" || return $?
     shift
   fi
@@ -334,7 +334,7 @@ _assertConditionHelper() {
   if [ "$exitCode" = "$expectedExitCode" ]; then
     testPassed=$success
   else
-    testPassed=$(_choose "$success" false true)
+    testPassed=$(booleanChoose "$success" false true)
   fi
   result="$("$formatter" "$testPassed" "$success" "$@" <"$outputFile")"
   # shellcheck disable=SC2059
@@ -342,7 +342,7 @@ _assertConditionHelper() {
   message="${message%, }"
   message="$(printf -- "%s ➡️ %s -> %s\n" "$linePrefix" "$message" "$result")"
   if $code1 || [ "$expectedExitCode" -ne 0 ]; then
-    message="$message ($exitCode $(_choose "$success" "=" "!=") expected $expectedExitCode), $(__resultText "$testPassed" "$(_choose "$testPassed" correct incorrect)")"
+    message="$message ($exitCode $(booleanChoose "$success" "=" "!=") expected $expectedExitCode), $(__resultText "$testPassed" "$(booleanChoose "$testPassed" correct incorrect)")"
   fi
   local functionName="${handler#_}"
   if ! "$errorsOk" && [ -s "$errorFile" ]; then
@@ -381,7 +381,7 @@ _assertConditionHelper() {
       dumpPipe "--$whichEnd" "$stderrTitle" <"$errorFile" || :
     fi
   fi
-  __catchEnvironment "$handler" rm -f "${clean[@]}" || return $?
+  catchEnvironment "$handler" rm -f "${clean[@]}" || return $?
   return $exitCode
 }
 
@@ -456,8 +456,8 @@ __assertFileContainsHelper() {
 
   local args verb notVerb
 
-  verb=$(_choose "$success" "contains" "does not contain") || return $?
-  notVerb=$(_choose "$success" "does not contain" "contains") || return $?
+  verb=$(booleanChoose "$success" "contains" "does not contain") || return $?
+  notVerb=$(booleanChoose "$success" "does not contain" "contains") || return $?
   args=("$@")
 
   while [ $# -gt 0 ]; do
@@ -521,8 +521,8 @@ ___assertIsEqualFormat() {
       printf "%s %s != %s" "$(decorate green "not equals")" "$(__resultTextSize true "$left")" "$(__resultTextSize false "$right")"
     fi
   else
-    compare="$(decorate warning "$(_choose "$success" "DOES NOT EQUAL" "EQUALS")")"
-    decorate error "Test for $(_choose "$success" "equality" "inequality") failed:"
+    compare="$(decorate warning "$(booleanChoose "$success" "DOES NOT EQUAL" "EQUALS")")"
+    decorate error "Test for $(booleanChoose "$success" "equality" "inequality") failed:"
     printf -- "%s\n%s\n" "$(___printResultPair "Expected" true "$left" "$compare")" "$(___printResultPair "  Actual" "$testPassed" "$right")"
   fi
 
@@ -600,7 +600,7 @@ ___assertNumericFormat() {
   local leftValue="$1" rightValue="$2" cmp
   cmp="${!#}"
   shift 2
-  printf "[%s %s] %s %s\n" "$(decorate code "$leftValue")" "$(__resultText "$testPassed" "$cmp $rightValue")" "$(_choose "$success" "(true)" "(false)")" "$*"
+  printf "[%s %s] %s %s\n" "$(decorate code "$leftValue")" "$(__resultText "$testPassed" "$cmp $rightValue")" "$(booleanChoose "$success" "(true)" "(false)")" "$*"
 }
 
 #=== === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === ===
@@ -632,7 +632,7 @@ ___assertContainsFormat() {
   shift 2
   needle="$(decorate code "${1-}")" && shift
   haystack=$(__resultTextSize "$testPassed" "$*")
-  printf -- "%s %s %s\n" "$needle" "$(_choose "$testPassed" "is contained in" "is not contained in")" "$haystack"
+  printf -- "%s %s %s\n" "$needle" "$(booleanChoose "$testPassed" "is contained in" "is not contained in")" "$haystack"
 }
 
 #=== === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === ===
@@ -653,7 +653,7 @@ ___assertDirectoryExists() {
 ___assertDirectoryExistsFormat() {
   local testPassed="${1-}" success="${2-}"
   shift 2
-  printf -- "%s %s" "$(__resultText "$testPassed" "$*")" "$(_choose "$success" "is a directory" "is not a directory")"
+  printf -- "%s %s" "$(__resultText "$testPassed" "$*")" "$(booleanChoose "$success" "is a directory" "is not a directory")"
 }
 
 #=== === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === ===
@@ -674,7 +674,7 @@ ___assertDirectoryEmpty() {
 ___assertDirectoryEmptyFormat() {
   local testPassed="${1-}" success="${2-}"
   shift 2
-  printf -- "%s %s" "$(__resultText "$testPassed" "$*")" "$(_choose "$testPassed" "is an empty directory" "is not an empty directory")"
+  printf -- "%s %s" "$(__resultText "$testPassed" "$*")" "$(booleanChoose "$testPassed" "is an empty directory" "is not an empty directory")"
 }
 
 #=== === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === ===
@@ -695,7 +695,7 @@ ___assertFileExists() {
 ___assertFileExistsFormat() {
   local testPassed="${1-}" success="${2-}"
   shift 2
-  printf -- "%s %s wd: \"%s" "$(__resultText "$testPassed" "$*")" "$(_choose "$testPassed" "is a file" "is not a file")" "$(decorate value "$(pwd)")"
+  printf -- "%s %s wd: \"%s" "$(__resultText "$testPassed" "$*")" "$(booleanChoose "$testPassed" "is a file" "is not a file")" "$(decorate value "$(pwd)")"
 }
 
 #=== === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === ===
@@ -725,7 +725,7 @@ ___assertFileSize() {
 ___assertFileSizeFormat() {
   local testPassed="${1-}" success="${2-}"
   shift 2
-  printf -- "%s %s %s\n" "$(__resultText "$testPassed" "File Size: $1")" "$(_choose "$success" "matches" "does not match")" "$*"
+  printf -- "%s %s %s\n" "$(__resultText "$testPassed" "File Size: $1")" "$(booleanChoose "$success" "matches" "does not match")" "$*"
 }
 
 #=== === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === ===
@@ -743,7 +743,7 @@ ___assertOutputEquals() {
 
   shift 2 || :
   stderr=$(fileTemporaryName "$handler") || return $?
-  isCallable "$binary" || __throwEnvironment "$handler" "$binary is not callable: $*" || return $?
+  isCallable "$binary" || returnThrowEnvironment "$handler" "$binary is not callable: $*" || return $?
   if output=$(plumber "$binary" "$@" 2>"$stderr"); then
     if [ -s "$stderr" ]; then
       dumpPipe "$(decorate error Produced stderr): $binary" "$@" <"$stderr" 1>&2
@@ -753,7 +753,7 @@ ___assertOutputEquals() {
     printf "%s\n" "$output"
   else
     exitCode=$?
-    [ "$exitCode" -eq "$(returnCode leak)" ] && ! __throwEnvironment "$handler" "Leak:" "$binary" "$!" || __throwEnvironment "$handler" "Exit code: $?" "$binary" "$@" || exitCode=$?
+    [ "$exitCode" -eq "$(returnCode leak)" ] && ! returnThrowEnvironment "$handler" "Leak:" "$binary" "$!" || returnThrowEnvironment "$handler" "Exit code: $?" "$binary" "$@" || exitCode=$?
   fi
   returnClean "$exitCode" "$stderr" || return $?
 }
@@ -762,7 +762,7 @@ ___assertOutputEqualsFormat() {
   shift 4 || :
 
   message="$(decorate code "$binary")$(printf " \"%s\"" "$@")"
-  verb=$(_choose "$success" "matches" "does not match")
+  verb=$(booleanChoose "$success" "matches" "does not match")
   printf -- "%s %s %s %s" "$message" "$(decorate code "$(cat)")" "$(__resultText "$testPassed" "$verb")" "$(__resultTextSize "$testPassed" "$expected")"
 }
 
@@ -814,7 +814,7 @@ ___assertExitCodeFormat() {
   shift 2
   # shellcheck disable=SC2059
   command="$(printf "\"$(decorate code %s)\" " "$@")"
-  printf "%s => %s" "${command% }" "$(_choose "$testPassed" "☑️" "☹️")"
+  printf "%s => %s" "${command% }" "$(booleanChoose "$testPassed" "☑️" "☹️")"
 }
 
 #=== === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === ===
@@ -846,8 +846,8 @@ ___assertOutputContainsTest() {
   local handler="returnMessage"
   local contains="${1-}" binary="${2-}" captureOut exitCode
   shift 1
-  [ -n "$contains" ] || __throwArgument "$handler" "contains is blank: $*" || return $?
-  isCallable "$binary" || __throwArgument "$handler" "$binary is not callable: $*" || return $?
+  [ -n "$contains" ] || returnThrowArgument "$handler" "contains is blank: $*" || return $?
+  isCallable "$binary" || returnThrowArgument "$handler" "$binary is not callable: $*" || return $?
   captureOut=$(fileTemporaryName "$handler") || return $?
   exitCode=1
   ! isFunction "$binary" || __assertedFunctions "$binary" || return $?
@@ -869,6 +869,6 @@ ___assertOutputContainsFormat() {
   shift 3
   # shellcheck disable=SC2059
   command="$(printf "\"$(decorate code %s)\" " "$@")"
-  verb=$(_choose "$success" "contains" "does not contain")
-  printf "%s => %s \"%s\" %s" "${command% }" "$(decorate value "$verb")" "$contains" "$(__resultText "$testPassed" "$(_choose "$testPassed" "correctly" "incorrectly")")"
+  verb=$(booleanChoose "$success" "contains" "does not contain")
+  printf "%s => %s \"%s\" %s" "${command% }" "$(decorate value "$verb")" "$contains" "$(__resultText "$testPassed" "$(booleanChoose "$testPassed" "correctly" "incorrectly")")"
 }

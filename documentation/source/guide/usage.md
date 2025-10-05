@@ -44,7 +44,7 @@ An example:
     myFunction() {
         local handler="_${FUNCNAME[0]}"
         local bigFile="$1" savedFile="$2"
-        __catchEnvironment "$handler" curl -L "$bigFile" -o - > "$savedFile" || return $?
+        catchEnvironment "$handler" curl -L "$bigFile" -o - > "$savedFile" || return $?
         ..
     }
     _myFunction() {
@@ -143,7 +143,7 @@ to generate (as the code reads the script to extract the comment):
         local handler="_${FUNCNAME[0]}"
         file="${1-}"
         # ...
-        [ -f "$file" ] || __throwArgument "$handler" "Requires a file" || return $?
+        [ -f "$file" ] || returnThrowArgument "$handler" "Requires a file" || return $?
         # ...
     }
     _myCoolScript() {

@@ -25,8 +25,8 @@ bashPromptModule_BuildProject() {
 
   [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
 
-  __catch "$handler" buildEnvironmentLoad HOME || return $?
-  home=$(__catch "$handler" buildHome) || return $?
+  returnCatch "$handler" buildEnvironmentLoad HOME || return $?
+  home=$(returnCatch "$handler" buildHome) || return $?
   showHome="${home//$HOME/~}"
   gitHome=$(gitFindHome "$(pwd)" 2>/dev/null) || return 0
   [ "$home" != "$gitHome" ] || return 0
@@ -65,7 +65,7 @@ bashPromptModule_BuildProject() {
 
   pathSuffix=
   if [ -d "$gitHome/bin" ]; then
-    __catchEnvironment "$handler" pathConfigure --last "$gitHome/bin" || return $?
+    catchEnvironment "$handler" pathConfigure --last "$gitHome/bin" || return $?
     pathSuffix="$pathSuffix +$(decorate cyan "$showGitHome/bin")"
   fi
   if [ -d "$home/bin" ]; then

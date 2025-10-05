@@ -7,12 +7,12 @@
 # host in this context means system host
 
 # Get the full hostname
-# Requires: __help __hostname usageRequireBinary __catchEnvironment
+# Requires: __help __hostname usageRequireBinary catchEnvironment
 hostnameFull() {
   local handler="_${FUNCNAME[0]}"
 
   [ $# -eq 0 ] || __help --only "$handler" "$@" || return "$(convertValue $? 1 0)"
-  __catch "$handler" __hostname || return $?
+  returnCatch "$handler" __hostname || return $?
 }
 _hostnameFull() {
   # __IDENTICAL__ usageDocument 1

@@ -11,11 +11,11 @@ __buildTestRequirements() {
   local handler="$1" && shift
 
   local bigBinary
-  bigBinary=$(__catch "$handler" __bigTextBinary) || return $?
+  bigBinary=$(returnCatch "$handler" __bigTextBinary) || return $?
   [ -n "$bigBinary" ] || bigBinary="toilet"
-  __catch "$handler" packageWhich "$bigBinary" "$bigBinary" || return $?
-  __catch "$handler" packageWhich shellcheck shellcheck || return $?
-  __catch "$handler" __pcregrepInstall || return $?
+  returnCatch "$handler" packageWhich "$bigBinary" "$bigBinary" || return $?
+  returnCatch "$handler" packageWhich shellcheck shellcheck || return $?
+  returnCatch "$handler" __pcregrepInstall || return $?
 }
 
 # Standard test layout
@@ -34,15 +34,15 @@ __buildTestSuite() {
   local handler="_${FUNCNAME[0]}"
   local testHome
 
-  testHome="$(__catch "$handler" buildHome)" || return $?
-  [ -d "$testHome/test" ] || __throwArgument "$handler" "Missing test directory" || return $?
+  testHome="$(returnCatch "$handler" buildHome)" || return $?
+  [ -d "$testHome/test" ] || returnThrowArgument "$handler" "Missing test directory" || return $?
 
   # Include our own test support files if needed
-  [ ! -d "$testHome/test/support" ] || __catchEnvironment "$handler" bashSourcePath "$testHome/test/support" || return $?
+  [ ! -d "$testHome/test/support" ] || catchEnvironment "$handler" bashSourcePath "$testHome/test/support" || return $?
 
   __buildTestRequirements "$handler" || return $?
 
-  __catchEnvironment "$handler" testTools testSuite --cd-away --delete-common --tests "$testHome/test/tools/" "$@" || return $?
+  catchEnvironment "$handler" testTools testSuite --cd-away --delete-common --tests "$testHome/test/tools/" "$@" || return $?
 }
 ___buildTestSuite() {
   # __IDENTICAL__ usageDocument 1

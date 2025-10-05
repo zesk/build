@@ -13,7 +13,7 @@ bashPromptModule_ApplicationPath() {
   local path applicationPath
   [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
 
-  path=$(__catchEnvironment "$handler" pwd) || return $?
+  path=$(catchEnvironment "$handler" pwd) || return $?
   applicationPath=$(decoratePath "$path")
   if [ "$applicationPath" != "$path" ]; then
     iTerm2Badge -i "$(printf -- "%s\n%s %s\n" "$(buildEnvironmentGet APPLICATION_NAME)" "$folderIcon" "$applicationPath")"

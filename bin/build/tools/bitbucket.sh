@@ -43,10 +43,10 @@ bitbucketGetVariable() {
 
   local value yml home
 
-  home=$(__catch "$handler" buildHome) || return $?
+  home=$(returnCatch "$handler" buildHome) || return $?
   yml="$home/bitbucket-pipelines.yml"
 
-  [ -f "$yml" ] || __throwEnvironment "$handler" "Missing $yml" || return $?
+  [ -f "$yml" ] || returnThrowEnvironment "$handler" "Missing $yml" || return $?
   value=$(grep "$1" "$yml" | awk '{ print $2 }')
   value=${value:-$2}
 

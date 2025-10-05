@@ -28,7 +28,7 @@ __hookPreCommitPHP() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -37,7 +37,7 @@ __hookPreCommitPHP() {
       ;;
     *)
       # _IDENTICAL_ argumentUnknownHandler 1
-      __throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
+      returnThrowArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
       ;;
     esac
     shift
@@ -48,18 +48,18 @@ __hookPreCommitPHP() {
   start=$(timingStart)
 
   statusMessage --last printf -- "%s %s (%s)\n" "$(decorate info "[pre-commit]")" "$(decorate code ".php")" "$(decorate label "PHP Hypertext Processor")"
-  __catchEnvironment "$handler" gitPreCommitListExtension php | decorate bold-blue | decorate wrap "- " || return $?
+  catchEnvironment "$handler" gitPreCommitListExtension php | decorate bold-blue | decorate wrap "- " || return $?
 
   local home mode
 
-  home=$(__catch "$handler" buildHome) || return $?
-  mode=$(_choose "$readOnly" 0440 0640)
+  home=$(returnCatch "$handler" buildHome) || return $?
+  mode=$(booleanChoose "$readOnly" 0440 0640)
 
   statusMessage --last decorate info ".php script mode -> $(decorate code "$mode")"
-  __catchEnvironment "$handler" find "$home" -type f -name '*.php' ! -path '*/bin/*' ! -path '*/.*/*' ! -path '*/vendor/*' -exec chmod -v "$mode" {} \; || return $?
-  mode=$(_choose "$readOnly" 0550 0750)
+  catchEnvironment "$handler" find "$home" -type f -name '*.php' ! -path '*/bin/*' ! -path '*/.*/*' ! -path '*/vendor/*' -exec chmod -v "$mode" {} \; || return $?
+  mode=$(booleanChoose "$readOnly" 0550 0750)
   statusMessage --last decorate info ".php bin mode -> $(decorate code "$mode")"
-  __catchEnvironment "$handler" find "$home" -type f -name '*.php' -path '*/bin/*' ! -path '*/.*/*' ! -path '*/vendor/*' -exec chmod -v "$mode" {} \; || return $?
+  catchEnvironment "$handler" find "$home" -type f -name '*.php' -path '*/bin/*' ! -path '*/.*/*' ! -path '*/vendor/*' -exec chmod -v "$mode" {} \; || return $?
 
   if [ ! -d "$home/vendor" ]; then
     statusMessage --last decorate warning "PHP commit - no vendor directory - no fixer"
@@ -73,11 +73,11 @@ __hookPreCommitPHP() {
   done < <(gitPreCommitListExtension php)
   if [ ! -x "$home/vendor/bin/php-cs-fixer" ]; then
     statusMessage --last decorate error "Missing binary"
-    __throwEnvironment "$handler" "No php-cs-fixer found" || return $?
+    returnThrowEnvironment "$handler" "No php-cs-fixer found" || return $?
   fi
   if [ ! -f "$home/.php-cs-fixer.php" ]; then
     statusMessage --last decorate error "Missing configuration"
-    __throwEnvironment "$handler" "No .php-cs-fixer.php found" || return $?
+    returnThrowEnvironment "$handler" "No .php-cs-fixer.php found" || return $?
   fi
   statusMessage decorate success "Fixing PHP"
 
@@ -85,16 +85,16 @@ __hookPreCommitPHP() {
 
   fixResults=$(fileTemporaryName "$handler") || return $?
 
-  "$home/vendor/bin/php-cs-fixer" fix --config "$home/.php-cs-fixer.php" "${changed[@]}" >"$fixResults" 2>&1 || __throwEnvironment "$handler" "php-cs-fixer failed: $(cat "$fixResults")" || returnClean $? "$fixResults" || return $?
+  "$home/vendor/bin/php-cs-fixer" fix --config "$home/.php-cs-fixer.php" "${changed[@]}" >"$fixResults" 2>&1 || returnThrowEnvironment "$handler" "php-cs-fixer failed: $(cat "$fixResults")" || returnClean $? "$fixResults" || return $?
   if grep -q 'not fixed' "$fixResults"; then
     statusMessage --last decorate error "some files not fixed"
     dumpPipe --lines 100 'not fixed' <"$fixResults"
     rm -rf "$fixResults" || :L
-    __throwEnvironment "$handler" "PHP files failed" || return $?
+    returnThrowEnvironment "$handler" "PHP files failed" || return $?
   fi
   statusMessage decorate success "PHP fixer ran"
   statusMessage decorate success "PHP fixer ran"
-  __catchEnvironment "$handler" rm -f "$fixResults" || return $?
+  catchEnvironment "$handler" rm -f "$fixResults" || return $?
 
   if [ -f "$home/composer.json" ]; then
     statusMessage decorate info "Updating version ..."

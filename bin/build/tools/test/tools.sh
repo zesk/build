@@ -45,7 +45,7 @@ export globalTestFailure=
 # Hook: bash-test-fail
 # Requires: head tee printf trap
 # Requires: decorate loadAverage consoleConfigureColorMode
-# Requires: buildEnvironmentLoad usageArgumentString __catchEnvironment
+# Requires: buildEnvironmentLoad usageArgumentString catchEnvironment
 # Requires: bashCoverage TODO
 testSuite() {
   local handler="_${FUNCNAME[0]}"
@@ -63,7 +63,7 @@ testSuite() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -116,7 +116,7 @@ testSuite() {
       continueFlag=true
       ;;
     --start)
-      [ -z "$startTest" ] || __throwArgument "$handler" "$argument supplied twice" || return $?
+      [ -z "$startTest" ] || returnThrowArgument "$handler" "$argument supplied twice" || return $?
       shift
       startTest="$(usageArgumentString "$handler" "$argument" "$1")" || return $?
       continueFlag=true
@@ -154,7 +154,7 @@ testSuite() {
       ;;
     -*)
       # _IDENTICAL_ argumentUnknownHandler 1
-      __throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
+      returnThrowArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
       ;;
     *)
       matchTests+=("$(usageArgumentString "$handler" "match" "$1")") || return $?
@@ -179,19 +179,19 @@ testSuite() {
     return 0
   fi
 
-  __catch "$handler" buildEnvironmentLoad BUILD_COLORS_MODE BUILD_COLORS XDG_CACHE_HOME XDG_STATE_HOME HOME || return $?
+  returnCatch "$handler" buildEnvironmentLoad BUILD_COLORS_MODE BUILD_COLORS XDG_CACHE_HOME XDG_STATE_HOME HOME || return $?
 
   local load home testTemporaryHome testTemporaryInternal testTemporaryTest clean=()
 
-  home=$(__catch "$handler" buildHome) || return $?
+  home=$(returnCatch "$handler" buildHome) || return $?
 
-  testTemporaryHome=$(__catch "$handler" buildCacheDirectory "testSuite.$$") || return $?
+  testTemporaryHome=$(returnCatch "$handler" buildCacheDirectory "testSuite.$$") || return $?
 
   clean+=("$testTemporaryHome")
   export TMPDIR
 
-  testTemporaryTest=$(__catch "$handler" directoryRequire "$testTemporaryHome/T") || returnClean $? "${clean[@]}" || return $?
-  testTemporaryInternal=$(__catch "$handler" directoryRequire "$testTemporaryHome/internal") || returnClean $? "${clean[@]}" || return $?
+  testTemporaryTest=$(returnCatch "$handler" directoryRequire "$testTemporaryHome/T") || returnClean $? "${clean[@]}" || return $?
+  testTemporaryInternal=$(returnCatch "$handler" directoryRequire "$testTemporaryHome/internal") || returnClean $? "${clean[@]}" || return $?
 
   TMPDIR="$testTemporaryInternal"
 
@@ -199,19 +199,19 @@ testSuite() {
 
   local startString allTestStart quietLog
 
-  startString="$(__catchEnvironment "$handler" date +"%F %T")" || returnClean $? "${clean[@]}" || return $?
+  startString="$(catchEnvironment "$handler" date +"%F %T")" || returnClean $? "${clean[@]}" || return $?
   allTestStart=$(timingStart) || returnClean $? "${clean[@]}" || return $?
 
   quietLog="$(fileTemporaryName "$handler")" || returnClean $? "${clean[@]}" || return $?
 
   # Start tracing
-  __catchEnvironment "$handler" printf -- "%s\n" "$__TEST_SUITE_TRACE" >>"$quietLog" || returnClean $? "${clean[@]}" || return $?
+  catchEnvironment "$handler" printf -- "%s\n" "$__TEST_SUITE_TRACE" >>"$quietLog" || returnClean $? "${clean[@]}" || return $?
 
   # Color mode
   export BUILD_COLORS BUILD_COLORS_MODE
-  BUILD_COLORS_MODE=$(__catch "$handler" consoleConfigureColorMode) || returnClean $? "${clean[@]}" || return $?
+  BUILD_COLORS_MODE=$(returnCatch "$handler" consoleConfigureColorMode) || returnClean $? "${clean[@]}" || return $?
 
-  [ "${#testPaths[@]}" -gt 0 ] || __throwArgument "$handler" "Need at least one --tests directory ($(decorate each quote "${__saved[@]}"))" || returnClean $? "${clean[@]}" || return $?
+  [ "${#testPaths[@]}" -gt 0 ] || returnThrowArgument "$handler" "Need at least one --tests directory ($(decorate each quote "${__saved[@]}"))" || returnClean $? "${clean[@]}" || return $?
 
   #
   # Intro statement to console
@@ -228,7 +228,7 @@ testSuite() {
       hasColors || printf "%s" "No colors available in TERM ${TERM-}\n"
       statusMessage printf -- "%s" "$intro"
     fi
-    __catchEnvironment "$handler" printf -- "%s\n" "$intro" >>"$quietLog" || returnClean $? "${clean[@]}" || return $?
+    catchEnvironment "$handler" printf -- "%s\n" "$intro" >>"$quietLog" || returnClean $? "${clean[@]}" || return $?
   fi
 
   #
@@ -244,7 +244,7 @@ testSuite() {
   #
   if $showFlag; then
     __testSuitePathToCode "${allSuites[@]}"
-    __catchEnvironment "$handler" rm -rf "${clean[@]}" || return $?
+    catchEnvironment "$handler" rm -rf "${clean[@]}" || return $?
     _textExit 0
   fi
 
@@ -265,7 +265,7 @@ testSuite() {
   local tests=() item
   for item in "${runTestSuites[@]}"; do
     if ! __testLoad "$item" >"$testFunctions"; then
-      __throwEnvironment "$handler" "Can not load $item" || returnClean $? "${clean[@]}" || return $?
+      returnThrowEnvironment "$handler" "Can not load $item" || returnClean $? "${clean[@]}" || return $?
     fi
     local foundTests=()
     while read -r foundTest; do
@@ -289,7 +289,7 @@ testSuite() {
 
   local statsFile=""
   ! $doStats || statsFile=$(fileTemporaryName "$handler") || returnClean $? "${clean[@]}" || return $?
-  __catchEnvironment "$handler" rm -f "$testFunctions" || returnClean $? "${clean[@]}" || return $?
+  catchEnvironment "$handler" rm -f "$testFunctions" || returnClean $? "${clean[@]}" || return $?
 
   # Set up continue file if needed (remove it if we are *NOT* continuing)
   local continueFile="$BUILD_HOME/.last-run-test"
@@ -303,15 +303,15 @@ testSuite() {
       startTest="$([ ! -f "$continueFile" ] || head -n 1 "$continueFile")"
       if [ "$startTest" = "PASSED" ]; then
         statusMessage --last decorate success "All tests passed successfully. Next test run will start from the beginning."
-        __catchEnvironment "$handler" rm -rf "$continueFile" || returnClean $? "${clean[@]}" || return $?
+        catchEnvironment "$handler" rm -rf "$continueFile" || returnClean $? "${clean[@]}" || return $?
         __TEST_SUITE_CLEAN_EXIT=true
-        __catchEnvironment "$handler" rm -rf "${clean[@]}" || return $?
+        catchEnvironment "$handler" rm -rf "${clean[@]}" || return $?
         return 0
       fi
     fi
   fi
 
-  [ "${#tests[@]}" -gt 0 ] || __throwEnvironment "$handler" "No tests found" || returnClean $? "${clean[@]}" || return $?
+  [ "${#tests[@]}" -gt 0 ] || returnThrowEnvironment "$handler" "No tests found" || returnClean $? "${clean[@]}" || return $?
   local filteredTests=() item actualTest=""
   for item in "${tests[@]}"; do
     if [ "$item" = "${item#\#}" ]; then
@@ -341,7 +341,7 @@ testSuite() {
     filteredTests=("${tests[@]}")
     startTest=""
   else
-    [ -n "$actualTest" ] || __throwArgument "$handler" "No tests match $(decorate code "${matchTests[@]}")" || returnClean $? "${clean[@]}" || return $?
+    [ -n "$actualTest" ] || returnThrowArgument "$handler" "No tests match $(decorate code "${matchTests[@]}")" || returnClean $? "${clean[@]}" || return $?
   fi
 
   # Filter by tags
@@ -361,19 +361,19 @@ testSuite() {
 
   if $showTags; then
     __TEST_SUITE_TRACE="showing-tags"
-    __catch "$handler" __testSuiteShowTags "${filteredTests[@]+"${filteredTests[@]}"}" || returnClean $? "${clean[@]}" || return $?
+    returnCatch "$handler" __testSuiteShowTags "${filteredTests[@]+"${filteredTests[@]}"}" || returnClean $? "${clean[@]}" || return $?
     __TEST_SUITE_CLEAN_EXIT=true
     return 0
   fi
 
   if $listFlag; then
     __TEST_SUITE_TRACE="listing"
-    __catch "$handler" __testSuiteListTests "${filteredTests[@]+"${filteredTests[@]}"}" || returnClean $? "${clean[@]}" || return $?
+    returnCatch "$handler" __testSuiteListTests "${filteredTests[@]+"${filteredTests[@]}"}" || returnClean $? "${clean[@]}" || return $?
     __TEST_SUITE_CLEAN_EXIT=true
     return 0
   fi
 
-  $continueFlag || [ ! -f "$continueFile" ] || __catchEnvironment "$handler" rm "$continueFile" || returnClean $? "${clean[@]}" || return $?
+  $continueFlag || [ ! -f "$continueFile" ] || catchEnvironment "$handler" rm "$continueFile" || returnClean $? "${clean[@]}" || return $?
 
   #    ▀▛▘     ▐  ▗        ▜
   #     ▌▞▀▖▞▀▘▜▀ ▄ ▛▀▖▞▀▌ ▐ ▞▀▖▞▀▖▛▀▖
@@ -405,7 +405,7 @@ testSuite() {
 
       local __testStart testLine
       __testStart=$(timingStart)
-      __catchEnvironment "$handler" hookRunOptional bash-test-start "$sectionName" "$item" || __throwEnvironment "$handler" "... continuing" || :
+      catchEnvironment "$handler" hookRunOptional bash-test-start "$sectionName" "$item" || returnThrowEnvironment "$handler" "... continuing" || :
 
       #  ▛▀▖
       #  ▙▄▘▌ ▌▛▀▖▛▀▖▞▀▖▙▀▖
@@ -414,7 +414,7 @@ testSuite() {
       local __flags globalFlags
       testLine=$(__testGetLine "$item" <"$sectionFile") || :
       __flags=$(__testLoadFlags "$sectionFile" "$item")
-      globalFlags=$(__catch "$handler" buildEnvironmentGet BUILD_TEST_FLAGS) || return $?
+      globalFlags=$(returnCatch "$handler" buildEnvironmentGet BUILD_TEST_FLAGS) || return $?
       local rawFlags="$__flags;$globalFlags"
 
       ! $verboseMode || statusMessage decorate info "$item flags is $(decorate code "${rawFlags:-none specified}")" || returnClean $? "${clean[@]}" || return $?
@@ -439,22 +439,22 @@ testSuite() {
         testHome="$saveHome"
       fi
       testsRun+=("$item")
-      __catchEnvironment "$handler" cd "$testHome" || returnClean $? "${clean[@]}" || return $?
+      catchEnvironment "$handler" cd "$testHome" || returnClean $? "${clean[@]}" || return $?
 
       ! $verboseMode || statusMessage --last decorate pair "Raw flags" "$rawFlags"
       "${runner[@]+"${runner[@]}"}" __testRun "$quietLog" "$testTemporaryTest" "$item" "$rawFlags" || __testSuiteExecutor "$item" "$sectionFile" "$testLine" "$__flags" "${failExecutors[@]+"${failExecutors[@]}"}" || __testFailed "$sectionName" "$item" || returnUndo $? cd "$saveHome" || returnClean $? "${clean[@]}" || return $?
 
-      __catchEnvironment "$handler" cd "$saveHome" || returnClean $? "${clean[@]}" || return $?
+      catchEnvironment "$handler" cd "$saveHome" || returnClean $? "${clean[@]}" || return $?
 
       [ -z "$tapFile" ] || __testSuiteTAP_ok "$tapFile" "$item" "$sectionFile" "$testLine" "$rawFlags" || returnClean $? "${clean[@]}" || return $?
 
       runTime=$(($(timingStart) - __testStart))
       ! $doStats || printf "%s %s\n" "$runTime" "$item" >>"$statsFile"
-      __catchEnvironment "$handler" hookRunOptional bash-test-pass "$sectionName" "$item" "$rawFlags" || __throwEnvironment "$handler" "... continuing" || :
+      catchEnvironment "$handler" hookRunOptional bash-test-pass "$sectionName" "$item" "$rawFlags" || returnThrowEnvironment "$handler" "... continuing" || :
 
-      [ "${#clean[@]}" -eq 0 ] || __catchEnvironment "$handler" rm -rf "${clean[@]}" || returnClean $? "${clean[@]}" || return $?
+      [ "${#clean[@]}" -eq 0 ] || catchEnvironment "$handler" rm -rf "${clean[@]}" || returnClean $? "${clean[@]}" || return $?
     done
-    [ ${#matchTests[@]} -eq 0 ] || [ ${#testsRun[@]} -gt 0 ] || __throwArgument "$handler" "Match not found: $(decorate each code "${matchTests[@]}")" || returnClean $? "${clean[@]}" || return $?
+    [ ${#matchTests[@]} -eq 0 ] || [ ${#testsRun[@]} -gt 0 ] || returnThrowArgument "$handler" "Match not found: $(decorate each code "${matchTests[@]}")" || returnClean $? "${clean[@]}" || return $?
     bigText --bigger Passed | decorate wrap "" "    " | decorate success | decorate wrap --fill "*" "    "
     if $continueFlag; then
       printf "%s\n" "PASSED" >"$continueFile"
@@ -464,13 +464,13 @@ testSuite() {
     [ ${#matchTests[@]} -eq 0 ] || message+=("Match: $(decorate each code "${matchTests[@]}")")
     [ ${#tags[@]} -eq 0 ] || message+=("Tags: $(decorate each code "${tags[@]}")")
     [ ${#skipTags[@]} -eq 0 ] || message+=("Skip Tags: $(decorate each code "${skipTags[@]}")")
-    __throwEnvironment "$handler" "No tests match" "${message[@]}" || returnClean $? "${clean[@]}" || return $?
+    returnThrowEnvironment "$handler" "No tests match" "${message[@]}" || returnClean $? "${clean[@]}" || return $?
   fi
 
   local assertionFailures assertionSuccesses stats=()
   IFS=$'\n' read -r -d '' assertionFailures assertionSuccesses < <(_assertionStatistics)
 
-  __catchEnvironment "$handler" rm -rf "${clean[@]}" || return $?
+  catchEnvironment "$handler" rm -rf "${clean[@]}" || return $?
 
   local failColor="error"
   [ "$assertionFailures" -ne 0 ] || failColor="subtle"
@@ -563,7 +563,7 @@ __testSuiteFilterTags() {
   local lastSectionFile="" sectionFile
   local tempComment home filtersFile="/dev/null"
 
-  home=$(__catch "$handler" buildHome) || return $?
+  home=$(returnCatch "$handler" buildHome) || return $?
 
   ! $debugMode || filtersFile="$home/${FUNCNAME[0]}.debug"
 
@@ -583,7 +583,7 @@ __testSuiteFilterTags() {
       local testTag testTags=() defaultKeepIt=true
 
       [ ${#tags[@]} -eq 0 ] || defaultKeepIt=false
-      __catchEnvironment "$handler" bashFunctionComment "$sectionFile" "$item" >"$tempComment" || returnClean $? "${clean[@]}" || return $?
+      catchEnvironment "$handler" bashFunctionComment "$sectionFile" "$item" >"$tempComment" || returnClean $? "${clean[@]}" || return $?
       IFS=$'\n' read -r -d "" -a testTags < <(grepSafe "Tag:" <"$tempComment" | removeFields 1 | tr ' ' '\n' | printfOutputSuffix "\n") || :
       ! $debugMode || printf "%s\n" "$(date "+%F %T"): $item" >>"$filtersFile"
       if [ "${#testTags[@]}" -gt 0 ]; then
@@ -620,7 +620,7 @@ __testSuiteFilterTags() {
     fi
     shift
   done
-  __catchEnvironment "$handler" rm -f "${clean[@]}" || return $?
+  catchEnvironment "$handler" rm -f "${clean[@]}" || return $?
 }
 
 __testSuiteListTests() {
@@ -644,7 +644,7 @@ __testFunctionWasTested() {
   local handler="returnMessage"
   local assertedFunctions verboseMode=false
 
-  assertedFunctions=$(__catch "$handler" __assertedFunctions) || return $?
+  assertedFunctions=$(returnCatch "$handler" __assertedFunctions) || return $?
   local __fns=()
   while [ $# -gt 0 ]; do
     if [ "$1" = "--verbose" ]; then
@@ -689,7 +689,7 @@ __testStats() {
   printf -- "\n"
   boxedHeading "Functions asserted (cumulative)"
   cat "$(__assertedFunctions)"
-  lines=$(__catch "$handler" fileLineCount "$(__assertedFunctions)") || return $?
+  lines=$(returnCatch "$handler" fileLineCount "$(__assertedFunctions)") || return $?
   decorate info "$lines $(plural "$lines" "function" "functions")"
   printf -- "\n"
 }
@@ -710,7 +710,7 @@ __testLookup() {
     fi
     shift
   done
-  __throwArgument "$handler" "No such suite $lookup" || return $?
+  returnThrowArgument "$handler" "No such suite $lookup" || return $?
 }
 
 # Fetch the line number of a test
@@ -876,14 +876,14 @@ __testLoad() {
   __testFunctions="$__beforeFunctions.after"
   __tests=()
   while [ "$#" -gt 0 ]; do
-    __catchEnvironment "$handler" isExecutable "$1" || returnClean $? "$__beforeFunctions" "$__testFunctions" || return $?
+    catchEnvironment "$handler" isExecutable "$1" || returnClean $? "$__beforeFunctions" "$__testFunctions" || return $?
 
     declare -pF | awk '{ print $3 }' | sort -u >"$__beforeFunctions"
     tests=()
     set -a
     # shellcheck source=/dev/null
-    source "$1" >"$__errors" 2>&1 || __throwEnvironment source "$1" || returnClean $? "$__beforeFunctions" "$__testFunctions" || return $?
-    fileIsEmpty "$__errors" || __throwEnvironment "produced output: $(dumpPipe "source $1" <"$__errors")"
+    source "$1" >"$__errors" 2>&1 || returnThrowEnvironment source "$1" || returnClean $? "$__beforeFunctions" "$__testFunctions" || return $?
+    fileIsEmpty "$__errors" || returnThrowEnvironment "produced output: $(dumpPipe "source $1" <"$__errors")"
     set +a
     if [ "${#tests[@]}" -gt 0 ]; then
       for __test in "${tests[@]}"; do
@@ -955,7 +955,7 @@ __testRun() {
   __testRunShellInitialize
 
   platform="$(_testPlatform)"
-  [ -n "$platform" ] || __throwEnvironment "$handler" "No platform defined?" || return $?
+  [ -n "$platform" ] || returnThrowEnvironment "$handler" "No platform defined?" || return $?
 
   errorTest=$(returnCode assert)
   stickyCode=0
@@ -969,7 +969,7 @@ __testRun() {
   __testSection "$__test" || :
   printf "%s %s ...\n" "$(decorate info "Running")" "$(decorate code "$__test")"
 
-  __catchEnvironment "$handler" muzzle fileDirectoryRequire "$quietLog" || return $?
+  catchEnvironment "$handler" muzzle fileDirectoryRequire "$quietLog" || return $?
 
   printf "%s\n" "Running $__test" >>"$quietLog"
 
@@ -1007,15 +1007,15 @@ __testRun() {
 
     if $verboseMode; then
       decorate pair "Platform" "$platform"
-      decorate pair "Housekeeper" "$(decorate "$(_choose "$doHousekeeper" green orange)" "$doHousekeeper")"
-      decorate pair "Plumber" "$(decorate "$(_choose "$doPlumber" green orange)" "$doPlumber")"
-      decorate pair "Build-Home" "$(decorate "$(_choose "$buildHomeRequired" green orange)" "$buildHomeRequired")"
+      decorate pair "Housekeeper" "$(decorate "$(booleanChoose "$doHousekeeper" green orange)" "$doHousekeeper")"
+      decorate pair "Plumber" "$(decorate "$(booleanChoose "$doPlumber" green orange)" "$doPlumber")"
+      decorate pair "Build-Home" "$(decorate "$(booleanChoose "$buildHomeRequired" green orange)" "$buildHomeRequired")"
       ! $testActuallyFails || decorate pair "Fail" "$(decorate green "$testActuallyFails")"
     fi
     local runner=()
     runner=("$__test" "$quietLog")
     if $doHousekeeper; then
-      housekeeperCache=$(__catch "$handler" buildCacheDirectory "test-housekeeper.$$") || return $?
+      housekeeperCache=$(returnCatch "$handler" buildCacheDirectory "test-housekeeper.$$") || return $?
       runner=(--ignore '.last-run-test' --ignore '/.git/' --temporary "$savedTMPDIR" --path "$TMPDIR" --path "$(buildHome)" "${runner[@]}")
       ! isSubstringInsensitive ";Housekeeper-Overhead:true;" ";$__flagText;" || runner=(--overhead "${runner[@]}")
       runner=(housekeeper --cache "$housekeeperCache" "${runner[@]}")
@@ -1062,8 +1062,8 @@ __testRun() {
       fi
     fi
 
-    ! $doHousekeeper || __catchEnvironment "$handler" rm -rf "$housekeeperCache" || return $?
-    __catchEnvironment "$handler" rm -rf "$captureStderr" || return $?
+    ! $doHousekeeper || catchEnvironment "$handler" rm -rf "$housekeeperCache" || return $?
+    catchEnvironment "$handler" rm -rf "$captureStderr" || return $?
 
     if $testActuallyFails; then
       if [ $resultCode -eq 0 ]; then
@@ -1081,7 +1081,7 @@ __testRun() {
   # So, `handler` can be overridden if it is made global somehow, declare -r prevents changing here
   # documentation-tests.sh change this apparently
   # Instead of preventing this handler, just work around it
-  __catchEnvironment "_${FUNCNAME[0]}" cd "$__testDirectory" || return $?
+  catchEnvironment "_${FUNCNAME[0]}" cd "$__testDirectory" || return $?
   local timingText
   timingText="$(timingReport "$__testStart")"
   if [ "$resultCode" = "$(returnCode leak)" ]; then
@@ -1135,7 +1135,7 @@ __testMatches() {
 __testFailed() {
   local errorCode sectionName="$1" item="$2"
 
-  __catchEnvironment "$handler" hookRunOptional bash-test-fail "$sectionName" "$item" || __throwEnvironment "$handler" "... continuing" || :
+  catchEnvironment "$handler" hookRunOptional bash-test-fail "$sectionName" "$item" || returnThrowEnvironment "$handler" "... continuing" || :
 
   errorCode="$(returnCode assert)"
   printf "\n%s: %s - %s %s (%s)\n" "$(decorate error "Exit")" "$(decorate bold-red "$errorCode")" "$(decorate error "Failed running")" "$(decorate info "$item")" "$(decorate magenta "$sectionName")" || :
@@ -1154,11 +1154,11 @@ __testFailed() {
 __testCleanup() {
   local handler="returnMessage"
   local home
-  home=$(__catch "$handler" buildHome) || return $?
+  home=$(returnCatch "$handler" buildHome) || return $?
   shopt -u failglob
   export __TEST_CLEANUP_DIRS
 
-  __catchEnvironment "$handler" rm -rf "$home/test."*/ "$home/.test"*/ "${__TEST_CLEANUP_DIRS[@]+"${__TEST_CLEANUP_DIRS[@]}"}" || return $?
+  catchEnvironment "$handler" rm -rf "$home/test."*/ "$home/.test"*/ "${__TEST_CLEANUP_DIRS[@]+"${__TEST_CLEANUP_DIRS[@]}"}" || return $?
 }
 
 __testCleanupMess() {
@@ -1198,10 +1198,10 @@ __testSuiteTAP_line() {
 
   export __TEST_SUITE_RESULT
 
-  [ -f "$tapFile" ] && shift 1 || __throwEnvironment "$handler" "tapFile does not exist: $tapFile" || return $?
+  [ -f "$tapFile" ] && shift 1 || returnThrowEnvironment "$handler" "tapFile does not exist: $tapFile" || return $?
 
   local functionName="${1-}" source="${2-}" functionLine="${3-}" __flagText="${4-}"
-  shift 4 || __throwArgument "$handler" "Missing functionName source or functionLine" || return $?
+  shift 4 || returnThrowArgument "$handler" "Missing functionName source or functionLine" || return $?
 
   local directive="" value
   if isSubstringInsensitive ";Skip:true;" ";$__flagText;"; then

@@ -21,7 +21,7 @@ __characterClassReport() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -33,7 +33,7 @@ __characterClassReport() {
       ;;
     *)
       # _IDENTICAL_ argumentUnknownHandler 1
-      __throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
+      returnThrowArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
       ;;
     esac
     shift
@@ -43,8 +43,8 @@ __characterClassReport() {
     classList+=("$arg")
   done
 
-  savedLimit="$(__catchEnvironment "$handler" ulimit -n)" || return $?
-  __catchEnvironment "$handler" ulimit -n 10240 || return $?
+  savedLimit="$(catchEnvironment "$handler" ulimit -n)" || return $?
+  catchEnvironment "$handler" ulimit -n 10240 || return $?
   # shellcheck disable=SC2207
   indexList=($(seq 0 127))
 
@@ -98,5 +98,5 @@ __characterClassReport() {
     total=$((total + matched))
   done
   printf "%s total %s\n" "$(decorate bold-red "$total")" "$(decorate red "$(plural "$total" "${nouns[@]}")")"
-  __catchEnvironment "$handler" ulimit -n "$savedLimit" || return $?
+  catchEnvironment "$handler" ulimit -n "$savedLimit" || return $?
 }

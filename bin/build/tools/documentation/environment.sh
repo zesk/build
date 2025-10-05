@@ -28,7 +28,7 @@ __documentationBuildEnvironment() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -37,26 +37,26 @@ __documentationBuildEnvironment() {
     --verbose) verboseFlag=true ;;
     *)
       # _IDENTICAL_ argumentUnknownHandler 1
-      __throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
+      returnThrowArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
       ;;
     esac
     shift
   done
 
-  home=$(__catch "$handler" buildHome) || return $?
+  home=$(returnCatch "$handler" buildHome) || return $?
   envSource="$home/bin/build/env"
   lineTemplate="$home/documentation/template/env-line.md"
   moreTemplate="$home/documentation/template/env-more.md"
   source="$home/documentation/source/env/index.md"
   target="$home/documentation/.docs/env"
-  cacheDirectory=$(__catch "$handler" documentationBuildCache envDocs) || return $?
+  cacheDirectory=$(returnCatch "$handler" documentationBuildCache envDocs) || return $?
 
   if "$cleanFlag"; then
-    [ ! -d "$cacheDirectory" ] || __catchEnvironment "$handler" find "$cacheDirectory" -type f -exec rm -f {} \; || return $?
+    [ ! -d "$cacheDirectory" ] || catchEnvironment "$handler" find "$cacheDirectory" -type f -exec rm -f {} \; || return $?
     return 0
   fi
-  __catchEnvironment "$handler" muzzle directoryRequire "$target" || return $?
-  __catchEnvironment "$handler" cat "$source" >"$target/index.md" || return $?
+  catchEnvironment "$handler" muzzle directoryRequire "$target" || return $?
+  catchEnvironment "$handler" cat "$source" >"$target/index.md" || return $?
   local envFile categories=()
 
   if ! $forceFlag && [ -f "$cacheDirectory/categories" ]; then
@@ -68,13 +68,13 @@ __documentationBuildEnvironment() {
       return 0
     fi
   else
-    __catchEnvironment "$handler" touch "$cacheDirectory/categories" || return $?
+    catchEnvironment "$handler" touch "$cacheDirectory/categories" || return $?
   fi
 
   while IFS="" read -r item; do categories+=("$item"); done <"$cacheDirectory/categories"
 
   statusMessage decorate info "Iterating through env files ..."
-  __catchEnvironment "$handler" cp "$cacheDirectory/categories" "$cacheDirectory/categories.unsorted" || return $?
+  catchEnvironment "$handler" cp "$cacheDirectory/categories" "$cacheDirectory/categories.unsorted" || return $?
   while read -r envFile; do
     local envTarget name="${envFile##*/}"
 
@@ -91,7 +91,7 @@ __documentationBuildEnvironment() {
 
     local description type lines more="" shortDesc
     description=$(sed -n '/^[[:space:]]*#/!q; p' "$envFile" | grep -v -e '^#!\|\&copy;' | cut -c 3- | grep -v '^[[:alpha:]][[:alnum:]]*: ')
-    lines=$(printf "%s\n" "$description" | __catch "$handler" fileLineCount) || return $?
+    lines=$(printf "%s\n" "$description" | returnCatch "$handler" fileLineCount) || return $?
 
     local categoryName categoryFileName
 
@@ -109,10 +109,10 @@ __documentationBuildEnvironment() {
     fi
 
     if [ "${#categories[@]}" -eq 0 ] || ! inArray "$categoryName" "${categories[@]}"; then
-      __catchEnvironment "$handler" printf "%s\n" "$categoryName" >>"$cacheDirectory/categories.unsorted" || return $?
+      catchEnvironment "$handler" printf "%s\n" "$categoryName" >>"$cacheDirectory/categories.unsorted" || return $?
       categories+=("$categoryName")
     fi
-    __catchEnvironment "$handler" printf "%s\n" "$name" >>"$cacheDirectory/category.$categoryFileName" || return $?
+    catchEnvironment "$handler" printf "%s\n" "$name" >>"$cacheDirectory/category.$categoryFileName" || return $?
 
     description=$shortDesc category="$categoryName" more="$more" type="$type" mapEnvironment <"$lineTemplate" >"$envTarget"
     if [ -n "$more" ]; then
@@ -120,8 +120,8 @@ __documentationBuildEnvironment() {
     fi
     printf "%s\n" "$name" >>"$cacheDirectory/mores"
   done < <(find "$home/bin/build/env" -maxdepth 1 -name "*.sh")
-  __catchEnvironment "$handler" sort -u <"$cacheDirectory/categories.unsorted" >"$cacheDirectory/categories" || return $?
-  __catchEnvironment "$handler" rm -rf "$cacheDirectory/categories.unsorted" || return $?
+  catchEnvironment "$handler" sort -u <"$cacheDirectory/categories.unsorted" >"$cacheDirectory/categories" || return $?
+  catchEnvironment "$handler" rm -rf "$cacheDirectory/categories.unsorted" || return $?
 
   local targetFile
 

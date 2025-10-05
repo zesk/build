@@ -45,8 +45,8 @@ testAlpineContainer() {
 
     local handler="returnMessage" home
 
-    home=$(__catch "$handler" buildHome) || return $?
-    __catchEnvironment "$handler" muzzle pushd "$home" || return $?
+    home=$(returnCatch "$handler" buildHome) || return $?
+    catchEnvironment "$handler" muzzle pushd "$home" || return $?
 
     # In BitBucket pipelines, only location you can run Alpine volume shares are within the initial build directory
 
@@ -57,7 +57,7 @@ testAlpineContainer() {
 
     assertEquals "$value" "FOO=\"foo\"" || return $?
 
-    __catchEnvironment "$handler" muzzle popd || return $?
+    catchEnvironment "$handler" muzzle popd || return $?
 
     mockEnvironmentStop BUILD_DOCKER_IMAGE
     mockEnvironmentStop BUILD_DOCKER_PATH

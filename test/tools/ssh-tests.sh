@@ -41,7 +41,7 @@ testSSHAddKnownHosts() {
   assertFileContains "$tempHome/.ssh/known_hosts" "$sampleDomainA" || return $?
   assertFileContains "$tempHome/.ssh/known_hosts" "$sampleDomainB" || return $?
 
-  __catch "$handler" rm -rf "$tempHome" || return $?
+  returnCatch "$handler" rm -rf "$tempHome" || return $?
 
   mockEnvironmentStop HOME
 
@@ -96,7 +96,7 @@ testSSHRemoveKnownHosts() {
 
   mockEnvironmentStop HOME
 
-  __catch "$handler" rm -rf "$tempHome" || return $?
+  returnCatch "$handler" rm -rf "$tempHome" || return $?
 
   return 0
 

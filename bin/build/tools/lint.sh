@@ -31,7 +31,7 @@
 bashLint() {
   local handler="_${FUNCNAME[0]}" fixFlag=false verboseFlag=false undo=("exec" "3>&-" "4>&1")
 
-  __catch "$handler" packageWhich shellcheck shellcheck || return $?
+  returnCatch "$handler" packageWhich shellcheck shellcheck || return $?
 
   # Open 3 and 4 to aliases so we can change them
   exec 3>/dev/null 4>&1
@@ -40,7 +40,7 @@ bashLint() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -52,18 +52,18 @@ bashLint() {
       verboseFlag=true
       ;;
     *)
-      [ -f "$argument" ] || __throwArgument "$handler" "$(printf -- "%s: %s PWD: %s" "Not a item" "$(decorate code "$argument")" "$(pwd)")" || returnUndo $? "${undo[@]}" || return $?
+      [ -f "$argument" ] || returnThrowArgument "$handler" "$(printf -- "%s: %s PWD: %s" "Not a item" "$(decorate code "$argument")" "$(pwd)")" || returnUndo $? "${undo[@]}" || return $?
       # shellcheck disable=SC2210
-      __catchEnvironment "$handler" bash -n "$argument" 1>&3 2>&3 || returnUndo $? printf "%s\n" "bash -n failed" 1>&4 || returnUndo $? "${undo[@]}" || return $?
+      catchEnvironment "$handler" bash -n "$argument" 1>&3 2>&3 || returnUndo $? printf "%s\n" "bash -n failed" 1>&4 || returnUndo $? "${undo[@]}" || return $?
       # shellcheck disable=SC2210
-      __catchEnvironment "$handler" shellcheck "$argument" 1>&3 2>&3 || returnUndo $? printf "%s\n" "shellcheck" 1>&4 || returnUndo $? "${undo[@]}" || return $?
+      catchEnvironment "$handler" shellcheck "$argument" 1>&3 2>&3 || returnUndo $? printf "%s\n" "shellcheck" 1>&4 || returnUndo $? "${undo[@]}" || return $?
       local found
       if found=$(__pcregrep -n -l -M '\n\}\n#' "$argument"); then
         if $fixFlag; then
-          __catchEnvironment "$handler" sed -i 's/}\n#/}\n\n#/' "$argument" || returnUndo $? "${undo[@]}" || return $?
+          catchEnvironment "$handler" sed -i 's/}\n#/}\n\n#/' "$argument" || returnUndo $? "${undo[@]}" || return $?
           $verboseFlag
         else
-          __throwEnvironment "$handler" "found }\\n#: $(decorate code "$found")" 1>&3 2>&3 || returnUndo $? printf "%s\n" "comment following brace" 1>&4 || returnUndo $? "${undo[@]}" || return $?
+          returnThrowEnvironment "$handler" "found }\\n#: $(decorate code "$found")" 1>&3 2>&3 || returnUndo $? printf "%s\n" "comment following brace" 1>&4 || returnUndo $? "${undo[@]}" || return $?
         fi
       fi
       ;;
@@ -104,7 +104,7 @@ bashLintFiles() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -126,10 +126,10 @@ bashLintFiles() {
       checkedFiles+=("$(usageArgumentFile "$handler" "checkFile" "$argument")") || return $?
       ;;
     esac
-    shift || __throwArgument "$handler" "shift after $argument failed" || return $?
+    shift || returnThrowArgument "$handler" "shift after $argument failed" || return $?
   done
 
-  __catch "$handler" buildEnvironmentLoad BUILD_INTERACTIVE_REFRESH || return $?
+  returnCatch "$handler" buildEnvironmentLoad BUILD_INTERACTIVE_REFRESH || return $?
   statusMessage --first decorate info "Checking all shell scripts ..."
 
   local source=none
@@ -208,7 +208,7 @@ bashLintFilesInteractive() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -222,7 +222,7 @@ bashLintFilesInteractive() {
       ;;
     *)
       # _IDENTICAL_ argumentUnknownHandler 1
-      __throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
+      returnThrowArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
       ;;
     esac
     shift
@@ -240,7 +240,7 @@ bashLintFilesInteractive() {
       while [ "$countdown" -gt 0 ]; do
         statusMessage decorate warning "Refresh in $(decorate value " $countdown ") $(plural "$countdown" second seconds)"
         countdown=$((countdown - 1))
-        sleep 1 || __throwEnvironment "$handler" "Interrupt ..." || return $?
+        sleep 1 || returnThrowEnvironment "$handler" "Interrupt ..." || return $?
       done
       clear
     fi
@@ -293,15 +293,15 @@ findUncaughtAssertions() {
 
   while [ $# -gt 0 ]; do
     argument="$1"
-    [ -n "$argument" ] || __throwArgument "$handler" "blank argument" || return $?
+    [ -n "$argument" ] || returnThrowArgument "$handler" "blank argument" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
     # _IDENTICAL_ handlerHandler 1
     --handler) shift && handler=$(usageArgumentFunction "$handler" "$argument" "${1-}") || return $? ;;
     --exec)
-      shift || __throwArgument "$handler" "$argument missing argument" || return $?
-      [ -n "$1" ] || __throwArgument "$handler" "$argument argument blank" || return $?
+      shift || returnThrowArgument "$handler" "$argument missing argument" || return $?
+      [ -n "$1" ] || returnThrowArgument "$handler" "$argument argument blank" || return $?
       binary="$1"
       ;;
     --list)
@@ -309,8 +309,8 @@ findUncaughtAssertions() {
       ;;
     *)
       if [ -n "$directory" ]; then
-        # _IDENTICAL_ argumentUnknownHandler 1
-        __throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
+      # _IDENTICAL_ argumentUnknownHandler 1
+      returnThrowArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
       fi
       directory=$(usageArgumentDirectory "$handler" "directory" "$1") || return $?
       ;;
@@ -369,7 +369,7 @@ findUncaughtAssertions() {
       cat "$tempFile"
     fi
   fi
-  __catchEnvironment "$handler" rm "$tempFile" || return $?
+  catchEnvironment "$handler" rm "$tempFile" || return $?
   [ ${#problemFiles[@]} -eq 0 ]
 }
 _findUncaughtAssertions() {
@@ -423,14 +423,14 @@ validateFileExtensionContents() {
     textMatches+=("$1")
     shift
   done
-  [ "${#extensions[@]}" -gt 0 ] || __throwArgument "$handler" "No extension arguments" || return $?
-  [ "${#textMatches[@]}" -gt 0 ] || __throwArgument "$handler" "No text match arguments" || return $?
+  [ "${#extensions[@]}" -gt 0 ] || returnThrowArgument "$handler" "No extension arguments" || return $?
+  [ "${#textMatches[@]}" -gt 0 ] || returnThrowArgument "$handler" "No text match arguments" || return $?
 
   local failedReasons=() total=0 foundFiles
   foundFiles=$(fileTemporaryName "$handler")
   # Final arguments for find
   find . "${extensionArgs[@]}" ! -path "*/.*/*" "$@" >"$foundFiles"
-  total=$(__catch "$handler" fileLineCount "$foundFiles") || return $?
+  total=$(returnCatch "$handler" fileLineCount "$foundFiles") || return $?
   # shellcheck disable=SC2059
   statusMessage decorate info "Searching $total $(plural "$total" item files) (ext: ${extensions[*]}) for text: $(printf -- " $(decorate reset --)\"$(decorate code "%s")\"" "${textMatches[@]}")"
 
@@ -457,7 +457,7 @@ validateFileExtensionContents() {
       printf "    %s\n" "$(decorate magenta "$item")$(decorate info ", ")" 1>&2
     done
     decorate error "done." 1>&2
-    __throwEnvironment "$handler" "${FUNCNAME[0]} failed" || return $?
+    returnThrowEnvironment "$handler" "${FUNCNAME[0]} failed" || return $?
   else
     statusMessage decorate success "All scripts passed"
   fi
@@ -494,7 +494,7 @@ validateFileContents() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -508,7 +508,7 @@ validateFileContents() {
     --exec)
       shift
       binary="$1"
-      isCallable "$binary" || __throwArgument "$handler" "--exec $binary Not callable" || return $?
+      isCallable "$binary" || returnThrowArgument "$handler" "--exec $binary Not callable" || return $?
       ;;
     -)
       fileArgs=()
@@ -524,7 +524,7 @@ validateFileContents() {
   local textMatches=()
   while [ $# -gt 0 ]; do
     local argument="$1"
-    [ -n "$argument" ] || __throwArgument "$handler" "Zero size text match passed" || return $?
+    [ -n "$argument" ] || returnThrowArgument "$handler" "Zero size text match passed" || return $?
     case "$argument" in
     --)
       shift
@@ -537,7 +537,7 @@ validateFileContents() {
     shift
   done
 
-  [ "${#textMatches[@]}" -gt 0 ] || __throwArgument "$handler" "No text match arguments" || return $?
+  [ "${#textMatches[@]}" -gt 0 ] || returnThrowArgument "$handler" "No text match arguments" || return $?
 
   local failedReasons=() failedFiles=() total="${#fileArgs[@]}"
 
@@ -575,7 +575,7 @@ validateFileContents() {
     if [ -n "$binary" ]; then
       "$binary" "${failedFiles[@]}"
     fi
-    __throwEnvironment "$handler" "${FUNCNAME[0]} failed" || return $?
+    returnThrowEnvironment "$handler" "${FUNCNAME[0]} failed" || return $?
   else
     statusMessage decorate success "All scripts passed"
   fi

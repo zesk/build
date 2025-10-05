@@ -20,7 +20,7 @@ __addNoteTo() {
 #
 # handler: {fn} [ --skip-commit ]
 # Argument: --skip-commit - Skip the commit if the files change
-# Requires: jq __throwArgument statusMessage
+# Requires: jq returnThrowArgument statusMessage
 __updateMarkdown() {
   local handler="_${FUNCNAME[0]}"
   local flagSkipCommit
@@ -31,7 +31,7 @@ __updateMarkdown() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     --skip-commit)
       flagSkipCommit=true
@@ -39,7 +39,7 @@ __updateMarkdown() {
       ;;
     *)
       # _IDENTICAL_ argumentUnknownHandler 1
-      __throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
+      returnThrowArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
       ;;
     esac
     shift
@@ -48,7 +48,7 @@ __updateMarkdown() {
   __addNoteTo LICENSE.md
 
   local buildMarker
-  buildMarker=$(__catch "$handler" __buildMarker) || return $?
+  buildMarker=$(returnCatch "$handler" __buildMarker) || return $?
 
   #
   # Disable this to see what environment shows up in commit hooks for GIT*=
@@ -61,8 +61,8 @@ __updateMarkdown() {
     if ! gitInsideHook; then
       if gitRepositoryChanged; then
         statusMessage --last decorate info "Committing "
-        __catchEnvironment "$handler" git commit -m "Updating build.json" "$buildMarker" || return $?
-        __catchEnvironment "$handler" git push origin || return $?
+        catchEnvironment "$handler" git commit -m "Updating build.json" "$buildMarker" || return $?
+        catchEnvironment "$handler" git push origin || return $?
       fi
     else
       statusMessage --last decorate warning "Skipping update during commit hook" || :

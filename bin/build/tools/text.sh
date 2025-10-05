@@ -36,7 +36,7 @@ fileExtractLines() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -46,8 +46,8 @@ fileExtractLines() {
       elif [ -z "$end" ]; then
         end="$(usageArgumentPositiveInteger "$handler" "end" "$1")" || return $?
       else
-        # _IDENTICAL_ argumentUnknownHandler 1
-        __throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
+      # _IDENTICAL_ argumentUnknownHandler 1
+      returnThrowArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
       fi
       ;;
     esac
@@ -113,7 +113,7 @@ isMappable() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -294,7 +294,7 @@ trimSpace() {
       shift
     done
   else
-    __catchEnvironment "$handler" awk "{\$1=\$1};NF" || return $?
+    catchEnvironment "$handler" awk "{\$1=\$1};NF" || return $?
   fi
 }
 _trimSpace() {
@@ -441,7 +441,7 @@ beginsWith() {
   [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
 
   local text="${1-}"
-  [ -n "$text" ] || __throwArgument "$handler" "Empty text" || return $?
+  [ -n "$text" ] || returnThrowArgument "$handler" "Empty text" || return $?
 
   shift
   while [ $# -gt 0 ]; do
@@ -500,7 +500,7 @@ isSubstringInsensitive() {
   local element arrayElement
 
   element="$(lowercase "${1-}")"
-  [ -n "$element" ] || __throwArgument "$handler" "needle is blank" || return $?
+  [ -n "$element" ] || returnThrowArgument "$handler" "needle is blank" || return $?
   shift || return 1
   for arrayElement; do
     arrayElement=$(lowercase "$arrayElement")
@@ -618,14 +618,14 @@ fileEndsWithNewline() {
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
     *)
-      [ -f "$argument" ] || __throwArgument "$handler" "not a file #$__index/$__count ($argument)" || return $?
+      [ -f "$argument" ] || returnThrowArgument "$handler" "not a file #$__index/$__count ($argument)" || return $?
       one=true
       [ -z "$(tail -c 1 "$argument")" ] || return 1
       ;;
     esac
     shift
   done
-  $one || __throwArgument "$handler" "Requires at least one file $(decorate each code -- "${__saved[@]}")" || return $?
+  $one || returnThrowArgument "$handler" "Requires at least one file $(decorate each code -- "${__saved[@]}")" || return $?
 }
 _fileEndsWithNewline() {
   # __IDENTICAL__ usageDocument 1
@@ -651,7 +651,7 @@ fileLineCount() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -661,7 +661,7 @@ fileLineCount() {
     *)
       local file total
       file="$(usageArgumentFile "$handler" "$argument" "${1-}")" || return $?
-      total=$(__catchEnvironment "$handler" wc -l <"$file" | trimSpace) || return $?
+      total=$(catchEnvironment "$handler" wc -l <"$file" | trimSpace) || return $?
       if $newlineCheck; then
         if [ -s "$file" ]; then
           # File is not empty
@@ -687,11 +687,11 @@ fileLineCount() {
     if $newlineCheck; then
       local temp
       temp=$(fileTemporaryName "$handler") || return $?
-      __catchEnvironment "$handler" cat >"$temp" || returnClean $? "$temp" || return $?
+      catchEnvironment "$handler" cat >"$temp" || returnClean $? "$temp" || return $?
       fileLineCount --newline --handler "$handler" "$temp" || return $?
-      __catch "$handler" rm -f "$temp" || return $?
+      returnCatch "$handler" rm -f "$temp" || return $?
     else
-      printf "%d\n" "$(__catchEnvironment "$handler" wc -l | trimSpace)" || return $?
+      printf "%d\n" "$(catchEnvironment "$handler" wc -l | trimSpace)" || return $?
     fi
   fi
 }
@@ -711,7 +711,7 @@ pluralWord() {
   local handler="_${FUNCNAME[0]}"
   [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
   local word
-  word=$(__catch "$handler" plural "$@") || return $?
+  word=$(returnCatch "$handler" plural "$@") || return $?
   printf -- "%s %s\n" "$1" "$word" || return $?
 }
 _pluralWord() {
@@ -752,7 +752,7 @@ plural() {
     *) printf %s "${2-}" ;;
     esac
   else
-    __throwArgument "$handler" "plural argument: \"$count\" is not numeric" || return $?
+    returnThrowArgument "$handler" "plural argument: \"$count\" is not numeric" || return $?
     return 1
   fi
 }
@@ -949,12 +949,12 @@ removeFields() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
     *)
-      [ -z "$fieldCount" ] || __throwArgument "$handler" "Only one fieldCount should be provided argument #$__index: $argument" || return $?
+      [ -z "$fieldCount" ] || returnThrowArgument "$handler" "Only one fieldCount should be provided argument #$__index: $argument" || return $?
       fieldCount="$(usageArgumentPositiveInteger "$handler" "fieldCount" "$argument")" || return $?
       ;;
     esac
@@ -1032,7 +1032,7 @@ stringReplace() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -1053,8 +1053,8 @@ stringReplace() {
   if $hasTextArguments; then
     return 0
   fi
-  [ -n "$needle" ] || __throwArgument "$handler" "Missing needle" || return $?
-  [ -n "$sedCommand" ] || __throwArgument "$handler" "Missing replacement" || return $?
+  [ -n "$needle" ] || returnThrowArgument "$handler" "Missing needle" || return $?
+  [ -n "$sedCommand" ] || returnThrowArgument "$handler" "Missing replacement" || return $?
   sed -e "$sedCommand"
 }
 _stringReplace() {

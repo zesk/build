@@ -16,26 +16,26 @@ testWrapperShellScripts() {
   packageWhich shellcheck || return $?
   export BUILD_COMPANY
 
-  __catch "$handler" buildEnvironmentLoad BUILD_COMPANY || return $?
-  thisYear=$(__catchEnvironment "$handler" date +%Y) || return $?
-  home=$(__catch "$handler" buildHome) || return $?
+  returnCatch "$handler" buildEnvironmentLoad BUILD_COMPANY || return $?
+  thisYear=$(catchEnvironment "$handler" date +%Y) || return $?
+  home=$(returnCatch "$handler" buildHome) || return $?
   # Part of commit check - keep it quick
   if ! find "$home/bin/build" -name '*.sh' "${findArgs[@]}" -exec "shellcheck" '{}' ';'; then
-    __catchEnvironment "$handler" "shellcheck failed" || return $?
+    catchEnvironment "$handler" "shellcheck failed" || return $?
   fi
-  __catchEnvironment "$handler" muzzle pushd "$home" || return $?
+  catchEnvironment "$handler" muzzle pushd "$home" || return $?
   if ! validateFileExtensionContents sh -- "Copyright &copy; $thisYear" "$BUILD_COMPANY" -- "${findArgs[@]}"; then
     unset BUILD_COMPANY
-    __catchEnvironment "$handler" "validateFileExtensionContents failed" || return $?
+    catchEnvironment "$handler" "validateFileExtensionContents failed" || return $?
   fi
   unset BUILD_COMPANY
-  __catchEnvironment "$handler" muzzle popd || return $?
+  catchEnvironment "$handler" muzzle popd || return $?
 }
 
 testTestSuite() {
   local home
 
-  home=$(__catch "$handler" buildHome) || return $?
+  home=$(returnCatch "$handler" buildHome) || return $?
   # env -i is to avoid having our functions inherited to parent and no tests found in test/tools when loaded by __testLoad
   assertExitCode --stdout-match testWrapperShellScripts --stdout-match "${FUNCNAME[0]}" 0 env -i "$home/bin/test.sh" --list || return $?
 }

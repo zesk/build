@@ -18,7 +18,7 @@ __installInstallBinary() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -56,65 +56,65 @@ __installInstallBinary() {
       elif [ -z "$applicationHome" ]; then
         applicationHome=$(usageArgumentDirectory "$handler" "applicationHome" "$1") || return $?
       else
-        # _IDENTICAL_ argumentUnknownHandler 1
-        __throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
+      # _IDENTICAL_ argumentUnknownHandler 1
+      returnThrowArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
       fi
       ;;
     esac
     shift
   done
 
-  [ -n "$installBinName" ] || __throwArgument "$handler" "--bin is required" || return $?
-  [ -n "$source" ] || __throwArgument "$handler" "--local-path is required" || return $?
+  [ -n "$installBinName" ] || returnThrowArgument "$handler" "--bin is required" || return $?
+  [ -n "$source" ] || returnThrowArgument "$handler" "--local-path is required" || return $?
 
   # Validate paths and force realPath
   # default application home is $(pwd)
-  [ -n "$applicationHome" ] || applicationHome="$(__catchEnvironment "$handler" pwd)" || return $?
+  [ -n "$applicationHome" ] || applicationHome="$(catchEnvironment "$handler" pwd)" || return $?
   # default installation path home is $(pwd)/bin
   [ -n "$path" ] || path="$applicationHome/bin"
-  path=$(__catchEnvironment "$handler" realPath "$path") || return $?
-  applicationHome="$(__catchEnvironment "$handler" realPath "$applicationHome")" || return $?
+  path=$(catchEnvironment "$handler" realPath "$path") || return $?
+  applicationHome="$(catchEnvironment "$handler" realPath "$applicationHome")" || return $?
 
   # Custom target binary?
   if [ "${path%.sh}" != "$path" ]; then
     target="$path"
-    path=$(__catchEnvironment "$handler" dirname "$path") || return $?
+    path=$(catchEnvironment "$handler" dirname "$path") || return $?
   elif [ -d "$path" ]; then
     target="$path/$installBinName"
   else
-    __throwEnvironment "$handler" "$path is not a directory" || return $?
+    returnThrowEnvironment "$handler" "$path is not a directory" || return $?
   fi
 
   # Compute relTop
   relTop="${path#"$applicationHome"}"
   if [ "$relTop" = "$path" ]; then
-    __throwArgument "$handler" "Path ($path) ($(realPath "$path")) is not within applicationHome ($applicationHome)" || return $?
+    returnThrowArgument "$handler" "Path ($path) ($(realPath "$path")) is not within applicationHome ($applicationHome)" || return $?
   fi
   relTop=$(directoryRelativePath "$relTop")
 
   # Get installation binary
   temp="$path/.downloaded.$$"
   if $localFlag; then
-    [ -x "$source" ] || __throwEnvironment "$handler" "$source is not executable" || return $?
-    __catchEnvironment "$handler" cp "$source" "$temp" || return $?
+    [ -x "$source" ] || returnThrowEnvironment "$handler" "$source is not executable" || return $?
+    catchEnvironment "$handler" cp "$source" "$temp" || return $?
   else
     if [ -z "$url" ]; then
-      [ -n "$urlFunction" ] || __catchArgument "$handler" "Need --url or --url-function" || return $?
+      [ -n "$urlFunction" ] || catchArgument "$handler" "Need --url or --url-function" || return $?
       url=$("$urlFunction" "$handler") || return $?
-      [ -n "$url" ] || __throwEnvironment "$urlFunction failed to generate a URL" || return $?
-      urlValid "$url" || __throwEnvironment "$urlFunction failed to generate a VALID URL: $url" || return $?
+      [ -n "$url" ] || returnThrowEnvironment "$urlFunction failed to generate a URL" || return $?
+      urlValid "$url" || returnThrowEnvironment "$urlFunction failed to generate a VALID URL: $url" || return $?
     fi
     if ! curl -s -o - "$url" >"$temp"; then
-      __throwEnvironment "$handler" "Unable to download $(decorate code "$url")" || returnClean $? "$temp" || return $?
+      returnThrowEnvironment "$handler" "Unable to download $(decorate code "$url")" || returnClean $? "$temp" || return $?
     fi
   fi
   if _installInstallBinaryCanCustomize "$temp"; then
-    __catchEnvironment "$handler" _installInstallBinaryCustomize "$relTop" <"$temp" >"$temp.custom" || returnClean $? "$temp" "$temp.custom" || return $?
-    __catchEnvironment "$handler" mv -f "$temp.custom" "$temp" || returnClean $? "$temp" "$temp.custom" || return $?
+    catchEnvironment "$handler" _installInstallBinaryCustomize "$relTop" <"$temp" >"$temp.custom" || returnClean $? "$temp" "$temp.custom" || return $?
+    catchEnvironment "$handler" mv -f "$temp.custom" "$temp" || returnClean $? "$temp" "$temp.custom" || return $?
   fi
   if [ -n "$postFunction" ]; then
-    __catchEnvironment "$handler" "$postFunction" <"$temp" >"$temp.custom" || returnClean $? "$temp" "$temp.custom" || return $?
-    __catchEnvironment "$handler" mv -f "$temp.custom" "$temp" || returnClean $? "$temp" "$temp.custom" || return $?
+    catchEnvironment "$handler" "$postFunction" <"$temp" >"$temp.custom" || returnClean $? "$temp" "$temp.custom" || return $?
+    catchEnvironment "$handler" mv -f "$temp.custom" "$temp" || returnClean $? "$temp" "$temp.custom" || return $?
   fi
 
   verb=Installed
@@ -122,10 +122,10 @@ __installInstallBinary() {
   # Show diffs
   ! $showDiffFlag || _installInstallBinaryDiffer "$handler" "$temp" "$target" || returnClean $? "$temp" || return $?
   # Copy to target
-  __catchEnvironment "$handler" cp "$temp" "$target" || returnClean $? "$temp" || return $?
+  catchEnvironment "$handler" cp "$temp" "$target" || returnClean $? "$temp" || return $?
   rm -rf "$temp" || :
   # Clean up and make executable
-  __catchEnvironment "$handler" chmod +x "$target" || exitCode=$?
+  catchEnvironment "$handler" chmod +x "$target" || exitCode=$?
   [ "$exitCode" -ne 0 ] && return "$exitCode"
   # Life is good
   statusMessage --last printf -- "%s %s (%s=\"%s\")" "$(decorate success "$verb")" "$(decorate code "$target")" "$(decorate label relTop)" "$(decorate value "$relTop")"
@@ -137,9 +137,9 @@ __installInstallBuildRemote() {
   local handler="$1"
   export BUILD_INSTALL_URL
 
-  __catch "$handler" packageWhich curl curl || return $?
-  __catch "$handler" buildEnvironmentLoad BUILD_INSTALL_URL || return $?
-  urlParse "${BUILD_INSTALL_URL-}" >/dev/null || __throwEnvironment "$handler" "BUILD_INSTALL_URL ($BUILD_INSTALL_URL) is not a valid URL" || return $?
+  returnCatch "$handler" packageWhich curl curl || return $?
+  returnCatch "$handler" buildEnvironmentLoad BUILD_INSTALL_URL || return $?
+  urlParse "${BUILD_INSTALL_URL-}" >/dev/null || returnThrowEnvironment "$handler" "BUILD_INSTALL_URL ($BUILD_INSTALL_URL) is not a valid URL" || return $?
 
   printf "%s\n" "${BUILD_INSTALL_URL}"
 }
@@ -152,11 +152,11 @@ __installInstallBinaryLegacy() {
   temp=$(fileTemporaryName "$handler") || return $?
   cat >"$temp"
   if __installInstallBinaryIsLegacy <"$temp"; then
-    __catch "$handler" __installInstallBinaryCustomizeLegacy "$relTop" <"$temp" || returnClean $? "$temp" || return $?
+    returnCatch "$handler" __installInstallBinaryCustomizeLegacy "$relTop" <"$temp" || returnClean $? "$temp" || return $?
   else
-    __catchEnvironment "$handler" cat "$temp" || return $?
+    catchEnvironment "$handler" cat "$temp" || return $?
   fi
-  __catchEnvironment "$handler" rm "$temp" || return $?
+  catchEnvironment "$handler" rm "$temp" || return $?
 }
 __installInstallBinaryIsLegacy() {
   grep -q '^relTop=' >/dev/null
@@ -171,7 +171,7 @@ _installInstallBinaryDiffer() {
   local handler="$1" diffLines
   shift
   if [ -x "$target" ]; then
-    diffLines="$(__catchEnvironment "$handler" _installInstallBinaryDifferFilter -c "$@")" || return $?
+    diffLines="$(catchEnvironment "$handler" _installInstallBinaryDifferFilter -c "$@")" || return $?
     [ "$diffLines" -gt 0 ] || return 0
     decorate magenta "--- Changes: $diffLines ---"
     _installInstallBinaryDifferFilter "$@" || :

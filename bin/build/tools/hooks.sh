@@ -25,7 +25,7 @@ _hookContextWrapper() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -42,15 +42,15 @@ _hookContextWrapper() {
 
   local start home
 
-  home=$(__catch "$handler" buildHome) || return $?
-  start="$(pwd -P 2>/dev/null)" || __throwEnvironment "$handler" "Failed to get pwd" || return $?
-  start=$(__catchEnvironment "$handler" realPath "$start") || return $?
+  home=$(returnCatch "$handler" buildHome) || return $?
+  start="$(pwd -P 2>/dev/null)" || returnThrowEnvironment "$handler" "Failed to get pwd" || return $?
+  start=$(catchEnvironment "$handler" realPath "$start") || return $?
 
   if [ -z "$application" ]; then
     if [ "${start#"$home"}" = "$start" ]; then
       application="$home"
     else
-      application=$(__catch "$handler" bashLibraryHome "bin/build/tools.sh" "$start") || return $?
+      application=$(returnCatch "$handler" bashLibraryHome "bin/build/tools.sh" "$start") || return $?
       application="${application%/}"
       if [ "${start#"$application"}" = "$start" ]; then
         buildEnvironmentContext "$application" hookRun --application "$application" "$hookName" "$@" || return $?
@@ -58,7 +58,7 @@ _hookContextWrapper() {
       fi
     fi
   fi
-  __catchEnvironment "$handler" hookRun --application "$application" "$hookName" "$@" || return $?
+  catchEnvironment "$handler" hookRun --application "$application" "$hookName" "$@" || return $?
 }
 
 # Application current version

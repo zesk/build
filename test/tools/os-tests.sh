@@ -10,7 +10,7 @@ testNewestAndOldest() {
   local waitSeconds=1 place aTime bTime cTime
 
   place=$(fileTemporaryName "$handler" -d) || return $?
-  __catchEnvironment "$handler" muzzle pushd "$place" || return $?
+  catchEnvironment "$handler" muzzle pushd "$place" || return $?
 
   date >"a"
   decorate info "testNewestAndOldest: Sleeping $waitSeconds seconds ..."
@@ -20,9 +20,9 @@ testNewestAndOldest() {
   sleep "$waitSeconds"
   date >"c"
 
-  aTime=$(__catch "$handler" fileModificationTime "a") || return $?
-  bTime=$(__catch "$handler" fileModificationTime "b") || return $?
-  cTime=$(__catch "$handler" fileModificationTime "c") || return $?
+  aTime=$(returnCatch "$handler" fileModificationTime "a") || return $?
+  bTime=$(returnCatch "$handler" fileModificationTime "b") || return $?
+  cTime=$(returnCatch "$handler" fileModificationTime "c") || return $?
 
   assertOutputEquals "a" fileOldest "a" "b" "c" || return $?
   assertOutputEquals "a" fileOldest "c" "b" "a" || return $?
@@ -40,8 +40,8 @@ testNewestAndOldest() {
   assertExitCode 1 fileIsNewest "a" "c" || return $?
   assertExitCode 1 fileIsNewest "a" "b" || return $?
 
-  __catchEnvironment "$handler" muzzle popd || return $?
-  __catch "$handler" rm -rf "$place" || return $?
+  catchEnvironment "$handler" muzzle popd || return $?
+  returnCatch "$handler" rm -rf "$place" || return $?
 }
 
 testMemoryRelated() {
@@ -116,7 +116,7 @@ testExtensionLists() {
   local handler="returnMessage"
   local target me
 
-  me=$(__catchEnvironment "$handler" realPath "${BASH_SOURCE[0]}") || return $?
+  me=$(catchEnvironment "$handler" realPath "${BASH_SOURCE[0]}") || return $?
 
   export BUILD_HOME
   assertExitCode 0 buildEnvironmentLoad BUILD_HOME || return $?

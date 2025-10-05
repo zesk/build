@@ -15,7 +15,7 @@ if source "${BASH_SOURCE[0]%/*}/tools.sh"; then
     local handler="_${FUNCNAME[0]}"
     local home
 
-    home=$(__catch "$handler" buildHome) || return $?
+    home=$(returnCatch "$handler" buildHome) || return $?
 
     # Logo for iTerm2
     if isiTerm2; then
@@ -25,9 +25,9 @@ if source "${BASH_SOURCE[0]%/*}/tools.sh"; then
     fi
     # Title
     local name
-    name=$(__catch "$handler" buildEnvironmentGet APPLICATION_NAME) || return $?
+    name=$(returnCatch "$handler" buildEnvironmentGet APPLICATION_NAME) || return $?
     [ -n "$name" ] || name=$(basename "$home")
-    title="$name $(__catch "$handler" hookVersionCurrent)" || return $?
+    title="$name $(returnCatch "$handler" hookVersionCurrent)" || return $?
     bigText --bigger "$title"
 
     # shellcheck disable=SC2139
@@ -64,10 +64,10 @@ if source "${BASH_SOURCE[0]%/*}/tools.sh"; then
     local handler="returnMessage"
     local home
 
-    home=$(__catch "$handler" buildHome) || return $?
+    home=$(returnCatch "$handler" buildHome) || return $?
 
     local name
-    name=$(__catch "$handler" buildEnvironmentContext "$home" buildEnvironmentGet APPLICATION_NAME) || return $?
+    name=$(returnCatch "$handler" buildEnvironmentContext "$home" buildEnvironmentGet APPLICATION_NAME) || return $?
     [ -n "$name" ] || name=$(basename "$home")
 
     statusMessage decorate notice "Deactivating $name ..."

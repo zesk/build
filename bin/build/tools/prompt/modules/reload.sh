@@ -15,12 +15,12 @@ __reloadChanges() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
     --source)
-      [ -z "$source" ] || __throwArgument "$handler" "--source only can be supplied once" || return $?
+      [ -z "$source" ] || returnThrowArgument "$handler" "--source only can be supplied once" || return $?
       shift && source="$(usageArgumentRealFile "$handler" "$argument" "${1-}")" || return $?
       ;;
     --show) showFlag=true ;;
@@ -28,7 +28,7 @@ __reloadChanges() {
       # If not found we do not care
       muzzle bashPrompt --skip-prompt --remove __bashPromptModule_reloadChanges 2>&1 || :
       if cacheFile="$(__reloadChangesCacheFile "$handler")"; then
-        __catchEnvironment "$handler" rm -rf "$cacheFile" || return $?
+        catchEnvironment "$handler" rm -rf "$cacheFile" || return $?
       fi
       statusMessage --last decorate success "Disabled reloadChanges ..."
       return 0
@@ -38,7 +38,7 @@ __reloadChanges() {
     --file) shift && paths+=("$(usageArgumentRealFile "$handler" "$argument" "${1-}")") || return $? ;;
     -*)
       # _IDENTICAL_ argumentUnknownHandler 1
-      __throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
+      returnThrowArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
       ;;
     *)
       if [ -z "$source" ]; then
@@ -63,9 +63,9 @@ __reloadChanges() {
 
   [ ${#paths[@]} -eq 0 ] || printf "%s %s\n%s\n" "👀 $(decorate info "$name")" "$(decorate code "(source $(decorate file "$source"))")" "$(printf -- "- %s\n" "${paths[@]}"))"
 
-  [ -n "$source" ] || __throwArgument "$handler" "--source required" || return $?
+  [ -n "$source" ] || returnThrowArgument "$handler" "--source required" || return $?
 
-  [ 0 -lt "${#paths[@]}" ] || __throwArgument "$handler" "At least one path is required" || return $?
+  [ 0 -lt "${#paths[@]}" ] || returnThrowArgument "$handler" "At least one path is required" || return $?
   if [ -z "$name" ]; then
     local pathNames=() path
     for path in "${paths[@]}"; do pathNames+=("$(basename "$path")"); done
@@ -74,7 +74,7 @@ __reloadChanges() {
 
   __reloadChangesRemove "$handler" "$cacheFile" "$source" || return $?
 
-  __catchEnvironment "$handler" printf -- "%s\n" "$source" "$name" "${paths[@]}" "--" >>"$cacheFile" || return $?
+  catchEnvironment "$handler" printf -- "%s\n" "$source" "$name" "${paths[@]}" "--" >>"$cacheFile" || return $?
 
   decorate success "Watching $(decorate each file "${paths[@]}") as $(decorate value "$name")"
   bashPrompt --skip-prompt --first __bashPromptModule_reloadChanges
@@ -115,7 +115,7 @@ __reloadChangesRemove() {
 
   local argument name="" source="" paths=() target="$cacheFile.$$.temp"
 
-  __catchEnvironment "$handler" touch "$target" || returnClean $? "$target" || return $?
+  catchEnvironment "$handler" touch "$target" || returnClean $? "$target" || return $?
   while IFS="" read -r argument; do
     if [ -z "$source" ]; then
       source="$(usageArgumentRealFile "$handler" "config-source" "$argument")" || returnClean $? "$target" || return $?
@@ -123,7 +123,7 @@ __reloadChangesRemove() {
       name=$(usageArgumentString "$handler" "config-name" "$argument") || returnClean $? "$target" || return $?
     elif [ "$argument" = "--" ]; then
       if [ "$source" != "$matchSource" ]; then
-        __catchEnvironment "$handler" printf -- "%s\n" "$source" "$name" "${paths[@]}" "--" >>"$target" || returnClean $? "$target" || return $?
+        catchEnvironment "$handler" printf -- "%s\n" "$source" "$name" "${paths[@]}" "--" >>"$target" || returnClean $? "$target" || return $?
       fi
       name=""
       source=""
@@ -135,14 +135,14 @@ __reloadChangesRemove() {
       paths+=("$(usageArgumentRealDirectory "$handler" "config-path" "$argument")") || return $?
     fi
   done <"$cacheFile"
-  __catchEnvironment "$handler" mv -f "$target" "$cacheFile" || returnClean $? "$target" || return $?
-  __catchEnvironment "$handler" find "$(dirname "$cacheFile")" -name '*.temp' -delete || return $?
+  catchEnvironment "$handler" mv -f "$target" "$cacheFile" || returnClean $? "$target" || return $?
+  catchEnvironment "$handler" find "$(dirname "$cacheFile")" -name '*.temp' -delete || return $?
 }
 
 __reloadChangesCacheFile() {
   local handler="$1" extension="${2-state}"
-  reloadHome=$(__catch "$handler" buildEnvironmentGetDirectory --subdirectory "reloadChanges" XDG_STATE_HOME) || return $?
-  cacheFile="$(__catch "$handler" buildEnvironmentGet APPLICATION_CODE).$extension" || return $?
+  reloadHome=$(returnCatch "$handler" buildEnvironmentGetDirectory --subdirectory "reloadChanges" XDG_STATE_HOME) || return $?
+  cacheFile="$(returnCatch "$handler" buildEnvironmentGet APPLICATION_CODE).$extension" || return $?
   printf "%s/%s\n" "${reloadHome%/}" "${cacheFile}"
 }
 
@@ -263,7 +263,7 @@ ___bashPromptModule_reloadChangesCheck() {
       if $debug; then
         decorate warning "Modified in $pathStateFile is non-integer: \"$stateModified\""
       else
-        __catchEnvironment "$handler" rm -f "$pathStateFile" || return $?
+        catchEnvironment "$handler" rm -f "$pathStateFile" || return $?
       fi
       stateModified=0
     elif isInteger "${__BASH_PROMPT_RELOAD_CHANGES-}"; then

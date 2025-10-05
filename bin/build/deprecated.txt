@@ -9,6 +9,15 @@ nextMinorVersion|versionNextMinor
 NextMinorVersion|VersionNextMinor
 newRelease|releaseNew
 NewRelease|ReleaseNew
+__throw|returnThrow|
+returnCatchEnvironment|catchEnvironment|
+returnCatchArgument|catchArgument|
+__catch|returnCatch|
+__catchCode|catchCode|
+__throwEnvironment|throwEnvironment
+__execute|execute
+__echo|executeEcho
+_choose|booleanChoose
 
 # v0.38.3
 # Exit Code:|# Return Code:|

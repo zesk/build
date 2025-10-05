@@ -14,7 +14,7 @@
 # DOC TEMPLATE: --help 1
 # Argument: --help - Optional. Flag. Display this help.
 # Argument: ... - Optional. Arguments. Any additional arguments are passed through.
-# Requires: mktemp __help __catchEnvironment usageDocument
+# Requires: mktemp __help catchEnvironment usageDocument
 # BUILD_DEBUG: temp - Logs backtrace of all temporary files to a file in application root named after this function to detect and clean up leaks
 fileTemporaryName() {
   local handler="_${FUNCNAME[0]}"
@@ -24,7 +24,7 @@ fileTemporaryName() {
   if [ "${debug#*;temp;}" != "$debug" ]; then
     local target="${BUILD_HOME-.}/.${FUNCNAME[0]}"
     printf "%s" "fileTemporaryName: " >>"$target"
-    __catchEnvironment "$handler" mktemp "$@" | tee -a "$target" || return $?
+    catchEnvironment "$handler" mktemp "$@" | tee -a "$target" || return $?
     local sources=() count=${#FUNCNAME[@]} index=0
     while [ "$index" -lt "$count" ]; do
       sources+=("${BASH_SOURCE[index + 1]-}:${BASH_LINENO[index]-"$LINENO"} - ${FUNCNAME[index]-}")
@@ -32,7 +32,7 @@ fileTemporaryName() {
     done
     printf "%s\n" "${sources[@]}" "-- END" >>"$target"
   else
-    __catchEnvironment "$handler" mktemp "$@" || return $?
+    catchEnvironment "$handler" mktemp "$@" || return $?
   fi
 }
 _fileTemporaryName() {

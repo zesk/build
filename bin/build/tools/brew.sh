@@ -18,7 +18,7 @@ __brewWrapper() {
 # Platform: Darwin
 brewInstall() {
   [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
-  isDarwin || __throwEnvironment "$handler" "Only on Darwin (Mac OS X)" || return $?
+  isDarwin || returnThrowEnvironment "$handler" "Only on Darwin (Mac OS X)" || return $?
   /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 }
 _brewInstall() {
@@ -70,22 +70,22 @@ __brewUpgrade() {
   local handler="_${FUNCNAME[0]}"
   local quietLog upgradeLog result clean=()
 
-  quietLog=$(__catch "$handler" buildQuietLog "$handler") || return $?
-  upgradeLog=$(__catch "$handler" buildQuietLog "upgrade_${handler#_}") || return $?
+  quietLog=$(returnCatch "$handler" buildQuietLog "$handler") || return $?
+  upgradeLog=$(returnCatch "$handler" buildQuietLog "upgrade_${handler#_}") || return $?
   clean+=("$quietLog" "$upgradeLog")
-  __catchEnvironmentQuiet "$quietLog" packageUpdate || return $?
-  __catchEnvironmentQuiet "$quietLog" packageInstall || return $?
-  __catch "$handler" __brewWrapper upgrade --overwrite --greedy | tee -a "$upgradeLog" >>"$quietLog" || returnUndo $? dumpPipe "apk upgrade failed" <"$quietLog" || returnClean $? "${clean[@]}" || return $?
+  catchEnvironmentQuiet "$quietLog" packageUpdate || return $?
+  catchEnvironmentQuiet "$quietLog" packageInstall || return $?
+  returnCatch "$handler" __brewWrapper upgrade --overwrite --greedy | tee -a "$upgradeLog" >>"$quietLog" || returnUndo $? dumpPipe "apk upgrade failed" <"$quietLog" || returnClean $? "${clean[@]}" || return $?
   if ! muzzle packageNeedRestartFlag; then
     if grep -q " restart " "$upgradeLog" || grep -qi needrestart "$upgradeLog" || grep -qi need-restart "$upgradeLog"; then
-      __catch "$handler" packageNeedRestartFlag "true" || returnClean $? "${clean[@]}" || return $?
+      returnCatch "$handler" packageNeedRestartFlag "true" || returnClean $? "${clean[@]}" || return $?
     fi
     result=restart
   else
-    __catch "$handler" packageNeedRestartFlag "" || returnClean $? "${clean[@]}" || return $?
+    returnCatch "$handler" packageNeedRestartFlag "" || returnClean $? "${clean[@]}" || return $?
     result=ok
   fi
-  __catchEnvironment "$handler" rm -rf "${clean[@]}" || return $?
+  catchEnvironment "$handler" rm -rf "${clean[@]}" || return $?
   printf "%s\n" "$result"
 }
 ___brewUpgrade() {
@@ -114,8 +114,8 @@ __brewUpdate() {
 # package.sh: true
 __brewInstalledList() {
   local handler="_${FUNCNAME[0]}"
-  whichExists brew || __throwEnvironment "$handler" "brew not installed - can not list" || return $?
-  [ $# -eq 0 ] || __throwArgument "$handler" "Unknown argument $*" || return $?
+  whichExists brew || returnThrowEnvironment "$handler" "brew not installed - can not list" || return $?
+  [ $# -eq 0 ] || returnThrowArgument "$handler" "Unknown argument $*" || return $?
   __brewWrapper list -1 | grep -v '^[^A-Za-z]'
 }
 ___brewInstalledList() {
@@ -128,7 +128,7 @@ ___brewInstalledList() {
 # package.sh: true
 __brewAvailableList() {
   local handler="_${FUNCNAME[0]}"
-  whichExists brew || __throwEnvironment "$handler" "brew not installed - can not list" || return $?
+  whichExists brew || returnThrowEnvironment "$handler" "brew not installed - can not list" || return $?
   __brewWrapper search --formula '/.*/'
 }
 ___brewAvailableList() {

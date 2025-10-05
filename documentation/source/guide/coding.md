@@ -30,7 +30,7 @@ prefixed with an underscore:
     usefulThing() {
       local handler="_${FUNCNAME[0]}"
       ...
-       __catchEnvironment "$handler" ...
+       catchEnvironment "$handler" ...
     }
     _usefulThing() {
       # __IDENTICAL__ usageDocument 1
@@ -112,11 +112,11 @@ The sooner it gets handled the cleaner things are.
 
 So just do:
 
-    foo=$(__catchEnvironment "$handler" thingWhichFails) || return $?
+    foo=$(catchEnvironment "$handler" thingWhichFails) || return $?
 
 or
 
-    __catchEnvironment "$handler" thingWhichFails || return $?
+    catchEnvironment "$handler" thingWhichFails || return $?
 
 **MOST** of the time. When not to?
 
@@ -144,7 +144,7 @@ Pattern:
         local handler="_${FUNCNAME[0]}"
        ...
         if ! trySomething; then
-            __throwEnvironment "$handler" "Error message why" || return $?
+            returnThrowEnvironment "$handler" "Error message why" || return $?
         fi
     }
     _functionName() {
@@ -202,14 +202,14 @@ Code:
 handler:
 
     tempFile=(fileTemporaryName "$handler") || return $?
-    __throwEnvironment "$handler" "No deployment application directory exists" || return $?
+    returnThrowEnvironment "$handler" "No deployment application directory exists" || return $?
 
 See:
 
 - [`_environment`](./tools/sugar.md#_environment)
 - [`__environment`](./tools/sugar.md#__environment)
-- [`__throwEnvironment`](./tools/sugar.md#__throwEnvironment)
-- [`__catchEnvironment`](./tools/sugar.md#__catchEnvironment)
+- [`returnThrowEnvironment`](./tools/sugar.md#returnThrowEnvironment)
+- [`catchEnvironment`](./tools/sugar.md#catchEnvironment)
 
 ### Argument errors (Exit Code `2`)
 
@@ -229,8 +229,8 @@ Code:
 
 handler:
 
-    __catchArgument "$handler" isInteger "$argument" || return $?
-    __throwArgument "$handler" "No deployment application directory exists" || return $?
+    catchArgument "$handler" isInteger "$argument" || return $?
+    returnThrowArgument "$handler" "No deployment application directory exists" || return $?
 
 ### Argument utilities
 
@@ -270,8 +270,8 @@ handler:
 - [handler functions](./tools/handler.md)
 - [`_argument`](./tools/sugar.md#_argument)
 - [`__argument`](./tools/sugar.md#__argument)
-- [`__throwArgument`](./tools/sugar.md#__throwArgument)
-- [`__catchArgument`](./tools/sugar.md#__catchArgument)
+- [`returnThrowArgument`](./tools/sugar.md#returnThrowArgument)
+- [`catchArgument`](./tools/sugar.md#catchArgument)
 
 Code:
 

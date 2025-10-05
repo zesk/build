@@ -25,7 +25,7 @@ __documentationTemplateUpdate() {
   while ! identicalCheck "${repairArgs[@]}" --ignore-singles --extension md --prefix '<!-- TEMPLATE' --cd "$templatePath"; do
     failCount=$((failCount + 1))
     if [ $failCount -gt 4 ]; then
-      __catchEnvironment "$handler" "identicalCheck --repair failed" || return $?
+      catchEnvironment "$handler" "identicalCheck --repair failed" || return $?
     fi
   done
 }
@@ -49,12 +49,12 @@ __documentationTemplateUpdateUnlinked() {
 
   # Not used I guess
   muzzle usageArgumentFile "$handler" "pageTemplate" "${5-}" || return $?
-  todoTemplate=$(__catch "$handler" documentationTemplate "${6-todo}") || return $?
+  todoTemplate=$(returnCatch "$handler" documentationTemplate "${6-todo}") || return $?
 
   unlinkedFunctions=$(fileTemporaryName "$handler") || return $?
   clean+=("$unlinkedFunctions")
-  __catch "$handler" _documentationIndexUnlinkedFunctions "$cacheDirectory" | grepSafe -v '^_' | decorate wrap "{" "}" >"$unlinkedFunctions" || returnClean $? "${clean[@]}" || return $?
-  total=$(__catch "$handler" fileLineCount "$unlinkedFunctions") || return $?
+  returnCatch "$handler" _documentationIndexUnlinkedFunctions "$cacheDirectory" | grepSafe -v '^_' | decorate wrap "{" "}" >"$unlinkedFunctions" || returnClean $? "${clean[@]}" || return $?
+  total=$(returnCatch "$handler" fileLineCount "$unlinkedFunctions") || return $?
 
   # Subshell hide globals
   (
@@ -66,13 +66,13 @@ __documentationTemplateUpdateUnlinked() {
     content=$content total=$total mapEnvironment content total <"$todoTemplate" >"$template.$$"
   ) || returnClean $? "${clean[@]}" || return $?
 
-  __catchEnvironment "$handler" rm -rf "${clean[@]}" || return $?
+  catchEnvironment "$handler" rm -rf "${clean[@]}" || return $?
 
   if [ -f "$template" ] && diff -q "$template" "$template.$$" >/dev/null; then
     statusMessage decorate info "Not updating $template - unchanged $total unlinked $(plural "$total" function functions)"
-    __catchEnvironment "$handler" rm -f "$template.$$" || return $?
+    catchEnvironment "$handler" rm -f "$template.$$" || return $?
   else
-    __catchEnvironment "$handler" mv -f "$template.$$" "$template" || return $?
+    catchEnvironment "$handler" mv -f "$template.$$" "$template" || return $?
     statusMessage decorate info "Updated $(decorate file "$template") with $total unlinked $(plural "$total" function functions)"
   fi
 }
@@ -89,14 +89,14 @@ _buildDocumentation_MergeWithDocsBranch() {
   local branch
   local handler="_${FUNCNAME[0]}"
 
-  branch=$(__catchEnvironment "$handler" gitCurrentBranch) || return $?
+  branch=$(catchEnvironment "$handler" gitCurrentBranch) || return $?
   if [ "$branch" = "$docsBranch" ]; then
-    __throwEnvironment "$handler" "Already on docs branch" || return $?
+    returnThrowEnvironment "$handler" "Already on docs branch" || return $?
   fi
-  __catchEnvironment "$handler" git checkout "$docsBranch" || return $?
-  __catchEnvironment "$handler" git merge -m "${FUNCNAME[0]}" "$branch" || return $?
-  __catchEnvironment "$handler" git push || return $?
-  __catchEnvironment "$handler" git checkout "$branch" || return $?
+  catchEnvironment "$handler" git checkout "$docsBranch" || return $?
+  catchEnvironment "$handler" git merge -m "${FUNCNAME[0]}" "$branch" || return $?
+  catchEnvironment "$handler" git push || return $?
+  catchEnvironment "$handler" git checkout "$branch" || return $?
 }
 __buildDocumentation_MergeWithDocsBranch() {
   # __IDENTICAL__ usageDocument 1
@@ -112,15 +112,15 @@ _buildDocumentation_Recommit() {
 
   handler="_${FUNCNAME[0]}"
 
-  branch=$(gitCurrentBranch) || __throwEnvironment "$handler" gitCurrentBranch || return $?
+  branch=$(gitCurrentBranch) || returnThrowEnvironment "$handler" gitCurrentBranch || return $?
   if [ "$branch" = "docs" ]; then
-    __throwEnvironment "$handler" "Already on docs branch" || return $?
+    returnThrowEnvironment "$handler" "Already on docs branch" || return $?
   fi
   if gitRepositoryChanged; then
     statusMessage decorate warning "Committing to branch $branch ..."
-    __catchEnvironment "$handler" git commit -m "Updated docs in pipeline on $(date +"%F %T")" -a || return $?
+    catchEnvironment "$handler" git commit -m "Updated docs in pipeline on $(date +"%F %T")" -a || return $?
     statusMessage decorate info "Pushing branch $branch ..."
-    __catchEnvironment "$handler" git push || return $?
+    catchEnvironment "$handler" git push || return $?
     statusMessage decorate success "Documentation committed"
   else
     decorate info "Branch $branch is unchanged"
@@ -145,7 +145,7 @@ _buildDocumentationGenerateEnvironment() {
     __dumpNameValue BUILD_COMPANY_LINK "$2"
 
     __dumpNameValue year "$(date +%Y)"
-  } >>"$envFile" || __throwEnvironment "$handler" "Saving to $envFile failed" || return $?
+  } >>"$envFile" || returnThrowEnvironment "$handler" "Saving to $envFile failed" || return $?
   printf "%s\n" "$envFile"
 }
 
@@ -160,14 +160,14 @@ __documentationUnlinked() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
     --debug) dd+=("$argument") ;;
     *)
       # _IDENTICAL_ argumentUnknownHandler 1
-      __throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
+      returnThrowArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
       ;;
     esac
     shift
@@ -175,9 +175,9 @@ __documentationUnlinked() {
 
   local cacheDirectory
 
-  cacheDirectory="$(__catch "$handler" documentationBuildCache)" || return $?
+  cacheDirectory="$(returnCatch "$handler" documentationBuildCache)" || return $?
 
-  __catch "$handler" _documentationIndexUnlinkedFunctions "$cacheDirectory" "${dd[@]+"${dd[@]}"}" || return $?
+  returnCatch "$handler" _documentationIndexUnlinkedFunctions "$cacheDirectory" "${dd[@]+"${dd[@]}"}" || return $?
 }
 
 # See: bashDocumentFunction
@@ -201,16 +201,16 @@ _bashDocumentation_Template() {
   local handler="$1" && shift
   local template="$1" && shift
 
-  [ -f "$template" ] || __throwArgument "$handler" "Template $template not found" || return $?
+  [ -f "$template" ] || returnThrowArgument "$handler" "Template $template not found" || return $?
   set +m
   (
     # subshell this does not affect anything except these commands
     set -a
     while [ $# -gt 0 ]; do
       local envFile="$1"
-      [ -f "$envFile" ] || __throwArgument "$handler" "Settings file $envFile not found" || return $?
+      [ -f "$envFile" ] || returnThrowArgument "$handler" "Settings file $envFile not found" || return $?
       # shellcheck source=/dev/null
-      source "$envFile" || __throwEnvironment "$handler" "SOURCE $envFile Failed: $(dumpPipe "Template envFile failed" <"$envFile")" || return $?
+      source "$envFile" || returnThrowEnvironment "$handler" "SOURCE $envFile Failed: $(dumpPipe "Template envFile failed" <"$envFile")" || return $?
       shift
     done
     while read -r token; do
@@ -223,7 +223,7 @@ _bashDocumentation_Template() {
       fi
     done < <(mapTokens <"$template" | sort -u)
     mapEnvironment <"$template" | grepSafe -E -v '^shellcheck|# shellcheck' | markdown_removeUnfinishedSections || :
-  ) || __throwEnvironment "$handler" "_bashDocumentation_Template failed: ${saved[*]}" || return $?
+  ) || returnThrowEnvironment "$handler" "_bashDocumentation_Template failed: ${saved[*]}" || return $?
 }
 
 # Formats arguments for markdown

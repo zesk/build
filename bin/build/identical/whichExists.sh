@@ -14,15 +14,15 @@
 # Argument: --help - Optional. Flag. Display this help.
 # Return Code: 0 - If all values are found
 # Return Code: 1 - If any value is not found
-# Requires: __throwArgument which decorate __decorateExtensionEach
+# Requires: returnThrowArgument which decorate __decorateExtensionEach
 whichExists() {
   local handler="_${FUNCNAME[0]}"
   local __saved=("$@") __count=$# anyFlag=false
-  [ $# -gt 0 ] || __throwArgument "$handler" "no arguments" || return $?
+  [ $# -gt 0 ] || returnThrowArgument "$handler" "no arguments" || return $?
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;

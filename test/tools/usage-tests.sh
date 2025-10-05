@@ -7,14 +7,14 @@ testUsageTemplate() {
   local handler="returnMessage"
   local home
 
-  home="$(__catch "$handler" buildHome)" || return $?
+  home="$(returnCatch "$handler" buildHome)" || return $?
 
   # Loads __usageTemplate
   assertExitCode 0 usageDocument --help || return $?
 
   # Now test internals
   local output
-  output=$(__usageTemplate testThatFunction "--one thing^Required. String. Thing."$'\n'"--another thing^Optional. Integer. Another thing." "^" "Makes the world a better place" 0 | stripAnsi) || __throwEnvironment "$handler" "usageTemplate failed" || return $?
+  output=$(__usageTemplate testThatFunction "--one thing^Required. String. Thing."$'\n'"--another thing^Optional. Integer. Another thing." "^" "Makes the world a better place" 0 | stripAnsi) || returnThrowEnvironment "$handler" "usageTemplate failed" || return $?
   assertEquals "$output" "$(cat "$home/test/example/usageTemplateSimple.txt")" || return $?
 }
 
@@ -24,10 +24,10 @@ testUsageFunctions() {
   match=$(randomString)
   assertExitCode --stderr-match "$match" 1 returnEnvironment "$match" || return $?
   assertExitCode --stderr-match "$match" 2 returnArgument "$match" || return $?
-  assertExitCode --stderr-match "$match" 1 __throwEnvironment returnMessage "$match" || return $?
-  assertExitCode --stderr-match "$match" 2 __throwArgument returnMessage "$match" || return $?
-  assertExitCode --stderr-match "$match" 1 __catchEnvironment returnMessage returnMessage 99 "$match" || return $?
-  assertExitCode --stderr-match "$match" 2 __catchArgument returnMessage returnMessage 99 "$match" || return $?
+  assertExitCode --stderr-match "$match" 1 returnThrowEnvironment returnMessage "$match" || return $?
+  assertExitCode --stderr-match "$match" 2 returnThrowArgument returnMessage "$match" || return $?
+  assertExitCode --stderr-match "$match" 1 catchEnvironment returnMessage returnMessage 99 "$match" || return $?
+  assertExitCode --stderr-match "$match" 2 catchArgument returnMessage returnMessage 99 "$match" || return $?
 }
 
 __sampleArgs() {
@@ -47,7 +47,7 @@ testUsageArguments1() {
 
   assertEquals " --name --thing thing [ --value name ]" "$(cat "$results")" || return $?
 
-  __catchEnvironment "$handler" rm "$results" || return $?
+  catchEnvironment "$handler" rm "$results" || return $?
 }
 
 __testUsageArgumentsFile() {
@@ -143,7 +143,7 @@ testUsageArgumentFunctions() {
 
   _testUsageArgumentHelperFail usageArgumentPositiveInteger "${intTests[@]}" -1.0 1.0 1d2 jq '9123-' what 0 || return $?
 
-  __catchEnvironment "$handler" rm -f "$TEST_USAGE" || return $?
+  catchEnvironment "$handler" rm -f "$TEST_USAGE" || return $?
 
   unset TEST_USAGE
 }

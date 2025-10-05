@@ -22,14 +22,14 @@ __identicalCheck() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
     # _IDENTICAL_ handlerHandler 1
     --handler) shift && handler=$(usageArgumentFunction "$handler" "$argument" "${1-}") || return $? ;;
     --watch)
-      __catch "$handler" identicalWatch "${__saved[@]}" && return $? || return $?
+      returnCatch "$handler" identicalWatch "${__saved[@]}" && return $? || return $?
       ;;
     --no-map)
       mapFile=false
@@ -85,7 +85,7 @@ __identicalCheck() {
       ;;
     --exclude)
       shift
-      [ -n "$1" ] || __throwArgument "$handler" "Empty $(decorate code "$argument") argument" || return $?
+      [ -n "$1" ] || returnThrowArgument "$handler" "Empty $(decorate code "$argument") argument" || return $?
       excludes+=(! -path "$1")
       ;;
     --cache) shift && tempDirectory=$(usageArgumentDirectory "$handler" "$argument" "${1-}") || return $? ;;
@@ -98,14 +98,14 @@ __identicalCheck() {
       ;;
     *)
       # _IDENTICAL_ argumentUnknownHandler 1
-      __throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
+      returnThrowArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
       ;;
     esac
     shift
   done
 
-  [ ${#findArgs[@]} -gt 0 ] || __throwArgument "$handler" "Need to specify at least one --extension" || return $?
-  [ ${#prefixes[@]} -gt 0 ] || __throwArgument "$handler" "Need to specify at least one prefix (Try --prefix '# IDENTICAL')" || return $?
+  [ ${#findArgs[@]} -gt 0 ] || returnThrowArgument "$handler" "Need to specify at least one --extension" || return $?
+  [ ${#prefixes[@]} -gt 0 ] || returnThrowArgument "$handler" "Need to specify at least one prefix (Try --prefix '# IDENTICAL')" || return $?
 
   local start failureCode exitCode=0 clean=()
 
@@ -113,7 +113,7 @@ __identicalCheck() {
   start=$(timingStart) || return $?
   failureCode="$(returnCode identical)"
 
-  rootDir=$(__catchEnvironment "$handler" realPath "$rootDir") || return $?
+  rootDir=$(catchEnvironment "$handler" realPath "$rootDir") || return $?
   local resultsFile searchFileList clean=()
 
   if [ -z "$tempDirectory" ]; then
@@ -122,19 +122,19 @@ __identicalCheck() {
   fi
   local resultsFile="$tempDirectory/results" searchFileList="$tempDirectory/searchFileList"
 
-  __catchEnvironment "$handler" touch "$resultsFile" "$searchFileList" || return $?
+  catchEnvironment "$handler" touch "$resultsFile" "$searchFileList" || return $?
   $debug || clean+=("$searchFileList")
 
   # ! $debug || decorate info "$LINENO: Generate search files"
   # ! $debug || decorate each quote __identicalCheckGenerateSearchFiles "$handler" "${repairSources[@]+"${repairSources[@]}"}" -- "$rootDir" "${findArgs[@]}" ! -path "*/.*/*" "${excludes[@]+${excludes[@]}}"
   __identicalCheckGenerateSearchFiles "$handler" "$rootDir" "${repairSources[@]+"${repairSources[@]}"}" -- \( "${findArgs[@]}" \) ! -path "*/.*/*" "${excludes[@]+${excludes[@]}}" >"$searchFileList" || returnClean $? "${clean[@]}" || return $?
   if [ ! -s "$searchFileList" ]; then
-    __throwEnvironment "$handler" "No files found in $(decorate file "$rootDir") with${extensionText}" || returnClean $? "${clean[@]}" || return $?
+    returnThrowEnvironment "$handler" "No files found in $(decorate file "$rootDir") with${extensionText}" || returnClean $? "${clean[@]}" || return $?
   fi
   clean+=("$searchFileList.smaller")
   if [ "${#tokens[@]}" -gt 0 ]; then
     xargs grep -l -E "($(listJoin '|' "${escapedTokens[@]}"))" <"$searchFileList" >"$searchFileList.smaller" || returnClean $? "${clean[@]}" || return $?
-    __catchEnvironment "$handler" mv "$searchFileList.smaller" "$searchFileList" || returnClean $? "${clean[@]}" || return $?
+    catchEnvironment "$handler" mv "$searchFileList.smaller" "$searchFileList" || returnClean $? "${clean[@]}" || return $?
   fi
   ! $debug || dumpPipe "searchFileList" <"$searchFileList" || returnClean $? "${clean[@]}" || return $?
 
@@ -144,22 +144,22 @@ __identicalCheck() {
 
   # Write strings to state
   for variable in tempDirectory resultsFile rootDir failureCode searchFileList mapFile; do
-    __catch "$handler" environmentValueWrite "$variable" "${!variable}" >>"$stateFile" || returnClean $? "${clean[@]}" || return $?
+    returnCatch "$handler" environmentValueWrite "$variable" "${!variable}" >>"$stateFile" || returnClean $? "${clean[@]}" || return $?
   done
   # Line exists here largely so $mapFile is "used"
-  __catch "$handler" environmentValueWrite "mapFile" "$mapFile" >>"$stateFile" || returnClean $? "${clean[@]}" || return $?
+  returnCatch "$handler" environmentValueWrite "mapFile" "$mapFile" >>"$stateFile" || returnClean $? "${clean[@]}" || return $?
 
   # Write array values to state
-  __catch "$handler" environmentValueWriteArray "repairSources" "${repairSources[@]+"${repairSources[@]}"}" >>"$stateFile" || returnClean $? "${clean[@]}" || return $?
-  __catch "$handler" environmentValueWriteArray "prefixes" "${prefixes[@]+"${prefixes[@]}"}" >>"$stateFile" || returnClean $? "${clean[@]}" || return $?
-  __catch "$handler" environmentValueWriteArray "skipFiles" "${skipFiles[@]+"${skipFiles[@]}"}" >>"$stateFile" || returnClean $? "${clean[@]}" || return $?
-  __catch "$handler" environmentValueWriteArray "singles" "${singles[@]+"${singles[@]}"}" >>"$stateFile" || returnClean $? "${clean[@]}" || return $?
-  __catch "$handler" environmentValueWriteArray "tokens" "${tokens[@]+"${tokens[@]}"}" >>"$stateFile" || returnClean $? "${clean[@]}" || return $?
+  returnCatch "$handler" environmentValueWriteArray "repairSources" "${repairSources[@]+"${repairSources[@]}"}" >>"$stateFile" || returnClean $? "${clean[@]}" || return $?
+  returnCatch "$handler" environmentValueWriteArray "prefixes" "${prefixes[@]+"${prefixes[@]}"}" >>"$stateFile" || returnClean $? "${clean[@]}" || return $?
+  returnCatch "$handler" environmentValueWriteArray "skipFiles" "${skipFiles[@]+"${skipFiles[@]}"}" >>"$stateFile" || returnClean $? "${clean[@]}" || return $?
+  returnCatch "$handler" environmentValueWriteArray "singles" "${singles[@]+"${singles[@]}"}" >>"$stateFile" || returnClean $? "${clean[@]}" || return $?
+  returnCatch "$handler" environmentValueWriteArray "tokens" "${tokens[@]+"${tokens[@]}"}" >>"$stateFile" || returnClean $? "${clean[@]}" || return $?
 
   local __line=1 searchFile
 
   while read -r searchFile; do
-    [ -f "$searchFile" ] || __throwEnvironment "$handler" "Invalid searchFileList $searchFileList line $__line: $(decorate file "$searchFile")"
+    [ -f "$searchFile" ] || returnThrowEnvironment "$handler" "Invalid searchFileList $searchFileList line $__line: $(decorate file "$searchFile")"
     if [ "${#skipFiles[@]}" -gt 0 ] && inArray "$searchFile" "${skipFiles[@]}"; then
       statusMessage decorate notice "Skipping $(decorate file "$searchFile")" || returnClean $? "${clean[@]}" || return $?
       continue
@@ -173,12 +173,12 @@ __identicalCheck() {
 
   if [ "$exitCode" -ne 0 ]; then
     local badFiles=() item
-    while read -r item; do badFiles+=("$item"); done < <(__catch "$handler" environmentValueReadArray "$stateFile" "badFiles") || return $?
+    while read -r item; do badFiles+=("$item"); done < <(returnCatch "$handler" environmentValueReadArray "$stateFile" "badFiles") || return $?
 
     if [ ${#badFiles[@]} -gt 0 ]; then
       exitCode=$failureCode
       if [ -n "$binary" ]; then
-        __catchEnvironment "$handler" "$binary" "${badFiles[@]}" || :
+        catchEnvironment "$handler" "$binary" "${badFiles[@]}" || :
         statusMessage --last printf -- "%s %s %s %s" "$(decorate success "Sent")" "$(pluralWord ${#badFiles[@]} file)" "$(decorate success "to")" "$(decorate code "$binary")"
       fi
     fi
@@ -199,7 +199,7 @@ __identicalCheck() {
   fi
   fileIsEmpty "$resultsFile" || cat "$resultsFile" 1>&2
   rm -rf "$resultsFile" "$searchFileList"
-  __catchEnvironment "$handler" rm -rf "${clean[@]}" || return $?
+  catchEnvironment "$handler" rm -rf "${clean[@]}" || return $?
   statusMessage --last timingReport "$start" "Completed in"
   return "$exitCode"
 }

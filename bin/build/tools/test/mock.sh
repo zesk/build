@@ -51,7 +51,7 @@ mockEnvironmentStop() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -83,9 +83,9 @@ mockConsoleAnimationStart() {
   local handler="_${FUNCNAME[0]}" flag
 
   flag=$(usageArgumentBoolean "$handler" "flag" "${1-}") || return $?
-  __catch "$handler" mockEnvironmentStart CI || return $?
+  returnCatch "$handler" mockEnvironmentStart CI || return $?
   export CI
-  CI="$(_choose "$flag" "" "testCI")"
+  CI="$(booleanChoose "$flag" "" "testCI")"
 }
 _mockConsoleAnimationStart() {
   # __IDENTICAL__ usageDocument 1

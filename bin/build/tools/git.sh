@@ -69,9 +69,9 @@ gitEnsureSafeDirectory() {
   local handler="_${FUNCNAME[0]}"
   while [ $# -gt 0 ]; do
     [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
-    [ -d "$1" ] || __throwArgument "$handler" "$1 is not a directory" || return $?
+    [ -d "$1" ] || returnThrowArgument "$handler" "$1 is not a directory" || return $?
     if ! git config --global --get safe.directory | grep -q "$1"; then
-      __catchEnvironment "$handler" git config --global --add safe.directory "$1" || return $?
+      catchEnvironment "$handler" git config --global --add safe.directory "$1" || return $?
     fi
     shift
   done
@@ -94,22 +94,22 @@ gitTagDelete() {
   local exitCode=0
   export GIT_REMOTE
 
-  __catch "$handler" buildEnvironmentLoad GIT_REMOTE || return $?
+  returnCatch "$handler" buildEnvironmentLoad GIT_REMOTE || return $?
   usageRequireEnvironment "$handler" GIT_REMOTE || return $?
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
     *)
       # Deleting local tag
-      __catchArgument "$handler" git tag -d "$argument" || exitCode=$?
+      catchArgument "$handler" git tag -d "$argument" || exitCode=$?
       # Deleting remote tag
-      __catchArgument "$handler" git push "$GIT_REMOTE" :"$argument" || exitCode=$?
+      catchArgument "$handler" git push "$GIT_REMOTE" :"$argument" || exitCode=$?
       ;;
     esac
     shift
@@ -131,14 +131,14 @@ _gitTagDelete() {
 gitTagAgain() {
   local handler="_${FUNCNAME[0]}" a=("$@")
 
-  [ $# -gt 0 ] || __throwArgument "$handler" "No arguments" || return $?
+  [ $# -gt 0 ] || returnThrowArgument "$handler" "No arguments" || return $?
   while [ $# -gt 0 ]; do
     [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
     statusMessage decorate info "Deleting tag $1 ..."
-    __catchArgument "$handler" gitTagDelete "$1" || return $?
+    catchArgument "$handler" gitTagDelete "$1" || return $?
     statusMessage decorate info "Tagging again $1 ..."
-    __catchArgument "$handler" git tag "$1" || return $?
-    __catchArgument "$handler" git push --tags || return $?
+    catchArgument "$handler" git tag "$1" || return $?
+    catchArgument "$handler" git push --tags || return $?
   done
   statusMessage --last decorate info "All tags completed" "$(decorate orange "${a[@]}")"
 }
@@ -158,8 +158,8 @@ _gitTagAgain() {
 gitVersionList() {
   local handler="_${FUNCNAME[0]}"
   [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
-  [ -d "./.git" ] || __throwEnvironment "$handler" "No .git directory at $(pwd), stopping" || return $?
-  __catchEnvironment "$handler" git tag | grep -e '^v[0-9.]*$' | versionSort "$@" || return $?
+  [ -d "./.git" ] || returnThrowEnvironment "$handler" "No .git directory at $(pwd), stopping" || return $?
+  catchEnvironment "$handler" git tag | grep -e '^v[0-9.]*$' | versionSort "$@" || return $?
 }
 _gitVersionList() {
   # __IDENTICAL__ usageDocument 1
@@ -197,11 +197,11 @@ veeGitTag() {
   local tagName
   tagName=$(usageArgumentString "$handler" "tagName" "${1-}") || return $?
 
-  [ "$tagName" = "${tagName#v}" ] || __throwArgument "$handler" "already v'd': $(decorate value "$tagName")" || return $?
-  __catchEnvironment "$handler" git tag "v$tagName" "$tagName" || return $?
-  __catchEnvironment "$handler" git tag -d "$tagName" || return $?
-  __catchEnvironment "$handler" git push origin "v$tagName" ":$tagName" || return $?
-  __catchEnvironment "$handler" git fetch -q --prune --prune-tags || return $?
+  [ "$tagName" = "${tagName#v}" ] || returnThrowArgument "$handler" "already v'd': $(decorate value "$tagName")" || return $?
+  catchEnvironment "$handler" git tag "v$tagName" "$tagName" || return $?
+  catchEnvironment "$handler" git tag -d "$tagName" || return $?
+  catchEnvironment "$handler" git push origin "v$tagName" ":$tagName" || return $?
+  catchEnvironment "$handler" git fetch -q --prune --prune-tags || return $?
 }
 _veeGitTag() {
   # __IDENTICAL__ usageDocument 1
@@ -316,7 +316,7 @@ gitRemoteHosts() {
   [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
   local remoteUrl host
   while read -r remoteUrl; do
-    host=$(urlParseItem host "$remoteUrl") || host=$(urlParseItem host "git://$remoteUrl") || __throwArgument "$handler" "Unable to extract host from \"$remoteUrl\"" || return $?
+    host=$(urlParseItem host "$remoteUrl") || host=$(urlParseItem host "git://$remoteUrl") || returnThrowArgument "$handler" "Unable to extract host from \"$remoteUrl\"" || return $?
     printf -- "%s\n" "$host"
   done < <(git remote -v | awk '{ print $2 }')
 }
@@ -345,7 +345,7 @@ gitTagVersion() {
   local handler="_${FUNCNAME[0]}"
   local maximumTagsPerVersion
 
-  __catch "$handler" buildEnvironmentLoad BUILD_MAXIMUM_TAGS_PER_VERSION || return $?
+  returnCatch "$handler" buildEnvironmentLoad BUILD_MAXIMUM_TAGS_PER_VERSION || return $?
 
   maximumTagsPerVersion="$BUILD_MAXIMUM_TAGS_PER_VERSION"
   local init start versionSuffix
@@ -359,35 +359,35 @@ gitTagVersion() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
     --suffix)
-      shift || __throwArgument "$handler" "missing $argument argument" || return $?
+      shift || returnThrowArgument "$handler" "missing $argument argument" || return $?
       versionSuffix="${1-}"
-      [ -n "$versionSuffix" ] || __throwArgument "$handler" "Blank $argument argument" || return $?
+      [ -n "$versionSuffix" ] || returnThrowArgument "$handler" "Blank $argument argument" || return $?
       ;;
     *)
       # _IDENTICAL_ argumentUnknownHandler 1
-      __throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
+      returnThrowArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
       ;;
     esac
-    shift || __throwArgument "$handler" "shift $argument" || return $?
+    shift || returnThrowArgument "$handler" "shift $argument" || return $?
   done
 
   statusMessage decorate info "Pulling tags from origin "
-  __catchEnvironment "$handler" git pull --tags origin >/dev/null || return $?
+  catchEnvironment "$handler" git pull --tags origin >/dev/null || return $?
   statusMessage timingReport "$start" "Pulled tags in"
 
   statusMessage decorate info "Pulling tags from origin "
-  __catchEnvironment "$handler" git pull --tags origin >/dev/null || return $?
+  catchEnvironment "$handler" git pull --tags origin >/dev/null || return $?
   statusMessage timingReport "$start" "Pulled tags in"
 
   local currentVersion previousVersion releaseNotes
   local tagPrefix index tryVersion
 
-  currentVersion=$(__catchEnvironment "$handler" hookRun version-current) || return $?
+  currentVersion=$(catchEnvironment "$handler" hookRun version-current) || return $?
   if ! previousVersion=$(gitVersionLast "$currentVersion"); then
     previousVersion="none"
   fi
@@ -404,7 +404,7 @@ gitTagVersion() {
     "$(decorate label "Previous version is: ")" "$(decorate value "$previousVersion")" \
     "$(decorate label " Release version is: ")" "$(decorate value "$currentVersion")"
 
-  releaseNotes="$(releaseNotes "$currentVersion")" || __throwEnvironment "$handler" "releaseNotes $currentVersion failed" || return $?
+  releaseNotes="$(releaseNotes "$currentVersion")" || returnThrowEnvironment "$handler" "releaseNotes $currentVersion failed" || return $?
 
   if [ ! -f "$releaseNotes" ]; then
     decorate error "Version $currentVersion no release notes \"$releaseNotes\" found, stopping." 1>&2
@@ -418,7 +418,7 @@ gitTagVersion() {
   # rc is for release candidate
   versionSuffix=${versionSuffix:-${BUILD_VERSION_SUFFIX:-rc}}
   tagPrefix="${currentVersion}${versionSuffix}"
-  __catchEnvironment "$handler" git show-ref --tags | removeFields 1 | __catchEnvironment "$handler" muzzle tee -a "$tagFile" || returnClean $? "${clean[@]}" || return $?
+  catchEnvironment "$handler" git show-ref --tags | removeFields 1 | catchEnvironment "$handler" muzzle tee -a "$tagFile" || returnClean $? "${clean[@]}" || return $?
   index=0
   while true; do
     tryVersion="$tagPrefix$index"
@@ -426,16 +426,16 @@ gitTagVersion() {
       break
     fi
     index=$((index + 1))
-    [ $index -lt "$maximumTagsPerVersion" ] || __throwEnvironment "$handler" "Tag version exceeded maximum of $maximumTagsPerVersion" || returnClean $? "${clean[@]}" || return $?
+    [ $index -lt "$maximumTagsPerVersion" ] || returnThrowEnvironment "$handler" "Tag version exceeded maximum of $maximumTagsPerVersion" || returnClean $? "${clean[@]}" || return $?
   done
-  __catchEnvironment "$handler" rm -rf "${clean[@]}" || return $?
+  catchEnvironment "$handler" rm -rf "${clean[@]}" || return $?
 
   statusMessage decorate info "Tagging version $(decorate code "$tryVersion") ... " || return $?
-  __catchEnvironment "$handler" git tag "$tryVersion" || return $?
+  catchEnvironment "$handler" git tag "$tryVersion" || return $?
   statusMessage decorate info "Pushing version $(decorate code "$tryVersion") ... " || return $?
-  __catchEnvironment "$handler" git push --tags --quiet || return $?
+  catchEnvironment "$handler" git push --tags --quiet || return $?
   statusMessage decorate info "Fetching version $(decorate code "$tryVersion") ... " || return $?
-  __catchEnvironment "$handler" git fetch -q || return $?
+  catchEnvironment "$handler" git fetch -q || return $?
   statusMessage --last timingReport "$init" "Tagged version completed in" || return $?
 }
 _gitTagVersion() {
@@ -480,7 +480,7 @@ gitCommit() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -506,7 +506,7 @@ gitCommit() {
   done
 
   if ! isBoolean "$openLinks"; then
-    openLinks=$(__catch "$handler" buildEnvironmentGet GIT_OPEN_LINKS) || return $?
+    openLinks=$(returnCatch "$handler" buildEnvironmentGet GIT_OPEN_LINKS) || return $?
   fi
   isBoolean "$openLinks" || openLinks=false
 
@@ -516,19 +516,19 @@ gitCommit() {
   fi
 
   local start
-  start="$(pwd -P 2>/dev/null)" || __throwEnvironment "$handler" "Failed to get pwd" || return $?
+  start="$(pwd -P 2>/dev/null)" || returnThrowEnvironment "$handler" "Failed to get pwd" || return $?
   if [ -z "$home" ]; then
-    home=$(gitFindHome "$start") || __throwEnvironment "$handler" "Unable to find git home" || return $?
+    home=$(gitFindHome "$start") || returnThrowEnvironment "$handler" "Unable to find git home" || return $?
     buildEnvironmentContext "$home" gitCommit --home "$home" "${__saved[@]+"${__saved[@]}"}" || return $?
     return 0
   fi
-  __catchEnvironment "$handler" cd "$home" || return $?
-  gitRepositoryChanged || __throwEnvironment "$handler" "No changes to commit" || return $?
+  catchEnvironment "$handler" cd "$home" || return $?
+  gitRepositoryChanged || returnThrowEnvironment "$handler" "No changes to commit" || return $?
   local notes
-  notes="$(releaseNotes)" || __throwEnvironment "$handler" "No releaseNotes?" || return $?
+  notes="$(releaseNotes)" || returnThrowEnvironment "$handler" "No releaseNotes?" || return $?
   if $updateReleaseNotes && [ -n "$comment" ]; then
     statusMessage decorate info "Updating release notes ..."
-    __catch "$handler" __gitCommitReleaseNotesUpdate "$handler" "$notes" "$comment" || return $?
+    returnCatch "$handler" __gitCommitReleaseNotesUpdate "$handler" "$notes" "$comment" || return $?
   elif [ -z "$comment" ]; then
     comment=$(__gitCommitReleaseNotesGetLastComment "$handler" "$notes") || return $?
     [ -z "$comment" ] || printf -- "%s %s:\n%s\n" "$(decorate info "Using last release note line from")" "$(decorate file "$notes")" "$(boxedHeading "$comment")"
@@ -537,31 +537,31 @@ gitCommit() {
   ! $openLinks || outputHandler="urlOpener"
   if $appendLast || [ -z "$comment" ]; then
     statusMessage decorate info "Using last commit message ... ($(decorate subtle "$outputHandler"))"
-    __catchEnvironment "$handler" git commit --reuse-message=HEAD --reset-author -a 2>&1 | "$outputHandler" || return $?
+    catchEnvironment "$handler" git commit --reuse-message=HEAD --reset-author -a 2>&1 | "$outputHandler" || return $?
   else
     statusMessage decorate info "Using commit comment \"$comment\" ... ($(decorate subtle "$outputHandler"))"
-    __catchEnvironment "$handler" git commit -a -m "$comment" 2>&1 | "$outputHandler" || return $?
+    catchEnvironment "$handler" git commit -a -m "$comment" 2>&1 | "$outputHandler" || return $?
   fi
-  __catchEnvironment "$handler" cd "$start" || return $?
+  catchEnvironment "$handler" cd "$start" || return $?
   return 0
 }
 __gitCommitReleaseNotesUpdate() {
   local handler="$1" notes="$2" comment="$3"
   local pattern
 
-  home=$(__catch "$handler" buildHome) || return $?
+  home=$(returnCatch "$handler" buildHome) || return $?
   pattern="$(quoteGrepPattern "$comment")"
-  __catchEnvironment "$handler" statusMessage --last printf -- "%s%s\n" "$(lineFill '.' "$(decorate label "Release notes") $(decorate file "$notes") $(decorate decoration --)")" "$(decorate reset --)" || return $?
+  catchEnvironment "$handler" statusMessage --last printf -- "%s%s\n" "$(lineFill '.' "$(decorate label "Release notes") $(decorate file "$notes") $(decorate decoration --)")" "$(decorate reset --)" || return $?
   if ! grep -q -e "$pattern" "$notes"; then
     local prefix=""
     fileEndsWithNewline "$notes" || prefix=$'\n'
-    __catchEnvironment "$handler" printf -- "%s%s %s\n" "$prefix" "-" "$comment" >>"$notes" || return $?
+    catchEnvironment "$handler" printf -- "%s%s %s\n" "$prefix" "-" "$comment" >>"$notes" || return $?
     printf -- "%s %s:\n%s\n" "$(decorate info "Adding comment to")" "$(decorate file "$notes")" "$(boxedHeading "$comment")"
-    __catchEnvironment "$handler" git add "$notes" || return $?
-    __catchEnvironment "$handler" grep -B 10 -e "$pattern" "$notes" | decorate code || return $?
+    catchEnvironment "$handler" git add "$notes" || return $?
+    catchEnvironment "$handler" grep -B 10 -e "$pattern" "$notes" | decorate code || return $?
   else
-    __catchEnvironment "$handler" statusMessage printf -- "%s %s:\n" "$(decorate info "Comment already added to")" "$(decorate code "$notes")" || return $?
-    __catchEnvironment "$handler" grep -q -e "$pattern" "$notes" | decorate code || return $?
+    catchEnvironment "$handler" statusMessage printf -- "%s %s:\n" "$(decorate info "Comment already added to")" "$(decorate code "$notes")" || return $?
+    catchEnvironment "$handler" grep -q -e "$pattern" "$notes" | decorate code || return $?
   fi
 }
 __gitCommitReleaseNotesGetLastComment() {
@@ -595,7 +595,7 @@ gitMainly() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -608,20 +608,20 @@ gitMainly() {
       ;;
     *)
       # _IDENTICAL_ argumentUnknownHandler 1
-      __throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
+      returnThrowArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
       ;;
     esac
-    shift || __throwArgument "$handler" "missing argument $(decorate label "$argument")" || return $?
+    shift || returnThrowArgument "$handler" "missing argument $(decorate label "$argument")" || return $?
   done
 
   errorLog=$(fileTemporaryName "$handler") || return $?
   branch=$(git rev-parse --abbrev-ref HEAD) || returnEnvironment "Git not present" || return $?
   case "$branch" in
   main | staging)
-    __throwEnvironment "$handler" "Already in branch $(decorate code "$branch")" || return $?
+    returnThrowEnvironment "$handler" "Already in branch $(decorate code "$branch")" || return $?
     ;;
   HEAD)
-    __throwEnvironment "$handler" "Ignore branches named $(decorate code "$branch")" || return $?
+    returnThrowEnvironment "$handler" "Ignore branches named $(decorate code "$branch")" || return $?
     ;;
   *)
     returnCode=0
@@ -630,11 +630,11 @@ gitMainly() {
       if ! git checkout "$updateOther" >"$errorLog" 2>&1; then
         printf -- "%s %s\n" "$(decorate error "Unable to checkout branch")" "$(decorate code "$updateOther")" 1>&2
         returnCode=1
-        __catchEnvironment "$handler" git status -s || :
+        catchEnvironment "$handler" git status -s || :
         break
       else
         ! $verboseFlag || decorate info git pull "# ($updateOther)"
-        if ! __catchEnvironment "$handler" git pull "$remote" "$updateOther" >"$errorLog" 2>&1; then
+        if ! catchEnvironment "$handler" git pull "$remote" "$updateOther" >"$errorLog" 2>&1; then
           printf -- "%s %s\n" "$(decorate error "Unable to pull branch")" "$(decorate code "$updateOther")" 1>&2
           ! $verboseFlag || dumpPipe errors <"$errorLog"
           returnCode=1
@@ -643,18 +643,18 @@ gitMainly() {
       fi
     done
     if [ "$returnCode" -ne 0 ]; then
-      __catchEnvironment "$handler" git checkout -f "$branch" || :
+      catchEnvironment "$handler" git checkout -f "$branch" || :
       rm -rf "$errorLog"
       return "$returnCode"
     fi
     ! $verboseFlag || decorate info git checkout "$branch"
-    if ! __catchEnvironment "$handler" git checkout "$branch" >"$errorLog" 2>&1; then
+    if ! catchEnvironment "$handler" git checkout "$branch" >"$errorLog" 2>&1; then
       printf -- "%s %s\n" "$(decorate error "Unable to switch BACK to branch")" "$(decorate code "$updateOther")" 1>&2
       rm -rf "$errorLog"
       return 1
     fi
     ! $verboseFlag || decorate info git merge -m
-    __catchEnvironment "$handler" muzzle git merge -m "Merging staging and main with $branch" origin/staging origin/main || return $?
+    catchEnvironment "$handler" muzzle git merge -m "Merging staging and main with $branch" origin/staging origin/main || return $?
     if grep -q 'Already' "$errorLog"; then
       printf -- "%s %s\n" "$(decorate info "Already up to date")" "$(decorate code "$branch")"
     else
@@ -673,7 +673,7 @@ _gitMainly() {
 gitCommitHash() {
   local handler="_${FUNCNAME[0]}"
   [ $# -eq 0 ] || __help --only "$handler" "$@" || return "$(convertValue $? 1 0)"
-  __catchEnvironment "$handler" git rev-parse --short HEAD || return $?
+  catchEnvironment "$handler" git rev-parse --short HEAD || return $?
 }
 _gitCommitHash() {
   # __IDENTICAL__ usageDocument 1
@@ -687,7 +687,7 @@ gitCurrentBranch() {
   local handler="_${FUNCNAME[0]}"
   [ $# -eq 0 ] || __help --only "$handler" "$@" || return "$(convertValue $? 1 0)"
   # git rev-parse --abbrev-ref HEAD
-  __catchEnvironment "$handler" git symbolic-ref --short HEAD || return $?
+  catchEnvironment "$handler" git symbolic-ref --short HEAD || return $?
 }
 _gitCurrentBranch() {
   # __IDENTICAL__ usageDocument 1
@@ -701,7 +701,7 @@ gitHasAnyRefs() {
   [ $# -eq 0 ] || __help --only "$handler" "$@" || return "$(convertValue $? 1 0)"
   local count
 
-  count=$(__catchEnvironment "$handler" git show-ref | grep -c refs/tags) || return $?
+  count=$(catchEnvironment "$handler" git show-ref | grep -c refs/tags) || return $?
   [ $((0 + count)) -gt 0 ]
 }
 _gitHasAnyRefs() {
@@ -754,7 +754,7 @@ gitInstallHooks() {
   local handler="_${FUNCNAME[0]}"
   local types home
 
-  home=$(__catch "$handler" buildHome) || return $?
+  home=$(returnCatch "$handler" buildHome) || return $?
 
   local verbose=false hookNames=()
 
@@ -764,7 +764,7 @@ gitInstallHooks() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -775,7 +775,7 @@ gitInstallHooks() {
       verbose=true
       ;;
     --application)
-      shift || __throwArgument "$handler" "missing $argument argument" || return $?
+      shift || returnThrowArgument "$handler" "missing $argument argument" || return $?
       home=$(usageArgumentDirectory "$handler" "applicationHome" "$1") || return $?
       ;;
     *)
@@ -783,7 +783,7 @@ gitInstallHooks() {
       if inArray "$hook" "${types[@]}"; then
         hookNames+=("$hook")
       else
-        __throwArgument "$handler" "Unknown hook:" "$argument" "Allowed:" "${types[@]}" || return $?
+        returnThrowArgument "$handler" "Unknown hook:" "$argument" "Allowed:" "${types[@]}" || return $?
       fi
       ;;
     esac
@@ -794,7 +794,7 @@ gitInstallHooks() {
   fi
   for hook in "${hookNames[@]}"; do
     if hasHook --application "$home" "git-$hook"; then
-      __catchEnvironment "$handler" gitInstallHook --application "$home" --copy "$hook" || return $?
+      catchEnvironment "$handler" gitInstallHook --application "$home" --copy "$hook" || return $?
       ! $verbose || decorate success "Installed $(decorate value "$hook")" || :
     fi
   done
@@ -827,7 +827,7 @@ gitInstallHook() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -838,16 +838,16 @@ gitInstallHook() {
       verbose=true
       ;;
     --application)
-      shift || __throwArgument "$handler" "missing $argument argument" || return $?
+      shift || returnThrowArgument "$handler" "missing $argument argument" || return $?
       home=$(usageArgumentDirectory "$handler" "applicationHome" "$1") || return $?
       ;;
     *)
       [ "${#types[@]}" -gt 0 ] || read -r -a types < <(gitHookTypes) || :
-      [ -n "$home" ] || home=$(__catch "$handler" buildHome) || return $?
+      [ -n "$home" ] || home=$(returnCatch "$handler" buildHome) || return $?
       if inArray "$argument" "${types[@]}"; then
         local fromTo relFromTo item
-        hasHook --application "$home" "git-$argument" || __throwArgument "$handler" "Hook git-$argument does not exist (Home: $home)" || return $?
-        fromTo=("$(whichHook --application "$home" "git-$argument")" "$home/.git/hooks/$argument") || __throwEnvironment "$handler" "Unable to whichHook git-$argument (Home: $home)" || rewturn $?
+        hasHook --application "$home" "git-$argument" || returnThrowArgument "$handler" "Hook git-$argument does not exist (Home: $home)" || return $?
+        fromTo=("$(whichHook --application "$home" "git-$argument")" "$home/.git/hooks/$argument") || returnThrowEnvironment "$handler" "Unable to whichHook git-$argument (Home: $home)" || rewturn $?
         relFromTo=()
         home="${home%/}/"
         for item in "${fromTo[@]}"; do
@@ -864,11 +864,11 @@ gitInstallHook() {
           ! $verbose || decorate pair 15 "Installing" "${relFromTo[1]}"
         fi
         statusMessage --last printf "%s %s -> %s\n" "$(decorate success "git hook:")" "$(decorate warning "${relFromTo[0]}")" "$(decorate code "${relFromTo[1]}")" || :
-        __catchEnvironment "$handler" cp -f "${fromTo[@]}" || return $?
-        ! $execute || __catchEnvironment "$handler" exec "${fromTo[1]}" "$@" || return $?
+        catchEnvironment "$handler" cp -f "${fromTo[@]}" || return $?
+        ! $execute || catchEnvironment "$handler" exec "${fromTo[1]}" "$@" || return $?
         return 0
       else
-        __throwArgument "$handler" "Unknown hook:" "$argument" "Allowed:" "${types[@]}" || return $?
+        returnThrowArgument "$handler" "Unknown hook:" "$argument" "Allowed:" "${types[@]}" || return $?
       fi
       ;;
     esac
@@ -883,9 +883,9 @@ _gitInstallHook() {
 __gitPreCommitCache() {
   local handler="$1" && shift
   local directory create="${1-}" name
-  name="pre-commit.$(__catchEnvironment "$handler" whoami)" || return $?
-  directory=$(__catch "$handler" buildCacheDirectory "$name") || return $?
-  [ "$create" != "true" ] || [ -d "$directory" ] || __catchEnvironment "$handler" mkdir -p "$directory" || return $?
+  name="pre-commit.$(catchEnvironment "$handler" whoami)" || return $?
+  directory=$(returnCatch "$handler" buildCacheDirectory "$name") || return $?
+  [ "$create" != "true" ] || [ -d "$directory" ] || catchEnvironment "$handler" mkdir -p "$directory" || return $?
   printf "%s\n" "$directory"
 }
 
@@ -896,9 +896,9 @@ gitPreCommitSetup() {
 
   local directory total=0
 
-  directory=$(__catch "$handler" __gitPreCommitCache "$handler" true) || return $?
-  __catchEnvironment "$handler" git diff --name-only --cached --diff-filter=ACMR | __catchEnvironment "$handler" extensionLists --clean "$directory" || return $?
-  total=$(__catch "$handler" fileLineCount "$directory/@") || return $?
+  directory=$(returnCatch "$handler" __gitPreCommitCache "$handler" true) || return $?
+  catchEnvironment "$handler" git diff --name-only --cached --diff-filter=ACMR | catchEnvironment "$handler" extensionLists --clean "$directory" || return $?
+  total=$(returnCatch "$handler" fileLineCount "$directory/@") || return $?
   [ "$total" -ge 0 ]
 }
 _gitPreCommitSetup() {
@@ -913,15 +913,15 @@ gitPreCommitHeader() {
 
   local directory total color
 
-  directory=$(__catch "$handler" __gitPreCommitCache "$handler" true) || return $?
-  [ -f "$directory/@" ] || __throwEnvironment "$handler" "$directory/@ missing" || return $?
-  total=$(__catch "$handler" fileLineCount "$directory/@") || return $?
+  directory=$(returnCatch "$handler" __gitPreCommitCache "$handler" true) || return $?
+  [ -f "$directory/@" ] || returnThrowEnvironment "$handler" "$directory/@ missing" || return $?
+  total=$(returnCatch "$handler" fileLineCount "$directory/@") || return $?
   statusMessage --last printf -- "%s: %s\n" "$(decorate success "$(alignRight "$width" "all")")" "$(decorate info "$total $(plural "$total" file files) changed")"
   while [ $# -gt 0 ]; do
     total=0
     color="warning"
     if [ -f "$directory/$1" ]; then
-      total=$(__catch "$handler" fileLineCount "$directory/$1") || return $?
+      total=$(returnCatch "$handler" fileLineCount "$directory/$1") || return $?
       color="success"
     fi
     # shellcheck disable=SC2015
@@ -938,7 +938,7 @@ _gitPreCommitHeader() {
 gitPreCommitHasExtension() {
   local handler="_${FUNCNAME[0]}"
   local directory
-  directory=$(__catch "$handler" __gitPreCommitCache "$handler" true) || return $?
+  directory=$(returnCatch "$handler" __gitPreCommitCache "$handler" true) || return $?
   while [ $# -gt 0 ]; do
     [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
     [ -f "$directory/$1" ] || return 1
@@ -955,10 +955,10 @@ gitPreCommitListExtension() {
   local handler="_${FUNCNAME[0]}"
   [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
   local directory
-  directory=$(__catch "$handler" __gitPreCommitCache "$handler" true) || return $?
+  directory=$(returnCatch "$handler" __gitPreCommitCache "$handler" true) || return $?
   while [ $# -gt 0 ]; do
-    [ -f "$directory/$1" ] || __throwEnvironment "$handler" "No files with extension $1" || return $?
-    __catchEnvironment "$handler" cat "$directory/$1" || return $?
+    [ -f "$directory/$1" ] || returnThrowEnvironment "$handler" "No files with extension $1" || return $?
+    catchEnvironment "$handler" cat "$directory/$1" || return $?
     shift
   done | sort
 }
@@ -972,8 +972,8 @@ gitPreCommitCleanup() {
   local handler="_${FUNCNAME[0]}"
   [ $# -eq 0 ] || __help --only "$handler" "$@" || return "$(convertValue $? 1 0)"
   local directory
-  directory=$(__catch "$handler" __gitPreCommitCache "$handler") || return $?
-  [ ! -d "$directory" ] || __catchEnvironment "$handler" rm -rf "$directory" || return $?
+  directory=$(returnCatch "$handler" __gitPreCommitCache "$handler") || return $?
+  [ ! -d "$directory" ] || catchEnvironment "$handler" rm -rf "$directory" || return $?
 }
 _gitPreCommitCleanup() {
   # __IDENTICAL__ usageDocument 1
@@ -988,7 +988,7 @@ _gitPreCommitCleanup() {
 gitBranchExists() {
   local handler="_${FUNCNAME[0]}"
 
-  [ $# -gt 0 ] || __throwArgument "$handler" "Requires at least one branch name" || return $?
+  [ $# -gt 0 ] || returnThrowArgument "$handler" "Requires at least one branch name" || return $?
   while [ $# -gt 0 ]; do
     [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
     if ! gitBranchExistsLocal "$1" && ! gitBranchExistsRemote "$1"; then
@@ -1011,10 +1011,10 @@ gitBranchExistsLocal() {
   local handler="_${FUNCNAME[0]}"
   local branch
 
-  [ $# -gt 0 ] || __throwArgument "$handler" "Requires at least one branch name" || return $?
+  [ $# -gt 0 ] || returnThrowArgument "$handler" "Requires at least one branch name" || return $?
   while [ $# -gt 0 ]; do
     [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
-    branch=$(__catchEnvironment "$handler" git branch --list "$1") || return $?
+    branch=$(catchEnvironment "$handler" git branch --list "$1") || return $?
     [ -n "$branch" ] || return 1
     shift
   done
@@ -1035,13 +1035,13 @@ gitBranchExistsRemote() {
 
   export GIT_REMOTE
 
-  __catch "$handler" buildEnvironmentLoad GIT_REMOTE || return $?
-  [ -n "$GIT_REMOTE" ] || __catchEnvironment "$handler" "GIT_REMOTE requires a value" || return $?
+  returnCatch "$handler" buildEnvironmentLoad GIT_REMOTE || return $?
+  [ -n "$GIT_REMOTE" ] || catchEnvironment "$handler" "GIT_REMOTE requires a value" || return $?
 
-  [ $# -gt 0 ] || __throwArgument "$handler" "Requires at least one branch name" || return $?
+  [ $# -gt 0 ] || returnThrowArgument "$handler" "Requires at least one branch name" || return $?
   while [ $# -gt 0 ]; do
     [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
-    branch=$(__catchEnvironment "$handler" git ls-remote --heads "$GIT_REMOTE" "$1") || return $?
+    branch=$(catchEnvironment "$handler" git ls-remote --heads "$GIT_REMOTE" "$1") || return $?
     [ -n "$branch" ] || return 1
     shift
   done
@@ -1068,30 +1068,30 @@ gitBranchify() {
   export GIT_BRANCH_FORMAT GIT_REMOTE
 
   usageRequireBinary "$handler" whoami || return $?
-  __catch "$handler" buildEnvironmentLoad GIT_BRANCH_FORMAT GIT_REMOTE || return $?
-  [ -n "$GIT_REMOTE" ] || __catchEnvironment "$handler" "GIT_REMOTE requires a value" || return $?
+  returnCatch "$handler" buildEnvironmentLoad GIT_BRANCH_FORMAT GIT_REMOTE || return $?
+  [ -n "$GIT_REMOTE" ] || catchEnvironment "$handler" "GIT_REMOTE requires a value" || return $?
 
-  version=$(__catchEnvironment "$handler" hookVersionCurrent) || return $?
-  user=$(__catchEnvironment "$handler" whoami) || return $?
+  version=$(catchEnvironment "$handler" hookVersionCurrent) || return $?
+  user=$(catchEnvironment "$handler" whoami) || return $?
 
   format="${BUILD_BRANCH_FORMAT-}"
   [ -n "$format" ] || format="{version}-{user}"
   branchName="$(version=$version user=$user mapEnvironment < <(printf "%s\n" "$format"))"
-  [ -n "$branchName" ] || __throwEnvironment "$handler" "BUILD_BRANCH_FORMAT=\"$BUILD_BRANCH_FORMAT\" -> \"$format\" made blank branch (user=$user version=$version)" || return $?
+  [ -n "$branchName" ] || returnThrowEnvironment "$handler" "BUILD_BRANCH_FORMAT=\"$BUILD_BRANCH_FORMAT\" -> \"$format\" made blank branch (user=$user version=$version)" || return $?
 
   if gitBranchExists "$branchName"; then
-    currentBranch=$(__catchEnvironment "$handler" gitCurrentBranch) || return $?
+    currentBranch=$(catchEnvironment "$handler" gitCurrentBranch) || return $?
     if [ "$currentBranch" != "$branchName" ]; then
       if ! muzzle git checkout "$branchName" 2>&1; then
-        __throwEnvironment "$handler" "Local changes in $(decorate value "$currentBranch") prevent switching to $(decorate code "$branchName") due to local changes" || return $?
+        returnThrowEnvironment "$handler" "Local changes in $(decorate value "$currentBranch") prevent switching to $(decorate code "$branchName") due to local changes" || return $?
       fi
       decorate success "Switched to $(decorate code "$branchName")"
     else
       decorate success "Branch is $(decorate code "$branchName")"
     fi
   else
-    __catchEnvironment "$handler" git checkout -b "$branchName" || return $?
-    __catchEnvironment "$handler" git push -u "$GIT_REMOTE" "$branchName" || return $?
+    catchEnvironment "$handler" git checkout -b "$branchName" || return $?
+    catchEnvironment "$handler" git push -u "$GIT_REMOTE" "$branchName" || return $?
     printf "%s %s %s%s%s\n" "$(decorate success "Branch is")" "$(decorate code "$branchName")" "$(decorate info "(pushed to ")" "$(decorate value "$GIT_REMOTE")" "$(decorate info ")")"
   fi
 
@@ -1115,7 +1115,7 @@ gitBranchMergeCurrent() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -1133,7 +1133,7 @@ gitBranchMergeCurrent() {
     shift
   done
 
-  [ -n "$targetBranch" ] || __throwArgument "$handler" "branch required" || return $?
+  [ -n "$targetBranch" ] || returnThrowArgument "$handler" "branch required" || return $?
   if [ -z "$comment" ]; then
     comment="${FUNCNAME[0]} by $(whoami) on $(hostname)"
   fi
@@ -1141,14 +1141,14 @@ gitBranchMergeCurrent() {
     comment="$comment @ $(ipLookup || printf "%s" "$? <- ipLookup failed")" 2>/dev/null
   fi
   local currentBranch
-  currentBranch=$(__catchEnvironment "$handler" gitCurrentBranch) || return $?
+  currentBranch=$(catchEnvironment "$handler" gitCurrentBranch) || return $?
   if [ "$currentBranch" = "$targetBranch" ]; then
-    __throwEnvironment "$handler" "Already on $(decorate code "$targetBranch") branch" || return $?
+    returnThrowEnvironment "$handler" "Already on $(decorate code "$targetBranch") branch" || return $?
   fi
-  __catchEnvironment "$handler" git checkout "$targetBranch" || return $?
-  __catchEnvironment "$handler" git merge -m "$comment" "$branch" || returnUndo $? git checkout --force "$branch" || return $?
-  __catchEnvironment "$handler" git push || returnUndo $? git checkout --force "$branch" || return $?
-  __catchEnvironment "$handler" git checkout "$branch" || return $?
+  catchEnvironment "$handler" git checkout "$targetBranch" || return $?
+  catchEnvironment "$handler" git merge -m "$comment" "$branch" || returnUndo $? git checkout --force "$branch" || return $?
+  catchEnvironment "$handler" git push || returnUndo $? git checkout --force "$branch" || return $?
+  catchEnvironment "$handler" git checkout "$branch" || return $?
 }
 _gitBranchMergeCurrent() {
   # __IDENTICAL__ usageDocument 1

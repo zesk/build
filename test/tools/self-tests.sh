@@ -14,11 +14,11 @@ testBuildRunner() {
 testBinBuildRequires() {
   local home
 
-  home=$(__catch "$handler" buildHome) || return $?
+  home=$(returnCatch "$handler" buildHome) || return $?
 
   assertExitCode 0 bashCheckRequires --require --unused --report "$home/bin/build/install.sample.sh" || return $?
   assertExitCode 0 bashCheckRequires --require --unused --report "$home/bin/build/install-bin-build.sh" || return $?
-  assertExitCode 0 bashCheckRequires --ignore __catch --ignore-prefix returnEnvironment --ignore-prefix __decorateExtension --require --unused --report "$home/bin/build/map.sh" || return $?
+  assertExitCode 0 bashCheckRequires --ignore returnCatch --ignore-prefix returnEnvironment --ignore-prefix __decorateExtension --require --unused --report "$home/bin/build/map.sh" || return $?
   assertExitCode 0 bashCheckRequires --require --unused --report "$home/bin/build/need-bash.sh" || return $?
 }
 
@@ -32,17 +32,17 @@ testBuildApplicationTools() {
   muzzle directoryRequire "$testApp/docs/release" || return $?
   muzzle directoryRequire "$testApp/bin/tools" || return $?
 
-  __catchEnvironment "$handler" touch "$testApp/docs/release/v1.2.3.md" || return $?
+  catchEnvironment "$handler" touch "$testApp/docs/release/v1.2.3.md" || return $?
   assertExitCode 0 installInstallBuild "$testApp/bin" "$testApp" || return $?
-  __catchEnvironment "$handler" cp "$(buildHome)/bin/build/application.sh" "$testApp/bin/tools.sh" || return $?
+  catchEnvironment "$handler" cp "$(buildHome)/bin/build/application.sh" "$testApp/bin/tools.sh" || return $?
 
-  __catchEnvironment "$handler" muzzle pushd "$testApp" || return $?
+  catchEnvironment "$handler" muzzle pushd "$testApp" || return $?
 
-  __catchEnvironment "$handler" chmod +x "$testApp/bin/tools.sh" || return $?
+  catchEnvironment "$handler" chmod +x "$testApp/bin/tools.sh" || return $?
   assertEquals "$("$testApp/bin/tools.sh" hookVersionCurrent --application "$testApp")" "v1.2.3" || return $?
-  __catchEnvironment "$handler" muzzle popd || return $?
+  catchEnvironment "$handler" muzzle popd || return $?
 
-  __catch "$handler" rm -rf "$testApp" || return $?
+  returnCatch "$handler" rm -rf "$testApp" || return $?
 }
 
 # Tag: slow slow-non-critical
@@ -78,7 +78,7 @@ testBuildEnvironmentLoadAll() {
     PATH
   )
 
-  home=$(__catch "$handler" buildHome) || return $?
+  home=$(returnCatch "$handler" buildHome) || return $?
   tempFile=$(fileTemporaryName "$handler")
 
   find "$home" -type f -name '*.sh' -path '*/env/*' ! -path '*/test/*' ! -path '*/.*/*' -exec basename {} \; | cut -d . -f 1 | dumpPipe "All env files found"
@@ -103,7 +103,7 @@ testBuildEnvironmentLoadAll() {
       isFunction "$validator" || returnEnvironment "$type is not a known type in $(decorate file "$envFile")" || return $?
     ) || return $?
   done < <(find "$home" -type f -name '*.sh' -path '*/env/*' ! -path '*/test/*' ! -path '*/.*/*' -exec basename {} \; | cut -d . -f 1) || return $?
-  __catchEnvironment "$handler" rm -f "$tempFile" || return $?
+  catchEnvironment "$handler" rm -f "$tempFile" || return $?
 }
 
 testBuildFunctions() {
@@ -113,9 +113,9 @@ testBuildFunctions() {
   fun=$(fileTemporaryName "$handler") || return $?
   buildFunctions >"$fun" || returnEnvironment "buildFunctions failed" || return $?
 
-  assertFileContains "$fun" buildFunctions __catchEnvironment "$handler" returnArgument returnEnvironment __catch housekeeper || return $?
+  assertFileContains "$fun" buildFunctions catchEnvironment "$handler" returnArgument returnEnvironment returnCatch housekeeper || return $?
 
-  __catchEnvironment "$handler" rm -f "$fun" || return $?
+  catchEnvironment "$handler" rm -f "$fun" || return $?
 }
 
 testInstallInstallBuildSelf() {
@@ -125,8 +125,8 @@ testInstallInstallBuildSelf() {
 
   tempD=$(fileTemporaryName "$handler" -d) || return $?
 
-  __catch "$handler" buildEnvironmentLoad BUILD_COMPANY || return $?
-  __catchEnvironment "$handler" mkdir -p "$tempD/a/b/c/d/e/f" || return $?
+  returnCatch "$handler" buildEnvironmentLoad BUILD_COMPANY || return $?
+  catchEnvironment "$handler" mkdir -p "$tempD/a/b/c/d/e/f" || return $?
 
   assertFileDoesNotExist "$tempD/a/b/c/d/e/f/install-bin-build.sh" || return $?
   assertExitCode --stdout-match '../../../../../..' 0 installInstallBuild "$tempD/a/b/c/d/e/f" "$tempD" || return $?
@@ -135,7 +135,7 @@ testInstallInstallBuildSelf() {
 
   unset BUILD_COMPANY
 
-  __catch "$handler" rm -rf "$tempD" || return $?
+  returnCatch "$handler" rm -rf "$tempD" || return $?
 
 }
 
@@ -144,15 +144,15 @@ testInstallBinBuildNetwork() {
   local testDir testBinBuild section home matches
   local handler=_return
 
-  home=$(__catch "$handler" buildHome) || return $?
+  home=$(returnCatch "$handler" buildHome) || return $?
 
   testDir=$(fileTemporaryName "$handler" -d)
   testBinBuild="$testDir/bin/pipeline/install-bin-build.sh"
-  __catchEnvironment "$handler" muzzle pushd "$testDir" || return $?
+  catchEnvironment "$handler" muzzle pushd "$testDir" || return $?
 
-  __catchEnvironment "$handler" mkdir -p bin/pipeline || return $?
-  __catchEnvironment "$handler" cp "$home/bin/build/install-bin-build.sh" "$testBinBuild" || return $?
-  __catchEnvironment "$handler" echo '# this make the file different' >>"$testBinBuild" || return $?
+  catchEnvironment "$handler" mkdir -p bin/pipeline || return $?
+  catchEnvironment "$handler" cp "$home/bin/build/install-bin-build.sh" "$testBinBuild" || return $?
+  catchEnvironment "$handler" echo '# this make the file different' >>"$testBinBuild" || return $?
 
   assertDirectoryDoesNotExist "$testDir/bin/build" || return $?
   assertFileDoesNotExist "$testDir/bin/build/tools.sh" || return $?
@@ -161,8 +161,8 @@ testInstallBinBuildNetwork() {
   assertDirectoryExists "$testDir/bin/build" || return $?
   assertFileExists "$testDir/bin/build/tools.sh" || return $?
 
-  __catchEnvironment "$handler" muzzle popd || return $?
-  __catch "$handler" rm -rf "$testDir" || return $?
+  catchEnvironment "$handler" muzzle popd || return $?
+  returnCatch "$handler" rm -rf "$testDir" || return $?
 }
 
 #
@@ -173,16 +173,16 @@ testInstallBinBuild() {
   local handler="_${FUNCNAME[0]}"
   local testDir testBinBuild section home matches
 
-  home=$(__catch "$handler" buildHome) || return $?
+  home=$(returnCatch "$handler" buildHome) || return $?
   assertDirectoryExists "$BUILD_HOME" || return $?
   section=0
   testDir=$(fileTemporaryName "$handler" -d)
   testBinBuild="$testDir/bin/pipeline/install-bin-build.sh"
-  __catchEnvironment "$handler" muzzle pushd "$testDir" || return $?
+  catchEnvironment "$handler" muzzle pushd "$testDir" || return $?
 
-  __catchEnvironment "$handler" mkdir -p bin/pipeline || return $?
-  __catchEnvironment "$handler" cp "$home/bin/build/install-bin-build.sh" "$testBinBuild" || return $?
-  __catchEnvironment "$handler" printf -- '%s\n' '# this make the file different' >>"$testBinBuild" || return $?
+  catchEnvironment "$handler" mkdir -p bin/pipeline || return $?
+  catchEnvironment "$handler" cp "$home/bin/build/install-bin-build.sh" "$testBinBuild" || return $?
+  catchEnvironment "$handler" printf -- '%s\n' '# this make the file different' >>"$testBinBuild" || return $?
 
   # --------------------------------------------------------------------------------
   #
@@ -213,12 +213,12 @@ testInstallBinBuild() {
   assertFileDoesNotContain --line "$LINENO" "$testBinBuild" "make the file different" || return $?
   assertFileContains --line "$LINENO" "$testBinBuild" "__installPackageConfiguration ../.. " || return $?
 
-  __catch "$handler" rm -rf "$testDir/bin/build" || return $?
+  returnCatch "$handler" rm -rf "$testDir/bin/build" || return $?
 
   # --------------------------------------------------------------------------------
   #
   clearLine
-  __catchEnvironment "$handler" cp "$home/bin/build/install-bin-build.sh" "$testBinBuild" || return $?
+  catchEnvironment "$handler" cp "$home/bin/build/install-bin-build.sh" "$testBinBuild" || return $?
   boxedHeading "Has gitignore (missing), missing, different name"
   section=$((section + 1))
   bigText "Section #$section"
@@ -250,7 +250,7 @@ testInstallBinBuild() {
   # assertExitCode --dump --line "$LINENO" "${matches[@]}" 0 bin/pipeline/we-like-head-rubs.sh  || return $?
   assertExitCode --dump --line "$LINENO" "${matches[@]}" 0 bin/pipeline/we-like-head-rubs.sh --mock "$home/bin/build" || return $?
 
-  __catchEnvironment "$handler" cp "$home/bin/build/install-bin-build.sh" "$testBinBuild" || return $?
+  catchEnvironment "$handler" cp "$home/bin/build/install-bin-build.sh" "$testBinBuild" || return $?
   clearLine
   boxedHeading "Has gitignore (missing), bin/build exists, different name"
   section=$((section + 1))
@@ -277,7 +277,7 @@ testInstallBinBuild() {
   assertExitCode --dump --line "$LINENO" "${matches[@]}" 0 "$testBinBuild" || return $?
   assertDirectoryExists --line "$LINENO" bin/build || return $?
 
-  __catchEnvironment "$handler" cp "$home/bin/build/install-bin-build.sh" "$testBinBuild" || return $?
+  catchEnvironment "$handler" cp "$home/bin/build/install-bin-build.sh" "$testBinBuild" || return $?
   boxedHeading "Has gitignore (correct), bin/build exists, different name"
 
   #  ▞▀▖      ▐  ▗           ▌ ▌
@@ -304,8 +304,8 @@ testInstallBinBuild() {
   assertExitCode --dump --line "$LINENO" "${matches[@]}" 0 bin/pipeline/we-like-head-rubs.sh --mock "$home/bin/build" || return $?
   # Check
 
-  __catchEnvironment "$handler" muzzle popd || return $?
-  __catch "$handler" rm -rf "$testDir" || return $?
+  catchEnvironment "$handler" muzzle popd || return $?
+  returnCatch "$handler" rm -rf "$testDir" || return $?
 }
 _testInstallBinBuild() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
@@ -319,11 +319,11 @@ testBuildEnvironmentLoad() {
 
   target="$tempDir/FOO.sh"
   BUILD_ENVIRONMENT_DIRS="$tempDir" assertNotExitCode --stderr-match Missing --line "$LINENO" 0 buildEnvironmentLoad FOO || return $?
-  __catchEnvironment "$handler" touch "$target" || return $?
+  catchEnvironment "$handler" touch "$target" || return $?
   BUILD_ENVIRONMENT_DIRS="$tempDir" assertNotExitCode --stderr-match Missing --line "$LINENO" 0 buildEnvironmentLoad FOO || return $?
   printf "%s\n" "#!/usr/bin/env bash" >"$target"
   BUILD_ENVIRONMENT_DIRS="$tempDir" assertNotExitCode --stderr-match Missing --line "$LINENO" 0 buildEnvironmentLoad FOO || return $?
-  __catchEnvironment "$handler" chmod +x "$target" || return $?
+  catchEnvironment "$handler" chmod +x "$target" || return $?
   BUILD_ENVIRONMENT_DIRS="$tempDir" assertExitCode 0 buildEnvironmentLoad FOO || return $?
 
   assertEquals "${FOO-}" "" || return $?
@@ -335,7 +335,7 @@ testBuildEnvironmentLoad() {
 
   unset FOO
 
-  __catch "$handler" rm -rf "$tempDir" || return $?
+  returnCatch "$handler" rm -rf "$tempDir" || return $?
 }
 
 testBuildEnvironmentGet() {
@@ -346,11 +346,11 @@ testBuildEnvironmentGet() {
 
   target="$tempDir/FOO.sh"
   BUILD_ENVIRONMENT_DIRS="$tempDir" assertNotExitCode --stderr-match Missing --line "$LINENO" 0 buildEnvironmentGet FOO || return $?
-  __catchEnvironment "$handler" touch "$target" || return $?
+  catchEnvironment "$handler" touch "$target" || return $?
   BUILD_ENVIRONMENT_DIRS="$tempDir" assertNotExitCode --stderr-match Missing --line "$LINENO" 0 buildEnvironmentGet FOO || return $?
   printf "%s\n" "#!/usr/bin/env bash" >"$target"
   BUILD_ENVIRONMENT_DIRS="$tempDir" assertNotExitCode --stderr-match Missing --line "$LINENO" 0 buildEnvironmentGet FOO || return $?
-  __catchEnvironment "$handler" chmod +x "$target" || return $?
+  catchEnvironment "$handler" chmod +x "$target" || return $?
   BUILD_ENVIRONMENT_DIRS="$tempDir" assertExitCode 0 buildEnvironmentGet FOO || return $?
 
   assertEquals "${FOO-}" "" || return $?
@@ -362,7 +362,7 @@ testBuildEnvironmentGet() {
 
   unset FOO
 
-  __catch "$handler" rm -rf "$tempDir" || return $?
+  returnCatch "$handler" rm -rf "$tempDir" || return $?
 }
 
 # Tag: php-install simple-php
@@ -370,13 +370,13 @@ testUnderscoreUnderscoreBuild() {
   local handler="returnMessage"
   local testPath home
 
-  home=$(__catch "$handler" buildHome) || return $?
+  home=$(returnCatch "$handler" buildHome) || return $?
   testPath=$(fileTemporaryName "$handler" -d) || return $?
-  __catchEnvironment "$handler" cp -R "$home/test/example/simple-php" "$testPath/app" || return $?
+  catchEnvironment "$handler" cp -R "$home/test/example/simple-php" "$testPath/app" || return $?
   assertExitCode 0 installInstallBuild --local "$testPath/app/bin" "$testPath/app" || return $?
-  __catchEnvironment "$handler" cp -R "$home/bin/build" "$testPath/app/bin/build" || return $?
+  catchEnvironment "$handler" cp -R "$home/bin/build" "$testPath/app/bin/build" || return $?
 
   APPLICATION_ID=testID.$$ assertExitCode --dump --line "$LINENO" 0 "$testPath/app/bin/build.sh" || return $?
 
-  __catchEnvironment "$handler" rm -rf "$testPath" || return $?
+  catchEnvironment "$handler" rm -rf "$testPath" || return $?
 }

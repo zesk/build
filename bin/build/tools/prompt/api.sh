@@ -24,7 +24,7 @@ __bashPrompt() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -65,8 +65,8 @@ __bashPrompt() {
       colorsText="$(usageArgumentString "$handler" "$argument" "${1-}")" || return $?
       local colors
       IFS=":" read -r -a colors <<<"$colorsText" || :
-      [ "${#colors[@]}" -ge 2 ] || __throwArgument "$handler" "$argument should be min 2 colors separated by a colon: $(decorate code "$colorsText")" || return $?
-      [ "${#colors[@]}" -le 5 ] || __throwArgument "$handler" "$argument should be max 5 colors separated by a colon: $(decorate code "$colorsText")" || return $?
+      [ "${#colors[@]}" -ge 2 ] || returnThrowArgument "$handler" "$argument should be min 2 colors separated by a colon: $(decorate code "$colorsText")" || return $?
+      [ "${#colors[@]}" -le 5 ] || returnThrowArgument "$handler" "$argument should be max 5 colors separated by a colon: $(decorate code "$colorsText")" || return $?
       colorsTextFormatted=$(bashPromptColorsFormat "${colorsText}")
       ;;
     --first | --last | --debug)
@@ -82,7 +82,7 @@ __bashPrompt() {
       ;;
     -*)
       # _IDENTICAL_ argumentUnknownHandler 1
-      __throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
+      returnThrowArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
       ;;
     *)
       addArguments+=("$(usageArgumentCallable "$handler" "module" "$argument")") || return $?
@@ -120,7 +120,7 @@ __bashPrompt() {
 
   if [ -z "$colorsTextFormatted" ] || $resetFlag; then
     if ! $resetFlag; then
-      __catch "$handler" buildEnvironmentLoad BUILD_PROMPT_COLORS || return $?
+      returnCatch "$handler" buildEnvironmentLoad BUILD_PROMPT_COLORS || return $?
       [ -z "${BUILD_PROMPT_COLORS-}" ] || colorsText="$BUILD_PROMPT_COLORS"
     fi
     if $resetFlag || [ -z "$colorsText" ]; then
@@ -209,7 +209,7 @@ __bashPromptAdd() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     --order)
       shift
@@ -234,7 +234,7 @@ __bashPromptAdd() {
     shift
   done
 
-  __catch "$handler" __bashPromptModulesSave "${modules[@]}" || return $?
+  returnCatch "$handler" __bashPromptModulesSave "${modules[@]}" || return $?
   return 0
 }
 
@@ -262,7 +262,7 @@ __bashPromptRemove() {
   if ! $found; then
     local moduleList
     [ "${#__BASH_PROMPT_MODULES[@]}" -eq 0 ] && moduleList="$(decorate warning none)" || moduleList=$(decorate each code "${__BASH_PROMPT_MODULES[@]}")
-    __throwEnvironment "$handler" "$module was not found in modules: $moduleList" || return $?
+    returnThrowEnvironment "$handler" "$module was not found in modules: $moduleList" || return $?
   fi
   __BASH_PROMPT_MODULES=("${modules[@]+"${modules[@]}"}")
 }

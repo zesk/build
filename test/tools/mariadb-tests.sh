@@ -54,7 +54,7 @@ testMariaDBDumpClean() {
   local handler="returnMessage"
   local home
 
-  home=$(__catch "$handler" buildHome) || return $?
+  home=$(returnCatch "$handler" buildHome) || return $?
 
   local sql
 

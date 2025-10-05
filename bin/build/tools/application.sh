@@ -8,9 +8,9 @@
 __applicationHomeFile() {
   local f home
 
-  home=$(__catch "$handler" buildEnvironmentGetDirectory XDG_STATE_HOME) || return $?
+  home=$(returnCatch "$handler" buildEnvironmentGetDirectory XDG_STATE_HOME) || return $?
   f="$home/.applicationHome"
-  [ -f "$f" ] || __catchEnvironment "$handler" touch "$f" || return $?
+  [ -f "$f" ] || catchEnvironment "$handler" touch "$f" || return $?
   printf "%s\n" "$f"
 }
 
@@ -18,19 +18,19 @@ __applicationHomeGo() {
   local handler="$1" && shift
   local file home label userHome oldHome=""
 
-  file=$(__catch "$handler" __applicationHomeFile) || return $?
-  home=$(trimSpace "$(__catchEnvironment "$handler" head -n 1 "$file")") || return $?
+  file=$(returnCatch "$handler" __applicationHomeFile) || return $?
+  home=$(trimSpace "$(catchEnvironment "$handler" head -n 1 "$file")") || return $?
   if [ -z "$home" ]; then
-    __throwEnvironment "$handler" "No code home set, try $(decorate code "applicationHome")" || return $?
+    returnThrowEnvironment "$handler" "No code home set, try $(decorate code "applicationHome")" || return $?
   fi
-  [ -d "$home" ] || __throwEnvironment "$handler" "Application home directory deleted $(decorate code "$home")" || return $?
+  [ -d "$home" ] || returnThrowEnvironment "$handler" "Application home directory deleted $(decorate code "$home")" || return $?
 
-  oldHome=$(__catch "$handler" buildHome) || return $?
+  oldHome=$(returnCatch "$handler" buildHome) || return $?
 
   if [ -d "$oldHome" ] && [ "$oldHome" != "$home" ]; then
     hookSourceOptional --application "$oldHome" project-deactivate "$home" || :
   fi
-  __catchEnvironment "$handler" cd "$home" || return $?
+  catchEnvironment "$handler" cd "$home" || return $?
   label="Working in"
   if [ $# -gt 0 ]; then
     label="${*-}"
@@ -61,7 +61,7 @@ applicationHome() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -71,13 +71,13 @@ applicationHome() {
       return 0
       ;;
     *)
-      [ -z "$here" ] || __throwArgument "$handler" "Unknown argument (applicationHome set already to $(decorate code "$here"))"
+      [ -z "$here" ] || returnThrowArgument "$handler" "Unknown argument (applicationHome set already to $(decorate code "$here"))"
       here=$(usageArgumentDirectory "$handler" "directory" "$argument") || return $?
       ;;
     esac
     shift
   done
-  [ -n "$here" ] || here=$(__catchEnvironment "$handler" pwd) || return $?
+  [ -n "$here" ] || here=$(catchEnvironment "$handler" pwd) || return $?
   home=$(bashLibraryHome "$buildTools" "$here" 2>/dev/null) || home="$here"
   printf "%s\n" "$home" >"$(__applicationHomeFile)"
   __applicationHomeGo "$handler" "${__saved[0]-} Application home set to" || return $?
@@ -101,7 +101,7 @@ applicationHomeAliases() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -112,7 +112,7 @@ applicationHomeAliases() {
         setAlias=$(usageArgumentString "$handler" "setAlias" "$argument") || return $?
       else
         # _IDENTICAL_ argumentUnknownHandler 1
-        __throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
+        returnThrowArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
       fi
       ;;
     esac
@@ -122,9 +122,9 @@ applicationHomeAliases() {
   [ -n "$setAlias" ] || setAlias="G"
 
   # shellcheck disable=SC2139
-  alias "$goAlias"='applicationHome --go' || __throwEnvironment "$handler" "alias $goAlias failed" || return $?
+  alias "$goAlias"='applicationHome --go' || returnThrowEnvironment "$handler" "alias $goAlias failed" || return $?
   # shellcheck disable=SC2139
-  alias "$setAlias"=applicationHome || __throwEnvironment "$handler" "alias $setAlias failed" || return $?
+  alias "$setAlias"=applicationHome || returnThrowEnvironment "$handler" "alias $setAlias failed" || return $?
 }
 _applicationHomeAliases() {
   # __IDENTICAL__ usageDocument 1

@@ -26,7 +26,7 @@ __build() {
 # Argument: relativeHome - Optional. Directory. Path to application home. Default is `..`.
 # Argument: command ... - Optional. Callable. A command to run and optional arguments.
 # Example:      __install bin/install-bin-build.sh bin/build/tools.sh ../../.. decorate info "$@"
-# Requires: returnMessage __execute
+# Requires: returnMessage execute
 __install() {
   local installer="${1-}" source="${2-}" relativeHome="${3:-".."}" me="${BASH_SOURCE[0]}"
   local here="${me%/*}" e=253 a
@@ -42,7 +42,7 @@ __install() {
   # shellcheck source=/dev/null
   source "$tools" || returnMessage "$e" source "$tools" || return $?
   [ ${#a[@]} -gt 0 ] || return 0
-  __execute "${a[@]}" || return $?
+  execute "${a[@]}" || return $?
 }
 
 # IDENTICAL returnMessage 38
@@ -88,8 +88,8 @@ _isUnsignedInteger() {
 __buildSampleApplication() {
   local handler="returnMessage"
   statusMessage printf ""
-  __catchEnvironment "$handler" muzzle pushd "$(buildHome)" || return $?
-  __catchEnvironment "$handler" phpBuild "$@" -- simple.application.php public src docs || return $?
+  catchEnvironment "$handler" muzzle pushd "$(buildHome)" || return $?
+  catchEnvironment "$handler" phpBuild "$@" -- simple.application.php public src docs || return $?
 }
 
 __build .. bin __buildSampleApplication "$@"

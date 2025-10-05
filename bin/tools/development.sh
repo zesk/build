@@ -8,12 +8,12 @@
 buildAddTool() {
   local handler="returnMessage" home file
 
-  home=$(__catch "$handler" buildHome) || return $?
+  home=$(returnCatch "$handler" buildHome) || return $?
 
   while [ $# -gt 0 ]; do
     case "$1" in
     *[^-[:alnum:]]*)
-      __throwArgument "$handler" "Invalid name: $1" || return $?
+      returnThrowArgument "$handler" "Invalid name: $1" || return $?
       ;;
     esac
     for file in "bin/build/tools/$1.sh" "test/tools/$1-tests.sh"; do
@@ -56,7 +56,7 @@ buildQuickTest() {
 
   __help "$handler" "$@" || return 0
 
-  home=$(__catch "$handler" buildHome) || return $?
+  home=$(returnCatch "$handler" buildHome) || return $?
   BUILD_TEST_FLAGS='Housekeeper:false;Plumber:false' "$home/bin/test.sh" -c --skip-tag slow --skip-tag package-install "$@"
 }
 _buildQuickTest() {
@@ -72,7 +72,7 @@ buildStagingTest() {
 
   __help "$handler" "$@" || return 0
 
-  home=$(__catch "$handler" buildHome) || return $?
+  home=$(returnCatch "$handler" buildHome) || return $?
   BUILD_TEST_FLAGS='Housekeeper:false;Plumber:false' "$home/bin/test.sh" -c "$@"
 }
 _buildStagingTest() {
@@ -88,7 +88,7 @@ buildProductionTest() {
 
   __help "$handler" "$@" || return 0
 
-  home=$(__catch "$handler" buildHome) || return $?
+  home=$(returnCatch "$handler" buildHome) || return $?
   BUILD_TEST_FLAGS='Housekeeper:true;Plumber:true' "$home/bin/test.sh" --skip-tag slow-non-critical "$@"
 }
 _buildProductionTest() {
@@ -104,7 +104,7 @@ buildFastFiles() {
 
   __help "$handler" "$@" || return 0
 
-  home=$(__catch "$handler" buildHome) || return $?
+  home=$(returnCatch "$handler" buildHome) || return $?
 
   local pattern patterns=("__check") aa=() && for pattern in "${patterns[@]}"; do aa+=(-e "/# __IDENTICAL__ $(quoteSedPattern "$pattern")/{N;d;}"); done
 
@@ -113,17 +113,17 @@ buildFastFiles() {
   for f in "${ff[@]}"; do
     local target="${f%.sh}-fast.sh"
     local tempTarget="$target.temp"
-    __catch "$handler" sed "${aa[@]}" "$f" | grep -v '# \(IDENTICAL\|_IDENTICAL_\|__IDENTICAL__\)' >"$tempTarget" || return $?
+    returnCatch "$handler" sed "${aa[@]}" "$f" | grep -v '# \(IDENTICAL\|_IDENTICAL_\|__IDENTICAL__\)' >"$tempTarget" || return $?
     if [ -f "$target" ]; then
       if ! diff -q "$tempTarget" "$target"; then
         diff "$target" "$tempTarget" | dumpPipe "Updated $(decorate file "$target"): < old, > new"
-        __catch "$handler" mv "$tempTarget" "$target" || returnClean $? "$tempTarget" || return $?
+        returnCatch "$handler" mv "$tempTarget" "$target" || returnClean $? "$tempTarget" || return $?
       else
-        __catchEnvironment "$handler" rm -f "$tempTarget" || return $?
+        catchEnvironment "$handler" rm -f "$tempTarget" || return $?
         decorate info "No changes required for $(decorate file "$target")"
       fi
     else
-      __catch "$handler" mv "$tempTarget" "$target" || returnClean $? "$tempTarget" || return $?
+      returnCatch "$handler" mv "$tempTarget" "$target" || returnClean $? "$tempTarget" || return $?
       decorate info "Created $(decorate file "$target")"
     fi
   done
@@ -143,7 +143,7 @@ buildBuildTiming() {
       bigText "Test #$index"
       decorate pair "PRODUCTION" "$production"
       decorate pair "BUILD_COLORS" "$colors"
-      __catch "$handler" env -i BUILD_DEBUG=handler HOME="$HOME" PATH="$PATH" PRODUCTION=$production BUILD_COLORS=$colors time "$home/bin/build.sh" || return $?
+      returnCatch "$handler" env -i BUILD_DEBUG=handler HOME="$HOME" PATH="$PATH" PRODUCTION=$production BUILD_COLORS=$colors time "$home/bin/build.sh" || return $?
       index=$((index + 1))
     done
   done

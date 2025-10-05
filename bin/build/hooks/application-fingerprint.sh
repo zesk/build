@@ -20,19 +20,19 @@ __hookApplicationFingerprint() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
     *)
       # _IDENTICAL_ argumentUnknownHandler 1
-      __throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
+      returnThrowArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
       ;;
     esac
     shift
   done
-  home=$(__catch "$handler" buildHome) || return $?
-  __catch "$handler" hookRun --application "$home" application-files -print0 | xargs -0 -n 1 sha1sum | sort | shaPipe || return $?
+  home=$(returnCatch "$handler" buildHome) || return $?
+  returnCatch "$handler" hookRun --application "$home" application-files -print0 | xargs -0 -n 1 sha1sum | sort | shaPipe || return $?
 }
 ___hookApplicationFingerprint() {
   # __IDENTICAL__ usageDocument 1

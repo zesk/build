@@ -39,7 +39,7 @@ phpComposer() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -51,8 +51,8 @@ phpComposer() {
       forceDocker=true
       ;;
     *)
-      [ "$composerDirectory" = "." ] || __throwArgument "$handler" "Unknown argument $1" || return $?
-      [ -d "$argument" ] || __throwArgument "$handler" "Directory does not exist: $argument" || return $?
+      [ "$composerDirectory" = "." ] || returnThrowArgument "$handler" "Unknown argument $1" || return $?
+      [ -d "$argument" ] || returnThrowArgument "$handler" "Directory does not exist: $argument" || return $?
       composerDirectory="$argument"
       statusMessage decorate info "Composer directory: $(decorate file "$composerDirectory")"
       break
@@ -65,13 +65,13 @@ phpComposer() {
 
   local installArgs=("--ignore-platform-reqs") quietLog
 
-  quietLog="$(__catch "$handler" buildQuietLog "$handler")" || return $?
+  quietLog="$(returnCatch "$handler" buildQuietLog "$handler")" || return $?
   printf "%s\n" "Install vendor" >>"$quietLog"
 
   local butFirst="" composerBin=(composer)
   if $forceDocker; then
     $quietFlag || statusMessage decorate info "Pulling composer ... "
-    __catchEnvironmentQuiet "$handler" "$quietLog" docker pull "$dockerImage" || return $?
+    catchEnvironmentQuiet "$handler" "$quietLog" docker pull "$dockerImage" || return $?
     composerBin=(docker run)
     composerBin+=("-v" "$composerDirectory:/app")
     composerBin+=("-v" "$composerDirectory/$cacheDir:/tmp")
@@ -79,20 +79,20 @@ phpComposer() {
     butFirst="Pulled composer image. "
   elif ! whichExists composer; then
     $quietFlag || statusMessage decorate info "Installing composer ... "
-    __catchEnvironment "$handler" phpComposerInstall || return $?
+    catchEnvironment "$handler" phpComposerInstall || return $?
     butFirst="Installed composer. "
   fi
 
   $quietFlag || statusMessage decorate info "${butFirst}Validating ... "
 
-  __catchEnvironment "$handler" muzzle pushd "$composerDirectory" || return $?
+  catchEnvironment "$handler" muzzle pushd "$composerDirectory" || return $?
   printf "%s\n" "Running: ${composerBin[*]} validate" >>"$quietLog"
   "${composerBin[@]}" validate >>"$quietLog" 2>&1 || returnUndo $? muzzle popd || buildFailed "$quietLog" || return $?
 
   $quietFlag || statusMessage decorate info "Application packages ... " || :
   printf "%s\n" "Running: ${composerBin[*]} install ${installArgs[*]}" >>"$quietLog" || :
   "${composerBin[@]}" install "${installArgs[@]}" >>"$quietLog" 2>&1 || returnUndo $? muzzle popd || buildFailed "$quietLog" || return $?
-  __catchEnvironment "$handler" muzzle popd || return $?
+  catchEnvironment "$handler" muzzle popd || return $?
   $quietFlag || statusMessage --last timingReport "$start" "${FUNCNAME[0]} completed in" || :
 }
 _phpComposer() {
@@ -105,12 +105,12 @@ phpComposerInstall() {
   local handler="_${FUNCNAME[0]}"
   [ $# -eq 0 ] || __help --only "$handler" "$@" || return "$(convertValue $? 1 0)"
   ! whichExists composer || return 0
-  __catch "$handler" phpInstall || return $?
+  returnCatch "$handler" phpInstall || return $?
   local target="/usr/local/bin/composer"
   local tempBinary="$target.$$"
-  __catch "$handler" urlFetch "https://getcomposer.org/composer.phar" "$tempBinary" || returnClean $? "$tempBinary" || return $?
-  __catchEnvironment "$handler" mv -f "$tempBinary" "$target" || returnClean $? "$tempBinary" || return $?
-  __catchEnvironment "$handler" chmod +x "$target" || returnClean $? "$tempBinary" || return $?
+  returnCatch "$handler" urlFetch "https://getcomposer.org/composer.phar" "$tempBinary" || returnClean $? "$tempBinary" || return $?
+  catchEnvironment "$handler" mv -f "$tempBinary" "$target" || returnClean $? "$tempBinary" || return $?
+  catchEnvironment "$handler" chmod +x "$target" || returnClean $? "$tempBinary" || return $?
 }
 _phpComposerInstall() {
   # __IDENTICAL__ usageDocument 1
@@ -140,7 +140,7 @@ phpComposerSetVersion() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -158,21 +158,21 @@ phpComposerSetVersion() {
       ;;
     *)
       # _IDENTICAL_ argumentUnknownHandler 1
-      __throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
+      returnThrowArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
       ;;
     esac
     shift
   done
 
-  [ -n "$home" ] || home=$(__catch "$handler" buildHome) || return $?
+  [ -n "$home" ] || home=$(returnCatch "$handler" buildHome) || return $?
 
   local composerJSON="$home/composer.json" decoratedComposerJSON
 
   decoratedComposerJSON="$(decorate file "$composerJSON")"
 
-  [ -f "$composerJSON" ] || __throwEnvironment "$handler" "No $decoratedComposerJSON" || return $?
+  [ -f "$composerJSON" ] || returnThrowEnvironment "$handler" "No $decoratedComposerJSON" || return $?
 
-  __catchEnvironment "$handler" jsonSetValue "${aa[@]+"${aa[@]}"}" --key version --generator hookVersionCurrent --filter versionNoVee "$composerJSON" || return $?
+  catchEnvironment "$handler" jsonSetValue "${aa[@]+"${aa[@]}"}" --key version --generator hookVersionCurrent --filter versionNoVee "$composerJSON" || return $?
 }
 _phpComposerSetVersion() {
   # __IDENTICAL__ usageDocument 1

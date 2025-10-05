@@ -19,18 +19,18 @@
 # stderr: error messages
 # Return Code: 0 - Field was found and was non-blank
 # Return Code: 1 - Field was not found or is blank
-# Requires: jq whichExists __throwEnvironment printf rm decorate head
+# Requires: jq whichExists returnThrowEnvironment printf rm decorate head
 jsonField() {
   [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
   local handler="$1" jsonFile="$2" value message && shift 2
 
-  [ -f "$jsonFile" ] || __throwEnvironment "$handler" "$jsonFile is not a file" || return $?
-  whichExists jq || __throwEnvironment "$handler" "Requires jq - not installed" || return $?
+  [ -f "$jsonFile" ] || returnThrowEnvironment "$handler" "$jsonFile is not a file" || return $?
+  whichExists jq || returnThrowEnvironment "$handler" "Requires jq - not installed" || return $?
   if ! value=$(jq -r "$@" <"$jsonFile"); then
     message="$(printf -- "%s\n%s\n" "Unable to fetch selector $(decorate each code -- "$@") from JSON:" "$(head -n 100 "$jsonFile")")"
-    __throwEnvironment "$handler" "$message" || return $?
+    returnThrowEnvironment "$handler" "$message" || return $?
   fi
-  [ -n "$value" ] || __throwEnvironment "$handler" "$(printf -- "%s\n%s\n" "Selector $(decorate each code -- "$@") was blank from JSON:" "$(head -n 100 "$jsonFile")")" || return $?
+  [ -n "$value" ] || returnThrowEnvironment "$handler" "$(printf -- "%s\n%s\n" "Selector $(decorate each code -- "$@") was blank from JSON:" "$(head -n 100 "$jsonFile")")" || return $?
   printf -- "%s\n" "$value"
 }
 _jsonField() {
@@ -92,7 +92,7 @@ jsonFileGet() {
 
   path="$(__jqPathClean "$path")"
 
-  __catch "$handler" jq -r "$(__jqObject "$path") + . | $path" <"$jsonFile" || return $?
+  returnCatch "$handler" jq -r "$(__jqObject "$path") + . | $path" <"$jsonFile" || return $?
 }
 _jsonFileGet() {
   # __IDENTICAL__ usageDocument 1
@@ -111,11 +111,11 @@ jsonFileSet() {
   path=$(usageArgumentString "$handler" "path" "${1-}") && shift || return $?
   value=$(usageArgumentEmptyString "$handler" "value" "${1-}") && shift || return $?
 
-  whichExists jq || __throwEnvironment "$handler" "Requires jq - not installed" || return $?
+  whichExists jq || returnThrowEnvironment "$handler" "Requires jq - not installed" || return $?
 
   path=$(__jqPathClean "$path")
-  __catchEnvironment "$handler" jq --sort-keys -r "$(__jqObject "$path") + . | $path = \"$value\"" <"$jsonFile" >"$jsonFile.new" || returnClean $? "$jsonFile.new" || return $?
-  __catchEnvironment "$handler" mv -f "$jsonFile.new" "$jsonFile" || returnClean $? "$jsonFile.new" || return $?
+  catchEnvironment "$handler" jq --sort-keys -r "$(__jqObject "$path") + . | $path = \"$value\"" <"$jsonFile" >"$jsonFile.new" || returnClean $? "$jsonFile.new" || return $?
+  catchEnvironment "$handler" mv -f "$jsonFile.new" "$jsonFile" || returnClean $? "$jsonFile.new" || return $?
 }
 _jsonFileSet() {
   # __IDENTICAL__ usageDocument 1
@@ -145,14 +145,14 @@ jsonSetValue() {
   local value="" statusFlag=false quietFlag=false file="" key="version"
   local generator="hookVersionCurrent" filter="versionNoVee"
 
-  whichExists jq || __throwEnvironment "$handler" "Requires jq - not installed" || return $?
+  whichExists jq || returnThrowEnvironment "$handler" "Requires jq - not installed" || return $?
 
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -182,17 +182,17 @@ jsonSetValue() {
       file="$(usageArgumentFile "$handler" "$argument" "${1-}")" || return $?
       if [ -z "$value" ]; then
         if [ -z "$generator" ]; then
-          __throwArgument "$handler" "--generator or --value is required" || return $?
+          returnThrowArgument "$handler" "--generator or --value is required" || return $?
         fi
-        value=$(__catchEnvironment "$handler" "$generator") || return $?
+        value=$(catchEnvironment "$handler" "$generator") || return $?
         if [ -z "$value" ]; then
-          __throwEnvironment "$handler" "Value returned by --generator $generator hook is blank" || return $?
+          returnThrowEnvironment "$handler" "Value returned by --generator $generator hook is blank" || return $?
         fi
       fi
       if [ -n "$filter" ]; then
-        value=$(__catchEnvironment "$handler" "$filter" "$value") || return $?
+        value=$(catchEnvironment "$handler" "$filter" "$value") || return $?
         if [ -z "$value" ]; then
-          __throwEnvironment "$handler" "Value returned by --filter $filter hook is blank" || return $?
+          returnThrowEnvironment "$handler" "Value returned by --filter $filter hook is blank" || return $?
         fi
       fi
       __jsonSetValue "$handler" "$file" "$key" "$value" "$quietFlag" "$statusFlag" || return $?
@@ -200,7 +200,7 @@ jsonSetValue() {
     esac
     shift
   done
-  [ -n "$file" ] || __throwArgument "$handler" "file is required" || return $?
+  [ -n "$file" ] || returnThrowArgument "$handler" "file is required" || return $?
 }
 _jsonSetValue() {
   # __IDENTICAL__ usageDocument 1
@@ -216,19 +216,19 @@ __jsonSetValue() {
   newJSON="$json.${FUNCNAME[0]}.$$"
   key="${key#.}"
 
-  oldValue="$(__catchEnvironment "$handler" jq ".$key" <"$json")" || return $?
+  oldValue="$(catchEnvironment "$handler" jq ".$key" <"$json")" || return $?
 
-  __catchEnvironment "$handler" jq --sort-keys --arg value "$value" ". + { $key: \$value }" <"$json" >"$newJSON" || returnClean $? "$newJSON" || return $?
+  catchEnvironment "$handler" jq --sort-keys --arg value "$value" ". + { $key: \$value }" <"$json" >"$newJSON" || returnClean $? "$newJSON" || return $?
 
   decoratedValue=$(decorate value "$value")
   decoratedOldValue=$(decorate value "$oldValue")
 
   if muzzle diff -q "$json" "$newJSON"; then
     $quietFlag || statusMessage --last decorate info "$decoratedJSON $key is $decoratedValue (up to date)"
-    __catchEnvironment "$handler" rm -rf "$newJSON" || return $?
+    catchEnvironment "$handler" rm -rf "$newJSON" || return $?
     ! $statusFlag || return "$(returnCode identical)"
   else
-    __catchEnvironment "$handler" mv -f "$newJSON" "$json" || returnClean $? "$newJSON" || return $?
+    catchEnvironment "$handler" mv -f "$newJSON" "$json" || returnClean $? "$newJSON" || return $?
     $quietFlag || statusMessage --last decorate info "$decoratedJSON $key updated to $decoratedValue (old value $decoratedOldValue)"
   fi
 }

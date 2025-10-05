@@ -133,7 +133,7 @@ testCrontabApplicationSync() {
   showFlag=
   while [ $# -gt 0 ]; do
     argument="$1"
-    [ -n "$argument" ] || __throwArgument "$handler" "blank argument" || return $?
+    [ -n "$argument" ] || returnThrowArgument "$handler" "blank argument" || return $?
     case "$argument" in
     -v | --verbose)
       verboseFlag=1
@@ -147,11 +147,11 @@ testCrontabApplicationSync() {
       showFlag=1
       ;;
     *)
-      [ -d "$argument" ] || __throwArgument "$handler" "No arguments" || return $?
+      [ -d "$argument" ] || returnThrowArgument "$handler" "No arguments" || return $?
       decorate info "Home is $argument"
       ;;
     esac
-    shift || __throwArgument "$handler" "missing argument $(decorate label "$argument")" || return $?
+    shift || returnThrowArgument "$handler" "missing argument $(decorate label "$argument")" || return $?
   done
 
   testEnv=$(fileTemporaryName "$handler")
@@ -167,9 +167,9 @@ testCrontabApplicationSync() {
     echo "APPLICATION_PATH=hello"
   } >>"$testEnv"
 
-  __catchEnvironment "$handler" mkdir -p "$tempDir"/app1 || return $?
-  __catchEnvironment "$handler" mkdir -p "$tempDir"/app2 || return $?
-  __catchEnvironment "$handler" mkdir -p "$tempDir/app3/and/it/is/really/deep" || return $?
+  catchEnvironment "$handler" mkdir -p "$tempDir"/app1 || return $?
+  catchEnvironment "$handler" mkdir -p "$tempDir"/app2 || return $?
+  catchEnvironment "$handler" mkdir -p "$tempDir/app3/and/it/is/really/deep" || return $?
 
   {
     echo "FOO=lover"
@@ -202,7 +202,7 @@ testCrontabApplicationSync() {
   cp "$tempDir"/app1/user.crontab "$tempDir/app3/and/it/is/really/deep/user.crontab"
 
   results=$(fileTemporaryName "$handler")
-  __catchEnvironment "$handler" crontabApplicationUpdate --user user --show "$tempDir" --env-file "$testEnv" >>"$results" || return $?
+  catchEnvironment "$handler" crontabApplicationUpdate --user user --show "$tempDir" --env-file "$testEnv" >>"$results" || return $?
 
   if test $showFlag; then
     cat "$results"
@@ -236,7 +236,7 @@ testCrontabApplicationSync() {
       fi
       printBasics "$tempDir" "$testEnv"
     fi
-    __throwEnvironment "$handler" "Failed" || return $?
+    returnThrowEnvironment "$handler" "Failed" || return $?
   else
     rm -rf "$tempDir"
     rm "$testEnv"

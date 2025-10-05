@@ -15,7 +15,7 @@
 # Argument: relativeHome - Optional. Directory. Path to application home. Default is `..`.
 # Argument: command ... - Optional. Callable. A command to run and optional arguments.
 # Example:      __install bin/install-bin-build.sh bin/build/tools.sh ../../.. decorate info "$@"
-# Requires: returnMessage __execute
+# Requires: returnMessage execute
 __install() {
   local installer="${1-}" source="${2-}" relativeHome="${3:-".."}" me="${BASH_SOURCE[0]}"
   local here="${me%/*}" e=253 a
@@ -31,5 +31,5 @@ __install() {
   # shellcheck source=/dev/null
   source "$tools" || returnMessage "$e" source "$tools" || return $?
   [ ${#a[@]} -gt 0 ] || return 0
-  __execute "${a[@]}" || return $?
+  execute "${a[@]}" || return $?
 }

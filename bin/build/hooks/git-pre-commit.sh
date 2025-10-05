@@ -109,14 +109,14 @@ __hookGitPreCommit() {
   start=$(timingStart) || return $?
 
   export BUILD_PRECOMMIT_EXTENSIONS APPLICATION_NAME
-  __catch "$handler" buildEnvironmentLoad APPLICATION_NAME BUILD_PRECOMMIT_EXTENSIONS || return $?
+  returnCatch "$handler" buildEnvironmentLoad APPLICATION_NAME BUILD_PRECOMMIT_EXTENSIONS || return $?
 
   statusMessage --first printf -- "%s %s" "$(decorate info "[$hookName]")" "$(decorate info "Installing ...")"
-  __catchEnvironment "$handler" gitInstallHook --copy "$hookName" || return $?
+  catchEnvironment "$handler" gitInstallHook --copy "$hookName" || return $?
   statusMessage --last printf -- "%s %s" "$(decorate info "[$hookName]")" "$(decorate info "Running ...")"
 
-  __catchEnvironment "$handler" gitPreCommitSetup || return $?
-  __catchEnvironment "$handler" hookRunOptional "$hookName" || return $?
+  catchEnvironment "$handler" gitPreCommitSetup || return $?
+  catchEnvironment "$handler" hookRunOptional "$hookName" || return $?
 
   statusMessage --last decorate info "$(lineFill '*' "$APPLICATION_NAME $(decorate magenta "$hookName") $(decorate decoration --)")"
 
@@ -125,7 +125,7 @@ __hookGitPreCommit() {
   for extension in "${extensions[@]+${extensions[@]}}"; do
     statusMessage decorate info "Processing $(decorate code "$extension") ..."
     if gitPreCommitHasExtension "$extension"; then
-      __catchEnvironment "$handler" hookRunOptional "pre-commit-$extension" || return $?
+      catchEnvironment "$handler" hookRunOptional "pre-commit-$extension" || return $?
     fi
   done
 

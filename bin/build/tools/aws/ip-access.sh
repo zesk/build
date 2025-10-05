@@ -18,18 +18,18 @@ __awsIPAccess() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
     --services)
-      shift || __throwArgument "$handler" "missing $argument argument" || return $?
+      shift || returnThrowArgument "$handler" "missing $argument argument" || return $?
       IFS=', ' read -r -a services <<<"$1" || :
       ;;
     # IDENTICAL profileNameArgumentHandlerCase 6
     --profile)
       shift
-      [ ${#pp[@]} -eq 0 ] || __throwArgument "$handler" "$argument already specified: ${pp[*]}"
+      [ ${#pp[@]} -eq 0 ] || returnThrowArgument "$handler" "$argument already specified: ${pp[*]}"
       profileName="$(usageArgumentString "$handler" "$argument" "$1")" || return $?
       pp=("$argument" "$profileName")
       ;;
@@ -45,32 +45,32 @@ __awsIPAccess() {
     shift
   done
 
-  [ -n "$developerId" ] || __throwArgument "$handler" "Empty --id or DEVELOPER_ID environment" || return $?
+  [ -n "$developerId" ] || returnThrowArgument "$handler" "Empty --id or DEVELOPER_ID environment" || return $?
 
-  [ "${#services[@]}" -gt 0 ] || __throwArgument "$handler" "Supply one or more services" || return $?
+  [ "${#services[@]}" -gt 0 ] || returnThrowArgument "$handler" "Supply one or more services" || return $?
 
-  [ ${#securityGroups[@]} -gt 0 ] || __throwArgument "$handler" "One or more --group is required" || return $?
+  [ ${#securityGroups[@]} -gt 0 ] || returnThrowArgument "$handler" "One or more --group is required" || return $?
   if [ -z "$currentIP" ]; then
     if ! currentIP=$(ipLookup) || [ -z "$currentIP" ]; then
-      __throwEnvironment "$handler" "Unable to determine IP address" || return $?
+      returnThrowEnvironment "$handler" "Unable to determine IP address" || return $?
     fi
   fi
   currentIP="$currentIP/32"
 
-  __catch "$handler" awsInstall || return $?
+  returnCatch "$handler" awsInstall || return $?
 
   if ! awsHasEnvironment; then
     # IDENTICAL profileNameArgumentValidation 4
     if [ -z "$profileName" ]; then
-      profileName="$(__catch "$handler" buildEnvironmentGet AWS_PROFILE)" || return $?
+      profileName="$(returnCatch "$handler" buildEnvironmentGet AWS_PROFILE)" || return $?
       [ -n "$profileName" ] || profileName="default"
     fi
     ! $verboseFlag || statusMessage decorate info "Need AWS credentials: $profileName" || :
     if awsCredentialsHasProfile "$profileName"; then
-      # __catchEnvironment "$handler" eval "$(awsEnvironmentFromCredentials "$profileName")" || return $?
+      # catchEnvironment "$handler" eval "$(awsEnvironmentFromCredentials "$profileName")" || return $?
       pp=("--profile" "$profileName")
     else
-      __throwEnvironment "$handler" "No AWS credentials available: $profileName" || return $?
+      returnThrowEnvironment "$handler" "No AWS credentials available: $profileName" || return $?
     fi
   fi
 
@@ -100,7 +100,7 @@ __awsIPAccess() {
   local service
   for service in "${services[@]}"; do
     if ! isPositiveInteger "$service" && ! serviceToPort "$service" >/dev/null; then
-      __throwArgument "$handler" "Invalid service $(decorate code "$service")" || return $?
+      returnThrowArgument "$handler" "Invalid service $(decorate code "$service")" || return $?
     fi
   done
 
@@ -110,12 +110,12 @@ __awsIPAccess() {
       if isPositiveInteger "$service"; then
         port="$service"
       else
-        port=$(serviceToPort "$service") || __throwEnvironment "$handler" "serviceToPort $service failed 2nd round?" || return $?
+        port=$(serviceToPort "$service") || returnThrowEnvironment "$handler" "serviceToPort $service failed 2nd round?" || return $?
       fi
       sgArgs=(--group "$securityGroupId" --port "$port" --description "$developerId-$service" --ip "$currentIP")
 
       local actionArg="--register" && ! $optionRevoke || actionArg="--remove"
-      __catch "$handler" awsSecurityGroupIPModify "${pp[@]+"${pp[@]}"}" "$actionArg" "${sgArgs[@]}" || return $?
+      returnCatch "$handler" awsSecurityGroupIPModify "${pp[@]+"${pp[@]}"}" "$actionArg" "${sgArgs[@]}" || return $?
     done
   done
 }

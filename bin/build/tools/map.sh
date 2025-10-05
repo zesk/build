@@ -65,7 +65,7 @@ mapValue() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -93,29 +93,29 @@ mapValue() {
         shift
         break
       else
-        # _IDENTICAL_ argumentUnknownHandler 1
-        __throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
+      # _IDENTICAL_ argumentUnknownHandler 1
+      returnThrowArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
       fi
       ;;
     esac
     shift
   done
-  [ -n "$mapFile" ] || __throwArgument "$handler" "mapFile required" || return $?
+  [ -n "$mapFile" ] || returnThrowArgument "$handler" "mapFile required" || return $?
   (
     local value environment searchToken environmentValue filter
 
     value="$*"
     while read -r environment; do
-      environmentValue=$(__catch "$handler" environmentValueRead "$mapFile" "$environment") || return $?
+      environmentValue=$(returnCatch "$handler" environmentValueRead "$mapFile" "$environment") || return $?
       searchToken="$prefix$environment$suffix"
       if [ ${#searchFilters[@]} -gt 0 ]; then
         for filter in "${searchFilters[@]}"; do
-          searchToken=$(__catchEnvironment "$handler" "$filter" "$searchToken") || return $?
+          searchToken=$(catchEnvironment "$handler" "$filter" "$searchToken") || return $?
         done
       fi
       if [ ${#replaceFilters[@]} -gt 0 ]; then
         for filter in "${replaceFilters[@]}"; do
-          environmentValue=$(__catchEnvironment "$handler" "$filter" "$environmentValue") || return $?
+          environmentValue=$(catchEnvironment "$handler" "$filter" "$environmentValue") || return $?
         done
       fi
       value="${value/${searchToken}/${environmentValue}}"
@@ -161,8 +161,8 @@ _mapValueTrim() {
 # Argument: --replace-filter - Zero or more. Callable. Filter for replacement strings. (e.g. `trimSpace`)
 # Environment: Argument-passed or entire environment variables which are exported are used and mapped to the destination.
 # Example:     printf %s "{NAME}, {PLACE}.\n" | NAME=Hello PLACE=world mapEnvironment NAME PLACE
-# Requires: environmentVariables cat __throwEnvironment __catchEnvironment
-# Requires: __throwArgument decorate usageArgumentString
+# Requires: environmentVariables cat returnThrowEnvironment catchEnvironment
+# Requires: returnThrowArgument decorate usageArgumentString
 mapEnvironment() {
   local handler="_${FUNCNAME[0]}"
 
@@ -173,7 +173,7 @@ mapEnvironment() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -214,7 +214,7 @@ mapEnvironment() {
     local __filter __value __handler="$handler"
     unset handler
 
-    __value="$(__catchEnvironment "$__handler" cat)" || return $?
+    __value="$(catchEnvironment "$__handler" cat)" || return $?
     if [ $((${#__replaceFilters[@]} + ${#__searchFilters[@]})) -gt 0 ]; then
       for __e in "${__ee[@]}"; do
         case "${__e}" in *[!A-Za-z0-9_]*) continue ;; *) ;; esac
@@ -222,12 +222,12 @@ mapEnvironment() {
         local __replace="${!__e-}"
         if [ ${#__searchFilters[@]} -gt 0 ]; then
           for __filter in "${__searchFilters[@]}"; do
-            __search=$(__catchEnvironment "$__handler" "$__filter" "$__search") || return $?
+            __search=$(catchEnvironment "$__handler" "$__filter" "$__search") || return $?
           done
         fi
         if [ ${#__replaceFilters[@]} -gt 0 ]; then
           for __filter in "${__replace[@]}"; do
-            __replace=$(__catchEnvironment "$__handler" "$__filter" "$__replace") || return $?
+            __replace=$(catchEnvironment "$__handler" "$__filter" "$__replace") || return $?
           done
         fi
         __value="${__value//"$__search"/$__replace}"
@@ -279,7 +279,7 @@ cannon() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -306,10 +306,10 @@ cannon() {
 
   searchQuoted=$(quoteSedPattern "$search")
   replaceQuoted=$(quoteSedPattern "$replace")
-  [ "$searchQuoted" != "$replaceQuoted" ] || __throwArgument "$handler" "from = to \"$search\" are identical" || return $?
+  [ "$searchQuoted" != "$replaceQuoted" ] || returnThrowArgument "$handler" "from = to \"$search\" are identical" || return $?
   cannonLog=$(fileTemporaryName "$handler") || return $?
   local undo=(muzzle popd -- rm -f "$cannonLog" "$cannonLog.found" --)
-  __catchEnvironment "$handler" muzzle pushd "$cannonPath" || return $?
+  catchEnvironment "$handler" muzzle pushd "$cannonPath" || return $?
   if ! find "." -type f ! -path "*/.*/*" "$@" -print0 >"$cannonLog"; then
     printf "%s" "$(decorate success "# \"")$(decorate code "$1")$(decorate success "\" Not found")"
     returnUndo 0 "${undo[@]}"
@@ -319,11 +319,11 @@ cannon() {
 
   local exitCode=0 count
 
-  count="$(($(__catch "$handler" fileLineCount "$cannonLog.found") + 0))" || returnUndo 0 "${undo[@]}" || return $?
+  count="$(($(returnCatch "$handler" fileLineCount "$cannonLog.found") + 0))" || returnUndo 0 "${undo[@]}" || return $?
   if [ "$count" -eq 0 ]; then
     statusMessage --inline decorate warning "Modified (NO) files"
   else
-    __catch "$handler" __xargsSedInPlaceReplace -e "s/$searchQuoted/$replaceQuoted/g" <"$cannonLog.found" || returnUndo 0 "${undo[@]}" || return $?
+    returnCatch "$handler" __xargsSedInPlaceReplace -e "s/$searchQuoted/$replaceQuoted/g" <"$cannonLog.found" || returnUndo 0 "${undo[@]}" || return $?
     statusMessage --inline decorate success "Modified $(decorate code "$(pluralWord "$count" file)")"
     exitCode=1
   fi

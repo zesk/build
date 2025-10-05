@@ -18,6 +18,38 @@
 #             |_|
 #
 
+__catch() {
+  returnCatch "$@"
+}
+__catchCode() {
+  _deprecated "${FUNCNAME[0]}"
+  catchCode "$@"
+}
+__throwEnvironment() {
+  _deprecated "${FUNCNAME[0]}"
+  throwEnvironment "$@"
+}
+__catchEnvironment() {
+  _deprecated "${FUNCNAME[0]}"
+  catchEnvironment "$@"
+}
+__catchArgument() {
+  _deprecated "${FUNCNAME[0]}"
+  catchArgument "$@"
+}
+__execute() {
+  _deprecated "${FUNCNAME[0]}"
+  execute "$@"
+}
+executeEcho() {
+  _deprecated "${FUNCNAME[0]}"
+  __echo "$@"
+}
+_choose() {
+  _deprecated "${FUNCNAME[0]}"
+  booleanChoose "$@"
+}
+
 # DEPRECATED 2025-10-03
 newRelease() {
   _deprecated "${FUNCNAME[0]}"

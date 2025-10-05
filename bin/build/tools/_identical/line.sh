@@ -24,7 +24,7 @@ __identicalCheckInsideLoopLineHandler() {
 
   if [ ! -f "$tokenFile" ]; then
     printf -- "%s\n%d\n%s\n" "$count" "$lineNumber" "$searchFile" >"$tokenFile"
-    __catch "$handler" __identicalCheckMatchFile "$searchFile" "$totalLines" "$lineNumber" "$count" >"$countFile" || return $?
+    returnCatch "$handler" __identicalCheckMatchFile "$searchFile" "$totalLines" "$lineNumber" "$count" >"$countFile" || return $?
     if [ "$token" = "" ]; then
       dumpPipe "token countFile $token $countFile" <"$countFile" 1>&2
     fi
@@ -48,7 +48,7 @@ __identicalCheckInsideLoopLineHandler() {
     touch "$countFile.compare" || :
     touch "$tokenDirectory/$tokenLineCount@$token.match.compare" || :
   elif ! isUnsignedInteger "$count"; then
-    __catch "$handler" __identicalCheckMatchFile "$searchFile" "$totalLines" "$lineNumber" "1" >"$countFile" || return $?
+    returnCatch "$handler" __identicalCheckMatchFile "$searchFile" "$totalLines" "$lineNumber" "1" >"$countFile" || return $?
     badFiles+=("$searchFile")
     printf -- "%s\n" "$(decorate code "$searchFile:$lineNumber") - not integers: $(decorate value "$identicalLine")"
   else
@@ -57,7 +57,7 @@ __identicalCheckInsideLoopLineHandler() {
     # 10 lines in file, line 1 means: tail -n 10
     # 10 lines in file, line 9 means: tail -n 2
     # 10 lines in file, line 10 means: tail -n 1
-    __catch "$handler" __identicalCheckMatchFile "$searchFile" "$totalLines" "$lineNumber" "$count" >"$compareFile" || return $?
+    returnCatch "$handler" __identicalCheckMatchFile "$searchFile" "$totalLines" "$lineNumber" "$count" >"$compareFile" || return $?
     if [ "$(identicalFindTokens --prefix "$prefix" "$compareFile" | fileLineCount)" != "0" ]; then
       dumpPipe compareFile <"$compareFile" 1>&2
       badFiles+=("$searchFile")

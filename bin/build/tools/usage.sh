@@ -89,11 +89,11 @@ usageRequireBinary() {
   [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
   local usageFunction="${1-}" && shift
   if [ "$(type -t "$usageFunction")" != "function" ]; then
-    __catchArgument "$handler" "$(decorate code "$handler") must be a valid function" || return $?
+    catchArgument "$handler" "$(decorate code "$handler") must be a valid function" || return $?
   fi
   local binary
   for binary in "$@"; do
-    whichExists "$binary" || __throwEnvironment "$handler" "$binary is not available in path, not found: $(decorate code "$PATH")"
+    whichExists "$binary" || returnThrowEnvironment "$handler" "$binary is not available in path, not found: $(decorate code "$PATH")"
   done
 }
 _usageRequireBinary() {
@@ -115,12 +115,12 @@ usageRequireEnvironment() {
   [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
   local usageFunction="${1-}" && shift
   if [ "$(type -t "$usageFunction")" != "function" ]; then
-    __catchArgument "$handler" "$(decorate code "$handler") must be a valid function" || return $?
+    catchArgument "$handler" "$(decorate code "$handler") must be a valid function" || return $?
   fi
   local environmentVariable
   for environmentVariable in "$@"; do
     if [ -z "${!environmentVariable-}" ]; then
-      __throwEnvironment "$usageFunction" "Environment variable $(decorate code "$environmentVariable") is required" || return $?
+      returnThrowEnvironment "$usageFunction" "Environment variable $(decorate code "$environmentVariable") is required" || return $?
     fi
   done
 }
@@ -137,7 +137,7 @@ _usageRequireEnvironment() {
 # Argument: testCommand ... - Required. Callable. Test command to run on value.
 # Utility function to handle all handler
 #
-__catchArgumentHelper() {
+catchArgumentHelper() {
   local defaultNoun usageFunction variableName variableValue noun
 
   defaultNoun="${1-}"
@@ -150,10 +150,10 @@ __catchArgumentHelper() {
   shift || :
   noun="${1:-"$defaultNoun"}"
   shift || :
-  [ -n "$variableValue" ] || __throwArgument "$usageFunction" "$variableName $noun is required ($(decorate code "$variableValue"))" || return $?
+  [ -n "$variableValue" ] || returnThrowArgument "$usageFunction" "$variableName $noun is required ($(decorate code "$variableValue"))" || return $?
 
   # Remaining parameters are the test
-  "$@" "$variableValue" || __throwArgument "$usageFunction" "$variableName is not $noun (\"$(decorate code "$variableValue")$(decorate error '")')" || return $?
+  "$@" "$variableValue" || returnThrowArgument "$usageFunction" "$variableName is not $noun (\"$(decorate code "$variableValue")$(decorate error '")')" || return $?
 
   printf "%s\n" "$variableValue"
 }
@@ -169,7 +169,7 @@ __catchArgumentHelper() {
 usageArgumentString() {
   local handler="$1" argument="$2"
   shift 2 || :
-  [ -n "${1-}" ] || __throwArgument "$handler" "blank" "$argument" || return $?
+  [ -n "${1-}" ] || returnThrowArgument "$handler" "blank" "$argument" || return $?
   printf "%s\n" "$1"
 }
 
@@ -185,8 +185,8 @@ usageArgumentInteger() {
   local args handler="$1"
   args=("$@")
   args[3]="${4-}"
-  [ ${#args[@]} -eq 4 ] || __throwArgument "$handler" "Need 4 arguments" || return $?
-  __catchArgumentHelper integer "${args[@]}" isInteger || return $?
+  [ ${#args[@]} -eq 4 ] || returnThrowArgument "$handler" "Need 4 arguments" || return $?
+  catchArgumentHelper integer "${args[@]}" isInteger || return $?
 }
 
 # Validates a value is a number
@@ -201,8 +201,8 @@ usageArgumentNumber() {
   local args handler="$1"
   args=("$@")
   args[3]="${4-}"
-  [ ${#args[@]} -eq 4 ] || __throwArgument "$handler" "Need 4 arguments" || return $?
-  __catchArgumentHelper integer "${args[@]}" isNumber || return $?
+  [ ${#args[@]} -eq 4 ] || returnThrowArgument "$handler" "Need 4 arguments" || return $?
+  catchArgumentHelper integer "${args[@]}" isNumber || return $?
 }
 
 # Validates a value is an unsigned integer
@@ -218,10 +218,10 @@ usageArgumentUnsignedInteger() {
   args=("$@")
   args[3]="${4-}"
   if [ ${#args[@]} -ne 4 ]; then
-    __throwArgument "$handler" "${FUNCNAME[0]} Need at least 3 arguments" || return $?
+    returnThrowArgument "$handler" "${FUNCNAME[0]} Need at least 3 arguments" || return $?
     return $?
   fi
-  __catchArgumentHelper "unsigned integer" "${args[@]}" isUnsignedInteger || return $?
+  catchArgumentHelper "unsigned integer" "${args[@]}" isUnsignedInteger || return $?
 }
 
 # Validates a value is an unsigned integer and greater than zero (NOT zero)
@@ -237,10 +237,10 @@ usageArgumentPositiveInteger() {
   args=("$@")
   args[3]="${4-}"
   if [ ${#args[@]} -ne 4 ]; then
-    __throwArgument "$handler" "${FUNCNAME[0]} Need at least 3 arguments" || return $?
+    returnThrowArgument "$handler" "${FUNCNAME[0]} Need at least 3 arguments" || return $?
     return $?
   fi
-  __catchArgumentHelper "positive integer" "${args[@]}" isUnsignedInteger >/dev/null && __catchArgumentHelper "positive integer" "${args[@]}" test 0 -lt || return $?
+  catchArgumentHelper "positive integer" "${args[@]}" isUnsignedInteger >/dev/null && catchArgumentHelper "positive integer" "${args[@]}" test 0 -lt || return $?
 }
 
 # Validates a value is not blank and is a file.
@@ -257,10 +257,10 @@ usageArgumentFile() {
   args=("$@")
   args[3]="${4-}"
   if [ ${#args[@]} -ne 4 ]; then
-    __throwArgument "$handler" "${FUNCNAME[0]} Need at least 3 arguments" || return $?
+    returnThrowArgument "$handler" "${FUNCNAME[0]} Need at least 3 arguments" || return $?
     return $?
   fi
-  __catchArgumentHelper "file" "${args[@]}" test -f || return $?
+  catchArgumentHelper "file" "${args[@]}" test -f || return $?
 }
 
 # Validates a value is not blank and is a file and does `realPath` on it.
@@ -276,11 +276,11 @@ usageArgumentRealFile() {
   args=("$@")
   args[3]="${4-}"
   if [ ${#args[@]} -ne 4 ]; then
-    __throwArgument "$handler" "${FUNCNAME[0]} Need at least 3 arguments" || return $?
+    returnThrowArgument "$handler" "${FUNCNAME[0]} Need at least 3 arguments" || return $?
   fi
 
-  value="$(__catchArgumentHelper "file" "${args[@]}" test -f)" || return $?
-  __catchEnvironment "$handler" realPath "$value" || return $?
+  value="$(catchArgumentHelper "file" "${args[@]}" test -f)" || return $?
+  catchEnvironment "$handler" realPath "$value" || return $?
 }
 
 # Validates a value is not blank and exists in the file system
@@ -297,10 +297,10 @@ usageArgumentExists() {
   args=("$@")
   args[3]="${4-}"
   if [ ${#args[@]} -ne 4 ]; then
-    __throwArgument "$handler" "${FUNCNAME[0]} Need at least 3 arguments" || return $?
+    returnThrowArgument "$handler" "${FUNCNAME[0]} Need at least 3 arguments" || return $?
     return $?
   fi
-  __catchArgumentHelper "file or directory" "${args[@]}" test -e || return $?
+  catchArgumentHelper "file or directory" "${args[@]}" test -e || return $?
 }
 
 # Validates a value is not blank and is a link
@@ -317,10 +317,10 @@ usageArgumentLink() {
   args=("$@")
   args[3]="${4-}"
   if [ ${#args[@]} -ne 4 ]; then
-    __throwArgument "$handler" "${FUNCNAME[0]} Need at least 3 arguments" || return $?
+    returnThrowArgument "$handler" "${FUNCNAME[0]} Need at least 3 arguments" || return $?
     return $?
   fi
-  __catchArgumentHelper "link" "${args[@]}" test -L || return $?
+  catchArgumentHelper "link" "${args[@]}" test -L || return $?
 }
 
 # Validates a value is not blank and is a directory. Upon success, outputs the directory name trailing slash stripped.
@@ -336,10 +336,10 @@ usageArgumentDirectory() {
   args=("$@")
   args[3]="${4-}"
   if [ ${#args[@]} -ne 4 ]; then
-    __throwArgument "$handler" "${FUNCNAME[0]} Need at least 3 arguments" || return $?
+    returnThrowArgument "$handler" "${FUNCNAME[0]} Need at least 3 arguments" || return $?
     return $?
   fi
-  directory="$(__catchArgumentHelper "directory" "${args[@]}" test -d)" || return $?
+  directory="$(catchArgumentHelper "directory" "${args[@]}" test -d)" || return $?
   [ "${#directory}" -le 1 ] || directory="${directory%/}"
   printf "%s\n" "${directory}"
 }
@@ -357,14 +357,14 @@ usageArgumentDirectoryList() {
   args=("$@")
   args[3]="${4-}"
   if [ ${#args[@]} -ne 4 ]; then
-    __throwArgument "$handler" "${FUNCNAME[0]} Need at least 3 arguments" || return $?
+    returnThrowArgument "$handler" "${FUNCNAME[0]} Need at least 3 arguments" || return $?
     return $?
   fi
   local directories=() directory result=() index=0
   IFS=":" read -r -a directories <<<"$3" || :
   for directory in "${directories[@]+"${directories[@]}"}"; do
     [ -n "$directory" ] || continue
-    [ -d "$directory" ] || __throwArgument "$handler" "$2 element #$index is not a directory $(decorate code "$directory"): $(decorate value "$3")" || return $?
+    [ -d "$directory" ] || returnThrowArgument "$handler" "$2 element #$index is not a directory $(decorate code "$directory"): $(decorate value "$3")" || return $?
     result+=("$directory")
     index=$((index + 1))
   done
@@ -384,20 +384,20 @@ usageArgumentApplicationDirectoryList() {
   args=("$@")
   args[3]="${4-}"
   if [ ${#args[@]} -ne 4 ]; then
-    __throwArgument "$handler" "${FUNCNAME[0]} Need at least 3 arguments" || return $?
+    returnThrowArgument "$handler" "${FUNCNAME[0]} Need at least 3 arguments" || return $?
     return $?
   fi
 
   local home directories=() directory result=() index=0
 
-  home=$(__catch "$handler" buildHome) || return $?
+  home=$(returnCatch "$handler" buildHome) || return $?
   IFS=":" read -r -a directories <<<"$3" || :
   for directory in "${directories[@]+"${directories[@]}"}"; do
     [ -n "$directory" ] || continue
     directory="${directory#./}"
     directory="${directory#/}"
     directory="${directory%/}"
-    [ -d "${home%/}/$directory" ] || __throwArgument "$handler" "$2 element #$index is not a directory $(decorate code "$home/$directory"): $(decorate value "$3")" || return $?
+    [ -d "${home%/}/$directory" ] || returnThrowArgument "$handler" "$2 element #$index is not a directory $(decorate code "$home/$directory"): $(decorate value "$3")" || return $?
     result+=("$directory")
     index=$((index + 1))
   done
@@ -417,18 +417,18 @@ usageArgumentApplicationDirectory() {
   args=("$@")
   args[3]="${4-}"
   if [ ${#args[@]} -ne 4 ]; then
-    __throwArgument "$handler" "${FUNCNAME[0]} Need at least 3 arguments" || return $?
+    returnThrowArgument "$handler" "${FUNCNAME[0]} Need at least 3 arguments" || return $?
     return $?
   fi
   local home directory="$3"
 
-  [ -n "$directory" ] || __throwArgument "$handler" "$directory is blank" || return $?
-  home=$(__catch "$handler" buildHome) || return $?
+  [ -n "$directory" ] || returnThrowArgument "$handler" "$directory is blank" || return $?
+  home=$(returnCatch "$handler" buildHome) || return $?
 
   directory="${directory#./}"
   directory="${directory#/}"
   directory="${directory%/}"
-  [ -d "${home%/}/$directory" ] || __throwArgument "$handler" "$2 element #$index is not a directory $(decorate code "$home/$directory"): $(decorate value "$3")" || return $?
+  [ -d "${home%/}/$directory" ] || returnThrowArgument "$handler" "$2 element #$index is not a directory $(decorate code "$home/$directory"): $(decorate value "$3")" || return $?
   printf "%s\n" "$directory"
 }
 
@@ -444,18 +444,18 @@ usageArgumentApplicationFile() {
   local handler="$1" args
   args=("$@")
   args[3]="${4-}"
-  [ ${#args[@]} -eq 4 ] || __throwArgument "$handler" "${FUNCNAME[0]} Need at least 3 arguments" || return $?
+  [ ${#args[@]} -eq 4 ] || returnThrowArgument "$handler" "${FUNCNAME[0]} Need at least 3 arguments" || return $?
 
   local file="$3"
-  [ -n "$file" ] || __throwArgument "$handler" "$directory is blank" || return $?
+  [ -n "$file" ] || returnThrowArgument "$handler" "$directory is blank" || return $?
 
   local home
-  home=$(__catch "$handler" buildHome) || return $?
+  home=$(returnCatch "$handler" buildHome) || return $?
 
   file="${file#./}"
   file="${file#/}"
   local appFile="${home%/}/$file"
-  [ -f "$appFile" ] || __throwArgument "$handler" "$2 element #$index is not a file $(decorate code "$appFile"): $(decorate value "$file")" || return $?
+  [ -f "$appFile" ] || returnThrowArgument "$handler" "$2 element #$index is not a file $(decorate code "$appFile"): $(decorate value "$file")" || return $?
   printf "%s\n" "$file"
 }
 
@@ -472,11 +472,11 @@ usageArgumentRealDirectory() {
   args=("$@")
   args[3]="${4-}"
   if [ ${#args[@]} -ne 4 ]; then
-    __throwArgument "$handler" "${FUNCNAME[0]} Need at least 3 arguments" || return $?
+    returnThrowArgument "$handler" "${FUNCNAME[0]} Need at least 3 arguments" || return $?
   fi
 
-  args[2]=$(realPath "${args[2]}") || __throwArgument "$handler" "realPath" "${args[2]}" || return $?
-  directory="$(__catchArgumentHelper "directory" "${args[@]}" test -d)" || return $?
+  args[2]=$(realPath "${args[2]}") || returnThrowArgument "$handler" "realPath" "${args[2]}" || return $?
+  directory="$(catchArgumentHelper "directory" "${args[@]}" test -d)" || return $?
   printf "%s\n" "${directory%/}"
 }
 
@@ -493,10 +493,10 @@ usageArgumentFileDirectory() {
   args=("$@")
   args[3]="${4-}"
   if [ ${#args[@]} -ne 4 ]; then
-    __throwArgument "$handler" "${FUNCNAME[0]} Need at least 3 arguments" || return $?
+    returnThrowArgument "$handler" "${FUNCNAME[0]} Need at least 3 arguments" || return $?
     return $?
   fi
-  __catchArgumentHelper "file" "${args[@]}" fileDirectoryExists || return $?
+  catchArgumentHelper "file" "${args[@]}" fileDirectoryExists || return $?
 }
 
 # Validates a value is not blank and is an environment file which is loaded immediately.
@@ -515,7 +515,7 @@ usageArgumentLoadEnvironmentFile() {
   usageFunction="$1"
   envFile=$(usageArgumentFile "$@") || return $?
   bashEnv=$(fileTemporaryName "$usageFunction") || return $?
-  __catchEnvironment "$usageFunction" environmentFileToBashCompatible "$envFile" >"$bashEnv" || returnClean $? "$bashEnv" || return $?
+  catchEnvironment "$usageFunction" environmentFileToBashCompatible "$envFile" >"$bashEnv" || returnClean $? "$bashEnv" || return $?
   set -a
   # shellcheck source=/dev/null
   source "$bashEnv"
@@ -551,7 +551,7 @@ usageArgumentEmptyString() {
 usageArgumentBoolean() {
   local handler="$1" argument="$2"
   shift 2 || :
-  isBoolean "${1-}" || __throwArgument "$handler" "$argument not boolean: \"${1-}\"" || return $?
+  isBoolean "${1-}" || returnThrowArgument "$handler" "$argument not boolean: \"${1-}\"" || return $?
   printf "%s\n" "$1"
 }
 
@@ -565,7 +565,7 @@ usageArgumentBoolean() {
 usageArgumentURL() {
   local handler="$1" argument="$2"
   shift 2 || :
-  urlValid "${1-}" || __throwArgument "$handler" "$argument \"${1-}\" is not a valid URL" || return $?
+  urlValid "${1-}" || returnThrowArgument "$handler" "$argument \"${1-}\" is not a valid URL" || return $?
   printf "%s\n" "$1"
 }
 
@@ -579,7 +579,7 @@ usageArgumentURL() {
 usageArgumentCallable() {
   local handler="$1" argument="$2"
   shift 2 || :
-  isCallable "${1-}" || __throwArgument "$handler" "$argument \"${1-}\" is not callable" || return $?
+  isCallable "${1-}" || returnThrowArgument "$handler" "$argument \"${1-}\" is not callable" || return $?
   printf "%s\n" "$1"
 }
 
@@ -593,7 +593,7 @@ usageArgumentCallable() {
 usageArgumentExecutable() {
   local handler="$1" argument="$2"
   shift 2 || :
-  isExecutable "${1-}" || __throwArgument "$handler" "$argument \"${1-}\" is not executable" || return $?
+  isExecutable "${1-}" || returnThrowArgument "$handler" "$argument \"${1-}\" is not executable" || return $?
   printf "%s\n" "$1"
 }
 
@@ -607,7 +607,7 @@ usageArgumentExecutable() {
 usageArgumentFunction() {
   local handler="$1" argument="$2"
   shift 2 || :
-  isFunction "${1-}" || __throwArgument "$handler" "$argument \"${1-}\" is not a function" || return $?
+  isFunction "${1-}" || returnThrowArgument "$handler" "$argument \"${1-}\" is not a function" || return $?
   printf "%s\n" "$1"
 }
 
@@ -623,7 +623,7 @@ usageArgumentFunction() {
 usageArgumentEnvironmentVariable() {
   local handler="$1" argument="$2"
   shift 2 || :
-  environmentVariableNameValid "${1-}" || __throwArgument "$handler" "$argument \"${1-}\" is not a valid environment variable name" || return $?
+  environmentVariableNameValid "${1-}" || returnThrowArgument "$handler" "$argument \"${1-}\" is not a valid environment variable name" || return $?
   printf "%s\n" "$1"
 }
 
@@ -685,7 +685,7 @@ usageArgumentRemoteDirectory() {
   local handler="$1" argument="$2"
   shift 2 || :
   local path="${1-}"
-  [ "${path:0:1}" = "/" ] || __throwArgument "$handler" "$argument \"${1-}\" is not a valid remote path" || return $?
+  [ "${path:0:1}" = "/" ] || returnThrowArgument "$handler" "$argument \"${1-}\" is not a valid remote path" || return $?
   printf "%s\n" "${1%/}"
 }
 
@@ -696,6 +696,6 @@ usageArgumentRemoteDirectory() {
 usageArgumentDate() {
   local handler="$1" argument="$2"
   shift 2 || :
-  dateValid "${1-}" || __throwArgument "$handler" "$argument \"${1-}\" is not a valid date" || return $?
+  dateValid "${1-}" || returnThrowArgument "$handler" "$argument \"${1-}\" is not a valid date" || return $?
   printf "%s\n" "$1"
 }

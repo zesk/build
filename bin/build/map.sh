@@ -61,35 +61,35 @@ _isUnsignedInteger() {
 # Run `handler` with an argument error
 # Argument: handler - Function. Required. Error handler.
 # Argument: message ... - String. Optional. Error message
-__throwArgument() {
-  __throw 2 "$@" || return $?
+returnThrowArgument() {
+  returnThrow 2 "$@" || return $?
 }
 
 # Run `handler` with an environment error
 # Argument: handler - Function. Required. Error handler.
 # Argument: message ... - String. Optional. Error message
-__throwEnvironment() {
-  __throw 1 "$@" || return $?
+returnThrowEnvironment() {
+  returnThrow 1 "$@" || return $?
 }
 
 # Run `command`, upon failure run `handler` with an argument error
 # Usage: {fn} handler command ...
 # Argument: handler - Required. String. Failure command
 # Argument: command - Required. Command to run.
-# Requires: __throwArgument
-__catchArgument() {
+# Requires: returnThrowArgument
+catchArgument() {
   local handler="${1-}"
-  shift && "$@" || __throwArgument "$handler" "$@" || return $?
+  shift && "$@" || returnThrowArgument "$handler" "$@" || return $?
 }
 
 # Run `command`, upon failure run `handler` with an environment error
 # Usage: {fn} handler command ...
 # Argument: handler - Required. String. Failure command
 # Argument: command - Required. Command to run.
-# Requires: __throwEnvironment
-__catchEnvironment() {
+# Requires: returnThrowEnvironment
+catchEnvironment() {
   local handler="${1-}"
-  shift && "$@" || __throwEnvironment "$handler" "$@" || return $?
+  shift && "$@" || returnThrowEnvironment "$handler" "$@" || return $?
 }
 
 # _IDENTICAL_ _errors 36
@@ -115,7 +115,7 @@ returnEnvironment() {
 # Argument: handler - Function. Required. Error handler.
 # Argument: message ... - String. Optional. Error message
 # Requires: returnArgument
-__throw() {
+returnThrow() {
   local exitCode="${1-}" && shift || returnArgument "Missing exit code" || return $?
   lcoal handler="${1-}" && shift || returnArgument "Missing error handler" || return $?
   "$handler" "$exitCode" "$@" || return $?
@@ -125,7 +125,7 @@ __throw() {
 # Argument: handler - Required. Function. Error handler.
 # Argument: binary ... - Required. Executable. Any arguments are passed to `binary`.
 # Requires: returnArgument
-__catch() {
+returnCatch() {
   local handler="${1-}" && shift || returnArgument "Missing handler" || return $?
   "$@" || "$handler" "$?" "$@" || return $?
 }
@@ -291,14 +291,14 @@ _convertValue() {
 # DEPRECATED-Example: [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return $?
 # DEPRECATED-Example: [ $# -eq 0 ] || __help --only "$handler" "$@" || return $?
 #
-# Requires: __throwArgument usageDocument ___help
+# Requires: returnThrowArgument usageDocument ___help
 __help() {
   [ $# -gt 0 ] || ! ___help 0 || return 0
   local handler="${1-}" && shift
   if [ "$handler" = "--only" ]; then
     handler="${1-}" && shift
     [ $# -gt 0 ] || return 0
-    [ "$#" -eq 1 ] && [ "${1-}" = "--help" ] || __throwArgument "$handler" "Only argument allowed is \"--help\": $*" || return $?
+    [ "$#" -eq 1 ] && [ "${1-}" = "--help" ] || returnThrowArgument "$handler" "Only argument allowed is \"--help\": $*" || return $?
   fi
   while [ $# -gt 0 ]; do
     [ "$1" != "--help" ] || ! "$handler" 0 || return 1
@@ -318,11 +318,11 @@ ___help() {
 # Argument: value - EmptyString. Required. Value to check if it is an unsigned integer
 # Return Code: 0 - if it is a positive integer
 # Return Code: 1 - if it is not a positive integer
-# Requires: __catchArgument isUnsignedInteger usageDocument
+# Requires: catchArgument isUnsignedInteger usageDocument
 isPositiveInteger() {
   # _IDENTICAL_ functionSignatureSingleArgument 2
   local handler="_${FUNCNAME[0]}"
-  [ $# -eq 1 ] || __catchArgument "$handler" "Single argument only: $*" || return $?
+  [ $# -eq 1 ] || catchArgument "$handler" "Single argument only: $*" || return $?
   [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
   if isUnsignedInteger "${1-}"; then
     [ "$1" -gt 0 ] || return 1
@@ -340,11 +340,11 @@ _isPositiveInteger() {
 # If no arguments are passed, returns exit code 1.
 # Return Code: 0 - argument is bash function
 # Return Code: 1 - argument is not a bash function
-# Requires: __catchArgument isUnsignedInteger usageDocument type
+# Requires: catchArgument isUnsignedInteger usageDocument type
 isFunction() {
   # _IDENTICAL_ functionSignatureSingleArgument 2
   local handler="_${FUNCNAME[0]}"
-  [ $# -eq 1 ] || __catchArgument "$handler" "Single argument only: $*" || return $?
+  [ $# -eq 1 ] || catchArgument "$handler" "Single argument only: $*" || return $?
   [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
   # Skip illegal options "--" and "-foo"
   [ "$1" = "${1#-}" ] || return 1
@@ -383,7 +383,7 @@ _returnCodeString() {
 usageArgumentString() {
   local handler="$1" argument="$2"
   shift 2 || :
-  [ -n "${1-}" ] || __throwArgument "$handler" "blank" "$argument" || return $?
+  [ -n "${1-}" ] || returnThrowArgument "$handler" "blank" "$argument" || return $?
   printf "%s\n" "$1"
 }
 
@@ -466,26 +466,26 @@ _decorations() {
 # Argument: style - String. Required. One of: reset underline no-underline bold no-bold black black-contrast blue cyan green magenta orange red white yellow bold-black bold-black-contrast bold-blue bold-cyan bold-green bold-magenta bold-orange bold-red bold-white bold-yellow code info notice success warning error subtle label value decoration
 # Argument: text - Text to output. If not supplied, outputs a code to change the style to the new style.
 # stdout: Decorated text
-# Requires: isFunction returnArgument awk __catchEnvironment usageDocument __executeInputSupport __help
+# Requires: isFunction returnArgument awk catchEnvironment usageDocument executeInputSupport __help
 decorate() {
   local handler="_${FUNCNAME[0]}" text="" what="${1-}" lp dp style
   [ "$what" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
-  shift && [ -n "$what" ] || __catchArgument "$handler" "Requires at least one argument: \"$*\"" || return $?
+  shift && [ -n "$what" ] || catchArgument "$handler" "Requires at least one argument: \"$*\"" || return $?
 
   if ! style=$(__decorateStyle "$what"); then
     local extend func="${what/-/_}"
     extend="__decorateExtension$(printf "%s" "${func:0:1}" | awk '{print toupper($0)}')${func:1}"
-    # When this next line calls `__catchArgument` it results in an infinite loop, so don't - use returnArgument
+    # When this next line calls `catchArgument` it results in an infinite loop, so don't - use returnArgument
     # shellcheck disable=SC2119
     isFunction "$extend" || returnArgument printf -- "%s\n%s\n" "Unknown decoration name: $what ($extend)" "$(decorations)" || return $?
-    __executeInputSupport "$handler" "$extend" -- "$@" || return $?
+    executeInputSupport "$handler" "$extend" -- "$@" || return $?
     return 0
   fi
   IFS=" " read -r lp dp text <<<"$style" || :
   [ "$dp" != "-" ] || dp="$lp"
   local p='\033['
 
-  __executeInputSupport "$handler" __decorate "$text" "${p}${lp}m" "${p}${dp:-$lp}m" "${p}0m" -- "$@" || return $?
+  executeInputSupport "$handler" __decorate "$text" "${p}${lp}m" "${p}${dp:-$lp}m" "${p}0m" -- "$@" || return $?
 }
 _decorate() {
   # __IDENTICAL__ usageDocument 1
@@ -629,13 +629,13 @@ __decorateExtensionQuote() {
 
 # <-- END of IDENTICAL decorate
 
-# _IDENTICAL_ __executeInputSupport 39
+# _IDENTICAL_ executeInputSupport 39
 
 # Support arguments and stdin as arguments to an executor
 # Argument: executor ... -- - The command to run on each line of input or on each additional argument. Arguments to prefix the final variable argument can be supplied prior to an initial `--`.
 # Argument: -- - Alone after the executor forces `stdin` to be ignored. The `--` flag is also removed from the arguments passed to the executor.
 # Argument: ... - Any additional arguments are passed directly to the executor
-__executeInputSupport() {
+executeInputSupport() {
   local handler="$1" executor=() && shift
 
   while [ $# -gt 0 ]; do
@@ -653,20 +653,20 @@ __executeInputSupport() {
   if [ $# -eq 0 ] && IFS="" read -r -t 1 -n 1 byte; then
     local line done=false
     if [ "$byte" = $'\n' ]; then
-      __catchEnvironment "$handler" "${executor[@]}" "" || return $?
+      catchEnvironment "$handler" "${executor[@]}" "" || return $?
       byte=""
     fi
     while ! $done; do
       IFS="" read -r line || done=true
       [ -n "$byte$line" ] || ! $done || break
-      __catchEnvironment "$handler" "${executor[@]}" "$byte$line" || return $?
+      catchEnvironment "$handler" "${executor[@]}" "$byte$line" || return $?
       byte=""
     done
   else
     if [ "${1-}" = "--" ]; then
       shift
     fi
-    __catchEnvironment "$handler" "${executor[@]}" "$@" || return $?
+    catchEnvironment "$handler" "${executor[@]}" "$@" || return $?
   fi
 }
 
@@ -677,7 +677,7 @@ __executeInputSupport() {
 # DOC TEMPLATE: --help 1
 # Argument: --help - Optional. Flag. Display this help.
 # Argument: ... - Optional. Arguments. Any additional arguments are passed through.
-# Requires: mktemp __help __catchEnvironment usageDocument
+# Requires: mktemp __help catchEnvironment usageDocument
 # BUILD_DEBUG: temp - Logs backtrace of all temporary files to a file in application root named after this function to detect and clean up leaks
 fileTemporaryName() {
   local handler="_${FUNCNAME[0]}"
@@ -687,7 +687,7 @@ fileTemporaryName() {
   if [ "${debug#*;temp;}" != "$debug" ]; then
     local target="${BUILD_HOME-.}/.${FUNCNAME[0]}"
     printf "%s" "fileTemporaryName: " >>"$target"
-    __catchEnvironment "$handler" mktemp "$@" | tee -a "$target" || return $?
+    catchEnvironment "$handler" mktemp "$@" | tee -a "$target" || return $?
     local sources=() count=${#FUNCNAME[@]} index=0
     while [ "$index" -lt "$count" ]; do
       sources+=("${BASH_SOURCE[index + 1]-}:${BASH_LINENO[index]-"$LINENO"} - ${FUNCNAME[index]-}")
@@ -695,7 +695,7 @@ fileTemporaryName() {
     done
     printf "%s\n" "${sources[@]}" "-- END" >>"$target"
   else
-    __catchEnvironment "$handler" mktemp "$@" || return $?
+    catchEnvironment "$handler" mktemp "$@" || return $?
   fi
 }
 _fileTemporaryName() {
@@ -762,8 +762,8 @@ _environmentVariables() {
 # Argument: --replace-filter - Zero or more. Callable. Filter for replacement strings. (e.g. `trimSpace`)
 # Environment: Argument-passed or entire environment variables which are exported are used and mapped to the destination.
 # Example:     printf %s "{NAME}, {PLACE}.\n" | NAME=Hello PLACE=world mapEnvironment NAME PLACE
-# Requires: environmentVariables cat __throwEnvironment __catchEnvironment
-# Requires: __throwArgument decorate usageArgumentString
+# Requires: environmentVariables cat returnThrowEnvironment catchEnvironment
+# Requires: returnThrowArgument decorate usageArgumentString
 mapEnvironment() {
   local handler="_${FUNCNAME[0]}"
 
@@ -774,7 +774,7 @@ mapEnvironment() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -815,7 +815,7 @@ mapEnvironment() {
     local __filter __value __handler="$handler"
     unset handler
 
-    __value="$(__catchEnvironment "$__handler" cat)" || return $?
+    __value="$(catchEnvironment "$__handler" cat)" || return $?
     if [ $((${#__replaceFilters[@]} + ${#__searchFilters[@]})) -gt 0 ]; then
       for __e in "${__ee[@]}"; do
         case "${__e}" in *[!A-Za-z0-9_]*) continue ;; *) ;; esac
@@ -823,12 +823,12 @@ mapEnvironment() {
         local __replace="${!__e-}"
         if [ ${#__searchFilters[@]} -gt 0 ]; then
           for __filter in "${__searchFilters[@]}"; do
-            __search=$(__catchEnvironment "$__handler" "$__filter" "$__search") || return $?
+            __search=$(catchEnvironment "$__handler" "$__filter" "$__search") || return $?
           done
         fi
         if [ ${#__replaceFilters[@]} -gt 0 ]; then
           for __filter in "${__replace[@]}"; do
-            __replace=$(__catchEnvironment "$__handler" "$__filter" "$__replace") || return $?
+            __replace=$(catchEnvironment "$__handler" "$__filter" "$__replace") || return $?
           done
         fi
         __value="${__value//"$__search"/$__replace}"

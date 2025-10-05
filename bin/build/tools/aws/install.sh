@@ -21,7 +21,7 @@ __awsInstall() {
 
   local start
   start=$(timingStart) || return $?
-  __catch "$handler" packageWhich unzip unzip || return $?
+  returnCatch "$handler" packageWhich unzip unzip || return $?
 
   local url
   statusMessage decorate info "Installing aws-cli ... " || :
@@ -35,19 +35,19 @@ __awsInstall() {
   esac
   {
     local buildDir quietLog clean=()
-    buildDir="$(__catch "$handler" buildCacheDirectory awsCache.$$)" || return $?
+    buildDir="$(returnCatch "$handler" buildCacheDirectory awsCache.$$)" || return $?
     clean+=("$buildDir")
-    quietLog="$(__catch "$handler" buildQuietLog awsInstall)" || returnClean $? "${clean[@]}" || return $?
+    quietLog="$(returnCatch "$handler" buildQuietLog awsInstall)" || returnClean $? "${clean[@]}" || return $?
     clean+=("$quietLog")
-    buildDir=$(__catch "$handler" directoryRequire "$buildDir") || returnClean $? "${clean[@]}" || return $?
+    buildDir=$(returnCatch "$handler" directoryRequire "$buildDir") || returnClean $? "${clean[@]}" || return $?
     clean+=("$buildDir")
 
     local zipFile=awscliv2.zip version
-    __catchEnvironmentQuiet "$handler" "$quietLog" urlFetch "$url" "$buildDir/$zipFile" || returnClean $? "${clean[@]}" || return $?
-    __catchEnvironmentQuiet "$handler" "$quietLog" unzip -d "$buildDir" "$buildDir/$zipFile" || returnClean $? "${clean[@]}" || return $?
-    __catchEnvironmentQuiet "$handler" "$quietLog" "$buildDir/aws/install" || returnClean $? "${clean[@]}" || return $?
-    version="$(__catch "$handler" __awsWrapper --version)" || returnClean $? "${clean[@]}" || return $?
+    catchEnvironmentQuiet "$handler" "$quietLog" urlFetch "$url" "$buildDir/$zipFile" || returnClean $? "${clean[@]}" || return $?
+    catchEnvironmentQuiet "$handler" "$quietLog" unzip -d "$buildDir" "$buildDir/$zipFile" || returnClean $? "${clean[@]}" || return $?
+    catchEnvironmentQuiet "$handler" "$quietLog" "$buildDir/aws/install" || returnClean $? "${clean[@]}" || return $?
+    version="$(returnCatch "$handler" __awsWrapper --version)" || returnClean $? "${clean[@]}" || return $?
     printf "%s %s\n" "$version" "$(timingReport "$start" OK)" || :
-    __catchEnvironment "$handler" rm -rf "${clean[@]}" || return $?
+    catchEnvironment "$handler" rm -rf "${clean[@]}" || return $?
   }
 }

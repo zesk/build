@@ -47,12 +47,12 @@ buildFailed() {
   # shellcheck disable=SC2094
   statusMessage --last decorate error "$failBar"
 
-  showLines=$(__catch "$handler" buildEnvironmentGet BUILD_DEBUG_LINES) || return $?
+  showLines=$(returnCatch "$handler" buildEnvironmentGet BUILD_DEBUG_LINES) || return $?
 
   isUnsignedInteger "$showLines" || showLines=$(($(consoleRows) - 16)) || showLines=40
   # shellcheck disable=SC2094
   dumpPipe --lines "$showLines" --tail "$(basename "$quietLog")" "$@" <"$quietLog"
-  __throwEnvironment "$handler" "Failed:" "$@" || return $?
+  returnThrowEnvironment "$handler" "Failed:" "$@" || return $?
 }
 _buildFailed() {
   # __IDENTICAL__ usageDocument 1
@@ -75,7 +75,7 @@ _buildFailed() {
 # DOC TEMPLATE: --help 1
 # Argument: --help - Optional. Flag. Display this help.
 # Example:    git tag | grep -e '^v[0-9.]*$' | versionSort
-# Requires: __throwArgument sort usageDocument
+# Requires: returnThrowArgument sort usageDocument
 versionSort() {
   local handler="_${FUNCNAME[0]}"
 
@@ -86,7 +86,7 @@ versionSort() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -95,7 +95,7 @@ versionSort() {
       ;;
     *)
       # _IDENTICAL_ argumentUnknownHandler 1
-      __throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
+      returnThrowArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
       ;;
     esac
     shift
@@ -120,15 +120,15 @@ ipLookup() {
   [ $# -eq 0 ] || __help --only "$handler" "$@" || return "$(convertValue $? 1 0)"
   local url jqFilter
   if ! packageWhich curl curl; then
-    __throwEnvironment "$handler" "Requires curl to operate" || return $?
+    returnThrowEnvironment "$handler" "Requires curl to operate" || return $?
   fi
-  url=$(__catch "$handler" buildEnvironmentGet IP_URL) || return $?
-  [ -n "$url" ] || __throwEnvironment "$handler" "$(decorate value "IP_URL") is required for $(decorate code "${handler#_}")" || return $?
-  jqFilter=$(__catch "$handler" buildEnvironmentGet IP_URL_FILTER) || return $?
-  urlValid "$url" || __throwEnvironment "$handler" "URL $(decorate error "$url") is not a valid URL" || return $?
+  url=$(returnCatch "$handler" buildEnvironmentGet IP_URL) || return $?
+  [ -n "$url" ] || returnThrowEnvironment "$handler" "$(decorate value "IP_URL") is required for $(decorate code "${handler#_}")" || return $?
+  jqFilter=$(returnCatch "$handler" buildEnvironmentGet IP_URL_FILTER) || return $?
+  urlValid "$url" || returnThrowEnvironment "$handler" "URL $(decorate error "$url") is not a valid URL" || return $?
   local pp=(cat)
   [ -z "$jqFilter" ] || pp=(jq "$jqFilter")
-  __catchEnvironment "$handler" curl -s "$url" | "${pp[@]}" || return $?
+  catchEnvironment "$handler" curl -s "$url" | "${pp[@]}" || return $?
 }
 _ipLookup() {
   # __IDENTICAL__ usageDocument 1
@@ -168,7 +168,7 @@ isUpToDate() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -182,30 +182,30 @@ isUpToDate() {
       elif [ -z "$upToDateDays" ]; then
         upToDateDays=$(usageArgumentInteger "$handler" "upToDateDays" "$argument") || return $?
       else
-        # _IDENTICAL_ argumentUnknownHandler 1
-        __throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
+      # _IDENTICAL_ argumentUnknownHandler 1
+      returnThrowArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
       fi
       ;;
     esac
-    shift || __throwArgument "shift $argument" || return $?
+    shift || returnThrowArgument "shift $argument" || return $?
   done
-  [ -n "$keyDate" ] || __throwArgument "$handler" "missing keyDate" || return $?
+  [ -n "$keyDate" ] || returnThrowArgument "$handler" "missing keyDate" || return $?
   [ -n "$upToDateDays" ] || upToDateDays=90
 
   keyDate="${keyDate:0:10}"
   [ -z "$name" ] || name="$name "
 
   local todayTimestamp
-  todayTimestamp=$(dateToTimestamp "$(todayDate)") || __throwEnvironment "$handler" "Unable to generate todayDate" || return $?
+  todayTimestamp=$(dateToTimestamp "$(todayDate)") || returnThrowEnvironment "$handler" "Unable to generate todayDate" || return $?
 
   local keyTimestamp maxDays
 
-  keyTimestamp=$(dateToTimestamp "$keyDate") || __throwArgument "$handler" "Invalid date $keyDate" || return $?
-  isInteger "$upToDateDays" || __throwArgument "$handler" "upToDateDays is not an integer ($upToDateDays)" || return $?
+  keyTimestamp=$(dateToTimestamp "$keyDate") || returnThrowArgument "$handler" "Invalid date $keyDate" || return $?
+  isInteger "$upToDateDays" || returnThrowArgument "$handler" "upToDateDays is not an integer ($upToDateDays)" || return $?
 
   maxDays=366
-  [ "$upToDateDays" -le "$maxDays" ] || __throwArgument "$handler" "isUpToDate $keyDate $upToDateDays - values not allowed greater than $maxDays" || return $?
-  [ "$upToDateDays" -ge 0 ] || __throwArgument "$handler" "isUpToDate $keyDate $upToDateDays - negative values not allowed" || return $?
+  [ "$upToDateDays" -le "$maxDays" ] || returnThrowArgument "$handler" "isUpToDate $keyDate $upToDateDays - values not allowed greater than $maxDays" || return $?
+  [ "$upToDateDays" -ge 0 ] || returnThrowArgument "$handler" "isUpToDate $keyDate $upToDateDays - negative values not allowed" || return $?
 
   local expireDate
   local accessKeyTimestamp=$((keyTimestamp + ((23 * 60) + 59) * 60))

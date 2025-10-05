@@ -26,12 +26,12 @@ EOF
 testReleaseNew() {
   local handler="returnMessage" home
 
-  home=$(__catch "$handler" buildHome) || return $?
-  __catchEnvironment "$handler" muzzle pushd "$home" || return $?
+  home=$(returnCatch "$handler" buildHome) || return $?
+  catchEnvironment "$handler" muzzle pushd "$home" || return $?
 
   assertExitCode 0 releaseNew --non-interactive || return $?
 
-  __catchEnvironment "$handler" muzzle popd || return $?
+  catchEnvironment "$handler" muzzle popd || return $?
 }
 
 testIsVersion() {
@@ -43,13 +43,13 @@ testIsVersion() {
 testReleaseNotesSimple() {
   local handler="returnMessage" home
 
-  home=$(__catch "$handler" buildHome) || return $?
-  __catchEnvironment "$handler" muzzle pushd "$home" || return $?
+  home=$(returnCatch "$handler" buildHome) || return $?
+  catchEnvironment "$handler" muzzle pushd "$home" || return $?
 
   assertExitCode --leak BUILD_RELEASE_NOTES --stdout-match "documentation/source/release" 0 releaseNotes || return $?
   unset BUILD_RELEASE_NOTES
 
-  __catchEnvironment "$handler" muzzle popd || return $?
+  catchEnvironment "$handler" muzzle popd || return $?
 }
 
 testVersionNext() {
@@ -85,8 +85,8 @@ __assertPathsEquals() {
 testReleaseNotes() {
   local handler="returnMessage" home
 
-  home=$(__catch "$handler" buildHome) || return $?
-  __catchEnvironment "$handler" muzzle pushd "$home" || return $?
+  home=$(returnCatch "$handler" buildHome) || return $?
+  catchEnvironment "$handler" muzzle pushd "$home" || return $?
 
   # BUILD DOCS DEFAULT PATH
   __assertPathsEquals "$LINENO" "$home/documentation/source/release/1.0.md" "$(releaseNotes "1.0")" || return $?
@@ -107,6 +107,6 @@ testReleaseNotes() {
   unset BUILD_RELEASE_NOTES
   # BUILD DOCS DEFAULT PATH
   __assertPathsEquals "$LINENO" "$home/documentation/source/release/1.0.md" "$(releaseNotes "1.0")" || return $?
-  __catchEnvironment "$handler" muzzle popd || return $?
+  catchEnvironment "$handler" muzzle popd || return $?
 
 }

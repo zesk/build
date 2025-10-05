@@ -18,6 +18,6 @@
 usageArgumentString() {
   local handler="$1" argument="$2"
   shift 2 || :
-  [ -n "${1-}" ] || __throwArgument "$handler" "blank" "$argument" || return $?
+  [ -n "${1-}" ] || returnThrowArgument "$handler" "blank" "$argument" || return $?
   printf "%s\n" "$1"
 }

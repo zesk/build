@@ -16,7 +16,7 @@
 mariadbInstall() {
   local handler="_${FUNCNAME[0]}"
   [ $# -eq 0 ] || __help --only "$handler" "$@" || return "$(convertValue $? 1 0)"
-  __catch "$handler" packageGroupInstall mariadb || return $?
+  returnCatch "$handler" packageGroupInstall mariadb || return $?
 }
 _mariadbInstall() {
   true || mariadbInstall --help
@@ -32,7 +32,7 @@ _mariadbInstall() {
 mariadbUninstall() {
   local handler="_${FUNCNAME[0]}"
   [ $# -eq 0 ] || __help --only "$handler" "$@" || return "$(convertValue $? 1 0)"
-  __catch "$handler" packageGroupUninstall mariadb || return $?
+  returnCatch "$handler" packageGroupUninstall mariadb || return $?
 }
 _mariadbUninstall() {
   true || mariadbUninstall --help
@@ -60,7 +60,7 @@ mariadbDump() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -92,7 +92,7 @@ mariadbDump() {
       ;;
     *)
       # _IDENTICAL_ argumentUnknownHandler 1
-      __throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
+      returnThrowArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
       ;;
     esac
     shift
@@ -101,9 +101,9 @@ mariadbDump() {
   export MARIADB_BINARY_DUMP
   [ -n "$binary" ] || binary=$(buildEnvironmentGet MARIADB_BINARY_DUMP) || return $?
   [ -n "$binary" ] || binary=$(packageDefault mysqldump)
-  [ -n "$binary" ] || __throwArgument "$handler" "--binary not supplied and MARIADB_BINARY_DUMP is blank - at least one is required (MARIADB_BINARY_DUMP=${MARIADB_BINARY_DUMP-})" || return $?
+  [ -n "$binary" ] || returnThrowArgument "$handler" "--binary not supplied and MARIADB_BINARY_DUMP is blank - at least one is required (MARIADB_BINARY_DUMP=${MARIADB_BINARY_DUMP-})" || return $?
 
-  whichExists "$binary" || __catchEnvironment "$handler" "$binary not found in PATH: $PATH" || return $?
+  whichExists "$binary" || catchEnvironment "$handler" "$binary not found in PATH: $PATH" || return $?
   options+=(--add-drop-table -c)
 
   if $printFlag; then
@@ -149,7 +149,7 @@ mariadbConnect() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -161,7 +161,7 @@ mariadbConnect() {
       printFlag=true
       ;;
     *)
-      urlValid "$argument" || __throwArgument "dsn is not valid: ${#argument} chars" || return $?
+      urlValid "$argument" || returnThrowArgument "dsn is not valid: ${#argument} chars" || return $?
       dsn="$argument"
       shift
       break
@@ -174,18 +174,18 @@ mariadbConnect() {
 
   [ -n "$binary" ] || binary=$(buildEnvironmentGet MARIADB_BINARY_CONNECT) || return $?
   [ -n "$binary" ] || binary=$(packageDefault mysql)
-  [ -n "$binary" ] || __throwArgument "$handler" "--binary not supplied and MARIADB_BINARY_CONNECT is blank - at least one is required (MARIADB_BINARY_CONNECT=${MARIADB_BINARY_CONNECT-})" || return $?
-  $printFlag || isCallable "$binary" || __throwArgument "$handler" "binary $binary is not executable (MARIADB_BINARY_CONNECT=${MARIADB_BINARY_CONNECT-})" || return $?
+  [ -n "$binary" ] || returnThrowArgument "$handler" "--binary not supplied and MARIADB_BINARY_CONNECT is blank - at least one is required (MARIADB_BINARY_CONNECT=${MARIADB_BINARY_CONNECT-})" || return $?
+  $printFlag || isCallable "$binary" || returnThrowArgument "$handler" "binary $binary is not executable (MARIADB_BINARY_CONNECT=${MARIADB_BINARY_CONNECT-})" || return $?
 
-  [ -n "$dsn" ] || __throwArgument "$handler" "dsn required" || return $?
+  [ -n "$dsn" ] || returnThrowArgument "$handler" "dsn required" || return $?
 
   local url="" path="" name="" user="" password="" host="" port="" error=""
   # eval OK - urlParse
   eval "$(urlParse "$dsn")"
-  [ -z "$error" ] || __throwEnvironment "DSN Parsing failed: $error" || return $?
+  [ -z "$error" ] || returnThrowEnvironment "DSN Parsing failed: $error" || return $?
   isPositiveInteger "$port" || port=3306
   : "$url $path $error"
-  [ -n "$user" ] && [ -n "$password" ] && [ -n "$name" ] && [ -n "$host" ] || __throwArgument "$handler" "Unable to parse DSN: dsn=(${#dsn} chars)" "name=$name" "host=$host" "user=$user" "password=(${#password} chars)" || return $?
+  [ -n "$user" ] && [ -n "$password" ] && [ -n "$name" ] && [ -n "$host" ] || returnThrowArgument "$handler" "Unable to parse DSN: dsn=(${#dsn} chars)" "name=$name" "host=$host" "user=$user" "password=(${#password} chars)" || return $?
   local aa=(-u "$user" "-p$password" -h "$host")
   if [ $port != 3306 ]; then
     # Excluding port with localhost connects via socket so only include if non-standard

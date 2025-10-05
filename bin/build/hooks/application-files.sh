@@ -21,7 +21,7 @@ __hookApplicationFiles() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -31,21 +31,21 @@ __hookApplicationFiles() {
     esac
     shift
   done
-  home=$(__catch "$handler" buildHome) || return $?
+  home=$(returnCatch "$handler" buildHome) || return $?
 
   local extensionText
-  extensionText=$(__catch "$handler" buildEnvironmentGet APPLICATION_CODE_EXTENSIONS) || return $?
-  [ -n "$extensionText" ] || __throwArgument "$handler" "Requires APPLICATION_CODE_EXTENSIONS to be non-blank" || return $?
+  extensionText=$(returnCatch "$handler" buildEnvironmentGet APPLICATION_CODE_EXTENSIONS) || return $?
+  [ -n "$extensionText" ] || returnThrowArgument "$handler" "Requires APPLICATION_CODE_EXTENSIONS to be non-blank" || return $?
 
   local extensions=()
   IFS=":" read -r -a extensions <<<"$extensionText" || :
-  [ "${#extensions[@]}" -gt 0 ] || __throwArgument "$handler" "No extensions found in $(decorate code "$extensionText")?" || return $?
+  [ "${#extensions[@]}" -gt 0 ] || returnThrowArgument "$handler" "No extensions found in $(decorate code "$extensionText")?" || return $?
   local ff=()
   for extension in "${extensions[@]}"; do
     [ ${#ff[@]} -eq 0 ] || ff+=(-or)
     ff+=(-name "*.$extension")
   done
-  jsonFile=$(__catch "$handler" buildEnvironmentGet APPLICATION_JSON) || return $?
+  jsonFile=$(returnCatch "$handler" buildEnvironmentGet APPLICATION_JSON) || return $?
 
   directoryChange "$home" find "." -type f \( "${ff[@]}" \) ! -path '*/.*/*' ! -path "*/$jsonFile" "$@"
 }

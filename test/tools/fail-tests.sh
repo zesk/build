@@ -26,7 +26,7 @@ testHasHousekeeperLeaks() {
   local handler="returnMessage"
   local dogma
   dogma=$(fileTemporaryName "$handler") || return $?
-  false || __catchEnvironment "$handler" rm -rf "$dogma" || return $?
+  false || catchEnvironment "$handler" rm -rf "$dogma" || return $?
 }
 
 # Test-Build-Home: true

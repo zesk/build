@@ -58,5 +58,5 @@ testQuoteGrepPattern() {
     assertExitCode 0 grep -q -e "$(quoteGrepPattern "$text")" <"$temp" || return $?
   done < <(__dataQuoteGrepPattern)
 
-  __catchEnvironment "$handler" rm -rf "$temp" || return $?
+  catchEnvironment "$handler" rm -rf "$temp" || return $?
 }

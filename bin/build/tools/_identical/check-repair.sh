@@ -26,7 +26,7 @@ __identicalCheckRepair() {
   local fileA="$1" && shift
   local fileB="$1" && shift
 
-  [ "$fileA" != "$fileB" ] || __throwArgument "$handler" "Repair in same file not possible: $(decorate file "$fileA") (Prefix: $(decorate code "$prefix"))" || return $?
+  [ "$fileA" != "$fileB" ] || returnThrowArgument "$handler" "Repair in same file not possible: $(decorate file "$fileA") (Prefix: $(decorate code "$prefix"))" || return $?
 
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
@@ -34,14 +34,14 @@ __identicalCheckRepair() {
     statusMessage decorate info "Checking path $checkPath ..."
     if [ "${fileA#"$checkPath"}" != "$fileA" ]; then
       statusMessage decorate info Repairing "$fileB" with "$fileA"
-      __catch "$handler" identicalRepair --prefix "$prefix" --token "$token" "$fileA" "$fileB" || return $?
+      returnCatch "$handler" identicalRepair --prefix "$prefix" --token "$token" "$fileA" "$fileB" || return $?
       return $?
     elif [ "${fileB#"$checkPath"}" != "$fileB" ]; then
       statusMessage decorate info Repairing "$fileA" with "$fileB"
-      __catch "$handler" identicalRepair --prefix "$prefix" --token "$token" "$fileB" "$fileA" || return $?
+      returnCatch "$handler" identicalRepair --prefix "$prefix" --token "$token" "$fileB" "$fileA" || return $?
       return $?
     fi
     shift
   done
-  __throwEnvironment "$handler" "No repair found between $(decorate file "$fileA") and $(decorate file "$fileB") (Prefix: $(decorate code "$prefix"))" "Sources (#$__count): $(decorate each --index code "${__saved[@]+"${__saved[@]}"}")" || return $?
+  returnThrowEnvironment "$handler" "No repair found between $(decorate file "$fileA") and $(decorate file "$fileB") (Prefix: $(decorate code "$prefix"))" "Sources (#$__count): $(decorate each --index code "${__saved[@]+"${__saved[@]}"}")" || return $?
 }

@@ -17,26 +17,26 @@ xdebugInstall() {
 
   local iniFile
 
-  __catchEnvironment "$handler" phpInstall || return $?
-  __catch "$handler" packageWhich pear php-pear || return $?
-  __catch "$handler" packageWhich phpize php-dev || return $?
+  catchEnvironment "$handler" phpInstall || return $?
+  returnCatch "$handler" packageWhich pear php-pear || return $?
+  returnCatch "$handler" packageWhich phpize php-dev || return $?
   usageRequireBinary "$handler" pear pecl || return $?
 
-  iniFile=$(__catchEnvironment "$handler" phpIniFile) || return $?
-  [ -f "$iniFile" ] || __throwEnvironment "$handler" "php.ini not found $(decorate file "$iniFile")" || return $?
+  iniFile=$(catchEnvironment "$handler" phpIniFile) || return $?
+  [ -f "$iniFile" ] || returnThrowEnvironment "$handler" "php.ini not found $(decorate file "$iniFile")" || return $?
 
   statusMessage decorate info "Setting php ini path to $(decorate file "$iniFile")"
-  __catchEnvironment "$handler" pear config-set php_ini "$iniFile" || return $?
+  catchEnvironment "$handler" pear config-set php_ini "$iniFile" || return $?
 
   statusMessage decorate info "Installing xdebug ..."
-  __catchEnvironment "$handler" pecl channel-update pecl.php.net || return $?
+  catchEnvironment "$handler" pecl channel-update pecl.php.net || return $?
   if ! muzzle pecl list-files xdebug; then
-    muzzle __catchEnvironment "$handler" pecl install xdebug || return $?
+    muzzle catchEnvironment "$handler" pecl install xdebug || return $?
   fi
 
   local artifact
   artifact=$(__xdebugInstallationArtifact)
-  date | muzzle __catchEnvironment "$handler" tee "$artifact" || return $?
+  date | muzzle catchEnvironment "$handler" tee "$artifact" || return $?
 }
 _xdebugInstall() {
   # __IDENTICAL__ usageDocument 1
@@ -46,7 +46,7 @@ _xdebugInstall() {
 __xdebug_Require() {
   local artifact
   artifact=$(__xdebugInstallationArtifact)
-  [ -f "$artifact" ] || __throwArgument "$1" "xdebug is not installed on this system" || return $?
+  [ -f "$artifact" ] || returnThrowArgument "$1" "xdebug is not installed on this system" || return $?
 }
 
 # Enable Xdebug on systems that have it

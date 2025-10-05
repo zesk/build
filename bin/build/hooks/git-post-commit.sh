@@ -104,14 +104,14 @@ __gitPushHelper() {
 
   tempFile=$(fileTemporaryName "$handler") || return $?
   statusMessage --last decorate success "Pushing to remote ..."
-  if ! __catchEnvironment "$handler" git push origin 2>&1 | tee "$tempFile" | grep 'remote:' | removeFields 1 | decorate code | decorate wrap "Remote: "; then
+  if ! catchEnvironment "$handler" git push origin 2>&1 | tee "$tempFile" | grep 'remote:' | removeFields 1 | decorate code | decorate wrap "Remote: "; then
     if ! grep -q 'up-to-date' "$tempFile"; then
       dumpPipe "git push" <"$tempFile" || :
-      __catchEnvironment "$handler" rm -rf "$tempFile" || :
+      catchEnvironment "$handler" rm -rf "$tempFile" || :
       return 1
     fi
   fi
-  __catchEnvironment "$handler" rm -rf "$tempFile" || return $?
+  catchEnvironment "$handler" rm -rf "$tempFile" || return $?
 }
 
 #
@@ -125,11 +125,11 @@ __hookGitPostCommit() {
   local handler="_${FUNCNAME[0]}" hookName="post-commit" start
   start=$(timingStart) || return $?
   statusMessage --first printf -- "%s %s" "$(decorate info "[$hookName]")" "$(decorate info "Installing ...")"
-  __catchEnvironment "$handler" gitInstallHook --copy "$hookName" || return $?
+  catchEnvironment "$handler" gitInstallHook --copy "$hookName" || return $?
   statusMessage --last printf -- "%s %s" "$(decorate info "[$hookName]")" "$(decorate info "Running ...")"
-  __catchEnvironment "$handler" hookRunOptional "$hookName" || return $?
+  catchEnvironment "$handler" hookRunOptional "$hookName" || return $?
   __gitPushHelper "$handler" || return $?
-  # __catchEnvironment "$handler" gitMainly && __gitPushHelper "$handler" || return $?
+  # catchEnvironment "$handler" gitMainly && __gitPushHelper "$handler" || return $?
   statusMessage --last printf -- "%s %s" "$(decorate info "[$hookName]")" "$(timingReport "$start" "completed in")"
 }
 ___hookGitPostCommit() {

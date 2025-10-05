@@ -17,11 +17,11 @@
 # Argument: -- - Flag. Optional. Used to delimit multiple commands.
 # As a caveat, your command to `undo` can NOT take the argument `--` as a parameter.
 # Example:     local undo thing
-# Example:     thing=$(__catchEnvironment "$handler" createLargeResource) || return $?
+# Example:     thing=$(catchEnvironment "$handler" createLargeResource) || return $?
 # Example:     undo+=(-- deleteLargeResource "$thing")
-# Example:     thing=$(__catchEnvironment "$handler" createMassiveResource) || returnUndo $? "${undo[@]}" || return $?
+# Example:     thing=$(catchEnvironment "$handler" createMassiveResource) || returnUndo $? "${undo[@]}" || return $?
 # Example:     undo+=(-- deleteMassiveResource "$thing")
-# Requires: isPositiveInteger __catchArgument decorate __execute
+# Requires: isPositiveInteger catchArgument decorate execute
 # Requires: usageDocument
 returnUndo() {
   local __count=$# __saved=("$@") __handler="_${FUNCNAME[0]}" code="${1-}" args=()
@@ -29,11 +29,11 @@ returnUndo() {
   [ "${1-}" != "--help" ] || __help "$__handler" "$@" || return 0
   shift
   # __IDENTICAL__ __checkCode__handler 1
-  isInteger "$code" || __throwArgument "$__handler" "Not integer: $(decorate value "[$code]") (#$__count $(decorate each code -- "${__saved[@]}"))" || return $?
+  isInteger "$code" || returnThrowArgument "$__handler" "Not integer: $(decorate value "[$code]") (#$__count $(decorate each code -- "${__saved[@]}"))" || return $?
   while [ $# -gt 0 ]; do
     case "$1" in
     --)
-      [ "${#args[@]}" -eq 0 ] || __execute "${args[@]}" || :
+      [ "${#args[@]}" -eq 0 ] || execute "${args[@]}" || :
       args=()
       ;;
     *)
@@ -42,7 +42,7 @@ returnUndo() {
     esac
     shift
   done
-  [ "${#args[@]}" -eq 0 ] || __execute "${args[@]}" || :
+  [ "${#args[@]}" -eq 0 ] || execute "${args[@]}" || :
   return "$code"
 }
 _returnUndo() {

@@ -11,23 +11,23 @@
 _identicalMapAttributesFilter() {
   local handler="${1-}" file="${2-}" base home full dir aa=()
 
-  home=$(__catch "$handler" buildHome) || return $?
+  home=$(returnCatch "$handler" buildHome) || return $?
   home="${home%/}/"
-  full=$(__catchEnvironment "$handler" realPath "$file") || return $?
+  full=$(catchEnvironment "$handler" realPath "$file") || return $?
   aa+=(-e 's/__FULL__/'"$(quoteSedReplacement "$full")"'/g')
 
-  base=$(__catchEnvironment "$handler" basename "$full") || return $?
+  base=$(catchEnvironment "$handler" basename "$full") || return $?
   aa+=(-e 's/__EXTENSION__/'"$(quoteSedReplacement "${base##*.}")"'/g')
   aa+=(-e 's/__BASE__/'"$(quoteSedReplacement "$base")"'/g')
 
   file="${file#"$home"}"
   aa+=(-e 's/__FILE__/'"$(quoteSedReplacement "$file")"'/g')
 
-  dir=$(__catchEnvironment "$handler" dirname -- "$file") || return $?
+  dir=$(catchEnvironment "$handler" dirname -- "$file") || return $?
   aa+=(-e 's/__DIR__/'"$(quoteSedReplacement "$dir")"'/g')
   aa+=(-e 's/__DIRECTORY__/'"$(quoteSedReplacement "$dir")"'/g')
 
-  __catchEnvironment "$handler" sed "${aa[@]}" || return $?
+  catchEnvironment "$handler" sed "${aa[@]}" || return $?
 }
 
 # handler: {fn} usageFunction fileToModify fileNameToUse
@@ -39,5 +39,5 @@ _identicalMapAttributesFile() {
   shift
   temp="$file.$$"
   _identicalMapAttributesFilter "$handler" "${1-}" <"$file" >"$temp" || returnClean $? "$temp" || return $?
-  __catchEnvironment "$handler" mv -f "$temp" "$file" || returnClean "$?" "$temp" || return $?
+  catchEnvironment "$handler" mv -f "$temp" "$file" || returnClean "$?" "$temp" || return $?
 }

@@ -20,9 +20,9 @@ testBashGetRequires() {
   local temp
 
   temp=$(fileTemporaryName "$handler") || return $?
-  __catch "$handler" bashGetRequires "${BASH_SOURCE[0]}" >"$temp" || return $?
+  returnCatch "$handler" bashGetRequires "${BASH_SOURCE[0]}" >"$temp" || return $?
   assertFileContains "$temp" A B C D E F G a b c d || return $?
-  __catch "$handler" rm -f "$temp" || return $?
+  returnCatch "$handler" rm -f "$temp" || return $?
 }
 
 testBashBuiltins() {
@@ -71,22 +71,22 @@ testBashSourcePath() {
   # Regardless of order someone will not exist
 
   assertNotExitCode --stderr-match "not executable" 0 bashSourcePath "$testPath" || return $?
-  __catchEnvironment "$handler" muzzle makeShellFilesExecutable "$testPath" || return $?
+  catchEnvironment "$handler" muzzle makeShellFilesExecutable "$testPath" || return $?
   assertNotExitCode --stderr-match "not a bash source" 0 bashSourcePath "$testPath" || return $?
 
-  __catchEnvironment "$handler" rm -rf "$testPath/"*.sh || return $?
+  catchEnvironment "$handler" rm -rf "$testPath/"*.sh || return $?
 
   assertEquals "${ZESK_BUILD-}" "" || return $?
   printf "%s\n" "#!/usr/bin/env bash" "export ZESK_BUILD=true" >"$testPath/1.sh"
   printf "%s\n" "#!/usr/bin/env bash" "_testZeskBuildFunction() {" "    decorate green Not easy being green." "}" >"$testPath/2.sh"
-  __catchEnvironment "$handler" muzzle makeShellFilesExecutable "$testPath" || return $?
+  catchEnvironment "$handler" muzzle makeShellFilesExecutable "$testPath" || return $?
 
   assertExitCode --leak ZESK_BUILD 0 bashSourcePath "$testPath" || return $?
 
   assertEquals "${ZESK_BUILD-}" "true" || return $?
   assertExitCode 0 isFunction _testZeskBuildFunction || return $?
 
-  __catchEnvironment "$handler" rm -rf "${clean[@]}" || return $?
+  catchEnvironment "$handler" rm -rf "${clean[@]}" || return $?
 
   unset ZESK_BUILD
 }
@@ -97,10 +97,10 @@ testBashSourcePathExclude() {
 
   testPath=$(fileTemporaryName "$handler" -d) || return $?
 
-  __catchEnvironment "$handler" printf "%s\n" "#!/usr/bin/env bash" "echo \"\${BASH_SOURCE[0]}\";" >"$testPath/one.sh" || return $?
-  __catchEnvironment "$handler" chmod +x "$testPath/one.sh" || return $?
-  __catchEnvironment "$handler" cp "$testPath/one.sh" "$testPath/two.sh" || return $?
-  __catchEnvironment "$handler" cp "$testPath/one.sh" "$testPath/__ignore.sh" || return $?
+  catchEnvironment "$handler" printf "%s\n" "#!/usr/bin/env bash" "echo \"\${BASH_SOURCE[0]}\";" >"$testPath/one.sh" || return $?
+  catchEnvironment "$handler" chmod +x "$testPath/one.sh" || return $?
+  catchEnvironment "$handler" cp "$testPath/one.sh" "$testPath/two.sh" || return $?
+  catchEnvironment "$handler" cp "$testPath/one.sh" "$testPath/__ignore.sh" || return $?
 
   local matches=(
     --stdout-match "__ignore.sh"
@@ -128,7 +128,7 @@ testBashSourcePathExclude() {
   )
   assertExitCode "${matches[@]}" 0 bashSourcePath --exclude "*/__ignore.sh" --exclude "*/*" "$testPath/" || return $?
 
-  __catchEnvironment "$handler" rm -rf "$testPath" || return $?
+  catchEnvironment "$handler" rm -rf "$testPath" || return $?
 }
 
 testBashSourcePathDot() {
@@ -140,7 +140,7 @@ testBashSourcePathDot() {
 
   clean+=("$testPath")
 
-  __catchEnvironment "$handler" mkdir -p "$testPath/.foobar/.eefo/.dots" || return $?
+  catchEnvironment "$handler" mkdir -p "$testPath/.foobar/.eefo/.dots" || return $?
   printf "%s\n" "testPasses=dots" >"$testPath/.foobar/.eefo/.dots/test.sh" || return $?
   printf "%s\n" "testPasses=eefo" >"$testPath/.foobar/.eefo/goo.sh" || return $?
   printf "%s\n" "testPasses=foobar" >"$testPath/.foobar/beep.sh" || return $?
@@ -164,7 +164,7 @@ testBashSourcePathDot() {
   assertExitCode --leak testPasses 0 bashSourcePath "$testPath/.foobar" || return $?
   assertEquals "$testPasses" "foobar" || return $?
 
-  __catchEnvironment "$handler" rm -rf "${clean[@]}" || return $?
+  catchEnvironment "$handler" rm -rf "${clean[@]}" || return $?
   # Behavior is correct - ignore .dot directories within the bashSourcePath but not above it
 }
 

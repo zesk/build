@@ -28,7 +28,7 @@ __doEvalCheck() {
           firstLine=true
           continue
         fi
-        [ "$lineNo" != "$line" ] || __catchEnvironment "$handler" "Unable to parse line: $line" || return $?
+        [ "$lineNo" != "$line" ] || catchEnvironment "$handler" "Unable to parse line: $line" || return $?
         line="${line#-*}"
       else
         line="${line#:*}"
@@ -52,8 +52,8 @@ __doEvalCheck() {
       fi
     done <"$tempResults"
   done
-  __catchEnvironment "$handler" rm -rf "$tempResults" || return $?
-  [ "$failed" -eq 0 ] || __throwEnvironment "$handler" "evalCheck failed for $failed $(plural "$failed" file files)" || return $?
+  catchEnvironment "$handler" rm -rf "$tempResults" || return $?
+  [ "$failed" -eq 0 ] || returnThrowEnvironment "$handler" "evalCheck failed for $failed $(plural "$failed" file files)" || return $?
 }
 
 # Check files to ensure `eval`s in code have been checked

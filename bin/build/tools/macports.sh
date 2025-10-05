@@ -100,13 +100,13 @@ __portUpgrade() {
   local handler="_${FUNCNAME[0]}"
   local quietLog upgradeLog result clean=()
 
-  quietLog=$(__catch "$handler" buildQuietLog "$handler") || return $?
-  upgradeLog=$(__catch "$handler" buildQuietLog "upgrade_${handler#_}") || return $?
+  quietLog=$(returnCatch "$handler" buildQuietLog "$handler") || return $?
+  upgradeLog=$(returnCatch "$handler" buildQuietLog "upgrade_${handler#_}") || return $?
   clean+=("$quietLog" "$upgradeLog")
-  __catchEnvironmentQuiet "$quietLog" packageUpdate || return $?
-  __catchEnvironmentQuiet "$quietLog" packageInstall || return $?
-  __catch "$handler" __sudoPortWrapper upgrade outdated | tee -a "$upgradeLog" >>"$quietLog" || returnUndo $? dumpPipe "macports upgrade failed" <"$quietLog" || returnClean $? "${clean[@]}" || return $?
-  __catchEnvironment "$handler" rm -rf "${clean[@]}" || return $?
+  catchEnvironmentQuiet "$quietLog" packageUpdate || return $?
+  catchEnvironmentQuiet "$quietLog" packageInstall || return $?
+  returnCatch "$handler" __sudoPortWrapper upgrade outdated | tee -a "$upgradeLog" >>"$quietLog" || returnUndo $? dumpPipe "macports upgrade failed" <"$quietLog" || returnClean $? "${clean[@]}" || return $?
+  catchEnvironment "$handler" rm -rf "${clean[@]}" || return $?
   printf "%s\n" "$result"
 }
 ___portUpgrade() {
@@ -135,8 +135,8 @@ __portUpdate() {
 # package.sh: true
 __portInstalledList() {
   local handler="_${FUNCNAME[0]}"
-  whichExists port || __throwEnvironment "$handler" "port not installed - can not list" || return $?
-  [ $# -eq 0 ] || __throwArgument "$handler" "Unknown argument $*" || return $?
+  whichExists port || returnThrowEnvironment "$handler" "port not installed - can not list" || return $?
+  [ $# -eq 0 ] || returnThrowArgument "$handler" "Unknown argument $*" || return $?
   __portWrapper installed | grep -v 'currently installed' | awk '{ print $1 }'
 }
 ___portInstalledList() {
@@ -149,7 +149,7 @@ ___portInstalledList() {
 # package.sh: true
 __portAvailableList() {
   local handler="_${FUNCNAME[0]}"
-  whichExists port || __throwEnvironment "$handler" "port not installed - can not list" || return $?
+  whichExists port || returnThrowEnvironment "$handler" "port not installed - can not list" || return $?
   __portWrapper list | awk '{ print $1 }'
 }
 ___portAvailableList() {

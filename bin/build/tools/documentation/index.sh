@@ -30,7 +30,7 @@ _documentationIndexGenerate() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -48,7 +48,7 @@ _documentationIndexGenerate() {
     shift
   done
   if [ ${#codePaths[@]} -eq 0 ]; then
-    __throwArgument "$handler" "at least one codePath required" || return $?
+    returnThrowArgument "$handler" "at least one codePath required" || return $?
     return $?
   fi
 
@@ -56,19 +56,19 @@ _documentationIndexGenerate() {
   start=$(timingStart) || return $?
 
   local indexDirectory
-  indexDirectory=$(__catch "$handler" __documentationIndexCache) || return $?
-  __catch "$handler" muzzle directoryRequire "$indexDirectory" || return $?
+  indexDirectory=$(returnCatch "$handler" __documentationIndexCache) || return $?
+  returnCatch "$handler" muzzle directoryRequire "$indexDirectory" || return $?
 
   local cacheDirectory
-  cacheDirectory=$(__catch "$handler" documentationBuildCache) || return $?
+  cacheDirectory=$(returnCatch "$handler" documentationBuildCache) || return $?
 
   local indexFile="$cacheDirectory/code.index"
   local foundOne=false
-  __catchEnvironment "$handler" rm -rf "$indexFile" "$indexFile.unsorted" "$indexDirectory/files/" || return $?
-  __catch "$handler" muzzle directoryRequire "$indexDirectory/files/" "$indexDirectory/comment" || return $?
+  catchEnvironment "$handler" rm -rf "$indexFile" "$indexFile.unsorted" "$indexDirectory/files/" || return $?
+  returnCatch "$handler" muzzle directoryRequire "$indexDirectory/files/" "$indexDirectory/comment" || return $?
   local codePath
   local homeSlash
-  homeSlash="$(__catch "$handler" buildHome)/" || return $?
+  homeSlash="$(returnCatch "$handler" buildHome)/" || return $?
   for codePath in "${codePaths[@]}"; do
     pathIsAbsolute "$codePath" || codePath="$homeSlash/$codePath"
     local fullPath
@@ -84,7 +84,7 @@ _documentationIndexGenerate() {
       local fileCacheMarker="$indexDirectory/code/${shellFile#/}"
       local functionsCache="$fileCacheMarker/.functions"
       if [ ! -f "$functionsCache" ]; then
-        __catch "$handler" muzzle directoryRequire "$fileCacheMarker" || return $?
+        returnCatch "$handler" muzzle directoryRequire "$fileCacheMarker" || return $?
       elif fileIsNewest "$functionsCache" "$fullPath"; then
         ! $verboseFlag || statusMessage decorate info "$(decorate file "$shellFile") $(decorate bold-blue "(cached)")"
         cat "$functionsCache" >>"$indexFile.unsorted"
@@ -92,27 +92,27 @@ _documentationIndexGenerate() {
       fi
       local count=0
       ! $verboseFlag || statusMessage decorate info "Processing $(decorate file "$shellFile")"
-      __catch "$handler" printf "%s" "" >"$functionsCache" || return $?
+      returnCatch "$handler" printf "%s" "" >"$functionsCache" || return $?
       while read -r functionName; do
         local lineNumber="${functionName%%:*}"
         functionName="${functionName#*:}"
         printf "%s %s %s\n" "$functionName" "$shellFile" "$lineNumber" | tee -a "$functionsCache" >>"$indexFile.unsorted"
         count=$((count + 1))
         if ! bashFileComment "$fullPath" "$lineNumber" >"$indexDirectory/comment/$functionName"; then
-          __throwEnvironment "$handler" "Documentation failed for $functionName" || return $?
+          returnThrowEnvironment "$handler" "Documentation failed for $functionName" || return $?
         fi
       done < <(__pcregrep -n -o1 -M '\n([a-zA-Z_][a-zA-Z_0-9]+)\(\)\s+\{\s*\n' "$fullPath")
       ! $verboseFlag || statusMessage decorate success "Generated $count functions for $shellFile"
     done < <(find "$codePath" -type f -name '*.sh' ! -path '*/.*/*' || :)
   done
   if ! $foundOne; then
-    __throwEnvironment "$handler" "No shell files found in $(decorate each file "${codePaths[@]}")" || return $?
+    returnThrowEnvironment "$handler" "No shell files found in $(decorate each file "${codePaths[@]}")" || return $?
   fi
   if [ ! -f "$indexFile.unsorted" ]; then
-    __throwEnvironment "$handler" "No functions found in $(decorate each file "${codePaths[@]}")" || return $?
+    returnThrowEnvironment "$handler" "No functions found in $(decorate each file "${codePaths[@]}")" || return $?
   fi
-  __catchEnvironment "$handler" sort -u <"$indexFile.unsorted" >"$indexFile" || returnClean $? "$indexFile.sorted" "$indexFile" || return $?
-  __catchEnvironment "$handler" rm -f "$indexFile.unsorted" || return $?
+  catchEnvironment "$handler" sort -u <"$indexFile.unsorted" >"$indexFile" || returnClean $? "$indexFile.sorted" "$indexFile" || return $?
+  catchEnvironment "$handler" rm -f "$indexFile.unsorted" || return $?
   ! $verboseFlag || statusMessage --last printf -- "%s %s %s\n" "$(decorate info "Generated index for ")" "$(decorate code "$(decorate file "$codePath")")" "$(timingReport "$start" in)"
 }
 __documentationIndexGenerate() {
@@ -136,7 +136,7 @@ _documentationIndexUnlinkedFunctions() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -150,27 +150,27 @@ _documentationIndexUnlinkedFunctions() {
     shift
   done
 
-  [ -n "$cacheDirectory" ] || __throwArgument "$handler" "Need cacheDirectory" || return $?
+  [ -n "$cacheDirectory" ] || returnThrowArgument "$handler" "Need cacheDirectory" || return $?
 
-  [ -f "$cacheDirectory/documentation.index" ] || __throwEnvironment "$handler" "Need documentation index" || return $?
-  [ -f "$cacheDirectory/code.index" ] || __throwEnvironment "$handler" "Need code index" || return $?
+  [ -f "$cacheDirectory/documentation.index" ] || returnThrowEnvironment "$handler" "Need documentation index" || return $?
+  [ -f "$cacheDirectory/code.index" ] || returnThrowEnvironment "$handler" "Need code index" || return $?
 
   local tempFile clean=()
   tempFile=$(fileTemporaryName "$handler") || return $?
   clean+=("$tempFile")
   # shellcheck disable=SC2016
-  __catchEnvironment "$handler" awk '{ print $1 }' "$cacheDirectory/documentation.index" | sort -u >"$tempFile" || returnClean $? "${clean[@]}" || return $?
+  catchEnvironment "$handler" awk '{ print $1 }' "$cacheDirectory/documentation.index" | sort -u >"$tempFile" || returnClean $? "${clean[@]}" || return $?
   # Things in `code.index` but not in `documentation.index`
   clean+=("$tempFile.code")
   # shellcheck disable=SC2016
-  __catchEnvironment "$handler" awk '{ print $1 }' "$cacheDirectory/code.index" | sort -u >"$tempFile.code" || returnClean $? "${clean[@]}" || return $?
+  catchEnvironment "$handler" awk '{ print $1 }' "$cacheDirectory/code.index" | sort -u >"$tempFile.code" || returnClean $? "${clean[@]}" || return $?
   diff -U0 "$tempFile" "$tempFile.code" | grep -e '^[+][^+]' | cut -c 2- || :
 
   if $debugFlag; then
     dumpPipe --tail --lines 20 "documentation index" <"$tempFile" 1>&2
     dumpPipe --tail --lines 20 "code index" <"$tempFile.code" 1>&2
   fi
-  __catchEnvironment "$handler" rm -rf "${clean[@]}" || return $?
+  catchEnvironment "$handler" rm -rf "${clean[@]}" || return $?
 }
 __documentationIndexUnlinkedFunctions() {
   # __IDENTICAL__ usageDocument 1
@@ -189,7 +189,7 @@ __documentationIndexDocumentation() {
   local handler="$1" && shift
   local start
 
-  start=$(timingStart) || __catchEnvironment "$handler" "timingStart failed" || return $?
+  start=$(timingStart) || catchEnvironment "$handler" "timingStart failed" || return $?
   local cacheDirectory="" sourcePaths=() debugFlag=false
 
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
@@ -197,7 +197,7 @@ __documentationIndexDocumentation() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -212,16 +212,16 @@ __documentationIndexDocumentation() {
     esac
     shift
   done
-  [ -n "$cacheDirectory" ] || __throwArgument "$handler" "cacheDirectory required" || return $?
-  [ 0 -lt "${#sourcePaths[@]}" ] || __throwArgument "$handler" "documentationSource required" || return $?
+  [ -n "$cacheDirectory" ] || returnThrowArgument "$handler" "cacheDirectory required" || return $?
+  [ 0 -lt "${#sourcePaths[@]}" ] || returnThrowArgument "$handler" "documentationSource required" || return $?
 
   local indexFile="$cacheDirectory/documentation.index"
   local home
-  home=$(__catch "$handler" buildHome) || return $?
+  home=$(returnCatch "$handler" buildHome) || return $?
   local sourcePath unsorted="$indexFile.unsorted"
   (
-    __catchEnvironment "$handler" rm -f "$indexFile" "$unsorted" || return $?
-    __catchEnvironment "$handler" muzzle pushd "$home" || return $?
+    catchEnvironment "$handler" rm -f "$indexFile" "$unsorted" || return $?
+    catchEnvironment "$handler" muzzle pushd "$home" || return $?
     ! $debugFlag || decorate info "Moving to $home" 1>&2
     for sourcePath in "${sourcePaths[@]}"; do
       sourcePath="${sourcePath#"$home/"}"
@@ -229,9 +229,9 @@ __documentationIndexDocumentation() {
       find "$sourcePath" -name '*.md' -print0 | xargs -0 grep -e "^{[_a-zA-Z][a-zA-Z0-9_]*}$" | sed 's/[{}]//g' | awk -F ":" "{ print \$2 \" \" \$1 }" >>"$unsorted" || :
       ! $debugFlag || decorate info "index is $(fileLineCount "$unsorted")" 1>&2
     done
-    __catchEnvironment "$handler" muzzle popd || returnClean $? "$indexFile" "$unsorted" || return $?
+    catchEnvironment "$handler" muzzle popd || returnClean $? "$indexFile" "$unsorted" || return $?
   )
-  __catchEnvironment "$handler" sort -u <"$unsorted" >"$indexFile" || returnClean $? "$indexFile" "$unsorted" || return $?
+  catchEnvironment "$handler" sort -u <"$unsorted" >"$indexFile" || returnClean $? "$indexFile" "$unsorted" || return $?
   total=$(fileLineCount "$indexFile")
   statusMessage decorate info "$(printf "%s %s %s %s %s %s\n" "$(decorate cyan Indexed)" "$(decorate cyan "$(pluralWord "$total" "function")")" "for" "$(decorate each file "${sourcePaths[@]}")" "in" "$(timingReport "$start")")"
 }
@@ -247,7 +247,7 @@ ___documentationIndexDocumentation() {
 #
 __documentationIndexCache() {
   local handler="_${FUNCNAME[0]}"
-  __catch "$handler" documentationBuildCache "index" || return $?
+  returnCatch "$handler" documentationBuildCache "index" || return $?
 }
 ___documentationIndexCache() {
   # __IDENTICAL__ usageDocument 1

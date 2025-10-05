@@ -28,7 +28,7 @@ __deployApplication() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -37,7 +37,7 @@ __deployApplication() {
       ;;
     --message)
       shift
-      [ -n "${1-}" ] || __throwArgument "blank $argument argument" || return $?
+      [ -n "${1-}" ] || returnThrowArgument "blank $argument argument" || return $?
       message="$1"
       ;;
     --first)
@@ -52,7 +52,7 @@ __deployApplication() {
       ;;
     --id)
       shift
-      [ -n "${1-}" ] || __throwArgument "blank $argument argument" || return $?
+      [ -n "${1-}" ] || returnThrowArgument "blank $argument argument" || return $?
       applicationId="$1"
       ;;
     --application)
@@ -61,17 +61,17 @@ __deployApplication() {
       ;;
     --target)
       shift
-      [ -n "${1-}" ] || __throwArgument "blank $argument argument" || return $?
+      [ -n "${1-}" ] || returnThrowArgument "blank $argument argument" || return $?
       targetPackage="$1"
       ;;
     *)
       # _IDENTICAL_ argumentUnknownHandler 1
-      __throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
+      returnThrowArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
       ;;
     esac
     shift
   done
-  [ -n "$targetPackage" ] || targetPackage="$(deployPackageName)" || __throwArgument "$handler" "No package name" || return $?
+  [ -n "$targetPackage" ] || targetPackage="$(deployPackageName)" || returnThrowArgument "$handler" "No package name" || return $?
   if $revertFlag; then
     requiredArgs+=(applicationId)
   fi
@@ -80,14 +80,14 @@ __deployApplication() {
   requiredArgs+=(deployHome applicationPath)
   local name
   for name in "${requiredArgs[@]}"; do
-    [ -n "${!name}" ] || __throwArgument "$handler" "$name is required" || return $?
+    [ -n "${!name}" ] || returnThrowArgument "$handler" "$name is required" || return $?
   done
 
   local currentApplicationId=""
   if [ -d "$applicationPath" ]; then
     if ! currentApplicationId="$(deployApplicationVersion "$applicationPath")" || [ -z "$currentApplicationId" ]; then
       if ! $firstFlag; then
-        __throwEnvironment "$handler" "Can not fetch version from $applicationPath,  need --first" || return $?
+        returnThrowEnvironment "$handler" "Can not fetch version from $applicationPath,  need --first" || return $?
       fi
       currentApplicationId=
     fi
@@ -98,10 +98,10 @@ __deployApplication() {
     # If reverting, check the application ID (if supplied) is correct otherwise fail
     #
     local newApplicationId
-    newApplicationId=$(deployPreviousVersion "$deployHome" "$currentApplicationId") || __throwEnvironment "$handler" "--revert can not find previous version of $currentApplicationId ($deployHome)" || return $?
+    newApplicationId=$(deployPreviousVersion "$deployHome" "$currentApplicationId") || returnThrowEnvironment "$handler" "--revert can not find previous version of $currentApplicationId ($deployHome)" || return $?
 
     if [ -n "$applicationId" ] && [ "$applicationId" != "$currentApplicationId" ]; then
-      __throwArgument "$handler" "--id $applicationId does not match ID \"$currentApplicationId\" of $applicationPath" || return $?
+      returnThrowArgument "$handler" "--id $applicationId does not match ID \"$currentApplicationId\" of $applicationPath" || return $?
     fi
     applicationId="$newApplicationId"
     printf "%s %s %s %s\n" "$(decorate info "Reverting from")" "$(decorate orange "$currentApplicationId")" "$(decorate info "->")" "$(decorate green "$applicationId")"
@@ -111,7 +111,7 @@ __deployApplication() {
   # Arguments are all parsed by here
   #
   local targetPackageFullPath="$deployHome/$applicationId/$targetPackage"
-  [ -f "$targetPackageFullPath" ] || __throwArgument "$handler" "deployApplication: Missing target file $targetPackageFullPath" || return $?
+  [ -f "$targetPackageFullPath" ] || returnThrowArgument "$handler" "deployApplication: Missing target file $targetPackageFullPath" || return $?
 
   #
   # Generates deployHome/{newVersion}/app and deletes on failure
@@ -216,10 +216,10 @@ __deployApplication() {
   # STOP _unwindDeploy
 
   if ! hookRunOptional --application "$applicationPath" deploy-finish; then
-    __throwEnvironment "$handler" "Deploy finish failed" || exitCode=$?
+    returnThrowEnvironment "$handler" "Deploy finish failed" || exitCode=$?
   fi
   if ! hookRunOptional --application "$applicationPath" maintenance off; then
-    __throwEnvironment "$handler" "maintenance off failed" || exitCode=$?
+    returnThrowEnvironment "$handler" "maintenance off failed" || exitCode=$?
   fi
   if [ $exitCode -eq 0 ]; then
     decorate success "Completed"
@@ -243,5 +243,5 @@ _unwindDeploy() {
   else
     printf "%s %s %s\n" "$(decorate error "Unwind")" "$(decorate code "$deployedApplicationPath")" "$(decorate error "does not exist")"
   fi
-  __throwEnvironment "$handler" "$@" || return $?
+  returnThrowEnvironment "$handler" "$@" || return $?
 }

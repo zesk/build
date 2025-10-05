@@ -31,7 +31,7 @@
 ### Sugar
 
 - __argument
-- __catchEnvironmentQuiet
+- catchEnvironmentQuiet
 
 # Helpers (why)
 
@@ -43,7 +43,7 @@
 - _returnCodeString
 - _returnClean
 
-- __executeInputSupport
+- executeInputSupport
 
 ### AWS 
 - awsSecurityGroupIPModify
@@ -334,13 +334,13 @@ On a "2x" machine:
 
 - returnClean
 - __argument
-- ___catch
-- ___catchCode
-- __catchEnvironmentQuiet
+- _returnCatch
+- _returnCatchCode
+- catchEnvironmentQuiet
 - _deprecated
 - _mapReturn
 - __undo
-- __executeInputSupport
+- executeInputSupport
 - applicationHomeAliases
 - aptIsInstalled
 - aptKeyAdd

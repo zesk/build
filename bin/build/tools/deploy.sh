@@ -69,7 +69,7 @@ deployApplicationVersion() {
   local tryVariables=(APPLICATION_ID APPLICATION_TAG)
   local deployFile
 
-  [ -d "$p" ] || __throwEnvironment "$handler" "$p is not a directory" || return $?
+  [ -d "$p" ] || returnThrowEnvironment "$handler" "$p is not a directory" || return $?
   for f in "${tryVariables[@]}"; do
     deployFile="$p/.deploy/$f"
     if [ -f "$deployFile" ]; then
@@ -77,7 +77,7 @@ deployApplicationVersion() {
       return 0
     fi
   done
-  [ -f "$p/.env" ] || __throwEnvironment "$handler" "$p/.env does not exist" || return $?
+  [ -f "$p/.env" ] || returnThrowEnvironment "$handler" "$p/.env does not exist" || return $?
   for f in "${tryVariables[@]}"; do
     # shellcheck source=/dev/null
     value=$(
@@ -89,7 +89,7 @@ deployApplicationVersion() {
       return 0
     fi
   done
-  __throwEnvironment "$handler" "No application version found" || return $?
+  returnThrowEnvironment "$handler" "No application version found" || return $?
 }
 _deployApplicationVersion() {
   # __IDENTICAL__ usageDocument 1
@@ -110,8 +110,8 @@ deployPackageName() {
   [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
 
   export BUILD_TARGET
-  __catch "$handler" buildEnvironmentLoad BUILD_TARGET || return $?
-  [ -n "${BUILD_TARGET-}" ] || __throwEnvironment "$handler" "BUILD_TARGET is blank" || return $?
+  returnCatch "$handler" buildEnvironmentLoad BUILD_TARGET || return $?
+  [ -n "${BUILD_TARGET-}" ] || returnThrowEnvironment "$handler" "BUILD_TARGET is blank" || return $?
   printf "%s\n" "${BUILD_TARGET-}"
 }
 _deployPackageName() {
@@ -134,9 +134,9 @@ deployHasVersion() {
   [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
   deployHome=$(usageArgumentDirectory "$handler" deployHome "${1-}") || return $?
   versionName="${2-}"
-  [ -n "$versionName" ] || __throwArgument "$handler" "blank versionName" || return $?
+  [ -n "$versionName" ] || returnThrowArgument "$handler" "blank versionName" || return $?
   targetPackage="${3-$(deployPackageName)}"
-  [ -d "$deployHome/$versionName" ] || __throwEnvironment "$handler" "No deployment version found: $deployHome/$versionName" || return $?
+  [ -d "$deployHome/$versionName" ] || returnThrowEnvironment "$handler" "No deployment version found: $deployHome/$versionName" || return $?
   [ -f "$deployHome/$versionName/$targetPackage" ]
 }
 _deployHasVersion() {
@@ -151,7 +151,7 @@ _deployHasVersion() {
 #
 _applicationIdLink() {
   local handler="${1-}" fileSuffix="${2-}" && shift 2 || return $?
-  [ -n "$fileSuffix" ] || __throwArgument "$handler" "Internal fileSuffix is blank" || return $?
+  [ -n "$fileSuffix" ] || returnThrowArgument "$handler" "Internal fileSuffix is blank" || return $?
   [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
   local deployHome versionName
   deployHome="$(usageArgumentDirectory "$handler" deployHome "${1-}")" && shift || return $?
@@ -200,8 +200,8 @@ deployMove() {
   [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
   local applicationPath newApplicationSource
   applicationPath=$(usageArgumentDirectory "$handler" applicationPath "${1-}") || return $?
-  shift || __throwArgument "$handler" "missing argument" || return $?
-  newApplicationSource=$(pwd) || __throwEnvironment "$handler" "Unable to get pwd" || return $?
+  shift || returnThrowArgument "$handler" "missing argument" || return $?
+  newApplicationSource=$(pwd) || returnThrowEnvironment "$handler" "Unable to get pwd" || return $?
   directoryClobber "$newApplicationSource" "$applicationPath"
 }
 _deployMove() {

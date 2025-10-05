@@ -18,15 +18,45 @@ __buildTestPlatformOutput() {
   printf "%s %s %s\n" "$(decorate "$color" "$image")" "$verb" "$(decorate magenta "$(timingFormat "$elapsed") seconds")"
 }
 
+# Run Zesk Build tests on multiple platforms
+# Argument: --env-file envFile - Optional. File. Environment file to load - can handle any format.
 buildTestPlatforms() {
   local handler="_${FUNCNAME[0]}"
 
+  local ee=()
+
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
+  local __saved=("$@") __count=$#
+  while [ $# -gt 0 ]; do
+    local argument="$1" __index=$((__count - $# + 1))
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
+    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    case "$argument" in
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
+    # _IDENTICAL_ handlerHandler 1
+    --handler) shift && handler=$(usageArgumentFunction "$handler" "$argument" "${1-}") || return $? ;;
+    --env-file)
+      # shift here never fails as [ #$ -gt 0 ]
+      shift && ee+=("$argument" "$(usageArgumentRealFile "$handler" "$argument" "${1-}")") || return $?
+      ;;
+    *)
+      # _IDENTICAL_ argumentUnknownHandler 1
+      returnThrowArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
+      ;;
+    esac
+    shift
+  done
+
+  decorate error ENV FILES "${ee[@]}"
+  printf "\n"
+
   local testHome
-  testHome="$(__catch "$handler" buildHome)" || return $?
+  testHome="$(returnCatch "$handler" buildHome)" || return $?
 
   local safeTestFiles
   local platforms="$testHome/etc/platform.txt"
-  [ -f "$platforms" ] || __throwArgument "$handler" "Missing test directory" || return $?
+  [ -f "$platforms" ] || returnThrowArgument "$handler" "Missing test directory" || return $?
 
   __buildTestRequirements "$handler" || return $?
 
@@ -34,7 +64,7 @@ buildTestPlatforms() {
 
   safeTestFiles=$(buildCacheDirectory "${FUNCNAME[0]}") || return $?
   local name clean=("$safeTestFiles")
-  name=$(__catch "$handler" buildEnvironmentGet APPLICATION_NAME) || return $?
+  name=$(returnCatch "$handler" buildEnvironmentGet APPLICATION_NAME) || return $?
 
   if [ -f "$lastRunPlatform" ]; then
     local image success elapsed
@@ -48,10 +78,11 @@ buildTestPlatforms() {
   while read -r image; do
     local pathName="${image//[^[:alnum:]]/_}"
 
-    __catch "$handler" directoryRequire "$safeTestFiles/$pathName" || return $?
+    returnCatch "$handler" directoryRequire "$safeTestFiles/$pathName" || return $?
+    local f
     for f in "bin" "test" "etc" "documentation"; do
       statusMessage decorate info "Copying $(decorate code "$name") [$f] to $(decorate file "$safeTestFiles/$pathName/$f")"
-      __catchEnvironment "$handler" cp -R "$testHome/$f" "$safeTestFiles/$pathName/$f" || return $?
+      catchEnvironment "$handler" cp -R "$testHome/$f" "$safeTestFiles/$pathName/$f" || return $?
     done
 
     if [ -n "$lastImage" ]; then
@@ -64,14 +95,14 @@ buildTestPlatforms() {
 
     local start exitCode=0 elapsed
     start=$(timingStart)
-    dockerLocalContainer --local "$safeTestFiles/$pathName" --path "/var/buildTest" --verbose --handler "$handler" --image "$image" "/var/buildTest/bin/test.sh" -c "$@" || exitCode=$?
+    executeEcho dockerLocalContainer "${ee[@]+"${ee[@]}"}" --local "$safeTestFiles/$pathName" --path "/var/buildTest" --verbose --handler "$handler" --image "$image" "/var/buildTest/bin/test.sh" -c "$@" || exitCode=$?
     elapsed=$(($(timingStart) - start))
     __buildTestPlatformOutput "$image" "$exitCode" "$elapsed"
     [ $exitCode -eq 0 ] || returnCode=$exitCode
     [ $returnCode -eq 0 ] || printf "%s %s %s\n" "$image" "$exitCode" "$elapsed" >>"$lastRunPlatform"
   done <"$platforms"
 
-  [ $returnCode -ne 0 ] || __catchEnvironment "$handler" rm -rf "${clean[@]}" || return $?
+  [ $returnCode -ne 0 ] || catchEnvironment "$handler" rm -rf "${clean[@]}" || return $?
   return $returnCode
 }
 _buildTestPlatforms() {

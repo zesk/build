@@ -47,7 +47,7 @@ processWait() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -58,19 +58,19 @@ processWait() {
       verboseFlag=true
       ;;
     --signals)
-      shift || __throwArgument "$handler" "missing $argument argument" || return $?
+      shift || returnThrowArgument "$handler" "missing $argument argument" || return $?
       IFS=',' read -r -a signals < <(uppercase "$1")
       for signal in "${signals[@]}"; do
         case "$signal" in
         STOP | QUIT | INT | KILL | HUP | ABRT | TERM) ;;
         *)
-          __throwArgument "$handler" "Invalid signal $signal" || return $?
+          returnThrowArgument "$handler" "Invalid signal $signal" || return $?
           ;;
         esac
       done
       ;;
     --timeout)
-      shift || __throwArgument "$handler" "missing $argument" || return $?
+      shift || returnThrowArgument "$handler" "missing $argument" || return $?
       timeout=$(usageArgumentInteger "$handler" "timeout" "$1") || return $?
       signalTimeout=$timeout
       ;;
@@ -91,16 +91,16 @@ processWait() {
   local processTemp
 
   if [ 0 -eq ${#processIds[@]} ]; then
-    __throwArgument "$handler" "Requires at least one processId" || return $?
+    returnThrowArgument "$handler" "Requires at least one processId" || return $?
   fi
 
   local start sendSignals sendSignals=("${signals[@]+"${signals[@]}"}") lastSignal=0 elapsed=0 processTemp
 
-  start=$(date +%s) || __throwEnvironment "$handler" "date failed" || return $?
+  start=$(date +%s) || returnThrowEnvironment "$handler" "date failed" || return $?
 
   processTemp=$(fileTemporaryName "$handler") || return $?
   while [ ${#processIds[@]} -gt 0 ]; do
-    __catchEnvironment "$handler" _processSignal 0 "${processIds[@]}" >"$processTemp" || return $?
+    catchEnvironment "$handler" _processSignal 0 "${processIds[@]}" >"$processTemp" || return $?
     # Reset aliveIds, load them from _processSignal
     aliveIds=()
     while read -r processId; do ! isInteger "$processId" || aliveIds+=("$processId"); done <"$processTemp"
@@ -109,7 +109,7 @@ processWait() {
       # First - check --required - all processes must be running
       # And ensure they match (all processes running) and then clear the requireFlag
       if [ ${#processIds[@]} -ne ${#aliveIds[@]} ]; then
-        __throwEnvironment "$handler" "All processes must be alive to start: ${processIds[*]} (Alive: ${aliveIds[*]-none})" || return $?
+        returnThrowEnvironment "$handler" "All processes must be alive to start: ${processIds[*]} (Alive: ${aliveIds[*]-none})" || return $?
       fi
       # Just the first time
       requireFlag=false
@@ -128,7 +128,7 @@ processWait() {
         sendSignals=("${sendSignals[@]}")
         # Reset aliveIds, load them from _processSignal
         ! $verboseFlag || statusMessage decorate info "Sending $(decorate label "$signal") to $(IFS=, decorate code "${processIds[*]}")"
-        __catchEnvironment "$handler" _processSignal "$signal" "${processIds[@]}" >"$processTemp" || return $?
+        catchEnvironment "$handler" _processSignal "$signal" "${processIds[@]}" >"$processTemp" || return $?
         aliveIds=()
         while read -r processId; do ! isInteger "$processId" || aliveIds+=("$processId"); done <"$processTemp"
         ! $verboseFlag && IFS=, statusMessage decorate info "Processes: ${processIds[*]} -> Alive: $(IFS=, decorate code "${aliveIds[*]-none}")"
@@ -137,12 +137,12 @@ processWait() {
       sinceLastSignal=0
     fi
     if [ "$timeout" -gt 0 ] && [ "$sinceLastSignal" -ge "$timeout" ] && [ ${#sendSignals[@]} -eq 0 ]; then
-      __throwEnvironment "$handler" "Expired after $elapsed $(plural "$elapsed" second seconds) (timeout: $timeout, signals: ${signals[*]-wait}) Alive: ${aliveIds[*]-none}" || return $?
+      returnThrowEnvironment "$handler" "Expired after $elapsed $(plural "$elapsed" second seconds) (timeout: $timeout, signals: ${signals[*]-wait}) Alive: ${aliveIds[*]-none}" || return $?
     fi
     if [ "$elapsed" -gt "$STATUS_THRESHOLD" ] || $verboseFlag; then
       statusMessage decorate info "${handler#_} ${processIds[*]} (${sendSignals[*]-wait}, $sinceLastSignal) - $elapsed seconds"
     fi
-    sleep 1 || __throwEnvironment "$handler" "sleep interrupted" || return $?
+    sleep 1 || returnThrowEnvironment "$handler" "sleep interrupted" || return $?
   done
   if [ "$elapsed" -gt "$STATUS_THRESHOLD" ] || $verboseFlag; then
     statusMessage --last decorate warning "$elapsed $(plural "$elapsed" second seconds) elapsed (threshold is $(decorate code "$STATUS_THRESHOLD"))"
@@ -169,16 +169,16 @@ processMemoryUsage() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
     *)
       local pid="$argument"
-      __catchArgument "$handler" isInteger "$pid" || return $?
+      catchArgument "$handler" isInteger "$pid" || return $?
       # ps -o '%cpu %mem pid vsz rss tsiz %mem comm' -p "$pid" | tail -n 1
-      value="$(ps -o rss -p "$pid" | tail -n 1 | trimSpace)" || __throwEnvironment "$handler" "Failed to get process status for $pid" || return $?
-      isInteger "$value" || __throwEnvironment "$handler" "Bad memory value for $pid: $value" || return $?
+      value="$(ps -o rss -p "$pid" | tail -n 1 | trimSpace)" || returnThrowEnvironment "$handler" "Failed to get process status for $pid" || return $?
+      isInteger "$value" || returnThrowEnvironment "$handler" "Bad memory value for $pid: $value" || return $?
       printf %d $((value * 1))
       ;;
     esac
@@ -207,15 +207,15 @@ processVirtualMemoryAllocation() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
     *)
       local pid="$argument" value
-      __catchArgument "$handler" isInteger "$pid" || return $?
+      catchArgument "$handler" isInteger "$pid" || return $?
       value="$(ps -o vsz -p "$pid" | tail -n 1 | trimSpace)"
-      isInteger "$value" || __throwEnvironment "$handler" "ps returned non-integer: \"$(decorate code "$value")\"" || return $?
+      isInteger "$value" || returnThrowEnvironment "$handler" "ps returned non-integer: \"$(decorate code "$value")\"" || return $?
       printf %d $((value * 1))
       ;;
     esac
@@ -239,7 +239,7 @@ processOpenPipes() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;

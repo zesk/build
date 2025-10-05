@@ -45,12 +45,12 @@ _isUnsignedInteger() {
 
 # <-- END of IDENTICAL returnMessage
 
-# _IDENTICAL_ __execute 7
+# _IDENTICAL_ execute 7
 
 # Argument: binary ... - Required. Executable. Any arguments are passed to `binary`.
 # Run binary and output failed command upon error
 # Requires: returnMessage
-__execute() {
+execute() {
   "$@" || returnMessage "$?" "$@" || return $?
 }
 
@@ -97,12 +97,12 @@ _logger() {
   APPLICATION_USER=$user
 
   [ -d "$logHome" ] || _return 4 "$logHome is not a directory" || return $?
-  __execute _ownFiles "$user" "$logHome" || return $?
+  execute _ownFiles "$user" "$logHome" || return $?
   logHome="$logHome/$name"
-  [ -d "$logHome" ] || __execute mkdir -p "$logHome" || return $?
-  __execute chown -R "$user:" "$logHome" || return $?
-  __execute chmod 775 "$logHome" || return $?
-  __execute cd "$logHome" || return $?
+  [ -d "$logHome" ] || execute mkdir -p "$logHome" || return $?
+  execute chown -R "$user:" "$logHome" || return $?
+  execute chmod 775 "$logHome" || return $?
+  execute cd "$logHome" || return $?
 
   exec setuidgid "$user" multilog t "$@" "$logHome"
 }

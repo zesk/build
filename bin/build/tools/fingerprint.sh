@@ -24,7 +24,7 @@ fingerprint() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -36,27 +36,27 @@ fingerprint() {
     --prefix) shift && prefix=$(usageArgumentEmptyString "$handler" "$argument" "${1-}") || return $? ;;
     *)
       # _IDENTICAL_ argumentUnknownHandler 1
-      __throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
+      returnThrowArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
       ;;
     esac
     shift
   done
 
-  [ -n "$prefix" ] || prefix=$(__catch "$handler" buildEnvironmentGet APPLICATION_JSON_PREFIX) || return $?
+  [ -n "$prefix" ] || prefix=$(returnCatch "$handler" buildEnvironmentGet APPLICATION_JSON_PREFIX) || return $?
   [ -n "$key" ] || key="fingerprint"
 
   local jqPath
-  jqPath=$(__catch "$handler" jsonPath "$prefix" "$key") || return $?
+  jqPath=$(returnCatch "$handler" jsonPath "$prefix" "$key") || return $?
 
   local home
-  home=$(__catch "$handler" buildHome) || return $?
-  jsonFile="$home/$(__catch "$handler" buildEnvironmentGet APPLICATION_JSON)" || return $?
+  home=$(returnCatch "$handler" buildHome) || return $?
+  jsonFile="$home/$(returnCatch "$handler" buildEnvironmentGet APPLICATION_JSON)" || return $?
 
-  [ -f "$jsonFile" ] || __throwEnvironment "$handler" "Missing $(decorate file "$jsonFile")" || return $?
+  [ -f "$jsonFile" ] || returnThrowEnvironment "$handler" "Missing $(decorate file "$jsonFile")" || return $?
 
   local savedFingerprint fingerprint
-  savedFingerprint="$(__catch "$handler" jsonFileGet "$jsonFile" "$jqPath")" || return $?
-  fingerprint=$(__catch "$handler" hookRun application-fingerprint) || return $?
+  savedFingerprint="$(returnCatch "$handler" jsonFileGet "$jsonFile" "$jqPath")" || return $?
+  fingerprint=$(returnCatch "$handler" hookRun application-fingerprint) || return $?
   if [ "$fingerprint" = "$savedFingerprint" ]; then
     if $checkFlag; then
       printf -- "%s\n" "$fingerprint"
@@ -69,7 +69,7 @@ fingerprint() {
       printf -- "%s\n" "$fingerprint"
       return 1
     fi
-    __catchEnvironment "$handler" jsonFileSet "$jsonFile" "$jqPath" "$fingerprint" || return $?
+    catchEnvironment "$handler" jsonFileSet "$jsonFile" "$jqPath" "$fingerprint" || return $?
     ! $verboseFlag || decorate subtle "Fingerprint updated to $(decorate code "$fingerprint") [$savedFingerprint]. (path: $(decorate value "$jqPath"))"
   fi
 }

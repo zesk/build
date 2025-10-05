@@ -40,7 +40,7 @@ __testIsCharacterClass() {
 testValidateCharacterClass() {
   local temp home handler="returnMessage"
 
-  home=$(__catch "$handler" buildHome) || return $?
+  home=$(returnCatch "$handler" buildHome) || return $?
   temp=$(fileTemporaryName "$handler") || return $?
   __testIsCharacterClass | tee "$temp" || return $?
   if ! diff -q "$temp" "$home/test/example/isCharacterClass.txt"; then

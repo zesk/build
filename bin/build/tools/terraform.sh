@@ -17,7 +17,7 @@
 aptKeyAddHashicorp() {
   local handler="_${FUNCNAME[0]}"
   __help "$handler" "$@" || return 0
-  __catch "$handler" aptKeyAdd --title Hashicorp --name hashicorp --url https://apt.releases.hashicorp.com/gpg || return $?
+  returnCatch "$handler" aptKeyAdd --title Hashicorp --name hashicorp --url https://apt.releases.hashicorp.com/gpg || return $?
 }
 _aptKeyAddHashicorp() {
   # __IDENTICAL__ usageDocument 1
@@ -34,7 +34,7 @@ _aptKeyAddHashicorp() {
 aptKeyRemoveHashicorp() {
   local handler="_${FUNCNAME[0]}"
   __help "$handler" "$@" || return 0
-  __catch "$handler" aptKeyRemove hashicorp "$@" || return $?
+  returnCatch "$handler" aptKeyRemove hashicorp "$@" || return $?
 }
 _aptKeyRemoveHashicorp() {
   # __IDENTICAL__ usageDocument 1
@@ -53,11 +53,11 @@ terraformInstall() {
   __help "$handler" "$@" || return 0
   ! whichExists "$binary" || return 0
   if aptIsInstalled; then
-    __catch "$handler" packageInstall gnupg software-properties-common curl figlet || return $?
-    __catch "$handler" aptKeyAddHashicorp || return $?
+    returnCatch "$handler" packageInstall gnupg software-properties-common curl figlet || return $?
+    returnCatch "$handler" aptKeyAddHashicorp || return $?
   fi
-  __catch "$handler" packageInstall "$binary" "$@" || return $?
-  whichExists "$binary" || __throwEnvironment "$handler" "No $binary binary found - installation failed" || return $?
+  returnCatch "$handler" packageInstall "$binary" "$@" || return $?
+  whichExists "$binary" || returnThrowEnvironment "$handler" "No $binary binary found - installation failed" || return $?
 }
 _terraformInstall() {
   # __IDENTICAL__ usageDocument 1
@@ -75,9 +75,9 @@ terraformUninstall() {
 
   __help "$handler" "$@" || return 0
   whichExists terraform || return 0
-  __catch "$handler" packageWhichUninstall terraform terraform "$@" || return $?
-  __catch "$handler" aptKeyRemoveHashicorp || return $?
-  __catch "$handler" packageUpdate --force || return $?
+  returnCatch "$handler" packageWhichUninstall terraform terraform "$@" || return $?
+  returnCatch "$handler" aptKeyRemoveHashicorp || return $?
+  returnCatch "$handler" packageUpdate --force || return $?
 }
 _terraformUninstall() {
   # __IDENTICAL__ usageDocument 1

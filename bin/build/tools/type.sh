@@ -126,7 +126,7 @@ isType() {
   *"declare -- "*) printf -- "%s\n" "string" "local" ;;
   *"declare -fx "*) printf -- "%s\n" "function" "export" ;;
   *"declare -f "*) printf -- "%s\n" "function" "local" ;;
-  *) __throwArgument "$handler" "Unknown type: $1 -> \"$text\"" || return $? ;;
+  *) returnThrowArgument "$handler" "Unknown type: $1 -> \"$text\"" || return $? ;;
   esac
 }
 _isType() {
@@ -162,11 +162,11 @@ _isArray() {
 # Argument: value - EmptyString. Required. Value to check if it is an unsigned integer
 # Return Code: 0 - if it is a positive integer
 # Return Code: 1 - if it is not a positive integer
-# Requires: __catchArgument isUnsignedInteger usageDocument
+# Requires: catchArgument isUnsignedInteger usageDocument
 isPositiveInteger() {
   # _IDENTICAL_ functionSignatureSingleArgument 2
   local handler="_${FUNCNAME[0]}"
-  [ $# -eq 1 ] || __catchArgument "$handler" "Single argument only: $*" || return $?
+  [ $# -eq 1 ] || catchArgument "$handler" "Single argument only: $*" || return $?
   [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
   if isUnsignedInteger "${1-}"; then
     [ "$1" -gt 0 ] || return 1
@@ -184,11 +184,11 @@ _isPositiveInteger() {
 # If no arguments are passed, returns exit code 1.
 # Return Code: 0 - argument is bash function
 # Return Code: 1 - argument is not a bash function
-# Requires: __catchArgument isUnsignedInteger usageDocument type
+# Requires: catchArgument isUnsignedInteger usageDocument type
 isFunction() {
   # _IDENTICAL_ functionSignatureSingleArgument 2
   local handler="_${FUNCNAME[0]}"
-  [ $# -eq 1 ] || __catchArgument "$handler" "Single argument only: $*" || return $?
+  [ $# -eq 1 ] || catchArgument "$handler" "Single argument only: $*" || return $?
   [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
   # Skip illegal options "--" and "-foo"
   [ "$1" = "${1#-}" ] || return 1

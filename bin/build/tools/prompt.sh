@@ -87,7 +87,7 @@ bashUserInput() {
 
   [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
   if ! isTTYAvailable; then
-    __throwEnvironment "$handler" "No TTY available for user input" || return $?
+    returnThrowEnvironment "$handler" "No TTY available for user input" || return $?
   fi
   stty -f /dev/tty echo 2>/dev/null || :
   # Technically the reading program will not receive these bytes as they will be sent to the tty
@@ -115,14 +115,14 @@ bashPromptMarkers() {
   local markers=()
 
   export __BASH_PROMPT_MARKERS
-  __catch "$handler" buildEnvironmentLoad __BASH_PROMPT_MARKERS || return $?
+  returnCatch "$handler" buildEnvironmentLoad __BASH_PROMPT_MARKERS || return $?
 
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -132,7 +132,7 @@ bashPromptMarkers() {
     esac
     shift
   done
-  [ "${#markers[@]}" -le 2 ] || __throwArgument "$handler" "Maximum two markers supported (prefix suffix)"
+  [ "${#markers[@]}" -le 2 ] || returnThrowArgument "$handler" "Maximum two markers supported (prefix suffix)"
   [ "${#markers[@]}" -eq 0 ] || __BASH_PROMPT_MARKERS=("${markers[@]}")
   printf "%s\n" "${__BASH_PROMPT_MARKERS[@]}"
 }

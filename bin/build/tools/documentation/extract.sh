@@ -14,7 +14,7 @@ __bashDocumentationSettingsHeader() {
   # Hides 'unused' messages so shellcheck should succeed
   printf '%s\n' '# shellcheck disable=SC2034'
 
-  __catch "$handler" __dumpSimpleValue "fn" "$fn" || return $?
+  returnCatch "$handler" __dumpSimpleValue "fn" "$fn" || return $?
 }
 
 # Argument: handler - Required. Function.
@@ -26,14 +26,14 @@ __bashDocumentationSettingsFileDetails() {
   local lineNumber="${2-}"
 
   local home
-  home=$(__catch "$handler" buildHome) || return $?
+  home=$(returnCatch "$handler" buildHome) || return $?
 
-  __catch "$handler" __dumpSimpleValue "applicationHome" "$home" || return $?
+  returnCatch "$handler" __dumpSimpleValue "applicationHome" "$home" || return $?
   definitionFile=$(usageArgumentFile "$handler" "definitionFile" "$sourceFile") && shift || return $?
-  __catch "$handler" __dumpSimpleValue "applicationFile" "${definitionFile#"${home%/}"/}" || return $?
-  __catch "$handler" __dumpSimpleValue "file" "$definitionFile" || return $?
-  __catch "$handler" __dumpSimpleValue "base" "$(basename "$definitionFile")" || return $?
-  [ -z "$lineNumber" ] || __catch "$handler" __dumpSimpleValue "sourceLine" "$lineNumber" || return $?
+  returnCatch "$handler" __dumpSimpleValue "applicationFile" "${definitionFile#"${home%/}"/}" || return $?
+  returnCatch "$handler" __dumpSimpleValue "file" "$definitionFile" || return $?
+  returnCatch "$handler" __dumpSimpleValue "base" "$(basename "$definitionFile")" || return $?
+  [ -z "$lineNumber" ] || returnCatch "$handler" __dumpSimpleValue "sourceLine" "$lineNumber" || return $?
 }
 
 __bashDocumentationExtract() {
@@ -83,7 +83,7 @@ __bashDocumentationExtract() {
           else
             dumper=__dumpNameValueAppend
           fi
-          __catch "$handler" "$dumper" "$lastName" "${values[@]}" || return $?
+          returnCatch "$handler" "$dumper" "$lastName" "${values[@]}" || return $?
           values=()
         fi
         : "$fn"
@@ -101,7 +101,7 @@ __bashDocumentationExtract() {
       else
         dumper=__dumpNameValueAppend
       fi
-      __catch "$handler" "$dumper" "$lastName" "${values[@]}" || return $?
+      returnCatch "$handler" "$dumper" "$lastName" "${values[@]}" || return $?
     fi
 
     if [ "${#desc[@]}" -gt 0 ]; then

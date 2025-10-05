@@ -16,7 +16,7 @@ __loopExecute() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || __throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -45,7 +45,7 @@ __loopExecute() {
     shift
   done
 
-  [ -n "$loopCallable" ] || __throwArgument "$handler" "No loopCallable" || return $?
+  [ -n "$loopCallable" ] || returnThrowArgument "$handler" "No loopCallable" || return $?
   [ -n "$title" ] || title="$(decorate each code "$loopCallable" "$@")"
   [ ${#until[@]} -gt 0 ] || until=("0")
 
@@ -66,7 +66,7 @@ __loopExecute() {
       suffix=$(decorate warning "(loading)")
     fi
 
-    __catchEnvironment "$handler" boxedHeading --outside "$outsideColor" --inside "$outsideColor" "$title $suffix" | plasterLines || return $?
+    catchEnvironment "$handler" boxedHeading --outside "$outsideColor" --inside "$outsideColor" "$title $suffix" | plasterLines || return $?
     printf "%s\n" "$statusLine" | plasterLines
     IFS=$'\n' read -r -d '' _ saveY < <(cursorGet)
 
@@ -84,8 +84,8 @@ __loopExecute() {
 
     # Compute status line
     local elapsed seconds nLines stamp
-    nLines=$(__catch "$handler" fileLineCount "$outputBuffer") || return $?
-    elapsed=$(($(__catch "$handler" timingStart) - start)) || return $?
+    nLines=$(returnCatch "$handler" fileLineCount "$outputBuffer") || return $?
+    elapsed=$(($(returnCatch "$handler" timingStart) - start)) || return $?
     seconds=$(timingFormat "$elapsed")
     seconds="$seconds $(plural "$seconds" second seconds)"
     stamp=$(date "+%F %T")
@@ -95,14 +95,14 @@ __loopExecute() {
     cursorSet 1 1
 
     if inArray "$exitCode" "${until[@]}"; then
-      __catchEnvironment "$handler" boxedHeading --outside "$outsideColor" --inside success "$title (SUCCESS)" | plasterLines || return $?
+      catchEnvironment "$handler" boxedHeading --outside "$outsideColor" --inside success "$title (SUCCESS)" | plasterLines || return $?
       printf "%s\n" "$statusLine" | plasterLines || return $?
-      __catchEnvironment "$handler" plasterLines <"$outputBuffer" || return $?
+      catchEnvironment "$handler" plasterLines <"$outputBuffer" || return $?
       cursorSet 1 "$((rowCount - 1))"
       bigText "Success"
       done=true
     else
-      __catchEnvironment "$handler" boxedHeading --outside "$outsideColor" --inside "$outsideColor" "$title $(decorate orange "(looping)")" || echo "EXIT CODE: $?"
+      catchEnvironment "$handler" boxedHeading --outside "$outsideColor" --inside "$outsideColor" "$title $(decorate orange "(looping)")" || echo "EXIT CODE: $?"
       printf "%s\n" "$statusLine" | plasterLines || return $?
       (
         tail -n "$showRows" <"$outputBuffer"
@@ -111,11 +111,11 @@ __loopExecute() {
       elapsed=$((elapsed / 1000))
       if [ "$elapsed" -lt "$sleepDelay" ]; then
         cursorSet 1 "$((saveY - 1))"
-        __catch "$handler" interactiveCountdown --prefix "$statusLine, running $title in " "$((sleepDelay - elapsed))" || return $?
+        returnCatch "$handler" interactiveCountdown --prefix "$statusLine, running $title in " "$((sleepDelay - elapsed))" || return $?
       fi
     fi
     iterations=$((iterations + 1))
     rowCount=$(consoleRows)
   done
-  __catchEnvironment "$handler" rm -rf "$outputBuffer" || return $?
+  catchEnvironment "$handler" rm -rf "$outputBuffer" || return $?
 }
