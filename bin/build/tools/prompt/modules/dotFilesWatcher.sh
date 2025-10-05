@@ -8,7 +8,7 @@ __bashPromptModule_dotFilesWatcher() {
   local handler="$1" && shift
   local askFile dataFile
 
-  [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
+  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
 
   askFile="$(buildEnvironmentGetDirectory "XDG_STATE_HOME")/dotFilesWatcher-asked" 2>/dev/null || return 1
   dataFile="$(dotFilesApprovedFile)" || return 1

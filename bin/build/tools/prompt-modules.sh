@@ -80,18 +80,6 @@ _reloadChanges() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# Maintain the application fingerprint in the `APPLICATION_JSON` file
-#
-# Example:     bashPrompt bashPromptModule_dotFilesWatcher
-# Requires: sort buildEnvironmentGetDirectory touch returnEnvironment read basename inArray decorate printf confirmYesNo statusMessage grep rm
-bashPromptModule_Fingerprint() {
-  __promptLoader "_${FUNCNAME[0]}" "__${FUNCNAME[0]}" "$@"
-}
-_bashPromptModule_Fingerprint() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
-}
-
 # Watches your HOME directory for `.` files which are added and unknown to you.
 #
 # Example:     bashPrompt bashPromptModule_dotFilesWatcher

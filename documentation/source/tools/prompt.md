@@ -51,8 +51,6 @@ To enable:
 
 {bashPromptModule_TermColors}
 
-{bashPromptModule_Fingerprint}
-
 ## dotFilesWatcher Tools
 
 Example during setup:

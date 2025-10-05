@@ -125,10 +125,6 @@ __aptKeyAdd() {
   fi
   statusMessage --last timingReport "$start" "Added $title to sources in"
 }
-_aptKeyAdd() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
-}
 
 __aptKeyRemove() {
   local handler="$1" && shift

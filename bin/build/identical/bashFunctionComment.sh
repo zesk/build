@@ -21,7 +21,7 @@ bashFinalComment() {
   # - cut -c 3- - Delete the first 2 characters on each line
 }
 _bashFinalComment() {
-  false || bashFinalComment --help
+  ! false || bashFinalComment --help
   # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

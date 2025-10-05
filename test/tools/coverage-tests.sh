@@ -251,11 +251,11 @@ testBuildFunctionsHelpCoverage() {
         helpCall=("$fun")
       fi
       if $coverageRequired; then
-        assertExitCode --stdout-match "$fun" --stdout-match "handler" 0 "${helpCall[@]}" || return $?
+        assertExitCode --stdout-match "$fun" --stdout-match "Usage:" 0 "${helpCall[@]}" || return $?
       else
         statusMessage decorate info "Attempting $(decorate each code "${helpCall[@]}") ..."
         # "$fun" --help | dumpPipe "$fun --help"
-        if ! assertExitCode --stdout-match "$fun" --stdout-match "handler" 0 "${helpCall[@]}"; then
+        if ! assertExitCode --stdout-match "$fun" --stdout-match "Usage:" 0 "${helpCall[@]}"; then
           missing+=("$fun")
           __catchEnvironment "$handler" printf "%s\n" "$fun" >>"$missingFile" || return $?
         else

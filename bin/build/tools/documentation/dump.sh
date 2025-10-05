@@ -16,10 +16,16 @@ __dumpNameValue() {
 }
 
 __dumpSimpleValue() {
-  printf "export %s\n" "$(environmentValueWrite "${1-}" "$(trimSpace "${2-}")")"
+  local handler="returnMessage"
+  local name="${1-}"
+  case "${name:0:1}" in [[:alpha:]_]) ;; *) __throwArgument "$handler" "Invalid variable name $name $(debuggingStack)" || return $? ;; esac
+  printf -- "export %s\n" "$(__catch "$handler" environmentValueWrite "$name" "$(trimSpace "${2-}")")" || return $?
 }
 
 __dumpArrayValue() {
+  local handler="returnMessage"
+  local name="${1-}"
+  case "${name:0:1}" in [[:alpha:]_]) ;; *) __throwArgument "$handler" "Invalid variable name $name $(debuggingStack)" || return $? ;; esac
   printf "export %s\n" "$(environmentValueWriteArray "$@")"
 }
 
@@ -45,8 +51,10 @@ __dumpNameValueAppend() {
 # Argument: `value0` - One or more lines of text associated with this value to be output in a bash-friendly manner
 #
 __dumpNameValuePrefixLocal() {
-  local prefix="${1}" varName="${2}"
-  printf -- "IFS='' read -r -d '' '%s' <<'%s' || :\n" "$varName" "EOF" # Single quote means no interpolation
+  local handler="returnMessage"
+  local prefix="${1}" name="${2}"
+  case "${name:0:1}" in [[:alpha:]_]) ;; *) __throwArgument "$handler" "Invalid variable name $name $(debuggingStack)" || return $? ;; esac
+  printf -- "IFS='' read -r -d '' '%s' <<'%s' || :\n" "$name" "EOF" # Single quote means no interpolation
   shift 2
   while [ $# -gt 0 ]; do
     printf -- "%s%s\n" "$prefix" "$1"
