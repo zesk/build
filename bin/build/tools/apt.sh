@@ -102,6 +102,9 @@ __aptDefault() {
 __aptUpdate() {
   __aptLoader "returnMessage" "_${FUNCNAME[0]}" "$@"
 }
+__aptUpgrade() {
+  __aptLoader "returnMessage" "_${FUNCNAME[0]}" "$@"
+}
 __aptInstall() {
   __aptLoader "returnMessage" "_${FUNCNAME[0]}" "$@"
 }
