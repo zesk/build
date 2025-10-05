@@ -8,73 +8,24 @@
 # Docs: contextOpen ./documentation/source/tools/sugar.md
 # Test: contextOpen ./test/tools/sugar-tests.sh
 
-# Run a command, fail using a handler
-# Usage: {fn} handler command arguments
-# Argument: handler - Function. Required. Function to call on error.
-# Argument: command - Callable. Required. Command to run.
-# Argument: ... - Arguments. Optional. Any additional arguments to `command`.
-__catch() {
-  local __count=$# __saved=("$@") __handler="${1-}" command="${2-}"
-  shift 2 || __throwArgument "$__handler" "missing arguments #$__count $(decorate each code -- "${__saved[@]}")" || return $?
-  "$command" "$@" || "$__handler" "$?" "$command" "$@" || return $?
-}
-___catch() {
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
-}
-
-# Run `command`, handle failure with `handler` with `code` and `command` as error
-# Usage: {fn} code handler command ...
-# Argument: code - Required. Integer. Exit code to return
-# Argument: handler - Required. Function. Failure command, passed remaining arguments and error code.
-# Argument: command - Required. String. Command to run.
-# Requires: isInteger returnArgument isFunction isCallable
-__catchCode() {
-  local __count=$# __saved=("$@") __handler="_${FUNCNAME[0]}" code="${1-0}" command="${3-}"
-  __handler="${2-}"
-  shift 3
-  "$command" "$@" || "$__handler" "$code" "$(decorate each code "$command" "$@")" || return $?
-}
-___catchCode() {
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
-}
-
-# Run `command`, upon failure run `handler` with an environment error
-# Usage: {fn} handler command ...
-# Argument: handler - Required. Function. Failure command
-# Argument: command - Required. Command to run.
-__catchEnvironment() {
-  __catchCode 1 "$@" || return $?
-}
-
-# Run `command`, upon failure run `handler` with an argument error
-# Argument: handler - Required. Function. Failure command
-# Argument: command - Required. Command to run.
-__catchArgument() {
-  __catchCode 2 "$@" || return $?
-}
 
 # Run `handler` with an environment error
 # Argument: handler - Required. Function. Failure command
-# Argument: message - Optional. Error message to display.
-__throwEnvironment() {
-  local __handler="${1-}"
-  shift && "$__handler" 1 "$@" || return $?
-}
-
-# Run `handler` with an argument error
-# Argument: handler - Required. Function. Failure command
-# Argument: message - Optional. Error message to display.
-__throwArgument() {
-  local __handler="${1-}"
-  shift && "$__handler" 2 "$@" || return $?
-}
-
-# Run `handler` with an environment error
-# Usage: {fn} handler quietLog message ...
+# Argument: quietLog - Required. File. File to output log to temporarily for this command. If `quietLog` is `-` then creates a temporary file for the command which is deleted automatically.
+# Argument: command ... - Required. Callable. Thing to run and append output to `quietLog`.
 # Requires: isFunction returnArgument buildFailed debuggingStack __throwEnvironment
 __catchEnvironmentQuiet() {
-  local __handler="${1-}" quietLog="${2-}"
-  shift 2 && "$@" >>"$quietLog" 2>&1 || buildFailed "$quietLog" || __throwEnvironment "$__handler" "$@" || return $?
+  local __handler="${1-}" quietLog="${2-}" clean=() && shift 2
+  if [ ! -f "$quietLog" ]; then
+    if [ "$quietLog" = "-" ]; then
+      quietLog=$(fileTemporaryName "$handler") || return $?
+      clean+=("$quietLog")
+    elif [ ! -d "$(dirname "$quietLog")" ]; then
+      __throwArgument "$handler" "Directory for $(decorate file "$quietLog") does not exist!" || return $?
+    fi
+  fi
+  "$@" >>"$quietLog" 2>&1 || buildFailed "$quietLog" || __throwEnvironment "$__handler" "$@" || returnClean $? "${clean[@]+"${clean[@]}"}" || return $?
+  returnClean 0 "${clean[@]+"${clean[@]}"}" || return $?
 }
 
 # Logs all deprecated functions to application root in a file called `.deprecated`
@@ -133,46 +84,12 @@ _mapReturn() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# map a value from one value to another given from-to pairs
-#
-# Prints the mapped value to stdout
-#
-# DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
-# Argument: value - String. A value.
-# Argument: from - String. When value matches `from`, instead print `to`
-# Argument: to - String. The value to print when `from` matches `value`
-# Argument: ... - Additional from-to pairs can be passed, first matching value is used, all values will be examined if none match
-convertValue() {
-  local __handler="_${FUNCNAME[0]}" value="" from="" to=""
-
-  while [ $# -gt 0 ]; do
-    if [ -z "$value" ]; then
-      value=$(usageArgumentString "$__handler" "value" "$1") || return $?
-    elif [ -z "$from" ]; then
-      from=$(usageArgumentString "$__handler" "from" "$1") || return $?
-    elif [ -z "$to" ]; then
-      to=$(usageArgumentString "$__handler" "to" "$1") || return $?
-      if [ "$value" = "$from" ]; then
-        printf "%s\n" "$to"
-        return 0
-      fi
-      from="" && to=""
-    fi
-    shift
-  done
-  printf "%s\n" "${value:-0}"
-}
-_convertValue() {
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
-}
-
 
 # Argument: binary ... - Required. Executable. Any arguments are passed to `binary`.
 # Run binary and output failed command upon error
-# Requires: _return
+# Requires: returnMessage
 __execute() {
-  "$@" || _return "$?" "$@" || return $?
+  "$@" || returnMessage "$?" "$@" || return $?
 }
 
 
