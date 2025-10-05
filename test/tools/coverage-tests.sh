@@ -301,6 +301,7 @@ EOF
 __dataBuildFunctionsWithBlankHelp() {
   cat <<EOF
 __help
+jsonPath
 quoteGrepPattern
 escapeDoubleQuotes
 escapeSingleQuotes

@@ -38,13 +38,24 @@ _jsonField() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
+# Generate a path into a JSON structure for use in jq queries
+#
+# Argument: path - String. Output a json path separated by dots.
+# DOC TEMPLATE: noArgumentsForHelp 1
+# Without arguments, displays help.
 jsonPath() {
+  # __IDENTICAL__ --help-when-blank 1
+  [ $# -gt 0 ] || __help "_${FUNCNAME[0]}" --help || return 0
   local paths=()
   while [ $# -gt 0 ]; do
     [ -z "$1" ] || paths+=("$1")
     shift
   done
   printf ".%s\n" "$(listJoin "." "${paths[@]}")"
+}
+_jsonPath() {
+  # __IDENTICAL__ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 __jqPathClean() {

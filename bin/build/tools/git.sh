@@ -972,7 +972,7 @@ gitPreCommitCleanup() {
   local handler="_${FUNCNAME[0]}"
   [ $# -eq 0 ] || __help --only "$handler" "$@" || return "$(convertValue $? 1 0)"
   local directory
-  directory=$(__catch "$handler" __gitPreCommitCache "$handler")  || return $?
+  directory=$(__catch "$handler" __gitPreCommitCache "$handler") || return $?
   [ ! -d "$directory" ] || __catchEnvironment "$handler" rm -rf "$directory" || return $?
 }
 _gitPreCommitCleanup() {

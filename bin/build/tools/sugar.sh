@@ -8,7 +8,6 @@
 # Docs: contextOpen ./documentation/source/tools/sugar.md
 # Test: contextOpen ./test/tools/sugar-tests.sh
 
-
 # Run `handler` with an environment error
 # Argument: handler - Required. Function. Failure command
 # Argument: quietLog - Required. File. File to output log to temporarily for this command. If `quietLog` is `-` then creates a temporary file for the command which is deleted automatically.
