@@ -179,10 +179,6 @@ __documentationUnlinked() {
 
   __catch "$handler" _documentationIndexUnlinkedFunctions "$cacheDirectory" "${dd[@]+"${dd[@]}"}" || return $?
 }
-_documentationUnlinked() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
-}
 
 # See: bashDocumentFunction
 # Document a function and generate a function template (markdown). To custom format any

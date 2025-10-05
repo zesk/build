@@ -93,10 +93,6 @@ __documentationIndexLookup() {
   esac
   return 0
 }
-___documentationIndexLookup() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
-}
 
 __documentationIndexCommentFile() {
   local handler="$1" indexDirectory="$2" functionName="$3" sourceFile="$4" lineNumber="$5" && shift 5

@@ -188,10 +188,6 @@ __documentationTemplateFunctionCompile() {
   settingsFile=$(__catch "$handler" __documentationIndexLookup "$handler" "$functionName") || return $?
   _bashDocumentation_Template "$handler" "$functionTemplate" "${envFiles[@]+"${envFiles[@]}"}" "$settingsFile" || return $?
 }
-_documentationTemplateFunctionCompile() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
-}
 
 __documentationTemplateDirectoryCompile() {
   local handler="$1" && shift
@@ -272,8 +268,4 @@ __documentationTemplateDirectoryCompile() {
   done < <(find "$templateDirectory" -type f -name '*.md' ! -path "*/.*/*" ! -name '_*' "${filterArgs[@]+"${filterArgs[@]}"}")
   statusMessage --last timingReport "$start" "Completed generation of $fileCount $(plural $fileCount file files) in $(decorate info "$targetDirectory") "
   return $exitCode
-}
-_documentationTemplateDirectoryCompile() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
