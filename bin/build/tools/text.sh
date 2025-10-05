@@ -389,6 +389,7 @@ stringBeginsInsensitive() {
 
   [ -n "$haystack" ] || return 1
   shift
+  haystack=$(lowercase "$haystack") || :
   while [ $# -gt 0 ]; do
     [ -n "$1" ] || continue
     local needle

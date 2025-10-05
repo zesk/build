@@ -173,11 +173,11 @@ EOF
 testStringBeginsInsensitive() {
   local exitCode haystack needle
   while IFS="|" read -r exitCode haystack needle; do
-    assertExitCode "$expected" "$(stringBeginsInsensitive "$haystack" "$needle")" || return $?
+    assertExitCode --display "stringBeginsInsensitive \"$haystack\" \"$needle\"" "$exitCode" stringBeginsInsensitive "$haystack" "$needle" || return $?
   done < <(__dataStringBeginsInsensitive)
 }
 
-__dataStringBegins2() {
+__dataBeginsWith() {
   cat <<'EOF'
 0 Hello Hell No
 1 Whatever WHAT hatever
@@ -187,13 +187,13 @@ __dataStringBegins2() {
 EOF
 }
 
-testStringBegins2() {
+testBeginsWith() {
   local expected text remainder
   while read -r expected text remainder; do
     local args=()
     IFS=" " read -r -a args <<<"$remainder" || :
-    assertExitCode "$expected" beginsWith "$text" "${args[@]+"${args[@]}"}" || return $?
-  done < <(__dataStringBegins2)
+    assertExitCode --display "beginsWith \"$text\" ${args[*]}" "$expected" beginsWith "$text" "${args[@]+"${args[@]}"}" || return $?
+  done < <(__dataBeginsWith)
 }
 
 __dataStringBegins() {
@@ -209,13 +209,13 @@ EOF
 testStringBegins() {
   local exitCode haystack needle
   while IFS="|" read -r exitCode haystack needle; do
-    assertExitCode "$expected" "$(stringBegins "$haystack" "$needle")" || return $?
-  done < <(__dataStringBeginsInsensitive)
+    assertExitCode --display "stringBegins \"$haystack\" \"$needle\"" "$exitCode" stringBegins "$haystack" "$needle" || return $?
+  done < <(__dataStringBegins)
 }
 
 __dataStringContainsInsensitive() {
   cat <<'EOF'
-1|Hello, world.|hello
+0|Hello, world.|hello
 0|Hello, world.|Hello
 0|Hello, world.|Hello, world.
 0|Hello, world.|world
@@ -262,18 +262,19 @@ testStringContains() {
 __dataStringOffset() {
   cat <<'EOF'
 -1|hello|Hello, world.
-0|ello|Hello, world.
-1|llo, |Hello, world.
-2|lo, world.|Hello, world.
+0|Hello|Hello, world.
+1|ello|Hello, world.
+2|llo, |Hello, world.
+3|lo, world.|Hello, world.
 7|world|Hello, world.
 8|orld.|Hello, world.
-15|.|Hello, world.
+12|.|Hello, world.
 EOF
 }
 
 testStringOffset() {
   local expected haystack needle
-  while IFS="|" read -r expected haystack needle; do
+  while IFS="|" read -r expected needle haystack; do
     assertEquals "$expected" "$(stringOffset "$needle" "$haystack")" || return $?
   done < <(__dataStringOffset)
 }
@@ -310,15 +311,15 @@ testParseBoolean() {
 __dataShaPipe() {
   cat <<'EOF'
 1d229271928d3f9e2bb0375bd6ce5db6c6d348d9|Hello
-da39a3ee5e6b4b0d3255bfef95601890afd80709|
-9a87e2256c7b6ff46b155e90fbf0d1f0f83aab1b|Zesk Build
+adc83b19e793491b1c6ea0fd8b46cd9f32e592fc|
+36a657f07101da21abddf9b8ae339091073809fd|Zesk Build
 EOF
 }
 
 testShaPipe() {
   local expected content
   while IFS="|" read -r expected content; do
-    assertEquals "$expected" "$(shaPipe <<<"$content")" || return $?
+    assertEquals --display "${content:-blank}" "$expected" "$(shaPipe <<<"$content")" || return $?
   done < <(__dataShaPipe)
 }
 
@@ -397,7 +398,7 @@ testPrintfOutput() {
 
 __maxLineLengthFile() {
   repeat "$1" _
-  printf "%s\n" "$(randomString)"
+  printf "\n%s\n" "$(randomString)"
 }
 
 testMaximumLineLength() {
@@ -407,21 +408,30 @@ testMaximumLineLength() {
 }
 
 __maxFieldLengthFile() {
+  # Name,Department,Age,Salary,Notes
   cat <<'EOF'
-Name,Department,Age,Salary,Notes
 Juan,Accounting,25,98023,Is actually from another planet.
 Michelle,HR,29,87099,Eats lunch at 4PM
 Randy,DevTeam,36,75000,Does not speak.
 EOF
 }
 
+__maxFieldResults() {
+  cat <<'EOF'
+8 1
+10 2
+2 3
+5 4
+32 5
+0 6
+0 7
+0 99
+EOF
+}
+
 testMaximumFieldLength() {
-  assertEquals 8 "$(maximumFieldLength 1 , <__maxFieldLengthFile)" || return $?
-  assertEquals 10 "$(maximumFieldLength 2 , <__maxFieldLengthFile)" || return $?
-  assertEquals 2 "$(maximumFieldLength 3 , <__maxFieldLengthFile)" || return $?
-  assertEquals 5 "$(maximumFieldLength 4 , <__maxFieldLengthFile)" || return $?
-  assertEquals 5 "$(maximumFieldLength 5 , <__maxFieldLengthFile)" || return $?
-  assertEquals 32 "$(maximumFieldLength 6 , <__maxFieldLengthFile)" || return $?
-  assertEquals 0 "$(maximumFieldLength 7 , <__maxFieldLengthFile)" || return $?
-  assertEquals 0 "$(maximumFieldLength 99 , <__maxFieldLengthFile)" || return $?
+  local expectedLength fieldIndex
+  while read -r expectedLength fieldIndex; do
+    assertEquals --display "Field $fieldIndex" "$expectedLength" "$(__maxFieldLengthFile | maximumFieldLength "$fieldIndex" ,)" || return $?
+  done < <(__maxFieldResults)
 }
