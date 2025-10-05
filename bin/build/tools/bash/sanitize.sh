@@ -86,10 +86,6 @@ __bashSanitize() {
   statusMessage decorate success Completed ...
   printf "\n"
 }
-_bashSanitize() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
-}
 
 _bashSanitizeCheckLint() {
   local handler="$1" && shift

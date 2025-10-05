@@ -169,10 +169,7 @@ __bashCheckRequires() {
     __throwEnvironment "$handler" "Unused: $(decorate each code "${unused[@]}")" || return $?
   fi
 }
-_bashCheckRequires() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
-}
+
 __bashCheckReport() {
   local label="$1" color="$2" && shift 2
   [ $# -eq 0 ] || printf "%s [%s]\n%s\n" "$(decorate "$color" "$label"):" "$(decorate value "$#")" "$(printf -- "- %s\n" "$@")"

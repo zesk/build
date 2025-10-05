@@ -50,11 +50,13 @@ _installInstallBuild() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# Usage: {fn}
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
 # Environment: BUILD_HOME
 # Prints the list of functions defined in Zesk Build
 buildFunctions() {
   local handler="_${FUNCNAME[0]}"
+  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
   local home
   home=$(__catch "$handler" buildHome) || return $?
   {

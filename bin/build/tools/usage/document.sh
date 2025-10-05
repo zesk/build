@@ -69,12 +69,15 @@ __usageDocument() {
     ;;
   esac
 
-  local variablesFile
+  local variablesFile commentFile
   variablesFile=$(fileTemporaryName "$handler") || return $?
-  if ! bashDocumentationExtract "$functionName" >"$variablesFile" < <(bashFunctionComment "$functionDefinitionFile" "$functionName"); then
+  commentFile="$variablesFile.comment"
+  __catch "$handler" bashFunctionComment "$functionDefinitionFile" "$functionName" >"$commentFile" || returnClean $? "$commentFile" || return $?
+  if ! __catch "$handler" bashDocumentationExtract "$functionName" >"$variablesFile" <"$commentFile"; then
+    dumpPipe "commentFile" <"$commentFile"
     dumpPipe "variablesFile" <"$variablesFile"
     dumpPipe "functionDefinitionFile" <"$functionDefinitionFile"
-    __throwArgument "$handler" "Unable to extract \"$functionName\" from \"$functionDefinitionFile\"" || returnClean $? "$variablesFile" || return $?
+    __throwArgument "$handler" "Unable to extract \"$functionName\" from \"$functionDefinitionFile\"" || returnClean $? "$variablesFile" "$commentFile" || return $?
   fi
   (
     local fn="$functionName" description="" argument="" base return_code="" environment="" stdin="" stdout="" example="" build_debug=""
@@ -83,9 +86,9 @@ __usageDocument() {
     set -a
     base="$(basename "$functionDefinitionFile")"
     # shellcheck source=/dev/null
-    __catchEnvironment "$__handler" source "$variablesFile" || returnClean $? "$variablesFile" || return $?
+    __catchEnvironment "$__handler" source "$variablesFile" || returnClean $? "$variablesFile" "$commentFile" || return $?
     # Some variables MAY BE OVERWRITTEN ABOVE .e.g. `__handler`
-    __catchEnvironment "$__handler" rm -f "$variablesFile" || return $?
+    # TODO __catchEnvironment "$__handler" rm -f "$variablesFile" "$commentFile" || return $?
     set +a
 
     : "$base $return_code $environment $stdin $stdout $example are referenced here and with \${!variable} below"
@@ -116,6 +119,7 @@ __usageDocument() {
       __buildDebugEnable
     fi
     __catch "$__handler" bashRecursionDebug --end || return $?
-  ) || returnClean $? "$variablesFile" || return $?
+    # TODO ) || returnClean $? "$variablesFile" "$commentFile" || return $?
+  ) || return $?
   return "$returnCode"
 }
