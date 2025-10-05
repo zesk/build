@@ -22,7 +22,7 @@ __buildVersionCreated() {
   local handler="returnMessage"
   local home
 
-  home=$(returnCatch "$handler" buildHome) || return $?
+  home=$(catchReturn "$handler" buildHome) || return $?
   catchEnvironment "$handler" gitBranchify || return $?
 
   # deprecated.txt add version comment

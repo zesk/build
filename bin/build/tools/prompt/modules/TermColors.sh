@@ -26,7 +26,7 @@ bashPromptModule_TermColors() {
   [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
 
   local home
-  home=$(returnCatch "$handler" buildHome 2>/dev/null) || return 0
+  home=$(catchReturn "$handler" buildHome 2>/dev/null) || return 0
 
   local debug=false
   ! buildDebugEnabled term-colors || debug=true
@@ -44,7 +44,7 @@ bashPromptModule_TermColors() {
 
     ! $debug || statusMessage decorate info "Applying colors from $prettySchemeFile ... "
     ! $debug || dd+=("--debug")
-    if returnCatch "$handler" colorScheme "${dd[@]+"${dd[@]}"}" <"$schemeFile" || return $?; then
+    if catchReturn "$handler" colorScheme "${dd[@]+"${dd[@]}"}" <"$schemeFile" || return $?; then
       break
     fi
   done

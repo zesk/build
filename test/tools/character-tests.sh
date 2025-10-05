@@ -40,7 +40,7 @@ __testIsCharacterClass() {
 testValidateCharacterClass() {
   local temp home handler="returnMessage"
 
-  home=$(returnCatch "$handler" buildHome) || return $?
+  home=$(catchReturn "$handler" buildHome) || return $?
   temp=$(fileTemporaryName "$handler") || return $?
   __testIsCharacterClass | tee "$temp" || return $?
   if ! diff -q "$temp" "$home/test/example/isCharacterClass.txt"; then
@@ -68,3 +68,20 @@ testCharacterFromInteger() {
   assertEquals a "$(characterFromInteger "$(returnCode assert)")" || return $?
 }
 
+# Tag: slow-non-critical slow
+testCharacterClassReport() {
+  characterClassReport --class
+  characterClassReport --char
+}
+
+testCharacterClasses() {
+  assertOutputContains alpha characterClasses || return $?
+  assertOutputContains xdigit characterClasses || return $?
+}
+
+testIsCharacterClass() {
+  local className
+  while read -r className; do
+    assertExitCode 0 isCharacterClass "$className" || return $?
+  done < <(characterClasses)
+}

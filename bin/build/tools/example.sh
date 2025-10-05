@@ -85,7 +85,7 @@ exampleFunction() {
 
   # Load MANPATH environment
   export MANPATH
-  returnCatch "$handler" buildEnvironmentLoad MANPATH || return $?
+  catchReturn "$handler" buildEnvironmentLoad MANPATH || return $?
 
   ! $easyFlag || catchEnvironment "$handler" decorate pair "$width" "$name: Easy mode enabled" || return $?
   ! $easyFlag || catchEnvironment "$handler" decorate pair "path" "$path" || return $?

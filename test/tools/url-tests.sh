@@ -148,13 +148,13 @@ testUrlFilter() {
   local handler="returnMessage"
   local home output source
 
-  home=$(returnCatch "$handler" buildHome) || return $?
+  home=$(catchReturn "$handler" buildHome) || return $?
   output=$(fileTemporaryName "$handler") || return $?
   source="$home/test/example/urlFilter.source.html"
   urlFilter "$source" >"$output" || returnEnvironment "urlFilter $source failed" || return $?
   assertExitCode 0 diff "$output" "$home/test/example/urlFilter.output.txt" || returnUndo $? dumpPipe "urlFilter $source" <"$output" || returnUndo $? rm -rf "$output" || return $?
 
-  returnCatch "$handler" rm -f "$output" || return $?
+  catchReturn "$handler" rm -f "$output" || return $?
 }
 
 testUrlOpen() {

@@ -45,7 +45,7 @@ testAlpineContainer() {
 
     local handler="returnMessage" home
 
-    home=$(returnCatch "$handler" buildHome) || return $?
+    home=$(catchReturn "$handler" buildHome) || return $?
     catchEnvironment "$handler" muzzle pushd "$home" || return $?
 
     # In BitBucket pipelines, only location you can run Alpine volume shares are within the initial build directory

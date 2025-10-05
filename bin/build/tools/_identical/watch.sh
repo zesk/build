@@ -146,7 +146,7 @@ __identicalWatch() {
     shift
   done
 
-  [ -n "$rootDir" ] || rootDir=$(returnCatch "$handler" buildHome) || return $?
+  [ -n "$rootDir" ] || rootDir=$(catchReturn "$handler" buildHome) || return $?
 
   local fileList finished=false lastTimestamp="" lastFile=""
 
@@ -192,7 +192,7 @@ __identicalWatch() {
           fi
           if [ "${#tokens[@]}" -gt 0 ]; then
             ! $debugFlag || statusMessage decorate info "Replacing tokens $(decorate each code -- "${tokens[@]}")"
-            returnCatch "$handler" identicalCheck "${rr[@]}" "${tokens[@]}" || return $?
+            catchReturn "$handler" identicalCheck "${rr[@]}" "${tokens[@]}" || return $?
           else
             statusMessage decorate info "No tokens found in $(decorate each file -- "${files[@]}")"
           fi

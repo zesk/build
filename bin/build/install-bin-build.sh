@@ -510,7 +510,7 @@ __installRemotePackageDebug() {
 
 # Install the package directory
 # Requires: uname pushd popd rm tar dirname
-# Requires: returnCatch catchEnvironment throwEnvironment urlFetch
+# Requires: catchReturn catchEnvironment throwEnvironment urlFetch
 __installRemotePackageDirectory() {
   local handler="$1" packagePath="$2" applicationHome="$3" url="$4" localPath="$5"
   local start tarArgs osName
@@ -521,7 +521,7 @@ __installRemotePackageDirectory() {
     __installRemotePackageDirectoryLocal "$handler" "$packagePath" "$applicationHome" "$localPath"
     return $?
   fi
-  returnCatch "$handler" urlFetch "$url" "$target" || return $?
+  catchReturn "$handler" urlFetch "$url" "$target" || return $?
   [ -f "$target" ] || throwEnvironment "$handler" "$target does not exist after download from $url" || return $?
   packagePath=${packagePath%/}
   packagePath=${packagePath#/}
@@ -1550,7 +1550,7 @@ returnThrow() {
 # Argument: handler - Required. Function. Error handler.
 # Argument: binary ... - Required. Executable. Any arguments are passed to `binary`.
 # Requires: returnArgument
-returnCatch() {
+catchReturn() {
   local handler="${1-}" && shift || returnArgument "Missing handler" || return $?
   "$@" || "$handler" "$?" "$@" || return $?
 }

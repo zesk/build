@@ -27,7 +27,7 @@ __usageDocument() {
 
   local home returnCode="${1-NONE}"
 
-  home=$(returnCatch "$handler" buildHome) || return $?
+  home=$(catchReturn "$handler" buildHome) || return $?
 
   shift 2>/dev/null || :
 
@@ -73,8 +73,8 @@ __usageDocument() {
   variablesFile=$(fileTemporaryName "$handler") || return $?
   local commentFile="$variablesFile.comment"
   local clean=("$variablesFile" "$commentFile")
-  returnCatch "$handler" bashFunctionComment "$functionDefinitionFile" "$functionName" >"$commentFile" || returnClean $? "${clean[@]}" || return $?
-  if ! returnCatch "$handler" bashDocumentationExtract "$functionName" >"$variablesFile" <"$commentFile"; then
+  catchReturn "$handler" bashFunctionComment "$functionDefinitionFile" "$functionName" >"$commentFile" || returnClean $? "${clean[@]}" || return $?
+  if ! catchReturn "$handler" bashDocumentationExtract "$functionName" >"$variablesFile" <"$commentFile"; then
     dumpPipe "commentFile" <"$commentFile"
     dumpPipe "variablesFile" <"$variablesFile"
     dumpPipe "functionDefinitionFile" <"$functionDefinitionFile"
@@ -102,7 +102,7 @@ __usageDocument() {
       # Hides a lot of unnecessary tracing
       __buildDebugDisable
     fi
-    returnCatch "$__handler" bashRecursionDebug || return $?
+    catchReturn "$__handler" bashRecursionDebug || return $?
     local variable prefix label done=false suffix=""
     while ! $done; do
       IFS="|" read -r variable prefix label || done=true
@@ -119,7 +119,7 @@ __usageDocument() {
     if $bashDebug; then
       __buildDebugEnable
     fi
-    returnCatch "$__handler" bashRecursionDebug --end || return $?
+    catchReturn "$__handler" bashRecursionDebug --end || return $?
   ) || returnClean $? "${clean[@]}" || return $?
   return "$returnCode"
 }

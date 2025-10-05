@@ -65,7 +65,7 @@ phpComposer() {
 
   local installArgs=("--ignore-platform-reqs") quietLog
 
-  quietLog="$(returnCatch "$handler" buildQuietLog "$handler")" || return $?
+  quietLog="$(catchReturn "$handler" buildQuietLog "$handler")" || return $?
   printf "%s\n" "Install vendor" >>"$quietLog"
 
   local butFirst="" composerBin=(composer)
@@ -105,10 +105,10 @@ phpComposerInstall() {
   local handler="_${FUNCNAME[0]}"
   [ $# -eq 0 ] || __help --only "$handler" "$@" || return "$(convertValue $? 1 0)"
   ! whichExists composer || return 0
-  returnCatch "$handler" phpInstall || return $?
+  catchReturn "$handler" phpInstall || return $?
   local target="/usr/local/bin/composer"
   local tempBinary="$target.$$"
-  returnCatch "$handler" urlFetch "https://getcomposer.org/composer.phar" "$tempBinary" || returnClean $? "$tempBinary" || return $?
+  catchReturn "$handler" urlFetch "https://getcomposer.org/composer.phar" "$tempBinary" || returnClean $? "$tempBinary" || return $?
   catchEnvironment "$handler" mv -f "$tempBinary" "$target" || returnClean $? "$tempBinary" || return $?
   catchEnvironment "$handler" chmod +x "$target" || returnClean $? "$tempBinary" || return $?
 }
@@ -164,7 +164,7 @@ phpComposerSetVersion() {
     shift
   done
 
-  [ -n "$home" ] || home=$(returnCatch "$handler" buildHome) || return $?
+  [ -n "$home" ] || home=$(catchReturn "$handler" buildHome) || return $?
 
   local composerJSON="$home/composer.json" decoratedComposerJSON
 

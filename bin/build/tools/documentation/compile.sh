@@ -73,8 +73,8 @@ __documentationTemplateCompile() {
 
   clean+=("$mappedDocumentTemplate")
 
-  returnCatch "$handler" mapEnvironment <"$sourceFile" >"$mappedDocumentTemplate" || retunClean $? "${clean[@]}" || return $?
-  returnCatch "$handler" mapTokens <"$mappedDocumentTemplate" >"$documentTokensFile" || retunClean $? "${clean[@]}" || return $?
+  catchReturn "$handler" mapEnvironment <"$sourceFile" >"$mappedDocumentTemplate" || retunClean $? "${clean[@]}" || return $?
+  catchReturn "$handler" mapTokens <"$mappedDocumentTemplate" >"$documentTokensFile" || retunClean $? "${clean[@]}" || return $?
 
   local tokenCount
   tokenCount=$(fileLineCount "$documentTokensFile")
@@ -82,7 +82,7 @@ __documentationTemplateCompile() {
   statusMessage decorate info "Generating $(decorate code "$base") ($(decorate info "$(pluralWord "$tokenCount" token)) ...")"
 
   local compiledTemplateCache
-  compiledTemplateCache=$(returnCatch "$handler" directoryRequire "$cacheDirectory/compiledTemplateCache") || returnClean $? "${clean[@]}" || return $?
+  compiledTemplateCache=$(catchReturn "$handler" directoryRequire "$cacheDirectory/compiledTemplateCache") || returnClean $? "${clean[@]}" || return $?
   # Environment change will affect this template
   # Function template change will affect this template
 
@@ -125,7 +125,7 @@ __documentationTemplateCompile() {
           statusMessage decorate info "Skip $tokenName and use cache"
         else
           {
-            returnCatch "$handler" documentationTemplateFunctionCompile "$tokenName" "$functionTemplate" | trimTail || returnClean $? "${clean[@]}" || return $?
+            catchReturn "$handler" documentationTemplateFunctionCompile "$tokenName" "$functionTemplate" | trimTail || returnClean $? "${clean[@]}" || return $?
             printf "\n"
           } >"$compiledFunctionTarget" || returnClean $? "${clean[@]}" || return $?
         fi
@@ -185,7 +185,7 @@ __documentationTemplateFunctionCompile() {
   done
 
   local settingsFile
-  settingsFile=$(returnCatch "$handler" __documentationIndexLookup "$handler" "$functionName") || return $?
+  settingsFile=$(catchReturn "$handler" __documentationIndexLookup "$handler" "$functionName") || return $?
   _bashDocumentation_Template "$handler" "$functionTemplate" "${envFiles[@]+"${envFiles[@]}"}" "$settingsFile" || return $?
 }
 

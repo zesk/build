@@ -43,7 +43,7 @@ __awsCredentialsFile() {
   usageRequireBinary "$handler" mkdir chmod touch || return $?
 
   if [ -z "$home" ]; then
-    home="$(returnCatch "$handler" userRecordHome)" || return $?
+    home="$(catchReturn "$handler" userRecordHome)" || return $?
   fi
   if [ ! -d "$home" ]; then
     # Argument is validated above MUST be environment
@@ -95,9 +95,9 @@ __awsEnvironmentFromCredentials() {
   done
   [ -n "$profileName" ] || profileName="default"
 
-  credentials="$(returnCatch "$handler" awsCredentialsFile)" || return $?
+  credentials="$(catchReturn "$handler" awsCredentialsFile)" || return $?
   while read -r name value; do
-    returnCatch "$handler" environmentValueWrite "$(uppercase "$name")" "$value" || return $?
+    catchReturn "$handler" environmentValueWrite "$(uppercase "$name")" "$value" || return $?
   done < <(__awsCredentialsExtractProfile "$profileName" <"$credentials")
 }
 
@@ -111,7 +111,7 @@ __awsCredentialsHasProfile() {
   local foundValues=()
   __help "$handler" "$@" || return 0
   [ -n "$profileName" ] || throwArgument "$handler" "profileName is somehow blank" || return $?
-  credentials="$(returnCatch "$handler" awsCredentialsFile)" || return $?
+  credentials="$(catchReturn "$handler" awsCredentialsFile)" || return $?
   while read -r name value; do
     foundValues+=("$(uppercase "$name")")
   done < <(__awsCredentialsExtractProfile "$profileName" <"$credentials")

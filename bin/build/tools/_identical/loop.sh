@@ -25,7 +25,7 @@ _identicalCheckInsideLoop() {
 
   local prefix prefixIndex=0 prefixes=("$@")
   local tempDirectory
-  tempDirectory=$(returnCatch "$handler" environmentValueRead "$stateFile" tempDirectory) || returnClean $? "${clean[@]}" || return $?
+  tempDirectory=$(catchReturn "$handler" environmentValueRead "$stateFile" tempDirectory) || returnClean $? "${clean[@]}" || return $?
 
   for prefix in "${prefixes[@]}"; do
     if ! __identicalFindPrefixes "$handler" "$prefix" <"$searchFile" | decorate wrap "$prefixIndex:" >>"$foundLines"; then
@@ -42,12 +42,12 @@ _identicalCheckInsideLoop() {
   fi
 
   local repairSources=() item tokens=()
-  mapFile=$(returnCatch "$handler" environmentValueRead "$stateFile" mapFile) || returnClean $? "${clean[@]}" || return $?
-  repairSources=() && while read -r item; do repairSources+=("$item"); done < <(returnCatch "$handler" environmentValueReadArray "$stateFile" "repairSources") || returnClean $? "${clean[@]}" || return $?
-  tokens=() && while read -r item; do tokens+=("$item"); done < <(returnCatch "$handler" environmentValueReadArray "$stateFile" "tokens") || returnClean $? "${clean[@]}" || return $?
+  mapFile=$(catchReturn "$handler" environmentValueRead "$stateFile" mapFile) || returnClean $? "${clean[@]}" || return $?
+  repairSources=() && while read -r item; do repairSources+=("$item"); done < <(catchReturn "$handler" environmentValueReadArray "$stateFile" "repairSources") || returnClean $? "${clean[@]}" || return $?
+  tokens=() && while read -r item; do tokens+=("$item"); done < <(catchReturn "$handler" environmentValueReadArray "$stateFile" "tokens") || returnClean $? "${clean[@]}" || return $?
 
   local totalLines
-  totalLines=$(($(returnCatch "$handler" fileLineCount "$searchFile") + 0)) || returnClean $? "${clean[@]}" || return $?
+  totalLines=$(($(catchReturn "$handler" fileLineCount "$searchFile") + 0)) || returnClean $? "${clean[@]}" || return $?
 
   local identicalLine badFiles=()
   while read -r identicalLine; do

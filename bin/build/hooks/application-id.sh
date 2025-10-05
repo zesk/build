@@ -40,13 +40,13 @@ __hookApplicationID() {
     esac
     shift
   done
-  home=$(returnCatch "$handler" buildHome) || return $?
+  home=$(catchReturn "$handler" buildHome) || return $?
   if ! home="$(gitFindHome "$home" 2>/dev/null)" || [ -z "$home" ]; then
     printf "%s\n" "$(date +%F)"
     return 0
   fi
   catchEnvironment "$handler" muzzle pushd "$home" || return $?
-  returnCatch "$handler" gitEnsureSafeDirectory "$home" || return $?
+  catchReturn "$handler" gitEnsureSafeDirectory "$home" || return $?
   catchEnvironment "$handler" git rev-parse --short HEAD || return $?
 }
 ___hookApplicationID() {

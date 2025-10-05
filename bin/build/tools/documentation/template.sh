@@ -49,12 +49,12 @@ __documentationTemplateUpdateUnlinked() {
 
   # Not used I guess
   muzzle usageArgumentFile "$handler" "pageTemplate" "${5-}" || return $?
-  todoTemplate=$(returnCatch "$handler" documentationTemplate "${6-todo}") || return $?
+  todoTemplate=$(catchReturn "$handler" documentationTemplate "${6-todo}") || return $?
 
   unlinkedFunctions=$(fileTemporaryName "$handler") || return $?
   clean+=("$unlinkedFunctions")
-  returnCatch "$handler" _documentationIndexUnlinkedFunctions "$cacheDirectory" | grepSafe -v '^_' | decorate wrap "{" "}" >"$unlinkedFunctions" || returnClean $? "${clean[@]}" || return $?
-  total=$(returnCatch "$handler" fileLineCount "$unlinkedFunctions") || return $?
+  catchReturn "$handler" _documentationIndexUnlinkedFunctions "$cacheDirectory" | grepSafe -v '^_' | decorate wrap "{" "}" >"$unlinkedFunctions" || returnClean $? "${clean[@]}" || return $?
+  total=$(catchReturn "$handler" fileLineCount "$unlinkedFunctions") || return $?
 
   # Subshell hide globals
   (
@@ -175,9 +175,9 @@ __documentationUnlinked() {
 
   local cacheDirectory
 
-  cacheDirectory="$(returnCatch "$handler" documentationBuildCache)" || return $?
+  cacheDirectory="$(catchReturn "$handler" documentationBuildCache)" || return $?
 
-  returnCatch "$handler" _documentationIndexUnlinkedFunctions "$cacheDirectory" "${dd[@]+"${dd[@]}"}" || return $?
+  catchReturn "$handler" _documentationIndexUnlinkedFunctions "$cacheDirectory" "${dd[@]+"${dd[@]}"}" || return $?
 }
 
 # See: bashDocumentFunction

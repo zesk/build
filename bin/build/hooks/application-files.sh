@@ -31,10 +31,10 @@ __hookApplicationFiles() {
     esac
     shift
   done
-  home=$(returnCatch "$handler" buildHome) || return $?
+  home=$(catchReturn "$handler" buildHome) || return $?
 
   local extensionText
-  extensionText=$(returnCatch "$handler" buildEnvironmentGet APPLICATION_CODE_EXTENSIONS) || return $?
+  extensionText=$(catchReturn "$handler" buildEnvironmentGet APPLICATION_CODE_EXTENSIONS) || return $?
   [ -n "$extensionText" ] || throwArgument "$handler" "Requires APPLICATION_CODE_EXTENSIONS to be non-blank" || return $?
 
   local extensions=()
@@ -45,7 +45,7 @@ __hookApplicationFiles() {
     [ ${#ff[@]} -eq 0 ] || ff+=(-or)
     ff+=(-name "*.$extension")
   done
-  jsonFile=$(returnCatch "$handler" buildEnvironmentGet APPLICATION_JSON) || return $?
+  jsonFile=$(catchReturn "$handler" buildEnvironmentGet APPLICATION_JSON) || return $?
 
   directoryChange "$home" find "." -type f \( "${ff[@]}" \) ! -path '*/.*/*' ! -path "*/$jsonFile" "$@"
 }

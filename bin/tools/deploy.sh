@@ -48,11 +48,11 @@ __buildDeploy() {
     shift
   done
 
-  returnCatch "$handler" packageInstall || return $?
+  catchReturn "$handler" packageInstall || return $?
 
   local name
-  name=$(returnCatch "$handler" buildEnvironmentGet APPLICATION_NAME) || return $?
-  currentVersion="$(returnCatch "$handler" hookRun version-current)" || return $?
+  name=$(catchReturn "$handler" buildEnvironmentGet APPLICATION_NAME) || return $?
+  currentVersion="$(catchReturn "$handler" hookRun version-current)" || return $?
   [ -n "$currentVersion" ] || throwEnvironment "$handler" "Blank version-current" || return $?
   bigText "Deploy $name $currentVersion" | decorate success
   dumpEnvironment
@@ -64,14 +64,14 @@ __buildDeploy() {
 
   if $makeDocumentation; then
     ! $debugFlag || statusMessage decorate info "Installing AWS ..."
-    returnCatch "$handler" awsInstall || return $?
+    catchReturn "$handler" awsInstall || return $?
   fi
   local target cloudFrontID
   target=$(buildEnvironmentGet "DOCUMENTATION_S3_PREFIX") || return $?
   cloudFrontID=$(buildEnvironmentGet "DOCUMENTATION_CLOUDFRONT_ID") || return $?
 
   local home
-  home=$(returnCatch "$handler" buildHome) || return $?
+  home=$(catchReturn "$handler" buildHome) || return $?
 
   local appId notes
 

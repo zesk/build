@@ -179,19 +179,19 @@ testSuite() {
     return 0
   fi
 
-  returnCatch "$handler" buildEnvironmentLoad BUILD_COLORS_MODE BUILD_COLORS XDG_CACHE_HOME XDG_STATE_HOME HOME || return $?
+  catchReturn "$handler" buildEnvironmentLoad BUILD_COLORS_MODE BUILD_COLORS XDG_CACHE_HOME XDG_STATE_HOME HOME || return $?
 
   local load home testTemporaryHome testTemporaryInternal testTemporaryTest clean=()
 
-  home=$(returnCatch "$handler" buildHome) || return $?
+  home=$(catchReturn "$handler" buildHome) || return $?
 
-  testTemporaryHome=$(returnCatch "$handler" buildCacheDirectory "testSuite.$$") || return $?
+  testTemporaryHome=$(catchReturn "$handler" buildCacheDirectory "testSuite.$$") || return $?
 
   clean+=("$testTemporaryHome")
   export TMPDIR
 
-  testTemporaryTest=$(returnCatch "$handler" directoryRequire "$testTemporaryHome/T") || returnClean $? "${clean[@]}" || return $?
-  testTemporaryInternal=$(returnCatch "$handler" directoryRequire "$testTemporaryHome/internal") || returnClean $? "${clean[@]}" || return $?
+  testTemporaryTest=$(catchReturn "$handler" directoryRequire "$testTemporaryHome/T") || returnClean $? "${clean[@]}" || return $?
+  testTemporaryInternal=$(catchReturn "$handler" directoryRequire "$testTemporaryHome/internal") || returnClean $? "${clean[@]}" || return $?
 
   TMPDIR="$testTemporaryInternal"
 
@@ -209,7 +209,7 @@ testSuite() {
 
   # Color mode
   export BUILD_COLORS BUILD_COLORS_MODE
-  BUILD_COLORS_MODE=$(returnCatch "$handler" consoleConfigureColorMode) || returnClean $? "${clean[@]}" || return $?
+  BUILD_COLORS_MODE=$(catchReturn "$handler" consoleConfigureColorMode) || returnClean $? "${clean[@]}" || return $?
 
   [ "${#testPaths[@]}" -gt 0 ] || throwArgument "$handler" "Need at least one --tests directory ($(decorate each quote "${__saved[@]}"))" || returnClean $? "${clean[@]}" || return $?
 
@@ -361,14 +361,14 @@ testSuite() {
 
   if $showTags; then
     __TEST_SUITE_TRACE="showing-tags"
-    returnCatch "$handler" __testSuiteShowTags "${filteredTests[@]+"${filteredTests[@]}"}" || returnClean $? "${clean[@]}" || return $?
+    catchReturn "$handler" __testSuiteShowTags "${filteredTests[@]+"${filteredTests[@]}"}" || returnClean $? "${clean[@]}" || return $?
     __TEST_SUITE_CLEAN_EXIT=true
     return 0
   fi
 
   if $listFlag; then
     __TEST_SUITE_TRACE="listing"
-    returnCatch "$handler" __testSuiteListTests "${filteredTests[@]+"${filteredTests[@]}"}" || returnClean $? "${clean[@]}" || return $?
+    catchReturn "$handler" __testSuiteListTests "${filteredTests[@]+"${filteredTests[@]}"}" || returnClean $? "${clean[@]}" || return $?
     __TEST_SUITE_CLEAN_EXIT=true
     return 0
   fi
@@ -414,7 +414,7 @@ testSuite() {
       local __flags globalFlags
       testLine=$(__testGetLine "$item" <"$sectionFile") || :
       __flags=$(__testLoadFlags "$sectionFile" "$item")
-      globalFlags=$(returnCatch "$handler" buildEnvironmentGet BUILD_TEST_FLAGS) || return $?
+      globalFlags=$(catchReturn "$handler" buildEnvironmentGet BUILD_TEST_FLAGS) || return $?
       local rawFlags="$__flags;$globalFlags"
 
       ! $verboseMode || statusMessage decorate info "$item flags is $(decorate code "${rawFlags:-none specified}")" || returnClean $? "${clean[@]}" || return $?
@@ -563,7 +563,7 @@ __testSuiteFilterTags() {
   local lastSectionFile="" sectionFile
   local tempComment home filtersFile="/dev/null"
 
-  home=$(returnCatch "$handler" buildHome) || return $?
+  home=$(catchReturn "$handler" buildHome) || return $?
 
   ! $debugMode || filtersFile="$home/${FUNCNAME[0]}.debug"
 
@@ -644,7 +644,7 @@ __testFunctionWasTested() {
   local handler="returnMessage"
   local assertedFunctions verboseMode=false
 
-  assertedFunctions=$(returnCatch "$handler" __assertedFunctions) || return $?
+  assertedFunctions=$(catchReturn "$handler" __assertedFunctions) || return $?
   local __fns=()
   while [ $# -gt 0 ]; do
     if [ "$1" = "--verbose" ]; then
@@ -689,7 +689,7 @@ __testStats() {
   printf -- "\n"
   boxedHeading "Functions asserted (cumulative)"
   cat "$(__assertedFunctions)"
-  lines=$(returnCatch "$handler" fileLineCount "$(__assertedFunctions)") || return $?
+  lines=$(catchReturn "$handler" fileLineCount "$(__assertedFunctions)") || return $?
   decorate info "$lines $(plural "$lines" "function" "functions")"
   printf -- "\n"
 }
@@ -1015,7 +1015,7 @@ __testRun() {
     local runner=()
     runner=("$__test" "$quietLog")
     if $doHousekeeper; then
-      housekeeperCache=$(returnCatch "$handler" buildCacheDirectory "test-housekeeper.$$") || return $?
+      housekeeperCache=$(catchReturn "$handler" buildCacheDirectory "test-housekeeper.$$") || return $?
       runner=(--ignore '.last-run-test' --ignore '/.git/' --temporary "$savedTMPDIR" --path "$TMPDIR" --path "$(buildHome)" "${runner[@]}")
       ! isSubstringInsensitive ";Housekeeper-Overhead:true;" ";$__flagText;" || runner=(--overhead "${runner[@]}")
       runner=(housekeeper --cache "$housekeeperCache" "${runner[@]}")
@@ -1154,7 +1154,7 @@ __testFailed() {
 __testCleanup() {
   local handler="returnMessage"
   local home
-  home=$(returnCatch "$handler" buildHome) || return $?
+  home=$(catchReturn "$handler" buildHome) || return $?
   shopt -u failglob
   export __TEST_CLEANUP_DIRS
 

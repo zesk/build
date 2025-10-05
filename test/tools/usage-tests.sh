@@ -7,7 +7,7 @@ testUsageTemplate() {
   local handler="returnMessage"
   local home
 
-  home="$(returnCatch "$handler" buildHome)" || return $?
+  home="$(catchReturn "$handler" buildHome)" || return $?
 
   # Loads __usageTemplate
   assertExitCode 0 usageDocument --help || return $?

@@ -137,8 +137,8 @@ __installInstallBuildRemote() {
   local handler="$1"
   export BUILD_INSTALL_URL
 
-  returnCatch "$handler" packageWhich curl curl || return $?
-  returnCatch "$handler" buildEnvironmentLoad BUILD_INSTALL_URL || return $?
+  catchReturn "$handler" packageWhich curl curl || return $?
+  catchReturn "$handler" buildEnvironmentLoad BUILD_INSTALL_URL || return $?
   urlParse "${BUILD_INSTALL_URL-}" >/dev/null || throwEnvironment "$handler" "BUILD_INSTALL_URL ($BUILD_INSTALL_URL) is not a valid URL" || return $?
 
   printf "%s\n" "${BUILD_INSTALL_URL}"
@@ -152,7 +152,7 @@ __installInstallBinaryLegacy() {
   temp=$(fileTemporaryName "$handler") || return $?
   cat >"$temp"
   if __installInstallBinaryIsLegacy <"$temp"; then
-    returnCatch "$handler" __installInstallBinaryCustomizeLegacy "$relTop" <"$temp" || returnClean $? "$temp" || return $?
+    catchReturn "$handler" __installInstallBinaryCustomizeLegacy "$relTop" <"$temp" || returnClean $? "$temp" || return $?
   else
     catchEnvironment "$handler" cat "$temp" || return $?
   fi

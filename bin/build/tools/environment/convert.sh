@@ -63,7 +63,7 @@ __anyEnvToFunctionEnv() {
     local temp
     temp=$(fileTemporaryName "$handler") || return $?
     catchEnvironment "$handler" muzzle tee "$temp" || returnClean $? "$temp" || return $?
-    returnCatch "$handler" __anyEnvToFunctionEnv "$handler" "$passConvertFunction" "$failConvertFunction" "$temp" || returnClean $? "$temp" || return $?
+    catchReturn "$handler" __anyEnvToFunctionEnv "$handler" "$passConvertFunction" "$failConvertFunction" "$temp" || returnClean $? "$temp" || return $?
     catchEnvironment "$handler" rm "$temp" || return $?
     return 0
   fi

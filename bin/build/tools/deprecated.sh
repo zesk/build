@@ -25,7 +25,7 @@ userHome() {
 
 __catch() {
   # TODO Add this back in after another release
-  returnCatch "$@"
+  catchReturn "$@"
 }
 __catchCode() {
   _deprecated "${FUNCNAME[0]}"
@@ -68,10 +68,6 @@ _home() {
   userRecordHome "$@"
 }
 
-returnMessage() {
-  _deprecated "${FUNCNAME[0]}"
-  returnMessage "$@"
-}
 _argument() {
   _deprecated "${FUNCNAME[0]}"
   returnArgument "$@"

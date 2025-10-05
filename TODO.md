@@ -334,7 +334,7 @@ On a "2x" machine:
 
 - returnClean
 - __argument
-- _returnCatch
+- _catchReturn
 - _catchCode
 - catchEnvironmentQuiet
 - _deprecated

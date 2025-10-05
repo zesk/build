@@ -20,9 +20,9 @@ testBashGetRequires() {
   local temp
 
   temp=$(fileTemporaryName "$handler") || return $?
-  returnCatch "$handler" bashGetRequires "${BASH_SOURCE[0]}" >"$temp" || return $?
+  catchReturn "$handler" bashGetRequires "${BASH_SOURCE[0]}" >"$temp" || return $?
   assertFileContains "$temp" A B C D E F G a b c d || return $?
-  returnCatch "$handler" rm -f "$temp" || return $?
+  catchReturn "$handler" rm -f "$temp" || return $?
 }
 
 testBashBuiltins() {

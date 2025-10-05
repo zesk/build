@@ -63,7 +63,7 @@ _assertTiming() {
   export __BUILD_SAVED_CACHE_DIRECTORY
 
   if [ -z "${__BUILD_SAVED_CACHE_DIRECTORY-}" ]; then
-    __BUILD_SAVED_CACHE_DIRECTORY="$(returnCatch "$handler" buildCacheDirectory)" || return $?
+    __BUILD_SAVED_CACHE_DIRECTORY="$(catchReturn "$handler" buildCacheDirectory)" || return $?
   fi
 
   timingFile="$__BUILD_SAVED_CACHE_DIRECTORY/.${FUNCNAME[0]}" || return $?
@@ -89,8 +89,8 @@ __assertedFunctions() {
   local handler="_${FUNCNAME[0]}"
   local logFile
 
-  logFile="$(returnCatch "$handler" buildCacheDirectory)/$handler" || return $?
-  logFile="$(returnCatch "$handler" fileDirectoryRequire "$logFile")" || return $?
+  logFile="$(catchReturn "$handler" buildCacheDirectory)/$handler" || return $?
+  logFile="$(catchReturn "$handler" fileDirectoryRequire "$logFile")" || return $?
   if [ $# -eq 0 ]; then
     catchEnvironment "$handler" touch "$logFile" || return $?
     if [ -f "$logFile.dirty" ]; then
@@ -101,7 +101,7 @@ __assertedFunctions() {
     return 0
   fi
   local track
-  track=$(returnCatch "$handler" buildEnvironmentGet TEST_TRACK_ASSERTIONS) || return $?
+  track=$(catchReturn "$handler" buildEnvironmentGet TEST_TRACK_ASSERTIONS) || return $?
   if [ "$track" != "false" ]; then
     catchEnvironment "$handler" printf -- "%s\n" "$@" >>"$logFile" || return $?
     catchEnvironment "$handler" touch "$logFile.dirty" || return $?
@@ -301,7 +301,7 @@ _assertConditionHelper() {
 
   if [ -z "$doPlumber" ]; then
     local flags
-    flags=$(returnCatch "$handler" buildEnvironmentGet BUILD_TEST_FLAGS) || return $?
+    flags=$(catchReturn "$handler" buildEnvironmentGet BUILD_TEST_FLAGS) || return $?
     doPlumber=false
     ! isSubstringInsensitive ";Assert-Plumber:true;" ";$flags;" || doPlumber=true
   fi

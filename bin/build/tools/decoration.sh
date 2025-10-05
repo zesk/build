@@ -58,8 +58,8 @@ bigText() {
 
   local fonts binary index=0
 
-  binary=$(returnCatch "$handler" buildEnvironmentGet BUILD_TEXT_BINARY) || return $?
-  [ -n "$binary" ] || binary="$(returnCatch "$handler" __bigTextBinary)" || return $?
+  binary=$(catchReturn "$handler" buildEnvironmentGet BUILD_TEXT_BINARY) || return $?
+  [ -n "$binary" ] || binary="$(catchReturn "$handler" __bigTextBinary)" || return $?
   [ -n "$binary" ] || throwEnvironment "$handler" "Need BUILD_TEXT_BINARY" || return $?
   case "$binary" in
   figlet) fonts=("standard" "big") ;;
@@ -114,8 +114,8 @@ bigTextAt() {
   [ -n "$x" ] || throwArgument "$handler" "Missing x" || return $?
   [ -n "$y" ] || throwArgument "$handler" "Missing y" || return $?
   local maxX maxY theX="$x" theY="$y" saveX saveY
-  maxX=$(returnCatch "$handler" consoleColumns) || return $?
-  maxY=$(returnCatch "$handler" consoleRows) || return $?
+  maxX=$(catchReturn "$handler" consoleColumns) || return $?
+  maxY=$(catchReturn "$handler" consoleRows) || return $?
   [ "$x" -lt "$maxX" ] || throwArgument "$handler" "$x -gt $maxX exceeds column width" || return $?
   [ "$y" -lt "$maxY" ] || throwArgument "$handler" "$y -gt $maxY exceeds row height" || return $?
   [ "$x" -gt "-$maxX" ] || throwArgument "$handler" "$x -lt -$maxX exceeds negative column width" || return $?
@@ -297,7 +297,7 @@ echoBar() {
 
   local barText="" width count delta=""
 
-  width=$(returnCatch "$handler" consoleColumns) || return $?
+  width=$(catchReturn "$handler" consoleColumns) || return $?
   # _IDENTICAL_ argumentBlankLoopHandler 4
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
@@ -344,7 +344,7 @@ lineFill() {
 
   local text cleanText width barText
 
-  width=$(returnCatch "$handler" consoleColumns) || return $?
+  width=$(catchReturn "$handler" consoleColumns) || return $?
   barText=$(usageArgumentString "$handler" "barText" "${1:--}") || return $?
   shift || :
 

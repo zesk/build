@@ -11,11 +11,11 @@ __buildTestRequirements() {
   local handler="$1" && shift
 
   local bigBinary
-  bigBinary=$(returnCatch "$handler" __bigTextBinary) || return $?
+  bigBinary=$(catchReturn "$handler" __bigTextBinary) || return $?
   [ -n "$bigBinary" ] || bigBinary="toilet"
-  returnCatch "$handler" packageWhich "$bigBinary" "$bigBinary" || return $?
-  returnCatch "$handler" packageWhich shellcheck shellcheck || return $?
-  returnCatch "$handler" __pcregrepInstall || return $?
+  catchReturn "$handler" packageWhich "$bigBinary" "$bigBinary" || return $?
+  catchReturn "$handler" packageWhich shellcheck shellcheck || return $?
+  catchReturn "$handler" __pcregrepInstall || return $?
 }
 
 # Standard test layout
@@ -34,7 +34,7 @@ __buildTestSuite() {
   local handler="_${FUNCNAME[0]}"
   local testHome
 
-  testHome="$(returnCatch "$handler" buildHome)" || return $?
+  testHome="$(catchReturn "$handler" buildHome)" || return $?
   [ -d "$testHome/test" ] || throwArgument "$handler" "Missing test directory" || return $?
 
   # Include our own test support files if needed

@@ -42,7 +42,7 @@ _hookContextWrapper() {
 
   local start home
 
-  home=$(returnCatch "$handler" buildHome) || return $?
+  home=$(catchReturn "$handler" buildHome) || return $?
   start="$(pwd -P 2>/dev/null)" || throwEnvironment "$handler" "Failed to get pwd" || return $?
   start=$(catchEnvironment "$handler" realPath "$start") || return $?
 
@@ -50,7 +50,7 @@ _hookContextWrapper() {
     if [ "${start#"$home"}" = "$start" ]; then
       application="$home"
     else
-      application=$(returnCatch "$handler" bashLibraryHome "bin/build/tools.sh" "$start") || return $?
+      application=$(catchReturn "$handler" bashLibraryHome "bin/build/tools.sh" "$start") || return $?
       application="${application%/}"
       if [ "${start#"$application"}" = "$start" ]; then
         buildEnvironmentContext "$application" hookRun --application "$application" "$hookName" "$@" || return $?

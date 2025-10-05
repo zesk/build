@@ -27,7 +27,7 @@ __buildTestSuite() {
   local handler="_${FUNCNAME[0]}"
   local testHome
 
-  testHome="$(returnCatch "$handler" buildHome)" || return $?
+  testHome="$(catchReturn "$handler" buildHome)" || return $?
   [ -d "$testHome/test" ] || throwArgument "$handler" "Missing test directory" || return $?
 
   # Include our own test support files if needed

@@ -9,7 +9,7 @@ test_XMLBasics() {
 
   local rando
 
-  rando=$(returnCatch "$handler" randomString) || return $?
+  rando=$(catchReturn "$handler" randomString) || return $?
 
   local matches=(
     --stdout-match "<?xml"

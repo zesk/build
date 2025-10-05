@@ -175,7 +175,7 @@ environmentValueReadArray() {
   local stateFile="${1-}" name value
 
   name=$(usageArgumentEnvironmentVariable "$handler" "name" "${2-}") || return $?
-  value=$(returnCatch "$handler" environmentValueRead "$stateFile" "$name" "") || return $?
+  value=$(catchReturn "$handler" environmentValueRead "$stateFile" "$name" "") || return $?
   environmentValueConvertArray "$value" || return $?
 }
 _environmentValueReadArray() {
@@ -255,7 +255,7 @@ dotEnvConfigure() {
     where=$(catchEnvironment "$handler" pwd) || return $?
   fi
   aa+=(--require "$where/.env" --optional "$where/.env.local" --require)
-  returnCatch "$handler" environmentFileLoad "${aa[@]}" "$@" || return $?
+  catchReturn "$handler" environmentFileLoad "${aa[@]}" "$@" || return $?
 }
 _dotEnvConfigure() {
   # __IDENTICAL__ usageDocument 1
@@ -478,7 +478,7 @@ environmentFileLoad() {
   ! $debugMode || printf -- "Files to actually load: %d %s\n" "${#ff[@]}" "${ff[*]}"
   for environmentFile in "${ff[@]}"; do
     ! $debugMode || printf "%s lines:\n%s\n" "$(decorate code "$environmentFile")" "$(environmentLines <"$environmentFile")"
-    returnCatch "$handler" environmentLoad --context "$environmentFile" "${pp[@]+"${pp[@]}"}" "${ee[@]+"${ee[@]}"}" < <(environmentLines <"$environmentFile") || return $?
+    catchReturn "$handler" environmentLoad --context "$environmentFile" "${pp[@]+"${pp[@]}"}" "${ee[@]+"${ee[@]}"}" < <(environmentLines <"$environmentFile") || return $?
   done
   [ ${#execute[@]} -eq 0 ] || catchEnvironment "$handler" "${execute[@]}"
 }
@@ -525,7 +525,7 @@ environmentApplicationLoad() {
   IFS=$'\n' read -d '' -r -a variables < <(environmentApplicationVariables) || :
   export "${variables[@]}"
 
-  here=$(returnCatch "$handler" buildHome) || return $?
+  here=$(catchReturn "$handler" buildHome) || return $?
 
   for env in "${variables[@]}"; do
     # shellcheck source=/dev/null
@@ -548,7 +548,7 @@ environmentApplicationLoad() {
   fi
   local variable
   for variable in "${variables[@]}" "$@"; do
-    returnCatch "$handler" environmentValueWrite "$variable" "${!variable-}" || return $?
+    catchReturn "$handler" environmentValueWrite "$variable" "${!variable-}" || return $?
   done
 }
 _environmentApplicationLoad() {
@@ -683,12 +683,12 @@ environmentFileApplicationMake() {
 
   local loaded
 
-  loaded="$(returnCatch "$handler" environmentApplicationLoad "$@" && returnCatch "$handler" environmentFileApplicationVerify "$@")" || return $?
+  loaded="$(catchReturn "$handler" environmentApplicationLoad "$@" && catchReturn "$handler" environmentFileApplicationVerify "$@")" || return $?
   printf -- "%s\n" "$loaded"
 
   local name
   for name in "$@" "${optional[@]+"${optional[@]}"}"; do
-    returnCatch "$handler" environmentValueWrite "$name" "${!name-}" || return $?
+    catchReturn "$handler" environmentValueWrite "$name" "${!name-}" || return $?
   done
 }
 _environmentFileApplicationMake() {
@@ -768,7 +768,7 @@ environmentAddFile() {
   done
 
   local home
-  home=$(returnCatch "$handler" buildHome) || return $?
+  home=$(catchReturn "$handler" buildHome) || return $?
   [ ${#environmentNames[@]} -gt 0 ] || throwArgument "$handler" "Need at least one $(decorate code environmentVariable)" || return $?
 
   local year company
@@ -910,7 +910,7 @@ environmentCompile() {
   tempEnv=$(fileTemporaryName "$handler") || return $?
 
   local clean=("$tempEnv" "$tempEnv.after")
-  returnCatch "$handler" environmentOutput "${aa[@]+"${aa[@]}"}" | sort >"$tempEnv" || returnClean $? "${clean[@]}" || return $?
+  catchReturn "$handler" environmentOutput "${aa[@]+"${aa[@]}"}" | sort >"$tempEnv" || returnClean $? "${clean[@]}" || return $?
   (
     local environmentFile
     for environmentFile in "${environmentFiles[@]}"; do
@@ -919,7 +919,7 @@ environmentCompile() {
       source "$environmentFile" >(outputTrigger source "$environmentFile") 2>&1 || returnClean $? "${clean[@]}" || return $?
       set +a
     done
-    returnCatch "$handler" environmentOutput "${aa[@]+"${aa[@]}"}" | sort >"$tempEnv.after" || returnClean $? "${clean[@]}" || return $?
+    catchReturn "$handler" environmentOutput "${aa[@]+"${aa[@]}"}" | sort >"$tempEnv.after" || returnClean $? "${clean[@]}" || return $?
   ) || returnClean $? "${clean[@]}" || return $?
   diff -U0 "$tempEnv" "$tempEnv.after" | grepSafe '^+' | cut -c 2- | grepSafe -v '^+' || returnClean $? "${clean[@]}" || return 0
   catchEnvironment "$handler" rm -f "${clean[@]}" || return $?

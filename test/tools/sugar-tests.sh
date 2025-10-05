@@ -252,7 +252,7 @@ testArgEnvStuff() {
 testMuzzle() {
   local home mantra="I'm sorry, Dave, I'm afraid I can't do that."
 
-  home=$(returnCatch "$handler" buildHome) || return $?
+  home=$(catchReturn "$handler" buildHome) || return $?
 
   # produces nothing
   assertOutputEquals "" muzzle cat "${BASH_SOURCE[0]}" || return $?

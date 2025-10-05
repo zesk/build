@@ -10,25 +10,29 @@
 testEverythingElse() {
   #  catchEnvironmentQuiet
   #  executeInputSupport
+  #  isType
   #  approveBashSource
   #  awsSecurityGroupIPModify
-  #  backgroundProcess
+
+  # BASH Parsing
+
   #  bashFileComment
   #  bashFinalComment
   #  bashFunctionCommentVariable
   #  bashFunctionDefined
+
   #  bashLibrary
   #  bashLibraryHome
   #  bashLint
   #  bashLintFiles
   #  bashLintFilesInteractive
+  #  bashSanitize
   #  bashListFunctions
   #  bashPromptColorScheme
   #  bashPromptColorsFormat
   #  bashPromptMarkers
   #  bashPromptModule_dotFilesWatcher
   #  bashRecursionDebug
-  #  bashSanitize
   #  bashShowUsage
   #  bashUserInput
   #  bigTextAt
@@ -38,9 +42,9 @@ testEverythingElse() {
   #  buildEnvironmentContext
   #  buildEnvironmentGetDirectory
   #  cachedShaPipe
-  #  characterClassReport
-  #  characterClasses
   #  clampDigits
+
+  ## COLORS
   #  colorMultiply
   #  colorNormalize
   #  colorParse
@@ -57,31 +61,30 @@ testEverythingElse() {
   #  daemontoolsManager
   #  daemontoolsRestart
   #  daemontoolsTerminate
-  #  darwinNotification
-  #  darwinSoundInstall
-  #  darwinSoundValid
   #  debugOpenFiles
   #  debuggingStack
-  #  decoratePath
-  #  decorateStyle
   #  deployLink
   #  deployMove
   #  deprecatedCannonFile
   #  deprecatedFilePrependVersion
   #  deprecatedTokensFile
+
+  ## DEVELOPER
+
   #  developerAnnounce
   #  developerDevelopmentLink
   #  developerTrack
-  #  directoryClobber
-  #  directoryIsEmpty
-  #  directoryNewestFile
-  #  directoryOldestFile
-  #  directoryParent
+
+  ## DOCKER
+
   #  dockerComposeUninstall
   #  dockerImages
   #  dockerLocalContainer
   #  dockerVolumeDelete
   #  dockerVolumeExists
+
+  ## DOCUMENTATION
+
   #  documentationBuild
   #  documentationBuildCache
   #  documentationBuildEnvironment
@@ -157,8 +160,6 @@ testEverythingElse() {
   #  isDockerComposeCommand
   #  isPHPStorm
   #  isPyCharm
-  #  isType
-  #  isValidateType
   #  isVisualStudioCode
   #  lineFill
   #  linkRename
@@ -179,20 +180,10 @@ testEverythingElse() {
   #  usageRequireBinary
   #  validateFileContents
 
-  # bashPrompt
+  # VALIDATE
 
-  #  reloadChanges
-
-  # iTerm2
-    #  iTerm2Attention
-    #  iTerm2Download
-    #  iTerm2Image
-    #  iTerm2IsColorName
-    #  iTerm2IsColorType
-    #  iTerm2Notify
-    #  iTerm2PromptSupport
-    #  iTerm2SetColors
-    #  iTerm2Version
+  #  validate
+  #  isValidateType
 
   ## Python
 
@@ -217,6 +208,7 @@ testEverythingElse() {
   #  processOpenPipes
   #  veeGitTag
   #  websiteScrape
+  #  backgroundProcess
 
   # MANPATH and PATH
 

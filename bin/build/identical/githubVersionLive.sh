@@ -16,10 +16,10 @@ else
     local handler="_${FUNCNAME[0]}"
 
     local name owner
-    name=$(returnCatch "$handler" buildEnvironmentGet GITHUB_REPOSITORY_NAME) || return $?
+    name=$(catchReturn "$handler" buildEnvironmentGet GITHUB_REPOSITORY_NAME) || return $?
     [ -n "$name" ] || throwEnvironment "$handler" "GITHUB_REPOSITORY_NAME is blank" || return $?
 
-    owner=$(returnCatch "$handler" buildEnvironmentGet GITHUB_REPOSITORY_OWNER) || return $?
+    owner=$(catchReturn "$handler" buildEnvironmentGet GITHUB_REPOSITORY_OWNER) || return $?
     [ -n "$owner" ] || throwEnvironment "$handler" "GITHUB_REPOSITORY_OWNER is blank" || return $?
     catchEnvironment "$handler" githubLatestRelease "$owner/$name" "$@" || return $?
   }

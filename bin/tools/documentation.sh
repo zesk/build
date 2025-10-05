@@ -41,7 +41,7 @@ __buildDocumentationBuildDirectory() {
   done < <(find "$source" -type f -name '*.md' ! -path "*/.*/*")
   statusMessage --last timingReport "$start" "Created skeleton file structure in"
 
-  functionTemplate="$(returnCatch "$handler" documentationTemplate "function")" || return $?
+  functionTemplate="$(catchReturn "$handler" documentationTemplate "function")" || return $?
 
   aa+=(--source "$home/bin")
   aa+=(--target "$target")
@@ -51,7 +51,7 @@ __buildDocumentationBuildDirectory() {
   aa+=("--function-template" "$functionTemplate" --page-template "$home/documentation/template/__main.md")
   aa+=(--see-prefix "./documentation/.docs")
 
-  returnCatch "$handler" documentationBuild "${aa[@]}" "$@" || return $?
+  catchReturn "$handler" documentationBuild "${aa[@]}" "$@" || return $?
 }
 
 __buildDocumentationCleanDirectory() {
@@ -61,8 +61,8 @@ __buildDocumentationCleanDirectory() {
 
   aa+=(--source "$home/bin")
 
-  returnCatch "$handler" muzzle directoryRequire "$target" || return $?
-  returnCatch "$handler" documentationBuild "${aa[@]}" "--clean" "$@" || return $?
+  catchReturn "$handler" muzzle directoryRequire "$target" || return $?
+  catchReturn "$handler" documentationBuild "${aa[@]}" "--clean" "$@" || return $?
 
   catchEnvironment "$handler" rm -rf "$target" || return $?
 }
@@ -72,9 +72,9 @@ __buildDocumentationBuildRelease() {
   local target="$home/documentation/.docs/release/index.md"
   local recentNotes=10 index
 
-  currentNotes=$(returnCatch "$handler" releaseNotes --application "$home") || return $?
+  currentNotes=$(catchReturn "$handler" releaseNotes --application "$home") || return $?
 
-  returnCatch "$handler" muzzle fileDirectoryRequire "$target" || return $?
+  catchReturn "$handler" muzzle fileDirectoryRequire "$target" || return $?
 
   printf -- "%s\n" "# Release Notes" "" >"$target"
 
@@ -102,10 +102,10 @@ __mkdocsConfiguration() {
   while IFS="" read -r token; do
     # skip lowercase
     [ "$token" != "$(lowercase "$token")" ] || continue
-    returnCatch "$handler" buildEnvironmentLoad "$token" || return $?
+    catchReturn "$handler" buildEnvironmentLoad "$token" || return $?
     export "${token?}"
   done < <(mapTokens <"$source")
-  version="$version" returnCatch "$handler" mapEnvironment <"$source" >"$target" || return $?
+  version="$version" catchReturn "$handler" mapEnvironment <"$source" >"$target" || return $?
 }
 
 # Build the build documentation
@@ -176,13 +176,13 @@ buildDocumentationBuild() {
   done
 
   local home
-  home=$(returnCatch "$handler" buildHome) || return $?
+  home=$(catchReturn "$handler" buildHome) || return $?
 
   # --clean
   if $cleanFlag; then
     ! $verboseFlag || statusMessage decorate info "Cleaning documentation ... "
     # Clean env cache
-    returnCatch "$handler" documentationBuildEnvironment --clean || return $?
+    catchReturn "$handler" documentationBuildEnvironment --clean || return $?
     # Clean reference cache
     __buildDocumentationCleanDirectory "$handler" "$home" "${vv[@]+"${vv[@]}"}" || return $?
     return 0
@@ -194,7 +194,7 @@ buildDocumentationBuild() {
   timestamp="$(date -u "+%F %T") UTC"
 
   # Greeting
-  returnCatch "$handler" buildEnvironmentLoad APPLICATION_NAME || return $?
+  catchReturn "$handler" buildEnvironmentLoad APPLICATION_NAME || return $?
   statusMessage lineFill . "$(decorate info "${APPLICATION_NAME} documentation started on $(decorate value "$(date +"%F %T")")") "
 
   if $verboseFlag; then
@@ -254,12 +254,12 @@ buildDocumentationBuild() {
       file=${file#"$sourceHome"}
       statusMessage decorate notice "Updating $file ..."
       catchEnvironment "$handler" muzzle fileDirectoryRequire "$targetHome/$file" || return $?
-      example="$example" timestamp="$timestamp" version="$version" returnCatch "$handler" mapEnvironment <"$sourceHome/$file" >"$targetHome/$file" || return $?
+      example="$example" timestamp="$timestamp" version="$version" catchReturn "$handler" mapEnvironment <"$sourceHome/$file" >"$targetHome/$file" || return $?
     done < <(
       find "$sourceHome" -type f -name "*.md" ! -path "*/tools/*" ! -path "*/env/*" -print0 | xargs -0 grep -l '{[A-Za-z][^]!\[}]*}' || :
     )
     statusMessage --last decorate notice "Updating environment variables document ..."
-    returnCatch "$handler" documentationBuildEnvironment --verbose "${ea[@]+"${ea[@]}"}" || return $?
+    catchReturn "$handler" documentationBuildEnvironment --verbose "${ea[@]+"${ea[@]}"}" || return $?
   fi
 
   if "$updateReference"; then
@@ -275,7 +275,7 @@ buildDocumentationBuild() {
 
       if [ ! -d "$home/.venv" ]; then
         if ! pythonPackageInstalled venv; then
-          returnCatch "$handler" packageInstall python3-venv || return $?
+          catchReturn "$handler" packageInstall python3-venv || return $?
 
           #  The virtual environment was not created successfully because ensurepip is not
           #  available.  On Debian/Ubuntu systems, you need to install the python3-venv

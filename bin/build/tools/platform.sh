@@ -132,7 +132,7 @@ manPathConfigure() {
   local tempPath
   export MANPATH
 
-  returnCatch "$handler" buildEnvironmentLoad MANPATH || return $?
+  catchReturn "$handler" buildEnvironmentLoad MANPATH || return $?
   tempPath="$(catchEnvironment "$handler" listAppend "$MANPATH" ':' "$@")" || return $?
   MANPATH="$tempPath"
 }
@@ -152,7 +152,7 @@ manPathRemove() {
   local tempPath
   export MANPATH
 
-  returnCatch "$handler" buildEnvironmentLoad MANPATH || return $?
+  catchReturn "$handler" buildEnvironmentLoad MANPATH || return $?
   tempPath="$(catchEnvironment "$handler" listRemove "$MANPATH" ':' "$@")" || return $?
   MANPATH="$tempPath"
 }
@@ -174,7 +174,7 @@ manPathCleanDuplicates() {
   [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
   export MANPATH
 
-  returnCatch "$handler" buildEnvironmentLoad MANPATH || return $?
+  catchReturn "$handler" buildEnvironmentLoad MANPATH || return $?
 
   newPath=$(catchEnvironment "$handler" listCleanDuplicates --test _pathIsDirectory ':' "${PATH-}") || return $?
 
@@ -195,7 +195,7 @@ pathRemove() {
   local tempPath
   export PATH
 
-  returnCatch "$handler" buildEnvironmentLoad PATH || return $?
+  catchReturn "$handler" buildEnvironmentLoad PATH || return $?
   tempPath="$(catchEnvironment "$handler" listRemove "$PATH" ':' "$@")" || return $?
   PATH="$tempPath"
 }
@@ -216,7 +216,7 @@ pathConfigure() {
   local tempPath
   export PATH
 
-  returnCatch "$handler" buildEnvironmentLoad PATH || return $?
+  catchReturn "$handler" buildEnvironmentLoad PATH || return $?
   tempPath="$(catchEnvironment "$handler" listAppend "$PATH" ':' "$@")" || return $?
   PATH="$tempPath"
 }
@@ -329,7 +329,7 @@ serviceToStandardPort() {
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    argument=$(returnCatch "$handler" trimSpace "$argument") || return $?
+    argument=$(catchReturn "$handler" trimSpace "$argument") || return $?
     # __IDENTICAL__ __checkBlankArgumentHandler 1
     [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
@@ -470,12 +470,12 @@ extensionLists() {
   local name
   if [ ${#names[@]} -gt 0 ]; then
     for name in "${names[@]}"; do
-      returnCatch "$handler" __extensionListsLog "$directory" "$name" || return $?
+      catchReturn "$handler" __extensionListsLog "$directory" "$name" || return $?
     done
   else
     catchEnvironment "$handler" touch "$directory/@" || return $?
     while read -r name; do
-      returnCatch "$handler" __extensionListsLog "$directory" "$name" || return $?
+      catchReturn "$handler" __extensionListsLog "$directory" "$name" || return $?
     done
   fi
 }

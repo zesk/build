@@ -20,9 +20,9 @@ testNewestAndOldest() {
   sleep "$waitSeconds"
   date >"c"
 
-  aTime=$(returnCatch "$handler" fileModificationTime "a") || return $?
-  bTime=$(returnCatch "$handler" fileModificationTime "b") || return $?
-  cTime=$(returnCatch "$handler" fileModificationTime "c") || return $?
+  aTime=$(catchReturn "$handler" fileModificationTime "a") || return $?
+  bTime=$(catchReturn "$handler" fileModificationTime "b") || return $?
+  cTime=$(catchReturn "$handler" fileModificationTime "c") || return $?
 
   assertOutputEquals "a" fileOldest "a" "b" "c" || return $?
   assertOutputEquals "a" fileOldest "c" "b" "a" || return $?
@@ -41,7 +41,7 @@ testNewestAndOldest() {
   assertExitCode 1 fileIsNewest "a" "b" || return $?
 
   catchEnvironment "$handler" muzzle popd || return $?
-  returnCatch "$handler" rm -rf "$place" || return $?
+  catchReturn "$handler" rm -rf "$place" || return $?
 }
 
 testMemoryRelated() {

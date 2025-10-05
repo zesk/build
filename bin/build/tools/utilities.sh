@@ -41,8 +41,8 @@ incrementor() {
   local argument cacheDirectory
   local name value counterFile
 
-  cacheDirectory=$(returnCatch "$handler" buildCacheDirectory "${FUNCNAME[0]}/$$") || return $?
-  cacheDirectory="$(returnCatch "$handler" directoryRequire "$cacheDirectory")" || return $?
+  cacheDirectory=$(catchReturn "$handler" buildCacheDirectory "${FUNCNAME[0]}/$$") || return $?
+  cacheDirectory="$(catchReturn "$handler" directoryRequire "$cacheDirectory")" || return $?
   name=""
   value=""
   # _IDENTICAL_ argumentNonBlankLoopHandler 6

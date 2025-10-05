@@ -22,7 +22,7 @@ testDeprecatedFind() {
   local handler="returnMessage"
   local home
 
-  home=$(returnCatch "$handler" buildHome) || return $?
+  home=$(catchReturn "$handler" buildHome) || return $?
   assertExitCode 0 deprecatedFind deprecatedIgnore --path "$home/test/example/deprecated/" oldFunction || return $?
   assertExitCode 1 deprecatedFind deprecatedIgnore --path "$home/test/example/deprecated/" newFunction || return $?
 }
@@ -31,7 +31,7 @@ testDeprecatedFind() {
 testDeprecatedCannon() {
   local home tempDir handler="returnMessage"
 
-  home=$(returnCatch "$handler" buildHome) || return $?
+  home=$(catchReturn "$handler" buildHome) || return $?
   tempDir=$(fileTemporaryName "$handler" -d) || return $?
   catchEnvironment "$handler" cp -R "$home/test/example/deprecated/" "$tempDir/deprecated" || return $?
 

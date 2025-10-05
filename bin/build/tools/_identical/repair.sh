@@ -67,7 +67,7 @@ __identicalRepair() {
   identicalLine="$(grep -m 1 -n -e "$grepPattern" <"$source")" || throwArgument "$handler" "\"$prefix $token\" not found in source $(decorate code "$source")" || return $?
   [ $(($(grep -c -e "$grepPattern" <"$destination") + 0)) -gt 0 ] || throwArgument "$handler" "\"$prefix $token\" not found in destination $(decorate code "$destination")" || return $?
   # totalLines is *source* lines
-  totalLines=$(returnCatch "$handler" fileLineCount <"$source") || return $?
+  totalLines=$(catchReturn "$handler" fileLineCount <"$source") || return $?
   parsed=$(__identicalLineParse "$handler" "$source" "$prefix" "$identicalLine") || return $?
   IFS=" " read -r lineNumber token count < <(printf -- "%s\n" "$parsed") || :
   count=$(__identicalLineCount "$count" "$((totalLines - lineNumber))") || throwEnvironment "$handler" "\"$identicalLine\" invalid count: $count" || return $?
@@ -81,8 +81,8 @@ __identicalRepair() {
   clean+=("$sourceText")
 
   # Include header but map EOF to count on the first line
-  returnCatch "$handler" __identicalCheckMatchFile "$source" "$totalLines" "$((lineNumber - 1))" 1 | sed -e "s/[[:space:]]EOF\$/ $count/g" -e "s/[[:space:]]EOF[[:space:]]/ $count /g" >"$sourceText" || returnClean $? "${clean[@]}" || return $?
-  returnCatch "$handler" __identicalCheckMatchFile "$source" "$totalLines" "$lineNumber" "$count" >>"$sourceText" || returnClean $? "${clean[@]}" || return $?
+  catchReturn "$handler" __identicalCheckMatchFile "$source" "$totalLines" "$((lineNumber - 1))" 1 | sed -e "s/[[:space:]]EOF\$/ $count/g" -e "s/[[:space:]]EOF[[:space:]]/ $count /g" >"$sourceText" || returnClean $? "${clean[@]}" || return $?
+  catchReturn "$handler" __identicalCheckMatchFile "$source" "$totalLines" "$lineNumber" "$count" >>"$sourceText" || returnClean $? "${clean[@]}" || return $?
   if $fileMap; then
     _identicalMapAttributesFile "$handler" "$sourceText" "$destination" || returnClean $? "${clean[@]}" || return $?
   fi
@@ -97,7 +97,7 @@ __identicalRepair() {
   local currentLineNumber=0 undo=("exec" "3>&-" --)
 
   # totalLines is *$destination* lines
-  totalLines=$(returnCatch "$handler" fileLineCount --newline "$destination") || returnClean $? "${clean[@]}" || return $?
+  totalLines=$(catchReturn "$handler" fileLineCount --newline "$destination") || returnClean $? "${clean[@]}" || return $?
   local finished=false
   while ! $finished; do
     read -r identicalLine || finished=true

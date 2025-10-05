@@ -18,8 +18,8 @@ xdebugInstall() {
   local iniFile
 
   catchEnvironment "$handler" phpInstall || return $?
-  returnCatch "$handler" packageWhich pear php-pear || return $?
-  returnCatch "$handler" packageWhich phpize php-dev || return $?
+  catchReturn "$handler" packageWhich pear php-pear || return $?
+  catchReturn "$handler" packageWhich phpize php-dev || return $?
   usageRequireBinary "$handler" pear pecl || return $?
 
   iniFile=$(catchEnvironment "$handler" phpIniFile) || return $?

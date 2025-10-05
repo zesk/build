@@ -12,7 +12,7 @@ __testInstallInstallBuild() {
   local topDir targetDir marker testBinary
   export BUILD_HOME
 
-  returnCatch "$handler" buildEnvironmentLoad BUILD_HOME || return $?
+  catchReturn "$handler" buildEnvironmentLoad BUILD_HOME || return $?
   assertDirectoryExists "$BUILD_HOME" || return $?
 
   topDir="$(pwd)/test.$$"
@@ -61,7 +61,7 @@ testMapBin() {
   local handler="returnMessage" home
 
   home=$(buildHome)
-  home=$(returnCatch "$handler" buildHome) || return $?
+  home=$(catchReturn "$handler" buildHome) || return $?
   catchEnvironment "$handler" muzzle pushd "$home" || return $?
 
   __testSection testMap
@@ -83,7 +83,7 @@ testMapPortability() {
   local handler="returnMessage" home
 
   home=$(buildHome)
-  home=$(returnCatch "$handler" buildHome) || return $?
+  home=$(catchReturn "$handler" buildHome) || return $?
 
   tempDir="./random.$$/"
   catchEnvironment "$handler" mkdir -p "$tempDir" || return $?
@@ -102,7 +102,7 @@ testAdditionalBins() {
   local aa
 
   local home
-  home="$(returnCatch "$handler" buildHome)" || return $?
+  home="$(catchReturn "$handler" buildHome)" || return $?
   catchEnvironment "$handler" cd "$home" || return $?
 
   for binTest in ./test/bin/*.sh; do

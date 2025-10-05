@@ -63,7 +63,7 @@ deprecatedIgnore() {
 
   isArray __BUILD_DEPRECATED_EXTRAS || __BUILD_DEPRECATED_EXTRAS=()
 
-  notes=$(returnCatch "$handler" buildEnvironmentGet BUILD_RELEASE_NOTES) || return $?
+  notes=$(catchReturn "$handler" buildEnvironmentGet BUILD_RELEASE_NOTES) || return $?
   if [ -z "$notes" ]; then
     throwEnvironment "$handler" "BUILD_RELEASE_NOTES is blank?" || return $?
   fi
@@ -116,7 +116,7 @@ deprecatedTokensFile() {
   done
 
   [ -n "$findArgumentFunction" ] || throwArgument "$handler" "findArgumentFunction required" || return $?
-  [ -n "$cannonPath" ] || cannonPath=$(returnCatch "$handler" buildHome) || return $?
+  [ -n "$cannonPath" ] || cannonPath=$(catchReturn "$handler" buildHome) || return $?
 
   local line tokens=()
   local exitCode=0 start results comment="" commentText="(start of file)"
@@ -198,10 +198,10 @@ deprecatedCannonFile() {
   done
 
   [ -n "$findArgumentFunction" ] || throwArgument "$handler" "findArgumentFunction required" || return $?
-  [ -n "$cannonPath" ] || cannonPath=$(returnCatch "$handler" buildHome) || return $?
+  [ -n "$cannonPath" ] || cannonPath=$(catchReturn "$handler" buildHome) || return $?
 
   local start
-  start=$(returnCatch "$handler" timingStart) || return $?
+  start=$(catchReturn "$handler" timingStart) || return $?
 
   local exitCode=0 version="No version yet"
 
@@ -263,7 +263,7 @@ deprecatedFind() {
         local aa=()
         read -d '' -r -a aa < <("$findArgumentFunction") || [ "${#aa[@]}" -gt 0 ] || throwArgument "$handler" "$findArgumentFunction returned empty" || return $?
       else
-        [ -n "$cannonPath" ] || cannonPath=$(returnCatch "$handler" buildHome) || return $?
+        [ -n "$cannonPath" ] || cannonPath=$(catchReturn "$handler" buildHome) || return $?
         search="$(usageArgumentString "$handler" "search" "${1-}")" || return $?
         search="$(quoteGrepPattern "$search")"
         if find "$cannonPath" -type f "${aa[@]}" -print0 | xargs -0 grep -n -l -e "$search"; then
@@ -318,7 +318,7 @@ deprecatedCannon() {
     esac
     shift
   done
-  [ -n "$cannonPath" ] || cannonPath=$(returnCatch "$handler" buildHome) || return $?
+  [ -n "$cannonPath" ] || cannonPath=$(catchReturn "$handler" buildHome) || return $?
   [ -n "$findArgumentFunction" ] || throwArgument "$handler" "findArgumentFunction required" || return $?
   [ -n "$search" ] || throwArgument "$handler" "search required" || return $?
   [ -n "$replace" ] || throwArgument "$handler" "replace required" || return $?

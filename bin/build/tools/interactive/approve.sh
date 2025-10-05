@@ -65,9 +65,9 @@ __approveBashSource() {
     shift
   done
   if $reportFlag; then
-    returnCatch "$handler" approvedSources "${hh[@]+"${hh[@]}"}" || return $?
+    catchReturn "$handler" approvedSources "${hh[@]+"${hh[@]}"}" || return $?
   elif $deleteFlag; then
-    returnCatch "$handler" muzzle approvedSources --delete || return $?
+    catchReturn "$handler" muzzle approvedSources --delete || return $?
   fi
 }
 
@@ -143,7 +143,7 @@ __interactiveApproveRegisterCacheFile() {
 # Argument: handler - Function. Required.
 __interactiveApproveHome() {
   local handler="$1" approvedHome
-  approvedHome=$(returnCatch "$handler" buildEnvironmentGetDirectory --subdirectory ".interactiveApproved" "XDG_STATE_HOME") || return $?
+  approvedHome=$(catchReturn "$handler" buildEnvironmentGetDirectory --subdirectory ".interactiveApproved" "XDG_STATE_HOME") || return $?
   printf "%s\n" "$approvedHome"
 }
 
@@ -156,7 +156,7 @@ __interactiveApproveCacheFile() {
   local handler="$1" approvedHome="$2" sourceFile="$3" cacheFile
 
   [ -f "$sourceFile" ] || throwArgument "$handler" "File does not exist: $sourceFile" || return $?
-  cacheFile="$approvedHome/$(returnCatch "$handler" shaPipe <"$sourceFile")" || return $?
+  cacheFile="$approvedHome/$(catchReturn "$handler" shaPipe <"$sourceFile")" || return $?
   printf "%s\n" "$cacheFile"
 }
 

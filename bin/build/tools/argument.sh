@@ -59,7 +59,7 @@ _arguments() {
     case "$type" in
     Flag)
       argumentName="$(_commentArgumentName "$spec" "$stateFile" "$__index" "$argument")" || returnClean "$?" "${clean[@]}" || return $?
-      returnCatch "$handler" environmentValueWrite "$argumentName" "true" >>"$stateFile" || returnClean "$?" "${clean[@]}" || return $?
+      catchReturn "$handler" environmentValueWrite "$argumentName" "true" >>"$stateFile" || returnClean "$?" "${clean[@]}" || return $?
       if ! inArray "$argumentName" "${flags[@]+"${flags[@]}"}"; then
         flags+=("$argumentName")
       fi
@@ -83,7 +83,7 @@ _arguments() {
       fi
       checkFunction="handler""Argument${type}"
       value="$("$checkFunction" "$handler" "$argumentName" "$argument")" || returnClean "$?" || return $?
-      returnCatch "$handler" environmentValueWrite "$argumentName" "$value" >>"$stateFile" || returnClean "$?" || return $?
+      catchReturn "$handler" environmentValueWrite "$argumentName" "$value" >>"$stateFile" || returnClean "$?" || return $?
       ;;
     esac
     shift || throwArgument "$handler" "missing argument #$__index: $argument" || returnClean "$?" "${clean[@]}" || return $?
@@ -102,7 +102,7 @@ _arguments() {
     return 0
   fi
   if [ "${#flags[@]}" -gt 0 ]; then
-    returnCatch "$handler" environmentValueWrite "_flags" "${flags[@]}" >>"$stateFile" || return $?
+    catchReturn "$handler" environmentValueWrite "_flags" "${flags[@]}" >>"$stateFile" || return $?
   fi
   ARGUMENTS="$stateFile" || return $?
 }
@@ -152,15 +152,15 @@ _commentArgumentSpecification() {
   local functionDefinitionFile="${1-}" functionName="${2-}"
   local functionCache cacheFile argumentIndex argumentDirectory argumentLine
 
-  functionCache=$(returnCatch "$handler" buildCacheDirectory "ARGUMENTS") || return $?
+  functionCache=$(catchReturn "$handler" buildCacheDirectory "ARGUMENTS") || return $?
   functionCache="$functionCache/$functionName"
 
   cacheFile="$functionCache/documentation"
-  argumentDirectory=$(returnCatch "$handler" directoryRequire "$functionCache/parsed") || return $?
+  argumentDirectory=$(catchReturn "$handler" directoryRequire "$functionCache/parsed") || return $?
   catchEnvironment "$handler" touch "$functionCache/.magic" || return $?
   if [ ! -f "$functionDefinitionFile" ] && ! pathIsAbsolute "$functionDefinitionFile"; then
     local home
-    home=$(returnCatch "$handler" buildHome) || return $?
+    home=$(catchReturn "$handler" buildHome) || return $?
     if [ -f "$home/$functionDefinitionFile" ]; then
       functionDefinitionFile="$home/$functionDefinitionFile"
     fi
@@ -168,7 +168,7 @@ _commentArgumentSpecification() {
   [ -f "$functionDefinitionFile" ] || throwArgument "$handler" "$functionDefinitionFile does not exist" || return $?
   [ -n "$functionName" ] || throwArgument "$handler" "functionName is blank" || return $?
   if [ ! -f "$cacheFile" ] || [ "$(fileNewest "$cacheFile" "$functionDefinitionFile")" = "$functionDefinitionFile" ]; then
-    returnCatch "$handler" bashDocumentationExtract "$functionName" >"$cacheFile" < <(returnCatch "$handler" bashFunctionComment "$functionDefinitionFile" "$functionName") || return $?
+    catchReturn "$handler" bashDocumentationExtract "$functionName" >"$cacheFile" < <(catchReturn "$handler" bashFunctionComment "$functionDefinitionFile" "$functionName") || return $?
     for file in "$(__commentArgumentSpecification__required "$functionCache")" "$(__commentArgumentSpecification__defaults "$functionCache")"; do
       catchEnvironment "$handler" printf "" >"$file" || return $?
     done
@@ -188,7 +188,7 @@ _commentArgumentSpecification() {
     catchEnvironment "$handler" printf "%s" "" >"$functionCache/flags" || return $?
     argumentId=1
     while IFS=" " read -r -a argumentLine; do
-      returnCatch "$handler" _commentArgumentSpecificationParseLine "$functionCache" "$argumentId" "${argumentLine[@]+"${argumentLine[@]}"}" || return $?
+      catchReturn "$handler" _commentArgumentSpecificationParseLine "$functionCache" "$argumentId" "${argumentLine[@]+"${argumentLine[@]}"}" || return $?
       argumentId=$((argumentId + 1))
     done <"$argumentsFile"
     catchEnvironment "$handler" date >"$argumentDirectory/@" || return $?
@@ -351,7 +351,7 @@ _commentArgumentSpecificationParseLine() {
       argumentDefault=false
     fi
     if [ -n "$argumentDefault" ]; then
-      returnCatch "$handler" environmentValueWrite "${argumentName/-/_}" "$argumentDefault" >>"$(__commentArgumentSpecification__defaults "$functionCache")" || return $?
+      catchReturn "$handler" environmentValueWrite "${argumentName/-/_}" "$argumentDefault" >>"$(__commentArgumentSpecification__defaults "$functionCache")" || return $?
     fi
   fi
   if $argumentRemainder; then
@@ -460,8 +460,8 @@ ___commentArgumentName() {
 _commentArgumentTypeFromSpec() {
   local handler="$1" specification="$2" argumentType argumentRepeat="${4-}"
 
-  argumentType=$(returnCatch "$handler" environmentValueRead "$specification" argumentType undefined) || return $?
-  [ -n "$argumentRepeat" ] || argumentRepeat=$(returnCatch "$handler" environmentValueRead "$specification" argumentRepeat false) || return $?
+  argumentType=$(catchReturn "$handler" environmentValueRead "$specification" argumentType undefined) || return $?
+  [ -n "$argumentRepeat" ] || argumentRepeat=$(catchReturn "$handler" environmentValueRead "$specification" argumentRepeat false) || return $?
   printf "%s%s%s" "$3" "$argumentType" "$(catchEnvironment "$handler" booleanChoose "$argumentRepeat" '*' '')" || return $?
 }
 
@@ -498,7 +498,7 @@ _commentArgumentType() {
     argumentRepeat="$(environmentValueRead "$argumentSpec" argumentRepeat false)"
     isBoolean "$argumentRepeat" || throwEnvironment "$handler" "$argumentSpec non-boolean argumentRepeat" || return $?
     if $argumentRepeat; then
-      returnCatch "$handler" environmentValueWrite argumentRepeatName "$argumentNamed" >>"$stateFile" || return $?
+      catchReturn "$handler" environmentValueWrite argumentRepeatName "$argumentNamed" >>"$stateFile" || return $?
     fi
   fi
   _commentArgumentTypeFromSpec "$handler" "$argumentSpec" "!" "$argumentRepeat" || return $?
@@ -520,14 +520,14 @@ _commentArgumentsRemainder() {
   while ! $done; do
     read -d '' -r name || done=true
     [ -n "$name" ] || continue
-    value="$(returnCatch "$handler" environmentValueRead "$stateFile" "$name" "")" || return $?
+    value="$(catchReturn "$handler" environmentValueRead "$stateFile" "$name" "")" || return $?
     if [ -z "$value" ]; then
       throwArgument "$handler" "$name is required" || return $?
     fi
   done <"$(__commentArgumentSpecification__required "$specification")"
   if [ $# -gt 0 ]; then
     if [ -f "$specification/remainder" ]; then
-      returnCatch "$handler" environmentValueWrite _remainder "$@" >>"$stateFile" || return $?
+      catchReturn "$handler" environmentValueWrite _remainder "$@" >>"$stateFile" || return $?
     else
       throwArgument "$handler" "Unknown arguments $#: $(decorate each code -- "$@")" || return $?
     fi

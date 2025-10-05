@@ -52,7 +52,7 @@ buildTestPlatforms() {
   printf "\n"
 
   local testHome
-  testHome="$(returnCatch "$handler" buildHome)" || return $?
+  testHome="$(catchReturn "$handler" buildHome)" || return $?
 
   local safeTestFiles
   local platforms="$testHome/etc/platform.txt"
@@ -64,7 +64,7 @@ buildTestPlatforms() {
 
   safeTestFiles=$(buildCacheDirectory "${FUNCNAME[0]}") || return $?
   local name clean=("$safeTestFiles")
-  name=$(returnCatch "$handler" buildEnvironmentGet APPLICATION_NAME) || return $?
+  name=$(catchReturn "$handler" buildEnvironmentGet APPLICATION_NAME) || return $?
 
   if [ -f "$lastRunPlatform" ]; then
     local image success elapsed
@@ -78,7 +78,7 @@ buildTestPlatforms() {
   while read -r image; do
     local pathName="${image//[^[:alnum:]]/_}"
 
-    returnCatch "$handler" directoryRequire "$safeTestFiles/$pathName" || return $?
+    catchReturn "$handler" directoryRequire "$safeTestFiles/$pathName" || return $?
     local f
     for f in "bin" "test" "etc" "documentation"; do
       statusMessage decorate info "Copying $(decorate code "$name") [$f] to $(decorate file "$safeTestFiles/$pathName/$f")"

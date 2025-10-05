@@ -28,7 +28,7 @@ __bashDocumentation_FindFunctionDefinition() {
   fn=$(usageArgumentString "$handler" "fn" "${1-}") && shift || return $?
 
   local definitionFile
-  definitionFile=$(returnCatch "$handler" __bashDocumentation_FindFunctionDefinitions "$directory" "$fn" | head -n 1) || return $?
+  definitionFile=$(catchReturn "$handler" __bashDocumentation_FindFunctionDefinitions "$directory" "$fn" | head -n 1) || return $?
   if [ -z "$definitionFile" ]; then
     throwEnvironment "$handler" "No files found for $fn in $directory" || return $?
   fi

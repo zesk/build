@@ -19,7 +19,7 @@ bashCoverage() {
 
   # local binPath actualBash
 
-  home=$(returnCatch "$handler" buildHome) || return $?
+  home=$(catchReturn "$handler" buildHome) || return $?
   # IDENTICAL startBeginTiming 1
   start=$(timingStart) || return $?
 
@@ -47,7 +47,7 @@ bashCoverage() {
   done
   [ -n "$target" ] || target="$home/coverage.stats"
   ! $verbose || decorate info "Collecting coverage to $(decorate code "${target#"$home"}")"
-  returnCatch "$handler" __bashCoverageWrapper "$target" "$@" || return $?
+  catchReturn "$handler" __bashCoverageWrapper "$target" "$@" || return $?
   ! $verbose || timingReport "$start" "Coverage completed in"
 }
 _bashCoverage() {
@@ -69,7 +69,7 @@ bashCoverageReport() {
 
   # IDENTICAL startBeginTiming 1
   start=$(timingStart) || return $?
-  home=$(returnCatch "$handler" buildHome) || return $?
+  home=$(catchReturn "$handler" buildHome) || return $?
 
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
@@ -97,9 +97,9 @@ bashCoverageReport() {
 
   [ -n "$target" ] || target="$home/test-coverage"
   if [ -z "$reportCache" ]; then
-    reportCache=$(returnCatch "$handler" buildCacheDirectory ".bashCoverageReport") || return $?
+    reportCache=$(catchReturn "$handler" buildCacheDirectory ".bashCoverageReport") || return $?
   fi
-  target=$(returnCatch "$handler" directoryRequire "$target") || return $?
+  target=$(catchReturn "$handler" directoryRequire "$target") || return $?
 
   decorate info "$reportCache"
   decorate info "Report: $target"
@@ -174,7 +174,7 @@ __bashCoverageReportFile() {
 
   tempFile=$(fileTemporaryName "$handler") || return $?
   sort -u >"$tempFile"
-  lineCount=$(returnCatch "$handler" fileLineCount "$tempFile") || return $?
+  lineCount=$(catchReturn "$handler" fileLineCount "$tempFile") || return $?
   __bashCoverageReportProcessStats "$handler" "$reportCache" "$target" "$lineCount" <"$tempFile" || returnClean $? "$tempFile" || return $?
   catchEnvironment "$handler" rm -rf "$tempFile" || return $?
 }
@@ -190,11 +190,11 @@ __bashCoverageReportProcessStats() {
   while read -r fileLine command; do
     file="${fileLine%:*}"
     line="${fileLine##*:}"
-    dataPath=$(returnCatch "$handler" directoryRequire "$reportCache/$file/$line/") || return $?
+    dataPath=$(catchReturn "$handler" directoryRequire "$reportCache/$file/$line/") || return $?
     commandFile="$(printf -- "%s\n" "$command" | shaPipe)"
     printf -- "%s\n" "$command" >"$dataPath/$commandFile" || throwEnvironment "$handler" "Writing $commandFile" || return $?
     targetFile="$reportBase/$file.html"
-    targetFile=$(returnCatch "$handler" fileDirectoryRequire "$targetFile") || return $?
+    targetFile=$(catchReturn "$handler" fileDirectoryRequire "$targetFile") || return $?
     [ -f "$targetFile" ] || catchEnvironment "$handler" touch "$targetFile" || return $?
     catchEnvironment "$handler" printf -- "%s\n" "$file" >>"$reportCache/all" || return $?
     index=$((index + 1))
@@ -210,7 +210,7 @@ __bashCoverageReportTemplate() {
   local handler="returnMessage"
   local home path
 
-  home=$(returnCatch "$handler" buildHome) || return $?
+  home=$(catchReturn "$handler" buildHome) || return $?
   path="$home/bin/build/tools/coverage/$1"
   [ -f "$path" ] || returnEnvironment "${FUNCNAME[0]} $path not found" || return $?
   printf -- "%s\n" "$path"
@@ -231,7 +231,7 @@ __bashCoverageReportConvertFiles() {
   local fileTemplateVariables=(content file_classes total name coverage coveredLines notCoveredLines coverableLines notCoverableLines)
   local pageTemplateVariables=(title content head foot body_classes relativeTop)
 
-  home=$(returnCatch "$handler" buildHome) || return $?
+  home=$(catchReturn "$handler" buildHome) || return $?
   coveredTemplate=$(__bashCoverageReportTemplate "covered.html") || return $?
   notCoveredTemplate=$(__bashCoverageReportTemplate "not-covered.html") || return $?
   pageTemplate=$(__bashCoverageReportTemplate "page.html") || return $?

@@ -47,7 +47,7 @@ buildFailed() {
   # shellcheck disable=SC2094
   statusMessage --last decorate error "$failBar"
 
-  showLines=$(returnCatch "$handler" buildEnvironmentGet BUILD_DEBUG_LINES) || return $?
+  showLines=$(catchReturn "$handler" buildEnvironmentGet BUILD_DEBUG_LINES) || return $?
 
   isUnsignedInteger "$showLines" || showLines=$(($(consoleRows) - 16)) || showLines=40
   # shellcheck disable=SC2094
@@ -122,9 +122,9 @@ ipLookup() {
   if ! packageWhich curl curl; then
     throwEnvironment "$handler" "Requires curl to operate" || return $?
   fi
-  url=$(returnCatch "$handler" buildEnvironmentGet IP_URL) || return $?
+  url=$(catchReturn "$handler" buildEnvironmentGet IP_URL) || return $?
   [ -n "$url" ] || throwEnvironment "$handler" "$(decorate value "IP_URL") is required for $(decorate code "${handler#_}")" || return $?
-  jqFilter=$(returnCatch "$handler" buildEnvironmentGet IP_URL_FILTER) || return $?
+  jqFilter=$(catchReturn "$handler" buildEnvironmentGet IP_URL_FILTER) || return $?
   urlValid "$url" || throwEnvironment "$handler" "URL $(decorate error "$url") is not a valid URL" || return $?
   local pp=(cat)
   [ -z "$jqFilter" ] || pp=(jq "$jqFilter")

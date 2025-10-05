@@ -108,7 +108,9 @@ isValidateType() {
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
     *)
-      isFunction "$prefix$argument" || throwArgument "$handler" "Invalid type $argument" || return $?
+      local mapped
+      mapped=$(_validateTypeMapper "$argument")
+      isFunction "$prefix$mapped" || throwArgument "$handler" "Invalid type $argument (-> \"$mapped\")" || return $?
       ;;
     esac
     shift
@@ -167,6 +169,7 @@ EOF
 
 # Convert from short type to long type
 _validateTypeMapper() {
+  local type aliases
   read -r type aliases < <(_validateTypeAliases | grepSafe -i -e "\b$(quoteGrepPattern "$1")\b")
   [ -n "$type" ] || type="$1"
   printf "%s\n" "$type"
@@ -301,7 +304,7 @@ __validateTypeApplicationDirectoryList() {
   local value="${1-}"
   local home directories=() directory result=() index=0
 
-  home=$(returnCatch "$handler" buildHome) || return $?
+  home=$(catchReturn "$handler" buildHome) || return $?
   home="${home%/}"
   IFS=":" read -r -a directories <<<"$value" || :
   for directory in "${directories[@]+"${directories[@]}"}"; do

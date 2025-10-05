@@ -14,12 +14,12 @@ __hookMaintenanceSetValue() {
   local handler="$1" envFile="$2" variable="$3" value="$4"
   local tempEnvFile="$envFile.$$"
   if [ ! -f "$envFile" ]; then
-    returnCatch "$handler" environmentValueWrite "BUILD_MAINTENANCE_CREATED_FILE" "true" >>"$tempEnvFile" || returnClean $? "$tempEnvFile" || return $?
+    catchReturn "$handler" environmentValueWrite "BUILD_MAINTENANCE_CREATED_FILE" "true" >>"$tempEnvFile" || returnClean $? "$tempEnvFile" || return $?
     printf "%s %s %s\n" "$(decorate warning "Created")" "$(decorate code "$envFile")" "$(decorate warning "(maintenance - did not exist)")" 1>&2
   else
     grep -v "$variable" "$envFile" >"$tempEnvFile" || :
   fi
-  returnCatch "$handler" environmentValueWrite "$variable" "$value" >>"$envFile.$$" || returnClean $? "$tempEnvFile" || return $?
+  catchReturn "$handler" environmentValueWrite "$variable" "$value" >>"$envFile.$$" || returnClean $? "$tempEnvFile" || return $?
   catchEnvironment "$handler" mv -f "$tempEnvFile" "$envFile" || returnClean $? "$tempEnvFile" || return $?
 }
 
@@ -37,10 +37,10 @@ __hookMaintenance() {
   local variable messageVariable
   local handler="_${FUNCNAME[0]}"
 
-  home=$(returnCatch "$handler" buildHome) || return $?
+  home=$(catchReturn "$handler" buildHome) || return $?
   export BUILD_MAINTENANCE_VARIABLE BUILD_MAINTENANCE_MESSAGE_VARIABLE
 
-  returnCatch "$handler" buildEnvironmentLoad BUILD_MAINTENANCE_VARIABLE BUILD_MAINTENANCE_MESSAGE_VARIABLE || return $?
+  catchReturn "$handler" buildEnvironmentLoad BUILD_MAINTENANCE_VARIABLE BUILD_MAINTENANCE_MESSAGE_VARIABLE || return $?
 
   variable=${BUILD_MAINTENANCE_VARIABLE-}
   messageVariable=${BUILD_MAINTENANCE_MESSAGE_VARIABLE-}
@@ -90,7 +90,7 @@ __hookMaintenance() {
     maintenanceValue=
     messageSuffix=$(decorate bold-magenta "NOW LIVE!")
     if [ -f "$envFile" ]; then
-      deleteFile=$(returnCatch "$handler" environmentValueRead "$envFile" BUILD_MAINTENANCE_CREATED_FILE false) || return $?
+      deleteFile=$(catchReturn "$handler" environmentValueRead "$envFile" BUILD_MAINTENANCE_CREATED_FILE false) || return $?
       if [ -z "$deleteFile" ]; then
         deleteFile=false
         messageSuffix="$messageSuffix deleteFile is blank"

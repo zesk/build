@@ -244,7 +244,7 @@ hasHook() {
     --application) shift && applicationHome=$(usageArgumentDirectory "$handler" applicationHome "${1-}") || return $? ;;
     *)
       local binary
-      [ -n "$applicationHome" ] || applicationHome="$(returnCatch "$handler" buildHome)" || return $?
+      [ -n "$applicationHome" ] || applicationHome="$(catchReturn "$handler" buildHome)" || return $?
       binary="$(whichHook "${ww[@]+${ww[@]}}" --application "$applicationHome" "$argument")" || return 1
       [ -n "$binary" ] || return 1
       ;;
@@ -301,7 +301,7 @@ whichHook() {
       ;;
     --debug) debugFlag=true ;;
     *)
-      [ -n "$applicationHome" ] || applicationHome="$(returnCatch "$handler" buildHome)" || return $?
+      [ -n "$applicationHome" ] || applicationHome="$(catchReturn "$handler" buildHome)" || return $?
 
       if [ "${#hookPaths[@]}" -eq 0 ]; then
         IFS=":" read -r -a hookPaths < <(buildEnvironmentGet --application "$applicationHome" BUILD_HOOK_DIRS) || :

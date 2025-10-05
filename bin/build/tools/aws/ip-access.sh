@@ -57,12 +57,12 @@ __awsIPAccess() {
   fi
   currentIP="$currentIP/32"
 
-  returnCatch "$handler" awsInstall || return $?
+  catchReturn "$handler" awsInstall || return $?
 
   if ! awsHasEnvironment; then
     # IDENTICAL profileNameArgumentValidation 4
     if [ -z "$profileName" ]; then
-      profileName="$(returnCatch "$handler" buildEnvironmentGet AWS_PROFILE)" || return $?
+      profileName="$(catchReturn "$handler" buildEnvironmentGet AWS_PROFILE)" || return $?
       [ -n "$profileName" ] || profileName="default"
     fi
     ! $verboseFlag || statusMessage decorate info "Need AWS credentials: $profileName" || :
@@ -115,7 +115,7 @@ __awsIPAccess() {
       sgArgs=(--group "$securityGroupId" --port "$port" --description "$developerId-$service" --ip "$currentIP")
 
       local actionArg="--register" && ! $optionRevoke || actionArg="--remove"
-      returnCatch "$handler" awsSecurityGroupIPModify "${pp[@]+"${pp[@]}"}" "$actionArg" "${sgArgs[@]}" || return $?
+      catchReturn "$handler" awsSecurityGroupIPModify "${pp[@]+"${pp[@]}"}" "$actionArg" "${sgArgs[@]}" || return $?
     done
   done
 }

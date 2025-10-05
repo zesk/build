@@ -123,7 +123,7 @@ returnThrow() {
 # Argument: handler - Required. Function. Error handler.
 # Argument: binary ... - Required. Executable. Any arguments are passed to `binary`.
 # Requires: returnArgument
-returnCatch() {
+catchReturn() {
   local handler="${1-}" && shift || returnArgument "Missing handler" || return $?
   "$@" || "$handler" "$?" "$@" || return $?
 }

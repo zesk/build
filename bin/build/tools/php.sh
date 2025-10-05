@@ -22,7 +22,7 @@
 phpInstall() {
   local handler="_${FUNCNAME[0]}"
   [ $# -eq 0 ] || __help --only "$handler" "$@" || return "$(convertValue $? 1 0)"
-  returnCatch "$handler" packageWhich php php-common php-cli "$@" || return $?
+  catchReturn "$handler" packageWhich php php-common php-cli "$@" || return $?
 }
 _phpInstall() {
   # __IDENTICAL__ usageDocument 1
@@ -42,7 +42,7 @@ _phpInstall() {
 phpUninstall() {
   local handler="_${FUNCNAME[0]}"
   [ $# -eq 0 ] || __help --only "$handler" "$@" || return "$(convertValue $? 1 0)"
-  returnCatch "$handler" packageWhichUninstall php php-common php-cli "$@" || return $?
+  catchReturn "$handler" packageWhichUninstall php php-common php-cli "$@" || return $?
 }
 _phpUninstall() {
   # __IDENTICAL__ usageDocument 1
@@ -211,12 +211,12 @@ phpBuild() {
     shift
   done
 
-  [ -n "$home" ] || home=$(returnCatch "$handler" buildHome) || return $?
+  [ -n "$home" ] || home=$(catchReturn "$handler" buildHome) || return $?
   [ -n "$targetName" ] || throwArgument "$handler" "--name argument blank" || return $?
   [ $# -gt 0 ] || throwArgument "$handler" "Need to supply a list of files for application $(decorate code "$targetName")" || return $?
 
   usageRequireBinary "$handler" tar || return $?
-  returnCatch "$handler" buildEnvironmentLoad "${environments[@]}" "${optionals[@]}" || return $?
+  catchReturn "$handler" buildEnvironmentLoad "${environments[@]}" "${optionals[@]}" || return $?
 
   local missingFile tarFile
   missingFile=()
@@ -241,7 +241,7 @@ phpBuild() {
   statusMessage --first decorate info "Installing build tools ..." || :
 
   # Ensure we're up to date
-  returnCatch "$handler" packageInstall || return $?
+  catchReturn "$handler" packageInstall || return $?
 
   # shellcheck disable=SC2119
   catchEnvironment "$handler" phpInstall || return $?
@@ -257,7 +257,7 @@ phpBuild() {
   if hasHook application-environment; then
     catchEnvironment "$handler" hookRun --application "$home" application-environment "${environments[@]}" -- "${optionals[@]}" >"$dotEnv" || returnClean $? "${clean[@]}" || return $?
   else
-    returnCatch "$handler" environmentFileApplicationMake "${environments[@]}" -- "${optionals[@]}" >"$dotEnv" || returnClean $? "${clean[@]}" || return $?
+    catchReturn "$handler" environmentFileApplicationMake "${environments[@]}" -- "${optionals[@]}" >"$dotEnv" || returnClean $? "${clean[@]}" || return $?
   fi
   if ! grep -q APPLICATION "$dotEnv"; then
     buildFailed "$dotEnv" || throwEnvironment "$handler" "$dotEnv file seems to be invalid:" || returnClean $? "${clean[@]}" || return $?
@@ -368,7 +368,7 @@ phpTest() {
     shift
   done
 
-  [ -n "$home" ] || home=$(returnCatch "$handler" buildHome) || return $?
+  [ -n "$home" ] || home=$(catchReturn "$handler" buildHome) || return $?
 
   [ -f "$home/docker-compose.yml" ] || catchEnvironment "$handler" "Requires $(decorate code "$home/docker-compose.yml")" || return $?
 
@@ -381,7 +381,7 @@ phpTest() {
   local init quietLog
 
   init=$(timingStart) || return $?
-  quietLog="$(returnCatch "$handler" buildQuietLog "$handler")" || return $?
+  quietLog="$(catchReturn "$handler" buildQuietLog "$handler")" || return $?
 
   buildDebugStart "${FUNCNAME[0]}" || :
 
@@ -403,7 +403,7 @@ phpTest() {
 
   statusMessage decorate info "Bringing up containers ..." || returnUndo "$?" "${undo[@]}" || return $?
 
-  start=$(returnCatch "$handler" timingStart) || returnUndo "$?" "${undo[@]}" || return $?
+  start=$(catchReturn "$handler" timingStart) || returnUndo "$?" "${undo[@]}" || return $?
   catchEnvironmentQuiet "$handler" "$quietLog" docker-compose "${dca[@]}" up -d || returnUndo "$?" "${undo[@]}" || return $?
   statusMessage timingReport "$start" "Up in" || :
 

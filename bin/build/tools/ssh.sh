@@ -13,7 +13,7 @@
 sshKnownHostsFile() {
   local handler="_${FUNCNAME[0]}"
 
-  sshKnown=$(returnCatch "$handler" userRecordHome ".ssh/known_hosts") || return $?
+  sshKnown=$(catchReturn "$handler" userRecordHome ".ssh/known_hosts") || return $?
 
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
@@ -28,7 +28,7 @@ sshKnownHostsFile() {
       local sshHome
       sshHome=$(catchEnvironment "$handler" dirname "$sshKnown") || return $?
       if [ ! -d "$sshHome" ]; then
-        sshHome=$(returnCatch "$handler" directoryRequire "$sshHome") || return $?
+        sshHome=$(catchReturn "$handler" directoryRequire "$sshHome") || return $?
       fi
       [ -f "$sshKnown" ] || touch "$sshKnown" || throwEnvironment "$handler" "Unable to create $sshKnown" || return $?
       catchEnvironment "$handler" chmod 700 "$sshHome" || return $?
@@ -95,11 +95,11 @@ sshKnownHostAdd() {
         output=$(fileTemporaryName "$handler") || return $?
         if ssh-keyscan "${verboseArgs[@]+"${verboseArgs[@]+}"}" "$remoteHost" >"$output" 2>&1; then
           catchEnvironment "$handler" cat "$output" >>"$sshKnown" || returnClean $? "$output" || return $?
-          returnCatch "$handler" rm -f "$output" || return $?
+          catchReturn "$handler" rm -f "$output" || return $?
           ! $verbose || decorate success "Added $remoteHost to $sshKnown"
         else
           exitCode=$?
-          returnCatch "$handler" rm -f "$output" || return $?
+          catchReturn "$handler" rm -f "$output" || return $?
           printf "%s: %s\nOUTPUT:\n%s\nEND OUTPUT\n" "$(decorate error "Failed to add $remoteHost to $sshKnown")" "$(decorate code "$exitCode")" "$(decorate code <"$output" | decorate wrap ">> ")" 1>&2
         fi
       fi
@@ -207,7 +207,7 @@ sshSetup() {
   local sshHomePath flagForce servers keyType keyBits
   local handler="_${FUNCNAME[0]}"
 
-  home=$(returnCatch "$handler" userRecordHome) || return $?
+  home=$(catchReturn "$handler" userRecordHome) || return $?
 
   local sshHomePath="$home/.ssh/" flagForce=false servers=() keyType=ed25519 keyBits=2048
 

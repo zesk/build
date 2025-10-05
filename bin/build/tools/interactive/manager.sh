@@ -63,7 +63,7 @@ __interactiveManager() {
 
   local rowsAllowed output index=1 didClear=false triedRepair
 
-  rowsAllowed=$(returnCatch "$handler" consoleRows) || return $?
+  rowsAllowed=$(catchReturn "$handler" consoleRows) || return $?
   rowsAllowed=$((rowsAllowed - 4))
   output=$(fileTemporaryName "$handler") || return $?
   index=1

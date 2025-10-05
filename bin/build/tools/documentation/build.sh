@@ -11,7 +11,7 @@ __documentationBuild() {
   local handler="$1" && shift
 
   local home
-  home=$(returnCatch "$handler" buildHome) || return $?
+  home=$(catchReturn "$handler" buildHome) || return $?
 
   local company="" applicationName="" docArgs=() companyLink="" applicationName=""
 
@@ -122,14 +122,14 @@ __documentationBuild() {
 
   BUILD_COLORS_MODE=$(consoleConfigureColorMode) || :
 
-  returnCatch "$handler" buildEnvironmentLoad APPLICATION_CODE APPLICATION_NAME BUILD_COMPANY BUILD_COMPANY_LINK || return $?
+  catchReturn "$handler" buildEnvironmentLoad APPLICATION_CODE APPLICATION_NAME BUILD_COMPANY BUILD_COMPANY_LINK || return $?
 
   #
   # --clean actually does not require much to run so just handle that first
   #
   local cacheDirectory
 
-  cacheDirectory="$(returnCatch "$handler" documentationBuildCache)" || return $?
+  cacheDirectory="$(catchReturn "$handler" documentationBuildCache)" || return $?
   if $cleanFlag; then
     catchEnvironment "$handler" rm -rf "$cacheDirectory" || return $?
     [ ! -d "$targetPath" ] || catchEnvironment "$handler" rm -rf "$targetPath" || return $?
@@ -160,12 +160,12 @@ __documentationBuild() {
   local start
   start=$(timingStart) || throwEnvironment "$handler" timingStart || return $?
 
-  returnCatch "$handler" __pcregrepInstall || return $?
+  catchReturn "$handler" __pcregrepInstall || return $?
 
   local seeFunction seeFile seePrefix
 
-  seeFunction=$(returnCatch "$handler" documentationTemplate seeFunction) || return $?
-  seeFile=$(returnCatch "$handler" documentationTemplate seeFile) || return $?
+  seeFunction=$(catchReturn "$handler" documentationTemplate seeFunction) || return $?
+  seeFile=$(catchReturn "$handler" documentationTemplate seeFile) || return $?
 
   if [ "$actionFlag" = "--unlinked-update" ]; then
     for argument in unlinkedTemplate unlinkedTarget; do
@@ -182,7 +182,7 @@ __documentationBuild() {
   local elapsed
   elapsed=$(timingStart)
   statusMessage decorate info "Generating source indexes ..."
-  returnCatch "$handler" _documentationIndexGenerate "${indexArgs[@]+${indexArgs[@]}}" "${sourcePaths[@]}" || return $?
+  catchReturn "$handler" _documentationIndexGenerate "${indexArgs[@]+${indexArgs[@]}}" "${sourcePaths[@]}" || return $?
   statusMessage --last timingReport "$elapsed" "Indexes took"
   statusMessage timingReport "$start" "Elapsed so far"
 
@@ -193,12 +193,12 @@ __documentationBuild() {
 
   if [ -f "$unlinkedTemplate" ]; then
     # First copy
-    returnCatch "$handler" mapEnvironment <"$unlinkedTemplate" >"$unlinkedTarget" || return $?
+    catchReturn "$handler" mapEnvironment <"$unlinkedTemplate" >"$unlinkedTarget" || return $?
 
     # Create or update indexes
     elapsed=$(timingStart)
     statusMessage decorate info "Generating documentation index ..."
-    returnCatch "$handler" __documentationIndexDocumentation "$handler" "$cacheDirectory" "${sourcePaths[@]}" || returnClean $? "${clean[@]}" || return $?
+    catchReturn "$handler" __documentationIndexDocumentation "$handler" "$cacheDirectory" "${sourcePaths[@]}" || returnClean $? "${clean[@]}" || return $?
     statusMessage --last timingReport "$elapsed" "Generated documentation index in" || :
   fi
 
@@ -212,9 +212,9 @@ __documentationBuild() {
 
     elapsed=$(timingStart)
     statusMessage decorate info "Updating unlinked ..."
-    returnCatch "$handler" __documentationTemplateUpdateUnlinked "$cacheDirectory" "$envFile" "$unlinkedTemplate" "$unlinkedTarget" "$pageTemplate" || returnClean $? "${clean[@]}" || return $?
+    catchReturn "$handler" __documentationTemplateUpdateUnlinked "$cacheDirectory" "$envFile" "$unlinkedTemplate" "$unlinkedTarget" "$pageTemplate" || returnClean $? "${clean[@]}" || return $?
     statusMessage --last timingReport "$elapsed" "Updated unlinked index in" || :
-    returnCatch "$handler" environmentFileLoad "$envFile" --execute documentationTemplateCompile "${docArgs[@]+"${docArgs[@]}"}" "$cacheDirectory" "$unlinkedTemplate" "$functionTemplate" "$unlinkedTarget" || returnClean $? "${clean[@]}" || return $?
+    catchReturn "$handler" environmentFileLoad "$envFile" --execute documentationTemplateCompile "${docArgs[@]+"${docArgs[@]}"}" "$cacheDirectory" "$unlinkedTemplate" "$functionTemplate" "$unlinkedTarget" || returnClean $? "${clean[@]}" || return $?
     if [ "$actionFlag" = "--unlinked-update" ]; then
       printf "\n"
       catchEnvironment "$handler" rm -rf "${clean[@]}" || return $?
@@ -230,13 +230,13 @@ __documentationBuild() {
 
   (
     local functionLinkPattern fileLinkPattern
-    returnCatch "$handler" buildEnvironmentLoad BUILD_DOCUMENTATION_SOURCE_LINK_PATTERN || return $?
+    catchReturn "$handler" buildEnvironmentLoad BUILD_DOCUMENTATION_SOURCE_LINK_PATTERN || return $?
     functionLinkPattern=${BUILD_DOCUMENTATION_SOURCE_LINK_PATTERN-}
     # Remove line
     fileLinkPattern=${functionLinkPattern%%#.*}
-    returnCatch "$handler" __documentationIndexSeeLinker "$cacheDirectory" "$seePrefix" "$seeFunction" "$functionLinkPattern" "$seeFile" "$fileLinkPattern" || return $?
+    catchReturn "$handler" __documentationIndexSeeLinker "$cacheDirectory" "$seePrefix" "$seeFunction" "$functionLinkPattern" "$seeFile" "$fileLinkPattern" || return $?
   ) || return $?
-  message=$(returnCatch "$handler" timingReport "$start" "in") || return $?
+  message=$(catchReturn "$handler" timingReport "$start" "in") || return $?
 
   [ "${#clean[@]}" -eq 0 ] || catchEnvironment "$handler" rm -rf "${clean[@]}" || return $?
 

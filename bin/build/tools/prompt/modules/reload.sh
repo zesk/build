@@ -141,8 +141,8 @@ __reloadChangesRemove() {
 
 __reloadChangesCacheFile() {
   local handler="$1" extension="${2-state}"
-  reloadHome=$(returnCatch "$handler" buildEnvironmentGetDirectory --subdirectory "reloadChanges" XDG_STATE_HOME) || return $?
-  cacheFile="$(returnCatch "$handler" buildEnvironmentGet APPLICATION_CODE).$extension" || return $?
+  reloadHome=$(catchReturn "$handler" buildEnvironmentGetDirectory --subdirectory "reloadChanges" XDG_STATE_HOME) || return $?
+  cacheFile="$(catchReturn "$handler" buildEnvironmentGet APPLICATION_CODE).$extension" || return $?
   printf "%s/%s\n" "${reloadHome%/}" "${cacheFile}"
 }
 

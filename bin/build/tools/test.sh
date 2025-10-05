@@ -21,7 +21,7 @@ testTools() {
 
   __help "$handler" "${1-}" || return 0
 
-  home=$(returnCatch "$handler" buildHome) || return $?
+  home=$(catchReturn "$handler" buildHome) || return $?
 
   for testCode in tools _assert assert mock junit; do
     testCode="$home/bin/build/tools/test/$testCode.sh"

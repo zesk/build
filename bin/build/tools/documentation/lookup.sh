@@ -73,7 +73,7 @@ __documentationIndexLookup() {
   if [ -z "$functionName" ] || [ -z "$filePath" ] || ! isUnsignedInteger "$lineNumber"; then
     return 1
   fi
-  home=$(returnCatch "$handler" buildHome) || return $?
+  home=$(catchReturn "$handler" buildHome) || return $?
   sourceFile="$home/$filePath"
   case $mode in
   source) printf -- "%s\n" "$sourceFile" ;;

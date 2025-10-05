@@ -9,7 +9,7 @@ test_jUnitBasic() {
 
   local rando
 
-  rando=$(returnCatch "$handler" randomString) || return $?
+  rando=$(catchReturn "$handler" randomString) || return $?
 
   assertOutputContains "<testsuites " junitOpen "name=Test run" || return $?
   assertOutputContains "</testsuites>" junitClose "name=Test run" || return $?

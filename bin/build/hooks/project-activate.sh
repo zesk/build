@@ -25,8 +25,8 @@ __hookProjectActivate() {
     otherName=$("$otherHome/$tools" buildEnvironmentGet APPLICATION_NAME)
   fi
   [ -n "$otherName" ] || otherName="${otherHome##*/}"
-  name=$(returnCatch "$handler" buildEnvironmentGet APPLICATION_NAME) || return $?
-  home=$(returnCatch "$handler" buildHome) || return $?
+  name=$(catchReturn "$handler" buildEnvironmentGet APPLICATION_NAME) || return $?
+  home=$(catchReturn "$handler" buildHome) || return $?
   [ -n "$name" ] || name="${home##*/}"
 
   statusMessage --last printf -- "%s %s %s %s\n" "$symbol" "$(decorate subtle "$otherName")" "➜" "$(decorate info "$name")"

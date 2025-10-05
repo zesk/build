@@ -31,7 +31,7 @@
 bashLint() {
   local handler="_${FUNCNAME[0]}" fixFlag=false verboseFlag=false undo=("exec" "3>&-" "4>&1")
 
-  returnCatch "$handler" packageWhich shellcheck shellcheck || return $?
+  catchReturn "$handler" packageWhich shellcheck shellcheck || return $?
 
   # Open 3 and 4 to aliases so we can change them
   exec 3>/dev/null 4>&1
@@ -129,7 +129,7 @@ bashLintFiles() {
     shift || throwArgument "$handler" "shift after $argument failed" || return $?
   done
 
-  returnCatch "$handler" buildEnvironmentLoad BUILD_INTERACTIVE_REFRESH || return $?
+  catchReturn "$handler" buildEnvironmentLoad BUILD_INTERACTIVE_REFRESH || return $?
   statusMessage --first decorate info "Checking all shell scripts ..."
 
   local source=none
@@ -430,7 +430,7 @@ validateFileExtensionContents() {
   foundFiles=$(fileTemporaryName "$handler")
   # Final arguments for find
   find . "${extensionArgs[@]}" ! -path "*/.*/*" "$@" >"$foundFiles"
-  total=$(returnCatch "$handler" fileLineCount "$foundFiles") || return $?
+  total=$(catchReturn "$handler" fileLineCount "$foundFiles") || return $?
   # shellcheck disable=SC2059
   statusMessage decorate info "Searching $total $(plural "$total" item files) (ext: ${extensions[*]}) for text: $(printf -- " $(decorate reset --)\"$(decorate code "%s")\"" "${textMatches[@]}")"
 

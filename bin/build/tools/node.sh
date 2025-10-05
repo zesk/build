@@ -33,7 +33,7 @@ nodeInstall() {
 
   local quietLog
 
-  quietLog=$(returnCatch "$handler" buildQuietLog "$handler") || return $?
+  quietLog=$(catchReturn "$handler" buildQuietLog "$handler") || return $?
   statusMessage --first decorate info "Installing nodejs ... " || return $?
   catchEnvironmentQuiet "$handler" "$quietLog" packageInstall nodejs || return $?
   __nodeInstall_corepackEnable "$handler" || return $?
@@ -52,7 +52,7 @@ __nodeInstall_corepackEnable() {
     whichExists corepack || throwEnvironment "$handler" "corepack not found after global installation - failing: PATH=$PATH" || return $?
   fi
   local home
-  home=$(returnCatch "$handler" buildHome) || return $?
+  home=$(catchReturn "$handler" buildHome) || return $?
   catchEnvironment "$handler" muzzle pushd "$home" || return $?
   catchEnvironment "$handler" corepack enable || returnUndo $? muzzle popd || return $?
   catchEnvironment "$handler" muzzle popd || return $?
@@ -85,7 +85,7 @@ nodeUninstall() {
   local start name quietLog
   name=$(decorate code node)
   start=$(timingStart) || return $?
-  quietLog=$(returnCatch "$handler" buildQuietLog "$handler") || return $?
+  quietLog=$(catchReturn "$handler" buildQuietLog "$handler") || return $?
   statusMessage --first decorate info "Uninstalling $name ... " || return $?
   catchEnvironmentQuiet "$handler" "$quietLog" packageUninstall nodejs || return $?
   statusMessage timingReport "$start" "Uninstalled $name in" || return $?
@@ -139,7 +139,7 @@ nodePackageManager() {
 
   local manager
 
-  manager=$(returnCatch "$handler" buildEnvironmentGet NODE_PACKAGE_MANAGER) || return $?
+  manager=$(catchReturn "$handler" buildEnvironmentGet NODE_PACKAGE_MANAGER) || return $?
   [ -n "$manager" ] || throwEnvironment "$handler" "NODE_PACKAGE_MANAGER is blank" || return $?
   nodePackageManagerValid "$manager" || throwEnvironment "$handler" "NODE_PACKAGE_MANAGER is not valid: $manager not in $(nodePackageManagerValid)" || return $?
   isExecutable "$manager" || throwEnvironment "$handler" "$(decorate code "$manager") is not an executable" || return $?

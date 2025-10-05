@@ -52,7 +52,7 @@ __hookPreCommitPHP() {
 
   local home mode
 
-  home=$(returnCatch "$handler" buildHome) || return $?
+  home=$(catchReturn "$handler" buildHome) || return $?
   mode=$(booleanChoose "$readOnly" 0440 0640)
 
   statusMessage --last decorate info ".php script mode -> $(decorate code "$mode")"

@@ -17,7 +17,7 @@
 aptKeyAddHashicorp() {
   local handler="_${FUNCNAME[0]}"
   __help "$handler" "$@" || return 0
-  returnCatch "$handler" aptKeyAdd --title Hashicorp --name hashicorp --url https://apt.releases.hashicorp.com/gpg || return $?
+  catchReturn "$handler" aptKeyAdd --title Hashicorp --name hashicorp --url https://apt.releases.hashicorp.com/gpg || return $?
 }
 _aptKeyAddHashicorp() {
   # __IDENTICAL__ usageDocument 1
@@ -34,7 +34,7 @@ _aptKeyAddHashicorp() {
 aptKeyRemoveHashicorp() {
   local handler="_${FUNCNAME[0]}"
   __help "$handler" "$@" || return 0
-  returnCatch "$handler" aptKeyRemove hashicorp "$@" || return $?
+  catchReturn "$handler" aptKeyRemove hashicorp "$@" || return $?
 }
 _aptKeyRemoveHashicorp() {
   # __IDENTICAL__ usageDocument 1
@@ -53,10 +53,10 @@ terraformInstall() {
   __help "$handler" "$@" || return 0
   ! whichExists "$binary" || return 0
   if aptIsInstalled; then
-    returnCatch "$handler" packageInstall gnupg software-properties-common curl figlet || return $?
-    returnCatch "$handler" aptKeyAddHashicorp || return $?
+    catchReturn "$handler" packageInstall gnupg software-properties-common curl figlet || return $?
+    catchReturn "$handler" aptKeyAddHashicorp || return $?
   fi
-  returnCatch "$handler" packageInstall "$binary" "$@" || return $?
+  catchReturn "$handler" packageInstall "$binary" "$@" || return $?
   whichExists "$binary" || throwEnvironment "$handler" "No $binary binary found - installation failed" || return $?
 }
 _terraformInstall() {
@@ -75,9 +75,9 @@ terraformUninstall() {
 
   __help "$handler" "$@" || return 0
   whichExists terraform || return 0
-  returnCatch "$handler" packageWhichUninstall terraform terraform "$@" || return $?
-  returnCatch "$handler" aptKeyRemoveHashicorp || return $?
-  returnCatch "$handler" packageUpdate --force || return $?
+  catchReturn "$handler" packageWhichUninstall terraform terraform "$@" || return $?
+  catchReturn "$handler" aptKeyRemoveHashicorp || return $?
+  catchReturn "$handler" packageUpdate --force || return $?
 }
 _terraformUninstall() {
   # __IDENTICAL__ usageDocument 1

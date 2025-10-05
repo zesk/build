@@ -27,7 +27,7 @@ This is universally used throughout.
 ## Usage Sugar References
 
 {execute}
-{returnCatch}
+{catchReturn}
 {catchCode}
 {catchEnvironment}
 {catchEnvironmentQuiet}

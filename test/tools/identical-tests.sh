@@ -22,14 +22,14 @@ testIdenticalEofWithBracket() {
   local handler="returnMessage"
   local temp home
 
-  home=$(returnCatch "$handler" buildHome) || return $?
+  home=$(catchReturn "$handler" buildHome) || return $?
   temp=$(fileTemporaryName "$handler" -d) || return $?
   catchEnvironment "$handler" cp -R "$home/test/example/similar" "$temp/similar" || return $?
   assertDirectoryExists "$temp/similar" "$temp/similar/fix" || return $?
   assertExitCode 0 identicalCheck --repair "$temp/similar/fix" --prefix '# ''IDENTICAL' --extension txt --cd "$temp/similar" || return $?
   assertFileContains "$temp/similar/eofbug-target.txt" "}" || return $?
 
-  returnCatch "$handler" rm -rf "$temp" || return $?
+  catchReturn "$handler" rm -rf "$temp" || return $?
 }
 
 # Tag: slow
@@ -37,7 +37,7 @@ testIdenticalCheckAndRepairMap() {
   local handler="returnMessage"
   local testPath home name
 
-  home=$(returnCatch "$handler" buildHome) || return $?
+  home=$(catchReturn "$handler" buildHome) || return $?
   testPath=$(fileTemporaryName "$handler" -d) || return $?
   decorate info "HOME is $home"
   decorate info "testPath is $testPath"
@@ -65,14 +65,14 @@ testIdenticalCheckAndRepairMap() {
     assertFileContains "$testPath/alternate/$name.txt" "- BASE $name.txt" || return $?
   done
 
-  returnCatch "$handler" rm -rf "$testPath" || return $?
+  catchReturn "$handler" rm -rf "$testPath" || return $?
 }
 
 testIdenticalRepair() {
   local handler="returnMessage"
 
   local home
-  home=$(returnCatch "$handler" buildHome) || return $?
+  home=$(catchReturn "$handler" buildHome) || return $?
 
   local output source token target expectedTarget testPath prefix
 
@@ -118,7 +118,7 @@ testIdenticalChecks() {
   local handler="returnMessage"
   local home
 
-  home=$(returnCatch "$handler" buildHome) || return $?
+  home=$(catchReturn "$handler" buildHome) || return $?
   local identicalCheckArgs identicalError
 
   identicalError=$(returnCode identical)
@@ -160,7 +160,7 @@ testIdenticalCheckSingles() {
   local identicalCheckArgs identicalError singles
 
   local home
-  home=$(returnCatch "$handler" buildHome) || return $?
+  home=$(catchReturn "$handler" buildHome) || return $?
 
   identicalError=$(returnCode identical)
 
@@ -201,7 +201,7 @@ testIdenticalCheckRepairWithEmptyDir() {
   touch "$temp/hey.sh"
   assertExitCode 0 identicalCheck --cd "$temp" --repair "$temp/foo/identical/" --repair "$temp/bar/identical/" --prefix '# ''IDENTICAL' --extension sh || return $?
 
-  returnCatch "$handler" rm -rf "$temp" || return $?
+  catchReturn "$handler" rm -rf "$temp" || return $?
 }
 
 # Test identical EOF problem
@@ -224,7 +224,7 @@ testIdenticalThingEOFProblem() {
 
   temp=$(fileTemporaryName "$handler" -d) || return $?
 
-  returnCatch "$handler" mkdir -p "$temp/identical/" || return $?
+  catchReturn "$handler" mkdir -p "$temp/identical/" || return $?
 
   printf "%s\n" "# IDENTICAL foo 1" "HELLO, WORLD" "" "" >"$temp/identical/master.txt"
   printf "%s\n" "$(randomString)" "$(randomString)" "$(randomString)" "" "# IDENTICAL foo 1" "Hello, WORLD" "" "" >"$temp/$(incrementor 0 "$name").txt"
@@ -234,7 +234,7 @@ testIdenticalThingEOFProblem() {
   local newline=$'\n'
   printf "%s" "$(randomString)$newline" "$(randomString)$newline" "$(randomString)$newline" "{$newline" "    # IDENTICAL foo 1$newline" "    HELLO, WORLD$newline" "}" >"$temp/$(incrementor "$name").txt"
 
-  returnCatch "$handler" identicalCheck --cd "$temp" --repair "$temp/identical" --extension 'txt' --prefix '# IDENTICAL' || return $?
+  catchReturn "$handler" identicalCheck --cd "$temp" --repair "$temp/identical" --extension 'txt' --prefix '# IDENTICAL' || return $?
 
   assertFileContains "$temp/0.txt" "HELLO, WORLD" "# IDENTICAL foo 1" || return $?
   assertFileDoesNotContain "$temp/0.txt" "{" "}" || return $?

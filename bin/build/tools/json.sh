@@ -92,7 +92,7 @@ jsonFileGet() {
 
   path="$(__jqPathClean "$path")"
 
-  returnCatch "$handler" jq -r "$(__jqObject "$path") + . | $path" <"$jsonFile" || return $?
+  catchReturn "$handler" jq -r "$(__jqObject "$path") + . | $path" <"$jsonFile" || return $?
 }
 _jsonFileGet() {
   # __IDENTICAL__ usageDocument 1

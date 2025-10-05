@@ -64,3 +64,5 @@ testBashPrompt() {
   mockEnvironmentStop BUILD_PROMPT_COLORS
   mockEnvironmentStop PROMPT_COMMAND
 }
+
+# TODO reloadChanges test

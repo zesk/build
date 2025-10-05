@@ -121,8 +121,8 @@ documentationBuildCache() {
   local handler="_${FUNCNAME[0]}"
   [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
   local code
-  code=$(returnCatch "$handler" buildEnvironmentGet "APPLICATION_CODE") || return $?
-  returnCatch "$handler" buildCacheDirectory ".documentation/${code-default}/${1-}" || return $?
+  code=$(catchReturn "$handler" buildEnvironmentGet "APPLICATION_CODE") || return $?
+  catchReturn "$handler" buildCacheDirectory ".documentation/${code-default}/${1-}" || return $?
 }
 _documentationBuildCache() {
   # __IDENTICAL__ usageDocument 1

@@ -44,7 +44,7 @@ __characterClassReport() {
   done
 
   savedLimit="$(catchEnvironment "$handler" ulimit -n)" || return $?
-  catchEnvironment "$handler" ulimit -n 10240 || return $?
+  catchEnvironment "$handler" ulimit -n 10240 2>&1 || :
   # shellcheck disable=SC2207
   indexList=($(seq 0 127))
 
@@ -98,5 +98,5 @@ __characterClassReport() {
     total=$((total + matched))
   done
   printf "%s total %s\n" "$(decorate bold-red "$total")" "$(decorate red "$(plural "$total" "${nouns[@]}")")"
-  catchEnvironment "$handler" ulimit -n "$savedLimit" || return $?
+  catchEnvironment "$handler" ulimit -n "$savedLimit" 2>&1 || :
 }

@@ -41,9 +41,9 @@ __identicalCheckGenerateSearchFiles() {
     if $startExclude && [ "${#ignorePatterns[@]}" -gt 0 ]; then
       filter=("grepSafe" "-v" "${ignorePatterns[@]}")
     fi
-    directory=$(returnCatch "$handler" realPath "$directory") || returnClean $? "${clean[@]}" || return $?
+    directory=$(catchReturn "$handler" realPath "$directory") || returnClean $? "${clean[@]}" || return $?
 
-    if ! returnCatch "$handler" directoryChange "$directory" find . "$@" | sort | "${filter[@]}" | cut -c 3- | decorate wrap "${directory%/}/" >>"$searchFileList"; then
+    if ! catchReturn "$handler" directoryChange "$directory" find . "$@" | sort | "${filter[@]}" | cut -c 3- | decorate wrap "${directory%/}/" >>"$searchFileList"; then
       # decorate warning "No matching files found in $directory" 1>&2
       : Do nothing for now
     fi

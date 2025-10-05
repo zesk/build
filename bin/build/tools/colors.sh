@@ -65,7 +65,7 @@ consoleColorMode() {
 
   export BUILD_COLORS_MODE
 
-  returnCatch "$handler" buildEnvironmentLoad BUILD_COLORS_MODE || return $?
+  catchReturn "$handler" buildEnvironmentLoad BUILD_COLORS_MODE || return $?
 
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
@@ -328,8 +328,8 @@ plasterLines() {
   IFS=$'\n' read -r -d '' curX curY < <(cursorGet) || :
   isUnsignedInteger "$curX" || throwEnvironment "$handler" "cursorGet returned $curX $curY" || return $?
   isUnsignedInteger "$curY" || throwEnvironment "$handler" "cursorGet returned $curX $curY" || return $?
-  rows=$(returnCatch "$handler" consoleRows) || return $?
-  columns=$(returnCatch "$handler" consoleColumns) || return $?
+  rows=$(catchReturn "$handler" consoleRows) || return $?
+  columns=$(catchReturn "$handler" consoleColumns) || return $?
   while IFS="" read -r line; do
     catchEnvironment "$handler" cursorSet 1 "$curY" || return $?
     printf "%s" "$line"
@@ -611,7 +611,7 @@ __colorNormalize() {
 colorNormalize() {
   local handler="_${FUNCNAME[0]}"
 
-  returnCatch "$handler" packageWhich bc bc || return $?
+  catchReturn "$handler" packageWhich bc bc || return $?
   local red green blue
   if [ $# -eq 0 ]; then
     local done=false
@@ -767,7 +767,7 @@ colorMultiply() {
   local factor colors=()
 
   [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
-  returnCatch "$handler" packageWhich bc bc || return $?
+  catchReturn "$handler" packageWhich bc bc || return $?
   factor=$(usageArgumentString "$handler" "factor" "${1-}") && shift || return $?
 
   local red green blue
@@ -927,7 +927,7 @@ colorScheme() {
   __BUILD_TERM_COLORS="$hash"
 
   local mode
-  mode=$(returnCatch "$handler" consoleConfigureColorMode "$bg") || :
+  mode=$(catchReturn "$handler" consoleConfigureColorMode "$bg") || :
   [ -z "$mode" ] || BUILD_COLORS_MODE="$mode" && bashPrompt --skip-prompt --colors "$(bashPromptColorScheme "$mode")"
 
   ! $debug || decorate info "Background is now $bg and mode is $mode ... "

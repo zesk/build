@@ -94,7 +94,7 @@ gitTagDelete() {
   local exitCode=0
   export GIT_REMOTE
 
-  returnCatch "$handler" buildEnvironmentLoad GIT_REMOTE || return $?
+  catchReturn "$handler" buildEnvironmentLoad GIT_REMOTE || return $?
   usageRequireEnvironment "$handler" GIT_REMOTE || return $?
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
@@ -345,7 +345,7 @@ gitTagVersion() {
   local handler="_${FUNCNAME[0]}"
   local maximumTagsPerVersion
 
-  returnCatch "$handler" buildEnvironmentLoad BUILD_MAXIMUM_TAGS_PER_VERSION || return $?
+  catchReturn "$handler" buildEnvironmentLoad BUILD_MAXIMUM_TAGS_PER_VERSION || return $?
 
   maximumTagsPerVersion="$BUILD_MAXIMUM_TAGS_PER_VERSION"
   local init start versionSuffix
@@ -506,7 +506,7 @@ gitCommit() {
   done
 
   if ! isBoolean "$openLinks"; then
-    openLinks=$(returnCatch "$handler" buildEnvironmentGet GIT_OPEN_LINKS) || return $?
+    openLinks=$(catchReturn "$handler" buildEnvironmentGet GIT_OPEN_LINKS) || return $?
   fi
   isBoolean "$openLinks" || openLinks=false
 
@@ -528,7 +528,7 @@ gitCommit() {
   notes="$(releaseNotes)" || throwEnvironment "$handler" "No releaseNotes?" || return $?
   if $updateReleaseNotes && [ -n "$comment" ]; then
     statusMessage decorate info "Updating release notes ..."
-    returnCatch "$handler" __gitCommitReleaseNotesUpdate "$handler" "$notes" "$comment" || return $?
+    catchReturn "$handler" __gitCommitReleaseNotesUpdate "$handler" "$notes" "$comment" || return $?
   elif [ -z "$comment" ]; then
     comment=$(__gitCommitReleaseNotesGetLastComment "$handler" "$notes") || return $?
     [ -z "$comment" ] || printf -- "%s %s:\n%s\n" "$(decorate info "Using last release note line from")" "$(decorate file "$notes")" "$(boxedHeading "$comment")"
@@ -549,7 +549,7 @@ __gitCommitReleaseNotesUpdate() {
   local handler="$1" notes="$2" comment="$3"
   local pattern
 
-  home=$(returnCatch "$handler" buildHome) || return $?
+  home=$(catchReturn "$handler" buildHome) || return $?
   pattern="$(quoteGrepPattern "$comment")"
   catchEnvironment "$handler" statusMessage --last printf -- "%s%s\n" "$(lineFill '.' "$(decorate label "Release notes") $(decorate file "$notes") $(decorate decoration --)")" "$(decorate reset --)" || return $?
   if ! grep -q -e "$pattern" "$notes"; then
@@ -754,7 +754,7 @@ gitInstallHooks() {
   local handler="_${FUNCNAME[0]}"
   local types home
 
-  home=$(returnCatch "$handler" buildHome) || return $?
+  home=$(catchReturn "$handler" buildHome) || return $?
 
   local verbose=false hookNames=()
 
@@ -843,7 +843,7 @@ gitInstallHook() {
       ;;
     *)
       [ "${#types[@]}" -gt 0 ] || read -r -a types < <(gitHookTypes) || :
-      [ -n "$home" ] || home=$(returnCatch "$handler" buildHome) || return $?
+      [ -n "$home" ] || home=$(catchReturn "$handler" buildHome) || return $?
       if inArray "$argument" "${types[@]}"; then
         local fromTo relFromTo item
         hasHook --application "$home" "git-$argument" || throwArgument "$handler" "Hook git-$argument does not exist (Home: $home)" || return $?
@@ -884,7 +884,7 @@ __gitPreCommitCache() {
   local handler="$1" && shift
   local directory create="${1-}" name
   name="pre-commit.$(catchEnvironment "$handler" whoami)" || return $?
-  directory=$(returnCatch "$handler" buildCacheDirectory "$name") || return $?
+  directory=$(catchReturn "$handler" buildCacheDirectory "$name") || return $?
   [ "$create" != "true" ] || [ -d "$directory" ] || catchEnvironment "$handler" mkdir -p "$directory" || return $?
   printf "%s\n" "$directory"
 }
@@ -896,9 +896,9 @@ gitPreCommitSetup() {
 
   local directory total=0
 
-  directory=$(returnCatch "$handler" __gitPreCommitCache "$handler" true) || return $?
+  directory=$(catchReturn "$handler" __gitPreCommitCache "$handler" true) || return $?
   catchEnvironment "$handler" git diff --name-only --cached --diff-filter=ACMR | catchEnvironment "$handler" extensionLists --clean "$directory" || return $?
-  total=$(returnCatch "$handler" fileLineCount "$directory/@") || return $?
+  total=$(catchReturn "$handler" fileLineCount "$directory/@") || return $?
   [ "$total" -ge 0 ]
 }
 _gitPreCommitSetup() {
@@ -913,15 +913,15 @@ gitPreCommitHeader() {
 
   local directory total color
 
-  directory=$(returnCatch "$handler" __gitPreCommitCache "$handler" true) || return $?
+  directory=$(catchReturn "$handler" __gitPreCommitCache "$handler" true) || return $?
   [ -f "$directory/@" ] || throwEnvironment "$handler" "$directory/@ missing" || return $?
-  total=$(returnCatch "$handler" fileLineCount "$directory/@") || return $?
+  total=$(catchReturn "$handler" fileLineCount "$directory/@") || return $?
   statusMessage --last printf -- "%s: %s\n" "$(decorate success "$(alignRight "$width" "all")")" "$(decorate info "$total $(plural "$total" file files) changed")"
   while [ $# -gt 0 ]; do
     total=0
     color="warning"
     if [ -f "$directory/$1" ]; then
-      total=$(returnCatch "$handler" fileLineCount "$directory/$1") || return $?
+      total=$(catchReturn "$handler" fileLineCount "$directory/$1") || return $?
       color="success"
     fi
     # shellcheck disable=SC2015
@@ -938,7 +938,7 @@ _gitPreCommitHeader() {
 gitPreCommitHasExtension() {
   local handler="_${FUNCNAME[0]}"
   local directory
-  directory=$(returnCatch "$handler" __gitPreCommitCache "$handler" true) || return $?
+  directory=$(catchReturn "$handler" __gitPreCommitCache "$handler" true) || return $?
   while [ $# -gt 0 ]; do
     [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
     [ -f "$directory/$1" ] || return 1
@@ -955,7 +955,7 @@ gitPreCommitListExtension() {
   local handler="_${FUNCNAME[0]}"
   [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
   local directory
-  directory=$(returnCatch "$handler" __gitPreCommitCache "$handler" true) || return $?
+  directory=$(catchReturn "$handler" __gitPreCommitCache "$handler" true) || return $?
   while [ $# -gt 0 ]; do
     [ -f "$directory/$1" ] || throwEnvironment "$handler" "No files with extension $1" || return $?
     catchEnvironment "$handler" cat "$directory/$1" || return $?
@@ -972,7 +972,7 @@ gitPreCommitCleanup() {
   local handler="_${FUNCNAME[0]}"
   [ $# -eq 0 ] || __help --only "$handler" "$@" || return "$(convertValue $? 1 0)"
   local directory
-  directory=$(returnCatch "$handler" __gitPreCommitCache "$handler") || return $?
+  directory=$(catchReturn "$handler" __gitPreCommitCache "$handler") || return $?
   [ ! -d "$directory" ] || catchEnvironment "$handler" rm -rf "$directory" || return $?
 }
 _gitPreCommitCleanup() {
@@ -1035,7 +1035,7 @@ gitBranchExistsRemote() {
 
   export GIT_REMOTE
 
-  returnCatch "$handler" buildEnvironmentLoad GIT_REMOTE || return $?
+  catchReturn "$handler" buildEnvironmentLoad GIT_REMOTE || return $?
   [ -n "$GIT_REMOTE" ] || catchEnvironment "$handler" "GIT_REMOTE requires a value" || return $?
 
   [ $# -gt 0 ] || throwArgument "$handler" "Requires at least one branch name" || return $?
@@ -1068,7 +1068,7 @@ gitBranchify() {
   export GIT_BRANCH_FORMAT GIT_REMOTE
 
   usageRequireBinary "$handler" whoami || return $?
-  returnCatch "$handler" buildEnvironmentLoad GIT_BRANCH_FORMAT GIT_REMOTE || return $?
+  catchReturn "$handler" buildEnvironmentLoad GIT_BRANCH_FORMAT GIT_REMOTE || return $?
   [ -n "$GIT_REMOTE" ] || catchEnvironment "$handler" "GIT_REMOTE requires a value" || return $?
 
   version=$(catchEnvironment "$handler" hookVersionCurrent) || return $?

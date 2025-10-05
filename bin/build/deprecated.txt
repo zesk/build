@@ -19,7 +19,8 @@ __catchEnvironment|catchEnvironment
 __throwArgument|throwArgument
 __catchArgument|catchArgument
 __throw|returnThrow|
-__catch|returnCatch|
+returnCatch|catchReturn|
+__catch|catchReturn|
 __catchCode|catchCode|
 __execute|execute
 __echo|executeEcho

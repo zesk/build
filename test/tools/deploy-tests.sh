@@ -122,7 +122,7 @@ _simplePHPRequest() {
   local indexFile
   local indexValue
 
-  indexFile="$(returnCatch "$handler" buildCacheDirectory)/PHP_REQUEST_INDEX" || return $?
+  indexFile="$(catchReturn "$handler" buildCacheDirectory)/PHP_REQUEST_INDEX" || return $?
   indexValue="$([ -f "$indexFile" ] && cat "$indexFile" || printf 0)"
   indexValue=$((indexValue + 1))
   curl -s "http://$PHP_SERVER_HOST:$PHP_SERVER_PORT/index.php?request=$indexValue"
@@ -423,14 +423,14 @@ testDeployApplication() {
   PHP_SERVER_PID=
   unset BUILD_DEBUG
 
-  returnCatch "$handler" rm -rf "$d" || return $?
+  catchReturn "$handler" rm -rf "$d" || return $?
 }
 
 testDeployPackageName() {
   local handler="returnMessage"
   local saveTarget home
 
-  home=$(returnCatch "$handler" buildHome) || return $?
+  home=$(catchReturn "$handler" buildHome) || return $?
 
   saveTarget=${BUILD_TARGET-NONE}
 
@@ -455,7 +455,7 @@ testDeployPackageName() {
   export BUILD_TARGET
 
   # shellcheck source=/dev/null
-  returnCatch "$handler" buildEnvironmentLoad BUILD_TARGET || return $?
+  catchReturn "$handler" buildEnvironmentLoad BUILD_TARGET || return $?
 
   assertEquals "app.tar.gz" "$(deployPackageName)" || return $?
 

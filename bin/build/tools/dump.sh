@@ -135,7 +135,7 @@ dumpPipe() {
 
   if [ -z "$showLines" ]; then
     export BUILD_DEBUG_LINES
-    returnCatch "$handler" buildEnvironmentLoad BUILD_DEBUG_LINES || return $?
+    catchReturn "$handler" buildEnvironmentLoad BUILD_DEBUG_LINES || return $?
     showLines="${BUILD_DEBUG_LINES:-100}"
     isUnsignedInteger "$showLines" || returnEnvironment "BUILD_DEBUG_LINES is not an unsigned integer: $showLines" || showLines=10
   fi

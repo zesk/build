@@ -30,7 +30,7 @@ __githubAPI() {
   fi
 
   local accessToken hh=() details=()
-  accessToken=$(returnCatch "$handler" buildEnvironmentGet GITHUB_ACCESS_TOKEN) || return $?
+  accessToken=$(catchReturn "$handler" buildEnvironmentGet GITHUB_ACCESS_TOKEN) || return $?
   if [ -n "$accessToken" ]; then
     hh+=(-H "Authorization: token $accessToken")
     details+=("$(decorate green Authenticated)")
@@ -251,7 +251,7 @@ githubRelease() {
   #
   # Preflight our environment to make sure we have the basics defined in the calling script
   #
-  returnCatch "$handler" packageWhich curl curl || return $?
+  catchReturn "$handler" packageWhich curl curl || return $?
 
   host=github.com
   catchEnvironment "$handler" sshKnownHostAdd "$host" || return $?

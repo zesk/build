@@ -13,7 +13,7 @@ testEnvironmentAddFile() {
   assertFileDoesNotExist "$home/bin/env/FOOBAR.sh" || return $?
   assertExitCode 0 environmentAddFile FOOBAR || return $?
   assertFileExists "$home/bin/env/FOOBAR.sh" || return $?
-  returnCatch "$handler" rm -f "$home/bin/env/FOOBAR.sh" || return $?
+  catchReturn "$handler" rm -f "$home/bin/env/FOOBAR.sh" || return $?
 }
 
 testDotEnvConfigure() {
@@ -21,16 +21,16 @@ testDotEnvConfigure() {
   export TESTENVWORKS TESTENVLOCALWORKS
 
   magic=$(randomString)
-  tempDir="$(returnCatch "$handler" buildCacheDirectory)/$$.dotEnvConfig" || return $?
+  tempDir="$(catchReturn "$handler" buildCacheDirectory)/$$.dotEnvConfig" || return $?
 
-  returnCatch "$handler" directoryRequire "$tempDir" || return $?
+  catchReturn "$handler" directoryRequire "$tempDir" || return $?
   catchEnvironment "$handler" muzzle pushd "$tempDir" || return $?
   assertNotExitCode --stderr-match "is not file" 0 environmentFileLoad .env --optional .env.local || return $?
 
   tempEnv="$tempDir/.env"
 
   catchEnvironment "$handler" touch "$tempEnv" || return $?
-  returnCatch "$handler" environmentValueWrite TESTENVWORKS "$magic" >>"$tempEnv" || return $?
+  catchReturn "$handler" environmentValueWrite TESTENVWORKS "$magic" >>"$tempEnv" || return $?
 
   assertEquals "" "${TESTENVWORKS-}" || return $?
   assertEquals "" "${TESTENVLOCALWORKS-}" || return $?
@@ -45,8 +45,8 @@ testDotEnvConfigure() {
 
   assertEquals "" "${TESTENVLOCALWORKS-}" || return $?
 
-  returnCatch "$handler" environmentValueWrite TESTENVLOCALWORKS "$magic" >>"$tempEnv" || return $?
-  returnCatch "$handler" environmentValueWrite TESTENVWORKS "NEW-$magic" >>"$tempEnv" || return $?
+  catchReturn "$handler" environmentValueWrite TESTENVLOCALWORKS "$magic" >>"$tempEnv" || return $?
+  catchReturn "$handler" environmentValueWrite TESTENVWORKS "NEW-$magic" >>"$tempEnv" || return $?
   catchEnvironment "$handler" touch "$tempDir/.env.local" || return $?
 
   environmentFileLoad .env --optional .env.local || return $?
@@ -74,7 +74,7 @@ testEnvironmentFileLoad() {
 
   mockEnvironmentStop BUILD_DEBUG
 
-  tempDir="$(returnCatch "$handler" buildCacheDirectory)/$$.${FUNCNAME[0]}" || return $?
+  tempDir="$(catchReturn "$handler" buildCacheDirectory)/$$.${FUNCNAME[0]}" || return $?
 
   catchEnvironment "$handler" mkdir -p "$tempDir" || return $?
   [ -d "$tempDir" ] || returnEnvironment "Creating $tempDir failed" || return $?
@@ -116,7 +116,7 @@ testEnvironmentFileMake() {
   local handler="returnMessage"
 
   local home
-  home=$(returnCatch "$handler" buildHome) || return $?
+  home=$(catchReturn "$handler" buildHome) || return $?
 
   catchEnvironment muzzle pushd "$home" || return $?
   (
@@ -180,12 +180,12 @@ testEnvironmentValueReadWrite() {
   foo=$(fileTemporaryName "$handler") || return $?
 
   __testEnvironmentValueReadWriteData | while read -r testName testValue; do
-    returnCatch "$handler" environmentValueWrite "$testName" "$testValue" >>"$foo" || return $?
-    value=$(returnCatch "$handler" environmentValueRead "$foo" "$testName" "*default*") || return $?
+    catchReturn "$handler" environmentValueWrite "$testName" "$testValue" >>"$foo" || return $?
+    value=$(catchReturn "$handler" environmentValueRead "$foo" "$testName" "*default*") || return $?
     assertEquals "$testValue" "$value" "Read write value changed" || return $?
   done
 
-  returnCatch "$handler" rm "$foo" || return $?
+  catchReturn "$handler" rm "$foo" || return $?
 }
 
 testEnvironmentValueWriteArray() {
@@ -214,15 +214,15 @@ testEnvironmentValueWriteArray() {
     environmentValueWrite "STRING$index" "${testArray[@]}" >>"$envFile"
     environmentValueWriteArray "ARRAY$index" "${testArray[@]}" >>"$envFile"
     # dumpPipe envFile <"$envFile"
-    restoredValue=() && while read -r item; do restoredValue+=("$item"); done < <(returnCatch "$handler" environmentValueReadArray "$envFile" "ARRAY$index" || return $?)
+    restoredValue=() && while read -r item; do restoredValue+=("$item"); done < <(catchReturn "$handler" environmentValueReadArray "$envFile" "ARRAY$index" || return $?)
     assertEquals "${#testArray[*]}" "${#restoredValue[*]}" || return $?
     assertEquals "${testArray[*]}" "${restoredValue[*]}" || return $?
-    restoredValue=() && while read -r item; do restoredValue+=("$item"); done < <(returnCatch "$handler" environmentValueReadArray "$envFile" "STRING$index" || return $?)
+    restoredValue=() && while read -r item; do restoredValue+=("$item"); done < <(catchReturn "$handler" environmentValueReadArray "$envFile" "STRING$index" || return $?)
     assertEquals "${testArray[*]}" "${restoredValue[*]}" || return $?
     index=$((index + 1))
   done
 
-  returnCatch "$handler" rm -f "$envFile" || return $?
+  catchReturn "$handler" rm -f "$envFile" || return $?
 }
 
 __testEnvironmentNameValidPassValues() {
@@ -272,8 +272,8 @@ testEnvironmentValueReadDefault() {
 
   envFile=$(fileTemporaryName "$handler") || return $?
 
-  returnCatch "$handler" environmentValueWrite Greeting Hello >>"$envFile" || return $?
-  returnCatch "$handler" environmentValueWrite Target World >>"$envFile" || return $?
+  catchReturn "$handler" environmentValueWrite Greeting Hello >>"$envFile" || return $?
+  catchReturn "$handler" environmentValueWrite Target World >>"$envFile" || return $?
 
   assertExitCode --stdout-match Hello 0 environmentValueRead "$envFile" Greeting || return $?
 
@@ -303,7 +303,7 @@ testEnvironmentOutput() {
   __HIDE_THIS_STUFF=FAIL
   _HIDE_THIS_STUFF=FAIL
 
-  returnCatch "$handler" environmentOutput >>"$envFile" || return $?
+  catchReturn "$handler" environmentOutput >>"$envFile" || return $?
 
   assertFileContains "$envFile" ZESK_BUILD_ROCKS= || return $?
   assertFileDoesNotContain "$envFile" "FAIL" || return $?
@@ -323,7 +323,7 @@ testEnvironmentApacheCompile() {
   local handler="returnMessage"
   local envFile
 
-  envFile="$(returnCatch "$handler" buildHome)/test/example/apache.env" || return $?
+  envFile="$(catchReturn "$handler" buildHome)/test/example/apache.env" || return $?
 
   local matches
 
@@ -407,7 +407,7 @@ testEnvironmentClean() {
 
   saveEnv=$(fileTemporaryName "$handler") || return $?
 
-  returnCatch "$handler" environmentOutput --underscore --secure >"$saveEnv" || return $?
+  catchReturn "$handler" environmentOutput --underscore --secure >"$saveEnv" || return $?
 
   local item keepers=(A B C DEE EEE FFF GGG) removed=()
 
@@ -456,7 +456,7 @@ testEnvironmentClean() {
   source "$saveEnv"
   set +a
 
-  returnCatch "$handler" rm -f "$saveEnv" || return $?
+  catchReturn "$handler" rm -f "$saveEnv" || return $?
 }
 
 __testEchoEnv() {
@@ -473,12 +473,12 @@ testEnvironmentFileLoadExecute() {
   testEnv=$(fileTemporaryName "$handler") || return $?
   clean+=("$testEnv")
 
-  returnCatch "$handler" environmentValueWrite HELLO World >>"$testEnv" || return $?
+  catchReturn "$handler" environmentValueWrite HELLO World >>"$testEnv" || return $?
 
   export TEST_THING=Transient
   assertEquals "[Transient]" "$(environmentFileLoad "$testEnv" --execute __testEchoEnv TEST_THING)" || return $?
   assertEquals "[World]" "$(environmentFileLoad "$testEnv" --execute __testEchoEnv HELLO)" || return $?
-  returnCatch "$handler" environmentValueWrite TEST_THING Winner >>"$testEnv" || return $?
+  catchReturn "$handler" environmentValueWrite TEST_THING Winner >>"$testEnv" || return $?
   assertEquals "[Winner]" "$(environmentFileLoad "$testEnv" --execute __testEchoEnv TEST_THING)" || return $?
   assertEquals "[World]" "$(environmentFileLoad "$testEnv" --execute __testEchoEnv HELLO)" || return $?
 

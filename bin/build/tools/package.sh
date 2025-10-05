@@ -111,7 +111,7 @@ __packageUpFunction() {
   isFunction "$packageFunction" || throwEnvironment "$handler" "$packageFunction is not a defined function" || return $?
 
   local name
-  name="$(returnCatch "$handler" buildCacheDirectory)/.packageUpdate" || return $?
+  name="$(catchReturn "$handler" buildCacheDirectory)/.packageUpdate" || return $?
 
   if $forceFlag; then
     ! $verboseFlag || statusMessage decorate info "Forcing $manager $verb ..."
@@ -130,7 +130,7 @@ __packageUpFunction() {
 
   if ! $showLog; then
     local quietLog
-    quietLog=$(returnCatch "$handler" buildQuietLog "${handler#_}${suffix}") || return $?
+    quietLog=$(catchReturn "$handler" buildQuietLog "${handler#_}${suffix}") || return $?
     exec 3>&1
     exec 1>"$quietLog"
   fi
@@ -286,7 +286,7 @@ packageWhich() {
     ! whichExists "$binary" || return 0
   fi
   # Install packages
-  returnCatch "$handler" packageInstall "${vv[@]+"${vv[@]}"}" --manager "$manager" --force "${packages[@]}" || return $?
+  catchReturn "$handler" packageInstall "${vv[@]+"${vv[@]}"}" --manager "$manager" --force "${packages[@]}" || return $?
   # Ensure binary now exists, otherwise fail
   whichExists "$binary" || throwEnvironment "$handler" "$manager packages \"${packages[*]}\" did not add $binary to the PATH: ${PATH-}" || return $?
 }
@@ -352,7 +352,7 @@ packageWhichUninstall() {
   if ! whichExists "$binary"; then
     return 0
   fi
-  returnCatch "$handler" packageUninstall "${vv[@]+"${vv[@]}"}" --manager "$manager" "${packages[@]}" || return $?
+  catchReturn "$handler" packageUninstall "${vv[@]+"${vv[@]}"}" --manager "$manager" "${packages[@]}" || return $?
   if foundPath="$(command which "$binary")" && [ -n "$foundPath" ]; then
     throwEnvironment "$handler" "packageUninstall ($manager) \"${packages[*]}\" did not remove $(decorate code "$foundPath") FROM the PATH: $(decorate value "${PATH-}")" || return $?
   fi
@@ -427,10 +427,10 @@ packageInstall() {
 
   __start=$(timingStart) || return $?
   installed="$(fileTemporaryName "$handler")" || return $?
-  returnCatch "$handler" packageUpdate "${vv[@]+"${vv[@]}"}" || return $?
+  catchReturn "$handler" packageUpdate "${vv[@]+"${vv[@]}"}" || return $?
   local __installStart clean=()
   __installStart=$(timingStart) || return $?
-  returnCatch "$handler" packageInstalledList --manager "$manager" >"$installed" || return $?
+  catchReturn "$handler" packageInstalledList --manager "$manager" >"$installed" || return $?
   clean+=("$installed")
   local standardPackages=() actualPackages=() package installFunction
   # Loads BUILD_TEXT_BINARY
@@ -466,7 +466,7 @@ packageInstall() {
 
   if ! $showLog; then
     local quietLog
-    quietLog=$(returnCatch "$handler" buildQuietLog "${FUNCNAME[0]}") || return $?
+    quietLog=$(catchReturn "$handler" buildQuietLog "${FUNCNAME[0]}") || return $?
     exec 3>&1
     exec 1>"$quietLog"
   fi
@@ -508,7 +508,7 @@ packageIsInstalled() {
   [ "${#packages[@]}" -gt 0 ] || throwArgument "$handler" "Requires at least one package" || return $?
   local installed
   installed=$(fileTemporaryName "$handler") || return $?
-  returnCatch "$handler" packageInstalledList >"$installed" || return $?
+  catchReturn "$handler" packageInstalledList >"$installed" || return $?
   local package
   for package in "${packages[@]}"; do
     if ! grep -q -e "^$(quoteGrepPattern "$package")$" "$installed"; then
@@ -566,7 +566,7 @@ packageUninstall() {
   local start quietLog standardPackages=()
 
   start=$(timingStart) || return $?
-  quietLog=$(returnCatch "$handler" buildQuietLog "$handler") || return $?
+  quietLog=$(catchReturn "$handler" buildQuietLog "$handler") || return $?
   IFS=$'\n' read -d '' -r -a standardPackages < <(_packageStandardPackages "$handler" "$manager") || :
   local package
   for package in "${packages[@]}"; do
@@ -635,7 +635,7 @@ packageManagerDefault() {
   local handler="_${FUNCNAME[0]}"
   [ $# -eq 0 ] || __help --only "$handler" "$@" || return "$(convertValue $? 1 0)"
   export BUILD_PACKAGE_MANAGER
-  returnCatch "$handler" buildEnvironmentLoad BUILD_PACKAGE_MANAGER || return $?
+  catchReturn "$handler" buildEnvironmentLoad BUILD_PACKAGE_MANAGER || return $?
   __packageManagerDefault "${BUILD_PACKAGE_MANAGER-}"
 }
 _packageManagerDefault() {
@@ -669,7 +669,7 @@ packageNeedRestartFlag() {
   local handler="_${FUNCNAME[0]}"
   local quietLog restartFile
 
-  restartFile="$(returnCatch "$handler" buildCacheDirectory)/.needRestart" || return $?
+  restartFile="$(catchReturn "$handler" buildCacheDirectory)/.needRestart" || return $?
   if [ $# -eq 0 ]; then
     if [ -f "$restartFile" ]; then
       catchEnvironment "$handler" cat "$restartFile" || return $?
@@ -730,7 +730,7 @@ packageGroupInstall() {
   for group in "${groups[@]}"; do
     local packages=()
     while read -r package; do packages+=("$package"); done < <(packageMapping --manager "$manager" "$group")
-    returnCatch "$handler" packageInstall --manager "$manager" "${packages[@]}" || return $?
+    catchReturn "$handler" packageInstall --manager "$manager" "${packages[@]}" || return $?
   done
 }
 _packageGroupInstall() {
@@ -778,7 +778,7 @@ packageGroupUninstall() {
   for group in "${groups[@]}"; do
     local packages=()
     while read -r package; do packages+=("$package"); done < <(packageMapping --manager "$manager" "$group")
-    returnCatch "$handler" packageUninstall --manager "$manager" "${packages[@]}" || return $?
+    catchReturn "$handler" packageUninstall --manager "$manager" "${packages[@]}" || return $?
   done
 }
 _packageGroupUninstall() {

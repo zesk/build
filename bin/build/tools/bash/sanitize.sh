@@ -12,7 +12,7 @@ __bashSanitize() {
 
   local home checkAssertions=() executor=contextOpen
 
-  home=$(returnCatch "$handler" buildHome) || return $?
+  home=$(catchReturn "$handler" buildHome) || return $?
 
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
@@ -119,7 +119,7 @@ _bashSanitizeCheckCopyright() {
     done <"$file"
   done < <(find . -name ".skip-copyright" -type f ! -path "*/.*/*")
   export BUILD_COMPANY
-  returnCatch "$handler" buildEnvironmentLoad BUILD_COMPANY || return $?
+  catchReturn "$handler" buildEnvironmentLoad BUILD_COMPANY || return $?
 
   year="$(date +%Y)"
   statusMessage decorate warning "Checking $year and $BUILD_COMPANY ..." || :

@@ -120,7 +120,7 @@ __bashPrompt() {
 
   if [ -z "$colorsTextFormatted" ] || $resetFlag; then
     if ! $resetFlag; then
-      returnCatch "$handler" buildEnvironmentLoad BUILD_PROMPT_COLORS || return $?
+      catchReturn "$handler" buildEnvironmentLoad BUILD_PROMPT_COLORS || return $?
       [ -z "${BUILD_PROMPT_COLORS-}" ] || colorsText="$BUILD_PROMPT_COLORS"
     fi
     if $resetFlag || [ -z "$colorsText" ]; then
@@ -234,7 +234,7 @@ __bashPromptAdd() {
     shift
   done
 
-  returnCatch "$handler" __bashPromptModulesSave "${modules[@]}" || return $?
+  catchReturn "$handler" __bashPromptModulesSave "${modules[@]}" || return $?
   return 0
 }
 

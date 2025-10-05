@@ -7,7 +7,7 @@
 # Directory where we store everything
 __backgroundProcessCache() {
   local handler="$1" && shift
-  returnCatch "$handler" buildEnvironmentGetDirectory --subdirectory "${FUNCNAME[0]}" XDG_CACHE_HOME || return $?
+  catchReturn "$handler" buildEnvironmentGetDirectory --subdirectory "${FUNCNAME[0]}" XDG_CACHE_HOME || return $?
 }
 
 # Main API interface to this feature
@@ -59,7 +59,7 @@ __backgroundProcess() {
     shift
   done
   local home
-  home=$(returnCatch "$handler" buildHome) || return $?
+  home=$(catchReturn "$handler" buildHome) || return $?
 
   local cache
   cache=$(__backgroundProcessCache "$handler") || return $?
@@ -121,7 +121,7 @@ __backgroundProcess() {
     return 0
     ;;
   "go")
-    returnCatch "$handler" __bashPromptModule_Background "${vv[@]+"${vv[@]}"}" || return $?
+    catchReturn "$handler" __bashPromptModule_Background "${vv[@]+"${vv[@]}"}" || return $?
     return 0
     ;;
   "summary")
@@ -156,20 +156,20 @@ __backgroundProcess() {
   [ ${#command[@]} -gt 0 ] || throwArgument "$handler" "Requires a command" || return $?
 
   local id
-  id=$(returnCatch "$handler" shaPipe <<<"${condition[*]} ${command[*]}") || return $?
-  returnCatch "$handler" muzzle directoryRequire "$cache/process/$id" || return $?
+  id=$(catchReturn "$handler" shaPipe <<<"${condition[*]} ${command[*]}") || return $?
+  catchReturn "$handler" muzzle directoryRequire "$cache/process/$id" || return $?
   {
-    returnCatch "$handler" environmentValueWrite home "$home" || return $?
-    returnCatch "$handler" environmentValueWriteArray condition "${condition[@]}" || return $?
-    returnCatch "$handler" environmentValueWriteArray command "${command[@]}" || return $?
-    returnCatch "$handler" environmentValueWrite id "$id" || return $?
-    returnCatch "$handler" environmentValueWrite created "$(timingStart)" || return $?
-    returnCatch "$handler" environmentValueWrite stopSeconds "$stopSeconds" || return $?
-    returnCatch "$handler" environmentValueWrite waitSeconds "$waitSeconds" || return $?
-    returnCatch "$handler" environmentValueWrite frequency "$frequency" || return $?
+    catchReturn "$handler" environmentValueWrite home "$home" || return $?
+    catchReturn "$handler" environmentValueWriteArray condition "${condition[@]}" || return $?
+    catchReturn "$handler" environmentValueWriteArray command "${command[@]}" || return $?
+    catchReturn "$handler" environmentValueWrite id "$id" || return $?
+    catchReturn "$handler" environmentValueWrite created "$(timingStart)" || return $?
+    catchReturn "$handler" environmentValueWrite stopSeconds "$stopSeconds" || return $?
+    catchReturn "$handler" environmentValueWrite waitSeconds "$waitSeconds" || return $?
+    catchReturn "$handler" environmentValueWrite frequency "$frequency" || return $?
   } >"$cache/process/$id/state" || return $?
   catchEnvironment "$handler" printf "%s\n" "$(timingStart) created by $(id -u) on $(uname -a)" >"$cache/process/$id/log" || return $?
-  returnCatch "$handler" bashPrompt --skip-prompt --first __bashPromptModule_Background || return $?
+  catchReturn "$handler" bashPrompt --skip-prompt --first __bashPromptModule_Background || return $?
   ! $verboseFlag || statusMessage --last decorate info "Registered background process $(decorate each code "${command[*]}") $(decorate code "[${id:0:6}]") "
 }
 
@@ -316,17 +316,17 @@ __backgroundProcessManager() {
   local stopSeconds frequency waitSeconds=0 waitCheck=0 waitStop=0 now id
 
   now=$(timingStart)
-  id=$(returnCatch "$handler" environmentValueRead "$stateFile" "id") || return $?
-  home=$(returnCatch "$handler" environmentValueRead "$stateFile" "home") || return $?
-  frequency=$(returnCatch "$handler" environmentValueRead "$stateFile" "frequency") || return $?
-  stopSeconds=$(returnCatch "$handler" environmentValueRead "$stateFile" "stopSeconds") || return $?
-  waitSeconds=$(returnCatch "$handler" environmentValueRead "$stateFile" "waitSeconds") || return $?
+  id=$(catchReturn "$handler" environmentValueRead "$stateFile" "id") || return $?
+  home=$(catchReturn "$handler" environmentValueRead "$stateFile" "home") || return $?
+  frequency=$(catchReturn "$handler" environmentValueRead "$stateFile" "frequency") || return $?
+  stopSeconds=$(catchReturn "$handler" environmentValueRead "$stateFile" "stopSeconds") || return $?
+  waitSeconds=$(catchReturn "$handler" environmentValueRead "$stateFile" "waitSeconds") || return $?
   [ ! -f "$d/waitCheck" ] || waitCheck="$(cat "$d/waitCheck")"
   [ ! -f "$d/waitStop" ] || waitStop="$(cat "$d/waitStop")"
 
   local condition=() command=()
-  while read -r item; do condition+=("$item"); done < <(returnCatch "$handler" environmentValueReadArray "$stateFile" "condition") || return $?
-  while read -r item; do command+=("$item"); done < <(returnCatch "$handler" environmentValueReadArray "$stateFile" "command") || return $?
+  while read -r item; do condition+=("$item"); done < <(catchReturn "$handler" environmentValueReadArray "$stateFile" "condition") || return $?
+  while read -r item; do command+=("$item"); done < <(catchReturn "$handler" environmentValueReadArray "$stateFile" "command") || return $?
 
   local shouldRun=false showId
 
@@ -405,18 +405,18 @@ __backgroundProcessKill() {
 
   [ ! -f "$d/pid" ] || pid=$(catchEnvironment "$handler" cat "$d/pid") || return $?
   local id
-  id=$(returnCatch "$handler" environmentValueRead "$stateFile" "id") || return $?
+  id=$(catchReturn "$handler" environmentValueRead "$stateFile" "id") || return $?
   local command=()
-  while read -r item; do command+=("$item"); done < <(returnCatch "$handler" environmentValueReadArray "$stateFile" "command") || return $?
+  while read -r item; do command+=("$item"); done < <(catchReturn "$handler" environmentValueReadArray "$stateFile" "command") || return $?
 
   id=$(decorate label "${id:0:6}")
   if [ -n "$pid" ]; then
-    returnCatch "$handler" kill -TERM "$pid" 2>>"$d/process-errors" || :
+    catchReturn "$handler" kill -TERM "$pid" 2>>"$d/process-errors" || :
     ! $verboseFlag || statusMessage decorate info "Removed process $id (PID $pid) $(decorate each code "${command[@]}")"
   else
     ! $verboseFlag || statusMessage decorate info "Removed process $id $(decorate each code "${command[@]}")"
   fi
-  returnCatch "$handler" rm -rf "$d" || return $?
+  catchReturn "$handler" rm -rf "$d" || return $?
 }
 
 __backgroundProcessExitWrapper() {
@@ -493,16 +493,16 @@ __backgroundProcessReport() {
 
   local pid="" now id frequency stopSeconds waitSeconds waitCheck="" waitStop=""
 
-  id=$(returnCatch "$handler" environmentValueRead "$stateFile" "id") || return $?
-  frequency=$(returnCatch "$handler" environmentValueRead "$stateFile" "frequency") || return $?
-  stopSeconds=$(returnCatch "$handler" environmentValueRead "$stateFile" "stopSeconds") || return $?
-  waitSeconds=$(returnCatch "$handler" environmentValueRead "$stateFile" "waitSeconds") || return $?
+  id=$(catchReturn "$handler" environmentValueRead "$stateFile" "id") || return $?
+  frequency=$(catchReturn "$handler" environmentValueRead "$stateFile" "frequency") || return $?
+  stopSeconds=$(catchReturn "$handler" environmentValueRead "$stateFile" "stopSeconds") || return $?
+  waitSeconds=$(catchReturn "$handler" environmentValueRead "$stateFile" "waitSeconds") || return $?
   [ ! -f "$d/waitCheck" ] || waitCheck="$(cat "$d/waitCheck")"
   [ ! -f "$d/waitStop" ] || waitStop="$(cat "$d/waitStop")"
 
   local condition=() command=()
-  while read -r item; do condition+=("$item"); done < <(returnCatch "$handler" environmentValueReadArray "$stateFile" "condition") || return $?
-  while read -r item; do command+=("$item"); done < <(returnCatch "$handler" environmentValueReadArray "$stateFile" "command") || return $?
+  while read -r item; do condition+=("$item"); done < <(catchReturn "$handler" environmentValueReadArray "$stateFile" "condition") || return $?
+  while read -r item; do command+=("$item"); done < <(catchReturn "$handler" environmentValueReadArray "$stateFile" "command") || return $?
 
   [ ! -f "$d/pid" ] || pid="$(cat "$d/pid")"
   lineFill "=" "$(decorate success "Process: $(decorate each code "${command[@]}") ")"
@@ -565,10 +565,10 @@ __backgroundProcessSummary() {
   local stateFile="$d/state"
 
   local id home
-  id=$(returnCatch "$handler" environmentValueRead "$stateFile" "id") || return $?
-  home=$(returnCatch "$handler" environmentValueRead "$stateFile" "home") || return $?
+  id=$(catchReturn "$handler" environmentValueRead "$stateFile" "id") || return $?
+  home=$(catchReturn "$handler" environmentValueRead "$stateFile" "home") || return $?
   local command=()
-  while read -r item; do command+=("$item"); done < <(returnCatch "$handler" environmentValueReadArray "$stateFile" "command") || return $?
+  while read -r item; do command+=("$item"); done < <(catchReturn "$handler" environmentValueReadArray "$stateFile" "command") || return $?
 
   local pid=""
   [ ! -f "$d/pid" ] || pid="$(cat "$d/pid")"

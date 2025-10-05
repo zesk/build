@@ -19,7 +19,7 @@ testCoverageBasics() {
 
   assertFileExists "$tempCoverage" || return $?
 
-  returnCatch "$handler" rm -f "$tempCoverage" || return $?
+  catchReturn "$handler" rm -f "$tempCoverage" || return $?
 }
 
 #
@@ -27,7 +27,7 @@ testCoverageNeedToUpdate() {
   local handler="returnMessage"
   local home
 
-  home=$(returnCatch "$handler" buildHome) || return $?
+  home=$(catchReturn "$handler" buildHome) || return $?
   # THIS FAILS - INFINITE LOOP
   # assertExitCode --dump --stdout-match "Target is" --stdout-match "Coverage completed" 0 bashCoverage "$home/bin/build/tools.sh" isInteger 2 || return $?
   assertEquals "$home" "$home" || return $?
@@ -52,7 +52,7 @@ testSlowTagsWorkCorrectly() {
   local handler="returnMessage"
 
   local home
-  home=$(returnCatch "$handler" buildHome) || return $?
+  home=$(catchReturn "$handler" buildHome) || return $?
 
   local ee=("PATH=$PATH" "HOME=$HOME")
   assertExitCode --stdout-match "testBuildFunctionsCoverage" --stdout-match "${FUNCNAME[0]}" 0 /usr/bin/env -i "${ee[@]}" "$home/bin/test.sh" --tag slow --list || return $?
@@ -64,7 +64,7 @@ testBuildFunctionsCoverage() {
   local handler="returnMessage"
 
   local home
-  home=$(returnCatch "$handler" buildHome) || return $?
+  home=$(catchReturn "$handler" buildHome) || return $?
 
   local deprecatedFunctions allTestFiles clean=()
   deprecatedFunctions=$(fileTemporaryName "$handler") || return $?
@@ -97,7 +97,7 @@ testBuildFunctionsCoverage() {
       # grep returns 1 when nothing matches
 
       matchingTests=$(xargs -0 grep -l -e "$pattern" <"$allTestFiles" 2>/dev/null || mapReturn $? 1 0 123 0 | trimBoth) || return $?
-      [ -z "$matchingTests" ] || foundCount=$(returnCatch "$handler" fileLineCount <<<"$matchingTests") || return $?
+      [ -z "$matchingTests" ] || foundCount=$(catchReturn "$handler" fileLineCount <<<"$matchingTests") || return $?
       # statusMessage decorate error "Matches $foundCount: $matchingTests"
 
       if [ "$foundCount" -eq 0 ]; then
@@ -154,7 +154,7 @@ testBuildFunctionsHelpCoverage() {
   local handler="returnMessage"
 
   local home
-  home=$(returnCatch "$handler" buildHome) || return $?
+  home=$(catchReturn "$handler" buildHome) || return $?
 
   local deprecatedFunctions clean=()
   deprecatedFunctions=$(fileTemporaryName "$handler") || return $?
@@ -223,7 +223,7 @@ testBuildFunctionsHelpCoverage() {
 
   local lastPassedCache lastPassed="" stopAfter=1000000
 
-  lastPassedCache="$(returnCatch "$handler" buildCacheDirectory)/.${FUNCNAME[0]}.lastPassed" || return $?
+  lastPassedCache="$(catchReturn "$handler" buildCacheDirectory)/.${FUNCNAME[0]}.lastPassed" || return $?
 
   [ ! -f "$lastPassedCache" ] || lastPassed=""$(head -n 1 "$lastPassedCache")
   local missingFile stopped=false

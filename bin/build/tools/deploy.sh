@@ -110,7 +110,7 @@ deployPackageName() {
   [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
 
   export BUILD_TARGET
-  returnCatch "$handler" buildEnvironmentLoad BUILD_TARGET || return $?
+  catchReturn "$handler" buildEnvironmentLoad BUILD_TARGET || return $?
   [ -n "${BUILD_TARGET-}" ] || throwEnvironment "$handler" "BUILD_TARGET is blank" || return $?
   printf "%s\n" "${BUILD_TARGET-}"
 }

@@ -36,14 +36,14 @@ __hookApplicationTag() {
     esac
     shift
   done
-  home=$(returnCatch "$handler" buildHome) || return $?
+  home=$(catchReturn "$handler" buildHome) || return $?
 
   if ! home="$(gitFindHome "$home" 2>/dev/null)" || [ -z "$home" ]; then
     printf "%s\n" "$(date +%F)"
     return 0
   fi
   catchEnvironment "$handler" muzzle pushd "$home" || return $?
-  returnCatch "$handler" gitEnsureSafeDirectory "$home" || return $?
+  catchReturn "$handler" gitEnsureSafeDirectory "$home" || return $?
   if ! git for-each-ref --format '%(refname:short)' refs/tags/ | grep -E '^v[0-9\.]+$' | versionSort -r | head -n 1 2>/dev/null; then
     printf %s "v0.0.1"
   fi

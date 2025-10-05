@@ -26,10 +26,10 @@ daemontoolsInstall() {
       packages+=(daemontools-run)
     fi
   fi
-  returnCatch "$handler" packageInstall "${packages[@]}" || return $?
+  catchReturn "$handler" packageInstall "${packages[@]}" || return $?
   if insideDocker; then
     decorate warning "daemontools run in background - not production" 1>&2
-    returnCatch "$handler" daemontoolsExecute || return $?
+    catchReturn "$handler" daemontoolsExecute || return $?
   fi
 }
 _daemontoolsInstall() {
@@ -118,9 +118,9 @@ daemontoolsInstallService() {
   done
 
   local here
-  here="$(returnCatch "$handler" buildHome)/bin/build/tools" || return $?
+  here="$(catchReturn "$handler" buildHome)/bin/build/tools" || return $?
 
-  returnCatch "$handler" buildEnvironmentLoad DAEMONTOOLS_HOME || return $?
+  catchReturn "$handler" buildEnvironmentLoad DAEMONTOOLS_HOME || return $?
 
   [ -n "$serviceHome" ] || serviceHome=${DAEMONTOOLS_HOME-}
   [ -d "$serviceHome" ] || throwEnvironment "$handler" "daemontools home \"$serviceHome\" is not a directory" || return $?
@@ -131,7 +131,7 @@ daemontoolsInstallService() {
     serviceName="${serviceName%%.*}"
   fi
   local appUser
-  appUser=$(returnCatch "$handler" fileOwner "$serviceFile") || return $?
+  appUser=$(catchReturn "$handler" fileOwner "$serviceFile") || return $?
   [ -n "$appUser" ] || throwEnvironment "$handler" "fileOwner $serviceFile returned blank" || return $?
 
   local binaryPath
@@ -163,7 +163,7 @@ _daemontoolsInstallService() {
 _daemontoolsInstallServiceRun() {
   local handler="$1" source="$2" target="$3" args
   shift 3 || throwArgument "$handler" "Missing arguments" || return $?
-  returnCatch "$handler" muzzle directoryRequire "$target" || return $?
+  catchReturn "$handler" muzzle directoryRequire "$target" || return $?
   args=(--map "$source" "$target/run")
   if fileCopyWouldChange "${args[@]}"; then
     catchEnvironment "$handler" fileCopy "$@" "${args[@]}" || return $?
@@ -225,7 +225,7 @@ daemontoolsRemoveService() {
   done
 
   if [ -z "$serviceHome" ]; then
-    returnCatch "$handler" buildEnvironmentLoad DAEMONTOOLS_HOME || return $?
+    catchReturn "$handler" buildEnvironmentLoad DAEMONTOOLS_HOME || return $?
     serviceHome="${DAEMONTOOLS_HOME}"
   fi
   [ -d "$serviceHome" ] || throwEnvironment "$handler" "daemontools home \"$serviceHome\" is not a directory" || return $?
@@ -269,7 +269,7 @@ _daemontoolsIsRunning() {
 daemontoolsHome() {
   local handler="_${FUNCNAME[0]}"
   [ $# -eq 0 ] || __help --only "$handler" "$@" || return "$(convertValue $? 1 0)"
-  returnCatch "$handler" buildEnvironmentGet DAEMONTOOLS_HOME || return $?
+  catchReturn "$handler" buildEnvironmentGet DAEMONTOOLS_HOME || return $?
 }
 _daemontoolsHome() {
   # __IDENTICAL__ usageDocument 1
@@ -288,10 +288,10 @@ daemontoolsExecute() {
   [ "$(id -u 2>/dev/null)" = "0" ] || throwEnvironment "$handler" "Must be root" || return $?
 
   local home
-  home="$(returnCatch "$handler" daemontoolsHome)" || return $?
+  home="$(catchReturn "$handler" daemontoolsHome)" || return $?
 
   usageRequireBinary "$handler" svscanboot id svc svstat || return $?
-  returnCatch "$handler" muzzle directoryRequire --mode 0775 --owner root:root "$home" || return $?
+  catchReturn "$handler" muzzle directoryRequire --mode 0775 --owner root:root "$home" || return $?
   catchEnvironment "$handler" muzzle nohup bash -c 'svscanboot &' 2>&1 || return $?
 }
 _daemontoolsExecute() {
@@ -537,7 +537,7 @@ daemontoolsManager() {
     shift
   done
 
-  returnCatch "$handler" buildEnvironmentLoad DAEMONTOOLS_HOME || return $?
+  catchReturn "$handler" buildEnvironmentLoad DAEMONTOOLS_HOME || return $?
 
   usageRequireBinary "$handler" svc svstat || return $?
 

@@ -271,7 +271,7 @@ deployRemoteFinish() {
     fi
   done
 
-  [ -n "$targetPackage" ] || targetPackage="$(returnCatch "$handler" deployPackageName)" || return $?
+  [ -n "$targetPackage" ] || targetPackage="$(catchReturn "$handler" deployPackageName)" || return $?
 
   if buildDebugStart deployment; then
     debuggingFlag=true
@@ -373,7 +373,7 @@ _deployRevertApplication() {
     esac
     shift || :
   done
-  [ -n "$targetPackage" ] || targetPackage="$(returnCatch "$handler" deployPackageName)" || return $?
+  [ -n "$targetPackage" ] || targetPackage="$(catchReturn "$handler" deployPackageName)" || return $?
 
   local name
 
@@ -484,7 +484,7 @@ deployToRemote() {
   local handler="_${FUNCNAME[0]}"
   local initTime
 
-  returnCatch "$handler" buildEnvironmentLoad HOME BUILD_DEBUG || return $?
+  catchReturn "$handler" buildEnvironmentLoad HOME BUILD_DEBUG || return $?
 
   initTime=$(timingStart)
 
@@ -596,7 +596,7 @@ deployToRemote() {
   [ -n "$applicationPath" ] || throwArgument "$handler" "missing applicationPath" || return $?
 
   if [ -z "$buildTarget" ]; then
-    buildTarget=$(returnCatch "$handler" deployPackageName) || return $?
+    buildTarget=$(catchReturn "$handler" deployPackageName) || return $?
   fi
   if [ 0 -eq ${#userHosts[@]} ]; then
     throwArgument "$handler" "No user hosts provided" || return $?
@@ -700,7 +700,7 @@ deployToRemote() {
     return 0
   fi
 
-  returnCatch "$handler" __deployCommandsFile "$deployHome/$applicationId/app" "$deployArg" "${commonArguments[@]}" >"$temporaryCommandsFile" || return $?
+  catchReturn "$handler" __deployCommandsFile "$deployHome/$applicationId/app" "$deployArg" "${commonArguments[@]}" >"$temporaryCommandsFile" || return $?
   if $showCommands; then
     catchEnvironment "$handler" cat "$temporaryCommandsFile" || return $?
     rm -rf "$temporaryCommandsFile" || :

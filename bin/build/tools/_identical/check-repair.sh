@@ -34,11 +34,11 @@ __identicalCheckRepair() {
     statusMessage decorate info "Checking path $checkPath ..."
     if [ "${fileA#"$checkPath"}" != "$fileA" ]; then
       statusMessage decorate info Repairing "$fileB" with "$fileA"
-      returnCatch "$handler" identicalRepair --prefix "$prefix" --token "$token" "$fileA" "$fileB" || return $?
+      catchReturn "$handler" identicalRepair --prefix "$prefix" --token "$token" "$fileA" "$fileB" || return $?
       return $?
     elif [ "${fileB#"$checkPath"}" != "$fileB" ]; then
       statusMessage decorate info Repairing "$fileA" with "$fileB"
-      returnCatch "$handler" identicalRepair --prefix "$prefix" --token "$token" "$fileB" "$fileA" || return $?
+      catchReturn "$handler" identicalRepair --prefix "$prefix" --token "$token" "$fileB" "$fileA" || return $?
       return $?
     fi
     shift

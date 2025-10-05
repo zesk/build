@@ -12,7 +12,7 @@ hostnameFull() {
   local handler="_${FUNCNAME[0]}"
 
   [ $# -eq 0 ] || __help --only "$handler" "$@" || return "$(convertValue $? 1 0)"
-  returnCatch "$handler" __hostname || return $?
+  catchReturn "$handler" __hostname || return $?
 }
 _hostnameFull() {
   # __IDENTICAL__ usageDocument 1

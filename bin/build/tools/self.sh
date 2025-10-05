@@ -42,7 +42,7 @@ installInstallBuild() {
   local home
   local binName="install-bin-build.sh"
 
-  home=$(returnCatch "$handler" buildHome) || return $?
+  home=$(catchReturn "$handler" buildHome) || return $?
   installInstallBinary --handler "$handler" "$@" --bin "$binName" --source "$home/bin/build/$binName" --url-function __installInstallBuildRemote --post __installInstallBinaryLegacy
 }
 _installInstallBuild() {
@@ -58,7 +58,7 @@ buildFunctions() {
   local handler="_${FUNCNAME[0]}"
   [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
   local home
-  home=$(returnCatch "$handler" buildHome) || return $?
+  home=$(catchReturn "$handler" buildHome) || return $?
   "$home/bin/build/tools.sh" declare -F | cut -d ' ' -f 3 | grep -v -e '^_'
 }
 _buildFunctions() {
@@ -80,7 +80,7 @@ buildCacheDirectory() {
   [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
   local suffix
   suffix="$(printf "%s/" ".build" "$@")"
-  returnCatch "$handler" buildEnvironmentGetDirectory --subdirectory "$suffix" XDG_CACHE_HOME || return $?
+  catchReturn "$handler" buildEnvironmentGetDirectory --subdirectory "$suffix" XDG_CACHE_HOME || return $?
 }
 _buildCacheDirectory() {
   # __IDENTICAL__ usageDocument 1
@@ -120,7 +120,7 @@ _buildEnvironmentPath() {
   export BUILD_ENVIRONMENT_DIRS BUILD_HOME
   home="${BUILD_HOME-}"
   if [ -z "$home" ]; then
-    home=$(returnCatch "$handler" buildHome) || return $?
+    home=$(catchReturn "$handler" buildHome) || return $?
   fi
   # shellcheck source=/dev/null
   source "$home/bin/build/env/BUILD_ENVIRONMENT_DIRS.sh" || throwEnvironment "$handler" "BUILD_ENVIRONMENT_DIRS.sh fail" || return $?
@@ -148,7 +148,7 @@ _buildEnvironmentPath() {
 buildEnvironmentLoad() {
   local handler="_${FUNCNAME[0]}" applicationHome printFlag=false
 
-  applicationHome=$(returnCatch "$handler" buildHome) || return $?
+  applicationHome=$(catchReturn "$handler" buildHome) || return $?
 
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
@@ -242,7 +242,7 @@ Build() {
 
   local home code=0
   if ! home=$(bashLibraryHome "$run" "$startDirectory" 2>/dev/null); then
-    home=$(returnCatch "$handler" buildHome) || return $?
+    home=$(catchReturn "$handler" buildHome) || return $?
     ! $verboseFlag || statusMessage decorate info "Running $(decorate file "$home/$run")" "$(decorate each code "$@")"
     "$home/$run" "$@" || code=$?
   else
@@ -286,7 +286,7 @@ buildEnvironmentGet() {
     --handler) shift && handler=$(usageArgumentFunction "$handler" "$argument" "${1-}") || return $? ;;
     --application) shift && ll+=("$argument" "${1-}") ;;
     *)
-      returnCatch "$handler" buildEnvironmentLoad "${ll[@]+"${ll[@]}"}" "$argument" || return $?
+      catchReturn "$handler" buildEnvironmentLoad "${ll[@]+"${ll[@]}"}" "$argument" || return $?
       printf "%s\n" "${!argument-}"
       ;;
     esac
@@ -347,10 +347,10 @@ buildEnvironmentGetDirectory() {
       ;;
     *)
       local path
-      path=$(returnCatch "$handler" buildEnvironmentGet "$argument" 2>/dev/null) || return $?
+      path=$(catchReturn "$handler" buildEnvironmentGet "$argument" 2>/dev/null) || return $?
       [ -z "$subdirectory" ] || subdirectory="${subdirectory#/}"
       subdirectory="${path%/}/$subdirectory"
-      ! $createFlag || path=$(returnCatch "$handler" directoryRequire "${rr[@]+"${rr[@]}"}" "$subdirectory") || return $?
+      ! $createFlag || path=$(catchReturn "$handler" directoryRequire "${rr[@]+"${rr[@]}"}" "$subdirectory") || return $?
       ! $existsFlag || [ -d "$subdirectory" ] || throwEnvironment "$handler" "$argument -> $subdirectory does not exist" || return $?
       printf "%s\n" "${subdirectory%/}"
       ;;
@@ -390,8 +390,8 @@ buildQuietLog() {
       ;;
     *)
       local logFile
-      logFile="$(returnCatch "$handler" buildCacheDirectory)/${1#_}.log" || return $?
-      ! "$flagMake" || logFile=$(returnCatch "$handler" fileDirectoryRequire "$logFile") || return $?
+      logFile="$(catchReturn "$handler" buildCacheDirectory)/${1#_}.log" || return $?
+      ! "$flagMake" || logFile=$(catchReturn "$handler" fileDirectoryRequire "$logFile") || return $?
       printf -- "%s\n" "$logFile"
       return 0
       ;;
@@ -419,7 +419,7 @@ buildEnvironmentContext() {
   start="$(usageArgumentDirectory "$handler" "contextStart" "${1-}")" && shift || return $?
 
   local codeHome home binTools="bin/build/tools.sh"
-  codeHome=$(returnCatch "$handler" buildHome) || return $?
+  codeHome=$(catchReturn "$handler" buildHome) || return $?
   home=$(catchEnvironment "$handler" bashLibraryHome "$binTools" "$start") || return $?
 
   if [ "$codeHome" != "$home" ]; then

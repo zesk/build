@@ -70,7 +70,7 @@ __aptKeyAdd() {
   whichExists --any curl wget || installs+=("curl")
   if [ ${#installs[@]} -gt 0 ]; then
     if $installFlag; then
-      returnCatch "$handler" packageInstall "${installs[@]}" || return $?
+      catchReturn "$handler" packageInstall "${installs[@]}" || return $?
     else
       throwEnvironment "$handler" "Unable to install packages: $(decorate each "${installs[@]}")" || return $?
     fi
@@ -82,7 +82,7 @@ __aptKeyAdd() {
   [ "${#remoteUrls[@]}" -gt 0 ] || throwArgument "$handler" "Need at least one --url" || return $?
   [ "${#names[@]}" -eq "${#remoteUrls[@]}" ] || throwArgument "$handler" "Mismatched --name and --url pairs: ${#names[@]} != ${#remoteUrls[@]}" || return $?
 
-  returnCatch "$handler" packageWhich lsb_release lsb-release || return $?
+  catchReturn "$handler" packageWhich lsb_release lsb-release || return $?
 
   [ -n "$releaseName" ] || releaseName="$(catchEnvironment "$handler" lsb_release -cs)" || return $?
 
@@ -98,7 +98,7 @@ __aptKeyAdd() {
     statusMessage decorate info "Fetching $title key ... "
     keyFile="$ring/$name.gpg"
     # curl used  -fsSL as options:
-    returnCatch "$handler" urlFetch "$url" | gpg --no-tty --batch --dearmor | tee "$keyFile" >/dev/null || return $?
+    catchReturn "$handler" urlFetch "$url" | gpg --no-tty --batch --dearmor | tee "$keyFile" >/dev/null || return $?
     catchEnvironment "$handler" chmod a+r "$keyFile" || return $?
     signFiles+=("$keyFile")
     index=$((index + 1))
@@ -119,7 +119,7 @@ __aptKeyAdd() {
   catchEnvironment "$handler" chmod a+r "$listTarget" || return $?
   if ! $skipUpdate; then
     statusMessage --first decorate success "updating ... "
-    returnCatch "$handler" packageUpdate --force || return $?
+    catchReturn "$handler" packageUpdate --force || return $?
   else
     statusMessage --first decorate success "skipped ... "
   fi
@@ -174,7 +174,7 @@ __aptKeyRemove() {
   done
   if ! $skipUpdate; then
     ! $verboseFlag || statusMessage decorate success "Updating apt sources ... "
-    returnCatch "$handler" packageUpdate --force || return $?
+    catchReturn "$handler" packageUpdate --force || return $?
   else
     ! $verboseFlag || statusMessage decorate success "Skipped update ... "
   fi
@@ -194,7 +194,7 @@ _usageAptSourcesPath() {
 _usageAptKeyRings() {
   local handler="$1" ring
   # In case this changes later and may fail
-  ring=$(returnCatch "$handler" aptKeyRingDirectory) || return $?
+  ring=$(catchReturn "$handler" aptKeyRingDirectory) || return $?
   if ! [ -d "$ring" ]; then
     catchEnvironment "$handler" mkdir -p "$ring" || return $?
     catchEnvironment "$handler" chmod 0755 "$ring" || return $?

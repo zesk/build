@@ -42,21 +42,21 @@ fingerprint() {
     shift
   done
 
-  [ -n "$prefix" ] || prefix=$(returnCatch "$handler" buildEnvironmentGet APPLICATION_JSON_PREFIX) || return $?
+  [ -n "$prefix" ] || prefix=$(catchReturn "$handler" buildEnvironmentGet APPLICATION_JSON_PREFIX) || return $?
   [ -n "$key" ] || key="fingerprint"
 
   local jqPath
-  jqPath=$(returnCatch "$handler" jsonPath "$prefix" "$key") || return $?
+  jqPath=$(catchReturn "$handler" jsonPath "$prefix" "$key") || return $?
 
   local home
-  home=$(returnCatch "$handler" buildHome) || return $?
-  jsonFile="$home/$(returnCatch "$handler" buildEnvironmentGet APPLICATION_JSON)" || return $?
+  home=$(catchReturn "$handler" buildHome) || return $?
+  jsonFile="$home/$(catchReturn "$handler" buildEnvironmentGet APPLICATION_JSON)" || return $?
 
   [ -f "$jsonFile" ] || throwEnvironment "$handler" "Missing $(decorate file "$jsonFile")" || return $?
 
   local savedFingerprint fingerprint
-  savedFingerprint="$(returnCatch "$handler" jsonFileGet "$jsonFile" "$jqPath")" || return $?
-  fingerprint=$(returnCatch "$handler" hookRun application-fingerprint) || return $?
+  savedFingerprint="$(catchReturn "$handler" jsonFileGet "$jsonFile" "$jqPath")" || return $?
+  fingerprint=$(catchReturn "$handler" hookRun application-fingerprint) || return $?
   if [ "$fingerprint" = "$savedFingerprint" ]; then
     if $checkFlag; then
       printf -- "%s\n" "$fingerprint"

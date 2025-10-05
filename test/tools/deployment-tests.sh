@@ -14,16 +14,16 @@ __prepareSampleApplicationDeployment() {
 
   export BUILD_HOME
 
-  returnCatch "$handler" buildEnvironmentLoad BUILD_HOME || return $?
+  catchReturn "$handler" buildEnvironmentLoad BUILD_HOME || return $?
 
   local tempPath
   tempPath=$(fileTemporaryName "$handler" -d) || return $?
-  returnCatch "$handler" directoryRequire "$target/app" || return $?
+  catchReturn "$handler" directoryRequire "$target/app" || return $?
   local appRoot=$tempPath/simple-php
   catchEnvironment "$handler" cp -r "$BUILD_HOME/test/example/simple-php" "$appRoot" || return $?
-  returnCatch "$handler" directoryRequire "$appRoot/.deploy" || return $?
+  catchReturn "$handler" directoryRequire "$appRoot/.deploy" || return $?
   printf "%s\n" "$id" >"$appRoot/.deploy/APPLICATION_ID" || return $?
-  returnCatch "$handler" directoryChange "$appRoot" tarCreate "$target/app.tar.gz" .webApplication bin docs public src simple.application.php .env .deploy || return $?
+  catchReturn "$handler" directoryChange "$appRoot" tarCreate "$target/app.tar.gz" .webApplication bin docs public src simple.application.php .env .deploy || return $?
   catchEnvironment "$handler" rm -rf "$tempPath" || return $?
 
   # Mock deployment
@@ -40,7 +40,7 @@ testDeployRemoteFinish() {
   exec 2>&1
   export BUILD_HOME
 
-  returnCatch "$handler" buildEnvironmentLoad BUILD_HOME || return $?
+  catchReturn "$handler" buildEnvironmentLoad BUILD_HOME || return $?
 
   id=abcdef
   tempDirectory=$(fileTemporaryName "$handler" -d) || return $?

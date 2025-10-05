@@ -14,7 +14,7 @@ timing() {
   local start exitCode=0
   start=$(timingStart)
   isCallable "${1-}" || throwArgument "$handler" "${1-} must be callable" || return $?
-  returnCatch "$handler" "$@" || exitCode="$?"
+  catchReturn "$handler" "$@" || exitCode="$?"
   timingReport "$start" "$@"
   [ $exitCode = 0 ] || returnMessage "$exitCode" "$@" || return $?
 }

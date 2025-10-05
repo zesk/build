@@ -57,7 +57,7 @@ __notify() {
   [ -n "$message" ] || message="$binary"
 
   local home
-  home=$(returnCatch "$handler" buildHome) || return $?
+  home=$(catchReturn "$handler" buildHome) || return $?
   ! $verboseFlag || statusMessage --last decorate info "Running $(decorate each code "$binary" "$@") ... [$(decorate magenta "$message")]" || return $?
   local start tempOut tempErr dialog
   start=$(timingStart)

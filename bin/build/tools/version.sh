@@ -86,8 +86,8 @@ releaseNotes() {
     esac
     shift
   done
-  [ -n "$home" ] || home="$(returnCatch "$handler" buildHome)" || return $?
-  returnCatch "$handler" buildEnvironmentContext "$home" __releaseNotes "$handler" "$version" || return $?
+  [ -n "$home" ] || home="$(catchReturn "$handler" buildHome)" || return $?
+  catchReturn "$handler" buildEnvironmentContext "$home" __releaseNotes "$handler" "$version" || return $?
 }
 _releaseNotes() {
   # __IDENTICAL__ usageDocument 1
@@ -99,16 +99,16 @@ __releaseNotes() {
 
   set -eou pipefail
   local home
-  home=$(returnCatch "$handler" buildHome) || return $?
+  home=$(catchReturn "$handler" buildHome) || return $?
   if [ -z "$version" ]; then
     version=$(catchEnvironment "$handler" hookRun --application "$home" version-current) || return $?
     [ -n "$version" ] || throwEnvironment "$handler" "version-current hook returned blank" || return $?
   fi
   local notes
-  notes=$(returnCatch "$handler" buildEnvironmentGet --application "$home" BUILD_RELEASE_NOTES) || return $?
+  notes=$(catchReturn "$handler" buildEnvironmentGet --application "$home" BUILD_RELEASE_NOTES) || return $?
   [ -n "$notes" ] || throwEnvironment "$handler" "BUILD_RELEASE_NOTES is blank" || return $?
   releasePath="${notes%/}"
-  pathIsAbsolute "$releasePath" || releasePath=$(returnCatch "$handler" directoryPathSimplify "$home/$releasePath") || return $?
+  pathIsAbsolute "$releasePath" || releasePath=$(catchReturn "$handler" directoryPathSimplify "$home/$releasePath") || return $?
   printf "%s/%s.md\n" "${releasePath%/}" "$version"
 }
 
@@ -205,7 +205,7 @@ releaseNew() {
     esac
     shift
   done
-  [ -n "$application" ] || application=$(returnCatch "$handler" buildHome) || return $?
+  [ -n "$application" ] || application=$(catchReturn "$handler" buildHome) || return $?
 
   buildEnvironmentContext "$application" __releaseNew "$handler" "$isInteractive" "$newVersion"
 }

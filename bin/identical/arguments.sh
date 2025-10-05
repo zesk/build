@@ -93,14 +93,14 @@ __documentTemplateFunction() {
 
   # IDENTICAL profileNameArgumentValidation 4
   if [ -z "$profileName" ]; then
-    profileName="$(returnCatch "$handler" buildEnvironmentGet AWS_PROFILE)" || return $?
+    profileName="$(catchReturn "$handler" buildEnvironmentGet AWS_PROFILE)" || return $?
     [ -n "$profileName" ] || profileName="default"
   fi
 
   # IDENTICAL regionArgumentValidation 7
   if [ -z "$region" ]; then
     export AWS_REGION
-    returnCatch "$handler" buildEnvironmentLoad AWS_REGION || return $?
+    catchReturn "$handler" buildEnvironmentLoad AWS_REGION || return $?
     region="${AWS_REGION-}"
     [ -n "$region" ] || throwArgument "$handler" "AWS_REGION or --region is required" || return $?
   fi
@@ -147,14 +147,14 @@ ___documentTemplateFunction() {
 
   # IDENTICAL profileNameArgumentValidation 4
   if [ -z "$profileName" ]; then
-    profileName="$(returnCatch "$handler" buildEnvironmentGet AWS_PROFILE)" || return $?
+    profileName="$(catchReturn "$handler" buildEnvironmentGet AWS_PROFILE)" || return $?
     [ -n "$profileName" ] || profileName="default"
   fi
 
   # IDENTICAL regionArgumentValidation 7
   if [ -z "$region" ]; then
     export AWS_REGION
-    returnCatch "$handler" buildEnvironmentLoad AWS_REGION || return $?
+    catchReturn "$handler" buildEnvironmentLoad AWS_REGION || return $?
     region="${AWS_REGION-}"
     [ -n "$region" ] || throwArgument "$handler" "AWS_REGION or --region is required" || return $?
   fi

@@ -49,5 +49,5 @@ __identicalCheckShell() {
     shift || :
   done
   ! $addDefaultPrefixes || pp+=(--prefix '# ''IDENTICAL')
-  returnCatch "$handler" identicalCheck "${aa[@]+"${aa[@]}"}" "${pp[@]}" --extension sh "$@" || return $?
+  catchReturn "$handler" identicalCheck "${aa[@]+"${aa[@]}"}" "${pp[@]}" --extension sh "$@" || return $?
 }

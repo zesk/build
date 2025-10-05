@@ -137,7 +137,7 @@ __fileCopyWouldChange() {
         local exitCode=1
         if $mapFlag; then
           actualSource=$(fileTemporaryName "$handler") || return $?
-          returnCatch "$handler" mapEnvironment <"$source" >"$actualSource" || returnClean $? "$actualSource" || return $?
+          catchReturn "$handler" mapEnvironment <"$source" >"$actualSource" || returnClean $? "$actualSource" || return $?
           if ! diff -q "$actualSource" "$destination" >/dev/null; then
             exitCode=0
           fi
@@ -203,6 +203,6 @@ _fileCopyShowNew() {
   local lines
   _fileCopyPrompt "$displaySource" "$destination" "Created"
   head -10 "$source" | decorate code
-  lines=$(returnCatch "$handler" fileLineCount "$source") || lines="0" || :
+  lines=$(catchReturn "$handler" fileLineCount "$source") || lines="0" || :
   decorate info "$(printf "%d %s total" "$lines" "$(plural "$lines" line lines)")"
 }

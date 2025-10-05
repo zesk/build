@@ -31,7 +31,7 @@ testPHPComposerInstallation() {
   local handler="returnMessage"
   local d oldDir
 
-  home=$(returnCatch "$handler" buildHome) || return $?
+  home=$(catchReturn "$handler" buildHome) || return $?
 
   oldDir="${BITBUCKET_CLONE_DIR-NONE}"
 
@@ -50,7 +50,7 @@ testPHPComposerInstallation() {
   BITBUCKET_CLONE_DIR="$oldDir"
   [ "$oldDir" != "NONE" ] || unset BITBUCKET_CLONE_DIR
 
-  returnCatch "$handler" rm -rf "$d" || return $?
+  catchReturn "$handler" rm -rf "$d" || return $?
 }
 
 #
@@ -68,7 +68,7 @@ testPHPBuild() {
     return 0
   fi
 
-  home=$(returnCatch "$handler" buildHome) || return $?
+  home=$(catchReturn "$handler" buildHome) || return $?
   here=$(catchEnvironment "$handler" pwd) || return $?
 
   #
@@ -157,7 +157,7 @@ testPHPBuild() {
   assertFileDoesNotContain "$manifest" composer.lock composer.json bitbucket-pipelines.yml || return $?
   assertFileContains "$manifest.complete" vendor/zesk vendor/composer || return $?
 
-  returnCatch "$handler" rm -f "$manifest" "$manifest.complete" || return $?
+  catchReturn "$handler" rm -f "$manifest" "$manifest.complete" || return $?
 
   decorate success Passed.
 
@@ -167,7 +167,7 @@ testPHPBuild() {
 testPHPComposerSetVersion() {
   local home testHome usage="returnMessage"
 
-  home=$(returnCatch "$usage" buildHome) || return $?
+  home=$(catchReturn "$usage" buildHome) || return $?
 
   testHome=$(fileTemporaryName "$usage" -d) || return $?
 

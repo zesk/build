@@ -17,7 +17,7 @@ testWhichHook() {
   local handler="returnMessage"
   local home
 
-  home=$(returnCatch "$handler" buildHome) || return $?
+  home=$(catchReturn "$handler" buildHome) || return $?
   assertEquals "$home/bin/build/hooks/version-current.sh" "$(whichHook version-current)" || return $?
 }
 
@@ -31,7 +31,7 @@ testHookSystem() {
   local testDir savedHome randomApp randomDefault path
   local hook exitCode f
 
-  savedHome=$(returnCatch "$handler" buildHome) || return $?
+  savedHome=$(catchReturn "$handler" buildHome) || return $?
 
   export BUILD_HOOK_EXTENSIONS BUILD_HOOK_DIRS BUILD_HOME
 
@@ -41,7 +41,7 @@ testHookSystem() {
 
   unset BUILD_HOOK_DIRS
 
-  returnCatch "$handler" buildEnvironmentLoad BUILD_HOOK_DIRS BUILD_HOOK_EXTENSIONS || return $?
+  catchReturn "$handler" buildEnvironmentLoad BUILD_HOOK_DIRS BUILD_HOOK_EXTENSIONS || return $?
 
   decorate pair BUILD_HOOK_EXTENSIONS "$BUILD_HOOK_EXTENSIONS"
   decorate pair BUILD_HOOK_DIRS "$BUILD_HOOK_DIRS"
@@ -193,7 +193,7 @@ testHookSystem() {
   assertExitCode "${matches[@]}" --stdout-match "test3.bash" 0 hookRun --application "$testDir" test3 || _hookTestFailed "$testDir" || return $?
   assertExitCode "${matches[@]}" --stdout-match "noExtension.bash" --stdout-no-match ".sh" 0 hookRun --application "$testDir" noExtension || _hookTestFailed "$testDir" || return $?
 
-  returnCatch "$handler" rm -rf "$testDir" || return $?
+  catchReturn "$handler" rm -rf "$testDir" || return $?
 
   catchEnvironment "$handler" cd "$savedHome" || return $?
 
@@ -204,8 +204,8 @@ testHooksWhichSeemBenign() {
   local handler="returnMessage"
   local cache home hook
 
-  home="$(returnCatch "$handler" buildHome)" || return $?
-  cache=$(returnCatch "$handler" __gitPreCommitCache true) || return $?
+  home="$(catchReturn "$handler" buildHome)" || return $?
+  cache=$(catchReturn "$handler" __gitPreCommitCache true) || return $?
   find "$home/test/example" -type f ! -path "*/.*/*" | extensionLists --clean "$cache"
 
   assertExitCode 0 gitPreCommitHeader || return $?

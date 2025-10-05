@@ -8,7 +8,7 @@
 __applicationHomeFile() {
   local f home
 
-  home=$(returnCatch "$handler" buildEnvironmentGetDirectory XDG_STATE_HOME) || return $?
+  home=$(catchReturn "$handler" buildEnvironmentGetDirectory XDG_STATE_HOME) || return $?
   f="$home/.applicationHome"
   [ -f "$f" ] || catchEnvironment "$handler" touch "$f" || return $?
   printf "%s\n" "$f"
@@ -18,14 +18,14 @@ __applicationHomeGo() {
   local handler="$1" && shift
   local file home label userRecordHome oldHome=""
 
-  file=$(returnCatch "$handler" __applicationHomeFile) || return $?
+  file=$(catchReturn "$handler" __applicationHomeFile) || return $?
   home=$(trimSpace "$(catchEnvironment "$handler" head -n 1 "$file")") || return $?
   if [ -z "$home" ]; then
     throwEnvironment "$handler" "No code home set, try $(decorate code "applicationHome")" || return $?
   fi
   [ -d "$home" ] || throwEnvironment "$handler" "Application home directory deleted $(decorate code "$home")" || return $?
 
-  oldHome=$(returnCatch "$handler" buildHome) || return $?
+  oldHome=$(catchReturn "$handler" buildHome) || return $?
 
   if [ -d "$oldHome" ] && [ "$oldHome" != "$home" ]; then
     hookSourceOptional --application "$oldHome" project-deactivate "$home" || :

@@ -93,7 +93,7 @@ awsIsKeyUpToDate() {
   local handler="_${FUNCNAME[0]}"
   [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
   export AWS_ACCESS_KEY_DATE
-  returnCatch "$handler" buildEnvironmentLoad AWS_ACCESS_KEY_DATE || return $?
+  catchReturn "$handler" buildEnvironmentLoad AWS_ACCESS_KEY_DATE || return $?
   isUpToDate "${AWS_ACCESS_KEY_DATE-}" "$@"
 }
 _awsIsKeyUpToDate() {
@@ -120,7 +120,7 @@ awsHasEnvironment() {
   [ $# -eq 0 ] || __help --only "$handler" "$@" || return "$(convertValue $? 1 0)"
   export AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY
   # shellcheck source=/dev/null
-  returnCatch "$handler" buildEnvironmentLoad AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY || return $?
+  catchReturn "$handler" buildEnvironmentLoad AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY || return $?
   [ -n "${AWS_ACCESS_KEY_ID-}" ] && [ -n "${AWS_SECRET_ACCESS_KEY-}" ]
 }
 _awsHasEnvironment() {
@@ -138,7 +138,7 @@ awsProfilesList() {
   local file
 
   [ $# -eq 0 ] || __help --only "$handler" "$@" || return "$(convertValue $? 1 0)"
-  file=$(returnCatch "$handler" awsCredentialsFile --path) || return $?
+  file=$(catchReturn "$handler" awsCredentialsFile --path) || return $?
   [ -f "$file" ] || return 0
   grep -e '\[[^]]*\]' "$file" | sed 's/[]\[]//g' | sort -u || :
 }
@@ -246,9 +246,9 @@ awsCredentialsFromEnvironment() {
 
   __help "$handler" "$@" || return 0
   export AWS_PROFILE AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY
-  returnCatch "$handler" buildEnvironmentLoad AWS_PROFILE AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY || return $?
+  catchReturn "$handler" buildEnvironmentLoad AWS_PROFILE AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY || return $?
   awsHasEnvironment || throwEnvironment "$handler" "Requires AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY" || return $?
-  returnCatch "$handler" awsCredentialsAdd "$@" "$AWS_ACCESS_KEY_ID" "$AWS_SECRET_ACCESS_KEY" || return $?
+  catchReturn "$handler" awsCredentialsAdd "$@" "$AWS_ACCESS_KEY_ID" "$AWS_SECRET_ACCESS_KEY" || return $?
 }
 _awsCredentialsFromEnvironment() {
   # __IDENTICAL__ usageDocument 1

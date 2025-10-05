@@ -5,6 +5,13 @@
 # Copyright &copy; 2025 Market Acumen, Inc.
 #
 
+# TODO
+#  directoryClobber
+#  directoryIsEmpty
+#  directoryNewestFile
+#  directoryOldestFile
+#  directoryParent
+
 __testIsAbsolutePathData() {
   cat <<EOF
 /,0

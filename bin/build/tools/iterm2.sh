@@ -165,7 +165,7 @@ iTerm2Aliases() {
 
   local home skipped=()
 
-  home=$(returnCatch "$handler" userRecordHome) || return $?
+  home=$(catchReturn "$handler" userRecordHome) || return $?
 
   [ -d "$home/.iterm2" ] || throwEnvironment "$handler" "Missing ~/.iterm2" || return $?
 
@@ -306,7 +306,7 @@ iTerm2Image() {
   if [ "${#images[@]}" -gt 0 ]; then
     set -- "${images[@]}"
     while [ $# -gt 1 ]; do
-      returnCatch "$handler" __iTerm2Image "$1" "$1" "$2" || return $?
+      catchReturn "$handler" __iTerm2Image "$1" "$1" "$2" || return $?
       shift 2
     done
   else
@@ -314,7 +314,7 @@ iTerm2Image() {
 
     image=$(fileTemporaryName "$handler") || return $?
     catchEnvironment "$handler" cat >"$image" || return $?
-    returnCatch "$handler" __iTerm2Image "$image" "$(__iTerm2ImageExtras "$width" "$height" "$aspectRatio")" || return $?
+    catchReturn "$handler" __iTerm2Image "$image" "$(__iTerm2ImageExtras "$width" "$height" "$aspectRatio")" || return $?
     catchEnvironment "$handler" rm -rf "$image" || return $?
   fi
 }
@@ -393,7 +393,7 @@ iTerm2Download() {
   if [ "${#files[@]}" -gt 0 ]; then
     set -- "${files[@]}"
     while [ $# -gt 0 ]; do
-      returnCatch "$handler" __iTerm2Download "$1" "$1" || return $?
+      catchReturn "$handler" __iTerm2Download "$1" "$1" || return $?
       shift
     done
   else
@@ -401,7 +401,7 @@ iTerm2Download() {
 
     file=$(fileTemporaryName "$handler") || return $?
     catchEnvironment "$handler" cat >"$file" || return $?
-    returnCatch "$handler" __iTerm2Download "$file" "$name" || return $?
+    catchReturn "$handler" __iTerm2Download "$file" "$name" || return $?
     catchEnvironment "$handler" rm -rf "$file" || return $?
   fi
 }
@@ -848,8 +848,8 @@ iTerm2Init() {
   fi
 
   local home
-  returnCatch "$handler" buildEnvironmentLoad TERM || return $?
-  home=$(returnCatch "$handler" userRecordHome) || return $?
+  catchReturn "$handler" buildEnvironmentLoad TERM || return $?
+  home=$(catchReturn "$handler" userRecordHome) || return $?
 
   # iTerm2 customizations
   local ii=()

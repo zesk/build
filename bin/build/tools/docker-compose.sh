@@ -232,7 +232,7 @@ dockerCompose() {
   if [ -z "$databaseVolume" ]; then
     local home dockerName
 
-    home=$(returnCatch "$handler" buildHome) || return $?
+    home=$(catchReturn "$handler" buildHome) || return $?
     dockerName=$(basename "$home")
 
     databaseVolume="${dockerName}_database_data"
@@ -286,7 +286,7 @@ _dockerCompose() {
 
 __dockerCompose() {
   local handler="$1" home && shift
-  home=$(returnCatch "$handler" buildHome) || return $?
+  home=$(catchReturn "$handler" buildHome) || return $?
   [ -f "$home/docker-compose.yml" ] || throwEnvironment "$handler" "Missing $(decorate file "$home/docker-compose.yml")" || return $?
   COMPOSE_BAKE=true docker compose -f "$home/docker-compose.yml" "$@"
 }
@@ -301,7 +301,7 @@ __dockerComposeEnvironmentSetup() {
   local handler="$1" deployment="$2" && shift 2
 
   local home deploymentEnv envFile
-  home=$(returnCatch "$handler" buildHome) || return $?
+  home=$(catchReturn "$handler" buildHome) || return $?
 
   deploymentEnv=".$(uppercase "$deployment").env"
   [ -f "$home/$deploymentEnv" ] || throwEnvironment "$handler" "Missing $deploymentEnv" || return $?
@@ -331,7 +331,7 @@ __dockerComposeEnvironmentSetup() {
     envValue=$(environmentValueRead "$envFile" "$variable") || :
     if [ -z "$envValue" ]; then
       decorate info "Writing $(decorate file "$envFile") $icon $(decorate code "$variable") $(decorate value "$value") (default)"
-      returnCatch "$handler" environmentValueWrite "$variable" "$value" >>"$envFile" || return $?
+      catchReturn "$handler" environmentValueWrite "$variable" "$value" >>"$envFile" || return $?
     fi
     shift 2
   done
@@ -347,7 +347,7 @@ __dockerComposeArgumentSetup() {
   local handler="$1" && shift
 
   local home deploymentEnv envFile
-  home=$(returnCatch "$handler" buildHome) || return $?
+  home=$(catchReturn "$handler" buildHome) || return $?
 
   envFile="$home/.env"
   local icon="⬅"

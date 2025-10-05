@@ -47,7 +47,7 @@ buildCompletion() {
 
   local home name homeText
 
-  home=$(returnCatch "$handler" buildHome) || return $?
+  home=$(catchReturn "$handler" buildHome) || return $?
   name="$(decorate info "$(buildEnvironmentGet APPLICATION_NAME)")"
   homeText="$(decorate code "$home")"
 
@@ -146,10 +146,10 @@ __buildCompletionFunctionID() {
   else
     local home source
 
-    home=$(returnCatch "$handler" buildHome) || return $?
-    source=$(returnCatch "$handler" __bashDocumentation_FindFunctionDefinitions "$home" "$command" | grepSafe -v "/identical" | head -n 1) || return $?
+    home=$(catchReturn "$handler" buildHome) || return $?
+    source=$(catchReturn "$handler" __bashDocumentation_FindFunctionDefinitions "$home" "$command" | grepSafe -v "/identical" | head -n 1) || return $?
     if [ -n "$source" ]; then
-      id=$(returnCatch "$handler" _commentArgumentSpecification "$source" "$command") || return $?
+      id=$(catchReturn "$handler" _commentArgumentSpecification "$source" "$command") || return $?
       if [ -n "$id" ]; then
         printf "%s\n" "$id" | tee "$cache/$command"
       fi

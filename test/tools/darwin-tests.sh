@@ -21,3 +21,28 @@ testDarwinDialog() {
     ) || :
   fi
 }
+
+testDarwinSoundInstall() {
+  local handler="returnMessage"
+  if isDarwin; then
+    local home
+
+    home=$(catchReturn "$handler" buildHome) || return $?
+    assertExitCode 0 darwinSoundInstall "$home/etc/zesk-build-notification.mp3" || return $?
+    assertExitCode 0 darwinSoundInstall "$home/etc/zesk-build-failed.mp3" || return $?
+
+    assertExitCode 0 darwinSoundValid zesk-build-notification || return $?
+    assertExitCode 0 darwinSoundValid zesk-build-failed || return $?
+    assertOutputContains zesk-build-notification darwinSoundNames || return $?
+    assertOutputContains zesk-build-failed darwinSoundNames || return $?
+
+    assertDirectoryExists "$(darwinSoundDirectory)" || return $?
+  fi
+}
+
+testDarwinNotification() {
+  if isDarwin; then
+    assertExitCode 0 darwinNotification "${FUNCNAME[0]}" || return $?
+  fi
+}
+

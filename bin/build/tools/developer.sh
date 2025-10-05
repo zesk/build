@@ -125,7 +125,7 @@ developerTrack() {
 
   local cachePath
 
-  cachePath=$(returnCatch "$handler" buildCacheDirectory "${FUNCNAME[0]}" "profile") || return $?
+  cachePath=$(catchReturn "$handler" buildCacheDirectory "${FUNCNAME[0]}" "profile") || return $?
   if $profileFlag; then
     ! $optionalFlag || [ ! -f "$cachePath/environment" ] || return 0
     __developerTrack "$cachePath" || return $?
@@ -274,7 +274,7 @@ developerDevelopmentLink() {
   [ -n "$versionSelector" ] || versionSelector=".version"
 
   local home target
-  home=$(returnCatch "$handler" buildHome) || return $?
+  home=$(catchReturn "$handler" buildHome) || return $?
   home=$(catchEnvironment "$handler" realPath "${home%/}") || return $?
 
   if [ -z "$composerPackage" ]; then
@@ -300,7 +300,7 @@ developerDevelopmentLink() {
   showName=$(decorate label "$showName")
 
   # developmentHome
-  developmentHome=$(returnCatch "$handler" buildEnvironmentGet "$variable") || return $?
+  developmentHome=$(catchReturn "$handler" buildEnvironmentGet "$variable") || return $?
   if [ -n "$developmentHome" ]; then
     developmentHome=$(catchEnvironment "$handler" realPath "${developmentHome%/}") || return $?
   fi
@@ -374,7 +374,7 @@ __developerDevelopmentRevert() {
     local binary="$1" installer
     installer="$developmentHome/$relPath/$binary"]
     [ -x "$installer" ] || throwEnvironment "$handler" "$installer does not exist" || return $?
-    returnCatch "$handler" directoryRequire "$target" || return $?
+    catchReturn "$handler" directoryRequire "$target" || return $?
     catchEnvironment "$handler" cp "$installer" "$target/$binary" || return $?
     set -- "$target/$binary"
   fi

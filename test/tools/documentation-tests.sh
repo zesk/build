@@ -17,7 +17,7 @@ testBashFunctionComment() {
     --stdout-match "--skip-prompt"
   )
 
-  home=$(returnCatch "$handler" buildHome) || return $?
+  home=$(catchReturn "$handler" buildHome) || return $?
 
   assertExitCode "${matches[@]}" 0 bashFunctionComment "$home/bin/build/tools/prompt.sh" bashPrompt || return $?
 }
@@ -29,7 +29,7 @@ testDocumentation() {
 
   # export BUILD_DEBUG="fast-usage,usage"
   local home
-  home=$(returnCatch "$handler" buildHome) || return $?
+  home=$(catchReturn "$handler" buildHome) || return $?
 
   testOutput=$(fileTemporaryName "$handler") || return $?
   assertExitCode 0 inArray "summary" summary usage argument example reviewed || return $?
@@ -68,7 +68,7 @@ __isolateTest() {
   local handler="returnMessage"
 
   local home
-  home=$(returnCatch "$handler" buildHome) || return $?
+  home=$(catchReturn "$handler" buildHome) || return $?
   local fn
 
   fn="ass""ertNotEquals" # "" hides from findUncaughtAssertions

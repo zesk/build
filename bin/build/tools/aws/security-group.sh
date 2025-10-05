@@ -68,12 +68,12 @@ __awsSecurityGroupIPModify() {
 
   [ -n "$profileName" ] || awsHasEnvironment || throwEnvironment "$handler" "Need AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY" || return $?
 
-  ! whichExists aws || returnCatch "$handler" awsInstall || return $?
+  ! whichExists aws || catchReturn "$handler" awsInstall || return $?
 
   # IDENTICAL regionArgumentValidation 7
   if [ -z "$region" ]; then
     export AWS_REGION
-    returnCatch "$handler" buildEnvironmentLoad AWS_REGION || return $?
+    catchReturn "$handler" buildEnvironmentLoad AWS_REGION || return $?
     region="${AWS_REGION-}"
     [ -n "$region" ] || throwArgument "$handler" "AWS_REGION or --region is required" || return $?
   fi
@@ -105,7 +105,7 @@ __awsSecurityGroupIPModify() {
   #
   if [ "$mode" != "--add" ]; then
     tempErrorFile=$(fileTemporaryName "$handler") || return $?
-    returnCatch "$handler" __awsWrapper "${pp[@]+"${pp[@]}"}" ec2 describe-security-groups --region "$region" --group-id "$group" --output text --query "SecurityGroups[*].IpPermissions[*]" >"$tempErrorFile" || returnClean "$?" "$tempErrorFile" || return $?
+    catchReturn "$handler" __awsWrapper "${pp[@]+"${pp[@]}"}" ec2 describe-security-groups --region "$region" --group-id "$group" --output text --query "SecurityGroups[*].IpPermissions[*]" >"$tempErrorFile" || returnClean "$?" "$tempErrorFile" || return $?
     foundIP=$(grep -e "$(quoteGrepPattern "$description")" <"$tempErrorFile" | head -1 | awk '{ print $2 }') || :
     catchEnvironment "$handler" rm -f "$tempErrorFile" || return $?
 
@@ -121,7 +121,7 @@ __awsSecurityGroupIPModify() {
       return 0
     else
       __awsSGOutput "$(decorate info "Removing old IP:")" "$foundIP" "$group" "$port"
-      returnCatch "$handler" __awsWrapper "${pp[@]+"${pp[@]}"}" --output json ec2 revoke-security-group-ingress --region "$region" --group-id "$group" --protocol tcp --port "$port" --cidr "$foundIP" | __awsReturnTrue || return $?
+      catchReturn "$handler" __awsWrapper "${pp[@]+"${pp[@]}"}" --output json ec2 revoke-security-group-ingress --region "$region" --group-id "$group" --protocol tcp --port "$port" --cidr "$foundIP" | __awsReturnTrue || return $?
     fi
   fi
   if [ "$mode" != "--remove" ]; then

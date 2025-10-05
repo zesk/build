@@ -17,7 +17,7 @@ testBasicFileStuff() {
   assertExitCode 0 fileModificationTime "$testFile" || return $?
   assertExitCode 0 fileModificationSeconds "$testFile" || return $?
 
-  returnCatch "$handler" rm -rf "$testDir" || return $?
+  catchReturn "$handler" rm -rf "$testDir" || return $?
 }
 
 _assertBetterType() {
@@ -37,7 +37,7 @@ testBetterType() {
   local d
   d=$(fileTemporaryName "$handler" -d) || return $?
 
-  returnCatch "$handler" directoryRequire "$d/food" >/dev/null || return $?
+  catchReturn "$handler" directoryRequire "$d/food" >/dev/null || return $?
   catchEnvironment "$handler" ln -s "$d/food" "$d/food-link" || return $?
 
   catchEnvironment "$handler" touch "$d/goof" || return $?
@@ -78,7 +78,7 @@ testFileMatches() {
 
   ex=()
   matchFiles=$(fileTemporaryName "$handler") || return $?
-  home=$(returnCatch "$handler" buildHome) || return $?
+  home=$(catchReturn "$handler" buildHome) || return $?
 
   catchEnvironment "$handler" find "$home/test/matches" -type f >"$matchFiles" || return $?
 
@@ -212,13 +212,13 @@ testFileMatches() {
   assertExitCode "${matches[@]}" 0 fileMatches "$pattern" -- "${ex[@]+"${ex[@]}"}" -- - <"$matchFiles" || return $?
   assertExitCode "${invertedMatches[@]}" 0 fileNotMatches "$pattern" -- "${ex[@]+"${ex[@]}"}" -- - <"$matchFiles" || return $?
 
-  returnCatch "$handler" rm -f "$matchFiles" || return $?
+  catchReturn "$handler" rm -f "$matchFiles" || return $?
 }
 
 testLinkCreate() {
   local home target
 
-  home=$(returnCatch "$handler" buildHome) || return $?
+  home=$(catchReturn "$handler" buildHome) || return $?
 
   find "$home/bin/build/" -maxdepth 1 -name 'wacky.*' -exec rm {} \; || :
 

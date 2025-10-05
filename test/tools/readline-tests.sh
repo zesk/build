@@ -23,7 +23,7 @@ testReadlineConfigurationAdd() {
 
   assertFileContains "$HOME/.input""rc" history-search-backward || return $?
 
-  returnCatch "$handler" rm -rf "$tempHome" || return $?
+  catchReturn "$handler" rm -rf "$tempHome" || return $?
 
   mockEnvironmentStop HOME
 }

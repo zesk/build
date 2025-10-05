@@ -56,5 +56,5 @@ testTarExtractFilePattern() {
   assertEquals "$content" "down going let never to you" || return $?
   catchEnvironment "$handler" muzzle popd || return $?
 
-  returnCatch "$handler" rm -rf "$temp" || return $?
+  catchReturn "$handler" rm -rf "$temp" || return $?
 }

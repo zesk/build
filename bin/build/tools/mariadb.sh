@@ -16,7 +16,7 @@
 mariadbInstall() {
   local handler="_${FUNCNAME[0]}"
   [ $# -eq 0 ] || __help --only "$handler" "$@" || return "$(convertValue $? 1 0)"
-  returnCatch "$handler" packageGroupInstall mariadb || return $?
+  catchReturn "$handler" packageGroupInstall mariadb || return $?
 }
 _mariadbInstall() {
   true || mariadbInstall --help
@@ -32,7 +32,7 @@ _mariadbInstall() {
 mariadbUninstall() {
   local handler="_${FUNCNAME[0]}"
   [ $# -eq 0 ] || __help --only "$handler" "$@" || return "$(convertValue $? 1 0)"
-  returnCatch "$handler" packageGroupUninstall mariadb || return $?
+  catchReturn "$handler" packageGroupUninstall mariadb || return $?
 }
 _mariadbUninstall() {
   true || mariadbUninstall --help

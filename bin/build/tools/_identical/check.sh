@@ -29,7 +29,7 @@ __identicalCheck() {
     # _IDENTICAL_ handlerHandler 1
     --handler) shift && handler=$(usageArgumentFunction "$handler" "$argument" "${1-}") || return $? ;;
     --watch)
-      returnCatch "$handler" identicalWatch "${__saved[@]}" && return $? || return $?
+      catchReturn "$handler" identicalWatch "${__saved[@]}" && return $? || return $?
       ;;
     --no-map)
       mapFile=false
@@ -144,17 +144,17 @@ __identicalCheck() {
 
   # Write strings to state
   for variable in tempDirectory resultsFile rootDir failureCode searchFileList mapFile; do
-    returnCatch "$handler" environmentValueWrite "$variable" "${!variable}" >>"$stateFile" || returnClean $? "${clean[@]}" || return $?
+    catchReturn "$handler" environmentValueWrite "$variable" "${!variable}" >>"$stateFile" || returnClean $? "${clean[@]}" || return $?
   done
   # Line exists here largely so $mapFile is "used"
-  returnCatch "$handler" environmentValueWrite "mapFile" "$mapFile" >>"$stateFile" || returnClean $? "${clean[@]}" || return $?
+  catchReturn "$handler" environmentValueWrite "mapFile" "$mapFile" >>"$stateFile" || returnClean $? "${clean[@]}" || return $?
 
   # Write array values to state
-  returnCatch "$handler" environmentValueWriteArray "repairSources" "${repairSources[@]+"${repairSources[@]}"}" >>"$stateFile" || returnClean $? "${clean[@]}" || return $?
-  returnCatch "$handler" environmentValueWriteArray "prefixes" "${prefixes[@]+"${prefixes[@]}"}" >>"$stateFile" || returnClean $? "${clean[@]}" || return $?
-  returnCatch "$handler" environmentValueWriteArray "skipFiles" "${skipFiles[@]+"${skipFiles[@]}"}" >>"$stateFile" || returnClean $? "${clean[@]}" || return $?
-  returnCatch "$handler" environmentValueWriteArray "singles" "${singles[@]+"${singles[@]}"}" >>"$stateFile" || returnClean $? "${clean[@]}" || return $?
-  returnCatch "$handler" environmentValueWriteArray "tokens" "${tokens[@]+"${tokens[@]}"}" >>"$stateFile" || returnClean $? "${clean[@]}" || return $?
+  catchReturn "$handler" environmentValueWriteArray "repairSources" "${repairSources[@]+"${repairSources[@]}"}" >>"$stateFile" || returnClean $? "${clean[@]}" || return $?
+  catchReturn "$handler" environmentValueWriteArray "prefixes" "${prefixes[@]+"${prefixes[@]}"}" >>"$stateFile" || returnClean $? "${clean[@]}" || return $?
+  catchReturn "$handler" environmentValueWriteArray "skipFiles" "${skipFiles[@]+"${skipFiles[@]}"}" >>"$stateFile" || returnClean $? "${clean[@]}" || return $?
+  catchReturn "$handler" environmentValueWriteArray "singles" "${singles[@]+"${singles[@]}"}" >>"$stateFile" || returnClean $? "${clean[@]}" || return $?
+  catchReturn "$handler" environmentValueWriteArray "tokens" "${tokens[@]+"${tokens[@]}"}" >>"$stateFile" || returnClean $? "${clean[@]}" || return $?
 
   local __line=1 searchFile
 
@@ -173,7 +173,7 @@ __identicalCheck() {
 
   if [ "$exitCode" -ne 0 ]; then
     local badFiles=() item
-    while read -r item; do badFiles+=("$item"); done < <(returnCatch "$handler" environmentValueReadArray "$stateFile" "badFiles") || return $?
+    while read -r item; do badFiles+=("$item"); done < <(catchReturn "$handler" environmentValueReadArray "$stateFile" "badFiles") || return $?
 
     if [ ${#badFiles[@]} -gt 0 ]; then
       exitCode=$failureCode

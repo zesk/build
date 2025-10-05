@@ -67,7 +67,7 @@ __crontabGenerate() {
 crontabApplicationUpdate() {
   local handler="_${FUNCNAME[0]}"
 
-  returnCatch "$handler" packageWhich crontab cron || return $?
+  catchReturn "$handler" packageWhich crontab cron || return $?
 
   local rootEnv="" appPath="" user
   user=$(whoami) || throwEnvironment "$handler" whoami || return $?

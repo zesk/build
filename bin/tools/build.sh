@@ -23,16 +23,16 @@ __buildMarker() {
   local handler="returnMessage"
   local home
 
-  home=$(returnCatch "$handler" buildHome) || return $?
+  home=$(catchReturn "$handler" buildHome) || return $?
   local jsonFile
 
-  jsonFile="$home/$(returnCatch "$handler" buildEnvironmentGet APPLICATION_JSON)" || return $?
+  jsonFile="$home/$(catchReturn "$handler" buildEnvironmentGet APPLICATION_JSON)" || return $?
 
   [ -f "$jsonFile" ] || catchEnvironment "$handler" printf "{}" >"$jsonFile" || return $?
 
   local version id
-  version="$(returnCatch "$handler" hookRun version-current)" || return $?
-  id="$(returnCatch "$handler" hookRun application-id)" || return $?
+  version="$(catchReturn "$handler" hookRun version-current)" || return $?
+  id="$(catchReturn "$handler" hookRun application-id)" || return $?
   catchEnvironment "$handler" jsonFileSet "$jsonFile" ".version" "$version" || return $?
   catchEnvironment "$handler" jsonFileSet "$jsonFile" ".id" "$id" || return $?
   catchEnvironment "$handler" muzzle git add "$jsonFile" || return $?
@@ -102,10 +102,10 @@ __buildBuild() {
   [ -n "${BUILD_COLORS_MODE-}" ] || BUILD_COLORS_MODE=$(consoleConfigureColorMode) || :
 
   ! $debugFlag || statusMessage decorate info "Installing dependencies ..."
-  returnCatch "$handler" packageInstall || return $?
+  catchReturn "$handler" packageInstall || return $?
 
   local home
-  home=$(returnCatch "$handler" buildHome) || return $?
+  home=$(catchReturn "$handler" buildHome) || return $?
 
   local size
 
@@ -116,7 +116,7 @@ __buildBuild() {
   fi
   [ -n "$size" ] || size="1x"
 
-  returnCatch "$handler" bigText "$(buildEnvironmentGet APPLICATION_NAME) $(hookVersionCurrent)" || return $?
+  catchReturn "$handler" bigText "$(buildEnvironmentGet APPLICATION_NAME) $(hookVersionCurrent)" || return $?
   echoBar "."
   decorate pair Branch "${BITBUCKET_BRANCH-}"
   decorate pair Deployment "${BITBUCKET_DEPLOYMENT_ENVIRONMENT-}"
@@ -135,13 +135,13 @@ __buildBuild() {
   "$home/bin/build/deprecated.sh" || throwEnvironment "$handler" "Deprecated failed" || return $?
 
   ! $debugFlag || statusMessage decorate warning "Building fast files first time ..."
-  returnCatch "$handler" "$home/bin/tools.sh" buildFastFiles || return $?
+  catchReturn "$handler" "$home/bin/tools.sh" buildFastFiles || return $?
 
   ! $debugFlag || statusMessage decorate warning "Running identical ..."
   "$home/bin/build/identical-repair.sh" --internal || throwEnvironment "$handler" "Identical repair failed" || return $?
 
   ! $debugFlag || statusMessage decorate warning "Building fast files ..."
-  returnCatch "$handler" "$home/bin/tools.sh" buildFastFiles || return $?
+  catchReturn "$handler" "$home/bin/tools.sh" buildFastFiles || return $?
 
   if $makeDocumentation; then
     local path rootShow rootPath="$home/documentation/site"

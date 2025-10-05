@@ -53,7 +53,7 @@ __interactiveCountdown() {
   done
   statusMessage printf -- "%s" ""
   if [ -n "$binary" ]; then
-    returnCatch "$handler" "$@" || return $?
+    catchReturn "$handler" "$@" || return $?
   fi
 }
 _interactiveCountdown() {

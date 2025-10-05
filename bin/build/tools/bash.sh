@@ -129,7 +129,7 @@ bashLibraryHome() {
   run=$(usageArgumentString "$handler" "libraryRelativePath" "${1-}") || return $?
   [ -n "$startDirectory" ] || startDirectory=$(catchEnvironment "$handler" pwd) || return $?
   startDirectory=$(usageArgumentDirectory "$handler" "startDirectory" "$startDirectory") || return $?
-  home=$(returnCatch "$handler" directoryParent --pattern "$run" --test -f --test -x "$startDirectory") || return $?
+  home=$(catchReturn "$handler" directoryParent --pattern "$run" --test -f --test -x "$startDirectory") || return $?
   printf "%s\n" "$home"
 }
 _bashLibraryHome() {

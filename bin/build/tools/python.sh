@@ -19,7 +19,7 @@ pythonInstall() {
   local handler="_${FUNCNAME[0]}"
   [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
   if ! whichExists python; then
-    returnCatch "$handler" packageGroupInstall "$@" python || return $?
+    catchReturn "$handler" packageGroupInstall "$@" python || return $?
   fi
 }
 _pythonInstall() {
@@ -32,7 +32,7 @@ pythonUninstall() {
   local handler="_${FUNCNAME[0]}"
   [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
   if whichExists python; then
-    returnCatch "$handler" packageGroupUninstall "$@" python || return $?
+    catchReturn "$handler" packageGroupUninstall "$@" python || return $?
   fi
 }
 _pythonUninstall() {
@@ -46,7 +46,7 @@ _pythonUninstall() {
 pipUpgrade() {
   local handler="_${FUNCNAME[0]}"
   [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
-  returnCatch "$handler" pipWrapper install --upgrade pip || return $?
+  catchReturn "$handler" pipWrapper install --upgrade pip || return $?
 }
 _pipUpgrade() {
   # __IDENTICAL__ usageDocument 1
@@ -95,7 +95,7 @@ pipInstall() {
   statusMessage decorate info "Installing $prettyNames ... "
 
   local quietLog
-  quietLog=$(returnCatch "$handler" buildQuietLog "$handler") || return $?
+  quietLog=$(catchReturn "$handler" buildQuietLog "$handler") || return $?
   catchEnvironmentQuiet "$handler" "$quietLog" pipWrapper install "${names[@]}" || returnClean $? "$quietLog" || return $?
   catchEnvironment "$handler" rm -f "$quietLog" || return $?
   statusMessage --last timingReport "$start" "Installed $prettyNames in"
@@ -159,7 +159,7 @@ pipUninstall() {
   statusMessage decorate info "Uninstalling $showNames ... "
 
   local quietLog
-  quietLog=$(returnCatch "$handler" buildQuietLog "$handler") || return $?
+  quietLog=$(catchReturn "$handler" buildQuietLog "$handler") || return $?
 
   statusMessage decorate info "Uninstalling pip packages $showNames ... "
   catchEnvironmentQuiet "$handler" "$quietLog" pipWrapper uninstall "${removeNames[@]}" || return $?
@@ -180,11 +180,11 @@ _pipUninstall() {
 pipWrapper() {
   local handler="_${FUNCNAME[0]}"
   [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
-  returnCatch "$handler" pythonInstall || return $?
+  catchReturn "$handler" pythonInstall || return $?
   if whichExists pip; then
-    returnCatch "$handler" pip "$@" || return $?
+    catchReturn "$handler" pip "$@" || return $?
   else
-    returnCatch "$handler" python -m pip "$@" || return $?
+    catchReturn "$handler" python -m pip "$@" || return $?
   fi
 }
 _pipWrapper() {
@@ -231,7 +231,7 @@ pythonPackageInstalled() {
   else
     local allPackages
     allPackages=$(fileTemporaryName "$handler") || return $?
-    returnCatch "$handler" pipWrapper list >"$allPackages" || returnClean $? "$allPackages" || return $?
+    catchReturn "$handler" pipWrapper list >"$allPackages" || returnClean $? "$allPackages" || return $?
     for package in "${packages[@]}"; do
       if ! grepSafe -q "$(quoteGrepPattern "$package")" <"$allPackages"; then
         # Not installed
@@ -287,7 +287,7 @@ pythonVirtual() {
     shift
   done
 
-  [ -n "$application" ] || application=$(returnCatch "$handler" buildHome) || return $?
+  [ -n "$application" ] || application=$(catchReturn "$handler" buildHome) || return $?
   [ ${#pp[@]} -gt 0 ] || throwArgument "$handler" "Need at "
   catchEnvironment "$handler" pythonInstall || return $?
 
@@ -301,8 +301,8 @@ pythonVirtual() {
     clean+=(rm -rf "$venv" --)
   fi
   catchEnvironment "$handler" source "$venv/bin/activate" || returnClean $? "${clean[@]}" || return $?
-  returnCatch "$handler" pipUpgrade || returnClean $? "${clean[@]}" || return $?
-  returnCatch "$handler" pipWrapper install "${pp[@]}" || returnClean $? "${clean[@]}" || return $?
+  catchReturn "$handler" pipUpgrade || returnClean $? "${clean[@]}" || return $?
+  catchReturn "$handler" pipWrapper install "${pp[@]}" || returnClean $? "${clean[@]}" || return $?
 }
 _pythonVirtual() {
   # __IDENTICAL__ usageDocument 1

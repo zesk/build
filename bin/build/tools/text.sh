@@ -689,7 +689,7 @@ fileLineCount() {
       temp=$(fileTemporaryName "$handler") || return $?
       catchEnvironment "$handler" cat >"$temp" || returnClean $? "$temp" || return $?
       fileLineCount --newline --handler "$handler" "$temp" || return $?
-      returnCatch "$handler" rm -f "$temp" || return $?
+      catchReturn "$handler" rm -f "$temp" || return $?
     else
       printf "%d\n" "$(catchEnvironment "$handler" wc -l | trimSpace)" || return $?
     fi
@@ -711,7 +711,7 @@ pluralWord() {
   local handler="_${FUNCNAME[0]}"
   [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
   local word
-  word=$(returnCatch "$handler" plural "$@") || return $?
+  word=$(catchReturn "$handler" plural "$@") || return $?
   printf -- "%s %s\n" "$1" "$word" || return $?
 }
 _pluralWord() {

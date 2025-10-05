@@ -56,19 +56,19 @@ _documentationIndexGenerate() {
   start=$(timingStart) || return $?
 
   local indexDirectory
-  indexDirectory=$(returnCatch "$handler" __documentationIndexCache) || return $?
-  returnCatch "$handler" muzzle directoryRequire "$indexDirectory" || return $?
+  indexDirectory=$(catchReturn "$handler" __documentationIndexCache) || return $?
+  catchReturn "$handler" muzzle directoryRequire "$indexDirectory" || return $?
 
   local cacheDirectory
-  cacheDirectory=$(returnCatch "$handler" documentationBuildCache) || return $?
+  cacheDirectory=$(catchReturn "$handler" documentationBuildCache) || return $?
 
   local indexFile="$cacheDirectory/code.index"
   local foundOne=false
   catchEnvironment "$handler" rm -rf "$indexFile" "$indexFile.unsorted" "$indexDirectory/files/" || return $?
-  returnCatch "$handler" muzzle directoryRequire "$indexDirectory/files/" "$indexDirectory/comment" || return $?
+  catchReturn "$handler" muzzle directoryRequire "$indexDirectory/files/" "$indexDirectory/comment" || return $?
   local codePath
   local homeSlash
-  homeSlash="$(returnCatch "$handler" buildHome)/" || return $?
+  homeSlash="$(catchReturn "$handler" buildHome)/" || return $?
   for codePath in "${codePaths[@]}"; do
     pathIsAbsolute "$codePath" || codePath="$homeSlash/$codePath"
     local fullPath
@@ -84,7 +84,7 @@ _documentationIndexGenerate() {
       local fileCacheMarker="$indexDirectory/code/${shellFile#/}"
       local functionsCache="$fileCacheMarker/.functions"
       if [ ! -f "$functionsCache" ]; then
-        returnCatch "$handler" muzzle directoryRequire "$fileCacheMarker" || return $?
+        catchReturn "$handler" muzzle directoryRequire "$fileCacheMarker" || return $?
       elif fileIsNewest "$functionsCache" "$fullPath"; then
         ! $verboseFlag || statusMessage decorate info "$(decorate file "$shellFile") $(decorate bold-blue "(cached)")"
         cat "$functionsCache" >>"$indexFile.unsorted"
@@ -92,7 +92,7 @@ _documentationIndexGenerate() {
       fi
       local count=0
       ! $verboseFlag || statusMessage decorate info "Processing $(decorate file "$shellFile")"
-      returnCatch "$handler" printf "%s" "" >"$functionsCache" || return $?
+      catchReturn "$handler" printf "%s" "" >"$functionsCache" || return $?
       while read -r functionName; do
         local lineNumber="${functionName%%:*}"
         functionName="${functionName#*:}"
@@ -217,7 +217,7 @@ __documentationIndexDocumentation() {
 
   local indexFile="$cacheDirectory/documentation.index"
   local home
-  home=$(returnCatch "$handler" buildHome) || return $?
+  home=$(catchReturn "$handler" buildHome) || return $?
   local sourcePath unsorted="$indexFile.unsorted"
   (
     catchEnvironment "$handler" rm -f "$indexFile" "$unsorted" || return $?
@@ -247,7 +247,7 @@ ___documentationIndexDocumentation() {
 #
 __documentationIndexCache() {
   local handler="_${FUNCNAME[0]}"
-  returnCatch "$handler" documentationBuildCache "index" || return $?
+  catchReturn "$handler" documentationBuildCache "index" || return $?
 }
 ___documentationIndexCache() {
   # __IDENTICAL__ usageDocument 1

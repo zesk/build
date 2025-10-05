@@ -21,7 +21,7 @@ __awsInstall() {
 
   local start
   start=$(timingStart) || return $?
-  returnCatch "$handler" packageWhich unzip unzip || return $?
+  catchReturn "$handler" packageWhich unzip unzip || return $?
 
   local url
   statusMessage decorate info "Installing aws-cli ... " || :
@@ -35,18 +35,18 @@ __awsInstall() {
   esac
   {
     local buildDir quietLog clean=()
-    buildDir="$(returnCatch "$handler" buildCacheDirectory awsCache.$$)" || return $?
+    buildDir="$(catchReturn "$handler" buildCacheDirectory awsCache.$$)" || return $?
     clean+=("$buildDir")
-    quietLog="$(returnCatch "$handler" buildQuietLog awsInstall)" || returnClean $? "${clean[@]}" || return $?
+    quietLog="$(catchReturn "$handler" buildQuietLog awsInstall)" || returnClean $? "${clean[@]}" || return $?
     clean+=("$quietLog")
-    buildDir=$(returnCatch "$handler" directoryRequire "$buildDir") || returnClean $? "${clean[@]}" || return $?
+    buildDir=$(catchReturn "$handler" directoryRequire "$buildDir") || returnClean $? "${clean[@]}" || return $?
     clean+=("$buildDir")
 
     local zipFile=awscliv2.zip version
     catchEnvironmentQuiet "$handler" "$quietLog" urlFetch "$url" "$buildDir/$zipFile" || returnClean $? "${clean[@]}" || return $?
     catchEnvironmentQuiet "$handler" "$quietLog" unzip -d "$buildDir" "$buildDir/$zipFile" || returnClean $? "${clean[@]}" || return $?
     catchEnvironmentQuiet "$handler" "$quietLog" "$buildDir/aws/install" || returnClean $? "${clean[@]}" || return $?
-    version="$(returnCatch "$handler" __awsWrapper --version)" || returnClean $? "${clean[@]}" || return $?
+    version="$(catchReturn "$handler" __awsWrapper --version)" || returnClean $? "${clean[@]}" || return $?
     printf "%s %s\n" "$version" "$(timingReport "$start" OK)" || :
     catchEnvironment "$handler" rm -rf "${clean[@]}" || return $?
   }

@@ -100,12 +100,12 @@ __portUpgrade() {
   local handler="_${FUNCNAME[0]}"
   local quietLog upgradeLog result clean=()
 
-  quietLog=$(returnCatch "$handler" buildQuietLog "$handler") || return $?
-  upgradeLog=$(returnCatch "$handler" buildQuietLog "upgrade_${handler#_}") || return $?
+  quietLog=$(catchReturn "$handler" buildQuietLog "$handler") || return $?
+  upgradeLog=$(catchReturn "$handler" buildQuietLog "upgrade_${handler#_}") || return $?
   clean+=("$quietLog" "$upgradeLog")
   catchEnvironmentQuiet "$quietLog" packageUpdate || return $?
   catchEnvironmentQuiet "$quietLog" packageInstall || return $?
-  returnCatch "$handler" __sudoPortWrapper upgrade outdated | tee -a "$upgradeLog" >>"$quietLog" || returnUndo $? dumpPipe "macports upgrade failed" <"$quietLog" || returnClean $? "${clean[@]}" || return $?
+  catchReturn "$handler" __sudoPortWrapper upgrade outdated | tee -a "$upgradeLog" >>"$quietLog" || returnUndo $? dumpPipe "macports upgrade failed" <"$quietLog" || returnClean $? "${clean[@]}" || return $?
   catchEnvironment "$handler" rm -rf "${clean[@]}" || return $?
   printf "%s\n" "$result"
 }

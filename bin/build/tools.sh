@@ -61,7 +61,7 @@ __functionLoader() {
   shift 4 || catchArgument "$handler" "Missing arguments: $(decorate each --count code -- "${__saved[@]}")" || return $?
   export BUILD_HOME
   if ! isFunction "$functionName"; then
-    returnCatch "$handler" bashSourcePath "${BUILD_HOME-}/bin/build/tools/$subdirectory/" || return $?
+    catchReturn "$handler" bashSourcePath "${BUILD_HOME-}/bin/build/tools/$subdirectory/" || return $?
     export __BUILD_LOADER
     __BUILD_LOADER+=("$functionName")
   fi

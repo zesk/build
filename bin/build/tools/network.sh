@@ -21,7 +21,7 @@ __networkConfigurationFiltered() {
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
     --install)
-      returnCatch "$handler" packageWhich ifconfig net-tools || return $?
+      catchReturn "$handler" packageWhich ifconfig net-tools || return $?
       ;;
     *)
       # _IDENTICAL_ argumentUnknownHandler 1

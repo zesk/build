@@ -7,6 +7,33 @@
 # Copyright &copy; 2025 Market Acumen, Inc.
 #
 
+#  decoratePath
+testDecoratePath() {
+  export TMPDIR
+
+  mockEnvironmentStart HOME
+  mockEnvironmentStart BUILD_HOME
+  mockEnvironmentStart TMPDIR "$TMPDIR"
+
+  assertEquals "$HOME/cation" "$(decoratePath "Yo/cation")" || return $?
+  assertEquals "$BUILD_HOME/cation" "$(decoratePath "/var/cation")" || return $?
+  assertEquals "💣/cation" "$(decoratePath "$TMPDIR/cation")" || return $?
+
+  export HOME="Yo"
+  export BUILD_HOME="/var/"
+
+  assertEquals "🏠/cation" "$(decoratePath "Yo/cation")" || return $?
+  assertEquals "🍎/cation" "$(decoratePath "/var/cation")" || return $?
+  assertEquals "💣/cation" "$(decoratePath "$TMPDIR/cation")" || return $?
+
+  mockEnvironmentStop HOME BUILD_HOME TMPDIR
+}
+testDecorateStyle() {
+  assertEquals "38;2;255;255;0" "$(decorateStyle bold)" || return $?
+  assertExitCode 0 decorateStyle bold 31 || return $?
+  assertEquals "31" "$(decorateStyle bold)" || return $?
+}
+
 testDecorateStdin() {
   assertExitCode 0 decorate green || return $?
   assertEquals "$(printf "%s\n" "Something notable and prescient" "Leader" | decorate quote)" "\"Something notable and prescient\""$'\n'"\"Leader\"" || return $?

@@ -115,7 +115,7 @@ bashPromptMarkers() {
   local markers=()
 
   export __BASH_PROMPT_MARKERS
-  returnCatch "$handler" buildEnvironmentLoad __BASH_PROMPT_MARKERS || return $?
+  catchReturn "$handler" buildEnvironmentLoad __BASH_PROMPT_MARKERS || return $?
 
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#

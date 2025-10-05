@@ -55,7 +55,7 @@ testMapTokens() {
   local handler="returnMessage" home
 
   local COLUMNS LINES
-  home=$(returnCatch "$handler" buildHome) || return $?
+  home=$(catchReturn "$handler" buildHome) || return $?
 
   echo | assertExitCode 0 mapTokens || return $?
   assertEquals "" "$(echo | mapTokens)" || return $?
@@ -98,7 +98,7 @@ testMapValue() {
 
   assertEquals "bar" "$(mapValue "$tempEnv" "{foo}")" || return $?
 
-  returnCatch "$handler" rm -f "$tempEnv" || return $?
+  catchReturn "$handler" rm -f "$tempEnv" || return $?
 }
 
 testMapEnvironmentBadNames() {

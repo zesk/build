@@ -84,8 +84,8 @@ __loopExecute() {
 
     # Compute status line
     local elapsed seconds nLines stamp
-    nLines=$(returnCatch "$handler" fileLineCount "$outputBuffer") || return $?
-    elapsed=$(($(returnCatch "$handler" timingStart) - start)) || return $?
+    nLines=$(catchReturn "$handler" fileLineCount "$outputBuffer") || return $?
+    elapsed=$(($(catchReturn "$handler" timingStart) - start)) || return $?
     seconds=$(timingFormat "$elapsed")
     seconds="$seconds $(plural "$seconds" second seconds)"
     stamp=$(date "+%F %T")
@@ -111,7 +111,7 @@ __loopExecute() {
       elapsed=$((elapsed / 1000))
       if [ "$elapsed" -lt "$sleepDelay" ]; then
         cursorSet 1 "$((saveY - 1))"
-        returnCatch "$handler" interactiveCountdown --prefix "$statusLine, running $title in " "$((sleepDelay - elapsed))" || return $?
+        catchReturn "$handler" interactiveCountdown --prefix "$statusLine, running $title in " "$((sleepDelay - elapsed))" || return $?
       fi
     fi
     iterations=$((iterations + 1))

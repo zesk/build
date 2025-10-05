@@ -23,7 +23,7 @@ darwinSoundDirectory() {
   [ $# -eq 0 ] || __help --only "$handler" "$@" || return "$(convertValue $? 1 0)"
 
   isDarwin || throwEnvironment "$handler" "Only on Darwin" || return $?
-  home=$(returnCatch "$handler" userRecordHome) || return $?
+  home=$(catchReturn "$handler" userRecordHome) || return $?
   printf "%s\n" "$home/Library/Sounds"
 }
 _darwinSoundDirectory() {
@@ -276,7 +276,9 @@ darwinDialog() {
   (
     # Documentation
     # https://developer.apple.com/library/archive/documentation/AppleScript/Conceptual/AppleScriptLangGuide/reference/ASLR_cmds.html#//apple_ref/doc/uid/TP40000983-CH216-SW12
-    local script="display dialog \"$messageText\" buttons { ${choiceText[*]} } default button $defaultButton"
+    local choices
+    choices=$(listJoin "," "${choiceText[@]}")
+    local script="display dialog \"$messageText\" buttons { $choices } default button $defaultButton"
     [ -z "$timeout" ] || script="$script giving up after $timeout"
     [ -z "$title" ] || script="$script with title \"$(escapeDoubleQuotes "$title")\""
     # [ -z "$icon" ] || script="$script with icon \"$(escapeDoubleQuotes "$icon")\""

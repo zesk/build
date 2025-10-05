@@ -37,8 +37,8 @@ urlMatchesLocalFileSize() {
     shift
   done
 
-  localSize=$(returnCatch "$handler" fileSize "$file") || return $?
-  remoteSize=$(returnCatch "$handler" urlContentLength "$url") || return $?
+  localSize=$(catchReturn "$handler" fileSize "$file") || return $?
+  remoteSize=$(catchReturn "$handler" urlContentLength "$url") || return $?
   localSize=$((localSize + 0))
   isPositiveInteger "$remoteSize" || throwEnvironment "$handler" "Remote size is not integer: $(decorate value "$remoteSize")" || return $?
 
@@ -78,7 +78,7 @@ urlContentLength() {
       url=$(usageArgumentURL "$handler" "url" "$1") || return $?
       catchEnvironment "$handler" curl -s -I "$url" >"$tempFile" || returnClean $? "$tempFile" || return $?
       remoteSize=$(grep -i 'Content-Length' "$tempFile" | awk '{ print $2 }') || throwEnvironment "$handler" "Remote URL did not return Content-Length" || returnClean $? "$tempFile" || return $?
-      returnCatch "$handler" rm -f "$tempFile" || return $?
+      catchReturn "$handler" rm -f "$tempFile" || return $?
       remoteSize="$(trimSpace "$remoteSize")"
       isUnsignedInteger "$remoteSize" || throwEnvironment "$handler" "Remote content length was non-integer: $remoteSize" || return $?
       printf "%d\n" $((remoteSize + 0))
@@ -140,10 +140,10 @@ websiteScrape() {
     shift
   done
 
-  logFile=$(returnCatch "$handler" buildQuietLog "$handler.$$.log") || return $?
-  progressFile=$(returnCatch "$handler" buildQuietLog "$handler.$$.progress.log") || return $?
+  logFile=$(catchReturn "$handler" buildQuietLog "$handler.$$.log") || return $?
+  progressFile=$(catchReturn "$handler" buildQuietLog "$handler.$$.progress.log") || return $?
 
-  returnCatch "$handler" packageWhich wget wget || return $?
+  catchReturn "$handler" packageWhich wget wget || return $?
 
   aa=()
   aa+=(-e robots=off)

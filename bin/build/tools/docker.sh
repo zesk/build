@@ -122,7 +122,7 @@ dockerLocalContainer() {
 
   export BUILD_DOCKER_PLATFORM BUILD_DOCKER_PATH BUILD_DOCKER_IMAGE
 
-  returnCatch "$handler" buildEnvironmentLoad BUILD_DOCKER_PLATFORM BUILD_DOCKER_IMAGE BUILD_DOCKER_PATH || return $?
+  catchReturn "$handler" buildEnvironmentLoad BUILD_DOCKER_PLATFORM BUILD_DOCKER_IMAGE BUILD_DOCKER_PATH || return $?
 
   platform=${BUILD_DOCKER_PLATFORM}
   imageApplicationPath=${BUILD_DOCKER_PATH}

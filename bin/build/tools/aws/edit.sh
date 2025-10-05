@@ -46,7 +46,7 @@ __awsCredentialsAdd() {
   done
   # IDENTICAL profileNameArgumentValidation 4
   if [ -z "$profileName" ]; then
-    profileName="$(returnCatch "$handler" buildEnvironmentGet AWS_PROFILE)" || return $?
+    profileName="$(catchReturn "$handler" buildEnvironmentGet AWS_PROFILE)" || return $?
     [ -n "$profileName" ] || profileName="default"
   fi
   [ -n "$key" ] || throwArgument "$handler" "key is required" || return $?
@@ -58,7 +58,7 @@ __awsCredentialsAdd() {
     "aws_secret_access_key = $secret"
   )
   local credentials name="${FUNCNAME[0]#__}"
-  credentials="$(returnCatch "$handler" awsCredentialsFile --create)" || return $?
+  credentials="$(catchReturn "$handler" awsCredentialsFile --create)" || return $?
   if awsCredentialsHasProfile "$profileName"; then
     ! "$addComments" || lines+=("# $name replaced $profileName on $(date -u)")
     $forceFlag || throwEnvironment "$handler" "Profile $(decorate value "$profileName") exists in $(decorate code "$credentials")" || return $?
@@ -113,16 +113,16 @@ __awsCredentialsRemove() {
 
   # IDENTICAL profileNameArgumentValidation 4
   if [ -z "$profileName" ]; then
-    profileName="$(returnCatch "$handler" buildEnvironmentGet AWS_PROFILE)" || return $?
+    profileName="$(catchReturn "$handler" buildEnvironmentGet AWS_PROFILE)" || return $?
     [ -n "$profileName" ] || profileName="default"
   fi
 
   export AWS_PROFILE
 
-  returnCatch "$handler" buildEnvironmentLoad AWS_PROFILE || return $?
+  catchReturn "$handler" buildEnvironmentLoad AWS_PROFILE || return $?
 
   local credentials
-  credentials="$(returnCatch "$handler" awsCredentialsFile --path)" || return $?
+  credentials="$(catchReturn "$handler" awsCredentialsFile --path)" || return $?
   [ -f "$credentials" ] || return 0
   if awsCredentialsHasProfile "$profileName"; then
     _awsCredentialsRemoveSectionInPlace "$handler" "$credentials" "$profileName" "" || return $?
@@ -132,7 +132,7 @@ __awsCredentialsRemove() {
 _awsCredentialsRemoveSection() {
   local handler="$1" credentials="$2" profileName="$3" newCredentials="${4-}"
   local pattern="\[\s*$profileName\s*\]" lines total
-  total=$((0 + $(returnCatch "$handler" fileLineCount "$credentials"))) || return $?
+  total=$((0 + $(catchReturn "$handler" fileLineCount "$credentials"))) || return $?
   exec 3>&1
   lines=$(catchEnvironment "$handler" grepSafe -m 1 -B 32767 "$credentials" -e "$pattern" | catchEnvironment "$handler" grepSafe -v -e "$pattern" | catchEnvironment "$handler" trimTail | tee >(cat >&3) | fileLineCount) || return $?
   [ -z "$newCredentials" ] || printf -- "\n%s\n" "$newCredentials" | catchEnvironment "$handler" trimTail || return $?

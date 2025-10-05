@@ -51,7 +51,7 @@ alpineContainer() {
   local handler="_${FUNCNAME[0]}"
 
   export LC_TERMINAL TERM
-  returnCatch "$handler" buildEnvironmentLoad LC_TERMINAL TERM || return $?
+  catchReturn "$handler" buildEnvironmentLoad LC_TERMINAL TERM || return $?
   catchEnvironment "$handler" dockerLocalContainer --handler "$handler" --image alpine:latest --path /root/build --env LC_TERMINAL="$LC_TERMINAL" --env TERM="$TERM" /root/build/bin/build/need-bash.sh Alpine apk add bash ncurses -- "$@" || return $?
 }
 _alpineContainer() {
@@ -103,17 +103,17 @@ __apkUpgrade() {
   local handler="_${FUNCNAME[0]}"
   local quietLog upgradeLog result clean=()
 
-  quietLog=$(returnCatch "$handler" buildQuietLog "$handler") || return $?
-  upgradeLog=$(returnCatch "$handler" buildQuietLog "upgrade_${handler#_}") || return $?
+  quietLog=$(catchReturn "$handler" buildQuietLog "$handler") || return $?
+  upgradeLog=$(catchReturn "$handler" buildQuietLog "upgrade_${handler#_}") || return $?
   clean+=("$quietLog" "$upgradeLog")
   catchEnvironment "$handler" apk upgrade | tee -a "$upgradeLog" >>"$quietLog" || returnUndo $? dumpPipe "apk upgrade failed" <"$quietLog" || returnClean $? "${clean[@]}" || return $?
   if ! muzzle packageNeedRestartFlag; then
     if grep -q " restart " "$upgradeLog" || grep -qi needrestart "$upgradeLog" || grep -qi need-restart "$upgradeLog"; then
-      returnCatch "$handler" packageNeedRestartFlag "true" || return $?
+      catchReturn "$handler" packageNeedRestartFlag "true" || return $?
     fi
     result=restart
   else
-    returnCatch "$handler" packageNeedRestartFlag "" || return $?
+    catchReturn "$handler" packageNeedRestartFlag "" || return $?
     result=ok
   fi
   printf "%s\n" "$result"

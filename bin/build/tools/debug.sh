@@ -147,7 +147,7 @@ bashRecursionDebug() {
 
   local cacheFile
 
-  cacheFile="$(returnCatch "$handler" buildCacheDirectory)/.${FUNCNAME[0]}" || return $?
+  cacheFile="$(catchReturn "$handler" buildCacheDirectory)/.${FUNCNAME[0]}" || return $?
   if [ "${__BUILD_RECURSION-}" = "true" ]; then
     if [ "${1-}" = "--end" ]; then
       unset __BUILD_RECURSION

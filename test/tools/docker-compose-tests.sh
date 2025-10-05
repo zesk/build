@@ -12,7 +12,7 @@ testIsDockerComposeRunning() {
   if whichExists docker; then
     local oldHome
 
-    oldHome=$(returnCatch "$handler" buildHome) || return $?
+    oldHome=$(catchReturn "$handler" buildHome) || return $?
 
     mockEnvironmentStart BUILD_HOME
 

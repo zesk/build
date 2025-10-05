@@ -48,7 +48,7 @@ __updateMarkdown() {
   __addNoteTo LICENSE.md
 
   local buildMarker
-  buildMarker=$(returnCatch "$handler" __buildMarker) || return $?
+  buildMarker=$(catchReturn "$handler" __buildMarker) || return $?
 
   #
   # Disable this to see what environment shows up in commit hooks for GIT*=
