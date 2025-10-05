@@ -69,15 +69,16 @@ __usageDocument() {
     ;;
   esac
 
-  local variablesFile commentFile
+  local variablesFile
   variablesFile=$(fileTemporaryName "$handler") || return $?
-  commentFile="$variablesFile.comment"
-  __catch "$handler" bashFunctionComment "$functionDefinitionFile" "$functionName" >"$commentFile" || returnClean $? "$commentFile" || return $?
+  local commentFile="$variablesFile.comment"
+  local clean=("$variablesFile" "$commentFile")
+  __catch "$handler" bashFunctionComment "$functionDefinitionFile" "$functionName" >"$commentFile" || returnClean $? "${clean[@]}" || return $?
   if ! __catch "$handler" bashDocumentationExtract "$functionName" >"$variablesFile" <"$commentFile"; then
     dumpPipe "commentFile" <"$commentFile"
     dumpPipe "variablesFile" <"$variablesFile"
     dumpPipe "functionDefinitionFile" <"$functionDefinitionFile"
-    __throwArgument "$handler" "Unable to extract \"$functionName\" from \"$functionDefinitionFile\"" || returnClean $? "$variablesFile" "$commentFile" || return $?
+    __throwArgument "$handler" "Unable to extract \"$functionName\" from \"$functionDefinitionFile\"" || returnClean $? "${clean[@]}" || return $?
   fi
   (
     local fn="$functionName" description="" argument="" base return_code="" environment="" stdin="" stdout="" example="" build_debug=""
@@ -86,9 +87,9 @@ __usageDocument() {
     set -a
     base="$(basename "$functionDefinitionFile")"
     # shellcheck source=/dev/null
-    __catchEnvironment "$__handler" source "$variablesFile" || returnClean $? "$variablesFile" "$commentFile" || return $?
+    __catchEnvironment "$__handler" source "$variablesFile" || returnClean $? "${clean[@]}" || return $?
     # Some variables MAY BE OVERWRITTEN ABOVE .e.g. `__handler`
-    # TODO __catchEnvironment "$__handler" rm -f "$variablesFile" "$commentFile" || return $?
+    __catchEnvironment "$__handler" rm -f "$variablesFile" "$commentFile" || return $?
     set +a
 
     : "$base $return_code $environment $stdin $stdout $example are referenced here and with \${!variable} below"
@@ -119,7 +120,6 @@ __usageDocument() {
       __buildDebugEnable
     fi
     __catch "$__handler" bashRecursionDebug --end || return $?
-    # TODO ) || returnClean $? "$variablesFile" "$commentFile" || return $?
-  ) || return $?
+  ) || returnClean $? "${clean[@]}" || return $?
   return "$returnCode"
 }
