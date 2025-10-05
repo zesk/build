@@ -152,3 +152,30 @@ _buildBuildTiming() {
   # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
+
+#
+# Force the fingerprints in the APPLICATION_JSON to be up to date
+#
+__buildFingerUpdate() {
+  local handler="_${FUNCNAME[0]}"
+
+  local f jf
+
+  f=$(catchReturn "$handler" hookRun application-fingerprint) || return $?
+  jf=$(catchReturn "$handler" buildEnvironmentGet APPLICATION_JSON) || return $?
+  local path u=()
+  for path in .fingerprint .deprecated '.identical."--internal"' '.identical.default'; do
+    local value
+    value=$(catchReturn "$handler" jsonFileGet "$jf" "$path") || return $?
+    if [ "$value" != "$f" ]; then
+      statusMessage decorate info "Updating $(decorate code "$path")"
+      catchReturn "$handler" jsonFileSet "$jf" "$path" "$f" || return $?
+      u+=("$path")
+    fi
+  done
+  [ "${#u[@]}" -eq 0 ] || statusMessage --last decorate success "Updated $(decorate each bold-red "${u[@]}") [$(pluralWord "${#u[@]}" field)] in $(decorate file "$jf")"
+}
+___buildFingerUpdate() {
+  # __IDENTICAL__ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}

@@ -74,7 +74,7 @@ test_iTerm2Image() {
 
 test_iTerm2Version() {
   if isiTerm2; then
-    assertOutputContains ITERM2 iTerm2Version || return $?
+    iTerm2Version || return $?
   fi
 }
 

@@ -268,3 +268,14 @@ testFileLineCount() {
 
   unset RANDOM
 }
+
+# TODO fileExtractLines
+# TODO fileGroup
+# TODO fileIsOldest
+# TODO fileModificationTimes
+# TODO fileModifiedDays
+# TODO fileModifiedRecently
+# TODO fileModifiedSeconds
+# TODO fileOwner
+# TODO fileReverseLines
+# TODO filesRename

@@ -40,10 +40,12 @@ testEnvironmentFileDockerToBashCompatible() {
   local home
   home=$(catchReturn "$handler" buildHome) || return $?
 
+  local exitCode
+
   decorate info "PWD is $(pwd)"
-  if environmentFileDockerToBashCompatible "$home/test/example/test.env" >"$out" 2>"$err"; then
-    throwEnvironment "$handler" "environmentFileDockerToBashCompatible SHOULD fail" || return $?
-  fi
+  catchEnvironment "$handler" environmentFileDockerToBashCompatible "$home/test/example/test.env" >"$out" 2>"$err" || exitCode=$?
+
+  assertNotEquals "0" "$exitCode" || return $?
 
   # Different than testEnvironmentFileDockerToBashCompatiblePipe
   assertFileContains "$out" "A=" "ABC=" "ABC_D=" "A01234=" "a=" "abc=" "abc_d=" || return $?

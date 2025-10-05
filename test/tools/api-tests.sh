@@ -8,6 +8,7 @@
 #
 
 testHooks() {
+  mockEnvironmentStart BUILD_COLORS
   local h
   for h in application-environment deploy-cleanup deploy-confirm version-created version-live; do
     assertExitCode 0 hasHook "$h" || return $?
@@ -16,6 +17,7 @@ testHooks() {
     assertNotExitCode 0 hasHook "$h" || return $?
   done
   decorate success testHooks OK
+  mockEnvironmentStop BUILD_COLORS
 }
 
 testEnvironmentVariables() {

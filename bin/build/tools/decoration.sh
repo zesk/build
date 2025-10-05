@@ -524,9 +524,9 @@ decoratePath() {
   export HOME BUILD_HOME TMPDIR
   while [ $# -gt 0 ]; do
     local display="$1"
+    display=${display//${TMPDIR-}/💣}
     display=${display//${BUILD_HOME-}/🍎}
     display=${display//${HOME-}/🏠}
-    display=${display//${TMPDIR-}/💣}
     printf "%s\n" "$display"
     shift
   done

@@ -8,10 +8,13 @@
 #
 
 testEverythingElse() {
+  # SUGAR
+
   #  catchEnvironmentQuiet
   #  executeInputSupport
+  #  isBashBuiltin
   #  isType
-  #  approveBashSource
+
   #  awsSecurityGroupIPModify
 
   # BASH Parsing
@@ -108,43 +111,7 @@ testEverythingElse() {
   #  environmentLoad
   #  environmentValueConvertArray
   #  evalCheck
-  #  fileExtractLines
-  #  fileGroup
-  #  fileIsOldest
-  #  fileModificationTimes
-  #  fileModifiedDays
-  #  fileModifiedRecentlyName
-  #  fileModifiedRecentlyTimestamp
-  #  fileModifiedSeconds
-  #  fileOwner
-  #  fileReverseLines
-  #  filesRename
-  #  gitBranchExists
-  #  gitBranchExistsLocal
-  #  gitBranchExistsRemote
-  #  gitBranchMergeCurrent
-  #  gitBranchify
-  #  gitEnsureSafeDirectory
-  #  gitFindHome
-  #  gitInstallHook
-  #  gitInstallHooks
-  #  gitMainly
-  #  gitPreCommitHasExtension
-  #  gitPreCommitListExtension
-  #  gitPreCommitSetup
-  #  gitRemoveFileFromHistory
-  #  gitRepositoryChanged
-  #  gitShowChanges
-  #  gitShowStatus
-  #  gitTagAgain
-  #  gitTagDelete
-  #  gitTagVersion
-  #  gitVersionLast
-  #  githubLatest
-  #  githubLatestRelease
-  #  githubProjectJSON
-  #  githubPublishDate
-  #  githubRelease
+
   #  hookRunOptional
   #  hookSource
   #  hookSourceOptional
@@ -155,27 +122,22 @@ testEverythingElse() {
   #  installInstallBinary
   #  interactiveCountdown
   #  interactiveManager
-  #  isBashBuiltin
-  #  isCharacterClasses
   #  isDockerComposeCommand
   #  isPHPStorm
   #  isPyCharm
   #  isVisualStudioCode
   #  lineFill
   #  linkRename
-  #  listCleanDuplicates
   #  loopExecute
   #  manPathCleanDuplicates
   #  mapValueTrim
   #  markdownIndentHeading
   #  nodePackageManagerValid
-  #  notify
   #  phpTailLog
   #  phpTest
   #  pipeRunner
   #  rotateLogs
   #  sshSetup
-  #  urlOpener
   #  usageDocumentSimple
   #  usageRequireBinary
   #  validateFileContents
@@ -184,25 +146,6 @@ testEverythingElse() {
 
   #  validate
   #  isValidateType
-
-  ## Python
-
-  #  pipInstall
-  #  pipUninstall
-  #  pipUpgrade
-  #  pipWrapper
-  #  pythonPackageInstalled
-  #  pythonVirtual
-
-  ## Package
-
-  #  packageDefault
-  #  packageGroupInstall
-  #  packageGroupUninstall
-  #  packageIsInstalled
-  #  packageMapping
-  #  packageUninstall
-  #  packageUpgrade
 
   # Likely do not need tests or are harder to test
   #  processOpenPipes
@@ -216,6 +159,12 @@ testEverythingElse() {
   #  manPathRemove
   #  pathConfigure
   #  pathRemove
+
+  # INTERACTIVE
+
+  #  approveBashSource
+  #  urlOpener
+  #  notify
 
   assertExitCode 0 printf "" || return $?
 }

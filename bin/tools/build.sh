@@ -144,7 +144,7 @@ __buildBuild() {
   catchReturn "$handler" "$home/bin/tools.sh" buildFastFiles || return $?
 
   if $makeDocumentation; then
-    local path rootShow rootPath="$home/documentation/site"
+    local path rootShow rootPath="$home/documentation/.site"
     rootShow=$(decorate file "$rootPath")
     for path in "$rootPath" "$home/documentation/.docs"; do
       if [ -d "$path" ]; then
@@ -154,6 +154,7 @@ __buildBuild() {
     done
     ! $debugFlag || statusMessage decorate warning "Building documentation ..."
     catchEnvironment "$handler" "$home/bin/documentation.sh" || return $?
+    rootPath="$home/documentation/.docs"
     [ -d "$rootPath" ] || throwEnvironment "$handler" "Documentation failed to create $rootShow" || return $?
   fi
 

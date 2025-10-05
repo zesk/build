@@ -126,7 +126,7 @@ environmentFileDockerToBashCompatible() {
         return $?
       fi
       [ -f "$file" ] || throwArgument "$handler" "Not a file $file" || return $?
-      __internalEnvironmentFileDockerToBashCompatiblePipe <"$file" || throwArgument "$handler" "Invalid file: $file" || return $?
+      __internalEnvironmentFileDockerToBashCompatiblePipe <"$file" || return $?
     done
   fi
 }
@@ -152,11 +152,13 @@ __internalEnvironmentFileDockerToBashCompatiblePipe() {
       name="${envLine%%=*}"
       value="${envLine#*=}"
       if [ -n "$name" ] && [ "$name" != "$envLine" ]; then
-        if [ -z "$(printf -- "%s" "$name" | sed 's/^[A-Za-z][0-9A-Za-z_]*$//g')" ]; then
-          printf -- "%s=\"%s\"\n" "$name" "$(escapeDoubleQuotes "$value")"
-        else
+        case "$name" in [^[:alpha:]_]* | *[^[:alnum:]_]]*)
           returnArgument "Invalid name at line $index: $name" || result=$?
-        fi
+          ;;
+        *)
+          printf -- "%s=\"%s\"\n" "$name" "$(escapeDoubleQuotes "$value")"
+          ;;
+        esac
       else
         returnArgument "Invalid line $index: $envLine" || result=$?
       fi

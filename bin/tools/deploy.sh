@@ -91,7 +91,7 @@ __buildDeploy() {
   bigText "$currentVersion" | decorate magenta | decorate wrap "$(decorate green "$name    🛠️️ ")" "$(decorate green " ⚒️ ")"
 
   if $makeDocumentation; then
-    local rootShow rootPath="$home/documentation/site"
+    local rootShow rootPath="$home/documentation/.site"
     rootShow=$(decorate file "$rootPath")
 
     if [ -z "$target" ]; then

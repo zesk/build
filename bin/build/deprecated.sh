@@ -111,7 +111,7 @@ __deprecatedCleanup() {
   export __BUILD_DEPRECATED_EXTRAS
   __BUILD_DEPRECATED_EXTRAS=("${ignoreExtras[@]+"${ignoreExtras[@]}"}")
 
-  __BUILD_DEPRECATED_EXTRAS+=(! -path '*/documentation/*/release/*' ! -path '*/documentation/site/*' \( -name '*.sh' -or -name '*.md' -or -name '*.txt' -or -name '*.json' -or -name '*.yml' -or -name '*.conf' \))
+  __BUILD_DEPRECATED_EXTRAS+=(! -path '*/documentation/*/release/*' ! -path '*/documentation/.site/*' \( -name '*.sh' -or -name '*.md' -or -name '*.txt' -or -name '*.json' -or -name '*.yml' -or -name '*.conf' \))
 
   start=$(__catch "$handler" timingStart) || return $?
   local home
@@ -255,7 +255,7 @@ __deprecatedConfiguration() {
   return "$exitCode"
 }
 
-# IDENTICAL returnMessage 38
+# IDENTICAL returnMessage 39
 
 # Return passed in integer return code and output message to `stderr` (non-zero) or `stdout` (zero)
 # Argument: exitCode - Required. UnsignedInteger. Exit code to return. Default is 1.
@@ -263,9 +263,10 @@ __deprecatedConfiguration() {
 # Return Code: exitCode
 # Requires: isUnsignedInteger printf returnMessage
 returnMessage() {
+  local handler="_${FUNCNAME[0]}"
   local to=1 icon="✅" code="${1:-1}" && shift 2>/dev/null
-  [ "$code" != "--help" ] || "_${FUNCNAME[0]}" 0 && return 0 || return 0
-  isUnsignedInteger "$code" || returnMessage 2 "${FUNCNAME[1]-none}:${BASH_LINENO[1]-} -> ${FUNCNAME[0]} non-integer \"$code\"" "$@" || return $?
+  if [ "$code" = "--help" ]; then "$handler" 0 && return; fi
+  isUnsignedInteger "$code" || returnMessage 2 "${FUNCNAME[1]-none}:${BASH_LINENO[1]-} -> ${handler#_} non-integer \"$code\"" "$@" || return $?
   if [ "$code" -gt 0 ]; then icon="❌ [$code]" && to=2; fi
   printf -- "%s %s\n" "$icon" "${*-§}" 1>&"$to"
   return "$code"
@@ -294,7 +295,6 @@ _isUnsignedInteger() {
 }
 
 # <-- END of IDENTICAL returnMessage
-# IDENTICAL __source 21
 
 # Load a source file and run a command
 # Argument: source - Required. File. Path to source relative to application root..

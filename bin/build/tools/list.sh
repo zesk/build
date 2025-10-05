@@ -117,13 +117,15 @@ _listAppend() {
 # Removes duplicates from a list and maintains ordering.
 #
 # Usage: {fn} separator listText
+# Argument: separator - String. Required. List separator character.
+# Argument: listText - String. Required. List to clean duplicates.
 # Argument: --help - Optional. Flag. This help.
 # Argument: --removed - Optional. Flag. Show removed items instead of the new list.
 #
 listCleanDuplicates() {
   local handler="_${FUNCNAME[0]}"
   local IFS
-  local item items removed=() separator="" showRemoved=false IFS
+  local item items removed=() separator="" showRemoved=false IFS testFunction=""
 
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
@@ -136,7 +138,7 @@ listCleanDuplicates() {
     --help) "$handler" 0 && return $? || return $? ;;
     --test)
       shift
-      test=$(usageArgumentCallable "$handler" "$argument" "${1-}") || return $?
+      testFunction=$(usageArgumentCallable "$handler" "$argument" "${1-}") || return $?
       ;;
     --removed)
       showRemoved=true
@@ -152,15 +154,14 @@ listCleanDuplicates() {
     shift
   done
 
-  newItems=()
+  local tempPath=""
   while [ $# -gt 0 ]; do
-    local tempPath
     IFS="$separator" read -r -a items < <(printf "%s\n" "$1")
     for item in "${items[@]}"; do
-      if [ -z "$test" ] || ! "$test" "$item" || ! tempPath=$(listAppend "$tempPath" "$separator" "$item"); then
+      if [ -n "$testFunction" ] && ! "$testFunction" "$item"; then
         removed+=("$item")
       else
-        newItems+=("$item")
+        tempPath=$(listAppend "$tempPath" "$separator" "$item")
       fi
     done
     shift
@@ -169,7 +170,7 @@ listCleanDuplicates() {
   if $showRemoved; then
     printf "%s\n" "${removed[*]}"
   else
-    printf "%s\n" "${newItems[*]}"
+    printf "%s\n" "$tempPath"
   fi
 }
 _listCleanDuplicates() {

@@ -9,24 +9,15 @@
 
 #  decoratePath
 testDecoratePath() {
-  export TMPDIR
+  export TMPDIR HOME BUILD_HOME
 
-  mockEnvironmentStart HOME
-  mockEnvironmentStart BUILD_HOME
-  mockEnvironmentStart TMPDIR "$TMPDIR"
+  assertEquals "🏠/cation" "$(decoratePath "${HOME%/}/cation")" || return $?
+  assertEquals "🍎/cation" "$(decoratePath "${BUILD_HOME%/}/cation")" || return $?
+  assertEquals "💣/tempFile" "$(decoratePath "$TMPDIR/tempFile")" || return $?
 
-  assertEquals "$HOME/cation" "$(decoratePath "Yo/cation")" || return $?
-  assertEquals "$BUILD_HOME/cation" "$(decoratePath "/var/cation")" || return $?
-  assertEquals "💣/cation" "$(decoratePath "$TMPDIR/cation")" || return $?
-
-  export HOME="Yo"
-  export BUILD_HOME="/var/"
-
-  assertEquals "🏠/cation" "$(decoratePath "Yo/cation")" || return $?
-  assertEquals "🍎/cation" "$(decoratePath "/var/cation")" || return $?
-  assertEquals "💣/cation" "$(decoratePath "$TMPDIR/cation")" || return $?
-
-  mockEnvironmentStop HOME BUILD_HOME TMPDIR
+  assertEquals "🏠/cation" "$(HOME="Yo" decoratePath "Yo/cation")" || return $?
+  assertEquals "🍎/cation" "$(BUILD_HOME="/var" decoratePath "/var/cation")" || return $?
+  assertEquals "💣/tempFile" "$(TMPDIR="/you-guessed-it" decoratePath "/you-guessed-it/tempFile")" || return $?
 }
 testDecorateStyle() {
   assertEquals "38;2;255;255;0" "$(decorateStyle bold)" || return $?

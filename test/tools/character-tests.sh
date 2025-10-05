@@ -85,3 +85,23 @@ testIsCharacterClass() {
     assertExitCode 0 isCharacterClass "$className" || return $?
   done < <(characterClasses)
 }
+
+__dataIsCharacterClasses() {
+  cat <<'EOF'
+0|alpha|a|b|c|d|e|f|g|h|i|j
+1|alpha|a|b|c|d|e|f|g|2|i|j
+0|print|"|a|b|d|^|"
+0|punct|"|[|]
+0|digit|0|1|2|3
+1|digit|0|1|2|Z|3
+EOF
+}
+
+testIsCharacterClasses() {
+  local testRow=()
+  while IFS="|" read -r -a testRow; do
+    set -- "${testRow[@]}"
+    local expected="$1" && shift
+    assertExitCode "$expected" isCharacterClass "$@" || return $?
+  done < <(__dataIsCharacterClasses)
+}

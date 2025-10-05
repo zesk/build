@@ -211,18 +211,6 @@ requireDirectory() {
 }
 
 # DEPRECATED 2025-07-07
-mostRecentlyModifiedFile() {
-  _deprecated "${FUNCNAME[0]}"
-  fileModifiedRecentlyName "$@"
-}
-
-# DEPRECATED 2025-07-07
-mostRecentlyModifiedTimestamp() {
-  _deprecated "${FUNCNAME[0]}"
-  fileModifiedRecentlyTimestamp "$@"
-}
-
-# DEPRECATED 2025-07-07
 betterType() {
   _deprecated "${FUNCNAME[0]}"
   fileType "$@"

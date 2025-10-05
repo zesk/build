@@ -59,3 +59,27 @@ testGitCommitFailures() {
 testGitInstallation() {
   __checkFunctionInstallsAndUninstallsBinary git gitInstall gitUninstall || return $?
 }
+
+# TODO
+
+#  gitBranchExists
+#  gitBranchExistsLocal
+#  gitBranchExistsRemote
+#  gitBranchMergeCurrent
+#  gitBranchify
+#  gitEnsureSafeDirectory
+#  gitFindHome
+#  gitInstallHook
+#  gitInstallHooks
+#  gitMainly
+#  gitPreCommitHasExtension
+#  gitPreCommitListExtension
+#  gitPreCommitSetup
+#  gitRemoveFileFromHistory
+#  gitRepositoryChanged
+#  gitShowChanges
+#  gitShowStatus
+#  gitTagAgain
+#  gitTagDelete
+#  gitTagVersion
+#  gitVersionLast

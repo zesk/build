@@ -13,8 +13,7 @@
 __characterClassReport() {
   local handler="$1" && shift
 
-  local arg character classList indexList outer matched total classOuter=false outerList innerList nouns outerText width=5
-  local savedLimit
+  local classOuter=false
 
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
@@ -38,13 +37,18 @@ __characterClassReport() {
     esac
     shift
   done
-  classList=()
-  for arg in $(characterClasses); do
-    classList+=("$arg")
-  done
+  local classList=()
+  IFS=$'\n' read -r -d '' -a classList < <(characterClasses)
+
+  local width=5
+
+  local savedLimit
 
   savedLimit="$(catchEnvironment "$handler" ulimit -n)" || return $?
   catchEnvironment "$handler" ulimit -n 10240 2>&1 || :
+
+  local indexList=() outerList=() innerList=() nouns=()
+
   # shellcheck disable=SC2207
   indexList=($(seq 0 127))
 
@@ -58,9 +62,9 @@ __characterClassReport() {
     innerList=("${classList[@]}")
     nouns=("class" "classes")
   fi
-  total=0
+  local total=0 outer
   for outer in "${outerList[@]}"; do
-    matched=0
+    local matched=0 outerText class character
     if $classOuter; then
       class="$outer"
       outerText="$(decorate label "$(alignRight 10 "$outer")")"
@@ -75,6 +79,7 @@ __characterClassReport() {
       fi
     fi
     printf "%s: " "$(alignLeft "$width" "$outerText")"
+    local inner
     for inner in "${innerList[@]}"; do
       if $classOuter; then
         character="$(characterFromInteger "$inner")"

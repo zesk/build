@@ -98,7 +98,7 @@ isCharacterClasses() {
     elif isCharacterClass "$class" "$character"; then
       return 0
     fi
-    shift || throwArgument "$handler" "shift $class failed" || return $?
+    shift
   done
   return 1
 }
@@ -182,7 +182,7 @@ isCharacterClass() {
     if ! eval "case $character in [[:$class:]]) ;; *) return 1 ;; esac"; then
       return 1
     fi
-    shift || throwArgument "$handler" "shift $character failed" || return $?
+    shift
   done
 }
 _isCharacterClass() {

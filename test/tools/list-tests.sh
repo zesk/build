@@ -36,3 +36,21 @@ testListJoin() {
   assertEquals "a:b:c" "$(listJoin ":" a b c)" || return $?
   assertEquals "a:b:c" "$(listJoin "::" a b c)" || return $?
 }
+
+__dataListCleanDuplicates() {
+  cat <<EOF
+a;b;c;d|;|a;b;c;d;a;b;c;d;a;b;c;d;a;b;c;d;a;b;c;d;a;b;c;d;a;b;c;d;a;b;c;d
+a;b;c;d;e|;|a;b;c;d;a;b;c;d;a;b;c;d;a;b;c;d;a;b;c;d;a;b;c;d;a;b;c;d;a;e;c;d
+a;f;b;c;d;e|;|a;f;b;c;d;a;b;c;d;a;b;c;d;a;b;c;d;a;b;c;d;a;b;c;d;a;b;c;d;a;e;c;d
+EOF
+}
+
+testListCleanDuplicates() {
+  local testRow=()
+  #  listCleanDuplicates
+  while IFS="|" read -r -a testRow; do
+    set -- "${testRow[@]}"
+    local expected="$1" && shift
+    assertEquals --display "listCleanDuplicates $*" "$expected" "$(listCleanDuplicates "$@")" || return $?
+  done < <(__dataListCleanDuplicates)
+}

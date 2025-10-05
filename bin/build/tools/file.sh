@@ -129,34 +129,18 @@ _fileModificationTimes() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# List the most recently modified file in a directory
+# List the most recently modified file in a directory prefixed with the timestamp
 # Usage: {fn} directory [ findArgs ... ]
 # Argument: directory - Required. Directory. Must exists - directory to list.
 # Argument: findArgs - Optional additional arguments to modify the find query
-fileModifiedRecentlyName() {
+fileModifiedRecently() {
   local handler="_${FUNCNAME[0]}"
   [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
   local directory="${1-}" && shift
   [ -d "$directory" ] || throwArgument "$handler" "Not a directory $(decorate code "$directory")" || return $?
-  fileModificationTimes "$directory" -type f "$@" | sort -r | head -1 | cut -f2- -d" "
+  fileModificationTimes "$directory" -type f "$@" | sort -rn | head -n 1
 }
-_fileModifiedRecentlyName() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
-}
-
-# List the most recently modified timestamp in a directory
-# Usage: {fn} directory [ findArgs ... ]
-# Argument: directory - Required. Directory. Must exists - directory to list.
-# Argument: findArgs - Optional additional arguments to modify the find query
-fileModifiedRecentlyTimestamp() {
-  local handler="_${FUNCNAME[0]}"
-  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
-  local directory="${1-}" && shift
-  [ -d "$directory" ] || throwArgument "$handler" "Not a directory $(decorate code "$directory")" || return $?
-  fileModificationTimes "$directory" -type f "$@" | sort -r | head -1 | cut -f1 -d" "
-}
-_fileModifiedRecentlyTimestamp() {
+_fileModifiedRecently() {
   # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
@@ -454,8 +438,8 @@ linkRename() {
       elif [ -z "$to" ]; then
         to=$(usageArgumentString "$handler" "to $(fileType "$1")" "$1") || return $?
       else
-      # _IDENTICAL_ argumentUnknownHandler 1
-      throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
+        # _IDENTICAL_ argumentUnknownHandler 1
+        throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
       fi
       ;;
     esac
@@ -746,8 +730,8 @@ linkCreate() {
       elif [ -z "$linkName" ]; then
         linkName=$(usageArgumentString "$handler" "linkName" "$argument") || return $?
       else
-      # _IDENTICAL_ argumentUnknownHandler 1
-      throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
+        # _IDENTICAL_ argumentUnknownHandler 1
+        throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
       fi
       ;;
     esac

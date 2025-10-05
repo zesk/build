@@ -20,3 +20,36 @@ testGithubURLParse() {
     assertEquals "$expected" "$(githubURLParse "$url")" || return $?
   done < <(__testGithubURLParseData)
 }
+
+testGithubStuff() {
+  local handler="returnMessage"
+  local temp
+
+  temp=$(fileTemporaryName "$handler") || return $?
+
+  catchEnvironment "$handler" githubProjectJSON zesk/build >"$temp" || returnClean $? "$temp" || return $?
+
+  local url
+  url=$(jsonFileGet "$temp" .url) || returnClean $? "$temp" || return $?
+  assertContains "https://api.github.com/repos/zesk/build/" "$url" || returnClean $? "$temp" || return $?
+
+  catchEnvironment "$handler" rm -f "$temp" || return $?
+
+  local publishDate
+  publishDate=$(catchEnvironment "$handler" githubPublishDate zesk/build) || return $?
+
+  assertExitCode 0 dateValid "$publishDate" || return $?
+
+  local latest current earliest
+
+  #  githubLatest
+  latest=$(catchEnvironment "$handler" githubLatestRelease zesk/build) || return $?
+
+  current=$(catchEnvironment "$handler" hookVersionCurrent) || return $?
+
+  earliest=$(printf "%s\n" "$latest" "$current" | versionSort | head -n 1) || return $?
+
+  assertEquals "$earliest" "$latest" || return $?
+}
+
+# githubRelease is tested in deploy.sh

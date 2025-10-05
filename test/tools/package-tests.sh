@@ -5,11 +5,13 @@
 # Copyright &copy; 2025 Market Acumen, Inc.
 #
 
+# Tag: package-install
 testPackageAPI() {
   local ourTestBinary=ronn ourTestPackage=ronn
 
   assertNotExitCode 0 packageNeedRestartFlag || return $?
   assertExitCode 0 packageUpdate --force || return $?
+  assertExitCode 0 packageUpgrade || return $?
   assertExitCode 0 packageNeedRestartFlag yes || return $?
   assertExitCode 0 packageNeedRestartFlag || return $?
   assertExitCode 0 packageNeedRestartFlag "" || return $?
@@ -41,7 +43,20 @@ testPackageAvailableList() {
   local temp
 
   temp=$(fileTemporaryName "$handler") || return $?
-  assertExitCode 0 packageAvailableList >"$temp" || return $?
+  catchEnvironment "$handler" packageAvailableList >"$temp" || return $?
   assertFileContains "$temp" mariadb mysql php python toilet || return $?
 }
 
+# Tag: package-install
+testPackageBasics() {
+  assertExitCode 0 packageInstall zip || return $?
+  assertExitCode 0 packageIsInstalled zip || return $?
+  assertExitCode 0 packageUninstall zip || return $?
+  assertNotExitCode 0 packageIsInstalled zip || return $?
+  assertExitCode 0 packageGroupInstall mariadb || return $?
+  assertExitCode 0 whichExists mariadb || return $?
+  assertExitCode 0 packageGroupUninstall mariadb || return $?
+  assertNotExitCode 0 whichExists mariadb || return $?
+
+  assertOutputContains mariadb packageMapping mariadb || return $?
+}
