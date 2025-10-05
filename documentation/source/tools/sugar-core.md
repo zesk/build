@@ -71,8 +71,6 @@ Run-related:
 
 {__execute}
 
-{__echo}
-
 {__environment}
 
 {__argument}

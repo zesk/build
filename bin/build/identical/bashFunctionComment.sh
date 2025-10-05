@@ -1,8 +1,6 @@
 #!/bin/bash
 #
-# Identical template
-#
-# Original of usageDocument
+# Original of bashFinalComment bashFunctionComment
 #
 # Copyright &copy; 2025 Market Acumen, Inc.
 #

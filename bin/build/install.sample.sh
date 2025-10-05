@@ -696,8 +696,8 @@ urlFetch() {
         shift
         break
       else
-        # _IDENTICAL_ argumentUnknownHandler 1
-        __throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
+      # _IDENTICAL_ argumentUnknownHandler 1
+      __throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
       fi
       ;;
     esac
@@ -1288,6 +1288,66 @@ __decorateExtensionQuote() {
 
 # <-- END of IDENTICAL decorate
 
+# _IDENTICAL_ __execute 7
+
+# Argument: binary ... - Required. Executable. Any arguments are passed to `binary`.
+# Run binary and output failed command upon error
+# Requires: returnMessage
+__execute() {
+  "$@" || returnMessage "$?" "$@" || return $?
+}
+
+# IDENTICAL _return 32
+
+# Return passed in integer return code and output message to `stderr` (non-zero) or `stdout` (zero)
+# Argument: exitCode - Required. UnsignedInteger. Exit code to return. Default is 1.
+# Argument: message ... - Optional. String. Message to output
+# Return Code: exitCode
+# Requires: isUnsignedInteger printf _return
+returnMessage() {
+  local to=1 icon="✅" code="${1:-1}" && shift 2>/dev/null
+  isUnsignedInteger "$code" || _return 2 "${FUNCNAME[1]-none}:${BASH_LINENO[1]-} -> ${FUNCNAME[0]} non-integer \"$code\"" "$@" || return $?
+  if [ "$code" -gt 0 ]; then icon="❌ [$code]" && to=2; fi
+  printf -- "%s %s\n" "$icon" "${*-§}" 1>&"$to"
+  return "$code"
+}
+_return() {
+  returnMessage "$@"
+}
+
+# Test if an argument is an unsigned integer
+# Source: https://stackoverflow.com/questions/806906/how-do-i-test-if-a-variable-is-a-number-in-bash
+# Credits: F. Hauri - Give Up GitHub (isnum_Case)
+# Original: is_uint
+# Argument: value - EmptyString. Value to test if it is an unsigned integer.
+# Usage: {fn} argument ...
+# Return Code: 0 - if it is an unsigned integer
+# Return Code: 1 - if it is not an unsigned integer
+# Requires: _return
+isUnsignedInteger() {
+  [ $# -eq 1 ] || _return 2 "Single argument only: $*" || return $?
+  case "${1#+}" in --help) usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]}" 0 ;; '' | *[!0-9]*) return 1 ;; esac
+}
+
+# <-- END of IDENTICAL _return
+
+# _IDENTICAL_ returnCodeString 15
+
+# Output the exit code as a string
+#
+# INTERNAL: Winner of the one-line bash award 10 years running
+# Argument: code ... - UnsignedInteger. String. Exit code value to output.
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
+# stdout: exitCodeToken, one per line
+returnCodeString() {
+  local k="" && while [ $# -gt 0 ]; do case "$1" in 0) k="success" ;; 1) k="environment" ;; 2) k="argument" ;; 97) k="assert" ;; 105) k="identical" ;; 108) k="leak" ;; 116) k="timeout" ;; 120) k="exit" ;; 127) k="not-found" ;; 130) k="user-interrupt" ;; 141) k="interrupt" ;; 253) k="internal" ;; 254) k="unknown" ;; --help) "_${FUNCNAME[0]}" 0 && return $? || return $? ;; *) k="[returnCodeString unknown \"$1\"]" ;; esac && [ -n "$k" ] || k="$1" && printf "%s\n" "$k" && shift; done
+}
+_returnCodeString() {
+  # __IDENTICAL__ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
 # _IDENTICAL_ __executeInputSupport 39
 
 # Support arguments and stdin as arguments to an executor
@@ -1329,58 +1389,69 @@ __executeInputSupport() {
   fi
 }
 
-# _IDENTICAL_ returnCodeString 15
+# _IDENTICAL_ returnClean 21
 
-# Output the exit code as a string
-#
-# INTERNAL: Winner of the one-line bash award 10 years running
-# Argument: code ... - UnsignedInteger. String. Exit code value to output.
-# DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
-# stdout: exitCodeToken, one per line
-returnCodeString() {
-  local k="" && while [ $# -gt 0 ]; do case "$1" in 0) k="success" ;; 1) k="environment" ;; 2) k="argument" ;; 97) k="assert" ;; 105) k="identical" ;; 108) k="leak" ;; 116) k="timeout" ;; 120) k="exit" ;; 127) k="not-found" ;; 130) k="user-interrupt" ;; 141) k="interrupt" ;; 253) k="internal" ;; 254) k="unknown" ;; --help) "_${FUNCNAME[0]}" 0 && return $? || return $? ;; *) k="[returnCodeString unknown \"$1\"]" ;; esac && [ -n "$k" ] || k="$1" && printf "%s\n" "$k" && shift; done
+# Delete files or directories and return the same exit code passed in.
+# Argument: exitCode - Required. Integer. Exit code to return.
+# Argument: item - Optional. One or more files or folders to delete, failures are logged to stderr.
+# Requires: isUnsignedInteger returnArgument __throwEnvironment usageDocument __throwArgument
+# Group: Sugar
+returnClean() {
+  local handler="_${FUNCNAME[0]}"
+  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
+  local exitCode="${1-}" && shift
+  if ! isUnsignedInteger "$exitCode"; then
+    __throwArgument "$handler" "$exitCode (not an integer) $*" || return $?
+  else
+    __catchEnvironment "$handler" rm -rf "$@" || return "$exitCode"
+    return "$exitCode"
+  fi
 }
-_returnCodeString() {
+_returnClean() {
   # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# IDENTICAL _return 32
+# _IDENTICAL_ convertValue 37
 
-# Return passed in integer return code and output message to `stderr` (non-zero) or `stdout` (zero)
-# Argument: exitCode - Required. UnsignedInteger. Exit code to return. Default is 1.
-# Argument: message ... - Optional. String. Message to output
-# Return Code: exitCode
-# Requires: isUnsignedInteger printf _return
-returnMessage() {
-  local to=1 icon="✅" code="${1:-1}" && shift 2>/dev/null
-  isUnsignedInteger "$code" || _return 2 "${FUNCNAME[1]-none}:${BASH_LINENO[1]-} -> ${FUNCNAME[0]} non-integer \"$code\"" "$@" || return $?
-  if [ "$code" -gt 0 ]; then icon="❌ [$code]" && to=2; fi
-  printf -- "%s %s\n" "$icon" "${*-§}" 1>&"$to"
-  return "$code"
+# map a value from one value to another given from-to pairs
+#
+# Prints the mapped value to stdout
+#
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
+# Argument: value - String. A value.
+# Argument: from - String. When value matches `from`, instead print `to`
+# Argument: to - String. The value to print when `from` matches `value`
+# Argument: ... - Additional from-to pairs can be passed, first matching value is used, all values will be examined if none match
+convertValue() {
+  local __handler="_${FUNCNAME[0]}" value="" from="" to=""
+  # __IDENTICAL__ __checkHelp1__handler 1
+  [ "${1-}" != "--help" ] || __help "$__handler" "$@" || return 0
+
+  while [ $# -gt 0 ]; do
+    if [ -z "$value" ]; then
+      value=$(usageArgumentString "$__handler" "value" "$1") || return $?
+    elif [ -z "$from" ]; then
+      from=$(usageArgumentString "$__handler" "from" "$1") || return $?
+    elif [ -z "$to" ]; then
+      to=$(usageArgumentString "$__handler" "to" "$1") || return $?
+      if [ "$value" = "$from" ]; then
+        printf "%s\n" "$to"
+        return 0
+      fi
+      from="" && to=""
+    fi
+    shift
+  done
+  printf "%s\n" "${value:-0}"
 }
-_return() {
-  returnMessage "$@"
+_convertValue() {
+  # __IDENTICAL__ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# Test if an argument is an unsigned integer
-# Source: https://stackoverflow.com/questions/806906/how-do-i-test-if-a-variable-is-a-number-in-bash
-# Credits: F. Hauri - Give Up GitHub (isnum_Case)
-# Original: is_uint
-# Argument: value - EmptyString. Value to test if it is an unsigned integer.
-# Usage: {fn} argument ...
-# Return Code: 0 - if it is an unsigned integer
-# Return Code: 1 - if it is not an unsigned integer
-# Requires: _return
-isUnsignedInteger() {
-  [ $# -eq 1 ] || _return 2 "Single argument only: $*" || return $?
-  case "${1#+}" in --help) usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]}" 0 ;; '' | *[!0-9]*) return 1 ;; esac
-}
-
-# <-- END of IDENTICAL _return
-
-# IDENTICAL _tinySugar 97
+# IDENTICAL _tinySugar 74
 
 # Run `handler` with an argument error
 # Argument: handler - Function. Required. Error handler.
@@ -1454,30 +1525,8 @@ __catch() {
   "$@" || "$handler" "$?" "$@" || return $?
 }
 
-# _IDENTICAL_ returnClean 21
-
-# Delete files or directories and return the same exit code passed in.
-# Argument: exitCode - Required. Integer. Exit code to return.
-# Argument: item - Optional. One or more files or folders to delete, failures are logged to stderr.
-# Requires: isUnsignedInteger returnArgument __throwEnvironment usageDocument __throwArgument
-# Group: Sugar
-returnClean() {
-  local handler="_${FUNCNAME[0]}"
-  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
-  local exitCode="${1-}" && shift
-  if ! isUnsignedInteger "$exitCode"; then
-    __throwArgument "$handler" "$exitCode (not an integer) $*" || return $?
-  else
-    __catchEnvironment "$handler" rm -rf "$@" || return "$exitCode"
-    return "$exitCode"
-  fi
-}
-_returnClean() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
-}
-
 # <-- END of IDENTICAL _tinySugar
+
 # Run a function and preserve exit code
 # Returns `code`
 # DOC TEMPLATE: --help 1

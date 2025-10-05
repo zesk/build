@@ -94,6 +94,29 @@ __installBinBuildCheck() {
   __installCheck "zesk/build" "build.json" "$@"
 }
 
+# _IDENTICAL_ returnClean 21
+
+# Delete files or directories and return the same exit code passed in.
+# Argument: exitCode - Required. Integer. Exit code to return.
+# Argument: item - Optional. One or more files or folders to delete, failures are logged to stderr.
+# Requires: isUnsignedInteger returnArgument __throwEnvironment usageDocument __throwArgument
+# Group: Sugar
+returnClean() {
+  local handler="_${FUNCNAME[0]}"
+  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
+  local exitCode="${1-}" && shift
+  if ! isUnsignedInteger "$exitCode"; then
+    __throwArgument "$handler" "$exitCode (not an integer) $*" || return $?
+  else
+    __catchEnvironment "$handler" rm -rf "$@" || return "$exitCode"
+    return "$exitCode"
+  fi
+}
+_returnClean() {
+  # __IDENTICAL__ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
 # _IDENTICAL_ jsonField 29
 
 # Fetch a non-blank field from a JSON file with error handling
@@ -914,6 +937,86 @@ _bashFunctionComment() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
+# _IDENTICAL_ convertValue 37
+
+# map a value from one value to another given from-to pairs
+#
+# Prints the mapped value to stdout
+#
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
+# Argument: value - String. A value.
+# Argument: from - String. When value matches `from`, instead print `to`
+# Argument: to - String. The value to print when `from` matches `value`
+# Argument: ... - Additional from-to pairs can be passed, first matching value is used, all values will be examined if none match
+convertValue() {
+  local __handler="_${FUNCNAME[0]}" value="" from="" to=""
+  # __IDENTICAL__ __checkHelp1__handler 1
+  [ "${1-}" != "--help" ] || __help "$__handler" "$@" || return 0
+
+  while [ $# -gt 0 ]; do
+    if [ -z "$value" ]; then
+      value=$(usageArgumentString "$__handler" "value" "$1") || return $?
+    elif [ -z "$from" ]; then
+      from=$(usageArgumentString "$__handler" "from" "$1") || return $?
+    elif [ -z "$to" ]; then
+      to=$(usageArgumentString "$__handler" "to" "$1") || return $?
+      if [ "$value" = "$from" ]; then
+        printf "%s\n" "$to"
+        return 0
+      fi
+      from="" && to=""
+    fi
+    shift
+  done
+  printf "%s\n" "${value:-0}"
+}
+_convertValue() {
+  # __IDENTICAL__ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+# _IDENTICAL_ __executeInputSupport 39
+
+# Support arguments and stdin as arguments to an executor
+# Argument: executor ... -- - The command to run on each line of input or on each additional argument. Arguments to prefix the final variable argument can be supplied prior to an initial `--`.
+# Argument: -- - Alone after the executor forces `stdin` to be ignored. The `--` flag is also removed from the arguments passed to the executor.
+# Argument: ... - Any additional arguments are passed directly to the executor
+__executeInputSupport() {
+  local handler="$1" executor=() && shift
+
+  while [ $# -gt 0 ]; do
+    if [ "$1" = "--" ]; then
+      shift
+      break
+    fi
+    executor+=("$1")
+    shift
+  done
+  [ ${#executor[@]} -gt 0 ] || return 0
+
+  local byte
+  # On Darwin `read -t 0` DOES NOT WORK as a select on stdin
+  if [ $# -eq 0 ] && IFS="" read -r -t 1 -n 1 byte; then
+    local line done=false
+    if [ "$byte" = $'\n' ]; then
+      __catchEnvironment "$handler" "${executor[@]}" "" || return $?
+      byte=""
+    fi
+    while ! $done; do
+      IFS="" read -r line || done=true
+      [ -n "$byte$line" ] || ! $done || break
+      __catchEnvironment "$handler" "${executor[@]}" "$byte$line" || return $?
+      byte=""
+    done
+  else
+    if [ "${1-}" = "--" ]; then
+      shift
+    fi
+    __catchEnvironment "$handler" "${executor[@]}" "$@" || return $?
+  fi
+}
+
 # IDENTICAL fileReverseLines 18
 
 # Reverses a pipe's input lines to output using an awk trick.
@@ -1312,45 +1415,13 @@ __decorateExtensionQuote() {
 
 # <-- END of IDENTICAL decorate
 
-# _IDENTICAL_ __executeInputSupport 39
+# _IDENTICAL_ __execute 7
 
-# Support arguments and stdin as arguments to an executor
-# Argument: executor ... -- - The command to run on each line of input or on each additional argument. Arguments to prefix the final variable argument can be supplied prior to an initial `--`.
-# Argument: -- - Alone after the executor forces `stdin` to be ignored. The `--` flag is also removed from the arguments passed to the executor.
-# Argument: ... - Any additional arguments are passed directly to the executor
-__executeInputSupport() {
-  local handler="$1" executor=() && shift
-
-  while [ $# -gt 0 ]; do
-    if [ "$1" = "--" ]; then
-      shift
-      break
-    fi
-    executor+=("$1")
-    shift
-  done
-  [ ${#executor[@]} -gt 0 ] || return 0
-
-  local byte
-  # On Darwin `read -t 0` DOES NOT WORK as a select on stdin
-  if [ $# -eq 0 ] && IFS="" read -r -t 1 -n 1 byte; then
-    local line done=false
-    if [ "$byte" = $'\n' ]; then
-      __catchEnvironment "$handler" "${executor[@]}" "" || return $?
-      byte=""
-    fi
-    while ! $done; do
-      IFS="" read -r line || done=true
-      [ -n "$byte$line" ] || ! $done || break
-      __catchEnvironment "$handler" "${executor[@]}" "$byte$line" || return $?
-      byte=""
-    done
-  else
-    if [ "${1-}" = "--" ]; then
-      shift
-    fi
-    __catchEnvironment "$handler" "${executor[@]}" "$@" || return $?
-  fi
+# Argument: binary ... - Required. Executable. Any arguments are passed to `binary`.
+# Run binary and output failed command upon error
+# Requires: returnMessage
+__execute() {
+  "$@" || returnMessage "$?" "$@" || return $?
 }
 
 # _IDENTICAL_ returnCodeString 15
@@ -1404,7 +1475,7 @@ isUnsignedInteger() {
 
 # <-- END of IDENTICAL _return
 
-# IDENTICAL _tinySugar 97
+# IDENTICAL _tinySugar 74
 
 # Run `handler` with an argument error
 # Argument: handler - Function. Required. Error handler.
@@ -1476,29 +1547,6 @@ __throw() {
 __catch() {
   local handler="${1-}" && shift || returnArgument "Missing handler" || return $?
   "$@" || "$handler" "$?" "$@" || return $?
-}
-
-# _IDENTICAL_ returnClean 21
-
-# Delete files or directories and return the same exit code passed in.
-# Argument: exitCode - Required. Integer. Exit code to return.
-# Argument: item - Optional. One or more files or folders to delete, failures are logged to stderr.
-# Requires: isUnsignedInteger returnArgument __throwEnvironment usageDocument __throwArgument
-# Group: Sugar
-returnClean() {
-  local handler="_${FUNCNAME[0]}"
-  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
-  local exitCode="${1-}" && shift
-  if ! isUnsignedInteger "$exitCode"; then
-    __throwArgument "$handler" "$exitCode (not an integer) $*" || return $?
-  else
-    __catchEnvironment "$handler" rm -rf "$@" || return "$exitCode"
-    return "$exitCode"
-  fi
-}
-_returnClean() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # <-- END of IDENTICAL _tinySugar

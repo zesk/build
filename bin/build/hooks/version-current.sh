@@ -26,6 +26,7 @@ __hookVersionCurrent() {
 
   local notes
   notes=$(__catch "$handler" buildEnvironmentGet --application "$home" BUILD_RELEASE_NOTES) || return $?
+  pathIsAbsolute "$notes" || notes="$home/$notes"
   __catchEnvironment "$handler" muzzle pushd "$notes" || return $?
   find . -mindepth 1 -maxdepth 1 -name '*.md' | cut -c 3- | sed 's/.md//g' | versionSort -r | head -n 1 || :
   __catchEnvironment "$handler" muzzle popd || return $?

@@ -90,29 +90,6 @@ _choose() {
   "$testValue" && printf -- "%s\n" "${1-}" || printf -- "%s\n" "${2-}"
 }
 
-# _IDENTICAL_ returnClean 21
-
-# Delete files or directories and return the same exit code passed in.
-# Argument: exitCode - Required. Integer. Exit code to return.
-# Argument: item - Optional. One or more files or folders to delete, failures are logged to stderr.
-# Requires: isUnsignedInteger returnArgument __throwEnvironment usageDocument __throwArgument
-# Group: Sugar
-returnClean() {
-  local handler="_${FUNCNAME[0]}"
-  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
-  local exitCode="${1-}" && shift
-  if ! isUnsignedInteger "$exitCode"; then
-    __throwArgument "$handler" "$exitCode (not an integer) $*" || return $?
-  else
-    __catchEnvironment "$handler" rm -rf "$@" || return "$exitCode"
-    return "$exitCode"
-  fi
-}
-_returnClean() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
-}
-
 # _IDENTICAL_ _errors 36
 
 # Return `argument` error code. Outputs `message ...` to `stderr`.
@@ -151,13 +128,27 @@ __catch() {
   "$@" || "$handler" "$?" "$@" || return $?
 }
 
-# _IDENTICAL_ __execute 7
+# _IDENTICAL_ returnClean 21
 
-# Argument: binary ... - Required. Executable. Any arguments are passed to `binary`.
-# Run binary and output failed command upon error
-# Requires: returnMessage
-__execute() {
-  "$@" || returnMessage "$?" "$@" || return $?
+# Delete files or directories and return the same exit code passed in.
+# Argument: exitCode - Required. Integer. Exit code to return.
+# Argument: item - Optional. One or more files or folders to delete, failures are logged to stderr.
+# Requires: isUnsignedInteger returnArgument __throwEnvironment usageDocument __throwArgument
+# Group: Sugar
+returnClean() {
+  local handler="_${FUNCNAME[0]}"
+  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
+  local exitCode="${1-}" && shift
+  if ! isUnsignedInteger "$exitCode"; then
+    __throwArgument "$handler" "$exitCode (not an integer) $*" || return $?
+  else
+    __catchEnvironment "$handler" rm -rf "$@" || return "$exitCode"
+    return "$exitCode"
+  fi
+}
+_returnClean() {
+  # __IDENTICAL__ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Output the `command ...` to stdout prior to running, then `__execute` it
@@ -167,6 +158,112 @@ __execute() {
 # Requires: printf decorate __execute __decorateExtensionQuote __decorateExtensionEach
 __echo() {
   printf -- "➡️ %s\n" "$(decorate each quote -- "$@")" && __execute "$@" || return $?
+}
+
+# _IDENTICAL_ __execute 7
+
+# Argument: binary ... - Required. Executable. Any arguments are passed to `binary`.
+# Run binary and output failed command upon error
+# Requires: returnMessage
+__execute() {
+  "$@" || returnMessage "$?" "$@" || return $?
+}
+
+# _IDENTICAL_ convertValue 37
+
+# map a value from one value to another given from-to pairs
+#
+# Prints the mapped value to stdout
+#
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
+# Argument: value - String. A value.
+# Argument: from - String. When value matches `from`, instead print `to`
+# Argument: to - String. The value to print when `from` matches `value`
+# Argument: ... - Additional from-to pairs can be passed, first matching value is used, all values will be examined if none match
+convertValue() {
+  local __handler="_${FUNCNAME[0]}" value="" from="" to=""
+  # __IDENTICAL__ __checkHelp1__handler 1
+  [ "${1-}" != "--help" ] || __help "$__handler" "$@" || return 0
+
+  while [ $# -gt 0 ]; do
+    if [ -z "$value" ]; then
+      value=$(usageArgumentString "$__handler" "value" "$1") || return $?
+    elif [ -z "$from" ]; then
+      from=$(usageArgumentString "$__handler" "from" "$1") || return $?
+    elif [ -z "$to" ]; then
+      to=$(usageArgumentString "$__handler" "to" "$1") || return $?
+      if [ "$value" = "$from" ]; then
+        printf "%s\n" "$to"
+        return 0
+      fi
+      from="" && to=""
+    fi
+    shift
+  done
+  printf "%s\n" "${value:-0}"
+}
+_convertValue() {
+  # __IDENTICAL__ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+# Run `command`, handle failure with `handler` with `code` and `command` as error
+# Usage: {fn} code handler command ...
+# Argument: code - Required. Integer. Exit code to return
+# Argument: handler - Required. Function. Failure command, passed remaining arguments and error code.
+# Argument: command - Required. String. Command to run.
+# Requires: isUnsignedInteger returnArgument isFunction isCallable
+__catchCode() {
+  local __count=$# __saved=("$@") __handler="_${FUNCNAME[0]}" code="${1-0}" command="${3-}"
+  # __IDENTICAL__ __checkCode__handler 1
+  isInteger "$code" || __throwArgument "$__handler" "Not integer: $(decorate value "[$code]") (#$__count $(decorate each code -- "${__saved[@]}"))" || return $?
+  __handler="${2-}"
+  # __IDENTICAL__ __checkHandler 1
+  isFunction "$__handler" || returnArgument "handler not callable \"$(decorate code "$__handler")\" Stack: $(debuggingStack)" || return $?
+  # __IDENTICAL__ __checkCommand__handler 1
+  isCallable "$command" || __throwArgument "$__handler" "Not callable $(decorate code "$command")" || return $?
+  shift 3
+  "$command" "$@" || "$__handler" "$code" "$(decorate each code "$command" "$@")" || return $?
+}
+___catchCode() {
+  # __IDENTICAL__ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+# Run `command`, upon failure run `handler` with an environment error
+# Usage: {fn} handler command ...
+# Argument: handler - Required. Function. Failure command
+# Argument: command - Required. Command to run.
+__catchEnvironment() {
+  __catchCode 1 "$@" || return $?
+}
+
+# Run `command`, upon failure run `handler` with an argument error
+# Argument: handler - Required. Function. Failure command
+# Argument: command - Required. Command to run.
+__catchArgument() {
+  __catchCode 2 "$@" || return $?
+}
+
+# Run `handler` with an environment error
+# Argument: handler - Required. Function. Failure command
+# Argument: message - Optional. Error message to display.
+__throwEnvironment() {
+  local __handler="${1-}"
+  # __IDENTICAL__ __checkHandler 1
+  isFunction "$__handler" || returnArgument "handler not callable \"$(decorate code "$__handler")\" Stack: $(debuggingStack)" || return $?
+  shift && "$__handler" 1 "$@" || return $?
+}
+
+# Run `handler` with an argument error
+# Argument: handler - Required. Function. Failure command
+# Argument: message - Optional. Error message to display.
+__throwArgument() {
+  local __handler="${1-}"
+  # __IDENTICAL__ __checkHandler 1
+  isFunction "$__handler" || returnArgument "handler not callable \"$(decorate code "$__handler")\" Stack: $(debuggingStack)" || return $?
+  shift && "$__handler" 2 "$@" || return $?
 }
 
 # <-- END of IDENTICAL _sugar

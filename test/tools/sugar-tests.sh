@@ -49,9 +49,9 @@ testExitString() {
   done < <(__dataExitString)
 }
 
-testReturn() {
-  assertExitCode --stderr-match "99" 99 _return 99 || return $?
-  assertExitCode 0 _return 0 || return $?
+testReturnMessage() {
+  assertExitCode --stderr-match "99" 99 returnMessage 99 || return $?
+  assertExitCode 0 returnMessage 0 || return $?
 }
 
 testUndo() {
@@ -199,15 +199,15 @@ testSugar() {
   rm -rf "$SUGAR_FILE"
   unset SUGAR_FILE
 
-  # _return
-  assertExitCode 0 _return 0 || return $?
+  # returnMessage
+  assertExitCode 0 returnMessage 0 || return $?
   for code in 31 42 255; do
-    assertExitCode --stderr-ok "$code" _return "$code" || return $?
+    assertExitCode --stderr-ok "$code" returnMessage "$code" || return $?
   done
   # __execute
-  assertExitCode "0" __execute _return "0" || return $?
+  assertExitCode "0" __execute returnMessage "0" || return $?
   for code in 29 101 255; do
-    assertExitCode --stderr-ok "$code" __execute _return "$code" || return $?
+    assertExitCode --stderr-ok "$code" __execute returnMessage "$code" || return $?
   done
 
   # returnEnvironment
@@ -240,13 +240,13 @@ testArgEnvStuff() {
 
   k=$(returnCode environment)
   assertExitCode --stderr-match foo "$k" returnEnvironment "foo" || return $?
-  assertExitCode --stderr-match foo "$k" __throwEnvironment _return "foo" || return $?
-  assertExitCode --stderr-match foo "$k" __catchEnvironment "$usage" _return 99 foo || return $?
+  assertExitCode --stderr-match foo "$k" __throwEnvironment returnMessage "foo" || return $?
+  assertExitCode --stderr-match foo "$k" __catchEnvironment "$usage" returnMessage 99 foo || return $?
 
   k=$(returnCode argument)
   assertExitCode --stderr-match foo "$k" returnArgument "foo" || return $?
-  assertExitCode --stderr-match foo "$k" __throwArgument _return "foo" || return $?
-  assertExitCode --stderr-match foo "$k" __catchArgument "$usage" _return 99 foo || return $?
+  assertExitCode --stderr-match foo "$k" __throwArgument returnMessage "foo" || return $?
+  assertExitCode --stderr-match foo "$k" __catchArgument "$usage" returnMessage 99 foo || return $?
 }
 
 testMuzzle() {
@@ -264,5 +264,5 @@ testMuzzle() {
   # ls produces nothing
   assertOutputEquals "" muzzle ls "$home" || return $?
   # Does not block stderr
-  assertExitCode --stderr-match "Dave" 71 muzzle _return 71 "$mantra" || return $?
+  assertExitCode --stderr-match "Dave" 71 muzzle returnMessage 71 "$mantra" || return $?
 }
