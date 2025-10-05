@@ -19,6 +19,12 @@
 #
 
 # DEPRECATED 2025-10-03
+newRelease() {
+  _deprecated "${FUNCNAME[0]}"
+  releaseNew "$@"
+}
+
+# DEPRECATED 2025-10-03
 _home() {
   _deprecated "${FUNCNAME[0]}"
   userRecordHome "$@"
