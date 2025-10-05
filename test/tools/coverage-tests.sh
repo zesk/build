@@ -112,7 +112,7 @@ testBuildFunctionsCoverage() {
   if [ "$(date +%s)" -lt "$(dateToTimestamp "$requireCoverageDate")" ]; then
     [ "${#missing[@]}" -eq 0 ] || printf "%s %s\n%s\n" "$(decorate notice "This test will FAIL")" "$(decorate magenta "after $requireCoverageDate")" "$(printf "%s\n" "${missing[@]}" | decorate code | decorate wrap "- ")"
   else
-    [ "${#missing[@]}" -eq 0 ] || returnThrowEnvironment "$handler" "Functions require at least 1 test: ($(decorate magenta "after $requireCoverageDate")):"$'\n'"$(printf "%s\n" "${missing[@]}" | decorate code | decorate wrap "- ")"
+    [ "${#missing[@]}" -eq 0 ] || throwEnvironment "$handler" "Functions require at least 1 test: ($(decorate magenta "after $requireCoverageDate")):"$'\n'"$(printf "%s\n" "${missing[@]}" | decorate code | decorate wrap "- ")"
   fi
 }
 __deprecatedFunctionsSoon() {
@@ -191,10 +191,10 @@ testBuildFunctionsHelpCoverage() {
     if [ -n "$fun" ]; then
       helpless+=("$fun")
       if inArray "$fun" "${blanks[@]}"; then
-        returnThrowEnvironment "$handler" "$fun is in without-help and blank-help lists, pick one" || return $?
+        throwEnvironment "$handler" "$fun is in without-help and blank-help lists, pick one" || return $?
       fi
       if ! inArray "$fun" "${functions[@]}"; then
-        returnThrowEnvironment "$handler" "$fun is no longer part of core" || return $?
+        throwEnvironment "$handler" "$fun is no longer part of core" || return $?
       fi
     fi
   done < <(__dataBuildFunctionsWithoutHelp)

@@ -19,7 +19,7 @@ deprecatedFilePrependVersion() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -34,8 +34,8 @@ deprecatedFilePrependVersion() {
     shift
   done
 
-  [ -n "$target" ] || returnThrowArgument "$handler" "Missing target" || return $?
-  [ -n "$version" ] || returnThrowArgument "$handler" "Missing version" || return $?
+  [ -n "$target" ] || throwArgument "$handler" "Missing target" || return $?
+  [ -n "$version" ] || throwArgument "$handler" "Missing version" || return $?
 
   local newTarget
 
@@ -65,7 +65,7 @@ deprecatedIgnore() {
 
   notes=$(returnCatch "$handler" buildEnvironmentGet BUILD_RELEASE_NOTES) || return $?
   if [ -z "$notes" ]; then
-    returnThrowEnvironment "$handler" "BUILD_RELEASE_NOTES is blank?" || return $?
+    throwEnvironment "$handler" "BUILD_RELEASE_NOTES is blank?" || return $?
   fi
   # Trim extra stuff from release notes partial path
   notes="${notes#.}"
@@ -96,7 +96,7 @@ deprecatedTokensFile() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -115,7 +115,7 @@ deprecatedTokensFile() {
     shift
   done
 
-  [ -n "$findArgumentFunction" ] || returnThrowArgument "$handler" "findArgumentFunction required" || return $?
+  [ -n "$findArgumentFunction" ] || throwArgument "$handler" "findArgumentFunction required" || return $?
   [ -n "$cannonPath" ] || cannonPath=$(returnCatch "$handler" buildHome) || return $?
 
   local line tokens=()
@@ -178,7 +178,7 @@ deprecatedCannonFile() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -197,7 +197,7 @@ deprecatedCannonFile() {
     shift
   done
 
-  [ -n "$findArgumentFunction" ] || returnThrowArgument "$handler" "findArgumentFunction required" || return $?
+  [ -n "$findArgumentFunction" ] || throwArgument "$handler" "findArgumentFunction required" || return $?
   [ -n "$cannonPath" ] || cannonPath=$(returnCatch "$handler" buildHome) || return $?
 
   local start
@@ -249,7 +249,7 @@ deprecatedFind() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -261,7 +261,7 @@ deprecatedFind() {
       if [ -z "$findArgumentFunction" ]; then
         findArgumentFunction=$(usageArgumentFunction "$handler" "ignoreFunction" "$1") || return $?
         local aa=()
-        read -d '' -r -a aa < <("$findArgumentFunction") || [ "${#aa[@]}" -gt 0 ] || returnThrowArgument "$handler" "$findArgumentFunction returned empty" || return $?
+        read -d '' -r -a aa < <("$findArgumentFunction") || [ "${#aa[@]}" -gt 0 ] || throwArgument "$handler" "$findArgumentFunction returned empty" || return $?
       else
         [ -n "$cannonPath" ] || cannonPath=$(returnCatch "$handler" buildHome) || return $?
         search="$(usageArgumentString "$handler" "search" "${1-}")" || return $?
@@ -296,7 +296,7 @@ deprecatedCannon() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -319,12 +319,12 @@ deprecatedCannon() {
     shift
   done
   [ -n "$cannonPath" ] || cannonPath=$(returnCatch "$handler" buildHome) || return $?
-  [ -n "$findArgumentFunction" ] || returnThrowArgument "$handler" "findArgumentFunction required" || return $?
-  [ -n "$search" ] || returnThrowArgument "$handler" "search required" || return $?
-  [ -n "$replace" ] || returnThrowArgument "$handler" "replace required" || return $?
+  [ -n "$findArgumentFunction" ] || throwArgument "$handler" "findArgumentFunction required" || return $?
+  [ -n "$search" ] || throwArgument "$handler" "search required" || return $?
+  [ -n "$replace" ] || throwArgument "$handler" "replace required" || return $?
 
   local aa=()
-  read -d '' -r -a aa < <("$findArgumentFunction") || [ "${#aa[@]}" -gt 0 ] || returnThrowArgument "$handler" "$findArgumentFunction returned empty" || return $?
+  read -d '' -r -a aa < <("$findArgumentFunction") || [ "${#aa[@]}" -gt 0 ] || throwArgument "$handler" "$findArgumentFunction returned empty" || return $?
   # ignore should go at the end so it has priority over previous entries
   cannon --path "$cannonPath" "$search" "$replace" "$@" "${aa[@]}"
 }

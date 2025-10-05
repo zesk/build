@@ -12,7 +12,7 @@ testUserHome() {
 
   HOME=/etc/does-not
 
-  assertNotExitCode --dump --stderr-match "not a directory" --line "$LINENO" 0 userHome || return $?
+  assertNotExitCode --dump --stderr-match "not a directory" --line "$LINENO" 0 userRecordHome || return $?
 
   HOME=$(pwd)
 
@@ -20,11 +20,11 @@ testUserHome() {
 
   cleanHome="${HOME%/}"
   assertDirectoryExists "$HOME" || return $?
-  assertExitCode --stdout-match "$cleanHome" --line "$LINENO" 0 userHome || return $?
-  assertEquals "$cleanHome" "$(userHome)" || return $?
-  assertEquals "$cleanHome/extra" "$(userHome extra)" || return $?
-  assertEquals "$cleanHome/extra/dir/to/look" "$(userHome extra dir to look)" || return $?
-  assertEquals "$cleanHome/extra/dir/to/look" "$(userHome extra/dir/to/look/)" || return $?
+  assertExitCode --stdout-match "$cleanHome" --line "$LINENO" 0 userRecordHome || return $?
+  assertEquals "$cleanHome" "$(userRecordHome)" || return $?
+  assertEquals "$cleanHome/extra" "$(userRecordHome extra)" || return $?
+  assertEquals "$cleanHome/extra/dir/to/look" "$(userRecordHome extra dir to look)" || return $?
+  assertEquals "$cleanHome/extra/dir/to/look" "$(userRecordHome extra/dir/to/look/)" || return $?
 
   mockEnvironmentStop HOME
 }

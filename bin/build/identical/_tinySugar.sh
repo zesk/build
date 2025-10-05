@@ -15,14 +15,14 @@
 # Run `handler` with an argument error
 # Argument: handler - Function. Required. Error handler.
 # Argument: message ... - String. Optional. Error message
-returnThrowArgument() {
+throwArgument() {
   returnThrow 2 "$@" || return $?
 }
 
 # Run `handler` with an environment error
 # Argument: handler - Function. Required. Error handler.
 # Argument: message ... - String. Optional. Error message
-returnThrowEnvironment() {
+throwEnvironment() {
   returnThrow 1 "$@" || return $?
 }
 
@@ -30,20 +30,20 @@ returnThrowEnvironment() {
 # Usage: {fn} handler command ...
 # Argument: handler - Required. String. Failure command
 # Argument: command - Required. Command to run.
-# Requires: returnThrowArgument
+# Requires: throwArgument
 catchArgument() {
   local handler="${1-}"
-  shift && "$@" || returnThrowArgument "$handler" "$@" || return $?
+  shift && "$@" || throwArgument "$handler" "$@" || return $?
 }
 
 # Run `command`, upon failure run `handler` with an environment error
 # Usage: {fn} handler command ...
 # Argument: handler - Required. String. Failure command
 # Argument: command - Required. Command to run.
-# Requires: returnThrowEnvironment
+# Requires: throwEnvironment
 catchEnvironment() {
   local handler="${1-}"
-  shift && "$@" || returnThrowEnvironment "$handler" "$@" || return $?
+  shift && "$@" || throwEnvironment "$handler" "$@" || return $?
 }
 
 # _IDENTICAL_ _errors 36

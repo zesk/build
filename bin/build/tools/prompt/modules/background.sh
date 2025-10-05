@@ -23,7 +23,7 @@ __backgroundProcess() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -48,7 +48,7 @@ __backgroundProcess() {
         shift
         while [ $# -gt 0 ] && [ "$1" != '--' ]; do condition+=("$1") && shift; done
         # Get that --
-        [ $# -gt 0 ] || returnThrowArgument "$handler" "No command passed: [$__count] $(decorate each quote -- "${__saved[@]}")" || return $?
+        [ $# -gt 0 ] || throwArgument "$handler" "No command passed: [$__count] $(decorate each quote -- "${__saved[@]}")" || return $?
       else
         shift
         command=("$(usageArgumentCallable "$handler" "command" "$argument")" "$@") || return $?
@@ -149,11 +149,11 @@ __backgroundProcess() {
     return 0
     ;;
   "condition") ;;
-  *) returnThrowEnvironment "$handler" "Unknown actionFlag? $actionFlag" || return $? ;;
+  *) throwEnvironment "$handler" "Unknown actionFlag? $actionFlag" || return $? ;;
   esac
 
-  [ ${#condition[@]} -gt 0 ] || returnThrowArgument "$handler" "Requires a condition" || return $?
-  [ ${#command[@]} -gt 0 ] || returnThrowArgument "$handler" "Requires a command" || return $?
+  [ ${#condition[@]} -gt 0 ] || throwArgument "$handler" "Requires a condition" || return $?
+  [ ${#command[@]} -gt 0 ] || throwArgument "$handler" "Requires a command" || return $?
 
   local id
   id=$(returnCatch "$handler" shaPipe <<<"${condition[*]} ${command[*]}") || return $?
@@ -347,7 +347,7 @@ __backgroundProcessManager() {
     catchEnvironment "$handler" rm -f "$d/waitStop" || return $?
   else
     pid=$(catchEnvironment "$handler" cat "$d/pid") || return $?
-    isPositiveInteger "$pid" || returnThrowEnvironment "$handler" "PID is not integer $d/pid?" || returnClean $? "$d/pid" || return $?
+    isPositiveInteger "$pid" || throwEnvironment "$handler" "PID is not integer $d/pid?" || returnClean $? "$d/pid" || return $?
     if kill -0 "$pid" 2>/dev/null; then
       # Running. Should we check the condition behind the back and kill it?
       if [ "$stopSeconds" -gt 0 ] && [ "$now" -gt "$waitStop" ]; then

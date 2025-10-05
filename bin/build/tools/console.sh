@@ -31,7 +31,7 @@ consoleGetColor() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -43,7 +43,7 @@ consoleGetColor() {
       ;;
     *)
       # _IDENTICAL_ argumentUnknownHandler 1
-      returnThrowArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
+      throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
       ;;
     esac
     shift
@@ -70,7 +70,7 @@ consoleGetColor() {
     IFS='/' read -r -a colors < <(printf -- "%s\\n" "$result" | sed 's/[^a-f0-9/]//g') || :
   fi
   if ! "$noTTY" && ! stty "$sttyOld"; then
-    returnThrowEnvironment "$handler" "stty reset to \"$sttyOld\" failed" || return $?
+    throwEnvironment "$handler" "stty reset to \"$sttyOld\" failed" || return $?
   fi
   if $success; then
     for color in "${colors[@]+${colors[@]}}"; do
@@ -151,7 +151,7 @@ _consoleSetTitle() {
 consoleDefaultTitle() {
   local handler="_${FUNCNAME[0]}"
   [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
-  [ -t 0 ] || returnThrowEnvironment "$handler" "stdin is not a terminal" || return $?
+  [ -t 0 ] || throwEnvironment "$handler" "stdin is not a terminal" || return $?
   consoleSetTitle "${USER}@${HOSTNAME%%.*}: ${PWD/#$HOME/~}"
 }
 _consoleDefaultTitle() {
@@ -201,7 +201,7 @@ consoleFileLink() {
     printf -- "%s\n" "$(decoratePath "$1")"
   else
     local path="$1"
-    isPlain "$path" || returnThrowArgument "$handler" "Path contains non-plain characters: $(dumpBinary <<<"$path")" || return $?
+    isPlain "$path" || throwArgument "$handler" "Path contains non-plain characters: $(dumpBinary <<<"$path")" || return $?
     if [ "${path:0:1}" != "/" ]; then
       path="$(pwd)/$(directoryPathSimplify "$path")"
     fi

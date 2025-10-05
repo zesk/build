@@ -78,7 +78,7 @@ _isUnsignedInteger() {
 }
 
 # <-- END of IDENTICAL returnMessage
-# <-- END of IDENTICAL _return
+# <-- END of IDENTICAL returnMessage
 
 #
 # fn: {base}

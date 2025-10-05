@@ -26,7 +26,7 @@ __identicalCheckRepair() {
   local fileA="$1" && shift
   local fileB="$1" && shift
 
-  [ "$fileA" != "$fileB" ] || returnThrowArgument "$handler" "Repair in same file not possible: $(decorate file "$fileA") (Prefix: $(decorate code "$prefix"))" || return $?
+  [ "$fileA" != "$fileB" ] || throwArgument "$handler" "Repair in same file not possible: $(decorate file "$fileA") (Prefix: $(decorate code "$prefix"))" || return $?
 
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
@@ -43,5 +43,5 @@ __identicalCheckRepair() {
     fi
     shift
   done
-  returnThrowEnvironment "$handler" "No repair found between $(decorate file "$fileA") and $(decorate file "$fileB") (Prefix: $(decorate code "$prefix"))" "Sources (#$__count): $(decorate each --index code "${__saved[@]+"${__saved[@]}"}")" || return $?
+  throwEnvironment "$handler" "No repair found between $(decorate file "$fileA") and $(decorate file "$fileB") (Prefix: $(decorate code "$prefix"))" "Sources (#$__count): $(decorate each --index code "${__saved[@]+"${__saved[@]}"}")" || return $?
 }

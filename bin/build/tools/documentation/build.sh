@@ -24,7 +24,7 @@ __documentationBuild() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -51,17 +51,17 @@ __documentationBuild() {
       docArgs+=("--")
       ;;
     --template)
-      [ -z "$templatePath" ] || returnThrowArgument "$handler" "$argument already supplied" || return $?
+      [ -z "$templatePath" ] || throwArgument "$handler" "$argument already supplied" || return $?
       shift
       templatePath=$(usageArgumentRealDirectory "$handler" "$argument" "${1-}") || return $?
       ;;
     --page-template)
-      [ -z "$pageTemplate" ] || returnThrowArgument "$handler" "$argument already supplied" || return $?
+      [ -z "$pageTemplate" ] || throwArgument "$handler" "$argument already supplied" || return $?
       shift
       pageTemplate=$(usageArgumentFile "$handler" "$argument" "${1-}") || return $?
       ;;
     --function-template)
-      [ -z "$functionTemplate" ] || returnThrowArgument "$handler" "$argument already supplied" || return $?
+      [ -z "$functionTemplate" ] || throwArgument "$handler" "$argument already supplied" || return $?
       shift
       functionTemplate=$(usageArgumentFile "$handler" "$argument" "${1-}") || return $?
       ;;
@@ -95,7 +95,7 @@ __documentationBuild() {
       seePrefix="${1-}"
       ;;
     --unlinked-update)
-      [ -z "$actionFlag" ] || returnThrowArgument "$handler" "$argument and $actionFlag are mutually exclusive" || return $?
+      [ -z "$actionFlag" ] || throwArgument "$handler" "$argument and $actionFlag are mutually exclusive" || return $?
       actionFlag="$argument"
       ;;
     --force)
@@ -112,7 +112,7 @@ __documentationBuild() {
       ;;
     *)
       # _IDENTICAL_ argumentUnknownHandler 1
-      returnThrowArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
+      throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
       ;;
     esac
     shift
@@ -150,15 +150,15 @@ __documentationBuild() {
   #
   # Check requirements
   #
-  [ -n "$companyLink" ] || returnThrowArgument "$handler" "Need --company-link" || return $?
-  [ -n "$applicationName" ] || returnThrowArgument "$handler" "Need --name" || return $?
-  [ -n "$functionTemplate" ] || returnThrowArgument "$handler" "--function-template required" || return $?
-  [ -n "$pageTemplate" ] || returnThrowArgument "$handler" "--page-template required" || return $?
-  [ -n "$targetPath" ] || returnThrowArgument "$handler" "--target required" || return $?
-  [ 0 -lt "${#sourcePaths[@]}" ] || returnThrowArgument "$handler" "--source required" || return $?
+  [ -n "$companyLink" ] || throwArgument "$handler" "Need --company-link" || return $?
+  [ -n "$applicationName" ] || throwArgument "$handler" "Need --name" || return $?
+  [ -n "$functionTemplate" ] || throwArgument "$handler" "--function-template required" || return $?
+  [ -n "$pageTemplate" ] || throwArgument "$handler" "--page-template required" || return $?
+  [ -n "$targetPath" ] || throwArgument "$handler" "--target required" || return $?
+  [ 0 -lt "${#sourcePaths[@]}" ] || throwArgument "$handler" "--source required" || return $?
 
   local start
-  start=$(timingStart) || returnThrowEnvironment "$handler" timingStart || return $?
+  start=$(timingStart) || throwEnvironment "$handler" timingStart || return $?
 
   returnCatch "$handler" __pcregrepInstall || return $?
 
@@ -169,11 +169,11 @@ __documentationBuild() {
 
   if [ "$actionFlag" = "--unlinked-update" ]; then
     for argument in unlinkedTemplate unlinkedTarget; do
-      [ -n "${!argument-}" ] || returnThrowArgument "$handler" "$argument is required for $actionFlag" || return $?
+      [ -n "${!argument-}" ] || throwArgument "$handler" "$argument is required for $actionFlag" || return $?
     done
   fi
   if [ -n "$unlinkedTemplate" ]; then
-    [ -n "$unlinkedTarget" ] || returnThrowArgument "$handler" "--unlinked-target required with --unlinked-template" || returnClean $? "${clean[@]}" || return $?
+    [ -n "$unlinkedTarget" ] || throwArgument "$handler" "--unlinked-target required with --unlinked-template" || returnClean $? "${clean[@]}" || return $?
   fi
 
   #

@@ -6,9 +6,9 @@
 #
 
 testBuildRunner() {
-  assertExitCode --stderr-match "Hello, world" 1 Build --verbose _return 1 "Hello, world" || return $?
-  assertExitCode --stderr-match "welcome our" 99 Build --verbose _return 99 "I. for one, welcome our ..." || return $?
-  assertExitCode --stderr-match "bad arg" 2 Build --verbose _return "NaN" "bad arg" || return $?
+  assertExitCode --stderr-match "Hello, world" 1 Build --verbose returnMessage 1 "Hello, world" || return $?
+  assertExitCode --stderr-match "welcome our" 99 Build --verbose returnMessage 99 "I. for one, welcome our ..." || return $?
+  assertExitCode --stderr-match "bad arg" 2 Build --verbose returnMessage "NaN" "bad arg" || return $?
 }
 
 testBinBuildRequires() {
@@ -142,7 +142,7 @@ testInstallInstallBuildSelf() {
 # Test that urlFetch works for remote installs
 testInstallBinBuildNetwork() {
   local testDir testBinBuild section home matches
-  local handler=_return
+  local handler=returnMessage
 
   home=$(returnCatch "$handler" buildHome) || return $?
 

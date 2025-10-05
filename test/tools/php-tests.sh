@@ -19,7 +19,7 @@ _testComposerTempDirectory() {
   if [ -z "$BITBUCKET_CLONE_DIR" ]; then
     fileTemporaryName "$handler" -d || return $?
   else
-    [ -d "$BITBUCKET_CLONE_DIR" ] || returnThrowEnvironment "$handler" "BITBUCKET_CLONE_DIR=$BITBUCKET_CLONE_DIR is not a directory" || return $?
+    [ -d "$BITBUCKET_CLONE_DIR" ] || throwEnvironment "$handler" "BITBUCKET_CLONE_DIR=$BITBUCKET_CLONE_DIR is not a directory" || return $?
     fileTemporaryName "$handler" -d --tmpdir="$BITBUCKET_CLONE_DIR" || return $?
   fi
 }

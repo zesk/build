@@ -25,25 +25,25 @@ runCount() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
     *)
       if [ -z "$total" ]; then
-        isUnsignedInteger "$argument" || returnThrowArgument "$handler" "$argument must be a positive integer" || return $?
+        isUnsignedInteger "$argument" || throwArgument "$handler" "$argument must be a positive integer" || return $?
         total="$argument"
       else
         local index=0
         while [ "$index" -lt "$total" ]; do
           index=$((index + 1))
-          "$@" || returnThrowEnvironment "$handler" "iteration #$index" "$@" return $?
+          "$@" || throwEnvironment "$handler" "iteration #$index" "$@" return $?
         done
         return 0
       fi
       ;;
     esac
-    shift || returnThrowArgument "$handler" shift || return $?
+    shift || throwArgument "$handler" shift || return $?
   done
 
 }
@@ -89,7 +89,7 @@ makeShellFilesExecutable() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -261,15 +261,15 @@ _pathCleanDuplicates() {
 # Argument: --help - Optional. Flag. Display this help.
 # Return Code: 0 - If all values are found
 # Return Code: 1 - If any value is not found
-# Requires: returnThrowArgument which decorate __decorateExtensionEach
+# Requires: throwArgument which decorate __decorateExtensionEach
 whichExists() {
   local handler="_${FUNCNAME[0]}"
   local __saved=("$@") __count=$# anyFlag=false
-  [ $# -gt 0 ] || returnThrowArgument "$handler" "no arguments" || return $?
+  [ $# -gt 0 ] || throwArgument "$handler" "no arguments" || return $?
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -322,7 +322,7 @@ _JSON() {
 serviceToStandardPort() {
   local handler="_${FUNCNAME[0]}"
 
-  [ $# -gt 0 ] || returnThrowArgument "$handler" "No arguments" || return $?
+  [ $# -gt 0 ] || throwArgument "$handler" "No arguments" || return $?
   local port
 
   # _IDENTICAL_ argumentTrimBlankLoopHandler 7
@@ -331,7 +331,7 @@ serviceToStandardPort() {
     local argument="$1" __index=$((__count - $# + 1))
     argument=$(returnCatch "$handler" trimSpace "$argument") || return $?
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -340,7 +340,7 @@ serviceToStandardPort() {
     https) port=443 ;;
     mariadb | mysql) port=3306 ;;
     postgres) port=5432 ;;
-    *) returnThrowEnvironment "$handler" "$argument unknown" || return $? ;;
+    *) throwEnvironment "$handler" "$argument unknown" || return $? ;;
     esac
     printf "%d\n" "$port"
     shift
@@ -366,20 +366,20 @@ serviceToPort() {
   local handler="_${FUNCNAME[0]}"
   local port servicesFile=/etc/services service
 
-  [ $# -gt 0 ] || returnThrowArgument "$handler" "Require at least one service" || return $?
+  [ $# -gt 0 ] || throwArgument "$handler" "Require at least one service" || return $?
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
     # _IDENTICAL_ handlerHandler 1
     --handler) shift && handler=$(usageArgumentFunction "$handler" "$argument" "${1-}") || return $? ;;
     --services)
-      shift || returnThrowArgument "$handler" "missing $argument argument" || return $?
+      shift || throwArgument "$handler" "missing $argument argument" || return $?
       servicesFile=$(usageArgumentFile "$handler" "servicesFile" "$1") || return $?
       ;;
     *)
@@ -387,11 +387,11 @@ serviceToPort() {
         catchEnvironment "$handler" serviceToStandardPort "$@" || return $?
       else
         service="$(trimSpace "$argument")"
-        [ -n "$service" ] || returnThrowArgument "$handler" "whitespace argument: $(decorate quote "$argument") #$__index/$__count" || return $?
+        [ -n "$service" ] || throwArgument "$handler" "whitespace argument: $(decorate quote "$argument") #$__index/$__count" || return $?
         if port="$(grep /tcp "$servicesFile" | grep "^$service\s" | awk '{ print $2 }' | cut -d / -f 1)"; then
-          isInteger "$port" || returnThrowEnvironment "$handler" "Port found in $servicesFile is not an integer: $port" || return $?
+          isInteger "$port" || throwEnvironment "$handler" "Port found in $servicesFile is not an integer: $port" || return $?
         else
-          port="$(serviceToStandardPort "$service")" || returnThrowEnvironment "$handler" serviceToStandardPort "$service" || return $?
+          port="$(serviceToStandardPort "$service")" || throwEnvironment "$handler" serviceToStandardPort "$service" || return $?
         fi
         printf "%d\n" "$port"
       fi
@@ -446,7 +446,7 @@ extensionLists() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -463,7 +463,7 @@ extensionLists() {
     esac
     shift
   done
-  [ -n "$directory" ] || returnThrowArgument "$handler" "No directory supplied" || return $?
+  [ -n "$directory" ] || throwArgument "$handler" "No directory supplied" || return $?
 
   ! $cleanFlag || catchEnvironment "$handler" find "$directory" -type f -delete || return $?
 
@@ -527,21 +527,21 @@ groupID() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
     *)
       local gid
       gid="$(__groupID "$1")" || return 1
-      isPositiveInteger "$gid" || returnThrowEnvironment "$handler" "No group found: $1" || return $?
+      isPositiveInteger "$gid" || throwEnvironment "$handler" "No group found: $1" || return $?
       printf "%d\n" "$gid"
       one=true
       ;;
     esac
     shift
   done
-  $one || returnThrowArgument "$handler" "Requires a group name" || return $?
+  $one || throwArgument "$handler" "Requires a group name" || return $?
 }
 _groupID() {
   # __IDENTICAL__ usageDocument 1

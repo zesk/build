@@ -26,12 +26,12 @@ testTools() {
   for testCode in tools _assert assert mock junit; do
     testCode="$home/bin/build/tools/test/$testCode.sh"
     # shellcheck source=/dev/null
-    source "$testCode" || returnThrowEnvironment "$handler" "source $testCode" || return $?
+    source "$testCode" || throwEnvironment "$handler" "source $testCode" || return $?
   done
   catchEnvironment "$handler" isFunction testSuite || return $?
 
   [ $# -ne 0 ] || return 0
-  isCallable "$1" || returnThrowArgument "$handler" "$1 is not callable" || return $?
+  isCallable "$1" || throwArgument "$handler" "$1 is not callable" || return $?
   catchEnvironment "$handler" "$@" || return $?
 }
 _testTools() {
@@ -54,7 +54,7 @@ dumpBinary() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -84,7 +84,7 @@ dumpBinary() {
       break
       ;;
     esac
-    shift || returnThrowArgument "$handler" shift || return $?
+    shift || throwArgument "$handler" shift || return $?
   done
 
   local item

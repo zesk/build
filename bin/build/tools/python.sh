@@ -70,7 +70,7 @@ pipInstall() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -83,7 +83,7 @@ pipInstall() {
     shift
   done
 
-  [ ${#names[@]} -gt 0 ] || returnThrowArgument "$handler" "No pip package names specified to install" || return $?
+  [ ${#names[@]} -gt 0 ] || throwArgument "$handler" "No pip package names specified to install" || return $?
 
   local start
   start=$(timingStart) || return $?
@@ -121,7 +121,7 @@ pipUninstall() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -144,7 +144,7 @@ pipUninstall() {
     shift
   done
 
-  [ ${#names[@]} -gt 0 ] || returnThrowArgument "$handler" "No pip package names specified to uninstall" || return $?
+  [ ${#names[@]} -gt 0 ] || throwArgument "$handler" "No pip package names specified to uninstall" || return $?
 
   [ ${#removeNames[@]} -gt 0 ] || return 0
 
@@ -164,7 +164,7 @@ pipUninstall() {
   statusMessage decorate info "Uninstalling pip packages $showNames ... "
   catchEnvironmentQuiet "$handler" "$quietLog" pipWrapper uninstall "${removeNames[@]}" || return $?
   if pythonPackageInstalled --any "${names[@]}"; then
-    returnThrowEnvironment "$handler" "One or more packages are still installed: $showNames" || return $?
+    throwEnvironment "$handler" "One or more packages are still installed: $showNames" || return $?
   fi
   statusMessage --last timingReport "$start" "Uninstalled $showNames in"
 }
@@ -207,7 +207,7 @@ pythonPackageInstalled() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -219,7 +219,7 @@ pythonPackageInstalled() {
     shift
   done
 
-  [ ${#packages[@]} -gt 0 ] || returnThrowArgument "$handler" "No pip package names passed" || return $?
+  [ ${#packages[@]} -gt 0 ] || throwArgument "$handler" "No pip package names passed" || return $?
   if [ ${#packages[@]} -eq 1 ]; then
     # root@6335ec37c5a8 ~/build > pipWrapper list | grep -q "pip"
     # ERROR: Pipe to stdout was broken
@@ -272,7 +272,7 @@ pythonVirtual() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -288,7 +288,7 @@ pythonVirtual() {
   done
 
   [ -n "$application" ] || application=$(returnCatch "$handler" buildHome) || return $?
-  [ ${#pp[@]} -gt 0 ] || returnThrowArgument "$handler" "Need at "
+  [ ${#pp[@]} -gt 0 ] || throwArgument "$handler" "Need at "
   catchEnvironment "$handler" pythonInstall || return $?
 
   local venv="$application/.venv" clean=()
@@ -297,7 +297,7 @@ pythonVirtual() {
       catchEnvironment "$handler" pipWrapper install venv || return $?
     fi
     catchEnvironment "$handler" python -m venv "$venv" || return $?
-    [ -d "$venv" ] || returnThrowEnvironment "$handler" "Unable to create $venv" || return $?
+    [ -d "$venv" ] || throwEnvironment "$handler" "Unable to create $venv" || return $?
     clean+=(rm -rf "$venv" --)
   fi
   catchEnvironment "$handler" source "$venv/bin/activate" || returnClean $? "${clean[@]}" || return $?

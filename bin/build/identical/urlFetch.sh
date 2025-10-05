@@ -36,8 +36,8 @@
 # Argument: file - Optional. FileDirectory. Target file. Use `-` to send to `stdout`. Default value is `-`.
 # Requires: returnMessage whichExists printf decorate
 # Requires: usageArgumentString
-# Requires: returnThrowArgument catchArgument
-# Requires: returnThrowEnvironment catchEnvironment
+# Requires: throwArgument catchArgument
+# Requires: throwEnvironment catchEnvironment
 urlFetch() {
   local handler="_${FUNCNAME[0]}"
 
@@ -51,7 +51,7 @@ urlFetch() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -72,11 +72,11 @@ urlFetch() {
     --binary)
       shift
       binary=$(usageArgumentString "$handler" "$argument" "${1-}") || return $?
-      whichExists "$binary" || returnThrowArgument "$handler" "$binary must be in PATH: $PATH" || return $?
+      whichExists "$binary" || throwArgument "$handler" "$binary must be in PATH: $PATH" || return $?
       ;;
     --argument-format)
       format=$(usageArgumentString "$handler" "$argument" "${1-}") || return $?
-      case "$format" in curl | wget) ;; *) returnThrowArgument "$handler" "$argument must be curl or wget" || return $? ;; esac
+      case "$format" in curl | wget) ;; *) throwArgument "$handler" "$argument must be curl or wget" || return $? ;; esac
       ;;
     --redirect-max) shift && maxRedirections=$(usageArgumentPositiveInteger "$handler" "$argument" "${1-}") || return $? ;;
     --password) shift && password="$1" ;;
@@ -93,7 +93,7 @@ urlFetch() {
     --agent)
       shift
       local agent="$1"
-      [ -n "$agent" ] || returnThrowArgument "$handler" "$argument must be non-blank" || return $?
+      [ -n "$agent" ] || throwArgument "$handler" "$argument must be non-blank" || return $?
       wgetArgs+=("--user-agent=$1")
       curlArgs+=("--user-agent" "$1")
       genericArgs+=("$argument" "$1")
@@ -107,7 +107,7 @@ urlFetch() {
         break
       else
         # _IDENTICAL_ argumentUnknownHandler 1
-        returnThrowArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
+        throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
       fi
       ;;
     esac
@@ -115,7 +115,7 @@ urlFetch() {
   done
 
   # URL
-  [ -n "$url" ] || returnThrowArgument "$handler" "URL is required" || return $?
+  [ -n "$url" ] || throwArgument "$handler" "URL is required" || return $?
 
   # target
   [ -n "$target" ] || target="-"
@@ -128,7 +128,7 @@ urlFetch() {
     genericArgs+=("--user" "$user" "--password" "$password")
   fi
   if [ "$binary" = "curl" ] && $userHasColons; then
-    returnThrowArgument "$handler" "$argument: Users ($argument \"$(decorate code "$user")\") with colons are not supported by curl, use wget" || return $?
+    throwArgument "$handler" "$argument: Users ($argument \"$(decorate code "$user")\") with colons are not supported by curl, use wget" || return $?
   fi
 
   # Binary
@@ -139,7 +139,7 @@ urlFetch() {
       binary="curl"
     fi
   fi
-  [ -n "$binary" ] || returnThrowEnvironment "$handler" "wget or curl required" || return $?
+  [ -n "$binary" ] || throwEnvironment "$handler" "wget or curl required" || return $?
   [ -n "$format" ] || format="$binary"
   case "$format" in
   wget)
@@ -152,7 +152,7 @@ urlFetch() {
     curlArgs+=(-L --max-redirs "$maxRedirections" -s -f --no-show-error)
     catchEnvironment "$handler" "$binary" "$url" "$@" "${curlArgs[@]+"${curlArgs[@]}"}" || return $?
     ;;
-  *) returnThrowEnvironment "$handler" "No handler for binary format $(decorate value "$format") (binary is $(decorate code "$binary")) $(decorate each value -- "${genericArgs[@]}")" || return $? ;;
+  *) throwEnvironment "$handler" "No handler for binary format $(decorate value "$format") (binary is $(decorate code "$binary")) $(decorate each value -- "${genericArgs[@]}")" || return $? ;;
   esac
 }
 _urlFetch() {

@@ -78,7 +78,7 @@ ___aptUpdate() {
 # package.sh: true
 ___aptInstalledList() {
   local handler="$1" && shift
-  [ $# -eq 0 ] || returnThrowArgument "$handler" "Unknown argument $*" || return $?
+  [ $# -eq 0 ] || throwArgument "$handler" "Unknown argument $*" || return $?
   catchEnvironment "$handler" dpkg --get-selections | grepSafe -v deinstall | awk '{ print $1 }' || return $?
 }
 

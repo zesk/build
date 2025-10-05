@@ -20,10 +20,10 @@ __usageDocument() {
   local handler="$1" __handler="$1" && shift
 
   [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
-  [ $# -ge 2 ] || returnThrowArgument "$handler" "Expected 2 arguments, got $#:$(printf -- " \"%s\"" "$@")" || return $?
+  [ $# -ge 2 ] || throwArgument "$handler" "Expected 2 arguments, got $#:$(printf -- " \"%s\"" "$@")" || return $?
 
   local functionDefinitionFile="${1-}" functionName="${2-}"
-  shift 2 || returnThrowArgument "$handler" "Missing arguments" || return $?
+  shift 2 || throwArgument "$handler" "Missing arguments" || return $?
 
   local home returnCode="${1-NONE}"
 
@@ -39,7 +39,7 @@ __usageDocument() {
     fi
     functionDefinitionFile="$tryFile"
   fi
-  [ -n "$functionName" ] || returnThrowArgument "$handler" "functionName is blank" || return $?
+  [ -n "$functionName" ] || throwArgument "$handler" "functionName is blank" || return $?
 
   if [ "$returnCode" = "NONE" ]; then
     decorate error "NO EXIT CODE" 1>&2
@@ -78,7 +78,7 @@ __usageDocument() {
     dumpPipe "commentFile" <"$commentFile"
     dumpPipe "variablesFile" <"$variablesFile"
     dumpPipe "functionDefinitionFile" <"$functionDefinitionFile"
-    returnThrowArgument "$handler" "Unable to extract \"$functionName\" from \"$functionDefinitionFile\"" || returnClean $? "${clean[@]}" || return $?
+    throwArgument "$handler" "Unable to extract \"$functionName\" from \"$functionDefinitionFile\"" || returnClean $? "${clean[@]}" || return $?
   fi
   (
     local fn="$functionName" description="" argument="" base return_code="" environment="" stdin="" stdout="" example="" build_debug=""

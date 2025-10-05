@@ -42,7 +42,7 @@ testEnvironmentFileDockerToBashCompatible() {
 
   decorate info "PWD is $(pwd)"
   if environmentFileDockerToBashCompatible "$home/test/example/test.env" >"$out" 2>"$err"; then
-    returnThrowEnvironment "$handler" "environmentFileDockerToBashCompatible SHOULD fail" || return $?
+    throwEnvironment "$handler" "environmentFileDockerToBashCompatible SHOULD fail" || return $?
   fi
 
   # Different than testEnvironmentFileDockerToBashCompatiblePipe
@@ -70,7 +70,7 @@ testEnvironmentFileDockerToBashCompatiblePipe() {
 
   decorate info "PWD is $(pwd)"
   if environmentFileDockerToBashCompatible <"$home/test/example/test.env" >"$out" 2>"$err"; then
-    returnThrowEnvironment "$handler" "environmentFileDockerToBashCompatible SHOULD fail" || return $?
+    throwEnvironment "$handler" "environmentFileDockerToBashCompatible SHOULD fail" || return $?
   fi
 
   assertFileContains "$out" "A=" "ABC=" "ABC_D=" "A01234=" "a=" "abc=" "abc_d=" || return $?

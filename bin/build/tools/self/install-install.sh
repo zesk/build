@@ -18,7 +18,7 @@ __installInstallBinary() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -57,15 +57,15 @@ __installInstallBinary() {
         applicationHome=$(usageArgumentDirectory "$handler" "applicationHome" "$1") || return $?
       else
       # _IDENTICAL_ argumentUnknownHandler 1
-      returnThrowArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
+      throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
       fi
       ;;
     esac
     shift
   done
 
-  [ -n "$installBinName" ] || returnThrowArgument "$handler" "--bin is required" || return $?
-  [ -n "$source" ] || returnThrowArgument "$handler" "--local-path is required" || return $?
+  [ -n "$installBinName" ] || throwArgument "$handler" "--bin is required" || return $?
+  [ -n "$source" ] || throwArgument "$handler" "--local-path is required" || return $?
 
   # Validate paths and force realPath
   # default application home is $(pwd)
@@ -82,30 +82,30 @@ __installInstallBinary() {
   elif [ -d "$path" ]; then
     target="$path/$installBinName"
   else
-    returnThrowEnvironment "$handler" "$path is not a directory" || return $?
+    throwEnvironment "$handler" "$path is not a directory" || return $?
   fi
 
   # Compute relTop
   relTop="${path#"$applicationHome"}"
   if [ "$relTop" = "$path" ]; then
-    returnThrowArgument "$handler" "Path ($path) ($(realPath "$path")) is not within applicationHome ($applicationHome)" || return $?
+    throwArgument "$handler" "Path ($path) ($(realPath "$path")) is not within applicationHome ($applicationHome)" || return $?
   fi
   relTop=$(directoryRelativePath "$relTop")
 
   # Get installation binary
   temp="$path/.downloaded.$$"
   if $localFlag; then
-    [ -x "$source" ] || returnThrowEnvironment "$handler" "$source is not executable" || return $?
+    [ -x "$source" ] || throwEnvironment "$handler" "$source is not executable" || return $?
     catchEnvironment "$handler" cp "$source" "$temp" || return $?
   else
     if [ -z "$url" ]; then
       [ -n "$urlFunction" ] || catchArgument "$handler" "Need --url or --url-function" || return $?
       url=$("$urlFunction" "$handler") || return $?
-      [ -n "$url" ] || returnThrowEnvironment "$urlFunction failed to generate a URL" || return $?
-      urlValid "$url" || returnThrowEnvironment "$urlFunction failed to generate a VALID URL: $url" || return $?
+      [ -n "$url" ] || throwEnvironment "$urlFunction failed to generate a URL" || return $?
+      urlValid "$url" || throwEnvironment "$urlFunction failed to generate a VALID URL: $url" || return $?
     fi
     if ! curl -s -o - "$url" >"$temp"; then
-      returnThrowEnvironment "$handler" "Unable to download $(decorate code "$url")" || returnClean $? "$temp" || return $?
+      throwEnvironment "$handler" "Unable to download $(decorate code "$url")" || returnClean $? "$temp" || return $?
     fi
   fi
   if _installInstallBinaryCanCustomize "$temp"; then
@@ -139,7 +139,7 @@ __installInstallBuildRemote() {
 
   returnCatch "$handler" packageWhich curl curl || return $?
   returnCatch "$handler" buildEnvironmentLoad BUILD_INSTALL_URL || return $?
-  urlParse "${BUILD_INSTALL_URL-}" >/dev/null || returnThrowEnvironment "$handler" "BUILD_INSTALL_URL ($BUILD_INSTALL_URL) is not a valid URL" || return $?
+  urlParse "${BUILD_INSTALL_URL-}" >/dev/null || throwEnvironment "$handler" "BUILD_INSTALL_URL ($BUILD_INSTALL_URL) is not a valid URL" || return $?
 
   printf "%s\n" "${BUILD_INSTALL_URL}"
 }

@@ -63,7 +63,7 @@ _identicalCheckInsideLoop() {
     fi
     IFS=' ' read -r lineNumber token count <<<"$(printf -- "%s\n" "$parsed")" || :
     [ ${#tokens[@]} -eq 0 ] || inArray "$token" "${tokens[@]}" || continue
-    if ! count=$(__identicalLineCount "$count" "$((totalLines - lineNumber))") && ! returnThrowEnvironment "$handler" "\"$identicalLine\" invalid count: $count"; then
+    if ! count=$(__identicalLineCount "$count" "$((totalLines - lineNumber))") && ! throwEnvironment "$handler" "\"$identicalLine\" invalid count: $count"; then
       continue
     fi
     errorFile="$tempDirectory/$prefixIndex/errors"

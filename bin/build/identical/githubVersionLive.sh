@@ -17,10 +17,10 @@ else
 
     local name owner
     name=$(returnCatch "$handler" buildEnvironmentGet GITHUB_REPOSITORY_NAME) || return $?
-    [ -n "$name" ] || returnThrowEnvironment "$handler" "GITHUB_REPOSITORY_NAME is blank" || return $?
+    [ -n "$name" ] || throwEnvironment "$handler" "GITHUB_REPOSITORY_NAME is blank" || return $?
 
     owner=$(returnCatch "$handler" buildEnvironmentGet GITHUB_REPOSITORY_OWNER) || return $?
-    [ -n "$owner" ] || returnThrowEnvironment "$handler" "GITHUB_REPOSITORY_OWNER is blank" || return $?
+    [ -n "$owner" ] || throwEnvironment "$handler" "GITHUB_REPOSITORY_OWNER is blank" || return $?
     catchEnvironment "$handler" githubLatestRelease "$owner/$name" "$@" || return $?
   }
   ___hookVersionLive() {

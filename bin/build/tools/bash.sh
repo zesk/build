@@ -94,7 +94,7 @@ _bashBuiltins() {
 # Return Code: 1 - No, this is not a bash builtin command
 isBashBuiltin() {
   local handler="_${FUNCNAME[0]}"
-  [ $# -gt 0 ] || returnThrowArgument "$handler" "Need builtin" || return $?
+  [ $# -gt 0 ] || throwArgument "$handler" "Need builtin" || return $?
   [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
   case "${1-}" in
   ":" | "." | "[" | "alias" | "bg" | "bind" | "break" | "builtin" | "case" | "cd" | "command" | "compgen" | "complete" | "continue" | "declare" | "dirs" | "disown" | "echo" | "enable" | "eval" | "exec" | "exit" | "export" | "fc" | "fg" | "getopts")
@@ -151,7 +151,7 @@ bashLibrary() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -167,12 +167,12 @@ bashLibrary() {
     shift
   done
 
-  [ -n "$run" ] || returnThrowArgument "$handler" "Missing libraryRelativePath" || return $?
+  [ -n "$run" ] || throwArgument "$handler" "Missing libraryRelativePath" || return $?
   home=$(bashLibraryHome "$run") || return $?
   if [ $# -eq 0 ]; then
     export HOME
     # shellcheck source=/dev/null
-    source "$home/$run" || returnThrowEnvironment "$handler" "source ${run//${HOME-}/~} failed" || return $?
+    source "$home/$run" || throwEnvironment "$handler" "source ${run//${HOME-}/~} failed" || return $?
     ! $verboseFlag || decorate info "Reloaded $(decorate code "$run") @ $(decorate info "${home//${HOME-}/~}")"
   else
     ! $verboseFlag || decorate info "Running $(decorate file "$home/$run")" "$(decorate each code "$@")"
@@ -200,7 +200,7 @@ bashSourcePath() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -216,16 +216,16 @@ bashSourcePath() {
       # shellcheck disable=SC2015
       while read -r tool; do
         local tool="${tool#./}"
-        [ -f "$path/$tool" ] || returnThrowEnvironment "$handler" "$path/$tool is not a bash source file" || return $?
-        [ -x "$path/$tool" ] || returnThrowEnvironment "$handler" "$path/$tool is not executable" || return $?
+        [ -f "$path/$tool" ] || throwEnvironment "$handler" "$path/$tool is not a bash source file" || return $?
+        [ -x "$path/$tool" ] || throwEnvironment "$handler" "$path/$tool is not executable" || return $?
         # shellcheck source=/dev/null
-        source "$path/$tool" || returnThrowEnvironment "$handler" "source $path/$tool" || return $?
+        source "$path/$tool" || throwEnvironment "$handler" "source $path/$tool" || return $?
       done < <(cd "$path" && find "." -type f -name '*.sh' ! -path "*/.*/*" "${ff[@]+"${ff[@]}"}" | sort || :)
       ;;
     esac
     shift
   done
-  $foundOne || returnThrowArgument "$handler" "Requires a directory" || return $?
+  $foundOne || throwArgument "$handler" "Requires a directory" || return $?
 }
 _bashSourcePath() {
   # __IDENTICAL__ usageDocument 1
@@ -245,7 +245,7 @@ bashFunctionDefined() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -259,8 +259,8 @@ bashFunctionDefined() {
     esac
     shift
   done
-  [ -n "$function" ] || returnThrowArgument "$handler" "functionName is required" || retrun $?
-  [ ${#files[@]} -gt 0 ] || returnThrowArgument "$handler" "Requires at least one file" || retrun $?
+  [ -n "$function" ] || throwArgument "$handler" "functionName is required" || retrun $?
+  [ ${#files[@]} -gt 0 ] || throwArgument "$handler" "Requires at least one file" || retrun $?
 
   grep -q -e "^\s*$(quoteGrepPattern "$function")() {" "${files[@]}"
 }
@@ -286,7 +286,7 @@ _bashStripComments() {
 # Return Code: 0 - Function is used within the file
 # Return Code: 1 - Function is *not* used within the file
 # This check is simplistic and does not verify actual coverage or code paths.
-# Requires: returnThrowArgument decorate usageArgumentString usageArgumentFile quoteGrepPattern bashStripComments cat grep
+# Requires: throwArgument decorate usageArgumentString usageArgumentFile quoteGrepPattern bashStripComments cat grep
 bashShowUsage() {
   local handler="_${FUNCNAME[0]}"
 
@@ -297,7 +297,7 @@ bashShowUsage() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -329,7 +329,7 @@ _bashShowUsage() {
 # DOC TEMPLATE: --help 1
 # Argument: --help - Optional. Flag. Display this help.
 # Argument: file - File. Optional. File(s) to list bash functions defined within.
-# Requires: __bashListFunctions returnThrowArgument decorate usageArgumentFile
+# Requires: __bashListFunctions throwArgument decorate usageArgumentFile
 bashListFunctions() {
   local handler="_${FUNCNAME[0]}"
 
@@ -341,7 +341,7 @@ bashListFunctions() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -384,7 +384,7 @@ bashFunctionCommentVariable() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -501,7 +501,7 @@ bashCommentFilter() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;

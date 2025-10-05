@@ -29,7 +29,7 @@ yarnInstall() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -39,7 +39,7 @@ yarnInstall() {
       ;;
     *)
       # _IDENTICAL_ argumentUnknownHandler 1
-      returnThrowArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
+      throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
       ;;
     esac
     shift
@@ -55,7 +55,7 @@ yarnInstall() {
   returnCatch "$handler" buildEnvironmentLoad BUILD_YARN_VERSION || return $?
 
   version="${1-${BUILD_YARN_VERSION:-stable}}"
-  quietLog=$(buildQuietLog "$handler") || returnThrowEnvironment "buildQuietLog $handler"
+  quietLog=$(buildQuietLog "$handler") || throwEnvironment "buildQuietLog $handler"
   returnCatch "$handler" fileDirectoryRequire "$quietLog" || return $?
   quietLog=$(returnCatch "$handler" buildQuietLog "$handler") || return $?
   statusMessage --first decorate info "Installing node ... " || return $?
@@ -92,7 +92,7 @@ __nodePackageManagerArguments_yarn() {
 
   case "$action" in
   run)
-    ! $globalFlag || returnThrowArgument "$handler" "--global makes no sense with run" || return $?
+    ! $globalFlag || throwArgument "$handler" "--global makes no sense with run" || return $?
     printf "%s\n" "run"
     ;;
   update)

@@ -24,7 +24,7 @@ __hookRunner() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     --require)
       requireHook=true
@@ -38,7 +38,7 @@ __hookRunner() {
       ;;
     *)
       # _IDENTICAL_ argumentUnknownHandler 1
-      returnThrowArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
+      throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
       ;;
     esac
     shift
@@ -52,7 +52,7 @@ __hookRunner() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -71,7 +71,7 @@ __hookRunner() {
       if ! hook=$(whichHook "${ww[@]+"${ww[@]}"}" "${whichArgs[@]+${whichArgs[@]}}" "$binary"); then
         if $requireHook; then
           # hookRun
-          returnThrowArgument "$handler" "Hook not found $(decorate code "$binary")" || return $?
+          throwArgument "$handler" "Hook not found $(decorate code "$binary")" || return $?
         else
           if buildDebugEnabled hook; then
             printf "%s %s %s %s\n" "$(decorate warning "No hook")" "$(decorate code "$binary")" "$(decorate warning "in this project:")" "$(decorate code "$applicationHome")"
@@ -83,7 +83,7 @@ __hookRunner() {
       if "$sourceHook"; then
         set -- "$@"
         # shellcheck disable=SC1090
-        source "$hook" || returnThrowEnvironment "$handler" "source $hook failed" || return $?
+        source "$hook" || throwEnvironment "$handler" "source $hook failed" || return $?
       else
         command env HOME="$HOME" PATH="$PATH" BUILD_HOME="$BUILD_HOME" "$hook" "$@" || return $?
       fi
@@ -92,7 +92,7 @@ __hookRunner() {
     esac
     shift
   done
-  returnThrowArgument "$handler" "No hook name passed (Arguments: $(decorate each code "${__saved[@]}"))" || return $?
+  throwArgument "$handler" "No hook name passed (Arguments: $(decorate each code "${__saved[@]}"))" || return $?
 }
 
 # Run a hook in the project located at `./bin/hooks/`
@@ -232,7 +232,7 @@ hasHook() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -286,7 +286,7 @@ whichHook() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -305,12 +305,12 @@ whichHook() {
 
       if [ "${#hookPaths[@]}" -eq 0 ]; then
         IFS=":" read -r -a hookPaths < <(buildEnvironmentGet --application "$applicationHome" BUILD_HOOK_DIRS) || :
-        [ ${#hookPaths[@]} -gt 0 ] || returnThrowEnvironment "$handler" "BUILD_HOOK_DIRS is blank" || return $?
+        [ ${#hookPaths[@]} -gt 0 ] || throwEnvironment "$handler" "BUILD_HOOK_DIRS is blank" || return $?
       fi
       if [ "${#hookExtensions[@]}" -eq 0 ]; then
         [ -n "$extensionText" ] || extensionText="$(buildEnvironmentGet --application "$applicationHome" BUILD_HOOK_EXTENSIONS)"
         IFS=":" read -r -a hookExtensions <<<"$extensionText"
-        [ ${#hookExtensions[@]} -gt 0 ] || returnThrowEnvironment "$handler" "BUILD_HOOK_EXTENSIONS is blank" || return $?
+        [ ${#hookExtensions[@]} -gt 0 ] || throwEnvironment "$handler" "BUILD_HOOK_EXTENSIONS is blank" || return $?
       fi
 
       local hookPath
@@ -354,7 +354,7 @@ whichHook() {
     esac
     shift
   done
-  returnThrowArgument "$handler" "no arguments" || return $?
+  throwArgument "$handler" "no arguments" || return $?
 }
 _whichHook() {
   # __IDENTICAL__ usageDocument 1

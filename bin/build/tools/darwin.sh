@@ -22,8 +22,8 @@ darwinSoundDirectory() {
   local handler="_${FUNCNAME[0]}" home
   [ $# -eq 0 ] || __help --only "$handler" "$@" || return "$(convertValue $? 1 0)"
 
-  isDarwin || returnThrowEnvironment "$handler" "Only on Darwin" || return $?
-  home=$(returnCatch "$handler" userHome) || return $?
+  isDarwin || throwEnvironment "$handler" "Only on Darwin" || return $?
+  home=$(returnCatch "$handler" userRecordHome) || return $?
   printf "%s\n" "$home/Library/Sounds"
 }
 _darwinSoundDirectory() {
@@ -63,7 +63,7 @@ darwinSoundInstall() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -76,14 +76,14 @@ darwinSoundInstall() {
     esac
     shift
   done
-  [ "${#soundFiles[@]}" -gt 0 ] || returnThrowArgument "$handler" "Need at least one sound file" || return $?
+  [ "${#soundFiles[@]}" -gt 0 ] || throwArgument "$handler" "Need at least one sound file" || return $?
 
   soundDirectory=$(catchEnvironment "$handler" darwinSoundDirectory) || return $?
   if [ ! -d "$soundDirectory" ]; then
     if "$createFlag"; then
       catchEnvironment "$handler" mkdir -p "$soundDirectory" || return $?
     else
-      returnThrowEnvironment "$handler" "No $soundDirectory" || return $?
+      throwEnvironment "$handler" "No $soundDirectory" || return $?
     fi
   fi
   catchEnvironment "$handler" cp "${soundFiles[@]+"${soundFiles[@]}"}" "${soundDirectory%/}/" || return $?
@@ -99,7 +99,7 @@ darwinSoundNames() {
   [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
 
   soundDirectory=$(catchEnvironment "$handler" darwinSoundDirectory) || return $?
-  [ -d "$soundDirectory" ] || returnThrowEnvironment "$handler" "No $soundDirectory" || return $?
+  [ -d "$soundDirectory" ] || throwEnvironment "$handler" "No $soundDirectory" || return $?
   find "$soundDirectory" -type f ! -name '.*' -exec basename {} \; | while read -r file; do
     printf "%s\n" "${file%.*}"
   done
@@ -134,7 +134,7 @@ darwinNotification() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -148,7 +148,7 @@ darwinNotification() {
     --sound)
       shift
       soundName="$(usageArgumentString "$handler" "$argument" "${1-}")" || return $?
-      darwinSoundValid "$soundName" || returnThrowArgument "$handler" "Sound name $(decorate value "$soundName") not valid, ignoring: $(darwinSoundNames)" || :
+      darwinSoundValid "$soundName" || throwArgument "$handler" "Sound name $(decorate value "$soundName") not valid, ignoring: $(darwinSoundNames)" || :
       ;;
     --)
       shift
@@ -207,7 +207,7 @@ darwinDialog() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -267,7 +267,7 @@ darwinDialog() {
   done
   maxChoice=$((${#choices[@]} - 1))
   if [ "$defaultButton" -gt $maxChoice ]; then
-    returnThrowArgument "$handler" "defaultButton $defaultButton is out of range 0 ... $maxChoice" || return $?
+    throwArgument "$handler" "defaultButton $defaultButton is out of range 0 ... $maxChoice" || return $?
   fi
   messageText="$(escapeDoubleQuotes "$(printf "%s\\\n" "${message[@]}")")"
   quietErrors=$(fileTemporaryName "$handler") || return $?
@@ -297,11 +297,11 @@ darwinDialog() {
         button="$value"
         ;;
       "gave up")
-        isBoolean "$value" || returnThrowEnvironment "$handler" "gave up should be a boolean: $value" || return $?
-        ! "$value" || _return "$(returnCode timeout)" "Dialog timed out" || return $?
+        isBoolean "$value" || throwEnvironment "$handler" "gave up should be a boolean: $value" || return $?
+        ! "$value" || returnMessage "$(returnCode timeout)" "Dialog timed out" || return $?
         ;;
       *)
-        returnThrowEnvironment "$handler" "Unknown return value from dialog: $(decorate label "$name"): $(decorate value "$value")" || return $?
+        throwEnvironment "$handler" "Unknown return value from dialog: $(decorate label "$name"): $(decorate value "$value")" || return $?
         ;;
       esac
     done <<<"$result"

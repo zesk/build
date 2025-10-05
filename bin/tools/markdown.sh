@@ -20,7 +20,7 @@ __addNoteTo() {
 #
 # handler: {fn} [ --skip-commit ]
 # Argument: --skip-commit - Skip the commit if the files change
-# Requires: jq returnThrowArgument statusMessage
+# Requires: jq throwArgument statusMessage
 __updateMarkdown() {
   local handler="_${FUNCNAME[0]}"
   local flagSkipCommit
@@ -31,7 +31,7 @@ __updateMarkdown() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     --skip-commit)
       flagSkipCommit=true
@@ -39,7 +39,7 @@ __updateMarkdown() {
       ;;
     *)
       # _IDENTICAL_ argumentUnknownHandler 1
-      returnThrowArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
+      throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
       ;;
     esac
     shift

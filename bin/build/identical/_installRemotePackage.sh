@@ -112,7 +112,7 @@ __packageCheckFunction() {
 # Argument: --diff - Optional. Flag. Show differences between old and new file.
 # Return Code: 1 - Environment error
 # Return Code: 2 - Argument error
-# Requires: cp rm cat printf realPath whichExists returnMessage fileTemporaryName catchArgument returnThrowArgument catchEnvironment decorate usageArgumentString isFunction __decorateExtensionQuote
+# Requires: cp rm cat printf realPath whichExists returnMessage fileTemporaryName catchArgument throwArgument catchEnvironment decorate usageArgumentString isFunction __decorateExtensionQuote
 _installRemotePackage() {
   local handler="_${FUNCNAME[0]}"
 
@@ -131,7 +131,7 @@ _installRemotePackage() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -144,9 +144,9 @@ _installRemotePackage() {
       name=$(usageArgumentString "$handler" "$argument" "${1-}") || return $?
       ;;
     --mock | --local)
-      [ -z "$localPath" ] || returnThrowArgument "$handler" "$argument already" || return $?
+      [ -z "$localPath" ] || throwArgument "$handler" "$argument already" || return $?
       shift
-      [ -n "${1-}" ] || returnThrowArgument "$handler" "$argument blank argument #$__index" || return $?
+      [ -n "${1-}" ] || throwArgument "$handler" "$argument blank argument #$__index" || return $?
       localPath="$(catchArgument "$handler" realPath "${1%/}")" || return $?
       ;;
     --user | --header | --password)
@@ -155,26 +155,26 @@ _installRemotePackage() {
       ;;
     --url)
       shift
-      [ -z "$url" ] || returnThrowArgument "$handler" "$argument already" || return $?
-      [ -n "${1-}" ] || returnThrowArgument "$handler" "$argument blank argument" || return $?
+      [ -z "$url" ] || throwArgument "$handler" "$argument already" || return $?
+      [ -n "${1-}" ] || throwArgument "$handler" "$argument blank argument" || return $?
       url="$1"
       ;;
     --version-function)
       shift
-      [ -z "$versionFunction" ] || returnThrowArgument "$handler" "$argument already" || return $?
-      isFunction "${1-}" || returnThrowArgument "$handler" "$argument not callable: ${1-}" || return $?
+      [ -z "$versionFunction" ] || throwArgument "$handler" "$argument already" || return $?
+      isFunction "${1-}" || throwArgument "$handler" "$argument not callable: ${1-}" || return $?
       versionFunction="$1"
       ;;
     --url-function)
       shift
-      [ -z "$urlFunction" ] || returnThrowArgument "$handler" "$argument already" || return $?
-      isFunction "${1-}" || returnThrowArgument "$handler" "$argument not callable: ${1-}" || return $?
+      [ -z "$urlFunction" ] || throwArgument "$handler" "$argument already" || return $?
+      isFunction "${1-}" || throwArgument "$handler" "$argument not callable: ${1-}" || return $?
       urlFunction="$1"
       ;;
     --check-function)
       shift
-      [ -z "$checkFunction" ] || returnThrowArgument "$handler" "$argument already" || return $?
-      isFunction "${1-}" || returnThrowArgument "$handler" "$argument not callable: ${1-}" || return $?
+      [ -z "$checkFunction" ] || throwArgument "$handler" "$argument already" || return $?
+      isFunction "${1-}" || throwArgument "$handler" "$argument not callable: ${1-}" || return $?
       checkFunction="$1"
       ;;
     --installer)
@@ -247,12 +247,12 @@ _installRemotePackage() {
     if [ -n "$urlFunction" ]; then
       url=$(catchEnvironment "$handler" "$urlFunction" "$handler") || return $?
       if [ -z "$url" ]; then
-        returnThrowArgument "$handler" "$urlFunction failed" || return $?
+        throwArgument "$handler" "$urlFunction failed" || return $?
       fi
     fi
   fi
   if [ -z "$url" ] && [ -z "$localPath" ]; then
-    returnThrowArgument "$handler" "--local or --url|--url-function is required" || return $?
+    throwArgument "$handler" "--local or --url|--url-function is required" || return $?
   fi
 
   if [ ! -d "$installPath" ]; then
@@ -283,7 +283,7 @@ _installRemotePackage() {
     local start
     start=$(($(catchEnvironment "$handler" date +%s) + 0)) || return $?
     __installRemotePackageDirectory "$handler" "$packagePath" "$applicationHome" "$url" "$localPath" "${fetchArguments[@]+"${fetchArguments[@]}"}" || return $?
-    [ -d "$packagePath" ] || returnThrowEnvironment "$handler" "Unable to download and install $packagePath (not a directory, still)" || return $?
+    [ -d "$packagePath" ] || throwEnvironment "$handler" "Unable to download and install $packagePath (not a directory, still)" || return $?
     message="Installed "
     suffix="in $(($(date +%s) - start)) seconds$binName"
   else
@@ -317,11 +317,11 @@ _installRemotePackage() {
         installer="${installer#@}"
       fi
       if [ ! -f "$installer" ]; then
-        returnThrowEnvironment "$handler" "$installer is missing" || exitCode=$?
+        throwEnvironment "$handler" "$installer is missing" || exitCode=$?
         continue
       fi
       if [ ! -x "$installer" ]; then
-        returnThrowEnvironment "$handler" "$installer is not executable" || exitCode=$?
+        throwEnvironment "$handler" "$installer is not executable" || exitCode=$?
         continue
       fi
       decorate info "Running installer $(decorate code "$installer") ($ignoreErrors) ..."
@@ -370,7 +370,7 @@ __installRemotePackageDebug() {
 
 # Install the package directory
 # Requires: uname pushd popd rm tar dirname
-# Requires: returnCatch catchEnvironment returnThrowEnvironment urlFetch
+# Requires: returnCatch catchEnvironment throwEnvironment urlFetch
 __installRemotePackageDirectory() {
   local handler="$1" packagePath="$2" applicationHome="$3" url="$4" localPath="$5"
   local start tarArgs osName
@@ -382,7 +382,7 @@ __installRemotePackageDirectory() {
     return $?
   fi
   returnCatch "$handler" urlFetch "$url" "$target" || return $?
-  [ -f "$target" ] || returnThrowEnvironment "$handler" "$target does not exist after download from $url" || return $?
+  [ -f "$target" ] || throwEnvironment "$handler" "$target does not exist after download from $url" || return $?
   packagePath=${packagePath%/}
   packagePath=${packagePath#/}
   if ! osName="$(uname)" || [ "$osName" != "Darwin" ]; then
@@ -399,7 +399,7 @@ __installRemotePackageDirectory() {
 
 # Install the build directory from a copy
 # Requires: rm mv cp mkdir
-# Requires: returnUndo catchEnvironment returnThrowEnvironment
+# Requires: returnUndo catchEnvironment throwEnvironment
 __installRemotePackageDirectoryLocal() {
   local handler="$1" packagePath="$2" applicationHome="$3" localPath="$4" installPath tempPath
 

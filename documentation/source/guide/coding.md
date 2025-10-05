@@ -144,7 +144,7 @@ Pattern:
         local handler="_${FUNCNAME[0]}"
        ...
         if ! trySomething; then
-            returnThrowEnvironment "$handler" "Error message why" || return $?
+            throwEnvironment "$handler" "Error message why" || return $?
         fi
     }
     _functionName() {
@@ -202,13 +202,13 @@ Code:
 handler:
 
     tempFile=(fileTemporaryName "$handler") || return $?
-    returnThrowEnvironment "$handler" "No deployment application directory exists" || return $?
+    throwEnvironment "$handler" "No deployment application directory exists" || return $?
 
 See:
 
 - [`_environment`](./tools/sugar.md#_environment)
 - [`__environment`](./tools/sugar.md#__environment)
-- [`returnThrowEnvironment`](./tools/sugar.md#returnThrowEnvironment)
+- [`throwEnvironment`](./tools/sugar.md#throwEnvironment)
 - [`catchEnvironment`](./tools/sugar.md#catchEnvironment)
 
 ### Argument errors (Exit Code `2`)
@@ -230,7 +230,7 @@ Code:
 handler:
 
     catchArgument "$handler" isInteger "$argument" || return $?
-    returnThrowArgument "$handler" "No deployment application directory exists" || return $?
+    throwArgument "$handler" "No deployment application directory exists" || return $?
 
 ### Argument utilities
 
@@ -270,7 +270,7 @@ handler:
 - [handler functions](./tools/handler.md)
 - [`_argument`](./tools/sugar.md#_argument)
 - [`__argument`](./tools/sugar.md#__argument)
-- [`returnThrowArgument`](./tools/sugar.md#returnThrowArgument)
+- [`throwArgument`](./tools/sugar.md#throwArgument)
 - [`catchArgument`](./tools/sugar.md#catchArgument)
 
 Code:

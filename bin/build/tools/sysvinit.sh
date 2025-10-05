@@ -20,7 +20,7 @@ sysvInitScriptInstall() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -31,12 +31,12 @@ sysvInitScriptInstall() {
       fi
       baseName=$(catchArgument "$handler" basename "$argument") || return $?
       target="$initHome/$baseName"
-      [ -x "$argument" ] || returnThrowArgument "$handler" "Not executable: $argument" || return $?
+      [ -x "$argument" ] || throwArgument "$handler" "Not executable: $argument" || return $?
       if [ -f "$target" ]; then
         if diff -q "$1" "$target" >/dev/null; then
           statusMessage decorate success "reinstalling script: $(decorate code "$baseName")"
         else
-          returnThrowEnvironment "$handler" "$(decorate code "$target") already exists - remove first" || return $?
+          throwEnvironment "$handler" "$(decorate code "$target") already exists - remove first" || return $?
         fi
       else
         statusMessage decorate success "installing script: $(decorate code "$baseName")"
@@ -70,7 +70,7 @@ sysvInitScriptUninstall() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -82,7 +82,7 @@ sysvInitScriptUninstall() {
       baseName=$(catchArgument "$handler" basename "$argument") || return $?
       target="$initHome/$baseName"
       if [ -f "$target" ]; then
-        update-rc.d -f "$baseName" remove || returnThrowEnvironment "$handler" "update-rc.d $baseName remove failed" || return $?
+        update-rc.d -f "$baseName" remove || throwEnvironment "$handler" "update-rc.d $baseName remove failed" || return $?
         catchEnvironment "$handler" rm -f "$target" || return $?
         printf "%s %s\n" "$(decorate code "$baseName")" "$(decorate success "removed successfully")"
       else
@@ -101,6 +101,6 @@ _sysvInitScriptUninstall() {
 # Fetch the home directory and make sure it exists
 __sysvInitScriptInitHome() {
   local handler="$1" initHome=/etc/init.d
-  [ -d "$initHome" ] || returnThrowEnvironment "$handler" "sysvInit directory does not exist $(decorate code "$initHome")" || return $?
+  [ -d "$initHome" ] || throwEnvironment "$handler" "sysvInit directory does not exist $(decorate code "$initHome")" || return $?
   printf "%s\n" "$initHome"
 }

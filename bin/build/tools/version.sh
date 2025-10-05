@@ -71,7 +71,7 @@ releaseNotes() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -102,11 +102,11 @@ __releaseNotes() {
   home=$(returnCatch "$handler" buildHome) || return $?
   if [ -z "$version" ]; then
     version=$(catchEnvironment "$handler" hookRun --application "$home" version-current) || return $?
-    [ -n "$version" ] || returnThrowEnvironment "$handler" "version-current hook returned blank" || return $?
+    [ -n "$version" ] || throwEnvironment "$handler" "version-current hook returned blank" || return $?
   fi
   local notes
   notes=$(returnCatch "$handler" buildEnvironmentGet --application "$home" BUILD_RELEASE_NOTES) || return $?
-  [ -n "$notes" ] || returnThrowEnvironment "$handler" "BUILD_RELEASE_NOTES is blank" || return $?
+  [ -n "$notes" ] || throwEnvironment "$handler" "BUILD_RELEASE_NOTES is blank" || return $?
   releasePath="${notes%/}"
   pathIsAbsolute "$releasePath" || releasePath=$(returnCatch "$handler" directoryPathSimplify "$home/$releasePath") || return $?
   printf "%s/%s.md\n" "${releasePath%/}" "$version"
@@ -118,13 +118,13 @@ __releaseNotes() {
 versionNextMinor() {
   local handler="_${FUNCNAME[0]}"
 
-  [ $# -gt 0 ] || returnThrowArgument "$handler" "lastVersion required" || return $?
+  [ $# -gt 0 ] || throwArgument "$handler" "lastVersion required" || return $?
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -184,7 +184,7 @@ releaseNew() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -196,10 +196,10 @@ releaseNew() {
     *)
       if [ -n "$newVersion" ]; then
       # _IDENTICAL_ argumentUnknownHandler 1
-      returnThrowArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
+      throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
       fi
       newVersion="${argument#v}"
-      isVersion "$newVersion" || returnThrowArgument "$handler" "$argument is not a version" || return $?
+      isVersion "$newVersion" || throwArgument "$handler" "$argument is not a version" || return $?
       newVersion="v$newVersion"
       ;;
     esac
@@ -220,12 +220,12 @@ __releaseNew() {
   if [ -z "$newVersion" ]; then
     readLoop=true
   fi
-  hasHook version-current || returnThrowEnvironment "$handler" "Requires hook version-current" || return $?
+  hasHook version-current || throwEnvironment "$handler" "Requires hook version-current" || return $?
   currentVersion=$(catchEnvironment "$handler" hookRun version-current) || return $?
-  [ -n "$currentVersion" ] || returnThrowEnvironment "$handler" "version-current hook returned empty string" || return $?
+  [ -n "$currentVersion" ] || throwEnvironment "$handler" "version-current hook returned empty string" || return $?
   if hasHook version-live; then
     liveVersion=$(catchEnvironment "$handler" hookRun version-live) || return $?
-    [ -n "$currentVersion" ] || returnThrowEnvironment "$handler" "version-live hook returned empty string" || return $?
+    [ -n "$currentVersion" ] || throwEnvironment "$handler" "version-live hook returned empty string" || return $?
     decorate pair $width "Live:" "$liveVersion"
   else
     liveVersion=$currentVersion
@@ -240,14 +240,14 @@ __releaseNew() {
     [ -n "$checkVersion" ] || checkVersion="$lastVersion"
     lastVersion="$(printf "%s\n" "$liveVersion" "$newVersion" | versionSort | tail -n 1)" || return $?
     if [ "$newVersion" != "$lastVersion" ]; then
-      returnThrowArgument "$handler" "$(decorate error "$newVersion") is before live $(decorate code "$liveVersion")" || return $?
+      throwArgument "$handler" "$(decorate error "$newVersion") is before live $(decorate code "$liveVersion")" || return $?
     fi
     ! $isInteractive || confirmYesNo --yes "Change version to $(decorate code "$newVersion")? " || return $?
     if [ -f "$notes" ]; then
       local newNotes
       newNotes=$(catchEnvironment "$handler" releaseNotes "$newVersion") || return $?
       if [ -f "$newNotes" ]; then
-        returnThrowEnvironment "$handler" "$(decorate file "$notes") and $(decorate file "$newNotes") both exist - can not re-version" || return $?
+        throwEnvironment "$handler" "$(decorate file "$notes") and $(decorate file "$newNotes") both exist - can not re-version" || return $?
       fi
       catchEnvironment "$handler" sed "s/$(quoteSedPattern "$currentVersion")/$(quoteSedReplacement "$newVersion")/g" <"$notes" >"$notes.fixed" || returnClean $? "$notes.fixed" || return $?
       catchEnvironment "$handler" git mv "$notes" "$newNotes" || returnClean $? "$notes.fixed" || return $?
@@ -273,7 +273,7 @@ __releaseNew() {
     if [ -z "$newVersion" ]; then
       newVersion=$nextVersion
     elif ! isVersion "$newVersion"; then
-      returnThrowArgument "$handler" "New version $newVersion is not a valid version tag" || return $?
+      throwArgument "$handler" "New version $newVersion is not a valid version tag" || return $?
     fi
   else
     while true; do
@@ -291,7 +291,7 @@ __releaseNew() {
         break
       else
         if ! $readLoop; then
-          returnThrowArgument "$handler" "Invalid version $newVersion" || return $?
+          throwArgument "$handler" "Invalid version $newVersion" || return $?
         fi
         decorate error "Invalid version $newVersion"
       fi

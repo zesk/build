@@ -133,14 +133,14 @@ returnCatch() {
 # Delete files or directories and return the same exit code passed in.
 # Argument: exitCode - Required. Integer. Exit code to return.
 # Argument: item - Optional. One or more files or folders to delete, failures are logged to stderr.
-# Requires: isUnsignedInteger returnArgument returnThrowEnvironment usageDocument returnThrowArgument
+# Requires: isUnsignedInteger returnArgument throwEnvironment usageDocument throwArgument
 # Group: Sugar
 returnClean() {
   local handler="_${FUNCNAME[0]}"
   [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
   local exitCode="${1-}" && shift
   if ! isUnsignedInteger "$exitCode"; then
-    returnThrowArgument "$handler" "$exitCode (not an integer) $*" || return $?
+    throwArgument "$handler" "$exitCode (not an integer) $*" || return $?
   else
     catchEnvironment "$handler" rm -rf "$@" || return "$exitCode"
     return "$exitCode"
@@ -214,19 +214,19 @@ _convertValue() {
 # Argument: handler - Required. Function. Failure command, passed remaining arguments and error code.
 # Argument: command - Required. String. Command to run.
 # Requires: isUnsignedInteger returnArgument isFunction isCallable
-returnCatchCode() {
+catchCode() {
   local __count=$# __saved=("$@") __handler="_${FUNCNAME[0]}" code="${1-0}" command="${3-}"
   # __IDENTICAL__ __checkCode__handler 1
-  isInteger "$code" || returnThrowArgument "$__handler" "Not integer: $(decorate value "[$code]") (#$__count $(decorate each code -- "${__saved[@]}"))" || return $?
+  isInteger "$code" || throwArgument "$__handler" "Not integer: $(decorate value "[$code]") (#$__count $(decorate each code -- "${__saved[@]}"))" || return $?
   __handler="${2-}"
   # __IDENTICAL__ __checkHandler 1
   isFunction "$__handler" || returnArgument "handler not callable \"$(decorate code "$__handler")\" Stack: $(debuggingStack)" || return $?
   # __IDENTICAL__ __checkCommand__handler 1
-  isCallable "$command" || returnThrowArgument "$__handler" "Not callable $(decorate code "$command")" || return $?
+  isCallable "$command" || throwArgument "$__handler" "Not callable $(decorate code "$command")" || return $?
   shift 3
   "$command" "$@" || "$__handler" "$code" "$(decorate each code "$command" "$@")" || return $?
 }
-_returnCatchCode() {
+_catchCode() {
   # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
@@ -236,20 +236,20 @@ _returnCatchCode() {
 # Argument: handler - Required. Function. Failure command
 # Argument: command - Required. Command to run.
 catchEnvironment() {
-  returnCatchCode 1 "$@" || return $?
+  catchCode 1 "$@" || return $?
 }
 
 # Run `command`, upon failure run `handler` with an argument error
 # Argument: handler - Required. Function. Failure command
 # Argument: command - Required. Command to run.
 catchArgument() {
-  returnCatchCode 2 "$@" || return $?
+  catchCode 2 "$@" || return $?
 }
 
 # Run `handler` with an environment error
 # Argument: handler - Required. Function. Failure command
 # Argument: message - Optional. Error message to display.
-returnThrowEnvironment() {
+throwEnvironment() {
   local __handler="${1-}"
   # __IDENTICAL__ __checkHandler 1
   isFunction "$__handler" || returnArgument "handler not callable \"$(decorate code "$__handler")\" Stack: $(debuggingStack)" || return $?
@@ -259,7 +259,7 @@ returnThrowEnvironment() {
 # Run `handler` with an argument error
 # Argument: handler - Required. Function. Failure command
 # Argument: message - Optional. Error message to display.
-returnThrowArgument() {
+throwArgument() {
   local __handler="${1-}"
   # __IDENTICAL__ __checkHandler 1
   isFunction "$__handler" || returnArgument "handler not callable \"$(decorate code "$__handler")\" Stack: $(debuggingStack)" || return $?

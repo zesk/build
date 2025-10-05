@@ -4,4 +4,6 @@
 [⬅ Parent ](../index.md)
 <hr />
 
-{userHome}
+{userRecord}
+{userRecordHome}
+{userRecordName}

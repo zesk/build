@@ -16,7 +16,7 @@ cursorGet() {
   local handler="_${FUNCNAME[0]}"
   [ $# -eq 0 ] || __help --only "$handler" "$@" || return "$(convertValue $? 1 0)"
 
-  isTTYAvailable || returnThrowEnvironment "$handler" "no tty" || return $?
+  isTTYAvailable || throwEnvironment "$handler" "no tty" || return $?
 
   local x y
 
@@ -41,7 +41,7 @@ cursorSet() {
   local handler="_${FUNCNAME[0]}"
   [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
 
-  isTTYAvailable || returnThrowEnvironment "$handler" "no tty" || return $?
+  isTTYAvailable || throwEnvironment "$handler" "no tty" || return $?
 
   local x y
 

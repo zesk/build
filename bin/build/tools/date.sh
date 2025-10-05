@@ -24,7 +24,7 @@ dateToFormat() {
   [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
   local format="${2-"%F %T"}"
   if [ $# -lt 1 ] || [ $# -gt 2 ]; then
-    returnThrowArgument "$handler" "${FUNCNAME[0]} requires 1 or 2 arguments: date [ format ] –- Passed $#:" "$@" || return $?
+    throwArgument "$handler" "${FUNCNAME[0]} requires 1 or 2 arguments: date [ format ] –- Passed $#:" "$@" || return $?
   fi
   __dateToFormat "$1" "$format"
   #  if date --version 2>/dev/null 1>&2; then
@@ -73,7 +73,7 @@ dateFromTimestamp() {
   local handler="_${FUNCNAME[0]}"
   [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
   if [ $# -lt 1 ] || [ $# -gt 2 ]; then
-    returnThrowArgument "$handler" "${FUNCNAME[0]} requires 1 or 2 arguments: integerTimestamp [ format ] –- Passed $#:" "$@" || return $?
+    throwArgument "$handler" "${FUNCNAME[0]} requires 1 or 2 arguments: integerTimestamp [ format ] –- Passed $#:" "$@" || return $?
   fi
   local format="${2-"%F %T"}"
   __dateFromTimestamp "$1" "$format"
@@ -169,7 +169,7 @@ dateAdd() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;

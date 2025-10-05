@@ -227,24 +227,24 @@ _assertConditionHelper() {
       ;;
     --stderr-match)
       shift || :
-      [ -n "${1-}" ] || returnThrowArgument "$handler" "Blank $argument argument" || return $?
+      [ -n "${1-}" ] || throwArgument "$handler" "Blank $argument argument" || return $?
       stderrContains+=("$1")
       errorsOk=true
       ;;
     --stderr-no-match)
       shift || :
-      [ -n "${1-}" ] || returnThrowArgument "$handler" "Blank $argument argument" || return $?
+      [ -n "${1-}" ] || throwArgument "$handler" "Blank $argument argument" || return $?
       stderrNotContains+=("$1")
       errorsOk=true
       ;;
     --stdout-match)
       shift || :
-      [ -n "${1-}" ] || returnThrowArgument "$handler" "Blank $argument argument" || return $?
+      [ -n "${1-}" ] || throwArgument "$handler" "Blank $argument argument" || return $?
       outputContains+=("$1")
       ;;
     --stdout-no-match)
       shift || :
-      [ -n "${1-}" ] || returnThrowArgument "$handler" "Blank $argument argument" || return $?
+      [ -n "${1-}" ] || throwArgument "$handler" "Blank $argument argument" || return $?
       outputNotContains+=("$1")
       ;;
     --dump)
@@ -305,7 +305,7 @@ _assertConditionHelper() {
     doPlumber=false
     ! isSubstringInsensitive ";Assert-Plumber:true;" ";$flags;" || doPlumber=true
   fi
-  [ -n "$tester" ] || returnThrowArgument "$handler" "--test required ($*)" || return $?
+  [ -n "$tester" ] || throwArgument "$handler" "--test required ($*)" || return $?
 
   outputFile=$(fileTemporaryName "$handler") || return $?
   errorFile="$outputFile.err"
@@ -743,7 +743,7 @@ ___assertOutputEquals() {
 
   shift 2 || :
   stderr=$(fileTemporaryName "$handler") || return $?
-  isCallable "$binary" || returnThrowEnvironment "$handler" "$binary is not callable: $*" || return $?
+  isCallable "$binary" || throwEnvironment "$handler" "$binary is not callable: $*" || return $?
   if output=$(plumber "$binary" "$@" 2>"$stderr"); then
     if [ -s "$stderr" ]; then
       dumpPipe "$(decorate error Produced stderr): $binary" "$@" <"$stderr" 1>&2
@@ -753,7 +753,7 @@ ___assertOutputEquals() {
     printf "%s\n" "$output"
   else
     exitCode=$?
-    [ "$exitCode" -eq "$(returnCode leak)" ] && ! returnThrowEnvironment "$handler" "Leak:" "$binary" "$!" || returnThrowEnvironment "$handler" "Exit code: $?" "$binary" "$@" || exitCode=$?
+    [ "$exitCode" -eq "$(returnCode leak)" ] && ! throwEnvironment "$handler" "Leak:" "$binary" "$!" || throwEnvironment "$handler" "Exit code: $?" "$binary" "$@" || exitCode=$?
   fi
   returnClean "$exitCode" "$stderr" || return $?
 }
@@ -846,8 +846,8 @@ ___assertOutputContainsTest() {
   local handler="returnMessage"
   local contains="${1-}" binary="${2-}" captureOut exitCode
   shift 1
-  [ -n "$contains" ] || returnThrowArgument "$handler" "contains is blank: $*" || return $?
-  isCallable "$binary" || returnThrowArgument "$handler" "$binary is not callable: $*" || return $?
+  [ -n "$contains" ] || throwArgument "$handler" "contains is blank: $*" || return $?
+  isCallable "$binary" || throwArgument "$handler" "$binary is not callable: $*" || return $?
   captureOut=$(fileTemporaryName "$handler") || return $?
   exitCode=1
   ! isFunction "$binary" || __assertedFunctions "$binary" || return $?

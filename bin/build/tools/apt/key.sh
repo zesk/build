@@ -17,7 +17,7 @@ __aptKeyAdd() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -55,7 +55,7 @@ __aptKeyAdd() {
     --install) installFlag=true ;;
     *)
       # _IDENTICAL_ argumentUnknownHandler 1
-      returnThrowArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
+      throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
       ;;
     esac
     shift
@@ -72,15 +72,15 @@ __aptKeyAdd() {
     if $installFlag; then
       returnCatch "$handler" packageInstall "${installs[@]}" || return $?
     else
-      returnThrowEnvironment "$handler" "Unable to install packages: $(decorate each "${installs[@]}")" || return $?
+      throwEnvironment "$handler" "Unable to install packages: $(decorate each "${installs[@]}")" || return $?
     fi
   fi
   # apt-key is deprecated for good reasons
   # https://stackoverflow.com/questions/68992799/warning-apt-key-is-deprecated-manage-keyring-files-in-trusted-gpg-d-instead
 
-  [ "${#names[@]}" -gt 0 ] || returnThrowArgument "$handler" "Need at least one --name" || return $?
-  [ "${#remoteUrls[@]}" -gt 0 ] || returnThrowArgument "$handler" "Need at least one --url" || return $?
-  [ "${#names[@]}" -eq "${#remoteUrls[@]}" ] || returnThrowArgument "$handler" "Mismatched --name and --url pairs: ${#names[@]} != ${#remoteUrls[@]}" || return $?
+  [ "${#names[@]}" -gt 0 ] || throwArgument "$handler" "Need at least one --name" || return $?
+  [ "${#remoteUrls[@]}" -gt 0 ] || throwArgument "$handler" "Need at least one --url" || return $?
+  [ "${#names[@]}" -eq "${#remoteUrls[@]}" ] || throwArgument "$handler" "Mismatched --name and --url pairs: ${#names[@]} != ${#remoteUrls[@]}" || return $?
 
   returnCatch "$handler" packageWhich lsb_release lsb-release || return $?
 
@@ -92,7 +92,7 @@ __aptKeyAdd() {
   local name
   for name in "${names[@]}"; do
     url="${remoteUrls[index]}"
-    host=$(urlParseItem host "$url") || returnThrowArgument "$handler" "Unable to get host from $url" || return $?
+    host=$(urlParseItem host "$url") || throwArgument "$handler" "Unable to get host from $url" || return $?
     title="${title:-"$name"}"
 
     statusMessage decorate info "Fetching $title key ... "
@@ -136,7 +136,7 @@ __aptKeyRemove() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -147,7 +147,7 @@ __aptKeyRemove() {
     shift
   done
 
-  [ "${#names[@]}" -gt 0 ] || returnThrowArgument "$handler" "No keyNames supplied" || return $?
+  [ "${#names[@]}" -gt 0 ] || throwArgument "$handler" "No keyNames supplied" || return $?
 
   local start ring sourcesPath
 
@@ -156,7 +156,7 @@ __aptKeyRemove() {
   ring=$(_usageAptKeyRings "$handler") || return $?
   sourcesPath="$(_usageAptSourcesPath "$handler")" || return $?
 
-  [ -d "$ring" ] || returnThrowEnvironment "$handler" "Unable to remove key as $ring is not a directory" || return $?
+  [ -d "$ring" ] || throwEnvironment "$handler" "Unable to remove key as $ring is not a directory" || return $?
 
   _usageAptPermissions "$handler" "$sourcesPath" || return $?
 
@@ -186,7 +186,7 @@ __aptKeyRemove() {
 _usageAptSourcesPath() {
   local handler="$1" sourcesPath
   sourcesPath=$(catchEnvironment "$handler" aptSourcesDirectory) || return $?
-  [ -d "$sourcesPath" ] || returnThrowEnvironment "$handler" "No $sourcesPath exists - not an apt system" || return $?
+  [ -d "$sourcesPath" ] || throwEnvironment "$handler" "No $sourcesPath exists - not an apt system" || return $?
   printf "%s\n" "$sourcesPath"
 }
 
@@ -205,6 +205,6 @@ _usageAptKeyRings() {
 # permissions check for sourcesPath modifications
 _usageAptPermissions() {
   local handler="$1" sourcesPath="$2"
-  touch "$sourcesPath/$$.test" 2>/dev/null || returnThrowEnvironment "$handler" "No permission to modify $sourcesPath, failing" || return $?
-  rm -f "$sourcesPath/$$.test" 2>/dev/null || returnThrowEnvironment "$handler" "No permission to delete in $sourcesPath, failing" || return $?
+  touch "$sourcesPath/$$.test" 2>/dev/null || throwEnvironment "$handler" "No permission to modify $sourcesPath, failing" || return $?
+  rm -f "$sourcesPath/$$.test" 2>/dev/null || throwEnvironment "$handler" "No permission to delete in $sourcesPath, failing" || return $?
 }

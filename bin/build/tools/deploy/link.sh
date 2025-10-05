@@ -36,7 +36,7 @@ __deployLink() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -45,9 +45,9 @@ __deployLink() {
         applicationLinkPath="$argument"
         if [ -e "$applicationLinkPath" ]; then
           if [ ! -L "$applicationLinkPath" ]; then
-            [ ! -d "$applicationLinkPath" ] || returnThrowArgument "$handler" "$applicationLinkPath is directory (should be a link)" || return $?
+            [ ! -d "$applicationLinkPath" ] || throwArgument "$handler" "$applicationLinkPath is directory (should be a link)" || return $?
             # Not a link or directory
-            returnThrowArgument "$handler" "Unknown file type $(fileType "$applicationLinkPath")" || return $?
+            throwArgument "$handler" "Unknown file type $(fileType "$applicationLinkPath")" || return $?
           fi
         else
           applicationLinkPath=$(usageArgumentFileDirectory "$handler" applicationLinkPath "$applicationLinkPath") || return $?
@@ -60,7 +60,7 @@ __deployLink() {
         fi
       else
         # _IDENTICAL_ argumentUnknownHandler 1
-        returnThrowArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
+        throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
       fi
       ;;
     esac
@@ -71,12 +71,12 @@ __deployLink() {
     catchArgument "$handler" "Missing applicationLinkPath" || return $?
   fi
   if [ -z "$currentApplicationHome" ]; then
-    currentApplicationHome="$(pwd -P 2>/dev/null)" || returnThrowEnvironment "$handler" "pwd failed" || return $?
+    currentApplicationHome="$(pwd -P 2>/dev/null)" || throwEnvironment "$handler" "pwd failed" || return $?
   fi
   local newApplicationLinkPath
   newApplicationLinkPath="$applicationLinkPath.READY.$$"
   if ! ln -sf "$currentApplicationHome" "$newApplicationLinkPath" || ! linkRename "$newApplicationLinkPath" "$applicationLinkPath"; then
     rm -rf "$newApplicationLinkPath" 2>/dev/null
-    returnThrowEnvironment "$handler" "Unable to link and rename" || return $?
+    throwEnvironment "$handler" "Unable to link and rename" || return $?
   fi
 }

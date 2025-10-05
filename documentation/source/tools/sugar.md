@@ -15,8 +15,8 @@ This groupings of functions are related to a `usage` function to handle errors:
 - `catchEnvironment handler command ...` - Run `command ...` and if it fails invoke `handler` with an environment
   error.
 - `catchArgument handler command ...` - Run `command ...` and if it fails invoke `handler` with an argument error.
-- `returnThrowEnvironment handler message ...` - Run `handler` with an environment error and `message ...` arguments.
-- `returnThrowArgument handler message ...` - Run `handler` with an argument error and `message ...` arguments.
+- `throwEnvironment handler message ...` - Run `handler` with an environment error and `message ...` arguments.
+- `throwArgument handler message ...` - Run `handler` with an argument error and `message ...` arguments.
 
 `handler` argument signature is:
 
@@ -28,13 +28,13 @@ This is universally used throughout.
 
 {execute}
 {returnCatch}
-{returnCatchCode}
+{catchCode}
 {catchEnvironment}
 {catchEnvironmentQuiet}
 
 {catchArgument}
-{returnThrowEnvironment}
-{returnThrowArgument}
+{throwEnvironment}
+{throwArgument}
 
 {muzzle}
 {mapReturn}

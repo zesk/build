@@ -50,7 +50,7 @@ __deprecatedCleanup() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -102,7 +102,7 @@ __deprecatedCleanup() {
 
     *)
       # _IDENTICAL_ argumentUnknownHandler 1
-      returnThrowArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
+      throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
       ;;
     esac
     shift
@@ -128,7 +128,7 @@ __deprecatedCleanup() {
     jqPath=$(__catch "$handler" jsonPath "$prefix" "deprecated") || return $?
     if [ -f "$jsonFile" ]; then
       local savedFingerprint
-      savedFingerprint=$(__catchEnvironment "$handler" jsonFileGet "$jsonFile" "$jqPath") || return $?
+      savedFingerprint=$(catchEnvironment "$handler" jsonFileGet "$jsonFile" "$jqPath") || return $?
       if [ "$fingerprint" = "$savedFingerprint" ]; then
         if $justCheck; then
           printf "%s\n" "$fingerprint"
@@ -168,7 +168,7 @@ __deprecatedCleanup() {
   fi
   if [ $exitCode -eq 0 ] && [ -f "$jsonFile" ]; then
     statusMessage --last decorate info "Saving deprecated fingerprint $(decorate subtle "$fingerprint") ..."
-    __catchEnvironment "$handler" jsonFileSet "$jsonFile" "$jqPath" "$fingerprint" || return $?
+    catchEnvironment "$handler" jsonFileSet "$jsonFile" "$jqPath" "$fingerprint" || return $?
     statusMessage --last timingReport "$start" "Failures occurred, not caching results."
   fi
   statusMessage --last timingReport "$start" "Deprecated process took"
@@ -215,12 +215,12 @@ __deprecatedConfiguration() {
   local handler="returnMessage"
   local home
 
-  home=$(__catchEnvironment "$handler" buildHome) || return $?
+  home=$(catchEnvironment "$handler" buildHome) || return $?
 
   export HOME
 
   local newHome
-  newHome=$(__catchEnvironment "$handler" buildEnvironmentGet "BUILD_CACHE_HOME") || return $?
+  newHome=$(catchEnvironment "$handler" buildEnvironmentGet "BUILD_CACHE_HOME") || return $?
 
   [ -d "$HOME" ] || returnEnvironmentHOME is not set || return $?
 

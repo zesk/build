@@ -35,7 +35,7 @@ __buildTestSuite() {
   local testHome
 
   testHome="$(returnCatch "$handler" buildHome)" || return $?
-  [ -d "$testHome/test" ] || returnThrowArgument "$handler" "Missing test directory" || return $?
+  [ -d "$testHome/test" ] || throwArgument "$handler" "Missing test directory" || return $?
 
   # Include our own test support files if needed
   [ ! -d "$testHome/test/support" ] || catchEnvironment "$handler" bashSourcePath "$testHome/test/support" || return $?

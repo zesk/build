@@ -39,7 +39,7 @@ phpComposer() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -51,8 +51,8 @@ phpComposer() {
       forceDocker=true
       ;;
     *)
-      [ "$composerDirectory" = "." ] || returnThrowArgument "$handler" "Unknown argument $1" || return $?
-      [ -d "$argument" ] || returnThrowArgument "$handler" "Directory does not exist: $argument" || return $?
+      [ "$composerDirectory" = "." ] || throwArgument "$handler" "Unknown argument $1" || return $?
+      [ -d "$argument" ] || throwArgument "$handler" "Directory does not exist: $argument" || return $?
       composerDirectory="$argument"
       statusMessage decorate info "Composer directory: $(decorate file "$composerDirectory")"
       break
@@ -140,7 +140,7 @@ phpComposerSetVersion() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -158,7 +158,7 @@ phpComposerSetVersion() {
       ;;
     *)
       # _IDENTICAL_ argumentUnknownHandler 1
-      returnThrowArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
+      throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
       ;;
     esac
     shift
@@ -170,7 +170,7 @@ phpComposerSetVersion() {
 
   decoratedComposerJSON="$(decorate file "$composerJSON")"
 
-  [ -f "$composerJSON" ] || returnThrowEnvironment "$handler" "No $decoratedComposerJSON" || return $?
+  [ -f "$composerJSON" ] || throwEnvironment "$handler" "No $decoratedComposerJSON" || return $?
 
   catchEnvironment "$handler" jsonSetValue "${aa[@]+"${aa[@]}"}" --key version --generator hookVersionCurrent --filter versionNoVee "$composerJSON" || return $?
 }

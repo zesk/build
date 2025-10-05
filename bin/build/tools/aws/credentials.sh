@@ -15,7 +15,7 @@ __awsCredentialsFile() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -34,7 +34,7 @@ __awsCredentialsFile() {
       ;;
     *)
       # _IDENTICAL_ argumentUnknownHandler 1
-      returnThrowArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
+      throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
       ;;
     esac
     shift
@@ -43,17 +43,17 @@ __awsCredentialsFile() {
   usageRequireBinary "$handler" mkdir chmod touch || return $?
 
   if [ -z "$home" ]; then
-    home="$(returnCatch "$handler" userHome)" || return $?
+    home="$(returnCatch "$handler" userRecordHome)" || return $?
   fi
   if [ ! -d "$home" ]; then
     # Argument is validated above MUST be environment
-    ! "$verbose" || returnThrowEnvironment "$handler" "HOME environment \"$(decorate value "$home")\" directory not found" || return $?
+    ! "$verbose" || throwEnvironment "$handler" "HOME environment \"$(decorate value "$home")\" directory not found" || return $?
     return 1
   fi
   local credentialsPath credentials="$HOME/.aws/credentials"
   if $checkFlag && [ ! -f "$credentials" ]; then
     if ! $createFlag; then
-      ! $verbose || returnThrowEnvironment "$handler" "No credentials file ($(decorate value "$credentials")) found" || return $?
+      ! $verbose || throwEnvironment "$handler" "No credentials file ($(decorate value "$credentials")) found" || return $?
       return 1
     fi
     credentialsPath="${credentials%/*}"
@@ -76,18 +76,18 @@ __awsEnvironmentFromCredentials() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
     # IDENTICAL --profileHandler 5
     --profile)
       shift
-      [ -z "$profileName" ] || returnThrowArgument "$handler" "--profile already specified" || return $?
+      [ -z "$profileName" ] || throwArgument "$handler" "--profile already specified" || return $?
       profileName="$(usageArgumentString "$handler" "$argument" "${1-}")" || return $?
       ;;
     *)
-      [ -z "$profileName" ] || returnThrowArgument "$handler" "profileName already supplied" || return $?
+      [ -z "$profileName" ] || throwArgument "$handler" "profileName already supplied" || return $?
       profileName="$1"
       ;;
     esac
@@ -110,14 +110,14 @@ __awsCredentialsHasProfile() {
   local credentials profileName=${1:-default} name value
   local foundValues=()
   __help "$handler" "$@" || return 0
-  [ -n "$profileName" ] || returnThrowArgument "$handler" "profileName is somehow blank" || return $?
+  [ -n "$profileName" ] || throwArgument "$handler" "profileName is somehow blank" || return $?
   credentials="$(returnCatch "$handler" awsCredentialsFile)" || return $?
   while read -r name value; do
     foundValues+=("$(uppercase "$name")")
   done < <(__awsCredentialsExtractProfile "$profileName" <"$credentials")
   [ "${#foundValues[@]}" -gt 0 ] || return 1
   if [ "${#foundValues[@]}" -lt 2 ]; then
-    returnThrowEnvironment "$handler" "${#foundValues[@]} minimum 2 values found in $(decorate value "$credentials")" || return $?
+    throwEnvironment "$handler" "${#foundValues[@]} minimum 2 values found in $(decorate value "$credentials")" || return $?
   fi
   inArray AWS_ACCESS_KEY_ID "${foundValues[@]}" && inArray AWS_SECRET_ACCESS_KEY "${foundValues[@]}"
 }

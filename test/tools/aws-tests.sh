@@ -49,7 +49,7 @@ testAWSIPAccess() {
 
   tempHome=$(fileTemporaryName "$handler" -d) || return $?
   HOME="$tempHome"
-  usageRequireEnvironment _return TEST_AWS_SECURITY_GROUP AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY AWS_REGION HOME || return $?
+  usageRequireEnvironment returnMessage TEST_AWS_SECURITY_GROUP AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY AWS_REGION HOME || return $?
 
   if [ -d "$HOME/.aws" ]; then
     returnEnvironment "No .aws directory should exist already" || return $?
@@ -342,7 +342,7 @@ testAWSCredentialsEdit() {
   assertExitCode --stderr-match "No credentials" 1 awsCredentialsFile --verbose || return $?
   # Internal MUST be after __awsLoader is called by `awsCredentialsFile` above
   # Note when loaded in a subshell - code is NOT shared
-  _awsCredentialsRemoveSection _return "$testCredentials" "$profileName" "" >"$testResults" || return $?
+  _awsCredentialsRemoveSection returnMessage "$testCredentials" "$profileName" "" >"$testResults" || return $?
   assertExitCode 0 diff -u "$testResults" "$home/test/example/aws/fake.credentials.0.txt" || return $?
 
   assertExitCode 0 awsCredentialsAdd --force --profile "$profileName" "AKIA0123456789001233" "$testPassword" || return $?

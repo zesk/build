@@ -23,10 +23,10 @@ __githubAPI() {
   local handler="$1" query="$2" suffix="${3-}" && shift 3
 
   [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
-  [ $# -gt 0 ] || returnThrowArgument "$handler" "projectName required" || return $?
+  [ $# -gt 0 ] || throwArgument "$handler" "projectName required" || return $?
 
   if ! packageWhich curl curl; then
-    returnThrowEnvironment "$handler" "curl is a required dependency" || return $?
+    throwEnvironment "$handler" "curl is a required dependency" || return $?
   fi
 
   local accessToken hh=() details=()
@@ -40,7 +40,7 @@ __githubAPI() {
   while [ $# -gt 0 ]; do
     local url="https://api.github.com/repos/$1${suffix}"
     if ! curl "${hh[@]+"${hh[@]}"}" -o - -s "$url" 2>>"$errorFile" | jq -r "$query" 2>>"$errorFile"; then
-      returnThrowEnvironment "$handler" "API call failed for $1 ($(decorate code "$url"))"$'\n'"${details[*]-}"$'\n'"$(dumpPipe Errors <"$errorFile")" || returnClean $? "$errorFile" || return $?
+      throwEnvironment "$handler" "API call failed for $1 ($(decorate code "$url"))"$'\n'"${details[*]-}"$'\n'"$(dumpPipe Errors <"$errorFile")" || returnClean $? "$errorFile" || return $?
     fi
     shift
   done
@@ -63,14 +63,14 @@ __githubLatestVariable() {
 githubURLParse() {
   local handler="_${FUNCNAME[0]}"
 
-  [ $# -gt 0 ] || returnThrowArgument "$handler" "url required" || return $?
+  [ $# -gt 0 ] || throwArgument "$handler" "url required" || return $?
 
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -80,7 +80,7 @@ githubURLParse() {
       local host
       host=$(urlParseItem host "$url") || return $?
       if [ "$host" != "github.com" ]; then
-        returnThrowArgument "$handler" "Not a github site: $(decorate code "$url")" || return $?
+        throwArgument "$handler" "Not a github site: $(decorate code "$url")" || return $?
       fi
       path=$(urlParseItem path "$url") || return $?
       # Trim ends of slashes
@@ -88,8 +88,8 @@ githubURLParse() {
       path="${path%/}"
       local owner repository _
       IFS='/' read -d '' -r owner repository _ <<<"$path" || :
-      [ -n "$owner" ] || returnThrowArgument "handler" "Blank owner" || return $?
-      [ -n "$repository" ] || returnThrowArgument "handler" "Blank repository" || return $?
+      [ -n "$owner" ] || throwArgument "handler" "Blank owner" || return $?
+      [ -n "$repository" ] || throwArgument "handler" "Blank repository" || return $?
       printf "%s/%s\n" "$owner" "$repository"
       ;;
     esac
@@ -202,7 +202,7 @@ githubRelease() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -210,22 +210,22 @@ githubRelease() {
     --handler) shift && handler=$(usageArgumentFunction "$handler" "$argument" "${1-}") || return $? ;;
     --token)
       shift
-      [ -n "${1-}" ] || returnThrowArgument "$handler" "Blank $argument argument" || return $?
+      [ -n "${1-}" ] || throwArgument "$handler" "Blank $argument argument" || return $?
       accessToken="$1"
       ;;
     --owner)
       shift
-      [ -n "${1-}" ] || returnThrowArgument "$handler" "Blank $argument argument" || return $?
+      [ -n "${1-}" ] || throwArgument "$handler" "Blank $argument argument" || return $?
       repoOwner="$1"
       ;;
     --name)
       shift
-      [ -n "${1-}" ] || returnThrowArgument "$handler" "Blank $argument argument" || return $?
+      [ -n "${1-}" ] || throwArgument "$handler" "Blank $argument argument" || return $?
       repoName="$1"
       ;;
     --expire)
       shift
-      [ -n "${1-}" ] || returnThrowArgument "$handler" "Blank $argument argument" || return $?
+      [ -n "${1-}" ] || throwArgument "$handler" "Blank $argument argument" || return $?
       accessTokenExpire="$1"
       ;;
     *)
@@ -235,18 +235,18 @@ githubRelease() {
     shift
   done
 
-  [ ${#extras[@]} -eq 3 ] || returnThrowArgument "$handler" "Need: descriptionFile releaseName commitish, found ${#extras[@]} arguments" || return $?
+  [ ${#extras[@]} -eq 3 ] || throwArgument "$handler" "Need: descriptionFile releaseName commitish, found ${#extras[@]} arguments" || return $?
 
   descriptionFile="${extras[0]}"
   releaseName="${extras[1]}"
   commitish="${extras[2]}"
 
-  isUpToDate --name "GITHUB_ACCESS_TOKEN_EXPIRE" "$accessTokenExpire" 0 || returnThrowEnvironment "$handler" "Need to update the GitHub access token, expired" || return $?
+  isUpToDate --name "GITHUB_ACCESS_TOKEN_EXPIRE" "$accessTokenExpire" 0 || throwEnvironment "$handler" "Need to update the GitHub access token, expired" || return $?
   # descriptionFile
-  [ -f "$descriptionFile" ] || returnThrowEnvironment "$handler" "Description file $descriptionFile is not a file" || return $?
-  [ -n "$repoOwner" ] || returnThrowArgument "$handler" "Repository owner is blank" || return $?
-  [ -n "$repoName" ] || returnThrowArgument "$handler" "Repository name is blank" || return $?
-  [ -n "$accessToken" ] || returnThrowArgument "$handler" "Access token is blank" || return $?
+  [ -f "$descriptionFile" ] || throwEnvironment "$handler" "Description file $descriptionFile is not a file" || return $?
+  [ -n "$repoOwner" ] || throwArgument "$handler" "Repository owner is blank" || return $?
+  [ -n "$repoName" ] || throwArgument "$handler" "Repository name is blank" || return $?
+  [ -n "$accessToken" ] || throwArgument "$handler" "Access token is blank" || return $?
 
   #
   # Preflight our environment to make sure we have the basics defined in the calling script
@@ -264,7 +264,7 @@ githubRelease() {
 
   catchEnvironment "$handler" hookRunOptional github-release-before || return $?
 
-  resultsFile="$(buildCacheDirectory)/results.json" || returnThrowEnvironment "$handler" "Unable create cache directory" || return $?
+  resultsFile="$(buildCacheDirectory)/results.json" || throwEnvironment "$handler" "Unable create cache directory" || return $?
 
   decorate decoration "$(echoBar)" || :
   bigText "$releaseName" | decorate magenta
@@ -288,7 +288,7 @@ githubRelease() {
   # that's good enough
 
   JSON='{"draft":false,"prerelease":false,"generate_release_notes":false}'
-  JSON="$(echo "$JSON" | jq --arg name "$releaseName" --rawfile desc "$descriptionFile" '. + {body: $desc, tag_name: $name, name: $name}')" || returnThrowEnvironment "$handler" "Generating JSON" || return $?
+  JSON="$(echo "$JSON" | jq --arg name "$releaseName" --rawfile desc "$descriptionFile" '. + {body: $desc, tag_name: $name, name: $name}')" || throwEnvironment "$handler" "Generating JSON" || return $?
 
   decorate info
   if ! curl -s -L \

@@ -30,7 +30,7 @@ __bashDocumentation_FindFunctionDefinition() {
   local definitionFile
   definitionFile=$(returnCatch "$handler" __bashDocumentation_FindFunctionDefinitions "$directory" "$fn" | head -n 1) || return $?
   if [ -z "$definitionFile" ]; then
-    returnThrowEnvironment "$handler" "No files found for $fn in $directory" || return $?
+    throwEnvironment "$handler" "No files found for $fn in $directory" || return $?
   fi
   printf "%s\n" "$definitionFile"
 }

@@ -61,11 +61,11 @@ _isUnsignedInteger() {
 # Environment: HOME
 # stdout: the home directory
 # File: /etc/passwd
-# Requires: grep cut _return printf /etc/passwd
+# Requires: grep cut returnMessage printf /etc/passwd
 _home() {
   local user="${1-}" userDatabase="/etc/passwd" home
-  set -o pipefail && home=$(grep "^$user:" "$userDatabase" | cut -d : -f 6) || _return $? "No such user $user in $userDatabase" || return $?
-  [ -d "$home" ] || _return 1 "User $user home \"$home\" is not a directory" || return $?
+  set -o pipefail && home=$(grep "^$user:" "$userDatabase" | cut -d : -f 6) || returnMessage $? "No such user $user in $userDatabase" || return $?
+  [ -d "$home" ] || returnMessage 1 "User $user home \"$home\" is not a directory" || return $?
   printf -- "%s\n" "$home"
 }
 
@@ -74,10 +74,10 @@ _home() {
 __daemontoolsService() {
   local user="${1-}" && shift
   export HOME APPLICATION_USER
-  HOME=$(_home "$user") || _return $? "No home for {APPLICATION_USER}" || return $?
+  HOME=$(_home "$user") || returnMessage $? "No home for {APPLICATION_USER}" || return $?
   APPLICATION_USER="$user"
   exec 2>&1
-  exec setuidgid "$user" "{BINARY}" "$@" || _return $? "Unable to load {BINARY} $*" || return $?
+  exec setuidgid "$user" "{BINARY}" "$@" || returnMessage $? "Unable to load {BINARY} $*" || return $?
 }
 
 # shellcheck disable=SC1083

@@ -19,7 +19,7 @@ __bashSanitize() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -32,7 +32,7 @@ __bashSanitize() {
       home=$(usageArgumentDirectory "$handler" "$argument" "${1-}") || return $?
       ;;
     --check)
-      shift || returnThrowArgument "$handler" "shift $argument" || return $?
+      shift || throwArgument "$handler" "shift $argument" || return $?
       checkAssertions+=("$(usageArgumentDirectory "$handler" "checkDirectory" "$1")") || return $?
       ;;
     *)
@@ -55,7 +55,7 @@ __bashSanitize() {
 
   # CHANGE DIRECTORY HERE
   catchEnvironment "$handler" muzzle pushd "$home" || return $?
-  [ "$home" = "$(pwd)" ] || returnThrowEnvironment "$handler" "Unable to cd to $home" || return $?
+  [ "$home" = "$(pwd)" ] || throwEnvironment "$handler" "Unable to cd to $home" || return $?
   undo=(muzzle popd)
 
   statusMessage decorate success Making shell files executable ...
@@ -101,7 +101,7 @@ _bashSanitizeCheckAssertions() {
     if ! findUncaughtAssertions "$1" --list; then
       # When ready - add --interactive here as well
       findUncaughtAssertions "$1" --exec "$executor" &
-      returnThrowEnvironment "$handler" findUncaughtAssertions "$1" --list || return $?
+      throwEnvironment "$handler" findUncaughtAssertions "$1" --list || return $?
     else
       decorate success "all files passed"
     fi
@@ -129,7 +129,7 @@ _bashSanitizeCheckCopyright() {
     while IFS=":" read -r file pattern; do
       error="$(decorate error "No pattern used")" pattern="$(decorate value "$pattern")" file="$(decorate code "$file")" mapEnvironment <<<"{error}: {pattern} missing from {file}"
     done <"$matches"
-    returnThrowEnvironment "$handler" "File pattern check failed" || returnClean $? "$matches" || return $?
+    throwEnvironment "$handler" "File pattern check failed" || returnClean $? "$matches" || return $?
   fi
   set +v
 }
@@ -143,7 +143,7 @@ _bashSanitizeCheckDebugging() {
   if fileMatches 'set ["]\?-x' -- -- - >"$matches"; then
     local file line remain debugHash found=false
     while IFS=":" read -r file line remain; do
-      [ -f "$file" ] || returnThrowEnvironment "$handler" "returned line \"$file $line $remain\" - not a file" || return $?
+      [ -f "$file" ] || throwEnvironment "$handler" "returned line \"$file $line $remain\" - not a file" || return $?
       debugHash="$(sed -e "${line}p" -e d <"$file" | shaPipe)"
       if grep -q -e "Debugging: $debugHash" "$file"; then
         continue
@@ -155,7 +155,7 @@ _bashSanitizeCheckDebugging() {
     $found || return 0
     statusMessage --last dumpPipe "Debugging matches:" "${BASH_SOURCE[0]}" <"$matches"
     catchEnvironment "$handler" rm -rf "$matches" || return $?
-    returnThrowEnvironment "$handler" "Debugging found" || return $?
+    throwEnvironment "$handler" "Debugging found" || return $?
   fi
   catchEnvironment "$handler" rm -rf "$matches" || return $?
 }

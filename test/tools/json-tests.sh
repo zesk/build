@@ -58,3 +58,33 @@ testJSONSetValue() {
   catchEnvironment "$handler" rm -rf "$tempDir" || return $?
 
 }
+
+__dataJsonFileGetSet() {
+  cat <<EOF
+.path.to.something.deeper Hello
+.path.to.something.id 0
+.place.within Hello
+.path.to.something.else Hello
+.path.to.something.pid 1
+.path.to.another.node Hello
+.path.to.another.id 2
+EOF
+}
+
+testJsonFileGetSet() {
+  local handler="returnMessage"
+
+  local temp
+
+  temp=$(fileTemporaryName "$handler") || return $?
+  printf "{}" >"$temp"
+
+  local path value
+  while read -r path value; do
+    assertExitCode --display "jsonFileSet $path -> $value" 0 jsonFileSet "$temp" "$path" "$value" || return $?
+  done < <(__dataJsonFileGetSet)
+  while read -r path value; do
+    assertEquals --display "jsonFileGet $path" "$value" "$(jsonFileGet "$temp" "$path")" || return $?
+  done < <(__dataJsonFileGetSet)
+  rm -rf "$temp"
+}

@@ -143,7 +143,7 @@ to generate (as the code reads the script to extract the comment):
         local handler="_${FUNCNAME[0]}"
         file="${1-}"
         # ...
-        [ -f "$file" ] || returnThrowArgument "$handler" "Requires a file" || return $?
+        [ -f "$file" ] || throwArgument "$handler" "Requires a file" || return $?
         # ...
     }
     _myCoolScript() {

@@ -165,9 +165,9 @@ iTerm2Aliases() {
 
   local home skipped=()
 
-  home=$(returnCatch "$handler" userHome) || return $?
+  home=$(returnCatch "$handler" userRecordHome) || return $?
 
-  [ -d "$home/.iterm2" ] || returnThrowEnvironment "$handler" "Missing ~/.iterm2" || return $?
+  [ -d "$home/.iterm2" ] || throwEnvironment "$handler" "Missing ~/.iterm2" || return $?
 
   for item in imgcat imgls it2attention it2check it2copy it2dl it2ul it2getvar it2setcolor it2setkeylabel it2universion; do
     local target="$home/.iterm2/$item"
@@ -253,29 +253,6 @@ _iTerm2ColorTypes() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# Usage: {fn} handler verboseFlag colorSetting
-__iTerm2SetColors() {
-  local handler="$1" verboseFlag="$2" colorType="$3" colorValue="$4"
-
-  local colorSpace colorCode=""
-  IFS=":" read -r colorSpace colorCode <<<"$colorValue" || :
-  if [ -z "$colorCode" ]; then
-    colorCode=$colorValue
-    colorSpace=""
-  else
-    case "$colorSpace" in
-    srgb | rgb | p3) ;; *) returnThrowArgument "$handler" "Invalid color space $(decorate error "$colorSpace") in $(decorate code "$colorValue")" || return $? ;;
-    esac
-  fi
-  colorCode=$(uppercase "$colorCode")
-  case "$colorCode" in
-  [[:xdigit:]]*) ;;
-  *) returnThrowArgument "$handler" "Invalid hexadecimal color: $(decorate error "$colorCode") in $(decorate code "$colorValue")" || return $? ;;
-  esac
-  ! $verboseFlag || statusMessage decorate info "Setting color $(decorate label "$colorType") to $(decorate value "$colorCode")"
-  _iTerm2_setValue SetColors "$colorType=$colorCode"
-}
-
 # Output an image to the console
 iTerm2Image() {
   local handler="_${FUNCNAME[0]}"
@@ -287,7 +264,7 @@ iTerm2Image() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -311,7 +288,7 @@ iTerm2Image() {
       ;;
     -*)
       # _IDENTICAL_ argumentUnknownHandler 1
-      returnThrowArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
+      throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
       ;;
     *)
       images+=("$(usageArgumentFile "$handler" "imageFile" "$1")" "$(__iTerm2ImageExtras "$width" "$height" "$aspectRatio")") || return $?
@@ -323,7 +300,7 @@ iTerm2Image() {
   # IDENTICAL handle-iTerm2ignore 4
   if ! isiTerm2; then
     ! $ignoreErrors || return 0
-    returnThrowEnvironment "$handler" "Not iTerm2" || return $?
+    throwEnvironment "$handler" "Not iTerm2" || return $?
   fi
 
   if [ "${#images[@]}" -gt 0 ]; then
@@ -384,7 +361,7 @@ iTerm2Download() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -398,7 +375,7 @@ iTerm2Download() {
       ;;
     -*)
       # _IDENTICAL_ argumentUnknownHandler 1
-      returnThrowArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
+      throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
       ;;
     *)
       files+=("$(usageArgumentFile "$handler" "imageFile" "$1")") || return $?
@@ -410,7 +387,7 @@ iTerm2Download() {
   # IDENTICAL handle-iTerm2ignore 4
   if ! isiTerm2; then
     ! $ignoreErrors || return 0
-    returnThrowEnvironment "$handler" "Not iTerm2" || return $?
+    throwEnvironment "$handler" "Not iTerm2" || return $?
   fi
 
   if [ "${#files[@]}" -gt 0 ]; then
@@ -466,7 +443,7 @@ iTerm2SetColors() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -485,7 +462,7 @@ iTerm2SetColors() {
       ;;
     -*)
       # _IDENTICAL_ argumentUnknownHandler 1
-      returnThrowArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
+      throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
       ;;
     *)
       colorSettings+=("$(usageArgumentString "$handler" "colorSetting" "$1")") || return $?
@@ -497,7 +474,7 @@ iTerm2SetColors() {
   # IDENTICAL handle-iTerm2ignore 4
   if ! isiTerm2; then
     ! $ignoreErrors || return 0
-    returnThrowEnvironment "$handler" "Not iTerm2" || return $?
+    throwEnvironment "$handler" "Not iTerm2" || return $?
   fi
 
   local colorSetting
@@ -515,7 +492,7 @@ iTerm2SetColors() {
   for colorSetting in "${colorSettings[@]+"${colorSettings[@]}"}"; do
     local colorType="${colorSetting%%=*}" colorValue="${colorSetting#*=}"
     if ! iTerm2IsColorType "$colorType"; then
-      $skipColorErrors || returnThrowArgument "$handler" "Invalid color $(decorate value "$colorType")" || return $?
+      $skipColorErrors || throwArgument "$handler" "Invalid color $(decorate value "$colorType")" || return $?
     else
       __iTerm2SetColors "$handler" "$verboseFlag" "$colorType" "$colorValue" || return $?
       if $fillMissing; then
@@ -552,10 +529,36 @@ iTerm2SetColors() {
     colorValue="$(colorParse <<<"$colorValue" | colorMultiply "$colorMod" | colorFormat)"
     __iTerm2SetColors "$handler" "$verboseFlag" "$colorName" "$colorValue" || exitCode=$?
     ! $verboseFlag || statusMessage decorate notice "Filled $(decorate code "$colorName") with $(decorate value "$colorMod") $(decorate blue "$2") -> $(decorate bold-blue "$colorValue")"
-    shift 2 || returnThrowEnvironment "$handler" "${FUNCNAME[0]}:$LINENO" || return $?
+    shift 2 || throwEnvironment "$handler" "${FUNCNAME[0]}:$LINENO" || return $?
   done
 
   return $exitCode
+}
+
+# Argument: handler
+# Argument: verboseFlag
+# Argument: colorSetting
+# Argument: colorValue
+__iTerm2SetColors() {
+  local handler="$1" verboseFlag="$2" colorType="$3" colorValue="$4"
+
+  local colorSpace colorCode=""
+  IFS=":" read -r colorSpace colorCode <<<"$colorValue" || :
+  if [ -z "$colorCode" ]; then
+    colorCode=$colorValue
+    colorSpace=""
+  else
+    case "$colorSpace" in
+    srgb | rgb | p3) ;; *) throwArgument "$handler" "Invalid color space $(decorate error "$colorSpace") in $(decorate code "$colorValue")" || return $? ;;
+    esac
+  fi
+  colorCode=$(uppercase "$colorCode")
+  case "$colorCode" in
+  [[:xdigit:]]*) ;;
+  *) throwArgument "$handler" "Invalid hexadecimal color: $(decorate error "$colorCode") in $(decorate code "$colorValue")" || return $? ;;
+  esac
+  ! $verboseFlag || statusMessage decorate info "Setting color $(decorate label "$colorType") to $(decorate value "$colorCode")"
+  _iTerm2_setValue SetColors "$colorType=$colorCode"
 }
 _iTerm2SetColors() {
   # __IDENTICAL__ usageDocument 1
@@ -576,7 +579,7 @@ iTerm2Attention() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -591,7 +594,7 @@ iTerm2Attention() {
       # IDENTICAL handle-iTerm2ignore 4
       if ! isiTerm2; then
         ! $ignoreErrors || return 0
-        returnThrowEnvironment "$handler" "Not iTerm2" || return $?
+        throwEnvironment "$handler" "Not iTerm2" || return $?
       fi
 
       local result=0
@@ -620,8 +623,8 @@ iTerm2Attention() {
           didSomething=true
           ;;
         *)
-      # _IDENTICAL_ argumentUnknownHandler 1
-      returnThrowArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
+          # _IDENTICAL_ argumentUnknownHandler 1
+          throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
           ;;
         esac
         ;;
@@ -631,7 +634,7 @@ iTerm2Attention() {
     shift
   done
 
-  $didSomething || returnThrowArgument "$handler" "Requires at least one argument" || return $?
+  $didSomething || throwArgument "$handler" "Requires at least one argument" || return $?
 }
 _iTerm2Attention() {
   # __IDENTICAL__ usageDocument 1
@@ -653,7 +656,7 @@ iTerm2Badge() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -671,7 +674,7 @@ iTerm2Badge() {
   # IDENTICAL handle-iTerm2ignore 4
   if ! isiTerm2; then
     ! $ignoreErrors || return 0
-    returnThrowEnvironment "$handler" "Not iTerm2" || return $?
+    throwEnvironment "$handler" "Not iTerm2" || return $?
   fi
 
   _iTerm2_setBase64Value "SetBadgeFormat" "${message[@]}"
@@ -708,7 +711,7 @@ iTerm2Version() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -718,7 +721,7 @@ iTerm2Version() {
       ;;
     *)
       # _IDENTICAL_ argumentUnknownHandler 1
-      returnThrowArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
+      throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
       ;;
     esac
     shift
@@ -727,7 +730,7 @@ iTerm2Version() {
   # IDENTICAL handle-iTerm2ignore 4
   if ! isiTerm2; then
     ! $ignoreErrors || return 0
-    returnThrowEnvironment "$handler" "Not iTerm2" || return $?
+    throwEnvironment "$handler" "Not iTerm2" || return $?
   fi
 
   local savedTTY undo=()
@@ -747,7 +750,7 @@ iTerm2Version() {
   case "$version" in
   "0" | "3")
     stty "$savedTTY" || :
-    returnThrowEnvironment "$handler" "iTerm2 did not respond to DSR 1337: $version" || return $?
+    throwEnvironment "$handler" "iTerm2 did not respond to DSR 1337: $version" || return $?
     ;;
   *)
     # Read device status
@@ -767,8 +770,41 @@ _iTerm2Version() {
 iTerm2Notify() {
   local handler="_${FUNCNAME[0]}"
   [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
-  [ -t 0 ] || returnThrowEnvironment "$handler" "stdin is not a terminal" || return $?
-  printf "\e]9;%s\007" "$*"
+
+  local handler="_${FUNCNAME[0]}"
+
+  local ignoreErrors=false messageText=""
+
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
+  local __saved=("$@") __count=$#
+  while [ $# -gt 0 ]; do
+    local argument="$1" __index=$((__count - $# + 1))
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    case "$argument" in
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
+    # IDENTICAL case-iTerm2ignore 3
+    --ignore | -i)
+      ignoreErrors=true
+      ;;
+    *)
+      messageText="$*"
+      break
+      ;;
+    esac
+    shift
+  done
+
+  [ -n "$messageText" ] || throwArgument "handler" "Requires a notification message" || return $?
+
+  # IDENTICAL handle-iTerm2ignore 4
+  if ! isiTerm2; then
+    ! $ignoreErrors || return 0
+    throwEnvironment "$handler" "Not iTerm2" || return $?
+  fi
+
+  printf "\e]9;%s\007" "$messageText"
 }
 _iTerm2Notify() {
   # __IDENTICAL__ usageDocument 1
@@ -789,7 +825,7 @@ iTerm2Init() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -799,7 +835,7 @@ iTerm2Init() {
       ;;
     *)
       # _IDENTICAL_ argumentUnknownHandler 1
-      returnThrowArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
+      throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
       ;;
     esac
     shift
@@ -808,12 +844,12 @@ iTerm2Init() {
   # IDENTICAL handle-iTerm2ignore 4
   if ! isiTerm2; then
     ! $ignoreErrors || return 0
-    returnThrowEnvironment "$handler" "Not iTerm2" || return $?
+    throwEnvironment "$handler" "Not iTerm2" || return $?
   fi
 
   local home
   returnCatch "$handler" buildEnvironmentLoad TERM || return $?
-  home=$(returnCatch "$handler" userHome) || return $?
+  home=$(returnCatch "$handler" userRecordHome) || return $?
 
   # iTerm2 customizations
   local ii=()

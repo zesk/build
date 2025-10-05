@@ -34,3 +34,14 @@ testPackageAPI() {
   assertNotExitCode 0 packageManagerValid apt-get || return $?
   assertExitCode 0 packageManagerValid "$(packageManagerDefault)" || return $?
 }
+
+testPackageAvailableList() {
+  local handler="returnMessage"
+
+  local temp
+
+  temp=$(fileTemporaryName "$handler") || return $?
+  assertExitCode 0 packageAvailableList >"$temp" || return $?
+  assertFileContains "$temp" mariadb mysql php python toilet || return $?
+}
+

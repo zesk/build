@@ -15,12 +15,12 @@ __reloadChanges() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
     --source)
-      [ -z "$source" ] || returnThrowArgument "$handler" "--source only can be supplied once" || return $?
+      [ -z "$source" ] || throwArgument "$handler" "--source only can be supplied once" || return $?
       shift && source="$(usageArgumentRealFile "$handler" "$argument" "${1-}")" || return $?
       ;;
     --show) showFlag=true ;;
@@ -38,7 +38,7 @@ __reloadChanges() {
     --file) shift && paths+=("$(usageArgumentRealFile "$handler" "$argument" "${1-}")") || return $? ;;
     -*)
       # _IDENTICAL_ argumentUnknownHandler 1
-      returnThrowArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
+      throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
       ;;
     *)
       if [ -z "$source" ]; then
@@ -63,9 +63,9 @@ __reloadChanges() {
 
   [ ${#paths[@]} -eq 0 ] || printf "%s %s\n%s\n" "👀 $(decorate info "$name")" "$(decorate code "(source $(decorate file "$source"))")" "$(printf -- "- %s\n" "${paths[@]}"))"
 
-  [ -n "$source" ] || returnThrowArgument "$handler" "--source required" || return $?
+  [ -n "$source" ] || throwArgument "$handler" "--source required" || return $?
 
-  [ 0 -lt "${#paths[@]}" ] || returnThrowArgument "$handler" "At least one path is required" || return $?
+  [ 0 -lt "${#paths[@]}" ] || throwArgument "$handler" "At least one path is required" || return $?
   if [ -z "$name" ]; then
     local pathNames=() path
     for path in "${paths[@]}"; do pathNames+=("$(basename "$path")"); done

@@ -6,22 +6,27 @@
 #
 # Copyright &copy; 2025 Market Acumen, Inc.
 
-# The current user HOME (must exist)
-# Argument: pathSegment - String. Optional. Add these path segments to the HOME directory returned. Does not create them.
-# No directories *should* be created by calling this, nor should any assumptions be made about the ability to read or write files in this directory.
-# Return Code: 1 - Issue with `buildEnvironmentGet HOME` or $HOME is not a directory (say, it's a file)
-# Return Code: 0 - Home directory exists.
-userHome() {
-  local handler="_${FUNCNAME[0]}"
-  __help "_${FUNCNAME[0]}" "$@" || return 0
-  local home
-  home=$(returnCatch "$handler" buildEnvironmentGet HOME) || return $?
-  [ -d "$home" ] || returnThrowEnvironment "$handler" "HOME is not a directory: $HOME" || return $?
-  home="$(printf "%s%s" "$home" "$(printf "/%s" "$@")")"
-  printf "%s\n" "${home%/}"
+# IDENTICAL userRecord 23
 
+# Argument: index - PositiveInteger. Required. Index (1-based) of field to select.
+# Argument: user - String. Required. User name to look up.
+# Summary: Quick user database look up
+# Look user up, output user home
+# Environment: APPLICATION_USER
+# Environment: HOME
+# stdout: the home directory
+# File: /etc/passwd
+# Requires: grep cut returnMessage printf /etc/passwd
+userRecord() {
+  local index="${1-}" user="${2-}" userDatabase=${3-"/etc/passwd"} value
+  set -o pipefail && value=$(grep "^$user:" "$userDatabase" | cut -d : -f "$index") || returnMessage $? "No such user $user in $userDatabase" || return $?
+  printf -- "%s\n" "$value"
 }
-_userHome() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+
+userRecordName() {
+  userRecord 4 "$@"
+}
+
+userRecordHome() {
+  userRecord 6 "$@"
 }

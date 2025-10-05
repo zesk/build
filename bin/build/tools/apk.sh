@@ -135,7 +135,7 @@ __apkUpdate() {
 # package.sh: true
 __apkInstalledList() {
   local handler="_${FUNCNAME[0]}"
-  [ $# -eq 0 ] || returnThrowArgument "$handler" "Unknown argument $*" || return $?
+  [ $# -eq 0 ] || throwArgument "$handler" "Unknown argument $*" || return $?
   apk list -I -q
 }
 ___apkInstalledList() {
@@ -159,7 +159,7 @@ __apkStandardPackages() {
 # package.sh: true
 __apkAvailableList() {
   local handler="_${FUNCNAME[0]}"
-  [ $# -eq 0 ] || returnThrowArgument "$handler" "Unknown argument $*" || return $?
+  [ $# -eq 0 ] || throwArgument "$handler" "Unknown argument $*" || return $?
   apk list -a -q
 }
 ___apkAvailableList() {

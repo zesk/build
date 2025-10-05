@@ -58,7 +58,7 @@ phpTailLog() {
   [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
   local logFile
   logFile=$(catchEnvironment "$handler" phpLog) || return $?
-  [ -n "$logFile" ] || returnThrowEnvironment "$handler" "PHP log file is blank" || return $?
+  [ -n "$logFile" ] || throwEnvironment "$handler" "PHP log file is blank" || return $?
   if [ ! -f "$logFile" ]; then
     statusMessage printf -- "%s %s" "$(decorate file "$logFile")" "$(decorate warning "does not exist - creating")" 1>&2
     catchEnvironment "$handler" touch "$logFile" || return $?
@@ -79,8 +79,8 @@ _phpTailLog() {
 phpLog() {
   local handler="_${FUNCNAME[0]}"
   [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
-  whichExists php || returnThrowEnvironment "$handler" "php not installed" || return $?
-  php -r "echo ini_get('error_log');" 2>/dev/null || returnThrowEnvironment "$handler" "php installation issue" || return $?
+  whichExists php || throwEnvironment "$handler" "php not installed" || return $?
+  php -r "echo ini_get('error_log');" 2>/dev/null || throwEnvironment "$handler" "php installation issue" || return $?
 }
 _phpLog() {
   # __IDENTICAL__ usageDocument 1
@@ -94,8 +94,8 @@ _phpLog() {
 phpIniFile() {
   local handler="_${FUNCNAME[0]}"
   [ $# -eq 0 ] || __help --only "$handler" "$@" || return "$(convertValue $? 1 0)"
-  whichExists php || returnThrowEnvironment "$handler" "php not installed" || return $?
-  php -r "echo get_cfg_var('cfg_file_path');" 2>/dev/null || returnThrowEnvironment "$handler" "php installation issue" || return $?
+  whichExists php || throwEnvironment "$handler" "php not installed" || return $?
+  php -r "echo get_cfg_var('cfg_file_path');" 2>/dev/null || throwEnvironment "$handler" "php installation issue" || return $?
 }
 _phpIniFile() {
   # __IDENTICAL__ usageDocument 1
@@ -127,7 +127,7 @@ _deploymentToSuffix() {
   staging) versionSuffix=s ;;
   test) versionSuffix=t ;;
   *)
-    returnThrowArgument "$handler" "--deployment $deployment unknown - can not set versionSuffix" || return $?
+    throwArgument "$handler" "--deployment $deployment unknown - can not set versionSuffix" || return $?
     ;;
   esac
   printf "%s\n" "$versionSuffix"
@@ -174,7 +174,7 @@ phpBuild() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -212,8 +212,8 @@ phpBuild() {
   done
 
   [ -n "$home" ] || home=$(returnCatch "$handler" buildHome) || return $?
-  [ -n "$targetName" ] || returnThrowArgument "$handler" "--name argument blank" || return $?
-  [ $# -gt 0 ] || returnThrowArgument "$handler" "Need to supply a list of files for application $(decorate code "$targetName")" || return $?
+  [ -n "$targetName" ] || throwArgument "$handler" "--name argument blank" || return $?
+  [ $# -gt 0 ] || throwArgument "$handler" "Need to supply a list of files for application $(decorate code "$targetName")" || return $?
 
   usageRequireBinary "$handler" tar || return $?
   returnCatch "$handler" buildEnvironmentLoad "${environments[@]}" "${optionals[@]}" || return $?
@@ -225,7 +225,7 @@ phpBuild() {
       missingFile+=("$tarFile")
     fi
   done
-  [ ${#missingFile[@]} -eq 0 ] || returnThrowEnvironment "$handler" "Missing files: ${missingFile[*]}" || return $?
+  [ ${#missingFile[@]} -eq 0 ] || throwEnvironment "$handler" "Missing files: ${missingFile[*]}" || return $?
 
   local initTime
   initTime=$(timingStart) || return $?
@@ -260,7 +260,7 @@ phpBuild() {
     returnCatch "$handler" environmentFileApplicationMake "${environments[@]}" -- "${optionals[@]}" >"$dotEnv" || returnClean $? "${clean[@]}" || return $?
   fi
   if ! grep -q APPLICATION "$dotEnv"; then
-    buildFailed "$dotEnv" || returnThrowEnvironment "$handler" "$dotEnv file seems to be invalid:" || returnClean $? "${clean[@]}" || return $?
+    buildFailed "$dotEnv" || throwEnvironment "$handler" "$dotEnv file seems to be invalid:" || returnClean $? "${clean[@]}" || return $?
   fi
   local environment
   for environment in "${environments[@]}" "${optionals[@]}"; do
@@ -299,7 +299,7 @@ phpBuild() {
   # shellcheck disable=SC2119
   catchEnvironment "$handler" phpComposer "$home" "${composerArgs[@]+${composerArgs[@]}}" || returnClean $? "${clean[@]}" || return $?
 
-  [ -d "$home/vendor" ] || returnThrowEnvironment "$handler" "Composer step did not create the vendor directory" || returnClean $? "${clean[@]}" || return $?
+  [ -d "$home/vendor" ] || throwEnvironment "$handler" "Composer step did not create the vendor directory" || returnClean $? "${clean[@]}" || return $?
 
   _phpEchoBar
   _phpBuildBanner "Application ID" "$APPLICATION_ID"
@@ -347,7 +347,7 @@ phpTest() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -362,7 +362,7 @@ phpTest() {
       ;;
     *)
       # _IDENTICAL_ argumentUnknownHandler 1
-      returnThrowArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
+      throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
       ;;
     esac
     shift
@@ -417,7 +417,7 @@ phpTest() {
   fi
   decorate info "Bringing down containers ..." || :
   start=$(timingStart) || return $?
-  catchEnvironment "$handler" docker-compose "${dca[@]}" down || _phpTestCleanup "$handler" || returnThrowEnvironment "$handler" "docker-compose down" || return $?
+  catchEnvironment "$handler" docker-compose "${dca[@]}" down || _phpTestCleanup "$handler" || throwEnvironment "$handler" "docker-compose down" || return $?
 
   # Reset test environment ASAP
   _phpTestCleanup "$handler" || return $?
@@ -425,7 +425,7 @@ phpTest() {
   if ! hookRunOptional test-cleanup; then
     reason="test-cleanup ALSO failed"
   fi
-  [ -z "$reason" ] || returnThrowEnvironment "$handler" "$reason" || return $?
+  [ -z "$reason" ] || throwEnvironment "$handler" "$reason" || return $?
   buildDebugStop "${FUNCNAME[0]}" || :
   statusMessage timingReport "$init" "PHP Test completed in" || return $?
 }

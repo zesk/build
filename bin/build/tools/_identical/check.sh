@@ -22,7 +22,7 @@ __identicalCheck() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -85,7 +85,7 @@ __identicalCheck() {
       ;;
     --exclude)
       shift
-      [ -n "$1" ] || returnThrowArgument "$handler" "Empty $(decorate code "$argument") argument" || return $?
+      [ -n "$1" ] || throwArgument "$handler" "Empty $(decorate code "$argument") argument" || return $?
       excludes+=(! -path "$1")
       ;;
     --cache) shift && tempDirectory=$(usageArgumentDirectory "$handler" "$argument" "${1-}") || return $? ;;
@@ -98,14 +98,14 @@ __identicalCheck() {
       ;;
     *)
       # _IDENTICAL_ argumentUnknownHandler 1
-      returnThrowArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
+      throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
       ;;
     esac
     shift
   done
 
-  [ ${#findArgs[@]} -gt 0 ] || returnThrowArgument "$handler" "Need to specify at least one --extension" || return $?
-  [ ${#prefixes[@]} -gt 0 ] || returnThrowArgument "$handler" "Need to specify at least one prefix (Try --prefix '# IDENTICAL')" || return $?
+  [ ${#findArgs[@]} -gt 0 ] || throwArgument "$handler" "Need to specify at least one --extension" || return $?
+  [ ${#prefixes[@]} -gt 0 ] || throwArgument "$handler" "Need to specify at least one prefix (Try --prefix '# IDENTICAL')" || return $?
 
   local start failureCode exitCode=0 clean=()
 
@@ -129,7 +129,7 @@ __identicalCheck() {
   # ! $debug || decorate each quote __identicalCheckGenerateSearchFiles "$handler" "${repairSources[@]+"${repairSources[@]}"}" -- "$rootDir" "${findArgs[@]}" ! -path "*/.*/*" "${excludes[@]+${excludes[@]}}"
   __identicalCheckGenerateSearchFiles "$handler" "$rootDir" "${repairSources[@]+"${repairSources[@]}"}" -- \( "${findArgs[@]}" \) ! -path "*/.*/*" "${excludes[@]+${excludes[@]}}" >"$searchFileList" || returnClean $? "${clean[@]}" || return $?
   if [ ! -s "$searchFileList" ]; then
-    returnThrowEnvironment "$handler" "No files found in $(decorate file "$rootDir") with${extensionText}" || returnClean $? "${clean[@]}" || return $?
+    throwEnvironment "$handler" "No files found in $(decorate file "$rootDir") with${extensionText}" || returnClean $? "${clean[@]}" || return $?
   fi
   clean+=("$searchFileList.smaller")
   if [ "${#tokens[@]}" -gt 0 ]; then
@@ -159,7 +159,7 @@ __identicalCheck() {
   local __line=1 searchFile
 
   while read -r searchFile; do
-    [ -f "$searchFile" ] || returnThrowEnvironment "$handler" "Invalid searchFileList $searchFileList line $__line: $(decorate file "$searchFile")"
+    [ -f "$searchFile" ] || throwEnvironment "$handler" "Invalid searchFileList $searchFileList line $__line: $(decorate file "$searchFile")"
     if [ "${#skipFiles[@]}" -gt 0 ] && inArray "$searchFile" "${skipFiles[@]}"; then
       statusMessage decorate notice "Skipping $(decorate file "$searchFile")" || returnClean $? "${clean[@]}" || return $?
       continue

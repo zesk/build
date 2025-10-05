@@ -35,7 +35,7 @@ rotateLog() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -49,7 +49,7 @@ rotateLog() {
         count="$argument"
       else
       # _IDENTICAL_ argumentUnknownHandler 1
-      returnThrowArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
+      throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
       fi
       ;;
     esac
@@ -58,8 +58,8 @@ rotateLog() {
 
   logFile="$(usageArgumentFile _rotateLog logFile "$logFile")" || return $?
 
-  isInteger "$count" || returnThrowArgument "$handler" "$this count $(decorate value "$count") must be a positive integer" || return $?
-  [ "$count" -gt 0 ] || returnThrowArgument "$handler" "$this count $(decorate value "$count") must be a positive integer greater than zero" || return $?
+  isInteger "$count" || throwArgument "$handler" "$this count $(decorate value "$count") must be a positive integer" || return $?
+  [ "$count" -gt 0 ] || throwArgument "$handler" "$this count $(decorate value "$count") must be a positive integer greater than zero" || return $?
 
   local index="$count"
   if [ "$count" -gt 1 ]; then
@@ -67,7 +67,7 @@ rotateLog() {
       if "$dryRun"; then
         printf "%s \"%s\"\n" rm "$(escapeDoubleQuotes "$logFile.$count")"
       else
-        rm "$logFile.$count" || returnThrowEnvironment "$handler" "$this Can not remove $logFile.$count" || return $?
+        rm "$logFile.$count" || throwEnvironment "$handler" "$this Can not remove $logFile.$count" || return $?
       fi
     fi
   fi
@@ -78,7 +78,7 @@ rotateLog() {
       if "$dryRun"; then
         printf "%s \"%s\" \"%s\"\n" mv "$(escapeDoubleQuotes "$logFile.$index")" "$(escapeDoubleQuotes "$logFile.$((index + 1))")"
       else
-        mv "$logFile.$index" "$logFile.$((index + 1))" || returnThrowEnvironment "$handler" "$this Failed to mv $logFile.$index -> $logFile.$((index + 1))" || return $?
+        mv "$logFile.$index" "$logFile.$((index + 1))" || throwEnvironment "$handler" "$this Failed to mv $logFile.$index -> $logFile.$((index + 1))" || return $?
       fi
     fi
     index=$((index - 1))
@@ -89,8 +89,8 @@ rotateLog() {
     printf "%s \"%s\" \"%s\"\n" cp "$(escapeDoubleQuotes "$logFile")" "$(escapeDoubleQuotes "$logFile.$index")"
     printf "printf \"\">\"%s\"\n" "$(escapeDoubleQuotes "$logFile")"
   else
-    cp "$logFile" "$logFile.$index" || returnThrowEnvironment "$handler" "$this Failed to copy $logFile $logFile.$index" || return $?
-    printf "" >"$logFile" || returnThrowEnvironment "$handler" "$this Failed to truncate $logFile" || return $?
+    cp "$logFile" "$logFile.$index" || throwEnvironment "$handler" "$this Failed to copy $logFile $logFile.$index" || return $?
+    printf "" >"$logFile" || throwEnvironment "$handler" "$this Failed to truncate $logFile" || return $?
   fi
 }
 _rotateLog() {
@@ -113,7 +113,7 @@ rotateLogs() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -126,14 +126,14 @@ rotateLogs() {
       elif [ -z "$count" ]; then
         count="$(usageArgumentPositiveInteger "$handler" "count" "$argument")" || return $?
       else
-        returnThrowArgument "$handler" "$this Unknown argument $argument" || return $?
+        throwArgument "$handler" "$this Unknown argument $argument" || return $?
       fi
       ;;
     esac
     shift
   done
-  [ -z "$logPath" ] || returnThrowArgument "$handler" "missing logPath" || return $?
-  [ -z "$count" ] || returnThrowArgument "$handler" "missing count" || return $?
+  [ -z "$logPath" ] || throwArgument "$handler" "missing logPath" || return $?
+  [ -z "$count" ] || throwArgument "$handler" "missing count" || return $?
 
   statusMessage decorate info "Rotating log files in path $(decorate file "$logPath")"
   find "$logPath" -type f -name '*.log' ! -path "*/.*/*" | while IFS= read -r logFile; do

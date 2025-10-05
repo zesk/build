@@ -18,7 +18,7 @@ __brewWrapper() {
 # Platform: Darwin
 brewInstall() {
   [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
-  isDarwin || returnThrowEnvironment "$handler" "Only on Darwin (Mac OS X)" || return $?
+  isDarwin || throwEnvironment "$handler" "Only on Darwin (Mac OS X)" || return $?
   /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 }
 _brewInstall() {
@@ -114,8 +114,8 @@ __brewUpdate() {
 # package.sh: true
 __brewInstalledList() {
   local handler="_${FUNCNAME[0]}"
-  whichExists brew || returnThrowEnvironment "$handler" "brew not installed - can not list" || return $?
-  [ $# -eq 0 ] || returnThrowArgument "$handler" "Unknown argument $*" || return $?
+  whichExists brew || throwEnvironment "$handler" "brew not installed - can not list" || return $?
+  [ $# -eq 0 ] || throwArgument "$handler" "Unknown argument $*" || return $?
   __brewWrapper list -1 | grep -v '^[^A-Za-z]'
 }
 ___brewInstalledList() {
@@ -128,7 +128,7 @@ ___brewInstalledList() {
 # package.sh: true
 __brewAvailableList() {
   local handler="_${FUNCNAME[0]}"
-  whichExists brew || returnThrowEnvironment "$handler" "brew not installed - can not list" || return $?
+  whichExists brew || throwEnvironment "$handler" "brew not installed - can not list" || return $?
   __brewWrapper search --formula '/.*/'
 }
 ___brewAvailableList() {

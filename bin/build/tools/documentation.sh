@@ -164,7 +164,7 @@ _documentationTemplateUpdate() {
 # Return Code: 0 - If success
 # Return Code: 1 - Issue with file generation
 # Return Code: 2 - Argument error
-# Requires: catchEnvironment timingStart returnThrowArgument usageArgumentFile usageArgumentDirectory usageArgumentFileDirectory
+# Requires: catchEnvironment timingStart throwArgument usageArgumentFile usageArgumentDirectory usageArgumentFileDirectory
 # Requires: basename decorate statusMessage fileTemporaryName rm grep cut source mapTokens returnClean
 # Requires: mapEnvironment shaPipe printf
 documentationTemplateCompile() {
@@ -241,7 +241,7 @@ __documentationFormatArguments() {
   local handler="_${FUNCNAME[0]}"
   [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
 
-  [ $# -le 3 ] || returnThrowArgument "$handler" "Requires 3 or fewer arguments" || return $?
+  [ $# -le 3 ] || throwArgument "$handler" "Requires 3 or fewer arguments" || return $?
 
   local separatorChar="${1-" "}" optionalDecoration="${2-blue}" requiredDecoration="${3-bold-magenta}"
 

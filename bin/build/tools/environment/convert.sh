@@ -125,8 +125,8 @@ environmentFileDockerToBashCompatible() {
         "$handler" 0
         return $?
       fi
-      [ -f "$file" ] || returnThrowArgument "$handler" "Not a file $file" || return $?
-      __internalEnvironmentFileDockerToBashCompatiblePipe <"$file" || returnThrowArgument "$handler" "Invalid file: $file" || return $?
+      [ -f "$file" ] || throwArgument "$handler" "Not a file $file" || return $?
+      __internalEnvironmentFileDockerToBashCompatiblePipe <"$file" || throwArgument "$handler" "Invalid file: $file" || return $?
     done
   fi
 }
@@ -189,8 +189,8 @@ environmentFileBashCompatibleToDocker() {
     if [ "$file" = "--help" ]; then
       "$handler" 0 && returnClean $? "${clean[@]}" && return $? || return $?
     fi
-    [ -f "$file" ] || returnThrowArgument "$handler" "Not a file $file" || returnClean $? "${clean[@]}" || return $?
-    env -i bash -c "set -eoua pipefail; source \"$file\"; declare -px; declare -pa" >"$tempFile" 2>&1 | outputTrigger --name "$file" || returnThrowArgument "$handler" "$file is not a valid bash file" || returnClean $? "${clean[@]}" || return $?
+    [ -f "$file" ] || throwArgument "$handler" "Not a file $file" || returnClean $? "${clean[@]}" || return $?
+    env -i bash -c "set -eoua pipefail; source \"$file\"; declare -px; declare -pa" >"$tempFile" 2>&1 | outputTrigger --name "$file" || throwArgument "$handler" "$file is not a valid bash file" || returnClean $? "${clean[@]}" || return $?
   done
   while IFS='' read -r envLine; do
     local name=${envLine%%=*} value=${envLine#*=}

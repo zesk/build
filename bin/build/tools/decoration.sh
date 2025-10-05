@@ -60,12 +60,12 @@ bigText() {
 
   binary=$(returnCatch "$handler" buildEnvironmentGet BUILD_TEXT_BINARY) || return $?
   [ -n "$binary" ] || binary="$(returnCatch "$handler" __bigTextBinary)" || return $?
-  [ -n "$binary" ] || returnThrowEnvironment "$handler" "Need BUILD_TEXT_BINARY" || return $?
+  [ -n "$binary" ] || throwEnvironment "$handler" "Need BUILD_TEXT_BINARY" || return $?
   case "$binary" in
   figlet) fonts=("standard" "big") ;;
   toilet) fonts=("smblock" "smmono12") ;;
   *)
-    returnThrowEnvironment "$handler" "Unknown BUILD_TEXT_BINARY $(decorate code "$binary")" || return $?
+    throwEnvironment "$handler" "Unknown BUILD_TEXT_BINARY $(decorate code "$binary")" || return $?
     ;;
   esac
   if ! whichExists "$binary"; then
@@ -94,7 +94,7 @@ bigTextAt() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -111,15 +111,15 @@ bigTextAt() {
     shift
   done
 
-  [ -n "$x" ] || returnThrowArgument "$handler" "Missing x" || return $?
-  [ -n "$y" ] || returnThrowArgument "$handler" "Missing y" || return $?
+  [ -n "$x" ] || throwArgument "$handler" "Missing x" || return $?
+  [ -n "$y" ] || throwArgument "$handler" "Missing y" || return $?
   local maxX maxY theX="$x" theY="$y" saveX saveY
   maxX=$(returnCatch "$handler" consoleColumns) || return $?
   maxY=$(returnCatch "$handler" consoleRows) || return $?
-  [ "$x" -lt "$maxX" ] || returnThrowArgument "$handler" "$x -gt $maxX exceeds column width" || return $?
-  [ "$y" -lt "$maxY" ] || returnThrowArgument "$handler" "$y -gt $maxY exceeds row height" || return $?
-  [ "$x" -gt "-$maxX" ] || returnThrowArgument "$handler" "$x -lt -$maxX exceeds negative column width" || return $?
-  [ "$y" -gt "-$maxY" ] || returnThrowArgument "$handler" "$y -lt -$maxY exceeds negative row height" || return $?
+  [ "$x" -lt "$maxX" ] || throwArgument "$handler" "$x -gt $maxX exceeds column width" || return $?
+  [ "$y" -lt "$maxY" ] || throwArgument "$handler" "$y -gt $maxY exceeds row height" || return $?
+  [ "$x" -gt "-$maxX" ] || throwArgument "$handler" "$x -lt -$maxX exceeds negative column width" || return $?
+  [ "$y" -gt "-$maxY" ] || throwArgument "$handler" "$y -lt -$maxY exceeds negative row height" || return $?
   IFS=$'\n' read -r -d '' saveX saveY < <(cursorGet)
   [ "$theX" -ge 0 ] || theX=$((maxX + theX))
   [ "$theY" -ge 0 ] || theY=$((maxY + theY))
@@ -171,7 +171,7 @@ labeledBigText() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -197,10 +197,10 @@ labeledBigText() {
     *)
       if [ "$argument" != "${argument#-}" ]; then
         # _IDENTICAL_ argumentUnknownHandler 1
-        returnThrowArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
+        throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
       fi
       label="$argument"
-      plainLabel="$(printf -- "%s\n" "$label" | stripAnsi)" || returnThrowArgument "$handler" "Unable to clean label" || return $?
+      plainLabel="$(printf -- "%s\n" "$label" | stripAnsi)" || throwArgument "$handler" "Unable to clean label" || return $?
       shift
       break
       ;;
@@ -247,7 +247,7 @@ repeat() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -276,7 +276,7 @@ repeat() {
     esac
     shift
   done
-  returnThrowArgument "$handler" "missing repeat string" || return $?
+  throwArgument "$handler" "missing repeat string" || return $?
 }
 _repeat() {
   # __IDENTICAL__ usageDocument 1
@@ -308,7 +308,7 @@ echoBar() {
     *)
       if [ $# -gt 2 ]; then
         # _IDENTICAL_ argumentUnknownHandler 1
-        returnThrowArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
+        throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
       fi
       barText="$argument"
       shift
@@ -327,7 +327,7 @@ echoBar() {
 
   count=$((width / ${#barText}))
   count=$((count + delta))
-  [ $count -gt 0 ] || returnThrowArgument "$handler" "count $count (delta $delta) less than zero?" || return $?
+  [ $count -gt 0 ] || throwArgument "$handler" "count $count (delta $delta) less than zero?" || return $?
   printf -- "%s\n" "$(repeat "$count" "$barText")"
 }
 _echoBar() {
@@ -445,7 +445,7 @@ boxedHeading() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;

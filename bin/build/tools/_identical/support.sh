@@ -24,7 +24,7 @@ __identicalLineParse() {
   local lineNumber=${identicalLine%%:*}
 
   if ! isUnsignedInteger "$lineNumber"; then
-    returnThrowArgument "$handler" "\"$identicalLine\" no line number: \"$lineNumber\"" || return $?
+    throwArgument "$handler" "\"$identicalLine\" no line number: \"$lineNumber\"" || return $?
   fi
   # Trim line number from beginning of line
   identicalLine=${identicalLine#*:}
@@ -44,14 +44,14 @@ __identicalLineParse() {
     # Allow non-numeric token after numeric (markup)
     if isInteger "$line1"; then
       if [ "$line0" -ge "$line1" ]; then
-        returnThrowEnvironment "$handler" "$(decorate code "$file:$lineNumber") - line numbers out of order: $(decorate each value "$line0 $line1")" || return $?
+        throwEnvironment "$handler" "$(decorate code "$file:$lineNumber") - line numbers out of order: $(decorate each value "$line0 $line1")" || return $?
       fi
       count=$((line1 - line0))
     else
       count="$line0"
     fi
   else
-    returnThrowEnvironment "$handler" "$(decorate code "$file:$lineNumber") prefix=\"$prefix\" \"$identicalLine\" Invalid token count: $line0 $line1" || return $?
+    throwEnvironment "$handler" "$(decorate code "$file:$lineNumber") prefix=\"$prefix\" \"$identicalLine\" Invalid token count: $line0 $line1" || return $?
   fi
   printf "%d %s %s\n" "$lineNumber" "$token" "$count"
 }

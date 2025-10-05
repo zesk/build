@@ -16,7 +16,7 @@ __networkConfigurationFiltered() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -25,18 +25,18 @@ __networkConfigurationFiltered() {
       ;;
     *)
       # _IDENTICAL_ argumentUnknownHandler 1
-      returnThrowArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
+      throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
       ;;
     esac
     shift
   done
 
-  whichExists ifconfig || returnThrowEnvironment "$handler" "Need ifconfig (net-tools) installed. not available in PATH: $PATH" || return $?
+  whichExists ifconfig || throwEnvironment "$handler" "Need ifconfig (net-tools) installed. not available in PATH: $PATH" || return $?
 
   case "$(lowercase "${OSTYPE-}")" in
   linux) ifconfig | grep "$patternNotGNU" | cut -f 2 -d : | trimSpace | cut -f 1 -d ' ' ;;
   linux-gnu | darwin* | freebsd*) ifconfig | grep "$patternGNU " | trimSpace | cut -f 2 -d ' ' ;;
-  *) returnThrowEnvironment "$handler" "networkIPList Unsupported OSTYPE \"${OSTYPE-}\"" || return $? ;;
+  *) throwEnvironment "$handler" "networkIPList Unsupported OSTYPE \"${OSTYPE-}\"" || return $? ;;
   esac
 }
 

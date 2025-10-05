@@ -6,7 +6,7 @@
 #
 # Require: IDENTICAL returnMessage
 
-# IDENTICAL userRecord 23
+# IDENTICAL userRecord EOF
 
 # Argument: index - PositiveInteger. Required. Index (1-based) of field to select.
 # Argument: user - String. Required. User name to look up.
@@ -16,10 +16,10 @@
 # Environment: HOME
 # stdout: the home directory
 # File: /etc/passwd
-# Requires: grep cut _return printf /etc/passwd
+# Requires: grep cut returnMessage printf /etc/passwd
 userRecord() {
   local index="${1-}" user="${2-}" userDatabase=${3-"/etc/passwd"} value
-  set -o pipefail && value=$(grep "^$user:" "$userDatabase" | cut -d : -f "$index") || _return $? "No such user $user in $userDatabase" || return $?
+  set -o pipefail && value=$(grep "^$user:" "$userDatabase" | cut -d : -f "$index") || returnMessage $? "No such user $user in $userDatabase" || return $?
   printf -- "%s\n" "$value"
 }
 

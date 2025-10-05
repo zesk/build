@@ -28,7 +28,7 @@ __hookPreCommitPHP() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -37,7 +37,7 @@ __hookPreCommitPHP() {
       ;;
     *)
       # _IDENTICAL_ argumentUnknownHandler 1
-      returnThrowArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
+      throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
       ;;
     esac
     shift
@@ -73,11 +73,11 @@ __hookPreCommitPHP() {
   done < <(gitPreCommitListExtension php)
   if [ ! -x "$home/vendor/bin/php-cs-fixer" ]; then
     statusMessage --last decorate error "Missing binary"
-    returnThrowEnvironment "$handler" "No php-cs-fixer found" || return $?
+    throwEnvironment "$handler" "No php-cs-fixer found" || return $?
   fi
   if [ ! -f "$home/.php-cs-fixer.php" ]; then
     statusMessage --last decorate error "Missing configuration"
-    returnThrowEnvironment "$handler" "No .php-cs-fixer.php found" || return $?
+    throwEnvironment "$handler" "No .php-cs-fixer.php found" || return $?
   fi
   statusMessage decorate success "Fixing PHP"
 
@@ -85,12 +85,12 @@ __hookPreCommitPHP() {
 
   fixResults=$(fileTemporaryName "$handler") || return $?
 
-  "$home/vendor/bin/php-cs-fixer" fix --config "$home/.php-cs-fixer.php" "${changed[@]}" >"$fixResults" 2>&1 || returnThrowEnvironment "$handler" "php-cs-fixer failed: $(cat "$fixResults")" || returnClean $? "$fixResults" || return $?
+  "$home/vendor/bin/php-cs-fixer" fix --config "$home/.php-cs-fixer.php" "${changed[@]}" >"$fixResults" 2>&1 || throwEnvironment "$handler" "php-cs-fixer failed: $(cat "$fixResults")" || returnClean $? "$fixResults" || return $?
   if grep -q 'not fixed' "$fixResults"; then
     statusMessage --last decorate error "some files not fixed"
     dumpPipe --lines 100 'not fixed' <"$fixResults"
     rm -rf "$fixResults" || :L
-    returnThrowEnvironment "$handler" "PHP files failed" || return $?
+    throwEnvironment "$handler" "PHP files failed" || return $?
   fi
   statusMessage decorate success "PHP fixer ran"
   statusMessage decorate success "PHP fixer ran"

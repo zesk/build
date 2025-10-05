@@ -55,7 +55,7 @@ validate() {
   local prefix="__validateType"
 
   [ $# -eq 0 ] || __help "$handler" "$@" || return 0
-  [ $# -ge 4 ] || returnThrowArgument "$handler" "Missing arguments - expect 4 or more (#$#: $(decorate each code "$@"))" || return $?
+  [ $# -ge 4 ] || throwArgument "$handler" "Missing arguments - expect 4 or more (#$#: $(decorate each code "$@"))" || return $?
 
   local handler="$1" && shift
 
@@ -63,11 +63,11 @@ validate() {
     local type="$1" name="$2" value="$3"
     type=$(_validateTypeMapper "$type")
     local typeFunction="$prefix$type"
-    isFunction "$typeFunction" || returnThrowArgument "$handler" "validate $type is not a valid type:"$'\n'"$(validateTypeList)" || return $?
+    isFunction "$typeFunction" || throwArgument "$handler" "validate $type is not a valid type:"$'\n'"$(validateTypeList)" || return $?
     if ! value=$("$typeFunction" "$value" 2>&1); then
       local suffix=""
       [ -z "$value" ] || suffix=" $(decorate error "$value")"
-      returnThrowArgument "$handler" "$name ($(decorate each code "$@")) is not type $(decorate label "$type")$suffix" || return $?
+      throwArgument "$handler" "$name ($(decorate each code "$@")) is not type $(decorate label "$type")$suffix" || return $?
     fi
     printf -- "%s\n" "$value"
     shift 3
@@ -103,12 +103,12 @@ isValidateType() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
     *)
-      isFunction "$prefix$argument" || returnThrowArgument "$handler" "Invalid type $argument" || return $?
+      isFunction "$prefix$argument" || throwArgument "$handler" "Invalid type $argument" || return $?
       ;;
     esac
     shift

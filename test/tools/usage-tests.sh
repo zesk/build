@@ -14,7 +14,7 @@ testUsageTemplate() {
 
   # Now test internals
   local output
-  output=$(__usageTemplate testThatFunction "--one thing^Required. String. Thing."$'\n'"--another thing^Optional. Integer. Another thing." "^" "Makes the world a better place" 0 | stripAnsi) || returnThrowEnvironment "$handler" "usageTemplate failed" || return $?
+  output=$(__usageTemplate testThatFunction "--one thing^Required. String. Thing."$'\n'"--another thing^Optional. Integer. Another thing." "^" "Makes the world a better place" 0 | stripAnsi) || throwEnvironment "$handler" "usageTemplate failed" || return $?
   assertEquals "$output" "$(cat "$home/test/example/usageTemplateSimple.txt")" || return $?
 }
 
@@ -24,8 +24,8 @@ testUsageFunctions() {
   match=$(randomString)
   assertExitCode --stderr-match "$match" 1 returnEnvironment "$match" || return $?
   assertExitCode --stderr-match "$match" 2 returnArgument "$match" || return $?
-  assertExitCode --stderr-match "$match" 1 returnThrowEnvironment returnMessage "$match" || return $?
-  assertExitCode --stderr-match "$match" 2 returnThrowArgument returnMessage "$match" || return $?
+  assertExitCode --stderr-match "$match" 1 throwEnvironment returnMessage "$match" || return $?
+  assertExitCode --stderr-match "$match" 2 throwArgument returnMessage "$match" || return $?
   assertExitCode --stderr-match "$match" 1 catchEnvironment returnMessage returnMessage 99 "$match" || return $?
   assertExitCode --stderr-match "$match" 2 catchArgument returnMessage returnMessage 99 "$match" || return $?
 }

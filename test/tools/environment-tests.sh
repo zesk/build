@@ -293,7 +293,7 @@ testEnvironmentValueReadDefault() {
 testEnvironmentOutput() {
   local envFile
 
-  envFile=$(fileTemporaryName "_return") || return $?
+  envFile=$(fileTemporaryName "returnMessage") || return $?
 
   export ZESK_BUILD_ROCKS
   export __HIDE_THIS_STUFF

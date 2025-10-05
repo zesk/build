@@ -38,11 +38,11 @@ listRemove() {
   [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
   local argument listValue="${1-}" separator="${2-}"
 
-  shift 2 || returnThrowArgument "$handler" "Missing arguments" || return $?
+  shift 2 || throwArgument "$handler" "Missing arguments" || return $?
   firstFlag=false
   while [ $# -gt 0 ]; do
     local offset next argument="$1"
-    [ -n "$argument" ] || returnThrowArgument "$handler" "blank argument" || return $?
+    [ -n "$argument" ] || throwArgument "$handler" "blank argument" || return $?
     offset="$(stringOffset "$argument$separator" "$separator$separator$listValue$separator")"
     if [ "$offset" -lt 0 ]; then
       shift
@@ -73,7 +73,7 @@ listAppend() {
   [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
   local argument listValue="${1-}" separator="${2-}"
 
-  [ ${#separator} -eq 1 ] || returnThrowArgument "$handler" "character-length separator required: ${#separator} $(decorate code "$separator")" || return $?
+  [ ${#separator} -eq 1 ] || throwArgument "$handler" "character-length separator required: ${#separator} $(decorate code "$separator")" || return $?
   shift 2
 
   firstFlag=false
@@ -82,7 +82,7 @@ listAppend() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -104,7 +104,7 @@ listAppend() {
       fi
       ;;
     esac
-    shift || returnThrowArgument "$handler" "shift $argument" || return $?
+    shift || throwArgument "$handler" "shift $argument" || return $?
   done
   printf "%s\n" "$listValue"
 }
@@ -130,7 +130,7 @@ listCleanDuplicates() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;

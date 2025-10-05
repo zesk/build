@@ -335,7 +335,7 @@ On a "2x" machine:
 - returnClean
 - __argument
 - _returnCatch
-- _returnCatchCode
+- _catchCode
 - catchEnvironmentQuiet
 - _deprecated
 - _mapReturn

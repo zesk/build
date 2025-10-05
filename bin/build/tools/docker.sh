@@ -135,7 +135,7 @@ dockerLocalContainer() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -188,7 +188,7 @@ dockerLocalContainer() {
   fi
   if [ -n "$failedWhy" ]; then
     [ ${#tempEnvs[@]} -eq 0 ] || rm -f "${tempEnvs[@]}" || :
-    returnThrowEnvironment "$handler" "$failedWhy" || return $?
+    throwEnvironment "$handler" "$failedWhy" || return $?
   fi
   local tt=()
   [ ! -t 0 ] || tt=(-it)
@@ -221,18 +221,18 @@ dockerImages() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
     --filter)
       shift
-      [ 0 -eq "${#filter[@]}" ] || returnThrowArgument "$handler" "--filter passed twice: #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
+      [ 0 -eq "${#filter[@]}" ] || throwArgument "$handler" "--filter passed twice: #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
       filter+=("--filter" "reference=$(usageArgumentString "$handler" "$argument" "${1-}")") || return $?
       ;;
     *)
       # _IDENTICAL_ argumentUnknownHandler 1
-      returnThrowArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
+      throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
       ;;
     esac
     shift
@@ -293,7 +293,7 @@ _dockerImages() {
 dockerVolumeExists() {
   local handler="_${FUNCNAME[0]}"
   __help "$handler" "$@" || return 0
-  [ $# -eq 1 ] || returnThrowArgument "$handler" "Requires a volume name" || return $?
+  [ $# -eq 1 ] || throwArgument "$handler" "Requires a volume name" || return $?
   docker volume ls --format json | jq .Name | grep -q "$1"
 }
 _dockerVolumeExists() {
@@ -306,7 +306,7 @@ _dockerVolumeExists() {
 dockerVolumeDelete() {
   local handler="_${FUNCNAME[0]}"
   __help "$handler" "$@" || return 0
-  [ $# -eq 1 ] || returnThrowArgument "$handler" "Requires a volume name" || return $?
+  [ $# -eq 1 ] || throwArgument "$handler" "Requires a volume name" || return $?
   docker volume ls --format json | jq .Name | grep -q "$1"
 }
 _dockerVolumeDelete() {

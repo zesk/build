@@ -36,7 +36,7 @@ fileExtractLines() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -46,8 +46,8 @@ fileExtractLines() {
       elif [ -z "$end" ]; then
         end="$(usageArgumentPositiveInteger "$handler" "end" "$1")" || return $?
       else
-      # _IDENTICAL_ argumentUnknownHandler 1
-      returnThrowArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
+        # _IDENTICAL_ argumentUnknownHandler 1
+        throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
       fi
       ;;
     esac
@@ -113,7 +113,7 @@ isMappable() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -144,7 +144,7 @@ _isMappable() {
 # Requires: lowercase __help
 parseBoolean() {
   __help "_${FUNCNAME[0]}" "$@" || return 0
-  case "$(lowercase "$1")" in
+  case "$(lowercase "${1-}")" in
   y | yes | 1 | true)
     return 0
     ;;
@@ -441,7 +441,7 @@ beginsWith() {
   [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
 
   local text="${1-}"
-  [ -n "$text" ] || returnThrowArgument "$handler" "Empty text" || return $?
+  [ -n "$text" ] || throwArgument "$handler" "Empty text" || return $?
 
   shift
   while [ $# -gt 0 ]; do
@@ -500,7 +500,7 @@ isSubstringInsensitive() {
   local element arrayElement
 
   element="$(lowercase "${1-}")"
-  [ -n "$element" ] || returnThrowArgument "$handler" "needle is blank" || return $?
+  [ -n "$element" ] || throwArgument "$handler" "needle is blank" || return $?
   shift || return 1
   for arrayElement; do
     arrayElement=$(lowercase "$arrayElement")
@@ -555,7 +555,7 @@ _trimWords() {
 # Defaults to first field (fieldIndex of `1`), space separator (separatorChar is ` `)
 #
 # Argument: fieldIndex - UnsignedInteger. Required. The field to compute the maximum length for
-# Argument: separatorChar - String. Required. The separator character to delineate fields
+# Argument: separatorChar - String. Optional. The separator character to delineate fields. Uses space if not supplied.
 # stdin: Lines are read from standard in and line length is computed for each line
 # stdout: `UnsignedInteger`
 maximumFieldLength() {
@@ -570,7 +570,7 @@ maximumFieldLength() {
   else
     separatorChar=()
   fi
-  awk "${separatorChar[@]}" "{ print length(\$$index) }" | sort -rn | head -n 1
+  awk "${separatorChar[@]+"${separatorChar[@]}"}" "{ print length(\$$index) }" | sort -rn | head -n 1
 }
 _maximumFieldLength() {
   # __IDENTICAL__ usageDocument 1
@@ -618,14 +618,14 @@ fileEndsWithNewline() {
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
     *)
-      [ -f "$argument" ] || returnThrowArgument "$handler" "not a file #$__index/$__count ($argument)" || return $?
+      [ -f "$argument" ] || throwArgument "$handler" "not a file #$__index/$__count ($argument)" || return $?
       one=true
       [ -z "$(tail -c 1 "$argument")" ] || return 1
       ;;
     esac
     shift
   done
-  $one || returnThrowArgument "$handler" "Requires at least one file $(decorate each code -- "${__saved[@]}")" || return $?
+  $one || throwArgument "$handler" "Requires at least one file $(decorate each code -- "${__saved[@]}")" || return $?
 }
 _fileEndsWithNewline() {
   # __IDENTICAL__ usageDocument 1
@@ -651,7 +651,7 @@ fileLineCount() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -752,7 +752,7 @@ plural() {
     *) printf %s "${2-}" ;;
     esac
   else
-    returnThrowArgument "$handler" "plural argument: \"$count\" is not numeric" || return $?
+    throwArgument "$handler" "plural argument: \"$count\" is not numeric" || return $?
     return 1
   fi
 }
@@ -833,15 +833,23 @@ _stripAnsi() {
 }
 
 # Length of an unformatted string
-# Argument: text - EmptyString. Required. text to determine the plaintext length of.
+# Argument: text - EmptyString. Optional. text to determine the plaintext length of. If not supplied reads from standard input.
+# stdin: A file to determine the plain-text length
 # stdout: `UnsignedInteger`. Length of the plain characters in the input arguments.
 plainLength() {
   local handler="_${FUNCNAME[0]}"
   [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
 
-  local text
-  text="$(stripAnsi <<<"$*")"
-  printf "%d\n" "${#text}"
+  if [ $# -gt 0 ]; then
+    local text
+    text="$(stripAnsi <<<"$*")"
+    printf "%d\n" "${#text}"
+  else
+    local count
+    count=$(trimSpace "$(stripAnsi | wc -c)")
+    # wc -c ALWAYS counts an added newline so remove it from results
+    printf "%d\n" "$((count - 1))"
+  fi
 }
 _plainLength() {
   # __IDENTICAL__ usageDocument 1
@@ -912,13 +920,11 @@ _randomString() {
 }
 
 #
-# Usage: stringOffset needle haystack
 # Outputs the integer offset of `needle` if found as substring in `haystack`
 # If `haystack` is not found, -1 is output
-# Argument: offset - Integer. Required.
 # Argument: needle - String. Required.
 # Argument: haystack - String. Required.
-# stdout: `UnsignedInteger`. The offset at which the `needle` was found in `haystack`.
+# stdout: `Integer`. The offset at which the `needle` was found in `haystack`. Outputs -1 if not found.
 stringOffset() {
   [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
   local length=${#2}
@@ -949,12 +955,12 @@ removeFields() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
     *)
-      [ -z "$fieldCount" ] || returnThrowArgument "$handler" "Only one fieldCount should be provided argument #$__index: $argument" || return $?
+      [ -z "$fieldCount" ] || throwArgument "$handler" "Only one fieldCount should be provided argument #$__index: $argument" || return $?
       fieldCount="$(usageArgumentPositiveInteger "$handler" "fieldCount" "$argument")" || return $?
       ;;
     esac
@@ -1032,7 +1038,7 @@ stringReplace() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -1053,8 +1059,8 @@ stringReplace() {
   if $hasTextArguments; then
     return 0
   fi
-  [ -n "$needle" ] || returnThrowArgument "$handler" "Missing needle" || return $?
-  [ -n "$sedCommand" ] || returnThrowArgument "$handler" "Missing replacement" || return $?
+  [ -n "$needle" ] || throwArgument "$handler" "Missing needle" || return $?
+  [ -n "$sedCommand" ] || throwArgument "$handler" "Missing replacement" || return $?
   sed -e "$sedCommand"
 }
 _stringReplace() {

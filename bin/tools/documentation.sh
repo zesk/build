@@ -98,7 +98,7 @@ __buildDocumentationBuildRelease() {
 __mkdocsConfiguration() {
   local handler="$1" token source="mkdocs.template.yml" target="mkdocs.yml"
 
-  [ -f "$source" ] || returnThrowEnvironment "$handler" "missing $source" || return $?
+  [ -f "$source" ] || throwEnvironment "$handler" "missing $source" || return $?
   while IFS="" read -r token; do
     # skip lowercase
     [ "$token" != "$(lowercase "$token")" ] || continue
@@ -145,7 +145,7 @@ buildDocumentationBuild() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -169,7 +169,7 @@ buildDocumentationBuild() {
     --force) da+=("$argument") && ea+=("$argument") ;;
     *)
       # _IDENTICAL_ argumentUnknownHandler 1
-      returnThrowArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
+      throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
       ;;
     esac
     shift
@@ -246,7 +246,7 @@ buildDocumentationBuild() {
 
     local example
 
-    example="$(decorate wrap "    " <"$home/bin/build/tools/example.sh")" || returnThrowEnvironment "$handler" "generating example" || return $?
+    example="$(decorate wrap "    " <"$home/bin/build/tools/example.sh")" || throwEnvironment "$handler" "generating example" || return $?
 
     # Mappable files
     statusMessage --last decorate notice "Mapping non-tools ..."
@@ -294,7 +294,7 @@ buildDocumentationBuild() {
       catchEnvironment "$handler" source "$home/.venv/bin/activate" || return $?
       if ! pythonPackageInstalled mkdocs; then
         catchEnvironmentQuiet "$handler" - python -m pip install mkdocs mkdocs-material || return $?
-        whichExists mkdocs || returnThrowEnvironment "$handler" "mkdocs not found after installation?" || return $?
+        whichExists mkdocs || throwEnvironment "$handler" "mkdocs not found after installation?" || return $?
       fi
     else
 

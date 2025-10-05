@@ -63,25 +63,6 @@ testFileEndsWithNewline() {
   catchEnvironment "$handler" rm -f "$ff" || return $?
 }
 
-__dataStringBegins() {
-  cat <<EOF
-0 Hello Hell No
-1 Whatever WHAT hatever
-0 Whatever What BBB CCC DDD
-0 Whatever BBB CCC DDD What
-1 Whatever BBB CCC DDD AAA
-EOF
-}
-
-testStringBegins() {
-  local expected text remainder
-  while read -r expected text remainder; do
-    local args=()
-    IFS=" " read -r -a args <<<"$remainder" || :
-    assertExitCode "$expected" beginsWith "$text" "${args[@]+"${args[@]}"}" || return $?
-  done < <(__dataStringBegins)
-}
-
 __dataIsPlain() {
   local dog
   dog="$(decorate red dog)"
@@ -161,18 +142,200 @@ testStringReplace() {
     assertEquals "$expected" "$(stringReplace "$needle" "$replacement" "$haystack")" || return $?
   done < <(__dataStringReplace)
 }
+
+__dataIsSubstringInsensitive() {
+  cat <<'EOF'
+1|abc|ABd|bcd|abed
+0|;Build-Home:true;|;Build-Home:true;
+0|;Build-Home:true;|;build-home:true;
+0|;build-home:true;|;Build-Home:true;
+EOF
+}
 testIsSubstringInsensitive() {
-  assertExitCode 1 isSubstringInsensitive "abc" "ABd" "bcd" "abed" || return $?
-  assertExitCode 0 isSubstringInsensitive ";Build-Home:true;" ";Build-Home:true;" || return $?
-  assertExitCode 0 isSubstringInsensitive ";Build-Home:true;" ";build-home:true;" || return $?
-  assertExitCode 0 isSubstringInsensitive ";build-home:true;" ";Build-Home:true;" || return $?
+  local testRow
+  while IFS="|" read -r -a testRow; do
+    set -- "${testRow[@]}"
+    local expected="$1" haystack="$2" && shift 2
+    assertExitCode "$expected" isSubstringInsensitive "$haystack" "$@" || return $?
+  done < <(__dataIsSubstringInsensitive)
 }
 
-testSubstringFound() {
-  assertExitCode 0 stringContains haystack needle needle needle needle needle aystac needle || return $?
-  assertExitCode 0 stringContains haystack needle needle needle needle needle haystac needle || return $?
-  assertExitCode 0 stringContains haystack needle needle needle needle needle aystack needle || return $?
-  assertNotExitCode 0 stringContains haystack needle needle needle needle needle Haystack needle || return $?
+__dataStringBeginsInsensitive() {
+  cat <<'EOF'
+0|Hello, world.|hello
+0|Hello, world.|Hello
+0|Hello, world.|Hello, world.
+1|Hello, world.|world
+1|Hello, world.|World
+EOF
+}
+
+testStringBeginsInsensitive() {
+  local exitCode haystack needle
+  while IFS="|" read -r exitCode haystack needle; do
+    assertExitCode "$expected" "$(stringBeginsInsensitive "$haystack" "$needle")" || return $?
+  done < <(__dataStringBeginsInsensitive)
+}
+
+__dataStringBegins2() {
+  cat <<'EOF'
+0 Hello Hell No
+1 Whatever WHAT hatever
+0 Whatever What BBB CCC DDD
+0 Whatever BBB CCC DDD What
+1 Whatever BBB CCC DDD AAA
+EOF
+}
+
+testStringBegins2() {
+  local expected text remainder
+  while read -r expected text remainder; do
+    local args=()
+    IFS=" " read -r -a args <<<"$remainder" || :
+    assertExitCode "$expected" beginsWith "$text" "${args[@]+"${args[@]}"}" || return $?
+  done < <(__dataStringBegins2)
+}
+
+__dataStringBegins() {
+  cat <<'EOF'
+1|Hello, world.|hello
+0|Hello, world.|Hello
+0|Hello, world.|Hello, world.
+1|Hello, world.|world
+1|Hello, world.|World
+EOF
+}
+
+testStringBegins() {
+  local exitCode haystack needle
+  while IFS="|" read -r exitCode haystack needle; do
+    assertExitCode "$expected" "$(stringBegins "$haystack" "$needle")" || return $?
+  done < <(__dataStringBeginsInsensitive)
+}
+
+__dataStringContainsInsensitive() {
+  cat <<'EOF'
+1|Hello, world.|hello
+0|Hello, world.|Hello
+0|Hello, world.|Hello, world.
+0|Hello, world.|world
+0|Hello, world.|World
+0|haystack|needle|needle|needle|needle|needle|aystac|needle
+0|haystack|needle|needle|needle|needle|needle|haystac|needle
+0|haystack|needle|needle|needle|needle|needle|aystack|needle
+0|haystack|needle|needle|needle|needle|needle|Haystack|needle
+EOF
+}
+
+testStringContainsInsensitive() {
+  local testRow
+  while IFS="|" read -r -a testRow; do
+    set -- "${testRow[@]}"
+    local expected="$1" && shift
+    assertExitCode "$expected" stringContainsInsensitive "$@" || return $?
+  done < <(__dataStringContainsInsensitive)
+}
+
+__dataStringContains() {
+  cat <<'EOF'
+1|Hello, world.|hello
+0|Hello, world.|Hello
+0|Hello, world.|Hello, world.
+0|Hello, world.|world
+1|Hello, world.|World
+0|haystack|needle|needle|needle|needle|needle|aystac|needle
+0|haystack|needle|needle|needle|needle|needle|haystac|needle
+0|haystack|needle|needle|needle|needle|needle|aystack|needle
+1|haystack|needle|needle|needle|needle|needle|Haystack|needle
+EOF
+}
+
+testStringContains() {
+  local testRow
+  while IFS="|" read -r -a testRow; do
+    set -- "${testRow[@]}"
+    local expected="$1" haystack="$2" && shift 2
+    assertExitCode "$expected" stringContains "$haystack" "$@" || return $?
+  done < <(__dataStringContains)
+}
+
+__dataStringOffset() {
+  cat <<'EOF'
+-1|hello|Hello, world.
+0|ello|Hello, world.
+1|llo, |Hello, world.
+2|lo, world.|Hello, world.
+7|world|Hello, world.
+8|orld.|Hello, world.
+15|.|Hello, world.
+EOF
+}
+
+testStringOffset() {
+  local expected haystack needle
+  while IFS="|" read -r expected haystack needle; do
+    assertEquals "$expected" "$(stringOffset "$needle" "$haystack")" || return $?
+  done < <(__dataStringOffset)
+}
+
+__dataParseBoolean() {
+  cat <<'EOF'
+0|yes
+0|Y
+0|true
+0|TRUE
+0|TrUe
+1|false
+1|n
+1|fAlSe
+1|no
+2|not
+2|maybe
+2|nein
+2|non
+2|nyet
+2|ja
+2|oui
+2|si
+EOF
+}
+
+testParseBoolean() {
+  local expected haystack needle
+  while IFS="|" read -r expected value; do
+    assertExitCode "$expected" parseBoolean "$value" || return $?
+  done < <(__dataParseBoolean)
+}
+
+__dataShaPipe() {
+  cat <<'EOF'
+1d229271928d3f9e2bb0375bd6ce5db6c6d348d9|Hello
+da39a3ee5e6b4b0d3255bfef95601890afd80709|
+9a87e2256c7b6ff46b155e90fbf0d1f0f83aab1b|Zesk Build
+EOF
+}
+
+testShaPipe() {
+  local expected content
+  while IFS="|" read -r expected content; do
+    assertEquals "$expected" "$(shaPipe <<<"$content")" || return $?
+  done < <(__dataShaPipe)
+}
+
+__dataPlainLength() {
+  cat <<EOF
+5|Hello
+5|$(decorate bold Hello)
+9|$(decorate file README.md)
+EOF
+}
+
+testPlainLength() {
+  local expected content
+  while IFS="|" read -r expected content; do
+    assertEquals --display "plainLength $content (${#content})" "$expected" "$(plainLength "$content")" || return $?
+    assertEquals --display "plainLength <<< $content (${#content})" "$expected" "$(plainLength <<<"$content")" || return $?
+  done < <(__dataPlainLength)
 }
 
 __testIsSubstringData() {
@@ -230,4 +393,35 @@ testPrintfOutput() {
   assertEquals "$(printf "" | printfOutputPrefix "c")" "" || return $?
   assertEquals "$(echo "ab" | printfOutputSuffix "c")" "ab"$'\n'"c" || return $?
   assertEquals "$(printf "" | printfOutputSuffix "c")" "" || return $?
+}
+
+__maxLineLengthFile() {
+  repeat "$1" _
+  printf "%s\n" "$(randomString)"
+}
+
+testMaximumLineLength() {
+  for n in 54 94 112 199; do
+    assertEquals "$n" "$(__maxLineLengthFile "$n" | maximumLineLength)" || return $?
+  done
+}
+
+__maxFieldLengthFile() {
+  cat <<'EOF'
+Name,Department,Age,Salary,Notes
+Juan,Accounting,25,98023,Is actually from another planet.
+Michelle,HR,29,87099,Eats lunch at 4PM
+Randy,DevTeam,36,75000,Does not speak.
+EOF
+}
+
+testMaximumFieldLength() {
+  assertEquals 8 "$(maximumFieldLength 1 , <__maxFieldLengthFile)" || return $?
+  assertEquals 10 "$(maximumFieldLength 2 , <__maxFieldLengthFile)" || return $?
+  assertEquals 2 "$(maximumFieldLength 3 , <__maxFieldLengthFile)" || return $?
+  assertEquals 5 "$(maximumFieldLength 4 , <__maxFieldLengthFile)" || return $?
+  assertEquals 5 "$(maximumFieldLength 5 , <__maxFieldLengthFile)" || return $?
+  assertEquals 32 "$(maximumFieldLength 6 , <__maxFieldLengthFile)" || return $?
+  assertEquals 0 "$(maximumFieldLength 7 , <__maxFieldLengthFile)" || return $?
+  assertEquals 0 "$(maximumFieldLength 99 , <__maxFieldLengthFile)" || return $?
 }

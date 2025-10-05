@@ -53,7 +53,7 @@ __doEvalCheck() {
     done <"$tempResults"
   done
   catchEnvironment "$handler" rm -rf "$tempResults" || return $?
-  [ "$failed" -eq 0 ] || returnThrowEnvironment "$handler" "evalCheck failed for $failed $(plural "$failed" file files)" || return $?
+  [ "$failed" -eq 0 ] || throwEnvironment "$handler" "evalCheck failed for $failed $(plural "$failed" file files)" || return $?
 }
 
 # Check files to ensure `eval`s in code have been checked

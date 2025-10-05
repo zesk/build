@@ -65,10 +65,10 @@ fileModificationTime() {
   while [ $# -gt 0 ]; do
     [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
     argument="$1"
-    [ -n "$argument" ] || returnThrowArgument "$handler" "blank argument" || return $?
-    [ -f "$argument" ] || returnThrowArgument "$handler" "$argument is not a file" || return $?
+    [ -n "$argument" ] || throwArgument "$handler" "blank argument" || return $?
+    [ -f "$argument" ] || throwArgument "$handler" "$argument is not a file" || return $?
     printf "%d\n" "$(date -r "$argument" +%s)"
-    shift || returnThrowArgument "$handler" "shift" || return $?
+    shift || throwArgument "$handler" "shift" || return $?
   done
 }
 _fileModificationTime() {
@@ -120,7 +120,7 @@ fileModificationTimes() {
   local handler="_${FUNCNAME[0]}"
   [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
   local directory="${1-}" && shift
-  [ -d "$directory" ] || returnThrowArgument "$handler" "Not a directory $(decorate code "$directory")" || return $?
+  [ -d "$directory" ] || throwArgument "$handler" "Not a directory $(decorate code "$directory")" || return $?
   # See: platform
   __fileModificationTimes "$directory" "$@"
 }
@@ -137,7 +137,7 @@ fileModifiedRecentlyName() {
   local handler="_${FUNCNAME[0]}"
   [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
   local directory="${1-}" && shift
-  [ -d "$directory" ] || returnThrowArgument "$handler" "Not a directory $(decorate code "$directory")" || return $?
+  [ -d "$directory" ] || throwArgument "$handler" "Not a directory $(decorate code "$directory")" || return $?
   fileModificationTimes "$directory" -type f "$@" | sort -r | head -1 | cut -f2- -d" "
 }
 _fileModifiedRecentlyName() {
@@ -153,7 +153,7 @@ fileModifiedRecentlyTimestamp() {
   local handler="_${FUNCNAME[0]}"
   [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
   local directory="${1-}" && shift
-  [ -d "$directory" ] || returnThrowArgument "$handler" "Not a directory $(decorate code "$directory")" || return $?
+  [ -d "$directory" ] || throwArgument "$handler" "Not a directory $(decorate code "$directory")" || return $?
   fileModificationTimes "$directory" -type f "$@" | sort -r | head -1 | cut -f1 -d" "
 }
 _fileModifiedRecentlyTimestamp() {
@@ -227,9 +227,9 @@ __gamutFile() {
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1)) tempTime
-    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count: $(decorate each code "${__saved[@]}") $(debuggingStack)" || return $?
-    [ -f "$argument" ] || returnThrowArgument "$handler" "Not a file: $(decorate code "$argument"): #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
-    tempTime=$(fileModificationTime "$argument") || returnThrowEnvironment "#$__index/$__count: fileModificationTime $argument: #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count: $(decorate each code "${__saved[@]}") $(debuggingStack)" || return $?
+    [ -f "$argument" ] || throwArgument "$handler" "Not a file: $(decorate code "$argument"): #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
+    tempTime=$(fileModificationTime "$argument") || throwEnvironment "#$__index/$__count: fileModificationTime $argument: #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
     if [ -z "$theFile" ] || test "$tempTime" "$comparison" "$gamutTime"; then
       theFile="$1"
       gamutTime="$tempTime"
@@ -279,7 +279,7 @@ fileModifiedSeconds() {
 
   local timestamp
 
-  timestamp=$(fileModificationTime "$1") || returnThrowArgument "$handler" fileModificationTime "$1" || return $?
+  timestamp=$(fileModificationTime "$1") || throwArgument "$handler" fileModificationTime "$1" || return $?
   printf %d "$(($(date +%s) - timestamp))"
 }
 _fileModifiedSeconds() {
@@ -299,7 +299,7 @@ fileModifiedDays() {
 
   local timestamp
 
-  timestamp=$(fileModifiedSeconds "$1") || returnThrowArgument "$handler" fileModifiedSeconds "$1" || return $?
+  timestamp=$(fileModifiedSeconds "$1") || throwArgument "$handler" fileModifiedSeconds "$1" || return $?
   printf %d "$((timestamp / 86400))"
 }
 _fileModifiedDays() {
@@ -379,9 +379,9 @@ fileSize() {
   *) opts=('-c%s') ;;
   esac
   while [ $# -gt 0 ]; do
-    size="$(stat "${opts[@]}" "$1")" || returnThrowEnvironment "$handler" "Unable to stat" "${opts[@]}" "$1" || return $?
+    size="$(stat "${opts[@]}" "$1")" || throwEnvironment "$handler" "Unable to stat" "${opts[@]}" "$1" || return $?
     printf "%s\n" "$size"
-    shift || returnThrowArgument "$handler" shift || return $?
+    shift || throwArgument "$handler" shift || return $?
   done
 }
 _fileSize() {
@@ -444,7 +444,7 @@ linkRename() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -455,14 +455,14 @@ linkRename() {
         to=$(usageArgumentString "$handler" "to $(fileType "$1")" "$1") || return $?
       else
       # _IDENTICAL_ argumentUnknownHandler 1
-      returnThrowArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
+      throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
       fi
       ;;
     esac
     shift
   done
-  [ -n "$from" ] || returnThrowArgument "$handler" "Need a \"from\" argument" || return $?
-  [ -n "$to" ] || returnThrowArgument "$handler" "Need a \"to\" argument" || return $?
+  [ -n "$from" ] || throwArgument "$handler" "Need a \"from\" argument" || return $?
+  [ -n "$to" ] || throwArgument "$handler" "Need a \"to\" argument" || return $?
   __linkRename "$from" "$to"
 }
 _linkRename() {
@@ -485,7 +485,7 @@ __fileListColumn() {
     [ "${1-}" != "--help" ] || __help "$usageFunction" "$@" || return 0
     # shellcheck disable=SC2012
     if ! result="$(ls -ld "$1" | awk '{ print $'"$column"' }')"; then
-      returnThrowEnvironment "$usageFunction" "Running ls -ld \"$1\"" || return $?
+      throwEnvironment "$usageFunction" "Running ls -ld \"$1\"" || return $?
     fi
     printf "%s\n" "$result"
     shift
@@ -569,7 +569,7 @@ _fileMatchesHelper() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -634,7 +634,7 @@ fileIsEmpty() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -656,7 +656,7 @@ _directoryGamutFile() {
   local clipper="$1" directory="${2-.}" modified file && shift 2
   read -r modified file < <(__fileModificationTimes "$directory" -type f ! -path "*/.*/*" "$@" | sort -n | "$clipper" -n 1) || :
   [ -n "$modified" ] || return 0
-  isPositiveInteger "$modified" || returnThrowEnvironment "$handler" "__fileModificationTimes output a non-integer: \"$modified\" \"$file\"" || return $?
+  isPositiveInteger "$modified" || throwEnvironment "$handler" "__fileModificationTimes output a non-integer: \"$modified\" \"$file\"" || return $?
   printf "%s\n" "$file"
 }
 
@@ -670,7 +670,7 @@ _directoryGamutFileWrapper() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -684,15 +684,15 @@ _directoryGamutFileWrapper() {
       [ $# -gt 0 ] || break
       ;;
     *)
-      [ -z "$directory" ] || returnThrowArgument "$handler" "Directory already supplied" || return $?
+      [ -z "$directory" ] || throwArgument "$handler" "Directory already supplied" || return $?
       directory="$(usageArgumentDirectory "$handler" "$argument" "${1-}")" || return $?
       ;;
     esac
     shift
   done
-  [ -n "$directory" ] || returnThrowArgument "$handler" "directory is required" || return $?
+  [ -n "$directory" ] || throwArgument "$handler" "directory is required" || return $?
   if ! _directoryGamutFile "$comparator" "$directory" "${findArgs[@]+"${findArgs[@]}"}"; then
-    returnThrowEnvironment "$handler" "No files in $(decorate file "$directory") (${findArgs[*]-})" || return $?
+    throwEnvironment "$handler" "No files in $(decorate file "$directory") (${findArgs[*]-})" || return $?
   fi
 }
 
@@ -732,7 +732,7 @@ linkCreate() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -747,26 +747,26 @@ linkCreate() {
         linkName=$(usageArgumentString "$handler" "linkName" "$argument") || return $?
       else
       # _IDENTICAL_ argumentUnknownHandler 1
-      returnThrowArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
+      throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
       fi
       ;;
     esac
     shift
   done
 
-  [ -n "$target" ] || returnThrowArgument "$handler" "Missing target" || return $?
-  [ -n "$linkName" ] || returnThrowArgument "$handler" "Missing linkName" || return $?
+  [ -n "$target" ] || throwArgument "$handler" "Missing target" || return $?
+  [ -n "$linkName" ] || throwArgument "$handler" "Missing linkName" || return $?
 
-  [ ! -L "$target" ] || returnThrowArgument "$handler" "Can not link to another link ($(decorate file "$target") is a link)" || return $?
+  [ ! -L "$target" ] || throwArgument "$handler" "Can not link to another link ($(decorate file "$target") is a link)" || return $?
 
   target=$(catchEnvironment "$handler" basename "$target") || return $?
 
-  [ -e "$path/$target" ] || returnThrowEnvironment "$handler" "$path/$target must be a file or directory" || return $?
+  [ -e "$path/$target" ] || throwEnvironment "$handler" "$path/$target must be a file or directory" || return $?
 
   local link="$path/$linkName"
   if [ ! -L "$link" ]; then
     if [ -e "$link" ]; then
-      returnThrowEnvironment "$handler" "$(decorate file "$link") exists and was not a link $(decorate code "$(fileType "$link")")" || :
+      throwEnvironment "$handler" "$(decorate file "$link") exists and was not a link $(decorate code "$(fileType "$link")")" || :
       catchEnvironment "$handler" mv "$link" "$link.createLink.$$.backup" || return $?
       clean+=("$link.$$.backup")
     fi

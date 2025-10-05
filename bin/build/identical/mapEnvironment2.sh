@@ -26,8 +26,8 @@
 # Argument: --replace-filter - Zero or more. Callable. Filter for replacement strings. (e.g. `trimSpace`)
 # Environment: Argument-passed or entire environment variables which are exported are used and mapped to the destination.
 # Example:     printf %s "{NAME}, {PLACE}.\n" | NAME=Hello PLACE=world mapEnvironment NAME PLACE
-# Requires: environmentVariables cat returnThrowEnvironment catchEnvironment
-# Requires: returnThrowArgument decorate usageArgumentString
+# Requires: environmentVariables cat throwEnvironment catchEnvironment
+# Requires: throwArgument decorate usageArgumentString
 mapEnvironment() {
   local handler="_${FUNCNAME[0]}"
 
@@ -38,7 +38,7 @@ mapEnvironment() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;

@@ -18,14 +18,14 @@ __dumpNameValue() {
 __dumpSimpleValue() {
   local handler="returnMessage"
   local name="${1-}"
-  case "${name:0:1}" in [[:alpha:]_]) ;; *) returnThrowArgument "$handler" "Invalid variable name $name $(debuggingStack)" || return $? ;; esac
+  case "${name:0:1}" in [[:alpha:]_]) ;; *) throwArgument "$handler" "Invalid variable name $name $(debuggingStack)" || return $? ;; esac
   printf -- "export %s\n" "$(returnCatch "$handler" environmentValueWrite "$name" "$(trimSpace "${2-}")")" || return $?
 }
 
 __dumpArrayValue() {
   local handler="returnMessage"
   local name="${1-}"
-  case "${name:0:1}" in [[:alpha:]_]) ;; *) returnThrowArgument "$handler" "Invalid variable name $name $(debuggingStack)" || return $? ;; esac
+  case "${name:0:1}" in [[:alpha:]_]) ;; *) throwArgument "$handler" "Invalid variable name $name $(debuggingStack)" || return $? ;; esac
   printf "export %s\n" "$(environmentValueWriteArray "$@")"
 }
 
@@ -53,7 +53,7 @@ __dumpNameValueAppend() {
 __dumpNameValuePrefixLocal() {
   local handler="returnMessage"
   local prefix="${1}" name="${2}"
-  case "${name:0:1}" in [[:alpha:]_]) ;; *) returnThrowArgument "$handler" "Invalid variable name $name $(debuggingStack)" || return $? ;; esac
+  case "${name:0:1}" in [[:alpha:]_]) ;; *) throwArgument "$handler" "Invalid variable name $name $(debuggingStack)" || return $? ;; esac
   printf -- "IFS='' read -r -d '' '%s' <<'%s' || :\n" "$name" "EOF" # Single quote means no interpolation
   shift 2
   while [ $# -gt 0 ]; do

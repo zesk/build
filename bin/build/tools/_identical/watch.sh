@@ -18,7 +18,7 @@ __identicalFindTokens() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -35,8 +35,8 @@ __identicalFindTokens() {
     shift
   done
 
-  [ "${#prefixes[@]}" -gt 0 ] || returnThrowArgument "$handler" "Need at least one prefix" || return $?
-  [ "${#files[@]}" -gt 0 ] || returnThrowArgument "$handler" "Need at least one file" || return $?
+  [ "${#prefixes[@]}" -gt 0 ] || throwArgument "$handler" "Need at least one prefix" || return $?
+  [ "${#files[@]}" -gt 0 ] || throwArgument "$handler" "Need at least one file" || return $?
 
   foundLines=$(fileTemporaryName "$handler") || return $?
 
@@ -87,7 +87,7 @@ __identicalWatch() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -140,7 +140,7 @@ __identicalWatch() {
       ;;
     *)
       # _IDENTICAL_ argumentUnknownHandler 1
-      returnThrowArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
+      throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
       ;;
     esac
     shift

@@ -72,7 +72,7 @@ consoleColorMode() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -90,13 +90,13 @@ consoleColorMode() {
       ;;
     *)
       # _IDENTICAL_ argumentUnknownHandler 1
-      returnThrowArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
+      throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
       ;;
     esac
     shift
   done
 
-  [ -n "${BUILD_COLORS_MODE-}" ] || returnThrowArgument "$handler" "Empty BUILD_COLORS_MODE" || return $?
+  [ -n "${BUILD_COLORS_MODE-}" ] || throwArgument "$handler" "Empty BUILD_COLORS_MODE" || return $?
   printf "%s\n" "${BUILD_COLORS_MODE-}"
 }
 _consoleColorMode() {
@@ -326,8 +326,8 @@ plasterLines() {
 
   local line curX curY rows character=" "
   IFS=$'\n' read -r -d '' curX curY < <(cursorGet) || :
-  isUnsignedInteger "$curX" || returnThrowEnvironment "$handler" "cursorGet returned $curX $curY" || return $?
-  isUnsignedInteger "$curY" || returnThrowEnvironment "$handler" "cursorGet returned $curX $curY" || return $?
+  isUnsignedInteger "$curX" || throwEnvironment "$handler" "cursorGet returned $curX $curY" || return $?
+  isUnsignedInteger "$curY" || throwEnvironment "$handler" "cursorGet returned $curX $curY" || return $?
   rows=$(returnCatch "$handler" consoleRows) || return $?
   columns=$(returnCatch "$handler" consoleColumns) || return $?
   while IFS="" read -r line; do
@@ -383,7 +383,7 @@ statusMessage() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -408,7 +408,7 @@ statusMessage() {
       ;;
     -*)
       # _IDENTICAL_ argumentUnknownHandler 1
-      returnThrowArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
+      throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
       ;;
     *)
       muzzle usageArgumentCallable "$handler" "command" "${1-}" || return $?
@@ -571,7 +571,7 @@ colorBrightness() {
     done
   elif [ $# -lt 3 ]; then
     [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
-    returnThrowArgument "$handler" "Requires 3 arguments" || return $?
+    throwArgument "$handler" "Requires 3 arguments" || return $?
   fi
   while [ $# -ge 3 ]; do
     __colorBrightness "$handler" "$1" "$2" "$3" || return $?
@@ -707,11 +707,11 @@ colorFormat() {
   if [ $# -gt 0 ]; then
     while [ $# -gt 0 ]; do
       local r="${1-}" g="${2-}" b="${3-}"
-      shift 3 2>/dev/null || returnThrowArgument "$handler" "Arguments must be in threes after format" || return $?
+      shift 3 2>/dev/null || throwArgument "$handler" "Arguments must be in threes after format" || return $?
 
-      r=$(_colorRange "$r") || returnThrowArgument "$handler" "Invalid r $r value" || return $?
-      g=$(_colorRange "$g") || returnThrowArgument "$handler" "Invalid g $g value" || return $?
-      b=$(_colorRange "$b") || returnThrowArgument "$handler" "Invalid b $b value" || return $?
+      r=$(_colorRange "$r") || throwArgument "$handler" "Invalid r $r value" || return $?
+      g=$(_colorRange "$g") || throwArgument "$handler" "Invalid g $g value" || return $?
+      b=$(_colorRange "$b") || throwArgument "$handler" "Invalid b $b value" || return $?
 
       # shellcheck disable=SC2059
       printf -- "$format" "$r" "$g" "$b"
@@ -751,6 +751,7 @@ colorParse() {
   fi
 }
 _colorParse() {
+  ! false || colorParse --help
   # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
@@ -842,4 +843,96 @@ _toggleCharacterToColor() {
       return 0
     fi
   done
+}
+
+# Set the terminal color scheme to the specification
+# stdin: Scheme definition with `colorName=colorValue` on each line
+colorScheme() {
+  local handler="_${FUNCNAME[0]}"
+  local colorsFile debug=false
+
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
+  local __saved=("$@") __count=$#
+  while [ $# -gt 0 ]; do
+    local argument="$1" __index=$((__count - $# + 1))
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    case "$argument" in
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
+    # _IDENTICAL_ handlerHandler 1
+    --handler) shift && handler=$(usageArgumentFunction "$handler" "$argument" "${1-}") || return $? ;;
+    --debug) debug=true ;;
+    *)
+      # _IDENTICAL_ argumentUnknownHandler 1
+      throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
+      ;;
+    esac
+    shift
+  done
+
+  export __BUILD_TERM_COLORS BUILD_COLORS_MODE
+
+  colorsFile=$(fileTemporaryName "$handler") || return 0
+  catchEnvironment "$handler" grepSafe -v -e '^#' | catchEnvironment "$handler" sed '/^$/d' | catchEnvironment "$handler" muzzle tee "$colorsFile" || return $?
+  local hash
+  hash="$(shaPipe <"$colorsFile")" || :
+
+  [ "$hash" != "${__BUILD_TERM_COLORS-}" ] || return 0
+
+  local it2=false iTerm2=false
+  ! isiTerm2 || it2=true
+  local bg bgs=()
+  local name value newStyle
+  while IFS="=" read -r name value; do
+    local colorCode
+    if $it2 && iTerm2IsColorType "$name"; then
+      iTerm2=true
+    fi
+    if muzzle decorateStyle "$name"; then
+      ! $debug || statusMessage decorate info "Parsing $(decorate code "$name") and $(decorate value "$value")"
+      colorCode=$(colorParse <<<"$value" | colorFormat "%d;%d;%d")
+      newStyle="38;2;$colorCode"
+      ! $debug || statusMessage decorate info "Setting style $(decorate value "$name") to $(decorate code "$newStyle")"
+      catchEnvironment "$handler" muzzle decorateStyle "$name" "$newStyle" || return $?
+    else
+      local bgName="${name%bg}"
+      if [ -n "$bgName" ] && [ "$name" != "$bgName" ] && muzzle decorateStyle "$bgName"; then
+        colorCode=$(colorParse <<<"$value" | colorFormat "%d;%d;%d")
+        bgs+=("$bgName" "$colorCode")
+        ! $debug || statusMessage decorate info "Parsing background color for $(decorate code "$bgName"): $(decorate value "$value") -> $(decorate code "$colorCode")"
+      fi
+    fi
+  done <"$colorsFile"
+  if [ ${#bgs[@]} -gt 0 ]; then
+    set -- "${bgs[@]}"
+    while [ $# -gt 1 ]; do
+      name="$1"
+      value="$2"
+      newStyle=$(decorateStyle "$name")
+      newStyle="${newStyle%%;48;2;*}"
+      newStyle="$newStyle;48;2;$value"
+      catchEnvironment "$handler" muzzle decorateStyle "$name" "$newStyle" || return $?
+      ! $debug || statusMessage decorate info "Setting background style $(decorate value "$name") \"$(decorate code "$value")\" to $(decorate code "$newStyle")"
+      shift 2
+    done
+  fi
+
+  ! $debug || dd+=(--verbose)
+  ! $iTerm2 || iTerm2SetColors "${dd[@]+"${dd[@]}"}" --fill --ignore --skip-errors <"$colorsFile" || :
+
+  bg="$(grep -e '^bg=' "$colorsFile" | tail -n 1 | cut -f 2 -d =)"
+  catchEnvironment "$handler" rm -rf "$colorsFile" || return $?
+
+  __BUILD_TERM_COLORS="$hash"
+
+  local mode
+  mode=$(returnCatch "$handler" consoleConfigureColorMode "$bg") || :
+  [ -z "$mode" ] || BUILD_COLORS_MODE="$mode" && bashPrompt --skip-prompt --colors "$(bashPromptColorScheme "$mode")"
+
+  ! $debug || decorate info "Background is now $bg and mode is $mode ... "
+}
+_colorScheme() {
+  # __IDENTICAL__ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

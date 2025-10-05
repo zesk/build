@@ -14,14 +14,14 @@ __awsSecurityGroupIPModify() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
     # IDENTICAL profileNameArgumentHandlerCase 6
     --profile)
       shift
-      [ ${#pp[@]} -eq 0 ] || returnThrowArgument "$handler" "$argument already specified: ${pp[*]}"
+      [ ${#pp[@]} -eq 0 ] || throwArgument "$handler" "$argument already specified: ${pp[*]}"
       profileName="$(usageArgumentString "$handler" "$argument" "$1")" || return $?
       pp=("$argument" "$profileName")
       ;;
@@ -56,17 +56,17 @@ __awsSecurityGroupIPModify() {
     # IDENTICAL regionArgumentHandler 5
     --region)
       shift
-      [ -z "$region" ] || returnThrowArgument "$handler" "$argument already specified: $region"
+      [ -z "$region" ] || throwArgument "$handler" "$argument already specified: $region"
       region=$(usageArgumentString "$handler" "$argument" "${1-}") || return $?
       ;;
     *)
-      returnThrowArgument "unknown argument: $argument" || return $?
+      throwArgument "unknown argument: $argument" || return $?
       ;;
     esac
     shift
   done
 
-  [ -n "$profileName" ] || awsHasEnvironment || returnThrowEnvironment "$handler" "Need AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY" || return $?
+  [ -n "$profileName" ] || awsHasEnvironment || throwEnvironment "$handler" "Need AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY" || return $?
 
   ! whichExists aws || returnCatch "$handler" awsInstall || return $?
 
@@ -75,21 +75,21 @@ __awsSecurityGroupIPModify() {
     export AWS_REGION
     returnCatch "$handler" buildEnvironmentLoad AWS_REGION || return $?
     region="${AWS_REGION-}"
-    [ -n "$region" ] || returnThrowArgument "$handler" "AWS_REGION or --region is required" || return $?
+    [ -n "$region" ] || throwArgument "$handler" "AWS_REGION or --region is required" || return $?
   fi
-  awsRegionValid "$region" || returnThrowArgument "$handler" "--region $region is not a valid region" || return $?
+  awsRegionValid "$region" || throwArgument "$handler" "--region $region is not a valid region" || return $?
 
-  [ -n "$mode" ] || returnThrowArgument "$handler" "--add, --remove, or --register is required" || return $?
+  [ -n "$mode" ] || throwArgument "$handler" "--add, --remove, or --register is required" || return $?
 
   for argument in group description region; do
     if [ -z "${!argument}" ]; then
-      returnThrowArgument "$handler" "--$argument is required ($(decorate each code "${__saved[@]}"))" || return $?
+      throwArgument "$handler" "--$argument is required ($(decorate each code "${__saved[@]}"))" || return $?
     fi
   done
 
   if [ "$mode" != "--remove" ]; then
     for argument in ip port; do
-      [ -n "${!argument}" ] || returnThrowArgument "$handler" "--$argument is required for $mode (Arguments: $(decorate each code "${handler#_}" "${__saved[@]}"))" || return $?
+      [ -n "${!argument}" ] || throwArgument "$handler" "--$argument is required for $mode (Arguments: $(decorate each code "${handler#_}" "${__saved[@]}"))" || return $?
     done
   fi
 
@@ -134,7 +134,7 @@ __awsSecurityGroupIPModify() {
       if grep -q "Duplicate" "$tempErrorFile"; then
         printf "%s\n" "$(decorate yellow "duplicate")"
       else
-        returnThrowEnvironment "$handler" "Failed to authorize-security-group-ingress $(dumpPipe "Errors:" <"$tempErrorFile")" || returnClean $? "$tempErrorFile" || return $?
+        throwEnvironment "$handler" "Failed to authorize-security-group-ingress $(dumpPipe "Errors:" <"$tempErrorFile")" || returnClean $? "$tempErrorFile" || return $?
       fi
     else
       printf "%s\n" "$(decorate success "ok")"

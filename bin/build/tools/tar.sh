@@ -25,13 +25,13 @@ tarExtractPattern() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
     *)
       local pattern="$argument"
-      shift || returnThrowArgument "No pattern supplied" || return $?
+      shift || throwArgument "No pattern supplied" || return $?
       # -h means follow symlinks
       if tar --version | grep -q GNU; then
         # GNU
@@ -69,20 +69,20 @@ tarCreate() {
 
   local target=""
 
-  [ $# -gt 0 ] || returnThrowArgument "$handler" "Need target and files" || return $?
+  [ $# -gt 0 ] || throwArgument "$handler" "Need target and files" || return $?
 
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
     *)
       target="$argument"
-      shift || returnThrowArgument "No files supplied" || return $?
+      shift || throwArgument "No files supplied" || return $?
       # -h means follow symlinks
       if tar --version | grep -q GNU; then
         # GNU

@@ -16,7 +16,7 @@ decorateStyle() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -114,14 +114,14 @@ __decorateExtensionWrap() {
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
     --fill)
-      shift || returnThrowArgument "$handler" "missing $argument argument" || return $?
-      [ 1 -eq "${#1}" ] || returnThrowArgument "$handler" "Fill character must be single character" || return $?
+      shift || throwArgument "$handler" "missing $argument argument" || return $?
+      [ 1 -eq "${#1}" ] || throwArgument "$handler" "Fill character must be single character" || return $?
       fill="$1"
       width="${width:-needed}"
       ;;
     --width)
-      shift || returnThrowArgument "$handler" "missing $argument argument" || return $?
-      isUnsignedInteger "$1" && [ "$1" -gt 0 ] || returnThrowArgument "$handler" "$argument requires positive integer" || return $?
+      shift || throwArgument "$handler" "missing $argument argument" || return $?
+      isUnsignedInteger "$1" && [ "$1" -gt 0 ] || throwArgument "$handler" "$argument requires positive integer" || return $?
       width="$1"
       ;;
     *)
@@ -141,7 +141,7 @@ __decorateExtensionWrap() {
     return 0
   fi
   if ! isUnsignedInteger "$width"; then
-    width=$(consoleColumns) || returnThrowEnvironment "$handler" "consoleColumns" || return $?
+    width=$(consoleColumns) || throwEnvironment "$handler" "consoleColumns" || return $?
   fi
 
   local actualWidth
@@ -150,7 +150,7 @@ __decorateExtensionWrap() {
     strippedText="$(printf "%s" "$prefix$suffix" | stripAnsi)"
     actualWidth=$((width - ${#strippedText}))
     if [ "$actualWidth" -lt 0 ]; then
-      returnThrowArgument "$handler" "$width is too small to support prefix and suffix characters (${#prefix} + ${#suffix}):"$'\n'"prefix=$prefix"$'\n'"suffix=$suffix" || return $?
+      throwArgument "$handler" "$width is too small to support prefix and suffix characters (${#prefix} + ${#suffix}):"$'\n'"prefix=$prefix"$'\n'"suffix=$suffix" || return $?
     fi
     if [ "$actualWidth" -eq 0 ]; then
       # If we are doing nothing then do not do nothing

@@ -12,7 +12,7 @@
 # Argument: handler - Required. Function. Failure command
 # Argument: quietLog - Required. File. File to output log to temporarily for this command. If `quietLog` is `-` then creates a temporary file for the command which is deleted automatically.
 # Argument: command ... - Required. Callable. Thing to run and append output to `quietLog`.
-# Requires: isFunction returnArgument buildFailed debuggingStack returnThrowEnvironment
+# Requires: isFunction returnArgument buildFailed debuggingStack throwEnvironment
 catchEnvironmentQuiet() {
   local __handler="${1-}" quietLog="${2-}" clean=() && shift 2
   if [ ! -f "$quietLog" ]; then
@@ -20,10 +20,10 @@ catchEnvironmentQuiet() {
       quietLog=$(fileTemporaryName "$handler") || return $?
       clean+=("$quietLog")
     elif [ ! -d "$(dirname "$quietLog")" ]; then
-      returnThrowArgument "$handler" "Directory for $(decorate file "$quietLog") does not exist!" || return $?
+      throwArgument "$handler" "Directory for $(decorate file "$quietLog") does not exist!" || return $?
     fi
   fi
-  "$@" >>"$quietLog" 2>&1 || buildFailed "$quietLog" || returnThrowEnvironment "$__handler" "$@" || returnClean $? "${clean[@]+"${clean[@]}"}" || return $?
+  "$@" >>"$quietLog" 2>&1 || buildFailed "$quietLog" || throwEnvironment "$__handler" "$@" || returnClean $? "${clean[@]+"${clean[@]}"}" || return $?
   returnClean 0 "${clean[@]+"${clean[@]}"}" || return $?
 }
 

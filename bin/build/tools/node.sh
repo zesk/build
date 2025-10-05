@@ -14,13 +14,13 @@ nodeInstall() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
     *)
       # _IDENTICAL_ argumentUnknownHandler 1
-      returnThrowArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
+      throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
       ;;
     esac
     shift
@@ -49,7 +49,7 @@ __nodeInstall_corepackEnable() {
     statusMessage decorate warning "No corepack - installing using npm" || return $?
     catchEnvironment "$handler" npmInstall || return $?
     catchEnvironment "$handler" npm install -g corepack || return $?
-    whichExists corepack || returnThrowEnvironment "$handler" "corepack not found after global installation - failing: PATH=$PATH" || return $?
+    whichExists corepack || throwEnvironment "$handler" "corepack not found after global installation - failing: PATH=$PATH" || return $?
   fi
   local home
   home=$(returnCatch "$handler" buildHome) || return $?
@@ -67,13 +67,13 @@ nodeUninstall() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
     *)
       # _IDENTICAL_ argumentUnknownHandler 1
-      returnThrowArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
+      throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
       ;;
     esac
     shift
@@ -111,7 +111,7 @@ nodePackageManager() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -122,15 +122,15 @@ nodePackageManager() {
       flags+=("$argument")
       ;;
     install | run | update | uninstall)
-      [ -z "$action" ] || returnThrowArgument "$handler" "Only a single action allowed: $argument (already: $action)"
+      [ -z "$action" ] || throwArgument "$handler" "Only a single action allowed: $argument (already: $action)"
       action="$argument"
       ;;
     -*)
       # _IDENTICAL_ argumentUnknownHandler 1
-      returnThrowArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
+      throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
       ;;
     *)
-      [ -n "$action" ] || returnThrowArgument "$handler" "Requires an action" || return $?
+      [ -n "$action" ] || throwArgument "$handler" "Requires an action" || return $?
       packages+=("$argument")
       ;;
     esac
@@ -140,9 +140,9 @@ nodePackageManager() {
   local manager
 
   manager=$(returnCatch "$handler" buildEnvironmentGet NODE_PACKAGE_MANAGER) || return $?
-  [ -n "$manager" ] || returnThrowEnvironment "$handler" "NODE_PACKAGE_MANAGER is blank" || return $?
-  nodePackageManagerValid "$manager" || returnThrowEnvironment "$handler" "NODE_PACKAGE_MANAGER is not valid: $manager not in $(nodePackageManagerValid)" || return $?
-  isExecutable "$manager" || returnThrowEnvironment "$handler" "$(decorate code "$manager") is not an executable" || return $?
+  [ -n "$manager" ] || throwEnvironment "$handler" "NODE_PACKAGE_MANAGER is blank" || return $?
+  nodePackageManagerValid "$manager" || throwEnvironment "$handler" "NODE_PACKAGE_MANAGER is not valid: $manager not in $(nodePackageManagerValid)" || return $?
+  isExecutable "$manager" || throwEnvironment "$handler" "$(decorate code "$manager") is not an executable" || return $?
   if [ -z "$action" ]; then
     printf "%s\n" "$manager"
     return 0
@@ -150,7 +150,7 @@ nodePackageManager() {
 
   local managerArgumentFormatter="__nodePackageManagerArguments_$manager"
 
-  isFunction "$managerArgumentFormatter" || returnThrowEnvironment "$handler" "$managerArgumentFormatter is not defined, failing" || return $?
+  isFunction "$managerArgumentFormatter" || throwEnvironment "$handler" "$managerArgumentFormatter is not defined, failing" || return $?
   IFS=$'\n' read -r -d "" -a arguments < <("$managerArgumentFormatter" "$handler" "$action" "${flags[@]+"${flags[@]}"}") || :
 
   ! $debugFlag || decorate each code "$manager" "${arguments[@]+"${arguments[@]}"}" "${packages[@]+"${packages[@]}"}" || :
@@ -173,7 +173,7 @@ nodePackageManagerInstall() {
     return 0
   fi
   local method="${manager}Install"
-  isFunction "$method" || returnThrowEnvironment "$handler" "No installer for $manager exists ($method)" || return $?
+  isFunction "$method" || throwEnvironment "$handler" "No installer for $manager exists ($method)" || return $?
   catchEnvironment "$handler" "$method" "$@" || return $?
 }
 _nodePackageManagerInstall() {
@@ -192,7 +192,7 @@ nodePackageManagerUninstall() {
     return 0
   fi
   local method="${manager}Uninstall"
-  isFunction "$method" || returnThrowEnvironment "$handler" "No uninstaller method for $manager exists ($method)" || return $?
+  isFunction "$method" || throwEnvironment "$handler" "No uninstaller method for $manager exists ($method)" || return $?
   catchEnvironment "$handler" "$method" "$@" || return $?
 }
 _nodePackageManagerUninstall() {
@@ -223,7 +223,7 @@ nodePackageManagerValid() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;

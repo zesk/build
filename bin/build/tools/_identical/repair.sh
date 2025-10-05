@@ -19,7 +19,7 @@ __identicalRepair() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -29,12 +29,12 @@ __identicalRepair() {
       fileMap=false
       ;;
     --prefix)
-      [ -z "$prefix" ] || returnThrowArgument "$handler" "single $argument only:" "$arguments" || return $?
+      [ -z "$prefix" ] || throwArgument "$handler" "single $argument only:" "$arguments" || return $?
       shift
       prefix="$(usageArgumentString "$handler" "$argument" "${1-}")" || return $?
       ;;
     --token)
-      [ -z "$token" ] || returnThrowArgument "$handler" "single $argument only:" "$arguments" || return $?
+      [ -z "$token" ] || throwArgument "$handler" "single $argument only:" "$arguments" || return $?
       shift
       token="$(usageArgumentString "$handler" "$argument" "${1-}")" || return $?
       ;;
@@ -48,32 +48,32 @@ __identicalRepair() {
         destination=$(usageArgumentFile "$handler" "destination" "$argument") || return $?
       else
         # _IDENTICAL_ argumentUnknownHandler 1
-        returnThrowArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
+        throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
       fi
       ;;
     esac
     shift
   done
 
-  [ -n "$prefix" ] || returnThrowArgument "$handler" "missing --prefix" || return $?
-  [ -n "$token" ] || returnThrowArgument "$handler" "missing --token" || return $?
-  [ -n "$source" ] || returnThrowArgument "$handler" "missing source" || return $?
-  [ -n "$destination" ] || returnThrowArgument "$handler" "missing destination" || return $?
+  [ -n "$prefix" ] || throwArgument "$handler" "missing --prefix" || return $?
+  [ -n "$token" ] || throwArgument "$handler" "missing --token" || return $?
+  [ -n "$source" ] || throwArgument "$handler" "missing source" || return $?
+  [ -n "$destination" ] || throwArgument "$handler" "missing destination" || return $?
 
   local grepPattern identicalLine totalLines parsed count
   local lineNumber token count
 
   grepPattern="^[[:space:]]*$(quoteGrepPattern "$prefix $token")"
-  identicalLine="$(grep -m 1 -n -e "$grepPattern" <"$source")" || returnThrowArgument "$handler" "\"$prefix $token\" not found in source $(decorate code "$source")" || return $?
-  [ $(($(grep -c -e "$grepPattern" <"$destination") + 0)) -gt 0 ] || returnThrowArgument "$handler" "\"$prefix $token\" not found in destination $(decorate code "$destination")" || return $?
+  identicalLine="$(grep -m 1 -n -e "$grepPattern" <"$source")" || throwArgument "$handler" "\"$prefix $token\" not found in source $(decorate code "$source")" || return $?
+  [ $(($(grep -c -e "$grepPattern" <"$destination") + 0)) -gt 0 ] || throwArgument "$handler" "\"$prefix $token\" not found in destination $(decorate code "$destination")" || return $?
   # totalLines is *source* lines
   totalLines=$(returnCatch "$handler" fileLineCount <"$source") || return $?
   parsed=$(__identicalLineParse "$handler" "$source" "$prefix" "$identicalLine") || return $?
   IFS=" " read -r lineNumber token count < <(printf -- "%s\n" "$parsed") || :
-  count=$(__identicalLineCount "$count" "$((totalLines - lineNumber))") || returnThrowEnvironment "$handler" "\"$identicalLine\" invalid count: $count" || return $?
+  count=$(__identicalLineCount "$count" "$((totalLines - lineNumber))") || throwEnvironment "$handler" "\"$identicalLine\" invalid count: $count" || return $?
 
   if ! isUnsignedInteger "$count"; then
-    returnThrowEnvironment "$handler" "$(decorate code "$source") not an integer: \"$(decorate value "$identicalLine")\"" || return $?
+    throwEnvironment "$handler" "$(decorate code "$source") not an integer: \"$(decorate value "$identicalLine")\"" || return $?
   fi
 
   local sourceText clean=()
@@ -108,7 +108,7 @@ __identicalRepair() {
     if [ "$count" = "EOF" ]; then
       isEOF=true
     fi
-    count=$(__identicalLineCount "$count" "$((totalLines - lineNumber))") || returnThrowEnvironment "$handler" "\"$identicalLine\" invalid count: $count" || returnUndo $? "${undo[@]}" || returnClean $? "${clean[@]}" || return $?
+    count=$(__identicalLineCount "$count" "$((totalLines - lineNumber))") || throwEnvironment "$handler" "\"$identicalLine\" invalid count: $count" || returnUndo $? "${undo[@]}" || returnClean $? "${clean[@]}" || return $?
     if [ "$lineNumber" -gt 1 ]; then
       if [ "$currentLineNumber" -eq 0 ]; then
         head -n $((lineNumber - 1)) <"$destination" >&3

@@ -22,11 +22,11 @@
 #
 # Support for iTerm2 is built-in and automatic
 bashPromptModule_TermColors() {
+  local handler="returnMessage"
   [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
 
-  local home start
-  start=$(timingStart)
-  home=$(buildHome 2>/dev/null) || return 0
+  local home
+  home=$(returnCatch "$handler" buildHome 2>/dev/null) || return 0
 
   local debug=false
   ! buildDebugEnabled term-colors || debug=true
@@ -43,7 +43,8 @@ bashPromptModule_TermColors() {
     fi
 
     ! $debug || statusMessage decorate info "Applying colors from $prettySchemeFile ... "
-    if __bashPromptModule_LoadColors "$schemeFile" "$start" "$debug" "$prettySchemeFile"; then
+    ! $debug || dd+=("--debug")
+    if returnCatch "$handler" colorScheme "${dd[@]+"${dd[@]}"}" <"$schemeFile" || return $?; then
       break
     fi
   done
@@ -51,73 +52,4 @@ bashPromptModule_TermColors() {
 _bashPromptModule_TermColors() {
   # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
-}
-
-__bashPromptModule_LoadColors() {
-  local handler="returnMessage"
-  local schemeFile="$1" start="$2" debug="$3" prettySchemeFile="$4" dd=()
-
-  export __BUILD_TERM_COLORS BUILD_COLORS_MODE
-
-  hash="$(fileModificationTime "$schemeFile"):$(fileSize "$schemeFile")" || :
-  ! $debug || statusMessage --last decorate info "$schemeFile -> \"$hash\" $(decorate code __BUILD_TERM_COLORS) $(timingReport "$start")"
-  [ -n "$hash" ] || return 0
-
-  hash="$schemeFile:$hash"
-  [ "$hash" != "${__BUILD_TERM_COLORS-}" ] || return 0
-
-  colorsFile=$(fileTemporaryName _return) || return 0
-  catchEnvironment "$handler" grepSafe -v -e '^#' "$schemeFile" | catchEnvironment "$handler" sed '/^$/d' | catchEnvironment "$handler" muzzle tee "$colorsFile" || return $?
-  local it2=false iTerm2=false
-  ! isiTerm2 || it2=true
-  local bgs=()
-  while IFS="=" read -r name value; do
-    local colorCode newStyle
-    if $it2 && iTerm2IsColorType "$name"; then
-      iTerm2=true
-    fi
-    if muzzle decorateStyle "$name"; then
-      ! $debug || statusMessage decorate info "Parsing $(decorate code "$name") and $(decorate value "$value")"
-      colorCode=$(colorParse <<<"$value" | colorFormat "%d;%d;%d")
-      newStyle="38;2;$colorCode"
-      ! $debug || statusMessage decorate info "Setting style $(decorate value "$name") to $(decorate code "$newStyle")"
-      catchEnvironment "$handler" muzzle decorateStyle "$name" "$newStyle" || return $?
-    else
-      local bgName="${name%bg}"
-      if [ -n "$bgName" ] && [ "$name" != "$bgName" ] && muzzle decorateStyle "$bgName"; then
-        colorCode=$(colorParse <<<"$value" | colorFormat "%d;%d;%d")
-        bgs+=("$bgName" "$colorCode")
-        ! $debug || statusMessage decorate info "Parsing background color for $(decorate code "$bgName"): $(decorate value "$value") -> $(decorate code "$colorCode")"
-      fi
-    fi
-  done <"$colorsFile"
-  if [ ${#bgs[@]} -gt 0 ]; then
-    set -- "${bgs[@]}"
-    while [ $# -gt 1 ]; do
-      name="$1"
-      value="$2"
-      newStyle=$(decorateStyle "$name")
-      newStyle="${newStyle%%;48;2;*}"
-      newStyle="$newStyle;48;2;$value"
-      catchEnvironment "$handler" muzzle decorateStyle "$name" "$newStyle" || return $?
-      ! $debug || statusMessage decorate info "Setting background style $(decorate value "$name") \"$(decorate code "$value")\" to $(decorate code "$newStyle")"
-      shift 2
-    done
-  fi
-
-  ! $debug || dd+=(--verbose)
-  ! $iTerm2 || iTerm2SetColors "${dd[@]+"${dd[@]}"}" --fill --ignore --skip-errors <"$colorsFile" || :
-
-  bg="$(grep -e '^bg=' "$colorsFile" | tail -n 1 | cut -f 2 -d =)"
-  catchEnvironment "$handler" rm -rf "$colorsFile" || return $?
-
-  ! $debug || timingReport "$start" Elapsed
-
-  __BUILD_TERM_COLORS="$hash"
-
-  local mode
-  mode=$(returnCatch "$handler" consoleConfigureColorMode "$bg") || :
-  [ -z "$mode" ] || BUILD_COLORS_MODE="$mode" && bashPrompt --skip-prompt --colors "$(bashPromptColorScheme "$mode")"
-
-  ! $debug || timingReport "$start" "Background is now $bg and mode is $mode ... "
 }

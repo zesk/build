@@ -13,7 +13,7 @@ buildAddTool() {
   while [ $# -gt 0 ]; do
     case "$1" in
     *[^-[:alnum:]]*)
-      returnThrowArgument "$handler" "Invalid name: $1" || return $?
+      throwArgument "$handler" "Invalid name: $1" || return $?
       ;;
     esac
     for file in "bin/build/tools/$1.sh" "test/tools/$1-tests.sh"; do

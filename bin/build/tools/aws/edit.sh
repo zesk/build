@@ -15,7 +15,7 @@ __awsCredentialsAdd() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -28,7 +28,7 @@ __awsCredentialsAdd() {
     # IDENTICAL --profileHandler 5
     --profile)
       shift
-      [ -z "$profileName" ] || returnThrowArgument "$handler" "--profile already specified" || return $?
+      [ -z "$profileName" ] || throwArgument "$handler" "--profile already specified" || return $?
       profileName="$(usageArgumentString "$handler" "$argument" "${1-}")" || return $?
       ;;
     *)
@@ -38,7 +38,7 @@ __awsCredentialsAdd() {
         secret=$(usageArgumentString "$handler" "secret" "$1") || return $?
       else
         # _IDENTICAL_ argumentUnknownHandler 1
-        returnThrowArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
+        throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
       fi
       ;;
     esac
@@ -49,8 +49,8 @@ __awsCredentialsAdd() {
     profileName="$(returnCatch "$handler" buildEnvironmentGet AWS_PROFILE)" || return $?
     [ -n "$profileName" ] || profileName="default"
   fi
-  [ -n "$key" ] || returnThrowArgument "$handler" "key is required" || return $?
-  [ -n "$secret" ] || returnThrowArgument "$handler" "secret is required" || return $?
+  [ -n "$key" ] || throwArgument "$handler" "key is required" || return $?
+  [ -n "$secret" ] || throwArgument "$handler" "secret is required" || return $?
 
   local lines=(
     "[$profileName]"
@@ -61,10 +61,10 @@ __awsCredentialsAdd() {
   credentials="$(returnCatch "$handler" awsCredentialsFile --create)" || return $?
   if awsCredentialsHasProfile "$profileName"; then
     ! "$addComments" || lines+=("# $name replaced $profileName on $(date -u)")
-    $forceFlag || returnThrowEnvironment "$handler" "Profile $(decorate value "$profileName") exists in $(decorate code "$credentials")" || return $?
+    $forceFlag || throwEnvironment "$handler" "Profile $(decorate value "$profileName") exists in $(decorate code "$credentials")" || return $?
     _awsCredentialsRemoveSectionInPlace "$handler" "$credentials" "$profileName" "$(printf -- "%s\n" "${lines[@]}")" || return $?
   else
-    ! "$addComments" || lines+=("# $name added $profileName on $(date -u)") || returnThrowEnvironment "$handler" "Generating comment line failed" || return $?
+    ! "$addComments" || lines+=("# $name added $profileName on $(date -u)") || throwEnvironment "$handler" "Generating comment line failed" || return $?
     catchEnvironment "$handler" printf -- "%s\n" "${lines[@]}" | trimHead >>"$credentials" || return $?
   fi
 }
@@ -86,14 +86,14 @@ __awsCredentialsRemove() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
     # IDENTICAL --profileHandler 5
     --profile)
       shift
-      [ -z "$profileName" ] || returnThrowArgument "$handler" "--profile already specified" || return $?
+      [ -z "$profileName" ] || throwArgument "$handler" "--profile already specified" || return $?
       profileName="$(usageArgumentString "$handler" "$argument" "${1-}")" || return $?
       ;;
     --comments)
@@ -104,7 +104,7 @@ __awsCredentialsRemove() {
         profileName="$(usageArgumentString "$handler" "$argument" "$1")" || return $?
       else
         # _IDENTICAL_ argumentUnknownHandler 1
-        returnThrowArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
+        throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
       fi
       ;;
     esac

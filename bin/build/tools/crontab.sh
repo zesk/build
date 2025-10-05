@@ -70,8 +70,8 @@ crontabApplicationUpdate() {
   returnCatch "$handler" packageWhich crontab cron || return $?
 
   local rootEnv="" appPath="" user
-  user=$(whoami) || returnThrowEnvironment "$handler" whoami || return $?
-  [ -n "$user" ] || returnThrowEnvironment "$handler" "whoami user is blank" || return $?
+  user=$(whoami) || throwEnvironment "$handler" whoami || return $?
+  [ -n "$user" ] || throwEnvironment "$handler" "whoami user is blank" || return $?
 
   local environmentMapper="" flagDiff=false flagShow=false
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
@@ -79,17 +79,17 @@ crontabApplicationUpdate() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
     --env-file)
-      [ -z "$rootEnv" ] || returnThrowArgument "$handler" "$argument already" || return $?
+      [ -z "$rootEnv" ] || throwArgument "$handler" "$argument already" || return $?
       shift
       rootEnv=$(usageArgumentFile "$handler" "rootEnv" "$1") || return $?
       ;;
     --mapper)
-      [ -z "$environmentMapper" ] || returnThrowArgument "$handler" "$argument already" || return $?
+      [ -z "$environmentMapper" ] || throwArgument "$handler" "$argument already" || return $?
       shift
       environmentMapper=$(usageArgumentString "$handler" "$argument" "${1-}") || return $?
       ;;
@@ -113,10 +113,10 @@ crontabApplicationUpdate() {
   if [ -z "$environmentMapper" ]; then
     environmentMapper=mapEnvironment
   fi
-  isCallable "$environmentMapper" || returnThrowEnvironment "$handler" "$environmentMapper is not callable" || return $?
+  isCallable "$environmentMapper" || throwEnvironment "$handler" "$environmentMapper is not callable" || return $?
 
-  [ -n "$appPath" ] || returnThrowArgument "$handler" "Need to specify application path" || return $?
-  [ -n "$user" ] || returnThrowArgument "$handler" "Need to specify user" || return $?
+  [ -n "$appPath" ] || throwArgument "$handler" "Need to specify application path" || return $?
+  [ -n "$user" ] || throwArgument "$handler" "Need to specify user" || return $?
 
   if $flagShow; then
     __crontabGenerate "$rootEnv" "$appPath" "$user" "$environmentMapper"

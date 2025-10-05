@@ -76,7 +76,7 @@ __toolsTimingLoad() {
     [ "$production" = "true" ] || toolFile="${1//-fast/}"
     ! isFunction __timestamp || start=$(__timestamp)
     # shellcheck source=/dev/null
-    source "$toolsPath/$toolFile.sh" || _return $internalError "%s\n" "Loading $toolFile.sh failed" || return $?
+    source "$toolsPath/$toolFile.sh" || returnMessage $internalError "%s\n" "Loading $toolFile.sh failed" || return $?
     ! isFunction __timestamp || elapsed=$(($(__timestamp) - start))
     printf "%s %s\n" "$elapsed" "$toolFile" >>"${BASH_SOURCE[0]%/*}/../../.tools.times"
     shift
@@ -99,7 +99,7 @@ __toolsMain() {
   export __BUILD_LOADER
   [ -z "${__BUILD_LOADER-}" ] || unset "${__BUILD_LOADER[@]}"
   __BUILD_LOADER=()
-  [ -f "$toolsList" ] || _return $internalError "%s\n" "Missing $toolsList" 1>&2 || return $?
+  [ -f "$toolsList" ] || returnMessage $internalError "%s\n" "Missing $toolsList" 1>&2 || return $?
   toolsFiles+=("../env/BUILD_HOME")
   while read -r toolFile; do [ "$toolFile" != "${toolFile#\#}" ] || toolsFiles+=("$toolFile"); done <"$toolsList"
   toolsFiles+=("platform/$(uname -s)")
@@ -111,7 +111,7 @@ __toolsMain() {
     for toolFile in "${toolsFiles[@]}"; do
       [ "$production" = "true" ] || toolFile="${toolFile//-fast/}"
       # shellcheck source=/dev/null
-      source "$toolsPath/$toolFile.sh" || _return $internalError "%s\n" "Loading $toolFile.sh failed" || return $?
+      source "$toolsPath/$toolFile.sh" || returnMessage $internalError "%s\n" "Loading $toolFile.sh failed" || return $?
     done
   fi
 

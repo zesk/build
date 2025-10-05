@@ -13,14 +13,14 @@
 sshKnownHostsFile() {
   local handler="_${FUNCNAME[0]}"
 
-  sshKnown=$(returnCatch "$handler" userHome ".ssh/known_hosts") || return $?
+  sshKnown=$(returnCatch "$handler" userRecordHome ".ssh/known_hosts") || return $?
 
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -30,13 +30,13 @@ sshKnownHostsFile() {
       if [ ! -d "$sshHome" ]; then
         sshHome=$(returnCatch "$handler" directoryRequire "$sshHome") || return $?
       fi
-      [ -f "$sshKnown" ] || touch "$sshKnown" || returnThrowEnvironment "$handler" "Unable to create $sshKnown" || return $?
+      [ -f "$sshKnown" ] || touch "$sshKnown" || throwEnvironment "$handler" "Unable to create $sshKnown" || return $?
       catchEnvironment "$handler" chmod 700 "$sshHome" || return $?
       catchEnvironment "$handler" chmod 600 "$sshKnown" || return $?
       ;;
     *)
       # _IDENTICAL_ argumentUnknownHandler 1
-      returnThrowArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
+      throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
       ;;
     esac
     shift
@@ -78,7 +78,7 @@ sshKnownHostAdd() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -107,7 +107,7 @@ sshKnownHostAdd() {
     esac
     shift
   done
-  [ -n "$sshKnown" ] || returnThrowArgument "$handler" "Need at least one host to add" || return $?
+  [ -n "$sshKnown" ] || throwArgument "$handler" "Need at least one host to add" || return $?
 
   return $exitCode
 }
@@ -148,7 +148,7 @@ sshKnownHostRemove() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -183,7 +183,7 @@ sshKnownHostRemove() {
     esac
     shift
   done
-  [ -n "$sshKnown" ] || returnThrowArgument "$handler" "Need at least one host to remove" || return $?
+  [ -n "$sshKnown" ] || throwArgument "$handler" "Need at least one host to remove" || return $?
 }
 _sshKnownHostRemove() {
   # __IDENTICAL__ usageDocument 1
@@ -202,12 +202,12 @@ _sshKnownHostRemove() {
 # Argument: server- Servers to connect to to set up authorization
 #
 # You will need the password for this server for the current user.
-# Requires: userHome catchEnvironment returnThrowEnvironment
+# Requires: userRecordHome catchEnvironment throwEnvironment
 sshSetup() {
   local sshHomePath flagForce servers keyType keyBits
   local handler="_${FUNCNAME[0]}"
 
-  home=$(returnCatch "$handler" userHome) || return $?
+  home=$(returnCatch "$handler" userRecordHome) || return $?
 
   local sshHomePath="$home/.ssh/" flagForce=false servers=() keyType=ed25519 keyBits=2048
 
@@ -216,20 +216,20 @@ sshSetup() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
     --type)
       shift
       keyType="$(usageArgumentString "$handler" "$argument" "${1-}")" || return $?
-      case "$keyType" in ed25519 | rsa | dsa) ;; *) returnThrowArgument "$handler" "Key type $1 is not known: ed25519 | rsa | dsa" || return $? ;; esac
+      case "$keyType" in ed25519 | rsa | dsa) ;; *) throwArgument "$handler" "Key type $1 is not known: ed25519 | rsa | dsa" || return $? ;; esac
       ;;
     --bits)
       shift
       minBits=512
       keyBits=$(usageArgumentPositiveInteger "$handler" "$argument" "${1-}") || return $?
-      [ "$keyBits" -ge "$minBits" ] || returnThrowArgument "$handler" "Key bits must be at least $minBits: $keyBits" || return $?
+      [ "$keyBits" -ge "$minBits" ] || throwArgument "$handler" "Key bits must be at least $minBits: $keyBits" || return $?
       ;;
     --force)
       flagForce=true
@@ -241,11 +241,11 @@ sshSetup() {
     shift
   done
 
-  [ -d "$sshHomePath" ] || mkdir -p "$sshHomePath" || returnThrowEnvironment "$handler" "Can not create $sshHomePath" || return $?
+  [ -d "$sshHomePath" ] || mkdir -p "$sshHomePath" || throwEnvironment "$handler" "Can not create $sshHomePath" || return $?
   catchEnvironment "$handler" chmod 700 "$sshHomePath" || return $?
 
-  user="$(whoami)" || returnThrowEnvironment "$handler" "whoami failed" || return $?
-  keyName="$user@$(uname -n)" || returnThrowEnvironment "$handler" "uname -n failed" || return $?
+  user="$(whoami)" || throwEnvironment "$handler" "whoami failed" || return $?
+  keyName="$user@$(uname -n)" || throwEnvironment "$handler" "uname -n failed" || return $?
   if $flagForce && [ -f "$keyName" ]; then
     [ ${#servers[@]} -gt 0 ] || returnArgument "Key $keyName already exists, exiting." || return $?
   else
@@ -268,11 +268,11 @@ sshSetup() {
     showServer=$(decorate value "$server")
     statusMessage --last printf "%s\n" "Pushing to $showServer – (Please authenticate with sftp)"
     if ! printf "cd .ssh\n""put %s\n""quit" "$keyName.pub" | sftp "$server" >/dev/null; then
-      returnThrowEnvironment "$handler" "failed to upload key to $showServer" || return $?
+      throwEnvironment "$handler" "failed to upload key to $showServer" || return $?
     fi
     statusMessage decorate info "Configuring $server ..."
     if ! printf "cd ~\\n""cd .ssh\n""cat *pub > authorized_keys\n""exit" | ssh -T "$server" >/dev/null; then
-      returnThrowEnvironment "$handler" "failed to add to authorized_keys on $showServer" || return $?
+      throwEnvironment "$handler" "failed to add to authorized_keys on $showServer" || return $?
     fi
     statusMessage decorate success "Completed $server"
   done

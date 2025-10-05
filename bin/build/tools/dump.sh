@@ -14,7 +14,7 @@
 # Argument: -x - Optional. Flag. Show exported variables. (verbose)
 # Requires: printf usageDocument
 # BUILD_DEBUG: debuggingStack - `debuggingStack` shows arguments passed (extra) and exports (optional flag) ALWAYS
-# Requires: returnThrowArgument
+# Requires: throwArgument
 debuggingStack() {
   local handler="_${FUNCNAME[0]}"
 
@@ -25,7 +25,7 @@ debuggingStack() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -34,7 +34,7 @@ debuggingStack() {
     --exit) exitFlag=true ;;
     *)
       # _IDENTICAL_ argumentUnknownHandler 1
-      returnThrowArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
+      throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
       ;;
     esac
     shift
@@ -106,7 +106,7 @@ dumpPipe() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -121,7 +121,7 @@ dumpPipe() {
       endBinary="tail"
       ;;
     --symbol)
-      shift || returnThrowArgument "$handler" "missing $argument argument" || return $?
+      shift || throwArgument "$handler" "missing $argument argument" || return $?
       symbol="$1"
       ;;
     --lines) shift && showLines=$(usageArgumentUnsignedInteger "$handler" "showLines" "$1") || return $? ;;
@@ -130,7 +130,7 @@ dumpPipe() {
       break
       ;;
     esac
-    shift || returnThrowArgument "$handler" shift || return $?
+    shift || throwArgument "$handler" shift || return $?
   done
 
   if [ -z "$showLines" ]; then
@@ -180,7 +180,7 @@ dumpPipe() {
 
   local decoration width
   decoration="$(decorate code "$(echoBar)")"
-  width=$(consoleColumns) || returnThrowEnvironment "$handler" consoleColumns || return $?
+  width=$(consoleColumns) || throwEnvironment "$handler" consoleColumns || return $?
   printf -- "%s\n%s\n%s\n" "$decoration" "$("$endBinary" -n "$showLines" "$item" | decorate wrap --width "$((width - 2))" --fill " " "$symbol" "$(decorate reset --)")" "$decoration"
   rm -rf "$item" || :
 }
@@ -203,24 +203,24 @@ dumpFile() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
     --symbol)
-      shift || returnThrowArgument "$handler" "shift $argument" || return $?
+      shift || throwArgument "$handler" "shift $argument" || return $?
       dumpArgs+=("$argument" "$1")
       ;;
     --lines)
-      shift || returnThrowArgument "$handler" "missing $argument argument" || return $?
+      shift || throwArgument "$handler" "missing $argument argument" || return $?
       dumpArgs+=("--lines" "$1")
       ;;
     *)
-      [ -f "$argument" ] || returnThrowArgument "$handler" "$argument is not a item" || return $?
+      [ -f "$argument" ] || throwArgument "$handler" "$argument is not a item" || return $?
       files+=("$argument")
       ;;
     esac
-    shift || returnThrowArgument "$handler" shift || return $?
+    shift || throwArgument "$handler" shift || return $?
   done
 
   if [ ${#files[@]} -eq 0 ]; then
@@ -263,7 +263,7 @@ __internalDumpEnvironment() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -296,7 +296,7 @@ __internalDumpEnvironment() {
       ;;
     *)
       # _IDENTICAL_ argumentUnknownHandler 1
-      returnThrowArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
+      throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
       ;;
     esac
     shift
@@ -368,7 +368,7 @@ _dumpEnvironment() {
 dumpEnvironmentUnsafe() {
   local handler="_${FUNCNAME[0]}" argument
   [ $# -eq 0 ] || for argument in "--secure-match" "--secure-suffix"; do
-    ! inArray "$argument" "$@" || returnThrowArgument "$handler" "Unknown $argument (did you mean dumpEnvironment?)" || return $?
+    ! inArray "$argument" "$@" || throwArgument "$handler" "Unknown $argument (did you mean dumpEnvironment?)" || return $?
   done
   # Disable the secure features by putting them at the end
   __internalDumpEnvironment "$handler" "$@" --secure-match - --secure-suffix ""
@@ -389,13 +389,13 @@ dumpLoadAverages() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
     *)
       # _IDENTICAL_ argumentUnknownHandler 1
-      returnThrowArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
+      throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
       ;;
     esac
     shift
@@ -424,7 +424,7 @@ dumpHex() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -440,7 +440,7 @@ dumpHex() {
     shift
   done
 
-  whichExists od || returnThrowEnvironment "$handler" "od required to be installed" || return $?
+  whichExists od || throwEnvironment "$handler" "od required to be installed" || return $?
 
   if [ "${#arguments[@]}" -eq 0 ]; then
     "${runner[@]}"

@@ -91,7 +91,7 @@ _buildDocumentation_MergeWithDocsBranch() {
 
   branch=$(catchEnvironment "$handler" gitCurrentBranch) || return $?
   if [ "$branch" = "$docsBranch" ]; then
-    returnThrowEnvironment "$handler" "Already on docs branch" || return $?
+    throwEnvironment "$handler" "Already on docs branch" || return $?
   fi
   catchEnvironment "$handler" git checkout "$docsBranch" || return $?
   catchEnvironment "$handler" git merge -m "${FUNCNAME[0]}" "$branch" || return $?
@@ -112,9 +112,9 @@ _buildDocumentation_Recommit() {
 
   handler="_${FUNCNAME[0]}"
 
-  branch=$(gitCurrentBranch) || returnThrowEnvironment "$handler" gitCurrentBranch || return $?
+  branch=$(gitCurrentBranch) || throwEnvironment "$handler" gitCurrentBranch || return $?
   if [ "$branch" = "docs" ]; then
-    returnThrowEnvironment "$handler" "Already on docs branch" || return $?
+    throwEnvironment "$handler" "Already on docs branch" || return $?
   fi
   if gitRepositoryChanged; then
     statusMessage decorate warning "Committing to branch $branch ..."
@@ -145,7 +145,7 @@ _buildDocumentationGenerateEnvironment() {
     __dumpNameValue BUILD_COMPANY_LINK "$2"
 
     __dumpNameValue year "$(date +%Y)"
-  } >>"$envFile" || returnThrowEnvironment "$handler" "Saving to $envFile failed" || return $?
+  } >>"$envFile" || throwEnvironment "$handler" "Saving to $envFile failed" || return $?
   printf "%s\n" "$envFile"
 }
 
@@ -160,14 +160,14 @@ __documentationUnlinked() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
     --debug) dd+=("$argument") ;;
     *)
       # _IDENTICAL_ argumentUnknownHandler 1
-      returnThrowArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
+      throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
       ;;
     esac
     shift
@@ -201,16 +201,16 @@ _bashDocumentation_Template() {
   local handler="$1" && shift
   local template="$1" && shift
 
-  [ -f "$template" ] || returnThrowArgument "$handler" "Template $template not found" || return $?
+  [ -f "$template" ] || throwArgument "$handler" "Template $template not found" || return $?
   set +m
   (
     # subshell this does not affect anything except these commands
     set -a
     while [ $# -gt 0 ]; do
       local envFile="$1"
-      [ -f "$envFile" ] || returnThrowArgument "$handler" "Settings file $envFile not found" || return $?
+      [ -f "$envFile" ] || throwArgument "$handler" "Settings file $envFile not found" || return $?
       # shellcheck source=/dev/null
-      source "$envFile" || returnThrowEnvironment "$handler" "SOURCE $envFile Failed: $(dumpPipe "Template envFile failed" <"$envFile")" || return $?
+      source "$envFile" || throwEnvironment "$handler" "SOURCE $envFile Failed: $(dumpPipe "Template envFile failed" <"$envFile")" || return $?
       shift
     done
     while read -r token; do
@@ -223,7 +223,7 @@ _bashDocumentation_Template() {
       fi
     done < <(mapTokens <"$template" | sort -u)
     mapEnvironment <"$template" | grepSafe -E -v '^shellcheck|# shellcheck' | markdown_removeUnfinishedSections || :
-  ) || returnThrowEnvironment "$handler" "_bashDocumentation_Template failed: ${saved[*]}" || return $?
+  ) || throwEnvironment "$handler" "_bashDocumentation_Template failed: ${saved[*]}" || return $?
 }
 
 # Formats arguments for markdown

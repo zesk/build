@@ -52,7 +52,7 @@ _awsInstall() {
 # Argument: --verbose - Flag. Optional. Verbose mode
 # Argument: --create - Optional. Flag. Create the directory and file if it does not exist
 # Argument: --home homeDirectory - Optional. Directory. Home directory to use instead of `$HOME`.
-# Example:     credentials=$(awsCredentialsFile) || returnThrowEnvironment "$handler" "No credentials file found" || return $?
+# Example:     credentials=$(awsCredentialsFile) || throwEnvironment "$handler" "No credentials file found" || return $?
 # Return Code: 1 - If `$HOME` is not a directory or credentials file does not exist
 # Return Code: 0 - If credentials file is found and output to stdout
 #
@@ -247,7 +247,7 @@ awsCredentialsFromEnvironment() {
   __help "$handler" "$@" || return 0
   export AWS_PROFILE AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY
   returnCatch "$handler" buildEnvironmentLoad AWS_PROFILE AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY || return $?
-  awsHasEnvironment || returnThrowEnvironment "$handler" "Requires AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY" || return $?
+  awsHasEnvironment || throwEnvironment "$handler" "Requires AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY" || return $?
   returnCatch "$handler" awsCredentialsAdd "$@" "$AWS_ACCESS_KEY_ID" "$AWS_SECRET_ACCESS_KEY" || return $?
 }
 _awsCredentialsFromEnvironment() {
@@ -316,13 +316,13 @@ _awsIPAccess() {
 # Checked: 2024-09-02
 awsRegionValid() {
   local handler="_${FUNCNAME[0]}"
-  [ $# -gt 0 ] || returnThrowArgument "$handler" "Requires at least one region" || return $?
+  [ $# -gt 0 ] || throwArgument "$handler" "Requires at least one region" || return $?
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;

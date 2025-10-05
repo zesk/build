@@ -20,7 +20,7 @@ buildCompletion() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -37,7 +37,7 @@ buildCompletion() {
       ;;
     *)
       # _IDENTICAL_ argumentUnknownHandler 1
-      returnThrowArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
+      throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
       ;;
     esac
     shift
@@ -115,7 +115,7 @@ __buildCompletionArguments() {
 
   export COMP_WORDS COMP_CWORD COMPREPLY
 
-  [ "$COMP_CWORD" -ge 2 ] || returnThrowArgument "$handler" "ONLY call for arguments once function selected" || return $?
+  [ "$COMP_CWORD" -ge 2 ] || throwArgument "$handler" "ONLY call for arguments once function selected" || return $?
 
   local command="${COMP_WORDS[1]}"
   local word="${COMP_WORDS[COMP_CWORD]-}"

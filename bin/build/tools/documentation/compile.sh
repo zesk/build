@@ -24,7 +24,7 @@ __documentationTemplateCompile() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -46,22 +46,22 @@ __documentationTemplateCompile() {
         targetFile="$(usageArgumentFileDirectory "$handler" targetFile "$argument")" || return $?
       else
       # _IDENTICAL_ argumentUnknownHandler 1
-      returnThrowArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
+      throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
       fi
       ;;
     esac
     shift
   done
 
-  [ -n "$cacheDirectory" ] || returnThrowArgument "$handler" "Missing cacheDirectory" || return $?
-  [ -n "$sourceFile" ] || returnThrowArgument "$handler" "Missing sourceFile" || return $?
-  [ -n "$functionTemplate" ] || returnThrowArgument "$handler" "Missing functionTemplate" || return $?
-  [ -n "$targetFile" ] || returnThrowArgument "$handler" "Missing targetFile" || return $?
+  [ -n "$cacheDirectory" ] || throwArgument "$handler" "Missing cacheDirectory" || return $?
+  [ -n "$sourceFile" ] || throwArgument "$handler" "Missing sourceFile" || return $?
+  [ -n "$functionTemplate" ] || throwArgument "$handler" "Missing functionTemplate" || return $?
+  [ -n "$targetFile" ] || throwArgument "$handler" "Missing targetFile" || return $?
 
   # Validate arguments
   local base
 
-  base="$(basename "$targetFile")" || returnThrowArgument "$handler" basename "$targetFile" || return $?
+  base="$(basename "$targetFile")" || throwArgument "$handler" basename "$targetFile" || return $?
   base="${base%%.md}"
 
   local clean=() documentTokensFile
@@ -137,9 +137,9 @@ __documentationTemplateCompile() {
       (
         set -a
         #shellcheck source=/dev/null
-        source "$compiledFunctionEnv" || returnThrowEnvironment "$handler" "source $compiledFunctionEnv compiled for $targetFile" || return $?
+        source "$compiledFunctionEnv" || throwEnvironment "$handler" "source $compiledFunctionEnv compiled for $targetFile" || return $?
         mapEnvironment "${tokenNames[@]}" <"$mappedDocumentTemplate" >"$targetFile"
-      ) || returnThrowEnvironment "$handler" "mapEnvironment $tokenName" || returnClean $? "${clean[@]}" || return $?
+      ) || throwEnvironment "$handler" "mapEnvironment $tokenName" || returnClean $? "${clean[@]}" || return $?
     else
       message="Cached"
     fi
@@ -158,7 +158,7 @@ __documentationTemplateFunctionCompile() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -171,7 +171,7 @@ __documentationTemplateFunctionCompile() {
         functionTemplate="$(usageArgumentFile "$handler" functionTemplate "$argument")" || return $?
       else
       # _IDENTICAL_ argumentUnknownHandler 1
-      returnThrowArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
+      throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
       fi
       ;;
     esac
@@ -181,7 +181,7 @@ __documentationTemplateFunctionCompile() {
   # Validate arguments
   local argument
   for argument in functionName functionTemplate; do
-    [ -n "${!argument}" ] || returnThrowArgument "$handler" "Requires argument $argument (#${#__saved[@]}: $(decorate each code -- "${__saved[@]}"))" || return $?
+    [ -n "${!argument}" ] || throwArgument "$handler" "Requires argument $argument (#${#__saved[@]}: $(decorate each code -- "${__saved[@]}"))" || return $?
   done
 
   local settingsFile
@@ -201,7 +201,7 @@ __documentationTemplateDirectoryCompile() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -231,7 +231,7 @@ __documentationTemplateDirectoryCompile() {
         targetDirectory=$(usageArgumentDirectory "$handler" "targetDirectory" "$argument") || return $?
       else
       # _IDENTICAL_ argumentUnknownHandler 1
-      returnThrowArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
+      throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
       fi
       ;;
     esac
@@ -243,7 +243,7 @@ __documentationTemplateDirectoryCompile() {
 
   local argument
   for argument in cacheDirectory templateDirectory functionTemplate targetDirectory; do
-    [ -n "${!argument}" ] || returnThrowArgument "$handler" "Need $argument (#${#__saved[@]}: $(decorate each code -- "${__saved[@]}"))" || return $?
+    [ -n "${!argument}" ] || throwArgument "$handler" "Need $argument (#${#__saved[@]}: $(decorate each code -- "${__saved[@]}"))" || return $?
   done
 
   if $verboseFlag; then
@@ -256,7 +256,7 @@ __documentationTemplateDirectoryCompile() {
   local exitCode=0 fileCount=0 templateFile=""
   while read -r templateFile; do
     local base="${templateFile#"$templateDirectory/"}"
-    [ "$base" != "$templateFile" ] || returnThrowEnvironment "$handler" "templateFile $(decorate file "$templateFile") is not within $(decorate file "$templateDirectory")" || return $?
+    [ "$base" != "$templateFile" ] || throwEnvironment "$handler" "templateFile $(decorate file "$templateFile") is not within $(decorate file "$templateDirectory")" || return $?
     local targetFile="$targetDirectory/$base"
     ! $verboseFlag || statusMessage decorate info Compiling "$templateFile"
     if ! documentationTemplateCompile "${passArgs[@]+${passArgs[@]}}" "$cacheDirectory" "$templateFile" "$functionTemplate" "$targetFile"; then

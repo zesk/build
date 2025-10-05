@@ -42,7 +42,7 @@ if source "$(dirname "${BASH_SOURCE[0]}")/tools.sh"; then
       shift
     done
     if $checkFlag && ! $doFingerprint; then
-      returnThrowArgument "$handler" "Invalid --check with --token" || return $?
+      throwArgument "$handler" "Invalid --check with --token" || return $?
     fi
     set -- "${cleaned[@]+"${cleaned[@]}"}"
     home=$(returnCatch "$handler" buildHome) || return $?

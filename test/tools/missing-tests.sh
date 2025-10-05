@@ -8,224 +8,222 @@
 #
 
 testEverythingElse() {
-  _returnCode
-  _returnCodeString
-  _returnClean
-  _convertValue
-  catchEnvironmentQuiet
-  _muzzle
-  _mapReturn
-  _returnUndo
-  executeInputSupport
-  approveBashSource
-  awsSecurityGroupIPModify
-  backgroundProcess
-  bashFileComment
-  bashFinalComment
-  bashFunctionCommentVariable
-  bashFunctionDefined
-  bashLibrary
-  bashLibraryHome
-  bashLint
-  bashLintFiles
-  bashLintFilesInteractive
-  bashListFunctions
-  bashPromptColorScheme
-  bashPromptColorsFormat
-  bashPromptMarkers
-  bashPromptModule_dotFilesWatcher
-  bashRecursionDebug
-  bashSanitize
-  bashShowUsage
-  bashUserInput
-  bigTextAt
-  bitbucketContainer
-  bitbucketGetVariable
-  buildDevelopmentLink
-  buildEnvironmentContext
-  buildEnvironmentGetDirectory
-  cachedShaPipe
-  characterClassReport
-  characterClasses
-  clampDigits
-  colorMultiply
-  colorNormalize
-  colorParse
-  confirmMenu
-  consoleBrightness
-  consoleColorMode
-  consoleConfigureColorMode
-  consoleDefaultTitle
-  consoleGetColor
-  consoleLinksSupported
-  consoleSetTitle
-  contextShow
-  convertValue
-  daemontoolsManager
-  daemontoolsRestart
-  daemontoolsTerminate
-  darwinNotification
-  darwinSoundInstall
-  darwinSoundValid
-  debugOpenFiles
-  debuggingStack
-  decoratePath
-  decorateStyle
-  deployLink
-  deployMove
-  deprecatedCannonFile
-  deprecatedFilePrependVersion
-  deprecatedTokensFile
-  developerAnnounce
-  developerDevelopmentLink
-  developerTrack
-  directoryClobber
-  directoryIsEmpty
-  directoryNewestFile
-  directoryOldestFile
-  directoryParent
-  dockerComposeUninstall
-  dockerImages
-  dockerLocalContainer
-  dockerVolumeDelete
-  dockerVolumeExists
-  documentationBuild
-  documentationBuildCache
-  documentationBuildEnvironment
-  documentationIndexDocumentation
-  documentationIndexLookup
-  documentationTemplate
-  documentationTemplateCompile
-  documentationTemplateDirectoryCompile
-  documentationTemplateFunctionCompile
-  documentationTemplateUpdate
-  documentationUnlinked
-  dotEnvConfigure
-  dotFilesApproved
-  dotFilesApprovedFile
-  dumpFile
-  dumpHex
-  dumpLoadAverages
-  environmentApplicationLoad
-  environmentFileApplicationVerify
-  environmentFileShow
-  environmentLoad
-  environmentValueConvertArray
-  evalCheck
-  fileExtractLines
-  fileGroup
-  fileIsOldest
-  fileModificationTimes
-  fileModifiedDays
-  fileModifiedRecentlyName
-  fileModifiedRecentlyTimestamp
-  fileModifiedSeconds
-  fileOwner
-  fileReverseLines
-  filesRename
-  gitBranchExists
-  gitBranchExistsLocal
-  gitBranchExistsRemote
-  gitBranchMergeCurrent
-  gitBranchify
-  gitEnsureSafeDirectory
-  gitFindHome
-  gitInstallHook
-  gitInstallHooks
-  gitMainly
-  gitPreCommitHasExtension
-  gitPreCommitListExtension
-  gitPreCommitSetup
-  gitRemoveFileFromHistory
-  gitRepositoryChanged
-  gitShowChanges
-  gitShowStatus
-  gitTagAgain
-  gitTagDelete
-  gitTagVersion
-  gitVersionLast
-  githubLatest
-  githubLatestRelease
-  githubProjectJSON
-  githubPublishDate
-  githubRelease
-  hookRunOptional
-  hookSource
-  hookSourceOptional
-  hostTTFB
-  iTerm2Attention
-  iTerm2Download
-  iTerm2Image
-  iTerm2IsColorName
-  iTerm2IsColorType
-  iTerm2Notify
-  iTerm2PromptSupport
-  iTerm2SetColors
-  iTerm2Version
-  identicalCheckShell
-  identicalFindTokens
-  identicalWatch
-  installInstallBinary
-  interactiveCountdown
-  interactiveManager
-  isBashBuiltin
-  isCharacterClasses
-  isDockerComposeCommand
-  isPHPStorm
-  isPyCharm
-  isType
-  isValidateType
-  isVisualStudioCode
-  jsonFileGet
-  jsonFileSet
-  lineFill
-  linkRename
-  listCleanDuplicates
-  loopExecute
-  manPathCleanDuplicates
-  manPathConfigure
-  manPathRemove
-  mapValueTrim
-  markdownIndentHeading
-  maximumFieldLength
-  maximumLineLength
-  nodePackageManagerValid
-  notify
-  packageAvailableList
-  packageDefault
-  packageGroupInstall
-  packageGroupUninstall
-  packageIsInstalled
-  packageMapping
-  packageUninstall
-  packageUpgrade
-  parseBoolean
-  pathConfigure
-  pathRemove
-  phpTailLog
-  phpTest
-  pipInstall
-  pipUninstall
-  pipUpgrade
-  pipWrapper
-  pipeRunner
-  plainLength
-  processOpenPipes
-  pythonPackageInstalled
-  pythonVirtual
-  reloadChanges
-  rotateLogs
-  shaPipe
-  sshSetup
-  stringBegins
-  stringBeginsInsensitive
-  stringContainsInsensitive
-  stringOffset
-  urlMatchesLocalFileSize
-  urlOpener
-  usageDocumentSimple
-  usageRequireBinary
-  validateFileContents
-  veeGitTag
-  websiteScrape
+  #  catchEnvironmentQuiet
+  #  executeInputSupport
+  #  approveBashSource
+  #  awsSecurityGroupIPModify
+  #  backgroundProcess
+  #  bashFileComment
+  #  bashFinalComment
+  #  bashFunctionCommentVariable
+  #  bashFunctionDefined
+  #  bashLibrary
+  #  bashLibraryHome
+  #  bashLint
+  #  bashLintFiles
+  #  bashLintFilesInteractive
+  #  bashListFunctions
+  #  bashPromptColorScheme
+  #  bashPromptColorsFormat
+  #  bashPromptMarkers
+  #  bashPromptModule_dotFilesWatcher
+  #  bashRecursionDebug
+  #  bashSanitize
+  #  bashShowUsage
+  #  bashUserInput
+  #  bigTextAt
+  #  bitbucketContainer
+  #  bitbucketGetVariable
+  #  buildDevelopmentLink
+  #  buildEnvironmentContext
+  #  buildEnvironmentGetDirectory
+  #  cachedShaPipe
+  #  characterClassReport
+  #  characterClasses
+  #  clampDigits
+  #  colorMultiply
+  #  colorNormalize
+  #  colorParse
+  #  confirmMenu
+  #  consoleBrightness
+  #  consoleColorMode
+  #  consoleConfigureColorMode
+  #  consoleDefaultTitle
+  #  consoleGetColor
+  #  consoleLinksSupported
+  #  consoleSetTitle
+  #  contextShow
+  #  convertValue
+  #  daemontoolsManager
+  #  daemontoolsRestart
+  #  daemontoolsTerminate
+  #  darwinNotification
+  #  darwinSoundInstall
+  #  darwinSoundValid
+  #  debugOpenFiles
+  #  debuggingStack
+  #  decoratePath
+  #  decorateStyle
+  #  deployLink
+  #  deployMove
+  #  deprecatedCannonFile
+  #  deprecatedFilePrependVersion
+  #  deprecatedTokensFile
+  #  developerAnnounce
+  #  developerDevelopmentLink
+  #  developerTrack
+  #  directoryClobber
+  #  directoryIsEmpty
+  #  directoryNewestFile
+  #  directoryOldestFile
+  #  directoryParent
+  #  dockerComposeUninstall
+  #  dockerImages
+  #  dockerLocalContainer
+  #  dockerVolumeDelete
+  #  dockerVolumeExists
+  #  documentationBuild
+  #  documentationBuildCache
+  #  documentationBuildEnvironment
+  #  documentationIndexDocumentation
+  #  documentationIndexLookup
+  #  documentationTemplate
+  #  documentationTemplateCompile
+  #  documentationTemplateDirectoryCompile
+  #  documentationTemplateFunctionCompile
+  #  documentationTemplateUpdate
+  #  documentationUnlinked
+  #  dotEnvConfigure
+  #  dotFilesApproved
+  #  dotFilesApprovedFile
+  #  dumpFile
+  #  dumpHex
+  #  dumpLoadAverages
+  #  environmentApplicationLoad
+  #  environmentFileApplicationVerify
+  #  environmentFileShow
+  #  environmentLoad
+  #  environmentValueConvertArray
+  #  evalCheck
+  #  fileExtractLines
+  #  fileGroup
+  #  fileIsOldest
+  #  fileModificationTimes
+  #  fileModifiedDays
+  #  fileModifiedRecentlyName
+  #  fileModifiedRecentlyTimestamp
+  #  fileModifiedSeconds
+  #  fileOwner
+  #  fileReverseLines
+  #  filesRename
+  #  gitBranchExists
+  #  gitBranchExistsLocal
+  #  gitBranchExistsRemote
+  #  gitBranchMergeCurrent
+  #  gitBranchify
+  #  gitEnsureSafeDirectory
+  #  gitFindHome
+  #  gitInstallHook
+  #  gitInstallHooks
+  #  gitMainly
+  #  gitPreCommitHasExtension
+  #  gitPreCommitListExtension
+  #  gitPreCommitSetup
+  #  gitRemoveFileFromHistory
+  #  gitRepositoryChanged
+  #  gitShowChanges
+  #  gitShowStatus
+  #  gitTagAgain
+  #  gitTagDelete
+  #  gitTagVersion
+  #  gitVersionLast
+  #  githubLatest
+  #  githubLatestRelease
+  #  githubProjectJSON
+  #  githubPublishDate
+  #  githubRelease
+  #  hookRunOptional
+  #  hookSource
+  #  hookSourceOptional
+  #  hostTTFB
+  #  identicalCheckShell
+  #  identicalFindTokens
+  #  identicalWatch
+  #  installInstallBinary
+  #  interactiveCountdown
+  #  interactiveManager
+  #  isBashBuiltin
+  #  isCharacterClasses
+  #  isDockerComposeCommand
+  #  isPHPStorm
+  #  isPyCharm
+  #  isType
+  #  isValidateType
+  #  isVisualStudioCode
+  #  lineFill
+  #  linkRename
+  #  listCleanDuplicates
+  #  loopExecute
+  #  manPathCleanDuplicates
+  #  mapValueTrim
+  #  markdownIndentHeading
+  #  nodePackageManagerValid
+  #  notify
+  #  phpTailLog
+  #  phpTest
+  #  pipeRunner
+  #  rotateLogs
+  #  sshSetup
+  #  urlOpener
+  #  usageDocumentSimple
+  #  usageRequireBinary
+  #  validateFileContents
+
+  # bashPrompt
+
+  #  reloadChanges
+
+  # iTerm2
+    #  iTerm2Attention
+    #  iTerm2Download
+    #  iTerm2Image
+    #  iTerm2IsColorName
+    #  iTerm2IsColorType
+    #  iTerm2Notify
+    #  iTerm2PromptSupport
+    #  iTerm2SetColors
+    #  iTerm2Version
+
+  ## Python
+
+  #  pipInstall
+  #  pipUninstall
+  #  pipUpgrade
+  #  pipWrapper
+  #  pythonPackageInstalled
+  #  pythonVirtual
+
+  ## Package
+
+  #  packageDefault
+  #  packageGroupInstall
+  #  packageGroupUninstall
+  #  packageIsInstalled
+  #  packageMapping
+  #  packageUninstall
+  #  packageUpgrade
+
+  # Likely do not need tests or are harder to test
+  #  processOpenPipes
+  #  veeGitTag
+  #  websiteScrape
+
+  # MANPATH and PATH
+
+  #  manPathConfigure
+  #  manPathRemove
+  #  pathConfigure
+  #  pathRemove
+
+  assertExitCode 0 printf "" || return $?
 }

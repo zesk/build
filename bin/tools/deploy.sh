@@ -26,7 +26,7 @@ __buildDeploy() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -42,7 +42,7 @@ __buildDeploy() {
       ;;
     *)
       # _IDENTICAL_ argumentUnknownHandler 1
-      returnThrowArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
+      throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
       ;;
     esac
     shift
@@ -53,7 +53,7 @@ __buildDeploy() {
   local name
   name=$(returnCatch "$handler" buildEnvironmentGet APPLICATION_NAME) || return $?
   currentVersion="$(returnCatch "$handler" hookRun version-current)" || return $?
-  [ -n "$currentVersion" ] || returnThrowEnvironment "$handler" "Blank version-current" || return $?
+  [ -n "$currentVersion" ] || throwEnvironment "$handler" "Blank version-current" || return $?
   bigText "Deploy $name $currentVersion" | decorate success
   dumpEnvironment
 
@@ -76,12 +76,12 @@ __buildDeploy() {
   local appId notes
 
   statusMessage decorate info "Collecting application version and ID ..." || :
-  appId=$(hookRun application-id) || returnThrowEnvironment "$handler" "hookRun application-id" || return $?
+  appId=$(hookRun application-id) || throwEnvironment "$handler" "hookRun application-id" || return $?
 
-  [ -n "$appId" ] || returnThrowEnvironment "$handler" "No application ID (blank?)" || return $?
+  [ -n "$appId" ] || throwEnvironment "$handler" "No application ID (blank?)" || return $?
 
-  notes=$(releaseNotes) || returnThrowEnvironment "$handler" "releaseNotes" || return $?
-  [ -f "$notes" ] || returnThrowEnvironment "$handler" "$notes does not exist" || return $?
+  notes=$(releaseNotes) || throwEnvironment "$handler" "releaseNotes" || return $?
+  [ -f "$notes" ] || throwEnvironment "$handler" "$notes does not exist" || return $?
 
   local name
   name=$(buildEnvironmentGet APPLICATION_NAME)
@@ -95,16 +95,16 @@ __buildDeploy() {
     rootShow=$(decorate file "$rootPath")
 
     if [ -z "$target" ]; then
-      returnThrowEnvironment "$handler" "No DOCUMENTATION_S3_PREFIX but --documentation supplied" || return $?
+      throwEnvironment "$handler" "No DOCUMENTATION_S3_PREFIX but --documentation supplied" || return $?
     fi
     if [ ! -d "$rootPath" ]; then
-      returnThrowEnvironment "$handler" "$rootShow does not exist but --documentation supplied" || return $?
+      throwEnvironment "$handler" "$rootShow does not exist but --documentation supplied" || return $?
     fi
 
     # Validate for later (possibly every time in the future)
-    [ -n "$target" ] || returnThrowEnvironment "$handler" "DOCUMENTATION_S3_PREFIX is blank" || return $?
-    [ "$target" != "${target#s3://}" ] || returnThrowEnvironment "$handler" "DOCUMENTATION_S3_PREFIX=$(decorate code "$target") is NOT a S3 URL" || return $?
-    [ -n "$cloudFrontID" ] || returnThrowEnvironment "$handler" "DOCUMENTATION_CLOUDFRONT_ID is blank" || return $?
+    [ -n "$target" ] || throwEnvironment "$handler" "DOCUMENTATION_S3_PREFIX is blank" || return $?
+    [ "$target" != "${target#s3://}" ] || throwEnvironment "$handler" "DOCUMENTATION_S3_PREFIX=$(decorate code "$target") is NOT a S3 URL" || return $?
+    [ -n "$cloudFrontID" ] || throwEnvironment "$handler" "DOCUMENTATION_CLOUDFRONT_ID is blank" || return $?
 
     ! $debugFlag || statusMessage decorate warning "Publishing documentation to $target ..."
 
@@ -125,7 +125,7 @@ __buildDeploy() {
       local exitCode=$?
       decorate warning "FAILED - Deleting tagged version ... " || :
       gitTagDelete "$currentVersion" || decorate error "gitTagDelete $currentVersion ALSO failed but continuing ..." || :
-      returnThrowEnvironment "$handler" "githubRelease FAILED with $exitCode" || return $?
+      throwEnvironment "$handler" "githubRelease FAILED with $exitCode" || return $?
     fi
   fi
   timingReport "$start" "Release completed in" || :

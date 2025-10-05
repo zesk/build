@@ -84,7 +84,7 @@ __checkFunctionUninstalls() {
 
   __testSection "UNINSTALL $(decorate value "$noun") $(decorate code "$thing") ($(decorate bold-red "$why"))"
 
-  "$checkFunction" "$thing" || returnThrowEnvironment "$handler" "$noun" "$(decorate code "$thing")" "is NOT installed, can not uninstall" || return $?
+  "$checkFunction" "$thing" || throwEnvironment "$handler" "$noun" "$(decorate code "$thing")" "is NOT installed, can not uninstall" || return $?
   catchEnvironment "$handler" "$@" || return $?
-  ! "$checkFunction" "$thing" || returnThrowEnvironment "$handler" "$noun" "$(decorate code "$thing")" "is still installed after uninstallation ($why)" || return $?
+  ! "$checkFunction" "$thing" || throwEnvironment "$handler" "$noun" "$(decorate code "$thing")" "is still installed after uninstallation ($why)" || return $?
 }

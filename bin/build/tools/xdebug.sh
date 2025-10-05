@@ -23,7 +23,7 @@ xdebugInstall() {
   usageRequireBinary "$handler" pear pecl || return $?
 
   iniFile=$(catchEnvironment "$handler" phpIniFile) || return $?
-  [ -f "$iniFile" ] || returnThrowEnvironment "$handler" "php.ini not found $(decorate file "$iniFile")" || return $?
+  [ -f "$iniFile" ] || throwEnvironment "$handler" "php.ini not found $(decorate file "$iniFile")" || return $?
 
   statusMessage decorate info "Setting php ini path to $(decorate file "$iniFile")"
   catchEnvironment "$handler" pear config-set php_ini "$iniFile" || return $?
@@ -46,7 +46,7 @@ _xdebugInstall() {
 __xdebug_Require() {
   local artifact
   artifact=$(__xdebugInstallationArtifact)
-  [ -f "$artifact" ] || returnThrowArgument "$1" "xdebug is not installed on this system" || return $?
+  [ -f "$artifact" ] || throwArgument "$1" "xdebug is not installed on this system" || return $?
 }
 
 # Enable Xdebug on systems that have it

@@ -1,4 +1,4 @@
-# v0.38.4
+# v0.39.0
 isAbsolutePath|pathIsAbsolute
 bashDocumentation_Extract|bashDocumentationExtract
 # IDENTICAL _home |# IDENTICAL userRecord |
@@ -9,15 +9,22 @@ nextMinorVersion|versionNextMinor
 NextMinorVersion|VersionNextMinor
 newRelease|releaseNew
 NewRelease|ReleaseNew
-__throw|returnThrow|
 returnCatchEnvironment|catchEnvironment|
 returnCatchArgument|catchArgument|
+returnThrowEnvironment|throwEnvironment|
+returnThrowArgument|throwArgument|
+returnCatchCode|catchCode|
+__throwEnvironment|throwEnvironment
+__catchEnvironment|catchEnvironment
+__throwArgument|throwArgument
+__catchArgument|catchArgument
+__throw|returnThrow|
 __catch|returnCatch|
 __catchCode|catchCode|
-__throwEnvironment|throwEnvironment
 __execute|execute
 __echo|executeEcho
 _choose|booleanChoose
+userHome|userRecordHome
 
 # v0.38.3
 # Exit Code:|# Return Code:|

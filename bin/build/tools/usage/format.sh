@@ -29,19 +29,19 @@
 # Argument: description - String. Required. The function description
 # Argument: exitCode - Integer. Required. The exit code of the function prior to showing handler
 # Argument: ... - String. Any additional description - output directly.
-# Requires: returnCodeString returnThrowArgument trimSpace usageArgumentUnsignedInteger returnThrowArgument decorate printf
+# Requires: returnCodeString throwArgument trimSpace usageArgumentUnsignedInteger throwArgument decorate printf
 # BUILD_DEBUG: handler - For all `--help` and any function which uses `usageTemplate` to output documentation (upon error), the stack will be displayed
 __usageTemplate() {
   local handler="_${FUNCNAME[0]}" __saved=("$@")
 
   [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
-  [ $# -ge 5 ] || returnThrowArgument "$handler" "Requires 5 or more arguments" || return $?
+  [ $# -ge 5 ] || throwArgument "$handler" "Requires 5 or more arguments" || return $?
 
   local binName options="$2" delimiter="$3" description="$4" exitCode
 
   binName="$(trimSpace "$1")"
   exitCode=$(usageArgumentUnsignedInteger "$handler" "exitCode" "$5") || return $?
-  shift 5 || returnThrowArgument "$handler" "shift 5" || return $?
+  shift 5 || throwArgument "$handler" "shift 5" || return $?
 
   if ! muzzle decorateStyle bold-green; then
     export __BUILD_COLORS

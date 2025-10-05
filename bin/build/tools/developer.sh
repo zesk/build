@@ -16,7 +16,7 @@ developerAnnounce() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -106,7 +106,7 @@ developerTrack() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -117,7 +117,7 @@ developerTrack() {
       ;;
     *)
       # _IDENTICAL_ argumentUnknownHandler 1
-      returnThrowArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
+      throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
       ;;
     esac
     shift
@@ -133,12 +133,12 @@ developerTrack() {
   fi
 
   if [ ! -f "$cachePath/functions" ]; then
-    returnThrowEnvironment "$handler" "developerTrack --profile never called" || return $?
+    throwEnvironment "$handler" "developerTrack --profile never called" || return $?
   fi
   local tempPath itemType
 
   # shellcheck source=/dev/null
-  source "$cachePath/alias.source" || returnThrowEnvironment "$handler" "Aliases reload failed" || return $?
+  source "$cachePath/alias.source" || throwEnvironment "$handler" "Aliases reload failed" || return $?
 
   tempPath=$(fileTemporaryName "$handler" -d) || return $?
   __developerTrack "$tempPath" || return $?
@@ -180,7 +180,7 @@ buildDevelopmentLink() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -188,7 +188,7 @@ buildDevelopmentLink() {
 
     *)
       # _IDENTICAL_ argumentUnknownHandler 1
-      returnThrowArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
+      throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
       ;;
     esac
     shift
@@ -223,7 +223,7 @@ developerDevelopmentLink() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -246,7 +246,7 @@ developerDevelopmentLink() {
       ;;
     --path)
       shift
-      path=$(usageArgumentApplicationDirectory "$handler" "$argument" "${1-}") || returnThrowArgument "$handler" "path failed #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
+      path=$(usageArgumentApplicationDirectory "$handler" "$argument" "${1-}") || throwArgument "$handler" "path failed #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
       ;;
     --version-json)
       shift
@@ -265,7 +265,7 @@ developerDevelopmentLink() {
       ;;
     *)
       # _IDENTICAL_ argumentUnknownHandler 1
-      returnThrowArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
+      throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
       ;;
     esac
     shift
@@ -278,16 +278,16 @@ developerDevelopmentLink() {
   home=$(catchEnvironment "$handler" realPath "${home%/}") || return $?
 
   if [ -z "$composerPackage" ]; then
-    [ "${#runBinary[@]}" -gt 0 ] || returnThrowArgument "$handler" "--binary or --composer is required" || return $?
-    [ -n "$path" ] || returnThrowArgument "$handler" "--path is required" || return $?
-    [ -n "$versionJSON" ] || returnThrowArgument "$handler" "--version-json is required" || return $?
+    [ "${#runBinary[@]}" -gt 0 ] || throwArgument "$handler" "--binary or --composer is required" || return $?
+    [ -n "$path" ] || throwArgument "$handler" "--path is required" || return $?
+    [ -n "$versionJSON" ] || throwArgument "$handler" "--version-json is required" || return $?
   else
     runBinary=(composer require "$composerPackage")
     path="vendor/$composerPackage"
     versionJSON="$path/composer.json"
     developmentPath=""
   fi
-  [ -n "$variable" ] || returnThrowArgument "$handler" "--variable is required" || return $?
+  [ -n "$variable" ] || throwArgument "$handler" "--variable is required" || return $?
 
   local developmentHome=""
 
@@ -308,13 +308,13 @@ developerDevelopmentLink() {
   local source="$developmentHome/$developmentPath"
   source="${source%/}"
 
-  [ -d "$source" ] || returnThrowEnvironment "$handler" "$variable is not a directory: $(decorate error "$source")" || return $?
+  [ -d "$source" ] || throwEnvironment "$handler" "$variable is not a directory: $(decorate error "$source")" || return $?
 
-  [ "$home" != "$developmentHome" ] || returnThrowEnvironment "$handler" "This $(decorate warning "is") the development directory: $showName" || return $?
+  [ "$home" != "$developmentHome" ] || throwEnvironment "$handler" "This $(decorate warning "is") the development directory: $showName" || return $?
 
   if $resetFlag; then
     local versionText
-    [ -f "$home/$versionJSON" ] || returnThrowEnvironment "$handler" "$(decorate file "$home/$versionJSON") does not exist" || return $?
+    [ -f "$home/$versionJSON" ] || throwEnvironment "$handler" "$(decorate file "$home/$versionJSON") does not exist" || return $?
     versionText="$(jq -r "$versionSelector" <"$home/$versionJSON")"
     if [ -L "$target" ]; then
       __developerDevelopmentRevert "$handler" "$home" "$path" "$developmentHome" "${runBinary[@]}"
@@ -324,7 +324,7 @@ developerDevelopmentLink() {
   else
     local arrowIcon="➡️" aok="✅"
 
-    [ -z "$developmentPath" ] || [ -d "$source" ] || returnThrowEnvironment "$handler" "$source is not a directory" || return $?
+    [ -z "$developmentPath" ] || [ -d "$source" ] || throwEnvironment "$handler" "$source is not a directory" || return $?
 
     if $copyFlag; then
       local verb
@@ -351,7 +351,7 @@ developerDevelopmentLink() {
         statusMessage --last decorate error "Nothing removed."
       fi
     else
-      returnThrowEnvironment "$handler" "$versionJSON does not exist, will not update." || return $?
+      throwEnvironment "$handler" "$versionJSON does not exist, will not update." || return $?
     fi
   fi
 }
@@ -365,7 +365,7 @@ _developerDevelopmentLink() {
 __developerDevelopmentRevert() {
   local handler="$1" home="$2" relPath="$3" developmentHome="$4" && shift 4
 
-  [ $# -gt 0 ] || returnThrowArgument "$handler" "Missing installer" || return $?
+  [ $# -gt 0 ] || throwArgument "$handler" "Missing installer" || return $?
 
   local target="$home/$relPath/"
   catchEnvironment "$handler" rm -rf "$target" || return $?
@@ -373,12 +373,12 @@ __developerDevelopmentRevert() {
   if [ $# -eq 1 ] && ! isExecutable "$1"; then
     local binary="$1" installer
     installer="$developmentHome/$relPath/$binary"]
-    [ -x "$installer" ] || returnThrowEnvironment "$handler" "$installer does not exist" || return $?
+    [ -x "$installer" ] || throwEnvironment "$handler" "$installer does not exist" || return $?
     returnCatch "$handler" directoryRequire "$target" || return $?
     catchEnvironment "$handler" cp "$installer" "$target/$binary" || return $?
     set -- "$target/$binary"
   fi
 
   catchEnvironment "$handler" "$@" || return $?
-  [ -d "$target" ] || returnThrowEnvironment "$handler" "Installer $(decorate code "$*") did not install $(decorate file "$target")"
+  [ -d "$target" ] || throwEnvironment "$handler" "Installer $(decorate code "$*") did not install $(decorate file "$target")"
 }

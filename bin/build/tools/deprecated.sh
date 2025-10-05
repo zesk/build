@@ -18,7 +18,13 @@
 #             |_|
 #
 
+userHome() {
+  _deprecated
+  userRecordHome "$@"
+}
+
 __catch() {
+  # TODO Add this back in after another release
   returnCatch "$@"
 }
 __catchCode() {
@@ -62,7 +68,7 @@ _home() {
   userRecordHome "$@"
 }
 
-_return() {
+returnMessage() {
   _deprecated "${FUNCNAME[0]}"
   returnMessage "$@"
 }
@@ -76,11 +82,11 @@ _environment() {
 }
 __environment() {
   _deprecated "${FUNCNAME[0]}"
-  __catchEnvironment "_return" "$@"
+  __catchEnvironment "returnMessage" "$@"
 }
 __argument() {
   _deprecated "${FUNCNAME[0]}"
-  __catchArgument "_return" "$@"
+  __catchArgument "returnMessage" "$@"
 }
 
 isAbsolutePath() {

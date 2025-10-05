@@ -88,7 +88,7 @@ __addNoteTo() {
 #
 # Usage: {fn} [ --skip-commit ]
 # Argument: --skip-commit - Skip the commit if the files change
-# Requires: catchEnvironment returnThrowArgument timingStart isDarwin whichExists statusMessage
+# Requires: catchEnvironment throwArgument timingStart isDarwin whichExists statusMessage
 # Requires: decorate __decorateExtensionEach
 __updateAvailable() {
   local handler="_${FUNCNAME[0]}"
@@ -103,7 +103,7 @@ __updateAvailable() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -112,7 +112,7 @@ __updateAvailable() {
       ;;
     *)
       # _IDENTICAL_ argumentUnknownHandler 1
-      returnThrowArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
+      throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
       ;;
     esac
     shift
@@ -145,7 +145,7 @@ __updateAvailable() {
     allManagerLists+=("$manager")
     statusMessage decorate info "Generating $manager list ..."
     generator="__${manager}Generator"
-    isFunction "$generator" || returnThrowEnvironment "$handler" "$generator is not a function" || return $?
+    isFunction "$generator" || throwEnvironment "$handler" "$generator is not a function" || return $?
     if [ -f "$manager" ] && ! $forceFlag; then
       local ageInSeconds
       ageInSeconds=$(catchEnvironment "$handler" fileModificationSeconds "$manager") || return $?

@@ -28,7 +28,7 @@ __bashBuild() {
     exec bash "$@"
   fi
   local home
-  if home=$(userHome); then
+  if home=$(userRecordHome); then
     local extraCommands=() rcFile="$home/.bashrc"
     if [ "${1-}" = "--rc-extras" ]; then
       shift

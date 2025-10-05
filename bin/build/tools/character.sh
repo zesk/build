@@ -37,8 +37,8 @@ stringValidate() {
   local text character
 
   text="${1-}"
-  shift || returnThrowArgument "$handler" "missing text" || return $?
-  [ $# -gt 0 ] || returnThrowArgument "$handler" "missing class" || return $?
+  shift || throwArgument "$handler" "missing text" || return $?
+  [ $# -gt 0 ] || throwArgument "$handler" "missing class" || return $?
   for character in $(printf "%s" "$text" | grep -o .); do
     if ! isCharacterClasses "$character" "$@"; then
       return 1
@@ -62,8 +62,8 @@ characterToInteger() {
   while [ $# -gt 0 ]; do
     [ "$1" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
     index=$((index + 1))
-    [ "${#1}" = 1 ] || returnThrowArgument "$handler" "Single characters only (argument #$index): \"$1\" (${#1} characters)" || return $?
-    LC_CTYPE=C printf '%d' "'$1" || returnThrowEnvironment "$handler" "Single characters only (argument #$index): \"$1\" (${#1} characters)" || return $?
+    [ "${#1}" = 1 ] || throwArgument "$handler" "Single characters only (argument #$index): \"$1\" (${#1} characters)" || return $?
+    LC_CTYPE=C printf '%d' "'$1" || throwEnvironment "$handler" "Single characters only (argument #$index): \"$1\" (${#1} characters)" || return $?
     shift
   done
 }
@@ -85,9 +85,9 @@ isCharacterClasses() {
 
   local character="${1-}" class
 
-  [ "${#character}" -eq 1 ] || returnThrowArgument "$handler" "Non-single character: \"$character\"" || return $?
+  [ "${#character}" -eq 1 ] || throwArgument "$handler" "Non-single character: \"$character\"" || return $?
   if ! shift || [ $# -eq 0 ]; then
-    returnThrowArgument "$handler" "Need at least one class" || return $?
+    throwArgument "$handler" "Need at least one class" || return $?
   fi
   while [ "$#" -gt 0 ]; do
     class="$1"
@@ -98,7 +98,7 @@ isCharacterClasses() {
     elif isCharacterClass "$class" "$character"; then
       return 0
     fi
-    shift || returnThrowArgument "$handler" "shift $class failed" || return $?
+    shift || throwArgument "$handler" "shift $class failed" || return $?
   done
   return 1
 }
@@ -119,13 +119,13 @@ characterFromInteger() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
     *)
-      isUnsignedInteger "$argument" || returnThrowArgument "$handler" "Argument is not unsigned integer: $(decorate code "$argument")" || return $?
-      [ "$argument" -lt 256 ] || returnThrowArgument "$handler" "Integer out of range: \"$argument\"" || return $?
+      isUnsignedInteger "$argument" || throwArgument "$handler" "Argument is not unsigned integer: $(decorate code "$argument")" || return $?
+      [ "$argument" -lt 256 ] || throwArgument "$handler" "Integer out of range: \"$argument\"" || return $?
       if [ "$argument" -eq 0 ]; then
         printf "%s\n" $'\0'
       else
@@ -172,7 +172,7 @@ isCharacterClass() {
 
   handler="_${FUNCNAME[0]}"
   IFS=$'\n' read -r -d '' -a classes < <(characterClasses) || :
-  inArray "$class" "${classes[@]}" || returnThrowArgument "$handler" "Invalid class: $class" || return $?
+  inArray "$class" "${classes[@]}" || throwArgument "$handler" "Invalid class: $class" || return $?
   shift
   while [ $# -gt 0 ]; do
     character="${1:0:1}"
@@ -182,7 +182,7 @@ isCharacterClass() {
     if ! eval "case $character in [[:$class:]]) ;; *) return 1 ;; esac"; then
       return 1
     fi
-    shift || returnThrowArgument "$handler" "shift $character failed" || return $?
+    shift || throwArgument "$handler" "shift $character failed" || return $?
   done
 }
 _isCharacterClass() {

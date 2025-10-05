@@ -63,11 +63,11 @@ execute() {
 # Environment: HOME
 # stdout: the home directory
 # File: /etc/passwd
-# Requires: grep cut _return printf /etc/passwd
+# Requires: grep cut returnMessage printf /etc/passwd
 _home() {
   local user="${1-}" userDatabase="/etc/passwd" home
-  set -o pipefail && home=$(grep "^$user:" "$userDatabase" | cut -d : -f 6) || _return $? "No such user $user in $userDatabase" || return $?
-  [ -d "$home" ] || _return 1 "User $user home \"$home\" is not a directory" || return $?
+  set -o pipefail && home=$(grep "^$user:" "$userDatabase" | cut -d : -f 6) || returnMessage $? "No such user $user in $userDatabase" || return $?
+  [ -d "$home" ] || returnMessage 1 "User $user home \"$home\" is not a directory" || return $?
   printf -- "%s\n" "$home"
 }
 
@@ -91,12 +91,12 @@ _logger() {
   local user="${1-}" name logHome="${2-}" user && shift 2
   export HOME APPLICATION_USER
 
-  name="$(basename "$(dirname "$(pwd)")")" || _return $? determining name || return $?
+  name="$(basename "$(dirname "$(pwd)")")" || returnMessage $? determining name || return $?
   printf "Logging for %s\n" "$name"
-  HOME=$(_home "$user") || _return $?
+  HOME=$(_home "$user") || returnMessage $?
   APPLICATION_USER=$user
 
-  [ -d "$logHome" ] || _return 4 "$logHome is not a directory" || return $?
+  [ -d "$logHome" ] || returnMessage 4 "$logHome is not a directory" || return $?
   execute _ownFiles "$user" "$logHome" || return $?
   logHome="$logHome/$name"
   [ -d "$logHome" ] || execute mkdir -p "$logHome" || return $?

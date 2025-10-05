@@ -59,7 +59,7 @@ __documentTemplateFunction() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -68,19 +68,19 @@ __documentTemplateFunction() {
     # IDENTICAL profileNameArgumentHandlerCase 6
     --profile)
       shift
-      [ ${#pp[@]} -eq 0 ] || returnThrowArgument "$handler" "$argument already specified: ${pp[*]}"
+      [ ${#pp[@]} -eq 0 ] || throwArgument "$handler" "$argument already specified: ${pp[*]}"
       profileName="$(usageArgumentString "$handler" "$argument" "$1")" || return $?
       pp=("$argument" "$profileName")
       ;;
     # IDENTICAL regionArgumentHandler 5
     --region)
       shift
-      [ -z "$region" ] || returnThrowArgument "$handler" "$argument already specified: $region"
+      [ -z "$region" ] || throwArgument "$handler" "$argument already specified: $region"
       region=$(usageArgumentString "$handler" "$argument" "${1-}") || return $?
       ;;
     *)
       # _IDENTICAL_ argumentUnknownHandler 1
-      returnThrowArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
+      throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
       ;;
     esac
     shift
@@ -102,9 +102,9 @@ __documentTemplateFunction() {
     export AWS_REGION
     returnCatch "$handler" buildEnvironmentLoad AWS_REGION || return $?
     region="${AWS_REGION-}"
-    [ -n "$region" ] || returnThrowArgument "$handler" "AWS_REGION or --region is required" || return $?
+    [ -n "$region" ] || throwArgument "$handler" "AWS_REGION or --region is required" || return $?
   fi
-  awsRegionValid "$region" || returnThrowArgument "$handler" "--region $region is not a valid region" || return $?
+  awsRegionValid "$region" || throwArgument "$handler" "--region $region is not a valid region" || return $?
 
   timingReport "$start" "Completed in"
 }
@@ -122,19 +122,19 @@ ___documentTemplateFunction() {
     # IDENTICAL profileNameArgumentHandlerCase 6
     --profile)
       shift
-      [ ${#pp[@]} -eq 0 ] || returnThrowArgument "$handler" "$argument already specified: ${pp[*]}"
+      [ ${#pp[@]} -eq 0 ] || throwArgument "$handler" "$argument already specified: ${pp[*]}"
       profileName="$(usageArgumentString "$handler" "$argument" "$1")" || return $?
       pp=("$argument" "$profileName")
       ;;
     # IDENTICAL regionArgumentHandler 5
     --region)
       shift
-      [ -z "$region" ] || returnThrowArgument "$handler" "$argument already specified: $region"
+      [ -z "$region" ] || throwArgument "$handler" "$argument already specified: $region"
       region=$(usageArgumentString "$handler" "$argument" "${1-}") || return $?
       ;;
     *)
       # _IDENTICAL_ argumentUnknownHandler 1
-      returnThrowArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
+      throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
       ;;
     esac
     shift
@@ -156,9 +156,9 @@ ___documentTemplateFunction() {
     export AWS_REGION
     returnCatch "$handler" buildEnvironmentLoad AWS_REGION || return $?
     region="${AWS_REGION-}"
-    [ -n "$region" ] || returnThrowArgument "$handler" "AWS_REGION or --region is required" || return $?
+    [ -n "$region" ] || throwArgument "$handler" "AWS_REGION or --region is required" || return $?
   fi
-  awsRegionValid "$region" || returnThrowArgument "$handler" "--region $region is not a valid region" || return $?
+  awsRegionValid "$region" || throwArgument "$handler" "--region $region is not a valid region" || return $?
 
   timingReport "$start" "Completed in"
 }

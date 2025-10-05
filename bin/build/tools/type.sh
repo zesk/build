@@ -126,7 +126,7 @@ isType() {
   *"declare -- "*) printf -- "%s\n" "string" "local" ;;
   *"declare -fx "*) printf -- "%s\n" "function" "export" ;;
   *"declare -f "*) printf -- "%s\n" "function" "local" ;;
-  *) returnThrowArgument "$handler" "Unknown type: $1 -> \"$text\"" || return $? ;;
+  *) throwArgument "$handler" "Unknown type: $1 -> \"$text\"" || return $? ;;
   esac
 }
 _isType() {

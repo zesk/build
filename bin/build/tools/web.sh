@@ -19,7 +19,7 @@ urlMatchesLocalFileSize() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -30,7 +30,7 @@ urlMatchesLocalFileSize() {
         file="$(usageArgumentFile "$handler" "file" "$1")" || return $?
       else
       # _IDENTICAL_ argumentUnknownHandler 1
-      returnThrowArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
+      throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
       fi
       ;;
     esac
@@ -40,7 +40,7 @@ urlMatchesLocalFileSize() {
   localSize=$(returnCatch "$handler" fileSize "$file") || return $?
   remoteSize=$(returnCatch "$handler" urlContentLength "$url") || return $?
   localSize=$((localSize + 0))
-  isPositiveInteger "$remoteSize" || returnThrowEnvironment "$handler" "Remote size is not integer: $(decorate value "$remoteSize")" || return $?
+  isPositiveInteger "$remoteSize" || throwEnvironment "$handler" "Remote size is not integer: $(decorate value "$remoteSize")" || return $?
 
   [ "$localSize" -eq "$remoteSize" ]
 }
@@ -66,7 +66,7 @@ urlContentLength() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -77,10 +77,10 @@ urlContentLength() {
       tempFile=$(fileTemporaryName "$handler") || return $?
       url=$(usageArgumentURL "$handler" "url" "$1") || return $?
       catchEnvironment "$handler" curl -s -I "$url" >"$tempFile" || returnClean $? "$tempFile" || return $?
-      remoteSize=$(grep -i 'Content-Length' "$tempFile" | awk '{ print $2 }') || returnThrowEnvironment "$handler" "Remote URL did not return Content-Length" || returnClean $? "$tempFile" || return $?
+      remoteSize=$(grep -i 'Content-Length' "$tempFile" | awk '{ print $2 }') || throwEnvironment "$handler" "Remote URL did not return Content-Length" || returnClean $? "$tempFile" || return $?
       returnCatch "$handler" rm -f "$tempFile" || return $?
       remoteSize="$(trimSpace "$remoteSize")"
-      isUnsignedInteger "$remoteSize" || returnThrowEnvironment "$handler" "Remote content length was non-integer: $remoteSize" || return $?
+      isUnsignedInteger "$remoteSize" || throwEnvironment "$handler" "Remote content length was non-integer: $remoteSize" || return $?
       printf "%d\n" $((remoteSize + 0))
       ;;
     esac
@@ -128,7 +128,7 @@ websiteScrape() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;

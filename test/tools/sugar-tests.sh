@@ -74,13 +74,13 @@ testMapReturn() {
   done
 }
 
-testreturnCatchCode() {
-  assertNotExitCode --stderr-match "not callable" 0 returnCatchCode || return $?
-  assertNotExitCode --stderr-match "Not integer" 0 returnCatchCode 12n || return $?
-  assertNotExitCode --stderr-match "Not callable" 0 returnCatchCode 12 _return "not-callable-thing" || return $?
-  assertExitCode 0 returnCatchCode 12 _return printf -- "" || return $?
-  assertExitCode --stdout-match "Hello, world" 0 returnCatchCode 12 _return printf -- "Hello, world" || return $?
-  assertExitCode --stderr-match "__alwaysFail" 12 returnCatchCode 12 _return __alwaysFail || return $?
+testcatchCode() {
+  assertNotExitCode --stderr-match "not callable" 0 catchCode || return $?
+  assertNotExitCode --stderr-match "Not integer" 0 catchCode 12n || return $?
+  assertNotExitCode --stderr-match "Not callable" 0 catchCode 12 returnMessage "not-callable-thing" || return $?
+  assertExitCode 0 catchCode 12 returnMessage printf -- "" || return $?
+  assertExitCode --stdout-match "Hello, world" 0 catchCode 12 returnMessage printf -- "Hello, world" || return $?
+  assertExitCode --stderr-match "__alwaysFail" 12 catchCode 12 returnMessage __alwaysFail || return $?
 }
 
 testBoolean() {
@@ -151,7 +151,7 @@ testExitCode() {
   assertEquals "254" "$(returnCode adsfa01324kjadksfj)" || return $?
   assertEquals "254" "$(returnCode adsfa01324kjadksfj1)" || return $?
 
-  assertExitCode --stderr-match non-integer --stderr-match "message for return" "$(returnCode argument)" _return notInt "message for return"
+  assertExitCode --stderr-match non-integer --stderr-match "message for return" "$(returnCode argument)" returnMessage notInt "message for return"
 
   for code in assert identical leak "timeout"; do
     char="${code:0:1}"
@@ -240,12 +240,12 @@ testArgEnvStuff() {
 
   k=$(returnCode environment)
   assertExitCode --stderr-match foo "$k" returnEnvironment "foo" || return $?
-  assertExitCode --stderr-match foo "$k" returnThrowEnvironment returnMessage "foo" || return $?
+  assertExitCode --stderr-match foo "$k" throwEnvironment returnMessage "foo" || return $?
   assertExitCode --stderr-match foo "$k" catchEnvironment "$usage" returnMessage 99 foo || return $?
 
   k=$(returnCode argument)
   assertExitCode --stderr-match foo "$k" returnArgument "foo" || return $?
-  assertExitCode --stderr-match foo "$k" returnThrowArgument returnMessage "foo" || return $?
+  assertExitCode --stderr-match foo "$k" throwArgument returnMessage "foo" || return $?
   assertExitCode --stderr-match foo "$k" catchArgument "$usage" returnMessage 99 foo || return $?
 }
 

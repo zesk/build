@@ -57,7 +57,7 @@ terraformInstall() {
     returnCatch "$handler" aptKeyAddHashicorp || return $?
   fi
   returnCatch "$handler" packageInstall "$binary" "$@" || return $?
-  whichExists "$binary" || returnThrowEnvironment "$handler" "No $binary binary found - installation failed" || return $?
+  whichExists "$binary" || throwEnvironment "$handler" "No $binary binary found - installation failed" || return $?
 }
 _terraformInstall() {
   # __IDENTICAL__ usageDocument 1

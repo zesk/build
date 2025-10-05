@@ -133,7 +133,7 @@ testCrontabApplicationSync() {
   showFlag=
   while [ $# -gt 0 ]; do
     argument="$1"
-    [ -n "$argument" ] || returnThrowArgument "$handler" "blank argument" || return $?
+    [ -n "$argument" ] || throwArgument "$handler" "blank argument" || return $?
     case "$argument" in
     -v | --verbose)
       verboseFlag=1
@@ -147,11 +147,11 @@ testCrontabApplicationSync() {
       showFlag=1
       ;;
     *)
-      [ -d "$argument" ] || returnThrowArgument "$handler" "No arguments" || return $?
+      [ -d "$argument" ] || throwArgument "$handler" "No arguments" || return $?
       decorate info "Home is $argument"
       ;;
     esac
-    shift || returnThrowArgument "$handler" "missing argument $(decorate label "$argument")" || return $?
+    shift || throwArgument "$handler" "missing argument $(decorate label "$argument")" || return $?
   done
 
   testEnv=$(fileTemporaryName "$handler")
@@ -236,7 +236,7 @@ testCrontabApplicationSync() {
       fi
       printBasics "$tempDir" "$testEnv"
     fi
-    returnThrowEnvironment "$handler" "Failed" || return $?
+    throwEnvironment "$handler" "Failed" || return $?
   else
     rm -rf "$tempDir"
     rm "$testEnv"

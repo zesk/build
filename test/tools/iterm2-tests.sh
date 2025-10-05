@@ -45,3 +45,133 @@ testIterm2() {
   mockEnvironmentStop __BASH_PROMPT_MODULES
   mockEnvironmentStop __BASH_PROMPT_PREVIOUS
 }
+
+test_iTerm2Attention() {
+  local ii=()
+  if ! isiTerm2; then
+    ii+=(--ignore)
+    assertNotExitCode --stderr-match "Not iTerm2" 0 iTerm2Attention "true" || return $?
+  fi
+  assertExitCode 0 iTerm2Attention "${ii[@]+"${ii[@]}"}" true || return $?
+  assertExitCode 0 iTerm2Attention "${ii[@]+"${ii[@]}"}" false || return $?
+  assertExitCode 0 iTerm2Attention "${ii[@]+"${ii[@]}"}" start || return $?
+  assertExitCode 0 iTerm2Attention "${ii[@]+"${ii[@]}"}" stop || return $?
+  assertExitCode 0 iTerm2Attention "${ii[@]+"${ii[@]}"}" fireworks || return $?
+  assertExitCode 0 iTerm2Attention "${ii[@]+"${ii[@]}"}" ! || return $?
+}
+
+test_iTerm2Image() {
+  local handler="returnMessage"
+  local ii=()
+  local home imageFile="$home/etc/zesk-build-icon.png"
+  home=$(returnCatch "$handler" buildHome)
+  if ! isiTerm2; then
+    ii+=(--ignore)
+    assertNotExitCode --stderr-match "Not iTerm2" 0 iTerm2Image "$imageFile" || return $?
+  fi
+  assertExitCode 0 iTerm2Image "${ii[@]+"${ii[@]}"}" "$imageFile" || return $?
+}
+
+test_iTerm2Version() {
+  if isiTerm2; then
+    assertOutputContains ITERM2 iTerm2Version || return $?
+  fi
+}
+
+__data_iTerm2IsColorName() {
+  cat <<EOF
+0 black
+0 red
+0 green
+0 yellow
+0 blue
+0 magenta
+0 cyan
+0 white
+1 orange
+1 fuschia
+EOF
+}
+
+test_iTerm2IsColorName() {
+  local exitCode colorName
+  while read -r exitCode colorName; do
+    assertExitCode "$exitCode" iTerm2IsColorName "$colorName" || return $?
+  done < <(__data_iTerm2IsColorName)
+}
+
+__data_iTerm2IsColorType() {
+  cat <<EOF
+0 fg
+0 bg
+0 selbg
+0 selfg
+0 curbg
+0 curfg
+0 br_black
+0 br_red
+0 br_green
+0 br_yellow
+0 br_blue
+0 br_magenta
+0 br_cyan
+0 br_white
+0 red
+0 green
+0 yellow
+0 blue
+0 magenta
+0 cyan
+0 bold
+0 link
+0 underline
+0 tab
+0 white
+1 orange
+1 br_orange
+1 fuschia
+1 random
+1 port
+EOF
+}
+
+test_iTerm2IsColorType() {
+  local exitCode colorType
+  while read -r exitCode colorType; do
+    assertExitCode "$exitCode" iTerm2IsColorType "$colorType" || return $?
+  done < <(__data_iTerm2IsColorType)
+}
+
+test_iTerm2Notify() {
+  local handler="returnMessage"
+  local ii=()
+  local home
+  home=$(returnCatch "$handler" buildHome)
+  if ! isiTerm2; then
+    ii+=(--ignore)
+    assertNotExitCode --stderr-match "Not iTerm2" 0 iTerm2Notify "Hello, world" || return $?
+  fi
+  assertExitCode 0 iTerm2Notify "${ii[@]+"${ii[@]}"}" "Hello, world" || return $?
+}
+
+test_iTerm2SetColors() {
+  local handler="returnMessage"
+  local ii=()
+  local home
+  home=$(returnCatch "$handler" buildHome)
+  if ! isiTerm2; then
+    ii+=(--ignore)
+    assertNotExitCode --stderr-match "Not iTerm2" 0 iTerm2SetColors "fg=FFF" "bg=000" || return $?
+  fi
+  assertExitCode 0 iTerm2SetColors "${ii[@]+"${ii[@]}"}" "fg=FFF" "bg=000" || return $?
+  assertExitCode 0 iTerm2SetColors "${ii[@]+"${ii[@]}"}" "fg=000" "bg=FFF" || return $?
+  iTerm2SetColors "${ii[@]+"${ii[@]}"}" "fg=FFF" "bg=000"
+  iTerm2SetColors "${ii[@]+"${ii[@]}"}" "fg=000" "bg=FFF"
+  iTerm2SetColors "${ii[@]+"${ii[@]}"}" "fg=FFF" "bg=000"
+  iTerm2SetColors "${ii[@]+"${ii[@]}"}" "fg=000" "bg=FFF"
+}
+
+#  iTerm2Download
+#  iTerm2PromptSupport
+#  iTerm2SetColors
+#

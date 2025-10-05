@@ -20,7 +20,7 @@ __approveBashSource() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -57,7 +57,7 @@ __approveBashSource() {
           decorate subtle "Skipping unapproved directory $(decorate file "$sourcePath") Undo: $(decorate code "${FUNCNAME[0]} --clear \"$sourcePath\"")"
         fi
       else
-        returnThrowEnvironment "$handler" "Not a file or directory? $displayPath is a $(decorate value "$(fileType "$sourcePath")")" || return $?
+        throwEnvironment "$handler" "Not a file or directory? $displayPath is a $(decorate value "$(fileType "$sourcePath")")" || return $?
       fi
       hh+=(--highlight "$sourcePath")
       ;;
@@ -126,7 +126,7 @@ __interactiveApproveRegisterCacheFile() {
     else
       approved=false
     fi
-    printf -- "%s\n" "$approved" "$(whoami)" "$(date +%s)" "$(date -u)" "$sourceFile" >"$cacheFile" || returnThrowEnvironment "$handler" "Unable to write $(decorate file "$cacheFile")" || return $?
+    printf -- "%s\n" "$approved" "$(whoami)" "$(date +%s)" "$(date -u)" "$sourceFile" >"$cacheFile" || throwEnvironment "$handler" "Unable to write $(decorate file "$cacheFile")" || return $?
   fi
   approved=$(head -n 1 "$cacheFile")
   if ! isBoolean "$approved" || ! "$approved"; then
@@ -155,7 +155,7 @@ __interactiveApproveHome() {
 __interactiveApproveCacheFile() {
   local handler="$1" approvedHome="$2" sourceFile="$3" cacheFile
 
-  [ -f "$sourceFile" ] || returnThrowArgument "$handler" "File does not exist: $sourceFile" || return $?
+  [ -f "$sourceFile" ] || throwArgument "$handler" "File does not exist: $sourceFile" || return $?
   cacheFile="$approvedHome/$(returnCatch "$handler" shaPipe <"$sourceFile")" || return $?
   printf "%s\n" "$cacheFile"
 }
@@ -196,7 +196,7 @@ approvedSources() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -206,7 +206,7 @@ approvedSources() {
     --no-delete) deleteFlag=false ;;
     *)
       # _IDENTICAL_ argumentUnknownHandler 1
-      returnThrowArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
+      throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
       ;;
     esac
     shift

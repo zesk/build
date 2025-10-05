@@ -61,14 +61,14 @@ _isUnsignedInteger() {
 # Run `handler` with an argument error
 # Argument: handler - Function. Required. Error handler.
 # Argument: message ... - String. Optional. Error message
-returnThrowArgument() {
+throwArgument() {
   returnThrow 2 "$@" || return $?
 }
 
 # Run `handler` with an environment error
 # Argument: handler - Function. Required. Error handler.
 # Argument: message ... - String. Optional. Error message
-returnThrowEnvironment() {
+throwEnvironment() {
   returnThrow 1 "$@" || return $?
 }
 
@@ -76,20 +76,20 @@ returnThrowEnvironment() {
 # Usage: {fn} handler command ...
 # Argument: handler - Required. String. Failure command
 # Argument: command - Required. Command to run.
-# Requires: returnThrowArgument
+# Requires: throwArgument
 catchArgument() {
   local handler="${1-}"
-  shift && "$@" || returnThrowArgument "$handler" "$@" || return $?
+  shift && "$@" || throwArgument "$handler" "$@" || return $?
 }
 
 # Run `command`, upon failure run `handler` with an environment error
 # Usage: {fn} handler command ...
 # Argument: handler - Required. String. Failure command
 # Argument: command - Required. Command to run.
-# Requires: returnThrowEnvironment
+# Requires: throwEnvironment
 catchEnvironment() {
   local handler="${1-}"
-  shift && "$@" || returnThrowEnvironment "$handler" "$@" || return $?
+  shift && "$@" || throwEnvironment "$handler" "$@" || return $?
 }
 
 # _IDENTICAL_ _errors 36
@@ -291,14 +291,14 @@ _convertValue() {
 # DEPRECATED-Example: [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return $?
 # DEPRECATED-Example: [ $# -eq 0 ] || __help --only "$handler" "$@" || return $?
 #
-# Requires: returnThrowArgument usageDocument ___help
+# Requires: throwArgument usageDocument ___help
 __help() {
   [ $# -gt 0 ] || ! ___help 0 || return 0
   local handler="${1-}" && shift
   if [ "$handler" = "--only" ]; then
     handler="${1-}" && shift
     [ $# -gt 0 ] || return 0
-    [ "$#" -eq 1 ] && [ "${1-}" = "--help" ] || returnThrowArgument "$handler" "Only argument allowed is \"--help\": $*" || return $?
+    [ "$#" -eq 1 ] && [ "${1-}" = "--help" ] || throwArgument "$handler" "Only argument allowed is \"--help\": $*" || return $?
   fi
   while [ $# -gt 0 ]; do
     [ "$1" != "--help" ] || ! "$handler" 0 || return 1
@@ -383,7 +383,7 @@ _returnCodeString() {
 usageArgumentString() {
   local handler="$1" argument="$2"
   shift 2 || :
-  [ -n "${1-}" ] || returnThrowArgument "$handler" "blank" "$argument" || return $?
+  [ -n "${1-}" ] || throwArgument "$handler" "blank" "$argument" || return $?
   printf "%s\n" "$1"
 }
 
@@ -762,8 +762,8 @@ _environmentVariables() {
 # Argument: --replace-filter - Zero or more. Callable. Filter for replacement strings. (e.g. `trimSpace`)
 # Environment: Argument-passed or entire environment variables which are exported are used and mapped to the destination.
 # Example:     printf %s "{NAME}, {PLACE}.\n" | NAME=Hello PLACE=world mapEnvironment NAME PLACE
-# Requires: environmentVariables cat returnThrowEnvironment catchEnvironment
-# Requires: returnThrowArgument decorate usageArgumentString
+# Requires: environmentVariables cat throwEnvironment catchEnvironment
+# Requires: throwArgument decorate usageArgumentString
 mapEnvironment() {
   local handler="_${FUNCNAME[0]}"
 
@@ -774,7 +774,7 @@ mapEnvironment() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;

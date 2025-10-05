@@ -189,7 +189,7 @@ bashDebugInterruptFile() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -202,7 +202,7 @@ bashDebugInterruptFile() {
       ;;
     *)
       # _IDENTICAL_ argumentUnknownHandler 1
-      returnThrowArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
+      throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
       ;;
     esac
     shift
@@ -215,14 +215,14 @@ bashDebugInterruptFile() {
   fi
   local currentTraps installed=()
   currentTraps=$(fileTemporaryName "$handler") || return $?
-  trap >"$currentTraps" || returnClean "$?" "$currentTraps" || returnThrowEnvironment "trap listing failed" || return $?
+  trap >"$currentTraps" || returnClean "$?" "$currentTraps" || throwEnvironment "trap listing failed" || return $?
   for trap in "${traps[@]}"; do
     if grep "$name" "$currentTraps" | grep -q " SIG${trap}"; then
       installed+=("$trap")
     fi
   done
   if [ "${#installed[@]}" -eq "${#traps[@]}" ]; then
-    returnThrowEnvironment "$handler" "Already installed" || returnClean $? "$currentTraps" || return $?
+    throwEnvironment "$handler" "Already installed" || returnClean $? "$currentTraps" || return $?
   fi
   catchEnvironment "$handler" rm -rf "$currentTraps" || return $?
   catchEnvironment "$handler" trap __bashDebugInterruptFile "${traps[@]}" || return $?
@@ -273,7 +273,7 @@ _isErrorExit() {
 # Usage: plumber command ...
 # Run command and detect any global or local leaks
 # Requires: declare diff grep
-# Requires: returnThrowArgument decorate usageArgumentString isCallable
+# Requires: throwArgument decorate usageArgumentString isCallable
 # Requires: fileTemporaryName removeFields
 # BUILD_DEBUG: plumber-verbose - The plumber outputs the exact variable captures before and after
 plumber() {
@@ -291,7 +291,7 @@ plumber() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -304,7 +304,7 @@ plumber() {
   done
 
   [ $# -gt 0 ] || return 0
-  isCallable "${1-}" || returnThrowArgument "$handler" "$1 is not callable" "$@" || return $?
+  isCallable "${1-}" || throwArgument "$handler" "$1 is not callable" "$@" || return $?
 
   __after=$(TMPDIR=$__tempDir fileTemporaryName "$handler") || return $?
   __before="$__after.before"
@@ -322,7 +322,7 @@ plumber() {
     if grep -q -e 'COLUMNS\|LINES' < <(printf "%s\n" "$__changed"); then
       # decorate warning "$__cmd set $(decorate value "COLUMNS, LINES")"
       unset COLUMNS LINES
-      __changed="$(printf "%s\n" "$__changed" | grep -v -e 'COLUMNS\|LINES' || :)" || returnThrowEnvironment "$handler" "Removing COLUMNS and LINES from $__changed" || return $?
+      __changed="$(printf "%s\n" "$__changed" | grep -v -e 'COLUMNS\|LINES' || :)" || throwEnvironment "$handler" "Removing COLUMNS and LINES from $__changed" || return $?
     fi
     if [ -n "$__changed" ]; then
       printf "%s\n" "$__changed" "COMMAND: $__cmd" | dumpPipe "$(decorate bold-orange "found leak"): $__rawChanged" 1>&2
@@ -382,7 +382,7 @@ housekeeper() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -417,7 +417,7 @@ housekeeper() {
     watchPaths+=("$path")
   fi
   [ $# -gt 0 ] || return 0
-  isCallable "${1-}" || returnThrowArgument "$handler" "$1 is not callable" "$@" || return $?
+  isCallable "${1-}" || throwArgument "$handler" "$1 is not callable" "$@" || return $?
 
   __after=$(TMPDIR="$__tempDir" fileTemporaryName "$handler") || return $?
   __before="$__after.before"
@@ -474,7 +474,7 @@ outputTrigger() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -482,8 +482,8 @@ outputTrigger() {
       verbose=true
       ;;
     --name)
-      shift || returnThrowArgument "$handler" "missing $argument argument" || return $?
-      [ -n "$1" ] || returnThrowArgument "$handler" "Blank $argument argument" || return $?
+      shift || throwArgument "$handler" "missing $argument argument" || return $?
+      [ -n "$1" ] || throwArgument "$handler" "Blank $argument argument" || return $?
       name="$1"
       ;;
     *)
@@ -512,7 +512,7 @@ outputTrigger() {
 
   local message
   message=$(catchEnvironment "$handler" dumpPipe --vanish "$error") || return $?
-  returnThrowEnvironment "$handler" "stderr found in $(decorate code "$name") $(decorate value "$lineText"): " "$@" "$message" || return $?
+  throwEnvironment "$handler" "stderr found in $(decorate code "$name") $(decorate value "$lineText"): " "$@" "$message" || return $?
 }
 _outputTrigger() {
   # __IDENTICAL__ usageDocument 1
@@ -539,7 +539,7 @@ debugOpenFiles() {
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
     # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || returnThrowArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
