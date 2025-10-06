@@ -303,7 +303,7 @@ __completionTypeBooleanLike() {
 
 # Date formatted like YYYY-MM-DD
 __completionTypeDate() {
-  dateValid "${1-}" || returnThrowValidate || return $?
+  dateValid "${1-}" || __throwValidate || return $?
   printf "%s\n" "${1-}"
 }
 
@@ -354,20 +354,20 @@ __completionTypeRealFile() {
 
 # A path which is on a remote system
 __completionTypeRemoteDirectory() {
-  [ "${1:0:1}" = "/" ] || returnThrowValidate "begins with a slash" || return $?
+  [ "${1:0:1}" = "/" ] || __throwValidate "begins with a slash" || return $?
   printf "%s\n" "${1%/}"
 }
 
 # An URL
 __completionTypeURL() {
-  urlValid "${1-}" || returnThrowValidate "invalid url" || return $?
+  urlValid "${1-}" || __throwValidate "invalid url" || return $?
   printf "%s\n" "${1-}"
 }
 
 # output arguments to stderr and return the argument error
 # Return: 2
 # Return Code: 2 - Argument error
-returnThrowValidate() {
+__throwValidate() {
   printf -- "%s\n" "$@" 1>&2
   return 2
 }

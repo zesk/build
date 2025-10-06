@@ -13,7 +13,7 @@
 sshKnownHostsFile() {
   local handler="_${FUNCNAME[0]}"
 
-  local user
+  local user sshKnown
 
   user=$(catchReturn "$handler" buildEnvironmentGet HOME) || return $?
   sshKnown="$user/.ssh/known_hosts"
@@ -201,18 +201,14 @@ _sshKnownHostRemove() {
 # Add .ssh key for current user
 #
 # Usage: {fn} [ --force ] [ server ... ]
-# Argument: --force Force the program to create a new key if one exists
-# Argument: server- Servers to connect to to set up authorization
+# Argument: --force - Flag. Optional. Force the program to create a new key if one exists
+# Argument: server - String. Required. Servers to connect to to set up authorization
 #
 # You will need the password for this server for the current user.
 # Requires: userRecordHome catchEnvironment throwEnvironment
 sshSetup() {
-  local sshHomePath flagForce servers keyType keyBits
+  local forceFlag=false servers=() keyType="ed25519" keyBits=2048 minBits=512
   local handler="_${FUNCNAME[0]}"
-
-  home=$(catchReturn "$handler" userRecordHome) || return $?
-
-  local sshHomePath="$home/.ssh/" flagForce=false servers=() keyType=ed25519 keyBits=2048
 
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
@@ -230,26 +226,27 @@ sshSetup() {
       ;;
     --bits)
       shift
-      minBits=512
       keyBits=$(usageArgumentPositiveInteger "$handler" "$argument" "${1-}") || return $?
       [ "$keyBits" -ge "$minBits" ] || throwArgument "$handler" "Key bits must be at least $minBits: $keyBits" || return $?
       ;;
-    --force)
-      flagForce=true
-      ;;
-    *)
-      servers+=("$argument")
-      ;;
+    --force) forceFlag=true ;;
+    *) servers+=("$argument") ;;
     esac
     shift
   done
 
+  local home
+
+  home=$(catchReturn "$handler" userRecordHome) || return $?
+
+  local sshHomePath="$home/.ssh/"
+
   [ -d "$sshHomePath" ] || mkdir -p "$sshHomePath" || throwEnvironment "$handler" "Can not create $sshHomePath" || return $?
   catchEnvironment "$handler" chmod 700 "$sshHomePath" || return $?
 
-  user="$(whoami)" || throwEnvironment "$handler" "whoami failed" || return $?
-  keyName="$user@$(uname -n)" || throwEnvironment "$handler" "uname -n failed" || return $?
-  if $flagForce && [ -f "$keyName" ]; then
+  user="$(catchEnvironment "$handler" whoami)" || return $?
+  keyName="$user@$(catchEnvironment "$handler" uname -n)" || return $?
+  if $forceFlag && [ -f "$keyName" ]; then
     [ ${#servers[@]} -gt 0 ] || returnArgument "Key $keyName already exists, exiting." || return $?
   else
     local newKeys=("$keyName" "${keyName}.pub")
@@ -258,7 +255,7 @@ sshSetup() {
     catchEnvironment "$handler" ssh-keygen -f "$keyName" -t "$keyType" -b "$keyBits" -C "$keyName" -q -N "" || returnUndo $? muzzle popd || return $?
     catchEnvironment "$handler" muzzle popd || returnClean $? "${newKeys[@]}" || return $?
 
-    targetKeys=("id_${keyType}" "id_${keyType}.pub")
+    local targetKeys=("id_${keyType}" "id_${keyType}.pub")
     local index
     for index in "${!targetKeys[@]}"; do
       catchEnvironment "$handler" cp "${newKeys[index]}" "${targetKeys[index]}" || returnClean $? "${targetKeys[@]}" "${newKeys[@]}" || return $?

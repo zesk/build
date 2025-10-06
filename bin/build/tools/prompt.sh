@@ -91,7 +91,6 @@ bashUserInput() {
   fi
   stty -f /dev/tty echo 2>/dev/null || :
   # Technically the reading program will not receive these bytes as they will be sent to the tty
-  export __BASH_PROMPT_MARKERS
   printf "%s" "${__BASH_PROMPT_MARKERS[0]-}" >>/dev/tty
   read -r "$@" word </dev/tty 2>>/dev/tty || exitCode=$?
   printf "%s" "${__BASH_PROMPT_MARKERS[1]-}" >>/dev/tty
@@ -114,9 +113,6 @@ bashPromptMarkers() {
 
   local markers=()
 
-  export __BASH_PROMPT_MARKERS
-  catchReturn "$handler" buildEnvironmentLoad __BASH_PROMPT_MARKERS || return $?
-
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
@@ -133,6 +129,8 @@ bashPromptMarkers() {
     shift
   done
   [ "${#markers[@]}" -le 2 ] || throwArgument "$handler" "Maximum two markers supported (prefix suffix)"
+  export __BASH_PROMPT_MARKERS
+  catchReturn "$handler" buildEnvironmentLoad __BASH_PROMPT_MARKERS || return $?
   [ "${#markers[@]}" -eq 0 ] || __BASH_PROMPT_MARKERS=("${markers[@]}")
   printf "%s\n" "${__BASH_PROMPT_MARKERS[@]}"
 }

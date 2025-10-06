@@ -104,10 +104,6 @@ __reloadChangesShow() {
     fi
   done <"$cacheFile"
 }
-_reloadChanges() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
-}
 __reloadChangesRemove() {
   local handler="$1" cacheFile="$2" matchSource="$3"
 

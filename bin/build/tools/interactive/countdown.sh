@@ -56,10 +56,6 @@ __interactiveCountdown() {
     catchReturn "$handler" "$@" || return $?
   fi
 }
-_interactiveCountdown() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
-}
 
 # Maybe move this to its own thing if needed later
 # handler: {fn} handler timeout attempts extras message parser

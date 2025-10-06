@@ -92,10 +92,7 @@ _gitEnsureSafeDirectory() {
 gitTagDelete() {
   local handler="_${FUNCNAME[0]}"
   local exitCode=0
-  export GIT_REMOTE
 
-  catchReturn "$handler" buildEnvironmentLoad GIT_REMOTE || return $?
-  usageRequireEnvironment "$handler" GIT_REMOTE || return $?
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
@@ -106,10 +103,13 @@ gitTagDelete() {
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
     *)
+      export GIT_REMOTE
+      catchReturn "$handler" buildEnvironmentLoad GIT_REMOTE || return $?
+      usageRequireEnvironment "$handler" GIT_REMOTE || return $?
       # Deleting local tag
       catchArgument "$handler" git tag -d "$argument" || exitCode=$?
       # Deleting remote tag
-      catchArgument "$handler" git push "$GIT_REMOTE" :"$argument" || exitCode=$?
+      catchArgument "$handler" git push "${GIT_REMOTE-}" :"$argument" || exitCode=$?
       ;;
     esac
     shift
@@ -343,16 +343,6 @@ _gitRemoteHosts() {
 # Environment: BUILD_MAXIMUM_TAGS_PER_VERSION - Integer. Number of integers to attempt to look for when incrementing.
 gitTagVersion() {
   local handler="_${FUNCNAME[0]}"
-  local maximumTagsPerVersion
-
-  catchReturn "$handler" buildEnvironmentLoad BUILD_MAXIMUM_TAGS_PER_VERSION || return $?
-
-  maximumTagsPerVersion="$BUILD_MAXIMUM_TAGS_PER_VERSION"
-  local init start versionSuffix
-
-  init=$(timingStart) || return $?
-  start=$init
-  versionSuffix=""
 
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
@@ -375,6 +365,16 @@ gitTagVersion() {
     esac
     shift || throwArgument "$handler" "shift $argument" || return $?
   done
+
+  local maximumTagsPerVersion
+
+  maximumTagsPerVersion=$(catchReturn "$handler" buildEnvironmentGet BUILD_MAXIMUM_TAGS_PER_VERSION) || return $?
+
+  local init start versionSuffix
+
+  init=$(timingStart) || return $?
+  start=$init
+  versionSuffix=""
 
   statusMessage decorate info "Pulling tags from origin "
   catchEnvironment "$handler" git pull --tags origin >/dev/null || return $?

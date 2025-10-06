@@ -38,7 +38,7 @@ buildTestPlatforms() {
     --handler) shift && handler=$(usageArgumentFunction "$handler" "$argument" "${1-}") || return $? ;;
     --env-file)
       # shift here never fails as [ #$ -gt 0 ]
-      shift && ee+=("$argument" "$(usageArgumentRealFile "$handler" "$argument" "${1-}")") || return $?
+      shift && ee+=("$(usageArgumentRealFile "$handler" "$argument" "${1-}")") || return $?
       ;;
     *)
       # _IDENTICAL_ argumentUnknownHandler 1
@@ -60,50 +60,65 @@ buildTestPlatforms() {
 
   __buildTestRequirements "$handler" || return $?
 
-  local lastRunPlatform="$testHome/.last-run-platform" lastImage="" returnCode=0
+  local lastRunPlatform="$testHome/.last-run-platform" returnCode=0
+  local currentRunPlatform="$lastRunPlatform.current"
 
   safeTestFiles=$(buildCacheDirectory "${FUNCNAME[0]}") || return $?
-  local name clean=("$safeTestFiles")
+  local name
   name=$(catchReturn "$handler" buildEnvironmentGet APPLICATION_NAME) || return $?
 
+  local passedImages=()
+  printf "" >"$currentRunPlatform"
   if [ -f "$lastRunPlatform" ]; then
     local image success elapsed
     while read -r image exitCode elapsed; do
       __buildTestPlatformOutput "$image" "$exitCode" "$elapsed"
-      [ "$exitCode" != "0" ] || [ -n "$lastImage" ] || lastImage="$image"
+      if [ "$exitCode" = "0" ]; then
+        printf "%s %s %s\n" "$image" "$exitCode" "$elapsed" >>"$currentRunPlatform"
+        passedImages+=("$image")
+      fi
     done <"$lastRunPlatform"
   fi
   local image exitCode=0
 
+  local interrupt
+  interrupt=$(returnCode interrupt)
   while read -r image; do
     local pathName="${image//[^[:alnum:]]/_}"
-
+    if [ "${#passedImages[@]}" -gt 0 ] && inArray "$image" "${passedImages[@]}"; then
+      decorate info "Already passed $(decorate code "$image") ... skipping"
+      continue
+    fi
     catchReturn "$handler" directoryRequire "$safeTestFiles/$pathName" || return $?
     local f
     for f in "bin" "test" "etc" "documentation"; do
       statusMessage decorate info "Copying $(decorate code "$name") [$f] to $(decorate file "$safeTestFiles/$pathName/$f")"
+      [ ! -d "$safeTestFiles/$pathName/$f" ] || catchEnvironment "$handler" rm -rf "$safeTestFiles/$pathName/$f" || return $?
       catchEnvironment "$handler" cp -R "$testHome/$f" "$safeTestFiles/$pathName/$f" || return $?
     done
-
-    if [ -n "$lastImage" ]; then
-      if [ "$image" = "$lastImage" ]; then
-        lastImage=""
-      fi
-      continue
-    fi
+    local testEnv="$safeTestFiles/$pathName/.test.env"
+    catchEnvironment "$handler" printf "" >"$testEnv" || return $?
+    [ "${#ee[@]}" -eq 0 ] || for f in "${ee[@]}"; do
+      catchEnvironment "$handler" cat "$f" >>"$testEnv" || return $?
+    done
     bigText "Test: $image" | decorate subtle
 
-    local start exitCode=0 elapsed
+    local start exitCode=0 elapsed logFile="$safeTestFiles/$pathName.log"
     start=$(timingStart)
-    executeEcho dockerLocalContainer "${ee[@]+"${ee[@]}"}" --local "$safeTestFiles/$pathName" --path "/var/buildTest" --verbose --handler "$handler" --image "$image" "/var/buildTest/bin/test.sh" -c "$@" || exitCode=$?
+    decorate info "Logging to $(decorate file "$logFile") ..."
+    executeEcho dockerLocalContainer --local "$safeTestFiles/$pathName" --path "/var/buildTest" --verbose --handler "$handler" --image "$image" "/var/buildTest/bin/test.sh" --env-file "/var/buildTest/.test.env" -c "$@" | tee "$logFile" || exitCode=$?
+    if [ "$exitCode" -eq "$interrupt" ]; then
+      returnCode=$interrupt
+      break
+    fi
     elapsed=$(($(timingStart) - start))
     __buildTestPlatformOutput "$image" "$exitCode" "$elapsed"
-    [ $exitCode -eq 0 ] || returnCode=$exitCode
-    [ $returnCode -eq 0 ] || printf "%s %s %s\n" "$image" "$exitCode" "$elapsed" >>"$lastRunPlatform"
+    [ "$exitCode" -eq 0 ] || returnCode=$exitCode
+    printf "%s %s %s\n" "$image" "$exitCode" "$elapsed" >>"$currentRunPlatform"
   done <"$platforms"
-
-  [ $returnCode -ne 0 ] || catchEnvironment "$handler" rm -rf "${clean[@]}" || return $?
-  return $returnCode
+  catchEnvironment "$handler" mv "$currentRunPlatform" "$lastRunPlatform" || return $?
+  # [ $returnCode -ne 0 ] || catchEnvironment "$handler" rm -rf "${clean[@]}" || return $?
+  return "$returnCode"
 }
 _buildTestPlatforms() {
   # __IDENTICAL__ usageDocument 1

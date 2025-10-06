@@ -184,19 +184,14 @@ _githubLatest() {
 # Environment: GITHUB_ACCESS_TOKEN
 githubRelease() {
   local handler="_${FUNCNAME[0]}"
-  local start argument descriptionFile releaseName commitish JSON resultsFile accessToken accessTokenExpire repoOwner repoName
-  local host
 
   export GITHUB_ACCESS_TOKEN
   export GITHUB_ACCESS_TOKEN_EXPIRE
   export GITHUB_REPOSITORY_OWNER
   export GITHUB_REPOSITORY_NAME
 
-  extras=()
-  accessTokenExpire="${GITHUB_ACCESS_TOKEN_EXPIRE-}"
-  accessToken="${GITHUB_ACCESS_TOKEN-}"
-  repoOwner="${GITHUB_REPOSITORY_OWNER-}"
-  repoName="${GITHUB_REPOSITORY_NAME-}"
+  local extras=() accessTokenExpire="${GITHUB_ACCESS_TOKEN_EXPIRE-}" accessToken="${GITHUB_ACCESS_TOKEN-}" repoOwner="${GITHUB_REPOSITORY_OWNER-}" repoName="${GITHUB_REPOSITORY_NAME-}"
+
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
@@ -235,6 +230,8 @@ githubRelease() {
     shift
   done
 
+  local descriptionFile releaseName commitish resultsFile
+
   [ ${#extras[@]} -eq 3 ] || throwArgument "$handler" "Need: descriptionFile releaseName commitish, found ${#extras[@]} arguments" || return $?
 
   descriptionFile="${extras[0]}"
@@ -253,7 +250,7 @@ githubRelease() {
   #
   catchReturn "$handler" packageWhich curl curl || return $?
 
-  host=github.com
+  local host=github.com
   catchEnvironment "$handler" sshKnownHostAdd "$host" || return $?
 
   if git remote | grep -q github; then
@@ -271,6 +268,7 @@ githubRelease() {
   decorate decoration "$(echoBar)" || :
   printf "%s %s (%s) %s\n" "$(decorate green Tagging)" "$(decorate code "$releaseName")" "$(decorate magenta "$commitish")" "$(decorate green "and pushing ... ")" || :
 
+  local start
   start=$(timingStart)
 
   statusMessage decorate warning "Deleting any trace of the $releaseName tag"
@@ -286,7 +284,7 @@ githubRelease() {
 
   # passing commitish in the JSON results in a failure, just tag it beforehand and push to all remotes (mostly just github)
   # that's good enough
-
+  local JSON
   JSON='{"draft":false,"prerelease":false,"generate_release_notes":false}'
   JSON="$(echo "$JSON" | jq --arg name "$releaseName" --rawfile desc "$descriptionFile" '. + {body: $desc, tag_name: $name, name: $name}')" || throwEnvironment "$handler" "Generating JSON" || return $?
 

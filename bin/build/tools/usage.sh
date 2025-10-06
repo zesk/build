@@ -14,6 +14,7 @@ __usageLoader() {
   __functionLoader __usageDocument usage "$@"
 }
 
+# Usage: {fn} functionDefinitionFile functionName exitCode [ message ]
 # Summary: Universal error handler for functions (with formatting)
 #
 # Actual function is called `{functionName}`.
@@ -28,7 +29,7 @@ __usageLoader() {
 # Simplifies documentation and keeps it with the code.
 #
 # Environment: *BUILD_DEBUG* - Add `fast-usage` to make this quicker when you do not care about usage/failure.
-# BUILD_DEBUG: fast-usage - `usageDocumentComplex` does not output formatted help for performance reasons
+# BUILD_DEBUG: fast-usage - `usageDocument` does not output formatted help for performance reasons
 usageDocument() {
   #  usageDocumentSimple "$@"
   __usageLoader "_${FUNCNAME[0]}" "__${FUNCNAME[0]}" "$@"
@@ -137,7 +138,7 @@ _usageRequireEnvironment() {
 # Argument: testCommand ... - Required. Callable. Test command to run on value.
 # Utility function to handle all handler
 #
-catchArgumentHelper() {
+__catchArgumentHelper() {
   local defaultNoun usageFunction variableName variableValue noun
 
   defaultNoun="${1-}"
@@ -186,7 +187,7 @@ usageArgumentInteger() {
   args=("$@")
   args[3]="${4-}"
   [ ${#args[@]} -eq 4 ] || throwArgument "$handler" "Need 4 arguments" || return $?
-  catchArgumentHelper integer "${args[@]}" isInteger || return $?
+  __catchArgumentHelper integer "${args[@]}" isInteger || return $?
 }
 
 # Validates a value is a number
@@ -202,7 +203,7 @@ usageArgumentNumber() {
   args=("$@")
   args[3]="${4-}"
   [ ${#args[@]} -eq 4 ] || throwArgument "$handler" "Need 4 arguments" || return $?
-  catchArgumentHelper integer "${args[@]}" isNumber || return $?
+  __catchArgumentHelper integer "${args[@]}" isNumber || return $?
 }
 
 # Validates a value is an unsigned integer
@@ -221,7 +222,7 @@ usageArgumentUnsignedInteger() {
     throwArgument "$handler" "${FUNCNAME[0]} Need at least 3 arguments" || return $?
     return $?
   fi
-  catchArgumentHelper "unsigned integer" "${args[@]}" isUnsignedInteger || return $?
+  __catchArgumentHelper "unsigned integer" "${args[@]}" isUnsignedInteger || return $?
 }
 
 # Validates a value is an unsigned integer and greater than zero (NOT zero)
@@ -240,7 +241,7 @@ usageArgumentPositiveInteger() {
     throwArgument "$handler" "${FUNCNAME[0]} Need at least 3 arguments" || return $?
     return $?
   fi
-  catchArgumentHelper "positive integer" "${args[@]}" isUnsignedInteger >/dev/null && catchArgumentHelper "positive integer" "${args[@]}" test 0 -lt || return $?
+  __catchArgumentHelper "positive integer" "${args[@]}" isUnsignedInteger >/dev/null && __catchArgumentHelper "positive integer" "${args[@]}" test 0 -lt || return $?
 }
 
 # Validates a value is not blank and is a file.
@@ -260,7 +261,7 @@ usageArgumentFile() {
     throwArgument "$handler" "${FUNCNAME[0]} Need at least 3 arguments" || return $?
     return $?
   fi
-  catchArgumentHelper "file" "${args[@]}" test -f || return $?
+  __catchArgumentHelper "file" "${args[@]}" test -f || return $?
 }
 
 # Validates a value is not blank and is a file and does `realPath` on it.
@@ -279,7 +280,7 @@ usageArgumentRealFile() {
     throwArgument "$handler" "${FUNCNAME[0]} Need at least 3 arguments" || return $?
   fi
 
-  value="$(catchArgumentHelper "file" "${args[@]}" test -f)" || return $?
+  value="$(__catchArgumentHelper "file" "${args[@]}" test -f)" || return $?
   catchEnvironment "$handler" realPath "$value" || return $?
 }
 
@@ -300,7 +301,7 @@ usageArgumentExists() {
     throwArgument "$handler" "${FUNCNAME[0]} Need at least 3 arguments" || return $?
     return $?
   fi
-  catchArgumentHelper "file or directory" "${args[@]}" test -e || return $?
+  __catchArgumentHelper "file or directory" "${args[@]}" test -e || return $?
 }
 
 # Validates a value is not blank and is a link
@@ -320,7 +321,7 @@ usageArgumentLink() {
     throwArgument "$handler" "${FUNCNAME[0]} Need at least 3 arguments" || return $?
     return $?
   fi
-  catchArgumentHelper "link" "${args[@]}" test -L || return $?
+  __catchArgumentHelper "link" "${args[@]}" test -L || return $?
 }
 
 # Validates a value is not blank and is a directory. Upon success, outputs the directory name trailing slash stripped.
@@ -339,7 +340,7 @@ usageArgumentDirectory() {
     throwArgument "$handler" "${FUNCNAME[0]} Need at least 3 arguments" || return $?
     return $?
   fi
-  directory="$(catchArgumentHelper "directory" "${args[@]}" test -d)" || return $?
+  directory="$(__catchArgumentHelper "directory" "${args[@]}" test -d)" || return $?
   [ "${#directory}" -le 1 ] || directory="${directory%/}"
   printf "%s\n" "${directory}"
 }
@@ -476,7 +477,7 @@ usageArgumentRealDirectory() {
   fi
 
   args[2]=$(realPath "${args[2]}") || throwArgument "$handler" "realPath" "${args[2]}" || return $?
-  directory="$(catchArgumentHelper "directory" "${args[@]}" test -d)" || return $?
+  directory="$(__catchArgumentHelper "directory" "${args[@]}" test -d)" || return $?
   printf "%s\n" "${directory%/}"
 }
 
@@ -496,7 +497,7 @@ usageArgumentFileDirectory() {
     throwArgument "$handler" "${FUNCNAME[0]} Need at least 3 arguments" || return $?
     return $?
   fi
-  catchArgumentHelper "file" "${args[@]}" fileDirectoryExists || return $?
+  __catchArgumentHelper "file" "${args[@]}" fileDirectoryExists || return $?
 }
 
 # Validates a value is not blank and is an environment file which is loaded immediately.

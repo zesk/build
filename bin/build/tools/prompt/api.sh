@@ -12,8 +12,6 @@ __bashPrompt() {
 
   local addArguments=() resetFlag=false verbose=false listFlag=false skipPrompt=false
 
-  export __BASH_PROMPT_PREVIOUS
-
   isArray __BASH_PROMPT_PREVIOUS || __BASH_PROMPT_PREVIOUS=()
 
   local colorsText=""
@@ -90,6 +88,8 @@ __bashPrompt() {
     esac
     shift
   done
+
+  export __BASH_PROMPT_PREVIOUS
 
   if [ ${#addArguments[@]} -gt 0 ]; then
     __bashPromptAdd "$handler" "${addArguments[@]+"${addArguments[@]}"}" || return $?

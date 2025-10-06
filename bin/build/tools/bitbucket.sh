@@ -69,11 +69,13 @@ _bitbucketGetVariable() {
 # Updated: 2024-01-26
 #
 bitbucketContainer() {
+  local handler="_${FUNCNAME[0]}"
+  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
   export BUILD_DOCKER_BITBUCKET_IMAGE BUILD_DOCKER_BITBUCKET_PATH
   if ! buildEnvironmentLoad BUILD_DOCKER_BITBUCKET_IMAGE BUILD_DOCKER_BITBUCKET_PATH; then
     return 1
   fi
-  dockerLocalContainer --handler "_${FUNCNAME[0]}" --image "${BUILD_DOCKER_BITBUCKET_IMAGE}" --path "${BUILD_DOCKER_BITBUCKET_PATH}" "$@"
+  dockerLocalContainer --handler "$handler" --image "${BUILD_DOCKER_BITBUCKET_IMAGE-}" --path "${BUILD_DOCKER_BITBUCKET_PATH-}" "$@"
 }
 _bitbucketContainer() {
   # __IDENTICAL__ usageDocument 1

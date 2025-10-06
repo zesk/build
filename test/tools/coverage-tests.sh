@@ -59,6 +59,11 @@ testSlowTagsWorkCorrectly() {
   assertExitCode --stdout-match "${FUNCNAME[0]}" 0 /usr/bin/env -i "${ee[@]}" "$home/bin/test.sh" --tag test-tags --list || return $?
 }
 
+__deprecatedFunctions() {
+  local handler="$1" home="$2"
+  catchEnvironment "$handler" cut -f 1 -d '|' <"$home/bin/build/deprecated.txt" | grep -v '#' | trimSpace | grep -v ' ' | grep -v '/' | sort -u || return $?
+}
+
 # Tag: slow-30-seconds slow
 testBuildFunctionsCoverage() {
   local handler="returnMessage"
@@ -72,8 +77,8 @@ testBuildFunctionsCoverage() {
   clean+=("$deprecatedFunctions")
   clean+=("$allTestFiles")
 
-  catchEnvironment "$handler" cut -f 1 -d '|' <"$home/bin/build/deprecated.txt" | grep -v '#' | grep -v ' ' | grep -v '/' | sort -u >"$deprecatedFunctions" || return $?
-  __deprecatedFunctionsSoon >>"$deprecatedFunctions"
+  __deprecatedFunctions "$handler" "$home" >"$deprecatedFunctions" || return $?
+  catchReturn "$handler" __deprecatedFunctionsSoon >>"$deprecatedFunctions" || return $?
   catchEnvironment "$handler" find "$home/test/tools" -type f -name '*.sh' -print0 >"$allTestFiles" || return $?
 
   local requireCoverageDate
@@ -91,21 +96,21 @@ testBuildFunctionsCoverage() {
 
     if grep -q -e "^$pattern\$" <"$deprecatedFunctions"; then
       statusMessage decorate subtle "Deprecated function: $(decorate code "$function")"
+      continue
+    fi
+    local matchingTests foundCount=0
+
+    # grep returns 1 when nothing matches
+
+    matchingTests=$(xargs -0 grep -l -e "$pattern" <"$allTestFiles" 2>/dev/null || mapReturn $? 1 0 123 0 | trimBoth) || return $?
+    [ -z "$matchingTests" ] || foundCount=$(catchReturn "$handler" fileLineCount <<<"$matchingTests") || return $?
+    # statusMessage decorate error "Matches $foundCount: $matchingTests"
+
+    if [ "$foundCount" -eq 0 ]; then
+      missing+=("$function")
+      statusMessage --last decorate warning "No references found for $(decorate code "$function")"
     else
-      local matchingTests foundCount=0
-
-      # grep returns 1 when nothing matches
-
-      matchingTests=$(xargs -0 grep -l -e "$pattern" <"$allTestFiles" 2>/dev/null || mapReturn $? 1 0 123 0 | trimBoth) || return $?
-      [ -z "$matchingTests" ] || foundCount=$(catchReturn "$handler" fileLineCount <<<"$matchingTests") || return $?
-      # statusMessage decorate error "Matches $foundCount: $matchingTests"
-
-      if [ "$foundCount" -eq 0 ]; then
-        missing+=("$function")
-        statusMessage --last decorate warning "No references found for $(decorate code "$function")"
-      else
-        statusMessage decorate info "$foundCount $(plural "$foundCount" reference references) to $(decorate code "$function"): $(head -n 1 <<<"$matchingTests")"
-      fi
+      statusMessage decorate info "$foundCount $(plural "$foundCount" reference references) to $(decorate code "$function"): $(head -n 1 <<<"$matchingTests")"
     fi
   done < <(buildFunctions)
   catchEnvironment "$handler" rm -f "${clean[@]}" || return $?
@@ -161,7 +166,7 @@ testBuildFunctionsHelpCoverage() {
 
   clean+=("$deprecatedFunctions")
 
-  catchEnvironment "$handler" cut -f 1 -d '|' <"$home/bin/build/deprecated.txt" | grep -v '#' | grep -v ' ' | grep -v '/' | sort -u >"$deprecatedFunctions" || return $?
+  __deprecatedFunctions "$handler" "$home" >"$deprecatedFunctions" || return $?
 
   local requireCoverageDate
   requireCoverageDate=$(buildEnvironmentGet BUILD_COVERAGE_REQUIRED_DATE) || return $?
@@ -295,6 +300,19 @@ escapeBash
 quoteBashString
 inArray
 mapReturn
+execute
+executeEcho
+executeInputSupport
+returnArgument
+returnThrow
+returnEnvironment
+catchCode
+catchReturn
+catchArgument
+catchEnvironmentQuiet
+catchEnvironment
+throwEnvironment
+throwArgument
 EOF
 }
 
@@ -313,6 +331,7 @@ quoteGrepPattern
 sedReplacePattern
 newlineHide
 realPath
+isPlain
 EOF
 }
 

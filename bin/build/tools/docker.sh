@@ -115,20 +115,12 @@ _dockerListContext() {
 #
 dockerLocalContainer() {
   local handler="_${FUNCNAME[0]}"
-  local platform imageName imageApplicationPath
-  local envFile envPair
-  local tempEnv
-  local failedWhy localPath=""
 
-  export BUILD_DOCKER_PLATFORM BUILD_DOCKER_PATH BUILD_DOCKER_IMAGE
-
-  catchReturn "$handler" buildEnvironmentLoad BUILD_DOCKER_PLATFORM BUILD_DOCKER_IMAGE BUILD_DOCKER_PATH || return $?
-
-  platform=${BUILD_DOCKER_PLATFORM}
-  imageApplicationPath=${BUILD_DOCKER_PATH}
-  imageName=${BUILD_DOCKER_IMAGE}
+  local localPath=""
 
   local exitCode=0 ee=() extraArgs=() tempEnvs=() verboseFlag=false envFiles=()
+
+  local platform="" imageName="" imageApplicationPath=""
 
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
@@ -150,6 +142,7 @@ dockerLocalContainer() {
       envFiles+=("-w" "$imageApplicationPath")
       ;;
     --env)
+      local envPair
       shift
       envPair=$(usageArgumentString "$handler" "$argument" "${1-}") || return $?
       if [ "${envPair#*=}" = "$envPair" ]; then
@@ -158,6 +151,7 @@ dockerLocalContainer() {
       ee+=("$argument" "$envPair")
       ;;
     --env-file)
+      local envFile tempEnv
       shift
       envFile=$(usageArgumentFile "$handler" "envFile" "$1") || return $?
       tempEnv=$(fileTemporaryName "$handler") || return $?
@@ -173,12 +167,21 @@ dockerLocalContainer() {
     esac
     shift
   done
+
+  export BUILD_DOCKER_PLATFORM BUILD_DOCKER_PATH BUILD_DOCKER_IMAGE
+
+  catchReturn "$handler" buildEnvironmentLoad BUILD_DOCKER_PLATFORM BUILD_DOCKER_IMAGE BUILD_DOCKER_PATH || return $?
+
+  [ -n "$platform" ] || platform=${BUILD_DOCKER_PLATFORM-}
+  [ -n "$imageApplicationPath" ] || imageApplicationPath=${BUILD_DOCKER_PATH-}
+  [ -n "$imageName" ] || imageName=${BUILD_DOCKER_IMAGE-}
+
   [ -n "$platform" ] || platform=$(dockerPlatformDefault)
 
   if [ -z "$localPath" ]; then
     localPath=$(catchEnvironment "$handler" pwd) || return $?
   fi
-  failedWhy=
+  local failedWhy=""
   if [ -z "$imageName" ]; then
     failedWhy="imageName is empty"
   elif [ -z "$imageApplicationPath" ]; then

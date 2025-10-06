@@ -16,16 +16,16 @@ returnThrowArgument|throwArgument|
 returnCatchCode|catchCode|
 __throwEnvironment|throwEnvironment
 __catchEnvironment|catchEnvironment
-__throwArgument|throwArgument
-__catchArgument|catchArgument
-__throw|returnThrow|
+__throwArgument |throwArgument |
+__catchArgument |catchArgument |
+__throw |returnThrow |
 returnCatch|catchReturn|
-__catch|catchReturn|
+__catch |catchReturn |
 __catchCode|catchCode|
 __execute|execute
-__echo|executeEcho
-_choose|booleanChoose
-userHome|userRecordHome
+__echo |executeEcho |
+_choose |booleanChoose |
+userHome |userRecordHome |
 
 # v0.38.3
 # Exit Code:|# Return Code:|

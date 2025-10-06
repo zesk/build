@@ -50,6 +50,7 @@ _isAlpine() {
 alpineContainer() {
   local handler="_${FUNCNAME[0]}"
 
+  [ "$1" != "--help" ] || __help "$handler" "$@" || return 0
   export LC_TERMINAL TERM
   catchReturn "$handler" buildEnvironmentLoad LC_TERMINAL TERM || return $?
   catchEnvironment "$handler" dockerLocalContainer --handler "$handler" --image alpine:latest --path /root/build --env LC_TERMINAL="$LC_TERMINAL" --env TERM="$TERM" /root/build/bin/build/need-bash.sh Alpine apk add bash ncurses -- "$@" || return $?

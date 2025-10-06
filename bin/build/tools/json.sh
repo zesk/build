@@ -87,6 +87,8 @@ jsonFileGet() {
   local handler="_${FUNCNAME[0]}"
   local jsonFile path value
 
+  [ "$1" != "--help" ] || __help "$handler" "$@" || return 0
+
   jsonFile=$(usageArgumentFile "$handler" "jsonFile" "${1-}") && shift || return $?
   path=$(usageArgumentString "$handler" "path" "${1-}") && shift || return $?
 
@@ -106,6 +108,8 @@ _jsonFileGet() {
 jsonFileSet() {
   local handler="_${FUNCNAME[0]}"
   local jsonFile path value
+
+  [ "$1" != "--help" ] || __help "$handler" "$@" || return 0
 
   jsonFile=$(usageArgumentFile "$handler" "jsonFile" "${1-}") && shift || return $?
   path=$(usageArgumentString "$handler" "path" "${1-}") && shift || return $?

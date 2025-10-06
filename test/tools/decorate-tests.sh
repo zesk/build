@@ -20,6 +20,8 @@ testDecoratePath() {
   assertEquals "💣/tempFile" "$(TMPDIR="/you-guessed-it" decoratePath "/you-guessed-it/tempFile")" || return $?
 }
 testDecorateStyle() {
+  assertExitCode 0 __decorateStylesDefault || return $?
+
   assertEquals "38;2;255;255;0" "$(decorateStyle bold)" || return $?
   assertExitCode 0 decorateStyle bold 31 || return $?
   assertEquals "31" "$(decorateStyle bold)" || return $?

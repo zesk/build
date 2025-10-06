@@ -10,6 +10,7 @@
 testApplicationHome() {
   local handler="returnMessage"
 
+  mockEnvironmentStart BUILD_COLORS
   mockEnvironmentStart XDG_STATE_HOME
   export XDG_STATE_HOME
 
@@ -22,6 +23,7 @@ testApplicationHome() {
   catchEnvironment "$handler" rm -rf "$XDG_STATE_HOME" || return $?
 
   mockEnvironmentStop XDG_STATE_HOME
+  mockEnvironmentStop BUILD_COLORS
 }
 
 testApplicationHomeAliases() {

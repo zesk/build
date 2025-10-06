@@ -86,6 +86,7 @@ isBoolean() {
 # Argument: falseChoice - EmptyString. Optional. Value to output when testValue is `false`
 booleanChoose() {
   local testValue="${1-}" && shift
+  if [ "$testValue" = "--help" ]; then usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]}" 0 && return 0; fi
   isBoolean "$testValue" || returnArgument "${BASH_SOURCE[1]-no function name}:${BASH_LINENO[0]-no line} ${FUNCNAME[1]} -> ${FUNCNAME[0]} non-boolean: \"$testValue\"" || return $?
   "$testValue" && printf -- "%s\n" "${1-}" || printf -- "%s\n" "${2-}"
 }
