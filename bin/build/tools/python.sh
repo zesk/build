@@ -199,7 +199,8 @@ _pipWrapper() {
 # DOC TEMPLATE: --handler 1
 # Argument: --handler handler - Optional. Function. Use this error handler instead of the default error handler.
 # Argument: --any - Flag. Optional. When specified changes the behavior such that if it returns return code 0 IFF any single package is installed.
-# Return Code: 0 - IFF all packages are installed.
+# Return Code: 0 - All packages are installed (or at least one package with `--any`)
+# Return Code: 1 - All packages are not installed (or NO packages are installed with `--any`)
 pythonPackageInstalled() {
   local handler="_${FUNCNAME[0]}" packages=() anyMode=false
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
@@ -220,33 +221,17 @@ pythonPackageInstalled() {
   done
 
   [ ${#packages[@]} -gt 0 ] || throwArgument "$handler" "No pip package names passed" || return $?
-  if [ ${#packages[@]} -eq 1 ]; then
-    # root@6335ec37c5a8 ~/build > pipWrapper list | grep -q "pip"
-    # ERROR: Pipe to stdout was broken
-    # Exception ignored in: <_io.TextIOWrapper name='<stdout>' mode='w' encoding='utf-8'>
-    # BrokenPipeError: [Errno 32] Broken pipe
-    # pip is still writing to stdout when grep quits after finding the package, so simply suppress pip stderr
-    # To avoid this, just do the temp file always as shown below
-    pipWrapper list 2>/dev/null | grep -q "$(quoteGrepPattern "${packages[0]}")" || return 1
-  else
-    local allPackages
-    allPackages=$(fileTemporaryName "$handler") || return $?
-    catchReturn "$handler" pipWrapper list >"$allPackages" || returnClean $? "$allPackages" || return $?
-    for package in "${packages[@]}"; do
-      if ! grepSafe -q "$(quoteGrepPattern "$package")" <"$allPackages"; then
-        # Not installed
-        catchEnvironment "$handler" rm -f "$allPackages" || return $?
-        return 1
-      elif $anyMode; then
-        # $package is installed and --any
-        return 0
-      else
-        : # $package is installed, make sure all are
-      fi
-    done
-    catchEnvironment "$handler" rm -f "$allPackages" || return $?
-    return 0
-  fi
+  for package in "${packages[@]}"; do
+    if ! python -m "$package" --help >/dev/null 2>/dev/null; then
+      # Not installed
+      return 1
+    elif $anyMode; then
+      # $package is installed and --any
+      return 0
+    else
+      : # $package is installed, make sure all are
+    fi
+  done
 }
 _pythonPackageInstalled() {
   # __IDENTICAL__ usageDocument 1

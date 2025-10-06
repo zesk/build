@@ -25,4 +25,8 @@ testPythonStuff() {
   assertExitCode --stdout-match "mkdocs" 0 pipWrapper list || return $?
   assertExitCode 0 pipUninstall mkdocs || return $?
   assertExitCode 1 pythonPackageInstalled mkdocs || return $?
+  # Test twice calls
+  assertExitCode 0 pipUninstall mkdocs || return $?
+
+  catchReturn "$handler" rm -rf "$temp" || return $?
 }
