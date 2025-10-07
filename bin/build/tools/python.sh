@@ -46,7 +46,7 @@ _pythonUninstall() {
 pipUpgrade() {
   local handler="_${FUNCNAME[0]}"
   [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
-  PIP_ROOT_USER_ACTION=ignore catchReturn "$handler" pipWrapper install --upgrade pip || return $?
+  PIP_ROOT_USER_ACTION=ignore catchReturn "$handler" pipWrapper install --upgrade pip 2>/dev/null || return $?
 }
 _pipUpgrade() {
   # __IDENTICAL__ usageDocument 1
