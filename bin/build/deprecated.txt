@@ -25,7 +25,6 @@ __catchCode|catchCode|
 __execute|execute
 __echo |executeEcho |
 _choose |booleanChoose |
-userHome |userRecordHome |
 
 # v0.38.3
 # Exit Code:|# Return Code:|

@@ -18,11 +18,6 @@
 #             |_|
 #
 
-userHome() {
-  _deprecated
-  userRecordHome "$@"
-}
-
 __catch() {
   # TODO Add this back in after another release
   catchReturn "$@"

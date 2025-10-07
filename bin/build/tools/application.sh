@@ -16,7 +16,7 @@ __applicationHomeFile() {
 
 __applicationHomeGo() {
   local handler="$1" && shift
-  local file home label userRecordHome oldHome=""
+  local file home label uHome oldHome=""
 
   file=$(catchReturn "$handler" __applicationHomeFile) || return $?
   home=$(trimSpace "$(catchEnvironment "$handler" head -n 1 "$file")") || return $?
@@ -36,8 +36,8 @@ __applicationHomeGo() {
     label="${*-}"
     [ -n "$label" ] || return 0
   fi
-  userRecordHome="${HOME%/}"
-  printf "%s %s\n" "$(decorate label "$label")" "$(decorate value "${home//"$userRecordHome"/~}")"
+  uHome="${HOME%/}"
+  printf "%s %s\n" "$(decorate label "$label")" "$(decorate value "${home//"$uHome"/~}")"
   hookSourceOptional --application "$home" project-activate "$oldHome" || :
   return 0
 }
