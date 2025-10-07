@@ -569,10 +569,16 @@ _iTerm2SetColors() {
 # Usage: {fn} [ true | false | ! | fireworks ]
 # Argument: --ignore | -i - Flag. Optional. If the current terminal is not iTerm2, then exit status 0 and do nothing.
 # Argument: --verbose | -v - Flag. Optional. Verbose mode. Show what you are doing.
+# Argument: action. String. Action to attract attention: `true`, `false` or `!`
+# Actions:
+# - `true` - start making dock icon bounce
+# - `false` - stop making dock icon bounce
+# - `!` - Show fireworks at cursor
+# - `fireworks` - Show fireworks at cursor
 iTerm2Attention() {
   local handler="_${FUNCNAME[0]}"
 
-  local ignoreErrors=true verboseFlag=false didSomething=false
+  local ignoreErrors=false verboseFlag=false didSomething=false
 
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#

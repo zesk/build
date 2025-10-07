@@ -46,7 +46,7 @@ _pythonUninstall() {
 pipUpgrade() {
   local handler="_${FUNCNAME[0]}"
   [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
-  catchReturn "$handler" pipWrapper install --upgrade pip || return $?
+  PIP_ROOT_USER_ACTION=ignore catchReturn "$handler" pipWrapper install --upgrade pip || return $?
 }
 _pipUpgrade() {
   # __IDENTICAL__ usageDocument 1
@@ -221,6 +221,7 @@ pythonPackageInstalled() {
   done
 
   [ ${#packages[@]} -gt 0 ] || throwArgument "$handler" "No pip package names passed" || return $?
+  local package
   for package in "${packages[@]}"; do
     if ! python -m "$package" --help >/dev/null 2>/dev/null; then
       # Not installed

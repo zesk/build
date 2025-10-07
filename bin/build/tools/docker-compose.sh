@@ -24,7 +24,7 @@ dockerComposeInstall() {
   if pythonPackageInstalled "$name"; then
     return 0
   fi
-  pipInstall --handler "$handler" "docker-compose" "$@"
+  pipInstall --handler "$handler" "$name" "$@"
 }
 _dockerComposeInstall() {
   # __IDENTICAL__ usageDocument 1
