@@ -20,31 +20,31 @@
 
 __catch() {
   # TODO Add this back in after another release
-  catchReturn "$@"
+  catchReturn "$@" || return $?
 }
 __catchCode() {
   _deprecated "${FUNCNAME[0]}"
-  catchCode "$@"
+  catchCode "$@" || return $?
 }
 __throwEnvironment() {
   _deprecated "${FUNCNAME[0]}"
-  throwEnvironment "$@"
+  throwEnvironment "$@" || return $?
 }
 __catchEnvironment() {
   _deprecated "${FUNCNAME[0]}"
-  catchEnvironment "$@"
+  catchEnvironment "$@" || return $?
 }
 __catchArgument() {
   _deprecated "${FUNCNAME[0]}"
-  catchArgument "$@"
+  catchArgument "$@" || return $?
 }
 __execute() {
   _deprecated "${FUNCNAME[0]}"
-  execute "$@"
+  execute "$@" || return $?
 }
 __echo() {
   _deprecated "${FUNCNAME[0]}"
-  executeEcho "$@"
+  executeEcho "$@" || return $?
 }
 _choose() {
   _deprecated "${FUNCNAME[0]}"

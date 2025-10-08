@@ -19,7 +19,7 @@ if source "${BASH_SOURCE[0]%/*}/../build/tools.sh"; then
     local handler="_${FUNCNAME[0]}"
     local module="$1" testFunction="$2" name symbol="✅"
     # IDENTICAL hookBashTestFinish 3
-    name=$(catchReturn "$handler" buildEnvironmentGet APPLICATION_NAME)
+    name=$(catchReturn "$handler" buildEnvironmentGet APPLICATION_NAME) || return $?
     [ -z "$name" ] || name="🍎 ${name}\n"
     iTerm2Badge -i "${name}👀 ${module} \n${symbol}️ ${testFunction}"
   }

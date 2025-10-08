@@ -18,7 +18,7 @@ if source "${BASH_SOURCE[0]%/*}/../build/tools.sh"; then
   __hookBashTestStart() {
     local handler="_${FUNCNAME[0]}"
     local module="$1" testFunction="$2" name
-    name=$(catchReturn "$handler" buildEnvironmentGet APPLICATION_NAME)
+    name=$(catchReturn "$handler" buildEnvironmentGet APPLICATION_NAME) || return $?
     [ -z "$name" ] || name="🍎 ${name}"
     iTerm2Badge -i "${name}\n👀 ${module} \n➡️ ${testFunction}"
     [ ! -t 0 ] || consoleSetTitle "$name Testing : $module ➡️ $testFunction"

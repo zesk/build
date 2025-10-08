@@ -54,6 +54,6 @@ testPythonVirtual() {
 # Tag: package-install
 testPythonUninstallation() {
   if whichExists python; then
-    __checkFunctionUninstalls "installed first" whichExists python pythonUninstall || return $?
+    __checkFunctionUninstalls whichExists "already installed" python pythonUninstall || return $?
   fi
 }

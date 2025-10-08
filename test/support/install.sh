@@ -42,14 +42,14 @@ __checkFunctionInstallsAndUninstalls() {
 
   if ! __testFunctionWasTested "$installer" "$uninstaller"; then
     if "$checkFunction" "$thing"; then
-      __checkFunctionUninstalls "already installed" "$checkFunction" "$noun" "$thing" "$uninstaller" || return $?
+      __checkFunctionUninstalls "$checkFunction" "$noun" "$thing" "$uninstaller" || return $?
       uninstalledAlready=true
     else
       printf "%s\n" "$(decorate label "$noun") $(decorate value "$thing") $(decorate info "is not installed - installing")"
     fi
     __checkFunctionInstalls "$checkFunction" "$noun" "$thing" "$installer" || return $?
     if ! $uninstalledAlready; then
-      __checkFunctionUninstalls "just installed" "$checkFunction" "$noun" "$thing" "$uninstaller" || return $?
+      __checkFunctionUninstalls "$checkFunction" "$noun" "$thing" "$uninstaller" || return $?
     fi
   else
     statusMessage decorate success "Skipping $(decorate code "$installer") and $(decorate code "$uninstaller") - already tested"
@@ -62,6 +62,7 @@ __checkFunctionInstallsAndUninstalls() {
 # Usage: thing - String. Required. Thing which is going to be installed.
 # Usage: installer - Function. Required. Function to test.
 __checkFunctionInstalls() {
+  local handler="returnMessage"
   local checkFunction="" noun="" thing="" installer=""
 
   checkFunction=$(usageArgumentFunction "$handler" "checkFunction" "${1-}") && shift || return $?
@@ -79,12 +80,16 @@ __checkFunctionInstalls() {
 # Usage: {fn} why checkFunction noun thing ...
 __checkFunctionUninstalls() {
   local handler="returnMessage"
-  local why="$1" && shift
-  local checkFunction="$1" noun="$2" thing="$3" && shift 3 || returnArgument "Missing arguments" || return $?
+  local checkFunction="" noun="" thing="" installer=""
 
-  __testSection "UNINSTALL $(decorate value "$noun") $(decorate code "$thing") ($(decorate bold-red "$why"))"
+  checkFunction=$(usageArgumentFunction "$handler" "checkFunction" "${1-}") && shift || return $?
+  noun=$(usageArgumentString "$handler" "noun" "${1-}") && shift || return $?
+  thing=$(usageArgumentString "$handler" "binary" "${1-}") && shift || return $?
+  uninstaller=$(usageArgumentFunction "$handler" "installer" "${1-}") && shift || return $?
 
-  "$checkFunction" "$thing" || throwEnvironment "$handler" "$noun" "$(decorate code "$thing")" "is NOT installed, can not uninstall" || return $?
-  catchEnvironment "$handler" "$@" || return $?
-  ! "$checkFunction" "$thing" || throwEnvironment "$handler" "$noun" "$(decorate code "$thing")" "is still installed after uninstallation ($why)" || return $?
+  __testSection "UNINSTALL $(decorate value "$noun") $(decorate code "$thing")"
+
+  "$checkFunction" "$thing" || throwEnvironment "$handler" "$noun $(decorate code "$thing") is NOT installed, can not uninstall" || return $?
+  assertExitCode 0 "$uninstaller" "$@" || return $?
+  ! "$checkFunction" "$thing" || throwEnvironment "$handler" "$noun $(decorate code "$thing") is still installed after uninstallation" || return $?
 }

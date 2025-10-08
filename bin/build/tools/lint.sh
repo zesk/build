@@ -309,8 +309,8 @@ findUncaughtAssertions() {
       ;;
     *)
       if [ -n "$directory" ]; then
-      # _IDENTICAL_ argumentUnknownHandler 1
-      throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
+        # _IDENTICAL_ argumentUnknownHandler 1
+        throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
       fi
       directory=$(usageArgumentDirectory "$handler" "directory" "$1") || return $?
       ;;
@@ -336,8 +336,8 @@ findUncaughtAssertions() {
   local suffixCheck='(local|return|; then|\ \|\||:[0-9]+:\s*#|\(\)\ \{)'
   {
     find "${directory%/}" -type f -name '*.sh' ! -path "*/.*/*" -print0 | xargs -0 grep -n -E 'assert[A-Z]|usageArgument' | grep -E -v "$suffixCheck" || :
-    find "${directory%/}" -type f -name '*.sh' ! -path "*/.*/*" -print0 | xargs -0 grep -n -E '_(clean|undo|argument|environment|return)' | grep -E -v "$suffixCheck" || :
-    find "${directory%/}" -type f -name '*.sh' ! -path "*/.*/*" -print0 | xargs -0 grep -n -E '__(execute|catch|throw)' | grep -E -v "$suffixCheck" || :
+    find "${directory%/}" -type f -name '*.sh' ! -path "*/.*/*" -print0 | xargs -0 grep -n -E 'return(Clean|Undo|Argument|Environment|Code)' | grep -E -v "$suffixCheck" || :
+    find "${directory%/}" -type f -name '*.sh' ! -path "*/.*/*" -print0 | xargs -0 grep -n -E '(execute|catch|throw)[A-Z ]' | grep -E -v "$suffixCheck" || :
   } >"$tempFile"
 
   local problemFiles=()

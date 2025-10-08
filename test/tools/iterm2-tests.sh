@@ -64,7 +64,7 @@ test_iTerm2Image() {
   local handler="returnMessage"
   local ii=()
   local home imageFile="$home/etc/zesk-build-icon.png"
-  home=$(catchReturn "$handler" buildHome)
+  home=$(catchReturn "$handler" buildHome) || return $?
   if ! isiTerm2; then
     ii+=(--ignore)
     assertNotExitCode --stderr-match "Not iTerm2" 0 iTerm2Image "$imageFile" || return $?
@@ -146,7 +146,7 @@ test_iTerm2Notify() {
   local handler="returnMessage"
   local ii=()
   local home
-  home=$(catchReturn "$handler" buildHome)
+  home=$(catchReturn "$handler" buildHome) || return $?
   if ! isiTerm2; then
     ii+=(--ignore)
     assertNotExitCode --stderr-match "Not iTerm2" 0 iTerm2Notify "Hello, world" || return $?
@@ -158,7 +158,7 @@ test_iTerm2SetColors() {
   local handler="returnMessage"
   local ii=()
   local home
-  home=$(catchReturn "$handler" buildHome)
+  home=$(catchReturn "$handler" buildHome) || return $?
   if ! isiTerm2; then
     ii+=(--ignore)
     assertNotExitCode --stderr-match "Not iTerm2" 0 iTerm2SetColors "fg=FFF" "bg=000" || return $?

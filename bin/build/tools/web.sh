@@ -12,7 +12,7 @@
 urlMatchesLocalFileSize() {
   local handler="_${FUNCNAME[0]}"
 
-  local url file remoteSize localSize
+  local url="" file=""
 
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
@@ -29,14 +29,15 @@ urlMatchesLocalFileSize() {
       elif [ -z "$file" ]; then
         file="$(usageArgumentFile "$handler" "file" "$1")" || return $?
       else
-      # _IDENTICAL_ argumentUnknownHandler 1
-      throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
+        # _IDENTICAL_ argumentUnknownHandler 1
+        throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
       fi
       ;;
     esac
     shift
   done
 
+  local remoteSize localSize
   localSize=$(catchReturn "$handler" fileSize "$file") || return $?
   remoteSize=$(catchReturn "$handler" urlContentLength "$url") || return $?
   localSize=$((localSize + 0))
@@ -58,8 +59,6 @@ _urlMatchesLocalFileSize() {
 # Argument: url - Required. URL. URL to fetch the Content-Length.
 urlContentLength() {
   local handler="_${FUNCNAME[0]}"
-  local url remoteSize
-  local tempFile
 
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
@@ -73,7 +72,7 @@ urlContentLength() {
     # _IDENTICAL_ handlerHandler 1
     --handler) shift && handler=$(usageArgumentFunction "$handler" "$argument" "${1-}") || return $? ;;
     *)
-      local tempFile
+      local tempFile url remoteSize
       tempFile=$(fileTemporaryName "$handler") || return $?
       url=$(usageArgumentURL "$handler" "url" "$1") || return $?
       catchEnvironment "$handler" curl -s -I "$url" >"$tempFile" || returnClean $? "$tempFile" || return $?
@@ -105,6 +104,7 @@ _hostTTFB() {
 
 _watchFile() {
   decorate info "Watching $1"
+  local line
   while IFS='' read -r line; do
     if [ "${line}" != "${line#--}" ]; then
       line=$(trimSpace "${line##.*--}")
@@ -113,15 +113,17 @@ _watchFile() {
   done
 }
 
-#
-# Usage: {fn} siteURL
+# Scrape a website.
+# Untested, and in progress. Do not use seriously.
+# Argument: url - URL. Required. Url to scrape recursively.
 # Untested: true
 # Uses wget to fetch a site, convert it to HTML nad rewrite it for local consumption
 # SIte is stored in a directory called `host` for the URL requested
 # This is not final yet and may not work properly.
 websiteScrape() {
   local handler="_${FUNCNAME[0]}"
-  local logFile pid progressFile aa
+
+  local url=""
 
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
@@ -139,19 +141,22 @@ websiteScrape() {
     esac
     shift
   done
+  [ -z "$url" ] || throwArgument "$handler" "Need URL" || return $?
 
+  local logFile progressFile
   logFile=$(catchReturn "$handler" buildQuietLog "$handler.$$.log") || return $?
   progressFile=$(catchReturn "$handler" buildQuietLog "$handler.$$.progress.log") || return $?
 
   catchReturn "$handler" packageWhich wget wget || return $?
 
-  aa=()
+  local aa=()
   aa+=(-e robots=off)
   aa+=(-R "zip,exe")
   aa+=(--no-check-certificate)
   aa+=(--user-agent="Mozilla/4.0 (compatible; MSIE 10.0; Windows NT 5.1)")
   aa+=(-r --level=5 -t 10 --random-wait --force-directories --html-extension)
   aa+=(--no-parent --convert-links --backup-converted --page-requisites)
+  local pid
   pid=$(
     wget "${aa[@]}" "$url" 2>&1 | tee "$logFile" | grep -E '^--' >"$progressFile" &
     printf "%d" $!

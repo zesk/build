@@ -193,6 +193,8 @@ testBuildFunctionsHelpCoverage() {
   eof=false
   while ! $eof; do
     read -r fun || eof=true
+    # Remove stars
+    fun="${fun//*/}"
     if [ -n "$fun" ]; then
       helpless+=("$fun")
       if inArray "$fun" "${blanks[@]}"; then
@@ -291,6 +293,7 @@ testBuildFunctionsHelpCoverage() {
   fi
 }
 
+# Added the star to hide from _bashSanitizeCheckAssertions
 __dataBuildFunctionsWithoutHelp() {
   cat <<EOF
 trimSpace
@@ -301,18 +304,18 @@ quoteBashString
 inArray
 mapReturn
 execute
-executeEcho
-executeInputSupport
-returnArgument
-returnThrow
-returnEnvironment
-catchCode
-catchReturn
-catchArgument
-catchEnvironmentQuiet
-catchEnvironment
-throwEnvironment
-throwArgument
+execute*Echo
+execute*InputSupport
+return*Argument
+return*Throw
+return*Environment
+catch*Code
+catch*Return
+catch*Argument
+catch*EnvironmentQuiet
+catch*Environment
+throw*Environment
+throw*Argument
 EOF
 }
 
