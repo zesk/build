@@ -194,7 +194,7 @@ testBuildFunctionsHelpCoverage() {
   while ! $eof; do
     read -r fun || eof=true
     # Remove stars
-    fun="${fun//*/}"
+    fun="${fun//-/}"
     if [ -n "$fun" ]; then
       helpless+=("$fun")
       if inArray "$fun" "${blanks[@]}"; then
@@ -204,7 +204,7 @@ testBuildFunctionsHelpCoverage() {
         throwEnvironment "$handler" "$fun is no longer part of core" || return $?
       fi
     fi
-  done < <(__dataBuildFunctionsWithoutHelp)
+  done <"$home/etc/helpless.txt"
 
   mockEnvironmentStart BUILD_DEBUG
   mockEnvironmentStart BUILD_COLORS
@@ -291,32 +291,6 @@ testBuildFunctionsHelpCoverage() {
   if ! $coverageRequired; then
     [ "${#missing[@]}" -eq 0 ] || printf "%s %s\n%s\n" "$(decorate notice "Functions require --help support. This test will FAIL")" "$(decorate magenta "after $requireCoverageDate")" "$(printf "%s\n" "${missing[@]}" | decorate code | decorate wrap "- ")"
   fi
-}
-
-# Added the star to hide from _bashSanitizeCheckAssertions
-__dataBuildFunctionsWithoutHelp() {
-  cat <<EOF
-trimSpace
-clearLine
-plasterLines
-escapeBash
-quoteBashString
-inArray
-mapReturn
-execute
-execute*Echo
-execute*InputSupport
-return*Argument
-return*Throw
-return*Environment
-catch*Code
-catch*Return
-catch*Argument
-catch*EnvironmentQuiet
-catch*Environment
-throw*Environment
-throw*Argument
-EOF
 }
 
 __dataBuildFunctionsWithBlankHelp() {

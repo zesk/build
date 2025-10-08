@@ -71,7 +71,7 @@ returnEnvironment() {
 # Requires: returnArgument
 returnThrow() {
   local exitCode="${1-}" && shift || returnArgument "Missing exit code" || return $?
-  lcoal handler="${1-}" && shift || returnArgument "Missing error handler" || return $?
+  local handler="${1-}" && shift || returnArgument "Missing error handler" || return $?
   "$handler" "$exitCode" "$@" || return $?
 }
 
