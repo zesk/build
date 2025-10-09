@@ -67,3 +67,14 @@ testAlpineContainer() {
   fi
   return 0
 }
+
+# Test-Platform: alpine
+testAlpineOnly() {
+  assertExitCode 0 isAlpine || return $?
+}
+
+# Test-Platform: !darwin
+# Test-Platform: !linux
+testAlpineOnlyTheOtherWay() {
+  assertExitCode 0 isAlpine || return $?
+}

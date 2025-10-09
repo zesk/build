@@ -426,7 +426,7 @@ testSuite() {
       # --cd-away handling
       if $cdAway; then
         local buildHomeRequired=false
-        ! isSubstringInsensitive ";Build-Home:true;" ";$__flags;" || buildHomeRequired=true
+        ! testFlagBoolean "$__flags" "Build-Home" || buildHomeRequired=true
 
         # Force it off for functions which flag it
         if $buildHomeRequired; then
@@ -934,6 +934,19 @@ _testPlatform() {
   __testPlatformName
 }
 
+# Outputs ALL platform names
+# See: __testPlatformName
+__testPlatforms() {
+  local handler="_${FUNCNAME[0]}"
+  local home
+  home="$(catchReturn "$handler" buildHome)" || return $?
+  find "$home/bin/build/tools/platform/" -type f -name '*.sh' -print0 | xargs -0 grep -A 1 '__testPlatformName()' | grep printf | awk '{ print $5 }' | sed 's/"//g'
+}
+___testPlatforms() {
+  # __IDENTICAL__ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
 # Load one or more test files and run the tests defined within
 #
 # Usage: {fn} filename [ ... ]
@@ -954,9 +967,6 @@ __testRun() {
 
   __testRunShellInitialize
 
-  platform="$(_testPlatform)"
-  [ -n "$platform" ] || throwEnvironment "$handler" "No platform defined?" || return $?
-
   errorTest=$(returnCode assert)
   stickyCode=0
 
@@ -976,9 +986,11 @@ __testRun() {
   local resultCode=0 stickyCode=0
   __TEST_SUITE_TRACE="$__test"
   __testStart=$(timingStart)
-  if isSubstringInsensitive ";Platform:!$platform;" ";$__flagText;"; then
-    printf "%s\n" "Skipping Platform:!$platform $__test" >>"$quietLog"
-    __TEST_SUITE_RESULT="skip Platform $platform disallowed"
+  platform="$(_testPlatform)"
+  [ -n "$platform" ] || throwEnvironment "$handler" "No platform defined?" || return $?
+  if ! testFlagPlatformMatch "$platform" "$__flagText" 2>>"$quietLog"; then
+    statusMessage --last decorate warning "Skipping $(decorate code "$__test") on $(decorate error "$platform")"
+    __TEST_SUITE_RESULT="skipped platform $platform"
     resultCode=0
   else
     local doHousekeeper="" doPlumber="" buildHomeRequired=false testActuallyFails=false
@@ -993,17 +1005,13 @@ __testRun() {
     savedTMPDIR=$TMPDIR
     TMPDIR="$tempDirectory"
 
-    local maybe
-    # Enabling checks wins
-    for maybe in false true; do
-      ! isSubstringInsensitive ";Housekeeper:$maybe;" ";$__flagText;" || doHousekeeper=$maybe
-      ! isSubstringInsensitive ";Plumber:$maybe;" ";$__flagText;" || doPlumber=$maybe
-    done
+    doHousekeeper=$(testFlagBoolean "Housekeeper" "$__flagText")
+    doPlumber=$(testFlagBoolean "Plumber" "$__flagText")
     [ -n "$doHousekeeper" ] || doHousekeeper=true
     [ -n "$doPlumber" ] || doPlumber=true
 
-    ! isSubstringInsensitive ";Build-Home:true;" ";$__flagText;" || buildHomeRequired=true
-    ! isSubstringInsensitive ";Fail:true;" ";$__flagText;" || testActuallyFails=true
+    buildHomeRequired=$(testFlagBoolean "Build-Home" "$__flagText" true)
+    testActuallyFails=$(testFlagBoolean "Fail" "$__flagText" false)
 
     if $verboseMode; then
       decorate pair "Platform" "$platform"

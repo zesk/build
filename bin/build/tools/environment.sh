@@ -819,8 +819,9 @@ _environmentVariables() {
 #
 # See: environmentSecureVariables
 # Requires: throwArgument decorate environmentSecureVariables grepSafe env removeFields
-# Argument: --underscore - Flag. Include environment variables which begin with underscore `_`.
-# Argument: --secure - Flag. Include environment variables which are in `environmentSecureVariables`
+# Argument: --underscore - Flag. Optional. Include environment variables which begin with underscore `_`.
+# Argument: --skip-prefix - String. Optional. Skip environment variables which begin with this exact prefix (case-sensitive).
+# Argument: --secure - Flag. Optional. Include environment variables which are in `environmentSecureVariables`
 environmentOutput() {
   local handler="_${FUNCNAME[0]}"
   local skipSecure=true skipUnderscore=true
@@ -834,12 +835,9 @@ environmentOutput() {
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
-    --underscore)
-      skipUnderscore=false
-      ;;
-    --secure)
-      skipSecure=false
-      ;;
+    --underscore) skipUnderscore=false ;;
+    --skip-prefix) shift && skipPrefix+=("$(usageArgumentString "$handler" "$argument" "${1-}")") || return $? ;;
+    --secure) skipSecure=false ;;
     *)
       # _IDENTICAL_ argumentUnknownHandler 1
       throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
@@ -867,6 +865,9 @@ environmentOutput() {
     fi
     environmentValueWrite "$name" "$value"
   done < <(env -0)
+  while IFS='=' read -r name value; do
+    ! isPlain "$value" || printf "%s=%s\n" "$name" "$(unquote "'" "$value")"
+  done < <(declare -ax | removeFields 2)
 }
 _environmentOutput() {
   # __IDENTICAL__ usageDocument 1

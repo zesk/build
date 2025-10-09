@@ -23,7 +23,7 @@ testTools() {
 
   home=$(catchReturn "$handler" buildHome) || return $?
 
-  for testCode in tools _assert assert mock junit; do
+  for testCode in tools flags _assert assert mock junit; do
     testCode="$home/bin/build/tools/test/$testCode.sh"
     # shellcheck source=/dev/null
     source "$testCode" || throwEnvironment "$handler" "source $testCode" || return $?

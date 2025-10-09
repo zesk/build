@@ -941,6 +941,30 @@ _stringOffset() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
+#
+# Outputs the integer offset of `needle` if found as substring in `haystack` (case-insensitive)
+# If `haystack` is not found, -1 is output
+# Argument: needle - String. Required.
+# Argument: haystack - String. Required.
+# stdout: `Integer`. The offset at which the `needle` was found in `haystack`. Outputs -1 if not found.
+stringOffsetInsensitive() {
+  [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
+  local length=${#2}
+  local needle haystack
+  needle=$(lowercase "${1-}")
+  haystack=$(lowercase "${2-}")
+  local substring="${haystack/$needle*/}"
+  local offset="${#substring}"
+  if [ "$offset" -eq "$length" ]; then
+    offset=-1
+  fi
+  printf %d "$offset"
+}
+_stringOffsetInsensitive() {
+  # __IDENTICAL__ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
 # Remove fields from left to right from a text file as a pipe
 # Usage: {fn} fieldCount < input > output
 # Argument: fieldCount - Optional. Integer. Number of field to remove. Default is just first `1`.

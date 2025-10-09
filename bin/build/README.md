@@ -21,21 +21,23 @@ Depends on:
 
 This toolkit assumes:
 
-- Binaries from this project installed at `./bin/build/` (required)
-- Files containing bash code end with `.sh`
-- **Release notes** are located in a dedicated subdirectory (may be configured per-project), files are named `v1.0.0.md`
-  which match version names (`v1.0.0`) (required)
-- Installation pulls from `github.com` using `curl` or `wget`
+- Sources from this project installed at `./bin/build/` (required)
+- Bash code files end with `.sh`
+- **Release notes** are located in a dedicated subdirectory (may be configured per-project), using markdown `.md` and
+  files are named `v1.0.0.md`  which match version names (`v1.0.0`) (required)
+- Installation of new versions pulls from `github.com` using `curl` or `wget`
 
 To use in your pipeline:
 
 - copy `bin/build/install-bin-build.sh` into your project (changing last line as needed) or use `installInstallBuild` to
   install it.
-- run it before you need this code (will be installed at `./bin/build`)
+- Run the installer it before you need this code (will be installed at `./bin/build`)
+- `source bin/build/tools.sh` to load the library and use any function defined
 
 To install it in the operating system:
 
 - Copy `bin/build/install-bin-build.sh` to `/usr/local/bin/build/` and `sudo /usr/local/bin/build/install-bin-build.sh`
+- Source `/usr/local/bin/build/tools.sh` in your scripts to get access to all functions
 
 ## Main entry points
 
@@ -51,7 +53,7 @@ Zesk Build makes the following assumptions about your project structure:
 - `./bin/hooks/` - Application hook implementation (`hook-name` with `.sh` on the end)
 - `./bin/env/` - Your project's environment variables defaults (`NAME` with `.sh` on the end if you use
   `buildEnvironmentLoad` or `buildEnvironmentGet`)
-- `./docs/release/v1.0.0.md` - Release notes (override by adding `BUILD_RELEASE_NOTES` environment)
+- `./docs/release/v1.0.0.md` - Release notes (override path by adding `BUILD_RELEASE_NOTES` environment)
 
 ## Zesk Build Project structure
 
@@ -69,7 +71,7 @@ Internally Zesk Build is organized:
 
     export PATH="$PATH:$BUILD_HOME/bin/build"
 
-Binaries are:
+The included binaries at `bin/build/` are:
 
 - `cannon.sh` - `cannon` - replace strings in many files. Destructive! Warning! Danger!
 - `chmod-sh.sh` - `makeShellFilesExecutable` - Makes `.sh` files `+x`
@@ -80,7 +82,7 @@ Binaries are:
 - `bitbucket-container.sh` - `bitbucketContainer` wrapper
 - `map.sh` - `mapEnvironment` wrapper
 - `need-bash.sh` - For Docker image installs which lack bash (usually running `sh`). This script enables install of
-  `bash` to run `tools.sh` properly.
+  `bash` to run `tools.sh` properly. (used by `alpineContainer` specifically)
 - `new-release.sh` - `releaseNew` wrapper
 - `release-notes.sh` - `releaseNotes` wrapper
 - `test-tools.sh` - Tools for `testSuite`
@@ -98,16 +100,16 @@ To load all functions:
 
     #!/usr/bin/env bash
     # shellcheck source=/dev/null
-    source "${BASH_SOURCE[0]%/*}/../bin/build/tools.sh" 
-
-    decorate orange "The code is working."
-    bigText "Hooray."
+    if source "${BASH_SOURCE[0]%/*}/../bin/build/tools.sh"; then 
+        decorate orange "The code is working."
+        bigText "Hooray."
+    fi
 
 For more complex (and more robust error handling) see `__install` and `__tools` code in `bin/build/identical`.
 
 ## Artifacts: Build Directory and `.deploy`
 
-A `.build` directory is created at a configured location set by the environment variable `BUILD_CACHE`. If not set, it
+A `.build/` directory is created at a configured location set by the environment variable `BUILD_CACHE`. If not set, it
 uses `XDG_CACHE_HOME` directory, which defaults to a standard directory.
 
 You can preserve the build directory post-build to see any details. Most failures will still output the log, but they
@@ -119,7 +121,7 @@ required, however).
 
 ## Run tests in docker
 
-Scripts support loading an environment files and running commands directly in a test container:
+Scripts support loading one or more environment files and running commands directly in a test container:
 
     bin/build/bitbucket-container.sh --env-file .env.MYTESTENV bin/test.sh
 
@@ -139,7 +141,7 @@ them.
     NAME="Zesk Build"
     export ITEMS=(1 2 3 4)
 
-Given that your project may use one or both, it's best to support any implementation when possible.
+Given that your project may use one or both, we support *any* implementation when possible.
 
 > **Note:** `.env` files appear to have different implementations such that it's difficult at best to have a single
 > format which works in your projects.
@@ -164,7 +166,8 @@ Tested bash versions:
 - 5.2.26 (`Alpine`)
 
 If you test on another OS or need support on a specific
-platform, [report an issue](https://github.com/zesk/build/issues).
+platform, [report an issue](https://github.com/zesk/build/issues). We have early platform testing working via
+`bin/tools.sh buildTestPlatforms` but it needs work.
 
 ## Known issues and workarounds
 
