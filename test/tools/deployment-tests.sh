@@ -26,8 +26,8 @@ __prepareSampleApplicationDeployment() {
   catchReturn "$handler" directoryChange "$appRoot" tarCreate "$target/app.tar.gz" .webApplication bin docs public src simple.application.php .env .deploy || return $?
   catchEnvironment "$handler" rm -rf "$tempPath" || return $?
 
-  # Mock deployment
-  catchEnvironment "$handler" tar zxf "$target/app.tar.gz" || return $?
+  # Mock deployment ?
+  # catchEnvironment "$handler" tar zxf "$target/app.tar.gz" || return $?
 }
 
 #
@@ -35,6 +35,10 @@ __prepareSampleApplicationDeployment() {
 #
 testDeployRemoteFinish() {
   local handler="returnMessage"
+
+  mockEnvironmentStart BUILD_COLORS
+  mockEnvironmentStart BUILD_DEBUG_LINES
+
   local tempDirectory id oldId matches finishArgs
 
   exec 2>&1
@@ -137,9 +141,11 @@ testDeployRemoteFinish() {
   assertEquals "$tempDirectory/deploy/$id/app" "$(readlink "$tempDirectory/app")" || return $?
   assertExitCode 0 test -L "$tempDirectory/app" || return $?
 
-  unset BUILD_DEBUG_LINES
-
   catchEnvironment "$handler" rm -rf "$tempDirectory" || return $?
+
+  mockEnvironmentStop BUILD_COLORS
+  mockEnvironmentStop BUILD_DEBUG_LINES
+
   return 0
 }
 
