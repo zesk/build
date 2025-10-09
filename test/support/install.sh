@@ -80,7 +80,7 @@ __checkFunctionInstalls() {
 # Usage: {fn} why checkFunction noun thing ...
 __checkFunctionUninstalls() {
   local handler="returnMessage"
-  local checkFunction="" noun="" thing="" installer=""
+  local checkFunction="" noun="" thing="" uninstaller=""
 
   checkFunction=$(usageArgumentFunction "$handler" "checkFunction" "${1-}") && shift || return $?
   noun=$(usageArgumentString "$handler" "noun" "${1-}") && shift || return $?
