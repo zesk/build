@@ -193,6 +193,9 @@ _waitForValue() {
 testDeployApplication() {
   local handler="returnMessage"
 
+  mockEnvironmentStart BUILD_COLORS
+  mockEnvironmentStart BUILD_DEBUG_LINES
+
   exec 2>&1
 
   local d quietLog migrateVersion startingValue firstArgs home lastOne t
@@ -205,7 +208,7 @@ testDeployApplication() {
   fi
   assertExitCode 0 phpInstall || return $?
 
-  if ! home=$(pwd -P 2>/dev/null); then
+  if ! home=$(catchReturn "$handler" buildHome); then
     returnEnvironment "Unable to pwd" || return $?
   fi
 
@@ -424,6 +427,9 @@ testDeployApplication() {
   unset BUILD_DEBUG
 
   catchReturn "$handler" rm -rf "$d" || return $?
+
+  mockEnvironmentStop BUILD_COLORS
+  mockEnvironmentStop BUILD_DEBUG_LINES
 }
 
 testDeployPackageName() {
