@@ -22,13 +22,14 @@ pipelines:
           services:
             - docker
           artifacts:
-            - test.stats
             - .build.env
           script:
             - bin/build.sh --commit
       - parallel:
           steps:
             - step:
+                artifacts:
+                  - test.stats
                 services:
                   - docker
                 size: 2x
@@ -36,6 +37,8 @@ pipelines:
                 script:
                   - bin/tools.sh buildProductionTest --env-file .build.env --skip-tag slow --skip-tag package-install
             - step:
+                artifacts:
+                  - test.stats
                 services:
                   - docker
                 size: 2x
@@ -43,6 +46,8 @@ pipelines:
                 script:
                   - bin/tools.sh buildProductionTest --env-file .build.env --tag slow
             - step:
+                artifacts:
+                  - test.stats
                 services:
                   - docker
                 size: 1x
@@ -67,6 +72,8 @@ pipelines:
       - parallel:
           steps:
             - step:
+                artifacts:
+                  - test.stats
                 services:
                   - docker
                 size: 2x
@@ -74,6 +81,8 @@ pipelines:
                 script:
                   - bin/tools.sh buildStagingTest --env-file .build.env --skip-tag slow --skip-tag package-install
             - step:
+                artifacts:
+                  - test.stats
                 services:
                   - docker
                 size: 2x
@@ -81,6 +90,8 @@ pipelines:
                 script:
                   - bin/tools.sh buildStagingTest --env-file .build.env --tag slow
             - step:
+                artifacts:
+                  - test.stats
                 services:
                   - docker
                 size: 1x
@@ -92,6 +103,7 @@ pipelines:
           size: 4x
           artifacts:
             - documentation/.site/
+            - documentation/.docs/
           script:
             - bin/build/tools.sh environmentFileLoad .build.env --execute bin/build.sh --documentation --commit
             - bin/deploy.sh --env-file .build.env --documentation --no-release
@@ -122,8 +134,9 @@ pipelines:
       - step:
           deployment: documentation
           name: Build documentation
-          services:
-            - docker
+          artifacts:
+            - documentation/.site/
+            - documentation/.docs/
           script:
             - bin/build.sh --documentation --commit
             - bin/deploy.sh --env-file .build.env --documentation --no-release
