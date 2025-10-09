@@ -18,8 +18,6 @@
 
 ## Generating documentation
 
-{bashDocumentFunction}
-
 {documentationTemplateUpdate}
 
 {documentationTemplateCompile}

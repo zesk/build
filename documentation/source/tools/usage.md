@@ -88,16 +88,6 @@ Essentially a `usage` function is a failure handler. If you need a simple `usage
 
 {usageArgumentSecret}
 
-## Argument Errors (fail)
-
-{usageArgumentMissing}
-
-{usageArgumentUnknown}
-
-{buildEnvironmentGetDirectory}
-
-{dateValid}
-
 ## Lists
 
 {usageArgumentArray}

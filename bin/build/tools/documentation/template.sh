@@ -223,7 +223,7 @@ _bashDocumentation_Template() {
       fi
     done < <(mapTokens <"$template" | sort -u)
     mapEnvironment <"$template" | grepSafe -E -v '^shellcheck|# shellcheck' | markdown_removeUnfinishedSections || :
-  ) || throwEnvironment "$handler" "_bashDocumentation_Template failed: ${saved[*]}" || return $?
+  ) || throwEnvironment "$handler" "${FUNCNAME[0]} failed: ${saved[*]}" || return $?
 }
 
 # Formats arguments for markdown

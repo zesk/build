@@ -165,7 +165,7 @@ iTerm2Aliases() {
 
   local home skipped=()
 
-  home=$(catchReturn "$handler" userRecordHome) || return $?
+  home=$(catchReturn "$handler" userHome) || return $?
 
   [ -d "$home/.iterm2" ] || throwEnvironment "$handler" "Missing ~/.iterm2" || return $?
 
@@ -855,7 +855,7 @@ iTerm2Init() {
 
   local home
   catchReturn "$handler" buildEnvironmentLoad TERM || return $?
-  home=$(catchReturn "$handler" userRecordHome) || return $?
+  home=$(catchReturn "$handler" userHome) || return $?
 
   # iTerm2 customizations
   local ii=()

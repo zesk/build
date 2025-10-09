@@ -12,6 +12,6 @@ See:
 - `project-activate` hook
 - `project-deactivate` hook
 
-{approvedBashSources}
+{approvedSources}
 
 {approveBashSource}

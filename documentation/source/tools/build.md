@@ -13,6 +13,8 @@
 
 {buildEnvironmentGet}
 
+{buildEnvironmentGetDirectory}
+
 {buildEnvironmentLoad}
 
 {buildEnvironmentContext}
@@ -39,10 +41,11 @@
 
 These tools are if you wish to write your own installer for your own software in `bash` using **Zesk Build**.
 
-Copy `install-bin-build.sh` and rename, keep up to date in your own project with
+Copy `install.sample.sh` and rename, and keep up to date in your own project with
 `bin/build/identical-repair.sh --internal`.
 
 {_installRemotePackage}
+
 {installInstallBinary}
 
 It will download and install your package as outlined in [building your own installer](../guide/installer.md)

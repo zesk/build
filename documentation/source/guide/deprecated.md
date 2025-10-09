@@ -74,8 +74,8 @@ This document lists functionality which was removed, why, and when.
 ### Release v0.10.4
 
 - `crontabApplicationUpdate` -> `crontabApplicationUpdate` (more accurate name)
-- `usageArgumentMissing` -> `usageArgumentMissing` (consistency)
-- `usageArgumentUnknown` -> `usageArgumentUnknown` (consistency)
+- `usageArgumentMissing` (unused/consistency)
+- `usageArgumentUnknown` (unused/consistency)
 
 ### Release v0.11.1
 

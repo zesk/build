@@ -419,7 +419,7 @@ testSuite() {
 
       ! $verboseMode || statusMessage decorate info "$item flags is $(decorate code "${rawFlags:-none specified}")" || returnClean $? "${clean[@]}" || return $?
 
-      local testHome saveHome clean=()
+      local testHome saveHome
 
       saveHome=$(pwd)
 
@@ -470,7 +470,7 @@ testSuite() {
   local assertionFailures assertionSuccesses stats=()
   IFS=$'\n' read -r -d '' assertionFailures assertionSuccesses < <(_assertionStatistics)
 
-  catchEnvironment "$handler" rm -rf "${clean[@]}" || return $?
+  [ ${#clean[@]} -eq 0 ] || catchEnvironment "$handler" rm -rf "${clean[@]}" || return $?
 
   local failColor="error"
   [ "$assertionFailures" -ne 0 ] || failColor="subtle"

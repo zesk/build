@@ -43,7 +43,7 @@ __awsCredentialsFile() {
   usageRequireBinary "$handler" mkdir chmod touch || return $?
 
   if [ -z "$home" ]; then
-    home="$(catchReturn "$handler" userRecordHome)" || return $?
+    home="$(catchReturn "$handler" userHome)" || return $?
   fi
   if [ ! -d "$home" ]; then
     # Argument is validated above MUST be environment

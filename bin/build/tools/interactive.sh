@@ -99,6 +99,20 @@ _approveBashSource() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
+
+# List approved Bash script sources which can be loaded automatically by project hooks.
+#
+# Argument: --debug - Flag. Optional. Show a lot of information about the approved cache.
+# Argument: --no-delete - Flag. Optional. Do not delete stale approval files.
+# Argument: --delete - Flag. Optional. Delete stale approval files.
+approvedSources() {
+  __interactiveLoader "_${FUNCNAME[0]}" "__${FUNCNAME[0]}" "$@"
+}
+_approvedSources() {
+  # __IDENTICAL__ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
 # Notify after running a binary. Uses the `notify` hook with some handy paramters which are inherited
 # between "success" and "failure":
 #

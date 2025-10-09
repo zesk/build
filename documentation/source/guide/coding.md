@@ -251,14 +251,12 @@ handler:
   integer (0 or greater)
 - [`usageArgumentLoadEnvironmentFile`](./tools/handler.md#usageArgumentLoadEnvironmentFile) - Argument must be an
   environment file which is also loaded immediately.
-- [`usageArgumentMissing`](./tools/handler.md#usageArgumentMissing) - Fails with an argument is missing error
 - [`usageArgumentString`](./tools/handler.md#usageArgumentString) - Argument must be a non-blank string
 - [`usageArgumentEmptyString`](./tools/handler.md#usageArgumentEmptyString) - Argument may be anything
 - [`usageArgumentBoolean`](./tools/handler.md#usageArgumentBoolean) - Argument must be a boolean value (`true` or `false`)
 - [`usageArgumentEnvironmentVariable`](./tools/handler.md#usageArgumentEnvironmentVariable) - Argument must be a valid
   environment variable name
 - [`usageArgumentURL`](./tools/handler.md#usageArgumentURL) - Argument must be a valid URL
-- [`usageArgumentUnknown`](./tools/handler.md#usageArgumentUnknown) - Fails with an unknown argument error
 - [`usageArgumentCallable`](./tools/handler.md#usageArgumentCallable) - Argument must be callable (a function or
   executable)
 - [`usageArgumentFunction`](./tools/handler.md#usageArgumentFunction) - Argument must be a function

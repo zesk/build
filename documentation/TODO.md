@@ -634,7 +634,6 @@ On a "2x" machine:
 - usageArgumentLink
 - usageArgumentList
 - usageArgumentLoadEnvironmentFile
-- usageArgumentMissing
 - usageArgumentNumber
 - usageArgumentRealDirectory
 - usageArgumentRealFile
@@ -642,4 +641,3 @@ On a "2x" machine:
 - usageArgumentSecret
 - usageArgumentString
 - usageArgumentURL
-- usageArgumentUnknown

@@ -1,7 +1,6 @@
 # v0.39.0
 isAbsolutePath|pathIsAbsolute
 bashDocumentation_Extract|bashDocumentationExtract
-# IDENTICAL _home |# IDENTICAL userRecord |
 # IDENTICAL _return |# IDENTICAL returnMessage |
 # _IDENTICAL_ exitString |# _IDENTICAL_ returnString |
 exitString|returnCodeString

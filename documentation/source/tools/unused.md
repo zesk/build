@@ -24,10 +24,6 @@ Hides these from [New and uncategorized functions](./todo.md)
 
 {roundFloat}
 
-{mostRecentlyModifiedFile}
-
-{mostRecentlyModifiedTimestamp}
-
 {betterType}
 
 {simplifyPath}

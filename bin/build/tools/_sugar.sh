@@ -161,7 +161,7 @@ executeEcho() {
   printf -- "➡️ %s\n" "$(decorate each quote -- "$@")" && execute "$@" || return $?
 }
 
-# _IDENTICAL_ execute 7
+# IDENTICAL execute 7
 
 # Argument: binary ... - Required. Executable. Any arguments are passed to `binary`.
 # Run binary and output failed command upon error

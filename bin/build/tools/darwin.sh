@@ -23,7 +23,7 @@ darwinSoundDirectory() {
   [ $# -eq 0 ] || __help --only "$handler" "$@" || return "$(convertValue $? 1 0)"
 
   isDarwin || throwEnvironment "$handler" "Only on Darwin" || return $?
-  home=$(catchReturn "$handler" userRecordHome) || return $?
+  home=$(catchReturn "$handler" userHome) || return $?
   printf "%s\n" "$home/Library/Sounds"
 }
 _darwinSoundDirectory() {
@@ -37,7 +37,7 @@ darwinSoundValid() {
   local sound sounds=()
   while read -r sound; do sounds+=("$sound"); done < <(darwinSoundNames)
   while [ $# -gt 0 ]; do
-
+    [ "${#sounds[@]}" -gt 0 ] || return 1
     inArray "$1" "${sounds[@]}" || return 1
     shift
   done

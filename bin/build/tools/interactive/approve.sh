@@ -182,12 +182,8 @@ __interactiveApproveClear() {
 }
 
 # List approved Bash script sources which can be loaded automatically by project hooks.
-#
-# Argument: --debug - Flag. Optional. Show a lot of information about the approved cache.
-# Argument: --no-delete - Flag. Optional. Do not delete stale approval files.
-# Argument: --delete - Flag. Optional. Delete stale approval files.
-approvedSources() {
-  local handler="_${FUNCNAME[0]}"
+__approvedSources() {
+  local handler="$1" && shift
 
   local debugFlag=false deleteFlag=false highlighted=()
 
@@ -287,8 +283,4 @@ approvedSources() {
   [ "${#unapprovedBashSources[@]}" -eq 0 ] || printf "%s\n%s\n\n" "$(decorate warning "Unapproved:")" "$(printf -- "%s\n" "${unapprovedBashSources[@]}" | sort | awk -F '|' '{ print $2 }')"
 
   ! $deleteFlag || catchEnvironment "$handler" rm -f "${deleteFiles[@]}" || return $?
-}
-_approvedSources() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

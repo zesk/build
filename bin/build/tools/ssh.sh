@@ -237,7 +237,7 @@ sshSetup() {
 
   local home
 
-  home=$(catchReturn "$handler" userRecordHome) || return $?
+  home=$(catchReturn "$handler" userHome) || return $?
 
   local sshHomePath="$home/.ssh/"
 

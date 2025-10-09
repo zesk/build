@@ -976,7 +976,7 @@ _convertValue() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# _IDENTICAL_ executeInputSupport 39
+# IDENTICAL executeInputSupport 39
 
 # Support arguments and stdin as arguments to an executor
 # Argument: executor ... -- - The command to run on each line of input or on each additional argument. Arguments to prefix the final variable argument can be supplied prior to an initial `--`.
@@ -1173,7 +1173,7 @@ _isFunction() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# IDENTICAL decorate 240
+# IDENTICAL decorate 244
 
 # Sets the environment variable `BUILD_COLORS` if not set, uses `TERM` to calculate
 #
@@ -1251,7 +1251,11 @@ _decorations() {
 # Usage: decorate style [ text ... ]
 # Argument: style - String. Required. One of: reset underline no-underline bold no-bold black black-contrast blue cyan green magenta orange red white yellow bold-black bold-black-contrast bold-blue bold-cyan bold-green bold-magenta bold-orange bold-red bold-white bold-yellow code info notice success warning error subtle label value decoration
 # Argument: text - Text to output. If not supplied, outputs a code to change the style to the new style.
+# You can extend this function by writing a your own extension `__decorationExtensionCustom` is called for `decorate custom`.
 # stdout: Decorated text
+# Environment: __BUILD_COLORS - String. Cached color lookup.
+# Environment: BUILD_COLORS - Boolean. Colors enabled (`true` or `false`).
+# Environment: BUILD_COLORS_MODE - String. Color mode (`light` or `dark`). This is going to be deprecated.
 # Requires: isFunction returnArgument awk catchEnvironment usageDocument executeInputSupport __help
 decorate() {
   local handler="_${FUNCNAME[0]}" text="" what="${1-}" lp dp style
@@ -1415,7 +1419,7 @@ __decorateExtensionQuote() {
 
 # <-- END of IDENTICAL decorate
 
-# _IDENTICAL_ execute 7
+# IDENTICAL execute7
 
 # Argument: binary ... - Required. Executable. Any arguments are passed to `binary`.
 # Run binary and output failed command upon error

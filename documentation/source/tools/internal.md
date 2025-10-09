@@ -6,7 +6,7 @@
 
 ## Building
 
-{__buildDocumentationBuild}
+{buildDocumentationBuild}
 
 {__buildTestSuite}
 
