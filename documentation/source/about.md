@@ -8,7 +8,7 @@ Zesk Build was written by Kent Davidson, contact via his consulting
 company [Market Acumen, Inc.](https://www.marketacumen.com/?crsource=zesk-build&crcat=code&crkw=about) or
 via [GitHub](https://github.com/razzed). Credits to a few recipes are given within the code and documentation.
 
-If you find this project useful and f you find yourself or another colleague in need of help with existing code and
+If you find this project useful and if you find yourself or another colleague in need of help with existing code and
 projects, CI/CD
 pipelines, devops, security, engineering
 architectures, database, infrastructure, or performance and optimization issues –

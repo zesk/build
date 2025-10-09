@@ -23,7 +23,7 @@ Examples:
 [⬅ Parent ](../index.md)
 <hr />
 
-## Functions
+# Functions
 
 {bashPrompt}
 {bashPromptColorScheme}
@@ -31,7 +31,7 @@ Examples:
 {bashPromptMarkers}
 {bashUserInput}
 
-## Bash Prompt Modules
+# Bash Prompt Modules
 
 - [`bashPromptModule_binBuild`](#bashPromptModule_binBuild)
 - [`bashPromptModule_ApplicationPath`](#bashPromptModule_ApplicationPath)

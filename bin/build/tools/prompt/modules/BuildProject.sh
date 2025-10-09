@@ -9,6 +9,7 @@ bashPromptModule_binBuild() {
 }
 
 # Check which bin/build we are running and keep local to current project. Activates when we switch between projects.
+#
 # - Re-sources `bin/build` so versions do not conflict.
 # - Runs hook `project-deactivate` in the old project (using that `bin/build` library)
 # - Runs the `project-activate` hook in the new project

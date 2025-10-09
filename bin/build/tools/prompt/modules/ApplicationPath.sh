@@ -3,7 +3,7 @@
 # Copyright &copy; 2025 Market Acumen, Inc.
 #
 
-# Show current application and path as a badge
+# Show current application and path as a badge in iTerm2
 # Platform: iTerm2
 # Terminal: iTerm2
 # Example:     bashPrompt bashPromptModule_ApplicationPath

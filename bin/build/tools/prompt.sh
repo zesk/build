@@ -35,7 +35,7 @@ __promptLoader() {
 # - Easily extend your bash prompt with modules
 #
 #
-# ## PROMPT MODULES
+# ### PROMPT MODULES
 #
 # Modules are any binary or executable to run each prompt, and can be added, removed or managed here.
 #
@@ -49,7 +49,7 @@ __promptLoader() {
 # 4. Host color (Array index 3)
 # 5. Directory color (Array index 4)
 #
-# ## PROMPT FORMATTING
+# ### PROMPT FORMATTING
 #
 # Prompts respond to the prior command by changing the status text and color based on the exit code. The **prompt color** for success and failure can be
 # set using the `--colors` option.
@@ -64,6 +64,8 @@ __promptLoader() {
 # - `directory` - Host name with color (`\h` equivalent)
 # - `status` - `successText` or `failureText` with appropriate colors
 # - `reset` - A color reset escape sequence to cancel any color mode currently set
+#
+# An example would be `bashPrompt --format "{label} {user}@{host} {status} {$}"`
 #
 # Example: bashPrompt --colors "bold-cyan:bold-magenta:green:orange:code" --format "{label} {user}@{host} {status}"
 # Environment: PROMPT_COMMAND
@@ -161,8 +163,9 @@ bashPromptColorScheme() {
   printf -- "%s" "$colors"
 }
 
-#
-# Given a list of color names, generate the color codes in a :-separated list
+# Given a list of color names, generate the color codes in a colon separated list
+# Argument: text - String. Required. List of color names in a colon separated list.
+# stdout: Outputs color *codes* separated by colons.
 # Requires: decorations read inArray decorate listJoin
 bashPromptColorsFormat() {
   local index color colors=()
