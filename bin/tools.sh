@@ -11,7 +11,7 @@
 # Copyright &copy; 2025, Market Acumen, Inc.
 #
 
-# _IDENTICAL_ application.sh 153
+# _IDENTICAL_ application.sh 144
 
 #
 # This file generically loads all application tools in `./bin/tools` and allows for extensions
@@ -58,15 +58,6 @@ __tools() {
   __source bin/build/tools.sh "$@"
 }
 
-# IDENTICAL execute 7
-
-# Argument: binary ... - Required. Executable. Any arguments are passed to `binary`.
-# Run binary and output failed command upon error
-# Requires: returnMessage
-execute() {
-  "$@" || returnMessage "$?" "$@" || return $?
-}
-
 # IDENTICAL __install 25
 
 # Load a bash script (installing if needed) and run an optional command
@@ -75,7 +66,7 @@ execute() {
 # Argument: relativeHome - Optional. Directory. Path to application home. Default is `..`.
 # Argument: command ... - Optional. Callable. A command to run and optional arguments.
 # Example:      __install bin/install-bin-build.sh bin/build/tools.sh ../../.. decorate info "$@"
-# Requires: returnMessage execute
+# Requires: returnMessage
 __install() {
   local installer="${1-}" source="${2-}" relativeHome="${3:-".."}" me="${BASH_SOURCE[0]}"
   local here="${me%/*}" e=253 a

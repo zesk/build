@@ -7,7 +7,7 @@
 # Copyright &copy; 2025, Market Acumen, Inc.
 #
 
-# _IDENTICAL_ application.sh 153
+# _IDENTICAL_ application.sh 144
 
 #
 # This file generically loads all application tools in `./bin/tools` and allows for extensions
@@ -52,15 +52,6 @@ __source() {
 # Requires: __source
 __tools() {
   __source bin/build/tools.sh "$@"
-}
-
-# IDENTICAL execute 7
-
-# Argument: binary ... - Required. Executable. Any arguments are passed to `binary`.
-# Run binary and output failed command upon error
-# Requires: returnMessage
-execute() {
-  "$@" || returnMessage "$?" "$@" || return $?
 }
 
 # IDENTICAL __install 25

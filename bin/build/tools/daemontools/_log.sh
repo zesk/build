@@ -46,7 +46,7 @@ _isUnsignedInteger() {
 
 # <-- END of IDENTICAL returnMessage
 
-# IDENTICAL execute 7
+# _IDENTICAL_ execute 7
 
 # Argument: binary ... - Required. Executable. Any arguments are passed to `binary`.
 # Run binary and output failed command upon error

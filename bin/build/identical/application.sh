@@ -58,15 +58,6 @@ __tools() {
   __source bin/build/tools.sh "$@"
 }
 
-# IDENTICAL execute 7
-
-# Argument: binary ... - Required. Executable. Any arguments are passed to `binary`.
-# Run binary and output failed command upon error
-# Requires: returnMessage
-execute() {
-  "$@" || returnMessage "$?" "$@" || return $?
-}
-
 # IDENTICAL __install 25
 
 # Load a bash script (installing if needed) and run an optional command

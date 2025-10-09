@@ -91,7 +91,7 @@ _mapReturn() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# IDENTICAL execute 7
+# _IDENTICAL_ execute 7
 
 # Argument: binary ... - Required. Executable. Any arguments are passed to `binary`.
 # Run binary and output failed command upon error
