@@ -6,6 +6,9 @@ All hooks should be in your project root located at `bin/hooks`. (This also can 
 
 If build has a default behavior for your hook, it's located at `bin/build/hooks`.
 
+> IMPORTANT: Environment `BUILD_HOOK_EXTENSIONS` must contain `sh` to if you want `bin/build/hooks` default hooks to run
+> in your project. The default value is `sh`.
+
 Most hooks are optional unless specified.
 
 ## [Version Hooks](../tools/version.md)
@@ -15,7 +18,8 @@ Most hooks are optional unless specified.
 - `version-current` - Outputs a string which displays the current application version. Default hook uses the
   `docs/release` directory.
 - `version-live` - The current published live version of the software. (Optional but **highly recommended.**)
-- `version-notes` - When a new release notes file needs to be generated, this generates the new file if you want something custom.
+- `version-notes` - When a new release notes file needs to be generated, this generates the new file if you want
+  something custom.
 - `version-notes-copyright` - And, if you want to have a custom copyright line, just add this hook.
 
 ## [Application Hooks](../tools/application.md)

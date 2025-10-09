@@ -10,7 +10,7 @@ Most functions are used in the form suffixed with `|| return $?` which takes the
 from the function.
 
     returnMessage 1 "This failed" || return $?
-    __argument isInteger "$1" || return $?
+    catchArgument "$handler" isInteger "$1" || return $?
 
 Alternately, these can be used within an `if` or other compound statement but the return code should be returned to the
 user, typically.
@@ -19,7 +19,8 @@ Quick guide:
 
 - `isPositiveInteger value` - Returns 0 if value passed is an integer, otherwise returns 1.
 - `isBoolean value` - Returns 0 if value passed is `true` or `false`, otherwise returns 1.
-- `booleanChoose testValue trueValue falseValue` - Outputs `trueValue` when `[ "$testValue" = "true" ]` otherwise outputs
+- `chooseBoolean testValue trueValue falseValue` - Outputs `trueValue` when `[ "$testValue" = "true" ]` otherwise
+  outputs
   `falseValue`.
 
 Error codes:
@@ -39,7 +40,8 @@ Run-related:
 - `execute command ...` - Run `command ...` (with any arguments) and then `_return` if it fails.
 - `executeEcho command ...` - Output the `command ...` to stdout prior to running, then `execute` it (helpful to debug
   statements within other scripts)
-- `__environment command ...` - Run `command ...` (with any arguments) and then `returnEnvironment` if it fails.
+- `catchEnvironment handler command ...` - Run `command ...` (with any arguments) and then run `handler` with an
+  environment error if it fails.
 
 # Sugar Functions References
 
@@ -47,11 +49,11 @@ Run-related:
 
 {isBoolean}
 
+{booleanChoose}
+
 {returnCode}
 
 {returnCodeString}
-
-{booleanChoose}
 
 ## Cleanup
 
@@ -71,6 +73,18 @@ Run-related:
 
 {execute}
 
-{__environment}
+{executeEcho}
 
-{__argument}
+{returnThrow}
+
+{convertValue}
+
+{catchCode}
+
+{catchEnvironment}
+
+{catchArgument}
+
+{throwEnvironment}
+
+{throwArgument}
