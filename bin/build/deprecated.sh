@@ -166,11 +166,14 @@ __deprecatedCleanup() {
     statusMessage --last decorate info "Cleaning up configuration ..."
     __deprecatedConfiguration || exitCode=$?
   fi
-  if [ $exitCode -eq 0 ] && [ -f "$jsonFile" ]; then
-    fingerprint=$(__catch "$handler" hookRun application-fingerprint) || return $?
-    statusMessage --last decorate info "Saving deprecated fingerprint $(decorate subtle "$fingerprint") ..."
-    catchEnvironment "$handler" jsonFileSet "$jsonFile" "$jqPath" "$fingerprint" || return $?
-    statusMessage --last timingReport "$start" "Failures occurred, not caching results."
+  if [ -f "$jsonFile" ]; then
+    if [ $exitCode -eq 0 ]; then
+      fingerprint=$(__catch "$handler" hookRun application-fingerprint) || return $?
+      statusMessage --last decorate info "Saving deprecated fingerprint $(decorate subtle "$fingerprint") ..."
+      catchEnvironment "$handler" jsonFileSet "$jsonFile" "$jqPath" "$fingerprint" || return $?
+    else
+      statusMessage --last timingReport "$start" "Failures occurred, not caching results."
+    fi
   fi
   statusMessage --last timingReport "$start" "Deprecated process took"
   return "$exitCode"

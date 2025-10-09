@@ -98,7 +98,7 @@ if source "$(dirname "${BASH_SOURCE[0]}")/tools.sh"; then
       # Fingerprint has likely changed
       fingerprint=$(catchReturn "$handler" hookRun application-fingerprint) || return $?
       catchReturn "$handler" jsonFileSet "$jsonFile" "$jqPath" "$fingerprint" || return $?
-      decorate success "Fingerprint updated: $fingerprint"
+      printf "%s %s\n" "$(decorate success "Fingerprint updated:")" "$(decorate green "$fingerprint")"
     fi
 
   }
