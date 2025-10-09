@@ -24,12 +24,13 @@ testIsDockerComposeRunning() {
     BUILD_HOME=$newHome
     catchEnvironment "$handler" mkdir "$BUILD_HOME/bin" || return $?
     catchEnvironment "$handler" cp -R "$oldHome/bin/build" "$BUILD_HOME/bin/build" || return $?
-    catchEnvironment "$handler" pushd "$BUILD_HOME" || return $?
+    catchEnvironment "$handler" muzzle pushd "$BUILD_HOME" || return $?
 
     assertNotExitCode --stderr-match "Missing" --stderr-match ".STAGING.env" 0 dockerComposeIsRunning || return $?
     catchEnvironment "$handler" touch "$BUILD_HOME/.STAGING.env" || return $?
     assertNotExitCode --stderr-match "Missing" --stderr-match "docker-compose.yml" 0 dockerComposeIsRunning || return $?
 
+    catchEnvironment "$handler" muzzle popd || return $?
     catchEnvironment "$handler" rm -rf "$newHome" || return $?
     mockEnvironmentStop BUILD_HOME
   fi

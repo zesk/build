@@ -1041,7 +1041,9 @@ __testRun() {
     ###########################################
     ###########################################
     # ! $verboseMode || decorate each code "${runner[@]}"
+    catchReturn "$handler" muzzle pushd "$tempDirectory" || return $?
     if "${runner[@]}" 2> >(tee -a "$captureStderr"); then
+      catchReturn "$handler" muzzle popd || :
       TMPDIR="$savedTMPDIR"
       if fileIsEmpty "$captureStderr"; then
         printf "%s\n" "SUCCESS $__test" >>"$quietLog"
@@ -1053,6 +1055,7 @@ __testRun() {
       fi
     else
       resultCode=$?
+      catchReturn "$handler" muzzle popd || :
       TMPDIR="$savedTMPDIR"
       stickyCode=$errorTest
       printf "\n%s\n" "FAILED [$resultCode] $__test" | tee -a "$quietLog"
