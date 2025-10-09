@@ -1041,7 +1041,9 @@ __testRun() {
     ###########################################
     ###########################################
     # ! $verboseMode || decorate each code "${runner[@]}"
-    catchReturn "$handler" muzzle pushd "$tempDirectory" || return $?
+    local startDirectory
+    startDirectory=$(catchEnvironment "$handler" pwd) || return $?
+    catchReturn "$handler" muzzle pushd "$startDirectory" || return $?
     if "${runner[@]}" 2> >(tee -a "$captureStderr"); then
       catchReturn "$handler" muzzle popd || :
       TMPDIR="$savedTMPDIR"
