@@ -419,40 +419,40 @@ testSuite() {
 
       ! $verboseMode || statusMessage decorate info "$item flags is $(decorate code "${rawFlags:-none specified}")" || returnClean $? "${clean[@]}" || return $?
 
-      local testHome saveHome
+      local testHome saveHome cleanTestOnly=()
 
       saveHome=$(pwd)
 
       # --cd-away handling
       if $cdAway; then
-        local buildHomeRequired=false
-        ! testFlagBoolean "$__flags" "Build-Home" || buildHomeRequired=true
+        local buildHomeRequired
+        buildHomeRequired=$(testFlagBoolean "Build-Home" "$__flags" false)
 
         # Force it off for functions which flag it
         if $buildHomeRequired; then
           testHome="$home"
         else
-          testHome="$(fileTemporaryName "$handler" -d)" || returnClean $? "${clean[@]}" || return $?
-          clean+=("$testHome")
+          testHome="$(fileTemporaryName "$handler" -d)" || returnClean $? "${clean[@]}" "${cleanTestOnly[@]+}" || return $?
+          cleanTestOnly+=("$testHome")
         fi
       else
         testHome="$saveHome"
       fi
       testsRun+=("$item")
-      catchEnvironment "$handler" cd "$testHome" || returnClean $? "${clean[@]}" || return $?
+      catchEnvironment "$handler" cd "$testHome" || returnClean $? "${clean[@]}" "${cleanTestOnly[@]+}" || return $?
 
       ! $verboseMode || statusMessage --last decorate pair "Raw flags" "$rawFlags"
       "${runner[@]+"${runner[@]}"}" __testRun "$quietLog" "$testTemporaryTest" "$item" "$rawFlags" || __testSuiteExecutor "$item" "$sectionFile" "$testLine" "$__flags" "${failExecutors[@]+"${failExecutors[@]}"}" || __testFailed "$sectionName" "$item" || returnUndo $? cd "$saveHome" || returnClean $? "${clean[@]}" || return $?
 
-      catchEnvironment "$handler" cd "$saveHome" || returnClean $? "${clean[@]}" || return $?
+      catchEnvironment "$handler" cd "$saveHome" || returnClean $? "${clean[@]}" "${cleanTestOnly[@]+}" || return $?
 
-      [ -z "$tapFile" ] || __testSuiteTAP_ok "$tapFile" "$item" "$sectionFile" "$testLine" "$rawFlags" || returnClean $? "${clean[@]}" || return $?
+      [ -z "$tapFile" ] || __testSuiteTAP_ok "$tapFile" "$item" "$sectionFile" "$testLine" "$rawFlags" || returnClean $? "${clean[@]}" "${cleanTestOnly[@]+}" || return $?
 
       runTime=$(($(timingStart) - __testStart))
       ! $doStats || printf "%s %s\n" "$runTime" "$item" >>"$statsFile"
       catchEnvironment "$handler" hookRunOptional bash-test-pass "$sectionName" "$item" "$rawFlags" || throwEnvironment "$handler" "... continuing" || :
 
-      [ "${#clean[@]}" -eq 0 ] || catchEnvironment "$handler" rm -rf "${clean[@]}" || returnClean $? "${clean[@]}" || return $?
+      [ "${#cleanTestOnly[@]}" -eq 0 ] || catchEnvironment "$handler" rm -rf "${cleanTestOnly[@]}" || returnClean $? "${clean[@]}" "${cleanTestOnly[@]+}" || return $?
     done
     [ ${#matchTests[@]} -eq 0 ] || [ ${#testsRun[@]} -gt 0 ] || throwArgument "$handler" "Match not found: $(decorate each code "${matchTests[@]}")" || returnClean $? "${clean[@]}" || return $?
     bigText --bigger Passed | decorate wrap "" "    " | decorate success | decorate wrap --fill "*" "    "
@@ -470,13 +470,14 @@ testSuite() {
   local assertionFailures assertionSuccesses stats=()
   IFS=$'\n' read -r -d '' assertionFailures assertionSuccesses < <(_assertionStatistics)
 
-  [ ${#clean[@]} -eq 0 ] || catchEnvironment "$handler" rm -rf "${clean[@]}" || return $?
-
   local failColor="error"
   [ "$assertionFailures" -ne 0 ] || failColor="subtle"
 
   stats+=("$(decorate "$failColor" "$(pluralWord "$assertionFailures" "failed assertion")")," "$(decorate success "$(pluralWord "$assertionSuccesses" "successful assertion")")")
   [ -z "$statsFile" ] || __testStats "$statsFile"
+
+  [ ${#clean[@]} -eq 0 ] || catchEnvironment "$handler" rm -rf "${clean[@]}" || return $?
+
   timingReport "$allTestStart" "Completed $(decorate orange "${stats[*]}") in"
 
   _textExit 0
@@ -993,7 +994,6 @@ __testRun() {
     __TEST_SUITE_RESULT="skipped platform $platform"
     resultCode=0
   else
-    local doHousekeeper="" doPlumber="" buildHomeRequired=false testActuallyFails=false
     local captureStderr
     captureStderr=$(fileTemporaryName "$handler") || return $?
     #     ▖   ▐        ▐
@@ -1005,12 +1005,13 @@ __testRun() {
     savedTMPDIR=$TMPDIR
     TMPDIR="$tempDirectory"
 
+    local doHousekeeper="" doPlumber="" buildHomeRequired="" testActuallyFails=""
     doHousekeeper=$(testFlagBoolean "Housekeeper" "$__flagText")
     doPlumber=$(testFlagBoolean "Plumber" "$__flagText")
     [ -n "$doHousekeeper" ] || doHousekeeper=true
     [ -n "$doPlumber" ] || doPlumber=true
 
-    buildHomeRequired=$(testFlagBoolean "Build-Home" "$__flagText" true)
+    buildHomeRequired=$(testFlagBoolean "Build-Home" "$__flagText" false)
     testActuallyFails=$(testFlagBoolean "Fail" "$__flagText" false)
 
     if $verboseMode; then
