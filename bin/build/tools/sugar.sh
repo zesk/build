@@ -43,7 +43,7 @@ _deprecated() {
 # Suppress stdout without piping. Handy when you just want a behavior not the output.
 # Argument: command - Required. Callable. Thing to muzzle.
 # Argument: ... - Optional. Arguments. Additional arguments.
-# Example:     {fn} pushd
+# Example:     {fn} pushd "$buildDir"
 # Example:     catchEnvironment "$handler" phpBuild || returnUndo $? {fn} popd || return $?
 # stdout: - No output from stdout ever from this function
 muzzle() {
@@ -144,7 +144,7 @@ _returnUndo() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# IDENTICAL InputSupport 39
+# IDENTICAL executeInputSupport 39
 
 # Support arguments and stdin as arguments to an executor
 # Argument: executor ... -- - The command to run on each line of input or on each additional argument. Arguments to prefix the final variable argument can be supplied prior to an initial `--`.
