@@ -20,3 +20,4 @@ extra_javascript:
 theme:
   name: material
 docs_dir: ./.docs/
+site_dir: ./.site/

@@ -90,6 +90,8 @@ pipelines:
       - step:
           name: Staging Deploy 4x
           size: 4x
+          artifacts:
+            - documentation/.site/
           script:
             - bin/build/tools.sh environmentFileLoad .build.env --execute bin/build.sh --documentation --commit
             - bin/deploy.sh --env-file .build.env --documentation --no-release
@@ -124,7 +126,7 @@ pipelines:
             - docker
           script:
             - bin/build.sh --documentation --commit
-            - bin/deploy.sh --documentation --no-release
+            - bin/deploy.sh --env-file .build.env --documentation --no-release
     coverage:
       - step:
           deployment: coverage

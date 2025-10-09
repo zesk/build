@@ -306,6 +306,7 @@ buildDocumentationBuild() {
 
     timestamp="$timestamp" version="$version" __mkdocsConfiguration "$handler" || return $?
     tempLog=$(fileTemporaryName "$handler") || return $?
+    statusMessage --last decorate notice "Building with mkdocs ..."
     catchEnvironmentQuiet "$handler" "$tempLog" python -m mkdocs build || returnUndo $? dumpPipe "mkdocs log" <"$tempLog" || returnClean $? "$tempLog" || return $?
     catchEnvironment "$handler" rm -f "$tempLog" || return $?
     catchEnvironment "$handler" muzzle popd || return $?

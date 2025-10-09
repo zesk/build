@@ -28,9 +28,7 @@
 
 {fileModificationTimes}
 
-{fileModifiedRecentlyName}
-
-{fileModifiedRecentlyTimestamp}
+{fileModifiedRecently}
 
 ### Owner Group Size Type
 
