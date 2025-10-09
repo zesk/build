@@ -41,7 +41,7 @@ _deprecated() {
 # Suppress stdout without piping. Handy when you just want a behavior not the output.
 # Argument: command - Required. Callable. Thing to muzzle.
 # Argument: ... - Optional. Arguments. Additional arguments.
-# Example:     {fn} pushd
+# Example:     {fn} pushd "$buildDir"
 # Example:     catchEnvironment "$handler" phpBuild || returnUndo $? {fn} popd || return $?
 # stdout: - No output from stdout ever from this function
 muzzle() {
