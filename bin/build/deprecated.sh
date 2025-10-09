@@ -167,6 +167,7 @@ __deprecatedCleanup() {
     __deprecatedConfiguration || exitCode=$?
   fi
   if [ $exitCode -eq 0 ] && [ -f "$jsonFile" ]; then
+    fingerprint=$(__catch "$handler" hookRun application-fingerprint) || return $?
     statusMessage --last decorate info "Saving deprecated fingerprint $(decorate subtle "$fingerprint") ..."
     catchEnvironment "$handler" jsonFileSet "$jsonFile" "$jqPath" "$fingerprint" || return $?
     statusMessage --last timingReport "$start" "Failures occurred, not caching results."

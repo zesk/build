@@ -95,8 +95,10 @@ if source "$(dirname "${BASH_SOURCE[0]}")/tools.sh"; then
     set -eou pipefail
     catchReturn "$handler" identicalCheckShell "${aa[@]+"${aa[@]}"}" --exec contextOpen "$@" || return $?
     if $doFingerprint; then
+      # Fingerprint has likely changed
+      fingerprint=$(catchReturn "$handler" hookRun application-fingerprint) || return $?
       catchReturn "$handler" jsonFileSet "$jsonFile" "$jqPath" "$fingerprint" || return $?
-      decorate success "Fingerprint updated."
+      decorate success "Fingerprint updated: $fingerprint"
     fi
 
   }

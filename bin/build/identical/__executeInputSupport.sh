@@ -13,7 +13,7 @@
 # So our hack solution is to read a single byte with a 1-second timeout and then add that into our first line of output
 # if needed. Handle the case when the first line is blank (and is a newline)
 
-#  EOF
+# IDENTICAL executeInputSupport EOF
 
 # Support arguments and stdin as arguments to an executor
 # Argument: executor ... -- - The command to run on each line of input or on each additional argument. Arguments to prefix the final variable argument can be supplied prior to an initial `--`.
