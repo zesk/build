@@ -5,6 +5,7 @@
 # Copyright &copy; 2025 Market Acumen, Inc.
 #
 
+# Test-Plumber: false
 testIterm2() {
   mockEnvironmentStart __BASH_PROMPT_MARKERS
   mockEnvironmentStart __BASH_PROMPT_MODULES
