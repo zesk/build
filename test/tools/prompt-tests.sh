@@ -18,6 +18,7 @@ __testBashPromptC() {
 testBashPrompt() {
   local matches leak leaks=(PS1 BUILD_PROMPT_COLORS PROMPT_COMMAND __BASH_PROMPT_MODULES __BASH_PROMPT_PREVIOUS __BASH_PROMPT_SKIP_FIRST) ll=()
 
+  mockEnvironmentStart PS1
   mockEnvironmentStart BUILD_PROMPT_COLORS
   mockEnvironmentStart PROMPT_COMMAND
 
@@ -63,6 +64,7 @@ testBashPrompt() {
 
   mockEnvironmentStop BUILD_PROMPT_COLORS
   mockEnvironmentStop PROMPT_COMMAND
+  mockEnvironmentStop PS1
 }
 
 # TODO reloadChanges test
