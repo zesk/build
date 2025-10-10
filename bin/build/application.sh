@@ -144,7 +144,7 @@ __applicationTools() {
 
   bashSourcePath "$(realPath "$here/tools/")" || return $?
 
-  execute "${__saved[@]+"${__saved[@]}"}" || return $?
+  "${__saved[@]+"${__saved[@]}"}" || return $?
 }
 
 if [ "$(basename "${0##-}")" = "$(basename "${BASH_SOURCE[0]}")" ] && [ $# -gt 0 ]; then

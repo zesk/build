@@ -302,7 +302,7 @@ EOF
 }
 
 testParseBoolean() {
-  local expected haystack needle
+  local expected value
   while IFS="|" read -r expected value; do
     assertExitCode "$expected" parseBoolean "$value" || return $?
   done < <(__dataParseBoolean)
@@ -402,6 +402,7 @@ __maxLineLengthFile() {
 }
 
 testMaximumLineLength() {
+  local n
   for n in 54 94 112 199; do
     assertEquals "$n" "$(__maxLineLengthFile "$n" | maximumLineLength)" || return $?
   done

@@ -36,6 +36,7 @@ __githubAPI() {
     details+=("$(decorate green Authenticated)")
   fi
 
+  local errorFile
   errorFile=$(fileTemporaryName "$handler") || return $?
   while [ $# -gt 0 ]; do
     local url="https://api.github.com/repos/$1${suffix}"

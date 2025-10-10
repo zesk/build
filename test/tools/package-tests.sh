@@ -45,6 +45,7 @@ testPackageAvailableList() {
   temp=$(fileTemporaryName "$handler") || return $?
   catchEnvironment "$handler" packageAvailableList >"$temp" || return $?
   assertFileContains "$temp" mariadb mysql php python toilet || return $?
+  catchEnvironment "$handler" rm -f "$temp" || return $?
 }
 
 # Tag: package-install

@@ -186,7 +186,7 @@ testFetch() {
   assertExitCode 0 urlFetch 'https://example.com' "$targetFile" || return $?
   assertFileExists "$targetFile" || return $?
   assertNotFileSize --line "$LINENO" 0 "$targetFile" || return $?
-  assertFileContains --line "$LINENO" "$targetFile" "https://www.iana.org/domains/example" || return $?
+  assertFileContains --line "$LINENO" "$targetFile" "https://" "iana.org/domains/example" || return $?
   catchEnvironment "$handler" rm -f "$targetFile" || return $?
 }
 

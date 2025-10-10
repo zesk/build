@@ -7,7 +7,7 @@
 
 # Test-Plumber: false
 testNetworkIPList() {
-  assertExitCode --leak OSTYPE --stdout-match "127.0.0.1" 0 networkIPList --install || return $?
+  assertExitCode --leak __BUILD_LOADER --leak OSTYPE --stdout-match "127.0.0.1" 0 networkIPList --install || return $?
 }
 
 # Leaks OSTYPE

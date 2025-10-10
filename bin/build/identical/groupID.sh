@@ -8,7 +8,7 @@
 # IDENTICAL groupID EOF
 
 # Convert a group name to a group ID
-# Argument: groupName - String. Optional. Group name to convert to a group ID
+# Argument: groupName - String. Required. Group name to convert to a group ID
 # stdout: `Integer`. One line for each group name passed as an argument.
 # Return Code: 0 - All groups were found in the database and IDs were output successfully
 # Return Code: 1 - Any group is not found in the database.
@@ -21,6 +21,7 @@ groupID() {
 
   local __saved=("$@") __count=$#
   local gid
+  [ $# -gt 0 ] || throwArgument "$handler" "Requires a group name" || return $?
   if whichExists getent; then
     while [ $# -gt 0 ]; do
       local argument="$1" __index=$((__count - $# + 1))

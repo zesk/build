@@ -18,7 +18,8 @@ testUrlFetch() {
   remoteURL="https://marketacumen.com/zesk-build.html"
 
   temp=$(fileTemporaryName "$handler") || return $?
-  clean+=("$temp")  assertExitCode --stdout-match "Test file for Zesk Build" --stdout-match "Hello, world." --stdout-match "<h1>" 0 urlFetch "$remoteURL" "-" || returnClean $? "${clean[@]}" || return $?
+  clean+=("$temp")
+  assertExitCode --stdout-match "Test file for Zesk Build" --stdout-match "Hello, world." --stdout-match "<h1>" 0 urlFetch "$remoteURL" "-" || returnClean $? "${clean[@]}" || return $?
   catchReturn "$handler" urlFetch "$remoteURL" >"$temp" || returnClean $? "${clean[@]}" || return $?
 
   clean+=("$temp.1")
