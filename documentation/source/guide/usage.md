@@ -78,7 +78,7 @@ Where:
 - `argumentFlag` can be the flag to designate the argument, like `--help`, or `--path`
 - `argumentName` for arguments which take one or more values; the name of the argument expected.
 - `...` for multiple
-- `argumentType` is type such as `String`, `URL`, or `UnsignedInteger`
+- `argumentType` is [a type](./types.md) such as `String`, `URL`, or `UnsignedInteger`
 - `argumentRequirement` is `Required.` or `Optional.` or `One or more.` or `Zero or more.`
 - `argumentDescription` is the brief description for the argument
 
@@ -94,17 +94,17 @@ Where:
 
 - `markdownCode` is rendered exactly (with the "`# Example: `" prefix removed).
 
-### `Exit Code` - Exit codes
+### `Return Code` - Exit codes
 
-Describe the exit codes for a function:
+Describe the return codes for a function:
 
 Format is:
 
-    # Return Code: exitCode - exitCodeDescription
+    # Return Code: returnCode - returnCodeDescription
 
 Where:
 
-- `returnCode` is an integer or a return code string (see `returnCode`)
+- `returnCode` is an integer or a return code string (see `returnCodeString`)
 - `returnCodeDescription` is the brief description for the reason for any error
 
 ### `Environment` - Environment variables used

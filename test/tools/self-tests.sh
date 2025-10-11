@@ -366,6 +366,7 @@ testBuildEnvironmentGet() {
 }
 
 # Tag: php-install simple-php
+# Tag: package-install
 testUnderscoreUnderscoreBuild() {
   local handler="returnMessage"
   local testPath home

@@ -196,6 +196,7 @@ testAwsRegionValid() {
   assertExitCode 1 awsRegionValid us-east-1000 || return $?
 }
 
+# Tag: slow
 testAwsEnvironmentFromCredentials() {
   local handler="returnMessage"
   local credFile firstKey firstId year matches

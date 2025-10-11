@@ -8,35 +8,35 @@
 #
 
 __testIsCharacterClass() {
-  local first header c characters=(0 1 2 7 8 9 a b c x y z A B C X Y Z ' ' '!' '%' "'" @ ^ - '=')
-  local class line temp token firstColumnWidth=7
-  local sep="" cellWidth=2
-  header=
-  first=1
+  local first=true characters=(0 1 2 7 8 9 a b c x y z A B C X Y Z ' ' '!' '%' "'" @ ^ - '=')
+  local line temp token firstColumnWidth=7
+
+  local header
+  header=$(listJoin " " "${characters[@]}")
+  local class
   for class in alnum alpha ascii blank cntrl digit graph lower print punct space upper word xdigit; do
-    line=
+    local line=()
+    local c
     for c in "${characters[@]}"; do
-      if test $first; then
-        header="$header$(alignRight "$cellWidth" "$c")$sep"
-      fi
       if isCharacterClass "$class" "$c"; then
         token="Y"
       else
         #temp="$(repeat "${#temp}" " ")"
         token="."
       fi
-      line="${line}$(alignRight "$cellWidth" "$token")$sep"
+      line+=("$token")
     done
 
-    if test $first; then
-      printf "$(alignLeft "$firstColumnWidth" "class")%s|%s%s\n" "$sep" "$sep" "$header"
-      printf "%s%s+%s%s\n" "$(repeat "$firstColumnWidth" "-")" "$sep" "$sep" "$(repeat "${#header}" "-")"
+    if $first; then
+      printf "$(alignLeft "$firstColumnWidth" "class")| %s\n" "$header"
+      printf "%s+%s\n" "$(repeat "$firstColumnWidth" "-")" "-$(repeat "${#header}" "-")"
+      first=false
     fi
-    first=
-    printf "%s%s|%s%s\n" "$(alignLeft "$firstColumnWidth" "$class")" "$sep" "$sep" "$line"
+    printf "%s| %s\n" "$(alignLeft "$firstColumnWidth" "$class")" "${line[*]}"
   done
 }
 
+# Tag: slow
 testValidateCharacterClass() {
   local temp home handler="returnMessage"
 

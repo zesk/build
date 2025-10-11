@@ -27,7 +27,7 @@ when the
 
     No hay
     
-    handler: layAnEgg
+    Usage: layAnEgg
     
     Lay an egg
 
@@ -35,33 +35,48 @@ You can add arguments, exit codes, summary lines, or even rename the function to
 
     # fn: makeCryptoThing
     # Lay an egg. You can use `markdown` in *here*. **Cool**.
-    # Argument: name - Required. String. What to name the egg.
-    # Argument: --debug - Optional. Flag. Turn on debugging.`
+    #
+    #     Displayed as code
+    #
+    # No animal was harmed in the making of this example.
+    # Argument: name - String. Required. What to name the egg.
+    # Argument: --debug - Flag. Optional. Turn on debugging.`
     # Return Code: 0 - Success
     # Return Code: 1 - Environment error
     # Return Code: 2 - Argument error
-    # Example: {fn[]} newEgg 
-    # Output: Eggs laid: 2000
+    # Example:     {fn} newEgg
+    # stdout: Eggs laid: 2000
     layAnEgg() {
+        [ "$1" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
         ...
+    }
+    _layAnEgg() {
+        # __IDENTICAL__ usageDocument 1
+        usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
     }
 
 Will generate:
 
-    All is great
+    Usage: makeCryptoThing name [ --debug ]
     
-    handler: makeCryptoThing name [ --debug ]
+        name     String. Required. What to name the egg.
+        --debug  Flag. Optional. Turn on debugging.
     
-        name     Required. String. What to name the egg.
-        --debug  Optional. Flag. Turn on debugging.`
+    Lay an egg. You can use markdown in here. Cool.
     
-    Lay an egg.
+        Displayed as code
     
-    You can use markdown in here. Cool.
+    No animal was harmed in the making of this example.
     
-    The end.
+    Return codes:
+    - 0 - Success
+    - 1 - Environment error
+    - 2 - Argument error
+    
+    Writes to stdout:
+    Eggs laid: 2000
+    
+    Example:
+    makeCryptoThing newEgg
 
-Additional sections will be added, and the above documentation can also be converted into Markdown documentation.
-
-Valid argument types are:
-
+Similarly the same can be converted into our [amazing online documentation](/).

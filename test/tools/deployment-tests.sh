@@ -32,7 +32,7 @@ __prepareSampleApplicationDeployment() {
 
 #
 # deployRemoteFinish
-#
+# Tag: slow
 testDeployRemoteFinish() {
   local handler="returnMessage"
 

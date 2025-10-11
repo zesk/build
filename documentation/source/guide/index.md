@@ -3,13 +3,13 @@
 ## Zesk Build Guides
 
 - [Coding in Bash](./coding.md)
-- [Usage](./usage.md)
-- [Documentation](./documentation.md)
-- [Deprecated functionality](./deprecated.md)
-- [Zesk Hooks](./hooks.md)
 - [Test Tools](./test-tools.md)
+- [Usage](./usage.md)
+- [Guide to types](./types.md)
+- [Documentation](./documentation.md)
+- [Zesk Hooks](./hooks.md)
 - [Installer](./installer.md)
--
+- [Deprecated functionality](./deprecated.md)
 
 ## Bash guides
 

@@ -165,17 +165,14 @@ _characterClasses() {
 #     print   punct   space   upper   word    xdigit
 #
 isCharacterClass() {
-  [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
+  local handler="_${FUNCNAME[0]}"
+  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
 
-  local class="${1-}" classes character
-  local handler
-
-  handler="_${FUNCNAME[0]}"
-  IFS=$'\n' read -r -d '' -a classes < <(characterClasses) || :
-  inArray "$class" "${classes[@]}" || throwArgument "$handler" "Invalid class: $class" || return $?
+  local class="${1-}"
+  case "$class" in alnum | alpha | ascii | blank | cntrl | digit | graph | lower | print | punct | space | upper | word | xdigit) ;; *) throwArgument "$handler" "Invalid class: $class" || return $? ;; esac
   shift
   while [ $# -gt 0 ]; do
-    character="${1:0:1}"
+    local character="${1:0:1}"
     character="$(escapeBash "$character")"
     # Not sure how you can hack this function with single character eval injections.
     # evalCheck: SAFE 2024-01-29 KMD

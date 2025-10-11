@@ -72,6 +72,7 @@ _invertMatches() {
   done
 }
 
+# Tag: slow
 testFileMatches() {
   local handler="returnMessage"
   local home matchFiles match matches invertedMatches ex pattern neverMatches

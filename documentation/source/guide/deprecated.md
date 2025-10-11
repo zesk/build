@@ -6,6 +6,32 @@
 
 This document lists functionality which was removed, why, and when.
 
+### Release v0.39.0
+
+Many functions were "made first class" by removing the initial underscore:
+
+- `__throwEnvironment` -> `throwEnvironment`
+- `__catchEnvironment` -> `catchEnvironment`
+- `__throwArgument` -> `throwArgument`
+- `__catchArgument` -> `catchArgument`
+- `__throw` -> `returnThrow`
+- `__catch` -> `catchReturn`
+- `__catchCode`-> `catchCode`
+- `__execute`-> `execute`
+- `__echo` -> `executeEcho`
+- `_choose` -> `booleanChoose`
+
+Naming convention fixes:
+
+- `isAbsolutePath` -> `pathIsAbsolute`
+- `bashDocumentation_Extract` -> `bashDocumentationExtract`
+- `nextMinorVersion` -> `versionNextMinor`
+- `newRelease` -> `releaseNew`
+
+Using "return code" in our naming:
+
+- `exitString` -> `returnCodeString`
+
 ### Release v0.38.3
 
 - `Exit Code:` -> `# Return Code:` - 'return code' is more appropriate for functions

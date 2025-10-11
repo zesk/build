@@ -25,11 +25,12 @@ testBashGetRequires() {
   catchReturn "$handler" rm -f "$temp" || return $?
 }
 
+# Tag: slow
 testBashBuiltins() {
   local item type
   while read -r item; do
     type=$(type -t "$item")
-    assertExitCode --display "Type of $item" 0 inArray "$type" "builtin" "keyword" || return $?
+    assertExitCode --display "Type of $item is $type" 0 inArray "$type" "builtin" "keyword" || return $?
   done < <(bashBuiltins)
 }
 

@@ -155,6 +155,7 @@ testIdenticalChecks() {
   assertNotExitCode --stderr-match overlap 0 identicalCheck "${identicalCheckArgs[@]}" --prefix '# OVERLAP_IDENTICAL' || return $?
 }
 
+# Tag: slow
 testIdenticalCheckSingles() {
   local handler="returnMessage"
   local identicalCheckArgs identicalError singles

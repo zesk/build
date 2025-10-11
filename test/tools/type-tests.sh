@@ -359,6 +359,7 @@ testUn_dataSignedNumberSamples() {
   _dataUnsignedNumberSamples | _testValidateNotUnsignedInteger || return $?
 }
 
+# Tag: slow
 testBadNumericSamples() {
   #
   # Nothing is good
