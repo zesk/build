@@ -34,8 +34,9 @@ __hookProjectActivate() {
   local item items=() candidates=("bin/developer.sh" "bin/developer/")
 
   for item in "${candidates[@]}"; do [ ! -e "$home/$item" ] || items+=("$home/$item"); done
-
-  [ ${#items[@]} -eq 0 ] || approveBashSource --report --delete --verbose --prefix "Activate" "${items[@]}" || return $?
+  local rr=()
+  ! buildDebugEnabled approve || rr+=("--report")
+  [ ${#items[@]} -eq 0 ] || approveBashSource "${rr[@]+"${rr[@]}"}" --delete --verbose --prefix "Activate" "${items[@]}" || return $?
 }
 ___hookProjectActivate() {
   # __IDENTICAL__ usageDocument 1
