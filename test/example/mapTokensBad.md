@@ -17,8 +17,8 @@ Example:
 
     args=(--map configure/sshd_config /etc/ssh/sshd_config)
     if fileCopyWouldChange "${args[@]}"; then
-        __environment fileCopy "${args[@]}" || return $?
-        __environment service ssh restart || return $?
+        catchEnvironment "$handler" fileCopy "${args[@]}" || return $?
+        catchEnvironment "$handler" service ssh restart || return $?
     fi
 
 [⬅ Return to index](index.md)

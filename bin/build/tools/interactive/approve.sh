@@ -46,7 +46,7 @@ __approveBashSource() {
           ! $verboseFlag || statusMessage --last printf -- "%s %s %s" "$(decorate info "$prefix")" "$(decorate label "$verb")" "$displayPath"
           catchEnvironment "$handler" source "$sourcePath" || return $?
         else
-          decorate subtle "Skipping unapproved file $(decorate file "$sourcePath") Undo: $(decorate code "${FUNCNAME[0]} --clear \"$sourcePath\"")"
+          decorate subtle "Skipping unapproved file $(decorate file "$sourcePath") Undo: $(decorate code "${handler#_} --clear \"$sourcePath\"")"
         fi
       elif [ -d "$sourcePath" ]; then
         verb="path"
@@ -54,7 +54,7 @@ __approveBashSource() {
           ! $verboseFlag || statusMessage --last printf -- "%s %s %s" "$(decorate info "$prefix")" "$(decorate label "$verb")" "$displayPath"
           catchEnvironment "$handler" bashSourcePath "$sourcePath" || return $?
         else
-          decorate subtle "Skipping unapproved directory $(decorate file "$sourcePath") Undo: $(decorate code "${FUNCNAME[0]} --clear \"$sourcePath\"")"
+          decorate subtle "Skipping unapproved directory $(decorate file "$sourcePath") Undo: $(decorate code "${handler#_} --clear \"$sourcePath\"")"
         fi
       else
         throwEnvironment "$handler" "Not a file or directory? $displayPath is a $(decorate value "$(fileType "$sourcePath")")" || return $?

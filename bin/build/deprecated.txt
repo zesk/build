@@ -3,8 +3,8 @@
 # v0.39.0
 isAbsolutePath|pathIsAbsolute
 bashDocumentation_Extract|bashDocumentationExtract
-# IDENTICAL _return |# IDENTICAL returnMessage |
-# _IDENTICAL_ exitString |# _IDENTICAL_ returnString |
+IDENTICAL _return |IDENTICAL returnMessage |
+_IDENTICAL_ exitString |_IDENTICAL_ returnString |
 exitString|returnCodeString
 nextMinorVersion|versionNextMinor
 NextMinorVersion|VersionNextMinor
@@ -23,7 +23,8 @@ __throw |returnThrow |
 returnCatch|catchReturn|
 __catch |catchReturn |
 __catchCode|catchCode|
-__execute|execute
+__environment |catchEnvironment "returnMessage" |
+__execute |execute |
 __echo |executeEcho |
 _choose |booleanChoose |
 
