@@ -135,7 +135,7 @@ _isArray() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# IDENTICAL _type 43
+# IDENTICAL _type 42
 
 # Test if an argument is a positive integer (non-zero)
 # Takes one argument only.

@@ -161,6 +161,7 @@ __buildFingerUpdate() {
 
   local f jf
 
+  catchReturn "$handler" buildFastFiles || return $?
   f=$(catchReturn "$handler" hookRun application-fingerprint) || return $?
   jf=$(catchReturn "$handler" buildEnvironmentGet APPLICATION_JSON) || return $?
   local path u=()
