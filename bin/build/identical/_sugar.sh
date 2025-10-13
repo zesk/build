@@ -211,7 +211,7 @@ _convertValue() {
 
 # Run `command`, handle failure with `handler` with `code` and `command` as error
 # Usage: {fn} code handler command ...
-# Argument: code - Required. Integer. Exit code to return
+# Argument: code - Required. UnsignedInteger. Exit code to return
 # Argument: handler - Required. Function. Failure command, passed remaining arguments and error code.
 # Argument: command - Required. String. Command to run.
 # Requires: isUnsignedInteger returnArgument isFunction isCallable
