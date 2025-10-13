@@ -48,7 +48,8 @@ isExecutable() {
     # Docker has an issue when you mount a local volume inside a container
     # Executable files, inside the container within the mounted volume report as non-executable via `-x` but
     # Report *correctly* when you use `ls`.
-    mode=$(catchEnvironment "$handler" ls -l "$1" | awk '{ print $1 }') || return $?
+    mode=$(catchEnvironment "$handler" ls -l "$1") || return $?
+    mode="${mode%% *}"
     [ "${mode#*x}" != "$mode" ]
   else
     [ -n "$(command which "$1")" ]

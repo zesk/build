@@ -179,7 +179,7 @@ _isFunction() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# IDENTICAL isCallable 49
+# IDENTICAL isCallable 50
 
 # Test if all arguments are callable as a command
 # handler: {fn} string0 [ string1 ... ]
@@ -219,7 +219,8 @@ isExecutable() {
     # Docker has an issue when you mount a local volume inside a container
     # Executable files, inside the container within the mounted volume report as non-executable via `-x` but
     # Report *correctly* when you use `ls`.
-    mode=$(catchEnvironment "$handler" ls -l "$1" | awk '{ print $1 }') || return $?
+    mode=$(catchEnvironment "$handler" ls -l "$1") || return $?
+    mode="${mode%% *}"
     [ "${mode#*x}" != "$mode" ]
   else
     [ -n "$(command which "$1")" ]
