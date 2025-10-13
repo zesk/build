@@ -138,7 +138,6 @@ _bashLibraryHome() {
 }
 
 # Run or source a library
-# Usage: {fn} libraryRelativePath [ command ... ]
 # Argument: libraryRelativePath - Path. Required. Path to library source file.
 # Argument: command - Callable. Optional. Command to run after loading the library.
 bashLibrary() {

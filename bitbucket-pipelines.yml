@@ -61,7 +61,7 @@ pipelines:
             - documentation/.docs/
           script:
             - bin/build/tools.sh environmentFileLoad .build.env --execute bin/build.sh --documentation
-            - bin/deploy.sh --env-file .build.env --documentation --no-release
+            - bin/deploy.sh --env-file .build.env --documentation --release
     staging:
       - step:
           artifacts:
@@ -119,8 +119,8 @@ pipelines:
           services:
             - docker
           script:
-            - bin/build.sh
-            - bin/deploy.sh
+            - bin/build.sh --documentation
+            - bin/deploy.sh --env-file .build.env --documentation --release
     test:
       - step:
           deployment: test
