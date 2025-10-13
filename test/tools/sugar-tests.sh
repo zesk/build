@@ -76,7 +76,8 @@ testMapReturn() {
 
 testCatchCode() {
   assertNotExitCode --stderr-match "not callable" 0 catchCode || return $?
-  assertNotExitCode --stderr-match "Not integer" 0 catchCode 12n || return $?
+  assertNotExitCode --stderr-match "Not unsigned integer" 0 catchCode 12n || return $?
+  assertNotExitCode --stderr-match "Not unsigned integer" 0 catchCode -1 || return $?
   assertNotExitCode --stderr-match "Not callable" 0 catchCode 12 returnMessage "not-callable-thing" || return $?
   assertExitCode 0 catchCode 12 returnMessage printf -- "" || return $?
   assertExitCode --stdout-match "Hello, world" 0 catchCode 12 returnMessage printf -- "Hello, world" || return $?
