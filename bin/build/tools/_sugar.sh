@@ -211,14 +211,14 @@ _convertValue() {
 
 # Run `command`, handle failure with `handler` with `code` and `command` as error
 # Usage: {fn} code handler command ...
-# Argument: code - Required. Integer. Exit code to return
+# Argument: code - Required. UnsignedInteger. Exit code to return
 # Argument: handler - Required. Function. Failure command, passed remaining arguments and error code.
 # Argument: command - Required. String. Command to run.
 # Requires: isUnsignedInteger returnArgument isFunction isCallable
 catchCode() {
   local __count=$# __saved=("$@") __handler="_${FUNCNAME[0]}" code="${1-0}" command="${3-}"
   # __IDENTICAL__ __checkCode__handler 1
-  isInteger "$code" || throwArgument "$__handler" "Not integer: $(decorate value "[$code]") (#$__count $(decorate each code -- "${__saved[@]}"))" || return $?
+  isUnsignedInteger "$code" || throwArgument "$__handler" "Not unsigned integer: $(decorate value "[$code]") (#$__count $(decorate each code -- "${__saved[@]}"))" || return $?
   __handler="${2-}"
   # __IDENTICAL__ __checkHandler 1
   isFunction "$__handler" || returnArgument "handler not callable \"$(decorate code "$__handler")\" Stack: $(debuggingStack)" || return $?

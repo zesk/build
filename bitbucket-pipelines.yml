@@ -56,8 +56,12 @@ pipelines:
                   - bin/tools.sh buildProductionTest --env-file .build.env --tag package-install
       - step:
           name: Production Deploy
+          artifacts:
+            - documentation/.site/
+            - documentation/.docs/
           script:
-            - bin/deploy.sh --env-file .build.env --release
+            - bin/build/tools.sh environmentFileLoad .build.env --execute bin/build.sh --documentation
+            - bin/deploy.sh --env-file .build.env --documentation --no-release
     staging:
       - step:
           artifacts:

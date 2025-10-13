@@ -22,7 +22,7 @@ function __faster() {
   local code="$1" && shift
   local command="$1" && shift
   # __IDENTICAL__ __checkCode__handler 1
-  isInteger "$code" || throwArgument "$__handler" "Not integer: $(decorate value "[$code]") (#$__count $(decorate each code -- "${__saved[@]}"))" || return $?
+  isUnsignedInteger "$code" || throwArgument "$__handler" "Not unsigned integer: $(decorate value "[$code]") (#$__count $(decorate each code -- "${__saved[@]}"))" || return $?
   # __IDENTICAL__ __checkHandler 1
   isFunction "$__handler" || returnArgument "handler not callable \"$(decorate code "$__handler")\" Stack: $(debuggingStack)" || return $?
   # __IDENTICAL__ __checkCommand__handler 1

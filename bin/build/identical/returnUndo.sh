@@ -29,7 +29,7 @@ returnUndo() {
   [ "${1-}" != "--help" ] || __help "$__handler" "$@" || return 0
   shift
   # __IDENTICAL__ __checkCode__handler 1
-  isInteger "$code" || throwArgument "$__handler" "Not integer: $(decorate value "[$code]") (#$__count $(decorate each code -- "${__saved[@]}"))" || return $?
+  isUnsignedInteger "$code" || throwArgument "$__handler" "Not unsigned integer: $(decorate value "[$code]") (#$__count $(decorate each code -- "${__saved[@]}"))" || return $?
   while [ $# -gt 0 ]; do
     case "$1" in
     --)
