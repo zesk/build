@@ -312,7 +312,7 @@ ___help() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# IDENTICAL _type 42
+# IDENTICAL _type 43
 
 # Test if an argument is a positive integer (non-zero)
 # Takes one argument only.
@@ -355,6 +355,7 @@ _isFunction() {
   # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
+
 
 # _IDENTICAL_ returnCodeString 15
 

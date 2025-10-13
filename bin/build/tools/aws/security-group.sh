@@ -132,12 +132,12 @@ __awsSecurityGroupIPModify() {
     tempErrorFile=$(fileTemporaryName "$handler") || return $?
     if ! __awsWrapper "${pp[@]+"${pp[@]}"}" --output json ec2 authorize-security-group-ingress --region "$region" --group-id "$group" --ip-permissions "$json" 2>"$tempErrorFile" | __awsReturnTrue; then
       if grep -q "Duplicate" "$tempErrorFile"; then
-        printf "%s\n" "$(decorate yellow "duplicate")"
+        printf " (%s)\n" "$(decorate yellow "duplicate")"
       else
         throwEnvironment "$handler" "Failed to authorize-security-group-ingress $(dumpPipe "Errors:" <"$tempErrorFile")" || returnClean $? "$tempErrorFile" || return $?
       fi
     else
-      printf "%s\n" "$(decorate success "ok")"
+      printf " (%s)\n" "$(decorate success "ok")"
     fi
     catchEnvironment "$handler" rm -f "$tempErrorFile" || return $?
   fi

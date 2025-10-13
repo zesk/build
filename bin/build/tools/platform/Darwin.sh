@@ -7,9 +7,6 @@
 # Copyright &copy; 2025 Market Acumen, Inc.
 #
 
-# shellcheck source=/dev/null
-source "${BASH_SOURCE[0]%/*}/_isExecutable.sh"
-
 # Requires: find stat
 __fileModificationTimes() {
   local directory="$1" && shift

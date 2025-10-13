@@ -64,26 +64,6 @@ isInteger() {
   case ${1#[-+]} in -help) usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]}" 0 ;; '' | *[!0-9]*) return 1 ;; esac
 }
 
-# isExecutable defined in platform
-
-# Test if all arguments are callable as a command
-# handler: {fn} string0 [ string1 ... ]
-# Argument: string - Required. EmptyString. Path to binary to test if it is executable.
-# If no arguments are passed, returns exit code 1.
-# Return Code: 0 - All arguments are callable as a command
-# Return Code: 1 - One or or more arguments are callable as a command
-isCallable() {
-  [ $# -eq 1 ] || returnArgument "Single argument only: $*" || return $?
-  [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
-  if ! isFunction "$1" && ! isExecutable "$1"; then
-    return 1
-  fi
-}
-_isCallable() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
-}
-
 # True-ish
 # DOC TEMPLATE: --help 1
 # Argument: --help - Optional. Flag. Display this help.
@@ -155,7 +135,7 @@ _isArray() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# IDENTICAL _type 42
+# IDENTICAL _type 43
 
 # Test if an argument is a positive integer (non-zero)
 # Takes one argument only.
@@ -195,6 +175,59 @@ isFunction() {
   case "$(type -t "$1")" in function | builtin) [ "$1" != "." ] || return 1 ;; *) return 1 ;; esac
 }
 _isFunction() {
+  # __IDENTICAL__ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+# IDENTICAL isCallable 51
+
+# Test if all arguments are callable as a command
+# handler: {fn} string0 [ string1 ... ]
+# Argument: string - Required. EmptyString. Path to binary to test if it is executable.
+# If no arguments are passed, returns exit code 1.
+# Return Code: 0 - All arguments are callable as a command
+# Return Code: 1 - One or or more arguments are callable as a command
+# Requires: throwArgument __help isExecutable isFunction
+isCallable() {
+  local handler="_${FUNCNAME[0]}"
+  [ $# -eq 1 ] || throwArgument "$handler" "Single argument only: $*" || return $?
+  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
+  if ! isFunction "$1" && ! isExecutable "$1"; then
+    return 1
+  fi
+}
+_isCallable() {
+  # __IDENTICAL__ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+# Test if all arguments are executable binaries
+# Usage: {fn} string0 [ string1 ... ]
+# Argument: string - Required. Path to binary to test if it is executable.
+# If no arguments are passed, returns exit code 1.
+# Return Code: 0 - All arguments are executable binaries
+# Return Code: 1 - One or or more arguments are not executable binaries
+# Requires: throwArgument __help which
+isExecutable() {
+  local handler="_${FUNCNAME[0]}"
+  [ $# -eq 1 ] || throwArgument "$handler" "Single argument only: $*" || return $?
+  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
+  # Skip illegal options "--" and "-foo"
+  [ "$1" = "${1#-}" ] || return 1
+  if [ -f "$1" ]; then
+    # Assume -x for files (Docker issue)
+    # Docker has an issue when you mount a local volume inside a container
+    # Executable files, inside the container within the mounted volume report as non-executable via `-x` but
+    # Report *correctly* when you use `ls -l`. Workaround was to do `ls` on various platforms but instead just
+    # simplify our test here; any executable which is not executable will then throw an error which we can
+    # capture later.
+    return 0
+  elif [ -z "$(which "$1")" ]; then
+    return 1
+  fi
+  return 0
+}
+_isExecutable() {
   # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

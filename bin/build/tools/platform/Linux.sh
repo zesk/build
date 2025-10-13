@@ -13,14 +13,6 @@ __loadLinuxFunctions() {
   # shellcheck source=/dev/null
   source "$here/not-Darwin.sh"
 
-  if ! insideDocker; then
-    # shellcheck source=/dev/null
-    source "$here/_isExecutable.sh"
-  else
-    # shellcheck source=/dev/null
-    source "$here/_isExecutable.docker.sh"
-  fi
-
   if isAlpine; then
     # shellcheck source=/dev/null
     source "$here/Alpine.sh"
