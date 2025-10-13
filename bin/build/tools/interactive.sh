@@ -99,7 +99,6 @@ _approveBashSource() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-
 # List approved Bash script sources which can be loaded automatically by project hooks.
 #
 # Argument: --debug - Flag. Optional. Show a lot of information about the approved cache.

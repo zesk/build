@@ -45,8 +45,8 @@ __documentationTemplateCompile() {
       elif [ -z "$targetFile" ]; then
         targetFile="$(usageArgumentFileDirectory "$handler" targetFile "$argument")" || return $?
       else
-      # _IDENTICAL_ argumentUnknownHandler 1
-      throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
+        # _IDENTICAL_ argumentUnknownHandler 1
+        throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
       fi
       ;;
     esac
@@ -170,8 +170,8 @@ __documentationTemplateFunctionCompile() {
       elif [ -z "$functionTemplate" ]; then
         functionTemplate="$(usageArgumentFile "$handler" functionTemplate "$argument")" || return $?
       else
-      # _IDENTICAL_ argumentUnknownHandler 1
-      throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
+        # _IDENTICAL_ argumentUnknownHandler 1
+        throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
       fi
       ;;
     esac
@@ -230,8 +230,8 @@ __documentationTemplateDirectoryCompile() {
       elif [ -z "$targetDirectory" ]; then
         targetDirectory=$(usageArgumentDirectory "$handler" "targetDirectory" "$argument") || return $?
       else
-      # _IDENTICAL_ argumentUnknownHandler 1
-      throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
+        # _IDENTICAL_ argumentUnknownHandler 1
+        throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
       fi
       ;;
     esac

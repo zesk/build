@@ -356,7 +356,6 @@ _isFunction() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-
 # _IDENTICAL_ returnCodeString 15
 
 # Output the exit code as a string

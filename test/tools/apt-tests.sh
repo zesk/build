@@ -14,6 +14,7 @@ testAptIsInstalled() {
   fi
 }
 
+# Tag: slow
 testAptKeyAdd() {
   if aptIsInstalled; then
     assertExitCode 0 aptKeyAddHashicorp || return $?

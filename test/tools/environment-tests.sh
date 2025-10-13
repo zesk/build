@@ -335,6 +335,7 @@ testEnvironmentApacheCompile() {
   assertExitCode "${matches[@]}" 0 environmentCompile "$envFile" || return $?
 }
 
+# Tag: slow
 testEnvironmentCompile() {
   local handler="returnMessage"
   local envFile

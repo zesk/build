@@ -91,10 +91,10 @@ _identicalCheck() {
 #
 # DOC TEMPLATE: --help 1
 # Argument: --help - Optional. Flag. Display this help.
-# Argument: --singles singlesFiles - Optional. File. One or more files which contain a list of allowed `IDENTICAL` singles, one per line.
+# Argument: --singles singlesFiles - Optional. File. One or more files which contain a list of allowed `{identical}` singles, one per line.
 # Argument: --single singleToken - Optional. String. One or more tokens which cam be singles.
 # Argument: --repair directory - Optional. Directory. Any files in onr or more directories can be used to repair other files.
-# Argument: --internal - Flag. Optional. Do updates for `# _IDENTICAL_` and `# DOC TEMPLATE:` prefixes first.
+# Argument: --internal - Flag. Optional. Do updates for `# _{identical}_` and `# DOC TEMPLATE:` prefixes first.
 # Argument: --internal-only - Flag. Optional. Just do `--internal` repairs.
 # Argument: --interactive - Flag. Optional. Interactive mode on fixing errors.
 # Argument: ... - Optional. Additional arguments are passed directly to `identicalCheck`.

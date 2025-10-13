@@ -136,6 +136,7 @@ __data_iTerm2IsColorType() {
 EOF
 }
 
+# Tag: slow
 test_iTerm2IsColorType() {
   local exitCode colorType
   while read -r exitCode colorType; do

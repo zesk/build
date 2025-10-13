@@ -305,7 +305,8 @@ testSignedIntegerSamples() {
   _dataSignedIntegerSamples | _testValidateNotUnsignedNumber || return $?
 }
 
-testUn_dataSignedIntegerSamples() {
+# Tag: slow
+testUnsignedIntegerSamples() {
 
   #
   # unsigned Integer
@@ -326,6 +327,7 @@ testUn_dataSignedIntegerSamples() {
   _dataUnsignedIntegerSamples | _testValidateSignedNumber || return $?
 }
 
+# Tag: slow
 testSignedNumberSamples() {
 
   #
@@ -342,7 +344,8 @@ testSignedNumberSamples() {
   _dataSignedNumberSamples | _testValidateNotUnsignedInteger || return $?
 }
 
-testUn_dataSignedNumberSamples() {
+# Tag: slow
+testUnsignedNumberSamples() {
 
   # Number are neither signed nor unsigned
   statusMessage decorate code _testValidateUnsignedNumber

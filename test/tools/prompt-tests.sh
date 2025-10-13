@@ -15,6 +15,7 @@ __testBashPromptC() {
   incrementor "${FUNCNAME[0]}"
 }
 
+# Tag: slow
 testBashPrompt() {
   local matches leak leaks=(PS1 BUILD_PROMPT_COLORS PROMPT_COMMAND __BASH_PROMPT_MODULES __BASH_PROMPT_PREVIOUS __BASH_PROMPT_SKIP_FIRST) ll=()
 

@@ -26,6 +26,7 @@ __slowDaemon() {
   timingReport "$start" "$this finished in"
 }
 
+# Tag: slow
 testProcessWait() {
   local background timingFactor
 

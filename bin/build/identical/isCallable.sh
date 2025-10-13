@@ -44,17 +44,15 @@ isExecutable() {
   # Skip illegal options "--" and "-foo"
   [ "$1" = "${1#-}" ] || return 1
   if [ -f "$1" ]; then
-    # Assume -x for files (Docker issue)
+    local mode
     # Docker has an issue when you mount a local volume inside a container
     # Executable files, inside the container within the mounted volume report as non-executable via `-x` but
-    # Report *correctly* when you use `ls -l`. Workaround was to do `ls` on various platforms but instead just
-    # simplify our test here; any executable which is not executable will then throw an error which we can
-    # capture later.
-    return 0
-  elif [ -z "$(which "$1")" ]; then
-    return 1
+    # Report *correctly* when you use `ls`.
+    mode=$(catchEnvironment "$handler" ls -l "$1" | awk '{ print $1 }') || return $?
+    [ "${mode#*x}" != "$mode" ]
+  else
+    [ -n "$(command which "$1")" ]
   fi
-  return 0
 }
 _isExecutable() {
   # __IDENTICAL__ usageDocument 1

@@ -1046,7 +1046,6 @@ _isFunction() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-
 # IDENTICAL decorate 244
 
 # Sets the environment variable `BUILD_COLORS` if not set, uses `TERM` to calculate
