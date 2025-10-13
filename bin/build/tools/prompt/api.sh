@@ -351,6 +351,8 @@ __bashPromptCommand() {
     return $exitCode
   fi
 
+  [ "${#__BASH_PROMPT_MODULES[@]}" -gt 0 ] || return 0
+
   ! $debug || statusMessage decorate warning "Running $(decorate each --count code "${__BASH_PROMPT_MODULES[@]}") "
 
   local promptCommand start

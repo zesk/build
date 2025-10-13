@@ -78,18 +78,17 @@ _identicalCheck() {
 #
 # Looks for up to three tokens in code:
 #
-# - `# ``IDENTICAL tokenName 1`
-# - `# ``_IDENTICAL_ tokenName 1`, and
-# - `# ``DOC TEMPLATE: tokenName 1`
+# - `# ``{identical} tokenName 1`
+# - `# ``_{identical}_ tokenName 1`, and
+# - `# ``DOC`` TEMPLATE: tokenName 1`
 #
 # This allows for overlapping identical sections within templates with the intent:
 #
-# - `IDENTICAL` - used in most cases (not internal)
-# - `_IDENTICAL_` - used in templates which must be included in IDENTICAL templates (INTERNAL)
-# - `__IDENTICAL__` - used in templates which must be included in _IDENTICAL_ templates (INTERNAL)
-# - `DOC TEMPLATE:` - used in documentation templates for functions - is handled by internal document generator (INTERNAL)
+# - `{identical}` - used in most cases (not internal)
+# - `_{identical}_` - used in templates which must be included in {identical} templates
+# - `__{identical}__` - used in templates which must be included in _{identical}_ templates
+# - `DOC`` TEMPLATE:` - used in documentation templates for functions - is handled by internal document generator
 #
-# handler: {fn} [ --repair repairSource ] [ --help ] [ --interactive ] [ --check checkDirectory ] ...
 # DOC TEMPLATE: --help 1
 # Argument: --help - Optional. Flag. Display this help.
 # Argument: --singles singlesFiles - Optional. File. One or more files which contain a list of allowed `IDENTICAL` singles, one per line.
