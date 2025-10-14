@@ -1,5 +1,9 @@
 # prompt Tools
 
+<!-- TEMPLATE toolHeader 2 -->
+[🛠️ Tools ](./index.md) &middot; [⬅ Top ](../index.md)
+<hr />
+
 The prompt supports a few things:
 
 - `user@host ~/path` prefix
@@ -19,9 +23,6 @@ Examples:
     bashPrompt bashPromptModule_binBuild consoleDefaultTitle
     bashPrompt --colors "$(bashPromptColorScheme forest)"
 
-<!-- TEMPLATE header 2 -->
-[⬅ Parent ](../index.md)
-<hr />
 
 # Functions
 

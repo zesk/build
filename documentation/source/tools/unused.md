@@ -1,5 +1,10 @@
 # Unused functions
 
+<!-- TEMPLATE toolHeader 2 -->
+[🛠️ Tools ](./index.md) &middot; [⬅ Top ](../index.md)
+<hr />
+
+
 Hides these from [New and uncategorized functions](./todo.md)
 
 {debugOpenFiles}
@@ -9,8 +14,6 @@ Hides these from [New and uncategorized functions](./todo.md)
 {exampleFunction}
 
 {githubURLsToCSV}
-
-{isExecutableHack}
 
 {isType}
 

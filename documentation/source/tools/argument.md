@@ -1,5 +1,9 @@
 # Common Argument Handling
 
+<!-- TEMPLATE toolHeader 2 -->
+[🛠️ Tools ](./index.md) &middot; [⬅ Top ](../index.md)
+<hr />
+
 This is a work in progress and not yet ready for release.
 
 ## Sample usage
@@ -17,10 +21,6 @@ To handle a possible `--help` ending the arguments early:
         # fileName set to a valid file, json is set to true or false
         # ...
     }
-
-<!-- TEMPLATE header 2 -->
-[⬅ Parent ](../index.md)
-<hr />
 
 {_arguments}
 

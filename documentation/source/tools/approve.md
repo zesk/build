@@ -1,8 +1,9 @@
 # Approve Bash Sources
 
-<!-- TEMPLATE header 2 -->
-[⬅ Parent ](../index.md)
+<!-- TEMPLATE toolHeader 2 -->
+[🛠️ Tools ](./index.md) &middot; [⬅ Top ](../index.md)
 <hr />
+
 
 
 An easy way to interactively load bash code in your console and require you to give permission first.

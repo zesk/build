@@ -1,5 +1,9 @@
 # iTerm2 Tools
 
+<!-- TEMPLATE toolHeader 2 -->
+[🛠️ Tools ](./index.md) &middot; [⬅ Top ](../index.md)
+<hr />
+
 [iTerm2](https://iterm2.com) is a terminal program with some exceptional features written and maintained by George
 Nachman and contributors.
 

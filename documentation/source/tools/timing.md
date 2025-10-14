@@ -1,9 +1,8 @@
 # Timing
 
-<!-- TEMPLATE header 2 -->
-[⬅ Parent ](../index.md)
+<!-- TEMPLATE toolHeader 2 -->
+[🛠️ Tools ](./index.md) &middot; [⬅ Top ](../index.md)
 <hr />
-
 
 Millisecond timing support when the underlying operating system supports it.
 

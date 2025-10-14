@@ -22,7 +22,7 @@ __documentationLoader() {
   __buildFunctionLoader __bashDocumentationExtract documentation "$@" || return $?
 }
 
-# Extract documentation varaibles from a comment stripped of the '# ' prefixes.
+# Extract documentation variables from a comment stripped of the '# ' prefixes.
 #
 # A few special values are generated/computed:
 #

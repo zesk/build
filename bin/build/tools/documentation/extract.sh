@@ -124,16 +124,14 @@ __bashDocumentationExtract() {
     if ! inArray "fn" "${foundNames[@]+"${foundNames[@]}"}"; then
       __dumpSimpleValue "fn" "$fn"
     fi
-    # Trims trailing space from `fn`
-    printf '%s\n' "fn=\"\${fn%\$'\n'}\""
     if ! inArray "argument" "${foundNames[@]+${foundNames[@]}}"; then
       __dumpSimpleValue "argument" "none"
-      __dumpAliasedValue "usage" "fn"
+      if ! inArray "usage" "${foundNames[@]+"${foundNames[@]}"}"; then
+        __dumpAliasedValue "usage" "fn"
+      fi
     else
       if ! inArray "usage" "${foundNames[@]+"${foundNames[@]}"}"; then
         printf "%s\n" "export usage; usage=\"\$fn\$(__bashDocumentationDefaultArguments \"\$argument\")\""
-      else
-        __dumpAliasedValue "usage" "fn"
       fi
     fi
     __dumpArrayValue "foundNames" "${foundNames[@]+"${foundNames[@]}"}"
