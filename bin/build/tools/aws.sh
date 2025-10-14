@@ -6,7 +6,7 @@
 #
 
 __awsLoader() {
-  __functionLoader __awsInstall aws "$@"
+  __buildFunctionLoader __awsInstall aws "$@"
 }
 
 ###############################################################################

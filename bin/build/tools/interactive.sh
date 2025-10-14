@@ -23,7 +23,7 @@
 ####################################################################################################
 ####################################################################################################
 __interactiveLoader() {
-  __functionLoader __fileCopy interactive "$@"
+  __buildFunctionLoader __fileCopy interactive "$@"
 }
 
 # Pause for user input

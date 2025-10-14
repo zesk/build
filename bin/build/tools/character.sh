@@ -9,7 +9,7 @@
 #
 
 __characterLoader() {
-  __functionLoader __characterClassReport character "$@"
+  __buildFunctionLoader __characterClassReport character "$@"
 }
 
 # Write a report of the character classes

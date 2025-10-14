@@ -7,8 +7,15 @@
 # Docs: o ./documentation/source/tools/apt.md
 # Test: o ./test/tools/apt-tests.sh
 
+#               _
+#    __ _ _ __ | |_
+#   / _` | '_ \| __|
+#  | (_| | |_) | |_
+#   \__,_| .__/ \__|
+#        |_|
+
 __aptLoader() {
-  __functionLoader ___aptUpdate apt "$@"
+  __buildFunctionLoader ___aptUpdate apt "$@"
 }
 
 #

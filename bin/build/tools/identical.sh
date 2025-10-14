@@ -7,6 +7,21 @@
 # Copyright &copy; 2025 Market Acumen, Inc.
 #
 
+#   _     _            _   _           _
+#  (_) __| | ___ _ __ | |_(_) ___ __ _| |
+#  | |/ _` |/ _ \ '_ \| __| |/ __/ _` | |
+#  | | (_| |  __/ | | | |_| | (_| (_| | |
+#  |_|\__,_|\___|_| |_|\__|_|\___\__,_|_|
+#
+
+# Loads identical code
+# Argument: handler - Function. Required. Error handler.
+# Argument: function - Function. Required. Function to call; first argument will be `handler`.
+# Argument ... - Arguments. Optional. Additional arguments to the function.
+__identicalLoader() {
+  __buildFunctionLoader __identicalLineParse _identical "$@"
+}
+
 # Usage: {fn} token source destination
 # Repair an identical `token` in `destination` from `source`
 # Argument: --prefix prefix - Required. A text prefix to search for to identify identical sections (e.g. `# {identical}}`) (may specify more than one)
@@ -133,10 +148,3 @@ _identicalWatch() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# Loads identical code
-# Argument: handler - Function. Required. Error handler.
-# Argument: function - Function. Required. Function to call; first argument will be `handler`.
-# Argument ... - Arguments. Optional. Additional arguments to the function.
-__identicalLoader() {
-  __functionLoader __identicalLineParse _identical "$@"
-}

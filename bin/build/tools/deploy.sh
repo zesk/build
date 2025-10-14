@@ -1,23 +1,13 @@
 #!/usr/bin/env bash
 #
+# deploy tools
+#
 # Copyright &copy; 2025 Market Acumen, Inc.
 #
-#
-#    ▌      ▜
-#  ▞▀▌▞▀▖▛▀▖▐ ▞▀▖▌ ▌
-#  ▌ ▌▛▀ ▙▄▘▐ ▌ ▌▚▄▌
-#  ▝▀▘▝▀▘▌   ▘▝▀ ▗▄▘
-#
-# deploy tools - see `deploy/application.sh'
 # Related: o ./deploy/application.sh
 # Docs: o ./documentation/source/tools/deploy.md
 # Test: o ./test/tools/deploy-tests.sh
 
-__deployLoader() {
-  __functionLoader __deployApplication deploy "$@"
-}
-
-# Deploy an application from a deployment repository
 #
 #      ____             _
 #     |  _ \  ___ _ __ | | ___  _   _
@@ -26,6 +16,12 @@ __deployLoader() {
 #     |____/ \___| .__/|_|\___/ \__, |
 #                |_|            |___/
 #
+
+__deployLoader() {
+  __buildFunctionLoader __deployApplication deploy "$@"
+}
+
+# Deploy an application from a deployment repository
 # This acts on the local file system only but used in tandem with `deployment.sh` functions.
 #
 # handler: {fn} deployHome applicationId applicationPath [ targetPackage ]

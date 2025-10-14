@@ -7,11 +7,17 @@
 # Test: ./test/tools/handler-tests.sh
 # Docs: ./documentation/source/tools/handler.md
 
+#   _   _ ___  __ _  __ _  ___
+#  | | | / __|/ _` |/ _` |/ _ \
+#  | |_| \__ \ (_| | (_| |  __/
+#   \__,_|___/\__,_|\__, |\___|
+#                   |___/
+
 # Argument: handler - Function. Required. Error handler.
 # Argument: function - Function. Required. Function to call; first argument will be `handler`.
 # Argument ... - Arguments. Optional. Additional arguments to the function.
 __usageLoader() {
-  __functionLoader __usageDocument usage "$@"
+  __buildFunctionLoader __usageDocument usage "$@"
 }
 
 # Usage: {fn} functionDefinitionFile functionName exitCode [ message ]

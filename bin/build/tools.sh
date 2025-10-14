@@ -52,21 +52,32 @@ _isUnsignedInteger() {
 # <-- END of IDENTICAL returnMessage
 
 # Loads conditional code based on whether a function is defined yet
+# Argument: prefix - ApplicationDirectory. Required. Relative path from the application directory to the subdirectory.
+# Argument: testFunction - Function. Required. Function which MUST be defined in the subdirectory sources.
+# Argument: subdirectory - RelativeDirectory. Required. Path added to `prefix` to load files.
+# Argument: handler - Function. Required. Error handler.
+# Argument: function - Function. Required. Function to call; first argument will be `handler`.
+# Argument ... - Arguments. Optional. Additional arguments to the function.
+__functionLoader() {
+  local __saved=("$@") prefix="${1-}" functionName="${2-}" subdirectory="${3-}" handler="${4-}" command="${5-}"
+  shift 5 || catchArgument "$handler" "Missing arguments: $(decorate each --count code -- "${__saved[@]}")" || return $?
+  export BUILD_HOME
+  if ! isFunction "$functionName"; then
+    catchReturn "$handler" bashSourcePath "${BUILD_HOME-}/$prefix/$subdirectory/" || return $?
+    export __BUILD_LOADER
+    __BUILD_LOADER+=("$functionName")
+  fi
+  "$command" "$handler" "$@" || return $?
+}
+
+# Function loader for build tools
 # Argument: testFunction - Function. Required. Function which MUST be defined in the subdirectory sources.
 # Argument: subdirectory - RelativeDirectory. Required. Path from /bin/build/tools/ to load files.
 # Argument: handler - Function. Required. Error handler.
 # Argument: function - Function. Required. Function to call; first argument will be `handler`.
 # Argument ... - Arguments. Optional. Additional arguments to the function.
-__functionLoader() {
-  local __saved=("$@") functionName="${1-}" subdirectory="${2-}" handler="${3-}" command="${4-}"
-  shift 4 || catchArgument "$handler" "Missing arguments: $(decorate each --count code -- "${__saved[@]}")" || return $?
-  export BUILD_HOME
-  if ! isFunction "$functionName"; then
-    catchReturn "$handler" bashSourcePath "${BUILD_HOME-}/bin/build/tools/$subdirectory/" || return $?
-    export __BUILD_LOADER
-    __BUILD_LOADER+=("$functionName")
-  fi
-  "$command" "$handler" "$@" || return $?
+__buildFunctionLoader() {
+  __functionLoader "bin/build/tools" "$@"
 }
 
 __toolsTimingLoad() {

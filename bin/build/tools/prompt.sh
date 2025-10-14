@@ -7,8 +7,17 @@
 # Docs: ./documentation/source/tools/prompt.md
 # Test: ./test/tools/prompt-tests.sh
 
+#                                   _
+#   _ __  _ __ ___  _ __ ___  _ __ | |_
+#  | '_ \| '__/ _ \| '_ ` _ \| '_ \| __|
+#  | |_) | | | (_) | | | | | | |_) | |_
+#  | .__/|_|  \___/|_| |_| |_| .__/ \__|
+#  |_|                       |_|
+#
+
+# Load prompt code
 __promptLoader() {
-  __functionLoader __bashPrompt prompt "$@"
+  __buildFunctionLoader __bashPrompt prompt "$@"
 }
 
 # Argument: module - Executable. Optional. Module to enable or disable.

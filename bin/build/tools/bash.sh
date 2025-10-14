@@ -7,8 +7,15 @@
 # Docs: ./documentation/source/tools/bash.md
 # Test: ./test/tools/bash-tests.sh
 
+#   _               _
+#  | |__   __ _ ___| |__
+#  | '_ \ / _` / __| '_ \
+#  | |_) | (_| \__ \ | | |
+#  |_.__/ \__,_|___/_| |_|
+#
+
 __bashLoader() {
-  __functionLoader __bashGetRequires bash "$@"
+  __buildFunctionLoader __bashGetRequires bash "$@"
 }
 
 # Sanitize bash files for code quality.

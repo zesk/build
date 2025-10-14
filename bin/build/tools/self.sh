@@ -7,8 +7,15 @@
 # Test: o test/tools/self-tests.sh
 # Docs: o docs/_templates/tools/build.md
 
+#            _  __
+#   ___  ___| |/ _|
+#  / __|/ _ \ | |_
+#  \__ \  __/ |  _|
+#  |___/\___|_|_|
+#
+
 __selfLoader() {
-  __functionLoader __installInstallBinary self "$@"
+  __buildFunctionLoader __installInstallBinary self "$@"
 }
 
 # Installs an installer the first time in a new project, and modifies it to work in the application path.
