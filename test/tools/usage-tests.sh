@@ -113,6 +113,8 @@ _testUsageArgumentHelperFail() {
 # Tag: slow
 testUsageArgumentFunctions() {
   local handler="returnMessage"
+
+  mockEnvironmentStart BUILD_COLORS
   local d intTests unsignedIntTests positiveIntTests
 
   d=$(fileTemporaryName "$handler" -d) || return $?
@@ -146,6 +148,7 @@ testUsageArgumentFunctions() {
   catchEnvironment "$handler" rm -f "$TEST_USAGE" || return $?
 
   unset TEST_USAGE
+  mockEnvironmentStop BUILD_COLORS
 }
 
 _usageWasCalled() {

@@ -447,6 +447,43 @@ _bashFileComment() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
+# Filter comments from a bash stream
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
+# Argument: --only - Optional. Flag. Show ONLY comment lines. (Reverse of lines when not specified.)
+# Argument: file - Optional. File. File(s) to filter.
+# stdin: a bash file
+# stdout: bash file without line-comments `#`
+bashCommentFilter() {
+  local handler="_${FUNCNAME[0]}"
+  local ff=(-v) files=()
+
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
+  local __saved=("$@") __count=$#
+  while [ $# -gt 0 ]; do
+    local argument="$1" __index=$((__count - $# + 1))
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    case "$argument" in
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
+    --only)
+      ff=()
+      ;;
+    *)
+      files+=("$(usageArgumentFile "$handler" "file" "$1")") || return $?
+      ;;
+    esac
+    shift
+  done
+
+  grepSafe "${ff[@]+"${ff[@]}"}" -e '^[[:space:]]*#' "${files[@]+"${files[@]}"}"
+}
+_bashCommentFilter() {
+  # __IDENTICAL__ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
 # IDENTICAL bashFunctionComment 44
 
 # Extracts the final comment from a stream
