@@ -67,7 +67,8 @@ _dateToTimestamp() {
 # Argument: integerTimestamp - Integer timestamp offset (unix timestamp, same as `$(date +%s)`)
 # Argument: format - How to output the date (e.g. `%F` - no `+` is required)
 # Environment: Compatible with BSD and GNU date.
-# Exit codes: If parsing fails, non-zero exit code.
+# Return Code: 0 - If parsing is successful
+# Return Code: 1 - If parsing fails
 # Example:     dateField=$(dateFromTimestamp $init %Y)
 dateFromTimestamp() {
   local handler="_${FUNCNAME[0]}"

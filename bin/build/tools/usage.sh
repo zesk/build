@@ -82,10 +82,10 @@ _usageDocumentSimple() {
 
 #
 # Summary: Check that one or more binaries are installed
-# handler: {fn} handler binary0 [ ... ]
+# handler: {fn} handler binary [ ... ]
 # Argument: usageFunction - Required. `bash` function already defined to output handler
-# Argument: binary0 - Required. Binary which must have a `which` path.
-# Exit Codes: 1 - If any binary0 are not available within the current path
+# Argument: binary - Required. Binary which must have a `which` path.
+# Return Code: 1 - If any `binary` is not available within the current path
 # Requires the binaries to be found via `which`
 #
 # Runs `handler` on failure
@@ -109,11 +109,11 @@ _usageRequireBinary() {
 }
 
 #
-# handler: {fn} handler [ env0 ... ]
 # Requires environment variables to be set and non-blank
 # Argument: usageFunction - Required. `bash` function already defined to output handler
-# Argument: env0 - Optional. String. One or more environment variables which should be set and non-empty.
-# Exit Codes: 1 - If any env0 variables bre not set or bre empty.
+# Argument: environmentVariable - Optional. String. One or more environment variables which should be set and non-empty.
+# Return Code: 0 - All environment variables are set and non-empty
+# Return Code: 1 - If any `environmentVariable` variables are not set or are empty.
 # Deprecated: 2024-01-01
 #
 usageRequireEnvironment() {

@@ -347,7 +347,6 @@ _assertNotContains() {
 # Argument: message - An error message if this fails
 # Return Code: 0 - If the assertion succeeds
 # Return Code: 1 - If the assertion fails
-# Local cache: None
 # Environment: - This fails if `directory` is anything but a `directory`
 # Example:     assertDirectoryExists "$HOME" "HOME not found"
 # Summary: Test that a directory exists
@@ -386,7 +385,6 @@ _assertDirectoryExists() {
 # Argument: message - An error message if this fails
 # Return Code: 0 - If the assertion succeeds
 # Return Code: 1 - If the assertion fails
-# Local cache: None
 # Environment: - This fails if `directory` is anything at all, even a non-directory (such as a link)
 # Examples: assertDirectoryDoesNotExist "$INSTALL_PATH" "INSTALL_PATH should not exist yet"
 # Summary: Test that a directory does not exist
@@ -426,7 +424,6 @@ _assertDirectoryDoesNotExist() {
 # Argument: message - An error message if this fails
 # Return Code: 0 - If the assertion succeeds
 # Return Code: 1 - If the assertion fails
-# Local cache: None
 # Environment: - This fails if `directory` is anything but a `directory`
 # Example:     assertDirectoryExists "$HOME" "HOME not found"
 # Summary: Test that a directory exists
@@ -466,7 +463,6 @@ _assertDirectoryEmpty() {
 # Argument: message - An error message if this fails
 # Return Code: 0 - If the assertion succeeds
 # Return Code: 1 - If the assertion fails
-# Local cache: None
 # Examples: {fn} "$INSTALL_PATH" "INSTALL_PATH should contain files"
 # Summary: Test that a directory does not exist
 # Reviewed: 2023-11-12
@@ -514,7 +510,6 @@ _assertDirectoryNotEmpty() {
 # Argument: message - An error message if this fails
 # Return Code: 0 - If the assertion succeeds
 # Return Code: 1 - If the assertion fails
-# Local cache: None
 # Environment: - This fails if `file` is anything but a `file`
 # Example:     assertDirectoryExists "$HOME" "HOME not found"
 # Summary: Test that a file exists
@@ -553,7 +548,6 @@ _assertFileExists() {
 # Argument: message - An error message if this fails
 # Return Code: 0 - If the assertion succeeds
 # Return Code: 1 - If the assertion fails
-# Local cache: None
 # Environment: - This fails if `file` is anything at all, even a non-file (such as a link)
 # Examples: assertDirectoryDoesNotExist "$INSTALL_PATH" "INSTALL_PATH should not exist yet"
 # Summary: Test that a file does not exist
@@ -688,7 +682,6 @@ _assertOutputContains() {
 # Argument: - `--stderr` - Also include standard error in output checking
 # Return Code: 0 - If the output contains at least one occurrence of the string
 # Return Code: 1 - If output does not contain string
-# Local cache: None
 # Example:     assertOutputDoesNotContain Success complex-thing.sh --dry-run
 # Reviewed: 2023-11-12
 #
@@ -727,7 +720,6 @@ _assertOutputDoesNotContain() {
 #
 # Return Code: 0 - If the assertion succeeds
 # Return Code: 1 - If the assertion fails
-# Local cache: None
 # Environment: If the file does not exist, this will fail.
 # Example:     assertFileContains $logFile Success
 # Example:     assertFileContains $logFile "is up to date"

@@ -104,7 +104,8 @@ You can tag tests using the standard Zesk Build documentation. The following fla
     - `alpine`, `!alpine` - Alpine Linux (or NOT)
     - `darwin`, `!darwin` - Mac OS X (or NOT)
     - `linux`, `!linux` - Neither Alpine/Mac OS X - Generic Linux (or NOT)
-- `Test-Housekeeper-Overhead` - Set to `true` to display `housekeeper` overhead (this tends to be SLOW)
+- `Test-Housekeeper-Overhead` - Set to `true` to display `housekeeper` overhead (`housekeeper` tends to slow things
+  down)
 - `Test-Fail` - Set to `true` if you want the semantics of failure to be reversed.
 
 Globals flags can be set using `BUILD_TEST_FLAGS` and are inherited to the test level:

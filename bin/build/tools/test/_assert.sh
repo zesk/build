@@ -791,7 +791,6 @@ __assertFileDoesNotContainThis() {
 # Argument: command - The command to run
 # Argument: arguments - Any arguments to pass to the command to run
 # Argument: --debug - Optional. Flag. Debugging
-# Local cache: None.
 # Environment: None.
 # Examples: assertExitCode 0 hasHook version-current
 # Reviewed: 2023-11-12

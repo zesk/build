@@ -809,8 +809,6 @@ _uppercase() {
 #
 # Strip ANSI console escape sequences from a file
 # Argument: None.
-# Exit Codes: Zero.
-# Local Cache: None.
 # Environment: None.
 # Write Environment: None.
 # Credits: commandlinefu tripleee

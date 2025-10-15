@@ -13,8 +13,6 @@
 # Usage: mapTokens prefix suffix < input > output
 # Argument: `prefix` - Optional prefix for token search, defaults to `{` (same as `map.sh`)
 # Argument: `suffix` - Optional suffix for token search, defaults to `}` (same as `map.sh`)
-# Exit Codes: Zero.
-# Local Cache: None.
 # Environment: None.
 # Short description: list mappable variables in a file (without prefix or suffix)
 # Depends: sed quoteSedPattern

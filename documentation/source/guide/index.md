@@ -3,13 +3,12 @@
 ## Zesk Build Guides
 
 - [Coding in Bash](./coding.md)
-- [Test Tools](./test-tools.md)
-- [Usage](./usage.md)
-- [Guide to types](./types.md)
-- [Documentation](./documentation.md)
-- [Zesk Hooks](./hooks.md)
-- [Installer](./installer.md)
-- [Deprecated functionality](./deprecated.md)
+- [Testing Tools](./testing.md)
+- [Guide to types](./types.md) - Data types supported by Zesk Build
+- [Function Documentation](./documentation.md) - Zesk Build supports documentation via the comment above a Bash function.
+- [Hooks](./hooks.md) - Hooks are called by Zesk Build at various times and allow for extension and customization of
+  various behaviors.
+- [Installer](./installer.md) - [Build your own standalone installer script using Zesk Build](./installer.md)
 
 ## Bash guides
 
@@ -18,5 +17,9 @@ see [bash](https://en.wikipedia.org/wiki/Bourne_shell)) and has a long history a
 your systems.
 
 - [`FUNCNAME` and `BASH_SOURCE` notes](./notes.md)
-- [Test cheatsheet](./test-cheatsheet.md)
-- [Bash cheatsheet](./bash-cheatsheet.md)
+- [`test` cheatsheet](./test-cheatsheet.md) - Bash `test` and `[ ]` expressions
+- [Bash cheatsheet](./bash-cheatsheet.md) - `shopt` and `set` meanings
+
+## History
+
+- [Deprecated functionality](./deprecated.md)
