@@ -110,7 +110,7 @@ _userRecordHome() {
 }
 
 # Make `user` owner of all files in `logHome`
-ownLogHome() {
+__ownLogHome() {
   local user="$1" logHome="$2"
   if [ -n "$(find "$logHome" -type f -print -quit)" ]; then
     if ! find "$logHome" -type f -or -type d -print0 | xargs -0 chown "$user:"; then
@@ -126,7 +126,7 @@ ownLogHome() {
 # Usage: {fn} user logHome
 # Argument: user - User to run as
 # Argument: logHome - Directory to log to
-serviceLogger() {
+__serviceLogger() {
   local user="${1-}" name logHome="${2-}" userName && shift 2
   export HOME APPLICATION_USER
 
@@ -137,7 +137,7 @@ serviceLogger() {
   APPLICATION_USER=$user
 
   [ -d "$logHome" ] || returnMessage 4 "$logHome is not a directory" || return $?
-  execute ownLogHome "$user" "$logHome" || return $?
+  execute __ownLogHome "$user" "$logHome" || return $?
   logHome="$logHome/$name"
   [ -d "$logHome" ] || execute mkdir -p "$logHome" || return $?
   execute chown -R "$user:" "$logHome" || return $?
@@ -148,4 +148,4 @@ serviceLogger() {
 }
 
 # shellcheck disable=SC1083
-serviceLogger "{APPLICATION_USER}" "{LOG_HOME}"{ARGUMENTS} "$@"
+__serviceLogger "{APPLICATION_USER}" "{LOG_HOME}"{ARGUMENTS} "$@"

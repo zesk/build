@@ -8,7 +8,7 @@
 # Argument: flags - String. Flags to test
 # Argument: testName - String. Test name to check for true or false value.
 # Tests flags for first occurrence of a flag which takes priority over later ones.
-testFlagBoolean() {
+__testFlagBoolean() {
   local maybe found smallest=""
   local name="${1-}" && shift
   local flags="${1-}" && shift
@@ -28,7 +28,7 @@ testFlagBoolean() {
   printf "%s\n" "$smallestValue"
 }
 
-testFlagPlatformMatch() {
+__testFlagPlatformMatch() {
   local platform="${1-}" && shift
   local flags="${1-}" && shift
 

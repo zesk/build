@@ -447,18 +447,19 @@ _bashFileComment() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# IDENTICAL bashFunctionComment 42
+# IDENTICAL bashFunctionComment 43
 
 # Extracts the final comment from a stream
 # Requires: fileReverseLines sed cut grep convertValue
 bashFinalComment() {
   [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
-  grep -v -e '\( IDENTICAL \|_IDENTICAL_\|DOC TEMPLATE:\|Internal:\|INTERNAL:\)' | fileReverseLines | sed -n -e '1d' -e '/^#/!q; p' | fileReverseLines | cut -c 3- || :
+  grep -v -e '\( IDENTICAL \|_IDENTICAL_\|DOC TEMPLATE:\|Internal:\|INTERNAL:\)' | fileReverseLines | sed -n -e 1d -e '/^[[:space:]]*#/ { p'$'\n''b'$'\n''}; q' | sed 's/^[[:space:]]*//' | fileReverseLines | cut -c 3- || :
   # Explained:
   # - grep -v ... - Removes internal documentation and anything we want to hide from the user
   # - fileReverseLines - First reversal to get that comment, file lines are reverse ordered
   # - sed 1d - Deletes the first line (e.g. the `function() { ` which was the LAST thing in the line and is now our first line
-  # - sed -n '/^#/!q; p' - `-n` - disables automatic printing. /^#/!q quits when it does not match a '#' comment and prints all `#` lines (effectively outputting just the comment lines)
+  # - `-n` - disables automatic printing. /^#/!q quits when it does not match a '#' comment and prints all `#` lines (effectively outputting just the comment lines)
+  # - `'/^[[:space:]]*#/ { p'$'\n''b'$'\n''}; q'` - while matching `[space]#` print lines then quit when does not match
   # - fileReverseLines - File is back to normal
   # - cut -c 3- - Delete the first 2 characters on each line
 }
@@ -482,48 +483,11 @@ bashFunctionComment() {
   local source="${1-}" functionName="${2-}"
   local maxLines=1000
   __help "_${FUNCNAME[0]}" "$@" || return 0
-  grep -m 1 -B $maxLines "^$functionName() {" "$source" | bashFinalComment
+  grep -m 1 -B $maxLines -e "^\s*$functionName() {" "$source" | bashFinalComment
   # Explained:
   # - grep -m 1 ... - Finds the `function() {` string in the file and all lines beforehand (up to 1000 lines)
 }
 _bashFunctionComment() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
-}
-
-# Filter comments from a bash stream
-# DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
-# Argument: --only - Optional. Flag. Show ONLY comment lines. (Reverse of lines when not specified.)
-# Argument: file - Optional. File. File(s) to filter.
-# stdin: a bash file
-# stdout: bash file without line-comments `#`
-bashCommentFilter() {
-  local handler="_${FUNCNAME[0]}"
-  local ff=(-v) files=()
-
-  # _IDENTICAL_ argumentNonBlankLoopHandler 6
-  local __saved=("$@") __count=$#
-  while [ $# -gt 0 ]; do
-    local argument="$1" __index=$((__count - $# + 1))
-    # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
-    case "$argument" in
-    # _IDENTICAL_ helpHandler 1
-    --help) "$handler" 0 && return $? || return $? ;;
-    --only)
-      ff=()
-      ;;
-    *)
-      files+=("$(usageArgumentFile "$handler" "file" "$1")") || return $?
-      ;;
-    esac
-    shift
-  done
-
-  grepSafe "${ff[@]+"${ff[@]}"}" -e '^[[:space:]]*#' "${files[@]+"${files[@]}"}"
-}
-_bashCommentFilter() {
   # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

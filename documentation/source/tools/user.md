@@ -6,6 +6,8 @@
 
 See also [group](./group.md) functions.
 
+{userHome}
+
 {userRecord}
 
 {userRecordHome}

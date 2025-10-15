@@ -13,16 +13,16 @@ __buildDocumentationBuildDirectory() {
   statusMessage decorate notice "Filling in missing files ..."
 
   # Fill in any missing files
-  local prefix="$home/documentation/source"
+  local documentationSource="$home/documentation/source"
   while read -r markdownFile; do
-    target="$home/documentation/.docs${markdownFile#"$prefix"}"
+    target="$home/documentation/.docs${markdownFile#"$documentationSource"}"
     catchEnvironment "$handler" muzzle fileDirectoryRequire "$target" || return $?
     if [ ! -f "$target" ]; then
       catchEnvironment "$handler" cp "$markdownFile" "$target" || return $?
     fi
-  done < <(find "$prefix" -name '*.md' ! -path '*/tools/*')
+  done < <(find "$documentationSource" -name '*.md' ! -path '*/tools/*')
 
-  source="$home/documentation/source/tools"
+  source="$documentationSource/tools"
   target="$home/documentation/.docs/tools"
 
   catchEnvironment "$handler" muzzle directoryRequire "$target" || return $?
@@ -47,7 +47,8 @@ __buildDocumentationBuildDirectory() {
   aa+=(--target "$target")
 
   aa+=(--template "$source")
-  aa+=(--unlinked-template "$home/documentation/source/tools/todo.md" --unlinked-target "$home/documentation/.docs/tools/todo.md")
+  aa+=(--unlinked-source "$documentationSource")
+  aa+=(--unlinked-template "$source/todo.md" --unlinked-target "$target/todo.md")
   aa+=("--function-template" "$functionTemplate" --page-template "$home/documentation/template/__main.md")
   aa+=(--see-prefix "./documentation/.docs")
 
@@ -205,6 +206,7 @@ buildDocumentationBuild() {
   fi
 
   local targetHome="$home/documentation/.docs"
+  local documentationSource="$home/documentation/source"
 
   # Ensure we have our target
   catchEnvironment "$handler" muzzle directoryRequire "$targetHome" || return $?
@@ -214,7 +216,7 @@ buildDocumentationBuild() {
 
     local newestTemplate newestDocs
     newestTemplate=$(directoryNewestFile "$home/documentation/template")
-    newestDocs=$(directoryNewestFile "$home/documentation/source")
+    newestDocs=$(directoryNewestFile "$documentationSource")
     if [ -z "$newestDocs" ] || fileIsNewest "$newestTemplate" "$newestDocs"; then
       updateTemplates=true
       ! $verboseFlag || statusMessage decorate info "Templates were changed, update templates is now automatic"
@@ -223,7 +225,7 @@ buildDocumentationBuild() {
 
   if $updateTemplates; then
     statusMessage --last decorate notice "Updating document templates ..."
-    documentationTemplateUpdate "$home/documentation/source" "$home/documentation/template" || return $?
+    documentationTemplateUpdate "$documentationSource" "$home/documentation/template" || return $?
   fi
 
   if $updateDerived; then
@@ -232,16 +234,14 @@ buildDocumentationBuild() {
     statusMessage --last decorate notice "Updating release page ..."
     __buildDocumentationBuildRelease "$handler" "$home" || return $?
 
-    local sourceHome="$home/documentation/source"
-
     statusMessage --last decorate notice "Copying all non-tools ..."
     while IFS="" read -r file; do
-      file=${file#"$sourceHome"}
+      file=${file#"$documentationSource"}
       statusMessage decorate notice "Copying $file ..."
       catchEnvironment "$handler" muzzle fileDirectoryRequire "$targetHome/$file" || return $?
-      cp -f "$sourceHome/$file" "$targetHome/$file" || return $?
+      cp -f "$documentationSource/$file" "$targetHome/$file" || return $?
     done < <(
-      find "$sourceHome" -type f -name "*.md" ! -path "*/tools/*" ! -path "*/env/*" -print0 | xargs -0 grep -v -l '{[A-Za-z][^]!\[}]*}' || :
+      find "$documentationSource" -type f -name "*.md" ! -path "*/tools/*" ! -path "*/env/*" -print0 | xargs -0 grep -v -l '{[A-Za-z][^]!\[}]*}' || :
     )
 
     local example
@@ -251,12 +251,12 @@ buildDocumentationBuild() {
     # Mappable files
     statusMessage --last decorate notice "Mapping non-tools ..."
     while IFS="" read -r file; do
-      file=${file#"$sourceHome"}
+      file=${file#"$documentationSource"}
       statusMessage decorate notice "Updating $file ..."
       catchEnvironment "$handler" muzzle fileDirectoryRequire "$targetHome/$file" || return $?
-      example="$example" timestamp="$timestamp" version="$version" catchReturn "$handler" mapEnvironment <"$sourceHome/$file" >"$targetHome/$file" || return $?
+      example="$example" timestamp="$timestamp" version="$version" catchReturn "$handler" mapEnvironment <"$documentationSource/$file" >"$targetHome/$file" || return $?
     done < <(
-      find "$sourceHome" -type f -name "*.md" ! -path "*/tools/*" ! -path "*/env/*" -print0 | xargs -0 grep -l '{[A-Za-z][^]!\[}]*}' || :
+      find "$documentationSource" -type f -name "*.md" ! -path "*/tools/*" ! -path "*/env/*" -print0 | xargs -0 grep -l '{[A-Za-z][^]!\[}]*}' || :
     )
     statusMessage --last decorate notice "Updating environment variables document ..."
     catchReturn "$handler" documentationBuildEnvironment --verbose "${ea[@]+"${ea[@]}"}" || return $?

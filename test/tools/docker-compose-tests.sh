@@ -32,6 +32,7 @@ testIsDockerComposeRunning() {
 
     catchEnvironment "$handler" muzzle popd || return $?
     catchEnvironment "$handler" rm -rf "$newHome" || return $?
+    catchEnvironment "$handler" cd "$oldHome" || return $?
     mockEnvironmentStop BUILD_HOME
   fi
 }

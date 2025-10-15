@@ -426,7 +426,7 @@ testSuite() {
       # --cd-away handling
       if $cdAway; then
         local buildHomeRequired
-        buildHomeRequired=$(testFlagBoolean "Build-Home" "$__flags" false)
+        buildHomeRequired=$(__testFlagBoolean "Build-Home" "$__flags" false)
 
         # Force it off for functions which flag it
         if $buildHomeRequired; then
@@ -989,7 +989,7 @@ __testRun() {
   __testStart=$(timingStart)
   platform="$(_testPlatform)"
   [ -n "$platform" ] || throwEnvironment "$handler" "No platform defined?" || return $?
-  if ! testFlagPlatformMatch "$platform" "$__flagText" 2>>"$quietLog"; then
+  if ! __testFlagPlatformMatch "$platform" "$__flagText" 2>>"$quietLog"; then
     statusMessage --last decorate warning "Skipping $(decorate code "$__test") on $(decorate error "$platform")"
     __TEST_SUITE_RESULT="skipped platform $platform"
     resultCode=0
@@ -1006,13 +1006,13 @@ __testRun() {
     TMPDIR="$tempDirectory"
 
     local doHousekeeper="" doPlumber="" buildHomeRequired="" testActuallyFails=""
-    doHousekeeper=$(testFlagBoolean "Housekeeper" "$__flagText")
-    doPlumber=$(testFlagBoolean "Plumber" "$__flagText")
+    doHousekeeper=$(__testFlagBoolean "Housekeeper" "$__flagText")
+    doPlumber=$(__testFlagBoolean "Plumber" "$__flagText")
     [ -n "$doHousekeeper" ] || doHousekeeper=true
     [ -n "$doPlumber" ] || doPlumber=true
 
-    buildHomeRequired=$(testFlagBoolean "Build-Home" "$__flagText" false)
-    testActuallyFails=$(testFlagBoolean "Fail" "$__flagText" false)
+    buildHomeRequired=$(__testFlagBoolean "Build-Home" "$__flagText" false)
+    testActuallyFails=$(__testFlagBoolean "Fail" "$__flagText" false)
 
     if $verboseMode; then
       decorate pair "Platform" "$platform"

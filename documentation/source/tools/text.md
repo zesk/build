@@ -27,30 +27,49 @@
 ## Cleanup ANSI text
 
 {stripAnsi}
+
 {plainLength}
 
 ### Space trimming
 
 {trimWords}
+
 {trimSpace}
+
 {trimHead}
+
 {trimTail}
+
 {trimBoth}
+
 {singleBlankLines}
 
 ## Finding or Calculating
 
 {inArray}
+
 {isSubstring}
+
 {isSubstringInsensitive}
+
 {stringBegins}
+
 {stringBeginsInsensitive}
+
 {stringContains}
+
 {stringContainsInsensitive}
+
 {beginsWith}
+
 {stringOffset}
+
+{stringOffsetInsensitive}
+
 {maximumFieldLength}
+
 {maximumLineLength}
+
 {fileEndsWithNewline}
 
 ## Language-related

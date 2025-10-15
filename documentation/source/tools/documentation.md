@@ -14,6 +14,12 @@
 
 {documentationTemplate}
 
+## Indexes
+
+{documentationIndexDocumentation}
+
+{documentationIndexLookup}
+
 {documentationUnlinked}
 
 ## Generating documentation

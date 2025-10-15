@@ -15,6 +15,8 @@ Examples:
 
 Zesk Build supports customizations of all decoration colors to custom values.
 
+{colorScheme}
+
 {decorate}
 
 {decorations}

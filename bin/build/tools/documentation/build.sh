@@ -16,8 +16,10 @@ __documentationBuild() {
   local company="" applicationName="" docArgs=() companyLink="" applicationName=""
 
   local sourcePaths=() cleanFlag=false
-  local targetPath="" actionFlag="" unlinkedTemplate="" unlinkedTarget="" actionFlag="" verbose=false pageTemplate=""
+  local targetPath="" actionFlag="" actionFlag="" verbose=false pageTemplate=""
   local indexArgs=() templatePath="" company="" applicationName="" functionTemplate="" seePrefix="-"
+
+  local unlinkedSources=() unlinkedTemplate="" unlinkedTarget=""
 
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
@@ -77,6 +79,10 @@ __documentationBuild() {
     --company-link)
       shift
       companyLink=$(usageArgumentString "$handler" "$argument" "${1-}") || return $?
+      ;;
+    --unlinked-source)
+      shift
+      unlinkedSources+=("$(usageArgumentDirectory "$handler" "$argument" "${1-}")") || return $?
       ;;
     --unlinked-template)
       shift
@@ -195,11 +201,13 @@ __documentationBuild() {
     # First copy
     catchReturn "$handler" mapEnvironment <"$unlinkedTemplate" >"$unlinkedTarget" || return $?
 
-    # Create or update indexes
-    elapsed=$(timingStart)
-    statusMessage decorate info "Generating documentation index ..."
-    catchReturn "$handler" __documentationIndexDocumentation "$handler" "$cacheDirectory" "${sourcePaths[@]}" || returnClean $? "${clean[@]}" || return $?
-    statusMessage --last timingReport "$elapsed" "Generated documentation index in" || :
+    if [ "${#unlinkedSources[@]}" -gt 0 ]; then
+      # Create or update indexes
+      elapsed=$(timingStart)
+      statusMessage decorate info "Generating documentation index ..."
+      catchReturn "$handler" __documentationIndexDocumentation "$handler" "$cacheDirectory" "${unlinkedSources[@]}" || returnClean $? "${clean[@]}" || return $?
+      statusMessage --last timingReport "$elapsed" "Generated documentation index in" || :
+    fi
   fi
 
   elapsed=$(timingStart)

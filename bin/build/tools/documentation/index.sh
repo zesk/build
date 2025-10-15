@@ -95,13 +95,13 @@ _documentationIndexGenerate() {
       catchReturn "$handler" printf "%s" "" >"$functionsCache" || return $?
       while read -r functionName; do
         local lineNumber="${functionName%%:*}"
-        functionName="${functionName#*:}"
+        functionName=$(trimSpace "${functionName#*:}")
         printf "%s %s %s\n" "$functionName" "$shellFile" "$lineNumber" | tee -a "$functionsCache" >>"$indexFile.unsorted"
         count=$((count + 1))
         if ! bashFileComment "$fullPath" "$lineNumber" >"$indexDirectory/comment/$functionName"; then
           throwEnvironment "$handler" "Documentation failed for $functionName" || return $?
         fi
-      done < <(__pcregrep -n -o1 -M '\n([a-zA-Z_][a-zA-Z_0-9]+)\(\)\s+\{\s*\n' "$fullPath")
+      done < <(__pcregrep -n -o1 -M '\n\s*([a-zA-Z_][a-zA-Z_0-9]+)\(\)\s+\{\s*\n' "$fullPath")
       ! $verboseFlag || statusMessage decorate success "Generated $count functions for $shellFile"
     done < <(find "$codePath" -type f -name '*.sh' ! -path '*/.*/*' || :)
   done

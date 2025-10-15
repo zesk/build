@@ -40,6 +40,10 @@ This is universally used throughout.
 {mapReturn}
 {convertValue}
 
+## Handling arguments and stdin similarly
+
+{executeInputSupport}
+
 ## Deprecated Logging
 
 {_deprecated}

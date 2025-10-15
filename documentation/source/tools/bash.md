@@ -19,6 +19,10 @@
 
 ## Code analysis
 
+{bashFileComment}
+
+{bashFinalComment}
+
 {bashFunctionDefined}
 
 {bashGetRequires}
