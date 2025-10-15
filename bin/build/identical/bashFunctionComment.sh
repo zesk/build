@@ -11,15 +11,16 @@
 # Requires: fileReverseLines sed cut grep convertValue
 bashFinalComment() {
   [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
-  grep -v -e '\( IDENTICAL \|_IDENTICAL_\|DOC TEMPLATE:\|Internal:\|INTERNAL:\)' | fileReverseLines | sed -n -e 1d -e '/^[[:space:]]*#/ { p'$'\n''b'$'\n''}; q' | sed 's/^[[:space:]]*//' | fileReverseLines | cut -c 3- || :
+  grep -v -e '\( IDENTICAL \|_IDENTICAL_\|DOC TEMPLATE:\|Internal:\|INTERNAL:\)' | fileReverseLines | sed -n -e 1d -e '/^[[:space:]]*#/ { p'$'\n''b'$'\n''}; q' | sed 's/^[[:space:]]*#[[:space:]]*//' | fileReverseLines || :
   # Explained:
   # - grep -v ... - Removes internal documentation and anything we want to hide from the user
   # - fileReverseLines - First reversal to get that comment, file lines are reverse ordered
-  # - sed 1d - Deletes the first line (e.g. the `function() { ` which was the LAST thing in the line and is now our first line
-  # - `-n` - disables automatic printing. /^#/!q quits when it does not match a '#' comment and prints all `#` lines (effectively outputting just the comment lines)
-  # - `'/^[[:space:]]*#/ { p'$'\n''b'$'\n''}; q'` - while matching `[space]#` print lines then quit when does not match
+  # - `sed 1d` - Deletes the first line (e.g. the `function() { ` which was the LAST thing in the line and is now our first line
+  # - `sed -n` - disables automatic printing
+  # - `sed -e '/^[[:space:]]*#/ { p'$'\n''b'$'\n''}; q'` - while matching `[space]#` print lines then quit when does not match
+  # - `sed 's/^[[:space:]]*#[[:space:]]*//' - trim spaces and comment character
+  # - Why the odd $'\n'? See https://stackoverflow.com/questions/15467616/sed-gives-me-unexpected-eof-pending-s-error-and-i-have-no-idea-why ... On BSD sed you must use newlines between statements.
   # - fileReverseLines - File is back to normal
-  # - cut -c 3- - Delete the first 2 characters on each line
 }
 _bashFinalComment() {
   ! false || bashFinalComment --help

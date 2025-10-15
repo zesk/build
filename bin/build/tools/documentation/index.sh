@@ -226,7 +226,7 @@ __documentationIndexDocumentation() {
     for sourcePath in "${sourcePaths[@]}"; do
       sourcePath="${sourcePath#"$home/"}"
       ! $debugFlag || decorate info "Indexing $sourcePath" 1>&2
-      find "$sourcePath" -name '*.md' -print0 | xargs -0 grep -e "^{[_a-zA-Z][a-zA-Z0-9_]*}$" | sed 's/[{}]//g' | awk -F ":" "{ print \$2 \" \" \$1 }" >>"$unsorted" || :
+      find "$sourcePath" -name '*.md' -print0 | xargs -0 grep -e "^{[_a-zA-Z][a-zA-Z0-9_]*}[[:space:]]*$" | sed 's/[{}]//g' | awk -F ":" "{ print \$2 \" \" \$1 }" >>"$unsorted" || :
       ! $debugFlag || decorate info "index is $(fileLineCount "$unsorted")" 1>&2
     done
     catchEnvironment "$handler" muzzle popd || returnClean $? "$indexFile" "$unsorted" || return $?
