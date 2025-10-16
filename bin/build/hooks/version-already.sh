@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# Run during bin/build/new-release.sh when a new version was already created
+# Run during bin/build/release-new.sh when a new version was already created
 #
 # Copyright &copy; 2025 Market Acumen, Inc.
 #

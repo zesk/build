@@ -67,7 +67,7 @@ Internally Zesk Build is organized:
 ## Other binaries
 
 `bin/build/` contains other tools for simple templating (`map.sh`, global changes `cannon.sh`, release utilities
-`new-release.sh` and `version-last.sh`. Add `./bin/build/` your `PATH` to get access to these easily.
+`release-new.sh` and `version-last.sh`. Add `./bin/build/` your `PATH` to get access to these easily.
 
     export PATH="$PATH:$BUILD_HOME/bin/build"
 
@@ -83,7 +83,7 @@ The included binaries at `bin/build/` are:
 - `map.sh` - `mapEnvironment` wrapper
 - `need-bash.sh` - For Docker image installs which lack bash (usually running `sh`). This script enables install of
   `bash` to run `tools.sh` properly. (used by `alpineContainer` specifically)
-- `new-release.sh` - `releaseNew` wrapper
+- `release-new.sh` - `releaseNew` wrapper
 - `release-notes.sh` - `releaseNotes` wrapper
 - `test-tools.sh` - Tools for `testSuite`
 - `version-last.sh` - `gitVersionLast` wrapper

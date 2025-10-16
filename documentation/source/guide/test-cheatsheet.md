@@ -1,5 +1,11 @@
 # test Cheat Sheet
 
+This guide is the `test` man page nearly verbatim with formatting.
+
+<!-- TEMPLATE guideHeader 2 -->
+[🛠️ Guide](./index.md) &middot; [⬅ Home ](../index.md)
+<hr />
+
 An blank `EXPRESSION` is false.
 
 Expression combinations:

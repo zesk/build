@@ -1,5 +1,9 @@
 # `BASH_SOURCE` and `FUNCNAME`
 
+<!-- TEMPLATE guideHeader 2 -->
+[🛠️ Guide](./index.md) &middot; [⬅ Home ](../index.md)
+<hr />
+
 `$BASH_SOURCE` only has multiple entries if function calls are involved, in which case its elements parallel the
 `FUNCNAME` array that contains all function names currently on the call stack.
 

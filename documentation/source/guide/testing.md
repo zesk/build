@@ -1,5 +1,9 @@
 # Testing
 
+<!-- TEMPLATE guideHeader 2 -->
+[🛠️ Guide](./index.md) &middot; [⬅ Home ](../index.md)
+<hr />
+
 Zesk Build has a complete testing and assertion platform which allows you to write tests for your Bash scripts with a
 lot of extra functionality which makes it easy to use.
 

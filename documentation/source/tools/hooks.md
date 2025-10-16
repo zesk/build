@@ -22,7 +22,7 @@ These run within the current project regardless of where Zesk Build is loaded:
 
 # Version hooks
 
-These hooks interact with `new-release.sh` and deployment tools but are intended to be used anywhere.
+These hooks interact with `release-new.sh` and deployment tools but are intended to be used anywhere.
 
 - `version-current` - Required. The current version. Defaults to the highest version in `docs/release`.
 - `version-live` - Optional. Determine the live version.

@@ -39,7 +39,7 @@ They are intended to be standalone tools useful for a variety of installation an
 - `deprecated.sh` - Do a project-wide replacement of deprecated code with modern updates. May modify or break your code.
   example)
 - `local-container.sh` - Same as [`dockerLocalContainer`](./docker.md#dockerLocalContainer)
-- [`new-release.sh`](./version.md#releaseNew) - Same as [`releaseNew`](./version.md#releaseNew)
+- [`release-new.sh`](./version.md#releaseNew) - Same as [`releaseNew`](./version.md#releaseNew)
 - [`release-notes.sh`](./git.md#releaseNotes) - Same as [`releaseNotes`](./git.md#releaseNotes)
 - [`version-last.sh`](./git.md#gitVersionLast) - Same as [`gitVersionLast`](./git.md#gitVersionLast)
 - [`version-list.sh`](./git.md/#gitVersionList) - Same as [`gitVersionList`](./git.md#gitVersionList)

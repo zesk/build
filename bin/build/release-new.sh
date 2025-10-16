@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# new-release.sh
+# release-new.sh
 #
 # Copyright &copy; 2025 Market Acumen, Inc.
 #

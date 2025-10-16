@@ -1,5 +1,9 @@
 # Build your own installer
 
+<!-- TEMPLATE guideHeader 2 -->
+[🛠️ Guide](./index.md) &middot; [⬅ Home ](../index.md)
+<hr />
+
 A utility/internal function called [`_installRemotePackage`](../tools/build.md#_installRemotePackage) allows for
 building of your own installer for a software package. It inherits all of the capabilities of `install-bin-build.sh`:
 
@@ -15,6 +19,7 @@ When you write an installer, be sure to run `bashCheckRequries` as part of your 
 
     bashCheckRequires --ignore-prefix __decorateExtension --require --unused --report "$home/bin/my-installer.sh" || return $?
 
-This ensures that all dependent functions are included in the installation file (as this is necessary to allow copying of the installer script to another project).
+This ensures that all dependent functions are included in the installation file (as this is necessary to allow copying
+of the installer script to another project).
 
-TODO continue and finish this.
+*this document is a work in progress and needs to be completed*. TODO
