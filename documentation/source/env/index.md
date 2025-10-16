@@ -49,4 +49,6 @@ Project configuration variables:
 - [`buildEnvironmentLoad`](../tools/build.md#buildEnvironmentLoad)
 - [`buildEnvironmentGet`](../tools/build.md#buildEnvironmentGet)
 
+# Categories of Environment Variables
+
 <!-- source/env/index.md is the original version of this file and the one which should be edited -->

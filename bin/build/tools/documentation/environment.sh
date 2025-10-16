@@ -144,11 +144,20 @@ __documentationBuildEnvironment() {
     fi
   done <"$cacheDirectory/categories"
 
-  local name
+  local moreHeader="$home/documentation/template/env-more-header.md"
+  local moreFooter="$home/documentation/template/env-more-footer.md"
+  local heading=false name
   while IFS="" read -r name; do
     if [ -f "$cacheDirectory/more.$name" ]; then
+      if ! $heading; then
+        cat "$moreHeader" >>"$targetFile"
+        heading=true
+      fi
       printf "\n" >>"$targetFile"
       cat "$cacheDirectory/more.$name" >>"$targetFile"
     fi
   done < <(sort -u "$cacheDirectory/mores")
+  if "$heading"; then
+    cat "$moreFooter" >>"$targetFile"
+  fi
 }

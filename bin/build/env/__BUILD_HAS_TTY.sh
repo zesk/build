@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
-# Cached value of the availability of /dev/tty
-# true or false
-# true - /dev/tty appears to be operating without errors
-# false - /dev/tty appears to be disconnected and can not be used
-# This value is set automatically by `isTTYAvailable` and caches the value to avoid testing again.
+# Cached value of the availability of `/dev/tty`
+# Possible values are `true` or `false` or blank.
+# - `true` - `/dev/tty` appears to be operating without errors
+# - `false` - `/dev/tty` appears to be disconnected and can not be used
+# This value is set automatically by `isTTYAvailable` and caches the value using this environment variable to avoid testing again.
 # Copyright &copy; 2025 Market Acumen, Inc.
 # Category: Internal
 # Type: Boolean

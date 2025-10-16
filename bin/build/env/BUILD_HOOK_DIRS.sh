@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-# BUILD_INSTALL_URL for `installInstallBuild`
+# List of directories to search for hooks. Defaults to `bin/hooks:bin/build/hooks`.
+# Colon (`:`) separated list.
 # Copyright &copy; 2025 Market Acumen, Inc.
 # Category: Build Configuration
 # Type: ApplicationDirectoryList

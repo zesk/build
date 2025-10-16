@@ -3,5 +3,6 @@
 # Copyright &copy; 2025 Market Acumen, Inc.
 # Category: Deployment
 # Type: String
+# Default: app.tar.gz
 export BUILD_TARGET
 BUILD_TARGET=${BUILD_TARGET:-app.tar.gz}

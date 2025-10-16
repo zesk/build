@@ -3,7 +3,7 @@
 # Type: Boolean
 # Category: PHP
 # Vendor: xdebug
-# Is xdebug enabled? Calling application can honor this global to automatically connect to the debugger.
+# Is xdebug enabled? Calling application can honor this environment variable to automatically connect to the debugger.
 # See: https://github.com/zesk/zesk/blob/master/xdebug.php
 export XDEBUG_ENABLED
 XDEBUG_ENABLED="${XDEBUG_ENABLED-}"

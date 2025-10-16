@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# URL to look up IP address
+# URL to look up IP my address remotely
 # See: ipLookup
 # Type: URL
 # Copyright &copy; 2025 Market Acumen, Inc.

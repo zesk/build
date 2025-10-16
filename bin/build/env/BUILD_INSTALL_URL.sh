@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# BUILD_INSTALL_URL for `installInstallBuild`
+# `BUILD_INSTALL_URL` for `installInstallBuild` - source URL for a raw installer.
 # Copyright &copy; 2025 Market Acumen, Inc.
 # Category: Build Configuration
 # Type: URL
