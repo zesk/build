@@ -151,23 +151,23 @@ _assertionStatistics() {
 # Core condition assertion handler
 # DOC TEMPLATE: assert-common 18
 # Argument: --help - Optional. Flag. Display this help.
-# Argument: --line lineNumber - Optional. Integer. Line number of calling function.
+# Argument: --line lineNumber - Optional. Integer. Line number of calling function. Typically this is not required as it is computed from the calling function using `--line-depth`.
 # Argument: --line-depth depth - Optional. Integer. The depth in the stack of function calls to find the line number of the calling function.
 # Argument: --debug - Optional. Flag. Debugging enabled for the assertion function.
-# Argument: --debug-lines - Optional. Flag. Debugging of SOLELY differences between --line passed in and the computed line from the --line-depth parameter.
+# Argument: --debug-lines - Optional. Flag. Debugging of SOLELY differences between `--line` passed in and the computed line from the `--line-depth` parameter.
 # Argument: --display - Optional. String. Display name for the condition.
-# Argument: --success - Optional. Boolean. Whether the assertion should pass (`true`) or fail (`false`)
-# Argument: --stderr-match - Optional. String. One or more strings which must match stderr. Implies `--stderr-ok`
-# Argument: --stdout-no-match - Optional. String. One or more strings which must match stderr.
-# Argument: --stdout-match - Optional. String. One or more strings which must match stdout.
-# Argument: --stdout-no-match - Optional. String. One or more strings which must match stdout.
-# Argument: --stderr-ok - Optional. Flag. Output to stderr will not cause the test to fail.
+# Argument: --success - Optional. Boolean. Whether the assertion should pass (`true`) or fail (`false`) - most functions have this already baked in.
+# Argument: --stderr-match - Optional. String. One or more strings which must match `stderr` output. Implies `--stderr-ok`
+# Argument: --stdout-no-match - Optional. String. One or more strings which must match NOT `stderr` output.
+# Argument: --stdout-match - Optional. String. One or more strings which must match `stdout` output.
+# Argument: --stdout-no-match - Optional. String. One or more strings which must match `stdout` output.
+# Argument: --stderr-ok - Optional. Flag. Output to `stderr` will not cause the test to fail.
 # Argument: --leak globalName - Zero or more. String. Allow global leaks for these globals.
 # Argument: --skip-plumber - Optional. Flag. Skip plumber check for function calls.
-# Argument: --dump - Optional. Flag. Output stderr and stdout after test regardless.
-# Argument: --dump-binary - Optional. Flag. Output stderr and stdout after test regardless, and output binary.
-# Argument: --head - Optional. Flag. When outputting stderr or stdout, output the head of the file.
-# Argument: --tail - Optional. Flag. When outputting stderr or stdout, output the tail of the file. (Default)
+# Argument: --dump - Optional. Flag. Output `stderr` and `stdout` after test regardless.
+# Argument: --dump-binary - Optional. Flag. Output `stderr` and `stdout` after test regardless, displayed as binary.
+# Argument: --head - Optional. Flag. When outputting `stderr` or `stdout`, output the head of the file.
+# Argument: --tail - Optional. Flag. When outputting `stderr` or `stdout`, output the tail of the file. (Default)
 # Return Code: 1 - If the assertions fails
 # Return Code: 0 - If the assertion succeeds
 _assertConditionHelper() {

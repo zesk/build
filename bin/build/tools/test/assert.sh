@@ -17,23 +17,23 @@
 # Usage: assertEquals expected actual [ message ]
 # DOC TEMPLATE: assert-common 18
 # Argument: --help - Optional. Flag. Display this help.
-# Argument: --line lineNumber - Optional. Integer. Line number of calling function.
+# Argument: --line lineNumber - Optional. Integer. Line number of calling function. Typically this is not required as it is computed from the calling function using `--line-depth`.
 # Argument: --line-depth depth - Optional. Integer. The depth in the stack of function calls to find the line number of the calling function.
 # Argument: --debug - Optional. Flag. Debugging enabled for the assertion function.
-# Argument: --debug-lines - Optional. Flag. Debugging of SOLELY differences between --line passed in and the computed line from the --line-depth parameter.
+# Argument: --debug-lines - Optional. Flag. Debugging of SOLELY differences between `--line` passed in and the computed line from the `--line-depth` parameter.
 # Argument: --display - Optional. String. Display name for the condition.
-# Argument: --success - Optional. Boolean. Whether the assertion should pass (`true`) or fail (`false`)
-# Argument: --stderr-match - Optional. String. One or more strings which must match stderr. Implies `--stderr-ok`
-# Argument: --stdout-no-match - Optional. String. One or more strings which must match stderr.
-# Argument: --stdout-match - Optional. String. One or more strings which must match stdout.
-# Argument: --stdout-no-match - Optional. String. One or more strings which must match stdout.
-# Argument: --stderr-ok - Optional. Flag. Output to stderr will not cause the test to fail.
+# Argument: --success - Optional. Boolean. Whether the assertion should pass (`true`) or fail (`false`) - most functions have this already baked in.
+# Argument: --stderr-match - Optional. String. One or more strings which must match `stderr` output. Implies `--stderr-ok`
+# Argument: --stdout-no-match - Optional. String. One or more strings which must match NOT `stderr` output.
+# Argument: --stdout-match - Optional. String. One or more strings which must match `stdout` output.
+# Argument: --stdout-no-match - Optional. String. One or more strings which must match `stdout` output.
+# Argument: --stderr-ok - Optional. Flag. Output to `stderr` will not cause the test to fail.
 # Argument: --leak globalName - Zero or more. String. Allow global leaks for these globals.
 # Argument: --skip-plumber - Optional. Flag. Skip plumber check for function calls.
-# Argument: --dump - Optional. Flag. Output stderr and stdout after test regardless.
-# Argument: --dump-binary - Optional. Flag. Output stderr and stdout after test regardless, and output binary.
-# Argument: --head - Optional. Flag. When outputting stderr or stdout, output the head of the file.
-# Argument: --tail - Optional. Flag. When outputting stderr or stdout, output the tail of the file. (Default)
+# Argument: --dump - Optional. Flag. Output `stderr` and `stdout` after test regardless.
+# Argument: --dump-binary - Optional. Flag. Output `stderr` and `stdout` after test regardless, displayed as binary.
+# Argument: --head - Optional. Flag. When outputting `stderr` or `stdout`, output the head of the file.
+# Argument: --tail - Optional. Flag. When outputting `stderr` or `stdout`, output the tail of the file. (Default)
 # Argument: expected - Expected string
 # Argument: actual - Actual string
 # Argument: message - Message to output if the assertion fails
@@ -55,23 +55,23 @@ _assertEquals() {
 #
 # DOC TEMPLATE: assert-common 18
 # Argument: --help - Optional. Flag. Display this help.
-# Argument: --line lineNumber - Optional. Integer. Line number of calling function.
+# Argument: --line lineNumber - Optional. Integer. Line number of calling function. Typically this is not required as it is computed from the calling function using `--line-depth`.
 # Argument: --line-depth depth - Optional. Integer. The depth in the stack of function calls to find the line number of the calling function.
 # Argument: --debug - Optional. Flag. Debugging enabled for the assertion function.
-# Argument: --debug-lines - Optional. Flag. Debugging of SOLELY differences between --line passed in and the computed line from the --line-depth parameter.
+# Argument: --debug-lines - Optional. Flag. Debugging of SOLELY differences between `--line` passed in and the computed line from the `--line-depth` parameter.
 # Argument: --display - Optional. String. Display name for the condition.
-# Argument: --success - Optional. Boolean. Whether the assertion should pass (`true`) or fail (`false`)
-# Argument: --stderr-match - Optional. String. One or more strings which must match stderr. Implies `--stderr-ok`
-# Argument: --stdout-no-match - Optional. String. One or more strings which must match stderr.
-# Argument: --stdout-match - Optional. String. One or more strings which must match stdout.
-# Argument: --stdout-no-match - Optional. String. One or more strings which must match stdout.
-# Argument: --stderr-ok - Optional. Flag. Output to stderr will not cause the test to fail.
+# Argument: --success - Optional. Boolean. Whether the assertion should pass (`true`) or fail (`false`) - most functions have this already baked in.
+# Argument: --stderr-match - Optional. String. One or more strings which must match `stderr` output. Implies `--stderr-ok`
+# Argument: --stdout-no-match - Optional. String. One or more strings which must match NOT `stderr` output.
+# Argument: --stdout-match - Optional. String. One or more strings which must match `stdout` output.
+# Argument: --stdout-no-match - Optional. String. One or more strings which must match `stdout` output.
+# Argument: --stderr-ok - Optional. Flag. Output to `stderr` will not cause the test to fail.
 # Argument: --leak globalName - Zero or more. String. Allow global leaks for these globals.
 # Argument: --skip-plumber - Optional. Flag. Skip plumber check for function calls.
-# Argument: --dump - Optional. Flag. Output stderr and stdout after test regardless.
-# Argument: --dump-binary - Optional. Flag. Output stderr and stdout after test regardless, and output binary.
-# Argument: --head - Optional. Flag. When outputting stderr or stdout, output the head of the file.
-# Argument: --tail - Optional. Flag. When outputting stderr or stdout, output the tail of the file. (Default)
+# Argument: --dump - Optional. Flag. Output `stderr` and `stdout` after test regardless.
+# Argument: --dump-binary - Optional. Flag. Output `stderr` and `stdout` after test regardless, displayed as binary.
+# Argument: --head - Optional. Flag. When outputting `stderr` or `stdout`, output the head of the file.
+# Argument: --tail - Optional. Flag. When outputting `stderr` or `stdout`, output the tail of the file. (Default)
 # Argument: string ... - Not empty strings
 # Example:     assertStringNotEmpty "$string"
 # Reviewed: 2023-11-12
@@ -91,23 +91,23 @@ _assertStringNotEmpty() {
 #
 # DOC TEMPLATE: assert-common 18
 # Argument: --help - Optional. Flag. Display this help.
-# Argument: --line lineNumber - Optional. Integer. Line number of calling function.
+# Argument: --line lineNumber - Optional. Integer. Line number of calling function. Typically this is not required as it is computed from the calling function using `--line-depth`.
 # Argument: --line-depth depth - Optional. Integer. The depth in the stack of function calls to find the line number of the calling function.
 # Argument: --debug - Optional. Flag. Debugging enabled for the assertion function.
-# Argument: --debug-lines - Optional. Flag. Debugging of SOLELY differences between --line passed in and the computed line from the --line-depth parameter.
+# Argument: --debug-lines - Optional. Flag. Debugging of SOLELY differences between `--line` passed in and the computed line from the `--line-depth` parameter.
 # Argument: --display - Optional. String. Display name for the condition.
-# Argument: --success - Optional. Boolean. Whether the assertion should pass (`true`) or fail (`false`)
-# Argument: --stderr-match - Optional. String. One or more strings which must match stderr. Implies `--stderr-ok`
-# Argument: --stdout-no-match - Optional. String. One or more strings which must match stderr.
-# Argument: --stdout-match - Optional. String. One or more strings which must match stdout.
-# Argument: --stdout-no-match - Optional. String. One or more strings which must match stdout.
-# Argument: --stderr-ok - Optional. Flag. Output to stderr will not cause the test to fail.
+# Argument: --success - Optional. Boolean. Whether the assertion should pass (`true`) or fail (`false`) - most functions have this already baked in.
+# Argument: --stderr-match - Optional. String. One or more strings which must match `stderr` output. Implies `--stderr-ok`
+# Argument: --stdout-no-match - Optional. String. One or more strings which must match NOT `stderr` output.
+# Argument: --stdout-match - Optional. String. One or more strings which must match `stdout` output.
+# Argument: --stdout-no-match - Optional. String. One or more strings which must match `stdout` output.
+# Argument: --stderr-ok - Optional. Flag. Output to `stderr` will not cause the test to fail.
 # Argument: --leak globalName - Zero or more. String. Allow global leaks for these globals.
 # Argument: --skip-plumber - Optional. Flag. Skip plumber check for function calls.
-# Argument: --dump - Optional. Flag. Output stderr and stdout after test regardless.
-# Argument: --dump-binary - Optional. Flag. Output stderr and stdout after test regardless, and output binary.
-# Argument: --head - Optional. Flag. When outputting stderr or stdout, output the head of the file.
-# Argument: --tail - Optional. Flag. When outputting stderr or stdout, output the tail of the file. (Default)
+# Argument: --dump - Optional. Flag. Output `stderr` and `stdout` after test regardless.
+# Argument: --dump-binary - Optional. Flag. Output `stderr` and `stdout` after test regardless, displayed as binary.
+# Argument: --head - Optional. Flag. When outputting `stderr` or `stdout`, output the head of the file.
+# Argument: --tail - Optional. Flag. When outputting `stderr` or `stdout`, output the tail of the file. (Default)
 # Argument: string ... - Empty strings
 # Example:     assertEquals "$(alignRight 4 "hi")" "  hi" "alignRight not working"
 # Reviewed: 2023-11-12
@@ -126,23 +126,23 @@ _assertStringEmpty() {
 # Summary: Assert two strings are not equal
 # DOC TEMPLATE: assert-common 18
 # Argument: --help - Optional. Flag. Display this help.
-# Argument: --line lineNumber - Optional. Integer. Line number of calling function.
+# Argument: --line lineNumber - Optional. Integer. Line number of calling function. Typically this is not required as it is computed from the calling function using `--line-depth`.
 # Argument: --line-depth depth - Optional. Integer. The depth in the stack of function calls to find the line number of the calling function.
 # Argument: --debug - Optional. Flag. Debugging enabled for the assertion function.
-# Argument: --debug-lines - Optional. Flag. Debugging of SOLELY differences between --line passed in and the computed line from the --line-depth parameter.
+# Argument: --debug-lines - Optional. Flag. Debugging of SOLELY differences between `--line` passed in and the computed line from the `--line-depth` parameter.
 # Argument: --display - Optional. String. Display name for the condition.
-# Argument: --success - Optional. Boolean. Whether the assertion should pass (`true`) or fail (`false`)
-# Argument: --stderr-match - Optional. String. One or more strings which must match stderr. Implies `--stderr-ok`
-# Argument: --stdout-no-match - Optional. String. One or more strings which must match stderr.
-# Argument: --stdout-match - Optional. String. One or more strings which must match stdout.
-# Argument: --stdout-no-match - Optional. String. One or more strings which must match stdout.
-# Argument: --stderr-ok - Optional. Flag. Output to stderr will not cause the test to fail.
+# Argument: --success - Optional. Boolean. Whether the assertion should pass (`true`) or fail (`false`) - most functions have this already baked in.
+# Argument: --stderr-match - Optional. String. One or more strings which must match `stderr` output. Implies `--stderr-ok`
+# Argument: --stdout-no-match - Optional. String. One or more strings which must match NOT `stderr` output.
+# Argument: --stdout-match - Optional. String. One or more strings which must match `stdout` output.
+# Argument: --stdout-no-match - Optional. String. One or more strings which must match `stdout` output.
+# Argument: --stderr-ok - Optional. Flag. Output to `stderr` will not cause the test to fail.
 # Argument: --leak globalName - Zero or more. String. Allow global leaks for these globals.
 # Argument: --skip-plumber - Optional. Flag. Skip plumber check for function calls.
-# Argument: --dump - Optional. Flag. Output stderr and stdout after test regardless.
-# Argument: --dump-binary - Optional. Flag. Output stderr and stdout after test regardless, and output binary.
-# Argument: --head - Optional. Flag. When outputting stderr or stdout, output the head of the file.
-# Argument: --tail - Optional. Flag. When outputting stderr or stdout, output the tail of the file. (Default)
+# Argument: --dump - Optional. Flag. Output `stderr` and `stdout` after test regardless.
+# Argument: --dump-binary - Optional. Flag. Output `stderr` and `stdout` after test regardless, displayed as binary.
+# Argument: --head - Optional. Flag. When outputting `stderr` or `stdout`, output the head of the file.
+# Argument: --tail - Optional. Flag. When outputting `stderr` or `stdout`, output the tail of the file. (Default)
 # Argument: expected - Required. Expected string.
 # Argument: actual - Required. Actual string.
 # Argument: message - Message to output if the assertion fails. Optional.
@@ -167,23 +167,23 @@ _assertNotEquals() {
 # Argument: arguments - Optional. Arguments. Any arguments to pass to the command to run
 # DOC TEMPLATE: assert-common 18
 # Argument: --help - Optional. Flag. Display this help.
-# Argument: --line lineNumber - Optional. Integer. Line number of calling function.
+# Argument: --line lineNumber - Optional. Integer. Line number of calling function. Typically this is not required as it is computed from the calling function using `--line-depth`.
 # Argument: --line-depth depth - Optional. Integer. The depth in the stack of function calls to find the line number of the calling function.
 # Argument: --debug - Optional. Flag. Debugging enabled for the assertion function.
-# Argument: --debug-lines - Optional. Flag. Debugging of SOLELY differences between --line passed in and the computed line from the --line-depth parameter.
+# Argument: --debug-lines - Optional. Flag. Debugging of SOLELY differences between `--line` passed in and the computed line from the `--line-depth` parameter.
 # Argument: --display - Optional. String. Display name for the condition.
-# Argument: --success - Optional. Boolean. Whether the assertion should pass (`true`) or fail (`false`)
-# Argument: --stderr-match - Optional. String. One or more strings which must match stderr. Implies `--stderr-ok`
-# Argument: --stdout-no-match - Optional. String. One or more strings which must match stderr.
-# Argument: --stdout-match - Optional. String. One or more strings which must match stdout.
-# Argument: --stdout-no-match - Optional. String. One or more strings which must match stdout.
-# Argument: --stderr-ok - Optional. Flag. Output to stderr will not cause the test to fail.
+# Argument: --success - Optional. Boolean. Whether the assertion should pass (`true`) or fail (`false`) - most functions have this already baked in.
+# Argument: --stderr-match - Optional. String. One or more strings which must match `stderr` output. Implies `--stderr-ok`
+# Argument: --stdout-no-match - Optional. String. One or more strings which must match NOT `stderr` output.
+# Argument: --stdout-match - Optional. String. One or more strings which must match `stdout` output.
+# Argument: --stdout-no-match - Optional. String. One or more strings which must match `stdout` output.
+# Argument: --stderr-ok - Optional. Flag. Output to `stderr` will not cause the test to fail.
 # Argument: --leak globalName - Zero or more. String. Allow global leaks for these globals.
 # Argument: --skip-plumber - Optional. Flag. Skip plumber check for function calls.
-# Argument: --dump - Optional. Flag. Output stderr and stdout after test regardless.
-# Argument: --dump-binary - Optional. Flag. Output stderr and stdout after test regardless, and output binary.
-# Argument: --head - Optional. Flag. When outputting stderr or stdout, output the head of the file.
-# Argument: --tail - Optional. Flag. When outputting stderr or stdout, output the tail of the file. (Default)
+# Argument: --dump - Optional. Flag. Output `stderr` and `stdout` after test regardless.
+# Argument: --dump-binary - Optional. Flag. Output `stderr` and `stdout` after test regardless, displayed as binary.
+# Argument: --head - Optional. Flag. When outputting `stderr` or `stdout`, output the head of the file.
+# Argument: --tail - Optional. Flag. When outputting `stderr` or `stdout`, output the tail of the file. (Default)
 # Examples:     assertExitCode 0 hasHook version-current
 # Reviewed: 2023-11-12
 # Return Code: 0 - If the process exits with the provided exit code
@@ -207,23 +207,23 @@ _assertExitCode() {
 # Argument: arguments - Optional. Arguments. Any arguments to pass to the command to run
 # DOC TEMPLATE: assert-common 18
 # Argument: --help - Optional. Flag. Display this help.
-# Argument: --line lineNumber - Optional. Integer. Line number of calling function.
+# Argument: --line lineNumber - Optional. Integer. Line number of calling function. Typically this is not required as it is computed from the calling function using `--line-depth`.
 # Argument: --line-depth depth - Optional. Integer. The depth in the stack of function calls to find the line number of the calling function.
 # Argument: --debug - Optional. Flag. Debugging enabled for the assertion function.
-# Argument: --debug-lines - Optional. Flag. Debugging of SOLELY differences between --line passed in and the computed line from the --line-depth parameter.
+# Argument: --debug-lines - Optional. Flag. Debugging of SOLELY differences between `--line` passed in and the computed line from the `--line-depth` parameter.
 # Argument: --display - Optional. String. Display name for the condition.
-# Argument: --success - Optional. Boolean. Whether the assertion should pass (`true`) or fail (`false`)
-# Argument: --stderr-match - Optional. String. One or more strings which must match stderr. Implies `--stderr-ok`
-# Argument: --stdout-no-match - Optional. String. One or more strings which must match stderr.
-# Argument: --stdout-match - Optional. String. One or more strings which must match stdout.
-# Argument: --stdout-no-match - Optional. String. One or more strings which must match stdout.
-# Argument: --stderr-ok - Optional. Flag. Output to stderr will not cause the test to fail.
+# Argument: --success - Optional. Boolean. Whether the assertion should pass (`true`) or fail (`false`) - most functions have this already baked in.
+# Argument: --stderr-match - Optional. String. One or more strings which must match `stderr` output. Implies `--stderr-ok`
+# Argument: --stdout-no-match - Optional. String. One or more strings which must match NOT `stderr` output.
+# Argument: --stdout-match - Optional. String. One or more strings which must match `stdout` output.
+# Argument: --stdout-no-match - Optional. String. One or more strings which must match `stdout` output.
+# Argument: --stderr-ok - Optional. Flag. Output to `stderr` will not cause the test to fail.
 # Argument: --leak globalName - Zero or more. String. Allow global leaks for these globals.
 # Argument: --skip-plumber - Optional. Flag. Skip plumber check for function calls.
-# Argument: --dump - Optional. Flag. Output stderr and stdout after test regardless.
-# Argument: --dump-binary - Optional. Flag. Output stderr and stdout after test regardless, and output binary.
-# Argument: --head - Optional. Flag. When outputting stderr or stdout, output the head of the file.
-# Argument: --tail - Optional. Flag. When outputting stderr or stdout, output the tail of the file. (Default)
+# Argument: --dump - Optional. Flag. Output `stderr` and `stdout` after test regardless.
+# Argument: --dump-binary - Optional. Flag. Output `stderr` and `stdout` after test regardless, displayed as binary.
+# Argument: --head - Optional. Flag. When outputting `stderr` or `stdout`, output the head of the file.
+# Argument: --tail - Optional. Flag. When outputting `stderr` or `stdout`, output the tail of the file. (Default)
 # Examples:     {fn} 0 hasHook make-cash-quickly
 # Reviewed: 2023-11-12
 # Return Code: 0 - If the process exits with a different exit code
@@ -244,23 +244,23 @@ _assertNotExitCode() {
 #
 # DOC TEMPLATE: assert-common 18
 # Argument: --help - Optional. Flag. Display this help.
-# Argument: --line lineNumber - Optional. Integer. Line number of calling function.
+# Argument: --line lineNumber - Optional. Integer. Line number of calling function. Typically this is not required as it is computed from the calling function using `--line-depth`.
 # Argument: --line-depth depth - Optional. Integer. The depth in the stack of function calls to find the line number of the calling function.
 # Argument: --debug - Optional. Flag. Debugging enabled for the assertion function.
-# Argument: --debug-lines - Optional. Flag. Debugging of SOLELY differences between --line passed in and the computed line from the --line-depth parameter.
+# Argument: --debug-lines - Optional. Flag. Debugging of SOLELY differences between `--line` passed in and the computed line from the `--line-depth` parameter.
 # Argument: --display - Optional. String. Display name for the condition.
-# Argument: --success - Optional. Boolean. Whether the assertion should pass (`true`) or fail (`false`)
-# Argument: --stderr-match - Optional. String. One or more strings which must match stderr. Implies `--stderr-ok`
-# Argument: --stdout-no-match - Optional. String. One or more strings which must match stderr.
-# Argument: --stdout-match - Optional. String. One or more strings which must match stdout.
-# Argument: --stdout-no-match - Optional. String. One or more strings which must match stdout.
-# Argument: --stderr-ok - Optional. Flag. Output to stderr will not cause the test to fail.
+# Argument: --success - Optional. Boolean. Whether the assertion should pass (`true`) or fail (`false`) - most functions have this already baked in.
+# Argument: --stderr-match - Optional. String. One or more strings which must match `stderr` output. Implies `--stderr-ok`
+# Argument: --stdout-no-match - Optional. String. One or more strings which must match NOT `stderr` output.
+# Argument: --stdout-match - Optional. String. One or more strings which must match `stdout` output.
+# Argument: --stdout-no-match - Optional. String. One or more strings which must match `stdout` output.
+# Argument: --stderr-ok - Optional. Flag. Output to `stderr` will not cause the test to fail.
 # Argument: --leak globalName - Zero or more. String. Allow global leaks for these globals.
 # Argument: --skip-plumber - Optional. Flag. Skip plumber check for function calls.
-# Argument: --dump - Optional. Flag. Output stderr and stdout after test regardless.
-# Argument: --dump-binary - Optional. Flag. Output stderr and stdout after test regardless, and output binary.
-# Argument: --head - Optional. Flag. When outputting stderr or stdout, output the head of the file.
-# Argument: --tail - Optional. Flag. When outputting stderr or stdout, output the tail of the file. (Default)
+# Argument: --dump - Optional. Flag. Output `stderr` and `stdout` after test regardless.
+# Argument: --dump-binary - Optional. Flag. Output `stderr` and `stdout` after test regardless, displayed as binary.
+# Argument: --head - Optional. Flag. When outputting `stderr` or `stdout`, output the head of the file.
+# Argument: --tail - Optional. Flag. When outputting `stderr` or `stdout`, output the tail of the file. (Default)
 # Argument: needle - String. Text we are looking for.
 # Argument: haystack ... - String. One or more strings to find `needle` in - it must be found in all haystacks.
 # Return Code: 0 - The assertion succeeded
@@ -282,23 +282,23 @@ _assertContains() {
 #
 # DOC TEMPLATE: assert-common 18
 # Argument: --help - Optional. Flag. Display this help.
-# Argument: --line lineNumber - Optional. Integer. Line number of calling function.
+# Argument: --line lineNumber - Optional. Integer. Line number of calling function. Typically this is not required as it is computed from the calling function using `--line-depth`.
 # Argument: --line-depth depth - Optional. Integer. The depth in the stack of function calls to find the line number of the calling function.
 # Argument: --debug - Optional. Flag. Debugging enabled for the assertion function.
-# Argument: --debug-lines - Optional. Flag. Debugging of SOLELY differences between --line passed in and the computed line from the --line-depth parameter.
+# Argument: --debug-lines - Optional. Flag. Debugging of SOLELY differences between `--line` passed in and the computed line from the `--line-depth` parameter.
 # Argument: --display - Optional. String. Display name for the condition.
-# Argument: --success - Optional. Boolean. Whether the assertion should pass (`true`) or fail (`false`)
-# Argument: --stderr-match - Optional. String. One or more strings which must match stderr. Implies `--stderr-ok`
-# Argument: --stdout-no-match - Optional. String. One or more strings which must match stderr.
-# Argument: --stdout-match - Optional. String. One or more strings which must match stdout.
-# Argument: --stdout-no-match - Optional. String. One or more strings which must match stdout.
-# Argument: --stderr-ok - Optional. Flag. Output to stderr will not cause the test to fail.
+# Argument: --success - Optional. Boolean. Whether the assertion should pass (`true`) or fail (`false`) - most functions have this already baked in.
+# Argument: --stderr-match - Optional. String. One or more strings which must match `stderr` output. Implies `--stderr-ok`
+# Argument: --stdout-no-match - Optional. String. One or more strings which must match NOT `stderr` output.
+# Argument: --stdout-match - Optional. String. One or more strings which must match `stdout` output.
+# Argument: --stdout-no-match - Optional. String. One or more strings which must match `stdout` output.
+# Argument: --stderr-ok - Optional. Flag. Output to `stderr` will not cause the test to fail.
 # Argument: --leak globalName - Zero or more. String. Allow global leaks for these globals.
 # Argument: --skip-plumber - Optional. Flag. Skip plumber check for function calls.
-# Argument: --dump - Optional. Flag. Output stderr and stdout after test regardless.
-# Argument: --dump-binary - Optional. Flag. Output stderr and stdout after test regardless, and output binary.
-# Argument: --head - Optional. Flag. When outputting stderr or stdout, output the head of the file.
-# Argument: --tail - Optional. Flag. When outputting stderr or stdout, output the tail of the file. (Default)
+# Argument: --dump - Optional. Flag. Output `stderr` and `stdout` after test regardless.
+# Argument: --dump-binary - Optional. Flag. Output `stderr` and `stdout` after test regardless, displayed as binary.
+# Argument: --head - Optional. Flag. When outputting `stderr` or `stdout`, output the head of the file.
+# Argument: --tail - Optional. Flag. When outputting `stderr` or `stdout`, output the tail of the file. (Default)
 # Argument: needle - String. Text we are looking for.
 # Argument: haystack ... - String. One or more strings to find `needle` in - it must be found in no haystacks.
 # Return Code: 0 - The assertion succeeded
@@ -326,23 +326,23 @@ _assertNotContains() {
 #
 # DOC TEMPLATE: assert-common 18
 # Argument: --help - Optional. Flag. Display this help.
-# Argument: --line lineNumber - Optional. Integer. Line number of calling function.
+# Argument: --line lineNumber - Optional. Integer. Line number of calling function. Typically this is not required as it is computed from the calling function using `--line-depth`.
 # Argument: --line-depth depth - Optional. Integer. The depth in the stack of function calls to find the line number of the calling function.
 # Argument: --debug - Optional. Flag. Debugging enabled for the assertion function.
-# Argument: --debug-lines - Optional. Flag. Debugging of SOLELY differences between --line passed in and the computed line from the --line-depth parameter.
+# Argument: --debug-lines - Optional. Flag. Debugging of SOLELY differences between `--line` passed in and the computed line from the `--line-depth` parameter.
 # Argument: --display - Optional. String. Display name for the condition.
-# Argument: --success - Optional. Boolean. Whether the assertion should pass (`true`) or fail (`false`)
-# Argument: --stderr-match - Optional. String. One or more strings which must match stderr. Implies `--stderr-ok`
-# Argument: --stdout-no-match - Optional. String. One or more strings which must match stderr.
-# Argument: --stdout-match - Optional. String. One or more strings which must match stdout.
-# Argument: --stdout-no-match - Optional. String. One or more strings which must match stdout.
-# Argument: --stderr-ok - Optional. Flag. Output to stderr will not cause the test to fail.
+# Argument: --success - Optional. Boolean. Whether the assertion should pass (`true`) or fail (`false`) - most functions have this already baked in.
+# Argument: --stderr-match - Optional. String. One or more strings which must match `stderr` output. Implies `--stderr-ok`
+# Argument: --stdout-no-match - Optional. String. One or more strings which must match NOT `stderr` output.
+# Argument: --stdout-match - Optional. String. One or more strings which must match `stdout` output.
+# Argument: --stdout-no-match - Optional. String. One or more strings which must match `stdout` output.
+# Argument: --stderr-ok - Optional. Flag. Output to `stderr` will not cause the test to fail.
 # Argument: --leak globalName - Zero or more. String. Allow global leaks for these globals.
 # Argument: --skip-plumber - Optional. Flag. Skip plumber check for function calls.
-# Argument: --dump - Optional. Flag. Output stderr and stdout after test regardless.
-# Argument: --dump-binary - Optional. Flag. Output stderr and stdout after test regardless, and output binary.
-# Argument: --head - Optional. Flag. When outputting stderr or stdout, output the head of the file.
-# Argument: --tail - Optional. Flag. When outputting stderr or stdout, output the tail of the file. (Default)
+# Argument: --dump - Optional. Flag. Output `stderr` and `stdout` after test regardless.
+# Argument: --dump-binary - Optional. Flag. Output `stderr` and `stdout` after test regardless, displayed as binary.
+# Argument: --head - Optional. Flag. When outputting `stderr` or `stdout`, output the head of the file.
+# Argument: --tail - Optional. Flag. When outputting `stderr` or `stdout`, output the tail of the file. (Default)
 # Argument: directory - Directory that should exist
 # Argument: message - An error message if this fails
 # Return Code: 0 - If the assertion succeeds
@@ -364,23 +364,23 @@ _assertDirectoryExists() {
 #
 # DOC TEMPLATE: assert-common 18
 # Argument: --help - Optional. Flag. Display this help.
-# Argument: --line lineNumber - Optional. Integer. Line number of calling function.
+# Argument: --line lineNumber - Optional. Integer. Line number of calling function. Typically this is not required as it is computed from the calling function using `--line-depth`.
 # Argument: --line-depth depth - Optional. Integer. The depth in the stack of function calls to find the line number of the calling function.
 # Argument: --debug - Optional. Flag. Debugging enabled for the assertion function.
-# Argument: --debug-lines - Optional. Flag. Debugging of SOLELY differences between --line passed in and the computed line from the --line-depth parameter.
+# Argument: --debug-lines - Optional. Flag. Debugging of SOLELY differences between `--line` passed in and the computed line from the `--line-depth` parameter.
 # Argument: --display - Optional. String. Display name for the condition.
-# Argument: --success - Optional. Boolean. Whether the assertion should pass (`true`) or fail (`false`)
-# Argument: --stderr-match - Optional. String. One or more strings which must match stderr. Implies `--stderr-ok`
-# Argument: --stdout-no-match - Optional. String. One or more strings which must match stderr.
-# Argument: --stdout-match - Optional. String. One or more strings which must match stdout.
-# Argument: --stdout-no-match - Optional. String. One or more strings which must match stdout.
-# Argument: --stderr-ok - Optional. Flag. Output to stderr will not cause the test to fail.
+# Argument: --success - Optional. Boolean. Whether the assertion should pass (`true`) or fail (`false`) - most functions have this already baked in.
+# Argument: --stderr-match - Optional. String. One or more strings which must match `stderr` output. Implies `--stderr-ok`
+# Argument: --stdout-no-match - Optional. String. One or more strings which must match NOT `stderr` output.
+# Argument: --stdout-match - Optional. String. One or more strings which must match `stdout` output.
+# Argument: --stdout-no-match - Optional. String. One or more strings which must match `stdout` output.
+# Argument: --stderr-ok - Optional. Flag. Output to `stderr` will not cause the test to fail.
 # Argument: --leak globalName - Zero or more. String. Allow global leaks for these globals.
 # Argument: --skip-plumber - Optional. Flag. Skip plumber check for function calls.
-# Argument: --dump - Optional. Flag. Output stderr and stdout after test regardless.
-# Argument: --dump-binary - Optional. Flag. Output stderr and stdout after test regardless, and output binary.
-# Argument: --head - Optional. Flag. When outputting stderr or stdout, output the head of the file.
-# Argument: --tail - Optional. Flag. When outputting stderr or stdout, output the tail of the file. (Default)
+# Argument: --dump - Optional. Flag. Output `stderr` and `stdout` after test regardless.
+# Argument: --dump-binary - Optional. Flag. Output `stderr` and `stdout` after test regardless, displayed as binary.
+# Argument: --head - Optional. Flag. When outputting `stderr` or `stdout`, output the head of the file.
+# Argument: --tail - Optional. Flag. When outputting `stderr` or `stdout`, output the tail of the file. (Default)
 # Argument: directory - Directory that should NOT exist
 # Argument: message - An error message if this fails
 # Return Code: 0 - If the assertion succeeds
@@ -403,23 +403,23 @@ _assertDirectoryDoesNotExist() {
 #
 # DOC TEMPLATE: assert-common 18
 # Argument: --help - Optional. Flag. Display this help.
-# Argument: --line lineNumber - Optional. Integer. Line number of calling function.
+# Argument: --line lineNumber - Optional. Integer. Line number of calling function. Typically this is not required as it is computed from the calling function using `--line-depth`.
 # Argument: --line-depth depth - Optional. Integer. The depth in the stack of function calls to find the line number of the calling function.
 # Argument: --debug - Optional. Flag. Debugging enabled for the assertion function.
-# Argument: --debug-lines - Optional. Flag. Debugging of SOLELY differences between --line passed in and the computed line from the --line-depth parameter.
+# Argument: --debug-lines - Optional. Flag. Debugging of SOLELY differences between `--line` passed in and the computed line from the `--line-depth` parameter.
 # Argument: --display - Optional. String. Display name for the condition.
-# Argument: --success - Optional. Boolean. Whether the assertion should pass (`true`) or fail (`false`)
-# Argument: --stderr-match - Optional. String. One or more strings which must match stderr. Implies `--stderr-ok`
-# Argument: --stdout-no-match - Optional. String. One or more strings which must match stderr.
-# Argument: --stdout-match - Optional. String. One or more strings which must match stdout.
-# Argument: --stdout-no-match - Optional. String. One or more strings which must match stdout.
-# Argument: --stderr-ok - Optional. Flag. Output to stderr will not cause the test to fail.
+# Argument: --success - Optional. Boolean. Whether the assertion should pass (`true`) or fail (`false`) - most functions have this already baked in.
+# Argument: --stderr-match - Optional. String. One or more strings which must match `stderr` output. Implies `--stderr-ok`
+# Argument: --stdout-no-match - Optional. String. One or more strings which must match NOT `stderr` output.
+# Argument: --stdout-match - Optional. String. One or more strings which must match `stdout` output.
+# Argument: --stdout-no-match - Optional. String. One or more strings which must match `stdout` output.
+# Argument: --stderr-ok - Optional. Flag. Output to `stderr` will not cause the test to fail.
 # Argument: --leak globalName - Zero or more. String. Allow global leaks for these globals.
 # Argument: --skip-plumber - Optional. Flag. Skip plumber check for function calls.
-# Argument: --dump - Optional. Flag. Output stderr and stdout after test regardless.
-# Argument: --dump-binary - Optional. Flag. Output stderr and stdout after test regardless, and output binary.
-# Argument: --head - Optional. Flag. When outputting stderr or stdout, output the head of the file.
-# Argument: --tail - Optional. Flag. When outputting stderr or stdout, output the tail of the file. (Default)
+# Argument: --dump - Optional. Flag. Output `stderr` and `stdout` after test regardless.
+# Argument: --dump-binary - Optional. Flag. Output `stderr` and `stdout` after test regardless, displayed as binary.
+# Argument: --head - Optional. Flag. When outputting `stderr` or `stdout`, output the head of the file.
+# Argument: --tail - Optional. Flag. When outputting `stderr` or `stdout`, output the tail of the file. (Default)
 # Argument: directory - Directory that should exist and be empty
 # Argument: message - An error message if this fails
 # Return Code: 0 - If the assertion succeeds
@@ -442,23 +442,23 @@ _assertDirectoryEmpty() {
 #
 # DOC TEMPLATE: assert-common 18
 # Argument: --help - Optional. Flag. Display this help.
-# Argument: --line lineNumber - Optional. Integer. Line number of calling function.
+# Argument: --line lineNumber - Optional. Integer. Line number of calling function. Typically this is not required as it is computed from the calling function using `--line-depth`.
 # Argument: --line-depth depth - Optional. Integer. The depth in the stack of function calls to find the line number of the calling function.
 # Argument: --debug - Optional. Flag. Debugging enabled for the assertion function.
-# Argument: --debug-lines - Optional. Flag. Debugging of SOLELY differences between --line passed in and the computed line from the --line-depth parameter.
+# Argument: --debug-lines - Optional. Flag. Debugging of SOLELY differences between `--line` passed in and the computed line from the `--line-depth` parameter.
 # Argument: --display - Optional. String. Display name for the condition.
-# Argument: --success - Optional. Boolean. Whether the assertion should pass (`true`) or fail (`false`)
-# Argument: --stderr-match - Optional. String. One or more strings which must match stderr. Implies `--stderr-ok`
-# Argument: --stdout-no-match - Optional. String. One or more strings which must match stderr.
-# Argument: --stdout-match - Optional. String. One or more strings which must match stdout.
-# Argument: --stdout-no-match - Optional. String. One or more strings which must match stdout.
-# Argument: --stderr-ok - Optional. Flag. Output to stderr will not cause the test to fail.
+# Argument: --success - Optional. Boolean. Whether the assertion should pass (`true`) or fail (`false`) - most functions have this already baked in.
+# Argument: --stderr-match - Optional. String. One or more strings which must match `stderr` output. Implies `--stderr-ok`
+# Argument: --stdout-no-match - Optional. String. One or more strings which must match NOT `stderr` output.
+# Argument: --stdout-match - Optional. String. One or more strings which must match `stdout` output.
+# Argument: --stdout-no-match - Optional. String. One or more strings which must match `stdout` output.
+# Argument: --stderr-ok - Optional. Flag. Output to `stderr` will not cause the test to fail.
 # Argument: --leak globalName - Zero or more. String. Allow global leaks for these globals.
 # Argument: --skip-plumber - Optional. Flag. Skip plumber check for function calls.
-# Argument: --dump - Optional. Flag. Output stderr and stdout after test regardless.
-# Argument: --dump-binary - Optional. Flag. Output stderr and stdout after test regardless, and output binary.
-# Argument: --head - Optional. Flag. When outputting stderr or stdout, output the head of the file.
-# Argument: --tail - Optional. Flag. When outputting stderr or stdout, output the tail of the file. (Default)
+# Argument: --dump - Optional. Flag. Output `stderr` and `stdout` after test regardless.
+# Argument: --dump-binary - Optional. Flag. Output `stderr` and `stdout` after test regardless, displayed as binary.
+# Argument: --head - Optional. Flag. When outputting `stderr` or `stdout`, output the head of the file.
+# Argument: --tail - Optional. Flag. When outputting `stderr` or `stdout`, output the tail of the file. (Default)
 # Argument: directory - Directory that should exist and not be empty
 # Argument: message - An error message if this fails
 # Return Code: 0 - If the assertion succeeds
@@ -489,23 +489,23 @@ _assertDirectoryNotEmpty() {
 #
 # DOC TEMPLATE: assert-common 18
 # Argument: --help - Optional. Flag. Display this help.
-# Argument: --line lineNumber - Optional. Integer. Line number of calling function.
+# Argument: --line lineNumber - Optional. Integer. Line number of calling function. Typically this is not required as it is computed from the calling function using `--line-depth`.
 # Argument: --line-depth depth - Optional. Integer. The depth in the stack of function calls to find the line number of the calling function.
 # Argument: --debug - Optional. Flag. Debugging enabled for the assertion function.
-# Argument: --debug-lines - Optional. Flag. Debugging of SOLELY differences between --line passed in and the computed line from the --line-depth parameter.
+# Argument: --debug-lines - Optional. Flag. Debugging of SOLELY differences between `--line` passed in and the computed line from the `--line-depth` parameter.
 # Argument: --display - Optional. String. Display name for the condition.
-# Argument: --success - Optional. Boolean. Whether the assertion should pass (`true`) or fail (`false`)
-# Argument: --stderr-match - Optional. String. One or more strings which must match stderr. Implies `--stderr-ok`
-# Argument: --stdout-no-match - Optional. String. One or more strings which must match stderr.
-# Argument: --stdout-match - Optional. String. One or more strings which must match stdout.
-# Argument: --stdout-no-match - Optional. String. One or more strings which must match stdout.
-# Argument: --stderr-ok - Optional. Flag. Output to stderr will not cause the test to fail.
+# Argument: --success - Optional. Boolean. Whether the assertion should pass (`true`) or fail (`false`) - most functions have this already baked in.
+# Argument: --stderr-match - Optional. String. One or more strings which must match `stderr` output. Implies `--stderr-ok`
+# Argument: --stdout-no-match - Optional. String. One or more strings which must match NOT `stderr` output.
+# Argument: --stdout-match - Optional. String. One or more strings which must match `stdout` output.
+# Argument: --stdout-no-match - Optional. String. One or more strings which must match `stdout` output.
+# Argument: --stderr-ok - Optional. Flag. Output to `stderr` will not cause the test to fail.
 # Argument: --leak globalName - Zero or more. String. Allow global leaks for these globals.
 # Argument: --skip-plumber - Optional. Flag. Skip plumber check for function calls.
-# Argument: --dump - Optional. Flag. Output stderr and stdout after test regardless.
-# Argument: --dump-binary - Optional. Flag. Output stderr and stdout after test regardless, and output binary.
-# Argument: --head - Optional. Flag. When outputting stderr or stdout, output the head of the file.
-# Argument: --tail - Optional. Flag. When outputting stderr or stdout, output the tail of the file. (Default)
+# Argument: --dump - Optional. Flag. Output `stderr` and `stdout` after test regardless.
+# Argument: --dump-binary - Optional. Flag. Output `stderr` and `stdout` after test regardless, displayed as binary.
+# Argument: --head - Optional. Flag. When outputting `stderr` or `stdout`, output the head of the file.
+# Argument: --tail - Optional. Flag. When outputting `stderr` or `stdout`, output the tail of the file. (Default)
 # Argument: item - File that should exist
 # Argument: message - An error message if this fails
 # Return Code: 0 - If the assertion succeeds
@@ -527,23 +527,23 @@ _assertFileExists() {
 #
 # DOC TEMPLATE: assert-common 18
 # Argument: --help - Optional. Flag. Display this help.
-# Argument: --line lineNumber - Optional. Integer. Line number of calling function.
+# Argument: --line lineNumber - Optional. Integer. Line number of calling function. Typically this is not required as it is computed from the calling function using `--line-depth`.
 # Argument: --line-depth depth - Optional. Integer. The depth in the stack of function calls to find the line number of the calling function.
 # Argument: --debug - Optional. Flag. Debugging enabled for the assertion function.
-# Argument: --debug-lines - Optional. Flag. Debugging of SOLELY differences between --line passed in and the computed line from the --line-depth parameter.
+# Argument: --debug-lines - Optional. Flag. Debugging of SOLELY differences between `--line` passed in and the computed line from the `--line-depth` parameter.
 # Argument: --display - Optional. String. Display name for the condition.
-# Argument: --success - Optional. Boolean. Whether the assertion should pass (`true`) or fail (`false`)
-# Argument: --stderr-match - Optional. String. One or more strings which must match stderr. Implies `--stderr-ok`
-# Argument: --stdout-no-match - Optional. String. One or more strings which must match stderr.
-# Argument: --stdout-match - Optional. String. One or more strings which must match stdout.
-# Argument: --stdout-no-match - Optional. String. One or more strings which must match stdout.
-# Argument: --stderr-ok - Optional. Flag. Output to stderr will not cause the test to fail.
+# Argument: --success - Optional. Boolean. Whether the assertion should pass (`true`) or fail (`false`) - most functions have this already baked in.
+# Argument: --stderr-match - Optional. String. One or more strings which must match `stderr` output. Implies `--stderr-ok`
+# Argument: --stdout-no-match - Optional. String. One or more strings which must match NOT `stderr` output.
+# Argument: --stdout-match - Optional. String. One or more strings which must match `stdout` output.
+# Argument: --stdout-no-match - Optional. String. One or more strings which must match `stdout` output.
+# Argument: --stderr-ok - Optional. Flag. Output to `stderr` will not cause the test to fail.
 # Argument: --leak globalName - Zero or more. String. Allow global leaks for these globals.
 # Argument: --skip-plumber - Optional. Flag. Skip plumber check for function calls.
-# Argument: --dump - Optional. Flag. Output stderr and stdout after test regardless.
-# Argument: --dump-binary - Optional. Flag. Output stderr and stdout after test regardless, and output binary.
-# Argument: --head - Optional. Flag. When outputting stderr or stdout, output the head of the file.
-# Argument: --tail - Optional. Flag. When outputting stderr or stdout, output the tail of the file. (Default)
+# Argument: --dump - Optional. Flag. Output `stderr` and `stdout` after test regardless.
+# Argument: --dump-binary - Optional. Flag. Output `stderr` and `stdout` after test regardless, displayed as binary.
+# Argument: --head - Optional. Flag. When outputting `stderr` or `stdout`, output the head of the file.
+# Argument: --tail - Optional. Flag. When outputting `stderr` or `stdout`, output the tail of the file. (Default)
 # Argument: file - File that should NOT exist
 # Argument: message - An error message if this fails
 # Return Code: 0 - If the assertion succeeds
@@ -576,23 +576,23 @@ _assertFileDoesNotExist() {
 # Usage: assertOutputEquals expected binary [ parameters ]
 # DOC TEMPLATE: assert-common 18
 # Argument: --help - Optional. Flag. Display this help.
-# Argument: --line lineNumber - Optional. Integer. Line number of calling function.
+# Argument: --line lineNumber - Optional. Integer. Line number of calling function. Typically this is not required as it is computed from the calling function using `--line-depth`.
 # Argument: --line-depth depth - Optional. Integer. The depth in the stack of function calls to find the line number of the calling function.
 # Argument: --debug - Optional. Flag. Debugging enabled for the assertion function.
-# Argument: --debug-lines - Optional. Flag. Debugging of SOLELY differences between --line passed in and the computed line from the --line-depth parameter.
+# Argument: --debug-lines - Optional. Flag. Debugging of SOLELY differences between `--line` passed in and the computed line from the `--line-depth` parameter.
 # Argument: --display - Optional. String. Display name for the condition.
-# Argument: --success - Optional. Boolean. Whether the assertion should pass (`true`) or fail (`false`)
-# Argument: --stderr-match - Optional. String. One or more strings which must match stderr. Implies `--stderr-ok`
-# Argument: --stdout-no-match - Optional. String. One or more strings which must match stderr.
-# Argument: --stdout-match - Optional. String. One or more strings which must match stdout.
-# Argument: --stdout-no-match - Optional. String. One or more strings which must match stdout.
-# Argument: --stderr-ok - Optional. Flag. Output to stderr will not cause the test to fail.
+# Argument: --success - Optional. Boolean. Whether the assertion should pass (`true`) or fail (`false`) - most functions have this already baked in.
+# Argument: --stderr-match - Optional. String. One or more strings which must match `stderr` output. Implies `--stderr-ok`
+# Argument: --stdout-no-match - Optional. String. One or more strings which must match NOT `stderr` output.
+# Argument: --stdout-match - Optional. String. One or more strings which must match `stdout` output.
+# Argument: --stdout-no-match - Optional. String. One or more strings which must match `stdout` output.
+# Argument: --stderr-ok - Optional. Flag. Output to `stderr` will not cause the test to fail.
 # Argument: --leak globalName - Zero or more. String. Allow global leaks for these globals.
 # Argument: --skip-plumber - Optional. Flag. Skip plumber check for function calls.
-# Argument: --dump - Optional. Flag. Output stderr and stdout after test regardless.
-# Argument: --dump-binary - Optional. Flag. Output stderr and stdout after test regardless, and output binary.
-# Argument: --head - Optional. Flag. When outputting stderr or stdout, output the head of the file.
-# Argument: --tail - Optional. Flag. When outputting stderr or stdout, output the tail of the file. (Default)
+# Argument: --dump - Optional. Flag. Output `stderr` and `stdout` after test regardless.
+# Argument: --dump-binary - Optional. Flag. Output `stderr` and `stdout` after test regardless, displayed as binary.
+# Argument: --head - Optional. Flag. When outputting `stderr` or `stdout`, output the head of the file.
+# Argument: --tail - Optional. Flag. When outputting `stderr` or `stdout`, output the tail of the file. (Default)
 # Argument: expected - Expected string
 # Argument: binary - Binary to run and evaluate output
 # Argument: parameters - Any additional parameters to binary
@@ -615,23 +615,23 @@ _assertOutputEquals() {
 # Usage: {fn} expected command [ arguments ... ]
 # DOC TEMPLATE: assert-common 18
 # Argument: --help - Optional. Flag. Display this help.
-# Argument: --line lineNumber - Optional. Integer. Line number of calling function.
+# Argument: --line lineNumber - Optional. Integer. Line number of calling function. Typically this is not required as it is computed from the calling function using `--line-depth`.
 # Argument: --line-depth depth - Optional. Integer. The depth in the stack of function calls to find the line number of the calling function.
 # Argument: --debug - Optional. Flag. Debugging enabled for the assertion function.
-# Argument: --debug-lines - Optional. Flag. Debugging of SOLELY differences between --line passed in and the computed line from the --line-depth parameter.
+# Argument: --debug-lines - Optional. Flag. Debugging of SOLELY differences between `--line` passed in and the computed line from the `--line-depth` parameter.
 # Argument: --display - Optional. String. Display name for the condition.
-# Argument: --success - Optional. Boolean. Whether the assertion should pass (`true`) or fail (`false`)
-# Argument: --stderr-match - Optional. String. One or more strings which must match stderr. Implies `--stderr-ok`
-# Argument: --stdout-no-match - Optional. String. One or more strings which must match stderr.
-# Argument: --stdout-match - Optional. String. One or more strings which must match stdout.
-# Argument: --stdout-no-match - Optional. String. One or more strings which must match stdout.
-# Argument: --stderr-ok - Optional. Flag. Output to stderr will not cause the test to fail.
+# Argument: --success - Optional. Boolean. Whether the assertion should pass (`true`) or fail (`false`) - most functions have this already baked in.
+# Argument: --stderr-match - Optional. String. One or more strings which must match `stderr` output. Implies `--stderr-ok`
+# Argument: --stdout-no-match - Optional. String. One or more strings which must match NOT `stderr` output.
+# Argument: --stdout-match - Optional. String. One or more strings which must match `stdout` output.
+# Argument: --stdout-no-match - Optional. String. One or more strings which must match `stdout` output.
+# Argument: --stderr-ok - Optional. Flag. Output to `stderr` will not cause the test to fail.
 # Argument: --leak globalName - Zero or more. String. Allow global leaks for these globals.
 # Argument: --skip-plumber - Optional. Flag. Skip plumber check for function calls.
-# Argument: --dump - Optional. Flag. Output stderr and stdout after test regardless.
-# Argument: --dump-binary - Optional. Flag. Output stderr and stdout after test regardless, and output binary.
-# Argument: --head - Optional. Flag. When outputting stderr or stdout, output the head of the file.
-# Argument: --tail - Optional. Flag. When outputting stderr or stdout, output the tail of the file. (Default)
+# Argument: --dump - Optional. Flag. Output `stderr` and `stdout` after test regardless.
+# Argument: --dump-binary - Optional. Flag. Output `stderr` and `stdout` after test regardless, displayed as binary.
+# Argument: --head - Optional. Flag. When outputting `stderr` or `stdout`, output the head of the file.
+# Argument: --tail - Optional. Flag. When outputting `stderr` or `stdout`, output the tail of the file. (Default)
 # Argument: expected - A string to expect in the output
 # Argument: command - The command to run
 # Argument: arguments - Any arguments to pass to the command to run
@@ -658,23 +658,23 @@ _assertOutputContains() {
 # Usage: assertOutputDoesNotContain expected command [ arguments ... ]
 # DOC TEMPLATE: assert-common 18
 # Argument: --help - Optional. Flag. Display this help.
-# Argument: --line lineNumber - Optional. Integer. Line number of calling function.
+# Argument: --line lineNumber - Optional. Integer. Line number of calling function. Typically this is not required as it is computed from the calling function using `--line-depth`.
 # Argument: --line-depth depth - Optional. Integer. The depth in the stack of function calls to find the line number of the calling function.
 # Argument: --debug - Optional. Flag. Debugging enabled for the assertion function.
-# Argument: --debug-lines - Optional. Flag. Debugging of SOLELY differences between --line passed in and the computed line from the --line-depth parameter.
+# Argument: --debug-lines - Optional. Flag. Debugging of SOLELY differences between `--line` passed in and the computed line from the `--line-depth` parameter.
 # Argument: --display - Optional. String. Display name for the condition.
-# Argument: --success - Optional. Boolean. Whether the assertion should pass (`true`) or fail (`false`)
-# Argument: --stderr-match - Optional. String. One or more strings which must match stderr. Implies `--stderr-ok`
-# Argument: --stdout-no-match - Optional. String. One or more strings which must match stderr.
-# Argument: --stdout-match - Optional. String. One or more strings which must match stdout.
-# Argument: --stdout-no-match - Optional. String. One or more strings which must match stdout.
-# Argument: --stderr-ok - Optional. Flag. Output to stderr will not cause the test to fail.
+# Argument: --success - Optional. Boolean. Whether the assertion should pass (`true`) or fail (`false`) - most functions have this already baked in.
+# Argument: --stderr-match - Optional. String. One or more strings which must match `stderr` output. Implies `--stderr-ok`
+# Argument: --stdout-no-match - Optional. String. One or more strings which must match NOT `stderr` output.
+# Argument: --stdout-match - Optional. String. One or more strings which must match `stdout` output.
+# Argument: --stdout-no-match - Optional. String. One or more strings which must match `stdout` output.
+# Argument: --stderr-ok - Optional. Flag. Output to `stderr` will not cause the test to fail.
 # Argument: --leak globalName - Zero or more. String. Allow global leaks for these globals.
 # Argument: --skip-plumber - Optional. Flag. Skip plumber check for function calls.
-# Argument: --dump - Optional. Flag. Output stderr and stdout after test regardless.
-# Argument: --dump-binary - Optional. Flag. Output stderr and stdout after test regardless, and output binary.
-# Argument: --head - Optional. Flag. When outputting stderr or stdout, output the head of the file.
-# Argument: --tail - Optional. Flag. When outputting stderr or stdout, output the tail of the file. (Default)
+# Argument: --dump - Optional. Flag. Output `stderr` and `stdout` after test regardless.
+# Argument: --dump-binary - Optional. Flag. Output `stderr` and `stdout` after test regardless, displayed as binary.
+# Argument: --head - Optional. Flag. When outputting `stderr` or `stdout`, output the head of the file.
+# Argument: --tail - Optional. Flag. When outputting `stderr` or `stdout`, output the tail of the file. (Default)
 # Argument: expected - A string to NOT expect in the output
 # Argument: command - The command to run
 # Argument: arguments - Any arguments to pass to the command to run
@@ -698,23 +698,23 @@ _assertOutputDoesNotContain() {
 #
 # DOC TEMPLATE: assert-common 18
 # Argument: --help - Optional. Flag. Display this help.
-# Argument: --line lineNumber - Optional. Integer. Line number of calling function.
+# Argument: --line lineNumber - Optional. Integer. Line number of calling function. Typically this is not required as it is computed from the calling function using `--line-depth`.
 # Argument: --line-depth depth - Optional. Integer. The depth in the stack of function calls to find the line number of the calling function.
 # Argument: --debug - Optional. Flag. Debugging enabled for the assertion function.
-# Argument: --debug-lines - Optional. Flag. Debugging of SOLELY differences between --line passed in and the computed line from the --line-depth parameter.
+# Argument: --debug-lines - Optional. Flag. Debugging of SOLELY differences between `--line` passed in and the computed line from the `--line-depth` parameter.
 # Argument: --display - Optional. String. Display name for the condition.
-# Argument: --success - Optional. Boolean. Whether the assertion should pass (`true`) or fail (`false`)
-# Argument: --stderr-match - Optional. String. One or more strings which must match stderr. Implies `--stderr-ok`
-# Argument: --stdout-no-match - Optional. String. One or more strings which must match stderr.
-# Argument: --stdout-match - Optional. String. One or more strings which must match stdout.
-# Argument: --stdout-no-match - Optional. String. One or more strings which must match stdout.
-# Argument: --stderr-ok - Optional. Flag. Output to stderr will not cause the test to fail.
+# Argument: --success - Optional. Boolean. Whether the assertion should pass (`true`) or fail (`false`) - most functions have this already baked in.
+# Argument: --stderr-match - Optional. String. One or more strings which must match `stderr` output. Implies `--stderr-ok`
+# Argument: --stdout-no-match - Optional. String. One or more strings which must match NOT `stderr` output.
+# Argument: --stdout-match - Optional. String. One or more strings which must match `stdout` output.
+# Argument: --stdout-no-match - Optional. String. One or more strings which must match `stdout` output.
+# Argument: --stderr-ok - Optional. Flag. Output to `stderr` will not cause the test to fail.
 # Argument: --leak globalName - Zero or more. String. Allow global leaks for these globals.
 # Argument: --skip-plumber - Optional. Flag. Skip plumber check for function calls.
-# Argument: --dump - Optional. Flag. Output stderr and stdout after test regardless.
-# Argument: --dump-binary - Optional. Flag. Output stderr and stdout after test regardless, and output binary.
-# Argument: --head - Optional. Flag. When outputting stderr or stdout, output the head of the file.
-# Argument: --tail - Optional. Flag. When outputting stderr or stdout, output the tail of the file. (Default)
+# Argument: --dump - Optional. Flag. Output `stderr` and `stdout` after test regardless.
+# Argument: --dump-binary - Optional. Flag. Output `stderr` and `stdout` after test regardless, displayed as binary.
+# Argument: --head - Optional. Flag. When outputting `stderr` or `stdout`, output the head of the file.
+# Argument: --tail - Optional. Flag. When outputting `stderr` or `stdout`, output the tail of the file. (Default)
 # Argument: fileName - File to search
 # Argument: string0 ... - One or more strings which must be found on at least one line in the file
 #
@@ -738,23 +738,23 @@ _assertFileContains() {
 #
 # DOC TEMPLATE: assert-common 18
 # Argument: --help - Optional. Flag. Display this help.
-# Argument: --line lineNumber - Optional. Integer. Line number of calling function.
+# Argument: --line lineNumber - Optional. Integer. Line number of calling function. Typically this is not required as it is computed from the calling function using `--line-depth`.
 # Argument: --line-depth depth - Optional. Integer. The depth in the stack of function calls to find the line number of the calling function.
 # Argument: --debug - Optional. Flag. Debugging enabled for the assertion function.
-# Argument: --debug-lines - Optional. Flag. Debugging of SOLELY differences between --line passed in and the computed line from the --line-depth parameter.
+# Argument: --debug-lines - Optional. Flag. Debugging of SOLELY differences between `--line` passed in and the computed line from the `--line-depth` parameter.
 # Argument: --display - Optional. String. Display name for the condition.
-# Argument: --success - Optional. Boolean. Whether the assertion should pass (`true`) or fail (`false`)
-# Argument: --stderr-match - Optional. String. One or more strings which must match stderr. Implies `--stderr-ok`
-# Argument: --stdout-no-match - Optional. String. One or more strings which must match stderr.
-# Argument: --stdout-match - Optional. String. One or more strings which must match stdout.
-# Argument: --stdout-no-match - Optional. String. One or more strings which must match stdout.
-# Argument: --stderr-ok - Optional. Flag. Output to stderr will not cause the test to fail.
+# Argument: --success - Optional. Boolean. Whether the assertion should pass (`true`) or fail (`false`) - most functions have this already baked in.
+# Argument: --stderr-match - Optional. String. One or more strings which must match `stderr` output. Implies `--stderr-ok`
+# Argument: --stdout-no-match - Optional. String. One or more strings which must match NOT `stderr` output.
+# Argument: --stdout-match - Optional. String. One or more strings which must match `stdout` output.
+# Argument: --stdout-no-match - Optional. String. One or more strings which must match `stdout` output.
+# Argument: --stderr-ok - Optional. Flag. Output to `stderr` will not cause the test to fail.
 # Argument: --leak globalName - Zero or more. String. Allow global leaks for these globals.
 # Argument: --skip-plumber - Optional. Flag. Skip plumber check for function calls.
-# Argument: --dump - Optional. Flag. Output stderr and stdout after test regardless.
-# Argument: --dump-binary - Optional. Flag. Output stderr and stdout after test regardless, and output binary.
-# Argument: --head - Optional. Flag. When outputting stderr or stdout, output the head of the file.
-# Argument: --tail - Optional. Flag. When outputting stderr or stdout, output the tail of the file. (Default)
+# Argument: --dump - Optional. Flag. Output `stderr` and `stdout` after test regardless.
+# Argument: --dump-binary - Optional. Flag. Output `stderr` and `stdout` after test regardless, displayed as binary.
+# Argument: --head - Optional. Flag. When outputting `stderr` or `stdout`, output the head of the file.
+# Argument: --tail - Optional. Flag. When outputting `stderr` or `stdout`, output the tail of the file. (Default)
 # Argument: fileName - File to search
 # Argument: string0 ... - One or more strings which must NOT be found anywhere in `fileName`
 # Return Code: 1 - If the assertions fails
@@ -776,23 +776,23 @@ _assertFileDoesNotContain() {
 #
 # DOC TEMPLATE: assert-common 18
 # Argument: --help - Optional. Flag. Display this help.
-# Argument: --line lineNumber - Optional. Integer. Line number of calling function.
+# Argument: --line lineNumber - Optional. Integer. Line number of calling function. Typically this is not required as it is computed from the calling function using `--line-depth`.
 # Argument: --line-depth depth - Optional. Integer. The depth in the stack of function calls to find the line number of the calling function.
 # Argument: --debug - Optional. Flag. Debugging enabled for the assertion function.
-# Argument: --debug-lines - Optional. Flag. Debugging of SOLELY differences between --line passed in and the computed line from the --line-depth parameter.
+# Argument: --debug-lines - Optional. Flag. Debugging of SOLELY differences between `--line` passed in and the computed line from the `--line-depth` parameter.
 # Argument: --display - Optional. String. Display name for the condition.
-# Argument: --success - Optional. Boolean. Whether the assertion should pass (`true`) or fail (`false`)
-# Argument: --stderr-match - Optional. String. One or more strings which must match stderr. Implies `--stderr-ok`
-# Argument: --stdout-no-match - Optional. String. One or more strings which must match stderr.
-# Argument: --stdout-match - Optional. String. One or more strings which must match stdout.
-# Argument: --stdout-no-match - Optional. String. One or more strings which must match stdout.
-# Argument: --stderr-ok - Optional. Flag. Output to stderr will not cause the test to fail.
+# Argument: --success - Optional. Boolean. Whether the assertion should pass (`true`) or fail (`false`) - most functions have this already baked in.
+# Argument: --stderr-match - Optional. String. One or more strings which must match `stderr` output. Implies `--stderr-ok`
+# Argument: --stdout-no-match - Optional. String. One or more strings which must match NOT `stderr` output.
+# Argument: --stdout-match - Optional. String. One or more strings which must match `stdout` output.
+# Argument: --stdout-no-match - Optional. String. One or more strings which must match `stdout` output.
+# Argument: --stderr-ok - Optional. Flag. Output to `stderr` will not cause the test to fail.
 # Argument: --leak globalName - Zero or more. String. Allow global leaks for these globals.
 # Argument: --skip-plumber - Optional. Flag. Skip plumber check for function calls.
-# Argument: --dump - Optional. Flag. Output stderr and stdout after test regardless.
-# Argument: --dump-binary - Optional. Flag. Output stderr and stdout after test regardless, and output binary.
-# Argument: --head - Optional. Flag. When outputting stderr or stdout, output the head of the file.
-# Argument: --tail - Optional. Flag. When outputting stderr or stdout, output the tail of the file. (Default)
+# Argument: --dump - Optional. Flag. Output `stderr` and `stdout` after test regardless.
+# Argument: --dump-binary - Optional. Flag. Output `stderr` and `stdout` after test regardless, displayed as binary.
+# Argument: --head - Optional. Flag. When outputting `stderr` or `stdout`, output the head of the file.
+# Argument: --tail - Optional. Flag. When outputting `stderr` or `stdout`, output the tail of the file. (Default)
 # Argument: expectedSize - Integer file size which `fileName` should be, in bytes.
 # Argument: fileName ... - One ore more file which should be `expectedSize` bytes in size.
 # Return Code: 1 - If the assertions fails
@@ -814,23 +814,23 @@ _assertFileSize() {
 #
 # DOC TEMPLATE: assert-common 18
 # Argument: --help - Optional. Flag. Display this help.
-# Argument: --line lineNumber - Optional. Integer. Line number of calling function.
+# Argument: --line lineNumber - Optional. Integer. Line number of calling function. Typically this is not required as it is computed from the calling function using `--line-depth`.
 # Argument: --line-depth depth - Optional. Integer. The depth in the stack of function calls to find the line number of the calling function.
 # Argument: --debug - Optional. Flag. Debugging enabled for the assertion function.
-# Argument: --debug-lines - Optional. Flag. Debugging of SOLELY differences between --line passed in and the computed line from the --line-depth parameter.
+# Argument: --debug-lines - Optional. Flag. Debugging of SOLELY differences between `--line` passed in and the computed line from the `--line-depth` parameter.
 # Argument: --display - Optional. String. Display name for the condition.
-# Argument: --success - Optional. Boolean. Whether the assertion should pass (`true`) or fail (`false`)
-# Argument: --stderr-match - Optional. String. One or more strings which must match stderr. Implies `--stderr-ok`
-# Argument: --stdout-no-match - Optional. String. One or more strings which must match stderr.
-# Argument: --stdout-match - Optional. String. One or more strings which must match stdout.
-# Argument: --stdout-no-match - Optional. String. One or more strings which must match stdout.
-# Argument: --stderr-ok - Optional. Flag. Output to stderr will not cause the test to fail.
+# Argument: --success - Optional. Boolean. Whether the assertion should pass (`true`) or fail (`false`) - most functions have this already baked in.
+# Argument: --stderr-match - Optional. String. One or more strings which must match `stderr` output. Implies `--stderr-ok`
+# Argument: --stdout-no-match - Optional. String. One or more strings which must match NOT `stderr` output.
+# Argument: --stdout-match - Optional. String. One or more strings which must match `stdout` output.
+# Argument: --stdout-no-match - Optional. String. One or more strings which must match `stdout` output.
+# Argument: --stderr-ok - Optional. Flag. Output to `stderr` will not cause the test to fail.
 # Argument: --leak globalName - Zero or more. String. Allow global leaks for these globals.
 # Argument: --skip-plumber - Optional. Flag. Skip plumber check for function calls.
-# Argument: --dump - Optional. Flag. Output stderr and stdout after test regardless.
-# Argument: --dump-binary - Optional. Flag. Output stderr and stdout after test regardless, and output binary.
-# Argument: --head - Optional. Flag. When outputting stderr or stdout, output the head of the file.
-# Argument: --tail - Optional. Flag. When outputting stderr or stdout, output the tail of the file. (Default)
+# Argument: --dump - Optional. Flag. Output `stderr` and `stdout` after test regardless.
+# Argument: --dump-binary - Optional. Flag. Output `stderr` and `stdout` after test regardless, displayed as binary.
+# Argument: --head - Optional. Flag. When outputting `stderr` or `stdout`, output the head of the file.
+# Argument: --tail - Optional. Flag. When outputting `stderr` or `stdout`, output the tail of the file. (Default)
 # Argument: expectedSize - Integer file size which `fileName` should NOT be, in bytes.
 # Argument: fileName ... - Required. File. One ore more file which should NOT be `expectedSize` bytes in size.
 # Return Code: 1 - If the assertions fails
@@ -852,23 +852,23 @@ _assertNotFileSize() {
 #
 # DOC TEMPLATE: assert-common 18
 # Argument: --help - Optional. Flag. Display this help.
-# Argument: --line lineNumber - Optional. Integer. Line number of calling function.
+# Argument: --line lineNumber - Optional. Integer. Line number of calling function. Typically this is not required as it is computed from the calling function using `--line-depth`.
 # Argument: --line-depth depth - Optional. Integer. The depth in the stack of function calls to find the line number of the calling function.
 # Argument: --debug - Optional. Flag. Debugging enabled for the assertion function.
-# Argument: --debug-lines - Optional. Flag. Debugging of SOLELY differences between --line passed in and the computed line from the --line-depth parameter.
+# Argument: --debug-lines - Optional. Flag. Debugging of SOLELY differences between `--line` passed in and the computed line from the `--line-depth` parameter.
 # Argument: --display - Optional. String. Display name for the condition.
-# Argument: --success - Optional. Boolean. Whether the assertion should pass (`true`) or fail (`false`)
-# Argument: --stderr-match - Optional. String. One or more strings which must match stderr. Implies `--stderr-ok`
-# Argument: --stdout-no-match - Optional. String. One or more strings which must match stderr.
-# Argument: --stdout-match - Optional. String. One or more strings which must match stdout.
-# Argument: --stdout-no-match - Optional. String. One or more strings which must match stdout.
-# Argument: --stderr-ok - Optional. Flag. Output to stderr will not cause the test to fail.
+# Argument: --success - Optional. Boolean. Whether the assertion should pass (`true`) or fail (`false`) - most functions have this already baked in.
+# Argument: --stderr-match - Optional. String. One or more strings which must match `stderr` output. Implies `--stderr-ok`
+# Argument: --stdout-no-match - Optional. String. One or more strings which must match NOT `stderr` output.
+# Argument: --stdout-match - Optional. String. One or more strings which must match `stdout` output.
+# Argument: --stdout-no-match - Optional. String. One or more strings which must match `stdout` output.
+# Argument: --stderr-ok - Optional. Flag. Output to `stderr` will not cause the test to fail.
 # Argument: --leak globalName - Zero or more. String. Allow global leaks for these globals.
 # Argument: --skip-plumber - Optional. Flag. Skip plumber check for function calls.
-# Argument: --dump - Optional. Flag. Output stderr and stdout after test regardless.
-# Argument: --dump-binary - Optional. Flag. Output stderr and stdout after test regardless, and output binary.
-# Argument: --head - Optional. Flag. When outputting stderr or stdout, output the head of the file.
-# Argument: --tail - Optional. Flag. When outputting stderr or stdout, output the tail of the file. (Default)
+# Argument: --dump - Optional. Flag. Output `stderr` and `stdout` after test regardless.
+# Argument: --dump-binary - Optional. Flag. Output `stderr` and `stdout` after test regardless, displayed as binary.
+# Argument: --head - Optional. Flag. When outputting `stderr` or `stdout`, output the head of the file.
+# Argument: --tail - Optional. Flag. When outputting `stderr` or `stdout`, output the tail of the file. (Default)
 # Argument: - fileName ... - Required. File. One ore more file which should be zero bytes in size.
 # Return Code: 1 - If the assertions fails
 # Return Code: 0 - If the assertion succeeds
@@ -889,23 +889,23 @@ _assertZeroFileSize() {
 #
 # DOC TEMPLATE: assert-common 18
 # Argument: --help - Optional. Flag. Display this help.
-# Argument: --line lineNumber - Optional. Integer. Line number of calling function.
+# Argument: --line lineNumber - Optional. Integer. Line number of calling function. Typically this is not required as it is computed from the calling function using `--line-depth`.
 # Argument: --line-depth depth - Optional. Integer. The depth in the stack of function calls to find the line number of the calling function.
 # Argument: --debug - Optional. Flag. Debugging enabled for the assertion function.
-# Argument: --debug-lines - Optional. Flag. Debugging of SOLELY differences between --line passed in and the computed line from the --line-depth parameter.
+# Argument: --debug-lines - Optional. Flag. Debugging of SOLELY differences between `--line` passed in and the computed line from the `--line-depth` parameter.
 # Argument: --display - Optional. String. Display name for the condition.
-# Argument: --success - Optional. Boolean. Whether the assertion should pass (`true`) or fail (`false`)
-# Argument: --stderr-match - Optional. String. One or more strings which must match stderr. Implies `--stderr-ok`
-# Argument: --stdout-no-match - Optional. String. One or more strings which must match stderr.
-# Argument: --stdout-match - Optional. String. One or more strings which must match stdout.
-# Argument: --stdout-no-match - Optional. String. One or more strings which must match stdout.
-# Argument: --stderr-ok - Optional. Flag. Output to stderr will not cause the test to fail.
+# Argument: --success - Optional. Boolean. Whether the assertion should pass (`true`) or fail (`false`) - most functions have this already baked in.
+# Argument: --stderr-match - Optional. String. One or more strings which must match `stderr` output. Implies `--stderr-ok`
+# Argument: --stdout-no-match - Optional. String. One or more strings which must match NOT `stderr` output.
+# Argument: --stdout-match - Optional. String. One or more strings which must match `stdout` output.
+# Argument: --stdout-no-match - Optional. String. One or more strings which must match `stdout` output.
+# Argument: --stderr-ok - Optional. Flag. Output to `stderr` will not cause the test to fail.
 # Argument: --leak globalName - Zero or more. String. Allow global leaks for these globals.
 # Argument: --skip-plumber - Optional. Flag. Skip plumber check for function calls.
-# Argument: --dump - Optional. Flag. Output stderr and stdout after test regardless.
-# Argument: --dump-binary - Optional. Flag. Output stderr and stdout after test regardless, and output binary.
-# Argument: --head - Optional. Flag. When outputting stderr or stdout, output the head of the file.
-# Argument: --tail - Optional. Flag. When outputting stderr or stdout, output the tail of the file. (Default)
+# Argument: --dump - Optional. Flag. Output `stderr` and `stdout` after test regardless.
+# Argument: --dump-binary - Optional. Flag. Output `stderr` and `stdout` after test regardless, displayed as binary.
+# Argument: --head - Optional. Flag. When outputting `stderr` or `stdout`, output the head of the file.
+# Argument: --tail - Optional. Flag. When outputting `stderr` or `stdout`, output the tail of the file. (Default)
 # Argument: - fileName ... - Required. File. One ore more file which should NOT be zero bytes in size.
 # Return Code: 1 - If the assertions fails
 # Return Code: 0 - If the assertion succeeds
@@ -934,23 +934,23 @@ _assertNotZeroFileSize() {
 #
 # DOC TEMPLATE: assert-common 18
 # Argument: --help - Optional. Flag. Display this help.
-# Argument: --line lineNumber - Optional. Integer. Line number of calling function.
+# Argument: --line lineNumber - Optional. Integer. Line number of calling function. Typically this is not required as it is computed from the calling function using `--line-depth`.
 # Argument: --line-depth depth - Optional. Integer. The depth in the stack of function calls to find the line number of the calling function.
 # Argument: --debug - Optional. Flag. Debugging enabled for the assertion function.
-# Argument: --debug-lines - Optional. Flag. Debugging of SOLELY differences between --line passed in and the computed line from the --line-depth parameter.
+# Argument: --debug-lines - Optional. Flag. Debugging of SOLELY differences between `--line` passed in and the computed line from the `--line-depth` parameter.
 # Argument: --display - Optional. String. Display name for the condition.
-# Argument: --success - Optional. Boolean. Whether the assertion should pass (`true`) or fail (`false`)
-# Argument: --stderr-match - Optional. String. One or more strings which must match stderr. Implies `--stderr-ok`
-# Argument: --stdout-no-match - Optional. String. One or more strings which must match stderr.
-# Argument: --stdout-match - Optional. String. One or more strings which must match stdout.
-# Argument: --stdout-no-match - Optional. String. One or more strings which must match stdout.
-# Argument: --stderr-ok - Optional. Flag. Output to stderr will not cause the test to fail.
+# Argument: --success - Optional. Boolean. Whether the assertion should pass (`true`) or fail (`false`) - most functions have this already baked in.
+# Argument: --stderr-match - Optional. String. One or more strings which must match `stderr` output. Implies `--stderr-ok`
+# Argument: --stdout-no-match - Optional. String. One or more strings which must match NOT `stderr` output.
+# Argument: --stdout-match - Optional. String. One or more strings which must match `stdout` output.
+# Argument: --stdout-no-match - Optional. String. One or more strings which must match `stdout` output.
+# Argument: --stderr-ok - Optional. Flag. Output to `stderr` will not cause the test to fail.
 # Argument: --leak globalName - Zero or more. String. Allow global leaks for these globals.
 # Argument: --skip-plumber - Optional. Flag. Skip plumber check for function calls.
-# Argument: --dump - Optional. Flag. Output stderr and stdout after test regardless.
-# Argument: --dump-binary - Optional. Flag. Output stderr and stdout after test regardless, and output binary.
-# Argument: --head - Optional. Flag. When outputting stderr or stdout, output the head of the file.
-# Argument: --tail - Optional. Flag. When outputting stderr or stdout, output the tail of the file. (Default)
+# Argument: --dump - Optional. Flag. Output `stderr` and `stdout` after test regardless.
+# Argument: --dump-binary - Optional. Flag. Output `stderr` and `stdout` after test regardless, displayed as binary.
+# Argument: --head - Optional. Flag. When outputting `stderr` or `stdout`, output the head of the file.
+# Argument: --tail - Optional. Flag. When outputting `stderr` or `stdout`, output the tail of the file. (Default)
 # Usage: {fn} expected actual [ message ]
 # Argument: leftValue - Value to compare on the left hand side of the comparison
 # Argument: rightValue - Value to compare on the right hand side of the comparison
@@ -970,23 +970,23 @@ _assertGreaterThan() {
 #
 # DOC TEMPLATE: assert-common 18
 # Argument: --help - Optional. Flag. Display this help.
-# Argument: --line lineNumber - Optional. Integer. Line number of calling function.
+# Argument: --line lineNumber - Optional. Integer. Line number of calling function. Typically this is not required as it is computed from the calling function using `--line-depth`.
 # Argument: --line-depth depth - Optional. Integer. The depth in the stack of function calls to find the line number of the calling function.
 # Argument: --debug - Optional. Flag. Debugging enabled for the assertion function.
-# Argument: --debug-lines - Optional. Flag. Debugging of SOLELY differences between --line passed in and the computed line from the --line-depth parameter.
+# Argument: --debug-lines - Optional. Flag. Debugging of SOLELY differences between `--line` passed in and the computed line from the `--line-depth` parameter.
 # Argument: --display - Optional. String. Display name for the condition.
-# Argument: --success - Optional. Boolean. Whether the assertion should pass (`true`) or fail (`false`)
-# Argument: --stderr-match - Optional. String. One or more strings which must match stderr. Implies `--stderr-ok`
-# Argument: --stdout-no-match - Optional. String. One or more strings which must match stderr.
-# Argument: --stdout-match - Optional. String. One or more strings which must match stdout.
-# Argument: --stdout-no-match - Optional. String. One or more strings which must match stdout.
-# Argument: --stderr-ok - Optional. Flag. Output to stderr will not cause the test to fail.
+# Argument: --success - Optional. Boolean. Whether the assertion should pass (`true`) or fail (`false`) - most functions have this already baked in.
+# Argument: --stderr-match - Optional. String. One or more strings which must match `stderr` output. Implies `--stderr-ok`
+# Argument: --stdout-no-match - Optional. String. One or more strings which must match NOT `stderr` output.
+# Argument: --stdout-match - Optional. String. One or more strings which must match `stdout` output.
+# Argument: --stdout-no-match - Optional. String. One or more strings which must match `stdout` output.
+# Argument: --stderr-ok - Optional. Flag. Output to `stderr` will not cause the test to fail.
 # Argument: --leak globalName - Zero or more. String. Allow global leaks for these globals.
 # Argument: --skip-plumber - Optional. Flag. Skip plumber check for function calls.
-# Argument: --dump - Optional. Flag. Output stderr and stdout after test regardless.
-# Argument: --dump-binary - Optional. Flag. Output stderr and stdout after test regardless, and output binary.
-# Argument: --head - Optional. Flag. When outputting stderr or stdout, output the head of the file.
-# Argument: --tail - Optional. Flag. When outputting stderr or stdout, output the tail of the file. (Default)
+# Argument: --dump - Optional. Flag. Output `stderr` and `stdout` after test regardless.
+# Argument: --dump-binary - Optional. Flag. Output `stderr` and `stdout` after test regardless, displayed as binary.
+# Argument: --head - Optional. Flag. When outputting `stderr` or `stdout`, output the head of the file.
+# Argument: --tail - Optional. Flag. When outputting `stderr` or `stdout`, output the tail of the file. (Default)
 # Usage: {fn} expected actual [ message ]
 # Argument: leftValue - Value to compare on the left hand side of the comparison
 # Argument: rightValue - Value to compare on the right hand side of the comparison
@@ -1007,23 +1007,23 @@ _assertGreaterThanOrEqual() {
 #
 # DOC TEMPLATE: assert-common 18
 # Argument: --help - Optional. Flag. Display this help.
-# Argument: --line lineNumber - Optional. Integer. Line number of calling function.
+# Argument: --line lineNumber - Optional. Integer. Line number of calling function. Typically this is not required as it is computed from the calling function using `--line-depth`.
 # Argument: --line-depth depth - Optional. Integer. The depth in the stack of function calls to find the line number of the calling function.
 # Argument: --debug - Optional. Flag. Debugging enabled for the assertion function.
-# Argument: --debug-lines - Optional. Flag. Debugging of SOLELY differences between --line passed in and the computed line from the --line-depth parameter.
+# Argument: --debug-lines - Optional. Flag. Debugging of SOLELY differences between `--line` passed in and the computed line from the `--line-depth` parameter.
 # Argument: --display - Optional. String. Display name for the condition.
-# Argument: --success - Optional. Boolean. Whether the assertion should pass (`true`) or fail (`false`)
-# Argument: --stderr-match - Optional. String. One or more strings which must match stderr. Implies `--stderr-ok`
-# Argument: --stdout-no-match - Optional. String. One or more strings which must match stderr.
-# Argument: --stdout-match - Optional. String. One or more strings which must match stdout.
-# Argument: --stdout-no-match - Optional. String. One or more strings which must match stdout.
-# Argument: --stderr-ok - Optional. Flag. Output to stderr will not cause the test to fail.
+# Argument: --success - Optional. Boolean. Whether the assertion should pass (`true`) or fail (`false`) - most functions have this already baked in.
+# Argument: --stderr-match - Optional. String. One or more strings which must match `stderr` output. Implies `--stderr-ok`
+# Argument: --stdout-no-match - Optional. String. One or more strings which must match NOT `stderr` output.
+# Argument: --stdout-match - Optional. String. One or more strings which must match `stdout` output.
+# Argument: --stdout-no-match - Optional. String. One or more strings which must match `stdout` output.
+# Argument: --stderr-ok - Optional. Flag. Output to `stderr` will not cause the test to fail.
 # Argument: --leak globalName - Zero or more. String. Allow global leaks for these globals.
 # Argument: --skip-plumber - Optional. Flag. Skip plumber check for function calls.
-# Argument: --dump - Optional. Flag. Output stderr and stdout after test regardless.
-# Argument: --dump-binary - Optional. Flag. Output stderr and stdout after test regardless, and output binary.
-# Argument: --head - Optional. Flag. When outputting stderr or stdout, output the head of the file.
-# Argument: --tail - Optional. Flag. When outputting stderr or stdout, output the tail of the file. (Default)
+# Argument: --dump - Optional. Flag. Output `stderr` and `stdout` after test regardless.
+# Argument: --dump-binary - Optional. Flag. Output `stderr` and `stdout` after test regardless, displayed as binary.
+# Argument: --head - Optional. Flag. When outputting `stderr` or `stdout`, output the head of the file.
+# Argument: --tail - Optional. Flag. When outputting `stderr` or `stdout`, output the tail of the file. (Default)
 # Usage: {fn} expected actual [ message ]
 # Argument: leftValue - Value to compare on the left hand side of the comparison
 # Argument: rightValue - Value to compare on the right hand side of the comparison
@@ -1045,23 +1045,23 @@ _assertLessThan() {
 # Usage: {fn} leftValue rightValue [ message ]
 # DOC TEMPLATE: assert-common 18
 # Argument: --help - Optional. Flag. Display this help.
-# Argument: --line lineNumber - Optional. Integer. Line number of calling function.
+# Argument: --line lineNumber - Optional. Integer. Line number of calling function. Typically this is not required as it is computed from the calling function using `--line-depth`.
 # Argument: --line-depth depth - Optional. Integer. The depth in the stack of function calls to find the line number of the calling function.
 # Argument: --debug - Optional. Flag. Debugging enabled for the assertion function.
-# Argument: --debug-lines - Optional. Flag. Debugging of SOLELY differences between --line passed in and the computed line from the --line-depth parameter.
+# Argument: --debug-lines - Optional. Flag. Debugging of SOLELY differences between `--line` passed in and the computed line from the `--line-depth` parameter.
 # Argument: --display - Optional. String. Display name for the condition.
-# Argument: --success - Optional. Boolean. Whether the assertion should pass (`true`) or fail (`false`)
-# Argument: --stderr-match - Optional. String. One or more strings which must match stderr. Implies `--stderr-ok`
-# Argument: --stdout-no-match - Optional. String. One or more strings which must match stderr.
-# Argument: --stdout-match - Optional. String. One or more strings which must match stdout.
-# Argument: --stdout-no-match - Optional. String. One or more strings which must match stdout.
-# Argument: --stderr-ok - Optional. Flag. Output to stderr will not cause the test to fail.
+# Argument: --success - Optional. Boolean. Whether the assertion should pass (`true`) or fail (`false`) - most functions have this already baked in.
+# Argument: --stderr-match - Optional. String. One or more strings which must match `stderr` output. Implies `--stderr-ok`
+# Argument: --stdout-no-match - Optional. String. One or more strings which must match NOT `stderr` output.
+# Argument: --stdout-match - Optional. String. One or more strings which must match `stdout` output.
+# Argument: --stdout-no-match - Optional. String. One or more strings which must match `stdout` output.
+# Argument: --stderr-ok - Optional. Flag. Output to `stderr` will not cause the test to fail.
 # Argument: --leak globalName - Zero or more. String. Allow global leaks for these globals.
 # Argument: --skip-plumber - Optional. Flag. Skip plumber check for function calls.
-# Argument: --dump - Optional. Flag. Output stderr and stdout after test regardless.
-# Argument: --dump-binary - Optional. Flag. Output stderr and stdout after test regardless, and output binary.
-# Argument: --head - Optional. Flag. When outputting stderr or stdout, output the head of the file.
-# Argument: --tail - Optional. Flag. When outputting stderr or stdout, output the tail of the file. (Default)
+# Argument: --dump - Optional. Flag. Output `stderr` and `stdout` after test regardless.
+# Argument: --dump-binary - Optional. Flag. Output `stderr` and `stdout` after test regardless, displayed as binary.
+# Argument: --head - Optional. Flag. When outputting `stderr` or `stdout`, output the head of the file.
+# Argument: --tail - Optional. Flag. When outputting `stderr` or `stdout`, output the tail of the file. (Default)
 # Argument: leftValue - Value to compare on the left hand side of the comparison
 # Argument: rightValue - Value to compare on the right hand side of the comparison
 # Argument: message - Message to output if the assertion fails

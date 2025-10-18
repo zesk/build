@@ -1,3 +1,5 @@
+# v0.39.4
+
 # v0.39.3
 new-release.sh|release-new.sh|
 
