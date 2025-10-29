@@ -5,6 +5,23 @@
 # Docs: ./documentation/source/tools/docker-compose.md
 # Test: ./test/tools/docker-compose-tests.sh
 
+# Wrapper for `docker-compose` or `docker compose`
+dockerComposeWrapper() {
+  local handler="_${FUNCNAME[0]}"
+
+  whichExists docker || throwEnvironment "$handler" "Missing docker binary" || return $?
+  if muzzle docker compose --help; then
+    catchEnvironment "$handler" docker compose "$@" || return $?
+  else
+    whichExists docker-compose || throwEnvironment "$handler" "Missing docker-compose binary" || return $?
+    catchEnvironment "$handler" docker-compose "$@" || return $?
+  fi
+}
+_dockerComposeWrapper() {
+  # __IDENTICAL__ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
 # Install `docker-compose`
 #
 # If this fails it will output the installation log.
@@ -20,6 +37,10 @@
 dockerComposeInstall() {
   local handler="_${FUNCNAME[0]}"
   [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
+  whichExists docker || throwEnvironment "$handler" "Missing docker binary" || return $?
+  if muzzle docker compose --help; then
+    return 0
+  fi
   local name="docker-compose"
   if pythonPackageInstalled "$name"; then
     return 0
@@ -46,6 +67,9 @@ _dockerComposeInstall() {
 dockerComposeUninstall() {
   local handler="_${FUNCNAME[0]}"
   [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
+  if muzzle docker compose --help; then
+    return 0
+  fi
   local name="docker-compose"
   if ! pythonPackageInstalled "$name"; then
     return 0

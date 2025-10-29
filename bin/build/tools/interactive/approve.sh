@@ -277,7 +277,7 @@ __approvedSources() {
       fi
       handledFiles+=("$name")
     fi
-  done < <(find "$home" -type f -mindepth 1 -maxdepth 1)
+  done < <(find "$home" -mindepth 1 -maxdepth 1 -type f)
 
   [ "${#approvedBashSources[@]}" -eq 0 ] || printf "%s\n%s\n\n" "$(decorate info "Approved:")" "$(printf -- "%s\n" "${approvedBashSources[@]}" | sort | awk -F '|' '{ print $2 }')"
   [ "${#unapprovedBashSources[@]}" -eq 0 ] || printf "%s\n%s\n\n" "$(decorate warning "Unapproved:")" "$(printf -- "%s\n" "${unapprovedBashSources[@]}" | sort | awk -F '|' '{ print $2 }')"
