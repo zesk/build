@@ -6,9 +6,11 @@
 # Test: ./test/tools/docker-compose-tests.sh
 
 # Wrapper for `docker-compose` or `docker compose`
+# Argument: ... - Arguments. Passed to `docker compose` command or equivalent.
 dockerComposeWrapper() {
   local handler="_${FUNCNAME[0]}"
 
+  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
   whichExists docker || throwEnvironment "$handler" "Missing docker binary" || return $?
   if muzzle docker compose --help; then
     catchEnvironment "$handler" docker compose "$@" || return $?
