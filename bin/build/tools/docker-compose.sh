@@ -6,7 +6,7 @@
 # Test: ./test/tools/docker-compose-tests.sh
 
 # Wrapper for `docker-compose` or `docker compose`
-# Argument: ... - Arguments. Passed to `docker compose` command or equivalent.
+# Argument: ... - Arguments. Passed to `docker compose` command or equivalent
 dockerComposeWrapper() {
   local handler="_${FUNCNAME[0]}"
 
