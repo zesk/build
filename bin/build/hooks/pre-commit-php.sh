@@ -93,13 +93,7 @@ __hookPreCommitPHP() {
     throwEnvironment "$handler" "PHP files failed" || return $?
   fi
   statusMessage decorate success "PHP fixer ran"
-  statusMessage decorate success "PHP fixer ran"
   catchEnvironment "$handler" rm -f "$fixResults" || return $?
-
-  if [ -f "$home/composer.json" ]; then
-    statusMessage decorate info "Updating version ..."
-    phpComposerSetVersion
-  fi
 
   statusMessage --last timingReport "$start" "PHP pre-commit finished in"
 }
