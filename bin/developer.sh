@@ -8,9 +8,13 @@
 
 # shellcheck source=/dev/null
 if source "${BASH_SOURCE[0]%/*}/tools.sh"; then
-  # Configure your shell for build developer
-  # Adds some aliases (t, tools, IdenticalRepair), adds a bash prompt
+  # **Configure your shell for build developer**
+  # Adds some aliases (`t`, `tools`, `IdenticalRepair`), adds a bash prompt
   # and shell completions, terminal colors, and outputs banner and shows new functions
+  #
+  # 1 blank line above, 2 below
+  #
+  #
   __buildConfigure() {
     local handler="_${FUNCNAME[0]}"
     local home

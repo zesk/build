@@ -801,49 +801,49 @@ _colorMultiply() {
 # Argument: colorOff - Color off escape sequence defaults to "$(decorate reset --)"
 #
 _toggleCharacterToColor() {
-  local sequence line code reset lastItem lastLine=
 
   # TODO is quoteSedPattern correct for BASH // replacement?
+  local sequence reset
   sequence="$(quoteSedPattern "$1")"
-  code="$2"
+  local code="$2"
   reset="${3-$(decorate reset --)}"
-  while true; do
-    if ! IFS= read -r line; then
-      lastLine=1
-    fi
+
+  local finished=false
+  while ! $finished; do
+    local line
+    IFS="" read -r -d $'\n' line || finished=true
     if [ -z "$line" ]; then
-      printf "\n"
-    else
-      lastItem=
-      odd=0
-      while true; do
-        # shellcheck disable=SC2295
-        text="${line%%$sequence*}"
-        # shellcheck disable=SC2295
-        remain="${line#*$sequence}"
-        if [ "$text" = "$remain" ]; then
-          lastItem=1
-        else
-          line="$remain"
-        fi
-        if [ $((odd & 1)) -eq 1 ]; then
-          printf "%s%s%s" "$code" "$text" "$reset"
-        else
-          printf "%s" "$text"
-        fi
-        if test $lastItem; then
-          printf "\n"
-          lastItem=
-          break
-        fi
-        odd=$((odd + 1))
-      done
+      $finished || printf "\n"
+      continue
     fi
-    if test "$lastLine"; then
-      return 0
-    fi
+
+    local odd=0 lastOne=false
+    while true; do
+      local text remain
+      # shellcheck disable=SC2295
+      text="${line%%$sequence*}"
+      # shellcheck disable=SC2295
+      remain="${line#*$sequence}"
+      if [ "$text" = "$remain" ]; then
+        # Not found, stop
+        lastOne=true
+      else
+        line="$remain"
+      fi
+      if [ $((odd & 1)) -eq 1 ]; then
+        printf "%s%s%s" "$code" "$text" "$reset"
+      else
+        printf "%s" "$text"
+      fi
+      if $lastOne; then
+        printf "\n"
+        break
+      fi
+      odd=$((odd + 1))
+    done
   done
 }
+
 
 # Set the terminal color scheme to the specification
 # stdin: Scheme definition with `colorName=colorValue` on each line
