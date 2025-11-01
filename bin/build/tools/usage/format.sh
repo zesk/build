@@ -69,7 +69,7 @@ __usageTemplate() {
   description=${description:-"No description"}
   nSpaces=$(printf %s "$options" | maximumFieldLength 1 "$delimiter")
 
-  if [ -n "$delimiter" ] && [ -n "$options" ]; then
+  if [ -n "$delimiter" ] && [ -n "$options" ] && [ "$options" != "none" ]; then
     printf -- "%s: %s%s\n\n%s\n\n%s\n" \
       "$usageString" \
       "$(decorate info "$binName")" \
@@ -81,7 +81,7 @@ __usageTemplate() {
     printf "%s: %s\n\n%s\n\n" \
       "$usageString" \
       "$(decorate info "$binName")" \
-      "$description" |
+      "$(simpleMarkdownToConsole <<<"$description")" |
       trimBoth
   fi
   if buildDebugEnabled handler; then

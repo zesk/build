@@ -20,6 +20,8 @@ if source "${BASH_SOURCE[0]%/*}/tools.sh"; then
     local handler="_${FUNCNAME[0]}"
     local home
 
+    [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
+
     home=$(catchReturn "$handler" buildHome) || return $?
 
     # Logo for iTerm2
@@ -58,9 +60,10 @@ if source "${BASH_SOURCE[0]%/*}/tools.sh"; then
 
     export BUILD_PROJECT_DEACTIVATE="${FUNCNAME[0]}Undo"
 
-    unset "${FUNCNAME[0]}" "_${FUNCNAME[0]}"
+    # unset "${FUNCNAME[0]}" "_${FUNCNAME[0]}"
   }
   ___buildConfigure() {
+    true || __buildConfigure --help
     # __IDENTICAL__ usageDocument 1
     usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
   }
