@@ -8,13 +8,14 @@
 
 # shellcheck source=/dev/null
 if source "${BASH_SOURCE[0]%/*}/tools.sh"; then
-  # **Configure your shell for build developer**
+  # **Configure your shell for build developer** *Neat, eh*
   # Adds some aliases (`t`, `tools`, `IdenticalRepair`), adds a bash prompt
   # and shell completions, terminal colors, and outputs banner and shows new functions
   #
   # 1 blank line above, 2 below
   #
   #
+  # Can I put a * or a ** in here? - Nope
   __buildConfigure() {
     local handler="_${FUNCNAME[0]}"
     local home
@@ -55,9 +56,9 @@ if source "${BASH_SOURCE[0]%/*}/tools.sh"; then
     backgroundProcess --verbose --stop 30 --wait 90 bin/build/deprecated.sh --check -- bin/build/deprecated.sh
     backgroundProcess --verbose --stop 30 --wait 90 bin/build/identical-repair.sh --internal --check -- bin/build/identical-repair.sh --internal
 
-    export BUILD_PROJECT_DEACTIVATE=__buildConfigureUndo
+    export BUILD_PROJECT_DEACTIVATE="${FUNCNAME[0]}Undo"
 
-    unset __buildConfigure
+    unset "${FUNCNAME[0]}" "_${FUNCNAME[0]}"
   }
   ___buildConfigure() {
     # __IDENTICAL__ usageDocument 1
@@ -78,10 +79,7 @@ if source "${BASH_SOURCE[0]%/*}/tools.sh"; then
 
     pathRemove "$home/bin" "$home/bin/build"
 
-    # This is problematic - removes things we want
-    # developerUndo < <(developerTrack)
-
-    unset __buildConfigureUndo 2>/dev/null
+    unset "${FUNCNAME[0]}" 2>/dev/null
   }
 
   __buildConfigure
