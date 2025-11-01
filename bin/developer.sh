@@ -74,7 +74,8 @@ if source "${BASH_SOURCE[0]%/*}/tools.sh"; then
 
     pathRemove "$home/bin" "$home/bin/build"
 
-    developerUndo < <(developerTrack)
+    # This is problematic - removes things we want
+    # developerUndo < <(developerTrack)
 
     unset __buildConfigureUndo 2>/dev/null
   }

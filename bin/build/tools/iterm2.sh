@@ -254,6 +254,13 @@ _iTerm2ColorTypes() {
 }
 
 # Output an image to the console
+# Argument: --width width - PositiveInteger. Width in columns to display image.
+# Argument: --height height - PositiveInteger. Height in rows to display image.
+# Argument: --preserve-aspect-ratio - Flag. Preserve the aspect ratio.
+# Argument: --scale - Flag. Do not preserve the aspect ratio, scale the image.
+# DOC TEMPLATE: iTerm2IgnoreArgument 1
+# Argument: --ignore | -i - Flag. Optional. If the current terminal is not iTerm2, then exit status 0 and do nothing.
+# stdout: No output, however, if in an iTerm2 terminal it will display an image in the console at the cursor position
 iTerm2Image() {
   local handler="_${FUNCNAME[0]}"
 
@@ -282,10 +289,8 @@ iTerm2Image() {
     --preserve-aspect-ratio)
       aspectRatio=true
       ;;
-    # IDENTICAL case-iTerm2ignore 3
-    --ignore | -i)
-      ignoreErrors=true
-      ;;
+    # IDENTICAL case-iTerm2ignore 1
+    --ignore | -i) ignoreErrors=true ;;
     -*)
       # _IDENTICAL_ argumentUnknownHandler 1
       throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
@@ -350,6 +355,10 @@ __iTerm2Image() {
 
 # Download an file from remote to terminal host
 # Argument: file - Optional. File. File to download.
+# Argument: --name name - Optional. Target name of the file once downloaded.
+# Argument:
+# DOC TEMPLATE: iTerm2IgnoreArgument 1
+# Argument: --ignore | -i - Flag. Optional. If the current terminal is not iTerm2, then exit status 0 and do nothing.
 # stdin: file
 iTerm2Download() {
   local handler="_${FUNCNAME[0]}"
@@ -369,10 +378,8 @@ iTerm2Download() {
       shift
       name="$(usageArgumentString "$handler" "$argument" "${1-}")" || return $?
       ;;
-    # IDENTICAL case-iTerm2ignore 3
-    --ignore | -i)
-      ignoreErrors=true
-      ;;
+    # IDENTICAL case-iTerm2ignore 1
+    --ignore | -i) ignoreErrors=true ;;
     -*)
       # _IDENTICAL_ argumentUnknownHandler 1
       throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
@@ -411,9 +418,10 @@ _iTerm2Download() {
 }
 
 # Set terminal colors
-# Argument: --ignore | -i - Flag. Optional. If the current terminal is not iTerm2, then exit status 0 and do nothing.
 # Argument: --verbose | -v - Flag. Optional. Verbose mode. Show what you are doing.
 # Argument: --skip-errors - Flag. Optional. Skip errors in color settings and continue - if loading a file containing a color scheme will load most of the file and skip any color settings with errors.
+# DOC TEMPLATE: iTerm2IgnoreArgument 1
+# Argument: --ignore | -i - Flag. Optional. If the current terminal is not iTerm2, then exit status 0 and do nothing.
 # Argument: colorSetting ... - String. Required. colorName=colorFormat string
 #
 # Color names permitted are:
@@ -456,10 +464,8 @@ iTerm2SetColors() {
     --verbose | -v)
       verboseFlag=true
       ;;
-    # IDENTICAL case-iTerm2ignore 3
-    --ignore | -i)
-      ignoreErrors=true
-      ;;
+    # IDENTICAL case-iTerm2ignore 1
+    --ignore | -i) ignoreErrors=true ;;
     -*)
       # _IDENTICAL_ argumentUnknownHandler 1
       throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
@@ -567,6 +573,7 @@ _iTerm2SetColors() {
 
 # Attract the operator
 # Usage: {fn} [ true | false | ! | fireworks ]
+# DOC TEMPLATE: iTerm2IgnoreArgument 1
 # Argument: --ignore | -i - Flag. Optional. If the current terminal is not iTerm2, then exit status 0 and do nothing.
 # Argument: --verbose | -v - Flag. Optional. Verbose mode. Show what you are doing.
 # Argument: action. String. Action to attract attention: `true`, `false` or `!`
@@ -592,10 +599,8 @@ iTerm2Attention() {
     --verbose | -v)
       verboseFlag=true
       ;;
-    # IDENTICAL case-iTerm2ignore 3
-    --ignore | -i)
-      ignoreErrors=true
-      ;;
+    # IDENTICAL case-iTerm2ignore 1
+    --ignore | -i) ignoreErrors=true ;;
     *)
       # IDENTICAL handle-iTerm2ignore 4
       if ! isiTerm2; then
@@ -649,6 +654,7 @@ _iTerm2Attention() {
 
 # Set the badge for the iTerm2 console
 # Usage: {fn} [ --ignore | -i ] message ...
+# DOC TEMPLATE: iTerm2IgnoreArgument 1
 # Argument: --ignore | -i - Flag. Optional. If the current terminal is not iTerm2, then exit status 0 and do nothing.
 # Argument: message ... - Any message to display as the badge
 # Environment: LC_TERMINAL
@@ -666,10 +672,8 @@ iTerm2Badge() {
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
-    # IDENTICAL case-iTerm2ignore 3
-    --ignore | -i)
-      ignoreErrors=true
-      ;;
+    # IDENTICAL case-iTerm2ignore 1
+    --ignore | -i) ignoreErrors=true ;;
     *)
       message+=("$argument")
       ;;
@@ -721,10 +725,8 @@ iTerm2Version() {
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
-    # IDENTICAL case-iTerm2ignore 3
-    --ignore | -i)
-      ignoreErrors=true
-      ;;
+    # IDENTICAL case-iTerm2ignore 1
+    --ignore | -i) ignoreErrors=true ;;
     *)
       # _IDENTICAL_ argumentUnknownHandler 1
       throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
@@ -790,10 +792,8 @@ iTerm2Notify() {
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
-    # IDENTICAL case-iTerm2ignore 3
-    --ignore | -i)
-      ignoreErrors=true
-      ;;
+    # IDENTICAL case-iTerm2ignore 1
+    --ignore | -i) ignoreErrors=true ;;
     *)
       messageText="$*"
       break
@@ -818,6 +818,8 @@ _iTerm2Notify() {
 }
 
 # Add iTerm2 support to console
+# DOC TEMPLATE: iTerm2IgnoreArgument 1
+# Argument: --ignore | -i - Flag. Optional. If the current terminal is not iTerm2, then exit status 0 and do nothing.
 # Environment: LC_TERMINAL
 # Environment: TERM
 # See: iTerm2Aliases iTerm2PromptSupport
@@ -835,10 +837,8 @@ iTerm2Init() {
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
-    # IDENTICAL case-iTerm2ignore 3
-    --ignore | -i)
-      ignoreErrors=true
-      ;;
+    # IDENTICAL case-iTerm2ignore 1
+    --ignore | -i) ignoreErrors=true ;;
     *)
       # _IDENTICAL_ argumentUnknownHandler 1
       throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
