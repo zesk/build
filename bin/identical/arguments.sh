@@ -14,10 +14,11 @@
 # Argument: message ... - EmptyString. Optional. The message to display to the user about what caused the error.
 # The main error handler signature used in Zesk Build.
 #
-# Some code patterns:
-#
-#     usageRequireBinary "$handler" mariadb || return $?
-#
+# Example: Here, `handler` is a string variable which references our `errorHandler` function – when used in your code:
+# Example
+# Example:     tempFile=$(fileTemporaryName "$handler") || return $?
+# Example:     catchEnvironment "$handler" rm -f "$tempFile" || return $?
+# Example:     usageRequireBinary "$handler" curl sftp || return $?
 __errorHandler() {
   return 0
 }
