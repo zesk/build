@@ -70,7 +70,7 @@ __bashSanitize() {
   fi
 
   statusMessage --last decorate success Checking assertions ...
-  _bashSanitizeCheckAssertions "$handler" "${checkAssertions[@]+"${checkAssertions[@]}"}" || returnUndo $? "${undo[@]}" || return $?
+  _bashSanitizeCheckAssertions "$handler" "$executor" "${checkAssertions[@]+"${checkAssertions[@]}"}" || returnUndo $? "${undo[@]}" || return $?
 
   # Operates on specific files
   statusMessage decorate success Checking syntax ...
@@ -96,6 +96,7 @@ _bashSanitizeCheckLint() {
 
 _bashSanitizeCheckAssertions() {
   local handler="$1" && shift
+  local executor="$1" && shift
   while [ $# -gt 0 ]; do
     statusMessage --first decorate warning "Checking assertions in $(decorate file "$1") ... "
     if ! findUncaughtAssertions "$1" --list; then

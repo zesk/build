@@ -30,11 +30,7 @@
 # Output: This outputs `statusMessage`s to `stdout` and errors to `stderr`.
 bashLint() {
   local handler="_${FUNCNAME[0]}" fixFlag=false verboseFlag=false undo=("exec" "3>&-" "4>&1")
-
-  catchReturn "$handler" packageWhich shellcheck shellcheck || return $?
-  # IDENTICAL pcregrepInstall 1
-  catchReturn "$handler" packageGroupWhich "$(__pcregrepBinary)" pcregrep || return $?
-
+  local installed=false
   # Open 3 and 4 to aliases so we can change them
   exec 3>/dev/null 4>&1
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
@@ -54,6 +50,11 @@ bashLint() {
       verboseFlag=true
       ;;
     *)
+      if ! $installed; then
+        catchReturn "$handler" packageWhich shellcheck shellcheck || return $?
+        catchReturn "$handler" pcregrepInstall || return $?
+        installed=true
+      fi
       [ -f "$argument" ] || throwArgument "$handler" "$(printf -- "%s: %s PWD: %s" "Not a item" "$(decorate code "$argument")" "$(pwd)")" || returnUndo $? "${undo[@]}" || return $?
       # shellcheck disable=SC2210
       catchEnvironment "$handler" bash -n "$argument" 1>&3 2>&3 || returnUndo $? printf "%s\n" "bash -n failed" 1>&4 || returnUndo $? "${undo[@]}" || return $?
@@ -151,14 +152,14 @@ bashLintFiles() {
     while read -r argument; do
       [ -n "$argument" ] || continue
       if ! message=$(_bashLintFilesHelper "$verbose" "$argument" "$source"); then
-        statusMessage decorate warning "Failed: $(decorate file "$argument") $(decorate code "$message")"
+        statusMessage decorate warning "Failed: $(decorate file "$argument") $message)"
         failedFiles+=("$argument")
       fi
     done
   fi
   if [ "${#failedFiles[@]}" -gt 0 ]; then
     {
-      statusMessage --last printf -- "%s\n" "$(decorate warning "${#failedFiles[@]} $(plural ${#failedFiles[@]} file files) failed:")"
+      statusMessage --last printf -- "%s\n" "$(decorate warning "$(pluralWord ${#failedFiles[@]} file) failed:")"
       for failedFile in "${failedFiles[@]}"; do
         bashLint "${ff[@]+"${ff[@]}"}" --verbose "$failedFile" 2>/dev/null | dumpPipe "$(decorate warning "$(lineFill "•" "••[ $(decorate file "$failedFile") ]")")"
       done
@@ -186,7 +187,7 @@ _bashLintFilesHelper() {
 
   ! $verbose || vv+=(--verbose)
   ! $verbose || statusMessage decorate info "👀 Checking \"$file\" ($source) ..." || :
-  if reason=$(bashLint "${vv[@]+"${vv[@]}"}" "$file" 2>/dev/null); then
+  if reason=$(bashLint "${vv[@]+"${vv[@]}"}" "$file"); then
     ! $verbose || statusMessage --last decorate success "bashLint $file passed"
   else
     ! $verbose || statusMessage --last decorate info "bashLint $file failed: $reason"
