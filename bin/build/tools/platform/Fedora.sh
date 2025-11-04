@@ -12,4 +12,3 @@ __pcregrep() {
 __pcregrepBinary() {
   printf "%s\n" pcre2grep
 }
-

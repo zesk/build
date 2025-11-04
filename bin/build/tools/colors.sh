@@ -844,7 +844,6 @@ _toggleCharacterToColor() {
   done
 }
 
-
 # Set the terminal color scheme to the specification
 # stdin: Scheme definition with `colorName=colorValue` on each line
 colorScheme() {
