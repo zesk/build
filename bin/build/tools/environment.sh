@@ -39,6 +39,10 @@ _environmentValueWrite() {
 #     declare -a foo='([0]="a'\''s" [1]="b" [2]="c")'
 #     declare -a foo=([0]="a's" [1]="b" [2]="c")
 #
+# DOC TEMPLATE: --help 1
+# Argument: name - EnvironmentVariable. Required. Variable to read.
+# Argument: value ... - Arguments. Optional. Array values as arguments.
+# Argument: --help - Optional. Flag. Display this help.
 environmentValueWriteArray() {
   local handler="_${FUNCNAME[0]}"
   [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
@@ -77,6 +81,8 @@ __environmentValueWrite() {
 # Argument: stateFile - EnvironmentFile. Required. File to read a value from.
 # Argument: name - EnvironmentVariable. Required. Variable to read.
 # Argument: default - EmptyString. Optional. Default value of the environment variable if it does not exist.
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
 # Return Code: 1 - If value is not found and no default argument is supplied (2 arguments)
 # Return Code: 0 - If value
 environmentValueRead() {
@@ -102,9 +108,11 @@ _environmentValueRead() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-#
 # Convert an array value which was loaded already
-# Usage: {fn} encodedValue
+# Argument: encodedValue - String. Required. Value to convert to tokens, one per line
+# stdout: Array values separated by newlines
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
 environmentValueConvertArray() {
   local handler="_${FUNCNAME[0]}"
   [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
@@ -130,6 +138,8 @@ _environmentValueConvertArray() {
 }
 
 # Argument: variableName ... - String. Required. Exit status 0 if all variables names are valid ones.
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
 # Validates zero or more environment variable names.
 #
 # - alpha
@@ -163,11 +173,11 @@ _environmentVariableNameValid() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-#
 # Read an array value from a state file
-# Usage: {fn} stateFile
 # Argument: stateFile - Required. File. File to access, must exist.
 # Argument: name - Required. EnvironmentVariable. Name to read.
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
 # Outputs array elements, one per line.
 environmentValueReadArray() {
   local handler="_${FUNCNAME[0]}"
@@ -183,7 +193,9 @@ _environmentValueReadArray() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# Usage: {fn} < "$stateFile"
+# Example:     {fn} < "$stateFile"
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
 # List names of environment values set in a bash state file
 environmentNames() {
   [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
@@ -195,7 +207,9 @@ _environmentNames() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# Usage: {fn} < "$stateFile"
+# Example:     {fn} < "$stateFile"
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
 # List lines of environment values set in a bash state file
 environmentLines() {
   [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
