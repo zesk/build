@@ -547,3 +547,7 @@ _groupID() {
   # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
+
+__pcregrepInstall() {
+  packageGroupWhich "$(__pcregrepBinary)" pcregrep || return $?
+}

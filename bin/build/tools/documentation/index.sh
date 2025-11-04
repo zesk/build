@@ -20,6 +20,7 @@
 #
 # Argument: codePath - Required. Directory. Path where code is stored (should remain identical between invocations)
 # See: __documentationIndexLookup
+# Requires: __pcregrep
 _documentationIndexGenerate() {
   local handler="_${FUNCNAME[0]}"
 

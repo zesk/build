@@ -690,6 +690,53 @@ _packageNeedRestartFlag() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
+# Install a package group to have a binary installed
+# Argument: binary - String. Required. Binary which will exist in PATH after `group` is installed if it does not exist.
+# Argument: group - String. Required. Package group.
+# Any unrecognized groups are installed using the name as-is.
+packageGroupWhich() {
+  local binary="" manager="" groups=()
+
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
+  local __saved=("$@") __count=$#
+  while [ $# -gt 0 ]; do
+    local argument="$1" __index=$((__count - $# + 1))
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    case "$argument" in
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
+    # IDENTICAL managerArgumentHandler 5
+    --manager)
+      shift
+      manager=$(usageArgumentString "$handler" "$argument" "${1-}") || return $?
+      packageManagerValid "$manager" || throwArgument "$handler" "Manager is invalid: $(decorate code "$manager")" || return $?
+      ;;
+    *)
+      if [ -z "$binary" ]; then
+        binary=$(usageArgumentString "$handler" "$argument" "${1-}") || return $?
+      else
+        groups+=("$(usageArgumentString "$handler" "group" "$argument")") || return $?
+      fi
+      ;;
+    esac
+    shift
+  done
+
+  [ -n "$binary" ] || throwArgument "$handler" "Requires binary" || return $?
+  [ 0 -lt "${#groups[@]}" ] || throwArgument "$handler" "Requires at least one package group" || return $?
+
+  # IDENTICAL managerArgumentValidation 2
+  [ -n "$manager" ] || manager=$(packageManagerDefault) || throwEnvironment "$handler" "No package manager" || return $?
+  whichExists "$manager" || throwEnvironment "$handler" "$manager does not exist" || return $?
+
+  whichExists "$binary" || catchEnvironment "$handler" packageGroupInstall --manager "$manager" "${groups[@]}" || return $?
+}
+_packageGroupWhich() {
+  # __IDENTICAL__ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
 #
 # Install a package group
 # Argument: group - String. Required. Currently allowed: "python"

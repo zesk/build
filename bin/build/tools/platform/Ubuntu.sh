@@ -13,6 +13,6 @@ __pcregrepBinary() {
   printf "%s\n" pcregrep
 }
 
-__pcregrepInstall() {
-  packageWhich pcregrep pcregrep || return $?
+__pcregrepPackage() {
+  printf "%s\n" pcregrep
 }

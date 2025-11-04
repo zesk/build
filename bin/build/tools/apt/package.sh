@@ -106,6 +106,9 @@ ___aptStandardPackages() {
 ___aptPackageMapping() {
   local handler="$1" && shift
   case "$1" in
+  "pcregrep")
+    __pcregrepPackage
+    ;;
   "python")
     # Require venv and pip as part of core
     printf "%s\n" python-is-python3 python3 python3-pip python3-venv

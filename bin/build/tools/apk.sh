@@ -173,6 +173,9 @@ ___apkAvailableList() {
 #
 __apkPackageMapping() {
   case "$1" in
+  "pcregrep")
+    printf "%s\n" pcre2-tools
+    ;;
   "python")
     printf "%s\n" python3
     ;;
@@ -189,7 +192,7 @@ __apkPackageMapping() {
     printf "%s\n" mysql-server
     ;;
   "sha1sum")
-    printf "%s\n" "coreutils"
+    printf "%s\n" coreutils
     ;;
   *)
     printf "%s\n" "$1"

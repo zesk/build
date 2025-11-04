@@ -13,6 +13,6 @@ __pcregrepBinary() {
   printf "%s\n" pcre2grep
 }
 
-__pcregrepInstall() {
-  packageWhich pcre2grep pcre2-utils || return $?
+__pcregrepPackage() {
+  printf "%s\n" pcre2-utils
 }

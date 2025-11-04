@@ -100,6 +100,9 @@ __yumStandardPackages() {
 # See: https://packages.ubuntu.com/search?mode=filename&section=all&arch=any&searchon=contents&keywords=sha1sum
 __yumPackageMapping() {
   case "$1" in
+  "pcregrep")
+    printf "%s\n" "pcre2-utils" # TODO
+    ;;
   "python")
     printf "%s\n" python-is-python3 python3 python3-pip
     ;;

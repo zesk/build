@@ -31,7 +31,7 @@ _aptIsInstalled() {
 }
 
 # Run apt-get non-interactively
-# Argument: ... - Pass through arguments to `apt-get`
+# Argument: ... - Arguments. Pass through arguments to `apt-get`
 aptNonInteractive() {
   local handler="_${FUNCNAME[0]}"
   [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0

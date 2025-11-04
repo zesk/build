@@ -8,7 +8,7 @@
 
 # shellcheck source=/dev/null
 if source "${BASH_SOURCE[0]%/*}/tools.sh"; then
-  # **Configure your shell for build developer** *Neat, eh*
+  # Use `build` or `tools` aliases
   # Adds some aliases (`t`, `tools`, `IdenticalRepair`), adds a bash prompt
   # and shell completions, terminal colors, and outputs banner and shows new functions
   #
@@ -60,6 +60,8 @@ if source "${BASH_SOURCE[0]%/*}/tools.sh"; then
 
     export BUILD_PROJECT_DEACTIVATE="${FUNCNAME[0]}Undo"
 
+    simpleMarkdownToConsole < <(bashFunctionComment "${BASH_SOURCE[0]}" "${FUNCNAME[0]}")
+
     # unset "${FUNCNAME[0]}" "_${FUNCNAME[0]}"
   }
   ___buildConfigure() {
@@ -71,6 +73,8 @@ if source "${BASH_SOURCE[0]%/*}/tools.sh"; then
   __buildConfigureUndo() {
     local handler="returnMessage"
     local home
+
+    muzzle reloadChanges --stop 2>&1
 
     home=$(catchReturn "$handler" buildHome) || return $?
 

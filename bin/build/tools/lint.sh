@@ -32,6 +32,8 @@ bashLint() {
   local handler="_${FUNCNAME[0]}" fixFlag=false verboseFlag=false undo=("exec" "3>&-" "4>&1")
 
   catchReturn "$handler" packageWhich shellcheck shellcheck || return $?
+  # IDENTICAL pcregrepInstall 1
+  catchReturn "$handler" packageGroupWhich "$(__pcregrepBinary)" pcregrep || return $?
 
   # Open 3 and 4 to aliases so we can change them
   exec 3>/dev/null 4>&1
