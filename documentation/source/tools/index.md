@@ -38,24 +38,37 @@
 
 ## System Tools
 
+- [Character](./character.md)
 - [Directory](./directory.md)
 - [Date](./date.md)
 - [Dump](./dump.md)
 - [Environment](./environment.md)
 - [File](./file.md)
 - [Floating Point](./float.md)
-- [JSON](./json.md)
+- [Group](./group.md)
+- [Host](./host.md)
+- [Fingerprint](./fingerprint.md)
 - [List Utilities](./list.md)
 - [Log](./log.md)
-- [Markdown](./markdown.md)
 - [Map](./map.md)
 - [Network](./network.md)
 - [Platform](./platform.md)
 - [Process](./process.md)
+- [Quote](./quote.md)
 - [Text](./text.md)
+- [Timing](./timing.md)
 - [Type](./type.md)
 - [URL](./url.md)
 - [User](./user.md)
+- [Watch](./watch.md)
+
+## Formats
+
+- [jUnit](./junit.md)
+- [JSON](./json.md)
+- [Markdown](./markdown.md)
+- [tar](./tar.md)
+- [XML](./xml.md)
 
 ## Application Tools
 
@@ -94,6 +107,7 @@
 - [Markdown](./markdown.md)
 - [Node](./node.md)
 - [NPM](./npm.md)
+- [pcregrep](./pcregrep.md)
 - [PHP](./php.md)
 - [Python](./python.md)
 - [rsync](./rsync.md)
@@ -112,7 +126,7 @@ Wrappers for these are in [package tools](./package.md).
 - [Apt Package Manager](./apt.md)
 - [Homebrew](./brew.md)
 - [MacPorts](./macports.md)
-- Yum (Future)
+- [Yum](./yum.md) (Future)
 
 We have added platform-generic installation names (see {link:packageGroupInstall}).
 
