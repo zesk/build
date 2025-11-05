@@ -695,6 +695,7 @@ _packageNeedRestartFlag() {
 # Argument: group - String. Required. Package group.
 # Any unrecognized groups are installed using the name as-is.
 packageGroupWhich() {
+  local handler="_${FUNCNAME[0]}"
   local binary="" manager="" groups=()
 
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
