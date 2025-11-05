@@ -40,7 +40,7 @@ _environmentValueWrite() {
 #     declare -a foo=([0]="a's" [1]="b" [2]="c")
 #
 # DOC TEMPLATE: --help 1
-# Argument: name - EnvironmentVariable. Required. Variable to read.
+# Argument: --help - Optional. Flag. Display this help.
 # Argument: value ... - Arguments. Optional. Array values as arguments.
 # Argument: --help - Optional. Flag. Display this help.
 environmentValueWriteArray() {

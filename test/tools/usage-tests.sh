@@ -58,6 +58,26 @@ __testUsageArgumentsFile() {
 EOF
 }
 
+testFunctionNewline() {
+  local handler="returnMessage"
+  local home
+
+  home=$(catchReturn "$handler" buildHome) || return $?
+
+  variablesFile=$(fileTemporaryName "$handler") || return $?
+
+  local functionName="__errorHandler"
+  bashDocumentationExtract "$functionName" >"$variablesFile" < <(bashFunctionComment "$home/bin/identical/arguments.sh" "$functionName")
+  dumpPipe variables <"$variablesFile"
+
+  (
+    local fn=""
+    catchEnvironment "$handler" source "$variablesFile" || return $?
+    assertEquals "errorHandler" "$fn" || return $?
+  ) || return $?
+  catchEnvironment "$handler" rm -f "$variablesFile" || return $?
+}
+
 testUsageArguments() {
   local value testIndex=0
 

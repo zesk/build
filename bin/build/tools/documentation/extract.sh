@@ -48,7 +48,7 @@ __bashDocumentationExtract() {
     export fn base
 
     fn=$(usageArgumentString "$handler" "fn" "${1-}") && shift || return $?
-    local mapNames=("fn")
+    local mapNames=("fn") simpleNames=("fn")
     local desc=() lastName="" foundNames=() lastName="" values=()
     __bashDocumentationSettingsHeader "$handler" "$fn" || return $?
     # Read comment (stripped of #) from stdin
@@ -79,7 +79,11 @@ __bashDocumentationExtract() {
         if [ -n "$lastName" ] && [ "$lastName" != "$name" ]; then
           if ! inArray "$lastName" "${foundNames[@]+${foundNames[@]}}"; then
             foundNames+=("$lastName")
-            dumper=__dumpNameValue
+            if inArray "$lastName" "${simpleNames[@]}"; then
+              dumper=__dumpSimpleValue
+            else
+              dumper=__dumpNameValue
+            fi
           else
             dumper=__dumpNameValueAppend
           fi
@@ -97,7 +101,11 @@ __bashDocumentationExtract() {
     if [ "${#values[@]}" -gt 0 ]; then
       if ! inArray "$lastName" "${foundNames[@]+"${foundNames[@]}"}"; then
         foundNames+=("$lastName")
-        dumper=__dumpNameValue
+        if inArray "$lastName" "${simpleNames[@]}"; then
+          dumper=__dumpSimpleValue
+        else
+          dumper=__dumpNameValue
+        fi
       else
         dumper=__dumpNameValueAppend
       fi

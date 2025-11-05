@@ -316,7 +316,7 @@ plumber() {
     declare -p >"$__after"
     ! $__verboseFlag || dumpPipe "AFTER $__before $__after" <"$__after"
     __pattern="$(quoteGrepPattern "^\($(listJoin '|' "${__ignore[@]+"${__ignore[@]}"}")\)=")"
-    __changed="$(diff -U0 "$__before" "$__after" | grep -e '^[-+][^-+]' | cut -c 2- | grep declare | grep '=' | grep -v -e 'declare -[-a-z]*r ' | removeFields 2 | grep -v -e "$__pattern" || :)"
+    __changed="$(diff -U0 "$__before" "$__after" | grep -e '^[-+][^-+]' | cut -c 2- | grep -e '^declare' | grep '=' | grep -v -e '^declare -[-a-z]*r ' | removeFields 2 | grep -v -e "$__pattern" || :)"
     __rawChanged=$__changed
     __cmd="$(decorate each code "$@")"
     if grep -q -e 'COLUMNS\|LINES' < <(printf "%s\n" "$__changed"); then
