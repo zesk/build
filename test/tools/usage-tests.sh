@@ -64,6 +64,7 @@ testFunctionNewline() {
 
   home=$(catchReturn "$handler" buildHome) || return $?
 
+  local variablesFile
   variablesFile=$(fileTemporaryName "$handler") || return $?
 
   local functionName="__errorHandler"

@@ -53,11 +53,14 @@ To use in your pipeline:
 - [Functions to be documented](./tools/todo.md)
 - [`test` Cheatsheet](./guide/test-cheatsheet.md)
 - [Bash Cheatsheet](./guide/bash-cheatsheet.md)
+- [Code README](./README.md)
 
 ## Deprecated
 
 - [Deprecated functionality](./guide/deprecated.md)
 
 ## Copyright and License
+
+- [About Zesk Build](./about.md)
 
 Copyright &copy; 2025 Market Acumen, Inc. All Rights Reserved. Licensed under [MIT License](./LICENSE.md).

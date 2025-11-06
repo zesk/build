@@ -6,7 +6,7 @@
 
 ## Shell Tools
 
-- [Approve](approve.md)
+- [Approve](./approve.md)
 - [Bash](./bash.md)
 - [Binaries (direct)](./bin.md)
 - [Color](./colors.md)
@@ -34,7 +34,7 @@
 - [Deprecated](./deprecated.md)
 - [Usage](./usage.md)
 - [Validate](./validate.md)
-- [Sugar](./sugar.md)
+- [Sugar Core](./sugar-core.md) and [Sugar](./sugar.md)
 
 ## System Tools
 
@@ -55,6 +55,7 @@
 - [Platform](./platform.md)
 - [Process](./process.md)
 - [Quote](./quote.md)
+- [sed](./sed.md)
 - [Text](./text.md)
 - [Timing](./timing.md)
 - [Type](./type.md)
@@ -114,7 +115,7 @@
 - [SSH](./ssh.md)
 - [System V Init](./sysvinit.md)
 - [Terraform](./terraform.md)
-- [OpenTofu](./opentofu.md)
+- [OpenTofu](./tofu.md)
 - [Vendor](./vendor.md)
 - [XDebug](./xdebug.md)
 
@@ -140,3 +141,8 @@ The `tools.sh` shell is the only include you need in your scripts:
 (see `bin/build/identical/__tools.sh` for an error-reporting loader)
 
 Once included, [all functions here](./all.md) are available for use.
+
+# New or Obsolete
+
+- [Obsolete](./unused.md)
+- [New uncategorized functions](./todo.md)

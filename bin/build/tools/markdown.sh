@@ -131,3 +131,56 @@ _markdown_FormatList() {
   # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
+
+# Argument: indexFile ... - File. Required. One or more index files to check.
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
+# DOC TEMPLATE: --handler 1
+# Argument: --handler handler - Optional. Function. Use this error handler instead of the default error handler.
+# Displays any markdown files next to the given index file which are not found within the index file as links.
+markdownCheckIndex() {
+  local handler="_${FUNCNAME[0]}"
+  local files=()
+
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
+  local __saved=("$@") __count=$#
+  while [ $# -gt 0 ]; do
+    local argument="$1" __index=$((__count - $# + 1))
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    case "$argument" in
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
+    # _IDENTICAL_ handlerHandler 1
+    --handler) shift && handler=$(usageArgumentFunction "$handler" "$argument" "${1-}") || return $? ;;
+    *)
+      files+=("$(usageArgumentFile "$handler" "indexFile" "${1-}")") || return $?
+      ;;
+    esac
+    shift
+  done
+  [ ${#files[@]} -gt 0 ] || throwArgument "$handler" "Requires at least one indexFile" || return $?
+
+  local item code=0
+
+  for item in "${files[@]}"; do
+    local itemName itemDirectory
+    itemDirectory=$(catchEnvironment "$handler" dirname "$item") || return $?
+    itemName=$(catchEnvironment "$handler" basename "$item") || return $?
+    catchEnvironment "$handler" muzzle pushd "$itemDirectory" || return $?
+    local link itemText
+    itemText="$(decorate file "$item"): "
+    while read -r link; do
+      if ! grep -q "$link" "$itemName"; then
+        decorate warning "$itemText Missing $link"
+        code=1
+      fi
+    done < <(find . -maxdepth 1 -name '*.md' ! -name "$itemName")
+    catchEnvironment "$handler" muzzle popd || return $?
+  done
+  return $code
+}
+_markdownCheckIndex() {
+  # __IDENTICAL__ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}

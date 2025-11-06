@@ -7,6 +7,18 @@
 # Copyright &copy; 2025 Market Acumen, Inc.
 #
 
+testDocumentationIndexes() {
+  local handler="returnMessage"
+  local home
+
+  home=$(catchReturn "$handler" buildHome) || return $?
+
+  assertExitCode 0 markdownCheckIndex "$home/documentation/source/index.md" || return $?
+  assertExitCode 0 markdownCheckIndex "$home/documentation/source/guide/index.md" || return $?
+  assertExitCode 0 markdownCheckIndex "$home/documentation/source/tools/index.md" || return $?
+  assertExitCode 0 markdownCheckIndex "$home/documentation/source/env/index.md" || return $?
+
+}
 testBashFunctionComment() {
   local handler="returnMessage"
   local home

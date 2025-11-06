@@ -8,14 +8,7 @@
 
 # shellcheck source=/dev/null
 if source "${BASH_SOURCE[0]%/*}/tools.sh"; then
-  # Use `build` or `tools` aliases
-  # Adds some aliases (`t`, `tools`, `IdenticalRepair`), adds a bash prompt
-  # and shell completions, terminal colors, and outputs banner and shows new functions
-  #
-  # 1 blank line above, 2 below
-  #
-  #
-  # Can I put a * or a ** in here? - Nope
+  # Zesk Build configured
   __buildConfigure() {
     local handler="_${FUNCNAME[0]}"
     local home
@@ -62,7 +55,7 @@ if source "${BASH_SOURCE[0]%/*}/tools.sh"; then
 
     simpleMarkdownToConsole < <(bashFunctionComment "${BASH_SOURCE[0]}" "${FUNCNAME[0]}")
 
-    # unset "${FUNCNAME[0]}" "_${FUNCNAME[0]}"
+    unset "${FUNCNAME[0]}" "_${FUNCNAME[0]}"
   }
   ___buildConfigure() {
     true || __buildConfigure --help

@@ -1,11 +1,10 @@
-# Zesk Build Tools
+# [Zesk Build Tools](https://build.zesk.com/
 
-Pipeline, build, and operations tools useful for any project.
+Pipeline, build, and operations tools useful for any
+project written exclusively in `bash` and works across all major platforms devices and operating
+systems.
 
-- `bash` functions which work on all Unix-style operating systems with a common argument set
-- Build, deployment and management tools for pipelines and production systems (system setup, services, cron, permissions
-  separations)
-- Operating system differences in many tools supported automatically
+- System setup, service management, cron, permissions separations
 - Powerful tools for development workflows - automatic documentation for Bash scripts and functions, completions, and
   interactivity
 
@@ -13,24 +12,18 @@ This code toolkit depends solely on [`bash`](https://www.gnu.org/software/bash/m
 binaries (`jq`) and a conscientious decision has been made to not depend on any other language libraries, as of 2025
 support for Bash 3 and 4 remains stable.
 
-Depends on:
-
-- `jq` - Parsing JSON files, some formatting
-- `bc` - Floating-point math
-- `curl` or `wget` - Remote installation
-
 This toolkit assumes:
 
-- Sources from this project installed at `./bin/build/` (required)
+- Sources from this project are installed at `./bin/build/` in your project (required)
 - Bash code files end with `.sh`
 - **Release notes** are located in a dedicated subdirectory (may be configured per-project), using markdown `.md` and
   files are named `v1.0.0.md`  which match version names (`v1.0.0`) (required)
-- Installation of new versions pulls from `github.com` using `curl` or `wget`
 
 To use in your pipeline:
 
 - copy `bin/build/install-bin-build.sh` into your project (changing last line as needed) or use `installInstallBuild` to
-  install it.
+  install the installation script (to be clear &mdash; installs `install-bin-build.sh` into your project with the
+  correct path setup to your project root).
 - Run the installer it before you need this code (will be installed at `./bin/build`)
 - `source bin/build/tools.sh` to load the library and use any function defined
 
@@ -46,7 +39,7 @@ To install it in the operating system:
 
 ## Your project structure
 
-Zesk Build makes the following assumptions about your project structure:
+Zesk Build directories in your project structure:
 
 - `./` - Application root (same as `buildHome`)
 - `./bin/build/` - Zesk Build installation location (may *not* be changed)
@@ -103,6 +96,8 @@ To load all functions:
     if source "${BASH_SOURCE[0]%/*}/../bin/build/tools.sh"; then 
         decorate orange "The code is working."
         bigText "Hooray."
+    else
+        printf -- "%s\n" "No tools.sh" 1>&2 && false
     fi
 
 For more complex (and more robust error handling) see `__install` and `__tools` code in `bin/build/identical`.
@@ -177,10 +172,24 @@ platform, [report an issue](https://github.com/zesk/build/issues). We have early
   permissions are translated, I assume. Workaround falls back to `ls` which is slow but works. See `isExecutable`. Added
   2024-01.
 
+## Requirements
+
+Requires:
+
+- `jq` - Parsing JSON files, some formatting
+- `bc` - Floating-point math
+- `curl` or `wget` - Remote installation
+
+Optional:
+
+- `shellcheck` - `bash` linting code
+- `pcregrep` - documentation generation and support
+- `unzip` - `awsInstall`
+
 ## Copyright &copy; 2025
 
 All copyrights held by **Market Acumen, Inc.**, a [provider
-of infrastructure expertise.](https://marketacumen.com/executive-technical-assessment-and-reporting/?crcat=code&crsource=zesk-build&crcampaign=README.md&crkw=provider+of+infrastructure+expertise)
+of infrastructure and cloud expertise.](https://marketacumen.com/executive-technical-assessment-and-reporting/?crcat=code&crsource=zesk-build&crcampaign=README.md&crkw=provider+of+infrastructure+expertise)
 
 License is [MIT License](LICENSE.md). Source can be found online at [GitHub](https://github.com/zesk/build).
 

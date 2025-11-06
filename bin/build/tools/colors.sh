@@ -611,7 +611,7 @@ __colorNormalize() {
 colorNormalize() {
   local handler="_${FUNCNAME[0]}"
 
-  catchReturn "$handler" packageWhich bc bc || return $?
+  whichExists bc || throwEnvironment "$handler" "Requires bc installed - missing" || return $?
   local red green blue
   if [ $# -eq 0 ]; then
     local done=false
@@ -767,7 +767,7 @@ colorMultiply() {
   local factor colors=()
 
   [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
-  catchReturn "$handler" packageWhich bc bc || return $?
+  whichExists bc || throwEnvironment "$handler" "Requires bc binary" || return $?
   factor=$(usageArgumentString "$handler" "factor" "${1-}") && shift || return $?
 
   local red green blue

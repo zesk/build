@@ -5,7 +5,9 @@
 - [Coding in Bash](./coding.md)
 - [Testing Tools](./testing.md)
 - [Guide to types](./types.md) - Data types supported by Zesk Build
-- [Function Documentation](./documentation.md) - Zesk Build supports documentation via the comment above a Bash function.
+- [Function Documentation](./documentation.md) - Zesk Build supports documentation via the comment above a Bash
+  function.
+- [Identical](./identical.md) - The identical tool
 - [Hooks](./hooks.md) - Hooks are called by Zesk Build at various times and allow for extension and customization of
   various behaviors.
 - [Installer](./installer.md) - [Build your own standalone installer script using Zesk Build](./installer.md)
@@ -19,6 +21,7 @@ your systems.
 - [`FUNCNAME` and `BASH_SOURCE` notes](./notes.md)
 - [`test` cheatsheet](./test-cheatsheet.md) - Bash `test` and `[ ]` expressions
 - [Bash cheatsheet](./bash-cheatsheet.md) - `shopt` and `set` meanings
+- [Bash FAQ](./bash-FAQ.md) - Raw, original document.
 
 ## History
 
