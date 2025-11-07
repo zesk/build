@@ -122,28 +122,30 @@ __deprecatedCleanup() {
 
   if [ $__count -eq 0 ] || $justCheck; then
     fingerprint=$(__catch "$handler" hookRun application-fingerprint) || return $?
-    jsonFile="$home/$(__catch "$handler" buildEnvironmentGet APPLICATION_JSON)" || return $?
+    if jsonFile="$home/$(buildEnvironmentGet APPLICATION_JSON 2>/dev/null)"; then
+      local prefix
+      prefix=$(buildEnvironmentGet APPLICATION_JSON_PREFIX 2>/dev/null) || :
+      prefix="${prefix#.}"
+      prefix="${prefix%.}"
 
-    local jqPath
-    jqPath=$(__catch "$handler" jsonPath "$prefix" "deprecated") || return $?
-    if [ -f "$jsonFile" ]; then
-      local savedFingerprint
-      savedFingerprint=$(catchEnvironment "$handler" jsonFileGet "$jsonFile" "$jqPath") || return $?
-      if [ "$fingerprint" = "$savedFingerprint" ]; then
-        if $justCheck; then
-          printf "%s\n" "$fingerprint"
-        else
-          decorate success "Deprecated already run successfully. $(decorate subtle "$fingerprint")"
+      local jqPath
+      jqPath=$(__catch "$handler" jsonPath "$prefix" "deprecated") || return $?
+      if [ -f "$jsonFile" ]; then
+        local savedFingerprint
+        savedFingerprint=$(catchEnvironment "$handler" jsonFileGet "$jsonFile" "$jqPath") || return $?
+        if [ "$fingerprint" = "$savedFingerprint" ]; then
+          if $justCheck; then
+            printf "%s\n" "$fingerprint"
+          else
+            decorate success "Deprecated already run successfully. $(decorate subtle "$fingerprint")"
+          fi
+          return 0
+        elif ! $justCheck; then
+          decorate error "Files changed: $fingerprint != $savedFingerprint"
         fi
-        return 0
-      else
-        if $justCheck; then
-          printf "%s\n" "$fingerprint"
-          return 1
-        fi
-        decorate error "Files changed: $fingerprint != $savedFingerprint"
       fi
-    elif $justCheck; then
+    fi
+    if $justCheck; then
       printf "%s\n" "$fingerprint"
       return 1
     fi
