@@ -36,8 +36,16 @@ quoteGrepPattern() {
   # __IDENTICAL__ --help-when-blank 1
   [ $# -gt 0 ] || __help "_${FUNCNAME[0]}" --help || return 0
   local value="${1-}"
-  value="${value//\"/\\\"}"
+  value="${value//\\/\\\\}"
+  #value="${value//\"/\\\"}"
   value="${value//./\\.}"
+  value="${value//+/\\+}"
+  # * in a bash search pattern matches any characters
+  # ? in a search pattern matches any character
+  # why it is escaped here
+  value="${value//\*/\\*}"
+  # quotes remove special meaning but are ignored
+  value="${value//"?"/\\\\\\?}"
   value="${value//[/\\[}"
   value="${value//]/\\]}"
   value="${value//|/\\|}"
