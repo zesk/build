@@ -28,9 +28,9 @@ buildPreRelease() {
     if gitRepositoryChanged; then
       statusMessage decorate info "Committing changes ..."
       catchEnvironment "$handler" gitCommit -- "buildPreRelease $(hookVersionCurrent)" || return $?
-      statusMessage decorate info --last "Committed and ready to release."
+      statusMessage --last decorate info "Committed and ready to release."
     else
-      statusMessage decorate info --last "No changes to commit."
+      statusMessage --last decorate info "No changes to commit."
     fi
   fi
   local color="success"
