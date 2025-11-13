@@ -18,11 +18,8 @@ if source "${BASH_SOURCE[0]%/*}/tools.sh"; then
     home=$(catchReturn "$handler" buildHome) || return $?
 
     # Logo for iTerm2
-    if isiTerm2; then
-      if iTerm2Image "$home/etc/zesk-build-icon.png"; then
-        : "Icon output"
-      fi
-    fi
+    iTerm2Image -i "$home/etc/zesk-build-icon.png"
+
     # Title
     local name
     name=$(catchReturn "$handler" buildEnvironmentGet APPLICATION_NAME) || return $?
@@ -37,9 +34,8 @@ if source "${BASH_SOURCE[0]%/*}/tools.sh"; then
     alias IdenticalRepair="$home/bin/build/identical-repair.sh"
 
     muzzle reloadChanges --stop 2>&1
-    printf "%s" "$(decorate warning "Watching ")"
-    reloadChanges --name "$name" "$home/bin/tools.sh" "$home/bin/build/build.json"
-    buildCompletion
+    muzzle reloadChanges --name "$name" "$home/bin/tools.sh" "$home/bin/build/build.json"
+    muzzle buildCompletion
 
     bashPrompt --skip-prompt bashPromptModule_TermColors
 

@@ -845,6 +845,11 @@ _toggleCharacterToColor() {
 }
 
 # Set the terminal color scheme to the specification
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
+# DOC TEMPLATE: --handler 1
+# Argument: --handler handler - Optional. Function. Use this error handler instead of the default error handler.
+# Argument: --debug - Optional. Flag. Show additional debugging information.
 # stdin: Scheme definition with `colorName=colorValue` on each line
 colorScheme() {
   local handler="_${FUNCNAME[0]}"
@@ -925,11 +930,15 @@ colorScheme() {
 
   __BUILD_TERM_COLORS="$hash"
 
-  local mode
-  mode=$(catchReturn "$handler" consoleConfigureColorMode "$bg") || :
-  [ -z "$mode" ] || BUILD_COLORS_MODE="$mode" && bashPrompt --skip-prompt --colors "$(bashPromptColorScheme "$mode")"
+  if [ -n "$bg" ]; then
+    local mode
+    mode=$(catchReturn "$handler" consoleConfigureColorMode "$bg") || :
+    [ -z "$mode" ] || BUILD_COLORS_MODE="$mode" && bashPrompt --skip-prompt --colors "$(bashPromptColorScheme "$mode")"
 
-  ! $debug || decorate info "Background is now $bg and mode is $mode ... "
+    ! $debug || decorate info "Background is now $bg and mode is $mode ..."
+  else
+    ! $debug || decorate info "No background color defined - color mode not set automatically"
+  fi
 }
 _colorScheme() {
   # __IDENTICAL__ usageDocument 1

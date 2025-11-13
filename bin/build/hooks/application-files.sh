@@ -37,6 +37,14 @@ __hookApplicationFiles() {
   extensionText=$(catchReturn "$handler" buildEnvironmentGet APPLICATION_CODE_EXTENSIONS) || return $?
   [ -n "$extensionText" ] || throwArgument "$handler" "Requires APPLICATION_CODE_EXTENSIONS to be non-blank" || return $?
 
+  local ignoreList ii=()
+  ignoreList=$(catchReturn "$handler" buildEnvironmentGet APPLICATION_CODE_IGNORE 2>/dev/null) || :
+  if [ -n "$ignoreList" ]; then
+    local ignore
+    while IFS="" read -r -d ':' ignore; do
+      ii+=(! -path "*$ignore*")
+    done <<<"$ignoreList"
+  fi
   local extensions=()
   IFS=":" read -r -a extensions <<<"$extensionText" || :
   [ "${#extensions[@]}" -gt 0 ] || throwArgument "$handler" "No extensions found in $(decorate code "$extensionText")?" || return $?
@@ -47,7 +55,7 @@ __hookApplicationFiles() {
   done
   jsonFile=$(catchReturn "$handler" buildEnvironmentGet APPLICATION_JSON) || return $?
 
-  directoryChange "$home" find "." -type f \( "${ff[@]}" \) ! -path '*/.*/*' ! -path "*/$jsonFile" "$@"
+  directoryChange "$home" find "." -type f \( "${ff[@]}" \) ! -path '*/.*/*' ! -path "*/$jsonFile" "${ii[@]+"${ii[@]}"}" "$@"
 }
 ___hookApplicationFiles() {
   # __IDENTICAL__ usageDocument 1

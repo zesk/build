@@ -438,8 +438,8 @@ _iTerm2Download() {
 # - `srgb` - The default color space
 # - 1rgb - Apple's device-independent colorspace
 # - `p3` - Apple's large-gamut colorspace
-#
-# If no arguments are supplied which match a valid color setting values are read one-per-line from stdin
+# stdin: `colorName=colorFormat`. One per line. Only if no arguments passed with `colorSetting` format.
+# If no arguments are supplied which match a valid color setting values are read one-per-line from stdin.
 iTerm2SetColors() {
   local handler="_${FUNCNAME[0]}"
 
