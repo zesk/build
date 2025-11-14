@@ -1183,7 +1183,9 @@ __testCleanupMess() {
   __TEST_SUITE_CLEAN_EXIT="${__TEST_SUITE_CLEAN_EXIT-}"
   if [ "$__TEST_SUITE_CLEAN_EXIT" != "true" ]; then
     printf -- "%s\n%s\n" "Stack:" "$(debuggingStack)"
-    printf "\n%s\n" "$(basename "${BASH_SOURCE[0]}") FAILED $exitCode: TRACE $__TEST_SUITE_TRACE"
+    local blank
+    blank=$(decorate value "(blank)")
+    printf "\n%s\n" "$(basename "${BASH_SOURCE[0]}") FAILED $exitCode: TRACE ${__TEST_SUITE_TRACE:-$blank}"
   fi
   if [ "$messyOption" = "true" ]; then
     printf "%s\n" "Messy ... no cleanup"

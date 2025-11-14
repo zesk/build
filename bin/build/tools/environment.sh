@@ -959,7 +959,7 @@ environmentClean() {
     if inArray "$variable" "${keepers[@]}"; then
       continue
     fi
-    unset "${variable?}" || :
+    unset "${variable?}" 2>/dev/null || :
   done < <(declare -x | removeFields 2 | cut -f 1 -d =)
 }
 _environmentClean() {
