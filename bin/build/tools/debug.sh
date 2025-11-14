@@ -315,7 +315,7 @@ plumber() {
     local __rawChanged
     declare -p >"$__after"
     ! $__verboseFlag || dumpPipe "AFTER $__before $__after" <"$__after"
-    __pattern="$(quoteGrepPattern "^\($(listJoin '|' "${__ignore[@]+"${__ignore[@]}"}")\)=")"
+    __pattern="^\($(quoteGrepPattern "$(listJoin '|' "${__ignore[@]+"${__ignore[@]}"}")")\)="
     __changed="$(diff -U0 "$__before" "$__after" | grep -e '^[-+][^-+]' | cut -c 2- | grep -e '^declare' | grep '=' | grep -v -e '^declare -[-a-z]*r ' | removeFields 2 | grep -v -e "$__pattern" || :)"
     __rawChanged=$__changed
     __cmd="$(decorate each code "$@")"
@@ -327,8 +327,8 @@ plumber() {
     if [ -n "$__changed" ]; then
       printf "%s\n" "$__changed" "COMMAND: $__cmd" | dumpPipe "$(decorate bold-orange "found leak"): $__rawChanged" 1>&2
       if buildDebugEnabled plumber-verbose; then
-        dumpPipe BEFORE <"$__before"
-        dumpPipe AFTER <"$__after"
+        dumpPipe BEFORE <"$__before" 1>&2
+        dumpPipe AFTER <"$__after" 1>&2
       fi
       __result=$(returnCode leak)
     fi

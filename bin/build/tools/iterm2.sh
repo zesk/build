@@ -518,26 +518,29 @@ iTerm2SetColors() {
     return $exitCode
   fi
 
-  ! $verboseFlag || statusMessage decorate info "Filling in missing colors: $(decorate each --count --index code "${needColors[@]}")"
-  set -- "${needColors[@]}"
-  while [ $# -gt 0 ]; do
-    local colorName="$1" colorValue colorMod
-    if inArray "$colorName" "${didColors[@]}"; then
-      ! $verboseFlag || statusMessage decorate notice "No need to fill $(decorate value "$colorName")"
-      shift 2
-      continue
-    fi
-    if [ "${colorName#br_}" != "$colorName" ]; then
-      colorMod=0.7
-    else
-      colorMod=1.3
-    fi
-    colorValue="$(colorParse <<<"$colorValue" | colorMultiply "$colorMod" | colorFormat)"
-    __iTerm2SetColors "$handler" "$verboseFlag" "$colorName" "$colorValue" || exitCode=$?
-    ! $verboseFlag || statusMessage decorate notice "Filled $(decorate code "$colorName") with $(decorate value "$colorMod") $(decorate blue "$2") -> $(decorate bold-blue "$colorValue")"
-    shift 2 || throwEnvironment "$handler" "${FUNCNAME[0]}:$LINENO" || return $?
-  done
-
+  if whichExists bc; then
+    ! $verboseFlag || statusMessage decorate info "Filling in missing colors: $(decorate each --count --index code "${needColors[@]}")"
+    set -- "${needColors[@]}"
+    while [ $# -gt 0 ]; do
+      local colorName="$1" colorValue colorMod
+      if inArray "$colorName" "${didColors[@]}"; then
+        ! $verboseFlag || statusMessage decorate notice "No need to fill $(decorate value "$colorName")"
+        shift 2
+        continue
+      fi
+      if [ "${colorName#br_}" != "$colorName" ]; then
+        colorMod=0.7
+      else
+        colorMod=1.3
+      fi
+      colorValue="$(colorParse <<<"$colorValue" | colorMultiply "$colorMod" | colorFormat)"
+      __iTerm2SetColors "$handler" "$verboseFlag" "$colorName" "$colorValue" || exitCode=$?
+      ! $verboseFlag || statusMessage decorate notice "Filled $(decorate code "$colorName") with $(decorate value "$colorMod") $(decorate blue "$2") -> $(decorate bold-blue "$colorValue")"
+      shift 2 || throwEnvironment "$handler" "${FUNCNAME[0]}:$LINENO" || return $?
+    done
+  else
+    ! $verboseFlag || statusMessage decorate warning "bc binary required to fill in missing colors, skipping"
+  fi
   return $exitCode
 }
 
