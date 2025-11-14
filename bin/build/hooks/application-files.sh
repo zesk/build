@@ -14,7 +14,7 @@ source "${BASH_SOURCE[0]%/*}/../tools.sh"
 # Argument: ... - Arguments. Optional. Arguments are passed to the find command.
 __hookApplicationFiles() {
   local handler="_${FUNCNAME[0]}"
-  local home
+  local home debugFlag=false
 
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
@@ -25,6 +25,7 @@ __hookApplicationFiles() {
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
+    --debug) debugFlag=true ;;
     *)
       break
       ;;
@@ -38,11 +39,13 @@ __hookApplicationFiles() {
   [ -n "$extensionText" ] || throwArgument "$handler" "Requires APPLICATION_CODE_EXTENSIONS to be non-blank" || return $?
 
   local ignoreList ii=()
-  ignoreList=$(catchReturn "$handler" buildEnvironmentGet APPLICATION_CODE_IGNORE 2>/dev/null) || :
+  ignoreList=$(buildEnvironmentGet APPLICATION_CODE_IGNORE 2>/dev/null) || :
   if [ -n "$ignoreList" ]; then
-    local ignore
-    while IFS="" read -r -d ':' ignore; do
-      ii+=(! -path "*$ignore*")
+    local ignore finished=false
+    while ! $finished; do
+      IFS="" read -r -d ':' ignore || finished=true
+      ignore="${ignore%$'\n'}"
+      [ -z "$ignore" ] || ii+=(! -path "*$ignore*")
     done <<<"$ignoreList"
   fi
   local extensions=()
@@ -55,7 +58,9 @@ __hookApplicationFiles() {
   done
   jsonFile=$(catchReturn "$handler" buildEnvironmentGet APPLICATION_JSON) || return $?
 
-  directoryChange "$home" find "." -type f \( "${ff[@]}" \) ! -path '*/.*/*' ! -path "*/$jsonFile" "${ii[@]+"${ii[@]}"}" "$@"
+  set -- directoryChange "$home" find "." -type f \( "${ff[@]}" \) ! -path '*/.*/*' ! -path "*/$jsonFile" "${ii[@]+"${ii[@]}"}" "$@"
+  ! $debugFlag || decorate each quote "$@"
+  "$@"
 }
 ___hookApplicationFiles() {
   # __IDENTICAL__ usageDocument 1
