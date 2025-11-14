@@ -11,7 +11,7 @@ __addNoteTo() {
   local home
 
   home=$(buildHome)
-  statusMessage decorate info "Adding note to $1"
+  statusMessage --last decorate info "Adding note to $1"
   cp "$home/$1" "$home/bin/build"
   printf -- "\n%s" "(this file is a copy - please modify the original)" | tee -a "$home/bin/build/$1" >"./documentation/source/$1"
   git add "bin/build/$1" "./documentation/source/$1"

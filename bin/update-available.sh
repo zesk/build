@@ -79,13 +79,6 @@ _isUnsignedInteger() {
 
 # <-- END of IDENTICAL returnMessage
 
-__addNoteTo() {
-  statusMessage decorate info "Adding note to $1"
-  cp "$1" bin/build
-  printf -- "\n%s" "(this file is a copy - please modify the original)" >>"bin/build/$1"
-  git add "bin/build/$1"
-}
-
 #
 # Usage: {fn} [ --skip-commit ]
 # Argument: --skip-commit - Skip the commit if the files change
