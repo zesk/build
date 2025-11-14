@@ -7,3 +7,4 @@
 {bitbucketContainer}
 {isBitBucketPipeline}
 {bitbucketGetVariable}
+{bitbucketPRNewURL}

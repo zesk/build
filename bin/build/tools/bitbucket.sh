@@ -98,3 +98,46 @@ _isBitBucketPipeline() {
   # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
+
+# Compute the URL to create a new PR
+# Argument: organization - String. Organization name.
+# Argument: repository - String. Repository name.
+bitbucketPRNewURL() {
+  local handler="_${FUNCNAME[0]}"
+  local org="" name="" eventSource="bash" source=""
+
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
+  local __saved=("$@") __count=$#
+  while [ $# -gt 0 ]; do
+    local argument="$1" __index=$((__count - $# + 1))
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    case "$argument" in
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
+    # _IDENTICAL_ handlerHandler 1
+    --handler) shift && handler=$(usageArgumentFunction "$handler" "$argument" "${1-}") || return $? ;;
+    --event-source) shift && eventSource=$(usageArgumentString "$handler" "$argument" "${1-}") || return $? ;;
+    --source) shift && source=$(usageArgumentString "$handler" "$argument" "${1-}") || return $? ;;
+    *)
+      if [ -z "$org" ]; then
+        org=$(usageArgumentString "$handler" "$argument" "${1-}") || return $?
+      elif [ -z "$name" ]; then
+        name=$(usageArgumentString "$handler" "$argument" "${1-}") || return $?
+      else
+        # _IDENTICAL_ argumentUnknownHandler 1
+        throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
+      fi
+      ;;
+    esac
+    shift
+  done
+  [ -n "$org" ] || throwArgument "$handler" "Organization is required" || return $?
+  [ -n "$name" ] || throwArgument "$handler" "Repository is required" || return $?
+  [ -n "$source" ] || source=$(catchEnvironment "$handler" gitCurrentBranch) || return $?
+  printf -- "https://bitbucket.org/%s/%s/pull-requests/new?source=%s&event_source=%s" "$org" "$name" "$source" "$eventSource"
+}
+_bitbucketPRNewURL() {
+  # __IDENTICAL__ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}

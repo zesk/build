@@ -4,6 +4,17 @@
 #
 # Copyright &copy; 2025 Market Acumen, Inc.
 
+# Open a URL with a new PR
+buildPRNew() {
+  local handler="_${FUNCNAME[0]}"
+
+  open "$(catchEnvironment "$handler" bitbucketPRNewURL "marketacumen" "build")" || return $?
+}
+_buildPRNew() {
+  # __IDENTICAL__ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
 # Argument: name - String. Optional. Name of tool to add.
 buildAddTool() {
   local handler="returnMessage" home file
