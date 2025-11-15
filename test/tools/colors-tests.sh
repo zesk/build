@@ -109,8 +109,17 @@ testColorFormat() {
 testColorScheme() {
   local handler="returnMessage"
 
+  mockEnvironmentStart __BUILD_COLORS
+  mockEnvironmentStart __BUILD_TERM_COLORS
+  mockEnvironmentStart __BASH_PROMPT_PREVIOUS
+
   local home
   home=$(catchReturn "$handler" buildHome) || return $?
 
-  assertExitCode 0 colorScheme < "$home/etc/term-colors.conf" || return $?
+  assertExitCode --skip-plumber 0 colorScheme <"$home/etc/term-colors.conf" || return $?
+
+  mockEnvironmentStop __BUILD_COLORS
+  mockEnvironmentStop __BUILD_TERM_COLORS
+  mockEnvironmentStop __BASH_PROMPT_PREVIOUS
+
 }
