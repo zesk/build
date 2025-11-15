@@ -45,7 +45,7 @@ quoteGrepPattern() {
   # why it is escaped here
   value="${value//\*/\\*}"
   # quotes remove special meaning but are ignored
-  value="${value//"?"/\\\\\\?}"
+  value="${value//"?"/\\?}"
   value="${value//[/\\[}"
   value="${value//]/\\]}"
   value="${value//|/\\|}"

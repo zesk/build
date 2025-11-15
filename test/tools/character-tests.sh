@@ -88,12 +88,14 @@ testIsCharacterClass() {
 
 __dataIsCharacterClasses() {
   cat <<'EOF'
-0|alpha|a|b|c|d|e|f|g|h|i|j
-1|alpha|a|b|c|d|e|f|g|2|i|j
-0|print|"|a|b|d|^|"
-0|punct|"|[|]
-0|digit|0|1|2|3
-1|digit|0|1|2|Z|3
+0|a|alpha|print|alnum
+0|"|alpha|print
+0|"|print|blank
+0|"|punct|print
+0|0|digit|alnum
+0|0|digit|punct|alnum
+1|0|punct|blank
+1|"|blank|lower
 EOF
 }
 
@@ -102,6 +104,6 @@ testIsCharacterClasses() {
   while IFS="|" read -r -a testRow; do
     set -- "${testRow[@]}"
     local expected="$1" && shift
-    assertExitCode "$expected" isCharacterClass "$@" || return $?
+    assertExitCode "$expected" isCharacterClasses "$@" || return $?
   done < <(__dataIsCharacterClasses)
 }

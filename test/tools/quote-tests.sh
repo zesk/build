@@ -40,7 +40,7 @@ __dataQuoteGrepPattern() {
 # This is a quote (hello)^# This is a quote (hello)
 This | or | that.^This \| or \| that\.
 [Bob]^\[Bob\]
-\.*+?^\\\.\*\+\\\?
+\.*+?^\\\.\*\+\?
 \"quotes\"^\\"quotes\\"
 Added `zesk\Doctrine\Module::dsnFromMixed`^Added `zesk\\Doctrine\\Module::dsnFromMixed`
 EOF
@@ -60,4 +60,36 @@ testQuoteGrepPattern() {
   done < <(__dataQuoteGrepPattern)
 
   catchEnvironment "$handler" rm -rf "$temp" || return $?
+}
+
+__dataEscapeBash() {
+  cat <<EOF
+{}^'{}'
+She's a man eater^'She'\''s a man eater'
+EOF
+}
+
+testEscapeBash() {
+  local handler="returnMessage"
+
+  local text expected
+  while IFS='^' read -r text expected; do
+    assertEquals --display "escapeBash \"$text\"" "$expected" "$(escapeBash "$text")" || return $?
+  done < <(__dataEscapeBash)
+}
+
+__dataQuoteBashString() {
+  cat <<EOF
+{}^{}
+She's a man eater^She\'s a man eater
+EOF
+}
+
+testQuoteBashString() {
+  local handler="returnMessage"
+
+  local text expected
+  while IFS='^' read -r text expected; do
+    assertEquals --display "quoteBashString \"$text\"" "$expected" "$(quoteBashString "$text")" || return $?
+  done < <(__dataQuoteBashString)
 }

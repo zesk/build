@@ -194,6 +194,9 @@ __bashPromptModule_Background() {
   isPositiveInteger "$threshold" || threshold=30
 
   (
+    local now
+
+    now=$(timingStart)
     local pid="" alive=""
     [ ! -f "$cache/main.pid" ] || pid=$(cat "$cache/main.pid")
     [ ! -f "$cache/main.alive" ] || alive=$(cat "$cache/main.alive")

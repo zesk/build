@@ -61,3 +61,16 @@ testPackageBasics() {
 
   assertOutputContains mariadb packageMapping mariadb || return $?
 }
+
+testPackageDefault() {
+  assertExitCode --stderr-match "Need at least one name" 2 packageDefault || return $?
+  assertExitCode --stdout-match mariadb 0 packageDefault mysql || return $?
+  assertExitCode --stdout-match mariadb 0 packageDefault mariadb || return $?
+}
+
+# Tag: package-install
+testPackageGroupWhich() {
+  local binary
+  binary=$(pcregrepBinary)
+  assertExitCode 0 packageGroupWhich "$binary" pcregrep || return $?
+}

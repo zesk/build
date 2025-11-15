@@ -58,7 +58,7 @@ _userRecord() {
 # Argument: database - File. Optional. User name database file to examine. Uses `/etc/passwd` if not supplied.
 userRecordName() {
   [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
-  userRecord 4 "$@"
+  userRecord 5 "$@"
 }
 _userRecordName() {
   # __IDENTICAL__ usageDocument 1

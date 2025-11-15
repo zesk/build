@@ -27,7 +27,7 @@ test_XMLBasics() {
   assertEquals "<html lang=\"fr\">" "$(__xmlTagOpen html lang=fr)" || return $?
   assertEquals "</html>" "$(__xmlTagClose html)" || return $?
   assertEquals "</html>" "$(__xmlTagClose html)" "name=$rando" || return $?
-  local matches=(
+  matches=(
     --stdout-match "<properties>"
     --stdout-match "<property name=\"name\" value=\"$rando\" />"
     --stdout-match "</properties>"

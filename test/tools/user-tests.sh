@@ -28,3 +28,9 @@ testUserHome() {
 
   mockEnvironmentStop HOME
 }
+
+testUserRecord() {
+  assertExitCode --stdout-match "/root" 0 userRecord 6 root || return $?
+  assertExitCode --stdout-match "/root" 0 userRecordHome root || return $?
+  assertExitCode 0 userRecordName root || return $?
+}

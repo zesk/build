@@ -105,3 +105,12 @@ testColorFormat() {
     assertEquals "$expected" "$(printf "%d\n" "$r" "$g" "$b" | colorFormat "$format")" || return $?
   done < <(__dataColorFormat)
 }
+
+testColorScheme() {
+  local handler="returnMessage"
+
+  local home
+  home=$(catchReturn "$handler" buildHome) || return $?
+
+  assertExitCode 0 colorScheme < "$home/etc/term-colors.conf" || return $?
+}

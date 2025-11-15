@@ -10,6 +10,10 @@
 testEverythingElse() {
   # SUGAR
 
+  # approvedSources
+  # dockerComposeWrapper
+  # plasterLines
+
   #  catchEnvironmentQuiet
   #  executeInputSupport
   #  isBashBuiltin

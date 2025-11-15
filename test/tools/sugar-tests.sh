@@ -267,3 +267,12 @@ testMuzzle() {
   # Does not block stderr
   assertExitCode --stderr-match "Dave" 71 muzzle returnMessage 71 "$mantra" || return $?
 }
+
+testReturnThrow() {
+  local returnCode
+  for returnCode in 1 2 3 99 102; do
+    assertExitCode --stderr-match "Hello" "$returnCode" returnThrow "$returnCode" returnMessage "Hello" || return $?
+  done
+  returnCode=0
+  assertExitCode --stdout-match "Hello" "$returnCode" returnThrow "$returnCode" returnMessage "Hello" || return $?
+}

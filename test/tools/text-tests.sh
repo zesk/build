@@ -279,6 +279,26 @@ testStringOffset() {
   done < <(__dataStringOffset)
 }
 
+__dataStringOffsetInsensitive() {
+  cat <<'EOF'
+0|hello|Hello, world.
+0|Hello|Hello, world.
+1|ello|Hello, world.
+2|Llo, |Hello, world.
+3|lo, world.|Hello, World.
+7|world|Hello, WORLD.
+8|orld.|Hello, worlD.
+12|.|Hello, world.
+EOF
+}
+
+testStringOffsetInsensitive() {
+  local expected haystack needle
+  while IFS="|" read -r expected needle haystack; do
+    assertEquals "$expected" "$(stringOffsetInsensitive "$needle" "$haystack")" || return $?
+  done < <(__dataStringOffsetInsensitive)
+}
+
 __dataParseBoolean() {
   cat <<'EOF'
 0|yes
