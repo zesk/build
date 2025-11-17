@@ -17,6 +17,10 @@ if source "${BASH_SOURCE[0]%/*}/tools.sh"; then
 
     home=$(catchReturn "$handler" buildHome) || return $?
 
+    export BUILD_COLORS_MODE
+    if [ -z "${BUILD_COLORS_MODE-}" ]; then
+      BUILD_COLORS_MODE=$(consoleConfigureConsoleMode)
+    fi
     # Logo for iTerm2
     iTerm2Image -i "$home/etc/zesk-build-icon.png"
 
