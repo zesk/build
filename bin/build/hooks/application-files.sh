@@ -10,11 +10,13 @@ set -eou pipefail
 # shellcheck source=/dev/null
 source "${BASH_SOURCE[0]%/*}/../tools.sh"
 
-# Get a complete list of files which make up an application's state.
+# Get a complete list of files which make up an application's state. Should include anything which is code, not design. (fine line)
 # Argument: ... - Arguments. Optional. Arguments are passed to the find command.
+# Argument: --debug - Flag. Optional. Show debugging information.
+# Argument: --not - Flag. Optional. Show list of files which are still excluded by APPLICATION_CODE_IGNORE but show files which are NOT included by extension.
 __hookApplicationFiles() {
   local handler="_${FUNCNAME[0]}"
-  local home debugFlag=false
+  local home debugFlag=false notFlag=false
 
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
@@ -26,6 +28,7 @@ __hookApplicationFiles() {
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
     --debug) debugFlag=true ;;
+    --not) notFlag=true ;;
     *)
       break
       ;;
@@ -52,10 +55,16 @@ __hookApplicationFiles() {
   IFS=":" read -r -a extensions <<<"$extensionText" || :
   [ "${#extensions[@]}" -gt 0 ] || throwArgument "$handler" "No extensions found in $(decorate code "$extensionText")?" || return $?
   local ff=()
-  for extension in "${extensions[@]}"; do
-    [ ${#ff[@]} -eq 0 ] || ff+=(-or)
-    ff+=(-name "*.$extension")
-  done
+  if $notFlag; then
+    for extension in "${extensions[@]}"; do
+      ff+=(! -name "*.$extension")
+    done
+  else
+    for extension in "${extensions[@]}"; do
+      [ ${#ff[@]} -eq 0 ] || ff+=(-or)
+      ff+=(-name "*.$extension")
+    done
+  fi
   jsonFile=$(catchReturn "$handler" buildEnvironmentGet APPLICATION_JSON) || return $?
 
   set -- directoryChange "$home" find "." -type f \( "${ff[@]}" \) ! -path '*/.*/*' ! -path "*/$jsonFile" "${ii[@]+"${ii[@]}"}" "$@"
