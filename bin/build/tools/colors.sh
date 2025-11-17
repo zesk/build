@@ -611,6 +611,8 @@ __colorNormalize() {
 colorNormalize() {
   local handler="_${FUNCNAME[0]}"
 
+  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
+
   whichExists bc || throwEnvironment "$handler" "Requires bc installed - missing" || return $?
   local red green blue
   if [ $# -eq 0 ]; then
@@ -624,7 +626,6 @@ colorNormalize() {
     done
   else
     while [ $# -gt 0 ]; do
-      [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
       red=$(usageArgumentUnsignedInteger "$handler" "redValue" "${1-}") && shift || return $?
       green=$(usageArgumentUnsignedInteger "$handler" "greenValue" "${1-}") && shift || return $?
       blue=$(usageArgumentUnsignedInteger "$handler" "blueValue" "${1-}") && shift || return $?
@@ -767,6 +768,7 @@ colorMultiply() {
   local factor colors=()
 
   [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
+
   whichExists bc || throwEnvironment "$handler" "Requires bc binary" || return $?
   factor=$(usageArgumentString "$handler" "factor" "${1-}") && shift || return $?
 
