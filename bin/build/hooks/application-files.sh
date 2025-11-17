@@ -10,6 +10,7 @@ set -eou pipefail
 # shellcheck source=/dev/null
 source "${BASH_SOURCE[0]%/*}/../tools.sh"
 
+# fn: runHook application-files
 # Get a complete list of files which make up an application's state. Should include anything which is code, not design. (fine line)
 # Argument: ... - Arguments. Optional. Arguments are passed to the find command.
 # Argument: --debug - Flag. Optional. Show debugging information.
