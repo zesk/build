@@ -136,6 +136,7 @@ _bashSanitizeCheckCopyright() {
     while IFS=":" read -r file pattern; do
       error="$(decorate error "No pattern used")" pattern="$(decorate value "$pattern")" file="$(decorate code "$file")" mapEnvironment <<<"{error}: {pattern} missing from {file}"
     done <"$matches"
+    ! $debugFlag || decorate each quote fileNotMatches "Copyright &copy; $year" "$BUILD_COMPANY" -- "${copyrightExceptions[@]+"${copyrightExceptions[@]}"}" -- -
     throwEnvironment "$handler" "File pattern check failed" || returnClean $? "$matches" || return $?
   fi
 }
