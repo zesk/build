@@ -28,11 +28,7 @@ __bashLoader() {
 # Argument: --interactive - Flag. Optional. Interactive mode on fixing errors.
 # Argument: --check checkDirectory - Optional. Directory. Check shell scripts in this directory for common errors.
 # Argument: ... - Additional arguments are passed to `bashLintFiles` `validateFileContents`
-# Placing a `.debugging` file in your project with a list of permitted files which contain debugging (`set` with `-x`)
-# Configuration File: .debugging (list of file paths which are ok to allow debugging)
-# Configuration File: .check-assertions (location determines check root)
-# Configuration File: .skip-lint (file patterns to skip lint check, one per line)
-# Configuration File: .skip-copyright (file patterns to skip copyright check, one per line)
+# Configuration File: bashSanitize.conf (file containing patterns of files to skip, one per line, e.g. `etc/docker`)
 # See: buildHome
 bashSanitize() {
   __bashLoader "_${FUNCNAME[0]}" "__${FUNCNAME[0]}" "$@"

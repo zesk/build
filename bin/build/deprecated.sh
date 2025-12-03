@@ -225,14 +225,16 @@ __deprecatedConfiguration() {
 
   export HOME
 
+  # Moved .applicationHome
   local newHome
   newHome=$(catchEnvironment "$handler" buildEnvironmentGet "BUILD_CACHE_HOME") || return $?
 
-  [ -d "$HOME" ] || returnEnvironmentHOME is not set || return $?
+  [ -d "${HOME-}" ] || throwEnvironment "$handler" HOME is not set || return $?
 
   if [ -f "$HOME/.applicationHome" ]; then
     mv "$HOME/.applicationHome" "$newHome"
   fi
+
   local oldHome="$HOME/.build"
   if [ -d "$oldHome" ]; then
     if [ -d "$newHome" ]; then
@@ -242,6 +244,7 @@ __deprecatedConfiguration() {
     fi
   fi
 
+  # Renamed .env files in home directory
   [ ! -f "$home/.env.STAGING" ] || mv "$home/.env.STAGING" "$home/.STAGING.env" || return $?
   [ ! -f "$home/.env.PRODUCTION" ] || mv "$home/.env.PRODUCTION" "$home/.PRODUCTION.env" || return $?
   local fileName
@@ -255,9 +258,15 @@ __deprecatedConfiguration() {
     mv "$directory/$fileName" "$directory/.$suffix.$newName.env"
   done < <(find "$home" -name '.env.STAGING.*' -or -name '.env.PRODUCTION.*' -name '.env.staging.*' -or -name '.env.production.*')
 
+  # Flag deprecated files
   local exitCode=0
   find "$home" -name '.check-assertions' | outputTrigger "$(decorate error ".check-assertions is deprecated")" || exitCode=$?
   find "$home" -name '.debugging' | outputTrigger "$(decorate error ".debugging is deprecated")" || exitCode=$?
+
+  # .skip-copyright was renamed to bashSanitize.conf
+  while read -r fileName; do
+    printf "git mv %s %s\n" "$fileName" "$(dirname "$fileName")/bashSanitize.conf"
+  done < <(find "$home" -name ".skip-copyright" -type f) | outputTrigger "$(decorate error "Found old config files:")"
   return "$exitCode"
 }
 

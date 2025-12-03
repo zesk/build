@@ -10,7 +10,7 @@
 __bashSanitize() {
   local handler="$1" && shift
 
-  local home checkAssertions=() executor=contextOpen
+  local home checkAssertions=() executor=contextOpen debugFlag=false
 
   home=$(catchReturn "$handler" buildHome) || return $?
 
@@ -27,6 +27,7 @@ __bashSanitize() {
       shift
       executor=$(usageArgumentCallable "$handler" "$argument" "${1-}") || return $?
       ;;
+    --debug) debugFlag=true ;;
     --home)
       shift
       home=$(usageArgumentDirectory "$handler" "$argument" "${1-}") || return $?
@@ -77,7 +78,7 @@ __bashSanitize() {
   _bashSanitizeCheckLint "$handler" <"$fileList" || returnUndo $? "${undo[@]}" || returnClean $? "$fileList" || return $?
 
   statusMessage decorate success Checking copyright ...
-  _bashSanitizeCheckCopyright "$handler" <"$fileList" || returnUndo $? "${undo[@]}" || returnClean $? "$fileList" || return $?
+  _bashSanitizeCheckCopyright "$handler" "$debugFlag" <"$fileList" || returnUndo $? "${undo[@]}" || returnClean $? "$fileList" || return $?
 
   statusMessage decorate success Checking debugging ...
   _bashSanitizeCheckDebugging "$handler" <"$fileList" || returnUndo $? "${undo[@]}" || returnClean $? "$fileList" || return $?
@@ -111,14 +112,19 @@ _bashSanitizeCheckAssertions() {
 }
 
 _bashSanitizeCheckCopyright() {
-  local file line handler="$1" && shift
+  local handler="$1" && shift
+  local debugFlag="$1" && shift
+  local file line
   local matches year copyrightExceptions=()
+
+  home=$(catchEnvironment "$handler" buildHome) || return $?
 
   while read -r file; do
     while read -r line; do
       copyrightExceptions+=("$line")
     done <"$file"
-  done < <(find . -name ".skip-copyright" -type f ! -path "*/.*/*")
+    ! $debugFlag || statusMessage decorate info "Loaded $(pluralWord ${#copyrightExceptions} pattern) [$(decorate file "$file")]"
+  done < <(find "$home" -name "bashSanitize.conf" -type f ! -path "*/.*/*")
   export BUILD_COMPANY
   catchReturn "$handler" buildEnvironmentLoad BUILD_COMPANY || return $?
 
@@ -132,7 +138,6 @@ _bashSanitizeCheckCopyright() {
     done <"$matches"
     throwEnvironment "$handler" "File pattern check failed" || returnClean $? "$matches" || return $?
   fi
-  set +v
 }
 
 _bashSanitizeCheckDebugging() {

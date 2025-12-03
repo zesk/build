@@ -93,7 +93,8 @@ dockerComposeIsRunning() {
   [ $# -eq 0 ] || __help --only "$handler" "$@" || return "$(convertValue $? 1 0)"
   local temp
   temp=$(fileTemporaryName "$handler") || return $?
-  catchEnvironment "$handler" dockerCompose ps --format json >"$temp" || returnClean $? "$temp" || return $?
+  # DO NOT USE dockerCompose as it generates the .env file (again)
+  __dockerCompose "$handler" ps --format json >"$temp" || returnClean $? "$temp" || return $?
   local exitCode=1
   fileIsEmpty "$temp" || exitCode=0
   catchEnvironment "$handler" rm -rf "$temp" || return $?
@@ -174,8 +175,8 @@ dockerCompose() {
   local handler="_${FUNCNAME[0]}"
 
   local deployment="" aa=()
-  local buildFlag=false deleteVolumes=false keepVolumes="" keepVolumesDefault=false hasCommand=false debugFlag=false
-  local databaseVolume="" requiredEnvironment=() requiredArguments=()
+  local buildFlag=false deleteVolumes=false keepVolumes="" keepVolumesDefault=false debugFlag=false
+  local databaseVolume="" requiredEnvironment=() requiredArguments=() command=""
 
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
@@ -215,18 +216,21 @@ dockerCompose() {
       keepVolumes=true
       ;;
     --build)
-      buildFlag=true
-      hasCommand=true
+      command="build"
       ;;
     --arg | --default-env | --env)
       local environmentPair
       shift
       environmentPair="$(usageArgumentString "$handler" "$argument" "${1-}")" || return $?
       local name="${environmentPair%%=*}" value="${environmentPair#*=}"
-      ! $debugFlag || decorate info "Environment supplied $(decorate pair "$name" "$value")"
+      ! $debugFlag || decorate info "Variable $argument supplied $(decorate pair "$name" "$value")"
       name="$(usageArgumentEnvironmentVariable "$handler" "$argument" "$name")" || return $?
       if [ "$argument" = "--arg" ]; then
-        requiredArguments+=("$name" "$value")
+        if [ -z "$value" ]; then
+          requiredArguments+=("$name")
+        else
+          aa+=("--build-arg" "$environmentPair")
+        fi
       else
         requiredEnvironment+=("$name" "$value")
       fi
@@ -240,9 +244,10 @@ dockerCompose() {
       aa+=("$argument")
       ;;
     *)
+      [ -z "$command" ] || throwArgument "$handler" "$command already specified ($argument)" || return $?
       if isDockerComposeCommand "$argument"; then
-        aa+=("$@")
-        hasCommand=true
+        command="$argument"
+        shift
         break
       fi
       # _IDENTICAL_ argumentUnknownHandler 1
@@ -255,30 +260,31 @@ dockerCompose() {
   [ -n "$deployment" ] || deployment="staging"
   [ -n "$keepVolumes" ] || keepVolumes=$keepVolumesDefault
 
+  local home
+  home=$(catchReturn "$handler" buildHome) || return $?
+
   if [ -z "$databaseVolume" ]; then
-    local home dockerName
-
-    home=$(catchReturn "$handler" buildHome) || return $?
+    local dockerName
     dockerName=$(basename "$home")
-
     databaseVolume="${dockerName}_database_data"
   fi
 
-  local start home
-
+  local start
   start=$(timingStart)
 
-  if ! $buildFlag && ! $hasCommand; then
+  if [ -z "$command" ]; then
     throwArgument "$handler" "Need a docker command:"$'\n'"- $(dockerComposeCommandList | decorate each code)" || return $?
   fi
 
-  __dockerComposeEnvironmentSetup "$handler" "$deployment" "${requiredEnvironment[@]+"${requiredEnvironment[@]}"}" DEPLOYMENT "$deployment" || return $?
+  [ "$command" != "build" ] || buildFlag=true
+  aa=("$command" "${aa[@]+"${aa[@]}"}")
+
+  __dockerComposeEnvironmentSetup "$handler" "$home" "$debugFlag" "$deployment" "${requiredEnvironment[@]+"${requiredEnvironment[@]}"}" DEPLOYMENT "$deployment" || return $?
 
   local argument
-  [ "${#requiredArguments[@]}" -eq 0 ] || while read -r argument; do aa+=("$argument"); done < <(__dockerComposeArgumentSetup "$handler" "${requiredArguments[@]}") || return $?
+  [ "${#requiredArguments[@]}" -eq 0 ] || while read -r argument; do aa+=("$argument"); done < <(__dockerComposeArgumentSetup "$handler" "$home" "${requiredArguments[@]}") || return $?
 
   if $buildFlag; then
-    aa=("${aa[@]+"${aa[@]}"}" "build")
     if $deleteVolumes; then
       ! $debugFlag || decorate info "--clean supplied so deleting volumes"
       if dockerVolumeExists "$databaseVolume"; then
@@ -294,11 +300,15 @@ dockerCompose() {
         decorate info "Keeping volume $(decorate code "$databaseVolume")"
       fi
     else
+      ! $debugFlag || decorate info "__dockerVolumeDeleteInteractive"
       __dockerVolumeDeleteInteractive "$handler" "$databaseVolume" || return $?
     fi
   fi
 
+  [ $# -eq 0 ] || aa+=("$@")
+
   ! $debugFlag || decorate info "Running" "$(decorate label "docker compose")" "$(decorate each code "${aa[@]+"${aa[@]}"}")"
+
   __dockerCompose "$handler" "${aa[@]+"${aa[@]}"}" || return $?
 
   local name
@@ -324,10 +334,12 @@ __dockerCompose() {
 # DEPLOYMENT=test matches .TEST.env
 # The env file must exist locally or fails
 __dockerComposeEnvironmentSetup() {
-  local handler="$1" deployment="$2" && shift 2
+  local handler="$1" && shift
+  local home="$1" && shift
+  local debugFlag="$1" && shift
+  local deployment="$1" && shift
 
-  local home deploymentEnv envFile
-  home=$(catchReturn "$handler" buildHome) || return $?
+  local deploymentEnv envFile
 
   deploymentEnv=".$(uppercase "$deployment").env"
   [ -f "$home/$deploymentEnv" ] || throwEnvironment "$handler" "Missing $deploymentEnv" || return $?
@@ -337,18 +349,23 @@ __dockerComposeEnvironmentSetup() {
     local checkEnv
     while read -r checkEnv; do
       if muzzle diff -q "$envFile" "$checkEnv"; then
-        catchEnvironment "$handler" rm -rf "$envFile" || return $?
+        ! $debugFlag || statusMessage decorate warning "Deleting $(decorate file "$envFile")"
+        catchEnvironment "$handler" rm -f "$envFile" || return $?
         break
       fi
     done < <(find "$home" -maxdepth 1 -name ".*.env")
   fi
   if [ -f "$envFile" ]; then
-    statusMessage decorate warning "Backing up $(decorate file "$envFile") ..."
-    catchEnvironment "$handler" cp "$envFile" "$home/.$(date '+%F_%T').env" || return $?
+    local backupFile
+    backupFile="$home/.$(date '+%F_%T').env"
+    statusMessage decorate warning "Backing up $(decorate file "$envFile") to ... $(decorate file "$backupFile")"
+    catchEnvironment "$handler" cp "$envFile" "$backupFile" || return $?
   fi
+
+  ! $debugFlag || statusMessage decorate warning "Rewriting $(decorate file "$envFile") <- (copy from $deploymentEnv)"
   catchEnvironment "$handler" cp "$deploymentEnv" "$envFile" || return $?
 
-  printf "%s\n" "" "# Added values" >>"$envFile"
+  catchEnvironment "$handler" printf -- "%s\n" "" "# Adding values" >>"$envFile" || return $?
   local icon="⬅"
   # Remaining arguments are pairs
   while [ $# -gt 1 ]; do
@@ -356,10 +373,12 @@ __dockerComposeEnvironmentSetup() {
 
     envValue=$(environmentValueRead "$envFile" "$variable") || :
     if [ -z "$envValue" ]; then
-      decorate info "Writing $(decorate file "$envFile") $icon $(decorate code "$variable") $(decorate value "$value") (default)"
+      statusMessage decorate info "Appending $(decorate file "$envFile") $icon $(decorate code "$variable") $(decorate value "$value") (default)"
       catchReturn "$handler" environmentValueWrite "$variable" "$value" >>"$envFile" || return $?
+    else
+      ! $debugFlag || statusMessage decorate warning "Skipping $(decorate code "$variable")=$(decorate value "$envValue") ($(decorate magenta "$value"))"
     fi
-    shift 2
+    shift 2 || :
   done
 }
 
@@ -371,21 +390,19 @@ __dockerComposeEnvironmentSetup() {
 # The env file must exist locally or fails
 __dockerComposeArgumentSetup() {
   local handler="$1" && shift
-
-  local home deploymentEnv envFile
-  home=$(catchReturn "$handler" buildHome) || return $?
-
-  envFile="$home/.env"
+  local home="$1" && shift
+  local envFile="$home/.env"
   local icon="⬅"
-  # Remaining arguments are pairs
-  while [ $# -gt 1 ]; do
-    local variable="$1" value="$2" envValue
+
+  # Remaining arguments are names
+  while [ $# -gt 0 ]; do
+    local variable="$1" envValue
 
     envValue=$(environmentValueRead "$envFile" "$variable") || :
     if [ -z "$envValue" ]; then
       throwArgument "$handler" "$envFile does not have a variable $variable" || return $?
     fi
     printf "%s\n" "--build-arg" "$variable=$envValue"
-    shift 2
+    shift
   done
 }
