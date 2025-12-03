@@ -114,29 +114,33 @@ _bashSanitizeCheckAssertions() {
 _bashSanitizeCheckCopyright() {
   local handler="$1" && shift
   local debugFlag="$1" && shift
-  local file line
-  local matches year copyrightExceptions=()
 
   home=$(catchEnvironment "$handler" buildHome) || return $?
 
+  local file exceptions=()
   while read -r file; do
-    while read -r line; do
-      copyrightExceptions+=("$line")
+    local line eof=false
+    while ! $eof; do
+      read -r line || eof=true
+      [ -z "$line" ] || exceptions+=("$line")
     done <"$file"
-    ! $debugFlag || statusMessage decorate info "Loaded $(pluralWord ${#copyrightExceptions} pattern) [$(decorate file "$file")]"
+    ! $debugFlag || statusMessage decorate info "Loaded $(pluralWord ${#exceptions} pattern) [$(decorate file "$file")]"
   done < <(find "$home" -name "bashSanitize.conf" -type f ! -path "*/.*/*")
   export BUILD_COMPANY
   catchReturn "$handler" buildEnvironmentLoad BUILD_COMPANY || return $?
 
+  local year
   year="$(date +%Y)"
   statusMessage decorate warning "Checking $year and $BUILD_COMPANY ..." || :
+  local matches
   matches=$(fileTemporaryName "$handler") || return $?
-  if fileNotMatches "Copyright &copy; $year" "$BUILD_COMPANY" -- "${copyrightExceptions[@]+"${copyrightExceptions[@]}"}" -- - >"$matches"; then
+  local command=(fileNotMatches "Copyright &copy; $year" "$BUILD_COMPANY" -- "${exceptions[@]+"${exceptions[@]}"}" -- -)
+  if "${command[@]}" >"$matches"; then
     set +v
     while IFS=":" read -r file pattern; do
       error="$(decorate error "No pattern used")" pattern="$(decorate value "$pattern")" file="$(decorate code "$file")" mapEnvironment <<<"{error}: {pattern} missing from {file}"
     done <"$matches"
-    ! $debugFlag || decorate each quote fileNotMatches "Copyright &copy; $year" "$BUILD_COMPANY" -- "${copyrightExceptions[@]+"${copyrightExceptions[@]}"}" -- -
+    ! $debugFlag || decorate each quote "${command[@]}"
     throwEnvironment "$handler" "File pattern check failed" || returnClean $? "$matches" || return $?
   fi
 }

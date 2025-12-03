@@ -12,6 +12,7 @@ if source "${BASH_SOURCE[0]%/*}/../tools.sh"; then
   # The `pre-commit-sh` hook:
   # 1. Checks all shell files for errors
   # fn: {base}
+  # BUILD_DEBUG: bashSanitize - Debug patterns used to exclude files
   __hookPreCommitShell() {
     local handler="_${FUNCNAME[0]}"
 
@@ -22,6 +23,9 @@ if source "${BASH_SOURCE[0]%/*}/../tools.sh"; then
       read -r file || done=true
       [ -z "$file" ] || changed+=("$file")
     done < <(gitPreCommitListExtension sh)
+    if buildDebugEnabled bashSanitize; then
+      changed=(--debug "${changed[@]+"${changed[@]}"}")
+    fi
     catchEnvironment "$handler" bashSanitize "${changed[@]+"${changed[@]}"}" || return $?
   }
   ___hookPreCommitShell() {

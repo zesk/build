@@ -43,6 +43,8 @@ if source "${BASH_SOURCE[0]%/*}/../build/tools.sh"; then
       fi
       rm -f "$nonOriginalWithEOF" || :
     fi
+
+    hookRunOptional --next "${BASH_SOURCE[0]}" pre-commit "$@"
   }
   ___hookPreCommit() {
     # __IDENTICAL__ usageDocument 1
