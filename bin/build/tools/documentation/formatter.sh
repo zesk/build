@@ -13,6 +13,17 @@ _bashDocumentationFormatter_return_code() {
 }
 
 #
+# Format see blocks as tokens
+#
+_bashDocumentationFormatter_see() {
+  local tokens eof=false
+  while ! $eof; do
+    IFS=" " read -d $'\n' -r -a tokens || eof=true
+    [ "${#tokens[@]}" -eq 0 ] || printf "%s\n" "${tokens[@]}" | decorate wrap "{SEE:" "}" | markdown_FormatList
+  done
+}
+
+#
 # Format usage blocks (indents as a code block)
 #
 _bashDocumentationFormatter_usage() {
@@ -46,7 +57,7 @@ _bashDocumentationFormatter_depends() {
 #
 # Format see block
 #
-_bashDocumentationFormatter_see() {
+_bashDocumentationFormatter_see2() {
   local seeItem seeItems
   while IFS=" " read -r -a seeItems; do
     for seeItem in "${seeItems[@]+${seeItems[@]}}"; do

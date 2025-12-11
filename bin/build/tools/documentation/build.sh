@@ -19,7 +19,7 @@ __documentationBuild() {
   local targetPath="" actionFlag="" actionFlag="" verbose=false pageTemplate=""
   local indexArgs=() templatePath="" company="" applicationName="" functionTemplate="" seePrefix="-"
 
-  local unlinkedSources=() unlinkedTemplate="" unlinkedTarget=""
+  local unlinkedSources=() unlinkedTemplate="" unlinkedTarget="" dd=()
 
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
@@ -30,6 +30,7 @@ __documentationBuild() {
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
+    --debug) dd=(--debug) ;;
     --git)
       _buildDocumentation_MergeWithDocsBranch
       return $?
@@ -242,7 +243,7 @@ __documentationBuild() {
     functionLinkPattern=${BUILD_DOCUMENTATION_SOURCE_LINK_PATTERN-}
     # Remove line
     fileLinkPattern=${functionLinkPattern%%#.*}
-    catchReturn "$handler" __documentationIndexSeeLinker "$cacheDirectory" "$seePrefix" "$seeFunction" "$functionLinkPattern" "$seeFile" "$fileLinkPattern" || return $?
+    catchReturn "$handler" __documentationIndexSeeLinker "${dd[@]+"${dd[@]}"}" "$cacheDirectory" "${unlinkedSources[0]}" "$seePrefix" "$seeFunction" "$functionLinkPattern" "$seeFile" "$fileLinkPattern" || return $?
   ) || return $?
   message=$(catchReturn "$handler" timingReport "$start" "in") || return $?
 

@@ -13,7 +13,7 @@
 #
 # Post-processes any documentation and replaces tokens in the form `{SEE:name}` with links to documentation.
 #
-# Usage: {fn} cacheDirectory documentationDirectory seeFunctionTemplate seeFunctionLink seeFileTemplate seeFileLink
+# Usage: {fn} cacheDirectory documentationSource documentationTarget seeFunctionTemplate seeFunctionLink seeFileTemplate seeFileLink
 #
 __documentationIndexSeeLinker() {
   local handler="_${FUNCNAME[0]}"
@@ -22,7 +22,8 @@ __documentationIndexSeeLinker() {
   start=$(timingStart)
 
   # Argument parsing
-  local cacheDirectory="" documentationDirectory="" seeFunctionTemplate="" seeFunctionLink="" seeFileTemplate="" seeFileLink=""
+  local cacheDirectory="" documentationSource="" documentationTarget="" seeFunctionTemplate="" seeFunctionLink="" seeFileTemplate="" seeFileLink=""
+  local debugFlag=false
 
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
@@ -33,15 +34,18 @@ __documentationIndexSeeLinker() {
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
+    --debug) debugFlag=true ;;
     *)
       if [ -z "$cacheDirectory" ]; then
-        cacheDirectory=$(usageArgumentDirectory "$handler" "cacheDirectory" "${1%%/}") || return $?
-      elif [ -z "$documentationDirectory" ]; then
-        documentationDirectory=$(usageArgumentDirectory "$handler" "documentationDirectory" "${1%%/}") || return $?
+        cacheDirectory=$(usageArgumentDirectory "$handler" "cacheDirectory" "$argument") || return $?
+      elif [ -z "$documentationSource" ]; then
+        documentationSource=$(usageArgumentDirectory "$handler" "documentationSource" "$argument") || return $?
+      elif [ -z "$documentationTarget" ]; then
+        documentationTarget=$(usageArgumentDirectory "$handler" "documentationTarget" "$argument") || return $?
       elif [ -z "$seeFunctionTemplate" ]; then
-        seeFunctionTemplate=$(usageArgumentFile "$handler" seeFunctionTemplate "${1##./}") || return $?
+        seeFunctionTemplate=$(usageArgumentFile "$handler" seeFunctionTemplate "$argument") || return $?
         shift || :
-        seeFunctionLink="$1"
+        seeFunctionLink="${1-}"
       elif [ -z "$seeFileTemplate" ]; then
         seeFileTemplate=$(usageArgumentFile "$handler" seeFileTemplate "${1##./}") || return $?
         shift || throwArgument "$handler" "seeFileLink required" || return $?
@@ -54,10 +58,14 @@ __documentationIndexSeeLinker() {
     shift
   done
 
+  local home
+  home=$(catchReturn "$handler" buildHome) || return $?
+  documentationSource="${documentationSource#"$home"}"
+
   local seePattern='\{SEE:([^}]+)\}'
 
   local arg
-  for arg in cacheDirectory documentationDirectory seeFunctionTemplate seeFileTemplate seeFunctionLink seeFileLink; do
+  for arg in cacheDirectory documentationTarget seeFunctionTemplate seeFileTemplate seeFunctionLink seeFileLink; do
     [ -n "${!arg}" ] || throwArgument "$handler" "$arg is required" || return $?
   done
   local seeVariablesFile
@@ -65,11 +73,11 @@ __documentationIndexSeeLinker() {
   local linkPatternFile="$seeVariablesFile.linkPatterns"
   local variablesSedFile="$seeVariablesFile.variablesSedFile"
   local matchingFile
-  if ! find "$documentationDirectory" -name '*.md' -type f "$@" -print0 | xargs -0 "$(__pcregrepBinary)" -l "$seePattern" | while read -r matchingFile; do
+  if ! find "$documentationTarget" -name '*.md' -type f "$@" -print0 | xargs -0 "$(__pcregrepBinary)" -l "$seePattern" | while read -r matchingFile; do
     statusMessage decorate success "$matchingFile Found"
     local matchingToken
-    __pcregrep -o1 "$seePattern" "$matchingFile" | while read -r matchingToken; do
-      statusMessage decorate success "$matchingFile: $(decorate cyan "$matchingToken") Found"
+    while read -r matchingToken; do
+      ! $debugFlag || statusMessage decorate success "$matchingFile: $(decorate cyan "$matchingToken") Found"
       local cleanToken
       cleanToken=$(printf "%s" "$matchingToken" | sed 's/[^A-Za-z0-9_]/_/g')
       local tokenName="SEE_$cleanToken"
@@ -96,16 +104,37 @@ __documentationIndexSeeLinker() {
         __dumpNameValue "fn" "$matchingToken"
       } >"$linkPatternFile"
 
-      # shellcheck disable=SC2094
-      __dumpNameValue "sourceLink" "$(mapValueTrim "$linkPatternFile" "$linkPattern")" >>"$linkPatternFile"
+      local vv=(
+        fn usage applicationHome applicationFile file
+        base return_code description example argument linkType file line summary
+        sourceLink documentationPath
+      )
+      export sourceLink documentationPath
+      set -a
+      # shellcheck source=/dev/null
+      source "$linkPatternFile"
+      set +a
+      sourceLink="$(mapEnvironment "${vv[@]}" <<<"$linkPattern")" >>"$linkPatternFile"
+      documentationPath=$(__documentationIndexLookup "$handler" --documentation "$matchingToken")
+      documentationPath="${documentationPath#"$home"}"
+      documentationPath="${documentationPath#"$documentationSource"}"
+      local tokenValue
       if [ -z "$templateFile" ]; then
-        __dumpNameValue "$tokenName" "Not found" >>"$seeVariablesFile"
+        tokenValue="Not found"
       else
-        __dumpNameValue "$tokenName" "$(mapValue "$linkPatternFile" "$(cat "$templateFile")")" >>"$seeVariablesFile"
+        tokenValue=$(mapEnvironment "${vv[@]}" <"$templateFile")
       fi
-    done
+      ! $debugFlag || statusMessage decorate pair "$tokenName" "$(newlineHide "$tokenValue")"
+      __dumpNameValue "$tokenName" "$tokenValue" >>"$seeVariablesFile"
+    done < <(__pcregrep -o1 "$seePattern" "$matchingFile")
+
     if ! (
       statusMessage decorate info "Linking $matchingFile ..."
+      statusMessage --last decorate info "See: $seeVariablesFile"
+      statusMessage --last decorate info "documentationSource: $documentationSource"
+      statusMessage --last decorate info "documentationPath: $documentationPath"
+      statusMessage --last decorate info "documentationTarget: $documentationTarget"
+      statusMessage --last decorate info "Variables: $variablesSedFile"
       set -a
       # shellcheck source=/dev/null
       if ! source "$seeVariablesFile" ||
@@ -115,8 +144,8 @@ __documentationIndexSeeLinker() {
         return "1"
       fi
     ); then
-      rm -f "$seeVariablesFile" "$linkPatternFile" "$variablesSedFile" 2>/dev/null || :
-      return "1"
+      rm -f "$matchingFile.new" "$seeVariablesFile" "$linkPatternFile" "$variablesSedFile" 2>/dev/null || :
+      return 1
     fi
   done; then
     statusMessage --last decorate warning "No matching see directives found" || :

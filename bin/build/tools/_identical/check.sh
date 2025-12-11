@@ -16,6 +16,7 @@ __identicalCheck() {
   local mapFile=true debug=false rootDir="."
   local repairSources=() excludes=() prefixes=() singles=() binary="" ignoreSingles=false
   local findArgs=() extensionText="" skipFiles=() tokens=() tempDirectory=""
+  local activeFilePatterns=() prefixPatterns=()
 
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
@@ -79,6 +80,7 @@ __identicalCheck() {
     --prefix)
       shift
       prefixes+=("$1")
+      prefixPatterns+=("$(quoteGrepPattern "$1")") || return $?
       ;;
     --ignore-singles)
       ignoreSingles=true
@@ -94,7 +96,7 @@ __identicalCheck() {
       local token
       token="$(usageArgumentString "$handler" "$argument" "${1-}")" || return $?
       tokens+=("$token")
-      escapedTokens+=("$(quoteGrepPattern "$token")") || return $?
+      activeFilePatterns+=("$(quoteGrepPattern "$token")") || return $?
       ;;
     *)
       # _IDENTICAL_ argumentUnknownHandler 1
@@ -132,8 +134,9 @@ __identicalCheck() {
     throwEnvironment "$handler" "No files found in $(decorate file "$rootDir") with${extensionText}" || returnClean $? "${clean[@]}" || return $?
   fi
   clean+=("$searchFileList.smaller")
-  if [ "${#tokens[@]}" -gt 0 ]; then
-    xargs grep -l -E "($(listJoin '|' "${escapedTokens[@]}"))" <"$searchFileList" >"$searchFileList.smaller" || returnClean $? "${clean[@]}" || return $?
+  [ "${#activeFilePatterns[@]}" -gt 0 ] || activeFilePatterns=("${prefixPatterns[@]}")
+  if [ "${#activeFilePatterns[@]}" -gt 0 ]; then
+    xargs grep -l -E "($(listJoin '|' "${activeFilePatterns[@]}"))" <"$searchFileList" >"$searchFileList.smaller" || returnClean $? "${clean[@]}" || return $?
     catchEnvironment "$handler" mv "$searchFileList.smaller" "$searchFileList" || returnClean $? "${clean[@]}" || return $?
   fi
   ! $debug || dumpPipe "searchFileList" <"$searchFileList" || returnClean $? "${clean[@]}" || return $?

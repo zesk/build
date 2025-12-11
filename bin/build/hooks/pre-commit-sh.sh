@@ -27,6 +27,8 @@ if source "${BASH_SOURCE[0]%/*}/../tools.sh"; then
       changed=(--debug "${changed[@]+"${changed[@]}"}")
     fi
     catchEnvironment "$handler" bashSanitize "${changed[@]+"${changed[@]}"}" || return $?
+
+    unset "${FUNCNAME[0]}" "_${FUNCNAME[0]}"
   }
   ___hookPreCommitShell() {
     # __IDENTICAL__ usageDocument 1

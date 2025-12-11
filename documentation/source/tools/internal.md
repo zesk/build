@@ -20,6 +20,8 @@
 
 {buildAddTool}
 
+{buildPRNew}
+
 ## Testing Wrappers
 
 {buildTestPlatforms}

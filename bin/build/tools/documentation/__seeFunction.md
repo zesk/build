@@ -1,1 +1,1 @@
-- [function {fn}]({documentationPath}) - [{summary}]({sourceLink})
+[{fn}]({documentationPath}) - {summary} ([source]({sourceLink}))

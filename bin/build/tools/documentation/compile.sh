@@ -95,19 +95,23 @@ __documentationTemplateCompile() {
       catchEnvironment "$handler" cp "$mappedDocumentTemplate" "$targetFile" || returnClean $? "${clean[@]}" || return $?
     fi
   else
-    local checkTokens=() tokenName checkFiles=()
+    local checkTokens=() tokenName checkFiles=() specialTokens=()
     while read -r tokenName; do
-      if inArray "$tokenName" "${checkTokens[@]+"${checkTokens[@]}"}"; then
-        continue
+      if environmentVariableNameValid "$tokenName"; then
+        if inArray "$tokenName" "${checkTokens[@]+"${checkTokens[@]}"}"; then
+          continue
+        fi
+        case "$tokenName" in [^[:alpha:]_]* | *[^[:alnum:]_]]*) continue ;; esac
+        checkTokens+=("$tokenName")
+        local sourceCodeFile
+        if ! sourceCodeFile=$(__documentationIndexLookup "$handler" --source "$tokenName"); then
+          decorate warning "Function definition not found $(decorate code "$tokenName")"
+          continue
+        fi
+        checkFiles+=("$sourceCodeFile")
+      else
+        specialTokens+=("$tokenName")
       fi
-      case "$tokenName" in [^[:alpha:]_]* | *[^[:alnum:]_]]*) continue ;; esac
-      checkTokens+=("$tokenName")
-      local sourceCodeFile
-      if ! sourceCodeFile=$(__documentationIndexLookup "$handler" --source "$tokenName"); then
-        decorate warning "Function definition not found $(decorate code "$tokenName")"
-        continue
-      fi
-      checkFiles+=("$sourceCodeFile")
     done <"$documentTokensFile"
 
     if $forceFlag || fileIsEmpty "$targetFile" || ! fileIsNewest "$targetFile" "${checkFiles[@]+"${checkFiles[@]}"}" "$sourceFile"; then
@@ -131,7 +135,6 @@ __documentationTemplateCompile() {
         fi
         environmentValueWrite "$tokenName" "$(cat "$compiledFunctionTarget")" >>"$compiledFunctionEnv"
       done
-
       IFS=$'\n' read -r -d '' -a tokenNames <"$documentTokensFile"
       statusMessage decorate success "Writing $targetFile using $sourceFile (mapped) ..."
       (

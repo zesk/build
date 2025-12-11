@@ -39,6 +39,7 @@ __documentationIndexLookup() {
     --combined) mode="combined" ;;
     --settings) mode="settings" ;;
     --source) mode="source" ;;
+    --documentation) mode="documentation" ;;
     --line) mode="line" ;;
     *)
       break
@@ -59,6 +60,14 @@ __documentationIndexLookup() {
       return "$(returnCode exit)"
     fi
     cat "$indexRoot/$1"
+    return 0
+  fi
+  if [ "$mode" = "documentation" ]; then
+    indexRoot="$cacheDirectory/documentation.index"
+    if [ ! -f "$indexRoot" ]; then
+      throwEnvironment "$handler" "No documentation index exists" || return $?
+    fi
+    grep -e "^$(quoteGrepPattern "$1") " "$indexRoot" | removeFields 1 || return 1
     return 0
   fi
   indexRoot="$cacheDirectory/code.index"

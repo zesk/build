@@ -24,6 +24,7 @@ Wrapper around [apt](./apt.md), [apk](./apk.md), and [brew](./brew.md) currently
 
 A package group represents software which often is installed using different package manager names.
 
+{packageGroupWhich}
 {packageGroupInstall}
 {packageGroupUninstall}
 {packageMapping}

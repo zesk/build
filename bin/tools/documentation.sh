@@ -52,6 +52,12 @@ __buildDocumentationBuildDirectory() {
   aa+=("--function-template" "$functionTemplate" --page-template "$home/documentation/template/__main.md")
   aa+=(--see-prefix "./documentation/.docs")
 
+  # All functions
+  local target=$home/documentation/source/tools/all.md
+  catchEnvironment "$handler" cp "$home/documentation/source/templates/all.md" "$target" || return $?
+  printf "\n" >>"$target"
+  buildFunctions | sort -u | decorate wrap '- {SEE:' '}' >>"$target"
+
   catchReturn "$handler" documentationBuild "${aa[@]}" "$@" || return $?
 }
 
@@ -128,6 +134,7 @@ __mkdocsConfiguration() {
 # Argument: --verbose - Flag. Clean caches.
 # Argument: --filter filters ... - DashDashDelimitedArguments. Arguments to filter which reference files are updated.
 # Argument: --force - Flag. Force building of everything.
+# Argument: --debug - Flag. Debugging output enabled.
 # See: documentationBuild
 buildDocumentationBuild() {
   local handler="_${FUNCNAME[0]}"
@@ -165,6 +172,7 @@ buildDocumentationBuild() {
     --no-mkdocs) makeDocumentation=false ;;
     --mkdocs-only) updateDerived=false && updateTemplates=false && updateReference=false && makeDocumentation="true" ;;
     --clean) cleanFlag=true ;;
+    --debug) da+=(--debug) ;;
     --verbose) da+=("$argument") && vv+=("$argument") && ea+=("$argument") && verboseFlag=true ;;
     --filter) da+=("$argument") && while [ $# -gt 0 ] && [ "$1" != "--" ]; do da+=("$1") && shift; done ;;
     --force) da+=("$argument") && ea+=("$argument") ;;
