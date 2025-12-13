@@ -376,7 +376,7 @@ All functions in Zesk Build, alphabetically.
 - {SEE:interactiveCountdown}
 - {SEE:interactiveManager}
 - {SEE:ipLookup}
-- {SEE:isAbsolutePath}
+- {SEE:pathIsAbsolute}
 - {SEE:isAlpine}
 - {SEE:isArray}
 - {SEE:isBashBuiltin}
@@ -473,7 +473,7 @@ All functions in Zesk Build, alphabetically.
 - {SEE:networkMACAddressList}
 - {SEE:newestFile}
 - {SEE:newlineHide}
-- {SEE:newRelease}
+- {SEE:releaseNew}
 - {SEE:nodeInstall}
 - {SEE:nodePackageManager}
 - {SEE:nodePackageManagerInstall}
