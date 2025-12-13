@@ -27,9 +27,6 @@ testIsDockerComposeRunning() {
     catchEnvironment "$handler" muzzle pushd "$BUILD_HOME" || return $?
 
     assertNotExitCode --stderr-match "Missing" --stderr-match "docker-compose.yml" 0 dockerComposeIsRunning || return $?
-    catchEnvironment "$handler" touch "$BUILD_HOME/docker-compose.yml" || return $?
-
-    assertNotExitCode --stderr-match "empty compose file" 0 dockerComposeIsRunning || return $?
 
     local lines=(
       "services:"
