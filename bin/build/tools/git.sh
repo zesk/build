@@ -344,6 +344,8 @@ _gitRemoteHosts() {
 gitTagVersion() {
   local handler="_${FUNCNAME[0]}"
 
+  local versionSuffix=""
+
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
@@ -370,11 +372,10 @@ gitTagVersion() {
 
   maximumTagsPerVersion=$(catchReturn "$handler" buildEnvironmentGet BUILD_MAXIMUM_TAGS_PER_VERSION) || return $?
 
-  local init start versionSuffix
+  local init start
 
   init=$(timingStart) || return $?
   start=$init
-  versionSuffix=""
 
   statusMessage decorate info "Pulling tags from origin "
   catchEnvironment "$handler" git pull --tags origin >/dev/null || return $?
