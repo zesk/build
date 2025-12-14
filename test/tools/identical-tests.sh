@@ -122,6 +122,8 @@ testIdenticalChecks() {
   local handler="returnMessage"
   local home
 
+  mockEnvironmentStart BUILD_COLORS
+
   home=$(catchReturn "$handler" buildHome) || return $?
   local identicalCheckArgs identicalError
 
@@ -157,6 +159,8 @@ testIdenticalChecks() {
   assertExitCode 0 identicalCheck "${identicalCheckArgs[@]}" --prefix '// Identical' || return $?
 
   assertNotExitCode --stderr-match overlap 0 identicalCheck "${identicalCheckArgs[@]}" --prefix '# OVERLAP_IDENTICAL' || return $?
+
+  mockEnvironmentStop BUILD_COLORS
 }
 
 # Tag: slow
