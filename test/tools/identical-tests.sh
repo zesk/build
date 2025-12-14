@@ -37,6 +37,8 @@ testIdenticalCheckAndRepairMap() {
   local handler="returnMessage"
   local testPath home name
 
+  mockEnvironmentStart BUILD_COLORS
+
   home=$(catchReturn "$handler" buildHome) || return $?
   testPath=$(fileTemporaryName "$handler" -d) || return $?
   decorate info "HOME is $home"
@@ -66,6 +68,8 @@ testIdenticalCheckAndRepairMap() {
   done
 
   catchReturn "$handler" rm -rf "$testPath" || return $?
+
+  mockEnvironmentStop BUILD_COLORS
 }
 
 testIdenticalRepair() {
