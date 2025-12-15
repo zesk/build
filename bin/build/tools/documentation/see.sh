@@ -61,6 +61,7 @@ __documentationIndexSeeLinker() {
   local home
   home=$(catchReturn "$handler" buildHome) || return $?
   documentationSource="${documentationSource#"$home"}"
+  documentationSource="${documentationSource#/}"
 
   local seePattern='\{SEE:([^}]+)\}'
 
@@ -117,7 +118,9 @@ __documentationIndexSeeLinker() {
       sourceLink="$(mapEnvironment "${vv[@]}" <<<"$linkPattern")" >>"$linkPatternFile"
       documentationPath=$(__documentationIndexLookup "$handler" --documentation "$matchingToken")
       documentationPath="${documentationPath#"$home"}"
+      documentationPath="${documentationPath#/}"
       documentationPath="${documentationPath#"$documentationSource"}"
+      documentationPath="/${documentationPath#/}"
       local tokenValue
       if [ -z "$templateFile" ]; then
         tokenValue="Not found"
