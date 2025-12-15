@@ -8,7 +8,6 @@ escapeBash
 execute
 executeEcho
 executeInputSupport
-inArray
 mapReturn
 plasterLines
 quoteBashString

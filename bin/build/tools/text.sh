@@ -311,15 +311,23 @@ _trimSpace() {
 # Return Code: 0 - If element is found in array
 # Return Code: 1 - If element is NOT found in array
 # Tested: No
+# DOC TEMPLATE: noArgumentsForHelp 1
+# Without arguments, displays help.
 inArray() {
   local element=${1-} arrayElement
-  shift || return 1
+  if ! shift 2>/dev/null; then
+    _inArray 0 && return $? || return $?
+  fi
   for arrayElement; do
     if [ "$element" == "$arrayElement" ]; then
       return 0
     fi
   done
   return 1
+}
+_inArray() {
+  # __IDENTICAL__ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Usage: {fn} haystack needle ...

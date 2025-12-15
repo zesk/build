@@ -296,6 +296,7 @@ testBuildFunctionsHelpCoverage() {
 __dataBuildFunctionsWithBlankHelp() {
   cat <<EOF
 __help
+inArray
 jsonPath
 quoteGrepPattern
 escapeDoubleQuotes
