@@ -11,3 +11,5 @@
 {markdownIndentHeading}
 
 {simpleMarkdownToConsole}
+
+{markdownCheckIndex}

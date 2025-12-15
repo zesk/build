@@ -73,9 +73,16 @@ __documentationIndexSeeLinker() {
   seeVariablesFile=$(fileTemporaryName "$handler") || return $?
   local linkPatternFile="$seeVariablesFile.linkPatterns"
   local variablesSedFile="$seeVariablesFile.variablesSedFile"
-  local matchingFile
+  local matchingFile matchingPrefix
   if ! find "$documentationTarget" -name '*.md' -type f "$@" -print0 | xargs -0 "$(__pcregrepBinary)" -l "$seePattern" | while read -r matchingFile; do
     statusMessage decorate success "$matchingFile Found"
+    matchingPrefix=${matchingFile#"$documentationTarget"}
+    matchingPrefix="$(dirname "$matchingPrefix")"
+    # Remove everything but slashes
+    matchingPrefix="${matchingPrefix//[^\/]/}"
+    # Length is number of dot-dots to the root
+    matchingPrefix=$(repeat "${#matchingPrefix}" "../")
+
     local matchingToken
     while read -r matchingToken; do
       ! $debugFlag || statusMessage decorate success "$matchingFile: $(decorate cyan "$matchingToken") Found"
@@ -116,11 +123,15 @@ __documentationIndexSeeLinker() {
       source "$linkPatternFile"
       set +a
       sourceLink="$(mapEnvironment "${vv[@]}" <<<"$linkPattern")" >>"$linkPatternFile"
-      documentationPath=$(__documentationIndexLookup "$handler" --documentation "$matchingToken")
-      documentationPath="${documentationPath#"$home"}"
-      documentationPath="${documentationPath#/}"
-      documentationPath="${documentationPath#"$documentationSource"}"
-      documentationPath="/${documentationPath#/}"
+      documentationPath="$(__documentationIndexLookup "$handler" --documentation "$matchingToken" | head -n 1 || :)"
+      if [ -n "$documentationPath" ]; then
+        documentationPath="${documentationPath#"$home"}"
+        documentationPath="${documentationPath#/}"
+        documentationPath="${documentationPath#"$documentationSource"}"
+        documentationPath="$matchingPrefix${documentationPath#/}"
+      else
+        documentationPath="#not-found-$matchingToken"
+      fi
       local tokenValue
       if [ -z "$templateFile" ]; then
         tokenValue="Not found"
@@ -132,8 +143,10 @@ __documentationIndexSeeLinker() {
     done < <(__pcregrep -o1 "$seePattern" "$matchingFile")
 
     if ! (
-      statusMessage decorate info "Linking $matchingFile ..."
+      statusMessage --last decorate info "Linking $matchingFile ..."
       statusMessage --last decorate info "See: $seeVariablesFile"
+      statusMessage --last decorate info "matchingFile: $matchingFile"
+      statusMessage --last decorate info "matchingPrefix: $matchingPrefix"
       statusMessage --last decorate info "documentationSource: $documentationSource"
       statusMessage --last decorate info "documentationPath: $documentationPath"
       statusMessage --last decorate info "documentationTarget: $documentationTarget"

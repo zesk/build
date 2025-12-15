@@ -45,7 +45,7 @@ __packageListFunction() {
     shift
   done
 
-  # IDENTICAL managerArgumentValidation 2
+  # IDENTICAL managerArgumentRunValidation 2
   [ -n "$manager" ] || manager=$(packageManagerDefault) || throwEnvironment "$handler" "No package manager" || return $?
   whichExists "$manager" || throwEnvironment "$handler" "$manager does not exist" || return $?
 
@@ -103,7 +103,7 @@ __packageUpFunction() {
     shift
   done
 
-  # IDENTICAL managerArgumentValidation 2
+  # IDENTICAL managerArgumentRunValidation 2
   [ -n "$manager" ] || manager=$(packageManagerDefault) || throwEnvironment "$handler" "No package manager" || return $?
   whichExists "$manager" || throwEnvironment "$handler" "$manager does not exist" || return $?
 
@@ -207,9 +207,8 @@ packageDefault() {
   done
   [ "${#lookup[@]}" -gt 0 ] || throwArgument "$handler" "Need at least one name" || return $?
 
-  # IDENTICAL managerArgumentValidation 2
+  # IDENTICAL managerArgumentValidation 1
   [ -n "$manager" ] || manager=$(packageManagerDefault) || throwEnvironment "$handler" "No package manager" || return $?
-  whichExists "$manager" || throwEnvironment "$handler" "$manager does not exist" || return $?
 
   local function="__${manager}Default"
   if ! isFunction "$function"; then
@@ -275,7 +274,7 @@ packageWhich() {
     shift
   done
 
-  # IDENTICAL managerArgumentValidation 2
+  # IDENTICAL managerArgumentRunValidation 2
   [ -n "$manager" ] || manager=$(packageManagerDefault) || throwEnvironment "$handler" "No package manager" || return $?
   whichExists "$manager" || throwEnvironment "$handler" "$manager does not exist" || return $?
   [ "${#packages[@]}" -gt 0 ] || packages+=("$binary")
@@ -343,7 +342,7 @@ packageWhichUninstall() {
     shift
   done
 
-  # IDENTICAL managerArgumentValidation 2
+  # IDENTICAL managerArgumentRunValidation 2
   [ -n "$manager" ] || manager=$(packageManagerDefault) || throwEnvironment "$handler" "No package manager" || return $?
   whichExists "$manager" || throwEnvironment "$handler" "$manager does not exist" || return $?
 
@@ -419,7 +418,7 @@ packageInstall() {
     shift
   done
 
-  # IDENTICAL managerArgumentValidation 2
+  # IDENTICAL managerArgumentRunValidation 2
   [ -n "$manager" ] || manager=$(packageManagerDefault) || throwEnvironment "$handler" "No package manager" || return $?
   whichExists "$manager" || throwEnvironment "$handler" "$manager does not exist" || return $?
 
@@ -557,7 +556,7 @@ packageUninstall() {
     shift
   done
 
-  # IDENTICAL managerArgumentValidation 2
+  # IDENTICAL managerArgumentRunValidation 2
   [ -n "$manager" ] || manager=$(packageManagerDefault) || throwEnvironment "$handler" "No package manager" || return $?
   whichExists "$manager" || throwEnvironment "$handler" "$manager does not exist" || return $?
 
@@ -727,7 +726,7 @@ packageGroupWhich() {
   [ -n "$binary" ] || throwArgument "$handler" "Requires binary" || return $?
   [ 0 -lt "${#groups[@]}" ] || throwArgument "$handler" "Requires at least one package group" || return $?
 
-  # IDENTICAL managerArgumentValidation 2
+  # IDENTICAL managerArgumentRunValidation 2
   [ -n "$manager" ] || manager=$(packageManagerDefault) || throwEnvironment "$handler" "No package manager" || return $?
   whichExists "$manager" || throwEnvironment "$handler" "$manager does not exist" || return $?
 
@@ -770,7 +769,7 @@ packageGroupInstall() {
 
   [ 0 -lt "${#groups[@]}" ] || throwArgument "$handler" "Requires at least one package to map" || return $?
 
-  # IDENTICAL managerArgumentValidation 2
+  # IDENTICAL managerArgumentRunValidation 2
   [ -n "$manager" ] || manager=$(packageManagerDefault) || throwEnvironment "$handler" "No package manager" || return $?
   whichExists "$manager" || throwEnvironment "$handler" "$manager does not exist" || return $?
 
@@ -818,7 +817,7 @@ packageGroupUninstall() {
 
   [ 0 -lt "${#groups[@]}" ] || throwArgument "$handler" "Requires at least one package to map" || return $?
 
-  # IDENTICAL managerArgumentValidation 2
+  # IDENTICAL managerArgumentRunValidation 2
   [ -n "$manager" ] || manager=$(packageManagerDefault) || throwEnvironment "$handler" "No package manager" || return $?
   whichExists "$manager" || throwEnvironment "$handler" "$manager does not exist" || return $?
 
@@ -862,9 +861,8 @@ packageMapping() {
     shift
   done
 
-  # IDENTICAL managerArgumentValidation 2
+  # IDENTICAL managerArgumentValidation 1
   [ -n "$manager" ] || manager=$(packageManagerDefault) || throwEnvironment "$handler" "No package manager" || return $?
-  whichExists "$manager" || throwEnvironment "$handler" "$manager does not exist" || return $?
 
   [ 0 -lt "${#packages[@]}" ] || throwArgument "$handler" "Requires at least one package to map" || return $?
   local method="__${manager}PackageMapping"

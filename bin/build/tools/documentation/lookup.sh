@@ -18,8 +18,10 @@
 # Argument: --line - `lookupPattern` is a function name. Outputs the source code line where the function is defined
 # Argument: --combined - `lookupPattern` is a function name. Outputs the source code path and line where the function is defined as `path:line`
 # Argument: --file - `lookupPattern` is a file name. Find files which match this base file name.
+# Argument: --documentation - `lookupPattern` is a function name. Find first reference to this function in the documentation index.
+# Argument: --comment - `lookupPattern` is a function name. Find first reference to this function in the documentation index.
 # Argument: cacheDirectory - Directory where we can store cached information
-# Argument: lookupPattern - Token to look up in the index
+# Argument: lookupPattern - Token to look up
 # See: _documentationIndexGenerate
 #
 __documentationIndexLookup() {
@@ -39,6 +41,7 @@ __documentationIndexLookup() {
     --combined) mode="combined" ;;
     --settings) mode="settings" ;;
     --source) mode="source" ;;
+    --comment) mode="comment" ;;
     --documentation) mode="documentation" ;;
     --line) mode="line" ;;
     *)

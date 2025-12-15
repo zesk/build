@@ -7,3 +7,5 @@
 {dockerComposeCommandList}
 
 {dockerComposeIsRunning}
+
+{dockerComposeWrapper}

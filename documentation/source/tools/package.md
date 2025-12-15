@@ -4,9 +4,13 @@
 [🛠️ Tools ](./index.md) &middot; [⬅ Top ](../index.md)
 <hr />
 
+Wrapper around:
 
-Wrapper around [apt](./apt.md), [apk](./apk.md), and [brew](./brew.md) currently.
+- [apt](./apt.md) (Debian/Ubuntu)
+- [apk](./apk.md) (Alpine)
+- [MacPorts](./macports.md) and [brew](./brew.md) (Darwin)
 
+Package names change between platforms. Use `packageGroupInstall` for generic cross-platform names.
 
 ## Conditional installation
 

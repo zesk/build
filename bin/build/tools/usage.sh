@@ -41,8 +41,8 @@ usageDocument() {
   __usageLoader "_${FUNCNAME[0]}" "__${FUNCNAME[0]}" "$@"
 }
 _usageDocument() {
-  # __IDENTICAL__ usageDocumentSimple 1
-  usageDocumentSimple "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # IDENTICAL usageDocumentSimple 33

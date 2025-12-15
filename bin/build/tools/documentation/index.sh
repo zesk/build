@@ -95,12 +95,15 @@ _documentationIndexGenerate() {
       ! $verboseFlag || statusMessage decorate info "Processing $(decorate file "$shellFile")"
       catchReturn "$handler" printf "%s" "" >"$functionsCache" || return $?
       while read -r functionName; do
-        local lineNumber="${functionName%%:*}"
+        local lineNumber="${functionName%%:*}" comment
         functionName=$(trimSpace "${functionName#*:}")
         printf "%s %s %s\n" "$functionName" "$shellFile" "$lineNumber" | tee -a "$functionsCache" >>"$indexFile.unsorted"
         count=$((count + 1))
-        if ! bashFileComment "$fullPath" "$lineNumber" >"$indexDirectory/comment/$functionName"; then
-          throwEnvironment "$handler" "Documentation failed for $functionName" || return $?
+        comment=$(catchReturn "$handler" bashFileComment "$fullPath" "$lineNumber") || return $?
+        if [ -n "$comment" ]; then
+          catchEnvironment "$handler" printf -- "%s\n" "$comment" >"$indexDirectory/comment/$functionName" || return $?
+        else
+          ! $verboseFlag || statusMessage decorate warning "no function comment, skipping"
         fi
       done < <(__pcregrep -n -o1 -M '\n\s*([a-zA-Z_][a-zA-Z_0-9]+)\(\)\s+\{\s*\n' "$fullPath")
       ! $verboseFlag || statusMessage decorate success "Generated $count functions for $shellFile"

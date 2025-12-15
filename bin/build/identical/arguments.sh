@@ -35,9 +35,12 @@ ___documentTemplateFunction() {
     shift
   done
 
-  # IDENTICAL managerArgumentValidation 2
+  # IDENTICAL managerArgumentRunValidation 2
   [ -n "$manager" ] || manager=$(packageManagerDefault) || throwEnvironment "$handler" "No package manager" || return $?
   whichExists "$manager" || throwEnvironment "$handler" "$manager does not exist" || return $?
+
+  # IDENTICAL managerArgumentValidation 1
+  [ -n "$manager" ] || manager=$(packageManagerDefault) || throwEnvironment "$handler" "No package manager" || return $?
 
   return 0
 }
