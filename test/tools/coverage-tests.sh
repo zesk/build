@@ -407,7 +407,7 @@ iTerm2ColorTypes
 mariadbInstall
 mariadbUninstall
 mariadbDumpClean
-markdown_removeUnfinishedSections
+markdownRemoveUnfinishedSections
 markdown_FormatList
 nodePackageManagerInstall
 nodePackageManagerUninstall

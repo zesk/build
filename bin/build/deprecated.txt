@@ -1,4 +1,7 @@
 # v0.39.10
+markdown_removeUnfinishedSections|markdownRemoveUnfinishedSections
+markdown_FormatList|markdownFormatList
+simpleMarkdownToConsole|markdownToConsole
 
 # v0.39.9
 
@@ -116,8 +119,8 @@ modifiedDays|fileModifiedDays
 modifiedSeconds|fileModifiedSeconds
 requireFileDirectory|fileDirectoryRequire
 requireDirectory|directoryRequire
-_clean |returnClean 
-_undo |returnUndo 
+_clean |returnClean
+_undo |returnUndo
 getFromPipelineYML|bitbucketGetVariable
 allColorTest|colorSampleCodes
 AllColorTest|ColorSampleCodes
@@ -226,4 +229,3 @@ __failArgument|__throwArgument
 __failEnvironment|__throwEnvironment
 __usageEnvironment|__catchEnvironment
 __usageArgument|__catchArgument
-

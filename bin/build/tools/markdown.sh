@@ -66,14 +66,14 @@ _markdownIndentHeading() {
 # If you need a section to always be displayed; provide default values or blank values for the variables in those sections
 # to prevent removal.
 #
-# Usage: markdown_removeUnfinishedSections < inputFile > outputFile
+# Usage: markdownRemoveUnfinishedSections < inputFile > outputFile
 # Argument: None
 # Depends: read printf
 # Return Code: 0
 # Environment: None
-# Example:     map.sh < $templateFile | markdown_removeUnfinishedSections
+# Example:     map.sh < $templateFile | markdownRemoveUnfinishedSections
 #
-markdown_removeUnfinishedSections() {
+markdownRemoveUnfinishedSections() {
   local line section=() foundVar=false blankContent=true
   [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
   while IFS='' read -r line; do
@@ -102,8 +102,8 @@ markdown_removeUnfinishedSections() {
     printf '%s\n' "${section[@]+${section[@]}}"
   fi
 }
-_markdown_removeUnfinishedSections() {
-  true || markdown_removeUnfinishedSections --help
+_markdownRemoveUnfinishedSections() {
+  true || markdownRemoveUnfinishedSections --help
   # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

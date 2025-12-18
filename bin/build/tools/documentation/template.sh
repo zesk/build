@@ -190,7 +190,7 @@ __documentationUnlinked() {
 #
 # See: _bashDocumentationFormatter_exit_code
 # Usage: {fn} template [ settingsFile ...
-# Argument: template - Required. A markdown template to use to map values. Post-processed with `markdown_removeUnfinishedSections`
+# Argument: template - Required. A markdown template to use to map values. Post-processed with `markdownRemoveUnfinishedSections`
 # Argument: settingsFile - Required. Settings file to be loaded.
 # Return Code: 0 - Success
 # Return Code: 1 - Template file not found
@@ -222,7 +222,7 @@ _bashDocumentation_Template() {
         fi
       fi
     done < <(mapTokens <"$template" | sort -u)
-    mapEnvironment <"$template" | grepSafe -E -v '^shellcheck|# shellcheck' | markdown_removeUnfinishedSections || :
+    mapEnvironment <"$template" | grepSafe -E -v '^shellcheck|# shellcheck' | markdownRemoveUnfinishedSections || :
   ) || throwEnvironment "$handler" "${FUNCNAME[0]} failed: ${saved[*]}" || return $?
 }
 

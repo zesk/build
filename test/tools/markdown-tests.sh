@@ -25,7 +25,7 @@ testMarkdownFormatList() {
 }
 
 testMarkdownRemoveSections() {
-  assertEquals "$(__dataMarkdownRemoveSections | markdown_removeUnfinishedSections)" "$(__dataMarkdownRemoveSectionsExpected)" || return $?
+  assertEquals "$(__dataMarkdownRemoveSections | markdownRemoveUnfinishedSections)" "$(__dataMarkdownRemoveSectionsExpected)" || return $?
 }
 
 __dataMarkdownRemoveSections() {

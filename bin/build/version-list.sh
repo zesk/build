@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# markdown_removeUnfinishedSections.sh - List versions
+# markdownRemoveUnfinishedSections.sh - List versions
 #
 # Copyright &copy; 2025 Market Acumen, Inc.
 #

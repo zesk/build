@@ -4,7 +4,7 @@
 [🛠️ Tools ](./index.md) &middot; [⬅ Top ](../index.md)
 <hr />
 
-{markdown_removeUnfinishedSections}
+{markdownRemoveUnfinishedSections}
 
 {markdown_FormatList}
 

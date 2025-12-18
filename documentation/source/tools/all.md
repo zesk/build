@@ -459,7 +459,7 @@ All functions in Zesk Build, alphabetically.
 - {SEE:mariadbInstall}
 - {SEE:mariadbUninstall}
 - {SEE:markdown_FormatList}
-- {SEE:markdown_removeUnfinishedSections}
+- {SEE:markdownRemoveUnfinishedSections}
 - {SEE:markdownCheckIndex}
 - {SEE:markdownIndentHeading}
 - {SEE:maximumFieldLength}
