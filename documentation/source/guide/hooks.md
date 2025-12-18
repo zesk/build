@@ -40,8 +40,10 @@ Most hooks are *optional* unless specified.
 
 ## Development Hooks
 
-- `project-activate` - **Sourced**. When a project is activated - e.g. switching to starting development in this project.
-- `project-deactivate` - **Sourced**. When a project is deactivated - e.g. switching to ANOTHER project for development.
+- `project-activate` - **Sourced**. When a project is activated - e.g. switching to starting development in _this
+  project_. (e.g. your project, the current project)
+- `project-deactivate` - **Sourced**. When a project is deactivated - e.g. switching **away** from _this project_ to
+  someone else's project for development - note the other project may *NOT* have the current version of `Zesk Build`.
 
 ## [Deployment Hooks](../tools/deploy.md)
 

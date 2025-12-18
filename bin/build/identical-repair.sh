@@ -18,6 +18,7 @@ if source "$(dirname "${BASH_SOURCE[0]}")/tools.sh"; then
   #
   # See `identicalCheckShell` for additional arguments and handler.
   # See: identicalCheckShell
+  # fn: {base}
   __buildIdenticalRepair() {
     local handler="_${FUNCNAME[0]}"
     local item aa home checkFlag=false doFingerprint=true

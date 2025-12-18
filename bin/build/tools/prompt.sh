@@ -86,9 +86,13 @@ _bashPrompt() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# Prompt the user properly honoring any attached console
+# Prompt the user properly honoring any attached console.
+#
 # Arguments are the same as `read`, except:
+#
 # `-r` is implied and does not need to be specified
+#
+# See: read
 # DOC TEMPLATE: --help 1
 # Argument: --help - Optional. Flag. Display this help.
 # Argument: ... - Arguments. Optional. Identical arguments to `read` (but includes `-r`)

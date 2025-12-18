@@ -168,7 +168,11 @@ _developerTrack() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# Add a development link to the local version of Zesk Build for testing in local projects
+# Add a development link to the local version of Zesk Build for testing in local projects.
+#
+# Copies or updates `$BUILD_HOME/bin/build` in current project.
+#
+# Useful when you want to test a fix on a current project.
 # DOC TEMPLATE: developerDevelopmentLink 2
 # Argument: --copy - Flag. Optional. Copy the files instead of creating a link - more compatible with Docker but slower and requires synchronization.
 # Argument: --reset - Flag. Optional. Revert the link and reinstall using the original binary.
@@ -212,6 +216,7 @@ _buildDevelopmentLink() {
 # Argument: --binary - String. Optional. The binary to install the library remotely if needed to revert back. API.
 # Argument: --composer composerPackage - String. Optional. The composer package to convert to a link (or copy.). API.
 # Argument: --path applicationPath - ApplicationDirectory. Required. The library path to convert to a link (or copy). API.
+# See: buildDevelopmentLink
 # Test: TODO
 developerDevelopmentLink() {
   local handler="_${FUNCNAME[0]}"

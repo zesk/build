@@ -10,8 +10,8 @@ An easy way to interactively load bash code in your console and require you to g
 
 See:
 
-- `project-activate` hook
-- `project-deactivate` hook
+- [`project-activate` hook](../guide/hooks.md#development-hooks)
+- [`project-deactivate` hook](../guide/hooks.md#development-hooks)
 
 {approvedSources}
 

@@ -23,8 +23,8 @@ if source "${BASH_SOURCE[0]%/*}/../build/tools.sh"; then
     iTerm2Badge -i "${name}👀 ${module} \n${symbol}️ ${testFunction}"
   }
   ___hookBashTestFail() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+    # __IDENTICAL__ usageDocument 1
+    usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
   }
 
   __hookBashTestFail "$@"

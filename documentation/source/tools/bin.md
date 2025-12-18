@@ -23,7 +23,8 @@ They are intended to be standalone tools useful for a variety of installation an
   already. Updates itself if required.
 - [`map.sh`](./text.md#mapEnvironment) - Same as [`mapEnvironment`](./text.md#mapEnvironment)
 - `need-bash.sh` - Tool to install `bash` in containers first which do not have it installed automatically (Alpine, for
-- [`crontab-application-update.sh`](./crontab.md/#gitVersionList) - Same as [
+  example)
+- [`crontab-application-update.sh`](./crontab.md#crontabApplicationUpdate) - Same as [
   `crontabApplicationUpdate`](./crontab.md#crontabApplicationUpdate)
 
 ## Template scripts
@@ -38,7 +39,8 @@ They are intended to be standalone tools useful for a variety of installation an
 - `bitbucket-container.sh` - Wrapper for `{SEE:bitbucketContainer}`
 - `deprecated.sh` - Do a project-wide replacement of deprecated code with modern updates. May modify or break your code.
   example)
-- `local-container.sh` - Same as [`dockerLocalContainer`](./docker.md#dockerLocalContainer)
+- [`local-container.sh`](./docker.md#dockerLocalContainer) - Same as [
+  `dockerLocalContainer`](./docker.md#dockerLocalContainer)
 - [`release-new.sh`](./version.md#releaseNew) - Same as [`releaseNew`](./version.md#releaseNew)
 - [`release-notes.sh`](./git.md#releaseNotes) - Same as [`releaseNotes`](./git.md#releaseNotes)
 - [`version-last.sh`](./git.md#gitVersionLast) - Same as [`gitVersionLast`](./git.md#gitVersionLast)
@@ -54,16 +56,15 @@ You can also do
 
 To run commands directly; note this is slower for larger scripts and can be used when a single function is necessary.
 
-## `identical-repair.sh` repair with semantics
-
 {__buildIdenticalRepair}
 
 ## `install-bin-build.sh`
+
+{_installRemotePackage}
 
 Modify the last line of this file when installing at a different project depth:
 
     __installPackageConfiguration ../.. "$@"
 
-The `../..` is the relative path from the script to the project root
-directory. - [function {fn}]({documentationPath}) - [{summary}]({sourceLink}) will do this for you.
-
+The `../..` is the relative path from the script to the project root directory. - {SEE:installInstallBuild} will do this
+for you.

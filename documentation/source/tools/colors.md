@@ -4,7 +4,8 @@
 [⬅ Parent ](../index.md)
 <hr />
 
-All console functions in the form `decorate style` where `style` is a color name or a semantic meaning behave similarly:
+For color console support use `decorate style` where `style` is a color name or a _semantic meaning_, each of which
+behave similarly:
 
 Examples:
 
@@ -84,6 +85,12 @@ Colors vary depending on the console and the terminal. Try `colorSampleStyles` t
 - `decorate each --count code item1 item2 item3`
 - `decorate each --index code item1 item2 item3`
 - `decorate size 100`
+
+### Creating extensions
+
+You can add your own decoration extension to your code by creating a function named:
+
+- `__decorateExtensionFoo` - where `foo` (lowercase first letter) is the decoration name
 
 # Additional commands
 

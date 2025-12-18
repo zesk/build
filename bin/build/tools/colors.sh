@@ -424,7 +424,9 @@ _statusMessage() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# Quiet test for a TTY.
+# Summary: Quiet test for a TTY
+# Returns 0 if a tty is available, 1 if not. Caches the saved value in `__BUILD_HAS_TTY` to avoid running the test each call.ZL
+# See: stty /dev/tty
 # DOC TEMPLATE: --help 1
 # Argument: --help - Optional. Flag. Display this help.
 # Environment: - `__BUILD_HAS_TTY` - Cached value of `false` or `true`. Any other value forces computation during this call.
@@ -451,10 +453,12 @@ _isTTYAvailable() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-#
-# Column count in current console
-#
+# Summary: Column count in current console
 # Output the number of columns in the terminal. Default is 80 if not able to be determined from `TERM`.
+# stdout: Integer
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
+# See: stty
 # Example:     repeat $(consoleColumns)
 # Environment: - `COLUMNS` - May be defined after calling this
 # Environment: - `LINES` - May be defined after calling this
@@ -485,11 +489,11 @@ _consoleColumns() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-#
-# Row count in current console
-#
+# Summary: Row count in current console
 # Output the number of columns in the terminal. Default is 60 if not able to be determined from `TERM`.
-# Usage: consoleColumns
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
+# See: stty
 # Example:     tail -n $(consoleRows) "$file"
 # Environment: - `COLUMNS` - May be defined after calling this
 # Environment: - `LINES` - May be defined after calling this
@@ -520,11 +524,11 @@ _consoleRows() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-#
-# Converts backticks, bold and italic to console colors.
-#
-# Usage: simpleMarkdownToConsole < $markdownFile
-#
+# Summary: Converts backticks, bold and italic to console colors.
+# stdin: Markdown
+# stdout: decorated console output
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
 simpleMarkdownToConsole() {
   [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
   # shellcheck disable=SC2119
@@ -549,7 +553,8 @@ __colorBrightness() {
 # Credit: https://homepages.inf.ed.ac.uk/rbf/CVonline/LOCAL_COPIES/POYNTON1/ColorFAQ.html#RTFToC11
 # Return an integer between 0 and 100
 # Colors are between 0 and 255
-# Usage: {fn} r g b
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
 # Argument: redValue - Integer. Optional. Red RGB value (0-255)
 # Argument: greenValue - Integer. Optional. Red RGB value (0-255)
 # Argument: blueValue - Integer. Optional. Red RGB value (0-255)
@@ -607,6 +612,8 @@ __colorNormalize() {
 }
 
 # Redistribute color values to make brightness adjustments more balanced
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
 # Requires: bc catchEnvironment read usageArgumentUnsignedInteger packageWhich __colorNormalize
 colorNormalize() {
   local handler="_${FUNCNAME[0]}"
@@ -642,6 +649,8 @@ _colorNormalize() {
 # Reads stdin digits, one per line, and outputs only integer values between $min and $max
 # Argument: minimum - Integer|Empty. Minimum integer value to output.
 # Argument: maximum - Integer|Empty. Maximum integer value to output.
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
 clampDigits() {
   [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
 
@@ -699,6 +708,8 @@ _colorRange() {
 # Argument: red - UnsignedInteger. Optional. Red component.
 # Argument: green - UnsignedInteger. Optional. Blue component.
 # Argument: blue - UnsignedInteger. Optional. Green component.
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
 # Takes arguments or stdin values in groups of 3.
 colorFormat() {
   local handler="_${FUNCNAME[0]}" format="%0.2X%0.2X%0.2X\n"
@@ -736,6 +747,8 @@ _colorFormat() {
 # Parse a color and output R G B decimal values
 # stdin: list:colors
 # Argument: color - String. Optional. Color to parse.
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
 # Takes arguments or stdin.
 colorParse() {
   if [ $# -gt 0 ]; then
@@ -762,6 +775,8 @@ _colorParse() {
 # Argument: redValue - Integer. Required. Red RGB value (0-255)
 # Argument: greenValue - Integer. Required. Red RGB value (0-255)
 # Argument: blueValue - Integer. Required. Red RGB value (0-255)
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
 # Requires: bc
 colorMultiply() {
   local handler="_${FUNCNAME[0]}"

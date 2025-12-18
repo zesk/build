@@ -119,10 +119,18 @@ _isBashBuiltin() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# Output the home for a library in the parent path
-# Usage: {fn} libraryRelativePath [ startDirectory ]
-# Argument: libraryRelativePath - String. Required. Path of file to find from the home directory.
+# Summary: Output the home for a library in the parent path
+#
+# This function searches for a library located at the current path and searches upwards until it is found.
+# A simple example is `bin/build/tools.sh` for this library which will generally give you an application root if this library
+# is properly installed. You can use this for any application to find a library's home directory.
+#
+# Note that the `libraryRelativePath` given must be both executable and a file.
+#
+# Argument: libraryRelativePath - RelativeFile. Required. Path of file to find from the home directory. Must also be executable.
 # Argument: startDirectory - Directory. Optional. Place to start searching. Uses `pwd` if not specified.
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
 # stdout: Parent path where `libraryRelativePath` exists
 # Example:     libFound=$(bashLibraryHome "bin/watcher/server.py")
 bashLibraryHome() {
@@ -140,9 +148,14 @@ _bashLibraryHome() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# Run or source a library
+# Summary: Run or source a library
+# Run or source one or more bash scripts and load any defined functions into the current context.
+# Security: Loads code
+# Has security implications - only load trusted code sources and prevent user injection of bash source code into your applications.
 # Argument: libraryRelativePath - Path. Required. Path to library source file.
 # Argument: command - Callable. Optional. Command to run after loading the library.
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
 bashLibrary() {
   local handler="_${FUNCNAME[0]}"
 
@@ -170,7 +183,7 @@ bashLibrary() {
   done
 
   [ -n "$run" ] || throwArgument "$handler" "Missing libraryRelativePath" || return $?
-  home=$(bashLibraryHome "$run") || return $?
+  home=$(catchReturn "$handler" bashLibraryHome "$run") || return $?
   if [ $# -eq 0 ]; then
     export HOME
     # shellcheck source=/dev/null
@@ -187,8 +200,14 @@ _bashLibrary() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
+# Summary: Load a directory of bash scripts
+# Load a directory of bash scripts, excluding any dot directories (`*/.*/*`), and optionally any additional
+# files if you use `--exclude`. But recursively loads scripts in sorted alphabetic order within the directory until one fails.
+# All files must be executable.
 # Argument: --exclude pattern - Optional. String. String passed to `! -path pattern` in `find`
 # Argument: directory ... - Required. Directory. Directory to `source` all `.sh` files used.
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
 # Security: Loads bash files
 # Load a directory of `.sh` files using `source` to make the code available.
 # Has security implications. Use with caution and ensure your directory is protected.
@@ -234,9 +253,11 @@ _bashSourcePath() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# Usage: {fn} functionName file1 ...
+# Summary: Is a function defined in a bash source file?
 # Argument: functionName - String. Required. Name of function to check.
 # Argument: file ... - File. Required. One or more files to check if a function is defined within.
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
 bashFunctionDefined() {
   local handler="_${FUNCNAME[0]}"
 
@@ -271,7 +292,11 @@ _bashFunctionDefined() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# Pipe to strip comments from a bash file
+# Summary: Pipe to strip comments from a bash file
+#
+# Removes literally any line which begins with zero or more whitespace characters and then a `#`.
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
 bashStripComments() {
   [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
   sed '/^\s*#/d'
@@ -285,6 +310,8 @@ _bashStripComments() {
 # Show function handler in files
 # Argument: functionName - String. Required. Function which should be called somewhere within a file.
 # Argument: file - File. Required. File to search for function handler.
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
 # Return Code: 0 - Function is used within the file
 # Return Code: 1 - Function is *not* used within the file
 # This check is simplistic and does not verify actual coverage or code paths.
@@ -331,6 +358,8 @@ _bashShowUsage() {
 # DOC TEMPLATE: --help 1
 # Argument: --help - Optional. Flag. Display this help.
 # Argument: file - File. Optional. File(s) to list bash functions defined within.
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
 # Requires: __bashListFunctions throwArgument decorate usageArgumentFile
 bashListFunctions() {
   local handler="_${FUNCNAME[0]}"
@@ -375,6 +404,8 @@ __bashListFunctions() {
 # Argument: functionName - String. Required. The name of the bash function to extract the documentation for.
 # Argument: variableName - string. Required. Get this variable value
 # Argument: --prefix - flag. Optional. Find variables with the prefix `variableName`
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
 # Gets a list of the variable values from a bash function comment
 bashFunctionCommentVariable() {
   local handler="_${FUNCNAME[0]}"
@@ -417,7 +448,6 @@ bashFunctionCommentVariable() {
     printf "%s\n" "${matchLine}"
   done < <(bashFunctionComment "$source" "$functionName" | grep -e "[[:space:]]*$variableName$grepSuffix:[[:space:]]*" | trimSpace || :)
 }
-
 _bashFunctionCommentVariable() {
   # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
@@ -431,6 +461,8 @@ _bashFunctionCommentVariable() {
 #
 # Argument: source - File. Required. File where the function is defined.
 # Argument: lineNumber - String. Required. Previously computed line number of the function.
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
 # Requires: head bashFinalComment
 # Requires: __help usageDocument
 bashFileComment() {
@@ -480,9 +512,11 @@ _bashCommentFilter() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# IDENTICAL bashFunctionComment 44
+# IDENTICAL bashFunctionComment 48
 
 # Extracts the final comment from a stream
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
 # Requires: fileReverseLines sed cut grep convertValue
 bashFinalComment() {
   [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
@@ -511,6 +545,8 @@ _bashFinalComment() {
 #
 # Argument: source - File. Required. File where the function is defined.
 # Argument: functionName - String. Required. The name of the bash function to extract the documentation for.
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
 # Requires: grep cut fileReverseLines __help
 # Requires: usageDocument
 bashFunctionComment() {

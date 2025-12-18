@@ -81,7 +81,6 @@ _fileCopyWouldChange() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# Usage: {fn} [ directoryOrFile ... ]
 # Argument: directoryOrFile - Required. Exists. Directory or file to `source` `.sh` files found.
 # Argument: --info - Optional. Flag. Show user what they should do (press a key).
 # Argument: --no-info - Optional. Flag. Hide user info (what they should do ... press a key)
@@ -91,6 +90,11 @@ _fileCopyWouldChange() {
 # Security: Loads bash files
 # Loads files or a directory of `.sh` files using `source` to make the code available.
 # Has security implications. Use with caution and ensure your directory is protected.
+# DOC TEMPLATE: approvedCacheNote 4
+# Approved sources are stored in a cache structure at `$XDG_STATE_HOME/.interactiveApproved`.
+# Stale files are ones which no longer are associated with a file's current fingerprint.
+# Environment: XDG_STATE_HOME
+# See: XDG_STATE_HOME.sh
 approveBashSource() {
   __interactiveLoader "_${FUNCNAME[0]}" "__${FUNCNAME[0]}" "$@"
 }
@@ -104,6 +108,11 @@ _approveBashSource() {
 # Argument: --debug - Flag. Optional. Show a lot of information about the approved cache.
 # Argument: --no-delete - Flag. Optional. Do not delete stale approval files.
 # Argument: --delete - Flag. Optional. Delete stale approval files.
+# DOC TEMPLATE: approvedCacheNote 4
+# Approved sources are stored in a cache structure at `$XDG_STATE_HOME/.interactiveApproved`.
+# Stale files are ones which no longer are associated with a file's current fingerprint.
+# Environment: XDG_STATE_HOME
+# See: XDG_STATE_HOME.sh
 approvedSources() {
   __interactiveLoader "_${FUNCNAME[0]}" "__${FUNCNAME[0]}" "$@"
 }

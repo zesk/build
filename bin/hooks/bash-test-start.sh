@@ -24,8 +24,8 @@ if source "${BASH_SOURCE[0]%/*}/../build/tools.sh"; then
     [ ! -t 0 ] || consoleSetTitle "$name Testing : $module ➡️ $testFunction"
   }
   ___hookBashTestStart() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+    # __IDENTICAL__ usageDocument 1
+    usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
   }
   __hookBashTestStart "$@"
 fi

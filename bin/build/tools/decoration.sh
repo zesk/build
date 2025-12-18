@@ -283,12 +283,11 @@ _repeat() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-#
-# Usage: echoBar [ alternateChar [ offset ] ]
+# Summary: Output a bar as wide as the console
 # Output a bar as wide as the console using the `=` symbol.
-# Argument: alternateChar - Use an alternate character or string output
-# Argument: offset - an integer offset to increase or decrease the size of the bar (default is `0`)
-# Environment: Console width is captured using `tput cols` or if no `TERM` set, then uses the value 80.
+# Argument: alternateChar - Optional. String. Use an alternate character or string output
+# Argument: offset - Optional. Integer. an integer offset to increase or decrease the size of the bar (default is `0`)
+# See: consoleColumns
 # Example:     decorate success $(echoBar =-)
 # Example:     decorate success $(echoBar "- Success ")
 # Example:     decorate magenta $(echoBar +-)
@@ -418,7 +417,6 @@ _alignLeft() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-#
 # Heading for section output
 #
 # Summary: Text heading decoration
@@ -429,12 +427,13 @@ _alignLeft() {
 # Argument: --size lineCount - Optional. UnsignedInteger. Print this many blank lines between the header and title.
 # Argument: text ... - Text to put in the box
 # Example:     boxedHeading Moving ...
-# Output: +================================================================================================+
-# Output: |                                                                                                |
-# Output: | Moving ...                                                                                     |
-# Output: |                                                                                                |
-# Output: +================================================================================================+
-#
+# Output: +==========================================================================+
+# Output: |                                                                          |
+# Output: | Moving ...                                                               |
+# Output: |                                                                          |
+# Output: +==========================================================================+
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
 boxedHeading() {
   local handler="_${FUNCNAME[0]}"
 
@@ -518,7 +517,18 @@ _boxedHeading() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# Replace an absolute path prefix with an icon if it matches HOME, BUILD_HOME or TMPDIR
+# Summary: Display file paths and replace prefixes with icons
+# Replace an absolute path prefix with an icon if it matches `HOME`, `BUILD_HOME` or `TMPDIR`
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
+# Argument: path - String. Path to display and replace matching paths with icons.
+# Icons used:
+# - 💣 - `TMPDIR`
+# - 🍎 - `BUILD_HOME`
+# - 🏠 - `HOME`
+# Environment: TMPDIR
+# Environment: BUILD_HOME
+# Environment: HOME
 decoratePath() {
   [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
   export HOME BUILD_HOME TMPDIR

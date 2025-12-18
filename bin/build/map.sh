@@ -172,9 +172,11 @@ _usageDocumentSimple() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# IDENTICAL bashFunctionComment 44
+# IDENTICAL bashFunctionComment 48
 
 # Extracts the final comment from a stream
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
 # Requires: fileReverseLines sed cut grep convertValue
 bashFinalComment() {
   [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
@@ -203,6 +205,8 @@ _bashFinalComment() {
 #
 # Argument: source - File. Required. File where the function is defined.
 # Argument: functionName - String. Required. The name of the bash function to extract the documentation for.
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
 # Requires: grep cut fileReverseLines __help
 # Requires: usageDocument
 bashFunctionComment() {
