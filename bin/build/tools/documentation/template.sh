@@ -202,10 +202,11 @@ _bashDocumentation_Template() {
   local template="$1" && shift
 
   [ -f "$template" ] || throwArgument "$handler" "Template $template not found" || return $?
+  # monitor off - not sure why here but let's leave it for now - KMD 2025-12
   set +m
   (
     # subshell this does not affect anything except these commands
-    set -a
+    set -a # UNDO not required - subshell
     while [ $# -gt 0 ]; do
       local envFile="$1"
       [ -f "$envFile" ] || throwArgument "$handler" "Settings file $envFile not found" || return $?

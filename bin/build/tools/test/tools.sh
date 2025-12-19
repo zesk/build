@@ -881,9 +881,9 @@ __testLoad() {
 
     declare -pF | awk '{ print $3 }' | sort -u >"$__beforeFunctions"
     tests=()
-    set -a
+    set -a # UNDO ok
     # shellcheck source=/dev/null
-    source "$1" >"$__errors" 2>&1 || throwEnvironment source "$1" || returnClean $? "$__beforeFunctions" "$__testFunctions" || return $?
+    source "$1" >"$__errors" 2>&1 || throwEnvironment source "$1" || returnClean $? "$__beforeFunctions" "$__testFunctions" || returnUndo $? set +a || return $?
     fileIsEmpty "$__errors" || throwEnvironment "produced output: $(dumpPipe "source $1" <"$__errors")"
     set +a
     if [ "${#tests[@]}" -gt 0 ]; then

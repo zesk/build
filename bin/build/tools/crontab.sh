@@ -21,7 +21,7 @@ __crontabGenerate() {
     appName="${appName%%/*}"
     appName="${appName:-default}"
     (
-      set -a
+      set -a # UNDO correct
       for env in "$rootEnv" "$rootPath/$appName/.env" "$rootPath/$appName/.env.local"; do
         if [ -f "$env" ]; then
           # shellcheck disable=SC1090

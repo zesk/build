@@ -84,13 +84,13 @@ __usageDocument() {
     local fn="$functionName" description="" argument="" base return_code="" environment="" stdin="" stdout="" example="" build_debug=""
 
     declare -r __handler variablesFile
-    set -a
-    base="$(basename "$functionDefinitionFile")"
+    set -a # UNDO ok
+    base="$(catchEnvironment "$handler" basename "$functionDefinitionFile")" || returnUndo $? set +a || return $?
     # shellcheck source=/dev/null
-    catchEnvironment "$__handler" source "$variablesFile" || returnClean $? "${clean[@]}" || return $?
+    catchEnvironment "$__handler" source "$variablesFile" || returnUndo $? set +a || returnClean $? "${clean[@]}" || return $?
+    set +a
     # Some variables MAY BE OVERWRITTEN ABOVE .e.g. `__handler`
     catchEnvironment "$__handler" rm -f "$variablesFile" "$commentFile" || return $?
-    set +a
 
     : "$base $return_code $environment $stdin $stdout $example are referenced here and with \${!variable} below"
     : "$build_debug"

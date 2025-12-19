@@ -78,7 +78,7 @@ __documentationBuildEnvironment() {
   while read -r envFile; do
     local envTarget name="${envFile##*/}"
 
-    set -a
+    set -a # UNDO ok
     name="${name%.sh}"
     envTarget="$cacheDirectory/$name"
     moreTarget="$cacheDirectory/more.$name"
@@ -91,7 +91,7 @@ __documentationBuildEnvironment() {
 
     local description type lines more="" shortDesc
     description=$(sed -n '/^[[:space:]]*#/!q; p' "$envFile" | grep -v -e '^#!\|\&copy;' | cut -c 3- | grep -v '^[[:alpha:]][[:alnum:]]*: ')
-    lines=$(printf "%s\n" "$description" | catchReturn "$handler" fileLineCount) || return $?
+    lines=$(printf "%s\n" "$description" | catchReturn "$handler" fileLineCount) || returnUndo $? set +a || return $?
 
     local categoryName categoryFileName
 
@@ -109,17 +109,19 @@ __documentationBuildEnvironment() {
     fi
 
     if [ "${#categories[@]}" -eq 0 ] || ! inArray "$categoryName" "${categories[@]}"; then
-      catchEnvironment "$handler" printf "%s\n" "$categoryName" >>"$cacheDirectory/categories.unsorted" || return $?
+      catchEnvironment "$handler" printf "%s\n" "$categoryName" >>"$cacheDirectory/categories.unsorted" || returnUndo $? set +a || return $?
       categories+=("$categoryName")
     fi
-    catchEnvironment "$handler" printf "%s\n" "$name" >>"$cacheDirectory/category.$categoryFileName" || return $?
+    catchEnvironment "$handler" printf "%s\n" "$name" >>"$cacheDirectory/category.$categoryFileName" || returnUndo $? set +a || return $?
 
-    description=$shortDesc category="$categoryName" more="$more" type="$type" mapEnvironment <"$lineTemplate" >"$envTarget"
+    description=$shortDesc category="$categoryName" more="$more" type="$type" mapEnvironment <"$lineTemplate" >"$envTarget" || returnUndo $? set +a || return $?
     if [ -n "$more" ]; then
-      category="$categoryName" type="$type" mapEnvironment <"$moreTemplate" >"$moreTarget"
+      category="$categoryName" type="$type" mapEnvironment <"$moreTemplate" >"$moreTarget" || returnUndo $? set +a || return $?
     fi
     printf "%s\n" "$name" >>"$cacheDirectory/mores"
   done < <(find "$home/bin/build/env" -maxdepth 1 -name "*.sh")
+  set +a
+
   catchEnvironment "$handler" sort -u <"$cacheDirectory/categories.unsorted" >"$cacheDirectory/categories" || return $?
   catchEnvironment "$handler" rm -rf "$cacheDirectory/categories.unsorted" || return $?
 

@@ -929,9 +929,9 @@ environmentCompile() {
   (
     local environmentFile
     for environmentFile in "${environmentFiles[@]}"; do
-      set -a
+      set -a # UNDO ok
       # shellcheck source=/dev/null
-      source "$environmentFile" >(outputTrigger source "$environmentFile") 2>&1 || returnClean $? "${clean[@]}" || return $?
+      source "$environmentFile" >(outputTrigger source "$environmentFile") 2>&1 || returnClean $? "${clean[@]}" || returnUndo $? set +a || return $?
       set +a
     done
     catchReturn "$handler" environmentOutput "${aa[@]+"${aa[@]}"}" | sort >"$tempEnv.after" || returnClean $? "${clean[@]}" || return $?

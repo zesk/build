@@ -452,7 +452,7 @@ testEnvironmentClean() {
   done
 
   # Restore deleted environment
-  set -a
+  set -a # UNDO ok
   # shellcheck source=/dev/null
   source "$saveEnv"
   set +a

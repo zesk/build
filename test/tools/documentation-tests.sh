@@ -51,7 +51,7 @@ testDocumentation() {
 
     fn="ass""ertNotEquals" # "" hides from findUncaughtAssertions
     bashDocumentationExtract "$fn" < <(bashFunctionComment "$(__bashDocumentation_FindFunctionDefinition "$home" "$fn")" "$fn") >"$testOutput" || return $?
-    set -a
+    set -a # UNDO ok
     # shellcheck source=/dev/null
     source "$testOutput" > >(outputTrigger --name "$testOutput" --verbose) || return $?
     set +a
@@ -60,7 +60,7 @@ testDocumentation() {
 
     fn="ass""ertEquals" # "" hides from findUncaughtAssertions
     bashDocumentationExtract "$fn" < <(bashFunctionComment "$(__bashDocumentation_FindFunctionDefinition "$home" "$fn")" "$fn") >"$testOutput" || return $?
-    set -a
+    set -a # UNDO ok
     # shellcheck source=/dev/null
     source "$testOutput" > >(outputTrigger --name "$testOutput" --verbose) || return $?
     set +a
@@ -86,7 +86,7 @@ __isolateTest() {
   fn="ass""ertNotEquals" # "" hides from findUncaughtAssertions
 
   bashDocumentationExtract "$fn" < <(bashFunctionComment "$(__bashDocumentation_FindFunctionDefinition "$home" "$fn")" "$fn") >"$testOutput" || return $?
-  set -a
+  set -a # UNDO ok
   # shellcheck source=/dev/null
   source "$testOutput" > >(outputTrigger --name "$testOutput" --verbose) || return $?
   set +a
@@ -95,7 +95,7 @@ __isolateTest() {
 
   fn="ass""ertEquals" # "" hides from findUncaughtAssertions
   bashDocumentationExtract "$fn" < <(bashFunctionComment "$(__bashDocumentation_FindFunctionDefinition "$home" "$fn")" "$fn") >"$testOutput" || return $?
-  set -a
+  set -a # UNDO ok
   # shellcheck source=/dev/null
   source "$testOutput" > >(outputTrigger --name "$testOutput" --verbose) || return $?
   set +a

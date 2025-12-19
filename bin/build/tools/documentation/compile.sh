@@ -138,10 +138,11 @@ __documentationTemplateCompile() {
       IFS=$'\n' read -r -d '' -a tokenNames <"$documentTokensFile"
       statusMessage decorate success "Writing $targetFile using $sourceFile (mapped) ..."
       (
-        set -a
+        set -a # UNDO ok
         #shellcheck source=/dev/null
         source "$compiledFunctionEnv" || throwEnvironment "$handler" "source $compiledFunctionEnv compiled for $targetFile" || return $?
         mapEnvironment "${tokenNames[@]}" <"$mappedDocumentTemplate" >"$targetFile"
+        set +a
       ) || throwEnvironment "$handler" "mapEnvironment $tokenName" || returnClean $? "${clean[@]}" || return $?
     else
       message="Cached"

@@ -523,7 +523,7 @@ usageArgumentLoadEnvironmentFile() {
   envFile=$(usageArgumentFile "$@") || return $?
   bashEnv=$(fileTemporaryName "$usageFunction") || return $?
   catchEnvironment "$usageFunction" environmentFileToBashCompatible "$envFile" >"$bashEnv" || returnClean $? "$bashEnv" || return $?
-  set -a
+  set -a # UNDO ok
   # shellcheck source=/dev/null
   source "$bashEnv"
   returnCode=$?

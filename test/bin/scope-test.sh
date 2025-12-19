@@ -56,7 +56,7 @@ scopeTestNada() {
 }
 
 scopeTestSetA() {
-  set -a
+  set -a # UNDO ok
   TESTING=${TESTING:-"Totally"}
   set +a
   _subprocessSaveValue
@@ -184,7 +184,7 @@ for func in $(testsWhichReturnBlank); do
   _scopeAssert "" "${TESTING-}" "$fullName init"
   _subprocessAssertValue "" "$fullName init"
   # -- test --
-  set -a
+  set -a # UNDO ok
   if ! "$func"; then
     _fail "$func failed"
   fi

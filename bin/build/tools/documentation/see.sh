@@ -118,7 +118,7 @@ __documentationIndexSeeLinker() {
         sourceLink documentationPath
       )
       export sourceLink documentationPath
-      set -a
+      set -a # UNDO ok
       # shellcheck source=/dev/null
       source "$linkPatternFile"
       set +a
@@ -151,14 +151,16 @@ __documentationIndexSeeLinker() {
       statusMessage --last decorate info "documentationPath: $documentationPath"
       statusMessage --last decorate info "documentationTarget: $documentationTarget"
       statusMessage --last decorate info "Variables: $variablesSedFile"
-      set -a
+      set -a # UNDO ok
       # shellcheck source=/dev/null
       if ! source "$seeVariablesFile" ||
         ! sed -f "$variablesSedFile" <"$matchingFile" | mapEnvironment >"$matchingFile.new" ||
         ! mv "$matchingFile.new" "$matchingFile"; then
+        set +a
         rm -f "$seeVariablesFile" "$linkPatternFile" "$variablesSedFile" 2>/dev/null || :
         return "1"
       fi
+      set +a
     ); then
       rm -f "$matchingFile.new" "$seeVariablesFile" "$linkPatternFile" "$variablesSedFile" 2>/dev/null || :
       return 1

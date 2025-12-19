@@ -232,7 +232,7 @@ buildEnvironmentLoad() {
       fi
       export "${argument?}" || throwEnvironment "$handler" "export $argument failed" || returnClean $? "$tempFiles" || return $?
       # See testBashSetScopes - must undo this
-      set -a
+      set -a # UNDO correct
 
       local firstFile="" eof=false
       # shellcheck disable=SC2094
