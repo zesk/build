@@ -86,21 +86,21 @@ testBuildEnvironmentLoadAll() {
     (
       local envFile
       export "${loadIt?}"
-      buildEnvironmentLoad --print "$loadIt" >"$tempFile" || returnEnvironment "buildEnvironmentLoad $loadIt failed" return $?
-      envFile="$(cat "$tempFile")"
-      assertFileExists "$envFile" || return $?
-
+      catchReturn "$handler" buildEnvironmentLoad "$loadIt" || return $?
       # statusMessage decorate info Loaded "$loadIt=${!loadIt}"
       if inArray "$loadIt" "${nonBlankEnvs[@]}"; then
-        assertNotEquals --display "Loaded $loadIt is non-blank: \"${!loadIt}\"" "${!loadIt}" "" || return $?
+        assertNotEquals --display "Loaded $loadIt is non-blank: \"${!loadIt-}\"" "${!loadIt-}" "" || return $?
       fi
-      assertFileContains "$envFile" "# Type:" "# Category:" || return $?
+      while read -r envFile; do
+        assertFileExists "$envFile" || throwEnvironment "$handler" "envFile missing loading $loadIt" || return $?
+        assertFileContains "$envFile" "# Type:" "# Category:" || return $?
 
-      local type
-      type=$(grep -m 1 -e "^# Type:" "$envFile" | cut -f 2 -d : | trimSpace)
+        local type
+        type=$(grep -m 1 -e "^# Type:" "$envFile" | cut -f 2 -d : | trimSpace)
 
-      validator="usage""Argument$type"
-      isFunction "$validator" || returnEnvironment "$type is not a known type in $(decorate file "$envFile")" || return $?
+        validator="usage""Argument$type"
+        isFunction "$validator" || returnEnvironment "$type is not a known type in $(decorate file "$envFile")" || return $?
+      done < <(catchReturn "$handler" buildEnvironmentFiles "$loadIt") || return $?
     ) || return $?
   done < <(find "$home" -type f -name '*.sh' -path '*/env/*' ! -path '*/test/*' ! -path '*/.*/*' -exec basename {} \; | cut -d . -f 1) || return $?
   catchEnvironment "$handler" rm -f "$tempFile" || return $?
@@ -210,8 +210,8 @@ testInstallBinBuild() {
   )
 
   assertExitCode --dump "${matches[@]}" 0 "$testDir/bin/pipeline/install-bin-build.sh" --mock "$home/bin/build" || return $?
-  assertFileDoesNotContain --line "$LINENO" "$testBinBuild" "make the file different" || return $?
-  assertFileContains --line "$LINENO" "$testBinBuild" "__installPackageConfiguration ../.. " || return $?
+  assertFileDoesNotContain "$testBinBuild" "make the file different" || return $?
+  assertFileContains "$testBinBuild" "__installPackageConfiguration ../.. " || return $?
 
   catchReturn "$handler" rm -rf "$testDir/bin/build" || return $?
 
@@ -228,7 +228,7 @@ testInstallBinBuild() {
   #  ▖ ▌▛▀ ▌ ▖▐ ▖▐ ▌ ▌▌ ▌ ▟▟▖▗▘
   #  ▝▀ ▝▀▘▝▀  ▀ ▀▘▝▀ ▘ ▘ ▝▝ ▀▀▘
 
-  assertDirectoryDoesNotExist --line "$LINENO" bin/build || return $?
+  assertDirectoryDoesNotExist bin/build || return $?
 
   touch "$testDir/.gitignore" || return $?
   testBinBuild=bin/pipeline/we-like-head-rubs.sh
@@ -247,8 +247,8 @@ testInstallBinBuild() {
   clearLine
 
   # pause "$(pwd)/bin/pipeline/we-like-head-rubs.sh --mock $home/bin/build"
-  # assertExitCode --dump --line "$LINENO" "${matches[@]}" 0 bin/pipeline/we-like-head-rubs.sh  || return $?
-  assertExitCode --dump --line "$LINENO" "${matches[@]}" 0 bin/pipeline/we-like-head-rubs.sh --mock "$home/bin/build" || return $?
+  # assertExitCode --dump "${matches[@]}" 0 bin/pipeline/we-like-head-rubs.sh  || return $?
+  assertExitCode --dump "${matches[@]}" 0 bin/pipeline/we-like-head-rubs.sh --mock "$home/bin/build" || return $?
 
   catchEnvironment "$handler" cp "$home/bin/build/install-bin-build.sh" "$testBinBuild" || return $?
   clearLine
@@ -274,8 +274,8 @@ testInstallBinBuild() {
     --stdout-match "does not ignore"
     --stdout-match ".gitignore"
   )
-  assertExitCode --dump --line "$LINENO" "${matches[@]}" 0 "$testBinBuild" || return $?
-  assertDirectoryExists --line "$LINENO" bin/build || return $?
+  assertExitCode --dump "${matches[@]}" 0 "$testBinBuild" || return $?
+  assertDirectoryExists bin/build || return $?
 
   catchEnvironment "$handler" cp "$home/bin/build/install-bin-build.sh" "$testBinBuild" || return $?
   boxedHeading "Has gitignore (correct), bin/build exists, different name"
@@ -301,7 +301,7 @@ testInstallBinBuild() {
     --stdout-no-match "does not ignore"
     --stdout-no-match ".gitignore"
   )
-  assertExitCode --dump --line "$LINENO" "${matches[@]}" 0 bin/pipeline/we-like-head-rubs.sh --mock "$home/bin/build" || return $?
+  assertExitCode --dump "${matches[@]}" 0 bin/pipeline/we-like-head-rubs.sh --mock "$home/bin/build" || return $?
   # Check
 
   catchEnvironment "$handler" muzzle popd || return $?
@@ -318,22 +318,40 @@ testBuildEnvironmentLoad() {
   tempDir=$(fileTemporaryName "$handler" -d) || return $?
 
   target="$tempDir/FOO.sh"
-  BUILD_ENVIRONMENT_DIRS="$tempDir" assertNotExitCode --stderr-match Missing --line "$LINENO" 0 buildEnvironmentLoad FOO || return $?
+  BUILD_ENVIRONMENT_DIRS="$tempDir" assertNotExitCode --stderr-match "Failed to find" 0 buildEnvironmentLoad FOO || return $?
   catchEnvironment "$handler" touch "$target" || return $?
-  BUILD_ENVIRONMENT_DIRS="$tempDir" assertNotExitCode --stderr-match Missing --line "$LINENO" 0 buildEnvironmentLoad FOO || return $?
+  BUILD_ENVIRONMENT_DIRS="$tempDir" assertNotExitCode --stderr-match "Failed to find" 0 buildEnvironmentLoad FOO || return $?
   printf "%s\n" "#!/usr/bin/env bash" >"$target"
-  BUILD_ENVIRONMENT_DIRS="$tempDir" assertNotExitCode --stderr-match Missing --line "$LINENO" 0 buildEnvironmentLoad FOO || return $?
+  BUILD_ENVIRONMENT_DIRS="$tempDir" assertNotExitCode --stderr-match "Failed to find" 0 buildEnvironmentLoad FOO || return $?
   catchEnvironment "$handler" chmod +x "$target" || return $?
   BUILD_ENVIRONMENT_DIRS="$tempDir" assertExitCode 0 buildEnvironmentLoad FOO || return $?
 
   assertEquals "${FOO-}" "" || return $?
 
   printf "%s\n" "export FOO" "FOO=hello" >>"$target"
-  BUILD_ENVIRONMENT_DIRS="$tempDir" assertExitCode --leak FOO --line "$LINENO" 0 buildEnvironmentLoad FOO || return $?
+  BUILD_ENVIRONMENT_DIRS="$tempDir" assertExitCode --leak FOO 0 buildEnvironmentLoad FOO || return $?
 
   assertEquals "${FOO-}" "hello" || return $?
 
   unset FOO
+
+  catchReturn "$handler" rm -rf "$tempDir" || return $?
+}
+
+testBuildEnvironmentFiles() {
+  local handler="returnMessage"
+  local tempDir target
+
+  tempDir=$(fileTemporaryName "$handler" -d) || return $?
+
+  target="$tempDir/FOO.sh"
+  BUILD_ENVIRONMENT_DIRS="$tempDir" assertExitCode 1 buildEnvironmentFiles FOO || return $?
+  catchEnvironment "$handler" touch "$target" || return $?
+  BUILD_ENVIRONMENT_DIRS="$tempDir" assertExitCode 1 buildEnvironmentFiles FOO || return $?
+  printf "%s\n" "#!/usr/bin/env bash" >"$target"
+  BUILD_ENVIRONMENT_DIRS="$tempDir" assertExitCode 1 buildEnvironmentFiles FOO || return $?
+  catchEnvironment "$handler" chmod +x "$target" || return $?
+  BUILD_ENVIRONMENT_DIRS="$tempDir" assertExitCode --stdout-match "$tempDir/FOO.sh" 0 buildEnvironmentFiles FOO || return $?
 
   catchReturn "$handler" rm -rf "$tempDir" || return $?
 }
@@ -345,18 +363,18 @@ testBuildEnvironmentGet() {
   tempDir=$(fileTemporaryName "$handler" -d) || return $?
 
   target="$tempDir/FOO.sh"
-  BUILD_ENVIRONMENT_DIRS="$tempDir" assertNotExitCode --stderr-match Missing --line "$LINENO" 0 buildEnvironmentGet FOO || return $?
+  BUILD_ENVIRONMENT_DIRS="$tempDir" assertNotExitCode --stderr-match "Failed to find" 0 buildEnvironmentGet FOO || return $?
   catchEnvironment "$handler" touch "$target" || return $?
-  BUILD_ENVIRONMENT_DIRS="$tempDir" assertNotExitCode --stderr-match Missing --line "$LINENO" 0 buildEnvironmentGet FOO || return $?
-  printf "%s\n" "#!/usr/bin/env bash" >"$target"
-  BUILD_ENVIRONMENT_DIRS="$tempDir" assertNotExitCode --stderr-match Missing --line "$LINENO" 0 buildEnvironmentGet FOO || return $?
+  BUILD_ENVIRONMENT_DIRS="$tempDir" assertNotExitCode --stderr-match "Failed to find" 0 buildEnvironmentGet FOO || return $?
+  catchEnvironment "$handler" printf "%s\n" "#!/usr/bin/env bash" >"$target" || return $?
+  BUILD_ENVIRONMENT_DIRS="$tempDir" assertNotExitCode --stderr-match "Failed to find" 0 buildEnvironmentGet FOO || return $?
   catchEnvironment "$handler" chmod +x "$target" || return $?
   BUILD_ENVIRONMENT_DIRS="$tempDir" assertExitCode 0 buildEnvironmentGet FOO || return $?
 
   assertEquals "${FOO-}" "" || return $?
 
-  printf "%s\n" "export FOO" "FOO=hello" >>"$target"
-  BUILD_ENVIRONMENT_DIRS="$tempDir" assertExitCode --leak FOO --line "$LINENO" --stdout-match "hello" 0 buildEnvironmentGet FOO || return $?
+  catchEnvironment "$handler" printf "%s\n" "export FOO" "FOO=hello" >>"$target" || return $?
+  BUILD_ENVIRONMENT_DIRS="$tempDir" assertExitCode --leak FOO --stdout-match "hello" 0 buildEnvironmentGet FOO || return $?
 
   assertEquals "${FOO-}" "hello" || return $?
 
@@ -377,7 +395,7 @@ testUnderscoreUnderscoreBuild() {
   assertExitCode 0 installInstallBuild --local "$testPath/app/bin" "$testPath/app" || return $?
   catchEnvironment "$handler" cp -R "$home/bin/build" "$testPath/app/bin/build" || return $?
 
-  APPLICATION_ID=testID.$$ assertExitCode --dump --line "$LINENO" 0 "$testPath/app/bin/build.sh" || return $?
+  APPLICATION_ID=testID.$$ assertExitCode --dump 0 "$testPath/app/bin/build.sh" || return $?
 
   catchEnvironment "$handler" rm -rf "$testPath" || return $?
 }

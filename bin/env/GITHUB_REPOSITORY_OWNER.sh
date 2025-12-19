@@ -2,6 +2,6 @@
 # Copyright &copy; 2025 Market Acumen, Inc.
 # Type: String
 # The owner of this repository
-# Category: Internal
+# Category: Development
 export GITHUB_REPOSITORY_OWNER
 GITHUB_REPOSITORY_OWNER="${GITHUB_REPOSITORY_OWNER-zesk}"

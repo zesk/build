@@ -803,10 +803,9 @@ _assertExitCodeHelper() {
 }
 ___assertExitCodeTest() {
   local binary="${1-}"
-
   isCallable "$binary" || returnArgument "$binary is not callable: $*" || return $?
   ! isFunction "$binary" || __assertedFunctions "$binary" || return $?
-  "$@"
+  "$@" || return $?
 }
 ___assertExitCodeFormat() {
   local testPassed="${1-}" success="${2-}"

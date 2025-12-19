@@ -199,14 +199,14 @@ _buildEnvironmentFiles() {
 # created by build's default.
 #
 # Modifies local environment. Not usually run within a subshell.
-# Argument: --print - Flag. Print the environment file loaded last.
+# Argument: --print - Flag. Print the environment file loaded first.
 # DOC TEMPLATE: --help 1
 # Argument: --help - Optional. Flag. Display this help.
 # Environment: $envName
 # Environment: BUILD_ENVIRONMENT_DIRS - `:` separated list of paths to load env files
 #
 buildEnvironmentLoad() {
-  local handler="_${FUNCNAME[0]}" applicationHome="" printFlag=false
+  local handler="_${FUNCNAME[0]}" applicationHome="" printFlag=false tempFiles=""
 
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
@@ -225,21 +225,33 @@ buildEnvironmentLoad() {
     --application) shift && applicationHome=$(usageArgumentDirectory "$handler" "$argument" "${1-}") || return $? ;;
     *)
       [ -n "$applicationHome" ] || applicationHome=$(catchReturn "$handler" buildHome) || return $?
-      local f ff
-      IFS=$'\n' read -r -d '' -a ff < <(buildEnvironmentFiles --application "$applicationHome" "$argument") || :
-      [ ${#ff[@]} -gt 0 ] || throwEnvironment "$handler" "Failed to find any files for $argument" || return $?
-      export "${argument?}" || throwEnvironment "$handler" "export $argument failed" || return $?
-      set -a || :
-      for f in "${ff[@]}"; do
+
+      [ -f "$tempFiles" ] || tempFiles=$(fileTemporaryName "$handler") || return $?
+      if ! buildEnvironmentFiles --application "$applicationHome" "$argument" >"$tempFiles"; then
+        throwEnvironment "$handler" "Failed to find any files for $argument" || returnClean $? "$tempFiles" || return $?
+      fi
+      export "${argument?}" || throwEnvironment "$handler" "export $argument failed" || returnClean $? "$tempFiles" || return $?
+      # See testBashSetScopes - must undo this
+      set -a
+
+      local firstFile="" eof=false
+      # shellcheck disable=SC2094
+      while ! $eof; do
+        local f && read -r f || eof=true
+        [ -n "$f" ] || continue
         # shellcheck source=/dev/null
-        source "$f" || throwEnvironment "$handler" source "$file" || return $?
-      done
-      set +a || :
-      ! $printFlag || printf -- "%s\n" "$f"
+        source "$f" || throwEnvironment "$handler" "Failed: source $f" || returnClean $? "$tempFiles" || returnUndo $? set +a || return $?
+        [ -n "$firstFile" ] || firstFile="$f"
+      done <"$tempFiles"
+
+      set +a
+      [ -n "$firstFile" ] || throwEnvironment "$handler" "No files loaded for $argument" || return $?
+      ! $printFlag || catchEnvironment "$handler" printf -- "%s\n" "$firstFile" || returnClean $? "$tempFiles" || return $?
       ;;
     esac
     shift
   done
+  [ -z "$tempFiles" ] || catchEnvironment "$handler" rm -f "$tempFiles" || return $?
 }
 _buildEnvironmentLoad() {
   # __IDENTICAL__ usageDocument 1

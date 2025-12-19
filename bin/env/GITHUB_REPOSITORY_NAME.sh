@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2025 Market Acumen, Inc.
+# See: githubRelease
+# Category: Development
 # Type: String
-# All about GITHUB_REPOSITORY_NAME and how it is used
-# Category: Internal
+# Repository name for release
 export GITHUB_REPOSITORY_NAME
 GITHUB_REPOSITORY_NAME="${GITHUB_REPOSITORY_NAME-build}"

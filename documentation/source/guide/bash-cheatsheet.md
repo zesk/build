@@ -116,40 +116,50 @@ Shell options turn features within `bash` on and off interactively.
 - `-` - Signal the end of options, cause all remaining args to be assigned to the positional parameters. The -x and -v
   options are turned off. If there are no args, the positional parameters remain unchanged.
 
+The following flags are "sticky" and will remain in parent functions after a function exits:
+
+- `-a` `-b` `-f` `-m` `-p` `-k` `-C` `-T`
+
+The following flags are scoped to the current function and are unset upon exit to the prior function scope setting:
+
+- `-e`, `-E`, `-u`
+
+All settings inherit to called functions.
+
 Option names: `-o option-name`
 
 - `allexport` - Same as `-a`.
 - `braceexpand` - Same as `-B`
 - `emacs` - Use an emacs-style command line editing interface. This is enabled by default when the shell is interactive,
-  unless the shell is started with the --noediting option.
+  unless the shell is started with the `--noediting` option.
 - `errtrace` - Same as `-E`.
-- `functrace`                    Same as -T.
-- `errexit` Same as -e.
-- `hashall` Same as -h.
-- `histexpand`                    Same as -H.
+- `functrace` - Same as `-T`.
+- `errexit`- Same as `-e`.
+- `hashall`- Same as `-h`.
+- `histexpand` - Same as `-H`.
 - `history` - Enable command history, as described above under HISTORY. This option is on by default in interactive
   shells.
 - `ignoreeof` - The effect is as if the shell command ``IGNOREEOF=10'' had been executed (see Shell Variables above).
-- `keyword` - Same as -k.
-- `monitor` - Same as -m.
-- `noclobber` - Same as -C.
-- `noexec`  - Same as -n.
-- `noglob`  - Same as -f.
+- `keyword` - Same as `-k`.
+- `monitor` - Same as `-m`.
+- `noclobber` - Same as `-C`.
+- `noexec`  - Same as `-n`.
+- `noglob`  - Same as `-f`.
 - `nolog` - Currently ignored.
-- `notify`  - Same as -b.
-- `nounset` - Same as -u.
-- `onecmd`  - Same as -t.
-- `physical` - Same as -P.
+- `notify`  - Same as `-b`.
+- `nounset` - Same as `-u`.
+- `onecmd`  - Same as `-t`.
+- `physical` - Same as `-P`.
 - `pipefail` - If set, the return value of a pipeline is the value of the last (rightmost) command to exit with a
   non-zero status, or zero if all commands in the pipeline exit successfully. This option is disabled by default.
 - `posix` - Change the behavior of bash where the default operation differs from the POSIX standard to match the
   standard (posix mode).
-- `privileged` - Same as -p.
-- `verbose` Same as -v.
+- `privileged` - Same as `-p`.
+- `verbose` Same as `-v`.
 - `vi` - Use a vi-style command line editing interface.
-- `xtrace` - Same as -x.
+- `xtrace` - Same as `-x`.
 
-If -o is supplied with no option-name, the values of the current options are printed. If +o is supplied with no
+If `-o` is supplied with no option-name, the values of the current options are printed. If `+o` is supplied with no
 option-name, a series of set commands to recreate the current option settings is displayed on the standard output.
 
 The options are off by default unless otherwise noted. Using + rather than - causes these options to be turned off. The
@@ -177,4 +187,3 @@ real user and group ids.
   value of `line` for non-empty values and handle when `$finished` becomes `true`.
   [Source](https://github.com/zesk/build/docs/bash-cheatsheet.md)
 - Problems with `&&` or `||` precedence leads to errors
-

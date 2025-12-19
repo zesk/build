@@ -25,7 +25,8 @@ testBashGetRequires() {
   catchReturn "$handler" rm -f "$temp" || return $?
 }
 
-# Tag: slow
+# Tag: slow slow-non-critical
+# Not really necessary but kind of neat to know
 testBashBuiltins() {
   local item type
   while read -r item; do
@@ -35,6 +36,7 @@ testBashBuiltins() {
 }
 
 # Requires: a b d
+# Tag: slow-non-critical
 testBashBasics() {
   # Bizarre logic precedence
 
@@ -55,6 +57,39 @@ testBashBasics() {
   assertEquals hitTheOr "$(true && false || printf hitTheOr || printf hitTheAnd)" || return $?
   assertEquals hitTheOr "$(false && false || printf hitTheOr || printf hitTheAnd)" || return $?
   assertEquals "" "$(true && true || printf hitTheOr || printf hitTheAnd)" || return $?
+}
+
+__doSetAndExit() {
+  set "$@"
+}
+
+# Tag: slow-non-critical
+testBashSetScopes() {
+  local handler="returnMessage"
+
+  local funScope=(e E u)
+  local temp
+
+  temp=$(fileTemporaryName "$handler") || return $?
+
+  local opt
+  for opt in a b e f m p k u C E T; do
+    # Protects against `noclobber`
+    catchEnvironment "$handler" rm -f "$temp" "$temp.1" "$temp.after" || return $?
+    catchReturn "$handler" set -o >"$temp" || return $?
+    set -o >"$temp.1"
+    decorate success "Testing -$opt"
+    __doSetAndExit "-$opt"
+    set -o >"$temp.after"
+    __doSetAndExit "+$opt"
+    assertExitCode 0 muzzle diff -q "$temp" "$temp.1" || return $?
+    if inArray "$opt" "${funScope[@]}"; then
+      assertExitCode --display "$opt usually is scoped to a function so no changes should appear" 0 diff "$temp" "$temp.after" || return $?
+    else
+      assertNotExitCode --dump --display "$opt NOT scoped to a function so changes should be visible" 0 diff "$temp" "$temp.after" || return $?
+    fi
+  done
+  catchEnvironment "$handler" rm -f "$temp" "$temp.1" "$temp.after" || return $?
 }
 
 testBashSourcePath() {

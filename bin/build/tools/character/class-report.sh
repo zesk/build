@@ -45,8 +45,11 @@ __characterClassReport() {
   local savedLimit
 
   savedLimit="$(catchEnvironment "$handler" ulimit -n)" || return $?
-  catchEnvironment "$handler" ulimit -n 10240 2>&1 || :
 
+  if ! muzzle ulimit -n 10240 2>&1; then
+    # Skip attempting to modify ulimit - no permission likely so just venture on
+    savedLimit=""
+  fi
   local indexList=() outerList=() innerList=() nouns=()
 
   # shellcheck disable=SC2207
@@ -103,5 +106,5 @@ __characterClassReport() {
     total=$((total + matched))
   done
   printf "%s total %s\n" "$(decorate bold-red "$total")" "$(decorate red "$(plural "$total" "${nouns[@]}")")"
-  catchEnvironment "$handler" ulimit -n "$savedLimit" 2>&1 || :
+  [ -z "$savedLimit" ] || muzzle ulimit -n "$savedLimit" 2>&1 || :
 }

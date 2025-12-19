@@ -19,7 +19,7 @@ if source "${BASH_SOURCE[0]%/*}/tools.sh"; then
 
     export BUILD_COLORS_MODE
     if [ -z "${BUILD_COLORS_MODE-}" ]; then
-      BUILD_COLORS_MODE=$(consoleConfigureConsoleMode)
+      BUILD_COLORS_MODE=$(consoleConfigureColorMode)
     fi
     # Logo for iTerm2
     iTerm2Image -i "$home/etc/zesk-build-icon.png"
