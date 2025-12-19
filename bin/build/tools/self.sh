@@ -156,30 +156,30 @@ buildEnvironmentFiles() {
     # __IDENTICAL__ __checkBlankArgumentHandler 1
     [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
-    # _IDENTICAL_ helpHandler 1
-    --help) "$handler" 0 && return $? || return $? ;;
-    # _IDENTICAL_ handlerHandler 1
-    --handler) shift && handler=$(usageArgumentFunction "$handler" "$argument" "${1-}") || return $? ;;
-    --application) shift && applicationHome=$(usageArgumentDirectory "$handler" "$argument" "${1-}") || return $? ;;
-    *)
-      local env paths=() path file=""
+      # _IDENTICAL_ helpHandler 1
+      --help) "$handler" 0 && return $? || return $? ;;
+      # _IDENTICAL_ handlerHandler 1
+      --handler) shift && handler=$(usageArgumentFunction "$handler" "$argument" "${1-}") || return $? ;;
+      --application) shift && applicationHome=$(usageArgumentDirectory "$handler" "$argument" "${1-}") || return $? ;;
+      *)
+        local env paths=() path file=""
 
-      [ -n "$applicationHome" ] || applicationHome=$(catchReturn "$handler" buildHome) || return $?
-      env="$(usageArgumentEnvironmentVariable "$handler" "environmentVariable" "$argument")" || return $?
-      IFS=$'\n' read -d '' -r -a paths < <(_buildEnvironmentPath "$handler") || :
-      for path in "${paths[@]}"; do
-        if ! pathIsAbsolute "$path"; then
-          # All relative paths are relative to the application root, so correct
-          path="$applicationHome/$path"
-        fi
-        [ -d "$path" ] || continue
-        file="$path/$env.sh"
-        if [ -x "$file" ]; then
-          printf "%s\n" "$file"
-          foundOne=true
-        fi
-      done
-      ;;
+        [ -n "$applicationHome" ] || applicationHome=$(catchReturn "$handler" buildHome) || return $?
+        env="$(usageArgumentEnvironmentVariable "$handler" "environmentVariable" "$argument")" || return $?
+        IFS=$'\n' read -d '' -r -a paths < <(_buildEnvironmentPath "$handler") || :
+        for path in "${paths[@]}"; do
+          if ! pathIsAbsolute "$path"; then
+            # All relative paths are relative to the application root, so correct
+            path="$applicationHome/$path"
+          fi
+          [ -d "$path" ] || continue
+          file="$path/$env.sh"
+          if [ -x "$file" ]; then
+            printf "%s\n" "$file"
+            foundOne=true
+          fi
+        done
+        ;;
     esac
     shift
   done
@@ -215,39 +215,39 @@ buildEnvironmentLoad() {
     # __IDENTICAL__ __checkBlankArgumentHandler 1
     [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
-    # _IDENTICAL_ helpHandler 1
-    --help) "$handler" 0 && return $? || return $? ;;
-    # _IDENTICAL_ handlerHandler 1
-    --handler) shift && handler=$(usageArgumentFunction "$handler" "$argument" "${1-}") || return $? ;;
-    --print)
-      printFlag=true
-      ;;
-    --application) shift && applicationHome=$(usageArgumentDirectory "$handler" "$argument" "${1-}") || return $? ;;
-    *)
-      [ -n "$applicationHome" ] || applicationHome=$(catchReturn "$handler" buildHome) || return $?
+      # _IDENTICAL_ helpHandler 1
+      --help) "$handler" 0 && return $? || return $? ;;
+      # _IDENTICAL_ handlerHandler 1
+      --handler) shift && handler=$(usageArgumentFunction "$handler" "$argument" "${1-}") || return $? ;;
+      --print)
+        printFlag=true
+        ;;
+      --application) shift && applicationHome=$(usageArgumentDirectory "$handler" "$argument" "${1-}") || return $? ;;
+      *)
+        [ -n "$applicationHome" ] || applicationHome=$(catchReturn "$handler" buildHome) || return $?
 
-      [ -f "$tempFiles" ] || tempFiles=$(fileTemporaryName "$handler") || return $?
-      if ! buildEnvironmentFiles --application "$applicationHome" "$argument" >"$tempFiles"; then
-        throwEnvironment "$handler" "Failed to find any files for $argument" || returnClean $? "$tempFiles" || return $?
-      fi
-      export "${argument?}" || throwEnvironment "$handler" "export $argument failed" || returnClean $? "$tempFiles" || return $?
-      # See testBashSetScopes - must undo this
-      set -a # UNDO correct
+        [ -f "$tempFiles" ] || tempFiles=$(fileTemporaryName "$handler") || return $?
+        if ! buildEnvironmentFiles --application "$applicationHome" "$argument" >"$tempFiles"; then
+          throwEnvironment "$handler" "Failed to find any files for $argument" || returnClean $? "$tempFiles" || return $?
+        fi
+        export "${argument?}" || throwEnvironment "$handler" "export $argument failed" || returnClean $? "$tempFiles" || return $?
+        # See testBashSetScopes - must undo this
+        set -a # UNDO correct
 
-      local firstFile="" eof=false
-      # shellcheck disable=SC2094
-      while ! $eof; do
-        local f && read -r f || eof=true
-        [ -n "$f" ] || continue
-        # shellcheck source=/dev/null
-        source "$f" || throwEnvironment "$handler" "Failed: source $f" || returnClean $? "$tempFiles" || returnUndo $? set +a || return $?
-        [ -n "$firstFile" ] || firstFile="$f"
-      done <"$tempFiles"
+        local firstFile="" eof=false
+        # shellcheck disable=SC2094
+        while ! $eof; do
+          local f && read -r f || eof=true
+          [ -n "$f" ] || continue
+          # shellcheck source=/dev/null
+          source "$f" || throwEnvironment "$handler" "Failed: source $f" || returnClean $? "$tempFiles" || returnUndo $? set +a || return $?
+          [ -n "$firstFile" ] || firstFile="$f"
+        done <"$tempFiles"
 
-      set +a
-      [ -n "$firstFile" ] || throwEnvironment "$handler" "No files loaded for $argument" || return $?
-      ! $printFlag || catchEnvironment "$handler" printf -- "%s\n" "$firstFile" || returnClean $? "$tempFiles" || return $?
-      ;;
+        set +a
+        [ -n "$firstFile" ] || throwEnvironment "$handler" "No files loaded for $argument" || return $?
+        ! $printFlag || catchEnvironment "$handler" printf -- "%s\n" "$firstFile" || returnClean $? "$tempFiles" || return $?
+        ;;
     esac
     shift
   done
@@ -258,15 +258,16 @@ _buildEnvironmentLoad() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# Run zesk/build command or load it
+unalias tools 2>/dev/null || :
+
+# Run a Zesk Build command or load it
 #
-# Argument: --help
 # DOC TEMPLATE: --help 1
 # Argument: --help - Optional. Flag. Display this help.
 # Argument: --start startDirectory - Directory. Optional. Start searching for a build installation at this location and searching upwards in the file hierarchy.
 # Argument: --verbose - Flag. Optional. Be verbose.
-# Argument: ... - Executable. Optional. Run this command after loading in the current build context.
-Build() {
+# Argument: ... - Callable. Optional. Run this command after loading in the current build context.
+tools() {
   local handler="_${FUNCNAME[0]}"
 
   local run="bin/build/tools.sh" vv=() verboseFlag=false startDirectory=""
@@ -278,21 +279,21 @@ Build() {
     # __IDENTICAL__ __checkBlankArgumentHandler 1
     [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
-    # _IDENTICAL_ helpHandler 1
-    --help) "$handler" 0 && return $? || return $? ;;
-    # _IDENTICAL_ handlerHandler 1
-    --handler) shift && handler=$(usageArgumentFunction "$handler" "$argument" "${1-}") || return $? ;;
-    --start)
-      shift
-      startDirectory=$(usageArgumentDirectory "$handler" "$argument" "${1-}") || return $?
-      ;;
-    --verbose)
-      vv+=("$argument")
-      verboseFlag=true
-      ;;
-    *)
-      break
-      ;;
+      # _IDENTICAL_ helpHandler 1
+      --help) "$handler" 0 && return $? || return $? ;;
+      # _IDENTICAL_ handlerHandler 1
+      --handler) shift && handler=$(usageArgumentFunction "$handler" "$argument" "${1-}") || return $? ;;
+      --start)
+        shift
+        startDirectory=$(usageArgumentDirectory "$handler" "$argument" "${1-}") || return $?
+        ;;
+      --verbose)
+        vv+=("$argument")
+        verboseFlag=true
+        ;;
+      *)
+        break
+        ;;
     esac
     shift
   done
@@ -310,7 +311,7 @@ Build() {
   ! $verboseFlag || statusMessage --last printf -- "%s %s" "$(decorate each code "$home/$run" "$@")" "$(decorate notice "Exit code: $code")"
   return $code
 }
-_Build() {
+_tools() {
   # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
@@ -339,15 +340,15 @@ buildEnvironmentGet() {
     # __IDENTICAL__ __checkBlankArgumentHandler 1
     [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
-    # _IDENTICAL_ helpHandler 1
-    --help) "$handler" 0 && return $? || return $? ;;
-    # _IDENTICAL_ handlerHandler 1
-    --handler) shift && handler=$(usageArgumentFunction "$handler" "$argument" "${1-}") || return $? ;;
-    --application) shift && ll+=("$argument" "${1-}") ;;
-    *)
-      catchReturn "$handler" buildEnvironmentLoad "${ll[@]+"${ll[@]}"}" "$argument" || return $?
-      printf "%s\n" "${!argument-}"
-      ;;
+      # _IDENTICAL_ helpHandler 1
+      --help) "$handler" 0 && return $? || return $? ;;
+      # _IDENTICAL_ handlerHandler 1
+      --handler) shift && handler=$(usageArgumentFunction "$handler" "$argument" "${1-}") || return $? ;;
+      --application) shift && ll+=("$argument" "${1-}") ;;
+      *)
+        catchReturn "$handler" buildEnvironmentLoad "${ll[@]+"${ll[@]}"}" "$argument" || return $?
+        printf "%s\n" "${!argument-}"
+        ;;
     esac
     shift
   done
@@ -385,34 +386,34 @@ buildEnvironmentGetDirectory() {
     # __IDENTICAL__ __checkBlankArgumentHandler 1
     [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
-    # _IDENTICAL_ helpHandler 1
-    --help) "$handler" 0 && return $? || return $? ;;
-    # _IDENTICAL_ handlerHandler 1
-    --handler) shift && handler=$(usageArgumentFunction "$handler" "$argument" "${1-}") || return $? ;;
-    --exists)
-      existsFlag=true
-      ;;
-    --subdirectory)
-      shift
-      subdirectory=$(usageArgumentString "$handler" "$argument" "${1-}") || return $?
-      ;;
-    --owner | --mode)
-      shift
-      rr+=("$argument" "$(usageArgumentString "$handler" "$argument" "${1-}")") || return $?
-      createFlag=true
-      ;;
-    --no-create)
-      createFlag=false
-      ;;
-    *)
-      local path
-      path=$(catchReturn "$handler" buildEnvironmentGet "$argument" 2>/dev/null) || return $?
-      [ -z "$subdirectory" ] || subdirectory="${subdirectory#/}"
-      subdirectory="${path%/}/$subdirectory"
-      ! $createFlag || path=$(catchReturn "$handler" directoryRequire "${rr[@]+"${rr[@]}"}" "$subdirectory") || return $?
-      ! $existsFlag || [ -d "$subdirectory" ] || throwEnvironment "$handler" "$argument -> $subdirectory does not exist" || return $?
-      printf "%s\n" "${subdirectory%/}"
-      ;;
+      # _IDENTICAL_ helpHandler 1
+      --help) "$handler" 0 && return $? || return $? ;;
+      # _IDENTICAL_ handlerHandler 1
+      --handler) shift && handler=$(usageArgumentFunction "$handler" "$argument" "${1-}") || return $? ;;
+      --exists)
+        existsFlag=true
+        ;;
+      --subdirectory)
+        shift
+        subdirectory=$(usageArgumentString "$handler" "$argument" "${1-}") || return $?
+        ;;
+      --owner | --mode)
+        shift
+        rr+=("$argument" "$(usageArgumentString "$handler" "$argument" "${1-}")") || return $?
+        createFlag=true
+        ;;
+      --no-create)
+        createFlag=false
+        ;;
+      *)
+        local path
+        path=$(catchReturn "$handler" buildEnvironmentGet "$argument" 2>/dev/null) || return $?
+        [ -z "$subdirectory" ] || subdirectory="${subdirectory#/}"
+        subdirectory="${path%/}/$subdirectory"
+        ! $createFlag || path=$(catchReturn "$handler" directoryRequire "${rr[@]+"${rr[@]}"}" "$subdirectory") || return $?
+        ! $existsFlag || [ -d "$subdirectory" ] || throwEnvironment "$handler" "$argument -> $subdirectory does not exist" || return $?
+        printf "%s\n" "${subdirectory%/}"
+        ;;
     esac
     shift
   done
@@ -440,20 +441,20 @@ buildQuietLog() {
     # __IDENTICAL__ __checkBlankArgumentHandler 1
     [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
-    # _IDENTICAL_ helpHandler 1
-    --help) "$handler" 0 && return $? || return $? ;;
-    # _IDENTICAL_ handlerHandler 1
-    --handler) shift && handler=$(usageArgumentFunction "$handler" "$argument" "${1-}") || return $? ;;
-    --no-create)
-      flagMake=false
-      ;;
-    *)
-      local logFile
-      logFile="$(catchReturn "$handler" buildCacheDirectory)/${1#_}.log" || return $?
-      ! "$flagMake" || logFile=$(catchReturn "$handler" fileDirectoryRequire "$logFile") || return $?
-      printf -- "%s\n" "$logFile"
-      return 0
-      ;;
+      # _IDENTICAL_ helpHandler 1
+      --help) "$handler" 0 && return $? || return $? ;;
+      # _IDENTICAL_ handlerHandler 1
+      --handler) shift && handler=$(usageArgumentFunction "$handler" "$argument" "${1-}") || return $? ;;
+      --no-create)
+        flagMake=false
+        ;;
+      *)
+        local logFile
+        logFile="$(catchReturn "$handler" buildCacheDirectory)/${1#_}.log" || return $?
+        ! "$flagMake" || logFile=$(catchReturn "$handler" fileDirectoryRequire "$logFile") || return $?
+        printf -- "%s\n" "$logFile"
+        return 0
+        ;;
     esac
     shift || :
   done

@@ -29,7 +29,7 @@
 
 # Running commands
 
-{Build}
+{tools}
 
 # Installing `install-bin-build.sh`
 

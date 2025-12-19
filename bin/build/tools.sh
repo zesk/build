@@ -120,11 +120,14 @@ __toolsMain() {
   if [ "${debug#;main;*}" != "$debug" ]; then
     __toolsTimingLoad "$production" "$toolsPath" "${toolsFiles[@]}" || return $?
   else
+    # Avoids conflict with aliases with same names as our functions
+    shopt -u expand_aliases
     for toolFile in "${toolsFiles[@]}"; do
       [ "$production" = "true" ] || toolFile="${toolFile//-fast/}"
       # shellcheck source=/dev/null
-      source "$toolsPath/$toolFile.sh" || returnMessage $internalError "%s\n" "Loading $toolFile.sh failed" || return $?
+      source "$toolsPath/$toolFile.sh" || returnMessage $internalError "%s\n" "Loading $toolFile.sh failed" || returnUndo $? shopt -s expand_aliases || return $?
     done
+    shopt -s expand_aliases
   fi
 
   # shellcheck source=/dev/null

@@ -56,11 +56,17 @@ buildCompletion() {
   if [ -z "$reloadAliasName" ]; then
     reloadAliasName="${aliasName}Reload"
   fi
+  if isFunction "$aliasName"; then
+    throwEnvironment "$handler" "$aliasName is a function already can not create alias" || return $?
+  fi
   # shellcheck disable=SC2139
   alias "$aliasName"="$home/bin/build/tools.sh"
 
   local reloadCode="source \"$home/bin/build/tools.sh\" && decorate info \"Reloaded $name @ $homeText\""
 
+  if isFunction "$reloadAliasName"; then
+    throwEnvironment "$handler" "$reloadAliasName is a function already can not create alias" || return $?
+  fi
   # shellcheck disable=SC2139
   alias "$reloadAliasName"="$reloadCode"
 
