@@ -529,12 +529,12 @@ _consoleRows() {
 # stdout: decorated console output
 # DOC TEMPLATE: --help 1
 # Argument: --help - Optional. Flag. Display this help.
-simpleMarkdownToConsole() {
+markdownToConsole() {
   [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
   # shellcheck disable=SC2119
   _toggleCharacterToColor '`' "$(decorate code --)" | _toggleCharacterToColor '**' "$(decorate red --)" | _toggleCharacterToColor '*' "$(decorate cyan --)"
 }
-_simpleMarkdownToConsole() {
+_markdownToConsole() {
   # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
@@ -811,7 +811,7 @@ _colorMultiply() {
 #
 # Internal
 #
-# Utility function to help with simpleMarkdownToConsole
+# Utility function to help with markdownToConsole
 # Usage: toggleCharacterToColor character colorOn [ colorOff ]
 # Argument: character - The character to map to color start/stop
 # Argument: colorOn - Color on escape sequence

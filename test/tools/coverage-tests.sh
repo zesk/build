@@ -307,6 +307,7 @@ printfOutputSuffix
 printfOutputPrefix
 quoteGrepPattern
 sedReplacePattern
+parseBoolean
 newlineHide
 realPath
 isPlain
@@ -358,7 +359,7 @@ colorSampleSemanticStyles
 isTTYAvailable
 consoleColumns
 consoleRows
-simpleMarkdownToConsole
+markdownToConsole
 cursorGet
 daemontoolsInstall
 daemontoolsIsRunning
@@ -408,7 +409,7 @@ mariadbInstall
 mariadbUninstall
 mariadbDumpClean
 markdownRemoveUnfinishedSections
-markdown_FormatList
+markdownFormatList
 nodePackageManagerInstall
 nodePackageManagerUninstall
 npmUninstall

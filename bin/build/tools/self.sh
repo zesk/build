@@ -136,7 +136,60 @@ _buildEnvironmentPath() {
   printf "%s\n" "${paths[@]+"${paths[@]}"}" "$home/bin/build/env"
 }
 
+# Determine the environment file names for environment variables
 #
+# Usage: {fn} [ envName ... ]
+# Argument: envName - Optional. String. Name of the environment value to find
+# Argument: --application applicationHome - Path. Optional. Directory of alternate application home. Can be specified more than once to change state.
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
+# DOC TEMPLATE: --handler 1
+# Argument: --handler handler - Optional. Function. Use this error handler instead of the default error handler.
+# Environment: BUILD_ENVIRONMENT_DIRS
+buildEnvironmentFiles() {
+  local handler="_${FUNCNAME[0]}" applicationHome="" foundOne=false
+
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
+  local __saved=("$@") __count=$#
+  while [ $# -gt 0 ]; do
+    local argument="$1" __index=$((__count - $# + 1))
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    case "$argument" in
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
+    # _IDENTICAL_ handlerHandler 1
+    --handler) shift && handler=$(usageArgumentFunction "$handler" "$argument" "${1-}") || return $? ;;
+    --application) shift && applicationHome=$(usageArgumentDirectory "$handler" "$argument" "${1-}") || return $? ;;
+    *)
+      local env paths=() path file=""
+
+      [ -n "$applicationHome" ] || applicationHome=$(catchReturn "$handler" buildHome) || return $?
+      env="$(usageArgumentEnvironmentVariable "$handler" "environmentVariable" "$argument")" || return $?
+      IFS=$'\n' read -d '' -r -a paths < <(_buildEnvironmentPath "$handler") || :
+      for path in "${paths[@]}"; do
+        if ! pathIsAbsolute "$path"; then
+          # All relative paths are relative to the application root, so correct
+          path="$applicationHome/$path"
+        fi
+        [ -d "$path" ] || continue
+        file="$path/$env.sh"
+        if [ -x "$file" ]; then
+          printf "%s\n" "$file"
+          foundOne=true
+        fi
+      done
+      ;;
+    esac
+    shift
+  done
+  $foundOne || return 1
+}
+_buildEnvironmentFiles() {
+  # __IDENTICAL__ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
 # Load one or more environment settings from the environment file path.
 #
 # Usage: {fn} [ envName ... ]
@@ -153,9 +206,7 @@ _buildEnvironmentPath() {
 # Environment: BUILD_ENVIRONMENT_DIRS - `:` separated list of paths to load env files
 #
 buildEnvironmentLoad() {
-  local handler="_${FUNCNAME[0]}" applicationHome printFlag=false
-
-  applicationHome=$(catchReturn "$handler" buildHome) || return $?
+  local handler="_${FUNCNAME[0]}" applicationHome="" printFlag=false
 
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
@@ -173,29 +224,18 @@ buildEnvironmentLoad() {
       ;;
     --application) shift && applicationHome=$(usageArgumentDirectory "$handler" "$argument" "${1-}") || return $? ;;
     *)
-      local env found="" paths=() path file=""
-
-      env="$(usageArgumentEnvironmentVariable "$handler" "environmentVariable" "$1")" || return $?
-      IFS=$'\n' read -d '' -r -a paths < <(_buildEnvironmentPath "$handler") || :
-      for path in "${paths[@]}"; do
-        if ! pathIsAbsolute "$path"; then
-          # All relative paths are relative to the application root, so correct
-          path="$applicationHome/$path"
-        fi
-        [ -d "$path" ] || continue
-        # Maybe warn here or something as if absolute and missing should not be in the list
-        file="$path/$env.sh"
-        if [ -x "$file" ]; then
-          export "${env?}" || throwEnvironment "$handler" "export $env failed" || return $?
-          found="$file"
-          set -a || :
-          # shellcheck source=/dev/null
-          source "$file" || throwEnvironment "$handler" source "$file" || return $?
-          set +a || :
-        fi
+      [ -n "$applicationHome" ] || applicationHome=$(catchReturn "$handler" buildHome) || return $?
+      local f ff
+      IFS=$'\n' read -r -d '' -a ff < <(buildEnvironmentFiles --application "$applicationHome" "$argument") || :
+      [ ${#ff[@]} -gt 0 ] || throwEnvironment "$handler" "Failed to find any files for $argument" || return $?
+      export "${argument?}" || throwEnvironment "$handler" "export $argument failed" || return $?
+      set -a || :
+      for f in "${ff[@]}"; do
+        # shellcheck source=/dev/null
+        source "$f" || throwEnvironment "$handler" source "$file" || return $?
       done
-      [ -n "$found" ] || throwEnvironment "$handler" "Missing $env in $(decorate each --index --count code "${paths[@]}")" || return $?
-      ! $printFlag || printf -- "%s\n" "$found"
+      set +a || :
+      ! $printFlag || printf -- "%s\n" "$f"
       ;;
     esac
     shift

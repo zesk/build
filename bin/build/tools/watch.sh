@@ -10,7 +10,6 @@
 # Argument: --help - Optional. Flag. Display this help.
 # DOC TEMPLATE: --handler 1
 # Argument: --handler handler - Optional. Function. Use this error handler instead of the default error handler.
-# Argument: --target target - Optional. File. File to create. File must exist.
 # Argument: --verbose - Optional. Flag. Be verbose.
 # Argument: --file modifiedFile - Optional. File. Last known modified file in this directory.
 # Argument: --modified modifiedTimestamp - Optional. UnsignedInteger. Last known modification timestamp in this directory.

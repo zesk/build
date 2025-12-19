@@ -5,8 +5,8 @@
 # Depends on no other .sh files
 # Shell Dependencies: awk sed date echo sort printf
 #
-# Docs: contextOpen ./documentation/source/tools/url.md
-# Test: contextOpen ./test/tools/url-tests.sh
+# Docs: ./documentation/source/tools/url.md
+# Test: ./test/tools/url-tests.sh
 #
 # ##############################################################################
 #
@@ -24,7 +24,7 @@
 # Argument: --help - Optional. Flag. Display this help.
 # DOC TEMPLATE: --handler 1
 # Argument: --handler handler - Optional. Function. Use this error handler instead of the default error handler.
-# Argument: scheme - Required. String. Scheme to look up the default port used for that scheme.
+# Argument: scheme ... - Required. String. Scheme to look up the default port used for that scheme.
 urlSchemeDefaultPort() {
   local handler="_${FUNCNAME[0]}"
 
@@ -63,15 +63,15 @@ _urlSchemeDefaultPort() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-#
-# Simplistic URL parsing. Converts a `url` into values which can be parsed or evaluated:
+# Simple URL parsing. Converts a `url` into values which can be parsed or evaluated:
 #
 # - `url` - URL
-# - `host` - Database host
-# - `user` - Database user
-# - `password` - Database password
-# - `port` - Database port
-# - `name` - Database name
+# - `host` - Host
+# - `user` - User
+# - `password` - Password
+# - `port` - Connection port
+# - `name` - Path with the first slash removed
+# - `path` - Path
 #
 # Does little to no validation of any characters so best used for well-formed input.
 #
@@ -79,11 +79,10 @@ _urlSchemeDefaultPort() {
 #
 # Return Code: 0 - If parsing succeeds
 # Return Code: 1 - If parsing fails
-# Summary: Simple Database URL Parsing
-# Usage: urlParse url
+# Summary: Simple URL Parsing
 # DOC TEMPLATE: --help 1
 # Argument: --help - Optional. Flag. Display this help.
-# Argument: url - a Uniform Resource Locator used to specify a database connection
+# Argument: url - a Uniform Resource Locator
 # Argument: --prefix prefix - String. Optional. Prefix variable names with this string.
 # Argument: --uppercase - Flag. Optional. Output variable names in uppercase, not lowercase (the default).
 # Example:     eval "$(urlParse scheme://user:password@host:port/path)"
@@ -178,14 +177,12 @@ _urlParse() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-#
-# Gets the component of one or more URLs
-# Summary: Get a database URL component directly
+# Extract a component from one or more URLs
+# Summary: Get a URL component directly
 # Usage: urlParseItem component url0 [ url1 ... ]
-# Argument: component - the url component to get: `name`, `user`, `password`, `host`, `port`, `failed`
-# Argument: url0 - String. URL. Required. A Uniform Resource Locator used to specify a database connection
+# Argument: component - the url component to get: `url`, `path`, `name`, `scheme`, `user`, `password`, `host`, `port`, `portDefault`, `error`
+# Argument: url ... - String. URL. Required. A Uniform Resource Locator used to specify a database connection
 # Example:     decorate info "Connecting as $(urlParseItem user "$url")"
-#
 urlParseItem() {
   local handler="_${FUNCNAME[0]}"
 
@@ -226,8 +223,7 @@ _urlParseItem() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-#
-# Checks a URL is valid
+# Checks if a URL is valid
 # DOC TEMPLATE: --help 1
 # Argument: --help - Optional. Flag. Display this help.
 # Argument: url ... - String. URL. Required. A Uniform Resource Locator

@@ -12,8 +12,8 @@
 # Argument: user - String. Optional. User name to look up. Uses `whoami` if not supplied.
 # Argument: database - File. Optional. User name database file to examine. Uses `/etc/passwd` if not supplied.
 # Summary: Quick user database look up
-# Look user up, output user home
-# stdout: the home directory
+# Look user up, output a single user database record.
+# stdout: String. Associated record with `index` and `user`.
 # File: /etc/passwd
 # Requires: grep cut returnMessage printf /etc/passwd whoami
 userRecord() {
@@ -30,7 +30,7 @@ _userRecord() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# Summary: Quick user database look up of the user name
+# Summary: Quick user database query of the user name
 # Look user up, output user name
 # stdout: the user name
 # File: /etc/passwd
@@ -45,7 +45,7 @@ _userRecordName() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# Summary: Quick user database look up of the user home directory
+# Summary: Quick user database query of the user home directory
 # Look user up, output user home directory
 # stdout: `Directory`. The user home directory.
 # File: /etc/passwd - Used for the default user database.

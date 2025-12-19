@@ -116,7 +116,7 @@ _markdownRemoveUnfinishedSections() {
 # 3. Prefix each line with a "dash space" (`- `)
 # stdin: reads input from stdin
 # stdout: formatted markdown list
-markdown_FormatList() {
+markdownFormatList() {
   [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
   local wordClass='[-.`_A-Za-z0-9[:space:]]' spaceClass='[[:space:]]'
   # shellcheck disable=SC2016
@@ -126,8 +126,8 @@ markdown_FormatList() {
     -e "s/\($wordClass*\)${spaceClass}-${spaceClass}/- \`\1\` - /1" \
     -e "s/^\([^-]\)/- \1/1"
 }
-_markdown_FormatList() {
-  true || markdown_FormatList --help
+_markdownFormatList() {
+  true || markdownFormatList --help
   # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

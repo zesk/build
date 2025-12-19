@@ -6,10 +6,10 @@
 #
 
 #
-# Format code blocks (does markdown_FormatList)
+# Format code blocks (does markdownFormatList)
 #
 _bashDocumentationFormatter_return_code() {
-  markdown_FormatList
+  markdownFormatList
 }
 
 #
@@ -19,7 +19,7 @@ _bashDocumentationFormatter_see() {
   local tokens eof=false
   while ! $eof; do
     IFS=" " read -d $'\n' -r -a tokens || eof=true
-    [ "${#tokens[@]}" -eq 0 ] || printf "%s\n" "${tokens[@]}" | decorate wrap "{SEE:" "}" | markdown_FormatList
+    [ "${#tokens[@]}" -eq 0 ] || printf "%s\n" "${tokens[@]}" | decorate wrap "{SEE:" "}" | markdownFormatList
   done
 }
 
@@ -30,21 +30,43 @@ _bashDocumentationFormatter_usage() {
   decorate wrap "    "
 }
 
+#
+# Format environment blocks (indents as a code block)
+#
+_bashDocumentationFormatter_environment() {
+  local items eof=false
+  while ! $eof; do
+    IFS=' ' read -r -d $'\n' -a items || eof=true
+    [ ${#items} -gt 0 ] || continue
+    local item ii
+    for item in "${items[@]}"; do
+      if muzzle buildEnvironmentFiles "$item"; then
+        printf "- {SEE:%s.sh}\n" "$item"
+      else
+        ii+=("$item")
+      fi
+    done
+    if [ "${#ii[@]}" -gt 0 ]; then
+      printf -- "%s\n" "${ii[*]}"
+    fi
+  done
+}
+
 # #
 # # Format example blocks (indents as a code block)
 # #
 # _bashDocumentationFormatter_exampleFormat() {
-#     markdown_FormatList
+#     markdownFormatList
 # }
-_bashDocumentationFormatter_output() {
-  decorate wrap "    "
-}
+#_bashDocumentationFormatter_output() {
+#  decorate wrap "    "
+#}
 
 #
-# Format argument blocks (does markdown_FormatList)
+# Format argument blocks (does markdownFormatList)
 #
 _bashDocumentationFormatter_argument() {
-  markdown_FormatList
+  markdownFormatList
 }
 
 #

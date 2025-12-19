@@ -7,6 +7,8 @@
 
 # Time command, similar to `time` but uses internal functions
 # Argument: command - Required. Executable. Command to run.
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
 # Outputs time as `timingReport`
 timing() {
   local handler="_${FUNCNAME[0]}"
@@ -27,7 +29,8 @@ _timing() {
 #
 # Outputs the offset in milliseconds from January 1, 1970.
 #
-# Usage: timingStart
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
 # Example:     init=$(timingStart)
 # Example:     ...
 # Example:     timingReport "$init" "Completed in"
@@ -45,6 +48,9 @@ _timingStart() {
 }
 
 # Format a timing output (milliseconds) as seconds using a decimal
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
+# Argument: delta - Integer. Milliseconds
 timingFormat() {
   local handler="_${FUNCNAME[0]}"
   [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0

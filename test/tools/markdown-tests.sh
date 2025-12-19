@@ -8,7 +8,7 @@
 #
 
 _assertMarkdownFormatList() {
-  assertEquals "$1" "$(printf %s "$2" | markdown_FormatList)" "markdown_FormatList \"$2\" !== \"$1\"" || return $?
+  assertEquals "$1" "$(printf %s "$2" | markdownFormatList)" "markdownFormatList \"$2\" !== \"$1\"" || return $?
 }
 testMarkdownFormatList() {
   # shellcheck disable=SC2016

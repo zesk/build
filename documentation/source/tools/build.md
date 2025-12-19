@@ -15,6 +15,8 @@
 
 {buildEnvironmentGetDirectory}
 
+{buildEnvironmentFiles}
+
 {buildEnvironmentLoad}
 
 {buildEnvironmentContext}

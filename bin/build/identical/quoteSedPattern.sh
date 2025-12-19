@@ -30,7 +30,7 @@ _quoteSedPattern() {
 # Usage: quoteSedReplacement text separatorChar
 # Argument: text - EmptyString. Required. Text to quote
 # Argument: separatorChar - The character used to separate the sed pattern and replacement. Defaults to `/`.
-# Output: string quoted and appropriate to insert in a sed search or replacement phrase
+# Output: string quoted and appropriate to insert in a `sed` replacement phrase
 # Example:     sed "s/$(quoteSedPattern "$1")/$(quoteSedReplacement "$2")/g"
 # Example:     needSlash=$(quoteSedPattern '$.*/[\]^')
 # Requires: printf sed usageDocument __help

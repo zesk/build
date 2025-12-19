@@ -38,7 +38,9 @@ _jsonField() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# Generate a path into a JSON structure for use in jq queries
+# Summary: Generate `jq` paths
+#
+# Generate a path for a JSON structure for use in `jq` queries
 #
 # Argument: path - String. Output a json path separated by dots.
 # DOC TEMPLATE: noArgumentsForHelp 1
@@ -126,15 +128,11 @@ _jsonFileSet() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# For any project, ensures the `version` field in a `.json` matches `runHook version-current`
-#
-# Run as a commit hook for any project which stores versions in files.
-#
-# Typically the version is copied in without the leading `v`.
+# Sets the value of a variable in a JSON file
 #
 # Argument: --filter - Function. Optional. Run value through this filter prior to inserting into the JSON file.
-# Argument: --status - Flag. Optional. When set, returns 0 when te version was updated successfully and $(returnCode identical) when the files are the same
-# Argument: --quiet - Flag. Optional. Do not output anything to stdout and just do the action and exit.
+# Argument: --status - Flag. Optional. When set, returns `0` when the value was updated successfully and `$(returnCode identical)` when the values is the same
+# Argument: --quiet - Flag. Optional. Do not output anything to `stdout` and just do the action and exit.
 # Argument: --generator - Function. Optional. Function to generate the value. Defaults to `hookVersionCurrent`.
 # Argument: --value - String. Optional. Value to set in JSON file. (Skips generation)
 # Argument: --key - String. Optional. Key to set in JSON file. Defaults to `version`.

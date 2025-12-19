@@ -20,6 +20,8 @@ __textLoader() {
 # Extract a range of lines from a file
 # Argument: startLine - Integer. Required. Starting line number.
 # Argument: endLine - Integer. Required. Ending line number.
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
 # stdin: Reads lines until EOF
 # stdout: Outputs the selected lines only
 fileExtractLines() {
@@ -62,6 +64,8 @@ _fileExtractLines() {
 # - `grep` - returns 1 - no lines selected
 # - `grep` - returns 0 - lines selected
 # Return Code: 0 - Normal operation
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
 # Argument: ... - Arguments. Passed directly to `grep`.
 # Requires: grep mapReturn
 grepSafe() {
@@ -73,9 +77,10 @@ _grepSafe() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# Check if text contains plaintext only
+# Check if text contains plaintext only.
 # Argument: text - Required. String. Text to search for mapping tokens.
-# No arguments displays help.
+# DOC TEMPLATE: noArgumentsForHelp 1
+# Without arguments, displays help.
 # Return code: - `0` - Text is plain
 # Return code: - `1` - Text contains non-plain characters
 isPlain() {
@@ -94,6 +99,8 @@ _isPlain() {
 
 # Check if text contains mappable tokens
 # If any text passed contains a token which can be mapped, succeed.
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
 # Argument: --prefix - Optional. String. Token prefix defaults to `{`.
 # Argument: --suffix - Optional. String. Token suffix defaults to `}`.
 # Argument: --token - Optional. String. Classes permitted in a token
@@ -133,13 +140,16 @@ _isMappable() {
 
 # Parses text and determines if it's true-ish
 #
-# Usage: {fn} text
 # Return Code: 0 - true
 # Return Code: 1 - false
 # Return Code: 2 - Neither
 # Requires: lowercase __help
+# DOC TEMPLATE: noArgumentsForHelp 1
+# Without arguments, displays help.
+# Return code: - `0` - Text is plain
+# Return code: - `1` - Text contains non-plain characters
 parseBoolean() {
-  __help "_${FUNCNAME[0]}" "$@" || return 0
+  [ $# -gt 0 ] || __help "_${FUNCNAME[0]}" --help || return 0
   case "$(lowercase "${1-}")" in
   y | yes | 1 | true)
     return 0
@@ -156,6 +166,8 @@ _parseBoolean() {
 }
 
 # Hide newlines in text (to ensure single-line output or other manipulation)
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
 # Argument: text - String. Required. Text to replace.
 # Argument: replace - String. Optional. Replacement string for newlines.
 # DOC TEMPLATE: noArgumentsForHelp 1
@@ -299,13 +311,12 @@ _trimSpace() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-#
 # Check if an element exists in an array
 #
 # Usage: inArray element [ arrayElement0 arrayElement1 ... ]
 # Argument: `element` - Thing to search for
 # Argument: `arrayElement0` - One or more array elements to match
-# Example:     if inArray "$thing" "${things[@]}"; then things+=("$thing");
+# Example:     if inArray "$thing" "${things[@]}"; then
 # Example:         things+=("$thing")
 # Example:     fi
 # Return Code: 0 - If element is found in array

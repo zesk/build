@@ -1,4 +1,4 @@
-# v0.39.10
+# v0.40.0
 markdown_removeUnfinishedSections|markdownRemoveUnfinishedSections
 markdown_FormatList|markdownFormatList
 simpleMarkdownToConsole|markdownToConsole

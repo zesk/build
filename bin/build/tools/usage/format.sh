@@ -74,14 +74,14 @@ __usageTemplate() {
       "$usageString" \
       "$(decorate info "$binName")" \
       "$(printf "%s" "$options" | __documentationFormatArguments "$delimiter")" \
-      "$(printf "%s" "$options" | __usageGenerator "$((nSpaces + 2))" "$delimiter" | simpleMarkdownToConsole | trimTail | decorate wrap "    " "$(decorate reset --)")" \
-      "$(simpleMarkdownToConsole <<<"$description")" |
+      "$(printf "%s" "$options" | __usageGenerator "$((nSpaces + 2))" "$delimiter" | markdownToConsole | trimTail | decorate wrap "    " "$(decorate reset --)")" \
+      "$(markdownToConsole <<<"$description")" |
       trimBoth
   else
     printf "%s: %s\n\n%s\n\n" \
       "$usageString" \
       "$(decorate info "$binName")" \
-      "$(simpleMarkdownToConsole <<<"$description")" |
+      "$(markdownToConsole <<<"$description")" |
       trimBoth
   fi
   if buildDebugEnabled handler; then

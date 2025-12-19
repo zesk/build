@@ -39,7 +39,7 @@ testSimpleMarkdownToConsole() {
 
   expected="$(printf "%s text is %s and %s" "$(decorate code Code)" "$(decorate cyan italic)" "$(decorate red bold)")"
 
-  actual="$(printf "%s" "$testString" | simpleMarkdownToConsole)"
+  actual="$(printf "%s" "$testString" | markdownToConsole)"
 
   if ! assertEquals "$expected" "$actual" "$this:$LINENO"; then
     printf "%s\n" "$expected" | dumpBinary "Expected"
@@ -48,7 +48,7 @@ testSimpleMarkdownToConsole() {
   fi
 
   BUILD_COLORS=false
-  actual="$(printf "%s" "$testString" | simpleMarkdownToConsole)"
+  actual="$(printf "%s" "$testString" | markdownToConsole)"
 
   mockEnvironmentStop BUILD_COLORS
 

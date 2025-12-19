@@ -6,10 +6,10 @@
 
 {markdownRemoveUnfinishedSections}
 
-{markdown_FormatList}
+{markdownFormatList}
 
 {markdownIndentHeading}
 
-{simpleMarkdownToConsole}
+{markdownToConsole}
 
 {markdownCheckIndex}

@@ -458,7 +458,7 @@ All functions in Zesk Build, alphabetically.
 - {SEE:mariadbDumpClean}
 - {SEE:mariadbInstall}
 - {SEE:mariadbUninstall}
-- {SEE:markdown_FormatList}
+- {SEE:markdownFormatList}
 - {SEE:markdownRemoveUnfinishedSections}
 - {SEE:markdownCheckIndex}
 - {SEE:markdownIndentHeading}
@@ -576,7 +576,7 @@ All functions in Zesk Build, alphabetically.
 - {SEE:serviceToPort}
 - {SEE:serviceToStandardPort}
 - {SEE:shaPipe}
-- {SEE:simpleMarkdownToConsole}
+- {SEE:markdownToConsole}
 - {SEE:directoryPathSimplify}
 - {SEE:singleBlankLines}
 - {SEE:sshKnownHostAdd}
