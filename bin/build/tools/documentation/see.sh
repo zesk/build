@@ -22,7 +22,9 @@ __documentationIndexSeeLinker() {
   start=$(timingStart)
 
   # Argument parsing
-  local cacheDirectory="" documentationSource="" documentationTarget="" seeFunctionTemplate="" seeFunctionLink="" seeFileTemplate="" seeFileLink=""
+  local cacheDirectory="" documentationSource="" documentationTarget=""
+  local seeFunctionTemplate="" seeFunctionLink="" seeFileTemplate="" seeFileLink=""
+  local seeEnvironmentTemplate="" seeEnvironmentLink=""
   local debugFlag=false
 
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
@@ -48,8 +50,12 @@ __documentationIndexSeeLinker() {
         seeFunctionLink="${1-}"
       elif [ -z "$seeFileTemplate" ]; then
         seeFileTemplate=$(usageArgumentFile "$handler" seeFileTemplate "${1##./}") || return $?
-        shift || throwArgument "$handler" "seeFileLink required" || return $?
-        seeFileLink="$1"
+      elif [ -z "$seeFileLink" ]; then
+        seeFileLink=$(usageArgumentString "$handler" seeFileLink "${1-}") || return $?
+      elif [ -z "$seeEnvironmentTemplate" ]; then
+        seeEnvironmentTemplate=$(usageArgumentFile "$handler" seeFileLink "${1-}") || return $?
+      elif [ -z "$seeEnvironmentLink" ]; then
+        seeEnvironmentLink=$(usageArgumentString "$handler" seeFileLink "${1-}") || return $?
       else
         break
       fi
@@ -100,10 +106,21 @@ __documentationIndexSeeLinker() {
           # __dumpNameValue "file" "$(__documentationIndexLookup "$handler" --file "$cacheDirectory" "$matchingToken")"
           __dumpNameValue "line" "$(__documentationIndexLookup "$handler" --line "$matchingToken")"
         elif settingsFile=$(__documentationIndexLookup "$handler" --file "$matchingToken"); then
-          linkPattern="$seeFileLink"
-          templateFile="$seeFileTemplate"
-          __dumpNameValue "linkType" "file"
           __dumpNameValue "file" "$settingsFile"
+          if stringBegins "$settingsFile" "bin/build/env" "bin/env"; then
+            local variable
+            variable="$(basename "$settingsFile")"
+            variable="${variable%.sh}"
+            __dumpNameValue "variable" "$variable"
+            __dumpNameValue "linkType" "environment"
+            __dumpNameValue "link" "$seeEnvironmentLink"
+            templateFile="$seeEnvironmentTemplate"
+            __documentationEnvironmentFileParse "$handler" "$settingsFile" || return $?
+          else
+            linkPattern="$seeFileLink"
+            templateFile="$seeFileTemplate"
+            __dumpNameValue "linkType" "file"
+          fi
         else
           linkPattern=""
           templateFile=""

@@ -84,7 +84,6 @@ All functions in Zesk Build, alphabetically.
 - {SEE:booleanChoose}
 - {SEE:boxedHeading}
 - {SEE:brewInstall}
-- {SEE:Build}
 - {SEE:buildCacheDirectory}
 - {SEE:buildCompletion}
 - {SEE:buildDebugEnabled}
@@ -612,6 +611,7 @@ All functions in Zesk Build, alphabetically.
 - {SEE:tofuInstall}
 - {SEE:tofuUninstall}
 - {SEE:tomorrowDate}
+- {SEE:tools}
 - {SEE:trimBoth}
 - {SEE:trimHead}
 - {SEE:trimSpace}

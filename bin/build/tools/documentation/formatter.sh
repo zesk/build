@@ -38,11 +38,12 @@ _bashDocumentationFormatter_environment() {
   while ! $eof; do
     IFS=' ' read -r -d $'\n' -a items || eof=true
     [ ${#items} -gt 0 ] || continue
-    local item ii
+    local item ii=() valid=true
     for item in "${items[@]}"; do
-      if muzzle buildEnvironmentFiles "$item"; then
-        printf "- {SEE:%s.sh}\n" "$item"
+      if $valid && environmentVariableNameValid "$item" && muzzle buildEnvironmentFiles "$item" 2>&1; then
+        printf -- "%s {SEE:%s.sh}\n" "-" "$item"
       else
+        valid=false
         ii+=("$item")
       fi
     done

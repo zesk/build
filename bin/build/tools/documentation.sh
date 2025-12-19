@@ -69,6 +69,15 @@ _bashDocumentationExtract() {
 # Argument: --help - I need somebody
 # Argument: --company companyName - Optional. Company name (uses `BUILD_COMPANY` if not set)
 # Argument: --company-link companyLink - Optional. Company name (uses `BUILD_COMPANY_LINK` if not set)
+# Argument: --unlinked-source directory - Directory. Optional.
+# Argument: --page-template pageTemplateFile - File. Optional.
+# Argument: --source sourceDirectory - Directory. Required. Location of source code. Can specify one or more.
+# Argument: --target targetDirectory - Directory. Required. Location of documentation build target.
+# Argument: --function-template functionTemplateFile - File. Optional.
+# Argument: --unlinked-template unlinkedTemplateFile - File. Optional.
+# Argument: --unlinked-target unlinkedTarget - FileDirectory. Optional.
+# Argument: --see-prefix seePrefix - EmptyString. Optional.
+# Argument: --see-environment-link seeEnvironmentLink - String. Optional.
 # Artifact: `cacheDirectory` may be created even on non-zero exit code
 # Return Code: 0 - Success
 # Return Code: 1 - Issue with environment

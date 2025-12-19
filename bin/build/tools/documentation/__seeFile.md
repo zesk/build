@@ -1,1 +1,1 @@
-- [{fn}]({sourceLink})
+[{fn}]({sourceLink})

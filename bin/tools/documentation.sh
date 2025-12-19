@@ -51,6 +51,7 @@ __buildDocumentationBuildDirectory() {
   aa+=(--unlinked-template "$source/todo.md" --unlinked-target "$target/todo.md")
   aa+=("--function-template" "$functionTemplate" --page-template "$home/documentation/template/__main.md")
   aa+=(--see-prefix "./documentation/.docs")
+  aa+=(--see-environment-link "/env/index.md")
 
   # All functions
   local target=$home/documentation/source/tools/all.md

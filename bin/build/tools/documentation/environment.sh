@@ -7,6 +7,34 @@
 # Docs: o ./documentation/source/tools/documentation.md
 # Test: o ./test/tools/documentation-tests.sh
 
+__documentationEnvironmentFileParse() {
+  local handler="$1" && shift
+
+  local envFile
+  envFile=$(usageArgumentFile "$handler" "environmentFile" "${1-}") || return $?
+
+  local description descriptionLineCount category type shortDesc
+
+  description=$(sed -n '/^[[:space:]]*#/!q; p' "$envFile" | grep -v -e '^#!\|\&copy;' | cut -c 3- | grep -v '^[[:alpha:]][[:alnum:]]*: ')
+  descriptionLineCount=$(printf "%s\n" "$description" | catchReturn "$handler" fileLineCount) || return $?
+
+  category="$(grep -m 1 -e "^[[:space:]]*#[[:space:]]*Category:" "$envFile" | cut -f 2 -d ":" | trimSpace)"
+  [ -n "$category" ] || categoryName="Uncategorized"
+  type="$(grep -m 1 -e "^[[:space:]]*#[[:space:]]*Type:" "$envFile" | cut -f 2 -d ":" | trimSpace)"
+
+  if [ "$descriptionLineCount" -le 2 ]; then
+    shortDesc="${description//$'\n'/ }"
+  else
+    shortDesc="$(printf "%s\n" "$description" | head -n 1)"
+  fi
+
+  environmentValueWrite description "$description"
+  environmentValueWrite descriptionLineCount "$descriptionLineCount"
+  environmentValueWrite category "$category"
+  environmentValueWrite type "$type"
+  environmentValueWrite summary "$shortDesc"
+}
+
 # Build documentation for ./bin/env (or bin/build/env) directory.
 #
 # Creates a cache at `documentationBuildCache`
@@ -75,6 +103,9 @@ __documentationBuildEnvironment() {
 
   statusMessage decorate info "Iterating through env files ..."
   catchEnvironment "$handler" cp "$cacheDirectory/categories" "$cacheDirectory/categories.unsorted" || return $?
+  local settings
+  settings="$cacheDirectory/.settings.$$"
+
   while read -r envFile; do
     local envTarget name="${envFile##*/}"
 
@@ -89,34 +120,29 @@ __documentationBuildEnvironment() {
       statusMessage decorate info "Generated $(basename "$envFile") ..."
     fi
 
-    local description type lines more="" shortDesc
-    description=$(sed -n '/^[[:space:]]*#/!q; p' "$envFile" | grep -v -e '^#!\|\&copy;' | cut -c 3- | grep -v '^[[:alpha:]][[:alnum:]]*: ')
-    lines=$(printf "%s\n" "$description" | catchReturn "$handler" fileLineCount) || returnUndo $? set +a || return $?
+    __documentationEnvironmentFileParse "$handler" "$envFile" >"$settings" || return $?
 
-    local categoryName categoryFileName
+    local description="" type="" category="" summary="" descriptionLineCount=""
+    # shellcheck source=/dev/null
+    catchEnvironment "$handler" source "$settings" || return $?
 
-    categoryName="$(grep -m 1 -e "^[[:space:]]*#[[:space:]]*Category:" "$envFile" | cut -f 2 -d ":" | trimSpace)"
-    [ -n "$categoryName" ] || categoryName="Uncategorized"
-    categoryFileName="${categoryName// /_}"
+    categoryFileName="${category// /_}"
 
-    type="$(grep -m 1 -e "^[[:space:]]*#[[:space:]]*Type:" "$envFile" | cut -f 2 -d ":" | trimSpace)"
-    if [ "$lines" -le 2 ]; then
-      shortDesc="${description//$'\n'/ }"
+    if ! isInteger "$descriptionLineCount" || [ "$descriptionLineCount" -le 2 ]; then
       more=""
     else
       more="[notes](#$name)"
-      shortDesc="$(printf "%s\n" "$description" | head -n 1)"
     fi
 
-    if [ "${#categories[@]}" -eq 0 ] || ! inArray "$categoryName" "${categories[@]}"; then
-      catchEnvironment "$handler" printf "%s\n" "$categoryName" >>"$cacheDirectory/categories.unsorted" || returnUndo $? set +a || return $?
-      categories+=("$categoryName")
+    if [ "${#categories[@]}" -eq 0 ] || ! inArray "$category" "${categories[@]}"; then
+      catchEnvironment "$handler" printf "%s\n" "$category" >>"$cacheDirectory/categories.unsorted" || returnUndo $? set +a || return $?
+      categories+=("$category")
     fi
     catchEnvironment "$handler" printf "%s\n" "$name" >>"$cacheDirectory/category.$categoryFileName" || returnUndo $? set +a || return $?
 
-    description=$shortDesc category="$categoryName" more="$more" type="$type" mapEnvironment <"$lineTemplate" >"$envTarget" || returnUndo $? set +a || return $?
+    description=$summary category="$category" more="$more" type="$type" mapEnvironment <"$lineTemplate" >"$envTarget" || returnUndo $? set +a || return $?
     if [ -n "$more" ]; then
-      category="$categoryName" type="$type" mapEnvironment <"$moreTemplate" >"$moreTarget" || returnUndo $? set +a || return $?
+      category="$category" type="$type" mapEnvironment <"$moreTemplate" >"$moreTarget" || returnUndo $? set +a || return $?
     fi
     printf "%s\n" "$name" >>"$cacheDirectory/mores"
   done < <(find "$home/bin/build/env" -maxdepth 1 -name "*.sh")
@@ -132,13 +158,13 @@ __documentationBuildEnvironment() {
   if ! fileEndsWithNewline "$targetFile"; then
     printf "\n\n" >>"$targetFile"
   fi
-  local categoryName
+  local category
   while IFS="" read -r categoryName; do
     categoryFileName="${categoryName// /_}"
-    statusMessage decorate info "Processing $(basename "$categoryName") ..."
+    statusMessage decorate info "Processing $(basename "$category") ..."
     local name
     if [ -f "$cacheDirectory/category.$categoryFileName" ]; then
-      printf "%s\n" "## $categoryName" "" >>"$targetFile"
+      printf "%s\n" "## $category" "" >>"$targetFile"
       while IFS="" read -r name; do
         printf "%s\n" "$(cat "$cacheDirectory/$name")" >>"$targetFile"
       done < <(sort -u "$cacheDirectory/category.$categoryFileName")

@@ -20,6 +20,7 @@ __documentationBuild() {
   local indexArgs=() templatePath="" company="" applicationName="" functionTemplate="" seePrefix="-"
 
   local unlinkedSources=() unlinkedTemplate="" unlinkedTarget="" dd=()
+  local seeEnvironmentLink=""
 
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
@@ -101,6 +102,10 @@ __documentationBuild() {
       shift
       seePrefix="${1-}"
       ;;
+    --see-environment-link)
+      shift
+      seeEnvironmentLink=$(usageArgumentString "$handler" "$argument" "${1-}") || return $?
+      ;;
     --unlinked-update)
       [ -z "$actionFlag" ] || throwArgument "$handler" "$argument and $actionFlag are mutually exclusive" || return $?
       actionFlag="$argument"
@@ -169,10 +174,11 @@ __documentationBuild() {
 
   catchReturn "$handler" __pcregrepInstall || return $?
 
-  local seeFunction seeFile seePrefix
+  local seeFunction seeFile seeEnvironment seePrefix
 
   seeFunction=$(catchReturn "$handler" documentationTemplate seeFunction) || return $?
   seeFile=$(catchReturn "$handler" documentationTemplate seeFile) || return $?
+  seeEnvironment=$(catchReturn "$handler" documentationTemplate seeEnvironment) || return $?
 
   if [ "$actionFlag" = "--unlinked-update" ]; then
     for argument in unlinkedTemplate unlinkedTarget; do
@@ -243,7 +249,7 @@ __documentationBuild() {
     functionLinkPattern=${BUILD_DOCUMENTATION_SOURCE_LINK_PATTERN-}
     # Remove line
     fileLinkPattern=${functionLinkPattern%%#.*}
-    catchReturn "$handler" __documentationIndexSeeLinker "${dd[@]+"${dd[@]}"}" "$cacheDirectory" "${unlinkedSources[0]}" "$seePrefix" "$seeFunction" "$functionLinkPattern" "$seeFile" "$fileLinkPattern" || return $?
+    catchReturn "$handler" __documentationIndexSeeLinker "${dd[@]+"${dd[@]}"}" "$cacheDirectory" "${unlinkedSources[0]}" "$seePrefix" "$seeFunction" "$functionLinkPattern" "$seeFile" "$fileLinkPattern" "$seeEnvironment" "$seeEnvironmentLink" || return $?
   ) || return $?
   message=$(catchReturn "$handler" timingReport "$start" "in") || return $?
 

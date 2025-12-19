@@ -6,9 +6,9 @@
 #
 
 testBuildRunner() {
-  assertExitCode --stderr-match "Hello, world" 1 Build --verbose returnMessage 1 "Hello, world" || return $?
-  assertExitCode --stderr-match "welcome our" 99 Build --verbose returnMessage 99 "I. for one, welcome our ..." || return $?
-  assertExitCode --stderr-match "bad arg" 2 Build --verbose returnMessage "NaN" "bad arg" || return $?
+  assertExitCode --stderr-match "Hello, world" 1 tools --verbose returnMessage 1 "Hello, world" || return $?
+  assertExitCode --stderr-match "welcome our" 99 tools --verbose returnMessage 99 "I. for one, welcome our ..." || return $?
+  assertExitCode --stderr-match "bad arg" 2 tools --verbose returnMessage "NaN" "bad arg" || return $?
 }
 
 testBinBuildRequires() {

@@ -152,10 +152,14 @@ junitTestCaseFailedOpen() {
 junitTestCaseFailedClose() {
   __xmlCLose failure
 }
+
+# Open tag for `error` - test error output
 junitTestCaseErrorOpen() {
   local message="$1" && shift
   __xmlTagOpen error message="$message" "$@"
 }
+
+# Close tag for `error` - test error output
 junitTestCaseErrorClose() {
   __xmlCLose error
 }
