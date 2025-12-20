@@ -24,7 +24,7 @@
 _documentationIndexGenerate() {
   local handler="_${FUNCNAME[0]}"
 
-  local codePaths=() filterArgs=()
+  local codePaths=() filterArgs=() verboseFlag=false
 
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
