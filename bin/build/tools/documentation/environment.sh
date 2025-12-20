@@ -31,6 +31,7 @@ __documentationEnvironmentFileParse() {
   environmentValueWrite description "$description"
   environmentValueWrite descriptionLineCount "$descriptionLineCount"
   environmentValueWrite category "$category"
+  environmentValueWrite categoryId "$(lowercase "${category// /-}")"
   environmentValueWrite type "$type"
   environmentValueWrite summary "$shortDesc"
 }
