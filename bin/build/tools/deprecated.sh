@@ -18,34 +18,49 @@
 #             |_|
 #
 
+# DEPRECATED 2025-10-05
 __catch() {
   # TODO Add this back in after another release
   catchReturn "$@" || return $?
 }
+
+# DEPRECATED 2025-10-05
 __catchCode() {
   _deprecated "${FUNCNAME[0]}"
   catchCode "$@" || return $?
 }
+
+# DEPRECATED 2025-10-05
 __throwEnvironment() {
   _deprecated "${FUNCNAME[0]}"
   throwEnvironment "$@" || return $?
 }
+
+# DEPRECATED 2025-10-05
 __catchEnvironment() {
   _deprecated "${FUNCNAME[0]}"
   catchEnvironment "$@" || return $?
 }
+
+# DEPRECATED 2025-10-05
 __catchArgument() {
   _deprecated "${FUNCNAME[0]}"
   catchArgument "$@" || return $?
 }
+
+# DEPRECATED 2025-10-05
 __execute() {
   _deprecated "${FUNCNAME[0]}"
   execute "$@" || return $?
 }
+
+# DEPRECATED 2025-10-05
 __echo() {
   _deprecated "${FUNCNAME[0]}"
   executeEcho "$@" || return $?
 }
+
+# DEPRECATED 2025-10-05
 _choose() {
   _deprecated "${FUNCNAME[0]}"
   booleanChoose "$@"
@@ -63,23 +78,31 @@ _home() {
   userRecordHome "$@"
 }
 
+# DEPRECATED 2025-10-03
 _argument() {
   _deprecated "${FUNCNAME[0]}"
   returnArgument "$@"
 }
+
+# DEPRECATED 2025-10-03
 _environment() {
   _deprecated "${FUNCNAME[0]}"
   returnEnvironment "$@"
 }
+
+# DEPRECATED 2025-10-03
 __environment() {
   _deprecated "${FUNCNAME[0]}"
   __catchEnvironment "returnMessage" "$@"
 }
+
+# DEPRECATED 2025-10-03
 __argument() {
   _deprecated "${FUNCNAME[0]}"
   __catchArgument "returnMessage" "$@"
 }
 
+# DEPRECATED 2025-10-03
 isAbsolutePath() {
   _deprecated "${FUNCNAME[0]}"
   pathIsAbsolute "$@"

@@ -115,7 +115,7 @@ __documentationIndexSeeLinker() {
             variable="${variable%.sh}"
             __dumpSimpleValue "variable" "$variable"
             __dumpSimpleValue "linkType" "environment"
-            __dumpSimpleValue "link" "$seeEnvironmentLink"
+            __dumpSimpleValue "link" "$matchingPrefix${seeEnvironmentLink#/}"
             templateFile="$seeEnvironmentTemplate"
             __documentationEnvironmentFileParse "$handler" "$settingsFile" || returnClean $? "${clean[@]}" || return $?
           else

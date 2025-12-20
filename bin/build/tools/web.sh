@@ -6,7 +6,8 @@
 #
 
 # Compare a remote file size with a local file size
-# Usage: {fn} url file
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
 # Argument: url - Required. URL. URL to check.
 # Argument: file - Required. File. File to compare.
 urlMatchesLocalFileSize() {
@@ -92,6 +93,8 @@ _urlContentLength() {
 }
 
 # Fetch Time to First Byte and other stats
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
 # Argument: url - URL. Required. URL to check.
 hostTTFB() {
   __help "_${FUNCNAME[0]}" "$@" || return 0
@@ -114,11 +117,14 @@ _watchFile() {
 }
 
 # Scrape a website.
+#
 # Untested, and in progress. Do not use seriously.
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
 # Argument: url - URL. Required. Url to scrape recursively.
 # Untested: true
-# Uses wget to fetch a site, convert it to HTML nad rewrite it for local consumption
-# SIte is stored in a directory called `host` for the URL requested
+# Uses `wget` to fetch a site, convert it to HTML nad rewrite it for local consumption.
+# Site is stored in a directory called `host` for the URL requested.
 # This is not final yet and may not work properly.
 websiteScrape() {
   local handler="_${FUNCNAME[0]}"

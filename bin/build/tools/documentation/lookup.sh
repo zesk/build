@@ -107,12 +107,11 @@ __documentationIndexLookup() {
 }
 
 __documentationIndexCommentFile() {
-  local handler="$1" indexDirectory="$2" functionName="$3" sourceFile="$4" lineNumber="$5" && shift 5
+  local saved=("$@") handler="$1" indexDirectory="$2" functionName="$3" sourceFile="$4" lineNumber="$5" && shift 5
   local commentFile="$indexDirectory/comment/$functionName"
   if [ ! -f "$commentFile" ]; then
     if ! bashFileComment "$sourceFile" "$lineNumber" >"$commentFile"; then
-      throwEnvironment "$handler" "$* failed for $functionName" || returnClean $? "$commentFile" || return $?
-
+      throwEnvironment "$handler" "${saved[*]} failed for $functionName" || returnClean $? "$commentFile" || return $?
     else
       printf "%s: %s\n" ":sourceFile" "$sourceFile"
       printf "%s: %s\n" ":sourceLine" "$lineNumber"

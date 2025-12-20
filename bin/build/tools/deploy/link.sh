@@ -2,29 +2,10 @@
 #
 # Copyright &copy; 2025 Market Acumen, Inc.
 #
-#
 #    ▌      ▜
 #  ▞▀▌▞▀▖▛▀▖▐ ▞▀▖▌ ▌
 #  ▌ ▌▛▀ ▙▄▘▐ ▌ ▌▚▄▌
 #  ▝▀▘▝▀▘▌   ▘▝▀ ▗▄▘
-#
-
-# Usage: {fn} applicationLinkPath
-# Environment: PWD
-# Argument: applicationLinkPath - Path. Required. Path where the link is created.
-# Argument: applicationPath - Path. Optional. Path where the link will point to. If not supplied uses current working directory.
-#
-# Link new version of application.
-#
-# When called, current directory is the **new** application and the `applicationLinkPath` which is
-# passed as an argument is the place where the **new** application should be linked to
-# in order to activate it.
-#
-# Summary: Link deployment to new version of the application
-# Argument: applicationLinkPath - This is the target for the current application
-# Return Code: 0 - Success
-# Return Code: 1 - Environment error
-# Return Code: 2 - Argument error
 #
 
 __deployLink() {

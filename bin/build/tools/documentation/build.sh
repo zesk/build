@@ -263,10 +263,13 @@ __documentationBuild() {
       fileLinkPattern=${functionLinkPattern%%#.*}
       catchReturn "$handler" __documentationIndexSeeLinker "${dd[@]+"${dd[@]}"}" "$cacheDirectory" "${unlinkedSources[0]}" "$seePrefix" "$seeFunction" "$functionLinkPattern" "$seeFile" "$fileLinkPattern" "$seeEnvironment" "$seeEnvironmentLink" || return $?
     ) || returnClean $? "${clean[@]}" || return $?
-    message=$(catchReturn "$handler" timingReport "$start" "in") || returnClean $? "${clean[@]}" || return $?
   fi
 
   [ "${#clean[@]}" -eq 0 ] || catchEnvironment "$handler" rm -rf "${clean[@]}" || return $?
+
+  local message
+
+  message=$(catchReturn "$handler" timingReport "$start" "in") || returnClean $? "${clean[@]}" || return $?
 
   hookRunOptional documentation-complete "$message" || return $?
 }

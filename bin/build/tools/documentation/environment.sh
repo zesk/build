@@ -19,7 +19,7 @@ __documentationEnvironmentFileParse() {
   descriptionLineCount=$(printf "%s\n" "$description" | catchReturn "$handler" fileLineCount) || return $?
 
   category="$(grep -m 1 -e "^[[:space:]]*#[[:space:]]*Category:" "$envFile" | cut -f 2 -d ":" | trimSpace)"
-  [ -n "$category" ] || categoryName="Uncategorized"
+  [ -n "$category" ] || category="Uncategorized"
   type="$(grep -m 1 -e "^[[:space:]]*#[[:space:]]*Type:" "$envFile" | cut -f 2 -d ":" | trimSpace)"
 
   if [ "$descriptionLineCount" -le 2 ]; then
@@ -159,8 +159,8 @@ __documentationBuildEnvironment() {
     printf "\n\n" >>"$targetFile"
   fi
   local category
-  while IFS="" read -r categoryName; do
-    categoryFileName="${categoryName// /_}"
+  while IFS="" read -r category; do
+    categoryFileName="${category// /_}"
     statusMessage decorate info "Processing $(basename "$category") ..."
     local name
     if [ -f "$cacheDirectory/category.$categoryFileName" ]; then

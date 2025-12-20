@@ -73,8 +73,8 @@ __documentationTemplateCompile() {
 
   clean+=("$mappedDocumentTemplate")
 
-  catchReturn "$handler" mapEnvironment <"$sourceFile" >"$mappedDocumentTemplate" || retunClean $? "${clean[@]}" || return $?
-  catchReturn "$handler" mapTokens <"$mappedDocumentTemplate" >"$documentTokensFile" || retunClean $? "${clean[@]}" || return $?
+  catchReturn "$handler" mapEnvironment <"$sourceFile" >"$mappedDocumentTemplate" || returnClean $? "${clean[@]}" || return $?
+  catchReturn "$handler" mapTokens <"$mappedDocumentTemplate" >"$documentTokensFile" || returnClean $? "${clean[@]}" || return $?
 
   local tokenCount
   tokenCount=$(fileLineCount "$documentTokensFile")
