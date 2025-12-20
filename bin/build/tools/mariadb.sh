@@ -117,11 +117,11 @@ _mariadbDump() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# Clean mariadb dumps of the dreaded
-# Code: /*!999999\- enable the sandbox mode */
+# Summary: Clean mariadb dumps for import
+# Clean mariadb dumps of the dreaded code `/*!999999\- enable the sandbox mode */`
 # stdin: mariadbDump
 # stdout: mariadbDump (cleaned)
-# See: https://mariadb.org/mariadb-dump-file-compatibility-change/
+# - [Official documentation](https://mariadb.org/mariadb-dump-file-compatibility-change/)
 mariadbDumpClean() {
   [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
   # Without LC_CTYPE and LAND it outputs the error:

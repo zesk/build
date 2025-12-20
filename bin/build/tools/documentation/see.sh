@@ -75,11 +75,12 @@ __documentationIndexSeeLinker() {
   for arg in cacheDirectory documentationTarget seeFunctionTemplate seeFileTemplate seeFunctionLink seeFileLink; do
     [ -n "${!arg}" ] || throwArgument "$handler" "$arg is required" || return $?
   done
-  local seeVariablesFile
+  local seeVariablesFile clean=()
   seeVariablesFile=$(fileTemporaryName "$handler") || return $?
   local linkPatternFile="$seeVariablesFile.linkPatterns"
   local variablesSedFile="$seeVariablesFile.variablesSedFile"
   local matchingFile matchingPrefix
+  clean+=("$seeVariablesFile" "$linkPatternFile" "$variablesSedFile")
   if ! find "$documentationTarget" -name '*.md' -type f "$@" -print0 | xargs -0 "$(__pcregrepBinary)" -l "$seePattern" | while read -r matchingFile; do
     statusMessage decorate success "$matchingFile Found"
     matchingPrefix=${matchingFile#"$documentationTarget"}
@@ -102,31 +103,32 @@ __documentationIndexSeeLinker() {
           cat "$settingsFile"
           linkPattern="$seeFunctionLink"
           templateFile="$seeFunctionTemplate"
-          __dumpNameValue "linkType" "function"
-          # __dumpNameValue "file" "$(__documentationIndexLookup "$handler" --file "$cacheDirectory" "$matchingToken")"
-          __dumpNameValue "line" "$(__documentationIndexLookup "$handler" --line "$matchingToken")"
+          __dumpSimpleValue "linkType" "function"
+          # __dumpSimpleValue "file" "$(__documentationIndexLookup "$handler" --file "$cacheDirectory" "$matchingToken")"
+          __dumpSimpleValue "line" "$(__documentationIndexLookup "$handler" --line "$matchingToken")"
         elif settingsFile=$(__documentationIndexLookup "$handler" --file "$matchingToken"); then
-          __dumpNameValue "file" "$settingsFile"
+          settingsFile="$(printf -- "%s\n" "$settingsFile" | sort | head -n 1)" || return $?
+          __dumpSimpleValue "file" "$settingsFile"
           if stringBegins "$settingsFile" "bin/build/env" "bin/env"; then
             local variable
             variable="$(basename "$settingsFile")"
             variable="${variable%.sh}"
-            __dumpNameValue "variable" "$variable"
-            __dumpNameValue "linkType" "environment"
-            __dumpNameValue "link" "$seeEnvironmentLink"
+            __dumpSimpleValue "variable" "$variable"
+            __dumpSimpleValue "linkType" "environment"
+            __dumpSimpleValue "link" "$seeEnvironmentLink"
             templateFile="$seeEnvironmentTemplate"
-            __documentationEnvironmentFileParse "$handler" "$settingsFile" || return $?
+            __documentationEnvironmentFileParse "$handler" "$settingsFile" || returnClean $? "${clean[@]}" || return $?
           else
             linkPattern="$seeFileLink"
             templateFile="$seeFileTemplate"
-            __dumpNameValue "linkType" "file"
+            __dumpSimpleValue "linkType" "file"
           fi
         else
           linkPattern=""
           templateFile=""
-          __dumpNameValue "linkType" "unknown"
+          __dumpSimpleValue "linkType" "unknown"
         fi
-        __dumpNameValue "fn" "$matchingToken"
+        __dumpSimpleValue "fn" "$matchingToken"
       } >"$linkPatternFile"
 
       local vv=(
@@ -139,7 +141,8 @@ __documentationIndexSeeLinker() {
       # shellcheck source=/dev/null
       source "$linkPatternFile"
       set +a
-      sourceLink="$(mapEnvironment "${vv[@]}" <<<"$linkPattern")" >>"$linkPatternFile"
+      handler="_${FUNCNAME[0]}"
+      sourceLink="$(catchEnvironment "$handler" mapEnvironment "${vv[@]}" <<<"$linkPattern")" >>"$linkPatternFile" || returnClean $? "${clean[@]}" || return $?
       documentationPath="$(__documentationIndexLookup "$handler" --documentation "$matchingToken" | head -n 1 || :)"
       if [ -n "$documentationPath" ]; then
         documentationPath="${documentationPath#"$home"}"
@@ -153,33 +156,24 @@ __documentationIndexSeeLinker() {
       if [ -z "$templateFile" ]; then
         tokenValue="Not found"
       else
-        tokenValue=$(mapEnvironment "${vv[@]}" <"$templateFile")
+        tokenValue=$(catchEnvironment "$handler" mapEnvironment "${vv[@]}" <"$templateFile") || returnClean $? "${clean[@]}" || return $?
       fi
       ! $debugFlag || statusMessage decorate pair "$tokenName" "$(newlineHide "$tokenValue")"
-      __dumpNameValue "$tokenName" "$tokenValue" >>"$seeVariablesFile"
+      catchEnvironment "$handler" __dumpNameValue "$tokenName" "$tokenValue" >>"$seeVariablesFile" || returnClean $? "${clean[@]}" || return $?
     done < <(__pcregrep -o1 "$seePattern" "$matchingFile")
 
+    clean+=("$matchingFile.new")
     if ! (
-      statusMessage --last decorate info "Linking $matchingFile ..."
-      statusMessage --last decorate info "See: $seeVariablesFile"
-      statusMessage --last decorate info "matchingFile: $matchingFile"
-      statusMessage --last decorate info "matchingPrefix: $matchingPrefix"
-      statusMessage --last decorate info "documentationSource: $documentationSource"
-      statusMessage --last decorate info "documentationPath: $documentationPath"
-      statusMessage --last decorate info "documentationTarget: $documentationTarget"
-      statusMessage --last decorate info "Variables: $variablesSedFile"
       set -a # UNDO ok
       # shellcheck source=/dev/null
-      if ! source "$seeVariablesFile" ||
-        ! sed -f "$variablesSedFile" <"$matchingFile" | mapEnvironment >"$matchingFile.new" ||
-        ! mv "$matchingFile.new" "$matchingFile"; then
+      if ! source "$seeVariablesFile" || ! sed -f "$variablesSedFile" <"$matchingFile" | mapEnvironment >"$matchingFile.new" || ! mv "$matchingFile.new" "$matchingFile"; then
         set +a
         rm -f "$seeVariablesFile" "$linkPatternFile" "$variablesSedFile" 2>/dev/null || :
         return "1"
       fi
       set +a
     ); then
-      rm -f "$matchingFile.new" "$seeVariablesFile" "$linkPatternFile" "$variablesSedFile" 2>/dev/null || :
+      rm -f "${clean[@]}" "$seeVariablesFile" "$linkPatternFile" "$variablesSedFile" 2>/dev/null || :
       return 1
     fi
   done; then

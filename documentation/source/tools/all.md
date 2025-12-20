@@ -141,8 +141,8 @@ All functions in Zesk Build, alphabetically.
 - {SEE:contextOpen}
 - {SEE:contextShow}
 - {SEE:convertValue}
-- {SEE:fileCopy}
-- {SEE:fileCopyWouldChange}
+- {SEE:copyFile}
+- {SEE:copyFileWouldChange}
 - {SEE:crontabApplicationUpdate}
 - {SEE:cursorGet}
 - {SEE:cursorSet}
@@ -358,7 +358,7 @@ All functions in Zesk Build, alphabetically.
 - {SEE:hookSourceOptional}
 - {SEE:hookVersionCurrent}
 - {SEE:hookVersionLive}
-- {SEE:networkIPList}
+- {SEE:hostIPList}
 - {SEE:hostnameFull}
 - {SEE:hostTTFB}
 - {SEE:housekeeper}
@@ -372,11 +372,11 @@ All functions in Zesk Build, alphabetically.
 - {SEE:insideDocker}
 - {SEE:installInstallBinary}
 - {SEE:installInstallBuild}
-- {SEE:approveBashSource}
+- {SEE:interactiveBashSource}
 - {SEE:interactiveCountdown}
 - {SEE:interactiveManager}
 - {SEE:ipLookup}
-- {SEE:pathIsAbsolute}
+- {SEE:isAbsolutePath}
 - {SEE:isAlpine}
 - {SEE:isArray}
 - {SEE:isBashBuiltin}
@@ -474,7 +474,7 @@ All functions in Zesk Build, alphabetically.
 - {SEE:networkMACAddressList}
 - {SEE:fileNewest}
 - {SEE:newlineHide}
-- {SEE:releaseNew}
+- {SEE:newRelease}
 - {SEE:nodeInstall}
 - {SEE:nodePackageManager}
 - {SEE:nodePackageManagerInstall}
@@ -569,7 +569,7 @@ All functions in Zesk Build, alphabetically.
 - {SEE:fileReverseLines}
 - {SEE:rotateLog}
 - {SEE:rotateLogs}
-- {SEE:floatRound}
+- {SEE:roundFloat}
 - {SEE:rsyncInstall}
 - {SEE:runCount}
 - {SEE:sedReplacePattern}
@@ -602,7 +602,7 @@ All functions in Zesk Build, alphabetically.
 - {SEE:testTools}
 - {SEE:throwArgument}
 - {SEE:throwEnvironment}
-- {SEE:dateFromTimestamp}
+- {SEE:timestampToDate}
 - {SEE:timing}
 - {SEE:timingFormat}
 - {SEE:timingReport}
@@ -617,7 +617,7 @@ All functions in Zesk Build, alphabetically.
 - {SEE:trimSpace}
 - {SEE:trimTail}
 - {SEE:trimWords}
-- {SEE:floatTruncate}
+- {SEE:truncateFloat}
 - {SEE:unquote}
 - {SEE:uppercase}
 - {SEE:urlContentLength}

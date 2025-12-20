@@ -174,6 +174,7 @@ buildDocumentationBuild() {
     --mkdocs-only) updateDerived=false && updateTemplates=false && updateReference=false && makeDocumentation="true" ;;
     --clean) cleanFlag=true ;;
     --debug) da+=(--debug) ;;
+    --see-update | --index-update | --docs-update | --env-update) da+=("$argument") && updateReference=true ;;
     --verbose) da+=("$argument") && vv+=("$argument") && ea+=("$argument") && verboseFlag=true ;;
     --filter) da+=("$argument") && while [ $# -gt 0 ] && [ "$1" != "--" ]; do da+=("$1") && shift; done ;;
     --force) da+=("$argument") && ea+=("$argument") ;;

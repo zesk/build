@@ -41,14 +41,14 @@ _bashDocumentationFormatter_environment() {
     local item ii=() valid=true
     for item in "${items[@]}"; do
       if $valid && environmentVariableNameValid "$item" && muzzle buildEnvironmentFiles "$item" 2>&1; then
-        printf -- "%s {SEE:%s.sh}\n" "-" "$item"
+        ii+=("{SEE:%s.sh}")
       else
         valid=false
         ii+=("$item")
       fi
     done
     if [ "${#ii[@]}" -gt 0 ]; then
-      printf -- "%s\n" "${ii[*]}"
+      printf -- "%s %s\n" "-" "${ii[*]}"
     fi
   done
 }

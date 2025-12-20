@@ -106,14 +106,14 @@ __documentationBuild() {
       shift
       seeEnvironmentLink=$(usageArgumentString "$handler" "$argument" "${1-}") || return $?
       ;;
-    --unlinked-update)
-      [ -z "$actionFlag" ] || throwArgument "$handler" "$argument and $actionFlag are mutually exclusive" || return $?
-      actionFlag="$argument"
-      ;;
     --force)
       if [ ${#docArgs[@]} -eq 0 ] || ! inArray "$argument" "${docArgs[@]}"; then
         docArgs+=("$argument")
       fi
+      ;;
+    --see-update | --env-update | --unlinked-update | --index-update | --docs-update)
+      [ -z "$actionFlag" ] || throwArgument "$handler" "$argument and $actionFlag are mutually exclusive" || return $?
+      actionFlag="$argument"
       ;;
     --verbose)
       verbose=true
@@ -186,54 +186,66 @@ __documentationBuild() {
     done
   fi
   if [ -n "$unlinkedTemplate" ]; then
-    [ -n "$unlinkedTarget" ] || throwArgument "$handler" "--unlinked-target required with --unlinked-template" || returnClean $? "${clean[@]}" || return $?
+    [ -n "$unlinkedTarget" ] || throwArgument "$handler" "--unlinked-target required with --unlinked-template" || return $?
   fi
 
   #
   # Generate or update indexes
   #
-  local elapsed
-  elapsed=$(timingStart)
-  statusMessage decorate info "Generating source indexes ..."
-  catchReturn "$handler" _documentationIndexGenerate "${indexArgs[@]+${indexArgs[@]}}" "${sourcePaths[@]}" || return $?
-  statusMessage --last timingReport "$elapsed" "Indexes took"
-  statusMessage timingReport "$start" "Elapsed so far"
+  if [ "$actionFlag" = "--index-update" ] || [ -z "$actionFlag" ]; then
+    local elapsed
+    elapsed=$(timingStart)
+    statusMessage decorate info "Generating source indexes ..."
+    catchReturn "$handler" _documentationIndexGenerate "${indexArgs[@]+${indexArgs[@]}}" "${sourcePaths[@]}" || return $?
+    statusMessage --last timingReport "$elapsed" "Indexes took"
+    statusMessage timingReport "$start" "Elapsed so far"
+  fi
 
-  local envFile clean=()
-  envFile=$(fileTemporaryName "$handler") || return $?
-  _buildDocumentationGenerateEnvironment "$handler" "$company" "$companyLink" "$applicationName" >"$envFile" || returnClean $? "$envFile" || return $?
-  clean+=("$envFile")
+  local clean=()
+  if [ "$actionFlag" = "--env-update" ] || [ -z "$actionFlag" ]; then
+    local envFile
+    envFile=$(fileTemporaryName "$handler") || return $?
+    clean+=("$envFile")
+    _buildDocumentationGenerateEnvironment "$handler" "$company" "$companyLink" "$applicationName" >"$envFile" || returnClean $? "${clean[@]}" || return $?
+  fi
 
   if [ -f "$unlinkedTemplate" ]; then
-    # First copy
-    catchReturn "$handler" mapEnvironment <"$unlinkedTemplate" >"$unlinkedTarget" || return $?
+    if [ "$actionFlag" = "--index-update" ] || [ -z "$actionFlag" ]; then
+      # First copy
+      catchReturn "$handler" mapEnvironment <"$unlinkedTemplate" >"$unlinkedTarget" || returnClean $? "${clean[@]}" || return $?
 
-    if [ "${#unlinkedSources[@]}" -gt 0 ]; then
-      # Create or update indexes
-      elapsed=$(timingStart)
-      statusMessage decorate info "Generating documentation index ..."
-      catchReturn "$handler" __documentationIndexDocumentation "$handler" "$cacheDirectory" "${unlinkedSources[@]}" || returnClean $? "${clean[@]}" || return $?
-      statusMessage --last timingReport "$elapsed" "Generated documentation index in" || :
+      if [ "${#unlinkedSources[@]}" -gt 0 ]; then
+        # Create or update indexes
+        elapsed=$(timingStart)
+        statusMessage decorate info "Generating documentation index ..."
+        catchReturn "$handler" __documentationIndexDocumentation "$handler" "$cacheDirectory" "${unlinkedSources[@]}" || returnClean $? "${clean[@]}" || return $?
+        statusMessage --last timingReport "$elapsed" "Generated documentation index in" || :
+      fi
     fi
   fi
 
-  elapsed=$(timingStart)
-  statusMessage decorate info "Compiling templates into documentation source ..."
-  __documentationTemplateDirectoryCompile "$handler" "${docArgs[@]+"${docArgs[@]}"}" "$cacheDirectory" "$templatePath" "$functionTemplate" "$targetPath" || returnClean $? "${clean[@]}" || return $?
-  statusMessage --last timingReport "$elapsed" "Compiling templates into documentation source took"
-
-  if [ -n "$unlinkedTemplate" ]; then
-    ! $verbose || decorate info "Update unlinked document $unlinkedTarget"
+  if [ "$actionFlag" = "--docs-update" ] || [ -z "$actionFlag" ]; then
 
     elapsed=$(timingStart)
-    statusMessage decorate info "Updating unlinked ..."
-    catchReturn "$handler" __documentationTemplateUpdateUnlinked "$cacheDirectory" "$envFile" "$unlinkedTemplate" "$unlinkedTarget" "$pageTemplate" || returnClean $? "${clean[@]}" || return $?
-    statusMessage --last timingReport "$elapsed" "Updated unlinked index in" || :
-    catchReturn "$handler" environmentFileLoad "$envFile" --execute documentationTemplateCompile "${docArgs[@]+"${docArgs[@]}"}" "$cacheDirectory" "$unlinkedTemplate" "$functionTemplate" "$unlinkedTarget" || returnClean $? "${clean[@]}" || return $?
-    if [ "$actionFlag" = "--unlinked-update" ]; then
-      printf "\n"
-      catchEnvironment "$handler" rm -rf "${clean[@]}" || return $?
-      return 0
+    statusMessage decorate info "Compiling templates into documentation source ..."
+    __documentationTemplateDirectoryCompile "$handler" "${docArgs[@]+"${docArgs[@]}"}" "$cacheDirectory" "$templatePath" "$functionTemplate" "$targetPath" || returnClean $? "${clean[@]}" || return $?
+    statusMessage --last timingReport "$elapsed" "Compiling templates into documentation source took"
+
+  fi
+  if [ -n "$unlinkedTemplate" ]; then
+    if [ "$actionFlag" = "--unlinked-update" ] || [ -z "$actionFlag" ]; then
+      ! $verbose || decorate info "Update unlinked document $unlinkedTarget"
+
+      elapsed=$(timingStart)
+      statusMessage decorate info "Updating unlinked ..."
+      catchReturn "$handler" __documentationTemplateUpdateUnlinked "$cacheDirectory" "$envFile" "$unlinkedTemplate" "$unlinkedTarget" "$pageTemplate" || returnClean $? "${clean[@]}" || return $?
+      statusMessage --last timingReport "$elapsed" "Updated unlinked index in" || :
+      catchReturn "$handler" environmentFileLoad "$envFile" --execute documentationTemplateCompile "${docArgs[@]+"${docArgs[@]}"}" "$cacheDirectory" "$unlinkedTemplate" "$functionTemplate" "$unlinkedTarget" || returnClean $? "${clean[@]}" || return $?
+      if [ "$actionFlag" = "--unlinked-update" ]; then
+        printf "\n"
+        catchEnvironment "$handler" rm -rf "${clean[@]}" || return $?
+        return 0
+      fi
     fi
   else
     ! $verbose || decorate warning "No --unlinked-template supplied"
@@ -242,16 +254,17 @@ __documentationBuild() {
   #
   # {SEE:foo} gets linked in final documentation where it exists (rewrites file currently)
   #
-
-  (
-    local functionLinkPattern fileLinkPattern
-    catchReturn "$handler" buildEnvironmentLoad BUILD_DOCUMENTATION_SOURCE_LINK_PATTERN || return $?
-    functionLinkPattern=${BUILD_DOCUMENTATION_SOURCE_LINK_PATTERN-}
-    # Remove line
-    fileLinkPattern=${functionLinkPattern%%#.*}
-    catchReturn "$handler" __documentationIndexSeeLinker "${dd[@]+"${dd[@]}"}" "$cacheDirectory" "${unlinkedSources[0]}" "$seePrefix" "$seeFunction" "$functionLinkPattern" "$seeFile" "$fileLinkPattern" "$seeEnvironment" "$seeEnvironmentLink" || return $?
-  ) || return $?
-  message=$(catchReturn "$handler" timingReport "$start" "in") || return $?
+  if [ "$actionFlag" = "--see-update" ] || [ -z "$actionFlag" ]; then
+    (
+      local functionLinkPattern fileLinkPattern
+      catchReturn "$handler" buildEnvironmentLoad BUILD_DOCUMENTATION_SOURCE_LINK_PATTERN || return $?
+      functionLinkPattern=${BUILD_DOCUMENTATION_SOURCE_LINK_PATTERN-}
+      # Remove line
+      fileLinkPattern=${functionLinkPattern%%#.*}
+      catchReturn "$handler" __documentationIndexSeeLinker "${dd[@]+"${dd[@]}"}" "$cacheDirectory" "${unlinkedSources[0]}" "$seePrefix" "$seeFunction" "$functionLinkPattern" "$seeFile" "$fileLinkPattern" "$seeEnvironment" "$seeEnvironmentLink" || return $?
+    ) || returnClean $? "${clean[@]}" || return $?
+    message=$(catchReturn "$handler" timingReport "$start" "in") || returnClean $? "${clean[@]}" || return $?
+  fi
 
   [ "${#clean[@]}" -eq 0 ] || catchEnvironment "$handler" rm -rf "${clean[@]}" || return $?
 
