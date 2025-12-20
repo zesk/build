@@ -372,7 +372,7 @@ All functions in Zesk Build, alphabetically.
 - {SEE:insideDocker}
 - {SEE:installInstallBinary}
 - {SEE:installInstallBuild}
-- {SEE:interactiveBashSource}
+- {SEE:approveBashSource}
 - {SEE:interactiveCountdown}
 - {SEE:interactiveManager}
 - {SEE:ipLookup}

@@ -237,7 +237,7 @@ __approvedSources() {
         if [ "$actualCacheFile" != "$cacheFile" ]; then
           why+=("original file $displayName changed")
         fi
-        if inArray "$name" "${handledFiles[@]}"; then
+        if [ "${#handledFiles[@]}" -gt 0 ] && inArray "$name" "${handledFiles[@]}"; then
           why+=("Already handled $displayName")
         fi
       else

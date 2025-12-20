@@ -103,19 +103,6 @@ __buildDocumentationBuildRelease() {
   done < <(find "$notesPath" -name "*.md" | versionSort -r)
 }
 
-__mkdocsConfiguration() {
-  local handler="$1" token source="mkdocs.template.yml" target="mkdocs.yml"
-
-  [ -f "$source" ] || throwEnvironment "$handler" "missing $source" || return $?
-  while IFS="" read -r token; do
-    # skip lowercase
-    [ "$token" != "$(lowercase "$token")" ] || continue
-    catchReturn "$handler" buildEnvironmentLoad "$token" || return $?
-    export "${token?}"
-  done < <(mapTokens <"$source")
-  version="$version" catchReturn "$handler" mapEnvironment <"$source" >"$target" || return $?
-}
-
 # Build the build documentation
 # fn: {base}
 # Argument: --none - Flag. Turn off all updates.
@@ -278,48 +265,7 @@ buildDocumentationBuild() {
   fi
 
   if "$makeDocumentation"; then
-    if ! whichExists mkdocs; then
-
-      statusMessage --last decorate notice "Installing python and mkdocs ..."
-      catchEnvironmentQuiet "$handler" - pythonInstall || return $?
-
-      if [ ! -d "$home/.venv" ]; then
-        if ! pythonPackageInstalled venv; then
-          catchReturn "$handler" packageInstall python3-venv || return $?
-
-          #  The virtual environment was not created successfully because ensurepip is not
-          #  available.  On Debian/Ubuntu systems, you need to install the python3-venv
-          #  package using the following command.
-          #      apt install python3.10-venv
-          #  You may need to use sudo with that command.  After installing the python3-venv
-          #  package, recreate your virtual environment.
-          #  Failing command: /opt/atlassian/pipelines/agent/build/.venv/bin/python
-          #  [1] __buildDocumentationBuild  python -m venv /opt/atlassian/pipelines/agent/build/.venv
-          #  [1] __buildBuild  /opt/atlassian/pipelines/agent/build/bin/documentation.sh
-
-          # catchEnvironment "$handler" pipWrapper install venv || return $?
-        fi
-        catchEnvironmentQuiet "$handler" - python -m venv "$home/.venv" || return $?
-      fi
-      catchEnvironment "$handler" source "$home/.venv/bin/activate" || return $?
-      if ! pythonPackageInstalled mkdocs; then
-        catchEnvironmentQuiet "$handler" - python -m pip install mkdocs mkdocs-material || return $?
-        whichExists mkdocs || throwEnvironment "$handler" "mkdocs not found after installation?" || return $?
-      fi
-    else
-
-      catchEnvironment "$handler" source "$home/.venv/bin/activate" || return $?
-    fi
-
-    catchEnvironment "$handler" muzzle pushd "./documentation" || return $?
-    statusMessage --last decorate notice "Updating mkdocs.yml ..."
-
-    timestamp="$timestamp" version="$version" __mkdocsConfiguration "$handler" || return $?
-    tempLog=$(fileTemporaryName "$handler") || return $?
-    statusMessage --last decorate notice "Building with mkdocs ..."
-    catchEnvironmentQuiet "$handler" "$tempLog" python -m mkdocs build || returnUndo $? dumpPipe "mkdocs log" <"$tempLog" || returnClean $? "$tempLog" || return $?
-    catchEnvironment "$handler" rm -f "$tempLog" || return $?
-    catchEnvironment "$handler" muzzle popd || return $?
+    timestamp="$timestamp" version="$version" documentationMkdocs --handler "$handler" --path "./documentation" || return $?
   fi
 
   statusMessage --last timingReport "$start" "$(basename "${BASH_SOURCE[0]}") completed in"

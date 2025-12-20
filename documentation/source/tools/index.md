@@ -108,6 +108,7 @@
 - [iTerm2](./iterm2.md)
 - [MariaDB](./mariadb.md)
 - [Markdown](./markdown.md)
+- [mkdocs](./mkdocs.md)
 - [Node](./node.md)
 - [NPM](./npm.md)
 - [pcregrep](./pcregrep.md)
