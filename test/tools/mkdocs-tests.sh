@@ -3,6 +3,7 @@
 # Copyright: Copyright &copy; 2025 Market Acumen, Inc.
 #
 
+# Tag: package-install
 testDocumentationMkdocs() {
   local handler="returnMessage"
 

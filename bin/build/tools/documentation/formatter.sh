@@ -31,13 +31,22 @@ _bashDocumentationFormatter_usage() {
 }
 
 #
-# Format environment blocks (indents as a code block)
-#
+# Format environment blocks
+# Converts environment variables which appear first on a line to SEE clauses
+# Once a non-token is found, rest of the line is output normally
+# Blank lines are preserved but only one sequentially
 _bashDocumentationFormatter_environment() {
-  local items eof=false
+  local items=() eof=false blank=false
   while ! $eof; do
     IFS=' ' read -r -d $'\n' -a items || eof=true
-    [ ${#items} -gt 0 ] || continue
+    if [ ${#items[@]} -eq 0 ]; then
+      if ! $blank; then
+        printf -- "\n"
+        blank=true
+      fi
+      continue
+    fi
+    blank=false
     local item ii=() valid=true
     for item in "${items[@]}"; do
       if $valid && environmentVariableNameValid "$item" && muzzle buildEnvironmentFiles "$item" 2>&1; then

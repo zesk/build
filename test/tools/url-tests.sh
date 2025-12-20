@@ -51,6 +51,7 @@ testUrlParseItem() {
   assertEquals "https" "$(urlParseItem "scheme" "$url")" || return $?
 }
 
+# Tag: slow
 testUrlParse() {
   local parsed u url user name password host port portDefault path error scheme
 

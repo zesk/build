@@ -8,6 +8,7 @@
 #
 
 # Test-Platform: !alpine
+# Tag: package-install
 testDaemontools() {
   local handler="returnMessage"
   local logPath start waitFor logWaitFor

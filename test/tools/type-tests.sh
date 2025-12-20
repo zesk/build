@@ -131,6 +131,7 @@ testNotExecutable() {
   _dataSampleNotExecutable | _testValidateNotExecutable || return $?
 }
 
+# Tag: slow
 testExecutableCallable() {
   local handler="returnMessage" home
 
