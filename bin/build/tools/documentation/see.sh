@@ -104,16 +104,17 @@ __documentationIndexSeeLinker() {
           linkPattern="$seeFunctionLink"
           templateFile="$seeFunctionTemplate"
           __dumpSimpleValue "linkType" "function"
-          # __dumpSimpleValue "file" "$(__documentationIndexLookup "$handler" --file "$cacheDirectory" "$matchingToken")"
           __dumpSimpleValue "line" "$(__documentationIndexLookup "$handler" --line "$matchingToken")"
         elif settingsFile=$(__documentationIndexLookup "$handler" --file "$matchingToken"); then
           settingsFile="$(printf -- "%s\n" "$settingsFile" | sort | head -n 1)" || return $?
           __dumpSimpleValue "file" "$settingsFile"
           if stringBegins "$settingsFile" "bin/build/env" "bin/env"; then
-            local variable
+            local variable lowerVariable
             variable="$(basename "$settingsFile")"
             variable="${variable%.sh}"
+            lowerVariable=$(lowercase "$variable")
             __dumpSimpleValue "variable" "$variable"
+            __dumpSimpleValue "lowerVariable" "$lowerVariable"
             __dumpSimpleValue "linkType" "environment"
             __dumpSimpleValue "link" "$matchingPrefix${seeEnvironmentLink#/}"
             templateFile="$seeEnvironmentTemplate"
@@ -129,6 +130,7 @@ __documentationIndexSeeLinker() {
           __dumpSimpleValue "linkType" "unknown"
         fi
         __dumpSimpleValue "fn" "$matchingToken"
+        __dumpSimpleValue "lowerFn" "$(lowercase "$matchingToken")"
       } >"$linkPatternFile"
 
       local vv=(

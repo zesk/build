@@ -223,6 +223,7 @@ All functions in Zesk Build, alphabetically.
 - {SEE:documentationBuildEnvironment}
 - {SEE:documentationIndexDocumentation}
 - {SEE:documentationIndexLookup}
+- {SEE:documentationMkdocs}
 - {SEE:documentationTemplate}
 - {SEE:documentationTemplateCompile}
 - {SEE:documentationTemplateDirectoryCompile}

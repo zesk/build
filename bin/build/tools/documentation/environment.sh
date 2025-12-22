@@ -36,21 +36,11 @@ __documentationEnvironmentFileParse() {
   environmentValueWrite summary "$shortDesc"
 }
 
-# Build documentation for ./bin/env (or bin/build/env) directory.
-#
-# Creates a cache at `documentationBuildCache`
-#
-# See: documentationBuild
-#
-# Return Code: 0 - Success
-# Return Code: 1 - Issue with environment
-# Return Code: 2 - Argument error
 __documentationBuildEnvironment() {
   local handler="$1" && shift
 
   local cleanFlag=false forceFlag=false verboseFlag=false
-
-  set -eou pipefail
+  local templatePath="" sources=() documentation="" target=""
 
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
@@ -64,6 +54,10 @@ __documentationBuildEnvironment() {
     --clean) cleanFlag=true ;;
     --force) forceFlag=true ;;
     --verbose) verboseFlag=true ;;
+    --source) shift && sources+=("$(usageArgumentDirectory "$handler" "$argument" "${1-}")") || return $? ;;
+    --target) shift && target="$(usageArgumentFile "$handler" "$argument" "${1-}")" || return $? ;;
+    --documentation) shift && documentation=$(usageArgumentDirectory "$handler" "$argument" "${1-}") || return $? ;;
+    --template-path) shift && templatePath=$(usageArgumentDirectory "$handler" "$argument" "${1-}") || return $? ;;
     *)
       # _IDENTICAL_ argumentUnknownHandler 1
       throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
@@ -73,25 +67,49 @@ __documentationBuildEnvironment() {
   done
 
   home=$(catchReturn "$handler" buildHome) || return $?
-  envSource="$home/bin/build/env"
-  lineTemplate="$home/documentation/template/env-line.md"
-  moreTemplate="$home/documentation/template/env-more.md"
-  source="$home/documentation/source/env/index.md"
-  target="$home/documentation/.docs/env"
+
+  [ -n "$documentation" ] || documentation="$home/documentation/source"
+  [ -d "$documentation" ] || throwArgument "$handler" "Not a directory: $documentation" || return $?
+
+  local argument
+  for argument in target templatePath; do
+    [ -n "${!argument-}" ] || throwArgument "$handler" "$argument is blank" || return $?
+  done
+  [ "${#sources[@]}" -gt 0 ] || throwArgument "$handler" "--source is required" || return $?
+
+  local targetDirectory
+  targetDirectory=$(catchEnvironment "$handler" dirname "$target") || return $?
+
+  local lineTemplate="$templatePath/env-line.md"
+  local moreTemplate="$templatePath/env-more.md"
+  local moreHeader="$templatePath/env-more-header.md"
+  local moreFooter="$templatePath/env-more-footer.md"
+
+  for argument in lineTemplate moreTemplate moreHeader moreFooter; do
+    argument="${!argument}"
+    [ -f "$argument" ] || throwEnvironment "$handler" "$argument template is missing" || return $?
+  done
   cacheDirectory=$(catchReturn "$handler" documentationBuildCache envDocs) || return $?
 
   if "$cleanFlag"; then
     [ ! -d "$cacheDirectory" ] || catchEnvironment "$handler" find "$cacheDirectory" -type f -exec rm -f {} \; || return $?
     return 0
   fi
-  catchEnvironment "$handler" muzzle directoryRequire "$target" || return $?
-  catchEnvironment "$handler" cat "$source" >"$target/index.md" || return $?
   local envFile categories=()
 
   if ! $forceFlag && [ -f "$cacheDirectory/categories" ]; then
-    local newestEnvSource newestEnvTarget
-    newestEnvSource=$(directoryNewestFile "$envSource" --find -type f -name '*.sh')
-    newestEnvTarget=$(directoryNewestFile "$target" --find -type f -name '*.md')
+    local newestEnvSource="" newestEnvTarget=""
+    local envSource
+    for envSource in "${sources[@]}"; do
+      envSource=$(directoryNewestFile "$envSource" --find -type f -name '*.sh') || :
+      [ -n "$envSource" ] || continue
+      if [ -z "$newestEnvSource" ]; then
+        newestEnvSource="$envSource"
+      else
+        newestEnvSource=$(fileNewest "$envSource" "$newestEnvSource")
+      fi
+    done
+    newestEnvTarget=$(directoryNewestFile "$targetDirectory" --find -type f -name '*.md')
     if [ "$cacheDirectory/categories" -nt "$newestEnvSource" ] && [ "$newestEnvTarget" -nt "$newestEnvSource" ]; then
       ! $verboseFlag || statusMessage decorate info "No changes to environment files." || return $?
       return 0
@@ -146,18 +164,14 @@ __documentationBuildEnvironment() {
       category="$category" type="$type" mapEnvironment <"$moreTemplate" >"$moreTarget" || returnUndo $? set +a || return $?
     fi
     printf "%s\n" "$name" >>"$cacheDirectory/mores"
-  done < <(find "$home/bin/build/env" -maxdepth 1 -name "*.sh")
+  done < <(local source && for source in "${sources[@]}"; do find "$source" -maxdepth 1 -name "*.sh"; done)
   set +a
 
   catchEnvironment "$handler" sort -u <"$cacheDirectory/categories.unsorted" >"$cacheDirectory/categories" || return $?
   catchEnvironment "$handler" rm -rf "$cacheDirectory/categories.unsorted" || return $?
 
-  local targetFile
-
-  targetFile="$target/index.md"
-
-  if ! fileEndsWithNewline "$targetFile"; then
-    printf "\n\n" >>"$targetFile"
+  if ! fileEndsWithNewline "$target"; then
+    printf "\n\n" >>"$target"
   fi
   local category
   while IFS="" read -r category; do
@@ -165,28 +179,26 @@ __documentationBuildEnvironment() {
     statusMessage decorate info "Processing $(basename "$category") ..."
     local name
     if [ -f "$cacheDirectory/category.$categoryFileName" ]; then
-      printf "%s\n" "## $category" "" >>"$targetFile"
+      printf "%s\n" "## $category" "" >>"$target"
       while IFS="" read -r name; do
-        printf "%s\n" "$(cat "$cacheDirectory/$name")" >>"$targetFile"
+        printf "%s\n" "$(cat "$cacheDirectory/$name")" >>"$target"
       done < <(sort -u "$cacheDirectory/category.$categoryFileName")
-      printf "\n" >>"$targetFile"
+      printf "\n" >>"$target"
     fi
   done <"$cacheDirectory/categories"
 
-  local moreHeader="$home/documentation/template/env-more-header.md"
-  local moreFooter="$home/documentation/template/env-more-footer.md"
   local heading=false name
   while IFS="" read -r name; do
     if [ -f "$cacheDirectory/more.$name" ]; then
       if ! $heading; then
-        cat "$moreHeader" >>"$targetFile"
+        cat "$moreHeader" >>"$target"
         heading=true
       fi
-      printf "\n" >>"$targetFile"
-      cat "$cacheDirectory/more.$name" >>"$targetFile"
+      printf "\n" >>"$target"
+      cat "$cacheDirectory/more.$name" >>"$target"
     fi
   done < <(sort -u "$cacheDirectory/mores")
   if "$heading"; then
-    cat "$moreFooter" >>"$targetFile"
+    cat "$moreFooter" >>"$target"
   fi
 }

@@ -256,7 +256,16 @@ buildDocumentationBuild() {
       find "$documentationSource" -type f -name "*.md" ! -path "*/tools/*" ! -path "*/env/*" -print0 | xargs -0 grep -l '{[A-Za-z][^]!\[}]*}' || :
     )
     statusMessage --last decorate notice "Updating environment variables document ..."
-    catchReturn "$handler" documentationBuildEnvironment --verbose "${ea[@]+"${ea[@]}"}" || return $?
+
+    local targetEnv="$home/documentation/.docs/env/index.md"
+    catchReturn "$handler" fileDirectoryRequire "$targetEnv" || return $?
+    catchReturn "$handler" cp "$home/documentation/source/env/index.md" "$targetEnv" || return $?
+    ea=(--verbose
+      --source "$home/bin/build/env"
+      --template-path "$home/documentation/template"
+      --target "$targetEnv"
+      "${ea[@]+"${ea[@]}"}")
+    catchReturn "$handler" documentationBuildEnvironment "${ea[@]+"${ea[@]}"}" || return $?
   fi
 
   if "$updateReference"; then

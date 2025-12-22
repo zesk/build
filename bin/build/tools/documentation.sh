@@ -118,6 +118,8 @@ _documentationTemplate() {
 #
 # Creates a cache at `documentationBuildCache`
 #
+# Argument: --documentation documentationPath - Directory. Optional. Path to documentation root. Default is `./documentation/source`.
+# Argument: --source sourcePath - Directory. Optional. Path to source environment files. Defaults to `$(buildHome)/bin/env` if not specified.
 # See: documentationBuild
 #
 # Return Code: 0 - Success
