@@ -10,14 +10,18 @@ set -eou pipefail
 # shellcheck source=/dev/null
 source "${BASH_SOURCE[0]%/*}/../tools.sh"
 
-#
-# The `git-pre-commit` hook self-installs as a `git` pre-commit hook in your project and will
-# overwrite any existing `pre-commit` hook.
-#
-# It will:
-# 1. Updates the help file templates
-# 2. Checks all shell files for errors
 # fn: {base}
+# The `pre-commit-php` hook is the default handler for PHP files, and does the following:
+#
+# 1. Change the mode of all PHP files not in a directory named `/bin/` to non-executable and readable by user and group, and not readable or writable by all
+# 1. Change the mode of all PHP files in a directory named `/bin/` to executable and readable by user and group, and not readable or writable by all
+# 1. Run `php-cs-fixer` if available in `./vendor/bin` using the project configuration on any PHP files
+#
+# The hook skips any dot directories (`*/.*/*`), and the `./vendor` directory and will not modify any files in any of those directories.
+#
+# All PHP files are made writable by the user unless the `--read-only` flag is specified.
+# Requires a file `$BUILD_HOME/.php-cs-fixer.php` if `./vendor/bin` contains the binary `php-cs-fixer`.
+# Argument: --read-only - Flag. Optional. Make all files read-only instead of writable by user.
 __hookPreCommitPHP() {
   local handler="_${FUNCNAME[0]}"
 
@@ -32,9 +36,7 @@ __hookPreCommitPHP() {
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
-    --read-only)
-      readOnly=true
-      ;;
+    --read-only) readOnly=true ;;
     *)
       # _IDENTICAL_ argumentUnknownHandler 1
       throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?

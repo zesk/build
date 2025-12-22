@@ -16,6 +16,8 @@ testDecoratePath() {
   assertEquals "💣/tempFile" "$(decoratePath "$TMPDIR/tempFile")" || return $?
 
   assertEquals "🏠/cation" "$(HOME="Yo" decoratePath "Yo/cation")" || return $?
+  assertEquals "🍎/etc" "$(HOME="/usr/home/dude" BUILD_HOME="/usr/home/dude/dev/build" decoratePath "/usr/home/dude/dev/build/etc")" || return $?
+  assertEquals "🏠/dev/build/etc" "$(HOME="/usr/home/dude" BUILD_HOME="/usr/home/dude/dev/build" decoratePath --no-app "/usr/home/dude/dev/build/etc")" || return $?
   assertEquals "🍎/cation" "$(BUILD_HOME="/var" decoratePath "/var/cation")" || return $?
   assertEquals "💣/tempFile" "$(TMPDIR="/you-guessed-it" decoratePath "/you-guessed-it/tempFile")" || return $?
 }

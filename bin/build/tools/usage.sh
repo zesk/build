@@ -20,7 +20,6 @@ __usageLoader() {
   __buildFunctionLoader __usageDocument usage "$@"
 }
 
-# Usage: {fn} functionDefinitionFile functionName exitCode [ message ]
 # Summary: Universal error handler for functions (with formatting)
 #
 # Actual function is called `{functionName}`.
@@ -36,6 +35,7 @@ __usageLoader() {
 #
 # Environment: *BUILD_DEBUG* - Add `fast-usage` to make this quicker when you do not care about usage/failure.
 # BUILD_DEBUG: fast-usage - `usageDocument` does not output formatted help for performance reasons
+# BUILD_DEBUG: handler - For all `--help` and any function which uses `usageTemplate` to output documentation (upon error), the stack will be displayed
 usageDocument() {
   #  usageDocumentSimple "$@"
   __usageLoader "_${FUNCNAME[0]}" "__${FUNCNAME[0]}" "$@"

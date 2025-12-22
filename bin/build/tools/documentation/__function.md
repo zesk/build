@@ -2,13 +2,11 @@
 
 > {summary}
 
-{description}
-
-- Location: `{applicationFile}`
-
 ### Usage
 
 {usage}
+
+{description}
 
 ### Reads standard input
 
@@ -25,6 +23,12 @@
 ### Arguments
 
 {argument}
+
+### Debugging settings
+
+Append to the value of `BUILD_DEBUG` (a comma-delimited (`,`) list) and add these tokens to enable debugging:
+
+{build_debug}
 
 ### Examples
 
@@ -65,3 +69,5 @@ File `{applicationFile}`, function `{fn}` was reviewed {reviewed}.
 ### Errors
 
 {error}
+
+- Location: `{applicationFile}`

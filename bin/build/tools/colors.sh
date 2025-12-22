@@ -59,7 +59,7 @@ __wrapColor() {
 # Argument: --dark - Optional. Flag. Dark mode for darker backgrounds.
 # Argument: --light - Optional. Flag. Light mode for lighter backgrounds.
 # Environment: BUILD_COLORS_MODE
-# BUILD_DEBUG: BUILD_COLORS_MODE
+# BUILD_DEBUG: BUILD_COLORS_MODE - Output the color mode when it is changed
 consoleColorMode() {
   local handler="_${FUNCNAME[0]}"
 

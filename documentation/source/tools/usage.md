@@ -7,7 +7,7 @@
 
 The concept of a "usage" function is one that fails, and displays a reasonable error to the user or controlling program.
 
-Essentially a `usage` function is a failure handler. If you need a simple `usage` function use `_return`.
+Essentially a `usage` function is a failure handler. If you need a simple `usage` function use `returnMessage`.
 
 ## Usage formatting
 
@@ -22,6 +22,8 @@ Essentially a `usage` function is a failure handler. If you need a simple `usage
 {usageRequireEnvironment}
 
 ## Argument check: File System
+
+All functions prefixed with `usageArgument` will be replaced with [validate](./validate.md) in the next major release.
 
 {usageArgumentExists}
 

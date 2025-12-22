@@ -81,6 +81,7 @@ _identicalRepair() {
 #
 # This is best used as a pre-commit check, for example.
 # See: identicalWatch
+# BUILD_DEBUG: identical-compare - Show verbose comparisons when things differ between identical sections
 identicalCheck() {
   __identicalLoader "_${FUNCNAME[0]}" "__${FUNCNAME[0]}" "$@"
 }

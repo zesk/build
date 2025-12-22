@@ -9,9 +9,7 @@
 
 #
 # Actual implementation of `hookRun` and `hookRunOptional`
-# See: hookRun
-#
-# BUILD_DEBUG: hook - `hookRun` and `hookSource` and optional versions of the same functions will output additional debugging information
+# See: hookRun hookRunOptional hookSource hookSourceOptional
 __hookRunner() {
   local handler="${1-}" && shift
 
@@ -122,7 +120,8 @@ __hookRunner() {
 # Example:     version="$({fn} version-current)"
 # See: hooks.md hookRunOptional hookRun hookSource hookSourceOptional
 # Test: testHookSystem
-# Environment: BUILD_HOOK_DIRS
+# Environment: BUILD_HOOK_EXTENSIONS BUILD_HOOK_DIRS BUILD_DEBUG
+# BUILD_DEBUG: hook - `hookRun` and `hookSource` and optional versions of the same functions will output additional debugging information
 hookRun() {
   __hookRunner "_${FUNCNAME[0]}" --require -- "$@"
 }
@@ -147,7 +146,9 @@ _hookRun() {
 # Example:     version="$({fn} version-current)"
 # See: hooks.md hookRunOptional hookRun
 # Test: testHookSystem
+# Environment: BUILD_HOOK_EXTENSIONS
 # Environment: BUILD_HOOK_DIRS
+# BUILD_DEBUG: hook - `hookRun` and `hookSource` and optional versions of the same functions will output additional debugging information
 hookRunOptional() {
   __hookRunner "_${FUNCNAME[0]}" -- "$@"
 }
@@ -179,7 +180,8 @@ _hookRunOptional() {
 # Example:     version="$({fn} version-current)"
 # See: hooks.md hookRunOptional
 # Test: testHookSystem
-# Environment: BUILD_HOOK_DIRS
+# Environment: BUILD_HOOK_EXTENSIONS BUILD_HOOK_DIRS BUILD_DEBUG
+# BUILD_DEBUG: hook - `hookRun` and `hookSource` and optional versions of the same functions will output additional debugging information
 hookSource() {
   __hookRunner "_${FUNCNAME[0]}" --source --require -- "$@"
 }
@@ -201,6 +203,10 @@ _hookSource() {
 # Example:     fi
 # Test: testHookSystem
 # See: hooks.md hookRun
+# Environment: BUILD_HOOK_EXTENSIONS
+# Environment: BUILD_HOOK_DIRS
+# Environment: BUILD_DEBUG
+# BUILD_DEBUG: hook - `hookRun` and `hookSource` and optional versions of the same functions will output additional debugging information
 hookSourceOptional() {
   __hookRunner "_${FUNCNAME[0]}" --source -- "$@"
 }
@@ -221,7 +227,7 @@ _hookSourceOptional() {
 # Argument: hookName0 - one or more hook names which must exist
 # Return Code: 0 - If all hooks exist
 # Test: testHookSystem
-# Environment: BUILD_HOOK_DIRS
+# Environment: BUILD_HOOK_EXTENSIONS BUILD_HOOK_DIRS BUILD_DEBUG
 hasHook() {
   local handler="_${FUNCNAME[0]}"
 
@@ -273,8 +279,7 @@ _hasHook() {
 # Argument: --next scriptName - File. Optional. Locate the script found *after* the named script, if any. Allows easy chaining of scripts.
 # Argument: hookName0 - Required. String. Hook to locate
 # Argument: hookName1 - Optional. String. Additional hooks to locate.
-# Environment: BUILD_HOOK_EXTENSIONS - ColonDelimitedList. List of extensions to search, in order for matching files in each hook directory. Defaults to `sh`. Specify no extension with a blank entry, like `sh:` or `:sh` to make it first.
-# Environment: BUILD_HOOK_DIRS - ColonDelimitedList. List of paths to search for hooks.
+# Environment: BUILD_HOOK_EXTENSIONS BUILD_HOOK_DIRS BUILD_DEBUG
 # Test: testHookSystem
 whichHook() {
   local handler="_${FUNCNAME[0]}"

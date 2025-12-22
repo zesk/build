@@ -521,6 +521,7 @@ _boxedHeading() {
 # Replace an absolute path prefix with an icon if it matches `HOME`, `BUILD_HOME` or `TMPDIR`
 # DOC TEMPLATE: --help 1
 # Argument: --help - Optional. Flag. Display this help.
+# Argument: --skip-app - Optional. Flag. Do not map `BUILD_HOME`.
 # Argument: path - String. Path to display and replace matching paths with icons.
 # Icons used:
 # - 💣 - `TMPDIR`
@@ -530,15 +531,45 @@ _boxedHeading() {
 # Environment: BUILD_HOME
 # Environment: HOME
 decoratePath() {
-  [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
-  export HOME BUILD_HOME TMPDIR
+  local handler="_${FUNCNAME[0]}"
+  local skipApp=false
+  local mapping=() items=()
+  local path icon
+
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
+  local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
-    local display="$1"
-    display=${display//${TMPDIR-}/💣}
-    display=${display//${BUILD_HOME-}/🍎}
-    display=${display//${HOME-}/🏠}
-    printf "%s\n" "$display"
+    local argument="$1" __index=$((__count - $# + 1))
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    case "$argument" in
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
+    --skip-app | --no-app) skipApp=true ;;
+    --path)
+      path="${argument%%=*}"
+      icon="${argument#*=}"
+      [ -n "$icon" ] || throwArgument "$handler" "Invalid path, must be in the form \`path=icon\`" || return $?
+      mapping=("$path" "$icon" "${mapping[@]+"${mapping[@]}"}")
+      ;;
+    *) items+=("$argument") ;;
+    esac
     shift
+  done
+  [ "${#items[@]}" -gt 0 ] || return 0
+
+  export HOME BUILD_HOME TMPDIR
+
+  [ -z "${TMPDIR-}" ] || mapping+=("$TMPDIR" "💣")
+  $skipApp || [ -z "${BUILD_HOME-}" ] || mapping+=("$BUILD_HOME" "🍎")
+  [ -z "${HOME-}" ] || mapping+=("$HOME" "🏠")
+  for item in "${items[@]}"; do
+    set -- "${mapping[@]}"
+    while [ $# -gt 1 ]; do
+      item="${item//$1/$2}"
+      shift 2
+    done
+    printf "%s\n" "$item"
   done
 }
 _decoratePath() {

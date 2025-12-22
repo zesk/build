@@ -10,9 +10,12 @@
 # Argument: --help - Optional. Flag. Display this help.
 # DOC TEMPLATE: --handler 1
 # Argument: --handler handler - Optional. Function. Use this error handler instead of the default error handler.
-# Argument: --verbose - Flag. Optional. Be verbose.
+# Argument: --verbose - Flag. Optional. Be verbose. Default based on value of `fingerprint` in `BUILD_DEBUG`.
+# Argument: --quiet - Flag. Optional. Be quiet (turns verbose off).
 # Argument: --check - Flag. Optional. Check if the fingerprint is up to date and output the current value.
 # Argument: --key - String. Optional. Update this key in the JSON file.
+# BUILD_DEBUG: fingerprint - By default be verbose even if the flag is not specified. (Use `--quiet` to silence if needed)
+# Environment: BUILD_DEBUG
 fingerprint() {
   local handler="_${FUNCNAME[0]}"
   local key="" verboseFlag=false checkFlag=false prefix=""
@@ -32,6 +35,7 @@ fingerprint() {
     --handler) shift && handler=$(usageArgumentFunction "$handler" "$argument" "${1-}") || return $? ;;
     --check) checkFlag=true ;;
     --verbose) verboseFlag=true ;;
+    --quiet) verboseFlag=false ;;
     --key) shift && key=$(usageArgumentString "$handler" "$argument" "${1-}") || return $? ;;
     --prefix) shift && prefix=$(usageArgumentEmptyString "$handler" "$argument" "${1-}") || return $? ;;
     *)

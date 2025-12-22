@@ -146,7 +146,6 @@ __reloadChangesCacheFile() {
 #
 # Source-Hook: project-activate
 # Source-Hook: project-deactivate
-# BUILD_DEBUG: reloadChanges - `bashPromptModule_reloadChanges` will show debugging information
 __bashPromptModule_reloadChanges() {
   local handler="_${FUNCNAME[0]}"
   local home removeSources=() cacheFile debug=false

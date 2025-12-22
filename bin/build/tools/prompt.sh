@@ -78,6 +78,7 @@ __promptLoader() {
 #
 # Example: bashPrompt --colors "bold-cyan:bold-magenta:green:orange:code" --format "{label} {user}@{host} {status}"
 # Environment: PROMPT_COMMAND
+# BUILD_DEBUG: bashPrompt - Debug prompt command execution
 bashPrompt() {
   __promptLoader "_${FUNCNAME[0]}" "__${FUNCNAME[0]}" "$@"
 }

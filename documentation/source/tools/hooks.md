@@ -37,6 +37,12 @@ These hooks interact with `release-new.sh` and deployment tools but are intended
 
 {__hookVersionLive}
 
+## Development Hooks
+
+{__hookProjectActivate}
+
+{__hookProjectActivate}
+
 ## Deployment Hooks
 
 {__hookApplicationEnvironment}
@@ -61,7 +67,15 @@ These hooks interact with `release-new.sh` and deployment tools but are intended
 
 ## Git hooks
 
+### Pre-commit 
+
 {__hookGitPreCommit}
+
+{__hookPreCommitShell}
+
+{__hookPreCommitPHP}
+
+### Post-commit
 
 {__hookGitPostCommit}
 

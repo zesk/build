@@ -77,7 +77,10 @@ _bashDocumentationExtract() {
 # Argument: --unlinked-template unlinkedTemplateFile - File. Optional.
 # Argument: --unlinked-target unlinkedTarget - FileDirectory. Optional.
 # Argument: --see-prefix seePrefix - EmptyString. Optional.
-# Argument: --see-environment-link seeEnvironmentLink - String. Optional.
+# Argument: --see-update - Flag. Optional. Update the `see` indexes only.
+# Argument: --unlinked-update - Flag. Optional. Update the unlinked file only.
+# Argument: --index-update - Flag. Optional. Update the documentation indexes only.
+# Argument: --docs-update - Flag. Optional. Update the documentation target only.
 # Artifact: `cacheDirectory` may be created even on non-zero exit code
 # Return Code: 0 - Success
 # Return Code: 1 - Issue with environment

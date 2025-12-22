@@ -30,6 +30,35 @@ _bashDocumentationFormatter_usage() {
   decorate wrap "    "
 }
 
+# Formats BUILD_DEBUG settings
+#
+# BUILD_DEBUG: #### Subsection
+# BUILD_DEBUG:
+# BUILD_DEBUG: token - description ...
+# BUILD_DEBUG: token2 - description2 ...
+# BUILD_DEBUG:
+_bashDocumentationFormatter_build_debug() {
+  local items=() eof=false blank=false
+  while ! $eof; do
+    IFS=' ' read -r -d $'\n' -a items || eof=true
+    if [ ${#items[@]} -eq 0 ]; then
+      if ! $blank; then
+        printf -- "\n"
+        blank=true
+      fi
+      continue
+    fi
+    blank=false
+    set -- "${items[@]}"
+    local item="$1" && shift
+    if [ "${1-}" = "-" ]; then
+      printf -- "- \`%s\` - %s\n" "$item" "$*"
+    else
+      printf -- "%s\n" "$1 $*"
+    fi
+  done
+}
+
 #
 # Format environment blocks
 # Converts environment variables which appear first on a line to SEE clauses

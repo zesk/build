@@ -111,7 +111,7 @@ __documentationBuild() {
         docArgs+=("$argument")
       fi
       ;;
-    --see-update | --env-update | --unlinked-update | --index-update | --docs-update)
+    --see-update | --unlinked-update | --index-update | --docs-update)
       [ -z "$actionFlag" ] || throwArgument "$handler" "$argument and $actionFlag are mutually exclusive" || return $?
       actionFlag="$argument"
       ;;
@@ -174,12 +174,6 @@ __documentationBuild() {
 
   catchReturn "$handler" __pcregrepInstall || return $?
 
-  local seeFunction seeFile seeEnvironment seePrefix
-
-  seeFunction=$(catchReturn "$handler" documentationTemplate seeFunction) || return $?
-  seeFile=$(catchReturn "$handler" documentationTemplate seeFile) || return $?
-  seeEnvironment=$(catchReturn "$handler" documentationTemplate seeEnvironment) || return $?
-
   if [ "$actionFlag" = "--unlinked-update" ]; then
     for argument in unlinkedTemplate unlinkedTarget; do
       [ -n "${!argument-}" ] || throwArgument "$handler" "$argument is required for $actionFlag" || return $?
@@ -202,12 +196,10 @@ __documentationBuild() {
   fi
 
   local clean=()
-  if [ "$actionFlag" = "--env-update" ] || [ -z "$actionFlag" ]; then
-    local envFile
-    envFile=$(fileTemporaryName "$handler") || return $?
-    clean+=("$envFile")
-    _buildDocumentationGenerateEnvironment "$handler" "$company" "$companyLink" "$applicationName" >"$envFile" || returnClean $? "${clean[@]}" || return $?
-  fi
+  local envFile
+  envFile=$(fileTemporaryName "$handler") || return $?
+  clean+=("$envFile")
+  _buildDocumentationGenerateEnvironment "$handler" "$company" "$companyLink" "$applicationName" >"$envFile" || returnClean $? "${clean[@]}" || return $?
 
   if [ -f "$unlinkedTemplate" ]; then
     if [ "$actionFlag" = "--index-update" ] || [ -z "$actionFlag" ]; then
@@ -261,6 +253,19 @@ __documentationBuild() {
       functionLinkPattern=${BUILD_DOCUMENTATION_SOURCE_LINK_PATTERN-}
       # Remove line
       fileLinkPattern=${functionLinkPattern%%#.*}
+
+      local seeFunction seeFile seeEnvironment
+
+      seeFunction=$(catchReturn "$handler" documentationTemplate seeFunction) || return $?
+      seeFile=$(catchReturn "$handler" documentationTemplate seeFile) || return $?
+      seeEnvironment=$(catchReturn "$handler" documentationTemplate seeEnvironment) || return $?
+
+      # Set up templates
+      __documentationSeeTokenTemplates "$handler" "$cacheDirectory" \
+        "function" "$seeFunction" "$functionLinkPattern" \
+        "file" "$seeFile" "$fileLinkPattern" \
+        "environment" "$seeEnvironment" "${seeEnvironmentLink#/}" || return $?
+
       catchReturn "$handler" __documentationIndexSeeLinker "${dd[@]+"${dd[@]}"}" "$cacheDirectory" "${unlinkedSources[0]}" "$seePrefix" "$seeFunction" "$functionLinkPattern" "$seeFile" "$fileLinkPattern" "$seeEnvironment" "$seeEnvironmentLink" || return $?
     ) || returnClean $? "${clean[@]}" || return $?
   fi

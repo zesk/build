@@ -480,6 +480,8 @@ _deploySuccessful() {
 #
 # Test: testDeployToRemote - INCOMPLETE
 # Environment: BUILD_DEBUG
+# BUILD_DEBUG: ssh - Debug ssh commands with verbose options
+# BUILD_DEBUG: ssh-debug - Debug ssh commands with LOTS of verbose options
 deployToRemote() {
   local handler="_${FUNCNAME[0]}"
   local initTime
@@ -777,8 +779,6 @@ __deployCommandsFile() {
   printf -- "%s/bin/build/tools.sh execute deployRemoteFinish %s|| exit \$?\n" "$appHome" "$(printf '"%s" ' "$@")" || return $?
 }
 
-# BUILD_DEBUG: ssh - Debug ssh commands with verbose options
-# BUILD_DEBUG: ssh-debug - Debug ssh commands with LOTS of verbose options
 __deploySSHOptions() {
   if buildDebugEnabled ssh; then
     printf %s "-v"

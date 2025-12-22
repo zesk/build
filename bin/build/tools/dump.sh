@@ -7,12 +7,12 @@
 # Docs: ./documentation/source/tools/dump.md
 # Test: ./test/tools/dump-tests.sh
 
-#
-# Usage: {fn} [ -x ]
-#
 # Dump the function and include stacks and the current environment
 # Argument: -x - Optional. Flag. Show exported variables. (verbose)
+# Argument: --me - Optional. Flag. Show calling function call stack frame.
+# Argument: --exit - Optional. Flag. Exit with code 0 after output.
 # Requires: printf usageDocument
+# Environment: BUILD_DEBUG
 # BUILD_DEBUG: debuggingStack - `debuggingStack` shows arguments passed (extra) and exports (optional flag) ALWAYS
 # Requires: throwArgument
 debuggingStack() {

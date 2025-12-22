@@ -192,20 +192,36 @@ _consoleLinksSupported() {
 }
 
 # Output a local file link to the console
-# handler: file [ text ]
+# Argument: --no-app - Flag. Optional. Do not map the application path in `decoratePath`
+# Argument: fileName - Required. File path to output.
+# Argument: text - Optional. Text to output linked to file.
 consoleFileLink() {
   local handler="_${FUNCNAME[0]}"
   [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
   export HOSTNAME HOME
   if ! consoleLinksSupported; then
-    printf -- "%s\n" "$(decoratePath "$1")"
+    printf -- "%s\n" "$(decoratePath "$@")"
   else
-    local path="$1"
-    isPlain "$path" || throwArgument "$handler" "Path contains non-plain characters: $(dumpBinary <<<"$path")" || return $?
-    if [ "${path:0:1}" != "/" ]; then
-      path="$(pwd)/$(directoryPathSimplify "$path")"
-    fi
-    consoleLink "file://$HOSTNAME$path" "$(decoratePath "${2-$1}")"
+    local aa=()
+    while [ $# -gt 0 ]; do
+      case "$1" in
+      --no-app) aa=("$1") ;;
+      *)
+        local path="$1"
+        isPlain "$path" || throwArgument "$handler" "Path contains non-plain characters: $(dumpBinary <<<"$path")" || return $?
+        if [ "${path:0:1}" != "/" ]; then
+          path="$(pwd)/$(directoryPathSimplify "$path")"
+        fi
+        local value="$path"
+        if [ $# -gt 1 ]; then
+          shift
+          value="$1"
+        fi
+        consoleLink "file://$HOSTNAME$path" "$(decoratePath "${aa[@]+"${aa[@]}"}" "$value")"
+        ;;
+      esac
+      shift
+    done
   fi
 }
 _consoleFileLink() {
@@ -215,8 +231,11 @@ _consoleFileLink() {
 
 # decorate extension for `file`
 # handler: decorate file fileName [ text ]
+# Argument: --no-app - Flag. Optional. Do not map the application path in `decoratePath`
 # Argument: fileName - Required. File path to output.
 # Argument: text - Optional. Text to output linked to file.
+# See: decoratePath
+# Environment: BUILD_HOME TMPDIR HOME
 __decorateExtensionFile() {
   consoleFileLink "$@"
 }

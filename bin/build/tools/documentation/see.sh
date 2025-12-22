@@ -1,19 +1,19 @@
 #!/usr/bin/env bash
+# see.sh
 #
-# documentation-index.sh
-#
-# Generate an index of our bash functions for faster documentation generation.
+# See functionality
 #
 # Copyright: Copyright &copy; 2025 Market Acumen, Inc.
-#
-# Docs: o ./documentation/source/tools/documentation.md
-# Test: o ./test/tools/documentation-tests.sh
 
 # Summary: Link `{SEE:name}` tokens in documentation
 #
 # Post-processes any documentation and replaces tokens in the form `{SEE:name}` with links to documentation.
 #
-# Usage: {fn} cacheDirectory documentationSource documentationTarget seeFunctionTemplate seeFunctionLink seeFileTemplate seeFileLink
+# Usage: {fn} cacheDirectory documentationSource documentationTarget
+# Run `__documentationSeeTokenTemplates` beforehand to configure target token types for:
+# - environment
+# - file
+# - function
 #
 __documentationIndexSeeLinker() {
   local handler="_${FUNCNAME[0]}"
@@ -23,8 +23,6 @@ __documentationIndexSeeLinker() {
 
   # Argument parsing
   local cacheDirectory="" documentationSource="" documentationTarget=""
-  local seeFunctionTemplate="" seeFunctionLink="" seeFileTemplate="" seeFileLink=""
-  local seeEnvironmentTemplate="" seeEnvironmentLink=""
   local debugFlag=false
 
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
@@ -44,20 +42,9 @@ __documentationIndexSeeLinker() {
         documentationSource=$(usageArgumentDirectory "$handler" "documentationSource" "$argument") || return $?
       elif [ -z "$documentationTarget" ]; then
         documentationTarget=$(usageArgumentDirectory "$handler" "documentationTarget" "$argument") || return $?
-      elif [ -z "$seeFunctionTemplate" ]; then
-        seeFunctionTemplate=$(usageArgumentFile "$handler" seeFunctionTemplate "$argument") || return $?
-        shift || :
-        seeFunctionLink="${1-}"
-      elif [ -z "$seeFileTemplate" ]; then
-        seeFileTemplate=$(usageArgumentFile "$handler" seeFileTemplate "${1##./}") || return $?
-      elif [ -z "$seeFileLink" ]; then
-        seeFileLink=$(usageArgumentString "$handler" seeFileLink "${1-}") || return $?
-      elif [ -z "$seeEnvironmentTemplate" ]; then
-        seeEnvironmentTemplate=$(usageArgumentFile "$handler" seeFileLink "${1-}") || return $?
-      elif [ -z "$seeEnvironmentLink" ]; then
-        seeEnvironmentLink=$(usageArgumentString "$handler" seeFileLink "${1-}") || return $?
       else
-        break
+        # _IDENTICAL_ argumentUnknownHandler 1
+        throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
       fi
       ;;
     esac
@@ -97,69 +84,7 @@ __documentationIndexSeeLinker() {
       cleanToken=$(printf "%s" "$matchingToken" | sed 's/[^A-Za-z0-9_]/_/g')
       local tokenName="SEE_$cleanToken"
       sedReplacePattern "{SEE:$matchingToken}" "{$tokenName}" >>"$variablesSedFile"
-      {
-        local settingsFile linkPattern templateFile
-        if settingsFile=$(__documentationIndexLookup "$handler" --settings "$matchingToken"); then
-          cat "$settingsFile"
-          linkPattern="$seeFunctionLink"
-          templateFile="$seeFunctionTemplate"
-          __dumpSimpleValue "linkType" "function"
-          __dumpSimpleValue "line" "$(__documentationIndexLookup "$handler" --line "$matchingToken")"
-        elif settingsFile=$(__documentationIndexLookup "$handler" --file "$matchingToken"); then
-          settingsFile="$(printf -- "%s\n" "$settingsFile" | sort | head -n 1)" || return $?
-          __dumpSimpleValue "file" "$settingsFile"
-          if stringBegins "$settingsFile" "bin/build/env" "bin/env"; then
-            local variable lowerVariable
-            variable="$(basename "$settingsFile")"
-            variable="${variable%.sh}"
-            lowerVariable=$(lowercase "$variable")
-            __dumpSimpleValue "variable" "$variable"
-            __dumpSimpleValue "lowerVariable" "$lowerVariable"
-            __dumpSimpleValue "linkType" "environment"
-            __dumpSimpleValue "link" "$matchingPrefix${seeEnvironmentLink#/}"
-            templateFile="$seeEnvironmentTemplate"
-            __documentationEnvironmentFileParse "$handler" "$settingsFile" || returnClean $? "${clean[@]}" || return $?
-          else
-            linkPattern="$seeFileLink"
-            templateFile="$seeFileTemplate"
-            __dumpSimpleValue "linkType" "file"
-          fi
-        else
-          linkPattern=""
-          templateFile=""
-          __dumpSimpleValue "linkType" "unknown"
-        fi
-        __dumpSimpleValue "fn" "$matchingToken"
-        __dumpSimpleValue "lowerFn" "$(lowercase "$matchingToken")"
-      } >"$linkPatternFile"
-
-      local vv=(
-        fn usage applicationHome applicationFile file
-        base return_code description example argument linkType file line summary
-        sourceLink documentationPath
-      )
-      export sourceLink documentationPath
-      set -a # UNDO ok
-      # shellcheck source=/dev/null
-      source "$linkPatternFile"
-      set +a
-      handler="_${FUNCNAME[0]}"
-      sourceLink="$(catchEnvironment "$handler" mapEnvironment "${vv[@]}" <<<"$linkPattern")" >>"$linkPatternFile" || returnClean $? "${clean[@]}" || return $?
-      documentationPath="$(__documentationIndexLookup "$handler" --documentation "$matchingToken" | head -n 1 || :)"
-      if [ -n "$documentationPath" ]; then
-        documentationPath="${documentationPath#"$home"}"
-        documentationPath="${documentationPath#/}"
-        documentationPath="${documentationPath#"$documentationSource"}"
-        documentationPath="$matchingPrefix${documentationPath#/}"
-      else
-        documentationPath="#not-found-$matchingToken"
-      fi
-      local tokenValue
-      if [ -z "$templateFile" ]; then
-        tokenValue="Not found"
-      else
-        tokenValue=$(catchEnvironment "$handler" mapEnvironment "${vv[@]}" <"$templateFile") || returnClean $? "${clean[@]}" || return $?
-      fi
+      tokenValue=$(__documentationSeeTokenGenerate "$handler" "$cacheDirectory" "$matchingToken" "$matchingPrefix") || return $?
       ! $debugFlag || statusMessage decorate pair "$tokenName" "$(newlineHide "$tokenValue")"
       catchEnvironment "$handler" __dumpNameValue "$tokenName" "$tokenValue" >>"$seeVariablesFile" || returnClean $? "${clean[@]}" || return $?
     done < <(__pcregrep -o1 "$seePattern" "$matchingFile")
@@ -184,6 +109,7 @@ __documentationIndexSeeLinker() {
   rm -f "$seeVariablesFile" "$linkPatternFile" "$variablesSedFile" 2>/dev/null || :
   statusMessage --last timingReport "$start" "See completed in" || :
 }
+
 ___documentationIndexSeeLinker() {
   # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"

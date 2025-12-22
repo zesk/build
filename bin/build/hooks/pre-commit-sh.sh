@@ -9,10 +9,10 @@ set -eou pipefail
 
 # shellcheck source=/dev/null
 if source "${BASH_SOURCE[0]%/*}/../tools.sh"; then
-  # The `pre-commit-sh` hook:
-  # 1. Checks all shell files for errors
   # fn: {base}
-  # BUILD_DEBUG: bashSanitize - Debug patterns used to exclude files
+  # The `pre-commit-php` hook is the default handler for Bash files (`.sh`), and does the following:
+  # 1. Checks all shell files for errors
+  # BUILD_DEBUG: bashSanitize - Debug the patterns used to exclude files by `bashSanitize`
   __hookPreCommitShell() {
     local handler="_${FUNCNAME[0]}"
 

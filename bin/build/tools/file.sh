@@ -773,7 +773,7 @@ _linkCreate() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# IDENTICAL fileTemporaryName 33
+# IDENTICAL fileTemporaryName 34
 
 # Wrapper for `mktemp`. Generate a temporary file name, and fail using a function
 # Argument: handler - Function. Required. Function to call on failure. Function Type: returnMessage
@@ -782,12 +782,13 @@ _linkCreate() {
 # Argument: ... - Optional. Arguments. Any additional arguments are passed through.
 # Requires: mktemp __help catchEnvironment usageDocument
 # BUILD_DEBUG: temp - Logs backtrace of all temporary files to a file in application root named after this function to detect and clean up leaks
+# Environment: BUILD_DEBUG
 fileTemporaryName() {
   local handler="_${FUNCNAME[0]}"
   __help "$handler" "$@" || return 0
   handler="$1" && shift
-  local debug=";${BUILD_DEBUG-};"
-  if [ "${debug#*;temp;}" != "$debug" ]; then
+  local debug=",${BUILD_DEBUG-},"
+  if [ "${debug#*,temp,}" != "$debug" ]; then
     local target="${BUILD_HOME-.}/.${FUNCNAME[0]}"
     printf "%s" "fileTemporaryName: " >>"$target"
     catchEnvironment "$handler" mktemp "$@" | tee -a "$target" || return $?
@@ -806,4 +807,5 @@ _fileTemporaryName() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
+# <-- END of IDENTICAL fileTemporaryName
 # <-- END of IDENTICAL fileTemporaryName

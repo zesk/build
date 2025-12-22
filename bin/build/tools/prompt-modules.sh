@@ -72,6 +72,7 @@ _backgroundProcess() {
 # Argument: path|file ... - DirectoryOrFile. Optional. If `source` supplied, then any other command line argument is treated as a path to scan for changes.
 # DOC TEMPLATE: --help 1
 # Argument: --help - Optional. Flag. Display this help.
+# BUILD_DEBUG: reloadChanges - prompt module will show debugging information
 reloadChanges() {
   __promptLoader "_${FUNCNAME[0]}" "__${FUNCNAME[0]}" "$@"
 }

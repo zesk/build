@@ -47,6 +47,7 @@ export globalTestFailure=
 # Requires: decorate loadAverage consoleConfigureColorMode
 # Requires: buildEnvironmentLoad usageArgumentString catchEnvironment
 # Requires: bashCoverage TODO
+# BUILD_DEBUG: test-dump-environment - When set tests will dump the environment at the end.
 testSuite() {
   local handler="_${FUNCNAME[0]}"
 

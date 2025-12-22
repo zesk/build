@@ -66,6 +66,13 @@ __documentationBuildEnvironment() {
     shift
   done
 
+  cacheDirectory=$(catchReturn "$handler" documentationBuildCache envDocs) || return $?
+
+  if "$cleanFlag"; then
+    [ ! -d "$cacheDirectory" ] || catchEnvironment "$handler" find "$cacheDirectory" -type f -exec rm -f {} \; || return $?
+    return 0
+  fi
+
   home=$(catchReturn "$handler" buildHome) || return $?
 
   [ -n "$documentation" ] || documentation="$home/documentation/source"
@@ -89,12 +96,6 @@ __documentationBuildEnvironment() {
     argument="${!argument}"
     [ -f "$argument" ] || throwEnvironment "$handler" "$argument template is missing" || return $?
   done
-  cacheDirectory=$(catchReturn "$handler" documentationBuildCache envDocs) || return $?
-
-  if "$cleanFlag"; then
-    [ ! -d "$cacheDirectory" ] || catchEnvironment "$handler" find "$cacheDirectory" -type f -exec rm -f {} \; || return $?
-    return 0
-  fi
   local envFile categories=()
 
   if ! $forceFlag && [ -f "$cacheDirectory/categories" ]; then
