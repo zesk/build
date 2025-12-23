@@ -4,6 +4,7 @@
 #
 
 # Tag: package-install
+# Tag: package-install-last
 testDocumentationMkdocs() {
   local handler="returnMessage"
 
