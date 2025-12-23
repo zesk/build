@@ -95,6 +95,7 @@ _dateFromTimestamp() {
 # Argument: --help - Optional. Flag. Display this help.
 # Example:     rotated="$log.$({fn} --local)"
 yesterdayDate() {
+  local handler="_${FUNCNAME[0]}"
   if [ $# -eq 0 ]; then
     ts=$(date -u +%s) || return $?
   else

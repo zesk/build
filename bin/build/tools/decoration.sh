@@ -521,7 +521,7 @@ _boxedHeading() {
 # Replace an absolute path prefix with an icon if it matches `HOME`, `BUILD_HOME` or `TMPDIR`
 # DOC TEMPLATE: --help 1
 # Argument: --help - Optional. Flag. Display this help.
-# Argument: --skip-app - Optional. Flag. Do not map `BUILD_HOME`.
+# Argument: --skip-app | --no-app - Optional. Flag. Do not map `BUILD_HOME`.
 # Argument: path - String. Path to display and replace matching paths with icons.
 # Icons used:
 # - 💣 - `TMPDIR`
@@ -536,12 +536,10 @@ decoratePath() {
   local mapping=() items=()
   local path icon
 
-  # _IDENTICAL_ argumentNonBlankLoopHandler 6
+  # _IDENTICAL_ argumentBlankLoopHandler 4
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -569,7 +567,7 @@ decoratePath() {
       item="${item//$1/$2}"
       shift 2
     done
-    printf "%s\n" "$item"
+    [ -z "$item" ] || printf "%s\n" "$item"
   done
 }
 _decoratePath() {
