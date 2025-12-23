@@ -23,6 +23,7 @@ __usageDocument() {
   [ $# -ge 2 ] || throwArgument "$handler" "Expected 2 arguments, got $#:$(printf -- " \"%s\"" "$@")" || return $?
 
   local functionDefinitionFile="${1-}" functionName="${2-}"
+  local displayName="${fn-"$functionName"}"
   shift 2 || throwArgument "$handler" "Missing arguments" || return $?
 
   local home returnCode="${1-NONE}"
@@ -74,14 +75,14 @@ __usageDocument() {
   local commentFile="$variablesFile.comment"
   local clean=("$variablesFile" "$commentFile")
   catchReturn "$handler" bashFunctionComment "$functionDefinitionFile" "$functionName" >"$commentFile" || returnClean $? "${clean[@]}" || return $?
-  if ! catchReturn "$handler" bashDocumentationExtract "$functionName" >"$variablesFile" <"$commentFile"; then
+  if ! catchReturn "$handler" bashDocumentationExtract "$displayName" >"$variablesFile" <"$commentFile"; then
     dumpPipe "commentFile" <"$commentFile"
     dumpPipe "variablesFile" <"$variablesFile"
     dumpPipe "functionDefinitionFile" <"$functionDefinitionFile"
     throwArgument "$handler" "Unable to extract \"$functionName\" from \"$functionDefinitionFile\"" || returnClean $? "${clean[@]}" || return $?
   fi
   (
-    local fn="$functionName" description="" argument="" base return_code="" environment="" stdin="" stdout="" example="" build_debug=""
+    local fn="$displayName" description="" argument="" base return_code="" environment="" stdin="" stdout="" example="" build_debug="" name="${name-}"
 
     declare -r __handler variablesFile
     set -a # UNDO ok
@@ -115,7 +116,7 @@ __usageDocument() {
       fi
     done < <(__usageDocumentSections)
     description=$(trimTail <<<"$description")
-    __usageTemplate "$fn" "$(printf "%s\n" "$argument" | sed 's/ - /^/1')" "^" "$description$suffix" "$returnCode" "$@" | identical=IDENTICAL functionName="$functionName" fn="$fn" mapEnvironment
+    __usageTemplate "$fn" "$(printf "%s\n" "$argument" | sed 's/ - /^/1')" "^" "$description$suffix" "$returnCode" "$@" | identical=IDENTICAL functionName="$functionName" fn="$fn" name="$name" mapEnvironment
     if $bashDebug; then
       __buildDebugEnable
     fi

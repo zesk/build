@@ -18,21 +18,13 @@ __buildTestRequirements() {
   catchReturn "$handler" __pcregrepInstall || return $?
 }
 
-# Standard test layout
-#
-# Test functions prefixed with the word `test` in:
-#
-# - ./test/tests/suite-tests.sh
-#
-# Test support files (available per test):
-#
-# - ./test/support/*.sh -
-#
-# Once ready, do `testTools testSuite --help`
-#
-__buildTestSuite() {
+# Run Zesk Build tests
+# See: testSuite
+buildTestSuite() {
   local handler="_${FUNCNAME[0]}"
   local testHome
+
+  __help "$handler" "$@" || return 0
 
   testHome="$(catchReturn "$handler" buildHome)" || return $?
   [ -d "$testHome/test" ] || throwArgument "$handler" "Missing test directory" || return $?
@@ -44,7 +36,6 @@ __buildTestSuite() {
 
   catchEnvironment "$handler" testTools testSuite --cd-away --delete-common --tests "$testHome/test/tools/" "$@" || return $?
 }
-___buildTestSuite() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+_buildTestSuite() {
+  name="$(buildEnvironmentGet APPLICATION_NAME)" fn="${FUNCNAME[0]#_}" testTools _testSuite "$@"
 }

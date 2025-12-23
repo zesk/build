@@ -8,7 +8,7 @@
 export __TEST_SUITE_TRACE
 export globalTestFailure=
 
-# Run bash test suites
+# Run bash test suites for {name}.
 #
 # Supports argument flags in tests:
 # `TAP-Directive` `Test-Skip` `TODO`
@@ -484,8 +484,9 @@ testSuite() {
   _textExit 0
 }
 _testSuite() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  local defaultName
+  defaultName=$(buildEnvironmentGet APPLICATION_NAME 2>/dev/null) || defaultName="any product"
+  fn="${fn-"${FUNCNAME[0]#_}"}" name=${name-"$defaultName"} usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 #

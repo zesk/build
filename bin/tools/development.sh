@@ -5,12 +5,12 @@
 # Copyright &copy; 2025 Market Acumen, Inc.
 
 # Open a URL with a new PR
-buildPRNew() {
+buildPR() {
   local handler="_${FUNCNAME[0]}"
 
   open "$(catchEnvironment "$handler" bitbucketPRNewURL "marketacumen" "build")" || return $?
 }
-_buildPRNew() {
+_buildPR() {
   # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
@@ -148,6 +148,11 @@ _buildFastFiles() {
 # See if buildFastFiles makes a difference
 buildBuildTiming() {
   local handler="_${FUNCNAME[0]}"
+
+  local home
+
+  home=$(catchReturn "$handler" buildHome) || return $?
+
   local index=1
   for production in false true; do
     for colors in false true; do

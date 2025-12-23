@@ -8,7 +8,34 @@
 
 # shellcheck source=/dev/null
 if source "${BASH_SOURCE[0]%/*}/tools.sh"; then
-  # Zesk Build configured
+  # Zesk Build Development tools
+  #
+  # - `buildPR` - Open URL to a new Pull Request
+  # - `buildAddTool code` - Add a new tool to Zesk Build (just use the code name, like `tofu`)
+  # - `buildContainer image` - Load Zesk Build in a container image
+  # - `buildFastFiles` - Build the fast files (do these work faster even?)
+  # - `buildBuildTiming` - Run the build with different setups to see which one is fastest
+  # - `__buildFingerUpdate` - Force update the deprecated and identical fingerprints
+  #
+  # Zesk Build Testing
+  #
+  # - `buildTestSuite` - Test Zesk Build (also `bin/test.sh`)
+  # - `buildQuickTest` - No professionals testing (no plumber or housekeeper) and no slow or package tests
+  # - `buildStagingTest` - No professionals testing (no plumber or housekeeper)
+  # - `buildProductionTest` - All professionals testing (yes plumber, yes housekeeper) but skip `slow-non-critical` tests
+  # - `buildTestPlatforms` - Test platforms
+  #
+  # Zesk Build Deployments
+  #
+  # - `buildPreRelease` - Run pre-release steps on code (deprecated, identical)
+  # - `bin/build.sh` - Build Zesk Build
+  # - `bin/deploy.sh` - Deploy built Zesk Build
+  # - `bin/documentation.sh` - Build documentation
+  #
+  # As always, when editing code, be sure to test with a cleanly loaded version as
+  #
+  #     `bin/tools.sh myTest` vs. `myTest` - the former is correct and loads the code each run
+  #
   __buildConfigure() {
     local handler="_${FUNCNAME[0]}"
     local home

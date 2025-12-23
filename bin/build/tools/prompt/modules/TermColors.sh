@@ -31,7 +31,9 @@ bashPromptModule_TermColors() {
   local debug=false
   ! buildDebugEnabled term-colors || debug=true
 
-  local schemeFile
+  local schemeFile dd=()
+  ! $debug || dd+=("--debug")
+
   # Deprecated files
   for schemeFile in "$home/.term-colors.conf" "$home/etc/term-colors.conf" "$home/.iterm2-colors.conf" "$home/etc/iterm2-colors.conf"; do
     local prettySchemeFile
@@ -43,7 +45,6 @@ bashPromptModule_TermColors() {
     fi
 
     ! $debug || statusMessage decorate info "Applying colors from $prettySchemeFile ... "
-    ! $debug || dd+=("--debug")
     if catchReturn "$handler" colorScheme "${dd[@]+"${dd[@]}"}" <"$schemeFile" || return $?; then
       break
     fi
