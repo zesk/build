@@ -1,1 +1,1 @@
-[{variable}]({link}#{categoryId}) - **{type}**. {summary}
+[{variable}]({rel}{link}#{categoryId}) - **{type}**. {summary}

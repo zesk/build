@@ -121,7 +121,7 @@ _approvedSources() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# Notify after running a binary. Uses the `notify` hook with some handy paramters which are inherited
+# Notify after running a binary. Uses the `notify` hook with some handy parameters which are inherited
 # between "success" and "failure":
 #
 # - Upon success uses: `--message` `--title` `--sound`

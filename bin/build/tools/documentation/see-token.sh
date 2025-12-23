@@ -26,7 +26,6 @@ __documentationSeeTokenGenerate() {
   local handler="$1" && shift
   local cacheDirectory="$1" && shift
   local matchingToken="$1" && shift
-  local matchingPrefix="$1" && shift
   local tokenCache
 
   local home
@@ -36,20 +35,22 @@ __documentationSeeTokenGenerate() {
   if [ "$matchingToken" != "${matchingToken//../}" ]; then
     throwArgument "$handler" "Token contains invalid characters: $matchingToken" || return $?
   fi
-  local checkFile="$tokenCache/$matchingToken.check"
-  if [ -f "$tokenCache/$matchingToken" ]; then
+  local matchingTokenFile="${matchingToken//[^A-Za-z0-9]/_}"
+  local tokenCacheFile="$tokenCache/$matchingTokenFile"
+  local checkFile="$tokenCacheFile.check"
+  if [ -f "$tokenCacheFile" ]; then
     local checkFiles=()
     IFS=$'\n' read -r -d '' -a checkFiles <"$checkFile" || :
     [ "${#checkFiles[@]}" -gt 0 ] || throwEnvironment "$handler" "$matchingToken.check contains no files" || return $?
-    if fileIsNewest "$tokenCache/$matchingToken" "${checkFiles[@]}"; then
-      catchEnvironment "$handler" cat "$tokenCache/$matchingToken" || return $?
+    if fileIsNewest "$tokenCacheFile" "${checkFiles[@]}"; then
+      catchEnvironment "$handler" cat "$tokenCacheFile" || return $?
       return 0
     fi
   fi
 
   local templateCache
   templateCache=$(catchEnvironment "$handler" directoryRequire "$cacheDirectory/see/templates") || return $?
-  local linkPatternFile="$tokenCache/$matchingToken.settings"
+  local linkPatternFile="$tokenCacheFile.settings"
 
   {
     local settingsFile linkPattern templateFile linkType="unknown"
@@ -70,10 +71,11 @@ __documentationSeeTokenGenerate() {
         lowerVariable=$(lowercase "$variable")
         __dumpSimpleValue "variable" "$variable"
         __dumpSimpleValue "lowerVariable" "$lowerVariable"
-        __dumpSimpleValue "link" "$matchingPrefix"
+        __dumpSimpleValue "line" ""
         __documentationEnvironmentFileParse "$handler" "$settingsFile" || return $?
       else
         catchEnvironment "$handler" printf -- "%s\n" "$settingsFile" >>"$checkFile" || return $?
+        __dumpSimpleValue "line" ""
         linkType="file"
       fi
     fi
@@ -81,6 +83,7 @@ __documentationSeeTokenGenerate() {
     templateFile=""
     if [ -f "$templateCache/$linkType" ]; then
       linkPattern=$(catchEnvironment "$handler" head -n 1 "$templateCache/$linkType.link") || return $?
+      __dumpSimpleValue "link" "$linkPattern"
       templateFile="$templateCache/$linkType"
     fi
     __dumpSimpleValue "linkType" "$linkType"
@@ -89,32 +92,32 @@ __documentationSeeTokenGenerate() {
   } >"$linkPatternFile"
 
   local vv=(
-    fn usage applicationHome applicationFile file
-    base return_code description example argument linkType file line summary
-    sourceLink documentationPath
+    fn lowerFn usage applicationHome applicationFile file line
+    base return_code description example argument linkType summary
+    sourceLink documentationPath build_debug variable lowerVariable link type
   )
-  export sourceLink documentationPath
-  local __save_handler__="$handler"
-  set -a # UNDO ok
-  # shellcheck source=/dev/null
-  source "$linkPatternFile"
-  set +a
-  handler="$__save_handler__"
-  sourceLink="$(catchEnvironment "$handler" mapEnvironment "${vv[@]}" <<<"$linkPattern")" >>"$linkPatternFile" || return $?
-  documentationPath="$(__documentationIndexLookup "$handler" --documentation "$matchingToken" | head -n 1 || :)"
-  if [ -n "$documentationPath" ]; then
-    documentationPath="${documentationPath#"$home"}"
-    documentationPath="${documentationPath#/}"
-    documentationPath="${documentationPath#"$documentationSource"}"
-    documentationPath="$matchingPrefix${documentationPath#/}"
-  else
-    documentationPath="#not-found-$matchingToken"
-  fi
-  local tokenValue
-  if [ -z "$templateFile" ]; then
-    tokenValue="Not found"
-  else
-    tokenValue=$(catchEnvironment "$handler" mapEnvironment "${vv[@]}" <"$templateFile" | tee "$tokenCache/$matchingToken") || return $?
-  fi
-  printf "%s\n" "$tokenValue"
+  (
+    export sourceLink documentationPath
+    local __save_handler__="$handler"
+    set -a # UNDO ok
+    # shellcheck source=/dev/null
+    source "$linkPatternFile"
+    set +a
+    handler="$__save_handler__"
+    sourceLink="$(catchEnvironment "$handler" mapEnvironment "${vv[@]}" <<<"$linkPattern")" || return $?
+    documentationPath="$(__documentationIndexLookup "$handler" --documentation "$matchingToken" | head -n 1 || :)"
+    if [ -n "$documentationPath" ]; then
+      documentationPath="${documentationPath#"$home"}"
+      documentationPath="${documentationPath#/}"
+      documentationPath="${documentationPath#"$documentationSource"}"
+      documentationPath="${documentationPath#/}"
+    else
+      documentationPath="#not-found-$matchingToken"
+    fi
+    if [ -z "$templateFile" ]; then
+      printf "%s\n" "$matchingToken - (not found)"
+    else
+      catchEnvironment "$handler" mapEnvironment "${vv[@]}" <"$templateFile" | tee "$tokenCacheFile" || return $?
+    fi
+  ) || return $?
 }

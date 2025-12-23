@@ -87,9 +87,9 @@ _timingFormat() {
 # Argument: message - Any additional arguments are output before the elapsed value computed
 # Return Code: 0 - Exits with exit code zero
 # See: timingStart
-# Example:    init=$(timingStart)
-# Example:    ...
-# Example:    timingReport "$init" "Deploy completed in"
+# Example:     init=$(timingStart)
+# Example:     ...
+# Example:     timingReport "$init" "Deploy completed in"
 timingReport() {
   local handler="_${FUNCNAME[0]}"
 

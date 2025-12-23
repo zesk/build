@@ -11,6 +11,8 @@ __xdebugInstallationArtifact() {
 }
 
 # Install the xdebug PHP Debugger
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
 xdebugInstall() {
   local handler="_${FUNCNAME[0]}"
   [ $# -eq 0 ] || __help --only "$handler" "$@" || return "$(convertValue $? 1 0)"
@@ -51,6 +53,8 @@ __xdebug_Require() {
 
 # Enable Xdebug on systems that have it
 # Environment: XDEBUG_ENABLED
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
 xdebugEnable() {
   local handler="_${FUNCNAME[0]}"
   [ $# -eq 0 ] || __help --only "$handler" "$@" || return "$(convertValue $? 1 0)"
@@ -65,6 +69,8 @@ _xdebugEnable() {
 
 # Disable Xdebug on systems that have it
 # Environment: XDEBUG_ENABLED
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
 xdebugDisable() {
   local handler="_${FUNCNAME[0]}"
 

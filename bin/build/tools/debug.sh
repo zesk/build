@@ -16,8 +16,9 @@
 # Environment: BUILD_DEBUG - Set to non-blank to enable debugging, blank to disable. `BUILD_DEBUG` may be a comma-separated list of modules to target debugging.
 # Example:     BUILD_DEBUG=false # All debugging disabled
 # Example:     BUILD_DEBUG= # All debugging disabled
-# Example:     BUILD_DEBUG=usage,documentation # Debug usage and documentation calls
-# Requires: -
+# Example:     unset BUILD_DEBUG # All debugging is disabled
+# Example:     BUILD_DEBUG=true # All debugging is enabled
+# Example:     BUILD_DEBUG=handler,bashPrompt # Debug `handler` and `bashPrompt` calls
 buildDebugEnabled() {
   [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
 

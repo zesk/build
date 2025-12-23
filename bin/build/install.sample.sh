@@ -559,7 +559,7 @@ __installRemotePackageLocal() {
 # Argument: -r | --reverse - Reverse the sort order (optional)
 # DOC TEMPLATE: --help 1
 # Argument: --help - Optional. Flag. Display this help.
-# Example:    git tag | grep -e '^v[0-9.]*$' | versionSort
+# Example:     git tag | grep -e '^v[0-9.]*$' | versionSort
 # Requires: throwArgument sort usageDocument
 versionSort() {
   local handler="_${FUNCNAME[0]}"
@@ -854,14 +854,14 @@ _usageDocumentSimple() {
 # Requires: fileReverseLines sed cut grep convertValue
 bashFinalComment() {
   [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
-  grep -v -e '\( IDENTICAL \|_IDENTICAL_\|DOC TEMPLATE:\|Internal:\|INTERNAL:\)' | fileReverseLines | sed -n -e 1d -e '/^[[:space:]]*#/ { p'$'\n''b'$'\n''}; q' | sed 's/^[[:space:]]*#[[:space:]]*//' | fileReverseLines || :
+  grep -v -e '\( IDENTICAL \|_IDENTICAL_\|DOC TEMPLATE:\|Internal:\|INTERNAL:\)' | fileReverseLines | sed -n -e 1d -e '/^[[:space:]]*#/ { p'$'\n''b'$'\n''}; q' | sed -e 's/^[[:space:]]*#[[:space:]]//' -e 's/^[[:space:]]*#$//' | fileReverseLines || :
   # Explained:
   # - grep -v ... - Removes internal documentation and anything we want to hide from the user
   # - fileReverseLines - First reversal to get that comment, file lines are reverse ordered
   # - `sed 1d` - Deletes the first line (e.g. the `function() { ` which was the LAST thing in the line and is now our first line
   # - `sed -n` - disables automatic printing
   # - `sed -e '/^[[:space:]]*#/ { p'$'\n''b'$'\n''}; q'` - while matching `[space]#` print lines then quit when does not match
-  # - `sed 's/^[[:space:]]*#[[:space:]]*//' - trim spaces and comment character
+  # - `sed -e 's/^[[:space:]]*#[[:space:]]//' -e 's/^[[:space:]]*#$//' - trim comment character and first space after
   # - Why the odd $'\n'? See https://stackoverflow.com/questions/15467616/sed-gives-me-unexpected-eof-pending-s-error-and-i-have-no-idea-why ... On BSD sed you must use newlines between statements.
   # - fileReverseLines - File is back to normal
 }

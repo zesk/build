@@ -52,7 +52,7 @@ _bashDocumentationFormatter_build_debug() {
     set -- "${items[@]}"
     local item="$1" && shift
     if [ "${1-}" = "-" ]; then
-      printf -- "- \`%s\` - %s\n" "$item" "$*"
+      printf -- "- \`%s\` %s\n" "$item" "$*"
     else
       printf -- "%s\n" "$1 $*"
     fi
@@ -79,7 +79,7 @@ _bashDocumentationFormatter_environment() {
     local item ii=() valid=true
     for item in "${items[@]}"; do
       if $valid && environmentVariableNameValid "$item" && muzzle buildEnvironmentFiles "$item" 2>&1; then
-        ii+=("{SEE:%s.sh}")
+        ii+=("{SEE:$item.sh}")
       else
         valid=false
         ii+=("$item")

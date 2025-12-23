@@ -98,30 +98,41 @@ _yesterdayDate() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# Returns tomorrow's date, in YYYY-MM-DD format. (same as `%F`)
+# Returns tomorrow's date (UTC time), in YYYY-MM-DD format. (same as `%F`)
 #
-# Usage: {fn}
-#
+# Argument: --local - Flag. Optional. Local tomorrow
 # Summary: Tomorrow's date
 # Example:     rotated="$log.$({fn})"
 tomorrowDate() {
-  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
-  dateFromTimestamp "$(($(date -u +%s) + 86400))" %F
+  local handler="_${FUNCNAME[0]}" ts
+  if [ $# -eq 0 ]; then
+    ts=$(date -u +%s) || return $?
+  else
+    case "$1" in
+    --help) "$handler" 0 && return $? || return "$(convertValue $? 1 0)" ;;
+    --local) ts=$(date +%s) ;;
+    *) throwArgument "$handler" "Unknown argument: $1" || return $? ;;
+    esac
+  fi
+  dateFromTimestamp "$((ts + 86400))" %F
 }
 _tomorrowDate() {
   # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# Summary: Today's date
+# Summary: Today's date in UTC
 # Returns the current date, in YYYY-MM-DD format. (same as `%F`)
-# Usage: {fn}
-# Argument: None.
+# Argument: --local - Flag. Optional. Local today.
 # Environment: Compatible with BSD and GNU date.
 # Example:     date="$({fn})"
-#
 todayDate() {
-  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
+  local handler="_${FUNCNAME[0]}"
+  [ $# -eq 0 ] || case "$1" in
+  --help) "$handler" 0 && return $? || return "$(convertValue $? 1 0)" ;;
+  --local) date +%F ;;
+  *) throwArgument "$handler" "Unknown argument: $1" || return $? ;;
+  esac
   date -u +%F
 }
 _todayDate() {

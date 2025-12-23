@@ -9,7 +9,8 @@
 
 #
 # Is yum installed?
-#
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
 yumIsInstalled() {
   [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
   [ -x "/usr/bin/yum" ]

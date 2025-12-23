@@ -51,6 +51,11 @@ __documentationIndexSeeLinker() {
     shift
   done
 
+  local arg
+  for arg in cacheDirectory documentationSource documentationTarget; do
+    [ -n "${!arg}" ] || throwArgument "$handler" "$arg is required" || return $?
+  done
+
   local home
   home=$(catchReturn "$handler" buildHome) || return $?
   documentationSource="${documentationSource#"$home"}"
@@ -58,10 +63,6 @@ __documentationIndexSeeLinker() {
 
   local seePattern='\{SEE:([^}]+)\}'
 
-  local arg
-  for arg in cacheDirectory documentationTarget seeFunctionTemplate seeFileTemplate seeFunctionLink seeFileLink; do
-    [ -n "${!arg}" ] || throwArgument "$handler" "$arg is required" || return $?
-  done
   local seeVariablesFile clean=()
   seeVariablesFile=$(fileTemporaryName "$handler") || return $?
   local linkPatternFile="$seeVariablesFile.linkPatterns"
@@ -84,8 +85,12 @@ __documentationIndexSeeLinker() {
       cleanToken=$(printf "%s" "$matchingToken" | sed 's/[^A-Za-z0-9_]/_/g')
       local tokenName="SEE_$cleanToken"
       sedReplacePattern "{SEE:$matchingToken}" "{$tokenName}" >>"$variablesSedFile"
-      tokenValue=$(__documentationSeeTokenGenerate "$handler" "$cacheDirectory" "$matchingToken" "$matchingPrefix") || return $?
+      tokenValue=$(__documentationSeeTokenGenerate "$handler" "$cacheDirectory" "$matchingToken") || return $?
       ! $debugFlag || statusMessage decorate pair "$tokenName" "$(newlineHide "$tokenValue")"
+      local rel="{rel}"
+      if [ "$tokenValue" != "${tokenValue#*"$rel"}" ]; then
+        tokenValue="$(rel="$matchingPrefix" mapEnvironment rel <<<"$tokenValue")"
+      fi
       catchEnvironment "$handler" __dumpNameValue "$tokenName" "$tokenValue" >>"$seeVariablesFile" || returnClean $? "${clean[@]}" || return $?
     done < <(__pcregrep -o1 "$seePattern" "$matchingFile")
 

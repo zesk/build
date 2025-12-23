@@ -54,7 +54,7 @@ __bashDocumentationExtract() {
     # Read comment (stripped of #) from stdin
     while IFS= read -r line; do
       local name="${line%%:*}" value
-      if [ "$name" = "$line" ] || [ "${line%%:}" != "$line" ] || [ "${line##:}" != "$line" ]; then
+      if ! environmentVariableNameValid "$name" || [ "$name" = "$line" ] || [ "${line%%:}" != "$line" ] || [ "${line##:}" != "$line" ]; then
         # no colon or ends with colon *or* starts with :
         # strip starting colon (end colon STAYS)
         value="${line##:}"
