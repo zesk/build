@@ -29,8 +29,9 @@
 # Return Code: 1 - One or more files did not pass
 # Output: This outputs `statusMessage`s to `stdout` and errors to `stderr`.
 bashLint() {
-  local handler="_${FUNCNAME[0]}" fixFlag=false verboseFlag=false undo=("exec" "3>&-" "4>&1")
+  local handler="_${FUNCNAME[0]}" fixFlag=false verboseFlag=false
   local installed=false
+
   # Open 3 and 4 to aliases so we can change them
   exec 3>/dev/null 4>&1
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
@@ -55,18 +56,22 @@ bashLint() {
         catchReturn "$handler" pcregrepInstall || return $?
         installed=true
       fi
-      [ -f "$argument" ] || throwArgument "$handler" "$(printf -- "%s: %s PWD: %s" "Not a item" "$(decorate code "$argument")" "$(pwd)")" || returnUndo $? "${undo[@]}" || return $?
+      if ! [ -f "$argument" ]; then
+
+        throwArgument "$handler" "$(printf -- "%s: %s PWD: %s" "Not a item" "$(decorate code "$argument")" "$(pwd)")" || return $?
+      fi
+
       # shellcheck disable=SC2210
-      catchEnvironment "$handler" bash -n "$argument" 1>&3 2>&3 || returnUndo $? printf "%s\n" "bash -n failed" 1>&4 || returnUndo $? "${undo[@]}" || return $?
+      catchEnvironment "$handler" bash -n "$argument" 1>&3 2>&4 || returnUndo $? printf "%s\n" "bash -n" 1>&4 || ! exec 3>&- 4>&- || return $?
       # shellcheck disable=SC2210
-      catchEnvironment "$handler" shellcheck "$argument" 1>&3 2>&3 || returnUndo $? printf "%s\n" "shellcheck" 1>&4 || returnUndo $? "${undo[@]}" || return $?
+      catchEnvironment "$handler" shellcheck "$argument" 1>&3 2>&4 || returnUndo $? printf "%s\n" "shellcheck" 1>&4 || ! exec 3>&- 4>&- || return $?
       local found
       if found=$(__pcregrep -n -l -M '\n\}\n#' "$argument"); then
         if $fixFlag; then
-          catchEnvironment "$handler" sed -i 's/}\n#/}\n\n#/' "$argument" || returnUndo $? "${undo[@]}" || return $?
+          catchEnvironment "$handler" sed -i 's/}\n#/}\n\n#/' "$argument" || returnUndo $? printf "%s\n" "comment following brace" 1>&4 || ! exec 3>&- 4>&- || return $?
           $verboseFlag
         else
-          throwEnvironment "$handler" "found }\\n#: $(decorate code "$found")" 1>&3 2>&3 || returnUndo $? printf "%s\n" "comment following brace" 1>&4 || returnUndo $? "${undo[@]}" || return $?
+          throwEnvironment "$handler" "found }\\n#: $(decorate code "$found")" 1>&3 2>&3 || returnUndo $? printf "%s\n" "comment following brace" 1>&4 || ! exec 3>&- 4>&- || return $?
         fi
       fi
       ;;

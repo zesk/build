@@ -94,7 +94,7 @@ __identicalRepair() {
   else
     exec 3>&1
   fi
-  local currentLineNumber=0 undo=("exec" "3>&-" --)
+  local currentLineNumber=0
 
   # totalLines is *$destination* lines
   totalLines=$(catchReturn "$handler" fileLineCount --newline "$destination") || returnClean $? "${clean[@]}" || return $?
@@ -103,12 +103,12 @@ __identicalRepair() {
     read -r identicalLine || finished=true
     [ -n "$identicalLine" ] || continue
     local isEOF=false
-    parsed=$(__identicalLineParse "$handler" "$destination" "$prefix" "$identicalLine") || returnUndo $? "${undo[@]}" || returnClean $? "${clean[@]}" || return $?
+    parsed=$(__identicalLineParse "$handler" "$destination" "$prefix" "$identicalLine") || ! exec 3>&- || returnClean $? "${clean[@]}" || return $?
     IFS=" " read -r lineNumber token count < <(printf -- "%s\n" "$parsed") || :
     if [ "$count" = "EOF" ]; then
       isEOF=true
     fi
-    count=$(__identicalLineCount "$count" "$((totalLines - lineNumber))") || throwEnvironment "$handler" "\"$identicalLine\" invalid count: $count" || returnUndo $? "${undo[@]}" || returnClean $? "${clean[@]}" || return $?
+    count=$(__identicalLineCount "$count" "$((totalLines - lineNumber))") || throwEnvironment "$handler" "\"$identicalLine\" invalid count: $count" || ! exec 3>&- || returnClean $? "${clean[@]}" || return $?
     if [ "$lineNumber" -gt 1 ]; then
       if [ "$currentLineNumber" -eq 0 ]; then
         head -n $((lineNumber - 1)) <"$destination" >&3
