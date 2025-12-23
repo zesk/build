@@ -44,11 +44,12 @@ _dateToFormat() {
 # Usage: dateToTimestamp date
 #
 # Argument: date - String in the form `YYYY-MM-DD` (e.g. `2023-10-15`)
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
 # Environment: Compatible with BSD and GNU date.
 # Return Code: 1 - if parsing fails
 # Return Code: 0 - if parsing succeeds
 # Example:     timestamp=$(dateToTimestamp '2023-10-15')
-#
 dateToTimestamp() {
   [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
   dateToFormat "$1" %s
@@ -66,6 +67,8 @@ _dateToTimestamp() {
 # Usage: dateFromTimestamp integerTimestamp format
 # Argument: integerTimestamp - Integer timestamp offset (unix timestamp, same as `$(date +%s)`)
 # Argument: format - How to output the date (e.g. `%F` - no `+` is required)
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
 # Environment: Compatible with BSD and GNU date.
 # Return Code: 0 - If parsing is successful
 # Return Code: 1 - If parsing fails
@@ -86,11 +89,21 @@ _dateFromTimestamp() {
 
 # Returns yesterday's date, in YYYY-MM-DD format. (same as `%F`)
 #
-# Usage: {fn}#
-# Summary: Yesterday's date
-# Example:     rotated="$log.$({fn})"
+# Summary: Yesterday's date (UTC time)
+# Argument: --local - Flag. Optional. Local yesterday
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
+# Example:     rotated="$log.$({fn} --local)"
 yesterdayDate() {
-  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
+  if [ $# -eq 0 ]; then
+    ts=$(date -u +%s) || return $?
+  else
+    case "$1" in
+    --help) "$handler" 0 && return $? || return "$(convertValue $? 1 0)" ;;
+    --local) ts=$(date +%s) ;;
+    *) throwArgument "$handler" "Unknown argument: $1" || return $? ;;
+    esac
+  fi
   dateFromTimestamp "$(($(date -u +%s) - 86400))" %F
 }
 _yesterdayDate() {
@@ -98,10 +111,12 @@ _yesterdayDate() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
+# Summary: Tomorrow's date in UTC
 # Returns tomorrow's date (UTC time), in YYYY-MM-DD format. (same as `%F`)
 #
 # Argument: --local - Flag. Optional. Local tomorrow
-# Summary: Tomorrow's date
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
 # Example:     rotated="$log.$({fn})"
 tomorrowDate() {
   local handler="_${FUNCNAME[0]}" ts
@@ -124,6 +139,8 @@ _tomorrowDate() {
 # Summary: Today's date in UTC
 # Returns the current date, in YYYY-MM-DD format. (same as `%F`)
 # Argument: --local - Flag. Optional. Local today.
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
 # Environment: Compatible with BSD and GNU date.
 # Example:     date="$({fn})"
 todayDate() {

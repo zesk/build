@@ -16,7 +16,10 @@ testPythonInstallation() {
 testPythonStuff() {
   local handler="returnMessage"
 
-  assertExitCode 0 pipUninstall mkdocs || return $?
+  # uninstall if needed
+  if pythonPackageInstalled mkdocs; then
+    assertExitCode 0 pipUninstall mkdocs || return $?
+  fi
   assertExitCode 1 pythonPackageInstalled mkdocs || return $?
   assertExitCode 0 pipInstall mkdocs || return $?
   assertExitCode 0 pipUpgrade || return $?

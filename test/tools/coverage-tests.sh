@@ -369,9 +369,6 @@ daemontoolsProcessIds
 isDarwin
 darwinSoundDirectory
 darwinSoundNames
-yesterdayDate
-tomorrowDate
-todayDate
 buildDebugStop
 isBashDebug
 isErrorExit
