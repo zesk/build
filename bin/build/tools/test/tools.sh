@@ -538,9 +538,11 @@ __testSuiteShowTags() {
 
 # Filters tests by tags
 # Usage: {fn} [ tags ... ] -- [ skipTags ... ] -- tests ...
-# Argument: includeTag - String. Optional. Tag(s) to include.
+# Argument: includeTag - String. Optional. Tag(s) to include. Prefix a tag with `+` to force it AND previous tags.
+# Argument: -- - String. Required. Delimits tags and exclusion tags. Prefix a tag with `+` to force it AND previous exclusion tags.
+# Argument: excludeTag -- - String. Optional. Tag(s) to exclude.
 # Argument: -- - String. Required. Delimits tags and exclusion tags.
-# Argument: excludeTag -- - String. Required. Delimits tags and exclusion tags.
+# Argument: tests ... - String. Function. Test functions
 # {fn} [ tags ... ] -- [ skipTags ... ] -- tests ...
 __testSuiteFilterTags() {
   local handler="$1" && shift
@@ -588,7 +590,7 @@ __testSuiteFilterTags() {
     if [ "$item" != "${item#\#}" ]; then
       sectionFile="${item#\#}"
     else
-      local testTag testTags=() defaultKeepIt=true
+      local tag testTags=() defaultKeepIt=true
 
       [ ${#tags[@]} -eq 0 ] || defaultKeepIt=false
       catchEnvironment "$handler" bashFunctionComment "$sectionFile" "$item" >"$tempComment" || returnClean $? "${clean[@]}" || return $?
@@ -604,15 +606,38 @@ __testSuiteFilterTags() {
         decorate each --count quote -- "${testTags[@]}" | decorate blue | printfOutputPrefix "%s" "$(decorate info "Match $item:")"
       fi
       local keepIt="$defaultKeepIt" keepNote="by default"
-      for testTag in "${testTags[@]+"${testTags[@]}"}"; do
-        if [ ${#tags[@]} -gt 0 ] && inArray "$testTag" "${tags[@]}"; then
-          keepIt=true
-          keepNote="** with tag $testTag **"
-        elif [ ${#skipTags[@]} -gt 0 ] && inArray "$testTag" "${skipTags[@]}"; then
+      local specificallyExcludedAlready=false
+      [ "${#skipTags[@]}" -eq 0 ] || for tag in "${skipTags[@]}"; do
+        local andTag=false
+        if [ "${tag#+}" != "$tag" ]; then
+          tag="${tag#+}"
+          andTag=true
+        fi
+        [ "${#testTags[@]}" -eq 0 ] || if inArray "$tag" "${testTags[@]}"; then
           keepIt=false
-          keepNote="** excluded by tag $testTag **"
+          specificallyExcludedAlready=true
+          keepNote="** excluded by tag $tag **"
+        elif $andTag; then
+          keepIt="$defaultKeepIt"
+          keepNote="** excluded AND $tag missing **"
         fi
       done
+      if ! $specificallyExcludedAlready; then
+        [ ${#tags[@]} -eq 0 ] || for tag in "${tags[@]}"; do
+          local andTag=false
+          if [ "${tag#+}" != "$tag" ]; then
+            tag="${tag#+}"
+            andTag=true
+          fi
+          if inArray "$tag" "${testTags[@]}"; then
+            keepIt=true
+            keepNote="** with tag $tag **"
+          elif $andTag; then
+            keepIt=false
+            keepNote="** and $tag removed **"
+          fi
+        done
+      fi
       if $keepIt; then
         ! $debugMode || printf "%s\n" "+ $item kept $keepNote Mine: ($(decorate each --count quote -- "${testTags[@]+"${testTags[@]}"}")) Keep: ($(decorate each --count quote -- "${tags[@]+"${tags[@]}"}"))" >>"$filtersFile"
       else
