@@ -103,7 +103,7 @@ _isUnsignedInteger() {
 # It will:
 # 1. Run `pre-commit-extension` for any extension which exists in the space delimited list `BUILD_PRECOMMIT_EXTENSIONS` and has a hook
 # 2. Displays files for any non-hook extension
-#  - `code` color for missing hook
+#  - `blue` color for missing hook
 #  - `red` color for missing BUILD_PRECOMMIT_EXTENSIONS)
 # 3. Output timing of duration of the pre-commit run
 # fn: {base}
@@ -132,10 +132,10 @@ __hookGitPreCommit() {
         statusMessage decorate info "Processing $(decorate code "$extension") ..."
         catchEnvironment "$handler" hookRunOptional "pre-commit-$extension" || return $?
       else
-        gitPreCommitListExtension | decorate wrap "$(decorate code "$extension"): "
+        gitPreCommitListExtension "$extension" | decorate code | decorate wrap "- $(decorate blue "$extension"): "
       fi
     else
-      gitPreCommitListExtension | decorate wrap "$(decorate red "$extension"): "
+      gitPreCommitListExtension "$extension" | decorate code | decorate wrap "- $(decorate red "$extension"): "
     fi
   done < <(gitPreCommitExtensionList)
 

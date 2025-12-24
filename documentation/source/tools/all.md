@@ -10,8 +10,8 @@ All functions in Zesk Build, alphabetically.
 - {SEE:alignRight}
 - {SEE:colorSampleCodes}
 - {SEE:alpineContainer}
-- {SEE:environmentFileToBashCompatible}
-- {SEE:environmentFileToDocker}
+- {SEE:anyEnvToBashEnv}
+- {SEE:anyEnvToDockerEnv}
 - {SEE:apkIsInstalled}
 - {SEE:applicationHome}
 - {SEE:applicationHomeAliases}
@@ -110,7 +110,7 @@ All functions in Zesk Build, alphabetically.
 - {SEE:characterClassReport}
 - {SEE:characterFromInteger}
 - {SEE:characterToInteger}
-- {SEE:environmentFileIsDocker}
+- {SEE:checkDockerEnvFile}
 - {SEE:clampDigits}
 - {SEE:clearLine}
 - {SEE:colorBrightness}
@@ -210,8 +210,8 @@ All functions in Zesk Build, alphabetically.
 - {SEE:dockerComposeIsRunning}
 - {SEE:dockerComposeUninstall}
 - {SEE:dockerComposeWrapper}
-- {SEE:environmentFileBashCompatibleToDocker}
-- {SEE:environmentFileDockerToBashCompatible}
+- {SEE:dockerEnvFromBashEnv}
+- {SEE:dockerEnvToBash}
 - {SEE:dockerImages}
 - {SEE:dockerListContext}
 - {SEE:dockerLocalContainer}
@@ -333,6 +333,7 @@ All functions in Zesk Build, alphabetically.
 - {SEE:gitInstallHooks}
 - {SEE:gitMainly}
 - {SEE:gitPreCommitCleanup}
+- {SEE:gitPreCommitExtensionList}
 - {SEE:gitPreCommitHasExtension}
 - {SEE:gitPreCommitHeader}
 - {SEE:gitPreCommitListExtension}
