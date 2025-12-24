@@ -208,6 +208,8 @@ testHooksWhichSeemBenign() {
   cache=$(catchReturn "$handler" __gitPreCommitCache true) || return $?
   find "$home/test/example" -type f ! -path "*/.*/*" | extensionLists --clean "$cache"
 
+  assertExitCode --stdout-match "html" --stdout-match "json" --stdout-match "@" --stdout-match "php" --stdout-match "sql" 0 gitPreCommitExtensionList || return $?
+
   assertExitCode 0 gitPreCommitHeader || return $?
   for hook in application-environment application-id application-tag version-current; do
     APPLICATION_ID=abc APPLICATION_TAG=def assertExitCode 0 hookRun --application "$home" "$hook" || return $?
