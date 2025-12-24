@@ -171,7 +171,7 @@ _versionNextMinor() {
 # Checks the live version versus the version in code and prompts to
 # generate a new release file if needed.
 #
-# A release notes template file is added at `./docs/release/`. This file is
+# A release notes template file is added at `./documentation/source/release/`. This file is
 # also added to `git` the first time.
 #
 releaseNew() {
