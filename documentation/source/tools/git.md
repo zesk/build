@@ -78,6 +78,8 @@
 
 {gitPreCommitHeader}
 
+{gitPreCommitExtensionList}
+
 {gitPreCommitHasExtension}
 
 {gitPreCommitListExtension}
