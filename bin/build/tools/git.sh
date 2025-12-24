@@ -951,6 +951,15 @@ _gitPreCommitHasExtension() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
+# List the extensions available
+gitPreCommitExtensionList() {
+  local handler="_${FUNCNAME[0]}"
+  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
+  local directory
+  directory=$(catchReturn "$handler" __gitPreCommitCache "$handler" true) || return $?
+  find -maxdepth 1 "$directory" -type f -exec basename {} \; | sort || return $?
+}
+
 # List the file(s) of an extension
 gitPreCommitListExtension() {
   local handler="_${FUNCNAME[0]}"

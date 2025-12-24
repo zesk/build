@@ -101,8 +101,11 @@ _isUnsignedInteger() {
 # overwrite any existing `pre-commit` hook.`
 #
 # It will:
-# 1. Updates the help file templates
-# 2. Checks all shell files for errors
+# 1. Run `pre-commit-extension` for any extension which exists in the space delimited list `BUILD_PRECOMMIT_EXTENSIONS` and has a hook
+# 2. Displays files for any non-hook extension
+#  - `code` color for missing hook
+#  - `red` color for missing BUILD_PRECOMMIT_EXTENSIONS)
+# 3. Output timing of duration of the pre-commit run
 # fn: {base}
 __hookGitPreCommit() {
   local handler="_${FUNCNAME[0]}" hookName="pre-commit" start
@@ -123,12 +126,18 @@ __hookGitPreCommit() {
 
   local extension extensions=()
   read -r -a extensions < <(printf "%s" "${BUILD_PRECOMMIT_EXTENSIONS-}") || :
-  for extension in "${extensions[@]+${extensions[@]}}"; do
-    statusMessage decorate info "Processing $(decorate code "$extension") ..."
-    if gitPreCommitHasExtension "$extension"; then
-      catchEnvironment "$handler" hookRunOptional "pre-commit-$extension" || return $?
+  while read -r extension; do
+    if inArray "$extension" "${extensions[@]}"; then
+      if hasHook "pre-commit-$extension"; then
+        statusMessage decorate info "Processing $(decorate code "$extension") ..."
+        catchEnvironment "$handler" hookRunOptional "pre-commit-$extension" || return $?
+      else
+        gitPreCommitListExtension | decorate wrap "$(decorate code "$extension"): "
+      fi
+    else
+      gitPreCommitListExtension | decorate wrap "$(decorate red "$extension"): "
     fi
-  done
+  done < <(gitPreCommitExtensionList)
 
   gitPreCommitCleanup || :
   statusMessage --last printf -- "%s %s" "$(decorate info "[$hookName]")" "$(timingReport "$start" "completed in")"
