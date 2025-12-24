@@ -55,7 +55,7 @@ testSuite() {
   local beQuiet=false listFlag=false verboseMode=false continueFlag=false doStats=true showFlag=false showTags=false tapFile="" cleanFlag=false
   local cdAway=false
   local testPaths=() messyOption="" runTestSuites=() matchTests=() failExecutors=()
-  local startTest=""
+  local startTest="" df=()
 
   set -eou pipefail
 
@@ -153,6 +153,7 @@ testSuite() {
     --messy)
       trap '__testCleanupMess true' EXIT QUIT TERM
       ;;
+    --debug-filter) df=(--debug) ;;
     -*)
       # _IDENTICAL_ argumentUnknownHandler 1
       throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
@@ -351,7 +352,7 @@ testSuite() {
 
     ! $verboseMode || statusMessage decorate info "$(printf "%s %d %s and %d %s to skip" "Applying" "${#tags[@]}" "$(plural ${#tags[@]} tag tags)" "${#skipTags[@]}" "$(plural ${#skipTags[@]} tag tags)")"
     sectionStart=$(timingStart) || returnClean $? "${clean[@]}" || return $?
-    while read -r item; do tagFilteredTests+=("$item"); done < <(__testSuiteFilterTags "$handler" "${tags[@]+"${tags[@]}"}" -- "${skipTags[@]+"${skipTags[@]}"}" -- "${filteredTests[@]}") || returnClean $? "${clean[@]}" || return $?
+    while read -r item; do tagFilteredTests+=("$item"); done < <(__testSuiteFilterTags "$handler" "${df[@]+"${df[@]}"}" "${tags[@]+"${tags[@]}"}" -- "${skipTags[@]+"${skipTags[@]}"}" -- "${filteredTests[@]}") || returnClean $? "${clean[@]}" || return $?
     if $verboseMode; then
       beforeCount="$(decorate notice "${#filteredTests[@]} $(plural ${#filteredTests[@]} "test" "tests")")"
       afterCount="$(decorate value "${#tagFilteredTests[@]} $(plural ${#tagFilteredTests[@]} "test" "tests")")"
@@ -537,6 +538,10 @@ __testSuiteShowTags() {
 
 # Filters tests by tags
 # Usage: {fn} [ tags ... ] -- [ skipTags ... ] -- tests ...
+# Argument: includeTag - String. Optional. Tag(s) to include.
+# Argument: -- - String. Required. Delimits tags and exclusion tags.
+# Argument: excludeTag -- - String. Required. Delimits tags and exclusion tags.
+# {fn} [ tags ... ] -- [ skipTags ... ] -- tests ...
 __testSuiteFilterTags() {
   local handler="$1" && shift
   local current=() tags=() skipTags=() gotTags=false debugMode=false
