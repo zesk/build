@@ -8,9 +8,7 @@
 
 {buildDocumentationBuild}
 
-{__buildTestSuite}
-
-### Generating fast (?) files
+### Generating fast files
 
 {buildFastFiles}
 
@@ -20,11 +18,13 @@
 
 {buildAddTool}
 
-{buildPRNew}
+{buildPR}
 
 ## Testing Wrappers
 
 {buildTestPlatforms}
+
+{buildTestSuite}
 
 {buildQuickTest}
 
@@ -35,4 +35,3 @@
 {buildBuildTiming}
 
 {buildContainer}
-
