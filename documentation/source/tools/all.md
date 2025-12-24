@@ -10,8 +10,8 @@ All functions in Zesk Build, alphabetically.
 - {SEE:alignRight}
 - {SEE:colorSampleCodes}
 - {SEE:alpineContainer}
-- {SEE:anyEnvToBashEnv}
-- {SEE:anyEnvToDockerEnv}
+- {SEE:environmentFileToBashCompatible}
+- {SEE:environmentFileToDocker}
 - {SEE:apkIsInstalled}
 - {SEE:applicationHome}
 - {SEE:applicationHomeAliases}
@@ -110,7 +110,7 @@ All functions in Zesk Build, alphabetically.
 - {SEE:characterClassReport}
 - {SEE:characterFromInteger}
 - {SEE:characterToInteger}
-- {SEE:checkDockerEnvFile}
+- {SEE:environmentFileIsDocker}
 - {SEE:clampDigits}
 - {SEE:clearLine}
 - {SEE:colorBrightness}
@@ -210,8 +210,8 @@ All functions in Zesk Build, alphabetically.
 - {SEE:dockerComposeIsRunning}
 - {SEE:dockerComposeUninstall}
 - {SEE:dockerComposeWrapper}
-- {SEE:dockerEnvFromBashEnv}
-- {SEE:dockerEnvToBash}
+- {SEE:environmentFileBashCompatibleToDocker}
+- {SEE:environmentFileDockerToBashCompatible}
 - {SEE:dockerImages}
 - {SEE:dockerListContext}
 - {SEE:dockerLocalContainer}

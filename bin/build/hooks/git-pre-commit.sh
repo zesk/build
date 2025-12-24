@@ -127,7 +127,14 @@ __hookGitPreCommit() {
   local extension extensions=()
   read -r -a extensions < <(printf "%s" "${BUILD_PRECOMMIT_EXTENSIONS-}") || :
   while read -r extension; do
-    if inArray "$extension" "${extensions[@]}"; then
+    local label=""
+    case "$extension" in
+    @) continue ;;
+    !)
+      label="*none*"
+      ;;
+    esac
+    if [ -z "$label" ] || inArray "$extension" "${extensions[@]}"; then
       if hasHook "pre-commit-$extension"; then
         statusMessage decorate info "Processing $(decorate code "$extension") ..."
         catchEnvironment "$handler" hookRunOptional "pre-commit-$extension" || return $?
@@ -135,7 +142,8 @@ __hookGitPreCommit() {
         gitPreCommitListExtension "$extension" | decorate code | decorate wrap "- $(decorate blue "$extension"): "
       fi
     else
-      gitPreCommitListExtension "$extension" | decorate code | decorate wrap "- $(decorate red "$extension"): "
+      label="${label-"$extension"}"
+      gitPreCommitListExtension "$extension" | decorate code | decorate wrap "- $(decorate red "$label"): "
     fi
   done < <(gitPreCommitExtensionList)
 
