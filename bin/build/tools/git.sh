@@ -890,7 +890,10 @@ __gitPreCommitCache() {
   printf "%s\n" "$directory"
 }
 
-# Set up a pre-commit hook
+# Set up a pre-commit hook and create a cache of our files by extension.
+# See: gitPreCommitCleanup
+# Return code: 0 - One or more files are available as part of the commit
+# Return code: 1 - Error, or zero files are available as part of the commit
 gitPreCommitSetup() {
   local handler="_${FUNCNAME[0]}"
   [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
@@ -900,7 +903,10 @@ gitPreCommitSetup() {
   directory=$(catchReturn "$handler" __gitPreCommitCache "$handler" true) || return $?
   catchEnvironment "$handler" git diff --name-only --cached --diff-filter=ACMR | catchEnvironment "$handler" extensionLists --clean "$directory" || return $?
   total=$(catchReturn "$handler" fileLineCount "$directory/@") || return $?
-  [ "$total" -ge 0 ]
+  if [ "$total" -eq 0 ]; then
+    catchReturn "$handler" rm -rf "$directory" || return $?
+    throwEnvironment "$handler" "No files to commit." || return $?
+  fi
 }
 _gitPreCommitSetup() {
   # __IDENTICAL__ usageDocument 1
@@ -908,6 +914,7 @@ _gitPreCommitSetup() {
 }
 
 # Output a display for pre-commit files changed
+# Argument: extension - Optional. String. Extension to display
 gitPreCommitHeader() {
   local handler="_${FUNCNAME[0]}" width=5
   [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
@@ -919,14 +926,21 @@ gitPreCommitHeader() {
   total=$(catchReturn "$handler" fileLineCount "$directory/@") || return $?
   statusMessage --last printf -- "%s: %s\n" "$(decorate success "$(alignRight "$width" "all")")" "$(decorate info "$total $(plural "$total" file files) changed")"
   while [ $# -gt 0 ]; do
+    local extension="$1" label="$1"
+    case "$extension" in
+    @) label="all" ;;
+    !) label="none" ;;
+    [[:alnum:]][[:alnum:]]*) ;;
+    *) throwArgument "$handler" "Invalid extension characters: $extension" || return $? ;;
+    esac
     total=0
     color="warning"
-    if [ -f "$directory/$1" ]; then
-      total=$(catchReturn "$handler" fileLineCount "$directory/$1") || return $?
+    if [ -f "$directory/$extension" ]; then
+      total=$(catchReturn "$handler" fileLineCount "$directory/$extension") || return $?
       color="success"
     fi
     # shellcheck disable=SC2015
-    printf "%s: %s\n" "$(decorate "$color" "$(alignRight "$width" "$1")")" "$(decorate info "$total $(plural "$total" file files) changed")"
+    printf "%s: %s\n" "$(decorate "$color" "$(alignRight "$width" "$label")")" "$(decorate info "$total $(plural "$total" file files) changed")"
     shift
   done
 }
@@ -936,6 +950,9 @@ _gitPreCommitHeader() {
 }
 
 # Does this commit have the following file extensions?
+# Argument: extension - Optional. String. Extension to check. Use `!` for blank extension and `@` for all extensions. Can specify one or more.
+# Return code: 0 - if all extensions are present
+# Return code: 1 - if any extension is not present
 gitPreCommitHasExtension() {
   local handler="_${FUNCNAME[0]}"
   local directory
@@ -952,9 +969,12 @@ _gitPreCommitHasExtension() {
 }
 
 # List the extensions available
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
+# stdout: String. One per line.
 gitPreCommitExtensionList() {
   local handler="_${FUNCNAME[0]}"
-  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
+  [ $# -eq 0 ] || __help --only "$handler" "$@" || return "$(convertValue $? 1 0)"
   local directory
   directory=$(catchReturn "$handler" __gitPreCommitCache "$handler" true) || return $?
   find "$directory" -maxdepth 1 -type f -exec basename {} \; | sort || return $?
@@ -965,6 +985,10 @@ _gitPreCommitExtensionList() {
 }
 
 # List the file(s) of an extension
+# Argument: extension - Optional. String. Extension to list. Use `!` for blank extension and `@` for all extensions. Can specify one or more.
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
+# stdout: File. One per line.
 gitPreCommitListExtension() {
   local handler="_${FUNCNAME[0]}"
   [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
@@ -982,6 +1006,8 @@ _gitPreCommitListExtension() {
 }
 
 # Clean up after our pre-commit (deletes cache directory)
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
 gitPreCommitCleanup() {
   local handler="_${FUNCNAME[0]}"
   [ $# -eq 0 ] || __help --only "$handler" "$@" || return "$(convertValue $? 1 0)"
@@ -995,8 +1021,9 @@ _gitPreCommitCleanup() {
 }
 
 # Does a branch exist locally or remotely?
-# Usage: {fn} branch ...
 # Argument: branch ... - String. Required. List of branch names to check.
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
 # Return Code: 0 - All branches passed exist
 # Return Code: 1 - At least one branch does not exist locally or remotely
 gitBranchExists() {
@@ -1019,7 +1046,9 @@ _gitBranchExists() {
 # Does a branch exist locally?
 # Usage: {fn} branch ...
 # Argument: branch ... - String. Required. List of branch names to check.
-# Return Code: 0 - All branches passed exist
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
+# Return Code: 0 - All branches exist
 # Return Code: 1 - At least one branch does not exist locally
 gitBranchExistsLocal() {
   local handler="_${FUNCNAME[0]}"
@@ -1041,7 +1070,9 @@ _gitBranchExistsLocal() {
 # Does a branch exist remotely?
 # Usage: {fn} branch ...
 # Argument: branch ... - String. Required. List of branch names to check.
-# Return Code: 0 - All branches passed exist
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
+# Return Code: 0 - All branches exist on the remote
 # Return Code: 1 - At least one branch does not exist remotely
 gitBranchExistsRemote() {
   local handler="_${FUNCNAME[0]}"
@@ -1065,7 +1096,6 @@ _gitBranchExistsRemote() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-#
 # Check out a branch with the current version and optional formatting
 #
 # `BUILD_BRANCH_FORMAT` is a string which can contain tokens in the form `{user}` and `{version}`
@@ -1073,7 +1103,8 @@ _gitBranchExistsRemote() {
 # The default value is `{version}-{user}`
 #
 # Environment: BUILD_BRANCH_FORMAT
-#
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
 gitBranchify() {
   local handler="_${FUNCNAME[0]}"
   [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
@@ -1119,6 +1150,8 @@ _gitBranchify() {
 # Argument: branch - String. Required. Branch to merge the current branch with.
 # Argument: --skip-ip - Boolean. Optional. Do not add the IP address to the comment.
 # Argument: --comment - String. Optional. Comment for merge commit.
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
 gitBranchMergeCurrent() {
   local handler="_${FUNCNAME[0]}"
 
@@ -1141,6 +1174,7 @@ gitBranchMergeCurrent() {
       comment=$(usageArgumentString "$handler" "$argument" "${1-}") || return $?
       ;;
     *)
+      [ -z "$targetBranch" ] || throwArgument "$handler" "Only one target branch should be specified: $targetBranch and $argument?" || return $?
       targetBranch="$(usageArgumentString "$handler" "$argument" "$1")" || return $?
       ;;
     esac
