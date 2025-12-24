@@ -103,7 +103,7 @@ pipelines:
                 name: Package Tests 1x
                 script:
                   - bin/tools.sh buildStagingTest --env-file .build.env --tag package-install --skip-tag package-install-last
-                  - bin/tools.sh buildStagingTest --env-file .build.env --tag package-install --tag package-install-last
+                  - bin/tools.sh buildStagingTest --env-file .build.env --tag package-install --tag +package-install-last
       - step:
           name: Staging Deploy 4x
           size: 4x
