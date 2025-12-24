@@ -957,7 +957,11 @@ gitPreCommitExtensionList() {
   [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
   local directory
   directory=$(catchReturn "$handler" __gitPreCommitCache "$handler" true) || return $?
-  find -maxdepth 1 "$directory" -type f -exec basename {} \; | sort || return $?
+  find "$directory" -maxdepth 1 -type f -exec basename {} \; | sort || return $?
+}
+_gitPreCommitExtensionList() {
+  # __IDENTICAL__ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # List the file(s) of an extension
