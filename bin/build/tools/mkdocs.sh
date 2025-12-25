@@ -23,10 +23,7 @@ documentationMkdocs() {
     # _IDENTICAL_ handlerHandler 1
     --handler) shift && handler=$(usageArgumentFunction "$handler" "$argument" "${1-}") || return $? ;;
     --template) shift && template=$(usageArgumentFile "$handler" "$argument" "${1-}") || return $? ;;
-    --path)
-      shift
-      rootPath="$(usageArgumentDirectory "$handler" "$argument" "${1-}")" || return $?
-      ;;
+    --path) shift && rootPath="$(usageArgumentDirectory "$handler" "$argument" "${1-}")" || return $? ;;
     *)
       # _IDENTICAL_ argumentUnknownHandler 1
       throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
@@ -38,15 +35,16 @@ documentationMkdocs() {
   local home
   home=$(catchReturn "$handler" buildHome) || return $?
 
+  [ -n "$rootPath" ] || rootPath="$home"
+
   if ! whichExists mkdocs; then
 
     statusMessage --last decorate notice "Installing python and mkdocs ..."
     catchEnvironmentQuiet "$handler" - pythonInstall || return $?
 
-    if [ ! -d "$home/.venv" ]; then
+    if [ ! -d "$rootPath/.venv" ]; then
       if ! pythonPackageInstalled venv; then
         catchReturn "$handler" packageInstall python3-venv || return $?
-
         #  The virtual environment was not created successfully because ensurepip is not
         #  available.  On Debian/Ubuntu systems, you need to install the python3-venv
         #  package using the following command.
@@ -59,16 +57,16 @@ documentationMkdocs() {
 
         # catchEnvironment "$handler" pipWrapper install venv || return $?
       fi
-      catchEnvironmentQuiet "$handler" - python -m venv "$home/.venv" || return $?
+      catchEnvironmentQuiet "$handler" - python -m venv "$rootPath/.venv" || return $?
+      [ -d "$rootPath/.venv" ] || throwEnvironment "$handler" ".venv directory not created?" || return $?
     fi
-    catchEnvironment "$handler" source "$home/.venv/bin/activate" || return $?
+    catchEnvironment "$handler" source "$rootPath/.venv/bin/activate" || return $?
     if ! pythonPackageInstalled mkdocs; then
       catchEnvironmentQuiet "$handler" - python -m pip install mkdocs mkdocs-material || return $?
       whichExists mkdocs || throwEnvironment "$handler" "mkdocs not found after installation?" || return $?
     fi
   else
-
-    catchEnvironment "$handler" source "$home/.venv/bin/activate" || return $?
+    catchEnvironment "$handler" source "$rootPath/.venv/bin/activate" || return $?
   fi
 
   catchEnvironment "$handler" muzzle pushd "$rootPath" || return $?
