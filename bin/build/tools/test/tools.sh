@@ -13,6 +13,18 @@ export globalTestFailure=
 # Supports argument flags in tests:
 # `TAP-Directive` `Test-Skip` `TODO`
 # You can also use `BUILD_TEST_FLAGS` to change the default flags.
+#
+# #### Tag filters
+#
+# Prefix a tag with `+` for `--tag` or `--skip-tag` queries to add the meaning "previous *AND*".
+#
+# - `--tag foo --tag bar` means tests must have `foo` tag OR must have `bar` tag
+# - `--tag foo --tag +bar` means tests must have `foo` tag AND must have `bar` tag (must have both)
+# - `--skip-tag foo --skip-tag bar` means skip any test with `foo` tag OR with any test with `bar` tag (either)
+# - `--skip-tag foo --skip-tag +bar` means skip any test with `foo` tag AND with the `bar` tag (must have both)
+# - `--tag a --tag +b --tag c --tag +d --tag +e` is `(a and b) or (c and d and e)`
+#
+# Notes: Consider using `--tag a+b --tag c+d+e` instead? TODO
 # Environment: - `BUILD_TEST_FLAGS` - Modify default flags and test behavior.
 # Environment: - `BUILD_DEBUG` - Many settings to debug different systems, comma-delimited.
 # Filters (`--tag` and `--skip-tag`) are applied in order after the function pattern or suite filter.
@@ -46,7 +58,9 @@ export globalTestFailure=
 # Requires: head tee printf trap
 # Requires: decorate loadAverage consoleConfigureColorMode
 # Requires: buildEnvironmentLoad usageArgumentString catchEnvironment
-# Requires: bashCoverage TODO
+# Requires: bashCoverage
+# TODO: bashCoverage support
+# TODO: results.xml output (hooks?)
 # BUILD_DEBUG: test-dump-environment - When set tests will dump the environment at the end.
 testSuite() {
   local handler="_${FUNCNAME[0]}"
