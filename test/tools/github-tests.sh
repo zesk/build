@@ -21,6 +21,9 @@ testGithubURLParse() {
   done < <(__testGithubURLParseData)
 }
 
+# Tag: remote-dependency
+# The URL fetch from GitHub has failed and `.url` returns `{}` in some cases - assume it's a temporary outage
+# Maybe try twice?
 testGithubStuff() {
   local handler="returnMessage"
   local temp
