@@ -54,7 +54,7 @@ pipelines:
                 name: Package Tests 1x
                 script:
                   - bin/tools.sh buildProductionTest --env-file .build.env --tag package-install --skip-tag package-install-last # poor man's ordering
-                  - bin/tools.sh buildProductionTest --env-file .build.env --tag package-install --tag package-install-last # poor man's ordering
+                  - bin/tools.sh buildProductionTest --env-file .build.env --tag package-install --tag +package-install-last # poor man's ordering
       - step:
           name: Production Deploy
           artifacts:
