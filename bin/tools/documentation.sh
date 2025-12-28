@@ -278,7 +278,7 @@ buildDocumentationBuild() {
   fi
 
   if "$makeDocumentation"; then
-    timestamp="$timestamp" version="$version" documentationMkdocs --handler "$handler" --path "./documentation" || return $?
+    timestamp="$timestamp" version="$version" documentationMkdocs --handler "$handler" --path "./documentation" --package mkdocs-material || return $?
   fi
 
   statusMessage --last timingReport "$start" "$(basename "${BASH_SOURCE[0]}") completed in"

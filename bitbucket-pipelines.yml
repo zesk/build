@@ -17,7 +17,7 @@ pipelines:
     main:
       - step:
           deployment: production
-          name: Production Build
+          name: Production Build (1x)
           size: 1x
           services:
             - docker
@@ -39,15 +39,17 @@ pipelines:
             - step:
                 artifacts:
                   - test.stats
+                  - .interrupt.log
                 services:
                   - docker
-                size: 2x
-                name: Slow Tests 2x
+                size: 4x
+                name: Slow Tests 4x
                 script:
                   - bin/tools.sh buildProductionTest --env-file .build.env --tag slow
             - step:
                 artifacts:
                   - test.stats
+                  - .interrupt.log
                 services:
                   - docker
                 size: 1x
@@ -56,8 +58,10 @@ pipelines:
                   - bin/tools.sh buildProductionTest --env-file .build.env --tag package-install --skip-tag package-install-last # poor man's ordering
                   - bin/tools.sh buildProductionTest --env-file .build.env --tag package-install --tag +package-install-last # poor man's ordering
       - step:
-          name: Production Deploy
+          name: Production Deploy (1x)
+          size: 1x
           artifacts:
+            - .interrupt.log
             - documentation/.site/
             - documentation/.docs/
           script:
@@ -66,10 +70,11 @@ pipelines:
     staging:
       - step:
           artifacts:
+            - .interrupt.log
             - .build.env
           size: 1x
           deployment: staging
-          name: Build 1x
+          name: Staging Build (1x)
           services:
             - docker
           script:
@@ -79,6 +84,7 @@ pipelines:
             - step:
                 artifacts:
                   - test.stats
+                  - .interrupt.log
                 services:
                   - docker
                 size: 2x
@@ -88,15 +94,17 @@ pipelines:
             - step:
                 artifacts:
                   - test.stats
+                  - .interrupt.log
                 services:
                   - docker
-                size: 2x
-                name: Slow Tests 2x
+                size: 4x
+                name: Slow Tests 4x
                 script:
                   - bin/tools.sh buildStagingTest --env-file .build.env --tag slow
             - step:
                 artifacts:
                   - test.stats
+                  - .interrupt.log
                 services:
                   - docker
                 size: 1x
@@ -105,17 +113,21 @@ pipelines:
                   - bin/tools.sh buildStagingTest --env-file .build.env --tag package-install --skip-tag package-install-last
                   - bin/tools.sh buildStagingTest --env-file .build.env --tag package-install --tag +package-install-last
       - step:
-          name: Staging Deploy 4x
-          size: 4x
+          name: Staging Deploy (1x)
+          size: 1x
           artifacts:
             - documentation/.site/
             - documentation/.docs/
+            - .interrupt.log
           script:
             - bin/build/tools.sh environmentFileLoad .build.env --execute bin/build.sh --documentation --commit
             - bin/deploy.sh --env-file .build.env --documentation --no-release
     deploy:
       - step:
           size: 1x
+          artifacts:
+            - .interrupt.log
+            - .build.env
           deployment: deploy
           name: Just Deploy
           services:
@@ -131,18 +143,48 @@ pipelines:
           artifacts:
             - test.stats
             - .last-run-test
+            - .interrupt.log
           services:
             - docker
           script:
             - IFS=' ' read -r -a aa < <(printf "%s\n" "${BUILD_TEST_ARGUMENTS-}")
             - BUILD_TEST_FLAGS="${BUILD_TEST_FLAGS-};Plumber:true;Housekeeper:true" BUILD_DEBUG="${BUILD_DEBUG-%,},usage" bin/test.sh "${aa[@]+"${aa[@]}"}"
-    docs:
+    docs-1:
       - step:
           deployment: documentation
-          name: Build documentation
+          name: Build documentation (1x)
+          size: 1x
           artifacts:
+            - .build.env
             - documentation/.site/
             - documentation/.docs/
+            - .interrupt.log
+          script:
+            - bin/build.sh --documentation --commit
+            - bin/deploy.sh --env-file .build.env --documentation --no-release
+    docs-2:
+      - step:
+          deployment: documentation
+          name: Build documentation (2x)
+          size: 2x
+          artifacts:
+            - .build.env
+            - documentation/.site/
+            - documentation/.docs/
+            - .interrupt.log
+          script:
+            - bin/build.sh --documentation --commit
+            - bin/deploy.sh --env-file .build.env --documentation --no-release
+    docs-4:
+      - step:
+          deployment: documentation
+          name: Build documentation (4x)
+          size: 4x
+          artifacts:
+            - .build.env
+            - documentation/.site/
+            - documentation/.docs/
+            - .interrupt.log
           script:
             - bin/build.sh --documentation --commit
             - bin/deploy.sh --env-file .build.env --documentation --no-release
@@ -153,6 +195,7 @@ pipelines:
           size: 2x
           artifacts:
             - test.stats
+            - .interrupt.log
             - coverage.stats.gz
           services:
             - docker

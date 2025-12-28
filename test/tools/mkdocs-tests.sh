@@ -26,7 +26,7 @@ testDocumentationMkdocs() {
     catchEnvironment "$handler" mkdir -p "$tempDocs/documentation/.docs" || return $?
     catchEnvironment "$handler" printf -- "%s\n" "# Hello, world" "" "{tools}" >"$tempDocs/documentation/.docs/index.md" || return $?
   fi
-  version=1.0 timestamp=$(timingStart) assertExitCode 0 documentationMkdocs --path "$tempDocs/documentation" || return $?
+  version=1.0 timestamp=$(timingStart) assertExitCode 0 documentationMkdocs --path "$tempDocs/documentation" --package mkdocs-material || return $?
   assertExitCode 0 whichExists mkdocs || return $?
   assertDirectoryExists "$tempDocs/documentation/.site" || return $?
   assertFileExists "$tempDocs/documentation/mkdocs.yml" || return $?
