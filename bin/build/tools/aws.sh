@@ -372,7 +372,7 @@ isS3URL() {
   local handler="_${FUNCNAME[0]}"
   [ $# -gt 0 ] || __help "$handler" --help || return 0
   while [ $# -gt 0 ]; do
-    [ "$(urlParseItem "$1" "scheme")" = "s3" ]
+    [ "$(urlParseItem scheme "$1")" = "s3" ] || return 1
     shift
   done
 }
@@ -399,6 +399,21 @@ awsS3Upload() {
   __awsLoader "_${FUNCNAME[0]}" "__${FUNCNAME[0]}" "$@"
 }
 _awsS3Upload() {
+  # __IDENTICAL__ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+# Delete a directory remotely on S3
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
+# DOC TEMPLATE: --handler 1
+# Argument: --handler handler - Optional. Function. Use this error handler instead of the default error handler.
+# Argument: --show - Optional. Flag. Show what would change, do not change anything.
+# Argument: url ... - Required. URL. AWS S3 URL to delete
+awsS3DirectoryDelete() {
+  __awsLoader "_${FUNCNAME[0]}" "__${FUNCNAME[0]}" "$@"
+}
+_awsS3DirectoryDelete() {
   # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

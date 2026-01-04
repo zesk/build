@@ -5,6 +5,42 @@
 # Copyright &copy; 2026 Market Acumen, Inc.
 #
 
+__awsS3DirectoryDelete() {
+  local handler="$1" && shift
+
+  local urls=() aa=()
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
+  local __saved=("$@") __count=$#
+  while [ $# -gt 0 ]; do
+    local argument="$1" __index=$((__count - $# + 1))
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    case "$argument" in
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
+    # _IDENTICAL_ handlerHandler 1
+    --handler) shift && handler=$(usageArgumentFunction "$handler" "$argument" "${1-}") || return $? ;;
+    --show) aa=(--dryrun) ;;
+    *)
+      isS3URL "$argument" || throwArgument "$handler" "Not a S3 URL: $argument" || return $?
+      urls+=("$argument")
+      ;;
+    esac
+    shift || usageArgumentMissing "$handler" "$argument" || return $?
+  done
+  [ ${#urls[@]} -gt 0 ] || throwArgument "$handler" "At least one URL is required" || return $?
+
+  local url
+  for url in "${urls[@]}"; do
+    local path base bucket
+    path=$(urlParseItem path "$url") || return $?
+    bucket=$(urlParseItem host "$url") || return $?
+    base=$(basename "$path")
+    path=$(dirname "$path")
+    catchEnvironment "$handler" aws s3 rm "s3://$bucket$path" --recursive "${aa[@]+"${aa[@]}"}" --exclude "*" --include "$base/*" || return $?
+  done
+}
+
 __awsS3Upload() {
   local handler="$1" && shift
 
@@ -56,18 +92,17 @@ __awsS3Upload() {
     throwArgument "$handler" "$target is not a valid S3 URL" || return $?
   fi
 
-  local fileList clean=()
-
   target="${target%/}"
 
+  local stagePath
   stagePath="$(catchEnvironment "$handler" buildCacheDirectory "./stage-results-$$")" || return $?
   catchEnvironment "$handler" directoryRequire "$stagePath" || return $?
-  clean+=("$stagePath")
+  local clean=("$stagePath")
 
   local manifest="$stagePath/manifest.json"
   # Clean up after here
-  fileList=()
-  catchEnvironment "$handler" printf "%s\n" "{}" >"$manifest" || return $?
+  local fileList=()
+  catchEnvironment "$handler" printf "%s\n" "{}" >"$manifest" || returnClean $? "${clean[@]}" || return $?
   catchEnvironment "$handler" jsonFileSet "$manifest" ".hostname" "$(hostname)" || returnClean $? "${clean[@]}" || return $?
   fileList+=("manifest.json")
 
@@ -97,8 +132,4 @@ __awsS3Upload() {
   catchEnvironment "$handler" aws "${profileArgs[@]+"${profileArgs[@]}"}" s3 sync --delete --quiet "$stagePath" "$target/" || returnClean $? "${clean[@]}" || return $?
   catchEnvironment "$handler" rm -rf "${clean[@]}" || return $?
   statusMessage timingReport "$start" "$(decorate label "$(buildEnvironmentGet APPLICATION_NAME)") published $(pluralWord "${#fileList[@]}" items) to $(decorate value "$target")"
-}
-_awsS3Upload() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

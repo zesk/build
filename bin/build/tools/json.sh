@@ -122,11 +122,11 @@ jsonFileSet() {
   if [ $# -eq 0 ]; then
     rawValue="\"$(escapeDoubleQuotes "$value")\""
   else
-    local arrayValue=("$(escapeDoubleQuotes "$value")")
+    local arrayValue=("\"$(escapeDoubleQuotes "$value")\"")
     while [ $# -gt 0 ]; do
-      arrayValue+=("$(escapeDoubleQuotes "$1")") && shift
+      arrayValue+=("\"$(escapeDoubleQuotes "$1")\"") && shift
     done
-    IFS="," rawValue="[ $(listJoin , "${arrayValue[@]}") ]"
+    rawValue="[ $(listJoin , "${arrayValue[@]}") ]"
   fi
 
   path=$(__jqPathClean "$path")

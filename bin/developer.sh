@@ -72,11 +72,9 @@ if source "${BASH_SOURCE[0]%/*}/tools.sh"; then
 
     pathConfigure --last "$home/bin" "$home/bin/build"
 
-    # developerAnnounce < <(developerTrack)
-
     backgroundProcess --verbose --stop 30 --wait 90 bin/build/tools.sh fingerprint --check -- bin/build/tools.sh fingerprint
     backgroundProcess --verbose --stop 30 --wait 90 bin/build/deprecated.sh --check -- bin/build/deprecated.sh
-    backgroundProcess --verbose --stop 30 --wait 90 bin/build/identical-repair.sh --internal --check -- bin/build/identical-repair.sh --internal
+    # backgroundProcess --verbose --stop 30 --wait 90 bin/build/identical-repair.sh --internal --check -- bin/build/identical-repair.sh --internal
 
     export BUILD_PROJECT_DEACTIVATE="${FUNCNAME[0]}Undo"
 
