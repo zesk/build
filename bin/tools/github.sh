@@ -2,7 +2,7 @@
 #
 # github.sh
 #
-# Copyright &copy; 2025 Market Acumen, Inc.
+# Copyright &copy; 2026 Market Acumen, Inc.
 
 #
 # read urls one per line and output to a CSV

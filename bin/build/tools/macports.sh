@@ -5,7 +5,7 @@
 # https://ports.macports.org/
 # https://www.macports.org/
 #
-# Copyright &copy; 2025 Market Acumen, Inc.
+# Copyright &copy; 2026 Market Acumen, Inc.
 # Docs: ./documentation/source/tools/macports.md
 # Test: ./test/tools/macports-tests.sh
 #

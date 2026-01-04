@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # This is the display name of the application
-# Copyright &copy; 2025 Market Acumen, Inc.
+# Copyright &copy; 2026 Market Acumen, Inc.
 # Category: Application
 # Type: String
 export APPLICATION_NAME

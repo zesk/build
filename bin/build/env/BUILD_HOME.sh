@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # `BUILD_HOME` is `.` when this code is installed - at `./bin/build`. Usually an absolute path and does NOT end with a trailing slash.
 # This is computed from the current source file using `${BASH_SOURCE[0]}`.
-# Copyright &copy; 2025 Market Acumen, Inc.
+# Copyright &copy; 2026 Market Acumen, Inc.
 # Category: Build Configuration
 # Type: Directory
 export BUILD_HOME

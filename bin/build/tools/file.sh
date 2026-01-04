@@ -2,7 +2,7 @@
 #
 # File Functions
 #
-# Copyright &copy; 2025 Market Acumen, Inc.
+# Copyright &copy; 2026 Market Acumen, Inc.
 #
 # Docs: o ./documentation/source/tools/file.md
 # Test: o ./test/tools/file-tests.sh

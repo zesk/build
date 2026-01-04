@@ -4,7 +4,7 @@
 #
 # Tags
 #
-# Copyright &copy; 2025 Market Acumen, Inc.
+# Copyright &copy; 2026 Market Acumen, Inc.
 #
 # Test: o test/tools/php-tools.sh
 # Docs: o docs/_templates/tools/php.md

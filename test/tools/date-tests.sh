@@ -4,7 +4,7 @@
 #
 # Date tests
 #
-# Copyright &copy; 2025 Market Acumen, Inc.
+# Copyright &copy; 2026 Market Acumen, Inc.
 #
 
 __testDateValidData() {
@@ -54,4 +54,3 @@ testDateToFormat() {
 testDateToTimestamp() {
   assertEquals "$(dateToTimestamp 2023-04-20)" "1681948800" || return $?
 }
-

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Previous result code
-# Copyright &copy; 2025 Market Acumen, Inc.
+# Copyright &copy; 2026 Market Acumen, Inc.
 # Category: Bash Prompt
 # Type: Array
 # See: bashPrompt

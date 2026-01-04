@@ -4,7 +4,7 @@
 #
 # Fake conditions to test them
 #
-# Copyright &copy; 2025 Market Acumen, Inc.
+# Copyright &copy; 2026 Market Acumen, Inc.
 
 # Saved name should not match grep of argument
 __mockEnvironmentGlobal() {

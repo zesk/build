@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # The file to generate when generating builds
-# Copyright &copy; 2025 Market Acumen, Inc.
+# Copyright &copy; 2026 Market Acumen, Inc.
 # Category: Deployment
 # Type: String
 # Default: app.tar.gz

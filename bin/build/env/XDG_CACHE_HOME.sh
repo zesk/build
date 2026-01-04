@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Base directory for user-specific cache data to be stored
-# Copyright &copy; 2025 Market Acumen, Inc.
+# Copyright &copy; 2026 Market Acumen, Inc.
 # Category: Build Configuration
 # Type: Directory
 # See: https://specifications.freedesktop.org/basedir-spec/latest/

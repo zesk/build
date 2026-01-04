@@ -4,7 +4,7 @@
 #
 # Arguments used throughout Zesk Build
 #
-# Copyright &copy; 2025 Market Acumen, Inc.
+# Copyright &copy; 2026 Market Acumen, Inc.
 #
 
 # This function is not used. It's here simply to provide documentation.

@@ -2,7 +2,7 @@
 #
 # xml.sh XML Formatting
 #
-# Copyright &copy; 2025 Market Acumen, Inc.
+# Copyright &copy; 2026 Market Acumen, Inc.
 #
 # Docs: ./documentation/source/tools/xml.md
 # Test: ./test/tools/xml.sh

@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # MariaDB binary for database connections
 # Default: blank
-# Copyright &copy; 2025 Market Acumen, Inc.
+# Copyright &copy; 2026 Market Acumen, Inc.
 # Category: Vendor
 # Vendor: MariaDBa
 # Type: Executable

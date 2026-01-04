@@ -4,7 +4,7 @@
 #
 # Before this warnings are output in the test suite. Get testing!
 #
-# Copyright &copy; 2025 Market Acumen, Inc.
+# Copyright &copy; 2026 Market Acumen, Inc.
 # Type: Date
 # Category: Test
 export BUILD_COVERAGE_REQUIRED_DATE

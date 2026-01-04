@@ -2,7 +2,7 @@
 #
 # Bash Prompt Module API calls
 #
-# Copyright &copy; 2025 Market Acumen, Inc.
+# Copyright &copy; 2026 Market Acumen, Inc.
 #
 # Docs: ./documentation/source/tools/prompt.md
 # Test: ./test/tools/prompt-tests.sh

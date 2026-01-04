@@ -3,7 +3,7 @@
 #
 # See functionality
 #
-# Copyright: Copyright &copy; 2025 Market Acumen, Inc.
+# Copyright: Copyright &copy; 2026 Market Acumen, Inc.
 
 __documentationSeeTokenTemplates() {
   local handler="$1" && shift

@@ -2,7 +2,7 @@
 #
 # Tests for jUnit
 #
-# Copyright &copy; 2025 Market Acumen, Inc.
+# Copyright &copy; 2026 Market Acumen, Inc.
 
 test_XMLBasics() {
   local handler="returnMessage"

@@ -2,7 +2,7 @@
 #
 # deploy tools
 #
-# Copyright &copy; 2025 Market Acumen, Inc.
+# Copyright &copy; 2026 Market Acumen, Inc.
 #
 # Related: o ./deploy/application.sh
 # Docs: o ./documentation/source/tools/deploy.md

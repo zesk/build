@@ -8,7 +8,7 @@
 # - Copy install-bin-build.sh to bin/install-bin-build.sh
 # - `source bin/tools.sh` installs and loads Zesk Build.
 #
-# Copyright &copy; 2025, Market Acumen, Inc.
+# Copyright &copy; 2026, Market Acumen, Inc.
 #
 
 # _IDENTICAL_ application.sh 144

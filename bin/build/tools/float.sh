@@ -2,7 +2,7 @@
 #
 # Floating-point support
 #
-# Copyright &copy; 2025 Market Acumen, Inc.
+# Copyright &copy; 2026 Market Acumen, Inc.
 #
 # bin: printf
 # Docs: contextOpen ./documentation/source/tools/float.md

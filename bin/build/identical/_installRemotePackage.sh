@@ -6,7 +6,7 @@
 #
 # See: bin/build/install-bin-build.sh
 #
-# Copyright &copy; 2025 Market Acumen, Inc.
+# Copyright &copy; 2026 Market Acumen, Inc.
 
 # These next three functions are not used and are here simply to provide documentation.
 

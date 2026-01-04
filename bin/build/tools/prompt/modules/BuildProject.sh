@@ -2,7 +2,7 @@
 #
 # Bash Prompt Module: binBuild
 #
-# Copyright &copy; 2025 Market Acumen, Inc.
+# Copyright &copy; 2026 Market Acumen, Inc.
 
 bashPromptModule_binBuild() {
   bashPromptModule_BuildProject "$@"
@@ -13,22 +13,19 @@ bashPromptModule_binBuild() {
 # - Re-sources `bin/build` so versions do not conflict.
 # - Runs hook `project-deactivate` in the old project (using that `bin/build` library)
 # - Runs the `project-activate` hook in the new project
-# - Adds the current project's `bin` directory to the `PATH`
-# - Removes the old project's `bin` directory from the `PATH`
 # - Displays the change in Zesk Build version
 #
 # Run-Hook: project-activate
 # Run-Hook: project-deactivate
 bashPromptModule_BuildProject() {
   local handler="returnMessage"
-  local home gitHome tools="bin/build/tools.sh" version="bin/build/build.json" oldVersion newMessage buildMessage currentVersion showHome showGitHome
+  local home gitHome tools="bin/build/tools.sh" version="bin/build/build.json" oldVersion newMessage buildMessage currentVersion showGitHome
   export HOME
 
   [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
 
   catchReturn "$handler" buildEnvironmentLoad HOME || return $?
   home=$(catchReturn "$handler" buildHome) || return $?
-  showHome="${home//$HOME/~}"
   gitHome=$(gitFindHome "$(pwd)" 2>/dev/null) || return 0
   [ "$home" != "$gitHome" ] || return 0
   showGitHome="${gitHome//$HOME/~}"
@@ -64,18 +61,7 @@ bashPromptModule_BuildProject() {
   hookSourceOptional --application "$gitHome" project-activate "$home" || returnEnvironment "project-activate failed" || :
   currentVersion="$(hookRunOptional --application "$gitHome" version-current)"
 
-  pathSuffix=
-  if [ -d "$gitHome/bin" ]; then
-    catchEnvironment "$handler" pathConfigure --last "$gitHome/bin" || return $?
-    pathSuffix="$pathSuffix +$(decorate cyan "$showGitHome/bin")"
-  fi
-  if [ -d "$home/bin" ]; then
-    pathRemove "$home/bin"
-    pathSuffix="$pathSuffix -$(decorate magenta "$showHome/bin")"
-  fi
-  [ -z "$pathSuffix" ] || pathSuffix=" $(decorate warning "PATH:")$pathSuffix"
-
-  printf -- "%s %s %s@ %s%s\n" "$newMessage" "$(decorate code "$currentVersion")" "$buildMessage" "$(decorate code "$(decorate file "$(buildHome)")")" "$pathSuffix"
+  printf -- "%s %s %s@ %s\n" "$newMessage" "$(decorate code "$currentVersion")" "$buildMessage" "$(decorate code "$(decorate file "$(buildHome)")")"
 }
 _bashPromptModule_BuildProject() {
   # __IDENTICAL__ usageDocument 1

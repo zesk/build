@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Copyright &copy; 2025 Market Acumen, Inc.
+# Copyright &copy; 2026 Market Acumen, Inc.
 # Standard way to express the foreground and background colors
 #
 # - Format is: `foregroundColor` `;` `backgroundColor`

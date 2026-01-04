@@ -2,7 +2,7 @@
 #
 # Title: Python Language Support
 #
-# Copyright &copy; 2025 Market Acumen, Inc.
+# Copyright &copy; 2026 Market Acumen, Inc.
 #
 # bin: npm
 # Binary paths are at bin/build/install
@@ -238,7 +238,8 @@ _pythonPackageInstalled() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# Set up a virtual environment for a project and install dependencies
+# Set up a virtual environment for a project and install dependencies. Also can be used to update dependencies or add them.
+#
 # Argument: --application directory - Directory. Required. Path to project location.
 # Argument: --require requirements - File. Optional. Requirements file for project.
 # Argument: pipPackage ... - String. Optional. One or more pip packages to install in the virtual environment.

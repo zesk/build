@@ -1,7 +1,7 @@
 #
 # Zesk Build BitBucket Pipeline
 #
-# Copyright &copy; 2025 Market Acumen Inc.
+# Copyright &copy; 2026 Market Acumen Inc.
 #
 # Requires: docker
 #
@@ -33,7 +33,7 @@ pipelines:
                 services:
                   - docker
                 size: 2x
-                name: Fast Tests 2x
+                name: Production Fast Tests 2x
                 script:
                   - bin/tools.sh buildProductionTest --env-file .build.env --skip-tag slow --skip-tag package-install
             - step:
@@ -43,7 +43,7 @@ pipelines:
                 services:
                   - docker
                 size: 4x
-                name: Slow Tests 4x
+                name: Production Slow Tests 4x
                 script:
                   - bin/tools.sh buildProductionTest --env-file .build.env --tag slow
             - step:
@@ -53,7 +53,7 @@ pipelines:
                 services:
                   - docker
                 size: 1x
-                name: Package Tests 1x
+                name: Production Package Tests 1x
                 script:
                   - bin/tools.sh buildProductionTest --env-file .build.env --tag package-install --skip-tag package-install-last # poor man's ordering
                   - bin/tools.sh buildProductionTest --env-file .build.env --tag package-install --tag +package-install-last # poor man's ordering
@@ -88,7 +88,7 @@ pipelines:
                 services:
                   - docker
                 size: 2x
-                name: Fast Tests 2x
+                name: Staging Fast Tests 2x
                 script:
                   - bin/tools.sh buildStagingTest --env-file .build.env --skip-tag slow --skip-tag package-install
             - step:
@@ -98,7 +98,7 @@ pipelines:
                 services:
                   - docker
                 size: 4x
-                name: Slow Tests 4x
+                name: Staging Slow Tests 4x
                 script:
                   - bin/tools.sh buildStagingTest --env-file .build.env --tag slow
             - step:
@@ -108,7 +108,7 @@ pipelines:
                 services:
                   - docker
                 size: 1x
-                name: Package Tests 1x
+                name: Staging Package Tests 1x
                 script:
                   - bin/tools.sh buildStagingTest --env-file .build.env --tag package-install --skip-tag package-install-last
                   - bin/tools.sh buildStagingTest --env-file .build.env --tag package-install --tag +package-install-last
@@ -138,7 +138,7 @@ pipelines:
     test:
       - step:
           deployment: test
-          name: Just Test
+          name: Just Test (2x)
           size: 2x
           artifacts:
             - test.stats

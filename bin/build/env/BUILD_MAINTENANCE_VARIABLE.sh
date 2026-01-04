@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # The variable
-# Copyright &copy; 2025 Market Acumen, Inc.
+# Copyright &copy; 2026 Market Acumen, Inc.
 # Category: Application
 # Type: EnvironmentVariable
 # The maintenance variable which enables (or disabled) maintenance mode.

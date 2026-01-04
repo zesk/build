@@ -63,4 +63,4 @@ To use in your pipeline:
 
 - [About Zesk Build](./about.md)
 
-Copyright &copy; 2025 Market Acumen, Inc. All Rights Reserved. Licensed under [MIT License](./LICENSE.md).
+Copyright &copy; 2026 Market Acumen, Inc. All Rights Reserved. Licensed under [MIT License](./LICENSE.md).

@@ -2,7 +2,7 @@
 #
 # Copy this into your project and customize for your own installer process.
 #
-# Copyright &copy; 2025 Market Acumen, Inc.
+# Copyright &copy; 2026 Market Acumen, Inc.
 #
 # Debugging: 73b0bd4ba49583263542da725669003fc821eb63
 

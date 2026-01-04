@@ -3,7 +3,7 @@
 # document.sh
 #
 #
-# Copyright: Copyright &copy; 2025 Market Acumen, Inc.
+# Copyright: Copyright &copy; 2026 Market Acumen, Inc.
 
 __usageDocumentSections() {
   cat <<'EOF'

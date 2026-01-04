@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # List of modules to run each prompt command
-# Copyright &copy; 2025 Market Acumen, Inc.
+# Copyright &copy; 2026 Market Acumen, Inc.
 # Category: Bash Prompt
 # Type: Array:Callable
 # See: bashPrompt

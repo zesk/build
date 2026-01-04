@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # See: bitbucketContainer
-# Copyright &copy; 2025 Market Acumen, Inc.
+# Copyright &copy; 2026 Market Acumen, Inc.
 # Category: Continuous Integration: BitBucket
 # Type: String
 export BUILD_DOCKER_BITBUCKET_IMAGE

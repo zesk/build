@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # This is the unique hash which represents the source code state (typically a git hash)
-# Copyright &copy; 2025 Market Acumen, Inc.
+# Copyright &copy; 2026 Market Acumen, Inc.
 # Category: Deployment
 # Type: String
 export APPLICATION_ID

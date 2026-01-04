@@ -2,7 +2,7 @@
 #
 # interactiveManager
 #
-# Copyright &copy; 2025 Market Acumen, Inc.
+# Copyright &copy; 2026 Market Acumen, Inc.
 
 # Usage: {fn} loopCallable fileToCheck ...
 # Argument: loopCallable - Required. Callable. Call this on each file and a zero result code means passed and non-zero means fails.

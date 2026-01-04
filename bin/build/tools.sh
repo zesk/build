@@ -5,7 +5,7 @@
 # Usage: # shellcheck source=/dev/null
 # Usage: . ./bin/build/tools.sh
 #
-# Copyright &copy; 2025 Market Acumen, Inc.
+# Copyright &copy; 2026 Market Acumen, Inc.
 #
 # documentTemplate: ./docs/_templates/__function.md
 #

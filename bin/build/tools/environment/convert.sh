@@ -2,7 +2,7 @@
 #
 # Functions related to converting between Bash-compatible and Docker environment files
 #
-# Copyright &copy; 2025 Market Acumen, Inc.
+# Copyright &copy; 2026 Market Acumen, Inc.
 #
 # bin: head grep
 # Docs: contextOpen ./documentation/source/tools/environment.md

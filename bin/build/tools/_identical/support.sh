@@ -4,7 +4,7 @@
 #
 # Ensuring a directory of files has sections which match identically
 #
-# Copyright &copy; 2025 Market Acumen, Inc.
+# Copyright &copy; 2026 Market Acumen, Inc.
 #
 
 # Usage: {fn} file prefix identicalLine

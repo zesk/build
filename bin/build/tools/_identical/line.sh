@@ -2,7 +2,7 @@
 #
 # Line handler inside loop
 #
-# Copyright &copy; 2025 Market Acumen, Inc.
+# Copyright &copy; 2026 Market Acumen, Inc.
 
 # Return Code: 1 - stderr - ERRORS
 # Return Code: 0 - stderr - console output, stdout -> tokenFileName

@@ -4,7 +4,6 @@
 [🛠️ Tools ](./index.md) &middot; [⬅ Top ](../index.md)
 <hr />
 
-
        ▄▄    ▄▄      ▄▄   ▄▄▄▄
       ████   ██      ██ ▄█▀▀▀▀█
       ████   ▀█▄ ██ ▄█▀ ██▄
@@ -17,19 +16,23 @@ AWS stands for Amazon Web Services and tools related to interacting with the `aw
 
 {awsInstall}
 
-{awsIsKeyUpToDate}
-
-{awsHasEnvironment}
+## AWS Security Groups
 
 {awsIPAccess}
 
 {awsSecurityGroupIPModify}
 
+## AWS Tools
+
+{awsIsKeyUpToDate}
+
 {awsRegionValid}
 
-{awsProfilesList}
+## AWS Credentials
 
 {awsCredentialsFile}
+
+{awsHasEnvironment}
 
 {awsCredentialsAdd}
 
@@ -40,3 +43,9 @@ AWS stands for Amazon Web Services and tools related to interacting with the `aw
 {awsCredentialsFromEnvironment}
 
 {awsCredentialsHasProfile}
+
+{awsProfilesList}
+
+## S3 Tools
+
+{awsS3Upload}

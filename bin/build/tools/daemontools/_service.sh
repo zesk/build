@@ -7,7 +7,7 @@
 # Environment: APPLICATION_USER - Set and then map this file
 # Environment: BINARY - Set and then map this file
 #
-# Copyright &copy; 2025 Market Acumen, Inc.
+# Copyright &copy; 2026 Market Acumen, Inc.
 #
 # See: daemontools
 #

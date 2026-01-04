@@ -2,7 +2,7 @@
 #
 # Support for various vendor applications
 #
-# Copyright &copy; 2025 Market Acumen, Inc.
+# Copyright &copy; 2026 Market Acumen, Inc.
 #
 # Depends: nothing
 # Docs: o ./documentation/source/tools/vendor.md

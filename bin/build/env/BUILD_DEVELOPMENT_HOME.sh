@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Copyright &copy; 2025 Market Acumen, Inc.
+# Copyright &copy; 2026 Market Acumen, Inc.
 # Type: String
 # Category: Development
 # Directory where Zesk Build is being developed in the file system (for other projects to test against a changed version)

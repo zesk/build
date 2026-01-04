@@ -2,7 +2,7 @@
 #
 # Amazon Web Services: aws
 #
-# Copyright &copy; 2025 Market Acumen, Inc.
+# Copyright &copy; 2026 Market Acumen, Inc.
 #
 
 # Requires: aws env

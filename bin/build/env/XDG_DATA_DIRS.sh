@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Search directory for user-specific data files to be stored. `:` separated.
 # Type: DirectoryList
-# Copyright &copy; 2025 Market Acumen, Inc.
+# Copyright &copy; 2026 Market Acumen, Inc.
 # Category: Build Configuration
 # See: https://specifications.freedesktop.org/basedir-spec/latest/
 

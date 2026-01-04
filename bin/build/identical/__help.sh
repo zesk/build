@@ -4,7 +4,7 @@
 #
 # Original of __help
 #
-# Copyright &copy; 2025 Market Acumen, Inc.
+# Copyright &copy; 2026 Market Acumen, Inc.
 #
 
 # DOC TEMPLATE: --help 1

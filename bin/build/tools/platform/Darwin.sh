@@ -4,7 +4,7 @@
 #
 # Darwin is Apple Inc.'s code name for the underlying operating system of Mac OS X
 #
-# Copyright &copy; 2025 Market Acumen, Inc.
+# Copyright &copy; 2026 Market Acumen, Inc.
 #
 
 # Requires: find stat

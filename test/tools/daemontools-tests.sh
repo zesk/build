@@ -4,7 +4,7 @@
 #
 # daemontools tests
 #
-# Copyright &copy; 2025 Market Acumen, Inc.
+# Copyright &copy; 2026 Market Acumen, Inc.
 #
 
 # Test-Platform: !alpine

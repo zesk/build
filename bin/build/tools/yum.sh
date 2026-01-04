@@ -2,7 +2,7 @@
 #
 # yum functions
 #
-# Copyright &copy; 2025 Market Acumen, Inc.
+# Copyright &copy; 2026 Market Acumen, Inc.
 #
 # Docs: o ./documentation/source/tools/yum.md
 # Test: o ./test/tools/yum-tests.sh

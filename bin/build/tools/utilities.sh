@@ -2,7 +2,7 @@
 #
 # utilities.sh
 #
-# Copyright &copy; 2025 Market Acumen, Inc.
+# Copyright &copy; 2026 Market Acumen, Inc.
 #
 # Test: o test/tools/utilities-tests.sh
 # Docs: o docs/_templates/tools/utilities.md

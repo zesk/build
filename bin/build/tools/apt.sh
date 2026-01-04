@@ -2,7 +2,7 @@
 #
 # apt functions
 #
-# Copyright &copy; 2025 Market Acumen, Inc.
+# Copyright &copy; 2026 Market Acumen, Inc.
 #
 # Docs: o ./documentation/source/tools/apt.md
 # Test: o ./test/tools/apt-tests.sh

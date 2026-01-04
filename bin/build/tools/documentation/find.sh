@@ -2,7 +2,7 @@
 #
 # Documentation
 #
-# Copyright &copy; 2025 Market Acumen, Inc.
+# Copyright &copy; 2026 Market Acumen, Inc.
 
 #
 # Finds a function definition and outputs the file in which it is found

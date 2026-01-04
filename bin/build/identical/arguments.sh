@@ -4,7 +4,7 @@
 #
 # argument-case-blank-argument-header
 #
-# Copyright &copy; 2025 Market Acumen, Inc.
+# Copyright &copy; 2026 Market Acumen, Inc.
 #
 
 ___documentTemplateFunction() {

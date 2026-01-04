@@ -2,7 +2,7 @@
 #
 # Checking identical
 #
-# Copyright &copy; 2025 Market Acumen, Inc.
+# Copyright &copy; 2026 Market Acumen, Inc.
 #
 # In case you forgot, the directory in which this file is named `_identical` and *NOT* `identical`.
 #

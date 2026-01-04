@@ -2,7 +2,7 @@
 #
 # rsync Tools
 #
-# Copyright &copy; 2025 Market Acumen, Inc.
+# Copyright &copy; 2026 Market Acumen, Inc.
 #
 # Docs: ./documentation/source/tools/rsync.md
 # Test: ./test/tools/rsync-tests.sh

@@ -4,7 +4,7 @@
 #
 # Original of mapEnvironment (uses bash replace instead of sed)
 #
-# Copyright &copy; 2025 Market Acumen, Inc.
+# Copyright &copy; 2026 Market Acumen, Inc.
 #
 # requires a lot of stuff
 #

@@ -4,7 +4,7 @@
 #
 # EDIT THIS FILE
 #
-# Copyright &copy; 2025 Market Acumen, Inc.
+# Copyright &copy; 2026 Market Acumen, Inc.
 #
 # Minimum _sugar for install
 # Requires IDENTICAL: returnMessage

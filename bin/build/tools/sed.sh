@@ -8,7 +8,7 @@
 #
 # Which matters more? Related to `quote` or related to `sed`?
 #
-# Copyright &copy; 2025 Market Acumen, Inc.
+# Copyright &copy; 2026 Market Acumen, Inc.
 #
 
 # Quote a sed command for search and replace

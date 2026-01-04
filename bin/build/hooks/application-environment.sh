@@ -2,7 +2,7 @@
 #
 # Fetch an ID which represents the current application build/code state which is unique
 #
-# Copyright &copy; 2025 Market Acumen, Inc.
+# Copyright &copy; 2026 Market Acumen, Inc.
 #
 
 # IDENTICAL zesk-build-hook-header 3

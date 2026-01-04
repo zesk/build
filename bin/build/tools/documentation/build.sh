@@ -2,7 +2,7 @@
 #
 # documentationBuild
 #
-# Copyright: Copyright &copy; 2025 Market Acumen, Inc.
+# Copyright: Copyright &copy; 2026 Market Acumen, Inc.
 #
 # Docs: o ./documentation/source/tools/documentation.md
 # Test: o ./test/tools/documentation-tests.sh

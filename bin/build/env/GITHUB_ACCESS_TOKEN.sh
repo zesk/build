@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # See: githubRelease
-# Copyright &copy; 2025 Market Acumen, Inc.
+# Copyright &copy; 2026 Market Acumen, Inc.
 # Category: Development
 # Type: String
 # Access token used for release

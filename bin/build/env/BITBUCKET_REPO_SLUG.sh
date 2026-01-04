@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Defined in BITBUCKET Pipelines, represents the project code name.
-# Copyright &copy; 2025 Market Acumen, Inc.
+# Copyright &copy; 2026 Market Acumen, Inc.
 # Category: Continuous Integration
 # Vendor: BitBucket
 # Type: String

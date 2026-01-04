@@ -16,7 +16,7 @@
 # - `rs` - Rust
 # - `css` - CSS
 # - `less`, `sass`, `scss` - Compiled stylesheets
-# Copyright &copy; 2025 Market Acumen, Inc.
+# Copyright &copy; 2026 Market Acumen, Inc.
 # Category: Build Configuration
 # Type: List
 export BUILD_PRECOMMIT_EXTENSIONS

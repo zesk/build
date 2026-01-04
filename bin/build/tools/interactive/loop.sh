@@ -2,7 +2,7 @@
 #
 # loopExecute
 #
-# Copyright: Copyright &copy; 2025 Market Acumen, Inc.
+# Copyright: Copyright &copy; 2026 Market Acumen, Inc.
 #
 
 # Run checks interactively until errors are all fixed.

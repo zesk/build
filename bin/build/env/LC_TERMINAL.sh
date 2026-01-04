@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # LC_TERMINAL typically identifies the terminal application
 # Found: iTerm2
-# Copyright &copy; 2025 Market Acumen, Inc.
+# Copyright &copy; 2026 Market Acumen, Inc.
 # Category: Bash
 # Type: String
 export LC_TERMINAL

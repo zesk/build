@@ -4,7 +4,7 @@
 #
 # Bash linting
 #
-# Copyright &copy; 2025 Market Acumen, Inc.
+# Copyright &copy; 2026 Market Acumen, Inc.
 
 # Run `shellcheck` and `bash -n` on a set of bash files.
 #
@@ -393,7 +393,7 @@ _findUncaughtAssertions() {
 # By default, any directory which begins with a dot `.` will be ignored.
 #
 # Usage: validateFileExtensionContents extension0 [ extension1 ... ] -- text0 [ text1 ... ] [ -- findArgs ]
-# Example:     validateFileContents sh php js -- 'Widgets LLC' 'Copyright &copy; 2025'
+# Example:     validateFileContents sh php js -- 'Widgets LLC' 'Copyright &copy; 2026'
 # Argument: `extension0` - Required - the extension to search for (`*.extension`)
 # Argument: `--` - Required. Separates extensions from text
 # Argument: `text0` - Required. Text which must exist in each item with the extension given.

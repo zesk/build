@@ -6,7 +6,7 @@
 #
 # - Bitbucket pipelines
 #
-# Copyright &copy; 2025 Market Acumen, Inc.
+# Copyright &copy; 2026 Market Acumen, Inc.
 # Category: Continuous Integration
 # Type: String
 export CI

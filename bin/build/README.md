@@ -186,7 +186,7 @@ Optional:
 - `pcregrep` - documentation generation and support
 - `unzip` - `awsInstall`
 
-## Copyright &copy; 2025
+## Copyright &copy; 2026
 
 All copyrights held by **Market Acumen, Inc.**, a [provider
 of infrastructure and cloud expertise.](https://marketacumen.com/executive-technical-assessment-and-reporting/?crcat=code&crsource=zesk-build&crcampaign=README.md&crkw=provider+of+infrastructure+expertise)

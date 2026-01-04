@@ -2,7 +2,7 @@
 #
 # dump output for debugging or review
 #
-# Copyright &copy; 2025 Market Acumen, Inc.
+# Copyright &copy; 2026 Market Acumen, Inc.
 #
 # Docs: ./documentation/source/tools/dump.md
 # Test: ./test/tools/dump-tests.sh

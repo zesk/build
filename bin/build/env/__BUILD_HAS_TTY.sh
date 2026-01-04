@@ -4,7 +4,7 @@
 # - `true` - `/dev/tty` appears to be operating without errors
 # - `false` - `/dev/tty` appears to be disconnected and can not be used
 # This value is set automatically by `isTTYAvailable` and caches the value using this environment variable to avoid testing again.
-# Copyright &copy; 2025 Market Acumen, Inc.
+# Copyright &copy; 2026 Market Acumen, Inc.
 # Category: Internal
 # Type: Boolean
 export __BUILD_HAS_TTY

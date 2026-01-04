@@ -4,7 +4,7 @@
 #
 # composer is the binary used to load and manage dependencies in PHP Projects
 #
-# Copyright &copy; 2025 Market Acumen, Inc.
+# Copyright &copy; 2026 Market Acumen, Inc.
 
 #
 # Summary: Run Composer commands on code

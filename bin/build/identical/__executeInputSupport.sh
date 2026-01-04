@@ -4,7 +4,7 @@
 #
 # Original of executeInputSupport
 #
-# Copyright &copy; 2025 Market Acumen, Inc.
+# Copyright &copy; 2026 Market Acumen, Inc.
 #
 # General reason for this: `read -t 0` which is the ideal solution does not behave identically
 # across platforms to determine if stdin has input. Darwin specifically ignores `-t` when stdin is a pipe or file.

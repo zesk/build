@@ -2,7 +2,7 @@
 #
 # Syntactic sugar
 #
-# Copyright &copy; 2025 Market Acumen, Inc.
+# Copyright &copy; 2026 Market Acumen, Inc.
 #
 
 # Docs: contextOpen ./documentation/source/tools/sugar.md

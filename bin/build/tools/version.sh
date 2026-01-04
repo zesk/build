@@ -4,7 +4,7 @@
 #
 # Tools to help with code version management
 #
-# Copyright: Copyright &copy; 2025 Market Acumen, Inc.
+# Copyright: Copyright &copy; 2026 Market Acumen, Inc.
 #
 # Docs: o ./documentation/source/tools/version.md
 # Test: o ./test/tools/version-tests.sh

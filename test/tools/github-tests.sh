@@ -4,7 +4,7 @@
 #
 # Git tests
 #
-# Copyright &copy; 2025 Market Acumen, Inc.
+# Copyright &copy; 2026 Market Acumen, Inc.
 #
 
 __testGithubURLParseData() {
@@ -34,6 +34,7 @@ testGithubStuff() {
 
   local url
   url=$(jsonFileGet "$temp" .url) || returnClean $? "$temp" || return $?
+  dumpPipe "GitHub JSON" <"$temp"
   assertContains "https://api.github.com/repos/zesk/build/" "$url" || returnClean $? "$temp" || return $?
 
   catchEnvironment "$handler" rm -f "$temp" || return $?

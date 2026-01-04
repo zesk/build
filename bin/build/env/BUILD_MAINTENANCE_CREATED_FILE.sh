@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Copyright &copy; 2025 Market Acumen, Inc.
+# Copyright &copy; 2026 Market Acumen, Inc.
 # Category: Application
 # When true, means the `.env.local` file was created by the maintenance hook and should be deleted when maintenance is
 # no longer enabled.

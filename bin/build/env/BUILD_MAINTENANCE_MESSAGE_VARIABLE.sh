@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Copyright &copy; 2025 Market Acumen, Inc.
+# Copyright &copy; 2026 Market Acumen, Inc.
 # Category: Application
 # Name of the environment variable (if any) which reflects the current maintenance message.
 # Default is `MAINTENANCE_MESSAGE` and this is typically added to the `.env.local` to a live

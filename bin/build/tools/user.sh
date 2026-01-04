@@ -4,7 +4,7 @@
 #
 # A user is the person or entity using the computer currently, usually. It dictates permissions and what they can do.
 #
-# Copyright &copy; 2025 Market Acumen, Inc.
+# Copyright &copy; 2026 Market Acumen, Inc.
 
 # The current user HOME (must exist)
 # Argument: pathSegment - String. Optional. Add these path segments to the HOME directory returned. Does not create them.

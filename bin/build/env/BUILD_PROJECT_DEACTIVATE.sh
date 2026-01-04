@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Copyright &copy; 2025 Market Acumen, Inc.
+# Copyright &copy; 2026 Market Acumen, Inc.
 # Type: Function
 # Category: Application
 # Set this to a function which cleans up the project context and

@@ -3,7 +3,7 @@
 # if blank, no filter is used and raw result is returned
 # See: ipLookup
 # Type: String
-# Copyright &copy; 2025 Market Acumen, Inc.
+# Copyright &copy; 2026 Market Acumen, Inc.
 # Category: Build Configuration
 # Type: String
 export IP_URL_FILTER

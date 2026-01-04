@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Region for Amazon Web Services
-# Copyright &copy; 2025 Market Acumen, Inc.
+# Copyright &copy; 2026 Market Acumen, Inc.
 # Category: Amazon Web Services
 # Vendor: Amazon Web Services
 # See: awsIPAccess

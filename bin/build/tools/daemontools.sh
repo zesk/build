@@ -2,7 +2,7 @@
 #
 # daemontools Support
 #
-# Copyright &copy; 2025 Market Acumen, Inc.
+# Copyright &copy; 2026 Market Acumen, Inc.
 #
 # Docs: o ./docs/_templates/ops/daemontools.md
 # Test: o ./test/tools/daemontools-tests.sh

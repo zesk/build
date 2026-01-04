@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Legal copyright holder website for this codebase
-# Copyright &copy; 2025 Market Acumen, Inc.
+# Copyright &copy; 2026 Market Acumen, Inc.
 # Category: Application
 # Type: URL
 export BUILD_COMPANY_LINK

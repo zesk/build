@@ -22,7 +22,7 @@
 # - https://iterm2.com/documentation-escape-codes.html
 # TODO: Review iTerm2 documentation and implement the missing codes
 #
-# Copyright &copy; 2025 Market Acumen, Inc.
+# Copyright &copy; 2026 Market Acumen, Inc.
 #
 # Docs: ./documentation/source/tools/iterm2.md
 # Test: ./test/tools/iterm2-tests.sh

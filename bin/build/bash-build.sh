@@ -2,7 +2,7 @@
 #
 # Script to set up a local bash environment with our tools already loaded
 #
-# Copyright &copy; 2025 Market Acumen, Inc.
+# Copyright &copy; 2026 Market Acumen, Inc.
 #
 
 __bashRunCommandsDefault() {

@@ -2,7 +2,7 @@
 #
 # Bash Prompt Module: ApplicationPath
 #
-# Copyright &copy; 2025 Market Acumen, Inc.
+# Copyright &copy; 2026 Market Acumen, Inc.
 
 __bashPromptModule_dotFilesWatcher() {
   local handler="$1" && shift

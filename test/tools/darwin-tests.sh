@@ -4,7 +4,7 @@
 #
 # Darwin tests
 #
-# Copyright &copy; 2025 Market Acumen, Inc.
+# Copyright &copy; 2026 Market Acumen, Inc.
 #
 
 testDarwinDialog() {
@@ -45,4 +45,3 @@ testDarwinNotification() {
     assertExitCode 0 darwinNotification "${FUNCNAME[0]}" || return $?
   fi
 }
-

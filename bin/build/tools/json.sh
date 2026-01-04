@@ -2,7 +2,7 @@
 #
 # JSON functions
 #
-# Copyright &copy; 2025 Market Acumen, Inc.
+# Copyright &copy; 2026 Market Acumen, Inc.
 #
 # Docs: ./documentation/source/tools/json.md
 # Test: ./test/tools/json-tests.sh
@@ -106,21 +106,31 @@ _jsonFileGet() {
 # Set a value in a JSON file
 # Argument: jsonFile - File. Required. File to get value from.
 # Argument: path - String. Required. dot-separated path to modify (e.g. `extra.fingerprint`)
-# Argument: value - String. Required. Value to set.
+# Argument: value ... - String. Required. Value to set. If more than one value is set, value is set to an array value
 jsonFileSet() {
   local handler="_${FUNCNAME[0]}"
   local jsonFile path value
 
   [ "$1" != "--help" ] || __help "$handler" "$@" || return 0
+  whichExists jq || throwEnvironment "$handler" "Requires jq - not installed" || return $?
 
   jsonFile=$(usageArgumentFile "$handler" "jsonFile" "${1-}") && shift || return $?
   path=$(usageArgumentString "$handler" "path" "${1-}") && shift || return $?
   value=$(usageArgumentEmptyString "$handler" "value" "${1-}") && shift || return $?
 
-  whichExists jq || throwEnvironment "$handler" "Requires jq - not installed" || return $?
+  local rawValue
+  if [ $# -eq 0 ]; then
+    rawValue="\"$(escapeDoubleQuotes "$value")\""
+  else
+    local arrayValue=("$(escapeDoubleQuotes "$value")")
+    while [ $# -gt 0 ]; do
+      arrayValue+=("$(escapeDoubleQuotes "$1")") && shift
+    done
+    IFS="," rawValue="[ $(listJoin , "${arrayValue[@]}") ]"
+  fi
 
   path=$(__jqPathClean "$path")
-  catchEnvironment "$handler" jq --sort-keys -r "$(__jqObject "$path") + . | $path = \"$value\"" <"$jsonFile" >"$jsonFile.new" || returnClean $? "$jsonFile.new" || return $?
+  catchEnvironment "$handler" jq --sort-keys -r "$(__jqObject "$path") + . | $path = $rawValue" <"$jsonFile" >"$jsonFile.new" || returnClean $? "$jsonFile.new" || return $?
   catchEnvironment "$handler" mv -f "$jsonFile.new" "$jsonFile" || returnClean $? "$jsonFile.new" || return $?
 }
 _jsonFileSet() {
