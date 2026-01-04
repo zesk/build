@@ -30,6 +30,8 @@ __awsS3DirectoryDelete() {
   done
   [ ${#urls[@]} -gt 0 ] || throwArgument "$handler" "At least one URL is required" || return $?
 
+  whichExists aws || catchEnvironment "$handler" awsInstall || return $?
+
   local url
   for url in "${urls[@]}"; do
     local path base bucket

@@ -38,13 +38,13 @@ documentationMkdocs() {
   home=$(catchReturn "$handler" buildHome) || return $?
 
   [ -n "$rootPath" ] || rootPath="$home"
-
   catchEnvironment "$handler" pythonVirtual --application "$rootPath" "${packages[@]}" || return $?
 
   catchEnvironment "$handler" muzzle pushd "$rootPath" || return $?
   statusMessage --last decorate notice "Updating mkdocs.yml ..."
 
   __mkdocsConfiguration "$handler" "$template" || returnUndo $? muzzle popd || return $?
+  local tempLog
   tempLog=$(fileTemporaryName "$handler") || returnUndo $? muzzle popd || return $?
   statusMessage --last decorate notice "Building with mkdocs ..."
   catchEnvironmentQuiet "$handler" "$tempLog" python -m mkdocs build || returnUndo $? dumpPipe "mkdocs log" <"$tempLog" || returnUndo $? muzzle popd || returnClean $? "$tempLog" || return $?
@@ -65,11 +65,14 @@ __mkdocsConfiguration() {
   local target="mkdocs.yml"
   [ -f "$source" ] || throwEnvironment "$handler" "missing $source" || return $?
 
-  while IFS="" read -r token; do
-    # skip lowercase
-    [ "$token" != "$(lowercase "$token")" ] || continue
-    catchReturn "$handler" buildEnvironmentLoad "$token" || return $?
-    export "${token?}"
-  done < <(mapTokens <"$source")
-  catchReturn "$handler" mapEnvironment <"$source" >"$target" || return $?
+  (
+    local token
+    while IFS="" read -r token; do
+      # skip lowercase
+      [ "$token" != "$(lowercase "$token")" ] || continue
+      catchReturn "$handler" buildEnvironmentLoad "$token" || return $?
+      export "${token?}"
+    done < <(mapTokens <"$source")
+    catchReturn "$handler" mapEnvironment <"$source" >"$target" || return $?
+  ) || return $?
 }
