@@ -37,6 +37,7 @@ testAWSS3Upload() {
   home=$(catchReturn "$handler" buildHome) || return $?
   assertExitCode 0 awsS3Upload --target "$target" "$home/bin/build/build.json" "$home/bitbucket-pipelines.yml" "$home/README.md" "$home/etc" || return $?
 
+  local checkFile
   checkFile=$(fileTemporaryName "$handler") || return $?
   catchEnvironment "$handler" aws s3 cp "$target/manifest.json" "$checkFile" || return $?
 
