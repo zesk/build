@@ -146,12 +146,13 @@ _tomorrowDate() {
 # Example:     date="$({fn})"
 todayDate() {
   local handler="_${FUNCNAME[0]}"
+  local uu=(-u)
   [ $# -eq 0 ] || case "$1" in
   --help) "$handler" 0 && return $? || return "$(convertValue $? 1 0)" ;;
-  --local) date +%F ;;
+  --local) uu=() ;;
   *) throwArgument "$handler" "Unknown argument: $1" || return $? ;;
   esac
-  date -u +%F
+  date "${uu[@]+"${uu[@]}"}" +%F
 }
 _todayDate() {
   # __IDENTICAL__ usageDocument 1
