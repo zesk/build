@@ -11,10 +11,14 @@ __addNoteTo() {
   local handler="$1" && shift
   local home="$1" && shift
 
+  local target="$home/bin/build/$1" docTarget="$home/documentation/source/$1"
+
   statusMessage --last decorate info "Adding note to $1"
-  catchEnvironment "$handler" cp "$home/$1" "$home/bin/build" || return $?
-  catchEnvironment "$handler" printf -- "\n%s" "(this file is a copy - please modify the original)" | catchEnvironment "$handler" tee -a "$home/bin/build/$1" >"./documentation/source/$1" || return $?
-  catchEnvironment "$handler" git add "bin/build/$1" "./documentation/source/$1" || return $?
+
+  catchEnvironment "$handler" cp "$home/$1" "$target" || return $?
+  catchEnvironment "$handler" printf -- "\n%s" "" "(this file is a copy - please modify the original)" >>"$target" || return $?
+  catchEnvironment "$handler" cp "$target" "$docTarget" || return $?
+  catchEnvironment "$handler" git add "$target" "$docTarget" || return $?
 }
 
 #
