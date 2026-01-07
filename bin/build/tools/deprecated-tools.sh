@@ -284,11 +284,11 @@ _deprecatedFind() {
 # Argument: --path cannonPath - Optional. Directory. Run cannon operation starting in this directory.
 # Argument: findArgumentFunction - Function. Required. Find arguments (for `find`) for cannon.
 # Argument: search - String. Required. String to search for
-# Argument: replace - String. Required. String to search for
+# Argument: replace - EmptyString. Required. Replacement string.
 # Argument: extraCannonArguments - Arguments. Optional. Any additional arguments are passed to `cannon`.
 deprecatedCannon() {
   local handler="_${FUNCNAME[0]}"
-  local search="" replace="" findArgumentFunction="" cannonPath=""
+  local search="" findArgumentFunction="" cannonPath=""
 
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
@@ -318,12 +318,11 @@ deprecatedCannon() {
   [ -n "$cannonPath" ] || cannonPath=$(catchReturn "$handler" buildHome) || return $?
   [ -n "$findArgumentFunction" ] || throwArgument "$handler" "findArgumentFunction required" || return $?
   [ -n "$search" ] || throwArgument "$handler" "search required" || return $?
-  [ -n "$replace" ] || throwArgument "$handler" "replace required" || return $?
 
   local aa=()
   read -d '' -r -a aa < <("$findArgumentFunction") || [ "${#aa[@]}" -gt 0 ] || throwArgument "$handler" "$findArgumentFunction returned empty" || return $?
   # ignore should go at the end so it has priority over previous entries
-  cannon --path "$cannonPath" "$search" "$replace" "$@" "${aa[@]}"
+  cannon --path "$cannonPath" "$search" "$@" "${aa[@]}"
 }
 _deprecatedCannon() {
   # __IDENTICAL__ usageDocument 1
