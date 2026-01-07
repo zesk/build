@@ -39,6 +39,8 @@ All functions in Zesk Build, alphabetically.
 - {SEE:awsIsKeyUpToDate}
 - {SEE:awsProfilesList}
 - {SEE:awsRegionValid}
+- {SEE:awsS3DirectoryDelete}
+- {SEE:awsS3Upload}
 - {SEE:awsSecurityGroupIPModify}
 - {SEE:backgroundProcess}
 - {SEE:bashBuiltins}
@@ -404,6 +406,7 @@ All functions in Zesk Build, alphabetically.
 - {SEE:isPlain}
 - {SEE:isPositiveInteger}
 - {SEE:isPyCharm}
+- {SEE:isS3URL}
 - {SEE:isSubstring}
 - {SEE:isSubstringInsensitive}
 - {SEE:isTrue}

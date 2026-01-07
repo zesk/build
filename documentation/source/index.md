@@ -29,7 +29,7 @@ To use in your pipeline:
 - Application [deployment](./tools/deployment.md) support to multiple hosts with rollback
 - Support for [application hooks](./tools/hook.md) and environment
 - [Bash prompt support](./tools/prompt.md) with [colors](./tools/decoration.md)
-- Bash [documentation](./guide/documentation.md) framework with [automatic usage](./guide/usage.md) in shell and
+- Bash [documentation](./guide/documentation.md) framework with [automatic usage](./guide/documentation.md) in shell and
   markdown documentation
 - Comprehensive [argument](./tools/usage.md) validation
 - Generic [package](./tools/package.md) interface for system configuration
@@ -48,7 +48,6 @@ To use in your pipeline:
 ## Zesk Build Guides
 
 - [Coding Practices](./guide/coding.md)
-- [Usage formatting](./guide/usage.md)
 - [Documentation](./guide/documentation.md)
 - [Functions to be documented](./tools/todo.md)
 - [`test` Cheatsheet](./guide/test-cheatsheet.md)

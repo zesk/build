@@ -4,7 +4,6 @@
 [🛠️ Tools ](./index.md) &middot; [⬅ Top ](../index.md)
 <hr />
 
-
 The concept of a "usage" function is one that fails, and displays a reasonable error to the user or controlling program.
 
 Essentially a `usage` function is a failure handler. If you need a simple `usage` function use `returnMessage`.

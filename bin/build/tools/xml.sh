@@ -8,7 +8,7 @@
 # Test: ./test/tools/xml.sh
 
 # Prints the `<?xml` header for XML files
-# stdout: XML header
+# stdout: String. XML header
 __xmlHeader() {
   printf "%s%s%s\n" "<?xml" "$(__xmlAttributes "$@" "version=1.0" "encoding=UTF-8")" "?>"
 }
@@ -16,7 +16,7 @@ __xmlHeader() {
 # Output am XML single tag
 # Argument: name - String. Required. Tag name.
 # Argument: ... - Arguments. Optional. Attributes to output within the tag in name/value pairs as `name=value`
-# stdout: XML single tag
+# stdout: String. XML single tag
 __xmlTag() {
   local name="$1" && shift
   printf -- "<%s%s />\n" "$name" "$(__xmlAttributes "$@")"
@@ -25,7 +25,7 @@ __xmlTag() {
 # Output am XML open tag
 # Argument: name - String. Required. Tag name.
 # Argument: ... - Arguments. Optional. Attributes to output within the tag in name/value pairs as `name=value`
-# stdout: XML tag open
+# stdout: String. XML tag open
 __xmlTagOpen() {
   local name="$1" && shift
   printf -- "<%s%s>\n" "$name" "$(__xmlAttributes "$@")"
@@ -33,7 +33,7 @@ __xmlTagOpen() {
 
 # Output am XML close tag
 # Argument: name - String. Required. Tag name.
-# stdout: XML tag close
+# stdout: String. XML tag close
 __xmlTagClose() {
   local name="$1" && shift
   printf -- "</%s>\n" "$name"
@@ -41,7 +41,7 @@ __xmlTagClose() {
 
 # Output an XML attribute value with proper quoting
 # Argument: value - EmptyString. Optional.
-# stdout: XML attribute value
+# stdout: String. XML attribute value
 __xmlAttributeValue() {
   while [ $# -gt 0 ]; do
     local value="$1"
@@ -55,7 +55,7 @@ __xmlAttributeValue() {
 # Output XML attributes
 # Argument: nameValue - String. Optional. One or more name/value pairs in the form `name=value` where the delimiter is an equals sign `=` and the value is *unquoted*.
 # Beware of Bash quoting rules when passing in values
-# stdout: XML attribute values formatted on a single line with a leading space
+# stdout: String. XML attribute values formatted on a single line with a leading space
 __xmlAttributes() {
   local attr=() found=()
   while [ $# -gt 0 ]; do

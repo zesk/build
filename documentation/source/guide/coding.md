@@ -6,7 +6,7 @@ less error prone and more enjoyable.
 ## Clean deprecated code often
 
 Code here has been written by evolution so older code shows signs of older patterns; know that the intent is to get
-everything to the same standard. We use `cannon.sh` liberally when changing code so it is considered a best practice to
+everything to the same standard. We use `cannon` liberally when changing code so it is considered a best practice to
 run this against your code regularly, it must run against the entire codebase and have zero replacements prior to
 release.
 
@@ -131,7 +131,7 @@ is run).
 
 ## `local` stays local
 
-Upon first using `bash` it made sense to put `local` a the top of a function to have them in one place. Unfortunately
+Upon first using `bash` it made sense to put `local` at the top of a function to have them in one place. Unfortunately
 this leads to moving declarations far away from usages at times and so we have shifted to doing `local` declarations at
 the scope needed as well as **as near to its initial usage** as possible. This leads to easier refactorings and better
 readability all around.
@@ -189,7 +189,7 @@ Using the `usageDocument` function we can automatically report errors and handle
 
 Pattern:
 
-    # This describes the handler
+    # This describes the function's operation
     # Argument: file - Required. File. Description of file argument.
     functionName() {
         local handler="_${FUNCNAME[0]}"
@@ -216,14 +216,15 @@ error handling:
 
 Our handler function signature is identical:
 
-    _usageFunction exitCode [ message ... ]
+    _usageFunction returnCode [ message ... ]
 
-And it **ALWAYS** returns the `exitCode` passed into it, so you can guaranteed a non-zero exit code will fail and this
+And it **ALWAYS** returns the `returnCode` passed into it, so you can guarantee a non-zero return code will fail and
+this
 pattern will always work:
 
-    _usageFunction "$errorEnvironment" "S N A F U" || return $?
+    _usageFunction "1" "S N A F U" || return $?
 
-The above code **MUST always** return `$errorEnvironment` - **coding your handler function in any other way** is
+The above code **MUST always** return `1` - **coding your handler function in any other way** is
 unsupported and will cause problems.
 
 ## Use `__functionLoader` for more complex code
@@ -280,10 +281,10 @@ handler:
 
 See:
 
-- [`_environment`](./tools/sugar.md#_environment)
-- [`__environment`](./tools/sugar.md#__environment)
-- [`throwEnvironment`](./tools/sugar.md#throwEnvironment)
-- [`catchEnvironment`](./tools/sugar.md#catchEnvironment)
+- [`_environment`](../tools/sugar.md#_environment)
+- [`__environment`](../tools/sugar.md#__environment)
+- [`throwEnvironment`](../tools/sugar.md#throwenvironment)
+- [`catchEnvironment`](../tools/sugar.md#catchenvironment)
 
 ### Argument errors (Exit Code `2`)
 
@@ -308,45 +309,47 @@ handler:
 
 ### Argument utilities
 
-- [`usageArgumentDirectory`](./tools/handler.md#usageArgumentDirectory) - Argument must be a valid directory
-- [`usageArgumentFile`](./tools/handler.md#usageArgumentFile) - Argument must be a valid file
-- [`usageArgumentFileDirectory`](./tools/handler.md#usageArgumentFileDirectory) - Argument must be a file which may or
+These will be replaced with [`validate`](../tools/validate.md) commands in an upcoming release.
+
+- [`usageArgumentDirectory`](../tools/handler.md#usageArgumentDirectory) - Argument must be a valid directory
+- [`usageArgumentFile`](../tools/handler.md#usageArgumentFile) - Argument must be a valid file
+- [`usageArgumentFileDirectory`](../tools/handler.md#usageArgumentFileDirectory) - Argument must be a file which may or
   may
   not exist in a directory which exists
-- [`usageArgumentDirectory`](./tools/handler.md#usageArgumentDirectory) - Argument must be a directory
-- [`usageArgumentRealDirectory`](./tools/handler.md#usageArgumentRealDirectory) - Argument must be a directory and
+- [`usageArgumentDirectory`](../tools/handler.md#usageArgumentDirectory) - Argument must be a directory
+- [`usageArgumentRealDirectory`](../tools/handler.md#usageArgumentRealDirectory) - Argument must be a directory and
   converted to the real path
-- [`usageArgumentFile`](./tools/handler.md#usageArgumentFile) - Argument must be a valid file
-- [`usageArgumentFileDirectory`](./tools/handler.md#usageArgumentFileDirectory) - Argument must be a file path which is
+- [`usageArgumentFile`](../tools/handler.md#usageArgumentFile) - Argument must be a valid file
+- [`usageArgumentFileDirectory`](../tools/handler.md#usageArgumentFileDirectory) - Argument must be a file path which is
   a
   directory that exists
-- [`usageArgumentInteger`](./tools/handler.md#usageArgumentInteger) - Argument must be an integer
-- [`usageArgumentPositiveInteger`](./tools/handler.md#usageArgumentPositiveInteger) - Argument must be a positive
+- [`usageArgumentInteger`](../tools/handler.md#usageArgumentInteger) - Argument must be an integer
+- [`usageArgumentPositiveInteger`](../tools/handler.md#usageArgumentPositiveInteger) - Argument must be a positive
   integer (1 or greater)
-- [`usageArgumentUnsignedInteger`](./tools/handler.md#usageArgumentUnsignedInteger) - Argument must be an unsigned
+- [`usageArgumentUnsignedInteger`](../tools/handler.md#usageArgumentUnsignedInteger) - Argument must be an unsigned
   integer (0 or greater)
-- [`usageArgumentLoadEnvironmentFile`](./tools/handler.md#usageArgumentLoadEnvironmentFile) - Argument must be an
+- [`usageArgumentLoadEnvironmentFile`](../tools/handler.md#usageArgumentLoadEnvironmentFile) - Argument must be an
   environment file which is also loaded immediately.
-- [`usageArgumentString`](./tools/handler.md#usageArgumentString) - Argument must be a non-blank string
-- [`usageArgumentEmptyString`](./tools/handler.md#usageArgumentEmptyString) - Argument may be anything
-- [`usageArgumentBoolean`](./tools/handler.md#usageArgumentBoolean) - Argument must be a boolean value (`true` or
+- [`usageArgumentString`](../tools/handler.md#usageArgumentString) - Argument must be a non-blank string
+- [`usageArgumentEmptyString`](../tools/handler.md#usageArgumentEmptyString) - Argument may be anything
+- [`usageArgumentBoolean`](../tools/handler.md#usageArgumentBoolean) - Argument must be a boolean value (`true` or
   `false`)
-- [`usageArgumentEnvironmentVariable`](./tools/handler.md#usageArgumentEnvironmentVariable) - Argument must be a valid
+- [`usageArgumentEnvironmentVariable`](../tools/handler.md#usageArgumentEnvironmentVariable) - Argument must be a valid
   environment variable name
-- [`usageArgumentURL`](./tools/handler.md#usageArgumentURL) - Argument must be a valid URL
-- [`usageArgumentCallable`](./tools/handler.md#usageArgumentCallable) - Argument must be callable (a function or
+- [`usageArgumentURL`](../tools/handler.md#usageArgumentURL) - Argument must be a valid URL
+- [`usageArgumentCallable`](../tools/handler.md#usageArgumentCallable) - Argument must be callable (a function or
   executable)
-- [`usageArgumentFunction`](./tools/handler.md#usageArgumentFunction) - Argument must be a function
-- [`usageArgumentExecutable`](./tools/handler.md#usageArgumentExecutable) - Argument must be a binary which can be
+- [`usageArgumentFunction`](../tools/handler.md#usageArgumentFunction) - Argument must be a function
+- [`usageArgumentExecutable`](../tools/handler.md#usageArgumentExecutable) - Argument must be a binary which can be
   executed
 
 ### See
 
-- [handler functions](./tools/handler.md)
-- [`_argument`](./tools/sugar.md#_argument)
-- [`__argument`](./tools/sugar.md#__argument)
-- [`throwArgument`](./tools/sugar.md#throwArgument)
-- [`catchArgument`](./tools/sugar.md#catchArgument)
+- [Usage functions](../tools/usage.md)
+- [`_argument`](../tools/sugar.md#_argument)
+- [`__argument`](../tools/sugar.md#__argument)
+- [`throwArgument`](../tools/sugar.md#throwargument)
+- [`catchArgument`](../tools/sugar.md#catchargument)
 
 Code:
 

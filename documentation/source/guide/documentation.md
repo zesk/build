@@ -2,21 +2,20 @@
 
 [⬅ Return to top](../index.md)
 
-`Usage` is the output that a command generates when an error occurs or the user (typically) uses the `--help` argument
-with the command.
+**Usage** refers to the output that a command generates when an error occurs or the user (typically) uses the `--help`
+argument
+with the command. It shows _how to use_ the command.
 
 e.g.
 
-    > bin/build/identical-check.sh --help
-    Need to specify at least one extension
-
-    Usage: identical-check.sh --extension extension --prefix prefix [ --cd directory ] [ --help ]
-
-        --extension extension  Required. One or more extensions to search for in the current directory.
-        --prefix prefix        Required. A text prefix to search for to identify identical sections (e.g. `# IDENTICAL`) (may specify more than one)
-        --cd directory         Optional. Change to this directory before running. Defaults to current directory.
-        --help                 Optional. This help.
-        etc.
+    ~/dev/build > identicalCheck
+    [argument] Need to specify at least one --extension
+    Usage: identicalCheck --extension extension --prefix prefix [ --exclude pattern ] [ --cd directory ] [ --repair directory ] [ --token token ] [ --skip file ] [ --ignore-singles ] [ --no-map ] [ --debug ] [ --help ] [ --singles singlesFiles ] [ --single singleToken ]
+    
+        --extension extension   Required. String. One or more extensions to search for in the current directory.
+        --prefix prefix         Required. String. A text prefix to search for to identify identical sections (e.g. # IDENTICAL) (may specify more than one)
+        --exclude pattern       Optional. String. One or more patterns of paths to exclude. Similar to pattern used in find.
+    ... continues
 
 If your terminal supports colors, then colors are used to make the help more readable.
 
@@ -79,7 +78,7 @@ Where:
 - `argumentName` for arguments which take one or more values; the name of the argument expected.
 - `...` for multiple
 - `argumentType` is [a type](./types.md) such as `String`, `URL`, or `UnsignedInteger`
-- `argumentRequirement` is `Required.` or `Optional.` or `One or more.` or `Zero or more.`
+- `argumentRequirement` is `Required`, `Optional`, `OneOrMore`, `ZeroOrMore`
 - `argumentDescription` is the brief description for the argument
 
 ### `Example:` - Example code
@@ -88,13 +87,15 @@ Any example code to display. This is rendered directly as Markdown, so indent co
 
 Format is:
 
-    # Example: markdownCode
+    # Example: Here's a good example:
+    # Example:
+    # Example:     catchEnvironment "$handler" markdownCode || return $?
 
 Where:
 
 - `markdownCode` is rendered exactly (with the "`# Example: `" prefix removed).
 
-### `Return Code` - Exit codes
+### `Return Code:` - Exit codes
 
 Describe the return codes for a function:
 
@@ -107,18 +108,40 @@ Where:
 - `returnCode` is an integer or a return code string (see `returnCodeString`)
 - `returnCodeDescription` is the brief description for the reason for any error
 
-### `Environment` - Environment variables used
+### `Environment:` - Environment variables used
 
 List environment variables which are accessed by this function.
 
 Format is:
 
-    # Environment: environmentVariableName - environmentVariableDescription
+    # Environment: environmentVariableName 
 
 Where:
 
-- `environmentVariableName` is the environment variable name
-- `environmentVariableDescription` is the brief description for how the function interacts with the environment variable
+- `environmentVariableName` is the environment variable name. Pass one or more to be listed and linked to the definition
+  in `bin/env/environmentVariableName.sh`
+- Any text which does not match a known environment variable name is simply output on another line
+
+### `stdout:` - Standard Output Description
+
+If a function outputs something to `stdout` this describes the output format.
+
+Format is:
+
+    # stdout: stdoutType. Description
+
+Where:
+
+- `stdoutType` is a [standard data type](./types.md)
+
+Where:
+
+- `argumentFlag` can be the flag to designate the argument, like `--help`, or `--path`
+- `argumentName` for arguments which take one or more values; the name of the argument expected.
+- `...` for multiple
+- `argumentType` is [a type](./types.md) such as `String`, `URL`, or `UnsignedInteger`
+- `argumentRequirement` is `Required`, `Optional`, `OneOrMore`, `ZeroOrMore`
+- `argumentDescription` is the brief description for the argument
 
 ### Usage using comments
 
@@ -129,28 +152,26 @@ to generate (as the code reads the script to extract the comment):
 
     set -eou pipefail
 
-    cd "$(dirname "${BASH_SOURCE[0]}")/../.."
-
     # shellcheck source=/dev/null
-    . ./bin/build/tools.sh
-
-    # Process a cool file
-    # Argument: file - File. Required. The file to cool
-    # Argument: directory - Directory. Required. The place to put the file
-    # Argument: --help - Flag. Optional. Show this help and exit
-    # Example:      myCoolScript my.cool ./coolOutput/
-    myCoolScript() {
-        local handler="_${FUNCNAME[0]}"
-        file="${1-}"
-        # ...
-        [ -f "$file" ] || throwArgument "$handler" "Requires a file" || return $?
-        # ...
-    }
-    _myCoolScript() {
-       usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
-    }
-
-    myCoolScript "$@"
+    if source "$(dirname "${BASH_SOURCE[0]}")/../../bin/build/tools.sh"; then
+      # Process a cool file
+      # Argument: file - File. Required. The file to cool
+      # Argument: directory - Directory. Required. The place to put the file
+      # Argument: --help - Flag. Optional. Show this help and exit
+      # Example:      myCoolScript my.cool ./coolOutput/
+      myCoolScript() {
+          local handler="_${FUNCNAME[0]}"
+          file="${1-}"
+          # ...
+          [ -f "$file" ] || throwArgument "$handler" "Requires a file" || return $?
+          # ...
+      }
+      _myCoolScript() {
+         usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+      }
+  
+      myCoolScript "$@"
+    fi
 
 And the output:
 
@@ -164,37 +185,6 @@ And the output:
         --help     Show this help and exit
 
     Process a cool file
-
-### Argument Descriptions
-
-By default all argument descriptions should use the following pattern:
-
-    Argument: argumentName - Optional. ArgumentType. Description 
-
-With the following specification:
-
-- `argumentName` - Name and one or more value names. May end with `...` if this argument can be repeated infinitely.
-- `-` - The dash separates the name from the type and description.
-- `Optional | Required`. Determines how many of an argument are required.
-- If a description contains the term `Required` which matches any case, then arguments are assumed to be required.
-
-### Return Code Descriptions
-
-Return codes can be specified using the integer (or string equivalent) returned, a dash, and a description of what
-causes that return code.
-
-Examples:
-
-    # Return Code: identical - This code is returned when the function finds identical items in the directory and/or fixes them.
-    # Return Code: 0 - String passed in is a valid URL
-
-### Environment Descriptions
-
-Functions can outline any environment variables used, accessed or modified in the function.
-
-Examples:
-
-    # Environment: HOME - This function uses `HOME` to locate the user's `.ssh` directory
 
 ### Help handlers
 
@@ -260,4 +250,3 @@ The following are supported by the testing system:
   `!darwin` `darwin`
 - `Test-Housekeeper-Overhead` - Show overhead of the housekeeper used in a function
 - `Test-Fail` - This test should actually fail and not succeed to be considered passing
-

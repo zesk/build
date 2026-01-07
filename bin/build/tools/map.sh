@@ -266,7 +266,6 @@ _mapEnvironment() {
 # Return Code: 1 - searchText is not blank
 # Return Code: 1 - fileTemporaryName failed
 # Return Code: 2 - Arguments are identical
-# See: cannon.sh
 cannon() {
   local handler="_${FUNCNAME[0]}"
 
