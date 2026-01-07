@@ -8,13 +8,13 @@
 #
 
 __addNoteTo() {
-  local home
+  local handler="$1" && shift
+  local home="$1" && shift
 
-  home=$(buildHome)
   statusMessage --last decorate info "Adding note to $1"
-  cp "$home/$1" "$home/bin/build"
-  printf -- "\n%s" "(this file is a copy - please modify the original)" | tee -a "$home/bin/build/$1" >"./documentation/source/$1"
-  git add "bin/build/$1" "./documentation/source/$1"
+  catchEnvironment "$handler" cp "$home/$1" "$home/bin/build" || return $?
+  catchEnvironment "$handler" printf -- "\n%s" "(this file is a copy - please modify the original)" | catchEnvironment "$handler" tee -a "$home/bin/build/$1" >"./documentation/source/$1" || return $?
+  catchEnvironment "$handler" git add "bin/build/$1" "./documentation/source/$1" || return $?
 }
 
 #
@@ -44,8 +44,12 @@ __updateMarkdown() {
     esac
     shift
   done
-  __addNoteTo README.md
-  __addNoteTo LICENSE.md
+  local home
+
+  home=$(catchReturn "$handler" buildHome) || return $?
+
+  __addNoteTo "$handler" "$home" README.md
+  __addNoteTo "$handler" "$home" LICENSE.md
 
   local buildMarker
   buildMarker=$(catchReturn "$handler" __buildMarker) || return $?
