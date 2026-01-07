@@ -64,7 +64,7 @@ if source "${BASH_SOURCE[0]%/*}/tools.sh"; then
     alias t="$home/bin/build/tools.sh"
     alias tools=t
     # shellcheck disable=SC2139
-    alias IdenticalRepair="$home/bin/build/identical-repair.sh"
+    alias IdenticalRepair="$home/bin/build/repair.sh"
 
     muzzle reloadChanges --stop 2>&1
     muzzle reloadChanges --name "$name" "$home/bin/tools.sh" "$home/bin/build/build.json"
@@ -76,7 +76,7 @@ if source "${BASH_SOURCE[0]%/*}/tools.sh"; then
 
     backgroundProcess --verbose --stop 30 --wait 90 bin/build/tools.sh fingerprint --check -- bin/build/tools.sh fingerprint
     backgroundProcess --verbose --stop 30 --wait 90 bin/build/deprecated.sh --check -- bin/build/deprecated.sh
-    # backgroundProcess --verbose --stop 30 --wait 90 bin/build/identical-repair.sh --internal --check -- bin/build/identical-repair.sh --internal
+    # backgroundProcess --verbose --stop 30 --wait 90 bin/build/repair.sh --internal --check -- bin/build/repair.sh --internal
 
     export BUILD_PROJECT_DEACTIVATE="${FUNCNAME[0]}Undo"
 

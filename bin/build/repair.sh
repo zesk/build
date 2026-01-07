@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# identical-repair.sh
+# repair.sh
 #
 # Copyright &copy; 2026 Market Acumen, Inc.
 #

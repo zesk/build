@@ -138,7 +138,7 @@ __buildBuild() {
   catchReturn "$handler" "$home/bin/tools.sh" buildFastFiles || return $?
 
   ! $debugFlag || statusMessage decorate warning "Running identical ..."
-  "$home/bin/build/identical-repair.sh" --internal || throwEnvironment "$handler" "Identical repair failed" || return $?
+  "$home/bin/build/repair.sh" --internal || throwEnvironment "$handler" "Identical repair failed" || return $?
 
   ! $debugFlag || statusMessage decorate warning "Building fast files ..."
   catchReturn "$handler" "$home/bin/tools.sh" buildFastFiles || return $?

@@ -15,7 +15,7 @@ buildPreRelease() {
   catchEnvironment "$handler" "$home/bin/build/deprecated.sh" || exitCode=$?
   [ "$exitCode" = 0 ] || decorate error "Failed but continuing with release steps ..."
   statusMessage decorate info "Identical repair (internal, long) ..."
-  catchEnvironment "$handler" "$home/bin/build/identical-repair.sh" --internal || exitCode=$?
+  catchEnvironment "$handler" "$home/bin/build/repair.sh" --internal || exitCode=$?
   [ "$exitCode" = 0 ] || decorate error "Failed but continuing with release steps ..."
   statusMessage decorate info "Linting"
   find "$home" -name '*.sh' ! -path '*/.*/*' | bashLintFiles || exitCode=$?
@@ -33,12 +33,13 @@ buildPreRelease() {
       statusMessage --last decorate info "No changes to commit."
     fi
   fi
-  local color="success"
+  local text
+  text="$(catchEnvironment "$handler" hookVersionCurrent)" || return $?
   if [ "$exitCode" != 0 ]; then
-    color="error"
-    text="Failed"
+    bigText "$text Failed" | decorate error
+  else
+    bigText "$text Built" | decorate success
   fi
-  bigText "$text" | decorate "$color"
   return "$exitCode"
 }
 _buildPreRelease() {
