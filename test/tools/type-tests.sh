@@ -91,7 +91,7 @@ _testValidateNotCallable() {
 _dataCallableExecutables() {
   cat <<EOF
 bin/build/map.sh
-bin/build/cannon.sh
+bin/build/tools.sh
 bin/build.sh
 bin/test.sh
 EOF

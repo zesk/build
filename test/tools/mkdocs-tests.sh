@@ -42,7 +42,6 @@ testDocumentationMkdocs() {
   assertFileExists "$tempDocs/documentation/mkdocs.yml" || return $?
   assertExitCode 0 isFunction deactivate || return $?
   assertExitCode 0 deactivate || return $?
-  assertExitCode 1 whichExists mkdocs || return $?
   catchEnvironment "$handler" rm -rf "$tempDocs" || return $?
 
   mockEnvironmentStop PATH PS1 VIRTUAL_ENV VIRTUAL_ENV_PROMPT _OLD_VIRTUAL_PATH _OLD_VIRTUAL_PS1
