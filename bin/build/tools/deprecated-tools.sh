@@ -281,7 +281,6 @@ _deprecatedFind() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# Usage: {fn} search replace [ findArgumentFunction ] [ extraCannonArguments ]
 # Argument: --path cannonPath - Optional. Directory. Run cannon operation starting in this directory.
 # Argument: findArgumentFunction - Function. Required. Find arguments (for `find`) for cannon.
 # Argument: search - String. Required. String to search for
@@ -309,8 +308,6 @@ deprecatedCannon() {
         findArgumentFunction=$(usageArgumentFunction "$handler" "ignoreFunction" "$1") || return $?
       elif [ -z "$search" ]; then
         search="$(usageArgumentString "$handler" "search" "${1-}")" || return $?
-      elif [ -z "$replace" ]; then
-        replace="$(usageArgumentString "$handler" "replace" "${1-}")" || return $?
       else
         break
       fi

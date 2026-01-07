@@ -41,7 +41,7 @@ testDeprecatedCannon() {
   assertFileContains --line "$LINENO" "$target" "oldFunction" || return $?
   assertFileDoesNotContain --line "$LINENO" "$target" "newFunction" || return $?
 
-  assertExitCode --stdout-match "Modified" --stdout-match "1 file" 1 deprecatedCannon --path "$tempDir" deprecatedIgnore oldFunction newFunction || return $?
+  assertExitCode --stdout-match "Modified" --stdout-match "1 file" 3 deprecatedCannon --path "$tempDir" deprecatedIgnore oldFunction newFunction || return $?
 
   assertFileContains --line "$LINENO" "$target" "newFunction" || return $?
   assertFileDoesNotContain --line "$LINENO" "$target" "oldFunction" || return $?
