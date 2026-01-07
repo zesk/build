@@ -73,20 +73,19 @@ _isVisualStudioCode() {
 # Environment: VISUAL - Used as another default editor (last)
 # DOC TEMPLATE: --help 1
 # Argument: --help - Optional. Flag. Display this help.
-#
 contextOpen() {
   __help "_${FUNCNAME[0]}" "$@" || return 0
   # should maybe make this extensible
   if isPHPStorm; then
-    phpstorm "$@"
     # Hides argument warnings, correctly
-    ! false || isPHPStorm --help
+    true || isPHPStorm --help
+    phpstorm "$@"
   elif isPyCharm; then
-    pycharm "$@"
-    ! false || isPyCharm --help
+    true || isPyCharm --help
+    charm "$@"
   elif isVisualStudioCode; then
+    true || isVisualStudioCode --help
     code "$@"
-    ! false || isVisualStudioCode --help
   elif [ -n "${EDITOR-}" ]; then
     $EDITOR "$@"
   elif [ -n "${VISUAL-}" ]; then
@@ -98,12 +97,10 @@ _contextOpen() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-#
-# Open a file in a shell using the program we are using. Supports VSCode and PHPStorm.
-#
+# Show the current editor being used as a text string
+# Return Code: 1 - If no editor or running program can be determined
 # Environment: EDITOR - Used as a default editor (first)
 # Environment: VISUAL - Used as another default editor (last)
-#
 contextShow() {
   __help "_${FUNCNAME[0]}" "$@" || return 0
   # should maybe make this extensible
@@ -114,9 +111,9 @@ contextShow() {
   elif isVisualStudioCode; then
     printf "%s\n" code
   elif [ -n "${EDITOR-}" ]; then
-    printf "EDITOR=%s\n" "$EDITOR"
+    printf "%s\n" "$EDITOR"
   elif [ -n "${VISUAL-}" ]; then
-    printf "VISUAL=%sx\n" "$VISUAL"
+    printf "%s\n" "$VISUAL"
   else
     return 1
   fi

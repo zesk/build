@@ -96,18 +96,21 @@ _isTrue() {
 
 # Bash types beyond `type -t`
 isType() {
-  local text
+  local text argument="${1-}"
   [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
-  text=$(declare -p "${1-}" 2>/dev/null) || return 1
-  case "$text" in
-  *"declare -ax "*) printf -- "%s\n" "array" "export" ;;
-  *"declare -a "*) printf -- "%s\n" "array" "local" ;;
-  *"declare -x "*) printf -- "%s\n" "string" "export" ;;
-  *"declare -- "*) printf -- "%s\n" "string" "local" ;;
-  *"declare -fx "*) printf -- "%s\n" "function" "export" ;;
-  *"declare -f "*) printf -- "%s\n" "function" "local" ;;
-  *) throwArgument "$handler" "Unknown type: $1 -> \"$text\"" || return $? ;;
-  esac
+  if text=$(declare -p "$argument" 2>/dev/null); then
+    case "$text" in
+    *"declare -ax "*) printf -- "%s\n" "array" "export" ;;
+    *"declare -a "*) printf -- "%s\n" "array" "local" ;;
+    *"declare -x "*) printf -- "%s\n" "string" "export" ;;
+    *"declare -- "*) printf -- "%s\n" "string" "local" ;;
+    *"declare -fx "*) printf -- "%s\n" "function" "export" ;;
+    *"declare -f "*) printf -- "%s\n" "function" "local" ;;
+    *) throwArgument "$handler" "Unknown type: $1 -> \"$text\"" || return $? ;;
+    esac
+  elif [ "$(declare -F "$argument" || :)" = "$argument" ]; then
+    printf "%s\n" "function"
+  fi
 }
 _isType() {
   # __IDENTICAL__ usageDocument 1

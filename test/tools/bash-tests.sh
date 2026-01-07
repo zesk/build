@@ -7,6 +7,38 @@
 # Copyright &copy; 2026 Market Acumen, Inc.
 #
 
+testIsType() {
+  local types=()
+  local var0="" var1=()
+  export var2="" var3=()
+
+  : "$var0" "${#var1[@]}"
+  IFS=$'\n' read -r -d '' -a types < <(isType var0)
+  assertExitCode 0 inArray "string" "${types[@]}" || return $?
+  assertExitCode 0 inArray "local" "${types[@]}" || return $?
+  IFS=$'\n' read -r -d '' -a types < <(isType var1)
+  assertExitCode 0 inArray "array" "${types[@]}" || return $?
+  assertExitCode 0 inArray "local" "${types[@]}" || return $?
+  IFS=$'\n' read -r -d '' -a types < <(isType var2)
+  assertExitCode 0 inArray "string" "${types[@]}" || return $?
+  assertExitCode 0 inArray "export" "${types[@]}" || return $?
+  IFS=$'\n' read -r -d '' -a types < <(isType var3)
+  assertExitCode 0 inArray "array" "${types[@]}" || return $?
+  assertExitCode 0 inArray "export" "${types[@]}" || return $?
+  IFS=$'\n' read -r -d '' -a types < <(isType testIsType)
+  assertExitCode 0 inArray "function" "${types[@]}" || return $?
+
+  unset var2 var3
+}
+testIsBashBuiltin() {
+  assertExitCode --stderr-match "Need builtin" 2 isBashBuiltin || return $?
+  assertExitCode 0 isBashBuiltin --help || return $?
+  assertExitCode 0 isBashBuiltin . || return $?
+  assertExitCode 0 isBashBuiltin '[' || return $?
+  assertExitCode 0 isBashBuiltin 'local' || return $?
+  assertExitCode 1 isBashBuiltin 'awk' || return $?
+}
+
 # Test-Housekeeper-Overhead: true
 testBashCommentFilter() {
   assertExitCode --stdout-no-match "SSH ""tests" --stdout-match "${FUNCNAME[0]}" 0 bashCommentFilter <"${BASH_SOURCE[0]}" || return $?

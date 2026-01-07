@@ -131,3 +131,28 @@ testCannon() {
   assertFileContains "$testHome/three.md" "when" "what" "where" "why" || return $?
   catchEnvironment "$handler" rm -rf "$testHome" || return $?
 }
+
+__dataConvertValue() {
+  cat <<EOF
+0
+a a
+a a a
+b a a b
+b a a b b c c d d e
+b a d e c d b c a b
+A a a A b B c C d D e E
+B b a A b B c C d D e E
+C c a A b B c C d D e E
+D d a A b B c C d D e E
+E e a A b B c C d D e E
+f f a A b B c C d D e E
+EOF
+}
+testConvertValue() {
+  local expected arguments
+  while read -r expected arguments; do
+    local args=()
+    IFS=" " read -d '' -r -a args <<<"$arguments"
+    assertEquals "$expected" "$(convertValue "${args[@]+"${args[@]}"}")" || return $?
+  done < <(__dataConvertValue)
+}

@@ -8,18 +8,13 @@
 #
 
 testEverythingElse() {
-  # SUGAR
-
-  # approvedSources
   # dockerComposeWrapper
   # plasterLines
 
   #  catchEnvironmentQuiet
   #  executeInputSupport
-  #  isBashBuiltin
-  #  isType
 
-  #  awsSecurityGroupIPModify
+  # awsSecurityGroupIPModify
 
   # BASH Parsing
 
@@ -64,12 +59,10 @@ testEverythingElse() {
   #  consoleLinksSupported
   #  consoleSetTitle
   #  contextShow
-  #  convertValue
-  #  daemontoolsManager
-  #  daemontoolsRestart
-  #  daemontoolsTerminate
+
   #  debugOpenFiles
   #  debuggingStack
+
   #  deployLink
   #  deployMove
   #  deprecatedCannonFile
@@ -166,9 +159,18 @@ testEverythingElse() {
 
   # INTERACTIVE
 
-  #  approveBashSource
   #  urlOpener
   #  notify
+  # approveBashSource
+  # approvedSources
+
+
+  # Daemontools
+  #
+  #  daemontoolsManager
+  #  daemontoolsRestart
+  #  daemontoolsTerminate
+
 
   assertExitCode 0 printf "" || return $?
 }
