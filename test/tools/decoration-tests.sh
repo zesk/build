@@ -8,8 +8,8 @@
 #
 
 testRepeat() {
-  assertEquals "$(repeat 10 "x")" "xxxxxxxxxx" || return $?
-  assertEquals "$(repeat 11 "x")" "xxxxxxxxxxx" || return $?
+  assertEquals "$(repeat 10 "@")" "@@@@@@@@@@" || return $?
+  assertEquals "$(repeat 11 "!")" "!!!!!!!!!!!" || return $?
   assertEquals "$(repeat 1 "x")" "x" || return $?
   assertEquals "$(repeat 0 "x")" "" || return $?
 }
@@ -28,13 +28,12 @@ testAlignLeft() {
 }
 
 testRepeat2() {
-  local string
+  local string=".................."
   local n
-  string="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
 
   n=0
   while [ "$n" -lt ${#string} ]; do
-    assertEquals "${string:0:$n}" "$(repeat "$n" x)" "Failed to match repeat $n" || return $?
+    assertEquals "${string:0:$n}" "$(repeat "$n" .)" "Failed to match repeat $n" || return $?
     n=$((n + 1))
   done
 }

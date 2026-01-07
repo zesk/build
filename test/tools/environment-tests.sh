@@ -410,9 +410,9 @@ testEnvironmentClean() {
 
   catchReturn "$handler" environmentOutput --underscore --secure >"$saveEnv" || return $?
 
-  local item keepers=(A B C DEE EEE FFF GGG) removed=()
+  local item keepers=(A B C DEE EEE FFF GGG CI) removed=()
 
-  export A B C DEE EEE FFF GGG
+  export A B C DEE EEE FFF GGG CI
 
   A=1
   B=2
@@ -422,6 +422,7 @@ testEnvironmentClean() {
   FFF=(1 2 3)
   GGG=("Hello" "World")
   PS1=FOOBAR
+  CI=1
 
   # environmentClean "${keepers[@]}" || return $?
 
