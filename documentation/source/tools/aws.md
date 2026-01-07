@@ -48,6 +48,8 @@ AWS stands for Amazon Web Services and tools related to interacting with the `aw
 
 ## S3 Tools
 
+{isS3URL}
+
 {awsS3Upload}
 
 {awsS3DirectoryDelete}
