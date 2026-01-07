@@ -16,7 +16,7 @@ __addNoteTo() {
   statusMessage --last decorate info "Adding note to $1"
 
   catchEnvironment "$handler" cp "$home/$1" "$target" || return $?
-  catchEnvironment "$handler" printf -- "\n%s" "" "(this file is a copy - please modify the original)" >>"$target" || return $?
+  catchEnvironment "$handler" printf -- "\n%s" "(this file is a copy - please modify the original)" "" >>"$target" || return $?
   catchEnvironment "$handler" cp "$target" "$docTarget" || return $?
   catchEnvironment "$handler" git add "$target" "$docTarget" || return $?
 }
