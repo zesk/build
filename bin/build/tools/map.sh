@@ -261,7 +261,8 @@ _mapEnvironment() {
 # Argument: fromText - Required. String of text to search for.
 # Argument: toText - Required. String of text to replace.
 # Argument: findArgs ... - Optional. FindArgument. Any additional arguments are meant to filter files.
-# Return Code: 0 - Success
+# Return Code: 0 - Success, no files changed
+# Return Code: 3 - At least one or more files were modified successfully
 # Return Code: 1 - --path is not a directory
 # Return Code: 1 - searchText is not blank
 # Return Code: 1 - fileTemporaryName failed
@@ -271,12 +272,10 @@ cannon() {
 
   local search="" cannonPath="." replace=""
 
-  # _IDENTICAL_ argumentNonBlankLoopHandler 6
+  # _IDENTICAL_ argumentBlankLoopHandler 4
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
     local argument="$1" __index=$((__count - $# + 1))
-    # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
@@ -322,7 +321,7 @@ cannon() {
   else
     catchReturn "$handler" __xargsSedInPlaceReplace -e "s/$searchQuoted/$replaceQuoted/g" <"$cannonLog.found" || returnUndo 0 "${undo[@]}" || return $?
     statusMessage --inline decorate success "Modified $(decorate code "$(pluralWord "$count" file)")"
-    exitCode=1
+    exitCode=3
   fi
   returnUndo "$exitCode" "${undo[@]}" || return $?
   return $?
