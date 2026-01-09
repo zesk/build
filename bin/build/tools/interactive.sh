@@ -283,15 +283,16 @@ interactiveOccasionally() {
 
   local now cacheShown
   now=$(timingStart)
-  if cacheShown="$(buildCacheDirectory "${FUNCNAME[0]}")/$name" && [ -f "$cacheShown" ]; then
+  if cacheShown="$(buildCacheDirectory "${FUNCNAME[0]}")/$name"; then
     local lastShown
-    if lastShown=$(head -n 1 "$cacheShown") && isInteger "$lastShown" && [ "$lastShown" -lt $((now - delta)) ]; then
-      ! $verboseFlag || printf "%s %s %s\n" "$(decorate code "$lastShown")" "Now: $(decorate info "$now")" "Delta: $(decorate value "$((now - lastShown))")"
+    ! $verboseFlag || printf "cacheFile: %s\n" "$(decorate file "$cacheShown")"
+    if [ -f "$cacheShown" ] && lastShown=$(head -n 1 "$cacheShown") && isInteger "$lastShown" && [ "$delta" -gt $((now - lastShown)) ]; then
+      ! $verboseFlag || printf "NO: %s %s %s\n" "$(decorate code "$lastShown")" "Now: $(decorate info "$now")" "Delta: $(decorate value "$((now - lastShown)) ($delta)")"
       # Show
       return 1
     else
       # Show occasional stuff, mark as shown
-      ! $verboseFlag || printf "%s %s %s\n" "$(decorate code "$lastShown")" "Now: $(decorate info "$now")" "Delta: $(decorate value "$((now - lastShown))")"
+      ! $verboseFlag || printf "YES: %s %s %s\n" "$(decorate code "$lastShown")" "Now: $(decorate info "$now")" "Delta: $(decorate value "$((now - lastShown)) ($delta)")"
       catchEnvironment "$handler" printf "%s\n" "$now" >"$cacheShown" || return $?
       return 0
     fi
@@ -299,5 +300,5 @@ interactiveOccasionally() {
 }
 _interactiveOccasionally() {
   # __IDENTICAL__ usageDocument 1
-  usageDocument "${GASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

@@ -16,7 +16,7 @@ __backgroundProcess() {
   local handler="$1" && shift
   local condition=() command=()
   local stopSeconds=0 waitSeconds=5 frequency=60
-  local actionFlag="" verboseFlag=false vv=()
+  local actionFlag="" verboseFlag=false vv=() showNewOnly=false
 
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
@@ -36,6 +36,7 @@ __backgroundProcess() {
     --terminate) actionFlag="stop-all" ;;
     --verbose) verboseFlag=true && vv=("$argument") ;;
     --quiet) verboseFlag=false && vv=() ;;
+    --new-only) showNewOnly=true ;;
     --verbose-toggle) actionFlag="verbose-toggle" ;;
     --stop) shift && stopSeconds=$(usageArgumentPositiveInteger "$handler" "$argument" "${1-}") || return $? ;;
     --wait) shift && waitSeconds=$(usageArgumentPositiveInteger "$handler" "$argument" "${1-}") || return $? ;;
@@ -157,6 +158,9 @@ __backgroundProcess() {
 
   local id
   id=$(catchReturn "$handler" shaPipe <<<"${condition[*]} ${command[*]}") || return $?
+
+  local stateFile="$cache/process/$id/state" exists=true
+  [ -f "$stateFile" ] || exists=false
   catchReturn "$handler" muzzle directoryRequire "$cache/process/$id" || return $?
   {
     catchReturn "$handler" environmentValueWrite home "$home" || return $?
@@ -167,10 +171,14 @@ __backgroundProcess() {
     catchReturn "$handler" environmentValueWrite stopSeconds "$stopSeconds" || return $?
     catchReturn "$handler" environmentValueWrite waitSeconds "$waitSeconds" || return $?
     catchReturn "$handler" environmentValueWrite frequency "$frequency" || return $?
-  } >"$cache/process/$id/state" || return $?
-  catchEnvironment "$handler" printf "%s\n" "$(timingStart) created by $(id -u) on $(uname -a)" >"$cache/process/$id/log" || return $?
+  } >"$stateFile" || return $?
+  if ! $exists; then
+    catchEnvironment "$handler" printf "%s\n" "$(timingStart) created by $(id -u) on $(uname -a)" >"$cache/process/$id/log" || return $?
+    ! $showNewOnly || statusMessage --last decorate success "Created background process $(decorate each code "${command[*]}") $(decorate code "[${id:0:6}]") "
+  else
+    ! $verboseFlag || statusMessage --last decorate info "Registered background process $(decorate each code "${command[*]}") $(decorate code "[${id:0:6}]") "
+  fi
   catchReturn "$handler" bashPrompt --skip-prompt --first __bashPromptModule_Background || return $?
-  ! $verboseFlag || statusMessage --last decorate info "Registered background process $(decorate each code "${command[*]}") $(decorate code "[${id:0:6}]") "
 }
 
 # Runs background processes continuously until a condition is met.

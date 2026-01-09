@@ -609,7 +609,7 @@ usageArgumentString() {
   printf "%s\n" "$1"
 }
 
-# IDENTICAL urlFetch 150
+# IDENTICAL urlFetch 151
 
 # Fetch URL content
 # DOC TEMPLATE: --help 1
@@ -658,6 +658,7 @@ urlFetch() {
       headers+=("$1")
       curlArgs+=("--header" "$1")
       wgetArgs+=("--header=$1")
+      genericArgs+=("$argument" "$1")
       ;;
     --wget) binary="wget" ;;
     --curl) binary="curl" ;;

@@ -46,6 +46,10 @@ if source "${BASH_SOURCE[0]%/*}/tools.sh"; then
       fi
     fi
 
+    local home
+
+    home=$(catchReturn "$handler" buildHome) || return $?
+
     # Title
     local name
     name=$(catchReturn "$handler" buildEnvironmentGet APPLICATION_NAME) || return $?
@@ -91,11 +95,11 @@ if source "${BASH_SOURCE[0]%/*}/tools.sh"; then
 
     pathConfigure --last "$home/bin" "$home/bin/build"
 
-    backgroundProcess --verbose --stop 30 --wait 90 bin/build/tools.sh fingerprint --check -- bin/build/tools.sh fingerprint
-    backgroundProcess --verbose --stop 30 --wait 90 bin/build/deprecated.sh --check -- bin/build/deprecated.sh
-    # backgroundProcess --verbose --stop 30 --wait 90 bin/build/repair.sh --internal --check -- bin/build/repair.sh --internal
-
     __buildHelp --cache
+
+    backgroundProcess --new-only --stop 30 --wait 90 bin/build/tools.sh fingerprint --check -- bin/build/tools.sh fingerprint
+    backgroundProcess --new-only --stop 30 --wait 90 bin/build/deprecated.sh --check -- bin/build/deprecated.sh
+    # backgroundProcess --verbose --stop 30 --wait 90 bin/build/repair.sh --internal --check -- bin/build/repair.sh --internal
 
     export BUILD_PROJECT_DEACTIVATE="${FUNCNAME[0]}Undo"
 

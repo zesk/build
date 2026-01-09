@@ -49,6 +49,7 @@
 # Argument: --verbose-toggle - Flag. Optional. Toggle the global verbose reporting.
 # Argument: --terminate - Flag. Optional. Terminate all processes and delete all background process records.
 # Argument: --go - Flag. Optional. Check all process states and update them.
+# Argument: --new-only - Flag. Optional. Output a message for new processes only.
 # Argument: --stop stopSeconds - PositiveInteger. Optional. Check every stop seconds after starting to see if should be stopped.
 # Argument: --wait waitSeconds - PositiveInteger. Optional. After stopping, wait this many seconds before trying again.
 # Argument: --frequency checkSeconds - PositiveInteger. Optional. Check condition at this frequency.
