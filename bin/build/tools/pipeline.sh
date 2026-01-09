@@ -109,11 +109,11 @@ _versionSort() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-#
 # Get the current IP address of a host
 # DOC TEMPLATE: --help 1
 # Argument: --help - Optional. Flag. Display this help.
-# Environment: IP_URL_FILTER - String. Optional. Filter for JSON to get IP - if blank returns remote contents directly.
+# Environment: IP_URL
+# Environment: IP_URL_FILTER
 ipLookup() {
   local handler="_${FUNCNAME[0]}"
 

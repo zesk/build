@@ -103,10 +103,10 @@ _jsonFileGet() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# Set a value in a JSON file
+# Set or delete a value in a JSON file
 # Argument: jsonFile - File. Required. File to get value from.
 # Argument: path - String. Required. dot-separated path to modify (e.g. `extra.fingerprint`)
-# Argument: value ... - String. Required. Value to set. If more than one value is set, value is set to an array value
+# Argument: value ... - EmptyString. Optional. Value to set. If more than one value is set, value is set to an array value. If no value passed, the key is deleted. **Note the difference between a blank argument and NO argument.**
 jsonFileSet() {
   local handler="_${FUNCNAME[0]}"
   local jsonFile path value
@@ -116,21 +116,24 @@ jsonFileSet() {
 
   jsonFile=$(usageArgumentFile "$handler" "jsonFile" "${1-}") && shift || return $?
   path=$(usageArgumentString "$handler" "path" "${1-}") && shift || return $?
-  value=$(usageArgumentEmptyString "$handler" "value" "${1-}") && shift || return $?
-
-  local rawValue
-  if [ $# -eq 0 ]; then
-    rawValue="\"$(escapeDoubleQuotes "$value")\""
-  else
-    local arrayValue=("\"$(escapeDoubleQuotes "$value")\"")
-    while [ $# -gt 0 ]; do
-      arrayValue+=("\"$(escapeDoubleQuotes "$1")\"") && shift
-    done
-    rawValue="[ $(listJoin , "${arrayValue[@]}") ]"
-  fi
-
   path=$(__jqPathClean "$path")
-  catchEnvironment "$handler" jq --sort-keys -r "$(__jqObject "$path") + . | $path = $rawValue" <"$jsonFile" >"$jsonFile.new" || returnClean $? "$jsonFile.new" || return $?
+  if [ $# -eq 0 ]; then
+    catchEnvironment "$handler" jq --sort-keys -r "del($path)" <"$jsonFile" >"$jsonFile.new" || returnClean $? "$jsonFile.new" || return $?
+  else
+    value=$(usageArgumentEmptyString "$handler" "value" "${1-}") && shift || return $?
+
+    local rawValue
+    if [ $# -eq 0 ]; then
+      rawValue="\"$(escapeDoubleQuotes "$value")\""
+    else
+      local arrayValue=("\"$(escapeDoubleQuotes "$value")\"")
+      while [ $# -gt 0 ]; do
+        arrayValue+=("\"$(escapeDoubleQuotes "$1")\"") && shift
+      done
+      rawValue="[ $(listJoin , "${arrayValue[@]}") ]"
+    fi
+    catchEnvironment "$handler" jq --sort-keys -r "$(__jqObject "$path") + . | $path = $rawValue" <"$jsonFile" >"$jsonFile.new" || returnClean $? "$jsonFile.new" || return $?
+  fi
   catchEnvironment "$handler" mv -f "$jsonFile.new" "$jsonFile" || returnClean $? "$jsonFile.new" || return $?
 }
 _jsonFileSet() {

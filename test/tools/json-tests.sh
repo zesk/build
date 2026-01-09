@@ -77,7 +77,7 @@ testJsonFileGetSet() {
   local temp
 
   temp=$(fileTemporaryName "$handler") || return $?
-  printf "{}" >"$temp"
+  catchEnvironment "$handler" printf "{}" >"$temp" || return $?
 
   local path value
   while read -r path value; do
@@ -86,5 +86,10 @@ testJsonFileGetSet() {
   while read -r path value; do
     assertEquals --display "jsonFileGet $path" "$value" "$(jsonFileGet "$temp" "$path")" || return $?
   done < <(__dataJsonFileGetSet)
-  rm -rf "$temp"
+  assertEquals "Hello" "$(jsonFileGet "$temp" ".path.to.something.deeper")" || return $?
+  assertEquals "1" "$(jsonFileGet "$temp" ".path.to.something.pid")" || return $?
+  assertExitCode 0 jsonFileSet "$temp" ".path.to.something" || return $?
+  assertNotEquals "Hello" "$(jsonFileGet "$temp" ".path.to.something.deeper")" || return $?
+  assertNotEquals "1" "$(jsonFileGet "$temp" ".path.to.something.pid")" || return $?
+  catchEnvironment "$handler" rm -rf "$temp" || return $?
 }
