@@ -4,7 +4,7 @@
 #
 # Copyright &copy; 2026 Market Acumen, Inc.
 
-# Open a URL with a new PR
+# Zesk Build open a URL with a new PR
 buildPR() {
   local handler="_${FUNCNAME[0]}"
 

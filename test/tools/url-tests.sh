@@ -191,6 +191,11 @@ testFetch() {
   catchEnvironment "$handler" rm -f "$targetFile" || return $?
 }
 
+testFetchTimeout() {
+  assertExitCode 0 urlFetch --timeout 10 "https://marketacumen.com/slow.php?t=5" || return $?
+  assertExitCode --stderr-ok 1 urlFetch --timeout 2 "https://marketacumen.com/slow.php?t=5" || return $?
+}
+
 testUrlToVariables() {
   local matches=(
     --stdout-match "DSN_USER=user"

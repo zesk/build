@@ -32,6 +32,8 @@
 # Argument: --argument-format format - Optional. String. Supply `curl` or `wget` for parameter formatting.
 # Argument: --user userName - Optional. String. If supplied, uses HTTP Simple authentication. Usually used with `--password`. Note: User names may not contain the character `:` when using `curl`.
 # Argument: --password password - Optional. String. If supplied along with `--user`, uses HTTP Simple authentication.
+# Argument: --agent userAgent - Optional. String. Specify the user agent string.
+# Argument: --timeout timeoutSeconds - Optional. PositiveInteger. A number of seconds to wait before failing.
 # Argument: url - Required. URL. URL to fetch to target file.
 # Argument: file - Optional. FileDirectory. Target file. Use `-` to send to `stdout`. Default value is `-`.
 # Requires: returnMessage whichExists printf decorate
@@ -42,7 +44,7 @@ urlFetch() {
   local handler="_${FUNCNAME[0]}"
 
   local wgetArgs=() curlArgs=() headers wgetExists binary="" userHasColons=false user="" password="" format="" url="" target=""
-  local maxRedirections=9
+  local maxRedirections=9 timeoutSeconds=10
 
   wgetExists=$(whichExists wget && printf true || printf false)
 
@@ -56,10 +58,7 @@ urlFetch() {
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
     --header)
-      shift
-      local name value
-      name="${1%%:}"
-      value="${1#*:}"
+      shift && local name="${1%%:}" value="${1#*:}"
       if [ "$name" = "$1" ] || [ "$value" = "$1" ]; then
         catchArgument "$handler" "Invalid $argument $1 passed" || return $?
       fi
@@ -70,19 +69,17 @@ urlFetch() {
     --wget) binary="wget" ;;
     --curl) binary="curl" ;;
     --binary)
-      shift
-      binary=$(usageArgumentString "$handler" "$argument" "${1-}") || return $?
+      shift && binary=$(usageArgumentString "$handler" "$argument" "${1-}") || return $?
       whichExists "$binary" || throwArgument "$handler" "$binary must be in PATH: $PATH" || return $?
       ;;
     --argument-format)
-      format=$(usageArgumentString "$handler" "$argument" "${1-}") || return $?
+      shift && format=$(usageArgumentString "$handler" "$argument" "${1-}") || return $?
       case "$format" in curl | wget) ;; *) throwArgument "$handler" "$argument must be curl or wget" || return $? ;; esac
       ;;
     --redirect-max) shift && maxRedirections=$(usageArgumentPositiveInteger "$handler" "$argument" "${1-}") || return $? ;;
     --password) shift && password="$1" ;;
     --user)
-      shift
-      user=$(usageArgumentString "$handler" "$argument (user)" "$user") || return $?
+      shift && user=$(usageArgumentString "$handler" "$argument (user)" "$user") || return $?
       if [ "$user" != "${user#*:}" ]; then
         userHasColons=true
       fi
@@ -90,13 +87,17 @@ urlFetch() {
       wgetArgs+=("--http-user=$user" "--http-password=$password")
       genericArgs+=("$argument" "$1")
       ;;
+    --timeout)
+      shift && timeoutSeconds=$(usageArgumentPositiveInteger "$handler" "$argument" "${1-}") || return $?
+      curlArgs+=(--connect-timeout "$timeoutSeconds")
+      wgetArgs+=("--timeout=$timeoutSeconds")
+      ;;
     --agent)
-      shift
-      local agent="$1"
-      [ -n "$agent" ] || throwArgument "$handler" "$argument must be non-blank" || return $?
-      wgetArgs+=("--user-agent=$1")
-      curlArgs+=("--user-agent" "$1")
-      genericArgs+=("$argument" "$1")
+      local agent
+      shift && agent=$(usageArgumentString "$handler" "$argument" "${1-}") || return $?
+      wgetArgs+=("--user-agent=$agent")
+      curlArgs+=("--user-agent" "$agent")
+      genericArgs+=("$argument" "$agent")
       ;;
     *)
       if [ -z "$url" ]; then
