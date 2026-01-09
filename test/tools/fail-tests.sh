@@ -1,10 +1,11 @@
 #!/usr/bin/env bash
+# IDENTICAL zeskBuildTestHeader 5
 #
 # fail-tests.sh
 #
-# Fail tests - tests which are designed to fail
-#
 # Copyright &copy; 2026 Market Acumen, Inc.
+#
+# Fail tests - tests which are designed to fail
 #
 
 __leakyThing() {

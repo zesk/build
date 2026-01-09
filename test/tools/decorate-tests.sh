@@ -1,8 +1,7 @@
 #!/usr/bin/env bash
+# IDENTICAL zeskBuildTestHeader 5
 #
 # decorate-tests.sh
-#
-# Darwin tests
 #
 # Copyright &copy; 2026 Market Acumen, Inc.
 #

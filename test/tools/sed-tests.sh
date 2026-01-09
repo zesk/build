@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
+# IDENTICAL zeskBuildTestHeader 5
 #
-# quote-tests.sh
+# sed-tests.sh
 #
 # Copyright &copy; 2026 Market Acumen, Inc.
 #

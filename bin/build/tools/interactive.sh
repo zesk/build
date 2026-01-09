@@ -238,3 +238,66 @@ _interactiveCountdown() {
   # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
+
+# Do something the first time and then only occasionally thereafter.
+# This manages a state file compared to the current time and triggers after `delta` seconds.
+# Think of it like something that only returns 0 like once every `delta` seconds but it's going to happen at minimum `delta` seconds, or the next time after that. And the first time as well.
+# Argument: --delta deltaMilliseconds - PositiveInteger. Optional. Default is 60000.
+# Argument: --mark - Flag. Optional. Write the marker which says the
+# Argument: --verbose - Flag. Optional. Be chatty.
+# Argument: name - EnvironmentVariable. Required. The global codename for this interaction.
+# Return Code: 0 - Do the thing
+# Return Code: 1 - Do not do the thing
+# Return Code: 2 - Argument error
+interactiveOccasionally() {
+  local name="" delta="" verboseFlag=false
+
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
+  local __saved=("$@") __count=$#
+  while [ $# -gt 0 ]; do
+    local argument="$1" __index=$((__count - $# + 1))
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    case "$argument" in
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
+    # _IDENTICAL_ handlerHandler 1
+    --handler) shift && handler=$(usageArgumentFunction "$handler" "$argument" "${1-}") || return $? ;;
+    --delta) shift && name="$(usageArgumentPositiveInteger "$handler" "$argument" "${1-}")" || return $? ;;
+    --verbose) verboseFlag=true ;;
+    *)
+      if [ -z "$name" ]; then
+        name="$(usageArgumentEnvironmentVariable "$handler" "$argument" "${1-}")" || return $?
+      else
+        # _IDENTICAL_ argumentUnknownHandler 1
+        throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
+      fi
+      ;;
+    esac
+    shift
+  done
+
+  [ -n "$name" ] || throwArgument "$handler" "name is required" || return $?
+
+  [ -n "$delta" ] || delta=60000
+
+  local now cacheShown
+  now=$(timingStart)
+  if cacheShown="$(buildCacheDirectory "${FUNCNAME[0]}")/$name" && [ -f "$cacheShown" ]; then
+    local lastShown
+    if lastShown=$(head -n 1 "$cacheShown") && isInteger "$lastShown" && [ "$lastShown" -lt $((now - delta)) ]; then
+      ! $verboseFlag || printf "%s %s %s\n" "$(decorate code "$lastShown")" "Now: $(decorate info "$now")" "Delta: $(decorate value "$((now - lastShown))")"
+      # Show
+      return 1
+    else
+      # Show occasional stuff, mark as shown
+      ! $verboseFlag || printf "%s %s %s\n" "$(decorate code "$lastShown")" "Now: $(decorate info "$now")" "Delta: $(decorate value "$((now - lastShown))")"
+      catchEnvironment "$handler" printf "%s\n" "$now" >"$cacheShown" || return $?
+      return 0
+    fi
+  fi
+}
+_interactiveOccasionally() {
+  # __IDENTICAL__ usageDocument 1
+  usageDocument "${GASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}

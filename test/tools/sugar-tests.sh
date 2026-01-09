@@ -1,8 +1,7 @@
 #!/usr/bin/env bash
+# IDENTICAL zeskBuildTestHeader 5
 #
-# ssh-tests.sh
-#
-# SSH tests
+# sugar-tests.sh
 #
 # Copyright &copy; 2026 Market Acumen, Inc.
 #

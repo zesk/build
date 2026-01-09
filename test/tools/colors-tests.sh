@@ -1,8 +1,7 @@
 #!/usr/bin/env bash
+# IDENTICAL zeskBuildTestHeader 5
 #
 # colors-tests.sh
-#
-# Colors tests
 #
 # Copyright &copy; 2026 Market Acumen, Inc.
 #

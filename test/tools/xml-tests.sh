@@ -1,8 +1,10 @@
 #!/usr/bin/env bash
+# IDENTICAL zeskBuildTestHeader 5
 #
-# Tests for jUnit
+# xml-tests.sh
 #
 # Copyright &copy; 2026 Market Acumen, Inc.
+#
 
 test_XMLBasics() {
   local handler="returnMessage"

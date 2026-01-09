@@ -1,10 +1,11 @@
 #!/usr/bin/env bash
+# IDENTICAL zeskBuildTestHeader 5
 #
 # tofu-tests.sh
 #
-# OpenTOFU tests
-#
 # Copyright &copy; 2026 Market Acumen, Inc.
+#
+# OpenTOFU tests
 #
 
 # Tag: package-install

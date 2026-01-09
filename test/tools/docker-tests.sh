@@ -1,8 +1,7 @@
 #!/usr/bin/env bash
+# IDENTICAL zeskBuildTestHeader 5
 #
 # docker-tests.sh
-#
-# docker tests
 #
 # Copyright &copy; 2026 Market Acumen, Inc.
 #

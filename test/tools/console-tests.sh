@@ -1,12 +1,10 @@
 #!/usr/bin/env bash
+# IDENTICAL zeskBuildTestHeader 5
 #
 # console-tests.sh
 #
-# Console tests
-#
 # Copyright &copy; 2026 Market Acumen, Inc.
 #
-set -eou pipefail
 
 _colorBrightnessValues() {
   cat <<EOF

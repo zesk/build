@@ -22,6 +22,8 @@
 
 {notify}
 
+{interactiveOccasionally}
+
 ## Copy files
 
 {fileCopyWouldChange} 

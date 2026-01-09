@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
+# IDENTICAL zeskBuildTestHeader 5
+#
+# utilities-tests.sh
 #
 # Copyright &copy; 2026 Market Acumen, Inc.
-#
 #
 
 testIncrementor() {

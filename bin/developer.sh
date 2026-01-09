@@ -38,19 +38,11 @@ if source "${BASH_SOURCE[0]%/*}/tools.sh"; then
   #
   __buildHelp() {
     local handler="_${FUNCNAME[0]}"
-    local cacheShown="" delta=60000
-    local now=""
 
     if [ "${1-}" = "--cache" ]; then
-      now=$(timingStart)
-      if cacheShown="$(buildCacheDirectory "${FUNCNAME[0]}")/helpShown" && [ -f "$cacheShown" ]; then
-        local now lastShown
-        if lastShown=$(head -n 1 "$cacheShown") && isInteger "$lastShown" && [ "$lastShown" -lt $((now - delta)) ]; then
-          printf "%s %s\n" "$(decorate code ' ? ')" "$(decorate info 'to show help')"
-          return 0
-        else
-          printf "%s %s %s\n" "$(decorate code "$lastShown")" "Now: $(decorate info "$now")" "Delta: $(decorate value "$((now - lastShown))")"
-        fi
+      if ! interactiveOccasionally "${FUNCNAME[0]}"; then
+        printf "%s %s\n" "$(decorate code ' ? ')" "$(decorate info 'to show help')"
+        return 0
       fi
     fi
 
@@ -66,8 +58,6 @@ if source "${BASH_SOURCE[0]%/*}/tools.sh"; then
     iTerm2Image -i "$home/etc/zesk-build-icon.png"
 
     markdownToConsole < <(bashFunctionComment "${BASH_SOURCE[0]}" "${FUNCNAME[0]}")
-
-    [ -z "$cacheShown" ] || printf "%s\n" "$now" >"$cacheShown" 2>/dev/null || :
   }
   ___buildHelp() {
     # __IDENTICAL__ usageDocument 1

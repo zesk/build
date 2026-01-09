@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
+# IDENTICAL zeskBuildTestHeader 5
 #
 # yum-tests.sh
 #
-# Yum tests (Fedora?)
-#
 # Copyright &copy; 2026 Market Acumen, Inc.
 #
+# Yum tests (Fedora?)
 
 testIsYum() {
   yumIsInstalled --help >/dev/null || return $?

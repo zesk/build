@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# IDENTICAL zeskBuildTestHeader 5
 #
 # self-tests.sh
 #

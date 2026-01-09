@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
+# IDENTICAL zeskBuildTestHeader 5
 #
 # darwin-tests.sh
 #
-# Darwin tests
-#
 # Copyright &copy; 2026 Market Acumen, Inc.
 #
+
 
 testDarwinDialog() {
   if whichExists osascript; then

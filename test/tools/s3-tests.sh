@@ -1,10 +1,11 @@
 #!/usr/bin/env bash
+# IDENTICAL zeskBuildTestHeader 5
 #
 # s3-tests.sh
 #
-# AWS S3 tests
-#
 # Copyright &copy; 2026 Market Acumen, Inc.
+#
+# AWS S3 tests
 #
 
 __dataIsS3URL() {

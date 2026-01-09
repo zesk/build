@@ -1,12 +1,10 @@
 #!/usr/bin/env bash
+# IDENTICAL zeskBuildTestHeader 5
 #
-# text-tests.sh
-#
-# Text tests
+# type-tests.sh
 #
 # Copyright &copy; 2026 Market Acumen, Inc.
 #
-# Test: o bin/build/tools/type.sh
 
 testBinaryTypes() {
   local home handler="returnMessage"

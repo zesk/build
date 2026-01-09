@@ -1,8 +1,7 @@
 #!/usr/bin/env bash
+# IDENTICAL zeskBuildTestHeader 5
 #
-# api-tests.sh
-#
-# API tests
+# bin-tests.sh
 #
 # Copyright &copy; 2026 Market Acumen, Inc.
 #

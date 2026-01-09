@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
+# IDENTICAL zeskBuildTestHeader 5
 #
 # hooks-tests.sh
 #
-# Hook tests
-#
 # Copyright &copy; 2026 Market Acumen, Inc.
 #
+# Hook tests
 
 testHookVersionCurrent() {
   assertExitCode 0 hookVersionCurrent || return $?

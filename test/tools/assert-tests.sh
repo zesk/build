@@ -1,8 +1,7 @@
 #!/usr/bin/env bash
+# IDENTICAL zeskBuildTestHeader 5
 #
 # assert-tests.sh
-#
-# Assertion testing
 #
 # Copyright &copy; 2026 Market Acumen, Inc.
 #
