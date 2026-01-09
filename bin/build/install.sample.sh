@@ -609,7 +609,7 @@ usageArgumentString() {
   printf "%s\n" "$1"
 }
 
-# IDENTICAL urlFetch 148
+# IDENTICAL urlFetch 150
 
 # Fetch URL content
 # DOC TEMPLATE: --help 1
@@ -634,9 +634,11 @@ usageArgumentString() {
 urlFetch() {
   local handler="_${FUNCNAME[0]}"
 
-  local wgetArgs=() curlArgs=() headers wgetExists binary="" userHasColons=false user="" password="" format="" url="" target=""
+  local wgetArgs=() curlArgs=() genericArgs=() headers=()
+  local binary="" userHasColons=false user="" password="" format="" url="" target=""
   local maxRedirections=9 timeoutSeconds=""
 
+  local wgetExists
   wgetExists=$(whichExists wget && printf true || printf false)
 
   # _IDENTICAL_ argumentNonBlankLoopHandler 6

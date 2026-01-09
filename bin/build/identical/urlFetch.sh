@@ -44,9 +44,11 @@
 urlFetch() {
   local handler="_${FUNCNAME[0]}"
 
-  local wgetArgs=() curlArgs=() headers wgetExists binary="" userHasColons=false user="" password="" format="" url="" target=""
+  local wgetArgs=() curlArgs=() genericArgs=() headers=()
+  local binary="" userHasColons=false user="" password="" format="" url="" target=""
   local maxRedirections=9 timeoutSeconds=""
 
+  local wgetExists
   wgetExists=$(whichExists wget && printf true || printf false)
 
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
@@ -66,6 +68,7 @@ urlFetch() {
       headers+=("$1")
       curlArgs+=("--header" "$1")
       wgetArgs+=("--header=$1")
+      genericArgs+=("$argument" "$1")
       ;;
     --wget) binary="wget" ;;
     --curl) binary="curl" ;;
