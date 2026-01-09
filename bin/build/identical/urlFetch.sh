@@ -33,18 +33,19 @@
 # Argument: --user userName - Optional. String. If supplied, uses HTTP Simple authentication. Usually used with `--password`. Note: User names may not contain the character `:` when using `curl`.
 # Argument: --password password - Optional. String. If supplied along with `--user`, uses HTTP Simple authentication.
 # Argument: --agent userAgent - Optional. String. Specify the user agent string.
-# Argument: --timeout timeoutSeconds - Optional. PositiveInteger. A number of seconds to wait before failing.
+# Argument: --timeout timeoutSeconds - Optional. PositiveInteger. A number of seconds to wait before failing. Defaults to `BUILD_URL_TIMEOUT` environment value.
 # Argument: url - Required. URL. URL to fetch to target file.
 # Argument: file - Optional. FileDirectory. Target file. Use `-` to send to `stdout`. Default value is `-`.
 # Requires: returnMessage whichExists printf decorate
 # Requires: usageArgumentString
 # Requires: throwArgument catchArgument
 # Requires: throwEnvironment catchEnvironment
+# Environment: BUILD_URL_TIMEOUT
 urlFetch() {
   local handler="_${FUNCNAME[0]}"
 
   local wgetArgs=() curlArgs=() headers wgetExists binary="" userHasColons=false user="" password="" format="" url="" target=""
-  local maxRedirections=9 timeoutSeconds=10
+  local maxRedirections=9 timeoutSeconds=""
 
   wgetExists=$(whichExists wget && printf true || printf false)
 
@@ -89,8 +90,6 @@ urlFetch() {
       ;;
     --timeout)
       shift && timeoutSeconds=$(usageArgumentPositiveInteger "$handler" "$argument" "${1-}") || return $?
-      curlArgs+=(--connect-timeout "$timeoutSeconds")
-      wgetArgs+=("--timeout=$timeoutSeconds")
       ;;
     --agent)
       local agent
@@ -115,6 +114,8 @@ urlFetch() {
     shift
   done
 
+  [ -n "$timeoutSeconds" ] || timeoutSeconds=$(catchReturn "$handler" buildEnvironmentGet BUILD_URL_TIMEOUT) || return $?
+
   # URL
   [ -n "$url" ] || throwArgument "$handler" "URL is required" || return $?
 
@@ -124,12 +125,19 @@ urlFetch() {
 
   # User
   if [ -n "$user" ]; then
-    curlArgs+=(--user "$user:$password")
+    curlArgs+=("--user" "$user:$password")
     wgetArgs+=("--http-user=$user" "--http-password=$password")
     genericArgs+=("--user" "$user" "--password" "$password")
   fi
   if [ "$binary" = "curl" ] && $userHasColons; then
     throwArgument "$handler" "$argument: Users ($argument \"$(decorate code "$user")\") with colons are not supported by curl, use wget" || return $?
+  fi
+
+  # Timeout
+  if isPositiveInteger "$timeoutSeconds"; then
+    curlArgs+=("--connect-timeout" "$timeoutSeconds")
+    wgetArgs+=("--timeout=$timeoutSeconds")
+    genericArgs+=("--timeout" "$timeoutSeconds")
   fi
 
   # Binary

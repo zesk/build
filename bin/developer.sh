@@ -36,11 +36,47 @@ if source "${BASH_SOURCE[0]%/*}/tools.sh"; then
   #
   #     `bin/tools.sh myTest` vs. `myTest` - the former is correct and loads the code each run
   #
+  __buildHelp() {
+    local handler="_${FUNCNAME[0]}"
+    local cacheShown="" delta=60000
+    local now=""
+
+    if [ "${1-}" = "--cache" ]; then
+      now=$(timingStart)
+      if cacheShown="$(buildCacheDirectory "${FUNCNAME[0]}")/helpShown" && [ -f "$cacheShown" ]; then
+        local now lastShown
+        if lastShown=$(head -n 1 "$cacheShown") && isInteger "$lastShown" && [ "$lastShown" -lt $((now - delta)) ]; then
+          printf "%s %s\n" "$(decorate code ' ? ')" "$(decorate info 'to show help')"
+          return 0
+        else
+          printf "%s %s %s\n" "$(decorate code "$lastShown")" "Now: $(decorate info "$now")" "Delta: $(decorate value "$((now - lastShown))")"
+        fi
+      fi
+    fi
+
+    # Title
+    local name
+    name=$(catchReturn "$handler" buildEnvironmentGet APPLICATION_NAME) || return $?
+    [ -n "$name" ] || name=$(basename "$home")
+
+    local title
+    title="$name $(catchReturn "$handler" hookVersionCurrent)" || return $?
+    bigText --bigger "$title"
+    # Logo for iTerm2
+    iTerm2Image -i "$home/etc/zesk-build-icon.png"
+
+    markdownToConsole < <(bashFunctionComment "${BASH_SOURCE[0]}" "${FUNCNAME[0]}")
+
+    [ -z "$cacheShown" ] || printf "%s\n" "$now" >"$cacheShown" 2>/dev/null || :
+  }
+  ___buildHelp() {
+    # __IDENTICAL__ usageDocument 1
+    usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  }
+
   __buildConfigure() {
     local handler="_${FUNCNAME[0]}"
     local home
-
-    [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
 
     home=$(catchReturn "$handler" buildHome) || return $?
 
@@ -51,27 +87,17 @@ if source "${BASH_SOURCE[0]%/*}/tools.sh"; then
     if [ -z "${BUILD_COLORS_MODE-}" ]; then
       BUILD_COLORS_MODE=$(consoleConfigureColorMode)
     fi
-    # Logo for iTerm2
-    iTerm2Image -i "$home/etc/zesk-build-icon.png"
-
-    # Title
-    local name
-    name=$(catchReturn "$handler" buildEnvironmentGet APPLICATION_NAME) || return $?
-    [ -n "$name" ] || name=$(basename "$home")
-    title="$name $(catchReturn "$handler" hookVersionCurrent)" || return $?
-    bigText --bigger "$title"
 
     # shellcheck disable=SC2139
     alias t="$home/bin/build/tools.sh"
     alias tools=t
-    # shellcheck disable=SC2139
-    alias IdenticalRepair="$home/bin/build/repair.sh"
+    alias '?'="__buildHelp"
 
     muzzle reloadChanges --stop 2>&1
     muzzle reloadChanges --name "$name" "$home/bin/tools.sh" "$home/bin/build/build.json"
     muzzle buildCompletion
 
-    bashPrompt --skip-prompt bashPromptModule_TermColors
+    bashPrompt --skip-prompt bashPromptModule_TermColors bashPromptModule_BuildProject
 
     pathConfigure --last "$home/bin" "$home/bin/build"
 
@@ -79,18 +105,18 @@ if source "${BASH_SOURCE[0]%/*}/tools.sh"; then
     backgroundProcess --verbose --stop 30 --wait 90 bin/build/deprecated.sh --check -- bin/build/deprecated.sh
     # backgroundProcess --verbose --stop 30 --wait 90 bin/build/repair.sh --internal --check -- bin/build/repair.sh --internal
 
-    export BUILD_PROJECT_DEACTIVATE="${FUNCNAME[0]}Undo"
+    __buildHelp --cache
 
-    markdownToConsole < <(bashFunctionComment "${BASH_SOURCE[0]}" "${FUNCNAME[0]}")
+    export BUILD_PROJECT_DEACTIVATE="${FUNCNAME[0]}Undo"
 
     unset "${FUNCNAME[0]}" "_${FUNCNAME[0]}"
   }
   ___buildConfigure() {
-    true || __buildConfigure --help
     # __IDENTICAL__ usageDocument 1
     usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
   }
 
+  # Undo Zesk Build project configuration
   __buildConfigureUndo() {
     local handler="returnMessage"
     local home
@@ -103,11 +129,13 @@ if source "${BASH_SOURCE[0]%/*}/tools.sh"; then
     name=$(catchReturn "$handler" buildEnvironmentContext "$home" buildEnvironmentGet APPLICATION_NAME) || return $?
     [ -n "$name" ] || name=$(basename "$home")
 
-    statusMessage decorate notice "Deactivating $name ..."
+    statusMessage decorate notice "Deactivating $(decorate value "$name") ..."
+
+    muzzle reloadChanges --stop 2>&1
 
     pathRemove "$home/bin" "$home/bin/build"
 
-    unset "${FUNCNAME[0]}" 2>/dev/null
+    unset "${FUNCNAME[0]}" "_${FUNCNAME[0]}" 2>/dev/null
   }
 
   __buildConfigure

@@ -5,6 +5,7 @@ site_description: "Toolkit for build, testing, system management, and deployment
 site_author: "{BUILD_COMPANY}"
 nav:
   - Home: "index.md"
+  - "tools/all.md"
   - "tools/index.md"
   - Environment: "env/index.md"
   - "guide/index.md"
