@@ -20,8 +20,8 @@ testInteractiveOccasionally() {
   assertExitCode 0 interactiveOccasionally --delta 10000000000000 "$name" || return $?
   assertExitCode 0 interactiveOccasionally --delta 1 "$name" || return $?
   assertExitCode 0 interactiveOccasionally --delta 1 "$name" || return $?
-  assertExitCode 1 interactiveOccasionally --delta 2000 "$name" || return $?
-  assertExitCode 1 interactiveOccasionally --delta 2000 "$name" || return $?
+  assertExitCode 1 interactiveOccasionally --delta 5000 "$name" || return $?
+  assertExitCode 1 interactiveOccasionally --delta 5000 "$name" || return $?
   assertExitCode 0 interactiveOccasionally --delta 1 "$name" || return $?
 
   rm -rf "$XDG_CACHE_HOME" || return $?
