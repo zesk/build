@@ -609,7 +609,7 @@ usageArgumentString() {
   printf "%s\n" "$1"
 }
 
-# IDENTICAL urlFetch 151
+# IDENTICAL urlFetch 154
 
 # Fetch URL content
 # DOC TEMPLATE: --help 1
@@ -626,8 +626,8 @@ usageArgumentString() {
 # Argument: --timeout timeoutSeconds - Optional. PositiveInteger. A number of seconds to wait before failing. Defaults to `BUILD_URL_TIMEOUT` environment value.
 # Argument: url - Required. URL. URL to fetch to target file.
 # Argument: file - Optional. FileDirectory. Target file. Use `-` to send to `stdout`. Default value is `-`.
-# Requires: returnMessage whichExists printf decorate
-# Requires: usageArgumentString
+# Requires: returnMessage whichExists decorate
+# Requires: usageArgumentString usageArgumentPositiveInteger isPositiveInteger
 # Requires: throwArgument catchArgument
 # Requires: throwEnvironment catchEnvironment
 # Environment: BUILD_URL_TIMEOUT
@@ -652,8 +652,8 @@ urlFetch() {
     --help) "$handler" 0 && return $? || return $? ;;
     --header)
       shift && local name="${1%%:}" value="${1#*:}"
-      if [ "$name" = "$1" ] || [ "$value" = "$1" ]; then
-        catchArgument "$handler" "Invalid $argument $1 passed" || return $?
+      if [ "$name" = "${1-}" ] || [ "$value" = "${1-}" ]; then
+        catchArgument "$handler" "Invalid $argument ${1-} passed" || return $?
       fi
       headers+=("$1")
       curlArgs+=("--header" "$1")
@@ -707,7 +707,10 @@ urlFetch() {
     shift
   done
 
-  [ -n "$timeoutSeconds" ] || timeoutSeconds=$(catchReturn "$handler" buildEnvironmentGet BUILD_URL_TIMEOUT) || return $?
+  if [ -z "$timeoutSeconds" ]; then
+    export BUILD_URL_TIMEOUT
+    timeoutSeconds="${BUILD_URL_TIMEOUT-}"
+  fi
 
   # URL
   [ -n "$url" ] || throwArgument "$handler" "URL is required" || return $?

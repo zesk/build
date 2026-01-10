@@ -102,8 +102,7 @@ testPHPBuild() {
   assertFileExists "$testPath/bin/install-bin-build.sh" || return $?
   assertFileContains "$testPath/bin/install-bin-build.sh" " .. " || return $?
 
-  # OLD INSTALLER IS BROKEN
-  assertExitCode --dump 0 "$testPath/bin/install-bin-build.sh" --mock "$home/bin/build" || return $?
+  assertExitCode 0 "$testPath/bin/install-bin-build.sh" || return $?
   assertDirectoryExists "$testPath/bin/build" || return $?
 
   decorate warning "Building PHP app" || :
