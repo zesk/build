@@ -263,7 +263,7 @@ interactiveOccasionally() {
     --help) "$handler" 0 && return $? || return $? ;;
     # _IDENTICAL_ handlerHandler 1
     --handler) shift && handler=$(usageArgumentFunction "$handler" "$argument" "${1-}") || return $? ;;
-    --delta) shift && name="$(usageArgumentPositiveInteger "$handler" "$argument" "${1-}")" || return $? ;;
+    --delta) shift && delta="$(usageArgumentPositiveInteger "$handler" "$argument" "${1-}")" || return $? ;;
     --verbose) verboseFlag=true ;;
     *)
       if [ -z "$name" ]; then
