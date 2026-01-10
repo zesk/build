@@ -56,7 +56,6 @@ __brewUninstall() {
 }
 
 #
-# handler: {fn}
 # OS upgrade and potential restart
 # Progress is written to stderr
 # Result is `ok` or `restart` written to stdout
@@ -109,7 +108,6 @@ __brewUpdate() {
   return $returnCode
 }
 
-# handler: {fn}
 # List installed packages
 # package.sh: true
 __brewInstalledList() {
@@ -123,7 +121,6 @@ ___brewInstalledList() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# handler: {fn}
 # List available bottles
 # package.sh: true
 __brewAvailableList() {
@@ -136,7 +133,6 @@ ___brewAvailableList() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# handler: {fn}
 # Output list of apt standard packages (constant)
 # See: _packageStandardPackages
 # package.sh: true

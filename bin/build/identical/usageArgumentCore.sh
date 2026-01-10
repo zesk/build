@@ -15,6 +15,7 @@
 # Argument: value - Optional. String, Value which should be non-blank otherwise an argument error is thrown.
 # Return Code: 2 - If `value` is blank
 # Return Code: 0 - If `value` is non-blank
+# Requires: throwArgument
 usageArgumentString() {
   local handler="$1" argument="$2"
   shift 2 || :

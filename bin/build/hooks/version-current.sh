@@ -11,7 +11,6 @@ set -eou pipefail
 source "${BASH_SOURCE[0]%/*}/../tools.sh"
 
 # fn: {base}
-# handler: {fn}
 #
 # Hook to return the current version
 #

@@ -379,7 +379,7 @@ _returnCodeString() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# IDENTICAL usageArgumentCore 13
+# IDENTICAL usageArgumentCore 14
 
 # Require an argument to be non-blank
 # Argument: handler - Required. Function. Usage function to call upon failure.
@@ -387,6 +387,7 @@ _returnCodeString() {
 # Argument: value - Optional. String, Value which should be non-blank otherwise an argument error is thrown.
 # Return Code: 2 - If `value` is blank
 # Return Code: 0 - If `value` is non-blank
+# Requires: throwArgument
 usageArgumentString() {
   local handler="$1" argument="$2"
   shift 2 || :

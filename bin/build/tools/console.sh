@@ -109,7 +109,6 @@ _consoleBrightness() {
 }
 
 #
-# handler: {fn}
 # Argument: backgroundColor - Optional. String. Background color.
 # Print the suggested color mode for the current environment
 #

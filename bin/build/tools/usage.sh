@@ -80,9 +80,7 @@ _usageDocumentSimple() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-#
 # Summary: Check that one or more binaries are installed
-# handler: {fn} handler binary [ ... ]
 # Argument: usageFunction - Required. `bash` function already defined to output handler
 # Argument: binary - Required. Binary which must have a `which` path.
 # Return Code: 1 - If any `binary` is not available within the current path
@@ -165,7 +163,7 @@ __catchArgumentHelper() {
   printf "%s\n" "$variableValue"
 }
 
-# IDENTICAL usageArgumentCore 13
+# IDENTICAL usageArgumentCore 14
 
 # Require an argument to be non-blank
 # Argument: handler - Required. Function. Usage function to call upon failure.
@@ -173,6 +171,7 @@ __catchArgumentHelper() {
 # Argument: value - Optional. String, Value which should be non-blank otherwise an argument error is thrown.
 # Return Code: 2 - If `value` is blank
 # Return Code: 0 - If `value` is non-blank
+# Requires: throwArgument
 usageArgumentString() {
   local handler="$1" argument="$2"
   shift 2 || :
@@ -180,8 +179,38 @@ usageArgumentString() {
   printf "%s\n" "$1"
 }
 
+# IDENTICAL usageArgumentPositiveInteger 14
+
+# Validates a value is an positive integer and greater than zero (NOT zero)
+# Argument: usageFunction - Required. Function. Run if handler fails
+# Argument: variableName - Required. String. Name of variable being tested
+# Argument: variableValue - Required. String. Required only in that if it's blank, it fails.
+# Return Code: 2 - Argument error
+# Return Code: 0 - Success
+# Requires: isPositiveInteger throwArgument decorate
+usageArgumentPositiveInteger() {
+  local handler="$1"
+  [ $# -eq 3 ] || throwArgument "$handler" "${FUNCNAME[0]} Need 3 arguments ($#)" || return $?
+  shift && isPositiveInteger "${2-}" || throwArgument "$handler" "${1-} not a positive integer: $(decorate code "${2-}")" || return $?
+  printf "%s\n" "$2"
+}
+
+# Validates a value is an unsigned integer and greater than zero (or equal to zero)
+# Argument: usageFunction - Required. Function. Run if handler fails
+# Argument: variableName - Required. String. Name of variable being tested
+# Argument: variableValue - Required. String. Required only in that if it's blank, it fails.
+# Argument: noun - Optional. String. Noun used to describe the argument in errors, defaults to `unsigned integer`
+# Return Code: 2 - Argument error
+# Return Code: 0 - Success
+# Requires: isUnsignedInteger throwArgument decorate
+usageArgumentUnsignedInteger() {
+  local handler="$1" args
+  [ $# -eq 3 ] || throwArgument "$handler" "${FUNCNAME[0]} Need 3 arguments ($#)" || return $?
+  shift && isUnsignedInteger "${2-}" || throwArgument "$handler" "${1-} not an unsigned integer: $(decorate code "${2-}")" || return $?
+  printf "%s\n" "$2"
+}
+
 # Validates a value is an integer
-# handler: {fn} usageFunction variableName variableValue [ noun ]
 # Argument: usageFunction - Required. Function. Run if handler fails
 # Argument: variableName - Required. String. Name of variable being tested
 # Argument: variableValue - Required. String. Required only in that if it's blank, it fails.
@@ -197,7 +226,6 @@ usageArgumentInteger() {
 }
 
 # Validates a value is a number
-# handler: {fn} usageFunction variableName variableValue [ noun ]
 # Argument: usageFunction - Required. Function. Run if handler fails
 # Argument: variableName - Required. String. Name of variable being tested
 # Argument: variableValue - Required. String. Required only in that if it's blank, it fails.
@@ -212,47 +240,8 @@ usageArgumentNumber() {
   __catchArgumentHelper integer "${args[@]}" isNumber || return $?
 }
 
-# Validates a value is an unsigned integer
-# handler: {fn} usageFunction variableName variableValue [ noun ]
-# Argument: usageFunction - Required. Function. Run if handler fails
-# Argument: variableName - Required. String. Name of variable being tested
-# Argument: variableValue - Required. String. Required only in that if it's blank, it fails.
-# Argument: noun - Optional. String. Noun used to describe the argument in errors, defaults to `unsigned integer`
-# Return Code: 2 - Argument error
-# Return Code: 0 - Success
-usageArgumentUnsignedInteger() {
-  local handler="$1" args
-  args=("$@")
-  args[3]="${4-}"
-  if [ ${#args[@]} -ne 4 ]; then
-    throwArgument "$handler" "${FUNCNAME[0]} Need at least 3 arguments" || return $?
-    return $?
-  fi
-  __catchArgumentHelper "unsigned integer" "${args[@]}" isUnsignedInteger || return $?
-}
-
-# Validates a value is an unsigned integer and greater than zero (NOT zero)
-# handler: {fn} usageFunction variableName variableValue [ noun ]
-# Argument: usageFunction - Required. Function. Run if handler fails
-# Argument: variableName - Required. String. Name of variable being tested
-# Argument: variableValue - Required. String. Required only in that if it's blank, it fails.
-# Argument: noun - Optional. String. Noun used to describe the argument in errors, defaults to `unsigned integer`
-# Return Code: 2 - Argument error
-# Return Code: 0 - Success
-usageArgumentPositiveInteger() {
-  local handler="$1" args
-  args=("$@")
-  args[3]="${4-}"
-  if [ ${#args[@]} -ne 4 ]; then
-    throwArgument "$handler" "${FUNCNAME[0]} Need at least 3 arguments" || return $?
-    return $?
-  fi
-  __catchArgumentHelper "positive integer" "${args[@]}" isUnsignedInteger >/dev/null && __catchArgumentHelper "positive integer" "${args[@]}" test 0 -lt || return $?
-}
-
 # Validates a value is not blank and is a file.
 # Upon success, outputs the file name
-# handler: {fn} usageFunction variableName variableValue [ noun ]
 # Argument: usageFunction - Required. Function. Run if handler fails
 # Argument: variableName - Required. String. Name of variable being tested
 # Argument: variableValue - Required. String. Value to test.
@@ -271,7 +260,6 @@ usageArgumentFile() {
 }
 
 # Validates a value is not blank and is a file and does `realPath` on it.
-# handler: {fn} usageFunction variableName variableValue [ noun ]
 # Argument: usageFunction - Required. Function. Run if handler fails
 # Argument: variableName - Required. String. Name of variable being tested
 # Argument: variableValue - Required. String. Value to test.
@@ -292,7 +280,6 @@ usageArgumentRealFile() {
 
 # Validates a value is not blank and exists in the file system
 # Upon success, outputs the file name
-# handler: {fn} usageFunction variableName variableValue [ noun ]
 # Argument: usageFunction - Required. Function. Run if handler fails
 # Argument: variableName - Required. String. Name of variable being tested
 # Argument: variableValue - Required. String. Required only in that if it's blank, it fails.
@@ -312,7 +299,6 @@ usageArgumentExists() {
 
 # Validates a value is not blank and is a link
 # Upon success, outputs the file name
-# handler: {fn} usageFunction variableName variableValue [ noun ]
 # Argument: usageFunction - Required. Function. Run if handler fails
 # Argument: variableName - Required. String. Name of variable being tested
 # Argument: variableValue - Required. String. Path to a link file.
@@ -331,7 +317,6 @@ usageArgumentLink() {
 }
 
 # Validates a value is not blank and is a directory. Upon success, outputs the directory name trailing slash stripped.
-# handler: {fn} usageFunction variableName variableValue [ noun ]
 # Argument: usageFunction - Required. Function. Run if handler fails
 # Argument: variableName - Required. String. Name of variable being tested
 # Argument: variableValue - Required. String. Required only in that if it's blank, it fails.
@@ -352,7 +337,6 @@ usageArgumentDirectory() {
 }
 
 # Validates a value as a directory search list. Upon success, outputs the entire list, cleans up any invalid values or trailing characters.
-# handler: {fn} usageFunction variableName variableValue [ noun ]
 # Argument: usageFunction - Required. Function. Run if handler fails
 # Argument: variableName - Required. String. Name of variable being tested
 # Argument: variableValue - Required. String. Required only in that if it's blank, it fails.
@@ -379,7 +363,6 @@ usageArgumentDirectoryList() {
 }
 
 # Validates a value as an application-relative directory search list. Upon success, outputs the entire list, cleans up any invalid values or trailing characters.
-# handler: {fn} usageFunction variableName variableValue [ noun ]
 # Argument: usageFunction - Required. Function. Run if handler fails
 # Argument: variableName - Required. String. Name of variable being tested
 # Argument: variableValue - Required. String. Required only in that if it's blank, it fails.
@@ -412,7 +395,6 @@ usageArgumentApplicationDirectoryList() {
 }
 
 # Validates a value as an application-relative directory. Upon success, outputs relative path.
-# handler: {fn} usageFunction variableName variableValue [ noun ]
 # Argument: usageFunction - Required. Function. Run if handler fails
 # Argument: variableName - Required. String. Name of variable being tested
 # Argument: variableValue - Required. String. Required only in that if it's blank, it fails.
@@ -440,7 +422,6 @@ usageArgumentApplicationDirectory() {
 }
 
 # Validates a value as an application-relative file. Upon success, outputs relative path.
-# handler: {fn} usageFunction variableName variableValue [ noun ]
 # Argument: usageFunction - Required. Function. Run if handler fails
 # Argument: variableName - Required. String. Name of variable being tested
 # Argument: variableValue - Required. String. Value to test.
@@ -467,7 +448,6 @@ usageArgumentApplicationFile() {
 }
 
 # Validates a value is not blank and is a directory and does `realPath` on it.
-# handler: {fn} usageFunction variableName variableValue [ noun ]
 # Argument: usageFunction - Required. Function. Run if handler fails
 # Argument: variableName - Required. String. Name of variable being tested
 # Argument: variableValue - Required. String. Required only in that if it's blank, it fails.
@@ -488,7 +468,6 @@ usageArgumentRealDirectory() {
 }
 
 # Validates a value is not blank and is a file path with a directory that exists. Upon success, outputs the file name.
-# handler: {fn} usageFunction variableName variableValue [ noun ]
 # Argument: usageFunction - Required. Function. Run if handler fails
 # Argument: variableName - Required. String. Name of variable being tested
 # Argument: variableValue - Required. String. Required only in that if it's blank, it fails.
@@ -508,7 +487,6 @@ usageArgumentFileDirectory() {
 
 # Validates a value is not blank and is an environment file which is loaded immediately.
 #
-# handler: {fn} processPid usageFunction variableName variableValue [ noun ]
 # Argument: usageFunction - Required. Function. Run if handler fails
 # Argument: variableName - Required. String. Name of variable being tested
 # Argument: variableValue - Required. String. Required only in that if it's blank, it fails.
@@ -537,7 +515,6 @@ usageArgumentLoadEnvironmentFile() {
 
 #
 # Do not require argument to be non-blank
-# handler: {fn} handler argument [ value ]
 # Argument: handler - Required. Function. handler function to call upon failure.
 # Argument: argument - Required. String. Name of the argument used in error messages.
 # Argument: value - Optional. String, Value to output.
@@ -549,7 +526,6 @@ usageArgumentEmptyString() {
 }
 
 # Require an argument to be a boolean value
-# handler: {fn} handler argument [ value ]
 # Argument: handler - Required. Function. handler function to call upon failure.
 # Argument: argument - Required. String. Name of the argument used in error messages.
 # Argument: value - Optional. String, Value which should be non-blank otherwise an argument error is thrown.
@@ -563,7 +539,6 @@ usageArgumentBoolean() {
 }
 
 # Require an argument to be a URL
-# handler: {fn} handler argument [ value ]
 # Argument: handler - Required. Function. handler function to call upon failure.
 # Argument: argument - Required. String. Name of the argument used in error messages.
 # Argument: value - Optional. String, Value which should be a URL otherwise an argument error is thrown.
@@ -577,7 +552,6 @@ usageArgumentURL() {
 }
 
 # Require an argument to be a callable
-# handler: {fn} handler argument [ value ]
 # Argument: handler - Required. Function. handler function to call upon failure.
 # Argument: argument - Required. String. Name of the argument used in error messages.
 # Argument: value - Optional. String, Value which should be callable otherwise an argument error is thrown.
@@ -591,7 +565,6 @@ usageArgumentCallable() {
 }
 
 # Require an argument to be a executable
-# handler: {fn} handler argument [ value ]
 # Argument: handler - Required. Function. handler function to call upon failure.
 # Argument: argument - Required. String. Name of the argument used in error messages.
 # Argument: value - Optional. String, Value which should be executable otherwise an argument error is thrown.
@@ -605,7 +578,6 @@ usageArgumentExecutable() {
 }
 
 # Require an argument to be a function
-# handler: {fn} handler argument [ value ]
 # Argument: handler - Required. Function. handler function to call upon failure.
 # Argument: argument - Required. String. Name of the argument used in error messages.
 # Argument: value - Optional. String, Value which should be a function otherwise an argument error is thrown.
@@ -620,7 +592,6 @@ usageArgumentFunction() {
 
 # Validates a value is ok for an environment variable name
 # Upon success, outputs the name
-# handler: {fn} usageFunction variableName variableValue [ noun ]
 # Argument: usageFunction - Required. Function. Run if handler fails
 # Argument: variableName - Required. String. Name of variable being tested
 # Argument: variableValue - Required. String. Environment variable name.

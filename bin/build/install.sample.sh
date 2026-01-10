@@ -594,7 +594,7 @@ _versionSort() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# IDENTICAL usageArgumentCore 13
+# IDENTICAL usageArgumentCore 14
 
 # Require an argument to be non-blank
 # Argument: handler - Required. Function. Usage function to call upon failure.
@@ -602,11 +602,28 @@ _versionSort() {
 # Argument: value - Optional. String, Value which should be non-blank otherwise an argument error is thrown.
 # Return Code: 2 - If `value` is blank
 # Return Code: 0 - If `value` is non-blank
+# Requires: throwArgument
 usageArgumentString() {
   local handler="$1" argument="$2"
   shift 2 || :
   [ -n "${1-}" ] || throwArgument "$handler" "blank" "$argument" || return $?
   printf "%s\n" "$1"
+}
+
+# IDENTICAL usageArgumentPositiveInteger 14
+
+# Validates a value is an positive integer and greater than zero (NOT zero)
+# Argument: usageFunction - Required. Function. Run if handler fails
+# Argument: variableName - Required. String. Name of variable being tested
+# Argument: variableValue - Required. String. Required only in that if it's blank, it fails.
+# Return Code: 2 - Argument error
+# Return Code: 0 - Success
+# Requires: isPositiveInteger throwArgument decorate
+usageArgumentPositiveInteger() {
+  local handler="$1"
+  [ $# -eq 3 ] || throwArgument "$handler" "${FUNCNAME[0]} Need 3 arguments ($#)" || return $?
+  shift && isPositiveInteger "${2-}" || throwArgument "$handler" "${1-} not a positive integer: $(decorate code "${2-}")" || return $?
+  printf "%s\n" "$2"
 }
 
 # IDENTICAL urlFetch 154

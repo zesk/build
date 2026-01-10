@@ -11,7 +11,6 @@
 # IDENTICAL isCallable EOF
 
 # Test if all arguments are callable as a command
-# handler: {fn} string0 [ string1 ... ]
 # Argument: string - Required. EmptyString. Path to binary to test if it is executable.
 # If no arguments are passed, returns exit code 1.
 # Return Code: 0 - All arguments are callable as a command
