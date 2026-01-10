@@ -204,6 +204,63 @@ _pathRemove() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
+# Show the path and where binaries are found
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
+pathShow() {
+  local handler="${FUNCNAME[0]}"
+
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
+  local __saved=("$@") __count=$#
+  while [ $# -gt 0 ]; do
+    local argument="$1" __index=$((__count - $# + 1))
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    case "$argument" in
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
+    # _IDENTICAL_ handlerHandler 1
+    --handler) shift && handler=$(usageArgumentFunction "$handler" "$argument" "${1-}") || return $? ;;
+    *)
+      break
+      ;;
+    esac
+    shift
+  done
+
+  local bf=() pp=() bb=("$@")
+  IFS=":" read -r -a pp <<<"$PATH"
+  local p
+  for p in "${pp[@]}"; do
+    local bt=() b
+    for b in "${bb[@]+${bb[@]}}"; do
+      if [ -x "$p/$b" ]; then
+        local style=success
+        if inArray "$b" "${bf[@]+"${bf[@]}"}"; then
+          style=warning
+        else
+          bf+=("$b")
+        fi
+        bt+=("$(decorate "$style" "$b")")
+      fi
+    done
+    [ "${#bt[@]}" -gt 0 ] || bt+=("$(decorate info none)")
+    decorate pair 100 "$p" "${bt[*]}"
+  done
+  local foundAll=true
+  for b in "${bb[@]+${bb[@]}}"; do
+    if ! inArray "$b" "${bf[@]+"${bf[@]}"}"; then
+      foundAll=false
+      decorate error "binary $(decorate code "$b") not found" 1>&2
+    fi
+  done
+  $foundAll
+}
+_pathShow() {
+  # __IDENTICAL__ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
 # Modify the PATH environment variable to add a path.
 # DOC TEMPLATE: --help 1
 # Argument: --help - Optional. Flag. Display this help.

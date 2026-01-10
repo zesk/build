@@ -20,3 +20,8 @@ testGroupID() {
   assertExitCode --stderr-match "Requires a group name" 2 groupID || return $?
   assertExitCode 0 groupID daemon || return $?
 }
+
+# Nice.
+testPathShow() {
+  assertExitCode 0 pathShow || return $?
+}

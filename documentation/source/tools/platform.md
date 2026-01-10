@@ -20,6 +20,8 @@
 
 {pathCleanDuplicates}
 
+{pathShow}
+
 ## Modify MANPATH
 
 {manPathConfigure}
