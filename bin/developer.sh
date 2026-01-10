@@ -88,7 +88,7 @@ if source "${BASH_SOURCE[0]%/*}/tools.sh"; then
     alias '?'="__buildHelp"
 
     muzzle reloadChanges --stop 2>&1
-    muzzle reloadChanges --name "$name" "$home/bin/tools.sh" "$home/bin/build/build.json"
+    muzzle reloadChanges --name "$(buildEnvironmentGet APPLICATION_NAME)" "$home/bin/tools.sh" "$home/bin/build/build.json"
     muzzle buildCompletion
 
     bashPrompt --skip-prompt bashPromptModule_TermColors bashPromptModule_BuildProject
