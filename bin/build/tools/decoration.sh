@@ -521,7 +521,9 @@ _boxedHeading() {
 # Replace an absolute path prefix with an icon if it matches `HOME`, `BUILD_HOME` or `TMPDIR`
 # DOC TEMPLATE: --help 1
 # Argument: --help - Optional. Flag. Display this help.
-# Argument: --skip-app | --no-app - Optional. Flag. Do not map `BUILD_HOME`.
+# Argument: --path pathName=icon - Optional. Flag. Add an additional path mapping to icon.
+# Argument: --no-app - Optional. Flag. Do not map `BUILD_HOME`.
+# Argument: --skip-app - Optional. Flag. Synonym for `--no-app`.
 # Argument: path - String. Path to display and replace matching paths with icons.
 # Icons used:
 # - 💣 - `TMPDIR`

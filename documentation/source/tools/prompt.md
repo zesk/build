@@ -34,11 +34,10 @@ Examples:
 
 # Bash Prompt Modules
 
-- [`bashPromptModule_binBuild`](#bashPromptModule_binBuild)
-- [`bashPromptModule_ApplicationPath`](#bashPromptModule_ApplicationPath)
-- [`bashPromptModule_dotFilesWatcher`](#bashPromptModule_dotFilesWatcher)
-- [`bashPromptModule_TermColors](#bashPromptModule_TermColors)
-- [`bashPromptModule_reloadChanges](#bashPromptModule_reloadChanges)
+- {SEE:bashPromptModule_BuildProject}
+- {SEE:bashPromptModule_ApplicationPath}
+- {SEE:bashPromptModule_dotFilesWatcher}
+- {SEE:bashPromptModule_TermColors}
 
 To enable:
 

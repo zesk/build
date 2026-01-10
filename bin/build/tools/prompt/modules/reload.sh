@@ -143,9 +143,6 @@ __reloadChangesCacheFile() {
 }
 
 # Check for shell files changing and reload a shell script after any changes and notify the user
-#
-# Source-Hook: project-activate
-# Source-Hook: project-deactivate
 __bashPromptModule_reloadChanges() {
   local handler="_${FUNCNAME[0]}"
   local home removeSources=() cacheFile debug=false
