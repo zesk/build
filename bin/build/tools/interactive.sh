@@ -278,24 +278,24 @@ interactiveOccasionally() {
   done
 
   [ -n "$name" ] || throwArgument "$handler" "name is required" || return $?
-
   [ -n "$delta" ] || delta=60000
 
-  local now cacheShown
+  local cacheShown
+  cacheShown="$(catchReturn "$handler" buildCacheDirectory "${FUNCNAME[0]}")/$name" || return $?
+
+  ! $verboseFlag || printf "cacheFile: %s\n" "$(decorate file "$cacheShown")"
+
+  local now lastShown
   now=$(timingStart)
-  if cacheShown="$(buildCacheDirectory "${FUNCNAME[0]}")/$name"; then
-    local lastShown
-    ! $verboseFlag || printf "cacheFile: %s\n" "$(decorate file "$cacheShown")"
-    if [ -f "$cacheShown" ] && lastShown=$(head -n 1 "$cacheShown") && isInteger "$lastShown" && [ "$delta" -gt $((now - lastShown)) ]; then
-      ! $verboseFlag || printf "NO: %s %s %s\n" "$(decorate code "$lastShown")" "Now: $(decorate info "$now")" "Delta: $(decorate value "$((now - lastShown)) ($delta)")"
-      # Show
-      return 1
-    else
-      # Show occasional stuff, mark as shown
-      ! $verboseFlag || printf "YES: %s %s %s\n" "$(decorate code "$lastShown")" "Now: $(decorate info "$now")" "Delta: $(decorate value "$((now - lastShown)) ($delta)")"
-      catchEnvironment "$handler" printf "%s\n" "$now" >"$cacheShown" || return $?
-      return 0
-    fi
+  if [ -f "$cacheShown" ] && lastShown=$(head -n 1 "$cacheShown") && isInteger "$lastShown" && [ "$delta" -gt $((now - lastShown)) ]; then
+    ! $verboseFlag || printf "NO: %s %s %s\n" "$(decorate code "$lastShown")" "Now: $(decorate info "$now")" "Delta: $(decorate value "$((now - lastShown)) ($delta)")"
+    # Show
+    return 1
+  else
+    # Show occasional stuff, mark as shown
+    ! $verboseFlag || printf "YES: %s %s %s\n" "$(decorate code "$lastShown")" "Now: $(decorate info "$now")" "Delta: $(decorate value "$((now - lastShown)) ($delta)")"
+    catchEnvironment "$handler" printf "%s\n" "$now" >"$cacheShown" || return $?
+    return 0
   fi
 }
 _interactiveOccasionally() {
