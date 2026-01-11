@@ -799,9 +799,9 @@ urlFetch() {
 
   # Timeout
   if isPositiveInteger "$timeoutSeconds"; then
-    curlArgs+=("--connect-timeout" "$timeoutSeconds")
+    curlArgs+=(--retry 1 --connect-timeout "$timeoutSeconds" --max-time "$timeoutSeconds")
     wgetArgs+=("--tries=1 --timeout=$timeoutSeconds")
-    genericArgs+=("--timeout" "$timeoutSeconds")
+    genericArgs+=(--timeout "$timeoutSeconds")
   fi
 
   [ "${#binary[@]}" -gt 0 ] || throwEnvironment "$handler" "wget or curl required" || return $?
