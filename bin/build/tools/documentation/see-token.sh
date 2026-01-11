@@ -10,7 +10,7 @@ __documentationSeeTokenTemplates() {
   local cacheDirectory="$1" && shift
 
   local templateCache
-  templateCache=$(catchEnvironment "$handler" directoryRequire "$cacheDirectory/see/templates") || return $?
+  templateCache=$(catchReturn "$handler" directoryRequire "$cacheDirectory/see/templates") || return $?
   local type file
   while [ $# -gt 1 ]; do
     type="$(usageArgumentString "$handler" "type" "$1")" || return $?
@@ -29,9 +29,9 @@ __documentationSeeTokenGenerate() {
   local tokenCache
 
   local home
-  home=$(catchEnvironment "$handler" buildHome) || return $?
+  home=$(catchReturn "$handler" buildHome) || return $?
 
-  tokenCache=$(catchEnvironment "$handler" directoryRequire "$cacheDirectory/see/tokens") || return $?
+  tokenCache=$(catchReturn "$handler" directoryRequire "$cacheDirectory/see/tokens") || return $?
   if [ "$matchingToken" != "${matchingToken//../}" ]; then
     throwArgument "$handler" "Token contains invalid characters: $matchingToken" || return $?
   fi
@@ -49,7 +49,7 @@ __documentationSeeTokenGenerate() {
   fi
 
   local templateCache
-  templateCache=$(catchEnvironment "$handler" directoryRequire "$cacheDirectory/see/templates") || return $?
+  templateCache=$(catchReturn "$handler" directoryRequire "$cacheDirectory/see/templates") || return $?
   local linkPatternFile="$tokenCacheFile.settings"
 
   {
@@ -104,7 +104,7 @@ __documentationSeeTokenGenerate() {
     source "$linkPatternFile"
     set +a
     handler="$__save_handler__"
-    sourceLink="$(catchEnvironment "$handler" mapEnvironment "${vv[@]}" <<<"$linkPattern")" || return $?
+    sourceLink="$(catchReturn "$handler" mapEnvironment "${vv[@]}" <<<"$linkPattern")" || return $?
     documentationPath="$(__documentationIndexLookup "$handler" --documentation "$matchingToken" | head -n 1 || :)"
     if [ -n "$documentationPath" ]; then
       documentationPath="${documentationPath#"$home"}"
@@ -117,7 +117,7 @@ __documentationSeeTokenGenerate() {
     if [ -z "$templateFile" ]; then
       printf "%s\n" "$matchingToken - (not found)"
     else
-      catchEnvironment "$handler" mapEnvironment "${vv[@]}" <"$templateFile" | tee "$tokenCacheFile" || return $?
+      catchReturn "$handler" mapEnvironment "${vv[@]}" <"$templateFile" | tee "$tokenCacheFile" || return $?
     fi
   ) || return $?
 }

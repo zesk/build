@@ -1,4 +1,21 @@
 # v0.40.3
+catchEnvironment "$handler" any|catchReturn "$handler" any
+catchEnvironment "$handler" awsC|catchReturn "$handler" awsC
+catchEnvironment "$handler" awsS|catchReturn "$handler" awsS
+catchEnvironment "$handler" bashDoc|catchReturn "$handler" bashDoc
+catchEnvironment "$handler" build|catchReturn "$handler" build
+catchEnvironment "$handler" confirm|catchReturn "$handler" confirm
+catchEnvironment "$handler" console|catchReturn "$handler" console
+catchEnvironment "$handler" document|catchReturn "$handler" document
+catchEnvironment "$handler" fileD|catchReturn "$handler" fileD
+catchEnvironment "$handler" fileL|catchReturn "$handler" fileL
+catchEnvironment "$handler" fileS|catchReturn "$handler" fileS
+catchEnvironment "$handler" identical|catchReturn "$handler" identical
+catchEnvironment "$handler" interactive|catchReturn "$handler" interactive
+catchEnvironment "$handler" map|catchReturn "$handler" map
+catchEnvironment "$handler" timing|catchReturn "$handler" timing
+catchEnvironment "$handler" url|catchReturn "$handler" url
+catchEnvironment "$handler" userH|catchReturn "$handler" userH
 
 # v0.40.2
 
@@ -68,35 +85,6 @@ _choose |booleanChoose |
 # v0.37.2
 interactiveBashSource|approveBashSource
 approvedFiles|approvedBashSources
-__catchEnvironment "$handler" buildHome|__catch "$handler" buildHome
-__catchEnvironment "$handler" bashDoc|__catch "$handler" bashDoc
-__catchEnvironment "$handler" fileL|__catch "$handler" fileL
-__catchEnvironment "$handler" fileD|__catch "$handler" fileD
-__catchEnvironment "$handler" fileS|__catch "$handler" fileS
-__catchEnvironment "$handler" build|__catch "$handler" build
-__catchEnvironment "$handler" url|__catch "$handler" url
-__catchEnvironment "$handler" package|__catch "$handler" package
-__catchEnvironment "$handler" directory|__catch "$handler" directory
-__catchEnvironment "$handler" nodeI|__catch "$handler" nodeI
-__catchEnvironment "$handler" gitE|__catch "$handler" gitE
-__catchEnvironment "$handler" shaP|__catch "$handler" shaP
-__catchEnvironment "$handler" aptK|__catch "$handler" aptK
-__catchEnvironment "$handler" environment|__catch "$handler" environment
-__catchEnvironment "$handler" _comment|__catch "$handler" _comment
-__catchEnvironment "$handler" __|__catch "$handler" __
-__catchEnvironment "$handler" awsI|__catch "$handler" awsI
-__catchEnvironment "$handler" awsS|__catch "$handler" awsS
-__catchEnvironment "$handler" userH|__catch "$handler" userH
-__catchEnvironment "$handler" awsC|__catch "$handler" awsC
-__catchEnvironment "$handler" awsC|__catch "$handler" awsC
-__catchEnvironment "$handler" document|__catch "$handler" document
-__catchEnvironment "$handler" timing|__catch "$handler" timing
-__catchEnvironment "$handler" identical|__catch "$handler" identical
-__catchEnvironment "$handler" console|__catch "$handler" console
-__catchEnvironment "$handler" confirm|__catch "$handler" confirm
-__catchEnvironment "$handler" interactive|__catch "$handler" interactive
-__catchEnvironment "$handler" map|__catch "$handler" map
-__catchEnvironment "$handler" any|__catch "$handler" any
 
 # v0.37.1
 
@@ -139,35 +127,6 @@ ColorComboTest|ColorSampleCombinations
 IDENTICAL usageDocument |__IDENTICAL__ usageDocument |
 _IDENTICAL_ usageDocument|__IDENTICAL__ usageDocument|
 semanticColorSampleStyles|colorSampleSemanticStyles
-__catchEnvironment "$usage" buildHome|__catch "$usage" buildHome|
-__catchEnvironment "$handler" buildHome|__catch "$handler" buildHome|
-__catchEnvironment "$usage" bashDoc|__catch "$usage" bashDoc
-__catchEnvironment "$usage" fileL|__catch "$usage" fileL|
-__catchEnvironment "$usage" fileD|__catch "$usage" fileD|
-__catchEnvironment "$usage" fileS|__catch "$usage" fileS|
-__catchEnvironment "$usage" build|__catch "$usage" build|
-__catchEnvironment "$usage" url|__catch "$usage" url|
-__catchEnvironment "$usage" package|__catch "$usage" package|
-__catchEnvironment "$usage" directory|__catch "$usage" directory|
-__catchEnvironment "$usage" nodeI|__catch "$usage" nodeI|
-__catchEnvironment "$usage" gitE|__catch "$usage" gitE|
-__catchEnvironment "$usage" shaP|__catch "$usage" shaP|
-__catchEnvironment "$usage" aptK|__catch "$usage" aptK|
-__catchEnvironment "$usage" environment|__catch "$usage" environment|
-__catchEnvironment "$usage" _comment|__catch "$usage" _comment|
-__catchEnvironment "$usage" __|__catch "$usage" __|
-__catchEnvironment "$usage" awsI|__catch "$usage" awsI|
-__catchEnvironment "$usage" awsS|__catch "$usage" awsS
-__catchEnvironment "$usage" userH|__catch "$usage" userH|
-__catchEnvironment "$usage" awsC|__catch "$usage" awsC|
-__catchEnvironment "$usage" awsC|__catch "$usage" awsC|
-__catchEnvironment "$usage" document|__catch "$usage" document|
-__catchEnvironment "$usage" timing|__catch "$usage" timing|
-__catchEnvironment "$usage" identical|__catch "$usage" identical|
-__catchEnvironment "$usage" console|__catch "$usage" console|
-__catchEnvironment "$usage" confirm|__catch "$usage" confirm|
-__catchEnvironment "$usage" interactive|__catch "$usage" interactive|
-__catchEnvironment "$usage" map|__catch "$usage" map|
 anyEnvToDockerEnv|environmentFileToDocker
 AnyEnvToDockerEnv|EnvironmentFileToDocker
 anyEnvToBashEnv|environmentFileToBashCompatible

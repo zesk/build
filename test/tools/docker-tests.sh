@@ -42,7 +42,7 @@ testEnvironmentFileDockerToBashCompatible() {
   local exitCode
 
   decorate info "PWD is $(pwd)"
-  catchEnvironment "$handler" environmentFileDockerToBashCompatible "$home/test/example/test.env" >"$out" 2>"$err" || exitCode=$?
+  catchReturn "$handler" environmentFileDockerToBashCompatible "$home/test/example/test.env" >"$out" 2>"$err" || exitCode=$?
 
   assertNotEquals "0" "$exitCode" || return $?
 

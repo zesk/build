@@ -30,7 +30,7 @@ __awsS3DirectoryDelete() {
   done
   [ ${#urls[@]} -gt 0 ] || throwArgument "$handler" "At least one URL is required" || return $?
 
-  whichExists aws || catchEnvironment "$handler" awsInstall || return $?
+  whichExists aws || catchReturn "$handler" awsInstall || return $?
 
   local url
   for url in "${urls[@]}"; do
@@ -81,9 +81,9 @@ __awsS3Upload() {
   done
 
   local start
-  start=$(catchEnvironment "$handler" timingStart) || return $?
+  start=$(catchReturn "$handler" timingStart) || return $?
 
-  whichExists aws || catchEnvironment "$handler" awsInstall || return $?
+  whichExists aws || catchReturn "$handler" awsInstall || return $?
 
   [ -n "$target" ] || throwArgument "$handler" "--target required" || return $?
   if [ $((${#uploadFiles[@]} + ${#uploadDirectories[@]})) -eq 0 ]; then
@@ -97,8 +97,8 @@ __awsS3Upload() {
   target="${target%/}"
 
   local stagePath
-  stagePath="$(catchEnvironment "$handler" buildCacheDirectory "./stage-results-$$")" || return $?
-  catchEnvironment "$handler" directoryRequire "$stagePath" || return $?
+  stagePath="$(catchReturn "$handler" buildCacheDirectory "./stage-results-$$")" || return $?
+  catchReturn "$handler" directoryRequire "$stagePath" || return $?
   local clean=("$stagePath")
 
   local manifest="$stagePath/manifest.json"
@@ -117,7 +117,7 @@ __awsS3Upload() {
     while IFS= read -r -d '' file; do
       relative="${file#"$directory"}"
       relative="$(basename "$directory")${relative#/}"
-      catchEnvironment "$handler" fileDirectoryRequire "$stagePath/$relative" || returnClean $? "${clean[@]}" || return $?
+      catchReturn "$handler" fileDirectoryRequire "$stagePath/$relative" || returnClean $? "${clean[@]}" || return $?
       catchEnvironment "$handler" cp "$file" "$stagePath/$relative" || returnClean $? "${clean[@]}" || return $?
       fileList+=("$relative")
     done < <(find "$directory" -type f)

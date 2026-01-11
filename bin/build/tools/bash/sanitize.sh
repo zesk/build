@@ -115,7 +115,7 @@ _bashSanitizeCheckCopyright() {
   local handler="$1" && shift
   local debugFlag="$1" && shift
 
-  home=$(catchEnvironment "$handler" buildHome) || return $?
+  home=$(catchReturn "$handler" buildHome) || return $?
 
   local file exceptions=()
   while read -r file; do

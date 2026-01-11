@@ -142,7 +142,7 @@ ipLookup() {
   jqFilter=$(catchReturn "$handler" buildEnvironmentGet IP_URL_FILTER) || return $?
   local pp=(cat)
   [ -z "$jqFilter" ] || pp=(jq -r "$jqFilter")
-  catchEnvironment "$handler" urlFetch "$url" - | catchEnvironment "$handler" "${pp[@]}" || return $?
+  catchReturn "$handler" urlFetch "$url" - | catchEnvironment "$handler" "${pp[@]}" || return $?
 }
 _ipLookup() {
   # __IDENTICAL__ usageDocument 1

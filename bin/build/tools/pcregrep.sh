@@ -12,7 +12,7 @@ pcregrepInstall() {
   local handler="_${FUNCNAME[0]}"
 
   [ $# -eq 0 ] || __help --only "$handler" "$@" || return "$(convertValue $? 1 0)"
-  catchEnvironment "$handler" packageGroupWhich "$(__pcregrepBinary)" pcregrep || return $?
+  catchReturn "$handler" packageGroupWhich "$(__pcregrepBinary)" pcregrep || return $?
 }
 _pcregrepInstall() {
   # __IDENTICAL__ usageDocument 1

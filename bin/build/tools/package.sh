@@ -730,7 +730,7 @@ packageGroupWhich() {
   [ -n "$manager" ] || manager=$(packageManagerDefault) || throwEnvironment "$handler" "No package manager" || return $?
   whichExists "$manager" || throwEnvironment "$handler" "$manager does not exist" || return $?
 
-  whichExists "$binary" || catchEnvironment "$handler" packageGroupInstall --manager "$manager" "${groups[@]}" || return $?
+  whichExists "$binary" || catchReturn "$handler" packageGroupInstall --manager "$manager" "${groups[@]}" || return $?
 }
 _packageGroupWhich() {
   # __IDENTICAL__ usageDocument 1

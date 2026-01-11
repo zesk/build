@@ -91,7 +91,7 @@ __documentationIndexSeeLinker() {
       if [ "$tokenValue" != "${tokenValue#*"$rel"}" ]; then
         tokenValue="$(rel="$matchingPrefix" mapEnvironment rel <<<"$tokenValue")"
       fi
-      catchEnvironment "$handler" __dumpNameValue "$tokenName" "$tokenValue" >>"$seeVariablesFile" || returnClean $? "${clean[@]}" || return $?
+      catchReturn "$handler" __dumpNameValue "$tokenName" "$tokenValue" >>"$seeVariablesFile" || returnClean $? "${clean[@]}" || return $?
     done < <(__pcregrep -o1 "$seePattern" "$matchingFile")
 
     clean+=("$matchingFile.new")
