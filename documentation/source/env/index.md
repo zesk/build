@@ -6,7 +6,7 @@ Note that you should place environment variables (if you override the default, f
 
 Where `VARIABLE_NAME` is the name of your environment variable. `environmentAddFile` does this for you if you want.
 
-These are the known environment variables in `Zesk Build` - to see the default behavior look at in `./bin/build/env`.
+These are the known environment variables in `Zesk Build` - to see default behaviors look at files in `./bin/build/env`.
 
 You can document your environment variables automatically using `Type:` and a description using comments and the
 standard Zesk Build bash comment syntax of `# Name: value`

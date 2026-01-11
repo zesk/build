@@ -17,6 +17,8 @@
 
 {buildEnvironmentFiles}
 
+{buildEnvironmentNames}
+
 {buildEnvironmentLoad}
 
 {buildEnvironmentContext}
