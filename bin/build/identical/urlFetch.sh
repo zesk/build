@@ -135,6 +135,10 @@ urlFetch() {
     wgetArgs+=("--http-user=$user" "--http-password=$password")
     genericArgs+=("--user" "$user" "--password" "$password")
   fi
+
+  # Binary
+  [ "${#binary[@]}" -gt 0 ] || whichExists wget && binary=("wget") || whichExists "curl" && binary=("curl") || throwArgument "$handler" "No binary found" || return $?
+
   if [ "${binary[0]}" = "curl" ] && $userHasColons; then
     throwArgument "$handler" "$argument: Users ($argument \"$(decorate code "$user")\") with colons are not supported by curl, use wget" || return $?
   fi
@@ -146,14 +150,6 @@ urlFetch() {
     genericArgs+=("--timeout" "$timeoutSeconds")
   fi
 
-  # Binary
-  if [ "${#binary[@]}" -eq 0 ]; then
-    if whichExists wget; then
-      binary=("wget")
-    elif whichExists "curl"; then
-      binary=("curl")
-    fi
-  fi
   [ "${#binary[@]}" -gt 0 ] || throwEnvironment "$handler" "wget or curl required" || return $?
   [ -n "$format" ] || format="${binary[0]}"
   ! $debugFlag || binary=("decorate" "each" "code" "${binary[@]}")
