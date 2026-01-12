@@ -221,12 +221,12 @@ sshSetup() {
     --help) "$handler" 0 && return $? || return $? ;;
     --type)
       shift
-      keyType="$(usageArgumentString "$handler" "$argument" "${1-}")" || return $?
+      keyType="$(validate "$handler" String "$argument" "${1-}")" || return $?
       case "$keyType" in ed25519 | rsa | dsa) ;; *) throwArgument "$handler" "Key type $1 is not known: ed25519 | rsa | dsa" || return $? ;; esac
       ;;
     --bits)
       shift
-      keyBits=$(usageArgumentPositiveInteger "$handler" "$argument" "${1-}") || return $?
+      keyBits=$(validate "$handler" PositiveInteger "$argument" "${1-}") || return $?
       [ "$keyBits" -ge "$minBits" ] || throwArgument "$handler" "Key bits must be at least $minBits: $keyBits" || return $?
       ;;
     --force) forceFlag=true ;;

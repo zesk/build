@@ -58,9 +58,9 @@ __hookRunner() {
       shift
       whichArgs+=("$argument" "$(validate "$handler" File "$argument" "${1-}")") || return $?
       ;;
-    --extensions) shift && ww+=("$argument" "$(usageArgumentString "$handler" "$argument" "${1-}")") || return $? ;;
+    --extensions) shift && ww+=("$argument" "$(validate "$handler" String "$argument" "${1-}")") || return $? ;;
     --application)
-      shift && applicationHome=$(usageArgumentDirectory "$handler" applicationHome "${1-}") || return $?
+      shift && applicationHome=$(validate "$handler" Directory applicationHome "${1-}") || return $?
       whichArgs+=(--application "$applicationHome")
       ;;
     *)
@@ -244,10 +244,10 @@ hasHook() {
     --help) "$handler" 0 && return $? || return $? ;;
     # _IDENTICAL_ handlerHandler 1
     --handler) shift && handler=$(validate "$handler" function "$argument" "${1-}") || return $? ;;
-    --extensions) shift && ww+=(--extensions "$(usageArgumentString "$handler" "$argument" "${1-}")") || return $? ;;
+    --extensions) shift && ww+=(--extensions "$(validate "$handler" String "$argument" "${1-}")") || return $? ;;
     --debug) ww+=("$argument") ;;
     --next) shift && ww+=("$argument" "$(validate "$handler" File "$argument" "${1-}")") || return $? ;;
-    --application) shift && applicationHome=$(usageArgumentDirectory "$handler" applicationHome "${1-}") || return $? ;;
+    --application) shift && applicationHome=$(validate "$handler" Directory applicationHome "${1-}") || return $? ;;
     *)
       local binary
       [ -n "$applicationHome" ] || applicationHome="$(catchReturn "$handler" buildHome)" || return $?
@@ -297,8 +297,8 @@ whichHook() {
     --help) "$handler" 0 && return $? || return $? ;;
     # _IDENTICAL_ handlerHandler 1
     --handler) shift && handler=$(validate "$handler" function "$argument" "${1-}") || return $? ;;
-    --application) shift && applicationHome=$(usageArgumentDirectory "$handler" "$argument" "${1-}") || return $? ;;
-    --extensions) shift && extensionText=$(usageArgumentString "$handler" "$argument" "${1-}") || return $? ;;
+    --application) shift && applicationHome=$(validate "$handler" Directory "$argument" "${1-}") || return $? ;;
+    --extensions) shift && extensionText=$(validate "$handler" String "$argument" "${1-}") || return $? ;;
     --next)
       shift
       nextSource=$(validate "$handler" File "$argument" "${1-}") || return $?

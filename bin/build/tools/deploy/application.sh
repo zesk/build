@@ -48,7 +48,7 @@ __deployApplication() {
       ;;
     --home)
       shift
-      deployHome=$(usageArgumentDirectory "$handler" deployHome "${1-}") || return $?
+      deployHome=$(validate "$handler" Directory deployHome "${1-}") || return $?
       ;;
     --id)
       shift

@@ -24,8 +24,8 @@ __bashDocumentation_FindFunctionDefinition() {
   local directory fn
 
   [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
-  directory=$(usageArgumentDirectory "$handler" "directory" "${1-}") && shift || return $?
-  fn=$(usageArgumentString "$handler" "fn" "${1-}") && shift || return $?
+  directory=$(validate "$handler" Directory "directory" "${1-}") && shift || return $?
+  fn=$(validate "$handler" String "fn" "${1-}") && shift || return $?
 
   local definitionFile
   definitionFile=$(catchReturn "$handler" __bashDocumentation_FindFunctionDefinitions "$directory" "$fn" | head -n 1) || return $?

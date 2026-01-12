@@ -124,7 +124,7 @@ dumpPipe() {
       shift || throwArgument "$handler" "missing $argument argument" || return $?
       symbol="$1"
       ;;
-    --lines) shift && showLines=$(usageArgumentUnsignedInteger "$handler" "showLines" "$1") || return $? ;;
+    --lines) shift && showLines=$(validate "$handler" UnsignedInteger "showLines" "$1") || return $? ;;
     *)
       names+=("$argument")
       break
@@ -272,11 +272,11 @@ __internalDumpEnvironment() {
       ;;
     --maximum-length)
       shift
-      maxLen=$(usageArgumentPositiveInteger "$handler" "$argument" "${1-}") || return $?
+      maxLen=$(validate "$handler" PositiveInteger "$argument" "${1-}") || return $?
       ;;
     --skip-env)
       shift
-      skipEnv+=("$(usageArgumentEnvironmentVariable "$handler" "$argument" "${1-}")") || return $?
+      skipEnv+=("$(validate "$handler" EnvironmentVariable "$argument" "${1-}")") || return $?
       ;;
     --secure-match)
       shift
@@ -430,7 +430,7 @@ dumpHex() {
     --help) "$handler" 0 && return $? || return $? ;;
     --size)
       shift
-      size=$(usageArgumentPositiveInteger "$handler" "$argument" "${1-}") || return $?
+      size=$(validate "$handler" PositiveInteger "$argument" "${1-}") || return $?
       runner+=("-N" "$size")
       ;;
     *)

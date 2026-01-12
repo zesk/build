@@ -73,7 +73,7 @@ __buildBuild() {
       ;;
     --env-file)
       shift
-      muzzle usageArgumentLoadEnvironmentFile "$handler" "$argument" "${1-}" || return $?
+      muzzle validate "$handler" LoadEnvironmentFile "$argument" "${1-}" || return $?
       decorate info "Loaded environment file $(decorate file "$1")" || return $?
       ;;
     --commit)

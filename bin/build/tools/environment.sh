@@ -16,7 +16,7 @@ environmentValueWrite() {
   [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
   local value
 
-  name=$(usageArgumentEnvironmentVariable "$handler" "name" "${1-}") || return $?
+  name=$(validate "$handler" EnvironmentVariable "name" "${1-}") || return $?
   shift
   [ $# -ge 1 ] || throwArgument "$handler" "value required" || return $?
   if [ $# -eq 1 ]; then
@@ -48,7 +48,7 @@ environmentValueWriteArray() {
   [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
   local name value result search="'" replace="'\''"
 
-  name=$(usageArgumentEnvironmentVariable "$handler" "name" "${1-}") || return $?
+  name=$(validate "$handler" EnvironmentVariable "name" "${1-}") || return $?
   shift
   if [ $# -eq 0 ]; then
     printf "%s=%s\n" "$name" "()"
@@ -90,7 +90,7 @@ environmentValueRead() {
   [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
   local stateFile name default="${3---}" value
   stateFile=$(validate "$handler" File "stateFile" "${1-}") || return $?
-  name=$(usageArgumentEnvironmentVariable "$handler" "name" "${2-}") || return $?
+  name=$(validate "$handler" EnvironmentVariable "name" "${2-}") || return $?
   [ $# -le 3 ] || throwArgument "$handler" "Extra arguments: $#" || return $?
   if ! value="$(grep -e "^$(quoteGrepPattern "$name")=" "$stateFile" | tail -n 1 | cut -c $((${#name} + 2))-)" || [ -z "$value" ]; then
     if [ $# -le 2 ]; then
@@ -184,7 +184,7 @@ environmentValueReadArray() {
   [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
   local stateFile="${1-}" name value
 
-  name=$(usageArgumentEnvironmentVariable "$handler" "name" "${2-}") || return $?
+  name=$(validate "$handler" EnvironmentVariable "name" "${2-}") || return $?
   value=$(catchReturn "$handler" environmentValueRead "$stateFile" "$name" "") || return $?
   environmentValueConvertArray "$value" || return $?
 }
@@ -259,7 +259,7 @@ dotEnvConfigure() {
       aa+=("$argument")
       ;;
     *)
-      where=$(usageArgumentDirectory "$handler" "where" "$1") || return $?
+      where=$(validate "$handler" Directory "where" "$1") || return $?
       ;;
     esac
     shift
@@ -313,18 +313,18 @@ environmentLoad() {
       ;;
     --secure)
       shift
-      secureList+=("$(usageArgumentString "$handler" "$argument" "${1-}")") || return $?
+      secureList+=("$(validate "$handler" String "$argument" "${1-}")") || return $?
       ;;
     --prefix)
       shift
-      variablePrefix="$(usageArgumentEnvironmentVariable "$handler" "$argument" "${1-}")" || return $?
+      variablePrefix="$(validate "$handler" EnvironmentVariable "$argument" "${1-}")" || return $?
       ;;
     --secure-defaults)
       read -d "" -r -a secureList < <(environmentSecureVariables) || :
       ;;
     --ignore)
       shift
-      ignoreList+=("$(usageArgumentString "$handler" "$argument" "${1-}")") || return $?
+      ignoreList+=("$(validate "$handler" String "$argument" "${1-}")") || return $?
       ;;
     --require)
       required=true
@@ -336,7 +336,7 @@ environmentLoad() {
       ;;
     --context)
       shift
-      context="$(usageArgumentString "$handler" "$argument" "${1-}")" || return $?
+      context="$(validate "$handler" String "$argument" "${1-}")" || return $?
       ! $debugMode || printf -- "Context: %s\n" "$context"
       ;;
     --execute)
@@ -597,7 +597,7 @@ environmentFileShow() {
       break
       ;;
     *)
-      extras+=("$(usageArgumentEnvironmentVariable "$handler" "variableName" "$argument")") || return $?
+      extras+=("$(validate "$handler" EnvironmentVariable "variableName" "$argument")") || return $?
       ;;
     esac
     shift
@@ -682,7 +682,7 @@ environmentFileApplicationMake() {
       ;;
     *)
       local variable
-      variable="$(usageArgumentEnvironmentVariable "$handler" "$variableName" "$1")" || return $?
+      variable="$(validate "$handler" EnvironmentVariable "$variableName" "$1")" || return $?
       if $isOptional; then
         optional+=("$variable")
       else
@@ -774,7 +774,7 @@ buildEnvironmentAdd() {
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
     *)
-      name=$(usageArgumentEnvironmentVariable "$handler" "environmentVariable" "$1") || return $?
+      name=$(validate "$handler" EnvironmentVariable "environmentVariable" "$1") || return $?
       environmentNames+=("$name")
       ;;
     esac
@@ -850,7 +850,7 @@ environmentOutput() {
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
     --underscore) skipUnderscore=false ;;
-    --skip-prefix) shift && skipPrefix+=("$(usageArgumentString "$handler" "$argument" "${1-}")") || return $? ;;
+    --skip-prefix) shift && skipPrefix+=("$(validate "$handler" String "$argument" "${1-}")") || return $? ;;
     --secure) skipSecure=false ;;
     *)
       # _IDENTICAL_ argumentUnknownHandler 1

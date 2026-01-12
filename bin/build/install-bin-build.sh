@@ -252,7 +252,7 @@ __installPackageConfiguration() {
 # Argument: --diff - Optional. Flag. Show differences between old and new file.
 # Return Code: 1 - Environment error
 # Return Code: 2 - Argument error
-# Requires: cp rm cat printf realPath whichExists returnMessage fileTemporaryName catchArgument throwArgument catchEnvironment decorate usageArgumentString isFunction __decorateExtensionQuote
+# Requires: cp rm cat printf realPath whichExists returnMessage fileTemporaryName catchArgument throwArgument catchEnvironment decorate validate isFunction __decorateExtensionQuote
 _installRemotePackage() {
   local handler="_${FUNCNAME[0]}"
 
@@ -641,7 +641,7 @@ _versionSort() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# IDENTICAL validate 115
+# IDENTICAL validate 126
 
 # Validate a value by type
 # Argument: handler - Function. Required. Error handler.
@@ -704,6 +704,8 @@ _versionSort() {
 # You can repeat the `type` `name` `value` more than once in the arguments and each will be checked until one fails
 # Return Code: 0 - Valid is valid, stdout is a filtered version of the value to be used
 # Return Code: 2 - Valid is invalid, output reason to stderr
+# Requires: __validateTypeString __validateTypePositiveInteger __validateTypeFunction __validateTypeCallable
+# Requires: isFunction throwArgument __help decorate
 validate() {
   local handler="_${FUNCNAME[0]}"
   local prefix="__validateType"
@@ -743,18 +745,27 @@ _validateThrow() {
 }
 
 # Non-empty string
+# Requires: _validateThrow
 __validateTypeString() {
   [ -n "${1-}" ] || _validateThrow "blank" || return $?
   printf "%s\n" "${1-}"
 }
 
+# Requires: isPositiveInteger _validateThrow
 __validateTypePositiveInteger() {
   isPositiveInteger "${1-}" || _validateThrow || return $?
   printf "%s\n" "${1#+}"
 }
 
+# Requires: isFunction _validateThrow
 __validateTypeFunction() {
   isFunction "${1-}" || _validateThrow || return $?
+  printf "%s\n" "${1-}"
+}
+
+# Requires: isCallable _validateThrow
+__validateTypeCallable() {
+  isCallable "${1-}" || _validateThrow || return $?
   printf "%s\n" "${1-}"
 }
 

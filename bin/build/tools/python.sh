@@ -77,7 +77,7 @@ pipInstall() {
     # _IDENTICAL_ handlerHandler 1
     --handler) shift && handler=$(validate "$handler" function "$argument" "${1-}") || return $? ;;
     *)
-      names+=("$(usageArgumentString "$handler" "name" "${1-}")") || return $?
+      names+=("$(validate "$handler" String "name" "${1-}")") || return $?
       ;;
     esac
     shift
@@ -129,7 +129,7 @@ pipUninstall() {
     --handler) shift && handler=$(validate "$handler" function "$argument" "${1-}") || return $? ;;
     --debug) debugFlag=true && aa+=("$argument") ;;
     *)
-      argument="$(usageArgumentString "$handler" "name" "$argument")" || return $?
+      argument="$(validate "$handler" String "name" "$argument")" || return $?
       names+=("$argument")
       if pythonPackageInstalled "$argument"; then
         prettyNames+=("$(decorate code "$argument")")
@@ -213,7 +213,7 @@ pythonPackageInstalled() {
     --help) "$handler" 0 && return $? || return $? ;;
     --any) anyMode=true ;;
     *)
-      packages+=("$(usageArgumentString "$handler" "pipPackage" "$1")") || return $?
+      packages+=("$(validate "$handler" String "pipPackage" "$1")") || return $?
       ;;
     esac
     shift
@@ -264,10 +264,10 @@ pythonVirtual() {
     --help) "$handler" 0 && return $? || return $? ;;
     # _IDENTICAL_ handlerHandler 1
     --handler) shift && handler=$(validate "$handler" function "$argument" "${1-}") || return $? ;;
-    --application) shift && application=$(usageArgumentDirectory "$handler" "$argument" "${1-}") || return $? ;;
+    --application) shift && application=$(validate "$handler" Directory "$argument" "${1-}") || return $? ;;
     --require) shift && pp+=("--requirement" "$(validate "$handler" File "$argument" "${1-}")") || return $? ;;
     *)
-      pp+=("$(usageArgumentString "$handler" "$argument" "${1-}")") || return $?
+      pp+=("$(validate "$handler" String "$argument" "${1-}")") || return $?
       ;;
     esac
     shift

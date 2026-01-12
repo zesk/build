@@ -146,7 +146,7 @@ phpComposerSetVersion() {
     --help) "$handler" 0 && return $? || return $? ;;
     --version)
       shift
-      version="$(usageArgumentString "$handler" "$argument" "${1-}")" || return $?
+      version="$(validate "$handler" String "$argument" "${1-}")" || return $?
       aa+=(--value "$version")
       ;;
     --status | --quiet)
@@ -154,7 +154,7 @@ phpComposerSetVersion() {
       ;;
     --home)
       shift
-      home="$(usageArgumentDirectory "$handler" "$argument" "${1-}")" || return $?
+      home="$(validate "$handler" Directory "$argument" "${1-}")" || return $?
       ;;
     *)
       # _IDENTICAL_ argumentUnknownHandler 1

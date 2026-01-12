@@ -37,7 +37,7 @@ __documentationTemplateCompile() {
     *)
       # Load arguments one-by-one
       if [ -z "$cacheDirectory" ]; then
-        cacheDirectory=$(usageArgumentDirectory "$handler" cacheDirectory "$argument") || return $?
+        cacheDirectory=$(validate "$handler" Directory cacheDirectory "$argument") || return $?
       elif [ -z "$sourceFile" ]; then
         sourceFile="$(validate "$handler" File sourceFile "$argument")" || return $?
       elif [ -z "$functionTemplate" ]; then
@@ -170,7 +170,7 @@ __documentationTemplateFunctionCompile() {
     *)
       # Load arguments one-by-one
       if [ -z "$functionName" ]; then
-        functionName="$(usageArgumentString "$handler" functionName "$argument")" || return $?
+        functionName="$(validate "$handler" String functionName "$argument")" || return $?
       elif [ -z "$functionTemplate" ]; then
         functionTemplate="$(validate "$handler" File functionTemplate "$argument")" || return $?
       else
@@ -226,13 +226,13 @@ __documentationTemplateDirectoryCompile() {
       ;;
     *)
       if [ -z "$cacheDirectory" ]; then
-        cacheDirectory=$(usageArgumentDirectory "$handler" "cacheDirectory" "$argument") || return $?
+        cacheDirectory=$(validate "$handler" Directory "cacheDirectory" "$argument") || return $?
       elif [ -z "$templateDirectory" ]; then
-        templateDirectory=$(usageArgumentDirectory "$handler" "templateDirectory" "$argument") || return $?
+        templateDirectory=$(validate "$handler" Directory "templateDirectory" "$argument") || return $?
       elif [ -z "$functionTemplate" ]; then
         functionTemplate=$(validate "$handler" RealFile "functionTemplate" "$argument") || return $?
       elif [ -z "$targetDirectory" ]; then
-        targetDirectory=$(usageArgumentDirectory "$handler" "targetDirectory" "$argument") || return $?
+        targetDirectory=$(validate "$handler" Directory "targetDirectory" "$argument") || return $?
       else
         # _IDENTICAL_ argumentUnknownHandler 1
         throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?

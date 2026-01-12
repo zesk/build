@@ -13,9 +13,9 @@ __documentationSeeTokenTemplates() {
   templateCache=$(catchReturn "$handler" directoryRequire "$cacheDirectory/see/templates") || return $?
   local type file
   while [ $# -gt 1 ]; do
-    type="$(usageArgumentString "$handler" "type" "$1")" || return $?
+    type="$(validate "$handler" String "type" "$1")" || return $?
     file="$(validate "$handler" File "file" "${2-}")" || return $?
-    link="$(usageArgumentString "$handler" "link" "${3-}")" || return $?
+    link="$(validate "$handler" String "link" "${3-}")" || return $?
     catchEnvironment "$handler" cp "$file" "$templateCache/$type" || return $?
     printf "%s\n" "$link" >"$templateCache/$type.link" || return $?
     shift 3

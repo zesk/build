@@ -137,9 +137,9 @@ bashLibraryHome() {
   local handler="_${FUNCNAME[0]}"
   local home run startDirectory="${2-}"
   [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
-  run=$(usageArgumentString "$handler" "libraryRelativePath" "${1-}") || return $?
+  run=$(validate "$handler" String "libraryRelativePath" "${1-}") || return $?
   [ -n "$startDirectory" ] || startDirectory=$(catchEnvironment "$handler" pwd) || return $?
-  startDirectory=$(usageArgumentDirectory "$handler" "startDirectory" "$startDirectory") || return $?
+  startDirectory=$(validate "$handler" Directory "startDirectory" "$startDirectory") || return $?
   home=$(catchReturn "$handler" directoryParent --pattern "$run" --test -f --test -x "$startDirectory") || return $?
   printf "%s\n" "$home"
 }
@@ -227,13 +227,13 @@ bashSourcePath() {
     --help) "$handler" 0 && return $? || return $? ;;
     --exclude)
       shift
-      ff+=("!" "-path" "$(usageArgumentString "$handler" "$argument" "${1-}")") || return $?
+      ff+=("!" "-path" "$(validate "$handler" String "$argument" "${1-}")") || return $?
       ;;
     *)
       local path tool
 
       foundOne=true
-      path=$(usageArgumentDirectory "$handler" "directory" "$argument") || return $?
+      path=$(validate "$handler" Directory "directory" "$argument") || return $?
       # shellcheck disable=SC2015
       while read -r tool; do
         local tool="${tool#./}"
@@ -274,7 +274,7 @@ bashFunctionDefined() {
     --help) "$handler" 0 && return $? || return $? ;;
     *)
       if [ -z "$function" ]; then
-        function="$(usageArgumentString "$handler" "functionName" "${1-}")" || return $?
+        function="$(validate "$handler" String "functionName" "${1-}")" || return $?
       else
         files+=("$(validate "$handler" File "file" "${1-}")") || return $?
       fi
@@ -335,7 +335,7 @@ bashShowUsage() {
       ;;
     *)
       if [ -z "$functionName" ]; then
-        functionName=$(usageArgumentString "$handler" "functionName" "$1") || return $?
+        functionName=$(validate "$handler" String "functionName" "$1") || return $?
       else
         files+=("$(validate "$handler" File "file" "$1")") || return $?
       fi
@@ -428,9 +428,9 @@ bashFunctionCommentVariable() {
       if [ -z "$source" ]; then
         source="$(validate "$handler" File "source" "${1-}")" || return $?
       elif [ -z "$functionName" ]; then
-        functionName=$(usageArgumentString "$handler" "functionName" "${1-}") || return $?
+        functionName=$(validate "$handler" String "functionName" "${1-}") || return $?
       elif [ -z "$variableName" ]; then
-        variableName=$(usageArgumentString "$handler" "variableName" "${1-}") || return $?
+        variableName=$(validate "$handler" String "variableName" "${1-}") || return $?
       fi
       ;;
     esac

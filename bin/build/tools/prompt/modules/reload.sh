@@ -33,7 +33,7 @@ __reloadChanges() {
       statusMessage --last decorate success "Disabled reloadChanges ..."
       return 0
       ;;
-    --name) shift && name="$(usageArgumentString "$handler" "$argument" "${1-}")" || return $? ;;
+    --name) shift && name="$(validate "$handler" String "$argument" "${1-}")" || return $? ;;
     --path) shift && paths+=("$(validate "$handler" RealDirectory "$argument" "${1-}")") || return $? ;;
     --file) shift && paths+=("$(validate "$handler" RealFile "$argument" "${1-}")") || return $? ;;
     -*)
@@ -91,7 +91,7 @@ __reloadChangesShow() {
     if [ -z "$source" ]; then
       source="$(validate "$handler" RealFile "config-source" "$argument")" || return $?
     elif [ -z "$name" ]; then
-      name=$(usageArgumentString "$handler" "config-name" "$argument") || return $?
+      name=$(validate "$handler" String "config-name" "$argument") || return $?
     elif [ "$argument" != "--" ]; then
       if [ -f "$argument" ]; then
         paths+=("$(validate "$handler" RealFile "config-file" "$argument")") || return $?
@@ -116,7 +116,7 @@ __reloadChangesRemove() {
     if [ -z "$source" ]; then
       source="$(validate "$handler" RealFile "config-source" "$argument")" || returnClean $? "$target" || return $?
     elif [ -z "$name" ]; then
-      name=$(usageArgumentString "$handler" "config-name" "$argument") || returnClean $? "$target" || return $?
+      name=$(validate "$handler" String "config-name" "$argument") || returnClean $? "$target" || return $?
     elif [ "$argument" = "--" ]; then
       if [ "$source" != "$matchSource" ]; then
         catchEnvironment "$handler" printf -- "%s\n" "$source" "$name" "${paths[@]}" "--" >>"$target" || returnClean $? "$target" || return $?
@@ -166,14 +166,14 @@ __bashPromptModule_reloadChanges() {
 
   while read -r argument; do
     if [ -z "$source" ]; then
-      source=$(usageArgumentString "$handler" "source" "$argument") || return $?
+      source=$(validate "$handler" String "source" "$argument") || return $?
       [ "${source:0:1}" = "/" ] || source="$home/$source"
       ! $debug || decorate pair source "$(decorate file "$source")"
       pathStateFile="$(__reloadChangesCacheFile "$handler" "$sourceIndex")" || return $?
       sourceIndex=$((sourceIndex + 1))
       continue
     elif [ -z "$name" ]; then
-      name=$(usageArgumentString "$handler" "name" "$argument") || return $?
+      name=$(validate "$handler" String "name" "$argument") || return $?
       ! $debug || decorate pair name "$name"
       continue
     elif [ "$argument" = "--" ]; then

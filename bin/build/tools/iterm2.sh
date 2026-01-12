@@ -74,7 +74,7 @@ __iTerm2HideOutput() {
 __iTerm2SetUserVariable() {
   local name="${1-}" value="${2-}"
 
-  name=$(usageArgumentEnrivonmentVariable "$handler" "name" "$name") || return $?
+  name=$(validate "$handler" EnvironmentVariable "name" "$name") || return $?
   _iTerm2_setValue "SetUserVar" "$(printf "%s" "$value" | base64 | tr -d '\n')"
 }
 
@@ -277,11 +277,11 @@ iTerm2Image() {
     --help) "$handler" 0 && return $? || return $? ;;
     --width)
       shift
-      width=$(usageArgumentPositiveInteger "$handler" "$argument" "${1-}") || return $?
+      width=$(validate "$handler" PositiveInteger "$argument" "${1-}") || return $?
       ;;
     --height)
       shift
-      height=$(usageArgumentPositiveInteger "$handler" "$argument" "${1-}") || return $?
+      height=$(validate "$handler" PositiveInteger "$argument" "${1-}") || return $?
       ;;
     --scale)
       aspectRatio=false
@@ -376,7 +376,7 @@ iTerm2Download() {
     --help) "$handler" 0 && return $? || return $? ;;
     --name)
       shift
-      name="$(usageArgumentString "$handler" "$argument" "${1-}")" || return $?
+      name="$(validate "$handler" String "$argument" "${1-}")" || return $?
       ;;
     # IDENTICAL case-iTerm2ignore 1
     --ignore | -i) ignoreErrors=true ;;
@@ -471,7 +471,7 @@ iTerm2SetColors() {
       throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
       ;;
     *)
-      colorSettings+=("$(usageArgumentString "$handler" "colorSetting" "$1")") || return $?
+      colorSettings+=("$(validate "$handler" String "colorSetting" "$1")") || return $?
       ;;
     esac
     shift

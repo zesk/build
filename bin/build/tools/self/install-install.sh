@@ -26,7 +26,7 @@ __installInstallBinary() {
     --handler) shift && handler=$(validate "$handler" function "$argument" "${1-}") || return $? ;;
     --bin)
       shift
-      installBinName=$(usageArgumentString "$handler" "$argument" "${1-}") || return $?
+      installBinName=$(validate "$handler" String "$argument" "${1-}") || return $?
       ;;
     --url-function)
       shift
@@ -38,7 +38,7 @@ __installInstallBinary() {
       ;;
     --url)
       shift
-      url=$(usageArgumentURL "$handler" "$argument" "${1-}") || return $?
+      url=$(validate "$handler" URL "$argument" "${1-}") || return $?
       ;;
     --source)
       shift
@@ -54,7 +54,7 @@ __installInstallBinary() {
       if [ -z "$path" ]; then
         path=$(validate "$handler" FileDirectory "path" "$1") || return $?
       elif [ -z "$applicationHome" ]; then
-        applicationHome=$(usageArgumentDirectory "$handler" "applicationHome" "$1") || return $?
+        applicationHome=$(validate "$handler" Directory "applicationHome" "$1") || return $?
       else
         # _IDENTICAL_ argumentUnknownHandler 1
         throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?

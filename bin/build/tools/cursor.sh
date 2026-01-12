@@ -45,8 +45,8 @@ cursorSet() {
 
   local x y
 
-  x=$(usageArgumentUnsignedInteger "$handler" "x" "${1-}") && shift || return $?
-  y=$(usageArgumentUnsignedInteger "$handler" "y" "${1-}") && shift || return $?
+  x=$(validate "$handler" UnsignedInteger "x" "${1-}") && shift || return $?
+  y=$(validate "$handler" UnsignedInteger "y" "${1-}") && shift || return $?
 
   # Set cursor position
   # Escape: ESC `[` <row> `;` <col> `H`

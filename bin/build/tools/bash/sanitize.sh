@@ -30,11 +30,11 @@ __bashSanitize() {
     --debug) debugFlag=true ;;
     --home)
       shift
-      home=$(usageArgumentDirectory "$handler" "$argument" "${1-}") || return $?
+      home=$(validate "$handler" Directory "$argument" "${1-}") || return $?
       ;;
     --check)
       shift || throwArgument "$handler" "shift $argument" || return $?
-      checkAssertions+=("$(usageArgumentDirectory "$handler" "checkDirectory" "$1")") || return $?
+      checkAssertions+=("$(validate "$handler" Directory "checkDirectory" "$1")") || return $?
       ;;
     *)
       break

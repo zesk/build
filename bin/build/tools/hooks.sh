@@ -31,7 +31,7 @@ _hookContextWrapper() {
     --help) "$handler" 0 && return $? || return $? ;;
     --application)
       shift
-      application=$(usageArgumentDirectory "$handler" "home" "${1-}") || return $?
+      application=$(validate "$handler" Directory "home" "${1-}") || return $?
       ;;
     *)
       break

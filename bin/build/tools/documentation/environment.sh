@@ -54,10 +54,10 @@ __documentationBuildEnvironment() {
     --clean) cleanFlag=true ;;
     --force) forceFlag=true ;;
     --verbose) verboseFlag=true ;;
-    --source) shift && sources+=("$(usageArgumentDirectory "$handler" "$argument" "${1-}")") || return $? ;;
+    --source) shift && sources+=("$(validate "$handler" Directory "$argument" "${1-}")") || return $? ;;
     --target) shift && target="$(validate "$handler" File "$argument" "${1-}")" || return $? ;;
-    --documentation) shift && documentation=$(usageArgumentDirectory "$handler" "$argument" "${1-}") || return $? ;;
-    --template-path) shift && templatePath=$(usageArgumentDirectory "$handler" "$argument" "${1-}") || return $? ;;
+    --documentation) shift && documentation=$(validate "$handler" Directory "$argument" "${1-}") || return $? ;;
+    --template-path) shift && templatePath=$(validate "$handler" Directory "$argument" "${1-}") || return $? ;;
     *)
       # _IDENTICAL_ argumentUnknownHandler 1
       throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?

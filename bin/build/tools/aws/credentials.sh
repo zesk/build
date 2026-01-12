@@ -27,7 +27,7 @@ __awsCredentialsFile() {
       ;;
     --home)
       shift
-      home=$(usageArgumentDirectory "$handler" "home" "${1-}") || return $?
+      home=$(validate "$handler" Directory "home" "${1-}") || return $?
       ;;
     --verbose)
       verbose=true
@@ -84,7 +84,7 @@ __awsEnvironmentFromCredentials() {
     --profile)
       shift
       [ -z "$profileName" ] || throwArgument "$handler" "--profile already specified" || return $?
-      profileName="$(usageArgumentString "$handler" "$argument" "${1-}")" || return $?
+      profileName="$(validate "$handler" String "$argument" "${1-}")" || return $?
       ;;
     *)
       [ -z "$profileName" ] || throwArgument "$handler" "profileName already supplied" || return $?

@@ -109,7 +109,7 @@ urlParse() {
       ;;
     --prefix)
       shift
-      prefix=$(usageArgumentString "$handler" "$argument" "${1-}") || return $?
+      prefix=$(validate "$handler" String "$argument" "${1-}") || return $?
       ;;
     *)
       local u="${1-}"
@@ -201,7 +201,7 @@ urlParseItem() {
     --handler) shift && handler=$(validate "$handler" function "$argument" "${1-}") || return $? ;;
     *)
       if [ -z "$component" ]; then
-        component=$(usageArgumentString "$handler" "component" "$1") || return $?
+        component=$(validate "$handler" String "component" "$1") || return $?
       else
         url="$1"
         # subshell hides variable scope
@@ -278,7 +278,7 @@ urlOpener() {
     --handler) shift && handler=$(validate "$handler" function "$argument" "${1-}") || return $? ;;
     --exec)
       shift
-      binary=$(usageArgumentExecutable "$handler" "$argument" "${1-}") || return $?
+      binary=$(validate "$handler" Executable "$argument" "${1-}") || return $?
       ;;
     *)
       # _IDENTICAL_ argumentUnknownHandler 1
@@ -371,7 +371,7 @@ urlFilter() {
       ;;
     --file)
       shift
-      file="$(usageArgumentString "$handler" "$argument" "${1-}")" || return $?
+      file="$(validate "$handler" String "$argument" "${1-}")" || return $?
       ;;
     *)
       files+=("$(validate "$handler" File "file" "$1")") || return $?
@@ -433,7 +433,7 @@ urlOpen() {
       waitFlag=true
       ;;
     *)
-      urls+=("$(usageArgumentString "$handler" "url" "$1")") || return $?
+      urls+=("$(validate "$handler" String "url" "$1")") || return $?
       ;;
     esac
     shift
@@ -660,7 +660,7 @@ __urlOpen() {
       return 0
     fi
   else
-    binary=$(usageArgumentExecutable "$handler" "BUILD_URL_BINARY" "$binary") || return $?
+    binary=$(validate "$handler" Executable "BUILD_URL_BINARY" "$binary") || return $?
   fi
   [ $# -gt 0 ] || catchArgument "$handler" "Require at least one URL" || return $?
   catchEnvironment "$handler" "$binary" "$@" || return $?

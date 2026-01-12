@@ -42,29 +42,12 @@ mapEnvironment() {
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
-    --prefix)
-      shift
-      __prefix=$(validate "$handler" String "$argument" "${1-}") || return $?
-      ;;
-    --suffix)
-      shift
-      __suffix=$(validate "$handler" String "$argument" "${1-}") || return $?
-      ;;
-    --search-filter)
-      shift
-      __searchFilters+=("$(validate "$handler" Callable "searchFilter" "${1-}")") || return $?
-      ;;
-    --replace-filter)
-      shift
-      __replaceFilters+=("$(validate "$handler" Callable "replaceFilter" "${1-}")") || return $?
-      ;;
-    --env-file)
-      shift
-      muzzle usageArgumentLoadEnvironmentFile "$handler" "$argument" "${1-}" || return $?
-      ;;
-    *)
-      __ee+=("$(validate "$handler" String "environmentVariableName" "$argument")") || return $?
-      ;;
+    --prefix) shift && __prefix=$(validate "$handler" String "$argument" "${1-}") || return $? ;;
+    --suffix) shift && __suffix=$(validate "$handler" String "$argument" "${1-}") || return $? ;;
+    --search-filter) shift && __searchFilters+=("$(validate "$handler" Callable "searchFilter" "${1-}")") || return $? ;;
+    --replace-filter) shift && __replaceFilters+=("$(validate "$handler" Callable "replaceFilter" "${1-}")") || return $? ;;
+    --env-file) shift && muzzle validate "$handler" LoadEnvironmentFile "$argument" "${1-}" || return $? ;;
+    *) __ee+=("$(validate "$handler" String "environmentVariableName" "$argument")") || return $? ;;
     esac
     shift
   done

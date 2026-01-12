@@ -65,11 +65,11 @@ mapReturn() {
 
   while [ $# -gt 0 ]; do
     if [ -z "$value" ]; then
-      value=$(usageArgumentUnsignedInteger "$__handler" "value" "$1") || return $?
+      value=$(validate "$__handler" UnsignedInteger "value" "$1") || return $?
     elif [ -z "$from" ]; then
-      from=$(usageArgumentUnsignedInteger "$__handler" "from" "$1") || return $?
+      from=$(validate "$__handler" UnsignedInteger "from" "$1") || return $?
     elif [ -z "$to" ]; then
-      to=$(usageArgumentUnsignedInteger "$__handler" "to" "$1") || return $?
+      to=$(validate "$__handler" UnsignedInteger "to" "$1") || return $?
       if [ "$value" -eq "$from" ]; then
         return "$to"
       fi

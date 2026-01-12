@@ -544,9 +544,9 @@ _markdownToConsole() {
 # Argument: b - UnsignedInteger. Required.
 __colorBrightness() {
   local handler="$1" r g b
-  r=$(usageArgumentUnsignedInteger "$handler" "red" "$2") || return $?
-  g=$(usageArgumentUnsignedInteger "$handler" "green" "$3") || return $?
-  b=$(usageArgumentUnsignedInteger "$handler" "blue" "$4") || return $?
+  r=$(validate "$handler" UnsignedInteger "red" "$2") || return $?
+  g=$(validate "$handler" UnsignedInteger "green" "$3") || return $?
+  b=$(validate "$handler" UnsignedInteger "blue" "$4") || return $?
   printf "%d\n" $(((r * 299 + g * 587 + b * 114) / 2550))
 }
 
@@ -626,16 +626,16 @@ colorNormalize() {
     local done=false
     while ! $done; do
       IFS=$'\n' read -d'' -r red green blue || done=true
-      red=$(usageArgumentUnsignedInteger "$handler" "redValue" "$red") || return $?
-      green=$(usageArgumentUnsignedInteger "$handler" "greenValue" "$green") || return $?
-      blue=$(usageArgumentUnsignedInteger "$handler" "blueValue" "$blue") || return $?
+      red=$(validate "$handler" UnsignedInteger "redValue" "$red") || return $?
+      green=$(validate "$handler" UnsignedInteger "greenValue" "$green") || return $?
+      blue=$(validate "$handler" UnsignedInteger "blueValue" "$blue") || return $?
       __colorNormalize "$red" "$green" "$blue"
     done
   else
     while [ $# -gt 0 ]; do
-      red=$(usageArgumentUnsignedInteger "$handler" "redValue" "${1-}") && shift || return $?
-      green=$(usageArgumentUnsignedInteger "$handler" "greenValue" "${1-}") && shift || return $?
-      blue=$(usageArgumentUnsignedInteger "$handler" "blueValue" "${1-}") && shift || return $?
+      red=$(validate "$handler" UnsignedInteger "redValue" "${1-}") && shift || return $?
+      green=$(validate "$handler" UnsignedInteger "greenValue" "${1-}") && shift || return $?
+      blue=$(validate "$handler" UnsignedInteger "blueValue" "${1-}") && shift || return $?
       __colorNormalize "$red" "$green" "$blue"
     done
   fi
@@ -785,7 +785,7 @@ colorMultiply() {
   [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
 
   whichExists bc || throwEnvironment "$handler" "Requires bc binary" || return $?
-  factor=$(usageArgumentString "$handler" "factor" "${1-}") && shift || return $?
+  factor=$(validate "$handler" String "factor" "${1-}") && shift || return $?
 
   local red green blue
   if [ $# -gt 0 ]; then
@@ -797,9 +797,9 @@ colorMultiply() {
   set -- "${colors[@]+"${colors[@]}"}"
   while [ $# -gt 0 ]; do
     local red green blue
-    red=$(usageArgumentUnsignedInteger "$handler" "redValue" "${1-}") && shift || return $?
-    green=$(usageArgumentUnsignedInteger "$handler" "greenValue" "${1-}") && shift || return $?
-    blue=$(usageArgumentUnsignedInteger "$handler" "blueValue" "${1-}") && shift || return $?
+    red=$(validate "$handler" UnsignedInteger "redValue" "${1-}") && shift || return $?
+    green=$(validate "$handler" UnsignedInteger "greenValue" "${1-}") && shift || return $?
+    blue=$(validate "$handler" UnsignedInteger "blueValue" "${1-}") && shift || return $?
     bc <<<"m=$factor;$red*m;$green*m;$blue*m" | cut -d . -f 1
   done
 }

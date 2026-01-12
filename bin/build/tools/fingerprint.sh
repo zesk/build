@@ -36,8 +36,8 @@ fingerprint() {
     --check) checkFlag=true ;;
     --verbose) verboseFlag=true ;;
     --quiet) verboseFlag=false ;;
-    --key) shift && key=$(usageArgumentString "$handler" "$argument" "${1-}") || return $? ;;
-    --prefix) shift && prefix=$(usageArgumentEmptyString "$handler" "$argument" "${1-}") || return $? ;;
+    --key) shift && key=$(validate "$handler" String "$argument" "${1-}") || return $? ;;
+    --prefix) shift && prefix=$(validate "$handler" EmptyString "$argument" "${1-}") || return $? ;;
     *)
       # _IDENTICAL_ argumentUnknownHandler 1
       throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?

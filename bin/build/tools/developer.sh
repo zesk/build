@@ -239,31 +239,31 @@ developerDevelopmentLink() {
       ;;
     --composer)
       shift
-      composerPackage=$(usageArgumentString "$handler" "$argument" "${1-}") || return $?
+      composerPackage=$(validate "$handler" String "$argument" "${1-}") || return $?
       ;;
     --binary)
       shift
-      runBinary+=("$(usageArgumentString "$handler" "$argument" "${1-}")") || return $?
+      runBinary+=("$(validate "$handler" String "$argument" "${1-}")") || return $?
       ;;
     --development-path)
       shift
-      developmentPath=$(usageArgumentString "$handler" "$argument" "${1-}") || return $?
+      developmentPath=$(validate "$handler" String "$argument" "${1-}") || return $?
       ;;
     --path)
       shift
-      path=$(usageArgumentApplicationDirectory "$handler" "$argument" "${1-}") || throwArgument "$handler" "path failed #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
+      path=$(validate "$handler" ApplicationDirectory "$argument" "${1-}") || throwArgument "$handler" "path failed #$__index/$__count ($(decorate each quote "${__saved[@]}"))" || return $?
       ;;
     --version-json)
       shift
-      versionJSON=$(usageArgumentString "$handler" "$argument" "${1-}") || return $?
+      versionJSON=$(validate "$handler" String "$argument" "${1-}") || return $?
       ;;
     --version-selector)
       shift
-      versionSelector=$(usageArgumentString "$handler" "$argument" "${1-}") || return $?
+      versionSelector=$(validate "$handler" String "$argument" "${1-}") || return $?
       ;;
     --variable)
       shift
-      variable=$(usageArgumentEnvironmentVariable "$handler" "$argument" "${1-}") || return $?
+      variable=$(validate "$handler" EnvironmentVariable "$argument" "${1-}") || return $?
       ;;
     --reset)
       resetFlag=true

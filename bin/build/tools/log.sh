@@ -56,7 +56,7 @@ rotateLog() {
     shift
   done
 
-  logFile="$(usageArgumentFile _rotateLog logFile "$logFile")" || return $?
+  logFile="$(validate "$handler" File logFile "$logFile")" || return $?
 
   isInteger "$count" || throwArgument "$handler" "$this count $(decorate value "$count") must be a positive integer" || return $?
   [ "$count" -gt 0 ] || throwArgument "$handler" "$this count $(decorate value "$count") must be a positive integer greater than zero" || return $?
@@ -122,9 +122,9 @@ rotateLogs() {
       ;;
     *)
       if [ -z "$logPath" ]; then
-        logPath="$(usageArgumentDirectory "$handler" logPath "$logPath") || return $?"
+        logPath="$(validate "$handler" Directory logPath "$logPath") || return $?"
       elif [ -z "$count" ]; then
-        count="$(usageArgumentPositiveInteger "$handler" "count" "$argument")" || return $?
+        count="$(validate "$handler" PositiveInteger "count" "$argument")" || return $?
       else
         throwArgument "$handler" "$this Unknown argument $argument" || return $?
       fi

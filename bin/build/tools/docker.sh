@@ -133,18 +133,18 @@ dockerLocalContainer() {
     --help) "$handler" 0 && return $? || return $? ;;
     # _IDENTICAL_ handlerHandler 1
     --handler) shift && handler=$(validate "$handler" function "$argument" "${1-}") || return $? ;;
-    --image) shift && imageName=$(usageArgumentString "$handler" "$argument" "${1-}") || return $? ;;
-    --local) shift && localPath=$(usageArgumentDirectory "$handler" "$argument" "${1-}") || return $? ;;
+    --image) shift && imageName=$(validate "$handler" String "$argument" "${1-}") || return $? ;;
+    --local) shift && localPath=$(validate "$handler" Directory "$argument" "${1-}") || return $? ;;
     --verbose) verboseFlag=true ;;
     --path)
       shift
-      imageApplicationPath=$(usageArgumentString "$handler" "$argument" "${1-}") || return $?
+      imageApplicationPath=$(validate "$handler" String "$argument" "${1-}") || return $?
       envFiles+=("-w" "$imageApplicationPath")
       ;;
     --env)
       local envPair
       shift
-      envPair=$(usageArgumentString "$handler" "$argument" "${1-}") || return $?
+      envPair=$(validate "$handler" String "$argument" "${1-}") || return $?
       if [ "${envPair#*=}" = "$envPair" ]; then
         decorate warning "$argument does not look like a variable: $(decorate error "$envPair")" 1>&2
       fi
@@ -159,7 +159,7 @@ dockerLocalContainer() {
       tempEnvs+=("$tempEnv")
       ee+=("$argument" "$tempEnv")
       ;;
-    --platform) shift && platform=$(usageArgumentString "$handler" "$argument" "${1}") || return $? ;;
+    --platform) shift && platform=$(validate "$handler" String "$argument" "${1}") || return $? ;;
     *)
       extraArgs+=("$@")
       break
@@ -231,7 +231,7 @@ dockerImages() {
     --filter)
       shift
       [ 0 -eq "${#filter[@]}" ] || throwArgument "$handler" "--filter passed twice: #$__index/$__count: $(decorate each code "${__saved[@]}")" || return $?
-      filter+=("--filter" "reference=$(usageArgumentString "$handler" "$argument" "${1-}")") || return $?
+      filter+=("--filter" "reference=$(validate "$handler" String "$argument" "${1-}")") || return $?
       ;;
     *)
       # _IDENTICAL_ argumentUnknownHandler 1

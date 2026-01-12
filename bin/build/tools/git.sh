@@ -195,7 +195,7 @@ veeGitTag() {
   [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
 
   local tagName
-  tagName=$(usageArgumentString "$handler" "tagName" "${1-}") || return $?
+  tagName=$(validate "$handler" String "tagName" "${1-}") || return $?
 
   [ "$tagName" = "${tagName#v}" ] || throwArgument "$handler" "already v'd': $(decorate value "$tagName")" || return $?
   catchEnvironment "$handler" git tag "v$tagName" "$tagName" || return $?
@@ -487,7 +487,7 @@ gitCommit() {
     --help) "$handler" 0 && return $? || return $? ;;
     --home)
       shift
-      home=$(usageArgumentDirectory "$handler" "home" "${1-}") || return $?
+      home=$(validate "$handler" Directory "home" "${1-}") || return $?
       ;;
     --)
       updateReleaseNotes=false
@@ -602,7 +602,7 @@ gitMainly() {
     --help) "$handler" 0 && return $? || return $? ;;
     --remote)
       shift
-      remote=$(usageArgumentString "$handler" "$argument" "${1-}") || return $?
+      remote=$(validate "$handler" String "$argument" "${1-}") || return $?
       ;;
     --verbose)
       verboseFlag=true
@@ -777,7 +777,7 @@ gitInstallHooks() {
       ;;
     --application)
       shift || throwArgument "$handler" "missing $argument argument" || return $?
-      home=$(usageArgumentDirectory "$handler" "applicationHome" "$1") || return $?
+      home=$(validate "$handler" Directory "applicationHome" "$1") || return $?
       ;;
     *)
       hook="$argument"
@@ -840,7 +840,7 @@ gitInstallHook() {
       ;;
     --application)
       shift || throwArgument "$handler" "missing $argument argument" || return $?
-      home=$(usageArgumentDirectory "$handler" "applicationHome" "$1") || return $?
+      home=$(validate "$handler" Directory "applicationHome" "$1") || return $?
       ;;
     *)
       [ "${#types[@]}" -gt 0 ] || read -r -a types < <(gitHookTypes) || :
@@ -1171,11 +1171,11 @@ gitBranchMergeCurrent() {
       ;;
     --comment)
       shift
-      comment=$(usageArgumentString "$handler" "$argument" "${1-}") || return $?
+      comment=$(validate "$handler" String "$argument" "${1-}") || return $?
       ;;
     *)
       [ -z "$targetBranch" ] || throwArgument "$handler" "Only one target branch should be specified: $targetBranch and $argument?" || return $?
-      targetBranch="$(usageArgumentString "$handler" "$argument" "$1")" || return $?
+      targetBranch="$(validate "$handler" String "$argument" "$1")" || return $?
       ;;
     esac
     shift

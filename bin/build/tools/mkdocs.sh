@@ -24,8 +24,8 @@ documentationMkdocs() {
     # _IDENTICAL_ handlerHandler 1
     --handler) shift && handler=$(validate "$handler" function "$argument" "${1-}") || return $? ;;
     --template) shift && template=$(validate "$handler" File "$argument" "${1-}") || return $? ;;
-    --package) shift && packages+=("$(usageArgumentString "$handler" "$argument" "${1-}")") || return $? ;;
-    --path) shift && rootPath="$(usageArgumentDirectory "$handler" "$argument" "${1-}")" || return $? ;;
+    --package) shift && packages+=("$(validate "$handler" String "$argument" "${1-}")") || return $? ;;
+    --path) shift && rootPath="$(validate "$handler" Directory "$argument" "${1-}")" || return $? ;;
     *)
       # _IDENTICAL_ argumentUnknownHandler 1
       throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?

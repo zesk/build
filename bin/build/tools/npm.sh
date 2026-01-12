@@ -34,7 +34,7 @@ npmInstall() {
     --help) "$handler" 0 && return $? || return $? ;;
     --version)
       shift
-      version=$(usageArgumentString "$handler" "$argument" "${1-}") || return $?
+      version=$(validate "$handler" String "$argument" "${1-}") || return $?
       ;;
     *)
       # _IDENTICAL_ argumentUnknownHandler 1
@@ -80,13 +80,13 @@ _npmUninstall() {
 __nodePackageManagerArguments_npm() {
   local handler="$1" action
 
-  action=$(usageArgumentString "$handler" "action" "${2-}") || return $?
+  action=$(validate "$handler" String "action" "${2-}") || return $?
   shift 2
 
   local globalFlag=false
   while [ $# -gt 0 ]; do
     local argument
-    argument="$(usageArgumentString "$handler" "argument" "$1")" || return $?
+    argument="$(validate "$handler" String "argument" "$1")" || return $?
     case "$argument" in
     --global)
       globalFlag=true

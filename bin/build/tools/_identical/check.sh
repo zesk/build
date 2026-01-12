@@ -41,7 +41,7 @@ __identicalCheck() {
       ;;
     --cd)
       shift
-      rootDir=$(usageArgumentDirectory "$handler" "$argument" "${1-}") || return $?
+      rootDir=$(validate "$handler" Directory "$argument" "${1-}") || return $?
       ;;
     --repair)
       shift
@@ -50,7 +50,7 @@ __identicalCheck() {
     --extension)
       shift
       [ ${#findArgs[@]} -eq 0 ] || findArgs+=("-or")
-      findArgs+=("-name" "*.$(usageArgumentString "$handler" "$argument" "${1-}")") || return $?
+      findArgs+=("-name" "*.$(validate "$handler" String "$argument" "${1-}")") || return $?
       extensionText="$extensionText .$1"
       ;;
     --exec)
@@ -90,11 +90,11 @@ __identicalCheck() {
       [ -n "$1" ] || throwArgument "$handler" "Empty $(decorate code "$argument") argument" || return $?
       excludes+=(! -path "$1")
       ;;
-    --cache) shift && tempDirectory=$(usageArgumentDirectory "$handler" "$argument" "${1-}") || return $? ;;
+    --cache) shift && tempDirectory=$(validate "$handler" Directory "$argument" "${1-}") || return $? ;;
     --token)
       shift
       local token
-      token="$(usageArgumentString "$handler" "$argument" "${1-}")" || return $?
+      token="$(validate "$handler" String "$argument" "${1-}")" || return $?
       tokens+=("$token")
       activeFilePatterns+=("$(quoteGrepPattern "$token")") || return $?
       ;;

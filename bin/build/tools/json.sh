@@ -92,7 +92,7 @@ jsonFileGet() {
   [ "$1" != "--help" ] || __help "$handler" "$@" || return 0
 
   jsonFile=$(validate "$handler" File "jsonFile" "${1-}") && shift || return $?
-  path=$(usageArgumentString "$handler" "path" "${1-}") && shift || return $?
+  path=$(validate "$handler" String "path" "${1-}") && shift || return $?
 
   path="$(__jqPathClean "$path")"
 
@@ -115,12 +115,12 @@ jsonFileSet() {
   whichExists jq || throwEnvironment "$handler" "Requires jq - not installed" || return $?
 
   jsonFile=$(validate "$handler" File "jsonFile" "${1-}") && shift || return $?
-  path=$(usageArgumentString "$handler" "path" "${1-}") && shift || return $?
+  path=$(validate "$handler" String "path" "${1-}") && shift || return $?
   path=$(__jqPathClean "$path")
   if [ $# -eq 0 ]; then
     catchEnvironment "$handler" jq --sort-keys -r "del($path)" <"$jsonFile" >"$jsonFile.new" || returnClean $? "$jsonFile.new" || return $?
   else
-    value=$(usageArgumentEmptyString "$handler" "value" "${1-}") && shift || return $?
+    value=$(validate "$handler" EmptyString "value" "${1-}") && shift || return $?
 
     local rawValue
     if [ $# -eq 0 ]; then
@@ -183,11 +183,11 @@ jsonSetValue() {
       ;;
     --value)
       shift
-      value="$(usageArgumentString "$handler" "$argument" "${1-}")" || return $?
+      value="$(validate "$handler" String "$argument" "${1-}")" || return $?
       ;;
     --key)
       shift
-      key="$(usageArgumentString "$handler" "$argument" "${1-}")" || return $?
+      key="$(validate "$handler" String "$argument" "${1-}")" || return $?
       ;;
     --filter)
       shift

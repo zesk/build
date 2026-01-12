@@ -99,7 +99,7 @@ makeShellFilesExecutable() {
       findArgs+=("${tempArgs[@]+"${tempArgs[@]}"}")
       ;;
     *)
-      paths+=("$(usageArgumentDirectory "$handler" "directory" "$1")") || return $?
+      paths+=("$(validate "$handler" Directory "directory" "$1")") || return $?
       ;;
     esac
     shift
@@ -512,7 +512,7 @@ extensionLists() {
       ;;
     *)
       if [ -z "$directory" ]; then
-        directory=$(usageArgumentDirectory "$handler" "directory" "$1") || return $?
+        directory=$(validate "$handler" Directory "directory" "$1") || return $?
       else
         names+=("$1")
       fi

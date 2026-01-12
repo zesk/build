@@ -98,17 +98,17 @@ daemontoolsInstallService() {
       ;;
     --name)
       shift
-      serviceName=$(usageArgumentString "$handler" "serviceName" "${1-}") || return $?
+      serviceName=$(validate "$handler" String "serviceName" "${1-}") || return $?
       ;;
     --log)
       shift
-      logHome="$(usageArgumentDirectory "$handler" "$argument" "${1-}")" || return $?
+      logHome="$(validate "$handler" Directory "$argument" "${1-}")" || return $?
       ;;
     *)
       if [ -z "$serviceFile" ]; then
-        serviceFile=$(usageArgumentExecutable "$handler" "serviceFile" "$1") || return $?
+        serviceFile=$(validate "$handler" Executable "serviceFile" "$1") || return $?
       elif [ -z "$serviceName" ]; then
-        serviceName=$(usageArgumentString "$handler" "serviceName" "$1") || return $?
+        serviceName=$(validate "$handler" String "serviceName" "$1") || return $?
       else
         throwArgument "$handler" "Extra argument $1" || return $?
       fi
@@ -211,7 +211,7 @@ daemontoolsRemoveService() {
     --help) "$handler" 0 && return $? || return $? ;;
     --home)
       shift
-      serviceHome=$(usageArgumentDirectory "$handler" "$argument" "${1-}") || return $?
+      serviceHome=$(validate "$handler" Directory "$argument" "${1-}") || return $?
       ;;
     *)
       if [ -z "$serviceName" ]; then
@@ -496,11 +496,11 @@ daemontoolsManager() {
     --help) "$handler" 0 && return $? || return $? ;;
     --chirp)
       shift
-      chirpSeconds=$(usageArgumentPositiveInteger "$handler" chirpSeconds "${1-}") || return $?
+      chirpSeconds=$(validate "$handler" PositiveInteger chirpSeconds "${1-}") || return $?
       ;;
     --interval)
       shift
-      intervalSeconds=$(usageArgumentPositiveInteger "$handler" intervalSeconds "${1-}") || return $?
+      intervalSeconds=$(validate "$handler" PositiveInteger intervalSeconds "${1-}") || return $?
       ;;
     --stat)
       shift
@@ -509,7 +509,7 @@ daemontoolsManager() {
       ;;
     --home)
       shift
-      serviceHome=$(usageArgumentDirectory "$handler" "serviceHome" "${1-}") || return $?
+      serviceHome=$(validate "$handler" Directory "serviceHome" "${1-}") || return $?
       ;;
     --action)
       shift

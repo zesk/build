@@ -7,7 +7,7 @@
 # Test: ./test/tools/validate-tests.sh
 # Docs: ./documentation/source/tools/validate.md
 
-# IDENTICAL validate 115
+# IDENTICAL validate 126
 
 # Validate a value by type
 # Argument: handler - Function. Required. Error handler.
@@ -70,6 +70,8 @@
 # You can repeat the `type` `name` `value` more than once in the arguments and each will be checked until one fails
 # Return Code: 0 - Valid is valid, stdout is a filtered version of the value to be used
 # Return Code: 2 - Valid is invalid, output reason to stderr
+# Requires: __validateTypeString __validateTypePositiveInteger __validateTypeFunction __validateTypeCallable
+# Requires: isFunction throwArgument __help decorate
 validate() {
   local handler="_${FUNCNAME[0]}"
   local prefix="__validateType"
@@ -86,7 +88,7 @@ validate() {
     fi
     local typeFunction="$prefix$type"
     isFunction "$typeFunction" || throwArgument "$handler" "validate $type is not a valid type:"$'\n'"$(validateTypeList)" || return $?
-    if ! value=$("$typeFunction" "$value"); then
+    if ! value=$("$typeFunction" "$value" 2>&1); then
       local suffix=""
       [ -z "$value" ] || suffix=" $(decorate error "$value")"
       throwArgument "$handler" "$name ($(decorate each code "$@")) is not type $(decorate label "$type")$suffix" || return $?
@@ -109,18 +111,27 @@ _validateThrow() {
 }
 
 # Non-empty string
+# Requires: _validateThrow
 __validateTypeString() {
   [ -n "${1-}" ] || _validateThrow "blank" || return $?
   printf "%s\n" "${1-}"
 }
 
+# Requires: isPositiveInteger _validateThrow
 __validateTypePositiveInteger() {
   isPositiveInteger "${1-}" || _validateThrow || return $?
   printf "%s\n" "${1#+}"
 }
 
+# Requires: isFunction _validateThrow
 __validateTypeFunction() {
   isFunction "${1-}" || _validateThrow || return $?
+  printf "%s\n" "${1-}"
+}
+
+# Requires: isCallable _validateThrow
+__validateTypeCallable() {
+  isCallable "${1-}" || _validateThrow || return $?
   printf "%s\n" "${1-}"
 }
 
@@ -203,11 +214,6 @@ __validateTypeInteger() {
 __validateTypeNumber() {
   isNumber "${1-}" || _validateThrow || return $?
   printf "%s\n" "${1#+}"
-}
-
-__validateTypeCallable() {
-  isCallable "${1-}" || _validateThrow || return $?
-  printf "%s\n" "${1-}"
 }
 
 __validateTypeExecutable() {
@@ -305,8 +311,7 @@ __validateTypeFile() {
 
 # A directory exists
 __validateTypeDirectory() {
-  _validateHelperCheck -d "$@" || return $?
-  printf "%s\n" "${1%/}"
+  _validateHelperCheck -d "${1%/}" || return $?
 }
 
 # A link exists
@@ -353,6 +358,23 @@ __validateTypeSecret() {
 __validateTypeURL() {
   urlValid "${1-}" || _validateThrow || return $?
   printf "%s\n" "${1-}"
+}
+
+# Validates a value as an environment file which is loaded immediately.
+#
+# Argument: variableValue - Required. String.
+# Return Code: 2 - Argument error
+# Return Code: 0 - Success
+__validateTypeLoadEnvironmentFile() {
+  local handler="returnMessage"
+  local envFile bashEnv
+
+  envFile=$(__validateTypeFile "$@") || return $?
+  bashEnv=$(fileTemporaryName "$handler") || return $?
+  catchEnvironment "$handler" environmentFileToBashCompatible "$envFile" >"$bashEnv" || returnClean $? "$bashEnv" || return $?
+  catchEnvironment "$handler" environmentFileLoad "$bashEnv" || returnClean $? "$bashEnv" || return $?
+  catchEnvironment "$handler" rm -f "$bashEnv" || return $?
+  printf "%s\n" "$envFile"
 }
 
 # List types which can be validated
@@ -426,6 +448,7 @@ _validateTypeMapper() {
     date) t=Date ;;
     directorylist | dirlist) t=DirectoryList ;;
     environmentvariable | env) t=EnvironmentVariable ;;
+    loadenvironmentfile | load-env) t=LoadEnvironmentFile ;;
     exists) t=Exists ;;
     file) t=File ;;
     directory | dir) t=Directory ;;

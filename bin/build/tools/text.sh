@@ -40,9 +40,9 @@ fileExtractLines() {
     --help) "$handler" 0 && return $? || return $? ;;
     *)
       if [ -z "$start" ]; then
-        start="$(usageArgumentPositiveInteger "$handler" "start" "$1")" || return $?
+        start="$(validate "$handler" PositiveInteger "start" "$1")" || return $?
       elif [ -z "$end" ]; then
-        end="$(usageArgumentPositiveInteger "$handler" "end" "$1")" || return $?
+        end="$(validate "$handler" PositiveInteger "end" "$1")" || return $?
       else
         # _IDENTICAL_ argumentUnknownHandler 1
         throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
@@ -120,9 +120,9 @@ isMappable() {
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
-    --token) shift && tokenClasses="$(usageArgumentString "$handler" "$argument" "${1-}")" || return $? ;;
-    --prefix) shift && prefix=$(quoteGrepPattern "$(usageArgumentString "$handler" "$argument" "${1-}")") || return $? ;;
-    --suffix) shift && suffix=$(quoteGrepPattern "$(usageArgumentString "$handler" "$argument" "${1-}")") || return $? ;;
+    --token) shift && tokenClasses="$(validate "$handler" String "$argument" "${1-}")" || return $? ;;
+    --prefix) shift && prefix=$(quoteGrepPattern "$(validate "$handler" String "$argument" "${1-}")") || return $? ;;
+    --suffix) shift && suffix=$(quoteGrepPattern "$(validate "$handler" String "$argument" "${1-}")") || return $? ;;
     *)
       if printf "%s\n" "$1" | grep -q -e "$prefix$tokenClasses$tokenClasses*$suffix"; then
         return 0
@@ -999,7 +999,7 @@ removeFields() {
     --help) "$handler" 0 && return $? || return $? ;;
     *)
       [ -z "$fieldCount" ] || throwArgument "$handler" "Only one fieldCount should be provided argument #$__index: $argument" || return $?
-      fieldCount="$(usageArgumentPositiveInteger "$handler" "fieldCount" "$argument")" || return $?
+      fieldCount="$(validate "$handler" PositiveInteger "fieldCount" "$argument")" || return $?
       ;;
     esac
     shift
@@ -1082,9 +1082,9 @@ stringReplace() {
     --help) "$handler" 0 && return $? || return $? ;;
     *)
       if [ -z "$needle" ]; then
-        needle="$(usageArgumentString "$handler" "$argument" "${1-}")" || return $?
+        needle="$(validate "$handler" String "$argument" "${1-}")" || return $?
       elif [ -z "$sedCommand" ]; then
-        replacement="$(usageArgumentEmptyString "$handler" "$argument" "${1-}")" || return $?
+        replacement="$(validate "$handler" EmptyString "$argument" "${1-}")" || return $?
         sedCommand="s/$(quoteSedPattern "$needle")/$(quoteSedReplacement "$replacement")/g"
       else
         sed -e "$sedCommand" <<<"$1"

@@ -108,7 +108,7 @@ timingReport() {
     --handler) shift && handler=$(validate "$handler" function "$argument" "${1-}") || return $? ;;
     --color)
       shift
-      color=$(usageArgumentString "$handler" "$argument" "${1-}") || return $?
+      color=$(validate "$handler" String "$argument" "${1-}") || return $?
       ;;
     *)
       start="$argument"

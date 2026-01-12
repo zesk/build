@@ -191,12 +191,12 @@ _assertConditionHelper() {
     --handler) shift && handler=$(validate "$handler" function "$argument" "${1-}") || return $? ;;
     --exit)
       shift
-      expectedExitCode=$(usageArgumentUnsignedInteger "$handler" "$argument" "${1-}") || return $?
+      expectedExitCode=$(validate "$handler" UnsignedInteger "$argument" "${1-}") || return $?
       pairs+=("Exit" "$(decorate bold-magenta " $expectedExitCode ")")
       ;;
     --display)
       shift
-      displayName="$(usageArgumentString "$handler" "$argument" "${1-}")" || return $?
+      displayName="$(validate "$handler" String "$argument" "${1-}")" || return $?
       ;;
     --success)
       shift
@@ -212,15 +212,15 @@ _assertConditionHelper() {
       ;;
     --line-depth)
       shift
-      lineDepth="$(usageArgumentPositiveInteger "$handler" "$argument" "${1-}")" || return $?
+      lineDepth="$(validate "$handler" PositiveInteger "$argument" "${1-}")" || return $?
       ;;
     --test)
       shift
-      tester="$(usageArgumentString "$handler" "$argument" "${1-}")" || return $?
+      tester="$(validate "$handler" String "$argument" "${1-}")" || return $?
       ;;
     --formatter)
       shift
-      formatter="$(usageArgumentString "$handler" "$argument" "${1-}")" || return $?
+      formatter="$(validate "$handler" String "$argument" "${1-}")" || return $?
       ;;
     --stderr-ok)
       errorsOk=true
@@ -271,7 +271,7 @@ _assertConditionHelper() {
     --leak)
       shift
       doPlumber=true
-      leaks+=(--leak "$(usageArgumentString "$handler" "$argument globalName" "${1-}")") || return $?
+      leaks+=(--leak "$(validate "$handler" String "$argument globalName" "${1-}")") || return $?
       ;;
     --debug-lines)
       debugLines=true
@@ -312,7 +312,7 @@ _assertConditionHelper() {
 
   if $code1; then
     [ "$expectedExitCode" -eq 0 ] || catchArgument "$handler" "--exit and --code1 and mutually exclusive for non-zero --exit" || return $?
-    expectedExitCode="$(usageArgumentUnsignedInteger "$handler" "exitCode" "${1-}")" || return $?
+    expectedExitCode="$(validate "$handler" UnsignedInteger "exitCode" "${1-}")" || return $?
     shift
   fi
   if $doPlumber; then
@@ -413,7 +413,7 @@ __assertFileContainsHelper() {
     --help) "$handler" 0 && return $? || return $? ;;
     --display)
       shift
-      displayName="$(usageArgumentString "$handler" "$argument" "${1-}")" || return $?
+      displayName="$(validate "$handler" String "$argument" "${1-}")" || return $?
       ;;
     --line)
       shift
@@ -421,7 +421,7 @@ __assertFileContainsHelper() {
       ;;
     --line-depth)
       shift
-      lineDepth="$(usageArgumentPositiveInteger "$handler" "$argument" "${1-}")" || return $?
+      lineDepth="$(validate "$handler" PositiveInteger "$argument" "${1-}")" || return $?
       ;;
     --debug-lines)
       debugLines=true

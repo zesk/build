@@ -82,7 +82,7 @@ bashCoverageReport() {
     --help) "$handler" 0 && return $? || return $? ;;
     --cache)
       shift
-      reportCache="$(usageArgumentDirectory "$handler" "$argument" "${1-}")" || return $?
+      reportCache="$(validate "$handler" Directory "$argument" "${1-}")" || return $?
       ;;
     --target)
       shift

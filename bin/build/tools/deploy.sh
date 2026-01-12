@@ -128,7 +128,7 @@ deployHasVersion() {
   local deployHome versionName targetPackage
 
   [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
-  deployHome=$(usageArgumentDirectory "$handler" deployHome "${1-}") || return $?
+  deployHome=$(validate "$handler" Directory deployHome "${1-}") || return $?
   versionName="${2-}"
   [ -n "$versionName" ] || throwArgument "$handler" "blank versionName" || return $?
   targetPackage="${3-$(deployPackageName)}"
@@ -150,8 +150,8 @@ _applicationIdLink() {
   [ -n "$fileSuffix" ] || throwArgument "$handler" "Internal fileSuffix is blank" || return $?
   [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
   local deployHome versionName
-  deployHome="$(usageArgumentDirectory "$handler" deployHome "${1-}")" && shift || return $?
-  versionName=$(usageArgumentString "$handler" "versionName" "${1-}") && shift || return $?
+  deployHome="$(validate "$handler" Directory deployHome "${1-}")" && shift || return $?
+  versionName=$(validate "$handler" String "versionName" "${1-}") && shift || return $?
   [ -f "$deployHome/$versionName.$fileSuffix" ] && cat "$deployHome/$versionName.$fileSuffix"
 }
 
@@ -195,7 +195,7 @@ deployMove() {
 
   [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
   local applicationPath newApplicationSource
-  applicationPath=$(usageArgumentDirectory "$handler" applicationPath "${1-}") || return $?
+  applicationPath=$(validate "$handler" Directory applicationPath "${1-}") || return $?
   shift || throwArgument "$handler" "missing argument" || return $?
   newApplicationSource=$(pwd) || throwEnvironment "$handler" "Unable to get pwd" || return $?
   directoryClobber "$newApplicationSource" "$applicationPath"

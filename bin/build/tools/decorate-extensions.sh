@@ -22,10 +22,10 @@ decorateStyle() {
     --help) "$handler" 0 && return $? || return $? ;;
     *)
       if [ -z "$style" ]; then
-        style=$(usageArgumentString "$handler" "style" "$1") || return $?
+        style=$(validate "$handler" String "style" "$1") || return $?
       else
         export __BUILD_COLORS
-        newFormat=$(usageArgumentString "$handler" "newFormat" "$1") || return $?
+        newFormat=$(validate "$handler" String "newFormat" "$1") || return $?
         if oldFormat=$(__decorateStyle "$style"); then
           __BUILD_COLORS="$(_decorateStyleReplace "$__BUILD_COLORS" "$style" "$newFormat")"
         else

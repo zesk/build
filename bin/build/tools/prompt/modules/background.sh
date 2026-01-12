@@ -38,9 +38,9 @@ __backgroundProcess() {
     --quiet) verboseFlag=false && vv=() ;;
     --new-only) showNewOnly=true ;;
     --verbose-toggle) actionFlag="verbose-toggle" ;;
-    --stop) shift && stopSeconds=$(usageArgumentPositiveInteger "$handler" "$argument" "${1-}") || return $? ;;
-    --wait) shift && waitSeconds=$(usageArgumentPositiveInteger "$handler" "$argument" "${1-}") || return $? ;;
-    --frequency) shift && frequency=$(usageArgumentPositiveInteger "$handler" "$argument" "${1-}") || return $? ;;
+    --stop) shift && stopSeconds=$(validate "$handler" PositiveInteger "$argument" "${1-}") || return $? ;;
+    --wait) shift && waitSeconds=$(validate "$handler" PositiveInteger "$argument" "${1-}") || return $? ;;
+    --frequency) shift && frequency=$(validate "$handler" PositiveInteger "$argument" "${1-}") || return $? ;;
     --go) actionFlag="go" ;;
     *)
       if [ 0 -eq ${#condition[@]} ]; then

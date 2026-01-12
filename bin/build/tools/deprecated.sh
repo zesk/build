@@ -18,6 +18,35 @@
 #             |_|
 #
 
+# Validates a value is not blank and is an environment file which is loaded immediately.
+#
+# Argument: usageFunction - Required. Function. Run if handler fails
+# Argument: variableName - Required. String. Name of variable being tested
+# Argument: variableValue - Required. String. Required only in that if it's blank, it fails.
+# Argument: noun - Optional. String. Noun used to describe the argument in errors, defaults to `file`
+# Return Code: 2 - Argument error
+# Return Code: 0 - Success
+# Upon success, outputs the file name to stdout, outputs a console message to stderr
+usageArgumentLoadEnvironmentFile() {
+  _deprecated "${FUNCNAME[0]}"
+  local envFile bashEnv usageFunction returnCode
+
+  usageFunction="$1"
+  envFile=$(validate "$usageFunction" File "${3-}") || return $?
+  bashEnv=$(fileTemporaryName "$usageFunction") || return $?
+  catchEnvironment "$usageFunction" environmentFileToBashCompatible "$envFile" >"$bashEnv" || returnClean $? "$bashEnv" || return $?
+  set -a # UNDO ok
+  # shellcheck source=/dev/null
+  source "$bashEnv"
+  returnCode=$?
+  set +a
+  rm -f "$bashEnv" || :
+  if [ $returnCode -ne 0 ]; then
+    "$usageFunction" "$returnCode" "source $envFile -> $bashEnv failed" || return $?
+  fi
+  printf "%s\n" "$envFile"
+}
+
 # DEPRECATED 2025-10-05
 __catch() {
   # TODO Add this back in after another release

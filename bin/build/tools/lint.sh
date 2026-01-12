@@ -220,14 +220,8 @@ bashLintFilesInteractive() {
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
-    --exec)
-      shift
-      binary="$(usageArgumentCallable "$argument" "${1-}")" || return $?
-      ;;
-    --delay)
-      shift
-      sleepDelay=$(usageArgumentUnsignedInteger "$handler" "$argument" "${1-}") || return $?
-      ;;
+    --exec) shift && binary="$(validate "$handler" Callable "$argument" "${1-}")" || return $? ;;
+    --delay) shift && sleepDelay=$(validate "$handler" UnsignedInteger "$argument" "${1-}") || return $? ;;
     *)
       # _IDENTICAL_ argumentUnknownHandler 1
       throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
@@ -320,7 +314,7 @@ findUncaughtAssertions() {
         # _IDENTICAL_ argumentUnknownHandler 1
         throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
       fi
-      directory=$(usageArgumentDirectory "$handler" "directory" "$1") || return $?
+      directory=$(validate "$handler" Directory "directory" "$1") || return $?
       ;;
     esac
     shift

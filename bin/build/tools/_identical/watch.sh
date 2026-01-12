@@ -26,7 +26,7 @@ __identicalFindTokens() {
     --handler) shift && handler=$(validate "$handler" function "$argument" "${1-}") || return $? ;;
     --prefix)
       shift
-      prefixes+=("$(usageArgumentString "$handler" "$argument" "${1-}")") || return $?
+      prefixes+=("$(validate "$handler" String "$argument" "${1-}")") || return $?
       ;;
     *)
       files+=("$(validate "$handler" File "$argument" "${1-}")") || return $?
@@ -102,11 +102,11 @@ __identicalWatch() {
     --repair)
       shift
       rr+=("$argument" "${1-}")
-      repairSources+=("$(usageArgumentDirectory "$handler" "$argument" "${1-}")") || return $?
+      repairSources+=("$(validate "$handler" Directory "$argument" "${1-}")") || return $?
       ;;
     --cd)
       shift
-      rootDir=$(usageArgumentDirectory "$handler" "$argument" "${1-}") || return $?
+      rootDir=$(validate "$handler" Directory "$argument" "${1-}") || return $?
       rr+=("$argument" "${1-}")
       ;;
     --token)
@@ -133,10 +133,10 @@ __identicalWatch() {
     --extension)
       shift
       rr+=("$argument" "${1-}")
-      findArgs+=("-name" "*.$(usageArgumentString "$handler" "$argument" "${1-}")") || return $?
+      findArgs+=("-name" "*.$(validate "$handler" String "$argument" "${1-}")") || return $?
       ;;
     --days)
-      shift && days=$(usageArgumentPositiveInteger "$handler" "$argument" "${1-}") || return $?
+      shift && days=$(validate "$handler" PositiveInteger "$argument" "${1-}") || return $?
       ;;
     *)
       # _IDENTICAL_ argumentUnknownHandler 1

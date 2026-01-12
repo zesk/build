@@ -19,7 +19,7 @@ __confirmMenu() {
     --help) "$handler" 0 && return $? || return $? ;;
     --prompt)
       shift
-      extras=$(usageArgumentString "$handler" "$argument" "${1-}") || return $?
+      extras=$(validate "$handler" String "$argument" "${1-}") || return $?
       extras=" $(decorate subtle "$extras") "
       ;;
     --result)
@@ -28,19 +28,19 @@ __confirmMenu() {
       ;;
     --attempts)
       shift
-      attempts=$(usageArgumentPositiveInteger "$handler" "$argument" "${1-}") || return $?
+      attempts=$(validate "$handler" PositiveInteger "$argument" "${1-}") || return $?
       ;;
     --timeout)
       shift
-      timeout=$(usageArgumentPositiveInteger "$handler" "$argument" "${1-}") || return $?
+      timeout=$(validate "$handler" PositiveInteger "$argument" "${1-}") || return $?
       ;;
     --choice)
       shift
-      allowed+=("$(usageArgumentString "$handler" "$argument" "${1-}")") || return $?
+      allowed+=("$(validate "$handler" String "$argument" "${1-}")") || return $?
       ;;
     --default)
       shift
-      default="$(usageArgumentString "$handler" "$argument" "${1-}")" || return $?
+      default="$(validate "$handler" String "$argument" "${1-}")" || return $?
       ;;
     -*)
       # _IDENTICAL_ argumentUnknownHandler 1

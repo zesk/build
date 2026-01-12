@@ -47,7 +47,7 @@ directoryChange() {
     --handler) shift && handler=$(validate "$handler" function "$argument" "${1-}") || return $? ;;
     *)
       if [ -z "$directory" ]; then
-        directory=$(usageArgumentDirectory "$handler" "directory" "$1") || return $?
+        directory=$(validate "$handler" Directory "directory" "$1") || return $?
       elif [ -z "$command" ]; then
         command=$(validate "$handler" callable "command" "$1") && shift || return $?
         catchEnvironment "$handler" muzzle pushd "$directory" || return $?
@@ -78,7 +78,7 @@ directoryClobber() {
 
   local source target targetPath targetName sourceStage targetBackup
 
-  source=$(usageArgumentDirectory "$handler" source "$1") || return $?
+  source=$(validate "$handler" Directory source "$1") || return $?
   shift || :
   target="${1-}"
   targetPath="$(dirname "$target")" || throwArgument "$handler" "dirname $target" || return $?
@@ -131,7 +131,7 @@ fileDirectoryRequire() {
     --owner | --mode)
       shift
       local value
-      value=$(usageArgumentString "$handler" "$argument" "${1-}") || return $?
+      value=$(validate "$handler" String "$argument" "${1-}") || return $?
       rr+=("$argument" "$value") || return $?
       ;;
     *)
@@ -206,21 +206,21 @@ directoryRequire() {
     --handler) shift && handler=$(validate "$handler" function "$argument" "${1-}") || return $? ;;
     --owner)
       shift
-      owner=$(usageArgumentString "$handler" "$argument" "${1-}") || return $?
+      owner=$(validate "$handler" String "$argument" "${1-}") || return $?
       [ "$owner" != "-" ] || owner=""
       ;;
     --mode)
       shift
-      mode=("$argument" "$(usageArgumentString "$handler" "$argument" "${1-}")") || return $?
+      mode=("$argument" "$(validate "$handler" String "$argument" "${1-}")") || return $?
       [ "${mode[1]}" != "-" ] || mode=()
       ;;
     --noun)
       shift
-      noun=$(usageArgumentString "$handler" "$argument" "${1-}") || return $?
+      noun=$(validate "$handler" String "$argument" "${1-}") || return $?
       ;;
     --output)
       shift
-      output=$(usageArgumentString "$handler" "$argument" "${1-}") || return $?
+      output=$(validate "$handler" String "$argument" "${1-}") || return $?
       ;;
     *)
       local name="$argument"
@@ -343,11 +343,11 @@ __directoryParent() {
     --pattern)
       [ -z "$filePattern" ] || throwArgument "$handler" "$argument already specified" || return $?
       shift
-      filePattern=$(usageArgumentString "$handler" "$argument" "${1-}") || return $?
+      filePattern=$(validate "$handler" String "$argument" "${1-}") || return $?
       ;;
     --test)
       shift
-      testExpressions+=("$(usageArgumentString "$handler" "$argument" "${1-}")") || return $?
+      testExpressions+=("$(validate "$handler" String "$argument" "${1-}")") || return $?
       ;;
     *)
       [ -z "$startingDirectory" ] || throwArgument "$handler" "startingDirectory $(decorate code "$argument") was already specified $(decorate value "$startingDirectory") (Arguments: $(decorate each code "${handler#_}" "${__saved[@]}"))" || return $?

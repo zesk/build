@@ -72,7 +72,7 @@ applicationHome() {
       ;;
     *)
       [ -z "$here" ] || throwArgument "$handler" "Unknown argument (applicationHome set already to $(decorate code "$here"))"
-      here=$(usageArgumentDirectory "$handler" "directory" "$argument") || return $?
+      here=$(validate "$handler" Directory "directory" "$argument") || return $?
       ;;
     esac
     shift
@@ -107,9 +107,9 @@ applicationHomeAliases() {
     --help) "$handler" 0 && return $? || return $? ;;
     *)
       if [ -z "$goAlias" ]; then
-        goAlias=$(usageArgumentString "$handler" "goAlias" "$argument") || return $?
+        goAlias=$(validate "$handler" String "goAlias" "$argument") || return $?
       elif [ -z "$setAlias" ]; then
-        setAlias=$(usageArgumentString "$handler" "setAlias" "$argument") || return $?
+        setAlias=$(validate "$handler" String "setAlias" "$argument") || return $?
       else
         # _IDENTICAL_ argumentUnknownHandler 1
         throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?

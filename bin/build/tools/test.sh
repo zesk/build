@@ -76,7 +76,7 @@ dumpBinary() {
       shift
       # Allow BLANK
       if [ -n "$1" ]; then
-        showBytes=$(usageArgumentUnsignedInteger "$handler" "bytes" "$1") || return $?
+        showBytes=$(validate "$handler" UnsignedInteger "bytes" "$1") || return $?
       fi
       ;;
     *)

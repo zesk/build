@@ -143,11 +143,11 @@ darwinNotification() {
       ;;
     --title)
       shift
-      title="$(usageArgumentString "$handler" "$argument" "${1-}")" || return $?
+      title="$(validate "$handler" String "$argument" "${1-}")" || return $?
       ;;
     --sound)
       shift
-      soundName="$(usageArgumentString "$handler" "$argument" "${1-}")" || return $?
+      soundName="$(validate "$handler" String "$argument" "${1-}")" || return $?
       darwinSoundValid "$soundName" || throwArgument "$handler" "Sound name $(decorate value "$soundName") not valid, ignoring: $(darwinSoundNames)" || :
       ;;
     --)
@@ -213,11 +213,11 @@ darwinDialog() {
     --help) "$handler" 0 && return $? || return $? ;;
     --choice)
       shift
-      choices+=("$(usageArgumentString "$handler" "$argument" "${1-}")") || return $?
+      choices+=("$(validate "$handler" String "$argument" "${1-}")") || return $?
       ;;
     --title)
       shift
-      title="$(usageArgumentString "$handler" "$argument" "${1-}")" || return $?
+      title="$(validate "$handler" String "$argument" "${1-}")" || return $?
       ;;
     --icon)
       shift
@@ -231,14 +231,14 @@ darwinDialog() {
       ;;
     --timeout)
       shift
-      timeout=$(usageArgumentPositiveInteger "$handler" "$argument" $"${1-}") || return $?
+      timeout=$(validate "$handler" PositiveInteger "$argument" $"${1-}") || return $?
       ;;
     --debug)
       debugFlag=true
       ;;
     --default)
       shift
-      defaultButton="$(usageArgumentUnsignedInteger "$handler" "$argument" "${1-}")" || return $?
+      defaultButton="$(validate "$handler" UnsignedInteger "$argument" "${1-}")" || return $?
       ;;
     --)
       shift

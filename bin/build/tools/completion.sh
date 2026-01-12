@@ -29,11 +29,11 @@ buildCompletion() {
       ;;
     --alias)
       shift
-      aliasName=$(usageArgumentString "$handler" "$argument" "${1-}") || return $?
+      aliasName=$(validate "$handler" String "$argument" "${1-}") || return $?
       ;;
     --reload-alias)
       shift
-      reloadAliasName=$(usageArgumentString "$handler" "$argument" "${1-}") || return $?
+      reloadAliasName=$(validate "$handler" String "$argument" "${1-}") || return $?
       ;;
     *)
       # _IDENTICAL_ argumentUnknownHandler 1

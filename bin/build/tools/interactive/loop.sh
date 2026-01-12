@@ -24,15 +24,15 @@ __loopExecute() {
     --handler) shift && handler=$(validate "$handler" function "$argument" "${1-}") || return $? ;;
     --title)
       shift
-      title=$(usageArgumentString "$handler" "$argument" "${1-}") || return $?
+      title=$(validate "$handler" String "$argument" "${1-}") || return $?
       ;;
     --until)
       shift
-      until+=("$(usageArgumentUnsignedInteger "$handler" "$argument" "${1-}")") || return $?
+      until+=("$(validate "$handler" UnsignedInteger "$argument" "${1-}")") || return $?
       ;;
     --delay)
       shift
-      sleepDelay=$(usageArgumentUnsignedInteger "$handler" "$argument" "${1-}") || return $?
+      sleepDelay=$(validate "$handler" UnsignedInteger "$argument" "${1-}") || return $?
       ;;
     *)
       if [ -z "$loopCallable" ]; then

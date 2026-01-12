@@ -192,9 +192,9 @@ isUpToDate() {
       ;;
     *)
       if [ -z "$keyDate" ]; then
-        keyDate=$(usageArgumentString "$handler" "keyDate" "$argument") || return $?
+        keyDate=$(validate "$handler" String "keyDate" "$argument") || return $?
       elif [ -z "$upToDateDays" ]; then
-        upToDateDays=$(usageArgumentInteger "$handler" "upToDateDays" "$argument") || return $?
+        upToDateDays=$(validate "$handler" Integer "upToDateDays" "$argument") || return $?
       else
         # _IDENTICAL_ argumentUnknownHandler 1
         throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?

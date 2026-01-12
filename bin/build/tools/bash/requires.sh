@@ -57,11 +57,11 @@ __bashCheckRequires() {
     --help) "$handler" 0 && return $? || return $? ;;
     --ignore)
       shift
-      ignore+=("$(usageArgumentString "$handler" "$argument" "${1-}")") || return $?
+      ignore+=("$(validate "$handler" String "$argument" "${1-}")") || return $?
       ;;
     --ignore-prefix)
       shift
-      ignorePrefixes+=("$(usageArgumentString "$handler" "$argument" "${1-}")") || return $?
+      ignorePrefixes+=("$(validate "$handler" String "$argument" "${1-}")") || return $?
       ;;
     --report)
       reportFlag=true

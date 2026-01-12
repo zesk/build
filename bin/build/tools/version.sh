@@ -75,7 +75,7 @@ releaseNotes() {
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
-    --application) shift && home="$(usageArgumentDirectory "$handler" "$argument" "${1-}")" || return $? ;;
+    --application) shift && home="$(validate "$handler" Directory "$argument" "${1-}")" || return $? ;;
     *)
       if [ -n "$version" ]; then
         decorate error "Version $version already specified: $argument"
@@ -192,7 +192,7 @@ releaseNew() {
       isInteractive=false
       decorate warning "Non-interactive mode set"
       ;;
-    --application) shift && application=$(usageArgumentDirectory "$handler" "$argument" "${1-}") || return $? ;;
+    --application) shift && application=$(validate "$handler" Directory "$argument" "${1-}") || return $? ;;
     *)
       if [ -n "$newVersion" ]; then
         # _IDENTICAL_ argumentUnknownHandler 1

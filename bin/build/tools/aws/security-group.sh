@@ -27,19 +27,19 @@ __awsSecurityGroupIPModify() {
       ;;
     --group)
       shift
-      group=$(usageArgumentString "$handler" "$argument" "${1-}") || return $?
+      group=$(validate "$handler" String "$argument" "${1-}") || return $?
       ;;
     --port)
       shift
-      port=$(usageArgumentPositiveInteger "$handler" "$argument" "${1-}") || return $?
+      port=$(validate "$handler" PositiveInteger "$argument" "${1-}") || return $?
       ;;
     --description)
       shift
-      description=$(usageArgumentString "$handler" "$argument" "${1-}") || return $?
+      description=$(validate "$handler" String "$argument" "${1-}") || return $?
       ;;
     --ip)
       shift
-      ip=$(usageArgumentString "$handler" "$argument" "${1-}") || return $?
+      ip=$(validate "$handler" String "$argument" "${1-}") || return $?
       ;;
     --add)
       verb="Adding"

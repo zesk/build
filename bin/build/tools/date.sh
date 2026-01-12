@@ -206,7 +206,7 @@ dateAdd() {
     --help) "$handler" 0 && return $? || return $? ;;
     --days)
       shift
-      days=$(usageArgumentInteger "$handler" "$argument" "${1-}") || return $?
+      days=$(validate "$handler" Integer "$argument" "${1-}") || return $?
       ;;
     *)
       timestamp=$(catchArgument "$handler" dateToTimestamp "$argument") || return $?

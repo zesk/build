@@ -29,13 +29,13 @@ __awsCredentialsAdd() {
     --profile)
       shift
       [ -z "$profileName" ] || throwArgument "$handler" "--profile already specified" || return $?
-      profileName="$(usageArgumentString "$handler" "$argument" "${1-}")" || return $?
+      profileName="$(validate "$handler" String "$argument" "${1-}")" || return $?
       ;;
     *)
       if [ -z "$key" ]; then
-        key=$(usageArgumentString "$handler" "key" "$1") || return $?
+        key=$(validate "$handler" String "key" "$1") || return $?
       elif [ -z "$secret" ]; then
-        secret=$(usageArgumentString "$handler" "secret" "$1") || return $?
+        secret=$(validate "$handler" String "secret" "$1") || return $?
       else
         # _IDENTICAL_ argumentUnknownHandler 1
         throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
@@ -94,14 +94,14 @@ __awsCredentialsRemove() {
     --profile)
       shift
       [ -z "$profileName" ] || throwArgument "$handler" "--profile already specified" || return $?
-      profileName="$(usageArgumentString "$handler" "$argument" "${1-}")" || return $?
+      profileName="$(validate "$handler" String "$argument" "${1-}")" || return $?
       ;;
     --comments)
       addComments=true
       ;;
     *)
       if [ -z "$profileName" ]; then
-        profileName="$(usageArgumentString "$handler" "$argument" "$1")" || return $?
+        profileName="$(validate "$handler" String "$argument" "$1")" || return $?
       else
         # _IDENTICAL_ argumentUnknownHandler 1
         throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?

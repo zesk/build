@@ -64,15 +64,15 @@ deployBuildEnvironment() {
       ;;
     --home)
       shift
-      deployHome="$(usageArgumentString "$handler" "$argument" "${1-}")" || return $?
+      deployHome="$(validate "$handler" String "$argument" "${1-}")" || return $?
       ;;
     --host)
       shift
-      userHosts+=("$(usageArgumentString "$handler" "$argument" "${1-}")") || return $?
+      userHosts+=("$(validate "$handler" String "$argument" "${1-}")") || return $?
       ;;
     --id)
       shift
-      applicationId="$(usageArgumentString "$handler" "$argument" "${1-}")" || return $?
+      applicationId="$(validate "$handler" String "$argument" "${1-}")" || return $?
       ;;
     --application)
       shift
@@ -80,7 +80,7 @@ deployBuildEnvironment() {
       ;;
     --target)
       shift
-      targetPackage="$(usageArgumentString "$handler" "$argument" "${1-}")" || return $?
+      targetPackage="$(validate "$handler" String "$argument" "${1-}")" || return $?
       ;;
     --dry-run)
       dryRun=true
@@ -98,7 +98,7 @@ deployBuildEnvironment() {
 
   local envFile
   for envFile in "${envFiles[@]+${envFiles[@]}}"; do
-    muzzle usageArgumentLoadEnvironmentFile "$handler" "envFile" "$envFile" || return $?
+    muzzle validate "$handler" LoadEnvironmentFile "envFile" "$envFile" || return $?
     envFilesLoaded+=("$envFile")
   done
 
@@ -238,7 +238,7 @@ deployRemoteFinish() {
       revertFlag=false
       ;;
     --home)
-      shift && deployHome=$(usageArgumentDirectory "$handler" deployHome "${1-}") || return $?
+      shift && deployHome=$(validate "$handler" Directory deployHome "${1-}") || return $?
       ;;
     --id)
       shift
@@ -358,11 +358,11 @@ _deployRevertApplication() {
       ;;
     *)
       if [ -z "$deployHome" ]; then
-        deployHome=$(usageArgumentDirectory "$handler" deployHome "$1") || return $?
+        deployHome=$(validate "$handler" Directory deployHome "$1") || return $?
       elif [ -z "$applicationId" ]; then
         applicationId="$1"
       elif [ -z "$applicationPath" ]; then
-        applicationPath=$(usageArgumentDirectory "$handler" applicationPath "$1") || return $?
+        applicationPath=$(validate "$handler" Directory applicationPath "$1") || return $?
       elif [ -z "$targetPackage" ]; then
         targetPackage="$1"
       else
@@ -530,7 +530,7 @@ deployToRemote() {
       ;;
     --ip)
       shift
-      currentIP=$(usageArgumentString "$handler" "$argument" "${1-}") || return $?
+      currentIP=$(validate "$handler" String "$argument" "${1-}") || return $?
       ;;
     --id)
       shift

@@ -20,9 +20,9 @@ __deployMigrateDirectoryToLink() {
     --help) "$handler" 0 && return $? || return $? ;;
     *)
       if [ -z "$deployHome" ]; then
-        deployHome="$(usageArgumentDirectory "$handler" "deployHome" "$1")" || return $?
+        deployHome="$(validate "$handler" Directory "deployHome" "$1")" || return $?
       elif [ -z "$applicationPath" ]; then
-        applicationPath="$(usageArgumentDirectory "$handler" "applicationPath" "$1")" || return $?
+        applicationPath="$(validate "$handler" Directory "applicationPath" "$1")" || return $?
       else
         # _IDENTICAL_ argumentUnknownHandler 1
         throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?

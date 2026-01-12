@@ -20,14 +20,14 @@ __interactiveCountdown() {
     --help) "$handler" 0 && return $? || return $? ;;
     --prefix)
       shift
-      prefix="$(usageArgumentEmptyString "$handler" "$argument" "${1-}")" || return $?
+      prefix="$(validate "$handler" EmptyString "$argument" "${1-}")" || return $?
       ;;
     --badge)
       runner=(bigTextAt "-5" "5")
       ;;
     *)
       if [ -z "$counter" ]; then
-        counter=$(usageArgumentPositiveInteger "$handler" "counter" "$1") || return $?
+        counter=$(validate "$handler" PositiveInteger "counter" "$1") || return $?
       else
         binary=$(validate "$handler" callable "callable" "$1") || return $?
         break
@@ -76,7 +76,7 @@ __interactiveCountdownReadCharacter() {
 
   if [ "$1" != "" ]; then
     rr=(-t 1)
-    timeout=$(usageArgumentPositiveInteger "$handler" "timeout" "${1-}") || return $?
+    timeout=$(validate "$handler" PositiveInteger "timeout" "${1-}") || return $?
     width="$timeout"
     width="${#width}"
     # milliseconds
@@ -84,7 +84,7 @@ __interactiveCountdownReadCharacter() {
   fi
   shift
 
-  attempts=$(usageArgumentInteger "$handler" "attempts" "${1-}") && shift || return $?
+  attempts=$(validate "$handler" Integer "attempts" "${1-}") && shift || return $?
 
   extras="${1-}" && shift
 

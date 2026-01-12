@@ -71,11 +71,11 @@ processWait() {
       ;;
     --timeout)
       shift || throwArgument "$handler" "missing $argument" || return $?
-      timeout=$(usageArgumentInteger "$handler" "timeout" "$1") || return $?
+      timeout=$(validate "$handler" Integer "timeout" "$1") || return $?
       signalTimeout=$timeout
       ;;
     *)
-      processId=$(usageArgumentInteger "$handler" "processId" "$1") || return $?
+      processId=$(validate "$handler" Integer "processId" "$1") || return $?
       processIds+=("$processId")
       ;;
     esac
@@ -245,7 +245,7 @@ processOpenPipes() {
     --help) "$handler" 0 && return $? || return $? ;;
     *)
       local pid
-      pid="$(usageArgumentInteger "$handler" "pid" "$argument")" || return $?
+      pid="$(validate "$handler" Integer "pid" "$argument")" || return $?
       lsof -c 9999 -g "$pid" -l -F ckns
       # -c n - character width of COMMAND output
       # -F field format

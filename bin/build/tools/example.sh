@@ -55,8 +55,8 @@ exampleFunction() {
     # _IDENTICAL_ handlerHandler 1
     --handler) shift && handler=$(validate "$handler" function "$argument" "${1-}") || return $? ;;
     --easy) easyFlag=true ;;
-    --name) shift && name="$(usageArgumentString "$handler" "$argument" "${1-}")" || return $? ;;
-    --path) shift && path="$(usageArgumentDirectory "$handler" "$argument" "${1-}")" || return $? ;;
+    --name) shift && name="$(validate "$handler" String "$argument" "${1-}")" || return $? ;;
+    --path) shift && path="$(validate "$handler" Directory "$argument" "${1-}")" || return $? ;;
     --target) shift && target="$(validate "$handler" FileDirectory "$argument" "${1-}")" || return $? ;;
     *)
       # _IDENTICAL_ argumentUnknownHandler 1

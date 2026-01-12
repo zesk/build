@@ -28,15 +28,15 @@ __bashPrompt() {
     --help) "$handler" 0 && return $? || return $? ;;
     --success)
       shift
-      successPrompt=$(usageArgumentString "$handler" "$argument" "${1-}") || return $?
+      successPrompt=$(validate "$handler" String "$argument" "${1-}") || return $?
       ;;
     --failure)
       shift
-      failurePrompt=$(usageArgumentString "$handler" "$argument" "${1-}") || return $?
+      failurePrompt=$(validate "$handler" String "$argument" "${1-}") || return $?
       ;;
     --label)
       shift
-      label="$(usageArgumentEmptyString "$handler" "$argument" "${1-}")" || return $?
+      label="$(validate "$handler" EmptyString "$argument" "${1-}")" || return $?
       [ -z "$label" ] || label="$label "
       ;;
     --list)
@@ -44,12 +44,12 @@ __bashPrompt() {
       ;;
     --format)
       shift
-      promptFormat=$(usageArgumentString "$handler" "$argument" "${1-}") || return $?
+      promptFormat=$(validate "$handler" String "$argument" "${1-}") || return $?
       ;;
     --remove)
       shift
       local module
-      module=$(usageArgumentString "$handler" "$argument" "${1-}") || return $?
+      module=$(validate "$handler" String "$argument" "${1-}") || return $?
       __bashPromptRemove "$handler" "$module" || return $?
       ;;
     --skip-prompt)
@@ -60,7 +60,7 @@ __bashPrompt() {
       ;;
     --colors)
       shift
-      colorsText="$(usageArgumentString "$handler" "$argument" "${1-}")" || return $?
+      colorsText="$(validate "$handler" String "$argument" "${1-}")" || return $?
       local colors
       IFS=":" read -r -a colors <<<"$colorsText" || :
       [ "${#colors[@]}" -ge 2 ] || throwArgument "$handler" "$argument should be min 2 colors separated by a colon: $(decorate code "$colorsText")" || return $?
@@ -72,7 +72,7 @@ __bashPrompt() {
       ;;
     --order)
       shift
-      order=$(usageArgumentUnsignedInteger "$handler" "$argument" "${1-}") || return $?
+      order=$(validate "$handler" UnsignedInteger "$argument" "${1-}") || return $?
       addArguments+=("$argument" "$order")
       ;;
     --verbose)
@@ -213,7 +213,7 @@ __bashPromptAdd() {
     case "$argument" in
     --order)
       shift
-      order=$(usageArgumentUnsignedInteger "$handler" "$argument" "${1-}") || return $?
+      order=$(validate "$handler" UnsignedInteger "$argument" "${1-}") || return $?
       [ "$order" -gt 0 ] || order=0
       [ "$order" -lt 99 ] || order=99
       ;;

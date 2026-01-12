@@ -200,7 +200,7 @@ packageDefault() {
       throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
       ;;
     *)
-      lookup+=("$(usageArgumentString "$handler" "binary" "$argument")") || return $?
+      lookup+=("$(validate "$handler" String "binary" "$argument")") || return $?
       ;;
     esac
     shift
@@ -265,9 +265,9 @@ packageWhich() {
       ;;
     *)
       if [ -z "$binary" ]; then
-        binary=$(usageArgumentString "$handler" "binary" "$argument") || return $?
+        binary=$(validate "$handler" String "binary" "$argument") || return $?
       else
-        packages+=("$(usageArgumentString "$handler" "binary" "$argument")") || return $?
+        packages+=("$(validate "$handler" String "binary" "$argument")") || return $?
       fi
       ;;
     esac
@@ -333,9 +333,9 @@ packageWhichUninstall() {
       ;;
     *)
       if [ -z "$binary" ]; then
-        binary=$(usageArgumentString "$handler" "binary" "$argument") || return $?
+        binary=$(validate "$handler" String "binary" "$argument") || return $?
       else
-        packages+=("$(usageArgumentString "$handler" "binary" "$argument")") || return $?
+        packages+=("$(validate "$handler" String "binary" "$argument")") || return $?
       fi
       ;;
     esac
@@ -714,9 +714,9 @@ packageGroupWhich() {
       ;;
     *)
       if [ -z "$binary" ]; then
-        binary=$(usageArgumentString "$handler" "$argument" "${1-}") || return $?
+        binary=$(validate "$handler" String "$argument" "${1-}") || return $?
       else
-        groups+=("$(usageArgumentString "$handler" "group" "$argument")") || return $?
+        groups+=("$(validate "$handler" String "group" "$argument")") || return $?
       fi
       ;;
     esac
@@ -761,7 +761,7 @@ packageGroupInstall() {
       packageManagerValid "$manager" || throwArgument "$handler" "Manager is invalid: $(decorate code "$manager")" || return $?
       ;;
     *)
-      groups+=("$(usageArgumentString "$handler" "group" "$argument")") || return $?
+      groups+=("$(validate "$handler" String "group" "$argument")") || return $?
       ;;
     esac
     shift
@@ -809,7 +809,7 @@ packageGroupUninstall() {
       packageManagerValid "$manager" || throwArgument "$handler" "Manager is invalid: $(decorate code "$manager")" || return $?
       ;;
     *)
-      groups+=("$(usageArgumentString "$handler" "group" "$argument")") || return $?
+      groups+=("$(validate "$handler" String "group" "$argument")") || return $?
       ;;
     esac
     shift

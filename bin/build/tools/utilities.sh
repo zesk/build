@@ -122,7 +122,7 @@ pipeRunner() {
     --help) "$handler" 0 && return $? || return $? ;;
     --mode)
       shift
-      mode=$(usageArgumentString "$handler" "mode" "${1-}") || return $?
+      mode=$(validate "$handler" String "mode" "${1-}") || return $?
       ;;
     --writer)
       [ -z "$namedPipe" ] || throwArgument "$handler" "No namedPipe supplied" || return $?

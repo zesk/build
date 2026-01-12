@@ -16,12 +16,12 @@ __identicalCheckGenerateSearchFiles() {
   local handler="$1" && shift
   local directory
 
-  directory=$(usageArgumentDirectory "$handler" "directory" "${1-%/}") && shift || return $?
+  directory=$(validate "$handler" Directory "directory" "${1-%/}") && shift || return $?
 
   local repairSources=()
   while [ $# -gt 0 ]; do
     if [ "$1" = "--" ]; then shift && break; fi
-    repairSources+=("$(usageArgumentDirectory "$handler" repairSource "$1")") && shift || return $?
+    repairSources+=("$(validate "$handler" Directory repairSource "$1")") && shift || return $?
   done
 
   local searchFileList directory directories

@@ -117,13 +117,13 @@ bitbucketPRNewURL() {
     --help) "$handler" 0 && return $? || return $? ;;
     # _IDENTICAL_ handlerHandler 1
     --handler) shift && handler=$(validate "$handler" function "$argument" "${1-}") || return $? ;;
-    --event-source) shift && eventSource=$(usageArgumentString "$handler" "$argument" "${1-}") || return $? ;;
-    --source) shift && source=$(usageArgumentString "$handler" "$argument" "${1-}") || return $? ;;
+    --event-source) shift && eventSource=$(validate "$handler" String "$argument" "${1-}") || return $? ;;
+    --source) shift && source=$(validate "$handler" String "$argument" "${1-}") || return $? ;;
     *)
       if [ -z "$org" ]; then
-        org=$(usageArgumentString "$handler" "$argument" "${1-}") || return $?
+        org=$(validate "$handler" String "$argument" "${1-}") || return $?
       elif [ -z "$name" ]; then
-        name=$(usageArgumentString "$handler" "$argument" "${1-}") || return $?
+        name=$(validate "$handler" String "$argument" "${1-}") || return $?
       else
         # _IDENTICAL_ argumentUnknownHandler 1
         throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?

@@ -26,7 +26,7 @@ urlMatchesLocalFileSize() {
     --help) "$handler" 0 && return $? || return $? ;;
     *)
       if [ -z "$url" ]; then
-        url=$(usageArgumentString "$handler" "url" "$1") || return $?
+        url=$(validate "$handler" String "url" "$1") || return $?
       elif [ -z "$file" ]; then
         file="$(validate "$handler" File "file" "$1")" || return $?
       else
@@ -75,7 +75,7 @@ urlContentLength() {
     *)
       local tempFile url remoteSize
       tempFile=$(fileTemporaryName "$handler") || return $?
-      url=$(usageArgumentURL "$handler" "url" "$1") || return $?
+      url=$(validate "$handler" URL "url" "$1") || return $?
       catchEnvironment "$handler" curl -s -I "$url" >"$tempFile" || returnClean $? "$tempFile" || return $?
       remoteSize=$(grep -i 'Content-Length' "$tempFile" | awk '{ print $2 }') || throwEnvironment "$handler" "Remote URL did not return Content-Length" || returnClean $? "$tempFile" || return $?
       catchReturn "$handler" rm -f "$tempFile" || return $?
@@ -141,7 +141,7 @@ websiteScrape() {
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
     *)
-      url=$(usageArgumentURL "$handler" "url" "$1") || return $?
+      url=$(validate "$handler" URL "url" "$1") || return $?
       break
       ;;
     esac

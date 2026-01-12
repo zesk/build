@@ -31,12 +31,12 @@ __identicalRepair() {
     --prefix)
       [ -z "$prefix" ] || throwArgument "$handler" "single $argument only:" "$arguments" || return $?
       shift
-      prefix="$(usageArgumentString "$handler" "$argument" "${1-}")" || return $?
+      prefix="$(validate "$handler" String "$argument" "${1-}")" || return $?
       ;;
     --token)
       [ -z "$token" ] || throwArgument "$handler" "single $argument only:" "$arguments" || return $?
       shift
-      token="$(usageArgumentString "$handler" "$argument" "${1-}")" || return $?
+      token="$(validate "$handler" String "$argument" "${1-}")" || return $?
       ;;
     --stdout)
       stdout=true

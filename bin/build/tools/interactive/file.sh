@@ -42,12 +42,12 @@ __fileCopy() {
       ;;
     --owner)
       shift
-      usageArgumentString "$handler" "$argument" "${1-}" || return $?
+      validate "$handler" String "$argument" "${1-}" || return $?
       owner="$1"
       ;;
     --mode)
       shift
-      usageArgumentString "$handler" "$argument" "${1-}" || return $?
+      validate "$handler" String "$argument" "${1-}" || return $?
       mode="$1"
       ;;
     *)
@@ -55,7 +55,7 @@ __fileCopy() {
       source="$1"
       [ -f "$source" ] || throwEnvironment "$handler" "source \"$source\" does not exist" || return $?
       shift
-      destination=$(usageArgumentFileDirectory returnArgument "destination" "${1-}") || return $?
+      destination=$(validate "$handler" FileDirectory "destination" "${1-}") || return $?
       shift
       [ $# -eq 0 ] || catchArgument "$handler" "unknown argument $1" || return $?
       if $mapFlag; then

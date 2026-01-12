@@ -263,11 +263,11 @@ interactiveOccasionally() {
     --help) "$handler" 0 && return $? || return $? ;;
     # _IDENTICAL_ handlerHandler 1
     --handler) shift && handler=$(validate "$handler" function "$argument" "${1-}") || return $? ;;
-    --delta) shift && delta="$(usageArgumentPositiveInteger "$handler" "$argument" "${1-}")" || return $? ;;
+    --delta) shift && delta="$(validate "$handler" PositiveInteger "$argument" "${1-}")" || return $? ;;
     --verbose) verboseFlag=true ;;
     *)
       if [ -z "$name" ]; then
-        name="$(usageArgumentEnvironmentVariable "$handler" "$argument" "${1-}")" || return $?
+        name="$(validate "$handler" EnvironmentVariable "$argument" "${1-}")" || return $?
       else
         # _IDENTICAL_ argumentUnknownHandler 1
         throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?

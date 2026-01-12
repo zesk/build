@@ -98,7 +98,7 @@ __deprecatedCleanup() {
       [ $# -eq 0 ] || shift
       ;;
     --check) justCheck=true ;;
-    --prefix) shift && prefix=$(usageArgumentEmptyString "$handler" "$argument" "${1-}") || return $? ;;
+    --prefix) shift && prefix=$(validate "$argument" "$handler" "${1-}") || return $? ;;
 
     *)
       # _IDENTICAL_ argumentUnknownHandler 1

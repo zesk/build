@@ -30,7 +30,7 @@ __approveBashSource() {
     --verbose) verboseFlag=true ;;
     --delete) hh+=(--delete) && deleteFlag=true ;;
     --report) reportFlag=true ;;
-    --prefix) shift && prefix="$(usageArgumentString "$handler" "$argument" "${1-}")" || return $? ;;
+    --prefix) shift && prefix="$(validate "$handler" String "$argument" "${1-}")" || return $? ;;
     *)
       local sourcePath="$argument" verb=""
       displayPath="$(decorate file "$sourcePath")"

@@ -102,15 +102,15 @@ testSuite() {
       ;;
     --tag)
       shift
-      tags+=("$(usageArgumentString "$handler" "$argument" "${1-}")") || return $?
+      tags+=("$(validate "$handler" String "$argument" "${1-}")") || return $?
       ;;
     --skip-tag)
       shift
-      skipTags+=("$(usageArgumentString "$handler" "$argument" "${1-}")") || return $?
+      skipTags+=("$(validate "$handler" String "$argument" "${1-}")") || return $?
       ;;
     --env-file)
       shift
-      muzzle usageArgumentLoadEnvironmentFile "$handler" "envFile" "${1-}" || return $?
+      muzzle validate "$handler" LoadEnvironmentFile "envFile" "${1-}" || return $?
       decorate info "Loaded environment file $(decorate code "$1")"
       ;;
     --cd-away)
@@ -118,7 +118,7 @@ testSuite() {
       ;;
     --tests)
       shift
-      testPaths+=("$(usageArgumentDirectory "$handler" "$argument" "${1-}")") || return $?
+      testPaths+=("$(validate "$handler" Directory "$argument" "${1-}")") || return $?
       ;;
     --coverage)
       $beQuiet || decorate warning "Will collect coverage statistics ..."
@@ -133,12 +133,12 @@ testSuite() {
     --start)
       [ -z "$startTest" ] || throwArgument "$handler" "$argument supplied twice" || return $?
       shift
-      startTest="$(usageArgumentString "$handler" "$argument" "$1")" || return $?
+      startTest="$(validate "$handler" String "$argument" "$1")" || return $?
       continueFlag=true
       ;;
     -1 | --one | --suite)
       shift
-      runTestSuites+=("$(usageArgumentString "$handler" "$argument" "${1-}")") || return $?
+      runTestSuites+=("$(validate "$handler" String "$argument" "${1-}")") || return $?
       ;;
     --list)
       verboseMode=false
@@ -173,7 +173,7 @@ testSuite() {
       throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
       ;;
     *)
-      matchTests+=("$(usageArgumentString "$handler" "match" "$1")") || return $?
+      matchTests+=("$(validate "$handler" String "match" "$1")") || return $?
       ;;
     esac
     shift

@@ -27,7 +27,7 @@ deprecatedFilePrependVersion() {
       if [ -z "$target" ]; then
         target="$(validate "$handler" File "target" "${1-}")" || return $?
       elif [ -z "$version" ]; then
-        version="$(usageArgumentString "$handler" "version" "$1")" || return $?
+        version="$(validate "$handler" String "version" "$1")" || return $?
       fi
       ;;
     esac
@@ -102,7 +102,7 @@ deprecatedTokensFile() {
     --help) "$handler" 0 && return $? || return $? ;;
     --path)
       shift
-      cannonPath=$(usageArgumentDirectory "$handler" "$argument cannonPath" "${1-}") || return $?
+      cannonPath=$(validate "$handler" Directory "$argument cannonPath" "${1-}") || return $?
       ;;
     *)
       if [ -z "$findArgumentFunction" ]; then
@@ -184,7 +184,7 @@ deprecatedCannonFile() {
     --help) "$handler" 0 && return $? || return $? ;;
     --path)
       shift
-      cannonPath=$(usageArgumentDirectory "$handler" "$argument cannonPath" "${1-}") || return $?
+      cannonPath=$(validate "$handler" Directory "$argument cannonPath" "${1-}") || return $?
       ;;
     *)
       if [ -z "$findArgumentFunction" ]; then
@@ -255,7 +255,7 @@ deprecatedFind() {
     --help) "$handler" 0 && return $? || return $? ;;
     --path)
       shift
-      cannonPath=$(usageArgumentDirectory "$handler" "$argument" "${1-}") || return $?
+      cannonPath=$(validate "$handler" Directory "$argument" "${1-}") || return $?
       ;;
     *)
       if [ -z "$findArgumentFunction" ]; then
@@ -264,7 +264,7 @@ deprecatedFind() {
         read -d '' -r -a aa < <("$findArgumentFunction") || [ "${#aa[@]}" -gt 0 ] || throwArgument "$handler" "$findArgumentFunction returned empty" || return $?
       else
         [ -n "$cannonPath" ] || cannonPath=$(catchReturn "$handler" buildHome) || return $?
-        search="$(usageArgumentString "$handler" "search" "${1-}")" || return $?
+        search="$(validate "$handler" String "search" "${1-}")" || return $?
         search="$(quoteGrepPattern "$search")"
         if find "$cannonPath" -type f "${aa[@]}" -print0 | xargs -0 grep -n -l -e "$search"; then
           return 0
@@ -301,13 +301,13 @@ deprecatedCannon() {
     --help) "$handler" 0 && return $? || return $? ;;
     --path)
       shift
-      cannonPath=$(usageArgumentDirectory "$handler" "$argument" "${1-}") || return $?
+      cannonPath=$(validate "$handler" Directory "$argument" "${1-}") || return $?
       ;;
     *)
       if [ -z "$findArgumentFunction" ]; then
         findArgumentFunction=$(validate "$handler" function "ignoreFunction" "$1") || return $?
       elif [ -z "$search" ]; then
-        search="$(usageArgumentString "$handler" "search" "${1-}")" || return $?
+        search="$(validate "$handler" String "search" "${1-}")" || return $?
       else
         break
       fi

@@ -8,8 +8,8 @@
 __networkConfigurationFiltered() {
   local patternNotGNU patternGNU handler="$1" && shift
 
-  patternNotGNU=$(usageArgumentString "$handler" "patternNotGNU" "${1-}") && shift || return $?
-  patternGNU=$(usageArgumentString "$handler" "patternGNU" "${1-}") && shift || return $?
+  patternNotGNU=$(validate "$handler" String "patternNotGNU" "${1-}") && shift || return $?
+  patternGNU=$(validate "$handler" String "patternGNU" "${1-}") && shift || return $?
 
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#

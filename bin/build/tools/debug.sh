@@ -296,8 +296,8 @@ plumber() {
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
-    --temporary) shift && __tempDir=$(usageArgumentDirectory "$handler" "$argument" "${1-}") || return $? ;;
-    --leak) shift && __ignore+=("$(usageArgumentString "$handler" "globalName" "${1-}")") || return $? ;;
+    --temporary) shift && __tempDir=$(validate "$handler" Directory "$argument" "${1-}") || return $? ;;
+    --leak) shift && __ignore+=("$(validate "$handler" String "globalName" "${1-}")") || return $? ;;
     --verbose) __verboseFlag=true ;;
     *) break ;;
     esac
@@ -389,17 +389,17 @@ housekeeper() {
     --help) "$handler" 0 && return $? || return $? ;;
     # _IDENTICAL_ handlerHandler 1
     --handler) shift && handler=$(validate "$handler" function "$argument" "${1-}") || return $? ;;
-    --temporary) shift && __tempDir=$(usageArgumentDirectory "$handler" "$argument" "${1-}") || return $? ;;
+    --temporary) shift && __tempDir=$(validate "$handler" Directory "$argument" "${1-}") || return $? ;;
     --ignore)
       shift
-      __pattern="$(usageArgumentString "$handler" "grepPattern" "${1-}")" || return $?
+      __pattern="$(validate "$handler" String "grepPattern" "${1-}")" || return $?
       __ignore+=(-e "$__pattern")
       ;;
-    --cache) shift && __cacheDirectory=$(usageArgumentDirectory "$handler" "$argument" "${1-}") || return $? ;;
+    --cache) shift && __cacheDirectory=$(validate "$handler" Directory "$argument" "${1-}") || return $? ;;
     --overhead) overheadFlag=true ;;
     --path)
       shift
-      path="$(usageArgumentDirectory "$handler" "path" "${1-}")" || return $?
+      path="$(validate "$handler" Directory "path" "${1-}")" || return $?
       watchPaths+=("$path")
       ;;
     *)

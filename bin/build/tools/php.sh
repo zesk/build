@@ -183,11 +183,11 @@ phpBuild() {
       ;;
     --composer)
       shift
-      composerArgs+=("$(usageArgumentString "$handler" "$argument" "${1-}")") || return $?
+      composerArgs+=("$(validate "$handler" String "$argument" "${1-}")") || return $?
       ;;
     --name)
       shift
-      targetName=$(usageArgumentString "$handler" "name" "${1-}") || return $?
+      targetName=$(validate "$handler" String "name" "${1-}") || return $?
       ;;
     --)
       shift
@@ -198,11 +198,11 @@ phpBuild() {
       ;;
     --suffix)
       shift
-      versionSuffix=$(usageArgumentString "$handler" "versionSuffix" "${1-}") || return $?
+      versionSuffix=$(validate "$handler" String "versionSuffix" "${1-}") || return $?
       ;;
     --home)
       shift
-      home=$(usageArgumentDirectory "$handler" "$argument" "${1-}") || return $?
+      home=$(validate "$handler" Directory "$argument" "${1-}") || return $?
       ;;
     *)
       environments+=("$1")
@@ -353,12 +353,12 @@ phpTest() {
     --help) "$handler" 0 && return $? || return $? ;;
     --env-file)
       shift
-      muzzle usageArgumentLoadEnvironmentFile "$handler" "$argument" "${1-}" || return $?
+      muzzle validate "$handler" LoadEnvironmentFile "$argument" "${1-}" || return $?
       statusMessage decorate info "Loaded $argument $(decorate file "$1") (wd: $(pwd))" || return $?
       ;;
     --home)
       shift
-      home=$(usageArgumentDirectory "$handler" "$argument" "${1-}") || return $?
+      home=$(validate "$handler" Directory "$argument" "${1-}") || return $?
       ;;
     *)
       # _IDENTICAL_ argumentUnknownHandler 1

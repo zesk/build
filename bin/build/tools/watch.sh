@@ -34,12 +34,12 @@ watchDirectory() {
     # _IDENTICAL_ handlerHandler 1
     --handler) shift && handler=$(validate "$handler" function "$argument" "${1-}") || return $? ;;
     --verbose) verboseFlag=true ;;
-    --file) shift && lastFile=$(usageArgumentString "$handler" "$argument" "${1-}") || return $? ;;
-    --modified) shift && lastTimestamp=$(usageArgumentUnsignedInteger "$handler" "$argument" "${1-}") || return $? ;;
-    --timeout) shift && secondsToRun=$(usageArgumentUnsignedInteger "$handler" "$argument" "${1-}") || return $? ;;
+    --file) shift && lastFile=$(validate "$handler" String "$argument" "${1-}") || return $? ;;
+    --modified) shift && lastTimestamp=$(validate "$handler" UnsignedInteger "$argument" "${1-}") || return $? ;;
+    --timeout) shift && secondsToRun=$(validate "$handler" UnsignedInteger "$argument" "${1-}") || return $? ;;
     --state) shift && stateFile=$(validate "$handler" File "$argument" "${1-}") || return $? ;;
     *)
-      rootDir=$(usageArgumentDirectory "$handler" "directory" "$1") || return $?
+      rootDir=$(validate "$handler" Directory "directory" "$1") || return $?
       shift
       break
       ;;

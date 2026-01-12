@@ -16,7 +16,7 @@ __documentationTemplateUpdate() {
   [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
 
   local templatePath repairArgs=() failCount=0
-  templatePath=$(usageArgumentDirectory "$handler" "templatePath" "${1-}") && shift || return $?
+  templatePath=$(validate "$handler" Directory "templatePath" "${1-}") && shift || return $?
 
   while [ $# -gt 0 ]; do
     repairArgs+=("--repair" "$1")
@@ -43,7 +43,7 @@ __documentationTemplateUpdateUnlinked() {
   local cacheDirectory envFile template unlinkedFunctions todoTemplate template total clean content
 
   clean=()
-  cacheDirectory=$(usageArgumentDirectory "$handler" "cacheDirectory" "${1-}") || return $?
+  cacheDirectory=$(validate "$handler" Directory "cacheDirectory" "${1-}") || return $?
   envFile=$(validate "$handler" File "envFile" "${2-}") || return $?
   template=$(validate "$handler" File "template" "${3-}") || return $?
 

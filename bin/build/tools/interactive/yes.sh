@@ -24,17 +24,17 @@ __confirmYesNo() {
       ;;
     --attempts)
       shift
-      attempts=$(usageArgumentPositiveInteger "$handler" "$argument" "${1-}") || return $?
+      attempts=$(validate "$handler" PositiveInteger "$argument" "${1-}") || return $?
       ;;
     --timeout)
       shift
-      timeout=$(usageArgumentPositiveInteger "$handler" "$argument" "${1-}") || return $?
+      timeout=$(validate "$handler" PositiveInteger "$argument" "${1-}") || return $?
       ;;
     --yes) default=yes ;;
     --no) default=no ;;
     --default)
       shift
-      default="$(usageArgumentString "$handler" "$argument" "${1-}")" || return $?
+      default="$(validate "$handler" String "$argument" "${1-}")" || return $?
       parseBoolean "$default" || [ $? -ne 2 ] || throwArgument "$handler" "Can not parse $(decorate code "$1") as a boolean" || return $?
       ;;
     *)

@@ -69,26 +69,26 @@ mariadbDump() {
       ;;
     --binary)
       shift
-      binary=$(usageArgumentExecutable "$handler" "$argument" "${1-}") || return $?
+      binary=$(validate "$handler" Executable "$argument" "${1-}") || return $?
       ;;
     --lock)
       options+=(--lock-tables)
       ;;
     --user)
       shift
-      options+=("--user=$(usageArgumentString "$handler" "$argument" "${1-}")") || return $?
+      options+=("--user=$(validate "$handler" String "$argument" "${1-}")") || return $?
       ;;
     --password)
       shift
-      options+=("--password=$(usageArgumentString "$handler" "$argument" "${1-}")") || return $?
+      options+=("--password=$(validate "$handler" String "$argument" "${1-}")") || return $?
       ;;
     --port)
       shift
-      options+=("--port=$(usageArgumentInteger "$handler" "$argument" "${1-}")") || return $?
+      options+=("--port=$(validate "$handler" Integer "$argument" "${1-}")") || return $?
       ;;
     --host)
       shift
-      options+=("--host=$(usageArgumentString "$handler" "$argument" "${1-}")") || return $?
+      options+=("--host=$(validate "$handler" String "$argument" "${1-}")") || return $?
       ;;
     *)
       # _IDENTICAL_ argumentUnknownHandler 1

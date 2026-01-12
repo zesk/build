@@ -34,8 +34,8 @@ filesRename() {
 
   local old new verb
 
-  old=$(usageArgumentEmptyString "$handler" "oldSuffix" "${1-}") && shift || return $?
-  new=$(usageArgumentEmptyString "$handler" "newSuffix" "${1-}") && shift || return $?
+  old=$(validate "$handler" EmptyString "oldSuffix" "${1-}") && shift || return $?
+  new=$(validate "$handler" EmptyString "newSuffix" "${1-}") && shift || return $?
   verb="${1-}" && shift || return $?
 
   while [ $# -gt 0 ]; do
@@ -434,9 +434,9 @@ linkRename() {
     --help) "$handler" 0 && return $? || return $? ;;
     *)
       if [ -z "$from" ]; then
-        from=$(usageArgumentLink "$handler" "from $(fileType "$1")" "$1") || return $?
+        from=$(validate "$handler" Link "from $(fileType "$1")" "$1") || return $?
       elif [ -z "$to" ]; then
-        to=$(usageArgumentString "$handler" "to $(fileType "$1")" "$1") || return $?
+        to=$(validate "$handler" String "to $(fileType "$1")" "$1") || return $?
       else
         # _IDENTICAL_ argumentUnknownHandler 1
         throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
@@ -669,7 +669,7 @@ _directoryGamutFileWrapper() {
       ;;
     *)
       [ -z "$directory" ] || throwArgument "$handler" "Directory already supplied" || return $?
-      directory="$(usageArgumentDirectory "$handler" "$argument" "${1-}")" || return $?
+      directory="$(validate "$handler" Directory "$argument" "${1-}")" || return $?
       ;;
     esac
     shift
@@ -725,10 +725,10 @@ linkCreate() {
       ;;
     *)
       if [ -z "$target" ]; then
-        target=$(usageArgumentExists "$handler" "target" "$argument") || return $?
+        target=$(validate "$handler" Exists "target" "$argument") || return $?
         path=$(catchEnvironment "$handler" dirname "$target") || return $?
       elif [ -z "$linkName" ]; then
-        linkName=$(usageArgumentString "$handler" "linkName" "$argument") || return $?
+        linkName=$(validate "$handler" String "linkName" "$argument") || return $?
       else
         # _IDENTICAL_ argumentUnknownHandler 1
         throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?

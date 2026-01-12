@@ -9,7 +9,7 @@
 __bashDocumentationSettingsHeader() {
   local handler="$1" && shift
 
-  fn=$(usageArgumentString "$handler" "fn" "${1-}") && shift || return $?
+  fn=$(validate "$handler" String "fn" "${1-}") && shift || return $?
 
   # Hides 'unused' messages so shellcheck should succeed
   printf '%s\n' '# shellcheck disable=SC2034'
@@ -47,7 +47,7 @@ __bashDocumentationExtract() {
     local dumper line
     export fn base
 
-    fn=$(usageArgumentString "$handler" "fn" "${1-}") && shift || return $?
+    fn=$(validate "$handler" String "fn" "${1-}") && shift || return $?
     local mapNames=("fn") simpleNames=("fn")
     local desc=() lastName="" foundNames=() lastName="" values=()
     __bashDocumentationSettingsHeader "$handler" "$fn" || return $?

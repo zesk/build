@@ -42,11 +42,11 @@ __documentationBuild() {
       ;;
     --company)
       shift
-      company=$(usageArgumentString "$handler" "$argument" "${1-}") || return $?
+      company=$(validate "$handler" String "$argument" "${1-}") || return $?
       ;;
     --name)
       shift
-      applicationName=$(usageArgumentString "$handler" "$argument" "${1-}") || return $?
+      applicationName=$(validate "$handler" String "$argument" "${1-}") || return $?
       ;;
     --filter)
       docArgs+=("$argument")
@@ -75,16 +75,16 @@ __documentationBuild() {
       ;;
     --target)
       shift
-      targetPath="$(usageArgumentDirectory "$handler" "$argument" "${1-}")" || return $?
+      targetPath="$(validate "$handler" Directory "$argument" "${1-}")" || return $?
       targetPath="${targetPath#"$home"/}"
       ;;
     --company-link)
       shift
-      companyLink=$(usageArgumentString "$handler" "$argument" "${1-}") || return $?
+      companyLink=$(validate "$handler" String "$argument" "${1-}") || return $?
       ;;
     --unlinked-source)
       shift
-      unlinkedSources+=("$(usageArgumentDirectory "$handler" "$argument" "${1-}")") || return $?
+      unlinkedSources+=("$(validate "$handler" Directory "$argument" "${1-}")") || return $?
       ;;
     --unlinked-template)
       shift
@@ -104,7 +104,7 @@ __documentationBuild() {
       ;;
     --see-environment-link)
       shift
-      seeEnvironmentLink=$(usageArgumentString "$handler" "$argument" "${1-}") || return $?
+      seeEnvironmentLink=$(validate "$handler" String "$argument" "${1-}") || return $?
       ;;
     --force)
       if [ ${#docArgs[@]} -eq 0 ] || ! inArray "$argument" "${docArgs[@]}"; then

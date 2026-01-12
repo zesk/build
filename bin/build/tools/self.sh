@@ -169,11 +169,11 @@ buildEnvironmentFiles() {
     --help) "$handler" 0 && return $? || return $? ;;
     # _IDENTICAL_ handlerHandler 1
     --handler) shift && handler=$(validate "$handler" function "$argument" "${1-}") || return $? ;;
-    --application) shift && applicationHome=$(usageArgumentDirectory "$handler" "$argument" "${1-}") || return $? ;;
+    --application) shift && applicationHome=$(validate "$handler" Directory "$argument" "${1-}") || return $? ;;
     *)
       local env paths=() path file=""
       [ -n "$applicationHome" ] || applicationHome=$(catchReturn "$handler" buildHome) || return $?
-      env="$(usageArgumentEnvironmentVariable "$handler" "environmentVariable" "$argument")" || return $?
+      env="$(validate "$handler" EnvironmentVariable "environmentVariable" "$argument")" || return $?
       IFS=$'\n' read -d '' -r -a paths < <(_buildEnvironmentPath "$handler") || :
       for path in "${paths[@]}"; do
         if ! pathIsAbsolute "$path"; then
@@ -229,9 +229,9 @@ buildEnvironmentLoad() {
     --handler) shift && handler=$(validate "$handler" function "$argument" "${1-}") || return $? ;;
     --print) printFlag=true ;;
     --all) allFlag=true ;;
-    --application) shift && applicationHome=$(usageArgumentDirectory "$handler" "$argument" "${1-}") || return $? ;;
+    --application) shift && applicationHome=$(validate "$handler" Directory "$argument" "${1-}") || return $? ;;
     *)
-      envNames+=("$(usageArgumentEnvironmentVariable "$handler" "environmentVariable" "$1")") || return $?
+      envNames+=("$(validate "$handler" EnvironmentVariable "environmentVariable" "$1")") || return $?
       ;;
     esac
     shift
@@ -303,7 +303,7 @@ tools() {
     --handler) shift && handler=$(validate "$handler" function "$argument" "${1-}") || return $? ;;
     --start)
       shift
-      startDirectory=$(usageArgumentDirectory "$handler" "$argument" "${1-}") || return $?
+      startDirectory=$(validate "$handler" Directory "$argument" "${1-}") || return $?
       ;;
     --verbose)
       vv+=("$argument")
@@ -413,11 +413,11 @@ buildEnvironmentGetDirectory() {
       ;;
     --subdirectory)
       shift
-      subdirectory=$(usageArgumentString "$handler" "$argument" "${1-}") || return $?
+      subdirectory=$(validate "$handler" String "$argument" "${1-}") || return $?
       ;;
     --owner | --mode)
       shift
-      rr+=("$argument" "$(usageArgumentString "$handler" "$argument" "${1-}")") || return $?
+      rr+=("$argument" "$(validate "$handler" String "$argument" "${1-}")") || return $?
       createFlag=true
       ;;
     --no-create)
@@ -494,7 +494,7 @@ buildEnvironmentContext() {
   [ $# -eq 0 ] || __help "$handler" "$@" || return 0
 
   local start
-  start="$(usageArgumentDirectory "$handler" "contextStart" "${1-}")" && shift || return $?
+  start="$(validate "$handler" Directory "contextStart" "${1-}")" && shift || return $?
 
   local codeHome home binTools="bin/build/tools.sh"
   codeHome=$(catchReturn "$handler" buildHome) || return $?

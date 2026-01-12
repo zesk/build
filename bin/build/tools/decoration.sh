@@ -100,9 +100,9 @@ bigTextAt() {
     --help) "$handler" 0 && return $? || return $? ;;
     *)
       if [ -z "$x" ]; then
-        x=$(usageArgumentInteger "$handler" "xOffset" "$argument") || return $?
+        x=$(validate "$handler" Integer "xOffset" "$argument") || return $?
       elif [ -z "$y" ]; then
-        y=$(usageArgumentInteger "$handler" "yOffset" "$argument") || return $?
+        y=$(validate "$handler" Integer "yOffset" "$argument") || return $?
       else
         message=$(catchEnvironment "$handler" bigText "$@") || return $?
       fi
@@ -253,7 +253,7 @@ repeat() {
     --help) "$handler" 0 && return $? || return $? ;;
     *)
       if [ -z "$count" ]; then
-        count="$(usageArgumentUnsignedInteger "$handler" "count" "$1")" || return $?
+        count="$(validate "$handler" UnsignedInteger "count" "$1")" || return $?
       else
         local powers curPow
         powers=("$*")
@@ -312,7 +312,7 @@ echoBar() {
       barText="$argument"
       shift
       if [ -n "${1-}" ]; then
-        delta=$(usageArgumentInteger "$handler" "delta" "$1") || return $?
+        delta=$(validate "$handler" Integer "delta" "$1") || return $?
       else
         delta=0
         break
@@ -344,7 +344,7 @@ lineFill() {
   local text cleanText width barText
 
   width=$(catchReturn "$handler" consoleColumns) || return $?
-  barText=$(usageArgumentString "$handler" "barText" "${1:--}") || return $?
+  barText=$(validate "$handler" String "barText" "${1:--}") || return $?
   shift || :
 
   text="$*"
@@ -383,7 +383,7 @@ alignRight() {
   local handler="_${FUNCNAME[0]}"
   local n
   __help "$handler" "$@" || return 0
-  n=$(usageArgumentUnsignedInteger "$handler" "characterWidth" "${1-}") && shift || return $?
+  n=$(validate "$handler" UnsignedInteger "characterWidth" "${1-}") && shift || return $?
   printf "%${n}s" "$*"
 }
 _alignRight() {
@@ -409,7 +409,7 @@ alignLeft() {
   local handler="_${FUNCNAME[0]}"
   local n
   __help "$handler" "$@" || return 0
-  n=$(usageArgumentUnsignedInteger "$handler" "characterWidth" "${1-}") && shift || return $?
+  n=$(validate "$handler" UnsignedInteger "characterWidth" "${1-}") && shift || return $?
   printf "%-${n}s" "$*"
 }
 _alignLeft() {
@@ -450,19 +450,19 @@ boxedHeading() {
     --help) "$handler" 0 && return $? || return $? ;;
     --outside)
       shift
-      decoration=$(usageArgumentString "$handler" "$argument" "${1-}") || return $?
+      decoration=$(validate "$handler" String "$argument" "${1-}") || return $?
       ;;
     --inside)
       shift
-      inside=$(usageArgumentString "$handler" "$argument" "${1-}") || return $?
+      inside=$(validate "$handler" String "$argument" "${1-}") || return $?
       ;;
     --shrink)
       shift
-      shrink=$(usageArgumentUnsignedInteger "$handler" "$argument" "${1-}") || return $?
+      shrink=$(validate "$handler" UnsignedInteger "$argument" "${1-}") || return $?
       ;;
     --size)
       shift
-      nLines=$(usageArgumentUnsignedInteger "$handler" "$argument" "${1-}") || return $?
+      nLines=$(validate "$handler" UnsignedInteger "$argument" "${1-}") || return $?
       ;;
     *)
       text+=("$1")

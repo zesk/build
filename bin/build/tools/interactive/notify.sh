@@ -21,29 +21,29 @@ __notify() {
     --handler) shift && handler=$(validate "$handler" function "$argument" "${1-}") || return $? ;;
     --message)
       shift
-      message="$(usageArgumentString "$handler" "$argument" "${1-}")" || return $?
+      message="$(validate "$handler" String "$argument" "${1-}")" || return $?
       ;;
     --fail-message)
       shift
-      failMessage="$(usageArgumentString "$handler" "$argument" "${1-}")" || return $?
+      failMessage="$(validate "$handler" String "$argument" "${1-}")" || return $?
       ;;
     --verbose)
       verboseFlag=true
       ;;
     --title)
       shift
-      nn+=("$argument" "$(usageArgumentString "$handler" "$argument" "${1-}")") || return $?
+      nn+=("$argument" "$(validate "$handler" String "$argument" "${1-}")") || return $?
       ;;
     --sound)
       shift
-      nn+=("$argument" "$(usageArgumentString "$handler" "$argument" "${1-}")") || return $?
+      nn+=("$argument" "$(validate "$handler" String "$argument" "${1-}")") || return $?
       ;;
     --fail-title)
       shift
-      nnFail+=("--title" "$(usageArgumentString "$handler" "$argument" "${1-}")") || return $?
+      nnFail+=("--title" "$(validate "$handler" String "$argument" "${1-}")") || return $?
       ;;
     --fail-sound)
-      nnFail+=("--sound" "$(usageArgumentString "$handler" "$argument" "${1-}")") || return $?
+      nnFail+=("--sound" "$(validate "$handler" String "$argument" "${1-}")") || return $?
       ;;
     *)
       binary="$(validate "$handler" callable "$argument" "$1")" || return $?

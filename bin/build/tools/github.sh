@@ -77,7 +77,7 @@ githubURLParse() {
     --help) "$handler" 0 && return $? || return $? ;;
     *)
       local url path
-      url=$(usageArgumentURL "$handler" "url" "$1") || return $?
+      url=$(validate "$handler" URL "url" "$1") || return $?
       local host
       host=$(urlParseItem host "$url") || return $?
       if [ "$host" != "github.com" ]; then

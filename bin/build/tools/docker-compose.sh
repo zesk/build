@@ -200,13 +200,13 @@ dockerCompose() {
       ;;
     --deployment)
       shift
-      deployment="$(usageArgumentString "$handler" "$argument" "${1-}")" || return $?
+      deployment="$(validate "$handler" String "$argument" "${1-}")" || return $?
       deployment="$(uppercase "$deployment")"
       ! $debugFlag || decorate info "Deployment set to $deployment"
       ;;
     --volume)
       shift
-      databaseVolume=$(usageArgumentString "$handler" "$argument" "${1-}") || return $?
+      databaseVolume=$(validate "$handler" String "$argument" "${1-}") || return $?
       ;;
     --clean)
       deleteVolumes=true
@@ -221,10 +221,10 @@ dockerCompose() {
     --arg | --default-env | --env)
       local environmentPair
       shift
-      environmentPair="$(usageArgumentString "$handler" "$argument" "${1-}")" || return $?
+      environmentPair="$(validate "$handler" String "$argument" "${1-}")" || return $?
       local name="${environmentPair%%=*}" value="${environmentPair#*=}"
       ! $debugFlag || decorate info "Variable $argument supplied $(decorate pair "$name" "$value")"
-      name="$(usageArgumentEnvironmentVariable "$handler" "$argument" "$name")" || return $?
+      name="$(validate "$handler" EnvironmentVariable "$argument" "$name")" || return $?
       if [ "$argument" = "--arg" ]; then
         if [ -z "$value" ]; then
           requiredArguments+=("$name")

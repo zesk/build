@@ -71,11 +71,11 @@ mapValue() {
     --handler) shift && handler=$(validate "$handler" function "$argument" "${1-}") || return $? ;;
     --prefix)
       shift
-      prefix=$(usageArgumentString "$handler" "$argument" "${1-}") || return $?
+      prefix=$(validate "$handler" String "$argument" "${1-}") || return $?
       ;;
     --suffix)
       shift
-      suffix=$(usageArgumentString "$handler" "$argument" "${1-}") || return $?
+      suffix=$(validate "$handler" String "$argument" "${1-}") || return $?
       ;;
     --search-filter)
       shift
@@ -140,7 +140,7 @@ _mapValueTrim() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# IDENTICAL mapEnvironment 104
+# IDENTICAL mapEnvironment 87
 
 # Summary: Convert tokens in files to environment variable values
 #
@@ -175,29 +175,12 @@ mapEnvironment() {
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
-    --prefix)
-      shift
-      __prefix=$(validate "$handler" String "$argument" "${1-}") || return $?
-      ;;
-    --suffix)
-      shift
-      __suffix=$(validate "$handler" String "$argument" "${1-}") || return $?
-      ;;
-    --search-filter)
-      shift
-      __searchFilters+=("$(validate "$handler" Callable "searchFilter" "${1-}")") || return $?
-      ;;
-    --replace-filter)
-      shift
-      __replaceFilters+=("$(validate "$handler" Callable "replaceFilter" "${1-}")") || return $?
-      ;;
-    --env-file)
-      shift
-      muzzle usageArgumentLoadEnvironmentFile "$handler" "$argument" "${1-}" || return $?
-      ;;
-    *)
-      __ee+=("$(validate "$handler" String "environmentVariableName" "$argument")") || return $?
-      ;;
+    --prefix) shift && __prefix=$(validate "$handler" String "$argument" "${1-}") || return $? ;;
+    --suffix) shift && __suffix=$(validate "$handler" String "$argument" "${1-}") || return $? ;;
+    --search-filter) shift && __searchFilters+=("$(validate "$handler" Callable "searchFilter" "${1-}")") || return $? ;;
+    --replace-filter) shift && __replaceFilters+=("$(validate "$handler" Callable "replaceFilter" "${1-}")") || return $? ;;
+    --env-file) shift && muzzle validate "$handler" LoadEnvironmentFile "$argument" "${1-}" || return $? ;;
+    *) __ee+=("$(validate "$handler" String "environmentVariableName" "$argument")") || return $? ;;
     esac
     shift
   done
@@ -283,11 +266,11 @@ cannon() {
     --handler) shift && handler=$(validate "$handler" function "$argument" "${1-}") || return $? ;;
     --path)
       shift
-      cannonPath=$(usageArgumentDirectory "$handler" "$argument cannonPath" "${1-}") || return $?
+      cannonPath=$(validate "$handler" Directory "$argument cannonPath" "${1-}") || return $?
       ;;
     *)
       if [ -z "$search" ]; then
-        search="$(usageArgumentString "$handler" "searchText" "$argument")" || return $?
+        search="$(validate "$handler" String "searchText" "$argument")" || return $?
       elif [ -z "$replace" ]; then
         replace="$argument"
         shift

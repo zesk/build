@@ -91,11 +91,11 @@ crontabApplicationUpdate() {
     --mapper)
       [ -z "$environmentMapper" ] || throwArgument "$handler" "$argument already" || return $?
       shift
-      environmentMapper=$(usageArgumentString "$handler" "$argument" "${1-}") || return $?
+      environmentMapper=$(validate "$handler" String "$argument" "${1-}") || return $?
       ;;
     --user)
       shift
-      user="$(usageArgumentString "$handler" "$argument" "${1-}")" || return $?
+      user="$(validate "$handler" String "$argument" "${1-}")" || return $?
       ;;
     --show)
       flagShow=true
@@ -104,7 +104,7 @@ crontabApplicationUpdate() {
       flagDiff=true
       ;;
     *)
-      appPath="$(usageArgumentDirectory "$handler" "applicationPath" "$argument")" || return $?
+      appPath="$(validate "$handler" Directory "applicationPath" "$argument")" || return $?
       ;;
     esac
     shift

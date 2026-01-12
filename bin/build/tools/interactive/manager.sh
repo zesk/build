@@ -29,11 +29,11 @@ __interactiveManager() {
     --handler) shift && handler=$(validate "$handler" function "$argument" "${1-}") || return $? ;;
     --exec)
       shift
-      binary="$(usageArgumentCallable "$argument" "${1-}")" || return $?
+      binary="$(validate "$handler" Callable "$argument" "${1-}")" || return $?
       ;;
     --delay)
       shift
-      sleepDelay=$(usageArgumentUnsignedInteger "$handler" "$argument" "${1-}") || return $?
+      sleepDelay=$(validate "$handler" UnsignedInteger "$argument" "${1-}") || return $?
       ;;
     --repair)
       shift

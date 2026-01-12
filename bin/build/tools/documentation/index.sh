@@ -43,7 +43,7 @@ _documentationIndexGenerate() {
       while [ $# -gt 0 ] && [ "$1" != "--" ]; do filterArgs+=("$1") && shift; done
       ;;
     *)
-      codePaths+=("$(usageArgumentDirectory "$handler" "codePath" "$argument")") || return $?
+      codePaths+=("$(validate "$handler" Directory "codePath" "$argument")") || return $?
       ;;
     esac
     shift
@@ -146,7 +146,7 @@ _documentationIndexUnlinkedFunctions() {
     --help) "$handler" 0 && return $? || return $? ;;
     --debug) debugFlag=true ;;
     *)
-      if ! cacheDirectory=$(usageArgumentDirectory "$handler" "cacheDirectory" "$1"); then
+      if ! cacheDirectory=$(validate "$handler" Directory "cacheDirectory" "$1"); then
         return $?
       fi
       ;;
@@ -208,9 +208,9 @@ __documentationIndexDocumentation() {
     --debug) debugFlag=true ;;
     *)
       if [ -z "$cacheDirectory" ]; then
-        cacheDirectory=$(usageArgumentDirectory "$handler" "cacheDirectory" "$argument") || return $?
+        cacheDirectory=$(validate "$handler" Directory "cacheDirectory" "$argument") || return $?
       else
-        sourcePaths+=("$(usageArgumentDirectory "$handler" "documentationSource" "$argument")") || return $?
+        sourcePaths+=("$(validate "$handler" Directory "documentationSource" "$argument")") || return $?
       fi
       ;;
     esac

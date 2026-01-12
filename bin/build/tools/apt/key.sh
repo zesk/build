@@ -23,34 +23,34 @@ __aptKeyAdd() {
     --help) "$handler" 0 && return $? || return $? ;;
     --name)
       shift
-      names+=("$(usageArgumentString "$handler" "$argument" "${1-}")") || return $?
+      names+=("$(validate "$handler" String "$argument" "${1-}")") || return $?
       ;;
     --skip)
       skipUpdate=true
       ;;
     --title)
       shift
-      title="$(usageArgumentString "$handler" "$argument" "${1-}")" || return $?
+      title="$(validate "$handler" String "$argument" "${1-}")" || return $?
       ;;
     --source)
       shift
-      sourceTypes+=("$(usageArgumentString "$handler" "$argument" "${1-}")") || return $?
+      sourceTypes+=("$(validate "$handler" String "$argument" "${1-}")") || return $?
       ;;
     --repository-url)
       shift
-      repoUrl="$(usageArgumentURL "$handler" "$argument" "${1-}")" || return $?
+      repoUrl="$(validate "$handler" URL "$argument" "${1-}")" || return $?
       ;;
     --list)
       shift
-      listName="$(usageArgumentString "$handler" "$argument" "${1-}")" || return $?
+      listName="$(validate "$handler" String "$argument" "${1-}")" || return $?
       ;;
     --release)
       shift
-      releaseName="$(usageArgumentString "$handler" "$argument" "${1-}")" || return $?
+      releaseName="$(validate "$handler" String "$argument" "${1-}")" || return $?
       ;;
     --url)
       shift
-      remoteUrls+=("$(usageArgumentURL "$handler" "$argument" "${1-}")") || return $?
+      remoteUrls+=("$(validate "$handler" URL "$argument" "${1-}")") || return $?
       ;;
     --install) installFlag=true ;;
     *)

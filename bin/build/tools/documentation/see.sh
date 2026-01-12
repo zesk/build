@@ -37,11 +37,11 @@ __documentationIndexSeeLinker() {
     --debug) debugFlag=true ;;
     *)
       if [ -z "$cacheDirectory" ]; then
-        cacheDirectory=$(usageArgumentDirectory "$handler" "cacheDirectory" "$argument") || return $?
+        cacheDirectory=$(validate "$handler" Directory "cacheDirectory" "$argument") || return $?
       elif [ -z "$documentationSource" ]; then
-        documentationSource=$(usageArgumentDirectory "$handler" "documentationSource" "$argument") || return $?
+        documentationSource=$(validate "$handler" Directory "documentationSource" "$argument") || return $?
       elif [ -z "$documentationTarget" ]; then
-        documentationTarget=$(usageArgumentDirectory "$handler" "documentationTarget" "$argument") || return $?
+        documentationTarget=$(validate "$handler" Directory "documentationTarget" "$argument") || return $?
       else
         # _IDENTICAL_ argumentUnknownHandler 1
         throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?

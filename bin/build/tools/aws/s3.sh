@@ -60,11 +60,11 @@ __awsS3Upload() {
     --help) "$handler" 0 && return $? || return $? ;;
     # _IDENTICAL_ handlerHandler 1
     --handler) shift && handler=$(validate "$handler" function "$argument" "${1-}") || return $? ;;
-    --target) shift && target="$(usageArgumentURL "$handler" "$argument" "${1-}")" || return $? ;;
+    --target) shift && target="$(validate "$handler" URL "$argument" "${1-}")" || return $? ;;
     --profile)
       shift
       [ "${#profileArgs[@]}" -eq 0 ] || throwArgument "$handler" "Specified multiple profiles: ${profileArgs[*]} and ${1-}" || return $?
-      profileArgs=(--profile "$(usageArgumentString "$handler" "$argument" "${1-}")") || return $?
+      profileArgs=(--profile "$(validate "$handler" String "$argument" "${1-}")") || return $?
       decorate info "Using profile $argument"
       ;;
     *)

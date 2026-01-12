@@ -40,7 +40,7 @@ __usageTemplate() {
   local binName options="$2" delimiter="$3" description="$4" exitCode
 
   binName="$(trimSpace "$1")"
-  exitCode=$(usageArgumentUnsignedInteger "$handler" "exitCode" "$5") || return $?
+  exitCode=$(validate "$handler" UnsignedInteger "exitCode" "$5") || return $?
   shift 5 || throwArgument "$handler" "shift 5" || return $?
 
   if ! muzzle decorateStyle bold-green; then
