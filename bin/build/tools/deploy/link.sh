@@ -31,7 +31,7 @@ __deployLink() {
             throwArgument "$handler" "Unknown file type $(fileType "$applicationLinkPath")" || return $?
           fi
         else
-          applicationLinkPath=$(usageArgumentFileDirectory "$handler" applicationLinkPath "$applicationLinkPath") || return $?
+          applicationLinkPath=$(validate "$handler" FileDirectory applicationLinkPath "$applicationLinkPath") || return $?
         fi
       elif [ -z "$currentApplicationHome" ]; then
         # No checking - allows pre-linking

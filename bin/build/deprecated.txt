@@ -1,4 +1,22 @@
-# v0.40.3
+# v0.41.0
+
+# v0.40.4
+usageArgumentBoolean "$handler"|validate "$handler" Boolean|
+usageArgumentCallable "$handler"|validate "$handler" Callable|
+usageArgumentFunction "$handler"|validate "$handler" Function|
+usageArgumentRealFile "$handler"|validate "$handler" RealFile|
+usageArgumentSecret "$handler"|validate "$handler" Secret|
+usageArgumentRealDirectory "$handler"|validate "$handler" RealDirectory|
+usageArgumentFileDirectory "$handler"|validate "$handler" FileDirectory|
+# usageArgumentDirectory "$handler"|validate "$handler" Directory|
+usageArgumentFile "$handler"|validate "$handler" File|
+# usageArgumentPositiveInteger "$handler"|validate "$handler" PositiveInteger|
+# usageArgumentEmptyString "$handler"|validate "$handler" EmptyString|
+# usageArgumentInteger "$handler"|validate "$handler" Integer|
+# usageArgumentUnsignedInteger "$handler"|validate "$handler" UnsignedInteger|
+# usageArgumentString "$__handler"|validate "$__handler" String|
+# usageArgumentString "$handler"|validate "$handler" String|
+environmentAddFile|buildEnvironmentAdd
 catchEnvironment "$handler" any|catchReturn "$handler" any
 catchEnvironment "$handler" awsC|catchReturn "$handler" awsC
 catchEnvironment "$handler" awsS|catchReturn "$handler" awsS
@@ -16,6 +34,8 @@ catchEnvironment "$handler" map|catchReturn "$handler" map
 catchEnvironment "$handler" timing|catchReturn "$handler" timing
 catchEnvironment "$handler" url|catchReturn "$handler" url
 catchEnvironment "$handler" userH|catchReturn "$handler" userH
+
+# v0.40.3
 
 # v0.40.2
 

@@ -188,7 +188,7 @@ _assertConditionHelper() {
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
     # _IDENTICAL_ handlerHandler 1
-    --handler) shift && handler=$(usageArgumentFunction "$handler" "$argument" "${1-}") || return $? ;;
+    --handler) shift && handler=$(validate "$handler" function "$argument" "${1-}") || return $? ;;
     --exit)
       shift
       expectedExitCode=$(usageArgumentUnsignedInteger "$handler" "$argument" "${1-}") || return $?
@@ -200,7 +200,7 @@ _assertConditionHelper() {
       ;;
     --success)
       shift
-      success="$(usageArgumentBoolean "$handler" "$argument" "${1-}")" || return $?
+      success="$(validate "$handler" boolean "$argument" "${1-}")" || return $?
       pairs+=("should" "$(booleanChoose "$success" "succeed" "$(decorate warning "fail")")")
       ;;
     --debug)

@@ -40,7 +40,7 @@ urlSchemeDefaultPort() {
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
     # _IDENTICAL_ handlerHandler 1
-    --handler) shift && handler=$(usageArgumentFunction "$handler" "$argument" "${1-}") || return $? ;;
+    --handler) shift && handler=$(validate "$handler" function "$argument" "${1-}") || return $? ;;
     ftp) port=21 ;;
     ssh) port=22 ;;
     http) port=80 ;;
@@ -100,7 +100,7 @@ urlParse() {
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
     # _IDENTICAL_ handlerHandler 1
-    --handler) shift && handler=$(usageArgumentFunction "$handler" "$argument" "${1-}") || return $? ;;
+    --handler) shift && handler=$(validate "$handler" function "$argument" "${1-}") || return $? ;;
     --integer-port)
       intPort=true
       ;;
@@ -198,7 +198,7 @@ urlParseItem() {
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
     # _IDENTICAL_ handlerHandler 1
-    --handler) shift && handler=$(usageArgumentFunction "$handler" "$argument" "${1-}") || return $? ;;
+    --handler) shift && handler=$(validate "$handler" function "$argument" "${1-}") || return $? ;;
     *)
       if [ -z "$component" ]; then
         component=$(usageArgumentString "$handler" "component" "$1") || return $?
@@ -242,7 +242,7 @@ urlValid() {
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
     # _IDENTICAL_ handlerHandler 1
-    --handler) shift && handler=$(usageArgumentFunction "$handler" "$argument" "${1-}") || return $? ;;
+    --handler) shift && handler=$(validate "$handler" function "$argument" "${1-}") || return $? ;;
     *)
       urlParse "$1" >/dev/null || return 1
       ;;
@@ -275,7 +275,7 @@ urlOpener() {
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
     # _IDENTICAL_ handlerHandler 1
-    --handler) shift && handler=$(usageArgumentFunction "$handler" "$argument" "${1-}") || return $? ;;
+    --handler) shift && handler=$(validate "$handler" function "$argument" "${1-}") || return $? ;;
     --exec)
       shift
       binary=$(usageArgumentExecutable "$handler" "$argument" "${1-}") || return $?
@@ -361,7 +361,7 @@ urlFilter() {
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
     # _IDENTICAL_ handlerHandler 1
-    --handler) shift && handler=$(usageArgumentFunction "$handler" "$argument" "${1-}") || return $? ;;
+    --handler) shift && handler=$(validate "$handler" function "$argument" "${1-}") || return $? ;;
     --show-file)
       aa=("$argument")
       showFile=true
@@ -374,7 +374,7 @@ urlFilter() {
       file="$(usageArgumentString "$handler" "$argument" "${1-}")" || return $?
       ;;
     *)
-      files+=("$(usageArgumentFile "$handler" "file" "$1")") || return $?
+      files+=("$(validate "$handler" File "file" "$1")") || return $?
       ;;
     esac
     shift
@@ -425,7 +425,7 @@ urlOpen() {
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
     # _IDENTICAL_ handlerHandler 1
-    --handler) shift && handler=$(usageArgumentFunction "$handler" "$argument" "${1-}") || return $? ;;
+    --handler) shift && handler=$(validate "$handler" function "$argument" "${1-}") || return $? ;;
     --ignore)
       ignoreFlag=true
       ;;
@@ -510,7 +510,7 @@ __urlOpenInnerLoop() {
 # Argument: url - Required. URL. URL to fetch to target file.
 # Argument: file - Optional. FileDirectory. Target file. Use `-` to send to `stdout`. Default value is `-`.
 # Requires: returnMessage whichExists decorate
-# Requires: usageArgumentString usageArgumentPositiveInteger isPositiveInteger
+# Requires: validate
 # Requires: throwArgument catchArgument
 # Requires: throwEnvironment catchEnvironment
 # Environment: BUILD_URL_TIMEOUT
@@ -544,18 +544,18 @@ urlFetch() {
     --curl) binary=("curl") ;;
     --binary)
       local tempBin
-      shift && tempBin=$(usageArgumentString "$handler" "$argument" "${1-}") || return $?
+      shift && tempBin=$(validate "$handler" String "$argument" "${1-}") || return $?
       whichExists "$tempBin" || throwArgument "$handler" "$tempBin must be in PATH: $PATH" || return $?
       binary=("$tempBin")
       ;;
     --argument-format)
-      shift && format=$(usageArgumentString "$handler" "$argument" "${1-}") || return $?
+      shift && format=$(validate "$handler" String "$argument" "${1-}") || return $?
       case "$format" in curl | wget) ;; *) throwArgument "$handler" "$argument must be curl or wget" || return $? ;; esac
       ;;
-    --redirect-max) shift && maxRedirections=$(usageArgumentPositiveInteger "$handler" "$argument" "${1-}") || return $? ;;
+    --redirect-max) shift && maxRedirections=$(validate "$handler" PositiveInteger "$argument" "${1-}") || return $? ;;
     --password) shift && password="$1" ;;
     --user)
-      shift && user=$(usageArgumentString "$handler" "$argument (user)" "$user") || return $?
+      shift && user=$(validate "$handler" String "$argument (user)" "$user") || return $?
       if [ "$user" != "${user#*:}" ]; then
         userHasColons=true
       fi
@@ -565,11 +565,11 @@ urlFetch() {
       ;;
     --debug) debugFlag=true ;;
     --timeout)
-      shift && timeoutSeconds=$(usageArgumentPositiveInteger "$handler" "$argument" "${1-}") || return $?
+      shift && timeoutSeconds=$(validate "$handler" PositiveInteger "$argument" "${1-}") || return $?
       ;;
     --agent)
       local agent
-      shift && agent=$(usageArgumentString "$handler" "$argument" "${1-}") || return $?
+      shift && agent=$(validate "$handler" String "$argument" "${1-}") || return $?
       wgetArgs+=("--user-agent=$agent")
       curlArgs+=("--user-agent" "$agent")
       genericArgs+=("$argument" "$agent")

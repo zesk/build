@@ -26,7 +26,7 @@ __interactiveManager() {
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
     # _IDENTICAL_ handlerHandler 1
-    --handler) shift && handler=$(usageArgumentFunction "$handler" "$argument" "${1-}") || return $? ;;
+    --handler) shift && handler=$(validate "$handler" function "$argument" "${1-}") || return $? ;;
     --exec)
       shift
       binary="$(usageArgumentCallable "$argument" "${1-}")" || return $?
@@ -37,13 +37,13 @@ __interactiveManager() {
       ;;
     --repair)
       shift
-      repairFunction=$(usageArgumentCallable "$handler" "$argument" "${1-}") || return $?
+      repairFunction=$(validate "$handler" callable "$argument" "${1-}") || return $?
       ;;
     *)
       if [ -z "$loopCallable" ]; then
-        loopCallable=$(usageArgumentCallable "$handler" "loopCallable" "$1") || return $?
+        loopCallable=$(validate "$handler" callable "loopCallable" "$1") || return $?
       else
-        files+=("$(usageArgumentFile "$handler" "fileToCheck" "$1")") || return $?
+        files+=("$(validate "$handler" File "fileToCheck" "$1")") || return $?
       fi
       ;;
     esac
@@ -53,7 +53,7 @@ __interactiveManager() {
   [ -n "$loopCallable" ] || throwArgument "$handler" "No loopCallable" || return $?
 
   if [ "${#files[@]}" -eq 0 ]; then
-    while read -r file; do files+=("$(usageArgumentFile "$handler" "fileToCheck (stdin)" "$1")") || return $?; done
+    while read -r file; do files+=("$(validate "$handler" File "fileToCheck (stdin)" "$1")") || return $?; done
     [ "${#files[@]}" -gt 0 ] || return 0
   fi
 

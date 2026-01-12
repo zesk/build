@@ -411,7 +411,7 @@ statusMessage() {
       throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
       ;;
     *)
-      muzzle usageArgumentCallable "$handler" "command" "${1-}" || return $?
+      muzzle validate "$handler" callable "command" "${1-}" || return $?
       break
       ;;
     esac
@@ -882,7 +882,7 @@ colorScheme() {
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
     # _IDENTICAL_ handlerHandler 1
-    --handler) shift && handler=$(usageArgumentFunction "$handler" "$argument" "${1-}") || return $? ;;
+    --handler) shift && handler=$(validate "$handler" function "$argument" "${1-}") || return $? ;;
     --debug) debug=true ;;
     *)
       # _IDENTICAL_ argumentUnknownHandler 1

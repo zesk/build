@@ -57,21 +57,21 @@ __documentationBuild() {
     --template)
       [ -z "$templatePath" ] || throwArgument "$handler" "$argument already supplied" || return $?
       shift
-      templatePath=$(usageArgumentRealDirectory "$handler" "$argument" "${1-}") || return $?
+      templatePath=$(validate "$handler" RealDirectory "$argument" "${1-}") || return $?
       ;;
     --page-template)
       [ -z "$pageTemplate" ] || throwArgument "$handler" "$argument already supplied" || return $?
       shift
-      pageTemplate=$(usageArgumentFile "$handler" "$argument" "${1-}") || return $?
+      pageTemplate=$(validate "$handler" File "$argument" "${1-}") || return $?
       ;;
     --function-template)
       [ -z "$functionTemplate" ] || throwArgument "$handler" "$argument already supplied" || return $?
       shift
-      functionTemplate=$(usageArgumentFile "$handler" "$argument" "${1-}") || return $?
+      functionTemplate=$(validate "$handler" File "$argument" "${1-}") || return $?
       ;;
     --source)
       shift
-      sourcePaths+=("$(usageArgumentRealDirectory "$handler" "$argument" "${1-}")") || return $?
+      sourcePaths+=("$(validate "$handler" RealDirectory "$argument" "${1-}")") || return $?
       ;;
     --target)
       shift
@@ -88,11 +88,11 @@ __documentationBuild() {
       ;;
     --unlinked-template)
       shift
-      unlinkedTemplate=$(usageArgumentFile "$handler" "$argument" "${1-}") || return $?
+      unlinkedTemplate=$(validate "$handler" File "$argument" "${1-}") || return $?
       ;;
     --unlinked-target)
       shift
-      unlinkedTarget=$(usageArgumentFileDirectory "$handler" "$argument" "${1-}") || return $?
+      unlinkedTarget=$(validate "$handler" FileDirectory "$argument" "${1-}") || return $?
       ;;
     --clean)
       indexArgs+=("$argument")

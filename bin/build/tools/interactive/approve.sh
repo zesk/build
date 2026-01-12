@@ -196,7 +196,7 @@ __approvedSources() {
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
-    --highlight) shift && highlighted+=("$(usageArgumentFile "$handler" "$argument" "${1-}")") || return $? ;;
+    --highlight) shift && highlighted+=("$(validate "$handler" File "$argument" "${1-}")") || return $? ;;
     --debug) debugFlag=true ;;
     --delete) deleteFlag=true ;;
     --no-delete) deleteFlag=false ;;

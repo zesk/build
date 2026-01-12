@@ -105,7 +105,7 @@ timingReport() {
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
     # _IDENTICAL_ handlerHandler 1
-    --handler) shift && handler=$(usageArgumentFunction "$handler" "$argument" "${1-}") || return $? ;;
+    --handler) shift && handler=$(validate "$handler" function "$argument" "${1-}") || return $? ;;
     --color)
       shift
       color=$(usageArgumentString "$handler" "$argument" "${1-}") || return $?

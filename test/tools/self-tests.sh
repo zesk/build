@@ -312,6 +312,28 @@ _testInstallBinBuild() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
+testBuildEnvironmentNames() {
+  local handler="returnMessage"
+  local checkNames=(
+    CI
+    __BASH_PROMPT_MARKERS
+    AWS_PROFILE
+    BUILD_COMPANY
+    BUILD_HOME
+    BUILD_NOTIFY_SOUND
+    IP_URL
+    LC_TERMINAL
+    MANPATH
+    PATH
+    PS1
+    TERM
+  )
+  local temp
+  temp=$(fileTemporaryName "$handler") || return $?
+  catchReturn "$handler" buildEnvironmentNames >"$temp" || return $?
+  assertFileContains "$temp" "${checkNames[@]}" || return $?
+  catchEnvironment "$handler" rm -f "$temp" || return $?
+}
 testBuildEnvironmentLoad() {
   local handler="returnMessage"
   local tempDir target

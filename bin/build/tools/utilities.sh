@@ -131,10 +131,10 @@ pipeRunner() {
       ;;
     *)
       if [ -n "$namedPipe" ]; then
-        binary="$(usageArgumentCallable "$handler" "readerExecutable" "$argument")" || return $?
+        binary="$(validate "$handler" callable "readerExecutable" "$argument")" || return $?
         break
       else
-        namedPipe=$(usageArgumentFileDirectory "$handler" "namedPipe" "$argument") || return $?
+        namedPipe=$(validate "$handler" FileDirectory "namedPipe" "$argument") || return $?
       fi
       ;;
     esac

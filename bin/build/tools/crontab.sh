@@ -86,7 +86,7 @@ crontabApplicationUpdate() {
     --env-file)
       [ -z "$rootEnv" ] || throwArgument "$handler" "$argument already" || return $?
       shift
-      rootEnv=$(usageArgumentFile "$handler" "rootEnv" "$1") || return $?
+      rootEnv=$(validate "$handler" File "rootEnv" "$1") || return $?
       ;;
     --mapper)
       [ -z "$environmentMapper" ] || throwArgument "$handler" "$argument already" || return $?

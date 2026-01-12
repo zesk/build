@@ -12,7 +12,7 @@ __doEvalCheck() {
 
   tempResults=$(fileTemporaryName "$handler") || return $?
   while [ $# -gt 0 ]; do
-    file=$(usageArgumentFile "$handler" "file" "$1") || return $?
+    file=$(validate "$handler" File "file" "$1") || return $?
     shift
     if ! grep -n -B 1 -e '^[^#]*\seval "' <"$file" >"$tempResults"; then
       continue

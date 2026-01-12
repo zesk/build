@@ -89,7 +89,7 @@ environmentValueRead() {
   local handler="_${FUNCNAME[0]}"
   [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
   local stateFile name default="${3---}" value
-  stateFile=$(usageArgumentFile "$handler" "stateFile" "${1-}") || return $?
+  stateFile=$(validate "$handler" File "stateFile" "${1-}") || return $?
   name=$(usageArgumentEnvironmentVariable "$handler" "name" "${2-}") || return $?
   [ $# -le 3 ] || throwArgument "$handler" "Extra arguments: $#" || return $?
   if ! value="$(grep -e "^$(quoteGrepPattern "$name")=" "$stateFile" | tail -n 1 | cut -c $((${#name} + 2))-)" || [ -z "$value" ]; then
@@ -341,7 +341,7 @@ environmentLoad() {
       ;;
     --execute)
       shift
-      binary=$(usageArgumentCallable "$handler" "$argument" "${1-}") || return $?
+      binary=$(validate "$handler" callable "$argument" "${1-}") || return $?
       shift
       execute=("$binary" "$@")
       break
@@ -460,7 +460,7 @@ environmentFileLoad() {
       ;;
     --execute)
       shift
-      binary=$(usageArgumentCallable "$handler" "$argument" "${1-}") || return $?
+      binary=$(validate "$handler" callable "$argument" "${1-}") || return $?
       shift
       execute=("$binary" "$@")
       break
@@ -469,11 +469,11 @@ environmentFileLoad() {
       hasOne=true
       if $required; then
         ! $debugMode || printf -- "Loading required file: %s\n" "$argument"
-        environmentFile="$(usageArgumentFile "$handler" "environmentFile" "$argument")" || return $?
+        environmentFile="$(validate "$handler" File "environmentFile" "$argument")" || return $?
         ff+=("$environmentFile") || return $?
       else
         ! $verboseMode || statusMessage decorate info "Loading optional file: $(decorate file "$argument")"
-        environmentFile=$(usageArgumentFileDirectory "$handler" "environmentFile" "$argument") || return $?
+        environmentFile=$(validate "$handler" FileDirectory "environmentFile" "$argument") || return $?
         if [ -f "$environmentFile" ]; then
           ff+=("$environmentFile")
         else
@@ -760,7 +760,7 @@ _environmentFileApplicationVerify() {
 # DOC TEMPLATE: --help 1
 # Argument: --help - Optional. Flag. Display this help.
 # Argument: environmentName ... - EnvironmentName. Required. One or more environment variable names to add to this project.
-environmentAddFile() {
+buildEnvironmentAdd() {
   local handler="_${FUNCNAME[0]}"
   local name environmentNames=()
 
@@ -805,7 +805,7 @@ environmentAddFile() {
     fi
   done
 }
-_environmentAddFile() {
+_buildEnvironmentAdd() {
   # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
@@ -914,7 +914,7 @@ environmentCompile() {
       fi
       ;;
     *)
-      environmentFiles+=("$(usageArgumentFile "$handler" "environmentFile" "$1")") || return $?
+      environmentFiles+=("$(validate "$handler" File "environmentFile" "$1")") || return $?
       ;;
     esac
     shift

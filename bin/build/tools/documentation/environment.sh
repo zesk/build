@@ -11,7 +11,7 @@ __documentationEnvironmentFileParse() {
   local handler="$1" && shift
 
   local envFile
-  envFile=$(usageArgumentFile "$handler" "environmentFile" "${1-}") || return $?
+  envFile=$(validate "$handler" File "environmentFile" "${1-}") || return $?
 
   local description descriptionLineCount category type shortDesc
 
@@ -55,7 +55,7 @@ __documentationBuildEnvironment() {
     --force) forceFlag=true ;;
     --verbose) verboseFlag=true ;;
     --source) shift && sources+=("$(usageArgumentDirectory "$handler" "$argument" "${1-}")") || return $? ;;
-    --target) shift && target="$(usageArgumentFile "$handler" "$argument" "${1-}")" || return $? ;;
+    --target) shift && target="$(validate "$handler" File "$argument" "${1-}")" || return $? ;;
     --documentation) shift && documentation=$(usageArgumentDirectory "$handler" "$argument" "${1-}") || return $? ;;
     --template-path) shift && templatePath=$(usageArgumentDirectory "$handler" "$argument" "${1-}") || return $? ;;
     *)

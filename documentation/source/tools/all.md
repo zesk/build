@@ -245,7 +245,7 @@ All functions in Zesk Build, alphabetically.
 - {SEE:dumpLoadAverages}
 - {SEE:dumpPipe}
 - {SEE:echoBar}
-- {SEE:environmentAddFile}
+- {SEE:buildEnvironmentAdd}
 - {SEE:environmentApplicationLoad}
 - {SEE:environmentApplicationVariables}
 - {SEE:environmentClean}

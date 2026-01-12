@@ -189,11 +189,11 @@ convertValue() {
 
   while [ $# -gt 0 ]; do
     if [ -z "$value" ]; then
-      value=$(usageArgumentString "$__handler" "value" "$1") || return $?
+      value=$(validate "$__handler" string "value" "$1") || return $?
     elif [ -z "$from" ]; then
-      from=$(usageArgumentString "$__handler" "from" "$1") || return $?
+      from=$(validate "$__handler" string "from" "$1") || return $?
     elif [ -z "$to" ]; then
-      to=$(usageArgumentString "$__handler" "to" "$1") || return $?
+      to=$(validate "$__handler" string "to" "$1") || return $?
       if [ "$value" = "$from" ]; then
         printf "%s\n" "$to"
         return 0

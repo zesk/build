@@ -24,7 +24,7 @@ __identicalRepair() {
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
     # _IDENTICAL_ handlerHandler 1
-    --handler) shift && handler=$(usageArgumentFunction "$handler" "$argument" "${1-}") || return $? ;;
+    --handler) shift && handler=$(validate "$handler" function "$argument" "${1-}") || return $? ;;
     --no-map)
       fileMap=false
       ;;
@@ -43,9 +43,9 @@ __identicalRepair() {
       ;;
     *)
       if [ -z "$source" ]; then
-        source=$(usageArgumentFile "$handler" "source" "$argument") || return $?
+        source=$(validate "$handler" File "source" "$argument") || return $?
       elif [ -z "$destination" ]; then
-        destination=$(usageArgumentFile "$handler" "destination" "$argument") || return $?
+        destination=$(validate "$handler" File "destination" "$argument") || return $?
       else
         # _IDENTICAL_ argumentUnknownHandler 1
         throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?

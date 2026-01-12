@@ -82,7 +82,7 @@ mockEnvironmentStop() {
 mockConsoleAnimationStart() {
   local handler="_${FUNCNAME[0]}" flag
 
-  flag=$(usageArgumentBoolean "$handler" "flag" "${1-}") || return $?
+  flag=$(validate "$handler" boolean "flag" "${1-}") || return $?
   catchReturn "$handler" mockEnvironmentStart CI || return $?
   export CI
   CI="$(booleanChoose "$flag" "" "testCI")"

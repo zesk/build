@@ -25,7 +25,7 @@ __bashSanitize() {
     --help) "$handler" 0 && return $? || return $? ;;
     --exec)
       shift
-      executor=$(usageArgumentCallable "$handler" "$argument" "${1-}") || return $?
+      executor=$(validate "$handler" callable "$argument" "${1-}") || return $?
       ;;
     --debug) debugFlag=true ;;
     --home)

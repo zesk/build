@@ -1,4 +1,4 @@
-# Build Functions
+# Build Environment Functions
 
 - Easier access to `BUILD_HOME` (calculates if needed) and environment variables
 - List of all Zesk Build functions
@@ -21,11 +21,15 @@
 
 {buildEnvironmentLoad}
 
+{buildEnvironmentAdd}
+
 {buildEnvironmentContext}
 
 {buildFunctions}
 
 {buildCacheDirectory}
+
+{buildStateDirectory}
 
 {buildQuietLog}
 

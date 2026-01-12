@@ -132,7 +132,7 @@ dockerLocalContainer() {
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
     # _IDENTICAL_ handlerHandler 1
-    --handler) shift && handler=$(usageArgumentFunction "$handler" "$argument" "${1-}") || return $? ;;
+    --handler) shift && handler=$(validate "$handler" function "$argument" "${1-}") || return $? ;;
     --image) shift && imageName=$(usageArgumentString "$handler" "$argument" "${1-}") || return $? ;;
     --local) shift && localPath=$(usageArgumentDirectory "$handler" "$argument" "${1-}") || return $? ;;
     --verbose) verboseFlag=true ;;
@@ -153,7 +153,7 @@ dockerLocalContainer() {
     --env-file)
       local envFile tempEnv
       shift
-      envFile=$(usageArgumentFile "$handler" "envFile" "$1") || return $?
+      envFile=$(validate "$handler" File "envFile" "$1") || return $?
       tempEnv=$(fileTemporaryName "$handler") || return $?
       catchArgument "$handler" environmentFileToDocker "$envFile" >"$tempEnv" || return $?
       tempEnvs+=("$tempEnv")

@@ -463,7 +463,7 @@ On a "2x" machine:
 - dumpFile
 - dumpHex
 - dumpLoadAverages
-- environmentAddFile
+- buildEnvironmentAdd
 - environmentApplicationLoad
 - environmentApplicationVariables
 - environmentFileApplicationVerify

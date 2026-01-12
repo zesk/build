@@ -30,7 +30,7 @@ __awsIPAccess() {
     --profile)
       shift
       [ ${#pp[@]} -eq 0 ] || throwArgument "$handler" "$argument already specified: ${pp[*]}"
-      profileName="$(usageArgumentString "$handler" "$argument" "$1")" || return $?
+      profileName="$(validate "$handler" string "$argument" "$1")" || return $?
       pp=("$argument" "$profileName")
       ;;
     --revoke) optionRevoke=true ;;

@@ -26,7 +26,7 @@ __bashGetRequires() {
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
     *)
-      files+=("$(usageArgumentFile "$handler" "checkFile" "${1-}")") || return $?
+      files+=("$(validate "$handler" File "checkFile" "${1-}")") || return $?
       ;;
     esac
     shift
@@ -73,7 +73,7 @@ __bashCheckRequires() {
       requireFlag=true
       ;;
     *)
-      files+=("$(usageArgumentFile "$handler" "checkFile" "${1-}")") || return $?
+      files+=("$(validate "$handler" File "checkFile" "${1-}")") || return $?
       ;;
     esac
     shift

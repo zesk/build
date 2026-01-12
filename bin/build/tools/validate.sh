@@ -7,6 +7,8 @@
 # Test: ./test/tools/validate-tests.sh
 # Docs: ./documentation/source/tools/validate.md
 
+# IDENTICAL validate 115
+
 # Validate a value by type
 # Argument: handler - Function. Required. Error handler.
 # Argument: type - Type. Required. Type to validate.
@@ -79,10 +81,12 @@ validate() {
 
   while [ $# -ge 3 ]; do
     local type="$1" name="$2" value="$3"
-    type=$(_validateTypeMapper "$type")
+    if isFunction _validateTypeMapper; then
+      type=$(_validateTypeMapper "$type")
+    fi
     local typeFunction="$prefix$type"
     isFunction "$typeFunction" || throwArgument "$handler" "validate $type is not a valid type:"$'\n'"$(validateTypeList)" || return $?
-    if ! value=$("$typeFunction" "$value" 2>&1); then
+    if ! value=$("$typeFunction" "$value"); then
       local suffix=""
       [ -z "$value" ] || suffix=" $(decorate error "$value")"
       throwArgument "$handler" "$name ($(decorate each code "$@")) is not type $(decorate label "$type")$suffix" || return $?
@@ -96,92 +100,28 @@ _validate() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# List types which can be validated
-validateTypeList() {
-  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
-  local prefix="__validateType"
-  declare -F | removeFields 2 | grepSafe -e "^$prefix" | cut -c "$((${#prefix} + 1))"- | sort
-}
-_validateTypeList() {
-  true || validateTypeList --help
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+# output arguments to stderr and return the argument error
+# Return: 2
+# Return Code: 2 - Argument error
+_validateThrow() {
+  printf -- "%s\n" "$@" 1>&2
+  return 2
 }
 
-# Are all arguments passed a valid validate type?
-# DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
-# Argument: type - String. Optional. Type to validate as `validate` type.
-# Example:     isValidateType string || returnMessage 1 "string is not a type."
-isValidateType() {
-  local handler="_${FUNCNAME[0]}"
-
-  local prefix="__validateType"
-
-  # _IDENTICAL_ argumentNonBlankLoopHandler 6
-  local __saved=("$@") __count=$#
-  while [ $# -gt 0 ]; do
-    local argument="$1" __index=$((__count - $# + 1))
-    # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
-    case "$argument" in
-    # _IDENTICAL_ helpHandler 1
-    --help) "$handler" 0 && return $? || return $? ;;
-    *)
-      local mapped
-      mapped=$(_validateTypeMapper "$argument")
-      isFunction "$prefix$mapped" || throwArgument "$handler" "Invalid type $argument (-> \"$mapped\")" || return $?
-      ;;
-    esac
-    shift
-  done
-}
-_isValidateType() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+# Non-empty string
+__validateTypeString() {
+  [ -n "${1-}" ] || _validateThrow "blank" || return $?
+  printf "%s\n" "${1-}"
 }
 
-_validateTypeMapper() {
-  while [ $# -gt 0 ]; do
-    local t="$1"
-    case "$(lowercase "$t")" in
-    string) t=String ;;
-    emptystring | string? | any) t=EmptyString ;;
-    array) t=Array ;;
-    list) t=List ;;
-    flag) t=Flag ;;
-    colondelimitedlist | list:) t=ColonDelimitedList ;;
-    commadelimitedlist | list,) t=CommaDelimitedList ;;
-    unsignedinteger | uint | unsigned) t=UnsignedInteger ;;
-    positiveinteger | positive) t=PositiveInteger ;;
-    integer | int) t=Integer ;;
-    number) t=Number ;;
-    function) t=Function ;;
-    callable) t=Callable ;;
-    executable | bin) t=Executable ;;
-    applicationdirectory | appdir) t=ApplicationDirectory ;;
-    applicationfile | appfile) t=ApplicationFile ;;
-    applicationdirectorylist | appdirlist) t=ApplicationDirectoryList ;;
-    boolean | bool) t=Boolean ;;
-    booleanlike | "boolean?" | "bool?") t=BooleanLike ;;
-    date) t=Date ;;
-    directorylist | dirlist) t=DirectoryList ;;
-    environmentvariable | env) t=EnvironmentVariable ;;
-    exists) t=Exists ;;
-    file) t=File ;;
-    directory | dir) t=Directory ;;
-    link) t=Link ;;
-    filedirectory | parent) t=FileDirectory ;;
-    realdirectory | realdir) t=RealDirectory ;;
-    realfile | real) t=RealFile ;;
-    remotedirectory | remotedir) t=RemoteDirectory ;;
-    secret) t=Secret ;;
-    url) t=URL ;;
-    *) ;;
-    esac
-    printf "%s\n" "$t"
-    shift
-  done
+__validateTypePositiveInteger() {
+  isPositiveInteger "${1-}" || _validateThrow || return $?
+  printf "%s\n" "${1#+}"
+}
+
+__validateTypeFunction() {
+  isFunction "${1-}" || _validateThrow || return $?
+  printf "%s\n" "${1-}"
 }
 
 #
@@ -203,12 +143,6 @@ _validateHelperApplicationTest() {
 }
 
 # Utility function for `test`
-_validateHelperTest() {
-  _validateHelperCheck "$@" && shift || return $?
-  printf "%s\n" "$@"
-}
-
-# Utility function for `test`
 _validateHelperCheck() {
   local testFlag="$1" && shift
   [ -n "${1-}" ] || _validateThrow "blank" || return $?
@@ -216,25 +150,11 @@ _validateHelperCheck() {
   printf "%s\n" "$@"
 }
 
-# output arguments to stderr and return the argument error
-# Return: 2
-# Return Code: 2 - Argument error
-_validateThrow() {
-  printf -- "%s\n" "$@" 1>&2
-  return 2
-}
-
 #  __     __    _ _     _       _         _____                 _   _
 #  \ \   / /_ _| (_) __| | __ _| |_ ___  |  ___|   _ _ __   ___| |_(_) ___  _ __  ___
 #   \ \ / / _` | | |/ _` |/ _` | __/ _ \ | |_ | | | | '_ \ / __| __| |/ _ \| '_ \/ __|
 #    \ V / (_| | | | (_| | (_| | ||  __/ |  _|| |_| | | | | (__| |_| | (_) | | | \__ \
 #     \_/ \__,_|_|_|\__,_|\__,_|\__\___| |_|   \__,_|_| |_|\___|\__|_|\___/|_| |_|___/
-
-# Non-empty string
-__validateTypeString() {
-  [ -n "${1-}" ] || _validateThrow "blank" || return $?
-  printf "%s\n" "${1-}"
-}
 
 # Any value passes
 __validateTypeEmptyString() {
@@ -275,11 +195,6 @@ __validateTypeUnsignedInteger() {
   printf "%s\n" "${1#+}"
 }
 
-__validateTypePositiveInteger() {
-  isPositiveInteger "${1-}" || _validateThrow || return $?
-  printf "%s\n" "${1#+}"
-}
-
 __validateTypeInteger() {
   isInteger "${1-}" || _validateThrow || return $?
   printf "%s\n" "${1#+}"
@@ -288,11 +203,6 @@ __validateTypeInteger() {
 __validateTypeNumber() {
   isNumber "${1-}" || _validateThrow || return $?
   printf "%s\n" "${1#+}"
-}
-
-__validateTypeFunction() {
-  isFunction "${1-}" || _validateThrow || return $?
-  printf "%s\n" "${1-}"
 }
 
 __validateTypeCallable() {
@@ -385,12 +295,12 @@ __validateTypeEnvironmentVariable() {
 
 # Validates a value is not blank and exists in the file system
 __validateTypeExists() {
-  _validateHelperTest -e "$@" || return $?
+  _validateHelperCheck -e "$@" || return $?
 }
 
 # A file exists
 __validateTypeFile() {
-  _validateHelperTest -f "$@" || return $?
+  _validateHelperCheck -f "$@" || return $?
 }
 
 # A directory exists
@@ -401,7 +311,7 @@ __validateTypeDirectory() {
 
 # A link exists
 __validateTypeLink() {
-  _validateHelperTest -L "$@" || return $?
+  _validateHelperCheck -L "$@" || return $?
 }
 
 # A file directory exists (file may exist or not)
@@ -443,4 +353,92 @@ __validateTypeSecret() {
 __validateTypeURL() {
   urlValid "${1-}" || _validateThrow || return $?
   printf "%s\n" "${1-}"
+}
+
+# List types which can be validated
+validateTypeList() {
+  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
+  local prefix="__validateType"
+  declare -F | removeFields 2 | grepSafe -e "^$prefix" | cut -c "$((${#prefix} + 1))"- | sort
+}
+_validateTypeList() {
+  true || validateTypeList --help
+  # __IDENTICAL__ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+# Are all arguments passed a valid validate type?
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
+# Argument: type - String. Optional. Type to validate as `validate` type.
+# Example:     isValidateType string || returnMessage 1 "string is not a type."
+isValidateType() {
+  local handler="_${FUNCNAME[0]}"
+
+  local prefix="__validateType"
+
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
+  local __saved=("$@") __count=$#
+  while [ $# -gt 0 ]; do
+    local argument="$1" __index=$((__count - $# + 1))
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    case "$argument" in
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
+    *)
+      local mapped
+      mapped=$(_validateTypeMapper "$argument")
+      isFunction "$prefix$mapped" || throwArgument "$handler" "Invalid type $argument (-> \"$mapped\")" || return $?
+      ;;
+    esac
+    shift
+  done
+}
+_isValidateType() {
+  # __IDENTICAL__ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+_validateTypeMapper() {
+  while [ $# -gt 0 ]; do
+    local t="$1"
+    case "$(lowercase "$t")" in
+    string) t=String ;;
+    emptystring | string? | any) t=EmptyString ;;
+    array) t=Array ;;
+    list) t=List ;;
+    flag) t=Flag ;;
+    colondelimitedlist | list:) t=ColonDelimitedList ;;
+    commadelimitedlist | list,) t=CommaDelimitedList ;;
+    unsignedinteger | uint | unsigned) t=UnsignedInteger ;;
+    positiveinteger | positive) t=PositiveInteger ;;
+    integer | int) t=Integer ;;
+    number) t=Number ;;
+    function) t=Function ;;
+    callable) t=Callable ;;
+    executable | bin) t=Executable ;;
+    applicationdirectory | appdir) t=ApplicationDirectory ;;
+    applicationfile | appfile) t=ApplicationFile ;;
+    applicationdirectorylist | appdirlist) t=ApplicationDirectoryList ;;
+    boolean | bool) t=Boolean ;;
+    booleanlike | "boolean?" | "bool?") t=BooleanLike ;;
+    date) t=Date ;;
+    directorylist | dirlist) t=DirectoryList ;;
+    environmentvariable | env) t=EnvironmentVariable ;;
+    exists) t=Exists ;;
+    file) t=File ;;
+    directory | dir) t=Directory ;;
+    link) t=Link ;;
+    filedirectory | parent) t=FileDirectory ;;
+    realdirectory | realdir) t=RealDirectory ;;
+    realfile | real) t=RealFile ;;
+    remotedirectory | remotedir) t=RemoteDirectory ;;
+    secret) t=Secret ;;
+    url) t=URL ;;
+    *) ;;
+    esac
+    printf "%s\n" "$t"
+    shift
+  done
 }

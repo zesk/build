@@ -54,7 +54,7 @@ deployBuildEnvironment() {
     --help) "$handler" 0 && return $? || return $? ;;
     --env-file)
       shift
-      envFiles+=("$(usageArgumentFile "$handler" "envFile" "${1-}")") || return $?
+      envFiles+=("$(validate "$handler" File "envFile" "${1-}")") || return $?
       ;;
     --debug)
       debuggingFlag=true
@@ -247,7 +247,7 @@ deployRemoteFinish() {
       ;;
     --application)
       shift
-      applicationPath=$(usageArgumentFileDirectory "$handler" applicationPath "${1-}") || return $?
+      applicationPath=$(validate "$handler" FileDirectory applicationPath "${1-}") || return $?
       ;;
     --target)
       shift

@@ -91,7 +91,7 @@ jsonFileGet() {
 
   [ "$1" != "--help" ] || __help "$handler" "$@" || return 0
 
-  jsonFile=$(usageArgumentFile "$handler" "jsonFile" "${1-}") && shift || return $?
+  jsonFile=$(validate "$handler" File "jsonFile" "${1-}") && shift || return $?
   path=$(usageArgumentString "$handler" "path" "${1-}") && shift || return $?
 
   path="$(__jqPathClean "$path")"
@@ -114,7 +114,7 @@ jsonFileSet() {
   [ "$1" != "--help" ] || __help "$handler" "$@" || return 0
   whichExists jq || throwEnvironment "$handler" "Requires jq - not installed" || return $?
 
-  jsonFile=$(usageArgumentFile "$handler" "jsonFile" "${1-}") && shift || return $?
+  jsonFile=$(validate "$handler" File "jsonFile" "${1-}") && shift || return $?
   path=$(usageArgumentString "$handler" "path" "${1-}") && shift || return $?
   path=$(__jqPathClean "$path")
   if [ $# -eq 0 ]; then
@@ -173,7 +173,7 @@ jsonSetValue() {
     --help) "$handler" 0 && return $? || return $? ;;
     --generator)
       shift
-      generator="$(usageArgumentFunction "$handler" "$argument" "${1-}")" || return $?
+      generator="$(validate "$handler" function "$argument" "${1-}")" || return $?
       ;;
     --status)
       statusFlag=true
@@ -191,10 +191,10 @@ jsonSetValue() {
       ;;
     --filter)
       shift
-      filter="$(usageArgumentFunction "$handler" "$argument" "${1-}")" || return $?
+      filter="$(validate "$handler" function "$argument" "${1-}")" || return $?
       ;;
     *)
-      file="$(usageArgumentFile "$handler" "$argument" "${1-}")" || return $?
+      file="$(validate "$handler" File "$argument" "${1-}")" || return $?
       if [ -z "$value" ]; then
         if [ -z "$generator" ]; then
           throwArgument "$handler" "--generator or --value is required" || return $?

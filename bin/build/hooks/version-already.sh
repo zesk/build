@@ -24,8 +24,8 @@ __hookVersionAlready() {
 
   export BUILD_VERSION_NO_OPEN
 
-  currentVersion=$(usageArgumentString "$handler" version "${1-}") && shift || return $?
-  releaseNotes=$(usageArgumentFile "$handler" releaseNotes "${1-}") && shift || return $?
+  currentVersion=$(validate "$handler" string version "${1-}") && shift || return $?
+  releaseNotes=$(validate "$handler" file releaseNotes "${1-}") && shift || return $?
 
   if buildEnvironmentLoad BUILD_VERSION_NO_OPEN && ! test "$BUILD_VERSION_NO_OPEN"; then
     printf "%s %s %s %s\n" "$(decorate success "Opening")" "$(decorate code "$currentVersion")" "$(decorate success "release notes at")" "$(decorate value "$releaseNotes")"

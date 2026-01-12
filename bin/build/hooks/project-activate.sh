@@ -23,7 +23,7 @@ __hookProjectActivate() {
   local handler="_${FUNCNAME[0]}" home otherName="" otherHome tools="bin/build/tools.sh"
   local symbol="🍎"
 
-  otherHome=$(usageArgumentEmptyString "$handler" "otherHomeDirectory" "${1-}") || return $?
+  otherHome=$(validate "$handler" string? "otherHomeDirectory" "${1-}") || return $?
   otherHome=${otherHome%/} # Strip trailing slash
   if [ -d "$otherHome" ] && [ -x "$otherHome/$tools" ]; then
     # Fetch old application name

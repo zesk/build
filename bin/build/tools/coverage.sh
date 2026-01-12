@@ -37,7 +37,7 @@ bashCoverage() {
       ;;
     --target)
       shift
-      target="$(usageArgumentFileDirectory "$handler" "$argument" "${1-}")" || return $?
+      target="$(validate "$handler" FileDirectory "$argument" "${1-}")" || return $?
       ;;
     *)
       break
@@ -86,10 +86,10 @@ bashCoverageReport() {
       ;;
     --target)
       shift
-      target="$(usageArgumentFileDirectory "$handler" "$argument" "${1-}")" || return $?
+      target="$(validate "$handler" FileDirectory "$argument" "${1-}")" || return $?
       ;;
     *)
-      files+=("$(usageArgumentFile "$handler" "coverageFile" "$1")") || return $?
+      files+=("$(validate "$handler" File "coverageFile" "$1")") || return $?
       ;;
     esac
     shift

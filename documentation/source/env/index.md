@@ -4,7 +4,8 @@ Note that you should place environment variables (if you override the default, f
 
     ./bin/env/VARIABLE_NAME.sh
 
-Where `VARIABLE_NAME` is the name of your environment variable. `environmentAddFile` does this for you if you want.
+Where `VARIABLE_NAME` is the name of your environment variable. `buildEnvironmentAdd` does this for you if you want. Also
+`buildEnvironmentNames` shows all known names within the current application scope.
 
 These are the known environment variables in `Zesk Build` - to see default behaviors look at files in `./bin/build/env`.
 

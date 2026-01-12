@@ -24,7 +24,7 @@ __confirmMenu() {
       ;;
     --result)
       shift
-      resultFile=$(usageArgumentFile "$handler" "$argument" "${1-}") || return $?
+      resultFile=$(validate "$handler" File "$argument" "${1-}") || return $?
       ;;
     --attempts)
       shift

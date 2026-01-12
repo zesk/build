@@ -65,19 +65,19 @@ __documentTemplateFunction() {
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
     # _IDENTICAL_ handlerHandler 1
-    --handler) shift && handler=$(usageArgumentFunction "$handler" "$argument" "${1-}") || return $? ;;
+    --handler) shift && handler=$(validate "$handler" function "$argument" "${1-}") || return $? ;;
     # IDENTICAL profileNameArgumentHandlerCase 6
     --profile)
       shift
       [ ${#pp[@]} -eq 0 ] || throwArgument "$handler" "$argument already specified: ${pp[*]}"
-      profileName="$(usageArgumentString "$handler" "$argument" "$1")" || return $?
+      profileName="$(validate "$handler" string "$argument" "$1")" || return $?
       pp=("$argument" "$profileName")
       ;;
     # IDENTICAL regionArgumentHandler 5
     --region)
       shift
       [ -z "$region" ] || throwArgument "$handler" "$argument already specified: $region"
-      region=$(usageArgumentString "$handler" "$argument" "${1-}") || return $?
+      region=$(validate "$handler" string "$argument" "${1-}") || return $?
       ;;
     *)
       # _IDENTICAL_ argumentUnknownHandler 1
@@ -124,14 +124,14 @@ ___documentTemplateFunction() {
     --profile)
       shift
       [ ${#pp[@]} -eq 0 ] || throwArgument "$handler" "$argument already specified: ${pp[*]}"
-      profileName="$(usageArgumentString "$handler" "$argument" "$1")" || return $?
+      profileName="$(validate "$handler" string "$argument" "$1")" || return $?
       pp=("$argument" "$profileName")
       ;;
     # IDENTICAL regionArgumentHandler 5
     --region)
       shift
       [ -z "$region" ] || throwArgument "$handler" "$argument already specified: $region"
-      region=$(usageArgumentString "$handler" "$argument" "${1-}") || return $?
+      region=$(validate "$handler" string "$argument" "${1-}") || return $?
       ;;
     *)
       # _IDENTICAL_ argumentUnknownHandler 1

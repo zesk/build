@@ -230,11 +230,11 @@ _installRemotePackage() {
     --help) "$handler" 0 && return $? || return $? ;;
     --source)
       shift
-      source=$(usageArgumentString "$handler" "$argument" "${1-}") || return $?
+      source=$(validate "$handler" String "$argument" "${1-}") || return $?
       ;;
     --name)
       shift
-      name=$(usageArgumentString "$handler" "$argument" "${1-}") || return $?
+      name=$(validate "$handler" String "$argument" "${1-}") || return $?
       ;;
     --mock | --local)
       [ -z "$localPath" ] || throwArgument "$handler" "$argument already" || return $?
@@ -244,7 +244,7 @@ _installRemotePackage() {
       ;;
     --user | --header | --password)
       shift
-      fetchArguments+=("$argument" "$(usageArgumentString "$handler" "$argument" "${1-}")") || return $?
+      fetchArguments+=("$argument" "$(validate "$handler" String "$argument" "${1-}")") || return $?
       ;;
     --url)
       shift
@@ -272,7 +272,7 @@ _installRemotePackage() {
       ;;
     --installer)
       shift
-      installers+=("$(usageArgumentString "$handler" "$argument" "${1-}")") || return $?
+      installers+=("$(validate "$handler" String "$argument" "${1-}")") || return $?
       ;;
     #
     # I believe this ensures that the process running does not modify its source script directly
@@ -289,7 +289,7 @@ _installRemotePackage() {
     --replace)
       local newName
       shift
-      newName=$(usageArgumentString "$handler" "$argument" "${1-}") || return $?
+      newName=$(validate "$handler" String "$argument" "${1-}") || return $?
       decorate bold-blue "Updating -> $(decorate bold-orange "$newName")"
       catchEnvironment "$handler" cp -f "${BASH_SOURCE[0]}" "$newName" || return $?
       catchEnvironment "$handler" chmod +x "$newName" || return $?
@@ -299,7 +299,7 @@ _installRemotePackage() {
     --finalize)
       local oldName
       shift
-      oldName=$(usageArgumentString "$handler" "$argument" "${1-}") || return $?
+      oldName=$(validate "$handler" String "$argument" "${1-}") || return $?
       catchEnvironment "$handler" rm -rf "$oldName" || return $?
       return 0
       ;;
@@ -317,7 +317,7 @@ _installRemotePackage() {
       installArgs+=("$argument")
       ;;
     *)
-      installPath=$(usageArgumentString "$handler" "installPath" "$1") || return $?
+      installPath=$(validate "$handler" String "installPath" "$1") || return $?
       installPath="${installPath%/}"
       ;;
     esac
@@ -644,7 +644,7 @@ usageArgumentPositiveInteger() {
 # Argument: url - Required. URL. URL to fetch to target file.
 # Argument: file - Optional. FileDirectory. Target file. Use `-` to send to `stdout`. Default value is `-`.
 # Requires: returnMessage whichExists decorate
-# Requires: usageArgumentString usageArgumentPositiveInteger isPositiveInteger
+# Requires: validate
 # Requires: throwArgument catchArgument
 # Requires: throwEnvironment catchEnvironment
 # Environment: BUILD_URL_TIMEOUT
@@ -678,18 +678,18 @@ urlFetch() {
     --curl) binary=("curl") ;;
     --binary)
       local tempBin
-      shift && tempBin=$(usageArgumentString "$handler" "$argument" "${1-}") || return $?
+      shift && tempBin=$(validate "$handler" String "$argument" "${1-}") || return $?
       whichExists "$tempBin" || throwArgument "$handler" "$tempBin must be in PATH: $PATH" || return $?
       binary=("$tempBin")
       ;;
     --argument-format)
-      shift && format=$(usageArgumentString "$handler" "$argument" "${1-}") || return $?
+      shift && format=$(validate "$handler" String "$argument" "${1-}") || return $?
       case "$format" in curl | wget) ;; *) throwArgument "$handler" "$argument must be curl or wget" || return $? ;; esac
       ;;
-    --redirect-max) shift && maxRedirections=$(usageArgumentPositiveInteger "$handler" "$argument" "${1-}") || return $? ;;
+    --redirect-max) shift && maxRedirections=$(validate "$handler" PositiveInteger "$argument" "${1-}") || return $? ;;
     --password) shift && password="$1" ;;
     --user)
-      shift && user=$(usageArgumentString "$handler" "$argument (user)" "$user") || return $?
+      shift && user=$(validate "$handler" String "$argument (user)" "$user") || return $?
       if [ "$user" != "${user#*:}" ]; then
         userHasColons=true
       fi
@@ -699,11 +699,11 @@ urlFetch() {
       ;;
     --debug) debugFlag=true ;;
     --timeout)
-      shift && timeoutSeconds=$(usageArgumentPositiveInteger "$handler" "$argument" "${1-}") || return $?
+      shift && timeoutSeconds=$(validate "$handler" PositiveInteger "$argument" "${1-}") || return $?
       ;;
     --agent)
       local agent
-      shift && agent=$(usageArgumentString "$handler" "$argument" "${1-}") || return $?
+      shift && agent=$(validate "$handler" String "$argument" "${1-}") || return $?
       wgetArgs+=("--user-agent=$agent")
       curlArgs+=("--user-agent" "$agent")
       genericArgs+=("$argument" "$agent")
@@ -1478,11 +1478,11 @@ convertValue() {
 
   while [ $# -gt 0 ]; do
     if [ -z "$value" ]; then
-      value=$(usageArgumentString "$__handler" "value" "$1") || return $?
+      value=$(validate "$__handler" string "value" "$1") || return $?
     elif [ -z "$from" ]; then
-      from=$(usageArgumentString "$__handler" "from" "$1") || return $?
+      from=$(validate "$__handler" string "from" "$1") || return $?
     elif [ -z "$to" ]; then
-      to=$(usageArgumentString "$__handler" "to" "$1") || return $?
+      to=$(validate "$__handler" string "to" "$1") || return $?
       if [ "$value" = "$from" ]; then
         printf "%s\n" "$to"
         return 0

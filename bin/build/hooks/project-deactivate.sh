@@ -33,7 +33,7 @@ __hookProjectDeactivate() {
   local newHome
   local handler="_${FUNCNAME[0]}"
 
-  newHome=$(usageArgumentDirectory "$handler" "newProjectHome" "${1-}") || return $?
+  newHome=$(validate "$handler" directory "newProjectHome" "${1-}") || return $?
 
   # Warning about deprecated scripts
   local home item candidates=("bin/developer-undo.sh")

@@ -241,11 +241,11 @@ convertValue() {
 
   while [ $# -gt 0 ]; do
     if [ -z "$value" ]; then
-      value=$(usageArgumentString "$__handler" "value" "$1") || return $?
+      value=$(validate "$__handler" string "value" "$1") || return $?
     elif [ -z "$from" ]; then
-      from=$(usageArgumentString "$__handler" "from" "$1") || return $?
+      from=$(validate "$__handler" string "from" "$1") || return $?
     elif [ -z "$to" ]; then
-      to=$(usageArgumentString "$__handler" "to" "$1") || return $?
+      to=$(validate "$__handler" string "to" "$1") || return $?
       if [ "$value" = "$from" ]; then
         printf "%s\n" "$to"
         return 0
@@ -776,7 +776,7 @@ _environmentVariables() {
 # Environment: Argument-passed or entire environment variables which are exported are used and mapped to the destination.
 # Example:     printf %s "{NAME}, {PLACE}.\n" | NAME=Hello PLACE=world mapEnvironment NAME PLACE
 # Requires: environmentVariables cat throwEnvironment catchEnvironment
-# Requires: throwArgument decorate usageArgumentString
+# Requires: throwArgument decorate validate
 mapEnvironment() {
   local handler="_${FUNCNAME[0]}"
 
@@ -793,26 +793,26 @@ mapEnvironment() {
     --help) "$handler" 0 && return $? || return $? ;;
     --prefix)
       shift
-      __prefix=$(usageArgumentString "$handler" "$argument" "${1-}") || return $?
+      __prefix=$(validate "$handler" String "$argument" "${1-}") || return $?
       ;;
     --suffix)
       shift
-      __suffix=$(usageArgumentString "$handler" "$argument" "${1-}") || return $?
+      __suffix=$(validate "$handler" String "$argument" "${1-}") || return $?
       ;;
     --search-filter)
       shift
-      __searchFilters+=("$(usageArgumentCallable "$handler" "searchFilter" "${1-}")") || return $?
+      __searchFilters+=("$(validate "$handler" Callable "searchFilter" "${1-}")") || return $?
       ;;
     --replace-filter)
       shift
-      __replaceFilters+=("$(usageArgumentCallable "$handler" "replaceFilter" "${1-}")") || return $?
+      __replaceFilters+=("$(validate "$handler" Callable "replaceFilter" "${1-}")") || return $?
       ;;
     --env-file)
       shift
       muzzle usageArgumentLoadEnvironmentFile "$handler" "$argument" "${1-}" || return $?
       ;;
     *)
-      __ee+=("$(usageArgumentString "$handler" "environmentVariableName" "$argument")") || return $?
+      __ee+=("$(validate "$handler" String "environmentVariableName" "$argument")") || return $?
       ;;
     esac
     shift

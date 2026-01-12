@@ -23,13 +23,13 @@ __identicalFindTokens() {
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
     # _IDENTICAL_ handlerHandler 1
-    --handler) shift && handler=$(usageArgumentFunction "$handler" "$argument" "${1-}") || return $? ;;
+    --handler) shift && handler=$(validate "$handler" function "$argument" "${1-}") || return $? ;;
     --prefix)
       shift
       prefixes+=("$(usageArgumentString "$handler" "$argument" "${1-}")") || return $?
       ;;
     *)
-      files+=("$(usageArgumentFile "$handler" "$argument" "${1-}")") || return $?
+      files+=("$(validate "$handler" File "$argument" "${1-}")") || return $?
       ;;
     esac
     shift
@@ -92,7 +92,7 @@ __identicalWatch() {
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
     # _IDENTICAL_ handlerHandler 1
-    --handler) shift && handler=$(usageArgumentFunction "$handler" "$argument" "${1-}") || return $? ;;
+    --handler) shift && handler=$(validate "$handler" function "$argument" "${1-}") || return $? ;;
     --ignore-singles)
       rr+=("$argument")
       ;;

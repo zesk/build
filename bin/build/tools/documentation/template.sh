@@ -44,11 +44,11 @@ __documentationTemplateUpdateUnlinked() {
 
   clean=()
   cacheDirectory=$(usageArgumentDirectory "$handler" "cacheDirectory" "${1-}") || return $?
-  envFile=$(usageArgumentFile "$handler" "envFile" "${2-}") || return $?
-  template=$(usageArgumentFile "$handler" "template" "${3-}") || return $?
+  envFile=$(validate "$handler" File "envFile" "${2-}") || return $?
+  template=$(validate "$handler" File "template" "${3-}") || return $?
 
   # Not used I guess
-  muzzle usageArgumentFile "$handler" "pageTemplate" "${5-}" || return $?
+  muzzle validate "$handler" File "pageTemplate" "${5-}" || return $?
   todoTemplate=$(catchReturn "$handler" documentationTemplate "${6-todo}") || return $?
 
   unlinkedFunctions=$(fileTemporaryName "$handler") || return $?

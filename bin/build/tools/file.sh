@@ -92,7 +92,7 @@ fileModificationSeconds() {
   while [ $# -gt 0 ]; do
     [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
     local argument
-    argument="$(usageArgumentFile "$handler" "argument #$((__count - $# + 1))" "${1-}")" || return $?
+    argument="$(validate "$handler" File "argument #$((__count - $# + 1))" "${1-}")" || return $?
     argument=$(catchEnvironment "$handler" fileModificationTime "$argument") || return $?
     printf "%d\n" "$((now_ - argument))"
     shift
@@ -623,7 +623,7 @@ fileIsEmpty() {
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
     *)
-      argument="$(usageArgumentFile "$handler" "file" "$1")" || return $?
+      argument="$(validate "$handler" File "file" "$1")" || return $?
       [ ! -s "$argument" ] || return 1
       ;;
     esac

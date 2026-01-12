@@ -22,7 +22,7 @@ __awsSecurityGroupIPModify() {
     --profile)
       shift
       [ ${#pp[@]} -eq 0 ] || throwArgument "$handler" "$argument already specified: ${pp[*]}"
-      profileName="$(usageArgumentString "$handler" "$argument" "$1")" || return $?
+      profileName="$(validate "$handler" string "$argument" "$1")" || return $?
       pp=("$argument" "$profileName")
       ;;
     --group)
@@ -57,7 +57,7 @@ __awsSecurityGroupIPModify() {
     --region)
       shift
       [ -z "$region" ] || throwArgument "$handler" "$argument already specified: $region"
-      region=$(usageArgumentString "$handler" "$argument" "${1-}") || return $?
+      region=$(validate "$handler" string "$argument" "${1-}") || return $?
       ;;
     *)
       throwArgument "unknown argument: $argument" || return $?

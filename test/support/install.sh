@@ -32,11 +32,11 @@ __checkFunctionInstallsAndUninstalls() {
   local handler="returnMessage"
   local checkFunction="" noun="" thing="" installer="" uninstaller=""
 
-  checkFunction=$(usageArgumentFunction "$handler" "checkFunction" "${1-}") && shift || return $?
-  noun=$(usageArgumentString "$handler" "noun" "${1-}") && shift || return $?
-  thing=$(usageArgumentString "$handler" "binary" "${1-}") && shift || return $?
-  installer=$(usageArgumentFunction "$handler" "installer" "${1-}") && shift || return $?
-  uninstaller=$(usageArgumentFunction "$handler" "uninstaller" "${1-}") && shift || return $?
+  checkFunction=$(validate "$handler" function "checkFunction" "${1-}") && shift || return $?
+  noun=$(validate "$handler" string "noun" "${1-}") && shift || return $?
+  thing=$(validate "$handler" string "binary" "${1-}") && shift || return $?
+  installer=$(validate "$handler" function "installer" "${1-}") && shift || return $?
+  uninstaller=$(validate "$handler" function "uninstaller" "${1-}") && shift || return $?
 
   local uninstalledAlready=false
 
@@ -65,10 +65,10 @@ __checkFunctionInstalls() {
   local handler="returnMessage"
   local checkFunction="" noun="" thing="" installer=""
 
-  checkFunction=$(usageArgumentFunction "$handler" "checkFunction" "${1-}") && shift || return $?
-  noun=$(usageArgumentString "$handler" "noun" "${1-}") && shift || return $?
-  thing=$(usageArgumentString "$handler" "binary" "${1-}") && shift || return $?
-  installer=$(usageArgumentFunction "$handler" "installer" "${1-}") && shift || return $?
+  checkFunction=$(validate "$handler" function "checkFunction" "${1-}") && shift || return $?
+  noun=$(validate "$handler" string "noun" "${1-}") && shift || return $?
+  thing=$(validate "$handler" string "binary" "${1-}") && shift || return $?
+  installer=$(validate "$handler" function "installer" "${1-}") && shift || return $?
 
   __testSection "INSTALL $(decorate value "$noun") $(decorate code "$thing")"
 
@@ -82,10 +82,10 @@ __checkFunctionUninstalls() {
   local handler="returnMessage"
   local checkFunction="" noun="" thing="" uninstaller=""
 
-  checkFunction=$(usageArgumentFunction "$handler" "checkFunction" "${1-}") && shift || return $?
-  noun=$(usageArgumentString "$handler" "noun" "${1-}") && shift || return $?
-  thing=$(usageArgumentString "$handler" "binary" "${1-}") && shift || return $?
-  uninstaller=$(usageArgumentFunction "$handler" "installer" "${1-}") && shift || return $?
+  checkFunction=$(validate "$handler" function "checkFunction" "${1-}") && shift || return $?
+  noun=$(validate "$handler" string "noun" "${1-}") && shift || return $?
+  thing=$(validate "$handler" string "binary" "${1-}") && shift || return $?
+  uninstaller=$(validate "$handler" function "installer" "${1-}") && shift || return $?
 
   __testSection "UNINSTALL $(decorate value "$noun") $(decorate code "$thing")"
 

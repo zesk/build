@@ -672,11 +672,11 @@ fileLineCount() {
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
     # _IDENTICAL_ handlerHandler 1
-    --handler) shift && handler=$(usageArgumentFunction "$handler" "$argument" "${1-}") || return $? ;;
+    --handler) shift && handler=$(validate "$handler" function "$argument" "${1-}") || return $? ;;
     --newline) newlineCheck=true ;;
     *)
       local file total
-      file="$(usageArgumentFile "$handler" "$argument" "${1-}")" || return $?
+      file="$(validate "$handler" File "$argument" "${1-}")" || return $?
       total=$(catchEnvironment "$handler" wc -l <"$file" | trimSpace) || return $?
       if $newlineCheck; then
         if [ -s "$file" ]; then

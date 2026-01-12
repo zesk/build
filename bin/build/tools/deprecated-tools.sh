@@ -25,7 +25,7 @@ deprecatedFilePrependVersion() {
     --help) "$handler" 0 && return $? || return $? ;;
     *)
       if [ -z "$target" ]; then
-        target="$(usageArgumentFile "$handler" "target" "${1-}")" || return $?
+        target="$(validate "$handler" File "target" "${1-}")" || return $?
       elif [ -z "$version" ]; then
         version="$(usageArgumentString "$handler" "version" "$1")" || return $?
       fi
@@ -106,9 +106,9 @@ deprecatedTokensFile() {
       ;;
     *)
       if [ -z "$findArgumentFunction" ]; then
-        findArgumentFunction=$(usageArgumentFunction "$handler" "ignoreFunction" "$1") || return $?
+        findArgumentFunction=$(validate "$handler" function "ignoreFunction" "$1") || return $?
       else
-        files+=("$(usageArgumentFile "$handler" "cannonFile" "$1")") || return $?
+        files+=("$(validate "$handler" File "cannonFile" "$1")") || return $?
       fi
       ;;
     esac
@@ -188,9 +188,9 @@ deprecatedCannonFile() {
       ;;
     *)
       if [ -z "$findArgumentFunction" ]; then
-        findArgumentFunction=$(usageArgumentFunction "$handler" "ignoreFunction" "$1") || return $?
+        findArgumentFunction=$(validate "$handler" function "ignoreFunction" "$1") || return $?
       else
-        files+=("$(usageArgumentFile "$handler" "cannonFile" "$1")") || return $?
+        files+=("$(validate "$handler" File "cannonFile" "$1")") || return $?
       fi
       ;;
     esac
@@ -259,7 +259,7 @@ deprecatedFind() {
       ;;
     *)
       if [ -z "$findArgumentFunction" ]; then
-        findArgumentFunction=$(usageArgumentFunction "$handler" "ignoreFunction" "$1") || return $?
+        findArgumentFunction=$(validate "$handler" function "ignoreFunction" "$1") || return $?
         local aa=()
         read -d '' -r -a aa < <("$findArgumentFunction") || [ "${#aa[@]}" -gt 0 ] || throwArgument "$handler" "$findArgumentFunction returned empty" || return $?
       else
@@ -305,7 +305,7 @@ deprecatedCannon() {
       ;;
     *)
       if [ -z "$findArgumentFunction" ]; then
-        findArgumentFunction=$(usageArgumentFunction "$handler" "ignoreFunction" "$1") || return $?
+        findArgumentFunction=$(validate "$handler" function "ignoreFunction" "$1") || return $?
       elif [ -z "$search" ]; then
         search="$(usageArgumentString "$handler" "search" "${1-}")" || return $?
       else

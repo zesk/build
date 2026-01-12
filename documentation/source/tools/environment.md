@@ -23,8 +23,6 @@ Tools to manipulate environment files in **Bash**:
 
 {environmentClean}
 
-{environmentAddFile}
-
 ## Variable lists
 
 {environmentSecureVariables}

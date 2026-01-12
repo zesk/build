@@ -23,18 +23,18 @@ __installInstallBinary() {
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
     # _IDENTICAL_ handlerHandler 1
-    --handler) shift && handler=$(usageArgumentFunction "$handler" "$argument" "${1-}") || return $? ;;
+    --handler) shift && handler=$(validate "$handler" function "$argument" "${1-}") || return $? ;;
     --bin)
       shift
       installBinName=$(usageArgumentString "$handler" "$argument" "${1-}") || return $?
       ;;
     --url-function)
       shift
-      urlFunction=$(usageArgumentCallable "$handler" "$argument" "${1-}") || return $?
+      urlFunction=$(validate "$handler" callable "$argument" "${1-}") || return $?
       ;;
     --post)
       shift
-      postFunction=$(usageArgumentCallable "$handler" "$argument" "${1-}") || return $?
+      postFunction=$(validate "$handler" callable "$argument" "${1-}") || return $?
       ;;
     --url)
       shift
@@ -42,7 +42,7 @@ __installInstallBinary() {
       ;;
     --source)
       shift
-      source=$(usageArgumentFile "$handler" "$argument" "${1-}") || return $?
+      source=$(validate "$handler" File "$argument" "${1-}") || return $?
       ;;
     --diff)
       showDiffFlag=true
@@ -52,7 +52,7 @@ __installInstallBinary() {
       ;;
     *)
       if [ -z "$path" ]; then
-        path=$(usageArgumentFileDirectory "$handler" "path" "$1") || return $?
+        path=$(validate "$handler" FileDirectory "path" "$1") || return $?
       elif [ -z "$applicationHome" ]; then
         applicationHome=$(usageArgumentDirectory "$handler" "applicationHome" "$1") || return $?
       else

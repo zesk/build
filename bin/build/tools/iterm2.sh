@@ -296,7 +296,7 @@ iTerm2Image() {
       throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
       ;;
     *)
-      images+=("$(usageArgumentFile "$handler" "imageFile" "$1")" "$(__iTerm2ImageExtras "$width" "$height" "$aspectRatio")") || return $?
+      images+=("$(validate "$handler" File "imageFile" "$1")" "$(__iTerm2ImageExtras "$width" "$height" "$aspectRatio")") || return $?
       ;;
     esac
     shift
@@ -385,7 +385,7 @@ iTerm2Download() {
       throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
       ;;
     *)
-      files+=("$(usageArgumentFile "$handler" "imageFile" "$1")") || return $?
+      files+=("$(validate "$handler" File "imageFile" "$1")") || return $?
       ;;
     esac
     shift

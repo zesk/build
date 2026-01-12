@@ -53,11 +53,11 @@ exampleFunction() {
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
     # _IDENTICAL_ handlerHandler 1
-    --handler) shift && handler=$(usageArgumentFunction "$handler" "$argument" "${1-}") || return $? ;;
+    --handler) shift && handler=$(validate "$handler" function "$argument" "${1-}") || return $? ;;
     --easy) easyFlag=true ;;
     --name) shift && name="$(usageArgumentString "$handler" "$argument" "${1-}")" || return $? ;;
     --path) shift && path="$(usageArgumentDirectory "$handler" "$argument" "${1-}")" || return $? ;;
-    --target) shift && target="$(usageArgumentFileDirectory "$handler" "$argument" "${1-}")" || return $? ;;
+    --target) shift && target="$(validate "$handler" FileDirectory "$argument" "${1-}")" || return $? ;;
     *)
       # _IDENTICAL_ argumentUnknownHandler 1
       throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?

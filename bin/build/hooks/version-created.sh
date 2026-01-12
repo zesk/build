@@ -22,8 +22,8 @@ __hookVersionCreated() {
   local currentVersion releaseNotes
   local handler="returnMessage"
 
-  currentVersion=$(usageArgumentString "$handler" version "${1-}") && shift || return $?
-  releaseNotes=$(usageArgumentFile "$handler" releaseNotes "${1-}") && shift || return $?
+  currentVersion=$(validate "$handler" string version "${1-}") && shift || return $?
+  releaseNotes=$(validate "$handler" file releaseNotes "${1-}") && shift || return $?
 
   export BUILD_VERSION_NO_OPEN
 

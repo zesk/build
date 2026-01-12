@@ -21,7 +21,7 @@ __reloadChanges() {
     --help) "$handler" 0 && return $? || return $? ;;
     --source)
       [ -z "$source" ] || throwArgument "$handler" "--source only can be supplied once" || return $?
-      shift && source="$(usageArgumentRealFile "$handler" "$argument" "${1-}")" || return $?
+      shift && source="$(validate "$handler" RealFile "$argument" "${1-}")" || return $?
       ;;
     --show) showFlag=true ;;
     --stop)
@@ -34,19 +34,19 @@ __reloadChanges() {
       return 0
       ;;
     --name) shift && name="$(usageArgumentString "$handler" "$argument" "${1-}")" || return $? ;;
-    --path) shift && paths+=("$(usageArgumentRealDirectory "$handler" "$argument" "${1-}")") || return $? ;;
-    --file) shift && paths+=("$(usageArgumentRealFile "$handler" "$argument" "${1-}")") || return $? ;;
+    --path) shift && paths+=("$(validate "$handler" RealDirectory "$argument" "${1-}")") || return $? ;;
+    --file) shift && paths+=("$(validate "$handler" RealFile "$argument" "${1-}")") || return $? ;;
     -*)
       # _IDENTICAL_ argumentUnknownHandler 1
       throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
       ;;
     *)
       if [ -z "$source" ]; then
-        source="$(usageArgumentRealFile "$handler" "source" "$argument")" || return $?
+        source="$(validate "$handler" RealFile "source" "$argument")" || return $?
       elif [ -f "$argument" ]; then
-        paths+=("$(usageArgumentRealFile "$handler" "file" "$argument")") || return $?
+        paths+=("$(validate "$handler" RealFile "file" "$argument")") || return $?
       else
-        paths+=("$(usageArgumentRealDirectory "$handler" "path" "$argument")") || return $?
+        paths+=("$(validate "$handler" RealDirectory "path" "$argument")") || return $?
       fi
       ;;
     esac
@@ -89,14 +89,14 @@ __reloadChangesShow() {
     read -r argument || done=true
     [ -n "$argument" ] || continue
     if [ -z "$source" ]; then
-      source="$(usageArgumentRealFile "$handler" "config-source" "$argument")" || return $?
+      source="$(validate "$handler" RealFile "config-source" "$argument")" || return $?
     elif [ -z "$name" ]; then
       name=$(usageArgumentString "$handler" "config-name" "$argument") || return $?
     elif [ "$argument" != "--" ]; then
       if [ -f "$argument" ]; then
-        paths+=("$(usageArgumentRealFile "$handler" "config-file" "$argument")") || return $?
+        paths+=("$(validate "$handler" RealFile "config-file" "$argument")") || return $?
       else
-        paths+=("$(usageArgumentRealDirectory "$handler" "config-path" "$argument")") || return $?
+        paths+=("$(validate "$handler" RealDirectory "config-path" "$argument")") || return $?
       fi
     else
       printf "%s %s %s\n%s\n" "👀 $(decorate info "$name")" "$(decorate code "(source $(decorate file "$source"))")" "when changes found in" "$(printf -- "%s\n" "${paths[@]}" | decorate code | decorate wrap -- "- ")"
@@ -114,7 +114,7 @@ __reloadChangesRemove() {
   catchEnvironment "$handler" touch "$target" || returnClean $? "$target" || return $?
   while IFS="" read -r argument; do
     if [ -z "$source" ]; then
-      source="$(usageArgumentRealFile "$handler" "config-source" "$argument")" || returnClean $? "$target" || return $?
+      source="$(validate "$handler" RealFile "config-source" "$argument")" || returnClean $? "$target" || return $?
     elif [ -z "$name" ]; then
       name=$(usageArgumentString "$handler" "config-name" "$argument") || returnClean $? "$target" || return $?
     elif [ "$argument" = "--" ]; then
@@ -126,9 +126,9 @@ __reloadChangesRemove() {
       paths=()
       continue
     elif [ -f "$argument" ]; then
-      paths+=("$(usageArgumentRealFile "$handler" "config-file" "$argument")") || return $?
+      paths+=("$(validate "$handler" RealFile "config-file" "$argument")") || return $?
     else
-      paths+=("$(usageArgumentRealDirectory "$handler" "config-path" "$argument")") || return $?
+      paths+=("$(validate "$handler" RealDirectory "config-path" "$argument")") || return $?
     fi
   done <"$cacheFile"
   catchEnvironment "$handler" mv -f "$target" "$cacheFile" || returnClean $? "$target" || return $?

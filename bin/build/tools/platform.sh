@@ -220,7 +220,7 @@ pathShow() {
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
     # _IDENTICAL_ handlerHandler 1
-    --handler) shift && handler=$(usageArgumentFunction "$handler" "$argument" "${1-}") || return $? ;;
+    --handler) shift && handler=$(validate "$handler" function "$argument" "${1-}") || return $? ;;
     *)
       break
       ;;
@@ -434,10 +434,10 @@ serviceToPort() {
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
     # _IDENTICAL_ handlerHandler 1
-    --handler) shift && handler=$(usageArgumentFunction "$handler" "$argument" "${1-}") || return $? ;;
+    --handler) shift && handler=$(validate "$handler" function "$argument" "${1-}") || return $? ;;
     --services)
       shift || throwArgument "$handler" "missing $argument argument" || return $?
-      servicesFile=$(usageArgumentFile "$handler" "servicesFile" "$1") || return $?
+      servicesFile=$(validate "$handler" File "servicesFile" "$1") || return $?
       ;;
     *)
       if [ ! -f "$servicesFile" ]; then

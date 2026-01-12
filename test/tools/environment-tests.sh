@@ -6,11 +6,11 @@
 # Copyright &copy; 2026 Market Acumen, Inc.
 #
 
-testEnvironmentAddFile() {
+testBuildEnvironmentAdd() {
   local handler="returnMessage"
 
   assertFileDoesNotExist "$home/bin/env/FOOBAR.sh" || return $?
-  assertExitCode 0 environmentAddFile FOOBAR || return $?
+  assertExitCode 0 buildEnvironmentAdd FOOBAR || return $?
   assertFileExists "$home/bin/env/FOOBAR.sh" || return $?
   catchReturn "$handler" rm -f "$home/bin/env/FOOBAR.sh" || return $?
 }

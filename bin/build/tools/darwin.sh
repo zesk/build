@@ -71,7 +71,7 @@ darwinSoundInstall() {
       createFlag=true
       ;;
     *)
-      soundFiles+=("$(usageArgumentFile "$handler" "soundFile" "${1-}")") || return $?
+      soundFiles+=("$(validate "$handler" File "soundFile" "${1-}")") || return $?
       ;;
     esac
     shift
@@ -221,7 +221,7 @@ darwinDialog() {
       ;;
     --icon)
       shift
-      icon=$(usageArgumentFile "$handler" "$argument" "${1-}") || return $?
+      icon=$(validate "$handler" File "$argument" "${1-}") || return $?
       ;;
     --ok)
       choices+=("Ok")

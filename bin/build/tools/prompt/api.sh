@@ -83,7 +83,7 @@ __bashPrompt() {
       throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
       ;;
     *)
-      addArguments+=("$(usageArgumentCallable "$handler" "module" "$argument")") || return $?
+      addArguments+=("$(validate "$handler" callable "module" "$argument")") || return $?
       ;;
     esac
     shift

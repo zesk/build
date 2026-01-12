@@ -68,7 +68,7 @@ mapValue() {
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
     # _IDENTICAL_ handlerHandler 1
-    --handler) shift && handler=$(usageArgumentFunction "$handler" "$argument" "${1-}") || return $? ;;
+    --handler) shift && handler=$(validate "$handler" function "$argument" "${1-}") || return $? ;;
     --prefix)
       shift
       prefix=$(usageArgumentString "$handler" "$argument" "${1-}") || return $?
@@ -79,15 +79,15 @@ mapValue() {
       ;;
     --search-filter)
       shift
-      searchFilters+=("$(usageArgumentCallable "$handler" "searchFilter" "${1-}")") || return $?
+      searchFilters+=("$(validate "$handler" callable "searchFilter" "${1-}")") || return $?
       ;;
     --replace-filter)
       shift
-      replaceFilters+=("$(usageArgumentCallable "$handler" "replaceFilter" "${1-}")") || return $?
+      replaceFilters+=("$(validate "$handler" callable "replaceFilter" "${1-}")") || return $?
       ;;
     *)
       if [ -z "$mapFile" ]; then
-        mapFile=$(usageArgumentFile "$handler" "mapFile" "${1-}") || return $?
+        mapFile=$(validate "$handler" File "mapFile" "${1-}") || return $?
         shift
         break
       else
@@ -160,7 +160,7 @@ _mapValueTrim() {
 # Environment: Argument-passed or entire environment variables which are exported are used and mapped to the destination.
 # Example:     printf %s "{NAME}, {PLACE}.\n" | NAME=Hello PLACE=world mapEnvironment NAME PLACE
 # Requires: environmentVariables cat throwEnvironment catchEnvironment
-# Requires: throwArgument decorate usageArgumentString
+# Requires: throwArgument decorate validate
 mapEnvironment() {
   local handler="_${FUNCNAME[0]}"
 
@@ -177,26 +177,26 @@ mapEnvironment() {
     --help) "$handler" 0 && return $? || return $? ;;
     --prefix)
       shift
-      __prefix=$(usageArgumentString "$handler" "$argument" "${1-}") || return $?
+      __prefix=$(validate "$handler" String "$argument" "${1-}") || return $?
       ;;
     --suffix)
       shift
-      __suffix=$(usageArgumentString "$handler" "$argument" "${1-}") || return $?
+      __suffix=$(validate "$handler" String "$argument" "${1-}") || return $?
       ;;
     --search-filter)
       shift
-      __searchFilters+=("$(usageArgumentCallable "$handler" "searchFilter" "${1-}")") || return $?
+      __searchFilters+=("$(validate "$handler" Callable "searchFilter" "${1-}")") || return $?
       ;;
     --replace-filter)
       shift
-      __replaceFilters+=("$(usageArgumentCallable "$handler" "replaceFilter" "${1-}")") || return $?
+      __replaceFilters+=("$(validate "$handler" Callable "replaceFilter" "${1-}")") || return $?
       ;;
     --env-file)
       shift
       muzzle usageArgumentLoadEnvironmentFile "$handler" "$argument" "${1-}" || return $?
       ;;
     *)
-      __ee+=("$(usageArgumentString "$handler" "environmentVariableName" "$argument")") || return $?
+      __ee+=("$(validate "$handler" String "environmentVariableName" "$argument")") || return $?
       ;;
     esac
     shift
@@ -280,7 +280,7 @@ cannon() {
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
     # _IDENTICAL_ handlerHandler 1
-    --handler) shift && handler=$(usageArgumentFunction "$handler" "$argument" "${1-}") || return $? ;;
+    --handler) shift && handler=$(validate "$handler" function "$argument" "${1-}") || return $? ;;
     --path)
       shift
       cannonPath=$(usageArgumentDirectory "$handler" "$argument cannonPath" "${1-}") || return $?

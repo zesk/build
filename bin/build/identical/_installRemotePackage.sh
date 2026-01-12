@@ -137,11 +137,11 @@ _installRemotePackage() {
     --help) "$handler" 0 && return $? || return $? ;;
     --source)
       shift
-      source=$(usageArgumentString "$handler" "$argument" "${1-}") || return $?
+      source=$(validate "$handler" String "$argument" "${1-}") || return $?
       ;;
     --name)
       shift
-      name=$(usageArgumentString "$handler" "$argument" "${1-}") || return $?
+      name=$(validate "$handler" String "$argument" "${1-}") || return $?
       ;;
     --mock | --local)
       [ -z "$localPath" ] || throwArgument "$handler" "$argument already" || return $?
@@ -151,7 +151,7 @@ _installRemotePackage() {
       ;;
     --user | --header | --password)
       shift
-      fetchArguments+=("$argument" "$(usageArgumentString "$handler" "$argument" "${1-}")") || return $?
+      fetchArguments+=("$argument" "$(validate "$handler" String "$argument" "${1-}")") || return $?
       ;;
     --url)
       shift
@@ -179,7 +179,7 @@ _installRemotePackage() {
       ;;
     --installer)
       shift
-      installers+=("$(usageArgumentString "$handler" "$argument" "${1-}")") || return $?
+      installers+=("$(validate "$handler" String "$argument" "${1-}")") || return $?
       ;;
     #
     # I believe this ensures that the process running does not modify its source script directly
@@ -196,7 +196,7 @@ _installRemotePackage() {
     --replace)
       local newName
       shift
-      newName=$(usageArgumentString "$handler" "$argument" "${1-}") || return $?
+      newName=$(validate "$handler" String "$argument" "${1-}") || return $?
       decorate bold-blue "Updating -> $(decorate bold-orange "$newName")"
       catchEnvironment "$handler" cp -f "${BASH_SOURCE[0]}" "$newName" || return $?
       catchEnvironment "$handler" chmod +x "$newName" || return $?
@@ -206,7 +206,7 @@ _installRemotePackage() {
     --finalize)
       local oldName
       shift
-      oldName=$(usageArgumentString "$handler" "$argument" "${1-}") || return $?
+      oldName=$(validate "$handler" String "$argument" "${1-}") || return $?
       catchEnvironment "$handler" rm -rf "$oldName" || return $?
       return 0
       ;;
@@ -224,7 +224,7 @@ _installRemotePackage() {
       installArgs+=("$argument")
       ;;
     *)
-      installPath=$(usageArgumentString "$handler" "installPath" "$1") || return $?
+      installPath=$(validate "$handler" String "installPath" "$1") || return $?
       installPath="${installPath%/}"
       ;;
     esac

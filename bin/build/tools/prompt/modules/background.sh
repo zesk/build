@@ -28,7 +28,7 @@ __backgroundProcess() {
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
     # _IDENTICAL_ handlerHandler 1
-    --handler) shift && handler=$(usageArgumentFunction "$handler" "$argument" "${1-}") || return $? ;;
+    --handler) shift && handler=$(validate "$handler" function "$argument" "${1-}") || return $? ;;
     --watch) actionFlag="watch" ;;
     --summary) actionFlag="summary" ;;
     --monitor) actionFlag="monitor" ;;
@@ -45,14 +45,14 @@ __backgroundProcess() {
     *)
       if [ 0 -eq ${#condition[@]} ]; then
         actionFlag="condition"
-        condition=("$(usageArgumentCallable "$handler" "condition" "$argument")") || return $?
+        condition=("$(validate "$handler" callable "condition" "$argument")") || return $?
         shift
         while [ $# -gt 0 ] && [ "$1" != '--' ]; do condition+=("$1") && shift; done
         # Get that --
         [ $# -gt 0 ] || throwArgument "$handler" "No command passed: [$__count] $(decorate each quote -- "${__saved[@]}")" || return $?
       else
         shift
-        command=("$(usageArgumentCallable "$handler" "command" "$argument")" "$@") || return $?
+        command=("$(validate "$handler" callable "command" "$argument")" "$@") || return $?
         break
       fi
       ;;

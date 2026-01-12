@@ -44,12 +44,12 @@ directoryChange() {
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
     # _IDENTICAL_ handlerHandler 1
-    --handler) shift && handler=$(usageArgumentFunction "$handler" "$argument" "${1-}") || return $? ;;
+    --handler) shift && handler=$(validate "$handler" function "$argument" "${1-}") || return $? ;;
     *)
       if [ -z "$directory" ]; then
         directory=$(usageArgumentDirectory "$handler" "directory" "$1") || return $?
       elif [ -z "$command" ]; then
-        command=$(usageArgumentCallable "$handler" "command" "$1") && shift || return $?
+        command=$(validate "$handler" callable "command" "$1") && shift || return $?
         catchEnvironment "$handler" muzzle pushd "$directory" || return $?
         catchEnvironment "$handler" "$command" "$@" || returnUndo $? muzzle popd || return $?
         catchEnvironment "$handler" muzzle popd || return $?
@@ -203,7 +203,7 @@ directoryRequire() {
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
     # _IDENTICAL_ handlerHandler 1
-    --handler) shift && handler=$(usageArgumentFunction "$handler" "$argument" "${1-}") || return $? ;;
+    --handler) shift && handler=$(validate "$handler" function "$argument" "${1-}") || return $? ;;
     --owner)
       shift
       owner=$(usageArgumentString "$handler" "$argument" "${1-}") || return $?
@@ -352,7 +352,7 @@ __directoryParent() {
     *)
       [ -z "$startingDirectory" ] || throwArgument "$handler" "startingDirectory $(decorate code "$argument") was already specified $(decorate value "$startingDirectory") (Arguments: $(decorate each code "${handler#_}" "${__saved[@]}"))" || return $?
       [ -n "$argument" ] || argument=$(catchEnvironment "$handler" pwd) || return $?
-      startingDirectory=$(usageArgumentRealDirectory "$handler" startingDirectory "$argument") || return $?
+      startingDirectory=$(validate "$handler" RealDirectory startingDirectory "$argument") || return $?
       ;;
     esac
     shift

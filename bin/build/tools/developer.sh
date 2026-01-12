@@ -24,7 +24,7 @@ developerAnnounce() {
       debugFlag=true
       ;;
     *)
-      source=$(usageArgumentRealFile "$handler" "source" "${1-}") || return $?
+      source=$(validate "$handler" RealFile "source" "${1-}") || return $?
       ;;
     esac
     shift
@@ -233,7 +233,7 @@ developerDevelopmentLink() {
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
     # _IDENTICAL_ handlerHandler 1
-    --handler) shift && handler=$(usageArgumentFunction "$handler" "$argument" "${1-}") || return $? ;;
+    --handler) shift && handler=$(validate "$handler" function "$argument" "${1-}") || return $? ;;
     --copy)
       copyFlag=true
       ;;

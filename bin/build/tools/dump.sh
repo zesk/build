@@ -115,7 +115,7 @@ dumpPipe() {
       ;;
     --vanish)
       shift
-      vanishFiles+=("$(usageArgumentFile "$handler" "$argument" "${1-}")") || return $?
+      vanishFiles+=("$(validate "$handler" File "$argument" "${1-}")") || return $?
       ;;
     --tail)
       endBinary="tail"

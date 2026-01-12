@@ -138,7 +138,7 @@ listCleanDuplicates() {
     --help) "$handler" 0 && return $? || return $? ;;
     --test)
       shift
-      testFunction=$(usageArgumentCallable "$handler" "$argument" "${1-}") || return $?
+      testFunction=$(validate "$handler" callable "$argument" "${1-}") || return $?
       ;;
     --removed)
       showRemoved=true

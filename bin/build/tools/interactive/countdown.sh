@@ -29,7 +29,7 @@ __interactiveCountdown() {
       if [ -z "$counter" ]; then
         counter=$(usageArgumentPositiveInteger "$handler" "counter" "$1") || return $?
       else
-        binary=$(usageArgumentCallable "$handler" "callable" "$1") || return $?
+        binary=$(validate "$handler" callable "callable" "$1") || return $?
         break
       fi
       ;;

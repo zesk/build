@@ -27,7 +27,7 @@
 # Environment: Argument-passed or entire environment variables which are exported are used and mapped to the destination.
 # Example:     printf %s "{NAME}, {PLACE}.\n" | NAME=Hello PLACE=world mapEnvironment NAME PLACE
 # Requires: throwArgument read environmentVariables decorate sed cat rm throwEnvironment catchEnvironment returnClean
-# Requires: usageArgumentString fileTemporaryName
+# Requires: validate fileTemporaryName
 mapEnvironmentSed() {
   local handler="_${FUNCNAME[0]}"
   local __sedFile __prefix='{' __suffix='}'
@@ -43,11 +43,11 @@ mapEnvironmentSed() {
     --help) "$handler" 0 && return $? || return $? ;;
     --prefix)
       shift
-      __prefix="$(usageArgumentString "$handler" "$argument" "${1-}")" || return $?
+      __prefix="$(validate "$handler" String "$argument" "${1-}")" || return $?
       ;;
     --suffix)
       shift
-      __suffix="$(usageArgumentString "$handler" "$argument" "${1-}")" || return $?
+      __suffix="$(validate "$handler" String "$argument" "${1-}")" || return $?
       ;;
     *)
       break

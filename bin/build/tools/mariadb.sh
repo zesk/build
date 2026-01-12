@@ -155,7 +155,7 @@ mariadbConnect() {
     --help) "$handler" 0 && return $? || return $? ;;
     --binary)
       shift
-      binary=$(usageArgumentCallable "$handler" "$argument" "${1-}") || return $?
+      binary=$(validate "$handler" callable "$argument" "${1-}") || return $?
       ;;
     --print)
       printFlag=true

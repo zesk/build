@@ -57,7 +57,7 @@ __deployApplication() {
       ;;
     --application)
       shift
-      applicationPath=$(usageArgumentFileDirectory "$handler" applicationPath "${1-}") || return $?
+      applicationPath=$(validate "$handler" FileDirectory applicationPath "${1-}") || return $?
       ;;
     --target)
       shift

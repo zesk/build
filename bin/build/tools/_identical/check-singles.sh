@@ -15,7 +15,7 @@ _identicalCheckSinglesChecker() {
   local handler="$1" stateFile && shift
 
   # Arguments
-  stateFile=$(usageArgumentFile "$handler" stateFile "${1-}") && shift || return $?
+  stateFile=$(validate "$handler" File stateFile "${1-}") && shift || return $?
 
   local tempDirectory singles=() item resultsFile identicalCode
 

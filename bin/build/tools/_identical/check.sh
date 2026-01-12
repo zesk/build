@@ -28,7 +28,7 @@ __identicalCheck() {
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
     # _IDENTICAL_ handlerHandler 1
-    --handler) shift && handler=$(usageArgumentFunction "$handler" "$argument" "${1-}") || return $? ;;
+    --handler) shift && handler=$(validate "$handler" function "$argument" "${1-}") || return $? ;;
     --watch)
       catchReturn "$handler" identicalWatch "${__saved[@]}" && return $? || return $?
       ;;
@@ -45,7 +45,7 @@ __identicalCheck() {
       ;;
     --repair)
       shift
-      repairSources+=("$(usageArgumentRealDirectory "$handler" "repairSource" "${1-}")") || return $?
+      repairSources+=("$(validate "$handler" RealDirectory "repairSource" "${1-}")") || return $?
       ;;
     --extension)
       shift
@@ -55,16 +55,16 @@ __identicalCheck() {
       ;;
     --exec)
       shift
-      binary=$(usageArgumentCallable "$handler" "$argument" "$1") || return $?
+      binary=$(validate "$handler" callable "$argument" "$1") || return $?
       ;;
     --skip)
       shift
-      skipFiles+=("$(usageArgumentFile "$handler" "$argument" "${1-}")") || return $?
+      skipFiles+=("$(validate "$handler" File "$argument" "${1-}")") || return $?
       ;;
     --singles)
       local singleFile
       shift
-      singleFile=$(usageArgumentFile "$handler" singlesFile "${1-}") || return $?
+      singleFile=$(validate "$handler" File singlesFile "${1-}") || return $?
       while read -r single; do
         single="${single#"${single%%[![:space:]]*}"}"
         single="${single%"${single##*[![:space:]]}"}"

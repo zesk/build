@@ -48,11 +48,11 @@ __hookNotify() {
     --help) "$handler" 0 && return $? || return $? ;;
     --sound)
       shift
-      soundName=$(usageArgumentString "$handler" "$argument" "${1-}") || return $?
+      soundName=$(validate "$handler" string "$argument" "${1-}") || return $?
       ;;
     --title)
       shift
-      title=$(usageArgumentString "$handler" "$argument" "${1-}") || return $?
+      title=$(validate "$handler" string "$argument" "${1-}") || return $?
       ;;
     *)
       break

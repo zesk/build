@@ -60,7 +60,7 @@ dumpBinary() {
     --help) "$handler" 0 && return $? || return $? ;;
     --vanish)
       shift
-      vanishFiles+=("$(usageArgumentFile "$handler" "$argument" "${1-}")") || return $?
+      vanishFiles+=("$(validate "$handler" File "$argument" "${1-}")") || return $?
       ;;
     --head)
       endBinary="head"

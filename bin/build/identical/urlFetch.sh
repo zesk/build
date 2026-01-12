@@ -37,7 +37,7 @@
 # Argument: url - Required. URL. URL to fetch to target file.
 # Argument: file - Optional. FileDirectory. Target file. Use `-` to send to `stdout`. Default value is `-`.
 # Requires: returnMessage whichExists decorate
-# Requires: usageArgumentString usageArgumentPositiveInteger isPositiveInteger
+# Requires: validate
 # Requires: throwArgument catchArgument
 # Requires: throwEnvironment catchEnvironment
 # Environment: BUILD_URL_TIMEOUT
@@ -71,18 +71,18 @@ urlFetch() {
     --curl) binary=("curl") ;;
     --binary)
       local tempBin
-      shift && tempBin=$(usageArgumentString "$handler" "$argument" "${1-}") || return $?
+      shift && tempBin=$(validate "$handler" String "$argument" "${1-}") || return $?
       whichExists "$tempBin" || throwArgument "$handler" "$tempBin must be in PATH: $PATH" || return $?
       binary=("$tempBin")
       ;;
     --argument-format)
-      shift && format=$(usageArgumentString "$handler" "$argument" "${1-}") || return $?
+      shift && format=$(validate "$handler" String "$argument" "${1-}") || return $?
       case "$format" in curl | wget) ;; *) throwArgument "$handler" "$argument must be curl or wget" || return $? ;; esac
       ;;
-    --redirect-max) shift && maxRedirections=$(usageArgumentPositiveInteger "$handler" "$argument" "${1-}") || return $? ;;
+    --redirect-max) shift && maxRedirections=$(validate "$handler" PositiveInteger "$argument" "${1-}") || return $? ;;
     --password) shift && password="$1" ;;
     --user)
-      shift && user=$(usageArgumentString "$handler" "$argument (user)" "$user") || return $?
+      shift && user=$(validate "$handler" String "$argument (user)" "$user") || return $?
       if [ "$user" != "${user#*:}" ]; then
         userHasColons=true
       fi
@@ -92,11 +92,11 @@ urlFetch() {
       ;;
     --debug) debugFlag=true ;;
     --timeout)
-      shift && timeoutSeconds=$(usageArgumentPositiveInteger "$handler" "$argument" "${1-}") || return $?
+      shift && timeoutSeconds=$(validate "$handler" PositiveInteger "$argument" "${1-}") || return $?
       ;;
     --agent)
       local agent
-      shift && agent=$(usageArgumentString "$handler" "$argument" "${1-}") || return $?
+      shift && agent=$(validate "$handler" String "$argument" "${1-}") || return $?
       wgetArgs+=("--user-agent=$agent")
       curlArgs+=("--user-agent" "$agent")
       genericArgs+=("$argument" "$agent")

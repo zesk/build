@@ -276,7 +276,7 @@ bashFunctionDefined() {
       if [ -z "$function" ]; then
         function="$(usageArgumentString "$handler" "functionName" "${1-}")" || return $?
       else
-        files+=("$(usageArgumentFile "$handler" "file" "${1-}")") || return $?
+        files+=("$(validate "$handler" File "file" "${1-}")") || return $?
       fi
       ;;
     esac
@@ -337,7 +337,7 @@ bashShowUsage() {
       if [ -z "$functionName" ]; then
         functionName=$(usageArgumentString "$handler" "functionName" "$1") || return $?
       else
-        files+=("$(usageArgumentFile "$handler" "file" "$1")") || return $?
+        files+=("$(validate "$handler" File "file" "$1")") || return $?
       fi
       ;;
     esac
@@ -378,7 +378,7 @@ bashListFunctions() {
     --help) "$handler" 0 && return $? || return $? ;;
     *)
       local file
-      file=$(usageArgumentFile "$handler" "file" "$1") || return $?
+      file=$(validate "$handler" File "file" "$1") || return $?
       __bashListFunctions <"$file"
       ;;
     esac
@@ -426,7 +426,7 @@ bashFunctionCommentVariable() {
       ;;
     *)
       if [ -z "$source" ]; then
-        source="$(usageArgumentFile "$handler" "source" "${1-}")" || return $?
+        source="$(validate "$handler" File "source" "${1-}")" || return $?
       elif [ -z "$functionName" ]; then
         functionName=$(usageArgumentString "$handler" "functionName" "${1-}") || return $?
       elif [ -z "$variableName" ]; then
@@ -499,7 +499,7 @@ bashCommentFilter() {
       ff=()
       ;;
     *)
-      files+=("$(usageArgumentFile "$handler" "file" "$1")") || return $?
+      files+=("$(validate "$handler" File "file" "$1")") || return $?
       ;;
     esac
     shift

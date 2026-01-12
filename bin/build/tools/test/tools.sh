@@ -98,7 +98,7 @@ testSuite() {
       ;;
     --tap)
       shift
-      tapFile=$(usageArgumentFileDirectory "$handler" "$argument" "${1-}") || return $?
+      tapFile=$(validate "$handler" FileDirectory "$argument" "${1-}") || return $?
       ;;
     --tag)
       shift
@@ -147,7 +147,7 @@ testSuite() {
       ;;
     --fail)
       shift
-      failExecutors+=("$(usageArgumentCallable "$handler" "failExecutor" "${1-}")") || return $?
+      failExecutors+=("$(validate "$handler" callable "failExecutor" "${1-}")") || return $?
       # shellcheck disable=SC2015
       while [ $# -gt 0 ]; do [ "$1" != "--" ] && failExecutors+=("$1") && shift || break; done
       failExecutors+=("--")
@@ -157,7 +157,7 @@ testSuite() {
       ;;
     --delete)
       shift
-      dd+=("$(usageArgumentFileDirectory "$handler" "$argument" "${1-}")") || return $?
+      dd+=("$(validate "$handler" FileDirectory "$argument" "${1-}")") || return $?
       ;;
     --delete-common)
       dd+=("$(buildHome)/vendor") || return $?
@@ -699,7 +699,7 @@ __testFunctionWasTested() {
       shift
     fi
     local argument
-    argument="$(usageArgumentFunction "$handler" function "$1")" || return $?
+    argument="$(validate "$handler" function function "$1")" || return $?
     if ! muzzle grep -q -e "^$(quoteGrepPattern "$argument")\$" "$assertedFunctions"; then
       return 1
     fi

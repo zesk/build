@@ -39,11 +39,11 @@ __documentationTemplateCompile() {
       if [ -z "$cacheDirectory" ]; then
         cacheDirectory=$(usageArgumentDirectory "$handler" cacheDirectory "$argument") || return $?
       elif [ -z "$sourceFile" ]; then
-        sourceFile="$(usageArgumentFile "$handler" sourceFile "$argument")" || return $?
+        sourceFile="$(validate "$handler" File sourceFile "$argument")" || return $?
       elif [ -z "$functionTemplate" ]; then
-        functionTemplate="$(usageArgumentFile "$handler" functionTemplate "$argument")" || return $?
+        functionTemplate="$(validate "$handler" File functionTemplate "$argument")" || return $?
       elif [ -z "$targetFile" ]; then
-        targetFile="$(usageArgumentFileDirectory "$handler" targetFile "$argument")" || return $?
+        targetFile="$(validate "$handler" FileDirectory targetFile "$argument")" || return $?
       else
         # _IDENTICAL_ argumentUnknownHandler 1
         throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
@@ -166,13 +166,13 @@ __documentationTemplateFunctionCompile() {
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
-    --env-file) shift && envFiles+=("$(usageArgumentFile "$handler" "envFile" "${1-}")") || return $? ;;
+    --env-file) shift && envFiles+=("$(validate "$handler" File "envFile" "${1-}")") || return $? ;;
     *)
       # Load arguments one-by-one
       if [ -z "$functionName" ]; then
         functionName="$(usageArgumentString "$handler" functionName "$argument")" || return $?
       elif [ -z "$functionTemplate" ]; then
-        functionTemplate="$(usageArgumentFile "$handler" functionTemplate "$argument")" || return $?
+        functionTemplate="$(validate "$handler" File functionTemplate "$argument")" || return $?
       else
         # _IDENTICAL_ argumentUnknownHandler 1
         throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
@@ -230,7 +230,7 @@ __documentationTemplateDirectoryCompile() {
       elif [ -z "$templateDirectory" ]; then
         templateDirectory=$(usageArgumentDirectory "$handler" "templateDirectory" "$argument") || return $?
       elif [ -z "$functionTemplate" ]; then
-        functionTemplate=$(usageArgumentRealFile "$handler" "functionTemplate" "$argument") || return $?
+        functionTemplate=$(validate "$handler" RealFile "functionTemplate" "$argument") || return $?
       elif [ -z "$targetDirectory" ]; then
         targetDirectory=$(usageArgumentDirectory "$handler" "targetDirectory" "$argument") || return $?
       else

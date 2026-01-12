@@ -14,7 +14,7 @@ __documentationSeeTokenTemplates() {
   local type file
   while [ $# -gt 1 ]; do
     type="$(usageArgumentString "$handler" "type" "$1")" || return $?
-    file="$(usageArgumentFile "$handler" "file" "${2-}")" || return $?
+    file="$(validate "$handler" File "file" "${2-}")" || return $?
     link="$(usageArgumentString "$handler" "link" "${3-}")" || return $?
     catchEnvironment "$handler" cp "$file" "$templateCache/$type" || return $?
     printf "%s\n" "$link" >"$templateCache/$type.link" || return $?

@@ -29,7 +29,7 @@ __bashDocumentationSettingsFileDetails() {
   home=$(catchReturn "$handler" buildHome) || return $?
 
   catchReturn "$handler" __dumpSimpleValue "applicationHome" "$home" || return $?
-  definitionFile=$(usageArgumentFile "$handler" "definitionFile" "$sourceFile") && shift || return $?
+  definitionFile=$(validate "$handler" File "definitionFile" "$sourceFile") && shift || return $?
   catchReturn "$handler" __dumpSimpleValue "applicationFile" "${definitionFile#"${home%/}"/}" || return $?
   catchReturn "$handler" __dumpSimpleValue "file" "$definitionFile" || return $?
   catchReturn "$handler" __dumpSimpleValue "base" "$(basename "$definitionFile")" || return $?

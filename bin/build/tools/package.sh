@@ -29,12 +29,12 @@ __packageListFunction() {
     --help) "$handler" 0 && return $? || return $? ;;
     --before)
       shift
-      beforeFunctions+=("$(usageArgumentFunction "$handler" "$argument" "${1-}")") || return $?
+      beforeFunctions+=("$(validate "$handler" function "$argument" "${1-}")") || return $?
       ;;
     # IDENTICAL managerArgumentHandler 5
     --manager)
       shift
-      manager=$(usageArgumentString "$handler" "$argument" "${1-}") || return $?
+      manager=$(validate "$handler" String "$argument" "${1-}") || return $?
       packageManagerValid "$manager" || throwArgument "$handler" "Manager is invalid: $(decorate code "$manager")" || return $?
       ;;
     *)
@@ -84,7 +84,7 @@ __packageUpFunction() {
     # IDENTICAL managerArgumentHandler 5
     --manager)
       shift
-      manager=$(usageArgumentString "$handler" "$argument" "${1-}") || return $?
+      manager=$(validate "$handler" String "$argument" "${1-}") || return $?
       packageManagerValid "$manager" || throwArgument "$handler" "Manager is invalid: $(decorate code "$manager")" || return $?
       ;;
     --force)
@@ -192,7 +192,7 @@ packageDefault() {
     # IDENTICAL managerArgumentHandler 5
     --manager)
       shift
-      manager=$(usageArgumentString "$handler" "$argument" "${1-}") || return $?
+      manager=$(validate "$handler" String "$argument" "${1-}") || return $?
       packageManagerValid "$manager" || throwArgument "$handler" "Manager is invalid: $(decorate code "$manager")" || return $?
       ;;
     -*)
@@ -256,7 +256,7 @@ packageWhich() {
     # IDENTICAL managerArgumentHandler 5
     --manager)
       shift
-      manager=$(usageArgumentString "$handler" "$argument" "${1-}") || return $?
+      manager=$(validate "$handler" String "$argument" "${1-}") || return $?
       packageManagerValid "$manager" || throwArgument "$handler" "Manager is invalid: $(decorate code "$manager")" || return $?
       ;;
     -*)
@@ -325,7 +325,7 @@ packageWhichUninstall() {
     # IDENTICAL managerArgumentHandler 5
     --manager)
       shift
-      manager=$(usageArgumentString "$handler" "$argument" "${1-}") || return $?
+      manager=$(validate "$handler" String "$argument" "${1-}") || return $?
       packageManagerValid "$manager" || throwArgument "$handler" "Manager is invalid: $(decorate code "$manager")" || return $?
       ;;
     --verbose)
@@ -397,7 +397,7 @@ packageInstall() {
     # IDENTICAL managerArgumentHandler 5
     --manager)
       shift
-      manager=$(usageArgumentString "$handler" "$argument" "${1-}") || return $?
+      manager=$(validate "$handler" String "$argument" "${1-}") || return $?
       packageManagerValid "$manager" || throwArgument "$handler" "Manager is invalid: $(decorate code "$manager")" || return $?
       ;;
     --force)
@@ -546,7 +546,7 @@ packageUninstall() {
     # IDENTICAL managerArgumentHandler 5
     --manager)
       shift
-      manager=$(usageArgumentString "$handler" "$argument" "${1-}") || return $?
+      manager=$(validate "$handler" String "$argument" "${1-}") || return $?
       packageManagerValid "$manager" || throwArgument "$handler" "Manager is invalid: $(decorate code "$manager")" || return $?
       ;;
     *)
@@ -709,7 +709,7 @@ packageGroupWhich() {
     # IDENTICAL managerArgumentHandler 5
     --manager)
       shift
-      manager=$(usageArgumentString "$handler" "$argument" "${1-}") || return $?
+      manager=$(validate "$handler" String "$argument" "${1-}") || return $?
       packageManagerValid "$manager" || throwArgument "$handler" "Manager is invalid: $(decorate code "$manager")" || return $?
       ;;
     *)
@@ -757,7 +757,7 @@ packageGroupInstall() {
     # IDENTICAL managerArgumentHandler 5
     --manager)
       shift
-      manager=$(usageArgumentString "$handler" "$argument" "${1-}") || return $?
+      manager=$(validate "$handler" String "$argument" "${1-}") || return $?
       packageManagerValid "$manager" || throwArgument "$handler" "Manager is invalid: $(decorate code "$manager")" || return $?
       ;;
     *)
@@ -805,7 +805,7 @@ packageGroupUninstall() {
     # IDENTICAL managerArgumentHandler 5
     --manager)
       shift
-      manager=$(usageArgumentString "$handler" "$argument" "${1-}") || return $?
+      manager=$(validate "$handler" String "$argument" "${1-}") || return $?
       packageManagerValid "$manager" || throwArgument "$handler" "Manager is invalid: $(decorate code "$manager")" || return $?
       ;;
     *)
@@ -851,7 +851,7 @@ packageMapping() {
     # IDENTICAL managerArgumentHandler 5
     --manager)
       shift
-      manager=$(usageArgumentString "$handler" "$argument" "${1-}") || return $?
+      manager=$(validate "$handler" String "$argument" "${1-}") || return $?
       packageManagerValid "$manager" || throwArgument "$handler" "Manager is invalid: $(decorate code "$manager")" || return $?
       ;;
     *)

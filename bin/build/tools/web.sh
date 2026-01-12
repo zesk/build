@@ -28,7 +28,7 @@ urlMatchesLocalFileSize() {
       if [ -z "$url" ]; then
         url=$(usageArgumentString "$handler" "url" "$1") || return $?
       elif [ -z "$file" ]; then
-        file="$(usageArgumentFile "$handler" "file" "$1")" || return $?
+        file="$(validate "$handler" File "file" "$1")" || return $?
       else
         # _IDENTICAL_ argumentUnknownHandler 1
         throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
@@ -71,7 +71,7 @@ urlContentLength() {
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
     # _IDENTICAL_ handlerHandler 1
-    --handler) shift && handler=$(usageArgumentFunction "$handler" "$argument" "${1-}") || return $? ;;
+    --handler) shift && handler=$(validate "$handler" function "$argument" "${1-}") || return $? ;;
     *)
       local tempFile url remoteSize
       tempFile=$(fileTemporaryName "$handler") || return $?

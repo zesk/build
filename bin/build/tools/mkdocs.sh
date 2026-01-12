@@ -22,8 +22,8 @@ documentationMkdocs() {
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
     # _IDENTICAL_ handlerHandler 1
-    --handler) shift && handler=$(usageArgumentFunction "$handler" "$argument" "${1-}") || return $? ;;
-    --template) shift && template=$(usageArgumentFile "$handler" "$argument" "${1-}") || return $? ;;
+    --handler) shift && handler=$(validate "$handler" function "$argument" "${1-}") || return $? ;;
+    --template) shift && template=$(validate "$handler" File "$argument" "${1-}") || return $? ;;
     --package) shift && packages+=("$(usageArgumentString "$handler" "$argument" "${1-}")") || return $? ;;
     --path) shift && rootPath="$(usageArgumentDirectory "$handler" "$argument" "${1-}")" || return $? ;;
     *)

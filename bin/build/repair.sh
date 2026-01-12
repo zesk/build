@@ -32,7 +32,7 @@ if source "$(dirname "${BASH_SOURCE[0]}")/tools.sh"; then
         ;;
       --token)
         local token
-        shift && token=$(usageArgumentString "$handler" "$argument" "${1-}") || return $?
+        shift && token=$(validate "$handler" string "$argument" "${1-}") || return $?
         cleaned+=("$argument" "$token")
         doFingerprint=false
         ;;

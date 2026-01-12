@@ -18,7 +18,7 @@ __notify() {
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
     # _IDENTICAL_ handlerHandler 1
-    --handler) shift && handler=$(usageArgumentFunction "$handler" "$argument" "${1-}") || return $? ;;
+    --handler) shift && handler=$(validate "$handler" function "$argument" "${1-}") || return $? ;;
     --message)
       shift
       message="$(usageArgumentString "$handler" "$argument" "${1-}")" || return $?
@@ -46,7 +46,7 @@ __notify() {
       nnFail+=("--sound" "$(usageArgumentString "$handler" "$argument" "${1-}")") || return $?
       ;;
     *)
-      binary="$(usageArgumentCallable "$handler" "$argument" "$1")" || return $?
+      binary="$(validate "$handler" callable "$argument" "$1")" || return $?
       shift
       break
       ;;

@@ -15,8 +15,8 @@ _identicalCheckInsideLoop() {
   local stateFile prefixIndex prefix searchFile
 
   # Arguments
-  stateFile=$(usageArgumentFile "$handler" stateFile "${1-}") && shift || return $?
-  searchFile=$(usageArgumentFile "$handler" searchFile "${1-}") && shift || return $?
+  stateFile=$(validate "$handler" File stateFile "${1-}") && shift || return $?
+  searchFile=$(validate "$handler" File searchFile "${1-}") && shift || return $?
 
   # State file
   local foundLines

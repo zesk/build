@@ -35,7 +35,7 @@ _identicalMapAttributesFile() {
   local handler="$1" && shift
   local file temp
 
-  file=$(usageArgumentFile "$handler" "file" "${1-}") || return $?
+  file=$(validate "$handler" File "file" "${1-}") || return $?
   shift
   temp="$file.$$"
   _identicalMapAttributesFilter "$handler" "${1-}" <"$file" >"$temp" || returnClean $? "$temp" || return $?

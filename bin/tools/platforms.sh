@@ -35,10 +35,10 @@ buildTestPlatforms() {
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
     # _IDENTICAL_ handlerHandler 1
-    --handler) shift && handler=$(usageArgumentFunction "$handler" "$argument" "${1-}") || return $? ;;
+    --handler) shift && handler=$(validate "$handler" function "$argument" "${1-}") || return $? ;;
     --env-file)
       # shift here never fails as [ #$ -gt 0 ]
-      shift && ee+=("$(usageArgumentRealFile "$handler" "$argument" "${1-}")") || return $?
+      shift && ee+=("$(validate "$handler" RealFile "$argument" "${1-}")") || return $?
       ;;
     *)
       # _IDENTICAL_ argumentUnknownHandler 1

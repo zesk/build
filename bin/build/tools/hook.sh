@@ -56,7 +56,7 @@ __hookRunner() {
     --help) "$handler" 0 && return $? || return $? ;;
     --next)
       shift
-      whichArgs+=("$argument" "$(usageArgumentFile "$handler" "$argument" "${1-}")") || return $?
+      whichArgs+=("$argument" "$(validate "$handler" File "$argument" "${1-}")") || return $?
       ;;
     --extensions) shift && ww+=("$argument" "$(usageArgumentString "$handler" "$argument" "${1-}")") || return $? ;;
     --application)
@@ -243,10 +243,10 @@ hasHook() {
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
     # _IDENTICAL_ handlerHandler 1
-    --handler) shift && handler=$(usageArgumentFunction "$handler" "$argument" "${1-}") || return $? ;;
+    --handler) shift && handler=$(validate "$handler" function "$argument" "${1-}") || return $? ;;
     --extensions) shift && ww+=(--extensions "$(usageArgumentString "$handler" "$argument" "${1-}")") || return $? ;;
     --debug) ww+=("$argument") ;;
-    --next) shift && ww+=("$argument" "$(usageArgumentFile "$handler" "$argument" "${1-}")") || return $? ;;
+    --next) shift && ww+=("$argument" "$(validate "$handler" File "$argument" "${1-}")") || return $? ;;
     --application) shift && applicationHome=$(usageArgumentDirectory "$handler" applicationHome "${1-}") || return $? ;;
     *)
       local binary
@@ -296,12 +296,12 @@ whichHook() {
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
     # _IDENTICAL_ handlerHandler 1
-    --handler) shift && handler=$(usageArgumentFunction "$handler" "$argument" "${1-}") || return $? ;;
+    --handler) shift && handler=$(validate "$handler" function "$argument" "${1-}") || return $? ;;
     --application) shift && applicationHome=$(usageArgumentDirectory "$handler" "$argument" "${1-}") || return $? ;;
     --extensions) shift && extensionText=$(usageArgumentString "$handler" "$argument" "${1-}") || return $? ;;
     --next)
       shift
-      nextSource=$(usageArgumentFile "$handler" "$argument" "${1-}") || return $?
+      nextSource=$(validate "$handler" File "$argument" "${1-}") || return $?
       nextSource=$(catchEnvironment "$handler" realPath "$nextSource") || return $?
       ;;
     --debug) debugFlag=true ;;

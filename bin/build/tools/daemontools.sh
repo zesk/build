@@ -505,7 +505,7 @@ daemontoolsManager() {
     --stat)
       shift
       [ -z "$statFile" ] || throwArgument "$handler" "$argument must be specified once ($statFile and ${1-})" || return $?
-      statFile=$(usageArgumentFileDirectory "$handler" "statFile" "${1-}") || return $?
+      statFile=$(validate "$handler" FileDirectory "statFile" "${1-}") || return $?
       ;;
     --home)
       shift
@@ -559,7 +559,7 @@ daemontoolsManager() {
   done
   while true; do
     if [ -n "$statFile" ]; then
-      statFile=$(usageArgumentFileDirectory "$handler" "statFile" "$statFile") || return $?
+      statFile=$(validate "$handler" FileDirectory "statFile" "$statFile") || return $?
       catchEnvironment "$handler" "$statBin" "$serviceHome/*" "$serviceHome/*/log" >"$statFile" || return $?
     fi
     index=0

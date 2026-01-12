@@ -124,14 +124,14 @@ bashLintFiles() {
       ;;
     --exec)
       shift
-      binary="$(usageArgumentCallable "$handler" "$argument" "${1-}")" || return $?
+      binary="$(validate "$handler" callable "$argument" "${1-}")" || return $?
       ii+=("$argument" "$binary")
       ;;
     --interactive)
       interactive=true
       ;;
     *)
-      checkedFiles+=("$(usageArgumentFile "$handler" "checkFile" "$argument")") || return $?
+      checkedFiles+=("$(validate "$handler" File "checkFile" "$argument")") || return $?
       ;;
     esac
     shift || throwArgument "$handler" "shift after $argument failed" || return $?
@@ -306,7 +306,7 @@ findUncaughtAssertions() {
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
     # _IDENTICAL_ handlerHandler 1
-    --handler) shift && handler=$(usageArgumentFunction "$handler" "$argument" "${1-}") || return $? ;;
+    --handler) shift && handler=$(validate "$handler" function "$argument" "${1-}") || return $? ;;
     --exec)
       shift || throwArgument "$handler" "$argument missing argument" || return $?
       [ -n "$1" ] || throwArgument "$handler" "$argument argument blank" || return $?
@@ -522,7 +522,7 @@ validateFileContents() {
       fileArgs=()
       ;;
     *)
-      usageArgumentFile "$handler" "file${#fileArgs[@]}" "$1" >/dev/null || return $?
+      validate "$handler" File "file${#fileArgs[@]}" "$1" >/dev/null || return $?
       fileArgs+=("$1")
       ;;
     esac
