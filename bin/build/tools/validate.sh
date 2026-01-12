@@ -135,6 +135,12 @@ __validateTypeCallable() {
   printf "%s\n" "${1-}"
 }
 
+################################################################################
+################################################################################
+################################################################################
+################################################################################
+################################################################################
+
 #
 #   _   _      _
 #  | | | | ___| |_ __   ___ _ __ ___
@@ -372,7 +378,7 @@ __validateTypeLoadEnvironmentFile() {
   envFile=$(__validateTypeFile "$@") || return $?
   bashEnv=$(fileTemporaryName "$handler") || return $?
   catchEnvironment "$handler" environmentFileToBashCompatible "$envFile" >"$bashEnv" || returnClean $? "$bashEnv" || return $?
-  local exitCode
+  local exitCode=0
   set -a
   # shellcheck source=/dev/null
   source "$bashEnv" || exitCode=$?
