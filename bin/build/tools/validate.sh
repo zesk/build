@@ -372,9 +372,14 @@ __validateTypeLoadEnvironmentFile() {
   envFile=$(__validateTypeFile "$@") || return $?
   bashEnv=$(fileTemporaryName "$handler") || return $?
   catchEnvironment "$handler" environmentFileToBashCompatible "$envFile" >"$bashEnv" || returnClean $? "$bashEnv" || return $?
-  catchEnvironment "$handler" environmentFileLoad "$bashEnv" || returnClean $? "$bashEnv" || return $?
+  local exitCode
+  set -a
+  # shellcheck source=/dev/null
+  source "$bashEnv" || exitCode=$?
+  set +a
   catchEnvironment "$handler" rm -f "$bashEnv" || return $?
-  printf "%s\n" "$envFile"
+  [ "$exitCode" != 0 ] || printf "%s\n" "$envFile"
+  return "$exitCode"
 }
 
 # List types which can be validated
