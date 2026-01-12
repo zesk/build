@@ -29,6 +29,7 @@ source "${BASH_SOURCE[0]%/*}/../tools.sh"
 # > The legacy method of doing this was creating a file called `bin/developer-undo.sh` - if your project contains this file then a warning is output.
 # Environment: BUILD_PROJECT_DEACTIVATE
 # Environment: BUILD_HOME
+# Summary: {base} hook
 __hookProjectDeactivate() {
   local newHome
   local handler="_${FUNCNAME[0]}"

@@ -11,6 +11,7 @@ set -eou pipefail
 source "${BASH_SOURCE[0]%/*}/../tools.sh"
 
 # Generate a default version notes
+# Summary: {base} hook
 __hookVersionNotes() {
   local newVersion="$1" oldVersion="$2"
   name=$(buildEnvironmentGet APPLICATION_NAME)

@@ -32,7 +32,7 @@ __hookMaintenanceSetValue() {
 # Note that applications SHOULD load this configuration file dynamically (and monitor it for changes) to enable maintenance at any time.
 #
 # Environment: BUILD_MAINTENANCE_VARIABLE - If you want to use a different environment variable than `MAINTENANCE`, set this environment variable to the variable you want to use.
-#
+# Summary: {base} hook
 __hookMaintenance() {
   local variable messageVariable
   local handler="_${FUNCNAME[0]}"

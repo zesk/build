@@ -24,7 +24,7 @@ __hookNotifySoundName() {
 }
 
 # fn: {base}
-#
+# Summary: {base} hook
 # Run for notifying the user of something rather important or time-consuming.
 #
 # Environment: BUILD_NOTIFY_SOUND - Play this sound if none is specified.

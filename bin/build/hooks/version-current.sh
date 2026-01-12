@@ -16,6 +16,7 @@ source "${BASH_SOURCE[0]%/*}/../tools.sh"
 #
 # Defaults to the last version numerically found in `docs/release` directory.
 # Requires: catchReturn catchEnvironment muzzle pushd cd printf versionSort popd usageDocument
+# Summary: {base} hook
 __hookVersionCurrent() {
   export BUILD_RELEASE_NOTES
   local handler="_${FUNCNAME[0]}"

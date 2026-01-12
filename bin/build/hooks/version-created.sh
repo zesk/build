@@ -12,12 +12,12 @@ source "${BASH_SOURCE[0]%/*}/../tools.sh"
 
 # fn: {base}
 #
-# Run whenever `new-version.sh` is run and a version was just created.
+# Run whenever `releaseNew` is run and a version was just created.
 #
 # Opens the release notes in the current editor.
 #
 # Environment: BUILD_VERSION_NO_OPEN - Do not open in the default editor. Set this is you do not want the behavior and do not have an override `version-created` hook
-#
+# Summary: {base} hook
 __hookVersionCreated() {
   local currentVersion releaseNotes
   local handler="returnMessage"

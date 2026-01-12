@@ -27,7 +27,7 @@
 
 Deployment occurs as follows:
 
-- `make-env` - Optional. Run on deployment system. Create environment file for remote system.
+- `application-environment` - Optional. Run on deployment system. Create environment file for remote system.
 - `deploy-start` - Optional. Run on each remote system.
 - `deploy-activate` - Optional. Run on each remote system.
 - `deploy-finish` - Optional. Run on each remote system.

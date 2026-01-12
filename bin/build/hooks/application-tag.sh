@@ -11,7 +11,7 @@ set -eou pipefail
 source "${BASH_SOURCE[0]%/*}/../tools.sh"
 
 # fn: {base}
-#
+# Summary: {base} hook
 # Get the "tag" (or current display version) for an application
 #
 # The default hook uses most recent tag associated in git or `v0.0.1` if no tags exist.

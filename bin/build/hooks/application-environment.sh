@@ -11,7 +11,7 @@ set -eou pipefail
 source "${BASH_SOURCE[0]%/*}/../tools.sh"
 
 # fn: {base}
-#
+# Summary: {base} hook
 # Hook to customize the application environment file
 #
 # See: environmentFileApplicationMake

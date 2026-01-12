@@ -13,7 +13,7 @@ source "${BASH_SOURCE[0]%/*}/../tools.sh"
 # fn: {base}
 #
 # When documentation has been built.
-#
+# Summary: {base} hook
 # See: documentationBuild
 __hookDocumentationComplete() {
   local name

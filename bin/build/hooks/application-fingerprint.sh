@@ -10,6 +10,7 @@ set -eou pipefail
 # shellcheck source=/dev/null
 source "${BASH_SOURCE[0]%/*}/../tools.sh"
 
+# Summary: {base} hook
 # Generate a unique ID for the state of the application code which changes if the code is modified.
 __hookApplicationFingerprint() {
   local handler="_${FUNCNAME[0]}"

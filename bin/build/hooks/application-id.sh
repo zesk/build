@@ -11,8 +11,9 @@ set -eou pipefail
 source "${BASH_SOURCE[0]%/*}/../tools.sh"
 
 # fn: {base}
-# Usage: {fn}
-#
+# Summary: {base} hook
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
 # Generate a unique ID for the state of the application files
 #
 # The default hook uses the short git sha:

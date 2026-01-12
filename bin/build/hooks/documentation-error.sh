@@ -13,7 +13,7 @@ source "${BASH_SOURCE[0]%/*}/../tools.sh"
 # fn: {base}
 #
 # When documentation has been built but fails
-#
+# Summary: {base} hook
 # See: documentationBuild
 # See: __errorHandler
 __hookDocumentationError() {

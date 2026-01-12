@@ -16,6 +16,7 @@ source "${BASH_SOURCE[0]%/*}/../tools.sh"
 # Argument: otherHomeDirectory - The old home directory of the project
 # BUILD_DEBUG: approve - Report on all approvals during project activation
 # BUILD_DEBUG: approve-verbose - Display verbose approval messages
+# Summary: {base} hook
 # See: hookSource
 # See: approveBashSource
 # See: buildDebugEnabled
