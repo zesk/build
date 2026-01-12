@@ -384,7 +384,7 @@ __validateTypeLoadEnvironmentFile() {
   source "$bashEnv" || exitCode=$?
   set +a
   catchEnvironment "$handler" rm -f "$bashEnv" || return $?
-  [ "$exitCode" != 0 ] || printf "%s\n" "$envFile"
+  [ "$exitCode" != 0 ] || printf -- "%s\n" "$envFile"
   return "$exitCode"
 }
 
