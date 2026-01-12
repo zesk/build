@@ -957,4 +957,11 @@ _mapEnvironment() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
+# fn: {base}
+# See `mapEnvironment` for arguments and usage.
+# See: mapEnvironment
+__binMapEnvironment() {
+  mapEnvironment "$@"
+}
+
 __binMapEnvironment "$@"
