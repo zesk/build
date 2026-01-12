@@ -1,12 +1,19 @@
 # v0.41.0
 
 # v0.40.4
+usageArgumentDate "$handler"|validate "$handler" Date|
+usageArgumentArguments "$handler"|validate "$handler" Arguments|
+usageArgumentArray "$handler"|validate "$handler" Array|
+usageArgumentList "$handler"|validate "$handler" List|
+usageArgumentColonDelimitedList "$handler"|validate "$handler" ColonDelimitedList|
+usageArgumentCommaDelimitedList "$handler"|validate "$handler" CommaDelimitedList|
 usageArgumentEmptyString "$handler"|validate "$handler" EmptyString|
 usageArgumentEnvironmentVariable "$handler"|validate "$handler" EnvironmentVariable|
 usageArgumentRemoteFile "$handler"|validate "$handler" RemoteFile|
 usageArgumentRemoteDirectory "$handler"|validate "$handler" RemoteDirectory|
 usageArgumentApplicationFile "$handler"|validate "$handler" ApplicationFile|
 usageArgumentApplicationDirectory "$handler"|validate "$handler" ApplicationDirectory|
+usageArgumentApplicationDirectoryList "$handler"|validate "$handler" ApplicationDirectoryList|
 usageArgumentURL "$handler"|validate "$handler" URL|
 usageArgumentBoolean "$handler"|validate "$handler" Boolean|
 usageArgumentExecutable "$handler"|validate "$handler" Executable|
@@ -16,13 +23,16 @@ usageArgumentRealFile "$handler"|validate "$handler" RealFile|
 usageArgumentSecret "$handler"|validate "$handler" Secret|
 usageArgumentRealDirectory "$handler"|validate "$handler" RealDirectory|
 usageArgumentFileDirectory "$handler"|validate "$handler" FileDirectory|
+usageArgumentDirectoryList "$handler"|validate "$handler" DirectoryList|
 usageArgumentDirectory "$handler"|validate "$handler" Directory|
 usageArgumentExists "$handler"|validate "$handler" Exists|
 usageArgumentLink "$handler"|validate "$handler" Link|
 usageArgumentFile "$handler"|validate "$handler" File|
+usageArgumentRealFile "$handler"|validate "$handler" RealFile|
 usageArgumentPositiveInteger "$handler"|validate "$handler" PositiveInteger|
 usageArgumentEmptyString "$handler"|validate "$handler" EmptyString|
 usageArgumentInteger "$handler"|validate "$handler" Integer|
+usageArgumentNumber "$handler"|validate "$handler" Number|
 usageArgumentUnsignedInteger "$handler"|validate "$handler" UnsignedInteger|
 usageArgumentUnsignedInteger "$__handler"|validate "$__handler" UnsignedInteger|
 usageArgumentString "$__handler"|validate "$__handler" String|
