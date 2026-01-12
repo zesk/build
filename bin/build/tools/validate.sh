@@ -291,7 +291,7 @@ __validateTypeDirectoryList() {
   IFS=":" read -r -a directories <<<"$value" || :
   for directory in "${directories[@]+"${directories[@]}"}"; do
     [ -n "$directory" ] || continue
-    [ -d "$directory" ] || _validateThrow "element #$index not directory $(decorate code "$directory"): $(decorate value "$value")" || return $?
+    [ -d "$directory" ] || _validateThrow "element #$index is not type directory $(decorate code "$directory"): $(decorate value "$value")" || return $?
     result+=("$directory")
     index=$((index + 1))
   done

@@ -131,7 +131,7 @@ testBashSourcePath() {
   clean+=("$testPath")
 
   assertNotExitCode --stderr-match "Requires a directory" 0 bashSourcePath || return $?
-  assertNotExitCode --stderr-match "not directory" 0 bashSourcePath "$testPath/does-not-exist-i-hope" || return $?
+  assertNotExitCode --stderr-match "not type" --stderr-match "Directory" 0 bashSourcePath "$testPath/does-not-exist-i-hope" || return $?
 
   printf "%s\n" "#!/usr/bin/env bash" "rm \${BASH_SOURCE[0]%/*}/2.sh" >"$testPath/1.sh"
   printf "%s\n" "#!/usr/bin/env bash" "rm \${BASH_SOURCE[0]%/*}/1.sh" >"$testPath/2.sh"

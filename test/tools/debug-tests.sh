@@ -174,7 +174,7 @@ testHousekeeper() {
   assertEquals 108 "$leakCode" || return $?
 
   statusMessage decorate info Housekeeper tests
-  assertNotExitCode --stderr-match "is not directory" 0 housekeeper --path NOT-A-DIR || return $?
+  assertNotExitCode --stderr-match "is not type" --stderr-match "Directory" 0 housekeeper --path NOT-A-DIR || return $?
   assertNotExitCode --stderr-match "not callable" 0 housekeeper "$testDir" "NotABinary" || return $?
 
   # Simple case - nothing
