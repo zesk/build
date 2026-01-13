@@ -9,7 +9,6 @@
 # shellcheck source=/dev/null
 if source "${BASH_SOURCE[0]%/*}/tools.sh"; then
   # Zesk Build Development tools
-  #
   # - `buildPR` - Open URL to a new Pull Request
   # - `buildAddTool code` - Add a new tool to Zesk Build (just use the code name, like `tofu`)
   # - `buildContainer image` - Load Zesk Build in a container image
@@ -17,23 +16,15 @@ if source "${BASH_SOURCE[0]%/*}/tools.sh"; then
   # - `__buildFingerUpdate` - Force update the deprecated and identical fingerprints
   #
   # Zesk Build Testing
-  #
-  # - `buildTestSuite` - Test Zesk Build (also `bin/test.sh`)
+  # - `bin/test.sh` - Test Zesk Build
   # - `buildQuickTest` - No professionals testing (no plumber or housekeeper) and no slow or package tests
   # - `buildStagingTest` - No professionals testing (no plumber or housekeeper)
   # - `buildProductionTest` - All professionals testing (yes plumber, yes housekeeper) but skip `slow-non-critical` tests
   # - `buildTestPlatforms` - Test platforms
   #
-  # Zesk Build Deployments
-  #
+  # Zesk Build Deployment
   # - `buildPreRelease` - Run pre-release steps on code (deprecated, identical)
-  # - `bin/build.sh` - Build Zesk Build
-  # - `bin/deploy.sh` - Deploy built Zesk Build
-  # - `bin/documentation.sh` - Build documentation
-  #
-  # As always, when editing code, be sure to test with a cleanly loaded version as
-  #
-  #     `bin/tools.sh myTest` vs. `myTest` - the former is correct and loads the code each run
+  # - `bin/build.sh`, `bin/deploy.sh`, `bin/documentation.sh` - Build, Deploy, Build Documentation for Zesk Build
   #
   __buildHelp() {
     local handler="_${FUNCNAME[0]}"
