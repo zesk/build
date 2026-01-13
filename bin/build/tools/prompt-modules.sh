@@ -78,6 +78,7 @@ _backgroundProcess() {
 # DOC TEMPLATE: --help 1
 # Argument: --help - Optional. Flag. Display this help.
 # BUILD_DEBUG: reloadChanges - prompt module will show debugging information
+# BUILD_DEBUG: reloadChangesProfile - prompt module will show profiling information
 reloadChanges() {
   __promptLoader "_${FUNCNAME[0]}" "__${FUNCNAME[0]}" "$@"
 }

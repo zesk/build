@@ -136,27 +136,45 @@ __reloadChangesRemove() {
 }
 
 __reloadChangesCacheFile() {
-  local handler="$1" extension="${2-state}"
-  reloadHome=$(catchReturn "$handler" buildEnvironmentGetDirectory --subdirectory "reloadChanges" XDG_STATE_HOME) || return $?
-  cacheFile="$(catchReturn "$handler" buildEnvironmentGet APPLICATION_CODE).$extension" || return $?
-  printf "%s/%s\n" "${reloadHome%/}" "${cacheFile}"
+  local handler="$1" extension="${2-state}" prefix
+
+  export __BASH_PROMPT_RELOAD_CHANGES_CACHE
+  if [ -z "${__BASH_PROMPT_RELOAD_CHANGES_CACHE-}" ]; then
+    local reloadHome cacheFile
+    reloadHome=$(catchReturn "$handler" buildEnvironmentGetDirectory --subdirectory "reloadChanges" XDG_STATE_HOME) || return $?
+    cacheFile="$(catchReturn "$handler" buildEnvironmentGet APPLICATION_CODE)." || return $?
+    prefix="${reloadHome%/}/$cacheFile"
+    __BASH_PROMPT_RELOAD_CHANGES_CACHE="$prefix"
+  else
+    prefix="$__BASH_PROMPT_RELOAD_CHANGES_CACHE"
+  fi
+  printf "%s%s\n" "$prefix" "$extension"
 }
 
 # Check for shell files changing and reload a shell script after any changes and notify the user
 __bashPromptModule_reloadChanges() {
   local handler="_${FUNCNAME[0]}"
-  local home removeSources=() cacheFile debug=false
+  local home removeSources=() cacheFile debug=false profile=false
+  local start
+
+  start=$(timingStart)
+
+  ! buildDebugEnabled reloadChanges || debug=true
+  ! buildDebugEnabled reloadChangesProfile || profile=true
 
   [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
 
   export __BASH_PROMPT_RELOAD_CHANGES
+  export __BASH_PROMPT_RELOAD_CHANGES_CACHE
 
-  home=$(buildHome) || return $?
+  # Primes the cached value
+  muzzle __reloadChangesCacheFile "$handler" || return $?
+  home=$(catchReturn "$handler" buildHome) || return $?
   cacheFile="$(__reloadChangesCacheFile "$handler")" || return $?
+  ! $profile || timingReport "$start" "cacheFile=$cacheFile"
   [ -f "$cacheFile" ] || return 0
 
   local argument pathIndex=0
-  ! buildDebugEnabled reloadChanges || debug=true
 
   ! $debug || decorate info "reloadChanges:"
   ! $debug || decorate pair cacheFile "$(decorate file "$cacheFile")"
@@ -166,14 +184,17 @@ __bashPromptModule_reloadChanges() {
 
   while read -r argument; do
     if [ -z "$source" ]; then
-      source=$(validate "$handler" String "source" "$argument") || return $?
+      source=$argument
       [ "${source:0:1}" = "/" ] || source="$home/$source"
+      ! $profile || timingReport "$start" "source=$source"
       ! $debug || decorate pair source "$(decorate file "$source")"
       pathStateFile="$(__reloadChangesCacheFile "$handler" "$sourceIndex")" || return $?
       sourceIndex=$((sourceIndex + 1))
+      ! $profile || timingReport "$start" "pathStateFile=$pathStateFile"
       continue
     elif [ -z "$name" ]; then
-      name=$(validate "$handler" String "name" "$argument") || return $?
+      name=$argument
+      ! $profile || timingReport "$start" "name=$name"
       ! $debug || decorate pair name "$name"
       continue
     elif [ "$argument" = "--" ]; then
@@ -181,6 +202,7 @@ __bashPromptModule_reloadChanges() {
         decorate warning "$source has moved"
         removeSources+=("$source")
       else
+        ! $profile || timingReport "$start" "Running check for $source"
         if ___bashPromptModule_reloadChangesCheck "$handler" "$debug" "$pathStateFile" "$source" "$name" "${directories[@]+"${directories[@]}"}" -- "${files[@]+"${files[@]}"}"; then
           # shellcheck source=/dev/null
           source "$source"
@@ -203,8 +225,10 @@ __bashPromptModule_reloadChanges() {
   done <"$cacheFile"
 
   for name in "${removeSources[@]+"${removeSources[@]+}"}"; do
+    ! $profile || timingReport "$start" "Removing $name"
     __reloadChangesRemove "$handler" "$cacheFile" "$source" || return $?
   done
+  ! $profile || timingReport "$start" "DONE"
 }
 ___bashPromptModule_reloadChanges() {
   # __IDENTICAL__ usageDocument 1

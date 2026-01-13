@@ -52,17 +52,15 @@ bashPromptModule_TermColors() {
 
   # Deprecated files
   for schemeFile in "$home/.term-colors.conf" "$home/etc/term-colors.conf" "$home/.iterm2-colors.conf" "$home/etc/iterm2-colors.conf"; do
-    local prettySchemeFile
-    prettySchemeFile="$(decorate file "$schemeFile")"
-    ! $debug || statusMessage decorate info "Looking at $prettySchemeFile"
+    ! $debug || statusMessage decorate info "Looking at $(decorate file "$schemeFile")"
     if [ ! -f "$schemeFile" ]; then
-      ! $debug || statusMessage decorate info "$prettySchemeFile does not exist"
+      ! $debug || statusMessage decorate info "$(decorate file "$schemeFile") does not exist"
       continue
     fi
     local modified
     modified=$(catchReturn "$handler" fileModificationTime "$schemeFile") || return $?
     if ! isInteger "$savedModified" || [ "$modified" -gt "$savedModified" ]; then
-      ! $debug || statusMessage decorate info "Applying colors from $prettySchemeFile ... "
+      ! $debug || statusMessage decorate info "Applying colors from $(decorate file "$schemeFile") ... "
       if catchReturn "$handler" colorScheme "${dd[@]+"${dd[@]}"}" <"$schemeFile" || return $?; then
         export BUILD_TERM_COLORS_STATE
         BUILD_TERM_COLORS_STATE="$home|$modified"

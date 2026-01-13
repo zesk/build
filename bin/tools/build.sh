@@ -134,14 +134,8 @@ __buildBuild() {
   ! $debugFlag || statusMessage decorate warning "Running deprecated ..."
   "$home/bin/build/deprecated.sh" || throwEnvironment "$handler" "Deprecated failed" || return $?
 
-  ! $debugFlag || statusMessage decorate warning "Building fast files first time ..."
-  catchReturn "$handler" "$home/bin/tools.sh" buildFastFiles || return $?
-
   ! $debugFlag || statusMessage decorate warning "Running identical ..."
   "$home/bin/build/repair.sh" --internal || throwEnvironment "$handler" "Identical repair failed" || return $?
-
-  ! $debugFlag || statusMessage decorate warning "Building fast files ..."
-  catchReturn "$handler" "$home/bin/tools.sh" buildFastFiles || return $?
 
   if $makeDocumentation; then
     local path rootShow rootPath="$home/documentation/.site"

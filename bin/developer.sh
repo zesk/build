@@ -13,7 +13,6 @@ if source "${BASH_SOURCE[0]%/*}/tools.sh"; then
   # - `buildPR` - Open URL to a new Pull Request
   # - `buildAddTool code` - Add a new tool to Zesk Build (just use the code name, like `tofu`)
   # - `buildContainer image` - Load Zesk Build in a container image
-  # - `buildFastFiles` - Build the fast files (do these work faster even?)
   # - `buildBuildTiming` - Run the build with different setups to see which one is fastest
   # - `__buildFingerUpdate` - Force update the deprecated and identical fingerprints
   #

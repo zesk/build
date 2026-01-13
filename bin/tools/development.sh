@@ -107,45 +107,7 @@ _buildProductionTest() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# Playing with the concept if we remove the type checking that Bash will perform faster
-# Initial tests show that increase in speeds is minor at best which is likely as IO or some other issue is at hand.
-buildFastFiles() {
-  local handler="_${FUNCNAME[0]}"
-  local home
-
-  __help "$handler" "$@" || return 0
-
-  home=$(catchReturn "$handler" buildHome) || return $?
-
-  local pattern patterns=("__check") aa=() && for pattern in "${patterns[@]}"; do aa+=(-e "/# __IDENTICAL__ $(quoteSedPattern "$pattern")/{N;d;}"); done
-
-  local ff=("$home/bin/build/tools/sugar.sh")
-
-  for f in "${ff[@]}"; do
-    local target="${f%.sh}-fast.sh"
-    local tempTarget="$target.temp"
-    catchReturn "$handler" sed "${aa[@]}" "$f" | grep -v '# \(IDENTICAL\|_IDENTICAL_\|__IDENTICAL__\)' >"$tempTarget" || return $?
-    if [ -f "$target" ]; then
-      if ! diff -q "$tempTarget" "$target"; then
-        diff "$target" "$tempTarget" | dumpPipe "Updated $(decorate file "$target"): < old, > new"
-        catchReturn "$handler" mv "$tempTarget" "$target" || returnClean $? "$tempTarget" || return $?
-      else
-        catchEnvironment "$handler" rm -f "$tempTarget" || return $?
-        decorate info "No changes required for $(decorate file "$target")"
-      fi
-    else
-      catchReturn "$handler" mv "$tempTarget" "$target" || returnClean $? "$tempTarget" || return $?
-      decorate info "Created $(decorate file "$target")"
-    fi
-  done
-}
-_buildFastFiles() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
-}
-
 # Test build timings with different settings
-# See if buildFastFiles makes a difference
 buildBuildTiming() {
   local handler="_${FUNCNAME[0]}"
 
@@ -177,7 +139,6 @@ __buildFingerUpdate() {
 
   local f jf
 
-  catchReturn "$handler" buildFastFiles || return $?
   f=$(catchReturn "$handler" hookRun application-fingerprint) || return $?
   jf=$(catchReturn "$handler" buildEnvironmentGet APPLICATION_JSON) || return $?
   local path u=()
