@@ -24,7 +24,7 @@ testDotEnvConfigure() {
 
   catchReturn "$handler" directoryRequire "$tempDir" || return $?
   catchEnvironment "$handler" muzzle pushd "$tempDir" || return $?
-  assertNotExitCode --stderr-match "is not file" 0 environmentFileLoad .env --optional .env.local || return $?
+  assertNotExitCode --stderr-match "is not type" --stderr-match "File" 0 environmentFileLoad .env --optional .env.local || return $?
 
   tempEnv="$tempDir/.env"
 
