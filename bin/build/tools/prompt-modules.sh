@@ -10,7 +10,7 @@
 # Summary: Background process manager for shell (UNSTABLE)
 #
 # > UNSTABLE: Seems this does not handle long processes well which do not quit quickly. Need to improve testing. Use
-# > at your own risk. (2025-12-22 KMD)
+# > at your own risk. (2026-01-12 KMD)
 #
 # Run a single process in the background continuously until a condition is met.
 #
