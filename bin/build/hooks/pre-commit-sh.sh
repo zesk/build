@@ -27,7 +27,12 @@ if source "${BASH_SOURCE[0]%/*}/../tools.sh"; then
       changed=(--debug "${changed[@]+"${changed[@]}"}")
     fi
     catchEnvironment "$handler" bashSanitize "${changed[@]+"${changed[@]}"}" || return $?
-
+    if whichExists shfmt; then
+      export SHFMT_ARGUMENTS
+      catchReturn "$handler" buildEnvironmentLoad SHFMT_ARGUMENTS || return $?
+      isArray SHFMT_ARGUMENTS || SHFMT_ARGUMENTS=()
+      catchEnvironment "$handler" shfmt "${SHFMT_ARGUMENTS[@]+"${SHFMT_ARGUMENTS[@]}"}" -w "${changed[@]+"${changed[@]}"}" || return $?
+    fi
     unset "${FUNCNAME[0]}" "_${FUNCNAME[0]}"
   }
   ___hookPreCommitShell() {

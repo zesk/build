@@ -164,13 +164,11 @@ testEverythingElse() {
   # approveBashSource
   # approvedSources
 
-
   # Daemontools
   #
   #  daemontoolsManager
   #  daemontoolsRestart
   #  daemontoolsTerminate
-
 
   assertExitCode 0 printf "" || return $?
 }

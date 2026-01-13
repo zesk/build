@@ -6,7 +6,6 @@
 # Copyright &copy; 2026 Market Acumen, Inc.
 #
 
-
 testDarwinDialog() {
   if whichExists osascript; then
     # Only can test on Darwin, but not sure how to manage dialog interaction if at all

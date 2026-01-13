@@ -248,7 +248,6 @@ __jsonSetValue() {
   fi
 }
 
-
 # DOC TEMPLATE: --help 1
 # Argument: --help - Optional. Flag. Display this help.
 # Summary: JSON pretty
