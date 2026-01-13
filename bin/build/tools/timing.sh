@@ -25,6 +25,27 @@ _timing() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
+# Summary: Show elapsed time from a start time
+#
+# DOC TEMPLATE: --help 1
+# Argument: timingOffset - UnsignedInteger. Required. Offset in milliseconds from January 1, 1970.
+# Argument: --help - Optional. Flag. Display this help.
+# Example:     init=$(timingStart)
+# Example:     ...
+# Example:     timingElapsed "$init"
+# Requires: __timestamp returnEnvironment validate date
+timingElapsed() {
+  local handler="_${FUNCNAME[0]}"
+  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
+  local start
+  start=$(validate "$handler" UnsignedInteger timingOffset "${1-}") && shift || return $?
+  printf "%d\n" "$(($(__timestamp) - start))"
+}
+_timingElapsed() {
+  # __IDENTICAL__ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
 # Summary: Start a timer
 #
 # Outputs the offset in milliseconds from January 1, 1970.

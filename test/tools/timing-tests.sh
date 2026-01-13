@@ -1,10 +1,20 @@
 #!/usr/bin/env bash
 # IDENTICAL zeskBuildTestHeader 5
 #
-# time-tests.sh
+# timing-tests.sh
 #
 # Copyright &copy; 2026 Market Acumen, Inc.
 #
+
+testTimingElapsed() {
+  local foo
+
+  foo=$(timingStart)
+  assertExitCode 0 timingElapsed "$foo" || return $?
+  # elapsed > 0
+  assertGreaterThan "$(timingElapsed "$foo")" 0 || return $?
+  timingElapsed "$foo"
+}
 
 __testTimingData() {
   cat <<"EOF"
