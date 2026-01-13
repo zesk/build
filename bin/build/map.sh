@@ -456,12 +456,12 @@ validate() {
     fi
     local typeFunction="$prefix$type"
     isFunction "$typeFunction" || throwArgument "$handler" "validate $type is not a valid type:"$'\n'"$(validateTypeList)" || return $?
-    if ! value=$("$typeFunction" "$value" 2>&1); then
+    # Outputs stdout value if successful
+    if ! "$typeFunction" "$value"; then
       local suffix=""
       [ -z "$value" ] || suffix=" $(decorate error "$value")"
       throwArgument "$handler" "$name ($(decorate each code "$@")) is not type $(decorate label "$type")$suffix" || return $?
     fi
-    printf -- "%s\n" "$value"
     shift 3
   done
 }

@@ -11,6 +11,8 @@
 # Argument: name - Required. String. Name to write.
 # Argument: value - Optional. EmptyString. Value to write.
 # Argument: ... - Optional. EmptyString. Additional values, when supplied, write this value as an array.
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
 environmentValueWrite() {
   local handler="_${FUNCNAME[0]}" name
   [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
@@ -285,6 +287,8 @@ _dotEnvConfigure() {
 # Argument: --secure environmentName - Optional. String. If found, entire load fails.
 # Argument: --secure-defaults - Flag. Optional. Add a list of environment variables considered security risks to the `--ignore` list.
 # Argument: --execute arguments ... - Callable. Optional. All additional arguments are passed to callable after loading environment.
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
 # Return Code: 2 - if file does not exist; outputs an error
 # Return Code: 0 - if files are loaded successfully
 environmentLoad() {
@@ -410,6 +414,8 @@ _environmentLoad() {
 # Argument: --secure environmentName - Optional. String. If found in a loaded file, entire file fails.
 # Argument: --secure-defaults - Flag. Optional. Add a list of environment variables considered security risks to the `--ignore` list.
 # Argument: --execute arguments ... - Callable. Optional. All additional arguments are passed to callable after loading environment files.
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
 # Return Code: 2 - if file does not exist; outputs an error
 # Return Code: 0 - if files are loaded successfully
 environmentFileLoad() {
@@ -501,6 +507,8 @@ _environmentFileLoad() {
 }
 
 # List environment variables related to security
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
 environmentSecureVariables() {
   [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
   printf -- "%s\n" PATH LD_LIBRARY USER HOME HOSTNAME LANG PS1 PS2 PS3 CWD PWD SHELL SHLVL TERM TMPDIR VISUAL EDITOR
@@ -512,6 +520,8 @@ _environmentSecureVariables() {
 }
 
 # List environment variables related to application deployments
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
 environmentApplicationVariables() {
   [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
   printf -- "%s\n" BUILD_TIMESTAMP APPLICATION_BUILD_DATE APPLICATION_VERSION APPLICATION_ID APPLICATION_TAG
@@ -522,13 +532,14 @@ _environmentApplicationVariables() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-#
 # Loads application environment variables, set them to their default values if needed, and outputs the list of variables and values.
 # Environment: BUILD_TIMESTAMP
 # Environment: APPLICATION_BUILD_DATE
 # Environment: APPLICATION_VERSION
 # Environment: APPLICATION_ID
 # Environment: APPLICATION_TAG
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
 environmentApplicationLoad() {
   local handler="_${FUNCNAME[0]}"
   [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0

@@ -8,7 +8,9 @@
 # Docs: o ./documentation/source/tools/debug.md
 # Test: o ./test/tools/debug-tests.sh
 
-# Simple debugger to walk through a program
+# {fn}: Simple debugger to walk through a program
+#
+#     Usage: {fn} [ --help ] commandToDebug ...
 #
 # Argument: commandToDebug - Callable. Required. Command to debug.
 #
@@ -47,6 +49,11 @@ _bashDebug() {
 }
 
 # Enables the debugger immediately
+#
+#     Usage: bashDebuggerEnable [ --help ]
+#
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
 # Saves file descriptors 0 1 and 2 as 20, 21 and 22 respectively
 # See: bashDebug bashDebuggerDisable
 bashDebuggerEnable() {
@@ -76,6 +83,11 @@ _bashDebuggerEnable() {
 
 # Disables the debugger immediately
 # Restores file descriptors 0 1 and 2 from 20, 21 and 22 respectively
+#
+#     Usage: bashDebuggerDisable [ --help ]
+#
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
 # See: bashDebug bashDebuggerEnable
 bashDebuggerDisable() {
   [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"

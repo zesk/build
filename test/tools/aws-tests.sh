@@ -13,6 +13,7 @@ _testAWSIPAccessErrorHandler() {
 
 __awsTestSetup() {
   export AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY AWS_PROFILE HOME
+  usageRequireEnvironment returnMessage AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY HOME || return $?
   mockEnvironmentStart HOME "" AWS_PROFILE "" AWS_ACCESS_KEY_ID "$AWS_ACCESS_KEY_ID" AWS_SECRET_ACCESS_KEY "$AWS_SECRET_ACCESS_KEY"
 }
 
@@ -45,7 +46,7 @@ testAWSIPAccess() {
   id=$AWS_ACCESS_KEY_ID
   key=$AWS_SECRET_ACCESS_KEY
 
-  __awsTestSetup
+  __awsTestSetup || return $?
 
   tempHome=$(fileTemporaryName "$handler" -d) || return $?
   HOME="$tempHome"
@@ -205,7 +206,7 @@ testAwsEnvironmentFromCredentials() {
 
   # copy env to locals
   # HOME is saved
-  __awsTestSetup
+  __awsTestSetup || return $?
 
   AWS_ACCESS_KEY_ID=
   AWS_SECRET_ACCESS_KEY=

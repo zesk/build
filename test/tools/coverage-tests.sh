@@ -258,6 +258,7 @@ testBuildFunctionsHelpCoverage() {
       fi
       if $coverageRequired; then
         assertExitCode --stdout-match "$fun" --stdout-match "Usage:" 0 "${helpCall[@]}" || return $?
+        catchEnvironment "$handler" printf "%s\n" "$fun" >"$lastPassedCache" || return $?
       else
         statusMessage decorate info "Attempting $(decorate each code "${helpCall[@]}") ..."
         # "$fun" --help | dumpPipe "$fun --help"
