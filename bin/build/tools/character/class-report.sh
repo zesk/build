@@ -46,7 +46,7 @@ __characterClassReport() {
 
   savedLimit="$(catchEnvironment "$handler" ulimit -n)" || return $?
 
-  if ! muzzle ulimit -n 10240 2>&1; then
+  if ! ulimit -n 10240 2>/dev/null 1>/dev/null; then
     # Skip attempting to modify ulimit - no permission likely so just venture on
     savedLimit=""
   fi
