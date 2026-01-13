@@ -21,12 +21,13 @@
 # BUILD_DEBUG: term-colors - When `bashPromptModule_TermColors` is enabled, will show colors and how they are applied
 #
 # Support for iTerm2 is built-in and automatic
+# Environment: BUILD_TERM_COLORS_STATE
 bashPromptModule_TermColors() {
   local handler="returnMessage"
   [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
 
   local home
-  home=$(catchReturn "$handler" buildHome 2>/dev/null) || return 0
+  home=$(catchReturn "$handler" buildHome) || return 0
 
   local debug=false
   ! buildDebugEnabled term-colors || debug=true
@@ -34,19 +35,42 @@ bashPromptModule_TermColors() {
   local schemeFile dd=()
   ! $debug || dd+=("--debug")
 
+  local savedState savedModified=""
+  savedState=$(catchReturn "$handler" buildEnvironmentGet BUILD_TERM_COLORS_STATE) || return $?
+  if [ -n "$savedState" ]; then
+    local savedHome savedModified
+    savedHome="${savedState%|*}"
+    savedModified="${savedState##*|}"
+    ! $debug || statusMessage decorate info "BUILD_TERM_COLORS_STATE=$savedState -> $savedHome ($savedModified)"
+    if [ "$savedHome" != "$home" ]; then
+      ! $debug || statusMessage decorate info "Saved home changed for term colors: $savedHome (saved) != $home (current)"
+      savedState=""
+    fi
+  else
+    ! $debug || statusMessage decorate info "BUILD_TERM_COLORS_STATE is blank"
+  fi
+
   # Deprecated files
   for schemeFile in "$home/.term-colors.conf" "$home/etc/term-colors.conf" "$home/.iterm2-colors.conf" "$home/etc/iterm2-colors.conf"; do
     local prettySchemeFile
     prettySchemeFile="$(decorate file "$schemeFile")"
     ! $debug || statusMessage decorate info "Looking at $prettySchemeFile"
     if [ ! -f "$schemeFile" ]; then
-      ! $debug || statusMessage --last decorate info "$prettySchemeFile does not exist"
+      ! $debug || statusMessage decorate info "$prettySchemeFile does not exist"
       continue
     fi
-
-    ! $debug || statusMessage decorate info "Applying colors from $prettySchemeFile ... "
-    if catchReturn "$handler" colorScheme "${dd[@]+"${dd[@]}"}" <"$schemeFile" || return $?; then
-      break
+    local modified
+    modified=$(catchReturn "$handler" fileModificationTime "$schemeFile") || return $?
+    if ! isInteger "$savedModified" || [ "$modified" -gt "$savedModified" ]; then
+      ! $debug || statusMessage decorate info "Applying colors from $prettySchemeFile ... "
+      if catchReturn "$handler" colorScheme "${dd[@]+"${dd[@]}"}" <"$schemeFile" || return $?; then
+        export BUILD_TERM_COLORS_STATE
+        BUILD_TERM_COLORS_STATE="$home|$modified"
+        ! $debug || statusMessage decorate info "BUILD_TERM_COLORS_STATE=$home|$modified"
+        break
+      fi
+    else
+      ! $debug || statusMessage decorate info "$schemeFile modified ($modified) before $savedModified"
     fi
   done
 }

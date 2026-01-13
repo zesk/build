@@ -76,11 +76,10 @@ __buildFunctionLoader() {
 }
 
 __toolsTimingLoad() {
-  local internalError=253 production="$1" toolsPath="$2" && shift 2
+  local internalError=253 toolsPath="$1" && shift
   local start elapsed="undefined"
   printf "" >"${BASH_SOURCE[0]%/*}/../../.tools.times"
   while [ "$#" -gt 0 ]; do
-    [ "$production" = "true" ] || toolFile="${1//-fast/}"
     ! isFunction __timestamp || start=$(__timestamp)
     # shellcheck source=/dev/null
     source "$toolsPath/$toolFile.sh" || returnMessage $internalError "%s\n" "Loading $toolFile.sh failed" || return $?
@@ -93,12 +92,12 @@ __toolsTimingLoad() {
 
 # Load tools and optionally run a command
 __toolsMain() {
-  export PRODUCTION BUILD_DEBUG
+  export BUILD_DEBUG
 
   local source="${BASH_SOURCE[0]}"
   local toolsPath="${source%/*}/tools" internalError=253
   local toolsFiles=() toolsList="$toolsPath/tools.conf" toolFile
-  local exitCode=0 production="${PRODUCTION-}" debug="${BUILD_DEBUG-}"
+  local exitCode=0 debug=",${BUILD_DEBUG-},"
 
   export BUILD_HOME BUILD_DEBUG
   unset BUILD_HOME
@@ -111,14 +110,12 @@ __toolsMain() {
   while read -r toolFile; do [ "$toolFile" != "${toolFile#\#}" ] || toolsFiles+=("$toolFile"); done <"$toolsList"
   toolsFiles+=("platform/$(uname -s)")
 
-  [ -z "$production" ] || [ ! -t 1 ] || production=true
-  if [ "${debug#;main;*}" != "$debug" ]; then
-    __toolsTimingLoad "$production" "$toolsPath" "${toolsFiles[@]}" || return $?
+  if [ "${debug#*,main,}" != "$debug" ]; then
+    __toolsTimingLoad "$toolsPath" "${toolsFiles[@]}" || return $?
   else
     # Avoids conflict with aliases with same names as our functions
     shopt -u expand_aliases
     for toolFile in "${toolsFiles[@]}"; do
-      [ "$production" = "true" ] || toolFile="${toolFile//-fast/}"
       # shellcheck source=/dev/null
       source "$toolsPath/$toolFile.sh" || returnMessage $internalError "%s\n" "Loading $toolFile.sh failed" || returnUndo $? shopt -s expand_aliases || return $?
     done
