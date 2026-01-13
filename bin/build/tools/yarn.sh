@@ -7,18 +7,17 @@
 # Test: bin-tests.sh
 #
 
-#
-# Usage: {fn} version
-# Environment: BUILD_YARN_VERSION - Read-only. Default version. If not specified, uses `latest`.
 # Install yarn in the build environment
 # If this fails it will output the installation log.
 # Notes: `yarn` is part of node, I think, so no clean uninstall.
 # When this tool succeeds the `yarn` binary is available in the local operating system.
-# Environment: - `BUILD_YARN_VERSION` - String. Default to `latest`.
+# Environment: - `BUILD_YARN_VERSION
 # Return Code: 1 - If installation of yarn fails
 # Return Code: 0 - If yarn is already installed or installed without error
-# Binary: npm.sh
 # Test: testYarnInstallation
+# Argument: --version versionCode - String. Optional. Install this version of yarn.
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
 yarnInstall() {
   local handler="_${FUNCNAME[0]}"
 

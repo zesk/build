@@ -6,7 +6,6 @@
 # Test: ./test/tools/hooks-tests.sh
 
 # Runs a hook in the current Zesk Build context
-# Usage: {fn} usageFunction hookName [ --help ] [ --home home ] arguments ...
 # Argument: usageFunction - Function. Required.
 # Argument. hookName. String. Required.
 # DOC TEMPLATE: --help 1
@@ -65,7 +64,6 @@ _hookContextWrapper() {
 #
 # Extracts the version from the repository
 #
-# Usage: {fn}  [ --help ] [ --home home ] arguments ...
 # DOC TEMPLATE: --help 1
 # Argument: --help - Optional. Flag. Display this help.
 # Argument: --application application - Optional. Directory. Application home directory.
@@ -78,7 +76,6 @@ _hookVersionCurrent() {
 }
 
 # Application deployed version
-# Usage: {fn}  [ --help ] [ --home home ] arguments ...
 # DOC TEMPLATE: --help 1
 # Argument: --help - Optional. Flag. Display this help.
 # Argument: --application application - Optional. Directory. Application home directory.

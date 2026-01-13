@@ -16,15 +16,15 @@
 #
 # Use with __documentationIndexLookup
 #
-# Usage: {fn} [ --clean ] codePath cacheDirectory
-#
 # Argument: codePath - Required. Directory. Path where code is stored (should remain identical between invocations)
+# Argument: cacheDirectory - Required. Cache directory where the index will be created.
+# Argument: --verbose - Flag. Optional.
 # See: __documentationIndexLookup
 # Requires: __pcregrep
 _documentationIndexGenerate() {
   local handler="_${FUNCNAME[0]}"
 
-  local codePaths=() filterArgs=() verboseFlag=false
+  local codePaths=() verboseFlag=false
 
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
@@ -35,13 +35,7 @@ _documentationIndexGenerate() {
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
-    --verbose)
-      verboseFlag=true
-      ;;
-    --filter)
-      shift
-      while [ $# -gt 0 ] && [ "$1" != "--" ]; do filterArgs+=("$1") && shift; done
-      ;;
+    --verbose) verboseFlag=true ;;
     *)
       codePaths+=("$(validate "$handler" Directory "codePath" "$argument")") || return $?
       ;;
@@ -244,11 +238,7 @@ ___documentationIndexDocumentation() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-#
-# Usage: fn cacheDirectory
 # Outputs relative path to cacheDirectory for shared handler
-# Return Code: 1 - passed in directory must exist
-#
 __documentationIndexCache() {
   local handler="_${FUNCNAME[0]}"
   catchReturn "$handler" documentationBuildCache "index" || return $?

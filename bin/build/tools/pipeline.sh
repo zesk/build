@@ -23,7 +23,6 @@
 # - Failed message
 # - last 3 lines in build log
 #
-# Usage: buildFailed logFile
 # Argument: logFile - File. Required. The most recent log from the current script.
 # Argument: message - String. Optional. Any additional message to output.
 #
@@ -164,15 +163,15 @@ _ipLookup() {
 # Otherwise, the tool *may* output a message to the console warning of pending days, and returns exit code 0 if the `keyDate` has not exceeded the number of days.
 #
 # Summary: Test whether the key needs to be updated
-# Usage: {fn} [ --name name ] keyDate upToDateDays
 # Argument: keyDate - Required. Date. Formatted like `YYYY-MM-DD`. Truncated at 10 characters as well.
-# Argument: --name name - Optional. Name of the expiring item for error messages.
 # Argument: upToDateDays - Required. Integer. Days that key expires after `keyDate`.
+# Argument: --name name - Optional. Name of the expiring item for error messages.
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
 # Example:     if !isUpToDate "$AWS_ACCESS_KEY_DATE" 90; then
 # Example:       bigText Failed, update key and reset date
 # Example:       exit 99
 # Example:     fi
-#
 isUpToDate() {
   local handler="_${FUNCNAME[0]}"
 

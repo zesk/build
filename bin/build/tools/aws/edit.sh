@@ -69,13 +69,6 @@ __awsCredentialsAdd() {
   fi
 }
 
-# Remove credentials from the AWS credentials file
-#
-# If the AWS credentials file is not found, succeeds.
-#
-# Usage: {fn} [ --help ] [ --profile profileName ] [ --force ] [ profileName ]
-# Argument: --profile profileName - String. Optional. The credentials profile to write (default value is `default`)
-# Argument: --comments - Flag. Optional. Write comments to the credentials file (in addition to updating the record).
 __awsCredentialsRemove() {
   local handler="$1" && shift
 

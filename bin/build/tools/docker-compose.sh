@@ -33,9 +33,7 @@ _dockerComposeWrapper() {
 # When this tool succeeds the `docker-compose` binary is available in the local operating system.
 # Return Code: 1 - If installation fails
 # Return Code: 0 - If installation succeeds
-# Binary: docker-compose.sh
 # See: pipInstall
-#
 dockerComposeInstall() {
   local handler="_${FUNCNAME[0]}"
   [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
@@ -54,18 +52,13 @@ _dockerComposeInstall() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# Install `docker-compose`
+# Uninstalls `docker-compose`
 #
-# If this fails it will output the installation log.
+# stderr: Upon failure error log is output
 #
-# Usage: {fn} [ package ... ]
-# Argument: package - Additional packages to install (using apt)
-# Summary: Install `docker-compose`
-# When this tool succeeds the `docker-compose` binary is available in the local operating system.
+# Summary: Uninstall `docker-compose`
 # Return Code: 1 - If installation fails
 # Return Code: 0 - If installation succeeds
-# Binary: docker-compose.sh
-#
 dockerComposeUninstall() {
   local handler="_${FUNCNAME[0]}"
   [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0

@@ -7,27 +7,38 @@
 # Copyright &copy; 2026 Market Acumen, Inc.
 #
 
-# Usage: {fn} binary installer uninstaller
+# Argument: binary
+# Argument: installer
+# Argument: uninstaller
 __checkFunctionInstallsAndUninstallsBinary() {
   __checkFunctionInstallsAndUninstalls "whichExists" "Binary" "$@"
 }
 
-# Usage: {fn} packageName installer uninstaller
+# Argument: packageName
+# Argument: installer
+# Argument: uninstaller
 __checkFunctionInstallsAndUninstallsPackage() {
   __checkFunctionInstallsAndUninstalls "packageIsInstalled" "Package" "$@"
 }
 
-# Usage: {fn} binary installer
+# Argument: binary
+# Argument: installer
 __checkFunctionInstallsBinary() {
   __checkFunctionInstalls "whichExists" "Binary" "$@"
 }
 
-# Usage: {fn} packageName installer
+# Argument: packageName
+# Argument: installer
 __checkFunctionInstallsPackage() {
   __checkFunctionInstalls "packageIsInstalled" "Package" "$@"
 }
 
-# Usage: {fn} checkFunction noun thing installer uninstaller
+# Argument: checkFunction
+# Argument: noun
+# Argument: thing
+# Argument: binary
+# Argument: installer
+# Argument: uninstaller
 __checkFunctionInstallsAndUninstalls() {
   local handler="returnMessage"
   local checkFunction="" noun="" thing="" installer="" uninstaller=""
@@ -56,11 +67,10 @@ __checkFunctionInstallsAndUninstalls() {
   fi
 }
 
-# Usage: {fn} checkFunction noun why thing ...
-# Usage: checkFunction - Function. Required.
-# Usage: noun - String. Required.
-# Usage: thing - String. Required. Thing which is going to be installed.
-# Usage: installer - Function. Required. Function to test.
+# Argument: checkFunction - Function. Required.
+# Argument: noun - String. Required.
+# Argument: thing - String. Required. Thing which is going to be installed.
+# Argument: installer - Function. Required. Function to test.
 __checkFunctionInstalls() {
   local handler="returnMessage"
   local checkFunction="" noun="" thing="" installer=""
@@ -74,10 +84,13 @@ __checkFunctionInstalls() {
 
   ! "$checkFunction" "$thing" || returnEnvironment "$noun" "$(decorate code "$thing")" "is already installed" || return $?
   assertExitCode 0 "$installer" "$@" || return $?
-  "$checkFunction" "$thing" || returnEnvironment "$noun" "$(decorate code "$thing")" "was not installed by" "$@" || return $?
+  "$checkFunction" "$thing" || returnEnvironment "$noun" "$(decorate code "$thing") was not installed by $(decorate error "$installer")" || return $?
 }
 
-# Usage: {fn} why checkFunction noun thing ...
+# Argument: checkFunction - Function. Required.
+# Argument: noun - String. Required.
+# Argument: thing - String. Required. Thing which is going to be installed.
+# Argument: uninstaller - Function. Required. Function to test.
 __checkFunctionUninstalls() {
   local handler="returnMessage"
   local checkFunction="" noun="" thing="" uninstaller=""
@@ -91,5 +104,5 @@ __checkFunctionUninstalls() {
 
   "$checkFunction" "$thing" || throwEnvironment "$handler" "$noun $(decorate code "$thing") is NOT installed, can not uninstall" || return $?
   assertExitCode 0 "$uninstaller" "$@" || return $?
-  ! "$checkFunction" "$thing" || throwEnvironment "$handler" "$noun $(decorate code "$thing") is still installed after uninstallation" || return $?
+  ! "$checkFunction" "$thing" || throwEnvironment "$handler" "$noun $(decorate code "$thing") is still installed after uninstallation by $(decorate error "$uninstaller"))" || return $?
 }

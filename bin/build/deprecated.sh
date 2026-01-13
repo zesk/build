@@ -14,7 +14,6 @@ set -eou pipefail
 # - Finds tokens which are no longer in use and reports on the files found
 # - Does common misspellings and replaces them
 #
-# Usage: {fn}
 # fn: {base}
 # Return Code: 0 - All cleaned up
 # Return Code: 1 - If fails or validation fails
@@ -291,12 +290,12 @@ _returnMessage() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# Test if an argument is an unsigned integer
+# Summary: Is value an unsigned integer?
+# Test if a value is a 0 or greater integer. Leading "+" is ok.
 # Source: https://stackoverflow.com/questions/806906/how-do-i-test-if-a-variable-is-a-number-in-bash
 # Credits: F. Hauri - Give Up GitHub (isnum_Case)
 # Original: is_uint
 # Argument: value - EmptyString. Value to test if it is an unsigned integer.
-# Usage: {fn} argument ...
 # Return Code: 0 - if it is an unsigned integer
 # Return Code: 1 - if it is not an unsigned integer
 # Requires: returnMessage

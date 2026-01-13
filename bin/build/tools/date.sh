@@ -11,12 +11,12 @@
 
 # Converts a date (`YYYY-MM-DD`) to another format.
 # Summary: Platform agnostic date conversion
-# Usage: dateToFormat date format
-# Argument: date - String in the form `YYYY-MM-DD` (e.g. `2023-10-15`)
-# Argument: format - Format string for the `date` command (e.g. `%s`)
+#
+# Compatible with BSD and GNU date.
+# Argument: date - String. Required. String in the form `YYYY-MM-DD` (e.g. `2023-10-15`)
+# Argument: format - Optional. String. Format string for the `date` command (e.g. `%s`)
 # Example:     dateToFormat 2023-04-20 %s 1681948800
 # Example:     timestamp=$(dateToFormat '2023-10-15' %s)
-# Environment: Compatible with BSD and GNU date.
 # Return Code: 1 - if parsing fails
 # Return Code: 0 - if parsing succeeds
 dateToFormat() {
@@ -41,8 +41,6 @@ _dateToFormat() {
 #
 # Converts a date to an integer timestamp
 #
-# Usage: dateToTimestamp date
-#
 # Argument: date - String in the form `YYYY-MM-DD` (e.g. `2023-10-15`)
 # DOC TEMPLATE: --help 1
 # Argument: --help - Optional. Flag. Display this help.
@@ -64,9 +62,8 @@ _dateToTimestamp() {
 #
 # dateFromTimestamp 1681966800 %F
 #
-# Usage: dateFromTimestamp integerTimestamp format
-# Argument: integerTimestamp - Integer timestamp offset (unix timestamp, same as `$(date +%s)`)
-# Argument: format - How to output the date (e.g. `%F` - no `+` is required)
+# Argument: integerTimestamp - Integer. Required. Integer timestamp offset (unix timestamp, same as `$(date +%s)`)
+# Argument: format - String. Optional. How to output the date (e.g. `%F` - no `+` is required)
 # DOC TEMPLATE: --help 1
 # Argument: --help - Optional. Flag. Display this help.
 # Environment: Compatible with BSD and GNU date.

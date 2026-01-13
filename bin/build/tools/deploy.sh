@@ -50,7 +50,6 @@ _deployApplication() {
 }
 
 #
-# Usage: {fn} applicationHome
 # Argument: applicationHome - Required. Directory. Application home to get the version from.
 #
 # Extracts version from an application either from `.deploy` files or from the the `.env` if
@@ -93,7 +92,7 @@ _deployApplicationVersion() {
 }
 
 #
-# Usage: {fn} deployHome
+# Argument: deployHome - Required. Directory. Deployment database home.
 #
 # Outputs the build target name which is based on the environment `BUILD_TARGET`.
 #
@@ -117,7 +116,6 @@ _deployPackageName() {
 }
 
 #
-# Usage: {fn} deployHome versionName [ targetPackage ]
 # Argument: deployHome - Required. Directory. Deployment database home.
 # Argument: versionName - Required. String. Application ID to look for
 #
@@ -156,7 +154,8 @@ _applicationIdLink() {
 }
 
 #
-# Usage: {fn} deployHome versionName
+# Argument: deployHome - Required. Directory. Deployment database home.
+# Argument: versionName - Required. String. Application ID to look for
 #
 # Get the previous version of the supplied version
 # Return Code: 1 - No version exists
@@ -171,7 +170,8 @@ _deployPreviousVersion() {
 }
 
 #
-# Usage: {fn} deployHome versionName
+# Argument: deployHome - Required. Directory. Deployment database home.
+# Argument: versionName - Required. String. Application ID to look for
 #
 # Get the next version of the supplied version
 #
@@ -186,7 +186,7 @@ _deployNextVersion() {
 #
 # Safe application deployment by moving
 #
-# Usage: {fn} applicationPath
+# Argument: applicationPath - Required. Directory. Application target path.
 #
 # Deploy current application to target path
 #
@@ -227,8 +227,8 @@ _deployLink() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# Usage: {fn} deployHome applicationPath
-#
+# Argument: deployHome - Required. Directory. Deployment database home.
+# Argument: applicationPath - Required. Directory. Application target path.
 # Automatically convert application deployments using non-links to links.
 #
 deployMigrateDirectoryToLink() {

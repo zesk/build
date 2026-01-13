@@ -26,7 +26,7 @@ _sedReplacePattern() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# IDENTICAL quoteSedPattern 39
+# IDENTICAL quoteSedPattern 38
 
 # Summary: Quote sed search strings for shell use
 # Quote a string to be used in a sed pattern on the command line.
@@ -48,7 +48,6 @@ _quoteSedPattern() {
 }
 
 # Summary: Quote sed replacement strings for shell use
-# Usage: quoteSedReplacement text separatorChar
 # Argument: text - EmptyString. Required. Text to quote
 # Argument: separatorChar - The character used to separate the sed pattern and replacement. Defaults to `/`.
 # Output: string quoted and appropriate to insert in a `sed` replacement phrase

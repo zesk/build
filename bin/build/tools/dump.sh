@@ -191,7 +191,7 @@ _dumpPipe() {
 
 # Output a file for debugging
 #
-# Usage: {fn} fileName0 [ fileName1 ... ]
+# Argument: fileName0 - File. Optional. File to dump.
 # stdin: text (optional)
 # stdout: formatted text (optional)
 dumpFile() {

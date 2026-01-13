@@ -179,7 +179,6 @@ _urlParse() {
 
 # Extract a component from one or more URLs
 # Summary: Get a URL component directly
-# Usage: urlParseItem component url0 [ url1 ... ]
 # Argument: component - the url component to get: `url`, `path`, `name`, `scheme`, `user`, `password`, `host`, `port`, `portDefault`, `error`
 # Argument: url ... - String. URL. Required. A Uniform Resource Locator used to specify a database connection
 # Example:     decorate info "Connecting as $(urlParseItem user "$url")"
@@ -301,7 +300,10 @@ _urlOpener() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# Usage: {fn} url prefix lineNumber debugFlag
+# Argument: url
+# Argument: prefix
+# Argument: lineNumber
+# Argument: debugFlag
 _urlExtract() {
   local match foundPrefix minPrefix="" url="${1-}" prefix="$2" lineNumber="$3" debugFlag="${4-false}"
   for match in 'https://*' 'http://*'; do
@@ -337,8 +339,6 @@ _urlExtract() {
 }
 
 # Open URLs which appear in a stream
-# Usage: {fn} [ file ]
-# Usage: {fn} [ --show-file ] [ --file name ] [ file ]
 # Argument: --show-file - Boolean. Optional. Show the file name in the output (suffix with `: `)
 # Argument: --file name - String. Optional. The file name to display - can be any text.
 # Argument: file - File. Optional. A file to read and output URLs found.

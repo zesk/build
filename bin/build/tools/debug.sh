@@ -9,7 +9,6 @@
 #
 # Is build debugging enabled?
 #
-# Usage: {fn} [ moduleName ... ]
 # Argument: moduleName - Optional. String. If `BUILD_DEBUG` contains any token passed, debugging is enabled.
 # Return Code: 1 - Debugging is not enabled (for any module)
 # Return Code: 0 - Debugging is enabled
@@ -57,7 +56,7 @@ _buildDebugEnabled() {
 # Debugging: f6bef8d783239932a1b4311d027289c42d9d4b3f
 
 # Internal: true
-# Usage: {fn} [ setArgs ]
+# Argument: setArgs - Optional. Extra characters to `set -`.
 # Turn on debugging and additional `set` arguments
 # Actually does 'set -x` - should be only occurrence.
 # Depends: -
@@ -65,7 +64,7 @@ __buildDebugEnable() {
   set "-x${1-}" # Debugging
 }
 
-# Usage: {fn} [ setArgs ]
+# Argument: setArgs - Optional. Extra characters to `set +`.
 # Turn off debugging and additional `set` arguments
 # Internal: true
 # Depends: -
@@ -83,7 +82,6 @@ __buildDebugDisable() {
 #
 # `BUILD_DEBUG` can be a list of strings like `environment,assert` for example.
 # Environment: BUILD_DEBUG
-# Usage: {fn} [ moduleName ... ]
 # Argument: moduleName - Optional. String. Only start debugging if debugging is enabled for ANY of the passed in modules.
 # Example:     buildDebugStart || :
 # Example:     # ... complex code here
@@ -103,9 +101,10 @@ _buildDebugStart() {
 
 #
 # Stop build debugging if it is enabled
-# Usage: buildDebugStop
 # See: buildDebugStart
 # Requires: buildDebugEnabled
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
 buildDebugStop() {
   [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
   if ! buildDebugEnabled "$@"; then
@@ -270,12 +269,16 @@ _isErrorExit() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-#
-# Usage: plumber command ...
 # Run command and detect any global or local leaks
 # Requires: declare diff grep
 # Requires: throwArgument decorate usageArgumentString isCallable
 # Requires: fileTemporaryName removeFields
+# Argument: command ... - Callable. Command to run
+# Argument: --temporary tempPath - Directory. Optional. Use this for the temporary path.
+# Argument: --leak envName ... - EnvironmentVariable. Variable name which is OK to leak.
+# Argument: --verbose - Flag. Optional. Be verbose.
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
 # BUILD_DEBUG: plumber-verbose - The plumber outputs the exact variable captures before and after
 plumber() {
   local handler="_${FUNCNAME[0]}"
@@ -365,8 +368,12 @@ _housekeeperAccountant() {
 }
 
 # Run a command and ensure files are not modified
-# Usage: {fn} [ --help ] [ --ignore grepPattern ] [ --path path ] [ path ... ] callable
+# Argument: --ignore grepPattern - String. Directory. One or more directories to watch. If no directories are supplied uses current working directory.
 # Argument: --path path - Optional. Directory. One or more directories to watch. If no directories are supplied uses current working directory.
+# Argument: path - Optional. Directory. One or more directories to watch. If no directories are supplied uses current working directory.
+# Argument: callable - Optional. Callable. Program to run and watch directory before and after.
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
 housekeeper() {
   local handler="_${FUNCNAME[0]}"
 

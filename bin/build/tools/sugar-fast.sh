@@ -28,7 +28,6 @@ catchEnvironmentQuiet() {
 }
 
 # Logs all deprecated functions to application root in a file called `.deprecated`
-# Usage: {fn} command ...
 # Argument: function - Required. String. Function which is deprecated.
 # Example:     {fn} "${FUNCNAME[0]}"
 # Requires: printf date

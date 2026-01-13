@@ -4,12 +4,11 @@
 #
 # Copyright &copy; 2026 Market Acumen, Inc.
 #
-# Docs: o ./docs/_templates/ops/sysvinit.md
-# Test: o ./test/ops/sysvinit-tests.sh
 
 # Install a script to run upon initialization.
-# Usage: {fn} script
 # Argument: binary - Required. String. Binary to install at startup.
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
 sysvInitScriptInstall() {
   local handler="_${FUNCNAME[0]}"
 
@@ -58,8 +57,9 @@ _sysvInitScriptInstall() {
 }
 
 # Remove an initialization script
-# Usage: {fn} script ...
-# Argument: binary - Required. String. Basename of installed
+# DOC TEMPLATE: --help 1
+# Argument: binary - Required. String. Basename of installed script.
+# Argument: --help - Optional. Flag. Display this help.
 sysvInitScriptUninstall() {
   local handler="_${FUNCNAME[0]}"
 

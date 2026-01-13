@@ -186,13 +186,12 @@ _darwinNotification() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# Usage: {fn} [ --help ] [ --choice choiceText ] [ --ok ] [ --cancel ] [ --default buttonIndex ] message ...
-# DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
 # Argument: --choice choiceText - Optional. String. Title of the thing.
 # Argument: --ok - Optional. Flag. Adds "OK" as an option.
 # Argument: --cancel - Optional. Flag. Adds "Cancel" as an option.
 # Argument: --default buttonIndex - Required. Integer. The button (0-based index) to make the default button choice.
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
 # Argument: message ... - Required. String. The message to display in the dialog.
 # Display a dialog using `osascript` with the choices provided. Typically this is found on Mac OS X.
 # Outputs the selected button text upon exit.

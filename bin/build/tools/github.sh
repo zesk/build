@@ -153,9 +153,7 @@ _githubLatest() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-#
 # Summary: Generate a release on GitHub using API
-# Usage: {fn} [ --token token ] [ --owner owner ] [ --name name ] [ --expire expire ] descriptionFilePath releaseName commitish
 # DOC TEMPLATE: --help 1
 # Argument: --help - Optional. Flag. Display this help.
 # DOC TEMPLATE: --handler 1

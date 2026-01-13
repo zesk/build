@@ -23,7 +23,8 @@ __urlBinary() {
   printf "%s\n" "open"
 }
 
-# Usage: {fn} date format
+# Argument: date - String. Required.
+# Argument: format - String. Required.
 # Requires: date
 __dateToFormat() {
   date -u -jf '%F %T' "$1 00:00:00" "+$2" 2>/dev/null

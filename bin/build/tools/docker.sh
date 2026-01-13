@@ -253,7 +253,7 @@ _dockerImages() {
 
 # Old versions of docker or hosted:
 #
-# Usage:  docker images [OPTIONS] [REPOSITORY[:TAG]]
+# -- Usage:  docker images [OPTIONS] [REPOSITORY[:TAG]]
 #
 # List images
 #
@@ -266,7 +266,7 @@ _dockerImages() {
 #   -q, --quiet           Only show image IDs
 
 # Docker version 27.3.1, build ce12230
-# Usage:  docker images [OPTIONS] [REPOSITORY[:TAG]]
+# -- Usage:  docker images [OPTIONS] [REPOSITORY[:TAG]]
 #
 # List images
 #

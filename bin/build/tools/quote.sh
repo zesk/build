@@ -14,8 +14,7 @@
 
 #
 # Quote bash strings for inclusion as single-quoted for eval
-# Usage: quoteBashString text
-# Argument: text - Text to quote
+# Argument: text - EmptyString. Required. Text to quote.
 # Output: string quoted and appropriate to assign to a value in the shell
 # Depends: sed
 # Example:     name="$(quoteBashString "$name")"
@@ -59,8 +58,7 @@ _quoteGrepPattern() {
 
 #
 # Quote strings for inclusion in shell quoted strings
-# Usage: escapeSingleQuotes text
-# Argument: text - Text to quote
+# Argument: text - String. Optional. Text to quote
 # Output: Single quotes are prefixed with a backslash
 # Example:     {fn} "Now I can't not include this in a bash string."
 # DOC TEMPLATE: noArgumentsForHelp 1

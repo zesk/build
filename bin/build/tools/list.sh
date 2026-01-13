@@ -14,9 +14,10 @@
 
 # Output arguments joined by a character
 # Output: text
-# Usage: {fn} separator text0 arg1 ...
 # Argument: separator - Required. EmptyString. Single character to join elements. If a multi-character string is used only the first character is used as the delimiter.
-# Argument: text0 - Optional. String. One or more strings to join
+# Argument: text0 ... - Optional. String. One or more strings to join
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
 listJoin() {
   [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
   local IFS="${1-:0:1}"
@@ -29,10 +30,11 @@ _listJoin() {
 }
 
 # Remove one or more items from a text-delimited list
-# Usage: {fn} listValue separator item ...
 # Argument: listValue - Required. List value to modify.
 # Argument: separator - Required. Separator string for item values (typically `:`)
 # Argument: item - the item to be removed from the `listValue`
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
 listRemove() {
   local handler="_${FUNCNAME[0]}"
   [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
@@ -61,12 +63,13 @@ _listRemove() {
 }
 
 #
-# Usage: {fn} listValue separator [ --first | --last | item ]
 # Argument: listValue - Required. Path value to modify.
 # Argument: separator - Required. Separator string for item values (typically `:`)
 # Argument: --first - Optional. Place any items after this flag first in the list
 # Argument: --last - Optional. Place any items after this flag last in the list. Default.
 # Argument: item - the path to be added to the `listValue`
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
 # Add an item to the beginning or end of a text-delimited list
 listAppend() {
   local handler="_${FUNCNAME[0]}"
@@ -116,12 +119,11 @@ _listAppend() {
 #
 # Removes duplicates from a list and maintains ordering.
 #
-# Usage: {fn} separator listText
 # Argument: separator - String. Required. List separator character.
 # Argument: listText - String. Required. List to clean duplicates.
-# Argument: --help - Optional. Flag. This help.
 # Argument: --removed - Optional. Flag. Show removed items instead of the new list.
-#
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
 listCleanDuplicates() {
   local handler="_${FUNCNAME[0]}"
   local IFS

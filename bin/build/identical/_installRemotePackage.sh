@@ -64,7 +64,7 @@ __packageCheckFunction() {
 # INTERNAL:
 # INTERNAL: Calling signature for `version-function`:
 # INTERNAL:
-# INTERNAL:    Usage: version-function handler applicationHome installPath
+# INTERNAL:    Example:     version-function handler applicationHome installPath
 # INTERNAL:    Argument: handler - Function. Required. Function to call when an error occurs.
 # INTERNAL:    Argument: applicationHome - Directory. Required. Path to the application home where target will be installed, or is installed. (e.g. myApp/)
 # INTERNAL:    Argument: installPath - Directory. Required. Path to the installPath home where target will be installed, or is installed. (e.g. myApp/bin/build)
@@ -73,14 +73,14 @@ __packageCheckFunction() {
 # INTERNAL:
 # INTERNAL: Calling signature for `url-function`:
 # INTERNAL:
-# INTERNAL:    Usage: url-function handler
+# INTERNAL:    Example:      url-function handler
 # INTERNAL:    Argument: handler - Function. Required. Function to call when an error occurs.
 # INTERNAL:
 # INTERNAL: `url-function` should output a URL and exit 0. Any other return code terminates installation.
 # INTERNAL:
 # INTERNAL: Calling signature for `check-function`:
 # INTERNAL:
-# INTERNAL:    Usage: check-function handler installPath
+# INTERNAL:    Example:      check-function handler installPath
 # INTERNAL:    Argument: handler - Function. Required. Function to call when an error occurs.
 # INTERNAL:    Argument: installPath - Directory. Required. Path to the installPath home where target will be installed, or is installed. (e.g. myApp/bin/build)
 # INTERNAL:
@@ -350,7 +350,8 @@ _installRemotePackage() {
 }
 
 # Error handler for _installRemotePackage
-# Usage: {fn} exitCode [ message ... ]
+# Argument: returnCode - UnsignedInteger. Required. Exit code.
+# Argument: message ... - EmptyString. Optional. Error message to show.
 # Requires: usageDocumentSimple
 __installRemotePackage() {
   local source content
@@ -434,7 +435,10 @@ __installRemotePackageGitCheck() {
   fi
 }
 
-# Usage: {fn} _installRemotePackageSource targetBinary relativePath
+# Argument: source - File. New source installer to customize.
+# Argument: targetBinary - File. Target installer to update.
+# Argument: relativePath - RelativePath. Path to the top of the project for the installer.
+# Assumes our source handles the `--replace` argument to replace itself.
 # Requires: grep printf chmod wait
 # Requires: returnEnvironment isUnsignedInteger cat returnClean
 __installRemotePackageLocal() {

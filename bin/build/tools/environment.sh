@@ -8,9 +8,9 @@
 
 #
 # Write a value to a state file as NAME="value"
-# Usage: name - Required. String. Name to write.
-# Usage: value - Optional. EmptyString. Value to write.
-# Usage: ... - Optional. EmptyString. Additional values, when supplied, write this value as an array.
+# Argument: name - Required. String. Name to write.
+# Argument: value - Optional. EmptyString. Value to write.
+# Argument: ... - Optional. EmptyString. Additional values, when supplied, write this value as an array.
 environmentValueWrite() {
   local handler="_${FUNCNAME[0]}" name
   [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
@@ -221,9 +221,9 @@ _environmentLines() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-#
-# Usage: environmentFileLoad .env --optional .env.local where
 # Argument: where - Optional. Directory. Where to load the `.env` files.
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
 #
 # Loads `.env` which is the current project configuration file
 # Also loads `.env.local` if it exists
@@ -236,7 +236,7 @@ _environmentLines() {
 #
 # If `.env.local` exists, it is also loaded in a similar manner.
 #
-# Environment: Loads `.env` and `.env.local`, use with caution on trusted content only
+# Use with caution on trusted content only.
 # Return Code: 1 - if `.env` does not exist; outputs an error
 # Return Code: 0 - if files are loaded successfully
 # DEPRECATED: 2024-07-20
@@ -401,7 +401,6 @@ _environmentLoad() {
 }
 
 # Safely load an environment file (no code execution)
-# Usage: {fn} [ --required | --optional ] [ --ignore name ] environmentFile ...
 # Argument: --prefix - EnvironmentVariable|Blank. Optional. All subsequent environment variables are prefixed with this prefix.
 # Argument: --require - Flag. Optional. All subsequent environment files on the command line will be required.
 # Argument: --optional - Flag. Optional. All subsequent environment files on the command line will be optional. (If they do not exist, no errors.)
@@ -643,8 +642,6 @@ _environmentFileShow() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-#
-# Usage: {fn} [ requiredEnvironment ... ] [ -- optionalEnvironment ...] "
 # DOC TEMPLATE: --help 1
 # Argument: --help - Optional. Flag. Display this help.
 # Argument: requiredVariable ... - Optional. One or more environment variables which should be non-blank and included in the `.env` file.

@@ -50,7 +50,6 @@ _pause() {
 # Copy file from source to destination
 #
 # Supports mapping the file using the current environment, or escalated privileges.
-# Usage: {fn} [ --map ] [ --escalate ] source destination
 # Argument: --map - Flag. Optional. Map environment values into file before copying.
 # Argument: --escalate - Flag. Optional. The file is a privilege escalation and needs visual confirmation. Requires root privileges.
 # Argument: source - File. Required. Source path
@@ -67,7 +66,6 @@ _fileCopy() {
 
 # Check whether copying a file would change it
 # This function does not modify the source or destination.
-# Usage: {fn} [ --map ] source destination
 # Argument: --map - Flag. Optional. Map environment values into file before copying.
 # Argument: source - File. Required. Source path
 # Argument: destination - File. Required. Destination path
@@ -194,7 +192,6 @@ _confirmMenu() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# Usage: {fn} loopCallable arguments ...
 # Argument: loopCallable - Required. Callable. Call this on each file and a zero result code means passed and non-zero means fails.
 # Argument: --delay delaySeconds - Optional. Integer. Delay in seconds between checks in interactive mode.
 # Argument: --until exitCode - Optional. Integer. Check until exit code matches this.

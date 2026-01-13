@@ -21,7 +21,8 @@ __urlBinary() {
   printf "%s\n" "open" "xdg-open" "kde-open"
 }
 
-# Usage: {fn} date format
+# Argument: date - String. Required.
+# Argument: format - String. Required.
 # Requires: date
 __dateToFormat() {
   date -u --date="$1 00:00:00" "+$2" 2>/dev/null

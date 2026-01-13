@@ -17,7 +17,6 @@
 
 # Sets the environment variable `BUILD_COLORS` if not set, uses `TERM` to calculate
 #
-# Usage: hasColors
 # DOC TEMPLATE: --help 1
 # Argument: --help - Optional. Flag. Display this help.
 # Return Code: 0 - Console or output supports colors
@@ -54,7 +53,11 @@ _hasColors() {
 #
 # Semantics-based
 #
-# Usage: {fn} label lightStartCode darkStartCode endCode [ -n ] [ message ]
+# Argument: label - Text label
+# Argument: lightStartCode - Escape code label for light mode (color)
+# Argument: darkStartCode - Escape code label for dark mode (color)
+# Argument: endCode - Escape end code
+# Argument: text ... - Text to output.
 # Requires: hasColors printf
 __decorate() {
   local prefix="$1" start="$2" dp="$3" end="$4" && shift 4
@@ -88,9 +91,8 @@ _decorations() {
 }
 
 # Singular decoration function
-# Usage: decorate style [ text ... ]
 # Argument: style - String. Required. One of: reset underline no-underline bold no-bold black black-contrast blue cyan green magenta orange red white yellow bold-black bold-black-contrast bold-blue bold-cyan bold-green bold-magenta bold-orange bold-red bold-white bold-yellow code info notice success warning error subtle label value decoration
-# Argument: text - Text to output. If not supplied, outputs a code to change the style to the new style.
+# Argument: text ... - Optional. String. Text to output. If not supplied, outputs a code to change the style to the new style. May contain arguments for `style`.
 # You can extend this function by writing a your own extension `__decorationExtensionCustom` is called for `decorate custom`.
 # stdout: Decorated text
 # Environment: __BUILD_COLORS - String. Cached color lookup.
@@ -194,7 +196,6 @@ decoration=45;97 45;30
 }
 
 # fn: decorate each
-# Usage: decorate each decoration argument1 argument2 ...
 # Runs the following command on each subsequent argument for formatting
 # Also supports formatting input lines instead (on the same line)
 # Example:     decorate each code "$@"

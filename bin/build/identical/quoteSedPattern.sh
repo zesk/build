@@ -27,7 +27,6 @@ _quoteSedPattern() {
 }
 
 # Summary: Quote sed replacement strings for shell use
-# Usage: quoteSedReplacement text separatorChar
 # Argument: text - EmptyString. Required. Text to quote
 # Argument: separatorChar - The character used to separate the sed pattern and replacement. Defaults to `/`.
 # Output: string quoted and appropriate to insert in a `sed` replacement phrase

@@ -5,7 +5,6 @@
 # Docs: ./documentation/source/tools/package.md
 # Test: ./test/tools/package-tests.sh
 
-# Usage: {fn} usageFunction functionSuffix [ --help ] [ --manager packageManager ] [ --force ] ...
 # DOC TEMPLATE: --help 1
 # Argument: --help - Optional. Flag. Display this help.
 # Argument: --manager packageManager - Optional. String. Package manager to use. (apk, apt, brew)
@@ -58,7 +57,6 @@ __packageListFunction() {
   catchEnvironment "$handler" "$listFunction" || return $?
 }
 
-# Usage: {fn} usageFunction functionSuffix [ --help ] [ --manager packageManager ] [ --force ] ...
 # DOC TEMPLATE: --help 1
 # Argument: --help - Optional. Flag. Display this help.
 # Argument: --manager packageManager - Optional. String. Package manager to use. (apk, apt, brew)
@@ -143,7 +141,6 @@ __packageUpFunction() {
 }
 
 # Upgrade packages lists and sources
-# Usage: {fn} [ --help ] [ --manager packageManager ] [ --force ] ...
 # DOC TEMPLATE: --help 1
 # Argument: --help - Optional. Flag. Display this help.
 # Argument: --verbose - Optional. Flag. Display progress to the terminal.
@@ -227,7 +224,6 @@ _packageDefault() {
 # Confirms that `binary` is installed after installation succeeds.
 #
 # Summary: Install tools using `apt-get` if they are not found
-# Usage: {fn} binary packageInstallPackage ...
 # Example:     packageWhich shellcheck shellcheck
 # Example:     packageWhich mariadb mariadb-client
 # Argument: --manager packageManager - Optional. String. Package manager to use. (apk, apt, brew)
@@ -300,7 +296,6 @@ _packageWhich() {
 # Confirms that `binary` is installed after installation succeeds.
 #
 # Summary: Install tools using `apt-get` if they are not found
-# Usage: {fn} binary packageInstallPackage ...
 # Example:     packageWhichUninstall shellcheck shellcheck
 # Example:     packageWhichUninstall mariadb mariadb-client
 # Argument: --manager packageManager - Optional. String. Package manager to use. (apk, apt, brew)
@@ -369,7 +364,6 @@ _packageWhichUninstall() {
 # - apt-get
 # - brew
 #
-# Usage: {fn} [ package ... ]
 # Example:     {fn} shellcheck
 # Return Code: 0 - If `apk` is not installed, returns 0.
 # Return Code: 1 - If `apk` fails to install the packages
@@ -482,7 +476,6 @@ _packageInstall() {
 }
 
 # Is a package installed?
-# Usage: {fn} [ package ... ]
 # Argument: package - String. Required. One or more packages to check if they are installed
 # Return Code: 1 - If any packages are not installed
 # Return Code: 0 - All packages are installed
@@ -524,7 +517,6 @@ _packageIsInstalled() {
 
 # Removes packages using the current package manager.
 #
-# Usage: {fn} [ package ... ]
 # Example:     {fn} shellcheck
 # Summary: Removes packages using package manager
 # Argument: package - String. Required. One or more packages to uninstall
@@ -661,7 +653,6 @@ _packageAvailableList() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# Usage: {fn} [ value ]
 # INTERNAL - has `packageUpdate` set the `restart` flag at some point?
 # Argument: value - Set the restart flag to this value (blank to remove)
 packageNeedRestartFlag() {

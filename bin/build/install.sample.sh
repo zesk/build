@@ -144,7 +144,7 @@ __installCheck() {
   printf "%s %s (%s)\n" "$(decorate bold-blue "$name")" "$(decorate code "$version")" "$(decorate orange "$id")"
 }
 
-# IDENTICAL _installRemotePackage 399
+# IDENTICAL _installRemotePackage 403
 
 # Installs {name} in a local project directory if not installed. Also
 # will overwrite {source} with the latest version after installation.
@@ -443,7 +443,8 @@ _installRemotePackage() {
 }
 
 # Error handler for _installRemotePackage
-# Usage: {fn} exitCode [ message ... ]
+# Argument: returnCode - UnsignedInteger. Required. Exit code.
+# Argument: message ... - EmptyString. Optional. Error message to show.
 # Requires: usageDocumentSimple
 __installRemotePackage() {
   local source content
@@ -527,7 +528,10 @@ __installRemotePackageGitCheck() {
   fi
 }
 
-# Usage: {fn} _installRemotePackageSource targetBinary relativePath
+# Argument: source - File. New source installer to customize.
+# Argument: targetBinary - File. Target installer to update.
+# Argument: relativePath - RelativePath. Path to the top of the project for the installer.
+# Assumes our source handles the `--replace` argument to replace itself.
 # Requires: grep printf chmod wait
 # Requires: returnEnvironment isUnsignedInteger cat returnClean
 __installRemotePackageLocal() {
@@ -1178,11 +1182,10 @@ _isFunction() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# IDENTICAL decorate 244
+# IDENTICAL decorate 245
 
 # Sets the environment variable `BUILD_COLORS` if not set, uses `TERM` to calculate
 #
-# Usage: hasColors
 # DOC TEMPLATE: --help 1
 # Argument: --help - Optional. Flag. Display this help.
 # Return Code: 0 - Console or output supports colors
@@ -1219,7 +1222,11 @@ _hasColors() {
 #
 # Semantics-based
 #
-# Usage: {fn} label lightStartCode darkStartCode endCode [ -n ] [ message ]
+# Argument: label - Text label
+# Argument: lightStartCode - Escape code label for light mode (color)
+# Argument: darkStartCode - Escape code label for dark mode (color)
+# Argument: endCode - Escape end code
+# Argument: text ... - Text to output.
 # Requires: hasColors printf
 __decorate() {
   local prefix="$1" start="$2" dp="$3" end="$4" && shift 4
@@ -1253,9 +1260,8 @@ _decorations() {
 }
 
 # Singular decoration function
-# Usage: decorate style [ text ... ]
 # Argument: style - String. Required. One of: reset underline no-underline bold no-bold black black-contrast blue cyan green magenta orange red white yellow bold-black bold-black-contrast bold-blue bold-cyan bold-green bold-magenta bold-orange bold-red bold-white bold-yellow code info notice success warning error subtle label value decoration
-# Argument: text - Text to output. If not supplied, outputs a code to change the style to the new style.
+# Argument: text ... - Optional. String. Text to output. If not supplied, outputs a code to change the style to the new style. May contain arguments for `style`.
 # You can extend this function by writing a your own extension `__decorationExtensionCustom` is called for `decorate custom`.
 # stdout: Decorated text
 # Environment: __BUILD_COLORS - String. Cached color lookup.
@@ -1359,7 +1365,6 @@ decoration=45;97 45;30
 }
 
 # fn: decorate each
-# Usage: decorate each decoration argument1 argument2 ...
 # Runs the following command on each subsequent argument for formatting
 # Also supports formatting input lines instead (on the same line)
 # Example:     decorate each code "$@"
@@ -1454,12 +1459,12 @@ _returnMessage() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# Test if an argument is an unsigned integer
+# Summary: Is value an unsigned integer?
+# Test if a value is a 0 or greater integer. Leading "+" is ok.
 # Source: https://stackoverflow.com/questions/806906/how-do-i-test-if-a-variable-is-a-number-in-bash
 # Credits: F. Hauri - Give Up GitHub (isnum_Case)
 # Original: is_uint
 # Argument: value - EmptyString. Value to test if it is an unsigned integer.
-# Usage: {fn} argument ...
 # Return Code: 0 - if it is an unsigned integer
 # Return Code: 1 - if it is not an unsigned integer
 # Requires: returnMessage
@@ -1566,7 +1571,7 @@ _returnClean() {
 # Argument: value - String. A value.
 # Argument: from - String. When value matches `from`, instead print `to`
 # Argument: to - String. The value to print when `from` matches `value`
-# Argument: ... - Additional from-to pairs can be passed, first matching value is used, all values will be examined if none match
+# Argument: ... - Optional. String. Additional from-to pairs can be passed, first matching value is used, all values will be examined if none match
 convertValue() {
   local __handler="_${FUNCNAME[0]}" value="" from="" to=""
   # __IDENTICAL__ __checkHelp1__handler 1
@@ -1594,7 +1599,7 @@ _convertValue() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# IDENTICAL _tinySugar 74
+# IDENTICAL _tinySugar 72
 
 # Run `handler` with an argument error
 # Argument: handler - Function. Required. Error handler.
@@ -1611,9 +1616,8 @@ throwEnvironment() {
 }
 
 # Run `command`, upon failure run `handler` with an argument error
-# Usage: {fn} handler command ...
 # Argument: handler - Required. String. Failure command
-# Argument: command - Required. Command to run.
+# Argument: command ... - Required. Command to run.
 # Requires: throwArgument
 catchArgument() {
   local handler="${1-}"
@@ -1621,9 +1625,8 @@ catchArgument() {
 }
 
 # Run `command`, upon failure run `handler` with an environment error
-# Usage: {fn} handler command ...
 # Argument: handler - Required. String. Failure command
-# Argument: command - Required. Command to run.
+# Argument: command ... - Required. Command to run.
 # Requires: throwEnvironment
 catchEnvironment() {
   local handler="${1-}"

@@ -53,7 +53,6 @@ __wrapColor() {
 
 #
 # Set colors to deal with dark or light-background consoles
-# Usage: {fn} [ --dark ] [ --light ]
 # DOC TEMPLATE: --help 1
 # Argument: --help - Optional. Flag. Display this help.
 # Argument: --dark - Optional. Flag. Dark mode for darker backgrounds.
@@ -119,7 +118,6 @@ _hasConsoleAnimation() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# Usage: {fn} prefix suffix [ text ]
 # Argument: prefix - Required. String.
 # Argument: suffix - Required. String.
 # Argument: text ... - Optional. String.
@@ -137,7 +135,6 @@ __consoleEscape() {
   fi
 }
 
-# Usage: {fn} prefix suffix [ text ]
 # Argument: prefix - Required. String.
 # Argument: suffix - Required. String.
 # Argument: text ... - Optional. String.
@@ -307,11 +304,9 @@ _colorSampleSemanticStyles() {
 #
 # Intended to be run on an interactive console, this clears the current line of any text and replaces the line with spaces.
 #
+# Intended to be run on an interactive console. Should support `tput cols`.
 # Summary: Clear a line in the console
-# Usage: clearLine textToOutput
-# Environment: Intended to be run on an interactive console. Should support `tput cols`.
-# Example:     clearLine
-#
+# Argument: textToOutput - Optional. String. Text to display on the new cleared line.
 clearLine() {
   if hasConsoleAnimation; then
     printf -- "\r%s\r%s" "$(repeat "$(consoleColumns)" " ")" "$*"
@@ -351,11 +346,10 @@ _plasterLines() {
 #
 # Summary: Output a status message and display correctly on consoles with animation and in log files
 # Clears the line and outputs a message using a command. Meant to show status but not use up an output line for it.
-# Usage: statusMessage command ...
-# Argument: command - Required. Commands which output a message.
 # Argument: --last - Optional. Flag. Last message to be output, so output a newline as well at the end.
 # Argument: --first - Optional. Flag. First message to be output, only clears line if available.
 # Argument: --inline - Optional. Flag. Inline message displays with newline when animation is NOT available.
+# Argument: command - Required. Commands which output a message.
 #
 # When `hasConsoleAnimation` is true:
 #
@@ -812,7 +806,6 @@ _colorMultiply() {
 # Internal
 #
 # Utility function to help with markdownToConsole
-# Usage: toggleCharacterToColor character colorOn [ colorOff ]
 # Argument: character - The character to map to color start/stop
 # Argument: colorOn - Color on escape sequence
 # Argument: colorOff - Color off escape sequence defaults to "$(decorate reset --)"

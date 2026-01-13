@@ -13,7 +13,6 @@ set -eou pipefail
 if source "${BASH_SOURCE[0]%/*}/../build/tools.sh"; then
   # fn: {base}
   # Summary: Run after a test fails
-  # Usage: {fn} module testFunction exitCode
   __hookBashTestFail() {
     local handler="_${FUNCNAME[0]}"
     local module="$1" testFunction="$2" name symbol="❌"

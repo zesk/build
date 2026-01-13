@@ -4,7 +4,7 @@
 #
 # Copyright &copy; 2026 Market Acumen, Inc.
 
-# Usage: {fn} handler stateFile prefixIndex prefix searchFile
+# Argument: handler - Function. Required. Error handler function name.
 # Argument: stateFile - File. Required. State file containing our variables.
 # Argument: prefixIndex - UnsignedInteger. Required. Which prefix index we are processing.
 # Argument: prefix - String. Required. Prefix we are are processing.

@@ -6,8 +6,9 @@
 # Install bash and then run it
 # Install a simple profile
 # Some containers do not have bash installed by default
-# Usage: {fn} installationCommand ... -- runCommand ...
+# Argument: installationCommand ... -- - Executable. Required. Command terminated with a `--` to install bash.
 # Requires: sh printf dirname chmod exec bash
+# Argument: runCommand ... - Executable. Optional. Command to pass to bash once installed.
 __needBash() {
   export LC_TERMINAL
   export TERM

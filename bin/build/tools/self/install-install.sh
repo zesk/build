@@ -120,7 +120,7 @@ __installInstallBinary() {
   verb=Installed
   [ ! -f "$target" ] || verb=Updated
   # Show diffs
-  ! $showDiffFlag || _installInstallBinaryDiffer "$handler" "$temp" "$target" || returnClean $? "$temp" || return $?
+  ! $showDiffFlag || _installInstallBinaryDiffer "$handler" "$target" || returnClean $? "$temp" || return $?
   # Copy to target
   catchEnvironment "$handler" cp "$temp" "$target" || returnClean $? "$temp" || return $?
   rm -rf "$temp" || :
@@ -165,12 +165,14 @@ __installInstallBinaryCustomizeLegacy() {
   sed "s/^relTop=.*$/relTop=$(quoteSedReplacement "$1")/g"
 }
 
-# Usage: {fn} source target
+# Argument: handler - Function. Required. Error handler.
+# Argument: target - Target
 # Show differences between installations
 _installInstallBinaryDiffer() {
-  local handler="$1" diffLines
-  shift
+  local handler="$1" && shift
+  local target="$1" && shift
   if [ -x "$target" ]; then
+    local diffLines
     diffLines="$(catchEnvironment "$handler" _installInstallBinaryDifferFilter -c "$@")" || return $?
     [ "$diffLines" -gt 0 ] || return 0
     decorate magenta "--- Changes: $diffLines ---"
@@ -179,7 +181,6 @@ _installInstallBinaryDiffer() {
   fi
 }
 
-# Usage: {fn} diff-arguments
 # Argument: diff-arguments - Required. Arguments. Passed to diff.
 _installInstallBinaryDifferFilter() {
   diff "$@" | grep -v -e '^__installPackageConfiguration ' | grep -c '[<>]'

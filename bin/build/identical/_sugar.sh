@@ -153,7 +153,6 @@ _returnClean() {
 }
 
 # Output the `command ...` to stdout prior to running, then `execute` it
-# Usage: {fn} command ...
 # Argument: command ... - Any command and arguments to run.
 # Return Code: Any
 # Requires: printf decorate execute __decorateExtensionQuote __decorateExtensionEach
@@ -181,7 +180,7 @@ execute() {
 # Argument: value - String. A value.
 # Argument: from - String. When value matches `from`, instead print `to`
 # Argument: to - String. The value to print when `from` matches `value`
-# Argument: ... - Additional from-to pairs can be passed, first matching value is used, all values will be examined if none match
+# Argument: ... - Optional. String. Additional from-to pairs can be passed, first matching value is used, all values will be examined if none match
 convertValue() {
   local __handler="_${FUNCNAME[0]}" value="" from="" to=""
   # __IDENTICAL__ __checkHelp1__handler 1
@@ -210,10 +209,9 @@ _convertValue() {
 }
 
 # Run `command`, handle failure with `handler` with `code` and `command` as error
-# Usage: {fn} code handler command ...
 # Argument: code - Required. UnsignedInteger. Exit code to return
 # Argument: handler - Required. Function. Failure command, passed remaining arguments and error code.
-# Argument: command - Required. String. Command to run.
+# Argument: command ... - Required. Callable. Command to run.
 # Requires: isUnsignedInteger returnArgument isFunction isCallable
 catchCode() {
   local __count=$# __saved=("$@") __handler="_${FUNCNAME[0]}" code="${1-0}" command="${3-}"
@@ -233,23 +231,22 @@ _catchCode() {
 }
 
 # Run `command`, upon failure run `handler` with an environment error
-# Usage: {fn} handler command ...
 # Argument: handler - Required. Function. Failure command
-# Argument: command - Required. Command to run.
+# Argument: command ... - Required. Callable. Command to run.
 catchEnvironment() {
   catchCode 1 "$@" || return $?
 }
 
 # Run `command`, upon failure run `handler` with an argument error
 # Argument: handler - Required. Function. Failure command
-# Argument: command - Required. Command to run.
+# Argument: command ... - Required. Callable. Command to run.
 catchArgument() {
   catchCode 2 "$@" || return $?
 }
 
 # Run `handler` with an environment error
 # Argument: handler - Required. Function. Failure command
-# Argument: message - Optional. Error message to display.
+# Argument: message ... - Optional. Error message to display.
 throwEnvironment() {
   local __handler="${1-}"
   # __IDENTICAL__ __checkHandler 1
@@ -259,7 +256,7 @@ throwEnvironment() {
 
 # Run `handler` with an argument error
 # Argument: handler - Required. Function. Failure command
-# Argument: message - Optional. Error message to display.
+# Argument: message ... - Optional. Error message to display.
 throwArgument() {
   local __handler="${1-}"
   # __IDENTICAL__ __checkHandler 1

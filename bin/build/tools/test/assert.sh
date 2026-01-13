@@ -9,12 +9,13 @@
 # Docs: contextOpen ./documentation/source/tools/assert.md
 # Test: contextOpen ./test/tools/assert-tests.sh
 
-#
 # Assert two strings are equal.
 #
 # If this fails it will output an error and exit.
 #
-# Usage: assertEquals expected actual [ message ]
+# Argument: expected - Required. String. Expected string.
+# Argument: actual - Required. String. Actual string
+# Argument: message ... - Optional. String. Message to output if the assertion fails
 # DOC TEMPLATE: assert-common 18
 # Argument: --help - Optional. Flag. Display this help.
 # Argument: --line lineNumber - Optional. Integer. Line number of calling function. Typically this is not required as it is computed from the calling function using `--line-depth`.
@@ -34,9 +35,6 @@
 # Argument: --dump-binary - Optional. Flag. Output `stderr` and `stdout` after test regardless, displayed as binary.
 # Argument: --head - Optional. Flag. When outputting `stderr` or `stdout`, output the head of the file.
 # Argument: --tail - Optional. Flag. When outputting `stderr` or `stdout`, output the tail of the file. (Default)
-# Argument: expected - Expected string
-# Argument: actual - Actual string
-# Argument: message - Message to output if the assertion fails
 # Example:     assertEquals "$(alignRight 4 "hi")" "  hi" "alignRight not working"
 # Reviewed: 2023-11-12
 #
@@ -143,7 +141,7 @@ _assertStringEmpty() {
 # Argument: --dump-binary - Optional. Flag. Output `stderr` and `stdout` after test regardless, displayed as binary.
 # Argument: --head - Optional. Flag. When outputting `stderr` or `stdout`, output the head of the file.
 # Argument: --tail - Optional. Flag. When outputting `stderr` or `stdout`, output the tail of the file. (Default)
-# Argument: expected - Required. Expected string.
+# Argument: expected - Required. String. Expected string.
 # Argument: actual - Required. Actual string.
 # Argument: message - Message to output if the assertion fails. Optional.
 # Example:     assertNotEquals "$(uname -s)" "FreeBSD" "Not compatible with FreeBSD"
@@ -162,8 +160,8 @@ _assertNotEquals() {
 #
 # If this fails it will output an error and exit.
 #
-# Argument: expectedExitCode - UnsignedInteger. A numeric exit code expected from the command.
-# Argument: command - Callable. The command to run
+# Argument: expectedExitCode - UnsignedInteger. Required. A numeric exit code expected from the command.
+# Argument: command - Callable. Required. The command to run
 # Argument: arguments - Optional. Arguments. Any arguments to pass to the command to run
 # DOC TEMPLATE: assert-common 18
 # Argument: --help - Optional. Flag. Display this help.
@@ -240,8 +238,8 @@ _assertNotExitCode() {
 #
 # Assert one string contains another (case-sensitive)
 #
-# Usage: {fn} needle haystack
-#
+# Argument: needle - String. Text we are looking for.
+# Argument: haystack ... - String. One or more strings to find `needle` in - it must be found in all haystacks.
 # DOC TEMPLATE: assert-common 18
 # Argument: --help - Optional. Flag. Display this help.
 # Argument: --line lineNumber - Optional. Integer. Line number of calling function. Typically this is not required as it is computed from the calling function using `--line-depth`.
@@ -261,8 +259,6 @@ _assertNotExitCode() {
 # Argument: --dump-binary - Optional. Flag. Output `stderr` and `stdout` after test regardless, displayed as binary.
 # Argument: --head - Optional. Flag. When outputting `stderr` or `stdout`, output the head of the file.
 # Argument: --tail - Optional. Flag. When outputting `stderr` or `stdout`, output the tail of the file. (Default)
-# Argument: needle - String. Text we are looking for.
-# Argument: haystack ... - String. One or more strings to find `needle` in - it must be found in all haystacks.
 # Return Code: 0 - The assertion succeeded
 # Return Code: 1 - Assertion failed
 # Return Code: 2 - Bad arguments
@@ -278,8 +274,8 @@ _assertContains() {
 #
 # Assert one string does not contains another (case-sensitive)
 #
-# Usage: {fn} needle haystack
-#
+# Argument: needle - String. Text we are looking for.
+# Argument: haystack ... - String. One or more strings to find `needle` in - it must be found in no haystacks.
 # DOC TEMPLATE: assert-common 18
 # Argument: --help - Optional. Flag. Display this help.
 # Argument: --line lineNumber - Optional. Integer. Line number of calling function. Typically this is not required as it is computed from the calling function using `--line-depth`.
@@ -299,8 +295,6 @@ _assertContains() {
 # Argument: --dump-binary - Optional. Flag. Output `stderr` and `stdout` after test regardless, displayed as binary.
 # Argument: --head - Optional. Flag. When outputting `stderr` or `stdout`, output the head of the file.
 # Argument: --tail - Optional. Flag. When outputting `stderr` or `stdout`, output the tail of the file. (Default)
-# Argument: needle - String. Text we are looking for.
-# Argument: haystack ... - String. One or more strings to find `needle` in - it must be found in no haystacks.
 # Return Code: 0 - The assertion succeeded
 # Return Code: 1 - Assertion failed
 # Return Code: 2 - Bad arguments
@@ -321,9 +315,9 @@ _assertNotContains() {
 # ▀▀ ▀▘▘  ▝▀▘▝▀  ▀ ▝▀ ▘  ▗▄▘
 #
 
-#
-# Usage: assertDirectoryExists directory [ message ... ]
-#
+# Summary: Test that a directory exists
+# Argument: directory - Directory. Required. Directory that should exist
+# Argument: message ... - String. Optional. An error message if this fails
 # DOC TEMPLATE: assert-common 18
 # Argument: --help - Optional. Flag. Display this help.
 # Argument: --line lineNumber - Optional. Integer. Line number of calling function. Typically this is not required as it is computed from the calling function using `--line-depth`.
@@ -343,14 +337,10 @@ _assertNotContains() {
 # Argument: --dump-binary - Optional. Flag. Output `stderr` and `stdout` after test regardless, displayed as binary.
 # Argument: --head - Optional. Flag. When outputting `stderr` or `stdout`, output the head of the file.
 # Argument: --tail - Optional. Flag. When outputting `stderr` or `stdout`, output the tail of the file. (Default)
-# Argument: directory - Directory that should exist
-# Argument: message - An error message if this fails
 # Return Code: 0 - If the assertion succeeds
 # Return Code: 1 - If the assertion fails
 # Environment: - This fails if `directory` is anything but a `directory`
 # Example:     assertDirectoryExists "$HOME" "HOME not found"
-# Summary: Test that a directory exists
-#
 assertDirectoryExists() {
   _assertDirectoryExistsHelper "_${FUNCNAME[0]}" "$@" || return $?
 }
@@ -359,9 +349,8 @@ _assertDirectoryExists() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-#
-# Usage: assertDirectoryDoesNotExist directory [ message ... ]
-#
+# Argument: directory - Directory. Required. Directory that should NOT exist
+# Argument: message ... - String. Optional. An error message if this fails
 # DOC TEMPLATE: assert-common 18
 # Argument: --help - Optional. Flag. Display this help.
 # Argument: --line lineNumber - Optional. Integer. Line number of calling function. Typically this is not required as it is computed from the calling function using `--line-depth`.
@@ -381,8 +370,6 @@ _assertDirectoryExists() {
 # Argument: --dump-binary - Optional. Flag. Output `stderr` and `stdout` after test regardless, displayed as binary.
 # Argument: --head - Optional. Flag. When outputting `stderr` or `stdout`, output the head of the file.
 # Argument: --tail - Optional. Flag. When outputting `stderr` or `stdout`, output the tail of the file. (Default)
-# Argument: directory - Directory that should NOT exist
-# Argument: message - An error message if this fails
 # Return Code: 0 - If the assertion succeeds
 # Return Code: 1 - If the assertion fails
 # Environment: - This fails if `directory` is anything at all, even a non-directory (such as a link)
@@ -398,9 +385,8 @@ _assertDirectoryDoesNotExist() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-#
-# Usage: {fn} directory [ message ... ]
-#
+# Argument: directory - Directory. Directory that should exist and be empty
+# Argument: message ... - String. Optional. An error message if this fails
 # DOC TEMPLATE: assert-common 18
 # Argument: --help - Optional. Flag. Display this help.
 # Argument: --line lineNumber - Optional. Integer. Line number of calling function. Typically this is not required as it is computed from the calling function using `--line-depth`.
@@ -420,8 +406,6 @@ _assertDirectoryDoesNotExist() {
 # Argument: --dump-binary - Optional. Flag. Output `stderr` and `stdout` after test regardless, displayed as binary.
 # Argument: --head - Optional. Flag. When outputting `stderr` or `stdout`, output the head of the file.
 # Argument: --tail - Optional. Flag. When outputting `stderr` or `stdout`, output the tail of the file. (Default)
-# Argument: directory - Directory that should exist and be empty
-# Argument: message - An error message if this fails
 # Return Code: 0 - If the assertion succeeds
 # Return Code: 1 - If the assertion fails
 # Environment: - This fails if `directory` is anything but a `directory`
@@ -437,9 +421,8 @@ _assertDirectoryEmpty() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-#
-# Usage: {fn} directory [ message ... ]
-#
+# Argument: directory - Directory. Directory that should exist and not be empty
+# Argument: message ... - String. Optional. An error message if this fails
 # DOC TEMPLATE: assert-common 18
 # Argument: --help - Optional. Flag. Display this help.
 # Argument: --line lineNumber - Optional. Integer. Line number of calling function. Typically this is not required as it is computed from the calling function using `--line-depth`.
@@ -459,8 +442,6 @@ _assertDirectoryEmpty() {
 # Argument: --dump-binary - Optional. Flag. Output `stderr` and `stdout` after test regardless, displayed as binary.
 # Argument: --head - Optional. Flag. When outputting `stderr` or `stdout`, output the head of the file.
 # Argument: --tail - Optional. Flag. When outputting `stderr` or `stdout`, output the tail of the file. (Default)
-# Argument: directory - Directory that should exist and not be empty
-# Argument: message - An error message if this fails
 # Return Code: 0 - If the assertion succeeds
 # Return Code: 1 - If the assertion fails
 # Examples: {fn} "$INSTALL_PATH" "INSTALL_PATH should contain files"
@@ -484,9 +465,8 @@ _assertDirectoryNotEmpty() {
 # ▘  ▀▘▘▝▀▘
 #
 
-#
-# Usage: {fn} item [ message ... ]
-#
+# Argument: item - File. Required. File that should exist
+# Argument: message ... - String. Optional. An error message if this fails
 # DOC TEMPLATE: assert-common 18
 # Argument: --help - Optional. Flag. Display this help.
 # Argument: --line lineNumber - Optional. Integer. Line number of calling function. Typically this is not required as it is computed from the calling function using `--line-depth`.
@@ -506,8 +486,6 @@ _assertDirectoryNotEmpty() {
 # Argument: --dump-binary - Optional. Flag. Output `stderr` and `stdout` after test regardless, displayed as binary.
 # Argument: --head - Optional. Flag. When outputting `stderr` or `stdout`, output the head of the file.
 # Argument: --tail - Optional. Flag. When outputting `stderr` or `stdout`, output the tail of the file. (Default)
-# Argument: item - File that should exist
-# Argument: message - An error message if this fails
 # Return Code: 0 - If the assertion succeeds
 # Return Code: 1 - If the assertion fails
 # Environment: - This fails if `file` is anything but a `file`
@@ -522,9 +500,8 @@ _assertFileExists() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-#
-# Usage: {fn} item [ message ... ]
-#
+# Argument: item - String. Required. File that should NOT exist
+# Argument: message ... - String. Optional. An error message if this fails
 # DOC TEMPLATE: assert-common 18
 # Argument: --help - Optional. Flag. Display this help.
 # Argument: --line lineNumber - Optional. Integer. Line number of calling function. Typically this is not required as it is computed from the calling function using `--line-depth`.
@@ -544,8 +521,6 @@ _assertFileExists() {
 # Argument: --dump-binary - Optional. Flag. Output `stderr` and `stdout` after test regardless, displayed as binary.
 # Argument: --head - Optional. Flag. When outputting `stderr` or `stdout`, output the head of the file.
 # Argument: --tail - Optional. Flag. When outputting `stderr` or `stdout`, output the tail of the file. (Default)
-# Argument: file - File that should NOT exist
-# Argument: message - An error message if this fails
 # Return Code: 0 - If the assertion succeeds
 # Return Code: 1 - If the assertion fails
 # Environment: - This fails if `file` is anything at all, even a non-file (such as a link)
@@ -573,7 +548,9 @@ _assertFileDoesNotExist() {
 #
 # If this fails it will output an error and exit.
 #
-# Usage: assertOutputEquals expected binary [ parameters ]
+# Argument: expected - EmptyString. Expected string to match output.
+# Argument: binary - Callable. Required. Binary to run and evaluate output
+# Argument: ... - Arguments. Optional. Any additional arguments to `binary`.
 # DOC TEMPLATE: assert-common 18
 # Argument: --help - Optional. Flag. Display this help.
 # Argument: --line lineNumber - Optional. Integer. Line number of calling function. Typically this is not required as it is computed from the calling function using `--line-depth`.
@@ -593,9 +570,6 @@ _assertFileDoesNotExist() {
 # Argument: --dump-binary - Optional. Flag. Output `stderr` and `stdout` after test regardless, displayed as binary.
 # Argument: --head - Optional. Flag. When outputting `stderr` or `stdout`, output the head of the file.
 # Argument: --tail - Optional. Flag. When outputting `stderr` or `stdout`, output the tail of the file. (Default)
-# Argument: expected - Expected string
-# Argument: binary - Binary to run and evaluate output
-# Argument: parameters - Any additional parameters to binary
 # Example:     assertOutputEquals "2023" date +%Y
 # Reviewed: 2023-11-12
 #
@@ -611,8 +585,11 @@ _assertOutputEquals() {
 # Run a command and expect the output to contain the occurrence of a string.
 #
 # If this fails it will output the command result to stdout.
-#
-# Usage: {fn} expected command [ arguments ... ]
+# Argument: expected - String. Required. A string to expect in the output
+# Argument: binary - Callable. Required. Binary to run and evaluate output
+# Argument: ... - Arguments. Optional. Any additional arguments to `binary`.
+# Argument: --exit - Assert exit status of process to be this number
+# Argument: --stderr - Also include standard error in output checking
 # DOC TEMPLATE: assert-common 18
 # Argument: --help - Optional. Flag. Display this help.
 # Argument: --line lineNumber - Optional. Integer. Line number of calling function. Typically this is not required as it is computed from the calling function using `--line-depth`.
@@ -632,11 +609,6 @@ _assertOutputEquals() {
 # Argument: --dump-binary - Optional. Flag. Output `stderr` and `stdout` after test regardless, displayed as binary.
 # Argument: --head - Optional. Flag. When outputting `stderr` or `stdout`, output the head of the file.
 # Argument: --tail - Optional. Flag. When outputting `stderr` or `stdout`, output the tail of the file. (Default)
-# Argument: expected - A string to expect in the output
-# Argument: command - The command to run
-# Argument: arguments - Any arguments to pass to the command to run
-# Argument: - `--exit` - Assert exit status of process to be this number
-# Argument: - `--stderr` - Also include standard error in output checking
 # Return Code: 0 - If the output contains at least one occurrence of the string
 # Return Code: 1 - If output does not contain string
 # Example:     {fn} Success complex-thing.sh --dry-run
@@ -655,7 +627,11 @@ _assertOutputContains() {
 #
 # If this fails it will output the command result to stdout.
 #
-# Usage: assertOutputDoesNotContain expected command [ arguments ... ]
+# Argument: expected - String. Required. A string NOT to expect in the output
+# Argument: binary - Callable. Required. Binary to run and evaluate output
+# Argument: ... - Arguments. Optional. Any additional arguments to `binary`.
+# Argument: --exit - Assert exit status of process to be this number
+# Argument: --stderr - Also include standard error in output checking
 # DOC TEMPLATE: assert-common 18
 # Argument: --help - Optional. Flag. Display this help.
 # Argument: --line lineNumber - Optional. Integer. Line number of calling function. Typically this is not required as it is computed from the calling function using `--line-depth`.
@@ -675,11 +651,6 @@ _assertOutputContains() {
 # Argument: --dump-binary - Optional. Flag. Output `stderr` and `stdout` after test regardless, displayed as binary.
 # Argument: --head - Optional. Flag. When outputting `stderr` or `stdout`, output the head of the file.
 # Argument: --tail - Optional. Flag. When outputting `stderr` or `stdout`, output the tail of the file. (Default)
-# Argument: expected - A string to NOT expect in the output
-# Argument: command - The command to run
-# Argument: arguments - Any arguments to pass to the command to run
-# Argument: - `--exit` - Assert exit status of process to be this number
-# Argument: - `--stderr` - Also include standard error in output checking
 # Return Code: 0 - If the output contains at least one occurrence of the string
 # Return Code: 1 - If output does not contain string
 # Example:     assertOutputDoesNotContain Success complex-thing.sh --dry-run
@@ -694,8 +665,8 @@ _assertOutputDoesNotContain() {
 }
 
 # Assert a file contains one or more strings
-# Usage: {fn} fileName string0 [ ... ]
-#
+# Argument: fileName - File. Required. File to search
+# Argument: string ... - String. Required. One or more strings which must be found on at least one line in the file
 # DOC TEMPLATE: assert-common 18
 # Argument: --help - Optional. Flag. Display this help.
 # Argument: --line lineNumber - Optional. Integer. Line number of calling function. Typically this is not required as it is computed from the calling function using `--line-depth`.
@@ -715,9 +686,6 @@ _assertOutputDoesNotContain() {
 # Argument: --dump-binary - Optional. Flag. Output `stderr` and `stdout` after test regardless, displayed as binary.
 # Argument: --head - Optional. Flag. When outputting `stderr` or `stdout`, output the head of the file.
 # Argument: --tail - Optional. Flag. When outputting `stderr` or `stdout`, output the tail of the file. (Default)
-# Argument: fileName - File to search
-# Argument: string0 ... - One or more strings which must be found on at least one line in the file
-#
 # Return Code: 0 - If the assertion succeeds
 # Return Code: 1 - If the assertion fails
 # Environment: If the file does not exist, this will fail.
@@ -734,8 +702,8 @@ _assertFileContains() {
 }
 
 # Assert a file does not contains any occurrence of one or more strings
-# Usage: {fn} fileName string0 [ ... ]
-#
+# Argument: fileName - File. Required. File to search
+# Argument: string ... - String. Required. One or more strings which must NOT be found anywhere in `fileName`
 # DOC TEMPLATE: assert-common 18
 # Argument: --help - Optional. Flag. Display this help.
 # Argument: --line lineNumber - Optional. Integer. Line number of calling function. Typically this is not required as it is computed from the calling function using `--line-depth`.
@@ -755,8 +723,6 @@ _assertFileContains() {
 # Argument: --dump-binary - Optional. Flag. Output `stderr` and `stdout` after test regardless, displayed as binary.
 # Argument: --head - Optional. Flag. When outputting `stderr` or `stdout`, output the head of the file.
 # Argument: --tail - Optional. Flag. When outputting `stderr` or `stdout`, output the tail of the file. (Default)
-# Argument: fileName - File to search
-# Argument: string0 ... - One or more strings which must NOT be found anywhere in `fileName`
 # Return Code: 1 - If the assertions fails
 # Return Code: 0 - If the assertion succeeds
 # Environment: If the file does not exist, this will fail.
@@ -772,7 +738,8 @@ _assertFileDoesNotContain() {
 }
 
 # Assert a file has an expected size in bytes
-# Usage: {fn} expectedSize [ fileName ... ]
+# Argument: expectedSize - PositiveInteger. Required. Integer file size which `fileName` should be, in bytes.
+# Argument: fileName ... - File. Required. One ore more file which should be `expectedSize` bytes in size.
 #
 # DOC TEMPLATE: assert-common 18
 # Argument: --help - Optional. Flag. Display this help.
@@ -793,8 +760,6 @@ _assertFileDoesNotContain() {
 # Argument: --dump-binary - Optional. Flag. Output `stderr` and `stdout` after test regardless, displayed as binary.
 # Argument: --head - Optional. Flag. When outputting `stderr` or `stdout`, output the head of the file.
 # Argument: --tail - Optional. Flag. When outputting `stderr` or `stdout`, output the tail of the file. (Default)
-# Argument: expectedSize - Integer file size which `fileName` should be, in bytes.
-# Argument: fileName ... - One ore more file which should be `expectedSize` bytes in size.
 # Return Code: 1 - If the assertions fails
 # Return Code: 0 - If the assertion succeeds
 # Environment: If the file does not exist, this will fail.
@@ -810,7 +775,6 @@ _assertFileSize() {
 }
 
 # Assert a file does NOT have an expected size in bytes
-# Usage: {fn} expectedSize [ fileName ... ]
 #
 # DOC TEMPLATE: assert-common 18
 # Argument: --help - Optional. Flag. Display this help.
@@ -831,7 +795,7 @@ _assertFileSize() {
 # Argument: --dump-binary - Optional. Flag. Output `stderr` and `stdout` after test regardless, displayed as binary.
 # Argument: --head - Optional. Flag. When outputting `stderr` or `stdout`, output the head of the file.
 # Argument: --tail - Optional. Flag. When outputting `stderr` or `stdout`, output the tail of the file. (Default)
-# Argument: expectedSize - Integer file size which `fileName` should NOT be, in bytes.
+# Argument: expectedSize - PositiveInteger. Required. Integer file size which `fileName` should NOT be, in bytes.
 # Argument: fileName ... - Required. File. One ore more file which should NOT be `expectedSize` bytes in size.
 # Return Code: 1 - If the assertions fails
 # Return Code: 0 - If the assertion succeeds
@@ -848,7 +812,6 @@ _assertNotFileSize() {
 }
 
 # Assert a file is empty (zero sized)
-# Usage: {fn} [ fileName ... ]
 #
 # DOC TEMPLATE: assert-common 18
 # Argument: --help - Optional. Flag. Display this help.
@@ -885,7 +848,6 @@ _assertZeroFileSize() {
 }
 
 # Assert a file is non-empty (non-zero sized)
-# Usage: {fn} [ fileName ... ]
 #
 # DOC TEMPLATE: assert-common 18
 # Argument: --help - Optional. Flag. Display this help.
@@ -951,9 +913,8 @@ _assertNotZeroFileSize() {
 # Argument: --dump-binary - Optional. Flag. Output `stderr` and `stdout` after test regardless, displayed as binary.
 # Argument: --head - Optional. Flag. When outputting `stderr` or `stdout`, output the head of the file.
 # Argument: --tail - Optional. Flag. When outputting `stderr` or `stdout`, output the tail of the file. (Default)
-# Usage: {fn} expected actual [ message ]
-# Argument: leftValue - Value to compare on the left hand side of the comparison
-# Argument: rightValue - Value to compare on the right hand side of the comparison
+# Argument: leftValue - Integer. Required. Value to compare on the left hand side of the comparison
+# Argument: rightValue - Integer. Required. Value to compare on the right hand side of the comparison
 # Argument: message - Message to output if the assertion fails
 # Example:     assertGreaterThan 3 "$found"
 # Reviewed: 2023-11-14
@@ -987,9 +948,8 @@ _assertGreaterThan() {
 # Argument: --dump-binary - Optional. Flag. Output `stderr` and `stdout` after test regardless, displayed as binary.
 # Argument: --head - Optional. Flag. When outputting `stderr` or `stdout`, output the head of the file.
 # Argument: --tail - Optional. Flag. When outputting `stderr` or `stdout`, output the tail of the file. (Default)
-# Usage: {fn} expected actual [ message ]
-# Argument: leftValue - Value to compare on the left hand side of the comparison
-# Argument: rightValue - Value to compare on the right hand side of the comparison
+# Argument: leftValue - Integer. Required. Value to compare on the left hand side of the comparison
+# Argument: rightValue - Integer. Required. Value to compare on the right hand side of the comparison
 # Argument: message - Message to output if the assertion fails
 # Example:     assertGreaterThanOrEqual 3 $found
 # Reviewed: 2023-11-12
@@ -1024,9 +984,8 @@ _assertGreaterThanOrEqual() {
 # Argument: --dump-binary - Optional. Flag. Output `stderr` and `stdout` after test regardless, displayed as binary.
 # Argument: --head - Optional. Flag. When outputting `stderr` or `stdout`, output the head of the file.
 # Argument: --tail - Optional. Flag. When outputting `stderr` or `stdout`, output the tail of the file. (Default)
-# Usage: {fn} expected actual [ message ]
-# Argument: leftValue - Value to compare on the left hand side of the comparison
-# Argument: rightValue - Value to compare on the right hand side of the comparison
+# Argument: leftValue - Integer. Required. Value to compare on the left hand side of the comparison
+# Argument: rightValue - Integer. Required. Value to compare on the right hand side of the comparison
 # Argument: message - Message to output if the assertion fails
 # Example:     assertLessThan 3 $found
 # Reviewed: 2023-11-12
@@ -1042,7 +1001,6 @@ _assertLessThan() {
 
 # Assert `leftValue <= rightValue`
 #
-# Usage: {fn} leftValue rightValue [ message ]
 # DOC TEMPLATE: assert-common 18
 # Argument: --help - Optional. Flag. Display this help.
 # Argument: --line lineNumber - Optional. Integer. Line number of calling function. Typically this is not required as it is computed from the calling function using `--line-depth`.
@@ -1062,8 +1020,8 @@ _assertLessThan() {
 # Argument: --dump-binary - Optional. Flag. Output `stderr` and `stdout` after test regardless, displayed as binary.
 # Argument: --head - Optional. Flag. When outputting `stderr` or `stdout`, output the head of the file.
 # Argument: --tail - Optional. Flag. When outputting `stderr` or `stdout`, output the tail of the file. (Default)
-# Argument: leftValue - Value to compare on the left hand side of the comparison
-# Argument: rightValue - Value to compare on the right hand side of the comparison
+# Argument: leftValue - Integer. Required. Value to compare on the left hand side of the comparison
+# Argument: rightValue - Integer. Required. Value to compare on the right hand side of the comparison
 # Argument: message - Message to output if the assertion fails
 # Example:     assertLessThanOrEqual 3 $found
 # Reviewed: 2023-11-12

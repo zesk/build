@@ -51,7 +51,8 @@ _iTerm2_osc() {
 }
 
 # Set an iTerm name to value
-# Usage: name value
+# Argument: name - String. Required.
+# Argument: value - EmptyString. Required.
 _iTerm2_setValue() {
   _iTerm2_osc "$(printf "1337;%s=%s" "$@")"
 }
@@ -70,7 +71,8 @@ __iTerm2HideOutput() {
   _iTerm2_osc "133;C;"
 }
 
-# Usage: __iTerm2SetUserVariable key value
+# Argument: key
+# Argument: value
 __iTerm2SetUserVariable() {
   local name="${1-}" value="${2-}"
 
@@ -575,7 +577,6 @@ _iTerm2SetColors() {
 }
 
 # Attract the operator
-# Usage: {fn} [ true | false | ! | fireworks ]
 # DOC TEMPLATE: iTerm2IgnoreArgument 1
 # Argument: --ignore | -i - Flag. Optional. If the current terminal is not iTerm2, then exit status 0 and do nothing.
 # Argument: --verbose | -v - Flag. Optional. Verbose mode. Show what you are doing.
@@ -656,10 +657,9 @@ _iTerm2Attention() {
 }
 
 # Set the badge for the iTerm2 console
-# Usage: {fn} [ --ignore | -i ] message ...
 # DOC TEMPLATE: iTerm2IgnoreArgument 1
 # Argument: --ignore | -i - Flag. Optional. If the current terminal is not iTerm2, then exit status 0 and do nothing.
-# Argument: message ... - Any message to display as the badge
+# Argument: message ... - String. Required. Any message to display as the badge
 # Environment: LC_TERMINAL
 iTerm2Badge() {
   local handler="_${FUNCNAME[0]}"
@@ -690,7 +690,7 @@ iTerm2Badge() {
     throwEnvironment "$handler" "Not iTerm2" || return $?
   fi
 
-  _iTerm2_setBase64Value "SetBadgeFormat" "${message[@]}"
+  _iTerm2_setBase64Value "SetBadgeFormat" "${message[@]+"${message[@]}"}"
 }
 _iTerm2Badge() {
   # __IDENTICAL__ usageDocument 1

@@ -10,7 +10,11 @@
 #
 # Thanks for your consideration.
 
-# Usage: {fn} usage repairSource ... -- directory findArgs ...
+# Argument: handler
+# Argument: repairSource ...
+# Argument: --
+# Argument: directory
+# Argument: findArgs ...
 # stdout: list of files
 __identicalCheckGenerateSearchFiles() {
   local handler="$1" && shift

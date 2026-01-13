@@ -166,10 +166,6 @@ testInstallBinBuildNetwork() {
   catchReturn "$handler" rm -rf "$testDir" || return $?
 }
 
-#
-# fn: {base}
-# Usage: {fn} buildHome
-#
 testInstallBinBuild() {
   local handler="_${FUNCNAME[0]}"
   local testDir testBinBuild section home matches

@@ -2,8 +2,6 @@
 #
 # Map environment to values in a target file
 #
-# Usage: map.sh [ --prefix prefixString ] [ --suffix suffixString ] [ env0 ... ]
-#
 # Map environment variables and convert input file tokens to values of environment variables.
 #
 # Renamed to `map.sh` in 2023 to keep it short and sweet.
@@ -37,12 +35,12 @@ _returnMessage() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# Test if an argument is an unsigned integer
+# Summary: Is value an unsigned integer?
+# Test if a value is a 0 or greater integer. Leading "+" is ok.
 # Source: https://stackoverflow.com/questions/806906/how-do-i-test-if-a-variable-is-a-number-in-bash
 # Credits: F. Hauri - Give Up GitHub (isnum_Case)
 # Original: is_uint
 # Argument: value - EmptyString. Value to test if it is an unsigned integer.
-# Usage: {fn} argument ...
 # Return Code: 0 - if it is an unsigned integer
 # Return Code: 1 - if it is not an unsigned integer
 # Requires: returnMessage
@@ -57,7 +55,7 @@ _isUnsignedInteger() {
 
 # <-- END of IDENTICAL returnMessage
 
-# IDENTICAL _tinySugar 74
+# IDENTICAL _tinySugar 72
 
 # Run `handler` with an argument error
 # Argument: handler - Function. Required. Error handler.
@@ -74,9 +72,8 @@ throwEnvironment() {
 }
 
 # Run `command`, upon failure run `handler` with an argument error
-# Usage: {fn} handler command ...
 # Argument: handler - Required. String. Failure command
-# Argument: command - Required. Command to run.
+# Argument: command ... - Required. Command to run.
 # Requires: throwArgument
 catchArgument() {
   local handler="${1-}"
@@ -84,9 +81,8 @@ catchArgument() {
 }
 
 # Run `command`, upon failure run `handler` with an environment error
-# Usage: {fn} handler command ...
 # Argument: handler - Required. String. Failure command
-# Argument: command - Required. Command to run.
+# Argument: command ... - Required. Command to run.
 # Requires: throwEnvironment
 catchEnvironment() {
   local handler="${1-}"
@@ -233,7 +229,7 @@ _bashFunctionComment() {
 # Argument: value - String. A value.
 # Argument: from - String. When value matches `from`, instead print `to`
 # Argument: to - String. The value to print when `from` matches `value`
-# Argument: ... - Additional from-to pairs can be passed, first matching value is used, all values will be examined if none match
+# Argument: ... - Optional. String. Additional from-to pairs can be passed, first matching value is used, all values will be examined if none match
 convertValue() {
   local __handler="_${FUNCNAME[0]}" value="" from="" to=""
   # __IDENTICAL__ __checkHelp1__handler 1
@@ -507,11 +503,10 @@ __validateTypeCallable() {
   printf "%s\n" "${1-}"
 }
 
-# IDENTICAL decorate 244
+# IDENTICAL decorate 245
 
 # Sets the environment variable `BUILD_COLORS` if not set, uses `TERM` to calculate
 #
-# Usage: hasColors
 # DOC TEMPLATE: --help 1
 # Argument: --help - Optional. Flag. Display this help.
 # Return Code: 0 - Console or output supports colors
@@ -548,7 +543,11 @@ _hasColors() {
 #
 # Semantics-based
 #
-# Usage: {fn} label lightStartCode darkStartCode endCode [ -n ] [ message ]
+# Argument: label - Text label
+# Argument: lightStartCode - Escape code label for light mode (color)
+# Argument: darkStartCode - Escape code label for dark mode (color)
+# Argument: endCode - Escape end code
+# Argument: text ... - Text to output.
 # Requires: hasColors printf
 __decorate() {
   local prefix="$1" start="$2" dp="$3" end="$4" && shift 4
@@ -582,9 +581,8 @@ _decorations() {
 }
 
 # Singular decoration function
-# Usage: decorate style [ text ... ]
 # Argument: style - String. Required. One of: reset underline no-underline bold no-bold black black-contrast blue cyan green magenta orange red white yellow bold-black bold-black-contrast bold-blue bold-cyan bold-green bold-magenta bold-orange bold-red bold-white bold-yellow code info notice success warning error subtle label value decoration
-# Argument: text - Text to output. If not supplied, outputs a code to change the style to the new style.
+# Argument: text ... - Optional. String. Text to output. If not supplied, outputs a code to change the style to the new style. May contain arguments for `style`.
 # You can extend this function by writing a your own extension `__decorationExtensionCustom` is called for `decorate custom`.
 # stdout: Decorated text
 # Environment: __BUILD_COLORS - String. Cached color lookup.
@@ -688,7 +686,6 @@ decoration=45;97 45;30
 }
 
 # fn: decorate each
-# Usage: decorate each decoration argument1 argument2 ...
 # Runs the following command on each subsequent argument for formatting
 # Also supports formatting input lines instead (on the same line)
 # Example:     decorate each code "$@"
@@ -868,24 +865,23 @@ _environmentVariables() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# IDENTICAL mapEnvironment 87
+# IDENTICAL mapEnvironment 86
 
 # Summary: Convert tokens in files to environment variable values
 #
 # Map tokens in the input stream based on environment values with the same names.
 # Converts tokens in the form `{ENVIRONMENT_VARIABLE}` to the associated value.
 # Undefined values are not converted.
-# Usage: {fn} [ environmentName ... ]
 # This one does it like `mapValue`
+# Environment is accessed via arguments passed or entire exported environment value space are and mapped to the destination.
 # See: mapValue
-# DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
 # Argument: environmentVariableName - Optional. String. Map this value only. If not specified, all environment variables are mapped.
 # Argument: --prefix - Optional. String. Prefix character for tokens, defaults to `{`.
 # Argument: --suffix - Optional. String. Suffix character for tokens, defaults to `}`.
 # Argument: --search-filter - Zero or more. Callable. Filter for search tokens. (e.g. `lowercase`)
 # Argument: --replace-filter - Zero or more. Callable. Filter for replacement strings. (e.g. `trimSpace`)
-# Environment: Argument-passed or entire environment variables which are exported are used and mapped to the destination.
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
 # Example:     printf %s "{NAME}, {PLACE}.\n" | NAME=Hello PLACE=world mapEnvironment NAME PLACE
 # Requires: environmentVariables cat throwEnvironment catchEnvironment
 # Requires: throwArgument decorate validate

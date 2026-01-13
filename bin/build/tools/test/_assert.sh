@@ -385,8 +385,6 @@ _assertConditionHelper() {
   return $exitCode
 }
 
-# Usage: {fn} success thisName fileName string0 [ ... ]
-#
 # Argument: thisName - Reported function for success or failure
 # Argument: fileName - File to search
 # Argument: string0 ... - One or more strings which must NOT be found anywhere in `fileName`
@@ -481,7 +479,8 @@ __assertFileContainsHelper() {
 }
 
 # Generic formatter
-# Usage: {fn} testPassed arguments
+# Argument: testPassed
+# Argument: arguments
 __resultFormatter() {
   local testPassed="${1-}" success="${2-}"
 
@@ -581,7 +580,6 @@ ___assertIsEmptyFormat() {
 # assert numeric
 #
 #=== === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === ===
-# Usage: {fn} function ... leftValue rightValue message ... comparison
 _assertNumericHelper() {
   local handler="$1" && shift
   _assertConditionHelper "$handler" --test ___assertNumericTest --formatter ___assertNumericFormat "$@" || return $?
@@ -766,12 +764,14 @@ ___assertOutputEqualsFormat() {
   printf -- "%s %s %s %s" "$message" "$(decorate code "$(cat)")" "$(__resultText "$testPassed" "$verb")" "$(__resultTextSize "$testPassed" "$expected")"
 }
 
-# Usage: {fn} thisName arguments
+# Argument: thisName
+# Argument: arguments
 __assertFileContainsThis() {
   __assertFileContainsHelper true "$@" || return $?
 }
 
-# Usage: {fn} thisName arguments
+# Argument: thisName
+# Argument: arguments
 __assertFileDoesNotContainThis() {
   __assertFileContainsHelper false "$@" || return $?
 }
@@ -785,8 +785,7 @@ __assertFileDoesNotContainThis() {
 #
 # If this fails it will output an error and exit.
 #
-# Usage: {fn} handler expectedExitCode command [ arguments ... ]
-#
+# Argument: handler - Function. Required. Error handler.
 # Argument: expectedExitCode - A numeric exit code expected from the command
 # Argument: command - The command to run
 # Argument: arguments - Any arguments to pass to the command to run
@@ -825,7 +824,6 @@ ___assertExitCodeFormat() {
 #
 # If this fails it will output the command result to stdout.
 #
-# Usage: {fn} expected command [ arguments ... ]
 # Argument: expected - A string to expect in the output
 # Argument: command - The command to run
 # Argument: arguments - Any arguments to pass to the command to run

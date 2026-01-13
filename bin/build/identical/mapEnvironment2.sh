@@ -14,17 +14,16 @@
 # Map tokens in the input stream based on environment values with the same names.
 # Converts tokens in the form `{ENVIRONMENT_VARIABLE}` to the associated value.
 # Undefined values are not converted.
-# Usage: {fn} [ environmentName ... ]
 # This one does it like `mapValue`
+# Environment is accessed via arguments passed or entire exported environment value space are and mapped to the destination.
 # See: mapValue
-# DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
 # Argument: environmentVariableName - Optional. String. Map this value only. If not specified, all environment variables are mapped.
 # Argument: --prefix - Optional. String. Prefix character for tokens, defaults to `{`.
 # Argument: --suffix - Optional. String. Suffix character for tokens, defaults to `}`.
 # Argument: --search-filter - Zero or more. Callable. Filter for search tokens. (e.g. `lowercase`)
 # Argument: --replace-filter - Zero or more. Callable. Filter for replacement strings. (e.g. `trimSpace`)
-# Environment: Argument-passed or entire environment variables which are exported are used and mapped to the destination.
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
 # Example:     printf %s "{NAME}, {PLACE}.\n" | NAME=Hello PLACE=world mapEnvironment NAME PLACE
 # Requires: environmentVariables cat throwEnvironment catchEnvironment
 # Requires: throwArgument decorate validate

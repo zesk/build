@@ -107,7 +107,6 @@ __hookRunner() {
 #
 # Default hooks (scripts) can be found in the current build version at `bin/build/hooks/`
 #
-# Usage: {fn} [ --application applicationHome ] hookName [ arguments ... ]
 # Argument: --application applicationHome - Path. Optional. Directory of alternate application home.
 # Argument: --extensions extensionList - ColonDelimitedList. Optional. List of extensions to search, in order for matching files in each hook directory. Defaults to `BUILD_HOOK_EXTENSIONS`.
 # Argument: --next scriptName - File. Optional. Run the script found *after* the named script, if any. Allows easy chaining of scripts.
@@ -133,7 +132,6 @@ _hookRun() {
 #
 # Identical to `hookRun` but returns exit code zero if the hook does not exist.
 #
-# Usage: {fn} [ --application applicationHome ] hookName [ arguments ... ]
 # Argument: --next scriptName - File. Optional. Run the script found *after* the named script, if any. Allows easy chaining of scripts.
 # Argument: --application applicationHome - Path. Optional. Directory of alternate application home.
 # Argument: --extensions extensionList - ColonDelimitedList. Optional. List of extensions to search, in order for matching files in each hook directory. Defaults to `BUILD_HOOK_EXTENSIONS`.
@@ -171,7 +169,6 @@ _hookRunOptional() {
 #
 # Default hooks (scripts) can be found in the current build version at `bin/build/hooks/`
 #
-# Usage: {fn} [ --application applicationHome ] hookName [ arguments ... ]
 # Argument: --application applicationHome - Path. Optional. Directory of alternate application home.
 # Argument: --extensions extensionList - ColonDelimitedList. Optional. List of extensions to search, in order for matching files in each hook directory. Defaults to `BUILD_HOOK_EXTENSIONS`.
 # Argument: hookName ... - String. Required. Hook to source.
@@ -220,7 +217,6 @@ _hookSourceOptional() {
 #
 # Check if one or more hook exists. All hooks must exist to succeed.
 # Summary: Determine if a hook exists
-# Usage: {fn} [ --application applicationHome ] hookName0 [ hookName1 ... ]
 # Argument: --application applicationHome - Path. Optional. Directory of alternate application home. Can be specified more than once to change state.
 # Argument: --extensions extensionList - ColonDelimitedList. Optional. List of extensions to search, in order for matching files in each hook directory. Defaults to `BUILD_HOOK_EXTENSIONS`.
 # Argument: --next scriptName - File. Optional. Locate the script found *after* the named script, if any. Allows easy chaining of scripts.

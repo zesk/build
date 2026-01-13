@@ -12,9 +12,10 @@
 #
 # Summary: Install `python`
 # When this tool succeeds the `python` binary is available in the local operating system.
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
 # Return Code: 1 - If installation fails
 # Return Code: 0 - If installation succeeds
-# Binary: python.sh
 pythonInstall() {
   local handler="_${FUNCNAME[0]}"
   [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0

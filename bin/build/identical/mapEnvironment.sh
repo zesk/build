@@ -16,7 +16,7 @@
 # Map tokens in the input stream based on environment values with the same names.
 # Converts tokens in the form `{ENVIRONMENT_VARIABLE}` to the associated value.
 # Undefined values are not converted.
-# Usage: {fn} [ environmentName ... ]
+# Uses environment variables passed as arguments or entire exported environment variables are used and mapped to the destination.
 # TODO: Do this like `mapValue`
 # See: mapValue
 # Argument: environmentName - Optional. String. Map this value only. If not specified, all environment variables are mapped.
@@ -24,7 +24,6 @@
 # Argument: --suffix - Optional. String. Suffix character for tokens, defaults to `}`.
 # DOC TEMPLATE: --help 1
 # Argument: --help - Optional. Flag. Display this help.
-# Environment: Argument-passed or entire environment variables which are exported are used and mapped to the destination.
 # Example:     printf %s "{NAME}, {PLACE}.\n" | NAME=Hello PLACE=world mapEnvironment NAME PLACE
 # Requires: throwArgument read environmentVariables decorate sed cat rm throwEnvironment catchEnvironment returnClean
 # Requires: validate fileTemporaryName

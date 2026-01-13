@@ -7,7 +7,6 @@
 # Docs: ./documentation/source/tools/bash.md
 # Test: ./test/tools/bash-tests.sh
 
-# Usage: {fn} script ...
 # Argument: script - File. Required. Bash script to fetch requires tokens from.
 # Gets a list of the `Requires:` comments in a bash file
 # Returns a unique list of tokens

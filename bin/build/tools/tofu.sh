@@ -9,13 +9,13 @@
 # https://opentofu.org/docs/
 #
 
+# Add keys to enable apt to download tofu directly from opentofu.org
 #
-# Add keys to enable apt to download tofu directly from hashicorp.com
-#
-# Usage: aptKeyAddHashicorp
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
 # Return Code: 1 - if environment is awry
 # Return Code: 0 - All good to install terraform
-#
+# See: aptKeyRemoveOpenTofu
 aptKeyAddOpenTofu() {
   local handler="_${FUNCNAME[0]}"
   local args=(
@@ -34,13 +34,12 @@ _aptKeyAddOpenTofu() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-#
-# Add keys to enable apt to download tofu directly from hashicorp.com
-#
-# Usage: aptKeyAddHashicorp
+# Remove keys to disable apt to download tofu from opentofu.org
+# See: aptKeyAddOpenTofu
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
 # Return Code: 1 - Environment problems
 # Return Code: 0 - All good to install tofu
-#
 aptKeyRemoveOpenTofu() {
   local handler="_${FUNCNAME[0]}"
   __help "$handler" "$@" || return 0
@@ -51,12 +50,12 @@ _aptKeyRemoveOpenTofu() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-#
 # Install tofu binary
 #
-# Usage: {fn} [ package ... ]
-# Argument: package - Additional packages to install using `packageInstall`
-#
+# Argument: package - String. Optional. Additional packages to install using `packageInstall`
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
+# See: tofuUninstall packageInstall
 tofuInstall() {
   local handler="_${FUNCNAME[0]}" binary="tofu"
 
@@ -72,12 +71,12 @@ _tofuInstall() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-#
 # Uninstall tofu binary and apt sources keys
 #
-# Usage: {fn} [ package ... ]
-# Argument: package - Additional packages to uninstall using `packageUninstall`
-#
+# Argument: package - Optional. String. Additional packages to uninstall using `packageUninstall`
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
+# See: tofuInstall packageUninstall
 tofuUninstall() {
   local handler="_${FUNCNAME[0]}"
 

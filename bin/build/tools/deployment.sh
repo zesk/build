@@ -203,7 +203,6 @@ _deployBuildEnvironment() {
 # Current working directory on undo is `applicationHome/`
 # Note that these MAY be the same or different directories depending on how the application is linked to the deployment
 #
-# Usage: {fn} [ --revert | --cleanup ] [ --debug ] deployPath applicationId applicationPath
 # Argument: --debug - Enable debugging. Defaults to `BUILD_DEBUG`
 # Argument: --deploy - Optional. Flag, default setting - handles the remote deploy.
 # Argument: --revert - Optional. Flag, Revert changes just made.
@@ -330,7 +329,6 @@ _deployRemoteFinish() {
 
 # Revert a deployed application from a deployment repository
 #
-# Usage: {fn} [ --first ] deployHome applicationId applicationPath [ targetPackage ]
 # Argument: --first - Optional. Flag. Undo the first deployment.
 # Argument: deployHome - Required. Directory. The deployment repository database home.
 # Argument: applicationId - Required. The version to revert FROM (string)
@@ -418,26 +416,21 @@ _deploySuccessful() {
 }
 
 #
-# Usage: {fn} [ --revert | --cleanup ] [ --debug ] deployPath applicationId applicationPath [ targetPackage ]
-#
-
-#
 # Summary: Deploy current application to one or more hosts
-# Usage: {fn} [ --revert | --cleanup | --deploy ] [ --debug ] [ --help ] applicationId deployHome applicationPath [ userAtHost ... ]
 # Argument: --target target - Optional. String. Build target file base name, defaults to `app.tar.gz`
 # Argument: --deploy - Default. Flag. deploy an application to a remote host
+# Argument: --cleanup - Optional. Flag. After all hosts have been `--deploy`ed successfully the `--cleanup` step is run on all hosts to finish up (or clean up) the deployment.
 # Argument: --revert - Optional. Flag. Reverses a deployment
 # Argument: --commands - Optional. Flag. Display commands sent to server but do not execute them. For debugging or testing. Implies --skip-ssh-host
 # Argument: --skip-ssh-host - Optional. Flag. Do not add ssh hosts to known hosts file.
 # Argument: --add-ssh-host - Optional. Flag. Add hosts to known hosts file in SSH if not already added.
-
-# Argument: --cleanup - Optional. Flag. After all hosts have been `--deploy`ed successfully the `--cleanup` step is run on all hosts to finish up (or clean up) the deployment.
-# Argument: --help - Optional. Flag. Show help
 # Argument: --debug - Optional. Flag. Turn on debugging (defaults to `BUILD_DEBUG` environment variable)
 # Argument: --versions - deployHome - Required. Path. Remote path where we can store deployment state files.
 # Argument: --id applicationId - Required. String. The application package will contain a `.env` with `APPLICATION_ID` set to this Value
 # Argument: --application applicationPath - Required. Path. Path where the application will be deployed
 # Argument: userAtHost - Required. Strings. A list of space-separated values or arguments which match users at remote hosts. Due to shell quoting peculiarities you can pass in space-delimited arguments as single arguments.
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
 #
 # Deploy current application to host at applicationPath.
 #
@@ -752,8 +745,8 @@ _deployToRemote() {
 # Generate our commands file
 #
 # Argument commands must cd such that current directory is a project directory
-# Usage: {fn} remoteDirectory  [ --deploy | --revert | --finish ] applicationId deployHome applicationPath
-#
+# Argument: remoteDirectory - RemoteDirectory. Required.
+# Argument: remoteArguments - Arguments. Optional.
 __deployCommandsFile() {
   local appHome
   if buildDebugEnabled; then
@@ -791,7 +784,11 @@ __deploySSHOptions() {
   fi
 }
 
-# Usage: {fn} applicationPath remotePath buildTarget [ userHost ... ]
+# Argument: handler
+# Argument: applicationPath
+# Argument: remotePath
+# Argument: buildTarget -
+# Argument: userHost ... - Optional. String. Remote host names to deploy package to.
 # Create base directories and upload package
 __deployUploadPackage() {
   local start userHost

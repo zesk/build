@@ -28,7 +28,6 @@ _processSignal() {
 
 # Wait for processes not owned by this process to exit, and send signals to terminate processes.
 #
-# Usage: {fn} processId ...
 # Argument: processId - Integer. Required. Wait for process ID to exit.
 # Argument: --timeout seconds - Integer. Optional. Wait for this long after sending a signals to see if a process exits. If not supplied waits 1 second after each signal, then waits forever.
 # Argument: --signals signal - List of strings. Optional. Send each signal to processes, in order.
@@ -156,8 +155,7 @@ _processWait() {
 #
 # Outputs value of resident memory used by a process, value is in kilobytes
 #
-# Usage: {fn} pid
-# Argument: pid - Process ID of running process
+# Argument: pid - Integer. Required. Process ID of running process
 # Example:     > {fn} 23
 # Output: 423
 # Return Code: 0 - Success

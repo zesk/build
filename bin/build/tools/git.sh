@@ -22,12 +22,9 @@
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #------------------------------------------------------------------------------
 
-#
 # Installs the `git` binary
-# Usage: gitInstall [ package ... ]
 # Argument: package - Additional packages to install
 # Summary: Install git if needed
-#
 gitInstall() {
   __help "_${FUNCNAME[0]}" "$@" || return 0
   packageWhich git git "$@"
@@ -39,10 +36,8 @@ _gitInstall() {
 
 #
 # Uninstalls the `git` binary
-# Usage: {fn} [ package ... ]
 # Argument: package - Additional packages to uninstall
 # Summary: Uninstall git
-#
 gitUninstall() {
   __help "_${FUNCNAME[0]}" "$@" || return 0
   packageWhichUninstall git git "$@"
@@ -121,13 +116,9 @@ _gitTagDelete() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-#
 # Remove a tag everywhere and tag again on the current branch
 #
-# Usage: gitTagDelete [ tag ... ]
-# Argument: tag - The tag to delete locally and remote
-# Return Code: 2 - Any stage fails will result in this exit code. Partial deletion may occur.
-#
+# Argument: tag - Optional. String. The tag to tag again.
 gitTagAgain() {
   local handler="_${FUNCNAME[0]}" a=("$@")
 
@@ -151,10 +142,10 @@ _gitTagAgain() {
 # Fetches a list of tags from git and filters those which start with v and a digit and returns
 # them sorted by version correctly.
 #
-# Usage: gitVersionList
 # Return Code: 1 - If the `.git` directory does not exist
 # Return Code: 0 - Success
-#
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
 gitVersionList() {
   local handler="_${FUNCNAME[0]}"
   [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
@@ -167,8 +158,9 @@ _gitVersionList() {
 }
 
 # Get the last reported version.
-# Usage: gitVersionLast [ ignorePattern ]
 # Argument: ignorePattern - Optional. Specify a grep pattern to ignore; allows you to ignore current version
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
 gitVersionLast() {
   local handler="_${FUNCNAME[0]}"
   [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
@@ -242,8 +234,8 @@ _gitRepositoryChanged() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-#
-# Usage: gitShowChanges
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
 # Return Code: 0 - the repo has been modified
 # Return Code: 1 - the repo has NOT bee modified
 #
@@ -261,7 +253,8 @@ _gitShowChanges() {
 }
 
 #
-# Usage: gitShowStatus
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
 # Return Code: 0 - the repo has been modified
 # Return Code: 1 - the repo has NOT bee modified
 #
@@ -336,8 +329,7 @@ _gitRemoteHosts() {
 # - `s` - for **staging**
 # - `rc` - for **release candidate**
 #
-# Usage: {fn} [ --suffix versionSuffix ] Tag version in git
-# Argument: --suffix - word to use between version and index as: `{current}rc{nextIndex}`
+# Argument: --suffix versionSuffix - String. Optional. word to use between version and index as: `{current}rc{nextIndex}`
 # Hook: version-current
 # Environment: BUILD_VERSION_SUFFIX - String. Version suffix to use as a default. If not specified the default is `rc`.
 # Environment: BUILD_MAXIMUM_TAGS_PER_VERSION - Integer. Number of integers to attempt to look for when incrementing.
@@ -355,11 +347,7 @@ gitTagVersion() {
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
-    --suffix)
-      shift || throwArgument "$handler" "missing $argument argument" || return $?
-      versionSuffix="${1-}"
-      [ -n "$versionSuffix" ] || throwArgument "$handler" "Blank $argument argument" || return $?
-      ;;
+    --suffix) shift && versionSuffix=$(validate "$handler" String "$argument" "${1-}") ;;
     *)
       # _IDENTICAL_ argumentUnknownHandler 1
       throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
@@ -444,8 +432,8 @@ _gitTagVersion() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# Usage: {fn} startingDirectory
 # Finds `.git` directory above or at `startingDirectory`
+# Argument: startingDirectory - Directory. Optional.
 # See: findFileHome
 gitFindHome() {
   local handler="_${FUNCNAME[0]}"
@@ -458,7 +446,6 @@ _gitFindHome() {
 }
 
 #
-# Usage: {fn} [ --last ] [ -- ] [ comment ... ]
 # Argument: --last - Optional. Flag. Append last comment
 # Argument: -- - Optional. Flag. Skip updating release notes with comment.
 # Argument: --help - Optional. Flag. I need somebody.
@@ -574,7 +561,6 @@ _gitCommit() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# Usage: gitMainly
 # Return Code: 1 - Already in main, staging, or HEAD, or git merge failed
 # Return Code: 0 - git merge succeeded
 # Merge `staging` and `main` branches of a git repository into the current branch.
@@ -805,11 +791,10 @@ _gitInstallHooks() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# Usage: {fn} [ --application applicationHome ] [ --copy ] hook
-# Argument: hook - A hook to install. Maps to `git-hook` internally. Will be executed in-place if it has changed from the original.
 # Argument: --application - Optional. Directory. Path to application home.
-# Install the most recent version of this hook and RUN IT in place if it has changed.
 # Argument: --copy - Optional. Flag. Do not execute the hook if it has changed.
+# Argument: hook - A hook to install. Maps to `git-hook` internally. Will be executed in-place if it has changed from the original.
+# Install the most recent version of this hook and RUN IT in place if it has changed.
 # You should ONLY run this from within your hook, or provide the `--copy` flag to just copy.
 # When running within your hook, pass additional arguments so they can be preserved:
 #
@@ -1044,7 +1029,6 @@ _gitBranchExists() {
 }
 
 # Does a branch exist locally?
-# Usage: {fn} branch ...
 # Argument: branch ... - String. Required. List of branch names to check.
 # DOC TEMPLATE: --help 1
 # Argument: --help - Optional. Flag. Display this help.
@@ -1068,7 +1052,6 @@ _gitBranchExistsLocal() {
 }
 
 # Does a branch exist remotely?
-# Usage: {fn} branch ...
 # Argument: branch ... - String. Required. List of branch names to check.
 # DOC TEMPLATE: --help 1
 # Argument: --help - Optional. Flag. Display this help.

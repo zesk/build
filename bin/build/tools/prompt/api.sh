@@ -189,7 +189,6 @@ __bashPromptList() {
   done
 }
 
-# Usage: {fn} [ --first | --last | module ]
 # Argument: --first - Flag. Optional. All subsequent modules are added first to the list.
 # Argument: --last - Flag. Optional. ALl subsequent modules are added to the end of the list.
 # Argument: --order ordering - UnsignedInteger. Ordering of the prompt call. 0 is first, higher numbers are last. Capped at 99.
@@ -243,7 +242,8 @@ __bashPromptModulesSave() {
   IFS=$'\n' read -d '' -r -a __BASH_PROMPT_MODULES < <(printf "%s\n" "$@" | sort -n | sort -u) || :
 }
 
-# Usage: {fn} usageFunction removeModule
+# Argument: usageFunction - Function. Required.
+# Argument: removeModule - String. Required.
 # Fails if not found
 # Requires: isArray read inArray decorate listJoin
 __bashPromptRemove() {

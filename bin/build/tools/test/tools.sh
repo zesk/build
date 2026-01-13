@@ -551,13 +551,11 @@ __testSuiteShowTags() {
 }
 
 # Filters tests by tags
-# Usage: {fn} [ tags ... ] -- [ skipTags ... ] -- tests ...
-# Argument: includeTag - String. Optional. Tag(s) to include. Prefix a tag with `+` to force it AND previous tags.
-# Argument: -- - String. Required. Delimits tags and exclusion tags. Prefix a tag with `+` to force it AND previous exclusion tags.
-# Argument: excludeTag -- - String. Optional. Tag(s) to exclude.
-# Argument: -- - String. Required. Delimits tags and exclusion tags.
+# Argument: includeTag ... - String. Optional. Tag(s) to include. Prefix a tag with `+` to force it AND previous tags.
+# Argument: -- - Separator. Required. Delimits tags and exclusion tags. Prefix a tag with `+` to force it AND previous exclusion tags.
+# Argument: excludeTag ...- String. Optional. Tag(s) to exclude.
+# Argument: -- - Separator. Required. Delimits tags and exclusion tags.
 # Argument: tests ... - String. Function. Test functions
-# {fn} [ tags ... ] -- [ skipTags ... ] -- tests ...
 __testSuiteFilterTags() {
   local handler="$1" && shift
   local current=() tags=() skipTags=() gotTags=false debugMode=false
@@ -904,12 +902,9 @@ __testLoadFlags() {
   [ ${#values[@]} -eq 0 ] || listJoin ";" "${values[@]}"
 }
 
-#
 # Load one or more test files and run the tests defined within
 #
-# Usage: {fn} filename [ ... ]
-# Argument: filename - File. Required. File located at `./test/tools/` and must be a valid shell file.
-#
+# Argument: filename ... - File. Required. File located at `./test/tools/` and must be a valid shell file.
 __testLoad() {
   local handler="_${FUNCNAME[0]}"
   local tests
@@ -996,7 +991,6 @@ ___testPlatforms() {
 
 # Load one or more test files and run the tests defined within
 #
-# Usage: {fn} filename [ ... ]
 # Argument: filename - File. Required. File located at `./test/tools/` and must be a valid shell file.
 #
 __testRun() {
@@ -1209,7 +1203,6 @@ __testFailed() {
 }
 
 #
-# Usage: {fn}
 #
 __testCleanup() {
   local handler="returnMessage"

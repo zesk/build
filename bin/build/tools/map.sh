@@ -1,8 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
 #
-# Docs: ./documentation/source/tools/map.md
-# Test: ./test/tools/map-tests.sh
 #
 #  ▛▚▀▖▝▀▖▛▀▖
 #  ▌▐ ▌▞▀▌▙▄▘
@@ -10,7 +8,6 @@
 #
 # map in this context means converting text using name/value pairs
 
-# Usage: mapTokens prefix suffix < input > output
 # Argument: `prefix` - Optional prefix for token search, defaults to `{` (same as `map.sh`)
 # Argument: `suffix` - Optional suffix for token search, defaults to `}` (same as `map.sh`)
 # Environment: None.
@@ -43,7 +40,6 @@ _mapTokens() {
 
 # Maps a string using an environment file
 #
-# Usage: mapValue mapFile [ value ... ]
 # DOC TEMPLATE: --help 1
 # Argument: --help - Optional. Flag. Display this help.
 # DOC TEMPLATE: --handler 1
@@ -128,7 +124,6 @@ _mapValue() {
 
 # Maps a string using an environment file
 #
-# Usage: {fn} mapFile [ value ... ]
 # Argument: mapFile - Required. File. a file containing bash environment definitions
 # Argument: value - Optional. String. One or more values to map using said environment file.
 #
@@ -140,24 +135,23 @@ _mapValueTrim() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# IDENTICAL mapEnvironment 87
+# IDENTICAL mapEnvironment 86
 
 # Summary: Convert tokens in files to environment variable values
 #
 # Map tokens in the input stream based on environment values with the same names.
 # Converts tokens in the form `{ENVIRONMENT_VARIABLE}` to the associated value.
 # Undefined values are not converted.
-# Usage: {fn} [ environmentName ... ]
 # This one does it like `mapValue`
+# Environment is accessed via arguments passed or entire exported environment value space are and mapped to the destination.
 # See: mapValue
-# DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
 # Argument: environmentVariableName - Optional. String. Map this value only. If not specified, all environment variables are mapped.
 # Argument: --prefix - Optional. String. Prefix character for tokens, defaults to `{`.
 # Argument: --suffix - Optional. String. Suffix character for tokens, defaults to `}`.
 # Argument: --search-filter - Zero or more. Callable. Filter for search tokens. (e.g. `lowercase`)
 # Argument: --replace-filter - Zero or more. Callable. Filter for replacement strings. (e.g. `trimSpace`)
-# Environment: Argument-passed or entire environment variables which are exported are used and mapped to the destination.
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
 # Example:     printf %s "{NAME}, {PLACE}.\n" | NAME=Hello PLACE=world mapEnvironment NAME PLACE
 # Requires: environmentVariables cat throwEnvironment catchEnvironment
 # Requires: throwArgument decorate validate
@@ -229,7 +223,6 @@ _mapEnvironment() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# Usage: cannon [ --path directory ] [ --help ] fromText toText [ findArgs ... ]
 # Replace text `fromText` with `toText` in files, using `findArgs` to filter files if needed.
 #
 # This can break your files so use with caution. Blank searchText is not allowed.
@@ -243,7 +236,7 @@ _mapEnvironment() {
 # Argument: --path cannonPath - Optional. Directory. Run cannon operation starting in this directory.
 # Argument: fromText - Required. String of text to search for.
 # Argument: toText - Required. String of text to replace.
-# Argument: findArgs ... - Optional. FindArgument. Any additional arguments are meant to filter files.
+# Argument: findArgs ... - Optional. Arguments. Any additional arguments are meant to filter files.
 # Return Code: 0 - Success, no files changed
 # Return Code: 3 - At least one or more files were modified successfully
 # Return Code: 1 - --path is not a directory

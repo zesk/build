@@ -9,7 +9,9 @@
 #
 # Post-processes any documentation and replaces tokens in the form `{SEE:name}` with links to documentation.
 #
-# Usage: {fn} cacheDirectory documentationSource documentationTarget
+# Argument: cacheDirectory - Required. Directory. Index cache directory.
+# Argument: documentationSource - Directory. Documentation source path to find tokens and their definitions.
+# Argument: documentationTarget - Directory. Documentation target path
 # Run `__documentationSeeTokenTemplates` beforehand to configure target token types for:
 # - environment
 # - file

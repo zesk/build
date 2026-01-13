@@ -39,8 +39,6 @@ _daemontoolsInstall() {
 
 # Install a daemontools service which runs a binary as the file owner.
 #
-# Usage: {fn} [ --log-path path ] serviceFile [ serviceName ]
-#
 # Installs a `daemontools` service with an optional logging daemon process. Uses `daemontools/_service.sh` and `daemontools/_log.sh` files as templates.
 #
 # Argument: --home serviceHome - Optional. Path. Override `DAEMONTOOLS_HOME` which defaults to `/etc/service`. Specify once.
@@ -194,7 +192,6 @@ _daemontoolsSuperviseWait() {
 #
 # Remove a daemontools service by name
 #
-# Usage: {fn} serviceName
 # Argument: serviceName - String. Required. Service name to remove.
 daemontoolsRemoveService() {
   local handler="_${FUNCNAME[0]}"
@@ -241,8 +238,9 @@ _daemontoolsRemoveService() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# Usage: {fn}
 # Is daemontools running?
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
 daemontoolsIsRunning() {
   local handler="_${FUNCNAME[0]}"
   [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
@@ -278,8 +276,9 @@ _daemontoolsHome() {
 
 # Launch the daemontools daemon
 # Do not use this for production
-# Usage: {fn}
 # Run the daemontools root daemon
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
 daemontoolsExecute() {
   local handler="_${FUNCNAME[0]}"
   [ $# -eq 0 ] || __help --only "$handler" "$@" || return "$(convertValue $? 1 0)"
@@ -320,7 +319,6 @@ _daemontoolsProcessIds() {
 
 #
 # Terminate daemontools as gracefully as possible
-# Usage: {fn} [ --timeout seconds ]
 # Argument: --timeout seconds - Integer. Optional.
 # Requires: throwArgument decorate usageArgumentInteger throwEnvironment catchEnvironment usageRequireBinary statusMessage
 # Requires: svscanboot id svc svstat
@@ -391,7 +389,6 @@ _daemontoolsTerminate() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# Usage: {fn}
 # Restart the daemontools processes from scratch.
 # Dangerous. Stops any running services and restarts them.
 daemontoolsRestart() {
@@ -469,7 +466,6 @@ _daemontoolsRestart() {
 #
 # Specify actions more than once on the command line to specify more than one set of permissions.
 #
-# Usage: {fn} [ --interval seconds ] [ --stat statFile ] [ --action actions ] service0 file0 [ service1 file1 ]
 # Argument: --home serviceHome - Optional. Service directory home. Defaults to `DAEMONTOOLS_HOME`.
 # Argument: --interval intervalSeconds - Optional. Number of seconds to check for presence of the file. Defaults to 10.
 # Argument: --stat statFile - Optional. Output the `svstat` status to this file every `intervalSeconds`. If not specified nothing is output.

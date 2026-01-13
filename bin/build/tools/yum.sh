@@ -52,7 +52,6 @@ __yumUninstall() {
 }
 
 #
-# Usage: {fn}
 # OS upgrade and potential restart
 # Progress is written to stderr
 # Result is `ok` or `restart` written to stdout
@@ -73,21 +72,18 @@ __yumUpdate() {
   __yumNonInteractive update "$@" || return $?
 }
 
-# Usage: {fn}
 # List installed packages
 # package.sh: true
 __yumInstalledList() {
   __yumNonInteractive list --installed | sed 1d || return $?
 }
 
-# Usage: {fn}
 # List available packages
 # package.sh: true
 __yumAvailableList() {
   __yumNonInteractive list --available | sed 1d || return $?
 }
 
-# Usage: {fn}
 # Output list of yum standard packages (constant)
 # See: _packageStandardPackages
 # package.sh: true

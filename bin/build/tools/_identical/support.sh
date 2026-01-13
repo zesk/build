@@ -7,7 +7,6 @@
 # Copyright &copy; 2026 Market Acumen, Inc.
 #
 
-# Usage: {fn} file prefix identicalLine
 # May return non-integer count and should be tested by calling function
 # Argument: file - String. Required. File being parsed for debugging output.
 # Argument: prefix - String. Required. Identical prefix being processed currently.
@@ -56,13 +55,13 @@ __identicalLineParse() {
   printf "%d %s %s\n" "$lineNumber" "$token" "$count"
 }
 
-# Usage: {fn} count remainingLines
-# stdout: count - UnsignedInteger|String. "EOF" or a positive integer of the line count.
+# Argument: count - UnsignedInteger|String. "EOF" or a positive integer of the line count.
+# Argument: remainingLines - Integer. Required.
 # stdout: remainingLines - Integer. The actual remaining lines in the file after the token.
 # Handles converting EOF to `remainingLines`
 # stdout: UnsignedInteger - IFF `count` is `EOF` prints `remainingLines` - returns 0
 # stdout: UnsignedInteger - IFF `count` is UnsignedInteger prints `count` - returns 0
-# stdout: String - IFF `count` is not EOF or UnsignedInteger prints `count` (string) - returns 1
+# Return Code: 1 - If count is not an Unsigned integer or `EOF` it fails
 __identicalLineCount() {
   if [ "$1" != "EOF" ]; then
     if isUnsignedInteger "$1"; then
@@ -76,9 +75,8 @@ __identicalLineCount() {
   fi
 }
 
-# Usage: {fn} searchFile lineNumber totalLines count
 # Generate the match file given the search file
-# Argument: file - String. Required. File being processed for identical.
+# Argument: searchFile - String. Required. File being processed for identical.
 # Argument: totalLines - UnsignedInteger. Required. Number of lines in the entire file.
 # Argument: lineNumber - UnsignedInteger. Required. Line number of the found token.
 # Argument: count - UnsignedInteger. Required. Number of lines this token should have.

@@ -5,8 +5,6 @@
 # Docs: o ./documentation/source/tools/platform.md
 # Test: o ./test/tools/platform-tests.sh
 
-#
-# Usage: {fn} count binary [ args ... ]
 # Argument: count - The number of times to run the binary
 # Argument: binary - The binary to run
 # Argument: args ... - Any arguments to pass to the binary each run
@@ -14,7 +12,6 @@
 # Return Code: 2 - `count` is not an unsigned number
 # Return Code: Any - If `binary` fails, the exit code is returned
 # Summary: Run a binary count times
-#
 runCount() {
   local handler="_${FUNCNAME[0]}"
 
@@ -344,19 +341,6 @@ _whichExists() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
-# Format something neatly as JSON
-# Usage: JSON < inputFile > outputFile
-JSON() {
-  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
-  jq .
-}
-_JSON() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
-}
-
 # Hard-coded services for:
 #
 # - `ssh` -> 22
@@ -410,8 +394,7 @@ _serviceToStandardPort() {
 
 # Get the port number associated with a service
 #
-# Usage: {fn} service [ ... ]
-# Argument: service - A unix service typically found in `/etc/services`
+# Argument: service - String. Required. A unix service typically found in `/etc/services`
 # Argument: --services servicesFile - Optional. File. File like '/etc/services`.
 # DOC TEMPLATE: --help 1
 # Argument: --help - Optional. Flag. Display this help.
@@ -462,7 +445,8 @@ _serviceToPort() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# Usage: {fn} directory original
+# Argument: directory - Directory. Required.
+# Argument: original - String. Required.
 # Appends (or creates) `original` to the file named `extension` in `directory`
 # Appends `original` to file `directory/@` as well.
 # `extension` is computed from `original` and an empty extension is written to '!'

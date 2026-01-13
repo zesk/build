@@ -30,8 +30,7 @@ catchEnvironmentQuiet() {
 }
 
 # Logs all deprecated functions to application root in a file called `.deprecated`
-# Usage: {fn} command ...
-# Argument: function - Required. String. Function which is deprecated.
+# Argument: function - Required. String. Function which is deprecated. Use `${FUNCNAME[0]}` always if implemented in an old deprecated function.
 # Example:     {fn} "${FUNCNAME[0]}"
 # Requires: printf date
 _deprecated() {

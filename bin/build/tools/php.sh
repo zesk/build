@@ -13,7 +13,6 @@
 #
 # If this fails it will output the installation log.
 #
-# Usage: {fn} [ package ... ]
 # Argument: package - Additional packages to install
 # Summary: Install `php`
 # When this tool succeeds the `php` binary is available in the local operating system.
@@ -33,7 +32,6 @@ _phpInstall() {
 #
 # If this fails it will output the installation log.
 #
-# Usage: {fn} [ package ... ]
 # Argument: package - Additional packages to install
 # Summary: Uninstall `php`
 # When this tool succeeds the `php` binary is no longer available in the local operating system.
@@ -73,7 +71,6 @@ _phpTailLog() {
 }
 
 #
-# Usage: {fn}
 # Outputs the path to the PHP log file
 #
 phpLog() {
@@ -88,7 +85,6 @@ _phpLog() {
 }
 
 #
-# Usage: {fn}
 # Outputs the path to the PHP ini file
 #
 phpIniFile() {
@@ -149,7 +145,6 @@ _deploymentToSuffix() {
 # - APPLICATION_TAG
 # - APPLICATION_ID
 #
-# Usage: {fn} [ --name tarFileName ] [ --suffix versionSuffix ] [ --debug ] [ ENV_VAR1 ... ] -- file1 [ file2 ... ]
 # Argument: --skip-tag | --no-tag - Optional. Flag. Do not tag the release.
 # Argument: --name tarFileName - String. Optional. Set BUILD_TARGET via command line (wins)
 # Argument: --composer arg - Optional. Argument. Supply one or more arguments to `phpComposer` command. (Use multiple times)

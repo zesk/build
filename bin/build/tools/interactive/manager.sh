@@ -4,7 +4,6 @@
 #
 # Copyright &copy; 2026 Market Acumen, Inc.
 
-# Usage: {fn} loopCallable fileToCheck ...
 # Argument: loopCallable - Required. Callable. Call this on each file and a zero result code means passed and non-zero means fails.
 # Argument: --exec binary - Optional. Callable. Run binary with files as an argument for any failed files. Only works if you pass in item names.
 # Argument: --delay delaySeconds - Optional. Integer. Delay in seconds between checks in interactive mode.

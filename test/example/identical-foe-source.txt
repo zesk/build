@@ -8,7 +8,7 @@
 #
 
 # IDENTICAL foetarget EOF
-# Usage: __tools command ...
+# Argument: command ... - Callable. Required.
 # Load zesk build and run command
 __tools() {
   local relative="$1"

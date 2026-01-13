@@ -13,9 +13,10 @@ __characterLoader() {
 }
 
 # Write a report of the character classes
-# Argument: --help - Optional. Flag. Display this help.
 # Argument: --class - Optional. Flag. Show class and then characters in that class.
 # Argument: --char - Optional. Flag. Show characters and then class for that character.
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
 characterClassReport() {
   __characterLoader "_${FUNCNAME[0]}" "__${FUNCNAME[0]}" "$@"
 }
@@ -25,9 +26,10 @@ _characterClassReport() {
 }
 
 # Ensure that every character in a text string passes all character class tests
-# Usage: {fn} text class0 [ ... ]
 # Argument: text - Text to validate
-# Argument: class0 - One or more character classes that the characters in string should match
+# Argument: class0 ... - One or more character classes that the characters in string should match
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
 # Note: This is slow.
 stringValidate() {
   local handler="_${FUNCNAME[0]}"
@@ -50,11 +52,12 @@ _stringValidate() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-#
-# Usage: {fn} [ character ... ]
+# Summary: Convert a character to the corresponding ASCII code
+# Argument: character - String. Optional. One or more characters to convert to their ASCII equivalent.
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
 # Convert one or more characters from their ascii representation to an integer value.
 # Requires a single character to be passed
-#
 characterToInteger() {
   local index
 
@@ -75,10 +78,10 @@ _characterToInteger() {
 #
 # Does this character match one or more character classes?
 #
-# Usage: {fn} character [ class0 class1 ... ]
 # Argument: character - Required. Single character to test.
-# Argument: class0 - Optional. A class name or a character to match. If more than is supplied, a single value must match to succeed (any).
-#
+# Argument: class ... - Optional. String. A class name or a character to match. If more than is supplied, a single value must match to succeed (any).
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
 isCharacterClasses() {
   local handler="_${FUNCNAME[0]}"
   [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
@@ -111,6 +114,8 @@ _isCharacterClasses() {
 # Credit: dsmsk80
 #
 # Source: https://mywiki.wooledge.org/BashFAQ/071
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
 characterFromInteger() {
   local handler="_${FUNCNAME[0]}"
 
@@ -143,6 +148,8 @@ _characterFromInteger() {
 }
 
 # List the valid character classes allowed in `isCharacterClass`
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
 characterClasses() {
   [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
   printf "%s\n" alnum alpha ascii blank cntrl digit graph lower print punct space upper word xdigit
@@ -153,9 +160,6 @@ _characterClasses() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-#
-# Usage: {fn} className character0 [ character1 ... ]
-#
 # Poor-man's bash character class matching
 #
 # Returns true if all `characters` are of `className`
@@ -164,6 +168,10 @@ _characterClasses() {
 #     alnum   alpha   ascii   blank   cntrl   digit   graph   lower
 #     print   punct   space   upper   word    xdigit
 #
+# Argument: className - String. Required. Class to check.
+# Argument: character ... - String. Optional. Characters to test.
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
 isCharacterClass() {
   local handler="_${FUNCNAME[0]}"
   [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0

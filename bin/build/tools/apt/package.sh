@@ -50,7 +50,6 @@ ___aptUninstall() {
 }
 
 #
-# Usage: {fn}
 # OS upgrade and potential restart
 # Progress is written to stderr
 # Result is `ok` or `restart` written to stdout
@@ -73,7 +72,6 @@ ___aptUpdate() {
   __aptNonInteractive "$handler" update -y "$@" || return $?
 }
 
-# Usage: {fn}
 # List installed packages
 # package.sh: true
 ___aptInstalledList() {
@@ -82,7 +80,6 @@ ___aptInstalledList() {
   catchEnvironment "$handler" dpkg --get-selections | grepSafe -v deinstall | awk '{ print $1 }' || return $?
 }
 
-# Usage: {fn}
 # List available packages
 # package.sh: true
 ___aptAvailableList() {
@@ -90,7 +87,6 @@ ___aptAvailableList() {
   catchEnvironment "$handler" apt-cache pkgnames || return $?
 }
 
-# Usage: {fn}
 # Output list of apt standard packages (constant)
 # See: _packageStandardPackages
 # package.sh: true

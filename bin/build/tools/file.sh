@@ -19,11 +19,10 @@
 # Renames files which have `oldSuffix` to then have `newSuffix` and output a message using `actionVerb`:
 #
 # Summary: Rename a list of files usually to back them up temporarily
-# Usage: {fn} oldSuffix newSuffix actionVerb file0 [ file1 file2 ... ]
 # Argument: oldSuffix - Required. String. Old suffix to look rename from.
 # Argument: newSuffix - Required. String. New suffix to rename to.
 # Argument: actionVerb - Required. String. Description to output for found files.
-# Argument: file0 - Required. String. One or more files to rename, if found, renaming occurs.
+# Argument: file ... - Required. String. One or more files to rename, if found, renaming occurs.
 # Example:     {fn} "" ".$$.backup" hiding etc/app.json etc/config.json
 # Example:     ...
 # Example:     {fn} ".$$.backup" "" restoring etc/app.json etc/config.json
@@ -54,11 +53,10 @@ _filesRename() {
 
 # Fetch the modification time of a file as a timestamp
 #
-# Usage: fileModificationTime filename0 [ filename1 ... ]
+# Argument: filename ... - File to fetch modification time
 # Return Code: 2 - If file does not exist
 # Return Code: 0 - If file exists and modification times are output, one per line
 # Example:     fileModificationTime ~/.bash_profile
-#
 fileModificationTime() {
   local handler="_${FUNCNAME[0]}"
   local argument
@@ -78,7 +76,7 @@ _fileModificationTime() {
 
 # Fetch the modification time in seconds from now of a file as a timestamp
 #
-# Usage: {fn} filename0 [ filename1 ... ]
+# Argument: filename ... - File to fetch modification time
 # Return Code: 2 - If file does not exist
 # Return Code: 0 - If file exists and modification times are output, one per line
 # Example:     fileModificationTime ~/.bash_profile
@@ -108,9 +106,8 @@ _fileModificationSeconds() {
 #
 # Output is unsorted.
 #
-# Usage: {fn} directory [ findArgs ... ]
 # Argument: directory - Required. Directory. Must exists - directory to list.
-# Argument: findArgs - Optional additional arguments to modify the find query
+# Argument: findArgs - Arguments. Optional. Optional additional arguments to modify the find query
 # Example: {fn} $myDir ! -path "*/.*/*"
 # Output: 1705347087 bin/build/tools.sh
 # Output: 1704312758 bin/build/deprecated.sh
@@ -130,9 +127,8 @@ _fileModificationTimes() {
 }
 
 # List the most recently modified file in a directory prefixed with the timestamp
-# Usage: {fn} directory [ findArgs ... ]
 # Argument: directory - Required. Directory. Must exists - directory to list.
-# Argument: findArgs - Optional additional arguments to modify the find query
+# Argument: findArgs - Arguments. Optional. Optional additional arguments to modify the find query
 fileModifiedRecently() {
   local handler="_${FUNCNAME[0]}"
   [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
@@ -151,9 +147,10 @@ _fileModifiedRecently() {
 # If `sourceFile` is modified AFTER ALL `targetFile`s, return `0``
 # Otherwise return `1``
 #
-# Usage: {fn} firstFile [ targetFile0 ... ]
-# Argument: sourceFile - File to check
-# Argument: targetFile0 - One or more files to compare
+# Argument: sourceFile - File. Required. File to check
+# Argument: targetFile ... - File. Optional. One or more files to compare. All must exist.
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
 #
 # Return Code: 1 - `sourceFile`, 'targetFile' does not exist, or
 # Return Code: 0 - All files exist and `sourceFile` is the oldest file
@@ -177,10 +174,10 @@ _fileIsNewest() {
 # If `sourceFile` is modified AFTER ALL `targetFile`s, return `0``
 # Otherwise return `1``
 #
-# Usage: {fn} firstFile [ targetFile0 ... ]
-# Argument: sourceFile - File to check
-# Argument: targetFile0 - One or more files to compare
-#
+# Argument: sourceFile - File. Required. File to check
+# Argument: targetFile ... - File. Optional. One or more files to compare. All must exist.
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
 # Return Code: 1 - `sourceFile`, 'targetFile' does not exist, or
 # Return Code: 0 - All files exist and `sourceFile` is the oldest file
 #
@@ -223,12 +220,11 @@ __gamutFile() {
   printf "%s" "$theFile"
 }
 
+# Output the oldest file in the list.
 #
-# Return the oldest file in the list.
-#
-# Usage: {fn} file0 [ file1 ... ]
-# Argument: file0 - One or more files to examine
-#
+# Argument: file ... - File. Required. One or more files to examine
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
 fileOldest() {
   __gamutFile "_${FUNCNAME[0]}" -lt "$@"
 }
@@ -237,12 +233,11 @@ _fileOldest() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
+# Output the newest file in the list
 #
-# Return the newest file in the list
-#
-# Usage: {fn} file0 [ file1 ... ]
-# Argument: file0 - One or more files to examine
-#
+# Argument: file ... - File. Required. One or more files to examine
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
 fileNewest() {
   __gamutFile "_${FUNCNAME[0]}" -gt "$@"
 }
@@ -251,9 +246,10 @@ _fileNewest() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-#
 # Prints seconds since modified
-# Usage: {fn} file
+# Argument: file ... - File. Required. One or more files to examine
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
 # Return Code: 0 - Success
 # Return Code: 2 - Can not get modification time
 #
@@ -271,12 +267,12 @@ _fileModifiedSeconds() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-#
 # Prints days (integer) since modified
-#
+# Argument: file ... - File. Required. One or more files to examine
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
 # Return Code: 0 - Success
 # Return Code: 2 - Can not get modification time
-#
 fileModifiedDays() {
   local handler="_${FUNCNAME[0]}"
   [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
@@ -347,11 +343,11 @@ _directoryPathSimplify() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# Outputs value of virtual memory allocated for a process, value is in kilobytes
-# Usage: {fn} file
-# Argument: file - Required. File to get size of.
+# Argument: file ... - Required. One or more files to get size of.
 # Return Code: 0 - Success
 # Return Code: 1 - Environment error
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
 fileSize() {
   local handler="_${FUNCNAME[0]}"
   [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
@@ -374,6 +370,8 @@ _fileSize() {
 }
 
 # Argument: item - String. Optional. Thing to classify
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
 # Better type handling of shell objects
 #
 # Outputs one of `type` output or enhancements:
@@ -413,9 +411,9 @@ _fileType() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-#
-# Usage: {fn} from to
-#
+# Rename a link
+# Argument: from - Link. Required. Link to rename.
+# Argument: to - FileDirectory. Required. New link path.
 # Renames a link forcing replacement, and works on different versions of `mv` which differs between systems.
 # See: mv
 linkRename() {
@@ -436,7 +434,7 @@ linkRename() {
       if [ -z "$from" ]; then
         from=$(validate "$handler" Link "from $(fileType "$1")" "$1") || return $?
       elif [ -z "$to" ]; then
-        to=$(validate "$handler" String "to $(fileType "$1")" "$1") || return $?
+        to=$(validate "$handler" FileDirectory "to $(fileType "$1")" "$1") || return $?
       else
         # _IDENTICAL_ argumentUnknownHandler 1
         throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
@@ -454,9 +452,9 @@ _linkRename() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-#
-# Usage: {fn} file ...
 # Argument: file - File to get the owner for
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
 # Outputs the file owner for each file passed on the command line
 # Return Code: 0 - Success
 # Return Code: 1 - Unable to access file
@@ -476,13 +474,13 @@ __fileListColumn() {
   done
 }
 
-#
-# Usage: {fn} file ...
+# Get the file owner name
 # Argument: file - File to get the owner for
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
 # Outputs the file owner for each file passed on the command line
 # Return Code: 0 - Success
 # Return Code: 1 - Unable to access file
-#
 fileOwner() {
   __fileListColumn "_${FUNCNAME[0]}" 3 "$@"
 }
@@ -491,13 +489,13 @@ _fileOwner() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-#
-# Usage: {fn} file ...
+# Get the file group name
 # Argument: file - File to get the owner for
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
 # Outputs the file group for each file passed on the command line
 # Return Code: 0 - Success
 # Return Code: 1 - Unable to access file
-#
 fileGroup() {
   __fileListColumn "_${FUNCNAME[0]}" 4 "$@"
 }
@@ -508,7 +506,6 @@ _fileGroup() {
 
 # Find list of files which do NOT match a specific pattern or patterns and output them
 #
-# Usage: {fn} [ --help ] pattern ... -- [ exception ... ] -- file ...
 # DOC TEMPLATE: --help 1
 # Argument: --help - Optional. Flag. Display this help.
 # Argument: pattern ... - Required. String. Pattern to find in files.
@@ -526,7 +523,6 @@ _fileNotMatches() {
 
 # Find one or more patterns in a list of files, with a list of file name pattern exceptions.
 #
-# Usage: {fn} [ --help ] pattern ... -- [ exception ... ] -- file ...
 # DOC TEMPLATE: --help 1
 # Argument: --help - Optional. Flag. Display this help.
 # Argument: pattern ... - Required. String. Pattern to find in files. No quoting is added so ensure these are compatible with `grep -e`.
@@ -635,7 +631,9 @@ _fileIsEmpty() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# Usage: {fn} directory
+# Argument: clipper - Callable. Required.
+# Argument: directory - Directory. Required.
+# Argument: findArgs ... - Arguments. Optional.
 _directoryGamutFile() {
   local clipper="$1" directory="${2-.}" modified file && shift 2
   read -r modified file < <(__fileModificationTimes "$directory" -type f ! -path "*/.*/*" "$@" | sort -n | "$clipper" -n 1) || :

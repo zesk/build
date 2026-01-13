@@ -8,9 +8,10 @@
 # Test: o ./test/tools/coverage-tests.sh
 #
 
-# Usage: {fn} [ --target reportFile ] thingToRun
+# Argument: --target reportFile - File. Optional. Write coverage data to this file.
+# Argument: thingToRun - Callable. Required. Function to run and collect coverage data.
 # Collect code coverage statistics for a code sample
-# Covert resulting files using `bashCoverageReport`
+# Convert resulting files using `bashCoverageReport`
 # See: bashCoverageReport
 bashCoverage() {
   local handler="_${FUNCNAME[0]}"
@@ -57,10 +58,11 @@ _bashCoverage() {
 
 # Generate a coverage report using the coverage statistics file
 #
-# *This is a work in progress and is unfinished as of September 2025. Plans are to do this in another language.*
-#
-# TODO: this
-# Usage: {fn} [ --help ] [ --cache cacheDirectory ] [ --target targetDirectory ] [ statsFile ]
+# *This is a work in progress and is unfinished as of January 2026. Plans are to do this in another language.*
+# Summary: Experimental. Likely abandon.
+# Argument: --cache cacheDirectory - Optional. Directory.
+# Argument: --target targetDirectory - Optional. Directory.
+# Argument: statsFile - File. Required.
 # stdin: Accepts a stats file
 bashCoverageReport() {
   local handler="_${FUNCNAME[0]}"
@@ -331,7 +333,9 @@ __bashCoverageReportConvertFiles() {
   done <"$reportCache/files"
 }
 
-# Usage: {fn} line uncoveredTexts template
+# Argument: line
+# Argument: uncoveredTexts
+# Argument: template
 __bashCoveragePartialLine() {
   local line="$1" template="$3" codes=() code index search replace
 

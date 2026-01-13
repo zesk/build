@@ -11,7 +11,8 @@
 #
 # `BUILD_TEXT_BINARY` can be `figlet` or `toilet`
 #
-# Usage: bigText [ --bigger ] Text to output
+# Argument: text - String. Required. Text to output
+# Argument: --bigger - Flag. Optional. Text font size is bigger.
 #
 # standard (figlet)
 #
@@ -137,8 +138,6 @@ _bigTextAt() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-#
-# Usage: {fn} [ --top | --bottom ] [ --prefix prefix ] label Text ...
 # Argument: --top - Optional. Flag. Place label at the top.
 # Argument: --bottom - Optional. Flag. Place label at the bottom.
 # Argument: --prefix prefixText - Optional. String. Optional prefix on each line.
@@ -228,7 +227,6 @@ _labeledBigText() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# Usage: repeat count string [ ... ]
 # Argument: `count` - Required, integer count of times to repeat
 # Argument: `string` - A sequence of characters to repeat
 # Argument: ... - Additional arguments are output using shell expansion of `$*`
@@ -365,20 +363,17 @@ _lineFill() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-#
 # Format text and align it right using spaces.
 #
-# Usage: alignRight characterWidth text [ ... ]
 # Summary: align text right
-# DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
 # Argument: characterWidth - Characters to align right
 # Argument: text ... - Text to align right
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
 # Example:     printf "%s: %s\n" "$(alignRight 20 Name)" "$name"
 # Example:     printf "%s: %s\n" "$(alignRight 20 Profession)" "$occupation"
 # Example:                 Name: Juanita
 # Example:           Profession: Engineer
-#
 alignRight() {
   local handler="_${FUNCNAME[0]}"
   local n
@@ -391,7 +386,6 @@ _alignRight() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-#
 # Format text and align it left using spaces.
 #
 # Summary: align text left
@@ -404,7 +398,6 @@ _alignRight() {
 # Example:     printf "%s: %s\n" "$(alignLeft 14 Profession)" "$occupation"
 # Example:     Name          : Tyrone
 # Example:     Profession    : Engineer
-#
 alignLeft() {
   local handler="_${FUNCNAME[0]}"
   local n

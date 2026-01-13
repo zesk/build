@@ -182,7 +182,7 @@ _isFunction() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# IDENTICAL isCallable 49
+# IDENTICAL isCallable 48
 
 # Test if all arguments are callable as a command
 # Argument: string - Required. EmptyString. Path to binary to test if it is executable.
@@ -204,8 +204,7 @@ _isCallable() {
 }
 
 # Test if all arguments are executable binaries
-# Usage: {fn} string0 [ string1 ... ]
-# Argument: string - Required. Path to binary to test if it is executable.
+# Argument: string ... - Required. String. Path to binary to test if it is executable.
 # If no arguments are passed, returns exit code 1.
 # Return Code: 0 - All arguments are executable binaries
 # Return Code: 1 - One or or more arguments are not executable binaries

@@ -21,8 +21,7 @@ if source "${BASH_SOURCE[0]%/*}/../build/tools.sh"; then
   # in order to activate it.
   #
   # Summary: Deployment move script
-  # Usage: hookRun deploy-activate applicationPath
-  # Argument: applicationPath - This is the target for the current application
+  # Argument: applicationPath - Directory. Required. This is the target for the current application
   # Return Code: 0 - This is called to replace the running application in-place
   #
   __hookDeployMove() {

@@ -65,9 +65,8 @@ _sshKnownHostsFile() {
 #
 # Return Code: 1 - Environment errors
 # Return Code: 0 - All hosts exist in or were successfully added to the known hosts file
-# Usage: {fn} [ host0 ]
 #
-# Argument: host0 - String. Optional. One ore more hosts to add to the known hosts file
+# Argument: hostName ... - String. Optional. One ore more hosts to add to the known hosts file
 #
 # If no arguments are passed, the default behavior is to set up the `~/.ssh` directory and create the known hosts file.
 #
@@ -133,9 +132,8 @@ _sshKnownHostAdd() {
 #
 # Return Code: 1 - Environment errors
 # Return Code: 0 - All hosts exist in or were successfully added to the known hosts file
-# Usage: {fn} [ host0 ]
 #
-# Argument: host0 ... - String. Optional. One ore more hosts to add to the known hosts file
+# Argument: hostName ... - String. Optional. One ore more hosts to add to the known hosts file
 # Argument: --skip-backup | --no-backup - Flag. Optional. Skip the file backup as `name.$(todayDate)`
 # Argument: --verbose - Flag. Optional. Be verbose.
 #
@@ -200,7 +198,6 @@ _sshKnownHostRemove() {
 #
 # Add .ssh key for current user
 #
-# Usage: {fn} [ --force ] [ server ... ]
 # Argument: --force - Flag. Optional. Force the program to create a new key if one exists
 # Argument: server - String. Required. Servers to connect to to set up authorization
 #

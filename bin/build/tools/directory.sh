@@ -8,7 +8,7 @@
 # Test: o ./test/tools/directory-tests.sh
 
 # Is a path an absolute path?
-# Usage: {fn} path ...
+# Argument: path - String. Optional. Path to check.
 # Return Code: 0 - if all paths passed in are absolute paths (begin with `/`).
 # Return Code: 1 - one ore more paths are not absolute paths
 pathIsAbsolute() {
@@ -68,7 +68,8 @@ _directoryChange() {
 }
 
 #
-# Usage: {fn} source target
+# Argument: source - Directory. Required. target
+# Argument: target - FileDirectory. Required.
 #
 # Copy directory over another sort-of-atomically
 #
@@ -105,7 +106,6 @@ _directoryClobber() {
 #
 # Creates the directories for all files passed in.
 #
-# Usage: {fn} file1 file2 ...
 # Example:     logFile=./.build/$me.log
 # Example:     {fn} "$logFile"
 # DOC TEMPLATE: --help 1
@@ -179,8 +179,7 @@ _fileDirectoryExists() {
 #
 # Given a list of directories, ensure they exist and create them if they do not.
 #
-# Usage: {fn} dir1 [ dir2 ... ]
-# Argument: dir1 - One or more directories to create
+# Argument: directoryPath ... - One or more directories to create
 # Example:     {fn} "$cachePath"
 # DOC TEMPLATE: --help 1
 # Argument: --help - Optional. Flag. Display this help.
@@ -283,7 +282,6 @@ _directoryIsEmpty() {
 #      directoryRelativePath "/" -> ".."
 #      directoryRelativePath "/a/b/c" -> ../../..
 #
-# Usage: {fn} directory ...
 # Argument: directory - String. A path to convert.
 # stdout: Relative paths, one per line
 directoryRelativePath() {
@@ -305,7 +303,6 @@ _directoryRelativePath() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# Usage: {fn} startingDirectory filePattern [ testExpression ... ]
 # Finds a file above `startingDirectory`, uses `testExpression` to test (defaults to `-d`)
 # Argument: startingDirectory - Required. EmptyString|RealDirectory. Uses the current directory if blank.
 # Argument: --pattern filePattern - Required. RelativePath. The file or directory to find the home for.
@@ -320,11 +317,12 @@ _directoryParent() {
 
 # Utility for specific implementations of `directoryParent`
 # See: gitFindHome
-# Usage: {fn} usageFunction [ --help ] startingDirectory filePattern [ testExpression ]
 # Argument: usageFunction - Required. Function. Called when an error occurs.
 # Argument: startingDirectory - Required. EmptyString|RealDirectory. Uses the current directory if blank.
 # Argument: --pattern filePattern - Required. RelativePath. The file or directory to find the home for.
 # Argument: --test testExpression - String. Optional. Zero or more. The `test` argument to test the targeted `filePattern`. By default uses `-d`.
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
 __directoryParent() {
   local handler="${1-}" && shift
 

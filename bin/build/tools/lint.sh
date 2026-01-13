@@ -87,7 +87,6 @@ _bashLint() {
 
 # Run `bashLint` on a set of bash files.
 #
-# Usage: bashLintFiles [ --exec binary ] [ file0 ... ]
 # Example:     if bashLintFiles; then git commit -m "saving things" -a; fi
 # Argument: --verbose - Flag. Optional. Verbose mode.
 # Argument: --fix - Flag. Optional. Fix errors when possible.
@@ -201,7 +200,6 @@ _bashLintFilesHelper() {
   fi
 }
 
-# Usage: [ fileToCheck ... ]
 # Argument: --exec binary - Optional. Callable. Run binary with files as an argument for any failed files. Only works if you pass in item names.
 # Argument: --delay delaySeconds - Optional. Integer. Delay in seconds between checks in interactive mode.
 # Argument: fileToCheck ... - Optional. File. Shell file to validate.
@@ -386,12 +384,11 @@ _findUncaughtAssertions() {
 #
 # By default, any directory which begins with a dot `.` will be ignored.
 #
-# Usage: validateFileExtensionContents extension0 [ extension1 ... ] -- text0 [ text1 ... ] [ -- findArgs ]
 # Example:     validateFileContents sh php js -- 'Widgets LLC' 'Copyright &copy; 2026'
 # Argument: `extension0` - Required - the extension to search for (`*.extension`)
-# Argument: `--` - Required. Separates extensions from text
-# Argument: `text0` - Required. Text which must exist in each item with the extension given.
-# Argument: `--` - Optional. Final delimiter to specify find arguments.
+# Argument: `--` - Required. Separator. Separates extensions from text
+# Argument: `text0` - Required. String. Text which must exist in each item with the extension given.
+# Argument: `--` - Optional. Separator. Final delimiter to specify find arguments.
 # Argument: findArgs - Optional. Limit find to additional conditions.
 # Side-effect: Errors written to stderr, status written to stdout
 # Environment: This operates in the current working directory
@@ -475,11 +472,10 @@ _validateFileExtensionContents() {
 #
 # By default, any directory which begins with a dot `.` will be ignored.
 #
-# Usage: {fn} file0 [ file1 ... ] -- text0 [ text1 ... ]
 # Example:     {fn} foo.sh my.sh -- "Copyright 2024" "Company, LLC"
-# Argument: `file0` - Required - a item to look for matches in. Use `-` to read file list from `stdin`.
-# Argument: `--` - Required. Separates files from text
-# Argument: `text0` - Required. Text which must exist in each item
+# Argument: file ... - Required. File. A item to look for matches in. Use `-` to read file list from `stdin`.
+# Argument: -- - Required. Separates files from text
+# Argument: text ... - Required. Text which must exist in each item
 # Side-effect: Errors written to stderr, status written to stdout
 # Summary: Check files for the existence of a string or strings
 # Return Code: 0 - All found files contain all text string or strings

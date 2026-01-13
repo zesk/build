@@ -10,7 +10,6 @@
 
 # Simple debugger to walk through a program
 #
-# Usage: {fn} commandToDebug ...
 # Argument: commandToDebug - Callable. Required. Command to debug.
 #
 # Debugger accepts the following keystrokes:
@@ -47,7 +46,6 @@ _bashDebug() {
   usageDocumentSimple "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# Usage: {fn}
 # Enables the debugger immediately
 # Saves file descriptors 0 1 and 2 as 20, 21 and 22 respectively
 # See: bashDebug bashDebuggerDisable
@@ -76,7 +74,6 @@ _bashDebuggerEnable() {
   usageDocumentSimple "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# Usage: {fn}
 # Disables the debugger immediately
 # Restores file descriptors 0 1 and 2 from 20, 21 and 22 respectively
 # See: bashDebug bashDebuggerEnable
@@ -119,7 +116,13 @@ _bashDebugWatch() {
   done
 }
 
-# Usage: {fn} currentSource currentFunction currentLine source0 function0 line0 [ source1 function1 line1 ... ]
+# Argument: currentSource - File. Required.
+# Argument: currentFunction - Function. Required.
+# Argument: currentLine - Integer. Required.
+# Argument: source0 - File. Required.
+# Argument: function0 - String. Required.
+# Argument: line0  - Integer. Required.
+# Argument: ... - Repeats
 # Argument count is always a multiple of 3
 __bashDebugStep() {
   local source="$1" functionName="$2" line="$3" && shift 3

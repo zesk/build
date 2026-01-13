@@ -10,9 +10,8 @@
 #
 # Succeeds IFF only one version of a function is found.
 #
-# Usage: __bashDocumentation_FindFunctionDefinition directory fn
-# Argument: `directory` - The directory to search
-# Argument: `fn` - A function to find the file in which it is defined
+# Argument: directory - Directory. Required. The directory to search
+# Argument: fn - String. Required. A function to find the file in which it is defined
 # Return Code: 0 - if one or more function definitions are found
 # Return Code: 1 - if no function definitions are found
 # Environment: Generates a temporary file which is removed

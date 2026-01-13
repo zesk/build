@@ -27,9 +27,8 @@ throwEnvironment() {
 }
 
 # Run `command`, upon failure run `handler` with an argument error
-# Usage: {fn} handler command ...
 # Argument: handler - Required. String. Failure command
-# Argument: command - Required. Command to run.
+# Argument: command ... - Required. Command to run.
 # Requires: throwArgument
 catchArgument() {
   local handler="${1-}"
@@ -37,9 +36,8 @@ catchArgument() {
 }
 
 # Run `command`, upon failure run `handler` with an environment error
-# Usage: {fn} handler command ...
 # Argument: handler - Required. String. Failure command
-# Argument: command - Required. Command to run.
+# Argument: command ... - Required. Command to run.
 # Requires: throwEnvironment
 catchEnvironment() {
   local handler="${1-}"

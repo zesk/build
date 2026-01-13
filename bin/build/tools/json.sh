@@ -247,3 +247,20 @@ __jsonSetValue() {
     $quietFlag || statusMessage --last decorate info "$decoratedJSON $key updated to $decoratedValue (old value $decoratedOldValue)"
   fi
 }
+
+
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
+# Summary: JSON pretty
+# Format something neatly as JSON
+# Example:     json < inputFile > outputFile
+# stdin: JSONFile
+# stdout: JSONFile pretty formatted
+json() {
+  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
+  jq .
+}
+_json() {
+  # __IDENTICAL__ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}

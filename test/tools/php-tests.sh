@@ -53,8 +53,6 @@ testPHPComposerInstallation() {
   catchReturn "$handler" rm -rf "$d" || return $?
 }
 
-#
-# Usage: {fn} [ --show ] [ --verbose ] [ --keep ]
 # Argument: --show - Optional. Flag. Print the displayed test crontab file to stdout.
 # Argument: --verbose - Optional. Flag. Be chatty.
 # Argument: --keep - Optional. Flag. Do not delete artifacts when done, print created values.

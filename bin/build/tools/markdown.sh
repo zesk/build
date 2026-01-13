@@ -66,11 +66,11 @@ _markdownIndentHeading() {
 # If you need a section to always be displayed; provide default values or blank values for the variables in those sections
 # to prevent removal.
 #
-# Usage: markdownRemoveUnfinishedSections < inputFile > outputFile
 # Argument: None
 # Depends: read printf
 # Return Code: 0
 # Environment: None
+# Example:     markdownRemoveUnfinishedSections < inputFile > outputFile
 # Example:     map.sh < $templateFile | markdownRemoveUnfinishedSections
 #
 markdownRemoveUnfinishedSections() {

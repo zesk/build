@@ -44,10 +44,9 @@ __tools() {
   __source bin/build/tools.sh "$@"
 }
 
-# IDENTICAL __gitHookPath 12
+# IDENTICAL __gitHookPath 11
 
 # Summary: Locates application home depending on whether this is running as a git hook or not
-# Usage: {fn}
 # If current path contains `.git/` then print `../../..` otherwise print `../..`
 # Lets us know if default hooks are in starting directory or are running as a git hook
 # Requires: printf
@@ -79,12 +78,12 @@ _returnMessage() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# Test if an argument is an unsigned integer
+# Summary: Is value an unsigned integer?
+# Test if a value is a 0 or greater integer. Leading "+" is ok.
 # Source: https://stackoverflow.com/questions/806906/how-do-i-test-if-a-variable-is-a-number-in-bash
 # Credits: F. Hauri - Give Up GitHub (isnum_Case)
 # Original: is_uint
 # Argument: value - EmptyString. Value to test if it is an unsigned integer.
-# Usage: {fn} argument ...
 # Return Code: 0 - if it is an unsigned integer
 # Return Code: 1 - if it is not an unsigned integer
 # Requires: returnMessage
@@ -98,7 +97,6 @@ _isUnsignedInteger() {
 }
 
 # <-- END of IDENTICAL returnMessage
-
 __gitPushHelper() {
   local handler="$1"
   local tempFile

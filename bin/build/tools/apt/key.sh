@@ -182,7 +182,7 @@ __aptKeyRemove() {
 }
 
 # sources constant with checking
-# Usage: {fn} usageFunction
+# Argument: handler - Function. Required. Error handler.
 _usageAptSourcesPath() {
   local handler="$1" sourcesPath
   sourcesPath=$(catchEnvironment "$handler" aptSourcesDirectory) || return $?

@@ -11,8 +11,6 @@
 
 # Looks up information in the function index
 #
-# Usage: {fn} [ --settings | --source | --line | --combined | --file ] cacheDirectory lookupPattern
-#
 # Argument: --settings - `lookupPattern` is a function name. Outputs a file containing function settings
 # Argument: --source - `lookupPattern` is a function name. Outputs the source code path to where the function is defined
 # Argument: --line - `lookupPattern` is a function name. Outputs the source code line where the function is defined
@@ -20,10 +18,9 @@
 # Argument: --file - `lookupPattern` is a file name. Find files which match this base file name.
 # Argument: --documentation - `lookupPattern` is a function name. Find first reference to this function in the documentation index.
 # Argument: --comment - `lookupPattern` is a function name. Find first reference to this function in the documentation index.
-# Argument: cacheDirectory - Directory where we can store cached information
-# Argument: lookupPattern - Token to look up
+# Argument: cacheDirectory - Directory. Required. Directory where we can store cached information
+# Argument: lookupPattern - String. Required. Token to look up
 # See: _documentationIndexGenerate
-#
 __documentationIndexLookup() {
   local handler="$1" && shift
   local mode="settings"

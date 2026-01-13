@@ -46,7 +46,6 @@ _awsInstall() {
 # If not found, returns with exit code 1.
 #
 # Summary: Get the path to the AWS credentials file
-# Usage:  {fn} [ --verbose ] [ --help ] [ --home homeDirectory ]
 # DOC TEMPLATE: --help 1
 # Argument: --help - Optional. Flag. Display this help.
 # Argument: --verbose - Flag. Optional. Verbose mode
@@ -82,7 +81,7 @@ _awsCredentialsFile() {
 #
 # Environment: AWS_ACCESS_KEY_DATE - Variable used to test
 # Summary: Test whether the AWS keys do not need to be updated
-# Usage: {fn} upToDateDays
+# Argument: upToDateDays - PositiveInteger.
 # Example:     if ! {fn} 90; then
 # Example:         bigText Failed, update key and reset date
 # Example:         exit 99
@@ -153,7 +152,6 @@ _awsProfilesList() {
 # If the AWS credentials file is incomplete, returns exit code 1 and outputs nothing.
 #
 # Summary: Get credentials and output environment variables for AWS authentication
-# Usage: {fn} [ profileName ] | [ --profile profileName ]
 # Argument: profileName - String. Optional. The credentials profile to load (default value is `default` and loads section identified by `[default]` in `~/.aws/credentials`)
 # Argument: --profile profileName - String. Optional. The credentials profile to load (default value is `default` and loads section identified by `[default]` in `~/.aws/credentials`)
 # Argument: --comments - Flag. Optional. Write comments to the credentials file (in addition to updating the record).
@@ -183,7 +181,6 @@ _awsEnvironmentFromCredentials() {
 # If the AWS credentials file is incomplete, returns exit code 1 and outputs nothing.
 #
 # Summary: Get credentials and output environment variables for AWS authentication
-# Usage: awsEnvironment profileName
 # Argument: profileName - The credentials profile to load (default value is `default` and loads section identified by `[default]` in `~/.aws/credentials`)
 # DOC TEMPLATE: --help 1
 # Argument: --help - Optional. Flag. Display this help.
@@ -227,9 +224,13 @@ _awsCredentialsAdd() {
 #
 # If the AWS credentials file is not found, succeeds.
 #
-# Usage: {fn} [ --help ] [ --profile profileName ] [ --force ] [ profileName ]
-# Argument: --profile profileName - String. Optional. The credentials profile to write (default value is `default`)
+# You can supply the profile using the `--profile` or directly, but just one.
+#
+# Argument: --profile profileName - String. Optional. The credentials profile to remove.
 # Argument: --comments - Flag. Optional. Write comments to the credentials file (in addition to updating the record).
+# Argument: profileName - String. Optional. The credentials profile to remove.
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
 awsCredentialsRemove() {
   __awsLoader "_${FUNCNAME[0]}" "__${FUNCNAME[0]}" "$@"
 }
@@ -318,8 +319,9 @@ _awsIPAccess() {
 # Summary: Check an AWS region code for validity
 # Checks an AWS region identifier for validity as of September 2024.
 # Note that passing no parameters returns success.
-# Usage: {fn} region
 # Argument: region ... - String. Required. The AWS Region to validate.
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
 # Return Code: 0 - All regions are valid AWS region
 # Return Code: 1 - One or more regions are NOT a valid AWS region
 # Checked: 2024-09-02

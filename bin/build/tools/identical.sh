@@ -22,7 +22,6 @@ __identicalLoader() {
   __buildFunctionLoader __identicalLineParse _identical "$@"
 }
 
-# Usage: {fn} token source destination
 # Repair an identical `token` in `destination` from `source`
 # Argument: --prefix prefix - Required. A text prefix to search for to identify identical sections (e.g. `# {identical}}`) (may specify more than one)
 # Argument: token - String. Required. The token to repair.
@@ -37,7 +36,6 @@ _identicalRepair() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# Usage: {fn} --extension extension0 --prefix prefix0  [ --cd directory ] [ --extension extension1 ... ] [ --prefix prefix1 ... ]
 # Argument: --extension extension - Required. String. One or more extensions to search for in the current directory.
 # Argument: --prefix prefix - Required. String. A text prefix to search for to identify identical sections (e.g. `# IDENTICAL`) (may specify more than one)
 # Argument: --exclude pattern - Optional. String. One or more patterns of paths to exclude. Similar to pattern used in `find`.

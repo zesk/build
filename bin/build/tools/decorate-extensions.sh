@@ -65,7 +65,6 @@ _decorateStyleReplace() {
 #
 # The name is output left-aligned to the `characterWidth` given and colored using `decorate label`; the value colored using `decorate value`.
 #
-# Usage: decorate pair [ characterWidth ] name [ value ... ]
 # Argument: characterWidth - Optional. Number of characters to format the value for spacing. Uses environment variable BUILD_PAIR_WIDTH if not set.
 # Argument: name - Required. Name to output
 # Argument: value ... - Optional. One or more Values to output as values for `name` (single line)
@@ -92,15 +91,14 @@ __decorateExtensionPair() {
 # consoles which do not honor colors line-by-line. Intended to be used as a pipe.
 #
 # Summary: Prefix output lines with a string
-# Usage: decorate wrap [ --fill ] [ prefix [ suffix ... ] ] < fileToWrapLines
 # Return Code: 0 - stdout contains input wrapped with text
 # Return Code: 1 - Environment error
 # Return Code: 2 - Argument error
-# Argument: prefix - String. Required. Prefix each line with this text
-# Argument: suffix - String. Required. Prefix each line with this text
+# Argument: prefix - EmptyString. Required. Prefix each line with this text
+# Argument: suffix - String. Optional. Prefix each line with this text
+# Argument: --fill fillCharacter - Character. Optional. Fill entire line with this character.
 # Example:     cat "$file" | decorate wrap "CODE> " " <EOL>"
 # Example:     cat "$errors" | decorate wrap "    ERROR: [" "]"
-#
 __decorateExtensionWrap() {
   local handler="_${FUNCNAME[0]}"
   local prefix=$'\1' suffix

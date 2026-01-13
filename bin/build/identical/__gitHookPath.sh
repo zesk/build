@@ -10,7 +10,6 @@
 # IDENTICAL __gitHookPath EOF
 
 # Summary: Locates application home depending on whether this is running as a git hook or not
-# Usage: {fn}
 # If current path contains `.git/` then print `../../..` otherwise print `../..`
 # Lets us know if default hooks are in starting directory or are running as a git hook
 # Requires: printf

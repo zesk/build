@@ -65,10 +65,11 @@ _aptSourcesDirectory() {
 #
 # Add keys to enable apt to download terraform directly from hashicorp.com
 #
-# Usage: {fn} --name keyName [ --title title ] remoteUrl
-# Argument: --title title - Optional. String. Title of the key.
-# Argument: --name name - Required. String. Name of the key used to generate file names.
+# Argument: --title keyTitle - Optional. String. Title of the key.
+# Argument: --name keyName - Required. String. Name of the key used to generate file names.
 # Argument: --url remoteUrl - Required. URL. Remote URL of gpg key.
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
 # Return Code: 1 - if environment is awry
 # Return Code: 0 - Apt key is installed AOK
 #
@@ -83,11 +84,12 @@ _aptKeyAdd() {
 #
 # Remove apt keys
 #
-# Usage: {fn} keyName [ ... ]
 # Argument: keyName - Required. String. One or more key names to remove.
 # Argument: --skip - Flag. Optional.a Do not do `apt-get update` afterwards to update the database.
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
 # Return Code: 1 - if environment is awry
-# Return Code: 0 - Apt key is installed AOK
+# Return Code: 0 - Apt key was removed AOK
 #
 aptKeyRemove() {
   __aptLoader "_${FUNCNAME[0]}" "__${FUNCNAME[0]}" "$@"

@@ -56,7 +56,6 @@ __crontabGenerate() {
 #
 # Any files not found are skipped. Note that environment values are not carried between applications.
 #
-# Usage: {fn} [ --env-file environment ] [ --show ] [ --user user ] [ --mapper envMapper ] applicationPath
 # Argument: --env-file environmentFile - Top-level environment file to pass variables into the user `crontab` template
 # Argument: --show - Show the crontab instead of installing it
 # Argument: --user user - Scan for crontab files in the form `user.crontab` and then install as this user. If not specified, uses current user name.

@@ -8,7 +8,6 @@
 #
 
 #
-# Usage: {fn} version
 # Environment: BUILD_NPM_VERSION - Read-only. Default version. If not specified, uses `latest`.
 # Install NPM in the build environment
 # If this fails it will output the installation log.
@@ -16,8 +15,7 @@
 # Environment: - `BUILD_NPM_VERSION` - String. Default to `latest`. Used to install `npm -i npm@$BUILD_NPM_VERSION` on install.
 # Return Code: 1 - If installation of npm fails
 # Return Code: 0 - If npm is already installed or installed without error
-# Binary: npm.sh
-#
+# Argument: --version versionCode - String. Optional. Install this version of python.
 npmInstall() {
   local handler="_${FUNCNAME[0]}"
 
@@ -65,7 +63,6 @@ _npmInstall() {
 }
 
 #
-# Usage: {fn}
 # Core as part of some systems - so this succeeds and it still exists
 #
 npmUninstall() {

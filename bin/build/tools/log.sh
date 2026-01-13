@@ -10,7 +10,7 @@
 # Test: o ./test/tools/log-tests.sh
 
 #
-# Usage: {fn} [ --dry-run ] logFile count
+# Argument: --dry-run - Flag. Optional. Do not change anything.
 # Argument: logFile - Required. A log file which exists.
 # Argument: count - Required. Integer of log files to maintain.
 # Rotate a log file
@@ -22,8 +22,7 @@
 #     logFile.2
 #     logFile.3
 #
-# But maintains file` descriptors for `logFile`.
-#
+# But maintains file descriptors for `logFile`.
 rotateLog() {
   local this="${FUNCNAME[0]}"
   local handler="_$this"
@@ -98,11 +97,11 @@ _rotateLog() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# Usage: {fn} [ --dry-run ] logPath count
+# Summary: Rotate log files
+# For all log files in logPath with extension `.log`, rotate them safely
+# Argument: --dry-run - Flag. Optional. Do not change anything.
 # Argument: logPath - Required. Path where log files exist.
 # Argument: count - Required. Integer of log files to maintain.
-# Rotate log files
-# For all log files in logPath with extension `.log`, rotate them safely
 rotateLogs() {
   local handler="_${FUNCNAME[0]}"
 

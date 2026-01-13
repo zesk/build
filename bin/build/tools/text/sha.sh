@@ -9,7 +9,9 @@
 
 __shaPipe() {
   local handler="$1" && shift
-  local argument
+  local argument debug=false
+
+  ! buildDebugEnabled shaPipe || debug=true
   whichExists sha1sum || throwEnvironment "$handler" "Need packageGroupInstall sha1sum" || return $?
   if [ -n "$*" ]; then
     while [ $# -gt 0 ]; do
@@ -17,14 +19,14 @@ __shaPipe() {
       [ "$argument" != "--help" ] || __help "$handler" "$@" || return 0
       [ -f "$1" ] || throwArgument "$handler" "$1 is not a file" || return $?
       [ -n "$argument" ] || throwArgument "$handler" "blank argument" || return $?
-      if test "${DEBUG_SHAPIPE-}"; then
+      if $debug; then
         printf "%s: %s\n" "$(date +"%FT%T")" "$argument" >>shaPipe.log
       fi
       sha1sum <"$argument" | cut -f 1 -d ' '
       shift
     done
   else
-    if test "${DEBUG_SHAPIPE-}"; then
+    if $debug; then
       printf "%s: stdin\n" "$(date +"%FT%T")" >>shaPipe.log
     fi
     sha1sum | cut -f 1 -d ' ' || throwEnvironment "$handler" "sha1sum" || return $?

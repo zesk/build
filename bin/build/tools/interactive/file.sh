@@ -157,9 +157,10 @@ __fileCopyWouldChange() {
   throwArgument "$handler" "Missing source" || return $?
 }
 
-#
-# Usage: _fileCopyEscalated displaySource source destination verb
-#
+# Argument: displaySource
+# Argument: source
+# Argument: destination
+# Argument: verb
 _fileCopyEscalated() {
   decorate reset
   printf "\n%s -> %s: %s\n\n" "$(decorate green "$1")" "$(decorate red "$3")" "$(decorate bold-red "$4")"
@@ -175,11 +176,10 @@ _fileCopyEscalated() {
   returnArgument || return $?
 }
 
-#
-# Usage: {fn} displaySource source destination verb
-#
-# Copy a file with no privilege escalation
-#
+# Argument: displaySource
+# Argument: source
+# Argument: destination
+# Argument: verb
 _fileCopyRegular() {
   local displaySource="$1" source="$2" destination="$3" verb="$4"
   _fileCopyPrompt "OVERRIDE $displaySource" "$destination" "$verb" || :
@@ -191,10 +191,8 @@ _fileCopyPrompt() {
   printf "%s -> %s %s\n" "$(decorate green "$source")" "$(decorate red "$destination")" "$(decorate cyan "$verb")"
 }
 
-#
 # Show a new file which will be added
 #
-# Usage: {fn} displaySource source destination
 # Argument: displaySource - Source path to show
 # Argument: source - Actual source path
 # Argument: destination - Destination path

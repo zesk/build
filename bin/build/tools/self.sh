@@ -19,7 +19,6 @@ __selfLoader() {
 }
 
 # Installs an installer the first time in a new project, and modifies it to work in the application path.
-# Argument: --help - Optional. Flag. This help.
 # Argument: --diff - Optional. Flag. Show differences between new and old files if changed.
 # Argument: --url - Optional. URL. A remote URL to download the installation script.
 # Argument: --url-function - Optional. Callable. Fetch the remote URL where the installation script is found.
@@ -28,7 +27,8 @@ __selfLoader() {
 # Argument: --bin - Required. String. Name of the installer file.
 # Argument: path - Optional. Directory. Path to install the binary. Default is `bin`. If ends with `.sh` will name the binary this name.
 # Argument: applicationHome - Optional. Directory. Path to the application home directory. Default is current directory.
-# Usage: {fn} [ --help ] [ --diff ] [ --local ] [ path [ applicationHome ] ]
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
 installInstallBinary() {
   __selfLoader "_${FUNCNAME[0]}" "__${FUNCNAME[0]}" "$@"
 }
@@ -43,7 +43,8 @@ _installInstallBinary() {
 # Argument: --local - Optional. Flag. Use local copy of `install-bin-build.sh` instead of downloaded version.
 # Argument: path - Optional. Directory. Path to install the binary. Default is `bin`. If ends with `.sh` will name the binary this name.
 # Argument: applicationHome - Optional. Directory. Path to the application home directory. Default is current directory.
-# Usage: {fn} [ --help ] [ --diff ] [ --local ] [ path [ applicationHome ] ]
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
 installInstallBuild() {
   local handler="_${FUNCNAME[0]}"
   local home
@@ -61,6 +62,8 @@ _installInstallBuild() {
 # Argument: --help - Optional. Flag. Display this help.
 # Environment: BUILD_HOME
 # Prints the list of functions defined in Zesk Build
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
 buildFunctions() {
   local handler="_${FUNCNAME[0]}"
   [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
@@ -82,6 +85,8 @@ _buildFunctions() {
 # Example:     logFile=$({fn} test.log)
 # Argument: pathSegment - One or more directory or file path, concatenated as path segments using `/`
 # Environment: XDG_CACHE_HOME
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
 buildCacheDirectory() {
   local handler="_${FUNCNAME[0]}"
   [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
@@ -94,10 +99,10 @@ _buildCacheDirectory() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# Usage: {fn}
 # Environment: BUILD_HOME
 # Prints the build home directory (usually same as the application root)
-# Environment: BUILD_HOME
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
 buildHome() {
   local handler="_${FUNCNAME[0]}"
   export BUILD_HOME
@@ -136,18 +141,29 @@ _buildEnvironmentPath() {
   printf "%s\n" "${paths[@]+"${paths[@]}"}" "$home/bin/build/env"
 }
 
+# Output the list of environment variable names which can be loaded via `buildEnvironmentLoad` or `buildEnvironmentGet`
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
+# Requires: convertValue _buildEnvironmentPath find sort read __help catchEnvironment
 buildEnvironmentNames() {
+  local handler="${FUNCNAME[0]}"
+
+  [ $# -eq 0 ] || __help --only "$handler" "$@" || return "$(convertValue $? 1 0)"
   (
     IFS=$'\n' read -d '' -r -a paths < <(_buildEnvironmentPath "$handler") || :
     for path in "${paths[@]}"; do
       find "$path" -type f -name '*.sh' -exec basename {} \; | cut -d . -f 1
     done
-  ) | sort -u
+  ) | catchEnvironment "$handler" sort -u || return $?
+}
+_buildEnvironmentNames() {
+  true || buildEnvironmentNames --help || return $?
+  # __IDENTICAL__ usageDocument 1
+  usageDocument "${GASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Determine the environment file names for environment variables
 #
-# Usage: {fn} [ envName ... ]
 # Argument: envName - Optional. String. Name of the environment value to find
 # Argument: --application applicationHome - Path. Optional. Directory of alternate application home. Can be specified more than once to change state.
 # DOC TEMPLATE: --help 1
@@ -200,7 +216,6 @@ _buildEnvironmentFiles() {
 
 # Load one or more environment settings from the environment file path.
 #
-# Usage: {fn} [ envName ... ]
 # Argument: envName - Optional. String. Name of the environment value to load. Afterwards this should be defined (possibly blank) and `export`ed.
 # Argument: --application applicationHome - Path. Optional. Directory of alternate application home. Can be specified more than once to change state.
 # Argument: --all - Flag. Optional. Load all environment variables defined in BUILD_ENVIRONMENT_DIRS.
@@ -336,7 +351,6 @@ _tools() {
 
 # Load and print one or more environment settings
 #
-# Usage: {fn} [ envName ... ]
 # Argument: envName - Optional. String. Name of the environment value to load. Afterwards this should be defined (possibly blank) and `export`ed.
 # Argument: --application applicationHome - Path. Optional. Directory of alternate application home. Can be specified more than once to change state.
 # If BOTH files exist, both are sourced, so application environments should anticipate values
@@ -378,7 +392,6 @@ _buildEnvironmentGet() {
 
 # Load and print one or more environment settings which represents a directory which should be created.
 #
-# Usage: {fn} [ envName ... ]
 # Argument: envName - Optional. String. Name of the environment value to load. Afterwards this should be defined (possibly blank) and `export`ed.
 # Argument: --subdirectory subdirectory - Optional. String. Name of a subdirectory to return "beneath" the value of environment variable. Created if the flag is set.
 # Argument: --mode fileMode - String. Optional. Enforce the mode for `mkdir --mode` and `chmod`. Use special mode `-` to mean no mode enforcement.
@@ -443,7 +456,6 @@ _buildEnvironmentGetDirectory() {
 
 #
 # Generate the path for a quiet log in the build cache directory, creating it if necessary.
-# Usage: {fn} name
 # Argument: name - String. Required. The log file name to create. Trims leading `_` if present.
 # Argument: --no-create - Flag. Optional. Do not require creation of the directory where the log file will appear.
 #
@@ -484,7 +496,6 @@ _buildQuietLog() {
 }
 
 # Run a command and ensure the build tools context matches the current project
-# Usage: {fn} arguments ...
 # Argument: contextStart - Required. Directory. Context in which the command should run.
 # Argument: command ... - Required. Command to run in new context.
 # Avoid infinite loops here, call down.

@@ -313,10 +313,9 @@ _trimSpace() {
 
 # Check if an element exists in an array
 #
-# Usage: inArray element [ arrayElement0 arrayElement1 ... ]
-# Argument: `element` - Thing to search for
-# Argument: `arrayElement0` - One or more array elements to match
-# Example:     if inArray "$thing" "${things[@]}"; then
+# Argument: element - EmptyString. Thing to search for
+# Argument: arrayElement0 ... - Array. Optional. One or more array elements to match
+# Example:     if inArray "$thing" "${things[@]+"${things[@]}"}"; then
 # Example:         things+=("$thing")
 # Example:     fi
 # Return Code: 0 - If element is found in array
@@ -341,7 +340,6 @@ _inArray() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# Usage: {fn} haystack needle ...
 # Argument: haystack - Required. String. String to search.
 # Argument: needle ... - Optional. String. One or more strings to find as a substring of `haystack`.
 # Return Code: 0 - IFF ANY needle matches as a substring of haystack
@@ -419,7 +417,6 @@ _stringBeginsInsensitive() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# Usage: {fn} haystack needle ...
 # Argument: haystack - Required. String. String to search.
 # Argument: needle ... - Optional. String. One or more strings to find as a case-insensitive substring of `haystack`.
 # Return Code: 0 - IFF ANY needle matches as a substring of haystack
@@ -447,7 +444,6 @@ _stringContainsInsensitive() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# Usage: {fn} text prefixText ...
 # Argument: text - Optional. String. String to match.
 # Argument: prefixText - Required. String. One or more. Does this prefix exist in our `text`?
 # Return Code: 0 - If `text` has any prefix
@@ -476,7 +472,6 @@ _beginsWith() {
 #
 # Check if one string is a substring of another set of strings (case-sensitive)
 #
-# Usage: {fn} needle [ haystack ... ]
 # Argument: needle - Required. String. Thing to search for, not blank.
 # Argument: haystack ... - Optional. EmptyString. One or more array elements to match
 # Return Code: 0 - If element is a substring of any haystack
@@ -502,7 +497,6 @@ _isSubstring() {
 #
 # Check if one string is a substring of another set of strings (case-insensitive)
 #
-# Usage: {fn} needle [ haystack ... ]
 # Argument: needle - Required. String. Thing to search for, not blank.
 # Argument: haystack ... - Optional. EmptyString. One or more array elements to match
 # Return Code: 0 - If element is a substring of any haystack
@@ -534,9 +528,8 @@ _isSubstringInsensitive() {
 #
 # Remove words from the end of a phrase
 #
-# Usage: trimWords [ wordCount [ word0 ... ] ]
-# Argument: `wordCount` - Words to output
-# Argument: `word0` - One or more words to output
+# Argument: wordCount - PositiveInteger. Words to output
+# Argument: word0 ... - EmptyString. One or more words to output
 # Example:     printf "%s: %s\n" "Summary:" "$(trimWords 10 $description)"
 # Tested: No
 #
@@ -874,14 +867,13 @@ _plainLength() {
 #
 # You can use this as a pipe or pass in arguments which are files to be hashed.
 #
-# Usage: shaPipe [ filename ... ]
-# Argument: filename - One or more filenames to generate a checksum for
+# Argument: filename ... - File. One or more filenames to generate a checksum for
 # Depends: sha1sum
 # Summary: SHA1 checksum of standard input
 # Example:     shaPipe < "$fileName"
 # Example:     shaPipe "$fileName0" "$fileName1"
 # Output: cf7861b50054e8c680a9552917b43ec2b9edae2b
-# Environment: DEBUG_SHAPIPE - When set to a truthy value, will output all requested shaPipe calls to log called `shaPipe.log`.
+# BUILD_DEBUG: shaPipe - Outputs all requested shaPipe calls to log called `shaPipe.log`.
 # stdin: any file
 # stdout: `String`. A hexadecimal string which uniquely represents the data in `stdin`.
 shaPipe() {
@@ -900,8 +892,8 @@ _shaPipe() {
 #
 # The `cacheDirectory`
 #
-# Usage: cachedShaPipe cacheDirectory [ filename ]
 # Argument: cacheDirectory - Optional. Directory. The directory where cache files can be stored exclusively for this function. Supports a blank value to disable caching, otherwise, it must be a valid directory.
+# Argument: filename - Optional. File. File determine the sha value for.
 # Depends: sha1sum shaPipe
 # Summary: SHA1 checksum of standard input
 # Example:     cachedShaPipe "$cacheDirectory" < "$fileName"
@@ -918,7 +910,6 @@ _cachedShaPipe() {
 }
 
 #
-# Usage: randomString [ ... ]
 # Depends: sha1sum, /dev/random
 # Description: Outputs 40 random hexadecimal characters, lowercase.
 # Example:     testPassword="$(randomString)"
@@ -979,7 +970,6 @@ _stringOffsetInsensitive() {
 }
 
 # Remove fields from left to right from a text file as a pipe
-# Usage: {fn} fieldCount < input > output
 # Argument: fieldCount - Optional. Integer. Number of field to remove. Default is just first `1`.
 # Partial Credit: https://stackoverflow.com/questions/4198138/printing-everything-except-the-first-field-with-awk/31849899#31849899
 # stdin: A file with fields separated by spaces

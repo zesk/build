@@ -17,10 +17,10 @@
 #
 # This tools does not install the `composer` binary into the local environment.
 # fn: composer.sh
-# Usage: composer.sh [ --help ] [ installDirectory ]
 #
-# Argument: installDirectory - You can pass a single argument which is the directory in your source tree to run composer. It should contain a `composer.json` file.
-# Argument: --help - This help
+# Argument: installDirectory - Directory. Required. You can pass a single argument which is the directory in your source tree to run composer. It should contain a `composer.json` file.
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
 #
 # Example:     phpComposer ./app/
 # Local Cache: This tool uses the local `.composer` directory to cache information between builds. If you cache data between builds for speed, cache the `.composer` artifact if you use this tool. You do not need to do this but 2nd builds tend to be must faster with cached data.

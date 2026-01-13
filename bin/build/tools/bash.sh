@@ -20,7 +20,6 @@ __bashLoader() {
 
 # Sanitize bash files for code quality.
 #
-# Usage: {fn} [ --help ] [ --interactive ] [ --check checkDirectory ] ...
 # DOC TEMPLATE: --help 1
 # Argument: --help - Optional. Flag. Display this help.
 # Argument: -- - Flag. Optional. Interactive mode on fixing errors.
@@ -38,7 +37,6 @@ _bashSanitize() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# Usage: {fn} script ...
 # Argument: script - File. Required. Bash script to fetch requires tokens from.
 # Gets a list of the `Requires:` comments in a bash file
 # Returns a unique list of tokens
@@ -50,7 +48,6 @@ _bashGetRequires() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# Usage: {fn} script
 # Checks a bash script to ensure all requirements are met, outputs a list of unmet requirements
 # Scans a bash script for lines which look like:
 #

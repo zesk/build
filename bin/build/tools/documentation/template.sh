@@ -10,7 +10,10 @@
 # Test: o ./test/tools/documentation-tests.sh
 
 # Map template files using our identical functionality
-# Usage: {fn} templatePath repairPath
+# Argument: templatePath - Directory. Required. Path to the templates to repair.
+# Argument: repairPath ... - Directory. Required. One or more directories containing IDENTICAL sources for repair.
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
 __documentationTemplateUpdate() {
   local handler="$1" && shift
   [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
@@ -30,34 +33,32 @@ __documentationTemplateUpdate() {
   done
 }
 
-#
-# Usage: {fn} cacheDirectory envFile unlinkedTemplateFile unlinkedTarget pageTemplateFile [ todoTemplateCode ]
 # Argument: cacheDirectory - Required. Directory. Cache directory.
 # Argument: envFile - Required. File. Environment file used as base environment for all template generation.
 # Argument: template - Required. File. Final template file.
-# - Argument: pageTemplate - Required. File. Environment file used as base environment for all template generation.
 # Argument: todoTemplateCode - Optional. File. Template code for template.
-#
 __documentationTemplateUpdateUnlinked() {
   local handler="_${FUNCNAME[0]}"
-  local cacheDirectory envFile template unlinkedFunctions todoTemplate template total clean content
 
-  clean=()
-  cacheDirectory=$(validate "$handler" Directory "cacheDirectory" "${1-}") || return $?
-  envFile=$(validate "$handler" File "envFile" "${2-}") || return $?
-  template=$(validate "$handler" File "template" "${3-}") || return $?
+  local cacheDirectory envFile template
+  cacheDirectory=$(validate "$handler" Directory "cacheDirectory" "${1-}") && shift || return $?
+  envFile=$(validate "$handler" File "envFile" "${1-}") && shift || return $?
+  template=$(validate "$handler" File "template" "${1-}") && shift || return $?
 
-  # Not used I guess
-  muzzle validate "$handler" File "pageTemplate" "${5-}" || return $?
-  todoTemplate=$(catchReturn "$handler" documentationTemplate "${6-todo}") || return $?
+  local todoTemplateCode="todo" todoTemplate
+  [ $# -eq 0 ] || todoTemplateCode="$1"
+  todoTemplate=$(catchReturn "$handler" documentationTemplate "$todoTemplateCode") || return $?
 
+  local unlinkedFunctions total
   unlinkedFunctions=$(fileTemporaryName "$handler") || return $?
-  clean+=("$unlinkedFunctions")
+  local clean=("$unlinkedFunctions")
   catchReturn "$handler" _documentationIndexUnlinkedFunctions "$cacheDirectory" | grepSafe -v '^_' | decorate wrap "{" "}" >"$unlinkedFunctions" || returnClean $? "${clean[@]}" || return $?
+  local total
   total=$(catchReturn "$handler" fileLineCount "$unlinkedFunctions") || return $?
 
   # Subshell hide globals
   (
+    local content
     if [ "$total" -lt 40 ]; then
       content="$(sort <"$unlinkedFunctions")"
     else
@@ -189,7 +190,6 @@ __documentationUnlinked() {
 # sample function `_bashDocumentationFormatter_exit_code`.
 #
 # See: _bashDocumentationFormatter_exit_code
-# Usage: {fn} template [ settingsFile ...
 # Argument: template - Required. A markdown template to use to map values. Post-processed with `markdownRemoveUnfinishedSections`
 # Argument: settingsFile - Required. Settings file to be loaded.
 # Return Code: 0 - Success
