@@ -94,7 +94,7 @@ validate() {
       [ -z "$value" ] || suffix=" $(decorate error "$value")"
       throwArgument "$handler" "$name ($(decorate each code "$@")) is not type $(decorate label "$type")$suffix" || return $?
     fi
-aa    shift 3
+    aa shift 3
   done
 }
 _validate() {
