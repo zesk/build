@@ -25,7 +25,7 @@ pipelines:
             - .build.env
           script:
             - bin/build.sh --commit
-            - bin/tools.sh buildStepInitialize "${BUILD_TEST_DUMP_ENVIRONMENT-}
+            - bin/tools.sh buildStepInitialize "${BUILD_TEST_DUMP_ENVIRONMENT-}"
       - parallel:
           steps:
             - step:
@@ -36,7 +36,7 @@ pipelines:
                 size: 2x
                 name: Production Fast Tests 2x
                 script:
-                  - bin/tools.sh buildStepInitialize "${BUILD_TEST_DUMP_ENVIRONMENT-}
+                  - bin/tools.sh buildStepInitialize "${BUILD_TEST_DUMP_ENVIRONMENT-}"
                   - bin/tools.sh buildProductionTest --env-file .build.env --skip-tag slow --skip-tag package-install
             - step:
                 artifacts:
@@ -47,7 +47,7 @@ pipelines:
                 size: 4x
                 name: Production Slow Tests 4x
                 script:
-                  - bin/tools.sh buildStepInitialize "${BUILD_TEST_DUMP_ENVIRONMENT-}
+                  - bin/tools.sh buildStepInitialize "${BUILD_TEST_DUMP_ENVIRONMENT-}"
                   - bin/tools.sh buildProductionTest --env-file .build.env --tag slow
             - step:
                 artifacts:
@@ -58,7 +58,7 @@ pipelines:
                 size: 1x
                 name: Production Package Tests 1x
                 script:
-                  - bin/tools.sh buildStepInitialize "${BUILD_TEST_DUMP_ENVIRONMENT-}
+                  - bin/tools.sh buildStepInitialize "${BUILD_TEST_DUMP_ENVIRONMENT-}"
                   - bin/tools.sh buildProductionTest --env-file .build.env --tag package-install --skip-tag package-install-last # poor man's ordering
                   - bin/tools.sh buildProductionTest --env-file .build.env --tag package-install --tag +package-install-last # poor man's ordering
       - step:
@@ -69,7 +69,7 @@ pipelines:
             - documentation/.site/
             - documentation/.docs/
           script:
-            - bin/tools.sh buildStepInitialize "${BUILD_TEST_DUMP_ENVIRONMENT-}
+            - bin/tools.sh buildStepInitialize "${BUILD_TEST_DUMP_ENVIRONMENT-}"
             - bin/build/tools.sh environmentFileLoad .build.env --execute bin/build.sh --documentation
             - bin/deploy.sh --env-file .build.env --documentation --release
     staging:
@@ -84,7 +84,7 @@ pipelines:
             - docker
           script:
             - bin/build.sh
-            - bin/tools.sh buildStepInitialize "${BUILD_TEST_DUMP_ENVIRONMENT-}
+            - bin/tools.sh buildStepInitialize "${BUILD_TEST_DUMP_ENVIRONMENT-}"
       - parallel:
           steps:
             - step:
@@ -96,7 +96,7 @@ pipelines:
                 size: 2x
                 name: Staging Fast Tests 2x
                 script:
-                  - bin/tools.sh buildStepInitialize "${BUILD_TEST_DUMP_ENVIRONMENT-}
+                  - bin/tools.sh buildStepInitialize "${BUILD_TEST_DUMP_ENVIRONMENT-}"
                   - bin/tools.sh buildStagingTest --env-file .build.env --skip-tag slow --skip-tag package-install
             - step:
                 artifacts:
@@ -107,7 +107,7 @@ pipelines:
                 size: 4x
                 name: Staging Slow Tests 4x
                 script:
-                  - bin/tools.sh buildStepInitialize "${BUILD_TEST_DUMP_ENVIRONMENT-}
+                  - bin/tools.sh buildStepInitialize "${BUILD_TEST_DUMP_ENVIRONMENT-}"
                   - bin/tools.sh buildStagingTest --env-file .build.env --tag slow
             - step:
                 artifacts:
@@ -118,7 +118,7 @@ pipelines:
                 size: 1x
                 name: Staging Package Tests 1x
                 script:
-                  - bin/tools.sh buildStepInitialize "${BUILD_TEST_DUMP_ENVIRONMENT-}
+                  - bin/tools.sh buildStepInitialize "${BUILD_TEST_DUMP_ENVIRONMENT-}"
                   - bin/tools.sh buildStagingTest --env-file .build.env --tag package-install --skip-tag package-install-last
                   - bin/tools.sh buildStagingTest --env-file .build.env --tag package-install --tag +package-install-last
       - step:
@@ -129,7 +129,7 @@ pipelines:
             - documentation/.docs/
             - .interrupt.log
           script:
-            - bin/tools.sh buildStepInitialize "${BUILD_TEST_DUMP_ENVIRONMENT-}
+            - bin/tools.sh buildStepInitialize "${BUILD_TEST_DUMP_ENVIRONMENT-}"
             - bin/build/tools.sh environmentFileLoad .build.env --execute bin/build.sh --documentation --commit
             - bin/deploy.sh --env-file .build.env --documentation --no-release
     deploy:
