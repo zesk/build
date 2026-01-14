@@ -305,7 +305,7 @@ ___bashPromptModule_reloadChangesCheck() {
   ! $debug || decorate info "Saving new state file $maxModified $maxNewestFile"
 
   printf "%s\n" "$maxModified" "$maxNewestFile" >"$pathStateFile"
-  if isInteger "${__BASH_PROMPT_RELOAD_CHANGES-}" && [ "$__BASH_PROMPT_RELOAD_CHANGES" -lt "$maxModified" ]; then
+  if ! isInteger "${__BASH_PROMPT_RELOAD_CHANGES-}" || [ "$__BASH_PROMPT_RELOAD_CHANGES" -lt "$maxModified" ]; then
     __BASH_PROMPT_RELOAD_CHANGES="$maxModified"
   fi
   return 0

@@ -4,10 +4,6 @@
 #
 # Copyright &copy; 2026 Market Acumen, Inc.
 #
-# Depends: text.sh colors.sh
-# bin: test echo printf
-# Docs: o ./documentation/source/tools/interactive.md
-# Test: o ./test/tools/interactive-tests.sh
 
 ####################################################################################################
 ####################################################################################################

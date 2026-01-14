@@ -328,8 +328,9 @@ __internalDumpEnvironment() {
   [ ${#regulars[@]} -eq 0 ] || for name in "${regulars[@]}"; do
     local value="${!name-}"
     local len=${#value}
-    [ "$len" -lt "$maxLen" ] || value="${value:0:$maxLen} ... $(decorate green "$len $(plural "$len" "character" "characters")")"
-    decorate pair "$name" "$(newlineHide "$value" "$(decorate green "␤")")"
+    [ "$len" -lt "$maxLen" ] || value="${value:0:$maxLen} ... $(decorate green "$(pluralWord "$len" "character")")"
+    value=$(newlineHide "$value" "$(decorate green "␤")")
+    decorate pair -- "$name" "$value"
   done
   [ ${#blanks[@]} -eq 0 ] || decorate pair "[BLANK VARIABLES]" "$(decorate each code "${blanks[@]}")"
   ! $showSkipped || [ ${#skipped[@]} -eq 0 ] || decorate pair "[SKIPPED VARIABLES]" "$(decorate each code "${skipped[@]}")"

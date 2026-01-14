@@ -83,7 +83,7 @@ __decorateExtensionPair() {
   if [ -z "$name" ]; then
     return 0
   fi
-  printf "%s %s%s\n" "$(decorate label "$(alignLeft "$width" "$name")")" "$(decorate each value "$@")" "$(decorate reset --)"
+  printf "%s %s%s\n" "$(decorate label "$(alignLeft "$width" "$name")")" "$(decorate each -- value "$@")" "$(decorate reset --)"
 }
 
 # fn: decorate wrap

@@ -231,7 +231,7 @@ _labeledBigText() {
 # Argument: `string` - A sequence of characters to repeat
 # Argument: ... - Additional arguments are output using shell expansion of `$*`
 # Example:     repeat 80 =
-# Example:     echo Hello world
+# Example:     decorate info Hello world
 # Example:     repeat 80 -
 # Internal: Uses power of 2 strings to minimize the number of print statements. Nerd.
 # Repeat a string

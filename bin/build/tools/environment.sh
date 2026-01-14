@@ -397,7 +397,11 @@ environmentLoad() {
       export "${name?}"="$value"
     done
   fi
-  [ ${#execute[@]} -eq 0 ] || catchEnvironment "$handler" "${execute[@]}"
+
+  if [ ${#execute[@]} -gt 0 ]; then
+    ! $debugMode || printf "RUNNING: %s" "$*"
+    catchEnvironment "$handler" "${execute[@]}" || return $?
+  fi
 }
 _environmentLoad() {
   # __IDENTICAL__ usageDocument 1
@@ -499,7 +503,10 @@ environmentFileLoad() {
     ! $debugMode || printf "%s lines:\n%s\n" "$(decorate code "$environmentFile")" "$(environmentLines <"$environmentFile")"
     catchReturn "$handler" environmentLoad --context "$environmentFile" "${pp[@]+"${pp[@]}"}" "${ee[@]+"${ee[@]}"}" < <(environmentLines <"$environmentFile") || return $?
   done
-  [ ${#execute[@]} -eq 0 ] || catchEnvironment "$handler" "${execute[@]}"
+  if [ ${#execute[@]} -gt 0 ]; then
+    ! $debugMode || printf "RUNNING: %s" "${execute[*]}"
+    catchEnvironment "$handler" "${execute[@]}" || return $?
+  fi
 }
 _environmentFileLoad() {
   # __IDENTICAL__ usageDocument 1
