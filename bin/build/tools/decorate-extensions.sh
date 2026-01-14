@@ -76,7 +76,9 @@ __decorateExtensionPair() {
     width="$1" && shift
   fi
   if [ -z "$width" ]; then
-    width=$(buildEnvironmentGet BUILD_PAIR_WIDTH) || width=40
+    export BUILD_PAIR_WIDTH
+    width=${BUILD_PAIR_WIDTH-}
+    isUnsignedInteger "$width" || width=40
   fi
   name="${1-}"
   shift 2>/dev/null || :

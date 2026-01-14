@@ -24,6 +24,7 @@ pipelines:
           artifacts:
             - .build.env
           script:
+            - bin/tools.sh buildStepInitialize "${BUILD_TEST_DUMP_ENVIRONMENT-}
             - bin/build.sh --commit
       - parallel:
           steps:
@@ -35,7 +36,7 @@ pipelines:
                 size: 2x
                 name: Production Fast Tests 2x
                 script:
-                  - bin/tools.sh environmentFileLoad .build.env --execute dumpEnvironment
+                  - bin/tools.sh buildStepInitialize "${BUILD_TEST_DUMP_ENVIRONMENT-}
                   - bin/tools.sh buildProductionTest --env-file .build.env --skip-tag slow --skip-tag package-install
             - step:
                 artifacts:
@@ -46,6 +47,7 @@ pipelines:
                 size: 4x
                 name: Production Slow Tests 4x
                 script:
+                  - bin/tools.sh buildStepInitialize "${BUILD_TEST_DUMP_ENVIRONMENT-}
                   - bin/tools.sh buildProductionTest --env-file .build.env --tag slow
             - step:
                 artifacts:
@@ -56,6 +58,7 @@ pipelines:
                 size: 1x
                 name: Production Package Tests 1x
                 script:
+                  - bin/tools.sh buildStepInitialize "${BUILD_TEST_DUMP_ENVIRONMENT-}
                   - bin/tools.sh buildProductionTest --env-file .build.env --tag package-install --skip-tag package-install-last # poor man's ordering
                   - bin/tools.sh buildProductionTest --env-file .build.env --tag package-install --tag +package-install-last # poor man's ordering
       - step:
@@ -66,6 +69,7 @@ pipelines:
             - documentation/.site/
             - documentation/.docs/
           script:
+            - bin/tools.sh buildStepInitialize "${BUILD_TEST_DUMP_ENVIRONMENT-}
             - bin/build/tools.sh environmentFileLoad .build.env --execute bin/build.sh --documentation
             - bin/deploy.sh --env-file .build.env --documentation --release
     staging:
@@ -79,6 +83,7 @@ pipelines:
           services:
             - docker
           script:
+            - bin/tools.sh buildStepInitialize "${BUILD_TEST_DUMP_ENVIRONMENT-}
             - bin/build.sh
       - parallel:
           steps:
@@ -91,6 +96,7 @@ pipelines:
                 size: 2x
                 name: Staging Fast Tests 2x
                 script:
+                  - bin/tools.sh buildStepInitialize "${BUILD_TEST_DUMP_ENVIRONMENT-}
                   - bin/tools.sh buildStagingTest --env-file .build.env --skip-tag slow --skip-tag package-install
             - step:
                 artifacts:
@@ -101,6 +107,7 @@ pipelines:
                 size: 4x
                 name: Staging Slow Tests 4x
                 script:
+                  - bin/tools.sh buildStepInitialize "${BUILD_TEST_DUMP_ENVIRONMENT-}
                   - bin/tools.sh buildStagingTest --env-file .build.env --tag slow
             - step:
                 artifacts:
@@ -111,6 +118,7 @@ pipelines:
                 size: 1x
                 name: Staging Package Tests 1x
                 script:
+                  - bin/tools.sh buildStepInitialize "${BUILD_TEST_DUMP_ENVIRONMENT-}
                   - bin/tools.sh buildStagingTest --env-file .build.env --tag package-install --skip-tag package-install-last
                   - bin/tools.sh buildStagingTest --env-file .build.env --tag package-install --tag +package-install-last
       - step:
@@ -121,6 +129,7 @@ pipelines:
             - documentation/.docs/
             - .interrupt.log
           script:
+            - bin/tools.sh buildStepInitialize "${BUILD_TEST_DUMP_ENVIRONMENT-}
             - bin/build/tools.sh environmentFileLoad .build.env --execute bin/build.sh --documentation --commit
             - bin/deploy.sh --env-file .build.env --documentation --no-release
     deploy:
@@ -148,6 +157,7 @@ pipelines:
           services:
             - docker
           script:
+            - bin/tools.sh buildStepInitialize "${BUILD_TEST_DUMP_ENVIRONMENT-}
             - IFS=' ' read -r -a aa < <(printf "%s\n" "${BUILD_TEST_ARGUMENTS-}")
             - BUILD_TEST_FLAGS="${BUILD_TEST_FLAGS-};Plumber:true;Housekeeper:true" BUILD_DEBUG="${BUILD_DEBUG-%,},usage" bin/test.sh "${aa[@]+"${aa[@]}"}"
     docs-1:
@@ -161,6 +171,7 @@ pipelines:
             - documentation/.docs/
             - .interrupt.log
           script:
+            - bin/tools.sh buildStepInitialize "${BUILD_TEST_DUMP_ENVIRONMENT-}
             - bin/build.sh --documentation --commit
             - bin/deploy.sh --env-file .build.env --documentation --no-release
     docs-2:
@@ -174,6 +185,7 @@ pipelines:
             - documentation/.docs/
             - .interrupt.log
           script:
+            - bin/tools.sh buildStepInitialize "${BUILD_TEST_DUMP_ENVIRONMENT-}
             - bin/build.sh --documentation --commit
             - bin/deploy.sh --env-file .build.env --documentation --no-release
     docs-4:
@@ -187,6 +199,7 @@ pipelines:
             - documentation/.docs/
             - .interrupt.log
           script:
+            - bin/tools.sh buildStepInitialize "${BUILD_TEST_DUMP_ENVIRONMENT-}
             - bin/build.sh --documentation --commit
             - bin/deploy.sh --env-file .build.env --documentation --no-release
     coverage:
@@ -201,6 +214,7 @@ pipelines:
           services:
             - docker
           script:
+            - bin/tools.sh buildStepInitialize "${BUILD_TEST_DUMP_ENVIRONMENT-}
             - IFS=' ' read -r -a aa < <(printf "%s\n" "${BUILD_TEST_ARGUMENTS-}")
             - bin/build.sh --no-documentation --no-commit --debug
             - BUILD_TEST_FLAGS="${BUILD_TEST_FLAGS-};Plumber:false;Housekeeper:false" BUILD_DEBUG="${BUILD_DEBUG-%,},usage" bin/test.sh --coverage "${aa[@]+"${aa[@]}"}"

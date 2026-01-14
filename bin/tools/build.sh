@@ -5,6 +5,22 @@
 # Copyright: Copyright &copy; 2026 Market Acumen, Inc.
 #
 
+buildStepInitialize() {
+  local handler="${FUNCNAME[0]}"
+  local home
+
+  home=$(catchReturn "$handler" buildHome) || return $?
+
+  local buildEnv="$home/.build.env"
+  [ -f "$buildEnv" ] || throwEnvironment "$handler" "No build environment? $(decorate file "$buildEnv")"
+  [ "${1-}" = true ] || return 0
+  catchReturn "$handler" environmentFileLoad "$buildEnv" --execute dumpEnvironment || return $?
+}
+_buildStepInitialize() {
+  # _IDENTICAL_ usageDocument 1
+  usageDocument "${GASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
 __buildDebugColors() {
   printf -- "BUILD_COLORS=\"%s\"\n" "${BUILD_COLORS-}"
   printf -- "tput colors %s" "$(tput colors 2>&1 || :)"
