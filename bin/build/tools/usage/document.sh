@@ -44,6 +44,7 @@ __usageDocument() {
 
   if [ "$returnCode" = "NONE" ]; then
     decorate error "NO EXIT CODE" 1>&2
+    debuggingStack
     returnCode=1
   fi
 
