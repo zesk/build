@@ -204,7 +204,7 @@ __installPackageConfiguration() {
 # INTERNAL:
 # INTERNAL: Calling signature for `version-function`:
 # INTERNAL:
-# INTERNAL:    Usage: version-function handler applicationHome installPath
+# INTERNAL:    Example:     version-function handler applicationHome installPath
 # INTERNAL:    Argument: handler - Function. Required. Function to call when an error occurs.
 # INTERNAL:    Argument: applicationHome - Directory. Required. Path to the application home where target will be installed, or is installed. (e.g. myApp/)
 # INTERNAL:    Argument: installPath - Directory. Required. Path to the installPath home where target will be installed, or is installed. (e.g. myApp/bin/build)
@@ -213,14 +213,14 @@ __installPackageConfiguration() {
 # INTERNAL:
 # INTERNAL: Calling signature for `url-function`:
 # INTERNAL:
-# INTERNAL:    Usage: url-function handler
+# INTERNAL:    Example:      url-function handler
 # INTERNAL:    Argument: handler - Function. Required. Function to call when an error occurs.
 # INTERNAL:
 # INTERNAL: `url-function` should output a URL and exit 0. Any other return code terminates installation.
 # INTERNAL:
 # INTERNAL: Calling signature for `check-function`:
 # INTERNAL:
-# INTERNAL:    Usage: check-function handler installPath
+# INTERNAL:    Example:      check-function handler installPath
 # INTERNAL:    Argument: handler - Function. Required. Function to call when an error occurs.
 # INTERNAL:    Argument: installPath - Directory. Required. Path to the installPath home where target will be installed, or is installed. (e.g. myApp/bin/build)
 # INTERNAL:
@@ -1084,7 +1084,7 @@ _bashFunctionComment() {
 # Argument: value - String. A value.
 # Argument: from - String. When value matches `from`, instead print `to`
 # Argument: to - String. The value to print when `from` matches `value`
-# Argument: ... - Additional from-to pairs can be passed, first matching value is used, all values will be examined if none match
+# Argument: ... - Optional. String. Additional from-to pairs can be passed, first matching value is used, all values will be examined if none match
 convertValue() {
   local __handler="_${FUNCNAME[0]}" value="" from="" to=""
   # __IDENTICAL__ __checkHelp1__handler 1
