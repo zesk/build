@@ -1256,7 +1256,7 @@ whichExists() {
     --help) "$handler" 0 && return $? || return $? ;;
     --any) anyFlag=true ;;
     *)
-      command -v "$1" >/dev/null 2>&1 || return 1
+      command which "$1" >/dev/null 2>&1 || return 1
       ! $anyFlag || return 0
       ;;
     esac
