@@ -73,8 +73,7 @@ __anyEnvToFunctionEnv() {
 # Takes any environment file and makes it docker-compatible
 #
 # Outputs the compatible env to stdout
-# handler: {fn} envFile [ ... ]
-# Argument: envFile - Required. File. One or more files to convert.
+# Argument: envFile ... - Required. File. One or more files to convert.
 #
 environmentFileToDocker() {
   __anyEnvToFunctionEnv "_${FUNCNAME[0]}" bashCommentFilter environmentFileBashCompatibleToDocker "$@" || return $?
@@ -89,8 +88,7 @@ _environmentFileToDocker() {
 #
 # Outputs the compatible env to stdout
 #
-# handler: {fn} filename [ ... ]
-# Argument: filename - Optional. File. One or more files to convert.
+# Argument: filename ... - Optional. File. One or more files to convert.
 # stdin: environment file
 # stdout: bash-compatible environment statements
 environmentFileToBashCompatible() {
@@ -109,8 +107,9 @@ _environmentFileToBashCompatible() {
 # Any output to stdout is considered valid output
 # Any output to stderr is errors in the file but is written to be compatible with a bash
 #
-# handler: {fn} [ filename ... ]
-# Argument: filename - Docker environment file to check for common issues
+# Argument: filename ... - File. Optional. Docker environment file to convert.
+# stdin: An environment file of any format
+# stdout: Environment file in Bash-compatible format
 # Return Code: 1 - if errors occur
 # Return Code: 0 - if file is valid
 #
@@ -139,9 +138,8 @@ _environmentFileDockerToBashCompatible() {
 # Utility for environmentFileDockerToBashCompatible to handle both pipes and files
 #
 __internalEnvironmentFileDockerToBashCompatiblePipe() {
-  local file index envLine result name value
-  result=0
-  index=0
+  local result=0 index=0
+  local envLine
   while IFS="" read -r envLine; do
     case "$envLine" in
     [[:space:]]*[#]* | [#]* | "")
@@ -149,6 +147,7 @@ __internalEnvironmentFileDockerToBashCompatiblePipe() {
       printf -- "%s\n" "$envLine"
       ;;
     *)
+      local name value
       name="${envLine%%=*}"
       value="${envLine#*=}"
       if [ -n "$name" ] && [ "$name" != "$envLine" ]; then
@@ -178,15 +177,17 @@ __internalEnvironmentFileDockerToBashCompatiblePipe() {
 #
 environmentFileBashCompatibleToDocker() {
   local handler="_${FUNCNAME[0]}"
-  local file envLine tempFile clean=()
 
+  local tempFile
   tempFile=$(fileTemporaryName "$handler") || return $?
-  clean=("$tempFile")
+
+  local clean=("$tempFile")
   if [ $# -eq 0 ]; then
     catchEnvironment "$handler" muzzle tee "$tempFile.bash" || returnClean $? "${clean[@]}" || return $?
     clean+=("$tempFile.bash")
     set -- "$tempFile.bash"
   fi
+  local file
   for file in "$@"; do
     if [ "$file" = "--help" ]; then
       "$handler" 0 && returnClean $? "${clean[@]}" && return $? || return $?

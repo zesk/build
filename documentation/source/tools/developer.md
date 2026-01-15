@@ -8,9 +8,7 @@
 
 {developerDevelopmentLink}
 
-## `developer.sh` Support
-
-Meant to assist in creating `bin/developer.sh` scripts.
+## `developer.sh` Support (Experimental - NOT production)
 
 {developerTrack}
 

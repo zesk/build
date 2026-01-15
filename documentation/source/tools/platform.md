@@ -12,24 +12,6 @@
 
 {makeShellFilesExecutable}
 
-## Modify PATH or MANPATH
-
-{pathConfigure}
-
-{pathRemove}
-
-{pathCleanDuplicates}
-
-{pathShow}
-
-## Modify MANPATH
-
-{manPathConfigure}
-
-{manPathRemove}
-
-{manPathCleanDuplicates}
-
 ## Memory
 
 {processMemoryUsage}

@@ -80,10 +80,9 @@ __approveBashSource() {
 #
 ####################################################################################################
 
-# handler: {fn} handler sourceFile ...
 # Argument: handler - Function. Required.
 # Argument: sourceFile - File. Required.
-# Argument: Prompt - String. Optional.
+# Argument: prompt - String. Optional.
 # Argument: ... - Arguments. Optional. Passed to `confirmYesNo`
 __interactiveApprove() {
   local handler="$1" sourcePath="$2" approved displayFile approvedHome
@@ -160,7 +159,8 @@ __interactiveApproveCacheFile() {
   printf "%s\n" "$cacheFile"
 }
 
-# handler: {fn} handler approvedTarget
+# Argument: handler - Function. Required.
+# Argument: approvedTarget - File. Required.
 __interactiveApproveClear() {
   local handler="$1" sourcePath="$2"
 

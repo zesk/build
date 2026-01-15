@@ -56,9 +56,3 @@
 {bashLintFilesInteractive}
 
 {bashLint}
-
-## Debug
-
-{bashDebugInterruptFile}
-
-{bashRecursionDebug}

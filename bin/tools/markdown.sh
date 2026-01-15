@@ -21,10 +21,11 @@ __addNoteTo() {
   catchEnvironment "$handler" git add "$target" "$docTarget" || return $?
 }
 
+# Distribute the README.md and LICENSE.md files to important places.
 #
-# handler: {fn} [ --skip-commit ]
 # Argument: --skip-commit - Skip the commit if the files change
-# Requires: jq throwArgument statusMessage
+# Requires: jq throwArgument statusMessage decorate  buildHome  catchReturn __addNoteTo __buildMarker
+# Requires: git gitInsideHook gitRepositoryChanged statusMessage throwEnvironment
 __updateMarkdown() {
   local handler="_${FUNCNAME[0]}"
   local flagSkipCommit

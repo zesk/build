@@ -29,8 +29,6 @@
 
 {buildCacheDirectory}
 
-{buildStateDirectory}
-
 {buildQuietLog}
 
 # Running commands

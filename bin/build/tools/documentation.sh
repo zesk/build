@@ -273,7 +273,6 @@ _documentationTemplateFunctionCompile() {
 # Input is in the format with "{argument}{delimiter}{description}{newline}" and generates a list of arguments (optionally decorated) color-coded based
 # on whether the word "require" appears in the description.
 # INTERNAL: This is solely used internally but should be accessible globally as it is used here and in `usage`
-# handler: __documentationFormatArguments delimiter
 # Argument: delimiter - Required. String. The character to separate name value pairs in the input
 __documentationFormatArguments() {
   local handler="_${FUNCNAME[0]}"

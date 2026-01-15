@@ -33,3 +33,9 @@ FunctionAttributeList: BUILD_DEBUG
 
 {bashDebuggerDisable}
 {bashDebuggerEnable}
+
+## Debug
+
+{bashDebugInterruptFile}
+
+{bashRecursionDebug}

@@ -7,11 +7,19 @@ Typically used to output text to the console using pretty colors and ANSI art.
 <hr />
 
 {repeat}
+
 {echoBar}
+
 {alignRight}
+
 {alignLeft}
+
 {boxedHeading}
+
 {bigText}
+
 {labeledBigText}
+
 {lineFill}
+
 {decoratePath}

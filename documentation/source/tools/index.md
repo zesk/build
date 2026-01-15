@@ -8,91 +8,95 @@
 
 ## Shell Tools
 
-- [Approve](./approve.md)
-- [Bash](./bash.md)
+- [Approve](./approve.md) - Interactively load `bash` code (with permission)
+- [Bash](./bash.md) - Bash user input, loading, parsing, linting
 - [Binaries (direct)](./bin.md)
-- [Color](./colors.md)
-- [Completion](./completion.md)
-- [Console](./console.md)
-- [Cursor](./cursor.md)
-- [Decoration](./decoration.md)
-- [Developer](./developer.md)
-- [Interactive](./interactive.md)
-- [Prompt](./prompt.md)
-- [Readline](./readline.md)
-
-- [Self](./build.md)
+- [Color](./colors.md) - Decorating text with colors and styles, color schemes, and decorate extensions
+- [Completion](./completion.md) - Add completions for Zesk Build
+- [Console](./console.md) - Console tools for size, title, outputting links
+- [Cursor](./cursor.md) - Tools to moving the cursor around the terminal
+- [Decoration](./decoration.md) - Decoration tools
+- [Developer](./developer.md) - Tools for your `developer.sh`
+- [Interactive](./interactive.md) - Interactivity tools for user confirmation, menus, message display
+- [Prompt](./prompt.md) - Customize your bash prompt easily, adding project customization and extensible prompt
+  commands.
+- [Readline](./readline.md) - Edit `readline` configuration
 
 ## Testing
 
-- [Assertion](./assert.md)
-- [Coverage](./coverage.md)
-- [Debug](./debug.md)
-- [Testing](./test.md)
+- [Assertion](./assert.md) - Complete assertion and testing toolkit
+- [Coverage](./coverage.md) - EXPERIMENTAL. Bash coverage tools.
+- [Debug](./debug.md) - Debugger for Bash programs
+- [Testing](./test.md) - Testing utilities available while using `testTools`
 
 ## Language Tools
 
-- [Argument](./argument.md)
-- [Deprecated](./deprecated.md)
-- [Usage](./usage.md)
-- [Validate](./validate.md)
-- [Sugar Core](./sugar-core.md) and [Sugar](./sugar.md)
+- [Argument](./argument.md) - EXPERIMENTAL. Arguments specified using comments.
+- [Deprecated](./deprecated.md) - Tools to help you upgrade deprecated code.
+- [Usage](./usage.md) - Self-documenting functions make life easier.
+- [Validate](./validate.md) - Validate any input type with a suite of type validations, extensible.
+- [Sugar Core](./sugar-core.md) and [Sugar](./sugar.md) - Syntactic sugar makes code easier to read, debug, and
+  understand.
 
 ## System Tools
 
-- [Character](./character.md)
-- [Directory](./directory.md)
-- [Date](./date.md)
-- [Dump](./dump.md)
-- [Environment](./environment.md)
-- [File](./file.md)
-- [Floating Point](./float.md)
-- [Group](./group.md)
-- [Host](./host.md)
-- [Fingerprint](./fingerprint.md)
-- [List Utilities](./list.md)
-- [Log](./log.md)
-- [Map](./map.md)
-- [Network](./network.md)
+- [Character](./character.md) - Character manipulation tools
+- [Directory](./directory.md) - Directory manipulation tools
+- [Date](./date.md) - Date validation, math and now-related generation
+- [Dump](./dump.md) - Dump the environment, files, binary data or stack information easily and securely.
+- [Environment](./environment.md) - Anything you could need to manipulate, load, modify, or generate environment files.
+- [File](./file.md) - File attributes accessors, link tools
+- [Floating Point](./float.md) - Simple floating point number manipulation
+- [Group](./group.md) - Just `groupID` so far
+- [Host](./host.md) - `hostnameFull`
+- [Fingerprint](./fingerprint.md) - Fingerprint your code
+- [List Utilities](./list.md) - Text-based list manipulation with a separator character
+- [Log](./log.md) - Log rotation
+- [MANPATH](./manpath.md) MANPATH manipulation
+- [Map](./map.md) - Simple token replacement using environment files or variables
+- [Network](./network.md) - Basic networking information
 - [Platform](./platform.md)
-- [Process](./process.md)
-- [Quote](./quote.md)
-- [sed](./sed.md)
-- [Text](./text.md)
-- [Timing](./timing.md)
-- [Type](./type.md)
-- [URL](./url.md)
-- [User](./user.md)
-- [Watch](./watch.md)
+- [PATH](./path.md) - PATH manipulation
+- [Process](./process.md) - Process tools
+- [Quote](./quote.md) - Text quoting tools
+- [sed](./sed.md) - Tools for processing sed statements
+- [Text](./text.md) - Test manipulation tools
+- [Timing](./timing.md) - Millisecond timing support across operating systems
+- [Type](./type.md) - Type testing and tools
+- [URL](./url.md) - URL parsing and tools
+- [User](./user.md) - User database tools
+- [Watch](./watch.md) - Watch files or directories and take actions
 
 ## Formats
 
-- [jUnit](./junit.md)
-- [JSON](./json.md)
-- [Markdown](./markdown.md)
-- [tar](./tar.md)
-- [XML](./xml.md)
+- [jUnit](./junit.md) - Generate `junit.xml` output for testing
+- [JSON](./json.md) - Access and cleaning of JSON
+- [Markdown](./markdown.md) - Markdown tools
+- [tar](./tar.md) - Tar platform neutral calls
+- [XML](./xml.md) - XML generation tools
 
 ## Application Tools
 
-- [Application](./application.md)
-- [Build Environment](./build.md)
-- [Deploy](./deploy.md)
-- [Deployment](./deployment.md)
-- [Documentation](./documentation.md)
-- [Hook API](./hook.md)
-- [Hooks](./hooks.md)
-- [Identical](./identical.md)
-- [Installation](./install.md)
-- [Pipeline](./pipeline.md)
-- [Utilities](./utilities.md)
-- [Version](./version.md)
-- [Web](./web.md)
+- [Application](./application.md) - Remember your application home directory upon login
+- [Build Application Tools](./build.md) - Access to `bin/env` and related cache directories, installation of the
+  installer and installer tools.
+- [Deploy](./deploy.md) - Application deployment tools for a local environment
+- [Deployment](./deployment.md) - Application deployment tools for remote
+- [Documentation](./documentation.md) - Bash documentation automatically and beautifully
+- [Hook API](./hook.md) - Application hooks let you change behavior across applications.
+- [Hooks](./hooks.md) - List of available or known hooks
+- [Identical](./identical.md) - The identical system to keep your code and source in perfect harmony
+- [Installation](./install.md) - Install other software like `aws` or `python` using package managers or custom
+  techniques.
+- [Pipeline](./pipeline.md) - Tools for application deployment in the pipeline
+- [Utilities](./utilities.md) - Some handy utilities
+- [Version](./version.md) - Release version management for your application
+- [Web](./web.md) - Web tools
 
 # Specifications
 
 - [Function interfaces](./interface.md)
-- [Internal tools](./internal.md)
+- [Internal tools](./internal.md) - Tools used during development of this project
 
 # Software Integration
 

@@ -21,17 +21,16 @@ __deployLoader() {
   __buildFunctionLoader __deployApplication deploy "$@"
 }
 
-# Deploy an application from a deployment repository
-# This acts on the local file system only but used in tandem with `deployment.sh` functions.
+# Summary: Deploy an application from a deployment repository
 #
-# handler: {fn} deployHome applicationId applicationPath [ targetPackage ]
+# This acts on the local file system only but used in tandem with [deployment](./deployment.md) functions.
 #
 # Argument: --help - Optional. Flag. This help.
 # Argument: --first - Optional. Flag. The first deployment has no prior version and can not be reverted.
 # Argument: --revert - Optional. Flag. Means this is part of the undo process of a deployment.
-# Argument: --home deployHome - Required. Directory. Path where the deployments database is on remote system.
+# Argument: --home deployHome - Required. Directory. Path where the deployments database is on system.
 # Argument: --id applicationId - Required. String. Should match `APPLICATION_ID` or `APPLICATION_TAG` in `.env` or `.deploy/`
-# Argument: --application applicationPath - Required. String. Path on the remote system where the application is live
+# Argument: --application applicationPath - Required. FileDirectory. Path on the  system where the application is live
 # Argument: --target targetPackage - Optional. Filename. Package name, defaults to `BUILD_TARGET`
 # Argument: --message message - Optional. String. Message to display in the maintenance message on systems while upgrade is occurring.
 # Environment: BUILD_TARGET APPLICATION_ID APPLICATION_TAG

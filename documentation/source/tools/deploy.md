@@ -1,5 +1,14 @@
 # Deploy Functions
 
+Deployment is the upgrading of an application from one version to another. These functions handle this on a file-level
+with various hooks and ways of backing out of a failed upgrade.
+
+Versions of the application are kept in a local deployment repository which contains information about each deployment,
+and switching between deployments is intended to be easy and straightforward to accomplish.
+
+Applications are served via a link aliased to a directory which then changes based on the current deployment; this
+minimizes moving parts to change deployment code bases.
+
 <!-- TEMPLATE header 2 -->
 [⬅ Parent ](../index.md)
 <hr />

@@ -88,11 +88,15 @@ __confirmYesNoParse() {
 }
 
 # Maybe move this to its own thing if needed later
-# handler: {fn} handler timeout attempts extras message
+# Argument: handler - Function. Required.
+# Argument: timeout - UnsignedInteger|Empty. Milliseconds to time out after.
+# Argument: attempts - Integer. Number ot attempts to allow.
+# Argument: extras - EmptyString. Extra text to add to the prompt.
+# Argument: message - EmptyString. The message to show to prompt the user.
 __interactiveCountdownReadBoolean() {
   local handler="$1" tempResult
 
-  [ $# -eq 5 ] || throwArgument "$handler" "Missing arguments: $# less than 5" || return $?
+  [ $# -eq 5 ] || throwArgument "$handler" "Incorrect arguments: $# != 5" || return $?
 
   tempResult=$(fileTemporaryName "$handler") || return $?
   __interactiveCountdownReadCharacter "$@" "__confirmYesNoValidate" "$tempResult" || returnClean $? "$tempResult" || return $?

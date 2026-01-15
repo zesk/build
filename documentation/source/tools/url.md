@@ -18,4 +18,10 @@
 
 {urlFilter}
 
+## Network access to URLs
+
 {urlFetch}
+
+{urlMatchesLocalFileSize}
+
+{urlContentLength}

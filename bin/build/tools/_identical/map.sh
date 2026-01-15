@@ -5,7 +5,22 @@
 # Copyright &copy; 2026 Market Acumen, Inc.
 #
 
-# handler: {fn} usageFunction fileNameToUse
+# Argument: usageFunction
+# Argument: fileToModify
+# Argument: fileNameToUse
+_identicalMapAttributesFile() {
+  local handler="$1" && shift
+  local file temp
+
+  file=$(validate "$handler" File "file" "${1-}") || return $?
+  shift
+  temp="$file.$$"
+  _identicalMapAttributesFilter "$handler" "${1-}" <"$file" >"$temp" || returnClean $? "$temp" || return $?
+  catchEnvironment "$handler" mv -f "$temp" "$file" || returnClean "$?" "$temp" || return $?
+}
+
+# Argument: usageFunction - Function. Required. Error handler.
+# Argument: fileNameToUse - String. Required. The file name used to generate the derived names.
 # stdin: converts magic attributes
 # Requires: quoteSedReplacement
 _identicalMapAttributesFilter() {
@@ -28,16 +43,4 @@ _identicalMapAttributesFilter() {
   aa+=(-e 's/__DIRECTORY__/'"$(quoteSedReplacement "$dir")"'/g')
 
   catchEnvironment "$handler" sed "${aa[@]}" || return $?
-}
-
-# handler: {fn} usageFunction fileToModify fileNameToUse
-_identicalMapAttributesFile() {
-  local handler="$1" && shift
-  local file temp
-
-  file=$(validate "$handler" File "file" "${1-}") || return $?
-  shift
-  temp="$file.$$"
-  _identicalMapAttributesFilter "$handler" "${1-}" <"$file" >"$temp" || returnClean $? "$temp" || return $?
-  catchEnvironment "$handler" mv -f "$temp" "$file" || returnClean "$?" "$temp" || return $?
 }

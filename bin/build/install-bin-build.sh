@@ -193,13 +193,15 @@ __installCheck() {
   printf "%s %s (%s)\n" "$(decorate bold-blue "$name")" "$(decorate code "$version")" "$(decorate orange "$id")"
 }
 
-# Environment: Needs internet access and creates a directory `./bin/build`
-# handler: {fn} relativePath installPath url urlFunction [ --local localPackageDirectory ] [ --debug ] [ --force ] [ --diff ]
 # fn: {base}
 # Installs a remote package system in a local project directory if not installed. Also
 # will overwrite the installation binary with the latest version after installation.
 #
 # Determines the most recent version using GitHub API unless --url or --local is specified
+#
+# Unless `--local` is supplied, needs internet access via `curl` or` `wget`.
+#
+# Creates the directory `../../bin/build` relative to the installer by default, can be modified.
 #
 # Argument: --local localPackageDirectory - Optional. Directory. Directory of an existing bin/build installation to mock behavior for testing
 # Argument: --url url - Optional. URL. URL of a tar.gz. file. Download source code from here.

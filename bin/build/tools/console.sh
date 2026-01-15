@@ -88,8 +88,7 @@ _consoleGetColor() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-#
-# handler: {fn} [ --background | --foreground ]
+# Summary: Output the brightness of the background color of the console as a number between 0 and 100
 # Argument: --foreground - Optional. Flag. Get the console text color.
 # Argument: --background - Optional. Flag. Get the console background color.
 # Fetch the brightness of the console using `consoleGetColor`
@@ -158,10 +157,14 @@ _consoleDefaultTitle() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
+# Summary: console hyperlinks
 # Output a hyperlink to the console
 # OSC 8 standard for terminals
 # No way to test ability, I think. Maybe `tput`.
-# handler: {fn} link [ text ]
+# Argument: link - EmptyString. Required. Link to output.
+# Argument: text - String. Optional. Text to display, if none then uses `link`.
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
 consoleLink() {
   [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
   local link="$1" text="${2-$1}" OSC="\e]" ST="\e\\"
@@ -192,8 +195,8 @@ _consoleLinksSupported() {
 
 # Output a local file link to the console
 # Argument: --no-app - Flag. Optional. Do not map the application path in `decoratePath`
-# Argument: fileName - Required. File path to output.
-# Argument: text - Optional. Text to output linked to file.
+# Argument: fileName - String. Required. File path to output.
+# Argument: text - String. Optional. Text to output linked to file.
 consoleFileLink() {
   local handler="_${FUNCNAME[0]}"
   [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
@@ -228,8 +231,8 @@ _consoleFileLink() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
+# Summary: decorate file links
 # decorate extension for `file`
-# handler: decorate file fileName [ text ]
 # Argument: --no-app - Flag. Optional. Do not map the application path in `decoratePath`
 # Argument: fileName - Required. File path to output.
 # Argument: text - Optional. Text to output linked to file.
@@ -239,8 +242,9 @@ __decorateExtensionFile() {
   consoleFileLink "$@"
 }
 
+# Summary: decorate web links
 # decorate extension for `link`
-# handler: decorate link url [ text ]
+# fn: decorate link
 # Argument: url - Required. Link to output to the console.
 # Argument: text - Optional. Text to output linked to `url`.
 __decorateExtensionLink() {

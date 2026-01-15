@@ -58,7 +58,6 @@ __interactiveCountdown() {
 }
 
 # Maybe move this to its own thing if needed later
-# handler: {fn} handler timeout attempts extras message parser
 # Argument: handler - Function. Error handler
 # Argument: timeout - UnsignedInteger|Empty. Milliseconds to time out after.
 # Argument: attempts - Integer. Number ot attempts to allow.

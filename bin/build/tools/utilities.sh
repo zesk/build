@@ -10,7 +10,6 @@
 # Tools which do not fit anywhere else
 #
 
-# handler: {fn} [ count | variable ] ...
 # Argument: count - Optional. Integer. Sets the value for any following named variables to this value.
 # Argument: variable - Optional. String. Variable to change or increment.
 # Argument: --reset - Optional. Flag. Reset all counters to zero.
@@ -87,9 +86,11 @@ _incrementor() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# handler: {fn} counterFile value
+# Argument: counterFile - File. Required. File to store our value.
+# Argument: value - EmptyString. Optional. The value to store.
+# stdout: Integer
 # When value is non-blank - write it to the counter file
-# When value is blank - load it (if it exists), increment it, and then write it to the counter file
+# When value is blank - load it (if it exists), increment it, and then write it to the counter file. First run writes `0`.
 __incrementor() {
   local counterFile="$1" value="${2-}"
   if [ -z "$value" ]; then
@@ -105,7 +106,11 @@ __incrementor() {
 }
 
 # Single reader, multiple writers
-# handler: {fn} [ --mode mode ] namedPipe [ --writer line | readerExecutable ... ]
+# Attempt at having docker communicate back to the outside world.
+# Argument: --mode mode - String. Optional.
+# Argument: namedPipe
+# Argument: --writer line ... - When encountered all additional arguments are written to the runner.
+# Argument: readerExecutable ... - Callable. Optional.
 pipeRunner() {
   local handler="_${FUNCNAME[0]}"
 
@@ -120,14 +125,11 @@ pipeRunner() {
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
-    --mode)
-      shift
-      mode=$(validate "$handler" String "mode" "${1-}") || return $?
-      ;;
+    --mode) shift && mode=$(validate "$handler" String "mode" "${1-}") || return $? ;;
     --writer)
       [ -z "$namedPipe" ] || throwArgument "$handler" "No namedPipe supplied" || return $?
       [ -p "$namedPipe" ] || throwEnvironment "$handler" "$namedPipe not a named pipe" || return $?
-      catchEnvironment "$handler" printf "%s\n" "$*" >"$namedPipe" || return $?
+      shift && catchEnvironment "$handler" printf "%s\n" "$*" >"$namedPipe" || return $?
       ;;
     *)
       if [ -n "$namedPipe" ]; then

@@ -24,12 +24,10 @@
 # - Executable Callable Function
 # - URL
 #
-# And uses the associated `usageArgument` function for validation.
-# handler: {fn} this source [ --none ] [ arguments ... ]
 # Argument: this - Required. Function. Function to collect arguments for. Assume handler function is "_$this".
 # Argument: source - Required. File. File of the function to collect the specification.
 # Argument: --none - Flag. Optional. If specified, state file is deleted prior to return regardless of handling.
-# Argument: arguments - Optional. String. One or more arguments to parse.
+# Argument: arguments ... - Optional. EmptyString. One or more arguments to parse.
 # Output is a temporary `stateFile` on line 1
 _arguments() {
   local _handler_="_${FUNCNAME[0]}"
@@ -428,7 +426,6 @@ _commentArgumentTypeValid() {
   return 1
 }
 
-# handler: specification argumentIndex argumentValue
 # Argument: specification - Required. File.
 # Argument: stateFile - Required. File.
 # Argument: argumentIndex - Required. Integer.

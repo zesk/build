@@ -21,7 +21,7 @@
 # Test if an argument is a positive floating point number
 # (`1e3` notation NOT supported)
 #
-# handler: {fn} argument ...
+# Argument: value - Required. EmptyString. Value to test.
 # Return Code: 0 - if it is a number equal to or greater than zero
 # Return Code: 1 - if it is not a number equal to or greater than zero
 # Credits: F. Hauri - Give Up GitHub (isnum_Case)
@@ -36,7 +36,7 @@ isUnsignedNumber() {
 # Test if an argument is a floating point number
 # (`1e3` notation NOT supported)
 #
-# handler: {fn} argument ...
+# Argument: value - Required. EmptyString. Value to test.
 # Return Code: 0 - if it is a floating point number
 # Return Code: 1 - if it is not a floating point number
 # Credits: F. Hauri - Give Up GitHub (isnum_Case)
@@ -51,7 +51,7 @@ isNumber() {
 #
 # Test if an argument is a signed integer
 #
-# handler: {fn} argument ...
+# Argument: value - Required. EmptyString. Value to test.
 # Return Code: 0 - if it is a signed integer
 # Return Code: 1 - if it is not a signed integer
 # Argument: value - EmptyString. The value to test.

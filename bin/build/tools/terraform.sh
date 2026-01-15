@@ -7,13 +7,12 @@
 # Copyright &copy; 2026 Market Acumen, Inc.
 #
 
-#
 # Add keys to enable apt to download terraform directly from hashicorp.com
 #
-# handler: aptKeyAddHashicorp
 # Return Code: 1 - if environment is awry
 # Return Code: 0 - All good to install terraform
-#
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
 aptKeyAddHashicorp() {
   local handler="_${FUNCNAME[0]}"
   __help "$handler" "$@" || return 0
@@ -27,10 +26,10 @@ _aptKeyAddHashicorp() {
 #
 # Add keys to enable apt to download terraform directly from hashicorp.com
 #
-# handler: aptKeyAddHashicorp
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
 # Return Code: 1 - if environment is awry
 # Return Code: 0 - All good to install terraform
-#
 aptKeyRemoveHashicorp() {
   local handler="_${FUNCNAME[0]}"
   __help "$handler" "$@" || return 0
@@ -41,12 +40,9 @@ _aptKeyRemoveHashicorp() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-#
 # Install terraform binary
 #
-# handler: {fn} [ package ... ]
-# Argument: package - Additional packages to install using `packageInstall`
-#
+# Argument: package ... - String. Optional. Additional packages to install using `packageInstall`
 terraformInstall() {
   local handler="_${FUNCNAME[0]}" binary="terraform"
 
@@ -64,12 +60,9 @@ _terraformInstall() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-#
 # Remove terraform binary
 #
-# handler: {fn} [ package ... ]
-# Argument: package - Additional packages to uninstall using `packageUninstall`
-#
+# Argument: package ... - String. Optional. Additional packages to uninstall using `packageUninstall`
 terraformUninstall() {
   local handler="_${FUNCNAME[0]}"
 

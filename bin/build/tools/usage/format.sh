@@ -22,7 +22,6 @@
 # See: usageDocument
 #
 # Do not call handler functions here to avoid recursion
-# handler: {fn} binName options delimiter description exitCode
 # Argument: binaryName - String. Required. The function name
 # Argument: argumentsText - String. Required. The argument definition.
 # Argument: argumentsDelimiter - String. Required. The argument delimiter.

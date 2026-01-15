@@ -13,19 +13,13 @@ These utilities can be accessed via the shell in the PATH:
 
 They are intended to be standalone tools useful for a variety of installation and package management functions:
 
-- [`cannon.sh`](./text.md#cannon) - Same as [`cannon`](./text.md#cannon)
-- [`chmod-sh.sh`](./platform.md#makeShellFilesExecutable) - Same as [
-  `makeShellFilesExecutable`](./platform.md#makeShellFilesExecutable)
-- [`identical-check.sh`](./identical.md#identicalCheck) - Same as [`identicalCheck`](./identical.md#identicalCheck)
-- [`identical-repair.sh`](./identical.md#identicalCheckShell) - Same as [
+- [`repair.sh`](./identical.md#identicalCheckShell) - Similar to [
   `identicalCheckShell`](./identical.md#identicalCheckShell) with some extra functionality.
 - `install-bin-build.sh` - Install or upgrdades current version of Zesk Build in `./bin/build` if it is not installed
   already. Updates itself if required.
 - [`map.sh`](./text.md#mapEnvironment) - Same as [`mapEnvironment`](./text.md#mapEnvironment)
 - `need-bash.sh` - Tool to install `bash` in containers first which do not have it installed automatically (Alpine, for
   example)
-- [`crontab-application-update.sh`](./crontab.md#crontabApplicationUpdate) - Same as [
-  `crontabApplicationUpdate`](./crontab.md#crontabApplicationUpdate)
 
 ## Template scripts
 
@@ -36,15 +30,8 @@ They are intended to be standalone tools useful for a variety of installation an
 
 - `bash-build.sh` - Tool to install `Zesk Build` in a new container, load it and modify the `.bashrc` to load it every
   time
-- `bitbucket-container.sh` - Wrapper for `{SEE:bitbucketContainer}`
 - `deprecated.sh` - Do a project-wide replacement of deprecated code with modern updates. May modify or break your code.
   example)
-- [`local-container.sh`](./docker.md#dockerLocalContainer) - Same as [
-  `dockerLocalContainer`](./docker.md#dockerLocalContainer)
-- [`release-new.sh`](./version.md#releaseNew) - Same as [`releaseNew`](./version.md#releaseNew)
-- [`release-notes.sh`](./git.md#releaseNotes) - Same as [`releaseNotes`](./git.md#releaseNotes)
-- [`version-last.sh`](./git.md#gitVersionLast) - Same as [`gitVersionLast`](./git.md#gitVersionLast)
-- [`version-list.sh`](./git.md/#gitVersionList) - Same as [`gitVersionList`](./git.md#gitVersionList)
 
 ## `tools.sh` to run commands
 
