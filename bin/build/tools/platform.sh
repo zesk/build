@@ -319,7 +319,7 @@ _pathCleanDuplicates() {
 # Example:     whichExists cp date aws ls mv stat || throwEnvironment "$handler" "Need basic environment to work" || return $?
 # Example:     whichExists --any terraform tofu || throwEnvironment "$handler" "No available infrastructure providers" || return $?
 # Example:     whichExists --any curl wget || throwEnvironment "$handler" "No way to download URLs easily" || return $?
-# Requires: throwArgument which decorate __decorateExtensionEach
+# Requires: throwArgument decorate __decorateExtensionEach command
 whichExists() {
   local handler="_${FUNCNAME[0]}"
   local __saved=("$@") __count=$# anyFlag=false
@@ -333,7 +333,7 @@ whichExists() {
     --help) "$handler" 0 && return $? || return $? ;;
     --any) anyFlag=true ;;
     *)
-      command which "$1" >/dev/null 2>&1 || return 1
+      command -v "$1" >/dev/null 2>&1 || return 1
       ! $anyFlag || return 0
       ;;
     esac

@@ -1115,7 +1115,7 @@ _fileTemporaryName() {
 # Example:     whichExists cp date aws ls mv stat || throwEnvironment "$handler" "Need basic environment to work" || return $?
 # Example:     whichExists --any terraform tofu || throwEnvironment "$handler" "No available infrastructure providers" || return $?
 # Example:     whichExists --any curl wget || throwEnvironment "$handler" "No way to download URLs easily" || return $?
-# Requires: throwArgument which decorate __decorateExtensionEach
+# Requires: throwArgument decorate __decorateExtensionEach command
 whichExists() {
   local handler="_${FUNCNAME[0]}"
   local __saved=("$@") __count=$# anyFlag=false
@@ -1129,7 +1129,7 @@ whichExists() {
     --help) "$handler" 0 && return $? || return $? ;;
     --any) anyFlag=true ;;
     *)
-      command which "$1" >/dev/null 2>&1 || return 1
+      command -v "$1" >/dev/null 2>&1 || return 1
       ! $anyFlag || return 0
       ;;
     esac
@@ -1167,7 +1167,7 @@ _isCallable() {
 # If no arguments are passed, returns exit code 1.
 # Return Code: 0 - All arguments are executable binaries
 # Return Code: 1 - One or or more arguments are not executable binaries
-# Requires: throwArgument catchEnvironment __help which mode
+# Requires: throwArgument  __help catchEnvironment command
 isExecutable() {
   local handler="_${FUNCNAME[0]}"
   [ $# -eq 1 ] || throwArgument "$handler" "Single argument only: $*" || return $?
@@ -1183,7 +1183,7 @@ isExecutable() {
     mode="${mode%% *}"
     [ "${mode#*x}" != "$mode" ]
   else
-    [ -n "$(command which "$1")" ]
+    [ -n "$(command -v "$1")" ]
   fi
 }
 _isExecutable() {
