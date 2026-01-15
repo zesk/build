@@ -57,8 +57,8 @@ _sysvInitScriptInstall() {
 }
 
 # Remove an initialization script
+# Argument: binary - Required. String. Basename of installed script to remove.
 # DOC TEMPLATE: --help 1
-# Argument: binary - Required. String. Basename of installed script.
 # Argument: --help - Optional. Flag. Display this help.
 sysvInitScriptUninstall() {
   local handler="_${FUNCNAME[0]}"

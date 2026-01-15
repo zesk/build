@@ -27,8 +27,8 @@ _timing() {
 
 # Summary: Show elapsed time from a start time
 #
-# DOC TEMPLATE: --help 1
 # Argument: timingOffset - UnsignedInteger. Required. Offset in milliseconds from January 1, 1970.
+# DOC TEMPLATE: --help 1
 # Argument: --help - Optional. Flag. Display this help.
 # Example:     init=$(timingStart)
 # Example:     ...
