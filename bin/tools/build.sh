@@ -6,7 +6,7 @@
 #
 
 buildStepInitialize() {
-  local handler="${FUNCNAME[0]}"
+  local handler="_${FUNCNAME[0]}"
   local home
 
   home=$(catchReturn "$handler" buildHome) || return $?

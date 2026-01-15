@@ -204,8 +204,9 @@ _pathRemove() {
 # Show the path and where binaries are found
 # DOC TEMPLATE: --help 1
 # Argument: --help - Optional. Flag. Display this help.
+# Argument: binary - Optional. Executable. Display where this executable appears in the path.
 pathShow() {
-  local handler="${FUNCNAME[0]}"
+  local handler="_${FUNCNAME[0]}"
 
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
