@@ -8,7 +8,8 @@ platforms, devices, and operating systems.
   interactivity
 
 This code toolkit depends solely on [`bash`](https://www.gnu.org/software/bash/manual/bash.html) and a few other
-binaries (`jq`, `sed`) and a conscientious decision has been made to not depend on any other language libraries, as of 2026
+binaries (`jq`, `sed`) and a conscientious decision has been made to not depend on any other language libraries, as of
+2026
 support for Bash 3 and 4 remains stable.
 
 This toolkit assumes:
@@ -30,6 +31,11 @@ To install it in the operating system:
 
 - Copy `bin/build/install-bin-build.sh` to `/usr/local/bin/build/` and `sudo /usr/local/bin/build/install-bin-build.sh`
 - Source `/usr/local/bin/build/tools.sh` in your scripts to get access to all functions
+
+Directly from the web:
+
+    mkdir -p bin/build && cd bin/build
+    curl -s "https://raw.githubusercontent.com/zesk/build/refs/tags/{version}/bin/build/install-bin-build.sh" | bash
 
 ## Main entry points
 

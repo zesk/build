@@ -144,7 +144,7 @@ __installCheck() {
   printf "%s %s (%s)\n" "$(decorate bold-blue "$name")" "$(decorate code "$version")" "$(decorate orange "$id")"
 }
 
-# IDENTICAL _installRemotePackage 403
+# IDENTICAL _installRemotePackage 379
 
 # Installs {name} in a local project directory if not installed. Also
 # will overwrite {source} with the latest version after installation.
@@ -157,17 +157,19 @@ __installCheck() {
 # INTERNAL:
 # INTERNAL: Calling signature for `version-function`:
 # INTERNAL:
-# INTERNAL:    Example:     version-function handler applicationHome installPath
+# INTERNAL:    Example:     version-function handler applicationHome installPath requestedVersion
 # INTERNAL:    Argument: handler - Function. Required. Function to call when an error occurs.
 # INTERNAL:    Argument: applicationHome - Directory. Required. Path to the application home where target will be installed, or is installed. (e.g. myApp/)
 # INTERNAL:    Argument: installPath - Directory. Required. Path to the installPath home where target will be installed, or is installed. (e.g. myApp/bin/build)
+# INTERNAL:    Argument: requestedVersion - EmptyString. Optional. Requested version to install.
 # INTERNAL:
 # INTERNAL: `version-function` should return 0 to halt the installation. Any other return code, installation continues normally.
 # INTERNAL:
 # INTERNAL: Calling signature for `url-function`:
 # INTERNAL:
-# INTERNAL:    Example:      url-function handler
+# INTERNAL:    Example:      url-function handler requestedVersion
 # INTERNAL:    Argument: handler - Function. Required. Function to call when an error occurs.
+# INTERNAL:    Argument: requestedVersion - EmptyString. Optional. Requested version to install.
 # INTERNAL:
 # INTERNAL: `url-function` should output a URL and exit 0. Any other return code terminates installation.
 # INTERNAL:
@@ -194,6 +196,7 @@ __installCheck() {
 # Argument: --password passwordText - Optional. String. Add `username:password` to remote request.
 # Argument: --header headerText - Optional. String. Add one or more headers to the remote request.
 # Argument: --version-function urlFunction - Optional. Function. Function to compare live version to local version. Exits 0 if they match. Output version text if you want. INTERNAL.
+# Argument: --version version - Optional. String. Download just **this** version of Zesk Build. Prevents stable breaking with new versions of Zesk Build.
 # Argument: --url-function urlFunction - Optional. Function. Function to return the URL to download. INTERNAL.
 # Argument: --check-function checkFunction - Optional. Function. Function to check the installation and output the version number or package name. INTERNAL.
 # Argument: --installer installer - Optional. Executable. Multiple. Binary to run after installation succeeds. Can be supplied multiple times. If `installer` begins with a `@` then any errors by the installer are ignored.
@@ -216,7 +219,8 @@ _installRemotePackage() {
   case "${BUILD_DEBUG-}" in 1 | true) __installRemotePackageDebug BUILD_DEBUG ;; esac
 
   local source="" name="${FUNCNAME[1]}"
-  local localPath="" fetchArguments=() url="" versionFunction="" urlFunction="" checkFunction="" installers=()
+  local localPath="" fetchArguments=() url="" urlFunction="" checkFunction="" installers=()
+  local versionFunction="" fixedVersion=""
   local installPath="" installArgs=() forceFlag=false installReason="" skipSelf=false
 
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
@@ -228,53 +232,31 @@ _installRemotePackage() {
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
-    --source)
-      shift
-      source=$(validate "$handler" String "$argument" "${1-}") || return $?
-      ;;
-    --name)
-      shift
-      name=$(validate "$handler" String "$argument" "${1-}") || return $?
-      ;;
+    --source) shift && source=$(validate "$handler" String "$argument" "${1-}") || return $? ;;
+    --name) shift && name=$(validate "$handler" String "$argument" "${1-}") || return $? ;;
     --mock | --local)
       [ -z "$localPath" ] || throwArgument "$handler" "$argument already" || return $?
-      shift
-      [ -n "${1-}" ] || throwArgument "$handler" "$argument blank argument #$__index" || return $?
-      localPath="$(catchArgument "$handler" realPath "${1%/}")" || return $?
+      shift && localPath="$(catchArgument "$handler" realPath "${1%/}")" || return $?
       ;;
-    --user | --header | --password)
-      shift
-      fetchArguments+=("$argument" "$(validate "$handler" String "$argument" "${1-}")") || return $?
-      ;;
+    --user | --header | --password) shift && fetchArguments+=("$argument" "$(validate "$handler" String "$argument" "${1-}")") || return $? ;;
     --url)
-      shift
       [ -z "$url" ] || throwArgument "$handler" "$argument already" || return $?
-      [ -n "${1-}" ] || throwArgument "$handler" "$argument blank argument" || return $?
-      url="$1"
+      shift && url=$(validate "$handler" String "$argument" "${1-}") || return $?
       ;;
+    --version) shift && fixedVersion=$(validate "$handler" String "$argument" "${1-}") || return $? ;;
     --version-function)
-      shift
       [ -z "$versionFunction" ] || throwArgument "$handler" "$argument already" || return $?
-      isFunction "${1-}" || throwArgument "$handler" "$argument not callable: ${1-}" || return $?
-      versionFunction="$1"
+      shift && versionFunction=$(validate "$handler" "Function" "$argument" "${1-}") || return $?
       ;;
     --url-function)
-      shift
       [ -z "$urlFunction" ] || throwArgument "$handler" "$argument already" || return $?
-      isFunction "${1-}" || throwArgument "$handler" "$argument not callable: ${1-}" || return $?
-      urlFunction="$1"
+      shift && urlFunction=$(validate "$handler" "Function" "$argument" "${1-}") || return $?
       ;;
     --check-function)
-      shift
       [ -z "$checkFunction" ] || throwArgument "$handler" "$argument already" || return $?
-      isFunction "${1-}" || throwArgument "$handler" "$argument not callable: ${1-}" || return $?
-      checkFunction="$1"
+      shift && checkFunction=$(validate "$handler" "Function" "$argument" "${1-}") || return $?
       ;;
-    --installer)
-      shift
-      installers+=("$(validate "$handler" String "$argument" "${1-}")") || return $?
-      ;;
-    #
+    --installer) shift && installers+=("$(validate "$handler" String "$argument" "${1-}")") || return $? ;;
     # I believe this ensures that the process running does not modify its source script directly
     #
     # 1. Copy new script to bin/install.sample.sh.$$
@@ -285,7 +267,6 @@ _installRemotePackage() {
     # 5. Loads NEW version of script, and then deletes `bin/install.sample.sh.$$` and exits
     #
     # But I could be wrong.
-    #
     --replace)
       local newName
       shift
@@ -306,20 +287,10 @@ _installRemotePackage() {
     --debug)
       __installRemotePackageDebug "$argument"
       ;;
-    --skip-self)
-      skipSelf=true
-      ;;
-    --force)
-      forceFlag=true
-      installReason="--force specified"
-      ;;
-    --diff)
-      installArgs+=("$argument")
-      ;;
-    *)
-      installPath=$(validate "$handler" String "installPath" "$1") || return $?
-      installPath="${installPath%/}"
-      ;;
+    --skip-self) skipSelf=true ;;
+    --force) forceFlag=true && installReason="--force specified" ;;
+    --diff) installArgs+=("$argument") ;;
+    *) installPath=$(validate "$handler" String "installPath" "$1") || return $? ;;
     esac
     shift
   done
@@ -332,15 +303,16 @@ _installRemotePackage() {
   applicationHome=$(catchEnvironment "$handler" realPath "$myPath/$relative") || return $?
   applicationHome="${applicationHome%/}"
   [ -n "$installPath" ] || installPath="$applicationHome/$defaultPackagePath"
+  installPath="${installPath%/}"
   packagePath="${installPath#"$applicationHome"}"
   packagePath="${packagePath#/}"
 
   catchEnvironment "$handler" pushd "$applicationHome" || return $?
   if [ -z "$url" ]; then
     if [ -n "$urlFunction" ]; then
-      url=$(catchEnvironment "$handler" "$urlFunction" "$handler") || return $?
+      url=$(catchEnvironment "$handler" "$urlFunction" "$handler" "$fixedVersion") || return $?
       if [ -z "$url" ]; then
-        throwArgument "$handler" "$urlFunction failed" || return $?
+        throwArgument "$handler" "$urlFunction $fixedVersion failed" || return $?
       fi
     fi
   fi
@@ -356,31 +328,34 @@ _installRemotePackage() {
     installFlag=true
   elif ! $forceFlag && [ -n "$versionFunction" ]; then
     local newVersion=""
-    if newVersion=$("$versionFunction" "$handler" "$applicationHome" "$packagePath"); then
+    if newVersion=$("$versionFunction" "$handler" "$applicationHome" "$packagePath" "$fixedVersion"); then
       printf "%s %s %s\n" "$(decorate value "$name")" "$(decorate info "Newest version installed")" "$newVersion"
       __installRemotePackageGitCheck "$applicationHome" "$packagePath" || :
       return 0
     fi
     forceFlag=true
-    installReason="newer version available: $newVersion"
+    [ -z "$fixedVersion" ] && installReason="newer version available: $newVersion" || installReason="fixed version available: $newVersion"
   fi
   if $forceFlag; then
     [ -n "$installReason" ] || installReason="directory exists"
     printf "%s (%s)\n" "$(decorate orange "Forcing installation")" "$(decorate bold-blue "$installReason")"
     installFlag=true
   fi
-  binName=" ($(decorate bold-blue "$(basename "$myBinary")"))"
-
-  local message suffix
+  binName="$(basename "$myBinary")"
+  if [ "$binName" = "main" ]; then
+    skipSelf=true
+    binName=" ($(decorate bold-orange "bash pipe"))"
+  else
+    binName=" ($(decorate bold-blue "$(basename "$myBinary")"))"
+  fi
+  local suffix
   if $installFlag; then
     local start
     start=$(($(catchEnvironment "$handler" date +%s) + 0)) || return $?
     __installRemotePackageDirectory "$handler" "$packagePath" "$applicationHome" "$url" "$localPath" "${fetchArguments[@]+"${fetchArguments[@]}"}" || return $?
     [ -d "$packagePath" ] || throwEnvironment "$handler" "Unable to download and install $packagePath (not a directory, still)" || return $?
-    message="Installed "
     suffix="in $(($(date +%s) - start)) seconds$binName"
   else
-    message=""
     suffix="already installed"
   fi
   local messageFile
@@ -390,7 +365,8 @@ _installRemotePackage() {
   else
     catchEnvironment "$handler" printf -- "%s\n" "$packagePath" >"$messageFile" || return $?
   fi
-  message="${message}Installed $(cat "$messageFile") $suffix"
+  local message
+  message="Installed $(cat "$messageFile") $suffix"
   catchEnvironment "$handler" rm -f "$messageFile" || return $?
   __installRemotePackageGitCheck "$applicationHome" "$packagePath" || :
   message="$message (local)$binName"

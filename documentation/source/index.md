@@ -24,6 +24,15 @@ To use in your pipeline:
 - copy `./bin/build/install-bin-build.sh` into your project (changing the last line `../..` if needed) manually
 - run it before you need your `./bin/build` directory
 
+To install directly from the web:
+
+    mkdir -p bin/build && cd bin/build
+    curl -s "https://raw.githubusercontent.com/zesk/build/refs/tags/{version}/bin/build/install-bin-build.sh" | bash
+
+Conceptually you can keep solely `install-bin-build.sh` in your project and use that to load **Zesk Build** as needed.
+It's not recommended that you commit `bin/build` to your source repository. You can lock to a version using
+`bin/build/install-bin-build --version "$desiredVersion"`. **Zesk Build** always installs the most recent version.
+
 ## Features
 
 - Application [deployment](./tools/deployment.md) support to multiple hosts with rollback

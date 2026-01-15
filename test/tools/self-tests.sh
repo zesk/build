@@ -121,23 +121,44 @@ testBuildFunctions() {
 
 testInstallInstallBuildSelf() {
   local handler="returnMessage"
-  local tempD
+  local tempDirectory
   export BUILD_COMPANY
 
-  tempD=$(fileTemporaryName "$handler" -d) || return $?
+  tempDirectory=$(fileTemporaryName "$handler" -d) || return $?
 
   catchReturn "$handler" buildEnvironmentLoad BUILD_COMPANY || return $?
-  catchEnvironment "$handler" mkdir -p "$tempD/a/b/c/d/e/f" || return $?
+  catchEnvironment "$handler" mkdir -p "$tempDirectory/a/b/c/d/e/f" || return $?
 
-  assertFileDoesNotExist "$tempD/a/b/c/d/e/f/install-bin-build.sh" || return $?
-  assertExitCode --stdout-match '../../../../../..' 0 installInstallBuild "$tempD/a/b/c/d/e/f" "$tempD" || return $?
-  assertFileExists "$tempD/a/b/c/d/e/f/install-bin-build.sh" || return $?
-  assertFileContains "$tempD/a/b/c/d/e/f/install-bin-build.sh" "${BUILD_COMPANY}" || return $?
+  assertFileDoesNotExist "$tempDirectory/a/b/c/d/e/f/install-bin-build.sh" || return $?
+  assertExitCode --stdout-match '../../../../../..' 0 installInstallBuild "$tempDirectory/a/b/c/d/e/f" "$tempDirectory" || return $?
+  assertFileExists "$tempDirectory/a/b/c/d/e/f/install-bin-build.sh" || return $?
+  assertFileContains "$tempDirectory/a/b/c/d/e/f/install-bin-build.sh" "${BUILD_COMPANY}" || return $?
 
   unset BUILD_COMPANY
 
-  catchReturn "$handler" rm -rf "$tempD" || return $?
+  catchReturn "$handler" rm -rf "$tempDirectory" || return $?
 
+}
+
+# Install version
+testInstallBinBuildVersion() {
+  local handler=returnMessage tempDirectory
+
+  home=$(catchReturn "$handler" buildHome) || return $?
+
+  tempDirectory=$(fileTemporaryName "$handler" -d) || return $?
+
+  catchEnvironment "$handler" mkdir -p "$tempDirectory/bin/build" || return $?
+  catchEnvironment "$handler" cp "$home/bin/build/install-bin-build.sh" "$tempDirectory/bin/build" || return $?
+
+  local tryVersion="v0.40.2"
+
+  assertExitCode 0 "$tempDirectory/bin/build/install-bin-build.sh" --version "$tryVersion" || return $?
+
+  assertFileExists "$tempDirectory/bin/build/build.json" || return $?
+  assertEquals "$(jq -r .version <"$tempDirectory/bin/build/build.json")" "$tryVersion" || return $?
+
+  catchReturn "$handler" rm -rf "$tempDirectory" || return $?
 }
 
 # Test that urlFetch works for remote installs
