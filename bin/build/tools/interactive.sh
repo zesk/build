@@ -243,6 +243,7 @@ _interactiveCountdown() {
 # Return Code: 1 - Do not do the thing
 # Return Code: 2 - Argument error
 interactiveOccasionally() {
+  local handler="_${FUNCNAME[0]}"
   local name="" delta="" verboseFlag=false
 
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
