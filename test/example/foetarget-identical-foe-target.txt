@@ -1,5 +1,5 @@
 # IDENTICAL foetarget 13
-# Example: __tools command ...
+# Argument: command ... - Callable. Required.
 # Load zesk build and run command
 __tools() {
   local relative="$1"
@@ -14,7 +14,7 @@ __tools() {
 }
 
 # IDENTICAL foetarget 13
-# Example: __tools command ...
+# Argument: command ... - Callable. Required.
 # Load zesk build and run command
 __tools() {
   local relative="$1"
@@ -29,7 +29,7 @@ __tools() {
 }
 
 # IDENTICAL foetarget 13
-# Example: __tools command ...
+# Argument: command ... - Callable. Required.
 # Load zesk build and run command
 __tools() {
   local relative="$1"
@@ -44,7 +44,7 @@ __tools() {
 }
 
 # IDENTICAL foetarget 13
-# Example: __tools command ...
+# Argument: command ... - Callable. Required.
 # Load zesk build and run command
 __tools() {
   local relative="$1"
@@ -59,7 +59,7 @@ __tools() {
 }
 
 # IDENTICAL foetarget 13
-# Example: __tools command ...
+# Argument: command ... - Callable. Required.
 # Load zesk build and run command
 __tools() {
   local relative="$1"
@@ -74,7 +74,7 @@ __tools() {
 }
 
 # IDENTICAL foetarget 13
-# Example: __tools command ...
+# Argument: command ... - Callable. Required.
 # Load zesk build and run command
 __tools() {
   local relative="$1"

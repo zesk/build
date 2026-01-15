@@ -93,8 +93,8 @@ pipelines:
                   - .interrupt.log
                 services:
                   - docker
-                size: 2x
-                name: Staging Fast Tests 2x
+                size: 1x
+                name: Staging Fast Tests 1x
                 script:
                   - bin/tools.sh buildStepInitialize "${BUILD_TEST_DUMP_ENVIRONMENT-}"
                   - bin/tools.sh buildStagingTest --env-file .build.env --skip-tag slow --skip-tag package-install
@@ -104,8 +104,8 @@ pipelines:
                   - .interrupt.log
                 services:
                   - docker
-                size: 4x
-                name: Staging Slow Tests 4x
+                size: 1x
+                name: Staging Slow Tests 1x
                 script:
                   - bin/tools.sh buildStepInitialize "${BUILD_TEST_DUMP_ENVIRONMENT-}"
                   - bin/tools.sh buildStagingTest --env-file .build.env --tag slow

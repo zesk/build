@@ -18,7 +18,7 @@ buildStepInitialize() {
 }
 _buildStepInitialize() {
   # _IDENTICAL_ usageDocument 1
-  usageDocument "${GASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 __buildDebugColors() {

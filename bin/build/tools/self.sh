@@ -146,9 +146,10 @@ _buildEnvironmentPath() {
 # Argument: --help - Optional. Flag. Display this help.
 # Requires: convertValue _buildEnvironmentPath find sort read __help catchEnvironment
 buildEnvironmentNames() {
-  local handler="${FUNCNAME[0]}"
+  local handler="_${FUNCNAME[0]}"
 
   [ $# -eq 0 ] || __help --only "$handler" "$@" || return "$(convertValue $? 1 0)"
+
   (
     IFS=$'\n' read -d '' -r -a paths < <(_buildEnvironmentPath "$handler") || :
     for path in "${paths[@]}"; do
@@ -159,7 +160,7 @@ buildEnvironmentNames() {
 _buildEnvironmentNames() {
   true || buildEnvironmentNames --help || return $?
   # __IDENTICAL__ usageDocument 1
-  usageDocument "${GASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Determine the environment file names for environment variables

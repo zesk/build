@@ -53,14 +53,15 @@
 # Requires: throwArgument usageDocument ___help
 __help() {
   [ $# -gt 0 ] || ! ___help 0 || return 0
+  local flag="--help"
   local handler="${1-}" && shift
   if [ "$handler" = "--only" ]; then
     handler="${1-}" && shift
     [ $# -gt 0 ] || return 0
-    [ "$#" -eq 1 ] && [ "${1-}" = "--help" ] || throwArgument "$handler" "Only argument allowed is \"--help\": $*" || return $?
+    [ "$#" -eq 1 ] && [ "${1-}" = "$flag" ] || throwArgument "$handler" "Only argument allowed is \"$flag\": $*" || return $?
   fi
   while [ $# -gt 0 ]; do
-    [ "$1" != "--help" ] || ! "$handler" 0 || return 1
+    [ "$1" != "$flag" ] || ! "$handler" 0 || return 1
     shift
   done
   return 0
