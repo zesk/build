@@ -31,7 +31,9 @@ testListAppend() {
     assertEquals "12,22${s}49${s}\$ii${s}H${s}gee${s}eff${s}dee${s}c${s}b${s}a" "$reverseList" || return $?
   done
 }
-
+testListAppendSame() {
+  assertEquals "$(listAppend "foo:does/not/match" ":" "not/match")" "foo:does/not/match:not/match" || return $?
+}
 testListJoin() {
   assertEquals "a:b:c" "$(listJoin ":" a b c)" || return $?
   assertEquals "a:b:c" "$(listJoin "::" a b c)" || return $?

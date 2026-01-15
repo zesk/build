@@ -96,7 +96,7 @@ listAppend() {
       firstFlag=false
       ;;
     *)
-      if [ "$(stringOffset "$argument$separator" "$separator$separator$listValue$separator")" -lt 0 ]; then
+      if [ "$(stringOffset "$separator$argument$separator" "$separator$separator$listValue$separator")" -lt 0 ]; then
         if [ -z "$listValue" ]; then
           listValue="$argument"
         elif "$firstFlag"; then
@@ -127,7 +127,8 @@ _listAppend() {
 listCleanDuplicates() {
   local handler="_${FUNCNAME[0]}"
   local IFS
-  local item items removed=() separator="" showRemoved=false IFS testFunction=""
+  local item separator="" showRemoved=false testFunction=""
+  local debugFlag=false
 
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
@@ -138,32 +139,26 @@ listCleanDuplicates() {
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
-    --test)
-      shift
-      testFunction=$(validate "$handler" callable "$argument" "${1-}") || return $?
-      ;;
-    --removed)
-      showRemoved=true
-      ;;
-    *)
-      if [ -z "$separator" ]; then
-        separator="$argument"
-      else
-        break
-      fi
-      ;;
+    --debug) debugFlag=true ;;
+    --test) shift && testFunction=$(validate "$handler" callable "$argument" "${1-}") || return $? ;;
+    --removed) showRemoved=true ;;
+    *) if [ -z "$separator" ]; then separator="$argument"; else break; fi ;;
     esac
     shift
   done
 
-  local tempPath=""
+  local tempPath="" removed=()
   while [ $# -gt 0 ]; do
+    local items
     IFS="$separator" read -r -a items < <(printf "%s\n" "$1")
+    local item
     for item in "${items[@]}"; do
       if [ -n "$testFunction" ] && ! "$testFunction" "$item"; then
         removed+=("$item")
+        ! $debugFlag || decorate info "Removed $item with $testFunction"
       else
         tempPath=$(listAppend "$tempPath" "$separator" "$item")
+        ! $debugFlag || decorate info "$(decorate code "$tempPath") - Added $item"
       fi
     done
     shift

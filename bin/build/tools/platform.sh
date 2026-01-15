@@ -282,8 +282,8 @@ _pathConfigure() {
 
 # Utility for pathCleanDuplicates to show bad directories
 _pathIsDirectory() {
-  [ -n "${1-}" ] || return 1
-  [ -d "${1-}" ] || return 1
+  [ -n "$1" ] || return 1
+  [ -d "$1" ] || return 1
 }
 
 # Cleans the path and removes non-directory entries and duplicates
