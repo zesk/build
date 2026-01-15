@@ -14,6 +14,7 @@ if source "${BASH_SOURCE[0]%/*}/tools.sh"; then
   # - `buildContainer image` - Load Zesk Build in a container image
   # - `buildBuildTiming` - Run the build with different setups to see which one is fastest
   # - `__buildFingerUpdate` - Force update the deprecated and identical fingerprints
+  # - `bpr` -> `buildPR` shortcut
   #
   # Zesk Build Testing
   # - `bin/test.sh` - Test Zesk Build
@@ -52,6 +53,7 @@ if source "${BASH_SOURCE[0]%/*}/tools.sh"; then
     iTerm2Image -i "$home/etc/zesk-build-icon.png"
 
     markdownToConsole < <(bashFunctionComment "${BASH_SOURCE[0]}" "${FUNCNAME[0]}")
+
   }
   ___buildHelp() {
     # __IDENTICAL__ usageDocument 1
@@ -76,6 +78,7 @@ if source "${BASH_SOURCE[0]%/*}/tools.sh"; then
     alias t="$home/bin/build/tools.sh"
     alias tools=t
     alias '?'="__buildHelp"
+    alias bpr='__buildFingerUpdate && gitCommit && buildPR'
 
     muzzle reloadChanges --stop 2>&1
     muzzle reloadChanges --name "$(buildEnvironmentGet APPLICATION_NAME)" "$home/bin/tools.sh" "$home/bin/build/build.json"

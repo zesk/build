@@ -58,6 +58,13 @@ testPythonVirtual() {
 # Tag: package-install
 testPythonUninstallation() {
   if whichExists python; then
-    __checkFunctionUninstalls whichExists "already installed" python pythonUninstall || return $?
+    python --version
+    assertExitCode 0 pythonUninstall || return $?
+    if whichExists python; then
+      printf -- "%s\n" "PATHS:" "- command -v: $(command -v python)" "- which: $(which python)" | decorate warning || return $?
+      decorate error "$(python --version)"
+      throwEnvironment "$handler" "python is still installed for some reason" || return $?
+    fi
+    #    __checkFunctionUninstalls whichExists "already installed" python pythonUninstall || return $?
   fi
 }
