@@ -83,7 +83,7 @@ testEnvironmentFileLoad() {
 
   envFile="$tempDir/.env"
 
-  assertNotExitCode --stderr-match "is not file" 0 environmentFileLoad "$envFile" || return $?
+  assertNotExitCode --stderr-match "is not type" --stderr-match "File" 0 environmentFileLoad "$envFile" || return $?
 
   [ -d "$tempDir" ] || returnEnvironment "$tempDir disappeared" || return $?
   catchEnvironment "$handler" touch "$envFile" || return $?
