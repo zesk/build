@@ -58,7 +58,7 @@ _buildFailed() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# IDENTICAL versionSort 48
+# IDENTICAL versionSort 47
 
 # Summary: Sort versions in the format v0.0.0
 #
@@ -74,7 +74,7 @@ _buildFailed() {
 # DOC TEMPLATE: --help 1
 # Argument: --help - Optional. Flag. Display this help.
 # Example:     git tag | grep -e '^v[0-9.]*$' | versionSort
-# Requires: throwArgument sort usageDocument
+# Requires: throwArgument sort usageDocument decorate
 versionSort() {
   local handler="_${FUNCNAME[0]}"
 
@@ -102,8 +102,7 @@ versionSort() {
   sort -t . -k "1.2,1n$reverse" -k "2,2n$reverse" -k "3,3n$reverse"
 }
 _versionSort() {
-  # Fix SC2120
-  ! false || versionSort --help
+  true || versionSort --help
   # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

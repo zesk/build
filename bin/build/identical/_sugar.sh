@@ -134,7 +134,7 @@ catchReturn() {
 # Delete files or directories and return the same exit code passed in.
 # Argument: exitCode - Required. Integer. Exit code to return.
 # Argument: item - Optional. One or more files or folders to delete, failures are logged to stderr.
-# Requires: isUnsignedInteger returnArgument throwEnvironment usageDocument throwArgument
+# Requires: isUnsignedInteger returnArgument throwEnvironment usageDocument throwArgument __help
 # Group: Sugar
 returnClean() {
   local handler="_${FUNCNAME[0]}"

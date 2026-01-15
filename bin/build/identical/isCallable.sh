@@ -34,7 +34,7 @@ _isCallable() {
 # If no arguments are passed, returns exit code 1.
 # Return Code: 0 - All arguments are executable binaries
 # Return Code: 1 - One or or more arguments are not executable binaries
-# Requires: throwArgument __help which
+# Requires: throwArgument catchEnvironment __help which mode
 isExecutable() {
   local handler="_${FUNCNAME[0]}"
   [ $# -eq 1 ] || throwArgument "$handler" "Single argument only: $*" || return $?

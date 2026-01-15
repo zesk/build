@@ -114,7 +114,7 @@ execute() {
 # Example:     undo+=(-- deleteLargeResource "$thing")
 # Example:     thing=$(catchEnvironment "$handler" createMassiveResource) || returnUndo $? "${undo[@]}" || return $?
 # Example:     undo+=(-- deleteMassiveResource "$thing")
-# Requires: isPositiveInteger catchArgument decorate execute
+# Requires: isUnsignedInteger throwArgument decorate execute
 # Requires: usageDocument
 returnUndo() {
   local __count=$# __saved=("$@") __handler="_${FUNCNAME[0]}" code="${1-}" args=()

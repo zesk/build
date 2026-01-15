@@ -548,7 +548,7 @@ __installRemotePackageLocal() {
 }
 
 # <-- END of IDENTICAL _installRemotePackage
-# IDENTICAL versionSort 48
+# IDENTICAL versionSort 47
 
 # Summary: Sort versions in the format v0.0.0
 #
@@ -564,7 +564,7 @@ __installRemotePackageLocal() {
 # DOC TEMPLATE: --help 1
 # Argument: --help - Optional. Flag. Display this help.
 # Example:     git tag | grep -e '^v[0-9.]*$' | versionSort
-# Requires: throwArgument sort usageDocument
+# Requires: throwArgument sort usageDocument decorate
 versionSort() {
   local handler="_${FUNCNAME[0]}"
 
@@ -592,8 +592,7 @@ versionSort() {
   sort -t . -k "1.2,1n$reverse" -k "2,2n$reverse" -k "3,3n$reverse"
 }
 _versionSort() {
-  # Fix SC2120
-  ! false || versionSort --help
+  true || versionSort --help
   # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
@@ -1104,15 +1103,18 @@ _fileTemporaryName() {
 
 # <-- END of IDENTICAL fileTemporaryName
 
-# IDENTICAL whichExists 33
+# IDENTICAL whichExists 36
 
 # Summary: Does a binary exist in the PATH?
 # Argument: --any - Flag. Optional. If any binary exists then return 0 (success). Otherwise, all binaries must exist.
 # Argument: binary ... - Required. String. One or more Binaries to find in the system `PATH`.
 # DOC TEMPLATE: --help 1
 # Argument: --help - Optional. Flag. Display this help.
-# Return Code: 0 - If all values are found
-# Return Code: 1 - If any value is not found
+# Return Code: 0 - If all values are found (without the `--any` flag), or if *any* binary is found with the `--any` flag
+# Return Code: 1 - If any value is not found (without the `--any` flag), or if *all* binaries are NOT found with the `--any` flag.
+# Example:     whichExists cp date aws ls mv stat || throwEnvironment "$handler" "Need basic environment to work" || return $?
+# Example:     whichExists --any terraform tofu || throwEnvironment "$handler" "No available infrastructure providers" || return $?
+# Example:     whichExists --any curl wget || throwEnvironment "$handler" "No way to download URLs easily" || return $?
 # Requires: throwArgument which decorate __decorateExtensionEach
 whichExists() {
   local handler="_${FUNCNAME[0]}"
@@ -1165,7 +1167,7 @@ _isCallable() {
 # If no arguments are passed, returns exit code 1.
 # Return Code: 0 - All arguments are executable binaries
 # Return Code: 1 - One or or more arguments are not executable binaries
-# Requires: throwArgument __help which
+# Requires: throwArgument catchEnvironment __help which mode
 isExecutable() {
   local handler="_${FUNCNAME[0]}"
   [ $# -eq 1 ] || throwArgument "$handler" "Single argument only: $*" || return $?
@@ -1593,7 +1595,7 @@ executeInputSupport() {
 # Delete files or directories and return the same exit code passed in.
 # Argument: exitCode - Required. Integer. Exit code to return.
 # Argument: item - Optional. One or more files or folders to delete, failures are logged to stderr.
-# Requires: isUnsignedInteger returnArgument throwEnvironment usageDocument throwArgument
+# Requires: isUnsignedInteger returnArgument throwEnvironment usageDocument throwArgument __help
 # Group: Sugar
 returnClean() {
   local handler="_${FUNCNAME[0]}"

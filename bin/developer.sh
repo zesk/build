@@ -8,7 +8,7 @@
 
 # shellcheck source=/dev/null
 if source "${BASH_SOURCE[0]%/*}/tools.sh"; then
-  # Zesk Build Development tools
+  # Zesk Build Development
   # - `buildPR` - Open URL to a new Pull Request
   # - `buildAddTool code` - Add a new tool to Zesk Build (just use the code name, like `tofu`)
   # - `buildContainer image` - Load Zesk Build in a container image
