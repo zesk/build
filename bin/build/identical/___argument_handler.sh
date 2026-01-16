@@ -7,6 +7,10 @@
 # Copyright &copy; 2026 Market Acumen, Inc.
 #
 
+# COMPILED toolsLoader 2
+# This section is removed during build as the compiled tools file contains the majority of the code, below.
+# -- COMPILED toolsLoader END
+
 # DOC TEMPLATE: dashDashAllowsHelpParameters 1
 # Argument: -- - Optional. Flag. Stops command processing to enable arbitrary text to be passed as additional arguments without special meaning.
 __argumentsWithNonBlanksHandler() {

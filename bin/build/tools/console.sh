@@ -210,7 +210,7 @@ consoleFileLink() {
       --no-app) aa=("$1") ;;
       *)
         local path="$1"
-        isPlain "$path" || throwArgument "$handler" "Path contains non-plain characters: $(dumpBinary <<<"$path")" || return $?
+        isPlain "$path" || throwArgument "$handler" "Path contains non-plain characters:"$'\n\n'"$(dumpBinary <<<"$path")"$'\n'"$(debuggingStack)" || return $?
         if [ "${path:0:1}" != "/" ]; then
           path="$(pwd)/$(directoryPathSimplify "$path")"
         fi

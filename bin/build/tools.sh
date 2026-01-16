@@ -94,9 +94,6 @@ __toolsTimingLoad() {
 __toolsMain() {
   export BUILD_DEBUG
 
-  local source="${BASH_SOURCE[0]}"
-  local toolsPath="${source%/*}/tools" internalError=253
-  local toolsFiles=() toolsList="$toolsPath/tools.conf" toolFile
   local exitCode=0 debug=",${BUILD_DEBUG-},"
 
   export BUILD_HOME BUILD_DEBUG
@@ -105,6 +102,11 @@ __toolsMain() {
   export __BUILD_LOADER
   [ -z "${__BUILD_LOADER-}" ] || unset "${__BUILD_LOADER[@]}"
   __BUILD_LOADER=()
+
+  # COMPILED toolsLoader 20
+  local source="${BASH_SOURCE[0]}"
+  local toolsPath="${source%/*}/tools" internalError=253
+  local toolsFiles=() toolsList="$toolsPath/tools.conf" toolFile
   [ -f "$toolsList" ] || returnMessage $internalError "%s\n" "Missing $toolsList" 1>&2 || return $?
   toolsFiles+=("../env/BUILD_HOME")
   while read -r toolFile; do [ "$toolFile" != "${toolFile#\#}" ] || toolsFiles+=("$toolFile"); done <"$toolsList"
@@ -121,6 +123,7 @@ __toolsMain() {
     done
     shopt -s expand_aliases
   fi
+  # -- COMPILED toolsLoader END
 
   # shellcheck source=/dev/null
   if [ "$(basename "${0##-}")" = "$(basename "${BASH_SOURCE[0]}")" ] && [ $# -gt 0 ]; then
