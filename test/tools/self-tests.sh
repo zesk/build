@@ -227,7 +227,7 @@ testInstallBinBuild() {
     --stdout-match "Installed"
   )
 
-  assertExitCode --dump "${matches[@]}" 0 "$testDir/bin/pipeline/install-bin-build.sh" --mock "$home/bin/build" || return $?
+  assertExitCode "${matches[@]}" 0 "$testDir/bin/pipeline/install-bin-build.sh" --mock "$home/bin/build" || return $?
   assertFileDoesNotContain "$testBinBuild" "make the file different" || return $?
   assertFileContains "$testBinBuild" "__installPackageConfiguration ../.. " || return $?
 
@@ -265,8 +265,8 @@ testInstallBinBuild() {
   clearLine
 
   # pause "$(pwd)/bin/pipeline/we-like-head-rubs.sh --mock $home/bin/build"
-  # assertExitCode --dump "${matches[@]}" 0 bin/pipeline/we-like-head-rubs.sh  || return $?
-  assertExitCode --dump "${matches[@]}" 0 bin/pipeline/we-like-head-rubs.sh --mock "$home/bin/build" || return $?
+  # assertExitCode "${matches[@]}" 0 bin/pipeline/we-like-head-rubs.sh  || return $?
+  assertExitCode "${matches[@]}" 0 bin/pipeline/we-like-head-rubs.sh --mock "$home/bin/build" || return $?
 
   catchEnvironment "$handler" cp "$home/bin/build/install-bin-build.sh" "$testBinBuild" || return $?
   clearLine
@@ -292,7 +292,7 @@ testInstallBinBuild() {
     --stdout-match "does not ignore"
     --stdout-match ".gitignore"
   )
-  assertExitCode --dump "${matches[@]}" 0 "$testBinBuild" || return $?
+  assertExitCode "${matches[@]}" 0 "$testBinBuild" || return $?
   assertDirectoryExists bin/build || return $?
 
   catchEnvironment "$handler" cp "$home/bin/build/install-bin-build.sh" "$testBinBuild" || return $?
@@ -319,7 +319,7 @@ testInstallBinBuild() {
     --stdout-no-match "does not ignore"
     --stdout-no-match ".gitignore"
   )
-  assertExitCode --dump "${matches[@]}" 0 bin/pipeline/we-like-head-rubs.sh --mock "$home/bin/build" || return $?
+  assertExitCode "${matches[@]}" 0 bin/pipeline/we-like-head-rubs.sh --mock "$home/bin/build" || return $?
   # Check
 
   catchEnvironment "$handler" muzzle popd || return $?
@@ -435,7 +435,7 @@ testUnderscoreUnderscoreBuild() {
   assertExitCode 0 installInstallBuild --local "$testPath/app/bin" "$testPath/app" || return $?
   catchEnvironment "$handler" cp -R "$home/bin/build" "$testPath/app/bin/build" || return $?
 
-  APPLICATION_ID=testID.$$ assertExitCode --dump 0 "$testPath/app/bin/build.sh" || return $?
+  APPLICATION_ID=testID.$$ assertExitCode 0 "$testPath/app/bin/build.sh" || return $?
 
   catchEnvironment "$handler" rm -rf "$testPath" || return $?
 }

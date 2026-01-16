@@ -9,44 +9,57 @@
 # Docs: contextOpen ./documentation/source/tools/assert.md
 # Test: contextOpen ./test/tools/assert-tests.sh
 
-# Format test text, special display for blank strings
 __resultText() {
-  local passed="$1" text length max=80 color && shift
+  local passed="$1" text length color && shift
+  local text
 
-  text="$*"
-  length="${#text}"
+  text="$(__resultTextCleaned "$*")"
 
-  # Hide newlines
-  if stringContains "$text" $'\e'; then
-    text="$(dumpHex --size "$max" "$text")"
+  local color="blue"
+  if [ -z "$text" ]; then
+    $passed || color="bold-red"
   else
-    text=$(newlineHide "$text")
-  fi
-  local half=$((max / 2))
-  [ "$length" -lt "$max" ] || text="${text:0:$half} ... ${text:$((length - half)):$((length - 1))}"
-  if [ "$length" -eq 0 ]; then
-    text="(blank)"
-    if $passed; then
-      color="blue"
-    else
-      color="bold-red"
-    fi
-  elif $passed; then
-    color="code"
-  else
-    color="error"
+    $passed || color="error"
   fi
   decorate "$color" "$text"
 }
 
 # Format test text, special display for blank strings
+__resultTextCleaned() {
+  local text="$*"
+  local length="${#text}"
+
+  if [ "$length" -eq 0 ]; then
+    text="(blank)"
+  else
+    local max=80
+    if stringContains "$text" $'\e'; then
+      dumpHex --size "$max" "$text"
+    else
+      local half=$((max / 2))
+      # Truncate to something readable
+      [ "$length" -lt "$max" ] || text="${text:0:$half} ... ${text:$((length - half)):$((length - 1))}"
+      # Hide newlines
+      newlineHide "$text"
+    fi
+  fi
+}
+
+# Format test text, special display for blank strings
 __resultTextSize() {
-  local passed="$1" text length && shift
+  local passed="$1" color=success && shift
+  "$passed" || color=error
+  __resultTextSizeColor "$color" "$@"
+}
 
-  text="$*"
-  length="${#text}"
+# Format test text, special display for blank strings
+__resultTextSizeColor() {
+  local text color="$1" && shift
 
-  printf -- "%s %s\n" "$(__resultText "$passed" "$text")" "$(decorate subtle "$(alignRight 9 "$(pluralWord "$length" char)")")"
+  text="$(__resultTextCleaned "$*")"
+  local length="${#text}"
+
+  printf -- "%s %s\n" "$(decorate "$color" "$text")" "$(decorate subtle "$(alignRight 9 "$(pluralWord "$length" char)")")"
 }
 
 ___printResultPair() {
@@ -55,17 +68,19 @@ ___printResultPair() {
   printf -- "%s: %s%s\n" "$label" "$(__resultTextSize "$resultStatus" "$result")" "$suffix"
 }
 
+__assertTimingSetup() {
+  export __BUILD_SAVED_CACHE_DIRECTORY
+  if [ -z "${__BUILD_SAVED_CACHE_DIRECTORY-}" ]; then
+    __BUILD_SAVED_CACHE_DIRECTORY="$(catchReturn "$handler" buildCacheDirectory)" || return $?
+  fi
+}
+
 # Save and report the timing since the last call
-_assertTiming() {
+__assertTimingCalculate() {
   local handler="returnMessage"
   local timingFile
 
   export __BUILD_SAVED_CACHE_DIRECTORY
-
-  if [ -z "${__BUILD_SAVED_CACHE_DIRECTORY-}" ]; then
-    __BUILD_SAVED_CACHE_DIRECTORY="$(catchReturn "$handler" buildCacheDirectory)" || return $?
-  fi
-
   timingFile="$__BUILD_SAVED_CACHE_DIRECTORY/.${FUNCNAME[0]}" || return $?
   if [ -f "$timingFile" ]; then
     local stamp
@@ -82,27 +97,26 @@ _assertTiming() {
   else
     decorate info "First test ($__BUILD_SAVED_CACHE_DIRECTORY)"
   fi
-  timingStart 1>&2 >"$timingFile" && sync -f 1>&2 >>"$timingFile" || printf -- "%s\n" "$? error from timingStart/sync" >>"$timingFile" || :
+  timingStart >"$timingFile"
 }
 
 __assertedFunctions() {
-  local handler="_${FUNCNAME[0]}"
-  local logFile
+  export TEST_TRACK_ASSERTIONS
+  if [ "${TEST_TRACK_ASSERTIONS-}" != "false" ]; then
+    local handler="_${FUNCNAME[0]}"
+    local logFile
 
-  logFile="$(catchReturn "$handler" buildCacheDirectory)/$handler" || return $?
-  logFile="$(catchReturn "$handler" fileDirectoryRequire "$logFile")" || return $?
-  if [ $# -eq 0 ]; then
-    catchEnvironment "$handler" touch "$logFile" || return $?
-    if [ -f "$logFile.dirty" ]; then
-      catchEnvironment "$handler" sort -u "$logFile" -o "$logFile" || return $?
-      catchEnvironment "$handler" rm -f "$logFile.dirty" || return $?
+    logFile="$(catchReturn "$handler" buildCacheDirectory)/$handler" || return $?
+    logFile="$(catchReturn "$handler" fileDirectoryRequire "$logFile")" || return $?
+    if [ $# -eq 0 ]; then
+      catchEnvironment "$handler" touch "$logFile" || return $?
+      if [ -f "$logFile.dirty" ]; then
+        catchEnvironment "$handler" sort -u "$logFile" -o "$logFile" || return $?
+        catchEnvironment "$handler" rm -f "$logFile.dirty" || return $?
+      fi
+      printf -- "%s\n" "$logFile"
+      return 0
     fi
-    printf -- "%s\n" "$logFile"
-    return 0
-  fi
-  local track
-  track=$(catchReturn "$handler" buildEnvironmentGet TEST_TRACK_ASSERTIONS) || return $?
-  if [ "$track" != "false" ]; then
     catchEnvironment "$handler" printf -- "%s\n" "$@" >>"$logFile" || return $?
     catchEnvironment "$handler" touch "$logFile.dirty" || return $?
   fi
@@ -115,28 +129,25 @@ ___assertedFunctions() {
 #
 # Decorations
 #
-_symbolSuccess() {
-  printf %s "✅ "
-}
-_symbolFail() {
-  printf %s "❌ "
-}
 _assertFailure() {
-  local function="${1-None}" ll=() message newline=$'\n'
-  incrementor assert-failure >/dev/null
-  shift || :
-  message="$*"
-  if [ "${message#*"$newline"}" != "$message" ]; then
-    ll=(--last)
+  local function="${1-None}" failIcon="❌ "
+  export BUILD_TEST_FLAGS
+  local timing="" flags=";${BUILD_TEST_FLAGS-};" flag="Assert-Statistics:true"
+  if [ "${flags#*;"$flag";}" != "$flags" ]; then
+    __assertTimingSetup && timing=" [$(__assertTimingCalculate)]" || :
+    (muzzle incrementor assert-failure &)
   fi
-  statusMessage --last "${ll[@]+"${ll[@]}"}" printf -- "%s %s %s [%s] " "$(_symbolFail)" "$(decorate error "$function")" "$message" "$(_assertTiming)" 1>&2 || return $?
+  shift && statusMessage --last printf -- "%s %s %s " "$failIcon" "$(decorate error "$function")" "$*" "$timing" 1>&2 || return $?
   return "$(returnCode assert)"
 }
 _assertSuccess() {
-  local function="${1-None}"
-  incrementor assert-success >/dev/null
-  shift || :
-  statusMessage printf -- "%s %s %s [%s] " "$(_symbolSuccess)" "$(decorate success "$function")" "$*" "$(_assertTiming)" || return $?
+  local function="${1-None}" successIcon="✅ "
+  local timing="" flags=";${BUILD_TEST_FLAGS-};" flag="Assert-Statistics:true"
+  if [ "${flags#*;"$flag";}" != "$flags" ]; then
+    __assertTimingSetup && timing=" [$(__assertTimingCalculate)]" || :
+    (muzzle incrementor assert-success &)
+  fi
+  shift && statusMessage printf -- "%s %s %s%s " "$successIcon" "$(decorate success "$function")" "$*" "$timing" || return $?
 }
 _assertionStatistics() {
   local item
@@ -148,6 +159,9 @@ _assertionStatistics() {
   incrementor --reset
 }
 
+# INTERNAL: To optimize this (or see where it is slow), use
+# INTERNAL:     BUILD_COLORS=false bin/tools.sh testTools assertEquals --profile a a | grep -v assert | sort -rn --key=2.1
+# INTERNAL:     bin/tools.sh testTools assertEquals --profile a a | grep -v assert | sort -rn --key=2.1
 # Core condition assertion handler
 # DOC TEMPLATE: assert-common 18
 # Argument: --help - Optional. Flag. Display this help.
@@ -171,6 +185,9 @@ _assertionStatistics() {
 # Return Code: 1 - If the assertions fails
 # Return Code: 0 - If the assertion succeeds
 _assertConditionHelper() {
+  export BUILD_TEST_FLAGS
+  local flag=";Assert-Profile:true;" flags=";${BUILD_TEST_FLAGS-};"
+
   local handler="$1" && shift
   local pairs=() debugFlag=false
   local success=true file="" lineDepth="" lineNumber="" displayName="" tester="" formatter="__resultFormatter"
@@ -179,6 +196,10 @@ _assertConditionHelper() {
   local errorsOk=false dumpFlag=false dumpBinaryFlag=false expectedExitCode=0 code1=false debugLines=false
   local message result testPassed runner exitCode outputFile errorFile stderrTitle stdoutTitle
 
+  # profiling variables
+  local profile=false _profile="" _profileStart="" _next _used=0
+
+  if [ "${flags#*"$flag"}" != "$flags" ]; then profile=true && _profile=$(timingStart) && _profileStart=$_profile; fi
   set -eou pipefail
   # _IDENTICAL_ argumentBlankLoopHandler 4
   local __saved=("$@") __count=$#
@@ -190,101 +211,64 @@ _assertConditionHelper() {
     # _IDENTICAL_ handlerHandler 1
     --handler) shift && handler=$(validate "$handler" function "$argument" "${1-}") || return $? ;;
     --exit)
-      shift
-      expectedExitCode=$(validate "$handler" UnsignedInteger "$argument" "${1-}") || return $?
+      shift && expectedExitCode=$(validate "$handler" UnsignedInteger "$argument" "${1-}") || return $?
       pairs+=("Exit" "$(decorate bold-magenta " $expectedExitCode ")")
       ;;
-    --display)
-      shift
-      displayName="$(validate "$handler" String "$argument" "${1-}")" || return $?
-      ;;
+    --display) shift && displayName="$(validate "$handler" String "$argument" "${1-}")" || return $? ;;
     --success)
-      shift
-      success="$(validate "$handler" boolean "$argument" "${1-}")" || return $?
+      shift && success="$(validate "$handler" boolean "$argument" "${1-}")" || return $?
       pairs+=("should" "$(booleanChoose "$success" "succeed" "$(decorate warning "fail")")")
       ;;
-    --debug)
-      debugFlag=true
-      ;;
-    --line)
-      shift
-      lineNumber="${1-}"
-      ;;
-    --line-depth)
-      shift
-      lineDepth="$(validate "$handler" PositiveInteger "$argument" "${1-}")" || return $?
-      ;;
-    --test)
-      shift
-      tester="$(validate "$handler" String "$argument" "${1-}")" || return $?
-      ;;
-    --formatter)
-      shift
-      formatter="$(validate "$handler" String "$argument" "${1-}")" || return $?
-      ;;
-    --stderr-ok)
-      errorsOk=true
-      ;;
+    # ********************************************************************************************************************
+    --profile) profile=true && _profile=$(timingStart) && _profileStart=$_profile ;;
+    --debug) debugFlag=true ;;
+    --line) shift && lineNumber="${1-}" ;;
+    --line-depth) shift && lineDepth="$(validate "$handler" PositiveInteger "$argument" "${1-}")" || return $? ;;
+    --test) shift && tester="$(validate "$handler" String "$argument" "${1-}")" || return $? ;;
+    --formatter) shift && formatter="$(validate "$handler" String "$argument" "${1-}")" || return $? ;;
+    --stderr-ok) errorsOk=true ;;
     --stderr-match)
-      shift || :
-      [ -n "${1-}" ] || throwArgument "$handler" "Blank $argument argument" || return $?
+      shift && [ -n "${1-}" ] || throwArgument "$handler" "Blank $argument argument" || return $?
       stderrContains+=("$1")
       errorsOk=true
       ;;
     --stderr-no-match)
-      shift || :
-      [ -n "${1-}" ] || throwArgument "$handler" "Blank $argument argument" || return $?
+      shift && [ -n "${1-}" ] || throwArgument "$handler" "Blank $argument argument" || return $?
       stderrNotContains+=("$1")
       errorsOk=true
       ;;
     --stdout-match)
-      shift || :
-      [ -n "${1-}" ] || throwArgument "$handler" "Blank $argument argument" || return $?
+      shift && [ -n "${1-}" ] || throwArgument "$handler" "Blank $argument argument" || return $?
       outputContains+=("$1")
       ;;
     --stdout-no-match)
-      shift || :
-      [ -n "${1-}" ] || throwArgument "$handler" "Blank $argument argument" || return $?
+      shift && [ -n "${1-}" ] || throwArgument "$handler" "Blank $argument argument" || return $?
       outputNotContains+=("$1")
       ;;
-    --dump)
-      dumpFlag=true
-      dumpBinaryFlag=false
-      ;;
-    --dump-binary)
-      dumpBinaryFlag=true
-      dumpFlag=true
-      ;;
-    --plumber)
-      doPlumber=true
-      ;;
-    --head)
-      whichEnd="head"
-      ;;
-    --tail)
-      whichEnd="tail"
-      ;;
-    --skip-plumber)
-      doPlumber=false
-      leaks=()
-      ;;
-    --leak)
-      shift
-      doPlumber=true
-      leaks+=(--leak "$(validate "$handler" String "$argument globalName" "${1-}")") || return $?
-      ;;
-    --debug-lines)
-      debugLines=true
-      ;;
-    --code1)
-      code1=true
-      ;;
+    --dump) dumpFlag=true && dumpBinaryFlag=false ;;
+    --dump-binary) dumpBinaryFlag=true && dumpFlag=true ;;
+    --plumber) doPlumber=true ;;
+    --head) whichEnd="head" ;;
+    --tail) whichEnd="tail" ;;
+    --skip-plumber) doPlumber=false && leaks=() ;;
+    --leak) shift && doPlumber=true && leaks+=(--leak "$(validate "$handler" String "$argument globalName" "${1-}")") || return $? ;;
+    --debug-lines) debugLines=true ;;
+    --code1) code1=true ;;
     *)
       break
       ;;
     esac
     shift
   done
+
+  if $code1; then
+    [ "$expectedExitCode" -eq 0 ] || catchArgument "$handler" "--exit and --code1 and mutually exclusive for non-zero --exit" || return $?
+    expectedExitCode="$(validate "$handler" UnsignedInteger "exitCode" "${1-}")" || return $?
+    shift
+  fi
+
+  # ********************************************************************************************************************
+  if $profile; then _next="$(timingStart)" && printf "%d %s\n" "$((_next - _profile))" "arguments (#$__count)" && _profile=$_next; fi
 
   # IDENTICAL lineDepthComputation 11
   local linePrefix=""
@@ -296,47 +280,55 @@ _assertConditionHelper() {
       displayName="${displayName} (Computed line [$computeLine] != passed line [$lineNumber])"
     fi
   fi
-  [ -z "$lineNumber" ] || linePrefix="$(decorate bold-magenta "Line $lineNumber: ")"
+  [ -z "$lineNumber" ] || linePrefix="Line $lineNumber: "
   # -- end IDENTICAL lineDepthComputation
 
   if [ -z "$doPlumber" ]; then
-    local flags
-    flags=$(catchReturn "$handler" buildEnvironmentGet BUILD_TEST_FLAGS) || return $?
-    doPlumber=false
-    ! isSubstringInsensitive ";Assert-Plumber:true;" ";$flags;" || doPlumber=true
+    flag=";Assert-Plumber:true;"
+    [ "${flags#*"$flag"}" = "$flags" ] && doPlumber=false || doPlumber=true
   fi
   [ -n "$tester" ] || throwArgument "$handler" "--test required ($*)" || return $?
 
-  outputFile=$(fileTemporaryName "$handler") || return $?
+  outputFile=$(mktemp) || throwEnvironment "$handler" "mktemp failed?" || return $?
   errorFile="$outputFile.err"
-
-  if $code1; then
-    [ "$expectedExitCode" -eq 0 ] || catchArgument "$handler" "--exit and --code1 and mutually exclusive for non-zero --exit" || return $?
-    expectedExitCode="$(validate "$handler" UnsignedInteger "exitCode" "${1-}")" || return $?
-    shift
-  fi
   if $doPlumber; then
     runner=(plumber "${leaks[@]+"${leaks[@]}"}" "$tester")
   else
     runner=("$tester")
   fi
   buildDebugStart "assert"
-  if $debugFlag; then
-    __buildDebugEnable v
-  fi
+  ! $debugFlag || __buildDebugEnable v
   exitCode=0
   local clean=("$outputFile" "$errorFile")
+
+  # ********************************************************************************************************************
+  if $profile; then _next="$(timingStart)" && printf "%d %s\n" "$((_next - _profile))" "runner-setup" && _profile=$_next; fi
+
   "${runner[@]}" "$@" >"$outputFile" 2>"$errorFile" || exitCode=$?
 
-  if $debugFlag; then
-    __buildDebugDisable v
+  # ********************************************************************************************************************
+  if $profile; then
+    _next="$(timingStart)"
+    _used=$((_used + (_next - _profile)))
+    printf "%d %s\n" "$((_next - _profile))" "runner"
+    _profile=$_next
   fi
+
+  ! $debugFlag || __buildDebugDisable v
   if [ "$exitCode" = "$expectedExitCode" ]; then
     testPassed=$success
   else
-    testPassed=$(booleanChoose "$success" false true)
+    $success && testPassed=false || testPassed=true
   fi
   result="$("$formatter" "$testPassed" "$success" "$@" <"$outputFile")"
+  # ********************************************************************************************************************
+  if $profile; then
+    _next="$(timingStart)"
+    _used=$((_used + (_next - _profile)))
+    printf "%d %s\n" "$((_next - _profile))" "formatter"
+    _profile=$_next
+  fi
+
   # shellcheck disable=SC2059
   message="$(printf "$(decorate label %s) %s, " "${pairs[@]+"${pairs[@]}"}")"
   message="${message%, }"
@@ -352,8 +344,8 @@ _assertConditionHelper() {
   if $errorsOk && [ ! -s "$errorFile" ]; then
     statusMessage --last printf "%s – %s" "$message" "$(decorate warning "--stderr-ok used but is NOT necessary")"
   fi
-  stderrTitle="$functionName $(decorate bold-red stderr)"
-  stdoutTitle="$functionName $(decorate label stdout)"
+  stderrTitle="$functionName (stderr)"
+  stdoutTitle="$functionName (stdout)"
   if [ ${#stderrContains[@]} -gt 0 ]; then
     __assertFileContainsThis "$handler" --line "$lineNumber" --display "$stderrTitle" "$errorFile" "${stderrContains[@]}" || testPassed=false
   fi
@@ -366,12 +358,18 @@ _assertConditionHelper() {
   if [ ${#outputNotContains[@]} -gt 0 ]; then
     __assertFileDoesNotContainThis "$handler" --line "$lineNumber" --display "$stdoutTitle" "$outputFile" "${outputNotContains[@]}" || testPassed=false
   fi
+
+  # ********************************************************************************************************************
+  if $profile; then _next="$(timingStart)" && printf "%d %s\n" "$((_next - _profile))" output-processing && _profile=$_next; fi
   if $testPassed; then
     _assertSuccess "$functionName" "$displayName $message" || exitCode=$?
     exitCode=0
   else
     _assertFailure "$functionName" "$displayName $message" || exitCode=$?
   fi
+  # ********************************************************************************************************************
+  if $profile; then _next="$(timingStart)" && printf "%d %s\n" "$((_next - _profile))" assert-status && _profile=$_next; fi
+
   if ! $testPassed || $dumpFlag; then
     if $dumpBinaryFlag; then
       dumpBinary "$stdoutTitle" <"$outputFile" || :
@@ -382,7 +380,12 @@ _assertConditionHelper() {
     fi
   fi
   catchEnvironment "$handler" rm -f "${clean[@]}" || return $?
-  return $exitCode
+  # ********************************************************************************************************************
+  if $profile; then
+    _next="$(timingStart)" && printf "%d %s\n" "$((_next - _profile))" cleanup
+    printf -- "%d %s (%d + %d) %s + %s\n" "$((_next - _profileStart))" '*TOTAL*' "$((_next - _profileStart - _used))" "$_used" 'us' 'them'
+  fi
+  return "$exitCode"
 }
 
 # Argument: thisName - Reported function for success or failure
@@ -445,7 +448,7 @@ __assertFileContainsHelper() {
       displayName="${displayName} (Computed line [$computeLine] != passed line [$lineNumber])"
     fi
   fi
-  [ -z "$lineNumber" ] || linePrefix="$(decorate bold-magenta "Line $lineNumber: ")"
+  [ -z "$lineNumber" ] || linePrefix="Line $lineNumber: "
   # -- end IDENTICAL lineDepthComputation
 
   local functionName="${handler#_}"
@@ -515,9 +518,9 @@ ___assertIsEqualFormat() {
   right="$*"
   if $testPassed; then
     if $success; then
-      printf "%s %s" "$(decorate green "equals")" "$(__resultTextSize true "$left")"
+      printf "%s %s" "$(decorate green "equals")" "$(__resultTextSizeColor success "$left")"
     else
-      printf "%s %s != %s" "$(decorate green "not equals")" "$(__resultTextSize true "$left")" "$(__resultTextSize false "$right")"
+      printf "%s %s != %s" "$(decorate green "not equals")" "$(__resultTextSizeColor success "$left")" "$(__resultTextSizeColor error "$right")"
     fi
   else
     compare="$(decorate warning "$(booleanChoose "$success" "DOES NOT EQUAL" "EQUALS")")"
@@ -555,7 +558,7 @@ ___assertIsEmptyFormat() {
     else
       while [ $# -gt 0 ]; do
         if [ -n "${1-}" ]; then
-          printf "%s %s (%s)" "$(decorate green "not empty")" "$(__resultTextSize true "$1")" "$(decorate value "#$index")"
+          printf "%s %s (%s)" "$(decorate green "not empty")" "$(__resultTextSizeColor success "$1")" "$(decorate value "#$index")"
         fi
         index=$((index + 1))
         shift
@@ -565,7 +568,7 @@ ___assertIsEmptyFormat() {
     local compare verb
     while [ $# -gt 0 ]; do
       if $success && [ -n "${1-}" ]; then
-        printf "%s %s (%s)" "$(__resultTextSize true "$1")" "$(decorate red "not empty")" "$(decorate value "#$index")"
+        printf "%s %s (%s)" "$(__resultTextSizeColor success "$1")" "$(decorate red "not empty")" "$(decorate value "#$index")"
       elif ! $success && [ -z "${1-}" ]; then
         printf "%s (%s)" "$(decorate red "empty")" "$(decorate value "#$index")"
       fi

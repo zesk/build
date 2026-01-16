@@ -70,7 +70,7 @@ testDeployRemoteFinish() {
     "--id" "$id"
     "--application" "$tempDirectory/app"
   )
-  assertExitCode --dump "${matches[@]+${matches[@]}}" 1 deployRemoteFinish "${finishArgs[@]}" || return $?
+  assertExitCode "${matches[@]+${matches[@]}}" 1 deployRemoteFinish "${finishArgs[@]}" || return $?
 
   __prepareSampleApplicationDeployment "$handler" "$tempDirectory/deploy/$id" "$id"
   catchEnvironment "$handler" mkdir -p "$tempDirectory/app" || return $?
@@ -87,7 +87,7 @@ testDeployRemoteFinish() {
   matches=(--stdout-match "Remote deployment finished")
   assertEquals "" "$(readlink "$tempDirectory/app" 2>/dev/null)" || return $?
   assertNotExitCode 0 test -f "$tempDirectory/app" || return $?
-  assertExitCode --dump "${matches[@]+${matches[@]}}" 0 deployRemoteFinish --first "--deploy" "--target" "app.tar.gz" "--home" "$tempDirectory/deploy" "--id" "$id" "--application" "$tempDirectory/app" || return $?
+  assertExitCode "${matches[@]+${matches[@]}}" 0 deployRemoteFinish --first "--deploy" "--target" "app.tar.gz" "--home" "$tempDirectory/deploy" "--id" "$id" "--application" "$tempDirectory/app" || return $?
   assertExitCode 0 test -L "$tempDirectory/app" || return $?
   assertEquals "$tempDirectory/deploy/$id/app" "$(readlink "$tempDirectory/app")" || return $?
 
@@ -96,7 +96,7 @@ testDeployRemoteFinish() {
   #
   # works without --first?
   matches=(--stdout-match "Cleaning up")
-  assertExitCode --dump "${matches[@]+${matches[@]}}" 0 deployRemoteFinish "--cleanup" "--target" "app.tar.gz" "--home" "$tempDirectory/deploy" "--id" "$id" "--application" "$tempDirectory/app" || return $?
+  assertExitCode "${matches[@]+${matches[@]}}" 0 deployRemoteFinish "--cleanup" "--target" "app.tar.gz" "--home" "$tempDirectory/deploy" "--id" "$id" "--application" "$tempDirectory/app" || return $?
   assertExitCode 0 test -L "$tempDirectory/app" || return $?
   assertEquals "$tempDirectory/deploy/$id/app" "$(readlink "$tempDirectory/app")" || return $?
 
@@ -108,7 +108,7 @@ testDeployRemoteFinish() {
   __prepareSampleApplicationDeployment "$handler" "$tempDirectory/deploy/$id" "$id" || return $?
 
   matches=(--stdout-match "Remote deployment finished")
-  assertExitCode --dump "${matches[@]+${matches[@]}}" 0 deployRemoteFinish "--deploy" "--target" "app.tar.gz" "--home" "$tempDirectory/deploy" "--id" "$id" "--application" "$tempDirectory/app" || return $?
+  assertExitCode "${matches[@]+${matches[@]}}" 0 deployRemoteFinish "--deploy" "--target" "app.tar.gz" "--home" "$tempDirectory/deploy" "--id" "$id" "--application" "$tempDirectory/app" || return $?
   assertEquals "$tempDirectory/deploy/$id/app" "$(readlink "$tempDirectory/app")" || return $?
   assertExitCode 0 test -L "$tempDirectory/app" || return $?
 
@@ -116,7 +116,7 @@ testDeployRemoteFinish() {
   # --cleanup
   #
   matches=(--stdout-match "Cleaning up")
-  assertExitCode --dump "${matches[@]+${matches[@]}}" 0 deployRemoteFinish "--cleanup" "--target" "app.tar.gz" "--home" "$tempDirectory/deploy" "--id" "$id" "--application" "$tempDirectory/app" || return $?
+  assertExitCode "${matches[@]+${matches[@]}}" 0 deployRemoteFinish "--cleanup" "--target" "app.tar.gz" "--home" "$tempDirectory/deploy" "--id" "$id" "--application" "$tempDirectory/app" || return $?
   assertEquals "$tempDirectory/deploy/$id/app" "$(readlink "$tempDirectory/app")" || return $?
   assertExitCode 0 test -L "$tempDirectory/app" || return $?
 
@@ -126,7 +126,7 @@ testDeployRemoteFinish() {
   # --revert
   #
   matches=(--stdout-match "reverted")
-  assertExitCode --dump "${matches[@]+${matches[@]}}" 0 deployRemoteFinish "--revert" "--target" "app.tar.gz" "--home" "$tempDirectory/deploy" "--id" "$id" "--application" "$tempDirectory/app" || return $?
+  assertExitCode "${matches[@]+${matches[@]}}" 0 deployRemoteFinish "--revert" "--target" "app.tar.gz" "--home" "$tempDirectory/deploy" "--id" "$id" "--application" "$tempDirectory/app" || return $?
   assertEquals "$tempDirectory/deploy/$oldId/app" "$(readlink "$tempDirectory/app")" || return $?
   printf "%s %s\n" "$(decorate bold-magenta "APP points to")" "$(decorate code --)"
 
@@ -136,7 +136,7 @@ testDeployRemoteFinish() {
   # --deploy again
   #
   matches=(--stdout-match "Remote deployment finished")
-  assertExitCode --dump "${matches[@]+${matches[@]}}" 0 deployRemoteFinish "--deploy" "--target" "app.tar.gz" "--home" "$tempDirectory/deploy" "--id" "$id" "--application" "$tempDirectory/app" || return $?
+  assertExitCode "${matches[@]+${matches[@]}}" 0 deployRemoteFinish "--deploy" "--target" "app.tar.gz" "--home" "$tempDirectory/deploy" "--id" "$id" "--application" "$tempDirectory/app" || return $?
   assertEquals "$tempDirectory/deploy/$id/app" "$(readlink "$tempDirectory/app")" || return $?
   assertExitCode 0 test -L "$tempDirectory/app" || return $?
 

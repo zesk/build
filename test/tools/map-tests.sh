@@ -117,7 +117,7 @@ testCannon() {
 
   assertFileContains "$testHome/two.sh" "lizard" || return $?
 
-  assertExitCode --stderr-match "directory" 2 cannon --path "$testHome/not-a-path" dog friend || return $?
+  assertExitCode --stderr-match "Directory" 2 cannon --path "$testHome/not-a-path" dog friend || return $?
   assertExitCode --stderr-match "blank" 2 cannon --path "$testHome" "" friend || return $?
   assertExitCode 3 cannon --path "$testHome" dog friend || return $?
   assertExitCode 3 cannon --path "$testHome" cat hairball || return $?

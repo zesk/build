@@ -19,7 +19,7 @@ __testInstallInstallBuild() {
   catchEnvironment "$handler" mkdir -p "$targetDir" || return $?
   assertDirectoryExists --line "$LINENO" "$targetDir" || return $?
   testBinary="$targetDir/install-bin-build.sh"
-  assertExitCode --dump --line "$LINENO" 0 installInstallBuild --local "$targetDir" "$topDir" || return $?
+  assertExitCode --line "$LINENO" 0 installInstallBuild --local "$targetDir" "$topDir" || return $?
   assertFileExists "$testBinary" || return $?
   marker=$(randomString)
   echo " # changed $marker" >>"$testBinary"

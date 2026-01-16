@@ -7,6 +7,9 @@
 #
 
 testHostnameFull() {
-  assertExitCode --dump --line "$LINENO" 0 hostnameFull || return $?
-  assertExitCode --dump --line "$LINENO" 0 hostnameFull --help || return $?
+  local handler="returnMessage"
+
+  catchReturn "$handler" timing hostnameFull || return $?
+  assertExitCode --line "$LINENO" 0 hostnameFull || return $?
+  assertExitCode --line "$LINENO" 0 hostnameFull --help || return $?
 }

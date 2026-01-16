@@ -117,7 +117,7 @@ testBashSetScopes() {
     if inArray "$opt" "${funScope[@]}"; then
       assertExitCode --display "$opt usually is scoped to a function so no changes should appear" 0 diff "$temp" "$temp.after" || return $?
     else
-      assertNotExitCode --dump --display "$opt NOT scoped to a function so changes should be visible" 0 diff "$temp" "$temp.after" || return $?
+      assertNotExitCode --display "$opt NOT scoped to a function so changes should be visible" 0 diff "$temp" "$temp.after" || return $?
     fi
   done
   catchEnvironment "$handler" rm -f "$temp" "$temp.1" "$temp.after" || return $?

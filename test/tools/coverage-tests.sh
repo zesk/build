@@ -28,7 +28,7 @@ testCoverageNeedToUpdate() {
 
   home=$(catchReturn "$handler" buildHome) || return $?
   # THIS FAILS - INFINITE LOOP
-  # assertExitCode --dump --stdout-match "Target is" --stdout-match "Coverage completed" 0 bashCoverage "$home/bin/build/tools.sh" isInteger 2 || return $?
+  # assertExitCode --stdout-match "Target is" --stdout-match "Coverage completed" 0 bashCoverage "$home/bin/build/tools.sh" isInteger 2 || return $?
   assertEquals "$home" "$home" || return $?
 }
 
@@ -205,8 +205,10 @@ testBuildFunctionsHelpCoverage() {
     fi
   done <"$home/etc/helpless.txt"
 
-  mockEnvironmentStart BUILD_DEBUG
+  export BUILD_COLORS BUILD_DEBUG TEST_TRACK_ASSERTIONS
+
   mockEnvironmentStart BUILD_COLORS
+  mockEnvironmentStart BUILD_DEBUG "${BUILD_DEBUG-}"
   mockEnvironmentStart TEST_TRACK_ASSERTIONS
 
   # BUILD_COLORS on vs off
@@ -220,10 +222,7 @@ testBuildFunctionsHelpCoverage() {
   #   user	6m46.296s
   #   sys	  14m43.790s
 
-  export BUILD_DEBUG
-  export BUILD_COLORS
-  export TEST_TRACK_ASSERTIONS
-  BUILD_DEBUG=""
+  BUILD_DEBUG=$(listRemove "${BUILD_DEBUG}" ',' "fast-usage")
   BUILD_COLORS=false
   TEST_TRACK_ASSERTIONS=false
 
@@ -282,7 +281,6 @@ testBuildFunctionsHelpCoverage() {
   [ "${#missing[@]}" -gt 0 ] || clean+=("$missingFile")
   catchEnvironment "$handler" rm -f "${clean[@]}" || return $?
 
-  mockEnvironmentStop BUILD_DEBUG
   mockEnvironmentStop TEST_TRACK_ASSERTIONS
   mockEnvironmentStop BUILD_COLORS
 
@@ -299,14 +297,14 @@ __help
 inArray
 jsonPath
 isS3URL
-quoteGrepPatternisS3URL
+quoteGrepPattern
+isS3URL
 escapeDoubleQuotes
 escapeSingleQuotes
 escapeQuotes
 replaceFirstPattern
 printfOutputSuffix
 printfOutputPrefix
-quoteGrepPattern
 sedReplacePattern
 parseBoolean
 newlineHide
@@ -412,7 +410,7 @@ nodePackageManagerInstall
 nodePackageManagerUninstall
 npmUninstall
 pathCleanDuplicates
-JSON
+json
 loadAverage
 packageManagerDefault
 phpComposerInstall

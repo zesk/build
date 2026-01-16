@@ -84,7 +84,7 @@ buildStagingTest() {
   __help "$handler" "$@" || return 0
 
   home=$(catchReturn "$handler" buildHome) || return $?
-  BUILD_TEST_FLAGS='Housekeeper:false;Plumber:false' "$home/bin/test.sh" -c "$@"
+  BUILD_TEST_FLAGS='Housekeeper:false;Plumber:false;Assert-Statistics:true' "$home/bin/test.sh" -c "$@"
 }
 _buildStagingTest() {
   # __IDENTICAL__ usageDocument 1

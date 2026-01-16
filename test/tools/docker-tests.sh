@@ -128,7 +128,7 @@ testEnvironmentFileToDocker() {
   catchReturn "$handler" environmentFileToDocker "$testEnv" >"$testEnv.result" || return $?
   # as a pipe
   catchReturn "$handler" environmentFileToDocker >"$testEnv.result2" <"$testEnv" || return $?
-  assertExitCode --dump 0 diff -w "$testEnv.result2" "$testEnv.result" || return $?
+  assertExitCode 0 diff -w "$testEnv.result2" "$testEnv.result" || return $?
 
   printf -- "%s=%s\n" "NAME" "\"value\"" >"$testEnv"
   assertExitCode --stdout-match 'NAME=value' 0 environmentFileToDocker "$testEnv" || return $?
