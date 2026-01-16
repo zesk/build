@@ -10,7 +10,7 @@
 documentationMkdocs() {
   local handler="_${FUNCNAME[0]}"
 
-  local rootPath="" template="" packages=("mkdocs")
+  local rootPath="" template="" packages=("mkdocs") pv=()
 
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
@@ -26,6 +26,7 @@ documentationMkdocs() {
     --template) shift && template=$(validate "$handler" File "$argument" "${1-}") || return $? ;;
     --package) shift && packages+=("$(validate "$handler" String "$argument" "${1-}")") || return $? ;;
     --path) shift && rootPath="$(validate "$handler" Directory "$argument" "${1-}")" || return $? ;;
+    --clean) pv+=("--clean") ;;
     *)
       # _IDENTICAL_ argumentUnknownHandler 1
       throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
@@ -38,7 +39,7 @@ documentationMkdocs() {
   home=$(catchReturn "$handler" buildHome) || return $?
 
   [ -n "$rootPath" ] || rootPath="$home"
-  catchEnvironment "$handler" pythonVirtual --application "$rootPath" "${packages[@]}" || return $?
+  catchEnvironment "$handler" pythonVirtual "${pv[@]+"${pv[@]}"}" --application "$rootPath" "${packages[@]}" || return $?
 
   catchEnvironment "$handler" muzzle pushd "$rootPath" || return $?
   statusMessage --last decorate notice "Updating mkdocs.yml ..."

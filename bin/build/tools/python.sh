@@ -44,10 +44,32 @@ _pythonUninstall() {
 # Utility to upgrade pip correctly
 # DOC TEMPLATE: --help 1
 # Argument: --help - Optional. Flag. Display this help.
+# Argument: --bin binary - Optional. Executable. Binary for `pip`.
 pipUpgrade() {
   local handler="_${FUNCNAME[0]}"
-  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
-  PIP_ROOT_USER_ACTION=ignore catchReturn "$handler" pipWrapper install --upgrade pip 2>/dev/null || return $?
+  local pp=()
+
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
+  local __saved=("$@") __count=$#
+  while [ $# -gt 0 ]; do
+    local argument="$1" __index=$((__count - $# + 1))
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    case "$argument" in
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
+    # _IDENTICAL_ handlerHandler 1
+    --handler) shift && handler=$(usageArgumentFunction "$handler" "$argument" "${1-}") || return $? ;;
+    --bin) shift && pp+=("$argument" "${1-}") ;;
+    *)
+      # _IDENTICAL_ argumentUnknownHandler 1
+      throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
+      ;;
+    esac
+    shift
+  done
+
+  PIP_ROOT_USER_ACTION=ignore catchReturn "$handler" pipWrapper "${pp[@]+"${pp[@]}"}" install --upgrade pip || return $?
 }
 _pipUpgrade() {
   # __IDENTICAL__ usageDocument 1
@@ -174,14 +196,38 @@ _pipUninstall() {
 }
 
 # Run pip whether it is installed as a module or as a binary
+# Argument: --bin binary - Optional. Executable. Binary for `pip`.
+# DOC TEMPLATE: --handler 1
+# Argument: --handler handler - Optional. Function. Use this error handler instead of the default error handler.
 # DOC TEMPLATE: --help 1
 # Argument: --help - Optional. Flag. Display this help.
 # Argument: ... - Arguments. Optional. Arguments passed to `pip`
 pipWrapper() {
   local handler="_${FUNCNAME[0]}"
-  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
+  local binary=""
+
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
+  local __saved=("$@") __count=$#
+  while [ $# -gt 0 ]; do
+    local argument="$1" __index=$((__count - $# + 1))
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    case "$argument" in
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
+    # _IDENTICAL_ handlerHandler 1
+    --handler) shift && handler=$(usageArgumentFunction "$handler" "$argument" "${1-}") || return $? ;;
+    --bin) shift && binary=$(validate "$handler" Executable "$argument" "${1-}") ;;
+    *) break ;;
+    esac
+    shift
+  done
+
   catchReturn "$handler" pythonInstall || return $?
-  if whichExists pip; then
+  if [ -n "$binary" ]; then
+    catchReturn "$handler" "$binary" "$@" || return $?
+  elif whichExists pip; then
+    printf "%s\n" "which: $(which pip)" "command: $(command -v pip)" 1>&2
     catchReturn "$handler" pip "$@" || return $?
   else
     catchReturn "$handler" python -m pip "$@" || return $?
@@ -252,7 +298,7 @@ _pythonPackageInstalled() {
 pythonVirtual() {
   local handler="_${FUNCNAME[0]}"
 
-  local application="" pp=()
+  local application="" pp=() cleanFlag=false
 
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
@@ -267,6 +313,7 @@ pythonVirtual() {
     --handler) shift && handler=$(validate "$handler" function "$argument" "${1-}") || return $? ;;
     --application) shift && application=$(validate "$handler" Directory "$argument" "${1-}") || return $? ;;
     --require) shift && pp+=("--requirement" "$(validate "$handler" File "$argument" "${1-}")") || return $? ;;
+    --clean) cleanFlag=true ;;
     *)
       pp+=("$(validate "$handler" String "$argument" "${1-}")") || return $?
       ;;
@@ -279,6 +326,7 @@ pythonVirtual() {
   catchEnvironment "$handler" pythonInstall || return $?
 
   local venv="$application/.venv" clean=()
+  ! $cleanFlag || [ ! -d "$venv" ] || catchEnvironment "$handler" rm -rf "$venv" || return $?
   if [ ! -d "$venv" ] || [ ! -f "$venv/bin/activate" ]; then
     if ! pythonPackageInstalled venv; then
       catchEnvironment "$handler" pipWrapper install venv || return $?
@@ -288,8 +336,8 @@ pythonVirtual() {
     clean+=(rm -rf "$venv" --)
   fi
   catchEnvironment "$handler" source "$venv/bin/activate" || returnClean $? "${clean[@]}" || return $?
-  catchReturn "$handler" pipUpgrade || returnClean $? "${clean[@]}" || return $?
-  catchReturn "$handler" pipWrapper install "${pp[@]}" || returnClean $? "${clean[@]}" || return $?
+  catchReturn "$handler" pipUpgrade --bin "$venv/bin/pip" || returnClean $? "${clean[@]}" || return $?
+  catchReturn "$handler" pipWrapper --bin "$venv/bin/pip" install "${pp[@]}" || returnClean $? "${clean[@]}" || return $?
 }
 _pythonVirtual() {
   # __IDENTICAL__ usageDocument 1

@@ -130,7 +130,7 @@ ___assertedFunctions() {
 # Decorations
 #
 _assertFailure() {
-  local function="${1-None}" failIcon="❌ "
+  local function="${1-None}" failIcon="❌"
   export BUILD_TEST_FLAGS
   local timing="" flags=";${BUILD_TEST_FLAGS-};" flag="Assert-Statistics:true"
   if [ "${flags#*;"$flag";}" != "$flags" ]; then
@@ -141,7 +141,7 @@ _assertFailure() {
   return "$(returnCode assert)"
 }
 _assertSuccess() {
-  local function="${1-None}" successIcon="✅ "
+  local function="${1-None}" successIcon="✅"
   local timing="" flags=";${BUILD_TEST_FLAGS-};" flag="Assert-Statistics:true"
   if [ "${flags#*;"$flag";}" != "$flags" ]; then
     __assertTimingSetup && timing=" [$(__assertTimingCalculate)]" || :

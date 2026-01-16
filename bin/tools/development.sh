@@ -84,7 +84,11 @@ buildStagingTest() {
   __help "$handler" "$@" || return 0
 
   home=$(catchReturn "$handler" buildHome) || return $?
-  BUILD_TEST_FLAGS='Housekeeper:false;Plumber:false;Assert-Statistics:true' "$home/bin/test.sh" -c "$@"
+  # FIRST occurrence of a flag takes priority.
+  # - `Housekeeper:false` wins unless a test overrides it specifically
+  # - `Plumber:false` wins unless a test overrides it specifically
+  export BUILD_TEST_FLAGS
+  BUILD_TEST_FLAGS="Housekeeper:false;Plumber:false;Assert-Statistics:true;${BUILD_TEST_FLAGS-}" "$home/bin/test.sh" -c "$@"
 }
 _buildStagingTest() {
   # __IDENTICAL__ usageDocument 1
@@ -100,7 +104,10 @@ buildProductionTest() {
   __help "$handler" "$@" || return 0
 
   home=$(catchReturn "$handler" buildHome) || return $?
-  BUILD_TEST_FLAGS='Housekeeper:true;Plumber:true' "$home/bin/test.sh" --skip-tag slow-non-critical "$@"
+  # FIRST occurrence of a flag takes priority.
+  # - `Housekeeper:true` wins unless a test overrides it specifically
+  # - `Plumber:true` wins unless a test overrides it specifically
+  BUILD_TEST_FLAGS='Housekeeper:true;Plumber:true;Assert-Statistics:true' "$home/bin/test.sh" --skip-tag slow-non-critical "$@"
 }
 _buildProductionTest() {
   # __IDENTICAL__ usageDocument 1
