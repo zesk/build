@@ -298,7 +298,8 @@ __dataBuildFunctionsWithBlankHelp() {
 __help
 inArray
 jsonPath
-quoteGrepPattern
+isS3URL
+quoteGrepPatternisS3URL
 escapeDoubleQuotes
 escapeSingleQuotes
 escapeQuotes

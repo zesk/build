@@ -16,6 +16,6 @@
 __gitHookPath() {
   local source="${BASH_SOURCE[0]}"
   local here="${source%/*}/"
-  [ "${here%%.git/*}" != "$here" ] || printf "%s" "../"
-  printf "%s" "../.."
+  [ "${here%%.git/*}" != "$here" ] || printf -- "../"
+  printf -- "../.."
 }
