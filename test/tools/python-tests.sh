@@ -59,12 +59,12 @@ testPythonVirtual() {
 testPythonUninstallation() {
   if whichExists python; then
     python --version
-    assertExitCode 0 pythonUninstall || return $?
-    if whichExists python; then
-      printf -- "%s\n" "PATHS:" "- command -v: $(command -v python)" "- which: $(which python)" | decorate warning || return $?
-      decorate error "$(python --version)"
-      throwEnvironment "$handler" "python is still installed for some reason" || return $?
-    fi
-    #    __checkFunctionUninstalls whichExists "already installed" python pythonUninstall || return $?
+    #    assertExitCode 0 pythonUninstall || return $?
+    #    if whichExists python; then
+    #      printf -- "%s\n" "PATHS:" "- command -v: $(command -v python)" "- which: $(which python)" | decorate warning || return $?
+    #      decorate error "$(python --version)"
+    #      throwEnvironment "$handler" "python is still installed for some reason" || return $?
+    #    fi
+    __checkFunctionUninstalls whichExists "already installed" python pythonUninstall || return $?
   fi
 }

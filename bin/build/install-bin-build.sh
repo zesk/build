@@ -1230,7 +1230,7 @@ _fileTemporaryName() {
 
 # <-- END of IDENTICAL fileTemporaryName
 
-# IDENTICAL whichExists 36
+# IDENTICAL whichExists 37
 
 # Summary: Does a binary exist in the PATH?
 # Argument: --any - Flag. Optional. If any binary exists then return 0 (success). Otherwise, all binaries must exist.
@@ -1256,7 +1256,8 @@ whichExists() {
     --help) "$handler" 0 && return $? || return $? ;;
     --any) anyFlag=true ;;
     *)
-      command -v "$1" >/dev/null 2>&1 || return 1
+      local bin
+      bin=$(command -v "$1" 2>/dev/null) && [ -e "$bin" ] || return 1
       ! $anyFlag || return 0
       ;;
     esac
