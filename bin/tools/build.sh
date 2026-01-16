@@ -5,6 +5,7 @@
 # Copyright: Copyright &copy; 2026 Market Acumen, Inc.
 #
 
+# Experimental - resulting file ends up being around 1MB
 buildToolsCompile() {
   local handler="_${FUNCNAME[0]}"
   local home
@@ -17,16 +18,17 @@ buildToolsCompile() {
   local clean=("$tempDirectory")
   local targetFile="$tempDirectory/source/tools.sh"
   local sourcePath="$home/bin/build"
+  local sourceFile="$sourcePath/tools.sh" sourceFileLines
 
+  sourceFileLines=$(fileLineCount "$sourceFile")
   catchEnvironment "$handler" muzzle directoryRequire "$tempDirectory/source" || return $?
-  catchEnvironment "$handler" cp "$sourcePath/tools.sh" "$targetFile" || returnClean $? "${clean[@]}" || return $?
+  catchEnvironment "$handler" grep -B "$sourceFileLines" -e '^# LOAD' <"$sourceFile" | grep -v '# LOAD' >"$targetFile" || returnClean $? "${clean[@]}" || return $?
   catchEnvironment "$handler" cp -r "$sourcePath/identical" "$tempDirectory/identical" || returnClean $? "${clean[@]}" || return $?
   catchEnvironment "$handler" muzzle identicalCheck --repair "$tempDirectory/identical" --extension "sh" --prefix "# COMPILED" --cd "$tempDirectory" || returnClean $? "${clean[@]}" || return $?
 
   local toolsPath="$home/bin/build/tools"
-  local toolsFiles=() toolsList="$toolsPath/tools.conf" toolFile
+  local toolsList="$toolsPath/tools.conf" toolFile
   [ -f "$toolsList" ] || throwEnvironment "$handler" "Missing $toolsList" 1>&2 || returnClean $? "${clean[@]}" || return $?
-  toolsFiles+=("../env/BUILD_HOME")
   while read -r toolFile; do
     [ "${toolFile#\#}" = "$toolFile" ] || continue
     {
@@ -34,6 +36,8 @@ buildToolsCompile() {
       catchEnvironment "$handler" cat "$toolsPath/$toolFile.sh" || returnClean $? "${clean[@]}" || return $?
     } >>"$targetFile" || returnClean $? "${clean[@]}" || return $?
   done <"$toolsList"
+  catchEnvironment "$handler" cat "$toolsPath/../env/BUILD_HOME.sh" >>"$targetFile" || return $?
+  catchEnvironment "$handler" grep -A "$sourceFileLines" -e '^# LOAD' <"$sourceFile" | grep -v '# LOAD' >>"$targetFile" || returnClean $? "${clean[@]}" || return $?
   catchEnvironment "$handler" cp "$targetFile" "$sourcePath/tools-compiled.sh" || return $?
   catchEnvironment "$handler" rm -rf "${clean[@]}" || return $?
 }

@@ -90,18 +90,17 @@ __toolsTimingLoad() {
   sort -r "${BASH_SOURCE[0]%/*}/../../.tools.times" >"${BASH_SOURCE[0]%/*}/../../.tools.times.sorted"
 }
 
-# Load tools and optionally run a command
-__toolsMain() {
-  export BUILD_DEBUG
-
-  local exitCode=0 debug=",${BUILD_DEBUG-},"
-
-  export BUILD_HOME BUILD_DEBUG
+__toolsInitialize() {
+  export BUILD_DEBUG BUILD_HOME __BUILD_LOADER
   unset BUILD_HOME
-
-  export __BUILD_LOADER
   [ -z "${__BUILD_LOADER-}" ] || unset "${__BUILD_LOADER[@]}"
   __BUILD_LOADER=()
+  unset "${FUNCNAME[0]}"
+}
+
+# Load tools and optionally run a command
+__toolsMain() {
+  local exitCode=0 debug=",${BUILD_DEBUG-},"
 
   # COMPILED toolsLoader 20
   local source="${BASH_SOURCE[0]}"
@@ -127,6 +126,7 @@ __toolsMain() {
 
   # shellcheck source=/dev/null
   if [ "$(basename "${0##-}")" = "$(basename "${BASH_SOURCE[0]}")" ] && [ $# -gt 0 ]; then
+    export BUILD_HOME
     # Only require when running as a shell command
     set -eou pipefail
     # Run remaining command line arguments
@@ -134,5 +134,9 @@ __toolsMain() {
   fi
   return $exitCode
 }
+
+__toolsInitialize
+
+# LOAD
 
 __toolsMain "$@"
