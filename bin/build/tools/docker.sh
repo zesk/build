@@ -99,15 +99,15 @@ _dockerListContext() {
 # Runs ARM64 by default.
 #
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
+# Argument: --help -  Flag. Optional.Display this help.
 # DOC TEMPLATE: --handler 1
-# Argument: --handler handler - Optional. Function. Use this error handler instead of the default error handler.
-# Argument: --image imageName - Optional. String. Docker image name to run. Defaults to `BUILD_DOCKER_IMAGE`.
+# Argument: --handler handler -  Function. Optional.Use this error handler instead of the default error handler.
+# Argument: --image imageName - String. Optional. Docker image name to run. Defaults to `BUILD_DOCKER_IMAGE`.
 # Argument: --path imageApplicationPath - Path. Docker image path to map to current directory. Defaults to `BUILD_DOCKER_PATH`.
-# Argument: --platform platform - Optional. String. Platform to run (arm vs intel).
-# Argument: --env-file envFile - Optional. File. One or more environment files which are suitable to load for docker; must be valid
-# Argument: --env envVariable=envValue - Optional. File. One or more environment variables to set.
-# Argument: extraArgs - Optional. Mixed. The first non-file argument to `{fn}` is passed directly through to `docker run` as arguments
+# Argument: --platform platform - String. Optional. Platform to run (arm vs intel).
+# Argument: --env-file envFile -  File. Optional.One or more environment files which are suitable to load for docker; must be valid
+# Argument: --env envVariable=envValue -  File. Optional.One or more environment variables to set.
+# Argument: extraArgs -  Mixed. Optional.The first non-file argument to `{fn}` is passed directly through to `docker run` as arguments
 # Return Code: 1 - If already inside docker, or the environment file passed is not valid
 # Return Code: 0 - Success
 # Return Code: Any - `docker run` error code is returned if non-zero
@@ -132,7 +132,7 @@ dockerLocalContainer() {
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
     # _IDENTICAL_ handlerHandler 1
-    --handler) shift && handler=$(validate "$handler" function "$argument" "${1-}") || return $? ;;
+    --handler) shift && handler=$(validate "$handler" Function "$argument" "${1-}") || return $? ;;
     --image) shift && imageName=$(validate "$handler" String "$argument" "${1-}") || return $? ;;
     --local) shift && localPath=$(validate "$handler" Directory "$argument" "${1-}") || return $? ;;
     --verbose) verboseFlag=true ;;

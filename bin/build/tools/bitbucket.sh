@@ -111,7 +111,7 @@ bitbucketPRNewURL() {
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
     # _IDENTICAL_ handlerHandler 1
-    --handler) shift && handler=$(validate "$handler" function "$argument" "${1-}") || return $? ;;
+    --handler) shift && handler=$(validate "$handler" Function "$argument" "${1-}") || return $? ;;
     --event-source) shift && eventSource=$(validate "$handler" String "$argument" "${1-}") || return $? ;;
     --source) shift && source=$(validate "$handler" String "$argument" "${1-}") || return $? ;;
     *)

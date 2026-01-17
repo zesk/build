@@ -24,8 +24,8 @@ __hookMaintenanceSetValue() {
 }
 
 # fn: hookRun maintenance
-# Argument: maintenanceSetting - Required. String. Maintenance setting: `on | 1 | true | enable | off | 0 | false | disable`
-# Argument: --message maintenanceMessage - Optional. String. Message to display to the use as to why maintenance is enabled.
+# Argument: maintenanceSetting - String. Required. Maintenance setting: `on | 1 | true | enable | off | 0 | false | disable`
+# Argument: --message maintenanceMessage - String. Optional. Message to display to the use as to why maintenance is enabled.
 # Toggle maintenance on or off. The default version of this modifies the environment files for the application by modifying the `.env.local` file
 # and dynamically adding or removing any line which matches the MAINTENANCE variable.
 #
@@ -83,12 +83,12 @@ __hookMaintenance() {
     messageColor=success
     maintenanceValue=1
     messageValue=$(decorate code "[ ON ]")
-    messageSuffix=$(decorate bold-red "(maintenance mode)")
+    messageSuffix=$(decorate BOLD red "(maintenance mode)")
   else
     messageColor=info
-    messageValue=$(decorate bold-green "- off -")
+    messageValue=$(decorate BOLD green "- off -")
     maintenanceValue=
-    messageSuffix=$(decorate bold-magenta "NOW LIVE!")
+    messageSuffix=$(decorate BOLD magenta "NOW LIVE!")
     if [ -f "$envFile" ]; then
       deleteFile=$(catchReturn "$handler" environmentValueRead "$envFile" BUILD_MAINTENANCE_CREATED_FILE false) || return $?
       if [ -z "$deleteFile" ]; then

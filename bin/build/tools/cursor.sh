@@ -35,8 +35,8 @@ _cursorGet() {
 
 #
 # Move the cursor to x y
-# Argument: x - Required. UnsignedInteger. Column to place the cursor.
-# Argument: y - Required. UnsignedInteger. Row to place the cursor.
+# Argument: x -  UnsignedInteger. Required. Column to place the cursor.
+# Argument: y -  UnsignedInteger. Required. Row to place the cursor.
 cursorSet() {
   local handler="_${FUNCNAME[0]}"
   [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0

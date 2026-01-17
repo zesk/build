@@ -11,8 +11,8 @@
 # Load test tools and make `testSuite` function available
 #
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
-# Argument: binary - Optional. Callable. Run this program after loading test tools.
+# Argument: --help -  Flag. Optional.Display this help.
+# Argument: binary -  Callable. Optional.Run this program after loading test tools.
 # Argument: ... - Optional. Arguments for binary.
 #
 testTools() {

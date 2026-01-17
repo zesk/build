@@ -16,7 +16,7 @@ export __CFBundleIdentifier
 # Are we within the JetBrains PHPStorm terminal?
 #
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
+# Argument: --help -  Flag. Optional.Display this help.
 # Return Code: 0 - within the PhpStorm terminal
 # Return Code: 1 - not within the PhpStorm terminal AFAIK
 # See: contextOpen
@@ -34,7 +34,7 @@ _isPHPStorm() {
 # Are we within the JetBrains PyCharm terminal?
 #
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
+# Argument: --help -  Flag. Optional.Display this help.
 # Return Code: 0 - within the PyCharm terminal
 # Return Code: 1 - not within the PyCharm terminal AFAIK
 # See: contextOpen
@@ -52,7 +52,7 @@ _isPyCharm() {
 # Are we within the Microsoft Visual Studio Code terminal?
 #
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
+# Argument: --help -  Flag. Optional.Display this help.
 # Return Code: 0 - within the Visual Studio Code terminal
 # Return Code: 1 - not within the Visual Studio Code terminal AFAIK
 # See: contextOpen
@@ -72,7 +72,7 @@ _isVisualStudioCode() {
 # Environment: EDITOR - Used as a default editor (first)
 # Environment: VISUAL - Used as another default editor (last)
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
+# Argument: --help -  Flag. Optional.Display this help.
 contextOpen() {
   __help "_${FUNCNAME[0]}" "$@" || return 0
   # should maybe make this extensible

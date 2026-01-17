@@ -20,9 +20,13 @@ Zesk Build supports customizations of all decoration colors to custom values.
 
 {decorate}
 
+{decorateInitialized}
+
 {decorations}
 
 {decorateStyle}
+
+{__decorateExtensionBOLD}
 
 {__decorateExtensionEach}
 
@@ -66,25 +70,12 @@ Colors vary depending on the console and the terminal. Try `colorSampleStyles` t
 - `decorate underline`
 - `decorate bold`
 
-## Bold Colors
-
-- `decorate bold-red`
-- `decorate bold-green`
-- `decorate bold-cyan`
-- `decorate bold-blue`
-- `decorate bold-orange`
-- `decorate bold-magenta`
-- `decorate bold-black`
-- `decorate bold-white`
-
 ## Extensions
 
-- `decorate pair name value`
-- `decorate pair 40 name value`
-- `decorate each code item1 item2`
-- `decorate each --count code item1 item2 item3`
-- `decorate each --index code item1 item2 item3`
-- `decorate size 100`
+- `decorate BOLD` `style` `text` ...
+- `decorate` `pair` `[` `width` `]` `name` `value` ...
+- `decorate` `each` `[ ``--count` `]` `[` `--index` `]` `style` `item1` `item2` ...
+- `decorate` `size` `value`
 
 ### Creating extensions
 
@@ -93,8 +84,6 @@ You can add your own decoration extension to your code by creating a function na
 - `__decorateExtensionFoo` - where `foo` (lowercase first letter) is the decoration name
 
 # Additional commands
-
-{consoleColorMode}
 
 {clearLine}
 

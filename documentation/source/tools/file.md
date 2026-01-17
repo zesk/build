@@ -58,6 +58,8 @@
 
 {fileLineCount}
 
+{fileTeeAtomic}
+
 ## Finding
 
 {fileMatches}
@@ -69,4 +71,3 @@
 {linkCreate}
 
 {linkRename}
-

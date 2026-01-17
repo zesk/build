@@ -11,7 +11,7 @@
 
 # Fetch a non-blank field from a JSON file with error handling
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
+# Argument: --help -  Flag. Optional.Display this help.
 # Argument: handler - Function. Required. Error handler.
 # Argument: jsonFile - File. Required. A JSON file to parse
 # Argument: ... - Arguments. Optional. Passed directly to jq
@@ -173,7 +173,7 @@ jsonSetValue() {
     --help) "$handler" 0 && return $? || return $? ;;
     --generator)
       shift
-      generator="$(validate "$handler" function "$argument" "${1-}")" || return $?
+      generator="$(validate "$handler" Function "$argument" "${1-}")" || return $?
       ;;
     --status)
       statusFlag=true
@@ -191,7 +191,7 @@ jsonSetValue() {
       ;;
     --filter)
       shift
-      filter="$(validate "$handler" function "$argument" "${1-}")" || return $?
+      filter="$(validate "$handler" Function "$argument" "${1-}")" || return $?
       ;;
     *)
       file="$(validate "$handler" File "$argument" "${1-}")" || return $?
@@ -249,7 +249,7 @@ __jsonSetValue() {
 }
 
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
+# Argument: --help -  Flag. Optional.Display this help.
 # Summary: JSON pretty
 # Format something neatly as JSON
 # Example:     json < inputFile > outputFile

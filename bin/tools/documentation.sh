@@ -1,7 +1,84 @@
 #!/usr/bin/env bash
 #
-# Copyright: Copyright &copy; 2026 Market Acumen, Inc.
+# Copyright &copy; 2026 Market Acumen, Inc.
 #
+
+#
+# Extract and build the bin/build/documentation/ cache
+# Argument: --clean - Flag. Optional.
+# Argument: --force - Flag. Optional. Force update regardless of top file modification times.
+# DOC TEMPLATE: --help 1
+# Argument: --help -  Flag. Optional.Display this help.
+buildDocumentationExtractionUpdate() {
+  local handler="_${FUNCNAME[0]}"
+
+  local cleanFlag=false quickFlag=false
+
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
+  local __saved=("$@") __count=$#
+  while [ $# -gt 0 ]; do
+    local argument="$1" __index=$((__count - $# + 1))
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    case "$argument" in
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
+    --clean) cleanFlag=true ;;
+    --quick) quickFlag=true ;;
+    *)
+      # _IDENTICAL_ argumentUnknownHandler 1
+      throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
+      ;;
+    esac
+    shift
+  done
+  local home
+  home=$(catchReturn "$handler" buildHome) || return $?
+
+  local docPath="$home/bin/build/documentation/"
+  if $cleanFlag; then
+    statusMessage decorate info "Cleaning $docPath"
+    [ ! -d "$docPath" ] || catchEnvironment "$handler" find "$docPath" -type f -name '*.sh' ! -path '*/.*/*' -delete || return $?
+  fi
+
+  catchReturn "$handler" muzzle directoryRequire "$docPath" || return $?
+  if $quickFlag; then
+    if (local finished && while ! $finished; do
+      local fun helpFun
+      read -r fun || finished=true
+      [ -n "$fun" ] && isFunction "_$fun" || continue
+      if [ ! -f "$docPath/$fun.sh" ]; then statusMessage decorate notice "$(decorate file "$docPath/$fun.sh") not found" && return 1; fi
+    done < <(buildFunctions)); then
+      local docToolsOldest toolsNewest
+
+      docToolsOldest=$(catchReturn "$handler" directoryOldestFile "$docPath") || return $?
+      toolsNewest=$(catchReturn "$handler" directoryNewestFile "$home/bin/build/tools") || return $?
+
+      # `FILE1 -ot FILE2` - `FILE1` is older than `FILE2`
+      if [ "$toolsNewest" -ot "$docToolsOldest" ]; then
+        statusMessage --last decorate info "Everything is up to date."
+        return 0
+      fi
+      statusMessage decorate notice "$(decorate file "$toolsNewest") modified more recently than $(decorate file "$docToolsOldest")"
+    fi
+  fi
+  local finished=false
+  while ! $finished; do
+    local fun helpFun
+    read -r fun || finished=true
+    [ -n "$fun" ] || continue
+    helpFun="_$fun"
+    if ! isFunction "$helpFun"; then
+      statusMessage decorate warning "No help for $fun ($helpFun not defined)" || return $?
+      continue
+    fi
+    BUILD_DEBUG="documentation-cache" statusMessage --last timing --name "$fun" muzzle "$helpFun" 0 || return $?
+  done < <(catchReturn "$handler" buildFunctions) || return $?
+}
+_buildDocumentationExtractionUpdate() {
+  # __IDENTICAL__ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
 
 __buildDocumentationBuildDirectory() {
   local handler="$1" && shift

@@ -53,9 +53,9 @@ testPHPComposerInstallation() {
   catchReturn "$handler" rm -rf "$d" || return $?
 }
 
-# Argument: --show - Optional. Flag. Print the displayed test crontab file to stdout.
-# Argument: --verbose - Optional. Flag. Be chatty.
-# Argument: --keep - Optional. Flag. Do not delete artifacts when done, print created values.
+# Argument: --show -  Flag. Optional.Print the displayed test crontab file to stdout.
+# Argument: --verbose -  Flag. Optional.Be chatty.
+# Argument: --keep -  Flag. Optional.Do not delete artifacts when done, print created values.
 # Tag: slow
 # Tag: php-install simple-php
 testPHPBuild() {

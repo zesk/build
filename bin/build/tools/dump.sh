@@ -8,9 +8,9 @@
 # Test: ./test/tools/dump-tests.sh
 
 # Dump the function and include stacks and the current environment
-# Argument: -x - Optional. Flag. Show exported variables. (verbose)
-# Argument: --me - Optional. Flag. Show calling function call stack frame.
-# Argument: --exit - Optional. Flag. Exit with code 0 after output.
+# Argument: -x -  Flag. Optional.Show exported variables. (verbose)
+# Argument: --me -  Flag. Optional.Show calling function call stack frame.
+# Argument: --exit -  Flag. Optional.Exit with code 0 after output.
 # Requires: printf usageDocument
 # Environment: BUILD_DEBUG
 # BUILD_DEBUG: debuggingStack - `debuggingStack` shows arguments passed (extra) and exports (optional flag) ALWAYS
@@ -88,12 +88,12 @@ __debuggingStackCodeList() {
 }
 
 # Dump a pipe with a title and stats
-# Argument: --symbol symbol - Optional. String. Symbol to place before each line. (Blank is ok).
-# Argument: --tail - Optional. Flag. Show the tail of the file and not the head when not enough can be shown.
-# Argument: --head - Optional. Flag. Show the head of the file when not enough can be shown. (default)
-# Argument: --lines - Optional. UnsignedInteger. Number of lines to show.
-# Argument: --vanish file - Optional. UnsignedInteger. Number of lines to show.
-# Argument: name - Optional. String. The item name or title of this output.
+# Argument: --symbol symbol - String. Optional. Symbol to place before each line. (Blank is ok).
+# Argument: --tail -  Flag. Optional.Show the tail of the file and not the head when not enough can be shown.
+# Argument: --head -  Flag. Optional.Show the head of the file when not enough can be shown. (default)
+# Argument: --lines -  UnsignedInteger. Optional.Number of lines to show.
+# Argument: --vanish file -  UnsignedInteger. Optional.Number of lines to show.
+# Argument: name - String. Optional. The item name or title of this output.
 # stdin: text
 # stdout: formatted text for debugging
 dumpPipe() {
@@ -246,7 +246,7 @@ _dumpFile() {
 # Argument: --skip-env environmentVariable - EnvironmentVariable. Optional. Skip this environment variable (must match exactly).
 # Argument: --show-skipped - Flag. Show skipped environment variables.
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
+# Argument: --help -  Flag. Optional.Display this help.
 __internalDumpEnvironment() {
   local handler="$1" && shift
 
@@ -349,7 +349,7 @@ __internalDumpEnvironment() {
 # Argument: --secure-match matchString - String. Optional. If an environment variable matches any case-insensitive part of this string, then hide it. If nothing specified, uses a `secret` `key` and `password`. If one value is specified the list is reset to zero. To show all variables pass a blank or `-` value here.
 # Argument: --secure-suffix secureSuffix  - EmptyString. Optional. Suffix to display after hidden arguments.
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
+# Argument: --help -  Flag. Optional.Display this help.
 dumpEnvironment() {
   local handler="_${FUNCNAME[0]}"
   __internalDumpEnvironment "$handler" "$@" || return $?
@@ -365,7 +365,7 @@ _dumpEnvironment() {
 # Argument: --skip-env environmentVariable - EnvironmentVariable. Optional. Skip this environment variable (must match exactly).
 # Argument: --show-skipped - Flag. Show skipped environment variables.
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
+# Argument: --help -  Flag. Optional.Display this help.
 dumpEnvironmentUnsafe() {
   local handler="_${FUNCNAME[0]}" argument
   [ $# -eq 0 ] || for argument in "--secure-match" "--secure-suffix"; do
@@ -381,7 +381,7 @@ _dumpEnvironmentUnsafe() {
 
 # Print the load averages
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
+# Argument: --help -  Flag. Optional.Display this help.
 dumpLoadAverages() {
   local handler="_${FUNCNAME[0]}"
 

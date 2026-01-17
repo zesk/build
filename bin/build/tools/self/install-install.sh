@@ -23,7 +23,7 @@ __installInstallBinary() {
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
     # _IDENTICAL_ handlerHandler 1
-    --handler) shift && handler=$(validate "$handler" function "$argument" "${1-}") || return $? ;;
+    --handler) shift && handler=$(validate "$handler" Function "$argument" "${1-}") || return $? ;;
     --bin)
       shift
       installBinName=$(validate "$handler" String "$argument" "${1-}") || return $?
@@ -181,7 +181,7 @@ _installInstallBinaryDiffer() {
   fi
 }
 
-# Argument: diff-arguments - Required. Arguments. Passed to diff.
+# Argument: diff-arguments -  Arguments. Required. Passed to diff.
 _installInstallBinaryDifferFilter() {
   diff "$@" | grep -v -e '^__installPackageConfiguration ' | grep -c '[<>]'
 }

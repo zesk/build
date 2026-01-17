@@ -20,10 +20,10 @@ __usageLoader() {
 #
 # Actual function is called `{functionName}`.
 #
-# Argument: functionDefinitionFile - Required. File. The file in which the function is defined. If you don't know, use `__bashDocumentation_FindFunctionDefinitions` or `__bashDocumentation_FindFunctionDefinition`.
-# Argument: functionName - Required. String. The function which actually defines our usage syntax. Documentation is extracted from this function, regardless.
-# Argument: exitCode - Required. Integer. The function which actually defines our usage syntax. Documentation is extracted from this function, regardless.
-# Argument: message - Optional. String. A message.
+# Argument: functionDefinitionFile -  File. Required. The file in which the function is defined. If you don't know, use `__bashDocumentation_FindFunctionDefinitions` or `__bashDocumentation_FindFunctionDefinition`.
+# Argument: functionName - String. Required. The function which actually defines our usage syntax. Documentation is extracted from this function, regardless.
+# Argument: exitCode -  Integer. Required. The function which actually defines our usage syntax. Documentation is extracted from this function, regardless.
+# Argument: message - String. Optional. A message.
 #
 # Generates console usage output for a script using documentation tools parsed from the comment of the function identified.
 #
@@ -45,19 +45,19 @@ _usageDocument() {
 
 # Output a simple error message for a function
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
+# Argument: --help -  Flag. Optional.Display this help.
 # Argument: source - File. Required. File where documentation exists.
 # Argument: function - String. Required. Function to document.
 # Argument: returnCode - UnsignedInteger. Required. Exit code to return.
-# Argument: message ... - Optional. String. Message to display to the user.
+# Argument: message ... - String. Optional. Message to display to the user.
 # Requires: bashFunctionComment decorate read printf returnCodeString __help usageDocument
 usageDocumentSimple() {
   [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
   local source="${1-}" functionName="${2-}" returnCode="${3-}" color helpColor="info" icon="❌" line prefix="" finished=false skip=false && shift 3
 
-  case "$returnCode" in 0) icon="🏆" && color="info" && [ $# -ne 0 ] || skip=true ;; 1) color="error" ;; 2) color="bold-red" ;; *) color="orange" ;; esac
+  case "$returnCode" in 0) icon="🏆" && color="info" && [ $# -ne 0 ] || skip=true ;; 1) color="error" ;; 2) color="red" ;; *) color="orange" ;; esac
   [ "$returnCode" -eq 0 ] || exec 1>&2
-  $skip || printf -- "%s [%s] %s\n" "$icon" "$(decorate "code" "$(returnCodeString "$returnCode")")" "$(decorate "$color" "$*")"
+  $skip || printf -- "%s [%s] %s\n" "$icon" "$(decorate "code" "$(returnCodeString "$returnCode")")" "$(decorate BOLD "$color" "$*")"
   if [ ! -f "$source" ]; then
     export BUILD_HOME
     [ -d "${BUILD_HOME-}" ] || returnArgument "Unable to locate $source (${PWD-})" || return $?
@@ -105,7 +105,7 @@ _usageRequireBinary() {
 #
 # Requires environment variables to be set and non-blank
 # Argument: usageFunction - Required. `bash` function already defined to output handler
-# Argument: environmentVariable - Optional. String. One or more environment variables which should be set and non-empty.
+# Argument: environmentVariable - String. Optional. One or more environment variables which should be set and non-empty.
 # Return Code: 0 - All environment variables are set and non-empty
 # Return Code: 1 - If any `environmentVariable` variables are not set or are empty.
 # Deprecated: 2024-01-01

@@ -34,7 +34,7 @@ __promptLoader() {
 # Argument: --colors colorsText - String. Optional. Set the prompt colors. See COLORS below.
 # Argument: --skip-prompt - Flag. Optional. Do not modify the prompt.
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
+# Argument: --help -  Flag. Optional.Display this help.
 #
 # Bash prompt creates the `PS1` prompt with the following extra features:
 #
@@ -76,7 +76,7 @@ __promptLoader() {
 #
 # An example would be `bashPrompt --format "{label} {user}@{host} {status} {$}"`
 #
-# Example: bashPrompt --colors "bold-cyan:bold-magenta:green:orange:code" --format "{label} {user}@{host} {status}"
+# Example: bashPrompt --colors "cyan:magenta:green:orange:code" --format "{label} {user}@{host} {status}"
 # Environment: PROMPT_COMMAND
 # BUILD_DEBUG: bashPrompt - Debug prompt command execution
 bashPrompt() {
@@ -95,7 +95,7 @@ _bashPrompt() {
 #
 # See: read
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
+# Argument: --help -  Flag. Optional.Display this help.
 # Argument: ... - Arguments. Optional. Identical arguments to `read` (but includes `-r`)
 bashUserInput() {
   local handler="_${FUNCNAME[0]}"
@@ -120,9 +120,9 @@ _bashUserInput() {
 
 # Set markers for terminal integration
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
-# Argument: prefix - Optional. EmptyString. Prefix for all prompts.
-# Argument: suffix - Optional. EmptyString. Suffix for all prompts.
+# Argument: --help -  Flag. Optional.Display this help.
+# Argument: prefix -  EmptyString. Optional.Prefix for all prompts.
+# Argument: suffix -  EmptyString. Optional.Suffix for all prompts.
 # Outputs the current marker settings, one per line (0, 1, or 2 lines will be output).
 bashPromptMarkers() {
   local handler="_${FUNCNAME[0]}"
@@ -163,16 +163,16 @@ _bashPromptMarkers() {
 # - dark
 bashPromptColorScheme() {
   local colors exitColor
-  exitColor="bold-green:bold-red"
+  exitColor="green:red"
   case "${1-}" in
   --help)
     usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]}" 0
     return $?
     ;;
-  forest) colors="bold-cyan:bold-magenta:green:orange:code" ;;
-  light) colors="$exitColor:magenta:blue:bold-black" ;;
-  dark) colors="$exitColor:magenta:blue:bold-white" ;;
-  *) colors="$exitColor:magenta:blue:bold-black" ;;
+  forest) colors="BOLD cyan:BOLD magenta:green:orange:code" ;;
+  light) colors="$exitColor:magenta:blue:BOLD black" ;;
+  dark) colors="$exitColor:magenta:blue:BOLD white" ;;
+  *) colors="$exitColor:magenta:blue:BOLD black" ;;
   esac
   printf -- "%s" "$colors"
 }
@@ -182,18 +182,16 @@ bashPromptColorScheme() {
 # stdout: Outputs color *codes* separated by colons.
 # Requires: decorations read inArray decorate listJoin
 bashPromptColorsFormat() {
-  local index color colors=()
-  local all=()
+  local index color colors=() cc=()
+  local all=("BOLD")
   [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
   while read -r color; do all+=("$color"); done < <(decorations)
   IFS=":" read -r -a colors <<<"$1:::::" || :
   for index in "${!colors[@]}"; do
-    color="${colors[index]}"
-    if inArray "$color" "${all[@]}"; then
-      colors[index]="$(decorate "$color" --)"
-    else
-      colors[index]=""
-    fi
+    IFS=" " read -r -a cc <<<"${colors[index]}" || :
+    local skip=false
+    for color in "${cc[@]}"; do inArray "$color" "${all[@]}" || skip=true && break; done
+    $skip && colors[index]="" || colors[index]=$(decorate "${cc[@]}" --)
     [ "$index" -le 4 ] || unset "colors[$index]"
   done
   colors+=("$(decorate reset --)")

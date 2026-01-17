@@ -23,19 +23,19 @@
 
 # Fetch URL content
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
+# Argument: --help -  Flag. Optional.Display this help.
 # Argument: --header header - String. Optional. Send a header in the format 'Name: Value'
 # Argument: --wget - Flag. Optional. Force use of wget. If unavailable, fail.
 # Argument: --redirect-max maxRedirections - PositiveInteger. Optional. Sets the number of allowed redirects from the original URL. Default is 9.
 # Argument: --curl - Flag. Optional. Force use of curl. If unavailable, fail.
 # Argument: --binary binaryName - Callable. Use this binary instead. If the base name of the file is not `curl` or `wget` you MUST supply `--argument-format`.
-# Argument: --argument-format format - Optional. String. Supply `curl` or `wget` for parameter formatting.
-# Argument: --user userName - Optional. String. If supplied, uses HTTP Simple authentication. Usually used with `--password`. Note: User names may not contain the character `:` when using `curl`.
-# Argument: --password password - Optional. String. If supplied along with `--user`, uses HTTP Simple authentication.
-# Argument: --agent userAgent - Optional. String. Specify the user agent string.
-# Argument: --timeout timeoutSeconds - Optional. PositiveInteger. A number of seconds to wait before failing. Defaults to `BUILD_URL_TIMEOUT` environment value.
-# Argument: url - Required. URL. URL to fetch to target file.
-# Argument: file - Optional. FileDirectory. Target file. Use `-` to send to `stdout`. Default value is `-`.
+# Argument: --argument-format format - String. Optional. Supply `curl` or `wget` for parameter formatting.
+# Argument: --user userName - String. Optional. If supplied, uses HTTP Simple authentication. Usually used with `--password`. Note: User names may not contain the character `:` when using `curl`.
+# Argument: --password password - String. Optional. If supplied along with `--user`, uses HTTP Simple authentication.
+# Argument: --agent userAgent - String. Optional. Specify the user agent string.
+# Argument: --timeout timeoutSeconds -  PositiveInteger. Optional.A number of seconds to wait before failing. Defaults to `BUILD_URL_TIMEOUT` environment value.
+# Argument: url -  URL. Required. URL to fetch to target file.
+# Argument: file -  FileDirectory. Optional.Target file. Use `-` to send to `stdout`. Default value is `-`.
 # Requires: returnMessage whichExists decorate
 # Requires: validate
 # Requires: throwArgument catchArgument

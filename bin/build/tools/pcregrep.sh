@@ -7,7 +7,7 @@
 
 # Install pcregrep binary
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
+# Argument: --help -  Flag. Optional.Display this help.
 pcregrepInstall() {
   local handler="_${FUNCNAME[0]}"
 
@@ -21,7 +21,7 @@ _pcregrepInstall() {
 
 # The name of the `pcregrep` binary on this operating system
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
+# Argument: --help -  Flag. Optional.Display this help.
 # stdout: String. Name of binary for pcregrep.
 pcregrepBinary() {
   [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"

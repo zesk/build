@@ -4,8 +4,8 @@
 #
 
 # Fetch
-# Argument: style - Required. String. The style to fetch or replace.
-# Argument: newFormat - Optional. String. The new style formatting options as a string in the form `lp dp label`
+# Argument: style - String. Required. The style to fetch or replace.
+# Argument: newFormat - String. Optional. The new style formatting options as a string in the form `lp dp label`
 decorateStyle() {
   local handler="_${FUNCNAME[0]}"
   local style="" newFormat="" oldFormat
@@ -24,12 +24,12 @@ decorateStyle() {
       if [ -z "$style" ]; then
         style=$(validate "$handler" String "style" "$1") || return $?
       else
-        export __BUILD_COLORS
+        export __BUILD_DECORATE
         newFormat=$(validate "$handler" String "newFormat" "$1") || return $?
         if oldFormat=$(__decorateStyle "$style"); then
-          __BUILD_COLORS="$(_decorateStyleReplace "$__BUILD_COLORS" "$style" "$newFormat")"
+          __BUILD_DECORATE="$(_decorateStyleReplace "$__BUILD_DECORATE" "$style" "$newFormat")"
         else
-          __BUILD_COLORS="$__BUILD_COLORS$style=$newFormat"$'\n'
+          __BUILD_DECORATE="$__BUILD_DECORATE$style=$newFormat:"
         fi
       fi
       ;;
@@ -53,10 +53,10 @@ _decorateStyle() {
 # Argument: newFormat - String. Required. New format for the style
 _decorateStyleReplace() {
   local colors="$1" style="$2" newFormat="$3" result
-  local pattern=$'\n'"$style="
+  local pattern=":$style="
   # Suffix first
   result="${colors#*"$pattern"}"
-  result="${colors%%"$pattern"*}$pattern$newFormat"$'\n'"${result#*$'\n'}"
+  result="${colors%%"$pattern"*}$pattern$newFormat:${result#*:}"
   printf "%s\n" "$result"
 }
 

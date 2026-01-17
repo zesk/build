@@ -12,7 +12,7 @@
 # -- COMPILED toolsLoader END
 
 # DOC TEMPLATE: dashDashAllowsHelpParameters 1
-# Argument: -- - Optional. Flag. Stops command processing to enable arbitrary text to be passed as additional arguments without special meaning.
+# Argument: -- -  Flag. Optional.Stops command processing to enable arbitrary text to be passed as additional arguments without special meaning.
 __argumentsWithNonBlanksHandler() {
   local handler="_${FUNCNAME[0]}"
 
@@ -26,7 +26,7 @@ __argumentsWithNonBlanksHandler() {
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
     # _IDENTICAL_ handlerHandler 1
-    --handler) shift && handler=$(validate "$handler" function "$argument" "${1-}") || return $? ;;
+    --handler) shift && handler=$(validate "$handler" Function "$argument" "${1-}") || return $? ;;
     *)
       # _IDENTICAL_ argumentUnknownHandler 1
       throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
@@ -51,7 +51,7 @@ __argumentsWithBlanksHandler() {
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
     # _IDENTICAL_ handlerHandler 1
-    --handler) shift && handler=$(validate "$handler" function "$argument" "${1-}") || return $? ;;
+    --handler) shift && handler=$(validate "$handler" Function "$argument" "${1-}") || return $? ;;
     *)
       # _IDENTICAL_ argumentUnknownHandler 1
       throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?

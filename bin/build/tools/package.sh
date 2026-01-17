@@ -6,10 +6,10 @@
 # Test: ./test/tools/package-tests.sh
 
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
-# Argument: --manager packageManager - Optional. String. Package manager to use. (apk, apt, brew)
-# Argument: --force - Optional. Flag. Force even if it seems to be installed.
-# Argument: --before beforeFunction - Optional. Function. One or more functions to run before list function. `muzzle`d.
+# Argument: --help -  Flag. Optional.Display this help.
+# Argument: --manager packageManager - String. Optional. Package manager to use. (apk, apt, brew)
+# Argument: --force -  Flag. Optional.Force even if it seems to be installed.
+# Argument: --before beforeFunction -  Function. Optional.One or more functions to run before list function. `muzzle`d.
 __packageListFunction() {
   local handler="$1" functionVerb="$2"
   local manager=""
@@ -28,7 +28,7 @@ __packageListFunction() {
     --help) "$handler" 0 && return $? || return $? ;;
     --before)
       shift
-      beforeFunctions+=("$(validate "$handler" function "$argument" "${1-}")") || return $?
+      beforeFunctions+=("$(validate "$handler" Function "$argument" "${1-}")") || return $?
       ;;
     # IDENTICAL managerArgumentHandler 5
     --manager)
@@ -58,11 +58,11 @@ __packageListFunction() {
 }
 
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
-# Argument: --manager packageManager - Optional. String. Package manager to use. (apk, apt, brew)
-# Argument: --force - Optional. Flag. Force even if it seems to be installed.
-# Argument: --verbose - Optional. Flag. Force even if it seems to be installed.
-# Argument: --show-log - Optional. Flag. Show the log of the package manager.
+# Argument: --help -  Flag. Optional.Display this help.
+# Argument: --manager packageManager - String. Optional. Package manager to use. (apk, apt, brew)
+# Argument: --force -  Flag. Optional.Force even if it seems to be installed.
+# Argument: --verbose -  Flag. Optional.Force even if it seems to be installed.
+# Argument: --show-log -  Flag. Optional.Show the log of the package manager.
 __packageUpFunction() {
   local handler="$1" suffix="$2" verb
 
@@ -142,10 +142,10 @@ __packageUpFunction() {
 
 # Upgrade packages lists and sources
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
-# Argument: --verbose - Optional. Flag. Display progress to the terminal.
-# Argument: --manager packageManager - Optional. String. Package manager to use. (apk, apt, brew)
-# Argument: --force - Optional. Flag. Force even if it was updated recently.
+# Argument: --help -  Flag. Optional.Display this help.
+# Argument: --verbose -  Flag. Optional.Display progress to the terminal.
+# Argument: --manager packageManager - String. Optional. Package manager to use. (apk, apt, brew)
+# Argument: --force -  Flag. Optional.Force even if it was updated recently.
 packageUpgrade() {
   __packageUpFunction "_${FUNCNAME[0]}" Upgrade "$@"
 }
@@ -156,10 +156,10 @@ _packageUpgrade() {
 
 # Update packages lists and sources
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
-# Argument: --verbose - Optional. Flag. Display progress to the terminal.
-# Argument: --manager packageManager - Optional. String. Package manager to use. (apk, apt, brew)
-# Argument: --force - Optional. Flag. Force even if it was updated recently.
+# Argument: --help -  Flag. Optional.Display this help.
+# Argument: --verbose -  Flag. Optional.Display progress to the terminal.
+# Argument: --manager packageManager - String. Optional. Package manager to use. (apk, apt, brew)
+# Argument: --force -  Flag. Optional.Force even if it was updated recently.
 packageUpdate() {
   __packageUpFunction "_${FUNCNAME[0]}" Update "$@"
 }
@@ -226,9 +226,9 @@ _packageDefault() {
 # Summary: Install tools using `apt-get` if they are not found
 # Example:     packageWhich shellcheck shellcheck
 # Example:     packageWhich mariadb mariadb-client
-# Argument: --manager packageManager - Optional. String. Package manager to use. (apk, apt, brew)
-# Argument: binary - Required. String. The binary to look for
-# Argument: packageName ... - Optional. String. The package name to install if the binary is not found in the `$PATH`. If not supplied uses the same name as the binary.
+# Argument: --manager packageManager - String. Optional. Package manager to use. (apk, apt, brew)
+# Argument: binary - String. Required. The binary to look for
+# Argument: packageName ... - String. Optional. The package name to install if the binary is not found in the `$PATH`. If not supplied uses the same name as the binary.
 # Environment: Technically this will install the binary and any related files as a package.
 packageWhich() {
   local handler="_${FUNCNAME[0]}"
@@ -298,9 +298,9 @@ _packageWhich() {
 # Summary: Install tools using `apt-get` if they are not found
 # Example:     packageWhichUninstall shellcheck shellcheck
 # Example:     packageWhichUninstall mariadb mariadb-client
-# Argument: --manager packageManager - Optional. String. Package manager to use. (apk, apt, brew)
-# Argument: binary - Required. String. The binary to look for.
-# Argument: packageInstallPackage - Required. String. The package name to uninstall if the binary is found in the `$PATH`.
+# Argument: --manager packageManager - String. Optional. Package manager to use. (apk, apt, brew)
+# Argument: binary - String. Required. The binary to look for.
+# Argument: packageInstallPackage - String. Required. The package name to uninstall if the binary is found in the `$PATH`.
 # Environment: Technically this will uninstall the binary and any related files as a package.
 #
 packageWhichUninstall() {
@@ -370,10 +370,10 @@ _packageWhichUninstall() {
 # Summary: Install packages using a package manager
 # Argument: package - One or more packages to install
 # Artifact: `{fn}.log` is left in the `buildCacheDirectory`
-# Argument: --verbose - Optional. Flag. Display progress to the terminal.
-# Argument: --manager packageManager - Optional. String. Package manager to use. (apk, apt, brew)
-# Argument: --force - Optional. Flag. Force even if it was updated recently.
-# Argument: --show-log - Optional. Flag. Show package manager logs.
+# Argument: --verbose -  Flag. Optional.Display progress to the terminal.
+# Argument: --manager packageManager - String. Optional. Package manager to use. (apk, apt, brew)
+# Argument: --force -  Flag. Optional.Force even if it was updated recently.
+# Argument: --show-log -  Flag. Optional.Show package manager logs.
 packageInstall() {
   local handler="_${FUNCNAME[0]}"
 
@@ -520,7 +520,7 @@ _packageIsInstalled() {
 # Example:     {fn} shellcheck
 # Summary: Removes packages using package manager
 # Argument: package - String. Required. One or more packages to uninstall
-# Argument: --manager packageManager - Optional. String. Package manager to use. (apk, apt, brew)
+# Argument: --manager packageManager - String. Optional. Package manager to use. (apk, apt, brew)
 packageUninstall() {
   local handler="_${FUNCNAME[0]}"
 
@@ -590,7 +590,7 @@ _packageStandardPackages() {
 # Is the package manager supported?
 # Checks the package manager to be a valid, supported one.
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
+# Argument: --help -  Flag. Optional.Display this help.
 # Argument: packageManager - String. Manager to check.
 # Return Code: 0 - The package manager is valid.
 # Return Code: 1 - The package manager is not valid.
@@ -825,7 +825,7 @@ _packageGroupUninstall() {
 }
 
 # Argument: packageName - A simple package name which will be expanded to specific platform or package-manager specific package names
-# Argument: --manager packageManager - Optional. String. Package manager to use. (apk, apt, brew)
+# Argument: --manager packageManager - String. Optional. Package manager to use. (apk, apt, brew)
 packageMapping() {
   local handler="_${FUNCNAME[0]}"
   local packages=() manager=""

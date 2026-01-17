@@ -17,21 +17,23 @@ if source "${BASH_SOURCE[0]%/*}/../tools.sh"; then
     local handler="_${FUNCNAME[0]}"
 
     statusMessage --last printf -- "%s %s (%s)\n" "$(decorate info "[pre-commit]")" "$(decorate code ".sh")" "$(decorate label "Shell files")"
-    catchEnvironment "$handler" gitPreCommitListExtension sh | decorate bold-magenta || return $?
-    local done=false changed=() file
-    while ! $done; do
-      read -r file || done=true
-      [ -z "$file" ] || changed+=("$file")
+    local finished=false changed=()
+    while ! $finished; do
+      local file && read -r file || finished=true
+      [ -n "$file" ] || continue
+      changed+=("$file")
+      printf -- "%s%s\n" "- " "$(decorate magenta "$file")"
     done < <(gitPreCommitListExtension sh)
+    local ba=()
     if buildDebugEnabled bashSanitize; then
-      changed=(--debug "${changed[@]+"${changed[@]}"}")
+      ba=(--debug)
     fi
-    catchEnvironment "$handler" bashSanitize "${changed[@]+"${changed[@]}"}" || return $?
+    catchEnvironment "$handler" bashSanitize "${ba[@]+"${ba[@]}"}" "${changed[@]+"${changed[@]}"}" || return $?
     if whichExists shfmt; then
       export SHFMT_ARGUMENTS
       catchReturn "$handler" buildEnvironmentLoad SHFMT_ARGUMENTS || return $?
       isArray SHFMT_ARGUMENTS || SHFMT_ARGUMENTS=()
-      catchEnvironment "$handler" shfmt "${SHFMT_ARGUMENTS[@]+"${SHFMT_ARGUMENTS[@]}"}" -w "${changed[@]+"${changed[@]}"}" || return $?
+      catchEnvironment "$handler" executeEcho shfmt "${SHFMT_ARGUMENTS[@]+"${SHFMT_ARGUMENTS[@]}"}" -w "${changed[@]+"${changed[@]}"}" || return $?
     fi
     unset "${FUNCNAME[0]}" "_${FUNCNAME[0]}"
   }

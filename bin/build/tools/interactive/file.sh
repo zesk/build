@@ -33,7 +33,7 @@ __fileCopy() {
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
     # _IDENTICAL_ handlerHandler 1
-    --handler) shift && handler=$(validate "$handler" function "$argument" "${1-}") || return $? ;;
+    --handler) shift && handler=$(validate "$handler" Function "$argument" "${1-}") || return $? ;;
     --map)
       mapFlag=true
       ;;
@@ -115,7 +115,7 @@ __fileCopyWouldChange() {
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
     # _IDENTICAL_ handlerHandler 1
-    --handler) shift && handler=$(validate "$handler" function "$argument" "${1-}") || return $? ;;
+    --handler) shift && handler=$(validate "$handler" Function "$argument" "${1-}") || return $? ;;
     --map)
       mapFlag=true
       ;;
@@ -163,7 +163,7 @@ __fileCopyWouldChange() {
 # Argument: verb
 _fileCopyEscalated() {
   decorate reset
-  printf "\n%s -> %s: %s\n\n" "$(decorate green "$1")" "$(decorate red "$3")" "$(decorate bold-red "$4")"
+  printf "\n%s -> %s: %s\n\n" "$(decorate green "$1")" "$(decorate red "$3")" "$(decorate BOLD red "$4")"
   if confirmYesNo --yes "$(printf "%s: %s\n(%s/%s - default %s)? " \
     "$(decorate bold Copy privileged file to)" \
     "$(decorate code "$3")" \

@@ -19,7 +19,7 @@ __awsS3DirectoryDelete() {
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
     # _IDENTICAL_ handlerHandler 1
-    --handler) shift && handler=$(validate "$handler" function "$argument" "${1-}") || return $? ;;
+    --handler) shift && handler=$(validate "$handler" Function "$argument" "${1-}") || return $? ;;
     --show) aa=(--dryrun) ;;
     *)
       isS3URL "$argument" || throwArgument "$handler" "Not a S3 URL: $argument" || return $?
@@ -59,7 +59,7 @@ __awsS3Upload() {
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
     # _IDENTICAL_ handlerHandler 1
-    --handler) shift && handler=$(validate "$handler" function "$argument" "${1-}") || return $? ;;
+    --handler) shift && handler=$(validate "$handler" Function "$argument" "${1-}") || return $? ;;
     --target) shift && target="$(validate "$handler" URL "$argument" "${1-}")" || return $? ;;
     --profile)
       shift

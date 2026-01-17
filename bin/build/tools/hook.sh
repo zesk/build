@@ -113,7 +113,7 @@ __hookRunner() {
 # Argument: hookName - String. Required. Hook name to run.
 # Argument: ... - Arguments. Optional. Any arguments to the hook. See each hook implementation for details.
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
+# Argument: --help -  Flag. Optional.Display this help.
 # Return Code: Any - The hook exit code is returned if it is run
 # Return Code: 1 - is returned if the hook is not found
 # Example:     version="$({fn} version-current)"
@@ -138,7 +138,7 @@ _hookRun() {
 # Argument: hookName - String. Required. Hook name to run.
 # Argument: ... - Arguments. Optional. Any arguments to the hook. See each hook implementation for details.
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
+# Argument: --help -  Flag. Optional.Display this help.
 # Return Code: Any - The hook exit code is returned if it is run
 # Return Code: 1 - is returned if the hook is not found
 # Example:     version="$({fn} version-current)"
@@ -239,7 +239,7 @@ hasHook() {
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
     # _IDENTICAL_ handlerHandler 1
-    --handler) shift && handler=$(validate "$handler" function "$argument" "${1-}") || return $? ;;
+    --handler) shift && handler=$(validate "$handler" Function "$argument" "${1-}") || return $? ;;
     --extensions) shift && ww+=(--extensions "$(validate "$handler" String "$argument" "${1-}")") || return $? ;;
     --debug) ww+=("$argument") ;;
     --next) shift && ww+=("$argument" "$(validate "$handler" File "$argument" "${1-}")") || return $? ;;
@@ -273,8 +273,8 @@ _hasHook() {
 # Argument: --application applicationHome - Path. Optional. Directory of alternate application home. Can be specified more than once to change state.
 # Argument: --extensions extensionList - ColonDelimitedList. Optional. List of extensions to search, in order for matching files in each hook directory. Defaults to `BUILD_HOOK_EXTENSIONS`.
 # Argument: --next scriptName - File. Optional. Locate the script found *after* the named script, if any. Allows easy chaining of scripts.
-# Argument: hookName0 - Required. String. Hook to locate
-# Argument: hookName1 - Optional. String. Additional hooks to locate.
+# Argument: hookName0 - String. Required. Hook to locate
+# Argument: hookName1 - String. Optional. Additional hooks to locate.
 # Environment: BUILD_HOOK_EXTENSIONS BUILD_HOOK_DIRS BUILD_DEBUG
 # Test: testHookSystem
 whichHook() {
@@ -292,7 +292,7 @@ whichHook() {
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
     # _IDENTICAL_ handlerHandler 1
-    --handler) shift && handler=$(validate "$handler" function "$argument" "${1-}") || return $? ;;
+    --handler) shift && handler=$(validate "$handler" Function "$argument" "${1-}") || return $? ;;
     --application) shift && applicationHome=$(validate "$handler" Directory "$argument" "${1-}") || return $? ;;
     --extensions) shift && extensionText=$(validate "$handler" String "$argument" "${1-}") || return $? ;;
     --next)

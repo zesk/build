@@ -16,7 +16,7 @@
 #
 # Use with __documentationIndexLookup
 #
-# Argument: codePath - Required. Directory. Path where code is stored (should remain identical between invocations)
+# Argument: codePath -  Directory. Required. Path where code is stored (should remain identical between invocations)
 # Argument: cacheDirectory - Required. Cache directory where the index will be created.
 # Argument: --verbose - Flag. Optional.
 # See: __documentationIndexLookup
@@ -81,7 +81,7 @@ _documentationIndexGenerate() {
       if [ ! -f "$functionsCache" ]; then
         catchReturn "$handler" muzzle directoryRequire "$fileCacheMarker" || return $?
       elif fileIsNewest "$functionsCache" "$fullPath"; then
-        ! $verboseFlag || statusMessage decorate info "$(decorate file "$shellFile") $(decorate bold-blue "(cached)")"
+        ! $verboseFlag || statusMessage decorate info "$(decorate file "$shellFile") $(decorate BOLD blue "(cached)")"
         cat "$functionsCache" >>"$indexFile.unsorted"
         continue
       fi
@@ -121,7 +121,7 @@ __documentationIndexGenerate() {
 #
 # List of functions which are not linked to anywhere in the documentation index
 #
-# Argument: cacheDirectory - Required. Directory. Index cache directory.
+# Argument: cacheDirectory -  Directory. Required. Index cache directory.
 _documentationIndexUnlinkedFunctions() {
   local handler="_${FUNCNAME[0]}"
 

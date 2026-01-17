@@ -263,4 +263,4 @@ testLocalScope
 
 rm "$savedValue"
 
-decorate bold-red 'Conclusion: Do not use declare -x in any function - locks scope to existing function and subprocesses'
+decorate BOLD red 'Conclusion: Do not use declare -x in any function - locks scope to existing function and subprocesses'

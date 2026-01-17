@@ -57,7 +57,7 @@
 # Argument: -- - Delimiter. Required. Separates command.
 # Argument: command ... - Callable. Required. Function to run in the background.
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
+# Argument: --help -  Flag. Optional.Display this help.
 backgroundProcess() {
   __promptLoader "_${FUNCNAME[0]}" "__${FUNCNAME[0]}" "$@"
 }
@@ -67,16 +67,16 @@ _backgroundProcess() {
 }
 
 # Watch or more directories for changes in a file extension and reload a source file if any changes occur.
-# Argument: --source source - Required. File. Source file to source upon change.
-# Argument: --name name - Optional. String. The name to call this when changes occur.
-# Argument: --path path - Required. Directory. OneOrMore. A directory to scan for changes in `.sh` files
-# Argument: --file file - Required. File. OneOrMore. A file to watch.å
+# Argument: --source source -  File. Required. Source file to source upon change.
+# Argument: --name name - String. Optional. The name to call this when changes occur.
+# Argument: --path path -  Directory. Required. OneOrMore. A directory to scan for changes in `.sh` files
+# Argument: --file file -  File. Required. OneOrMore. A file to watch.å
 # Argument: --stop - Flag. Optional. Stop watching changes and remove all watches.
 # Argument: --show - Flag. Optional. Show watched settings and exit.
 # Argument: source - File. Optional. If supplied directly on the command line, sets the source.
 # Argument: path|file ... - DirectoryOrFile. Optional. If `source` supplied, then any other command line argument is treated as a path to scan for changes.
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
+# Argument: --help -  Flag. Optional.Display this help.
 # BUILD_DEBUG: reloadChanges - prompt module will show debugging information
 # BUILD_DEBUG: reloadChangesProfile - prompt module will show profiling information
 reloadChanges() {
@@ -101,7 +101,7 @@ _bashPromptModule_dotFilesWatcher() {
 
 # The dot files approved file. Add files to this to approve.
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
+# Argument: --help -  Flag. Optional.Display this help.
 dotFilesApprovedFile() {
   [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
   printf "%s\n" "$(buildEnvironmentGetDirectory "XDG_DATA_HOME")/dotFilesWatcher"

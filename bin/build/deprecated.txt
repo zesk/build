@@ -1,4 +1,15 @@
 # v0.41.0
+consoleColorMode|consoleConfigureDecorate|
+decorate bold-black|decorate BOLD black|
+decorate bold-black-contrast|decorate BOLD black-contrast|
+decorate bold-blue|decorate BOLD blue|
+decorate bold-cyan|decorate BOLD cyan|
+decorate bold-green|decorate BOLD green|
+decorate bold-magenta|decorate BOLD magenta|
+decorate bold-orange|decorate BOLD orange|
+decorate bold-red|decorate BOLD red|
+decorate bold-white|decorate BOLD white|
+decorate bold-yellow|decorate BOLD yellow|
 
 # v0.40.4
 usageArgumentDate "$handler"|validate "$handler" Date|

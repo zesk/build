@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+# Copyright &copy; 2026 Market Acumen, Inc.
+# Generated on 2026-01-17
+# shellcheck disable=SC2034
+applicationFile="bin/build/tools/float.sh"
+argument="number - Float. Optional. Floating point number to convert to integer."$'\n'""
+base="float.sh"
+description="Convert float to an integer, round down always"$'\n'""
+file="bin/build/tools/float.sh"
+fn="floatTruncate"
+foundNames=([0]="argument")
+return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""$'\n'""$'\n'""
+source="bin/build/tools/float.sh"
+sourceModified="1768246145"
+summary="Convert float to an integer, round down always"
+usage="floatTruncate [ number ]"

@@ -37,8 +37,8 @@ returnThrow() {
 }
 
 # Run binary and catch errors with handler
-# Argument: handler - Required. Function. Error handler.
-# Argument: binary ... - Required. Executable. Any arguments are passed to `binary`.
+# Argument: handler -  Function. Required. Error handler.
+# Argument: binary ... -  Executable. Required. Any arguments are passed to `binary`.
 # Requires: returnArgument
 catchReturn() {
   local handler="${1-}" && shift || returnArgument "Missing handler" || return $?

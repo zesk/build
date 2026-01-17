@@ -11,7 +11,7 @@
 # See: readlink realpath
 # DOC TEMPLATE: noArgumentsForHelp 1
 # Without arguments, displays help.
-# Argument: file ... - Required. File. One or more files to `realpath`.
+# Argument: file ... -  File. Required. One or more files to `realpath`.
 # Requires: whichExists realpath __help usageDocument returnArgument
 realPath() {
   # __IDENTICAL__ --help-when-blank 1

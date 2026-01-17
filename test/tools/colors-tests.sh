@@ -16,11 +16,13 @@ testColorSampleStyles() {
 }
 testSemanticColorSampleStyles() {
   local mode
-  export BUILD_COLORS_MODE
-  for mode in light dark; do
-    BUILD_COLORS_MODE=$mode colorSampleSemanticStyles
+  mockEnvironmentStart __BUILD_DECORATE
+
+  for mode in FFF 000; do
+    consoleConfigureDecorate "$mode"
+    colorSampleSemanticStyles
   done
-  unset BUILD_COLORS_MODE
+  mockEnvironmentStop __BUILD_DECORATE
 }
 
 testSimpleMarkdownToConsole() {
@@ -108,7 +110,7 @@ testColorFormat() {
 testColorScheme() {
   local handler="returnMessage"
 
-  mockEnvironmentStart __BUILD_COLORS
+  mockEnvironmentStart __BUILD_DECORATE
   mockEnvironmentStart __BUILD_TERM_COLORS
   mockEnvironmentStart __BASH_PROMPT_PREVIOUS
 
@@ -117,7 +119,7 @@ testColorScheme() {
 
   assertExitCode --skip-plumber 0 colorScheme <"$home/etc/term-colors.conf" || return $?
 
-  mockEnvironmentStop __BUILD_COLORS
+  mockEnvironmentStop __BUILD_DECORATE
   mockEnvironmentStop __BUILD_TERM_COLORS
   mockEnvironmentStop __BASH_PROMPT_PREVIOUS
 

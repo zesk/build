@@ -9,9 +9,9 @@
 
 # Summary: Does a binary exist in the PATH?
 # Argument: --any - Flag. Optional. If any binary exists then return 0 (success). Otherwise, all binaries must exist.
-# Argument: binary ... - Required. String. One or more Binaries to find in the system `PATH`.
+# Argument: binary ... - String. Required. One or more Binaries to find in the system `PATH`.
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
+# Argument: --help -  Flag. Optional.Display this help.
 # Return Code: 0 - If all values are found (without the `--any` flag), or if *any* binary is found with the `--any` flag
 # Return Code: 1 - If any value is not found (without the `--any` flag), or if *all* binaries are NOT found with the `--any` flag.
 # Example:     whichExists cp date aws ls mv stat || throwEnvironment "$handler" "Need basic environment to work" || return $?

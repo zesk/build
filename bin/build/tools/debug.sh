@@ -9,7 +9,7 @@
 #
 # Is build debugging enabled?
 #
-# Argument: moduleName - Optional. String. If `BUILD_DEBUG` contains any token passed, debugging is enabled.
+# Argument: moduleName - String. Optional. If `BUILD_DEBUG` contains any token passed, debugging is enabled.
 # Return Code: 1 - Debugging is not enabled (for any module)
 # Return Code: 0 - Debugging is enabled
 # Environment: BUILD_DEBUG - Set to non-blank to enable debugging, blank to disable. `BUILD_DEBUG` may be a comma-separated list of modules to target debugging.
@@ -82,11 +82,12 @@ __buildDebugDisable() {
 #
 # `BUILD_DEBUG` can be a list of strings like `environment,assert` for example.
 # Environment: BUILD_DEBUG
-# Argument: moduleName - Optional. String. Only start debugging if debugging is enabled for ANY of the passed in modules.
+# Argument: moduleName - String. Optional. Only start debugging if debugging is enabled for ANY of the passed in modules.
 # Example:     buildDebugStart || :
 # Example:     # ... complex code here
 # Example:     buildDebugStop || :. -
 # Requires: buildDebugEnabled
+# Example:     # Debugging: 51b581e9a1275e3801165068bceaa6d245c76c2c
 buildDebugStart() {
   [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
   if ! buildDebugEnabled "$@"; then
@@ -104,7 +105,7 @@ _buildDebugStart() {
 # See: buildDebugStart
 # Requires: buildDebugEnabled
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
+# Argument: --help -  Flag. Optional.Display this help.
 buildDebugStop() {
   [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
   if ! buildDebugEnabled "$@"; then
@@ -177,7 +178,7 @@ _bashRecursionDebug() {
 # determine where the problem or loop exists.
 # Requires: trap
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
+# Argument: --help -  Flag. Optional.Display this help.
 # Argument: --error - Flag. Add ERR trap.
 # Argument: --interrupt - Flag. Add INT trap.
 bashDebugInterruptFile() {
@@ -278,7 +279,7 @@ _isErrorExit() {
 # Argument: --leak envName ... - EnvironmentVariable. Variable name which is OK to leak.
 # Argument: --verbose - Flag. Optional. Be verbose.
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
+# Argument: --help -  Flag. Optional.Display this help.
 # BUILD_DEBUG: plumber-verbose - The plumber outputs the exact variable captures before and after
 plumber() {
   local handler="_${FUNCNAME[0]}"
@@ -329,7 +330,7 @@ plumber() {
       __changed="$(printf "%s\n" "$__changed" | grep -v -e 'COLUMNS\|LINES' || :)" || throwEnvironment "$handler" "Removing COLUMNS and LINES from $__changed" || return $?
     fi
     if [ -n "$__changed" ]; then
-      printf "%s\n" "$__changed" "COMMAND: $__cmd" | dumpPipe "$(decorate bold-orange "found leak"): $__rawChanged" 1>&2
+      printf "%s\n" "$__changed" "COMMAND: $__cmd" | dumpPipe "$(decorate BOLD orange "found leak"): $__rawChanged" 1>&2
       if buildDebugEnabled plumber-verbose; then
         dumpPipe BEFORE <"$__before" 1>&2
         dumpPipe AFTER <"$__after" 1>&2
@@ -369,11 +370,11 @@ _housekeeperAccountant() {
 
 # Run a command and ensure files are not modified
 # Argument: --ignore grepPattern - String. Directory. One or more directories to watch. If no directories are supplied uses current working directory.
-# Argument: --path path - Optional. Directory. One or more directories to watch. If no directories are supplied uses current working directory.
-# Argument: path - Optional. Directory. One or more directories to watch. If no directories are supplied uses current working directory.
-# Argument: callable - Optional. Callable. Program to run and watch directory before and after.
+# Argument: --path path -  Directory. Optional.One or more directories to watch. If no directories are supplied uses current working directory.
+# Argument: path -  Directory. Optional.One or more directories to watch. If no directories are supplied uses current working directory.
+# Argument: callable -  Callable. Optional.Program to run and watch directory before and after.
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
+# Argument: --help -  Flag. Optional.Display this help.
 housekeeper() {
   local handler="_${FUNCNAME[0]}"
 
@@ -395,7 +396,7 @@ housekeeper() {
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
     # _IDENTICAL_ handlerHandler 1
-    --handler) shift && handler=$(validate "$handler" function "$argument" "${1-}") || return $? ;;
+    --handler) shift && handler=$(validate "$handler" Function "$argument" "${1-}") || return $? ;;
     --temporary) shift && __tempDir=$(validate "$handler" Directory "$argument" "${1-}") || return $? ;;
     --ignore)
       shift
@@ -468,8 +469,8 @@ _housekeeper() {
 # Check output for content and trigger environment error if found
 # Usage {fn} [ --help ] [ --verbose ] [ --name name ]
 # Argument: --help - Help
-# Argument: --verbose - Optional. Flag. Verbose messages when no errors exist.
-# Argument: --name name - Optional. String. Name for verbose mode.
+# Argument: --verbose -  Flag. Optional.Verbose messages when no errors exist.
+# Argument: --name name - String. Optional. Name for verbose mode.
 # # shellcheck source=/dev/null
 # Example:     source "$include" > >(outputTrigger source "$include") || return $?
 outputTrigger() {

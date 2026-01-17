@@ -94,7 +94,7 @@ __documentationIndexLookup() {
     commentFile=$(__documentationIndexCommentFile "$handler" "$indexDirectory" "$functionName" bashFileComment "$sourceFile" "$lineNumber") || return $?
     local settingsFile="$indexDirectory/comment/$functionName.settings"
     if [ ! -f "$settingsFile" ] || ! fileIsNewest "$settingsFile" "$commentFile"; then
-      __bashDocumentationExtract "$handler" "$functionName" <"$commentFile" >"$settingsFile" || return $?
+      __bashDocumentationExtract "$handler" "$functionName" "$sourceFile" <"$commentFile" >"$settingsFile" || return $?
       __bashDocumentationSettingsFileDetails "$handler" "$sourceFile" "$lineNumber" >>"$settingsFile"
     fi
     printf "%s\n" "$settingsFile"

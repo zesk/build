@@ -8,6 +8,8 @@
 
 {buildDocumentationBuild}
 
+{buildDocumentationExtractionUpdate}
+
 ### Generating fast files
 
 {buildFastFiles}

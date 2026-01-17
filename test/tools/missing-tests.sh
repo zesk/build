@@ -52,8 +52,9 @@ testEverythingElse() {
   #  colorParse
   #  confirmMenu
   #  consoleBrightness
-  #  consoleColorMode
+  #  consoleConfigureDecorate
   #  consoleConfigureColorMode
+  #  consoleConfigureDecorate
   #  consoleDefaultTitle
   #  consoleGetColor
   #  consoleLinksSupported

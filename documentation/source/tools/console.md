@@ -10,6 +10,8 @@
 
 {consoleConfigureColorMode}
 
+{consoleConfigureDecorate}
+
 {consoleColumns}
 
 {consoleRows}

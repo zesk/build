@@ -24,10 +24,10 @@
 # - Executable Callable Function
 # - URL
 #
-# Argument: this - Required. Function. Function to collect arguments for. Assume handler function is "_$this".
-# Argument: source - Required. File. File of the function to collect the specification.
+# Argument: this -  Function. Required. Function to collect arguments for. Assume handler function is "_$this".
+# Argument: source -  File. Required. File of the function to collect the specification.
 # Argument: --none - Flag. Optional. If specified, state file is deleted prior to return regardless of handling.
-# Argument: arguments ... - Optional. EmptyString. One or more arguments to parse.
+# Argument: arguments ... -  EmptyString. Optional.One or more arguments to parse.
 # Output is a temporary `stateFile` on line 1
 _arguments() {
   local _handler_="_${FUNCNAME[0]}"
@@ -129,8 +129,8 @@ __commentArgumentSpecificationMagic() {
 
 #
 # Generate a specification file for arguments
-# Argument: functionDefinitionFile - Required. File. Source file where the function is defined.
-# Argument: functionName - Required. String. Function to fetch the specification for.
+# Argument: functionDefinitionFile -  File. Required. Source file where the function is defined.
+# Argument: functionName - String. Required. Function to fetch the specification for.
 # Outputs the specification "id" to be used for future calls
 # Spec outputs a directory:
 # .arguments/functionName/
@@ -166,7 +166,7 @@ _commentArgumentSpecification() {
   [ -f "$functionDefinitionFile" ] || throwArgument "$handler" "$functionDefinitionFile does not exist" || return $?
   [ -n "$functionName" ] || throwArgument "$handler" "functionName is blank" || return $?
   if [ ! -f "$cacheFile" ] || [ "$(fileNewest "$cacheFile" "$functionDefinitionFile")" = "$functionDefinitionFile" ]; then
-    catchReturn "$handler" bashDocumentationExtract "$functionName" >"$cacheFile" < <(catchReturn "$handler" bashFunctionComment "$functionDefinitionFile" "$functionName") || return $?
+    catchReturn "$handler" bashDocumentationExtract "$functionName" "$functionDefinitionFile" >"$cacheFile" < <(catchReturn "$handler" bashFunctionComment "$functionDefinitionFile" "$functionName") || return $?
     for file in "$(__commentArgumentSpecification__required "$functionCache")" "$(__commentArgumentSpecification__defaults "$functionCache")"; do
       catchEnvironment "$handler" printf "" >"$file" || return $?
     done
@@ -245,8 +245,8 @@ __commentArgumentSpecificationDefaults() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# Argument: argumentDirectory - Required. Directory. Directory where the arguments structure is stored.
-# Argument: argumentId - Required. Integer. This argument ID.
+# Argument: argumentDirectory -  Directory. Required. Directory where the arguments structure is stored.
+# Argument: argumentId -  Integer. Required. This argument ID.
 # Output: nothing
 _commentArgumentSpecificationParseLine() {
   local functionCache="${1-}" argumentId="${2-}"
@@ -324,7 +324,7 @@ _commentArgumentSpecificationParseLine() {
     case "$required" in required) required=true ;; *) required=false ;; esac
   fi
   if ! argumentType=$(_commentArgumentTypeValid "$rawType" "$maybeRequired"); then
-    returnArgument "Invalid argument type in: \"$rawType\" \"$maybeRequired\" (Required was \"$required\")" || return $?
+    returnArgument "Invalid argument type in: \"$rawType\" \"$maybeRequired\" (Required. was \"$required\")" || return $?
   fi
   description="$*"
   if ! $argumentRemainder || [ -n "$argumentName" ]; then
@@ -364,7 +364,7 @@ __commentArgumentSpecificationParseLine() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# Argument: text ... - Optional. String. Text to test
+# Argument: text ... - String. Optional. Text to test
 # If starts with "required" then prints "required"
 # If starts with "optional" then prints "optional"
 # Otherwise fails with return code 1
@@ -508,7 +508,7 @@ __commentArgumentType() {
 
 # Argument: specification - Required. String.
 # Argument: stateFile - Required. File.
-# Argument: ... - Optional. String. One or more
+# Argument: ... - String. Optional. One or more
 _commentArgumentsRemainder() {
   local handler="$1" specification="$2" stateFile="$3" name value done=false
 

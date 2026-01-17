@@ -49,7 +49,9 @@ testDocumentation() {
     local fn
 
     fn="ass""ertNotEquals" # "" hides from findUncaughtAssertions
-    bashDocumentationExtract "$fn" < <(bashFunctionComment "$(__bashDocumentation_FindFunctionDefinition "$home" "$fn")" "$fn") >"$testOutput" || return $?
+    local sourceFile
+    sourceFile=$(__bashDocumentation_FindFunctionDefinition "$home" "$fn") || return $?
+    bashDocumentationExtract "$fn" "$sourceFile" < <(bashFunctionComment "$sourceFile" "$fn") >"$testOutput" || return $?
     set -a # UNDO ok
     # shellcheck source=/dev/null
     source "$testOutput" > >(outputTrigger --name "$testOutput" --verbose) || return $?
@@ -58,7 +60,8 @@ testDocumentation() {
     assertEquals $'Assert two strings are not equal.\n\nIf this fails it will output an error and exit.\n' "${description}" || return $?
 
     fn="ass""ertEquals" # "" hides from findUncaughtAssertions
-    bashDocumentationExtract "$fn" < <(bashFunctionComment "$(__bashDocumentation_FindFunctionDefinition "$home" "$fn")" "$fn") >"$testOutput" || return $?
+    sourceFile=$(__bashDocumentation_FindFunctionDefinition "$home" "$fn") || return $?
+    bashDocumentationExtract "$fn" "$sourceFile" < <(bashFunctionComment "$sourceFile" "$fn") >"$testOutput" || return $?
     set -a # UNDO ok
     # shellcheck source=/dev/null
     source "$testOutput" > >(outputTrigger --name "$testOutput" --verbose) || return $?
@@ -83,8 +86,9 @@ __isolateTest() {
   local fn
 
   fn="ass""ertNotEquals" # "" hides from findUncaughtAssertions
-
-  bashDocumentationExtract "$fn" < <(bashFunctionComment "$(__bashDocumentation_FindFunctionDefinition "$home" "$fn")" "$fn") >"$testOutput" || return $?
+  local sourceFile
+  sourceFile=$(__bashDocumentation_FindFunctionDefinition "$home" "$fn") || return $?
+  bashDocumentationExtract "$fn" "$sourceFile" < <(bashFunctionComment "$sourceFile" "$fn") >"$testOutput" || return $?
   set -a # UNDO ok
   # shellcheck source=/dev/null
   source "$testOutput" > >(outputTrigger --name "$testOutput" --verbose) || return $?
@@ -93,7 +97,8 @@ __isolateTest() {
   assertEquals $'Assert two strings are not equal.\n\nIf this fails it will output an error and exit.\n\n' "${description}" || return $?
 
   fn="ass""ertEquals" # "" hides from findUncaughtAssertions
-  bashDocumentationExtract "$fn" < <(bashFunctionComment "$(__bashDocumentation_FindFunctionDefinition "$home" "$fn")" "$fn") >"$testOutput" || return $?
+  sourceFile=$(__bashDocumentation_FindFunctionDefinition "$home" "$fn") || return $?
+  bashDocumentationExtract "$fn" "$sourceFile" < <(bashFunctionComment "$sourceFile" "$fn") >"$testOutput" || return $?
   set -a # UNDO ok
   # shellcheck source=/dev/null
   source "$testOutput" > >(outputTrigger --name "$testOutput" --verbose) || return $?

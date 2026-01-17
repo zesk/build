@@ -42,14 +42,14 @@ _mariadbUninstall() {
 
 # Dump a MariaDB database to raw SQL
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
-# Argument: --print - Optional. Flag. Show the command.
-# Argument: --binary - Optional. Executable. The binary to use to do the dump. Defaults to `MARIADB_BINARY_DUMP`.
-# Argument: --lock - Optional. Flag. Lock the database during dump
-# Argument: --password password - Optional. String. Password to connect
-# Argument: --user user - Optional. String. User to connect
-# Argument: --host host - Optional. String. Host to connect
-# Argument: --port port - Optional. Integer. Port to connect
+# Argument: --help -  Flag. Optional.Display this help.
+# Argument: --print -  Flag. Optional.Show the command.
+# Argument: --binary -  Executable. Optional.The binary to use to do the dump. Defaults to `MARIADB_BINARY_DUMP`.
+# Argument: --lock -  Flag. Optional.Lock the database during dump
+# Argument: --password password - String. Optional. Password to connect
+# Argument: --user user - String. Optional. User to connect
+# Argument: --host host - String. Optional. Host to connect
+# Argument: --port port -  Integer. Optional.Port to connect
 mariadbDump() {
   local handler="_${FUNCNAME[0]}"
 

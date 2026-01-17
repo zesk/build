@@ -30,28 +30,28 @@ export globalTestFailure=
 # Filters (`--tag` and `--skip-tag`) are applied in order after the function pattern or suite filter.
 # Argument: --help - Optional. This help.
 # Argument: --clean - Optional. Delete test artifact files and exit. (No tests run)
-# Argument: --list - Optional. Flag. List all test names (which match if applicable).
-# Argument: --env-file environmentFile - Optional. EnvironmentFile. Load one ore more environment files prior to running tests
-# Argument: --continue - Optional. Flag. Continue from last successful test.
-# Argument: -c - Optional. Flag. Continue from last successful test.
-# Argument: --delete directoryOrFile - Optional. FileDirectory. A file or directory to delete when the test suite terminates.
+# Argument: --list -  Flag. Optional.List all test names (which match if applicable).
+# Argument: --env-file environmentFile -  EnvironmentFile. Optional.Load one ore more environment files prior to running tests
+# Argument: --continue -  Flag. Optional.Continue from last successful test.
+# Argument: -c -  Flag. Optional.Continue from last successful test.
+# Argument: --delete directoryOrFile -  FileDirectory. Optional.A file or directory to delete when the test suite terminates.
 # Argument: --delete-common - Flag. Delete `./vendor` and `./node_modules` (and other temporary build directories) by default.
-# Argument: --verbose - Optional. Flag. Be verbose.
-# Argument: --coverage - Optional. Flag. Feature in progress - generate a coverage file for tests.
-# Argument: --no-stats - Optional. Flag. Do not generate a test.stats file showing test timings when completed.
+# Argument: --verbose -  Flag. Optional.Be verbose.
+# Argument: --coverage -  Flag. Optional.Feature in progress - generate a coverage file for tests.
+# Argument: --no-stats -  Flag. Optional.Do not generate a test.stats file showing test timings when completed.
 # Argument: --messy - Optional. Do not delete test artifact files afterwards.
-# Argument: --fail executor - Optional. Callable. One or more programs to run on the failed test files. Takes arguments: testName testFile testLine
-# Argument: --cd-away - Optional. Flag. Change directories to a temporary directory before each test.
-# Argument: --tap tapFile - Optional. FileDirectory. Output test results in TAP format to `tapFile`.
-# Argument: --show - Optional. Flag. List all test suites.
-# Argument: -l - Optional. Flag. List all test suites.
+# Argument: --fail executor -  Callable. Optional.One or more programs to run on the failed test files. Takes arguments: testName testFile testLine
+# Argument: --cd-away -  Flag. Optional.Change directories to a temporary directory before each test.
+# Argument: --tap tapFile -  FileDirectory. Optional.Output test results in TAP format to `tapFile`.
+# Argument: --show -  Flag. Optional.List all test suites.
+# Argument: -l -  Flag. Optional.List all test suites.
 # Argument: --one testSuite - Optional. Add one test suite to run. (Synonym for `--suite`)
 # Argument: --suite testSuite - Optional. Add one test suite to run.
 # Argument: -1 testSuite - Optional. Add one test suite to run. (Synonym for `--suite`)
-# Argument: --tag tagName - Optional. String. Include tests (only) tagged with this name.
-# Argument: --show-tags - Optional. Flag. Of the matched tests, display the tags that they have, if any. Unique list.
-# Argument: --skip-tag tagName - Optional. String. Skip tests tagged with this name.
-# Argument: testFunctionPattern - Optional. String. Test function (or substring of function name) to run.
+# Argument: --tag tagName - String. Optional. Include tests (only) tagged with this name.
+# Argument: --show-tags -  Flag. Optional.Of the matched tests, display the tags that they have, if any. Unique list.
+# Argument: --skip-tag tagName - String. Optional. Skip tests tagged with this name.
+# Argument: testFunctionPattern - String. Optional. Test function (or substring of function name) to run.
 # Hook: bash-test-start
 # Hook: bash-test-pass
 # Hook: bash-test-fail
@@ -195,7 +195,7 @@ testSuite() {
     return 0
   fi
 
-  catchReturn "$handler" buildEnvironmentLoad BUILD_COLORS_MODE BUILD_COLORS XDG_CACHE_HOME XDG_STATE_HOME HOME || return $?
+  catchReturn "$handler" buildEnvironmentLoad BUILD_COLORS XDG_CACHE_HOME XDG_STATE_HOME HOME || return $?
 
   local load home testTemporaryHome testTemporaryInternal testTemporaryTest clean=()
 
@@ -224,8 +224,8 @@ testSuite() {
   catchEnvironment "$handler" printf -- "%s\n" "$__TEST_SUITE_TRACE" >>"$quietLog" || returnClean $? "${clean[@]}" || return $?
 
   # Color mode
-  export BUILD_COLORS BUILD_COLORS_MODE
-  BUILD_COLORS_MODE=$(catchReturn "$handler" consoleConfigureColorMode) || returnClean $? "${clean[@]}" || return $?
+  export __BUILD_COLORS
+  [ -n "${__BUILD_COLORS-}" ] || muzzle consoleConfigureDecorate || :
 
   [ "${#testPaths[@]}" -gt 0 ] || throwArgument "$handler" "Need at least one --tests directory ($(decorate each quote "${__saved[@]}"))" || returnClean $? "${clean[@]}" || return $?
 
@@ -234,13 +234,11 @@ testSuite() {
   #
   if ! $beQuiet; then
     if [ ${#runTestSuites[@]} -gt 0 ]; then
-      printf "%s %s\n" "$(decorate warning "Adding ${#runTestSuites[@]} $(plural ${#runTestSuites[@]} suite suites):")" "$(decorate bold-red "${runTestSuites[@]}")"
+      printf "%s %s\n" "$(decorate warning "Adding ${#runTestSuites[@]} $(plural ${#runTestSuites[@]} suite suites):")" "$(decorate BOLD red "${runTestSuites[@]}")"
     fi
     local intro
-    intro=$(printf -- "%s started on %s %s\n" "$(decorate bold-magenta "${handler#_}")" "$startString" "$load")
+    intro=$(printf -- "%s started on %s %s\n" "$(decorate BOLD magenta "${handler#_}")" "$startString" "$load")
     if "$verboseMode"; then
-      local mode="$BUILD_COLORS_MODE" intro
-      [ -n "$mode" ] || mode=none
       hasColors || printf "%s" "No colors available in TERM ${TERM-}\n"
       statusMessage printf -- "%s" "$intro"
     fi
@@ -1192,7 +1190,7 @@ __testFailed() {
   catchEnvironment "$handler" hookRunOptional bash-test-fail "$sectionName" "$item" || throwEnvironment "$handler" "... continuing" || :
 
   errorCode="$(returnCode assert)"
-  printf "\n%s: %s - %s %s (%s)\n" "$(decorate error "Exit")" "$(decorate bold-red "$errorCode")" "$(decorate error "Failed running")" "$(decorate info "$item")" "$(decorate magenta "$sectionName")" || :
+  printf "\n%s: %s - %s %s (%s)\n" "$(decorate error "Exit")" "$(decorate BOLD red "$errorCode")" "$(decorate error "Failed running")" "$(decorate info "$item")" "$(decorate magenta "$sectionName")" || :
 
   ! buildDebugEnabled "test-dump-environment" || dumpEnvironment || :
   dumpLoadAverages || :
@@ -1290,7 +1288,7 @@ __testSuiteTAP_not_ok() {
 }
 
 # TODO: https://github.com/Perl-Toolchain-Gang/Test-Harness/blob/master/reference/Test-Harness-2.64/lib/Test/Harness/TAP.pod#php
-# Argument: --tap - Optional. Flag. TAP output instead of console output.
+# Argument: --tap -  Flag. Optional.TAP output instead of console output.
 #
 # TAP's general format is:
 #

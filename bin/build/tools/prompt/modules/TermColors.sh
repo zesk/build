@@ -8,7 +8,6 @@
 #
 # Will fill in missing bright or non-bright colors which are unspecified. (`blue` implies `br_blue` and so on)
 #
-# Sets `BUILD_COLORS_MODE` based on background color
 # Sets `decorateStyle` for valid styles
 #
 # See: consoleConfigureColorMode

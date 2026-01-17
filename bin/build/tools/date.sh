@@ -14,7 +14,7 @@
 #
 # Compatible with BSD and GNU date.
 # Argument: date - String. Required. String in the form `YYYY-MM-DD` (e.g. `2023-10-15`)
-# Argument: format - Optional. String. Format string for the `date` command (e.g. `%s`)
+# Argument: format - String. Optional. Format string for the `date` command (e.g. `%s`)
 # Example:     dateToFormat 2023-04-20 %s 1681948800
 # Example:     timestamp=$(dateToFormat '2023-10-15' %s)
 # Return Code: 1 - if parsing fails
@@ -43,7 +43,7 @@ _dateToFormat() {
 #
 # Argument: date - String in the form `YYYY-MM-DD` (e.g. `2023-10-15`)
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
+# Argument: --help -  Flag. Optional.Display this help.
 # Environment: Compatible with BSD and GNU date.
 # Return Code: 1 - if parsing fails
 # Return Code: 0 - if parsing succeeds
@@ -65,19 +65,41 @@ _dateToTimestamp() {
 # Argument: integerTimestamp - Integer. Required. Integer timestamp offset (unix timestamp, same as `$(date +%s)`)
 # Argument: format - String. Optional. How to output the date (e.g. `%F` - no `+` is required)
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
+# Argument: --help -  Flag. Optional.Display this help.
+# Argument: --local -  Flag. Optional.Show the local time, not UTC.
 # Environment: Compatible with BSD and GNU date.
 # Return Code: 0 - If parsing is successful
 # Return Code: 1 - If parsing fails
 # Example:     dateField=$(dateFromTimestamp $init %Y)
 dateFromTimestamp() {
   local handler="_${FUNCNAME[0]}"
-  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
-  if [ $# -lt 1 ] || [ $# -gt 2 ]; then
-    throwArgument "$handler" "${FUNCNAME[0]} requires 1 or 2 arguments: integerTimestamp [ format ] –- Passed $#:" "$@" || return $?
-  fi
-  local format="${2-"%F %T"}"
-  __dateFromTimestamp "$1" "$format"
+  local isUTC=true value="" format="%F %T"
+
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
+  local __saved=("$@") __count=$#
+  while [ $# -gt 0 ]; do
+    local argument="$1" __index=$((__count - $# + 1))
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    case "$argument" in
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
+    --local) isUTC=false ;;
+    *)
+      if [ -z "$value" ]; then
+        value=$(validate "$handler" UnsignedInteger "timestamp" "$argument") || return $?
+      elif [ -z "$format" ]; then
+        format=$(validate "$handler" String "format" "$argument") || return $?
+      else
+        # _IDENTICAL_ argumentUnknownHandler 1
+        throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
+      fi
+      ;;
+    esac
+    shift
+  done
+  [ -n "$value" ] || throwArgument "$handler" "No value supplied" || return $?
+  __dateFromTimestamp "$value" "$format" "$isUTC"
 }
 _dateFromTimestamp() {
   # __IDENTICAL__ usageDocument 1
@@ -89,7 +111,7 @@ _dateFromTimestamp() {
 # Summary: Yesterday's date (UTC time)
 # Argument: --local - Flag. Optional. Local yesterday
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
+# Argument: --help -  Flag. Optional.Display this help.
 # Example:     rotated="$log.$({fn} --local)"
 yesterdayDate() {
   local handler="_${FUNCNAME[0]}"
@@ -114,7 +136,7 @@ _yesterdayDate() {
 #
 # Argument: --local - Flag. Optional. Local tomorrow
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
+# Argument: --help -  Flag. Optional.Display this help.
 # Example:     rotated="$log.$({fn})"
 tomorrowDate() {
   local handler="_${FUNCNAME[0]}" ts
@@ -138,7 +160,7 @@ _tomorrowDate() {
 # Returns the current date, in YYYY-MM-DD format. (same as `%F`)
 # Argument: --local - Flag. Optional. Local today.
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
+# Argument: --help -  Flag. Optional.Display this help.
 # Environment: Compatible with BSD and GNU date.
 # Example:     date="$({fn})"
 todayDate() {
@@ -158,9 +180,9 @@ _todayDate() {
 
 # Is a date valid?
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
+# Argument: --help -  Flag. Optional.Display this help.
 # DOC TEMPLATE: dashDashAllowsHelpParameters 1
-# Argument: -- - Optional. Flag. Stops command processing to enable arbitrary text to be passed as additional arguments without special meaning.
+# Argument: -- -  Flag. Optional.Stops command processing to enable arbitrary text to be passed as additional arguments without special meaning.
 # Argument: text - String. Required. Text to validate as a date after the year 1600. Does not validate month and day combinations.
 dateValid() {
   local handler="_${FUNCNAME[0]}"

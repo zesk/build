@@ -21,10 +21,10 @@
 
 # Output the port for the given scheme
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
+# Argument: --help -  Flag. Optional.Display this help.
 # DOC TEMPLATE: --handler 1
-# Argument: --handler handler - Optional. Function. Use this error handler instead of the default error handler.
-# Argument: scheme ... - Required. String. Scheme to look up the default port used for that scheme.
+# Argument: --handler handler -  Function. Optional.Use this error handler instead of the default error handler.
+# Argument: scheme ... - String. Required. Scheme to look up the default port used for that scheme.
 urlSchemeDefaultPort() {
   local handler="_${FUNCNAME[0]}"
 
@@ -40,7 +40,7 @@ urlSchemeDefaultPort() {
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
     # _IDENTICAL_ handlerHandler 1
-    --handler) shift && handler=$(validate "$handler" function "$argument" "${1-}") || return $? ;;
+    --handler) shift && handler=$(validate "$handler" Function "$argument" "${1-}") || return $? ;;
     ftp) port=21 ;;
     ssh) port=22 ;;
     http) port=80 ;;
@@ -81,7 +81,7 @@ _urlSchemeDefaultPort() {
 # Return Code: 1 - If parsing fails
 # Summary: Simple URL Parsing
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
+# Argument: --help -  Flag. Optional.Display this help.
 # Argument: url - a Uniform Resource Locator
 # Argument: --prefix prefix - String. Optional. Prefix variable names with this string.
 # Argument: --uppercase - Flag. Optional. Output variable names in uppercase, not lowercase (the default).
@@ -100,7 +100,7 @@ urlParse() {
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
     # _IDENTICAL_ handlerHandler 1
-    --handler) shift && handler=$(validate "$handler" function "$argument" "${1-}") || return $? ;;
+    --handler) shift && handler=$(validate "$handler" Function "$argument" "${1-}") || return $? ;;
     --integer-port)
       intPort=true
       ;;
@@ -197,7 +197,7 @@ urlParseItem() {
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
     # _IDENTICAL_ handlerHandler 1
-    --handler) shift && handler=$(validate "$handler" function "$argument" "${1-}") || return $? ;;
+    --handler) shift && handler=$(validate "$handler" Function "$argument" "${1-}") || return $? ;;
     *)
       if [ -z "$component" ]; then
         component=$(validate "$handler" String "component" "$1") || return $?
@@ -224,7 +224,7 @@ _urlParseItem() {
 
 # Checks if a URL is valid
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
+# Argument: --help -  Flag. Optional.Display this help.
 # Argument: url ... - String. URL. Required. A Uniform Resource Locator
 # Return Code: 0 - all URLs passed in are valid
 # Return Code: 1 - at least one URL passed in is not a valid URL
@@ -241,7 +241,7 @@ urlValid() {
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
     # _IDENTICAL_ handlerHandler 1
-    --handler) shift && handler=$(validate "$handler" function "$argument" "${1-}") || return $? ;;
+    --handler) shift && handler=$(validate "$handler" Function "$argument" "${1-}") || return $? ;;
     *)
       urlParse "$1" >/dev/null || return 1
       ;;
@@ -274,7 +274,7 @@ urlOpener() {
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
     # _IDENTICAL_ handlerHandler 1
-    --handler) shift && handler=$(validate "$handler" function "$argument" "${1-}") || return $? ;;
+    --handler) shift && handler=$(validate "$handler" Function "$argument" "${1-}") || return $? ;;
     --exec)
       shift
       binary=$(validate "$handler" Executable "$argument" "${1-}") || return $?
@@ -361,7 +361,7 @@ urlFilter() {
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
     # _IDENTICAL_ handlerHandler 1
-    --handler) shift && handler=$(validate "$handler" function "$argument" "${1-}") || return $? ;;
+    --handler) shift && handler=$(validate "$handler" Function "$argument" "${1-}") || return $? ;;
     --show-file)
       aa=("$argument")
       showFile=true
@@ -404,10 +404,10 @@ _urlFilter() {
 # Open a URL using the operating system
 # Usage {fn} [ --help ]
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
-# Argument: --ignore - Optional. Flag. Ignore any invalid URLs found.
-# Argument: --wait - Optional. Flag. Display this help.
-# Argument: --url url - Optional. URL. URL to download.
+# Argument: --help -  Flag. Optional.Display this help.
+# Argument: --ignore -  Flag. Optional.Ignore any invalid URLs found.
+# Argument: --wait -  Flag. Optional.Display this help.
+# Argument: --url url -  URL. Optional.URL to download.
 # stdin: line:URL
 # stdout: none
 urlOpen() {
@@ -425,7 +425,7 @@ urlOpen() {
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
     # _IDENTICAL_ handlerHandler 1
-    --handler) shift && handler=$(validate "$handler" function "$argument" "${1-}") || return $? ;;
+    --handler) shift && handler=$(validate "$handler" Function "$argument" "${1-}") || return $? ;;
     --ignore)
       ignoreFlag=true
       ;;
@@ -496,19 +496,19 @@ __urlOpenInnerLoop() {
 
 # Fetch URL content
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
+# Argument: --help -  Flag. Optional.Display this help.
 # Argument: --header header - String. Optional. Send a header in the format 'Name: Value'
 # Argument: --wget - Flag. Optional. Force use of wget. If unavailable, fail.
 # Argument: --redirect-max maxRedirections - PositiveInteger. Optional. Sets the number of allowed redirects from the original URL. Default is 9.
 # Argument: --curl - Flag. Optional. Force use of curl. If unavailable, fail.
 # Argument: --binary binaryName - Callable. Use this binary instead. If the base name of the file is not `curl` or `wget` you MUST supply `--argument-format`.
-# Argument: --argument-format format - Optional. String. Supply `curl` or `wget` for parameter formatting.
-# Argument: --user userName - Optional. String. If supplied, uses HTTP Simple authentication. Usually used with `--password`. Note: User names may not contain the character `:` when using `curl`.
-# Argument: --password password - Optional. String. If supplied along with `--user`, uses HTTP Simple authentication.
-# Argument: --agent userAgent - Optional. String. Specify the user agent string.
-# Argument: --timeout timeoutSeconds - Optional. PositiveInteger. A number of seconds to wait before failing. Defaults to `BUILD_URL_TIMEOUT` environment value.
-# Argument: url - Required. URL. URL to fetch to target file.
-# Argument: file - Optional. FileDirectory. Target file. Use `-` to send to `stdout`. Default value is `-`.
+# Argument: --argument-format format - String. Optional. Supply `curl` or `wget` for parameter formatting.
+# Argument: --user userName - String. Optional. If supplied, uses HTTP Simple authentication. Usually used with `--password`. Note: User names may not contain the character `:` when using `curl`.
+# Argument: --password password - String. Optional. If supplied along with `--user`, uses HTTP Simple authentication.
+# Argument: --agent userAgent - String. Optional. Specify the user agent string.
+# Argument: --timeout timeoutSeconds -  PositiveInteger. Optional.A number of seconds to wait before failing. Defaults to `BUILD_URL_TIMEOUT` environment value.
+# Argument: url -  URL. Required. URL to fetch to target file.
+# Argument: file -  FileDirectory. Optional.Target file. Use `-` to send to `stdout`. Default value is `-`.
 # Requires: returnMessage whichExists decorate
 # Requires: validate
 # Requires: throwArgument catchArgument

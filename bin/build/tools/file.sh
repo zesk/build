@@ -19,10 +19,10 @@
 # Renames files which have `oldSuffix` to then have `newSuffix` and output a message using `actionVerb`:
 #
 # Summary: Rename a list of files usually to back them up temporarily
-# Argument: oldSuffix - Required. String. Old suffix to look rename from.
-# Argument: newSuffix - Required. String. New suffix to rename to.
-# Argument: actionVerb - Required. String. Description to output for found files.
-# Argument: file ... - Required. String. One or more files to rename, if found, renaming occurs.
+# Argument: oldSuffix - String. Required. Old suffix to look rename from.
+# Argument: newSuffix - String. Required. New suffix to rename to.
+# Argument: actionVerb - String. Required. Description to output for found files.
+# Argument: file ... - String. Required. One or more files to rename, if found, renaming occurs.
 # Example:     {fn} "" ".$$.backup" hiding etc/app.json etc/config.json
 # Example:     ...
 # Example:     {fn} ".$$.backup" "" restoring etc/app.json etc/config.json
@@ -106,7 +106,7 @@ _fileModificationSeconds() {
 #
 # Output is unsorted.
 #
-# Argument: directory - Required. Directory. Must exists - directory to list.
+# Argument: directory -  Directory. Required. Must exists - directory to list.
 # Argument: findArgs - Arguments. Optional. Optional additional arguments to modify the find query
 # Example: {fn} $myDir ! -path "*/.*/*"
 # Output: 1705347087 bin/build/tools.sh
@@ -127,7 +127,7 @@ _fileModificationTimes() {
 }
 
 # List the most recently modified file in a directory prefixed with the timestamp
-# Argument: directory - Required. Directory. Must exists - directory to list.
+# Argument: directory -  Directory. Required. Must exists - directory to list.
 # Argument: findArgs - Arguments. Optional. Optional additional arguments to modify the find query
 fileModifiedRecently() {
   local handler="_${FUNCNAME[0]}"
@@ -150,7 +150,7 @@ _fileModifiedRecently() {
 # Argument: sourceFile - File. Required. File to check
 # Argument: targetFile ... - File. Optional. One or more files to compare. All must exist.
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
+# Argument: --help -  Flag. Optional.Display this help.
 #
 # Return Code: 1 - `sourceFile`, 'targetFile' does not exist, or
 # Return Code: 0 - All files exist and `sourceFile` is the oldest file
@@ -177,7 +177,7 @@ _fileIsNewest() {
 # Argument: sourceFile - File. Required. File to check
 # Argument: targetFile ... - File. Optional. One or more files to compare. All must exist.
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
+# Argument: --help -  Flag. Optional.Display this help.
 # Return Code: 1 - `sourceFile`, 'targetFile' does not exist, or
 # Return Code: 0 - All files exist and `sourceFile` is the oldest file
 #
@@ -224,7 +224,7 @@ __gamutFile() {
 #
 # Argument: file ... - File. Required. One or more files to examine
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
+# Argument: --help -  Flag. Optional.Display this help.
 fileOldest() {
   __gamutFile "_${FUNCNAME[0]}" -lt "$@"
 }
@@ -237,7 +237,7 @@ _fileOldest() {
 #
 # Argument: file ... - File. Required. One or more files to examine
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
+# Argument: --help -  Flag. Optional.Display this help.
 fileNewest() {
   __gamutFile "_${FUNCNAME[0]}" -gt "$@"
 }
@@ -249,7 +249,7 @@ _fileNewest() {
 # Prints seconds since modified
 # Argument: file ... - File. Required. One or more files to examine
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
+# Argument: --help -  Flag. Optional.Display this help.
 # Return Code: 0 - Success
 # Return Code: 2 - Can not get modification time
 #
@@ -270,7 +270,7 @@ _fileModifiedSeconds() {
 # Prints days (integer) since modified
 # Argument: file ... - File. Required. One or more files to examine
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
+# Argument: --help -  Flag. Optional.Display this help.
 # Return Code: 0 - Success
 # Return Code: 2 - Can not get modification time
 fileModifiedDays() {
@@ -293,7 +293,7 @@ _fileModifiedDays() {
 # See: readlink realpath
 # DOC TEMPLATE: noArgumentsForHelp 1
 # Without arguments, displays help.
-# Argument: file ... - Required. File. One or more files to `realpath`.
+# Argument: file ... -  File. Required. One or more files to `realpath`.
 # Requires: whichExists realpath __help usageDocument returnArgument
 realPath() {
   # __IDENTICAL__ --help-when-blank 1
@@ -309,7 +309,7 @@ _realPath() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# Argument: path ... - Required. File. One or more paths to simplify
+# Argument: path ... -  File. Required. One or more paths to simplify
 # Normalizes segments of `/./` and `/../` in a path without using `realPath`
 # Removes dot and dot-dot paths from a path correctly
 directoryPathSimplify() {
@@ -347,7 +347,7 @@ _directoryPathSimplify() {
 # Return Code: 0 - Success
 # Return Code: 1 - Environment error
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
+# Argument: --help -  Flag. Optional.Display this help.
 fileSize() {
   local handler="_${FUNCNAME[0]}"
   [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
@@ -371,7 +371,7 @@ _fileSize() {
 
 # Argument: item - String. Optional. Thing to classify
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
+# Argument: --help -  Flag. Optional.Display this help.
 # Better type handling of shell objects
 #
 # Outputs one of `type` output or enhancements:
@@ -454,7 +454,7 @@ _linkRename() {
 
 # Argument: file - File to get the owner for
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
+# Argument: --help -  Flag. Optional.Display this help.
 # Outputs the file owner for each file passed on the command line
 # Return Code: 0 - Success
 # Return Code: 1 - Unable to access file
@@ -477,7 +477,7 @@ __fileListColumn() {
 # Get the file owner name
 # Argument: file - File to get the owner for
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
+# Argument: --help -  Flag. Optional.Display this help.
 # Outputs the file owner for each file passed on the command line
 # Return Code: 0 - Success
 # Return Code: 1 - Unable to access file
@@ -492,7 +492,7 @@ _fileOwner() {
 # Get the file group name
 # Argument: file - File to get the owner for
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
+# Argument: --help -  Flag. Optional.Display this help.
 # Outputs the file group for each file passed on the command line
 # Return Code: 0 - Success
 # Return Code: 1 - Unable to access file
@@ -507,12 +507,12 @@ _fileGroup() {
 # Find list of files which do NOT match a specific pattern or patterns and output them
 #
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
-# Argument: pattern ... - Required. String. Pattern to find in files.
-# Argument: -- - Required. Delimiter. exception.
-# Argument: exception ... - Optional. String. File pattern which should be ignored.
-# Argument: -- - Required. Delimiter. file.
-# Argument: file ... - Required. File. File to search. Special file `-` indicates files should be read from `stdin`.
+# Argument: --help -  Flag. Optional.Display this help.
+# Argument: pattern ... - String. Required.`grep -e` Pattern to find in files.
+# Argument: -- -  Delimiter. Required. exception.
+# Argument: exception ... - String. Optional. `grep -e` File pattern which should be ignored.
+# Argument: -- -  Delimiter. Required. file.
+# Argument: file ... -  File. Required. File to search. Special file `-` indicates files should be read from `stdin`.
 fileNotMatches() {
   _fileMatchesHelper "_${FUNCNAME[0]}" false "$@"
 }
@@ -524,12 +524,12 @@ _fileNotMatches() {
 # Find one or more patterns in a list of files, with a list of file name pattern exceptions.
 #
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
-# Argument: pattern ... - Required. String. Pattern to find in files. No quoting is added so ensure these are compatible with `grep -e`.
-# Argument: -- - Required. Delimiter. exception.
-# Argument: exception ... - Optional. String. File pattern which should be ignored.
-# Argument: -- - Required. Delimiter. file.
-# Argument: file ... - Required. File. File to search. Special file `-` indicates files should be read from `stdin`.
+# Argument: --help -  Flag. Optional.Display this help.
+# Argument: pattern ... - String. Required.`grep -e` Pattern to find in files. No quoting is added so ensure these are compatible with `grep -e`.
+# Argument: -- -  Delimiter. Required. exception.
+# Argument: exception ... - String. Optional. `grep -e` File pattern which should be ignored.
+# Argument: -- -  Delimiter. Required. file.
+# Argument: file ... -  File. Required. File to search. Special file `-` indicates files should be read from `stdin`.
 fileMatches() {
   _fileMatchesHelper "_${FUNCNAME[0]}" true "$@"
 }
@@ -538,9 +538,17 @@ _fileMatches() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
+# Argument: success - Boolean. Required. Should it match or NOT match to be considered success? `true` means match is success
+# Argument: pattern ... - String. Required.`grep -e` Pattern to find in files. No quoting is added so ensure these are compatible with `grep -e`.
+# Argument: -- -  Delimiter. Required. exception.
+# Argument: exception ... - String. Optional. `grep -e` File pattern which should be ignored.
+# Argument: -- -  Delimiter. Required. file.
+# Argument: file ... -  File. Required. File to search. Special file `-` indicates files should be read from `stdin`.
 _fileMatchesHelper() {
-  local handler="$1" success="$2" && shift 2
+  local handler="${1-}" && shift
+  local success="${1-}" && shift
 
+  local patterns=()
   local file patterns=() found=false exceptions=() clean fileList foundLines
 
   [ $# -gt 0 ] || return 0
@@ -553,13 +561,8 @@ _fileMatchesHelper() {
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
-    --)
-      shift
-      break
-      ;;
-    *)
-      patterns+=("$1")
-      ;;
+    --) shift && break ;;
+    *) patterns+=("$argument") ;;
     esac
     shift
   done
@@ -605,7 +608,7 @@ _fileMatchesHelper() {
 # Return Code: 1 - if any files passed in are non-empty files
 # Argument: file - File. Optional. One or more files, all of which must be empty.
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
+# Argument: --help -  Flag. Optional.Display this help.
 fileIsEmpty() {
   local handler="_${FUNCNAME[0]}"
 
@@ -642,7 +645,7 @@ _directoryGamutFile() {
   printf "%s\n" "$file"
 }
 
-# Argument: --find findArgs ... -- - Optional. ArgumentsDoubleDashDelimited. Arguments delimited by a double-dash (or end of argument list)
+# Argument: --find findArgs ... -- -  ArgumentsDoubleDashDelimited. Optional.Arguments delimited by a double-dash (or end of argument list)
 _directoryGamutFileWrapper() {
   local handler="$1" comparator="$2" && shift 2
   local directory="" findArgs=()
@@ -680,7 +683,7 @@ _directoryGamutFileWrapper() {
 
 # Find the oldest modified file in a directory
 # Argument: directory - Directory. Required. Directory to search for the oldest file.
-# Argument: --find findArgs ... -- - Optional. Arguments. Arguments delimited by a double-dash (or end of argument list)
+# Argument: --find findArgs ... -- -  Arguments. Optional.Arguments delimited by a double-dash (or end of argument list)
 directoryOldestFile() {
   _directoryGamutFileWrapper "_${FUNCNAME[0]}" head "$@"
 }
@@ -691,7 +694,7 @@ _directoryOldestFile() {
 
 # Find the newest modified file in a directory
 # Argument: directory - Directory. Required. Directory to search for the newest file.
-# Argument: --find findArgs ... -- - Optional. Arguments. Arguments delimited by a double-dash (or end of argument list)
+# Argument: --find findArgs ... -- -  Arguments. Optional.Arguments delimited by a double-dash (or end of argument list)
 directoryNewestFile() {
   _directoryGamutFileWrapper "_${FUNCNAME[0]}" tail "$@"
 }
@@ -776,8 +779,8 @@ _linkCreate() {
 # Wrapper for `mktemp`. Generate a temporary file name, and fail using a function
 # Argument: handler - Function. Required. Function to call on failure. Function Type: returnMessage
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
-# Argument: ... - Optional. Arguments. Any additional arguments are passed through.
+# Argument: --help -  Flag. Optional.Display this help.
+# Argument: ... -  Arguments. Optional.Any additional arguments are passed through.
 # Requires: mktemp __help catchEnvironment usageDocument
 # BUILD_DEBUG: temp - Logs backtrace of all temporary files to a file in application root named after this function to detect and clean up leaks
 # Environment: BUILD_DEBUG
@@ -806,4 +809,41 @@ _fileTemporaryName() {
 }
 
 # <-- END of IDENTICAL fileTemporaryName
-# <-- END of IDENTICAL fileTemporaryName
+
+# Write to a file in a single operation to avoid invalid files
+# Argument: -a - Flag. Optional. Append target (atomically as well).
+# Argument: target - File. Required. File to target
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
+# stdin: Piped to a temporary file until EOF and then moved to target
+# stdout: A copy of stdin
+fileTeeAtomic() {
+  local handler="_${FUNCNAME[0]}"
+
+  local tt=() copy=false
+
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
+  local __saved=("$@") __count=$#
+  while [ $# -gt 0 ]; do
+    local argument="$1" __index=$((__count - $# + 1))
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    case "$argument" in
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
+    -a) tt+=("$argument") && copy=true ;;
+    *) target="$(validate "$handler" FileDirectory "target" "${1-}")" && brek || return $? ;;
+    esac
+    shift
+  done
+  [ $# -eq 0 ] || throwArgument "$handler" "Unknown arguments: $# $*" || return $?
+
+  local clean=("$target.$$")
+  ! $copy || catchEnvironment "$handler" cp -f "$target" "$target.$$" || return $?
+  catchEnvironment "$handler" tee "${tt[@]+"${tt[@]}"}" "$target.$$" || returnClean $? "${clean[@]}" || return $?
+  catchEnvironment "$handler" mv -f "$target.$$" "$target" || returnClean $? "${clean[@]}" || return $?
+}
+_fileTeeAtomic() {
+  # __IDENTICAL__ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}

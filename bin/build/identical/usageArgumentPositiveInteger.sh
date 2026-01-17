@@ -10,9 +10,9 @@
 # IDENTICAL usageArgumentPositiveInteger EOF
 
 # Validates a value is an positive integer and greater than zero (NOT zero)
-# Argument: usageFunction - Required. Function. Run if handler fails
-# Argument: variableName - Required. String. Name of variable being tested
-# Argument: variableValue - Required. String. Required only in that if it's blank, it fails.
+# Argument: usageFunction -  Function. Required. Run if handler fails
+# Argument: variableName - String. Required. Name of variable being tested
+# Argument: variableValue - String. Required. Required. only in that if it's blank, it fails.
 # Return Code: 2 - Argument error
 # Return Code: 0 - Success
 # Requires: isPositiveInteger throwArgument decorate

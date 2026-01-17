@@ -7,16 +7,16 @@
 
 # Watch a directory
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
+# Argument: --help -  Flag. Optional.Display this help.
 # DOC TEMPLATE: --handler 1
-# Argument: --handler handler - Optional. Function. Use this error handler instead of the default error handler.
-# Argument: --verbose - Optional. Flag. Be verbose.
-# Argument: --file modifiedFile - Optional. File. Last known modified file in this directory.
-# Argument: --modified modifiedTimestamp - Optional. UnsignedInteger. Last known modification timestamp in this directory.
-# Argument: --timeout secondsToRun - Optional. UnsignedInteger. Last known modification timestamp in this directory.
-# Argument: --state stateFile - Optional. File. Output of `fileModificationTimes` will be saved here (and modified)
-# Argument: directory - Required. Directory. Directory to watch
-# Argument: findArguments ... - Optional. Arguments. Passed to find to filter the files examined.
+# Argument: --handler handler -  Function. Optional.Use this error handler instead of the default error handler.
+# Argument: --verbose -  Flag. Optional.Be verbose.
+# Argument: --file modifiedFile -  File. Optional.Last known modified file in this directory.
+# Argument: --modified modifiedTimestamp -  UnsignedInteger. Optional.Last known modification timestamp in this directory.
+# Argument: --timeout secondsToRun -  UnsignedInteger. Optional.Last known modification timestamp in this directory.
+# Argument: --state stateFile -  File. Optional.Output of `fileModificationTimes` will be saved here (and modified)
+# Argument: directory -  Directory. Required. Directory to watch
+# Argument: findArguments ... -  Arguments. Optional.Passed to find to filter the files examined.
 watchDirectory() {
   local handler="_${FUNCNAME[0]}"
 
@@ -32,7 +32,7 @@ watchDirectory() {
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
     # _IDENTICAL_ handlerHandler 1
-    --handler) shift && handler=$(validate "$handler" function "$argument" "${1-}") || return $? ;;
+    --handler) shift && handler=$(validate "$handler" Function "$argument" "${1-}") || return $? ;;
     --verbose) verboseFlag=true ;;
     --file) shift && lastFile=$(validate "$handler" String "$argument" "${1-}") || return $? ;;
     --modified) shift && lastTimestamp=$(validate "$handler" UnsignedInteger "$argument" "${1-}") || return $? ;;

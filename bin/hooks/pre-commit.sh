@@ -18,7 +18,6 @@ if source "${BASH_SOURCE[0]%/*}/../build/tools.sh"; then
     # gitPreCommitSetup is already called
     local fileCopies nonOriginalWithEOF nonOriginal original
 
-    gitPreCommitListExtension @ | decorate value | decorate wrap "- "
     gitPreCommitHeader sh md json
 
     statusMessage decorate success Updating help files ...

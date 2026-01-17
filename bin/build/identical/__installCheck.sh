@@ -26,5 +26,5 @@ __installCheck() {
   fi
   read -r version id < <(jq -r "($versionSelector + \" \" + $idSelector)" <"$versionFile" || :) || :
   [ -n "$version" ] && [ -n "$id" ] || throwEnvironment "$handler" "$versionFile missing version: \"$version\" or id: \"$id\"" || return $?
-  printf "%s %s (%s)\n" "$(decorate bold-blue "$name")" "$(decorate code "$version")" "$(decorate orange "$id")"
+  printf "%s %s (%s)\n" "$(decorate BOLD blue "$name")" "$(decorate code "$version")" "$(decorate orange "$id")"
 }

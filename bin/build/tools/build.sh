@@ -19,16 +19,16 @@ __selfLoader() {
 }
 
 # Installs an installer the first time in a new project, and modifies it to work in the application path.
-# Argument: --diff - Optional. Flag. Show differences between new and old files if changed.
-# Argument: --url - Optional. URL. A remote URL to download the installation script.
-# Argument: --url-function - Optional. Callable. Fetch the remote URL where the installation script is found.
-# Argument: --source - Required. File. The local copy of the `--bin` file.
-# Argument: --local - Optional. Flag. Use local copy `--bin` instead of downloaded version.
-# Argument: --bin - Required. String. Name of the installer file.
-# Argument: path - Optional. Directory. Path to install the binary. Default is `bin`. If ends with `.sh` will name the binary this name.
-# Argument: applicationHome - Optional. Directory. Path to the application home directory. Default is current directory.
+# Argument: --diff -  Flag. Optional.Show differences between new and old files if changed.
+# Argument: --url -  URL. Optional.A remote URL to download the installation script.
+# Argument: --url-function -  Callable. Optional.Fetch the remote URL where the installation script is found.
+# Argument: --source -  File. Required. The local copy of the `--bin` file.
+# Argument: --local -  Flag. Optional.Use local copy `--bin` instead of downloaded version.
+# Argument: --bin - String. Required. Name of the installer file.
+# Argument: path -  Directory. Optional.Path to install the binary. Default is `bin`. If ends with `.sh` will name the binary this name.
+# Argument: applicationHome -  Directory. Optional.Path to the application home directory. Default is current directory.
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
+# Argument: --help -  Flag. Optional.Display this help.
 installInstallBinary() {
   __selfLoader "_${FUNCNAME[0]}" "__${FUNCNAME[0]}" "$@"
 }
@@ -38,13 +38,13 @@ _installInstallBinary() {
 }
 
 # Installs `install-bin-build.sh` the first time in a new project, and modifies it to work in the application path.
-# Argument: --help - Optional. Flag. This help.
-# Argument: --diff - Optional. Flag. Show differences between new and old files if changed.
-# Argument: --local - Optional. Flag. Use local copy of `install-bin-build.sh` instead of downloaded version.
-# Argument: path - Optional. Directory. Path to install the binary. Default is `bin`. If ends with `.sh` will name the binary this name.
-# Argument: applicationHome - Optional. Directory. Path to the application home directory. Default is current directory.
+# Argument: --help -  Flag. Optional.This help.
+# Argument: --diff -  Flag. Optional.Show differences between new and old files if changed.
+# Argument: --local -  Flag. Optional.Use local copy of `install-bin-build.sh` instead of downloaded version.
+# Argument: path -  Directory. Optional.Path to install the binary. Default is `bin`. If ends with `.sh` will name the binary this name.
+# Argument: applicationHome -  Directory. Optional.Path to the application home directory. Default is current directory.
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
+# Argument: --help -  Flag. Optional.Display this help.
 installInstallBuild() {
   local handler="_${FUNCNAME[0]}"
   local home
@@ -59,11 +59,11 @@ _installInstallBuild() {
 }
 
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
+# Argument: --help -  Flag. Optional.Display this help.
 # Environment: BUILD_HOME
 # Prints the list of functions defined in Zesk Build
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
+# Argument: --help -  Flag. Optional.Display this help.
 buildFunctions() {
   local handler="_${FUNCNAME[0]}"
   [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
@@ -86,7 +86,7 @@ _buildFunctions() {
 # Argument: pathSegment - One or more directory or file path, concatenated as path segments using `/`
 # Environment: XDG_CACHE_HOME
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
+# Argument: --help -  Flag. Optional.Display this help.
 buildCacheDirectory() {
   local handler="_${FUNCNAME[0]}"
   [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
@@ -102,7 +102,7 @@ _buildCacheDirectory() {
 # Environment: BUILD_HOME
 # Prints the build home directory (usually same as the application root)
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
+# Argument: --help -  Flag. Optional.Display this help.
 buildHome() {
   local handler="_${FUNCNAME[0]}"
   export BUILD_HOME
@@ -143,7 +143,7 @@ _buildEnvironmentPath() {
 
 # Output the list of environment variable names which can be loaded via `buildEnvironmentLoad` or `buildEnvironmentGet`
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
+# Argument: --help -  Flag. Optional.Display this help.
 # Requires: convertValue _buildEnvironmentPath find sort read __help catchEnvironment
 buildEnvironmentNames() {
   local handler="_${FUNCNAME[0]}"
@@ -165,12 +165,12 @@ _buildEnvironmentNames() {
 
 # Determine the environment file names for environment variables
 #
-# Argument: envName - Optional. String. Name of the environment value to find
+# Argument: envName - String. Optional. Name of the environment value to find
 # Argument: --application applicationHome - Path. Optional. Directory of alternate application home. Can be specified more than once to change state.
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
+# Argument: --help -  Flag. Optional.Display this help.
 # DOC TEMPLATE: --handler 1
-# Argument: --handler handler - Optional. Function. Use this error handler instead of the default error handler.
+# Argument: --handler handler -  Function. Optional.Use this error handler instead of the default error handler.
 # Environment: BUILD_ENVIRONMENT_DIRS
 buildEnvironmentFiles() {
   local handler="_${FUNCNAME[0]}" applicationHome="" foundOne=false
@@ -185,7 +185,7 @@ buildEnvironmentFiles() {
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
     # _IDENTICAL_ handlerHandler 1
-    --handler) shift && handler=$(validate "$handler" function "$argument" "${1-}") || return $? ;;
+    --handler) shift && handler=$(validate "$handler" Function "$argument" "${1-}") || return $? ;;
     --application) shift && applicationHome=$(validate "$handler" Directory "$argument" "${1-}") || return $? ;;
     *)
       local env paths=() path file=""
@@ -217,12 +217,12 @@ _buildEnvironmentFiles() {
 
 # Load one or more environment settings from the environment file path.
 #
-# Argument: envName - Optional. String. Name of the environment value to load. Afterwards this should be defined (possibly blank) and `export`ed.
+# Argument: envName - String. Optional. Name of the environment value to load. Afterwards this should be defined (possibly blank) and `export`ed.
 # Argument: --application applicationHome - Path. Optional. Directory of alternate application home. Can be specified more than once to change state.
 # Argument: --all - Flag. Optional. Load all environment variables defined in BUILD_ENVIRONMENT_DIRS.
 # Argument: --print - Flag. Print the environment file loaded first.
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
+# Argument: --help -  Flag. Optional.Display this help.
 # If BOTH files exist, both are sourced, so application environments should anticipate values
 # created by build's default.
 #
@@ -242,7 +242,7 @@ buildEnvironmentLoad() {
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
     # _IDENTICAL_ handlerHandler 1
-    --handler) shift && handler=$(validate "$handler" function "$argument" "${1-}") || return $? ;;
+    --handler) shift && handler=$(validate "$handler" Function "$argument" "${1-}") || return $? ;;
     --print) printFlag=true ;;
     --all) allFlag=true ;;
     --application) shift && applicationHome=$(validate "$handler" Directory "$argument" "${1-}") || return $? ;;
@@ -297,7 +297,7 @@ unalias tools 2>/dev/null || :
 # Run a Zesk Build command or load it
 #
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
+# Argument: --help -  Flag. Optional.Display this help.
 # Argument: --start startDirectory - Directory. Optional. Start searching for a build installation at this location and searching upwards in the file hierarchy.
 # Argument: --verbose - Flag. Optional. Be verbose.
 # Argument: ... - Callable. Optional. Run this command after loading in the current build context.
@@ -316,7 +316,7 @@ tools() {
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
     # _IDENTICAL_ handlerHandler 1
-    --handler) shift && handler=$(validate "$handler" function "$argument" "${1-}") || return $? ;;
+    --handler) shift && handler=$(validate "$handler" Function "$argument" "${1-}") || return $? ;;
     --start)
       shift
       startDirectory=$(validate "$handler" Directory "$argument" "${1-}") || return $?
@@ -352,7 +352,7 @@ _tools() {
 
 # Load and print one or more environment settings
 #
-# Argument: envName - Optional. String. Name of the environment value to load. Afterwards this should be defined (possibly blank) and `export`ed.
+# Argument: envName - String. Optional. Name of the environment value to load. Afterwards this should be defined (possibly blank) and `export`ed.
 # Argument: --application applicationHome - Path. Optional. Directory of alternate application home. Can be specified more than once to change state.
 # If BOTH files exist, both are sourced, so application environments should anticipate values
 # created by build's default.
@@ -376,7 +376,7 @@ buildEnvironmentGet() {
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
     # _IDENTICAL_ handlerHandler 1
-    --handler) shift && handler=$(validate "$handler" function "$argument" "${1-}") || return $? ;;
+    --handler) shift && handler=$(validate "$handler" Function "$argument" "${1-}") || return $? ;;
     --application) shift && ll+=("$argument" "${1-}") ;;
     *)
       catchReturn "$handler" buildEnvironmentLoad "${ll[@]+"${ll[@]}"}" "$argument" || return $?
@@ -393,8 +393,8 @@ _buildEnvironmentGet() {
 
 # Load and print one or more environment settings which represents a directory which should be created.
 #
-# Argument: envName - Optional. String. Name of the environment value to load. Afterwards this should be defined (possibly blank) and `export`ed.
-# Argument: --subdirectory subdirectory - Optional. String. Name of a subdirectory to return "beneath" the value of environment variable. Created if the flag is set.
+# Argument: envName - String. Optional. Name of the environment value to load. Afterwards this should be defined (possibly blank) and `export`ed.
+# Argument: --subdirectory subdirectory - String. Optional. Name of a subdirectory to return "beneath" the value of environment variable. Created if the flag is set.
 # Argument: --mode fileMode - String. Optional. Enforce the mode for `mkdir --mode` and `chmod`. Use special mode `-` to mean no mode enforcement.
 # Argument: --owner ownerName - String. Optional. Enforce the owner of the directory. Use special ownerName `-` to mean no owner enforcement.
 # If BOTH files exist, both are sourced, so application environments should anticipate values
@@ -421,7 +421,7 @@ buildEnvironmentGetDirectory() {
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
     # _IDENTICAL_ handlerHandler 1
-    --handler) shift && handler=$(validate "$handler" function "$argument" "${1-}") || return $? ;;
+    --handler) shift && handler=$(validate "$handler" Function "$argument" "${1-}") || return $? ;;
     --exists)
       existsFlag=true
       ;;
@@ -475,7 +475,7 @@ buildQuietLog() {
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
     # _IDENTICAL_ handlerHandler 1
-    --handler) shift && handler=$(validate "$handler" function "$argument" "${1-}") || return $? ;;
+    --handler) shift && handler=$(validate "$handler" Function "$argument" "${1-}") || return $? ;;
     --no-create)
       flagMake=false
       ;;
@@ -497,7 +497,7 @@ _buildQuietLog() {
 }
 
 # Run a command and ensure the build tools context matches the current project
-# Argument: contextStart - Required. Directory. Context in which the command should run.
+# Argument: contextStart -  Directory. Required. Context in which the command should run.
 # Argument: command ... - Required. Command to run in new context.
 # Avoid infinite loops here, call down.
 buildEnvironmentContext() {

@@ -69,10 +69,6 @@ if source "${BASH_SOURCE[0]%/*}/tools.sh"; then
     unset BUILD_ENVIRONMENT_DIRS BUILD_HOOK_EXTENSIONS BUILD_RELEASE_NOTES
 
     catchReturn "$handler" colorScheme <"$home/etc/term-colors.conf" || return $?
-    export BUILD_COLORS_MODE
-    if [ -z "${BUILD_COLORS_MODE-}" ]; then
-      BUILD_COLORS_MODE=$(consoleConfigureColorMode)
-    fi
 
     # shellcheck disable=SC2139
     alias t="$home/bin/build/tools.sh"

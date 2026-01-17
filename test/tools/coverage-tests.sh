@@ -223,6 +223,7 @@ testBuildFunctionsHelpCoverage() {
   #   sys	  14m43.790s
 
   BUILD_DEBUG=$(listRemove "${BUILD_DEBUG}" ',' "fast-usage")
+  BUILD_DEBUG=$(listAppend "${BUILD_DEBUG}" ',' "documentation-cache")
   BUILD_COLORS=false
   TEST_TRACK_ASSERTIONS=false
 
@@ -313,6 +314,9 @@ isPlain
 EOF
 }
 
+# Tests failure cases for functions which should only take --help and only --help
+# What if we pass other arguments? It should fail. So what if it doesn't? Who gets hurt?
+# Like being strict, I guess.
 # Tag: slow slow-non-critical
 testBuildFunctionsHelpOnly() {
   local handler="returnMessage"
@@ -353,8 +357,6 @@ isBitBucketPipeline
 brewInstall
 hasConsoleAnimation
 colorSampleCodes
-colorSampleStyles
-colorSampleSemanticStyles
 isTTYAvailable
 consoleColumns
 consoleRows

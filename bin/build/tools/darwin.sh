@@ -50,9 +50,9 @@ _darwinSoundValid() {
 # Install a sound file for notifications
 #
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
+# Argument: --help -  Flag. Optional.Display this help.
 # Argument: soundFile ... - File. Required. Sound file(s) to install in user library.
-# Argument: --create - Optional. Flag. Create sound directory if it does not exist.
+# Argument: --create -  Flag. Optional.Create sound directory if it does not exist.
 darwinSoundInstall() {
   local handler="_${FUNCNAME[0]}"
 
@@ -186,13 +186,13 @@ _darwinNotification() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# Argument: --choice choiceText - Optional. String. Title of the thing.
-# Argument: --ok - Optional. Flag. Adds "OK" as an option.
-# Argument: --cancel - Optional. Flag. Adds "Cancel" as an option.
-# Argument: --default buttonIndex - Required. Integer. The button (0-based index) to make the default button choice.
+# Argument: --choice choiceText - String. Optional. Title of the thing.
+# Argument: --ok -  Flag. Optional.Adds "OK" as an option.
+# Argument: --cancel -  Flag. Optional.Adds "Cancel" as an option.
+# Argument: --default buttonIndex -  Integer. Required. The button (0-based index) to make the default button choice.
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
-# Argument: message ... - Required. String. The message to display in the dialog.
+# Argument: --help -  Flag. Optional.Display this help.
+# Argument: message ... - String. Required. The message to display in the dialog.
 # Display a dialog using `osascript` with the choices provided. Typically this is found on Mac OS X.
 # Outputs the selected button text upon exit.
 # Platform: Darwin

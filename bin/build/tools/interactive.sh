@@ -24,9 +24,9 @@ __interactiveLoader() {
 
 # Pause for user input
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
+# Argument: --help -  Flag. Optional.Display this help.
 # DOC TEMPLATE: dashDashAllowsHelpParameters 1
-# Argument: -- - Optional. Flag. Stops command processing to enable arbitrary text to be passed as additional arguments without special meaning.
+# Argument: -- -  Flag. Optional.Stops command processing to enable arbitrary text to be passed as additional arguments without special meaning.
 # Argument: message ... - Display this message while pausing
 pause() {
   [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
@@ -75,12 +75,12 @@ _fileCopyWouldChange() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# Argument: directoryOrFile - Required. Exists. Directory or file to `source` `.sh` files found.
-# Argument: --info - Optional. Flag. Show user what they should do (press a key).
-# Argument: --no-info - Optional. Flag. Hide user info (what they should do ... press a key)
-# Argument: --verbose - Optional. Flag. Show what is done as status messages.
-# Argument: --clear - Optional. Flag. Clear the approval status for file given.
-# Argument: --prefix - Optional. String. Display this text before each status messages.
+# Argument: directoryOrFile -  Exists. Required. Directory or file to `source` `.sh` files found.
+# Argument: --info -  Flag. Optional.Show user what they should do (press a key).
+# Argument: --no-info -  Flag. Optional.Hide user info (what they should do ... press a key)
+# Argument: --verbose -  Flag. Optional.Show what is done as status messages.
+# Argument: --clear -  Flag. Optional.Clear the approval status for file given.
+# Argument: --prefix - String. Optional. Display this text before each status messages.
 # Security: Loads bash files
 # Loads files or a directory of `.sh` files using `source` to make the code available.
 # Has security implications. Use with caution and ensure your directory is protected.
@@ -124,9 +124,9 @@ _approvedSources() {
 # If a value is not specified for failure, it will use the `success` value.
 #
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
+# Argument: --help -  Flag. Optional.Display this help.
 # DOC TEMPLATE: --handler 1
-# Argument: --handler handler - Optional. Function. Use this error handler instead of the default error handler.
+# Argument: --handler handler -  Function. Optional.Use this error handler instead of the default error handler.
 # Argument: --verbose - Flag. Optional. Be verbose.
 # Argument: --title title - String. Optional. Sets the title for the notification.
 # Argument: --message message - String. Optional. Display this message (alias is `-m`)
@@ -153,9 +153,9 @@ _notify() {
 # Argument: --yes - Flag. Optional. Short for `--default yes`
 # Argument: --no - Flag. Optional. Short for `--default no`
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
+# Argument: --help -  Flag. Optional.Display this help.
 # DOC TEMPLATE: --handler 1
-# Argument: --handler handler - Optional. Function. Use this error handler instead of the default error handler.
+# Argument: --handler handler -  Function. Optional.Use this error handler instead of the default error handler.
 # Argument: message ... - String. Any additional arguments are considered part of the message.
 # Example: Will time out after 10 seconds, regardless (user must make valid input in that time):
 # Example:
@@ -173,13 +173,13 @@ _confirmYesNo() {
 #
 # Return Code: interrupt - Attempts exceeded
 # Return Code: timeout - Timeout
-# Argument: --choice choiceCharacter - Required. String. Character to accept.
-# Argument: --default default - Optional. String. Character to choose when there is a timeout or other failure.
-# Argument: --result resultFile - Required. File. File to write the result to.
-# Argument: --attempts attemptCount - Optional. PositiveInteger. Number of attempts to try and get valid unput from the user.
-# Argument: --timeout timeoutSeconds - Optional. PositiveInteger. Number of seconds to wait for user input before stopping.
-# Argument: --prompt promptString - Optional. String. String to suffix the prompt with (usually tells the user what to do)
-# Argument: message - Optional. String. Display this message as the confirmation menu.
+# Argument: --choice choiceCharacter - String. Required. Character to accept.
+# Argument: --default default - String. Optional. Character to choose when there is a timeout or other failure.
+# Argument: --result resultFile -  File. Required. File to write the result to.
+# Argument: --attempts attemptCount -  PositiveInteger. Optional.Number of attempts to try and get valid unput from the user.
+# Argument: --timeout timeoutSeconds -  PositiveInteger. Optional.Number of seconds to wait for user input before stopping.
+# Argument: --prompt promptString - String. Optional. String to suffix the prompt with (usually tells the user what to do)
+# Argument: message - String. Optional. Display this message as the confirmation menu.
 confirmMenu() {
   __interactiveLoader "_${FUNCNAME[0]}" "__${FUNCNAME[0]}" "$@"
 }
@@ -188,10 +188,10 @@ _confirmMenu() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# Argument: loopCallable - Required. Callable. Call this on each file and a zero result code means passed and non-zero means fails.
-# Argument: --delay delaySeconds - Optional. Integer. Delay in seconds between checks in interactive mode.
-# Argument: --until exitCode - Optional. Integer. Check until exit code matches this.
-# Argument: --title title - Optional. String. Display this title instead of the command.
+# Argument: loopCallable -  Callable. Required. Call this on each file and a zero result code means passed and non-zero means fails.
+# Argument: --delay delaySeconds -  Integer. Optional.Delay in seconds between checks in interactive mode.
+# Argument: --until exitCode -  Integer. Optional.Check until exit code matches this.
+# Argument: --title title - String. Optional. Display this title instead of the command.
 # Argument: arguments ... - Optional. Arguments to loopCallable
 # Run checks interactively until errors are all fixed.
 loopExecute() {
@@ -202,10 +202,10 @@ _loopExecute() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# Argument: loopCallable - Required. Callable. Call this on each file and a zero result code means passed and non-zero means fails.
-# Argument: --exec binary - Optional. Callable. Run binary with files as an argument for any failed files. Only works if you pass in item names.
-# Argument: --delay delaySeconds - Optional. Integer. Delay in seconds between checks in interactive mode.
-# Argument: fileToCheck ... - Optional. File. Shell file to validate. May also supply file names via stdin.
+# Argument: loopCallable -  Callable. Required. Call this on each file and a zero result code means passed and non-zero means fails.
+# Argument: --exec binary -  Callable. Optional.Run binary with files as an argument for any failed files. Only works if you pass in item names.
+# Argument: --delay delaySeconds -  Integer. Optional.Delay in seconds between checks in interactive mode.
+# Argument: fileToCheck ... -  File. Optional.Shell file to validate. May also supply file names via stdin.
 # Run checks interactively until errors are all fixed.
 # Not ready for prime time yet - written not tested.
 interactiveManager() {
@@ -218,7 +218,7 @@ _interactiveManager() {
 
 # Display a message and count down display
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
+# Argument: --help -  Flag. Optional.Display this help.
 # Argument: --badge text - String. Display this text as bigTextAt
 # Argument: --prefix prefix - String.
 # Argument: counter - Integer. Required. Count down from.
@@ -256,7 +256,7 @@ interactiveOccasionally() {
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
     # _IDENTICAL_ handlerHandler 1
-    --handler) shift && handler=$(validate "$handler" function "$argument" "${1-}") || return $? ;;
+    --handler) shift && handler=$(validate "$handler" Function "$argument" "${1-}") || return $? ;;
     --delta) shift && delta="$(validate "$handler" PositiveInteger "$argument" "${1-}")" || return $? ;;
     --verbose) verboseFlag=true ;;
     *)

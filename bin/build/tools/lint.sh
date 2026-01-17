@@ -18,8 +18,8 @@
 #
 # Example:     bashLint goo.sh
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
-# Argument: --fix - Optional. Flag. Fix files when possible.
+# Argument: --help -  Flag. Optional.Display this help.
+# Argument: --fix -  Flag. Optional.Fix files when possible.
 # Argument: script - File. Optional. Shell script to validate
 # Argument: verbose - Flag. Optional. Be verbose.
 # Argument: script - File. Optional. Shell script to validate
@@ -92,7 +92,7 @@ _bashLint() {
 # Argument: --fix - Flag. Optional. Fix errors when possible.
 # Argument: --interactive - Flag. Optional. Interactive mode on fixing errors.
 # Argument: --exec binary - Run binary with files as an argument for any failed files. Only works if you pass in item names.
-# Argument: --delay - Optional. Integer. Delay between checks in interactive mode.
+# Argument: --delay -  Integer. Optional.Delay between checks in interactive mode.
 # Argument: findArgs - Additional find arguments for .sh files (or exclude directories).
 # Side-effect: shellcheck is installed
 # Side-effect: Status written to stdout, errors written to stderr
@@ -200,9 +200,9 @@ _bashLintFilesHelper() {
   fi
 }
 
-# Argument: --exec binary - Optional. Callable. Run binary with files as an argument for any failed files. Only works if you pass in item names.
-# Argument: --delay delaySeconds - Optional. Integer. Delay in seconds between checks in interactive mode.
-# Argument: fileToCheck ... - Optional. File. Shell file to validate.
+# Argument: --exec binary -  Callable. Optional.Run binary with files as an argument for any failed files. Only works if you pass in item names.
+# Argument: --delay delaySeconds -  Integer. Optional.Delay in seconds between checks in interactive mode.
+# Argument: fileToCheck ... -  File. Optional.Shell file to validate.
 # Run checks interactively until errors are all fixed.
 bashLintFilesInteractive() {
   local handler="_${FUNCNAME[0]}"
@@ -263,13 +263,13 @@ _bashLintInteractiveCheck() {
   fi
   if $scriptPassed; then
     bigText "SUCCESS $(basename "$script")" | decorate green
-    boxedHeading "$script now passes" | decorate bold-green
+    boxedHeading "$script now passes" | decorate BOLD green
     decorate orange "$(echoBar "*")"
     return 0
   fi
 
   shift 2
-  bigText "FAIL $(basename "$script")" | decorate bold-red | decorate wrap "$(decorate subtle "bashLint ")"
+  bigText "FAIL $(basename "$script")" | decorate BOLD red | decorate wrap "$(decorate subtle "bashLint ")"
   printf -- "%s\n%s\n%s\n" "$(decorate red "$failedReason")" \
     "$(decorate label "Queue")" \
     "$(decorate subtle "$(printf -- "- %s\n" "$@")")"
@@ -280,16 +280,17 @@ _bashLintInteractiveCheck() {
 
 # Search bash files for assertions which do not terminate a function and are likely an error
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
+# Argument: --help -  Flag. Optional.Display this help.
 # DOC TEMPLATE: --handler 1
-# Argument: --handler handler - Optional. Function. Use this error handler instead of the default error handler.
+# Argument: --handler handler -  Function. Optional.Use this error handler instead of the default error handler.
+# Argument: --exclude path - String. Optional. Exclude paths which contain this string
 # Argument: --exec binary - Executable. Optional. For each failed file run this command.
 # Argument: directory - Directory. Optional. Where to search for files to check.
 # Argument: --list - Flag. Optional. List files which fail. (Default is simply to exit silently.)
 findUncaughtAssertions() {
   local handler="_${FUNCNAME[0]}"
 
-  local listFlag=false binary="" directory=""
+  local listFlag=false binary="" directory="" ff=()
 
   while [ $# -gt 0 ]; do
     argument="$1"
@@ -298,15 +299,10 @@ findUncaughtAssertions() {
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
     # _IDENTICAL_ handlerHandler 1
-    --handler) shift && handler=$(validate "$handler" function "$argument" "${1-}") || return $? ;;
-    --exec)
-      shift || throwArgument "$handler" "$argument missing argument" || return $?
-      [ -n "$1" ] || throwArgument "$handler" "$argument argument blank" || return $?
-      binary="$1"
-      ;;
-    --list)
-      listFlag=true
-      ;;
+    --handler) shift && handler=$(validate "$handler" Function "$argument" "${1-}") || return $? ;;
+    --exec) shift && binary="$(validate "$handler" Callable "$argument" "${1-}")" || return $? ;;
+    --exclude) shift && ff+=(! -path "*$(validate "$handler" String "$argument" "${1-}")*") || return $? ;;
+    --list) listFlag=true ;;
     *)
       if [ -n "$directory" ]; then
         # _IDENTICAL_ argumentUnknownHandler 1
@@ -318,9 +314,7 @@ findUncaughtAssertions() {
     shift
   done
 
-  if [ -z "$directory" ]; then
-    directory=.
-  fi
+  [ -n "$directory" ] || directory=$(catchReturn "$handler" pwd) || return $?
 
   #
   # All OK with "assert"
@@ -333,12 +327,13 @@ findUncaughtAssertions() {
 
   local tempFile
   tempFile=$(fileTemporaryName "$handler") || return $?
+  local clean=("$tempFile")
   local suffixCheck='(local|return|; then|\ \|\||:[0-9]+:\s*#|\(\)\ \{)'
   {
-    find "${directory%/}" -type f -name '*.sh' ! -path "*/.*/*" -print0 | xargs -0 grep -n -E 'assert[A-Z]|usageArgument' | grep -E -v "$suffixCheck" || :
-    find "${directory%/}" -type f -name '*.sh' ! -path "*/.*/*" -print0 | xargs -0 grep -n -E 'return(Clean|Undo|Argument|Environment|Code)' | grep -E -v "$suffixCheck" || :
-    find "${directory%/}" -type f -name '*.sh' ! -path "*/.*/*" -print0 | xargs -0 grep -n -E '(execute|catch|throw)[A-Z ]' | grep -E -v "$suffixCheck" || :
-  } >"$tempFile"
+    find "${directory%/}" -type f -name '*.sh' ! -path "*/.*/*" "${ff[@]+"${ff[@]}"}" -print0 | xargs -0 grep -n -E 'assert[A-Z]|usageArgument' | grep -E -v "$suffixCheck" || :
+    find "${directory%/}" -type f -name '*.sh' ! -path "*/.*/*" "${ff[@]+"${ff[@]}"}" -print0 | xargs -0 grep -n -E 'return(Clean|Undo|Argument|Environment|Code)' | grep -E -v "$suffixCheck" || :
+    find "${directory%/}" -type f -name '*.sh' ! -path "*/.*/*" "${ff[@]+"${ff[@]}"}" -print0 | xargs -0 grep -n -E '(execute|catch|throw)[A-Z ]' | grep -E -v "$suffixCheck" || :
+  } >"$tempFile" || returnClean $? "${clean[@]}" || return $?
 
   local problemFiles=()
   if [ -s "$tempFile" ]; then
@@ -362,11 +357,9 @@ findUncaughtAssertions() {
       if $listFlag && [ -n "$lastProblemFile" ]; then
         printf -- "%s (Lines %s)\n" "$(decorate code "$lastProblemFile")" "$(IFS=, decorate magenta "${problemLines[*]}")"
       fi
-      if [ ${#problemFiles[@]} -gt 0 ] && [ -n "$binary" ]; then
-        "$binary" "${problemFiles[@]}"
-      fi
+      [ ${#problemFiles[@]} -eq 0 ] || [ -z "$binary" ] || catchReturn "$binary" "${problemFiles[@]}" || returnClean $? "${clean[@]}" || return $?
     else
-      cat "$tempFile"
+      catchEnvironment "$handler" cat "$tempFile" || returnClean $? "${clean[@]}" || return $?
     fi
   fi
   catchEnvironment "$handler" rm "$tempFile" || return $?
@@ -386,9 +379,9 @@ _findUncaughtAssertions() {
 #
 # Example:     validateFileContents sh php js -- 'Widgets LLC' 'Copyright &copy; 2026'
 # Argument: `extension0` - Required - the extension to search for (`*.extension`)
-# Argument: `--` - Required. Separator. Separates extensions from text
-# Argument: `text0` - Required. String. Text which must exist in each item with the extension given.
-# Argument: `--` - Optional. Separator. Final delimiter to specify find arguments.
+# Argument: `--` -  Separator. Required. Separates extensions from text
+# Argument: `text0` - String. Required. Text which must exist in each item with the extension given.
+# Argument: `--` -  Separator. Optional.Final delimiter to specify find arguments.
 # Argument: findArgs - Optional. Limit find to additional conditions.
 # Side-effect: Errors written to stderr, status written to stdout
 # Environment: This operates in the current working directory
@@ -473,7 +466,7 @@ _validateFileExtensionContents() {
 # By default, any directory which begins with a dot `.` will be ignored.
 #
 # Example:     {fn} foo.sh my.sh -- "Copyright 2024" "Company, LLC"
-# Argument: file ... - Required. File. A item to look for matches in. Use `-` to read file list from `stdin`.
+# Argument: file ... -  File. Required. A item to look for matches in. Use `-` to read file list from `stdin`.
 # Argument: -- - Required. Separates files from text
 # Argument: text ... - Required. Text which must exist in each item
 # Side-effect: Errors written to stderr, status written to stdout

@@ -47,10 +47,10 @@ _awsInstall() {
 #
 # Summary: Get the path to the AWS credentials file
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
+# Argument: --help -  Flag. Optional.Display this help.
 # Argument: --verbose - Flag. Optional. Verbose mode
-# Argument: --create - Optional. Flag. Create the directory and file if it does not exist
-# Argument: --home homeDirectory - Optional. Directory. Home directory to use instead of `$HOME`.
+# Argument: --create -  Flag. Optional.Create the directory and file if it does not exist
+# Argument: --home homeDirectory -  Directory. Optional.Home directory to use instead of `$HOME`.
 # Example:     credentials=$(awsCredentialsFile) || throwEnvironment "$handler" "No credentials file found" || return $?
 # Return Code: 1 - If `$HOME` is not a directory or credentials file does not exist
 # Return Code: 0 - If credentials file is found and output to stdout
@@ -104,7 +104,7 @@ _awsIsKeyUpToDate() {
 # Fails if either `AWS_ACCESS_KEY_ID` or `AWS_SECRET_ACCESS_KEY` is blank
 #
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
+# Argument: --help -  Flag. Optional.Display this help.
 # Return Code: 0 - If environment needs to be updated
 # Return Code: 1 - If the environment seems to be set already
 # Environment: AWS_ACCESS_KEY_ID - Read-only. If blank, this function succeeds (environment needs to be updated)
@@ -130,7 +130,7 @@ _awsHasEnvironment() {
 
 # List AWS profiles available in the credentials file
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
+# Argument: --help -  Flag. Optional.Display this help.
 # See: awsCredentialsFile
 awsProfilesList() {
   local handler="_${FUNCNAME[0]}"
@@ -156,7 +156,7 @@ _awsProfilesList() {
 # Argument: --profile profileName - String. Optional. The credentials profile to load (default value is `default` and loads section identified by `[default]` in `~/.aws/credentials`)
 # Argument: --comments - Flag. Optional. Write comments to the credentials file (in addition to updating the record).
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
+# Argument: --help -  Flag. Optional.Display this help.
 # Both forms can be used, but the profile should be supplied once and only once.
 # Example:     setFile=$(fileTemporaryName "$handler") || return $?
 # Example:     if awsEnvironment "$profile" > "$setFile"; then
@@ -183,7 +183,7 @@ _awsEnvironmentFromCredentials() {
 # Summary: Get credentials and output environment variables for AWS authentication
 # Argument: profileName - The credentials profile to load (default value is `default` and loads section identified by `[default]` in `~/.aws/credentials`)
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
+# Argument: --help -  Flag. Optional.Display this help.
 # Example:     setFile=$(fileTemporaryName "$handler") || return $?
 # Example:     if awsEnvironment "$profile" > "$setFile"; then
 # Example:     eval $(cat "$setFile")
@@ -209,7 +209,7 @@ _awsCredentialsHasProfile() {
 # Argument: --force - Flag. Optional. Write the credentials file even if the profile already exists
 # Argument: --comments - Flag. Optional. Write comments to the credentials file (in addition to updating the record).
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
+# Argument: --help -  Flag. Optional.Display this help.
 # Argument: key - The AWS_ACCESS_KEY_ID to write
 # Argument: secret - The AWS_SECRET_ACCESS_KEY to write
 awsCredentialsAdd() {
@@ -230,7 +230,7 @@ _awsCredentialsAdd() {
 # Argument: --comments - Flag. Optional. Write comments to the credentials file (in addition to updating the record).
 # Argument: profileName - String. Optional. The credentials profile to remove.
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
+# Argument: --help -  Flag. Optional.Display this help.
 awsCredentialsRemove() {
   __awsLoader "_${FUNCNAME[0]}" "__${FUNCNAME[0]}" "$@"
 }
@@ -248,7 +248,7 @@ _awsCredentialsRemove() {
 # Argument: --profile profileName - String. Optional. The credentials profile to write (default value is `default`)
 # Argument: --force - Flag. Optional. Write the credentials file even if the profile already exists
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
+# Argument: --help -  Flag. Optional.Display this help.
 awsCredentialsFromEnvironment() {
   local handler="_${FUNCNAME[0]}"
 
@@ -268,16 +268,16 @@ _awsCredentialsFromEnvironment() {
 #     {fn} --add --group group [ --region region ] --port port --description description --ip ip
 #     {fn} --remove --group group [ --region region ] --description description
 #
-# Argument: --remove - Optional. Flag. Remove instead of add - only `group`, and `description` required.
-# Argument: --add - Optional. Flag. Add to security group (default).
-# Argument: --register - Optional. Flag. Add it if not already added.
-# Argument: --group group - Required. String. Security Group ID
-# Argument: --region region - Optional. String. AWS region, defaults to `AWS_REGION`. Must be supplied.
-# Argument: --port port - Required for `--add` only. Integer. service port
-# Argument: --description description - Required. String. Description to identify this record.
-# Argument: --ip ip - Required for `--add` only. String. IP Address to add or remove.
+# Argument: --remove -  Flag. Optional.Remove instead of add - only `group`, and `description` required.
+# Argument: --add -  Flag. Optional.Add to security group (default).
+# Argument: --register -  Flag. Optional.Add it if not already added.
+# Argument: --group group - String. Required. Security Group ID
+# Argument: --region region - String. Optional. AWS region, defaults to `AWS_REGION`. Must be supplied.
+# Argument: --port port - Required. for `--add` only. Integer. service port
+# Argument: --description description - String. Required. Description to identify this record.
+# Argument: --ip ip - Required. for `--add` only. String. IP Address to add or remove.
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
+# Argument: --help -  Flag. Optional.Display this help.
 # Modify an EC2 Security Group and add or remove an IP/port combination to the group.
 # Summary: Modify an EC2 Security Group
 awsSecurityGroupIPModify() {
@@ -292,8 +292,8 @@ _awsSecurityGroupIPModify() {
 # Argument: --profile profileName - String. Optional. Use this AWS profile when connecting using ~/.aws/credentials
 # Argument: --services service0,service1,... - List. Required. List of services to add or remove (service names or port numbers)
 # Argument: --id developerId - String. Optional. Specify an developer id manually (uses DEVELOPER_ID from environment by default)
-# Argument: --group securityGroup - String. Required. String. Specify one or more security groups to modify. Format: `sg-` followed by hexadecimal characters.
-# Argument: --ip ip - Optional. IP. Specify bn IP manually (uses ipLookup tool from tools.sh by default)
+# Argument: --group securityGroup - String.  String. Required. Specify one or more security groups to modify. Format: `sg-` followed by hexadecimal characters.
+# Argument: --ip ip -  IP. Optional.Specify bn IP manually (uses ipLookup tool from tools.sh by default)
 # Argument: --revoke - Flag. Optional. Remove permissions
 # Argument: --help - Flag. Optional. Show this help
 #
@@ -321,7 +321,7 @@ _awsIPAccess() {
 # Note that passing no parameters returns success.
 # Argument: region ... - String. Required. The AWS Region to validate.
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
+# Argument: --help -  Flag. Optional.Display this help.
 # Return Code: 0 - All regions are valid AWS region
 # Return Code: 1 - One or more regions are NOT a valid AWS region
 # Checked: 2024-09-02
@@ -391,9 +391,9 @@ _isS3URL() {
 # - arguments - arguments to this function
 # Creates a `files.json` with a list of files as well at target
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
+# Argument: --help -  Flag. Optional.Display this help.
 # DOC TEMPLATE: --handler 1
-# Argument: --handler handler - Optional. Function. Use this error handler instead of the default error handler.
+# Argument: --handler handler -  Function. Optional.Use this error handler instead of the default error handler.
 # Argument: --target target - Required. S3 URL. S3 URL to upload to (with path)
 # Argument: item - Required. A file or directory to upload to S3. All files and directories are uploaded as the same name in the top-level directory target.
 # Argument: --profile profileName - Optional. String, S3 Profile to use when using S3
@@ -407,11 +407,11 @@ _awsS3Upload() {
 
 # Delete a directory remotely on S3
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
+# Argument: --help -  Flag. Optional.Display this help.
 # DOC TEMPLATE: --handler 1
-# Argument: --handler handler - Optional. Function. Use this error handler instead of the default error handler.
-# Argument: --show - Optional. Flag. Show what would change, do not change anything.
-# Argument: url ... - Required. URL. AWS S3 URL to delete
+# Argument: --handler handler -  Function. Optional.Use this error handler instead of the default error handler.
+# Argument: --show -  Flag. Optional.Show what would change, do not change anything.
+# Argument: url ... -  URL. Required. AWS S3 URL to delete
 awsS3DirectoryDelete() {
   __awsLoader "_${FUNCNAME[0]}" "__${FUNCNAME[0]}" "$@"
 }

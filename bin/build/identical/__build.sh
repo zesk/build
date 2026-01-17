@@ -11,9 +11,9 @@
 # IDENTICAL __build EOF
 
 # Load build tools (installing if needed) and runs a command
-# Argument: relativeHome - Optional. Directory. Path to application home.
-# Argument: installerPath - Optional. Directory. Path to `install-bin-build.sh` binary. Defaults to `bin`
-# Argument: command ... - Optional. Callable. A command to run and optional arguments.
+# Argument: relativeHome -  Directory. Optional.Path to application home.
+# Argument: installerPath -  Directory. Optional.Path to `install-bin-build.sh` binary. Defaults to `bin`
+# Argument: command ... -  Callable. Optional.A command to run and optional arguments.
 # Requires: __install
 # Example:     __build ../../.. functionToCall "$@"
 __build() {

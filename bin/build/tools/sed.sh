@@ -12,8 +12,8 @@
 #
 
 # Quote a sed command for search and replace
-# Argument: searchPattern - Required. String. The string to search for.
-# Argument: replacePattern - Required. String. The replacement to replace with.
+# Argument: searchPattern - String. Required. The string to search for.
+# Argument: replacePattern - String. Required. The replacement to replace with.
 # DOC TEMPLATE: noArgumentsForHelp 1
 # Without arguments, displays help.
 sedReplacePattern() {

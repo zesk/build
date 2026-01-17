@@ -33,7 +33,7 @@ developerAnnounce() {
   IFS=$'\n' read -r -d "" -a skipItems < <(environmentSecureVariables)
   local aa=() ff=() types=() unknowns=() item itemType blank
 
-  blank=$(decorate bold-orange "empty")
+  blank=$(decorate BOLD orange "empty")
   while read -r item; do
     [ -n "$item" ] || continue
     [ "$item" = "${item#_}" ] || continue
@@ -45,7 +45,7 @@ developerAnnounce() {
       ! inArray "$item" "${skipItems[@]}" || continue
       if muzzle isType "$item"; then
         local message
-        message="$(decorate info "$(decorate value "$item") is $(decorate bold-magenta "${!item-$blank}") ($(isType "$item" | decorate each code))")"
+        message="$(decorate info "$(decorate value "$item") is $(decorate BOLD magenta "${!item-$blank}") ($(isType "$item" | decorate each code))")"
         types+=("$message")
       else
         unknowns+=("$item")
@@ -233,7 +233,7 @@ developerDevelopmentLink() {
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
     # _IDENTICAL_ handlerHandler 1
-    --handler) shift && handler=$(validate "$handler" function "$argument" "${1-}") || return $? ;;
+    --handler) shift && handler=$(validate "$handler" Function "$argument" "${1-}") || return $? ;;
     --copy)
       copyFlag=true
       ;;

@@ -6,9 +6,9 @@
 #
 
 # Install a script to run upon initialization.
-# Argument: binary - Required. String. Binary to install at startup.
+# Argument: binary - String. Required. Binary to install at startup.
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
+# Argument: --help -  Flag. Optional.Display this help.
 sysvInitScriptInstall() {
   local handler="_${FUNCNAME[0]}"
 
@@ -57,9 +57,9 @@ _sysvInitScriptInstall() {
 }
 
 # Remove an initialization script
-# Argument: binary - Required. String. Basename of installed script to remove.
+# Argument: binary - String. Required. Basename of installed script to remove.
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
+# Argument: --help -  Flag. Optional.Display this help.
 sysvInitScriptUninstall() {
   local handler="_${FUNCNAME[0]}"
 

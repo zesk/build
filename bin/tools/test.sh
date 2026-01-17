@@ -24,6 +24,8 @@ buildTestSuite() {
   local handler="_${FUNCNAME[0]}"
   local testHome
 
+  ! hasColors || decorateInitialized || muzzle consoleConfigureDecorate || :
+
   __help "$handler" "$@" || return 0
 
   testHome="$(catchReturn "$handler" buildHome)" || return $?

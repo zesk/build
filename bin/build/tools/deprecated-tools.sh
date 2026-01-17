@@ -219,7 +219,7 @@ deprecatedCannonFile() {
       exitCode=1
       continue
     fi
-    statusMessage --first printf -- "%s: %s -> %s %s" "$(decorate bold-magenta "$version")" "$(decorate code "${tokens[0]}")" "$(decorate code "${tokens[1]}")"
+    statusMessage --first printf -- "%s: %s -> %s %s" "$(decorate BOLD magenta "$version")" "$(decorate code "${tokens[0]}")" "$(decorate code "${tokens[1]}")"
     if ! deprecatedCannon --path "$cannonPath" "$findArgumentFunction" "${tokens[@]}"; then
       printf -- "\n"
       exitCode=1
@@ -238,7 +238,7 @@ _deprecatedCannonFile() {
 # Return Code: 1 - Search tokens were not found in any file (which matches find arguments)
 # Argument: findArgumentFunction - Function. Required. Find arguments (for `find`) for cannon.
 # Argument: search - String. Required. String to search for (one or more)
-# Argument: --path cannonPath - Optional. Directory. Run cannon operation starting in this directory.
+# Argument: --path cannonPath -  Directory. Optional.Run cannon operation starting in this directory.
 # See: buildHome
 deprecatedFind() {
   local handler="_${FUNCNAME[0]}"
@@ -281,7 +281,7 @@ _deprecatedFind() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# Argument: --path cannonPath - Optional. Directory. Run cannon operation starting in this directory.
+# Argument: --path cannonPath -  Directory. Optional.Run cannon operation starting in this directory.
 # Argument: findArgumentFunction - Function. Required. Find arguments (for `find`) for cannon.
 # Argument: search - String. Required. String to search for
 # Argument: replace - EmptyString. Required. Replacement string.

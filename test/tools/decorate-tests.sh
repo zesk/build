@@ -6,6 +6,18 @@
 # Copyright &copy; 2026 Market Acumen, Inc.
 #
 
+testDecorateInitialized() {
+  mockEnvironmentStart BUILD_COLORS
+  mockEnvironmentStart __BUILD_DECORATE
+
+  assertExitCode 1 decorateInitialized || return $?
+  assertExitCode 0 consoleConfigureDecorate || return $?
+  assertExitCode 0 decorateInitialized || return $?
+
+  mockEnvironmentStop BUILD_COLORS
+  mockEnvironmentStop __BUILD_DECORATE
+}
+
 #  decoratePath
 testDecoratePath() {
   export TMPDIR HOME BUILD_HOME
@@ -23,30 +35,30 @@ testDecoratePath() {
 
 testDecorateStyle() {
   mockEnvironmentStart BUILD_COLORS
-  mockEnvironmentStart __BUILD_COLORS
+  mockEnvironmentStart __BUILD_DECORATE
   assertExitCode 0 __decorateStylesDefault || return $?
 
   assertEquals "1" "$(decorateStyle bold)" || return $?
   assertExitCode 0 decorateStyle bold 31 || return $?
   assertEquals "31" "$(decorateStyle bold)" || return $?
   mockEnvironmentStop BUILD_COLORS
-  mockEnvironmentStop __BUILD_COLORS
+  mockEnvironmentStop __BUILD_DECORATE
 }
 
 testDecorateStdin() {
   mockEnvironmentStart BUILD_COLORS
-  mockEnvironmentStart __BUILD_COLORS
+  mockEnvironmentStart __BUILD_DECORATE
   assertExitCode 0 decorate green || return $?
   assertEquals "$(printf "%s\n" "Something notable and prescient" "Leader" | decorate quote)" "\"Something notable and prescient\""$'\n'"\"Leader\"" || return $?
   mockEnvironmentStop BUILD_COLORS
-  mockEnvironmentStop __BUILD_COLORS
+  mockEnvironmentStop __BUILD_DECORATE
 }
 
 testDecorateBasics() {
   local color actual expected inVersion
 
   mockEnvironmentStart BUILD_COLORS
-  mockEnvironmentStart __BUILD_COLORS
+  mockEnvironmentStart __BUILD_DECORATE
 
   local phrase="Bird, bird. bird is the word."
 
@@ -67,20 +79,20 @@ testDecorateBasics() {
   done
 
   mockEnvironmentStop BUILD_COLORS
-  mockEnvironmentStop __BUILD_COLORS
+  mockEnvironmentStop __BUILD_DECORATE
 }
 
 testDecorateArgs() {
   local reset
 
   mockEnvironmentStart BUILD_COLORS
-  mockEnvironmentStart __BUILD_COLORS
+  mockEnvironmentStart __BUILD_DECORATE
 
   reset=$(printf -- '\e[0m')
   assertEquals "$(decorate reset --)" "$reset" || return $?
 
   mockEnvironmentStop BUILD_COLORS
-  mockEnvironmentStop __BUILD_COLORS
+  mockEnvironmentStop __BUILD_DECORATE
 }
 
 __dataDecorateSize() {

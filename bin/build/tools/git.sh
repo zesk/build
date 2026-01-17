@@ -54,8 +54,8 @@ _gitUninstall() {
 # This adds the directory passed to that directory in the local user's environment
 #
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
-# Argument: directory - Required. Directory. The directory to add to the `git` `safe.directory` configuration directive
+# Argument: --help -  Flag. Optional.Display this help.
+# Argument: directory -  Directory. Required. The directory to add to the `git` `safe.directory` configuration directive
 # Return Code: 0 - Success
 # Return Code: 2 - Argument is not a valid directory
 # Return Code: Other - git config error codes
@@ -80,7 +80,7 @@ _gitEnsureSafeDirectory() {
 # Delete git tag locally and at origin
 #
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
+# Argument: --help -  Flag. Optional.Display this help.
 # Argument: tag - The tag to delete locally and at origin
 # Return Code: argument - Any stage fails will result in this exit code. Partial deletion may occur.
 #
@@ -118,7 +118,7 @@ _gitTagDelete() {
 
 # Remove a tag everywhere and tag again on the current branch
 #
-# Argument: tag - Optional. String. The tag to tag again.
+# Argument: tag - String. Optional. The tag to tag again.
 gitTagAgain() {
   local handler="_${FUNCNAME[0]}" a=("$@")
 
@@ -145,7 +145,7 @@ _gitTagAgain() {
 # Return Code: 1 - If the `.git` directory does not exist
 # Return Code: 0 - Success
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
+# Argument: --help -  Flag. Optional.Display this help.
 gitVersionList() {
   local handler="_${FUNCNAME[0]}"
   [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
@@ -160,7 +160,7 @@ _gitVersionList() {
 # Get the last reported version.
 # Argument: ignorePattern - Optional. Specify a grep pattern to ignore; allows you to ignore current version
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
+# Argument: --help -  Flag. Optional.Display this help.
 gitVersionLast() {
   local handler="_${FUNCNAME[0]}"
   [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
@@ -235,7 +235,7 @@ _gitRepositoryChanged() {
 }
 
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
+# Argument: --help -  Flag. Optional.Display this help.
 # Return Code: 0 - the repo has been modified
 # Return Code: 1 - the repo has NOT bee modified
 #
@@ -254,7 +254,7 @@ _gitShowChanges() {
 
 #
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
+# Argument: --help -  Flag. Optional.Display this help.
 # Return Code: 0 - the repo has been modified
 # Return Code: 1 - the repo has NOT bee modified
 #
@@ -446,10 +446,10 @@ _gitFindHome() {
 }
 
 #
-# Argument: --last - Optional. Flag. Append last comment
-# Argument: -- - Optional. Flag. Skip updating release notes with comment.
-# Argument: --help - Optional. Flag. I need somebody.
-# Argument: comment - Optional. Text. A text comment for release notes and describing in general terms, what was done for a commit message.
+# Argument: --last -  Flag. Optional.Append last comment
+# Argument: -- -  Flag. Optional.Skip updating release notes with comment.
+# Argument: --help -  Flag. Optional.I need somebody.
+# Argument: comment -  Text. Optional.A text comment for release notes and describing in general terms, what was done for a commit message.
 # Commits all files added to git and also update release notes with comment
 #
 # Comment wisely. Does not duplicate comments. Check your release notes.
@@ -791,8 +791,8 @@ _gitInstallHooks() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# Argument: --application - Optional. Directory. Path to application home.
-# Argument: --copy - Optional. Flag. Do not execute the hook if it has changed.
+# Argument: --application -  Directory. Optional.Path to application home.
+# Argument: --copy -  Flag. Optional.Do not execute the hook if it has changed.
 # Argument: hook - A hook to install. Maps to `git-hook` internally. Will be executed in-place if it has changed from the original.
 # Install the most recent version of this hook and RUN IT in place if it has changed.
 # You should ONLY run this from within your hook, or provide the `--copy` flag to just copy.
@@ -899,7 +899,7 @@ _gitPreCommitSetup() {
 }
 
 # Output a display for pre-commit files changed
-# Argument: extension - Optional. String. Extension to display
+# Argument: extension - String. Optional. Extension to display
 gitPreCommitHeader() {
   local handler="_${FUNCNAME[0]}" width=5
   [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
@@ -935,7 +935,7 @@ _gitPreCommitHeader() {
 }
 
 # Does this commit have the following file extensions?
-# Argument: extension - Optional. String. Extension to check. Use `!` for blank extension and `@` for all extensions. Can specify one or more.
+# Argument: extension - String. Optional. Extension to check. Use `!` for blank extension and `@` for all extensions. Can specify one or more.
 # Return code: 0 - if all extensions are present
 # Return code: 1 - if any extension is not present
 gitPreCommitHasExtension() {
@@ -955,7 +955,7 @@ _gitPreCommitHasExtension() {
 
 # List the extensions available
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
+# Argument: --help -  Flag. Optional.Display this help.
 # stdout: String. One per line.
 gitPreCommitExtensionList() {
   local handler="_${FUNCNAME[0]}"
@@ -970,9 +970,9 @@ _gitPreCommitExtensionList() {
 }
 
 # List the file(s) of an extension
-# Argument: extension - Optional. String. Extension to list. Use `!` for blank extension and `@` for all extensions. Can specify one or more.
+# Argument: extension - String. Optional. Extension to list. Use `!` for blank extension and `@` for all extensions. Can specify one or more.
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
+# Argument: --help -  Flag. Optional.Display this help.
 # stdout: File. One per line.
 gitPreCommitListExtension() {
   local handler="_${FUNCNAME[0]}"
@@ -992,7 +992,7 @@ _gitPreCommitListExtension() {
 
 # Clean up after our pre-commit (deletes cache directory)
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
+# Argument: --help -  Flag. Optional.Display this help.
 gitPreCommitCleanup() {
   local handler="_${FUNCNAME[0]}"
   [ $# -eq 0 ] || __help --only "$handler" "$@" || return "$(convertValue $? 1 0)"
@@ -1008,7 +1008,7 @@ _gitPreCommitCleanup() {
 # Does a branch exist locally or remotely?
 # Argument: branch ... - String. Required. List of branch names to check.
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
+# Argument: --help -  Flag. Optional.Display this help.
 # Return Code: 0 - All branches passed exist
 # Return Code: 1 - At least one branch does not exist locally or remotely
 gitBranchExists() {
@@ -1031,7 +1031,7 @@ _gitBranchExists() {
 # Does a branch exist locally?
 # Argument: branch ... - String. Required. List of branch names to check.
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
+# Argument: --help -  Flag. Optional.Display this help.
 # Return Code: 0 - All branches exist
 # Return Code: 1 - At least one branch does not exist locally
 gitBranchExistsLocal() {
@@ -1054,7 +1054,7 @@ _gitBranchExistsLocal() {
 # Does a branch exist remotely?
 # Argument: branch ... - String. Required. List of branch names to check.
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
+# Argument: --help -  Flag. Optional.Display this help.
 # Return Code: 0 - All branches exist on the remote
 # Return Code: 1 - At least one branch does not exist remotely
 gitBranchExistsRemote() {
@@ -1087,7 +1087,7 @@ _gitBranchExistsRemote() {
 #
 # Environment: BUILD_BRANCH_FORMAT
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
+# Argument: --help -  Flag. Optional.Display this help.
 gitBranchify() {
   local handler="_${FUNCNAME[0]}"
   [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
@@ -1134,7 +1134,7 @@ _gitBranchify() {
 # Argument: --skip-ip - Boolean. Optional. Do not add the IP address to the comment.
 # Argument: --comment - String. Optional. Comment for merge commit.
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
+# Argument: --help -  Flag. Optional.Display this help.
 gitBranchMergeCurrent() {
   local handler="_${FUNCNAME[0]}"
 

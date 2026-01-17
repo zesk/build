@@ -10,8 +10,9 @@
 __bashSanitize() {
   local handler="$1" && shift
 
-  local home checkAssertions=() executor=contextOpen debugFlag=false
+  local home cad=() cax=() executor=contextOpen debugFlag=false
 
+  local home
   home=$(catchReturn "$handler" buildHome) || return $?
 
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
@@ -23,25 +24,26 @@ __bashSanitize() {
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
-    --exec)
-      shift
-      executor=$(validate "$handler" callable "$argument" "${1-}") || return $?
-      ;;
+    --exec) shift && executor=$(validate "$handler" callable "$argument" "${1-}") || return $? ;;
     --debug) debugFlag=true ;;
-    --home)
-      shift
-      home=$(validate "$handler" Directory "$argument" "${1-}") || return $?
-      ;;
-    --check)
-      shift || throwArgument "$handler" "shift $argument" || return $?
-      checkAssertions+=("$(validate "$handler" Directory "checkDirectory" "$1")") || return $?
-      ;;
-    *)
-      break
-      ;;
+    --home) shift && home=$(validate "$handler" Directory "$argument" "${1-}") || return $? ;;
+    --check) shift && cad+=("$(validate "$handler" Directory "checkDirectory" "$1")") || return $? ;;
+    *) break ;;
     esac
-    shift || :
+    shift
   done
+
+  local exceptions=()
+  while read -r file; do
+    local line eof=false
+    while ! $eof; do
+      read -r line || eof=true
+      [ -n "$line" ] || continue
+      exceptions+=("$line")
+      cax+=(--exclude "$line")
+    done <"$file"
+    ! $debugFlag || statusMessage decorate info "Loaded $(pluralWord ${#exceptions} pattern) [$(decorate file "$file")]"
+  done < <(find "$home" -name "bashSanitize.conf" -type f ! -path "*/.*/*")
 
   local fileList
 
@@ -66,19 +68,19 @@ __bashSanitize() {
     statusMessage decorate info "+x $(decorate file "$shellFile")"
   done < <(catchEnvironment "$handler" makeShellFilesExecutable) || returnUndo $? "${undo[@]}" || return $?
 
-  if [ ${#checkAssertions[@]} -eq 0 ]; then
-    checkAssertions+=("$(pwd)")
+  if [ ${#cad[@]} -eq 0 ]; then
+    cad+=("$(pwd)")
   fi
 
   statusMessage --last decorate success Checking assertions ...
-  _bashSanitizeCheckAssertions "$handler" "$executor" "${checkAssertions[@]+"${checkAssertions[@]}"}" || returnUndo $? "${undo[@]}" || return $?
+  _bashSanitizeCheckAssertions "$handler" "$executor" "${cad[@]+"${cad[@]}"}" -- "${cax[@]+"${cax[@]}"}" || returnUndo $? "${undo[@]}" || return $?
 
   # Operates on specific files
   statusMessage decorate success Checking syntax ...
   _bashSanitizeCheckLint "$handler" <"$fileList" || returnUndo $? "${undo[@]}" || returnClean $? "$fileList" || return $?
 
   statusMessage decorate success Checking copyright ...
-  _bashSanitizeCheckCopyright "$handler" "$debugFlag" <"$fileList" || returnUndo $? "${undo[@]}" || returnClean $? "$fileList" || return $?
+  executeEcho _bashSanitizeCheckCopyright "$handler" "$debugFlag" "${exceptions[@]+"${exceptions[@]}"}" <"$fileList" || returnUndo $? "${undo[@]}" || returnClean $? "$fileList" || return $?
 
   statusMessage decorate success Checking debugging ...
   _bashSanitizeCheckDebugging "$handler" <"$fileList" || returnUndo $? "${undo[@]}" || returnClean $? "$fileList" || return $?
@@ -98,12 +100,21 @@ _bashSanitizeCheckLint() {
 _bashSanitizeCheckAssertions() {
   local handler="$1" && shift
   local executor="$1" && shift
+  local directories=()
+
   while [ $# -gt 0 ]; do
-    statusMessage --first decorate warning "Checking assertions in $(decorate file "$1") ... "
-    if ! findUncaughtAssertions "$1" --list; then
+    case "$1" in
+    --) shift && break ;;
+    *) directories+=("$1") ;;
+    esac
+    shift
+  done
+  local directory && for directory in "${directories[@]}"; do
+    statusMessage --first decorate warning "Checking assertions in $(decorate file "$directory") ... "
+    if ! findUncaughtAssertions "$directory" --list "$@"; then
       # When ready - add --interactive here as well
-      findUncaughtAssertions "$1" --exec "$executor" &
-      throwEnvironment "$handler" findUncaughtAssertions "$1" --list || return $?
+      findUncaughtAssertions "$directory" "$@" --exec "$executor" &
+      throwEnvironment "$handler" findUncaughtAssertions "$directory" --list "$@" || return $?
     else
       decorate success "all files passed"
     fi
@@ -111,30 +122,25 @@ _bashSanitizeCheckAssertions() {
   done
 }
 
+# Argument: handler - Function. Required.
+# Argument: debugFlag - Boolean. Required.
+# Argument: exceptions ... - Arguments. Optional. List of path exceptions. Simple string contains match.
 _bashSanitizeCheckCopyright() {
   local handler="$1" && shift
   local debugFlag="$1" && shift
 
   home=$(catchReturn "$handler" buildHome) || return $?
 
-  local file exceptions=()
-  while read -r file; do
-    local line eof=false
-    while ! $eof; do
-      read -r line || eof=true
-      [ -z "$line" ] || exceptions+=("$line")
-    done <"$file"
-    ! $debugFlag || statusMessage decorate info "Loaded $(pluralWord ${#exceptions} pattern) [$(decorate file "$file")]"
-  done < <(find "$home" -name "bashSanitize.conf" -type f ! -path "*/.*/*")
-  export BUILD_COMPANY
-  catchReturn "$handler" buildEnvironmentLoad BUILD_COMPANY || return $?
+  local file exceptions=("$@")
+  set --
+  company=$(catchReturn "$handler" buildEnvironmentGet BUILD_COMPANY) || return $?
 
   local year
   year="$(date +%Y)"
-  statusMessage decorate warning "Checking $year and $BUILD_COMPANY ..." || :
+  statusMessage decorate warning "Checking $year and $company ..." || :
   local matches
   matches=$(fileTemporaryName "$handler") || return $?
-  local command=(fileNotMatches "Copyright &copy; $year" "$BUILD_COMPANY" -- "${exceptions[@]+"${exceptions[@]}"}" -- -)
+  local command=(fileNotMatches "Copyright &copy; $year" "$company" -- "${exceptions[@]+"${exceptions[@]}"}" -- -)
   if "${command[@]}" >"$matches"; then
     set +v
     while IFS=":" read -r file pattern; do

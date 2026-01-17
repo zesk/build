@@ -9,9 +9,9 @@
 # Test: contextOpen ./test/tools/sugar-tests.sh
 
 # Run `handler` with an environment error
-# Argument: handler - Required. Function. Failure command
-# Argument: quietLog - Required. File. File to output log to temporarily for this command. If `quietLog` is `-` then creates a temporary file for the command which is deleted automatically.
-# Argument: command ... - Required. Callable. Thing to run and append output to `quietLog`.
+# Argument: handler -  Function. Required. Failure command
+# Argument: quietLog -  File. Required. File to output log to temporarily for this command. If `quietLog` is `-` then creates a temporary file for the command which is deleted automatically.
+# Argument: command ... -  Callable. Required. Thing to run and append output to `quietLog`.
 # Requires: isFunction returnArgument buildFailed debuggingStack throwEnvironment
 catchEnvironmentQuiet() {
   local __handler="${1-}" quietLog="${2-}" clean=() && shift 2
@@ -30,7 +30,7 @@ catchEnvironmentQuiet() {
 }
 
 # Logs all deprecated functions to application root in a file called `.deprecated`
-# Argument: function - Required. String. Function which is deprecated. Use `${FUNCNAME[0]}` always if implemented in an old deprecated function.
+# Argument: function - String. Required. Function which is deprecated. Use `${FUNCNAME[0]}` always if implemented in an old deprecated function.
 # Example:     {fn} "${FUNCNAME[0]}"
 # Requires: printf date
 _deprecated() {
@@ -40,8 +40,8 @@ _deprecated() {
 }
 
 # Suppress stdout without piping. Handy when you just want a behavior not the output.
-# Argument: command - Required. Callable. Thing to muzzle.
-# Argument: ... - Optional. Arguments. Additional arguments.
+# Argument: command -  Callable. Required. Thing to muzzle.
+# Argument: ... -  Arguments. Optional.Additional arguments.
 # Example:     {fn} pushd "$buildDir"
 # Example:     catchEnvironment "$handler" phpBuild || returnUndo $? {fn} popd || return $?
 # stdout: - No output from stdout ever from this function
@@ -59,7 +59,7 @@ _muzzle() {
 # map a return value from one value to another
 #
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
+# Argument: --help -  Flag. Optional.Display this help.
 # Argument: value - Integer. A return value.
 # Argument: from - Integer. When value matches `from`, instead return `to`
 # Argument: to - Integer. The value to return when `from` matches `value`
@@ -92,7 +92,7 @@ _mapReturn() {
 
 # _IDENTICAL_ execute 7
 
-# Argument: binary ... - Required. Executable. Any arguments are passed to `binary`.
+# Argument: binary ... -  Executable. Required. Any arguments are passed to `binary`.
 # Run binary and output failed command upon error
 # Requires: returnMessage
 execute() {
@@ -104,8 +104,8 @@ execute() {
 # Run a function and preserve exit code
 # Returns `code`
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
-# Argument: code - Required. UnsignedInteger. Exit code to return.
+# Argument: --help -  Flag. Optional.Display this help.
+# Argument: code -  UnsignedInteger. Required. Exit code to return.
 # Argument: undoFunction - Optional. Command to run to undo something. Return status is ignored.
 # Argument: -- - Flag. Optional. Used to delimit multiple commands.
 # As a caveat, your command to `undo` can NOT take the argument `--` as a parameter.

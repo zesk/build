@@ -28,7 +28,7 @@ __backgroundProcess() {
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
     # _IDENTICAL_ handlerHandler 1
-    --handler) shift && handler=$(validate "$handler" function "$argument" "${1-}") || return $? ;;
+    --handler) shift && handler=$(validate "$handler" Function "$argument" "${1-}") || return $? ;;
     --watch) actionFlag="watch" ;;
     --summary) actionFlag="summary" ;;
     --monitor) actionFlag="monitor" ;;
@@ -502,7 +502,7 @@ __backgroundMainReport() {
   local alive="" elapsed=""
   [ ! -f "$cache/main.alive" ] || alive=" $(__nowRelative "$now" "$(cat "$cache/main.alive")")"
   [ ! -f "$cache/main.elapsed" ] || elapsed="$(cat "$cache/main.elapsed")"
-  [ -z "$elapsed" ] || elapsed=" $(decorate bold-blue "(loop elapsed: $elapsed $(plural "$elapsed" second seconds))")"
+  [ -z "$elapsed" ] || elapsed=" $(decorate BOLD blue "(loop elapsed: $elapsed $(plural "$elapsed" second seconds))")"
   decorate pair "Main PID" "$(__pidStatus "$pid")$alive$elapsed"
   __backgroundReportFile "Main output" "$cache/main.out" 3
   __backgroundReportFile "Main error" "$cache/main.err" 3

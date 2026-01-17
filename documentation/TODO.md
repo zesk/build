@@ -96,7 +96,7 @@
 - colorParse
 - confirmMenu
 - consoleBrightness
-- consoleColorMode
+- consoleConfigureDecorate
 - consoleConfigureColorMode
 - consoleDefaultTitle
 - consoleGetColor
@@ -398,7 +398,7 @@ On a "2x" machine:
 - colorParse
 - confirmMenu
 - consoleBrightness
-- consoleColorMode
+- consoleConfigureDecorate
 - consoleConfigureColorMode
 - consoleDefaultTitle
 - consoleGetColor

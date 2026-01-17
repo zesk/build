@@ -11,8 +11,8 @@
 
 # Check if something matches a version
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
-# Argument: binary - Required. String. The binary to look for.
+# Argument: --help -  Flag. Optional.Display this help.
+# Argument: binary - String. Required. The binary to look for.
 isVersion() {
   local part parts
   [ $# -gt 0 ] || return 1
@@ -55,8 +55,8 @@ _versionNoVee() {
 # When this tool succeeds it outputs the path to the current release notes file
 #
 # Environment: BUILD_RELEASE_NOTES
-# Argument: --application application - Optional. Directory. Application home directory.
-# Argument: version - Optional. String. Version for the release notes path. If not specified uses the current version.
+# Argument: --application application -  Directory. Optional.Application home directory.
+# Argument: version - String. Optional. Version for the release notes path. If not specified uses the current version.
 # Output: docs/release/version.md
 # Hook: version-current
 # Example:     open $(bin/build/release-notes.sh)
@@ -114,7 +114,7 @@ __releaseNotes() {
 
 #
 # Converts vX.Y.N to vX.Y.(N+1) so v1.0.0 to v1.0.1
-# Argument: lastVersion - Required. String. Version to calculate the next minor version.
+# Argument: lastVersion - String. Required. Version to calculate the next minor version.
 versionNextMinor() {
   local handler="_${FUNCNAME[0]}"
 
@@ -235,7 +235,7 @@ __releaseNew() {
   decorate pair $width "Current:" "$currentVersion"
 
   if [ -n "$newVersion" ] && [ "$currentVersion" != "$newVersion" ]; then
-    decorate pair "$width" "New:" "$(decorate bold-green "$newVersion")"
+    decorate pair "$width" "New:" "$(decorate BOLD green "$newVersion")"
     local checkVersion="$liveVersion"
     [ -n "$checkVersion" ] || checkVersion="$lastVersion"
     lastVersion="$(printf "%s\n" "$liveVersion" "$newVersion" | versionSort | tail -n 1)" || return $?
@@ -279,7 +279,7 @@ __releaseNew() {
     while true; do
       if $readLoop; then
         local message
-        message="$(printf "%s? (%s %s) " "$(decorate info "New version")" "$(decorate bold-magenta "default")" "$(decorate code "$nextVersion")")"
+        message="$(printf "%s? (%s %s) " "$(decorate info "New version")" "$(decorate BOLD magenta "default")" "$(decorate code "$nextVersion")")"
         printf "%s" "$message"
         read -r newVersion || :
         if [ -z "$newVersion" ]; then

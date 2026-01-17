@@ -59,7 +59,7 @@ __crontabGenerate() {
 # Argument: --env-file environmentFile - Top-level environment file to pass variables into the user `crontab` template
 # Argument: --show - Show the crontab instead of installing it
 # Argument: --user user - Scan for crontab files in the form `user.crontab` and then install as this user. If not specified, uses current user name.
-# Argument: --mapper envMapper - Optional. Binary. The binary use to map environment values to the file. (Uses `mapEnvironment` by default)
+# Argument: --mapper envMapper -  Binary. Optional.The binary use to map environment values to the file. (Uses `mapEnvironment` by default)
 # Example:     {fn} --env-file /etc/myCoolApp.conf --user www-data /var/www/applications
 # Example:     {fn} /etc/myCoolApp.conf /var/www/applications www-data /usr/local/bin/map.sh
 # See: whoami

@@ -21,14 +21,15 @@ __bashLoader() {
 # Sanitize bash files for code quality.
 #
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
+# Argument: --help -  Flag. Optional.Display this help.
 # Argument: -- - Flag. Optional. Interactive mode on fixing errors.
-# Argument: --home home - Optional. Directory. Sanitize files starting here. (Defaults to `buildHome`)
+# Argument: --home home -  Directory. Optional.Sanitize files starting here. (Defaults to `buildHome`)
 # Argument: --interactive - Flag. Optional. Interactive mode on fixing errors.
-# Argument: --check checkDirectory - Optional. Directory. Check shell scripts in this directory for common errors.
+# Argument: --check checkDirectory -  Directory. Optional.Check shell scripts in this directory for common errors.
 # Argument: ... - Additional arguments are passed to `bashLintFiles` `validateFileContents`
-# Configuration File: bashSanitize.conf (file containing patterns of files to skip, one per line, e.g. `etc/docker`)
-# See: buildHome
+# Configuration File: bashSanitize.conf (file containing simple `stringContains` matches to skip file NAMES, one per line, e.g. `etc/docker`)
+# used in find `find ... ! -path '*LINE*'` and in grep -e 'LINE'
+# TODO - use one mechanism for bashSanitize.conf format
 bashSanitize() {
   __bashLoader "_${FUNCNAME[0]}" "__${FUNCNAME[0]}" "$@"
 }
@@ -62,7 +63,7 @@ _bashGetRequires() {
 # If any requirements are not met, exit status of 1 and a list of unmet requirements are listed
 #
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
+# Argument: --help -  Flag. Optional.Display this help.
 # Argument: --ignore prefix. String. Optional. Ignore exact function names.
 # Argument: --ignore-prefix prefix. String. Optional. Ignore function names which match the prefix and do not check them.
 # Argument: --report - Flag. Optional. Output a report of various functions and handler after processing is complete.
@@ -127,7 +128,7 @@ _isBashBuiltin() {
 # Argument: libraryRelativePath - RelativeFile. Required. Path of file to find from the home directory. Must also be executable.
 # Argument: startDirectory - Directory. Optional. Place to start searching. Uses `pwd` if not specified.
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
+# Argument: --help -  Flag. Optional.Display this help.
 # stdout: Parent path where `libraryRelativePath` exists
 # Example:     libFound=$(bashLibraryHome "bin/watcher/server.py")
 bashLibraryHome() {
@@ -152,7 +153,7 @@ _bashLibraryHome() {
 # Argument: libraryRelativePath - Path. Required. Path to library source file.
 # Argument: command - Callable. Optional. Command to run after loading the library.
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
+# Argument: --help -  Flag. Optional.Display this help.
 bashLibrary() {
   local handler="_${FUNCNAME[0]}"
 
@@ -201,10 +202,10 @@ _bashLibrary() {
 # Load a directory of bash scripts, excluding any dot directories (`*/.*/*`), and optionally any additional
 # files if you use `--exclude`. But recursively loads scripts in sorted alphabetic order within the directory until one fails.
 # All files must be executable.
-# Argument: --exclude pattern - Optional. String. String passed to `! -path pattern` in `find`
-# Argument: directory ... - Required. Directory. Directory to `source` all `.sh` files used.
+# Argument: --exclude pattern - String. Optional. String passed to `! -path pattern` in `find`
+# Argument: directory ... -  Directory. Required. Directory to `source` all `.sh` files used.
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
+# Argument: --help -  Flag. Optional.Display this help.
 # Security: Loads bash files
 # Load a directory of `.sh` files using `source` to make the code available.
 # Has security implications. Use with caution and ensure your directory is protected.
@@ -254,7 +255,7 @@ _bashSourcePath() {
 # Argument: functionName - String. Required. Name of function to check.
 # Argument: file ... - File. Required. One or more files to check if a function is defined within.
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
+# Argument: --help -  Flag. Optional.Display this help.
 bashFunctionDefined() {
   local handler="_${FUNCNAME[0]}"
 
@@ -293,7 +294,7 @@ _bashFunctionDefined() {
 #
 # Removes literally any line which begins with zero or more whitespace characters and then a `#`.
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
+# Argument: --help -  Flag. Optional.Display this help.
 bashStripComments() {
   [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
   sed '/^\s*#/d'
@@ -308,7 +309,7 @@ _bashStripComments() {
 # Argument: functionName - String. Required. Function which should be called somewhere within a file.
 # Argument: file - File. Required. File to search for function handler.
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
+# Argument: --help -  Flag. Optional.Display this help.
 # Return Code: 0 - Function is used within the file
 # Return Code: 1 - Function is *not* used within the file
 # This check is simplistic and does not verify actual coverage or code paths.
@@ -353,10 +354,10 @@ _bashShowUsage() {
 
 # List functions in a given shell file
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
+# Argument: --help -  Flag. Optional.Display this help.
 # Argument: file - File. Optional. File(s) to list bash functions defined within.
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
+# Argument: --help -  Flag. Optional.Display this help.
 # Requires: __bashListFunctions throwArgument decorate usageArgumentFile
 bashListFunctions() {
   local handler="_${FUNCNAME[0]}"
@@ -402,7 +403,7 @@ __bashListFunctions() {
 # Argument: variableName - string. Required. Get this variable value
 # Argument: --prefix - flag. Optional. Find variables with the prefix `variableName`
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
+# Argument: --help -  Flag. Optional.Display this help.
 # Gets a list of the variable values from a bash function comment
 bashFunctionCommentVariable() {
   local handler="_${FUNCNAME[0]}"
@@ -459,7 +460,7 @@ _bashFunctionCommentVariable() {
 # Argument: source - File. Required. File where the function is defined.
 # Argument: lineNumber - String. Required. Previously computed line number of the function.
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
+# Argument: --help -  Flag. Optional.Display this help.
 # Requires: head bashFinalComment
 # Requires: __help usageDocument
 bashFileComment() {
@@ -474,9 +475,9 @@ _bashFileComment() {
 
 # Filter comments from a bash stream
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
-# Argument: --only - Optional. Flag. Show ONLY comment lines. (Reverse of lines when not specified.)
-# Argument: file - Optional. File. File(s) to filter.
+# Argument: --help -  Flag. Optional.Display this help.
+# Argument: --only -  Flag. Optional.Show ONLY comment lines. (Reverse of lines when not specified.)
+# Argument: file -  File. Optional.File(s) to filter.
 # stdin: a bash file
 # stdout: bash file without line-comments `#`
 bashCommentFilter() {
@@ -513,7 +514,7 @@ _bashCommentFilter() {
 
 # Extracts the final comment from a stream
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
+# Argument: --help -  Flag. Optional.Display this help.
 # Requires: fileReverseLines sed cut grep convertValue
 bashFinalComment() {
   [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
@@ -543,7 +544,7 @@ _bashFinalComment() {
 # Argument: source - File. Required. File where the function is defined.
 # Argument: functionName - String. Required. The name of the bash function to extract the documentation for.
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
+# Argument: --help -  Flag. Optional.Display this help.
 # Requires: grep cut fileReverseLines __help
 # Requires: usageDocument
 bashFunctionComment() {

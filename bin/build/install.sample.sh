@@ -95,7 +95,7 @@ _installCheck() {
 
 # Fetch a non-blank field from a JSON file with error handling
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
+# Argument: --help -  Flag. Optional.Display this help.
 # Argument: handler - Function. Required. Error handler.
 # Argument: jsonFile - File. Required. A JSON file to parse
 # Argument: ... - Arguments. Optional. Passed directly to jq
@@ -141,7 +141,7 @@ __installCheck() {
   fi
   read -r version id < <(jq -r "($versionSelector + \" \" + $idSelector)" <"$versionFile" || :) || :
   [ -n "$version" ] && [ -n "$id" ] || throwEnvironment "$handler" "$versionFile missing version: \"$version\" or id: \"$id\"" || return $?
-  printf "%s %s (%s)\n" "$(decorate bold-blue "$name")" "$(decorate code "$version")" "$(decorate orange "$id")"
+  printf "%s %s (%s)\n" "$(decorate BOLD blue "$name")" "$(decorate code "$version")" "$(decorate orange "$id")"
 }
 
 # IDENTICAL _installRemotePackage 379
@@ -182,30 +182,30 @@ __installCheck() {
 # INTERNAL: If `checkFunction` fails, it should output any errors to `stderr` and return a non-zero exit code.
 # INTERNAL:
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
-# Argument: relative - Required. RelativePath. Path from this script to our application root. INTERNAL.
-# Argument: defaultPackagePath - Required. RelativePath. Path from application root to where the package should be installed. INTERNAL.
-# Argument: packageInstallerName - Required. ApplicationFile. The new installer file, post installation, relative to the `installationPath`. INTERNAL.
-# Argument: installationPath - Optional. ApplicationDirectory. Path to where the package should be installed instead of the defaultPackagePath.
-# Argument: --help - Optional. Flag. Display this help.
-# Argument: --source source - Optional. String. Source to display for the binary name. INTERNAL.
-# Argument: --name name - Optional. String. Name to display for the remote package name. INTERNAL.
-# Argument: --local localPackageDirectory - Optional. Directory. Directory of an existing installation to mock behavior for testing. INTERNAL.
-# Argument: --url url - Optional. URL. URL of a tar.gz file. Download source code from here.
-# Argument: --user username - Optional. String. Add `username:password` to remote request.
-# Argument: --password passwordText - Optional. String. Add `username:password` to remote request.
-# Argument: --header headerText - Optional. String. Add one or more headers to the remote request.
-# Argument: --version-function urlFunction - Optional. Function. Function to compare live version to local version. Exits 0 if they match. Output version text if you want. INTERNAL.
-# Argument: --version version - Optional. String. Download just **this** version of Zesk Build. Prevents stable breaking with new versions of Zesk Build.
-# Argument: --url-function urlFunction - Optional. Function. Function to return the URL to download. INTERNAL.
-# Argument: --check-function checkFunction - Optional. Function. Function to check the installation and output the version number or package name. INTERNAL.
-# Argument: --installer installer - Optional. Executable. Multiple. Binary to run after installation succeeds. Can be supplied multiple times. If `installer` begins with a `@` then any errors by the installer are ignored.
-# Argument: --replace file - Optional. File. Replace the target file with this script and delete this one. Internal only, do not use. INTERNAL.
-# Argument: --finalize file - Optional. File. Remove the temporary file and exit 0. INTERNAL.
-# Argument: --debug - Optional. Flag. Debugging is on. INTERNAL.
-# Argument: --force - Optional. Flag. Force installation even if file is up to date.
-# Argument: --skip-self - Optional. Flag. Skip the installation script self-update. (By default it is enabled.)
-# Argument: --diff - Optional. Flag. Show differences between old and new file.
+# Argument: --help -  Flag. Optional.Display this help.
+# Argument: relative -  RelativePath. Required. Path from this script to our application root. INTERNAL.
+# Argument: defaultPackagePath -  RelativePath. Required. Path from application root to where the package should be installed. INTERNAL.
+# Argument: packageInstallerName -  ApplicationFile. Required. The new installer file, post installation, relative to the `installationPath`. INTERNAL.
+# Argument: installationPath -  ApplicationDirectory. Optional.Path to where the package should be installed instead of the defaultPackagePath.
+# Argument: --help -  Flag. Optional.Display this help.
+# Argument: --source source - String. Optional. Source to display for the binary name. INTERNAL.
+# Argument: --name name - String. Optional. Name to display for the remote package name. INTERNAL.
+# Argument: --local localPackageDirectory -  Directory. Optional.Directory of an existing installation to mock behavior for testing. INTERNAL.
+# Argument: --url url -  URL. Optional.URL of a tar.gz file. Download source code from here.
+# Argument: --user username - String. Optional. Add `username:password` to remote request.
+# Argument: --password passwordText - String. Optional. Add `username:password` to remote request.
+# Argument: --header headerText - String. Optional. Add one or more headers to the remote request.
+# Argument: --version-function urlFunction -  Function. Optional.Function to compare live version to local version. Exits 0 if they match. Output version text if you want. INTERNAL.
+# Argument: --version version - String. Optional. Download just **this** version of Zesk Build. Prevents stable breaking with new versions of Zesk Build.
+# Argument: --url-function urlFunction -  Function. Optional.Function to return the URL to download. INTERNAL.
+# Argument: --check-function checkFunction -  Function. Optional.Function to check the installation and output the version number or package name. INTERNAL.
+# Argument: --installer installer -  Executable. Optional.Multiple. Binary to run after installation succeeds. Can be supplied multiple times. If `installer` begins with a `@` then any errors by the installer are ignored.
+# Argument: --replace file -  File. Optional.Replace the target file with this script and delete this one. Internal only, do not use. INTERNAL.
+# Argument: --finalize file -  File. Optional.Remove the temporary file and exit 0. INTERNAL.
+# Argument: --debug -  Flag. Optional.Debugging is on. INTERNAL.
+# Argument: --force -  Flag. Optional.Force installation even if file is up to date.
+# Argument: --skip-self -  Flag. Optional.Skip the installation script self-update. (By default it is enabled.)
+# Argument: --diff -  Flag. Optional.Show differences between old and new file.
 # Return Code: 1 - Environment error
 # Return Code: 2 - Argument error
 # Requires: cp rm cat printf realPath whichExists returnMessage fileTemporaryName catchArgument throwArgument catchEnvironment decorate validate isFunction __decorateExtensionQuote
@@ -271,7 +271,7 @@ _installRemotePackage() {
       local newName
       shift
       newName=$(validate "$handler" String "$argument" "${1-}") || return $?
-      decorate bold-blue "Updating -> $(decorate bold-orange "$newName")"
+      decorate BOLD blue "Updating -> $(decorate BOLD orange "$newName")"
       catchEnvironment "$handler" cp -f "${BASH_SOURCE[0]}" "$newName" || return $?
       catchEnvironment "$handler" chmod +x "$newName" || return $?
       exec "$newName" --finalize "${BASH_SOURCE[0]}" || return $?
@@ -338,15 +338,15 @@ _installRemotePackage() {
   fi
   if $forceFlag; then
     [ -n "$installReason" ] || installReason="directory exists"
-    printf "%s (%s)\n" "$(decorate orange "Forcing installation")" "$(decorate bold-blue "$installReason")"
+    printf "%s (%s)\n" "$(decorate orange "Forcing installation")" "$(decorate BOLD blue "$installReason")"
     installFlag=true
   fi
   binName="$(basename "$myBinary")"
   if [ "$binName" = "main" ]; then
     skipSelf=true
-    binName=" ($(decorate bold-orange "bash pipe"))"
+    binName=" ($(decorate BOLD orange "bash pipe"))"
   else
-    binName=" ($(decorate bold-blue "$(basename "$myBinary")"))"
+    binName=" ($(decorate BOLD blue "$(basename "$myBinary")"))"
   fi
   local suffix
   if $installFlag; then
@@ -538,7 +538,7 @@ __installRemotePackageLocal() {
 #
 # Argument: -r | --reverse - Reverse the sort order (optional)
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
+# Argument: --help -  Flag. Optional.Display this help.
 # Example:     git tag | grep -e '^v[0-9.]*$' | versionSort
 # Requires: throwArgument sort usageDocument decorate
 versionSort() {
@@ -705,19 +705,19 @@ __validateTypeCallable() {
 
 # Fetch URL content
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
+# Argument: --help -  Flag. Optional.Display this help.
 # Argument: --header header - String. Optional. Send a header in the format 'Name: Value'
 # Argument: --wget - Flag. Optional. Force use of wget. If unavailable, fail.
 # Argument: --redirect-max maxRedirections - PositiveInteger. Optional. Sets the number of allowed redirects from the original URL. Default is 9.
 # Argument: --curl - Flag. Optional. Force use of curl. If unavailable, fail.
 # Argument: --binary binaryName - Callable. Use this binary instead. If the base name of the file is not `curl` or `wget` you MUST supply `--argument-format`.
-# Argument: --argument-format format - Optional. String. Supply `curl` or `wget` for parameter formatting.
-# Argument: --user userName - Optional. String. If supplied, uses HTTP Simple authentication. Usually used with `--password`. Note: User names may not contain the character `:` when using `curl`.
-# Argument: --password password - Optional. String. If supplied along with `--user`, uses HTTP Simple authentication.
-# Argument: --agent userAgent - Optional. String. Specify the user agent string.
-# Argument: --timeout timeoutSeconds - Optional. PositiveInteger. A number of seconds to wait before failing. Defaults to `BUILD_URL_TIMEOUT` environment value.
-# Argument: url - Required. URL. URL to fetch to target file.
-# Argument: file - Optional. FileDirectory. Target file. Use `-` to send to `stdout`. Default value is `-`.
+# Argument: --argument-format format - String. Optional. Supply `curl` or `wget` for parameter formatting.
+# Argument: --user userName - String. Optional. If supplied, uses HTTP Simple authentication. Usually used with `--password`. Note: User names may not contain the character `:` when using `curl`.
+# Argument: --password password - String. Optional. If supplied along with `--user`, uses HTTP Simple authentication.
+# Argument: --agent userAgent - String. Optional. Specify the user agent string.
+# Argument: --timeout timeoutSeconds -  PositiveInteger. Optional.A number of seconds to wait before failing. Defaults to `BUILD_URL_TIMEOUT` environment value.
+# Argument: url -  URL. Required. URL to fetch to target file.
+# Argument: file -  FileDirectory. Optional.Target file. Use `-` to send to `stdout`. Default value is `-`.
 # Requires: returnMessage whichExists decorate
 # Requires: validate
 # Requires: throwArgument catchArgument
@@ -920,19 +920,19 @@ usageDocument() {
 
 # Output a simple error message for a function
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
+# Argument: --help -  Flag. Optional.Display this help.
 # Argument: source - File. Required. File where documentation exists.
 # Argument: function - String. Required. Function to document.
 # Argument: returnCode - UnsignedInteger. Required. Exit code to return.
-# Argument: message ... - Optional. String. Message to display to the user.
+# Argument: message ... - String. Optional. Message to display to the user.
 # Requires: bashFunctionComment decorate read printf returnCodeString __help usageDocument
 usageDocumentSimple() {
   [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
   local source="${1-}" functionName="${2-}" returnCode="${3-}" color helpColor="info" icon="❌" line prefix="" finished=false skip=false && shift 3
 
-  case "$returnCode" in 0) icon="🏆" && color="info" && [ $# -ne 0 ] || skip=true ;; 1) color="error" ;; 2) color="bold-red" ;; *) color="orange" ;; esac
+  case "$returnCode" in 0) icon="🏆" && color="info" && [ $# -ne 0 ] || skip=true ;; 1) color="error" ;; 2) color="red" ;; *) color="orange" ;; esac
   [ "$returnCode" -eq 0 ] || exec 1>&2
-  $skip || printf -- "%s [%s] %s\n" "$icon" "$(decorate "code" "$(returnCodeString "$returnCode")")" "$(decorate "$color" "$*")"
+  $skip || printf -- "%s [%s] %s\n" "$icon" "$(decorate "code" "$(returnCodeString "$returnCode")")" "$(decorate BOLD "$color" "$*")"
   if [ ! -f "$source" ]; then
     export BUILD_HOME
     [ -d "${BUILD_HOME-}" ] || returnArgument "Unable to locate $source (${PWD-})" || return $?
@@ -955,7 +955,7 @@ _usageDocumentSimple() {
 
 # Extracts the final comment from a stream
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
+# Argument: --help -  Flag. Optional.Display this help.
 # Requires: fileReverseLines sed cut grep convertValue
 bashFinalComment() {
   [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
@@ -985,7 +985,7 @@ _bashFinalComment() {
 # Argument: source - File. Required. File where the function is defined.
 # Argument: functionName - String. Required. The name of the bash function to extract the documentation for.
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
+# Argument: --help -  Flag. Optional.Display this help.
 # Requires: grep cut fileReverseLines __help
 # Requires: usageDocument
 bashFunctionComment() {
@@ -1027,7 +1027,7 @@ _fileReverseLines() {
 # See: readlink realpath
 # DOC TEMPLATE: noArgumentsForHelp 1
 # Without arguments, displays help.
-# Argument: file ... - Required. File. One or more files to `realpath`.
+# Argument: file ... -  File. Required. One or more files to `realpath`.
 # Requires: whichExists realpath __help usageDocument returnArgument
 realPath() {
   # __IDENTICAL__ --help-when-blank 1
@@ -1048,8 +1048,8 @@ _realPath() {
 # Wrapper for `mktemp`. Generate a temporary file name, and fail using a function
 # Argument: handler - Function. Required. Function to call on failure. Function Type: returnMessage
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
-# Argument: ... - Optional. Arguments. Any additional arguments are passed through.
+# Argument: --help -  Flag. Optional.Display this help.
+# Argument: ... -  Arguments. Optional.Any additional arguments are passed through.
 # Requires: mktemp __help catchEnvironment usageDocument
 # BUILD_DEBUG: temp - Logs backtrace of all temporary files to a file in application root named after this function to detect and clean up leaks
 # Environment: BUILD_DEBUG
@@ -1083,9 +1083,9 @@ _fileTemporaryName() {
 
 # Summary: Does a binary exist in the PATH?
 # Argument: --any - Flag. Optional. If any binary exists then return 0 (success). Otherwise, all binaries must exist.
-# Argument: binary ... - Required. String. One or more Binaries to find in the system `PATH`.
+# Argument: binary ... - String. Required. One or more Binaries to find in the system `PATH`.
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
+# Argument: --help -  Flag. Optional.Display this help.
 # Return Code: 0 - If all values are found (without the `--any` flag), or if *any* binary is found with the `--any` flag
 # Return Code: 1 - If any value is not found (without the `--any` flag), or if *all* binaries are NOT found with the `--any` flag.
 # Example:     whichExists cp date aws ls mv stat || throwEnvironment "$handler" "Need basic environment to work" || return $?
@@ -1124,7 +1124,7 @@ _whichExists() {
 # IDENTICAL isCallable 48
 
 # Test if all arguments are callable as a command
-# Argument: string - Required. EmptyString. Path to binary to test if it is executable.
+# Argument: string -  EmptyString. Required. Path to binary to test if it is executable.
 # If no arguments are passed, returns exit code 1.
 # Return Code: 0 - All arguments are callable as a command
 # Return Code: 1 - One or or more arguments are callable as a command
@@ -1143,7 +1143,7 @@ _isCallable() {
 }
 
 # Test if all arguments are executable binaries
-# Argument: string ... - Required. String. Path to binary to test if it is executable.
+# Argument: string ... - String. Required. Path to binary to test if it is executable.
 # If no arguments are passed, returns exit code 1.
 # Return Code: 0 - All arguments are executable binaries
 # Return Code: 1 - One or or more arguments are not executable binaries
@@ -1215,15 +1215,15 @@ _isFunction() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# IDENTICAL decorate 245
+# IDENTICAL decorate 262
 
 # Sets the environment variable `BUILD_COLORS` if not set, uses `TERM` to calculate
 #
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
+# Argument: --help -  Flag. Optional.Display this help.
 # Return Code: 0 - Console or output supports colors
 # Return Code: 1 - Colors are likely not supported by console
-# Environment: BUILD_COLORS - Optional. Boolean. Whether the build system will output ANSI colors.
+# Environment: BUILD_COLORS -  Boolean. Optional.Whether the build system will output ANSI colors.
 # Requires: isPositiveInteger tput
 hasColors() {
   # --help is only argument allowed
@@ -1257,17 +1257,13 @@ _hasColors() {
 #
 # Argument: label - Text label
 # Argument: lightStartCode - Escape code label for light mode (color)
-# Argument: darkStartCode - Escape code label for dark mode (color)
 # Argument: endCode - Escape end code
 # Argument: text ... - Text to output.
 # Requires: hasColors printf
 __decorate() {
-  local prefix="$1" start="$2" dp="$3" end="$4" && shift 4
-  export BUILD_COLORS_MODE BUILD_COLORS
+  local prefix="$1" start="$2" end="$3" && shift 3
+  export BUILD_COLORS
   if [ -n "${BUILD_COLORS-}" ] && [ "${BUILD_COLORS-}" = "true" ] || [ -z "${BUILD_COLORS-}" ] && hasColors; then
-    if [ "${BUILD_COLORS_MODE-}" = "dark" ]; then
-      start="$dp"
-    fi
     if [ $# -eq 0 ]; then printf -- "%s$start" ""; else printf -- "$start%s$end\n" "$*"; fi
     return 0
   fi
@@ -1277,13 +1273,12 @@ __decorate() {
 
 # Output a list of build-in decoration styles, one per line
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
+# Argument: --help -  Flag. Optional.Display this help.
 decorations() {
   [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
   printf "%s\n" reset \
     underline no-underline bold no-bold \
     black black-contrast blue cyan green magenta orange red white yellow \
-    bold-black bold-black-contrast bold-blue bold-cyan bold-green bold-magenta bold-orange bold-red bold-white bold-yellow \
     code info notice success warning error subtle label value decoration
 }
 _decorations() {
@@ -1293,42 +1288,57 @@ _decorations() {
 }
 
 # Singular decoration function
-# Argument: style - String. Required. One of: reset underline no-underline bold no-bold black black-contrast blue cyan green magenta orange red white yellow bold-black bold-black-contrast bold-blue bold-cyan bold-green bold-magenta bold-orange bold-red bold-white bold-yellow code info notice success warning error subtle label value decoration
-# Argument: text ... - Optional. String. Text to output. If not supplied, outputs a code to change the style to the new style. May contain arguments for `style`.
+# Argument: style - String. Required. One of: reset underline no-underline bold no-bold black black-contrast blue cyan green magenta orange red white yellow code info notice success warning error subtle label value decoration
+# Argument: text ... - String. Optional. Text to output. If not supplied, outputs a code to change the style to the new style. May contain arguments for `style`.
 # You can extend this function by writing a your own extension `__decorationExtensionCustom` is called for `decorate custom`.
 # stdout: Decorated text
-# Environment: __BUILD_COLORS - String. Cached color lookup.
+# Environment: __BUILD_DECORATE - String. Cached color lookup.
 # Environment: BUILD_COLORS - Boolean. Colors enabled (`true` or `false`).
-# Environment: BUILD_COLORS_MODE - String. Color mode (`light` or `dark`). This is going to be deprecated.
 # Requires: isFunction returnArgument awk catchEnvironment usageDocument executeInputSupport __help
 decorate() {
-  local handler="_${FUNCNAME[0]}" text="" what="${1-}" lp dp style
+  local handler="_${FUNCNAME[0]}" text="" what="${1-}" lp style
   [ "$what" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
   shift && [ -n "$what" ] || catchArgument "$handler" "Requires at least one argument: \"$*\"" || return $?
-
+  catchReturn "$handler" _decorateInitialize || return $?
   if ! style=$(__decorateStyle "$what"); then
     local extend func="${what/-/_}"
     extend="__decorateExtension$(printf "%s" "${func:0:1}" | awk '{print toupper($0)}')${func:1}"
     # When this next line calls `catchArgument` it results in an infinite loop, so don't - use returnArgument
     # shellcheck disable=SC2119
-    isFunction "$extend" || returnArgument printf -- "%s\n%s\n" "Unknown decoration name: $what ($extend)" "$(decorations)" || return $?
-    executeInputSupport "$handler" "$extend" -- "$@" || return $?
-    return 0
+    if isFunction "$extend"; then
+      executeInputSupport "$handler" "$extend" -- "$@" || return $?
+      return 0
+    else
+      executeInputSupport "$handler" __decorate "❌" "[$what ☹️" "]" -- "$@" || return 2
+    fi
   fi
-  IFS=" " read -r lp dp text <<<"$style" || :
-  [ "$dp" != "-" ] || dp="$lp"
+  local IFS
+  IFS=" " read -r lp text <<<"$style" || :
   local p='\033['
-
-  executeInputSupport "$handler" __decorate "$text" "${p}${lp}m" "${p}${dp:-$lp}m" "${p}0m" -- "$@" || return $?
+  executeInputSupport "$handler" __decorate "$text" "${p}${lp}m" "${p}0m" -- "$@" || return $?
 }
 _decorate() {
   # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
+# Is the decorate color system initialized yet?
+# Useful to set our global color environment at the top level of a script if it hasn't been initialized already.
+# DOC TEMPLATE: --help 1
+# Argument: --help -  Flag. Optional.Display this help.
+decorateInitialized() {
+  [ "${1-}" != "--help" ] || __help --only "_${FUNCNAME[0]}" "$@" || return 0
+  export __BUILD_DECORATE
+  [ -n "${__BUILD_DECORATE-}" ]
+}
+_decorateInitialized() {
+  # __IDENTICAL__ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
 _decorateInitialize() {
-  export __BUILD_COLORS
-  [ -n "${__BUILD_COLORS-}" ] || __decorateStyles || return $?
+  export __BUILD_DECORATE
+  [ -n "${__BUILD_DECORATE-}" ] || __decorateStyles || return $?
 }
 
 # Fetch the requested style as a string: lp dp text
@@ -1336,65 +1346,53 @@ _decorateInitialize() {
 # text is optional, lp is required to be non-blank
 # Requires: __decorateStyles
 __decorateStyle() {
-  local original style pattern=$'\n'"$1="
+  local original style pattern=":$1="
 
-  _decorateInitialize || return $?
-  original="${__BUILD_COLORS}"
-  style="${__BUILD_COLORS#*"$pattern"}"
+  original="${__BUILD_DECORATE}"
+  style="${__BUILD_DECORATE#*"$pattern"}"
   [ "$style" != "$original" ] || return 1
-  style="${style%%$'\n'*}"
-  printf "%s\n" "$style"
+  printf "%s\n" "${style%%:*}"
 }
 
 # Default array styles, override if you wish
 if ! isFunction __decorateStyles; then
-  # This sets __BUILD_COLORS to the styles strings
+  # This sets __BUILD_DECORATE to the styles strings
   __decorateStyles() {
-    __decorateStylesDefault
+    __decorateStylesDefaultLight
   }
 fi
 
 # Default array styles, override if you wish
-__decorateStylesDefault() {
-  local styles="
-reset=0
-underline=4
-no-underline=24
-bold=1
-no-bold=21
-black=109;7
-black-contrast=107;30
-blue=94
-cyan=36
-green=92
-magenta=35
-orange=33
-red=31
-white=48;5;0;37
-yellow=48;5;16;38;5;11
-bold-black=1;109;7
-bold-black-contrast=1;107;30
-bold-blue=1;94
-bold-cyan=1;36
-bold-green=92
-bold-magenta=1;35
-bold-orange=1;33
-bold-red=1;31
-bold-white=1;48;5;0;37
-bold-yellow=1;48;5;16;38;5;11
-code=1;97;44
-info=38;5;20 1;33 Info
-notice=46;31 1;97;44 Notice
-success=42;30 0;32 Success
-warning=1;93;41 - Warning
-error=1;91 - ERROR
-subtle=1;38;5;252 1;38;5;240
-label=34;103 1;96
-value=1;40;97 1;97
-decoration=45;97 45;30
-"
-  export __BUILD_COLORS
-  __BUILD_COLORS="$styles"
+__decorateStylesBase() {
+  local styles=":reset=0:underline=4:no-underline=24:bold=1:no-bold=21:black=109;7:black-contrast=107;30:blue=94:cyan=36:green=92:magenta=35:orange=33:red=31:white=48;5;0;37:yellow=48;5;16;38;5;11:"
+  styles="$styles:$(printf "%s:" "$@")"
+  styles="$styles:code=1;97;44:warning=1;93;41 Warning:error=1;91 ERROR:"
+  export __BUILD_DECORATE
+  __BUILD_DECORATE="$styles"
+}
+__decorateStylesDefaultLight() {
+  local aa=(
+    "info=38;5;20 Info"
+    "notice=46;31 Notice"
+    "success=42;30 Success"
+    "subtle=1;38;5;252"
+    "label=34;103"
+    "value=1;40;97"
+    "decoration=45;97"
+  )
+  __decorateStylesBase "${aa[@]}"
+}
+__decorateStylesDefaultDark() {
+  local aa=(
+    "info=1;33 Info"
+    "notice=1;97;44 Notice"
+    "success=0;32 Success"
+    "subtle=1;38;5;240"
+    "label=1;96"
+    "value=1;97"
+    "decoration=45;30"
+  )
+  __decorateStylesBase "${aa[@]}"
 }
 
 # fn: decorate each
@@ -1449,6 +1447,25 @@ __decorateExtensionEach() {
   IFS=" " printf -- "%s\n" "${formatted[*]-}"
 }
 
+# fn: decorate BOLD
+# Argument: style - String. Style to display. Use `-`, `--`, or blank for no style.
+# Argument: text ... - EmptyString. Optional. Text to format. Use `--` to output begin codes only.
+__decorateExtensionBOLD() {
+  local style="${1-}" && shift
+  case "$style" in
+  "" | "-" | "--")
+    decorate bold "$*"
+    return 0
+    ;;
+  esac
+  if [ "$*" != "--" ]; then
+    decorate bold "$(decorate "$style" -- "$@")"
+  else
+    decorate bold --
+    decorate "$style" --
+  fi
+}
+
 # fn: decorate quote
 # Double-quote all arguments as properly quoted bash string
 # Mostly $ and " are problematic within a string
@@ -1461,10 +1478,9 @@ __decorateExtensionQuote() {
 }
 
 # <-- END of IDENTICAL decorate
-
 # IDENTICAL execute7
 
-# Argument: binary ... - Required. Executable. Any arguments are passed to `binary`.
+# Argument: binary ... -  Executable. Required. Any arguments are passed to `binary`.
 # Run binary and output failed command upon error
 # Requires: returnMessage
 execute() {
@@ -1474,8 +1490,8 @@ execute() {
 # IDENTICAL returnMessage 39
 
 # Return passed in integer return code and output message to `stderr` (non-zero) or `stdout` (zero)
-# Argument: exitCode - Required. UnsignedInteger. Exit code to return. Default is 1.
-# Argument: message ... - Optional. String. Message to output
+# Argument: exitCode -  UnsignedInteger. Required. Exit code to return. Default is 1.
+# Argument: message ... - String. Optional. Message to output
 # Return Code: exitCode
 # Requires: isUnsignedInteger printf returnMessage
 returnMessage() {
@@ -1519,7 +1535,7 @@ _isUnsignedInteger() {
 # INTERNAL: Winner of the one-line bash award 10 years running
 # Argument: code ... - UnsignedInteger. String. Exit code value to output.
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
+# Argument: --help -  Flag. Optional.Display this help.
 # stdout: exitCodeToken, one per line
 returnCodeString() {
   local k="" && while [ $# -gt 0 ]; do case "$1" in 0) k="success" ;; 1) k="environment" ;; 2) k="argument" ;; 97) k="assert" ;; 105) k="identical" ;; 108) k="leak" ;; 116) k="timeout" ;; 120) k="exit" ;; 127) k="not-found" ;; 130) k="user-interrupt" ;; 141) k="interrupt" ;; 253) k="internal" ;; 254) k="unknown" ;; --help) "_${FUNCNAME[0]}" 0 && return $? || return $? ;; *) k="[returnCodeString unknown \"$1\"]" ;; esac && [ -n "$k" ] || k="$1" && printf "%s\n" "$k" && shift; done
@@ -1573,7 +1589,7 @@ executeInputSupport() {
 # _IDENTICAL_ returnClean 21
 
 # Delete files or directories and return the same exit code passed in.
-# Argument: exitCode - Required. Integer. Exit code to return.
+# Argument: exitCode -  Integer. Required. Exit code to return.
 # Argument: item - Optional. One or more files or folders to delete, failures are logged to stderr.
 # Requires: isUnsignedInteger returnArgument throwEnvironment usageDocument throwArgument __help
 # Group: Sugar
@@ -1600,11 +1616,11 @@ _returnClean() {
 # Prints the mapped value to stdout
 #
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
+# Argument: --help -  Flag. Optional.Display this help.
 # Argument: value - String. A value.
 # Argument: from - String. When value matches `from`, instead print `to`
 # Argument: to - String. The value to print when `from` matches `value`
-# Argument: ... - Optional. String. Additional from-to pairs can be passed, first matching value is used, all values will be examined if none match
+# Argument: ... - String. Optional. Additional from-to pairs can be passed, first matching value is used, all values will be examined if none match
 convertValue() {
   local __handler="_${FUNCNAME[0]}" value="" from="" to=""
   # __IDENTICAL__ __checkHelp1__handler 1
@@ -1649,7 +1665,7 @@ throwEnvironment() {
 }
 
 # Run `command`, upon failure run `handler` with an argument error
-# Argument: handler - Required. String. Failure command
+# Argument: handler - String. Required. Failure command
 # Argument: command ... - Required. Command to run.
 # Requires: throwArgument
 catchArgument() {
@@ -1658,7 +1674,7 @@ catchArgument() {
 }
 
 # Run `command`, upon failure run `handler` with an environment error
-# Argument: handler - Required. String. Failure command
+# Argument: handler - String. Required. Failure command
 # Argument: command ... - Required. Command to run.
 # Requires: throwEnvironment
 catchEnvironment() {
@@ -1696,8 +1712,8 @@ returnThrow() {
 }
 
 # Run binary and catch errors with handler
-# Argument: handler - Required. Function. Error handler.
-# Argument: binary ... - Required. Executable. Any arguments are passed to `binary`.
+# Argument: handler -  Function. Required. Error handler.
+# Argument: binary ... -  Executable. Required. Any arguments are passed to `binary`.
 # Requires: returnArgument
 catchReturn() {
   local handler="${1-}" && shift || returnArgument "Missing handler" || return $?
@@ -1709,8 +1725,8 @@ catchReturn() {
 # Run a function and preserve exit code
 # Returns `code`
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
-# Argument: code - Required. UnsignedInteger. Exit code to return.
+# Argument: --help -  Flag. Optional.Display this help.
+# Argument: code -  UnsignedInteger. Required. Exit code to return.
 # Argument: undoFunction - Optional. Command to run to undo something. Return status is ignored.
 # Argument: -- - Flag. Optional. Used to delimit multiple commands.
 # As a caveat, your command to `undo` can NOT take the argument `--` as a parameter.

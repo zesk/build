@@ -19,7 +19,7 @@ __buildTestPlatformOutput() {
 }
 
 # Run Zesk Build tests on multiple platforms
-# Argument: --env-file envFile - Optional. File. Environment file to load - can handle any format.
+# Argument: --env-file envFile -  File. Optional.Environment file to load - can handle any format.
 buildTestPlatforms() {
   local handler="_${FUNCNAME[0]}"
 
@@ -35,7 +35,7 @@ buildTestPlatforms() {
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
     # _IDENTICAL_ handlerHandler 1
-    --handler) shift && handler=$(validate "$handler" function "$argument" "${1-}") || return $? ;;
+    --handler) shift && handler=$(validate "$handler" Function "$argument" "${1-}") || return $? ;;
     --env-file)
       # shift here never fails as [ #$ -gt 0 ]
       shift && ee+=("$(validate "$handler" RealFile "$argument" "${1-}")") || return $?

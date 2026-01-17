@@ -3,15 +3,15 @@
 # Copyright &copy; 2026 Market Acumen, Inc.
 #
 
-# IDENTICAL decorate 245
+# IDENTICAL decorate 262
 
 # Sets the environment variable `BUILD_COLORS` if not set, uses `TERM` to calculate
 #
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
+# Argument: --help -  Flag. Optional.Display this help.
 # Return Code: 0 - Console or output supports colors
 # Return Code: 1 - Colors are likely not supported by console
-# Environment: BUILD_COLORS - Optional. Boolean. Whether the build system will output ANSI colors.
+# Environment: BUILD_COLORS -  Boolean. Optional.Whether the build system will output ANSI colors.
 # Requires: isPositiveInteger tput
 hasColors() {
   # --help is only argument allowed
@@ -45,17 +45,13 @@ _hasColors() {
 #
 # Argument: label - Text label
 # Argument: lightStartCode - Escape code label for light mode (color)
-# Argument: darkStartCode - Escape code label for dark mode (color)
 # Argument: endCode - Escape end code
 # Argument: text ... - Text to output.
 # Requires: hasColors printf
 __decorate() {
-  local prefix="$1" start="$2" dp="$3" end="$4" && shift 4
-  export BUILD_COLORS_MODE BUILD_COLORS
+  local prefix="$1" start="$2" end="$3" && shift 3
+  export BUILD_COLORS
   if [ -n "${BUILD_COLORS-}" ] && [ "${BUILD_COLORS-}" = "true" ] || [ -z "${BUILD_COLORS-}" ] && hasColors; then
-    if [ "${BUILD_COLORS_MODE-}" = "dark" ]; then
-      start="$dp"
-    fi
     if [ $# -eq 0 ]; then printf -- "%s$start" ""; else printf -- "$start%s$end\n" "$*"; fi
     return 0
   fi
@@ -65,13 +61,12 @@ __decorate() {
 
 # Output a list of build-in decoration styles, one per line
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
+# Argument: --help -  Flag. Optional.Display this help.
 decorations() {
   [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
   printf "%s\n" reset \
     underline no-underline bold no-bold \
     black black-contrast blue cyan green magenta orange red white yellow \
-    bold-black bold-black-contrast bold-blue bold-cyan bold-green bold-magenta bold-orange bold-red bold-white bold-yellow \
     code info notice success warning error subtle label value decoration
 }
 _decorations() {
@@ -81,42 +76,57 @@ _decorations() {
 }
 
 # Singular decoration function
-# Argument: style - String. Required. One of: reset underline no-underline bold no-bold black black-contrast blue cyan green magenta orange red white yellow bold-black bold-black-contrast bold-blue bold-cyan bold-green bold-magenta bold-orange bold-red bold-white bold-yellow code info notice success warning error subtle label value decoration
-# Argument: text ... - Optional. String. Text to output. If not supplied, outputs a code to change the style to the new style. May contain arguments for `style`.
+# Argument: style - String. Required. One of: reset underline no-underline bold no-bold black black-contrast blue cyan green magenta orange red white yellow code info notice success warning error subtle label value decoration
+# Argument: text ... - String. Optional. Text to output. If not supplied, outputs a code to change the style to the new style. May contain arguments for `style`.
 # You can extend this function by writing a your own extension `__decorationExtensionCustom` is called for `decorate custom`.
 # stdout: Decorated text
-# Environment: __BUILD_COLORS - String. Cached color lookup.
+# Environment: __BUILD_DECORATE - String. Cached color lookup.
 # Environment: BUILD_COLORS - Boolean. Colors enabled (`true` or `false`).
-# Environment: BUILD_COLORS_MODE - String. Color mode (`light` or `dark`). This is going to be deprecated.
 # Requires: isFunction returnArgument awk catchEnvironment usageDocument executeInputSupport __help
 decorate() {
-  local handler="_${FUNCNAME[0]}" text="" what="${1-}" lp dp style
+  local handler="_${FUNCNAME[0]}" text="" what="${1-}" lp style
   [ "$what" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
   shift && [ -n "$what" ] || catchArgument "$handler" "Requires at least one argument: \"$*\"" || return $?
-
+  catchReturn "$handler" _decorateInitialize || return $?
   if ! style=$(__decorateStyle "$what"); then
     local extend func="${what/-/_}"
     extend="__decorateExtension$(printf "%s" "${func:0:1}" | awk '{print toupper($0)}')${func:1}"
     # When this next line calls `catchArgument` it results in an infinite loop, so don't - use returnArgument
     # shellcheck disable=SC2119
-    isFunction "$extend" || returnArgument printf -- "%s\n%s\n" "Unknown decoration name: $what ($extend)" "$(decorations)" || return $?
-    executeInputSupport "$handler" "$extend" -- "$@" || return $?
-    return 0
+    if isFunction "$extend"; then
+      executeInputSupport "$handler" "$extend" -- "$@" || return $?
+      return 0
+    else
+      executeInputSupport "$handler" __decorate "❌" "[$what ☹️" "]" -- "$@" || return 2
+    fi
   fi
-  IFS=" " read -r lp dp text <<<"$style" || :
-  [ "$dp" != "-" ] || dp="$lp"
+  local IFS
+  IFS=" " read -r lp text <<<"$style" || :
   local p='\033['
-
-  executeInputSupport "$handler" __decorate "$text" "${p}${lp}m" "${p}${dp:-$lp}m" "${p}0m" -- "$@" || return $?
+  executeInputSupport "$handler" __decorate "$text" "${p}${lp}m" "${p}0m" -- "$@" || return $?
 }
 _decorate() {
   # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
+# Is the decorate color system initialized yet?
+# Useful to set our global color environment at the top level of a script if it hasn't been initialized already.
+# DOC TEMPLATE: --help 1
+# Argument: --help -  Flag. Optional.Display this help.
+decorateInitialized() {
+  [ "${1-}" != "--help" ] || __help --only "_${FUNCNAME[0]}" "$@" || return 0
+  export __BUILD_DECORATE
+  [ -n "${__BUILD_DECORATE-}" ]
+}
+_decorateInitialized() {
+  # __IDENTICAL__ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
 _decorateInitialize() {
-  export __BUILD_COLORS
-  [ -n "${__BUILD_COLORS-}" ] || __decorateStyles || return $?
+  export __BUILD_DECORATE
+  [ -n "${__BUILD_DECORATE-}" ] || __decorateStyles || return $?
 }
 
 # Fetch the requested style as a string: lp dp text
@@ -124,65 +134,53 @@ _decorateInitialize() {
 # text is optional, lp is required to be non-blank
 # Requires: __decorateStyles
 __decorateStyle() {
-  local original style pattern=$'\n'"$1="
+  local original style pattern=":$1="
 
-  _decorateInitialize || return $?
-  original="${__BUILD_COLORS}"
-  style="${__BUILD_COLORS#*"$pattern"}"
+  original="${__BUILD_DECORATE}"
+  style="${__BUILD_DECORATE#*"$pattern"}"
   [ "$style" != "$original" ] || return 1
-  style="${style%%$'\n'*}"
-  printf "%s\n" "$style"
+  printf "%s\n" "${style%%:*}"
 }
 
 # Default array styles, override if you wish
 if ! isFunction __decorateStyles; then
-  # This sets __BUILD_COLORS to the styles strings
+  # This sets __BUILD_DECORATE to the styles strings
   __decorateStyles() {
-    __decorateStylesDefault
+    __decorateStylesDefaultLight
   }
 fi
 
 # Default array styles, override if you wish
-__decorateStylesDefault() {
-  local styles="
-reset=0
-underline=4
-no-underline=24
-bold=1
-no-bold=21
-black=109;7
-black-contrast=107;30
-blue=94
-cyan=36
-green=92
-magenta=35
-orange=33
-red=31
-white=48;5;0;37
-yellow=48;5;16;38;5;11
-bold-black=1;109;7
-bold-black-contrast=1;107;30
-bold-blue=1;94
-bold-cyan=1;36
-bold-green=92
-bold-magenta=1;35
-bold-orange=1;33
-bold-red=1;31
-bold-white=1;48;5;0;37
-bold-yellow=1;48;5;16;38;5;11
-code=1;97;44
-info=38;5;20 1;33 Info
-notice=46;31 1;97;44 Notice
-success=42;30 0;32 Success
-warning=1;93;41 - Warning
-error=1;91 - ERROR
-subtle=1;38;5;252 1;38;5;240
-label=34;103 1;96
-value=1;40;97 1;97
-decoration=45;97 45;30
-"
-  export __BUILD_COLORS
-  __BUILD_COLORS="$styles"
+__decorateStylesBase() {
+  local styles=":reset=0:underline=4:no-underline=24:bold=1:no-bold=21:black=109;7:black-contrast=107;30:blue=94:cyan=36:green=92:magenta=35:orange=33:red=31:white=48;5;0;37:yellow=48;5;16;38;5;11:"
+  styles="$styles:$(printf "%s:" "$@")"
+  styles="$styles:code=1;97;44:warning=1;93;41 Warning:error=1;91 ERROR:"
+  export __BUILD_DECORATE
+  __BUILD_DECORATE="$styles"
+}
+__decorateStylesDefaultLight() {
+  local aa=(
+    "info=38;5;20 Info"
+    "notice=46;31 Notice"
+    "success=42;30 Success"
+    "subtle=1;38;5;252"
+    "label=34;103"
+    "value=1;40;97"
+    "decoration=45;97"
+  )
+  __decorateStylesBase "${aa[@]}"
+}
+__decorateStylesDefaultDark() {
+  local aa=(
+    "info=1;33 Info"
+    "notice=1;97;44 Notice"
+    "success=0;32 Success"
+    "subtle=1;38;5;240"
+    "label=1;96"
+    "value=1;97"
+    "decoration=45;30"
+  )
+  __decorateStylesBase "${aa[@]}"
 }
 
 # fn: decorate each
@@ -235,6 +233,25 @@ __decorateExtensionEach() {
   fi
   ! $showCount || formatted+=("[$index]")
   IFS=" " printf -- "%s\n" "${formatted[*]-}"
+}
+
+# fn: decorate BOLD
+# Argument: style - String. Style to display. Use `-`, `--`, or blank for no style.
+# Argument: text ... - EmptyString. Optional. Text to format. Use `--` to output begin codes only.
+__decorateExtensionBOLD() {
+  local style="${1-}" && shift
+  case "$style" in
+  "" | "-" | "--")
+    decorate bold "$*"
+    return 0
+    ;;
+  esac
+  if [ "$*" != "--" ]; then
+    decorate bold "$(decorate "$style" -- "$@")"
+  else
+    decorate bold --
+    decorate "$style" --
+  fi
 }
 
 # fn: decorate quote

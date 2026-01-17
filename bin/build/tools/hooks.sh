@@ -9,8 +9,8 @@
 # Argument: usageFunction - Function. Required.
 # Argument. hookName. String. Required.
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
-# Argument: --home home - Optional. Directory. Application home directory.
+# Argument: --help -  Flag. Optional.Display this help.
+# Argument: --home home -  Directory. Optional.Application home directory.
 # Argument: arguments ... - String. Optional. Arguments to `hookName`'s hook.
 _hookContextWrapper() {
   local handler="$1" hookName="$2"
@@ -65,8 +65,8 @@ _hookContextWrapper() {
 # Extracts the version from the repository
 #
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
-# Argument: --application application - Optional. Directory. Application home directory.
+# Argument: --help -  Flag. Optional.Display this help.
+# Argument: --application application -  Directory. Optional.Application home directory.
 hookVersionCurrent() {
   _hookContextWrapper "_${FUNCNAME[0]}" "version-current" "$@"
 }
@@ -77,8 +77,8 @@ _hookVersionCurrent() {
 
 # Application deployed version
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
-# Argument: --application application - Optional. Directory. Application home directory.
+# Argument: --help -  Flag. Optional.Display this help.
+# Argument: --application application -  Directory. Optional.Application home directory.
 hookVersionLive() {
   _hookContextWrapper "_${FUNCNAME[0]}" "version-live" "$@"
 }

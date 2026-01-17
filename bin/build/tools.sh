@@ -8,8 +8,8 @@
 # IDENTICAL returnMessage 39
 
 # Return passed in integer return code and output message to `stderr` (non-zero) or `stdout` (zero)
-# Argument: exitCode - Required. UnsignedInteger. Exit code to return. Default is 1.
-# Argument: message ... - Optional. String. Message to output
+# Argument: exitCode -  UnsignedInteger. Required. Exit code to return. Default is 1.
+# Argument: message ... - String. Optional. Message to output
 # Return Code: exitCode
 # Requires: isUnsignedInteger printf returnMessage
 returnMessage() {

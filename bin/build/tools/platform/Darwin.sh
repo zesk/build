@@ -31,8 +31,13 @@ __dateToFormat() {
 }
 
 # Requires: date
+# Argument: value - Integer. Required.
+# Argument: format - String. Required.
+# Argument: isUTC - Boolean. Optional. Defaults to `true`.
 __dateFromTimestamp() {
-  date -u -r "$1" "+$2"
+  local a=(-r "$1" "+$2")
+  ! "${3:-true}" || a=(-u "${a[@]}")
+  date "${a[@]}"
 }
 
 # Requires: mv

@@ -17,7 +17,7 @@ testUsageTemplate() {
 
   # Now test internals
   local output
-  output=$(__usageTemplate testThatFunction "--one thing^Required. String. Thing."$'\n'"--another thing^Optional. Integer. Another thing." "^" "Makes the world a better place" 0 | stripAnsi) || throwEnvironment "$handler" "usageTemplate failed" || return $?
+  output=$(__usageTemplate testThatFunction "--one thing^ String. Required. Thing."$'\n'"--another thing^ Integer. Optional.Another thing." "^" "Makes the world a better place" 0 | stripAnsi) || throwEnvironment "$handler" "usageTemplate failed" || return $?
   assertEquals "$output" "$(cat "$home/test/example/usageTemplateSimple.txt")" || return $?
 }
 
@@ -35,9 +35,9 @@ testUsageFunctions() {
 
 __sampleArgs() {
   cat <<EOF
---name^Required. String. Name of the thing.
+--name^ String. Required. Name of the thing.
 --thing thing^required. String. Name of the thing.
---value name^Optional. URL. URL of the thing.
+--value name^ URL. Optional.URL of the thing.
 EOF
 }
 
@@ -57,7 +57,7 @@ __testUsageArgumentsFile() {
   cat <<'EOF'
      --test^Optional thing.
      variable^OptionalTHing
-     third^Required thing
+     third^Required. thing
 EOF
 }
 
@@ -71,7 +71,8 @@ testFunctionNewline() {
   variablesFile=$(fileTemporaryName "$handler") || return $?
 
   local functionName="__errorHandler"
-  bashDocumentationExtract "$functionName" >"$variablesFile" < <(bashFunctionComment "$home/bin/identical/arguments.sh" "$functionName")
+  local sourceFile="$home/bin/identical/arguments.sh"
+  bashDocumentationExtract "$functionName" "$sourceFile" >"$variablesFile" < <(bashFunctionComment "$sourceFile" "$functionName")
   dumpPipe variables <"$variablesFile"
 
   (

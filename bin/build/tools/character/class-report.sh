@@ -102,9 +102,9 @@ __characterClassReport() {
         fi
       fi
     done
-    printf "[%s %s]\n" "$(decorate bold-magenta "$matched")" "$(decorate subtle "$(plural "$matched" "${nouns[@]}")")"
+    printf "[%s %s]\n" "$(decorate BOLD magenta "$matched")" "$(decorate subtle "$(plural "$matched" "${nouns[@]}")")"
     total=$((total + matched))
   done
-  printf "%s total %s\n" "$(decorate bold-red "$total")" "$(decorate red "$(plural "$total" "${nouns[@]}")")"
+  printf "%s total %s\n" "$(decorate BOLD red "$total")" "$(decorate red "$(plural "$total" "${nouns[@]}")")"
   [ -z "$savedLimit" ] || muzzle ulimit -n "$savedLimit" 2>&1 || :
 }

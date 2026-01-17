@@ -51,58 +51,6 @@ __wrapColor() {
   fi
 }
 
-#
-# Set colors to deal with dark or light-background consoles
-# DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
-# Argument: --dark - Optional. Flag. Dark mode for darker backgrounds.
-# Argument: --light - Optional. Flag. Light mode for lighter backgrounds.
-# Environment: BUILD_COLORS_MODE
-# BUILD_DEBUG: BUILD_COLORS_MODE - Output the color mode when it is changed
-consoleColorMode() {
-  local handler="_${FUNCNAME[0]}"
-
-  export BUILD_COLORS_MODE
-
-  catchReturn "$handler" buildEnvironmentLoad BUILD_COLORS_MODE || return $?
-
-  # _IDENTICAL_ argumentNonBlankLoopHandler 6
-  local __saved=("$@") __count=$#
-  while [ $# -gt 0 ]; do
-    local argument="$1" __index=$((__count - $# + 1))
-    # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
-    case "$argument" in
-    # _IDENTICAL_ helpHandler 1
-    --help) "$handler" 0 && return $? || return $? ;;
-    --dark)
-      BUILD_COLORS_MODE=dark
-      if buildDebugEnabled BUILD_COLORS_MODE; then
-        decorate info "BUILD_COLORS_MODE set to dark"
-      fi
-      ;;
-    --light)
-      BUILD_COLORS_MODE=light
-      if buildDebugEnabled BUILD_COLORS_MODE; then
-        decorate info "BUILD_COLORS_MODE set to light"
-      fi
-      ;;
-    *)
-      # _IDENTICAL_ argumentUnknownHandler 1
-      throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
-      ;;
-    esac
-    shift
-  done
-
-  [ -n "${BUILD_COLORS_MODE-}" ] || throwArgument "$handler" "Empty BUILD_COLORS_MODE" || return $?
-  printf "%s\n" "${BUILD_COLORS_MODE-}"
-}
-_consoleColorMode() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
-}
-
 # Does the console support animation?
 # Return Code: 0 - Supports console animation
 # Return Code: 1 - Does not support console animation
@@ -156,7 +104,7 @@ __consoleEscape1() {
 # Summary: Alternate color output
 # If you want to explore what colors are available in your terminal, try this.
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
+# Argument: --help -  Flag. Optional.Display this help.
 colorSampleCodes() {
   local i j n
 
@@ -187,7 +135,7 @@ _colorSampleCodes() {
 
 # Show combinations of foreground and background colors in the console.
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
+# Argument: --help -  Flag. Optional.Display this help.
 colorSampleCombinations() {
   local fg bg text extra padding
   local top3=37
@@ -223,17 +171,17 @@ _colorSampleCombinations() {
 # Outputs sample sentences for the `consoleAction` commands to see what they look like.
 #
 colorSampleStyles() {
-  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
-  local i colors=(
-    red bold-red
-    green bold-green
-    blue bold-blue
-    cyan bold-cyan
-    orange bold-orange
-    magenta bold-magenta
-    black bold-black
-    black-contrast bold-black-contrast
-    white bold-white
+  [ $# -eq 0 ] || __help "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
+  local colors=(
+    red
+    green
+    blue
+    cyan
+    orange
+    magenta
+    black
+    black-contrast
+    white
     underline
     bold
     code
@@ -247,8 +195,13 @@ colorSampleStyles() {
     decoration
     subtle
   )
+  local text="$*" i
+  [ -n "$text" ] || text="The quick brown fox jumped over the lazy dog."
   for i in "${colors[@]}"; do
-    printf -- "%s%s\n" "$(decorate reset --)" "$(decorate "$i" "$i: The quick brown fox jumped over the lazy dog.")"
+    local label
+    label=$(alignLeft 10 "$i")
+    printf -- "%s%s\n" "$(decorate reset --)" "$(decorate "$i" "     $label: $text")"
+    printf -- "%s%s\n" "$(decorate reset --)" "$(decorate BOLD "$i" "BOLD $label: $text")"
   done
 }
 _colorSampleStyles() {
@@ -260,23 +213,7 @@ _colorSampleStyles() {
 # Outputs sample sentences for the `action` commands to see what they look like.
 #
 colorSampleSemanticStyles() {
-  local extra
-
-  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
-
-  if ! buildEnvironmentLoad BUILD_COLORS_MODE; then
-    return 1
-  fi
-  extra=
-  if [ -z "$BUILD_COLORS_MODE" ]; then
-    BUILD_COLORS_MODE=$(consoleConfigureColorMode)
-    extra="$(magenta Computed)"
-  fi
-  if [ -z "$BUILD_COLORS_MODE" ]; then
-    decorate error "BUILD_COLORS_MODE not set"
-  else
-    printf "%s%s\n" "$(decorate pair 25 "BUILD_COLORS_MODE:" "$BUILD_COLORS_MODE")" "$extra"
-  fi
+  [ $# -eq 0 ] || __help "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
   local i colors=(
     info
     success
@@ -289,9 +226,12 @@ colorSampleSemanticStyles() {
     decoration
     subtle
   )
+  local text="$*"
+  [ -n "$text" ] || text="The quick brown fox jumped over the lazy dog."
   for i in "${colors[@]}"; do
     decorate reset --
-    decorate "$i" "$i: The quick brown fox jumped over the lazy dog."
+    decorate "$i" "$i: $text"
+    decorate BOLD "$i" "BOLD $i: $text"
   done
 }
 _colorSampleSemanticStyles() {
@@ -306,7 +246,7 @@ _colorSampleSemanticStyles() {
 #
 # Intended to be run on an interactive console. Should support `tput cols`.
 # Summary: Clear a line in the console
-# Argument: textToOutput - Optional. String. Text to display on the new cleared line.
+# Argument: textToOutput - String. Optional. Text to display on the new cleared line.
 clearLine() {
   if hasConsoleAnimation; then
     printf -- "\r%s\r%s" "$(repeat "$(consoleColumns)" " ")" "$*"
@@ -321,8 +261,7 @@ plasterLines() {
 
   local line curX curY rows character=" "
   IFS=$'\n' read -r -d '' curX curY < <(cursorGet) || :
-  isUnsignedInteger "$curX" || throwEnvironment "$handler" "cursorGet returned $curX $curY" || return $?
-  isUnsignedInteger "$curY" || throwEnvironment "$handler" "cursorGet returned $curX $curY" || return $?
+  isUnsignedInteger "$curX" && isUnsignedInteger "$curY" || throwEnvironment "$handler" "cursorGet returned non-unsigned integer: \"$curX\" \"$curY\"" || return $?
   rows=$(catchReturn "$handler" consoleRows) || return $?
   columns=$(catchReturn "$handler" consoleColumns) || return $?
   while IFS="" read -r line; do
@@ -346,9 +285,9 @@ _plasterLines() {
 #
 # Summary: Output a status message and display correctly on consoles with animation and in log files
 # Clears the line and outputs a message using a command. Meant to show status but not use up an output line for it.
-# Argument: --last - Optional. Flag. Last message to be output, so output a newline as well at the end.
-# Argument: --first - Optional. Flag. First message to be output, only clears line if available.
-# Argument: --inline - Optional. Flag. Inline message displays with newline when animation is NOT available.
+# Argument: --last -  Flag. Optional.Last message to be output, so output a newline as well at the end.
+# Argument: --first -  Flag. Optional.First message to be output, only clears line if available.
+# Argument: --inline -  Flag. Optional.Inline message displays with newline when animation is NOT available.
 # Argument: command - Required. Commands which output a message.
 #
 # When `hasConsoleAnimation` is true:
@@ -422,7 +361,7 @@ _statusMessage() {
 # Returns 0 if a tty is available, 1 if not. Caches the saved value in `__BUILD_HAS_TTY` to avoid running the test each call.ZL
 # See: stty /dev/tty
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
+# Argument: --help -  Flag. Optional.Display this help.
 # Environment: - `__BUILD_HAS_TTY` - Cached value of `false` or `true`. Any other value forces computation during this call.
 # Credits: Tim Perry
 # URL: https://stackoverflow.com/questions/69075612/cross-platform-method-to-detect-whether-dev-tty-is-available-functional
@@ -451,7 +390,7 @@ _isTTYAvailable() {
 # Output the number of columns in the terminal. Default is 80 if not able to be determined from `TERM`.
 # stdout: Integer
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
+# Argument: --help -  Flag. Optional.Display this help.
 # See: stty
 # Example:     repeat $(consoleColumns)
 # Environment: - `COLUMNS` - May be defined after calling this
@@ -486,7 +425,7 @@ _consoleColumns() {
 # Summary: Row count in current console
 # Output the number of columns in the terminal. Default is 60 if not able to be determined from `TERM`.
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
+# Argument: --help -  Flag. Optional.Display this help.
 # See: stty
 # Example:     tail -n $(consoleRows) "$file"
 # Environment: - `COLUMNS` - May be defined after calling this
@@ -522,7 +461,7 @@ _consoleRows() {
 # stdin: Markdown
 # stdout: decorated console output
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
+# Argument: --help -  Flag. Optional.Display this help.
 markdownToConsole() {
   [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
   # shellcheck disable=SC2119
@@ -548,7 +487,7 @@ __colorBrightness() {
 # Return an integer between 0 and 100
 # Colors are between 0 and 255
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
+# Argument: --help -  Flag. Optional.Display this help.
 # Argument: redValue - Integer. Optional. Red RGB value (0-255)
 # Argument: greenValue - Integer. Optional. Red RGB value (0-255)
 # Argument: blueValue - Integer. Optional. Red RGB value (0-255)
@@ -607,7 +546,7 @@ __colorNormalize() {
 
 # Redistribute color values to make brightness adjustments more balanced
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
+# Argument: --help -  Flag. Optional.Display this help.
 # Requires: bc catchEnvironment read usageArgumentUnsignedInteger packageWhich __colorNormalize
 colorNormalize() {
   local handler="_${FUNCNAME[0]}"
@@ -644,7 +583,7 @@ _colorNormalize() {
 # Argument: minimum - Integer|Empty. Minimum integer value to output.
 # Argument: maximum - Integer|Empty. Maximum integer value to output.
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
+# Argument: --help -  Flag. Optional.Display this help.
 clampDigits() {
   [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
 
@@ -703,7 +642,7 @@ _colorRange() {
 # Argument: green - UnsignedInteger. Optional. Blue component.
 # Argument: blue - UnsignedInteger. Optional. Green component.
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
+# Argument: --help -  Flag. Optional.Display this help.
 # Takes arguments or stdin values in groups of 3.
 colorFormat() {
   local handler="_${FUNCNAME[0]}" format="%0.2X%0.2X%0.2X\n"
@@ -742,7 +681,7 @@ _colorFormat() {
 # stdin: list:colors
 # Argument: color - String. Optional. Color to parse.
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
+# Argument: --help -  Flag. Optional.Display this help.
 # Takes arguments or stdin.
 colorParse() {
   if [ $# -gt 0 ]; then
@@ -770,7 +709,7 @@ _colorParse() {
 # Argument: greenValue - Integer. Required. Red RGB value (0-255)
 # Argument: blueValue - Integer. Required. Red RGB value (0-255)
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
+# Argument: --help -  Flag. Optional.Display this help.
 # Requires: bc
 colorMultiply() {
   local handler="_${FUNCNAME[0]}"
@@ -856,10 +795,10 @@ _toggleCharacterToColor() {
 
 # Set the terminal color scheme to the specification
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
+# Argument: --help -  Flag. Optional.Display this help.
 # DOC TEMPLATE: --handler 1
-# Argument: --handler handler - Optional. Function. Use this error handler instead of the default error handler.
-# Argument: --debug - Optional. Flag. Show additional debugging information.
+# Argument: --handler handler -  Function. Optional.Use this error handler instead of the default error handler.
+# Argument: --debug -  Flag. Optional.Show additional debugging information.
 # stdin: Scheme definition with `colorName=colorValue` on each line
 colorScheme() {
   local handler="_${FUNCNAME[0]}"
@@ -875,7 +814,7 @@ colorScheme() {
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
     # _IDENTICAL_ handlerHandler 1
-    --handler) shift && handler=$(validate "$handler" function "$argument" "${1-}") || return $? ;;
+    --handler) shift && handler=$(validate "$handler" Function "$argument" "${1-}") || return $? ;;
     --debug) debug=true ;;
     *)
       # _IDENTICAL_ argumentUnknownHandler 1
@@ -885,19 +824,22 @@ colorScheme() {
     shift
   done
 
-  export __BUILD_TERM_COLORS BUILD_COLORS_MODE
+  export __BUILD_TERM_COLORS
+
+  local home
+  home=$(catchReturn "$handler" buildHome) || return $?
 
   colorsFile=$(fileTemporaryName "$handler") || return 0
   catchEnvironment "$handler" grepSafe -v -e '^#' | catchEnvironment "$handler" sed '/^$/d' | catchEnvironment "$handler" muzzle tee "$colorsFile" || return $?
   local hash
   hash="$(shaPipe <"$colorsFile")" || :
 
-  [ "$hash" != "${__BUILD_TERM_COLORS-}" ] || return 0
+  [ "$hash" != "$home:${__BUILD_TERM_COLORS-}" ] || return 0
 
   local it2=false iTerm2=false
   ! isiTerm2 || it2=true
-  local bg bgs=()
-  local name value newStyle
+  local bg="" bgs=()
+  local name value newStyle newStyles=()
   while IFS="=" read -r name value; do
     local colorCode
     if $it2 && iTerm2IsColorType "$name"; then
@@ -907,17 +849,38 @@ colorScheme() {
       ! $debug || statusMessage decorate info "Parsing $(decorate code "$name") and $(decorate value "$value")"
       colorCode=$(colorParse <<<"$value" | colorFormat "%d;%d;%d")
       newStyle="38;2;$colorCode"
-      ! $debug || statusMessage decorate info "Setting style $(decorate value "$name") to $(decorate code "$newStyle")"
-      catchEnvironment "$handler" muzzle decorateStyle "$name" "$newStyle" || return $?
+      newStyles+=("$name" "$newStyle")
     else
       local bgName="${name%bg}"
       if [ -n "$bgName" ] && [ "$name" != "$bgName" ] && muzzle decorateStyle "$bgName"; then
         colorCode=$(colorParse <<<"$value" | colorFormat "%d;%d;%d")
         bgs+=("$bgName" "$colorCode")
         ! $debug || statusMessage decorate info "Parsing background color for $(decorate code "$bgName"): $(decorate value "$value") -> $(decorate code "$colorCode")"
+      elif [ -z "$bgName" ]; then
+        bg="$value"
       fi
     fi
   done <"$colorsFile"
+
+  ! $debug || dd+=(--verbose)
+  ! $iTerm2 || iTerm2SetColors "${dd[@]+"${dd[@]}"}" --fill --ignore --skip-errors <"$colorsFile" || :
+
+  [ -n "$bg" ] || bg="$(grep -e '^bg=' "$colorsFile" | tail -n 1 | cut -f 2 -d =)"
+  catchEnvironment "$handler" rm -rf "$colorsFile" || return $?
+
+  if [ -n "$bg" ]; then
+    muzzle consoleConfigureDecorate "$bg"
+    ! $debug || decorate info "Background set to $bg and mode is $(consoleConfigureColorMode "$bg") ..."
+  else
+    ! $debug || decorate info "No background color defined - color mode not set automatically"
+  fi
+
+  set -- "${newStyles[@]+"${newStyles[@]}"}"
+  while [ $# -gt 0 ]; do
+    ! $debug || statusMessage decorate info "Setting style $(decorate value "$1") to $(decorate code "$2")"
+    catchEnvironment "$handler" muzzle decorateStyle "$1" "$2" || return $?
+    shift 2
+  done
   if [ ${#bgs[@]} -gt 0 ]; then
     set -- "${bgs[@]}"
     while [ $# -gt 1 ]; do
@@ -926,29 +889,12 @@ colorScheme() {
       newStyle=$(decorateStyle "$name")
       newStyle="${newStyle%%;48;2;*}"
       newStyle="$newStyle;48;2;$value"
+      ! $debug || statusMessage decorate info "Setting background style for $(decorate value "$name") to $(decorate code "$newStyle")"
       catchEnvironment "$handler" muzzle decorateStyle "$name" "$newStyle" || return $?
-      ! $debug || statusMessage decorate info "Setting background style $(decorate value "$name") \"$(decorate code "$value")\" to $(decorate code "$newStyle")"
       shift 2
     done
   fi
-
-  ! $debug || dd+=(--verbose)
-  ! $iTerm2 || iTerm2SetColors "${dd[@]+"${dd[@]}"}" --fill --ignore --skip-errors <"$colorsFile" || :
-
-  bg="$(grep -e '^bg=' "$colorsFile" | tail -n 1 | cut -f 2 -d =)"
-  catchEnvironment "$handler" rm -rf "$colorsFile" || return $?
-
-  __BUILD_TERM_COLORS="$hash"
-
-  if [ -n "$bg" ]; then
-    local mode
-    mode=$(catchReturn "$handler" consoleConfigureColorMode "$bg") || :
-    [ -z "$mode" ] || BUILD_COLORS_MODE="$mode" && bashPrompt --skip-prompt --colors "$(bashPromptColorScheme "$mode")"
-
-    ! $debug || decorate info "Background is now $bg and mode is $mode ..."
-  else
-    ! $debug || decorate info "No background color defined - color mode not set automatically"
-  fi
+  __BUILD_TERM_COLORS="$home:$hash"
 }
 _colorScheme() {
   # __IDENTICAL__ usageDocument 1

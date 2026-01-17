@@ -121,7 +121,7 @@ __buildBuild() {
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
     # _IDENTICAL_ handlerHandler 1
-    --handler) shift && handler=$(validate "$handler" function "$argument" "${1-}") || return $? ;;
+    --handler) shift && handler=$(validate "$handler" Function "$argument" "${1-}") || return $? ;;
     --documentation)
       makeDocumentation=true
       ;;
@@ -154,9 +154,7 @@ __buildBuild() {
   local start
   start=$(timingStart)
 
-  export BUILD_COLORS BUILD_COLORS_MODE
-
-  [ -n "${BUILD_COLORS_MODE-}" ] || BUILD_COLORS_MODE=$(consoleConfigureColorMode) || :
+  decorateInitialized || catchEnvironment "$handler" muzzle consoleConfigureDecorate || return $?
 
   ! $debugFlag || statusMessage decorate info "Installing dependencies ..."
   catchReturn "$handler" packageInstall || return $?
@@ -195,6 +193,9 @@ __buildBuild() {
   "$home/bin/build/repair.sh" --internal || throwEnvironment "$handler" "Identical repair failed" || return $?
 
   if $makeDocumentation; then
+    ! $debugFlag || statusMessage decorate warning "Updating documentation cache ..."
+    catchReturn "$handler" buildDocumentationExtractionUpdate --quick || return $?
+
     local path rootShow rootPath="$home/documentation/.site"
     rootShow=$(decorate file "$rootPath")
     for path in "$rootPath" "$home/documentation/.docs"; do

@@ -27,7 +27,7 @@ throwEnvironment() {
 }
 
 # Run `command`, upon failure run `handler` with an argument error
-# Argument: handler - Required. String. Failure command
+# Argument: handler - String. Required. Failure command
 # Argument: command ... - Required. Command to run.
 # Requires: throwArgument
 catchArgument() {
@@ -36,7 +36,7 @@ catchArgument() {
 }
 
 # Run `command`, upon failure run `handler` with an environment error
-# Argument: handler - Required. String. Failure command
+# Argument: handler - String. Required. Failure command
 # Argument: command ... - Required. Command to run.
 # Requires: throwEnvironment
 catchEnvironment() {
@@ -74,8 +74,8 @@ returnThrow() {
 }
 
 # Run binary and catch errors with handler
-# Argument: handler - Required. Function. Error handler.
-# Argument: binary ... - Required. Executable. Any arguments are passed to `binary`.
+# Argument: handler -  Function. Required. Error handler.
+# Argument: binary ... -  Executable. Required. Any arguments are passed to `binary`.
 # Requires: returnArgument
 catchReturn() {
   local handler="${1-}" && shift || returnArgument "Missing handler" || return $?

@@ -53,7 +53,7 @@ _bashDebug() {
 #     Usage: bashDebuggerEnable [ --help ]
 #
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
+# Argument: --help -  Flag. Optional.Display this help.
 # Saves file descriptors 0 1 and 2 as 20, 21 and 22 respectively
 # See: bashDebug bashDebuggerDisable
 bashDebuggerEnable() {
@@ -87,7 +87,7 @@ _bashDebuggerEnable() {
 #     Usage: bashDebuggerDisable [ --help ]
 #
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
+# Argument: --help -  Flag. Optional.Display this help.
 # See: bashDebug bashDebuggerEnable
 bashDebuggerDisable() {
   [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
@@ -155,7 +155,7 @@ __bashDebugWhere() {
   __where="${BASH_SOURCE[index + 2]}"
   __where="$(directoryPathSimplify "$__where")"
   __where="${__where#"$BUILD_HOME"}"
-  printf -- "%s:%s\n" "$(decorate value "$__where")" "$(decorate bold-blue "${BASH_LINENO[index + 1]}")"
+  printf -- "%s:%s\n" "$(decorate value "$__where")" "$(decorate BOLD blue "${BASH_LINENO[index + 1]}")"
 }
 
 # Internal trap to capture DEBUG events and allow control
@@ -349,7 +349,7 @@ __bashDebugCommandWatch() {
       statusMessage printf -- ""
       break
     fi
-    decorate bold-orange "Watching $(decorate code "$__item")"
+    decorate BOLD orange "Watching $(decorate code "$__item")"
     __BUILD_BASH_DEBUG_WATCH+=("$__item")
     _bashDebugWatch
   done
@@ -364,7 +364,7 @@ __bashDebugCommandUnwatch() {
     __found=false
     for __value in "${__BUILD_BASH_DEBUG_WATCH[@]+"${__BUILD_BASH_DEBUG_WATCH[@]}"}"; do
       if [ "$__value" = "$__item" ] || [ "$__index" = "$__item" ]; then
-        decorate bold-orange "Removed $__item from watch list"
+        decorate BOLD orange "Removed $__item from watch list"
         __found=true
       else
         __show+=("[$(decorate value "$__index")] $(decorate code "$__value")")

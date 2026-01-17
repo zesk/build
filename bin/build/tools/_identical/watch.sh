@@ -6,8 +6,8 @@
 #
 # In case you forgot, the directory in which this file is named `_identical` and *NOT* `identical`.
 
-# Argument: --prefix prefix - Required. String. A text prefix to search for to identify identical sections (e.g. `# IDENTICAL`) (may specify more than one)
-# Argument: file ... - Required. File. A file to search for identical tokens.
+# Argument: --prefix prefix - String. Required. A text prefix to search for to identify identical sections (e.g. `# IDENTICAL`) (may specify more than one)
+# Argument: file ... -  File. Required. A file to search for identical tokens.
 # stdout: tokens, one per line
 __identicalFindTokens() {
   local handler="$1" && shift
@@ -23,7 +23,7 @@ __identicalFindTokens() {
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
     # _IDENTICAL_ handlerHandler 1
-    --handler) shift && handler=$(validate "$handler" function "$argument" "${1-}") || return $? ;;
+    --handler) shift && handler=$(validate "$handler" Function "$argument" "${1-}") || return $? ;;
     --prefix)
       shift
       prefixes+=("$(validate "$handler" String "$argument" "${1-}")") || return $?
@@ -92,7 +92,7 @@ __identicalWatch() {
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
     # _IDENTICAL_ handlerHandler 1
-    --handler) shift && handler=$(validate "$handler" function "$argument" "${1-}") || return $? ;;
+    --handler) shift && handler=$(validate "$handler" Function "$argument" "${1-}") || return $? ;;
     --ignore-singles)
       rr+=("$argument")
       ;;

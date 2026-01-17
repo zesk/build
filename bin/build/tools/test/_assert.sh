@@ -164,24 +164,24 @@ _assertionStatistics() {
 # INTERNAL:     bin/tools.sh testTools assertEquals --profile a a | grep -v assert | sort -rn --key=2.1
 # Core condition assertion handler
 # DOC TEMPLATE: assert-common 18
-# Argument: --help - Optional. Flag. Display this help.
-# Argument: --line lineNumber - Optional. Integer. Line number of calling function. Typically this is not required as it is computed from the calling function using `--line-depth`.
-# Argument: --line-depth depth - Optional. Integer. The depth in the stack of function calls to find the line number of the calling function.
-# Argument: --debug - Optional. Flag. Debugging enabled for the assertion function.
-# Argument: --debug-lines - Optional. Flag. Debugging of SOLELY differences between `--line` passed in and the computed line from the `--line-depth` parameter.
-# Argument: --display - Optional. String. Display name for the condition.
-# Argument: --success - Optional. Boolean. Whether the assertion should pass (`true`) or fail (`false`) - most functions have this already baked in.
-# Argument: --stderr-match - Optional. String. One or more strings which must match `stderr` output. Implies `--stderr-ok`
-# Argument: --stdout-no-match - Optional. String. One or more strings which must match NOT `stderr` output.
-# Argument: --stdout-match - Optional. String. One or more strings which must match `stdout` output.
-# Argument: --stdout-no-match - Optional. String. One or more strings which must match `stdout` output.
-# Argument: --stderr-ok - Optional. Flag. Output to `stderr` will not cause the test to fail.
+# Argument: --help -  Flag. Optional.Display this help.
+# Argument: --line lineNumber -  Integer. Optional.Line number of calling function. Typically this is not required as it is computed from the calling function using `--line-depth`.
+# Argument: --line-depth depth -  Integer. Optional.The depth in the stack of function calls to find the line number of the calling function.
+# Argument: --debug -  Flag. Optional.Debugging enabled for the assertion function.
+# Argument: --debug-lines -  Flag. Optional.Debugging of SOLELY differences between `--line` passed in and the computed line from the `--line-depth` parameter.
+# Argument: --display - String. Optional. Display name for the condition.
+# Argument: --success -  Boolean. Optional.Whether the assertion should pass (`true`) or fail (`false`) - most functions have this already baked in.
+# Argument: --stderr-match - String. Optional. One or more strings which must match `stderr` output. Implies `--stderr-ok`
+# Argument: --stdout-no-match - String. Optional. One or more strings which must match NOT `stderr` output.
+# Argument: --stdout-match - String. Optional. One or more strings which must match `stdout` output.
+# Argument: --stdout-no-match - String. Optional. One or more strings which must match `stdout` output.
+# Argument: --stderr-ok -  Flag. Optional.Output to `stderr` will not cause the test to fail.
 # Argument: --leak globalName - Zero or more. String. Allow global leaks for these globals.
-# Argument: --skip-plumber - Optional. Flag. Skip plumber check for function calls.
-# Argument: --dump - Optional. Flag. Output `stderr` and `stdout` after test regardless.
-# Argument: --dump-binary - Optional. Flag. Output `stderr` and `stdout` after test regardless, displayed as binary.
-# Argument: --head - Optional. Flag. When outputting `stderr` or `stdout`, output the head of the file.
-# Argument: --tail - Optional. Flag. When outputting `stderr` or `stdout`, output the tail of the file. (Default)
+# Argument: --skip-plumber -  Flag. Optional.Skip plumber check for function calls.
+# Argument: --dump -  Flag. Optional.Output `stderr` and `stdout` after test regardless.
+# Argument: --dump-binary -  Flag. Optional.Output `stderr` and `stdout` after test regardless, displayed as binary.
+# Argument: --head -  Flag. Optional.When outputting `stderr` or `stdout`, output the head of the file.
+# Argument: --tail -  Flag. Optional.When outputting `stderr` or `stdout`, output the tail of the file. (Default)
 # Return Code: 1 - If the assertions fails
 # Return Code: 0 - If the assertion succeeds
 _assertConditionHelper() {
@@ -209,10 +209,10 @@ _assertConditionHelper() {
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
     # _IDENTICAL_ handlerHandler 1
-    --handler) shift && handler=$(validate "$handler" function "$argument" "${1-}") || return $? ;;
+    --handler) shift && handler=$(validate "$handler" Function "$argument" "${1-}") || return $? ;;
     --exit)
       shift && expectedExitCode=$(validate "$handler" UnsignedInteger "$argument" "${1-}") || return $?
-      pairs+=("Exit" "$(decorate bold-magenta " $expectedExitCode ")")
+      pairs+=("Exit" "$(decorate BOLD magenta " $expectedExitCode ")")
       ;;
     --display) shift && displayName="$(validate "$handler" String "$argument" "${1-}")" || return $? ;;
     --success)
@@ -792,7 +792,7 @@ __assertFileDoesNotContainThis() {
 # Argument: expectedExitCode - A numeric exit code expected from the command
 # Argument: command - The command to run
 # Argument: arguments - Any arguments to pass to the command to run
-# Argument: --debug - Optional. Flag. Debugging
+# Argument: --debug -  Flag. Optional.Debugging
 # Environment: None.
 # Examples: assertExitCode 0 hasHook version-current
 # Reviewed: 2023-11-12
@@ -810,11 +810,12 @@ ___assertExitCodeTest() {
   "$@" || return $?
 }
 ___assertExitCodeFormat() {
-  local testPassed="${1-}" success="${2-}"
+  local testPassed="${1-}" color="code" success="${2-}" nope="☹️" yep="☑️"
   shift 2
+  $testPassed || color="red"
+  $testPassed && testPassed=$yep || testPassed=$nope
   # shellcheck disable=SC2059
-  command="$(printf "\"$(decorate code %s)\" " "$@")"
-  printf "%s => %s" "${command% }" "$(booleanChoose "$testPassed" "☑️" "☹️")"
+  printf "%s-> %s" "$(decorate "$color" "$(printf -- "\"%s\" " "$@")")" "$testPassed"
 }
 
 #=== === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === ===

@@ -11,11 +11,11 @@
 - [Approve](./approve.md) - Interactively load `bash` code (with permission)
 - [Bash](./bash.md) - Bash user input, loading, parsing, linting
 - [Binaries (direct)](./bin.md)
-- [Color](./colors.md) - Decorating text with colors and styles, color schemes, and decorate extensions
 - [Completion](./completion.md) - Add completions for Zesk Build
 - [Console](./console.md) - Console tools for size, title, outputting links
 - [Cursor](./cursor.md) - Tools to moving the cursor around the terminal
-- [Decoration](./decoration.md) - Decoration tools
+- [Decorate](decorate.md) - Decorating text with colors and styles, color schemes, and decorate extensions
+- [Decoration Tools](./decoration.md) - Text decoration tools like bars, boxes, big text
 - [Developer](./developer.md) - Tools for your `developer.sh`
 - [Interactive](./interactive.md) - Interactivity tools for user confirmation, menus, message display
 - [Prompt](./prompt.md) - Customize your bash prompt easily, adding project customization and extensible prompt

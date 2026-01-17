@@ -30,7 +30,7 @@
 # Is the current console iTerm2?
 # Succeeds when LC_TERMINAL is `iTerm2` AND TERM is NOT `screen`
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
+# Argument: --help -  Flag. Optional.Display this help.
 # Environment: LC_TERMINAL
 # Environment: TERM
 isiTerm2() {
@@ -121,7 +121,7 @@ __iTerm2UpdateState() {
 # It also reports the host, user and current directory back to iTerm2 on every prompt command.
 #
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
+# Argument: --help -  Flag. Optional.Display this help.
 # See: bashPrompt
 # Requires: catchEnvironment muzzle bashPrompt bashPromptMarkers iTerm2UpdateState
 # Requires: __iTerm2_mark __iTerm2_suffix __iTerm2UpdateState
@@ -160,7 +160,7 @@ _iTerm2PromptSupport() {
 # - `it2dl` - `iTerm2Download`
 # - `it2setcolor` - `iTerm2SetColors`
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
+# Argument: --help -  Flag. Optional.Display this help.
 iTerm2Aliases() {
   local handler="_${FUNCNAME[0]}"
   [ $# -eq 0 ] || __help --only "$handler" "$@" || return "$(convertValue $? 1 0)"
@@ -190,7 +190,7 @@ _iTerm2Aliases() {
 
 # Solely the color names (e.g blue), not anything else
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
+# Argument: --help -  Flag. Optional.Display this help.
 iTerm2ColorNames() {
   [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
   printf "%s\n" black red green yellow blue magenta cyan white
@@ -203,7 +203,7 @@ _iTerm2ColorNames() {
 
 # Is it a color name?
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
+# Argument: --help -  Flag. Optional.Display this help.
 iTerm2IsColorName() {
   local handler="_${FUNCNAME[0]}"
   case "${1-}" in
@@ -356,7 +356,7 @@ __iTerm2Image() {
 }
 
 # Download an file from remote to terminal host
-# Argument: file - Optional. File. File to download.
+# Argument: file -  File. Optional.File to download.
 # Argument: --name name - Optional. Target name of the file once downloaded.
 # Argument:
 # DOC TEMPLATE: iTerm2IgnoreArgument 1
@@ -537,7 +537,7 @@ iTerm2SetColors() {
       fi
       colorValue="$(colorParse <<<"$colorValue" | colorMultiply "$colorMod" | colorFormat)"
       __iTerm2SetColors "$handler" "$verboseFlag" "$colorName" "$colorValue" || exitCode=$?
-      ! $verboseFlag || statusMessage decorate notice "Filled $(decorate code "$colorName") with $(decorate value "$colorMod") $(decorate blue "$2") -> $(decorate bold-blue "$colorValue")"
+      ! $verboseFlag || statusMessage decorate notice "Filled $(decorate code "$colorName") with $(decorate value "$colorMod") $(decorate blue "$2") -> $(decorate BOLD blue "$colorValue")"
       shift 2 || throwEnvironment "$handler" "${FUNCNAME[0]}:$LINENO" || return $?
     done
   else

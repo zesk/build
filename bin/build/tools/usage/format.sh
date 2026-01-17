@@ -38,23 +38,11 @@ __usageTemplate() {
 
   local binName options="$2" delimiter="$3" description="$4" exitCode
 
-  binName="$(trimSpace "$1")"
+  binName="$1"
   exitCode=$(validate "$handler" UnsignedInteger "exitCode" "$5") || return $?
   shift 5 || throwArgument "$handler" "shift 5" || return $?
 
-  if ! muzzle decorateStyle bold-green; then
-    export __BUILD_COLORS
-    dumpPipe __BUILD_COLORS <<<"${__BUILD_COLORS-}"
-    debuggingStack
-    __decorateStylesDefault
-  fi
-
-  local usageString
-  if [ "$exitCode" -eq 0 ]; then
-    usageString="$(decorate bold-green Usage)"
-  else
-    usageString="$(decorate bold-red Usage)"
-  fi
+  local usageColor=green
   if [ $# -gt 0 ] && [ -n "$*" ]; then
     if [ "$exitCode" -eq 0 ]; then
       printf "%s\n\n" "$(decorate success "$@")"
@@ -63,22 +51,23 @@ __usageTemplate() {
       return "$exitCode"
     else
       printf "%s %s\n" "$(decorate warning "[$(returnCodeString "$exitCode")]")" "$(decorate code "$@")"
+      usageColor=red
     fi
   fi
   description=${description:-"No description"}
-  nSpaces=$(printf %s "$options" | maximumFieldLength 1 "$delimiter")
+  nSpaces=$(maximumFieldLength 1 "$delimiter" <<<"$options")
 
   if [ -n "$delimiter" ] && [ -n "$options" ] && [ "$options" != "none" ]; then
     printf -- "%s: %s%s\n\n%s\n\n%s\n" \
-      "$usageString" \
+      "$(decorate "$usageColor" Usage)" \
       "$(decorate info "$binName")" \
-      "$(printf "%s" "$options" | __documentationFormatArguments "$delimiter")" \
-      "$(printf "%s" "$options" | __usageGenerator "$((nSpaces + 2))" "$delimiter" | markdownToConsole | trimTail | decorate wrap "    " "$(decorate reset --)")" \
+      "$(__documentationFormatArguments "$delimiter" <<<"$options")" \
+      "$(__usageGenerator "$((nSpaces + 2))" "$delimiter" <<<"$options" | markdownToConsole | trimTail | decorate wrap "    " "$(decorate reset --)")" \
       "$(markdownToConsole <<<"$description")" |
       trimBoth
   else
     printf "%s: %s\n\n%s\n\n" \
-      "$usageString" \
+      "$(decorate "$usageColor" Usage)" \
       "$(decorate info "$binName")" \
       "$(markdownToConsole <<<"$description")" |
       trimBoth
@@ -101,11 +90,11 @@ ___usageTemplate() {
 # use with maximumFieldLength 1 to generate widths
 #
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
-# Argument: nSpaces - Required. Integer. Number of spaces to indent arguments.
-# Argument: separatorChar - Optional. String. Default is space.
-# Argument: labelPrefix - Optional. String. Defaults to blue color text.
-# Argument: valuePrefix - Optional. String. Defaults to red color text.
+# Argument: --help -  Flag. Optional.Display this help.
+# Argument: nSpaces -  Integer. Required. Number of spaces to indent arguments.
+# Argument: separatorChar - String. Optional. Default is space.
+# Argument: labelPrefix - String. Optional. Defaults to blue color text.
+# Argument: valuePrefix - String. Optional. Defaults to red color text.
 __usageGenerator() {
   [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
   local nSpaces=$((${1-30} + 0)) separatorChar=${2-" "} labelPrefix valuePrefix labelOptionalPrefix labelRequiredPrefix capsLine lastLine

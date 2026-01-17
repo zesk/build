@@ -54,6 +54,17 @@ testBetterType() {
   catchEnvironment "$handler" rm -rf "$d" || return $?
 }
 
+testFileTeeAtomic() {
+  local handler="returnMessage"
+
+  local tempDir
+
+  tempDir=$(fileTemporaryName "$handler") || return $?
+
+  printf "%s\n" a b c | assertExitCode 0 fileTeeAtomic -a "$tempDir/a" || return $?
+
+  catchEnvironment "$handler" rm -f "$tempDir" || return $?
+}
 _invertMatches() {
   local output
   while [ $# -gt 0 ]; do

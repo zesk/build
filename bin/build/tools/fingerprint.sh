@@ -7,9 +7,9 @@
 # Update file from `APPLICATION_JSON` with application fingerprint.
 #
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
+# Argument: --help -  Flag. Optional.Display this help.
 # DOC TEMPLATE: --handler 1
-# Argument: --handler handler - Optional. Function. Use this error handler instead of the default error handler.
+# Argument: --handler handler -  Function. Optional.Use this error handler instead of the default error handler.
 # Argument: --verbose - Flag. Optional. Be verbose. Default based on value of `fingerprint` in `BUILD_DEBUG`.
 # Argument: --quiet - Flag. Optional. Be quiet (turns verbose off).
 # Argument: --check - Flag. Optional. Check if the fingerprint is up to date and output the current value.
@@ -32,7 +32,7 @@ fingerprint() {
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
     # _IDENTICAL_ handlerHandler 1
-    --handler) shift && handler=$(validate "$handler" function "$argument" "${1-}") || return $? ;;
+    --handler) shift && handler=$(validate "$handler" Function "$argument" "${1-}") || return $? ;;
     --check) checkFlag=true ;;
     --verbose) verboseFlag=true ;;
     --quiet) verboseFlag=false ;;

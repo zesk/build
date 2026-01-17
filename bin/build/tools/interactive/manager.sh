@@ -4,10 +4,10 @@
 #
 # Copyright &copy; 2026 Market Acumen, Inc.
 
-# Argument: loopCallable - Required. Callable. Call this on each file and a zero result code means passed and non-zero means fails.
-# Argument: --exec binary - Optional. Callable. Run binary with files as an argument for any failed files. Only works if you pass in item names.
-# Argument: --delay delaySeconds - Optional. Integer. Delay in seconds between checks in interactive mode.
-# Argument: fileToCheck ... - Optional. File. Shell file to validate. May also supply file names via stdin.
+# Argument: loopCallable -  Callable. Required. Call this on each file and a zero result code means passed and non-zero means fails.
+# Argument: --exec binary -  Callable. Optional.Run binary with files as an argument for any failed files. Only works if you pass in item names.
+# Argument: --delay delaySeconds -  Integer. Optional.Delay in seconds between checks in interactive mode.
+# Argument: fileToCheck ... -  File. Optional.Shell file to validate. May also supply file names via stdin.
 # Run checks interactively until errors are all fixed.
 # Not ready for prime time yet - written not tested.
 __interactiveManager() {
@@ -25,7 +25,7 @@ __interactiveManager() {
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
     # _IDENTICAL_ handlerHandler 1
-    --handler) shift && handler=$(validate "$handler" function "$argument" "${1-}") || return $? ;;
+    --handler) shift && handler=$(validate "$handler" Function "$argument" "${1-}") || return $? ;;
     --exec)
       shift
       binary="$(validate "$handler" Callable "$argument" "${1-}")" || return $?
@@ -90,7 +90,7 @@ __interactiveManager() {
       else
         nextMessage="$(printf -- "(%s %s)" "$(decorate subtle "next file is")" "$(decorate code "${files["$index"]}")")"
       fi
-      printf "%s %s %s files %s" "$(decorate bold-green "$index")" "$(decorate subtle "of")" "$(decorate bold-blue "${#files[@]}")" "$nextMessage"
+      printf "%s %s %s files %s" "$(decorate BOLD green "$index")" "$(decorate subtle "of")" "$(decorate BOLD blue "${#files[@]}")" "$nextMessage"
       if [ -n "$binary" ]; then
         "$binary" "$file"
       fi

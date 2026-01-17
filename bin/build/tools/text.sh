@@ -21,7 +21,7 @@ __textLoader() {
 # Argument: startLine - Integer. Required. Starting line number.
 # Argument: endLine - Integer. Required. Ending line number.
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
+# Argument: --help -  Flag. Optional.Display this help.
 # stdin: Reads lines until EOF
 # stdout: Outputs the selected lines only
 fileExtractLines() {
@@ -65,7 +65,7 @@ _fileExtractLines() {
 # - `grep` - returns 0 - lines selected
 # Return Code: 0 - Normal operation
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
+# Argument: --help -  Flag. Optional.Display this help.
 # Argument: ... - Arguments. Passed directly to `grep`.
 # Requires: grep mapReturn
 grepSafe() {
@@ -78,7 +78,7 @@ _grepSafe() {
 }
 
 # Check if text contains plaintext only.
-# Argument: text - Required. String. Text to search for mapping tokens.
+# Argument: text - String. Required. Text to search for mapping tokens.
 # DOC TEMPLATE: noArgumentsForHelp 1
 # Without arguments, displays help.
 # Return code: - `0` - Text is plain
@@ -100,11 +100,11 @@ _isPlain() {
 # Check if text contains mappable tokens
 # If any text passed contains a token which can be mapped, succeed.
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
-# Argument: --prefix - Optional. String. Token prefix defaults to `{`.
-# Argument: --suffix - Optional. String. Token suffix defaults to `}`.
-# Argument: --token - Optional. String. Classes permitted in a token
-# Argument: text - Optional. String. Text to search for mapping tokens.
+# Argument: --help -  Flag. Optional.Display this help.
+# Argument: --prefix - String. Optional. Token prefix defaults to `{`.
+# Argument: --suffix - String. Optional. Token suffix defaults to `}`.
+# Argument: --token - String. Optional. Classes permitted in a token
+# Argument: text - String. Optional. Text to search for mapping tokens.
 # Return code: - `0` - Text contains mapping tokens
 # Return code: - `1` - Text does not contain mapping tokens
 isMappable() {
@@ -167,7 +167,7 @@ _parseBoolean() {
 
 # Hide newlines in text (to ensure single-line output or other manipulation)
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
+# Argument: --help -  Flag. Optional.Display this help.
 # Argument: text - String. Required. Text to replace.
 # Argument: replace - String. Optional. Replacement string for newlines.
 # DOC TEMPLATE: noArgumentsForHelp 1
@@ -219,7 +219,7 @@ _replaceFirstPattern() {
 
 # Trim whitespace from beginning and end of a stream
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
+# Argument: --help -  Flag. Optional.Display this help.
 # stdin: Reads lines from stdin until EOF
 # stdout: Outputs modified lines
 # INTERNAL: Explained
@@ -237,7 +237,7 @@ _trimBoth() {
 
 # Removes any blank lines from the beginning of a stream
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
+# Argument: --help -  Flag. Optional.Display this help.
 # stdin: Reads lines from stdin until EOF
 # stdout: Outputs modified lines
 trimHead() {
@@ -251,7 +251,7 @@ _trimHead() {
 
 # Removes any blank lines from the end of a stream
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
+# Argument: --help -  Flag. Optional.Display this help.
 # stdin: Reads lines from stdin until EOF
 # stdout: Outputs modified lines
 trimTail() {
@@ -267,7 +267,7 @@ _trimTail() {
 # Used often to clean up markdown `.md` files, but can be used for any line-based configuration file which allows blank lines.
 #
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
+# Argument: --help -  Flag. Optional.Display this help.
 # stdin: Reads lines from stdin until EOF
 # stdout: Outputs modified lines where any blank lines are replaced with a single blank line.
 singleBlankLines() {
@@ -280,7 +280,7 @@ _singleBlankLines() {
 }
 
 # Trim spaces and only spaces from arguments or a pipe
-# Argument: text - Optional. EmptyString. Text to remove spaces. If no arguments are supplied it is assumed that input should be read from standard input.
+# Argument: text -  EmptyString. Optional.Text to remove spaces. If no arguments are supplied it is assumed that input should be read from standard input.
 # stdin: Reads lines from stdin until EOF
 # stdout: Outputs trimmed lines
 # Example:     {fn} "$token"
@@ -340,8 +340,8 @@ _inArray() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# Argument: haystack - Required. String. String to search.
-# Argument: needle ... - Optional. String. One or more strings to find as a substring of `haystack`.
+# Argument: haystack - String. Required. String to search.
+# Argument: needle ... - String. Optional. One or more strings to find as a substring of `haystack`.
 # Return Code: 0 - IFF ANY needle matches as a substring of haystack
 # Return Code: 1 - No needles found in haystack
 # Summary: Find whether a substring exists in one or more strings
@@ -365,8 +365,8 @@ _stringContains() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# Argument: haystack - Required. String. String to search.
-# Argument: needle ... - Optional. String. One or more strings to find as the "start" of `haystack`.
+# Argument: haystack - String. Required. String to search.
+# Argument: needle ... - String. Optional. One or more strings to find as the "start" of `haystack`.
 # Return Code: 0 - IFF ANY needle matches as a substring of haystack
 # Return Code: 1 - No needles found in haystack
 # Summary: Find whether a substring exists as teh beginning of one or more strings
@@ -390,8 +390,8 @@ _stringBegins() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# Argument: haystack - Required. String. String to search. (case-insensitive)
-# Argument: needle ... - Optional. String. One or more strings to find as the "start" of `haystack` (case-insensitive)
+# Argument: haystack - String. Required. String to search. (case-insensitive)
+# Argument: needle ... - String. Optional. One or more strings to find as the "start" of `haystack` (case-insensitive)
 # Return Code: 0 - IFF ANY needle matches as a substring of haystack (case-insensitive)
 # Return Code: 1 - No needles found in haystack (case-insensitive)
 # Summary: Find whether a substring exists as teh beginning of one or more strings
@@ -417,8 +417,8 @@ _stringBeginsInsensitive() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# Argument: haystack - Required. String. String to search.
-# Argument: needle ... - Optional. String. One or more strings to find as a case-insensitive substring of `haystack`.
+# Argument: haystack - String. Required. String to search.
+# Argument: needle ... - String. Optional. One or more strings to find as a case-insensitive substring of `haystack`.
 # Return Code: 0 - IFF ANY needle matches as a substring of haystack
 # Return Code: 1 - No needles found in haystack
 # Summary: Find whether a substring exists in one or more strings
@@ -444,8 +444,8 @@ _stringContainsInsensitive() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# Argument: text - Optional. String. String to match.
-# Argument: prefixText - Required. String. One or more. Does this prefix exist in our `text`?
+# Argument: text - String. Optional. String to match.
+# Argument: prefixText - String. Required. One or more. Does this prefix exist in our `text`?
 # Return Code: 0 - If `text` has any prefix
 # Does text have one or more prefixes?
 beginsWith() {
@@ -472,8 +472,8 @@ _beginsWith() {
 #
 # Check if one string is a substring of another set of strings (case-sensitive)
 #
-# Argument: needle - Required. String. Thing to search for, not blank.
-# Argument: haystack ... - Optional. EmptyString. One or more array elements to match
+# Argument: needle - String. Required. Thing to search for, not blank.
+# Argument: haystack ... -  EmptyString. Optional.One or more array elements to match
 # Return Code: 0 - If element is a substring of any haystack
 # Return Code: 1 - If element is NOT found as a substring of any haystack
 # Tested: No
@@ -497,8 +497,8 @@ _isSubstring() {
 #
 # Check if one string is a substring of another set of strings (case-insensitive)
 #
-# Argument: needle - Required. String. Thing to search for, not blank.
-# Argument: haystack ... - Optional. EmptyString. One or more array elements to match
+# Argument: needle - String. Required. Thing to search for, not blank.
+# Argument: haystack ... -  EmptyString. Optional.One or more array elements to match
 # Return Code: 0 - If element is a substring of any haystack
 # Return Code: 1 - If element is NOT found as a substring of any haystack
 # Tested: No
@@ -645,10 +645,10 @@ _fileEndsWithNewline() {
 # Outputs the number of lines read from stdin (or supplied files) until EOF. For multiple files passed on the command line - each one is output separately.
 # This is essentially a wrapper around `wc -l` which strips whitespace and does type checking.
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
+# Argument: --help -  Flag. Optional.Display this help.
 # DOC TEMPLATE: --handler 1
-# Argument: --handler handler - Optional. Function. Use this error handler instead of the default error handler.
-# Argument: file - Optional. File. Output line count for each file specified. If no files specified, uses stdin.
+# Argument: --handler handler -  Function. Optional.Use this error handler instead of the default error handler.
+# Argument: file -  File. Optional.Output line count for each file specified. If no files specified, uses stdin.
 # stdin: Lines are read from standard in and counted
 # stdout: `UnsignedInteger`
 fileLineCount() {
@@ -665,7 +665,7 @@ fileLineCount() {
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
     # _IDENTICAL_ handlerHandler 1
-    --handler) shift && handler=$(validate "$handler" function "$argument" "${1-}") || return $? ;;
+    --handler) shift && handler=$(validate "$handler" Function "$argument" "${1-}") || return $? ;;
     --newline) newlineCheck=true ;;
     *)
       local file total
@@ -773,9 +773,9 @@ _plural() {
 # Convert text to lowercase
 #
 # DOC TEMPLATE: dashDashAllowsHelpParameters 1
-# Argument: -- - Optional. Flag. Stops command processing to enable arbitrary text to be passed as additional arguments without special meaning.
+# Argument: -- -  Flag. Optional.Stops command processing to enable arbitrary text to be passed as additional arguments without special meaning.
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
+# Argument: --help -  Flag. Optional.Display this help.
 # Argument: text - EmptyString. Required. Text to convert to lowercase
 # stdout: `String`. The lowercase version of the `text`.
 # Requires: tr
@@ -797,9 +797,9 @@ _lowercase() {
 # Convert text to uppercase
 #
 # DOC TEMPLATE: dashDashAllowsHelpParameters 1
-# Argument: -- - Optional. Flag. Stops command processing to enable arbitrary text to be passed as additional arguments without special meaning.
+# Argument: -- -  Flag. Optional.Stops command processing to enable arbitrary text to be passed as additional arguments without special meaning.
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
+# Argument: --help -  Flag. Optional.Display this help.
 # Argument: text - EmptyString. Required. text to convert to uppercase
 # stdout: `String`. The uppercase version of the `text`.
 # Requires: tr
@@ -892,8 +892,8 @@ _shaPipe() {
 #
 # The `cacheDirectory`
 #
-# Argument: cacheDirectory - Optional. Directory. The directory where cache files can be stored exclusively for this function. Supports a blank value to disable caching, otherwise, it must be a valid directory.
-# Argument: filename - Optional. File. File determine the sha value for.
+# Argument: cacheDirectory -  Directory. Optional.The directory where cache files can be stored exclusively for this function. Supports a blank value to disable caching, otherwise, it must be a valid directory.
+# Argument: filename -  File. Optional.File determine the sha value for.
 # Depends: sha1sum shaPipe
 # Summary: SHA1 checksum of standard input
 # Example:     cachedShaPipe "$cacheDirectory" < "$fileName"
@@ -970,7 +970,7 @@ _stringOffsetInsensitive() {
 }
 
 # Remove fields from left to right from a text file as a pipe
-# Argument: fieldCount - Optional. Integer. Number of field to remove. Default is just first `1`.
+# Argument: fieldCount -  Integer. Optional.Number of field to remove. Default is just first `1`.
 # Partial Credit: https://stackoverflow.com/questions/4198138/printing-everything-except-the-first-field-with-awk/31849899#31849899
 # stdin: A file with fields separated by spaces
 # stdout: The same file with the first `fieldCount` fields removed from each line.
@@ -1003,23 +1003,20 @@ _removeFields() {
 }
 
 # Pipe to output some text before any output, otherwise, nothing is output.
-# Argument: ... - Required. Arguments. printf arguments.
+# Argument: ... -  Arguments. Required. printf arguments.
 # DOC TEMPLATE: noArgumentsForHelp 1
 # Without arguments, displays help.
 # stdin: text (Optional)
 # stdout: printf output and then the stdin text IFF stdin text is non-blank
 printfOutputPrefix() {
-  # __IDENTICAL__ --help-when-blank 1
-  [ $# -gt 0 ] || __help "_${FUNCNAME[0]}" --help || return 0
-  local output=false
-  while read -r line; do
-    if ! $output; then
-      # shellcheck disable=SC2059
-      printf "$@"
-      output=true
-    fi
-    printf -- "%s\n" "$line"
-  done
+  local handler="_${FUNCNAME[0]}"
+  [ $# -gt 0 ] || __help "$handler" --help || return 0
+  local finished=false char=$'\n' line
+  IFS="" read -r line || finished=true && char=""
+  [ -n "$line" ] || ! $finished || return 0
+  catchReturn "$handler" printf -- "$@" || return $?
+  catchReturn "$handler" printf -- "%s%s" "$line" "$char" || return $?
+  catchReturn "$handler" cat || return $?
 }
 _printfOutputPrefix() {
   # __IDENTICAL__ usageDocument 1
@@ -1027,23 +1024,20 @@ _printfOutputPrefix() {
 }
 
 # Pipe to output some text after any output, otherwise, nothing is output.
-# Argument: ... - Required. Arguments. printf arguments.
+# Argument: ... -  Arguments. Required. printf arguments.
 # DOC TEMPLATE: noArgumentsForHelp 1
 # Without arguments, displays help.
 # stdin: text (Optional)
 # stdout: stdin text and then printf output IFF stdin text is non-blank
 printfOutputSuffix() {
-  # __IDENTICAL__ --help-when-blank 1
-  [ $# -gt 0 ] || __help "_${FUNCNAME[0]}" --help || return 0
-  local output=false
-  while read -r line; do
-    if ! $output; then
-      output=true
-    fi
-    printf -- "%s\n" "$line"
-  done
-  # shellcheck disable=SC2059
-  ! $output || printf "$@"
+  local handler="_${FUNCNAME[0]}"
+  [ $# -gt 0 ] || __help "$handler" --help || return 0
+  local finished=false char=$'\n' line
+  IFS="" read -r line || finished=true && char=""
+  [ -n "$line" ] || ! $finished || return 0
+  catchReturn "$handler" printf -- "%s%s" "$line" "$char" || return $?
+  catchReturn "$handler" cat || return $?
+  catchReturn "$handler" printf -- "$@" || return $?
 }
 _printfOutputSuffix() {
   # __IDENTICAL__ usageDocument 1

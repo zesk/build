@@ -17,8 +17,8 @@
 # IDENTICAL returnMessage 39
 
 # Return passed in integer return code and output message to `stderr` (non-zero) or `stdout` (zero)
-# Argument: exitCode - Required. UnsignedInteger. Exit code to return. Default is 1.
-# Argument: message ... - Optional. String. Message to output
+# Argument: exitCode -  UnsignedInteger. Required. Exit code to return. Default is 1.
+# Argument: message ... - String. Optional. Message to output
 # Return Code: exitCode
 # Requires: isUnsignedInteger printf returnMessage
 returnMessage() {
@@ -72,7 +72,7 @@ throwEnvironment() {
 }
 
 # Run `command`, upon failure run `handler` with an argument error
-# Argument: handler - Required. String. Failure command
+# Argument: handler - String. Required. Failure command
 # Argument: command ... - Required. Command to run.
 # Requires: throwArgument
 catchArgument() {
@@ -81,7 +81,7 @@ catchArgument() {
 }
 
 # Run `command`, upon failure run `handler` with an environment error
-# Argument: handler - Required. String. Failure command
+# Argument: handler - String. Required. Failure command
 # Argument: command ... - Required. Command to run.
 # Requires: throwEnvironment
 catchEnvironment() {
@@ -119,8 +119,8 @@ returnThrow() {
 }
 
 # Run binary and catch errors with handler
-# Argument: handler - Required. Function. Error handler.
-# Argument: binary ... - Required. Executable. Any arguments are passed to `binary`.
+# Argument: handler -  Function. Required. Error handler.
+# Argument: binary ... -  Executable. Required. Any arguments are passed to `binary`.
 # Requires: returnArgument
 catchReturn() {
   local handler="${1-}" && shift || returnArgument "Missing handler" || return $?
@@ -137,19 +137,19 @@ usageDocument() {
 
 # Output a simple error message for a function
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
+# Argument: --help -  Flag. Optional.Display this help.
 # Argument: source - File. Required. File where documentation exists.
 # Argument: function - String. Required. Function to document.
 # Argument: returnCode - UnsignedInteger. Required. Exit code to return.
-# Argument: message ... - Optional. String. Message to display to the user.
+# Argument: message ... - String. Optional. Message to display to the user.
 # Requires: bashFunctionComment decorate read printf returnCodeString __help usageDocument
 usageDocumentSimple() {
   [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
   local source="${1-}" functionName="${2-}" returnCode="${3-}" color helpColor="info" icon="❌" line prefix="" finished=false skip=false && shift 3
 
-  case "$returnCode" in 0) icon="🏆" && color="info" && [ $# -ne 0 ] || skip=true ;; 1) color="error" ;; 2) color="bold-red" ;; *) color="orange" ;; esac
+  case "$returnCode" in 0) icon="🏆" && color="info" && [ $# -ne 0 ] || skip=true ;; 1) color="error" ;; 2) color="red" ;; *) color="orange" ;; esac
   [ "$returnCode" -eq 0 ] || exec 1>&2
-  $skip || printf -- "%s [%s] %s\n" "$icon" "$(decorate "code" "$(returnCodeString "$returnCode")")" "$(decorate "$color" "$*")"
+  $skip || printf -- "%s [%s] %s\n" "$icon" "$(decorate "code" "$(returnCodeString "$returnCode")")" "$(decorate BOLD "$color" "$*")"
   if [ ! -f "$source" ]; then
     export BUILD_HOME
     [ -d "${BUILD_HOME-}" ] || returnArgument "Unable to locate $source (${PWD-})" || return $?
@@ -172,7 +172,7 @@ _usageDocumentSimple() {
 
 # Extracts the final comment from a stream
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
+# Argument: --help -  Flag. Optional.Display this help.
 # Requires: fileReverseLines sed cut grep convertValue
 bashFinalComment() {
   [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
@@ -202,7 +202,7 @@ _bashFinalComment() {
 # Argument: source - File. Required. File where the function is defined.
 # Argument: functionName - String. Required. The name of the bash function to extract the documentation for.
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
+# Argument: --help -  Flag. Optional.Display this help.
 # Requires: grep cut fileReverseLines __help
 # Requires: usageDocument
 bashFunctionComment() {
@@ -225,11 +225,11 @@ _bashFunctionComment() {
 # Prints the mapped value to stdout
 #
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
+# Argument: --help -  Flag. Optional.Display this help.
 # Argument: value - String. A value.
 # Argument: from - String. When value matches `from`, instead print `to`
 # Argument: to - String. The value to print when `from` matches `value`
-# Argument: ... - Optional. String. Additional from-to pairs can be passed, first matching value is used, all values will be examined if none match
+# Argument: ... - String. Optional. Additional from-to pairs can be passed, first matching value is used, all values will be examined if none match
 convertValue() {
   local __handler="_${FUNCNAME[0]}" value="" from="" to=""
   # __IDENTICAL__ __checkHelp1__handler 1
@@ -318,7 +318,7 @@ ___help() {
 # IDENTICAL isCallable 48
 
 # Test if all arguments are callable as a command
-# Argument: string - Required. EmptyString. Path to binary to test if it is executable.
+# Argument: string -  EmptyString. Required. Path to binary to test if it is executable.
 # If no arguments are passed, returns exit code 1.
 # Return Code: 0 - All arguments are callable as a command
 # Return Code: 1 - One or or more arguments are callable as a command
@@ -337,7 +337,7 @@ _isCallable() {
 }
 
 # Test if all arguments are executable binaries
-# Argument: string ... - Required. String. Path to binary to test if it is executable.
+# Argument: string ... - String. Required. Path to binary to test if it is executable.
 # If no arguments are passed, returns exit code 1.
 # Return Code: 0 - All arguments are executable binaries
 # Return Code: 1 - One or or more arguments are not executable binaries
@@ -416,7 +416,7 @@ _isFunction() {
 # INTERNAL: Winner of the one-line bash award 10 years running
 # Argument: code ... - UnsignedInteger. String. Exit code value to output.
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
+# Argument: --help -  Flag. Optional.Display this help.
 # stdout: exitCodeToken, one per line
 returnCodeString() {
   local k="" && while [ $# -gt 0 ]; do case "$1" in 0) k="success" ;; 1) k="environment" ;; 2) k="argument" ;; 97) k="assert" ;; 105) k="identical" ;; 108) k="leak" ;; 116) k="timeout" ;; 120) k="exit" ;; 127) k="not-found" ;; 130) k="user-interrupt" ;; 141) k="interrupt" ;; 253) k="internal" ;; 254) k="unknown" ;; --help) "_${FUNCNAME[0]}" 0 && return $? || return $? ;; *) k="[returnCodeString unknown \"$1\"]" ;; esac && [ -n "$k" ] || k="$1" && printf "%s\n" "$k" && shift; done
@@ -554,15 +554,15 @@ __validateTypeCallable() {
   printf "%s\n" "${1-}"
 }
 
-# IDENTICAL decorate 245
+# IDENTICAL decorate 262
 
 # Sets the environment variable `BUILD_COLORS` if not set, uses `TERM` to calculate
 #
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
+# Argument: --help -  Flag. Optional.Display this help.
 # Return Code: 0 - Console or output supports colors
 # Return Code: 1 - Colors are likely not supported by console
-# Environment: BUILD_COLORS - Optional. Boolean. Whether the build system will output ANSI colors.
+# Environment: BUILD_COLORS -  Boolean. Optional.Whether the build system will output ANSI colors.
 # Requires: isPositiveInteger tput
 hasColors() {
   # --help is only argument allowed
@@ -596,17 +596,13 @@ _hasColors() {
 #
 # Argument: label - Text label
 # Argument: lightStartCode - Escape code label for light mode (color)
-# Argument: darkStartCode - Escape code label for dark mode (color)
 # Argument: endCode - Escape end code
 # Argument: text ... - Text to output.
 # Requires: hasColors printf
 __decorate() {
-  local prefix="$1" start="$2" dp="$3" end="$4" && shift 4
-  export BUILD_COLORS_MODE BUILD_COLORS
+  local prefix="$1" start="$2" end="$3" && shift 3
+  export BUILD_COLORS
   if [ -n "${BUILD_COLORS-}" ] && [ "${BUILD_COLORS-}" = "true" ] || [ -z "${BUILD_COLORS-}" ] && hasColors; then
-    if [ "${BUILD_COLORS_MODE-}" = "dark" ]; then
-      start="$dp"
-    fi
     if [ $# -eq 0 ]; then printf -- "%s$start" ""; else printf -- "$start%s$end\n" "$*"; fi
     return 0
   fi
@@ -616,13 +612,12 @@ __decorate() {
 
 # Output a list of build-in decoration styles, one per line
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
+# Argument: --help -  Flag. Optional.Display this help.
 decorations() {
   [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
   printf "%s\n" reset \
     underline no-underline bold no-bold \
     black black-contrast blue cyan green magenta orange red white yellow \
-    bold-black bold-black-contrast bold-blue bold-cyan bold-green bold-magenta bold-orange bold-red bold-white bold-yellow \
     code info notice success warning error subtle label value decoration
 }
 _decorations() {
@@ -632,42 +627,57 @@ _decorations() {
 }
 
 # Singular decoration function
-# Argument: style - String. Required. One of: reset underline no-underline bold no-bold black black-contrast blue cyan green magenta orange red white yellow bold-black bold-black-contrast bold-blue bold-cyan bold-green bold-magenta bold-orange bold-red bold-white bold-yellow code info notice success warning error subtle label value decoration
-# Argument: text ... - Optional. String. Text to output. If not supplied, outputs a code to change the style to the new style. May contain arguments for `style`.
+# Argument: style - String. Required. One of: reset underline no-underline bold no-bold black black-contrast blue cyan green magenta orange red white yellow code info notice success warning error subtle label value decoration
+# Argument: text ... - String. Optional. Text to output. If not supplied, outputs a code to change the style to the new style. May contain arguments for `style`.
 # You can extend this function by writing a your own extension `__decorationExtensionCustom` is called for `decorate custom`.
 # stdout: Decorated text
-# Environment: __BUILD_COLORS - String. Cached color lookup.
+# Environment: __BUILD_DECORATE - String. Cached color lookup.
 # Environment: BUILD_COLORS - Boolean. Colors enabled (`true` or `false`).
-# Environment: BUILD_COLORS_MODE - String. Color mode (`light` or `dark`). This is going to be deprecated.
 # Requires: isFunction returnArgument awk catchEnvironment usageDocument executeInputSupport __help
 decorate() {
-  local handler="_${FUNCNAME[0]}" text="" what="${1-}" lp dp style
+  local handler="_${FUNCNAME[0]}" text="" what="${1-}" lp style
   [ "$what" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
   shift && [ -n "$what" ] || catchArgument "$handler" "Requires at least one argument: \"$*\"" || return $?
-
+  catchReturn "$handler" _decorateInitialize || return $?
   if ! style=$(__decorateStyle "$what"); then
     local extend func="${what/-/_}"
     extend="__decorateExtension$(printf "%s" "${func:0:1}" | awk '{print toupper($0)}')${func:1}"
     # When this next line calls `catchArgument` it results in an infinite loop, so don't - use returnArgument
     # shellcheck disable=SC2119
-    isFunction "$extend" || returnArgument printf -- "%s\n%s\n" "Unknown decoration name: $what ($extend)" "$(decorations)" || return $?
-    executeInputSupport "$handler" "$extend" -- "$@" || return $?
-    return 0
+    if isFunction "$extend"; then
+      executeInputSupport "$handler" "$extend" -- "$@" || return $?
+      return 0
+    else
+      executeInputSupport "$handler" __decorate "❌" "[$what ☹️" "]" -- "$@" || return 2
+    fi
   fi
-  IFS=" " read -r lp dp text <<<"$style" || :
-  [ "$dp" != "-" ] || dp="$lp"
+  local IFS
+  IFS=" " read -r lp text <<<"$style" || :
   local p='\033['
-
-  executeInputSupport "$handler" __decorate "$text" "${p}${lp}m" "${p}${dp:-$lp}m" "${p}0m" -- "$@" || return $?
+  executeInputSupport "$handler" __decorate "$text" "${p}${lp}m" "${p}0m" -- "$@" || return $?
 }
 _decorate() {
   # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
+# Is the decorate color system initialized yet?
+# Useful to set our global color environment at the top level of a script if it hasn't been initialized already.
+# DOC TEMPLATE: --help 1
+# Argument: --help -  Flag. Optional.Display this help.
+decorateInitialized() {
+  [ "${1-}" != "--help" ] || __help --only "_${FUNCNAME[0]}" "$@" || return 0
+  export __BUILD_DECORATE
+  [ -n "${__BUILD_DECORATE-}" ]
+}
+_decorateInitialized() {
+  # __IDENTICAL__ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
 _decorateInitialize() {
-  export __BUILD_COLORS
-  [ -n "${__BUILD_COLORS-}" ] || __decorateStyles || return $?
+  export __BUILD_DECORATE
+  [ -n "${__BUILD_DECORATE-}" ] || __decorateStyles || return $?
 }
 
 # Fetch the requested style as a string: lp dp text
@@ -675,65 +685,53 @@ _decorateInitialize() {
 # text is optional, lp is required to be non-blank
 # Requires: __decorateStyles
 __decorateStyle() {
-  local original style pattern=$'\n'"$1="
+  local original style pattern=":$1="
 
-  _decorateInitialize || return $?
-  original="${__BUILD_COLORS}"
-  style="${__BUILD_COLORS#*"$pattern"}"
+  original="${__BUILD_DECORATE}"
+  style="${__BUILD_DECORATE#*"$pattern"}"
   [ "$style" != "$original" ] || return 1
-  style="${style%%$'\n'*}"
-  printf "%s\n" "$style"
+  printf "%s\n" "${style%%:*}"
 }
 
 # Default array styles, override if you wish
 if ! isFunction __decorateStyles; then
-  # This sets __BUILD_COLORS to the styles strings
+  # This sets __BUILD_DECORATE to the styles strings
   __decorateStyles() {
-    __decorateStylesDefault
+    __decorateStylesDefaultLight
   }
 fi
 
 # Default array styles, override if you wish
-__decorateStylesDefault() {
-  local styles="
-reset=0
-underline=4
-no-underline=24
-bold=1
-no-bold=21
-black=109;7
-black-contrast=107;30
-blue=94
-cyan=36
-green=92
-magenta=35
-orange=33
-red=31
-white=48;5;0;37
-yellow=48;5;16;38;5;11
-bold-black=1;109;7
-bold-black-contrast=1;107;30
-bold-blue=1;94
-bold-cyan=1;36
-bold-green=92
-bold-magenta=1;35
-bold-orange=1;33
-bold-red=1;31
-bold-white=1;48;5;0;37
-bold-yellow=1;48;5;16;38;5;11
-code=1;97;44
-info=38;5;20 1;33 Info
-notice=46;31 1;97;44 Notice
-success=42;30 0;32 Success
-warning=1;93;41 - Warning
-error=1;91 - ERROR
-subtle=1;38;5;252 1;38;5;240
-label=34;103 1;96
-value=1;40;97 1;97
-decoration=45;97 45;30
-"
-  export __BUILD_COLORS
-  __BUILD_COLORS="$styles"
+__decorateStylesBase() {
+  local styles=":reset=0:underline=4:no-underline=24:bold=1:no-bold=21:black=109;7:black-contrast=107;30:blue=94:cyan=36:green=92:magenta=35:orange=33:red=31:white=48;5;0;37:yellow=48;5;16;38;5;11:"
+  styles="$styles:$(printf "%s:" "$@")"
+  styles="$styles:code=1;97;44:warning=1;93;41 Warning:error=1;91 ERROR:"
+  export __BUILD_DECORATE
+  __BUILD_DECORATE="$styles"
+}
+__decorateStylesDefaultLight() {
+  local aa=(
+    "info=38;5;20 Info"
+    "notice=46;31 Notice"
+    "success=42;30 Success"
+    "subtle=1;38;5;252"
+    "label=34;103"
+    "value=1;40;97"
+    "decoration=45;97"
+  )
+  __decorateStylesBase "${aa[@]}"
+}
+__decorateStylesDefaultDark() {
+  local aa=(
+    "info=1;33 Info"
+    "notice=1;97;44 Notice"
+    "success=0;32 Success"
+    "subtle=1;38;5;240"
+    "label=1;96"
+    "value=1;97"
+    "decoration=45;30"
+  )
+  __decorateStylesBase "${aa[@]}"
 }
 
 # fn: decorate each
@@ -786,6 +784,25 @@ __decorateExtensionEach() {
   fi
   ! $showCount || formatted+=("[$index]")
   IFS=" " printf -- "%s\n" "${formatted[*]-}"
+}
+
+# fn: decorate BOLD
+# Argument: style - String. Style to display. Use `-`, `--`, or blank for no style.
+# Argument: text ... - EmptyString. Optional. Text to format. Use `--` to output begin codes only.
+__decorateExtensionBOLD() {
+  local style="${1-}" && shift
+  case "$style" in
+  "" | "-" | "--")
+    decorate bold "$*"
+    return 0
+    ;;
+  esac
+  if [ "$*" != "--" ]; then
+    decorate bold "$(decorate "$style" -- "$@")"
+  else
+    decorate bold --
+    decorate "$style" --
+  fi
 }
 
 # fn: decorate quote
@@ -847,8 +864,8 @@ executeInputSupport() {
 # Wrapper for `mktemp`. Generate a temporary file name, and fail using a function
 # Argument: handler - Function. Required. Function to call on failure. Function Type: returnMessage
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
-# Argument: ... - Optional. Arguments. Any additional arguments are passed through.
+# Argument: --help -  Flag. Optional.Display this help.
+# Argument: ... -  Arguments. Optional.Any additional arguments are passed through.
 # Requires: mktemp __help catchEnvironment usageDocument
 # BUILD_DEBUG: temp - Logs backtrace of all temporary files to a file in application root named after this function to detect and clean up leaks
 # Environment: BUILD_DEBUG
@@ -926,13 +943,13 @@ _environmentVariables() {
 # This one does it like `mapValue`
 # Environment is accessed via arguments passed or entire exported environment value space are and mapped to the destination.
 # See: mapValue
-# Argument: environmentVariableName - Optional. String. Map this value only. If not specified, all environment variables are mapped.
-# Argument: --prefix - Optional. String. Prefix character for tokens, defaults to `{`.
-# Argument: --suffix - Optional. String. Suffix character for tokens, defaults to `}`.
+# Argument: environmentVariableName - String. Optional. Map this value only. If not specified, all environment variables are mapped.
+# Argument: --prefix - String. Optional. Prefix character for tokens, defaults to `{`.
+# Argument: --suffix - String. Optional. Suffix character for tokens, defaults to `}`.
 # Argument: --search-filter - Zero or more. Callable. Filter for search tokens. (e.g. `lowercase`)
 # Argument: --replace-filter - Zero or more. Callable. Filter for replacement strings. (e.g. `trimSpace`)
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
+# Argument: --help -  Flag. Optional.Display this help.
 # Example:     printf %s "{NAME}, {PLACE}.\n" | NAME=Hello PLACE=world mapEnvironment NAME PLACE
 # Requires: environmentVariables cat throwEnvironment catchEnvironment
 # Requires: throwArgument decorate validate

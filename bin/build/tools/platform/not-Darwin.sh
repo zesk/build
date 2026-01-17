@@ -47,8 +47,13 @@ __hostname() {
 }
 
 # Requires: date
+# Argument: value - Integer. Required.
+# Argument: format - String. Required.
+# Argument: isUTC - Boolean. Optional. Defaults to `true`.
 __dateFromTimestamp() {
-  date -u -d "@$1" "+$2"
+  local a=(-d "@$1" "+$2")
+  ! "${3:-true}" || a=(-u "${a[@]}")
+  date "${a[@]}"
 }
 
 __groupID() {

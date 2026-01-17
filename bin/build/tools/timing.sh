@@ -6,18 +6,36 @@
 # Test: ./test/tools/time-tests.sh
 
 # Time command, similar to `time` but uses internal functions
-# Argument: command - Required. Executable. Command to run.
+# Argument: command -  Executable. Required. Command to run.
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
+# Argument: --help -  Flag. Optional.Display this help.
+# Argument: --name - String. Optional. Display this help.
 # Outputs time as `timingReport`
 timing() {
   local handler="_${FUNCNAME[0]}"
-  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
+
+  local name=""
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
+  local __saved=("$@") __count=$#
+  while [ $# -gt 0 ]; do
+    local argument="$1" __index=$((__count - $# + 1))
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    case "$argument" in
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
+    --name) shift && name="$(validate "$handler" String "$argument" "${1-}")" || return $? ;;
+    *) break ;;
+    esac
+    shift
+  done
+
+  [ -n "$name" ] || name="$*"
   local start exitCode=0
   start=$(timingStart)
   isCallable "${1-}" || throwArgument "$handler" "${1-} must be callable" || return $?
   catchReturn "$handler" "$@" || exitCode="$?"
-  timingReport "$start" "$@"
+  timingReport "$start" "$name"
   [ $exitCode = 0 ] || returnMessage "$exitCode" "$@" || return $?
 }
 _timing() {
@@ -29,7 +47,7 @@ _timing() {
 #
 # Argument: timingOffset - UnsignedInteger. Required. Offset in milliseconds from January 1, 1970.
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
+# Argument: --help -  Flag. Optional.Display this help.
 # Example:     init=$(timingStart)
 # Example:     ...
 # Example:     timingElapsed "$init"
@@ -51,7 +69,7 @@ _timingElapsed() {
 # Outputs the offset in milliseconds from January 1, 1970.
 #
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
+# Argument: --help -  Flag. Optional.Display this help.
 # Example:     init=$(timingStart)
 # Example:     ...
 # Example:     timingReport "$init" "Completed in"
@@ -70,7 +88,7 @@ _timingStart() {
 
 # Format a timing output (milliseconds) as seconds using a decimal
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
+# Argument: --help -  Flag. Optional.Display this help.
 # Argument: delta - Integer. Milliseconds
 timingFormat() {
   local handler="_${FUNCNAME[0]}"
@@ -101,9 +119,9 @@ _timingFormat() {
 # Outputs a nice colorful message showing the number of seconds elapsed as well as your custom message.
 # Argument: --color color - Make text this color (default is `green`)
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
+# Argument: --help -  Flag. Optional.Display this help.
 # DOC TEMPLATE: --handler 1
-# Argument: --handler handler - Optional. Function. Use this error handler instead of the default error handler.
+# Argument: --handler handler -  Function. Optional.Use this error handler instead of the default error handler.
 # Argument: start - Unix timestamp milliseconds. See `timingStart`.
 # Argument: message - Any additional arguments are output before the elapsed value computed
 # Return Code: 0 - Exits with exit code zero
@@ -126,7 +144,7 @@ timingReport() {
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
     # _IDENTICAL_ handlerHandler 1
-    --handler) shift && handler=$(validate "$handler" function "$argument" "${1-}") || return $? ;;
+    --handler) shift && handler=$(validate "$handler" Function "$argument" "${1-}") || return $? ;;
     --color)
       shift
       color=$(validate "$handler" String "$argument" "${1-}") || return $?
@@ -149,13 +167,13 @@ timingReport() {
     end=$(timingStart)
     delta=$((end - start))
     if [ "$delta" -lt 0 ]; then
-      printf "%s%s\n" "$prefix" "$(decorate bold-red "$end - $start => $delta NEGATIVE")"
+      printf "%s%s\n" "$prefix" "$(decorate BOLD red "$end - $start => $delta NEGATIVE")"
     else
       value=$(timingFormat "$delta") || :
-      printf "%s%s\n" "$prefix" "$(decorate bold-magenta "$value $(plural "$value" second seconds)")"
+      printf "%s%s\n" "$prefix" "$(decorate BOLD magenta "$value $(plural "$value" second seconds)")"
     fi
   else
-    printf "%s %s %s\n" "$*" "$(decorate bold-red "$start")" "$(decorate warning "(not integer)")"
+    printf "%s %s %s\n" "$*" "$(decorate BOLD red "$start")" "$(decorate warning "(not integer)")"
   fi
 }
 _timingReport() {

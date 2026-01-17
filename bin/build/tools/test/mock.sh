@@ -42,7 +42,7 @@ _mockEnvironmentStart() {
 
 # Restore a mocked value. Works solely with the default `saveGlobalName` (e.g. `__MOCK_${globalName}`).
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
+# Argument: --help -  Flag. Optional.Display this help.
 # Argument: globalName ... - EnvironmentVariable. Required. Global to restore from the mocked saved value.
 mockEnvironmentStop() {
   local handler="_${FUNCNAME[0]}"

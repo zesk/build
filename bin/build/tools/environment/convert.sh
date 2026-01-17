@@ -38,7 +38,7 @@ _environmentFileIsDocker() {
 # Argument: handler - Function. Required. Error handler.
 # Argument: passConvertFunction - Function. Required. Conversion function when `filename` is a Docker environment file.
 # Argument: failConvertFunction - Function. Required. Conversion function when `filename` is a NOT a Docker environment file.
-# Argument: filename - Optional. File. One or more files to convert.
+# Argument: filename -  File. Optional.One or more files to convert.
 # stdin: environment file
 # stdout: bash-compatible environment statements
 __anyEnvToFunctionEnv() {
@@ -73,7 +73,7 @@ __anyEnvToFunctionEnv() {
 # Takes any environment file and makes it docker-compatible
 #
 # Outputs the compatible env to stdout
-# Argument: envFile ... - Required. File. One or more files to convert.
+# Argument: envFile ... -  File. Required. One or more files to convert.
 #
 environmentFileToDocker() {
   __anyEnvToFunctionEnv "_${FUNCNAME[0]}" bashCommentFilter environmentFileBashCompatibleToDocker "$@" || return $?
@@ -88,7 +88,7 @@ _environmentFileToDocker() {
 #
 # Outputs the compatible env to stdout
 #
-# Argument: filename ... - Optional. File. One or more files to convert.
+# Argument: filename ... -  File. Optional.One or more files to convert.
 # stdin: environment file
 # stdout: bash-compatible environment statements
 environmentFileToBashCompatible() {

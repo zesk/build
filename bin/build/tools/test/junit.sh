@@ -140,7 +140,7 @@ junitTestCaseSkipped() {
 # Example:         Failure description or stack trace
 # Example:     </failure>
 # Argument: message - Required. Why failure occurred.
-# Argument ... - Optional. String. failure description.
+# Argument ... - String. Optional. failure description.
 # Attributes:
 # - `type=AssertionError`
 junitTestCaseFailedOpen() {
