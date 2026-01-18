@@ -107,12 +107,7 @@ __usageDocument() {
   # ********************************************************************************************************************
   if [ "$__profile" != false ]; then __profileNext="$(timingStart)" && printf "%s%d %s\n" "$__profilePrefix" "$((__profileNext - __profile))" "$__profileLabel" && __profile=$__profileNext; fi
 
-  local extras=()
-  if buildDebugEnabled documentation-cache; then
-    extras=("#!/usr/bin/env bash" "# Copyright &copy; $(date +%Y) $(catchReturn "$handler" buildEnvironmentGet BUILD_COMPANY)") || return $?
-    extras+=("# Generated on $(todayDate)")
-  fi
-  if ! catchReturn "$handler" bashDocumentationExtract "$displayName" "$functionDefinitionFile" "${extras[@]+"${extras[@]}"}" >"$variablesFile" <"$commentFile"; then
+  if ! catchReturn "$handler" bashDocumentationExtract "$displayName" "$functionDefinitionFile" >"$variablesFile" <"$commentFile"; then
     dumpPipe "commentFile" <"$commentFile"
     dumpPipe "variablesFile" <"$variablesFile"
     dumpPipe "functionDefinitionFile" <"$functionDefinitionFile"

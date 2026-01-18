@@ -11,6 +11,6 @@ fn="housekeeper"
 foundNames=([0]="argument")
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 source="bin/build/tools/debug.sh"
-sourceModified="1768757641"
+sourceModified="1768759254"
 summary="Run a command and ensure files are not modified"
 usage="housekeeper [ --ignore grepPattern ] [ --path path ] [ path ] [ callable ] [ --help ]"

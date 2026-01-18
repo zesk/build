@@ -11,6 +11,6 @@ fn="stringContainsInsensitive"
 foundNames=([0]="argument" [1]="summary")
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 source="bin/build/tools/text.sh"
-sourceModified="1768721469"
+sourceModified="1768759798"
 summary="Find whether a substring exists in one or more strings"$'\n'""
 usage="stringContainsInsensitive haystack [ needle ... ]"

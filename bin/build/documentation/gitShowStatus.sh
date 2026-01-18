@@ -12,6 +12,6 @@ fn="gitShowStatus"
 foundNames=([0]="argument" [1]="source" [2]="credit")
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 source="bin/build/tools/git.sh"
-sourceModified="1768721470"
+sourceModified="1768759336"
 summary="Return Code: 0 - the repo has been modified"
 usage="gitShowStatus [ --help ]"

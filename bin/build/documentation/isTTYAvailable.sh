@@ -14,7 +14,7 @@ foundNames=([0]="summary" [1]="see" [2]="argument" [3]="environment" [4]="credit
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 see="stty /dev/tty"$'\n'""
 source="bin/build/tools/colors.sh"
-sourceModified="1768757397"
+sourceModified="1768758955"
 summary="Quiet test for a TTY"$'\n'""
 url="https://stackoverflow.com/questions/69075612/cross-platform-method-to-detect-whether-dev-tty-is-available-functional"$'\n'""
 usage="isTTYAvailable [ --help ]"

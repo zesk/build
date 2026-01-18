@@ -11,7 +11,7 @@ fn="markdownToConsole"
 foundNames=([0]="summary" [1]="stdin" [2]="stdout" [3]="argument")
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 source="bin/build/tools/colors.sh"
-sourceModified="1768757397"
+sourceModified="1768758955"
 stdin="Markdown"$'\n'""
 stdout="decorated console output"$'\n'""
 summary="Converts backticks, bold and italic to console colors."$'\n'""

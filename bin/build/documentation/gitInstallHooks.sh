@@ -12,6 +12,6 @@ foundNames=([0]="argument" [1]="see")
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 see="gitHookTypes"$'\n'""
 source="bin/build/tools/git.sh"
-sourceModified="1768721470"
+sourceModified="1768759336"
 summary="Install one or more git hooks from Zesk Build hooks."
 usage="gitInstallHooks [ --copy ] [ --verbose ] [ --application home ] [ hookName ]"

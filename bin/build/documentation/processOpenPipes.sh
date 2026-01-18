@@ -11,7 +11,7 @@ fn="processOpenPipes"
 foundNames=([0]="todo" [1]="argument")
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 source="bin/build/tools/process.sh"
-sourceModified="1768721470"
+sourceModified="1768760463"
 summary="Output the number of open files for a process ID"
 todo="This is in progress"$'\n'""
 usage="processOpenPipes [ --help ]"

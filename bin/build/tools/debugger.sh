@@ -77,6 +77,7 @@ bashDebuggerEnable() {
   trap _bashDebugTrap DEBUG
 }
 _bashDebuggerEnable() {
+  true || bashDebuggerEnable --help
   # __IDENTICAL__ usageDocumentSimple 1
   usageDocumentSimple "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
@@ -102,8 +103,6 @@ bashDebuggerDisable() {
 
   # Close ORIGINAL FDs
   exec 20<&- 21>&- 22>&-
-
-  true || bashDebuggerEnable --help
 }
 _bashDebuggerDisable() {
   # __IDENTICAL__ usageDocumentSimple 1

@@ -12,6 +12,6 @@ foundNames=([0]="argument" [1]="see")
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 see="mv"$'\n'""
 source="bin/build/tools/file.sh"
-sourceModified="1768721469"
+sourceModified="1768758898"
 summary="Rename a link"
 usage="linkRename from to"

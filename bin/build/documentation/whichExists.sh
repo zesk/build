@@ -13,6 +13,6 @@ foundNames=([0]="summary" [1]="argument" [2]="example" [3]="requires")
 requires="throwArgument decorate __decorateExtensionEach command"$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 source="bin/build/tools/platform.sh"
-sourceModified="1768721470"
+sourceModified="1768759698"
 summary="Does a binary exist in the PATH?"$'\n'""
 usage="whichExists [ --any ] binary ... [ --help ]"

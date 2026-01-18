@@ -43,7 +43,6 @@ __bashDocumentationSettingsFileDetails() {
 # Argument: handler - Function. Required.
 # Argument: function - String. Required.
 # Argument: sourceFile - File. Required.
-# Argument: prefix ... - String. Optional. String to add as a prefix to cached files
 __bashDocumentationExtract() {
   local __saved=("$@") __count=$#
   local handler="$1" && shift
@@ -58,7 +57,10 @@ __bashDocumentationExtract() {
   local capture=(cat)
   export BUILD_HOME
   local definitionFile="${BUILD_HOME:-/dev/null}/bin/build/documentation/$fn.sh"
+  local extras=()
   if buildDebugEnabled "documentation-cache"; then
+    extras+=("#!/usr/bin/env bash" "# Copyright &copy; $(date +%Y) $(catchReturn "$handler" buildEnvironmentGet BUILD_COMPANY)") || return $?
+    extras+=("# Generated on $(todayDate)")
     local currentModified && currentModified=$(catchReturn "$handler" fileModificationTime "$source") || return $?
     if [ -f "$definitionFile" ] && [ "$source" -ot "$definitionFile" ]; then
       local sourceModified && sourceModified=$(environmentValueRead "$definitionFile" "sourceModified") || :
@@ -79,7 +81,7 @@ __bashDocumentationExtract() {
   fi
   bashRecursionDebug || return $?
 
-  __bashDocumentationExtractDirect "$handler" "$fn" "$source" "$@" | catchEnvironment "$handler" environmentCompile --keep-comments | catchEnvironment "$handler" "${capture[@]}" || return $?
+  __bashDocumentationExtractDirect "$handler" "$fn" "$source" "${extras[@]}" "$@" | catchEnvironment "$handler" environmentCompile --keep-comments | catchEnvironment "$handler" "${capture[@]}" || return $?
 
   bashRecursionDebug --end || return $?
 }

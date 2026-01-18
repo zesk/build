@@ -12,6 +12,6 @@ foundNames=([0]="argument" [1]="output")
 output="Port number of associated service (integer) one per line"$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 source="bin/build/tools/platform.sh"
-sourceModified="1768721470"
+sourceModified="1768759698"
 summary="Get the port number associated with a service"
 usage="serviceToPort service [ --services servicesFile ] [ --help ]"

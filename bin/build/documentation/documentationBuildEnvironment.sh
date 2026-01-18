@@ -12,6 +12,6 @@ foundNames=([0]="argument" [1]="see")
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 see="documentationBuild"$'\n'""
 source="bin/build/tools/documentation.sh"
-sourceModified="1768758867"
+sourceModified="1768761838"
 summary="Build documentation for ./bin/env (or bin/build/env) directory."
 usage="documentationBuildEnvironment [ --documentation documentationPath ] [ --source sourcePath ] [ --help ]"

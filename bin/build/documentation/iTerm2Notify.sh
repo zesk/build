@@ -11,6 +11,6 @@ fn="iTerm2Notify"
 foundNames=([0]="argument")
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 source="bin/build/tools/iterm2.sh"
-sourceModified="1768721470"
+sourceModified="1768759385"
 summary="Sends a notification message via Mac OS X from iTerm2"
 usage="iTerm2Notify message"

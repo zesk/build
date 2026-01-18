@@ -14,6 +14,6 @@ requires="catchEnvironment muzzle bashPrompt bashPromptMarkers iTerm2UpdateState
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 see="bashPrompt"$'\n'""
 source="bin/build/tools/iterm2.sh"
-sourceModified="1768721470"
+sourceModified="1768759385"
 summary="Add support for iTerm2 to bashPrompt"
 usage="iTerm2PromptSupport [ --help ]"

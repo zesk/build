@@ -12,6 +12,6 @@ fn="gitInstallHook"
 foundNames=([0]="argument" [1]="environment")
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 source="bin/build/tools/git.sh"
-sourceModified="1768721470"
+sourceModified="1768759336"
 summary="Install the most recent version of this hook and RUN"
 usage="gitInstallHook [ --application ] [ --copy ] [ hook ]"

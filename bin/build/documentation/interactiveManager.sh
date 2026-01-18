@@ -11,6 +11,6 @@ fn="interactiveManager"
 foundNames=([0]="argument")
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 source="bin/build/tools/interactive.sh"
-sourceModified="1768721469"
+sourceModified="1768759374"
 summary="Run checks interactively until errors are all fixed."
 usage="interactiveManager loopCallable [ --exec binary ] [ --delay delaySeconds ] [ fileToCheck ... ]"

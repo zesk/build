@@ -14,6 +14,6 @@ foundNames=([0]="summary" [1]="argument" [2]="environment" [3]="example" [4]="re
 requires="throwArgument hasConsoleAnimation catchEnvironment decorate validate clearLine"$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 source="bin/build/tools/colors.sh"
-sourceModified="1768757397"
+sourceModified="1768758955"
 summary="Output a status message and display correctly on consoles with animation and in log files"$'\n'""
 usage="statusMessage [ --last ] [ --first ] [ --inline ] command"

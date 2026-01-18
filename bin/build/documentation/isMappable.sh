@@ -11,6 +11,6 @@ fn="isMappable"
 foundNames=([0]="argument")
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 source="bin/build/tools/text.sh"
-sourceModified="1768721469"
+sourceModified="1768759798"
 summary="Check if text contains mappable tokens"
 usage="isMappable [ --help ] [ --prefix ] [ --suffix ] [ --token ] [ text ]"

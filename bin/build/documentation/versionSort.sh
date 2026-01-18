@@ -13,6 +13,6 @@ foundNames=([0]="summary" [1]="argument" [2]="example" [3]="requires")
 requires="throwArgument sort usageDocument decorate"$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 source="bin/build/tools/pipeline.sh"
-sourceModified="1768721470"
+sourceModified="1768759595"
 summary="Sort versions in the format v0.0.0"$'\n'""
 usage="versionSort [ -r | --reverse ] [ --help ]"

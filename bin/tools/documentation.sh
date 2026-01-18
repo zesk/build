@@ -3,17 +3,28 @@
 # Copyright &copy; 2026 Market Acumen, Inc.
 #
 
+# Argument: handler - Function. Required.
+# Argument: docPath - Directory. Required.
+# Argument: tempFunctions - File. Required. File containing list of function names
 __buildDocumentationIsComplete() {
+  local handler="$handler" && shift
   local docPath="$1" && shift
   local tempFunctions="$1" && shift
-  local finished && while ! $finished; do
+  local missing=() finished=false && while ! $finished; do
     local fun && read -r fun || finished=true
     if [ -z "$fun" ] || ! isFunction "_$fun"; then continue; fi
     if [ ! -f "$docPath/$fun.sh" ]; then
-      statusMessage decorate notice "$(decorate file "$docPath/$fun.sh") not found"
-      return 1
+      missing+=("$fun")
     fi
   done <"$tempFunctions"
+  local index=0 fun
+  [ "${#missing[@]}" -eq 0 ] || for fun in "${missing[@]}"; do
+    index=$((index + 1))
+    statusMessage decorate warning "Loading missing: $fun (length ${#fun})"
+    __buildDocumentationExtractionUpdateFunction "$handler" "$docPath" "$fun" "Missing #$index/${#missing[@]}" || return $?
+  done
+  statusMessage decorate info "No functions missing" || return $?
+  return 0
 }
 
 # Extract and build the bin/build/documentation/ cache
@@ -49,7 +60,7 @@ buildDocumentationExtractionUpdate() {
 
   local home && home=$(catchReturn "$handler" buildHome) || return $?
 
-  local docPath="$home/bin/build/documentation/"
+  local docPath="$home/bin/build/documentation"
   if $cleanFlag; then
     catchReturn "$handler" statusMessage decorate info "Cleaning $docPath" || return $?
     [ ! -d "$docPath" ] || catchEnvironment "$handler" find "$docPath" -type f -name '*.sh' ! -path '*/.*/*' -delete || return $?
@@ -64,86 +75,45 @@ buildDocumentationExtractionUpdate() {
   catchReturn "$handler" buildFunctions >"$tempFunctions" || returnClean $? "${clean[@]}" || return $?
   totalFunctions=$(catchReturn "$handler" fileLineCount "$tempFunctions") || returnClean $? "${clean[@]}" || return $?
   if $quickFlag; then
-    if __buildDocumentationIsComplete "$docPath" "$tempFunctions"; then
-      local docToolsOldest toolsNewest toolsNewestTime
+    if __buildDocumentationIsComplete "$handler" "$docPath" "$tempFunctions"; then
+      local allModificationTimes="$tempFunctions.all"
+      clean+=("$allModificationTimes")
 
-      toolsNewest=$(catchReturn "$handler" directoryNewestFile "$home/bin/build/tools") || returnClean $? "${clean[@]}" || return $?
-      docToolsOldest=$(catchReturn "$handler" directoryOldestFile "$docPath") || returnClean $? "${clean[@]}" || return $?
+      {
+        catchReturn "$handler" fileModificationTimes "$home/bin/build/tools/" -name '*.sh' || catchReturn "$handler" fileModificationTimes "$docPath" || return $?
+      } | catchReturn "$handler" sort -rn >"$allModificationTimes" || returnClean $? "${clean[@]}" || return $?
 
-      # `FILE1 -ot FILE2` - `FILE1` is older than `FILE2`
-      if [ "$toolsNewest" -ot "$docToolsOldest" ]; then
-        catchReturn "$handler" statusMessage --last decorate info "Everything is up to date." || return $?
-        catchEnvironment "$handler" rm -f "${clean[@]}" || return $?
-        return 0
-      fi
-      toolsNewestTime=$(catchReturn "$handler" fileModificationTime "$toolsNewest") || returnClean $? "${clean[@]}" || return $?
-      catchReturn "$handler" statusMessage decorate notice "$(decorate file "$toolsNewest") modified more recently than $(decorate file "$docToolsOldest")" || return $?
-
-      catchEnvironment "$handler" printf -- "" >"$tempFunctions" || returnClean $? "${clean[@]}" || return $?
-      local index=0
-
-      while read -r fileModificationTime filePath; do
-        index=$((index + 1))
-        local fn="${filePath##*/}"
-        fn="${fn%.sh}"
-        # If a tool doc file was modified BEFORE the most recent TOOLS file (regardless) then we regenerate it
-        if [ "$fileModificationTime" -lt "$toolsNewestTime" ]; then
-          catchEnvironment "$handler" printf -- "%s\n" "$fn" >>"$tempFunctions" || return $?
-        else
-          catchReturn "$handler" statusMessage decorate info "Stopped at $fn (#$index) ... ($(dateFromTimestamp --local "$fileModificationTime") > $(dateFromTimestamp --local "$toolsNewestTime") - $(decorate file "$toolsNewest"))" || return $?
-          break
-        fi
-      done < <(catchEnvironment "$handler" fileModificationTimes "$docPath" | sort -rn) || returnClean $? "${clean[@]}" || return $?
+      local fileMod filePath
+      while read -r fileMod filePath; do
+        # If prefixed with a docPath, then skip it
+        [ "${filePath#"$docPath"}" = "$filePath" ] || continue
+        : "$fileMod"
+        grep "$docPath" | removeFields 1 | cut -d . -f 1 | cut "-c${#docPath}" >"$tempFunctions"
+        break
+      done <"$allModificationTimes"
       totalFunctions=$(catchReturn "$handler" fileLineCount "$tempFunctions") || returnClean $? "${clean[@]}" || return $?
       catchReturn "$handler" statusMessage decorate info "Quick function count to compute is $totalFunctions" || return $?
+    else
+      catchReturn "$handler" statusMessage decorate info "Total function count to compute is $totalFunctions" || return $?
     fi
   else
     catchReturn "$handler" statusMessage decorate info "Total function count to compute is $totalFunctions" || return $?
   fi
   local finished=false
   local index=0
-  local pids=() names=()
-  local maxProcesses=20 timeout=10
 
   while ! $finished; do
-    local pid
     index=$((index + 1))
+    local prefix="#$index/$totalFunctions -"
     local fun helpFun
     read -r fun || finished=true
     [ -n "$fun" ] || continue
     helpFun="_$fun"
     if ! isFunction "$helpFun"; then
-      catchReturn "$handler" statusMessage decorate warning "No help for $fun ($helpFun not defined)" || return $?
+      catchReturn "$handler" statusMessage decorate warning "$prefix: No help for $fun ($helpFun not defined)" || return $?
       continue
     fi
-    pid="$(
-      __buildDocumentationExtractionUpdateFunction "$handler" "$fun" "#$index/$totalFunctions -" &
-      printf "%d\n" $!
-    )"
-    pids+=("$pid") || returnClean $? "${clean[@]}" || returnUndo $? processWait --timeout 3 --signals HUP,TERM,KILL "${pids[@]}" || return $?
-    # statusMessage decorate info "Launched process $pid for $name"
-    names+=("$fun")
-    local timer
-    timer=$(timingStart)
-    while [ "${#pids[@]}" -ge "$maxProcesses" ]; do
-      local newPids=() newNames=() index=0
-      for pid in "${pids[@]}"; do
-        name="${names[index]}"
-        if kill -0 "$pid" 2>/dev/null; then
-          newPids+=("$pid")
-          newNames+=("$name")
-        else
-          : # decorate info "Process $pid ($name) exited"
-        fi
-        index=$((index + 1))
-      done
-      pids=("${newPids[@]+"${newPids[@]}"}")
-      names=("${newNames[@]+"${newNames[@]}"}")
-      if [ "$(timingElapsed "$timer")" -gt $((timeout * 1000)) ]; then
-        catchReturn "$handler" processWait --timeout 3 --signals HUP,TERM,KILL "${pids[@]}" || return $?
-        throwEnvironment "$handler" "Max processes ($maxProcesses) running after $timeout seconds" || return $?
-      fi
-    done
+    __buildDocumentationExtractionUpdateFunction "$handler" "$docPath" "$fun" "$prefix" || return $?
   done <"$tempFunctions" || returnClean $? "${clean[@]}" || return $?
   catchEnvironment "$handler" rm -f "${clean[@]}" || return $?
 }
@@ -155,10 +125,14 @@ _buildDocumentationExtractionUpdate() {
 # Extract and build the bin/build/documentation/ cache
 # DOC TEMPLATE: --help 1
 # Argument: --help - Flag. Optional. Display this help.
+# Argument: handler - Function. Required.
+# Argument: docPath - Directory. Required.
 # Argument: function - String. Required. Function to extract
 # Argument: prefix ... - String. Optional. Prefix the status line with this text.
 __buildDocumentationExtractionUpdateFunction() {
   local handler="$1" && shift
+  local docPath="$1" && shift
+
   local fun
   fun=$(validate "$handler" Function "function" "${1-}") && shift || return $?
   local prefix="$*" && set --
@@ -171,6 +145,19 @@ __buildDocumentationExtractionUpdateFunction() {
     return 0
   fi
   BUILD_DEBUG="documentation-cache" statusMessage timing --name "${prefix}$prettyFun" muzzle "$helpFun" 0 || returnClean $? "${clean[@]}" || return $?
+  [ ! -f "$docPath/$fun.sh" ] || return 0
+
+  # Probably uses usageDocumentSimple, generate manually
+  catchReturn "$handler" statusMessage decorate warning "${prefix}Help for $prettyFun uses alternate generator - lookup" || return $?
+  sourceFile=$(__bashDocumentation_FindFunctionDefinitions "$(buildHome)/bin/build/tools" "$fun") || return $?
+  if [ -f "$sourceFile" ]; then
+    BUILD_DEBUG="documentation-cache" muzzle bashDocumentationExtract "$fun" "$sourceFile" < <(bashFunctionComment "$source" "$fun") || return $?
+    if [ ! -f "$docPath/$fun.sh" ]; then
+      throwEnvironment "$handler" "${prefix}: bashDocumentationExtract $fun $sourceFile did not generate $docPath/$fun.sh" || return $?
+    fi
+  else
+    throwEnvironment "$handler" "${prefix}: No source found for $prettyFun" || return $?
+  fi
 }
 
 __buildDocumentationBuildDirectory() {

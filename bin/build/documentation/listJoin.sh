@@ -12,6 +12,6 @@ foundNames=([0]="output" [1]="argument")
 output="text"$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 source="bin/build/tools/list.sh"
-sourceModified="1768756695"
+sourceModified="1768759476"
 summary="Output arguments joined by a character"
 usage="listJoin separator [ text0 ... ] [ --help ]"

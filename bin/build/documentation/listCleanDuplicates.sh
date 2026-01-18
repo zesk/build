@@ -11,6 +11,6 @@ fn="listCleanDuplicates"
 foundNames=([0]="argument")
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 source="bin/build/tools/list.sh"
-sourceModified="1768756695"
+sourceModified="1768759476"
 summary="Removes duplicates from a list and maintains ordering."
 usage="listCleanDuplicates separator listText [ --removed ] [ --help ]"

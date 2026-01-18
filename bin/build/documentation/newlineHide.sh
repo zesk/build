@@ -11,7 +11,7 @@ fn="newlineHide"
 foundNames=([0]="argument" [1]="stdout")
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 source="bin/build/tools/text.sh"
-sourceModified="1768721469"
+sourceModified="1768759798"
 stdout="The text with the newline replaced with another character, suitable typically for single-line output"$'\n'""
 summary="Hide newlines in text (to ensure single-line output or other"
 usage="newlineHide [ --help ] text [ replace ]"

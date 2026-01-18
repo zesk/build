@@ -12,7 +12,7 @@ foundNames=([0]="requires" [1]="stdout" [2]="argument")
 requires="uptime"$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 source="bin/build/tools/platform.sh"
-sourceModified="1768721470"
+sourceModified="1768759698"
 stdout="lines:Number"$'\n'""
 summary="Get the load average using uptime"
 usage="loadAverage [ --help ]"

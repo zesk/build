@@ -11,6 +11,6 @@ fn="identicalWatch"
 foundNames=([0]="argument")
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 source="bin/build/tools/identical.sh"
-sourceModified="1768721469"
+sourceModified="1768759368"
 summary="Watch a project for changes and propagate them immediately upon"
 usage="identicalWatch [ --help ] [ --handler handler ] ..."

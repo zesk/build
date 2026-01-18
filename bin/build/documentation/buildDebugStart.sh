@@ -2,8 +2,8 @@
 # Copyright &copy; 2026 Market Acumen, Inc.
 # Generated on 2026-01-18
 # shellcheck disable=SC2034
-    # ... complex code here
-    # Debugging: 51b581e9a1275e3801165068bceaa6d245c76c2c
+# ... complex code here
+# Debugging: 51b581e9a1275e3801165068bceaa6d245c76c2c
 applicationFile="bin/build/tools/debug.sh"
 argument="moduleName - String. Optional. Only start debugging if debugging is enabled for ANY of the passed in modules."$'\n'""
 base="debug.sh"

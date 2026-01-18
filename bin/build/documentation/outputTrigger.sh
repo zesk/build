@@ -13,6 +13,6 @@ fn="outputTrigger"
 foundNames=([0]="argument" [1]="example")
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 source="bin/build/tools/debug.sh"
-sourceModified="1768757641"
+sourceModified="1768759254"
 summary="Check output for content and trigger environment error if found"
 usage="outputTrigger [ --help ] [ --verbose ] [ --name name ]"

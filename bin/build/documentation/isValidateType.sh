@@ -12,6 +12,6 @@ fn="isValidateType"
 foundNames=([0]="argument" [1]="example")
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 source="bin/build/tools/validate.sh"
-sourceModified="1768721469"
+sourceModified="1768758955"
 summary="Are all arguments passed a valid validate type?"
 usage="isValidateType [ --help ] [ type ]"

@@ -12,6 +12,6 @@ foundNames=([0]="argument" [1]="hook")
 hook="test-setup - Move or copy files prior to docker-compose build to build test container\""$'\n'"test-runner - Run PHP Unit and any other tests inside the container\""$'\n'"test-cleanup - Reverse of test-setup hook actions\""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 source="bin/build/tools/php.sh"
-sourceModified="1768721470"
+sourceModified="1768759583"
 summary="Test a docker-based PHP application during build"
 usage="phpTest [ --env-file envFile ] [ --home homeDirectory ]"

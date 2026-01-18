@@ -11,7 +11,7 @@ fn="printfOutputPrefix"
 foundNames=([0]="argument" [1]="stdin" [2]="stdout")
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 source="bin/build/tools/text.sh"
-sourceModified="1768721469"
+sourceModified="1768759798"
 stdin="text (Optional)"$'\n'""
 stdout="printf output and then the stdin text IFF stdin text is non-blank"$'\n'""
 summary="Pipe to output some text before any output, otherwise, nothing"

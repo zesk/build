@@ -12,7 +12,7 @@ fn="insideDocker"
 foundNames=([0]="todo" [1]="checked")
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 source="bin/build/tools/docker.sh"
-sourceModified="1768721469"
+sourceModified="1768759328"
 summary="Are we inside a docker container right now?"
 todo="This changed 2023 ..."$'\n'"Write a test to check this date every oh, say, 3 months"$'\n'""
 usage="insideDocker"

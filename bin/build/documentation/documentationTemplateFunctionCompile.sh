@@ -11,6 +11,6 @@ fn="documentationTemplateFunctionCompile"
 foundNames=([0]="summary" [1]="argument")
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 source="bin/build/tools/documentation.sh"
-sourceModified="1768758867"
+sourceModified="1768761838"
 summary="Generate a function documentation block using \`functionTemplate\` for \`functionName\`"$'\n'""
 usage="documentationTemplateFunctionCompile [ --env-file envFile ] functionName functionTemplate [ --help ]"

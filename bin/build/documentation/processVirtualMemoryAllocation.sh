@@ -13,6 +13,6 @@ foundNames=([0]="argument" [1]="example" [2]="output")
 output="423"$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 source="bin/build/tools/process.sh"
-sourceModified="1768721470"
+sourceModified="1768760463"
 summary="Outputs value of virtual memory allocated for a process, value"
 usage="processVirtualMemoryAllocation [ --help ] [ pid ]"

@@ -12,6 +12,6 @@ fn="pathCleanDuplicates"
 foundNames=([0]="argument" [1]="environment")
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 source="bin/build/tools/path.sh"
-sourceModified="1768721469"
+sourceModified="1768759497"
 summary="Cleans the path and removes non-directory entries and duplicates"
 usage="pathCleanDuplicates [ --help ]"

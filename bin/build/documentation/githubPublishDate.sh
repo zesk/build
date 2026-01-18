@@ -11,6 +11,6 @@ fn="githubPublishDate"
 foundNames=([0]="argument")
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 source="bin/build/tools/github.sh"
-sourceModified="1768721469"
+sourceModified="1768759150"
 summary="Output the publish date for the latest release of ownerRepository"
 usage="githubPublishDate [ ownerRepository ]"

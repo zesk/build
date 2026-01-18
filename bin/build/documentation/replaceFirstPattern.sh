@@ -11,7 +11,7 @@ fn="replaceFirstPattern"
 foundNames=([0]="stdin" [1]="stdout")
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 source="bin/build/tools/text.sh"
-sourceModified="1768721469"
+sourceModified="1768759798"
 stdin="Reads lines from stdin until EOF"$'\n'""
 stdout="Outputs modified lines"$'\n'""
 summary="Replaces the first and only the first occurrence of a"

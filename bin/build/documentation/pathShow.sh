@@ -11,6 +11,6 @@ fn="pathShow"
 foundNames=([0]="argument")
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 source="bin/build/tools/path.sh"
-sourceModified="1768721469"
+sourceModified="1768759497"
 summary="Show the path and where binaries are found"
 usage="pathShow [ --help ] [ binary ]"

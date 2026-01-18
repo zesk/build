@@ -13,6 +13,6 @@ foundNames=([0]="argument" [1]="environment" [2]="see")
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 see="iTerm2Aliases iTerm2PromptSupport"$'\n'""
 source="bin/build/tools/iterm2.sh"
-sourceModified="1768721470"
+sourceModified="1768759385"
 summary="Add iTerm2 support to console"
 usage="iTerm2Init [ --ignore | -i ]"
