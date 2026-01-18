@@ -12,6 +12,6 @@ foundNames=([0]="argument" [1]="summary" [2]="see")
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 see="documentationTemplateCompile"$'\n'""
 source="bin/build/tools/documentation.sh"
-sourceModified="1768695708"
+sourceModified="1768710514"
 summary="Convert a directory of templates into documentation for Bash functions"$'\n'""
 usage="documentationTemplateDirectoryCompile [ --filter filterArgs ... --  ] [ --force ] [ --verbose ] [ --env-file envFile ] cacheDirectory templateDirectory functionTemplate targetDirectory [ --help ]"

@@ -13,6 +13,6 @@ foundNames=([0]="see" [1]="argument" [2]="artifact")
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 see="buildCacheDirectory"$'\n'""
 source="bin/build/tools/documentation.sh"
-sourceModified="1768695708"
+sourceModified="1768710514"
 summary="Build documentation for Bash functions"
 usage="documentationBuild [ --git ] [ --commit ] [ --force ] [ --unlinked ] [ --unlinked-update ] [ --clean ] [ --help ] [ --company companyName ] [ --company-link companyLink ] [ --unlinked-source directory ] [ --page-template pageTemplateFile ] --source sourceDirectory --target targetDirectory [ --function-template functionTemplateFile ] [ --unlinked-template unlinkedTemplateFile ] [ --unlinked-target unlinkedTarget ] [ --see-prefix seePrefix ] [ --see-update ] [ --unlinked-update ] [ --index-update ] [ --docs-update ] [ --help ]"

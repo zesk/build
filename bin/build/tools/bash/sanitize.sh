@@ -80,7 +80,7 @@ __bashSanitize() {
   _bashSanitizeCheckLint "$handler" <"$fileList" || returnUndo $? "${undo[@]}" || returnClean $? "$fileList" || return $?
 
   statusMessage decorate success Checking copyright ...
-  executeEcho _bashSanitizeCheckCopyright "$handler" "$debugFlag" "${exceptions[@]+"${exceptions[@]}"}" <"$fileList" || returnUndo $? "${undo[@]}" || returnClean $? "$fileList" || return $?
+  _bashSanitizeCheckCopyright "$handler" "$debugFlag" "${exceptions[@]+"${exceptions[@]}"}" <"$fileList" || returnUndo $? "${undo[@]}" || returnClean $? "$fileList" || return $?
 
   statusMessage decorate success Checking debugging ...
   _bashSanitizeCheckDebugging "$handler" <"$fileList" || returnUndo $? "${undo[@]}" || returnClean $? "$fileList" || return $?

@@ -3,6 +3,19 @@
 # Copyright &copy; 2026 Market Acumen, Inc.
 #
 
+__buildDocumentationIsComplete() {
+  local docPath="$1" && shift
+  local tempFunctions="$1" && shift
+  local finished && while ! $finished; do
+    local fun && read -r fun || finished=true
+    if [ -z "$fun" ] || ! isFunction "_$fun"; then continue; fi
+    if [ ! -f "$docPath/$fun.sh" ]; then
+      statusMessage decorate notice "$(decorate file "$docPath/$fun.sh") not found"
+      return 1
+    fi
+  done <"$tempFunctions"
+}
+
 # Extract and build the bin/build/documentation/ cache
 # Argument: --clean - Flag. Optional.
 # Argument: --quick - Flag. Optional. Do quick updates to minimize time to generate new files.
@@ -12,6 +25,8 @@ buildDocumentationExtractionUpdate() {
   local handler="_${FUNCNAME[0]}"
 
   local cleanFlag=false quickFlag=false
+
+  bashDebugInterruptFile
 
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
@@ -49,12 +64,7 @@ buildDocumentationExtractionUpdate() {
   catchReturn "$handler" buildFunctions >"$tempFunctions" || returnClean $? "${clean[@]}" || return $?
   totalFunctions=$(catchReturn "$handler" fileLineCount "$tempFunctions") || returnClean $? "${clean[@]}" || return $?
   if $quickFlag; then
-    if (local finished && while ! $finished; do
-      local fun helpFun
-      read -r fun || finished=true
-      [ -n "$fun" ] && isFunction "_$fun" || continue
-      if [ ! -f "$docPath/$fun.sh" ]; then statusMessage decorate notice "$(decorate file "$docPath/$fun.sh") not found" && return 1; fi
-    done <"$tempFunctions"); then
+    if ! __buildDocumentationIsComplete "$docPath" "$tempFunctions"; then
       local docToolsOldest toolsNewest toolsNewestTime
 
       toolsNewest=$(catchReturn "$handler" directoryNewestFile "$home/bin/build/tools") || returnClean $? "${clean[@]}" || return $?
@@ -71,6 +81,7 @@ buildDocumentationExtractionUpdate() {
 
       catchEnvironment "$handler" printf -- "" >"$tempFunctions" || returnClean $? "${clean[@]}" || return $?
       local index=0
+
       while read -r modificationTime filePath; do
         index=$((index + 1))
         local fn="${filePath##*/}"
@@ -101,15 +112,34 @@ buildDocumentationExtractionUpdate() {
       statusMessage decorate warning "No help for $fun ($helpFun not defined)" || :
       continue
     fi
-    local prettyFun
-    prettyFun=$(decorate code "$fun")
-    BUILD_DEBUG="documentation-cache" statusMessage timing --name "#$index/$totalFunctions - $prettyFun" muzzle "$helpFun" 0 || returnClean $? "${clean[@]}" || return $?
+    __buildDocumentationExtractionUpdateFunction "$handler" "$fun" "#$index/$totalFunctions -" || returnClean $? "${clean[@]}" || return $?
   done <"$tempFunctions" || returnClean $? "${clean[@]}" || return $?
   catchEnvironment "$handler" rm -f "${clean[@]}" || return $?
 }
 _buildDocumentationExtractionUpdate() {
   # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+# Extract and build the bin/build/documentation/ cache
+# DOC TEMPLATE: --help 1
+# Argument: --help - Flag. Optional.Display this help.
+# Argument: function - String. Required. Function to extract
+# Argument: prefix ... - String. Optional. Prefix the status line with this text.
+__buildDocumentationExtractionUpdateFunction() {
+  local handler="$1" && shift
+  local fun
+  fun=$(validate "$handler" Function "function" "${1-}") && shift || return $?
+  local prefix="$*" && set --
+  [ -z "$prefix" ] || prefix="${prefix% } "
+  local helpFun="_$fun"
+  local prettyFun
+  prettyFun=$(decorate code "$fun")
+  if ! isFunction "$helpFun"; then
+    statusMessage decorate warning "${prefix}No help for $prettyFun ($(decorate error "$helpFun") not defined)" || :
+    return 0
+  fi
+  BUILD_DEBUG="documentation-cache" statusMessage timing --name "${prefix}$prettyFun" muzzle "$helpFun" 0 || returnClean $? "${clean[@]}" || return $?
 }
 
 __buildDocumentationBuildDirectory() {

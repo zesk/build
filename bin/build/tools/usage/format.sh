@@ -78,8 +78,8 @@ __usageTemplate() {
   return "$exitCode"
 }
 ___usageTemplate() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  # __IDENTICAL__ usageDocumentSimple 1
+  usageDocumentSimple "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Formats name value pairs separated by separatorChar (default " ") and uses

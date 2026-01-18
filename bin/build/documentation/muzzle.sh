@@ -12,7 +12,7 @@ fn="muzzle"
 foundNames=([0]="argument" [1]="example" [2]="stdout")
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 source="bin/build/tools/sugar.sh"
-sourceModified="1768695708"
+sourceModified="1768698849"
 stdout="- No output from stdout ever from this function"$'\n'""
 summary="Suppress stdout without piping. Handy when you just want a"
 usage="muzzle command [ ... ]"

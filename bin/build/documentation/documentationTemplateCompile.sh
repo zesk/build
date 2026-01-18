@@ -13,6 +13,6 @@ requires="catchEnvironment timingStart throwArgument usageArgumentFile usageArgu
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 see="documentationIndexLookup"$'\n'"documentationIndexIndex"$'\n'""
 source="bin/build/tools/documentation.sh"
-sourceModified="1768695708"
+sourceModified="1768710514"
 summary="Convert a template file to a documentation file using templates"$'\n'""
 usage="documentationTemplateCompile [ --env-file envFile ] cacheDirectory sourceFile functionTemplate targetFile [ --help ]"

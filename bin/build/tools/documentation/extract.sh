@@ -39,6 +39,7 @@ __bashDocumentationSettingsFileDetails() {
   [ -z "$lineNumber" ] || catchReturn "$handler" __dumpSimpleValue "sourceLine" "$lineNumber" || return $?
 }
 
+# Caching version - __bashDocumentationExtractDirect does the actual work
 # Argument: handler - Function. Required.
 # Argument: function - String. Required.
 # Argument: sourceFile - File. Required.
@@ -49,29 +50,23 @@ __bashDocumentationExtract() {
 
   [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
 
-  set -eou pipefail
-
-  local fn source capture=(cat)
+  local fn source
 
   fn=$(validate "$handler" String "fn" "${1-}") && shift || return $?
   source=$(validate "$handler" File "source" "${1-}") && shift || return $?
 
+  local capture=(cat)
   export BUILD_HOME
   local definitionFile="${BUILD_HOME:-/dev/null}/bin/build/documentation/$fn.sh"
   if buildDebugEnabled "documentation-cache"; then
-    local currentModified
-    currentModified=$(catchReturn "$handler" fileModificationTime "$source") || return $?
+    local currentModified && currentModified=$(catchReturn "$handler" fileModificationTime "$source") || return $?
     if [ -f "$definitionFile" ] && [ "$source" -ot "$definitionFile" ]; then
-      local sourceModified
-      sourceModified=$(
-        local sourceModified=0
-        # shellcheck source=/dev/null
-        source "$definitionFile"
-        echo "$sourceModified"
-      ) || return $?
+      local sourceModified && sourceModified=$(environmentValueRead "$definitionFile" "sourceModified") || :
       if isInteger "$sourceModified" && [ "$sourceModified" -eq "$currentModified" ]; then
         catchEnvironment "$handler" touch "$definitionFile" || return $?
         return 0
+      else
+        decorate info "Secondary modification check failed: arg source=$source ($currentModified) cache source=$sourceModified ($((currentModified - sourceModified)) delta)" 1>&2
       fi
     fi
     catchEnvironment "$handler" muzzle fileDirectoryRequire "$definitionFile" || return $?
@@ -82,8 +77,11 @@ __bashDocumentationExtract() {
     catchEnvironment "$handler" cat "$definitionFile" || return $?
     return 0
   fi
+  bashRecursionDebug || return $?
 
   __bashDocumentationExtractDirect "$handler" "$fn" "$source" "$@" | catchEnvironment "$handler" environmentCompile --keep-comments | catchEnvironment "$handler" "${capture[@]}" || return $?
+
+  bashRecursionDebug --end || return $?
 }
 
 # Argument: handler - Function. Required.

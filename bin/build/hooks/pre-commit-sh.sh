@@ -33,7 +33,7 @@ if source "${BASH_SOURCE[0]%/*}/../tools.sh"; then
       export SHFMT_ARGUMENTS
       catchReturn "$handler" buildEnvironmentLoad SHFMT_ARGUMENTS || return $?
       isArray SHFMT_ARGUMENTS || SHFMT_ARGUMENTS=()
-      catchEnvironment "$handler" executeEcho shfmt "${SHFMT_ARGUMENTS[@]+"${SHFMT_ARGUMENTS[@]}"}" -w "${changed[@]+"${changed[@]}"}" || return $?
+      catchEnvironment "$handler" shfmt "${SHFMT_ARGUMENTS[@]+"${SHFMT_ARGUMENTS[@]}"}" -w "${changed[@]+"${changed[@]}"}" || return $?
     fi
     unset "${FUNCNAME[0]}" "_${FUNCNAME[0]}"
   }
