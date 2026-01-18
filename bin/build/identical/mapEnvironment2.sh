@@ -23,7 +23,7 @@
 # Argument: --search-filter - Zero or more. Callable. Filter for search tokens. (e.g. `lowercase`)
 # Argument: --replace-filter - Zero or more. Callable. Filter for replacement strings. (e.g. `trimSpace`)
 # DOC TEMPLATE: --help 1
-# Argument: --help -  Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional.Display this help.
 # Example:     printf %s "{NAME}, {PLACE}.\n" | NAME=Hello PLACE=world mapEnvironment NAME PLACE
 # Requires: environmentVariables cat throwEnvironment catchEnvironment
 # Requires: throwArgument decorate validate

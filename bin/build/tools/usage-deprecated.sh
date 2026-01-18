@@ -4,11 +4,11 @@
 #
 
 # Argument: defaultNoun - String. Required. Default noun if user noun is empty
-# Argument: usageFunction -  Function. Required. Error handler
+# Argument: usageFunction - Function. Required. Error handler
 # Argument: variableName - String. Required. Name to test
-# Argument: variableValue -  EmptyString. Required. Value to test
-# Argument: noun -  EmptyString. Required. Noun passed by user
-# Argument: testCommand ... -  Callable. Required. Test command to run on value.
+# Argument: variableValue - EmptyString. Required. Value to test
+# Argument: noun - EmptyString. Required. Noun passed by user
+# Argument: testCommand ... - Callable. Required. Test command to run on value.
 # Utility function to handle all handler
 #
 __catchArgumentHelper() {
@@ -32,10 +32,8 @@ __catchArgumentHelper() {
   printf "%s\n" "$variableValue"
 }
 
-# IDENTICAL usageArgumentCore 14
-
 # Require an argument to be non-blank
-# Argument: handler -  Function. Required. Usage function to call upon failure.
+# Argument: handler - Function. Required. Usage function to call upon failure.
 # Argument: argument - String. Required. Name of the argument used in error messages.
 # Argument: value - Optional. String, Value which should be non-blank otherwise an argument error is thrown.
 # Return Code: 2 - If `value` is blank
@@ -48,10 +46,8 @@ usageArgumentString() {
   printf "%s\n" "$1"
 }
 
-# IDENTICAL usageArgumentPositiveInteger 14
-
 # Validates a value is an positive integer and greater than zero (NOT zero)
-# Argument: usageFunction -  Function. Required. Run if handler fails
+# Argument: usageFunction - Function. Required. Run if handler fails
 # Argument: variableName - String. Required. Name of variable being tested
 # Argument: variableValue - String. Required. Required. only in that if it's blank, it fails.
 # Return Code: 2 - Argument error
@@ -65,7 +61,7 @@ usageArgumentPositiveInteger() {
 }
 
 # Validates a value is an unsigned integer and greater than zero (or equal to zero)
-# Argument: usageFunction -  Function. Required. Run if handler fails
+# Argument: usageFunction - Function. Required. Run if handler fails
 # Argument: variableName - String. Required. Name of variable being tested
 # Argument: variableValue - String. Required. Required. only in that if it's blank, it fails.
 # Argument: noun - String. Optional. Noun used to describe the argument in errors, defaults to `unsigned integer`
@@ -80,7 +76,7 @@ usageArgumentUnsignedInteger() {
 }
 
 # Validates a value is an integer
-# Argument: usageFunction -  Function. Required. Run if handler fails
+# Argument: usageFunction - Function. Required. Run if handler fails
 # Argument: variableName - String. Required. Name of variable being tested
 # Argument: variableValue - String. Required. Required. only in that if it's blank, it fails.
 # Argument: noun - String. Optional. Noun used to describe the argument in errors, defaults to `integer`
@@ -95,7 +91,7 @@ usageArgumentInteger() {
 }
 
 # Validates a value is a number
-# Argument: usageFunction -  Function. Required. Run if handler fails
+# Argument: usageFunction - Function. Required. Run if handler fails
 # Argument: variableName - String. Required. Name of variable being tested
 # Argument: variableValue - String. Required. Required. only in that if it's blank, it fails.
 # Argument: noun - String. Optional. Noun used to describe the argument in errors, defaults to `integer`
@@ -111,7 +107,7 @@ usageArgumentNumber() {
 
 # Validates a value is not blank and is a file.
 # Upon success, outputs the file name
-# Argument: usageFunction -  Function. Required. Run if handler fails
+# Argument: usageFunction - Function. Required. Run if handler fails
 # Argument: variableName - String. Required. Name of variable being tested
 # Argument: variableValue - String. Required. Value to test.
 # Argument: noun - String. Optional. Noun used to describe the argument in errors, defaults to `file`
@@ -129,7 +125,7 @@ usageArgumentFile() {
 }
 
 # Validates a value is not blank and is a file and does `realPath` on it.
-# Argument: usageFunction -  Function. Required. Run if handler fails
+# Argument: usageFunction - Function. Required. Run if handler fails
 # Argument: variableName - String. Required. Name of variable being tested
 # Argument: variableValue - String. Required. Value to test.
 # Argument: noun - String. Optional. Noun used to describe the argument in errors, defaults to `file`
@@ -149,7 +145,7 @@ usageArgumentRealFile() {
 
 # Validates a value is not blank and exists in the file system
 # Upon success, outputs the file name
-# Argument: usageFunction -  Function. Required. Run if handler fails
+# Argument: usageFunction - Function. Required. Run if handler fails
 # Argument: variableName - String. Required. Name of variable being tested
 # Argument: variableValue - String. Required. Required. only in that if it's blank, it fails.
 # Argument: noun - String. Optional. Noun used to describe the argument in errors, defaults to `file or directory`
@@ -168,7 +164,7 @@ usageArgumentExists() {
 
 # Validates a value is not blank and is a link
 # Upon success, outputs the file name
-# Argument: usageFunction -  Function. Required. Run if handler fails
+# Argument: usageFunction - Function. Required. Run if handler fails
 # Argument: variableName - String. Required. Name of variable being tested
 # Argument: variableValue - String. Required. Path to a link file.
 # Argument: noun - String. Optional. Noun used to describe the argument in errors, defaults to `link`
@@ -186,7 +182,7 @@ usageArgumentLink() {
 }
 
 # Validates a value is not blank and is a directory. Upon success, outputs the directory name trailing slash stripped.
-# Argument: usageFunction -  Function. Required. Run if handler fails
+# Argument: usageFunction - Function. Required. Run if handler fails
 # Argument: variableName - String. Required. Name of variable being tested
 # Argument: variableValue - String. Required. Required. only in that if it's blank, it fails.
 # Argument: noun - String. Optional. Noun used to describe the argument in errors, defaults to `directory`
@@ -206,7 +202,7 @@ usageArgumentDirectory() {
 }
 
 # Validates a value as a directory search list. Upon success, outputs the entire list, cleans up any invalid values or trailing characters.
-# Argument: usageFunction -  Function. Required. Run if handler fails
+# Argument: usageFunction - Function. Required. Run if handler fails
 # Argument: variableName - String. Required. Name of variable being tested
 # Argument: variableValue - String. Required. Required. only in that if it's blank, it fails.
 # Argument: noun - String. Optional. Noun used to describe the argument in errors, defaults to `directory list`
@@ -232,7 +228,7 @@ usageArgumentDirectoryList() {
 }
 
 # Validates a value as an application-relative directory search list. Upon success, outputs the entire list, cleans up any invalid values or trailing characters.
-# Argument: usageFunction -  Function. Required. Run if handler fails
+# Argument: usageFunction - Function. Required. Run if handler fails
 # Argument: variableName - String. Required. Name of variable being tested
 # Argument: variableValue - String. Required. Required. only in that if it's blank, it fails.
 # Argument: noun - String. Optional. Noun used to describe the argument in errors, defaults to `directory list`
@@ -264,7 +260,7 @@ usageArgumentApplicationDirectoryList() {
 }
 
 # Validates a value as an application-relative directory. Upon success, outputs relative path.
-# Argument: usageFunction -  Function. Required. Run if handler fails
+# Argument: usageFunction - Function. Required. Run if handler fails
 # Argument: variableName - String. Required. Name of variable being tested
 # Argument: variableValue - String. Required. Required. only in that if it's blank, it fails.
 # Argument: noun - String. Optional. Noun used to describe the argument in errors, defaults to `directory list`
@@ -291,7 +287,7 @@ usageArgumentApplicationDirectory() {
 }
 
 # Validates a value as an application-relative file. Upon success, outputs relative path.
-# Argument: usageFunction -  Function. Required. Run if handler fails
+# Argument: usageFunction - Function. Required. Run if handler fails
 # Argument: variableName - String. Required. Name of variable being tested
 # Argument: variableValue - String. Required. Value to test.
 # Argument: noun - String. Optional. Noun used to describe the argument in errors, defaults to `directory list`
@@ -317,7 +313,7 @@ usageArgumentApplicationFile() {
 }
 
 # Validates a value is not blank and is a directory and does `realPath` on it.
-# Argument: usageFunction -  Function. Required. Run if handler fails
+# Argument: usageFunction - Function. Required. Run if handler fails
 # Argument: variableName - String. Required. Name of variable being tested
 # Argument: variableValue - String. Required. Required. only in that if it's blank, it fails.
 # Argument: noun - String. Optional. Noun used to describe the argument in errors, defaults to `directory`
@@ -337,7 +333,7 @@ usageArgumentRealDirectory() {
 }
 
 # Validates a value is not blank and is a file path with a directory that exists. Upon success, outputs the file name.
-# Argument: usageFunction -  Function. Required. Run if handler fails
+# Argument: usageFunction - Function. Required. Run if handler fails
 # Argument: variableName - String. Required. Name of variable being tested
 # Argument: variableValue - String. Required. Required. only in that if it's blank, it fails.
 # Argument: noun - String. Optional. Noun used to describe the argument in errors, defaults to `file`
@@ -356,7 +352,7 @@ usageArgumentFileDirectory() {
 
 #
 # Do not require argument to be non-blank
-# Argument: handler -  Function. Required. handler function to call upon failure.
+# Argument: handler - Function. Required. handler function to call upon failure.
 # Argument: argument - String. Required. Name of the argument used in error messages.
 # Argument: value - Optional. String, Value to output.
 # Return Code: 0 - Always
@@ -367,7 +363,7 @@ usageArgumentEmptyString() {
 }
 
 # Require an argument to be a boolean value
-# Argument: handler -  Function. Required. handler function to call upon failure.
+# Argument: handler - Function. Required. handler function to call upon failure.
 # Argument: argument - String. Required. Name of the argument used in error messages.
 # Argument: value - Optional. String, Value which should be non-blank otherwise an argument error is thrown.
 # Return Code: 2 - If `value` is not a boolean
@@ -380,7 +376,7 @@ usageArgumentBoolean() {
 }
 
 # Require an argument to be a URL
-# Argument: handler -  Function. Required. handler function to call upon failure.
+# Argument: handler - Function. Required. handler function to call upon failure.
 # Argument: argument - String. Required. Name of the argument used in error messages.
 # Argument: value - Optional. String, Value which should be a URL otherwise an argument error is thrown.
 # Return Code: 0 - If `value` is `urlValid`
@@ -393,7 +389,7 @@ usageArgumentURL() {
 }
 
 # Require an argument to be a callable
-# Argument: handler -  Function. Required. handler function to call upon failure.
+# Argument: handler - Function. Required. handler function to call upon failure.
 # Argument: argument - String. Required. Name of the argument used in error messages.
 # Argument: value - Optional. String, Value which should be callable otherwise an argument error is thrown.
 # Return Code: 2 - If `value` is not `isCallable`
@@ -406,7 +402,7 @@ usageArgumentCallable() {
 }
 
 # Require an argument to be a executable
-# Argument: handler -  Function. Required. handler function to call upon failure.
+# Argument: handler - Function. Required. handler function to call upon failure.
 # Argument: argument - String. Required. Name of the argument used in error messages.
 # Argument: value - Optional. String, Value which should be executable otherwise an argument error is thrown.
 # Return Code: 2 - If `value` is not `isExecutable`
@@ -419,7 +415,7 @@ usageArgumentExecutable() {
 }
 
 # Require an argument to be a function
-# Argument: handler -  Function. Required. handler function to call upon failure.
+# Argument: handler - Function. Required. handler function to call upon failure.
 # Argument: argument - String. Required. Name of the argument used in error messages.
 # Argument: value - Optional. String, Value which should be a function otherwise an argument error is thrown.
 # Return Code: 2 - If `value` is not `isFunction`
@@ -433,7 +429,7 @@ usageArgumentFunction() {
 
 # Validates a value is ok for an environment variable name
 # Upon success, outputs the name
-# Argument: usageFunction -  Function. Required. Run if handler fails
+# Argument: usageFunction - Function. Required. Run if handler fails
 # Argument: variableName - String. Required. Name of variable being tested
 # Argument: variableValue - String. Required. Environment variable name.
 # Argument: noun - String. Optional. Noun used to describe the argument in errors, defaults to `environment variable`
@@ -447,57 +443,57 @@ usageArgumentEnvironmentVariable() {
 }
 
 # Secrets are things which should be kept secret
-# Argument: handler -  Function. Required. handler function to call upon failure.
+# Argument: handler - Function. Required. handler function to call upon failure.
 # Argument: argument - String. Required. Name of the argument used in error messages.
 usageArgumentSecret() {
   usageArgumentString "$@" || return $?
 }
 
 # List delimited with commas `,`
-# Argument: handler -  Function. Required. handler function to call upon failure.
+# Argument: handler - Function. Required. handler function to call upon failure.
 # Argument: argument - String. Required. Name of the argument used in error messages.
 usageArgumentCommaDelimitedList() {
   usageArgumentEmptyString "$@" || return $?
 }
 
 # List delimited with colons `:`
-# Argument: handler -  Function. Required. handler function to call upon failure.
+# Argument: handler - Function. Required. handler function to call upon failure.
 # Argument: argument - String. Required. Name of the argument used in error messages.
 usageArgumentColonDelimitedList() {
   usageArgumentEmptyString "$@" || return $?
 }
 
 # List delimited with colons `:`
-# Argument: handler -  Function. Required. handler function to call upon failure.
+# Argument: handler - Function. Required. handler function to call upon failure.
 # Argument: argument - String. Required. Name of the argument used in error messages.
 usageArgumentFlag() {
   usageArgumentEmptyString "$@" || return $?
 }
 
 # List delimited with spaces ` `
-# Argument: handler -  Function. Required. handler function to call upon failure.
+# Argument: handler - Function. Required. handler function to call upon failure.
 # Argument: argument - String. Required. Name of the argument used in error messages.
 usageArgumentList() {
   usageArgumentEmptyString "$@" || return $?
 }
 
 # Placeholder for array types
-# Argument: handler -  Function. Required. handler function to call upon failure.
+# Argument: handler - Function. Required. handler function to call upon failure.
 # Argument: argument - String. Required. Name of the argument used in error messages.
 usageArgumentArray() {
   usageArgumentEmptyString "$@" || return $?
 }
 
 # Placeholder for additional arguments
-# Argument: handler -  Function. Required. handler function to call upon failure.
+# Argument: handler - Function. Required. handler function to call upon failure.
 # Argument: argument - String. Required. Name of the argument used in error messages.
-# Argument: value ... -  Arguments. Optional.Additional arguments.
+# Argument: value ... - Arguments. Optional.Additional arguments.
 usageArgumentArguments() {
   usageArgumentEmptyString "$@" || return $?
 }
 
 # A remote path is one which exists in another file system
-# Argument: handler -  Function. Required. handler function to call upon failure.
+# Argument: handler - Function. Required. handler function to call upon failure.
 # Argument: argument - String. Required. Name of the argument used in error messages.
 # Return Code: 2 - Always
 usageArgumentRemoteDirectory() {
@@ -509,7 +505,7 @@ usageArgumentRemoteDirectory() {
 }
 
 # A remote path is one which exists in another file system
-# Argument: handler -  Function. Required. handler function to call upon failure.
+# Argument: handler - Function. Required. handler function to call upon failure.
 # Argument: argument - String. Required. Name of the argument used in error messages.
 # Return Code: 2 - Always
 usageArgumentDate() {

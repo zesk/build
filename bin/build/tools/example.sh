@@ -19,26 +19,26 @@ _usageFunction() {
 
 #
 # DOC TEMPLATE: --help 1
-# Argument: --help -  Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional.Display this help.
 #
 # DOC TEMPLATE: --handler 1
-# Argument: --handler handler -  Function. Optional.Use this error handler instead of the default error handler.
+# Argument: --handler handler - Function. Optional.Use this error handler instead of the default error handler.
 #
-# Argument: --easy -  Flag. Optional.Easy mode.
+# Argument: --easy - Flag. Optional.Easy mode.
 # Argument: binary - String. Required. The binary to look for.
-# Argument: remoteUrl -  URL. Required. Remote URL.
-# Argument: --target target -  File. Optional.File to create. File must exist.
-# Argument: --path path -  Directory. Optional.Directory of path of thing.
+# Argument: remoteUrl - URL. Required. Remote URL.
+# Argument: --target target - File. Optional.File to create. File must exist.
+# Argument: --path path - Directory. Optional.Directory of path of thing.
 # Argument: --title title - String. Optional. Title of the thing.
 # Argument: --name name - String. Optional. Name of the thing.
-# Argument: --url url -  URL. Optional.URL to download.
-# Argument: --callable callable -  Callable. Optional.Function to call when url is downloaded.
+# Argument: --url url - URL. Optional.URL to download.
+# Argument: --callable callable - Callable. Optional.Function to call when url is downloaded.
 # This is a sample function with example code and patterns used in Zesk Build.
 #
 # DOC TEMPLATE: noArgumentsForHelp 1
 # Without arguments, displays help.
 # DOC TEMPLATE: dashDashAllowsHelpParameters 1
-# Argument: -- -  Flag. Optional.Stops command processing to enable arbitrary text to be passed as additional arguments without special meaning.
+# Argument: -- - Flag. Optional.Stops command processing to enable arbitrary text to be passed as additional arguments without special meaning.
 exampleFunction() {
   local handler="_${FUNCNAME[0]}"
   local name="" easyFlag=false width=50 target=""
@@ -99,9 +99,9 @@ _exampleFunction() {
 # IDENTICAL __source 21
 
 # Load a source file and run a command
-# Argument: source -  File. Required. Path to source relative to application root..
-# Argument: relativeHome -  Directory. Optional.Path to application root. Defaults to `..`
-# Argument: command ... -  Callable. Optional.A command to run and optional arguments.
+# Argument: source - File. Required. Path to source relative to application root..
+# Argument: relativeHome - Directory. Optional.Path to application root. Defaults to `..`
+# Argument: command ... - Callable. Optional.A command to run and optional arguments.
 # Requires: returnMessage
 # Security: source
 # Return Code: 253 - source failed to load (internal error)
@@ -122,8 +122,8 @@ __source() {
 # IDENTICAL __tools 8
 
 # Load build tools and run command
-# Argument: relativeHome -  Directory. Required. Path to application root.
-# Argument: command ... -  Callable. Optional.A command to run and optional arguments.
+# Argument: relativeHome - Directory. Required. Path to application root.
+# Argument: command ... - Callable. Optional.A command to run and optional arguments.
 # Requires: __source
 __tools() {
   __source bin/build/tools.sh "$@"
@@ -132,7 +132,7 @@ __tools() {
 # IDENTICAL returnMessage 39
 
 # Return passed in integer return code and output message to `stderr` (non-zero) or `stdout` (zero)
-# Argument: exitCode -  UnsignedInteger. Required. Exit code to return. Default is 1.
+# Argument: exitCode - UnsignedInteger. Required. Exit code to return. Default is 1.
 # Argument: message ... - String. Optional. Message to output
 # Return Code: exitCode
 # Requires: isUnsignedInteger printf returnMessage

@@ -34,7 +34,7 @@ __promptLoader() {
 # Argument: --colors colorsText - String. Optional. Set the prompt colors. See COLORS below.
 # Argument: --skip-prompt - Flag. Optional. Do not modify the prompt.
 # DOC TEMPLATE: --help 1
-# Argument: --help -  Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional.Display this help.
 #
 # Bash prompt creates the `PS1` prompt with the following extra features:
 #
@@ -95,7 +95,7 @@ _bashPrompt() {
 #
 # See: read
 # DOC TEMPLATE: --help 1
-# Argument: --help -  Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional.Display this help.
 # Argument: ... - Arguments. Optional. Identical arguments to `read` (but includes `-r`)
 bashUserInput() {
   local handler="_${FUNCNAME[0]}"
@@ -120,9 +120,9 @@ _bashUserInput() {
 
 # Set markers for terminal integration
 # DOC TEMPLATE: --help 1
-# Argument: --help -  Flag. Optional.Display this help.
-# Argument: prefix -  EmptyString. Optional.Prefix for all prompts.
-# Argument: suffix -  EmptyString. Optional.Suffix for all prompts.
+# Argument: --help - Flag. Optional.Display this help.
+# Argument: prefix - EmptyString. Optional.Prefix for all prompts.
+# Argument: suffix - EmptyString. Optional.Suffix for all prompts.
 # Outputs the current marker settings, one per line (0, 1, or 2 lines will be output).
 bashPromptMarkers() {
   local handler="_${FUNCNAME[0]}"

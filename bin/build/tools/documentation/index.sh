@@ -16,7 +16,7 @@
 #
 # Use with __documentationIndexLookup
 #
-# Argument: codePath -  Directory. Required. Path where code is stored (should remain identical between invocations)
+# Argument: codePath - Directory. Required. Path where code is stored (should remain identical between invocations)
 # Argument: cacheDirectory - Required. Cache directory where the index will be created.
 # Argument: --verbose - Flag. Optional.
 # See: __documentationIndexLookup
@@ -121,7 +121,7 @@ __documentationIndexGenerate() {
 #
 # List of functions which are not linked to anywhere in the documentation index
 #
-# Argument: cacheDirectory -  Directory. Required. Index cache directory.
+# Argument: cacheDirectory - Directory. Required. Index cache directory.
 _documentationIndexUnlinkedFunctions() {
   local handler="_${FUNCNAME[0]}"
 

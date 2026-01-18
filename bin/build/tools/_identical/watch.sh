@@ -7,7 +7,7 @@
 # In case you forgot, the directory in which this file is named `_identical` and *NOT* `identical`.
 
 # Argument: --prefix prefix - String. Required. A text prefix to search for to identify identical sections (e.g. `# IDENTICAL`) (may specify more than one)
-# Argument: file ... -  File. Required. A file to search for identical tokens.
+# Argument: file ... - File. Required. A file to search for identical tokens.
 # stdout: tokens, one per line
 __identicalFindTokens() {
   local handler="$1" && shift

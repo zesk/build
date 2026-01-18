@@ -109,7 +109,7 @@ _directoryClobber() {
 # Example:     logFile=./.build/$me.log
 # Example:     {fn} "$logFile"
 # DOC TEMPLATE: --help 1
-# Argument: --help -  Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional.Display this help.
 # Argument: --mode fileMode - String. Optional. Enforce the directory mode for `mkdir --mode` and `chmod`. Affects directories after it in the command line; supply multiple modes and order your directories if needed. Set to `-` to reset to no value.
 # Argument: --owner ownerName - String. Optional. Enforce the directory owner the directory. Affects all directories supplied AFTER it on the command line. Set to `-` to reset to no value.
 # Argument: fileDirectory ... - FileDirectory. Required. Test if file directory exists (file does not have to exist)
@@ -182,7 +182,7 @@ _fileDirectoryExists() {
 # Argument: directoryPath ... - One or more directories to create
 # Example:     {fn} "$cachePath"
 # DOC TEMPLATE: --help 1
-# Argument: --help -  Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional.Display this help.
 # Argument: --mode fileMode - String. Optional. Enforce the directory mode for `mkdir --mode` and `chmod`. Affects directories after it in the command line; supply multiple modes and order your directories if needed. Set to `-` to reset to no value.
 # Argument: --owner ownerName - String. Optional. Enforce the directory owner the directory. Affects all directories supplied AFTER it on the command line. Set to `-` to reset to no value.
 # Requires: throwArgument usageArgumentFunction usageArgumentString decorate catchEnvironment dirname
@@ -305,7 +305,7 @@ _directoryRelativePath() {
 
 # Finds a file above `startingDirectory`, uses `testExpression` to test (defaults to `-d`)
 # Argument: startingDirectory - Required. EmptyString|RealDirectory. Uses the current directory if blank.
-# Argument: --pattern filePattern -  RelativePath. Required. The file or directory to find the home for.
+# Argument: --pattern filePattern - RelativePath. Required. The file or directory to find the home for.
 # Argument: --test testExpression - String. Optional. Zero or more. The `test` argument to test the targeted `filePattern`. By default uses `-d`.
 directoryParent() {
   __directoryParent "_${FUNCNAME[0]}" "$@"
@@ -317,12 +317,12 @@ _directoryParent() {
 
 # Utility for specific implementations of `directoryParent`
 # See: gitFindHome
-# Argument: usageFunction -  Function. Required. Called when an error occurs.
+# Argument: usageFunction - Function. Required. Called when an error occurs.
 # Argument: startingDirectory - Required. EmptyString|RealDirectory. Uses the current directory if blank.
-# Argument: --pattern filePattern -  RelativePath. Required. The file or directory to find the home for.
+# Argument: --pattern filePattern - RelativePath. Required. The file or directory to find the home for.
 # Argument: --test testExpression - String. Optional. Zero or more. The `test` argument to test the targeted `filePattern`. By default uses `-d`.
 # DOC TEMPLATE: --help 1
-# Argument: --help -  Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional.Display this help.
 __directoryParent() {
   local handler="${1-}" && shift
 

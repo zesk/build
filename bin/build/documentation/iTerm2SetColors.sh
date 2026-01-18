@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-17
+# Generated on 2026-01-18
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/iterm2.sh"
 argument="--verbose | -v - Flag. Optional. Verbose mode. Show what you are doing."$'\n'"--skip-errors - Flag. Optional. Skip errors in color settings and continue - if loading a file containing a color scheme will load most of the file and skip any color settings with errors."$'\n'"--ignore | -i - Flag. Optional. If the current terminal is not iTerm2, then exit status 0 and do nothing."$'\n'"colorSetting ... - String. Required. colorName=colorFormat string"$'\n'""
@@ -11,7 +11,7 @@ fn="iTerm2SetColors"
 foundNames=([0]="argument" [1]="stdin")
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 source="bin/build/tools/iterm2.sh"
-sourceModified="1768683751"
+sourceModified="1768695708"
 stdin="\`colorName=colorFormat\`. One per line. Only if no arguments passed with \`colorSetting\` format."$'\n'""
 summary="Set terminal colors"
 usage="iTerm2SetColors [ --verbose | -v ] [ --skip-errors ] [ --ignore | -i ] colorSetting ..."

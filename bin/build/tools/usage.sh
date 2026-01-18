@@ -20,9 +20,9 @@ __usageLoader() {
 #
 # Actual function is called `{functionName}`.
 #
-# Argument: functionDefinitionFile -  File. Required. The file in which the function is defined. If you don't know, use `__bashDocumentation_FindFunctionDefinitions` or `__bashDocumentation_FindFunctionDefinition`.
+# Argument: functionDefinitionFile - File. Required. The file in which the function is defined. If you don't know, use `__bashDocumentation_FindFunctionDefinitions` or `__bashDocumentation_FindFunctionDefinition`.
 # Argument: functionName - String. Required. The function which actually defines our usage syntax. Documentation is extracted from this function, regardless.
-# Argument: exitCode -  Integer. Required. The function which actually defines our usage syntax. Documentation is extracted from this function, regardless.
+# Argument: exitCode - Integer. Required. The function which actually defines our usage syntax. Documentation is extracted from this function, regardless.
 # Argument: message - String. Optional. A message.
 #
 # Generates console usage output for a script using documentation tools parsed from the comment of the function identified.
@@ -45,7 +45,7 @@ _usageDocument() {
 
 # Output a simple error message for a function
 # DOC TEMPLATE: --help 1
-# Argument: --help -  Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional.Display this help.
 # Argument: source - File. Required. File where documentation exists.
 # Argument: function - String. Required. Function to document.
 # Argument: returnCode - UnsignedInteger. Required. Exit code to return.

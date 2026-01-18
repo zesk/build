@@ -192,7 +192,7 @@ _processMemoryUsage() {
 # Outputs value of virtual memory allocated for a process, value is in kilobytes
 #
 # DOC TEMPLATE: --help 1
-# Argument: --help -  Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional.Display this help.
 # Argument: pid - Process ID of running process
 # Example:     {fn} 23
 # Output: 423
@@ -229,7 +229,7 @@ _processVirtualMemoryAllocation() {
 # Output the number of open files for a process ID or group
 # Not completed yet
 # DOC TEMPLATE: --help 1
-# Argument: --help -  Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional.Display this help.
 processOpenPipes() {
   local handler="_${FUNCNAME[0]}"
   # _IDENTICAL_ argumentNonBlankLoopHandler 6

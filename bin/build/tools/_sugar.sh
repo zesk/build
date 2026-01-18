@@ -54,7 +54,7 @@ _returnCode() {
 # INTERNAL: Winner of the one-line bash award 10 years running
 # Argument: code ... - UnsignedInteger. String. Exit code value to output.
 # DOC TEMPLATE: --help 1
-# Argument: --help -  Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional.Display this help.
 # stdout: exitCodeToken, one per line
 returnCodeString() {
   local k="" && while [ $# -gt 0 ]; do case "$1" in 0) k="success" ;; 1) k="environment" ;; 2) k="argument" ;; 97) k="assert" ;; 105) k="identical" ;; 108) k="leak" ;; 116) k="timeout" ;; 120) k="exit" ;; 127) k="not-found" ;; 130) k="user-interrupt" ;; 141) k="interrupt" ;; 253) k="internal" ;; 254) k="unknown" ;; --help) "_${FUNCNAME[0]}" 0 && return $? || return $? ;; *) k="[returnCodeString unknown \"$1\"]" ;; esac && [ -n "$k" ] || k="$1" && printf "%s\n" "$k" && shift; done
@@ -72,7 +72,7 @@ _returnCodeString() {
 # Return Code: 1 - if value is not a boolean
 # See: isTrue parseBoolean
 # DOC TEMPLATE: --help 1
-# Argument: --help -  Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional.Display this help.
 # Argument: value - String. Optional. Value to check if it is a boolean.
 # Requires: usageDocument printf
 isBoolean() {
@@ -121,8 +121,8 @@ returnThrow() {
 }
 
 # Run binary and catch errors with handler
-# Argument: handler -  Function. Required. Error handler.
-# Argument: binary ... -  Executable. Required. Any arguments are passed to `binary`.
+# Argument: handler - Function. Required. Error handler.
+# Argument: binary ... - Executable. Required. Any arguments are passed to `binary`.
 # Requires: returnArgument
 catchReturn() {
   local handler="${1-}" && shift || returnArgument "Missing handler" || return $?
@@ -132,8 +132,8 @@ catchReturn() {
 # _IDENTICAL_ returnClean 21
 
 # Delete files or directories and return the same exit code passed in.
-# Argument: exitCode -  Integer. Required. Exit code to return.
-# Argument: item - Optional. One or more files or folders to delete, failures are logged to stderr.
+# Argument: exitCode - Integer. Required. Exit code to return.
+# Argument: item - Exists. Optional. One or more files or folders to delete, failures are logged to stderr.
 # Requires: isUnsignedInteger returnArgument throwEnvironment usageDocument throwArgument __help
 # Group: Sugar
 returnClean() {
@@ -162,7 +162,7 @@ executeEcho() {
 
 # _IDENTICAL_ execute 7
 
-# Argument: binary ... -  Executable. Required. Any arguments are passed to `binary`.
+# Argument: binary ... - Executable. Required. Any arguments are passed to `binary`.
 # Run binary and output failed command upon error
 # Requires: returnMessage
 execute() {
@@ -176,7 +176,7 @@ execute() {
 # Prints the mapped value to stdout
 #
 # DOC TEMPLATE: --help 1
-# Argument: --help -  Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional.Display this help.
 # Argument: value - String. A value.
 # Argument: from - String. When value matches `from`, instead print `to`
 # Argument: to - String. The value to print when `from` matches `value`
@@ -209,9 +209,9 @@ _convertValue() {
 }
 
 # Run `command`, handle failure with `handler` with `code` and `command` as error
-# Argument: code -  UnsignedInteger. Required. Exit code to return
-# Argument: handler -  Function. Required. Failure command, passed remaining arguments and error code.
-# Argument: command ... -  Callable. Required. Command to run.
+# Argument: code - UnsignedInteger. Required. Exit code to return
+# Argument: handler - Function. Required. Failure command, passed remaining arguments and error code.
+# Argument: command ... - Callable. Required. Command to run.
 # Requires: isUnsignedInteger returnArgument isFunction isCallable
 catchCode() {
   local __count=$# __saved=("$@") __handler="_${FUNCNAME[0]}" code="${1-0}" command="${3-}"
@@ -231,22 +231,22 @@ _catchCode() {
 }
 
 # Run `command`, upon failure run `handler` with an environment error
-# Argument: handler -  Function. Required. Failure command
-# Argument: command ... -  Callable. Required. Command to run.
+# Argument: handler - Function. Required. Failure command
+# Argument: command ... - Callable. Required. Command to run.
 catchEnvironment() {
   catchCode 1 "$@" || return $?
 }
 
 # Run `command`, upon failure run `handler` with an argument error
-# Argument: handler -  Function. Required. Failure command
-# Argument: command ... -  Callable. Required. Command to run.
+# Argument: handler - Function. Required. Failure command
+# Argument: command ... - Callable. Required. Command to run.
 catchArgument() {
   catchCode 2 "$@" || return $?
 }
 
 # Run `handler` with an environment error
-# Argument: handler -  Function. Required. Failure command
-# Argument: message ... - Optional. Error message to display.
+# Argument: handler - Function. Required. Failure command
+# Argument: message ... - String. Optional. Error message to display.
 throwEnvironment() {
   local __handler="${1-}"
   # __IDENTICAL__ __checkHandler 1
@@ -255,8 +255,8 @@ throwEnvironment() {
 }
 
 # Run `handler` with an argument error
-# Argument: handler -  Function. Required. Failure command
-# Argument: message ... - Optional. Error message to display.
+# Argument: handler - Function. Required. Failure command
+# Argument: message ... - String. Optional. Error message to display.
 throwArgument() {
   local __handler="${1-}"
   # __IDENTICAL__ __checkHandler 1

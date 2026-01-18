@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-17
+# Generated on 2026-01-18
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/url.sh"
 argument="--show-file - Boolean. Optional. Show the file name in the output (suffix with \`: \`)"$'\n'"--file name - String. Optional. The file name to display - can be any text."$'\n'"file - File. Optional. A file to read and output URLs found."$'\n'""
@@ -11,7 +11,7 @@ fn="urlFilter"
 foundNames=([0]="argument" [1]="stdin" [2]="stdout")
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 source="bin/build/tools/url.sh"
-sourceModified="1768683999"
+sourceModified="1768695708"
 stdin="text"$'\n'""
 stdout="line:URL"$'\n'""
 summary="Open URLs which appear in a stream"

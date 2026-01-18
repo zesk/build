@@ -13,7 +13,7 @@
 # Summary: Install `python`
 # When this tool succeeds the `python` binary is available in the local operating system.
 # DOC TEMPLATE: --help 1
-# Argument: --help -  Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional.Display this help.
 # Return Code: 1 - If installation fails
 # Return Code: 0 - If installation succeeds
 pythonInstall() {
@@ -43,8 +43,8 @@ _pythonUninstall() {
 
 # Utility to upgrade pip correctly
 # DOC TEMPLATE: --help 1
-# Argument: --help -  Flag. Optional.Display this help.
-# Argument: --bin binary -  Executable. Optional.Binary for `pip`.
+# Argument: --help - Flag. Optional.Display this help.
+# Argument: --bin binary - Executable. Optional.Binary for `pip`.
 pipUpgrade() {
   local handler="_${FUNCNAME[0]}"
   local pp=()
@@ -79,9 +79,9 @@ _pipUpgrade() {
 # Utility to install python dependencies via pip
 # Installs python if it hasn't been using `pythonInstall`.
 # DOC TEMPLATE: --help 1
-# Argument: --help -  Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional.Display this help.
 # DOC TEMPLATE: --handler 1
-# Argument: --handler handler -  Function. Optional.Use this error handler instead of the default error handler.
+# Argument: --handler handler - Function. Optional.Use this error handler instead of the default error handler.
 # Argument: pipPackage [ ... ] - String. Required. Pip package name to install.
 pipInstall() {
   local handler="_${FUNCNAME[0]}"
@@ -130,9 +130,9 @@ _pipInstall() {
 
 # Utility to uninstall python dependencies via pip
 # DOC TEMPLATE: --help 1
-# Argument: --help -  Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional.Display this help.
 # DOC TEMPLATE: --handler 1
-# Argument: --handler handler -  Function. Optional.Use this error handler instead of the default error handler.
+# Argument: --handler handler - Function. Optional.Use this error handler instead of the default error handler.
 # Argument: pipPackage [ ... ] - String. Required. Pip package name to uninstall.
 pipUninstall() {
   local handler="_${FUNCNAME[0]}"
@@ -196,11 +196,11 @@ _pipUninstall() {
 }
 
 # Run pip whether it is installed as a module or as a binary
-# Argument: --bin binary -  Executable. Optional.Binary for `pip`.
+# Argument: --bin binary - Executable. Optional.Binary for `pip`.
 # DOC TEMPLATE: --handler 1
-# Argument: --handler handler -  Function. Optional.Use this error handler instead of the default error handler.
+# Argument: --handler handler - Function. Optional.Use this error handler instead of the default error handler.
 # DOC TEMPLATE: --help 1
-# Argument: --help -  Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional.Display this help.
 # Argument: ... - Arguments. Optional. Arguments passed to `pip`
 pipWrapper() {
   local handler="_${FUNCNAME[0]}"
@@ -241,9 +241,9 @@ _pipWrapper() {
 # Is a package installed for python?
 # Argument: pipPackage ... - String. Required. Package name(s) to check.
 # DOC TEMPLATE: --help 1
-# Argument: --help -  Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional.Display this help.
 # DOC TEMPLATE: --handler 1
-# Argument: --handler handler -  Function. Optional.Use this error handler instead of the default error handler.
+# Argument: --handler handler - Function. Optional.Use this error handler instead of the default error handler.
 # Argument: --any - Flag. Optional. When specified changes the behavior such that if it returns return code 0 IFF any single package is installed.
 # Return Code: 0 - All packages are installed (or at least one package with `--any`)
 # Return Code: 1 - All packages are not installed (or NO packages are installed with `--any`)
@@ -291,9 +291,9 @@ _pythonPackageInstalled() {
 # Argument: --require requirements - File. Optional. Requirements file for project.
 # Argument: pipPackage ... - String. Optional. One or more pip packages to install in the virtual environment.
 # DOC TEMPLATE: --help 1
-# Argument: --help -  Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional.Display this help.
 # DOC TEMPLATE: --handler 1
-# Argument: --handler handler -  Function. Optional.Use this error handler instead of the default error handler.
+# Argument: --handler handler - Function. Optional.Use this error handler instead of the default error handler.
 # When completed, a directory `.venv` exists in your project containing dependencies.
 pythonVirtual() {
   local handler="_${FUNCNAME[0]}"

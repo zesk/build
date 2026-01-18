@@ -72,7 +72,7 @@ _buildFailed() {
 #
 # Argument: -r | --reverse - Reverse the sort order (optional)
 # DOC TEMPLATE: --help 1
-# Argument: --help -  Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional.Display this help.
 # Example:     git tag | grep -e '^v[0-9.]*$' | versionSort
 # Requires: throwArgument sort usageDocument decorate
 versionSort() {
@@ -109,7 +109,7 @@ _versionSort() {
 
 # Get the current IP address of a host
 # DOC TEMPLATE: --help 1
-# Argument: --help -  Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional.Display this help.
 # Environment: IP_URL
 # Environment: IP_URL_FILTER
 ipLookup() {
@@ -148,11 +148,11 @@ _ipLookup() {
 # Otherwise, the tool *may* output a message to the console warning of pending days, and returns exit code 0 if the `keyDate` has not exceeded the number of days.
 #
 # Summary: Test whether the key needs to be updated
-# Argument: keyDate -  Date. Required. Formatted like `YYYY-MM-DD`. Truncated at 10 characters as well.
-# Argument: upToDateDays -  Integer. Required. Days that key expires after `keyDate`.
+# Argument: keyDate - Date. Required. Formatted like `YYYY-MM-DD`. Truncated at 10 characters as well.
+# Argument: upToDateDays - Integer. Required. Days that key expires after `keyDate`.
 # Argument: --name name - Optional. Name of the expiring item for error messages.
 # DOC TEMPLATE: --help 1
-# Argument: --help -  Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional.Display this help.
 # Example:     if !isUpToDate "$AWS_ACCESS_KEY_DATE" 90; then
 # Example:       bigText Failed, update key and reset date
 # Example:       exit 99

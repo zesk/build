@@ -24,10 +24,10 @@
 # - Executable Callable Function
 # - URL
 #
-# Argument: this -  Function. Required. Function to collect arguments for. Assume handler function is "_$this".
-# Argument: source -  File. Required. File of the function to collect the specification.
+# Argument: this - Function. Required. Function to collect arguments for. Assume handler function is "_$this".
+# Argument: source - File. Required. File of the function to collect the specification.
 # Argument: --none - Flag. Optional. If specified, state file is deleted prior to return regardless of handling.
-# Argument: arguments ... -  EmptyString. Optional.One or more arguments to parse.
+# Argument: arguments ... - EmptyString. Optional.One or more arguments to parse.
 # Output is a temporary `stateFile` on line 1
 _arguments() {
   local _handler_="_${FUNCNAME[0]}"
@@ -129,7 +129,7 @@ __commentArgumentSpecificationMagic() {
 
 #
 # Generate a specification file for arguments
-# Argument: functionDefinitionFile -  File. Required. Source file where the function is defined.
+# Argument: functionDefinitionFile - File. Required. Source file where the function is defined.
 # Argument: functionName - String. Required. Function to fetch the specification for.
 # Outputs the specification "id" to be used for future calls
 # Spec outputs a directory:
@@ -245,8 +245,8 @@ __commentArgumentSpecificationDefaults() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# Argument: argumentDirectory -  Directory. Required. Directory where the arguments structure is stored.
-# Argument: argumentId -  Integer. Required. This argument ID.
+# Argument: argumentDirectory - Directory. Required. Directory where the arguments structure is stored.
+# Argument: argumentId - Integer. Required. This argument ID.
 # Output: nothing
 _commentArgumentSpecificationParseLine() {
   local functionCache="${1-}" argumentId="${2-}"

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-17
+# Generated on 2026-01-18
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/docker-compose.sh"
 argument="package - Additional packages to install (using \`pipInstall\`)"$'\n'""
@@ -12,6 +12,6 @@ foundNames=([0]="argument" [1]="summary" [2]="see")
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 see="pipInstall"$'\n'""
 source="bin/build/tools/docker-compose.sh"
-sourceModified="1768683825"
+sourceModified="1768695708"
 summary="Install \`docker-compose\`"$'\n'""
 usage="dockerComposeInstall [ package ]"

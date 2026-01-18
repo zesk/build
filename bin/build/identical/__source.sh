@@ -9,9 +9,9 @@
 # IDENTICAL __source EOF
 
 # Load a source file and run a command
-# Argument: source -  File. Required. Path to source relative to application root..
-# Argument: relativeHome -  Directory. Optional.Path to application root. Defaults to `..`
-# Argument: command ... -  Callable. Optional.A command to run and optional arguments.
+# Argument: source - File. Required. Path to source relative to application root..
+# Argument: relativeHome - Directory. Optional.Path to application root. Defaults to `..`
+# Argument: command ... - Callable. Optional.A command to run and optional arguments.
 # Requires: returnMessage
 # Security: source
 # Return Code: 253 - source failed to load (internal error)

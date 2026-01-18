@@ -11,9 +11,9 @@
 # Run a function and preserve exit code
 # Returns `code`
 # DOC TEMPLATE: --help 1
-# Argument: --help -  Flag. Optional.Display this help.
-# Argument: code -  UnsignedInteger. Required. Exit code to return.
-# Argument: undoFunction - Optional. Command to run to undo something. Return status is ignored.
+# Argument: --help - Flag. Optional.Display this help.
+# Argument: code - UnsignedInteger. Required. Exit code to return.
+# Argument: undoFunction - Callable. Optional. Command to run to undo something. Return status is ignored.
 # Argument: -- - Flag. Optional. Used to delimit multiple commands.
 # As a caveat, your command to `undo` can NOT take the argument `--` as a parameter.
 # Example:     local undo thing

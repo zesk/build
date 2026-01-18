@@ -8,8 +8,8 @@
 # _IDENTICAL_ returnClean EOF
 
 # Delete files or directories and return the same exit code passed in.
-# Argument: exitCode -  Integer. Required. Exit code to return.
-# Argument: item - Optional. One or more files or folders to delete, failures are logged to stderr.
+# Argument: exitCode - Integer. Required. Exit code to return.
+# Argument: item - Exists. Optional. One or more files or folders to delete, failures are logged to stderr.
 # Requires: isUnsignedInteger returnArgument throwEnvironment usageDocument throwArgument __help
 # Group: Sugar
 returnClean() {

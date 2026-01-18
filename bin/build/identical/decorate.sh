@@ -18,10 +18,10 @@
 # Sets the environment variable `BUILD_COLORS` if not set, uses `TERM` to calculate
 #
 # DOC TEMPLATE: --help 1
-# Argument: --help -  Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional.Display this help.
 # Return Code: 0 - Console or output supports colors
 # Return Code: 1 - Colors are likely not supported by console
-# Environment: BUILD_COLORS -  Boolean. Optional.Whether the build system will output ANSI colors.
+# Environment: BUILD_COLORS - Boolean. Optional.Whether the build system will output ANSI colors.
 # Requires: isPositiveInteger tput
 hasColors() {
   # --help is only argument allowed
@@ -71,7 +71,7 @@ __decorate() {
 
 # Output a list of build-in decoration styles, one per line
 # DOC TEMPLATE: --help 1
-# Argument: --help -  Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional.Display this help.
 decorations() {
   [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
   printf "%s\n" reset \
@@ -123,7 +123,7 @@ _decorate() {
 # Is the decorate color system initialized yet?
 # Useful to set our global color environment at the top level of a script if it hasn't been initialized already.
 # DOC TEMPLATE: --help 1
-# Argument: --help -  Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional.Display this help.
 decorateInitialized() {
   [ "${1-}" != "--help" ] || __help --only "_${FUNCNAME[0]}" "$@" || return 0
   export __BUILD_DECORATE

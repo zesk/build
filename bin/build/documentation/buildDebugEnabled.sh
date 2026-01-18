@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-17
+# Generated on 2026-01-18
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/debug.sh"
 argument="moduleName - String. Optional. If \`BUILD_DEBUG\` contains any token passed, debugging is enabled."$'\n'""
@@ -13,6 +13,6 @@ fn="buildDebugEnabled"
 foundNames=([0]="argument" [1]="environment" [2]="example")
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 source="bin/build/tools/debug.sh"
-sourceModified="1768687749"
+sourceModified="1768695708"
 summary="Is build debugging enabled?"
 usage="buildDebugEnabled [ moduleName ]"

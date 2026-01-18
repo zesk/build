@@ -181,7 +181,7 @@ _installInstallBinaryDiffer() {
   fi
 }
 
-# Argument: diff-arguments -  Arguments. Required. Passed to diff.
+# Argument: diff-arguments - Arguments. Required. Passed to diff.
 _installInstallBinaryDifferFilter() {
   diff "$@" | grep -v -e '^__installPackageConfiguration ' | grep -c '[<>]'
 }

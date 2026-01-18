@@ -4,10 +4,10 @@
 #
 # Copyright &copy; 2026 Market Acumen, Inc.
 
-# Argument: loopCallable -  Callable. Required. Call this on each file and a zero result code means passed and non-zero means fails.
-# Argument: --exec binary -  Callable. Optional.Run binary with files as an argument for any failed files. Only works if you pass in item names.
-# Argument: --delay delaySeconds -  Integer. Optional.Delay in seconds between checks in interactive mode.
-# Argument: fileToCheck ... -  File. Optional.Shell file to validate. May also supply file names via stdin.
+# Argument: loopCallable - Callable. Required. Call this on each file and a zero result code means passed and non-zero means fails.
+# Argument: --exec binary - Callable. Optional.Run binary with files as an argument for any failed files. Only works if you pass in item names.
+# Argument: --delay delaySeconds - Integer. Optional.Delay in seconds between checks in interactive mode.
+# Argument: fileToCheck ... - File. Optional.Shell file to validate. May also supply file names via stdin.
 # Run checks interactively until errors are all fixed.
 # Not ready for prime time yet - written not tested.
 __interactiveManager() {

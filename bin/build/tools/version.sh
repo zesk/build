@@ -11,7 +11,7 @@
 
 # Check if something matches a version
 # DOC TEMPLATE: --help 1
-# Argument: --help -  Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional.Display this help.
 # Argument: binary - String. Required. The binary to look for.
 isVersion() {
   local part parts
@@ -55,7 +55,7 @@ _versionNoVee() {
 # When this tool succeeds it outputs the path to the current release notes file
 #
 # Environment: BUILD_RELEASE_NOTES
-# Argument: --application application -  Directory. Optional.Application home directory.
+# Argument: --application application - Directory. Optional.Application home directory.
 # Argument: version - String. Optional. Version for the release notes path. If not specified uses the current version.
 # Output: docs/release/version.md
 # Hook: version-current

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-17
+# Generated on 2026-01-18
 # shellcheck disable=SC2034
     # v0.25.0
     # v0.24.0
@@ -13,6 +13,6 @@ fn="deprecatedCannonFile"
 foundNames=([0]="argument")
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 source="bin/build/tools/deprecated-tools.sh"
-sourceModified="1768683751"
+sourceModified="1768695708"
 summary="Run cannon using a configuration file or files."
 usage="deprecatedCannonFile findArgumentFunction cannonFile"

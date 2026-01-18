@@ -13,7 +13,7 @@
 # Argument: templatePath - Directory. Required. Path to the templates to repair.
 # Argument: repairPath ... - Directory. Required. One or more directories containing IDENTICAL sources for repair.
 # DOC TEMPLATE: --help 1
-# Argument: --help -  Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional.Display this help.
 __documentationTemplateUpdate() {
   local handler="$1" && shift
   [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
@@ -33,10 +33,10 @@ __documentationTemplateUpdate() {
   done
 }
 
-# Argument: cacheDirectory -  Directory. Required. Cache directory.
-# Argument: envFile -  File. Required. Environment file used as base environment for all template generation.
-# Argument: template -  File. Required. Final template file.
-# Argument: todoTemplateCode -  File. Optional.Template code for template.
+# Argument: cacheDirectory - Directory. Required. Cache directory.
+# Argument: envFile - File. Required. Environment file used as base environment for all template generation.
+# Argument: template - File. Required. Final template file.
+# Argument: todoTemplateCode - File. Optional.Template code for template.
 __documentationTemplateUpdateUnlinked() {
   local handler="_${FUNCNAME[0]}"
 

@@ -11,7 +11,7 @@
 # IDENTICAL isCallable EOF
 
 # Test if all arguments are callable as a command
-# Argument: string -  EmptyString. Required. Path to binary to test if it is executable.
+# Argument: string - EmptyString. Required. Path to binary to test if it is executable.
 # If no arguments are passed, returns exit code 1.
 # Return Code: 0 - All arguments are callable as a command
 # Return Code: 1 - One or or more arguments are callable as a command

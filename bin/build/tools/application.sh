@@ -46,7 +46,7 @@ __applicationHomeGo() {
 # Set, or cd to current application home directory.
 #
 # DOC TEMPLATE: --help 1
-# Argument: --help -  Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional.Display this help.
 # Argument: directory - Directory. Optional. Set the application home to this directory.
 # Argument: --go - Flag. Optional. Change to the current saved application home directory.
 applicationHome() {

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-17
+# Generated on 2026-01-18
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/hook.sh"
 argument="--application applicationHome - Path. Optional. Directory of alternate application home."$'\n'"--extensions extensionList - ColonDelimitedList. Optional. List of extensions to search, in order for matching files in each hook directory. Defaults to \`BUILD_HOOK_EXTENSIONS\`."$'\n'"hookName ... - String. Required. Hook to source."$'\n'""
@@ -15,7 +15,7 @@ foundNames=([0]="summary" [1]="argument" [2]="example" [3]="see" [4]="test" [5]=
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 see="hooks.md hookRunOptional"$'\n'""
 source="bin/build/tools/hook.sh"
-sourceModified="1768683999"
+sourceModified="1768695708"
 summary="Run a project hook"$'\n'""
 test="testHookSystem"$'\n'""
 usage="hookSource [ --application applicationHome ] [ --extensions extensionList ] hookName ..."

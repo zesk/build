@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-17
+# Generated on 2026-01-18
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/debug.sh"
 argument="none"
@@ -12,6 +12,6 @@ foundNames=([0]="requires")
 requires="-"$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 source="bin/build/tools/debug.sh"
-sourceModified="1768687749"
+sourceModified="1768695708"
 summary="Returns whether the shell has the error exit flag set"
 usage="isErrorExit"

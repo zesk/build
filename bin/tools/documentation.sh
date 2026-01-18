@@ -3,12 +3,11 @@
 # Copyright &copy; 2026 Market Acumen, Inc.
 #
 
-#
 # Extract and build the bin/build/documentation/ cache
 # Argument: --clean - Flag. Optional.
-# Argument: --force - Flag. Optional. Force update regardless of top file modification times.
+# Argument: --quick - Flag. Optional. Do quick updates to minimize time to generate new files.
 # DOC TEMPLATE: --help 1
-# Argument: --help -  Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional.Display this help.
 buildDocumentationExtractionUpdate() {
   local handler="_${FUNCNAME[0]}"
 
@@ -42,38 +41,71 @@ buildDocumentationExtractionUpdate() {
   fi
 
   catchReturn "$handler" muzzle directoryRequire "$docPath" || return $?
+
+  local tempFunctions totalFunctions
+
+  tempFunctions=$(fileTemporaryName "$handler") || return $?
+  local clean=("$tempFunctions")
+  catchReturn "$handler" buildFunctions >"$tempFunctions" || returnClean $? "${clean[@]}" || return $?
+  totalFunctions=$(catchReturn "$handler" fileLineCount "$tempFunctions") || returnClean $? "${clean[@]}" || return $?
   if $quickFlag; then
     if (local finished && while ! $finished; do
       local fun helpFun
       read -r fun || finished=true
       [ -n "$fun" ] && isFunction "_$fun" || continue
       if [ ! -f "$docPath/$fun.sh" ]; then statusMessage decorate notice "$(decorate file "$docPath/$fun.sh") not found" && return 1; fi
-    done < <(buildFunctions)); then
-      local docToolsOldest toolsNewest
+    done <"$tempFunctions"); then
+      local docToolsOldest toolsNewest toolsNewestTime
 
-      docToolsOldest=$(catchReturn "$handler" directoryOldestFile "$docPath") || return $?
-      toolsNewest=$(catchReturn "$handler" directoryNewestFile "$home/bin/build/tools") || return $?
+      toolsNewest=$(catchReturn "$handler" directoryNewestFile "$home/bin/build/tools") || returnClean $? "${clean[@]}" || return $?
+      docToolsOldest=$(catchReturn "$handler" directoryOldestFile "$docPath") || returnClean $? "${clean[@]}" || return $?
 
       # `FILE1 -ot FILE2` - `FILE1` is older than `FILE2`
       if [ "$toolsNewest" -ot "$docToolsOldest" ]; then
         statusMessage --last decorate info "Everything is up to date."
+        catchEnvironment "$handler" rm -f "${clean[@]}" || return $?
         return 0
       fi
-      statusMessage decorate notice "$(decorate file "$toolsNewest") modified more recently than $(decorate file "$docToolsOldest")"
+      toolsNewestTime=$(catchReturn "$handler" fileModificationTime "$toolsNewest") || returnClean $? "${clean[@]}" || return $?
+      statusMessage decorate notice "$(decorate file "$toolsNewest") modified more recently than $(decorate file "$docToolsOldest")" || :
+
+      catchEnvironment "$handler" printf -- "" >"$tempFunctions" || returnClean $? "${clean[@]}" || return $?
+      local index=0
+      while read -r modificationTime filePath; do
+        index=$((index + 1))
+        local fn="${filePath##*/}"
+        fn="${fn%.sh}"
+        # If a tool doc file was modified BEFORE the most recent TOOLS file (regardless) then we regenerate it
+        if [ "$modificationTime" -lt "$toolsNewestTime" ]; then
+          catchEnvironment "$handler" printf -- "%s\n" "$fn" >>"$tempFunctions" || return $?
+        else
+          statusMessage decorate info "Stopped at $fn (#$index) ... ($(dateFromTimestamp --local "$modificationTime") > $(dateFromTimestamp --local "$toolsNewestTime") - $(decorate file "$toolsNewest"))" || :
+          break
+        fi
+      done < <(catchEnvironment "$handler" fileModificationTimes "$docPath" | sort -rn) || returnClean $? "${clean[@]}" || return $?
+      totalFunctions=$(catchReturn "$handler" fileLineCount "$tempFunctions") || returnClean $? "${clean[@]}" || return $?
+      statusMessage decorate info "Quick function count to compute is $totalFunctions" || :
     fi
+  else
+    statusMessage decorate info "Total function count to compute is $totalFunctions" || :
   fi
   local finished=false
+  local index=0
   while ! $finished; do
+    index=$((index + 1))
     local fun helpFun
     read -r fun || finished=true
     [ -n "$fun" ] || continue
     helpFun="_$fun"
     if ! isFunction "$helpFun"; then
-      statusMessage decorate warning "No help for $fun ($helpFun not defined)" || return $?
+      statusMessage decorate warning "No help for $fun ($helpFun not defined)" || :
       continue
     fi
-    BUILD_DEBUG="documentation-cache" statusMessage --last timing --name "$fun" muzzle "$helpFun" 0 || return $?
-  done < <(catchReturn "$handler" buildFunctions) || return $?
+    local prettyFun
+    prettyFun=$(decorate code "$fun")
+    BUILD_DEBUG="documentation-cache" statusMessage timing --name "#$index/$totalFunctions - $prettyFun" muzzle "$helpFun" 0 || returnClean $? "${clean[@]}" || return $?
+  done <"$tempFunctions" || returnClean $? "${clean[@]}" || return $?
+  catchEnvironment "$handler" rm -f "${clean[@]}" || return $?
 }
 _buildDocumentationExtractionUpdate() {
   # __IDENTICAL__ usageDocument 1

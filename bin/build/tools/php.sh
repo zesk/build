@@ -49,7 +49,7 @@ _phpUninstall() {
 
 # Tail the PHP log
 # DOC TEMPLATE: --help 1
-# Argument: --help -  Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional.Display this help.
 # See: tail
 phpTailLog() {
   local handler="_${FUNCNAME[0]}"
@@ -145,11 +145,11 @@ _deploymentToSuffix() {
 # - APPLICATION_TAG
 # - APPLICATION_ID
 #
-# Argument: --skip-tag | --no-tag -  Flag. Optional.Do not tag the release.
+# Argument: --skip-tag | --no-tag - Flag. Optional.Do not tag the release.
 # Argument: --name tarFileName - String. Optional. Set BUILD_TARGET via command line (wins)
-# Argument: --composer arg -  Argument. Optional.Supply one or more arguments to `phpComposer` command. (Use multiple times)
+# Argument: --composer arg - Argument. Optional.Supply one or more arguments to `phpComposer` command. (Use multiple times)
 # DOC TEMPLATE: --help 1
-# Argument: --help -  Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional.Display this help.
 # Argument: ENV_VAR1 - Optional. Environment variables to build into the deployed .env file
 # Argument: -- - Required. Separates environment variables to file list
 # Argument: file1 file2 dir3 ... - Required. List of files and directories to build into the application package.
@@ -325,8 +325,8 @@ _phpEchoBar() {
   decorate BOLD blue "$(echoBar '.-+^`^+-')" || :
 }
 
-# Argument: --env-file envFile -  File. Optional.Environment file to load.
-# Argument: --home homeDirectory -  Directory. Optional.Directory for application home.
+# Argument: --env-file envFile - File. Optional.Environment file to load.
+# Argument: --home homeDirectory - Directory. Optional.Directory for application home.
 # Test a docker-based PHP application during build
 #
 # Hook: test-setup - Move or copy files prior to docker-compose build to build test container"

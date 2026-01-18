@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-17
+# Generated on 2026-01-18
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/text.sh"
 argument="file ... - File. Required. File to check if the last character is a newline."$'\n'""
@@ -11,7 +11,7 @@ fn="fileEndsWithNewline"
 foundNames=([0]="argument" [1]="test")
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 source="bin/build/tools/text.sh"
-sourceModified="1768686587"
+sourceModified="1768695708"
 summary="Does a file end with a newline or is empty?"
 test="testFileEndsWithNewline"$'\n'""
 usage="fileEndsWithNewline file ..."

@@ -12,7 +12,7 @@
 # Return Code: 1 - if environment is awry
 # Return Code: 0 - All good to install terraform
 # DOC TEMPLATE: --help 1
-# Argument: --help -  Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional.Display this help.
 aptKeyAddHashicorp() {
   local handler="_${FUNCNAME[0]}"
   __help "$handler" "$@" || return 0
@@ -27,7 +27,7 @@ _aptKeyAddHashicorp() {
 # Add keys to enable apt to download terraform directly from hashicorp.com
 #
 # DOC TEMPLATE: --help 1
-# Argument: --help -  Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional.Display this help.
 # Return Code: 1 - if environment is awry
 # Return Code: 0 - All good to install terraform
 aptKeyRemoveHashicorp() {

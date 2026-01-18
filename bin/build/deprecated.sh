@@ -20,20 +20,20 @@ set -eou pipefail
 #
 # There are three flags to control the three processes, you can set them using arguments (all three cleanups are by default enabled)
 #
-# Argument: --prefix jsonPrefix -  EmptyString. Optional.Use this JSON prefix to update cached values in `APPLICATION_JSON`.
-# Argument: --no-configuration -  Flag. Optional.Do not fix any configuration issues from past versions.
-# Argument: --just-configuration -  Flag. Optional.Just fix any configuration issues from past versions. (Sets all other flags to false)
-# Argument: --configuration -  Flag. Optional.Do the fix any configuration issues from past versions. (other flags remain unchanged)
-# Argument: --no-cannon -  Flag. Optional.Do not do the cannon to replace tokens in code.
-# Argument: --just-cannon -  Flag. Optional.Just do the cannon to replace tokens in code. (Sets all other flags to false)
-# Argument: --cannon -  Flag. Optional.Do the cannon  to replace tokens in code. (other flags remain unchanged)
-# Argument: --no-tokens -  Flag. Optional.Report on deprecated tokens found in the code.
-# Argument: --just-tokens -  Flag. Optional.Just report on deprecated tokens found in the code. (Sets all other flags to false)
-# Argument: --tokens -  Flag. Optional.Report on deprecated tokens found in the code. (other flags remain unchanged)
-# Argument: --no-spelling -  Flag. Optional.Search for common (wink) misspellings and fix them.
-# Argument: --just-spelling -  Flag. Optional.Just search for common (wink) misspellings and fix them. (Sets all other flags to false)
-# Argument: --spelling -  Flag. Optional.Search for common (wink) misspellings and fix them. (other flags remain unchanged)
-# Argument: --check -  Flag. Optional.Check if the deprecated fingerprint is up to date and return 0 if it is.
+# Argument: --prefix jsonPrefix - EmptyString. Optional.Use this JSON prefix to update cached values in `APPLICATION_JSON`.
+# Argument: --no-configuration - Flag. Optional.Do not fix any configuration issues from past versions.
+# Argument: --just-configuration - Flag. Optional.Just fix any configuration issues from past versions. (Sets all other flags to false)
+# Argument: --configuration - Flag. Optional.Do the fix any configuration issues from past versions. (other flags remain unchanged)
+# Argument: --no-cannon - Flag. Optional.Do not do the cannon to replace tokens in code.
+# Argument: --just-cannon - Flag. Optional.Just do the cannon to replace tokens in code. (Sets all other flags to false)
+# Argument: --cannon - Flag. Optional.Do the cannon  to replace tokens in code. (other flags remain unchanged)
+# Argument: --no-tokens - Flag. Optional.Report on deprecated tokens found in the code.
+# Argument: --just-tokens - Flag. Optional.Just report on deprecated tokens found in the code. (Sets all other flags to false)
+# Argument: --tokens - Flag. Optional.Report on deprecated tokens found in the code. (other flags remain unchanged)
+# Argument: --no-spelling - Flag. Optional.Search for common (wink) misspellings and fix them.
+# Argument: --just-spelling - Flag. Optional.Just search for common (wink) misspellings and fix them. (Sets all other flags to false)
+# Argument: --spelling - Flag. Optional.Search for common (wink) misspellings and fix them. (other flags remain unchanged)
+# Argument: --check - Flag. Optional.Check if the deprecated fingerprint is up to date and return 0 if it is.
 # MOST RECENT STUFF at the top as it will likely have more hits
 # See: docs/_templates/deprecated.md
 # Environment: APPLICATION_JSON_PREFIX
@@ -272,7 +272,7 @@ __deprecatedConfiguration() {
 # IDENTICAL returnMessage 39
 
 # Return passed in integer return code and output message to `stderr` (non-zero) or `stdout` (zero)
-# Argument: exitCode -  UnsignedInteger. Required. Exit code to return. Default is 1.
+# Argument: exitCode - UnsignedInteger. Required. Exit code to return. Default is 1.
 # Argument: message ... - String. Optional. Message to output
 # Return Code: exitCode
 # Requires: isUnsignedInteger printf returnMessage
@@ -311,9 +311,9 @@ _isUnsignedInteger() {
 # <-- END of IDENTICAL returnMessage
 
 # Load a source file and run a command
-# Argument: source -  File. Required. Path to source relative to application root..
-# Argument: relativeHome -  Directory. Optional.Path to application root. Defaults to `..`
-# Argument: command ... -  Callable. Optional.A command to run and optional arguments.
+# Argument: source - File. Required. Path to source relative to application root..
+# Argument: relativeHome - Directory. Optional.Path to application root. Defaults to `..`
+# Argument: command ... - Callable. Optional.A command to run and optional arguments.
 # Requires: returnMessage
 # Security: source
 # Return Code: 253 - source failed to load (internal error)
@@ -334,8 +334,8 @@ __source() {
 # IDENTICAL __tools 8
 
 # Load build tools and run command
-# Argument: relativeHome -  Directory. Required. Path to application root.
-# Argument: command ... -  Callable. Optional.A command to run and optional arguments.
+# Argument: relativeHome - Directory. Required. Path to application root.
+# Argument: command ... - Callable. Optional.A command to run and optional arguments.
 # Requires: __source
 __tools() {
   __source bin/build/tools.sh "$@"

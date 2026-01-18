@@ -8,7 +8,7 @@
 # IDENTICAL returnMessage 39
 
 # Return passed in integer return code and output message to `stderr` (non-zero) or `stdout` (zero)
-# Argument: exitCode -  UnsignedInteger. Required. Exit code to return. Default is 1.
+# Argument: exitCode - UnsignedInteger. Required. Exit code to return. Default is 1.
 # Argument: message ... - String. Optional. Message to output
 # Return Code: exitCode
 # Requires: isUnsignedInteger printf returnMessage
@@ -48,7 +48,7 @@ _isUnsignedInteger() {
 
 # _IDENTICAL_ execute 7
 
-# Argument: binary ... -  Executable. Required. Any arguments are passed to `binary`.
+# Argument: binary ... - Executable. Required. Any arguments are passed to `binary`.
 # Run binary and output failed command upon error
 # Requires: returnMessage
 execute() {

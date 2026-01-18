@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-17
+# Generated on 2026-01-18
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/pipeline.sh"
 argument="logFile - File. Required. The most recent log from the current script."$'\n'"message - String. Optional. Any additional message to output."$'\n'""
@@ -13,6 +13,6 @@ foundNames=([0]="summary" [1]="argument" [2]="example" [3]="output")
 output="stdout"$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 source="bin/build/tools/pipeline.sh"
-sourceModified="1768683853"
+sourceModified="1768695708"
 summary="Output debugging information when the build fails"$'\n'""
 usage="buildFailed logFile [ message ]"

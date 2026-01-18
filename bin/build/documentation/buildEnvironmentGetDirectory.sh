@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-17
+# Generated on 2026-01-18
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/build.sh"
 argument="envName - String. Optional. Name of the environment value to load. Afterwards this should be defined (possibly blank) and \`export\`ed."$'\n'"--subdirectory subdirectory - String. Optional. Name of a subdirectory to return \"beneath\" the value of environment variable. Created if the flag is set."$'\n'"--mode fileMode - String. Optional. Enforce the mode for \`mkdir --mode\` and \`chmod\`. Use special mode \`-\` to mean no mode enforcement."$'\n'"--owner ownerName - String. Optional. Enforce the owner of the directory. Use special ownerName \`-\` to mean no owner enforcement."$'\n'""
@@ -12,6 +12,6 @@ fn="buildEnvironmentGetDirectory"
 foundNames=([0]="argument" [1]="environment")
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 source="bin/build/tools/build.sh"
-sourceModified="1768683999"
+sourceModified="1768695708"
 summary="Load and print one or more environment settings which represents"
 usage="buildEnvironmentGetDirectory [ envName ] [ --subdirectory subdirectory ] [ --mode fileMode ] [ --owner ownerName ]"

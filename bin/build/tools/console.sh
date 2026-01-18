@@ -13,8 +13,8 @@
 # Credit: https://www.talisman.org/~erlkonig/documents/xterm-color-queries/
 # Credit: https://stackoverflow.com/questions/16914418/how-to-manipulate-hexadecimal-value-in-bash
 #
-# Argument: --foreground -  Flag. Optional.Get the console text color.
-# Argument: --background -  Flag. Optional.Get the console background color.
+# Argument: --foreground - Flag. Optional.Get the console text color.
+# Argument: --background - Flag. Optional.Get the console background color.
 consoleGetColor() {
   local handler="_${FUNCNAME[0]}"
   local argument
@@ -89,8 +89,8 @@ _consoleGetColor() {
 }
 
 # Summary: Output the brightness of the background color of the console as a number between 0 and 100
-# Argument: --foreground -  Flag. Optional.Get the console text color.
-# Argument: --background -  Flag. Optional.Get the console background color.
+# Argument: --foreground - Flag. Optional.Get the console text color.
+# Argument: --background - Flag. Optional.Get the console background color.
 # Fetch the brightness of the console using `consoleGetColor`
 # See: consoleGetColor
 # Output: Integer. between 0 and 100.
@@ -141,7 +141,7 @@ _consoleConfigureColorMode() {
 # Update the color scheme for a light or dark scheme
 #
 # DOC TEMPLATE: --help 1
-# Argument: --help -  Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional.Display this help.
 consoleConfigureDecorate() {
   local handler="_${FUNCNAME[0]}"
   [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
@@ -191,7 +191,7 @@ _consoleDefaultTitle() {
 # Argument: link - EmptyString. Required. Link to output.
 # Argument: text - String. Optional. Text to display, if none then uses `link`.
 # DOC TEMPLATE: --help 1
-# Argument: --help -  Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional.Display this help.
 consoleLink() {
   [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
   local link="$1" text="${2-$1}" OSC="\e]" ST="\e\\"

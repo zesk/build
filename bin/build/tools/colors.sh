@@ -104,7 +104,7 @@ __consoleEscape1() {
 # Summary: Alternate color output
 # If you want to explore what colors are available in your terminal, try this.
 # DOC TEMPLATE: --help 1
-# Argument: --help -  Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional.Display this help.
 colorSampleCodes() {
   local i j n
 
@@ -135,7 +135,7 @@ _colorSampleCodes() {
 
 # Show combinations of foreground and background colors in the console.
 # DOC TEMPLATE: --help 1
-# Argument: --help -  Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional.Display this help.
 colorSampleCombinations() {
   local fg bg text extra padding
   local top3=37
@@ -285,9 +285,9 @@ _plasterLines() {
 #
 # Summary: Output a status message and display correctly on consoles with animation and in log files
 # Clears the line and outputs a message using a command. Meant to show status but not use up an output line for it.
-# Argument: --last -  Flag. Optional.Last message to be output, so output a newline as well at the end.
-# Argument: --first -  Flag. Optional.First message to be output, only clears line if available.
-# Argument: --inline -  Flag. Optional.Inline message displays with newline when animation is NOT available.
+# Argument: --last - Flag. Optional.Last message to be output, so output a newline as well at the end.
+# Argument: --first - Flag. Optional.First message to be output, only clears line if available.
+# Argument: --inline - Flag. Optional.Inline message displays with newline when animation is NOT available.
 # Argument: command - Required. Commands which output a message.
 #
 # When `hasConsoleAnimation` is true:
@@ -361,7 +361,7 @@ _statusMessage() {
 # Returns 0 if a tty is available, 1 if not. Caches the saved value in `__BUILD_HAS_TTY` to avoid running the test each call.ZL
 # See: stty /dev/tty
 # DOC TEMPLATE: --help 1
-# Argument: --help -  Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional.Display this help.
 # Environment: - `__BUILD_HAS_TTY` - Cached value of `false` or `true`. Any other value forces computation during this call.
 # Credits: Tim Perry
 # URL: https://stackoverflow.com/questions/69075612/cross-platform-method-to-detect-whether-dev-tty-is-available-functional
@@ -390,7 +390,7 @@ _isTTYAvailable() {
 # Output the number of columns in the terminal. Default is 80 if not able to be determined from `TERM`.
 # stdout: Integer
 # DOC TEMPLATE: --help 1
-# Argument: --help -  Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional.Display this help.
 # See: stty
 # Example:     repeat $(consoleColumns)
 # Environment: - `COLUMNS` - May be defined after calling this
@@ -425,7 +425,7 @@ _consoleColumns() {
 # Summary: Row count in current console
 # Output the number of columns in the terminal. Default is 60 if not able to be determined from `TERM`.
 # DOC TEMPLATE: --help 1
-# Argument: --help -  Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional.Display this help.
 # See: stty
 # Example:     tail -n $(consoleRows) "$file"
 # Environment: - `COLUMNS` - May be defined after calling this
@@ -461,7 +461,7 @@ _consoleRows() {
 # stdin: Markdown
 # stdout: decorated console output
 # DOC TEMPLATE: --help 1
-# Argument: --help -  Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional.Display this help.
 markdownToConsole() {
   [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
   # shellcheck disable=SC2119
@@ -487,7 +487,7 @@ __colorBrightness() {
 # Return an integer between 0 and 100
 # Colors are between 0 and 255
 # DOC TEMPLATE: --help 1
-# Argument: --help -  Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional.Display this help.
 # Argument: redValue - Integer. Optional. Red RGB value (0-255)
 # Argument: greenValue - Integer. Optional. Red RGB value (0-255)
 # Argument: blueValue - Integer. Optional. Red RGB value (0-255)
@@ -546,7 +546,7 @@ __colorNormalize() {
 
 # Redistribute color values to make brightness adjustments more balanced
 # DOC TEMPLATE: --help 1
-# Argument: --help -  Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional.Display this help.
 # Requires: bc catchEnvironment read usageArgumentUnsignedInteger packageWhich __colorNormalize
 colorNormalize() {
   local handler="_${FUNCNAME[0]}"
@@ -583,7 +583,7 @@ _colorNormalize() {
 # Argument: minimum - Integer|Empty. Minimum integer value to output.
 # Argument: maximum - Integer|Empty. Maximum integer value to output.
 # DOC TEMPLATE: --help 1
-# Argument: --help -  Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional.Display this help.
 clampDigits() {
   [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
 
@@ -642,7 +642,7 @@ _colorRange() {
 # Argument: green - UnsignedInteger. Optional. Blue component.
 # Argument: blue - UnsignedInteger. Optional. Green component.
 # DOC TEMPLATE: --help 1
-# Argument: --help -  Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional.Display this help.
 # Takes arguments or stdin values in groups of 3.
 colorFormat() {
   local handler="_${FUNCNAME[0]}" format="%0.2X%0.2X%0.2X\n"
@@ -681,7 +681,7 @@ _colorFormat() {
 # stdin: list:colors
 # Argument: color - String. Optional. Color to parse.
 # DOC TEMPLATE: --help 1
-# Argument: --help -  Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional.Display this help.
 # Takes arguments or stdin.
 colorParse() {
   if [ $# -gt 0 ]; then
@@ -709,7 +709,7 @@ _colorParse() {
 # Argument: greenValue - Integer. Required. Red RGB value (0-255)
 # Argument: blueValue - Integer. Required. Red RGB value (0-255)
 # DOC TEMPLATE: --help 1
-# Argument: --help -  Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional.Display this help.
 # Requires: bc
 colorMultiply() {
   local handler="_${FUNCNAME[0]}"
@@ -795,10 +795,10 @@ _toggleCharacterToColor() {
 
 # Set the terminal color scheme to the specification
 # DOC TEMPLATE: --help 1
-# Argument: --help -  Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional.Display this help.
 # DOC TEMPLATE: --handler 1
-# Argument: --handler handler -  Function. Optional.Use this error handler instead of the default error handler.
-# Argument: --debug -  Flag. Optional.Show additional debugging information.
+# Argument: --handler handler - Function. Optional.Use this error handler instead of the default error handler.
+# Argument: --debug - Flag. Optional.Show additional debugging information.
 # stdin: Scheme definition with `colorName=colorValue` on each line
 colorScheme() {
   local handler="_${FUNCNAME[0]}"

@@ -19,7 +19,7 @@ __buildTestPlatformOutput() {
 }
 
 # Run Zesk Build tests on multiple platforms
-# Argument: --env-file envFile -  File. Optional.Environment file to load - can handle any format.
+# Argument: --env-file envFile - File. Optional.Environment file to load - can handle any format.
 buildTestPlatforms() {
   local handler="_${FUNCNAME[0]}"
 

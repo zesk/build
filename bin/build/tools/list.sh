@@ -14,10 +14,10 @@
 
 # Output arguments joined by a character
 # Output: text
-# Argument: separator -  EmptyString. Required. Single character to join elements. If a multi-character string is used only the first character is used as the delimiter.
+# Argument: separator - EmptyString. Required. Single character to join elements. If a multi-character string is used only the first character is used as the delimiter.
 # Argument: text0 ... - String. Optional. One or more strings to join
 # DOC TEMPLATE: --help 1
-# Argument: --help -  Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional.Display this help.
 listJoin() {
   [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
   local IFS="${1-:0:1}"
@@ -34,7 +34,7 @@ _listJoin() {
 # Argument: separator - Required. Separator string for item values (typically `:`)
 # Argument: item - the item to be removed from the `listValue`
 # DOC TEMPLATE: --help 1
-# Argument: --help -  Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional.Display this help.
 listRemove() {
   local handler="_${FUNCNAME[0]}"
   [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
@@ -69,7 +69,7 @@ _listRemove() {
 # Argument: --last - Optional. Place any items after this flag last in the list. Default.
 # Argument: item - the path to be added to the `listValue`
 # DOC TEMPLATE: --help 1
-# Argument: --help -  Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional.Display this help.
 # Add an item to the beginning or end of a text-delimited list
 listAppend() {
   local handler="_${FUNCNAME[0]}"
@@ -121,9 +121,9 @@ _listAppend() {
 #
 # Argument: separator - String. Required. List separator character.
 # Argument: listText - String. Required. List to clean duplicates.
-# Argument: --removed -  Flag. Optional.Show removed items instead of the new list.
+# Argument: --removed - Flag. Optional.Show removed items instead of the new list.
 # DOC TEMPLATE: --help 1
-# Argument: --help -  Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional.Display this help.
 listCleanDuplicates() {
   local handler="_${FUNCNAME[0]}"
   local IFS

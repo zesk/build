@@ -41,14 +41,14 @@ _daemontoolsInstall() {
 #
 # Installs a `daemontools` service with an optional logging daemon process. Uses `daemontools/_service.sh` and `daemontools/_log.sh` files as templates.
 #
-# Argument: --home serviceHome -  Path. Optional.Override `DAEMONTOOLS_HOME` which defaults to `/etc/service`. Specify once.
-# Argument: serviceFile -  Binary. Required. The daemon to run. The user of this file will be used to run this file and will run as this user and group.
+# Argument: --home serviceHome - Path. Optional.Override `DAEMONTOOLS_HOME` which defaults to `/etc/service`. Specify once.
+# Argument: serviceFile - Binary. Required. The daemon to run. The user of this file will be used to run this file and will run as this user and group.
 # Argument: serviceName - String. Optional. The daemon service name. If not specified uses the `basename` of `serviceFile` with any extension removed.
 # Argument: --name serviceName - String. Optional. The daemon service name. If not specified uses the `basename` of `serviceFile` with any extension removed.
-# Argument: --log logHome -  Path. Optional.The root logging directory where a directory called `serviceName` will be created which contains the `multilog` output `current`
-# Argument: --escalate -  Flag. Optional.Only if the source file is owned by a non-root user.
-# Argument: --log-arguments ... -- -  ArgumentsList. Optional.List of arguments for the logger.
-# Argument: --arguments ... -- -  ArgumentsList. Optional.List of arguments for the service.
+# Argument: --log logHome - Path. Optional.The root logging directory where a directory called `serviceName` will be created which contains the `multilog` output `current`
+# Argument: --escalate - Flag. Optional.Only if the source file is owned by a non-root user.
+# Argument: --log-arguments ... -- - ArgumentsList. Optional.List of arguments for the logger.
+# Argument: --arguments ... -- - ArgumentsList. Optional.List of arguments for the service.
 # Argument: -- ... - Arguments. Optional. List of arguments for the service.
 #
 daemontoolsInstallService() {
@@ -240,7 +240,7 @@ _daemontoolsRemoveService() {
 
 # Is daemontools running?
 # DOC TEMPLATE: --help 1
-# Argument: --help -  Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional.Display this help.
 daemontoolsIsRunning() {
   local handler="_${FUNCNAME[0]}"
   [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
@@ -278,7 +278,7 @@ _daemontoolsHome() {
 # Do not use this for production
 # Run the daemontools root daemon
 # DOC TEMPLATE: --help 1
-# Argument: --help -  Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional.Display this help.
 daemontoolsExecute() {
   local handler="_${FUNCNAME[0]}"
   [ $# -eq 0 ] || __help --only "$handler" "$@" || return "$(convertValue $? 1 0)"
@@ -471,8 +471,8 @@ _daemontoolsRestart() {
 # Argument: --stat statFile - Optional. Output the `svstat` status to this file every `intervalSeconds`. If not specified nothing is output.
 # Argument: --chirp chirpSeconds - Optional. Output a message saying we're alive every `chirpSeconds` seconds.
 # Argument: --action actions - String. Optional. Onr or more actions permitted `start`, `stop`, `restart`, use comma to separate. Default is `restart`.
-# Argument: service0 -  Directory. Required. Service to control (e.g. `/etc/service/application/`)
-# Argument: file1 -  File. Required. Absolute path to a file. Presence of  `file` triggers `action`
+# Argument: service0 - Directory. Required. Service to control (e.g. `/etc/service/application/`)
+# Argument: file1 - File. Required. Absolute path to a file. Presence of  `file` triggers `action`
 # Environment: DAEMONTOOLS_HOME - The default home directory for `daemontools`
 #
 daemontoolsManager() {

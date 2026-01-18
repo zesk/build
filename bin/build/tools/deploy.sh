@@ -25,13 +25,13 @@ __deployLoader() {
 #
 # This acts on the local file system only but used in tandem with [deployment](./deployment.md) functions.
 #
-# Argument: --help -  Flag. Optional.This help.
-# Argument: --first -  Flag. Optional.The first deployment has no prior version and can not be reverted.
-# Argument: --revert -  Flag. Optional.Means this is part of the undo process of a deployment.
-# Argument: --home deployHome -  Directory. Required. Path where the deployments database is on system.
+# Argument: --help - Flag. Optional.This help.
+# Argument: --first - Flag. Optional.The first deployment has no prior version and can not be reverted.
+# Argument: --revert - Flag. Optional.Means this is part of the undo process of a deployment.
+# Argument: --home deployHome - Directory. Required. Path where the deployments database is on system.
 # Argument: --id applicationId - String. Required. Should match `APPLICATION_ID` or `APPLICATION_TAG` in `.env` or `.deploy/`
-# Argument: --application applicationPath -  FileDirectory. Required. Path on the  system where the application is live
-# Argument: --target targetPackage -  Filename. Optional.Package name, defaults to `BUILD_TARGET`
+# Argument: --application applicationPath - FileDirectory. Required. Path on the  system where the application is live
+# Argument: --target targetPackage - Filename. Optional.Package name, defaults to `BUILD_TARGET`
 # Argument: --message message - String. Optional. Message to display in the maintenance message on systems while upgrade is occurring.
 # Environment: BUILD_TARGET APPLICATION_ID APPLICATION_TAG
 # Example: {fn} --home /var/www/DEPLOY --id 10c2fab1 --application /var/www/apps/cool-app
@@ -49,7 +49,7 @@ _deployApplication() {
 }
 
 #
-# Argument: applicationHome -  Directory. Required. Application home to get the version from.
+# Argument: applicationHome - Directory. Required. Application home to get the version from.
 #
 # Extracts version from an application either from `.deploy` files or from the the `.env` if
 # that does not exist.
@@ -91,7 +91,7 @@ _deployApplicationVersion() {
 }
 
 #
-# Argument: deployHome -  Directory. Required. Deployment database home.
+# Argument: deployHome - Directory. Required. Deployment database home.
 #
 # Outputs the build target name which is based on the environment `BUILD_TARGET`.
 #
@@ -115,7 +115,7 @@ _deployPackageName() {
 }
 
 #
-# Argument: deployHome -  Directory. Required. Deployment database home.
+# Argument: deployHome - Directory. Required. Deployment database home.
 # Argument: versionName - String. Required. Application ID to look for
 #
 # Does a deploy version exist? versionName is the version identifier for deployments
@@ -153,7 +153,7 @@ _applicationIdLink() {
 }
 
 #
-# Argument: deployHome -  Directory. Required. Deployment database home.
+# Argument: deployHome - Directory. Required. Deployment database home.
 # Argument: versionName - String. Required. Application ID to look for
 #
 # Get the previous version of the supplied version
@@ -169,7 +169,7 @@ _deployPreviousVersion() {
 }
 
 #
-# Argument: deployHome -  Directory. Required. Deployment database home.
+# Argument: deployHome - Directory. Required. Deployment database home.
 # Argument: versionName - String. Required. Application ID to look for
 #
 # Get the next version of the supplied version
@@ -185,7 +185,7 @@ _deployNextVersion() {
 #
 # Safe application deployment by moving
 #
-# Argument: applicationPath -  Directory. Required. Application target path.
+# Argument: applicationPath - Directory. Required. Application target path.
 #
 # Deploy current application to target path
 #
@@ -226,8 +226,8 @@ _deployLink() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# Argument: deployHome -  Directory. Required. Deployment database home.
-# Argument: applicationPath -  Directory. Required. Application target path.
+# Argument: deployHome - Directory. Required. Deployment database home.
+# Argument: applicationPath - Directory. Required. Application target path.
 # Automatically convert application deployments using non-links to links.
 #
 deployMigrateDirectoryToLink() {

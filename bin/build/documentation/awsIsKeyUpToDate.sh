@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-17
+# Generated on 2026-01-18
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/aws.sh"
 argument="upToDateDays - PositiveInteger."$'\n'""
@@ -13,6 +13,6 @@ fn="awsIsKeyUpToDate"
 foundNames=([0]="environment" [1]="summary" [2]="argument" [3]="example")
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 source="bin/build/tools/aws.sh"
-sourceModified="1768683999"
+sourceModified="1768695708"
 summary="Test whether the AWS keys do not need to be updated"$'\n'""
 usage="awsIsKeyUpToDate [ upToDateDays ]"

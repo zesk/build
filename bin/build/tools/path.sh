@@ -7,7 +7,7 @@
 
 # Remove a path from the PATH environment variable
 # DOC TEMPLATE: --help 1
-# Argument: --help -  Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional.Display this help.
 # Argument: path - Requires. String. The path to be removed from the `PATH` environment.
 pathRemove() {
   local handler="_${FUNCNAME[0]}"
@@ -41,7 +41,7 @@ _pathRemove() {
 
 # Modify the PATH environment variable to add a path.
 # DOC TEMPLATE: --help 1
-# Argument: --help -  Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional.Display this help.
 # Argument: --first - Optional. Place any paths after this flag first in the list
 # Argument: --last - Optional. Place any paths after this flag last in the list. Default.
 # Argument: path - the path to be added to the `PATH` environment
@@ -88,7 +88,7 @@ _pathIsDirectory() {
 # Cleans the path and removes non-directory entries and duplicates
 #
 # DOC TEMPLATE: --help 1
-# Argument: --help -  Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional.Display this help.
 # Maintains ordering.
 #
 # Environment: PATH
@@ -108,8 +108,8 @@ _pathCleanDuplicates() {
 
 # Show the path and where binaries are found
 # DOC TEMPLATE: --help 1
-# Argument: --help -  Flag. Optional.Display this help.
-# Argument: binary -  Executable. Optional.Display where this executable appears in the path.
+# Argument: --help - Flag. Optional.Display this help.
+# Argument: binary - Executable. Optional.Display where this executable appears in the path.
 pathShow() {
   local handler="_${FUNCNAME[0]}"
 

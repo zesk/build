@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-17
+# Generated on 2026-01-18
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/markdown.sh"
 argument="None"$'\n'""
@@ -14,6 +14,6 @@ fn="markdownRemoveUnfinishedSections"
 foundNames=([0]="argument" [1]="depends" [2]="environment" [3]="example")
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 source="bin/build/tools/markdown.sh"
-sourceModified="1768683825"
+sourceModified="1768695708"
 summary="Given a file containing Markdown, remove header and any section"
 usage="markdownRemoveUnfinishedSections [ None ]"

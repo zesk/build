@@ -99,7 +99,7 @@ _nodeUninstall() {
 # Provides an abstraction to libraries to support any node package manager.
 # Optionally will output the current node package manager when no arguments are passed.
 # Argument: action - Optional. Action to perform: install run update uninstall
-# Argument: ... -  Arguments. Required. Passed to the node package manager. Required. when action is provided.
+# Argument: ... - Arguments. Required. Passed to the node package manager. Required. when action is provided.
 # No-Argument: Outputs the current node package manager code name
 nodePackageManager() {
   local handler="_${FUNCNAME[0]}"
@@ -202,7 +202,7 @@ _nodePackageManagerUninstall() {
 
 # Is the passed node package manager name valid?
 # DOC TEMPLATE: --help 1
-# Argument: --help -  Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional.Display this help.
 # Argument: managerName - String. Required. The node package manager name to check.
 # Without arguments, shows the valid package manager names.
 # Return Code: 0 - Yes, it's a valid package manager name.

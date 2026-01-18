@@ -2,22 +2,14 @@
 #
 # Map environment to values in a target file
 #
-# Map environment variables and convert input file tokens to values of environment variables.
-#
-# Renamed to `map.sh` in 2023 to keep it short and sweet.
-#
-# Argument: --prefix prefixString - Optional. The prefix string to determine what a token is. Defaults to `{`. Must be before any environment variable names, if any.
-# Argument: --suffix suffixString - Optional. The suffix string to determine what a token is. Defaults to `}`. Must be before any environment variable names, if any.
-# Argument: env0 - Optional. If specified, then ONLY these environment variables are mapped; all others are ignored. If not specified, then all environment variables are mapped.
-# Argument: ... - Optional. Additional environment variables to map can be specified as additional arguments
+# Example:     name=world map.sh name <<<"Hello, {name}."
 #
 # Copyright &copy; 2026 Market Acumen, Inc.
-#
 
 # IDENTICAL returnMessage 39
 
 # Return passed in integer return code and output message to `stderr` (non-zero) or `stdout` (zero)
-# Argument: exitCode -  UnsignedInteger. Required. Exit code to return. Default is 1.
+# Argument: exitCode - UnsignedInteger. Required. Exit code to return. Default is 1.
 # Argument: message ... - String. Optional. Message to output
 # Return Code: exitCode
 # Requires: isUnsignedInteger printf returnMessage
@@ -119,8 +111,8 @@ returnThrow() {
 }
 
 # Run binary and catch errors with handler
-# Argument: handler -  Function. Required. Error handler.
-# Argument: binary ... -  Executable. Required. Any arguments are passed to `binary`.
+# Argument: handler - Function. Required. Error handler.
+# Argument: binary ... - Executable. Required. Any arguments are passed to `binary`.
 # Requires: returnArgument
 catchReturn() {
   local handler="${1-}" && shift || returnArgument "Missing handler" || return $?
@@ -137,7 +129,7 @@ usageDocument() {
 
 # Output a simple error message for a function
 # DOC TEMPLATE: --help 1
-# Argument: --help -  Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional.Display this help.
 # Argument: source - File. Required. File where documentation exists.
 # Argument: function - String. Required. Function to document.
 # Argument: returnCode - UnsignedInteger. Required. Exit code to return.
@@ -172,7 +164,7 @@ _usageDocumentSimple() {
 
 # Extracts the final comment from a stream
 # DOC TEMPLATE: --help 1
-# Argument: --help -  Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional.Display this help.
 # Requires: fileReverseLines sed cut grep convertValue
 bashFinalComment() {
   [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
@@ -202,7 +194,7 @@ _bashFinalComment() {
 # Argument: source - File. Required. File where the function is defined.
 # Argument: functionName - String. Required. The name of the bash function to extract the documentation for.
 # DOC TEMPLATE: --help 1
-# Argument: --help -  Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional.Display this help.
 # Requires: grep cut fileReverseLines __help
 # Requires: usageDocument
 bashFunctionComment() {
@@ -225,7 +217,7 @@ _bashFunctionComment() {
 # Prints the mapped value to stdout
 #
 # DOC TEMPLATE: --help 1
-# Argument: --help -  Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional.Display this help.
 # Argument: value - String. A value.
 # Argument: from - String. When value matches `from`, instead print `to`
 # Argument: to - String. The value to print when `from` matches `value`
@@ -318,7 +310,7 @@ ___help() {
 # IDENTICAL isCallable 48
 
 # Test if all arguments are callable as a command
-# Argument: string -  EmptyString. Required. Path to binary to test if it is executable.
+# Argument: string - EmptyString. Required. Path to binary to test if it is executable.
 # If no arguments are passed, returns exit code 1.
 # Return Code: 0 - All arguments are callable as a command
 # Return Code: 1 - One or or more arguments are callable as a command
@@ -416,7 +408,7 @@ _isFunction() {
 # INTERNAL: Winner of the one-line bash award 10 years running
 # Argument: code ... - UnsignedInteger. String. Exit code value to output.
 # DOC TEMPLATE: --help 1
-# Argument: --help -  Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional.Display this help.
 # stdout: exitCodeToken, one per line
 returnCodeString() {
   local k="" && while [ $# -gt 0 ]; do case "$1" in 0) k="success" ;; 1) k="environment" ;; 2) k="argument" ;; 97) k="assert" ;; 105) k="identical" ;; 108) k="leak" ;; 116) k="timeout" ;; 120) k="exit" ;; 127) k="not-found" ;; 130) k="user-interrupt" ;; 141) k="interrupt" ;; 253) k="internal" ;; 254) k="unknown" ;; --help) "_${FUNCNAME[0]}" 0 && return $? || return $? ;; *) k="[returnCodeString unknown \"$1\"]" ;; esac && [ -n "$k" ] || k="$1" && printf "%s\n" "$k" && shift; done
@@ -559,10 +551,10 @@ __validateTypeCallable() {
 # Sets the environment variable `BUILD_COLORS` if not set, uses `TERM` to calculate
 #
 # DOC TEMPLATE: --help 1
-# Argument: --help -  Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional.Display this help.
 # Return Code: 0 - Console or output supports colors
 # Return Code: 1 - Colors are likely not supported by console
-# Environment: BUILD_COLORS -  Boolean. Optional.Whether the build system will output ANSI colors.
+# Environment: BUILD_COLORS - Boolean. Optional.Whether the build system will output ANSI colors.
 # Requires: isPositiveInteger tput
 hasColors() {
   # --help is only argument allowed
@@ -612,7 +604,7 @@ __decorate() {
 
 # Output a list of build-in decoration styles, one per line
 # DOC TEMPLATE: --help 1
-# Argument: --help -  Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional.Display this help.
 decorations() {
   [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
   printf "%s\n" reset \
@@ -664,7 +656,7 @@ _decorate() {
 # Is the decorate color system initialized yet?
 # Useful to set our global color environment at the top level of a script if it hasn't been initialized already.
 # DOC TEMPLATE: --help 1
-# Argument: --help -  Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional.Display this help.
 decorateInitialized() {
   [ "${1-}" != "--help" ] || __help --only "_${FUNCNAME[0]}" "$@" || return 0
   export __BUILD_DECORATE
@@ -864,8 +856,8 @@ executeInputSupport() {
 # Wrapper for `mktemp`. Generate a temporary file name, and fail using a function
 # Argument: handler - Function. Required. Function to call on failure. Function Type: returnMessage
 # DOC TEMPLATE: --help 1
-# Argument: --help -  Flag. Optional.Display this help.
-# Argument: ... -  Arguments. Optional.Any additional arguments are passed through.
+# Argument: --help - Flag. Optional.Display this help.
+# Argument: ... - Arguments. Optional.Any additional arguments are passed through.
 # Requires: mktemp __help catchEnvironment usageDocument
 # BUILD_DEBUG: temp - Logs backtrace of all temporary files to a file in application root named after this function to detect and clean up leaks
 # Environment: BUILD_DEBUG
@@ -949,7 +941,7 @@ _environmentVariables() {
 # Argument: --search-filter - Zero or more. Callable. Filter for search tokens. (e.g. `lowercase`)
 # Argument: --replace-filter - Zero or more. Callable. Filter for replacement strings. (e.g. `trimSpace`)
 # DOC TEMPLATE: --help 1
-# Argument: --help -  Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional.Display this help.
 # Example:     printf %s "{NAME}, {PLACE}.\n" | NAME=Hello PLACE=world mapEnvironment NAME PLACE
 # Requires: environmentVariables cat throwEnvironment catchEnvironment
 # Requires: throwArgument decorate validate

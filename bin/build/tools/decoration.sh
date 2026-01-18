@@ -138,8 +138,8 @@ _bigTextAt() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# Argument: --top -  Flag. Optional.Place label at the top.
-# Argument: --bottom -  Flag. Optional.Place label at the bottom.
+# Argument: --top - Flag. Optional.Place label at the top.
+# Argument: --bottom - Flag. Optional.Place label at the bottom.
 # Argument: --prefix prefixText - String. Optional. Optional prefix on each line.
 # Argument: --tween tweenText - String. Optional. Optional between text after label and before `bigText` on each line (allows coloring or other decorations).
 # Argument: --suffix suffixText - String. Optional. Optional suffix on each line.
@@ -284,7 +284,7 @@ _repeat() {
 # Summary: Output a bar as wide as the console
 # Output a bar as wide as the console using the `=` symbol.
 # Argument: alternateChar - String. Optional. Use an alternate character or string output
-# Argument: offset -  Integer. Optional.an integer offset to increase or decrease the size of the bar (default is `0`)
+# Argument: offset - Integer. Optional.an integer offset to increase or decrease the size of the bar (default is `0`)
 # See: consoleColumns
 # Example:     decorate success $(echoBar =-)
 # Example:     decorate success $(echoBar "- Success ")
@@ -369,7 +369,7 @@ _lineFill() {
 # Argument: characterWidth - Characters to align right
 # Argument: text ... - Text to align right
 # DOC TEMPLATE: --help 1
-# Argument: --help -  Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional.Display this help.
 # Example:     printf "%s: %s\n" "$(alignRight 20 Name)" "$name"
 # Example:     printf "%s: %s\n" "$(alignRight 20 Profession)" "$occupation"
 # Example:                 Name: Juanita
@@ -390,7 +390,7 @@ _alignRight() {
 # Format text and align it left using spaces.
 #
 # DOC TEMPLATE: --help 1
-# Argument: --help -  Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional.Display this help.
 # Argument: characterWidth - Characters to align left
 # Argument: text ... - Text to align left
 #
@@ -413,11 +413,11 @@ _alignLeft() {
 # Heading for section output
 #
 # Summary: Text heading decoration
-# Argument: --size size -  Integer. Optional.Number of liens to output. Defaults to 1.
+# Argument: --size size - Integer. Optional.Number of liens to output. Defaults to 1.
 # Argument: --outside outsideStyle - String. Optional. Style to apply to the outside border.
 # Argument: --inside insideStyle - String. Optional. Style to apply to the inside spacing.
-# Argument: --shrink characterCount -  UnsignedInteger. Optional.Reduce the box by this many characters wide.
-# Argument: --size lineCount -  UnsignedInteger. Optional.Print this many blank lines between the header and title.
+# Argument: --shrink characterCount - UnsignedInteger. Optional.Reduce the box by this many characters wide.
+# Argument: --size lineCount - UnsignedInteger. Optional.Print this many blank lines between the header and title.
 # Argument: text ... - Text to put in the box
 # Example:     boxedHeading Moving ...
 # Output: +==========================================================================+
@@ -426,7 +426,7 @@ _alignLeft() {
 # Output: |                                                                          |
 # Output: +==========================================================================+
 # DOC TEMPLATE: --help 1
-# Argument: --help -  Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional.Display this help.
 boxedHeading() {
   local handler="_${FUNCNAME[0]}"
 
@@ -513,10 +513,10 @@ _boxedHeading() {
 # Summary: Display file paths and replace prefixes with icons
 # Replace an absolute path prefix with an icon if it matches `HOME`, `BUILD_HOME` or `TMPDIR`
 # DOC TEMPLATE: --help 1
-# Argument: --help -  Flag. Optional.Display this help.
-# Argument: --path pathName=icon -  Flag. Optional.Add an additional path mapping to icon.
-# Argument: --no-app -  Flag. Optional.Do not map `BUILD_HOME`.
-# Argument: --skip-app -  Flag. Optional.Synonym for `--no-app`.
+# Argument: --help - Flag. Optional.Display this help.
+# Argument: --path pathName=icon - Flag. Optional.Add an additional path mapping to icon.
+# Argument: --no-app - Flag. Optional.Do not map `BUILD_HOME`.
+# Argument: --skip-app - Flag. Optional.Synonym for `--no-app`.
 # Argument: path - String. Path to display and replace matching paths with icons.
 # Icons used:
 # - 💣 - `TMPDIR`

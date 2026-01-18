@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-17
+# Generated on 2026-01-18
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/text.sh"
 argument="none"
@@ -11,7 +11,7 @@ fn="maximumLineLength"
 foundNames=([0]="stdin" [1]="stdout")
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 source="bin/build/tools/text.sh"
-sourceModified="1768686587"
+sourceModified="1768695708"
 stdin="Lines are read from standard in and line length is computed for each line"$'\n'""
 stdout="\`UnsignedInteger\`"$'\n'""
 summary="Outputs the maximum line length passed into stdin"

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-17
+# Generated on 2026-01-18
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/build.sh"
 argument="envName - String. Optional. Name of the environment value to load. Afterwards this should be defined (possibly blank) and \`export\`ed."$'\n'"--application applicationHome - Path. Optional. Directory of alternate application home. Can be specified more than once to change state."$'\n'""
@@ -12,6 +12,6 @@ fn="buildEnvironmentGet"
 foundNames=([0]="argument" [1]="environment")
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 source="bin/build/tools/build.sh"
-sourceModified="1768683999"
+sourceModified="1768695708"
 summary="Load and print one or more environment settings"
 usage="buildEnvironmentGet [ envName ] [ --application applicationHome ]"

@@ -9,7 +9,7 @@
 
 # _IDENTICAL_ execute EOF
 
-# Argument: binary ... -  Executable. Required. Any arguments are passed to `binary`.
+# Argument: binary ... - Executable. Required. Any arguments are passed to `binary`.
 # Run binary and output failed command upon error
 # Requires: returnMessage
 execute() {

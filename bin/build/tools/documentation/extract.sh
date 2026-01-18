@@ -64,6 +64,7 @@ __bashDocumentationExtract() {
     if [ -f "$definitionFile" ] && [ "$source" -ot "$definitionFile" ]; then
       local sourceModified
       sourceModified=$(
+        local sourceModified=0
         # shellcheck source=/dev/null
         source "$definitionFile"
         echo "$sourceModified"

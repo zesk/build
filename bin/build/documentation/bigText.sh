@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-17
+# Generated on 2026-01-18
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/decoration.sh"
 argument="text - String. Required. Text to output"$'\n'"--bigger - Flag. Optional. Text font size is bigger."$'\n'""
@@ -12,6 +12,6 @@ fn="bigText"
 foundNames=([0]="argument" [1]="environment")
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 source="bin/build/tools/decoration.sh"
-sourceModified="1768683999"
+sourceModified="1768695708"
 summary="Display large text in the console for banners and important"
 usage="bigText text [ --bigger ]"

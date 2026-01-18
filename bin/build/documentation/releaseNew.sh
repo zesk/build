@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-17
+# Generated on 2026-01-18
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/version.sh"
 argument="--non-interactive - Optional. If new version is needed, use default version"$'\n'"versionName - Optional. Set the new version name to this - must be after live version in version order"$'\n'""
@@ -12,6 +12,6 @@ foundNames=([0]="argument" [1]="summary" [2]="hook")
 hook="version-current"$'\n'"version-live"$'\n'"version-created"$'\n'"version-already"$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 source="bin/build/tools/version.sh"
-sourceModified="1768683999"
+sourceModified="1768695708"
 summary="Generate a new release notes and bump the version"$'\n'""
 usage="releaseNew [ --non-interactive ] [ versionName ]"

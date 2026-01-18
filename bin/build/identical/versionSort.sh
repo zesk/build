@@ -19,7 +19,7 @@
 #
 # Argument: -r | --reverse - Reverse the sort order (optional)
 # DOC TEMPLATE: --help 1
-# Argument: --help -  Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional.Display this help.
 # Example:     git tag | grep -e '^v[0-9.]*$' | versionSort
 # Requires: throwArgument sort usageDocument decorate
 versionSort() {

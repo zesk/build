@@ -22,7 +22,7 @@
 # Set colors to deal with dark or light-background consoles
 # Deprecated: 2026-01
 # DOC TEMPLATE: --help 1
-# Argument: --help -  Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional.Display this help.
 # BUILD_DEBUG: BUILD_COLORS_MODE - Output the color mode when it is changed
 consoleColorMode() {
   local handler="_${FUNCNAME[0]}"
@@ -36,7 +36,7 @@ _consoleColorMode() {
 
 # Validates a value is not blank and is an environment file which is loaded immediately.
 #
-# Argument: usageFunction -  Function. Required. Run if handler fails
+# Argument: usageFunction - Function. Required. Run if handler fails
 # Argument: variableName - String. Required. Name of variable being tested
 # Argument: variableValue - String. Required. Required. only in that if it's blank, it fails.
 # Argument: noun - String. Optional. Noun used to describe the argument in errors, defaults to `file`

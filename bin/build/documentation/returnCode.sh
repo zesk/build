@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-17
+# Generated on 2026-01-18
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/_sugar.sh"
 argument="name ... - String. Optional. Exit code value to output."$'\n'""
@@ -13,6 +13,6 @@ requires="usageDocument printf"$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 see="https://stackoverflow.com/questions/1101957/are-there-any-standard-exit-status-codes-in-linux"$'\n'"returnCodeString"$'\n'""
 source="bin/build/tools/_sugar.sh"
-sourceModified="1768683853"
+sourceModified="1768695727"
 summary="Print one or more return codes by name."
 usage="returnCode [ name ... ]"

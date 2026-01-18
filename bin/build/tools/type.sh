@@ -21,7 +21,7 @@
 # Test if an argument is a positive floating point number
 # (`1e3` notation NOT supported)
 #
-# Argument: value -  EmptyString. Required. Value to test.
+# Argument: value - EmptyString. Required. Value to test.
 # Return Code: 0 - if it is a number equal to or greater than zero
 # Return Code: 1 - if it is not a number equal to or greater than zero
 # Credits: F. Hauri - Give Up GitHub (isnum_Case)
@@ -36,7 +36,7 @@ isUnsignedNumber() {
 # Test if an argument is a floating point number
 # (`1e3` notation NOT supported)
 #
-# Argument: value -  EmptyString. Required. Value to test.
+# Argument: value - EmptyString. Required. Value to test.
 # Return Code: 0 - if it is a floating point number
 # Return Code: 1 - if it is not a floating point number
 # Credits: F. Hauri - Give Up GitHub (isnum_Case)
@@ -51,7 +51,7 @@ isNumber() {
 #
 # Test if an argument is a signed integer
 #
-# Argument: value -  EmptyString. Required. Value to test.
+# Argument: value - EmptyString. Required. Value to test.
 # Return Code: 0 - if it is a signed integer
 # Return Code: 1 - if it is not a signed integer
 # Argument: value - EmptyString. The value to test.
@@ -66,7 +66,7 @@ isInteger() {
 
 # True-ish
 # DOC TEMPLATE: --help 1
-# Argument: --help -  Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional.Display this help.
 # Argument: value ... - EmptyString. One or more values to test.
 # Succeeds when all arguments are "true"-ish
 isTrue() {
@@ -122,7 +122,7 @@ _isType() {
 # Is a variable declared as an array?
 # Argument: variableName - String. Required. Variable name to check.
 # DOC TEMPLATE: --help 1
-# Argument: --help -  Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional.Display this help.
 isArray() {
   [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
   while [ $# -gt 0 ]; do
@@ -187,7 +187,7 @@ _isFunction() {
 # IDENTICAL isCallable 48
 
 # Test if all arguments are callable as a command
-# Argument: string -  EmptyString. Required. Path to binary to test if it is executable.
+# Argument: string - EmptyString. Required. Path to binary to test if it is executable.
 # If no arguments are passed, returns exit code 1.
 # Return Code: 0 - All arguments are callable as a command
 # Return Code: 1 - One or or more arguments are callable as a command

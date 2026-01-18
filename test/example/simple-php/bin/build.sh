@@ -8,9 +8,9 @@
 # IDENTICAL __build 11
 
 # Load build tools (installing if needed) and runs a command
-# Argument: relativeHome -  Directory. Optional.Path to application home.
-# Argument: installerPath -  Directory. Optional.Path to `install-bin-build.sh` binary. Defaults to `bin`
-# Argument: command ... -  Callable. Optional.A command to run and optional arguments.
+# Argument: relativeHome - Directory. Optional.Path to application home.
+# Argument: installerPath - Directory. Optional.Path to `install-bin-build.sh` binary. Defaults to `bin`
+# Argument: command ... - Callable. Optional.A command to run and optional arguments.
 # Requires: __install
 # Example:     __build ../../.. functionToCall "$@"
 __build() {
@@ -21,10 +21,10 @@ __build() {
 # IDENTICAL __install 25
 
 # Load a bash script (installing if needed) and run an optional command
-# Argument: installer -  File. Required. Installation binary.
-# Argument: source -  File. Required. Include file which should exist after installation.
-# Argument: relativeHome -  Directory. Optional.Path to application home. Default is `..`.
-# Argument: command ... -  Callable. Optional.A command to run and optional arguments.
+# Argument: installer - File. Required. Installation binary.
+# Argument: source - File. Required. Include file which should exist after installation.
+# Argument: relativeHome - Directory. Optional.Path to application home. Default is `..`.
+# Argument: command ... - Callable. Optional.A command to run and optional arguments.
 # Example:      __install bin/install-bin-build.sh bin/build/tools.sh ../../.. decorate info "$@"
 # Requires: returnMessage execute
 __install() {
@@ -48,7 +48,7 @@ __install() {
 # IDENTICAL returnMessage 39
 
 # Return passed in integer return code and output message to `stderr` (non-zero) or `stdout` (zero)
-# Argument: exitCode -  UnsignedInteger. Required. Exit code to return. Default is 1.
+# Argument: exitCode - UnsignedInteger. Required. Exit code to return. Default is 1.
 # Argument: message ... - String. Optional. Message to output
 # Return Code: exitCode
 # Requires: isUnsignedInteger printf returnMessage

@@ -21,7 +21,7 @@ __textLoader() {
 # Argument: startLine - Integer. Required. Starting line number.
 # Argument: endLine - Integer. Required. Ending line number.
 # DOC TEMPLATE: --help 1
-# Argument: --help -  Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional.Display this help.
 # stdin: Reads lines until EOF
 # stdout: Outputs the selected lines only
 fileExtractLines() {
@@ -65,7 +65,7 @@ _fileExtractLines() {
 # - `grep` - returns 0 - lines selected
 # Return Code: 0 - Normal operation
 # DOC TEMPLATE: --help 1
-# Argument: --help -  Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional.Display this help.
 # Argument: ... - Arguments. Passed directly to `grep`.
 # Requires: grep mapReturn
 grepSafe() {
@@ -100,7 +100,7 @@ _isPlain() {
 # Check if text contains mappable tokens
 # If any text passed contains a token which can be mapped, succeed.
 # DOC TEMPLATE: --help 1
-# Argument: --help -  Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional.Display this help.
 # Argument: --prefix - String. Optional. Token prefix defaults to `{`.
 # Argument: --suffix - String. Optional. Token suffix defaults to `}`.
 # Argument: --token - String. Optional. Classes permitted in a token
@@ -167,7 +167,7 @@ _parseBoolean() {
 
 # Hide newlines in text (to ensure single-line output or other manipulation)
 # DOC TEMPLATE: --help 1
-# Argument: --help -  Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional.Display this help.
 # Argument: text - String. Required. Text to replace.
 # Argument: replace - String. Optional. Replacement string for newlines.
 # DOC TEMPLATE: noArgumentsForHelp 1
@@ -219,7 +219,7 @@ _replaceFirstPattern() {
 
 # Trim whitespace from beginning and end of a stream
 # DOC TEMPLATE: --help 1
-# Argument: --help -  Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional.Display this help.
 # stdin: Reads lines from stdin until EOF
 # stdout: Outputs modified lines
 # INTERNAL: Explained
@@ -237,7 +237,7 @@ _trimBoth() {
 
 # Removes any blank lines from the beginning of a stream
 # DOC TEMPLATE: --help 1
-# Argument: --help -  Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional.Display this help.
 # stdin: Reads lines from stdin until EOF
 # stdout: Outputs modified lines
 trimHead() {
@@ -251,7 +251,7 @@ _trimHead() {
 
 # Removes any blank lines from the end of a stream
 # DOC TEMPLATE: --help 1
-# Argument: --help -  Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional.Display this help.
 # stdin: Reads lines from stdin until EOF
 # stdout: Outputs modified lines
 trimTail() {
@@ -267,7 +267,7 @@ _trimTail() {
 # Used often to clean up markdown `.md` files, but can be used for any line-based configuration file which allows blank lines.
 #
 # DOC TEMPLATE: --help 1
-# Argument: --help -  Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional.Display this help.
 # stdin: Reads lines from stdin until EOF
 # stdout: Outputs modified lines where any blank lines are replaced with a single blank line.
 singleBlankLines() {
@@ -280,7 +280,7 @@ _singleBlankLines() {
 }
 
 # Trim spaces and only spaces from arguments or a pipe
-# Argument: text -  EmptyString. Optional.Text to remove spaces. If no arguments are supplied it is assumed that input should be read from standard input.
+# Argument: text - EmptyString. Optional.Text to remove spaces. If no arguments are supplied it is assumed that input should be read from standard input.
 # stdin: Reads lines from stdin until EOF
 # stdout: Outputs trimmed lines
 # Example:     {fn} "$token"
@@ -473,7 +473,7 @@ _beginsWith() {
 # Check if one string is a substring of another set of strings (case-sensitive)
 #
 # Argument: needle - String. Required. Thing to search for, not blank.
-# Argument: haystack ... -  EmptyString. Optional.One or more array elements to match
+# Argument: haystack ... - EmptyString. Optional.One or more array elements to match
 # Return Code: 0 - If element is a substring of any haystack
 # Return Code: 1 - If element is NOT found as a substring of any haystack
 # Tested: No
@@ -498,7 +498,7 @@ _isSubstring() {
 # Check if one string is a substring of another set of strings (case-insensitive)
 #
 # Argument: needle - String. Required. Thing to search for, not blank.
-# Argument: haystack ... -  EmptyString. Optional.One or more array elements to match
+# Argument: haystack ... - EmptyString. Optional.One or more array elements to match
 # Return Code: 0 - If element is a substring of any haystack
 # Return Code: 1 - If element is NOT found as a substring of any haystack
 # Tested: No
@@ -645,10 +645,10 @@ _fileEndsWithNewline() {
 # Outputs the number of lines read from stdin (or supplied files) until EOF. For multiple files passed on the command line - each one is output separately.
 # This is essentially a wrapper around `wc -l` which strips whitespace and does type checking.
 # DOC TEMPLATE: --help 1
-# Argument: --help -  Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional.Display this help.
 # DOC TEMPLATE: --handler 1
-# Argument: --handler handler -  Function. Optional.Use this error handler instead of the default error handler.
-# Argument: file -  File. Optional.Output line count for each file specified. If no files specified, uses stdin.
+# Argument: --handler handler - Function. Optional.Use this error handler instead of the default error handler.
+# Argument: file - File. Optional.Output line count for each file specified. If no files specified, uses stdin.
 # stdin: Lines are read from standard in and counted
 # stdout: `UnsignedInteger`
 fileLineCount() {
@@ -773,9 +773,9 @@ _plural() {
 # Convert text to lowercase
 #
 # DOC TEMPLATE: dashDashAllowsHelpParameters 1
-# Argument: -- -  Flag. Optional.Stops command processing to enable arbitrary text to be passed as additional arguments without special meaning.
+# Argument: -- - Flag. Optional.Stops command processing to enable arbitrary text to be passed as additional arguments without special meaning.
 # DOC TEMPLATE: --help 1
-# Argument: --help -  Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional.Display this help.
 # Argument: text - EmptyString. Required. Text to convert to lowercase
 # stdout: `String`. The lowercase version of the `text`.
 # Requires: tr
@@ -797,9 +797,9 @@ _lowercase() {
 # Convert text to uppercase
 #
 # DOC TEMPLATE: dashDashAllowsHelpParameters 1
-# Argument: -- -  Flag. Optional.Stops command processing to enable arbitrary text to be passed as additional arguments without special meaning.
+# Argument: -- - Flag. Optional.Stops command processing to enable arbitrary text to be passed as additional arguments without special meaning.
 # DOC TEMPLATE: --help 1
-# Argument: --help -  Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional.Display this help.
 # Argument: text - EmptyString. Required. text to convert to uppercase
 # stdout: `String`. The uppercase version of the `text`.
 # Requires: tr
@@ -892,8 +892,8 @@ _shaPipe() {
 #
 # The `cacheDirectory`
 #
-# Argument: cacheDirectory -  Directory. Optional.The directory where cache files can be stored exclusively for this function. Supports a blank value to disable caching, otherwise, it must be a valid directory.
-# Argument: filename -  File. Optional.File determine the sha value for.
+# Argument: cacheDirectory - Directory. Optional.The directory where cache files can be stored exclusively for this function. Supports a blank value to disable caching, otherwise, it must be a valid directory.
+# Argument: filename - File. Optional.File determine the sha value for.
 # Depends: sha1sum shaPipe
 # Summary: SHA1 checksum of standard input
 # Example:     cachedShaPipe "$cacheDirectory" < "$fileName"
@@ -970,7 +970,7 @@ _stringOffsetInsensitive() {
 }
 
 # Remove fields from left to right from a text file as a pipe
-# Argument: fieldCount -  Integer. Optional.Number of field to remove. Default is just first `1`.
+# Argument: fieldCount - Integer. Optional.Number of field to remove. Default is just first `1`.
 # Partial Credit: https://stackoverflow.com/questions/4198138/printing-everything-except-the-first-field-with-awk/31849899#31849899
 # stdin: A file with fields separated by spaces
 # stdout: The same file with the first `fieldCount` fields removed from each line.
@@ -1003,7 +1003,7 @@ _removeFields() {
 }
 
 # Pipe to output some text before any output, otherwise, nothing is output.
-# Argument: ... -  Arguments. Required. printf arguments.
+# Argument: ... - Arguments. Required. printf arguments.
 # DOC TEMPLATE: noArgumentsForHelp 1
 # Without arguments, displays help.
 # stdin: text (Optional)
@@ -1024,7 +1024,7 @@ _printfOutputPrefix() {
 }
 
 # Pipe to output some text after any output, otherwise, nothing is output.
-# Argument: ... -  Arguments. Required. printf arguments.
+# Argument: ... - Arguments. Required. printf arguments.
 # DOC TEMPLATE: noArgumentsForHelp 1
 # Without arguments, displays help.
 # stdin: text (Optional)

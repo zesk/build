@@ -13,13 +13,13 @@
 # Deploy to a host
 #
 # DOC TEMPLATE: --env-file 1
-# Argument: --env-file envFile -  File. Optional.Environment file to load - can handle any format.
-# Argument: --debug -  Flag. Optional.Enable debugging.
-# Argument: --first -  Flag. Optional.When it is the first deployment, use this flag.
-# Argument: --home deployPath -  Directory. Required. Path where the deployments database is on remote system. Uses
+# Argument: --env-file envFile - File. Optional.Environment file to load - can handle any format.
+# Argument: --debug - Flag. Optional.Enable debugging.
+# Argument: --first - Flag. Optional.When it is the first deployment, use this flag.
+# Argument: --home deployPath - Directory. Required. Path where the deployments database is on remote system. Uses
 # Argument: --id applicationId - String. Required. If not specified, uses environment variable loaded from `.build.env`, or `APPLICATION_ID` environment.
 # Argument: --application applicationPath - String. Required. Path on the remote system where the application is live. If not specified, uses environment variable loaded from `.build.env`, or `APPLICATION_REMOTE_HOME` environment.
-# Argument: --target targetPackage -  Filename. Optional.Package name usually an archive format.  If not specified, uses environment variable loaded from `.build.env`, or `BUILD_TARGET` environment. Defaults to `app.tar.gz`.
+# Argument: --target targetPackage - Filename. Optional.Package name usually an archive format.  If not specified, uses environment variable loaded from `.build.env`, or `BUILD_TARGET` environment. Defaults to `app.tar.gz`.
 # Loads `./.build.env` if it exists.
 # File: `./.build.env`
 # Environment: DEPLOY_REMOTE_HOME - path on remote host for deployment data
@@ -207,10 +207,10 @@ _deployBuildEnvironment() {
 # Argument: --deploy - Optional. Flag, default setting - handles the remote deploy.
 # Argument: --revert - Optional. Flag, Revert changes just made.
 # Argument: --cleanup - Optional. Flag, Cleanup after success.
-# Argument: --home deployPath -  Directory. Required. Path where the deployments database is on remote system.
+# Argument: --home deployPath - Directory. Required. Path where the deployments database is on remote system.
 # Argument: --id applicationId - String. Required. Should match `APPLICATION_ID` in `.env`
 # Argument: --application applicationPath - String. Required. Path on the remote system where the application is live
-# Argument: --target targetPackage -  Filename. Optional.Package name, defaults to `app.tar.gz`
+# Argument: --target targetPackage - Filename. Optional.Package name, defaults to `app.tar.gz`
 # Test: testDeployRemoteFinish - INCOMPLETE
 deployRemoteFinish() {
   local handler="_${FUNCNAME[0]}"
@@ -329,11 +329,11 @@ _deployRemoteFinish() {
 
 # Revert a deployed application from a deployment repository
 #
-# Argument: --first -  Flag. Optional.Undo the first deployment.
-# Argument: deployHome -  Directory. Required. The deployment repository database home.
+# Argument: --first - Flag. Optional.Undo the first deployment.
+# Argument: deployHome - Directory. Required. The deployment repository database home.
 # Argument: applicationId - Required. The version to revert FROM (string)
-# Argument: applicationPath -  Directory. Required. The FROM application deployed path.
-# Argument: targetPackage -  Filename. Optional.Package name, defaults to `BUILD_TARGET`
+# Argument: applicationPath - Directory. Required. The FROM application deployed path.
+# Argument: targetPackage - Filename. Optional.Package name, defaults to `BUILD_TARGET`
 # See: BUILD_TARGET.sh
 _deployRevertApplication() {
   local handler="_${FUNCNAME[0]}"
@@ -419,18 +419,18 @@ _deploySuccessful() {
 # Summary: Deploy current application to one or more hosts
 # Argument: --target target - String. Optional. Build target file base name, defaults to `app.tar.gz`
 # Argument: --deploy - Default. Flag. deploy an application to a remote host
-# Argument: --cleanup -  Flag. Optional.After all hosts have been `--deploy`ed successfully the `--cleanup` step is run on all hosts to finish up (or clean up) the deployment.
-# Argument: --revert -  Flag. Optional.Reverses a deployment
-# Argument: --commands -  Flag. Optional.Display commands sent to server but do not execute them. For debugging or testing. Implies --skip-ssh-host
-# Argument: --skip-ssh-host -  Flag. Optional.Do not add ssh hosts to known hosts file.
-# Argument: --add-ssh-host -  Flag. Optional.Add hosts to known hosts file in SSH if not already added.
-# Argument: --debug -  Flag. Optional.Turn on debugging (defaults to `BUILD_DEBUG` environment variable)
-# Argument: --versions - deployHome -  Path. Required. Remote path where we can store deployment state files.
+# Argument: --cleanup - Flag. Optional.After all hosts have been `--deploy`ed successfully the `--cleanup` step is run on all hosts to finish up (or clean up) the deployment.
+# Argument: --revert - Flag. Optional.Reverses a deployment
+# Argument: --commands - Flag. Optional.Display commands sent to server but do not execute them. For debugging or testing. Implies --skip-ssh-host
+# Argument: --skip-ssh-host - Flag. Optional.Do not add ssh hosts to known hosts file.
+# Argument: --add-ssh-host - Flag. Optional.Add hosts to known hosts file in SSH if not already added.
+# Argument: --debug - Flag. Optional.Turn on debugging (defaults to `BUILD_DEBUG` environment variable)
+# Argument: --versions - deployHome - Path. Required. Remote path where we can store deployment state files.
 # Argument: --id applicationId - String. Required. The application package will contain a `.env` with `APPLICATION_ID` set to this Value
-# Argument: --application applicationPath -  Path. Required. Path where the application will be deployed
-# Argument: userAtHost -  Strings. Required. A list of space-separated values or arguments which match users at remote hosts. Due to shell quoting peculiarities you can pass in space-delimited arguments as single arguments.
+# Argument: --application applicationPath - Path. Required. Path where the application will be deployed
+# Argument: userAtHost - Strings. Required. A list of space-separated values or arguments which match users at remote hosts. Due to shell quoting peculiarities you can pass in space-delimited arguments as single arguments.
 # DOC TEMPLATE: --help 1
-# Argument: --help -  Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional.Display this help.
 #
 # Deploy current application to host at applicationPath.
 #

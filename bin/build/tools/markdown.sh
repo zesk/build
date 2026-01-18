@@ -134,9 +134,9 @@ _markdownFormatList() {
 
 # Argument: indexFile ... - File. Required. One or more index files to check.
 # DOC TEMPLATE: --help 1
-# Argument: --help -  Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional.Display this help.
 # DOC TEMPLATE: --handler 1
-# Argument: --handler handler -  Function. Optional.Use this error handler instead of the default error handler.
+# Argument: --handler handler - Function. Optional.Use this error handler instead of the default error handler.
 # Displays any markdown files next to the given index file which are not found within the index file as links.
 markdownCheckIndex() {
   local handler="_${FUNCNAME[0]}"

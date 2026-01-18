@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-17
+# Generated on 2026-01-18
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/package.sh"
 argument="none"
@@ -12,6 +12,6 @@ foundNames=([0]="see")
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 see="platform"$'\n'""
 source="bin/build/tools/package.sh"
-sourceModified="1768683999"
+sourceModified="1768695708"
 summary="Determine the default package manager on this platform."
 usage="packageManagerDefault"

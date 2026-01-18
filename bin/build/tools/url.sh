@@ -21,9 +21,9 @@
 
 # Output the port for the given scheme
 # DOC TEMPLATE: --help 1
-# Argument: --help -  Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional.Display this help.
 # DOC TEMPLATE: --handler 1
-# Argument: --handler handler -  Function. Optional.Use this error handler instead of the default error handler.
+# Argument: --handler handler - Function. Optional.Use this error handler instead of the default error handler.
 # Argument: scheme ... - String. Required. Scheme to look up the default port used for that scheme.
 urlSchemeDefaultPort() {
   local handler="_${FUNCNAME[0]}"
@@ -81,7 +81,7 @@ _urlSchemeDefaultPort() {
 # Return Code: 1 - If parsing fails
 # Summary: Simple URL Parsing
 # DOC TEMPLATE: --help 1
-# Argument: --help -  Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional.Display this help.
 # Argument: url - a Uniform Resource Locator
 # Argument: --prefix prefix - String. Optional. Prefix variable names with this string.
 # Argument: --uppercase - Flag. Optional. Output variable names in uppercase, not lowercase (the default).
@@ -224,7 +224,7 @@ _urlParseItem() {
 
 # Checks if a URL is valid
 # DOC TEMPLATE: --help 1
-# Argument: --help -  Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional.Display this help.
 # Argument: url ... - String. URL. Required. A Uniform Resource Locator
 # Return Code: 0 - all URLs passed in are valid
 # Return Code: 1 - at least one URL passed in is not a valid URL
@@ -404,10 +404,10 @@ _urlFilter() {
 # Open a URL using the operating system
 # Usage {fn} [ --help ]
 # DOC TEMPLATE: --help 1
-# Argument: --help -  Flag. Optional.Display this help.
-# Argument: --ignore -  Flag. Optional.Ignore any invalid URLs found.
-# Argument: --wait -  Flag. Optional.Display this help.
-# Argument: --url url -  URL. Optional.URL to download.
+# Argument: --help - Flag. Optional.Display this help.
+# Argument: --ignore - Flag. Optional.Ignore any invalid URLs found.
+# Argument: --wait - Flag. Optional.Display this help.
+# Argument: --url url - URL. Optional.URL to download.
 # stdin: line:URL
 # stdout: none
 urlOpen() {
@@ -496,7 +496,7 @@ __urlOpenInnerLoop() {
 
 # Fetch URL content
 # DOC TEMPLATE: --help 1
-# Argument: --help -  Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional.Display this help.
 # Argument: --header header - String. Optional. Send a header in the format 'Name: Value'
 # Argument: --wget - Flag. Optional. Force use of wget. If unavailable, fail.
 # Argument: --redirect-max maxRedirections - PositiveInteger. Optional. Sets the number of allowed redirects from the original URL. Default is 9.
@@ -506,9 +506,9 @@ __urlOpenInnerLoop() {
 # Argument: --user userName - String. Optional. If supplied, uses HTTP Simple authentication. Usually used with `--password`. Note: User names may not contain the character `:` when using `curl`.
 # Argument: --password password - String. Optional. If supplied along with `--user`, uses HTTP Simple authentication.
 # Argument: --agent userAgent - String. Optional. Specify the user agent string.
-# Argument: --timeout timeoutSeconds -  PositiveInteger. Optional.A number of seconds to wait before failing. Defaults to `BUILD_URL_TIMEOUT` environment value.
-# Argument: url -  URL. Required. URL to fetch to target file.
-# Argument: file -  FileDirectory. Optional.Target file. Use `-` to send to `stdout`. Default value is `-`.
+# Argument: --timeout timeoutSeconds - PositiveInteger. Optional.A number of seconds to wait before failing. Defaults to `BUILD_URL_TIMEOUT` environment value.
+# Argument: url - URL. Required. URL to fetch to target file.
+# Argument: file - FileDirectory. Optional.Target file. Use `-` to send to `stdout`. Default value is `-`.
 # Requires: returnMessage whichExists decorate
 # Requires: validate
 # Requires: throwArgument catchArgument

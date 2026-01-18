@@ -53,7 +53,7 @@ _bashDebug() {
 #     Usage: bashDebuggerEnable [ --help ]
 #
 # DOC TEMPLATE: --help 1
-# Argument: --help -  Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional.Display this help.
 # Saves file descriptors 0 1 and 2 as 20, 21 and 22 respectively
 # See: bashDebug bashDebuggerDisable
 bashDebuggerEnable() {
@@ -87,7 +87,7 @@ _bashDebuggerEnable() {
 #     Usage: bashDebuggerDisable [ --help ]
 #
 # DOC TEMPLATE: --help 1
-# Argument: --help -  Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional.Display this help.
 # See: bashDebug bashDebuggerEnable
 bashDebuggerDisable() {
   [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
