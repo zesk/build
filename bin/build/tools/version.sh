@@ -153,7 +153,7 @@ _versionNextMinor() {
 }
 
 #
-# Argument: --non-interactive - Optional. If new version is needed, use default version
+# Argument: --non-interactive - Flag. Optional. If new version is needed, use default version
 # Argument: versionName - Optional. Set the new version name to this - must be after live version in version order
 # Summary: Generate a new release notes and bump the version
 # Hook: version-current

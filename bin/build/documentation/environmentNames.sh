@@ -12,6 +12,6 @@ fn="environmentNames"
 foundNames=([0]="example" [1]="argument")
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 source="bin/build/tools/environment.sh"
-sourceModified="1768756695"
+sourceModified="1768759812"
 summary="List names of environment values set in a bash state"
 usage="environmentNames [ --help ]"

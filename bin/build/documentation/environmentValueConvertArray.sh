@@ -11,7 +11,7 @@ fn="environmentValueConvertArray"
 foundNames=([0]="argument" [1]="stdout")
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 source="bin/build/tools/environment.sh"
-sourceModified="1768756695"
+sourceModified="1768759812"
 stdout="Array values separated by newlines"$'\n'""
 summary="Convert an array value which was loaded already"
 usage="environmentValueConvertArray encodedValue [ --help ]"

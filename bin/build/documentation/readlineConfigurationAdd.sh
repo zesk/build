@@ -3,7 +3,7 @@
 # Generated on 2026-01-18
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/readline.sh"
-argument="--help - Flag. Optional. Display this help."$'\n'"keyStroke - Required. String."$'\n'"action - Required. String."$'\n'""
+argument="--help - Flag. Optional. Display this help."$'\n'"keyStroke - String. Required."$'\n'"action - String. Required."$'\n'""
 base="readline.sh"
 description="Add configuration to \`~/.inputrc\` for a key binding"$'\n'""
 example="readlineConfigurationAdd \"\\ep\" history-search-backward"$'\n'""

@@ -74,7 +74,7 @@ junitProperties() {
 }
 
 # Output list of `property` tags
-# Argument: nameValue ... - Optional. A list of name value pairs (unquoted) to output as XML `property` tags.
+# Argument: nameValue ... - Optional. String. A list of name value pairs (unquoted) to output as XML `property` tags.
 junitPropertyList() {
   while [ $# -gt 0 ]; do
     local name value

@@ -12,6 +12,6 @@ foundNames=([0]="requires" [1]="argument")
 requires="trap"$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 source="bin/build/tools/debug.sh"
-sourceModified="1768757641"
+sourceModified="1768759254"
 summary="Adds a trap to capture the debugging stack on interrupt"
 usage="bashDebugInterruptFile [ --help ] [ --error ] [ --interrupt ]"

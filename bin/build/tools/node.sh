@@ -98,7 +98,7 @@ _nodeUninstall() {
 # Run an action using the current node package manager
 # Provides an abstraction to libraries to support any node package manager.
 # Optionally will output the current node package manager when no arguments are passed.
-# Argument: action - Optional. Action to perform: install run update uninstall
+# Argument: action - String. Optional. Action to perform: install run update uninstall
 # Argument: ... - Arguments. Required. Passed to the node package manager. Required. when action is provided.
 # No-Argument: Outputs the current node package manager code name
 nodePackageManager() {

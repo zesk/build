@@ -9,8 +9,8 @@
 # See: manPathRemove
 # DOC TEMPLATE: --help 1
 # Argument: --help - Flag. Optional. Display this help.
-# Argument: --first - Optional. Place any paths after this flag first in the list
-# Argument: --last - Optional. Place any paths after this flag last in the list. Default.
+# Argument: --first - Flag. Optional. Place any paths after this flag first in the list
+# Argument: --last - Flag. Optional. Place any paths after this flag last in the list. Default.
 # Argument: path - the path to be added to the `MANPATH` environment
 #
 manPathConfigure() {

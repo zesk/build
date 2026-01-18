@@ -82,15 +82,15 @@ buildDocumentationExtractionUpdate() {
       catchEnvironment "$handler" printf -- "" >"$tempFunctions" || returnClean $? "${clean[@]}" || return $?
       local index=0
 
-      while read -r modificationTime filePath; do
+      while read -r fileModificationTime filePath; do
         index=$((index + 1))
         local fn="${filePath##*/}"
         fn="${fn%.sh}"
         # If a tool doc file was modified BEFORE the most recent TOOLS file (regardless) then we regenerate it
-        if [ "$modificationTime" -lt "$toolsNewestTime" ]; then
+        if [ "$fileModificationTime" -lt "$toolsNewestTime" ]; then
           catchEnvironment "$handler" printf -- "%s\n" "$fn" >>"$tempFunctions" || return $?
         else
-          catchReturn "$handler" statusMessage decorate info "Stopped at $fn (#$index) ... ($(dateFromTimestamp --local "$modificationTime") > $(dateFromTimestamp --local "$toolsNewestTime") - $(decorate file "$toolsNewest"))" || return $?
+          catchReturn "$handler" statusMessage decorate info "Stopped at $fn (#$index) ... ($(dateFromTimestamp --local "$fileModificationTime") > $(dateFromTimestamp --local "$toolsNewestTime") - $(decorate file "$toolsNewest"))" || return $?
           break
         fi
       done < <(catchEnvironment "$handler" fileModificationTimes "$docPath" | sort -rn) || returnClean $? "${clean[@]}" || return $?
@@ -102,7 +102,11 @@ buildDocumentationExtractionUpdate() {
   fi
   local finished=false
   local index=0
+  local pids=() names=()
+  local maxProcesses=20 timeout=10
+
   while ! $finished; do
+    local pid
     index=$((index + 1))
     local fun helpFun
     read -r fun || finished=true
@@ -112,7 +116,34 @@ buildDocumentationExtractionUpdate() {
       catchReturn "$handler" statusMessage decorate warning "No help for $fun ($helpFun not defined)" || return $?
       continue
     fi
-    __buildDocumentationExtractionUpdateFunction "$handler" "$fun" "#$index/$totalFunctions -" || returnClean $? "${clean[@]}" || return $?
+    pid="$(
+      __buildDocumentationExtractionUpdateFunction "$handler" "$fun" "#$index/$totalFunctions -" &
+      printf "%d\n" $!
+    )"
+    pids+=("$pid") || returnClean $? "${clean[@]}" || returnUndo $? processWait --timeout 3 --signals HUP,TERM,KILL "${pids[@]}" || return $?
+    # statusMessage decorate info "Launched process $pid for $name"
+    names+=("$fun")
+    local timer
+    timer=$(timingStart)
+    while [ "${#pids[@]}" -ge "$maxProcesses" ]; do
+      local newPids=() newNames=() index=0
+      for pid in "${pids[@]}"; do
+        name="${names[index]}"
+        if kill -0 "$pid" 2>/dev/null; then
+          newPids+=("$pid")
+          newNames+=("$name")
+        else
+          : # decorate info "Process $pid ($name) exited"
+        fi
+        index=$((index + 1))
+      done
+      pids=("${newPids[@]+"${newPids[@]}"}")
+      names=("${newNames[@]+"${newNames[@]}"}")
+      if [ "$(timingElapsed "$timer")" -gt $((timeout * 1000)) ]; then
+        catchReturn "$handler" processWait --timeout 3 --signals HUP,TERM,KILL "${pids[@]}" || return $?
+        throwEnvironment "$handler" "Max processes ($maxProcesses) running after $timeout seconds" || return $?
+      fi
+    done
   done <"$tempFunctions" || returnClean $? "${clean[@]}" || return $?
   catchEnvironment "$handler" rm -f "${clean[@]}" || return $?
 }

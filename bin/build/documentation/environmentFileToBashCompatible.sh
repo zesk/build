@@ -11,7 +11,7 @@ fn="environmentFileToBashCompatible"
 foundNames=([0]="argument" [1]="stdin" [2]="stdout")
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 source="bin/build/tools/environment/convert.sh"
-sourceModified="1768721469"
+sourceModified="1768759914"
 stdin="environment file"$'\n'""
 stdout="bash-compatible environment statements"$'\n'""
 summary="Takes any environment file and makes it bash-compatible"

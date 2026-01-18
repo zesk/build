@@ -5,7 +5,7 @@
 # Copyright &copy; 2026 Market Acumen, Inc.
 
 # Argument: handler - Required. Function.
-# Argument: fn - Required. String.
+# Argument: fn - String. Required.
 __bashDocumentationSettingsHeader() {
   local handler="$1" && shift
 

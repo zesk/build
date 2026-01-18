@@ -11,6 +11,6 @@ fn="findUncaughtAssertions"
 foundNames=([0]="argument")
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 source="bin/build/tools/lint.sh"
-sourceModified="1768756695"
+sourceModified="1768759461"
 summary="Search bash files for assertions which do not terminate a"
 usage="findUncaughtAssertions [ --help ] [ --handler handler ] [ --exclude path ] [ --exec binary ] [ directory ] [ --list ]"

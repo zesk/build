@@ -11,6 +11,6 @@ fn="environmentFileLoad"
 foundNames=([0]="argument")
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 source="bin/build/tools/environment.sh"
-sourceModified="1768756695"
+sourceModified="1768759812"
 summary="Safely load an environment file (no code execution)"
 usage="environmentFileLoad [ --prefix ] --require [ --optional ] [ --verbose ] environmentFile [ --ignore environmentName ] [ --secure environmentName ] [ --secure-defaults ] [ --execute arguments ... ] [ --help ]"

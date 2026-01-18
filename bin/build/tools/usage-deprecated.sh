@@ -35,7 +35,7 @@ __catchArgumentHelper() {
 # Require an argument to be non-blank
 # Argument: handler - Function. Required. Usage function to call upon failure.
 # Argument: argument - String. Required. Name of the argument used in error messages.
-# Argument: value - Optional. String, Value which should be non-blank otherwise an argument error is thrown.
+# Argument: value - String. Optional. Value which should be non-blank otherwise an argument error is thrown.
 # Return Code: 2 - If `value` is blank
 # Return Code: 0 - If `value` is non-blank
 # Requires: throwArgument
@@ -354,7 +354,7 @@ usageArgumentFileDirectory() {
 # Do not require argument to be non-blank
 # Argument: handler - Function. Required. handler function to call upon failure.
 # Argument: argument - String. Required. Name of the argument used in error messages.
-# Argument: value - Optional. String, Value to output.
+# Argument: value - String. Optional. Value to output.
 # Return Code: 0 - Always
 usageArgumentEmptyString() {
   local handler="$1" argument="$2"
@@ -365,7 +365,7 @@ usageArgumentEmptyString() {
 # Require an argument to be a boolean value
 # Argument: handler - Function. Required. handler function to call upon failure.
 # Argument: argument - String. Required. Name of the argument used in error messages.
-# Argument: value - Optional. String, Value which should be non-blank otherwise an argument error is thrown.
+# Argument: value - String. Optional. Value which should be non-blank otherwise an argument error is thrown.
 # Return Code: 2 - If `value` is not a boolean
 # Return Code: 0 - If `value` is a boolean
 usageArgumentBoolean() {
@@ -378,7 +378,7 @@ usageArgumentBoolean() {
 # Require an argument to be a URL
 # Argument: handler - Function. Required. handler function to call upon failure.
 # Argument: argument - String. Required. Name of the argument used in error messages.
-# Argument: value - Optional. String, Value which should be a URL otherwise an argument error is thrown.
+# Argument: value - String. Optional. Value which should be a URL otherwise an argument error is thrown.
 # Return Code: 0 - If `value` is `urlValid`
 # Return Code: 2 - If `value` is not `urlValid`
 usageArgumentURL() {
@@ -391,7 +391,7 @@ usageArgumentURL() {
 # Require an argument to be a callable
 # Argument: handler - Function. Required. handler function to call upon failure.
 # Argument: argument - String. Required. Name of the argument used in error messages.
-# Argument: value - Optional. String, Value which should be callable otherwise an argument error is thrown.
+# Argument: value - String. Optional. Value which should be callable otherwise an argument error is thrown.
 # Return Code: 2 - If `value` is not `isCallable`
 # Return Code: 0 - If `value` is `isCallable`
 usageArgumentCallable() {
@@ -404,7 +404,7 @@ usageArgumentCallable() {
 # Require an argument to be a executable
 # Argument: handler - Function. Required. handler function to call upon failure.
 # Argument: argument - String. Required. Name of the argument used in error messages.
-# Argument: value - Optional. String, Value which should be executable otherwise an argument error is thrown.
+# Argument: value - String. Optional. Value which should be executable otherwise an argument error is thrown.
 # Return Code: 2 - If `value` is not `isExecutable`
 # Return Code: 0 - If `value` is `isExecutable`
 usageArgumentExecutable() {
@@ -417,7 +417,7 @@ usageArgumentExecutable() {
 # Require an argument to be a function
 # Argument: handler - Function. Required. handler function to call upon failure.
 # Argument: argument - String. Required. Name of the argument used in error messages.
-# Argument: value - Optional. String, Value which should be a function otherwise an argument error is thrown.
+# Argument: value - String. Optional. Value which should be a function otherwise an argument error is thrown.
 # Return Code: 2 - If `value` is not `isFunction`
 # Return Code: 0 - If `value` is `isFunction`
 usageArgumentFunction() {

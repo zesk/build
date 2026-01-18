@@ -262,7 +262,7 @@ _consoleFileLink() {
 # decorate extension for `file`
 # Argument: --no-app - Flag. Optional. Do not map the application path in `decoratePath`
 # Argument: fileName - Required. File path to output.
-# Argument: text - Optional. Text to output linked to file.
+# Argument: text - String. Optional. Text to output linked to file.
 # See: decoratePath
 # Environment: BUILD_HOME TMPDIR HOME
 __decorateExtensionFile() {
@@ -273,7 +273,7 @@ __decorateExtensionFile() {
 # decorate extension for `link`
 # fn: decorate link
 # Argument: url - Required. Link to output to the console.
-# Argument: text - Optional. Text to output linked to `url`.
+# Argument: text - String. Optional. Text to output linked to `url`.
 __decorateExtensionLink() {
   if ! consoleLinksSupported; then
     printf -- "%s\n" "$1"

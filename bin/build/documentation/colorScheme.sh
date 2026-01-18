@@ -11,7 +11,7 @@ fn="colorScheme"
 foundNames=([0]="argument" [1]="stdin")
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 source="bin/build/tools/colors.sh"
-sourceModified="1768757397"
+sourceModified="1768758955"
 stdin="Scheme definition with \`colorName=colorValue\` on each line"$'\n'""
 summary="Set the terminal color scheme to the specification"
 usage="colorScheme [ --help ] [ --handler handler ] [ --debug ]"

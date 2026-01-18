@@ -13,6 +13,6 @@ foundNames=([0]="argument" [1]="see" [2]="summary" [3]="deprecated")
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 see="toDockerEnv"$'\n'"environmentFileLoad"$'\n'""
 source="bin/build/tools/environment.sh"
-sourceModified="1768756695"
+sourceModified="1768759812"
 summary="Load \`.env\` and optional \`.env.local\` into bash context"$'\n'""
 usage="dotEnvConfigure [ where ] [ --help ]"

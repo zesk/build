@@ -7,8 +7,8 @@
 # Add configuration to `~/.inputrc` for a key binding
 # DOC TEMPLATE: --help 1
 # Argument: --help - Flag. Optional. Display this help.
-# Argument: keyStroke - Required. String.
-# Argument: action - Required. String.
+# Argument: keyStroke - String. Required.
+# Argument: action - String. Required.
 # Example: readlineConfigurationAdd "\ep" history-search-backward
 readlineConfigurationAdd() {
   local handler="_${FUNCNAME[0]}"

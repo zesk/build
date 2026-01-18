@@ -396,7 +396,7 @@ _isS3URL() {
 # Argument: --handler handler - Function. Optional. Use this error handler instead of the default error handler.
 # Argument: --target target - Required. S3 URL. S3 URL to upload to (with path)
 # Argument: item - Required. A file or directory to upload to S3. All files and directories are uploaded as the same name in the top-level directory target.
-# Argument: --profile profileName - Optional. String, S3 Profile to use when using S3
+# Argument: --profile profileName - String. Optional. S3 Profile to use when using S3
 awsS3Upload() {
   __awsLoader "_${FUNCNAME[0]}" "__${FUNCNAME[0]}" "$@"
 }

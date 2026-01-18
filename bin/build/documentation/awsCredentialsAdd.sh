@@ -11,6 +11,6 @@ fn="awsCredentialsAdd"
 foundNames=([0]="summary" [1]="argument")
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 source="bin/build/tools/aws.sh"
-sourceModified="1768721469"
+sourceModified="1768758981"
 summary="Write an AWS profile to the AWS credentials file"$'\n'""
 usage="awsCredentialsAdd [ --profile profileName ] [ --force ] [ --comments ] [ --help ] [ key ] [ secret ]"

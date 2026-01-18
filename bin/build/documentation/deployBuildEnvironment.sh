@@ -12,7 +12,7 @@ fn="deployBuildEnvironment"
 foundNames=([0]="argument" [1]="file" [2]="environment" [3]="test")
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 source="bin/build/tools/deployment.sh"
-sourceModified="1768721470"
+sourceModified="1768758898"
 summary="Deploy to a host"
 test="testDeployBuildEnvironment - INCOMPLETE"$'\n'""
 usage="deployBuildEnvironment [ --env-file envFile ] [ --debug ] [ --first ] --home deployPath --id applicationId --application applicationPath [ --target targetPackage ]"

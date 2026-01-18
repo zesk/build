@@ -11,7 +11,7 @@ fn="colorParse"
 foundNames=([0]="stdin" [1]="argument")
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 source="bin/build/tools/colors.sh"
-sourceModified="1768757397"
+sourceModified="1768758955"
 stdin="list:colors"$'\n'""
 summary="Parse a color and output R G B decimal values"
 usage="colorParse [ color ] [ --help ]"

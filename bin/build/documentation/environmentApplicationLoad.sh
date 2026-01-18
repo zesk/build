@@ -12,6 +12,6 @@ fn="environmentApplicationLoad"
 foundNames=([0]="environment" [1]="argument")
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 source="bin/build/tools/environment.sh"
-sourceModified="1768756695"
+sourceModified="1768759812"
 summary="Loads application environment variables, set them to their default values"
 usage="environmentApplicationLoad [ --help ]"

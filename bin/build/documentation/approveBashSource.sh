@@ -14,6 +14,6 @@ return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'
 security="Loads bash files"$'\n'""
 see="XDG_STATE_HOME.sh"$'\n'""
 source="bin/build/tools/interactive.sh"
-sourceModified="1768721469"
+sourceModified="1768759374"
 summary="Loads files or a directory of \`.sh\` files using \`source\`"
 usage="approveBashSource directoryOrFile [ --info ] [ --no-info ] [ --verbose ] [ --clear ] [ --prefix ]"

@@ -110,7 +110,20 @@ __deprecatedCleanup() {
   export __BUILD_DEPRECATED_EXTRAS
   __BUILD_DEPRECATED_EXTRAS=("${ignoreExtras[@]+"${ignoreExtras[@]}"}")
 
-  __BUILD_DEPRECATED_EXTRAS+=(! -path '*/documentation/*/release/*' ! -path '*/documentation/.site/*' \( -name '*.sh' -or -name '*.md' -or -name '*.txt' -or -name '*.json' -or -name '*.yml' -or -name '*.conf' \))
+  __BUILD_DEPRECATED_EXTRAS+=(
+    ! -path '*/bin/build/documentation/*'
+    ! -path '*/documentation/*/release/*'
+    ! -path '*/documentation/.site/*'
+    ! -path '*/documentation/.docs/*'
+    \(
+    -name '*.sh' -or
+    -name '*.md' -or
+    -name '*.txt' -or
+    -name '*.json' -or
+    -name '*.yml' -or
+    -name '*.conf'
+    \)
+  )
 
   start=$(__catch "$handler" timingStart) || return $?
   local home

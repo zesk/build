@@ -11,6 +11,6 @@ fn="gitBranchExistsLocal"
 foundNames=([0]="argument")
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 source="bin/build/tools/git.sh"
-sourceModified="1768721470"
+sourceModified="1768759336"
 summary="Does a branch exist locally?"
 usage="gitBranchExistsLocal branch ... [ --help ]"

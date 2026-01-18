@@ -158,7 +158,7 @@ _gitVersionList() {
 }
 
 # Get the last reported version.
-# Argument: ignorePattern - Optional. Specify a grep pattern to ignore; allows you to ignore current version
+# Argument: ignorePattern - Optional. String. Specify a grep pattern to ignore; allows you to ignore current version
 # DOC TEMPLATE: --help 1
 # Argument: --help - Flag. Optional. Display this help.
 gitVersionLast() {

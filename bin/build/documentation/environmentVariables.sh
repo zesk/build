@@ -12,6 +12,6 @@ foundNames=([0]="requires")
 requires="declare grep cut usageDocument __help"$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 source="bin/build/tools/environment.sh"
-sourceModified="1768756695"
+sourceModified="1768759812"
 summary="Output a list of environment variables and ignore function definitions"
 usage="environmentVariables"

@@ -14,7 +14,7 @@ foundNames=([0]="summary" [1]="stdout" [2]="argument" [3]="see" [4]="example" [5
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 see="stty"$'\n'""
 source="bin/build/tools/colors.sh"
-sourceModified="1768757397"
+sourceModified="1768758955"
 stdout="Integer"$'\n'""
 summary="Column count in current console"$'\n'""
 usage="consoleColumns [ --help ]"

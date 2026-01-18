@@ -357,7 +357,7 @@ __iTerm2Image() {
 
 # Download an file from remote to terminal host
 # Argument: file - File. Optional. File to download.
-# Argument: --name name - Optional. Target name of the file once downloaded.
+# Argument: --name name - String. Optional. Target name of the file once downloaded.
 # Argument:
 # DOC TEMPLATE: iTerm2IgnoreArgument 1
 # Argument: --ignore | -i - Flag. Optional. If the current terminal is not iTerm2, then exit status 0 and do nothing.

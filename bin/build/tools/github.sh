@@ -158,11 +158,11 @@ _githubLatest() {
 # Argument: --help - Flag. Optional. Display this help.
 # DOC TEMPLATE: --handler 1
 # Argument: --handler handler - Function. Optional. Use this error handler instead of the default error handler.
-# Argument: --token token - Optional. Uses `GITHUB_ACCESS_TOKEN` if not supplied. Access token for GitHub REST API.
-# Argument: --owner owner - Optional. Uses `GITHUB_REPOSITORY_OWNER` if not supplied. Repository owner of release.
-# Argument: --name name - Optional. Uses `GITHUB_REPOSITORY_NAME` if not supplied. Repository name to release.
-# Argument: --expire expireString - Optional. Uses `GITHUB_ACCESS_TOKEN_EXPIRE` if not supplied. Expiration time for the token.
-# Argument: descriptionFilePath - Required. File which exists. Path to file containing release notes (typically markdown)
+# Argument: --token token - String. Optional. Uses `GITHUB_ACCESS_TOKEN` if not supplied. Access token for GitHub REST API.
+# Argument: --owner owner - String. Optional. Uses `GITHUB_REPOSITORY_OWNER` if not supplied. Repository owner of release.
+# Argument: --name name - String. Optional. Uses `GITHUB_REPOSITORY_NAME` if not supplied. Repository name to release.
+# Argument: --expire expireString - String. Optional. Uses `GITHUB_ACCESS_TOKEN_EXPIRE` if not supplied. Expiration time for the token.
+# Argument: descriptionFilePath - File. Required. File which exists. Path to file containing release notes (typically markdown)
 # Argument: releaseName - String. Required. Name of the release (e.g. `v1.0.0`)
 # Argument: commitish - String. Required. The GIT short SHA tag for the release
 # Environment: - `GITHUB_ACCESS_TOKEN` - Access to GitHub to publish releases

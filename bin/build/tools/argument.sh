@@ -227,7 +227,7 @@ __commentArgumentSpecification__required() {
   printf "%s/%s\n" "$1" "required"
 }
 
-# Argument: specification - Required. String.
+# Argument: specification - String. Required.
 _commentArgumentSpecificationDefaults() {
   local handler="_${FUNCNAME[0]}"
   local specification="${1-}"
@@ -429,7 +429,7 @@ _commentArgumentTypeValid() {
 # Argument: specification - Required. File.
 # Argument: stateFile - Required. File.
 # Argument: argumentIndex - Required. Integer.
-# Argument: argumentValue - Optional. String.
+# Argument: argumentValue - String. Optional.
 _commentArgumentName() {
   local handler="_${FUNCNAME[0]}"
   local specification="${1-}" stateFile="${2-}" argumentIndex="${3-}" argumentValue="${4-}" argumentNamed
@@ -462,10 +462,10 @@ _commentArgumentTypeFromSpec() {
   printf "%s%s%s" "$3" "$argumentType" "$(catchEnvironment "$handler" booleanChoose "$argumentRepeat" '*' '')" || return $?
 }
 
-# Argument: specification - Required. String.
+# Argument: specification - String. Required.
 # Argument: stateFile - Required. File.
 # Argument: argumentIndex - Required. Integer.
-# Argument: argumentValue - Optional. String.
+# Argument: argumentValue - String. Optional.
 _commentArgumentType() {
   local handler="_${FUNCNAME[0]}"
   local specification="${1-}" stateFile="${2-}" argumentIndex="${3-}" argumentValue="${4-}"
@@ -506,7 +506,7 @@ __commentArgumentType() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# Argument: specification - Required. String.
+# Argument: specification - String. Required.
 # Argument: stateFile - Required. File.
 # Argument: ... - String. Optional. One or more
 _commentArgumentsRemainder() {

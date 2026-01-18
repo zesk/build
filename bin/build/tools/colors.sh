@@ -66,9 +66,9 @@ _hasConsoleAnimation() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# Argument: prefix - Required. String.
-# Argument: suffix - Required. String.
-# Argument: text ... - Optional. String.
+# Argument: prefix - String. Required.
+# Argument: suffix - String. Required.
+# Argument: text ... - String. Optional.
 __consoleEscape() {
   local start="$1" end="$2"
   shift && shift
@@ -83,9 +83,9 @@ __consoleEscape() {
   fi
 }
 
-# Argument: prefix - Required. String.
-# Argument: suffix - Required. String.
-# Argument: text ... - Optional. String.
+# Argument: prefix - String. Required.
+# Argument: suffix - String. Required.
+# Argument: text ... - String. Optional.
 __consoleEscape1() {
   local start="$1"
   shift

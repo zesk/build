@@ -466,10 +466,10 @@ _daemontoolsRestart() {
 #
 # Specify actions more than once on the command line to specify more than one set of permissions.
 #
-# Argument: --home serviceHome - Optional. Service directory home. Defaults to `DAEMONTOOLS_HOME`.
-# Argument: --interval intervalSeconds - Optional. Number of seconds to check for presence of the file. Defaults to 10.
-# Argument: --stat statFile - Optional. Output the `svstat` status to this file every `intervalSeconds`. If not specified nothing is output.
-# Argument: --chirp chirpSeconds - Optional. Output a message saying we're alive every `chirpSeconds` seconds.
+# Argument: --home serviceHome - Directory. Optional. Service directory home. Defaults to `DAEMONTOOLS_HOME`.
+# Argument: --interval intervalSeconds - PositiveInteger. Optional. Number of seconds to check for presence of the file. Defaults to 10.
+# Argument: --stat statFile - FileDirectory. Optional. Output the `svstat` status to this file every `intervalSeconds`. If not specified nothing is output.
+# Argument: --chirp chirpSeconds - PositiveInteger. Optional. Output a message saying we're alive every `chirpSeconds` seconds.
 # Argument: --action actions - String. Optional. Onr or more actions permitted `start`, `stop`, `restart`, use comma to separate. Default is `restart`.
 # Argument: service0 - Directory. Required. Service to control (e.g. `/etc/service/application/`)
 # Argument: file1 - File. Required. Absolute path to a file. Presence of  `file` triggers `action`

@@ -128,6 +128,7 @@ All functions in Zesk Build, alphabetically.
 - {SEE:consoleConfigureDecorate}
 - {SEE:consoleColumns}
 - {SEE:consoleConfigureColorMode}
+- {SEE:consoleConfigureDecorate}
 - {SEE:consoleDefaultTitle}
 - {SEE:consoleFileLink}
 - {SEE:consoleGetColor}
@@ -165,6 +166,7 @@ All functions in Zesk Build, alphabetically.
 - {SEE:debuggingStack}
 - {SEE:debugOpenFiles}
 - {SEE:decorate}
+- {SEE:decorateInitialized}
 - {SEE:decoratePath}
 - {SEE:decorateStyle}
 - {SEE:decorations}
@@ -294,6 +296,7 @@ All functions in Zesk Build, alphabetically.
 - {SEE:fileReverseLines}
 - {SEE:fileSize}
 - {SEE:filesRename}
+- {SEE:fileTeeAtomic}
 - {SEE:fileTemporaryName}
 - {SEE:fileType}
 - {SEE:findUncaughtAssertions}
@@ -364,12 +367,12 @@ All functions in Zesk Build, alphabetically.
 - {SEE:insideDocker}
 - {SEE:installInstallBinary}
 - {SEE:installInstallBuild}
-- {SEE:approveBashSource}
+- {SEE:interactiveBashSource}
 - {SEE:interactiveCountdown}
 - {SEE:interactiveManager}
 - {SEE:interactiveOccasionally}
 - {SEE:ipLookup}
-- {SEE:pathIsAbsolute}
+- {SEE:isAbsolutePath}
 - {SEE:isAlpine}
 - {SEE:isArray}
 - {SEE:isBashBuiltin}
@@ -460,7 +463,7 @@ All functions in Zesk Build, alphabetically.
 - {SEE:networkIPList}
 - {SEE:networkMACAddressList}
 - {SEE:newlineHide}
-- {SEE:releaseNew}
+- {SEE:newRelease}
 - {SEE:nodeInstall}
 - {SEE:nodePackageManager}
 - {SEE:nodePackageManagerInstall}

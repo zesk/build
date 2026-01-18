@@ -11,7 +11,7 @@ fn="fileLineCount"
 foundNames=([0]="stdout" [1]="argument" [2]="stdin")
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 source="bin/build/tools/text.sh"
-sourceModified="1768721469"
+sourceModified="1768759798"
 stdin="Lines are read from standard in and counted"$'\n'""
 stdout="UnsignedInteger"$'\n'"\`UnsignedInteger\`"$'\n'""
 summary="Outputs the number of lines read from stdin (or supplied"

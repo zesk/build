@@ -12,6 +12,6 @@ fn="gitCommit"
 foundNames=([0]="argument" [1]="example")
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 source="bin/build/tools/git.sh"
-sourceModified="1768721470"
+sourceModified="1768759336"
 summary="Commits all files added to git and also update release"
 usage="gitCommit [ --last ] [ -- ] [ --help ] [ comment ]"

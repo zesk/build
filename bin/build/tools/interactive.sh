@@ -192,7 +192,7 @@ _confirmMenu() {
 # Argument: --delay delaySeconds - Integer. Optional. Delay in seconds between checks in interactive mode.
 # Argument: --until exitCode - Integer. Optional. Check until exit code matches this.
 # Argument: --title title - String. Optional. Display this title instead of the command.
-# Argument: arguments ... - Optional. Arguments to loopCallable
+# Argument: arguments ... - Optional. Arguments. Arguments to `loopCallable`
 # Run checks interactively until errors are all fixed.
 loopExecute() {
   __interactiveLoader "_${FUNCNAME[0]}" "__${FUNCNAME[0]}" "$@"

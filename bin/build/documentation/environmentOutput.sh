@@ -13,6 +13,6 @@ requires="throwArgument decorate environmentSecureVariables grepSafe env removeF
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 see="environmentSecureVariables"$'\n'""
 source="bin/build/tools/environment.sh"
-sourceModified="1768756695"
+sourceModified="1768759812"
 summary="Output all exported environment variables, hiding secure ones and ones"
 usage="environmentOutput [ --underscore ] [ --skip-prefix ] [ --secure ]"

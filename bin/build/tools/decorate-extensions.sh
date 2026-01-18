@@ -65,9 +65,9 @@ _decorateStyleReplace() {
 #
 # The name is output left-aligned to the `characterWidth` given and colored using `decorate label`; the value colored using `decorate value`.
 #
-# Argument: characterWidth - Optional. Number of characters to format the value for spacing. Uses environment variable BUILD_PAIR_WIDTH if not set.
-# Argument: name - Required. Name to output
-# Argument: value ... - Optional. One or more Values to output as values for `name` (single line)
+# Argument: characterWidth - UnsignedInteger. Optional. Number of characters to format the value for spacing. Uses environment variable BUILD_PAIR_WIDTH if not set.
+# Argument: name - String. Required. Name to output
+# Argument: value ... - String. Optional. One or more Values to output as values for `name` (single line)
 # Environment: BUILD_PAIR_WIDTH
 # shellcheck disable=SC2120
 __decorateExtensionPair() {

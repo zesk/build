@@ -11,6 +11,6 @@ fn="daemontoolsHome"
 foundNames=()
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 source="bin/build/tools/daemontools.sh"
-sourceModified="1768721469"
+sourceModified="1768759217"
 summary="Print the daemontools service home path"
 usage="daemontoolsHome"

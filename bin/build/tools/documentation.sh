@@ -73,7 +73,7 @@ _bashDocumentationExtract() {
 # Argument: --unlinked-update - Flag. Optional. Update unlinked document file
 # Argument: --clean - Flag. Optional. Erase the cache before starting.
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
+# Argument: --help - Flag. Optional. Display this help.
 # Argument: --company companyName - String. Optional. Company name (uses `BUILD_COMPANY` if not set)
 # Argument: --company-link companyLink - String. Optional. Company name (uses `BUILD_COMPANY_LINK` if not set)
 # Argument: --unlinked-source directory - Directory. Optional.

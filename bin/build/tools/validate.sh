@@ -368,7 +368,7 @@ __validateTypeURL() {
 
 # Validates a value as an environment file which is loaded immediately.
 #
-# Argument: variableValue - Required. String.
+# Argument: variableValue - String. Required.
 # Return Code: 2 - Argument error
 # Return Code: 0 - Success
 __validateTypeLoadEnvironmentFile() {

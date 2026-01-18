@@ -150,9 +150,9 @@ _deploymentToSuffix() {
 # Argument: --composer arg - Argument. Optional. Supply one or more arguments to `phpComposer` command. (Use multiple times)
 # DOC TEMPLATE: --help 1
 # Argument: --help - Flag. Optional. Display this help.
-# Argument: ENV_VAR1 - Optional. Environment variables to build into the deployed .env file
-# Argument: -- - Required. Separates environment variables to file list
-# Argument: file1 file2 dir3 ... - Required. List of files and directories to build into the application package.
+# Argument: environmentVariable ... - EnvironmentVariable. Optional. Environment variables to build into the deployed .env file
+# Argument: -- - Separator. Required. Separates environment variables to file list
+# Argument: file1 file2 dir3 ... - File|Directory. Required. List of files and directories to build into the application package.
 # See: BUILD_TARGET.sh
 phpBuild() {
   local handler="_${FUNCNAME[0]}"
@@ -200,7 +200,7 @@ phpBuild() {
       home=$(validate "$handler" Directory "$argument" "${1-}") || return $?
       ;;
     *)
-      environments+=("$1")
+      environments+=("$(validate "$handler" EnvironmentVariable "environmentVariable" "$1")")
       ;;
     esac
     shift

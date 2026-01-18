@@ -41,14 +41,14 @@ _identicalRepair() {
 # Argument: --exclude pattern - String. Optional. One or more patterns of paths to exclude. Similar to pattern used in `find`.
 # Argument: --cd directory - Directory. Optional. Change to this directory before running. Defaults to current directory.
 # Argument: --repair directory - Directory. Optional. Any files in onr or more directories can be used to repair other files.
-# Argument: --token token - String. Optional. ONLY do this token. May be specified more than once.
 # Argument: --skip file - Directory. Optional. Ignore this file for repairs.
 # Argument: --ignore-singles - Flag. Optional. Skip the check to see if single entries exist.
 # Argument: --no-map - Flag. Optional. Do not map __BASE__, __FILE__, __DIR__ tokens.
-# Argument: --debug - Optional. Additional debugging information is output.
+# Argument: --debug - Flag. Optional. Additional debugging information is output.
 # Argument: --help - Flag. Optional. This help.
 # Argument: --singles singlesFiles - File. Optional. One or more files which contain a list of allowed `{identical}` singles, one per line.
 # Argument: --single singleToken - String. Optional. One or more tokens which cam be singles.
+# Argument: token ... - String. Optional. ONLY do this token. May be specified more than once.
 #
 # Return Code: 2 - Argument error
 # Return Code: 0 - Success, everything matches
@@ -111,7 +111,7 @@ _identicalCheck() {
 # Argument: --internal - Flag. Optional. Do updates for `# _{identical}_` and `# DOC TEMPLATE:` prefixes first.
 # Argument: --internal-only - Flag. Optional. Just do `--internal` repairs.
 # Argument: --interactive - Flag. Optional. Interactive mode on fixing errors.
-# Argument: ... - Optional. Additional arguments are passed directly to `identicalCheck`.
+# Argument: ... - Arguments. Optional. Additional arguments are passed directly to `identicalCheck`.
 identicalCheckShell() {
   __identicalLoader "_${FUNCNAME[0]}" "__${FUNCNAME[0]}" "$@"
 }

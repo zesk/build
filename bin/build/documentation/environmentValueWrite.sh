@@ -11,6 +11,6 @@ fn="environmentValueWrite"
 foundNames=([0]="argument")
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 source="bin/build/tools/environment.sh"
-sourceModified="1768756695"
+sourceModified="1768759812"
 summary="Write a value to a state file as NAME=\"value\""
 usage="environmentValueWrite name [ value ] [ ... ] [ --help ]"

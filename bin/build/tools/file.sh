@@ -814,7 +814,7 @@ _fileTemporaryName() {
 # Argument: -a - Flag. Optional. Append target (atomically as well).
 # Argument: target - File. Required. File to target
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
+# Argument: --help - Flag. Optional. Display this help.
 # stdin: Piped to a temporary file until EOF and then moved to target
 # stdout: A copy of stdin
 fileTeeAtomic() {

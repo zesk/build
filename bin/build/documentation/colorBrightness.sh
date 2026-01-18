@@ -12,7 +12,7 @@ fn="colorBrightness"
 foundNames=([0]="credit" [1]="argument" [2]="stdin")
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 source="bin/build/tools/colors.sh"
-sourceModified="1768757397"
+sourceModified="1768758955"
 stdin="3 integer values [ Optional ]"$'\n'""
 summary="Return an integer between 0 and 100"
 usage="colorBrightness [ --help ] [ redValue ] [ greenValue ] [ blueValue ]"

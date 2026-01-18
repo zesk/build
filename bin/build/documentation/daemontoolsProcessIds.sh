@@ -12,6 +12,6 @@ foundNames=([0]="requires")
 requires="pgrep read printf"$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 source="bin/build/tools/daemontools.sh"
-sourceModified="1768721469"
+sourceModified="1768759217"
 summary="List any processes associated with daemontools supervisors"
 usage="daemontoolsProcessIds"

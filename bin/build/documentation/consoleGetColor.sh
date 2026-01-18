@@ -12,6 +12,6 @@ fn="consoleGetColor"
 foundNames=([0]="summary" [1]="credit" [2]="argument")
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 source="bin/build/tools/console.sh"
-sourceModified="1768721469"
+sourceModified="1768759173"
 summary="Get the console foreground or background color"$'\n'""
 usage="consoleGetColor [ --foreground ] [ --background ]"

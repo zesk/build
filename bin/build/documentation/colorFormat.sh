@@ -11,7 +11,7 @@ fn="colorFormat"
 foundNames=([0]="stdin" [1]="argument")
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 source="bin/build/tools/colors.sh"
-sourceModified="1768757397"
+sourceModified="1768758955"
 stdin="list:UnsignedInteger"$'\n'""
 summary="Take r g b decimal values and convert them to"
 usage="colorFormat [ format ] [ red ] [ green ] [ blue ] [ --help ]"

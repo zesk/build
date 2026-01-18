@@ -56,7 +56,7 @@ _buildDebugEnabled() {
 # Debugging: f6bef8d783239932a1b4311d027289c42d9d4b3f
 
 # Internal: true
-# Argument: setArgs - Optional. Extra characters to `set -`.
+# Argument: setArgs - EmptyString. Optional. Extra characters to `set -`.
 # Turn on debugging and additional `set` arguments
 # Actually does 'set -x` - should be only occurrence.
 # Depends: -
@@ -64,7 +64,7 @@ __buildDebugEnable() {
   set "-x${1-}" # Debugging
 }
 
-# Argument: setArgs - Optional. Extra characters to `set +`.
+# Argument: setArgs - EmptyString. Optional. Extra characters to `set +`.
 # Turn off debugging and additional `set` arguments
 # Internal: true
 # Depends: -

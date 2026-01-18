@@ -382,7 +382,7 @@ _findUncaughtAssertions() {
 # Argument: `--` - Separator. Required. Separates extensions from text
 # Argument: `text0` - String. Required. Text which must exist in each item with the extension given.
 # Argument: `--` - Separator. Optional. Final delimiter to specify find arguments.
-# Argument: findArgs - Optional. Limit find to additional conditions.
+# Argument: findArgs - Arguments. Optional. Passed to `find`. Limit find to additional conditions.
 # Side-effect: Errors written to stderr, status written to stdout
 # Environment: This operates in the current working directory
 # Summary: Check files for the existence of a string

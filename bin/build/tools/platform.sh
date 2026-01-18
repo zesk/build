@@ -71,7 +71,8 @@ _fileReverseLines() {
 
 # Makes all `*.sh` files executable
 #
-# Argument: --find findArguments - Optional. Add arguments to exclude files or paths. SPACE-delimited for multiple options.
+# TODO: - findArguments is different here than other places
+# Argument: --find findArguments - String. Optional. Add arguments to exclude files or paths. SPACE-delimited for multiple options.
 # Argument: path ... - Directory. Optional. One or more paths to scan for shell files. Uses PWD if not specified.
 # Environment: Works from the current directory
 # See: makeShellFilesExecutable
@@ -79,7 +80,7 @@ _fileReverseLines() {
 makeShellFilesExecutable() {
   local handler="_${FUNCNAME[0]}"
 
-  local path findArgs=() tempArgs paths=()
+  local path findArgs=() paths=()
 
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
@@ -91,8 +92,7 @@ makeShellFilesExecutable() {
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
     --find)
-      shift
-      IFS=' ' read -r -a tempArgs <<<"${1-}" || :
+      local tempArgs && shift && IFS=' ' read -r -a tempArgs <<<"${1-}" || :
       findArgs+=("${tempArgs[@]+"${tempArgs[@]}"}")
       ;;
     *)
@@ -281,7 +281,7 @@ __extensionListsLog() {
 
 # Argument: --clean - Flag. Optional. Clean directory of all files first.
 # Argument: directory - Directory. Required. Directory to create extension lists.
-# Argument: file0 - Optional. List of files to add to the extension list.
+# Argument: file0 ... - String. Optional. List of files to add to the extension list.
 # DOC TEMPLATE: --help 1
 # Argument: --help - Flag. Optional. Display this help.
 # Input: Takes a list of files, one per line

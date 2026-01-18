@@ -150,7 +150,7 @@ _ipLookup() {
 # Summary: Test whether the key needs to be updated
 # Argument: keyDate - Date. Required. Formatted like `YYYY-MM-DD`. Truncated at 10 characters as well.
 # Argument: upToDateDays - Integer. Required. Days that key expires after `keyDate`.
-# Argument: --name name - Optional. Name of the expiring item for error messages.
+# Argument: --name name - String. Optional. Name of the expiring item for error messages.
 # DOC TEMPLATE: --help 1
 # Argument: --help - Flag. Optional. Display this help.
 # Example:     if !isUpToDate "$AWS_ACCESS_KEY_DATE" 90; then

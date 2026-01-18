@@ -12,6 +12,6 @@ fn="awsIPAccess"
 foundNames=([0]="summary" [1]="argument" [2]="environment")
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 source="bin/build/tools/aws.sh"
-sourceModified="1768721469"
+sourceModified="1768758981"
 summary="Grant access to AWS security group for this IP only using Amazon IAM credentials"$'\n'""
 usage="awsIPAccess [ --profile profileName ] --services service0,service1,... [ --id developerId ] --group securityGroup [ --ip ip ] [ --revoke ] [ --help ]"

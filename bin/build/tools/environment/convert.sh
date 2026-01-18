@@ -170,7 +170,7 @@ __internalEnvironmentFileDockerToBashCompatiblePipe() {
 
 # Ensure an environment file is compatible with non-quoted docker environment files
 # Argument: filename - File. Optional. Docker environment file to check for common issues
-# stdin: text - Optional. Environment file to convert.
+# stdin: text - Environment file to convert. (Optional)
 # stdout: text - Only if stdin is supplied and no `filename` arguments.
 # Return Code: 1 - if errors occur
 # Return Code: 0 - if file is valid

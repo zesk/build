@@ -11,6 +11,6 @@ fn="clampDigits"
 foundNames=([0]="argument")
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 source="bin/build/tools/colors.sh"
-sourceModified="1768757397"
+sourceModified="1768758955"
 summary="Clamp digits between two integers"
 usage="clampDigits [ minimum ] [ maximum ] [ --help ]"

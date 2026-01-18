@@ -111,8 +111,8 @@ _dockerListContext() {
 # Return Code: 1 - If already inside docker, or the environment file passed is not valid
 # Return Code: 0 - Success
 # Return Code: Any - `docker run` error code is returned if non-zero
-# Environment: BUILD_DOCKER_PLATFORM - Optional. Defaults to `linux/arm64`. Affects which image platform is used.
-#
+# Environment: BUILD_DOCKER_PLATFORM
+# - `BUILD_DOCKER_PLATFORM` defaults to `linux/arm64` – affects which image platform is used.
 dockerLocalContainer() {
   local handler="_${FUNCNAME[0]}"
 
@@ -213,7 +213,7 @@ _dockerLocalContainer() {
 }
 
 # List docker images which are currently pulled
-# Argument: --filter reference - Optional. Filter list by reference provided.
+# Argument: --filter reference - String. Optional. Filter list by reference provided.
 dockerImages() {
   local handler="_${FUNCNAME[0]}"
 

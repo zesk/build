@@ -12,6 +12,6 @@ foundNames=([0]="argument" [1]="requires")
 requires="bc"$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 source="bin/build/tools/colors.sh"
-sourceModified="1768757397"
+sourceModified="1768758955"
 summary="Multiply color values by a factor and return the new"
 usage="colorMultiply factor redValue greenValue blueValue [ --help ]"

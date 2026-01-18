@@ -65,8 +65,8 @@ _listRemove() {
 #
 # Argument: listValue - Required. Path value to modify.
 # Argument: separator - Required. Separator string for item values (typically `:`)
-# Argument: --first - Optional. Place any items after this flag first in the list
-# Argument: --last - Optional. Place any items after this flag last in the list. Default.
+# Argument: --first - Flag. Optional. Place any items after this flag first in the list
+# Argument: --last - Flag. Optional. Place any items after this flag last in the list. Default.
 # Argument: item - the path to be added to the `listValue`
 # DOC TEMPLATE: --help 1
 # Argument: --help - Flag. Optional. Display this help.

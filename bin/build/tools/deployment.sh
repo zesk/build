@@ -204,9 +204,9 @@ _deployBuildEnvironment() {
 # Note that these MAY be the same or different directories depending on how the application is linked to the deployment
 #
 # Argument: --debug - Enable debugging. Defaults to `BUILD_DEBUG`
-# Argument: --deploy - Optional. Flag, default setting - handles the remote deploy.
-# Argument: --revert - Optional. Flag, Revert changes just made.
-# Argument: --cleanup - Optional. Flag, Cleanup after success.
+# Argument: --deploy - Flag. Optional. default setting - handles the remote deploy.
+# Argument: --revert - Flag. Optional. Revert changes just made.
+# Argument: --cleanup - Flag. Optional. Cleanup after success.
 # Argument: --home deployPath - Directory. Required. Path where the deployments database is on remote system.
 # Argument: --id applicationId - String. Required. Should match `APPLICATION_ID` in `.env`
 # Argument: --application applicationPath - String. Required. Path on the remote system where the application is live

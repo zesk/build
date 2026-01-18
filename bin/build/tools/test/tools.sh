@@ -28,7 +28,8 @@ export globalTestFailure=
 # Environment: - `BUILD_TEST_FLAGS` - Modify default flags and test behavior.
 # Environment: - `BUILD_DEBUG` - Many settings to debug different systems, comma-delimited.
 # Filters (`--tag` and `--skip-tag`) are applied in order after the function pattern or suite filter.
-# Argument: --help - Optional. This help.
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
 # Argument: --clean - Optional. Delete test artifact files and exit. (No tests run)
 # Argument: --list - Flag. Optional. List all test names (which match if applicable).
 # Argument: --env-file environmentFile - EnvironmentFile. Optional. Load one ore more environment files prior to running tests
@@ -39,15 +40,15 @@ export globalTestFailure=
 # Argument: --verbose - Flag. Optional. Be verbose.
 # Argument: --coverage - Flag. Optional. Feature in progress - generate a coverage file for tests.
 # Argument: --no-stats - Flag. Optional. Do not generate a test.stats file showing test timings when completed.
-# Argument: --messy - Optional. Do not delete test artifact files afterwards.
+# Argument: --messy - Flag. Optional. Do not delete test artifact files afterwards.
 # Argument: --fail executor - Callable. Optional. One or more programs to run on the failed test files. Takes arguments: testName testFile testLine
 # Argument: --cd-away - Flag. Optional. Change directories to a temporary directory before each test.
 # Argument: --tap tapFile - FileDirectory. Optional. Output test results in TAP format to `tapFile`.
 # Argument: --show - Flag. Optional. List all test suites.
 # Argument: -l - Flag. Optional. List all test suites.
-# Argument: --one testSuite - Optional. Add one test suite to run. (Synonym for `--suite`)
-# Argument: --suite testSuite - Optional. Add one test suite to run.
-# Argument: -1 testSuite - Optional. Add one test suite to run. (Synonym for `--suite`)
+# Argument: --one testSuite - String. Optional. Add one test suite to run. (Synonym for `--suite`)
+# Argument: --suite testSuite - String. Optional. Add one test suite to run.
+# Argument: -1 testSuite - String. Optional. Add one test suite to run. (Synonym for `--suite`)
 # Argument: --tag tagName - String. Optional. Include tests (only) tagged with this name.
 # Argument: --show-tags - Flag. Optional. Of the matched tests, display the tags that they have, if any. Unique list.
 # Argument: --skip-tag tagName - String. Optional. Skip tests tagged with this name.

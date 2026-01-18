@@ -664,9 +664,9 @@ _environmentFileShow() {
 
 # DOC TEMPLATE: --help 1
 # Argument: --help - Flag. Optional. Display this help.
-# Argument: requiredVariable ... - Optional. One or more environment variables which should be non-blank and included in the `.env` file.
+# Argument: requiredVariable ... - EnvironmentVariable. Optional. One or more environment variables which should be non-blank and included in the `.env` file.
 # Argument: -- - Divider. Optional. Divides the requiredEnvironment values from the optionalEnvironment. Should appear once and only once.
-# Argument: optionalVariable ... - Optional. One or more environment variables which are included if blank or not
+# Argument: optionalVariable ... - EnvironmentVariable. Optional. One or more environment variables which are included if blank or not
 #
 # Create environment file `.env` for build.
 #

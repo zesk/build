@@ -30,7 +30,7 @@ _processSignal() {
 #
 # Argument: processId - Integer. Required. Wait for process ID to exit.
 # Argument: --timeout seconds - Integer. Optional. Wait for this long after sending a signals to see if a process exits. If not supplied waits 1 second after each signal, then waits forever.
-# Argument: --signals signal - List of strings. Optional. Send each signal to processes, in order.
+# Argument: --signals signal - CommaDelimitedList. Optional. Send each signal to processes, in order.
 # Argument: --require - Flag. Optional. Require all processes to be alive upon first invocation.
 #
 processWait() {

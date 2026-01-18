@@ -11,6 +11,6 @@ fn="colorSampleSemanticStyles"
 foundNames=([0]="summary")
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 source="bin/build/tools/colors.sh"
-sourceModified="1768757397"
+sourceModified="1768758955"
 summary="Output colors"$'\n'""
 usage="colorSampleSemanticStyles"

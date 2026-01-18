@@ -14,6 +14,6 @@ foundNames=([0]="summary" [1]="argument" [2]="see" [3]="example" [4]="environmen
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 see="stty"$'\n'""
 source="bin/build/tools/colors.sh"
-sourceModified="1768757397"
+sourceModified="1768758955"
 summary="Row count in current console"$'\n'""
 usage="consoleRows [ --help ]"

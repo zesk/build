@@ -12,6 +12,6 @@ fn="awsCredentialsFile"
 foundNames=([0]="summary" [1]="argument" [2]="example")
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 source="bin/build/tools/aws.sh"
-sourceModified="1768721469"
+sourceModified="1768758981"
 summary="Get the path to the AWS credentials file"$'\n'""
 usage="awsCredentialsFile [ --help ] [ --verbose ] [ --create ] [ --home homeDirectory ]"

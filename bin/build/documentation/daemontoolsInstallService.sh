@@ -11,6 +11,6 @@ fn="daemontoolsInstallService"
 foundNames=([0]="argument")
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 source="bin/build/tools/daemontools.sh"
-sourceModified="1768721469"
+sourceModified="1768759217"
 summary="Install a daemontools service which runs a binary as the"
 usage="daemontoolsInstallService [ --home serviceHome ] serviceFile [ serviceName ] [ --name serviceName ] [ --log logHome ] [ --escalate ] [ --log-arguments ... -- ] [ --arguments ... -- ] [ -- ... ]"

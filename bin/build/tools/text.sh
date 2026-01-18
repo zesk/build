@@ -710,9 +710,9 @@ _fileLineCount() {
 }
 
 # Plural word which includes the numeric prefix and the noun.
-# Argument: number - Required. An integer or floating point number
-# Argument: singular - Required. The singular form of a noun
-# Argument: plural - Optional. The plural form of a noun. If not specified uses `singular` plus an ess.
+# Argument: number - Number. Required. An integer or floating point number
+# Argument: singular - String. Required. The singular form of a noun
+# Argument: plural - String. Optional. The plural form of a noun. If not specified uses `singular` plus an ess.
 # Example:     count=$(fileLineCount "$foxSightings") || return $?
 # Example:     printf "We saw %s.\n" "$(pluralWord "$count" fox foxes)"
 # stdout: `String`. The number (direct) and the plural form for non-1 values. e.g. `$(pluralWord 2 potato potatoes)` = `2 potatoes`
@@ -732,9 +732,9 @@ _pluralWord() {
 # Otherwise, outputs the `plural` value to standard out.
 #
 # Short description: Output numeric messages which are grammatically accurate
-# Argument: number - Required. An integer or floating point number
-# Argument: singular - Required. The singular form of a noun
-# Argument: plural - Optional. The plural form of a noun. If not specified uses `singular` plus an ess.
+# Argument: number - Number. Required. An integer or floating point number
+# Argument: singular - String. Required. The singular form of a noun
+# Argument: plural - String. Optional. The plural form of a noun. If not specified uses `singular` plus an ess.
 #
 # Return Code: 1 - If count is non-numeric
 # Return Code: 0 - If count is numeric

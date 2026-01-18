@@ -11,6 +11,6 @@ fn="debugOpenFiles"
 foundNames=()
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 source="bin/build/tools/debug.sh"
-sourceModified="1768757641"
+sourceModified="1768759254"
 summary="Output current open files"
 usage="debugOpenFiles"

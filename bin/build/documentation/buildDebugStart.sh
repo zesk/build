@@ -16,6 +16,6 @@ foundNames=([0]="environment" [1]="argument" [2]="example" [3]="requires")
 requires="buildDebugEnabled"$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 source="bin/build/tools/debug.sh"
-sourceModified="1768757641"
+sourceModified="1768759254"
 summary="Start build debugging if it is enabled."
 usage="buildDebugStart [ moduleName ]"

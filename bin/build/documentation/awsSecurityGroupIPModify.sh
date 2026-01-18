@@ -11,6 +11,6 @@ fn="awsSecurityGroupIPModify"
 foundNames=([0]="argument" [1]="summary")
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 source="bin/build/tools/aws.sh"
-sourceModified="1768721469"
+sourceModified="1768758981"
 summary="Modify an EC2 Security Group"$'\n'""
 usage="awsSecurityGroupIPModify --remove [ --add ] [ --register ] --group group [ --region region ] --port port --description description --ip ip [ --help ]"

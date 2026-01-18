@@ -11,6 +11,6 @@ fn="awsCredentialsRemove"
 foundNames=([0]="argument")
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 source="bin/build/tools/aws.sh"
-sourceModified="1768721469"
+sourceModified="1768758981"
 summary="Remove credentials from the AWS credentials file"
 usage="awsCredentialsRemove [ --profile profileName ] [ --comments ] [ profileName ] [ --help ]"

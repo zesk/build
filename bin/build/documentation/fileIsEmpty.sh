@@ -11,6 +11,6 @@ fn="fileIsEmpty"
 foundNames=([0]="argument")
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 source="bin/build/tools/file.sh"
-sourceModified="1768721469"
+sourceModified="1768758898"
 summary="Is this an empty (zero-sized) file?"
 usage="fileIsEmpty [ file ] [ --help ]"

@@ -13,7 +13,7 @@
 # DOC TEMPLATE: --help 1
 # Argument: --help - Flag. Optional. Display this help.
 # Argument: binary - Callable. Optional. Run this program after loading test tools.
-# Argument: ... - Optional. Arguments for binary.
+# Argument: ... - Optional. Arguments. Arguments for binary.
 #
 testTools() {
   local handler="_${FUNCNAME[0]}"
