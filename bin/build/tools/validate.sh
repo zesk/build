@@ -402,7 +402,7 @@ _validateTypeList() {
 
 # Are all arguments passed a valid validate type?
 # DOC TEMPLATE: --help 1
-# Argument: --help - Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional. Display this help.
 # Argument: type - String. Optional. Type to validate as `validate` type.
 # Example:     isValidateType string || returnMessage 1 "string is not a type."
 isValidateType() {

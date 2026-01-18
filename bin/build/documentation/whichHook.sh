@@ -12,7 +12,7 @@ fn="whichHook"
 foundNames=([0]="summary" [1]="argument" [2]="environment" [3]="test")
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 source="bin/build/tools/hook.sh"
-sourceModified="1768695708"
+sourceModified="1768721469"
 summary="Find the path to a hook binary file"$'\n'""
 test="testHookSystem"$'\n'""
 usage="whichHook [ --application applicationHome ] [ --extensions extensionList ] [ --next scriptName ] hookName0 [ hookName1 ]"

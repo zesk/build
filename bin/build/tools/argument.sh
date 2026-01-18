@@ -27,7 +27,7 @@
 # Argument: this - Function. Required. Function to collect arguments for. Assume handler function is "_$this".
 # Argument: source - File. Required. File of the function to collect the specification.
 # Argument: --none - Flag. Optional. If specified, state file is deleted prior to return regardless of handling.
-# Argument: arguments ... - EmptyString. Optional.One or more arguments to parse.
+# Argument: arguments ... - EmptyString. Optional. One or more arguments to parse.
 # Output is a temporary `stateFile` on line 1
 _arguments() {
   local _handler_="_${FUNCNAME[0]}"

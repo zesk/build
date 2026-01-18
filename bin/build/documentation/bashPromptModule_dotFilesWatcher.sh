@@ -13,6 +13,6 @@ foundNames=([0]="example" [1]="requires")
 requires="sort buildEnvironmentGetDirectory touch returnEnvironment read basename inArray decorate printf confirmYesNo statusMessage grep rm"$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 source="bin/build/tools/prompt-modules.sh"
-sourceModified="1768695708"
+sourceModified="1768721469"
 summary="Watches your HOME directory for \`.\` files which are added"
 usage="bashPromptModule_dotFilesWatcher"

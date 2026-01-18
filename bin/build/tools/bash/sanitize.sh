@@ -24,7 +24,7 @@ __bashSanitize() {
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
-    --exec) shift && executor=$(validate "$handler" callable "$argument" "${1-}") || return $? ;;
+    --exec) shift && executor=$(validate "$handler" Callable "$argument" "${1-}") || return $? ;;
     --debug) debugFlag=true ;;
     --home) shift && home=$(validate "$handler" Directory "$argument" "${1-}") || return $? ;;
     --check) shift && cad+=("$(validate "$handler" Directory "checkDirectory" "$1")") || return $? ;;

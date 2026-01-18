@@ -50,9 +50,9 @@ _darwinSoundValid() {
 # Install a sound file for notifications
 #
 # DOC TEMPLATE: --help 1
-# Argument: --help - Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional. Display this help.
 # Argument: soundFile ... - File. Required. Sound file(s) to install in user library.
-# Argument: --create - Flag. Optional.Create sound directory if it does not exist.
+# Argument: --create - Flag. Optional. Create sound directory if it does not exist.
 darwinSoundInstall() {
   local handler="_${FUNCNAME[0]}"
 
@@ -187,11 +187,11 @@ _darwinNotification() {
 }
 
 # Argument: --choice choiceText - String. Optional. Title of the thing.
-# Argument: --ok - Flag. Optional.Adds "OK" as an option.
-# Argument: --cancel - Flag. Optional.Adds "Cancel" as an option.
+# Argument: --ok - Flag. Optional. Adds "OK" as an option.
+# Argument: --cancel - Flag. Optional. Adds "Cancel" as an option.
 # Argument: --default buttonIndex - Integer. Required. The button (0-based index) to make the default button choice.
 # DOC TEMPLATE: --help 1
-# Argument: --help - Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional. Display this help.
 # Argument: message ... - String. Required. The message to display in the dialog.
 # Display a dialog using `osascript` with the choices provided. Typically this is found on Mac OS X.
 # Outputs the selected button text upon exit.

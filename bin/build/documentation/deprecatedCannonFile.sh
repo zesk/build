@@ -2,8 +2,8 @@
 # Copyright &copy; 2026 Market Acumen, Inc.
 # Generated on 2026-01-18
 # shellcheck disable=SC2034
-# v0.25.0
-# v0.24.0
+    # v0.25.0
+    # v0.24.0
 applicationFile="bin/build/tools/deprecated-tools.sh"
 argument="findArgumentFunction - Function. Required. Find arguments (for \`find\`) for cannon."$'\n'"cannonFile - File. Required. One or more files delimited with \`|\` characters, one per line \`search|replace|findArguments|...\`. If not files are supplied then pipe file via stdin."$'\n'""
 base="deprecated-tools.sh"
@@ -13,6 +13,6 @@ fn="deprecatedCannonFile"
 foundNames=([0]="argument")
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 source="bin/build/tools/deprecated-tools.sh"
-sourceModified="1768695708"
+sourceModified="1768721469"
 summary="Run cannon using a configuration file or files."
 usage="deprecatedCannonFile findArgumentFunction cannonFile"

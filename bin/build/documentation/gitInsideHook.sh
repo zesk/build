@@ -12,6 +12,6 @@ fn="gitInsideHook"
 foundNames=([0]="environment")
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 source="bin/build/tools/git.sh"
-sourceModified="1768695708"
+sourceModified="1768721470"
 summary="Are we currently inside a git hook?"
 usage="gitInsideHook"

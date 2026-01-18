@@ -13,6 +13,6 @@ fn="fileReverseLines"
 foundNames=([0]="summary" [1]="source" [2]="credits" [3]="depends")
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 source="bin/build/tools/platform.sh"
-sourceModified="1768695708"
+sourceModified="1768721470"
 summary="Reverse output lines"$'\n'""
 usage="fileReverseLines"

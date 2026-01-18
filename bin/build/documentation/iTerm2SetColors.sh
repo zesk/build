@@ -11,7 +11,7 @@ fn="iTerm2SetColors"
 foundNames=([0]="argument" [1]="stdin")
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 source="bin/build/tools/iterm2.sh"
-sourceModified="1768695708"
+sourceModified="1768721470"
 stdin="\`colorName=colorFormat\`. One per line. Only if no arguments passed with \`colorSetting\` format."$'\n'""
 summary="Set terminal colors"
 usage="iTerm2SetColors [ --verbose | -v ] [ --skip-errors ] [ --ignore | -i ] colorSetting ..."

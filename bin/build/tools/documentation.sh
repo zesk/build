@@ -47,7 +47,7 @@ __documentationLoader() {
 # Argument: sourceFile - File. Required. File where the function is defined.
 # INTERNAL: Argument: prefix ... - String. Optional. String to add as a prefix to cached files
 # DOC TEMPLATE: --help 1
-# Argument: --help - Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional. Display this help.
 # stdin: Pipe stripped comments to extract information
 # BUILD_DEBUG: documentation-cache - Saves information to `bin/build/documentation`
 bashDocumentationExtract() {
@@ -89,7 +89,7 @@ _bashDocumentationExtract() {
 # Argument: --index-update - Flag. Optional. Update the documentation indexes only.
 # Argument: --docs-update - Flag. Optional. Update the documentation target only.
 # DOC TEMPLATE: --help 1
-# Argument: --help - Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional. Display this help.
 # Artifact: `cacheDirectory` may be created even on non-zero exit code
 # Return Code: 0 - Success
 # Return Code: 1 - Issue with environment
@@ -105,7 +105,7 @@ _documentationBuild() {
 
 # List unlinked functions in documentation index
 # DOC TEMPLATE: --help 1
-# Argument: --help - Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional. Display this help.
 documentationUnlinked() {
   __documentationLoader "_${FUNCNAME[0]}" "__${FUNCNAME[0]}" "$@"
 }
@@ -116,7 +116,7 @@ _documentationUnlinked() {
 
 # Get an internal template name
 # DOC TEMPLATE: --help 1
-# Argument: --help - Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional. Display this help.
 documentationTemplate() {
   [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
   local source="${BASH_SOURCE[0]%.sh}"
@@ -137,7 +137,7 @@ _documentationTemplate() {
 # Argument: --documentation documentationPath - Directory. Optional. Path to documentation root. Default is `./documentation/source`.
 # Argument: --source sourcePath - Directory. Optional. Path to source environment files. Defaults to `$(buildHome)/bin/env` if not specified.
 # DOC TEMPLATE: --help 1
-# Argument: --help - Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional. Display this help.
 # See: documentationBuild
 #
 # Return Code: 0 - Success
@@ -154,7 +154,7 @@ _documentationBuildEnvironment() {
 # Get the cache directory for the documentation
 # Argument: suffix - String. Optional. Directory suffix - created if does not exist.
 # DOC TEMPLATE: --help 1
-# Argument: --help - Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional. Display this help.
 documentationBuildCache() {
   local handler="_${FUNCNAME[0]}"
   [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
@@ -171,7 +171,7 @@ _documentationBuildCache() {
 # Argument: templatePath - Directory. Required. Path to the templates to repair.
 # Argument: repairPath ... - Directory. Required. One or more directories containing IDENTICAL sources for repair.
 # DOC TEMPLATE: --help 1
-# Argument: --help - Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional. Display this help.
 documentationTemplateUpdate() {
   __documentationLoader "_${FUNCNAME[0]}" "__${FUNCNAME[0]}" "$@"
 }
@@ -182,13 +182,13 @@ _documentationTemplateUpdate() {
 
 # Summary: Convert a template file to a documentation file using templates
 #
-# Argument: --env-file envFile - File. Optional.One (or more) environment files used to map `documentTemplate` prior to scanning, as defaults prior to each function generation, and after file generation.
+# Argument: --env-file envFile - File. Optional. One (or more) environment files used to map `documentTemplate` prior to scanning, as defaults prior to each function generation, and after file generation.
 # Argument: cacheDirectory - Required. Cache directory where the indexes live.
 # Argument: sourceFile - Required. The document template containing functions to define
 # Argument: functionTemplate - Required. The template for individual functions defined in the `documentTemplate`.
 # Argument: targetFile - Required. Target file to generate
 # DOC TEMPLATE: --help 1
-# Argument: --help - Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional. Display this help.
 # Convert a template which contains bash functions into full-fledged documentation.
 #
 # The process:
@@ -219,13 +219,13 @@ _documentationTemplateCompile() {
 # Argument: --filter filterArgs ... --  - Arguments. Optional. Passed to `find` and allows filtering list.
 # Argument: --force - Flag. Optional. Force generation of files.
 # Argument: --verbose - Flag. Optional. Output more messages.
-# Argument: --env-file envFile - File. Optional.One (or more) environment files used during map of `functionTemplate`
+# Argument: --env-file envFile - File. Optional. One (or more) environment files used during map of `functionTemplate`
 # Argument: cacheDirectory - Required. The directory where function index exists and additional cache files can be stored.
 # Argument: templateDirectory - Required. Directory containing documentation templates
 # Argument: functionTemplate - Required. Function template file to generate documentation for functions
 # Argument: targetDirectory - Required. Directory to create generated documentation
 # DOC TEMPLATE: --help 1
-# Argument: --help - Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional. Display this help.
 # Summary: Convert a directory of templates into documentation for Bash functions
 # Convert a directory of templates for bash functions into full-fledged documentation.
 #
@@ -261,11 +261,11 @@ _documentationTemplateDirectoryCompile() {
 # Return Code: 0 - If success
 # Return Code: 1 - Issue with file generation
 # Return Code: 2 - Argument error
-# Argument: --env-file envFile - File. Optional.One (or more) environment files used during map of `functionTemplate`
+# Argument: --env-file envFile - File. Optional. One (or more) environment files used during map of `functionTemplate`
 # Argument: functionName - Required. The function name to document.
 # Argument: functionTemplate - Required. The template for individual functions.
 # DOC TEMPLATE: --help 1
-# Argument: --help - Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional. Display this help.
 documentationTemplateFunctionCompile() {
   __documentationLoader "_${FUNCNAME[0]}" "__${FUNCNAME[0]}" "$@"
 }
@@ -348,7 +348,7 @@ _documentationIndexLookup() {
 # Argument: cacheDirectory - Required. Cache directory where the index will be created.
 # Argument: documentationSource ... - OneOrMore. Documentation source path to find tokens and their definitions.
 # DOC TEMPLATE: --help 1
-# Argument: --help - Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional. Display this help.
 # Return Code: 0 - If success
 # Return Code: 1 - Issue with file generation
 # Return Code: 2 - Argument error

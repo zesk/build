@@ -13,6 +13,6 @@ foundNames=([0]="argument" [1]="hook" [2]="environment")
 hook="version-current"$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 source="bin/build/tools/git.sh"
-sourceModified="1768695708"
+sourceModified="1768721470"
 summary="Generates a git tag for a build version, so \`v1.0d1\`,"
 usage="gitTagVersion [ --suffix versionSuffix ]"

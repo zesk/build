@@ -12,6 +12,6 @@ fn="deployLink"
 foundNames=([0]="environment" [1]="argument" [2]="summary")
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 source="bin/build/tools/deploy.sh"
-sourceModified="1768695708"
+sourceModified="1768721469"
 summary="Link deployment to new version of the application"$'\n'""
 usage="deployLink applicationLinkPath [ applicationPath ]"

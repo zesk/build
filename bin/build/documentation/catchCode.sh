@@ -12,6 +12,6 @@ foundNames=([0]="argument" [1]="requires")
 requires="isUnsignedInteger returnArgument isFunction isCallable"$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 source="bin/build/tools/_sugar.sh"
-sourceModified="1768695727"
+sourceModified="1768721470"
 summary="Run \`command\`, handle failure with \`handler\` with \`code\` and \`command\`"
 usage="catchCode code handler command ..."

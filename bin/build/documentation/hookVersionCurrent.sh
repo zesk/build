@@ -3,7 +3,7 @@
 # Generated on 2026-01-18
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/hooks.sh"
-argument="--help - Flag. Optional.Display this help."$'\n'"--application application - Directory. Optional.Application home directory."$'\n'""
+argument="--help - Flag. Optional. Display this help."$'\n'"--application application - Directory. Optional. Application home directory."$'\n'""
 base="hooks.sh"
 description="Application current version"$'\n'""$'\n'"Extracts the version from the repository"$'\n'""$'\n'""
 file="bin/build/tools/hooks.sh"
@@ -11,6 +11,6 @@ fn="hookVersionCurrent"
 foundNames=([0]="argument")
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 source="bin/build/tools/hooks.sh"
-sourceModified="1768695708"
+sourceModified="1768721470"
 summary="Application current version"
 usage="hookVersionCurrent [ --help ] [ --application application ]"

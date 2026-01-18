@@ -11,7 +11,7 @@ fn="versionNoVee"
 foundNames=([0]="stdin" [1]="stdout")
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 source="bin/build/tools/version.sh"
-sourceModified="1768695708"
+sourceModified="1768721469"
 stdin="Versions containing a preceding \`v\` character (optionally)"$'\n'""
 stdout="Versions with the initial \`v\` (if it exists) removed"$'\n'""
 summary="Take one or more versions and strip the leading \`v\`"

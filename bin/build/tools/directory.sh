@@ -49,7 +49,7 @@ directoryChange() {
       if [ -z "$directory" ]; then
         directory=$(validate "$handler" Directory "directory" "$1") || return $?
       elif [ -z "$command" ]; then
-        command=$(validate "$handler" callable "command" "$1") && shift || return $?
+        command=$(validate "$handler" Callable "command" "$1") && shift || return $?
         catchEnvironment "$handler" muzzle pushd "$directory" || return $?
         catchEnvironment "$handler" "$command" "$@" || returnUndo $? muzzle popd || return $?
         catchEnvironment "$handler" muzzle popd || return $?
@@ -109,7 +109,7 @@ _directoryClobber() {
 # Example:     logFile=./.build/$me.log
 # Example:     {fn} "$logFile"
 # DOC TEMPLATE: --help 1
-# Argument: --help - Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional. Display this help.
 # Argument: --mode fileMode - String. Optional. Enforce the directory mode for `mkdir --mode` and `chmod`. Affects directories after it in the command line; supply multiple modes and order your directories if needed. Set to `-` to reset to no value.
 # Argument: --owner ownerName - String. Optional. Enforce the directory owner the directory. Affects all directories supplied AFTER it on the command line. Set to `-` to reset to no value.
 # Argument: fileDirectory ... - FileDirectory. Required. Test if file directory exists (file does not have to exist)
@@ -182,7 +182,7 @@ _fileDirectoryExists() {
 # Argument: directoryPath ... - One or more directories to create
 # Example:     {fn} "$cachePath"
 # DOC TEMPLATE: --help 1
-# Argument: --help - Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional. Display this help.
 # Argument: --mode fileMode - String. Optional. Enforce the directory mode for `mkdir --mode` and `chmod`. Affects directories after it in the command line; supply multiple modes and order your directories if needed. Set to `-` to reset to no value.
 # Argument: --owner ownerName - String. Optional. Enforce the directory owner the directory. Affects all directories supplied AFTER it on the command line. Set to `-` to reset to no value.
 # Requires: throwArgument usageArgumentFunction usageArgumentString decorate catchEnvironment dirname
@@ -322,7 +322,7 @@ _directoryParent() {
 # Argument: --pattern filePattern - RelativePath. Required. The file or directory to find the home for.
 # Argument: --test testExpression - String. Optional. Zero or more. The `test` argument to test the targeted `filePattern`. By default uses `-d`.
 # DOC TEMPLATE: --help 1
-# Argument: --help - Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional. Display this help.
 __directoryParent() {
   local handler="${1-}" && shift
 

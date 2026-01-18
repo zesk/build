@@ -11,6 +11,6 @@ fn="pipeRunner"
 foundNames=([0]="argument")
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 source="bin/build/tools/utilities.sh"
-sourceModified="1768695708"
+sourceModified="1768756695"
 summary="Single reader, multiple writers"
 usage="pipeRunner [ --mode mode ] [ namedPipe ] [ --writer line ... ] [ readerExecutable ... ]"

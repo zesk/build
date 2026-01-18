@@ -15,8 +15,8 @@
 
 # Load a source file and run a command
 # Argument: source - File. Required. Path to source relative to application root..
-# Argument: relativeHome - Directory. Optional.Path to application root. Defaults to `..`
-# Argument: command ... - Callable. Optional.A command to run and optional arguments.
+# Argument: relativeHome - Directory. Optional. Path to application root. Defaults to `..`
+# Argument: command ... - Callable. Optional. A command to run and optional arguments.
 # Requires: returnMessage
 # Security: source
 # Return Code: 253 - source failed to load (internal error)
@@ -38,7 +38,7 @@ __source() {
 
 # Load build tools and run command
 # Argument: relativeHome - Directory. Required. Path to application root.
-# Argument: command ... - Callable. Optional.A command to run and optional arguments.
+# Argument: command ... - Callable. Optional. A command to run and optional arguments.
 # Requires: __source
 __tools() {
   __source bin/build/tools.sh "$@"

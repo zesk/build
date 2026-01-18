@@ -11,6 +11,6 @@ fn="consoleSetTitle"
 foundNames=()
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 source="bin/build/tools/console.sh"
-sourceModified="1768695708"
+sourceModified="1768721469"
 summary="Set the title of the window for the console"
 usage="consoleSetTitle"

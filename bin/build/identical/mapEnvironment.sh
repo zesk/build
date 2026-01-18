@@ -23,7 +23,7 @@
 # Argument: --prefix - String. Optional. Prefix character for tokens, defaults to `{`.
 # Argument: --suffix - String. Optional. Suffix character for tokens, defaults to `}`.
 # DOC TEMPLATE: --help 1
-# Argument: --help - Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional. Display this help.
 # Example:     printf %s "{NAME}, {PLACE}.\n" | NAME=Hello PLACE=world mapEnvironment NAME PLACE
 # Requires: throwArgument read environmentVariables decorate sed cat rm throwEnvironment catchEnvironment returnClean
 # Requires: validate fileTemporaryName

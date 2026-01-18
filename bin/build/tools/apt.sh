@@ -69,7 +69,7 @@ _aptSourcesDirectory() {
 # Argument: --name keyName - String. Required. Name of the key used to generate file names.
 # Argument: --url remoteUrl - URL. Required. Remote URL of gpg key.
 # DOC TEMPLATE: --help 1
-# Argument: --help - Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional. Display this help.
 # Return Code: 1 - if environment is awry
 # Return Code: 0 - Apt key is installed AOK
 #
@@ -85,9 +85,9 @@ _aptKeyAdd() {
 # Remove apt keys
 #
 # Argument: keyName - String. Required. One or more key names to remove.
-# Argument: --skip - Flag. Optional.a Do not do `apt-get update` afterwards to update the database.
+# Argument: --skip - Flag. Optional. a Do not do `apt-get update` afterwards to update the database.
 # DOC TEMPLATE: --help 1
-# Argument: --help - Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional. Display this help.
 # Return Code: 1 - if environment is awry
 # Return Code: 0 - Apt key was removed AOK
 #

@@ -9,10 +9,10 @@
 #
 # Write a value to a state file as NAME="value"
 # Argument: name - String. Required. Name to write.
-# Argument: value - EmptyString. Optional.Value to write.
-# Argument: ... - EmptyString. Optional.Additional values, when supplied, write this value as an array.
+# Argument: value - EmptyString. Optional. Value to write.
+# Argument: ... - EmptyString. Optional. Additional values, when supplied, write this value as an array.
 # DOC TEMPLATE: --help 1
-# Argument: --help - Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional. Display this help.
 environmentValueWrite() {
   local handler="_${FUNCNAME[0]}" name
   [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
@@ -44,9 +44,9 @@ _environmentValueWrite() {
 #     declare -a foo=([0]="a's" [1]="b" [2]="c")
 #
 # DOC TEMPLATE: --help 1
-# Argument: --help - Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional. Display this help.
 # Argument: value ... - Arguments. Optional. Array values as arguments.
-# Argument: --help - Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional. Display this help.
 environmentValueWriteArray() {
   local handler="_${FUNCNAME[0]}"
   [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
@@ -86,7 +86,7 @@ __environmentValueWrite() {
 # Argument: name - EnvironmentVariable. Required. Variable to read.
 # Argument: default - EmptyString. Optional. Default value of the environment variable if it does not exist.
 # DOC TEMPLATE: --help 1
-# Argument: --help - Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional. Display this help.
 # Return Code: 1 - If value is not found and no default argument is supplied (2 arguments)
 # Return Code: 0 - If value
 environmentValueRead() {
@@ -116,7 +116,7 @@ _environmentValueRead() {
 # Argument: encodedValue - String. Required. Value to convert to tokens, one per line
 # stdout: Array values separated by newlines
 # DOC TEMPLATE: --help 1
-# Argument: --help - Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional. Display this help.
 environmentValueConvertArray() {
   local handler="_${FUNCNAME[0]}"
   [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
@@ -143,7 +143,7 @@ _environmentValueConvertArray() {
 
 # Argument: variableName ... - String. Required. Exit status 0 if all variables names are valid ones.
 # DOC TEMPLATE: --help 1
-# Argument: --help - Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional. Display this help.
 # Validates zero or more environment variable names.
 #
 # - alpha
@@ -181,7 +181,7 @@ _environmentVariableNameValid() {
 # Argument: stateFile - File. Required. File to access, must exist.
 # Argument: name - EnvironmentVariable. Required. Name to read.
 # DOC TEMPLATE: --help 1
-# Argument: --help - Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional. Display this help.
 # Outputs array elements, one per line.
 environmentValueReadArray() {
   local handler="_${FUNCNAME[0]}"
@@ -199,7 +199,7 @@ _environmentValueReadArray() {
 
 # Example:     {fn} < "$stateFile"
 # DOC TEMPLATE: --help 1
-# Argument: --help - Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional. Display this help.
 # List names of environment values set in a bash state file
 environmentNames() {
   [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
@@ -213,7 +213,7 @@ _environmentNames() {
 
 # Example:     {fn} < "$stateFile"
 # DOC TEMPLATE: --help 1
-# Argument: --help - Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional. Display this help.
 # List lines of environment values set in a bash state file
 environmentLines() {
   [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
@@ -225,9 +225,9 @@ _environmentLines() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# Argument: where - Directory. Optional.Where to load the `.env` files.
+# Argument: where - Directory. Optional. Where to load the `.env` files.
 # DOC TEMPLATE: --help 1
-# Argument: --help - Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional. Display this help.
 #
 # Loads `.env` which is the current project configuration file
 # Also loads `.env.local` if it exists
@@ -290,7 +290,7 @@ _dotEnvConfigure() {
 # Argument: --secure-defaults - Flag. Optional. Add a list of environment variables considered security risks to the `--ignore` list.
 # Argument: --execute arguments ... - Callable. Optional. All additional arguments are passed to callable after loading environment.
 # DOC TEMPLATE: --help 1
-# Argument: --help - Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional. Display this help.
 # Return Code: 2 - if file does not exist; outputs an error
 # Return Code: 0 - if files are loaded successfully
 environmentLoad() {
@@ -347,7 +347,7 @@ environmentLoad() {
       ;;
     --execute)
       shift
-      binary=$(validate "$handler" callable "$argument" "${1-}") || return $?
+      binary=$(validate "$handler" Callable "$argument" "${1-}") || return $?
       shift
       execute=("$binary" "$@")
       break
@@ -421,7 +421,7 @@ _environmentLoad() {
 # Argument: --secure-defaults - Flag. Optional. Add a list of environment variables considered security risks to the `--ignore` list.
 # Argument: --execute arguments ... - Callable. Optional. All additional arguments are passed to callable after loading environment files.
 # DOC TEMPLATE: --help 1
-# Argument: --help - Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional. Display this help.
 # Return Code: 2 - if file does not exist; outputs an error
 # Return Code: 0 - if files are loaded successfully
 environmentFileLoad() {
@@ -471,7 +471,7 @@ environmentFileLoad() {
       ;;
     --execute)
       shift
-      binary=$(validate "$handler" callable "$argument" "${1-}") || return $?
+      binary=$(validate "$handler" Callable "$argument" "${1-}") || return $?
       shift
       execute=("$binary" "$@")
       break
@@ -517,7 +517,7 @@ _environmentFileLoad() {
 
 # List environment variables related to security
 # DOC TEMPLATE: --help 1
-# Argument: --help - Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional. Display this help.
 environmentSecureVariables() {
   [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
   printf -- "%s\n" PATH LD_LIBRARY USER HOME HOSTNAME LANG PS1 PS2 PS3 CWD PWD SHELL SHLVL TERM TMPDIR VISUAL EDITOR
@@ -530,7 +530,7 @@ _environmentSecureVariables() {
 
 # List environment variables related to application deployments
 # DOC TEMPLATE: --help 1
-# Argument: --help - Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional. Display this help.
 environmentApplicationVariables() {
   [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
   printf -- "%s\n" BUILD_TIMESTAMP APPLICATION_BUILD_DATE APPLICATION_VERSION APPLICATION_ID APPLICATION_TAG
@@ -548,7 +548,7 @@ _environmentApplicationVariables() {
 # Environment: APPLICATION_ID
 # Environment: APPLICATION_TAG
 # DOC TEMPLATE: --help 1
-# Argument: --help - Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional. Display this help.
 environmentApplicationLoad() {
   local handler="_${FUNCNAME[0]}"
   [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
@@ -663,9 +663,9 @@ _environmentFileShow() {
 }
 
 # DOC TEMPLATE: --help 1
-# Argument: --help - Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional. Display this help.
 # Argument: requiredVariable ... - Optional. One or more environment variables which should be non-blank and included in the `.env` file.
-# Argument: -- - Divider. Optional.Divides the requiredEnvironment values from the optionalEnvironment. Should appear once and only once.
+# Argument: -- - Divider. Optional. Divides the requiredEnvironment values from the optionalEnvironment. Should appear once and only once.
 # Argument: optionalVariable ... - Optional. One or more environment variables which are included if blank or not
 #
 # Create environment file `.env` for build.
@@ -729,9 +729,9 @@ _environmentFileApplicationMake() {
 
 # Check application environment is populated correctly.
 # DOC TEMPLATE: --help 1
-# Argument: --help - Flag. Optional.Display this help.
-# Argument: requiredEnvironment ... - EnvironmentName. Optional.One or more environment variables which should be non-blank and included in the `.env` file.
-# Argument: -- - Divider. Optional.Divides the requiredEnvironment values from the optionalEnvironment
+# Argument: --help - Flag. Optional. Display this help.
+# Argument: requiredEnvironment ... - EnvironmentName. Optional. One or more environment variables which should be non-blank and included in the `.env` file.
+# Argument: -- - Divider. Optional. Divides the requiredEnvironment values from the optionalEnvironment
 # Argument: optionalEnvironment ... - EnvironmentName. Optional. One or more environment variables which are included if blank or not
 # Also verifies that `environmentApplicationVariables` and `environmentApplicationLoad` are defined.
 environmentFileApplicationVerify() {
@@ -775,7 +775,7 @@ _environmentFileApplicationVerify() {
 
 # Adds an environment variable file to a project
 # DOC TEMPLATE: --help 1
-# Argument: --help - Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional. Display this help.
 # Argument: environmentName ... - EnvironmentName. Required. One or more environment variable names to add to this project.
 buildEnvironmentAdd() {
   local handler="_${FUNCNAME[0]}"

@@ -95,7 +95,7 @@ _installCheck() {
 
 # Fetch a non-blank field from a JSON file with error handling
 # DOC TEMPLATE: --help 1
-# Argument: --help - Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional. Display this help.
 # Argument: handler - Function. Required. Error handler.
 # Argument: jsonFile - File. Required. A JSON file to parse
 # Argument: ... - Arguments. Optional. Passed directly to jq
@@ -182,30 +182,30 @@ __installCheck() {
 # INTERNAL: If `checkFunction` fails, it should output any errors to `stderr` and return a non-zero exit code.
 # INTERNAL:
 # DOC TEMPLATE: --help 1
-# Argument: --help - Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional. Display this help.
 # Argument: relative - RelativePath. Required. Path from this script to our application root. INTERNAL.
 # Argument: defaultPackagePath - RelativePath. Required. Path from application root to where the package should be installed. INTERNAL.
 # Argument: packageInstallerName - ApplicationFile. Required. The new installer file, post installation, relative to the `installationPath`. INTERNAL.
-# Argument: installationPath - ApplicationDirectory. Optional.Path to where the package should be installed instead of the defaultPackagePath.
-# Argument: --help - Flag. Optional.Display this help.
+# Argument: installationPath - ApplicationDirectory. Optional. Path to where the package should be installed instead of the defaultPackagePath.
+# Argument: --help - Flag. Optional. Display this help.
 # Argument: --source source - String. Optional. Source to display for the binary name. INTERNAL.
 # Argument: --name name - String. Optional. Name to display for the remote package name. INTERNAL.
-# Argument: --local localPackageDirectory - Directory. Optional.Directory of an existing installation to mock behavior for testing. INTERNAL.
-# Argument: --url url - URL. Optional.URL of a tar.gz file. Download source code from here.
+# Argument: --local localPackageDirectory - Directory. Optional. Directory of an existing installation to mock behavior for testing. INTERNAL.
+# Argument: --url url - URL. Optional. URL of a tar.gz file. Download source code from here.
 # Argument: --user username - String. Optional. Add `username:password` to remote request.
 # Argument: --password passwordText - String. Optional. Add `username:password` to remote request.
 # Argument: --header headerText - String. Optional. Add one or more headers to the remote request.
-# Argument: --version-function urlFunction - Function. Optional.Function to compare live version to local version. Exits 0 if they match. Output version text if you want. INTERNAL.
+# Argument: --version-function urlFunction - Function. Optional. Function to compare live version to local version. Exits 0 if they match. Output version text if you want. INTERNAL.
 # Argument: --version version - String. Optional. Download just **this** version of Zesk Build. Prevents stable breaking with new versions of Zesk Build.
-# Argument: --url-function urlFunction - Function. Optional.Function to return the URL to download. INTERNAL.
-# Argument: --check-function checkFunction - Function. Optional.Function to check the installation and output the version number or package name. INTERNAL.
-# Argument: --installer installer - Executable. Optional.Multiple. Binary to run after installation succeeds. Can be supplied multiple times. If `installer` begins with a `@` then any errors by the installer are ignored.
-# Argument: --replace file - File. Optional.Replace the target file with this script and delete this one. Internal only, do not use. INTERNAL.
-# Argument: --finalize file - File. Optional.Remove the temporary file and exit 0. INTERNAL.
-# Argument: --debug - Flag. Optional.Debugging is on. INTERNAL.
-# Argument: --force - Flag. Optional.Force installation even if file is up to date.
-# Argument: --skip-self - Flag. Optional.Skip the installation script self-update. (By default it is enabled.)
-# Argument: --diff - Flag. Optional.Show differences between old and new file.
+# Argument: --url-function urlFunction - Function. Optional. Function to return the URL to download. INTERNAL.
+# Argument: --check-function checkFunction - Function. Optional. Function to check the installation and output the version number or package name. INTERNAL.
+# Argument: --installer installer - Executable. Optional. Multiple. Binary to run after installation succeeds. Can be supplied multiple times. If `installer` begins with a `@` then any errors by the installer are ignored.
+# Argument: --replace file - File. Optional. Replace the target file with this script and delete this one. Internal only, do not use. INTERNAL.
+# Argument: --finalize file - File. Optional. Remove the temporary file and exit 0. INTERNAL.
+# Argument: --debug - Flag. Optional. Debugging is on. INTERNAL.
+# Argument: --force - Flag. Optional. Force installation even if file is up to date.
+# Argument: --skip-self - Flag. Optional. Skip the installation script self-update. (By default it is enabled.)
+# Argument: --diff - Flag. Optional. Show differences between old and new file.
 # Return Code: 1 - Environment error
 # Return Code: 2 - Argument error
 # Requires: cp rm cat printf realPath whichExists returnMessage fileTemporaryName catchArgument throwArgument catchEnvironment decorate validate isFunction __decorateExtensionQuote
@@ -538,7 +538,7 @@ __installRemotePackageLocal() {
 #
 # Argument: -r | --reverse - Reverse the sort order (optional)
 # DOC TEMPLATE: --help 1
-# Argument: --help - Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional. Display this help.
 # Example:     git tag | grep -e '^v[0-9.]*$' | versionSort
 # Requires: throwArgument sort usageDocument decorate
 versionSort() {
@@ -705,7 +705,7 @@ __validateTypeCallable() {
 
 # Fetch URL content
 # DOC TEMPLATE: --help 1
-# Argument: --help - Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional. Display this help.
 # Argument: --header header - String. Optional. Send a header in the format 'Name: Value'
 # Argument: --wget - Flag. Optional. Force use of wget. If unavailable, fail.
 # Argument: --redirect-max maxRedirections - PositiveInteger. Optional. Sets the number of allowed redirects from the original URL. Default is 9.
@@ -715,9 +715,9 @@ __validateTypeCallable() {
 # Argument: --user userName - String. Optional. If supplied, uses HTTP Simple authentication. Usually used with `--password`. Note: User names may not contain the character `:` when using `curl`.
 # Argument: --password password - String. Optional. If supplied along with `--user`, uses HTTP Simple authentication.
 # Argument: --agent userAgent - String. Optional. Specify the user agent string.
-# Argument: --timeout timeoutSeconds - PositiveInteger. Optional.A number of seconds to wait before failing. Defaults to `BUILD_URL_TIMEOUT` environment value.
+# Argument: --timeout timeoutSeconds - PositiveInteger. Optional. A number of seconds to wait before failing. Defaults to `BUILD_URL_TIMEOUT` environment value.
 # Argument: url - URL. Required. URL to fetch to target file.
-# Argument: file - FileDirectory. Optional.Target file. Use `-` to send to `stdout`. Default value is `-`.
+# Argument: file - FileDirectory. Optional. Target file. Use `-` to send to `stdout`. Default value is `-`.
 # Requires: returnMessage whichExists decorate
 # Requires: validate
 # Requires: throwArgument catchArgument
@@ -920,7 +920,7 @@ usageDocument() {
 
 # Output a simple error message for a function
 # DOC TEMPLATE: --help 1
-# Argument: --help - Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional. Display this help.
 # Argument: source - File. Required. File where documentation exists.
 # Argument: function - String. Required. Function to document.
 # Argument: returnCode - UnsignedInteger. Required. Exit code to return.
@@ -955,7 +955,7 @@ _usageDocumentSimple() {
 
 # Extracts the final comment from a stream
 # DOC TEMPLATE: --help 1
-# Argument: --help - Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional. Display this help.
 # Requires: fileReverseLines sed cut grep convertValue
 bashFinalComment() {
   [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
@@ -985,7 +985,7 @@ _bashFinalComment() {
 # Argument: source - File. Required. File where the function is defined.
 # Argument: functionName - String. Required. The name of the bash function to extract the documentation for.
 # DOC TEMPLATE: --help 1
-# Argument: --help - Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional. Display this help.
 # Requires: grep cut fileReverseLines __help
 # Requires: usageDocument
 bashFunctionComment() {
@@ -1048,8 +1048,8 @@ _realPath() {
 # Wrapper for `mktemp`. Generate a temporary file name, and fail using a function
 # Argument: handler - Function. Required. Function to call on failure. Function Type: returnMessage
 # DOC TEMPLATE: --help 1
-# Argument: --help - Flag. Optional.Display this help.
-# Argument: ... - Arguments. Optional.Any additional arguments are passed through.
+# Argument: --help - Flag. Optional. Display this help.
+# Argument: ... - Arguments. Optional. Any additional arguments are passed through.
 # Requires: mktemp __help catchEnvironment usageDocument
 # BUILD_DEBUG: temp - Logs backtrace of all temporary files to a file in application root named after this function to detect and clean up leaks
 # Environment: BUILD_DEBUG
@@ -1085,7 +1085,7 @@ _fileTemporaryName() {
 # Argument: --any - Flag. Optional. If any binary exists then return 0 (success). Otherwise, all binaries must exist.
 # Argument: binary ... - String. Required. One or more Binaries to find in the system `PATH`.
 # DOC TEMPLATE: --help 1
-# Argument: --help - Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional. Display this help.
 # Return Code: 0 - If all values are found (without the `--any` flag), or if *any* binary is found with the `--any` flag
 # Return Code: 1 - If any value is not found (without the `--any` flag), or if *all* binaries are NOT found with the `--any` flag.
 # Example:     whichExists cp date aws ls mv stat || throwEnvironment "$handler" "Need basic environment to work" || return $?
@@ -1220,10 +1220,10 @@ _isFunction() {
 # Sets the environment variable `BUILD_COLORS` if not set, uses `TERM` to calculate
 #
 # DOC TEMPLATE: --help 1
-# Argument: --help - Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional. Display this help.
 # Return Code: 0 - Console or output supports colors
 # Return Code: 1 - Colors are likely not supported by console
-# Environment: BUILD_COLORS - Boolean. Optional.Whether the build system will output ANSI colors.
+# Environment: BUILD_COLORS - Boolean. Optional. Whether the build system will output ANSI colors.
 # Requires: isPositiveInteger tput
 hasColors() {
   # --help is only argument allowed
@@ -1273,7 +1273,7 @@ __decorate() {
 
 # Output a list of build-in decoration styles, one per line
 # DOC TEMPLATE: --help 1
-# Argument: --help - Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional. Display this help.
 decorations() {
   [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
   printf "%s\n" reset \
@@ -1325,7 +1325,7 @@ _decorate() {
 # Is the decorate color system initialized yet?
 # Useful to set our global color environment at the top level of a script if it hasn't been initialized already.
 # DOC TEMPLATE: --help 1
-# Argument: --help - Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional. Display this help.
 decorateInitialized() {
   [ "${1-}" != "--help" ] || __help --only "_${FUNCNAME[0]}" "$@" || return 0
   export __BUILD_DECORATE
@@ -1535,7 +1535,7 @@ _isUnsignedInteger() {
 # INTERNAL: Winner of the one-line bash award 10 years running
 # Argument: code ... - UnsignedInteger. String. Exit code value to output.
 # DOC TEMPLATE: --help 1
-# Argument: --help - Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional. Display this help.
 # stdout: exitCodeToken, one per line
 returnCodeString() {
   local k="" && while [ $# -gt 0 ]; do case "$1" in 0) k="success" ;; 1) k="environment" ;; 2) k="argument" ;; 97) k="assert" ;; 105) k="identical" ;; 108) k="leak" ;; 116) k="timeout" ;; 120) k="exit" ;; 127) k="not-found" ;; 130) k="user-interrupt" ;; 141) k="interrupt" ;; 253) k="internal" ;; 254) k="unknown" ;; --help) "_${FUNCNAME[0]}" 0 && return $? || return $? ;; *) k="[returnCodeString unknown \"$1\"]" ;; esac && [ -n "$k" ] || k="$1" && printf "%s\n" "$k" && shift; done
@@ -1616,7 +1616,7 @@ _returnClean() {
 # Prints the mapped value to stdout
 #
 # DOC TEMPLATE: --help 1
-# Argument: --help - Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional. Display this help.
 # Argument: value - String. A value.
 # Argument: from - String. When value matches `from`, instead print `to`
 # Argument: to - String. The value to print when `from` matches `value`
@@ -1725,7 +1725,7 @@ catchReturn() {
 # Run a function and preserve exit code
 # Returns `code`
 # DOC TEMPLATE: --help 1
-# Argument: --help - Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional. Display this help.
 # Argument: code - UnsignedInteger. Required. Exit code to return.
 # Argument: undoFunction - Optional. Command to run to undo something. Return status is ignored.
 # Argument: -- - Flag. Optional. Used to delimit multiple commands.

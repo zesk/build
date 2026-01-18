@@ -11,6 +11,6 @@ fn="pathIsAbsolute"
 foundNames=([0]="argument")
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 source="bin/build/tools/directory.sh"
-sourceModified="1768695708"
+sourceModified="1768756695"
 summary="Is a path an absolute path?"
 usage="pathIsAbsolute [ path ]"

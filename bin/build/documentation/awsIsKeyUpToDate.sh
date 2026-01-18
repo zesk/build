@@ -13,6 +13,6 @@ fn="awsIsKeyUpToDate"
 foundNames=([0]="environment" [1]="summary" [2]="argument" [3]="example")
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 source="bin/build/tools/aws.sh"
-sourceModified="1768695708"
+sourceModified="1768721469"
 summary="Test whether the AWS keys do not need to be updated"$'\n'""
 usage="awsIsKeyUpToDate [ upToDateDays ]"

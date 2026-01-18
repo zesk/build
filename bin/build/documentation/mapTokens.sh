@@ -13,6 +13,6 @@ fn="mapTokens"
 foundNames=([0]="argument" [1]="environment" [2]="depends")
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 source="bin/build/tools/map.sh"
-sourceModified="1768695708"
+sourceModified="1768756695"
 summary="Short description: list mappable variables in a file (without prefix"
 usage="mapTokens [ \`prefix\` ] [ \`suffix\` ]"

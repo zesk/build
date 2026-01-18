@@ -10,7 +10,7 @@
 
 # Is this an Alpine system and is apk installed?
 # DOC TEMPLATE: --help 1
-# Argument: --help - Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional. Display this help.
 # Return Code: 0 - System is an alpine system and apk is installed
 # Return Code: 1 - System is not an alpine system or apk is not installed
 apkIsInstalled() {
@@ -25,7 +25,7 @@ _apkIsInstalled() {
 
 # Is this an Alpine system?
 # DOC TEMPLATE: --help 1
-# Argument: --help - Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional. Display this help.
 isAlpine() {
   local handler="_${FUNCNAME[0]}"
   __help --only "$handler" "$@" || return 0
@@ -39,11 +39,11 @@ _isAlpine() {
 
 # Open an Alpine container shell
 # DOC TEMPLATE: --help 1
-# Argument: --help - Flag. Optional.Display this help.
-# Argument: --env-file envFile - File. Optional.One or more environment files which are suitable to load for docker; must be valid
-# Argument: --env envVariable=envValue - File. Optional.One or more environment variables to set.
+# Argument: --help - Flag. Optional. Display this help.
+# Argument: --env-file envFile - File. Optional. One or more environment files which are suitable to load for docker; must be valid
+# Argument: --env envVariable=envValue - File. Optional. One or more environment variables to set.
 # Argument: --platform platform - String. Optional. Platform to run (arm vs intel).
-# Argument: extraArgs - Mixed. Optional.The first non-file argument to `{fn}` is passed directly through to `docker run` as arguments
+# Argument: extraArgs - Mixed. Optional. The first non-file argument to `{fn}` is passed directly through to `docker run` as arguments
 # Return Code: 1 - If already inside docker, or the environment file passed is not valid
 # Return Code: 0 - Success
 # Return Code: Any - `docker run` error code is returned if non-zero

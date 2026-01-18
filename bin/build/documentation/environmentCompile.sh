@@ -12,6 +12,6 @@ foundNames=([0]="argument" [1]="security")
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 security="source"$'\n'""
 source="bin/build/tools/environment.sh"
-sourceModified="1768695708"
+sourceModified="1768756695"
 summary="Load an environment file and evaluate it using bash and"
 usage="environmentCompile [ --underscore ] [ --secure ] [ --keep-comments ] environmentFile"

@@ -10,9 +10,9 @@
 # Tools which do not fit anywhere else
 #
 
-# Argument: count - Integer. Optional.Sets the value for any following named variables to this value.
+# Argument: count - Integer. Optional. Sets the value for any following named variables to this value.
 # Argument: variable - String. Optional. Variable to change or increment.
-# Argument: --reset - Flag. Optional.Reset all counters to zero.
+# Argument: --reset - Flag. Optional. Reset all counters to zero.
 #
 # Set or increment a process-wide incrementor. If no numeric value is supplied the default is to increment the current value and output it.
 # New values are set to 0 by default so will output `1` upon first handler.
@@ -133,7 +133,7 @@ pipeRunner() {
       ;;
     *)
       if [ -n "$namedPipe" ]; then
-        binary="$(validate "$handler" callable "readerExecutable" "$argument")" || return $?
+        binary="$(validate "$handler" Callable "readerExecutable" "$argument")" || return $?
         break
       else
         namedPipe=$(validate "$handler" FileDirectory "namedPipe" "$argument") || return $?

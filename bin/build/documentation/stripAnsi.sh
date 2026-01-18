@@ -14,7 +14,7 @@ fn="stripAnsi"
 foundNames=([0]="argument" [1]="environment" [2]="credits" [3]="source" [4]="depends" [5]="stdin" [6]="stdout")
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 source="bin/build/tools/text.sh"
-sourceModified="1768695708"
+sourceModified="1768721469"
 stdin="arbitrary text which may contain ANSI escape sequences for the terminal"$'\n'""
 stdout="the same text with those ANSI escape sequences removed"$'\n'""
 summary="Strip ANSI console escape sequences from a file"

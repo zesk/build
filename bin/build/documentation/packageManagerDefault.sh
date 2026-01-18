@@ -12,6 +12,6 @@ foundNames=([0]="see")
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 see="platform"$'\n'""
 source="bin/build/tools/package.sh"
-sourceModified="1768695708"
+sourceModified="1768721470"
 summary="Determine the default package manager on this platform."
 usage="packageManagerDefault"

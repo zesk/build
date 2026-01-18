@@ -12,6 +12,6 @@ foundNames=([0]="argument" [1]="summary" [2]="see")
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 see="pipInstall"$'\n'""
 source="bin/build/tools/docker-compose.sh"
-sourceModified="1768695708"
+sourceModified="1768721469"
 summary="Install \`docker-compose\`"$'\n'""
 usage="dockerComposeInstall [ package ]"

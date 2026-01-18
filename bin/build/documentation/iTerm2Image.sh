@@ -11,7 +11,7 @@ fn="iTerm2Image"
 foundNames=([0]="argument" [1]="stdout")
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 source="bin/build/tools/iterm2.sh"
-sourceModified="1768695708"
+sourceModified="1768721470"
 stdout="No output, however, if in an iTerm2 terminal it will display an image in the console at the cursor position"$'\n'""
 summary="Output an image to the console"
 usage="iTerm2Image [ --width width ] [ --height height ] [ --preserve-aspect-ratio ] [ --scale ] [ --ignore | -i ]"

@@ -11,6 +11,6 @@ fn="interactiveOccasionally"
 foundNames=([0]="argument")
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 source="bin/build/tools/interactive.sh"
-sourceModified="1768695708"
+sourceModified="1768721469"
 summary="Do something the first time and then only occasionally thereafter."
 usage="interactiveOccasionally [ --delta deltaMilliseconds ] [ --mark ] [ --verbose ] name"

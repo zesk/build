@@ -12,6 +12,6 @@ fn="validateFileContents"
 foundNames=([0]="example" [1]="argument" [2]="summary")
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 source="bin/build/tools/lint.sh"
-sourceModified="1768695708"
+sourceModified="1768756695"
 summary="Check files for the existence of a string or strings"$'\n'""
 usage="validateFileContents file ... -- text ..."

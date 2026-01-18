@@ -25,13 +25,13 @@ __deployLoader() {
 #
 # This acts on the local file system only but used in tandem with [deployment](./deployment.md) functions.
 #
-# Argument: --help - Flag. Optional.This help.
-# Argument: --first - Flag. Optional.The first deployment has no prior version and can not be reverted.
-# Argument: --revert - Flag. Optional.Means this is part of the undo process of a deployment.
+# Argument: --help - Flag. Optional. This help.
+# Argument: --first - Flag. Optional. The first deployment has no prior version and can not be reverted.
+# Argument: --revert - Flag. Optional. Means this is part of the undo process of a deployment.
 # Argument: --home deployHome - Directory. Required. Path where the deployments database is on system.
 # Argument: --id applicationId - String. Required. Should match `APPLICATION_ID` or `APPLICATION_TAG` in `.env` or `.deploy/`
 # Argument: --application applicationPath - FileDirectory. Required. Path on the  system where the application is live
-# Argument: --target targetPackage - Filename. Optional.Package name, defaults to `BUILD_TARGET`
+# Argument: --target targetPackage - Filename. Optional. Package name, defaults to `BUILD_TARGET`
 # Argument: --message message - String. Optional. Message to display in the maintenance message on systems while upgrade is occurring.
 # Environment: BUILD_TARGET APPLICATION_ID APPLICATION_TAG
 # Example: {fn} --home /var/www/DEPLOY --id 10c2fab1 --application /var/www/apps/cool-app

@@ -12,6 +12,6 @@ fn="gitRepositoryChanged"
 foundNames=([0]="source" [1]="credit")
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 source="bin/build/tools/git.sh"
-sourceModified="1768695708"
+sourceModified="1768721470"
 summary="Return Code: 1 - the repo has NOT been modified"
 usage="gitRepositoryChanged"

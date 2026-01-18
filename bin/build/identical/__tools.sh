@@ -10,7 +10,7 @@
 
 # Load build tools and run command
 # Argument: relativeHome - Directory. Required. Path to application root.
-# Argument: command ... - Callable. Optional.A command to run and optional arguments.
+# Argument: command ... - Callable. Optional. A command to run and optional arguments.
 # Requires: __source
 __tools() {
   __source bin/build/tools.sh "$@"

@@ -13,7 +13,7 @@ source "${BASH_SOURCE[0]%/*}/../tools.sh"
 # fn: {base}
 # Summary: {base} hook
 # DOC TEMPLATE: --help 1
-# Argument: --help - Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional. Display this help.
 # Generate a unique ID for the state of the application files
 #
 # The default hook uses the short git sha:

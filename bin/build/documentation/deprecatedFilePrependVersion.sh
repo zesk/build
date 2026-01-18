@@ -11,6 +11,6 @@ fn="deprecatedFilePrependVersion"
 foundNames=([0]="argument")
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 source="bin/build/tools/deprecated-tools.sh"
-sourceModified="1768695708"
+sourceModified="1768721469"
 summary="Take a deprecated.txt file and add a comment with the"
 usage="deprecatedFilePrependVersion target version"

@@ -30,11 +30,11 @@ __installInstallBinary() {
       ;;
     --url-function)
       shift
-      urlFunction=$(validate "$handler" callable "$argument" "${1-}") || return $?
+      urlFunction=$(validate "$handler" Callable "$argument" "${1-}") || return $?
       ;;
     --post)
       shift
-      postFunction=$(validate "$handler" callable "$argument" "${1-}") || return $?
+      postFunction=$(validate "$handler" Callable "$argument" "${1-}") || return $?
       ;;
     --url)
       shift

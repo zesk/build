@@ -13,6 +13,6 @@ fn="buildDebugEnabled"
 foundNames=([0]="argument" [1]="environment" [2]="example")
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 source="bin/build/tools/debug.sh"
-sourceModified="1768695708"
+sourceModified="1768757641"
 summary="Is build debugging enabled?"
 usage="buildDebugEnabled [ moduleName ]"

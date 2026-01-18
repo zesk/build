@@ -12,6 +12,6 @@ fn="buildEnvironmentGet"
 foundNames=([0]="argument" [1]="environment")
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 source="bin/build/tools/build.sh"
-sourceModified="1768695708"
+sourceModified="1768721469"
 summary="Load and print one or more environment settings"
 usage="buildEnvironmentGet [ envName ] [ --application applicationHome ]"

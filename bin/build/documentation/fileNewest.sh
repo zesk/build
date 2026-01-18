@@ -3,7 +3,7 @@
 # Generated on 2026-01-18
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/file.sh"
-argument="file ... - File. Required. One or more files to examine"$'\n'"--help - Flag. Optional.Display this help."$'\n'""
+argument="file ... - File. Required. One or more files to examine"$'\n'"--help - Flag. Optional. Display this help."$'\n'""
 base="file.sh"
 description="Output the newest file in the list"$'\n'""$'\n'""
 file="bin/build/tools/file.sh"
@@ -11,6 +11,6 @@ fn="fileNewest"
 foundNames=([0]="argument")
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 source="bin/build/tools/file.sh"
-sourceModified="1768695708"
+sourceModified="1768721469"
 summary="Output the newest file in the list"
 usage="fileNewest file ... [ --help ]"

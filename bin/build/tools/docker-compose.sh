@@ -78,7 +78,7 @@ _dockerComposeUninstall() {
 
 # Is docker compose currently running?
 # DOC TEMPLATE: --help 1
-# Argument: --help - Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional. Display this help.
 # Return Code: 1 - Not running
 # Return Code: 0 - Running
 dockerComposeIsRunning() {
@@ -102,7 +102,7 @@ _dockerComposeIsRunning() {
 # Updated: 2025-04-07
 # Require-Update: 90
 # DOC TEMPLATE: --help 1
-# Argument: --help - Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional. Display this help.
 dockerComposeCommandList() {
   [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
   # Sampled 2025
@@ -118,7 +118,7 @@ _dockerComposeCommandList() {
 # Argument: command - String. Required. The command to test.
 # See: dockerComposeCommandList
 # DOC TEMPLATE: --help 1
-# Argument: --help - Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional. Display this help.
 # Return Code: 0 - Yes, it is.
 # Return Code: 1 - No, it is not.
 isDockerComposeCommand() {
@@ -139,9 +139,9 @@ _isDockerComposeCommand() {
 # docker compose wrapper with automatic .env support
 #
 # DOC TEMPLATE: --help 1
-# Argument: --help - Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional. Display this help.
 # DOC TEMPLATE: --handler 1
-# Argument: --handler handler - Function. Optional.Use this error handler instead of the default error handler.
+# Argument: --handler handler - Function. Optional. Use this error handler instead of the default error handler.
 # Argument: --production - Flag. Production container build. Shortcut for `--deployment production` (uses `.PRODUCTION.env`)
 # Argument: --staging - Flag. Staging container build. Shortcut for `--deployment staging` (uses `.STAGING.env`)
 # Argument: --deployment deploymentName - String. Deployment name to use. (uses `.$(uppercase "$deploymentName").env`)

@@ -72,7 +72,7 @@ _fileReverseLines() {
 # Makes all `*.sh` files executable
 #
 # Argument: --find findArguments - Optional. Add arguments to exclude files or paths. SPACE-delimited for multiple options.
-# Argument: path ... - Directory. Optional.One or more paths to scan for shell files. Uses PWD if not specified.
+# Argument: path ... - Directory. Optional. One or more paths to scan for shell files. Uses PWD if not specified.
 # Environment: Works from the current directory
 # See: makeShellFilesExecutable
 # See: chmod-sh.sh
@@ -120,7 +120,7 @@ _makeShellFilesExecutable() {
 # Argument: --any - Flag. Optional. If any binary exists then return 0 (success). Otherwise, all binaries must exist.
 # Argument: binary ... - String. Required. One or more Binaries to find in the system `PATH`.
 # DOC TEMPLATE: --help 1
-# Argument: --help - Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional. Display this help.
 # Return Code: 0 - If all values are found (without the `--any` flag), or if *any* binary is found with the `--any` flag
 # Return Code: 1 - If any value is not found (without the `--any` flag), or if *all* binaries are NOT found with the `--any` flag.
 # Example:     whichExists cp date aws ls mv stat || throwEnvironment "$handler" "Need basic environment to work" || return $?
@@ -168,7 +168,7 @@ _whichExists() {
 # Backup when `/etc/services` does not exist.
 #
 # DOC TEMPLATE: --help 1
-# Argument: --help - Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional. Display this help.
 # Argument: service ... - String. Optional. A unix service typically found in `/etc/services`
 # Output: Port number of associated service (integer) one per line
 # Return Code: 1 - service not found
@@ -210,9 +210,9 @@ _serviceToStandardPort() {
 # Get the port number associated with a service
 #
 # Argument: service - String. Required. A unix service typically found in `/etc/services`
-# Argument: --services servicesFile - File. Optional.File like '/etc/services`.
+# Argument: --services servicesFile - File. Optional. File like '/etc/services`.
 # DOC TEMPLATE: --help 1
-# Argument: --help - Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional. Display this help.
 # Output: Port number of associated service (integer) one per line
 # Return Code: 1 - service not found
 # Return Code: 2 - bad argument or invalid port
@@ -279,11 +279,11 @@ __extensionListsLog() {
   printf "%s\n" "$original" | tee -a "$directory/@" >>"$directory/$extension" || returnEnvironment "writing $directory/$extension" || return $?
 }
 
-# Argument: --clean - Flag. Optional.Clean directory of all files first.
+# Argument: --clean - Flag. Optional. Clean directory of all files first.
 # Argument: directory - Directory. Required. Directory to create extension lists.
 # Argument: file0 - Optional. List of files to add to the extension list.
 # DOC TEMPLATE: --help 1
-# Argument: --help - Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional. Display this help.
 # Input: Takes a list of files, one per line
 # Generates a directory containing files with `extension` as the file names.
 # All files passed to this are added to the `@` file, the `!` file is used for files without extensions.
@@ -346,7 +346,7 @@ _extensionLists() {
 # Uptime output: 05:01:06 up 8 days,  4:03,  0 users,  load average: 3.87, 3.09, 2.71
 # stdout: lines:Number
 # DOC TEMPLATE: --help 1
-# Argument: --help - Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional. Display this help.
 loadAverage() {
   local handler="_${FUNCNAME[0]}"
   local text
@@ -373,7 +373,7 @@ _loadAverage() {
 # Convert a group name to a group ID
 # Argument: groupName - String. Required. One or more names to find group IDs for.
 # DOC TEMPLATE: --help 1
-# Argument: --help - Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional. Display this help.
 # stdout: PositiveInteger
 groupID() {
   local handler="_${FUNCNAME[0]}" one=false

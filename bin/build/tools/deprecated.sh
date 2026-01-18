@@ -22,7 +22,7 @@
 # Set colors to deal with dark or light-background consoles
 # Deprecated: 2026-01
 # DOC TEMPLATE: --help 1
-# Argument: --help - Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional. Display this help.
 # BUILD_DEBUG: BUILD_COLORS_MODE - Output the color mode when it is changed
 consoleColorMode() {
   local handler="_${FUNCNAME[0]}"

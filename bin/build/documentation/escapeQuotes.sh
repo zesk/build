@@ -13,7 +13,7 @@ foundNames=([0]="argument" [1]="output" [2]="example" [3]="stdout")
 output="Single quotes are prefixed with a backslash"$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 source="bin/build/tools/text.sh"
-sourceModified="1768695708"
+sourceModified="1768721469"
 stdout="The input text properly quoted"$'\n'""
 summary="Quote strings for inclusion in shell quoted strings"
 usage="escapeQuotes [ text ]"

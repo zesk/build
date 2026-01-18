@@ -11,6 +11,6 @@ fn="aptSourcesDirectory"
 foundNames=()
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 source="bin/build/tools/apt.sh"
-sourceModified="1768695708"
+sourceModified="1768721469"
 summary="Get APT source list path"
 usage="aptSourcesDirectory"

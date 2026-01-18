@@ -36,7 +36,7 @@ __loopExecute() {
       ;;
     *)
       if [ -z "$loopCallable" ]; then
-        loopCallable=$(validate "$handler" callable "loopCallable" "$1") || return $?
+        loopCallable=$(validate "$handler" Callable "loopCallable" "$1") || return $?
         shift
         break
       fi

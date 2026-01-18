@@ -8,7 +8,7 @@
 # Modify the MANPATH environment variable to add a path.
 # See: manPathRemove
 # DOC TEMPLATE: --help 1
-# Argument: --help - Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional. Display this help.
 # Argument: --first - Optional. Place any paths after this flag first in the list
 # Argument: --last - Optional. Place any paths after this flag last in the list. Default.
 # Argument: path - the path to be added to the `MANPATH` environment
@@ -31,7 +31,7 @@ _manPathConfigure() {
 
 # Remove a path from the MANPATH environment variable
 # DOC TEMPLATE: --help 1
-# Argument: --help - Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional. Display this help.
 # Argument: path - Directory. Required. The path to be removed from the `MANPATH` environment
 manPathRemove() {
   local handler="_${FUNCNAME[0]}"
@@ -55,7 +55,7 @@ _manPathRemove() {
 # Maintains ordering.
 #
 # DOC TEMPLATE: --help 1
-# Argument: --help - Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional. Display this help.
 # No-Arguments: default
 manPathCleanDuplicates() {
   local handler="_${FUNCNAME[0]}" newPath

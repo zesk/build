@@ -12,6 +12,6 @@ foundNames=([0]="see")
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 see="gitPreCommitCleanup"$'\n'""
 source="bin/build/tools/git.sh"
-sourceModified="1768695708"
+sourceModified="1768721470"
 summary="Set up a pre-commit hook and create a cache of"
 usage="gitPreCommitSetup"

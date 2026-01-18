@@ -12,7 +12,7 @@ fn="dumpBinary"
 foundNames=([0]="depends" [1]="stdin" [2]="stdout")
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 source="bin/build/tools/test.sh"
-sourceModified="1768695708"
+sourceModified="1768721469"
 stdin="binary"$'\n'""
 stdout="formatted output set to ideal \`consoleColumns\`"$'\n'""
 summary="Dumps output as hex"

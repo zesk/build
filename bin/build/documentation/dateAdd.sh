@@ -12,7 +12,7 @@ fn="dateAdd"
 foundNames=([0]="argument" [1]="stdout" [2]="example")
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 source="bin/build/tools/date.sh"
-sourceModified="1768695708"
+sourceModified="1768721469"
 stdout="Date with days added to it"$'\n'""
 summary="Add or subtract days from a text date"
 usage="dateAdd [ --days delta ] [ timestamp ... ]"

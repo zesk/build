@@ -3,7 +3,7 @@
 # Generated on 2026-01-18
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/path.sh"
-argument="--help - Flag. Optional.Display this help."$'\n'"binary - Executable. Optional.Display where this executable appears in the path."$'\n'""
+argument="--help - Flag. Optional. Display this help."$'\n'"binary - Executable. Optional. Display where this executable appears in the path."$'\n'""
 base="path.sh"
 description="Show the path and where binaries are found"$'\n'""
 file="bin/build/tools/path.sh"
@@ -11,6 +11,6 @@ fn="pathShow"
 foundNames=([0]="argument")
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 source="bin/build/tools/path.sh"
-sourceModified="1768695708"
+sourceModified="1768721469"
 summary="Show the path and where binaries are found"
 usage="pathShow [ --help ] [ binary ]"

@@ -11,6 +11,6 @@ fn="versionNextMinor"
 foundNames=([0]="argument")
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 source="bin/build/tools/version.sh"
-sourceModified="1768695708"
+sourceModified="1768721469"
 summary="Converts vX.Y.N to vX.Y.(N+1) so v1.0.0 to v1.0.1"
 usage="versionNextMinor lastVersion"

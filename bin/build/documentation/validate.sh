@@ -18,6 +18,6 @@ foundNames=([0]="argument" [1]="requires")
 requires="__validateTypeString __validateTypePositiveInteger __validateTypeFunction __validateTypeCallable"$'\n'"isFunction throwArgument __help decorate"$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 source="bin/build/tools/validate.sh"
-sourceModified="1768695708"
+sourceModified="1768721469"
 summary="Validate a value by type"
 usage="validate handler type name value"

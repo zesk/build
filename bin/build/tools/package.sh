@@ -6,10 +6,10 @@
 # Test: ./test/tools/package-tests.sh
 
 # DOC TEMPLATE: --help 1
-# Argument: --help - Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional. Display this help.
 # Argument: --manager packageManager - String. Optional. Package manager to use. (apk, apt, brew)
-# Argument: --force - Flag. Optional.Force even if it seems to be installed.
-# Argument: --before beforeFunction - Function. Optional.One or more functions to run before list function. `muzzle`d.
+# Argument: --force - Flag. Optional. Force even if it seems to be installed.
+# Argument: --before beforeFunction - Function. Optional. One or more functions to run before list function. `muzzle`d.
 __packageListFunction() {
   local handler="$1" functionVerb="$2"
   local manager=""
@@ -58,11 +58,11 @@ __packageListFunction() {
 }
 
 # DOC TEMPLATE: --help 1
-# Argument: --help - Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional. Display this help.
 # Argument: --manager packageManager - String. Optional. Package manager to use. (apk, apt, brew)
-# Argument: --force - Flag. Optional.Force even if it seems to be installed.
-# Argument: --verbose - Flag. Optional.Force even if it seems to be installed.
-# Argument: --show-log - Flag. Optional.Show the log of the package manager.
+# Argument: --force - Flag. Optional. Force even if it seems to be installed.
+# Argument: --verbose - Flag. Optional. Force even if it seems to be installed.
+# Argument: --show-log - Flag. Optional. Show the log of the package manager.
 __packageUpFunction() {
   local handler="$1" suffix="$2" verb
 
@@ -142,10 +142,10 @@ __packageUpFunction() {
 
 # Upgrade packages lists and sources
 # DOC TEMPLATE: --help 1
-# Argument: --help - Flag. Optional.Display this help.
-# Argument: --verbose - Flag. Optional.Display progress to the terminal.
+# Argument: --help - Flag. Optional. Display this help.
+# Argument: --verbose - Flag. Optional. Display progress to the terminal.
 # Argument: --manager packageManager - String. Optional. Package manager to use. (apk, apt, brew)
-# Argument: --force - Flag. Optional.Force even if it was updated recently.
+# Argument: --force - Flag. Optional. Force even if it was updated recently.
 packageUpgrade() {
   __packageUpFunction "_${FUNCNAME[0]}" Upgrade "$@"
 }
@@ -156,10 +156,10 @@ _packageUpgrade() {
 
 # Update packages lists and sources
 # DOC TEMPLATE: --help 1
-# Argument: --help - Flag. Optional.Display this help.
-# Argument: --verbose - Flag. Optional.Display progress to the terminal.
+# Argument: --help - Flag. Optional. Display this help.
+# Argument: --verbose - Flag. Optional. Display progress to the terminal.
 # Argument: --manager packageManager - String. Optional. Package manager to use. (apk, apt, brew)
-# Argument: --force - Flag. Optional.Force even if it was updated recently.
+# Argument: --force - Flag. Optional. Force even if it was updated recently.
 packageUpdate() {
   __packageUpFunction "_${FUNCNAME[0]}" Update "$@"
 }
@@ -370,10 +370,10 @@ _packageWhichUninstall() {
 # Summary: Install packages using a package manager
 # Argument: package - One or more packages to install
 # Artifact: `{fn}.log` is left in the `buildCacheDirectory`
-# Argument: --verbose - Flag. Optional.Display progress to the terminal.
+# Argument: --verbose - Flag. Optional. Display progress to the terminal.
 # Argument: --manager packageManager - String. Optional. Package manager to use. (apk, apt, brew)
-# Argument: --force - Flag. Optional.Force even if it was updated recently.
-# Argument: --show-log - Flag. Optional.Show package manager logs.
+# Argument: --force - Flag. Optional. Force even if it was updated recently.
+# Argument: --show-log - Flag. Optional. Show package manager logs.
 packageInstall() {
   local handler="_${FUNCNAME[0]}"
 
@@ -590,7 +590,7 @@ _packageStandardPackages() {
 # Is the package manager supported?
 # Checks the package manager to be a valid, supported one.
 # DOC TEMPLATE: --help 1
-# Argument: --help - Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional. Display this help.
 # Argument: packageManager - String. Manager to check.
 # Return Code: 0 - The package manager is valid.
 # Return Code: 1 - The package manager is not valid.

@@ -11,6 +11,6 @@ fn="colorSampleStyles"
 foundNames=([0]="summary")
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 source="bin/build/tools/colors.sh"
-sourceModified="1768695708"
+sourceModified="1768757397"
 summary="Output colors"$'\n'""
 usage="colorSampleStyles"

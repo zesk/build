@@ -13,6 +13,6 @@ foundNames=([0]="argument" [1]="requires" [2]="environment")
 requires="printf unset  export debuggingStack exit"$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 source="bin/build/tools/debug.sh"
-sourceModified="1768695708"
+sourceModified="1768757641"
 summary="Place this in code where you suspect an infinite loop"
 usage="bashRecursionDebug [ --end ]"

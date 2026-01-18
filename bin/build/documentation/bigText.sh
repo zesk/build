@@ -12,6 +12,6 @@ fn="bigText"
 foundNames=([0]="argument" [1]="environment")
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 source="bin/build/tools/decoration.sh"
-sourceModified="1768695708"
+sourceModified="1768721469"
 summary="Display large text in the console for banners and important"
 usage="bigText text [ --bigger ]"

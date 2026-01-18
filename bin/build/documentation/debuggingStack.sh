@@ -3,7 +3,7 @@
 # Generated on 2026-01-18
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/dump.sh"
-argument="-x - Flag. Optional.Show exported variables. (verbose)"$'\n'"--me - Flag. Optional.Show calling function call stack frame."$'\n'"--exit - Flag. Optional.Exit with code 0 after output."$'\n'""
+argument="-x - Flag. Optional. Show exported variables. (verbose)"$'\n'"--me - Flag. Optional. Show calling function call stack frame."$'\n'"--exit - Flag. Optional. Exit with code 0 after output."$'\n'""
 base="dump.sh"
 build_debug="debuggingStack - \`debuggingStack\` shows arguments passed (extra) and exports (optional flag) ALWAYS"$'\n'""
 description="Dump the function and include stacks and the current environment"$'\n'""
@@ -14,6 +14,6 @@ foundNames=([0]="argument" [1]="requires" [2]="environment" [3]="build_debug")
 requires="printf usageDocument"$'\n'"throwArgument"$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 source="bin/build/tools/dump.sh"
-sourceModified="1768695708"
+sourceModified="1768721469"
 summary="Dump the function and include stacks and the current environment"
 usage="debuggingStack [ -x ] [ --me ] [ --exit ]"

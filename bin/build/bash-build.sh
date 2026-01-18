@@ -35,7 +35,7 @@ __bashProfileConfiguration() {
 # Argument: --rc-extras textLine ... -- - String. Optional. Set of commands to be written to the first `.bashrc` file.
 # Argument: command ... - Callable. Optional. Arguments to pass to `bash`
 # DOC TEMPLATE: --help 1
-# Argument: --help - Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional. Display this help.
 __bashBuild() {
   local handler="_${FUNCNAME[0]}"
 

@@ -15,7 +15,7 @@ foundNames=([0]="summary" [1]="argument" [2]="example" [3]="see" [4]="test" [5]=
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 see="hooks.md hookRunOptional"$'\n'""
 source="bin/build/tools/hook.sh"
-sourceModified="1768695708"
+sourceModified="1768721469"
 summary="Run a project hook"$'\n'""
 test="testHookSystem"$'\n'""
 usage="hookSource [ --application applicationHome ] [ --extensions extensionList ] hookName ..."

@@ -90,7 +90,7 @@ ___usageTemplate() {
 # use with maximumFieldLength 1 to generate widths
 #
 # DOC TEMPLATE: --help 1
-# Argument: --help - Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional. Display this help.
 # Argument: nSpaces - Integer. Required. Number of spaces to indent arguments.
 # Argument: separatorChar - String. Optional. Default is space.
 # Argument: labelPrefix - String. Optional. Defaults to blue color text.

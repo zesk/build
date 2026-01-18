@@ -20,7 +20,7 @@ __buildDocumentationIsComplete() {
 # Argument: --clean - Flag. Optional.
 # Argument: --quick - Flag. Optional. Do quick updates to minimize time to generate new files.
 # DOC TEMPLATE: --help 1
-# Argument: --help - Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional. Display this help.
 buildDocumentationExtractionUpdate() {
   local handler="_${FUNCNAME[0]}"
 
@@ -46,12 +46,12 @@ buildDocumentationExtractionUpdate() {
     esac
     shift
   done
-  local home
-  home=$(catchReturn "$handler" buildHome) || return $?
+
+  local home && home=$(catchReturn "$handler" buildHome) || return $?
 
   local docPath="$home/bin/build/documentation/"
   if $cleanFlag; then
-    statusMessage decorate info "Cleaning $docPath"
+    catchReturn "$handler" statusMessage decorate info "Cleaning $docPath" || return $?
     [ ! -d "$docPath" ] || catchEnvironment "$handler" find "$docPath" -type f -name '*.sh' ! -path '*/.*/*' -delete || return $?
   fi
 
@@ -64,7 +64,7 @@ buildDocumentationExtractionUpdate() {
   catchReturn "$handler" buildFunctions >"$tempFunctions" || returnClean $? "${clean[@]}" || return $?
   totalFunctions=$(catchReturn "$handler" fileLineCount "$tempFunctions") || returnClean $? "${clean[@]}" || return $?
   if $quickFlag; then
-    if ! __buildDocumentationIsComplete "$docPath" "$tempFunctions"; then
+    if __buildDocumentationIsComplete "$docPath" "$tempFunctions"; then
       local docToolsOldest toolsNewest toolsNewestTime
 
       toolsNewest=$(catchReturn "$handler" directoryNewestFile "$home/bin/build/tools") || returnClean $? "${clean[@]}" || return $?
@@ -72,12 +72,12 @@ buildDocumentationExtractionUpdate() {
 
       # `FILE1 -ot FILE2` - `FILE1` is older than `FILE2`
       if [ "$toolsNewest" -ot "$docToolsOldest" ]; then
-        statusMessage --last decorate info "Everything is up to date."
+        catchReturn "$handler" statusMessage --last decorate info "Everything is up to date." || return $?
         catchEnvironment "$handler" rm -f "${clean[@]}" || return $?
         return 0
       fi
       toolsNewestTime=$(catchReturn "$handler" fileModificationTime "$toolsNewest") || returnClean $? "${clean[@]}" || return $?
-      statusMessage decorate notice "$(decorate file "$toolsNewest") modified more recently than $(decorate file "$docToolsOldest")" || :
+      catchReturn "$handler" statusMessage decorate notice "$(decorate file "$toolsNewest") modified more recently than $(decorate file "$docToolsOldest")" || return $?
 
       catchEnvironment "$handler" printf -- "" >"$tempFunctions" || returnClean $? "${clean[@]}" || return $?
       local index=0
@@ -90,15 +90,15 @@ buildDocumentationExtractionUpdate() {
         if [ "$modificationTime" -lt "$toolsNewestTime" ]; then
           catchEnvironment "$handler" printf -- "%s\n" "$fn" >>"$tempFunctions" || return $?
         else
-          statusMessage decorate info "Stopped at $fn (#$index) ... ($(dateFromTimestamp --local "$modificationTime") > $(dateFromTimestamp --local "$toolsNewestTime") - $(decorate file "$toolsNewest"))" || :
+          catchReturn "$handler" statusMessage decorate info "Stopped at $fn (#$index) ... ($(dateFromTimestamp --local "$modificationTime") > $(dateFromTimestamp --local "$toolsNewestTime") - $(decorate file "$toolsNewest"))" || return $?
           break
         fi
       done < <(catchEnvironment "$handler" fileModificationTimes "$docPath" | sort -rn) || returnClean $? "${clean[@]}" || return $?
       totalFunctions=$(catchReturn "$handler" fileLineCount "$tempFunctions") || returnClean $? "${clean[@]}" || return $?
-      statusMessage decorate info "Quick function count to compute is $totalFunctions" || :
+      catchReturn "$handler" statusMessage decorate info "Quick function count to compute is $totalFunctions" || return $?
     fi
   else
-    statusMessage decorate info "Total function count to compute is $totalFunctions" || :
+    catchReturn "$handler" statusMessage decorate info "Total function count to compute is $totalFunctions" || return $?
   fi
   local finished=false
   local index=0
@@ -109,7 +109,7 @@ buildDocumentationExtractionUpdate() {
     [ -n "$fun" ] || continue
     helpFun="_$fun"
     if ! isFunction "$helpFun"; then
-      statusMessage decorate warning "No help for $fun ($helpFun not defined)" || :
+      catchReturn "$handler" statusMessage decorate warning "No help for $fun ($helpFun not defined)" || return $?
       continue
     fi
     __buildDocumentationExtractionUpdateFunction "$handler" "$fun" "#$index/$totalFunctions -" || returnClean $? "${clean[@]}" || return $?
@@ -123,7 +123,7 @@ _buildDocumentationExtractionUpdate() {
 
 # Extract and build the bin/build/documentation/ cache
 # DOC TEMPLATE: --help 1
-# Argument: --help - Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional. Display this help.
 # Argument: function - String. Required. Function to extract
 # Argument: prefix ... - String. Optional. Prefix the status line with this text.
 __buildDocumentationExtractionUpdateFunction() {
@@ -134,9 +134,9 @@ __buildDocumentationExtractionUpdateFunction() {
   [ -z "$prefix" ] || prefix="${prefix% } "
   local helpFun="_$fun"
   local prettyFun
-  prettyFun=$(decorate code "$fun")
+  prettyFun=$(catchReturn "$handler" decorate code "$fun") || return $?
   if ! isFunction "$helpFun"; then
-    statusMessage decorate warning "${prefix}No help for $prettyFun ($(decorate error "$helpFun") not defined)" || :
+    catchReturn "$handler" statusMessage decorate warning "${prefix}No help for $prettyFun ($(decorate error "$helpFun") not defined)" || return $?
     return 0
   fi
   BUILD_DEBUG="documentation-cache" statusMessage timing --name "${prefix}$prettyFun" muzzle "$helpFun" 0 || returnClean $? "${clean[@]}" || return $?
@@ -380,9 +380,7 @@ buildDocumentationBuild() {
       statusMessage decorate notice "Copying $file ..."
       catchEnvironment "$handler" muzzle fileDirectoryRequire "$targetHome/$file" || return $?
       cp -f "$documentationSource/$file" "$targetHome/$file" || return $?
-    done < <(
-      find "$documentationSource" -type f -name "*.md" ! -path "*/tools/*" ! -path "*/env/*" -print0 | xargs -0 grep -v -l '{[A-Za-z][^]!\[}]*}' || :
-    )
+    done < <(find "$documentationSource" -type f -name "*.md" ! -path "*/tools/*" ! -path "*/env/*" -print0 | xargs -0 grep -v -l '{[A-Za-z][^]!\[}]*}')
 
     local example
 
@@ -395,9 +393,7 @@ buildDocumentationBuild() {
       statusMessage decorate notice "Updating $file ..."
       catchEnvironment "$handler" muzzle fileDirectoryRequire "$targetHome/$file" || return $?
       example="$example" timestamp="$timestamp" version="$version" catchReturn "$handler" mapEnvironment <"$documentationSource/$file" >"$targetHome/$file" || return $?
-    done < <(
-      find "$documentationSource" -type f -name "*.md" ! -path "*/tools/*" ! -path "*/env/*" -print0 | xargs -0 grep -l '{[A-Za-z][^]!\[}]*}' || :
-    )
+    done < <(find "$documentationSource" -type f -name "*.md" ! -path "*/tools/*" ! -path "*/env/*" -print0 | xargs -0 grep -l '{[A-Za-z][^]!\[}]*}')
     statusMessage --last decorate notice "Updating environment variables document ..."
 
     local targetEnv="$home/documentation/.docs/env/index.md"

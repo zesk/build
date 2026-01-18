@@ -46,7 +46,7 @@ __notify() {
       nnFail+=("--sound" "$(validate "$handler" String "$argument" "${1-}")") || return $?
       ;;
     *)
-      binary="$(validate "$handler" callable "$argument" "$1")" || return $?
+      binary="$(validate "$handler" Callable "$argument" "$1")" || return $?
       shift
       break
       ;;

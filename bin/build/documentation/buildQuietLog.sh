@@ -11,6 +11,6 @@ fn="buildQuietLog"
 foundNames=([0]="argument")
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 source="bin/build/tools/build.sh"
-sourceModified="1768695708"
+sourceModified="1768721469"
 summary="Generate the path for a quiet log in the build"
 usage="buildQuietLog name [ --no-create ]"

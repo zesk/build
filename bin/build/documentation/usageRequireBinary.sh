@@ -11,6 +11,6 @@ fn="usageRequireBinary"
 foundNames=([0]="summary" [1]="argument")
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 source="bin/build/tools/usage.sh"
-sourceModified="1768695708"
+sourceModified="1768721469"
 summary="Check that one or more binaries are installed"$'\n'""
 usage="usageRequireBinary usageFunction binary"

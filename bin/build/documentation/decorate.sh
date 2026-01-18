@@ -13,7 +13,7 @@ foundNames=([0]="argument" [1]="stdout" [2]="environment" [3]="requires")
 requires="isFunction returnArgument awk catchEnvironment usageDocument executeInputSupport __help"$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 source="bin/build/tools/decorate.sh"
-sourceModified="1768695708"
+sourceModified="1768721469"
 stdout="Decorated text"$'\n'""
 summary="Singular decoration function"
 usage="decorate style [ text ... ]"

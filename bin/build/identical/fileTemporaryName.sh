@@ -12,8 +12,8 @@
 # Wrapper for `mktemp`. Generate a temporary file name, and fail using a function
 # Argument: handler - Function. Required. Function to call on failure. Function Type: returnMessage
 # DOC TEMPLATE: --help 1
-# Argument: --help - Flag. Optional.Display this help.
-# Argument: ... - Arguments. Optional.Any additional arguments are passed through.
+# Argument: --help - Flag. Optional. Display this help.
+# Argument: ... - Arguments. Optional. Any additional arguments are passed through.
 # Requires: mktemp __help catchEnvironment usageDocument
 # BUILD_DEBUG: temp - Logs backtrace of all temporary files to a file in application root named after this function to detect and clean up leaks
 # Environment: BUILD_DEBUG

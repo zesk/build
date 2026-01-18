@@ -12,6 +12,6 @@ foundNames=([0]="requires")
 requires="stty"$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 source="bin/build/tools/iterm2.sh"
-sourceModified="1768695708"
+sourceModified="1768721470"
 summary="Output the iTerm2 version"
 usage="iTerm2Version"

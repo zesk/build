@@ -12,6 +12,6 @@ foundNames=([0]="requires")
 requires="lowercase __help"$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 source="bin/build/tools/text.sh"
-sourceModified="1768695708"
+sourceModified="1768721469"
 summary="Parses text and determines if it's true-ish"
 usage="parseBoolean"

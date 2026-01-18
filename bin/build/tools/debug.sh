@@ -105,7 +105,7 @@ _buildDebugStart() {
 # See: buildDebugStart
 # Requires: buildDebugEnabled
 # DOC TEMPLATE: --help 1
-# Argument: --help - Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional. Display this help.
 buildDebugStop() {
   [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
   if ! buildDebugEnabled "$@"; then
@@ -178,7 +178,7 @@ _bashRecursionDebug() {
 # determine where the problem or loop exists.
 # Requires: trap
 # DOC TEMPLATE: --help 1
-# Argument: --help - Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional. Display this help.
 # Argument: --error - Flag. Add ERR trap.
 # Argument: --interrupt - Flag. Add INT trap.
 bashDebugInterruptFile() {
@@ -235,6 +235,7 @@ _bashDebugInterruptFile() {
 }
 
 __bashDebugInterruptFile() {
+  local exitCode=$?
   export BUILD_HOME BASH_LINENO BASH_SOURCE BASH_ARGC BASH_ARGV FUNCNAME
   {
     local now
@@ -243,6 +244,11 @@ __bashDebugInterruptFile() {
     debuggingStack -x --me
     printf "%s\n" "END --- $BUILD_HOME terminated $now ------------------------------------------" ""
   } >>"$BUILD_HOME/.interrupt.log" || :
+  local suffix="="
+  [ $exitCode -lt 10 ] || suffix="$suffix="
+  [ $exitCode -lt 100 ] || suffix="$suffix="
+  local box="+=================+=$suffix=+"
+  printf -- "%s\n" "" "$box" "| DEBUG INTERRUPT | $exitCode |" "$box" 1>&2
   return 122
 }
 
@@ -279,7 +285,7 @@ _isErrorExit() {
 # Argument: --leak envName ... - EnvironmentVariable. Variable name which is OK to leak.
 # Argument: --verbose - Flag. Optional. Be verbose.
 # DOC TEMPLATE: --help 1
-# Argument: --help - Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional. Display this help.
 # BUILD_DEBUG: plumber-verbose - The plumber outputs the exact variable captures before and after
 plumber() {
   local handler="_${FUNCNAME[0]}"
@@ -370,11 +376,11 @@ _housekeeperAccountant() {
 
 # Run a command and ensure files are not modified
 # Argument: --ignore grepPattern - String. Directory. One or more directories to watch. If no directories are supplied uses current working directory.
-# Argument: --path path - Directory. Optional.One or more directories to watch. If no directories are supplied uses current working directory.
-# Argument: path - Directory. Optional.One or more directories to watch. If no directories are supplied uses current working directory.
-# Argument: callable - Callable. Optional.Program to run and watch directory before and after.
+# Argument: --path path - Directory. Optional. One or more directories to watch. If no directories are supplied uses current working directory.
+# Argument: path - Directory. Optional. One or more directories to watch. If no directories are supplied uses current working directory.
+# Argument: callable - Callable. Optional. Program to run and watch directory before and after.
 # DOC TEMPLATE: --help 1
-# Argument: --help - Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional. Display this help.
 housekeeper() {
   local handler="_${FUNCNAME[0]}"
 
@@ -469,7 +475,7 @@ _housekeeper() {
 # Check output for content and trigger environment error if found
 # Usage {fn} [ --help ] [ --verbose ] [ --name name ]
 # Argument: --help - Help
-# Argument: --verbose - Flag. Optional.Verbose messages when no errors exist.
+# Argument: --verbose - Flag. Optional. Verbose messages when no errors exist.
 # Argument: --name name - String. Optional. Name for verbose mode.
 # # shellcheck source=/dev/null
 # Example:     source "$include" > >(outputTrigger source "$include") || return $?

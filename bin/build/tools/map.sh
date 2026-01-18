@@ -41,9 +41,9 @@ _mapTokens() {
 # Maps a string using an environment file
 #
 # DOC TEMPLATE: --help 1
-# Argument: --help - Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional. Display this help.
 # DOC TEMPLATE: --handler 1
-# Argument: --handler handler - Function. Optional.Use this error handler instead of the default error handler.
+# Argument: --handler handler - Function. Optional. Use this error handler instead of the default error handler.
 # Argument: mapFile - File. Required. a file containing bash environment definitions
 # Argument: value - String. Optional. One or more values to map using said environment file
 # Argument: --prefix - String. Optional. Token prefix defaults to `{`.
@@ -75,11 +75,11 @@ mapValue() {
       ;;
     --search-filter)
       shift
-      searchFilters+=("$(validate "$handler" callable "searchFilter" "${1-}")") || return $?
+      searchFilters+=("$(validate "$handler" Callable "searchFilter" "${1-}")") || return $?
       ;;
     --replace-filter)
       shift
-      replaceFilters+=("$(validate "$handler" callable "replaceFilter" "${1-}")") || return $?
+      replaceFilters+=("$(validate "$handler" Callable "replaceFilter" "${1-}")") || return $?
       ;;
     *)
       if [ -z "$mapFile" ]; then
@@ -151,7 +151,7 @@ _mapValueTrim() {
 # Argument: --search-filter - Zero or more. Callable. Filter for search tokens. (e.g. `lowercase`)
 # Argument: --replace-filter - Zero or more. Callable. Filter for replacement strings. (e.g. `trimSpace`)
 # DOC TEMPLATE: --help 1
-# Argument: --help - Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional. Display this help.
 # Example:     printf %s "{NAME}, {PLACE}.\n" | NAME=Hello PLACE=world mapEnvironment NAME PLACE
 # Requires: environmentVariables cat throwEnvironment catchEnvironment
 # Requires: throwArgument decorate validate
@@ -230,13 +230,13 @@ _mapEnvironment() {
 #
 # Example:     {fn} master main ! -path '*/old-version/*')
 # DOC TEMPLATE: --help 1
-# Argument: --help - Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional. Display this help.
 # DOC TEMPLATE: --handler 1
-# Argument: --handler handler - Function. Optional.Use this error handler instead of the default error handler.
-# Argument: --path cannonPath - Directory. Optional.Run cannon operation starting in this directory.
+# Argument: --handler handler - Function. Optional. Use this error handler instead of the default error handler.
+# Argument: --path cannonPath - Directory. Optional. Run cannon operation starting in this directory.
 # Argument: fromText - Required. String of text to search for.
 # Argument: toText - Required. String of text to replace.
-# Argument: findArgs ... - Arguments. Optional.Any additional arguments are meant to filter files.
+# Argument: findArgs ... - Arguments. Optional. Any additional arguments are meant to filter files.
 # Return Code: 0 - Success, no files changed
 # Return Code: 3 - At least one or more files were modified successfully
 # Return Code: 1 - --path is not a directory

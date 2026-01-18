@@ -11,6 +11,6 @@ fn="environmentFileIsDocker"
 foundNames=([0]="argument")
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 source="bin/build/tools/environment/convert.sh"
-sourceModified="1768695708"
+sourceModified="1768721469"
 summary="Ensure an environment file is compatible with non-quoted docker environment"
 usage="environmentFileIsDocker [ filename ]"

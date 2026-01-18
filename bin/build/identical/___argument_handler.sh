@@ -12,7 +12,7 @@
 # -- COMPILED toolsLoader END
 
 # DOC TEMPLATE: dashDashAllowsHelpParameters 1
-# Argument: -- - Flag. Optional.Stops command processing to enable arbitrary text to be passed as additional arguments without special meaning.
+# Argument: -- - Flag. Optional. Stops command processing to enable arbitrary text to be passed as additional arguments without special meaning.
 __argumentsWithNonBlanksHandler() {
   local handler="_${FUNCNAME[0]}"
 

@@ -487,7 +487,7 @@ usageArgumentArray() {
 # Placeholder for additional arguments
 # Argument: handler - Function. Required. handler function to call upon failure.
 # Argument: argument - String. Required. Name of the argument used in error messages.
-# Argument: value ... - Arguments. Optional.Additional arguments.
+# Argument: value ... - Arguments. Optional. Additional arguments.
 usageArgumentArguments() {
   usageArgumentEmptyString "$@" || return $?
 }

@@ -202,7 +202,7 @@ _nodePackageManagerUninstall() {
 
 # Is the passed node package manager name valid?
 # DOC TEMPLATE: --help 1
-# Argument: --help - Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional. Display this help.
 # Argument: managerName - String. Required. The node package manager name to check.
 # Without arguments, shows the valid package manager names.
 # Return Code: 0 - Yes, it's a valid package manager name.

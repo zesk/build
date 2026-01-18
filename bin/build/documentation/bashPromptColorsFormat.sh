@@ -12,7 +12,7 @@ foundNames=([0]="argument" [1]="stdout" [2]="requires")
 requires="decorations read inArray decorate listJoin"$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 source="bin/build/tools/prompt.sh"
-sourceModified="1768695708"
+sourceModified="1768721469"
 stdout="Outputs color *codes* separated by colons."$'\n'""
 summary="Given a list of color names, generate the color codes"
 usage="bashPromptColorsFormat text"

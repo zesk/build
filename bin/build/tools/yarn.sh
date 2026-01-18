@@ -17,7 +17,7 @@
 # Test: testYarnInstallation
 # Argument: --version versionCode - String. Optional. Install this version of yarn.
 # DOC TEMPLATE: --help 1
-# Argument: --help - Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional. Display this help.
 yarnInstall() {
   local handler="_${FUNCNAME[0]}"
 

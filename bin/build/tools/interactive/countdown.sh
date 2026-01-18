@@ -29,7 +29,7 @@ __interactiveCountdown() {
       if [ -z "$counter" ]; then
         counter=$(validate "$handler" PositiveInteger "counter" "$1") || return $?
       else
-        binary=$(validate "$handler" callable "callable" "$1") || return $?
+        binary=$(validate "$handler" Callable "callable" "$1") || return $?
         break
       fi
       ;;

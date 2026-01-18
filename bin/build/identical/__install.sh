@@ -12,8 +12,8 @@
 # Load a bash script (installing if needed) and run an optional command
 # Argument: installer - File. Required. Installation binary.
 # Argument: source - File. Required. Include file which should exist after installation.
-# Argument: relativeHome - Directory. Optional.Path to application home. Default is `..`.
-# Argument: command ... - Callable. Optional.A command to run and optional arguments.
+# Argument: relativeHome - Directory. Optional. Path to application home. Default is `..`.
+# Argument: command ... - Callable. Optional. A command to run and optional arguments.
 # Example:      __install bin/install-bin-build.sh bin/build/tools.sh ../../.. decorate info "$@"
 # Requires: returnMessage execute
 __install() {

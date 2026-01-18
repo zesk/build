@@ -66,7 +66,7 @@ isInteger() {
 
 # True-ish
 # DOC TEMPLATE: --help 1
-# Argument: --help - Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional. Display this help.
 # Argument: value ... - EmptyString. One or more values to test.
 # Succeeds when all arguments are "true"-ish
 isTrue() {
@@ -122,7 +122,7 @@ _isType() {
 # Is a variable declared as an array?
 # Argument: variableName - String. Required. Variable name to check.
 # DOC TEMPLATE: --help 1
-# Argument: --help - Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional. Display this help.
 isArray() {
   [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
   while [ $# -gt 0 ]; do

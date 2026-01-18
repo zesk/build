@@ -11,7 +11,7 @@ fn="environmentFileBashCompatibleToDocker"
 foundNames=([0]="argument" [1]="stdin" [2]="stdout")
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 source="bin/build/tools/environment/convert.sh"
-sourceModified="1768695708"
+sourceModified="1768721469"
 stdin="text - Optional. Environment file to convert."$'\n'""
 stdout="text - Only if stdin is supplied and no \`filename\` arguments."$'\n'""
 summary="Ensure an environment file is compatible with non-quoted docker environment"

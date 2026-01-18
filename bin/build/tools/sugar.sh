@@ -41,7 +41,7 @@ _deprecated() {
 
 # Suppress stdout without piping. Handy when you just want a behavior not the output.
 # Argument: command - Callable. Required. Thing to muzzle.
-# Argument: ... - Arguments. Optional.Additional arguments.
+# Argument: ... - Arguments. Optional. Additional arguments.
 # Example:     {fn} pushd "$buildDir"
 # Example:     catchEnvironment "$handler" phpBuild || returnUndo $? {fn} popd || return $?
 # stdout: - No output from stdout ever from this function
@@ -59,7 +59,7 @@ _muzzle() {
 # map a return value from one value to another
 #
 # DOC TEMPLATE: --help 1
-# Argument: --help - Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional. Display this help.
 # Argument: value - Integer. A return value.
 # Argument: from - Integer. When value matches `from`, instead return `to`
 # Argument: to - Integer. The value to return when `from` matches `value`
@@ -104,7 +104,7 @@ execute() {
 # Run a function and preserve exit code
 # Returns `code`
 # DOC TEMPLATE: --help 1
-# Argument: --help - Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional. Display this help.
 # Argument: code - UnsignedInteger. Required. Exit code to return.
 # Argument: undoFunction - Callable. Optional. Command to run to undo something. Return status is ignored.
 # Argument: -- - Flag. Optional. Used to delimit multiple commands.

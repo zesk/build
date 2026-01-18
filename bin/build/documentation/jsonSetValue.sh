@@ -11,6 +11,6 @@ fn="jsonSetValue"
 foundNames=([0]="argument")
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 source="bin/build/tools/json.sh"
-sourceModified="1768695708"
+sourceModified="1768721469"
 summary="Sets the value of a variable in a JSON file"
 usage="jsonSetValue [ --filter ] [ --status ] [ --quiet ] [ --generator ] [ --value ] [ --key ] key file"

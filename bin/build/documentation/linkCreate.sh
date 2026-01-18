@@ -11,6 +11,6 @@ fn="linkCreate"
 foundNames=([0]="argument")
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 source="bin/build/tools/file.sh"
-sourceModified="1768695708"
+sourceModified="1768721469"
 summary="Create a link"
 usage="linkCreate [ target ] linkName"

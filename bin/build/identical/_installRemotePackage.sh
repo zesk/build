@@ -90,30 +90,30 @@ __packageCheckFunction() {
 # INTERNAL: If `checkFunction` fails, it should output any errors to `stderr` and return a non-zero exit code.
 # INTERNAL:
 # DOC TEMPLATE: --help 1
-# Argument: --help - Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional. Display this help.
 # Argument: relative - RelativePath. Required. Path from this script to our application root. INTERNAL.
 # Argument: defaultPackagePath - RelativePath. Required. Path from application root to where the package should be installed. INTERNAL.
 # Argument: packageInstallerName - ApplicationFile. Required. The new installer file, post installation, relative to the `installationPath`. INTERNAL.
-# Argument: installationPath - ApplicationDirectory. Optional.Path to where the package should be installed instead of the defaultPackagePath.
-# Argument: --help - Flag. Optional.Display this help.
+# Argument: installationPath - ApplicationDirectory. Optional. Path to where the package should be installed instead of the defaultPackagePath.
+# Argument: --help - Flag. Optional. Display this help.
 # Argument: --source source - String. Optional. Source to display for the binary name. INTERNAL.
 # Argument: --name name - String. Optional. Name to display for the remote package name. INTERNAL.
-# Argument: --local localPackageDirectory - Directory. Optional.Directory of an existing installation to mock behavior for testing. INTERNAL.
-# Argument: --url url - URL. Optional.URL of a tar.gz file. Download source code from here.
+# Argument: --local localPackageDirectory - Directory. Optional. Directory of an existing installation to mock behavior for testing. INTERNAL.
+# Argument: --url url - URL. Optional. URL of a tar.gz file. Download source code from here.
 # Argument: --user username - String. Optional. Add `username:password` to remote request.
 # Argument: --password passwordText - String. Optional. Add `username:password` to remote request.
 # Argument: --header headerText - String. Optional. Add one or more headers to the remote request.
-# Argument: --version-function urlFunction - Function. Optional.Function to compare live version to local version. Exits 0 if they match. Output version text if you want. INTERNAL.
+# Argument: --version-function urlFunction - Function. Optional. Function to compare live version to local version. Exits 0 if they match. Output version text if you want. INTERNAL.
 # Argument: --version version - String. Optional. Download just **this** version of Zesk Build. Prevents stable breaking with new versions of Zesk Build.
-# Argument: --url-function urlFunction - Function. Optional.Function to return the URL to download. INTERNAL.
-# Argument: --check-function checkFunction - Function. Optional.Function to check the installation and output the version number or package name. INTERNAL.
-# Argument: --installer installer - Executable. Optional.Multiple. Binary to run after installation succeeds. Can be supplied multiple times. If `installer` begins with a `@` then any errors by the installer are ignored.
-# Argument: --replace file - File. Optional.Replace the target file with this script and delete this one. Internal only, do not use. INTERNAL.
-# Argument: --finalize file - File. Optional.Remove the temporary file and exit 0. INTERNAL.
-# Argument: --debug - Flag. Optional.Debugging is on. INTERNAL.
-# Argument: --force - Flag. Optional.Force installation even if file is up to date.
-# Argument: --skip-self - Flag. Optional.Skip the installation script self-update. (By default it is enabled.)
-# Argument: --diff - Flag. Optional.Show differences between old and new file.
+# Argument: --url-function urlFunction - Function. Optional. Function to return the URL to download. INTERNAL.
+# Argument: --check-function checkFunction - Function. Optional. Function to check the installation and output the version number or package name. INTERNAL.
+# Argument: --installer installer - Executable. Optional. Multiple. Binary to run after installation succeeds. Can be supplied multiple times. If `installer` begins with a `@` then any errors by the installer are ignored.
+# Argument: --replace file - File. Optional. Replace the target file with this script and delete this one. Internal only, do not use. INTERNAL.
+# Argument: --finalize file - File. Optional. Remove the temporary file and exit 0. INTERNAL.
+# Argument: --debug - Flag. Optional. Debugging is on. INTERNAL.
+# Argument: --force - Flag. Optional. Force installation even if file is up to date.
+# Argument: --skip-self - Flag. Optional. Skip the installation script self-update. (By default it is enabled.)
+# Argument: --diff - Flag. Optional. Show differences between old and new file.
 # Return Code: 1 - Environment error
 # Return Code: 2 - Argument error
 # Requires: cp rm cat printf realPath whichExists returnMessage fileTemporaryName catchArgument throwArgument catchEnvironment decorate validate isFunction __decorateExtensionQuote

@@ -7,7 +7,7 @@
 
 # Compare a remote file size with a local file size
 # DOC TEMPLATE: --help 1
-# Argument: --help - Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional. Display this help.
 # Argument: url - URL. Required. URL to check.
 # Argument: file - File. Required. File to compare.
 urlMatchesLocalFileSize() {
@@ -54,9 +54,9 @@ _urlMatchesLocalFileSize() {
 # Get the size of a remote URL
 # Depends: curl
 # DOC TEMPLATE: --help 1
-# Argument: --help - Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional. Display this help.
 # DOC TEMPLATE: --handler 1
-# Argument: --handler handler - Function. Optional.Use this error handler instead of the default error handler.
+# Argument: --handler handler - Function. Optional. Use this error handler instead of the default error handler.
 # Argument: url - URL. Required. URL to fetch the Content-Length.
 urlContentLength() {
   local handler="_${FUNCNAME[0]}"
@@ -94,7 +94,7 @@ _urlContentLength() {
 
 # Fetch Time to First Byte and other stats
 # DOC TEMPLATE: --help 1
-# Argument: --help - Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional. Display this help.
 # Argument: url - URL. Required. URL to check.
 hostTTFB() {
   __help "_${FUNCNAME[0]}" "$@" || return 0
@@ -120,7 +120,7 @@ _watchFile() {
 #
 # Untested, and in progress. Do not use seriously.
 # DOC TEMPLATE: --help 1
-# Argument: --help - Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional. Display this help.
 # Argument: url - URL. Required. Url to scrape recursively.
 # Untested: true
 # Uses `wget` to fetch a site, convert it to HTML nad rewrite it for local consumption.

@@ -45,14 +45,14 @@ __backgroundProcess() {
     *)
       if [ 0 -eq ${#condition[@]} ]; then
         actionFlag="condition"
-        condition=("$(validate "$handler" callable "condition" "$argument")") || return $?
+        condition=("$(validate "$handler" Callable "condition" "$argument")") || return $?
         shift
         while [ $# -gt 0 ] && [ "$1" != '--' ]; do condition+=("$1") && shift; done
         # Get that --
         [ $# -gt 0 ] || throwArgument "$handler" "No command passed: [$__count] $(decorate each quote -- "${__saved[@]}")" || return $?
       else
         shift
-        command=("$(validate "$handler" callable "command" "$argument")" "$@") || return $?
+        command=("$(validate "$handler" Callable "command" "$argument")" "$@") || return $?
         break
       fi
       ;;

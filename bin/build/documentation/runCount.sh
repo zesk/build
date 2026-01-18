@@ -11,6 +11,6 @@ fn="runCount"
 foundNames=([0]="argument" [1]="summary")
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 source="bin/build/tools/platform.sh"
-sourceModified="1768695708"
+sourceModified="1768721470"
 summary="Run a binary count times"$'\n'""
 usage="runCount [ count ] [ binary ] [ args ... ]"

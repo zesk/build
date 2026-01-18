@@ -11,6 +11,6 @@ fn="environmentFileToDocker"
 foundNames=([0]="argument")
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 source="bin/build/tools/environment/convert.sh"
-sourceModified="1768695708"
+sourceModified="1768721469"
 summary="Takes any environment file and makes it docker-compatible"
 usage="environmentFileToDocker envFile ..."

@@ -27,7 +27,7 @@ __identicalLoader() {
 # Argument: token - String. Required. The token to repair.
 # Argument: source - File. Required. The token file source. First occurrence is used.
 # Argument: destination - File. Required. The token file to repair. Can be same as `source`.
-# Argument: --stdout - Flag. Optional.Output changed file to `stdout`
+# Argument: --stdout - Flag. Optional. Output changed file to `stdout`
 identicalRepair() {
   __identicalLoader "_${FUNCNAME[0]}" "__${FUNCNAME[0]}" "$@"
 }
@@ -39,15 +39,15 @@ _identicalRepair() {
 # Argument: --extension extension - String. Required. One or more extensions to search for in the current directory.
 # Argument: --prefix prefix - String. Required. A text prefix to search for to identify identical sections (e.g. `# IDENTICAL`) (may specify more than one)
 # Argument: --exclude pattern - String. Optional. One or more patterns of paths to exclude. Similar to pattern used in `find`.
-# Argument: --cd directory - Directory. Optional.Change to this directory before running. Defaults to current directory.
-# Argument: --repair directory - Directory. Optional.Any files in onr or more directories can be used to repair other files.
+# Argument: --cd directory - Directory. Optional. Change to this directory before running. Defaults to current directory.
+# Argument: --repair directory - Directory. Optional. Any files in onr or more directories can be used to repair other files.
 # Argument: --token token - String. Optional. ONLY do this token. May be specified more than once.
-# Argument: --skip file - Directory. Optional.Ignore this file for repairs.
-# Argument: --ignore-singles - Flag. Optional.Skip the check to see if single entries exist.
-# Argument: --no-map - Flag. Optional.Do not map __BASE__, __FILE__, __DIR__ tokens.
+# Argument: --skip file - Directory. Optional. Ignore this file for repairs.
+# Argument: --ignore-singles - Flag. Optional. Skip the check to see if single entries exist.
+# Argument: --no-map - Flag. Optional. Do not map __BASE__, __FILE__, __DIR__ tokens.
 # Argument: --debug - Optional. Additional debugging information is output.
-# Argument: --help - Flag. Optional.This help.
-# Argument: --singles singlesFiles - File. Optional.One or more files which contain a list of allowed `{identical}` singles, one per line.
+# Argument: --help - Flag. Optional. This help.
+# Argument: --singles singlesFiles - File. Optional. One or more files which contain a list of allowed `{identical}` singles, one per line.
 # Argument: --single singleToken - String. Optional. One or more tokens which cam be singles.
 #
 # Return Code: 2 - Argument error
@@ -104,10 +104,10 @@ _identicalCheck() {
 # - `DOC`` TEMPLATE:` - used in documentation templates for functions - is handled by internal document generator
 #
 # DOC TEMPLATE: --help 1
-# Argument: --help - Flag. Optional.Display this help.
-# Argument: --singles singlesFiles - File. Optional.One or more files which contain a list of allowed `{identical}` singles, one per line.
+# Argument: --help - Flag. Optional. Display this help.
+# Argument: --singles singlesFiles - File. Optional. One or more files which contain a list of allowed `{identical}` singles, one per line.
 # Argument: --single singleToken - String. Optional. One or more tokens which cam be singles.
-# Argument: --repair directory - Directory. Optional.Any files in onr or more directories can be used to repair other files.
+# Argument: --repair directory - Directory. Optional. Any files in onr or more directories can be used to repair other files.
 # Argument: --internal - Flag. Optional. Do updates for `# _{identical}_` and `# DOC TEMPLATE:` prefixes first.
 # Argument: --internal-only - Flag. Optional. Just do `--internal` repairs.
 # Argument: --interactive - Flag. Optional. Interactive mode on fixing errors.
@@ -132,10 +132,10 @@ _identicalFindTokens() {
 }
 
 # DOC TEMPLATE: --help 1
-# Argument: --help - Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional. Display this help.
 #
 # DOC TEMPLATE: --handler 1
-# Argument: --handler handler - Function. Optional.Use this error handler instead of the default error handler.
+# Argument: --handler handler - Function. Optional. Use this error handler instead of the default error handler.
 # Argument: ... - Arguments. Required. Arguments to `identicalCheck` for your watch.
 # Watch a project for changes and propagate them immediately upon save. Can be quite dangerous so use with caution.
 # Still a known bug which trims the last end bracket from files

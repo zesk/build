@@ -57,7 +57,7 @@
 # Argument: -- - Delimiter. Required. Separates command.
 # Argument: command ... - Callable. Required. Function to run in the background.
 # DOC TEMPLATE: --help 1
-# Argument: --help - Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional. Display this help.
 backgroundProcess() {
   __promptLoader "_${FUNCNAME[0]}" "__${FUNCNAME[0]}" "$@"
 }
@@ -76,7 +76,7 @@ _backgroundProcess() {
 # Argument: source - File. Optional. If supplied directly on the command line, sets the source.
 # Argument: path|file ... - DirectoryOrFile. Optional. If `source` supplied, then any other command line argument is treated as a path to scan for changes.
 # DOC TEMPLATE: --help 1
-# Argument: --help - Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional. Display this help.
 # BUILD_DEBUG: reloadChanges - prompt module will show debugging information
 # BUILD_DEBUG: reloadChangesProfile - prompt module will show profiling information
 reloadChanges() {
@@ -101,7 +101,7 @@ _bashPromptModule_dotFilesWatcher() {
 
 # The dot files approved file. Add files to this to approve.
 # DOC TEMPLATE: --help 1
-# Argument: --help - Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional. Display this help.
 dotFilesApprovedFile() {
   [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
   printf "%s\n" "$(buildEnvironmentGetDirectory "XDG_DATA_HOME")/dotFilesWatcher"

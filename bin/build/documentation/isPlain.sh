@@ -11,6 +11,6 @@ fn="isPlain"
 foundNames=([0]="argument")
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 source="bin/build/tools/text.sh"
-sourceModified="1768695708"
+sourceModified="1768721469"
 summary="Check if text contains plaintext only."
 usage="isPlain text"

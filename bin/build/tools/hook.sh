@@ -113,7 +113,7 @@ __hookRunner() {
 # Argument: hookName - String. Required. Hook name to run.
 # Argument: ... - Arguments. Optional. Any arguments to the hook. See each hook implementation for details.
 # DOC TEMPLATE: --help 1
-# Argument: --help - Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional. Display this help.
 # Return Code: Any - The hook exit code is returned if it is run
 # Return Code: 1 - is returned if the hook is not found
 # Example:     version="$({fn} version-current)"
@@ -138,7 +138,7 @@ _hookRun() {
 # Argument: hookName - String. Required. Hook name to run.
 # Argument: ... - Arguments. Optional. Any arguments to the hook. See each hook implementation for details.
 # DOC TEMPLATE: --help 1
-# Argument: --help - Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional. Display this help.
 # Return Code: Any - The hook exit code is returned if it is run
 # Return Code: 1 - is returned if the hook is not found
 # Example:     version="$({fn} version-current)"

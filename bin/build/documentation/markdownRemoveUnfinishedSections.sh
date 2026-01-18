@@ -14,6 +14,6 @@ fn="markdownRemoveUnfinishedSections"
 foundNames=([0]="argument" [1]="depends" [2]="environment" [3]="example")
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 source="bin/build/tools/markdown.sh"
-sourceModified="1768695708"
+sourceModified="1768721469"
 summary="Given a file containing Markdown, remove header and any section"
 usage="markdownRemoveUnfinishedSections [ None ]"

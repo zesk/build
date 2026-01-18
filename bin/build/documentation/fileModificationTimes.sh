@@ -13,6 +13,6 @@ foundNames=([0]="argument" [1]="example" [2]="output")
 output="1705347087 bin/build/tools.sh"$'\n'"1704312758 bin/build/deprecated.sh"$'\n'"1705442647 bin/build/build.json"$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 source="bin/build/tools/file.sh"
-sourceModified="1768695708"
+sourceModified="1768721469"
 summary="Lists files in a directory recursively along with their modification"
 usage="fileModificationTimes directory [ findArgs ]"

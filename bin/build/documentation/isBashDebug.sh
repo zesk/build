@@ -12,6 +12,6 @@ fn="isBashDebug"
 foundNames=([0]="depends")
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 source="bin/build/tools/debug.sh"
-sourceModified="1768695708"
+sourceModified="1768757641"
 summary="Returns whether the shell has the debugging flag set"
 usage="isBashDebug"

@@ -11,6 +11,6 @@ fn="gitRemoteHosts"
 foundNames=()
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 source="bin/build/tools/git.sh"
-sourceModified="1768695708"
+sourceModified="1768721470"
 summary="List remote hosts for the current git repository"
 usage="gitRemoteHosts"

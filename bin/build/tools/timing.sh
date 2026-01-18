@@ -8,7 +8,7 @@
 # Time command, similar to `time` but uses internal functions
 # Argument: command - Executable. Required. Command to run.
 # DOC TEMPLATE: --help 1
-# Argument: --help - Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional. Display this help.
 # Argument: --name - String. Optional. Display this help.
 # Outputs time as `timingReport`
 timing() {
@@ -47,7 +47,7 @@ _timing() {
 #
 # Argument: timingOffset - UnsignedInteger. Required. Offset in milliseconds from January 1, 1970.
 # DOC TEMPLATE: --help 1
-# Argument: --help - Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional. Display this help.
 # Example:     init=$(timingStart)
 # Example:     ...
 # Example:     timingElapsed "$init"
@@ -69,7 +69,7 @@ _timingElapsed() {
 # Outputs the offset in milliseconds from January 1, 1970.
 #
 # DOC TEMPLATE: --help 1
-# Argument: --help - Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional. Display this help.
 # Example:     init=$(timingStart)
 # Example:     ...
 # Example:     timingReport "$init" "Completed in"
@@ -88,7 +88,7 @@ _timingStart() {
 
 # Format a timing output (milliseconds) as seconds using a decimal
 # DOC TEMPLATE: --help 1
-# Argument: --help - Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional. Display this help.
 # Argument: delta - Integer. Milliseconds
 timingFormat() {
   local handler="_${FUNCNAME[0]}"
@@ -119,9 +119,9 @@ _timingFormat() {
 # Outputs a nice colorful message showing the number of seconds elapsed as well as your custom message.
 # Argument: --color color - Make text this color (default is `green`)
 # DOC TEMPLATE: --help 1
-# Argument: --help - Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional. Display this help.
 # DOC TEMPLATE: --handler 1
-# Argument: --handler handler - Function. Optional.Use this error handler instead of the default error handler.
+# Argument: --handler handler - Function. Optional. Use this error handler instead of the default error handler.
 # Argument: start - Unix timestamp milliseconds. See `timingStart`.
 # Argument: message - Any additional arguments are output before the elapsed value computed
 # Return Code: 0 - Exits with exit code zero

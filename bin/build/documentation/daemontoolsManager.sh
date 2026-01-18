@@ -12,6 +12,6 @@ fn="daemontoolsManager"
 foundNames=([0]="argument" [1]="environment")
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 source="bin/build/tools/daemontools.sh"
-sourceModified="1768695708"
+sourceModified="1768721469"
 summary="Runs a daemon which monitors files and operates on services."
 usage="daemontoolsManager [ --home serviceHome ] [ --interval intervalSeconds ] [ --stat statFile ] [ --chirp chirpSeconds ] [ --action actions ] service0 file1"

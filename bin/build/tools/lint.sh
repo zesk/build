@@ -18,8 +18,8 @@
 #
 # Example:     bashLint goo.sh
 # DOC TEMPLATE: --help 1
-# Argument: --help - Flag. Optional.Display this help.
-# Argument: --fix - Flag. Optional.Fix files when possible.
+# Argument: --help - Flag. Optional. Display this help.
+# Argument: --fix - Flag. Optional. Fix files when possible.
 # Argument: script - File. Optional. Shell script to validate
 # Argument: verbose - Flag. Optional. Be verbose.
 # Argument: script - File. Optional. Shell script to validate
@@ -92,7 +92,7 @@ _bashLint() {
 # Argument: --fix - Flag. Optional. Fix errors when possible.
 # Argument: --interactive - Flag. Optional. Interactive mode on fixing errors.
 # Argument: --exec binary - Run binary with files as an argument for any failed files. Only works if you pass in item names.
-# Argument: --delay - Integer. Optional.Delay between checks in interactive mode.
+# Argument: --delay - Integer. Optional. Delay between checks in interactive mode.
 # Argument: findArgs - Additional find arguments for .sh files (or exclude directories).
 # Side-effect: shellcheck is installed
 # Side-effect: Status written to stdout, errors written to stderr
@@ -123,7 +123,7 @@ bashLintFiles() {
       ;;
     --exec)
       shift
-      binary="$(validate "$handler" callable "$argument" "${1-}")" || return $?
+      binary="$(validate "$handler" Callable "$argument" "${1-}")" || return $?
       ii+=("$argument" "$binary")
       ;;
     --interactive)
@@ -200,9 +200,9 @@ _bashLintFilesHelper() {
   fi
 }
 
-# Argument: --exec binary - Callable. Optional.Run binary with files as an argument for any failed files. Only works if you pass in item names.
-# Argument: --delay delaySeconds - Integer. Optional.Delay in seconds between checks in interactive mode.
-# Argument: fileToCheck ... - File. Optional.Shell file to validate.
+# Argument: --exec binary - Callable. Optional. Run binary with files as an argument for any failed files. Only works if you pass in item names.
+# Argument: --delay delaySeconds - Integer. Optional. Delay in seconds between checks in interactive mode.
+# Argument: fileToCheck ... - File. Optional. Shell file to validate.
 # Run checks interactively until errors are all fixed.
 bashLintFilesInteractive() {
   local handler="_${FUNCNAME[0]}"
@@ -280,9 +280,9 @@ _bashLintInteractiveCheck() {
 
 # Search bash files for assertions which do not terminate a function and are likely an error
 # DOC TEMPLATE: --help 1
-# Argument: --help - Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional. Display this help.
 # DOC TEMPLATE: --handler 1
-# Argument: --handler handler - Function. Optional.Use this error handler instead of the default error handler.
+# Argument: --handler handler - Function. Optional. Use this error handler instead of the default error handler.
 # Argument: --exclude path - String. Optional. Exclude paths which contain this string
 # Argument: --exec binary - Executable. Optional. For each failed file run this command.
 # Argument: directory - Directory. Optional. Where to search for files to check.
@@ -381,7 +381,7 @@ _findUncaughtAssertions() {
 # Argument: `extension0` - Required - the extension to search for (`*.extension`)
 # Argument: `--` - Separator. Required. Separates extensions from text
 # Argument: `text0` - String. Required. Text which must exist in each item with the extension given.
-# Argument: `--` - Separator. Optional.Final delimiter to specify find arguments.
+# Argument: `--` - Separator. Optional. Final delimiter to specify find arguments.
 # Argument: findArgs - Optional. Limit find to additional conditions.
 # Side-effect: Errors written to stderr, status written to stdout
 # Environment: This operates in the current working directory

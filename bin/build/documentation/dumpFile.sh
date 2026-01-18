@@ -11,7 +11,7 @@ fn="dumpFile"
 foundNames=([0]="argument" [1]="stdin" [2]="stdout")
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 source="bin/build/tools/dump.sh"
-sourceModified="1768695708"
+sourceModified="1768721469"
 stdin="text (optional)"$'\n'""
 stdout="formatted text (optional)"$'\n'""
 summary="Output a file for debugging"

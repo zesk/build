@@ -11,6 +11,6 @@ fn="iTerm2Attention"
 foundNames=([0]="argument")
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 source="bin/build/tools/iterm2.sh"
-sourceModified="1768695708"
+sourceModified="1768721470"
 summary="Attract the operator"
 usage="iTerm2Attention [ --ignore | -i ] [ --verbose | -v ] [ action. String. Action to attract attention: \`true\`, \`false\` or \`!\` ]"

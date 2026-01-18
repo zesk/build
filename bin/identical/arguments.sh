@@ -29,28 +29,28 @@ set -eou pipefail
 source "${BASH_SOURCE[0]%/*}/../tools.sh"
 
 # DOC TEMPLATE: --help 1
-# Argument: --help - Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional. Display this help.
 # DOC TEMPLATE: --env-file 1
-# Argument: --env-file envFile - File. Optional.Environment file to load - can handle any format.
+# Argument: --env-file envFile - File. Optional. Environment file to load - can handle any format.
 # DOC TEMPLATE: assert-common 18
-# Argument: --help - Flag. Optional.Display this help.
-# Argument: --line lineNumber - Integer. Optional.Line number of calling function. Typically this is not required as it is computed from the calling function using `--line-depth`.
-# Argument: --line-depth depth - Integer. Optional.The depth in the stack of function calls to find the line number of the calling function.
-# Argument: --debug - Flag. Optional.Debugging enabled for the assertion function.
-# Argument: --debug-lines - Flag. Optional.Debugging of SOLELY differences between `--line` passed in and the computed line from the `--line-depth` parameter.
+# Argument: --help - Flag. Optional. Display this help.
+# Argument: --line lineNumber - Integer. Optional. Line number of calling function. Typically this is not required as it is computed from the calling function using `--line-depth`.
+# Argument: --line-depth depth - Integer. Optional. The depth in the stack of function calls to find the line number of the calling function.
+# Argument: --debug - Flag. Optional. Debugging enabled for the assertion function.
+# Argument: --debug-lines - Flag. Optional. Debugging of SOLELY differences between `--line` passed in and the computed line from the `--line-depth` parameter.
 # Argument: --display - String. Optional. Display name for the condition.
-# Argument: --success - Boolean. Optional.Whether the assertion should pass (`true`) or fail (`false`) - most functions have this already baked in.
+# Argument: --success - Boolean. Optional. Whether the assertion should pass (`true`) or fail (`false`) - most functions have this already baked in.
 # Argument: --stderr-match - String. Optional. One or more strings which must match `stderr` output. Implies `--stderr-ok`
 # Argument: --stdout-no-match - String. Optional. One or more strings which must match NOT `stderr` output.
 # Argument: --stdout-match - String. Optional. One or more strings which must match `stdout` output.
 # Argument: --stdout-no-match - String. Optional. One or more strings which must match `stdout` output.
-# Argument: --stderr-ok - Flag. Optional.Output to `stderr` will not cause the test to fail.
+# Argument: --stderr-ok - Flag. Optional. Output to `stderr` will not cause the test to fail.
 # Argument: --leak globalName - Zero or more. String. Allow global leaks for these globals.
-# Argument: --skip-plumber - Flag. Optional.Skip plumber check for function calls.
-# Argument: --dump - Flag. Optional.Output `stderr` and `stdout` after test regardless.
-# Argument: --dump-binary - Flag. Optional.Output `stderr` and `stdout` after test regardless, displayed as binary.
-# Argument: --head - Flag. Optional.When outputting `stderr` or `stdout`, output the head of the file.
-# Argument: --tail - Flag. Optional.When outputting `stderr` or `stdout`, output the tail of the file. (Default)
+# Argument: --skip-plumber - Flag. Optional. Skip plumber check for function calls.
+# Argument: --dump - Flag. Optional. Output `stderr` and `stdout` after test regardless.
+# Argument: --dump-binary - Flag. Optional. Output `stderr` and `stdout` after test regardless, displayed as binary.
+# Argument: --head - Flag. Optional. When outputting `stderr` or `stdout`, output the head of the file.
+# Argument: --tail - Flag. Optional. When outputting `stderr` or `stdout`, output the tail of the file. (Default)
 # This function serves as a sample for all other templates. DOES NOT NEED TO MAKE SENSE. Do not add a Requires: to this function.
 __documentTemplateFunction() {
   local handler="_${FUNCNAME[0]}"

@@ -12,7 +12,7 @@
 # `rsync` is a tool which easily keeps file directories synchronized between
 # file systems, remote systems, and locations.
 # DOC TEMPLATE: --help 1
-# Argument: --help - Flag. Optional.Display this help.
+# Argument: --help - Flag. Optional. Display this help.
 rsyncInstall() {
   [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
   packageWhich rsync

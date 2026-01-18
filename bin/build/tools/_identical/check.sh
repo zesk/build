@@ -55,7 +55,7 @@ __identicalCheck() {
       ;;
     --exec)
       shift
-      binary=$(validate "$handler" callable "$argument" "$1") || return $?
+      binary=$(validate "$handler" Callable "$argument" "$1") || return $?
       ;;
     --skip)
       shift
