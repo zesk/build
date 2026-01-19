@@ -24,17 +24,17 @@ __testFunction() {
 
   # IDENTICAL profileFunctionMarker 3
   # ********************************************************************************************************************
-  if [ "$__profile" != false ]; then __profileNext="$(timingStart)" && printf "%s%d %s\n" "$__profilePrefix" "$((__profileNext - __profile))" "$__profileLabel" && __profile=$__profileNext; fi
+  if [ "$__profile" != false ]; then __profileNext="$(timingStart)" && printf "Line %d: %s%d %s\n" "$LINENO" "$__profilePrefix" "$((__profileNext - __profile))" "$__profileLabel" && __profile=$__profileNext; fi
 
   # IDENTICAL profileFunctionMarkerOthers 3
   # ********************************************************************************************************************
-  if [ "$__profile" != false ]; then __profileNext="$(timingStart)" && __profileUsed=$((__profileUsed + (__profileNext - __profile))) && printf "%s%d %s (*them %d)\n" "$__profilePrefix" "$((__profileNext - __profile))" "$__profileLabel" "$__profileUsed" && __profile=$__profileNext; fi
+  if [ "$__profile" != false ]; then __profileNext="$(timingStart)" && __profileUsed=$((__profileUsed + (__profileNext - __profile))) && printf "Line %d: %s%d %s (*them %d)\n" "$LINENO" "$__profilePrefix" "$((__profileNext - __profile))" "$__profileLabel" "$__profileUsed" && __profile=$__profileNext; fi
 
   # IDENTICAL profileFunctionTail 7
   # ********************************************************************************************************************
   if [ "$__profile" != false ]; then
-    __profileNext="$(timingStart)" && printf "%s%d %s\n" "$__profilePrefix" "$((__profileNext - __profile))" "$__profileLabel"
-    printf -- "%s%d %s (%d + %d) %s + %s %d%%\n" "$__profilePrefix" "$((__profileNext - __profile0))" '*TOTAL*' "$((__profileNext - __profile0 - __profileUsed))" "$__profileUsed" 'us' 'them' "$(((100 * __profileUsed) / (__profileNext - __profile0)))"
+    __profileNext="$(timingStart)" && printf "Line %d: %s%d %s\n" "$LINENO" "$__profilePrefix" "$((__profileNext - __profile))" "$__profileLabel"
+    printf -- "Line %d: %s%d %s (%d + %d) %s + %s %d%%\n" "$LINENO" "$__profilePrefix" "$((__profileNext - __profile0))" '*TOTAL*' "$((__profileNext - __profile0 - __profileUsed))" "$__profileUsed" 'us' 'them' "$(((100 * __profileUsed) / (__profileNext - __profile0)))"
   fi
   # ********************************************************************************************************************
 

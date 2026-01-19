@@ -43,21 +43,26 @@ __bashDocumentationSettingsFileDetails() {
 # Argument: handler - Function. Required.
 # Argument: function - String. Required.
 # Argument: sourceFile - File. Required.
+# BUILD_DEBUG: usage-cache-skip - Skip caching always
+# BUILD_DEBUG: documentation-cache - Actively update the caching - part of the build step
 __bashDocumentationExtract() {
   local __saved=("$@") __count=$#
   local handler="$1" && shift
+  local skipCache=false
 
   [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
 
   local fn source
-
   fn=$(validate "$handler" String "fn" "${1-}") && shift || return $?
   source=$(validate "$handler" File "source" "${1-}") && shift || return $?
 
   local capture=(cat)
+
+  ! buildDebugEnabled usage-cache-skip || skipCache=true
+
   export BUILD_HOME
   local definitionFile="${BUILD_HOME:-/dev/null}/bin/build/documentation/$fn.sh"
-  if buildDebugEnabled "documentation-cache"; then
+  if ! $skipCache && buildDebugEnabled "documentation-cache"; then
     local extras=()
     extras+=("#!/usr/bin/env bash" "# Copyright &copy; $(date +%Y) $(catchReturn "$handler" buildEnvironmentGet BUILD_COMPANY)") || return $?
     extras+=("# Generated on $(todayDate)")
@@ -75,16 +80,16 @@ __bashDocumentationExtract() {
     catchEnvironment "$handler" touch "$definitionFile" || return $?
     catchEnvironment "$handler" chmod +x "$definitionFile" || return $?
     capture=(tee "$definitionFile")
-
     bashRecursionDebug || return $?
     (
       __bashDocumentationExtractDirect "$handler" "$fn" "$source" "${extras[@]}" "$@" | catchEnvironment "$handler" environmentCompile --keep-comments | catchEnvironment "$handler" "${capture[@]}" || return $?
     ) || return $?
     bashRecursionDebug --end || return $?
-  elif [ -x "$definitionFile" ] && [ "$definitionFile" -nt "$source" ]; then
+  elif ! $skipCache && [ -x "$definitionFile" ] && [ "$definitionFile" -nt "$source" ]; then
     catchEnvironment "$handler" cat "$definitionFile" || return $?
     return 0
   else
+    decorate each code __bashDocumentationExtractDirect "$handler" "$fn" "$source" "$@" 1>&2
     __bashDocumentationExtractDirect "$handler" "$fn" "$source" "$@"
   fi
 

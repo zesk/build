@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-18
+# Generated on 2026-01-19
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/deprecated.sh"
 argument="--help - Flag. Optional. Display this help."$'\n'""
@@ -13,5 +13,6 @@ fn="consoleColorMode"
 foundNames=([0]="deprecated" [1]="argument" [2]="build_debug")
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 source="bin/build/tools/deprecated.sh"
+sourceModified="1768721470"
 summary="DEPRECATED, \`BUILD_COLORS_MODE\` no longer used or supported."
 usage="consoleColorMode [ --help ]"
