@@ -11,6 +11,6 @@ fn="bashGetRequires"
 foundNames=([0]="argument")
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 source="bin/build/tools/bash.sh"
-sourceModified="1768721469"
+sourceModified="1768776883"
 summary="Gets a list of the \`Requires:\` comments in a bash"
 usage="bashGetRequires script"

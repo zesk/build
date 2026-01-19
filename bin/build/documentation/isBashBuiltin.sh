@@ -11,6 +11,6 @@ fn="isBashBuiltin"
 foundNames=([0]="argument")
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 source="bin/build/tools/bash.sh"
-sourceModified="1768721469"
+sourceModified="1768776883"
 summary="Return Code: 0 - Yes, this string is a bash"
 usage="isBashBuiltin builtin"

@@ -11,7 +11,7 @@ fn="maximumLineLength"
 foundNames=([0]="stdin" [1]="stdout")
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 source="bin/build/tools/text.sh"
-sourceModified="1768759798"
+sourceModified="1768776345"
 stdin="Lines are read from standard in and line length is computed for each line"$'\n'""
 stdout="\`UnsignedInteger\`"$'\n'""
 summary="Outputs the maximum line length passed into stdin"

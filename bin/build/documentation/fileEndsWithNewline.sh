@@ -11,7 +11,7 @@ fn="fileEndsWithNewline"
 foundNames=([0]="argument" [1]="test")
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 source="bin/build/tools/text.sh"
-sourceModified="1768759798"
+sourceModified="1768776345"
 summary="Does a file end with a newline or is empty?"
 test="testFileEndsWithNewline"$'\n'""
 usage="fileEndsWithNewline file ..."

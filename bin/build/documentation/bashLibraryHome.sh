@@ -12,7 +12,7 @@ fn="bashLibraryHome"
 foundNames=([0]="summary" [1]="argument" [2]="stdout" [3]="example")
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 source="bin/build/tools/bash.sh"
-sourceModified="1768721469"
+sourceModified="1768776883"
 stdout="Parent path where \`libraryRelativePath\` exists"$'\n'""
 summary="Output the home for a library in the parent path"$'\n'""
 usage="bashLibraryHome libraryRelativePath [ startDirectory ] [ --help ]"

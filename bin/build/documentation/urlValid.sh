@@ -11,6 +11,5 @@ fn="urlValid"
 foundNames=([0]="argument")
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 source="bin/build/tools/url.sh"
-sourceModified="1768721470"
 summary="Checks if a URL is valid"
 usage="urlValid [ --help ] url ..."

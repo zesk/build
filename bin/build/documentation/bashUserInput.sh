@@ -12,6 +12,6 @@ foundNames=([0]="see" [1]="argument")
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 see="read"$'\n'""
 source="bin/build/tools/prompt.sh"
-sourceModified="1768759763"
+sourceModified="1768775409"
 summary="Prompt the user properly honoring any attached console."
 usage="bashUserInput [ --help ] [ ... ]"

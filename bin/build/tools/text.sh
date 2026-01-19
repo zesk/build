@@ -1012,7 +1012,7 @@ printfOutputPrefix() {
   local handler="_${FUNCNAME[0]}"
   [ $# -gt 0 ] || __help "$handler" --help || return 0
   local finished=false char=$'\n' line
-  IFS="" read -r line || finished=true && char=""
+  if ! IFS="" read -r line; then finished=true && char=""; fi
   [ -n "$line" ] || ! $finished || return 0
   catchReturn "$handler" printf -- "$@" || return $?
   catchReturn "$handler" printf -- "%s%s" "$line" "$char" || return $?
@@ -1033,7 +1033,7 @@ printfOutputSuffix() {
   local handler="_${FUNCNAME[0]}"
   [ $# -gt 0 ] || __help "$handler" --help || return 0
   local finished=false char=$'\n' line
-  IFS="" read -r line || finished=true && char=""
+  if ! IFS="" read -r line; then finished=true && char=""; fi
   [ -n "$line" ] || ! $finished || return 0
   catchReturn "$handler" printf -- "%s%s" "$line" "$char" || return $?
   catchReturn "$handler" cat || return $?

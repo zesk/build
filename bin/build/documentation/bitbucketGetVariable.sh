@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-17
+# Generated on 2026-01-18
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/bitbucket.sh"
 argument="varName - Name of the value to extract from \`bitbucket-pipelines.yml\`"$'\n'"defaultValue - Value if not found in pipelines"$'\n'""
@@ -10,7 +10,7 @@ example="    MARIADB_ROOT_PASSWORD=\${MARIADB_ROOT_PASSWORD:-\$(bitbucketGetVari
 file="bin/build/tools/bitbucket.sh"
 fn="bitbucketGetVariable"
 foundNames=([0]="argument" [1]="example")
-return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""$'\n'""$'\n'""
+return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 source="bin/build/tools/bitbucket.sh"
 sourceModified="1768588589"
 summary="Fetch a value from the pipelines YAML file"

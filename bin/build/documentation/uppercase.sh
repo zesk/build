@@ -12,7 +12,7 @@ foundNames=([0]="argument" [1]="stdout" [2]="requires")
 requires="tr"$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 source="bin/build/tools/text.sh"
-sourceModified="1768759798"
+sourceModified="1768776345"
 stdout="\`String\`. The uppercase version of the \`text\`."$'\n'""
 summary="Convert text to uppercase"
 usage="uppercase [ -- ] [ --help ] text"

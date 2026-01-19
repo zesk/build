@@ -115,8 +115,7 @@ daemontoolsInstallService() {
     shift
   done
 
-  local here
-  here="$(catchReturn "$handler" buildHome)/bin/build/tools" || return $?
+  local templateHome && templateHome="$(catchReturn "$handler" buildHome)/bin/build/identical" || return $?
 
   catchReturn "$handler" buildEnvironmentLoad DAEMONTOOLS_HOME || return $?
 
@@ -141,10 +140,10 @@ daemontoolsInstallService() {
   [ "${#arguments[@]}" -eq 0 ] || args=" $(decorate each quote "${arguments[@]}")"
   ! $debugFlag || printf -- "- %s\n" "ARGUMENTS" "${#arguments[@]}" "${arguments[@]+"${arguments[@]}"}" 1>&2
   ! $debugFlag || printf -- "- %s %s\n" "args" "$args" 1>&2
-  ARGUMENTS="$args" LOG_HOME="$logHome" APPLICATION_USER="$appUser" BINARY="$binaryPath" _daemontoolsInstallServiceRun "$handler" "$here/daemontools/_service.sh" "$target" "${extras[@]+"${extras[@]}"}" || return $?
+  ARGUMENTS="$args" LOG_HOME="$logHome" APPLICATION_USER="$appUser" BINARY="$binaryPath" _daemontoolsInstallServiceRun "$handler" "$templateHome/daemontools-service.sh" "$target" "${extras[@]+"${extras[@]}"}" || return $?
   if [ -d "$logHome" ]; then
     [ "${#logArguments[@]}" -eq 0 ] || logArgs=" $(decorate each quote "${logArguments[@]}")"
-    ARGUMENTS="$logArgs" LOG_HOME="$logHome" APPLICATION_USER="$appUser" BINARY="$binaryPath" _daemontoolsInstallServiceRun "$handler" "$here/daemontools/_log.sh" "$logTarget" "${extras[@]+"${extras[@]}"}" || return $?
+    ARGUMENTS="$logArgs" LOG_HOME="$logHome" APPLICATION_USER="$appUser" BINARY="$binaryPath" _daemontoolsInstallServiceRun "$handler" "$templateHome/daemontools-log.sh" "$logTarget" "${extras[@]+"${extras[@]}"}" || return $?
   fi
 
   _daemontoolsSuperviseWait "$handler" "$target" || return $?

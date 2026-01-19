@@ -11,6 +11,6 @@ fn="fileMatches"
 foundNames=([0]="argument")
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 source="bin/build/tools/file.sh"
-sourceModified="1768758898"
+sourceModified="1768775696"
 summary="Find one or more patterns in a list of files,"
 usage="fileMatches [ --help ] pattern ... -- [ exception ... ] -- file ..."

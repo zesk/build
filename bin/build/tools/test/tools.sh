@@ -29,8 +29,8 @@ export globalTestFailure=
 # Environment: - `BUILD_DEBUG` - Many settings to debug different systems, comma-delimited.
 # Filters (`--tag` and `--skip-tag`) are applied in order after the function pattern or suite filter.
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
-# Argument: --clean - Optional. Delete test artifact files and exit. (No tests run)
+# Argument: --help - Flag. Optional. Display this help.
+# Argument: --clean - Flag. Optional. Delete test artifact files and exit. (No tests run)
 # Argument: --list - Flag. Optional. List all test names (which match if applicable).
 # Argument: --env-file environmentFile - EnvironmentFile. Optional. Load one ore more environment files prior to running tests
 # Argument: --continue - Flag. Optional. Continue from last successful test.

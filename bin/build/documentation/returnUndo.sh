@@ -13,6 +13,6 @@ foundNames=([0]="argument" [1]="example" [2]="requires")
 requires="isUnsignedInteger throwArgument decorate execute"$'\n'"usageDocument"$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 source="bin/build/tools/sugar.sh"
-sourceModified="1768721469"
+sourceModified="1768769473"
 summary="Run a function and preserve exit code"
 usage="returnUndo [ --help ] code [ undoFunction ] [ -- ]"

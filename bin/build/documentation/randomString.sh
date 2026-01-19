@@ -14,7 +14,7 @@ foundNames=([0]="depends" [1]="example" [2]="output" [3]="stdout")
 output="cf7861b50054e8c680a9552917b43ec2b9edae2b"$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 source="bin/build/tools/text.sh"
-sourceModified="1768759798"
+sourceModified="1768776345"
 stdout="\`String\`. A random hexadecimal string."$'\n'""
 summary="Outputs 40 random hexadecimal characters, lowercase."
 usage="randomString"

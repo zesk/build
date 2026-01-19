@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-17
+# Generated on 2026-01-18
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/tar.sh"
 argument="target - The tar.gz file to create"$'\n'"files - A list of files to include in the tar file"$'\n'""
@@ -9,7 +9,7 @@ description="Platform agnostic tar cfz which ignores owner and attributes"$'\n'"
 file="bin/build/tools/tar.sh"
 fn="tarCreate"
 foundNames=([0]="argument")
-return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""$'\n'""$'\n'""
+return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 source="bin/build/tools/tar.sh"
 sourceModified="1768513812"
 summary="Platform agnostic tar cfz which ignores owner and attributes"

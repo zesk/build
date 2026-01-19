@@ -11,7 +11,6 @@ fn="websiteScrape"
 foundNames=([0]="argument" [1]="untested")
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 source="bin/build/tools/web.sh"
-sourceModified="1768721470"
 summary="Scrape a website."
 untested="true"$'\n'""
 usage="websiteScrape [ --help ] url"

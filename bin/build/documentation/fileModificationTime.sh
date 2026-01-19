@@ -12,6 +12,6 @@ fn="fileModificationTime"
 foundNames=([0]="argument" [1]="example")
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 source="bin/build/tools/file.sh"
-sourceModified="1768758898"
+sourceModified="1768775696"
 summary="Fetch the modification time of a file as a timestamp"
 usage="fileModificationTime [ filename ... ]"

@@ -2,7 +2,7 @@
 # Copyright &copy; 2026 Market Acumen, Inc.
 # Generated on 2026-01-18
 # shellcheck disable=SC2034
-# Hey
+    # Hey
 applicationFile="bin/build/tools/lint.sh"
 argument="--help - Flag. Optional. Display this help."$'\n'"--fix - Flag. Optional. Fix files when possible."$'\n'"script - File. Optional. Shell script to validate"$'\n'"verbose - Flag. Optional. Be verbose."$'\n'"script - File. Optional. Shell script to validate"$'\n'""
 base="lint.sh"

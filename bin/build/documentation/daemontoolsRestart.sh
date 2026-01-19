@@ -11,6 +11,6 @@ fn="daemontoolsRestart"
 foundNames=()
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 source="bin/build/tools/daemontools.sh"
-sourceModified="1768759217"
+sourceModified="1768769644"
 summary="Restart the daemontools processes from scratch."
 usage="daemontoolsRestart"

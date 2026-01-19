@@ -12,6 +12,6 @@ foundNames=([0]="summary" [1]="argument" [2]="security")
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 security="Loads bash files"$'\n'""
 source="bin/build/tools/bash.sh"
-sourceModified="1768721469"
+sourceModified="1768776883"
 summary="Load a directory of bash scripts"$'\n'""
 usage="bashSourcePath [ --exclude pattern ] directory ... [ --help ]"

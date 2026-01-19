@@ -11,6 +11,5 @@ fn="phpComposerSetVersion"
 foundNames=([0]="argument")
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 source="bin/build/tools/php-composer.sh"
-sourceModified="1768721470"
 summary="For any project, ensures the \`version\` field in \`composer.json\` matches"
 usage="phpComposerSetVersion [ --version ] [ --home ] [ --status ] [ --quiet ]"

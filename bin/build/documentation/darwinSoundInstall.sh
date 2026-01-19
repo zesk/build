@@ -11,6 +11,5 @@ fn="darwinSoundInstall"
 foundNames=([0]="argument")
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 source="bin/build/tools/darwin.sh"
-sourceModified="1768721470"
 summary="Install a sound file for notifications"
 usage="darwinSoundInstall [ --help ] soundFile ... [ --create ]"

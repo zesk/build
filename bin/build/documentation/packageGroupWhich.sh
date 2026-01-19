@@ -11,6 +11,5 @@ fn="packageGroupWhich"
 foundNames=([0]="argument")
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 source="bin/build/tools/package.sh"
-sourceModified="1768721470"
 summary="Install a package group to have a binary installed"
 usage="packageGroupWhich binary group"

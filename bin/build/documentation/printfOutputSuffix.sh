@@ -11,7 +11,7 @@ fn="printfOutputSuffix"
 foundNames=([0]="argument" [1]="stdin" [2]="stdout")
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 source="bin/build/tools/text.sh"
-sourceModified="1768759798"
+sourceModified="1768776345"
 stdin="text (Optional)"$'\n'""
 stdout="stdin text and then printf output IFF stdin text is non-blank"$'\n'""
 summary="Pipe to output some text after any output, otherwise, nothing"

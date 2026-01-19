@@ -5,7 +5,6 @@
 applicationFile="bin/build/tools.sh"
 argument="value - EmptyString. Value to test if it is an unsigned integer."$'\n'""
 base="tools.sh"
-credits="F. Hauri - Give Up GitHub (isnum_Case)"$'\n'""
 description="Test if a value is a 0 or greater integer. Leading \"+\" is ok."$'\n'"Return Code: 0 - if it is an unsigned integer"$'\n'"Return Code: 1 - if it is not an unsigned integer"$'\n'""
 file="bin/build/tools.sh"
 fn="isUnsignedInteger"

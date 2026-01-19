@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-17
+# Generated on 2026-01-18
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/ssh.sh"
 argument="--force - Flag. Optional. Force the program to create a new key if one exists"$'\n'"server - String. Required. Servers to connect to to set up authorization"$'\n'""
@@ -10,7 +10,7 @@ file="bin/build/tools/ssh.sh"
 fn="sshSetup"
 foundNames=([0]="argument" [1]="requires")
 requires="userRecordHome catchEnvironment throwEnvironment"$'\n'""
-return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""$'\n'""$'\n'""
+return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 source="bin/build/tools/ssh.sh"
 sourceModified="1768513812"
 summary="Set up SSH for a user with ID and backup"

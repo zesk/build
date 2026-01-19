@@ -11,6 +11,5 @@ fn="sysvInitScriptInstall"
 foundNames=([0]="argument")
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 source="bin/build/tools/sysvinit.sh"
-sourceModified="1768721470"
 summary="Install a script to run upon initialization."
 usage="sysvInitScriptInstall binary [ --help ]"

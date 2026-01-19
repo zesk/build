@@ -5,7 +5,6 @@
 applicationFile="bin/build/tools/environment.sh"
 argument="--help - Flag. Optional. Display this help."$'\n'"requiredEnvironment ... - EnvironmentName. Optional. One or more environment variables which should be non-blank and included in the \`.env\` file."$'\n'"-- - Divider. Optional. Divides the requiredEnvironment values from the optionalEnvironment"$'\n'"optionalEnvironment ... - EnvironmentName. Optional. One or more environment variables which are included if blank or not"$'\n'""
 base="environment.sh"
-BASH_LINENO=([0]="129" [1]="963" [2]="226" [3]="237" [4]="82" [5]="65" [6]="75" [7]="22" [8]="54" [9]="129" [10]="115" [11]="65" [12]="75" [13]="16" [14]="37" [15]="773" [16]="51" [17]="129" [18]="37" [19]="226" [20]="237" [21]="358" [22]="173" [23]="123" [24]="150" [25]="154" [26]="0")
 description="Check application environment is populated correctly."$'\n'"Also verifies that \`environmentApplicationVariables\` and \`environmentApplicationLoad\` are defined."$'\n'""
 file="bin/build/tools/environment.sh"
 fn="environmentFileApplicationVerify"

@@ -11,6 +11,5 @@ fn="urlMatchesLocalFileSize"
 foundNames=([0]="argument")
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 source="bin/build/tools/web.sh"
-sourceModified="1768721470"
 summary="Compare a remote file size with a local file size"
 usage="urlMatchesLocalFileSize [ --help ] url file"

@@ -155,26 +155,38 @@ _bashPromptMarkers() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-#
 # Color schemes for prompts
 # Options are:
 # - forest
 # - light (default)
 # - dark
+# Argument: colorScheme - String. Optional. Color scheme to choose: `light`, `dark`, `forest`
+# DOC TEMPLATE: --help 1
+# Argument: --help - Flag. Optional. Display this help.
 bashPromptColorScheme() {
-  local colors exitColor
-  exitColor="green:red"
-  case "${1-}" in
-  --help)
-    usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]}" 0
-    return $?
-    ;;
-  forest) colors="BOLD cyan:BOLD magenta:green:orange:code" ;;
-  light) colors="$exitColor:magenta:blue:BOLD black" ;;
-  dark) colors="$exitColor:magenta:blue:BOLD white" ;;
-  *) colors="$exitColor:magenta:blue:BOLD black" ;;
-  esac
+  local handler="_${FUNCNAME[0]}"
+
+  local colors="" exitColor="green:red"
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
+  local __saved=("$@") __count=$#
+  while [ $# -gt 0 ]; do
+    local argument="$1" __index=$((__count - $# + 1))
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    case "$argument" in
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
+    forest) colors="BOLD cyan:BOLD magenta:green:orange:code" && break ;;
+    dark) colors="$exitColor:magenta:blue:BOLD white" && break ;;
+    *) colors="$exitColor:magenta:blue:BOLD black" && break ;;
+    esac
+    shift
+  done
   printf -- "%s" "$colors"
+}
+_bashPromptColorScheme() {
+  # __IDENTICAL__ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
 # Given a list of color names, generate the color codes in a colon separated list

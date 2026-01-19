@@ -1,0 +1,54 @@
+#!/usr/bin/env bash
+#
+# TODO: Converting our documentation to `mdoc`
+#
+# Copyright &copy; 2026 Market Acumen, Inc.
+
+# https://man.freebsd.org/cgi/man.cgi?query=mdoc&sektion=7
+#
+#	     .Dd $Mdocdate$
+#	     .Dt PROGNAME section
+#	     .Os
+#	     .Sh NAME
+#	     .Nm progname
+#	     .Nd one line about	what it	does
+#	     .\" .Sh LIBRARY
+#	     .\" For sections 2, 3, and	9 only.
+#	     .\" Not used in OpenBSD.
+#	     .Sh SYNOPSIS
+#	     .Nm progname
+#	     .Op Fl options
+#	     .Ar
+#	     .Sh DESCRIPTION
+#	     The
+#	     .Nm
+#	     utility processes files ...
+#	     .\" .Sh CONTEXT
+#	     .\" For section 9 functions only.
+#	     .\" .Sh HARDWARE
+#	     .\" For section 4 only.
+#	     .\" Not used in OpenBSD.
+#	     .\" .Sh IMPLEMENTATION NOTES
+#	     .\" Not used in OpenBSD.
+#	     .\" .Sh RETURN VALUES
+#	     .\" For sections 2, 3, and	9 function return values only.
+#	     .\" .Sh ENVIRONMENT
+#	     .\" For sections 1, 6, 7, and 8 only.
+#	     .\" .Sh FILES
+#	     .\" .Sh EXIT STATUS
+#	     .\" For sections 1, 6, and	8 only.
+#	     .\" .Sh EXAMPLES
+#	     .\" .Sh DIAGNOSTICS
+#	     .\" For sections 1, 4, 6, 7, 8, and 9 printf/stderr messages only.
+#	     .\" .Sh ERRORS
+#	     .\" For sections 2, 3, 4, and 9 errno settings only.
+#	     .\" .Sh SEE ALSO
+#	     .\" .Xr foobar 1
+#	     .\" .Sh STANDARDS
+#	     .\" .Sh HISTORY
+#	     .\" .Sh AUTHORS
+#	     .\" .Sh CAVEATS
+#	     .\" .Sh BUGS
+#	     .\" .Sh SECURITY CONSIDERATIONS
+#	     .\" Not used in OpenBSD.
+#

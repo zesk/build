@@ -11,6 +11,5 @@ fn="packageGroupUninstall"
 foundNames=([0]="argument")
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 source="bin/build/tools/package.sh"
-sourceModified="1768721470"
 summary="Uninstall a package group"
 usage="packageGroupUninstall group"

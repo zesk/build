@@ -11,6 +11,6 @@ fn="bashStripComments"
 foundNames=([0]="summary" [1]="argument")
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 source="bin/build/tools/bash.sh"
-sourceModified="1768721469"
+sourceModified="1768776883"
 summary="Pipe to strip comments from a bash file"$'\n'""
 usage="bashStripComments [ --help ]"

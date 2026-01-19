@@ -17,14 +17,21 @@ __buildDocumentationIsComplete() {
       missing+=("$fun")
     fi
   done <"$tempFunctions"
+  finished=false && while ! $finished; do
+    local file fun && read -r file || finished=true
+    [ -n "$file" ] || continue
+    fun="${file##*/}" && fun="${fun%.sh}"
+    if ! isFunction "$fun"; then
+      catchReturn "$handler" statusMessage --last decorate error "File $(decorate file "$file") has no matching function $(decorate code "$fun") anymore" || return $?
+    fi
+  done < <(find "$docPath" -type f -name '*.sh')
   local index=0 fun
   [ "${#missing[@]}" -eq 0 ] || for fun in "${missing[@]}"; do
     index=$((index + 1))
-    statusMessage decorate warning "Loading missing: $fun (length ${#fun})"
+    catchReturn "$handler" statusMessage decorate warning "Loading missing: $fun (length ${#fun})" || return $?
     __buildDocumentationExtractionUpdateFunction "$handler" "$docPath" "$fun" "Missing #$index/${#missing[@]}" || return $?
   done
-  statusMessage decorate info "No functions missing" || return $?
-  return 0
+  catchReturn "$handler" statusMessage decorate info "No functions missing" || return $?
 }
 
 # Extract and build the bin/build/documentation/ cache
@@ -66,33 +73,36 @@ buildDocumentationExtractionUpdate() {
     [ ! -d "$docPath" ] || catchEnvironment "$handler" find "$docPath" -type f -name '*.sh' ! -path '*/.*/*' -delete || return $?
   fi
 
+  local start && start=$(timingStart)
+
   catchReturn "$handler" muzzle directoryRequire "$docPath" || return $?
 
-  local tempFunctions totalFunctions
+  local tempFunctions actualTotalFunctions totalFunctions
 
   tempFunctions=$(fileTemporaryName "$handler") || return $?
   local clean=("$tempFunctions")
   catchReturn "$handler" buildFunctions >"$tempFunctions" || returnClean $? "${clean[@]}" || return $?
   totalFunctions=$(catchReturn "$handler" fileLineCount "$tempFunctions") || returnClean $? "${clean[@]}" || return $?
+  actualTotalFunctions=$totalFunctions
   if $quickFlag; then
     if __buildDocumentationIsComplete "$handler" "$docPath" "$tempFunctions"; then
       local allModificationTimes="$tempFunctions.all"
       clean+=("$allModificationTimes")
-
       {
-        catchReturn "$handler" fileModificationTimes "$home/bin/build/tools/" -name '*.sh' || catchReturn "$handler" fileModificationTimes "$docPath" || return $?
+        catchReturn "$handler" fileModificationTimes "$home/bin/build/tools/" -name '*.sh' || return $?
+        catchReturn "$handler" fileModificationTimes "$docPath" -name '*.sh' || return $?
       } | catchReturn "$handler" sort -rn >"$allModificationTimes" || returnClean $? "${clean[@]}" || return $?
 
-      local fileMod filePath
-      while read -r fileMod filePath; do
+      local filePath
+      while read -r filePath; do
         # If prefixed with a docPath, then skip it
         [ "${filePath#"$docPath"}" = "$filePath" ] || continue
-        : "$fileMod"
-        grep "$docPath" | removeFields 1 | cut -d . -f 1 | cut "-c${#docPath}" >"$tempFunctions"
+        grep "$docPath" | removeFields 1 | cut -d . -f 1 | cut "-c$((2 + ${#docPath}))-" >"$tempFunctions"
         break
-      done <"$allModificationTimes"
+      done < <(removeFields 1 <"$allModificationTimes")
+      catchEnvironment "$handler" rm -f "$tempFunctions.all" || return $?
       totalFunctions=$(catchReturn "$handler" fileLineCount "$tempFunctions") || returnClean $? "${clean[@]}" || return $?
-      catchReturn "$handler" statusMessage decorate info "Quick function count to compute is $totalFunctions" || return $?
+      catchReturn "$handler" statusMessage decorate info "Quick function count to check is $totalFunctions (Actual is $actualTotalFunctions)" || return $?
     else
       catchReturn "$handler" statusMessage decorate info "Total function count to compute is $totalFunctions" || return $?
     fi
@@ -105,21 +115,29 @@ buildDocumentationExtractionUpdate() {
   while ! $finished; do
     index=$((index + 1))
     local prefix="#$index/$totalFunctions -"
-    local fun helpFun
-    read -r fun || finished=true
+    local fun && read -r fun || finished=true
     [ -n "$fun" ] || continue
-    helpFun="_$fun"
-    if ! isFunction "$helpFun"; then
-      catchReturn "$handler" statusMessage decorate warning "$prefix: No help for $fun ($helpFun not defined)" || return $?
-      continue
-    fi
     __buildDocumentationExtractionUpdateFunction "$handler" "$docPath" "$fun" "$prefix" || return $?
   done <"$tempFunctions" || returnClean $? "${clean[@]}" || return $?
   catchEnvironment "$handler" rm -f "${clean[@]}" || return $?
+
+  statusMessage decorate info "Generating console cache file ..."
+  __buildDocumentationConsoleCompile "$handler" "$home" || return $?
+
+  catchReturn "$handler" statusMessage --last timingReport "$start" "$totalFunctions completed in" || return $?
 }
 _buildDocumentationExtractionUpdate() {
   # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+__buildDocumentationConsoleCompile() {
+  local handler="$1" && shift
+  local home="$1" && shift
+  local consoleFile="$home/etc/console.help.txt"
+  local consolePath && consolePath="$(catchReturn "$handler" buildCacheDirectory ".console")" || return $?
+  catchEnvironment "$handler" printf -- "%s\n" "# Generated on $(date) by ${BASH_SOURCE[0]#"$home"}" "#" >"$consoleFile" || return $?
+  find "$consolePath" -type f -print | sort | xargs cat >>"$consoleFile" || return $?
 }
 
 # Extract and build the bin/build/documentation/ cache
@@ -133,27 +151,41 @@ __buildDocumentationExtractionUpdateFunction() {
   local handler="$1" && shift
   local docPath="$1" && shift
 
-  local fun
-  fun=$(validate "$handler" Function "function" "${1-}") && shift || return $?
-  local prefix="$*" && set --
-  [ -z "$prefix" ] || prefix="${prefix% } "
+  local consolePath && consolePath="$(catchReturn "$handler" buildCacheDirectory ".console")" || return $?
+  local fun && fun=$(validate "$handler" Function "function" "${1-}") && shift || return $?
+  local prefix="$*" && set -- && [ -z "$prefix" ] || prefix="${prefix% } "
+  local prettyFun && prettyFun=$(catchReturn "$handler" decorate code "$fun") || return $?
   local helpFun="_$fun"
-  local prettyFun
-  prettyFun=$(catchReturn "$handler" decorate code "$fun") || return $?
-  if ! isFunction "$helpFun"; then
-    catchReturn "$handler" statusMessage decorate warning "${prefix}No help for $prettyFun ($(decorate error "$helpFun") not defined)" || return $?
-    return 0
-  fi
-  BUILD_DEBUG="documentation-cache" statusMessage timing --name "${prefix}$prettyFun" muzzle "$helpFun" 0 || returnClean $? "${clean[@]}" || return $?
-  [ ! -f "$docPath/$fun.sh" ] || return 0
 
-  # Probably uses usageDocumentSimple, generate manually
+  if isFunction "$helpFun"; then
+    # Faster than bashDocumentationExtract as we do not have to look up the function (help function knows where it is)
+    BUILD_DEBUG="usage-profile,documentation-cache" "$helpFun" 0 | printfOutputPrefix "%s\n" ":$fun" | printfOutputSuffix "%s\n" ":END $fun()" >"$consolePath/$fun" || returnClean $? "${clean[@]}" || return $?
+    if [ -f "$docPath/$fun.sh" ]; then
+      dumpPipe "Help for $fun" <"$consolePath/$fun"
+      dumpPipe "Settings for $fun" <"$docPath/$fun.sh"
+      catchEnvironment "$handler" touch "$docPath/$fun.sh" || return $?
+      return 0
+    fi
+    catchEnvironment "$handler" rm -f "$consolePath/$fun" || return $?
+  else
+    catchReturn "$handler" statusMessage decorate warning "${prefix}No help for $prettyFun ($(decorate error "$helpFun") not defined)" || return $?
+  fi
+
+  # No file generated afterwards - help probably uses usageDocumentSimple, generate manually now
   catchReturn "$handler" statusMessage decorate warning "${prefix}Help for $prettyFun uses alternate generator - lookup" || return $?
+  # Look up the source file
   sourceFile=$(__bashDocumentation_FindFunctionDefinitions "$(buildHome)/bin/build/tools" "$fun") || return $?
   if [ -f "$sourceFile" ]; then
-    BUILD_DEBUG="documentation-cache" muzzle bashDocumentationExtract "$fun" "$sourceFile" < <(bashFunctionComment "$source" "$fun") || return $?
+    local tempComment="$docPath/tempComment.$$"
+    catchReturn "$handler" bashFunctionComment "$sourceFile" "$fun" >"$tempComment" || returnClean $? "$tempComment" || return $?
+    BUILD_DEBUG="documentation-cache" muzzle bashDocumentationExtract "$fun" "$sourceFile" <"$tempComment" || returnClean $? "$tempComment" || return $?
+    catchEnvironment "$handler" rm -f "$tempComment" || return $?
     if [ ! -f "$docPath/$fun.sh" ]; then
       throwEnvironment "$handler" "${prefix}: bashDocumentationExtract $fun $sourceFile did not generate $docPath/$fun.sh" || return $?
+    else
+      BUILD_DEBUG="" BUILD_COLORS=true catchEnvironment "$handler" usageDocument "$sourceFile" "$fun" 0 >"$consolePath/$fun" || returnClean $? "$consolePath/$fun" || return $?
+      dumpPipe "Help for $fun" <"$consolePath/$fun"
+      catchEnvironment "$handler" touch "$docPath/$fun.sh" || return $?
     fi
   else
     throwEnvironment "$handler" "${prefix}: No source found for $prettyFun" || return $?

@@ -11,7 +11,6 @@ fn="urlOpen"
 foundNames=([0]="argument" [1]="stdin" [2]="stdout")
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 source="bin/build/tools/url.sh"
-sourceModified="1768721470"
 stdin="line:URL"$'\n'""
 stdout="none"$'\n'""
 summary="Open a URL using the operating system"

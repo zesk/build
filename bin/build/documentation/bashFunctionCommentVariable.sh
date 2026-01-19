@@ -11,6 +11,6 @@ fn="bashFunctionCommentVariable"
 foundNames=([0]="argument")
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 source="bin/build/tools/bash.sh"
-sourceModified="1768721469"
+sourceModified="1768776883"
 summary="Gets a list of the variable values from a bash"
 usage="bashFunctionCommentVariable source functionName variableName [ --prefix ] [ --help ]"

@@ -13,6 +13,5 @@ fn="composer.sh"
 foundNames=([0]="summary" [1]="fn" [2]="argument" [3]="example" [4]="environment")
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 source="bin/build/tools/php-composer.sh"
-sourceModified="1768721470"
 summary="Run Composer commands on code"$'\n'""
 usage="composer.sh installDirectory [ --help ]"

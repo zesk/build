@@ -12,6 +12,5 @@ foundNames=([0]="argument" [1]="platform")
 platform="Darwin"$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 source="bin/build/tools/darwin.sh"
-sourceModified="1768721470"
 summary="Display a dialog using \`osascript\` with the choices provided. Typically"
 usage="darwinDialog [ --choice choiceText ] [ --ok ] [ --cancel ] --default buttonIndex [ --help ] message ..."

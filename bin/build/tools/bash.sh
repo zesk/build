@@ -65,7 +65,7 @@ _bashGetRequires() {
 # DOC TEMPLATE: --help 1
 # Argument: --help - Flag. Optional. Display this help.
 # Argument: --ignore prefix. String. Optional. Ignore exact function names.
-# Argument: --ignore-prefix prefix. String. Optional. Ignore function names which match the prefix and do not check them.
+# Argument: --ignore-prefix prefix - String. Optional. Ignore function names which match the prefix and do not check them.
 # Argument: --report - Flag. Optional. Output a report of various functions and handler after processing is complete.
 # Argument: --require - Flag. Optional. Requires at least one or more requirements to be listed and met to pass
 # Argument: --unused - Flag. Optional. Check for unused functions and report on them.

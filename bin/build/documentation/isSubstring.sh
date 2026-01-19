@@ -11,7 +11,7 @@ fn="isSubstring"
 foundNames=([0]="argument" [1]="tested")
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 source="bin/build/tools/text.sh"
-sourceModified="1768759798"
+sourceModified="1768776345"
 summary="Check if one string is a substring of another set"
 tested="No"$'\n'""
 usage="isSubstring needle [ haystack ... ]"

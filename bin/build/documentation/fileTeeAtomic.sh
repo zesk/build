@@ -11,7 +11,7 @@ fn="fileTeeAtomic"
 foundNames=([0]="argument" [1]="stdin" [2]="stdout")
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 source="bin/build/tools/file.sh"
-sourceModified="1768758898"
+sourceModified="1768775696"
 stdin="Piped to a temporary file until EOF and then moved to target"$'\n'""
 stdout="A copy of stdin"$'\n'""
 summary="Write to a file in a single operation to avoid"

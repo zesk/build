@@ -57,8 +57,8 @@ __bashDocumentationExtract() {
   local capture=(cat)
   export BUILD_HOME
   local definitionFile="${BUILD_HOME:-/dev/null}/bin/build/documentation/$fn.sh"
-  local extras=()
   if buildDebugEnabled "documentation-cache"; then
+    local extras=()
     extras+=("#!/usr/bin/env bash" "# Copyright &copy; $(date +%Y) $(catchReturn "$handler" buildEnvironmentGet BUILD_COMPANY)") || return $?
     extras+=("# Generated on $(todayDate)")
     local currentModified && currentModified=$(catchReturn "$handler" fileModificationTime "$source") || return $?
@@ -75,15 +75,17 @@ __bashDocumentationExtract() {
     catchEnvironment "$handler" touch "$definitionFile" || return $?
     catchEnvironment "$handler" chmod +x "$definitionFile" || return $?
     capture=(tee "$definitionFile")
+
+    bashRecursionDebug || return $?
+    __bashDocumentationExtractDirect "$handler" "$fn" "$source" "${extras[@]}" "$@" | catchEnvironment "$handler" environmentCompile --keep-comments | catchEnvironment "$handler" "${capture[@]}" || return $?
+    bashRecursionDebug --end || return $?
   elif [ -x "$definitionFile" ] && [ "$definitionFile" -nt "$source" ]; then
     catchEnvironment "$handler" cat "$definitionFile" || return $?
     return 0
+  else
+    __bashDocumentationExtractDirect "$handler" "$fn" "$source" "$@"
   fi
-  bashRecursionDebug || return $?
 
-  __bashDocumentationExtractDirect "$handler" "$fn" "$source" "${extras[@]}" "$@" | catchEnvironment "$handler" environmentCompile --keep-comments | catchEnvironment "$handler" "${capture[@]}" || return $?
-
-  bashRecursionDebug --end || return $?
 }
 
 # Argument: handler - Function. Required.

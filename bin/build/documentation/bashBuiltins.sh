@@ -11,7 +11,7 @@ fn="bashBuiltins"
 foundNames=([0]="stdout")
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 source="bin/build/tools/bash.sh"
-sourceModified="1768721469"
+sourceModified="1768776883"
 stdout="line:function"$'\n'""
 summary="List bash buildin functions, one per line"
 usage="bashBuiltins"

@@ -12,6 +12,6 @@ foundNames=([0]="argument" [1]="requires")
 requires="head bashFinalComment"$'\n'"__help usageDocument"$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 source="bin/build/tools/bash.sh"
-sourceModified="1768721469"
+sourceModified="1768776883"
 summary="Extract a bash comment from a file. Excludes lines containing"
 usage="bashFileComment source lineNumber [ --help ]"

@@ -11,7 +11,6 @@ fn="urlOpener"
 foundNames=([0]="argument" [1]="stdin" [2]="stdout")
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 source="bin/build/tools/url.sh"
-sourceModified="1768721470"
 stdin="text"$'\n'""
 stdout="text"$'\n'""
 summary="Open URLs which appear in a stream"

@@ -367,12 +367,12 @@ All functions in Zesk Build, alphabetically.
 - {SEE:insideDocker}
 - {SEE:installInstallBinary}
 - {SEE:installInstallBuild}
-- {SEE:interactiveBashSource}
+- {SEE:approveBashSource}
 - {SEE:interactiveCountdown}
 - {SEE:interactiveManager}
 - {SEE:interactiveOccasionally}
 - {SEE:ipLookup}
-- {SEE:isAbsolutePath}
+- {SEE:pathIsAbsolute}
 - {SEE:isAlpine}
 - {SEE:isArray}
 - {SEE:isBashBuiltin}
@@ -463,7 +463,7 @@ All functions in Zesk Build, alphabetically.
 - {SEE:networkIPList}
 - {SEE:networkMACAddressList}
 - {SEE:newlineHide}
-- {SEE:newRelease}
+- {SEE:releaseNew}
 - {SEE:nodeInstall}
 - {SEE:nodePackageManager}
 - {SEE:nodePackageManagerInstall}

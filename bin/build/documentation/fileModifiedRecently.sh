@@ -11,6 +11,6 @@ fn="fileModifiedRecently"
 foundNames=([0]="argument")
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 source="bin/build/tools/file.sh"
-sourceModified="1768758898"
+sourceModified="1768775696"
 summary="List the most recently modified file in a directory prefixed"
 usage="fileModifiedRecently directory [ findArgs ]"

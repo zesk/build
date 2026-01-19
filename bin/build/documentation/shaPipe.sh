@@ -15,7 +15,7 @@ foundNames=([0]="argument" [1]="depends" [2]="summary" [3]="example" [4]="output
 output="cf7861b50054e8c680a9552917b43ec2b9edae2b"$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 source="bin/build/tools/text.sh"
-sourceModified="1768759798"
+sourceModified="1768776345"
 stdin="any file"$'\n'""
 stdout="\`String\`. A hexadecimal string which uniquely represents the data in \`stdin\`."$'\n'""
 summary="SHA1 checksum of standard input"$'\n'""

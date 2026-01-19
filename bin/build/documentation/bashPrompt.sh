@@ -17,6 +17,6 @@ fn="bashPrompt"
 foundNames=([0]="argument" [1]="example" [2]="environment" [3]="build_debug")
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 source="bin/build/tools/prompt.sh"
-sourceModified="1768759763"
+sourceModified="1768775409"
 summary="Bash prompt creates the \`PS1\` prompt with the following extra"
 usage="bashPrompt [ module ] [ --remove module ] [ --reset ] [ --list ] [ --first ] [ --last ] [ --order order ] [ --format promptFormat ] [ --success successText ] [ --failure failureText ] [ --label promptLabel ] [ --colors colorsText ] [ --skip-prompt ] [ --help ]"

@@ -13,6 +13,5 @@ fn="packageWhichUninstall"
 foundNames=([0]="summary" [1]="example" [2]="argument" [3]="environment")
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 source="bin/build/tools/package.sh"
-sourceModified="1768721470"
 summary="Install tools using \`apt-get\` if they are not found"$'\n'""
 usage="packageWhichUninstall [ --manager packageManager ] binary packageInstallPackage"

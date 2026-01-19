@@ -11,6 +11,6 @@ fn="bashPromptMarkers"
 foundNames=([0]="argument")
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 source="bin/build/tools/prompt.sh"
-sourceModified="1768759763"
+sourceModified="1768775409"
 summary="Set markers for terminal integration"
 usage="bashPromptMarkers [ --help ] [ prefix ] [ suffix ]"

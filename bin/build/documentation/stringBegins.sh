@@ -11,6 +11,6 @@ fn="stringBegins"
 foundNames=([0]="argument" [1]="summary")
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 source="bin/build/tools/text.sh"
-sourceModified="1768759798"
+sourceModified="1768776345"
 summary="Find whether a substring exists as teh beginning of one or more strings"$'\n'""
 usage="stringBegins haystack [ needle ... ]"

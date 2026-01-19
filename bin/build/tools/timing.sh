@@ -145,15 +145,8 @@ timingReport() {
     --help) "$handler" 0 && return $? || return $? ;;
     # _IDENTICAL_ handlerHandler 1
     --handler) shift && handler=$(validate "$handler" Function "$argument" "${1-}") || return $? ;;
-    --color)
-      shift
-      color=$(validate "$handler" String "$argument" "${1-}") || return $?
-      ;;
-    *)
-      start="$argument"
-      shift
-      break
-      ;;
+    --color) shift && color=$(validate "$handler" String "$argument" "${1-}") || return $? ;;
+    *) start="$argument" && shift && break ;;
     esac
     shift
   done

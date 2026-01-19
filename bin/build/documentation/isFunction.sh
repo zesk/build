@@ -12,6 +12,5 @@ foundNames=([0]="argument" [1]="requires")
 requires="catchArgument isUnsignedInteger usageDocument type"$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 source="bin/build/tools/type.sh"
-sourceModified="1768721470"
 summary="Test if argument are bash functions"
 usage="isFunction string"

@@ -12,6 +12,5 @@ fn="urlParse"
 foundNames=([0]="summary" [1]="argument" [2]="example")
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 source="bin/build/tools/url.sh"
-sourceModified="1768721470"
 summary="Simple URL Parsing"$'\n'""
 usage="urlParse [ --help ] [ url ] [ --prefix prefix ] [ --uppercase ]"

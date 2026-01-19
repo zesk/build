@@ -11,6 +11,5 @@ fn="isArray"
 foundNames=([0]="argument")
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 source="bin/build/tools/type.sh"
-sourceModified="1768721470"
 summary="Is a variable declared as an array?"
 usage="isArray variableName [ --help ]"

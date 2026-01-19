@@ -13,6 +13,5 @@ foundNames=([0]="argument" [1]="requires" [2]="environment")
 requires="returnMessage whichExists decorate"$'\n'"validate"$'\n'"throwArgument catchArgument"$'\n'"throwEnvironment catchEnvironment"$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 source="bin/build/tools/url.sh"
-sourceModified="1768721470"
 summary="Fetch URL content"
 usage="urlFetch [ --help ] [ --header header ] [ --wget ] [ --redirect-max maxRedirections ] [ --curl ] [ --binary binaryName ] [ --argument-format format ] [ --user userName ] [ --password password ] [ --agent userAgent ] [ --timeout timeoutSeconds ] url [ file ]"

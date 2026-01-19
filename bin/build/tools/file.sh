@@ -832,11 +832,11 @@ fileTeeAtomic() {
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
     -a) tt+=("$argument") && copy=true ;;
-    *) target="$(validate "$handler" FileDirectory "target" "${1-}")" && break || return $? ;;
+    *) target="$(validate "$handler" FileDirectory "target" "$argument")" && break || return $? ;;
     esac
     shift
   done
-  [ $# -eq 0 ] || throwArgument "$handler" "Unknown arguments: $# $*" || return $?
+  [ ${#tt[@]} -eq 0 ] || throwArgument "$handler" "No file arguments: $__count ${__saved[*]}" || return $?
 
   local clean=("$target.$$")
   ! $copy || [ ! -f "$target" ] || catchEnvironment "$handler" cp -f "$target" "$target.$$" || return $?

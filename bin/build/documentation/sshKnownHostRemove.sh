@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-17
+# Generated on 2026-01-18
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/ssh.sh"
 argument="hostName ... - String. Optional. One ore more hosts to add to the known hosts file"$'\n'"--skip-backup | --no-backup - Flag. Optional. Skip the file backup as \`name.\$(todayDate)\`"$'\n'"--verbose - Flag. Optional. Be verbose."$'\n'""
@@ -9,7 +9,7 @@ description="Adds the host to the \`~/.known_hosts\` if it is not found in it al
 file="bin/build/tools/ssh.sh"
 fn="sshKnownHostRemove"
 foundNames=([0]="argument")
-return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""$'\n'""$'\n'""
+return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 source="bin/build/tools/ssh.sh"
 sourceModified="1768513812"
 summary="Adds the host to the \`~/.known_hosts\` if it is not"

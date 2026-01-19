@@ -12,6 +12,6 @@ fn="filesRename"
 foundNames=([0]="summary" [1]="argument" [2]="example")
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 source="bin/build/tools/file.sh"
-sourceModified="1768758898"
+sourceModified="1768775696"
 summary="Rename a list of files usually to back them up temporarily"$'\n'""
 usage="filesRename oldSuffix newSuffix actionVerb file ..."

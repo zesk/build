@@ -90,15 +90,6 @@ _mapReturn() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# _IDENTICAL_ execute 7
-
-# Argument: binary ... - Executable. Required. Any arguments are passed to `binary`.
-# Run binary and output failed command upon error
-# Requires: returnMessage
-execute() {
-  "$@" || returnMessage "$?" "$@" || return $?
-}
-
 # IDENTICAL returnUndo 42
 
 # Run a function and preserve exit code

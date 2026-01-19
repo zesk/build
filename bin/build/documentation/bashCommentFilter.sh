@@ -11,7 +11,7 @@ fn="bashCommentFilter"
 foundNames=([0]="argument" [1]="stdin" [2]="stdout")
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 source="bin/build/tools/bash.sh"
-sourceModified="1768721469"
+sourceModified="1768776883"
 stdin="a bash file"$'\n'""
 stdout="bash file without line-comments \`#\`"$'\n'""
 summary="Filter comments from a bash stream"

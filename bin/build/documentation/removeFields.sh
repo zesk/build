@@ -11,7 +11,7 @@ fn="removeFields"
 foundNames=([0]="argument" [1]="stdin" [2]="stdout")
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 source="bin/build/tools/text.sh"
-sourceModified="1768759798"
+sourceModified="1768776345"
 stdin="A file with fields separated by spaces"$'\n'""
 stdout="The same file with the first \`fieldCount\` fields removed from each line."$'\n'""
 summary="Remove fields from left to right from a text file"

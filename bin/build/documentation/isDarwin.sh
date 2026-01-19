@@ -11,6 +11,5 @@ fn="isDarwin"
 foundNames=()
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 source="bin/build/tools/darwin.sh"
-sourceModified="1768721470"
 summary="Are we on Mac OS X?"
 usage="isDarwin"
