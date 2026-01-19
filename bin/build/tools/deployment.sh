@@ -683,7 +683,7 @@ deployToRemote() {
         decorate info "DEBUG: Commands file is:"
         decorate code <"$temporaryCommandsFile"
       fi
-      if ! ssh "$(__deploySSHOptions)" -T "$userHost" bash --noprofile -s -e <"$temporaryCommandsFile" | decorate bold-bold | decorate wrap "$(decorate orange "$userHost"): "; then
+      if ! ssh "$(__deploySSHOptions)" -T "$userHost" bash --noprofile -s -e <"$temporaryCommandsFile" | decorate cyan | decorate wrap "$(decorate orange "$userHost"): "; then
         throwEnvironment "$handler" "Unable to deploy to $host" || return $?
       fi
       decorate info "::: END $host output"

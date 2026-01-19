@@ -161,8 +161,10 @@ __buildDocumentationExtractionUpdateFunction() {
     # Faster than bashDocumentationExtract as we do not have to look up the function (help function knows where it is)
     BUILD_DEBUG="usage-profile,documentation-cache" "$helpFun" 0 | printfOutputPrefix "%s\n" ":$fun" | printfOutputSuffix "%s\n" ":END $fun()" >"$consolePath/$fun" || returnClean $? "${clean[@]}" || return $?
     if [ -f "$docPath/$fun.sh" ]; then
-      dumpPipe "Help for $fun" <"$consolePath/$fun"
-      dumpPipe "Settings for $fun" <"$docPath/$fun.sh"
+      if buildDebugEnabled "usage-cache"; then
+        dumpPipe "Help for $fun" <"$consolePath/$fun"
+        dumpPipe "Settings for $fun" <"$docPath/$fun.sh"
+      fi
       catchEnvironment "$handler" touch "$docPath/$fun.sh" || return $?
       return 0
     fi
@@ -184,8 +186,11 @@ __buildDocumentationExtractionUpdateFunction() {
       throwEnvironment "$handler" "${prefix}: bashDocumentationExtract $fun $sourceFile did not generate $docPath/$fun.sh" || return $?
     else
       BUILD_DEBUG="" BUILD_COLORS=true catchEnvironment "$handler" usageDocument "$sourceFile" "$fun" 0 >"$consolePath/$fun" || returnClean $? "$consolePath/$fun" || return $?
-      dumpPipe "Help for $fun" <"$consolePath/$fun"
       catchEnvironment "$handler" touch "$docPath/$fun.sh" || return $?
+      if buildDebugEnabled "usage-cache"; then
+        dumpPipe "Help for $fun" <"$consolePath/$fun"
+        dumpPipe "Settings for $fun" <"$docPath/$fun.sh"
+      fi
     fi
   else
     throwEnvironment "$handler" "${prefix}: No source found for $prettyFun" || return $?

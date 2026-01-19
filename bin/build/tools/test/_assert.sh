@@ -17,7 +17,7 @@ __resultText() {
 
   local color="blue"
   if [ -z "$text" ]; then
-    $passed || color="bold-red"
+    $passed || color="red"
   else
     $passed || color="error"
   fi

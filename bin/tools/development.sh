@@ -158,7 +158,7 @@ __buildFingerUpdate() {
       u+=("$path")
     fi
   done
-  [ "${#u[@]}" -eq 0 ] || statusMessage --last decorate success "Updated $(decorate each bold-red "${u[@]}") [$(pluralWord "${#u[@]}" field)] in $(decorate file "$jf")"
+  [ "${#u[@]}" -eq 0 ] || statusMessage --last decorate success "Updated $(decorate each red "${u[@]}") [$(pluralWord "${#u[@]}" field)] in $(decorate file "$jf")"
 }
 ___buildFingerUpdate() {
   # __IDENTICAL__ usageDocument 1

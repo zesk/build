@@ -77,7 +77,9 @@ __bashDocumentationExtract() {
     capture=(tee "$definitionFile")
 
     bashRecursionDebug || return $?
-    __bashDocumentationExtractDirect "$handler" "$fn" "$source" "${extras[@]}" "$@" | catchEnvironment "$handler" environmentCompile --keep-comments | catchEnvironment "$handler" "${capture[@]}" || return $?
+    (
+      __bashDocumentationExtractDirect "$handler" "$fn" "$source" "${extras[@]}" "$@" | catchEnvironment "$handler" environmentCompile --keep-comments | catchEnvironment "$handler" "${capture[@]}" || return $?
+    ) || return $?
     bashRecursionDebug --end || return $?
   elif [ -x "$definitionFile" ] && [ "$definitionFile" -nt "$source" ]; then
     catchEnvironment "$handler" cat "$definitionFile" || return $?
