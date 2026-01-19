@@ -1680,8 +1680,8 @@ Return codes:
 - 2 - Argument error
 - 
 :END consoleBrightness()
-:consoleColorMode
-[92mUsage[0m: [38;2;170;170;255mconsoleColorMode[0m [94m[ --help ][0m
+:consoleConfigureDecorate
+[92mUsage[0m: [38;2;170;170;255mconsoleConfigureDecorate[0m [94m[ --help ][0m
 
     [94m--help  [1;97mFlag. Optional. Display this help.[0m
 
@@ -1697,7 +1697,7 @@ Return codes:
 [38;2;0;255;0;48;2;0;0;0mBUILD_DEBUG[0m settings:
 - BUILD_COLORS_MODE - Output the color mode when it is changed
 - 
-:END consoleColorMode()
+:END consoleConfigureDecorate()
 :consoleColumns
 [92mUsage[0m: [38;2;170;170;255mconsoleColumns[0m [94m[ --help ][0m
 
@@ -6155,7 +6155,7 @@ Return codes:
 - 2 - Argument error
 - 
 :END installInstallBuild()
-[92mUsage[0m: [38;2;170;170;255minteractiveBashSource[0m
+[92mUsage[0m: [38;2;170;170;255mapproveBashSource[0m
 
 DEPRECATED 2025-07-29
 
@@ -6238,7 +6238,7 @@ Environment variables:
 - IP_URL_FILTER
 - 
 :END ipLookup()
-[92mUsage[0m: [38;2;170;170;255misAbsolutePath[0m
+[92mUsage[0m: [38;2;170;170;255mpathIsAbsolute[0m
 
 DEPRECATED 2025-10-03
 
@@ -7813,7 +7813,7 @@ Return codes:
 Writes to [38;2;0;255;0;48;2;0;0;0mstdout[0m:
 The text with the newline replaced with another character, suitable typically for single-line output
 :END newlineHide()
-[92mUsage[0m: [38;2;170;170;255mnewRelease[0m
+[92mUsage[0m: [38;2;170;170;255mreleaseNew[0m
 
 DEPRECATED 2025-10-03
 
