@@ -11,7 +11,7 @@ fn="environmentValueWrite"
 foundNames=""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/environment.sh"
-sourceModified="1769061401"
+sourceModified="1769063211"
 summary="Write a value to a state file as NAME=\"value\""
 usage="environmentValueWrite name [ value ] [ ... ] [ --help ]"
 # shellcheck disable=SC2016

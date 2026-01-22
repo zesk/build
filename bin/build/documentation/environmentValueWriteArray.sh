@@ -11,7 +11,7 @@ fn="environmentValueWriteArray"
 foundNames=""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/environment.sh"
-sourceModified="1769061401"
+sourceModified="1769063211"
 summary="Write an array value as NAME=([0]=\"a\" [1]=\"b\" [2]=\"c\")"
 usage="environmentValueWriteArray [ --help ] [ value ... ] [ --help ]"
 # shellcheck disable=SC2016
