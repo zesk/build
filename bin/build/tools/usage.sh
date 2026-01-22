@@ -65,7 +65,6 @@ __usageDocumentCached() {
   ) || return $?
 }
 
-
 # IDENTICAL usageDocumentSimple 33
 
 # Output a simple error message for a function
