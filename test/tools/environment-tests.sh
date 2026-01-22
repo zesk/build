@@ -15,6 +15,19 @@ testBuildEnvironmentAdd() {
   catchReturn "$handler" rm -f "$home/bin/env/FOOBAR.sh" || return $?
 }
 
+testEnvironmentParseVariables() {
+  local handler="returnMessage"
+
+  local temp && temp=$(fileTemporaryName "$handler") || return $?
+
+  local clean=("$temp")
+  printf "%s\n" "Wonder=RedNow" "Ease=Live" "Fully=Argument" | catchReturn "$handler" environmentParseVariables >"$temp" || returnClean "${clean[@]}" || return $?
+
+  assertFileContains "$temp" "Wonder" "Ease" "Fully" || return $?
+
+  catchEnvironment "$handler" rm -f "${clean[@]}" || return $?
+}
+
 testDotEnvConfigure() {
   local tempDir tempEnv magic
   export TESTENVWORKS TESTENVLOCALWORKS

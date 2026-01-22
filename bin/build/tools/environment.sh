@@ -856,7 +856,8 @@ _environmentVariables() {
 # Argument: variable ... - String. Optional. Output these variables explicitly.
 environmentOutput() {
   local handler="_${FUNCNAME[0]}"
-  local skipSecure=true skipUnderscore=true
+  local __handler="$handler"
+  local __skipSecure=true __skipUnderscore=true __variables=() __skipPrefix=()
 
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
@@ -864,38 +865,39 @@ environmentOutput() {
     [ -n "$__argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
     case "$__argument" in
     --help) "$handler" 0 && return $? || return $? ;;
-    --underscore) skipUnderscore=false ;;
+    --underscore) __skipUnderscore=false ;;
     --skip-prefix) shift && __skipPrefix+=("$(validate "$handler" String "$__argument" "${1-}")") || return $? ;;
-    --secure) skipSecure=false ;;
-    *) variables+=("$(validate "$handler" "EnvironmentVariable" "variable" "$__argument")") || return $? ;;
+    --secure) __skipSecure=false ;;
+    *) __variables+=("$(validate "$handler" "EnvironmentVariable" "variable" "$__argument")") || return $? ;;
     esac
     shift
   done
 
-  local __hideArgs=() __skipPrefix=()
-  if $skipSecure; then
+  local __hideArgs=()
+  if $__skipSecure; then
     local __secureVariable && while read -r __secureVariable; do __hideArgs+=("$__secureVariable"); done < <(environmentSecureVariables)
   fi
-  if $skipUnderscore; then
+  if $__skipUnderscore; then
     __skipPrefix+=('_')
   fi
-  local __name __value finished=false written=()
-  while ! $finished; do
-    IFS="=" read -r -d $'\0' __name __value || finished=true
-    [ -n "$__name" ] || continue
+  local __name __value __finished=false __written=()
+  while ! $__finished; do
+    IFS="=" read -r -d $'\0' __name __value || __finished=true
+    [ -n "$__name" ] && [ "${__name%\%}" = "$__name" ] || continue
     [ "${#__hideArgs[@]}" -eq 0 ] || ! inArray "$__name" "${__hideArgs[@]}" || continue
     [ "${#__skipPrefix[@]}" -eq 0 ] || ! stringBegins "$__name" "${__skipPrefix[@]}" || continue
-    catchReturn "$handler" environmentValueWrite "$__name" "$__value" || return $?
-    written+=("$__name")
+    catchReturn "$__handler" environmentValueWrite "$__name" "$__value" || return $?
+    __written+=("$__name")
   done < <(env -0)
   while IFS='=' read -r __name __value; do
-    ! isPlain "$__value" || catchReturn "$handler" printf "%s=%s\n" "$__name" "$(unquote "'" "$__value")" || return $?
-    written+=("$__name")
+    [ "${#__written[@]}" -eq 0 ] || ! inArray "$__name" "${__written[@]}" || continue
+    ! isPlain "$__value" || catchReturn "$__handler" printf "%s=%s\n" "$__name" "$(unquote "'" "$__value")" || return $?
+    __written+=("$__name")
   done < <(declare -ax | removeFields 2)
-  [ ${#variables[@]} -eq 0 ] || for __name in "${variables[@]}"; do
-    [ "${#written[@]}" -eq 0 ] || ! inArray "$__name" "${written[@]}" || continue
-    catchReturn "$handler" environmentValueWrite "$__name" "${!__value}" || return $?
-    written+=("$__name")
+  [ ${#__variables[@]} -eq 0 ] || for __name in "${__variables[@]}"; do
+    [ "${#__written[@]}" -eq 0 ] || ! inArray "$__name" "${__written[@]}" || continue
+    catchReturn "$__handler" environmentValueWrite "$__name" "${!__value}" || return $?
+    __written+=("$__name")
   done
 }
 _environmentOutput() {

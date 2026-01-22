@@ -10,6 +10,7 @@
 _assertMarkdownFormatList() {
   assertEquals "$1" "$(printf %s "$2" | markdownFormatList)" "markdownFormatList \"$2\" !== \"$1\"" || return $?
 }
+
 testMarkdownFormatList() {
   # shellcheck disable=SC2016
   _assertMarkdownFormatList '- `dude` - Hello' 'dude - Hello' || return $?

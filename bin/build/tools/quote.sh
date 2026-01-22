@@ -87,7 +87,7 @@ escapeBash() {
   if [ $# -gt 0 ]; then
     printf "%s\n" "$@" | jq "${jqArgs[@]}"
   else
-    jq  --slurp "${jqArgs[@]}"
+    jq --slurp "${jqArgs[@]}"
   fi
 }
 _escapeBash() {
