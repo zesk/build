@@ -201,10 +201,11 @@ _pipUninstall() {
 # Argument: --handler handler - Function. Optional. Use this error handler instead of the default error handler.
 # DOC TEMPLATE: --help 1
 # Argument: --help - Flag. Optional. Display this help.
+# Argument: --debug - Flag. Optional. Show outputs to `which` and `command -v` for `pip`
 # Argument: ... - Arguments. Optional. Arguments passed to `pip`
 pipWrapper() {
   local handler="_${FUNCNAME[0]}"
-  local binary=""
+  local binary="" debugFlag=false
 
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
@@ -217,6 +218,7 @@ pipWrapper() {
     --help) "$handler" 0 && return $? || return $? ;;
     # _IDENTICAL_ handlerHandler 1
     --handler) shift && handler=$(validate "$handler" Function "$argument" "${1-}") || return $? ;;
+    --debug) debugFlag=true ;;
     --bin) shift && binary=$(validate "$handler" Executable "$argument" "${1-}") ;;
     *) break ;;
     esac
@@ -227,7 +229,7 @@ pipWrapper() {
   if [ -n "$binary" ]; then
     catchReturn "$handler" "$binary" "$@" || return $?
   elif whichExists pip; then
-    printf "%s\n" "which: $(which pip)" "command: $(command -v pip)" 1>&2
+    ! $debugFlag || printf "%s\n" "which: $(which pip)" "command: $(command -v pip)" 1>&2
     catchReturn "$handler" pip "$@" || return $?
   else
     catchReturn "$handler" python -m pip "$@" || return $?
