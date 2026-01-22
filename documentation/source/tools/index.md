@@ -14,7 +14,7 @@
 - [Completion](./completion.md) - Add completions for Zesk Build
 - [Console](./console.md) - Console tools for size, title, outputting links
 - [Cursor](./cursor.md) - Tools to moving the cursor around the terminal
-- [Decorate](decorate.md) - Decorating text with colors and styles, color schemes, and decorate extensions
+- [Decorate](./decorate.md) - Decorating text with colors and styles, color schemes, and decorate extensions
 - [Decoration Tools](./decoration.md) - Text decoration tools like bars, boxes, big text
 - [Developer](./developer.md) - Tools for your `developer.sh`
 - [Interactive](./interactive.md) - Interactivity tools for user confirmation, menus, message display
@@ -69,11 +69,12 @@
 
 ## Formats
 
-- [jUnit](./junit.md) - Generate `junit.xml` output for testing
+- [jUnit](./junit.md) - Generate `junit.xml` output for testing (EXPERIMENTAL)
 - [JSON](./json.md) - Access and cleaning of JSON
 - [Markdown](./markdown.md) - Markdown tools
 - [tar](./tar.md) - Tar platform neutral calls
 - [XML](./xml.md) - XML generation tools
+- [mdoc](./mdoc.md) - `mdoc` generation tools (PLANNED)
 
 ## Application Tools
 

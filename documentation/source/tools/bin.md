@@ -1,15 +1,12 @@
 # Binaries
 
-These are found in the `bin/build` directory and typically have equivalent functions within Zesk Build which are
-similar.
-
 <!-- TEMPLATE header 2 -->
 [⬅ Parent ](../index.md)
 <hr />
 
-These utilities can be accessed via the shell in the PATH:
+These utilities can be accessed via the shell in the `PATH` by adding:
 
-    ./bin/build/
+    PATH="$PATH:$(buildHome)/bin/build/"
 
 They are intended to be standalone tools useful for a variety of installation and package management functions:
 
@@ -17,7 +14,8 @@ They are intended to be standalone tools useful for a variety of installation an
   `identicalCheckShell`](./identical.md#identicalCheckShell) with some extra functionality.
 - `install-bin-build.sh` - Install or upgrdades current version of Zesk Build in `./bin/build` if it is not installed
   already. Updates itself if required.
-- [`map.sh`](./text.md#mapEnvironment) - Same as [`mapEnvironment`](./text.md#mapEnvironment)
+- [`map.sh`](./text.md#mapEnvironment) - Same as [`mapEnvironment`](./text.md#mapEnvironment) - kind of like
+  `envsubst` (hey!)
 - `need-bash.sh` - Tool to install `bash` in containers first which do not have it installed automatically (Alpine, for
   example)
 
