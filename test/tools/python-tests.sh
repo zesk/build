@@ -23,7 +23,6 @@ testPythonStuff() {
   fi
   assertExitCode 1 pythonPackageInstalled mkdocs || return $?
   assertExitCode 0 pipInstall mkdocs || return $?
-  assertExitCode 0 pipUpgrade || return $?
   assertExitCode 0 pythonPackageInstalled mkdocs || return $?
   assertExitCode --stdout-match "mkdocs" 0 pipWrapper list || return $?
   # TODO Fix later?

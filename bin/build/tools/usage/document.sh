@@ -16,28 +16,6 @@ build_debug|- |`BUILD_DEBUG` settings
 EOF
 }
 
-# Optionally use the big cached file which is generated on build
-__usageCached() {
-  local home="${1-}" && shift
-  local functionName="${1-}" && shift
-  local settingsFile="$home/bin/build/documentation/$functionName.sh"
-  [ -f "$settingsFile" ] || return 1
-  local start="${1-}" && shift
-  (
-    local helpConsole helpPlain
-    # shellcheck source=/dev/null
-    source "$settingsFile" || return $?
-    if [ "${BUILD_COLORS-}" != "false" ]; then
-      catchEnvironment "$handler" printf "%s\n" "$helpConsole" || return $?
-    else
-      catchEnvironment "$handler" printf "%s\n" "$helpPlain" || return $?
-    fi
-  ) || return $?
-  if buildDebugEnabled usage-profile; then
-    ! isInteger "$start" || decorate subtle "$(timingFormat "$(($(timingStart) - start))")"
-  fi
-}
-
 # BUILD_DEBUG: usage-cache-skip
 # BUILD_DEBUG: usage-cache-dump
 __usageDocument() {
@@ -112,7 +90,7 @@ __usageDocument() {
     ;;
   esac
 
-  if ! buildDebugEnabled usage-cache-skip || ! __usageCached "$home" "$functionName" "$start"; then
+  if ! buildDebugEnabled usage-cache-skip || ! __usageDocumentCached "$handler" "$home" "$functionName" "$start"; then
 
     # IDENTICAL profileFunctionMarker 3
     # ********************************************************************************************************************

@@ -16,25 +16,25 @@
 # Argument: function - String. Required. Function to document.
 # Argument: returnCode - UnsignedInteger. Required. Exit code to return.
 # Argument: message ... - String. Optional. Message to display to the user.
-# Requires: bashFunctionComment decorate read printf returnCodeString __help usageDocument
+# Requires: bashFunctionComment decorate read printf returnCodeString __help usageDocument __usageDocumentCached
 usageDocumentSimple() {
-  [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
-  local source="${1-}" functionName="${2-}" returnCode="${3-}" color helpColor="info" icon="❌" line prefix="" finished=false skip=false && shift 3
+  local handler="_${FUNCNAME[0]}"
+
+  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
+  local source="${1-}" functionName="${2-}" returnCode="${3-}" color helpColor="info" icon="❌" skip=false && shift 3
 
   case "$returnCode" in 0) icon="🏆" && color="info" && [ $# -ne 0 ] || skip=true ;; 1) color="error" ;; 2) color="red" ;; *) color="orange" ;; esac
   [ "$returnCode" -eq 0 ] || exec 1>&2
   $skip || printf -- "%s [%s] %s\n" "$icon" "$(decorate "code" "$(returnCodeString "$returnCode")")" "$(decorate BOLD "$color" "$*")"
+  export BUILD_HOME
   if [ ! -f "$source" ]; then
-    export BUILD_HOME
     [ -d "${BUILD_HOME-}" ] || returnArgument "Unable to locate $source (${PWD-})" || return $?
     source="$BUILD_HOME/$source"
     [ -f "$source" ] || returnArgument "Unable to locate $source (${PWD-})" || return $?
   fi
-  while ! $finished; do
-    IFS='' read -r line || finished=true
-    printf "%s%s\n" "$prefix" "$(decorate "$helpColor" "$line")"
-    prefix=""
-  done < <(bashFunctionComment "$source" "$functionName" | sed "s/{fn}/$functionName/g")
+  if ! __usageDocumentCached "$handler" "${BUILD_HOME-}" "${functionName}"; then
+    bashFunctionComment "$source" "$functionName" | sed "s/{fn}/$functionName/g" | decorate "$helpColor"
+  fi
   return "$returnCode"
 }
 _usageDocumentSimple() {

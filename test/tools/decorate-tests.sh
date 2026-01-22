@@ -36,7 +36,7 @@ testDecoratePath() {
 testDecorateStyle() {
   mockEnvironmentStart BUILD_COLORS
   mockEnvironmentStart __BUILD_DECORATE
-  assertExitCode 0 __decorateStylesDefault || return $?
+  assertExitCode 0 __decorateStylesDefaultLight || return $?
 
   assertEquals "1" "$(decorateStyle bold)" || return $?
   assertExitCode 0 decorateStyle bold 31 || return $?
