@@ -12,7 +12,7 @@ fn="decoratePath"
 foundNames=""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/decoration.sh"
-sourceModified="1768721469"
+sourceModified="1769063211"
 summary="Display file paths and replace prefixes with icons"$'\n'""
 usage="decoratePath [ --help ] [ --path pathName=icon ] [ --no-app ] [ --skip-app ] [ path ]"
 # shellcheck disable=SC2016

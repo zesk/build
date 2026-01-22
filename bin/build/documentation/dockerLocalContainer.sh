@@ -12,7 +12,7 @@ fn="dockerLocalContainer"
 foundNames=""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/docker.sh"
-sourceModified="1768759328"
+sourceModified="1769063211"
 summary="Run a build container using given docker image."
 usage="dockerLocalContainer [ --help ] [ --handler handler ] [ --image imageName ] [ --path imageApplicationPath ] [ --platform platform ] [ --env-file envFile ] [ --env envVariable=envValue ] [ extraArgs ]"
 # shellcheck disable=SC2016

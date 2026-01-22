@@ -11,30 +11,6 @@ fn="daemontoolsRestart"
 foundNames=""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/daemontools.sh"
-sourceModified="1768769644"
+sourceModified="1769063211"
 summary="Restart the daemontools processes from scratch."
 usage="daemontoolsRestart"
-# shellcheck disable=SC2016
-helpConsole='[92mUsage[0m: [38;2;170;170;255mdaemontoolsRestart[0m
-
-Restart the daemontools processes from scratch.
-Dangerous. Stops any running services and restarts them.
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-'
-# shellcheck disable=SC2016
-helpPlain='Usage: daemontoolsRestart
-
-Restart the daemontools processes from scratch.
-Dangerous. Stops any running services and restarts them.
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-'
