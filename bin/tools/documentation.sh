@@ -167,7 +167,8 @@ __buildUsageCompileFunction() {
     [ -f "$sourceFile" ] || throwEnvironment "$handler" "${prefix} No source found for $prettyFun" || return $?
   fi
 
-  local tempComment="$docPath/$fun.$$.comment" tempHelp="$docPath/$fun.$$.help"
+  local tempComment && tempComment=$(fileTemporaryName "$handler") || return $?
+  local tempHelp="$tempComment.help"
   clean+=("$tempComment" "$tempHelp")
 
   catchReturn "$handler" bashFunctionComment "$sourceFile" "$fun" >"$tempComment" || returnClean $? "${clean[@]}" || return $?
