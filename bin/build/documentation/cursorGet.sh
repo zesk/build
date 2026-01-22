@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-18
+# Generated on 2026-01-22
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/cursor.sh"
 argument="none"
@@ -10,10 +10,45 @@ escape="ESC \`[6n\`"$'\n'""
 example="    IFS=\$'\\n' read -r -d '' saveX saveY < <(cursorGet)"$'\n'""
 file="bin/build/tools/cursor.sh"
 fn="cursorGet"
-foundNames=([0]="stdout" [1]="escape" [2]="example")
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
-source="bin/build/tools/cursor.sh"
+sourceFile="bin/build/tools/cursor.sh"
 sourceModified="1768695708"
 stdout="UnsignedInteger"$'\n'""
 summary="Get the current cursor position"
 usage="cursorGet"
+# shellcheck disable=SC2016
+helpConsole='[92mUsage[0m: [38;2;170;170;255mcursorGet[0m
+
+Get the current cursor position
+Output is <x> <newline> <y> <newline>
+
+Return codes:
+- 0 - Success
+- 1 - Environment error
+- 2 - Argument error
+- 
+
+Writes to [38;2;0;255;0;48;2;0;0;0mstdout[0m:
+UnsignedInteger
+
+Example:
+    IFS=$'\''\n'\'' read -r -d '\'''\'' saveX saveY < <(cursorGet)
+'
+# shellcheck disable=SC2016
+helpPlain='Usage: cursorGet
+
+Get the current cursor position
+Output is <x> <newline> <y> <newline>
+
+Return codes:
+- 0 - Success
+- 1 - Environment error
+- 2 - Argument error
+- 
+
+Writes to stdout:
+UnsignedInteger
+
+Example:
+    IFS=$'\''\n'\'' read -r -d '\'''\'' saveX saveY < <(cursorGet)
+'

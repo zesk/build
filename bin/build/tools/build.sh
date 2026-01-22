@@ -397,6 +397,7 @@ _buildEnvironmentGet() {
 # Argument: --subdirectory subdirectory - String. Optional. Name of a subdirectory to return "beneath" the value of environment variable. Created if the flag is set.
 # Argument: --mode fileMode - String. Optional. Enforce the mode for `mkdir --mode` and `chmod`. Use special mode `-` to mean no mode enforcement.
 # Argument: --owner ownerName - String. Optional. Enforce the owner of the directory. Use special ownerName `-` to mean no owner enforcement.
+# Argument: --no-create - Flag. Optional. Do not create the subdirectory if it does not exist.
 # If BOTH files exist, both are sourced, so application environments should anticipate values
 # created by build's default.
 #

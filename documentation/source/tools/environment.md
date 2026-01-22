@@ -23,6 +23,8 @@ Tools to manipulate environment files in **Bash**:
 
 {environmentClean}
 
+{environmentParseVariables}
+
 ## Variable lists
 
 {environmentSecureVariables}

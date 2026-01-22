@@ -43,13 +43,16 @@ __documentationLoader() {
 # - `depends` - Any dependencies (list)
 #
 # Summary: Generate a set of name/value pairs to document bash functions
-# Argument: function - String. Required. Function defined in `file`
-# Argument: sourceFile - File. Required. File where the function is defined.
-# INTERNAL: Argument: prefix ... - String. Optional. String to add as a prefix to cached files
+# Argument: handler - Function. Required.
+# Argument: function - String. Required.
+# Argument: sourceFile - File. Required.
+# Argument: --generate - Flag. Optional. Generate cached files.
+# Argument: --no-cache - Flag. Optional. Skip any attempt to cache anything.
+# Argument: --cache - Flag. Optional. Force use of cache.
 # DOC TEMPLATE: --help 1
 # Argument: --help - Flag. Optional. Display this help.
 # stdin: Pipe stripped comments to extract information
-# BUILD_DEBUG: documentation-cache - Saves information to `bin/build/documentation`
+# BUILD_DEBUG: usage-cache-skip - Skip caching by default (override with `--cache`)
 bashDocumentationExtract() {
   __documentationLoader "_${FUNCNAME[0]}" "__${FUNCNAME[0]}" "$@"
 }
@@ -87,8 +90,6 @@ _bashDocumentationExtract() {
 # Argument: --unlinked-update - Flag. Optional. Update the unlinked file only.
 # Argument: --index-update - Flag. Optional. Update the documentation indexes only.
 # Argument: --docs-update - Flag. Optional. Update the documentation target only.
-# DOC TEMPLATE: --help 1
-# Argument: --help - Flag. Optional. Display this help.
 # Artifact: `cacheDirectory` may be created even on non-zero exit code
 # Return Code: 0 - Success
 # Return Code: 1 - Issue with environment

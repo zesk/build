@@ -19,15 +19,23 @@ EOF
 # Optionally use the big cached file which is generated on build
 __usageCached() {
   local home="${1-}" && shift
-  [ -f "$home/etc/console.help.txt" ] || return 1
   local functionName="${1-}" && shift
+  local settingsFile="$home/bin/build/documentation/$functionName.sh"
+  [ -f "$settingsFile" ] || return 1
   local start="${1-}" && shift
-  local content && content="$(sed "1,/^:$functionName\$/d" "$home/etc/console.help.txt" | sed "/^:END $functionName\(\)/,\$d")" || return $?
-  [ -n "$content" ] || return 1
+  (
+    local helpConsole helpPlain
+    # shellcheck source=/dev/null
+    source "$settingsFile" || return $?
+    if [ "${BUILD_COLORS-}" != "false" ]; then
+      catchEnvironment "$handler" printf "%s\n" "$helpConsole" || return $?
+    else
+      catchEnvironment "$handler" printf "%s\n" "$helpPlain" || return $?
+    fi
+  ) || return $?
   if buildDebugEnabled usage-profile; then
-    set -- "$(isInteger "$start" && decorate subtle "$(timingFormat "$(($(timingStart) - start))")")" "$@"
+    ! isInteger "$start" || decorate subtle "$(timingFormat "$(($(timingStart) - start))")"
   fi
-  printf "%s\n" "$content" "$@"
 }
 
 # BUILD_DEBUG: usage-cache-skip
@@ -40,19 +48,14 @@ __usageDocument() {
   # profiling variables
   export BUILD_DEBUG
   local flag=",usage-profile," flags=",${BUILD_DEBUG-},"
-
-  local bashDebug=false
-  if isBashDebug; then
-    bashDebug=true
-    # Hides a lot of unnecessary tracing
-    __buildDebugDisable
-  fi
+  # Hides a lot of unnecessary tracing
+  local bashDebug=false && if isBashDebug; then bashDebug=true && __buildDebugDisable; fi
 
   # IDENTICAL profileFunctionHead 6
   # ********************************************************************************************************************
-  local __profile=false __profile0="" __profileNext __profileUsed=0 __profileLabel="arguments (#$__count)" __profilePrefix="Profile-${FUNCNAME[0]}: "
+  local __profile="false" __profile0="" __profileNext __profileUsed=0 __profileLabel="arguments (#$__count)" __profilePrefix="Profile-${FUNCNAME[0]}: "
 
-  if [ "${flags#*"$flag"}" != "$flags" ]; then __profile=$(timingStart) && __profile0=$__profile; fi
+  if [ -n "$flags" ] && [ "${flags#*"$flag"}" != "$flags" ]; then __profile=$(timingStart) && __profile0=$__profile; fi
   # ********************************************************************************************************************
 
   local start="$__profile" && [ "$start" != false ] || start="$(timingStart)"
@@ -109,22 +112,22 @@ __usageDocument() {
     ;;
   esac
 
-  if buildDebugEnabled usage-cache-skip || ! __usageCached "$home" "$functionName" "$start"; then
+  if ! buildDebugEnabled usage-cache-skip || ! __usageCached "$home" "$functionName" "$start"; then
 
     # IDENTICAL profileFunctionMarker 3
     # ********************************************************************************************************************
-    if [ "$__profile" != false ]; then __profileNext="$(timingStart)" && printf "Line %d: %s%d %s\n" "$LINENO" "$__profilePrefix" "$((__profileNext - __profile))" "$__profileLabel" && __profile=$__profileNext; fi
+    if [ "$__profile" != "false" ]; then __profileNext="$(timingStart)" && printf "Line %d: %s%d %s\n" "$LINENO" "$__profilePrefix" "$((__profileNext - __profile))" "$__profileLabel" && __profile=$__profileNext; fi
 
-    local variablesFile
-    variablesFile=$(fileTemporaryName "$handler") || return $?
+    local variablesFile && variablesFile=$(fileTemporaryName "$handler") || return $?
     local commentFile="$variablesFile.comment"
     local clean=("$variablesFile" "$commentFile")
+
     catchReturn "$handler" bashFunctionComment "$functionDefinitionFile" "$functionName" >"$commentFile" || returnClean $? "${clean[@]}" || return $?
 
     __profileLabel=bashFunctionComment
     # IDENTICAL profileFunctionMarker 3
     # ********************************************************************************************************************
-    if [ "$__profile" != false ]; then __profileNext="$(timingStart)" && printf "Line %d: %s%d %s\n" "$LINENO" "$__profilePrefix" "$((__profileNext - __profile))" "$__profileLabel" && __profile=$__profileNext; fi
+    if [ "$__profile" != "false" ]; then __profileNext="$(timingStart)" && printf "Line %d: %s%d %s\n" "$LINENO" "$__profilePrefix" "$((__profileNext - __profile))" "$__profileLabel" && __profile=$__profileNext; fi
 
     if ! catchReturn "$handler" bashDocumentationExtract "$displayName" "$functionDefinitionFile" >"$variablesFile" <"$commentFile"; then
       dumpPipe "commentFile" <"$commentFile"
@@ -136,7 +139,7 @@ __usageDocument() {
     __profileLabel=bashDocumentationExtract
     # IDENTICAL profileFunctionMarker 3
     # ********************************************************************************************************************
-    if [ "$__profile" != false ]; then __profileNext="$(timingStart)" && printf "Line %d: %s%d %s\n" "$LINENO" "$__profilePrefix" "$((__profileNext - __profile))" "$__profileLabel" && __profile=$__profileNext; fi
+    if [ "$__profile" != "false" ]; then __profileNext="$(timingStart)" && printf "Line %d: %s%d %s\n" "$LINENO" "$__profilePrefix" "$((__profileNext - __profile))" "$__profileLabel" && __profile=$__profileNext; fi
 
     local fn="$displayName" description="" argument="" base return_code="" environment="" stdin="" stdout="" example="" build_debug="" name="${name-}"
 
@@ -146,15 +149,15 @@ __usageDocument() {
     # shellcheck source=/dev/null
     catchEnvironment "$__handler" source "$variablesFile" || returnUndo $? set +a || returnClean $? "${clean[@]}" || return $?
     set +a
-#    dumpPipe "commentFile" <"$commentFile"
-#    dumpPipe "sourceVariables" <"$variablesFile"
+    #    dumpPipe "commentFile" <"$commentFile"
+    #    dumpPipe "sourceVariables" <"$variablesFile"
     # Some variables MAY BE OVERWRITTEN ABOVE .e.g. `__handler`
     catchEnvironment "$__handler" rm -f "$variablesFile" "$commentFile" || return $?
 
     __profileLabel="source $variablesFile"
     # IDENTICAL profileFunctionMarker 3
     # ********************************************************************************************************************
-    if [ "$__profile" != false ]; then __profileNext="$(timingStart)" && printf "Line %d: %s%d %s\n" "$LINENO" "$__profilePrefix" "$((__profileNext - __profile))" "$__profileLabel" && __profile=$__profileNext; fi
+    if [ "$__profile" != "false" ]; then __profileNext="$(timingStart)" && printf "Line %d: %s%d %s\n" "$LINENO" "$__profilePrefix" "$((__profileNext - __profile))" "$__profileLabel" && __profile=$__profileNext; fi
 
     : "$base $return_code $environment $stdin $stdout $example are referenced here and with \${!variable} below"
     : "$build_debug"
@@ -177,7 +180,7 @@ __usageDocument() {
     __profileLabel="__usageDocumentSections formatting"
     # IDENTICAL profileFunctionMarker 3
     # ********************************************************************************************************************
-    if [ "$__profile" != false ]; then __profileNext="$(timingStart)" && printf "Line %d: %s%d %s\n" "$LINENO" "$__profilePrefix" "$((__profileNext - __profile))" "$__profileLabel" && __profile=$__profileNext; fi
+    if [ "$__profile" != "false" ]; then __profileNext="$(timingStart)" && printf "Line %d: %s%d %s\n" "$LINENO" "$__profilePrefix" "$((__profileNext - __profile))" "$__profileLabel" && __profile=$__profileNext; fi
 
     description=$(trimTail <<<"$description")
     __usageTemplate "$fn" "$(printf "%s\n" "$argument" | sed 's/ - /^/1')" "^" "$description$suffix" "$returnCode" "$@" | identical=IDENTICAL functionName="$functionName" fn="$fn" name="$name" mapEnvironment
@@ -185,23 +188,21 @@ __usageDocument() {
     __profileLabel="__usageTemplate $fn"
     # IDENTICAL profileFunctionMarker 3
     # ********************************************************************************************************************
-    if [ "$__profile" != false ]; then __profileNext="$(timingStart)" && printf "Line %d: %s%d %s\n" "$LINENO" "$__profilePrefix" "$((__profileNext - __profile))" "$__profileLabel" && __profile=$__profileNext; fi
+    if [ "$__profile" != "false" ]; then __profileNext="$(timingStart)" && printf "Line %d: %s%d %s\n" "$LINENO" "$__profilePrefix" "$((__profileNext - __profile))" "$__profileLabel" && __profile=$__profileNext; fi
 
     catchEnvironment "$handler" rm -f "${clean[@]}" || return $?
     catchReturn "$__handler" bashRecursionDebug --end || return $?
   fi
 
-  __profileLabel="cleanup ${clean[*]}"
+  __profileLabel="cleanup"
   # IDENTICAL profileFunctionTail 7
   # ********************************************************************************************************************
-  if [ "$__profile" != false ]; then
+  if [ "$__profile" != "false" ]; then
     __profileNext="$(timingStart)" && printf "Line %d: %s%d %s\n" "$LINENO" "$__profilePrefix" "$((__profileNext - __profile))" "$__profileLabel"
     printf -- "Line %d: %s%d %s (%d + %d) %s + %s %d%%\n" "$LINENO" "$__profilePrefix" "$((__profileNext - __profile0))" '*TOTAL*' "$((__profileNext - __profile0 - __profileUsed))" "$__profileUsed" 'us' 'them' "$(((100 * __profileUsed) / (__profileNext - __profile0)))"
   fi
   # ********************************************************************************************************************
 
-  if $bashDebug; then
-    __buildDebugEnable
-  fi
+  ! $bashDebug || __buildDebugEnable
   return "$returnCode"
 }

@@ -194,7 +194,7 @@ __buildBuild() {
 
   if $makeDocumentation; then
     ! $debugFlag || statusMessage decorate warning "Updating documentation cache ..."
-    catchReturn "$handler" buildDocumentationExtractionUpdate --quick || return $?
+    catchReturn "$handler" buildUsageCompile --quick || return $?
 
     local path rootShow rootPath="$home/documentation/.site"
     rootShow=$(decorate file "$rootPath")

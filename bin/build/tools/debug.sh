@@ -52,14 +52,14 @@ _buildDebugEnabled() {
 }
 
 # For __buildDebugEnable
-# Debugging: 513a78fb762a9632315fc564b560d644fd280f89
-# Debugging: f6bef8d783239932a1b4311d027289c42d9d4b3f
 
 # Internal: true
 # Argument: setArgs - EmptyString. Optional. Extra characters to `set -`.
 # Turn on debugging and additional `set` arguments
 # Actually does 'set -x` - should be only occurrence.
+# Debugging: 513a78fb762a9632315fc564b560d644fd280f89
 # Depends: -
+# Debugging: f6bef8d783239932a1b4311d027289c42d9d4b3f
 __buildDebugEnable() {
   set "-x${1-}" # Debugging
 }
@@ -87,7 +87,9 @@ __buildDebugDisable() {
 # Example:     # ... complex code here
 # Example:     buildDebugStop || :. -
 # Requires: buildDebugEnabled
-# Example:     # Debugging: 51b581e9a1275e3801165068bceaa6d245c76c2c
+# INTERNAL: Debugging: c8cc76fc123e41278bd99a62942d5aa6d24db002
+# INTERNAL: Debugging: d90928155f924a6771a20de8363ae4b04982b9e8
+# INTERNAL: Debugging: 51b581e9a1275e3801165068bceaa6d245c76c2c
 buildDebugStart() {
   [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
   if ! buildDebugEnabled "$@"; then

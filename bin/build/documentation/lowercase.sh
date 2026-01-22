@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-18
+# Generated on 2026-01-22
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/text.sh"
 argument="-- - Flag. Optional. Stops command processing to enable arbitrary text to be passed as additional arguments without special meaning."$'\n'"--help - Flag. Optional. Display this help."$'\n'"text - EmptyString. Required. Text to convert to lowercase"$'\n'""
@@ -8,11 +8,46 @@ base="text.sh"
 description="Convert text to lowercase"$'\n'""$'\n'""
 file="bin/build/tools/text.sh"
 fn="lowercase"
-foundNames=([0]="argument" [1]="stdout" [2]="requires")
 requires="tr"$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
-source="bin/build/tools/text.sh"
+sourceFile="bin/build/tools/text.sh"
 sourceModified="1768776345"
 stdout="\`String\`. The lowercase version of the \`text\`."$'\n'""
 summary="Convert text to lowercase"
 usage="lowercase [ -- ] [ --help ] text"
+# shellcheck disable=SC2016
+helpConsole='[92mUsage[0m: [38;2;170;170;255mlowercase[0m [94m[ -- ][0m [94m[ --help ][0m [38;2;255;255;0m[35;48;2;0;0;0mtext[0m[0m
+
+    [94m--      [1;97mFlag. Optional. Stops command processing to enable arbitrary text to be passed as additional arguments without special meaning.[0m
+    [94m--help  [1;97mFlag. Optional. Display this help.[0m
+    [31mtext    [1;97mEmptyString. Required. Text to convert to lowercase[0m
+
+Convert text to lowercase
+
+Return codes:
+- 0 - Success
+- 1 - Environment error
+- 2 - Argument error
+- 
+
+Writes to [38;2;0;255;0;48;2;0;0;0mstdout[0m:
+[38;2;0;255;0;48;2;0;0;0mString[0m. The lowercase version of the [38;2;0;255;0;48;2;0;0;0mtext[0m.
+'
+# shellcheck disable=SC2016
+helpPlain='Usage: lowercase [ -- ] [ --help ] text
+
+    --      Flag. Optional. Stops command processing to enable arbitrary text to be passed as additional arguments without special meaning.
+    --help  Flag. Optional. Display this help.
+    text    EmptyString. Required. Text to convert to lowercase
+
+Convert text to lowercase
+
+Return codes:
+- 0 - Success
+- 1 - Environment error
+- 2 - Argument error
+- 
+
+Writes to stdout:
+String. The lowercase version of the text.
+'

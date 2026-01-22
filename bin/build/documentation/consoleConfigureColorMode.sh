@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-18
+# Generated on 2026-01-22
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/console.sh"
 argument="backgroundColor - String. Optional. Background color."$'\n'""
@@ -8,9 +8,34 @@ base="console.sh"
 description="Print the suggested color mode for the current environment"$'\n'""$'\n'""
 file="bin/build/tools/console.sh"
 fn="consoleConfigureColorMode"
-foundNames=([0]="argument")
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
-source="bin/build/tools/console.sh"
+sourceFile="bin/build/tools/console.sh"
 sourceModified="1768759173"
 summary="Print the suggested color mode for the current environment"
 usage="consoleConfigureColorMode [ backgroundColor ]"
+# shellcheck disable=SC2016
+helpConsole='[92mUsage[0m: [38;2;170;170;255mconsoleConfigureColorMode[0m [94m[ backgroundColor ][0m
+
+    [94mbackgroundColor  [1;97mString. Optional. Background color.[0m
+
+Print the suggested color mode for the current environment
+
+Return codes:
+- 0 - Success
+- 1 - Environment error
+- 2 - Argument error
+- 
+'
+# shellcheck disable=SC2016
+helpPlain='Usage: consoleConfigureColorMode [ backgroundColor ]
+
+    backgroundColor  String. Optional. Background color.
+
+Print the suggested color mode for the current environment
+
+Return codes:
+- 0 - Success
+- 1 - Environment error
+- 2 - Argument error
+- 
+'

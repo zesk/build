@@ -106,5 +106,5 @@ __characterClassReport() {
     total=$((total + matched))
   done
   printf "%s total %s\n" "$(decorate BOLD red "$total")" "$(decorate red "$(plural "$total" "${nouns[@]}")")"
-  [ -z "$savedLimit" ] || muzzle ulimit -n "$savedLimit" 2>&1 || :
+  [ -z "$savedLimit" ] || ulimit -n "$savedLimit" 1>/dev/null 2>&1 || :
 }

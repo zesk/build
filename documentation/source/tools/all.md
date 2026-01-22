@@ -254,6 +254,7 @@ All functions in Zesk Build, alphabetically.
 - {SEE:environmentLoad}
 - {SEE:environmentNames}
 - {SEE:environmentOutput}
+- {SEE:environmentParseVariables}
 - {SEE:environmentSecureVariables}
 - {SEE:environmentValueConvertArray}
 - {SEE:environmentValueRead}

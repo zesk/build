@@ -48,7 +48,8 @@ _identicalRepair() {
 # Argument: --help - Flag. Optional. This help.
 # Argument: --singles singlesFiles - File. Optional. One or more files which contain a list of allowed `{identical}` singles, one per line.
 # Argument: --single singleToken - String. Optional. One or more tokens which cam be singles.
-# Argument: token ... - String. Optional. ONLY do this token. May be specified more than once.
+# Argument: --token token - String. Optional. Replace this token (only). May be specified more than once. Old method, deprecated but here for compatibility.
+# Argument: token ... - String. Optional. Replace this token (only). May be specified more than once.
 #
 # Return Code: 2 - Argument error
 # Return Code: 0 - Success, everything matches

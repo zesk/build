@@ -83,7 +83,7 @@ __bashSanitize() {
   _bashSanitizeCheckCopyright "$handler" "$debugFlag" "${exceptions[@]+"${exceptions[@]}"}" <"$fileList" || returnUndo $? "${undo[@]}" || returnClean $? "$fileList" || return $?
 
   statusMessage decorate success Checking debugging ...
-  _bashSanitizeCheckDebugging "$handler" <"$fileList" || returnUndo $? "${undo[@]}" || returnClean $? "$fileList" || return $?
+  _bashSanitizeCheckDebugging "$handler" "${exceptions[@]+"${exceptions[@]}"}" <"$fileList" || returnUndo $? "${undo[@]}" || returnClean $? "$fileList" || return $?
   rm -rf "$fileList" || :
   catchEnvironment "$handler" "${undo[@]}" || return $?
   statusMessage decorate success Completed ...
@@ -151,13 +151,15 @@ _bashSanitizeCheckCopyright() {
   fi
 }
 
+# Argument: handler - Function. Required.
+# Argument: exceptions ... - Arguments. Optional. List of path exceptions. Simple string contains match.
 _bashSanitizeCheckDebugging() {
   local handler="$1" && shift
 
   local matches
   matches=$(fileTemporaryName "$handler") || return $?
 
-  if fileMatches 'set ["]\?-x' -- -- - >"$matches"; then
+  if fileMatches 'set ["]\?-x' -- "$@" -- - >"$matches"; then
     local file line remain debugHash found=false
     while IFS=":" read -r file line remain; do
       [ -f "$file" ] || throwEnvironment "$handler" "returned line \"$file $line $remain\" - not a file" || return $?

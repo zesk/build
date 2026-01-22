@@ -31,7 +31,7 @@ __bashDocumentationSettingsFileDetails() {
   home=$(catchReturn "$handler" buildHome) || return $?
 
   local applicationFile="${definitionFile#"${home%/}"/}"
-  catchReturn "$handler" __dumpSimpleValue "source" "$applicationFile" || return $?
+  catchReturn "$handler" __dumpSimpleValue "sourceFile" "$applicationFile" || return $?
   catchReturn "$handler" __dumpSimpleValue "applicationFile" "$applicationFile" || return $?
   catchReturn "$handler" __dumpSimpleValue "sourceModified" "$(fileModificationTime "$definitionFile")" || return $?
   catchReturn "$handler" __dumpSimpleValue "file" "$applicationFile" || return $?
@@ -43,56 +43,95 @@ __bashDocumentationSettingsFileDetails() {
 # Argument: handler - Function. Required.
 # Argument: function - String. Required.
 # Argument: sourceFile - File. Required.
-# BUILD_DEBUG: usage-cache-skip - Skip caching always
-# BUILD_DEBUG: documentation-cache - Actively update the caching - part of the build step
+# Argument: --generate - Flag. Optional. Generate cached files.
+# Argument: --no-cache - Flag. Optional. Skip any attempt to cache anything.
+# Argument: --cache - Flag. Optional. Force use of cache.
+# DOC TEMPLATE: --help 1
+# Argument: --help - Optional. Flag. Display this help.
+# BUILD_DEBUG: usage-cache-skip - Skip caching by default (override with `--cache`)
 __bashDocumentationExtract() {
   local __saved=("$@") __count=$#
   local handler="$1" && shift
-  local skipCache=false
+  local generateCache=false fn="" source="" checkCache=true
 
-  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
+  ! buildDebugEnabled usage-cache-skip || checkCache=false
 
-  local fn source
-  fn=$(validate "$handler" String "fn" "${1-}") && shift || return $?
-  source=$(validate "$handler" File "source" "${1-}") && shift || return $?
-
-  local capture=(cat)
-
-  ! buildDebugEnabled usage-cache-skip || skipCache=true
-
-  export BUILD_HOME
-  local definitionFile="${BUILD_HOME:-/dev/null}/bin/build/documentation/$fn.sh"
-  if ! $skipCache && buildDebugEnabled "documentation-cache"; then
-    local extras=()
-    extras+=("#!/usr/bin/env bash" "# Copyright &copy; $(date +%Y) $(catchReturn "$handler" buildEnvironmentGet BUILD_COMPANY)") || return $?
-    extras+=("# Generated on $(todayDate)")
-    local currentModified && currentModified=$(catchReturn "$handler" fileModificationTime "$source") || return $?
-    if [ -f "$definitionFile" ] && [ "$source" -ot "$definitionFile" ]; then
-      local sourceModified && sourceModified=$(environmentValueRead "$definitionFile" "sourceModified") || :
-      if isInteger "$sourceModified" && [ "$sourceModified" -eq "$currentModified" ]; then
-        catchEnvironment "$handler" touch "$definitionFile" || return $?
-        return 0
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
+  local __saved=("$@") __count=$#
+  while [ $# -gt 0 ]; do
+    local argument="$1" __index=$((__count - $# + 1))
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    case "$argument" in
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
+    # _IDENTICAL_ handlerHandler 1
+    --handler) shift && handler=$(validate "$handler" Function "$argument" "${1-}") || return $? ;;
+    --generate) generateCache=true ;;
+    --no-cache) checkCache=false ;;
+    --cache) checkCache=true ;;
+    *)
+      if [ -z "$fn" ]; then
+        fn=$(validate "$handler" String "fn" "${1-}") || return $?
+      elif [ -z "$source" ]; then
+        source=$(validate "$handler" File "source" "${1-}") || return $?
       else
-        decorate info "Secondary modification check failed: arg source=$source ($currentModified) cache source=$sourceModified ($((currentModified - sourceModified)) delta)" 1>&2
+        # _IDENTICAL_ argumentUnknownHandler 1
+        throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
       fi
+      ;;
+    esac
+    shift
+  done
+
+  local home && home=$(catchReturn "$handler" buildHome) || return $?
+
+  local definitionFile="$home/bin/build/documentation/$fn.sh"
+  if $generateCache; then
+    if __bashDocumentationExtractCheckCache "$handler" "$source" "$definitionFile"; then
+      return 0
     fi
-    catchEnvironment "$handler" muzzle fileDirectoryRequire "$definitionFile" || return $?
-    catchEnvironment "$handler" touch "$definitionFile" || return $?
-    catchEnvironment "$handler" chmod +x "$definitionFile" || return $?
-    capture=(tee "$definitionFile")
-    bashRecursionDebug || return $?
-    (
-      __bashDocumentationExtractDirect "$handler" "$fn" "$source" "${extras[@]}" "$@" | catchEnvironment "$handler" environmentCompile --keep-comments | catchEnvironment "$handler" "${capture[@]}" || return $?
-    ) || return $?
-    bashRecursionDebug --end || return $?
-  elif ! $skipCache && [ -x "$definitionFile" ] && [ "$definitionFile" -nt "$source" ]; then
+    __bashDocumentationExtractGenerateCache "$handler" "$source" "$definitionFile" "$fn" || return $?
+  elif $checkCache && [ -x "$definitionFile" ] && [ "$definitionFile" -nt "$source" ]; then
     catchEnvironment "$handler" cat "$definitionFile" || return $?
     return 0
   else
-    decorate each code __bashDocumentationExtractDirect "$handler" "$fn" "$source" "$@" 1>&2
-    __bashDocumentationExtractDirect "$handler" "$fn" "$source" "$@"
+    __bashDocumentationExtractDirect "$handler" "$fn" "$source" "$@" || return $?
   fi
 
+}
+__bashDocumentationExtractCheckCache() {
+  local handler="$1" source="$2" definitionFile="$3"
+  local currentModified && currentModified=$(catchReturn "$handler" fileModificationTime "$source") || return $?
+  if [ -f "$definitionFile" ] && [ "$source" -ot "$definitionFile" ]; then
+    local sourceModified && sourceModified=$(
+      local sourceModified
+      # shellcheck source=/dev/null
+      catchEnvironment "$handler" source "$definitionFile" || return $?
+      catchEnvironment "$handler" printf -- "%s\n" "${sourceModified-}" || return $?
+    ) || :
+    if isInteger "$sourceModified" && [ "$sourceModified" -eq "$currentModified" ]; then
+      catchEnvironment "$handler" touch "$definitionFile" || return $?
+      catchEnvironment "$handler" cat "$definitionFile" || return $?
+      return 0
+    fi
+  fi
+  return 1
+}
+
+__bashDocumentationExtractGenerateCache() {
+  local handler="$1" source="$2" definitionFile="$3" fn="$4" && shift 4
+  catchEnvironment "$handler" muzzle fileDirectoryRequire "$definitionFile" || return $?
+  catchEnvironment "$handler" touch "$definitionFile" || return $?
+  catchEnvironment "$handler" chmod +x "$definitionFile" || return $?
+  (
+    local extras=()
+    extras+=("#!/usr/bin/env bash" "# Copyright &copy; $(date +%Y) $(catchReturn "$handler" buildEnvironmentGet BUILD_COMPANY)") || return $?
+    extras+=("# Generated on $(todayDate)")
+    bashRecursionDebug || return $?
+    __bashDocumentationExtractDirect "$handler" "$fn" "$source" "${extras[@]}" "$@" | catchEnvironment "$handler" environmentCompile --keep-comments --parse | catchEnvironment "$handler" tee "$definitionFile" || returnClean $? "$definitionFile" || $?
+    bashRecursionDebug --end || return $?
+  ) || return $?
 }
 
 # Argument: handler - Function. Required.

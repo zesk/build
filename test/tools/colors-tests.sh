@@ -12,7 +12,7 @@ testColorSampleCodes() {
 }
 testColorSampleStyles() {
   assertExitCode 0 colorSampleStyles || return $?
-  assertNotExitCode --stderr-match "Only argument allowed is" --stderr-match "--help" 0 colorSampleStyles --no-arguments-really-allowed || return $?
+  assertExitCode --stdout-match "quiz nymph" 0 colorSampleStyles "Glib jocks quiz nymph to vex dwarf." || return $?
 }
 testSemanticColorSampleStyles() {
   local mode

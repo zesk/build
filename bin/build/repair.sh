@@ -36,7 +36,11 @@ if source "$(dirname "${BASH_SOURCE[0]}")/tools.sh"; then
         cleaned+=("$argument" "$token")
         doFingerprint=false
         ;;
+      --internal)
+        cleaned+=("$1")
+        ;;
       *)
+        doFingerprint=false
         cleaned+=("$1")
         ;;
       esac

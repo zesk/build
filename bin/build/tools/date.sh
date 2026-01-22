@@ -73,7 +73,7 @@ _dateToTimestamp() {
 # Example:     dateField=$(dateFromTimestamp $init %Y)
 dateFromTimestamp() {
   local handler="_${FUNCNAME[0]}"
-  local isUTC=true value="" format="%F %T"
+  local isUTC=true value="" format=""
 
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
@@ -99,6 +99,7 @@ dateFromTimestamp() {
     shift
   done
   [ -n "$value" ] || throwArgument "$handler" "No value supplied" || return $?
+  [ -n "$format" ] || format="%F %T"
   __dateFromTimestamp "$value" "$format" "$isUTC"
 }
 _dateFromTimestamp() {

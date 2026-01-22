@@ -40,8 +40,8 @@ _environmentValueWrite() {
 # Supports empty arrays
 # Bash outputs on different versions:
 #
-#     declare -a foo='([0]="a'\''s" [1]="b" [2]="c")'
-#     declare -a foo=([0]="a's" [1]="b" [2]="c")
+#     declare -a foo='([0]="a" [1]="b" [2]="c")'
+#     declare -a foo=([0]="a" [1]="b" [2]="c")
 #
 # DOC TEMPLATE: --help 1
 # Argument: --help - Flag. Optional. Display this help.
@@ -851,67 +851,88 @@ _environmentVariables() {
 # See: environmentSecureVariables
 # Requires: throwArgument decorate environmentSecureVariables grepSafe env removeFields
 # Argument: --underscore - Flag. Optional. Include environment variables which begin with underscore `_`.
-# Argument: --skip-prefix - String. Optional. Skip environment variables which begin with this exact prefix (case-sensitive).
+# Argument: --skip-prefix prefixString - String. Optional. Skip environment variables which begin with this exact prefix (case-sensitive).
 # Argument: --secure - Flag. Optional. Include environment variables which are in `environmentSecureVariables`
+# Argument: variable ... - String. Optional. Output these variables explicitly.
 environmentOutput() {
   local handler="_${FUNCNAME[0]}"
   local skipSecure=true skipUnderscore=true
 
-  # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
-    local argument="$1" __index=$((__count - $# + 1))
-    # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
-    case "$argument" in
-    # _IDENTICAL_ helpHandler 1
+    local __argument="$1" __index=$((__count - $# + 1))
+    [ -n "$__argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    case "$__argument" in
     --help) "$handler" 0 && return $? || return $? ;;
     --underscore) skipUnderscore=false ;;
-    --skip-prefix) shift && skipPrefix+=("$(validate "$handler" String "$argument" "${1-}")") || return $? ;;
+    --skip-prefix) shift && __skipPrefix+=("$(validate "$handler" String "$__argument" "${1-}")") || return $? ;;
     --secure) skipSecure=false ;;
-    *)
-      # _IDENTICAL_ argumentUnknownHandler 1
-      throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
-      ;;
+    *) variables+=("$(validate "$handler" "EnvironmentVariable" "variable" "$__argument")") || return $? ;;
     esac
     shift
   done
 
-  local hideArgs=() skipPrefix=()
+  local __hideArgs=() __skipPrefix=()
   if $skipSecure; then
-    local secureVar && while read -r secureVar; do hideArgs+=("$secureVar"); done < <(environmentSecureVariables)
+    local __secureVariable && while read -r __secureVariable; do __hideArgs+=("$__secureVariable"); done < <(environmentSecureVariables)
   fi
   if $skipUnderscore; then
-    skipPrefix+=('_')
+    __skipPrefix+=('_')
   fi
-  local name value finished=false
+  local __name __value finished=false written=()
   while ! $finished; do
-    IFS="=" read -r -d $'\0' name value || finished=true
-    [ -n "$name" ] || continue
-    [ "${#hideArgs[@]}" -eq 0 ] || ! inArray "$name" "${hideArgs[@]}" || continue
-    [ "${#skipPrefix[@]}" -eq 0 ] || ! stringBegins "$name" "${skipPrefix[@]}" || continue
-    environmentValueWrite "$name" "$value"
+    IFS="=" read -r -d $'\0' __name __value || finished=true
+    [ -n "$__name" ] || continue
+    [ "${#__hideArgs[@]}" -eq 0 ] || ! inArray "$__name" "${__hideArgs[@]}" || continue
+    [ "${#__skipPrefix[@]}" -eq 0 ] || ! stringBegins "$__name" "${__skipPrefix[@]}" || continue
+    catchReturn "$handler" environmentValueWrite "$__name" "$__value" || return $?
+    written+=("$__name")
   done < <(env -0)
-  while IFS='=' read -r name value; do
-    ! isPlain "$value" || printf "%s=%s\n" "$name" "$(unquote "'" "$value")"
+  while IFS='=' read -r __name __value; do
+    ! isPlain "$__value" || catchReturn "$handler" printf "%s=%s\n" "$__name" "$(unquote "'" "$__value")" || return $?
+    written+=("$__name")
   done < <(declare -ax | removeFields 2)
+  [ ${#variables[@]} -eq 0 ] || for __name in "${variables[@]}"; do
+    [ "${#written[@]}" -eq 0 ] || ! inArray "$__name" "${written[@]}" || continue
+    catchReturn "$handler" environmentValueWrite "$__name" "${!__value}" || return $?
+    written+=("$__name")
+  done
 }
 _environmentOutput() {
   # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
+# Parse variables from an environment variable stream
+# Extracts lines with `NAME=value`
+# Details:
+# - Remove `export ` from lines
+# - Skip lines containing `read -r`
+# stdin: Environment File
+# stdout: EnvironmentVariable. One per line.
+environmentParseVariables() {
+  [ $# -eq 0 ] || __help --only "$handler" "$@" || return "$(convertValue $? 1 0)"
+  grepSafe -e '^\(export \)\?\s*[A-Za-z_][A-Za-z_0-9]*=' | grep -v 'read -r' | sed 's/^export[[:space:]][[:space:]]*//g' | cut -f 1 -d = | sort -u
+}
+_environmentParseVariables() {
+  true || environmentParseVariables --help || return $?
+  # __IDENTICAL__ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
 # Load an environment file and evaluate it using bash and output the changed environment variables after running
 # Do not perform this operation on files which are untrusted.
-# Argument: --underscore - Flag. Include environment variables which begin with underscore `_`.
-# Argument: --secure - Flag. Include environment variables which are in `environmentSecureVariables`
+# Argument: --underscore - Flag. Optional. Include environment variables which begin with underscore `_`.
+# Argument: --secure - Flag. Optional. Include environment variables which are in `environmentSecureVariables`
 # Argument: --keep-comments - Flag. Keep all comments in the source
+# Argument: --variables - CommaDelimitedList. Optional. Always output the value of these variables.
+# Argument: --parse - Flag. Optional. Parse the file for things which look like variables to output (basically `^foo=`)
 # Argument: environmentFile - File. Required. Environment file to load, evaluate, and output in raw form (Bash-compatible).
 # Security: source
 environmentCompile() {
   local handler="_${FUNCNAME[0]}"
 
-  local environmentFiles=() aa=() debugFlag=false keepComments=false
+  local environmentFiles=() aa=() debugFlag=false keepComments=false parseFlag=false
 
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
@@ -923,6 +944,12 @@ environmentCompile() {
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
     --debug) debugFlag=true ;;
+    --parse) parseFlag=true ;;
+    --variables)
+      local listText && listText="$(validate "$handler" "CommaDelimitedList" "$argument" "${1-}")" || return $?
+      local variableList=() && IFS="," read -r -d '' -a variableList <<<"$listText" || :
+      variables+=("${variableList[@]+"${variableList[@]}"}")
+      ;;
     --keep-comments) keepComments=true ;;
     --underscore | --secure)
       if [ ${#aa[@]} -eq 0 ] || ! inArray "$argument" "${aa[@]}"; then
@@ -938,36 +965,30 @@ environmentCompile() {
 
   local tempEnv
   tempEnv=$(fileTemporaryName "$handler") || return $?
-
   local clean=("$tempEnv" "$tempEnv.after" "$tempEnv.source" "$tempEnv.save")
-  catchReturn "$handler" environmentOutput "${aa[@]+"${aa[@]}"}" >"$tempEnv" || returnClean $? "${clean[@]}" || return $?
+  local home && home=$(catchReturn "$handler" buildHome) || return $?
+  if [ ${#environmentFiles[@]} -eq 0 ]; then
+    catchEnvironment "$handler" cat >"$tempEnv.source" || return $?
+    environmentFiles+=("$tempEnv.source")
+  fi
+  if $parseFlag; then
+    while read -r variable; do variables+=("$variable"); done < <(cat "${environmentFiles[@]}" | environmentParseVariables)
+  fi
+  if $debugFlag; then
+    cat "${environmentFiles[@]}" | dumpPipe SOURCES 1>&2
+  fi
   (
-    if [ ${#environmentFiles[@]} -gt 0 ]; then
-      local environmentFile
-      for environmentFile in "${environmentFiles[@]}"; do
-        set -a # UNDO ok
-        # shellcheck source=/dev/null
-        source "$environmentFile" >(outputTrigger source "$environmentFile") 2>&1 || returnClean $? "${clean[@]}" || returnUndo $? set +a || return $?
-        set +a
-        ! $keepComments || catchReturn "$handler" bashCommentFilter --only <"$environmentFile" >>"$tempEnv.save" || return $?
-      done
-    else
-      catchEnvironment "$handler" cat >"$tempEnv.source" || return $?
-      set -a # UNDO ok
-      # shellcheck source=/dev/null
-      source "$tempEnv.source" >(outputTrigger source "$tempEnv.source") 2>&1 || returnClean $? "${clean[@]}" || returnUndo $? set +a || return $?
-      set +a
-      ! $keepComments || catchReturn "$handler" bashCommentFilter --only <"$tempEnv.source" >>"$tempEnv.save" || return $?
-      catchEnvironment "$handler" rm -f "$tempEnv.source" || return $?
-    fi
-    catchReturn "$handler" environmentOutput "${aa[@]+"${aa[@]}"}" >"$tempEnv.after" || returnClean $? "${clean[@]}" || return $?
+    catchReturn "$handler" environmentClean || return $?
+    catchReturn "$handler" environmentOutput "${aa[@]+"${aa[@]}"}" >"$tempEnv" || returnClean $? "${clean[@]}" || return $?
+    __environmentCompileLoad "$handler" "$keepComments" "${environmentFiles[@]}" >>"$tempEnv.save" || returnClean $? "${clean[@]}" || returnUndo $? set +a || return $?
+    catchReturn "$handler" environmentOutput "${aa[@]+"${aa[@]}"}" "${variables[@]+"${variables[@]}"}" >"$tempEnv.after" || returnClean $? "${clean[@]}" || return $?
   ) || returnClean $? "${clean[@]}" || return $?
   if $debugFlag; then
-    dumpPipe BEFORE <"$tempEnv.source"
-    dumpPipe AFTER <"$tempEnv.after"
-    decorate info DIFF
-    diff -U0 "$tempEnv" "$tempEnv.after"
-    decorate success RESULT
+    dumpPipe BEFORE <"$tempEnv" 1>&2
+    dumpPipe AFTER <"$tempEnv.after" 1>&2
+    decorate info DIFF 1>&2
+    diff -U0 "$tempEnv" "$tempEnv.after" 1>&2
+    decorate success RESULT 1>&2
   fi
   [ ! -f "$tempEnv.save" ] || catchEnvironment "$handler" cat "$tempEnv.save" || return $?
   diff -U0 "$tempEnv" "$tempEnv.after" | grepSafe '^+' | cut -c 2- | grepSafe -v '^+' | sort -u || returnClean $? "${clean[@]}" || return 0
@@ -976,6 +997,19 @@ environmentCompile() {
 _environmentCompile() {
   # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+__environmentCompileLoad() {
+  local __handler="$1" && shift
+  local __keepComments="$1" && shift
+  while [ $# -gt 0 ]; do
+    set -a # UNDO ok
+    # shellcheck source=/dev/null
+    source "$1" >(outputTrigger source "$1") 2>&1 || return $?
+    set +a
+    ! $__keepComments || catchReturn "$handler" bashCommentFilter --only <"$1" | grepSafe -e '^#' || return $?
+    shift
+  done
 }
 
 # Clean *most* exported variables from the current context except a few important ones:
@@ -994,9 +1028,10 @@ environmentClean() {
       continue
     fi
     unset "${variable?}" 2>/dev/null || :
-  done < <(declare -x | removeFields 2 | cut -f 1 -d =)
+  done < <(environmentVariables)
 }
 _environmentClean() {
+  true || environmentClean --help
   # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

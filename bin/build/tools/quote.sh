@@ -83,12 +83,11 @@ _escapeDoubleQuotes() {
 # stdout: bash-compatible string
 escapeBash() {
   local jqArgs
-
   jqArgs=(-r --raw-input '@sh')
   if [ $# -gt 0 ]; then
     printf "%s\n" "$@" | jq "${jqArgs[@]}"
   else
-    jq "${jqArgs[@]}"
+    jq  --slurp "${jqArgs[@]}"
   fi
 }
 _escapeBash() {

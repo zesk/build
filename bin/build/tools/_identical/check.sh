@@ -17,6 +17,7 @@ __identicalCheck() {
   local repairSources=() excludes=() prefixes=() singles=() binary="" ignoreSingles=false
   local findArgs=() extensionText="" skipFiles=() tokens=() tempDirectory=""
   local activeFilePatterns=() prefixPatterns=()
+  local token
 
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
@@ -92,15 +93,12 @@ __identicalCheck() {
       ;;
     --cache) shift && tempDirectory=$(validate "$handler" Directory "$argument" "${1-}") || return $? ;;
     --token)
-      shift
-      local token
-      token="$(validate "$handler" String "$argument" "${1-}")" || return $?
-      tokens+=("$token")
-      activeFilePatterns+=("$(quoteGrepPattern "$token")") || return $?
+      shift && token="$(validate "$handler" String "$argument" "${1-}")" || return $?
+      tokens+=("$token") && activeFilePatterns+=("$(quoteGrepPattern "$token")") || return $?
       ;;
     *)
-      # _IDENTICAL_ argumentUnknownHandler 1
-      throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
+      token="$(validate "$handler" String "token" "$argument")" || return $?
+      tokens+=("$token") && activeFilePatterns+=("$(quoteGrepPattern "$token")") || return $?
       ;;
     esac
     shift

@@ -370,40 +370,6 @@ _loadAverage() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# Convert a group name to a group ID
-# Argument: groupName - String. Required. One or more names to find group IDs for.
-# DOC TEMPLATE: --help 1
-# Argument: --help - Flag. Optional. Display this help.
-# stdout: PositiveInteger
-groupID() {
-  local handler="_${FUNCNAME[0]}" one=false
-
-  # _IDENTICAL_ argumentNonBlankLoopHandler 6
-  local __saved=("$@") __count=$#
-  while [ $# -gt 0 ]; do
-    local argument="$1" __index=$((__count - $# + 1))
-    # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
-    case "$argument" in
-    # _IDENTICAL_ helpHandler 1
-    --help) "$handler" 0 && return $? || return $? ;;
-    *)
-      local gid
-      gid="$(__groupID "$1")" || return 1
-      isPositiveInteger "$gid" || throwEnvironment "$handler" "No group found: $1" || return $?
-      printf "%d\n" "$gid"
-      one=true
-      ;;
-    esac
-    shift
-  done
-  $one || throwArgument "$handler" "Requires a group name" || return $?
-}
-_groupID() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
-}
-
 __pcregrepInstall() {
   packageGroupWhich "$(__pcregrepBinary)" pcregrep || return $?
 }
