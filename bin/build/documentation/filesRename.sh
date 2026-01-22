@@ -9,6 +9,7 @@ description="Renames \"\$file0\$oldSuffix\" to \"\$file0\$newSuffix\" if file ex
 example="    filesRename \"\" \".\$\$.backup\" hiding etc/app.json etc/config.json"$'\n'"    ..."$'\n'"    filesRename \".\$\$.backup\" \"\" restoring etc/app.json etc/config.json"$'\n'""
 file="bin/build/tools/file.sh"
 fn="filesRename"
+foundNames=""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/file.sh"
 sourceModified="1768775696"

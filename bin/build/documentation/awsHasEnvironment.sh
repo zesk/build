@@ -10,6 +10,7 @@ environment="AWS_ACCESS_KEY_ID - Read-only. If blank, this function succeeds (en
 example="    if awsHasEnvironment; then"$'\n'"    ..."$'\n'"    fi"$'\n'""
 file="bin/build/tools/aws.sh"
 fn="awsHasEnvironment"
+foundNames=""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/aws.sh"
 sourceModified="1768758981"

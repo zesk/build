@@ -10,6 +10,7 @@ description="Dump the function and include stacks and the current environment"$'
 environment="BUILD_DEBUG"$'\n'""
 file="bin/build/tools/dump.sh"
 fn="debuggingStack"
+foundNames=""
 requires="printf usageDocument"$'\n'"throwArgument"$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/dump.sh"

@@ -9,6 +9,7 @@ build_debug="reloadChanges - prompt module will show debugging information"$'\n'
 description="Watch or more directories for changes in a file extension and reload a source file if any changes occur."$'\n'""
 file="bin/build/tools/prompt-modules.sh"
 fn="reloadChanges"
+foundNames=""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/prompt-modules.sh"
 sourceModified="1768721469"

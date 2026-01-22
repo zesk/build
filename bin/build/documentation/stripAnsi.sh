@@ -11,6 +11,7 @@ description="Strip ANSI console escape sequences from a file"$'\n'"Write Environ
 environment="None."$'\n'""
 file="bin/build/tools/text.sh"
 fn="stripAnsi"
+foundNames=""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 source="https://stackoverflow.com/questions/6534556/how-to-remove-and-all-of-the-escape-sequences-in-a-file-using-linux-shell-sc"$'\n'""
 sourceFile="bin/build/tools/text.sh"

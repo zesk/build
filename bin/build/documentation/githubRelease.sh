@@ -9,6 +9,7 @@ description="Use GitHub API to generate a release"$'\n'""$'\n'"GitHub MUST have 
 environment="- \`GITHUB_ACCESS_TOKEN\` - Access to GitHub to publish releases"$'\n'"- \`GITHUB_ACCESS_TOKEN_EXPIRE\` - Date in \`YYYY-MM-DD\` format which represents the date when \`GITHUB_ACCESS_TOKEN\` expires (required)"$'\n'"- \`GITHUB_REPOSITORY_OWNER\` - Owner of the repository (\`https://github.com/owner\`)"$'\n'"- \`GITHUB_REPOSITORY_NAME\` - Name of the repository (\`https://github.com/owner/name\`)"$'\n'"GITHUB_ACCESS_TOKEN"$'\n'""
 file="bin/build/tools/github.sh"
 fn="githubRelease"
+foundNames=""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/github.sh"
 sourceModified="1768759150"

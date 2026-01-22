@@ -10,6 +10,7 @@ environment="BUILD_COMPOSER_VERSION - String. Default to \`latest\`. Used to run
 example="    phpComposer ./app/"$'\n'""
 file="bin/build/tools/php-composer.sh"
 fn="composer.sh"
+foundNames=""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/php-composer.sh"
 sourceModified="1768721470"

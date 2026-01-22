@@ -10,6 +10,7 @@ environment="Intended to be run on an interactive console. Should support \$(tpu
 example="    statusMessage decorate info \"Loading ...\""$'\n'"    bin/load.sh >>\"\$loadLogFile\""$'\n'"    clearLine"$'\n'""
 file="bin/build/tools/colors.sh"
 fn="statusMessage"
+foundNames=""
 requires="throwArgument hasConsoleAnimation catchEnvironment decorate validate clearLine"$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/colors.sh"

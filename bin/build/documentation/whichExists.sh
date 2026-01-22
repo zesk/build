@@ -9,6 +9,7 @@ description="Return Code: 0 - If all values are found (without the \`--any\` fla
 example="    whichExists cp date aws ls mv stat || throwEnvironment \"\$handler\" \"Need basic environment to work\" || return \$?"$'\n'"    whichExists --any terraform tofu || throwEnvironment \"\$handler\" \"No available infrastructure providers\" || return \$?"$'\n'"    whichExists --any curl wget || throwEnvironment \"\$handler\" \"No way to download URLs easily\" || return \$?"$'\n'""
 file="bin/build/tools/platform.sh"
 fn="whichExists"
+foundNames=""
 requires="throwArgument decorate __decorateExtensionEach command"$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/platform.sh"

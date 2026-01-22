@@ -9,6 +9,7 @@ description="Prints the build home directory (usually same as the application ro
 environment="BUILD_HOME"$'\n'""
 file="bin/build/tools/build.sh"
 fn="buildHome"
+foundNames=""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/build.sh"
 sourceModified="1768843054"

@@ -9,6 +9,7 @@ description="Show the current editor being used as a text string"$'\n'"Return Co
 environment="EDITOR - Used as a default editor (first)"$'\n'"VISUAL - Used as another default editor (last)"$'\n'""
 file="bin/build/tools/vendor.sh"
 fn="contextShow"
+foundNames=""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/vendor.sh"
 sourceModified="1768721469"

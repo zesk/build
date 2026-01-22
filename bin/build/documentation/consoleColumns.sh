@@ -10,6 +10,7 @@ environment="- \`COLUMNS\` - May be defined after calling this"$'\n'"- \`LINES\`
 example="    repeat \$(consoleColumns)"$'\n'""
 file="bin/build/tools/colors.sh"
 fn="consoleColumns"
+foundNames=""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 see="stty"$'\n'""
 sourceFile="bin/build/tools/colors.sh"

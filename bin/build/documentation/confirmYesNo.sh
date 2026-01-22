@@ -9,6 +9,7 @@ description="Read user input and return 0 if the user says yes, or non-zero if t
 example="    confirmYesNo --timeout 10 \"Stop the timer!\""$'\n'""
 file="bin/build/tools/interactive.sh"
 fn="confirmYesNo"
+foundNames=""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/interactive.sh"
 sourceModified="1768759374"

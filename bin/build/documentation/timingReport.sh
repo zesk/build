@@ -9,6 +9,8 @@ description="Outputs the timing optionally prefixed by a message."$'\n'""$'\n'"O
 example="    init=\$(timingStart)"$'\n'"    ..."$'\n'"    timingReport \"\$init\" \"Deploy completed in\""$'\n'""
 file="bin/build/tools/timing.sh"
 fn="timingReport"
+foundNames=""
+init=""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 see="timingStart"$'\n'""
 sourceFile="bin/build/tools/timing.sh"

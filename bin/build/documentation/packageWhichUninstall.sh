@@ -10,6 +10,7 @@ environment="Technically this will uninstall the binary and any related files as
 example="    packageWhichUninstall shellcheck shellcheck"$'\n'"    packageWhichUninstall mariadb mariadb-client"$'\n'""
 file="bin/build/tools/package.sh"
 fn="packageWhichUninstall"
+foundNames=""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/package.sh"
 sourceModified="1768721470"

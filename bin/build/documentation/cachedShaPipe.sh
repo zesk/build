@@ -10,6 +10,7 @@ description="Generates a checksum of standard input and outputs a SHA1 checksum 
 example="    cachedShaPipe \"\$cacheDirectory\" < \"\$fileName\""$'\n'"    cachedShaPipe \"\$cacheDirectory\" \"\$fileName0\" \"\$fileName1\""$'\n'""
 file="bin/build/tools/text.sh"
 fn="cachedShaPipe"
+foundNames=""
 output="cf7861b50054e8c680a9552917b43ec2b9edae2b"$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/text.sh"

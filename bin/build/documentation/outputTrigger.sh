@@ -10,6 +10,7 @@ description="Check output for content and trigger environment error if found"$'\
 example="    source \"\$include\" > >(outputTrigger source \"\$include\") || return \$?"$'\n'""
 file="bin/build/tools/debug.sh"
 fn="outputTrigger"
+foundNames=""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/debug.sh"
 sourceModified="1769059754"

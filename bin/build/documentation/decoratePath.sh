@@ -9,6 +9,7 @@ description="Replace an absolute path prefix with an icon if it matches \`HOME\`
 environment="TMPDIR"$'\n'"BUILD_HOME"$'\n'"HOME"$'\n'""
 file="bin/build/tools/decoration.sh"
 fn="decoratePath"
+foundNames=""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/decoration.sh"
 sourceModified="1768721469"

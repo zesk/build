@@ -10,6 +10,7 @@ description="Short description: list mappable variables in a file (without prefi
 environment="None."$'\n'""
 file="bin/build/tools/map.sh"
 fn="mapTokens"
+foundNames=""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/map.sh"
 sourceModified="1768756695"

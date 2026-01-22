@@ -9,6 +9,7 @@ description="Is the current console iTerm2?"$'\n'"Succeeds when LC_TERMINAL is \
 environment="LC_TERMINAL"$'\n'"TERM"$'\n'""
 file="bin/build/tools/iterm2.sh"
 fn="isiTerm2"
+foundNames=""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/iterm2.sh"
 sourceModified="1768759385"

@@ -9,6 +9,7 @@ description="Replace text \`fromText\` with \`toText\` in files, using \`findArg
 example="    cannon master main ! -path '*/old-version/*')"$'\n'""
 file="bin/build/tools/map.sh"
 fn="cannon"
+foundNames=""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/map.sh"
 sourceModified="1768756695"

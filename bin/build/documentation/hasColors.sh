@@ -9,6 +9,7 @@ description="Sets the environment variable \`BUILD_COLORS\` if not set, uses \`T
 environment="BUILD_COLORS - Boolean. Optional. Whether the build system will output ANSI colors."$'\n'""
 file="bin/build/tools/decorate.sh"
 fn="hasColors"
+foundNames=""
 requires="isPositiveInteger tput"$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/decorate.sh"

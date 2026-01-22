@@ -9,6 +9,7 @@ description="Open a file in a shell using the program we are using. Supports VSC
 environment="EDITOR - Used as a default editor (first)"$'\n'"VISUAL - Used as another default editor (last)"$'\n'""
 file="bin/build/tools/vendor.sh"
 fn="contextOpen"
+foundNames=""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/vendor.sh"
 sourceModified="1768721469"

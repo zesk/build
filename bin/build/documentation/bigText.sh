@@ -9,6 +9,7 @@ description="Display large text in the console for banners and important message
 environment="BUILD_TEXT_BINARY"$'\n'""
 file="bin/build/tools/decoration.sh"
 fn="bigText"
+foundNames=""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/decoration.sh"
 sourceModified="1768721469"

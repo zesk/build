@@ -9,6 +9,7 @@ description="Check if an element exists in an array"$'\n'""$'\n'"Return Code: 0 
 example="    if inArray \"\$thing\" \"\${things[@]+\"\${things[@]}\"}\"; then"$'\n'"        things+=(\"\$thing\")"$'\n'"    fi"$'\n'""
 file="bin/build/tools/text.sh"
 fn="inArray"
+foundNames=""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/text.sh"
 sourceModified="1768776345"

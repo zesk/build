@@ -9,6 +9,7 @@ description="Loads files or a directory of \`.sh\` files using \`source\` to mak
 environment="XDG_STATE_HOME"$'\n'""
 file="bin/build/tools/interactive.sh"
 fn="approveBashSource"
+foundNames=""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 security="Loads bash files"$'\n'""
 see="XDG_STATE_HOME.sh"$'\n'""

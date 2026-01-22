@@ -10,10 +10,12 @@ environment="Compatible with BSD and GNU date."$'\n'""
 example="    timestamp=\$(dateToTimestamp '2023-10-15')"$'\n'""
 file="bin/build/tools/date.sh"
 fn="dateToTimestamp"
+foundNames=""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/date.sh"
 sourceModified="1769056043"
 summary="Converts a date to an integer timestamp"
+timestamp=""
 usage="dateToTimestamp [ date ] [ --help ]"
 # shellcheck disable=SC2016
 helpConsole='[92mUsage[0m: [38;2;170;170;255mdateToTimestamp[0m [94m[ date ][0m [94m[ --help ][0m

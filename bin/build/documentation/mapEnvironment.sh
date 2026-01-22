@@ -9,6 +9,7 @@ description="Map tokens in the input stream based on environment values with the
 example="    printf %s \"{NAME}, {PLACE}.\\n\" | NAME=Hello PLACE=world mapEnvironment NAME PLACE"$'\n'""
 file="bin/build/tools/map.sh"
 fn="mapEnvironment"
+foundNames=""
 requires="environmentVariables cat throwEnvironment catchEnvironment"$'\n'"throwArgument decorate validate"$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 see="mapValue"$'\n'""

@@ -9,6 +9,7 @@ description="Install the most recent version of this hook and RUN IT in place if
 environment="BUILD-HOME - The default application home directory used for \`.git\` and build hooks."$'\n'""
 file="bin/build/tools/git.sh"
 fn="gitInstallHook"
+foundNames=""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/git.sh"
 sourceModified="1768759336"

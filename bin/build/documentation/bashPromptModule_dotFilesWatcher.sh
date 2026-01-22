@@ -9,6 +9,7 @@ description="Watches your HOME directory for \`.\` files which are added and unk
 example="    bashPrompt bashPromptModule_dotFilesWatcher"$'\n'""
 file="bin/build/tools/prompt-modules.sh"
 fn="bashPromptModule_dotFilesWatcher"
+foundNames=""
 requires="sort buildEnvironmentGetDirectory touch returnEnvironment read basename inArray decorate printf confirmYesNo statusMessage grep rm"$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/prompt-modules.sh"

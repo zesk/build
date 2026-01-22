@@ -10,6 +10,7 @@ environment="AWS_ACCESS_KEY_DATE - Variable used to test"$'\n'"AWS_ACCESS_KEY_DA
 example="    if ! awsIsKeyUpToDate 90; then"$'\n'"        bigText Failed, update key and reset date"$'\n'"        exit 99"$'\n'"    fi"$'\n'""
 file="bin/build/tools/aws.sh"
 fn="awsIsKeyUpToDate"
+foundNames=""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/aws.sh"
 sourceModified="1768758981"

@@ -9,6 +9,7 @@ description="Check out a branch with the current version and optional formatting
 environment="BUILD_BRANCH_FORMAT"$'\n'""
 file="bin/build/tools/git.sh"
 fn="gitBranchify"
+foundNames=""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/git.sh"
 sourceModified="1768759336"

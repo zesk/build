@@ -10,6 +10,7 @@ description="Actual function is called \`{functionName}\`."$'\n'""$'\n'""$'\n'"G
 environment="*BUILD_DEBUG* - Add \`fast-usage\` to make this quicker when you do not care about usage/failure."$'\n'""
 file="bin/build/tools/usage.sh"
 fn="usageDocument"
+foundNames=""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/usage.sh"
 sourceModified="1768721469"

@@ -9,6 +9,7 @@ description="Fetch the modification time of a file as a timestamp"$'\n'""$'\n'"R
 example="    fileModificationTime ~/.bash_profile"$'\n'""
 file="bin/build/tools/file.sh"
 fn="fileModificationTime"
+foundNames=""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/file.sh"
 sourceModified="1768775696"

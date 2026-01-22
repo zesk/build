@@ -9,6 +9,7 @@ description="List approved Bash script sources which can be loaded automatically
 environment="XDG_STATE_HOME"$'\n'""
 file="bin/build/tools/interactive.sh"
 fn="approvedSources"
+foundNames=""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 see="XDG_STATE_HOME.sh"$'\n'""
 sourceFile="bin/build/tools/interactive.sh"

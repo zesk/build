@@ -259,7 +259,7 @@ set +a
 export -n TESTING
 unset TESTING
 
-testLocalScope
+timing testLocalScope
 
 rm "$savedValue"
 

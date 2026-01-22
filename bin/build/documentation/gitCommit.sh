@@ -9,6 +9,7 @@ description="Commits all files added to git and also update release notes with c
 example="    c last"$'\n'"    c --last"$'\n'"    c --"$'\n'"... are all equivalent."$'\n'""
 file="bin/build/tools/git.sh"
 fn="gitCommit"
+foundNames=""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/git.sh"
 sourceModified="1768759336"

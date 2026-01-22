@@ -9,6 +9,7 @@ description="Install NPM in the build environment"$'\n'"If this fails it will ou
 environment="BUILD_NPM_VERSION - Read-only. Default version. If not specified, uses \`latest\`."$'\n'"- \`BUILD_NPM_VERSION\` - String. Default to \`latest\`. Used to install \`npm -i npm@\$BUILD_NPM_VERSION\` on install."$'\n'""
 file="bin/build/tools/npm.sh"
 fn="npmInstall"
+foundNames=""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/npm.sh"
 sourceModified="1768513812"

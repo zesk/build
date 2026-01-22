@@ -9,6 +9,7 @@ description="Sorts semantic versions prefixed with a \`v\` character; intended t
 example="    git tag | grep -e '^v[0-9.]*\$' | versionSort"$'\n'""
 file="bin/build/tools/pipeline.sh"
 fn="versionSort"
+foundNames=""
 requires="throwArgument sort usageDocument decorate"$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/pipeline.sh"

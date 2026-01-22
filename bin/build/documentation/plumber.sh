@@ -9,6 +9,7 @@ build_debug="plumber-verbose - The plumber outputs the exact variable captures b
 description="Run command and detect any global or local leaks"$'\n'""
 file="bin/build/tools/debug.sh"
 fn="plumber"
+foundNames=""
 requires="declare diff grep"$'\n'"throwArgument decorate usageArgumentString isCallable"$'\n'"fileTemporaryName removeFields"$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/debug.sh"

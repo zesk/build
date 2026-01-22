@@ -9,10 +9,12 @@ description="Converts a date (\`YYYY-MM-DD\`) to another format."$'\n'""$'\n'"Co
 example="    dateToFormat 2023-04-20 %s 1681948800"$'\n'"    timestamp=\$(dateToFormat '2023-10-15' %s)"$'\n'""
 file="bin/build/tools/date.sh"
 fn="dateToFormat"
+foundNames=""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/date.sh"
 sourceModified="1769056043"
 summary="Platform agnostic date conversion"$'\n'""
+timestamp=""
 usage="dateToFormat date [ format ]"
 # shellcheck disable=SC2016
 helpConsole='[92mUsage[0m: [38;2;170;170;255mdateToFormat[0m [38;2;255;255;0m[35;48;2;0;0;0mdate[0m[0m [94m[ format ][0m

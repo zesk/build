@@ -9,6 +9,7 @@ description="Given a list of directories, ensure they exist and create them if t
 example="    directoryRequire \"\$cachePath\""$'\n'""
 file="bin/build/tools/directory.sh"
 fn="directoryRequire"
+foundNames=""
 requires="throwArgument usageArgumentFunction usageArgumentString decorate catchEnvironment dirname"$'\n'"chmod chown"$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/directory.sh"

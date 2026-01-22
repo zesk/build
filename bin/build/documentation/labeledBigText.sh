@@ -9,6 +9,7 @@ description="Outputs a label before a bigText for output."$'\n'""$'\n'"This func
 example="    > bin/build/tools.sh labeledBigText --top \"Neat: \" Done"$'\n'"    Neat: ▛▀▖"$'\n'"          ▌ ▌▞▀▖▛▀▖▞▀▖"$'\n'"          ▌ ▌▌ ▌▌ ▌▛▀"$'\n'"          ▀▀ ▝▀ ▘ ▘▝▀▘"$'\n'"    > bin/build/tools.sh labeledBigText --bottom \"Neat: \" Done"$'\n'"          ▛▀▖"$'\n'"          ▌ ▌▞▀▖▛▀▖▞▀▖"$'\n'"          ▌ ▌▌ ▌▌ ▌▛▀"$'\n'"    Neat: ▀▀ ▝▀ ▘ ▘▝▀▘"$'\n'""
 file="bin/build/tools/decoration.sh"
 fn="labeledBigText"
+foundNames=""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/decoration.sh"
 sourceModified="1768721469"

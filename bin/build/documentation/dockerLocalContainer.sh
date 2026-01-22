@@ -9,6 +9,7 @@ description="Run a build container using given docker image."$'\n'""$'\n'"Runs A
 environment="BUILD_DOCKER_PLATFORM"$'\n'""
 file="bin/build/tools/docker.sh"
 fn="dockerLocalContainer"
+foundNames=""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/docker.sh"
 sourceModified="1768759328"

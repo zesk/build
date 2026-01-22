@@ -9,6 +9,7 @@ description="Does a hook exist in the local project?"$'\n'""$'\n'"Find the path 
 environment="BUILD_HOOK_EXTENSIONS BUILD_HOOK_DIRS BUILD_DEBUG"$'\n'""
 file="bin/build/tools/hook.sh"
 fn="whichHook"
+foundNames=""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/hook.sh"
 sourceModified="1768721469"

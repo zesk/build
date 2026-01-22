@@ -9,6 +9,8 @@ description="This function searches for a library located at the current path an
 example="    libFound=\$(bashLibraryHome \"bin/watcher/server.py\")"$'\n'""
 file="bin/build/tools/bash.sh"
 fn="bashLibraryHome"
+foundNames=""
+libFound=""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/bash.sh"
 sourceModified="1768776883"

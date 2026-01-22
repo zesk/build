@@ -9,6 +9,7 @@ description="Are we currently inside a git hook?"$'\n'""$'\n'"Tests non-blank st
 environment="GIT_EXEC_PATH - Must be set to pass"$'\n'"GIT_INDEX_FILE - Must be set to pass"$'\n'""
 file="bin/build/tools/git.sh"
 fn="gitInsideHook"
+foundNames=""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/git.sh"
 sourceModified="1768759336"

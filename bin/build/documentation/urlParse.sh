@@ -9,6 +9,7 @@ description="Simple URL parsing. Converts a \`url\` into values which can be par
 example="    eval \"\$(urlParse scheme://user:password@host:port/path)\""$'\n'"    echo \$name"$'\n'""
 file="bin/build/tools/url.sh"
 fn="urlParse"
+foundNames=""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/url.sh"
 sourceModified="1768721470"

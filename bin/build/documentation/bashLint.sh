@@ -9,6 +9,7 @@ description="Run \`shellcheck\` and \`bash -n\` on a set of bash files."$'\n'""$
 example="    bashLint goo.sh"$'\n'""
 file="bin/build/tools/lint.sh"
 fn="bashLint"
+foundNames=""
 output="This outputs \`statusMessage\`s to \`stdout\` and errors to \`stderr\`."$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/lint.sh"

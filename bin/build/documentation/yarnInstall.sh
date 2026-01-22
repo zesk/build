@@ -9,6 +9,7 @@ description="Install yarn in the build environment"$'\n'"If this fails it will o
 environment="- \`BUILD_YARN_VERSION"$'\n'""
 file="bin/build/tools/yarn.sh"
 fn="yarnInstall"
+foundNames=""
 notes="\`yarn\` is part of node, I think, so no clean uninstall."$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/yarn.sh"

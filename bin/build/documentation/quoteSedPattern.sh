@@ -9,6 +9,8 @@ description="Quote a string to be used in a sed pattern on the command line."$'\
 example="    sed \"s/\$(quoteSedPattern \"\$1\")/\$(quoteSedPattern \"\$2\")/g\""$'\n'"    needSlash=\$(quoteSedPattern '\$.*/[\\]^')"$'\n'""
 file="bin/build/tools/sed.sh"
 fn="quoteSedPattern"
+foundNames=""
+needSlash=""
 output="string quoted and appropriate to insert in a sed search or replacement phrase"$'\n'""
 requires="printf sed usageDocument __help"$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""

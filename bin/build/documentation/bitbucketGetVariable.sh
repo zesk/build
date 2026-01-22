@@ -9,6 +9,8 @@ description="Fetch a value from the pipelines YAML file"$'\n'""$'\n'"Assumes cur
 example="    MARIADB_ROOT_PASSWORD=\${MARIADB_ROOT_PASSWORD:-\$(bitbucketGetVariable MARIADB_ROOT_PASSWORD not-in-bitbucket-pipelines.yml)}"$'\n'""
 file="bin/build/tools/bitbucket.sh"
 fn="bitbucketGetVariable"
+foundNames=""
+MARIADB_ROOT_PASSWORD=""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/bitbucket.sh"
 sourceModified="1768588589"

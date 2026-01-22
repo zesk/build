@@ -9,6 +9,7 @@ description="Generates a git tag for a build version, so \`v1.0d1\`, \`v1.0d2\`,
 environment="BUILD_VERSION_SUFFIX - String. Version suffix to use as a default. If not specified the default is \`rc\`."$'\n'"BUILD_MAXIMUM_TAGS_PER_VERSION - Integer. Number of integers to attempt to look for when incrementing."$'\n'""
 file="bin/build/tools/git.sh"
 fn="gitTagVersion"
+foundNames=""
 hook="version-current"$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/git.sh"

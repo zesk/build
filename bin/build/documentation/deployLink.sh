@@ -9,6 +9,7 @@ description="Link new version of application."$'\n'""$'\n'"When called, current 
 environment="PWD"$'\n'""
 file="bin/build/tools/deploy.sh"
 fn="deployLink"
+foundNames=""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/deploy.sh"
 sourceModified="1768721469"

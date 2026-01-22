@@ -10,6 +10,7 @@ description="Install packages using a package manager."$'\n'""$'\n'"Supported ma
 example="    packageInstall shellcheck"$'\n'""
 file="bin/build/tools/package.sh"
 fn="packageInstall"
+foundNames=""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/package.sh"
 sourceModified="1768721470"

@@ -9,6 +9,7 @@ description="Load and print one or more environment settings which represents a 
 environment="\$envName"$'\n'"BUILD_ENVIRONMENT_DIRS - \`:\` separated list of paths to load env files"$'\n'""
 file="bin/build/tools/build.sh"
 fn="buildEnvironmentGetDirectory"
+foundNames=""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/build.sh"
 sourceModified="1768843054"

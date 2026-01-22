@@ -9,6 +9,7 @@ credit="https://homepages.inf.ed.ac.uk/rbf/CVonline/LOCAL_COPIES/POYNTON1/ColorF
 description="Return an integer between 0 and 100"$'\n'"Colors are between 0 and 255"$'\n'""
 file="bin/build/tools/colors.sh"
 fn="colorBrightness"
+foundNames=""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/colors.sh"
 sourceModified="1768758955"

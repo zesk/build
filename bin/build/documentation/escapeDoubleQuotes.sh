@@ -9,6 +9,7 @@ description="Quote strings for inclusion in shell quoted strings"$'\n'"Without a
 example="    escapeDoubleQuotes \"Now I can't not include this in a bash string.\""$'\n'""
 file="bin/build/tools/quote.sh"
 fn="escapeDoubleQuotes"
+foundNames=""
 output="Single quotes are prefixed with a backslash"$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/quote.sh"

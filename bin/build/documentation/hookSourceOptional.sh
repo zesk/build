@@ -11,6 +11,7 @@ environment="BUILD_HOOK_EXTENSIONS"$'\n'"BUILD_HOOK_DIRS"$'\n'"BUILD_DEBUG"$'\n'
 example="    if ! hookSourceOptional test-cleanup >>\"\$quietLog\"; then"$'\n'"        buildFailed \"\$quietLog\""$'\n'"    fi"$'\n'""
 file="bin/build/tools/hook.sh"
 fn="hookSourceOptional"
+foundNames=""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 see="hooks.md hookRun"$'\n'""
 sourceFile="bin/build/tools/hook.sh"

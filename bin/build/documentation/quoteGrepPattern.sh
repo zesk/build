@@ -9,6 +9,7 @@ description="Quote grep -e patterns for shell use"$'\n'""$'\n'"Without arguments
 example="    grep -e \"\$(quoteGrepPattern \"\$pattern\")\" < \"\$filterFile\""$'\n'""
 file="bin/build/tools/quote.sh"
 fn="quoteGrepPattern"
+foundNames=""
 output="string quoted and appropriate to insert in a grep search or replacement phrase"$'\n'""
 quotes="\" . [ ] | \\n with a backslash"$'\n'""
 requires="printf sed"$'\n'""

@@ -11,6 +11,7 @@ environment="BUILD_HOOK_EXTENSIONS BUILD_HOOK_DIRS BUILD_DEBUG"$'\n'""
 example="    version=\"\$(hookSource version-current)\""$'\n'""
 file="bin/build/tools/hook.sh"
 fn="hookSource"
+foundNames=""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 see="hooks.md hookRunOptional"$'\n'""
 sourceFile="bin/build/tools/hook.sh"
@@ -18,6 +19,7 @@ sourceModified="1768721469"
 summary="Run a project hook"$'\n'""
 test="testHookSystem"$'\n'""
 usage="hookSource [ --application applicationHome ] [ --extensions extensionList ] hookName ..."
+version=""
 # shellcheck disable=SC2016
 helpConsole='[92mUsage[0m: [38;2;170;170;255mhookSource[0m [94m[ --application applicationHome ][0m [94m[ --extensions extensionList ][0m [38;2;255;255;0m[35;48;2;0;0;0mhookName ...[0m[0m
 

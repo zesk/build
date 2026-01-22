@@ -9,6 +9,7 @@ description="Register current IP address in listed security groups to allow for 
 environment="AWS_REGION"$'\n'"DEVELOPER_ID"$'\n'"AWS_ACCESS_KEY_ID"$'\n'"AWS_SECRET_ACCESS_KEY"$'\n'""
 file="bin/build/tools/aws.sh"
 fn="awsIPAccess"
+foundNames=""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/aws.sh"
 sourceModified="1768758981"

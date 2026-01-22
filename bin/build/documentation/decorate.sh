@@ -9,6 +9,7 @@ description="Singular decoration function"$'\n'"You can extend this function by 
 environment="__BUILD_DECORATE - String. Cached color lookup."$'\n'"BUILD_COLORS - Boolean. Colors enabled (\`true\` or \`false\`)."$'\n'""
 file="bin/build/tools/decorate.sh"
 fn="decorate"
+foundNames=""
 requires="isFunction returnArgument awk catchEnvironment usageDocument executeInputSupport __help"$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/decorate.sh"

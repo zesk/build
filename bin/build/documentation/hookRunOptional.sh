@@ -11,6 +11,7 @@ environment="BUILD_HOOK_EXTENSIONS"$'\n'"BUILD_HOOK_DIRS"$'\n'""
 example="    version=\"\$(hookRunOptional version-current)\""$'\n'""
 file="bin/build/tools/hook.sh"
 fn="hookRunOptional"
+foundNames=""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 see="hooks.md hookRunOptional hookRun"$'\n'""
 sourceFile="bin/build/tools/hook.sh"
@@ -18,6 +19,7 @@ sourceModified="1768721469"
 summary="Identical to \`hookRun\` but returns exit code zero if the"
 test="testHookSystem"$'\n'""
 usage="hookRunOptional [ --next scriptName ] [ --application applicationHome ] [ --extensions extensionList ] hookName [ ... ] [ --help ]"
+version=""
 # shellcheck disable=SC2016
 helpConsole='[92mUsage[0m: [38;2;170;170;255mhookRunOptional[0m [94m[ --next scriptName ][0m [94m[ --application applicationHome ][0m [94m[ --extensions extensionList ][0m [38;2;255;255;0m[35;48;2;0;0;0mhookName[0m[0m [94m[ ... ][0m [94m[ --help ][0m
 

@@ -9,6 +9,7 @@ build_debug="usage-cache-skip - Skip caching by default (override with \`--cache
 description="Extract documentation variables from a comment stripped of the '# ' prefixes."$'\n'""$'\n'"A few special values are generated/computed:"$'\n'""$'\n'"- \`description\` - Any line in the comment which is not in variable is appended to the field \`description\`"$'\n'"- \`fn\` - The function name (no parenthesis or anything)"$'\n'"- \`base\` - The basename of the file"$'\n'"- \`file\` - The relative path name of the file from the application root"$'\n'"- \`summary\` - Defaults to first ten words of \`description\`"$'\n'"- \`exit_code\` - Defaults to \`0 - Always succeeds\`"$'\n'"- \`reviewed\`  - Defaults to \`Never\`"$'\n'"- \`environment\"  - Defaults to \`No environment dependencies or modifications.\`"$'\n'""$'\n'"Otherwise the assumed variables (in addition to above) to define functions are:"$'\n'""$'\n'"- \`argument\` - Individual arguments"$'\n'"- \`usage\` - Canonical usage example (code)"$'\n'"- \`example\` - An example of usage (code, many)"$'\n'"- \`depends\` - Any dependencies (list)"$'\n'""$'\n'""
 file="bin/build/tools/documentation.sh"
 fn="bashDocumentationExtract"
+foundNames=""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/documentation.sh"
 sourceModified="1769058814"

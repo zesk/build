@@ -10,6 +10,7 @@ description="Returns 0 if a tty is available, 1 if not. Caches the saved value i
 environment="- \`__BUILD_HAS_TTY\` - Cached value of \`false\` or \`true\`. Any other value forces computation during this call."$'\n'""
 file="bin/build/tools/colors.sh"
 fn="isTTYAvailable"
+foundNames=""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 see="stty /dev/tty"$'\n'""
 sourceFile="bin/build/tools/colors.sh"

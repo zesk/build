@@ -9,6 +9,7 @@ description="Cleans the path and removes non-directory entries and duplicates"$'
 environment="PATH"$'\n'""
 file="bin/build/tools/path.sh"
 fn="pathCleanDuplicates"
+foundNames=""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/path.sh"
 sourceModified="1768759497"

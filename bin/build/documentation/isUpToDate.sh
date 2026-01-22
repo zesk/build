@@ -9,6 +9,7 @@ description="For security one should update keys every N days"$'\n'""$'\n'"This 
 example="    if !isUpToDate \"\$AWS_ACCESS_KEY_DATE\" 90; then"$'\n'"      bigText Failed, update key and reset date"$'\n'"      exit 99"$'\n'"    fi"$'\n'""
 file="bin/build/tools/pipeline.sh"
 fn="isUpToDate"
+foundNames=""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/pipeline.sh"
 sourceModified="1768759595"

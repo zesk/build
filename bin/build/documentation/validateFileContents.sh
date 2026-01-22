@@ -9,6 +9,7 @@ description="Search for item extensions and ensure that text is found in each it
 example="    validateFileContents foo.sh my.sh -- \"Copyright 2024\" \"Company, LLC\""$'\n'""
 file="bin/build/tools/lint.sh"
 fn="validateFileContents"
+foundNames=""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/lint.sh"
 sourceModified="1768759461"

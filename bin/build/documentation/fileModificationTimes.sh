@@ -9,6 +9,7 @@ description="Lists files in a directory recursively along with their modificatio
 example="fileModificationTimes \$myDir ! -path \"*/.*/*\""$'\n'""
 file="bin/build/tools/file.sh"
 fn="fileModificationTimes"
+foundNames=""
 output="1705347087 bin/build/tools.sh"$'\n'"1704312758 bin/build/deprecated.sh"$'\n'"1705442647 bin/build/build.json"$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/file.sh"

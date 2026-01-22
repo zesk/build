@@ -9,6 +9,7 @@ description="Keep crontab synced with files and environment files in an applicat
 example="    crontabApplicationUpdate --env-file /etc/myCoolApp.conf --user www-data /var/www/applications"$'\n'"    crontabApplicationUpdate /etc/myCoolApp.conf /var/www/applications www-data /usr/local/bin/map.sh"$'\n'""
 file="bin/build/tools/crontab.sh"
 fn="crontabApplicationUpdate"
+foundNames=""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 see="whoami"$'\n'""
 sourceFile="bin/build/tools/crontab.sh"

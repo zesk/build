@@ -10,6 +10,7 @@ description="Update file from \`APPLICATION_JSON\` with application fingerprint.
 environment="BUILD_DEBUG"$'\n'""
 file="bin/build/tools/fingerprint.sh"
 fn="fingerprint"
+foundNames=""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/fingerprint.sh"
 sourceModified="1768721469"

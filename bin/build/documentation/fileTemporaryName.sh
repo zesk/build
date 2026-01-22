@@ -10,6 +10,7 @@ description="Wrapper for \`mktemp\`. Generate a temporary file name, and fail us
 environment="BUILD_DEBUG"$'\n'""
 file="bin/build/tools/file.sh"
 fn="fileTemporaryName"
+foundNames=""
 requires="mktemp __help catchEnvironment usageDocument"$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/file.sh"

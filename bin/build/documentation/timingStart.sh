@@ -9,6 +9,8 @@ description="Outputs the offset in milliseconds from January 1, 1970."$'\n'""$'\
 example="    init=\$(timingStart)"$'\n'"    ..."$'\n'"    timingReport \"\$init\" \"Completed in\""$'\n'""
 file="bin/build/tools/timing.sh"
 fn="timingStart"
+foundNames=""
+init=""
 requires="__timestamp, returnEnvironment date"$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/timing.sh"

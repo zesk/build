@@ -9,11 +9,13 @@ description="Run a function and preserve exit code"$'\n'"Returns \`code\`"$'\n'"
 example="    local undo thing"$'\n'"    thing=\$(catchEnvironment \"\$handler\" createLargeResource) || return \$?"$'\n'"    undo+=(-- deleteLargeResource \"\$thing\")"$'\n'"    thing=\$(catchEnvironment \"\$handler\" createMassiveResource) || returnUndo \$? \"\${undo[@]}\" || return \$?"$'\n'"    undo+=(-- deleteMassiveResource \"\$thing\")"$'\n'""
 file="bin/build/tools/sugar.sh"
 fn="returnUndo"
+foundNames=""
 requires="isUnsignedInteger throwArgument decorate execute"$'\n'"usageDocument"$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/sugar.sh"
 sourceModified="1768769473"
 summary="Run a function and preserve exit code"
+thing=""
 usage="returnUndo [ --help ] code [ undoFunction ] [ -- ]"
 # shellcheck disable=SC2016
 helpConsole='[92mUsage[0m: [38;2;170;170;255mreturnUndo[0m [94m[ --help ][0m [38;2;255;255;0m[35;48;2;0;0;0mcode[0m[0m [94m[ undoFunction ][0m [94m[ -- ][0m

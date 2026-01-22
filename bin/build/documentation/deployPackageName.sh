@@ -9,6 +9,7 @@ description="Outputs the build target name which is based on the environment \`B
 environment="BUILD_TARGET"$'\n'""
 file="bin/build/tools/deploy.sh"
 fn="deployPackageName"
+foundNames=""
 leak="BUILD_TARGET"$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/deploy.sh"

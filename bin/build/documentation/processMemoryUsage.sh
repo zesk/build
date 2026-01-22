@@ -9,6 +9,7 @@ description="Outputs value of resident memory used by a process, value is in kil
 example="    > processMemoryUsage 23"$'\n'""
 file="bin/build/tools/process.sh"
 fn="processMemoryUsage"
+foundNames=""
 output="423"$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/process.sh"
