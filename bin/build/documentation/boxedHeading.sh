@@ -13,7 +13,7 @@ foundNames=""
 output="+==========================================================================+"$'\n'"|                                                                          |"$'\n'"| Moving ...                                                               |"$'\n'"|                                                                          |"$'\n'"+==========================================================================+"$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/decoration.sh"
-sourceModified="1768721469"
+sourceModified="1769063211"
 summary="Text heading decoration"$'\n'""
 usage="boxedHeading [ --size size ] [ --outside outsideStyle ] [ --inside insideStyle ] [ --shrink characterCount ] [ --size lineCount ] [ text ... ] [ --help ]"
 # shellcheck disable=SC2016

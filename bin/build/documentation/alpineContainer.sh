@@ -11,7 +11,7 @@ fn="alpineContainer"
 foundNames=""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/apk.sh"
-sourceModified="1768721469"
+sourceModified="1769063211"
 summary="Open an Alpine container shell"
 usage="alpineContainer [ --help ] [ --env-file envFile ] [ --env envVariable=envValue ] [ --platform platform ] [ extraArgs ]"
 # shellcheck disable=SC2016
