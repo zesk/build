@@ -12,6 +12,7 @@ foundNames=([0]="argument" [1]="note")
 note="This is slow."$'\n'""
 rawComment="Ensure that every character in a text string passes all character class tests"$'\n'"Argument: text - Text to validate"$'\n'"Argument: class0 ... - One or more character classes that the characters in string should match"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Note: This is slow."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
+sourceFile="bin/build/tools/character.sh"
 sourceModified="1769063211"
 summary="Ensure that every character in a text string passes all"
 usage="stringValidate [ text ] [ class0 ... ] [ --help ]"

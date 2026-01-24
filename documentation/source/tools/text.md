@@ -34,6 +34,8 @@
 
 {stripAnsi}
 
+{consoleTrimWidth}
+
 {consolePlainLength}
 
 ### Space trimming

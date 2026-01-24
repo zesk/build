@@ -12,7 +12,6 @@ foundNames=([0]="requires")
 rawComment="Output the iTerm2 version"$'\n'"Requires: stty"$'\n'""$'\n'""
 requires="stty"$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
-sourceFile="bin/build/tools/iterm2.sh"
 sourceModified="1769184734"
 summary="Output the iTerm2 version"
 usage="iTerm2Version"

@@ -11,6 +11,7 @@ file="bin/build/tools/python.sh"
 foundNames=([0]="argument")
 rawComment="Utility to uninstall python dependencies via pip"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Argument: --handler handler - Function. Optional. Use this error handler instead of the default error handler."$'\n'"Argument: pipPackage [ ... ] - String. Required. Pip package name to uninstall."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
+sourceFile="bin/build/tools/python.sh"
 sourceModified="1769184734"
 summary="Utility to uninstall python dependencies via pip"
 usage="pipUninstall [ --help ] [ --handler handler ] pipPackage [ ... ]"

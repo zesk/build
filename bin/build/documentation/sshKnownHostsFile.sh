@@ -11,6 +11,7 @@ file="bin/build/tools/ssh.sh"
 foundNames=()
 rawComment=""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
+sourceFile="bin/build/tools/ssh.sh"
 sourceModified="1769184556"
 summary="undocumented"
 usage="sshKnownHostsFile"

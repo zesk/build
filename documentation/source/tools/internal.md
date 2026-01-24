@@ -4,15 +4,15 @@
 [🛠️ Tools ](./index.md) &middot; [⬅ Top ](../index.md)
 <hr />
 
-## Building
+## Building markdown documentation
 
 {buildDocumentationBuild}
 
 {buildDocumentationExtractionUpdate}
 
-### Generating fast files
+### Generating documentation cache files
 
-{buildFastFiles}
+{buildUsageCompile}
 
 ## Development
 

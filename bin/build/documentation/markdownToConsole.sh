@@ -11,6 +11,7 @@ file="bin/build/tools/colors.sh"
 foundNames=([0]="summary" [1]="stdin" [2]="stdout" [3]="argument")
 rawComment="Summary: Converts backticks, bold and italic to console colors."$'\n'"stdin: Markdown"$'\n'"stdout: decorated console output"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
+sourceFile="bin/build/tools/colors.sh"
 sourceModified="1769211509"
 stdin="Markdown"$'\n'""
 stdout="decorated console output"$'\n'""

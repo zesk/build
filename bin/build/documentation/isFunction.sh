@@ -12,6 +12,7 @@ foundNames=([0]="argument" [1]="return_code" [2]="requires")
 rawComment="Test if argument are bash functions"$'\n'"Argument: string - Required. String to test if it is a bash function. Builtins are supported. \`.\` is explicitly not supported to disambiguate it from the current directory \`.\`."$'\n'"If no arguments are passed, returns exit code 1."$'\n'"Return Code: 0 - argument is bash function"$'\n'"Return Code: 1 - argument is not a bash function"$'\n'"Requires: catchArgument isUnsignedInteger usageDocument type"$'\n'""$'\n'""
 requires="catchArgument isUnsignedInteger usageDocument type"$'\n'""
 return_code="0 - argument is bash function"$'\n'"1 - argument is not a bash function"$'\n'""
+sourceFile="bin/build/tools/type.sh"
 sourceModified="1769063211"
 summary="Test if argument are bash functions"
 usage="isFunction string"

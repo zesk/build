@@ -12,6 +12,7 @@ file="bin/build/tools/path.sh"
 foundNames=([0]="argument" [1]="environment")
 rawComment="Cleans the path and removes non-directory entries and duplicates"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Maintains ordering."$'\n'"Environment: PATH"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
+sourceFile="bin/build/tools/path.sh"
 sourceModified="1769063211"
 summary="Cleans the path and removes non-directory entries and duplicates"
 usage="pathCleanDuplicates [ --help ]"

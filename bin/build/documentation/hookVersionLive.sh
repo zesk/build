@@ -11,7 +11,6 @@ file="bin/build/tools/hooks.sh"
 foundNames=([0]="argument")
 rawComment="Application deployed version"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Argument: --application application - Directory. Optional. Application home directory."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
-sourceFile="bin/build/tools/hooks.sh"
 sourceModified="1769063211"
 summary="Application deployed version"
 usage="hookVersionLive [ --help ] [ --application application ]"

@@ -13,6 +13,7 @@ foundNames=([0]="summary" [1]="argument" [2]="example" [3]="requires")
 rawComment="Summary: Sort versions in the format v0.0.0"$'\n'"Sorts semantic versions prefixed with a \`v\` character; intended to be used as a pipe."$'\n'"vXXX.XXX.XXX"$'\n'"for sort - -k 1.c,1 - the \`c\` is the 1-based character index, so 2 means skip the 1st character"$'\n'"Odd you can't globally flip sort order with -r - that only works with non-keyed entries I assume"$'\n'"Argument: -r | --reverse - Reverse the sort order (optional)"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Example:     git tag | grep -e '^v[0-9.]*\$' | versionSort"$'\n'"Requires: throwArgument sort usageDocument decorate"$'\n'""$'\n'""
 requires="throwArgument sort usageDocument decorate"$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
+sourceFile="bin/build/tools/pipeline.sh"
 sourceModified="1769185900"
 summary="Sort versions in the format v0.0.0"$'\n'""
 usage="versionSort [ -r | --reverse ] [ --help ]"

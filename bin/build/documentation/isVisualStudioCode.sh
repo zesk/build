@@ -12,6 +12,7 @@ foundNames=([0]="argument" [1]="return_code" [2]="see")
 rawComment="Are we within the Microsoft Visual Studio Code terminal?"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Return Code: 0 - within the Visual Studio Code terminal"$'\n'"Return Code: 1 - not within the Visual Studio Code terminal AFAIK"$'\n'"See: contextOpen"$'\n'""$'\n'""
 return_code="0 - within the Visual Studio Code terminal"$'\n'"1 - not within the Visual Studio Code terminal AFAIK"$'\n'""
 see="contextOpen"$'\n'""
+sourceFile="bin/build/tools/vendor.sh"
 sourceModified="1769063211"
 summary="Are we within the Microsoft Visual Studio Code terminal?"
 usage="isVisualStudioCode [ --help ]"

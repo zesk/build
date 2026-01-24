@@ -5,7 +5,6 @@
 # Copyright &copy; 2026 Market Acumen, Inc.
 #
 
-set -eou pipefail
 # shellcheck source=/dev/null
 source "${BASH_SOURCE[0]%/*}/../../../tools.sh" || exit 121
 

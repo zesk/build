@@ -11,6 +11,7 @@ file="bin/build/tools/php-composer.sh"
 foundNames=()
 rawComment="Install composer for PHP"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
+sourceFile="bin/build/tools/php-composer.sh"
 sourceModified="1769184734"
 summary="Install composer for PHP"
 usage="phpComposerInstall"

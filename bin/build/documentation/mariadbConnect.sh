@@ -12,6 +12,7 @@ file="bin/build/tools/mariadb.sh"
 foundNames=([0]="argument" [1]="environment")
 rawComment="Connect to a mariadb-type database using a URL"$'\n'"Argument: dsn - URL. Database to connect to. All arguments after this are passed to \`binary\`."$'\n'"Argument: binary - Callable. Executable to connect to the database."$'\n'"Argument: --print - Flag. Optional. Just print the statement instead of running it."$'\n'"Environment: MARIADB_BINARY_CONNECT"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
+sourceFile="bin/build/tools/mariadb.sh"
 sourceModified="1769184734"
 summary="Connect to a mariadb-type database using a URL"
 usage="mariadbConnect [ dsn ] [ binary ] [ --print ]"

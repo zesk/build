@@ -11,6 +11,7 @@ file="bin/build/tools/node.sh"
 foundNames=()
 rawComment="Installs the selected package manager for node"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
+sourceFile="bin/build/tools/node.sh"
 sourceModified="1769184734"
 summary="Installs the selected package manager for node"
 usage="nodePackageManagerInstall"

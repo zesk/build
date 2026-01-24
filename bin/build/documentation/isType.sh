@@ -11,6 +11,7 @@ file="bin/build/tools/type.sh"
 foundNames=()
 rawComment="Bash types beyond \`type -t\`"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
+sourceFile="bin/build/tools/type.sh"
 sourceModified="1769063211"
 summary="Bash types beyond \`type -t\`"
 usage="isType"

@@ -11,7 +11,6 @@ file="bin/build/tools/iterm2.sh"
 foundNames=()
 rawComment="Colors for various UI elements"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
-sourceFile="bin/build/tools/iterm2.sh"
 sourceModified="1769184734"
 summary="Colors for various UI elements"
 usage="iTerm2ColorTypes"

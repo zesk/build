@@ -12,6 +12,7 @@ file="bin/build/tools/usage.sh"
 foundNames=([0]="argument" [1]="return_code" [2]="deprecated")
 rawComment="Requires environment variables to be set and non-blank"$'\n'"Argument: usageFunction - Required. \`bash\` function already defined to output handler"$'\n'"Argument: environmentVariable - String. Optional. One or more environment variables which should be set and non-empty."$'\n'"Return Code: 0 - All environment variables are set and non-empty"$'\n'"Return Code: 1 - If any \`environmentVariable\` variables are not set or are empty."$'\n'"Deprecated: 2024-01-01"$'\n'""$'\n'""
 return_code="0 - All environment variables are set and non-empty"$'\n'"1 - If any \`environmentVariable\` variables are not set or are empty."$'\n'""
+sourceFile="bin/build/tools/usage.sh"
 sourceModified="1769216318"
 summary="Requires environment variables to be set and non-blank"
 usage="usageRequireEnvironment usageFunction [ environmentVariable ]"

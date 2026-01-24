@@ -11,6 +11,7 @@ file="bin/build/tools/process.sh"
 foundNames=([0]="argument")
 rawComment="Wait for processes not owned by this process to exit, and send signals to terminate processes."$'\n'"Argument: processId - Integer. Required. Wait for process ID to exit."$'\n'"Argument: --timeout seconds - Integer. Optional. Wait for this long after sending a signals to see if a process exits. If not supplied waits 1 second after each signal, then waits forever."$'\n'"Argument: --signals signal - CommaDelimitedList. Optional. Send each signal to processes, in order."$'\n'"Argument: --require - Flag. Optional. Require all processes to be alive upon first invocation."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
+sourceFile="bin/build/tools/process.sh"
 sourceModified="1769063211"
 summary="Wait for processes not owned by this process to exit,"
 usage="processWait processId [ --timeout seconds ] [ --signals signal ] [ --require ]"

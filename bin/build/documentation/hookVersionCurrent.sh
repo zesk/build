@@ -11,7 +11,6 @@ file="bin/build/tools/hooks.sh"
 foundNames=([0]="argument")
 rawComment="Application current version"$'\n'"Extracts the version from the repository"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Argument: --application application - Directory. Optional. Application home directory."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
-sourceFile="bin/build/tools/hooks.sh"
 sourceModified="1769063211"
 summary="Application current version"
 usage="hookVersionCurrent [ --help ] [ --application application ]"

@@ -11,6 +11,7 @@ file="bin/build/tools/_sugar.sh"
 foundNames=([0]="argument" [1]="stdout")
 rawComment="Output the exit code as a string"$'\n'"Argument: code ... - UnsignedInteger. String. Exit code value to output."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"stdout: exitCodeToken, one per line"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
+sourceFile="bin/build/tools/_sugar.sh"
 sourceModified="1769063211"
 stdout="exitCodeToken, one per line"$'\n'""
 summary="Output the exit code as a string"

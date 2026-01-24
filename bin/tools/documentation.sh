@@ -44,9 +44,9 @@ buildUsageCompile() {
 
   local cleanFlag=false quickFlag=true
 
-  bashDebugInterruptFile
-  set -eou pipefail
-
+  if ! decorateInitialized; then
+    decorateStyle
+  fi
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
@@ -148,7 +148,6 @@ __buildUsageCompileFunction() {
   local sourceFile=""
 
   if [ -f "$documentationSettingsFile" ]; then
-
     sourceFile=$(
       # shellcheck source=/dev/null
       export sourceFile && source "$documentationSettingsFile" || : && printf "%s\n" "${sourceFile-}" || :
@@ -173,11 +172,12 @@ __buildUsageCompileFunction() {
 
   catchReturn "$handler" bashFunctionComment "$sourceFile" "$fun" >"$tempComment" || returnClean $? "${clean[@]}" || return $?
   catchReturn "$handler" rm -f "$documentationSettingsFile" || return $?
+  printf "175 %s:%s\n" "${BASH_SOURCE[0]}" "$LINENO" 1>&2 # DEBUG
   catchReturn "$handler" muzzle bashDocumentationExtract --generate "$fun" "$sourceFile" <"$tempComment" || returnClean $? "${clean[@]}" || return $?
   if [ ! -f "$documentationSettingsFile" ]; then
     throwEnvironment "$handler" "${prefix}: bashDocumentationExtract $fun $sourceFile did not generate $documentationSettingsFile" || returnClean $? "${clean[@]}" || return $?
   else
-
+    printf "180 %s:%s\n" "${BASH_SOURCE[0]}" "$LINENO" 1>&2 # DEBUG
     catchReturn "$handler" decorateThemelessMode || return $?
     fn="" BUILD_DEBUG="" BUILD_COLORS=true catchEnvironment "$handler" usageDocument "$sourceFile" "$fun" 0 >"$tempHelp" || returnClean $? "${clean[@]}" || returnUndo $? decorateThemelessMode --end || return $?
     catchReturn "$handler" decorateThemelessMode --end || returnClean $? "${clean[@]}" || return $?

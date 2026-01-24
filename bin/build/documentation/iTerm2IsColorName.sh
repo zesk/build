@@ -11,7 +11,6 @@ file="bin/build/tools/iterm2.sh"
 foundNames=([0]="argument")
 rawComment="Is it a color name?"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
-sourceFile="bin/build/tools/iterm2.sh"
 sourceModified="1769184734"
 summary="Is it a color name?"
 usage="iTerm2IsColorName [ --help ]"

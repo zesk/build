@@ -12,6 +12,7 @@ file="bin/build/tools/package.sh"
 foundNames=([0]="example" [1]="summary" [2]="argument")
 rawComment="Removes packages using the current package manager."$'\n'"Example:     {fn} shellcheck"$'\n'"Summary: Removes packages using package manager"$'\n'"Argument: package - String. Required. One or more packages to uninstall"$'\n'"Argument: --manager packageManager - String. Optional. Package manager to use. (apk, apt, brew)"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
+sourceFile="bin/build/tools/package.sh"
 sourceModified="1769184734"
 summary="Removes packages using package manager"$'\n'""
 usage="packageUninstall package [ --manager packageManager ]"

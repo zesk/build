@@ -11,6 +11,7 @@ file="bin/build/tools/bitbucket.sh"
 foundNames=([0]="return_code")
 rawComment="Are we currently in the BitBucket pipeline?"$'\n'"Return Code: 0 - is BitBucket pipeline"$'\n'"Return Code: 1 - Not a BitBucket pipeline"$'\n'""$'\n'""
 return_code="0 - is BitBucket pipeline"$'\n'"1 - Not a BitBucket pipeline"$'\n'""
+sourceFile="bin/build/tools/bitbucket.sh"
 sourceModified="1769063211"
 summary="Are we currently in the BitBucket pipeline?"
 usage="isBitBucketPipeline"

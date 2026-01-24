@@ -11,6 +11,7 @@ file="bin/build/tools/user.sh"
 foundNames=([0]="summary" [1]="stdout" [2]="file" [3]="argument")
 rawComment="Summary: Quick user database query of the user home directory"$'\n'"Look user up, output user home directory"$'\n'"stdout: \`Directory\`. The user home directory."$'\n'"File: /etc/passwd - Used for the default user database."$'\n'"Argument: user - String. Optional. User name to look up. Uses \`whoami\` if not supplied."$'\n'"Argument: database - File. Optional. User name database file to examine. Uses \`/etc/passwd\` if not supplied."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
+sourceFile="bin/build/tools/user.sh"
 sourceModified="1768246145"
 stdout="\`Directory\`. The user home directory."$'\n'""
 summary="Quick user database query of the user home directory"$'\n'""

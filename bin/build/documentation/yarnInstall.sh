@@ -13,6 +13,7 @@ foundNames=([0]="notes" [1]="environment" [2]="return_code" [3]="test" [4]="argu
 notes="\`yarn\` is part of node, I think, so no clean uninstall."$'\n'""
 rawComment="Install yarn in the build environment"$'\n'"If this fails it will output the installation log."$'\n'"Notes: \`yarn\` is part of node, I think, so no clean uninstall."$'\n'"When this tool succeeds the \`yarn\` binary is available in the local operating system."$'\n'"Environment: - \`BUILD_YARN_VERSION"$'\n'"Return Code: 1 - If installation of yarn fails"$'\n'"Return Code: 0 - If yarn is already installed or installed without error"$'\n'"Test: testYarnInstallation"$'\n'"Argument: --version versionCode - String. Optional. Install this version of yarn."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'""$'\n'""
 return_code="1 - If installation of yarn fails"$'\n'"0 - If yarn is already installed or installed without error"$'\n'""
+sourceFile="bin/build/tools/yarn.sh"
 sourceModified="1769184734"
 summary="Install yarn in the build environment"
 test="testYarnInstallation"$'\n'""

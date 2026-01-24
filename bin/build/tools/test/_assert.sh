@@ -206,7 +206,7 @@ _assertConditionHelper() {
   local profile=false _profile="" _profileStart="" _next _used=0
 
   if [ "${flags#*"$flag"}" != "$flags" ]; then profile=true && _profile=$(timingStart) && _profileStart=$_profile; fi
-  set -eou pipefail
+
   # _IDENTICAL_ argumentBlankLoopHandler 4
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do

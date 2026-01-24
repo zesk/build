@@ -11,6 +11,7 @@ file="bin/build/tools/node.sh"
 foundNames=()
 rawComment="Install nodejs"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
+sourceFile="bin/build/tools/node.sh"
 sourceModified="1769184734"
 summary="Install nodejs"
 usage="nodeInstall"

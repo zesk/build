@@ -11,6 +11,7 @@ file="bin/build/tools/markdown.sh"
 foundNames=([0]="stdin" [1]="stdout")
 rawComment="Simple function to make list-like things more list-like in Markdown"$'\n'"1. Remove all trailing spaces from all lines"$'\n'"2. remove leading \"dash space\" if it exists (\`- \`)"$'\n'"3. Semantically, if the phrase matches \`[word]+[space][dash][space]\`. backtick quote the \`[word]\`, otherwise skip"$'\n'"4. Prefix each line with a \"dash space\" (\`- \`)"$'\n'"stdin: reads input from stdin"$'\n'"stdout: formatted markdown list"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
+sourceFile="bin/build/tools/markdown.sh"
 sourceModified="1769190358"
 stdin="reads input from stdin"$'\n'""
 stdout="formatted markdown list"$'\n'""

@@ -7,6 +7,15 @@
 
 Hides these from [New and uncategorized functions](./todo.md)
 
+{darkLight}
+{filesOpenStatus}
+{findUncaughtAssertions}
+{hasColors}
+{hasConsoleAnimation}
+{insideDocker}
+
+{clearLine}
+
 {cachedShaPipe}
 
 {consoleColorMode}

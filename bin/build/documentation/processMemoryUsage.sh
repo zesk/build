@@ -13,6 +13,7 @@ foundNames=([0]="argument" [1]="example" [2]="output" [3]="return_code")
 output="423"$'\n'""
 rawComment="Outputs value of resident memory used by a process, value is in kilobytes"$'\n'"Argument: pid - Integer. Required. Process ID of running process"$'\n'"Example:     > {fn} 23"$'\n'"Output: 423"$'\n'"Return Code: 0 - Success"$'\n'"Return Code: 2 - Argument error"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"2 - Argument error"$'\n'""
+sourceFile="bin/build/tools/process.sh"
 sourceModified="1769063211"
 summary="Outputs value of resident memory used by a process, value"
 usage="processMemoryUsage pid"

@@ -15,6 +15,7 @@ rawComment="Summary: Is value an unsigned integer?"$'\n'"Test if a value is a 0 
 requires="returnMessage"$'\n'""
 return_code="0 - if it is an unsigned integer"$'\n'"1 - if it is not an unsigned integer"$'\n'""
 source="https://stackoverflow.com/questions/806906/how-do-i-test-if-a-variable-is-a-number-in-bash"$'\n'""
+sourceFile="bin/build/tools/example.sh"
 sourceModified="1769208503"
 summary="Is value an unsigned integer?"$'\n'""
 usage="isUnsignedInteger [ value ]"

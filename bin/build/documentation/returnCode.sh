@@ -13,6 +13,7 @@ rawComment="Argument: name ... - String. Optional. Exit code value to output."$'
 requires="usageDocument printf"$'\n'""
 return_code="0 - success"$'\n'""
 see="https://stackoverflow.com/questions/1101957/are-there-any-standard-exit-status-codes-in-linux"$'\n'"returnCodeString"$'\n'""
+sourceFile="bin/build/tools/_sugar.sh"
 sourceModified="1769063211"
 summary="Print one or more return codes by name."
 usage="returnCode [ name ... ]"

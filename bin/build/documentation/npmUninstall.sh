@@ -11,6 +11,7 @@ file="bin/build/tools/npm.sh"
 foundNames=()
 rawComment="Core as part of some systems - so this succeeds and it still exists"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
+sourceFile="bin/build/tools/npm.sh"
 sourceModified="1769184734"
 summary="Core as part of some systems - so this succeeds"
 usage="npmUninstall"

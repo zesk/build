@@ -11,6 +11,7 @@ file="bin/build/tools/terraform.sh"
 foundNames=([0]="argument")
 rawComment="Install terraform binary"$'\n'"Argument: package ... - String. Optional. Additional packages to install using \`packageInstall\`"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
+sourceFile="bin/build/tools/terraform.sh"
 sourceModified="1769184734"
 summary="Install terraform binary"
 usage="terraformInstall [ package ... ]"

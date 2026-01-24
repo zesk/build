@@ -11,6 +11,7 @@ file="bin/build/tools/python.sh"
 foundNames=()
 rawComment="Uninstall python"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
+sourceFile="bin/build/tools/python.sh"
 sourceModified="1769184734"
 summary="Uninstall python"
 usage="pythonUninstall"

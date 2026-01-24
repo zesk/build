@@ -11,6 +11,7 @@ file="bin/build/tools/colors.sh"
 foundNames=()
 rawComment="Outputs a line and fills the remainder with space"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
+sourceFile="bin/build/tools/colors.sh"
 sourceModified="1769211509"
 summary="Outputs a line and fills the remainder with space"
 usage="plasterLines"

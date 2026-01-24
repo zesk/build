@@ -12,6 +12,7 @@ file="bin/build/tools/readline.sh"
 foundNames=([0]="argument" [1]="example")
 rawComment="Add configuration to \`~/.inputrc\` for a key binding"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Argument: keyStroke - String. Required."$'\n'"Argument: action - String. Required."$'\n'"Example: readlineConfigurationAdd \"\\ep\" history-search-backward"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
+sourceFile="bin/build/tools/readline.sh"
 sourceModified="1769063211"
 summary="Add configuration to \`~/.inputrc\` for a key binding"
 usage="readlineConfigurationAdd [ --help ] keyStroke action"

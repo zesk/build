@@ -12,6 +12,7 @@ foundNames=([0]="requires" [1]="uptime_output" [2]="stdout" [3]="argument")
 rawComment="Get the load average using uptime"$'\n'"Requires: uptime"$'\n'"Uptime output: 0:00  up 30 days,  6:02, 19 users, load averages: 15.01 12.66 11.64"$'\n'"Uptime output: 05:01:06 up 8 days,  4:03,  0 users,  load average: 3.87, 3.09, 2.71"$'\n'"stdout: lines:Number"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'""$'\n'""
 requires="uptime"$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
+sourceFile="bin/build/tools/platform.sh"
 sourceModified="1769184734"
 stdout="lines:Number"$'\n'""
 summary="Get the load average using uptime"

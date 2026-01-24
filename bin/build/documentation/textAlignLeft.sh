@@ -12,7 +12,8 @@ file="bin/build/tools/text.sh"
 foundNames=([0]="summary" [1]="argument" [2]="example")
 rawComment="Summary: align text left"$'\n'"Format text and align it left using spaces."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Argument: characterWidth - UnsignedInteger. Required. Number of characters to align left"$'\n'"Argument: text ... - Text to align left."$'\n'"Example:     printf \"%s: %s\\n\" \"\$(textAlignLeft 14 Name)\" \"\$name\""$'\n'"Example:     printf \"%s: %s\\n\" \"\$(textAlignLeft 14 Profession)\" \"\$occupation\""$'\n'"Example:     Name          : Tyrone"$'\n'"Example:     Profession    : Engineer"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
-sourceModified="1769201188"
+sourceFile="bin/build/tools/text.sh"
+sourceModified="1769226342"
 summary="align text left"$'\n'""
 usage="textAlignLeft [ --help ] characterWidth [ text ... ]"
 # shellcheck disable=SC2016

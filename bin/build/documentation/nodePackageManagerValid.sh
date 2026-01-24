@@ -11,6 +11,7 @@ file="bin/build/tools/node.sh"
 foundNames=([0]="argument" [1]="return_code" [2]="valid_names_are")
 rawComment="Is the passed node package manager name valid?"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Argument: managerName - String. Required. The node package manager name to check."$'\n'"Without arguments, shows the valid package manager names."$'\n'"Return Code: 0 - Yes, it's a valid package manager name."$'\n'"Return Code: 1 - No, it's not a valid package manager name."$'\n'"Valid names are: npm yarn"$'\n'""$'\n'""
 return_code="0 - Yes, it's a valid package manager name."$'\n'"1 - No, it's not a valid package manager name."$'\n'""
+sourceFile="bin/build/tools/node.sh"
 sourceModified="1769184734"
 summary="Is the passed node package manager name valid?"
 usage="nodePackageManagerValid [ --help ] managerName"

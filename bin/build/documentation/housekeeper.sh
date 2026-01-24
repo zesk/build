@@ -11,7 +11,6 @@ file="bin/build/tools/debug.sh"
 foundNames=([0]="argument")
 rawComment="Run a command and ensure files are not modified"$'\n'"Argument: --ignore grepPattern - String. Directory. One or more directories to watch. If no directories are supplied uses current working directory."$'\n'"Argument: --path path - Directory. Optional. One or more directories to watch. If no directories are supplied uses current working directory."$'\n'"Argument: path - Directory. Optional. One or more directories to watch. If no directories are supplied uses current working directory."$'\n'"Argument: callable - Callable. Optional. Program to run and watch directory before and after."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
-sourceFile="bin/build/tools/debug.sh"
 sourceModified="1769208503"
 summary="Run a command and ensure files are not modified"
 usage="housekeeper [ --ignore grepPattern ] [ --path path ] [ path ] [ callable ] [ --help ]"

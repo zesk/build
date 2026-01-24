@@ -12,6 +12,7 @@ foundNames=([0]="argument" [1]="return_code" [2]="see")
 rawComment="Are we within the JetBrains PyCharm terminal?"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Return Code: 0 - within the PyCharm terminal"$'\n'"Return Code: 1 - not within the PyCharm terminal AFAIK"$'\n'"See: contextOpen"$'\n'""$'\n'""
 return_code="0 - within the PyCharm terminal"$'\n'"1 - not within the PyCharm terminal AFAIK"$'\n'""
 see="contextOpen"$'\n'""
+sourceFile="bin/build/tools/vendor.sh"
 sourceModified="1769063211"
 summary="Are we within the JetBrains PyCharm terminal?"
 usage="isPyCharm [ --help ]"

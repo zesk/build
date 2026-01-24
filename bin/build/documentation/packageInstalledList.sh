@@ -11,6 +11,7 @@ file="bin/build/tools/package.sh"
 foundNames=()
 rawComment="List installed packages on this system using package manager"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
+sourceFile="bin/build/tools/package.sh"
 sourceModified="1769184734"
 summary="List installed packages on this system using package manager"
 usage="packageInstalledList"

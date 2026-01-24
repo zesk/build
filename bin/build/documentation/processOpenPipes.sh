@@ -11,6 +11,7 @@ file="bin/build/tools/process.sh"
 foundNames=([0]="todo" [1]="argument")
 rawComment="TODO: This is in progress"$'\n'"Output the number of open files for a process ID or group"$'\n'"Not completed yet"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
+sourceFile="bin/build/tools/process.sh"
 sourceModified="1769063211"
 summary="Output the number of open files for a process ID"
 todo="This is in progress"$'\n'""

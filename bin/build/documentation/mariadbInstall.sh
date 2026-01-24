@@ -11,6 +11,7 @@ file="bin/build/tools/mariadb.sh"
 foundNames=([0]="return_code")
 rawComment="Install \`mariadb\`"$'\n'"When this tool succeeds the \`mariadb\` binary is available in the local operating system."$'\n'"Return Code: 1 - If installation fails"$'\n'"Return Code: 0 - If installation succeeds"$'\n'""$'\n'""
 return_code="1 - If installation fails"$'\n'"0 - If installation succeeds"$'\n'""
+sourceFile="bin/build/tools/mariadb.sh"
 sourceModified="1769184734"
 summary="Install \`mariadb\`"
 usage="mariadbInstall"

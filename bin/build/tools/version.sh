@@ -97,7 +97,6 @@ _releaseNotes() {
 __releaseNotes() {
   local handler="$1" version="${2-}" home releasePath
 
-  set -eou pipefail
   local home
   home=$(catchReturn "$handler" buildHome) || return $?
   if [ -z "$version" ]; then

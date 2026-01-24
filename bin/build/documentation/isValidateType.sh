@@ -12,6 +12,7 @@ file="bin/build/tools/validate.sh"
 foundNames=([0]="argument" [1]="example")
 rawComment="Are all arguments passed a valid validate type?"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Argument: type - String. Optional. Type to validate as \`validate\` type."$'\n'"Example:     isValidateType string || returnMessage 1 \"string is not a type.\""$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
+sourceFile="bin/build/tools/validate.sh"
 sourceModified="1769208503"
 summary="Are all arguments passed a valid validate type?"
 usage="isValidateType [ --help ] [ type ]"

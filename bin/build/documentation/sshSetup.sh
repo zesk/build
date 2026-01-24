@@ -12,6 +12,7 @@ foundNames=([0]="argument" [1]="requires")
 rawComment="Set up SSH for a user with ID and backup keys in \`~/.ssh\`"$'\n'"Create a key for a user for SSH authentication to other servers."$'\n'"Add .ssh key for current user"$'\n'"Argument: --force - Flag. Optional. Force the program to create a new key if one exists"$'\n'"Argument: server - String. Required. Servers to connect to to set up authorization"$'\n'"You will need the password for this server for the current user."$'\n'"Requires: userRecordHome catchEnvironment throwEnvironment"$'\n'""$'\n'""
 requires="userRecordHome catchEnvironment throwEnvironment"$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
+sourceFile="bin/build/tools/ssh.sh"
 sourceModified="1769184556"
 summary="Set up SSH for a user with ID and backup"
 usage="sshSetup [ --force ] server"

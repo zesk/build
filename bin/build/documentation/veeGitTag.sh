@@ -11,6 +11,7 @@ file="bin/build/tools/git.sh"
 foundNames=()
 rawComment="Given a tag in the form \"1.1.3\" convert it to \"v1.1.3\" so it has a character prefix \"v\""$'\n'"Delete the old tag as well"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
+sourceFile="bin/build/tools/git.sh"
 sourceModified="1769199547"
 summary="Given a tag in the form \"1.1.3\" convert it to"
 usage="veeGitTag"
