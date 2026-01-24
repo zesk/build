@@ -12,7 +12,6 @@ foundNames=([0]="requires")
 rawComment="List any processes associated with daemontools supervisors"$'\n'"Requires: pgrep read printf"$'\n'""$'\n'""
 requires="pgrep read printf"$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
-sourceFile="bin/build/tools/daemontools.sh"
 sourceModified="1769109690"
 summary="List any processes associated with daemontools supervisors"
 usage="daemontoolsProcessIds"

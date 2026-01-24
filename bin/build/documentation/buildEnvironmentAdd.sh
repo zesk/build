@@ -11,7 +11,8 @@ file="bin/build/tools/environment.sh"
 foundNames=([0]="argument")
 rawComment="Adds an environment variable file to a project"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Argument: environmentName ... - EnvironmentName. Required. One or more environment variable names to add to this project."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
-sourceModified="1769203760"
+sourceFile="bin/build/tools/environment.sh"
+sourceModified="1769229530"
 summary="Adds an environment variable file to a project"
 usage="buildEnvironmentAdd [ --help ] environmentName ..."
 # shellcheck disable=SC2016

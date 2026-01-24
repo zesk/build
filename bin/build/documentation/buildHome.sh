@@ -12,6 +12,7 @@ file="bin/build/tools/build.sh"
 foundNames=([0]="environment" [1]="argument")
 rawComment="Environment: BUILD_HOME"$'\n'"Prints the build home directory (usually same as the application root)"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
+sourceFile="bin/build/tools/build.sh"
 sourceModified="1769208503"
 summary="Prints the build home directory (usually same as the application"
 usage="buildHome [ --help ]"

@@ -13,7 +13,6 @@ file="bin/build/tools/aws.sh"
 foundNames=([0]="summary" [1]="argument" [2]="example" [3]="return_code")
 rawComment="Get the credentials file path, optionally outputting errors"$'\n'"Pass a true-ish value to output warnings to stderr on failure"$'\n'"Pass any value to output warnings if the environment or file is not found; otherwise"$'\n'"output the credentials file path."$'\n'"If not found, returns with exit code 1."$'\n'"Summary: Get the path to the AWS credentials file"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Argument: --verbose - Flag. Optional. Verbose mode"$'\n'"Argument: --create - Flag. Optional. Create the directory and file if it does not exist"$'\n'"Argument: --home homeDirectory - Directory. Optional. Home directory to use instead of \`\$HOME\`."$'\n'"Example:     credentials=\$(awsCredentialsFile) || throwEnvironment \"\$handler\" \"No credentials file found\" || return \$?"$'\n'"Return Code: 1 - If \`\$HOME\` is not a directory or credentials file does not exist"$'\n'"Return Code: 0 - If credentials file is found and output to stdout"$'\n'"shellcheck disable=SC2120"$'\n'""$'\n'""
 return_code="1 - If \`\$HOME\` is not a directory or credentials file does not exist"$'\n'"0 - If credentials file is found and output to stdout"$'\n'""
-sourceFile="bin/build/tools/aws.sh"
 sourceModified="1769185802"
 summary="Get the path to the AWS credentials file"$'\n'""
 usage="awsCredentialsFile [ --help ] [ --verbose ] [ --create ] [ --home homeDirectory ]"

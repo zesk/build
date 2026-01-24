@@ -12,7 +12,6 @@ file="bin/build/tools/github.sh"
 foundNames=([0]="argument" [1]="environment")
 rawComment="Get the latest JSON structure"$'\n'"Argument: projectName - String. Required. Github project name in the form of \`owner/repository\`"$'\n'"Environment: GITHUB_ACCESS_TOKEN"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
-sourceFile="bin/build/tools/github.sh"
 sourceModified="1769111847"
 summary="Get the latest JSON structure"
 usage="githubLatest projectName"

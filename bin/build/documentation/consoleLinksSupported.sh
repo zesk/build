@@ -11,6 +11,7 @@ file="bin/build/tools/console.sh"
 foundNames=()
 rawComment="Are console links (likely) supported?"$'\n'"Unfortunately there's no way to test for this feature currently"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
+sourceFile="bin/build/tools/console.sh"
 sourceModified="1769209815"
 summary="Are console links (likely) supported?"
 usage="consoleLinksSupported"

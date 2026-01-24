@@ -11,6 +11,7 @@ file="bin/build/tools/colors.sh"
 foundNames=([0]="argument")
 rawComment="Clamp digits between two integers"$'\n'"Reads stdin digits, one per line, and outputs only integer values between \$min and \$max"$'\n'"Argument: minimum - Integer|Empty. Minimum integer value to output."$'\n'"Argument: maximum - Integer|Empty. Maximum integer value to output."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
+sourceFile="bin/build/tools/colors.sh"
 sourceModified="1769211509"
 summary="Clamp digits between two integers"
 usage="clampDigits [ minimum ] [ maximum ] [ --help ]"

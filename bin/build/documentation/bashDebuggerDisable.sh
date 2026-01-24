@@ -12,7 +12,6 @@ foundNames=([0]="____usage" [1]="argument" [2]="see")
 rawComment="Disables the debugger immediately"$'\n'"Restores file descriptors 0 1 and 2 from 20, 21 and 22 respectively"$'\n'"    Usage: bashDebuggerDisable [ --help ]"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"See: bashDebug bashDebuggerEnable"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 see="bashDebug bashDebuggerEnable"$'\n'""
-sourceFile="bin/build/tools/debugger.sh"
 sourceModified="1769063211"
 summary="Disables the debugger immediately"
 usage="bashDebuggerDisable [ --help ]"

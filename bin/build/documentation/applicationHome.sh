@@ -11,7 +11,6 @@ file="bin/build/tools/application.sh"
 foundNames=([0]="argument")
 rawComment="Set, or cd to current application home directory."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Argument: directory - Directory. Optional. Set the application home to this directory."$'\n'"Argument: --go - Flag. Optional. Change to the current saved application home directory."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
-sourceFile="bin/build/tools/application.sh"
 sourceModified="1769063211"
 summary="Set, or cd to current application home directory."
 usage="applicationHome [ --help ] [ directory ] [ --go ]"

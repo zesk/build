@@ -12,6 +12,7 @@ foundNames=([0]="argument" [1]="requires")
 rawComment="Run \`command\`, handle failure with \`handler\` with \`code\` and \`command\` as error"$'\n'"Argument: code - UnsignedInteger. Required. Exit code to return"$'\n'"Argument: handler - Function. Required. Failure command, passed remaining arguments and error code."$'\n'"Argument: command ... - Callable. Required. Command to run."$'\n'"Requires: isUnsignedInteger returnArgument isFunction isCallable"$'\n'""$'\n'""
 requires="isUnsignedInteger returnArgument isFunction isCallable"$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
+sourceFile="bin/build/tools/_sugar.sh"
 sourceModified="1769063211"
 summary="Run \`command\`, handle failure with \`handler\` with \`code\` and \`command\`"
 usage="catchCode code handler command ..."

@@ -11,7 +11,6 @@ file="bin/build/tools/dump.sh"
 foundNames=([0]="argument" [1]="stdin" [2]="stdout")
 rawComment="Output a file for debugging"$'\n'"Argument: fileName0 - File. Optional. File to dump."$'\n'"stdin: text (optional)"$'\n'"stdout: formatted text (optional)"$'\n'"Argument: --symbol symbolString - String. Optional. Prefix for each output line."$'\n'"Argument: --lines lineCount - PositiveInteger. Optional. Number of lines to output."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
-sourceFile="bin/build/tools/dump.sh"
 sourceModified="1769184734"
 stdin="text (optional)"$'\n'""
 stdout="formatted text (optional)"$'\n'""

@@ -12,7 +12,6 @@ foundNames=([0]="see" [1]="argument" [2]="return_code")
 rawComment="Remove keys to disable apt to download tofu from opentofu.org"$'\n'"See: aptKeyAddOpenTofu"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Return Code: 1 - Environment problems"$'\n'"Return Code: 0 - All good to install tofu"$'\n'""$'\n'""
 return_code="1 - Environment problems"$'\n'"0 - All good to install tofu"$'\n'""
 see="aptKeyAddOpenTofu"$'\n'""
-sourceFile="bin/build/tools/tofu.sh"
 sourceModified="1769184734"
 summary="Remove keys to disable apt to download tofu from opentofu.org"
 usage="aptKeyRemoveOpenTofu [ --help ]"

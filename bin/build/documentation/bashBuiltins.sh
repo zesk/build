@@ -11,7 +11,6 @@ file="bin/build/tools/bash.sh"
 foundNames=([0]="stdout")
 rawComment="List bash buildin functions, one per line"$'\n'"stdout: line:function"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
-sourceFile="bin/build/tools/bash.sh"
 sourceModified="1769208503"
 stdout="line:function"$'\n'""
 summary="List bash buildin functions, one per line"

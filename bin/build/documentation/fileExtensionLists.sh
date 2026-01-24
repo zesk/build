@@ -12,7 +12,6 @@ foundNames=([0]="argument" [1]="input")
 input="Takes a list of files, one per line"$'\n'""
 rawComment="Argument: --clean - Flag. Optional. Clean directory of all files first."$'\n'"Argument: directory - Directory. Required. Directory to create extension lists."$'\n'"Argument: file0 ... - String. Optional. List of files to add to the extension list."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Input: Takes a list of files, one per line"$'\n'"Generates a directory containing files with \`extension\` as the file names."$'\n'"All files passed to this are added to the \`@\` file, the \`!\` file is used for files without extensions."$'\n'"Extension parsing is done by removing the final dot from the filename:"$'\n'"- \`foo.sh\` -> \`\"sh\"\`"$'\n'"- \`foo.tar.gz\` -> \`\"gz\"\`"$'\n'"- \`foo.\` -> \`\"!\"\`\`"$'\n'"- \`foo-bar\` -> \`\"!\"\`\`"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
-sourceFile="bin/build/tools/platform.sh"
 sourceModified="1769184734"
 summary="Generates a directory containing files with \`extension\` as the file"
 usage="fileExtensionLists [ --clean ] directory [ file0 ... ] [ --help ]"

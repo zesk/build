@@ -11,6 +11,7 @@ file="bin/build/tools/character.sh"
 foundNames=([0]="argument")
 rawComment="Write a report of the character classes"$'\n'"Argument: --class - Flag. Optional. Show class and then characters in that class."$'\n'"Argument: --char - Flag. Optional. Show characters and then class for that character."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
+sourceFile="bin/build/tools/character.sh"
 sourceModified="1769063211"
 summary="Write a report of the character classes"
 usage="characterClassReport [ --class ] [ --char ] [ --help ]"

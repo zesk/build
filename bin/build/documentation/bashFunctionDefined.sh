@@ -11,6 +11,7 @@ file="bin/build/tools/bash.sh"
 foundNames=([0]="summary" [1]="argument")
 rawComment="Summary: Is a function defined in a bash source file?"$'\n'"Argument: functionName - String. Required. Name of function to check."$'\n'"Argument: file ... - File. Required. One or more files to check if a function is defined within."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
+sourceFile="bin/build/tools/bash.sh"
 sourceModified="1769208503"
 summary="Is a function defined in a bash source file?"$'\n'""
 usage="bashFunctionDefined functionName file ... [ --help ]"

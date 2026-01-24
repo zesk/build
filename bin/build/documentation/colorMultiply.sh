@@ -12,6 +12,7 @@ foundNames=([0]="argument" [1]="requires")
 rawComment="Multiply color values by a factor and return the new values"$'\n'"Argument: factor - floatValue. Required. Red RGB value (0-255)"$'\n'"Argument: redValue - Integer. Required. Red RGB value (0-255)"$'\n'"Argument: greenValue - Integer. Required. Red RGB value (0-255)"$'\n'"Argument: blueValue - Integer. Required. Red RGB value (0-255)"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Requires: bc"$'\n'""$'\n'""
 requires="bc"$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
+sourceFile="bin/build/tools/colors.sh"
 sourceModified="1769211509"
 summary="Multiply color values by a factor and return the new"
 usage="colorMultiply factor redValue greenValue blueValue [ --help ]"

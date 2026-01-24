@@ -11,7 +11,6 @@ file="bin/build/tools/security.sh"
 foundNames=()
 rawComment="Check files to ensure \`eval\`s in code have been checked"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
-sourceFile="bin/build/tools/security.sh"
 sourceModified="1769063211"
 summary="Check files to ensure \`eval\`s in code have been checked"
 usage="evalCheck"

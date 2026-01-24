@@ -15,6 +15,7 @@ file="bin/build/tools/date.sh"
 foundNames=([0]="converts_an_integer_date_to_a_date_formatted_timestamp__e_g___y__m__d__h" [1]="argument" [2]="environment" [3]="return_code" [4]="example")
 rawComment="Converts an integer date to a date formatted timestamp (e.g. %Y-%m-%d %H:%M:%S)"$'\n'"dateFromTimestamp 1681966800 %F"$'\n'"Argument: integerTimestamp - Integer. Required. Integer timestamp offset (unix timestamp, same as \`\$(date +%s)\`)"$'\n'"Argument: format - String. Optional. How to output the date (e.g. \`%F\` - no \`+\` is required)"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Argument: --local - Flag. Optional. Show the local time, not UTC."$'\n'"Environment: Compatible with BSD and GNU date."$'\n'"Return Code: 0 - If parsing is successful"$'\n'"Return Code: 1 - If parsing fails"$'\n'"Example:     dateField=\$(dateFromTimestamp \$init %Y)"$'\n'""$'\n'""
 return_code="0 - If parsing is successful"$'\n'"1 - If parsing fails"$'\n'""
+sourceFile="bin/build/tools/date.sh"
 sourceModified="1769184556"
 summary="dateFromTimestamp 1681966800 %F"
 usage="dateFromTimestamp integerTimestamp [ format ] [ --help ] [ --local ]"

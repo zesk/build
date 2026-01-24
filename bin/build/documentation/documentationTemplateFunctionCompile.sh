@@ -11,7 +11,6 @@ file="bin/build/tools/documentation.sh"
 foundNames=([0]="summary" [1]="return_code" [2]="argument")
 rawComment="Summary: Generate a function documentation block using \`functionTemplate\` for \`functionName\`"$'\n'"Requires function indexes to be generated in the documentation cache."$'\n'"Generate documentation for a single function."$'\n'"Template is output to stdout."$'\n'"Return Code: 0 - If success"$'\n'"Return Code: 1 - Issue with file generation"$'\n'"Return Code: 2 - Argument error"$'\n'"Argument: --env-file envFile - File. Optional. One (or more) environment files used during map of \`functionTemplate\`"$'\n'"Argument: functionName - Required. The function name to document."$'\n'"Argument: functionTemplate - Required. The template for individual functions."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'""$'\n'""
 return_code="0 - If success"$'\n'"1 - Issue with file generation"$'\n'"2 - Argument error"$'\n'""
-sourceFile="bin/build/tools/documentation.sh"
 sourceModified="1769065497"
 summary="Generate a function documentation block using \`functionTemplate\` for \`functionName\`"$'\n'""
 usage="documentationTemplateFunctionCompile [ --env-file envFile ] functionName functionTemplate [ --help ]"

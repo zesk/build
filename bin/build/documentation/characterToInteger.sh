@@ -11,6 +11,7 @@ file="bin/build/tools/character.sh"
 foundNames=([0]="summary" [1]="argument")
 rawComment="Summary: Convert a character to the corresponding ASCII code"$'\n'"Argument: character - String. Optional. One or more characters to convert to their ASCII equivalent."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Convert one or more characters from their ascii representation to an integer value."$'\n'"Requires a single character to be passed"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
+sourceFile="bin/build/tools/character.sh"
 sourceModified="1769063211"
 summary="Convert a character to the corresponding ASCII code"$'\n'""
 usage="characterToInteger [ character ] [ --help ]"

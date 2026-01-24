@@ -11,6 +11,7 @@ file="bin/build/tools/prompt.sh"
 foundNames=([0]="argument")
 rawComment="Color schemes for prompts"$'\n'"Options are:"$'\n'"- forest"$'\n'"- light (default)"$'\n'"- dark"$'\n'"Argument: colorScheme - String. Optional. Color scheme to choose: \`light\`, \`dark\`, \`forest\`"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
+sourceFile="bin/build/tools/prompt.sh"
 sourceModified="1769063211"
 summary="Color schemes for prompts"
 usage="bashPromptColorScheme [ colorScheme ] [ --help ]"

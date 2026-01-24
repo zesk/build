@@ -11,7 +11,6 @@ file="bin/build/tools/file.sh"
 foundNames=([0]="argument")
 rawComment="List the most recently modified file in a directory prefixed with the timestamp"$'\n'"Argument: directory - Directory. Required. Must exists - directory to list."$'\n'"Argument: findArgs - Arguments. Optional. Optional additional arguments to modify the find query"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
-sourceFile="bin/build/tools/file.sh"
 sourceModified="1769184734"
 summary="List the most recently modified file in a directory prefixed"
 usage="fileModifiedRecently directory [ findArgs ]"

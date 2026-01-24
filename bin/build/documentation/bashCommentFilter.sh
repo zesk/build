@@ -11,7 +11,6 @@ file="bin/build/tools/bash.sh"
 foundNames=([0]="argument" [1]="stdin" [2]="stdout")
 rawComment="Filter comments from a bash stream"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Argument: --only - Flag. Optional. Show ONLY comment lines. (Reverse of lines when not specified.)"$'\n'"Argument: file - File. Optional. File(s) to filter."$'\n'"stdin: a bash file"$'\n'"stdout: bash file without line-comments \`#\`"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
-sourceFile="bin/build/tools/bash.sh"
 sourceModified="1769208503"
 stdin="a bash file"$'\n'""
 stdout="bash file without line-comments \`#\`"$'\n'""

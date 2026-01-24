@@ -12,7 +12,6 @@ foundNames=([0]="requires")
 rawComment="aws Command-Line install"$'\n'"Installs x86 or aarch64 binary based on \`HOSTTYPE\`."$'\n'"Requires: packageInstall urlFetch"$'\n'""$'\n'""
 requires="packageInstall urlFetch"$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
-sourceFile="bin/build/tools/aws.sh"
 sourceModified="1769185802"
 summary="aws Command-Line install"
 usage="awsInstall"

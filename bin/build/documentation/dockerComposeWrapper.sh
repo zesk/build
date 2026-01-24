@@ -11,6 +11,7 @@ file="bin/build/tools/docker-compose.sh"
 foundNames=([0]="argument")
 rawComment="Wrapper for \`docker-compose\` or \`docker compose\`"$'\n'"Argument: ... - Arguments. Passed to \`docker compose\` command or equivalent"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
+sourceFile="bin/build/tools/docker-compose.sh"
 sourceModified="1769184734"
 summary="Wrapper for \`docker-compose\` or \`docker compose\`"
 usage="dockerComposeWrapper [ ... ]"

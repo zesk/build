@@ -11,7 +11,6 @@ file="bin/build/tools/file.sh"
 foundNames=([0]="argument")
 rawComment="Output the oldest file in the list."$'\n'"Argument: file ... - File. Required. One or more files to examine"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
-sourceFile="bin/build/tools/file.sh"
 sourceModified="1769184734"
 summary="Output the oldest file in the list."
 usage="fileOldest file ... [ --help ]"

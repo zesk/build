@@ -11,6 +11,7 @@ file="bin/build/tools/timing.sh"
 foundNames=([0]="argument")
 rawComment="Time command, similar to \`time\` but uses internal functions"$'\n'"Argument: command - Executable. Required. Command to run."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Argument: --name - String. Optional. Display this help."$'\n'"Outputs time as \`timingReport\`"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
+sourceFile="bin/build/tools/timing.sh"
 sourceModified="1769063211"
 summary="Time command, similar to \`time\` but uses internal functions"
 usage="timing command [ --help ] [ --name ]"

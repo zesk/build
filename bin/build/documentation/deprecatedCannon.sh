@@ -11,6 +11,7 @@ file="bin/build/tools/deprecated-tools.sh"
 foundNames=([0]="argument")
 rawComment="Argument: --path cannonPath - Directory. Optional. Run cannon operation starting in this directory."$'\n'"Argument: findArgumentFunction - Function. Required. Find arguments (for \`find\`) for cannon."$'\n'"Argument: search - String. Required. String to search for"$'\n'"Argument: replace - EmptyString. Required. Replacement string."$'\n'"Argument: extraCannonArguments - Arguments. Optional. Any additional arguments are passed to \`cannon\`."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
+sourceFile="bin/build/tools/deprecated-tools.sh"
 sourceModified="1769063211"
 summary="undocumented"
 usage="deprecatedCannon [ --path cannonPath ] findArgumentFunction search replace [ extraCannonArguments ]"

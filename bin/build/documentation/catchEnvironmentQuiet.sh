@@ -12,6 +12,7 @@ foundNames=([0]="argument" [1]="requires")
 rawComment="Run \`handler\` with an environment error"$'\n'"Argument: handler - Function. Required. Failure command"$'\n'"Argument: quietLog - File. Required. File to output log to temporarily for this command. If \`quietLog\` is \`-\` then creates a temporary file for the command which is deleted automatically."$'\n'"Argument: command ... - Callable. Required. Thing to run and append output to \`quietLog\`."$'\n'"Requires: isFunction returnArgument buildFailed debuggingStack throwEnvironment"$'\n'""$'\n'""
 requires="isFunction returnArgument buildFailed debuggingStack throwEnvironment"$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
+sourceFile="bin/build/tools/sugar.sh"
 sourceModified="1769063211"
 summary="Run \`handler\` with an environment error"
 usage="catchEnvironmentQuiet handler quietLog command ..."

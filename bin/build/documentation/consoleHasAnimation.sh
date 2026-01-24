@@ -11,6 +11,7 @@ file="bin/build/tools/colors.sh"
 foundNames=([0]="return_code")
 rawComment="Does the console support animation?"$'\n'"Return Code: 0 - Supports console animation"$'\n'"Return Code: 1 - Does not support console animation"$'\n'""$'\n'""
 return_code="0 - Supports console animation"$'\n'"1 - Does not support console animation"$'\n'""
+sourceFile="bin/build/tools/colors.sh"
 sourceModified="1769211509"
 summary="Does the console support animation?"
 usage="consoleHasAnimation"

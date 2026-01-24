@@ -13,7 +13,6 @@ file="bin/build/tools/fingerprint.sh"
 foundNames=([0]="argument" [1]="build_debug" [2]="environment")
 rawComment="Update file from \`APPLICATION_JSON\` with application fingerprint."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Argument: --handler handler - Function. Optional. Use this error handler instead of the default error handler."$'\n'"Argument: --verbose - Flag. Optional. Be verbose. Default based on value of \`fingerprint\` in \`BUILD_DEBUG\`."$'\n'"Argument: --quiet - Flag. Optional. Be quiet (turns verbose off)."$'\n'"Argument: --check - Flag. Optional. Check if the fingerprint is up to date and output the current value."$'\n'"Argument: --key - String. Optional. Update this key in the JSON file."$'\n'"BUILD_DEBUG: fingerprint - By default be verbose even if the flag is not specified. (Use \`--quiet\` to silence if needed)"$'\n'"Environment: BUILD_DEBUG"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
-sourceFile="bin/build/tools/fingerprint.sh"
 sourceModified="1769063211"
 summary="Update file from \`APPLICATION_JSON\` with application fingerprint."
 usage="fingerprint [ --help ] [ --handler handler ] [ --verbose ] [ --quiet ] [ --check ] [ --key ]"

@@ -11,8 +11,7 @@ file="bin/build/tools/environment.sh"
 foundNames=([0]="return_code" [1]="argument")
 rawComment="Display and validate application variables."$'\n'"Return Code: 1 - If any required application variables are blank, the function fails with an environment error"$'\n'"Return Code: 0 - All required application variables are non-blank"$'\n'"Argument: environmentName - EnvironmentVariable. Optional. A required environment variable name"$'\n'"Argument: -- - Separator. Optional. Separates requires from optional environment variables"$'\n'"Argument: optionalEnvironmentName - EnvironmentVariable. Optional. An optional environment variable name."$'\n'""$'\n'""
 return_code="1 - If any required application variables are blank, the function fails with an environment error"$'\n'"0 - All required application variables are non-blank"$'\n'""
-sourceFile="bin/build/tools/environment.sh"
-sourceModified="1769203760"
+sourceModified="1769229530"
 summary="Display and validate application variables."
 usage="environmentFileShow [ environmentName ] [ -- ] [ optionalEnvironmentName ]"
 # shellcheck disable=SC2016

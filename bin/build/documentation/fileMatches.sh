@@ -11,7 +11,6 @@ file="bin/build/tools/file.sh"
 foundNames=([0]="argument")
 rawComment="Find one or more patterns in a list of files, with a list of file name pattern exceptions."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Argument: pattern ... - String. Required.\`grep -e\` Pattern to find in files. No quoting is added so ensure these are compatible with \`grep -e\`."$'\n'"Argument: -- - Delimiter. Required. exception."$'\n'"Argument: exception ... - String. Optional. \`grep -e\` File pattern which should be ignored."$'\n'"Argument: -- - Delimiter. Required. file."$'\n'"Argument: file ... - File. Required. File to search. Special file \`-\` indicates files should be read from \`stdin\`."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
-sourceFile="bin/build/tools/file.sh"
 sourceModified="1769184734"
 summary="Find one or more patterns in a list of files,"
 usage="fileMatches [ --help ] pattern ... -- [ exception ... ] -- file ..."

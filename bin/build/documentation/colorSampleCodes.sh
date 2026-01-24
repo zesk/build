@@ -11,6 +11,7 @@ file="bin/build/tools/colors.sh"
 foundNames=([0]="summary" [1]="argument")
 rawComment="Summary: Alternate color output"$'\n'"If you want to explore what colors are available in your terminal, try this."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
+sourceFile="bin/build/tools/colors.sh"
 sourceModified="1769211509"
 summary="Alternate color output"$'\n'""
 usage="colorSampleCodes [ --help ]"

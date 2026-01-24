@@ -13,7 +13,6 @@ file="bin/build/tools/cursor.sh"
 foundNames=([0]="stdout" [1]="escape" [2]="example")
 rawComment="Get the current cursor position"$'\n'"Output is <x> <newline> <y> <newline>"$'\n'"stdout: UnsignedInteger"$'\n'"Escape: ESC \`[6n\`"$'\n'"Example:     IFS=\$'\\n' read -r -d '' saveX saveY < <(cursorGet)"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
-sourceFile="bin/build/tools/cursor.sh"
 sourceModified="1769063211"
 stdout="UnsignedInteger"$'\n'""
 summary="Get the current cursor position"

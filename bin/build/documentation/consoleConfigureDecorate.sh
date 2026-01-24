@@ -11,6 +11,7 @@ file="bin/build/tools/console.sh"
 foundNames=([0]="argument")
 rawComment="Modify the decoration environment for light or dark."$'\n'"Run this at the top of your script for best results."$'\n'"Argument: backgroundColor - String. Optional. Background color."$'\n'"Update the color scheme for a light or dark scheme"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
+sourceFile="bin/build/tools/console.sh"
 sourceModified="1769209815"
 summary="Modify the decoration environment for light or dark."
 usage="consoleConfigureDecorate [ backgroundColor ] [ --help ]"

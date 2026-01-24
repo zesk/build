@@ -11,6 +11,7 @@ file="bin/build/tools/build.sh"
 foundNames=([0]="argument")
 rawComment="Run a command and ensure the build tools context matches the current project"$'\n'"Argument: contextStart - Directory. Required. Context in which the command should run."$'\n'"Argument: command ... - Required. Command to run in new context."$'\n'"Avoid infinite loops here, call down."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
+sourceFile="bin/build/tools/build.sh"
 sourceModified="1769208503"
 summary="Run a command and ensure the build tools context matches"
 usage="buildEnvironmentContext contextStart command ..."

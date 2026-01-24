@@ -11,7 +11,6 @@ file="bin/build/tools/sysvinit.sh"
 foundNames=([0]="argument")
 rawComment="Remove an initialization script"$'\n'"Argument: binary - String. Required. Basename of installed script to remove."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
-sourceFile="bin/build/tools/sysvinit.sh"
 sourceModified="1769063211"
 summary="Remove an initialization script"
 usage="sysvInitScriptUninstall binary [ --help ]"

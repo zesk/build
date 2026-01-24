@@ -11,6 +11,7 @@ file="bin/build/tools/developer.sh"
 foundNames=([0]="argument")
 rawComment="Add a development link to the local version of Zesk Build for testing in local projects."$'\n'"Copies or updates \`\$BUILD_HOME/bin/build\` in current project."$'\n'"Useful when you want to test a fix on a current project."$'\n'"Argument: --copy - Flag. Optional. Copy the files instead of creating a link - more compatible with Docker but slower and requires synchronization."$'\n'"Argument: --reset - Flag. Optional. Revert the link and reinstall using the original binary."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
+sourceFile="bin/build/tools/developer.sh"
 sourceModified="1769184734"
 summary="Add a development link to the local version of Zesk"
 usage="buildDevelopmentLink [ --copy ] [ --reset ]"

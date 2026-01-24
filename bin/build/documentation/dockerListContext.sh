@@ -11,6 +11,7 @@ file="bin/build/tools/docker.sh"
 foundNames=()
 rawComment="List the files which would be included in the docker image"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
+sourceFile="bin/build/tools/docker.sh"
 sourceModified="1769184734"
 summary="List the files which would be included in the docker"
 usage="dockerListContext"

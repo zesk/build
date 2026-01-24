@@ -13,7 +13,8 @@ foundNames=([0]="summary" [1]="argument" [2]="see" [3]="example")
 rawComment="Summary: Output a bar as wide as the console"$'\n'"Output a bar as wide as the console using the \`=\` symbol."$'\n'"Argument: alternateChar - String. Optional. Use an alternate character or string output"$'\n'"Argument: offset - Integer. Optional. an integer offset to increase or decrease the size of the bar (default is \`0\`)"$'\n'"See: consoleColumns"$'\n'"Example:     decorate success \$(consoleLine =-)"$'\n'"Example:     decorate success \$(consoleLine \"- Success \")"$'\n'"Example:     decorate magenta \$(consoleLine +-)"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 see="consoleColumns"$'\n'""
-sourceModified="1769190911"
+sourceFile="bin/build/tools/decorate/line.sh"
+sourceModified="1769227354"
 summary="Output a bar as wide as the console"$'\n'""
 usage="consoleLine [ alternateChar ] [ offset ]"
 # shellcheck disable=SC2016

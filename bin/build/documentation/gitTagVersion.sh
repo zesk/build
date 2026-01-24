@@ -14,7 +14,6 @@ foundNames=([0]="default_is" [1]="argument" [2]="hook" [3]="environment")
 hook="version-current"$'\n'""
 rawComment="Generates a git tag for a build version, so \`v1.0d1\`, \`v1.0d2\`, for version \`v1.0\`."$'\n'"Tag a version of the software in git and push tags to origin."$'\n'"If this fails it will output the installation log."$'\n'"When this tool succeeds the git repository contains a tag with the suffix and an index which represents the build index."$'\n'"Default is: \`--suffix rc\` **release candidate**"$'\n'"- \`d\` - for **development**"$'\n'"- \`s\` - for **staging**"$'\n'"- \`rc\` - for **release candidate**"$'\n'"Argument: --suffix versionSuffix - String. Optional. word to use between version and index as: \`{current}rc{nextIndex}\`"$'\n'"Hook: version-current"$'\n'"Environment: BUILD_VERSION_SUFFIX - String. Version suffix to use as a default. If not specified the default is \`rc\`."$'\n'"Environment: BUILD_MAXIMUM_TAGS_PER_VERSION - Integer. Number of integers to attempt to look for when incrementing."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
-sourceFile="bin/build/tools/git.sh"
 sourceModified="1769199547"
 summary="Generates a git tag for a build version, so \`v1.0d1\`,"
 usage="gitTagVersion [ --suffix versionSuffix ]"

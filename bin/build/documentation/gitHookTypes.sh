@@ -12,7 +12,6 @@ foundNames=([0]="output")
 output="lines:gitHookType"$'\n'""
 rawComment="List current valid git hook types"$'\n'"Output: lines:gitHookType"$'\n'"Hook types:"$'\n'"- pre-commit"$'\n'"- pre-push"$'\n'"- pre-merge-commit"$'\n'"- pre-rebase"$'\n'"- pre-receive"$'\n'"- update"$'\n'"- post-update"$'\n'"- post-commit"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
-sourceFile="bin/build/tools/git.sh"
 sourceModified="1769199547"
 summary="List current valid git hook types"
 usage="gitHookTypes"

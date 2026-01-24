@@ -11,7 +11,6 @@ file="bin/build/tools/bash.sh"
 foundNames=([0]="argument")
 rawComment="Argument: source - File. Required. File where the function is defined."$'\n'"Argument: functionName - String. Required. The name of the bash function to extract the documentation for."$'\n'"Argument: variableName - string. Required. Get this variable value"$'\n'"Argument: --prefix - flag. Optional. Find variables with the prefix \`variableName\`"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Gets a list of the variable values from a bash function comment"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
-sourceFile="bin/build/tools/bash.sh"
 sourceModified="1769208503"
 summary="Gets a list of the variable values from a bash"
 usage="bashFunctionCommentVariable source functionName variableName [ --prefix ] [ --help ]"

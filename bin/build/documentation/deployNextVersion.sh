@@ -11,6 +11,7 @@ file="bin/build/tools/deploy.sh"
 foundNames=([0]="argument")
 rawComment="Argument: deployHome - Directory. Required. Deployment database home."$'\n'"Argument: versionName - String. Required. Application ID to look for"$'\n'"Get the next version of the supplied version"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
+sourceFile="bin/build/tools/deploy.sh"
 sourceModified="1769063211"
 summary="Get the next version of the supplied version"
 usage="deployNextVersion deployHome versionName"

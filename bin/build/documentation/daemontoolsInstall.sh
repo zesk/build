@@ -12,7 +12,6 @@ foundNames=([0]="platform")
 platform="\`docker\` containers will not install \`daemontools-run\` as it kills the container"$'\n'""
 rawComment="Install daemontools and dependencies"$'\n'"Platform: \`docker\` containers will not install \`daemontools-run\` as it kills the container"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
-sourceFile="bin/build/tools/daemontools.sh"
 sourceModified="1769109690"
 summary="Install daemontools and dependencies"
 usage="daemontoolsInstall"

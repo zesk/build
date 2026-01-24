@@ -13,6 +13,7 @@ file="bin/build/tools/date.sh"
 foundNames=([0]="argument" [1]="environment" [2]="return_code" [3]="example")
 rawComment="Converts a date to an integer timestamp"$'\n'"Argument: date - String in the form \`YYYY-MM-DD\` (e.g. \`2023-10-15\`)"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Environment: Compatible with BSD and GNU date."$'\n'"Return Code: 1 - if parsing fails"$'\n'"Return Code: 0 - if parsing succeeds"$'\n'"Example:     timestamp=\$(dateToTimestamp '2023-10-15')"$'\n'""$'\n'""
 return_code="1 - if parsing fails"$'\n'"0 - if parsing succeeds"$'\n'""
+sourceFile="bin/build/tools/date.sh"
 sourceModified="1769184556"
 summary="Converts a date to an integer timestamp"
 timestamp=""

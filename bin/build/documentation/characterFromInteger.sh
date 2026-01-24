@@ -13,6 +13,7 @@ foundNames=([0]="credit" [1]="source" [2]="argument")
 rawComment="Given a list of integers, output the character codes associated with them (e.g. \`chr\` in other languages)"$'\n'"Credit: dsmsk80"$'\n'"Source: https://mywiki.wooledge.org/BashFAQ/071"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 source="https://mywiki.wooledge.org/BashFAQ/071"$'\n'""
+sourceFile="bin/build/tools/character.sh"
 sourceModified="1769063211"
 summary="Given a list of integers, output the character codes associated"
 usage="characterFromInteger [ --help ]"

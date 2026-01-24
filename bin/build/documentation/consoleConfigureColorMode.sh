@@ -11,6 +11,7 @@ file="bin/build/tools/console.sh"
 foundNames=([0]="argument")
 rawComment="Argument: backgroundColor - String. Optional. Background color."$'\n'"Print the suggested color mode for the current environment"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
+sourceFile="bin/build/tools/console.sh"
 sourceModified="1769209815"
 summary="Print the suggested color mode for the current environment"
 usage="consoleConfigureColorMode [ backgroundColor ]"

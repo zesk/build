@@ -11,7 +11,6 @@ file="bin/build/tools/float.sh"
 foundNames=([0]="argument")
 rawComment="Argument: number - Float. Optional. Floating point number to convert to integer."$'\n'"Convert float to an integer, round down always"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
-sourceFile="bin/build/tools/float.sh"
 sourceModified="1768246145"
 summary="Convert float to an integer, round down always"
 usage="floatTruncate [ number ]"

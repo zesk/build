@@ -11,6 +11,7 @@ file="bin/build/tools/file.sh"
 foundNames=([0]="argument")
 rawComment="Find the oldest modified file in a directory"$'\n'"Argument: directory - Directory. Required. Directory to search for the oldest file."$'\n'"Argument: --find findArgs ... -- - Arguments. Optional. Arguments delimited by a double-dash (or end of argument list)"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
+sourceFile="bin/build/tools/file.sh"
 sourceModified="1769184734"
 summary="Find the oldest modified file in a directory"
 usage="directoryOldestFile directory [ --find findArgs ... -- ]"

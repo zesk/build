@@ -2,6 +2,7 @@
 # Copyright &copy; 2026 Market Acumen, Inc.
 # Generated on 2026-01-24
 # shellcheck disable=SC2034
+MARIADB_ROOT_PASSWORD=""
 applicationFile="bin/build/tools/bitbucket.sh"
 argument="varName - Name of the value to extract from \`bitbucket-pipelines.yml\`"$'\n'"defaultValue - Value if not found in pipelines"$'\n'""
 base="bitbucket.sh"
@@ -10,9 +11,9 @@ example="    MARIADB_ROOT_PASSWORD=\${MARIADB_ROOT_PASSWORD:-\$(bitbucketGetVari
 exitCode="0"
 file="bin/build/tools/bitbucket.sh"
 foundNames=([0]="________apt_lists" [1]="________apt_cache" [2]="________memory" [3]="________image" [4]="____________mariadb_root_password" [5]="argument" [6]="example")
-MARIADB_ROOT_PASSWORD=""
 rawComment="Fetch a value from the pipelines YAML file"$'\n'"Assumes current working directory is project root."$'\n'"Simple get value of a variable from the \`bitbucket-pipelines.yml\` file. It's important to note that"$'\n'"this does not parse the YML. This is useful if"$'\n'"you have a database container as part of your build configuration which requires a root password"$'\n'"required in other scripts; this means you do not have to replicate the value which can lead to errors."$'\n'"An example \`bitbucket-pipelines.yml\` file may have a header which looks like this:"$'\n'"    definitions:"$'\n'"    caches:"$'\n'"        apt-lists: /var/lib/apt/lists"$'\n'"        apt-cache: /var/cache/apt"$'\n'"    services:"$'\n'"        mariadb:"$'\n'"        memory: 1024"$'\n'"        image: mariadb:latest"$'\n'"        variables:"$'\n'"            MARIADB_ROOT_PASSWORD: super-secret"$'\n'"On this file, the value of \`\$(bitbucketGetVariable MARIADB_ROOT_PASSWORD)\` is \`super-secret\`; it uses \`grep\` and \`sed\` to extract the value."$'\n'"Argument: varName - Name of the value to extract from \`bitbucket-pipelines.yml\`"$'\n'"Argument: defaultValue - Value if not found in pipelines"$'\n'"Example:     MARIADB_ROOT_PASSWORD=\${MARIADB_ROOT_PASSWORD:-\$(bitbucketGetVariable MARIADB_ROOT_PASSWORD not-in-bitbucket-pipelines.yml)}"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
+sourceFile="bin/build/tools/bitbucket.sh"
 sourceModified="1769063211"
 summary="Fetch a value from the pipelines YAML file"
 usage="bitbucketGetVariable [ varName ] [ defaultValue ]"

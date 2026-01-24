@@ -11,7 +11,6 @@ file="bin/build/tools/github.sh"
 foundNames=([0]="argument")
 rawComment="Output the publish date for the latest release of ownerRepository"$'\n'"Argument: ownerRepository - String. Github \`owner/repository\` string"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
-sourceFile="bin/build/tools/github.sh"
 sourceModified="1769111847"
 summary="Output the publish date for the latest release of ownerRepository"
 usage="githubPublishDate [ ownerRepository ]"

@@ -11,6 +11,7 @@ file="bin/build/tools/docker.sh"
 foundNames=([0]="argument")
 rawComment="List docker images which are currently pulled"$'\n'"Argument: --filter reference - String. Optional. Filter list by reference provided."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
+sourceFile="bin/build/tools/docker.sh"
 sourceModified="1769184734"
 summary="List docker images which are currently pulled"
 usage="dockerImages [ --filter reference ]"

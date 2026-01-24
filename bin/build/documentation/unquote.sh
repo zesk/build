@@ -11,6 +11,7 @@ file="bin/build/tools/quote.sh"
 foundNames=([0]="argument")
 rawComment="Unquote a string"$'\n'"Argument: quote - String. Required. Must match beginning and end of string."$'\n'"Argument: value - String. Required. Value to unquote."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
+sourceFile="bin/build/tools/quote.sh"
 sourceModified="1769063211"
 summary="Unquote a string"
 usage="unquote quote value"

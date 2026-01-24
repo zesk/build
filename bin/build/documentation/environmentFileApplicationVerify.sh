@@ -11,8 +11,7 @@ file="bin/build/tools/environment.sh"
 foundNames=([0]="argument")
 rawComment="Check application environment is populated correctly."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Argument: requiredEnvironment ... - EnvironmentName. Optional. One or more environment variables which should be non-blank and included in the \`.env\` file."$'\n'"Argument: -- - Divider. Optional. Divides the requiredEnvironment values from the optionalEnvironment"$'\n'"Argument: optionalEnvironment ... - EnvironmentName. Optional. One or more environment variables which are included if blank or not"$'\n'"Also verifies that \`environmentApplicationVariables\` and \`environmentApplicationLoad\` are defined."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
-sourceFile="bin/build/tools/environment.sh"
-sourceModified="1769203760"
+sourceModified="1769229530"
 summary="Check application environment is populated correctly."
 usage="environmentFileApplicationVerify [ --help ] [ requiredEnvironment ... ] [ -- ] [ optionalEnvironment ... ]"
 # shellcheck disable=SC2016

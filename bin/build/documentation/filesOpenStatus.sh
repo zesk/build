@@ -11,7 +11,6 @@ file="bin/build/tools/debug.sh"
 foundNames=()
 rawComment="Output current open files"$'\n'"stdout"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
-sourceFile="bin/build/tools/debug.sh"
 sourceModified="1769208503"
 summary="Output current open files"
 usage="filesOpenStatus"

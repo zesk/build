@@ -11,7 +11,6 @@ file="bin/build/tools/console.sh"
 foundNames=()
 rawComment="Set the title of the window for the console"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
-sourceFile="bin/build/tools/console.sh"
 sourceModified="1769209815"
 summary="Set the title of the window for the console"
 usage="consoleSetTitle"

@@ -12,6 +12,7 @@ foundNames=([0]="argument" [1]="requires")
 rawComment="Redistribute color values to make brightness adjustments more balanced"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Requires: bc catchEnvironment read usageArgumentUnsignedInteger packageWhich __colorNormalize"$'\n'""$'\n'""
 requires="bc catchEnvironment read usageArgumentUnsignedInteger packageWhich __colorNormalize"$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
+sourceFile="bin/build/tools/colors.sh"
 sourceModified="1769211509"
 summary="Redistribute color values to make brightness adjustments more balanced"
 usage="colorNormalize [ --help ]"

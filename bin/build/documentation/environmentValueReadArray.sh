@@ -11,8 +11,7 @@ file="bin/build/tools/environment.sh"
 foundNames=([0]="argument")
 rawComment="Read an array value from a state file"$'\n'"Argument: stateFile - File. Required. File to access, must exist."$'\n'"Argument: name - EnvironmentVariable. Required. Name to read."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Outputs array elements, one per line."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
-sourceFile="bin/build/tools/environment.sh"
-sourceModified="1769203760"
+sourceModified="1769229530"
 summary="Read an array value from a state file"
 usage="environmentValueReadArray stateFile name [ --help ]"
 # shellcheck disable=SC2016

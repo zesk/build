@@ -12,6 +12,7 @@ foundNames=([0]="argument" [1]="requires")
 rawComment="Terminate daemontools as gracefully as possible"$'\n'"Argument: --timeout seconds - Integer. Optional."$'\n'"Requires: throwArgument decorate usageArgumentInteger throwEnvironment catchEnvironment usageRequireBinary statusMessage"$'\n'"Requires: svscanboot id svc svstat"$'\n'""$'\n'""
 requires="throwArgument decorate usageArgumentInteger throwEnvironment catchEnvironment usageRequireBinary statusMessage"$'\n'"svscanboot id svc svstat"$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
+sourceFile="bin/build/tools/daemontools.sh"
 sourceModified="1769109690"
 summary="Terminate daemontools as gracefully as possible"
 usage="daemontoolsTerminate [ --timeout seconds ]"

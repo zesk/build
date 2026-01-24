@@ -12,6 +12,7 @@ foundNames=([0]="argument" [1]="platform")
 platform="Darwin"$'\n'""
 rawComment="Argument: --choice choiceText - String. Optional. Title of the thing."$'\n'"Argument: --ok - Flag. Optional. Adds \"OK\" as an option."$'\n'"Argument: --cancel - Flag. Optional. Adds \"Cancel\" as an option."$'\n'"Argument: --default buttonIndex - Integer. Required. The button (0-based index) to make the default button choice."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Argument: message ... - String. Required. The message to display in the dialog."$'\n'"Display a dialog using \`osascript\` with the choices provided. Typically this is found on Mac OS X."$'\n'"Outputs the selected button text upon exit."$'\n'"Platform: Darwin"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
+sourceFile="bin/build/tools/darwin.sh"
 sourceModified="1769063211"
 summary="Display a dialog using \`osascript\` with the choices provided. Typically"
 usage="darwinDialog [ --choice choiceText ] [ --ok ] [ --cancel ] --default buttonIndex [ --help ] message ..."

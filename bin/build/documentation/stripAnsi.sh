@@ -16,7 +16,6 @@ rawComment="Strip ANSI console escape sequences from a file"$'\n'"Argument: None
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 short_description="Remove ANSI escape codes from streams"$'\n'""
 source="https://stackoverflow.com/questions/6534556/how-to-remove-and-all-of-the-escape-sequences-in-a-file-using-linux-shell-sc"$'\n'""
-sourceFile="bin/build/tools/text.sh"
 sourceModified="1769226342"
 stdin="arbitrary text which may contain ANSI escape sequences for the terminal"$'\n'""
 stdout="the same text with those ANSI escape sequences removed"$'\n'""

@@ -12,6 +12,7 @@ foundNames=([0]="summary" [1]="argument" [2]="security")
 rawComment="Summary: Load a directory of bash scripts"$'\n'"Load a directory of bash scripts, excluding any dot directories (\`*/.*/*\`), and optionally any additional"$'\n'"files if you use \`--exclude\`. But recursively loads scripts in sorted alphabetic order within the directory until one fails."$'\n'"All files must be executable."$'\n'"Argument: --exclude pattern - String. Optional. String passed to \`! -path pattern\` in \`find\`"$'\n'"Argument: directory ... - Directory. Required. Directory to \`source\` all \`.sh\` files used."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Security: Loads bash files"$'\n'"Load a directory of \`.sh\` files using \`source\` to make the code available."$'\n'"Has security implications. Use with caution and ensure your directory is protected."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 security="Loads bash files"$'\n'""
+sourceFile="bin/build/tools/bash.sh"
 sourceModified="1769208503"
 summary="Load a directory of bash scripts"$'\n'""
 usage="bashSourcePath [ --exclude pattern ] directory ... [ --help ]"
