@@ -14,7 +14,6 @@ foundNames=([0]="argument" [1]="output" [2]="depends" [3]="example")
 output="string quoted and appropriate to assign to a value in the shell"$'\n'""
 rawComment="Quote bash strings for inclusion as single-quoted for eval"$'\n'"Argument: text - EmptyString. Required. Text to quote."$'\n'"Output: string quoted and appropriate to assign to a value in the shell"$'\n'"Depends: sed"$'\n'"Example:     name=\"\$(quoteBashString \"\$name\")\""$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
-sourceFile="bin/build/tools/quote.sh"
 sourceModified="1769063211"
 summary="Quote bash strings for inclusion as single-quoted for eval"
 usage="quoteBashString text"

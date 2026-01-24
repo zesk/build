@@ -11,7 +11,6 @@ file="bin/build/tools/sed.sh"
 foundNames=([0]="argument")
 rawComment="Quote a sed command for search and replace"$'\n'"Argument: searchPattern - String. Required. The string to search for."$'\n'"Argument: replacePattern - String. Required. The replacement to replace with."$'\n'"Without arguments, displays help."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
-sourceFile="bin/build/tools/sed.sh"
 sourceModified="1769063211"
 summary="Quote a sed command for search and replace"
 usage="sedReplacePattern searchPattern replacePattern"

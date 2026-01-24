@@ -15,7 +15,6 @@ output="string quoted and appropriate to insert in a sed search or replacement p
 rawComment="Summary: Quote sed search strings for shell use"$'\n'"Quote a string to be used in a sed pattern on the command line."$'\n'"Argument: text - EmptyString. Required. Text to quote"$'\n'"Output: string quoted and appropriate to insert in a sed search or replacement phrase"$'\n'"Example:     sed \"s/\$(quoteSedPattern \"\$1\")/\$(quoteSedPattern \"\$2\")/g\""$'\n'"Example:     needSlash=\$(quoteSedPattern '\$.*/[\\]^')"$'\n'"Requires: printf sed usageDocument __help"$'\n'""$'\n'""
 requires="printf sed usageDocument __help"$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
-sourceFile="bin/build/tools/sed.sh"
 sourceModified="1769063211"
 summary="Quote sed search strings for shell use"$'\n'""
 usage="quoteSedPattern text"

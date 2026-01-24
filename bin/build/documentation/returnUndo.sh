@@ -13,7 +13,6 @@ foundNames=([0]="argument" [1]="example" [2]="requires")
 rawComment="Run a function and preserve exit code"$'\n'"Returns \`code\`"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Argument: code - UnsignedInteger. Required. Exit code to return."$'\n'"Argument: undoFunction - Callable. Optional. Command to run to undo something. Return status is ignored."$'\n'"Argument: -- - Flag. Optional. Used to delimit multiple commands."$'\n'"As a caveat, your command to \`undo\` can NOT take the argument \`--\` as a parameter."$'\n'"Example:     local undo thing"$'\n'"Example:     thing=\$(catchEnvironment \"\$handler\" createLargeResource) || return \$?"$'\n'"Example:     undo+=(-- deleteLargeResource \"\$thing\")"$'\n'"Example:     thing=\$(catchEnvironment \"\$handler\" createMassiveResource) || returnUndo \$? \"\${undo[@]}\" || return \$?"$'\n'"Example:     undo+=(-- deleteMassiveResource \"\$thing\")"$'\n'"Requires: isUnsignedInteger throwArgument decorate execute"$'\n'"Requires: usageDocument"$'\n'""$'\n'""
 requires="isUnsignedInteger throwArgument decorate execute"$'\n'"usageDocument"$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
-sourceFile="bin/build/tools/sugar.sh"
 sourceModified="1769063211"
 summary="Run a function and preserve exit code"
 thing=""

@@ -946,7 +946,7 @@ _environmentParseVariables() {
 environmentCompile() {
   local handler="_${FUNCNAME[0]}"
 
-  local environmentFiles=() aa=() __debugFlag=false keepComments=false parseFlag=false
+  local environmentFiles=() aa=() __debugFlag=false keepComments=false __parseFlag=false variables=()
 
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
@@ -956,11 +956,12 @@ environmentCompile() {
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
     --debug) __debugFlag=true ;;
-    --parse) parseFlag=true ;;
+    --parse) __parseFlag=true ;;
     --variables)
-      local listText && listText="$(validate "$handler" "CommaDelimitedList" "$__argument" "${1-}")" || return $?
-      local variableList=() && IFS="," read -r -d '' -a variableList <<<"$listText" || :
+      shift && local listText && listText="$(validate "$handler" "CommaDelimitedList" "$__argument" "${1-}")" || return $?
+      local variableList=() && IFS="," read -r -a variableList <<<"$listText" || :
       variables+=("${variableList[@]+"${variableList[@]}"}")
+      aa+=("${variableList[@]+"${variableList[@]}"}")
       ;;
     --keep-comments) keepComments=true ;;
     --underscore | --secure)
@@ -983,7 +984,7 @@ environmentCompile() {
     catchEnvironment "$handler" cat >"$tempEnv.source" || return $?
     environmentFiles+=("$tempEnv.source")
   fi
-  if $parseFlag; then
+  if $__parseFlag; then
     while read -r variable; do variables+=("$variable"); done < <(cat "${environmentFiles[@]}" | environmentParseVariables)
     if $__debugFlag; then printf "%s\n" "${variables[@]}" | dumpPipe "PARSED variables" 1>&2; fi
   fi

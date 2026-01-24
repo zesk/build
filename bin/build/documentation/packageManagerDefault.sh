@@ -12,7 +12,6 @@ foundNames=([0]="see")
 rawComment="Determine the default package manager on this platform."$'\n'"Output is one of:"$'\n'"- apk apt brew port"$'\n'"See: platform"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 see="platform"$'\n'""
-sourceFile="bin/build/tools/package.sh"
 sourceModified="1769184734"
 summary="Determine the default package manager on this platform."
 usage="packageManagerDefault"

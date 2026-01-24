@@ -12,7 +12,6 @@ foundNames=([0]="argument" [1]="requires")
 rawComment="Run \`handler\` with a passed return code"$'\n'"Argument: returnCode - Integer. Required. Return code."$'\n'"Argument: handler - Function. Required. Error handler."$'\n'"Argument: message ... - String. Optional. Error message"$'\n'"Requires: returnArgument"$'\n'""$'\n'""
 requires="returnArgument"$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
-sourceFile="bin/build/tools/_sugar.sh"
 sourceModified="1769063211"
 summary="Run \`handler\` with a passed return code"
 usage="returnThrow returnCode handler [ message ... ]"

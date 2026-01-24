@@ -653,9 +653,9 @@ _decorations() {
 # Environment: BUILD_COLORS - Boolean. Colors enabled (`true` or `false`).
 # Requires: isFunction returnArgument awk catchEnvironment usageDocument executeInputSupport __help
 decorate() {
-  local handler="_${FUNCNAME[0]}" text="" what="${1-}" lp style
+  local handler="_${FUNCNAME[0]}" text="" what="${1-}" lp style && shift 2>/dev/null
   [ "$what" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
-  shift && [ -n "$what" ] || catchArgument "$handler" "Requires at least one argument: \"$*\"" || return $?
+  [ -n "$what" ] || catchArgument "$handler" "Requires at least one argument: \"$*\"" || return $?
   catchReturn "$handler" _decorateInitialize || return $?
   if ! style=$(__decorateStyle "$what"); then
     local extend func="${what/-/_}"

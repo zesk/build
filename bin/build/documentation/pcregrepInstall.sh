@@ -11,7 +11,6 @@ file="bin/build/tools/pcregrep.sh"
 foundNames=([0]="argument")
 rawComment="Install pcregrep binary"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
-sourceFile="bin/build/tools/pcregrep.sh"
 sourceModified="1769063211"
 summary="Install pcregrep binary"
 usage="pcregrepInstall [ --help ]"

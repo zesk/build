@@ -12,7 +12,6 @@ foundNames=([0]="argument" [1]="see")
 rawComment="Tail the PHP log"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"See: tail"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 see="tail"$'\n'""
-sourceFile="bin/build/tools/php.sh"
 sourceModified="1769190358"
 summary="Tail the PHP log"
 usage="phpTailLog [ --help ]"

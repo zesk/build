@@ -12,7 +12,6 @@ foundNames=([0]="argument" [1]="return_code" [2]="requires")
 rawComment="Return passed in integer return code and output message to \`stderr\` (non-zero) or \`stdout\` (zero)"$'\n'"Argument: exitCode - UnsignedInteger. Required. Exit code to return. Default is 1."$'\n'"Argument: message ... - String. Optional. Message to output"$'\n'"Return Code: exitCode"$'\n'"Requires: isUnsignedInteger printf returnMessage"$'\n'""$'\n'""
 requires="isUnsignedInteger printf returnMessage"$'\n'""
 return_code="exitCode"$'\n'""
-sourceFile="bin/build/tools/example.sh"
 sourceModified="1769208503"
 summary="Return passed in integer return code and output message to"
 usage="returnMessage exitCode [ message ... ]"

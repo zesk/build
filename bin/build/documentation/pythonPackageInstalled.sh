@@ -11,7 +11,6 @@ file="bin/build/tools/python.sh"
 foundNames=([0]="argument" [1]="return_code")
 rawComment="Is a package installed for python?"$'\n'"Argument: pipPackage ... - String. Required. Package name(s) to check."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Argument: --handler handler - Function. Optional. Use this error handler instead of the default error handler."$'\n'"Argument: --any - Flag. Optional. When specified changes the behavior such that if it returns return code 0 IFF any single package is installed."$'\n'"Return Code: 0 - All packages are installed (or at least one package with \`--any\`)"$'\n'"Return Code: 1 - All packages are not installed (or NO packages are installed with \`--any\`)"$'\n'""$'\n'""
 return_code="0 - All packages are installed (or at least one package with \`--any\`)"$'\n'"1 - All packages are not installed (or NO packages are installed with \`--any\`)"$'\n'""
-sourceFile="bin/build/tools/python.sh"
 sourceModified="1769184734"
 summary="Is a package installed for python?"
 usage="pythonPackageInstalled pipPackage ... [ --help ] [ --handler handler ] [ --any ]"

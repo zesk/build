@@ -11,7 +11,6 @@ file="bin/build/tools/package.sh"
 foundNames=([0]="argument")
 rawComment="Install a package group to have a binary installed"$'\n'"Argument: binary - String. Required. Binary which will exist in PATH after \`group\` is installed if it does not exist."$'\n'"Argument: group - String. Required. Package group."$'\n'"Any unrecognized groups are installed using the name as-is."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
-sourceFile="bin/build/tools/package.sh"
 sourceModified="1769184734"
 summary="Install a package group to have a binary installed"
 usage="packageGroupWhich binary group"

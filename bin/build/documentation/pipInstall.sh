@@ -11,7 +11,6 @@ file="bin/build/tools/python.sh"
 foundNames=([0]="argument")
 rawComment="Utility to install python dependencies via pip"$'\n'"Installs python if it hasn't been using \`pythonInstall\`."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Argument: --handler handler - Function. Optional. Use this error handler instead of the default error handler."$'\n'"Argument: pipPackage [ ... ] - String. Required. Pip package name to install."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
-sourceFile="bin/build/tools/python.sh"
 sourceModified="1769184734"
 summary="Utility to install python dependencies via pip"
 usage="pipInstall [ --help ] [ --handler handler ] pipPackage [ ... ]"

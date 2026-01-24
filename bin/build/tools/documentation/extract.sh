@@ -128,13 +128,14 @@ __bashDocumentationExtractGenerateCache() {
     local extras=()
     extras+=("#!/usr/bin/env bash" "# Copyright &copy; $(date +%Y) $(catchReturn "$handler" buildEnvironmentGet BUILD_COMPANY)") || return $?
     extras+=("# Generated on $(dateToday)")
-    bashRecursionDebug || return $?
+    catchReturn "$handler" environmentClean || return $?
     local uncompiled="${definitionFile%.sh}.uncompiled.sh"
     local clean=("$uncompiled")
+    bashRecursionDebug || return $?
     __bashDocumentationExtractDirect "$handler" "$fn" "$source" "${extras[@]}" "$@" >"$uncompiled" || returnClean $? "${clean[@]}" || $?
-    catchEnvironment "$handler" environmentCompile --keep-comments --parse <"$uncompiled" | catchEnvironment "$handler" tee "$definitionFile" || returnClean $? "${clean[@]}" || $?
-    buildDebugEnabled "environmentCompile" || catchEnvironment "$handler" rm -f "${clean[@]}" || return $?
     bashRecursionDebug --end || return $?
+    catchEnvironment "$handler" environmentCompile --keep-comments --parse --variables sourceFile <"$uncompiled" | catchEnvironment "$handler" tee "$definitionFile" || returnClean $? "${clean[@]}" || $?
+    buildDebugEnabled "environmentCompile" || catchEnvironment "$handler" rm -f "${clean[@]}" || return $?
   ) || return $?
 }
 

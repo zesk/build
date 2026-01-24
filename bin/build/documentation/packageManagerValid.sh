@@ -11,7 +11,6 @@ file="bin/build/tools/package.sh"
 foundNames=([0]="argument" [1]="return_code")
 rawComment="Is the package manager supported?"$'\n'"Checks the package manager to be a valid, supported one."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Argument: packageManager - String. Manager to check."$'\n'"Return Code: 0 - The package manager is valid."$'\n'"Return Code: 1 - The package manager is not valid."$'\n'""$'\n'""
 return_code="0 - The package manager is valid."$'\n'"1 - The package manager is not valid."$'\n'""
-sourceFile="bin/build/tools/package.sh"
 sourceModified="1769184734"
 summary="Is the package manager supported?"
 usage="packageManagerValid [ --help ] [ packageManager ]"

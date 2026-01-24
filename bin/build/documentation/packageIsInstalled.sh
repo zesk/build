@@ -11,7 +11,6 @@ file="bin/build/tools/package.sh"
 foundNames=([0]="argument" [1]="return_code")
 rawComment="Is a package installed?"$'\n'"Argument: package - String. Required. One or more packages to check if they are installed"$'\n'"Return Code: 1 - If any packages are not installed"$'\n'"Return Code: 0 - All packages are installed"$'\n'""$'\n'""
 return_code="1 - If any packages are not installed"$'\n'"0 - All packages are installed"$'\n'""
-sourceFile="bin/build/tools/package.sh"
 sourceModified="1769184734"
 summary="Is a package installed?"
 usage="packageIsInstalled package"

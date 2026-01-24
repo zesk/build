@@ -11,7 +11,6 @@ file="bin/build/tools/rsync.sh"
 foundNames=([0]="argument")
 rawComment="Install \`rsync\`."$'\n'"\`rsync\` is a tool which easily keeps file directories synchronized between"$'\n'"file systems, remote systems, and locations."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
-sourceFile="bin/build/tools/rsync.sh"
 sourceModified="1769063211"
 summary="Install \`rsync\`."
 usage="rsyncInstall [ --help ]"

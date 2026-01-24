@@ -12,7 +12,6 @@ foundNames=([0]="argument" [1]="partial_credit" [2]="stdin" [3]="stdout")
 partial_credit="https://stackoverflow.com/questions/4198138/printing-everything-except-the-first-field-with-awk/31849899#31849899"$'\n'""
 rawComment="Remove fields from left to right from a text file as a pipe"$'\n'"Argument: fieldCount - Integer. Optional. Number of field to remove. Default is just first \`1\`."$'\n'"Partial Credit: https://stackoverflow.com/questions/4198138/printing-everything-except-the-first-field-with-awk/31849899#31849899"$'\n'"stdin: A file with fields separated by spaces"$'\n'"stdout: The same file with the first \`fieldCount\` fields removed from each line."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
-sourceFile="bin/build/tools/text.sh"
 sourceModified="1769226342"
 stdin="A file with fields separated by spaces"$'\n'""
 stdout="The same file with the first \`fieldCount\` fields removed from each line."$'\n'""

@@ -12,7 +12,6 @@ foundNames=([0]="argument" [1]="return_code" [2]="requires")
 rawComment="Return \`argument\` error code. Outputs \`message ...\` to \`stderr\`."$'\n'"Argument: message ... - String. Optional. Message to output."$'\n'"Return Code: 2"$'\n'"Requires: returnMessage"$'\n'""$'\n'""
 requires="returnMessage"$'\n'""
 return_code="2"$'\n'""
-sourceFile="bin/build/tools/_sugar.sh"
 sourceModified="1769063211"
 summary="Return \`argument\` error code. Outputs \`message ...\` to \`stderr\`."
 usage="returnArgument [ message ... ]"
