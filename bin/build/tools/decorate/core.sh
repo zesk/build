@@ -3,7 +3,6 @@
 # Copyright &copy; 2026 Market Acumen, Inc.
 #
 
-
 # IDENTICAL decorate 262
 
 # Sets the environment variable `BUILD_COLORS` if not set, uses `TERM` to calculate

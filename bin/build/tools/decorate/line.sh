@@ -3,7 +3,6 @@
 # Copyright &copy; 2026 Market Acumen, Inc.
 #
 
-
 # Summary: Output a bar as wide as the console
 # Output a bar as wide as the console using the `=` symbol.
 # Argument: alternateChar - String. Optional. Use an alternate character or string output
