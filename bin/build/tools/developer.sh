@@ -337,7 +337,7 @@ developerDevelopmentLink() {
         catchEnvironment "$handler" rm "$target" || return $?
         catchEnvironment "$handler" mkdir -p "$target" || return $?
       fi
-      if whichExists rsync; then
+      if executableExists rsync; then
         verb="Synchronized"
         catchEnvironment "$handler" rsync -a --exclude "*/.git/" --delete "$source/" "$target/" || return $?
       else

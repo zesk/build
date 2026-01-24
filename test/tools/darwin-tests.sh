@@ -7,7 +7,7 @@
 #
 
 testDarwinDialog() {
-  if whichExists osascript; then
+  if executableExists osascript; then
     # Only can test on Darwin, but not sure how to manage dialog interaction if at all
     assertExitCode --stdout-match osascript 0 darwinDialog --help || return $?
     assertNotExitCode --stderr-match 'not unsigned' 0 darwinDialog --choice A --choice B --default -1 || return $?

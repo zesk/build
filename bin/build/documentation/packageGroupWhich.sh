@@ -1,46 +1,20 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-22
+# Generated on 2026-01-24
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/package.sh"
 argument="binary - String. Required. Binary which will exist in PATH after \`group\` is installed if it does not exist."$'\n'"group - String. Required. Package group."$'\n'""
 base="package.sh"
 description="Install a package group to have a binary installed"$'\n'"Any unrecognized groups are installed using the name as-is."$'\n'""
+exitCode="0"
 file="bin/build/tools/package.sh"
-fn="packageGroupWhich"
-foundNames=""
+foundNames=([0]="argument")
+rawComment="Install a package group to have a binary installed"$'\n'"Argument: binary - String. Required. Binary which will exist in PATH after \`group\` is installed if it does not exist."$'\n'"Argument: group - String. Required. Package group."$'\n'"Any unrecognized groups are installed using the name as-is."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
-sourceFile="bin/build/tools/package.sh"
-sourceModified="1769063211"
+sourceModified="1769184734"
 summary="Install a package group to have a binary installed"
 usage="packageGroupWhich binary group"
 # shellcheck disable=SC2016
-helpConsole='[92mUsage[0m: [38;2;170;170;255mpackageGroupWhich[0m [38;2;255;255;0m[35;48;2;0;0;0mbinary[0m[0m [38;2;255;255;0m[35;48;2;0;0;0mgroup[0m[0m
-
-    [31mbinary  [1;97mString. Required. Binary which will exist in PATH after [38;2;0;255;0;48;2;0;0;0mgroup[0m is installed if it does not exist.[0m
-    [31mgroup   [1;97mString. Required. Package group.[0m
-
-Install a package group to have a binary installed
-Any unrecognized groups are installed using the name as-is.
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-'
+helpConsole=''$'\e''[[label]mUsage'$'\e''[0m: '$'\e''[[info]mpackageGroupWhich'$'\e''[0m '$'\e''[[bold]m'$'\e''[[magenta]mbinary'$'\e''[0m'$'\e''[0m '$'\e''[[bold]m'$'\e''[[magenta]mgroup'$'\e''[0m'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[red]mbinary  '$'\e''[[value]mString. Required. Binary which will exist in PATH after '$'\e''[[code]mgroup'$'\e''[[reset]m is installed if it does not exist.'$'\e''[[reset]m'$'\n''    '$'\e''[[red]mgroup   '$'\e''[[value]mString. Required. Package group.'$'\e''[[reset]m'$'\n'''$'\n''Install a package group to have a binary installed'$'\n''Any unrecognized groups are installed using the name as-is.'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[code]m0'$'\e''[[reset]m - Success'$'\n''- '$'\e''[[code]m1'$'\e''[[reset]m - Environment error'$'\n''- '$'\e''[[code]m2'$'\e''[[reset]m - Argument error'$'\n'''
 # shellcheck disable=SC2016
-helpPlain='Usage: packageGroupWhich binary group
-
-    binary  String. Required. Binary which will exist in PATH after group is installed if it does not exist.
-    group   String. Required. Package group.
-
-Install a package group to have a binary installed
-Any unrecognized groups are installed using the name as-is.
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-'
+helpPlain='Usage: packageGroupWhich binary group'$'\n'''$'\n''    binary  String. Required. Binary which will exist in PATH after group is installed if it does not exist.'$'\n''    group   String. Required. Package group.'$'\n'''$'\n''Install a package group to have a binary installed'$'\n''Any unrecognized groups are installed using the name as-is.'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''

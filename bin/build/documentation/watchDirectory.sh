@@ -1,58 +1,21 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-22
+# Generated on 2026-01-24
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/watch.sh"
 argument="--help - Flag. Optional. Display this help."$'\n'"--handler handler - Function. Optional. Use this error handler instead of the default error handler."$'\n'"--verbose - Flag. Optional. Be verbose."$'\n'"--file modifiedFile - File. Optional. Last known modified file in this directory."$'\n'"--modified modifiedTimestamp - UnsignedInteger. Optional. Last known modification timestamp in this directory."$'\n'"--timeout secondsToRun - UnsignedInteger. Optional. Last known modification timestamp in this directory."$'\n'"--state stateFile - File. Optional. Output of \`fileModificationTimes\` will be saved here (and modified)"$'\n'"directory - Directory. Required. Directory to watch"$'\n'"findArguments ... - Arguments. Optional. Passed to find to filter the files examined."$'\n'""
 base="watch.sh"
 description="Watch a directory"$'\n'""
+exitCode="0"
 file="bin/build/tools/watch.sh"
-fn="watchDirectory"
-foundNames=""
+foundNames=([0]="argument")
+rawComment="Watch a directory"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Argument: --handler handler - Function. Optional. Use this error handler instead of the default error handler."$'\n'"Argument: --verbose - Flag. Optional. Be verbose."$'\n'"Argument: --file modifiedFile - File. Optional. Last known modified file in this directory."$'\n'"Argument: --modified modifiedTimestamp - UnsignedInteger. Optional. Last known modification timestamp in this directory."$'\n'"Argument: --timeout secondsToRun - UnsignedInteger. Optional. Last known modification timestamp in this directory."$'\n'"Argument: --state stateFile - File. Optional. Output of \`fileModificationTimes\` will be saved here (and modified)"$'\n'"Argument: directory - Directory. Required. Directory to watch"$'\n'"Argument: findArguments ... - Arguments. Optional. Passed to find to filter the files examined."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/watch.sh"
 sourceModified="1769063211"
 summary="Watch a directory"
 usage="watchDirectory [ --help ] [ --handler handler ] [ --verbose ] [ --file modifiedFile ] [ --modified modifiedTimestamp ] [ --timeout secondsToRun ] [ --state stateFile ] directory [ findArguments ... ]"
 # shellcheck disable=SC2016
-helpConsole='[92mUsage[0m: [38;2;170;170;255mwatchDirectory[0m [94m[ --help ][0m [94m[ --handler handler ][0m [94m[ --verbose ][0m [94m[ --file modifiedFile ][0m [94m[ --modified modifiedTimestamp ][0m [94m[ --timeout secondsToRun ][0m [94m[ --state stateFile ][0m [38;2;255;255;0m[35;48;2;0;0;0mdirectory[0m[0m [94m[ findArguments ... ][0m
-
-    [94m--help                        [1;97mFlag. Optional. Display this help.[0m
-    [94m--handler handler             [1;97mFunction. Optional. Use this error handler instead of the default error handler.[0m
-    [94m--verbose                     [1;97mFlag. Optional. Be verbose.[0m
-    [94m--file modifiedFile           [1;97mFile. Optional. Last known modified file in this directory.[0m
-    [94m--modified modifiedTimestamp  [1;97mUnsignedInteger. Optional. Last known modification timestamp in this directory.[0m
-    [94m--timeout secondsToRun        [1;97mUnsignedInteger. Optional. Last known modification timestamp in this directory.[0m
-    [94m--state stateFile             [1;97mFile. Optional. Output of [38;2;0;255;0;48;2;0;0;0mfileModificationTimes[0m will be saved here (and modified)[0m
-    [31mdirectory                     [1;97mDirectory. Required. Directory to watch[0m
-    [94mfindArguments ...             [1;97mArguments. Optional. Passed to find to filter the files examined.[0m
-
-Watch a directory
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-'
+helpConsole=''$'\e''[[label]mUsage'$'\e''[0m: '$'\e''[[info]mwatchDirectory'$'\e''[0m '$'\e''[[blue]m[ --help ]'$'\e''[0m '$'\e''[[blue]m[ --handler handler ]'$'\e''[0m '$'\e''[[blue]m[ --verbose ]'$'\e''[0m '$'\e''[[blue]m[ --file modifiedFile ]'$'\e''[0m '$'\e''[[blue]m[ --modified modifiedTimestamp ]'$'\e''[0m '$'\e''[[blue]m[ --timeout secondsToRun ]'$'\e''[0m '$'\e''[[blue]m[ --state stateFile ]'$'\e''[0m '$'\e''[[bold]m'$'\e''[[magenta]mdirectory'$'\e''[0m'$'\e''[0m '$'\e''[[blue]m[ findArguments ... ]'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[blue]m--help                        '$'\e''[[value]mFlag. Optional. Display this help.'$'\e''[[reset]m'$'\n''    '$'\e''[[blue]m--handler handler             '$'\e''[[value]mFunction. Optional. Use this error handler instead of the default error handler.'$'\e''[[reset]m'$'\n''    '$'\e''[[blue]m--verbose                     '$'\e''[[value]mFlag. Optional. Be verbose.'$'\e''[[reset]m'$'\n''    '$'\e''[[blue]m--file modifiedFile           '$'\e''[[value]mFile. Optional. Last known modified file in this directory.'$'\e''[[reset]m'$'\n''    '$'\e''[[blue]m--modified modifiedTimestamp  '$'\e''[[value]mUnsignedInteger. Optional. Last known modification timestamp in this directory.'$'\e''[[reset]m'$'\n''    '$'\e''[[blue]m--timeout secondsToRun        '$'\e''[[value]mUnsignedInteger. Optional. Last known modification timestamp in this directory.'$'\e''[[reset]m'$'\n''    '$'\e''[[blue]m--state stateFile             '$'\e''[[value]mFile. Optional. Output of '$'\e''[[code]mfileModificationTimes'$'\e''[[reset]m will be saved here (and modified)'$'\e''[[reset]m'$'\n''    '$'\e''[[red]mdirectory                     '$'\e''[[value]mDirectory. Required. Directory to watch'$'\e''[[reset]m'$'\n''    '$'\e''[[blue]mfindArguments ...             '$'\e''[[value]mArguments. Optional. Passed to find to filter the files examined.'$'\e''[[reset]m'$'\n'''$'\n''Watch a directory'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[code]m0'$'\e''[[reset]m - Success'$'\n''- '$'\e''[[code]m1'$'\e''[[reset]m - Environment error'$'\n''- '$'\e''[[code]m2'$'\e''[[reset]m - Argument error'$'\n'''
 # shellcheck disable=SC2016
-helpPlain='Usage: watchDirectory [ --help ] [ --handler handler ] [ --verbose ] [ --file modifiedFile ] [ --modified modifiedTimestamp ] [ --timeout secondsToRun ] [ --state stateFile ] directory [ findArguments ... ]
-
-    --help                        Flag. Optional. Display this help.
-    --handler handler             Function. Optional. Use this error handler instead of the default error handler.
-    --verbose                     Flag. Optional. Be verbose.
-    --file modifiedFile           File. Optional. Last known modified file in this directory.
-    --modified modifiedTimestamp  UnsignedInteger. Optional. Last known modification timestamp in this directory.
-    --timeout secondsToRun        UnsignedInteger. Optional. Last known modification timestamp in this directory.
-    --state stateFile             File. Optional. Output of fileModificationTimes will be saved here (and modified)
-    directory                     Directory. Required. Directory to watch
-    findArguments ...             Arguments. Optional. Passed to find to filter the files examined.
-
-Watch a directory
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-'
+helpPlain='Usage: watchDirectory [ --help ] [ --handler handler ] [ --verbose ] [ --file modifiedFile ] [ --modified modifiedTimestamp ] [ --timeout secondsToRun ] [ --state stateFile ] directory [ findArguments ... ]'$'\n'''$'\n''    --help                        Flag. Optional. Display this help.'$'\n''    --handler handler             Function. Optional. Use this error handler instead of the default error handler.'$'\n''    --verbose                     Flag. Optional. Be verbose.'$'\n''    --file modifiedFile           File. Optional. Last known modified file in this directory.'$'\n''    --modified modifiedTimestamp  UnsignedInteger. Optional. Last known modification timestamp in this directory.'$'\n''    --timeout secondsToRun        UnsignedInteger. Optional. Last known modification timestamp in this directory.'$'\n''    --state stateFile             File. Optional. Output of fileModificationTimes will be saved here (and modified)'$'\n''    directory                     Directory. Required. Directory to watch'$'\n''    findArguments ...             Arguments. Optional. Passed to find to filter the files examined.'$'\n'''$'\n''Watch a directory'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''

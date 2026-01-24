@@ -1,65 +1,21 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-22
+# Generated on 2026-01-24
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/build.sh"
 argument="envName - String. Optional. Name of the environment value to load. Afterwards this should be defined (possibly blank) and \`export\`ed."$'\n'"--application applicationHome - Path. Optional. Directory of alternate application home. Can be specified more than once to change state."$'\n'""
 base="build.sh"
-description="Load and print one or more environment settings"$'\n'""$'\n'"If BOTH files exist, both are sourced, so application environments should anticipate values"$'\n'"created by build's default."$'\n'""$'\n'"Modifies local environment. Not usually run within a subshell."$'\n'""$'\n'""$'\n'""
+description="Load and print one or more environment settings"$'\n'"If BOTH files exist, both are sourced, so application environments should anticipate values"$'\n'"created by build's default."$'\n'"Modifies local environment. Not usually run within a subshell."$'\n'""
 environment="\$envName"$'\n'"BUILD_ENVIRONMENT_DIRS - \`:\` separated list of paths to load env files"$'\n'""
+exitCode="0"
 file="bin/build/tools/build.sh"
-fn="buildEnvironmentGet"
-foundNames=""
+foundNames=([0]="argument" [1]="environment")
+rawComment="Load and print one or more environment settings"$'\n'"Argument: envName - String. Optional. Name of the environment value to load. Afterwards this should be defined (possibly blank) and \`export\`ed."$'\n'"Argument: --application applicationHome - Path. Optional. Directory of alternate application home. Can be specified more than once to change state."$'\n'"If BOTH files exist, both are sourced, so application environments should anticipate values"$'\n'"created by build's default."$'\n'"Modifies local environment. Not usually run within a subshell."$'\n'"Environment: \$envName"$'\n'"Environment: BUILD_ENVIRONMENT_DIRS - \`:\` separated list of paths to load env files"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
-sourceFile="bin/build/tools/build.sh"
-sourceModified="1769063211"
+sourceModified="1769208503"
 summary="Load and print one or more environment settings"
 usage="buildEnvironmentGet [ envName ] [ --application applicationHome ]"
 # shellcheck disable=SC2016
-helpConsole='[92mUsage[0m: [38;2;170;170;255mbuildEnvironmentGet[0m [94m[ envName ][0m [94m[ --application applicationHome ][0m
-
-    [94menvName                        [1;97mString. Optional. Name of the environment value to load. Afterwards this should be defined (possibly blank) and [38;2;0;255;0;48;2;0;0;0mexport[0med.[0m
-    [94m--application applicationHome  [1;97mPath. Optional. Directory of alternate application home. Can be specified more than once to change state.[0m
-
-Load and print one or more environment settings
-
-If BOTH files exist, both are sourced, so application environments should anticipate values
-created by build'\''s default.
-
-Modifies local environment. Not usually run within a subshell.
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-
-Environment variables:
-- $envName
-- BUILD_ENVIRONMENT_DIRS - [38;2;0;255;0;48;2;0;0;0m:[0m separated list of paths to load env files
-- 
-'
+helpConsole=''$'\e''[[label]mUsage'$'\e''[0m: '$'\e''[[info]mbuildEnvironmentGet'$'\e''[0m '$'\e''[[blue]m[ envName ]'$'\e''[0m '$'\e''[[blue]m[ --application applicationHome ]'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[blue]menvName                        '$'\e''[[value]mString. Optional. Name of the environment value to load. Afterwards this should be defined (possibly blank) and '$'\e''[[code]mexport'$'\e''[[reset]med.'$'\e''[[reset]m'$'\n''    '$'\e''[[blue]m--application applicationHome  '$'\e''[[value]mPath. Optional. Directory of alternate application home. Can be specified more than once to change state.'$'\e''[[reset]m'$'\n'''$'\n''Load and print one or more environment settings'$'\n''If BOTH files exist, both are sourced, so application environments should anticipate values'$'\n''created by build'\''s default.'$'\n''Modifies local environment. Not usually run within a subshell.'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[code]m0'$'\e''[[reset]m - Success'$'\n''- '$'\e''[[code]m1'$'\e''[[reset]m - Environment error'$'\n''- '$'\e''[[code]m2'$'\e''[[reset]m - Argument error'$'\n'''$'\n''Environment variables:'$'\n''- $envName'$'\n''- '$'\e''[[code]mBUILD_ENVIRONMENT_DIRS'$'\e''[[reset]m - '$'\e''[[code]m:'$'\e''[[reset]m separated list of paths to load env files'$'\n'''
 # shellcheck disable=SC2016
-helpPlain='Usage: buildEnvironmentGet [ envName ] [ --application applicationHome ]
-
-    envName                        String. Optional. Name of the environment value to load. Afterwards this should be defined (possibly blank) and exported.
-    --application applicationHome  Path. Optional. Directory of alternate application home. Can be specified more than once to change state.
-
-Load and print one or more environment settings
-
-If BOTH files exist, both are sourced, so application environments should anticipate values
-created by build'\''s default.
-
-Modifies local environment. Not usually run within a subshell.
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-
-Environment variables:
-- $envName
-- BUILD_ENVIRONMENT_DIRS - : separated list of paths to load env files
-- 
-'
+helpPlain='Usage: buildEnvironmentGet [ envName ] [ --application applicationHome ]'$'\n'''$'\n''    envName                        String. Optional. Name of the environment value to load. Afterwards this should be defined (possibly blank) and exported.'$'\n''    --application applicationHome  Path. Optional. Directory of alternate application home. Can be specified more than once to change state.'$'\n'''$'\n''Load and print one or more environment settings'$'\n''If BOTH files exist, both are sourced, so application environments should anticipate values'$'\n''created by build'\''s default.'$'\n''Modifies local environment. Not usually run within a subshell.'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''$'\n''Environment variables:'$'\n''- $envName'$'\n''- BUILD_ENVIRONMENT_DIRS - : separated list of paths to load env files'$'\n'''

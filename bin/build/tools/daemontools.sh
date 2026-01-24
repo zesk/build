@@ -20,14 +20,14 @@ daemontoolsInstall() {
     packages=(daemontools-encore)
   else
     packages=(daemontools svtools)
-    if insideDocker; then
+    if dockerInside; then
       decorate warning "daemontools-run can not be installed because Docker exits 2024-03-21" 1>&2
     else
       packages+=(daemontools-run)
     fi
   fi
   catchReturn "$handler" packageInstall "${packages[@]}" || return $?
-  if insideDocker; then
+  if dockerInside; then
     decorate warning "daemontools run in background - not production" 1>&2
     catchReturn "$handler" daemontoolsExecute || return $?
   fi

@@ -134,7 +134,7 @@ _sshKnownHostAdd() {
 # Return Code: 0 - All hosts exist in or were successfully added to the known hosts file
 #
 # Argument: hostName ... - String. Optional. One ore more hosts to add to the known hosts file
-# Argument: --skip-backup | --no-backup - Flag. Optional. Skip the file backup as `name.$(todayDate)`
+# Argument: --skip-backup | --no-backup - Flag. Optional. Skip the file backup as `name.$(dateToday)`
 # Argument: --verbose - Flag. Optional. Be verbose.
 #
 # If no arguments are passed, the default behavior is to set up the `~/.ssh` directory and create the known hosts file.
@@ -169,7 +169,7 @@ sshKnownHostRemove() {
       else
         local backupName
 
-        backupName="$sshKnown.$(todayDate)"
+        backupName="$sshKnown.$(dateToday)"
         if $backupFlag && [ -f "$backupName" ]; then
           ! $verbose || decorate info "Rotating $(decorate file "$backupName")"
           catchEnvironment "$handler" rotateLog "$backupName" 9 || return $?

@@ -299,7 +299,7 @@ _awsSecurityGroupIPModify() {
 #
 # Register current IP address in listed security groups to allow for access to deployment systems from a specific IP.
 # Use this during deployment to grant temporary access to your systems during deployment only.
-# Build scripts should have a $(decorate code --revoke) step afterward, always.
+# Build scripts should have a `awsIPAccess --revoke` step afterward, always.
 # services are looked up in /etc/services and match /tcp services only for port selection
 #
 # If no `/etc/services` matches the default values are supported within the script: `mysql`,`postgres`,`ssh`,`http`,`https`

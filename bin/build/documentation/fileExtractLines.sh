@@ -1,60 +1,23 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-22
+# Generated on 2026-01-24
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/text.sh"
 argument="startLine - Integer. Required. Starting line number."$'\n'"endLine - Integer. Required. Ending line number."$'\n'"--help - Flag. Optional. Display this help."$'\n'""
 base="text.sh"
 description="Extract a range of lines from a file"$'\n'""
+exitCode="0"
 file="bin/build/tools/text.sh"
-fn="fileExtractLines"
-foundNames=""
+foundNames=([0]="argument" [1]="stdin" [2]="stdout")
+rawComment="Extract a range of lines from a file"$'\n'"Argument: startLine - Integer. Required. Starting line number."$'\n'"Argument: endLine - Integer. Required. Ending line number."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"stdin: Reads lines until EOF"$'\n'"stdout: Outputs the selected lines only"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/text.sh"
-sourceModified="1769063211"
+sourceModified="1769201188"
 stdin="Reads lines until EOF"$'\n'""
 stdout="Outputs the selected lines only"$'\n'""
 summary="Extract a range of lines from a file"
 usage="fileExtractLines startLine endLine [ --help ]"
 # shellcheck disable=SC2016
-helpConsole='[92mUsage[0m: [38;2;170;170;255mfileExtractLines[0m [38;2;255;255;0m[35;48;2;0;0;0mstartLine[0m[0m [38;2;255;255;0m[35;48;2;0;0;0mendLine[0m[0m [94m[ --help ][0m
-
-    [31mstartLine  [1;97mInteger. Required. Starting line number.[0m
-    [31mendLine    [1;97mInteger. Required. Ending line number.[0m
-    [94m--help     [1;97mFlag. Optional. Display this help.[0m
-
-Extract a range of lines from a file
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-
-Reads from [38;2;0;255;0;48;2;0;0;0mstdin[0m:
-Reads lines until EOF
-
-Writes to [38;2;0;255;0;48;2;0;0;0mstdout[0m:
-Outputs the selected lines only
-'
+helpConsole=''$'\e''[[label]mUsage'$'\e''[0m: '$'\e''[[info]mfileExtractLines'$'\e''[0m '$'\e''[[bold]m'$'\e''[[magenta]mstartLine'$'\e''[0m'$'\e''[0m '$'\e''[[bold]m'$'\e''[[magenta]mendLine'$'\e''[0m'$'\e''[0m '$'\e''[[blue]m[ --help ]'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[red]mstartLine  '$'\e''[[value]mInteger. Required. Starting line number.'$'\e''[[reset]m'$'\n''    '$'\e''[[red]mendLine    '$'\e''[[value]mInteger. Required. Ending line number.'$'\e''[[reset]m'$'\n''    '$'\e''[[blue]m--help     '$'\e''[[value]mFlag. Optional. Display this help.'$'\e''[[reset]m'$'\n'''$'\n''Extract a range of lines from a file'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[code]m0'$'\e''[[reset]m - Success'$'\n''- '$'\e''[[code]m1'$'\e''[[reset]m - Environment error'$'\n''- '$'\e''[[code]m2'$'\e''[[reset]m - Argument error'$'\n'''$'\n''Reads from '$'\e''[[code]mstdin'$'\e''[[reset]m:'$'\n''Reads lines until EOF'$'\n'''$'\n''Writes to '$'\e''[[code]mstdout'$'\e''[[reset]m:'$'\n''Outputs the selected lines only'$'\n'''
 # shellcheck disable=SC2016
-helpPlain='Usage: fileExtractLines startLine endLine [ --help ]
-
-    startLine  Integer. Required. Starting line number.
-    endLine    Integer. Required. Ending line number.
-    --help     Flag. Optional. Display this help.
-
-Extract a range of lines from a file
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-
-Reads from stdin:
-Reads lines until EOF
-
-Writes to stdout:
-Outputs the selected lines only
-'
+helpPlain='Usage: fileExtractLines startLine endLine [ --help ]'$'\n'''$'\n''    startLine  Integer. Required. Starting line number.'$'\n''    endLine    Integer. Required. Ending line number.'$'\n''    --help     Flag. Optional. Display this help.'$'\n'''$'\n''Extract a range of lines from a file'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''$'\n''Reads from stdin:'$'\n''Reads lines until EOF'$'\n'''$'\n''Writes to stdout:'$'\n''Outputs the selected lines only'$'\n'''

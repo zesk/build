@@ -1,44 +1,20 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-22
+# Generated on 2026-01-24
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/map.sh"
 argument="mapFile - File. Required. a file containing bash environment definitions"$'\n'"value - String. Optional. One or more values to map using said environment file."$'\n'""
 base="map.sh"
-description="Maps a string using an environment file"$'\n'""$'\n'""$'\n'""
+description="Maps a string using an environment file"$'\n'""
+exitCode="0"
 file="bin/build/tools/map.sh"
-fn="mapValueTrim"
-foundNames=""
+foundNames=([0]="argument")
+rawComment="Maps a string using an environment file"$'\n'"Argument: mapFile - File. Required. a file containing bash environment definitions"$'\n'"Argument: value - String. Optional. One or more values to map using said environment file."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
-sourceFile="bin/build/tools/map.sh"
 sourceModified="1769063211"
 summary="Maps a string using an environment file"
 usage="mapValueTrim mapFile [ value ]"
 # shellcheck disable=SC2016
-helpConsole='[92mUsage[0m: [38;2;170;170;255mmapValueTrim[0m [38;2;255;255;0m[35;48;2;0;0;0mmapFile[0m[0m [94m[ value ][0m
-
-    [31mmapFile  [1;97mFile. Required. a file containing bash environment definitions[0m
-    [94mvalue    [1;97mString. Optional. One or more values to map using said environment file.[0m
-
-Maps a string using an environment file
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-'
+helpConsole=''$'\e''[[label]mUsage'$'\e''[0m: '$'\e''[[info]mmapValueTrim'$'\e''[0m '$'\e''[[bold]m'$'\e''[[magenta]mmapFile'$'\e''[0m'$'\e''[0m '$'\e''[[blue]m[ value ]'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[red]mmapFile  '$'\e''[[value]mFile. Required. a file containing bash environment definitions'$'\e''[[reset]m'$'\n''    '$'\e''[[blue]mvalue    '$'\e''[[value]mString. Optional. One or more values to map using said environment file.'$'\e''[[reset]m'$'\n'''$'\n''Maps a string using an environment file'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[code]m0'$'\e''[[reset]m - Success'$'\n''- '$'\e''[[code]m1'$'\e''[[reset]m - Environment error'$'\n''- '$'\e''[[code]m2'$'\e''[[reset]m - Argument error'$'\n'''
 # shellcheck disable=SC2016
-helpPlain='Usage: mapValueTrim mapFile [ value ]
-
-    mapFile  File. Required. a file containing bash environment definitions
-    value    String. Optional. One or more values to map using said environment file.
-
-Maps a string using an environment file
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-'
+helpPlain='Usage: mapValueTrim mapFile [ value ]'$'\n'''$'\n''    mapFile  File. Required. a file containing bash environment definitions'$'\n''    value    String. Optional. One or more values to map using said environment file.'$'\n'''$'\n''Maps a string using an environment file'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''

@@ -6,7 +6,7 @@
 #
 
 testMacPorts() {
-  if whichExists port; then
+  if executableExists port; then
     assertExitCode 0 packageUpdate || return $?
     assertExitCode 0 packageInstall || return $?
     assertExitCode 0 packageInstall || return $?

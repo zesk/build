@@ -19,5 +19,5 @@ test_pcregrepInstall() {
   assertExitCode 0 pcregrepInstall || return $?
   assertExitCode --stderr-ok 2 pcregrepInstall --no-arguments-allowed || return $?
   assertExitCode 0 pcregrepInstall --help || return $?
-  assertExitCode 0 whichExists "$(pcregrepBinary)" || return $?
+  assertExitCode 0 executableExists "$(pcregrepBinary)" || return $?
 }

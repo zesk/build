@@ -17,7 +17,7 @@ testWhichHook() {
   local home
 
   home=$(catchReturn "$handler" buildHome) || return $?
-  assertEquals "$home/bin/build/hooks/version-current.sh" "$(whichHook version-current)" || return $?
+  assertEquals "$home/bin/build/hooks/version-current.sh" "$(hookFind version-current)" || return $?
 }
 
 testVersionLive() {
@@ -205,7 +205,7 @@ testHooksWhichSeemBenign() {
 
   home="$(catchReturn "$handler" buildHome)" || return $?
   cache=$(catchReturn "$handler" __gitPreCommitCache true) || return $?
-  find "$home/test/example" -type f ! -path "*/.*/*" | extensionLists --clean "$cache"
+  find "$home/test/example" -type f ! -path "*/.*/*" | fileExtensionLists --clean "$cache"
 
   assertExitCode --stdout-match "html" --stdout-match "json" --stdout-match "@" --stdout-match "php" --stdout-match "sql" 0 gitPreCommitExtensionList || return $?
 

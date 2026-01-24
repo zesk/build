@@ -18,8 +18,8 @@
 
 # Now Relative
 
-{todayDate}
+{dateToday}
 
-{yesterdayDate}
+{dateYesterday}
 
-{tomorrowDate}
+{dateTomorrow}

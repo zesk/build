@@ -1,49 +1,21 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-22
+# Generated on 2026-01-24
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/type.sh"
 argument="string ... - String. Required. Path to binary to test if it is executable."$'\n'""
 base="type.sh"
-description="Test if all arguments are executable binaries"$'\n'"If no arguments are passed, returns exit code 1."$'\n'"Return Code: 0 - All arguments are executable binaries"$'\n'"Return Code: 1 - One or or more arguments are not executable binaries"$'\n'""
+description="Test if all arguments are executable binaries"$'\n'"If no arguments are passed, returns exit code 1."$'\n'""
+exitCode="0"
 file="bin/build/tools/type.sh"
-fn="isExecutable"
-foundNames=""
+foundNames=([0]="argument" [1]="return_code" [2]="requires")
+rawComment="Test if all arguments are executable binaries"$'\n'"Argument: string ... - String. Required. Path to binary to test if it is executable."$'\n'"If no arguments are passed, returns exit code 1."$'\n'"Return Code: 0 - All arguments are executable binaries"$'\n'"Return Code: 1 - One or or more arguments are not executable binaries"$'\n'"Requires: throwArgument  __help catchEnvironment command"$'\n'""$'\n'""
 requires="throwArgument  __help catchEnvironment command"$'\n'""
-return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
-sourceFile="bin/build/tools/type.sh"
+return_code="0 - All arguments are executable binaries"$'\n'"1 - One or or more arguments are not executable binaries"$'\n'""
 sourceModified="1769063211"
 summary="Test if all arguments are executable binaries"
 usage="isExecutable string ..."
 # shellcheck disable=SC2016
-helpConsole='[92mUsage[0m: [38;2;170;170;255misExecutable[0m [38;2;255;255;0m[35;48;2;0;0;0mstring ...[0m[0m
-
-    [31mstring ...  [1;97mString. Required. Path to binary to test if it is executable.[0m
-
-Test if all arguments are executable binaries
-If no arguments are passed, returns exit code 1.
-Return Code: 0 - All arguments are executable binaries
-Return Code: 1 - One or or more arguments are not executable binaries
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-'
+helpConsole=''$'\e''[[label]mUsage'$'\e''[0m: '$'\e''[[info]misExecutable'$'\e''[0m '$'\e''[[bold]m'$'\e''[[magenta]mstring ...'$'\e''[0m'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[red]mstring ...  '$'\e''[[value]mString. Required. Path to binary to test if it is executable.'$'\e''[[reset]m'$'\n'''$'\n''Test if all arguments are executable binaries'$'\n''If no arguments are passed, returns exit code 1.'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[code]m0'$'\e''[[reset]m - All arguments are executable binaries'$'\n''- '$'\e''[[code]m1'$'\e''[[reset]m - One or or more arguments are not executable binaries'$'\n'''
 # shellcheck disable=SC2016
-helpPlain='Usage: isExecutable string ...
-
-    string ...  String. Required. Path to binary to test if it is executable.
-
-Test if all arguments are executable binaries
-If no arguments are passed, returns exit code 1.
-Return Code: 0 - All arguments are executable binaries
-Return Code: 1 - One or or more arguments are not executable binaries
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-'
+helpPlain='Usage: isExecutable string ...'$'\n'''$'\n''    string ...  String. Required. Path to binary to test if it is executable.'$'\n'''$'\n''Test if all arguments are executable binaries'$'\n''If no arguments are passed, returns exit code 1.'$'\n'''$'\n''Return codes:'$'\n''- 0 - All arguments are executable binaries'$'\n''- 1 - One or or more arguments are not executable binaries'$'\n'''

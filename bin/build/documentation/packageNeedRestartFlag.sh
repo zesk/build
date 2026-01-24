@@ -1,42 +1,20 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-22
+# Generated on 2026-01-24
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/package.sh"
 argument="value - Set the restart flag to this value (blank to remove)"$'\n'""
 base="package.sh"
 description="INTERNAL - has \`packageUpdate\` set the \`restart\` flag at some point?"$'\n'""
+exitCode="0"
 file="bin/build/tools/package.sh"
-fn="packageNeedRestartFlag"
-foundNames=""
+foundNames=([0]="argument")
+rawComment="INTERNAL - has \`packageUpdate\` set the \`restart\` flag at some point?"$'\n'"Argument: value - Set the restart flag to this value (blank to remove)"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
-sourceFile="bin/build/tools/package.sh"
-sourceModified="1769063211"
+sourceModified="1769184734"
 summary="INTERNAL - has \`packageUpdate\` set the \`restart\` flag at some"
 usage="packageNeedRestartFlag [ value ]"
 # shellcheck disable=SC2016
-helpConsole='[92mUsage[0m: [38;2;170;170;255mpackageNeedRestartFlag[0m [94m[ value ][0m
-
-    [94mvalue  [1;97mSet the restart flag to this value (blank to remove)[0m
-
-INTERNAL - has [38;2;0;255;0;48;2;0;0;0mpackageUpdate[0m set the [38;2;0;255;0;48;2;0;0;0mrestart[0m flag at some point?
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-'
+helpConsole=''$'\e''[[label]mUsage'$'\e''[0m: '$'\e''[[info]mpackageNeedRestartFlag'$'\e''[0m '$'\e''[[blue]m[ value ]'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[blue]mvalue  '$'\e''[[value]mSet the restart flag to this value (blank to remove)'$'\e''[[reset]m'$'\n'''$'\n''INTERNAL - has '$'\e''[[code]mpackageUpdate'$'\e''[[reset]m set the '$'\e''[[code]mrestart'$'\e''[[reset]m flag at some point?'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[code]m0'$'\e''[[reset]m - Success'$'\n''- '$'\e''[[code]m1'$'\e''[[reset]m - Environment error'$'\n''- '$'\e''[[code]m2'$'\e''[[reset]m - Argument error'$'\n'''
 # shellcheck disable=SC2016
-helpPlain='Usage: packageNeedRestartFlag [ value ]
-
-    value  Set the restart flag to this value (blank to remove)
-
-INTERNAL - has packageUpdate set the restart flag at some point?
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-'
+helpPlain='Usage: packageNeedRestartFlag [ value ]'$'\n'''$'\n''    value  Set the restart flag to this value (blank to remove)'$'\n'''$'\n''INTERNAL - has packageUpdate set the restart flag at some point?'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''

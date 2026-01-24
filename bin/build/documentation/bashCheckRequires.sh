@@ -1,73 +1,22 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-22
+# Generated on 2026-01-24
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/bash.sh"
 argument="--help - Flag. Optional. Display this help."$'\n'"--ignore prefix. String. Optional. Ignore exact function names."$'\n'"--ignore-prefix prefix - String. Optional. Ignore function names which match the prefix and do not check them."$'\n'"--report - Flag. Optional. Output a report of various functions and handler after processing is complete."$'\n'"--require - Flag. Optional. Requires at least one or more requirements to be listed and met to pass"$'\n'"--unused - Flag. Optional. Check for unused functions and report on them."$'\n'""
 base="bash.sh"
-description="Checks a bash script to ensure all requirements are met, outputs a list of unmet requirements"$'\n'"Scans a bash script for lines which look like:"$'\n'""$'\n'""$'\n'"Each requirement token is:"$'\n'""$'\n'"- a bash function which MUST be defined"$'\n'"- a shell script (executable) which must be present"$'\n'""$'\n'"If all requirements are met, exit status of 0."$'\n'"If any requirements are not met, exit status of 1 and a list of unmet requirements are listed"$'\n'""$'\n'""
+description="Checks a bash script to ensure all requirements are met, outputs a list of unmet requirements"$'\n'"Scans a bash script for lines which look like:"$'\n'"Each requirement token is:"$'\n'"- a bash function which MUST be defined"$'\n'"- a shell script (executable) which must be present"$'\n'"If all requirements are met, exit status of 0."$'\n'"If any requirements are not met, exit status of 1 and a list of unmet requirements are listed"$'\n'""
+exitCode="0"
 file="bin/build/tools/bash.sh"
-fn="bashCheckRequires"
-foundNames=""
+foundNames=([0]="requires" [1]="argument")
+rawComment="Checks a bash script to ensure all requirements are met, outputs a list of unmet requirements"$'\n'"Scans a bash script for lines which look like:"$'\n'"Requires: token1 token2"$'\n'"Each requirement token is:"$'\n'"- a bash function which MUST be defined"$'\n'"- a shell script (executable) which must be present"$'\n'"If all requirements are met, exit status of 0."$'\n'"If any requirements are not met, exit status of 1 and a list of unmet requirements are listed"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Argument: --ignore prefix. String. Optional. Ignore exact function names."$'\n'"Argument: --ignore-prefix prefix - String. Optional. Ignore function names which match the prefix and do not check them."$'\n'"Argument: --report - Flag. Optional. Output a report of various functions and handler after processing is complete."$'\n'"Argument: --require - Flag. Optional. Requires at least one or more requirements to be listed and met to pass"$'\n'"Argument: --unused - Flag. Optional. Check for unused functions and report on them."$'\n'""$'\n'""
 requires="token1 token2"$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/bash.sh"
-sourceModified="1769063211"
+sourceModified="1769208503"
 summary="Checks a bash script to ensure all requirements are met,"
 usage="bashCheckRequires [ --help ] [ --ignore prefix. String. Optional. Ignore exact function names. ] [ --ignore-prefix prefix ] [ --report ] [ --require ] [ --unused ]"
 # shellcheck disable=SC2016
-helpConsole='[92mUsage[0m: [38;2;170;170;255mbashCheckRequires[0m [94m[ --help ][0m [94m[ --ignore prefix. String. Optional. Ignore exact function names. ][0m [94m[ --ignore-prefix prefix ][0m [94m[ --report ][0m [94m[ --require ][0m [94m[ --unused ][0m
-
-    [94m--help                                                           [1;97mFlag. Optional. Display this help.[0m
-    [94m--ignore prefix. String. Optional. Ignore exact function names.  [1;97m--ignore prefix. String. Optional. Ignore exact function names.[0m
-    [94m--ignore-prefix prefix                                           [1;97mString. Optional. Ignore function names which match the prefix and do not check them.[0m
-    [94m--report                                                         [1;97mFlag. Optional. Output a report of various functions and handler after processing is complete.[0m
-    [94m--require                                                        [1;97mFlag. Optional. Requires at least one or more requirements to be listed and met to pass[0m
-    [94m--unused                                                         [1;97mFlag. Optional. Check for unused functions and report on them.[0m
-
-Checks a bash script to ensure all requirements are met, outputs a list of unmet requirements
-Scans a bash script for lines which look like:
-
-
-Each requirement token is:
-
-- a bash function which MUST be defined
-- a shell script (executable) which must be present
-
-If all requirements are met, exit status of 0.
-If any requirements are not met, exit status of 1 and a list of unmet requirements are listed
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-'
+helpConsole=''$'\e''[[label]mUsage'$'\e''[0m: '$'\e''[[info]mbashCheckRequires'$'\e''[0m '$'\e''[[blue]m[ --help ]'$'\e''[0m '$'\e''[[blue]m[ --ignore prefix. String. Optional. Ignore exact function names. ]'$'\e''[0m '$'\e''[[blue]m[ --ignore-prefix prefix ]'$'\e''[0m '$'\e''[[blue]m[ --report ]'$'\e''[0m '$'\e''[[blue]m[ --require ]'$'\e''[0m '$'\e''[[blue]m[ --unused ]'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[blue]m--help                                                           '$'\e''[[value]mFlag. Optional. Display this help.'$'\e''[[reset]m'$'\n''    '$'\e''[[blue]m--ignore prefix. String. Optional. Ignore exact function names.  '$'\e''[[value]m--ignore prefix. String. Optional. Ignore exact function names.'$'\e''[[reset]m'$'\n''    '$'\e''[[blue]m--ignore-prefix prefix                                           '$'\e''[[value]mString. Optional. Ignore function names which match the prefix and do not check them.'$'\e''[[reset]m'$'\n''    '$'\e''[[blue]m--report                                                         '$'\e''[[value]mFlag. Optional. Output a report of various functions and handler after processing is complete.'$'\e''[[reset]m'$'\n''    '$'\e''[[blue]m--require                                                        '$'\e''[[value]mFlag. Optional. Requires at least one or more requirements to be listed and met to pass'$'\e''[[reset]m'$'\n''    '$'\e''[[blue]m--unused                                                         '$'\e''[[value]mFlag. Optional. Check for unused functions and report on them.'$'\e''[[reset]m'$'\n'''$'\n''Checks a bash script to ensure all requirements are met, outputs a list of unmet requirements'$'\n''Scans a bash script for lines which look like:'$'\n''Each requirement token is:'$'\n''- a bash function which MUST be defined'$'\n''- a shell script (executable) which must be present'$'\n''If all requirements are met, exit status of 0.'$'\n''If any requirements are not met, exit status of 1 and a list of unmet requirements are listed'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[code]m0'$'\e''[[reset]m - Success'$'\n''- '$'\e''[[code]m1'$'\e''[[reset]m - Environment error'$'\n''- '$'\e''[[code]m2'$'\e''[[reset]m - Argument error'$'\n'''
 # shellcheck disable=SC2016
-helpPlain='Usage: bashCheckRequires [ --help ] [ --ignore prefix. String. Optional. Ignore exact function names. ] [ --ignore-prefix prefix ] [ --report ] [ --require ] [ --unused ]
-
-    --help                                                           Flag. Optional. Display this help.
-    --ignore prefix. String. Optional. Ignore exact function names.  --ignore prefix. String. Optional. Ignore exact function names.
-    --ignore-prefix prefix                                           String. Optional. Ignore function names which match the prefix and do not check them.
-    --report                                                         Flag. Optional. Output a report of various functions and handler after processing is complete.
-    --require                                                        Flag. Optional. Requires at least one or more requirements to be listed and met to pass
-    --unused                                                         Flag. Optional. Check for unused functions and report on them.
-
-Checks a bash script to ensure all requirements are met, outputs a list of unmet requirements
-Scans a bash script for lines which look like:
-
-
-Each requirement token is:
-
-- a bash function which MUST be defined
-- a shell script (executable) which must be present
-
-If all requirements are met, exit status of 0.
-If any requirements are not met, exit status of 1 and a list of unmet requirements are listed
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-'
+helpPlain='Usage: bashCheckRequires [ --help ] [ --ignore prefix. String. Optional. Ignore exact function names. ] [ --ignore-prefix prefix ] [ --report ] [ --require ] [ --unused ]'$'\n'''$'\n''    --help                                                           Flag. Optional. Display this help.'$'\n''    --ignore prefix. String. Optional. Ignore exact function names.  --ignore prefix. String. Optional. Ignore exact function names.'$'\n''    --ignore-prefix prefix                                           String. Optional. Ignore function names which match the prefix and do not check them.'$'\n''    --report                                                         Flag. Optional. Output a report of various functions and handler after processing is complete.'$'\n''    --require                                                        Flag. Optional. Requires at least one or more requirements to be listed and met to pass'$'\n''    --unused                                                         Flag. Optional. Check for unused functions and report on them.'$'\n'''$'\n''Checks a bash script to ensure all requirements are met, outputs a list of unmet requirements'$'\n''Scans a bash script for lines which look like:'$'\n''Each requirement token is:'$'\n''- a bash function which MUST be defined'$'\n''- a shell script (executable) which must be present'$'\n''If all requirements are met, exit status of 0.'$'\n''If any requirements are not met, exit status of 1 and a list of unmet requirements are listed'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''

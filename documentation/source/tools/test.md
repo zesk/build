@@ -7,7 +7,7 @@
 {validateFileExtensionContents}
 {validateFileContents}
 {evalCheck}
-{findUncaughtAssertions}
+{bashFindUncaughtAssertions}
 
 ## Test Subsystem
 

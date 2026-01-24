@@ -6,10 +6,10 @@
 #
 
 #
-# Format code blocks (does markdownFormatList)
+# Format Return Code: blocks as a list
 #
 _bashDocumentationFormatter_return_code() {
-  markdownFormatList
+  trimBoth | markdownFormatList
 }
 
 #

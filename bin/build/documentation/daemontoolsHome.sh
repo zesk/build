@@ -1,42 +1,21 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-22
+# Generated on 2026-01-24
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/daemontools.sh"
 argument="none"
 base="daemontools.sh"
-description="Print the daemontools service home path"$'\n'"Return Code: 0 - success"$'\n'"Return Code: 1 - No environment file found"$'\n'""
+description="Print the daemontools service home path"$'\n'""
+exitCode="0"
 file="bin/build/tools/daemontools.sh"
-fn="daemontoolsHome"
-foundNames=""
-return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
+foundNames=([0]="return_code")
+rawComment="Print the daemontools service home path"$'\n'"Return Code: 0 - success"$'\n'"Return Code: 1 - No environment file found"$'\n'""$'\n'""
+return_code="0 - success"$'\n'"1 - No environment file found"$'\n'""
 sourceFile="bin/build/tools/daemontools.sh"
-sourceModified="1769063211"
+sourceModified="1769109690"
 summary="Print the daemontools service home path"
 usage="daemontoolsHome"
 # shellcheck disable=SC2016
-helpConsole='[92mUsage[0m: [38;2;170;170;255mdaemontoolsHome[0m
-
-Print the daemontools service home path
-Return Code: 0 - success
-Return Code: 1 - No environment file found
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-'
+helpConsole=''$'\e''[[label]mUsage'$'\e''[0m: '$'\e''[[info]mdaemontoolsHome'$'\e''[0m'$'\n'''$'\n''Print the daemontools service home path'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[code]m0'$'\e''[[reset]m - success'$'\n''- '$'\e''[[code]m1'$'\e''[[reset]m - No environment file found'$'\n'''
 # shellcheck disable=SC2016
-helpPlain='Usage: daemontoolsHome
-
-Print the daemontools service home path
-Return Code: 0 - success
-Return Code: 1 - No environment file found
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-'
+helpPlain='Usage: daemontoolsHome'$'\n'''$'\n''Print the daemontools service home path'$'\n'''$'\n''Return codes:'$'\n''- 0 - success'$'\n''- 1 - No environment file found'$'\n'''

@@ -80,7 +80,7 @@ __pcregrepBinary() {
 __packageManagerDefault() {
   local manager managers=(port brew)
   for manager in "${managers[@]}"; do
-    if whichExists "$manager"; then
+    if executableExists "$manager"; then
       printf "%s\n" "$manager"
       return 0
     fi

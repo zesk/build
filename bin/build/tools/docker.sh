@@ -38,9 +38,10 @@ _dockerPlatformDefault() {
 
 #
 # Debugging, dumps the proc1file which is used to figure out if we
-# are insideDocker or not; use this to confirm platform implementation
+# are dockerInside or not; use this to confirm platform implementation
 #
-dumpDockerTestFile() {
+# INTERNAL
+__dumpDockerTestFile() {
   [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
   local proc1File=/proc/1/sched
 
@@ -51,7 +52,7 @@ dumpDockerTestFile() {
     decorate warning "Missing $proc1File"
   fi
 }
-_dumpDockerTestFile() {
+___dumpDockerTestFile() {
   true || dumpDockerTestFile --help
   # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
@@ -65,7 +66,7 @@ _dumpDockerTestFile() {
 # TODO: This changed 2023 ...
 # Checked: 2025-07-09
 # TODO: Write a test to check this date every oh, say, 3 months
-insideDocker() {
+dockerInside() {
   [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
   if [ ! -f /proc/1/cmdline ]; then
     # Not inside
@@ -78,8 +79,8 @@ insideDocker() {
   # inside
   return 0
 }
-_insideDocker() {
-  true || insideDocker --help
+_dockerInside() {
+  true || dockerInside --help
   # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
@@ -186,7 +187,7 @@ dockerLocalContainer() {
     failedWhy="imageName is empty"
   elif [ -z "$imageApplicationPath" ]; then
     failedWhy="imageApplicationPath is empty"
-  elif ! whichExists docker; then
+  elif ! executableExists docker; then
     failedWhy="docker does not exist in path"
   fi
   if [ -n "$failedWhy" ]; then

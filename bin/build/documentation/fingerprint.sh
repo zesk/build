@@ -1,70 +1,23 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-22
+# Generated on 2026-01-24
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/fingerprint.sh"
 argument="--help - Flag. Optional. Display this help."$'\n'"--handler handler - Function. Optional. Use this error handler instead of the default error handler."$'\n'"--verbose - Flag. Optional. Be verbose. Default based on value of \`fingerprint\` in \`BUILD_DEBUG\`."$'\n'"--quiet - Flag. Optional. Be quiet (turns verbose off)."$'\n'"--check - Flag. Optional. Check if the fingerprint is up to date and output the current value."$'\n'"--key - String. Optional. Update this key in the JSON file."$'\n'""
 base="fingerprint.sh"
 build_debug="fingerprint - By default be verbose even if the flag is not specified. (Use \`--quiet\` to silence if needed)"$'\n'""
-description="Update file from \`APPLICATION_JSON\` with application fingerprint."$'\n'""$'\n'""
+description="Update file from \`APPLICATION_JSON\` with application fingerprint."$'\n'""
 environment="BUILD_DEBUG"$'\n'""
+exitCode="0"
 file="bin/build/tools/fingerprint.sh"
-fn="fingerprint"
-foundNames=""
+foundNames=([0]="argument" [1]="build_debug" [2]="environment")
+rawComment="Update file from \`APPLICATION_JSON\` with application fingerprint."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Argument: --handler handler - Function. Optional. Use this error handler instead of the default error handler."$'\n'"Argument: --verbose - Flag. Optional. Be verbose. Default based on value of \`fingerprint\` in \`BUILD_DEBUG\`."$'\n'"Argument: --quiet - Flag. Optional. Be quiet (turns verbose off)."$'\n'"Argument: --check - Flag. Optional. Check if the fingerprint is up to date and output the current value."$'\n'"Argument: --key - String. Optional. Update this key in the JSON file."$'\n'"BUILD_DEBUG: fingerprint - By default be verbose even if the flag is not specified. (Use \`--quiet\` to silence if needed)"$'\n'"Environment: BUILD_DEBUG"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/fingerprint.sh"
 sourceModified="1769063211"
 summary="Update file from \`APPLICATION_JSON\` with application fingerprint."
 usage="fingerprint [ --help ] [ --handler handler ] [ --verbose ] [ --quiet ] [ --check ] [ --key ]"
 # shellcheck disable=SC2016
-helpConsole='[92mUsage[0m: [38;2;170;170;255mfingerprint[0m [94m[ --help ][0m [94m[ --handler handler ][0m [94m[ --verbose ][0m [94m[ --quiet ][0m [94m[ --check ][0m [94m[ --key ][0m
-
-    [94m--help             [1;97mFlag. Optional. Display this help.[0m
-    [94m--handler handler  [1;97mFunction. Optional. Use this error handler instead of the default error handler.[0m
-    [94m--verbose          [1;97mFlag. Optional. Be verbose. Default based on value of [38;2;0;255;0;48;2;0;0;0mfingerprint[0m in [38;2;0;255;0;48;2;0;0;0mBUILD_DEBUG[0m.[0m
-    [94m--quiet            [1;97mFlag. Optional. Be quiet (turns verbose off).[0m
-    [94m--check            [1;97mFlag. Optional. Check if the fingerprint is up to date and output the current value.[0m
-    [94m--key              [1;97mString. Optional. Update this key in the JSON file.[0m
-
-Update file from [38;2;0;255;0;48;2;0;0;0mAPPLICATION_JSON[0m with application fingerprint.
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-
-Environment variables:
-- BUILD_DEBUG
-- 
-
-[38;2;0;255;0;48;2;0;0;0mBUILD_DEBUG[0m settings:
-- fingerprint - By default be verbose even if the flag is not specified. (Use [38;2;0;255;0;48;2;0;0;0m--quiet[0m to silence if needed)
-- 
-'
+helpConsole=''$'\e''[[label]mUsage'$'\e''[0m: '$'\e''[[info]mfingerprint'$'\e''[0m '$'\e''[[blue]m[ --help ]'$'\e''[0m '$'\e''[[blue]m[ --handler handler ]'$'\e''[0m '$'\e''[[blue]m[ --verbose ]'$'\e''[0m '$'\e''[[blue]m[ --quiet ]'$'\e''[0m '$'\e''[[blue]m[ --check ]'$'\e''[0m '$'\e''[[blue]m[ --key ]'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[blue]m--help             '$'\e''[[value]mFlag. Optional. Display this help.'$'\e''[[reset]m'$'\n''    '$'\e''[[blue]m--handler handler  '$'\e''[[value]mFunction. Optional. Use this error handler instead of the default error handler.'$'\e''[[reset]m'$'\n''    '$'\e''[[blue]m--verbose          '$'\e''[[value]mFlag. Optional. Be verbose. Default based on value of '$'\e''[[code]mfingerprint'$'\e''[[reset]m in '$'\e''[[code]mBUILD_DEBUG'$'\e''[[reset]m.'$'\e''[[reset]m'$'\n''    '$'\e''[[blue]m--quiet            '$'\e''[[value]mFlag. Optional. Be quiet (turns verbose off).'$'\e''[[reset]m'$'\n''    '$'\e''[[blue]m--check            '$'\e''[[value]mFlag. Optional. Check if the fingerprint is up to date and output the current value.'$'\e''[[reset]m'$'\n''    '$'\e''[[blue]m--key              '$'\e''[[value]mString. Optional. Update this key in the JSON file.'$'\e''[[reset]m'$'\n'''$'\n''Update file from '$'\e''[[code]mAPPLICATION_JSON'$'\e''[[reset]m with application fingerprint.'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[code]m0'$'\e''[[reset]m - Success'$'\n''- '$'\e''[[code]m1'$'\e''[[reset]m - Environment error'$'\n''- '$'\e''[[code]m2'$'\e''[[reset]m - Argument error'$'\n'''$'\n''Environment variables:'$'\n''- BUILD_DEBUG'$'\n'''$'\n'''$'\e''[[code]mBUILD_DEBUG'$'\e''[[reset]m settings:'$'\n''- '$'\e''[[code]mfingerprint'$'\e''[[reset]m - By default be verbose even if the flag is not specified. (Use '$'\e''[[code]m--quiet'$'\e''[[reset]m to silence if needed)'$'\n'''
 # shellcheck disable=SC2016
-helpPlain='Usage: fingerprint [ --help ] [ --handler handler ] [ --verbose ] [ --quiet ] [ --check ] [ --key ]
-
-    --help             Flag. Optional. Display this help.
-    --handler handler  Function. Optional. Use this error handler instead of the default error handler.
-    --verbose          Flag. Optional. Be verbose. Default based on value of fingerprint in BUILD_DEBUG.
-    --quiet            Flag. Optional. Be quiet (turns verbose off).
-    --check            Flag. Optional. Check if the fingerprint is up to date and output the current value.
-    --key              String. Optional. Update this key in the JSON file.
-
-Update file from APPLICATION_JSON with application fingerprint.
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-
-Environment variables:
-- BUILD_DEBUG
-- 
-
-BUILD_DEBUG settings:
-- fingerprint - By default be verbose even if the flag is not specified. (Use --quiet to silence if needed)
-- 
-'
+helpPlain='Usage: fingerprint [ --help ] [ --handler handler ] [ --verbose ] [ --quiet ] [ --check ] [ --key ]'$'\n'''$'\n''    --help             Flag. Optional. Display this help.'$'\n''    --handler handler  Function. Optional. Use this error handler instead of the default error handler.'$'\n''    --verbose          Flag. Optional. Be verbose. Default based on value of fingerprint in BUILD_DEBUG.'$'\n''    --quiet            Flag. Optional. Be quiet (turns verbose off).'$'\n''    --check            Flag. Optional. Check if the fingerprint is up to date and output the current value.'$'\n''    --key              String. Optional. Update this key in the JSON file.'$'\n'''$'\n''Update file from APPLICATION_JSON with application fingerprint.'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''$'\n''Environment variables:'$'\n''- BUILD_DEBUG'$'\n'''$'\n''BUILD_DEBUG settings:'$'\n''- fingerprint - By default be verbose even if the flag is not specified. (Use --quiet to silence if needed)'$'\n'''

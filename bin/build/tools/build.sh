@@ -58,18 +58,62 @@ _installInstallBuild() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
+# List all functions which are currently deprecated in Zesk Build
+# stdout: String
 # DOC TEMPLATE: --help 1
 # Argument: --help - Flag. Optional. Display this help.
+buildDeprecatedFunctions() {
+  local handler="_${FUNCNAME[0]}"
+  [ "${1-}" != "--help" ] || __help --only "$handler" "$@" || return 0
+  local home && home=$(catchReturn "$handler" buildHome) || return $?
+  {
+    catchReturn "$handler" bashListFunctions "$home/bin/build/tools/deprecated.sh" || return $?
+    catchReturn "$handler" bashCommentFilter <"$home/bin/build/deprecated.txt" | catchReturn "$handler" cut -f 1 -d '|' | catchReturn "$handler" grepSafe -e '^[A-Za-z_][A-Za-z0-9_]*$' || return $?
+  } | catchReturn "$handler" sort -u || return $?
+}
+_buildDeprecatedFunctions() {
+  true || buildDeprecatedFunctions --help || return $?
+  # __IDENTICAL__ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+# DOC TEMPLATE: --help 1
+# Argument: --help - Flag. Optional. Display this help.
+# Argument: --deprecated - Flag. Optional. Include all deprecated functions as well.
 # Environment: BUILD_HOME
 # Prints the list of functions defined in Zesk Build
 # DOC TEMPLATE: --help 1
 # Argument: --help - Flag. Optional. Display this help.
 buildFunctions() {
-  local handler="_${FUNCNAME[0]}"
-  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
-  local home
-  home=$(catchReturn "$handler" buildHome) || return $?
-  "$home/bin/build/tools.sh" declare -F | cut -d ' ' -f 3 | grep -v -e '^_'
+  local handler="_${FUNCNAME[0]}" hideDeprecated=true
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
+  local __saved=("$@") __count=$#
+  while [ $# -gt 0 ]; do
+    local argument="$1" __index=$((__count - $# + 1))
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    case "$argument" in
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
+    # _IDENTICAL_ handlerHandler 1
+    --handler) shift && handler=$(validate "$handler" Function "$argument" "${1-}") || return $? ;;
+    --deprecated) hideDeprecated=false ;;
+    *)
+      # _IDENTICAL_ argumentUnknownHandler 1
+      throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
+      ;;
+    esac
+    shift
+  done
+
+  local postprocess=(cat)
+  if $hideDeprecated; then
+    local pattern=() fun && while read -r fun; do pattern+=("$fun"); done < <(buildDeprecatedFunctions)
+    local grepPattern && grepPattern="$(catchReturn "$handler" listJoin "|" "${pattern[@]}")" || return $?
+    [ "${#pattern[@]}" -eq 0 ] || postprocess=(grep -v -e "^\($(quoteGrepPattern "$grepPattern")\)$")
+  fi
+  local home && home=$(catchReturn "$handler" buildHome) || return $?
+  env -i PATH="$PATH" "$home/bin/build/tools.sh" declare -F | cut -d ' ' -f 3 | grep -v -e '^_' | "${postprocess[@]}"
 }
 _buildFunctions() {
   # __IDENTICAL__ usageDocument 1
@@ -337,7 +381,7 @@ tools() {
   local home code=0
   if ! home=$(bashLibraryHome "$run" "$startDirectory" 2>/dev/null); then
     home=$(catchReturn "$handler" buildHome) || return $?
-    ! $verboseFlag || statusMessage decorate info "Running $(decorate file "$home/$run")" "$(decorate each code "$@")"
+    ! $verboseFlag || statusMessage decorate info "Running $(decorate file "$home/$run")" "$(decorate each code -- "$@")"
     "$home/$run" "$@" || code=$?
   else
     bashLibrary "${vv[@]+"${vv[@]}"}" "$run" "$@" || code=$?

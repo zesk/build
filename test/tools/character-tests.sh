@@ -20,18 +20,18 @@ __testIsCharacterClass() {
       if isCharacterClass "$class" "$c"; then
         token="Y"
       else
-        #temp="$(repeat "${#temp}" " ")"
+        #temp="$(textRepeat "${#temp}" " ")"
         token="."
       fi
       line+=("$token")
     done
 
     if $first; then
-      printf "$(alignLeft "$firstColumnWidth" "class")| %s\n" "$header"
-      printf "%s+%s\n" "$(repeat "$firstColumnWidth" "-")" "-$(repeat "${#header}" "-")"
+      printf "$(textAlignLeft "$firstColumnWidth" "class")| %s\n" "$header"
+      printf "%s+%s\n" "$(textRepeat "$firstColumnWidth" "-")" "-$(textRepeat "${#header}" "-")"
       first=false
     fi
-    printf "%s| %s\n" "$(alignLeft "$firstColumnWidth" "$class")" "${line[*]}"
+    printf "%s| %s\n" "$(textAlignLeft "$firstColumnWidth" "$class")" "${line[*]}"
   done
 }
 

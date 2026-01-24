@@ -6,20 +6,24 @@ Typically used to output text to the console using pretty colors and ANSI art.
 [⬅ Parent ](../index.md)
 <hr />
 
-{repeat}
-
-{echoBar}
-
-{alignRight}
-
-{alignLeft}
-
-{boxedHeading}
+{consoleLine}
 
 {bigText}
 
 {labeledBigText}
 
-{lineFill}
+{consoleHeadingLine}
+
+{consoleHeadingBoxed}
 
 {decoratePath}
+
+{decorateThemed}
+
+{decorateThemelessMode}
+
+{textRepeat}
+
+{textAlignRight}
+
+{textAlignLeft}

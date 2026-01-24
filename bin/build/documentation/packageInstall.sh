@@ -1,74 +1,22 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-22
+# Generated on 2026-01-24
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/package.sh"
 argument="package - One or more packages to install"$'\n'"--verbose - Flag. Optional. Display progress to the terminal."$'\n'"--manager packageManager - String. Optional. Package manager to use. (apk, apt, brew)"$'\n'"--force - Flag. Optional. Force even if it was updated recently."$'\n'"--show-log - Flag. Optional. Show package manager logs."$'\n'""
 artifact="\`packageInstall.log\` is left in the \`buildCacheDirectory\`"$'\n'""
 base="package.sh"
-description="Install packages using a package manager."$'\n'""$'\n'"Supported managers:"$'\n'"- apk"$'\n'"- apt-get"$'\n'"- brew"$'\n'""$'\n'"Return Code: 0 - If \`apk\` is not installed, returns 0."$'\n'"Return Code: 1 - If \`apk\` fails to install the packages"$'\n'""
+description="Install packages using a package manager."$'\n'"Supported managers:"$'\n'"- apk"$'\n'"- apt-get"$'\n'"- brew"$'\n'""
 example="    packageInstall shellcheck"$'\n'""
+exitCode="0"
 file="bin/build/tools/package.sh"
-fn="packageInstall"
-foundNames=""
-return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
-sourceFile="bin/build/tools/package.sh"
-sourceModified="1769063211"
+foundNames=([0]="example" [1]="return_code" [2]="summary" [3]="argument" [4]="artifact")
+rawComment="Install packages using a package manager."$'\n'"Supported managers:"$'\n'"- apk"$'\n'"- apt-get"$'\n'"- brew"$'\n'"Example:     {fn} shellcheck"$'\n'"Return Code: 0 - If \`apk\` is not installed, returns 0."$'\n'"Return Code: 1 - If \`apk\` fails to install the packages"$'\n'"Summary: Install packages using a package manager"$'\n'"Argument: package - One or more packages to install"$'\n'"Artifact: \`{fn}.log\` is left in the \`buildCacheDirectory\`"$'\n'"Argument: --verbose - Flag. Optional. Display progress to the terminal."$'\n'"Argument: --manager packageManager - String. Optional. Package manager to use. (apk, apt, brew)"$'\n'"Argument: --force - Flag. Optional. Force even if it was updated recently."$'\n'"Argument: --show-log - Flag. Optional. Show package manager logs."$'\n'""$'\n'""
+return_code="0 - If \`apk\` is not installed, returns 0."$'\n'"1 - If \`apk\` fails to install the packages"$'\n'""
+sourceModified="1769184734"
 summary="Install packages using a package manager"$'\n'""
 usage="packageInstall [ package ] [ --verbose ] [ --manager packageManager ] [ --force ] [ --show-log ]"
 # shellcheck disable=SC2016
-helpConsole='[92mUsage[0m: [38;2;170;170;255mpackageInstall[0m [94m[ package ][0m [94m[ --verbose ][0m [94m[ --manager packageManager ][0m [94m[ --force ][0m [94m[ --show-log ][0m
-
-    [94mpackage                   [1;97mOne or more packages to install[0m
-    [94m--verbose                 [1;97mFlag. Optional. Display progress to the terminal.[0m
-    [94m--manager packageManager  [1;97mString. Optional. Package manager to use. (apk, apt, brew)[0m
-    [94m--force                   [1;97mFlag. Optional. Force even if it was updated recently.[0m
-    [94m--show-log                [1;97mFlag. Optional. Show package manager logs.[0m
-
-Install packages using a package manager.
-
-Supported managers:
-- apk
-- apt-get
-- brew
-
-Return Code: 0 - If [38;2;0;255;0;48;2;0;0;0mapk[0m is not installed, returns 0.
-Return Code: 1 - If [38;2;0;255;0;48;2;0;0;0mapk[0m fails to install the packages
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-
-Example:
-    packageInstall shellcheck
-'
+helpConsole=''$'\e''[[label]mUsage'$'\e''[0m: '$'\e''[[info]mpackageInstall'$'\e''[0m '$'\e''[[blue]m[ package ]'$'\e''[0m '$'\e''[[blue]m[ --verbose ]'$'\e''[0m '$'\e''[[blue]m[ --manager packageManager ]'$'\e''[0m '$'\e''[[blue]m[ --force ]'$'\e''[0m '$'\e''[[blue]m[ --show-log ]'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[blue]mpackage                   '$'\e''[[value]mOne or more packages to install'$'\e''[[reset]m'$'\n''    '$'\e''[[blue]m--verbose                 '$'\e''[[value]mFlag. Optional. Display progress to the terminal.'$'\e''[[reset]m'$'\n''    '$'\e''[[blue]m--manager packageManager  '$'\e''[[value]mString. Optional. Package manager to use. (apk, apt, brew)'$'\e''[[reset]m'$'\n''    '$'\e''[[blue]m--force                   '$'\e''[[value]mFlag. Optional. Force even if it was updated recently.'$'\e''[[reset]m'$'\n''    '$'\e''[[blue]m--show-log                '$'\e''[[value]mFlag. Optional. Show package manager logs.'$'\e''[[reset]m'$'\n'''$'\n''Install packages using a package manager.'$'\n''Supported managers:'$'\n''- apk'$'\n''- apt-get'$'\n''- brew'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[code]m0'$'\e''[[reset]m - If '$'\e''[[code]mapk'$'\e''[[reset]m is not installed, returns 0.'$'\n''- '$'\e''[[code]m1'$'\e''[[reset]m - If '$'\e''[[code]mapk'$'\e''[[reset]m fails to install the packages'$'\n'''$'\n''Example:'$'\n''    packageInstall shellcheck'$'\n'''
 # shellcheck disable=SC2016
-helpPlain='Usage: packageInstall [ package ] [ --verbose ] [ --manager packageManager ] [ --force ] [ --show-log ]
-
-    package                   One or more packages to install
-    --verbose                 Flag. Optional. Display progress to the terminal.
-    --manager packageManager  String. Optional. Package manager to use. (apk, apt, brew)
-    --force                   Flag. Optional. Force even if it was updated recently.
-    --show-log                Flag. Optional. Show package manager logs.
-
-Install packages using a package manager.
-
-Supported managers:
-- apk
-- apt-get
-- brew
-
-Return Code: 0 - If apk is not installed, returns 0.
-Return Code: 1 - If apk fails to install the packages
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-
-Example:
-    packageInstall shellcheck
-'
+helpPlain='Usage: packageInstall [ package ] [ --verbose ] [ --manager packageManager ] [ --force ] [ --show-log ]'$'\n'''$'\n''    package                   One or more packages to install'$'\n''    --verbose                 Flag. Optional. Display progress to the terminal.'$'\n''    --manager packageManager  String. Optional. Package manager to use. (apk, apt, brew)'$'\n''    --force                   Flag. Optional. Force even if it was updated recently.'$'\n''    --show-log                Flag. Optional. Show package manager logs.'$'\n'''$'\n''Install packages using a package manager.'$'\n''Supported managers:'$'\n''- apk'$'\n''- apt-get'$'\n''- brew'$'\n'''$'\n''Return codes:'$'\n''- 0 - If apk is not installed, returns 0.'$'\n''- 1 - If apk fails to install the packages'$'\n'''$'\n''Example:'$'\n''    packageInstall shellcheck'$'\n'''

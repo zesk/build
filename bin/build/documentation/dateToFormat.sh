@@ -1,62 +1,22 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-22
+# Generated on 2026-01-24
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/date.sh"
 argument="date - String. Required. String in the form \`YYYY-MM-DD\` (e.g. \`2023-10-15\`)"$'\n'"format - String. Optional. Format string for the \`date\` command (e.g. \`%s\`)"$'\n'""
 base="date.sh"
-description="Converts a date (\`YYYY-MM-DD\`) to another format."$'\n'""$'\n'"Compatible with BSD and GNU date."$'\n'"Return Code: 1 - if parsing fails"$'\n'"Return Code: 0 - if parsing succeeds"$'\n'""
+description="Converts a date (\`YYYY-MM-DD\`) to another format."$'\n'"Compatible with BSD and GNU date."$'\n'""
 example="    dateToFormat 2023-04-20 %s 1681948800"$'\n'"    timestamp=\$(dateToFormat '2023-10-15' %s)"$'\n'""
+exitCode="0"
 file="bin/build/tools/date.sh"
-fn="dateToFormat"
-foundNames=""
-return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
-sourceFile="bin/build/tools/date.sh"
-sourceModified="1769063211"
+foundNames=([0]="summary" [1]="argument" [2]="example" [3]="return_code")
+rawComment="Converts a date (\`YYYY-MM-DD\`) to another format."$'\n'"Summary: Platform agnostic date conversion"$'\n'"Compatible with BSD and GNU date."$'\n'"Argument: date - String. Required. String in the form \`YYYY-MM-DD\` (e.g. \`2023-10-15\`)"$'\n'"Argument: format - String. Optional. Format string for the \`date\` command (e.g. \`%s\`)"$'\n'"Example:     dateToFormat 2023-04-20 %s 1681948800"$'\n'"Example:     timestamp=\$(dateToFormat '2023-10-15' %s)"$'\n'"Return Code: 1 - if parsing fails"$'\n'"Return Code: 0 - if parsing succeeds"$'\n'""$'\n'""
+return_code="1 - if parsing fails"$'\n'"0 - if parsing succeeds"$'\n'""
+sourceModified="1769184556"
 summary="Platform agnostic date conversion"$'\n'""
 timestamp=""
 usage="dateToFormat date [ format ]"
 # shellcheck disable=SC2016
-helpConsole='[92mUsage[0m: [38;2;170;170;255mdateToFormat[0m [38;2;255;255;0m[35;48;2;0;0;0mdate[0m[0m [94m[ format ][0m
-
-    [31mdate    [1;97mString. Required. String in the form [38;2;0;255;0;48;2;0;0;0mYYYY-MM-DD[0m (e.g. [38;2;0;255;0;48;2;0;0;0m2023-10-15[0m)[0m
-    [94mformat  [1;97mString. Optional. Format string for the [38;2;0;255;0;48;2;0;0;0mdate[0m command (e.g. [38;2;0;255;0;48;2;0;0;0m%s[0m)[0m
-
-Converts a date ([38;2;0;255;0;48;2;0;0;0mYYYY-MM-DD[0m) to another format.
-
-Compatible with BSD and GNU date.
-Return Code: 1 - if parsing fails
-Return Code: 0 - if parsing succeeds
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-
-Example:
-    dateToFormat 2023-04-20 %s 1681948800
-    timestamp=$(dateToFormat '\''2023-10-15'\'' %s)
-'
+helpConsole=''$'\e''[[label]mUsage'$'\e''[0m: '$'\e''[[info]mdateToFormat'$'\e''[0m '$'\e''[[bold]m'$'\e''[[magenta]mdate'$'\e''[0m'$'\e''[0m '$'\e''[[blue]m[ format ]'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[red]mdate    '$'\e''[[value]mString. Required. String in the form '$'\e''[[code]mYYYY-MM-DD'$'\e''[[reset]m (e.g. '$'\e''[[code]m2023-10-15'$'\e''[[reset]m)'$'\e''[[reset]m'$'\n''    '$'\e''[[blue]mformat  '$'\e''[[value]mString. Optional. Format string for the '$'\e''[[code]mdate'$'\e''[[reset]m command (e.g. '$'\e''[[code]m%s'$'\e''[[reset]m)'$'\e''[[reset]m'$'\n'''$'\n''Converts a date ('$'\e''[[code]mYYYY-MM-DD'$'\e''[[reset]m) to another format.'$'\n''Compatible with BSD and GNU date.'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[code]m1'$'\e''[[reset]m - if parsing fails'$'\n''- '$'\e''[[code]m0'$'\e''[[reset]m - if parsing succeeds'$'\n'''$'\n''Example:'$'\n''    dateToFormat 2023-04-20 %s 1681948800'$'\n''    timestamp=$(dateToFormat '\''2023-10-15'\'' %s)'$'\n'''
 # shellcheck disable=SC2016
-helpPlain='Usage: dateToFormat date [ format ]
-
-    date    String. Required. String in the form YYYY-MM-DD (e.g. 2023-10-15)
-    format  String. Optional. Format string for the date command (e.g. %s)
-
-Converts a date (YYYY-MM-DD) to another format.
-
-Compatible with BSD and GNU date.
-Return Code: 1 - if parsing fails
-Return Code: 0 - if parsing succeeds
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-
-Example:
-    dateToFormat 2023-04-20 %s 1681948800
-    timestamp=$(dateToFormat '\''2023-10-15'\'' %s)
-'
+helpPlain='Usage: dateToFormat date [ format ]'$'\n'''$'\n''    date    String. Required. String in the form YYYY-MM-DD (e.g. 2023-10-15)'$'\n''    format  String. Optional. Format string for the date command (e.g. %s)'$'\n'''$'\n''Converts a date (YYYY-MM-DD) to another format.'$'\n''Compatible with BSD and GNU date.'$'\n'''$'\n''Return codes:'$'\n''- 1 - if parsing fails'$'\n''- 0 - if parsing succeeds'$'\n'''$'\n''Example:'$'\n''    dateToFormat 2023-04-20 %s 1681948800'$'\n''    timestamp=$(dateToFormat '\''2023-10-15'\'' %s)'$'\n'''

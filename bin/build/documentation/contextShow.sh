@@ -1,51 +1,22 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-22
+# Generated on 2026-01-24
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/vendor.sh"
 argument="none"
 base="vendor.sh"
-description="Show the current editor being used as a text string"$'\n'"Return Code: 1 - If no editor or running program can be determined"$'\n'""
+description="Show the current editor being used as a text string"$'\n'""
 environment="EDITOR - Used as a default editor (first)"$'\n'"VISUAL - Used as another default editor (last)"$'\n'""
+exitCode="0"
 file="bin/build/tools/vendor.sh"
-fn="contextShow"
-foundNames=""
-return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
+foundNames=([0]="return_code" [1]="environment")
+rawComment="Show the current editor being used as a text string"$'\n'"Return Code: 1 - If no editor or running program can be determined"$'\n'"Environment: EDITOR - Used as a default editor (first)"$'\n'"Environment: VISUAL - Used as another default editor (last)"$'\n'""$'\n'""
+return_code="1 - If no editor or running program can be determined"$'\n'""
 sourceFile="bin/build/tools/vendor.sh"
 sourceModified="1769063211"
 summary="Show the current editor being used as a text string"
 usage="contextShow"
 # shellcheck disable=SC2016
-helpConsole='[92mUsage[0m: [38;2;170;170;255mcontextShow[0m
-
-Show the current editor being used as a text string
-Return Code: 1 - If no editor or running program can be determined
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-
-Environment variables:
-- EDITOR - Used as a default editor (first)
-- VISUAL - Used as another default editor (last)
-- 
-'
+helpConsole=''$'\e''[[label]mUsage'$'\e''[0m: '$'\e''[[info]mcontextShow'$'\e''[0m'$'\n'''$'\n''Show the current editor being used as a text string'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[code]m1'$'\e''[[reset]m - If no editor or running program can be determined'$'\n'''$'\n''Environment variables:'$'\n''- '$'\e''[[code]mEDITOR'$'\e''[[reset]m - Used as a default editor (first)'$'\n''- '$'\e''[[code]mVISUAL'$'\e''[[reset]m - Used as another default editor (last)'$'\n'''
 # shellcheck disable=SC2016
-helpPlain='Usage: contextShow
-
-Show the current editor being used as a text string
-Return Code: 1 - If no editor or running program can be determined
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-
-Environment variables:
-- EDITOR - Used as a default editor (first)
-- VISUAL - Used as another default editor (last)
-- 
-'
+helpPlain='Usage: contextShow'$'\n'''$'\n''Show the current editor being used as a text string'$'\n'''$'\n''Return codes:'$'\n''- 1 - If no editor or running program can be determined'$'\n'''$'\n''Environment variables:'$'\n''- EDITOR - Used as a default editor (first)'$'\n''- VISUAL - Used as another default editor (last)'$'\n'''

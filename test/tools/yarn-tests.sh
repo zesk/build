@@ -8,11 +8,11 @@
 
 # Tag: package-install
 testYarnInstallation() {
-  if whichExists yarn; then
+  if executableExists yarn; then
     decorate warning "Yarn is already installed, skipping"
     return 0
   fi
   assertExitCode 0 nodeUninstall || return $?
   __checkFunctionInstallsBinary yarn yarnInstall || return $?
-  assertExitCode 0 whichExists node || return $?
+  assertExitCode 0 executableExists node || return $?
 }

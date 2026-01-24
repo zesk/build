@@ -107,16 +107,22 @@ testBuildEnvironmentLoadAll() {
   catchEnvironment "$handler" rm -f "$tempFile" || return $?
 }
 
+testBuildDeprecatedFunctions() {
+  assertExitCode --stdout-match bashMakeExecutable 0 buildDeprecatedFunctions || return $?
+}
+
 testBuildFunctions() {
   local handler="returnMessage"
   local fun
 
   fun=$(fileTemporaryName "$handler") || return $?
   buildFunctions >"$fun" || returnEnvironment "buildFunctions failed" || return $?
+  buildFunctions --deprecated >"$fun.deprecated" || returnEnvironment "buildFunctions failed" || return $?
 
   assertFileContains "$fun" buildFunctions catchEnvironment "$handler" returnArgument returnEnvironment catchReturn housekeeper || return $?
+  assertFileContains "$fun.deprecated" bashMakeExecutable || return $?
 
-  catchEnvironment "$handler" rm -f "$fun" || return $?
+  catchEnvironment "$handler" rm -f "$fun" "$fun.deprecated" || return $?
 }
 
 testInstallInstallBuildSelf() {
@@ -204,8 +210,8 @@ testInstallBinBuild() {
 
   # --------------------------------------------------------------------------------
   #
-  clearLine
-  boxedHeading "No .gitignore, was updated, same name"
+  consoleLineFill
+  consoleHeadingBoxed "No .gitignore, was updated, same name"
   #
   section=$((section + 1))
   bigText "Section #$section"
@@ -235,9 +241,9 @@ testInstallBinBuild() {
 
   # --------------------------------------------------------------------------------
   #
-  clearLine
+  consoleLineFill
   catchEnvironment "$handler" cp "$home/bin/build/install-bin-build.sh" "$testBinBuild" || return $?
-  boxedHeading "Has gitignore (missing), missing, different name"
+  consoleHeadingBoxed "Has gitignore (missing), missing, different name"
   section=$((section + 1))
   bigText "Section #$section"
 
@@ -262,15 +268,15 @@ testInstallBinBuild() {
     --stdout-match "does not ignore"
     --stdout-match ".gitignore"
   )
-  clearLine
+  consoleLineFill
 
   # pause "$(pwd)/bin/pipeline/we-like-head-rubs.sh --mock $home/bin/build"
   # assertExitCode "${matches[@]}" 0 bin/pipeline/we-like-head-rubs.sh  || return $?
   assertExitCode "${matches[@]}" 0 bin/pipeline/we-like-head-rubs.sh --mock "$home/bin/build" || return $?
 
   catchEnvironment "$handler" cp "$home/bin/build/install-bin-build.sh" "$testBinBuild" || return $?
-  clearLine
-  boxedHeading "Has gitignore (missing), bin/build exists, different name"
+  consoleLineFill
+  consoleHeadingBoxed "Has gitignore (missing), bin/build exists, different name"
   section=$((section + 1))
   bigText "Section #$section"
 
@@ -296,7 +302,7 @@ testInstallBinBuild() {
   assertDirectoryExists bin/build || return $?
 
   catchEnvironment "$handler" cp "$home/bin/build/install-bin-build.sh" "$testBinBuild" || return $?
-  boxedHeading "Has gitignore (correct), bin/build exists, different name"
+  consoleHeadingBoxed "Has gitignore (correct), bin/build exists, different name"
 
   #  ▞▀▖      ▐  ▗           ▌ ▌
   #  ▚▄ ▞▀▖▞▀▖▜▀ ▄ ▞▀▖▛▀▖ ▟▟▖▚▄▌

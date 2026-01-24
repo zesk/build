@@ -6,11 +6,11 @@
 
 ## Execution
 
-{whichExists}
+{executableExists}
 
 {runCount}
 
-{makeShellFilesExecutable}
+{bashMakeExecutable}
 
 ## Memory
 

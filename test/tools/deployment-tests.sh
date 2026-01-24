@@ -60,7 +60,7 @@ testDeployRemoteFinish() {
   assertExitCode "${matches[@]+${matches[@]}}" 1 deployRemoteFinish --first "--deploy" "--target" "app.tar.gz" "--home" "$tempDirectory/deploy" "--id" "$id" "--application" "$tempDirectory/app" || return $?
 
   # $id-stage vs $id produces 'tar file' error
-  clearLine
+  consoleLineFill
   __prepareSampleApplicationDeployment "$handler" "$tempDirectory/deploy/$id" "$id-stage"
   matches=(--stderr-match 'tar file is likely incorrect')
   finishArgs=(

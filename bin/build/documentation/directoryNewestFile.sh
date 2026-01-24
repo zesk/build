@@ -1,44 +1,20 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-22
+# Generated on 2026-01-24
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/file.sh"
 argument="directory - Directory. Required. Directory to search for the newest file."$'\n'"--find findArgs ... -- - Arguments. Optional. Arguments delimited by a double-dash (or end of argument list)"$'\n'""
 base="file.sh"
 description="Find the newest modified file in a directory"$'\n'""
+exitCode="0"
 file="bin/build/tools/file.sh"
-fn="directoryNewestFile"
-foundNames=""
+foundNames=([0]="argument")
+rawComment="Find the newest modified file in a directory"$'\n'"Argument: directory - Directory. Required. Directory to search for the newest file."$'\n'"Argument: --find findArgs ... -- - Arguments. Optional. Arguments delimited by a double-dash (or end of argument list)"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
-sourceFile="bin/build/tools/file.sh"
-sourceModified="1769063211"
+sourceModified="1769184734"
 summary="Find the newest modified file in a directory"
 usage="directoryNewestFile directory [ --find findArgs ... -- ]"
 # shellcheck disable=SC2016
-helpConsole='[92mUsage[0m: [38;2;170;170;255mdirectoryNewestFile[0m [38;2;255;255;0m[35;48;2;0;0;0mdirectory[0m[0m [94m[ --find findArgs ... -- ][0m
-
-    [31mdirectory               [1;97mDirectory. Required. Directory to search for the newest file.[0m
-    [94m--find findArgs ... --  [1;97mArguments. Optional. Arguments delimited by a double-dash (or end of argument list)[0m
-
-Find the newest modified file in a directory
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-'
+helpConsole=''$'\e''[[label]mUsage'$'\e''[0m: '$'\e''[[info]mdirectoryNewestFile'$'\e''[0m '$'\e''[[bold]m'$'\e''[[magenta]mdirectory'$'\e''[0m'$'\e''[0m '$'\e''[[blue]m[ --find findArgs ... -- ]'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[red]mdirectory               '$'\e''[[value]mDirectory. Required. Directory to search for the newest file.'$'\e''[[reset]m'$'\n''    '$'\e''[[blue]m--find findArgs ... --  '$'\e''[[value]mArguments. Optional. Arguments delimited by a double-dash (or end of argument list)'$'\e''[[reset]m'$'\n'''$'\n''Find the newest modified file in a directory'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[code]m0'$'\e''[[reset]m - Success'$'\n''- '$'\e''[[code]m1'$'\e''[[reset]m - Environment error'$'\n''- '$'\e''[[code]m2'$'\e''[[reset]m - Argument error'$'\n'''
 # shellcheck disable=SC2016
-helpPlain='Usage: directoryNewestFile directory [ --find findArgs ... -- ]
-
-    directory               Directory. Required. Directory to search for the newest file.
-    --find findArgs ... --  Arguments. Optional. Arguments delimited by a double-dash (or end of argument list)
-
-Find the newest modified file in a directory
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-'
+helpPlain='Usage: directoryNewestFile directory [ --find findArgs ... -- ]'$'\n'''$'\n''    directory               Directory. Required. Directory to search for the newest file.'$'\n''    --find findArgs ... --  Arguments. Optional. Arguments delimited by a double-dash (or end of argument list)'$'\n'''$'\n''Find the newest modified file in a directory'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''

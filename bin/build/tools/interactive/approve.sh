@@ -265,7 +265,7 @@ __approvedSources() {
       if [ "$padding" -lt 0 ]; then
         fileText="$fileText ..."
       else
-        fileText="$fileText$(repeat "$padding" " ")"
+        fileText="$fileText$(textRepeat "$padding" " ")"
       fi
       output="$(printf -- "%s|%s %s\n" "$name" "$fileText" "$textTime")"
       if [ "$approved" = true ]; then

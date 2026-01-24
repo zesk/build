@@ -1,84 +1,23 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-22
+# Generated on 2026-01-24
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/lint.sh"
 argument="\`extension0\` - Required - the extension to search for (\`*.extension\`)"$'\n'"\`--\` - Separator. Required. Separates extensions from text"$'\n'"\`text0\` - String. Required. Text which must exist in each item with the extension given."$'\n'"\`--\` - Separator. Optional. Final delimiter to specify find arguments."$'\n'"findArgs - Arguments. Optional. Passed to \`find\`. Limit find to additional conditions."$'\n'""
 base="lint.sh"
-description="Search for item extensions and ensure that text is found in each item."$'\n'""$'\n'"This can be run on any directory tree to test files in any application."$'\n'""$'\n'"By default, any directory which begins with a dot \`.\` will be ignored."$'\n'""$'\n'"Side-effect: Errors written to stderr, status written to stdout"$'\n'"Return Code: 0 - All found files contain all text strings"$'\n'"Return Code: 1 - One or more files does not contain all text strings"$'\n'"Return Code: 2 - Arguments error (missing extension or text)"$'\n'""$'\n'""
+description="Search for item extensions and ensure that text is found in each item."$'\n'"This can be run on any directory tree to test files in any application."$'\n'"By default, any directory which begins with a dot \`.\` will be ignored."$'\n'""
 environment="This operates in the current working directory"$'\n'""
 example="    validateFileContents sh php js -- 'Widgets LLC' 'Copyright &copy; 2026'"$'\n'""
+exitCode="0"
 file="bin/build/tools/lint.sh"
-fn="validateFileExtensionContents"
-foundNames=""
-return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
-sourceFile="bin/build/tools/lint.sh"
-sourceModified="1769063211"
+foundNames=([0]="example" [1]="argument" [2]="side_effect" [3]="environment" [4]="summary" [5]="return_code")
+rawComment="Search for item extensions and ensure that text is found in each item."$'\n'"This can be run on any directory tree to test files in any application."$'\n'"By default, any directory which begins with a dot \`.\` will be ignored."$'\n'"Example:     validateFileContents sh php js -- 'Widgets LLC' 'Copyright &copy; 2026'"$'\n'"Argument: \`extension0\` - Required - the extension to search for (\`*.extension\`)"$'\n'"Argument: \`--\` - Separator. Required. Separates extensions from text"$'\n'"Argument: \`text0\` - String. Required. Text which must exist in each item with the extension given."$'\n'"Argument: \`--\` - Separator. Optional. Final delimiter to specify find arguments."$'\n'"Argument: findArgs - Arguments. Optional. Passed to \`find\`. Limit find to additional conditions."$'\n'"Side-effect: Errors written to stderr, status written to stdout"$'\n'"Environment: This operates in the current working directory"$'\n'"Summary: Check files for the existence of a string"$'\n'"Return Code: 0 - All found files contain all text strings"$'\n'"Return Code: 1 - One or more files does not contain all text strings"$'\n'"Return Code: 2 - Arguments error (missing extension or text)"$'\n'""$'\n'""
+return_code="0 - All found files contain all text strings"$'\n'"1 - One or more files does not contain all text strings"$'\n'"2 - Arguments error (missing extension or text)"$'\n'""
+side_effect="Errors written to stderr, status written to stdout"$'\n'""
+sourceModified="1769199547"
 summary="Check files for the existence of a string"$'\n'""
 usage="validateFileExtensionContents [ \`extension0\` ] \`--\` \`text0\` [ \`--\` ] [ findArgs ]"
 # shellcheck disable=SC2016
-helpConsole='[92mUsage[0m: [38;2;170;170;255mvalidateFileExtensionContents[0m [94m[ `extension0` ][0m [38;2;255;255;0m[35;48;2;0;0;0m`--`[0m[0m [38;2;255;255;0m[35;48;2;0;0;0m`text0`[0m[0m [94m[ `--` ][0m [94m[ findArgs ][0m
-
-    [31m[38;2;0;255;0;48;2;0;0;0mextension0[0m  [1;97mRequired - the extension to search for ([38;2;0;255;0;48;2;0;0;0m[36m.extension[0m)[0m[0m
-    [31m[38;2;0;255;0;48;2;0;0;0m--[0m          [1;97mSeparator. Required. Separates extensions from text[0m
-    [31m[38;2;0;255;0;48;2;0;0;0mtext0[0m       [1;97mString. Required. Text which must exist in each item with the extension given.[0m
-    [94m[38;2;0;255;0;48;2;0;0;0m--[0m          [1;97mSeparator. Optional. Final delimiter to specify find arguments.[0m
-    [94mfindArgs      [1;97mArguments. Optional. Passed to [38;2;0;255;0;48;2;0;0;0mfind[0m. Limit find to additional conditions.[0m
-
-Search for item extensions and ensure that text is found in each item.
-
-This can be run on any directory tree to test files in any application.
-
-By default, any directory which begins with a dot [38;2;0;255;0;48;2;0;0;0m.[0m will be ignored.
-
-Side-effect: Errors written to stderr, status written to stdout
-Return Code: 0 - All found files contain all text strings
-Return Code: 1 - One or more files does not contain all text strings
-Return Code: 2 - Arguments error (missing extension or text)
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-
-Environment variables:
-- This operates in the current working directory
-- 
-
-Example:
-    validateFileContents sh php js -- '\''Widgets LLC'\'' '\''Copyright &copy; 2026'\''
-'
+helpConsole=''$'\e''[[label]mUsage'$'\e''[0m: '$'\e''[[info]mvalidateFileExtensionContents'$'\e''[0m '$'\e''[[blue]m[ `extension0` ]'$'\e''[0m '$'\e''[[bold]m'$'\e''[[magenta]m`--`'$'\e''[0m'$'\e''[0m '$'\e''[[bold]m'$'\e''[[magenta]m`text0`'$'\e''[0m'$'\e''[0m '$'\e''[[blue]m[ `--` ]'$'\e''[0m '$'\e''[[blue]m[ findArgs ]'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[red]m'$'\e''[[code]mextension0'$'\e''[[reset]m  '$'\e''[[value]mRequired - the extension to search for ('$'\e''[[code]m'$'\e''[[cyan]m.extension'$'\e''[[reset]m)'$'\e''[[reset]m'$'\e''[[reset]m'$'\n''    '$'\e''[[red]m'$'\e''[[code]m--'$'\e''[[reset]m          '$'\e''[[value]mSeparator. Required. Separates extensions from text'$'\e''[[reset]m'$'\n''    '$'\e''[[red]m'$'\e''[[code]mtext0'$'\e''[[reset]m       '$'\e''[[value]mString. Required. Text which must exist in each item with the extension given.'$'\e''[[reset]m'$'\n''    '$'\e''[[blue]m'$'\e''[[code]m--'$'\e''[[reset]m          '$'\e''[[value]mSeparator. Optional. Final delimiter to specify find arguments.'$'\e''[[reset]m'$'\n''    '$'\e''[[blue]mfindArgs      '$'\e''[[value]mArguments. Optional. Passed to '$'\e''[[code]mfind'$'\e''[[reset]m. Limit find to additional conditions.'$'\e''[[reset]m'$'\n'''$'\n''Search for item extensions and ensure that text is found in each item.'$'\n''This can be run on any directory tree to test files in any application.'$'\n''By default, any directory which begins with a dot '$'\e''[[code]m.'$'\e''[[reset]m will be ignored.'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[code]m0'$'\e''[[reset]m - All found files contain all text strings'$'\n''- '$'\e''[[code]m1'$'\e''[[reset]m - One or more files does not contain all text strings'$'\n''- '$'\e''[[code]m2'$'\e''[[reset]m - Arguments error (missing extension or text)'$'\n'''$'\n''Environment variables:'$'\n''- This operates in the current working directory'$'\n'''$'\n''Example:'$'\n''    validateFileContents sh php js -- '\''Widgets LLC'\'' '\''Copyright &copy; 2026'\'''$'\n'''
 # shellcheck disable=SC2016
-helpPlain='Usage: validateFileExtensionContents [ `extension0` ] `--` `text0` [ `--` ] [ findArgs ]
-
-    extension0  Required - the extension to search for (.extension)
-    --          Separator. Required. Separates extensions from text
-    text0       String. Required. Text which must exist in each item with the extension given.
-    --          Separator. Optional. Final delimiter to specify find arguments.
-    findArgs      Arguments. Optional. Passed to find. Limit find to additional conditions.
-
-Search for item extensions and ensure that text is found in each item.
-
-This can be run on any directory tree to test files in any application.
-
-By default, any directory which begins with a dot . will be ignored.
-
-Side-effect: Errors written to stderr, status written to stdout
-Return Code: 0 - All found files contain all text strings
-Return Code: 1 - One or more files does not contain all text strings
-Return Code: 2 - Arguments error (missing extension or text)
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-
-Environment variables:
-- This operates in the current working directory
-- 
-
-Example:
-    validateFileContents sh php js -- '\''Widgets LLC'\'' '\''Copyright &copy; 2026'\''
-'
+helpPlain='Usage: validateFileExtensionContents [ `extension0` ] `--` `text0` [ `--` ] [ findArgs ]'$'\n'''$'\n''    extension0  Required - the extension to search for (.extension)'$'\n''    --          Separator. Required. Separates extensions from text'$'\n''    text0       String. Required. Text which must exist in each item with the extension given.'$'\n''    --          Separator. Optional. Final delimiter to specify find arguments.'$'\n''    findArgs      Arguments. Optional. Passed to find. Limit find to additional conditions.'$'\n'''$'\n''Search for item extensions and ensure that text is found in each item.'$'\n''This can be run on any directory tree to test files in any application.'$'\n''By default, any directory which begins with a dot . will be ignored.'$'\n'''$'\n''Return codes:'$'\n''- 0 - All found files contain all text strings'$'\n''- 1 - One or more files does not contain all text strings'$'\n''- 2 - Arguments error (missing extension or text)'$'\n'''$'\n''Environment variables:'$'\n''- This operates in the current working directory'$'\n'''$'\n''Example:'$'\n''    validateFileContents sh php js -- '\''Widgets LLC'\'' '\''Copyright &copy; 2026'\'''$'\n'''

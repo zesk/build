@@ -66,7 +66,7 @@ __bashSanitize() {
   local shellFile
   while read -r shellFile; do
     statusMessage decorate info "+x $(decorate file "$shellFile")"
-  done < <(catchEnvironment "$handler" makeShellFilesExecutable) || returnUndo $? "${undo[@]}" || return $?
+  done < <(catchEnvironment "$handler" bashMakeExecutable) || returnUndo $? "${undo[@]}" || return $?
 
   if [ ${#cad[@]} -eq 0 ]; then
     cad+=("$(pwd)")
@@ -111,10 +111,10 @@ _bashSanitizeCheckAssertions() {
   done
   local directory && for directory in "${directories[@]}"; do
     statusMessage --first decorate warning "Checking assertions in $(decorate file "$directory") ... "
-    if ! findUncaughtAssertions "$directory" --list "$@"; then
+    if ! bashFindUncaughtAssertions "$directory" --list "$@"; then
       # When ready - add --interactive here as well
-      findUncaughtAssertions "$directory" "$@" --exec "$executor" &
-      throwEnvironment "$handler" findUncaughtAssertions "$directory" --list "$@" || return $?
+      bashFindUncaughtAssertions "$directory" "$@" --exec "$executor" &
+      throwEnvironment "$handler" bashFindUncaughtAssertions "$directory" --list "$@" || return $?
     else
       decorate success "all files passed"
     fi
@@ -167,12 +167,13 @@ _bashSanitizeCheckDebugging() {
       if grep -q -e "Debugging: $debugHash" "$file"; then
         continue
       fi
+
       found=true
       message=$(debugHash=$debugHash file="$(decorate code "$file")" error="$(decorate error "debugging used")" line="$(decorate value "$line")" remain="$(decorate code "$remain")" mapEnvironment <<<"{error}: {file}:{line} @ {remain} # Debugging: {debugHash}")
       statusMessage --last printf "%s\n" "$message"
     done <"$matches"
     $found || return 0
-    statusMessage --last dumpPipe "Debugging matches:" "${BASH_SOURCE[0]}" <"$matches"
+    statusMessage --last dumpPipe "Debugging matches" "${BASH_SOURCE[0]}" <"$matches"
     catchEnvironment "$handler" rm -rf "$matches" || return $?
     throwEnvironment "$handler" "Debugging found" || return $?
   fi

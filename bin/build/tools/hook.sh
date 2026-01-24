@@ -66,7 +66,7 @@ __hookRunner() {
     *)
       local hook binary="$argument"
       shift
-      if ! hook=$(whichHook "${ww[@]+"${ww[@]}"}" "${whichArgs[@]+${whichArgs[@]}}" "$binary"); then
+      if ! hook=$(hookFind "${ww[@]+"${ww[@]}"}" "${whichArgs[@]+${whichArgs[@]}}" "$binary"); then
         if $requireHook; then
           # hookRun
           throwArgument "$handler" "Hook not found $(decorate code "$binary")" || return $?
@@ -247,7 +247,7 @@ hasHook() {
     *)
       local binary
       [ -n "$applicationHome" ] || applicationHome="$(catchReturn "$handler" buildHome)" || return $?
-      binary="$(whichHook "${ww[@]+${ww[@]}}" --application "$applicationHome" "$argument")" || return 1
+      binary="$(hookFind "${ww[@]+${ww[@]}}" --application "$applicationHome" "$argument")" || return 1
       [ -n "$binary" ] || return 1
       ;;
     esac
@@ -277,7 +277,7 @@ _hasHook() {
 # Argument: hookName1 - String. Optional. Additional hooks to locate.
 # Environment: BUILD_HOOK_EXTENSIONS BUILD_HOOK_DIRS BUILD_DEBUG
 # Test: testHookSystem
-whichHook() {
+hookFind() {
   local handler="_${FUNCNAME[0]}"
   local applicationHome="" hookPaths=() hookExtensions=() nextSource="" debugFlag=false extensionText=""
 
@@ -357,7 +357,7 @@ whichHook() {
   done
   throwArgument "$handler" "no arguments" || return $?
 }
-_whichHook() {
+_hookFind() {
   # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

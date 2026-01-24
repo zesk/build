@@ -183,13 +183,13 @@ __documentationUnlinked() {
 
 # See: bashDocumentFunction
 # Document a function and generate a function template (markdown). To custom format any
-# of the fields in this, write functions in the form `_bashDocumentationFormatter_${name}Format` such that
+# of the fields in this, write functions in the form `_bashDocumentationFormatter_${name}` such that
 # name matches the variable name (lowercase alphanumeric characters and underscores).
 #
 # Filter functions should modify the input/output pipe; an example can be found in `{applicationFile}` by looking at
-# sample function `_bashDocumentationFormatter_exit_code`.
+# sample function `_bashDocumentationFormatter_return_code`.
 #
-# See: _bashDocumentationFormatter_exit_code
+# See: _bashDocumentationFormatter_return_code
 # Argument: template - Required. A markdown template to use to map values. Post-processed with `markdownRemoveUnfinishedSections`
 # Argument: settingsFile - Required. Settings file to be loaded.
 # Return Code: 0 - Success
@@ -219,7 +219,10 @@ _bashDocumentation_Template() {
       if [ -n "$value" ]; then
         formatter="_bashDocumentationFormatter_${token}"
         if isFunction "$formatter"; then
+          : # printf "%s\n" "Running $formatter on $token" 1>&2
           declare "$token"="$(printf "%s\n" "${!token}" | "$formatter")"
+        else
+          : # printf "%s\n" "NOT Running $formatter on $token" 1>&2
         fi
       fi
     done < <(mapTokens <"$template" | sort -u)

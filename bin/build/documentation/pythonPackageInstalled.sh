@@ -1,52 +1,20 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-22
+# Generated on 2026-01-24
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/python.sh"
 argument="pipPackage ... - String. Required. Package name(s) to check."$'\n'"--help - Flag. Optional. Display this help."$'\n'"--handler handler - Function. Optional. Use this error handler instead of the default error handler."$'\n'"--any - Flag. Optional. When specified changes the behavior such that if it returns return code 0 IFF any single package is installed."$'\n'""
 base="python.sh"
-description="Is a package installed for python?"$'\n'"Return Code: 0 - All packages are installed (or at least one package with \`--any\`)"$'\n'"Return Code: 1 - All packages are not installed (or NO packages are installed with \`--any\`)"$'\n'""
+description="Is a package installed for python?"$'\n'""
+exitCode="0"
 file="bin/build/tools/python.sh"
-fn="pythonPackageInstalled"
-foundNames=""
-return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
-sourceFile="bin/build/tools/python.sh"
-sourceModified="1769097744"
+foundNames=([0]="argument" [1]="return_code")
+rawComment="Is a package installed for python?"$'\n'"Argument: pipPackage ... - String. Required. Package name(s) to check."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Argument: --handler handler - Function. Optional. Use this error handler instead of the default error handler."$'\n'"Argument: --any - Flag. Optional. When specified changes the behavior such that if it returns return code 0 IFF any single package is installed."$'\n'"Return Code: 0 - All packages are installed (or at least one package with \`--any\`)"$'\n'"Return Code: 1 - All packages are not installed (or NO packages are installed with \`--any\`)"$'\n'""$'\n'""
+return_code="0 - All packages are installed (or at least one package with \`--any\`)"$'\n'"1 - All packages are not installed (or NO packages are installed with \`--any\`)"$'\n'""
+sourceModified="1769184734"
 summary="Is a package installed for python?"
 usage="pythonPackageInstalled pipPackage ... [ --help ] [ --handler handler ] [ --any ]"
 # shellcheck disable=SC2016
-helpConsole='[92mUsage[0m: [38;2;170;170;255mpythonPackageInstalled[0m [38;2;255;255;0m[35;48;2;0;0;0mpipPackage ...[0m[0m [94m[ --help ][0m [94m[ --handler handler ][0m [94m[ --any ][0m
-
-    [31mpipPackage ...     [1;97mString. Required. Package name(s) to check.[0m
-    [94m--help             [1;97mFlag. Optional. Display this help.[0m
-    [94m--handler handler  [1;97mFunction. Optional. Use this error handler instead of the default error handler.[0m
-    [94m--any              [1;97mFlag. Optional. When specified changes the behavior such that if it returns return code 0 IFF any single package is installed.[0m
-
-Is a package installed for python?
-Return Code: 0 - All packages are installed (or at least one package with [38;2;0;255;0;48;2;0;0;0m--any[0m)
-Return Code: 1 - All packages are not installed (or NO packages are installed with [38;2;0;255;0;48;2;0;0;0m--any[0m)
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-'
+helpConsole=''$'\e''[[label]mUsage'$'\e''[0m: '$'\e''[[info]mpythonPackageInstalled'$'\e''[0m '$'\e''[[bold]m'$'\e''[[magenta]mpipPackage ...'$'\e''[0m'$'\e''[0m '$'\e''[[blue]m[ --help ]'$'\e''[0m '$'\e''[[blue]m[ --handler handler ]'$'\e''[0m '$'\e''[[blue]m[ --any ]'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[red]mpipPackage ...     '$'\e''[[value]mString. Required. Package name(s) to check.'$'\e''[[reset]m'$'\n''    '$'\e''[[blue]m--help             '$'\e''[[value]mFlag. Optional. Display this help.'$'\e''[[reset]m'$'\n''    '$'\e''[[blue]m--handler handler  '$'\e''[[value]mFunction. Optional. Use this error handler instead of the default error handler.'$'\e''[[reset]m'$'\n''    '$'\e''[[blue]m--any              '$'\e''[[value]mFlag. Optional. When specified changes the behavior such that if it returns return code 0 IFF any single package is installed.'$'\e''[[reset]m'$'\n'''$'\n''Is a package installed for python?'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[code]m0'$'\e''[[reset]m - All packages are installed (or at least one package with '$'\e''[[code]m--any'$'\e''[[reset]m)'$'\n''- '$'\e''[[code]m1'$'\e''[[reset]m - All packages are not installed (or NO packages are installed with '$'\e''[[code]m--any'$'\e''[[reset]m)'$'\n'''
 # shellcheck disable=SC2016
-helpPlain='Usage: pythonPackageInstalled pipPackage ... [ --help ] [ --handler handler ] [ --any ]
-
-    pipPackage ...     String. Required. Package name(s) to check.
-    --help             Flag. Optional. Display this help.
-    --handler handler  Function. Optional. Use this error handler instead of the default error handler.
-    --any              Flag. Optional. When specified changes the behavior such that if it returns return code 0 IFF any single package is installed.
-
-Is a package installed for python?
-Return Code: 0 - All packages are installed (or at least one package with --any)
-Return Code: 1 - All packages are not installed (or NO packages are installed with --any)
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-'
+helpPlain='Usage: pythonPackageInstalled pipPackage ... [ --help ] [ --handler handler ] [ --any ]'$'\n'''$'\n''    pipPackage ...     String. Required. Package name(s) to check.'$'\n''    --help             Flag. Optional. Display this help.'$'\n''    --handler handler  Function. Optional. Use this error handler instead of the default error handler.'$'\n''    --any              Flag. Optional. When specified changes the behavior such that if it returns return code 0 IFF any single package is installed.'$'\n'''$'\n''Is a package installed for python?'$'\n'''$'\n''Return codes:'$'\n''- 0 - All packages are installed (or at least one package with --any)'$'\n''- 1 - All packages are not installed (or NO packages are installed with --any)'$'\n'''

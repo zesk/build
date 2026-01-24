@@ -133,7 +133,7 @@ __portUpdate() {
 # package.sh: true
 __portInstalledList() {
   local handler="_${FUNCNAME[0]}"
-  whichExists port || throwEnvironment "$handler" "port not installed - can not list" || return $?
+  executableExists port || throwEnvironment "$handler" "port not installed - can not list" || return $?
   [ $# -eq 0 ] || throwArgument "$handler" "Unknown argument $*" || return $?
   __portWrapper installed | grep -v 'currently installed' | awk '{ print $1 }'
 }
@@ -146,7 +146,7 @@ ___portInstalledList() {
 # package.sh: true
 __portAvailableList() {
   local handler="_${FUNCNAME[0]}"
-  whichExists port || throwEnvironment "$handler" "port not installed - can not list" || return $?
+  executableExists port || throwEnvironment "$handler" "port not installed - can not list" || return $?
   __portWrapper list | awk '{ print $1 }'
 }
 ___portAvailableList() {

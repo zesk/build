@@ -1,46 +1,20 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-22
+# Generated on 2026-01-24
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/web.sh"
 argument="--help - Flag. Optional. Display this help."$'\n'"url - URL. Required. URL to check."$'\n'"file - File. Required. File to compare."$'\n'""
 base="web.sh"
 description="Compare a remote file size with a local file size"$'\n'""
+exitCode="0"
 file="bin/build/tools/web.sh"
-fn="urlMatchesLocalFileSize"
-foundNames=""
+foundNames=([0]="argument")
+rawComment="Compare a remote file size with a local file size"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Argument: url - URL. Required. URL to check."$'\n'"Argument: file - File. Required. File to compare."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
-sourceFile="bin/build/tools/web.sh"
 sourceModified="1769063211"
 summary="Compare a remote file size with a local file size"
 usage="urlMatchesLocalFileSize [ --help ] url file"
 # shellcheck disable=SC2016
-helpConsole='[92mUsage[0m: [38;2;170;170;255murlMatchesLocalFileSize[0m [94m[ --help ][0m [38;2;255;255;0m[35;48;2;0;0;0murl[0m[0m [38;2;255;255;0m[35;48;2;0;0;0mfile[0m[0m
-
-    [94m--help  [1;97mFlag. Optional. Display this help.[0m
-    [31murl     [1;97mURL. Required. URL to check.[0m
-    [31mfile    [1;97mFile. Required. File to compare.[0m
-
-Compare a remote file size with a local file size
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-'
+helpConsole=''$'\e''[[label]mUsage'$'\e''[0m: '$'\e''[[info]murlMatchesLocalFileSize'$'\e''[0m '$'\e''[[blue]m[ --help ]'$'\e''[0m '$'\e''[[bold]m'$'\e''[[magenta]murl'$'\e''[0m'$'\e''[0m '$'\e''[[bold]m'$'\e''[[magenta]mfile'$'\e''[0m'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[blue]m--help  '$'\e''[[value]mFlag. Optional. Display this help.'$'\e''[[reset]m'$'\n''    '$'\e''[[red]murl     '$'\e''[[value]mURL. Required. URL to check.'$'\e''[[reset]m'$'\n''    '$'\e''[[red]mfile    '$'\e''[[value]mFile. Required. File to compare.'$'\e''[[reset]m'$'\n'''$'\n''Compare a remote file size with a local file size'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[code]m0'$'\e''[[reset]m - Success'$'\n''- '$'\e''[[code]m1'$'\e''[[reset]m - Environment error'$'\n''- '$'\e''[[code]m2'$'\e''[[reset]m - Argument error'$'\n'''
 # shellcheck disable=SC2016
-helpPlain='Usage: urlMatchesLocalFileSize [ --help ] url file
-
-    --help  Flag. Optional. Display this help.
-    url     URL. Required. URL to check.
-    file    File. Required. File to compare.
-
-Compare a remote file size with a local file size
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-'
+helpPlain='Usage: urlMatchesLocalFileSize [ --help ] url file'$'\n'''$'\n''    --help  Flag. Optional. Display this help.'$'\n''    url     URL. Required. URL to check.'$'\n''    file    File. Required. File to compare.'$'\n'''$'\n''Compare a remote file size with a local file size'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''

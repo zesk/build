@@ -1,42 +1,20 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-22
+# Generated on 2026-01-24
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/docker.sh"
 argument="--filter reference - String. Optional. Filter list by reference provided."$'\n'""
 base="docker.sh"
 description="List docker images which are currently pulled"$'\n'""
+exitCode="0"
 file="bin/build/tools/docker.sh"
-fn="dockerImages"
-foundNames=""
+foundNames=([0]="argument")
+rawComment="List docker images which are currently pulled"$'\n'"Argument: --filter reference - String. Optional. Filter list by reference provided."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
-sourceFile="bin/build/tools/docker.sh"
-sourceModified="1769063211"
+sourceModified="1769184734"
 summary="List docker images which are currently pulled"
 usage="dockerImages [ --filter reference ]"
 # shellcheck disable=SC2016
-helpConsole='[92mUsage[0m: [38;2;170;170;255mdockerImages[0m [94m[ --filter reference ][0m
-
-    [94m--filter reference  [1;97mString. Optional. Filter list by reference provided.[0m
-
-List docker images which are currently pulled
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-'
+helpConsole=''$'\e''[[label]mUsage'$'\e''[0m: '$'\e''[[info]mdockerImages'$'\e''[0m '$'\e''[[blue]m[ --filter reference ]'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[blue]m--filter reference  '$'\e''[[value]mString. Optional. Filter list by reference provided.'$'\e''[[reset]m'$'\n'''$'\n''List docker images which are currently pulled'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[code]m0'$'\e''[[reset]m - Success'$'\n''- '$'\e''[[code]m1'$'\e''[[reset]m - Environment error'$'\n''- '$'\e''[[code]m2'$'\e''[[reset]m - Argument error'$'\n'''
 # shellcheck disable=SC2016
-helpPlain='Usage: dockerImages [ --filter reference ]
-
-    --filter reference  String. Optional. Filter list by reference provided.
-
-List docker images which are currently pulled
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-'
+helpPlain='Usage: dockerImages [ --filter reference ]'$'\n'''$'\n''    --filter reference  String. Optional. Filter list by reference provided.'$'\n'''$'\n''List docker images which are currently pulled'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''

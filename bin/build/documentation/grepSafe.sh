@@ -1,54 +1,23 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-22
+# Generated on 2026-01-24
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/text.sh"
 argument="--help - Flag. Optional. Display this help."$'\n'"... - Arguments. Passed directly to \`grep\`."$'\n'""
 base="text.sh"
-description="\`grep\` but returns 0 when nothing matches"$'\n'"Allow blank files or no matches -"$'\n'"- \`grep\` - returns 1 - no lines selected"$'\n'"- \`grep\` - returns 0 - lines selected"$'\n'"Return Code: 0 - Normal operation"$'\n'""
+description="\`grep\` but returns 0 when nothing matches"$'\n'"Allow blank files or no matches -"$'\n'"- \`grep\` - returns 1 - no lines selected"$'\n'"- \`grep\` - returns 0 - lines selected"$'\n'""
+exitCode="0"
 file="bin/build/tools/text.sh"
-fn="grepSafe"
-foundNames=""
+foundNames=([0]="see" [1]="return_code" [2]="argument" [3]="requires")
+rawComment="\`grep\` but returns 0 when nothing matches"$'\n'"See: grep"$'\n'"Allow blank files or no matches -"$'\n'"- \`grep\` - returns 1 - no lines selected"$'\n'"- \`grep\` - returns 0 - lines selected"$'\n'"Return Code: 0 - Normal operation"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Argument: ... - Arguments. Passed directly to \`grep\`."$'\n'"Requires: grep mapReturn"$'\n'""$'\n'""
 requires="grep mapReturn"$'\n'""
-return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
+return_code="0 - Normal operation"$'\n'""
 see="grep"$'\n'""
 sourceFile="bin/build/tools/text.sh"
-sourceModified="1769063211"
+sourceModified="1769201188"
 summary="\`grep\` but returns 0 when nothing matches"
 usage="grepSafe [ --help ] [ ... ]"
 # shellcheck disable=SC2016
-helpConsole='[92mUsage[0m: [38;2;170;170;255mgrepSafe[0m [94m[ --help ][0m [94m[ ... ][0m
-
-    [94m--help  [1;97mFlag. Optional. Display this help.[0m
-    [94m...     [1;97mArguments. Passed directly to [38;2;0;255;0;48;2;0;0;0mgrep[0m.[0m
-
-[38;2;0;255;0;48;2;0;0;0mgrep[0m but returns 0 when nothing matches
-Allow blank files or no matches -
-- [38;2;0;255;0;48;2;0;0;0mgrep[0m - returns 1 - no lines selected
-- [38;2;0;255;0;48;2;0;0;0mgrep[0m - returns 0 - lines selected
-Return Code: 0 - Normal operation
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-'
+helpConsole=''$'\e''[[label]mUsage'$'\e''[0m: '$'\e''[[info]mgrepSafe'$'\e''[0m '$'\e''[[blue]m[ --help ]'$'\e''[0m '$'\e''[[blue]m[ ... ]'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[blue]m--help  '$'\e''[[value]mFlag. Optional. Display this help.'$'\e''[[reset]m'$'\n''    '$'\e''[[blue]m...     '$'\e''[[value]mArguments. Passed directly to '$'\e''[[code]mgrep'$'\e''[[reset]m.'$'\e''[[reset]m'$'\n'''$'\n'''$'\e''[[code]mgrep'$'\e''[[reset]m but returns 0 when nothing matches'$'\n''Allow blank files or no matches -'$'\n''- '$'\e''[[code]mgrep'$'\e''[[reset]m - returns 1 - no lines selected'$'\n''- '$'\e''[[code]mgrep'$'\e''[[reset]m - returns 0 - lines selected'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[code]m0'$'\e''[[reset]m - Normal operation'$'\n'''
 # shellcheck disable=SC2016
-helpPlain='Usage: grepSafe [ --help ] [ ... ]
-
-    --help  Flag. Optional. Display this help.
-    ...     Arguments. Passed directly to grep.
-
-grep but returns 0 when nothing matches
-Allow blank files or no matches -
-- grep - returns 1 - no lines selected
-- grep - returns 0 - lines selected
-Return Code: 0 - Normal operation
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-'
+helpPlain='Usage: grepSafe [ --help ] [ ... ]'$'\n'''$'\n''    --help  Flag. Optional. Display this help.'$'\n''    ...     Arguments. Passed directly to grep.'$'\n'''$'\n''grep but returns 0 when nothing matches'$'\n''Allow blank files or no matches -'$'\n''- grep - returns 1 - no lines selected'$'\n''- grep - returns 0 - lines selected'$'\n'''$'\n''Return codes:'$'\n''- 0 - Normal operation'$'\n'''

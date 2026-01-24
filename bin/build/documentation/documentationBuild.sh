@@ -1,100 +1,23 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-22
+# Generated on 2026-01-24
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/documentation.sh"
 argument="--git - Flag. Optional. Merge current branch in with \`docs\` branch"$'\n'"--commit - Flag. Optional. Commit docs to non-docs branch"$'\n'"--force - Flag. Optional. Force generation, ignore cache directives"$'\n'"--unlinked - Flag. Optional. Show unlinked functions"$'\n'"--unlinked-update - Flag. Optional. Update unlinked document file"$'\n'"--clean - Flag. Optional. Erase the cache before starting."$'\n'"--help - Flag. Optional. Display this help."$'\n'"--company companyName - String. Optional. Company name (uses \`BUILD_COMPANY\` if not set)"$'\n'"--company-link companyLink - String. Optional. Company name (uses \`BUILD_COMPANY_LINK\` if not set)"$'\n'"--unlinked-source directory - Directory. Optional."$'\n'"--page-template pageTemplateFile - File. Optional."$'\n'"--source sourceDirectory - Directory. Required. Location of source code. Can specify one or more."$'\n'"--target targetDirectory - Directory. Required. Location of documentation build target."$'\n'"--function-template functionTemplateFile - File. Optional."$'\n'"--unlinked-template unlinkedTemplateFile - File. Optional."$'\n'"--unlinked-target unlinkedTarget - FileDirectory. Optional."$'\n'"--see-prefix seePrefix - EmptyString. Optional."$'\n'"--see-update - Flag. Optional. Update the \`see\` indexes only."$'\n'"--unlinked-update - Flag. Optional. Update the unlinked file only."$'\n'"--index-update - Flag. Optional. Update the documentation indexes only."$'\n'"--docs-update - Flag. Optional. Update the documentation target only."$'\n'""
 artifact="\`cacheDirectory\` may be created even on non-zero exit code"$'\n'""
 base="documentation.sh"
-description="Build documentation for Bash functions"$'\n'""$'\n'"Given that bash is not an ideal template language, caching is mandatory."$'\n'""$'\n'"Uses a cache at \`buildCacheDirectory\`"$'\n'""$'\n'"Return Code: 0 - Success"$'\n'"Return Code: 1 - Issue with environment"$'\n'"Return Code: 2 - Argument error"$'\n'""
+description="Build documentation for Bash functions"$'\n'"Given that bash is not an ideal template language, caching is mandatory."$'\n'"Uses a cache at \`buildCacheDirectory\`"$'\n'""
+exitCode="0"
 file="bin/build/tools/documentation.sh"
-fn="documentationBuild"
-foundNames=""
-return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
+foundNames=([0]="see" [1]="argument" [2]="artifact" [3]="return_code")
+rawComment="Build documentation for Bash functions"$'\n'"Given that bash is not an ideal template language, caching is mandatory."$'\n'"Uses a cache at \`buildCacheDirectory\`"$'\n'"See: buildCacheDirectory"$'\n'"Argument: --git - Flag. Optional. Merge current branch in with \`docs\` branch"$'\n'"Argument: --commit - Flag. Optional. Commit docs to non-docs branch"$'\n'"Argument: --force - Flag. Optional. Force generation, ignore cache directives"$'\n'"Argument: --unlinked - Flag. Optional. Show unlinked functions"$'\n'"Argument: --unlinked-update - Flag. Optional. Update unlinked document file"$'\n'"Argument: --clean - Flag. Optional. Erase the cache before starting."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Argument: --company companyName - String. Optional. Company name (uses \`BUILD_COMPANY\` if not set)"$'\n'"Argument: --company-link companyLink - String. Optional. Company name (uses \`BUILD_COMPANY_LINK\` if not set)"$'\n'"Argument: --unlinked-source directory - Directory. Optional."$'\n'"Argument: --page-template pageTemplateFile - File. Optional."$'\n'"Argument: --source sourceDirectory - Directory. Required. Location of source code. Can specify one or more."$'\n'"Argument: --target targetDirectory - Directory. Required. Location of documentation build target."$'\n'"Argument: --function-template functionTemplateFile - File. Optional."$'\n'"Argument: --unlinked-template unlinkedTemplateFile - File. Optional."$'\n'"Argument: --unlinked-target unlinkedTarget - FileDirectory. Optional."$'\n'"Argument: --see-prefix seePrefix - EmptyString. Optional."$'\n'"Argument: --see-update - Flag. Optional. Update the \`see\` indexes only."$'\n'"Argument: --unlinked-update - Flag. Optional. Update the unlinked file only."$'\n'"Argument: --index-update - Flag. Optional. Update the documentation indexes only."$'\n'"Argument: --docs-update - Flag. Optional. Update the documentation target only."$'\n'"Artifact: \`cacheDirectory\` may be created even on non-zero exit code"$'\n'"Return Code: 0 - Success"$'\n'"Return Code: 1 - Issue with environment"$'\n'"Return Code: 2 - Argument error"$'\n'""$'\n'""
+return_code="0 - Success"$'\n'"1 - Issue with environment"$'\n'"2 - Argument error"$'\n'""
 see="buildCacheDirectory"$'\n'""
 sourceFile="bin/build/tools/documentation.sh"
 sourceModified="1769065497"
 summary="Build documentation for Bash functions"
 usage="documentationBuild [ --git ] [ --commit ] [ --force ] [ --unlinked ] [ --unlinked-update ] [ --clean ] [ --help ] [ --company companyName ] [ --company-link companyLink ] [ --unlinked-source directory ] [ --page-template pageTemplateFile ] --source sourceDirectory --target targetDirectory [ --function-template functionTemplateFile ] [ --unlinked-template unlinkedTemplateFile ] [ --unlinked-target unlinkedTarget ] [ --see-prefix seePrefix ] [ --see-update ] [ --unlinked-update ] [ --index-update ] [ --docs-update ]"
 # shellcheck disable=SC2016
-helpConsole='[92mUsage[0m: [38;2;170;170;255mdocumentationBuild[0m [94m[ --git ][0m [94m[ --commit ][0m [94m[ --force ][0m [94m[ --unlinked ][0m [94m[ --unlinked-update ][0m [94m[ --clean ][0m [94m[ --help ][0m [94m[ --company companyName ][0m [94m[ --company-link companyLink ][0m [94m[ --unlinked-source directory ][0m [94m[ --page-template pageTemplateFile ][0m [38;2;255;255;0m[35;48;2;0;0;0m--source sourceDirectory[0m[0m [38;2;255;255;0m[35;48;2;0;0;0m--target targetDirectory[0m[0m [94m[ --function-template functionTemplateFile ][0m [94m[ --unlinked-template unlinkedTemplateFile ][0m [94m[ --unlinked-target unlinkedTarget ][0m [94m[ --see-prefix seePrefix ][0m [94m[ --see-update ][0m [94m[ --unlinked-update ][0m [94m[ --index-update ][0m [94m[ --docs-update ][0m
-
-    [94m--git                                     [1;97mFlag. Optional. Merge current branch in with [38;2;0;255;0;48;2;0;0;0mdocs[0m branch[0m
-    [94m--commit                                  [1;97mFlag. Optional. Commit docs to non-docs branch[0m
-    [94m--force                                   [1;97mFlag. Optional. Force generation, ignore cache directives[0m
-    [94m--unlinked                                [1;97mFlag. Optional. Show unlinked functions[0m
-    [94m--unlinked-update                         [1;97mFlag. Optional. Update unlinked document file[0m
-    [94m--clean                                   [1;97mFlag. Optional. Erase the cache before starting.[0m
-    [94m--help                                    [1;97mFlag. Optional. Display this help.[0m
-    [94m--company companyName                     [1;97mString. Optional. Company name (uses [38;2;0;255;0;48;2;0;0;0mBUILD_COMPANY[0m if not set)[0m
-    [94m--company-link companyLink                [1;97mString. Optional. Company name (uses [38;2;0;255;0;48;2;0;0;0mBUILD_COMPANY_LINK[0m if not set)[0m
-    [94m--unlinked-source directory               [1;97mDirectory. Optional.[0m
-    [94m--page-template pageTemplateFile          [1;97mFile. Optional.[0m
-    [31m--source sourceDirectory                  [1;97mDirectory. Required. Location of source code. Can specify one or more.[0m
-    [31m--target targetDirectory                  [1;97mDirectory. Required. Location of documentation build target.[0m
-    [94m--function-template functionTemplateFile  [1;97mFile. Optional.[0m
-    [94m--unlinked-template unlinkedTemplateFile  [1;97mFile. Optional.[0m
-    [94m--unlinked-target unlinkedTarget          [1;97mFileDirectory. Optional.[0m
-    [94m--see-prefix seePrefix                    [1;97mEmptyString. Optional.[0m
-    [94m--see-update                              [1;97mFlag. Optional. Update the [38;2;0;255;0;48;2;0;0;0msee[0m indexes only.[0m
-    [94m--unlinked-update                         [1;97mFlag. Optional. Update the unlinked file only.[0m
-    [94m--index-update                            [1;97mFlag. Optional. Update the documentation indexes only.[0m
-    [94m--docs-update                             [1;97mFlag. Optional. Update the documentation target only.[0m
-
-Build documentation for Bash functions
-
-Given that bash is not an ideal template language, caching is mandatory.
-
-Uses a cache at [38;2;0;255;0;48;2;0;0;0mbuildCacheDirectory[0m
-
-Return Code: 0 - Success
-Return Code: 1 - Issue with environment
-Return Code: 2 - Argument error
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-'
+helpConsole=''$'\e''[[label]mUsage'$'\e''[0m: '$'\e''[[info]mdocumentationBuild'$'\e''[0m '$'\e''[[blue]m[ --git ]'$'\e''[0m '$'\e''[[blue]m[ --commit ]'$'\e''[0m '$'\e''[[blue]m[ --force ]'$'\e''[0m '$'\e''[[blue]m[ --unlinked ]'$'\e''[0m '$'\e''[[blue]m[ --unlinked-update ]'$'\e''[0m '$'\e''[[blue]m[ --clean ]'$'\e''[0m '$'\e''[[blue]m[ --help ]'$'\e''[0m '$'\e''[[blue]m[ --company companyName ]'$'\e''[0m '$'\e''[[blue]m[ --company-link companyLink ]'$'\e''[0m '$'\e''[[blue]m[ --unlinked-source directory ]'$'\e''[0m '$'\e''[[blue]m[ --page-template pageTemplateFile ]'$'\e''[0m '$'\e''[[bold]m'$'\e''[[magenta]m--source sourceDirectory'$'\e''[0m'$'\e''[0m '$'\e''[[bold]m'$'\e''[[magenta]m--target targetDirectory'$'\e''[0m'$'\e''[0m '$'\e''[[blue]m[ --function-template functionTemplateFile ]'$'\e''[0m '$'\e''[[blue]m[ --unlinked-template unlinkedTemplateFile ]'$'\e''[0m '$'\e''[[blue]m[ --unlinked-target unlinkedTarget ]'$'\e''[0m '$'\e''[[blue]m[ --see-prefix seePrefix ]'$'\e''[0m '$'\e''[[blue]m[ --see-update ]'$'\e''[0m '$'\e''[[blue]m[ --unlinked-update ]'$'\e''[0m '$'\e''[[blue]m[ --index-update ]'$'\e''[0m '$'\e''[[blue]m[ --docs-update ]'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[blue]m--git                                     '$'\e''[[value]mFlag. Optional. Merge current branch in with '$'\e''[[code]mdocs'$'\e''[[reset]m branch'$'\e''[[reset]m'$'\n''    '$'\e''[[blue]m--commit                                  '$'\e''[[value]mFlag. Optional. Commit docs to non-docs branch'$'\e''[[reset]m'$'\n''    '$'\e''[[blue]m--force                                   '$'\e''[[value]mFlag. Optional. Force generation, ignore cache directives'$'\e''[[reset]m'$'\n''    '$'\e''[[blue]m--unlinked                                '$'\e''[[value]mFlag. Optional. Show unlinked functions'$'\e''[[reset]m'$'\n''    '$'\e''[[blue]m--unlinked-update                         '$'\e''[[value]mFlag. Optional. Update unlinked document file'$'\e''[[reset]m'$'\n''    '$'\e''[[blue]m--clean                                   '$'\e''[[value]mFlag. Optional. Erase the cache before starting.'$'\e''[[reset]m'$'\n''    '$'\e''[[blue]m--help                                    '$'\e''[[value]mFlag. Optional. Display this help.'$'\e''[[reset]m'$'\n''    '$'\e''[[blue]m--company companyName                     '$'\e''[[value]mString. Optional. Company name (uses '$'\e''[[code]mBUILD_COMPANY'$'\e''[[reset]m if not set)'$'\e''[[reset]m'$'\n''    '$'\e''[[blue]m--company-link companyLink                '$'\e''[[value]mString. Optional. Company name (uses '$'\e''[[code]mBUILD_COMPANY_LINK'$'\e''[[reset]m if not set)'$'\e''[[reset]m'$'\n''    '$'\e''[[blue]m--unlinked-source directory               '$'\e''[[value]mDirectory. Optional.'$'\e''[[reset]m'$'\n''    '$'\e''[[blue]m--page-template pageTemplateFile          '$'\e''[[value]mFile. Optional.'$'\e''[[reset]m'$'\n''    '$'\e''[[red]m--source sourceDirectory                  '$'\e''[[value]mDirectory. Required. Location of source code. Can specify one or more.'$'\e''[[reset]m'$'\n''    '$'\e''[[red]m--target targetDirectory                  '$'\e''[[value]mDirectory. Required. Location of documentation build target.'$'\e''[[reset]m'$'\n''    '$'\e''[[blue]m--function-template functionTemplateFile  '$'\e''[[value]mFile. Optional.'$'\e''[[reset]m'$'\n''    '$'\e''[[blue]m--unlinked-template unlinkedTemplateFile  '$'\e''[[value]mFile. Optional.'$'\e''[[reset]m'$'\n''    '$'\e''[[blue]m--unlinked-target unlinkedTarget          '$'\e''[[value]mFileDirectory. Optional.'$'\e''[[reset]m'$'\n''    '$'\e''[[blue]m--see-prefix seePrefix                    '$'\e''[[value]mEmptyString. Optional.'$'\e''[[reset]m'$'\n''    '$'\e''[[blue]m--see-update                              '$'\e''[[value]mFlag. Optional. Update the '$'\e''[[code]msee'$'\e''[[reset]m indexes only.'$'\e''[[reset]m'$'\n''    '$'\e''[[blue]m--unlinked-update                         '$'\e''[[value]mFlag. Optional. Update the unlinked file only.'$'\e''[[reset]m'$'\n''    '$'\e''[[blue]m--index-update                            '$'\e''[[value]mFlag. Optional. Update the documentation indexes only.'$'\e''[[reset]m'$'\n''    '$'\e''[[blue]m--docs-update                             '$'\e''[[value]mFlag. Optional. Update the documentation target only.'$'\e''[[reset]m'$'\n'''$'\n''Build documentation for Bash functions'$'\n''Given that bash is not an ideal template language, caching is mandatory.'$'\n''Uses a cache at '$'\e''[[code]mbuildCacheDirectory'$'\e''[[reset]m'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[code]m0'$'\e''[[reset]m - Success'$'\n''- '$'\e''[[code]m1'$'\e''[[reset]m - Issue with environment'$'\n''- '$'\e''[[code]m2'$'\e''[[reset]m - Argument error'$'\n'''
 # shellcheck disable=SC2016
-helpPlain='Usage: documentationBuild [ --git ] [ --commit ] [ --force ] [ --unlinked ] [ --unlinked-update ] [ --clean ] [ --help ] [ --company companyName ] [ --company-link companyLink ] [ --unlinked-source directory ] [ --page-template pageTemplateFile ] --source sourceDirectory --target targetDirectory [ --function-template functionTemplateFile ] [ --unlinked-template unlinkedTemplateFile ] [ --unlinked-target unlinkedTarget ] [ --see-prefix seePrefix ] [ --see-update ] [ --unlinked-update ] [ --index-update ] [ --docs-update ]
-
-    --git                                     Flag. Optional. Merge current branch in with docs branch
-    --commit                                  Flag. Optional. Commit docs to non-docs branch
-    --force                                   Flag. Optional. Force generation, ignore cache directives
-    --unlinked                                Flag. Optional. Show unlinked functions
-    --unlinked-update                         Flag. Optional. Update unlinked document file
-    --clean                                   Flag. Optional. Erase the cache before starting.
-    --help                                    Flag. Optional. Display this help.
-    --company companyName                     String. Optional. Company name (uses BUILD_COMPANY if not set)
-    --company-link companyLink                String. Optional. Company name (uses BUILD_COMPANY_LINK if not set)
-    --unlinked-source directory               Directory. Optional.
-    --page-template pageTemplateFile          File. Optional.
-    --source sourceDirectory                  Directory. Required. Location of source code. Can specify one or more.
-    --target targetDirectory                  Directory. Required. Location of documentation build target.
-    --function-template functionTemplateFile  File. Optional.
-    --unlinked-template unlinkedTemplateFile  File. Optional.
-    --unlinked-target unlinkedTarget          FileDirectory. Optional.
-    --see-prefix seePrefix                    EmptyString. Optional.
-    --see-update                              Flag. Optional. Update the see indexes only.
-    --unlinked-update                         Flag. Optional. Update the unlinked file only.
-    --index-update                            Flag. Optional. Update the documentation indexes only.
-    --docs-update                             Flag. Optional. Update the documentation target only.
-
-Build documentation for Bash functions
-
-Given that bash is not an ideal template language, caching is mandatory.
-
-Uses a cache at buildCacheDirectory
-
-Return Code: 0 - Success
-Return Code: 1 - Issue with environment
-Return Code: 2 - Argument error
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-'
+helpPlain='Usage: documentationBuild [ --git ] [ --commit ] [ --force ] [ --unlinked ] [ --unlinked-update ] [ --clean ] [ --help ] [ --company companyName ] [ --company-link companyLink ] [ --unlinked-source directory ] [ --page-template pageTemplateFile ] --source sourceDirectory --target targetDirectory [ --function-template functionTemplateFile ] [ --unlinked-template unlinkedTemplateFile ] [ --unlinked-target unlinkedTarget ] [ --see-prefix seePrefix ] [ --see-update ] [ --unlinked-update ] [ --index-update ] [ --docs-update ]'$'\n'''$'\n''    --git                                     Flag. Optional. Merge current branch in with docs branch'$'\n''    --commit                                  Flag. Optional. Commit docs to non-docs branch'$'\n''    --force                                   Flag. Optional. Force generation, ignore cache directives'$'\n''    --unlinked                                Flag. Optional. Show unlinked functions'$'\n''    --unlinked-update                         Flag. Optional. Update unlinked document file'$'\n''    --clean                                   Flag. Optional. Erase the cache before starting.'$'\n''    --help                                    Flag. Optional. Display this help.'$'\n''    --company companyName                     String. Optional. Company name (uses BUILD_COMPANY if not set)'$'\n''    --company-link companyLink                String. Optional. Company name (uses BUILD_COMPANY_LINK if not set)'$'\n''    --unlinked-source directory               Directory. Optional.'$'\n''    --page-template pageTemplateFile          File. Optional.'$'\n''    --source sourceDirectory                  Directory. Required. Location of source code. Can specify one or more.'$'\n''    --target targetDirectory                  Directory. Required. Location of documentation build target.'$'\n''    --function-template functionTemplateFile  File. Optional.'$'\n''    --unlinked-template unlinkedTemplateFile  File. Optional.'$'\n''    --unlinked-target unlinkedTarget          FileDirectory. Optional.'$'\n''    --see-prefix seePrefix                    EmptyString. Optional.'$'\n''    --see-update                              Flag. Optional. Update the see indexes only.'$'\n''    --unlinked-update                         Flag. Optional. Update the unlinked file only.'$'\n''    --index-update                            Flag. Optional. Update the documentation indexes only.'$'\n''    --docs-update                             Flag. Optional. Update the documentation target only.'$'\n'''$'\n''Build documentation for Bash functions'$'\n''Given that bash is not an ideal template language, caching is mandatory.'$'\n''Uses a cache at buildCacheDirectory'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Issue with environment'$'\n''- 2 - Argument error'$'\n'''

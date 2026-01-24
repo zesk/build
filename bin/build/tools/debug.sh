@@ -154,11 +154,13 @@ bashRecursionDebug() {
     fi
     printf "%s\n" "RECURSION FAILURE" "$(debuggingStack)" "" "INITIAL CALL" "$(decorate code <"$cacheFile")" 1>&2
     catchEnvironment "$handler" rm -f "$cacheFile" || return $?
+    sleep 99
     exit 91
   fi
   if [ "${1-}" = "--end" ]; then
     printf "%s\n" "RECURSION FAILURE (end without start)" "$(debuggingStack)" 1>&2
     catchEnvironment "$handler" rm -f "$cacheFile" || return $?
+    sleep 99
     exit 91
   fi
 
@@ -326,7 +328,7 @@ plumber() {
     __pattern="^\($(quoteGrepPattern "$(listJoin '|' "${__ignore[@]+"${__ignore[@]}"}")")\)="
     __changed="$(diff -U0 "$__before" "$__after" | grep -e '^[-+][^-+]' | cut -c 2- | grep -e '^declare' | grep '=' | grep -v -e '^declare -[-a-z]*r ' | removeFields 2 | grep -v -e "$__pattern" || :)"
     __rawChanged=$__changed
-    __cmd="$(decorate each code "$@")"
+    __cmd="$(decorate each code -- "$@")"
     if grep -q -e 'COLUMNS\|LINES' < <(printf "%s\n" "$__changed"); then
       # decorate warning "$__cmd set $(decorate value "COLUMNS, LINES")"
       unset COLUMNS LINES
@@ -446,7 +448,7 @@ housekeeper() {
     else
       __changed="$(diff "$__before" "$__after" | grep -e '^[<>]' || :)"
     fi
-    __cmd=$(decorate each code "$@")
+    __cmd=$(decorate each code -- "$@")
     if [ -n "$__changed" ]; then
       printf "%s\n" "$(decorate code "$__cmd") modified files:" "$(printf "%s\n" "$__changed" | decorate wrap "- ")" "Watching:" "$(printf "%s\n" "${watchPaths[@]}" | decorate wrap "- ")" 1>&2
       __result=$(returnCode leak)
@@ -541,7 +543,7 @@ __processChildrenIDs() {
 
 # Output current open files
 # stdout
-debugOpenFiles() {
+filesOpenStatus() {
   local handler="_${FUNCNAME[0]}"
 
   local name="${FUNCNAME[1]}}"
@@ -571,7 +573,7 @@ debugOpenFiles() {
     __filesOpenList "$child"
   done
 }
-_debugOpenFiles() {
+_filesOpenStatus() {
   # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

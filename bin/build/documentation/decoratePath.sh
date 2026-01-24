@@ -1,71 +1,21 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-22
+# Generated on 2026-01-24
 # shellcheck disable=SC2034
-applicationFile="bin/build/tools/decoration.sh"
+applicationFile="bin/build/tools/decorate/path.sh"
 argument="--help - Flag. Optional. Display this help."$'\n'"--path pathName=icon - Flag. Optional. Add an additional path mapping to icon."$'\n'"--no-app - Flag. Optional. Do not map \`BUILD_HOME\`."$'\n'"--skip-app - Flag. Optional. Synonym for \`--no-app\`."$'\n'"path - String. Path to display and replace matching paths with icons."$'\n'""
-base="decoration.sh"
+base="path.sh"
 description="Replace an absolute path prefix with an icon if it matches \`HOME\`, \`BUILD_HOME\` or \`TMPDIR\`"$'\n'"Icons used:"$'\n'"- 💣 - \`TMPDIR\`"$'\n'"- 🍎 - \`BUILD_HOME\`"$'\n'"- 🏠 - \`HOME\`"$'\n'""
 environment="TMPDIR"$'\n'"BUILD_HOME"$'\n'"HOME"$'\n'""
-file="bin/build/tools/decoration.sh"
-fn="decoratePath"
-foundNames=""
+exitCode="0"
+file="bin/build/tools/decorate/path.sh"
+foundNames=([0]="summary" [1]="argument" [2]="environment")
+rawComment="Summary: Display file paths and replace prefixes with icons"$'\n'"Replace an absolute path prefix with an icon if it matches \`HOME\`, \`BUILD_HOME\` or \`TMPDIR\`"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Argument: --path pathName=icon - Flag. Optional. Add an additional path mapping to icon."$'\n'"Argument: --no-app - Flag. Optional. Do not map \`BUILD_HOME\`."$'\n'"Argument: --skip-app - Flag. Optional. Synonym for \`--no-app\`."$'\n'"Argument: path - String. Path to display and replace matching paths with icons."$'\n'"Icons used:"$'\n'"- 💣 - \`TMPDIR\`"$'\n'"- 🍎 - \`BUILD_HOME\`"$'\n'"- 🏠 - \`HOME\`"$'\n'"Environment: TMPDIR"$'\n'"Environment: BUILD_HOME"$'\n'"Environment: HOME"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
-sourceFile="bin/build/tools/decoration.sh"
-sourceModified="1769063211"
+sourceModified="1769190151"
 summary="Display file paths and replace prefixes with icons"$'\n'""
 usage="decoratePath [ --help ] [ --path pathName=icon ] [ --no-app ] [ --skip-app ] [ path ]"
 # shellcheck disable=SC2016
-helpConsole='[92mUsage[0m: [38;2;170;170;255mdecoratePath[0m [94m[ --help ][0m [94m[ --path pathName=icon ][0m [94m[ --no-app ][0m [94m[ --skip-app ][0m [94m[ path ][0m
-
-    [94m--help                [1;97mFlag. Optional. Display this help.[0m
-    [94m--path pathName=icon  [1;97mFlag. Optional. Add an additional path mapping to icon.[0m
-    [94m--no-app              [1;97mFlag. Optional. Do not map [38;2;0;255;0;48;2;0;0;0mBUILD_HOME[0m.[0m
-    [94m--skip-app            [1;97mFlag. Optional. Synonym for [38;2;0;255;0;48;2;0;0;0m--no-app[0m.[0m
-    [94mpath                  [1;97mString. Path to display and replace matching paths with icons.[0m
-
-Replace an absolute path prefix with an icon if it matches [38;2;0;255;0;48;2;0;0;0mHOME[0m, [38;2;0;255;0;48;2;0;0;0mBUILD_HOME[0m or [38;2;0;255;0;48;2;0;0;0mTMPDIR[0m
-Icons used:
-- 💣 - [38;2;0;255;0;48;2;0;0;0mTMPDIR[0m
-- 🍎 - [38;2;0;255;0;48;2;0;0;0mBUILD_HOME[0m
-- 🏠 - [38;2;0;255;0;48;2;0;0;0mHOME[0m
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-
-Environment variables:
-- TMPDIR
-- BUILD_HOME
-- HOME
-- 
-'
+helpConsole=''$'\e''[[label]mUsage'$'\e''[0m: '$'\e''[[info]mdecoratePath'$'\e''[0m '$'\e''[[blue]m[ --help ]'$'\e''[0m '$'\e''[[blue]m[ --path pathName=icon ]'$'\e''[0m '$'\e''[[blue]m[ --no-app ]'$'\e''[0m '$'\e''[[blue]m[ --skip-app ]'$'\e''[0m '$'\e''[[blue]m[ path ]'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[blue]m--help                '$'\e''[[value]mFlag. Optional. Display this help.'$'\e''[[reset]m'$'\n''    '$'\e''[[blue]m--path pathName=icon  '$'\e''[[value]mFlag. Optional. Add an additional path mapping to icon.'$'\e''[[reset]m'$'\n''    '$'\e''[[blue]m--no-app              '$'\e''[[value]mFlag. Optional. Do not map '$'\e''[[code]mBUILD_HOME'$'\e''[[reset]m.'$'\e''[[reset]m'$'\n''    '$'\e''[[blue]m--skip-app            '$'\e''[[value]mFlag. Optional. Synonym for '$'\e''[[code]m--no-app'$'\e''[[reset]m.'$'\e''[[reset]m'$'\n''    '$'\e''[[blue]mpath                  '$'\e''[[value]mString. Path to display and replace matching paths with icons.'$'\e''[[reset]m'$'\n'''$'\n''Replace an absolute path prefix with an icon if it matches '$'\e''[[code]mHOME'$'\e''[[reset]m, '$'\e''[[code]mBUILD_HOME'$'\e''[[reset]m or '$'\e''[[code]mTMPDIR'$'\e''[[reset]m'$'\n''Icons used:'$'\n''- 💣 - '$'\e''[[code]mTMPDIR'$'\e''[[reset]m'$'\n''- 🍎 - '$'\e''[[code]mBUILD_HOME'$'\e''[[reset]m'$'\n''- 🏠 - '$'\e''[[code]mHOME'$'\e''[[reset]m'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[code]m0'$'\e''[[reset]m - Success'$'\n''- '$'\e''[[code]m1'$'\e''[[reset]m - Environment error'$'\n''- '$'\e''[[code]m2'$'\e''[[reset]m - Argument error'$'\n'''$'\n''Environment variables:'$'\n''- TMPDIR'$'\n''- BUILD_HOME'$'\n''- HOME'$'\n'''
 # shellcheck disable=SC2016
-helpPlain='Usage: decoratePath [ --help ] [ --path pathName=icon ] [ --no-app ] [ --skip-app ] [ path ]
-
-    --help                Flag. Optional. Display this help.
-    --path pathName=icon  Flag. Optional. Add an additional path mapping to icon.
-    --no-app              Flag. Optional. Do not map BUILD_HOME.
-    --skip-app            Flag. Optional. Synonym for --no-app.
-    path                  String. Path to display and replace matching paths with icons.
-
-Replace an absolute path prefix with an icon if it matches HOME, BUILD_HOME or TMPDIR
-Icons used:
-- 💣 - TMPDIR
-- 🍎 - BUILD_HOME
-- 🏠 - HOME
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-
-Environment variables:
-- TMPDIR
-- BUILD_HOME
-- HOME
-- 
-'
+helpPlain='Usage: decoratePath [ --help ] [ --path pathName=icon ] [ --no-app ] [ --skip-app ] [ path ]'$'\n'''$'\n''    --help                Flag. Optional. Display this help.'$'\n''    --path pathName=icon  Flag. Optional. Add an additional path mapping to icon.'$'\n''    --no-app              Flag. Optional. Do not map BUILD_HOME.'$'\n''    --skip-app            Flag. Optional. Synonym for --no-app.'$'\n''    path                  String. Path to display and replace matching paths with icons.'$'\n'''$'\n''Replace an absolute path prefix with an icon if it matches HOME, BUILD_HOME or TMPDIR'$'\n''Icons used:'$'\n''- 💣 - TMPDIR'$'\n''- 🍎 - BUILD_HOME'$'\n''- 🏠 - HOME'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''$'\n''Environment variables:'$'\n''- TMPDIR'$'\n''- BUILD_HOME'$'\n''- HOME'$'\n'''

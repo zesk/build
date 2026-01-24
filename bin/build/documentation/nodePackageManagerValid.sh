@@ -1,52 +1,21 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-22
+# Generated on 2026-01-24
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/node.sh"
 argument="--help - Flag. Optional. Display this help."$'\n'"managerName - String. Required. The node package manager name to check."$'\n'""
 base="node.sh"
-description="Is the passed node package manager name valid?"$'\n'"Without arguments, shows the valid package manager names."$'\n'"Return Code: 0 - Yes, it's a valid package manager name."$'\n'"Return Code: 1 - No, it's not a valid package manager name."$'\n'"Valid names are: npm yarn"$'\n'""
+description="Is the passed node package manager name valid?"$'\n'"Without arguments, shows the valid package manager names."$'\n'""
+exitCode="0"
 file="bin/build/tools/node.sh"
-fn="nodePackageManagerValid"
-foundNames=""
-return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
-sourceFile="bin/build/tools/node.sh"
-sourceModified="1769063211"
+foundNames=([0]="argument" [1]="return_code" [2]="valid_names_are")
+rawComment="Is the passed node package manager name valid?"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Argument: managerName - String. Required. The node package manager name to check."$'\n'"Without arguments, shows the valid package manager names."$'\n'"Return Code: 0 - Yes, it's a valid package manager name."$'\n'"Return Code: 1 - No, it's not a valid package manager name."$'\n'"Valid names are: npm yarn"$'\n'""$'\n'""
+return_code="0 - Yes, it's a valid package manager name."$'\n'"1 - No, it's not a valid package manager name."$'\n'""
+sourceModified="1769184734"
 summary="Is the passed node package manager name valid?"
 usage="nodePackageManagerValid [ --help ] managerName"
+valid_names_are="npm yarn"$'\n'""
 # shellcheck disable=SC2016
-helpConsole='[92mUsage[0m: [38;2;170;170;255mnodePackageManagerValid[0m [94m[ --help ][0m [38;2;255;255;0m[35;48;2;0;0;0mmanagerName[0m[0m
-
-    [94m--help       [1;97mFlag. Optional. Display this help.[0m
-    [31mmanagerName  [1;97mString. Required. The node package manager name to check.[0m
-
-Is the passed node package manager name valid?
-Without arguments, shows the valid package manager names.
-Return Code: 0 - Yes, it'\''s a valid package manager name.
-Return Code: 1 - No, it'\''s not a valid package manager name.
-Valid names are: npm yarn
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-'
+helpConsole=''$'\e''[[label]mUsage'$'\e''[0m: '$'\e''[[info]mnodePackageManagerValid'$'\e''[0m '$'\e''[[blue]m[ --help ]'$'\e''[0m '$'\e''[[bold]m'$'\e''[[magenta]mmanagerName'$'\e''[0m'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[blue]m--help       '$'\e''[[value]mFlag. Optional. Display this help.'$'\e''[[reset]m'$'\n''    '$'\e''[[red]mmanagerName  '$'\e''[[value]mString. Required. The node package manager name to check.'$'\e''[[reset]m'$'\n'''$'\n''Is the passed node package manager name valid?'$'\n''Without arguments, shows the valid package manager names.'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[code]m0'$'\e''[[reset]m - Yes, it'\''s a valid package manager name.'$'\n''- '$'\e''[[code]m1'$'\e''[[reset]m - No, it'\''s not a valid package manager name.'$'\n'''
 # shellcheck disable=SC2016
-helpPlain='Usage: nodePackageManagerValid [ --help ] managerName
-
-    --help       Flag. Optional. Display this help.
-    managerName  String. Required. The node package manager name to check.
-
-Is the passed node package manager name valid?
-Without arguments, shows the valid package manager names.
-Return Code: 0 - Yes, it'\''s a valid package manager name.
-Return Code: 1 - No, it'\''s not a valid package manager name.
-Valid names are: npm yarn
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-'
+helpPlain='Usage: nodePackageManagerValid [ --help ] managerName'$'\n'''$'\n''    --help       Flag. Optional. Display this help.'$'\n''    managerName  String. Required. The node package manager name to check.'$'\n'''$'\n''Is the passed node package manager name valid?'$'\n''Without arguments, shows the valid package manager names.'$'\n'''$'\n''Return codes:'$'\n''- 0 - Yes, it'\''s a valid package manager name.'$'\n''- 1 - No, it'\''s not a valid package manager name.'$'\n'''

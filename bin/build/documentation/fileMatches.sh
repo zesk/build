@@ -1,52 +1,21 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-22
+# Generated on 2026-01-24
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/file.sh"
 argument="--help - Flag. Optional. Display this help."$'\n'"pattern ... - String. Required.\`grep -e\` Pattern to find in files. No quoting is added so ensure these are compatible with \`grep -e\`."$'\n'"-- - Delimiter. Required. exception."$'\n'"exception ... - String. Optional. \`grep -e\` File pattern which should be ignored."$'\n'"-- - Delimiter. Required. file."$'\n'"file ... - File. Required. File to search. Special file \`-\` indicates files should be read from \`stdin\`."$'\n'""
 base="file.sh"
-description="Find one or more patterns in a list of files, with a list of file name pattern exceptions."$'\n'""$'\n'""
+description="Find one or more patterns in a list of files, with a list of file name pattern exceptions."$'\n'""
+exitCode="0"
 file="bin/build/tools/file.sh"
-fn="fileMatches"
-foundNames=""
+foundNames=([0]="argument")
+rawComment="Find one or more patterns in a list of files, with a list of file name pattern exceptions."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Argument: pattern ... - String. Required.\`grep -e\` Pattern to find in files. No quoting is added so ensure these are compatible with \`grep -e\`."$'\n'"Argument: -- - Delimiter. Required. exception."$'\n'"Argument: exception ... - String. Optional. \`grep -e\` File pattern which should be ignored."$'\n'"Argument: -- - Delimiter. Required. file."$'\n'"Argument: file ... - File. Required. File to search. Special file \`-\` indicates files should be read from \`stdin\`."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/file.sh"
-sourceModified="1769063211"
+sourceModified="1769184734"
 summary="Find one or more patterns in a list of files,"
 usage="fileMatches [ --help ] pattern ... -- [ exception ... ] -- file ..."
 # shellcheck disable=SC2016
-helpConsole='[92mUsage[0m: [38;2;170;170;255mfileMatches[0m [94m[ --help ][0m [38;2;255;255;0m[35;48;2;0;0;0mpattern ...[0m[0m [38;2;255;255;0m[35;48;2;0;0;0m [94m[ exception ... ][0m [38;2;255;255;0m[35;48;2;0;0;0m [38;2;255;255;0m[35;48;2;0;0;0mfile ...[0m[0m
-
-    [94m--help         [1;97mFlag. Optional. Display this help.[0m
-    [31mpattern ...    [1;97mString. Required.[38;2;0;255;0;48;2;0;0;0mgrep -e[0m Pattern to find in files. No quoting is added so ensure these are compatible with [38;2;0;255;0;48;2;0;0;0mgrep -e[0m.[0m
-    [31m--             [1;97mDelimiter. Required. exception.[0m
-    [94mexception ...  [1;97mString. Optional. [38;2;0;255;0;48;2;0;0;0mgrep -e[0m File pattern which should be ignored.[0m
-    [31m--             [1;97mDelimiter. Required. file.[0m
-    [31mfile ...       [1;97mFile. Required. File to search. Special file [38;2;0;255;0;48;2;0;0;0m-[0m indicates files should be read from [38;2;0;255;0;48;2;0;0;0mstdin[0m.[0m
-
-Find one or more patterns in a list of files, with a list of file name pattern exceptions.
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-'
+helpConsole=''$'\e''[[label]mUsage'$'\e''[0m: '$'\e''[[info]mfileMatches'$'\e''[0m '$'\e''[[blue]m[ --help ]'$'\e''[0m '$'\e''[[bold]m'$'\e''[[magenta]mpattern ...'$'\e''[0m'$'\e''[0m '$'\e''[[bold]m'$'\e''[[magenta]m '$'\e''[[blue]m[ exception ... ]'$'\e''[0m '$'\e''[[bold]m'$'\e''[[magenta]m '$'\e''[[bold]m'$'\e''[[magenta]mfile ...'$'\e''[0m'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[blue]m--help         '$'\e''[[value]mFlag. Optional. Display this help.'$'\e''[[reset]m'$'\n''    '$'\e''[[red]mpattern ...    '$'\e''[[value]mString. Required.'$'\e''[[code]mgrep -e'$'\e''[[reset]m Pattern to find in files. No quoting is added so ensure these are compatible with '$'\e''[[code]mgrep -e'$'\e''[[reset]m.'$'\e''[[reset]m'$'\n''    '$'\e''[[red]m--             '$'\e''[[value]mDelimiter. Required. exception.'$'\e''[[reset]m'$'\n''    '$'\e''[[blue]mexception ...  '$'\e''[[value]mString. Optional. '$'\e''[[code]mgrep -e'$'\e''[[reset]m File pattern which should be ignored.'$'\e''[[reset]m'$'\n''    '$'\e''[[red]m--             '$'\e''[[value]mDelimiter. Required. file.'$'\e''[[reset]m'$'\n''    '$'\e''[[red]mfile ...       '$'\e''[[value]mFile. Required. File to search. Special file '$'\e''[[code]m-'$'\e''[[reset]m indicates files should be read from '$'\e''[[code]mstdin'$'\e''[[reset]m.'$'\e''[[reset]m'$'\n'''$'\n''Find one or more patterns in a list of files, with a list of file name pattern exceptions.'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[code]m0'$'\e''[[reset]m - Success'$'\n''- '$'\e''[[code]m1'$'\e''[[reset]m - Environment error'$'\n''- '$'\e''[[code]m2'$'\e''[[reset]m - Argument error'$'\n'''
 # shellcheck disable=SC2016
-helpPlain='Usage: fileMatches [ --help ] pattern ...  [ exception ... ]  file ...
-
-    --help         Flag. Optional. Display this help.
-    pattern ...    String. Required.grep -e Pattern to find in files. No quoting is added so ensure these are compatible with grep -e.
-    --             Delimiter. Required. exception.
-    exception ...  String. Optional. grep -e File pattern which should be ignored.
-    --             Delimiter. Required. file.
-    file ...       File. Required. File to search. Special file - indicates files should be read from stdin.
-
-Find one or more patterns in a list of files, with a list of file name pattern exceptions.
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-'
+helpPlain='Usage: fileMatches [ --help ] pattern ...  [ exception ... ]  file ...'$'\n'''$'\n''    --help         Flag. Optional. Display this help.'$'\n''    pattern ...    String. Required.grep -e Pattern to find in files. No quoting is added so ensure these are compatible with grep -e.'$'\n''    --             Delimiter. Required. exception.'$'\n''    exception ...  String. Optional. grep -e File pattern which should be ignored.'$'\n''    --             Delimiter. Required. file.'$'\n''    file ...       File. Required. File to search. Special file - indicates files should be read from stdin.'$'\n'''$'\n''Find one or more patterns in a list of files, with a list of file name pattern exceptions.'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''

@@ -81,7 +81,7 @@ _isUnsignedInteger() {
 
 #
 # Argument: --skip-commit - Skip the commit if the files change
-# Requires: catchEnvironment throwArgument timingStart isDarwin whichExists statusMessage
+# Requires: catchEnvironment throwArgument timingStart isDarwin executableExists statusMessage
 # Requires: decorate __decorateExtensionEach
 __updateAvailable() {
   local handler="_${FUNCNAME[0]}"
@@ -116,11 +116,11 @@ __updateAvailable() {
 
   local managers=(apk debian ubuntu) allKnown=false
   if isDarwin; then
-    if whichExists brew; then
+    if executableExists brew; then
       managers+=(brew)
       allKnown=true
     fi
-    if whichExists port; then
+    if executableExists port; then
       managers+=(port)
       allKnown=true
     fi

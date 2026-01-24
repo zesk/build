@@ -1,71 +1,22 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-22
+# Generated on 2026-01-24
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/lint.sh"
 argument="file ... - File. Required. A item to look for matches in. Use \`-\` to read file list from \`stdin\`."$'\n'"-- - Required. Separates files from text"$'\n'"text ... - Required. Text which must exist in each item"$'\n'""
 base="lint.sh"
-description="Search for item extensions and ensure that text is found in each item."$'\n'""$'\n'"This can be run on any directory tree to test files in any application."$'\n'""$'\n'"By default, any directory which begins with a dot \`.\` will be ignored."$'\n'""$'\n'"Side-effect: Errors written to stderr, status written to stdout"$'\n'"Return Code: 0 - All found files contain all text string or strings"$'\n'"Return Code: 1 - One or more files does not contain all text string or strings"$'\n'"Return Code: 2 - Arguments error (missing extension or text)"$'\n'""$'\n'""
+description="Search for item extensions and ensure that text is found in each item."$'\n'"This can be run on any directory tree to test files in any application."$'\n'"By default, any directory which begins with a dot \`.\` will be ignored."$'\n'""
 example="    validateFileContents foo.sh my.sh -- \"Copyright 2024\" \"Company, LLC\""$'\n'""
+exitCode="0"
 file="bin/build/tools/lint.sh"
-fn="validateFileContents"
-foundNames=""
-return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
-sourceFile="bin/build/tools/lint.sh"
-sourceModified="1769063211"
+foundNames=([0]="example" [1]="argument" [2]="side_effect" [3]="summary" [4]="return_code")
+rawComment="Search for item extensions and ensure that text is found in each item."$'\n'"This can be run on any directory tree to test files in any application."$'\n'"By default, any directory which begins with a dot \`.\` will be ignored."$'\n'"Example:     {fn} foo.sh my.sh -- \"Copyright 2024\" \"Company, LLC\""$'\n'"Argument: file ... - File. Required. A item to look for matches in. Use \`-\` to read file list from \`stdin\`."$'\n'"Argument: -- - Required. Separates files from text"$'\n'"Argument: text ... - Required. Text which must exist in each item"$'\n'"Side-effect: Errors written to stderr, status written to stdout"$'\n'"Summary: Check files for the existence of a string or strings"$'\n'"Return Code: 0 - All found files contain all text string or strings"$'\n'"Return Code: 1 - One or more files does not contain all text string or strings"$'\n'"Return Code: 2 - Arguments error (missing extension or text)"$'\n'""$'\n'""
+return_code="0 - All found files contain all text string or strings"$'\n'"1 - One or more files does not contain all text string or strings"$'\n'"2 - Arguments error (missing extension or text)"$'\n'""
+side_effect="Errors written to stderr, status written to stdout"$'\n'""
+sourceModified="1769199547"
 summary="Check files for the existence of a string or strings"$'\n'""
 usage="validateFileContents file ... -- text ..."
 # shellcheck disable=SC2016
-helpConsole='[92mUsage[0m: [38;2;170;170;255mvalidateFileContents[0m [38;2;255;255;0m[35;48;2;0;0;0mfile ...[0m[0m [38;2;255;255;0m[35;48;2;0;0;0m [38;2;255;255;0m[35;48;2;0;0;0mtext ...[0m[0m
-
-    [31mfile ...  [1;97mFile. Required. A item to look for matches in. Use [38;2;0;255;0;48;2;0;0;0m-[0m to read file list from [38;2;0;255;0;48;2;0;0;0mstdin[0m.[0m
-    [31m--        [1;97mRequired. Separates files from text[0m
-    [31mtext ...  [1;97mRequired. Text which must exist in each item[0m
-
-Search for item extensions and ensure that text is found in each item.
-
-This can be run on any directory tree to test files in any application.
-
-By default, any directory which begins with a dot [38;2;0;255;0;48;2;0;0;0m.[0m will be ignored.
-
-Side-effect: Errors written to stderr, status written to stdout
-Return Code: 0 - All found files contain all text string or strings
-Return Code: 1 - One or more files does not contain all text string or strings
-Return Code: 2 - Arguments error (missing extension or text)
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-
-Example:
-    validateFileContents foo.sh my.sh -- "Copyright 2024" "Company, LLC"
-'
+helpConsole=''$'\e''[[label]mUsage'$'\e''[0m: '$'\e''[[info]mvalidateFileContents'$'\e''[0m '$'\e''[[bold]m'$'\e''[[magenta]mfile ...'$'\e''[0m'$'\e''[0m '$'\e''[[bold]m'$'\e''[[magenta]m '$'\e''[[bold]m'$'\e''[[magenta]mtext ...'$'\e''[0m'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[red]mfile ...  '$'\e''[[value]mFile. Required. A item to look for matches in. Use '$'\e''[[code]m-'$'\e''[[reset]m to read file list from '$'\e''[[code]mstdin'$'\e''[[reset]m.'$'\e''[[reset]m'$'\n''    '$'\e''[[red]m--        '$'\e''[[value]mRequired. Separates files from text'$'\e''[[reset]m'$'\n''    '$'\e''[[red]mtext ...  '$'\e''[[value]mRequired. Text which must exist in each item'$'\e''[[reset]m'$'\n'''$'\n''Search for item extensions and ensure that text is found in each item.'$'\n''This can be run on any directory tree to test files in any application.'$'\n''By default, any directory which begins with a dot '$'\e''[[code]m.'$'\e''[[reset]m will be ignored.'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[code]m0'$'\e''[[reset]m - All found files contain all text string or strings'$'\n''- '$'\e''[[code]m1'$'\e''[[reset]m - One or more files does not contain all text string or strings'$'\n''- '$'\e''[[code]m2'$'\e''[[reset]m - Arguments error (missing extension or text)'$'\n'''$'\n''Example:'$'\n''    validateFileContents foo.sh my.sh -- "Copyright 2024" "Company, LLC"'$'\n'''
 # shellcheck disable=SC2016
-helpPlain='Usage: validateFileContents file ...  text ...
-
-    file ...  File. Required. A item to look for matches in. Use - to read file list from stdin.
-    --        Required. Separates files from text
-    text ...  Required. Text which must exist in each item
-
-Search for item extensions and ensure that text is found in each item.
-
-This can be run on any directory tree to test files in any application.
-
-By default, any directory which begins with a dot . will be ignored.
-
-Side-effect: Errors written to stderr, status written to stdout
-Return Code: 0 - All found files contain all text string or strings
-Return Code: 1 - One or more files does not contain all text string or strings
-Return Code: 2 - Arguments error (missing extension or text)
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-
-Example:
-    validateFileContents foo.sh my.sh -- "Copyright 2024" "Company, LLC"
-'
+helpPlain='Usage: validateFileContents file ...  text ...'$'\n'''$'\n''    file ...  File. Required. A item to look for matches in. Use - to read file list from stdin.'$'\n''    --        Required. Separates files from text'$'\n''    text ...  Required. Text which must exist in each item'$'\n'''$'\n''Search for item extensions and ensure that text is found in each item.'$'\n''This can be run on any directory tree to test files in any application.'$'\n''By default, any directory which begins with a dot . will be ignored.'$'\n'''$'\n''Return codes:'$'\n''- 0 - All found files contain all text string or strings'$'\n''- 1 - One or more files does not contain all text string or strings'$'\n''- 2 - Arguments error (missing extension or text)'$'\n'''$'\n''Example:'$'\n''    validateFileContents foo.sh my.sh -- "Copyright 2024" "Company, LLC"'$'\n'''

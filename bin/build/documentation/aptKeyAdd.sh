@@ -1,54 +1,20 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-22
+# Generated on 2026-01-24
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/apt.sh"
 argument="--title keyTitle - String. Optional. Title of the key."$'\n'"--name keyName - String. Required. Name of the key used to generate file names."$'\n'"--url remoteUrl - URL. Required. Remote URL of gpg key."$'\n'"--help - Flag. Optional. Display this help."$'\n'""
 base="apt.sh"
-description="Add keys to enable apt to download terraform directly from hashicorp.com"$'\n'""$'\n'"Return Code: 1 - if environment is awry"$'\n'"Return Code: 0 - Apt key is installed AOK"$'\n'""$'\n'""
+description="Add keys to enable apt to download terraform directly from hashicorp.com"$'\n'""
+exitCode="0"
 file="bin/build/tools/apt.sh"
-fn="aptKeyAdd"
-foundNames=""
-return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
-sourceFile="bin/build/tools/apt.sh"
-sourceModified="1769063211"
+foundNames=([0]="argument" [1]="return_code")
+rawComment="Add keys to enable apt to download terraform directly from hashicorp.com"$'\n'"Argument: --title keyTitle - String. Optional. Title of the key."$'\n'"Argument: --name keyName - String. Required. Name of the key used to generate file names."$'\n'"Argument: --url remoteUrl - URL. Required. Remote URL of gpg key."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Return Code: 1 - if environment is awry"$'\n'"Return Code: 0 - Apt key is installed AOK"$'\n'""$'\n'""
+return_code="1 - if environment is awry"$'\n'"0 - Apt key is installed AOK"$'\n'""
+sourceModified="1769184734"
 summary="Add keys to enable apt to download terraform directly from"
 usage="aptKeyAdd [ --title keyTitle ] --name keyName --url remoteUrl [ --help ]"
 # shellcheck disable=SC2016
-helpConsole='[92mUsage[0m: [38;2;170;170;255maptKeyAdd[0m [94m[ --title keyTitle ][0m [38;2;255;255;0m[35;48;2;0;0;0m--name keyName[0m[0m [38;2;255;255;0m[35;48;2;0;0;0m--url remoteUrl[0m[0m [94m[ --help ][0m
-
-    [94m--title keyTitle  [1;97mString. Optional. Title of the key.[0m
-    [31m--name keyName    [1;97mString. Required. Name of the key used to generate file names.[0m
-    [31m--url remoteUrl   [1;97mURL. Required. Remote URL of gpg key.[0m
-    [94m--help            [1;97mFlag. Optional. Display this help.[0m
-
-Add keys to enable apt to download terraform directly from hashicorp.com
-
-Return Code: 1 - if environment is awry
-Return Code: 0 - Apt key is installed AOK
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-'
+helpConsole=''$'\e''[[label]mUsage'$'\e''[0m: '$'\e''[[info]maptKeyAdd'$'\e''[0m '$'\e''[[blue]m[ --title keyTitle ]'$'\e''[0m '$'\e''[[bold]m'$'\e''[[magenta]m--name keyName'$'\e''[0m'$'\e''[0m '$'\e''[[bold]m'$'\e''[[magenta]m--url remoteUrl'$'\e''[0m'$'\e''[0m '$'\e''[[blue]m[ --help ]'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[blue]m--title keyTitle  '$'\e''[[value]mString. Optional. Title of the key.'$'\e''[[reset]m'$'\n''    '$'\e''[[red]m--name keyName    '$'\e''[[value]mString. Required. Name of the key used to generate file names.'$'\e''[[reset]m'$'\n''    '$'\e''[[red]m--url remoteUrl   '$'\e''[[value]mURL. Required. Remote URL of gpg key.'$'\e''[[reset]m'$'\n''    '$'\e''[[blue]m--help            '$'\e''[[value]mFlag. Optional. Display this help.'$'\e''[[reset]m'$'\n'''$'\n''Add keys to enable apt to download terraform directly from hashicorp.com'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[code]m1'$'\e''[[reset]m - if environment is awry'$'\n''- '$'\e''[[code]m0'$'\e''[[reset]m - Apt key is installed AOK'$'\n'''
 # shellcheck disable=SC2016
-helpPlain='Usage: aptKeyAdd [ --title keyTitle ] --name keyName --url remoteUrl [ --help ]
-
-    --title keyTitle  String. Optional. Title of the key.
-    --name keyName    String. Required. Name of the key used to generate file names.
-    --url remoteUrl   URL. Required. Remote URL of gpg key.
-    --help            Flag. Optional. Display this help.
-
-Add keys to enable apt to download terraform directly from hashicorp.com
-
-Return Code: 1 - if environment is awry
-Return Code: 0 - Apt key is installed AOK
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-'
+helpPlain='Usage: aptKeyAdd [ --title keyTitle ] --name keyName --url remoteUrl [ --help ]'$'\n'''$'\n''    --title keyTitle  String. Optional. Title of the key.'$'\n''    --name keyName    String. Required. Name of the key used to generate file names.'$'\n''    --url remoteUrl   URL. Required. Remote URL of gpg key.'$'\n''    --help            Flag. Optional. Display this help.'$'\n'''$'\n''Add keys to enable apt to download terraform directly from hashicorp.com'$'\n'''$'\n''Return codes:'$'\n''- 1 - if environment is awry'$'\n''- 0 - Apt key is installed AOK'$'\n'''

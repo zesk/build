@@ -1,53 +1,22 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-22
+# Generated on 2026-01-24
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/iterm2.sh"
 argument="--ignore | -i - Flag. Optional. If the current terminal is not iTerm2, then exit status 0 and do nothing."$'\n'"message ... - String. Required. Any message to display as the badge"$'\n'""
 base="iterm2.sh"
 description="Set the badge for the iTerm2 console"$'\n'""
 environment="LC_TERMINAL"$'\n'""
+exitCode="0"
 file="bin/build/tools/iterm2.sh"
-fn="iTerm2Badge"
-foundNames=""
+foundNames=([0]="argument" [1]="environment")
+rawComment="Set the badge for the iTerm2 console"$'\n'"Argument: --ignore | -i - Flag. Optional. If the current terminal is not iTerm2, then exit status 0 and do nothing."$'\n'"Argument: message ... - String. Required. Any message to display as the badge"$'\n'"Environment: LC_TERMINAL"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/iterm2.sh"
-sourceModified="1769063211"
+sourceModified="1769184734"
 summary="Set the badge for the iTerm2 console"
 usage="iTerm2Badge [ --ignore | -i ] message ..."
 # shellcheck disable=SC2016
-helpConsole='[92mUsage[0m: [38;2;170;170;255miTerm2Badge[0m [94m[ --ignore | -i ][0m [38;2;255;255;0m[35;48;2;0;0;0mmessage ...[0m[0m
-
-    [94m--ignore | -i  [1;97mFlag. Optional. If the current terminal is not iTerm2, then exit status 0 and do nothing.[0m
-    [31mmessage ...    [1;97mString. Required. Any message to display as the badge[0m
-
-Set the badge for the iTerm2 console
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-
-Environment variables:
-- LC_TERMINAL
-- 
-'
+helpConsole=''$'\e''[[label]mUsage'$'\e''[0m: '$'\e''[[info]miTerm2Badge'$'\e''[0m '$'\e''[[blue]m[ --ignore | -i ]'$'\e''[0m '$'\e''[[bold]m'$'\e''[[magenta]mmessage ...'$'\e''[0m'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[blue]m--ignore | -i  '$'\e''[[value]mFlag. Optional. If the current terminal is not iTerm2, then exit status 0 and do nothing.'$'\e''[[reset]m'$'\n''    '$'\e''[[red]mmessage ...    '$'\e''[[value]mString. Required. Any message to display as the badge'$'\e''[[reset]m'$'\n'''$'\n''Set the badge for the iTerm2 console'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[code]m0'$'\e''[[reset]m - Success'$'\n''- '$'\e''[[code]m1'$'\e''[[reset]m - Environment error'$'\n''- '$'\e''[[code]m2'$'\e''[[reset]m - Argument error'$'\n'''$'\n''Environment variables:'$'\n''- LC_TERMINAL'$'\n'''
 # shellcheck disable=SC2016
-helpPlain='Usage: iTerm2Badge [ --ignore | -i ] message ...
-
-    --ignore | -i  Flag. Optional. If the current terminal is not iTerm2, then exit status 0 and do nothing.
-    message ...    String. Required. Any message to display as the badge
-
-Set the badge for the iTerm2 console
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-
-Environment variables:
-- LC_TERMINAL
-- 
-'
+helpPlain='Usage: iTerm2Badge [ --ignore | -i ] message ...'$'\n'''$'\n''    --ignore | -i  Flag. Optional. If the current terminal is not iTerm2, then exit status 0 and do nothing.'$'\n''    message ...    String. Required. Any message to display as the badge'$'\n'''$'\n''Set the badge for the iTerm2 console'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''$'\n''Environment variables:'$'\n''- LC_TERMINAL'$'\n'''

@@ -1,44 +1,21 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-22
+# Generated on 2026-01-24
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/mkdocs.sh"
 argument="--path documentationPath - Directory. Optional. Directory where documentation root exists."$'\n'"--template yamlTemplate - File. Optional. Name of mkdocs.yml template file to generate final file. Default is \`mkdocs.template.yml\`."$'\n'""
 base="mkdocs.sh"
-description="Build documentation using mkdocs and a template"$'\n'""$'\n'""
+description="Build documentation using mkdocs and a template"$'\n'""
+exitCode="0"
 file="bin/build/tools/mkdocs.sh"
-fn="documentationMkdocs"
-foundNames=""
+foundNames=([0]="argument")
+rawComment="Build documentation using mkdocs and a template"$'\n'"Argument: --path documentationPath - Directory. Optional. Directory where documentation root exists."$'\n'"Argument: --template yamlTemplate - File. Optional. Name of mkdocs.yml template file to generate final file. Default is \`mkdocs.template.yml\`."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/mkdocs.sh"
 sourceModified="1769063211"
 summary="Build documentation using mkdocs and a template"
 usage="documentationMkdocs [ --path documentationPath ] [ --template yamlTemplate ]"
 # shellcheck disable=SC2016
-helpConsole='[92mUsage[0m: [38;2;170;170;255mdocumentationMkdocs[0m [94m[ --path documentationPath ][0m [94m[ --template yamlTemplate ][0m
-
-    [94m--path documentationPath  [1;97mDirectory. Optional. Directory where documentation root exists.[0m
-    [94m--template yamlTemplate   [1;97mFile. Optional. Name of mkdocs.yml template file to generate final file. Default is [38;2;0;255;0;48;2;0;0;0mmkdocs.template.yml[0m.[0m
-
-Build documentation using mkdocs and a template
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-'
+helpConsole=''$'\e''[[label]mUsage'$'\e''[0m: '$'\e''[[info]mdocumentationMkdocs'$'\e''[0m '$'\e''[[blue]m[ --path documentationPath ]'$'\e''[0m '$'\e''[[blue]m[ --template yamlTemplate ]'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[blue]m--path documentationPath  '$'\e''[[value]mDirectory. Optional. Directory where documentation root exists.'$'\e''[[reset]m'$'\n''    '$'\e''[[blue]m--template yamlTemplate   '$'\e''[[value]mFile. Optional. Name of mkdocs.yml template file to generate final file. Default is '$'\e''[[code]mmkdocs.template.yml'$'\e''[[reset]m.'$'\e''[[reset]m'$'\n'''$'\n''Build documentation using mkdocs and a template'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[code]m0'$'\e''[[reset]m - Success'$'\n''- '$'\e''[[code]m1'$'\e''[[reset]m - Environment error'$'\n''- '$'\e''[[code]m2'$'\e''[[reset]m - Argument error'$'\n'''
 # shellcheck disable=SC2016
-helpPlain='Usage: documentationMkdocs [ --path documentationPath ] [ --template yamlTemplate ]
-
-    --path documentationPath  Directory. Optional. Directory where documentation root exists.
-    --template yamlTemplate   File. Optional. Name of mkdocs.yml template file to generate final file. Default is mkdocs.template.yml.
-
-Build documentation using mkdocs and a template
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-'
+helpPlain='Usage: documentationMkdocs [ --path documentationPath ] [ --template yamlTemplate ]'$'\n'''$'\n''    --path documentationPath  Directory. Optional. Directory where documentation root exists.'$'\n''    --template yamlTemplate   File. Optional. Name of mkdocs.yml template file to generate final file. Default is mkdocs.template.yml.'$'\n'''$'\n''Build documentation using mkdocs and a template'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''

@@ -22,7 +22,7 @@ groupID() {
   local __saved=("$@") __count=$#
   local gid
   [ $# -gt 0 ] || throwArgument "$handler" "Requires a group name" || return $?
-  if whichExists getent; then
+  if executableExists getent; then
     while [ $# -gt 0 ]; do
       local argument="$1" __index=$((__count - $# + 1))
       # __IDENTICAL__ __checkBlankArgumentHandler 1

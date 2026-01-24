@@ -1,73 +1,23 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-22
+# Generated on 2026-01-24
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/debug.sh"
 argument="moduleName - String. Optional. If \`BUILD_DEBUG\` contains any token passed, debugging is enabled."$'\n'""
 base="debug.sh"
 BUILD_DEBUG=""
-description="Is build debugging enabled?"$'\n'""$'\n'"Return Code: 1 - Debugging is not enabled (for any module)"$'\n'"Return Code: 0 - Debugging is enabled"$'\n'""
+description="Is build debugging enabled?"$'\n'""
 environment="BUILD_DEBUG - Set to non-blank to enable debugging, blank to disable. \`BUILD_DEBUG\` may be a comma-separated list of modules to target debugging."$'\n'""
 example="    BUILD_DEBUG=false # All debugging disabled"$'\n'"    BUILD_DEBUG= # All debugging disabled"$'\n'"    unset BUILD_DEBUG # All debugging is disabled"$'\n'"    BUILD_DEBUG=true # All debugging is enabled"$'\n'"    BUILD_DEBUG=handler,bashPrompt # Debug \`handler\` and \`bashPrompt\` calls"$'\n'""
+exitCode="0"
 file="bin/build/tools/debug.sh"
-fn="buildDebugEnabled"
-foundNames=""
-return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
-sourceFile="bin/build/tools/debug.sh"
-sourceModified="1769063211"
+foundNames=([0]="argument" [1]="return_code" [2]="environment" [3]="example")
+rawComment="Is build debugging enabled?"$'\n'"Argument: moduleName - String. Optional. If \`BUILD_DEBUG\` contains any token passed, debugging is enabled."$'\n'"Return Code: 1 - Debugging is not enabled (for any module)"$'\n'"Return Code: 0 - Debugging is enabled"$'\n'"Environment: BUILD_DEBUG - Set to non-blank to enable debugging, blank to disable. \`BUILD_DEBUG\` may be a comma-separated list of modules to target debugging."$'\n'"Example:     BUILD_DEBUG=false # All debugging disabled"$'\n'"Example:     BUILD_DEBUG= # All debugging disabled"$'\n'"Example:     unset BUILD_DEBUG # All debugging is disabled"$'\n'"Example:     BUILD_DEBUG=true # All debugging is enabled"$'\n'"Example:     BUILD_DEBUG=handler,bashPrompt # Debug \`handler\` and \`bashPrompt\` calls"$'\n'""$'\n'""
+return_code="1 - Debugging is not enabled (for any module)"$'\n'"0 - Debugging is enabled"$'\n'""
+sourceModified="1769208503"
 summary="Is build debugging enabled?"
 usage="buildDebugEnabled [ moduleName ]"
 # shellcheck disable=SC2016
-helpConsole='[92mUsage[0m: [38;2;170;170;255mbuildDebugEnabled[0m [94m[ moduleName ][0m
-
-    [94mmoduleName  [1;97mString. Optional. If [38;2;0;255;0;48;2;0;0;0mBUILD_DEBUG[0m contains any token passed, debugging is enabled.[0m
-
-Is build debugging enabled?
-
-Return Code: 1 - Debugging is not enabled (for any module)
-Return Code: 0 - Debugging is enabled
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-
-Environment variables:
-- BUILD_DEBUG - Set to non-blank to enable debugging, blank to disable. [38;2;0;255;0;48;2;0;0;0mBUILD_DEBUG[0m may be a comma-separated list of modules to target debugging.
-- 
-
-Example:
-    BUILD_DEBUG=false # All debugging disabled
-    BUILD_DEBUG= # All debugging disabled
-    unset BUILD_DEBUG # All debugging is disabled
-    BUILD_DEBUG=true # All debugging is enabled
-    BUILD_DEBUG=handler,bashPrompt # Debug [38;2;0;255;0;48;2;0;0;0mhandler[0m and [38;2;0;255;0;48;2;0;0;0mbashPrompt[0m calls
-'
+helpConsole=''$'\e''[[label]mUsage'$'\e''[0m: '$'\e''[[info]mbuildDebugEnabled'$'\e''[0m '$'\e''[[blue]m[ moduleName ]'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[blue]mmoduleName  '$'\e''[[value]mString. Optional. If '$'\e''[[code]mBUILD_DEBUG'$'\e''[[reset]m contains any token passed, debugging is enabled.'$'\e''[[reset]m'$'\n'''$'\n''Is build debugging enabled?'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[code]m1'$'\e''[[reset]m - Debugging is not enabled (for any module)'$'\n''- '$'\e''[[code]m0'$'\e''[[reset]m - Debugging is enabled'$'\n'''$'\n''Environment variables:'$'\n''- '$'\e''[[code]mBUILD_DEBUG'$'\e''[[reset]m - Set to non-blank to enable debugging, blank to disable. '$'\e''[[code]mBUILD_DEBUG'$'\e''[[reset]m may be a comma-separated list of modules to target debugging.'$'\n'''$'\n''Example:'$'\n''    BUILD_DEBUG=false # All debugging disabled'$'\n''    BUILD_DEBUG= # All debugging disabled'$'\n''    unset BUILD_DEBUG # All debugging is disabled'$'\n''    BUILD_DEBUG=true # All debugging is enabled'$'\n''    BUILD_DEBUG=handler,bashPrompt # Debug '$'\e''[[code]mhandler'$'\e''[[reset]m and '$'\e''[[code]mbashPrompt'$'\e''[[reset]m calls'$'\n'''
 # shellcheck disable=SC2016
-helpPlain='Usage: buildDebugEnabled [ moduleName ]
-
-    moduleName  String. Optional. If BUILD_DEBUG contains any token passed, debugging is enabled.
-
-Is build debugging enabled?
-
-Return Code: 1 - Debugging is not enabled (for any module)
-Return Code: 0 - Debugging is enabled
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-
-Environment variables:
-- BUILD_DEBUG - Set to non-blank to enable debugging, blank to disable. BUILD_DEBUG may be a comma-separated list of modules to target debugging.
-- 
-
-Example:
-    BUILD_DEBUG=false # All debugging disabled
-    BUILD_DEBUG= # All debugging disabled
-    unset BUILD_DEBUG # All debugging is disabled
-    BUILD_DEBUG=true # All debugging is enabled
-    BUILD_DEBUG=handler,bashPrompt # Debug handler and bashPrompt calls
-'
+helpPlain='Usage: buildDebugEnabled [ moduleName ]'$'\n'''$'\n''    moduleName  String. Optional. If BUILD_DEBUG contains any token passed, debugging is enabled.'$'\n'''$'\n''Is build debugging enabled?'$'\n'''$'\n''Return codes:'$'\n''- 1 - Debugging is not enabled (for any module)'$'\n''- 0 - Debugging is enabled'$'\n'''$'\n''Environment variables:'$'\n''- BUILD_DEBUG - Set to non-blank to enable debugging, blank to disable. BUILD_DEBUG may be a comma-separated list of modules to target debugging.'$'\n'''$'\n''Example:'$'\n''    BUILD_DEBUG=false # All debugging disabled'$'\n''    BUILD_DEBUG= # All debugging disabled'$'\n''    unset BUILD_DEBUG # All debugging is disabled'$'\n''    BUILD_DEBUG=true # All debugging is enabled'$'\n''    BUILD_DEBUG=handler,bashPrompt # Debug handler and bashPrompt calls'$'\n'''

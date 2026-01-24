@@ -124,7 +124,7 @@ testExtensionLists() {
   target=$(fileTemporaryName "$handler" -d) || return $?
 
   assertDirectoryEmpty --line "$LINENO" "$target" || return $?
-  find "$BUILD_HOME/test" -type f ! -path '*/.*/*' | extensionLists --clean "$target"
+  find "$BUILD_HOME/test" -type f ! -path '*/.*/*' | fileExtensionLists --clean "$target"
 
   assertDirectoryNotEmpty --line "$LINENO" "$target" || return $?
   assertFileContains --line "$LINENO" "$target/@" "$me" || return $?

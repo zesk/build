@@ -1,44 +1,21 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-22
+# Generated on 2026-01-24
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/documentation.sh"
 argument="templatePath - Directory. Required. Path to the templates to repair."$'\n'"--help - Flag. Optional. Display this help."$'\n'""
 base="documentation.sh"
 description="Map template files using our identical functionality"$'\n'""
+exitCode="0"
 file="bin/build/tools/documentation.sh"
-fn="documentationTemplateUpdate"
-foundNames=""
+foundNames=([0]="argument")
+rawComment="Map template files using our identical functionality"$'\n'"Argument: templatePath - Directory. Required. Path to the templates to repair."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/documentation.sh"
 sourceModified="1769065497"
 summary="Map template files using our identical functionality"
 usage="documentationTemplateUpdate templatePath [ --help ]"
 # shellcheck disable=SC2016
-helpConsole='[92mUsage[0m: [38;2;170;170;255mdocumentationTemplateUpdate[0m [38;2;255;255;0m[35;48;2;0;0;0mtemplatePath[0m[0m [94m[ --help ][0m
-
-    [31mtemplatePath  [1;97mDirectory. Required. Path to the templates to repair.[0m
-    [94m--help        [1;97mFlag. Optional. Display this help.[0m
-
-Map template files using our identical functionality
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-'
+helpConsole=''$'\e''[[label]mUsage'$'\e''[0m: '$'\e''[[info]mdocumentationTemplateUpdate'$'\e''[0m '$'\e''[[bold]m'$'\e''[[magenta]mtemplatePath'$'\e''[0m'$'\e''[0m '$'\e''[[blue]m[ --help ]'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[red]mtemplatePath  '$'\e''[[value]mDirectory. Required. Path to the templates to repair.'$'\e''[[reset]m'$'\n''    '$'\e''[[blue]m--help        '$'\e''[[value]mFlag. Optional. Display this help.'$'\e''[[reset]m'$'\n'''$'\n''Map template files using our identical functionality'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[code]m0'$'\e''[[reset]m - Success'$'\n''- '$'\e''[[code]m1'$'\e''[[reset]m - Environment error'$'\n''- '$'\e''[[code]m2'$'\e''[[reset]m - Argument error'$'\n'''
 # shellcheck disable=SC2016
-helpPlain='Usage: documentationTemplateUpdate templatePath [ --help ]
-
-    templatePath  Directory. Required. Path to the templates to repair.
-    --help        Flag. Optional. Display this help.
-
-Map template files using our identical functionality
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-'
+helpPlain='Usage: documentationTemplateUpdate templatePath [ --help ]'$'\n'''$'\n''    templatePath  Directory. Required. Path to the templates to repair.'$'\n''    --help        Flag. Optional. Display this help.'$'\n'''$'\n''Map template files using our identical functionality'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''

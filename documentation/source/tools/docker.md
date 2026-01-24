@@ -4,9 +4,7 @@
 [⬅ Parent ](../index.md)
 <hr />
 
-{dumpDockerTestFile}
-
-{insideDocker}
+{dockerInside}
 
 {dockerLocalContainer}
 

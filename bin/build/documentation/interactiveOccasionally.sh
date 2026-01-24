@@ -1,58 +1,20 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-22
+# Generated on 2026-01-24
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/interactive.sh"
 argument="--delta deltaMilliseconds - PositiveInteger. Optional. Default is 60000."$'\n'"--mark - Flag. Optional. Write the marker which says the"$'\n'"--verbose - Flag. Optional. Be chatty."$'\n'"name - EnvironmentVariable. Required. The global codename for this interaction."$'\n'""
 base="interactive.sh"
-description="Do something the first time and then only occasionally thereafter."$'\n'"This manages a state file compared to the current time and triggers after \`delta\` seconds."$'\n'"Think of it like something that only returns 0 like once every \`delta\` seconds but it's going to happen at minimum \`delta\` seconds, or the next time after that. And the first time as well."$'\n'"Return Code: 0 - Do the thing"$'\n'"Return Code: 1 - Do not do the thing"$'\n'"Return Code: 2 - Argument error"$'\n'""
+description="Do something the first time and then only occasionally thereafter."$'\n'"This manages a state file compared to the current time and triggers after \`delta\` seconds."$'\n'"Think of it like something that only returns 0 like once every \`delta\` seconds but it's going to happen at minimum \`delta\` seconds, or the next time after that. And the first time as well."$'\n'""
+exitCode="0"
 file="bin/build/tools/interactive.sh"
-fn="interactiveOccasionally"
-foundNames=""
-return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
-sourceFile="bin/build/tools/interactive.sh"
+foundNames=([0]="argument" [1]="return_code")
+rawComment="Do something the first time and then only occasionally thereafter."$'\n'"This manages a state file compared to the current time and triggers after \`delta\` seconds."$'\n'"Think of it like something that only returns 0 like once every \`delta\` seconds but it's going to happen at minimum \`delta\` seconds, or the next time after that. And the first time as well."$'\n'"Argument: --delta deltaMilliseconds - PositiveInteger. Optional. Default is 60000."$'\n'"Argument: --mark - Flag. Optional. Write the marker which says the"$'\n'"Argument: --verbose - Flag. Optional. Be chatty."$'\n'"Argument: name - EnvironmentVariable. Required. The global codename for this interaction."$'\n'"Return Code: 0 - Do the thing"$'\n'"Return Code: 1 - Do not do the thing"$'\n'"Return Code: 2 - Argument error"$'\n'""$'\n'""
+return_code="0 - Do the thing"$'\n'"1 - Do not do the thing"$'\n'"2 - Argument error"$'\n'""
 sourceModified="1769063211"
 summary="Do something the first time and then only occasionally thereafter."
 usage="interactiveOccasionally [ --delta deltaMilliseconds ] [ --mark ] [ --verbose ] name"
 # shellcheck disable=SC2016
-helpConsole='[92mUsage[0m: [38;2;170;170;255minteractiveOccasionally[0m [94m[ --delta deltaMilliseconds ][0m [94m[ --mark ][0m [94m[ --verbose ][0m [38;2;255;255;0m[35;48;2;0;0;0mname[0m[0m
-
-    [94m--delta deltaMilliseconds  [1;97mPositiveInteger. Optional. Default is 60000.[0m
-    [94m--mark                     [1;97mFlag. Optional. Write the marker which says the[0m
-    [94m--verbose                  [1;97mFlag. Optional. Be chatty.[0m
-    [31mname                       [1;97mEnvironmentVariable. Required. The global codename for this interaction.[0m
-
-Do something the first time and then only occasionally thereafter.
-This manages a state file compared to the current time and triggers after [38;2;0;255;0;48;2;0;0;0mdelta[0m seconds.
-Think of it like something that only returns 0 like once every [38;2;0;255;0;48;2;0;0;0mdelta[0m seconds but it'\''s going to happen at minimum [38;2;0;255;0;48;2;0;0;0mdelta[0m seconds, or the next time after that. And the first time as well.
-Return Code: 0 - Do the thing
-Return Code: 1 - Do not do the thing
-Return Code: 2 - Argument error
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-'
+helpConsole=''$'\e''[[label]mUsage'$'\e''[0m: '$'\e''[[info]minteractiveOccasionally'$'\e''[0m '$'\e''[[blue]m[ --delta deltaMilliseconds ]'$'\e''[0m '$'\e''[[blue]m[ --mark ]'$'\e''[0m '$'\e''[[blue]m[ --verbose ]'$'\e''[0m '$'\e''[[bold]m'$'\e''[[magenta]mname'$'\e''[0m'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[blue]m--delta deltaMilliseconds  '$'\e''[[value]mPositiveInteger. Optional. Default is 60000.'$'\e''[[reset]m'$'\n''    '$'\e''[[blue]m--mark                     '$'\e''[[value]mFlag. Optional. Write the marker which says the'$'\e''[[reset]m'$'\n''    '$'\e''[[blue]m--verbose                  '$'\e''[[value]mFlag. Optional. Be chatty.'$'\e''[[reset]m'$'\n''    '$'\e''[[red]mname                       '$'\e''[[value]mEnvironmentVariable. Required. The global codename for this interaction.'$'\e''[[reset]m'$'\n'''$'\n''Do something the first time and then only occasionally thereafter.'$'\n''This manages a state file compared to the current time and triggers after '$'\e''[[code]mdelta'$'\e''[[reset]m seconds.'$'\n''Think of it like something that only returns 0 like once every '$'\e''[[code]mdelta'$'\e''[[reset]m seconds but it'\''s going to happen at minimum '$'\e''[[code]mdelta'$'\e''[[reset]m seconds, or the next time after that. And the first time as well.'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[code]m0'$'\e''[[reset]m - Do the thing'$'\n''- '$'\e''[[code]m1'$'\e''[[reset]m - Do not do the thing'$'\n''- '$'\e''[[code]m2'$'\e''[[reset]m - Argument error'$'\n'''
 # shellcheck disable=SC2016
-helpPlain='Usage: interactiveOccasionally [ --delta deltaMilliseconds ] [ --mark ] [ --verbose ] name
-
-    --delta deltaMilliseconds  PositiveInteger. Optional. Default is 60000.
-    --mark                     Flag. Optional. Write the marker which says the
-    --verbose                  Flag. Optional. Be chatty.
-    name                       EnvironmentVariable. Required. The global codename for this interaction.
-
-Do something the first time and then only occasionally thereafter.
-This manages a state file compared to the current time and triggers after delta seconds.
-Think of it like something that only returns 0 like once every delta seconds but it'\''s going to happen at minimum delta seconds, or the next time after that. And the first time as well.
-Return Code: 0 - Do the thing
-Return Code: 1 - Do not do the thing
-Return Code: 2 - Argument error
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-'
+helpPlain='Usage: interactiveOccasionally [ --delta deltaMilliseconds ] [ --mark ] [ --verbose ] name'$'\n'''$'\n''    --delta deltaMilliseconds  PositiveInteger. Optional. Default is 60000.'$'\n''    --mark                     Flag. Optional. Write the marker which says the'$'\n''    --verbose                  Flag. Optional. Be chatty.'$'\n''    name                       EnvironmentVariable. Required. The global codename for this interaction.'$'\n'''$'\n''Do something the first time and then only occasionally thereafter.'$'\n''This manages a state file compared to the current time and triggers after delta seconds.'$'\n''Think of it like something that only returns 0 like once every delta seconds but it'\''s going to happen at minimum delta seconds, or the next time after that. And the first time as well.'$'\n'''$'\n''Return codes:'$'\n''- 0 - Do the thing'$'\n''- 1 - Do not do the thing'$'\n''- 2 - Argument error'$'\n'''

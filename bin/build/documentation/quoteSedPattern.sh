@@ -1,54 +1,24 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-22
+# Generated on 2026-01-24
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/sed.sh"
 argument="text - EmptyString. Required. Text to quote"$'\n'""
 base="sed.sh"
 description="Quote a string to be used in a sed pattern on the command line."$'\n'""
 example="    sed \"s/\$(quoteSedPattern \"\$1\")/\$(quoteSedPattern \"\$2\")/g\""$'\n'"    needSlash=\$(quoteSedPattern '\$.*/[\\]^')"$'\n'""
+exitCode="0"
 file="bin/build/tools/sed.sh"
-fn="quoteSedPattern"
-foundNames=""
+foundNames=([0]="summary" [1]="argument" [2]="output" [3]="example" [4]="requires")
 needSlash=""
 output="string quoted and appropriate to insert in a sed search or replacement phrase"$'\n'""
+rawComment="Summary: Quote sed search strings for shell use"$'\n'"Quote a string to be used in a sed pattern on the command line."$'\n'"Argument: text - EmptyString. Required. Text to quote"$'\n'"Output: string quoted and appropriate to insert in a sed search or replacement phrase"$'\n'"Example:     sed \"s/\$(quoteSedPattern \"\$1\")/\$(quoteSedPattern \"\$2\")/g\""$'\n'"Example:     needSlash=\$(quoteSedPattern '\$.*/[\\]^')"$'\n'"Requires: printf sed usageDocument __help"$'\n'""$'\n'""
 requires="printf sed usageDocument __help"$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
-sourceFile="bin/build/tools/sed.sh"
 sourceModified="1769063211"
 summary="Quote sed search strings for shell use"$'\n'""
 usage="quoteSedPattern text"
 # shellcheck disable=SC2016
-helpConsole='[92mUsage[0m: [38;2;170;170;255mquoteSedPattern[0m [38;2;255;255;0m[35;48;2;0;0;0mtext[0m[0m
-
-    [31mtext  [1;97mEmptyString. Required. Text to quote[0m
-
-Quote a string to be used in a sed pattern on the command line.
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-
-Example:
-    sed "s/$(quoteSedPattern "$1")/$(quoteSedPattern "$2")/g"
-    needSlash=$(quoteSedPattern '\''$.[36m/[\]^'\'')[0m
-'
+helpConsole=''$'\e''[[label]mUsage'$'\e''[0m: '$'\e''[[info]mquoteSedPattern'$'\e''[0m '$'\e''[[bold]m'$'\e''[[magenta]mtext'$'\e''[0m'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[red]mtext  '$'\e''[[value]mEmptyString. Required. Text to quote'$'\e''[[reset]m'$'\n'''$'\n''Quote a string to be used in a sed pattern on the command line.'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[code]m0'$'\e''[[reset]m - Success'$'\n''- '$'\e''[[code]m1'$'\e''[[reset]m - Environment error'$'\n''- '$'\e''[[code]m2'$'\e''[[reset]m - Argument error'$'\n'''$'\n''Example:'$'\n''    sed "s/$(quoteSedPattern "$1")/$(quoteSedPattern "$2")/g"'$'\n''    needSlash=$(quoteSedPattern '\''$.'$'\e''[[cyan]m/[\]^'\'')'$'\e''[[reset]m'$'\n'''
 # shellcheck disable=SC2016
-helpPlain='Usage: quoteSedPattern text
-
-    text  EmptyString. Required. Text to quote
-
-Quote a string to be used in a sed pattern on the command line.
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-
-Example:
-    sed "s/$(quoteSedPattern "$1")/$(quoteSedPattern "$2")/g"
-    needSlash=$(quoteSedPattern '\''$./[\]^'\'')
-'
+helpPlain='Usage: quoteSedPattern text'$'\n'''$'\n''    text  EmptyString. Required. Text to quote'$'\n'''$'\n''Quote a string to be used in a sed pattern on the command line.'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''$'\n''Example:'$'\n''    sed "s/$(quoteSedPattern "$1")/$(quoteSedPattern "$2")/g"'$'\n''    needSlash=$(quoteSedPattern '\''$./[\]^'\'')'$'\n'''

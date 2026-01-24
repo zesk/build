@@ -21,11 +21,11 @@ __installBinBuildDownload() {
 }
 
 # Download remote JSON as a temporary file (delete it)
-# Requires: whichExists throwEnvironment fileTemporaryName __installBinBuildLatest curl urlFetch printf
+# Requires: executableExists throwEnvironment fileTemporaryName __installBinBuildLatest curl urlFetch printf
 __installBinBuildJSON() {
   local handler="$1" jsonFile message
 
-  whichExists jq || throwEnvironment "$handler" "Requires jq to install" || return $?
+  executableExists jq || throwEnvironment "$handler" "Requires jq to install" || return $?
   jsonFile=$(fileTemporaryName "$handler") || return $?
   if ! urlFetch "$(__installBinBuildLatest)" "$jsonFile"; then
     message="$(printf -- "%s\n%s\n" "Unable to fetch latest JSON:" "$(cat "$jsonFile")")"
@@ -152,13 +152,13 @@ _returnClean() {
 # stderr: error messages
 # Return Code: 0 - Field was found and was non-blank
 # Return Code: 1 - Field was not found or is blank
-# Requires: jq whichExists throwEnvironment printf rm decorate head
+# Requires: jq executableExists throwEnvironment printf rm decorate head
 jsonField() {
   [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
   local handler="$1" jsonFile="$2" value message && shift 2
 
   [ -f "$jsonFile" ] || throwEnvironment "$handler" "$jsonFile is not a file" || return $?
-  whichExists jq || throwEnvironment "$handler" "Requires jq - not installed" || return $?
+  executableExists jq || throwEnvironment "$handler" "Requires jq - not installed" || return $?
   if ! value=$(jq -r "$@" <"$jsonFile"); then
     message="$(printf -- "%s\n%s\n" "Unable to fetch selector $(decorate each code -- "$@") from JSON:" "$(head -n 100 "$jsonFile")")"
     throwEnvironment "$handler" "$message" || return $?
@@ -280,7 +280,7 @@ __installPackageConfiguration() {
 # Argument: --diff - Flag. Optional. Show differences between old and new file.
 # Return Code: 1 - Environment error
 # Return Code: 2 - Argument error
-# Requires: cp rm cat printf realPath whichExists returnMessage fileTemporaryName catchArgument throwArgument catchEnvironment decorate validate isFunction __decorateExtensionQuote
+# Requires: cp rm cat printf realPath executableExists returnMessage fileTemporaryName catchArgument throwArgument catchEnvironment decorate validate isFunction __decorateExtensionQuote
 _installRemotePackage() {
   local handler="_${FUNCNAME[0]}"
 
@@ -714,7 +714,7 @@ validate() {
   local prefix="__validateType"
 
   [ $# -eq 0 ] || __help "$handler" "$@" || return 0
-  [ $# -ge 4 ] || throwArgument "$handler" "Missing arguments - expect 4 or more (#$#: $(decorate each code "$@"))" || return $?
+  [ $# -ge 4 ] || throwArgument "$handler" "Missing arguments - expect 4 or more (#$#: $(decorate each code -- "$@"))" || return $?
 
   local handler="$1" && shift
 
@@ -729,7 +729,7 @@ validate() {
     if ! "$typeFunction" "$value"; then
       local suffix=""
       [ -z "$value" ] || suffix=" $(decorate error "$value")"
-      throwArgument "$handler" "$name ($(decorate each code "$@")) is not type $(decorate label "$type")$suffix" || return $?
+      throwArgument "$handler" "$name ($(decorate each code -- "$@")) is not type $(decorate label "$type")$suffix" || return $?
     fi
     shift 3
   done
@@ -789,7 +789,7 @@ __validateTypeCallable() {
 # Argument: --timeout timeoutSeconds - PositiveInteger. Optional. A number of seconds to wait before failing. Defaults to `BUILD_URL_TIMEOUT` environment value.
 # Argument: url - URL. Required. URL to fetch to target file.
 # Argument: file - FileDirectory. Optional. Target file. Use `-` to send to `stdout`. Default value is `-`.
-# Requires: returnMessage whichExists decorate
+# Requires: returnMessage executableExists decorate
 # Requires: validate
 # Requires: throwArgument catchArgument
 # Requires: throwEnvironment catchEnvironment
@@ -825,7 +825,7 @@ urlFetch() {
     --binary)
       local tempBin
       shift && tempBin=$(validate "$handler" String "$argument" "${1-}") || return $?
-      whichExists "$tempBin" || throwArgument "$handler" "$tempBin must be in PATH: $PATH" || return $?
+      executableExists "$tempBin" || throwArgument "$handler" "$tempBin must be in PATH: $PATH" || return $?
       binary=("$tempBin")
       ;;
     --argument-format)
@@ -890,7 +890,7 @@ urlFetch() {
   fi
 
   # Binary
-  [ "${#binary[@]}" -gt 0 ] || whichExists wget && binary=("wget") || whichExists "curl" && binary=("curl") || throwArgument "$handler" "No binary found" || return $?
+  [ "${#binary[@]}" -gt 0 ] || executableExists wget && binary=("wget") || executableExists "curl" && binary=("curl") || throwArgument "$handler" "No binary found" || return $?
 
   if [ "${binary[0]}" = "curl" ] && $userHasColons; then
     throwArgument "$handler" "$argument: Users ($argument \"$(decorate code "$user")\") with colons are not supported by curl, use wget" || return $?
@@ -987,12 +987,13 @@ usageDocument() {
   usageDocumentSimple "$@"
 }
 
-# IDENTICAL __usageDocumentCached 22
+# IDENTICAL __usageDocumentCached 24
 
 # Argument: handler - Function. Required.
 # Argument: home - Directory. BUILD_HOME
 # Argument: functionName - String. Function to display usage for
 # Environment: BUILD_COLORS
+# Requires: decorateThemed catchEnvironment
 __usageDocumentCached() {
   local handler="${1-}" && shift
   local home="${1-}" && shift
@@ -1000,11 +1001,12 @@ __usageDocumentCached() {
   local settingsFile="$home/bin/build/documentation/$functionName.sh"
   [ -f "$settingsFile" ] || return 1
   (
-    local helpConsole helpPlain
+    set -a
+    export helpConsole helpPlain
     # shellcheck source=/dev/null
     catchEnvironment "$handler" source "$settingsFile" || return $?
     if [ "${BUILD_COLORS-}" != "false" ]; then
-      catchEnvironment "$handler" printf "%s\n" "$helpConsole" || return $?
+      catchEnvironment "$handler" decorateThemed <<<"$helpConsole" || return $?
     else
       catchEnvironment "$handler" printf "%s\n" "$helpPlain" || return $?
     fi
@@ -1203,11 +1205,11 @@ _fileReverseLines() {
 # DOC TEMPLATE: noArgumentsForHelp 1
 # Without arguments, displays help.
 # Argument: file ... - File. Required. One or more files to `realpath`.
-# Requires: whichExists realpath __help usageDocument returnArgument
+# Requires: executableExists realpath __help usageDocument returnArgument
 realPath() {
   # __IDENTICAL__ --help-when-blank 1
   [ $# -gt 0 ] || __help "_${FUNCNAME[0]}" --help || return 0
-  if whichExists realpath; then
+  if executableExists realpath; then
     realpath "$@"
   else
     readlink -f -n "$@"
@@ -1254,7 +1256,7 @@ _fileTemporaryName() {
 
 # <-- END of IDENTICAL fileTemporaryName
 
-# IDENTICAL whichExists 40
+# IDENTICAL executableExists 40
 
 # Summary: Does a binary exist in the PATH?
 # Argument: --any - Flag. Optional. If any binary exists then return 0 (success). Otherwise, all binaries must exist.
@@ -1263,11 +1265,11 @@ _fileTemporaryName() {
 # Argument: --help - Flag. Optional. Display this help.
 # Return Code: 0 - If all values are found (without the `--any` flag), or if *any* binary is found with the `--any` flag
 # Return Code: 1 - If any value is not found (without the `--any` flag), or if *all* binaries are NOT found with the `--any` flag.
-# Example:     whichExists cp date aws ls mv stat || throwEnvironment "$handler" "Need basic environment to work" || return $?
-# Example:     whichExists --any terraform tofu || throwEnvironment "$handler" "No available infrastructure providers" || return $?
-# Example:     whichExists --any curl wget || throwEnvironment "$handler" "No way to download URLs easily" || return $?
+# Example:     executableExists cp date aws ls mv stat || throwEnvironment "$handler" "Need basic environment to work" || return $?
+# Example:     executableExists --any terraform tofu || throwEnvironment "$handler" "No available infrastructure providers" || return $?
+# Example:     executableExists --any curl wget || throwEnvironment "$handler" "No way to download URLs easily" || return $?
 # Requires: throwArgument decorate __decorateExtensionEach command
-whichExists() {
+executableExists() {
   local handler="_${FUNCNAME[0]}"
   local __saved=("$@") __count=$# anyFlag=false
   [ $# -gt 0 ] || throwArgument "$handler" "no arguments" || return $?
@@ -1291,7 +1293,7 @@ whichExists() {
     shift
   done
 }
-_whichExists() {
+_executableExists() {
   # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
@@ -1400,7 +1402,7 @@ _isFunction() {
 # Return Code: 1 - Colors are likely not supported by console
 # Environment: BUILD_COLORS - Boolean. Optional. Whether the build system will output ANSI colors.
 # Requires: isPositiveInteger tput
-hasColors() {
+consoleHasColors() {
   # --help is only argument allowed
   [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
 
@@ -1421,8 +1423,8 @@ hasColors() {
   fi
   [ "${BUILD_COLORS-}" = "true" ]
 }
-_hasColors() {
-  true || hasColors --help
+_consoleHasColors() {
+  true || consoleHasColors --help
   # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
@@ -1434,11 +1436,11 @@ _hasColors() {
 # Argument: lightStartCode - Escape code label for light mode (color)
 # Argument: endCode - Escape end code
 # Argument: text ... - Text to output.
-# Requires: hasColors printf
+# Requires: consoleHasColors printf
 __decorate() {
   local prefix="$1" start="$2" end="$3" && shift 3
   export BUILD_COLORS
-  if [ -n "${BUILD_COLORS-}" ] && [ "${BUILD_COLORS-}" = "true" ] || [ -z "${BUILD_COLORS-}" ] && hasColors; then
+  if [ -n "${BUILD_COLORS-}" ] && [ "${BUILD_COLORS-}" = "true" ] || [ -z "${BUILD_COLORS-}" ] && consoleHasColors; then
     if [ $# -eq 0 ]; then printf -- "%s$start" ""; else printf -- "$start%s$end\n" "$*"; fi
     return 0
   fi
@@ -1552,19 +1554,19 @@ __decorateStylesDefaultLight() {
     "success=42;30 Success"
     "subtle=1;38;5;252"
     "label=34;103"
-    "value=1;40;97"
+    "value=30;107"
     "decoration=45;97"
   )
   __decorateStylesBase "${aa[@]}"
 }
 __decorateStylesDefaultDark() {
   local aa=(
-    "info=1;33 Info"
-    "notice=1;97;44 Notice"
+    "info=33 Info"
+    "notice=97;44 Notice"
     "success=0;32 Success"
-    "subtle=1;38;5;240"
-    "label=1;96"
-    "value=1;97"
+    "subtle=38;5;240"
+    "label=96;40"
+    "value=94"
     "decoration=45;30"
   )
   __decorateStylesBase "${aa[@]}"
@@ -1573,7 +1575,7 @@ __decorateStylesDefaultDark() {
 # fn: decorate each
 # Runs the following command on each subsequent argument for formatting
 # Also supports formatting input lines instead (on the same line)
-# Example:     decorate each code "$@"
+# Example:     decorate each code -- "$@"
 # Requires: decorate printf
 # Argument: style - String. Required. The style to decorate each element.
 # Argument: -- - Flag. Optional. Pass as the first argument after the style to avoid reading arguments from stdin.

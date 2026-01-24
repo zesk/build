@@ -1,46 +1,21 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-22
+# Generated on 2026-01-24
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/environment/convert.sh"
 argument="filename - Docker environment file to check for common issues"$'\n'""
 base="convert.sh"
-description="Ensure an environment file is compatible with non-quoted docker environment files"$'\n'"Return Code: 1 - if errors occur"$'\n'"Return Code: 0 - if file is valid"$'\n'""$'\n'""
+description="Ensure an environment file is compatible with non-quoted docker environment files"$'\n'""
+exitCode="0"
 file="bin/build/tools/environment/convert.sh"
-fn="environmentFileIsDocker"
-foundNames=""
-return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
+foundNames=([0]="argument" [1]="return_code")
+rawComment="Ensure an environment file is compatible with non-quoted docker environment files"$'\n'"Argument: filename - Docker environment file to check for common issues"$'\n'"Return Code: 1 - if errors occur"$'\n'"Return Code: 0 - if file is valid"$'\n'""$'\n'""
+return_code="1 - if errors occur"$'\n'"0 - if file is valid"$'\n'""
 sourceFile="bin/build/tools/environment/convert.sh"
 sourceModified="1769063211"
 summary="Ensure an environment file is compatible with non-quoted docker environment"
 usage="environmentFileIsDocker [ filename ]"
 # shellcheck disable=SC2016
-helpConsole='[92mUsage[0m: [38;2;170;170;255menvironmentFileIsDocker[0m [94m[ filename ][0m
-
-    [94mfilename  [1;97mDocker environment file to check for common issues[0m
-
-Ensure an environment file is compatible with non-quoted docker environment files
-Return Code: 1 - if errors occur
-Return Code: 0 - if file is valid
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-'
+helpConsole=''$'\e''[[label]mUsage'$'\e''[0m: '$'\e''[[info]menvironmentFileIsDocker'$'\e''[0m '$'\e''[[blue]m[ filename ]'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[blue]mfilename  '$'\e''[[value]mDocker environment file to check for common issues'$'\e''[[reset]m'$'\n'''$'\n''Ensure an environment file is compatible with non-quoted docker environment files'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[code]m1'$'\e''[[reset]m - if errors occur'$'\n''- '$'\e''[[code]m0'$'\e''[[reset]m - if file is valid'$'\n'''
 # shellcheck disable=SC2016
-helpPlain='Usage: environmentFileIsDocker [ filename ]
-
-    filename  Docker environment file to check for common issues
-
-Ensure an environment file is compatible with non-quoted docker environment files
-Return Code: 1 - if errors occur
-Return Code: 0 - if file is valid
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-'
+helpPlain='Usage: environmentFileIsDocker [ filename ]'$'\n'''$'\n''    filename  Docker environment file to check for common issues'$'\n'''$'\n''Ensure an environment file is compatible with non-quoted docker environment files'$'\n'''$'\n''Return codes:'$'\n''- 1 - if errors occur'$'\n''- 0 - if file is valid'$'\n'''

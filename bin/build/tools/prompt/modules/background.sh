@@ -498,7 +498,7 @@ __backgroundMainReport() {
   local pid
   [ ! -f "$cache/main.pid" ] || pid="$(cat "$cache/main.pid")"
   isPositiveInteger "$pid" || pid=$(decorate error "not running")
-  decorate orange "$(lineFill "*" "Manager")"
+  decorate orange "$(consoleHeadingLine "*" "Manager")"
   local alive="" elapsed=""
   [ ! -f "$cache/main.alive" ] || alive=" $(__nowRelative "$now" "$(cat "$cache/main.alive")")"
   [ ! -f "$cache/main.elapsed" ] || elapsed="$(cat "$cache/main.elapsed")"
@@ -526,7 +526,7 @@ __backgroundProcessReport() {
   while read -r item; do command+=("$item"); done < <(catchReturn "$handler" environmentValueReadArray "$stateFile" "command") || return $?
 
   [ ! -f "$d/pid" ] || pid="$(cat "$d/pid")"
-  lineFill "=" "$(decorate success "Process: $(decorate each code "${command[@]}") ")"
+  consoleHeadingLine "=" "$(decorate success "Process: $(decorate each code "${command[@]}") ")"
   decorate pair ID "${id:0:6}"
   decorate pair Condition "${condition[*]}"
   [ ! -f "$d/condition" ] || decorate pair "Condition Value" "$(tail -n 1 "$d/condition")"

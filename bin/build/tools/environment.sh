@@ -857,7 +857,7 @@ _environmentVariables() {
 environmentOutput() {
   local handler="_${FUNCNAME[0]}"
   local __handler="$handler"
-  local __skipSecure=true __skipUnderscore=true __variables=() __skipPrefix=()
+  local __skipSecure=true __skipUnderscore=true __variables=() __skipPrefix=() __debugFlag=false
 
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
@@ -868,6 +868,7 @@ environmentOutput() {
     --underscore) __skipUnderscore=false ;;
     --skip-prefix) shift && __skipPrefix+=("$(validate "$handler" String "$__argument" "${1-}")") || return $? ;;
     --secure) __skipSecure=false ;;
+    --debug) __debugFlag=true ;;
     *) __variables+=("$(validate "$handler" "EnvironmentVariable" "variable" "$__argument")") || return $? ;;
     esac
     shift
@@ -881,24 +882,29 @@ environmentOutput() {
     __skipPrefix+=('_')
   fi
   local __name __value __finished=false __written=()
+  while IFS='=' read -r __name __value; do
+    ! $__debugFlag || printf "%s\n" "# ARRAY: $__name"
+    catchReturn "$__handler" printf "%s=%s\n" "$__name" "$(unquote "'" "$__value")" || return $?
+    __written+=("$__name")
+  done < <(declare -ax | removeFields 2)
+  ! $__debugFlag || printf "%s\n" "# above is arrays"
   while ! $__finished; do
     IFS="=" read -r -d $'\0' __name __value || __finished=true
     [ -n "$__name" ] && [ "${__name%\%}" = "$__name" ] || continue
+    [ "${#__written[@]}" -eq 0 ] || ! inArray "$__name" "${__written[@]}" || continue
     [ "${#__hideArgs[@]}" -eq 0 ] || ! inArray "$__name" "${__hideArgs[@]}" || continue
     [ "${#__skipPrefix[@]}" -eq 0 ] || ! stringBegins "$__name" "${__skipPrefix[@]}" || continue
     catchReturn "$__handler" environmentValueWrite "$__name" "$__value" || return $?
     __written+=("$__name")
   done < <(env -0)
-  while IFS='=' read -r __name __value; do
-    [ "${#__written[@]}" -eq 0 ] || ! inArray "$__name" "${__written[@]}" || continue
-    ! isPlain "$__value" || catchReturn "$__handler" printf "%s=%s\n" "$__name" "$(unquote "'" "$__value")" || return $?
-    __written+=("$__name")
-  done < <(declare -ax | removeFields 2)
+  ! $__debugFlag || printf "%s\n" "# above is env -0"
   [ ${#__variables[@]} -eq 0 ] || for __name in "${__variables[@]}"; do
     [ "${#__written[@]}" -eq 0 ] || ! inArray "$__name" "${__written[@]}" || continue
-    catchReturn "$__handler" environmentValueWrite "$__name" "${!__value}" || return $?
+    __value="${!__name-}"
+    catchReturn "$__handler" environmentValueWrite "$__name" "$__value" || return $?
     __written+=("$__name")
   done
+  ! $__debugFlag || printf "%s\n" "# above is argument variables"
 }
 _environmentOutput() {
   # __IDENTICAL__ usageDocument 1
@@ -906,14 +912,20 @@ _environmentOutput() {
 }
 
 # Parse variables from an environment variable stream
+#
 # Extracts lines with `NAME=value`
+#
 # Details:
 # - Remove `export ` from lines
 # - Skip lines containing `read -r`
+# - Anything before a `=` is considered a variable name
+# - Returns a sorted, unique list
 # stdin: Environment File
 # stdout: EnvironmentVariable. One per line.
+# DOC TEMPLATE: --help 1
+# Argument: --help - Flag. Optional. Display this help.
 environmentParseVariables() {
-  [ $# -eq 0 ] || __help --only "$handler" "$@" || return "$(convertValue $? 1 0)"
+  [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
   grepSafe -e '^\(export \)\?\s*[A-Za-z_][A-Za-z_0-9]*=' | grep -v 'read -r' | sed 's/^export[[:space:]][[:space:]]*//g' | cut -f 1 -d = | sort -u
 }
 _environmentParseVariables() {
@@ -934,32 +946,30 @@ _environmentParseVariables() {
 environmentCompile() {
   local handler="_${FUNCNAME[0]}"
 
-  local environmentFiles=() aa=() debugFlag=false keepComments=false parseFlag=false
+  local environmentFiles=() aa=() __debugFlag=false keepComments=false parseFlag=false
 
-  # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
-    local argument="$1" __index=$((__count - $# + 1))
-    # __IDENTICAL__ __checkBlankArgumentHandler 1
-    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
-    case "$argument" in
+    local __argument="$1" __index=$((__count - $# + 1))
+    [ -n "$__argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    case "$__argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
-    --debug) debugFlag=true ;;
+    --debug) __debugFlag=true ;;
     --parse) parseFlag=true ;;
     --variables)
-      local listText && listText="$(validate "$handler" "CommaDelimitedList" "$argument" "${1-}")" || return $?
+      local listText && listText="$(validate "$handler" "CommaDelimitedList" "$__argument" "${1-}")" || return $?
       local variableList=() && IFS="," read -r -d '' -a variableList <<<"$listText" || :
       variables+=("${variableList[@]+"${variableList[@]}"}")
       ;;
     --keep-comments) keepComments=true ;;
     --underscore | --secure)
-      if [ ${#aa[@]} -eq 0 ] || ! inArray "$argument" "${aa[@]}"; then
-        aa+=("$argument")
+      if [ ${#aa[@]} -eq 0 ] || ! inArray "$__argument" "${aa[@]}"; then
+        aa+=("$__argument")
       fi
       ;;
     *)
-      environmentFiles+=("$(validate "$handler" File "environmentFile" "$1")") || return $?
+      environmentFiles+=("$(validate "$handler" File "environmentFile" "$__argument")") || return $?
       ;;
     esac
     shift
@@ -975,17 +985,35 @@ environmentCompile() {
   fi
   if $parseFlag; then
     while read -r variable; do variables+=("$variable"); done < <(cat "${environmentFiles[@]}" | environmentParseVariables)
+    if $__debugFlag; then printf "%s\n" "${variables[@]}" | dumpPipe "PARSED variables" 1>&2; fi
   fi
-  if $debugFlag; then
-    cat "${environmentFiles[@]}" | dumpPipe SOURCES 1>&2
-  fi
+  if $__debugFlag; then cat "${environmentFiles[@]}" | dumpPipe SOURCES 1>&2; fi
   (
     catchReturn "$handler" environmentClean || return $?
-    catchReturn "$handler" environmentOutput "${aa[@]+"${aa[@]}"}" >"$tempEnv" || returnClean $? "${clean[@]}" || return $?
-    __environmentCompileLoad "$handler" "$keepComments" "${environmentFiles[@]}" >>"$tempEnv.save" || returnClean $? "${clean[@]}" || returnUndo $? set +a || return $?
-    catchReturn "$handler" environmentOutput "${aa[@]+"${aa[@]}"}" "${variables[@]+"${variables[@]}"}" >"$tempEnv.after" || returnClean $? "${clean[@]}" || return $?
+    if $__debugFlag; then "# variables: %s\n" "${variables[*]}" | tee "$tempEnv" >"$tempEnv.after"; fi
+    catchReturn "$handler" export "${variables[@]+"${variables[@]}"}" || return $?
+    catchReturn "$handler" environmentOutput "${aa[@]+"${aa[@]}"}" >>"$tempEnv" || returnClean $? "${clean[@]}" || return $?
+    # LOAD (source) MUST be here to ensure arrays are preserved - they are not passed back from an exported function
+    local environmentFile && for environmentFile in "${environmentFiles[@]}"; do
+      set -a # Undo ok
+      # shellcheck source=/dev/null
+      local exitCode=0 && source "$environmentFile" >(outputTrigger source "$environmentFile") 2>&1 || exitCode=$?
+      if $__debugFlag; then
+        declare -ax | dumpPipe "declare -ax INSIDE" 1>&2
+        declare -x | dumpPipe "declare -x INSIDE" 1>&2
+      fi
+      set +a # Undo
+      [ "$exitCode" -eq 0 ] || throwEnvironment "$__handler" "source $1 failed with $exitCode" || returnClean "$exitCode" "${clean[@]}" || returnUndo $? set +a || return $?
+      ! $keepComments || catchReturn "$handler" bashCommentFilter --only <"$environmentFile" | grepSafe -e '^#' >>"$tempEnv.save" || returnClean $? "${clean[@]}" || returnUndo $? set +a || return $?
+      shift
+    done
+    if $__debugFlag; then
+      declare -ax | dumpPipe "declare -ax OUTSIDE" 1>&2
+      declare -x | dumpPipe "declare -x OUTSIDE" 1>&2
+    fi
+    catchReturn "$handler" environmentOutput "${aa[@]+"${aa[@]}"}" "${variables[@]+"${variables[@]}"}" >>"$tempEnv.after" || returnClean $? "${clean[@]}" || return $?
   ) || returnClean $? "${clean[@]}" || return $?
-  if $debugFlag; then
+  if $__debugFlag; then
     dumpPipe BEFORE <"$tempEnv" 1>&2
     dumpPipe AFTER <"$tempEnv.after" 1>&2
     decorate info DIFF 1>&2
@@ -1005,10 +1033,13 @@ __environmentCompileLoad() {
   local __handler="$1" && shift
   local __keepComments="$1" && shift
   while [ $# -gt 0 ]; do
-    set -a # UNDO ok
+    set -a # Undo ok
     # shellcheck source=/dev/null
-    source "$1" >(outputTrigger source "$1") 2>&1 || return $?
-    set +a
+    local exitCode=0 && source "$1" >(outputTrigger source "$1") 2>&1 || exitCode=$?
+    declare -ax | dumpPipe "declare -ax INSIDE" 1>&2
+    declare -x | dumpPipe "declare -x INSIDE" 1>&2
+    set +a # Undo
+    [ "$exitCode" -eq 0 ] || throwEnvironment "$__handler" "source $1 failed with $exitCode" || return "$exitCode"
     ! $__keepComments || catchReturn "$handler" bashCommentFilter --only <"$1" | grepSafe -e '^#' || return $?
     shift
   done

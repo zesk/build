@@ -16,8 +16,6 @@ Examples:
 
 Zesk Build supports customizations of all decoration colors to custom values.
 
-{colorScheme}
-
 {decorate}
 
 {decorateInitialized}
@@ -25,6 +23,8 @@ Zesk Build supports customizations of all decoration colors to custom values.
 {decorations}
 
 {decorateStyle}
+
+{colorScheme}
 
 {__decorateExtensionBOLD}
 
@@ -85,13 +85,13 @@ You can add your own decoration extension to your code by creating a function na
 
 # Additional commands
 
-{clearLine}
+{consoleLineFill}
 
 {statusMessage}
 
-{hasColors}
+{consoleHasColors}
 
-{hasConsoleAnimation}
+{consoleHasAnimation}
 
 # Color tests
 

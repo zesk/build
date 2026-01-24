@@ -1,53 +1,21 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-22
+# Generated on 2026-01-24
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/text.sh"
 argument="needle - String. Required."$'\n'"haystack - String. Required."$'\n'""
 base="text.sh"
 description="Outputs the integer offset of \`needle\` if found as substring in \`haystack\` (case-insensitive)"$'\n'"If \`haystack\` is not found, -1 is output"$'\n'""
+exitCode="0"
 file="bin/build/tools/text.sh"
-fn="stringOffsetInsensitive"
-foundNames=""
+foundNames=([0]="argument" [1]="stdout")
+rawComment="Outputs the integer offset of \`needle\` if found as substring in \`haystack\` (case-insensitive)"$'\n'"If \`haystack\` is not found, -1 is output"$'\n'"Argument: needle - String. Required."$'\n'"Argument: haystack - String. Required."$'\n'"stdout: \`Integer\`. The offset at which the \`needle\` was found in \`haystack\`. Outputs -1 if not found."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
-sourceFile="bin/build/tools/text.sh"
-sourceModified="1769063211"
+sourceModified="1769201188"
 stdout="\`Integer\`. The offset at which the \`needle\` was found in \`haystack\`. Outputs -1 if not found."$'\n'""
 summary="Outputs the integer offset of \`needle\` if found as substring"
 usage="stringOffsetInsensitive needle haystack"
 # shellcheck disable=SC2016
-helpConsole='[92mUsage[0m: [38;2;170;170;255mstringOffsetInsensitive[0m [38;2;255;255;0m[35;48;2;0;0;0mneedle[0m[0m [38;2;255;255;0m[35;48;2;0;0;0mhaystack[0m[0m
-
-    [31mneedle    [1;97mString. Required.[0m
-    [31mhaystack  [1;97mString. Required.[0m
-
-Outputs the integer offset of [38;2;0;255;0;48;2;0;0;0mneedle[0m if found as substring in [38;2;0;255;0;48;2;0;0;0mhaystack[0m (case-insensitive)
-If [38;2;0;255;0;48;2;0;0;0mhaystack[0m is not found, -1 is output
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-
-Writes to [38;2;0;255;0;48;2;0;0;0mstdout[0m:
-[38;2;0;255;0;48;2;0;0;0mInteger[0m. The offset at which the [38;2;0;255;0;48;2;0;0;0mneedle[0m was found in [38;2;0;255;0;48;2;0;0;0mhaystack[0m. Outputs -1 if not found.
-'
+helpConsole=''$'\e''[[label]mUsage'$'\e''[0m: '$'\e''[[info]mstringOffsetInsensitive'$'\e''[0m '$'\e''[[bold]m'$'\e''[[magenta]mneedle'$'\e''[0m'$'\e''[0m '$'\e''[[bold]m'$'\e''[[magenta]mhaystack'$'\e''[0m'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[red]mneedle    '$'\e''[[value]mString. Required.'$'\e''[[reset]m'$'\n''    '$'\e''[[red]mhaystack  '$'\e''[[value]mString. Required.'$'\e''[[reset]m'$'\n'''$'\n''Outputs the integer offset of '$'\e''[[code]mneedle'$'\e''[[reset]m if found as substring in '$'\e''[[code]mhaystack'$'\e''[[reset]m (case-insensitive)'$'\n''If '$'\e''[[code]mhaystack'$'\e''[[reset]m is not found, -1 is output'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[code]m0'$'\e''[[reset]m - Success'$'\n''- '$'\e''[[code]m1'$'\e''[[reset]m - Environment error'$'\n''- '$'\e''[[code]m2'$'\e''[[reset]m - Argument error'$'\n'''$'\n''Writes to '$'\e''[[code]mstdout'$'\e''[[reset]m:'$'\n'''$'\e''[[code]mInteger'$'\e''[[reset]m. The offset at which the '$'\e''[[code]mneedle'$'\e''[[reset]m was found in '$'\e''[[code]mhaystack'$'\e''[[reset]m. Outputs -1 if not found.'$'\n'''
 # shellcheck disable=SC2016
-helpPlain='Usage: stringOffsetInsensitive needle haystack
-
-    needle    String. Required.
-    haystack  String. Required.
-
-Outputs the integer offset of needle if found as substring in haystack (case-insensitive)
-If haystack is not found, -1 is output
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-
-Writes to stdout:
-Integer. The offset at which the needle was found in haystack. Outputs -1 if not found.
-'
+helpPlain='Usage: stringOffsetInsensitive needle haystack'$'\n'''$'\n''    needle    String. Required.'$'\n''    haystack  String. Required.'$'\n'''$'\n''Outputs the integer offset of needle if found as substring in haystack (case-insensitive)'$'\n''If haystack is not found, -1 is output'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''$'\n''Writes to stdout:'$'\n''Integer. The offset at which the needle was found in haystack. Outputs -1 if not found.'$'\n'''

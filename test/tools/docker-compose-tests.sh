@@ -10,7 +10,7 @@
 testIsDockerComposeRunning() {
   local handler="returnMessage"
 
-  if whichExists docker; then
+  if executableExists docker; then
     local oldHome
 
     oldHome=$(catchReturn "$handler" buildHome) || return $?

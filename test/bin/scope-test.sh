@@ -77,11 +77,11 @@ testsWhichAppearToWork() {
 }
 
 _subprocessAssertValue() {
-  printf "%s %s" "$(decorate code "$(alignLeft "$width" "$2") ")" " -> "
+  printf "%s %s" "$(decorate code "$(textAlignLeft "$width" "$2") ")" " -> "
   assertEquals "$1" "$(_subprocessSavedValue)" "_subprocessAssertValue $2 buildFailed " || _fail "_subprocessAssertValue $*"
 }
 _scopeAssert() {
-  printf "%s %s" "$(decorate code "$(alignLeft "$width" "$3") ")" " -> "
+  printf "%s %s" "$(decorate code "$(textAlignLeft "$width" "$3") ")" " -> "
   assertEquals "$1" "$2" "$3 failed" || _fail "$1 $2 $3"
 }
 
@@ -99,7 +99,7 @@ unset TESTING
 set +a
 
 testName="Undeclared"
-boxedHeading "$testName"
+consoleHeadingBoxed "$testName"
 for func in $(testsWhichReturnBlank); do
   fullName="$testName $func"
   # -- precondition --
@@ -136,7 +136,7 @@ done
 export -n TESTING && unset TESTING && set +a && _subprocessClearValue
 
 testName="export TESTING first"
-boxedHeading "$testName"
+consoleHeadingBoxed "$testName"
 for func in $(testsWhichReturnBlank); do
   fullName="$testName $func"
   # -- precondition --
@@ -177,7 +177,7 @@ export -n TESTING && unset TESTING && set +a && _subprocessClearValue
 
 testName="set -a"
 
-boxedHeading "$testName"
+consoleHeadingBoxed "$testName"
 for func in $(testsWhichReturnBlank); do
   fullName="$testName $func"
   # -- precondition --
@@ -220,7 +220,7 @@ function testLocalScope() {
   local TESTING
 
   testName="local scope"
-  boxedHeading "$testName"
+  consoleHeadingBoxed "$testName"
   for func in $(testsWhichReturnBlank); do
     fullName="$testName $func"
     # -- precondition --

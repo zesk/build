@@ -54,14 +54,14 @@ __wrapColor() {
 # Does the console support animation?
 # Return Code: 0 - Supports console animation
 # Return Code: 1 - Does not support console animation
-hasConsoleAnimation() {
+consoleHasAnimation() {
   [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
   # Important: This can *not* use buildEnvironmentLoad - leads to infinite loops
   export CI
   [ -z "${CI-}" ]
 }
-_hasConsoleAnimation() {
-  true || hasConsoleAnimation --help
+_consoleHasAnimation() {
+  true || consoleHasAnimation --help
   # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
@@ -72,7 +72,7 @@ _hasConsoleAnimation() {
 __consoleEscape() {
   local start="$1" end="$2"
   shift && shift
-  if hasColors; then
+  if consoleHasColors; then
     if [ -z "$*" ]; then
       printf "%s$start" ""
     else
@@ -89,7 +89,7 @@ __consoleEscape() {
 __consoleEscape1() {
   local start="$1"
   shift
-  if hasColors; then
+  if consoleHasColors; then
     if [ -z "$*" ]; then
       printf "%s$start" ""
     else
@@ -109,7 +109,7 @@ colorSampleCodes() {
   local i j n
 
   [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
-  if ! hasColors; then
+  if ! consoleHasColors; then
     printf "no colors\n"
     return 0
   fi
@@ -148,7 +148,7 @@ colorSampleCombinations() {
     extra="1;"
   fi
   text="${*-" ABC "}"
-  padding="$(repeat $((${#text} - 3)) " ")"
+  padding="$(textRepeat $((${#text} - 3)) " ")"
   printf "   "
   for fg in $(seq 30 "$top3") $(seq 90 97); do
     printf "\033[%s%dm%3d%s\033[0m " "$extra" "$fg" "$fg" "$padding"
@@ -199,7 +199,7 @@ colorSampleStyles() {
   [ -n "$text" ] || text="The quick brown fox jumped over the lazy dog."
   for i in "${colors[@]}"; do
     local label
-    label=$(alignLeft 10 "$i")
+    label=$(textAlignLeft 10 "$i")
     printf -- "%s%s\n" "$(decorate reset --)" "$(decorate "$i" "     $label: $text")"
     printf -- "%s%s\n" "$(decorate reset --)" "$(decorate BOLD "$i" "BOLD $label: $text")"
   done
@@ -226,13 +226,18 @@ colorSampleSemanticStyles() {
     decoration
     subtle
   )
-  local text="$*"
+  local text="$*" reset
+  reset=$'\e'"[0m"
   [ -n "$text" ] || text="The quick brown fox jumped over the lazy dog."
   for i in "${colors[@]}"; do
-    decorate reset --
-    decorate "$i" "$i: $text"
-    decorate BOLD "$i" "BOLD $i: $text"
+    local leftLabel && leftLabel=$(textAlignLeft 10 "$i")
+    printf "%s" "$reset"
+    decorate "$i" "     $leftLabel: $text"
+    printf "%s" "$reset"
+    decorate BOLD "$i" "BOLD $leftLabel: $text"
   done
+  decorate "pair" "pair" "$text"
+  decorate BOLD "pair" "BOLD pair" "$text"
 }
 _colorSampleSemanticStyles() {
   # __IDENTICAL__ usageDocument 1
@@ -243,18 +248,18 @@ _colorSampleSemanticStyles() {
 #
 # Intended to be run on an interactive console, this clears the current line of any text and replaces the line with spaces.
 #
-# Intended to be run on an interactive console. Should support `tput cols`.
+# Intended to be run on an interactive console. Should support $(tput cols).
 # Summary: Clear a line in the console
 # Argument: textToOutput - String. Optional. Text to display on the new cleared line.
-clearLine() {
+consoleLineFill() {
   local handler="_${FUNCNAME[0]}"
-  if hasConsoleAnimation; then
-    catchEnvironment "$handler" printf -- "\r%s\r%s" "$(repeat "$(consoleColumns)" " ")" "$*" || return $?
+  if consoleHasAnimation; then
+    catchEnvironment "$handler" printf -- "\r%s\r%s" "$(textRepeat "$(consoleColumns)" " ")" "$*" || return $?
   else
     catchEnvironment "$handler" printf -- "%s\n" "$*" || return $?
   fi
 }
-_clearLine() {
+_consoleLineFill() {
   # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
@@ -272,7 +277,7 @@ plasterLines() {
     catchEnvironment "$handler" cursorSet 1 "$curY" || return $?
     printf "%s" "$line"
     IFS=$'\n' read -r -d '' curX _ < <(cursorGet) || :
-    printf "%s" "$(repeat $((columns - curX)) "$character")"
+    printf "%s" "$(textRepeat $((columns - curX)) "$character")"
     curY=$((curY + 1))
     [ $curY -le "$rows" ] || break
   done
@@ -285,7 +290,7 @@ _plasterLines() {
 
 # Output a status message
 #
-# This is intended for messages on a line which are then overwritten using clearLine
+# This is intended for messages on a line which are then overwritten using consoleLineFill
 #
 # Summary: Output a status message and display correctly on consoles with animation and in log files
 # Clears the line and outputs a message using a command. Meant to show status but not use up an output line for it.
@@ -294,23 +299,23 @@ _plasterLines() {
 # Argument: --inline - Flag. Optional. Inline message displays with newline when animation is NOT available.
 # Argument: command - Required. Commands which output a message.
 #
-# When `hasConsoleAnimation` is true:
+# When $(consoleHasAnimation) is true:
 #
-# `--first` - clears the line and outputs the message starting at the left column, no newline
-# `--last` - clears the line and outputs the message starting at the left column, with a newline
-# `--inline` - Outputs the message at the cursor without a newline
+# $(--first) - clears the line and outputs the message starting at the left column, no newline
+# $(--last) - clears the line and outputs the message starting at the left column, with a newline
+# $(--inline) - Outputs the message at the cursor without a newline
 #
-# When `hasConsoleAnimation` is false:
+# When $(consoleHasAnimation) is false:
 #
-# `--first` - outputs the message starting at the cursor, no newline
-# `--last` - outputs the message starting at the cursor, with a newline
-# `--inline` - Outputs the message at the cursor with a newline
+# $(--first) - outputs the message starting at the cursor, no newline
+# $(--last) - outputs the message starting at the cursor, with a newline
+# $(--inline) - Outputs the message at the cursor with a newline
 #
 # Environment: Intended to be run on an interactive console. Should support $(tput cols).
 # Example:     statusMessage decorate info "Loading ..."
 # Example:     bin/load.sh >>"$loadLogFile"
-# Example:     clearLine
-# Requires: throwArgument hasConsoleAnimation catchEnvironment decorate validate clearLine
+# Example:     consoleLineFill
+# Requires: throwArgument consoleHasAnimation catchEnvironment decorate validate consoleLineFill
 statusMessage() {
   local handler="_${FUNCNAME[0]}"
   local lastMessage=""
@@ -325,7 +330,7 @@ statusMessage() {
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
     --first)
-      if ! hasConsoleAnimation; then
+      if ! consoleHasAnimation; then
         shift
         catchEnvironment "$handler" printf -- "%s" "$("$@")" || return $?
         return 0
@@ -334,12 +339,12 @@ statusMessage() {
     --inline)
       shift
       local suffix="\n"
-      ! hasConsoleAnimation || suffix=""
+      ! consoleHasAnimation || suffix=""
       catchEnvironment "$handler" printf -- "%s$suffix" "$("$@")" || return $?
       return 0
       ;;
     --last)
-      if hasConsoleAnimation; then
+      if consoleHasAnimation; then
         lastMessage=$'\n'
       fi
       ;;
@@ -356,7 +361,7 @@ statusMessage() {
   done
   local text
   text=$(catchEnvironment "$handler" "$@") || return $?
-  catchEnvironment "$handler" clearLine "$text${lastMessage}" || return $?
+  catchReturn "$handler" consoleLineFill "$text${lastMessage}" || return $?
 }
 _statusMessage() {
   # __IDENTICAL__ usageDocument 1
@@ -398,7 +403,7 @@ _isTTYAvailable() {
 # DOC TEMPLATE: --help 1
 # Argument: --help - Flag. Optional. Display this help.
 # See: stty
-# Example:     repeat $(consoleColumns)
+# Example:     textRepeat $(consoleColumns)
 # Environment: - `COLUMNS` - May be defined after calling this
 # Environment: - `LINES` - May be defined after calling this
 # Side Effect: MAY define two environment variables
@@ -559,7 +564,7 @@ colorNormalize() {
 
   [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
 
-  whichExists bc || throwEnvironment "$handler" "Requires bc installed - missing" || return $?
+  executableExists bc || throwEnvironment "$handler" "Requires bc installed - missing" || return $?
   local red green blue
   if [ $# -eq 0 ]; then
     local done=false
@@ -723,7 +728,7 @@ colorMultiply() {
 
   [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
 
-  whichExists bc || throwEnvironment "$handler" "Requires bc binary" || return $?
+  executableExists bc || throwEnvironment "$handler" "Requires bc binary" || return $?
   factor=$(validate "$handler" String "factor" "${1-}") && shift || return $?
 
   local red green blue

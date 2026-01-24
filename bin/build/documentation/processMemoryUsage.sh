@@ -1,56 +1,22 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-22
+# Generated on 2026-01-24
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/process.sh"
 argument="pid - Integer. Required. Process ID of running process"$'\n'""
 base="process.sh"
-description="Outputs value of resident memory used by a process, value is in kilobytes"$'\n'""$'\n'"Return Code: 0 - Success"$'\n'"Return Code: 2 - Argument error"$'\n'""
+description="Outputs value of resident memory used by a process, value is in kilobytes"$'\n'""
 example="    > processMemoryUsage 23"$'\n'""
+exitCode="0"
 file="bin/build/tools/process.sh"
-fn="processMemoryUsage"
-foundNames=""
+foundNames=([0]="argument" [1]="example" [2]="output" [3]="return_code")
 output="423"$'\n'""
-return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
-sourceFile="bin/build/tools/process.sh"
+rawComment="Outputs value of resident memory used by a process, value is in kilobytes"$'\n'"Argument: pid - Integer. Required. Process ID of running process"$'\n'"Example:     > {fn} 23"$'\n'"Output: 423"$'\n'"Return Code: 0 - Success"$'\n'"Return Code: 2 - Argument error"$'\n'""$'\n'""
+return_code="0 - Success"$'\n'"2 - Argument error"$'\n'""
 sourceModified="1769063211"
 summary="Outputs value of resident memory used by a process, value"
 usage="processMemoryUsage pid"
 # shellcheck disable=SC2016
-helpConsole='[92mUsage[0m: [38;2;170;170;255mprocessMemoryUsage[0m [38;2;255;255;0m[35;48;2;0;0;0mpid[0m[0m
-
-    [31mpid  [1;97mInteger. Required. Process ID of running process[0m
-
-Outputs value of resident memory used by a process, value is in kilobytes
-
-Return Code: 0 - Success
-Return Code: 2 - Argument error
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-
-Example:
-    > processMemoryUsage 23
-'
+helpConsole=''$'\e''[[label]mUsage'$'\e''[0m: '$'\e''[[info]mprocessMemoryUsage'$'\e''[0m '$'\e''[[bold]m'$'\e''[[magenta]mpid'$'\e''[0m'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[red]mpid  '$'\e''[[value]mInteger. Required. Process ID of running process'$'\e''[[reset]m'$'\n'''$'\n''Outputs value of resident memory used by a process, value is in kilobytes'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[code]m0'$'\e''[[reset]m - Success'$'\n''- '$'\e''[[code]m2'$'\e''[[reset]m - Argument error'$'\n'''$'\n''Example:'$'\n''    > processMemoryUsage 23'$'\n'''
 # shellcheck disable=SC2016
-helpPlain='Usage: processMemoryUsage pid
-
-    pid  Integer. Required. Process ID of running process
-
-Outputs value of resident memory used by a process, value is in kilobytes
-
-Return Code: 0 - Success
-Return Code: 2 - Argument error
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-
-Example:
-    > processMemoryUsage 23
-'
+helpPlain='Usage: processMemoryUsage pid'$'\n'''$'\n''    pid  Integer. Required. Process ID of running process'$'\n'''$'\n''Outputs value of resident memory used by a process, value is in kilobytes'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 2 - Argument error'$'\n'''$'\n''Example:'$'\n''    > processMemoryUsage 23'$'\n'''

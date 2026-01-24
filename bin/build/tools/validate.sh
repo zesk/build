@@ -77,7 +77,7 @@ validate() {
   local prefix="__validateType"
 
   [ $# -eq 0 ] || __help "$handler" "$@" || return 0
-  [ $# -ge 4 ] || throwArgument "$handler" "Missing arguments - expect 4 or more (#$#: $(decorate each code "$@"))" || return $?
+  [ $# -ge 4 ] || throwArgument "$handler" "Missing arguments - expect 4 or more (#$#: $(decorate each code -- "$@"))" || return $?
 
   local handler="$1" && shift
 
@@ -92,7 +92,7 @@ validate() {
     if ! "$typeFunction" "$value"; then
       local suffix=""
       [ -z "$value" ] || suffix=" $(decorate error "$value")"
-      throwArgument "$handler" "$name ($(decorate each code "$@")) is not type $(decorate label "$type")$suffix" || return $?
+      throwArgument "$handler" "$name ($(decorate each code -- "$@")) is not type $(decorate label "$type")$suffix" || return $?
     fi
     shift 3
   done

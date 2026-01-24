@@ -1,48 +1,21 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-22
+# Generated on 2026-01-24
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/file.sh"
 argument="file - File. Optional. One or more files, all of which must be empty."$'\n'"--help - Flag. Optional. Display this help."$'\n'""
 base="file.sh"
-description="Is this an empty (zero-sized) file?"$'\n'"Return Code: 0 - if all files passed in are empty files"$'\n'"Return Code: 1 - if any files passed in are non-empty files"$'\n'""
+description="Is this an empty (zero-sized) file?"$'\n'""
+exitCode="0"
 file="bin/build/tools/file.sh"
-fn="fileIsEmpty"
-foundNames=""
-return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
+foundNames=([0]="return_code" [1]="argument")
+rawComment="Is this an empty (zero-sized) file?"$'\n'"Return Code: 0 - if all files passed in are empty files"$'\n'"Return Code: 1 - if any files passed in are non-empty files"$'\n'"Argument: file - File. Optional. One or more files, all of which must be empty."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'""$'\n'""
+return_code="0 - if all files passed in are empty files"$'\n'"1 - if any files passed in are non-empty files"$'\n'""
 sourceFile="bin/build/tools/file.sh"
-sourceModified="1769063211"
+sourceModified="1769184734"
 summary="Is this an empty (zero-sized) file?"
 usage="fileIsEmpty [ file ] [ --help ]"
 # shellcheck disable=SC2016
-helpConsole='[92mUsage[0m: [38;2;170;170;255mfileIsEmpty[0m [94m[ file ][0m [94m[ --help ][0m
-
-    [94mfile    [1;97mFile. Optional. One or more files, all of which must be empty.[0m
-    [94m--help  [1;97mFlag. Optional. Display this help.[0m
-
-Is this an empty (zero-sized) file?
-Return Code: 0 - if all files passed in are empty files
-Return Code: 1 - if any files passed in are non-empty files
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-'
+helpConsole=''$'\e''[[label]mUsage'$'\e''[0m: '$'\e''[[info]mfileIsEmpty'$'\e''[0m '$'\e''[[blue]m[ file ]'$'\e''[0m '$'\e''[[blue]m[ --help ]'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[blue]mfile    '$'\e''[[value]mFile. Optional. One or more files, all of which must be empty.'$'\e''[[reset]m'$'\n''    '$'\e''[[blue]m--help  '$'\e''[[value]mFlag. Optional. Display this help.'$'\e''[[reset]m'$'\n'''$'\n''Is this an empty (zero-sized) file?'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[code]m0'$'\e''[[reset]m - if all files passed in are empty files'$'\n''- '$'\e''[[code]m1'$'\e''[[reset]m - if any files passed in are non-empty files'$'\n'''
 # shellcheck disable=SC2016
-helpPlain='Usage: fileIsEmpty [ file ] [ --help ]
-
-    file    File. Optional. One or more files, all of which must be empty.
-    --help  Flag. Optional. Display this help.
-
-Is this an empty (zero-sized) file?
-Return Code: 0 - if all files passed in are empty files
-Return Code: 1 - if any files passed in are non-empty files
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-'
+helpPlain='Usage: fileIsEmpty [ file ] [ --help ]'$'\n'''$'\n''    file    File. Optional. One or more files, all of which must be empty.'$'\n''    --help  Flag. Optional. Display this help.'$'\n'''$'\n''Is this an empty (zero-sized) file?'$'\n'''$'\n''Return codes:'$'\n''- 0 - if all files passed in are empty files'$'\n''- 1 - if any files passed in are non-empty files'$'\n'''

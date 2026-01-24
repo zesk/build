@@ -1,51 +1,21 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-22
+# Generated on 2026-01-24
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/deprecated-tools.sh"
 argument="findArgumentFunction - Function. Required. Find arguments (for \`find\`) for cannon."$'\n'"search - String. Required. String to search for (one or more)"$'\n'"--path cannonPath - Directory. Optional. Run cannon operation starting in this directory."$'\n'""
 base="deprecated-tools.sh"
-description="Find files which match a token or tokens"$'\n'"Return Code: 0 - One of the search tokens was found in a file (which matches find arguments)"$'\n'"Return Code: 1 - Search tokens were not found in any file (which matches find arguments)"$'\n'""
+description="Find files which match a token or tokens"$'\n'""
+exitCode="0"
 file="bin/build/tools/deprecated-tools.sh"
-fn="deprecatedFind"
-foundNames=""
-return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
+foundNames=([0]="return_code" [1]="argument" [2]="see")
+rawComment="Find files which match a token or tokens"$'\n'"Return Code: 0 - One of the search tokens was found in a file (which matches find arguments)"$'\n'"Return Code: 1 - Search tokens were not found in any file (which matches find arguments)"$'\n'"Argument: findArgumentFunction - Function. Required. Find arguments (for \`find\`) for cannon."$'\n'"Argument: search - String. Required. String to search for (one or more)"$'\n'"Argument: --path cannonPath - Directory. Optional. Run cannon operation starting in this directory."$'\n'"See: buildHome"$'\n'""$'\n'""
+return_code="0 - One of the search tokens was found in a file (which matches find arguments)"$'\n'"1 - Search tokens were not found in any file (which matches find arguments)"$'\n'""
 see="buildHome"$'\n'""
-sourceFile="bin/build/tools/deprecated-tools.sh"
 sourceModified="1769063211"
 summary="Find files which match a token or tokens"
 usage="deprecatedFind findArgumentFunction search [ --path cannonPath ]"
 # shellcheck disable=SC2016
-helpConsole='[92mUsage[0m: [38;2;170;170;255mdeprecatedFind[0m [38;2;255;255;0m[35;48;2;0;0;0mfindArgumentFunction[0m[0m [38;2;255;255;0m[35;48;2;0;0;0msearch[0m[0m [94m[ --path cannonPath ][0m
-
-    [31mfindArgumentFunction  [1;97mFunction. Required. Find arguments (for [38;2;0;255;0;48;2;0;0;0mfind[0m) for cannon.[0m
-    [31msearch                [1;97mString. Required. String to search for (one or more)[0m
-    [94m--path cannonPath     [1;97mDirectory. Optional. Run cannon operation starting in this directory.[0m
-
-Find files which match a token or tokens
-Return Code: 0 - One of the search tokens was found in a file (which matches find arguments)
-Return Code: 1 - Search tokens were not found in any file (which matches find arguments)
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-'
+helpConsole=''$'\e''[[label]mUsage'$'\e''[0m: '$'\e''[[info]mdeprecatedFind'$'\e''[0m '$'\e''[[bold]m'$'\e''[[magenta]mfindArgumentFunction'$'\e''[0m'$'\e''[0m '$'\e''[[bold]m'$'\e''[[magenta]msearch'$'\e''[0m'$'\e''[0m '$'\e''[[blue]m[ --path cannonPath ]'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[red]mfindArgumentFunction  '$'\e''[[value]mFunction. Required. Find arguments (for '$'\e''[[code]mfind'$'\e''[[reset]m) for cannon.'$'\e''[[reset]m'$'\n''    '$'\e''[[red]msearch                '$'\e''[[value]mString. Required. String to search for (one or more)'$'\e''[[reset]m'$'\n''    '$'\e''[[blue]m--path cannonPath     '$'\e''[[value]mDirectory. Optional. Run cannon operation starting in this directory.'$'\e''[[reset]m'$'\n'''$'\n''Find files which match a token or tokens'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[code]m0'$'\e''[[reset]m - One of the search tokens was found in a file (which matches find arguments)'$'\n''- '$'\e''[[code]m1'$'\e''[[reset]m - Search tokens were not found in any file (which matches find arguments)'$'\n'''
 # shellcheck disable=SC2016
-helpPlain='Usage: deprecatedFind findArgumentFunction search [ --path cannonPath ]
-
-    findArgumentFunction  Function. Required. Find arguments (for find) for cannon.
-    search                String. Required. String to search for (one or more)
-    --path cannonPath     Directory. Optional. Run cannon operation starting in this directory.
-
-Find files which match a token or tokens
-Return Code: 0 - One of the search tokens was found in a file (which matches find arguments)
-Return Code: 1 - Search tokens were not found in any file (which matches find arguments)
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-'
+helpPlain='Usage: deprecatedFind findArgumentFunction search [ --path cannonPath ]'$'\n'''$'\n''    findArgumentFunction  Function. Required. Find arguments (for find) for cannon.'$'\n''    search                String. Required. String to search for (one or more)'$'\n''    --path cannonPath     Directory. Optional. Run cannon operation starting in this directory.'$'\n'''$'\n''Find files which match a token or tokens'$'\n'''$'\n''Return codes:'$'\n''- 0 - One of the search tokens was found in a file (which matches find arguments)'$'\n''- 1 - Search tokens were not found in any file (which matches find arguments)'$'\n'''

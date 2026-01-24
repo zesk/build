@@ -1,62 +1,21 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-22
+# Generated on 2026-01-24
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/daemontools.sh"
 argument="--home serviceHome - Path. Optional. Override \`DAEMONTOOLS_HOME\` which defaults to \`/etc/service\`. Specify once."$'\n'"serviceFile - Binary. Required. The daemon to run. The user of this file will be used to run this file and will run as this user and group."$'\n'"serviceName - String. Optional. The daemon service name. If not specified uses the \`basename\` of \`serviceFile\` with any extension removed."$'\n'"--name serviceName - String. Optional. The daemon service name. If not specified uses the \`basename\` of \`serviceFile\` with any extension removed."$'\n'"--log logHome - Path. Optional. The root logging directory where a directory called \`serviceName\` will be created which contains the \`multilog\` output \`current\`"$'\n'"--escalate - Flag. Optional. Only if the source file is owned by a non-root user."$'\n'"--log-arguments ... -- - ArgumentsList. Optional. List of arguments for the logger."$'\n'"--arguments ... -- - ArgumentsList. Optional. List of arguments for the service."$'\n'"-- ... - Arguments. Optional. List of arguments for the service."$'\n'""
 base="daemontools.sh"
-description="Install a daemontools service which runs a binary as the file owner."$'\n'""$'\n'"Installs a \`daemontools\` service with an optional logging daemon process. Uses \`daemontools/_service.sh\` and \`daemontools/_log.sh\` files as templates."$'\n'""$'\n'""$'\n'""
+description="Install a daemontools service which runs a binary as the file owner."$'\n'"Installs a \`daemontools\` service with an optional logging daemon process. Uses \`daemontools/_service.sh\` and \`daemontools/_log.sh\` files as templates."$'\n'""
+exitCode="0"
 file="bin/build/tools/daemontools.sh"
-fn="daemontoolsInstallService"
-foundNames=""
+foundNames=([0]="argument")
+rawComment="Install a daemontools service which runs a binary as the file owner."$'\n'"Installs a \`daemontools\` service with an optional logging daemon process. Uses \`daemontools/_service.sh\` and \`daemontools/_log.sh\` files as templates."$'\n'"Argument: --home serviceHome - Path. Optional. Override \`DAEMONTOOLS_HOME\` which defaults to \`/etc/service\`. Specify once."$'\n'"Argument: serviceFile - Binary. Required. The daemon to run. The user of this file will be used to run this file and will run as this user and group."$'\n'"Argument: serviceName - String. Optional. The daemon service name. If not specified uses the \`basename\` of \`serviceFile\` with any extension removed."$'\n'"Argument: --name serviceName - String. Optional. The daemon service name. If not specified uses the \`basename\` of \`serviceFile\` with any extension removed."$'\n'"Argument: --log logHome - Path. Optional. The root logging directory where a directory called \`serviceName\` will be created which contains the \`multilog\` output \`current\`"$'\n'"Argument: --escalate - Flag. Optional. Only if the source file is owned by a non-root user."$'\n'"Argument: --log-arguments ... -- - ArgumentsList. Optional. List of arguments for the logger."$'\n'"Argument: --arguments ... -- - ArgumentsList. Optional. List of arguments for the service."$'\n'"Argument: -- ... - Arguments. Optional. List of arguments for the service."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/daemontools.sh"
-sourceModified="1769063211"
+sourceModified="1769109690"
 summary="Install a daemontools service which runs a binary as the"
 usage="daemontoolsInstallService [ --home serviceHome ] serviceFile [ serviceName ] [ --name serviceName ] [ --log logHome ] [ --escalate ] [ --log-arguments ... -- ] [ --arguments ... -- ] [ -- ... ]"
 # shellcheck disable=SC2016
-helpConsole='[92mUsage[0m: [38;2;170;170;255mdaemontoolsInstallService[0m [94m[ --home serviceHome ][0m [38;2;255;255;0m[35;48;2;0;0;0mserviceFile[0m[0m [94m[ serviceName ][0m [94m[ --name serviceName ][0m [94m[ --log logHome ][0m [94m[ --escalate ][0m [94m[ --log-arguments ... -- ][0m [94m[ --arguments ... -- ][0m [94m[ -- ... ][0m
-
-    [94m--home serviceHome      [1;97mPath. Optional. Override [38;2;0;255;0;48;2;0;0;0mDAEMONTOOLS_HOME[0m which defaults to [38;2;0;255;0;48;2;0;0;0m/etc/service[0m. Specify once.[0m
-    [31mserviceFile             [1;97mBinary. Required. The daemon to run. The user of this file will be used to run this file and will run as this user and group.[0m
-    [94mserviceName             [1;97mString. Optional. The daemon service name. If not specified uses the [38;2;0;255;0;48;2;0;0;0mbasename[0m of [38;2;0;255;0;48;2;0;0;0mserviceFile[0m with any extension removed.[0m
-    [94m--name serviceName      [1;97mString. Optional. The daemon service name. If not specified uses the [38;2;0;255;0;48;2;0;0;0mbasename[0m of [38;2;0;255;0;48;2;0;0;0mserviceFile[0m with any extension removed.[0m
-    [94m--log logHome           [1;97mPath. Optional. The root logging directory where a directory called [38;2;0;255;0;48;2;0;0;0mserviceName[0m will be created which contains the [38;2;0;255;0;48;2;0;0;0mmultilog[0m output [38;2;0;255;0;48;2;0;0;0mcurrent[0m[0m
-    [94m--escalate              [1;97mFlag. Optional. Only if the source file is owned by a non-root user.[0m
-    [94m--log-arguments ... --  [1;97mArgumentsList. Optional. List of arguments for the logger.[0m
-    [94m--arguments ... --      [1;97mArgumentsList. Optional. List of arguments for the service.[0m
-    [94m-- ...                  [1;97mArguments. Optional. List of arguments for the service.[0m
-
-Install a daemontools service which runs a binary as the file owner.
-
-Installs a [38;2;0;255;0;48;2;0;0;0mdaemontools[0m service with an optional logging daemon process. Uses [38;2;0;255;0;48;2;0;0;0mdaemontools/_service.sh[0m and [38;2;0;255;0;48;2;0;0;0mdaemontools/_log.sh[0m files as templates.
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-'
+helpConsole=''$'\e''[[label]mUsage'$'\e''[0m: '$'\e''[[info]mdaemontoolsInstallService'$'\e''[0m '$'\e''[[blue]m[ --home serviceHome ]'$'\e''[0m '$'\e''[[bold]m'$'\e''[[magenta]mserviceFile'$'\e''[0m'$'\e''[0m '$'\e''[[blue]m[ serviceName ]'$'\e''[0m '$'\e''[[blue]m[ --name serviceName ]'$'\e''[0m '$'\e''[[blue]m[ --log logHome ]'$'\e''[0m '$'\e''[[blue]m[ --escalate ]'$'\e''[0m '$'\e''[[blue]m[ --log-arguments ... -- ]'$'\e''[0m '$'\e''[[blue]m[ --arguments ... -- ]'$'\e''[0m '$'\e''[[blue]m[ -- ... ]'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[blue]m--home serviceHome      '$'\e''[[value]mPath. Optional. Override '$'\e''[[code]mDAEMONTOOLS_HOME'$'\e''[[reset]m which defaults to '$'\e''[[code]m/etc/service'$'\e''[[reset]m. Specify once.'$'\e''[[reset]m'$'\n''    '$'\e''[[red]mserviceFile             '$'\e''[[value]mBinary. Required. The daemon to run. The user of this file will be used to run this file and will run as this user and group.'$'\e''[[reset]m'$'\n''    '$'\e''[[blue]mserviceName             '$'\e''[[value]mString. Optional. The daemon service name. If not specified uses the '$'\e''[[code]mbasename'$'\e''[[reset]m of '$'\e''[[code]mserviceFile'$'\e''[[reset]m with any extension removed.'$'\e''[[reset]m'$'\n''    '$'\e''[[blue]m--name serviceName      '$'\e''[[value]mString. Optional. The daemon service name. If not specified uses the '$'\e''[[code]mbasename'$'\e''[[reset]m of '$'\e''[[code]mserviceFile'$'\e''[[reset]m with any extension removed.'$'\e''[[reset]m'$'\n''    '$'\e''[[blue]m--log logHome           '$'\e''[[value]mPath. Optional. The root logging directory where a directory called '$'\e''[[code]mserviceName'$'\e''[[reset]m will be created which contains the '$'\e''[[code]mmultilog'$'\e''[[reset]m output '$'\e''[[code]mcurrent'$'\e''[[reset]m'$'\e''[[reset]m'$'\n''    '$'\e''[[blue]m--escalate              '$'\e''[[value]mFlag. Optional. Only if the source file is owned by a non-root user.'$'\e''[[reset]m'$'\n''    '$'\e''[[blue]m--log-arguments ... --  '$'\e''[[value]mArgumentsList. Optional. List of arguments for the logger.'$'\e''[[reset]m'$'\n''    '$'\e''[[blue]m--arguments ... --      '$'\e''[[value]mArgumentsList. Optional. List of arguments for the service.'$'\e''[[reset]m'$'\n''    '$'\e''[[blue]m-- ...                  '$'\e''[[value]mArguments. Optional. List of arguments for the service.'$'\e''[[reset]m'$'\n'''$'\n''Install a daemontools service which runs a binary as the file owner.'$'\n''Installs a '$'\e''[[code]mdaemontools'$'\e''[[reset]m service with an optional logging daemon process. Uses '$'\e''[[code]mdaemontools/_service.sh'$'\e''[[reset]m and '$'\e''[[code]mdaemontools/_log.sh'$'\e''[[reset]m files as templates.'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[code]m0'$'\e''[[reset]m - Success'$'\n''- '$'\e''[[code]m1'$'\e''[[reset]m - Environment error'$'\n''- '$'\e''[[code]m2'$'\e''[[reset]m - Argument error'$'\n'''
 # shellcheck disable=SC2016
-helpPlain='Usage: daemontoolsInstallService [ --home serviceHome ] serviceFile [ serviceName ] [ --name serviceName ] [ --log logHome ] [ --escalate ] [ --log-arguments ... -- ] [ --arguments ... -- ] [ -- ... ]
-
-    --home serviceHome      Path. Optional. Override DAEMONTOOLS_HOME which defaults to /etc/service. Specify once.
-    serviceFile             Binary. Required. The daemon to run. The user of this file will be used to run this file and will run as this user and group.
-    serviceName             String. Optional. The daemon service name. If not specified uses the basename of serviceFile with any extension removed.
-    --name serviceName      String. Optional. The daemon service name. If not specified uses the basename of serviceFile with any extension removed.
-    --log logHome           Path. Optional. The root logging directory where a directory called serviceName will be created which contains the multilog output current
-    --escalate              Flag. Optional. Only if the source file is owned by a non-root user.
-    --log-arguments ... --  ArgumentsList. Optional. List of arguments for the logger.
-    --arguments ... --      ArgumentsList. Optional. List of arguments for the service.
-    -- ...                  Arguments. Optional. List of arguments for the service.
-
-Install a daemontools service which runs a binary as the file owner.
-
-Installs a daemontools service with an optional logging daemon process. Uses daemontools/_service.sh and daemontools/_log.sh files as templates.
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-'
+helpPlain='Usage: daemontoolsInstallService [ --home serviceHome ] serviceFile [ serviceName ] [ --name serviceName ] [ --log logHome ] [ --escalate ] [ --log-arguments ... -- ] [ --arguments ... -- ] [ -- ... ]'$'\n'''$'\n''    --home serviceHome      Path. Optional. Override DAEMONTOOLS_HOME which defaults to /etc/service. Specify once.'$'\n''    serviceFile             Binary. Required. The daemon to run. The user of this file will be used to run this file and will run as this user and group.'$'\n''    serviceName             String. Optional. The daemon service name. If not specified uses the basename of serviceFile with any extension removed.'$'\n''    --name serviceName      String. Optional. The daemon service name. If not specified uses the basename of serviceFile with any extension removed.'$'\n''    --log logHome           Path. Optional. The root logging directory where a directory called serviceName will be created which contains the multilog output current'$'\n''    --escalate              Flag. Optional. Only if the source file is owned by a non-root user.'$'\n''    --log-arguments ... --  ArgumentsList. Optional. List of arguments for the logger.'$'\n''    --arguments ... --      ArgumentsList. Optional. List of arguments for the service.'$'\n''    -- ...                  Arguments. Optional. List of arguments for the service.'$'\n'''$'\n''Install a daemontools service which runs a binary as the file owner.'$'\n''Installs a daemontools service with an optional logging daemon process. Uses daemontools/_service.sh and daemontools/_log.sh files as templates.'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''

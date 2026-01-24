@@ -47,13 +47,13 @@ terraformInstall() {
   local handler="_${FUNCNAME[0]}" binary="terraform"
 
   __help "$handler" "$@" || return 0
-  ! whichExists "$binary" || return 0
+  ! executableExists "$binary" || return 0
   if aptIsInstalled; then
     catchReturn "$handler" packageInstall gnupg software-properties-common curl figlet || return $?
     catchReturn "$handler" aptKeyAddHashicorp || return $?
   fi
   catchReturn "$handler" packageInstall "$binary" "$@" || return $?
-  whichExists "$binary" || throwEnvironment "$handler" "No $binary binary found - installation failed" || return $?
+  executableExists "$binary" || throwEnvironment "$handler" "No $binary binary found - installation failed" || return $?
 }
 _terraformInstall() {
   # __IDENTICAL__ usageDocument 1
@@ -67,7 +67,7 @@ terraformUninstall() {
   local handler="_${FUNCNAME[0]}"
 
   __help "$handler" "$@" || return 0
-  whichExists terraform || return 0
+  executableExists terraform || return 0
   catchReturn "$handler" packageWhichUninstall terraform terraform "$@" || return $?
   catchReturn "$handler" aptKeyRemoveHashicorp || return $?
   catchReturn "$handler" packageUpdate --force || return $?

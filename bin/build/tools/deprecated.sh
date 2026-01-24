@@ -18,6 +18,183 @@
 #             |_|
 #
 
+# Deprecated: 2026-01
+boxedHeading() {
+  _deprecated "${FUNCNAME[0]}"
+  consoleHeadingBoxed "$@" || return $?
+}
+
+# Deprecated: 2026-01
+lineFill() {
+  _deprecated "${FUNCNAME[0]}"
+  consoleHeadingLine
+}
+
+# Deprecated: 2026-01
+repeat() {
+  _deprecated "${FUNCNAME[0]}"
+  textRepeat "$@"
+}
+
+# Deprecated: 2026-01
+whichExists() {
+  _deprecated "${FUNCNAME[0]}"
+  executableExists "$@"
+}
+
+# Deprecated: 2026-01
+whichHook() {
+  _deprecated "${FUNCNAME[0]}"
+  hookFind "$@"
+}
+
+# Deprecated: 2026-01
+extensionLists() {
+  fileExtensionLists "$@"
+}
+
+# Deprecated: 2026-01
+yesterdayDate() {
+  _deprecated "${FUNCNAME[0]}"
+  dateYesterday "$@"
+}
+
+# Deprecated: 2026-01
+todayDate() {
+  _deprecated "${FUNCNAME[0]}"
+  dateToday "$@"
+}
+
+# Deprecated: 2026-01
+tomorrowDate() {
+  _deprecated "${FUNCNAME[0]}"
+  dateTomorrow "$@"
+}
+
+# Summary: Output debugging information when the build fails
+#
+# Outputs debugging information after build fails:
+#
+# - last 50 lines in build log
+# - Failed message
+# - last 3 lines in build log
+#
+# Argument: logFile - File. Required. The most recent log from the current script.
+# Argument: message - String. Optional. Any additional message to output.
+#
+# Example:     quietLog="$(buildQuietLog "$me")"
+# Example:     if ! ./bin/deploy.sh >>"$quietLog"; then
+# Example:         decorate error "Deploy failed"
+# Example:         buildFailed "$quietLog"
+# Example:     fi
+# Return Code: 1 - Always fails
+# Output: stdout
+# Deprecated: 2026-01
+buildFailed() {
+  local handler="_${FUNCNAME[0]}"
+  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
+
+  local quietLog="${1-}" && shift
+  _deprecated "${FUNCNAME[0]}"
+
+  local failBar
+  failBar="$(consoleHeadingLine "*")"
+  statusMessage --last decorate error "$failBar"
+  bigText "Failed" | decorate error | decorate wrap "" " " | decorate wrap --fill "*" ""
+  # shellcheck disable=SC2094
+  statusMessage --last decorate error "$failBar"
+
+  showLines=$(catchReturn "$handler" buildEnvironmentGet BUILD_DEBUG_LINES) || return $?
+
+  isUnsignedInteger "$showLines" || showLines=$(($(consoleRows) - 16)) || showLines=40
+  # shellcheck disable=SC2094
+  dumpPipe --lines "$showLines" --tail "$(basename "$quietLog")" "$@" <"$quietLog"
+  throwEnvironment "$handler" "Failed:" "$@" || return $?
+}
+
+_buildFailed() {
+  # __IDENTICAL__ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+# Deprecated: 2026-01
+makeShellFilesExecutable() {
+  _deprecated "${FUNCNAME[0]}"
+  bashMakeExecutable "$@" || return $?
+}
+
+# Deprecated: 2026-01
+echoBar() {
+  _deprecated "${FUNCNAME[0]}"
+  consoleLine "$@" || return $?
+}
+
+# Deprecated: 2026-01
+# shellcheck disable=SC2329
+isAbsolutePath() {
+  _deprecated "${FUNCNAME[0]}"
+  pathIsAbsolute "$@" || return $?
+}
+
+# Deprecated: 2026-01
+insideDocker() {
+  true || isAbsolutePath --help
+  _deprecated "${FUNCNAME[0]}"
+  dockerInside "$@" || return $?
+}
+
+# Deprecated: 2026-01
+hasConsoleAnimation() {
+  _deprecated "${FUNCNAME[0]}"
+  consoleHasAnimation "$@" || return $?
+}
+
+# Deprecated: 2026-01
+hasColors() {
+  _deprecated "${FUNCNAME[0]}"
+  consoleHasColors "$@" || return $?
+}
+
+# Deprecated: 2026-01
+findUncaughtAssertions() {
+  _deprecated "${FUNCNAME[0]}"
+  bashFindUncaughtAssertions "$@" || return $?
+}
+
+# Deprecated: 2026-01
+debugOpenFiles() {
+  _deprecated "${FUNCNAME[0]}"
+  filesOpenStatus "$@" || return $?
+}
+
+clearLine() {
+  _deprecated "${FUNCNAME[0]}"
+  consoleLineFill "$@"
+}
+
+# Deprecated: 2026-01
+# See: shaPipe
+# Use `shaPipe --cache cacheDirectory` instead
+#
+# Argument: cacheDirectory - Directory. Optional. The directory where cache files can be stored exclusively for this function. Supports a blank value to disable caching, otherwise, it must be a valid directory.
+# Argument: filename - File. Optional. File determine the sha value for.
+# Depends: sha1sum shaPipe
+# Summary: SHA1 checksum of standard input
+# Example:     cachedShaPipe "$cacheDirectory" < "$fileName"
+# Example:     cachedShaPipe "$cacheDirectory" "$fileName0" "$fileName1"
+# Output: cf7861b50054e8c680a9552917b43ec2b9edae2b
+# stdin: any file
+# stdout: `String`. A hexadecimal string which uniquely represents the data in `stdin`.
+cachedShaPipe() {
+  local cacheDirectory="${1-}"
+  _deprecated "${FUNCNAME[0]}"
+  if [ "${cacheDirectory#-}" != "${cacheDirectory}" ]; then
+    shaPipe "$@"
+  else
+    shaPipe --cache "$@"
+  fi
+}
+
 # DEPRECATED, `BUILD_COLORS_MODE` no longer used or supported.
 # Set colors to deal with dark or light-background consoles
 # Deprecated: 2026-01
@@ -29,6 +206,7 @@ consoleColorMode() {
   _deprecated "${handler#_}" "Use consoleConfigureDecorate" || :
   consoleConfigureDecorate
 }
+
 _consoleColorMode() {
   # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"

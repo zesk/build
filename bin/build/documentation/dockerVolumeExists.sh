@@ -1,42 +1,21 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-22
+# Generated on 2026-01-24
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/docker.sh"
 argument="name - String. Required."$'\n'""
 base="docker.sh"
 description="Does a docker volume exist with name?"$'\n'""
+exitCode="0"
 file="bin/build/tools/docker.sh"
-fn="dockerVolumeExists"
-foundNames=""
+foundNames=([0]="argument")
+rawComment="Does a docker volume exist with name?"$'\n'"Argument: name - String. Required."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/docker.sh"
-sourceModified="1769063211"
+sourceModified="1769184734"
 summary="Does a docker volume exist with name?"
 usage="dockerVolumeExists name"
 # shellcheck disable=SC2016
-helpConsole='[92mUsage[0m: [38;2;170;170;255mdockerVolumeExists[0m [38;2;255;255;0m[35;48;2;0;0;0mname[0m[0m
-
-    [31mname  [1;97mString. Required.[0m
-
-Does a docker volume exist with name?
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-'
+helpConsole=''$'\e''[[label]mUsage'$'\e''[0m: '$'\e''[[info]mdockerVolumeExists'$'\e''[0m '$'\e''[[bold]m'$'\e''[[magenta]mname'$'\e''[0m'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[red]mname  '$'\e''[[value]mString. Required.'$'\e''[[reset]m'$'\n'''$'\n''Does a docker volume exist with name?'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[code]m0'$'\e''[[reset]m - Success'$'\n''- '$'\e''[[code]m1'$'\e''[[reset]m - Environment error'$'\n''- '$'\e''[[code]m2'$'\e''[[reset]m - Argument error'$'\n'''
 # shellcheck disable=SC2016
-helpPlain='Usage: dockerVolumeExists name
-
-    name  String. Required.
-
-Does a docker volume exist with name?
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-'
+helpPlain='Usage: dockerVolumeExists name'$'\n'''$'\n''    name  String. Required.'$'\n'''$'\n''Does a docker volume exist with name?'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''

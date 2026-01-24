@@ -1,52 +1,20 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-22
+# Generated on 2026-01-24
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/developer.sh"
 argument="--copy - Flag. Optional. Copy the files instead of creating a link - more compatible with Docker but slower and requires synchronization."$'\n'"--reset - Flag. Optional. Revert the link and reinstall using the original binary."$'\n'""
 base="developer.sh"
-description="Add a development link to the local version of Zesk Build for testing in local projects."$'\n'""$'\n'"Copies or updates \`\$BUILD_HOME/bin/build\` in current project."$'\n'""$'\n'"Useful when you want to test a fix on a current project."$'\n'""
+description="Add a development link to the local version of Zesk Build for testing in local projects."$'\n'"Copies or updates \`\$BUILD_HOME/bin/build\` in current project."$'\n'"Useful when you want to test a fix on a current project."$'\n'""
+exitCode="0"
 file="bin/build/tools/developer.sh"
-fn="buildDevelopmentLink"
-foundNames=""
+foundNames=([0]="argument")
+rawComment="Add a development link to the local version of Zesk Build for testing in local projects."$'\n'"Copies or updates \`\$BUILD_HOME/bin/build\` in current project."$'\n'"Useful when you want to test a fix on a current project."$'\n'"Argument: --copy - Flag. Optional. Copy the files instead of creating a link - more compatible with Docker but slower and requires synchronization."$'\n'"Argument: --reset - Flag. Optional. Revert the link and reinstall using the original binary."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
-sourceFile="bin/build/tools/developer.sh"
-sourceModified="1769063211"
+sourceModified="1769184734"
 summary="Add a development link to the local version of Zesk"
 usage="buildDevelopmentLink [ --copy ] [ --reset ]"
 # shellcheck disable=SC2016
-helpConsole='[92mUsage[0m: [38;2;170;170;255mbuildDevelopmentLink[0m [94m[ --copy ][0m [94m[ --reset ][0m
-
-    [94m--copy   [1;97mFlag. Optional. Copy the files instead of creating a link - more compatible with Docker but slower and requires synchronization.[0m
-    [94m--reset  [1;97mFlag. Optional. Revert the link and reinstall using the original binary.[0m
-
-Add a development link to the local version of Zesk Build for testing in local projects.
-
-Copies or updates [38;2;0;255;0;48;2;0;0;0m$BUILD_HOME/bin/build[0m in current project.
-
-Useful when you want to test a fix on a current project.
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-'
+helpConsole=''$'\e''[[label]mUsage'$'\e''[0m: '$'\e''[[info]mbuildDevelopmentLink'$'\e''[0m '$'\e''[[blue]m[ --copy ]'$'\e''[0m '$'\e''[[blue]m[ --reset ]'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[blue]m--copy   '$'\e''[[value]mFlag. Optional. Copy the files instead of creating a link - more compatible with Docker but slower and requires synchronization.'$'\e''[[reset]m'$'\n''    '$'\e''[[blue]m--reset  '$'\e''[[value]mFlag. Optional. Revert the link and reinstall using the original binary.'$'\e''[[reset]m'$'\n'''$'\n''Add a development link to the local version of Zesk Build for testing in local projects.'$'\n''Copies or updates '$'\e''[[code]m$BUILD_HOME/bin/build'$'\e''[[reset]m in current project.'$'\n''Useful when you want to test a fix on a current project.'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[code]m0'$'\e''[[reset]m - Success'$'\n''- '$'\e''[[code]m1'$'\e''[[reset]m - Environment error'$'\n''- '$'\e''[[code]m2'$'\e''[[reset]m - Argument error'$'\n'''
 # shellcheck disable=SC2016
-helpPlain='Usage: buildDevelopmentLink [ --copy ] [ --reset ]
-
-    --copy   Flag. Optional. Copy the files instead of creating a link - more compatible with Docker but slower and requires synchronization.
-    --reset  Flag. Optional. Revert the link and reinstall using the original binary.
-
-Add a development link to the local version of Zesk Build for testing in local projects.
-
-Copies or updates $BUILD_HOME/bin/build in current project.
-
-Useful when you want to test a fix on a current project.
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-'
+helpPlain='Usage: buildDevelopmentLink [ --copy ] [ --reset ]'$'\n'''$'\n''    --copy   Flag. Optional. Copy the files instead of creating a link - more compatible with Docker but slower and requires synchronization.'$'\n''    --reset  Flag. Optional. Revert the link and reinstall using the original binary.'$'\n'''$'\n''Add a development link to the local version of Zesk Build for testing in local projects.'$'\n''Copies or updates $BUILD_HOME/bin/build in current project.'$'\n''Useful when you want to test a fix on a current project.'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''

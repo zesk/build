@@ -112,7 +112,7 @@ __brewUpdate() {
 # package.sh: true
 __brewInstalledList() {
   local handler="_${FUNCNAME[0]}"
-  whichExists brew || throwEnvironment "$handler" "brew not installed - can not list" || return $?
+  executableExists brew || throwEnvironment "$handler" "brew not installed - can not list" || return $?
   [ $# -eq 0 ] || throwArgument "$handler" "Unknown argument $*" || return $?
   __brewWrapper list -1 | grep -v '^[^A-Za-z]'
 }
@@ -125,7 +125,7 @@ ___brewInstalledList() {
 # package.sh: true
 __brewAvailableList() {
   local handler="_${FUNCNAME[0]}"
-  whichExists brew || throwEnvironment "$handler" "brew not installed - can not list" || return $?
+  executableExists brew || throwEnvironment "$handler" "brew not installed - can not list" || return $?
   __brewWrapper search --formula '/.*/'
 }
 ___brewAvailableList() {

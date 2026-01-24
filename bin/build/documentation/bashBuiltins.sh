@@ -1,45 +1,22 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-22
+# Generated on 2026-01-24
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/bash.sh"
 argument="none"
 base="bash.sh"
 description="List bash buildin functions, one per line"$'\n'""
+exitCode="0"
 file="bin/build/tools/bash.sh"
-fn="bashBuiltins"
-foundNames=""
+foundNames=([0]="stdout")
+rawComment="List bash buildin functions, one per line"$'\n'"stdout: line:function"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/bash.sh"
-sourceModified="1769063211"
+sourceModified="1769208503"
 stdout="line:function"$'\n'""
 summary="List bash buildin functions, one per line"
 usage="bashBuiltins"
 # shellcheck disable=SC2016
-helpConsole='[92mUsage[0m: [38;2;170;170;255mbashBuiltins[0m
-
-List bash buildin functions, one per line
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-
-Writes to [38;2;0;255;0;48;2;0;0;0mstdout[0m:
-line:function
-'
+helpConsole=''$'\e''[[label]mUsage'$'\e''[0m: '$'\e''[[info]mbashBuiltins'$'\e''[0m'$'\n'''$'\n''List bash buildin functions, one per line'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[code]m0'$'\e''[[reset]m - Success'$'\n''- '$'\e''[[code]m1'$'\e''[[reset]m - Environment error'$'\n''- '$'\e''[[code]m2'$'\e''[[reset]m - Argument error'$'\n'''$'\n''Writes to '$'\e''[[code]mstdout'$'\e''[[reset]m:'$'\n''line:function'$'\n'''
 # shellcheck disable=SC2016
-helpPlain='Usage: bashBuiltins
-
-List bash buildin functions, one per line
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-
-Writes to stdout:
-line:function
-'
+helpPlain='Usage: bashBuiltins'$'\n'''$'\n''List bash buildin functions, one per line'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''$'\n''Writes to stdout:'$'\n''line:function'$'\n'''

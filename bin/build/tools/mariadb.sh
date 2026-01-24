@@ -103,7 +103,7 @@ mariadbDump() {
   [ -n "$binary" ] || binary=$(packageDefault mysqldump)
   [ -n "$binary" ] || throwArgument "$handler" "--binary not supplied and MARIADB_BINARY_DUMP is blank - at least one is required (MARIADB_BINARY_DUMP=${MARIADB_BINARY_DUMP-})" || return $?
 
-  whichExists "$binary" || catchEnvironment "$handler" "$binary not found in PATH: $PATH" || return $?
+  executableExists "$binary" || catchEnvironment "$handler" "$binary not found in PATH: $PATH" || return $?
   options+=(--add-drop-table -c)
 
   if $printFlag; then

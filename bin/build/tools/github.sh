@@ -262,9 +262,9 @@ githubRelease() {
 
   resultsFile="$(buildCacheDirectory)/results.json" || throwEnvironment "$handler" "Unable create cache directory" || return $?
 
-  decorate decoration "$(echoBar)" || :
+  decorate decoration "$(consoleLine)" || :
   bigText "$releaseName" | decorate magenta
-  decorate decoration "$(echoBar)" || :
+  decorate decoration "$(consoleLine)" || :
   printf "%s %s (%s) %s\n" "$(decorate green Tagging)" "$(decorate code "$releaseName")" "$(decorate magenta "$commitish")" "$(decorate green "and pushing ... ")" || :
 
   local start

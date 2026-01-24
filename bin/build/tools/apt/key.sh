@@ -66,8 +66,8 @@ __aptKeyAdd() {
   ring=$(_usageAptKeyRings "$handler") || return $?
 
   local installs=()
-  whichExists gpg || installs+=("gpg")
-  whichExists --any curl wget || installs+=("curl")
+  executableExists gpg || installs+=("gpg")
+  executableExists --any curl wget || installs+=("curl")
   if [ ${#installs[@]} -gt 0 ]; then
     if $installFlag; then
       catchReturn "$handler" packageInstall "${installs[@]}" || return $?

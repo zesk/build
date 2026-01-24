@@ -1,78 +1,22 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-22
+# Generated on 2026-01-24
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/deployment.sh"
 argument="--env-file envFile - File. Optional. Environment file to load - can handle any format."$'\n'"--debug - Flag. Optional. Enable debugging."$'\n'"--first - Flag. Optional. When it is the first deployment, use this flag."$'\n'"--home deployPath - Directory. Required. Path where the deployments database is on remote system. Uses"$'\n'"--id applicationId - String. Required. If not specified, uses environment variable loaded from \`.build.env\`, or \`APPLICATION_ID\` environment."$'\n'"--application applicationPath - String. Required. Path on the remote system where the application is live. If not specified, uses environment variable loaded from \`.build.env\`, or \`APPLICATION_REMOTE_HOME\` environment."$'\n'"--target targetPackage - Filename. Optional. Package name usually an archive format.  If not specified, uses environment variable loaded from \`.build.env\`, or \`BUILD_TARGET\` environment. Defaults to \`app.tar.gz\`."$'\n'""
 base="deployment.sh"
-description="Deploy to a host"$'\n'""$'\n'"Loads \`./.build.env\` if it exists."$'\n'"Not possible to deploy to different paths on different hosts, currently. Hosts are assumeed to be similar."$'\n'""$'\n'""
+description="Deploy to a host"$'\n'"Loads \`./.build.env\` if it exists."$'\n'"Not possible to deploy to different paths on different hosts, currently. Hosts are assumeed to be similar."$'\n'""
 environment="DEPLOY_REMOTE_HOME - path on remote host for deployment data"$'\n'"APPLICATION_REMOTE_HOME - path on remote host for application"$'\n'"DEPLOY_USER_HOSTS - list of user@host (will be tokenized by spaces regardless of shell quoting)"$'\n'"APPLICATION_ID - Version to be deployed"$'\n'"BUILD_TARGET - The application package name"$'\n'""
+exitCode="0"
 file="bin/build/tools/deployment.sh"
-fn="deployBuildEnvironment"
-foundNames=""
+foundNames=([0]="argument" [1]="file" [2]="environment" [3]="test")
+rawComment="Deploy to a host"$'\n'"Argument: --env-file envFile - File. Optional. Environment file to load - can handle any format."$'\n'"Argument: --debug - Flag. Optional. Enable debugging."$'\n'"Argument: --first - Flag. Optional. When it is the first deployment, use this flag."$'\n'"Argument: --home deployPath - Directory. Required. Path where the deployments database is on remote system. Uses"$'\n'"Argument: --id applicationId - String. Required. If not specified, uses environment variable loaded from \`.build.env\`, or \`APPLICATION_ID\` environment."$'\n'"Argument: --application applicationPath - String. Required. Path on the remote system where the application is live. If not specified, uses environment variable loaded from \`.build.env\`, or \`APPLICATION_REMOTE_HOME\` environment."$'\n'"Argument: --target targetPackage - Filename. Optional. Package name usually an archive format.  If not specified, uses environment variable loaded from \`.build.env\`, or \`BUILD_TARGET\` environment. Defaults to \`app.tar.gz\`."$'\n'"Loads \`./.build.env\` if it exists."$'\n'"File: \`./.build.env\`"$'\n'"Environment: DEPLOY_REMOTE_HOME - path on remote host for deployment data"$'\n'"Environment: APPLICATION_REMOTE_HOME - path on remote host for application"$'\n'"Environment: DEPLOY_USER_HOSTS - list of user@host (will be tokenized by spaces regardless of shell quoting)"$'\n'"Environment: APPLICATION_ID - Version to be deployed"$'\n'"Environment: BUILD_TARGET - The application package name"$'\n'"Not possible to deploy to different paths on different hosts, currently. Hosts are assumeed to be similar."$'\n'"Test: testDeployBuildEnvironment - INCOMPLETE"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
-sourceFile="bin/build/tools/deployment.sh"
-sourceModified="1769063211"
+sourceModified="1769109689"
 summary="Deploy to a host"
 test="testDeployBuildEnvironment - INCOMPLETE"$'\n'""
 usage="deployBuildEnvironment [ --env-file envFile ] [ --debug ] [ --first ] --home deployPath --id applicationId --application applicationPath [ --target targetPackage ]"
 # shellcheck disable=SC2016
-helpConsole='[92mUsage[0m: [38;2;170;170;255mdeployBuildEnvironment[0m [94m[ --env-file envFile ][0m [94m[ --debug ][0m [94m[ --first ][0m [38;2;255;255;0m[35;48;2;0;0;0m--home deployPath[0m[0m [38;2;255;255;0m[35;48;2;0;0;0m--id applicationId[0m[0m [38;2;255;255;0m[35;48;2;0;0;0m--application applicationPath[0m[0m [94m[ --target targetPackage ][0m
-
-    [94m--env-file envFile             [1;97mFile. Optional. Environment file to load - can handle any format.[0m
-    [94m--debug                        [1;97mFlag. Optional. Enable debugging.[0m
-    [94m--first                        [1;97mFlag. Optional. When it is the first deployment, use this flag.[0m
-    [31m--home deployPath              [1;97mDirectory. Required. Path where the deployments database is on remote system. Uses[0m
-    [31m--id applicationId             [1;97mString. Required. If not specified, uses environment variable loaded from [38;2;0;255;0;48;2;0;0;0m.build.env[0m, or [38;2;0;255;0;48;2;0;0;0mAPPLICATION_ID[0m environment.[0m
-    [31m--application applicationPath  [1;97mString. Required. Path on the remote system where the application is live. If not specified, uses environment variable loaded from [38;2;0;255;0;48;2;0;0;0m.build.env[0m, or [38;2;0;255;0;48;2;0;0;0mAPPLICATION_REMOTE_HOME[0m environment.[0m
-    [94m--target targetPackage         [1;97mFilename. Optional. Package name usually an archive format.  If not specified, uses environment variable loaded from [38;2;0;255;0;48;2;0;0;0m.build.env[0m, or [38;2;0;255;0;48;2;0;0;0mBUILD_TARGET[0m environment. Defaults to [38;2;0;255;0;48;2;0;0;0mapp.tar.gz[0m.[0m
-
-Deploy to a host
-
-Loads [38;2;0;255;0;48;2;0;0;0m./.build.env[0m if it exists.
-Not possible to deploy to different paths on different hosts, currently. Hosts are assumeed to be similar.
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-
-Environment variables:
-- DEPLOY_REMOTE_HOME - path on remote host for deployment data
-- APPLICATION_REMOTE_HOME - path on remote host for application
-- DEPLOY_USER_HOSTS - list of user@host (will be tokenized by spaces regardless of shell quoting)
-- APPLICATION_ID - Version to be deployed
-- BUILD_TARGET - The application package name
-- 
-'
+helpConsole=''$'\e''[[label]mUsage'$'\e''[0m: '$'\e''[[info]mdeployBuildEnvironment'$'\e''[0m '$'\e''[[blue]m[ --env-file envFile ]'$'\e''[0m '$'\e''[[blue]m[ --debug ]'$'\e''[0m '$'\e''[[blue]m[ --first ]'$'\e''[0m '$'\e''[[bold]m'$'\e''[[magenta]m--home deployPath'$'\e''[0m'$'\e''[0m '$'\e''[[bold]m'$'\e''[[magenta]m--id applicationId'$'\e''[0m'$'\e''[0m '$'\e''[[bold]m'$'\e''[[magenta]m--application applicationPath'$'\e''[0m'$'\e''[0m '$'\e''[[blue]m[ --target targetPackage ]'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[blue]m--env-file envFile             '$'\e''[[value]mFile. Optional. Environment file to load - can handle any format.'$'\e''[[reset]m'$'\n''    '$'\e''[[blue]m--debug                        '$'\e''[[value]mFlag. Optional. Enable debugging.'$'\e''[[reset]m'$'\n''    '$'\e''[[blue]m--first                        '$'\e''[[value]mFlag. Optional. When it is the first deployment, use this flag.'$'\e''[[reset]m'$'\n''    '$'\e''[[red]m--home deployPath              '$'\e''[[value]mDirectory. Required. Path where the deployments database is on remote system. Uses'$'\e''[[reset]m'$'\n''    '$'\e''[[red]m--id applicationId             '$'\e''[[value]mString. Required. If not specified, uses environment variable loaded from '$'\e''[[code]m.build.env'$'\e''[[reset]m, or '$'\e''[[code]mAPPLICATION_ID'$'\e''[[reset]m environment.'$'\e''[[reset]m'$'\n''    '$'\e''[[red]m--application applicationPath  '$'\e''[[value]mString. Required. Path on the remote system where the application is live. If not specified, uses environment variable loaded from '$'\e''[[code]m.build.env'$'\e''[[reset]m, or '$'\e''[[code]mAPPLICATION_REMOTE_HOME'$'\e''[[reset]m environment.'$'\e''[[reset]m'$'\n''    '$'\e''[[blue]m--target targetPackage         '$'\e''[[value]mFilename. Optional. Package name usually an archive format.  If not specified, uses environment variable loaded from '$'\e''[[code]m.build.env'$'\e''[[reset]m, or '$'\e''[[code]mBUILD_TARGET'$'\e''[[reset]m environment. Defaults to '$'\e''[[code]mapp.tar.gz'$'\e''[[reset]m.'$'\e''[[reset]m'$'\n'''$'\n''Deploy to a host'$'\n''Loads '$'\e''[[code]m./.build.env'$'\e''[[reset]m if it exists.'$'\n''Not possible to deploy to different paths on different hosts, currently. Hosts are assumeed to be similar.'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[code]m0'$'\e''[[reset]m - Success'$'\n''- '$'\e''[[code]m1'$'\e''[[reset]m - Environment error'$'\n''- '$'\e''[[code]m2'$'\e''[[reset]m - Argument error'$'\n'''$'\n''Environment variables:'$'\n''- '$'\e''[[code]mDEPLOY_REMOTE_HOME'$'\e''[[reset]m - path on remote host for deployment data'$'\n''- '$'\e''[[code]mAPPLICATION_REMOTE_HOME'$'\e''[[reset]m - path on remote host for application'$'\n''- '$'\e''[[code]mDEPLOY_USER_HOSTS'$'\e''[[reset]m - list of user@host (will be tokenized by spaces regardless of shell quoting)'$'\n''- '$'\e''[[code]mAPPLICATION_ID'$'\e''[[reset]m - Version to be deployed'$'\n''- '$'\e''[[code]mBUILD_TARGET'$'\e''[[reset]m - The application package name'$'\n'''
 # shellcheck disable=SC2016
-helpPlain='Usage: deployBuildEnvironment [ --env-file envFile ] [ --debug ] [ --first ] --home deployPath --id applicationId --application applicationPath [ --target targetPackage ]
-
-    --env-file envFile             File. Optional. Environment file to load - can handle any format.
-    --debug                        Flag. Optional. Enable debugging.
-    --first                        Flag. Optional. When it is the first deployment, use this flag.
-    --home deployPath              Directory. Required. Path where the deployments database is on remote system. Uses
-    --id applicationId             String. Required. If not specified, uses environment variable loaded from .build.env, or APPLICATION_ID environment.
-    --application applicationPath  String. Required. Path on the remote system where the application is live. If not specified, uses environment variable loaded from .build.env, or APPLICATION_REMOTE_HOME environment.
-    --target targetPackage         Filename. Optional. Package name usually an archive format.  If not specified, uses environment variable loaded from .build.env, or BUILD_TARGET environment. Defaults to app.tar.gz.
-
-Deploy to a host
-
-Loads ./.build.env if it exists.
-Not possible to deploy to different paths on different hosts, currently. Hosts are assumeed to be similar.
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-
-Environment variables:
-- DEPLOY_REMOTE_HOME - path on remote host for deployment data
-- APPLICATION_REMOTE_HOME - path on remote host for application
-- DEPLOY_USER_HOSTS - list of user@host (will be tokenized by spaces regardless of shell quoting)
-- APPLICATION_ID - Version to be deployed
-- BUILD_TARGET - The application package name
-- 
-'
+helpPlain='Usage: deployBuildEnvironment [ --env-file envFile ] [ --debug ] [ --first ] --home deployPath --id applicationId --application applicationPath [ --target targetPackage ]'$'\n'''$'\n''    --env-file envFile             File. Optional. Environment file to load - can handle any format.'$'\n''    --debug                        Flag. Optional. Enable debugging.'$'\n''    --first                        Flag. Optional. When it is the first deployment, use this flag.'$'\n''    --home deployPath              Directory. Required. Path where the deployments database is on remote system. Uses'$'\n''    --id applicationId             String. Required. If not specified, uses environment variable loaded from .build.env, or APPLICATION_ID environment.'$'\n''    --application applicationPath  String. Required. Path on the remote system where the application is live. If not specified, uses environment variable loaded from .build.env, or APPLICATION_REMOTE_HOME environment.'$'\n''    --target targetPackage         Filename. Optional. Package name usually an archive format.  If not specified, uses environment variable loaded from .build.env, or BUILD_TARGET environment. Defaults to app.tar.gz.'$'\n'''$'\n''Deploy to a host'$'\n''Loads ./.build.env if it exists.'$'\n''Not possible to deploy to different paths on different hosts, currently. Hosts are assumeed to be similar.'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''$'\n''Environment variables:'$'\n''- DEPLOY_REMOTE_HOME - path on remote host for deployment data'$'\n''- APPLICATION_REMOTE_HOME - path on remote host for application'$'\n''- DEPLOY_USER_HOSTS - list of user@host (will be tokenized by spaces regardless of shell quoting)'$'\n''- APPLICATION_ID - Version to be deployed'$'\n''- BUILD_TARGET - The application package name'$'\n'''

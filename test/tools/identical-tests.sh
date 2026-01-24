@@ -129,32 +129,32 @@ testIdenticalChecks() {
   identicalError=$(returnCode identical)
   identicalCheckArgs=(--cd "$home/test/example" --extension 'txt')
 
-  clearLine && decorate info "same file match"
+  consoleLineFill && decorate info "same file match"
   assertExitCode --stdout-match Verified 0 identicalCheck "${identicalCheckArgs[@]}" --prefix '# eIDENTICAL' || return $?
 
-  clearLine && decorate info "same file mismatch"
+  consoleLineFill && decorate info "same file mismatch"
   assertExitCode --stderr-match 'Token code changed' "$identicalError" identicalCheck "${identicalCheckArgs[@]}" --prefix '# fIDENTICAL' || return $?
 
-  clearLine && decorate info "overlap failure"
+  consoleLineFill && decorate info "overlap failure"
   assertExitCode --stderr-match 'overlap' "$identicalError" identicalCheck "${identicalCheckArgs[@]}" --prefix '# aIDENTICAL' || return $?
 
-  clearLine && decorate info "bad number failure"
+  consoleLineFill && decorate info "bad number failure"
   assertExitCode --stderr-match 'Invalid token count: NAN' "$identicalError" identicalCheck "${identicalCheckArgs[@]}" --prefix '# bIDENTICAL' || return $?
 
-  clearLine && decorate info "single instance failure"
+  consoleLineFill && decorate info "single instance failure"
   assertExitCode --stderr-match 'Single token' "$identicalError" identicalCheck "${identicalCheckArgs[@]}" --prefix '# cIDENTICAL' || return $?
   assertExitCode --stderr-match 'Single token' "$identicalError" identicalCheck "${identicalCheckArgs[@]}" --prefix '# xIDENTICAL' || return $?
 
-  clearLine && decorate info "$(pwd) passing 3 files"
+  consoleLineFill && decorate info "$(pwd) passing 3 files"
   assertExitCode 0 identicalCheck "${identicalCheckArgs[@]}" --prefix '# dIDENTICAL' || return $?
 
-  clearLine && decorate info "slash slash"
+  consoleLineFill && decorate info "slash slash"
   assertExitCode --stderr-match 'Token code changed' "$identicalError" identicalCheck "${identicalCheckArgs[@]}" --prefix '// Alternate heading is identical' || return $?
 
-  clearLine && decorate info "slash slash prefix mismatch is OK"
+  consoleLineFill && decorate info "slash slash prefix mismatch is OK"
   assertExitCode 0 identicalCheck "${identicalCheckArgs[@]}" --prefix '// IDENTICAL' || return $?
 
-  clearLine && decorate info "case match"
+  consoleLineFill && decorate info "case match"
   assertExitCode 0 identicalCheck "${identicalCheckArgs[@]}" --prefix '// Identical' || return $?
 
   assertNotExitCode --stderr-match overlap 0 identicalCheck "${identicalCheckArgs[@]}" --prefix '# OVERLAP_IDENTICAL' || return $?

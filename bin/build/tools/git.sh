@@ -519,7 +519,7 @@ gitCommit() {
     catchReturn "$handler" __gitCommitReleaseNotesUpdate "$handler" "$notes" "$comment" || return $?
   elif [ -z "$comment" ]; then
     comment=$(__gitCommitReleaseNotesGetLastComment "$handler" "$notes") || return $?
-    [ -z "$comment" ] || printf -- "%s %s:\n%s\n" "$(decorate info "Using last release note line from")" "$(decorate file "$notes")" "$(boxedHeading "$comment")"
+    [ -z "$comment" ] || printf -- "%s %s:\n%s\n" "$(decorate info "Using last release note line from")" "$(decorate file "$notes")" "$(consoleHeadingBoxed "$comment")"
   fi
   outputHandler="cat"
   ! $openLinks || outputHandler="urlOpener"
@@ -539,12 +539,12 @@ __gitCommitReleaseNotesUpdate() {
 
   home=$(catchReturn "$handler" buildHome) || return $?
   pattern="$(quoteGrepPattern "$comment")"
-  catchEnvironment "$handler" statusMessage --last printf -- "%s%s\n" "$(lineFill '.' "$(decorate label "Release notes") $(decorate file "$notes") $(decorate decoration --)")" "$(decorate reset --)" || return $?
+  catchEnvironment "$handler" statusMessage --last printf -- "%s%s\n" "$(consoleHeadingLine '.' "$(decorate label "Release notes") $(decorate file "$notes") $(decorate decoration --)")" "$(decorate reset --)" || return $?
   if ! grep -q -e "$pattern" "$notes"; then
     local prefix=""
     fileEndsWithNewline "$notes" || prefix=$'\n'
     catchEnvironment "$handler" printf -- "%s%s %s\n" "$prefix" "-" "$comment" >>"$notes" || return $?
-    printf -- "%s %s:\n%s\n" "$(decorate info "Adding comment to")" "$(decorate file "$notes")" "$(boxedHeading "$comment")"
+    printf -- "%s %s:\n%s\n" "$(decorate info "Adding comment to")" "$(decorate file "$notes")" "$(consoleHeadingBoxed "$comment")"
     catchEnvironment "$handler" git add "$notes" || return $?
     catchEnvironment "$handler" grep -B 10 -e "$pattern" "$notes" | decorate code || return $?
   else
@@ -833,7 +833,7 @@ gitInstallHook() {
       if inArray "$argument" "${types[@]}"; then
         local fromTo relFromTo item
         hasHook --application "$home" "git-$argument" || throwArgument "$handler" "Hook git-$argument does not exist (Home: $home)" || return $?
-        fromTo=("$(whichHook --application "$home" "git-$argument")" "$home/.git/hooks/$argument") || throwEnvironment "$handler" "Unable to whichHook git-$argument (Home: $home)" || rewturn $?
+        fromTo=("$(hookFind --application "$home" "git-$argument")" "$home/.git/hooks/$argument") || throwEnvironment "$handler" "Unable to hookFind git-$argument (Home: $home)" || rewturn $?
         relFromTo=()
         home="${home%/}/"
         for item in "${fromTo[@]}"; do
@@ -886,7 +886,7 @@ gitPreCommitSetup() {
   local directory total=0
 
   directory=$(catchReturn "$handler" __gitPreCommitCache "$handler" true) || return $?
-  catchEnvironment "$handler" git diff --name-only --cached --diff-filter=ACMR | catchEnvironment "$handler" extensionLists --clean "$directory" || return $?
+  catchEnvironment "$handler" git diff --name-only --cached --diff-filter=ACMR | catchEnvironment "$handler" fileExtensionLists --clean "$directory" || return $?
   total=$(catchReturn "$handler" fileLineCount "$directory/@") || return $?
   if [ "$total" -eq 0 ]; then
     catchReturn "$handler" rm -rf "$directory" || return $?
@@ -909,7 +909,7 @@ gitPreCommitHeader() {
   directory=$(catchReturn "$handler" __gitPreCommitCache "$handler" true) || return $?
   [ -f "$directory/@" ] || throwEnvironment "$handler" "$directory/@ missing" || return $?
   total=$(catchReturn "$handler" fileLineCount "$directory/@") || return $?
-  statusMessage --last printf -- "%s: %s\n" "$(decorate success "$(alignRight "$width" "all")")" "$(decorate info "$total $(plural "$total" file files) changed")"
+  statusMessage --last printf -- "%s: %s\n" "$(decorate success "$(textAlignRight "$width" "all")")" "$(decorate info "$total $(plural "$total" file files) changed")"
   while [ $# -gt 0 ]; do
     local extension="$1" label="$1"
     case "$extension" in
@@ -925,7 +925,7 @@ gitPreCommitHeader() {
       color="success"
     fi
     # shellcheck disable=SC2015
-    printf "%s: %s\n" "$(decorate "$color" "$(alignRight "$width" "$label")")" "$(decorate info "$total $(plural "$total" file files) changed")"
+    printf "%s: %s\n" "$(decorate "$color" "$(textAlignRight "$width" "$label")")" "$(decorate info "$total $(plural "$total" file files) changed")"
     shift
   done
 }

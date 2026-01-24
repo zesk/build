@@ -16,7 +16,7 @@
 apkIsInstalled() {
   local handler="_${FUNCNAME[0]}"
   __help --only "$handler" "$@" || return 0
-  isAlpine && whichExists apk
+  isAlpine && executableExists apk
 }
 _apkIsInstalled() {
   # __IDENTICAL__ usageDocument 1

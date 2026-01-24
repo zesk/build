@@ -1,71 +1,23 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-22
+# Generated on 2026-01-24
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/debug.sh"
 argument="moduleName - String. Optional. Only start debugging if debugging is enabled for ANY of the passed in modules."$'\n'""
 base="debug.sh"
-description="Start build debugging if it is enabled."$'\n'"This does \`set -x\` which traces and outputs every shell command"$'\n'"Use it to debug when you can not figure out what is happening internally."$'\n'""$'\n'"\`BUILD_DEBUG\` can be a list of strings like \`environment,assert\` for example."$'\n'"Example:     buildDebugStart || :"$'\n'""
+description="Start build debugging if it is enabled."$'\n'"This does \`set -x\` which traces and outputs every shell command"$'\n'"Use it to debug when you can not figure out what is happening internally."$'\n'"\`BUILD_DEBUG\` can be a list of strings like \`environment,assert\` for example."$'\n'"Example:     buildDebugStart || :"$'\n'""
 environment="BUILD_DEBUG"$'\n'""
 example="    # ... complex code here"$'\n'"    buildDebugStop || :. -"$'\n'""
+exitCode="0"
 file="bin/build/tools/debug.sh"
-fn="buildDebugStart"
-foundNames=""
+foundNames=([0]="environment" [1]="argument" [2]="example" [3]="requires")
+rawComment="Start build debugging if it is enabled."$'\n'"This does \`set -x\` which traces and outputs every shell command"$'\n'"Use it to debug when you can not figure out what is happening internally."$'\n'"\`BUILD_DEBUG\` can be a list of strings like \`environment,assert\` for example."$'\n'"Environment: BUILD_DEBUG"$'\n'"Argument: moduleName - String. Optional. Only start debugging if debugging is enabled for ANY of the passed in modules."$'\n'"Example:     buildDebugStart || :"$'\n'"Example:     # ... complex code here"$'\n'"Example:     buildDebugStop || :. -"$'\n'"Requires: buildDebugEnabled"$'\n'""$'\n'""
 requires="buildDebugEnabled"$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
-sourceFile="bin/build/tools/debug.sh"
-sourceModified="1769063211"
+sourceModified="1769208503"
 summary="Start build debugging if it is enabled."
 usage="buildDebugStart [ moduleName ]"
 # shellcheck disable=SC2016
-helpConsole='[92mUsage[0m: [38;2;170;170;255mbuildDebugStart[0m [94m[ moduleName ][0m
-
-    [94mmoduleName  [1;97mString. Optional. Only start debugging if debugging is enabled for ANY of the passed in modules.[0m
-
-Start build debugging if it is enabled.
-This does [38;2;0;255;0;48;2;0;0;0mset -x[0m which traces and outputs every shell command
-Use it to debug when you can not figure out what is happening internally.
-
-[38;2;0;255;0;48;2;0;0;0mBUILD_DEBUG[0m can be a list of strings like [38;2;0;255;0;48;2;0;0;0menvironment,assert[0m for example.
-Example:     buildDebugStart || :
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-
-Environment variables:
-- BUILD_DEBUG
-- 
-
-Example:
-    # ... complex code here
-    buildDebugStop || :. -
-'
+helpConsole=''$'\e''[[label]mUsage'$'\e''[0m: '$'\e''[[info]mbuildDebugStart'$'\e''[0m '$'\e''[[blue]m[ moduleName ]'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[blue]mmoduleName  '$'\e''[[value]mString. Optional. Only start debugging if debugging is enabled for ANY of the passed in modules.'$'\e''[[reset]m'$'\n'''$'\n''Start build debugging if it is enabled.'$'\n''This does '$'\e''[[code]mset -x'$'\e''[[reset]m which traces and outputs every shell command'$'\n''Use it to debug when you can not figure out what is happening internally.'$'\n'''$'\e''[[code]mBUILD_DEBUG'$'\e''[[reset]m can be a list of strings like '$'\e''[[code]menvironment,assert'$'\e''[[reset]m for example.'$'\n''Example:     buildDebugStart || :'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[code]m0'$'\e''[[reset]m - Success'$'\n''- '$'\e''[[code]m1'$'\e''[[reset]m - Environment error'$'\n''- '$'\e''[[code]m2'$'\e''[[reset]m - Argument error'$'\n'''$'\n''Environment variables:'$'\n''- BUILD_DEBUG'$'\n'''$'\n''Example:'$'\n''    # ... complex code here'$'\n''    buildDebugStop || :. -'$'\n'''
 # shellcheck disable=SC2016
-helpPlain='Usage: buildDebugStart [ moduleName ]
-
-    moduleName  String. Optional. Only start debugging if debugging is enabled for ANY of the passed in modules.
-
-Start build debugging if it is enabled.
-This does set -x which traces and outputs every shell command
-Use it to debug when you can not figure out what is happening internally.
-
-BUILD_DEBUG can be a list of strings like environment,assert for example.
-Example:     buildDebugStart || :
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-
-Environment variables:
-- BUILD_DEBUG
-- 
-
-Example:
-    # ... complex code here
-    buildDebugStop || :. -
-'
+helpPlain='Usage: buildDebugStart [ moduleName ]'$'\n'''$'\n''    moduleName  String. Optional. Only start debugging if debugging is enabled for ANY of the passed in modules.'$'\n'''$'\n''Start build debugging if it is enabled.'$'\n''This does set -x which traces and outputs every shell command'$'\n''Use it to debug when you can not figure out what is happening internally.'$'\n''BUILD_DEBUG can be a list of strings like environment,assert for example.'$'\n''Example:     buildDebugStart || :'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''$'\n''Environment variables:'$'\n''- BUILD_DEBUG'$'\n'''$'\n''Example:'$'\n''    # ... complex code here'$'\n''    buildDebugStop || :. -'$'\n'''

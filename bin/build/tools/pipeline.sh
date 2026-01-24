@@ -15,49 +15,6 @@
 #
 #------------------------------------------------------------------------------
 
-# Summary: Output debugging information when the build fails
-#
-# Outputs debugging information after build fails:
-#
-# - last 50 lines in build log
-# - Failed message
-# - last 3 lines in build log
-#
-# Argument: logFile - File. Required. The most recent log from the current script.
-# Argument: message - String. Optional. Any additional message to output.
-#
-# Example:     quietLog="$(buildQuietLog "$me")"
-# Example:     if ! ./bin/deploy.sh >>"$quietLog"; then
-# Example:         decorate error "Deploy failed"
-# Example:         buildFailed "$quietLog"
-# Example:     fi
-# Return Code: 1 - Always fails
-# Output: stdout
-buildFailed() {
-  local handler="_${FUNCNAME[0]}"
-  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
-
-  local quietLog="${1-}" && shift
-
-  local failBar
-  failBar="$(lineFill "*")"
-  statusMessage --last decorate error "$failBar"
-  bigText "Failed" | decorate error | decorate wrap "" " " | decorate wrap --fill "*" ""
-  # shellcheck disable=SC2094
-  statusMessage --last decorate error "$failBar"
-
-  showLines=$(catchReturn "$handler" buildEnvironmentGet BUILD_DEBUG_LINES) || return $?
-
-  isUnsignedInteger "$showLines" || showLines=$(($(consoleRows) - 16)) || showLines=40
-  # shellcheck disable=SC2094
-  dumpPipe --lines "$showLines" --tail "$(basename "$quietLog")" "$@" <"$quietLog"
-  throwEnvironment "$handler" "Failed:" "$@" || return $?
-}
-_buildFailed() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
-}
-
 # IDENTICAL versionSort 47
 
 # Summary: Sort versions in the format v0.0.0
@@ -194,7 +151,7 @@ isUpToDate() {
   [ -z "$name" ] || name="$name "
 
   local todayTimestamp
-  todayTimestamp=$(dateToTimestamp "$(todayDate)") || throwEnvironment "$handler" "Unable to generate todayDate" || return $?
+  todayTimestamp=$(dateToTimestamp "$(dateToday)") || throwEnvironment "$handler" "Unable to generate dateToday" || return $?
 
   local keyTimestamp maxDays
 

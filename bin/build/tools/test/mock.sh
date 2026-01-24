@@ -76,8 +76,8 @@ mockEnvironmentStop() {
   done
 }
 
-# Fake `hasConsoleAnimation` for testing
-# Argument: true | false - Boolean. Force the value of hasConsoleAnimation to this value temporarily. Saves the original value.
+# Fake `consoleHasAnimation` for testing
+# Argument: true | false - Boolean. Force the value of consoleHasAnimation to this value temporarily. Saves the original value.
 # Developer Note: Keep this here to keep it close to the definition it modifies
 mockConsoleAnimationStart() {
   local handler="_${FUNCNAME[0]}" flag
@@ -92,7 +92,7 @@ _mockConsoleAnimationStart() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# Stop faking `hasConsoleAnimation` for testing
+# Stop faking `consoleHasAnimation` for testing
 mockConsoleAnimationStop() {
   local handler="_${FUNCNAME[0]}" flag="${1-}"
 

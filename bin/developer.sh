@@ -96,6 +96,17 @@ if source "${BASH_SOURCE[0]%/*}/tools.sh"; then
     usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
   }
 
+  # Show dark and light mode
+  darkLight() {
+    local m
+    bin/build/repair.sh decorate
+    source bin/tools.sh
+    for m in __decorateStylesDefaultLight __decorateStylesDefaultDark; do
+      "$m"
+      colorSampleSemanticStyles
+    done
+  }
+
   # Undo Zesk Build project configuration
   __buildConfigureUndo() {
     local handler="returnMessage"

@@ -1,44 +1,21 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-22
+# Generated on 2026-01-24
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/bash.sh"
 argument="script - File. Required. Bash script to fetch requires tokens from."$'\n'""
 base="bash.sh"
-description="Gets a list of the \`Requires:\` comments in a bash file"$'\n'"Returns a unique list of tokens"$'\n'""
+description="Returns a unique list of tokens"$'\n'""
+exitCode="0"
 file="bin/build/tools/bash.sh"
-fn="bashGetRequires"
-foundNames=""
+foundNames=([0]="argument" [1]="gets_a_list_of_the__requires")
+gets_a_list_of_the__requires="\` comments in a bash file"$'\n'""
+rawComment="Argument: script - File. Required. Bash script to fetch requires tokens from."$'\n'"Gets a list of the \`Requires:\` comments in a bash file"$'\n'"Returns a unique list of tokens"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
-sourceFile="bin/build/tools/bash.sh"
-sourceModified="1769063211"
-summary="Gets a list of the \`Requires:\` comments in a bash"
+sourceModified="1769208503"
+summary="Returns a unique list of tokens"
 usage="bashGetRequires script"
 # shellcheck disable=SC2016
-helpConsole='[92mUsage[0m: [38;2;170;170;255mbashGetRequires[0m [38;2;255;255;0m[35;48;2;0;0;0mscript[0m[0m
-
-    [31mscript  [1;97mFile. Required. Bash script to fetch requires tokens from.[0m
-
-Gets a list of the [38;2;0;255;0;48;2;0;0;0mRequires:[0m comments in a bash file
-Returns a unique list of tokens
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-'
+helpConsole=''$'\e''[[label]mUsage'$'\e''[0m: '$'\e''[[info]mbashGetRequires'$'\e''[0m '$'\e''[[bold]m'$'\e''[[magenta]mscript'$'\e''[0m'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[red]mscript  '$'\e''[[value]mFile. Required. Bash script to fetch requires tokens from.'$'\e''[[reset]m'$'\n'''$'\n''Returns a unique list of tokens'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[code]m0'$'\e''[[reset]m - Success'$'\n''- '$'\e''[[code]m1'$'\e''[[reset]m - Environment error'$'\n''- '$'\e''[[code]m2'$'\e''[[reset]m - Argument error'$'\n'''
 # shellcheck disable=SC2016
-helpPlain='Usage: bashGetRequires script
-
-    script  File. Required. Bash script to fetch requires tokens from.
-
-Gets a list of the Requires: comments in a bash file
-Returns a unique list of tokens
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-'
+helpPlain='Usage: bashGetRequires script'$'\n'''$'\n''    script  File. Required. Bash script to fetch requires tokens from.'$'\n'''$'\n''Returns a unique list of tokens'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''

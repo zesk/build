@@ -1,47 +1,21 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-22
+# Generated on 2026-01-24
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/directory.sh"
 argument="directory - Directory. Required. Directory to change to prior to running command."$'\n'"command - Callable. Required. Thing to do in this directory."$'\n'"... - Arguments. Optional. Arguments to \`command\`."$'\n'""
 base="directory.sh"
 description="Run a command after changing directory to it and then returning to the previous directory afterwards."$'\n'""
+exitCode="0"
 file="bin/build/tools/directory.sh"
-fn="directoryChange"
-foundNames=""
+foundNames=([0]="argument" [1]="requires")
+rawComment="Argument: directory - Directory. Required. Directory to change to prior to running command."$'\n'"Argument: command - Callable. Required. Thing to do in this directory."$'\n'"Argument: ... - Arguments. Optional. Arguments to \`command\`."$'\n'"Run a command after changing directory to it and then returning to the previous directory afterwards."$'\n'"Requires: pushd popd"$'\n'""$'\n'""
 requires="pushd popd"$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
-sourceFile="bin/build/tools/directory.sh"
 sourceModified="1769063211"
 summary="Run a command after changing directory to it and then"
 usage="directoryChange directory command [ ... ]"
 # shellcheck disable=SC2016
-helpConsole='[92mUsage[0m: [38;2;170;170;255mdirectoryChange[0m [38;2;255;255;0m[35;48;2;0;0;0mdirectory[0m[0m [38;2;255;255;0m[35;48;2;0;0;0mcommand[0m[0m [94m[ ... ][0m
-
-    [31mdirectory  [1;97mDirectory. Required. Directory to change to prior to running command.[0m
-    [31mcommand    [1;97mCallable. Required. Thing to do in this directory.[0m
-    [94m...        [1;97mArguments. Optional. Arguments to [38;2;0;255;0;48;2;0;0;0mcommand[0m.[0m
-
-Run a command after changing directory to it and then returning to the previous directory afterwards.
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-'
+helpConsole=''$'\e''[[label]mUsage'$'\e''[0m: '$'\e''[[info]mdirectoryChange'$'\e''[0m '$'\e''[[bold]m'$'\e''[[magenta]mdirectory'$'\e''[0m'$'\e''[0m '$'\e''[[bold]m'$'\e''[[magenta]mcommand'$'\e''[0m'$'\e''[0m '$'\e''[[blue]m[ ... ]'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[red]mdirectory  '$'\e''[[value]mDirectory. Required. Directory to change to prior to running command.'$'\e''[[reset]m'$'\n''    '$'\e''[[red]mcommand    '$'\e''[[value]mCallable. Required. Thing to do in this directory.'$'\e''[[reset]m'$'\n''    '$'\e''[[blue]m...        '$'\e''[[value]mArguments. Optional. Arguments to '$'\e''[[code]mcommand'$'\e''[[reset]m.'$'\e''[[reset]m'$'\n'''$'\n''Run a command after changing directory to it and then returning to the previous directory afterwards.'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[code]m0'$'\e''[[reset]m - Success'$'\n''- '$'\e''[[code]m1'$'\e''[[reset]m - Environment error'$'\n''- '$'\e''[[code]m2'$'\e''[[reset]m - Argument error'$'\n'''
 # shellcheck disable=SC2016
-helpPlain='Usage: directoryChange directory command [ ... ]
-
-    directory  Directory. Required. Directory to change to prior to running command.
-    command    Callable. Required. Thing to do in this directory.
-    ...        Arguments. Optional. Arguments to command.
-
-Run a command after changing directory to it and then returning to the previous directory afterwards.
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-'
+helpPlain='Usage: directoryChange directory command [ ... ]'$'\n'''$'\n''    directory  Directory. Required. Directory to change to prior to running command.'$'\n''    command    Callable. Required. Thing to do in this directory.'$'\n''    ...        Arguments. Optional. Arguments to command.'$'\n'''$'\n''Run a command after changing directory to it and then returning to the previous directory afterwards.'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''

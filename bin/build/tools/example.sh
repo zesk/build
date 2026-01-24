@@ -81,10 +81,10 @@ exampleFunction() {
 
   # Trouble debugging
 
-  whichExists library-which-should-be-there || throwEnvironment "$handler" "missing thing" || return $?
+  executableExists library-which-should-be-there || throwEnvironment "$handler" "missing thing" || return $?
 
   # DEBUG LINE
-  printf -- "%s:%s %s\n" "$(decorate code "${BASH_SOURCE[0]}")" "$(decorate magenta "$LINENO")" "$(decorate each code "$@")" # DEBUG LINE
+  printf -- "%s:%s %s\n" "$(decorate code "${BASH_SOURCE[0]}")" "$(decorate magenta "$LINENO")" "$(decorate each code -- "$@")" # DEBUG LINE
   timingReport "$start" "Completed in"
 
   # LOG ALL CALLS TO A FUNCTION

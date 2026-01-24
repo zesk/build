@@ -78,7 +78,7 @@ __documentationIndexSeeLinker() {
     # Remove everything but slashes
     matchingPrefix="${matchingPrefix//[^\/]/}"
     # Length is number of dot-dots to the root
-    matchingPrefix=$(repeat "${#matchingPrefix}" "../")
+    matchingPrefix=$(textRepeat "${#matchingPrefix}" "../")
 
     local matchingToken
     while read -r matchingToken; do

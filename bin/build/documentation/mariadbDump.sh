@@ -1,56 +1,20 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-22
+# Generated on 2026-01-24
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/mariadb.sh"
 argument="--help - Flag. Optional. Display this help."$'\n'"--print - Flag. Optional. Show the command."$'\n'"--binary - Executable. Optional. The binary to use to do the dump. Defaults to \`MARIADB_BINARY_DUMP\`."$'\n'"--lock - Flag. Optional. Lock the database during dump"$'\n'"--password password - String. Optional. Password to connect"$'\n'"--user user - String. Optional. User to connect"$'\n'"--host host - String. Optional. Host to connect"$'\n'"--port port - Integer. Optional. Port to connect"$'\n'""
 base="mariadb.sh"
 description="Dump a MariaDB database to raw SQL"$'\n'""
+exitCode="0"
 file="bin/build/tools/mariadb.sh"
-fn="mariadbDump"
-foundNames=""
+foundNames=([0]="argument")
+rawComment="Dump a MariaDB database to raw SQL"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Argument: --print - Flag. Optional. Show the command."$'\n'"Argument: --binary - Executable. Optional. The binary to use to do the dump. Defaults to \`MARIADB_BINARY_DUMP\`."$'\n'"Argument: --lock - Flag. Optional. Lock the database during dump"$'\n'"Argument: --password password - String. Optional. Password to connect"$'\n'"Argument: --user user - String. Optional. User to connect"$'\n'"Argument: --host host - String. Optional. Host to connect"$'\n'"Argument: --port port - Integer. Optional. Port to connect"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
-sourceFile="bin/build/tools/mariadb.sh"
-sourceModified="1769063211"
+sourceModified="1769184734"
 summary="Dump a MariaDB database to raw SQL"
 usage="mariadbDump [ --help ] [ --print ] [ --binary ] [ --lock ] [ --password password ] [ --user user ] [ --host host ] [ --port port ]"
 # shellcheck disable=SC2016
-helpConsole='[92mUsage[0m: [38;2;170;170;255mmariadbDump[0m [94m[ --help ][0m [94m[ --print ][0m [94m[ --binary ][0m [94m[ --lock ][0m [94m[ --password password ][0m [94m[ --user user ][0m [94m[ --host host ][0m [94m[ --port port ][0m
-
-    [94m--help               [1;97mFlag. Optional. Display this help.[0m
-    [94m--print              [1;97mFlag. Optional. Show the command.[0m
-    [94m--binary             [1;97mExecutable. Optional. The binary to use to do the dump. Defaults to [38;2;0;255;0;48;2;0;0;0mMARIADB_BINARY_DUMP[0m.[0m
-    [94m--lock               [1;97mFlag. Optional. Lock the database during dump[0m
-    [94m--password password  [1;97mString. Optional. Password to connect[0m
-    [94m--user user          [1;97mString. Optional. User to connect[0m
-    [94m--host host          [1;97mString. Optional. Host to connect[0m
-    [94m--port port          [1;97mInteger. Optional. Port to connect[0m
-
-Dump a MariaDB database to raw SQL
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-'
+helpConsole=''$'\e''[[label]mUsage'$'\e''[0m: '$'\e''[[info]mmariadbDump'$'\e''[0m '$'\e''[[blue]m[ --help ]'$'\e''[0m '$'\e''[[blue]m[ --print ]'$'\e''[0m '$'\e''[[blue]m[ --binary ]'$'\e''[0m '$'\e''[[blue]m[ --lock ]'$'\e''[0m '$'\e''[[blue]m[ --password password ]'$'\e''[0m '$'\e''[[blue]m[ --user user ]'$'\e''[0m '$'\e''[[blue]m[ --host host ]'$'\e''[0m '$'\e''[[blue]m[ --port port ]'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[blue]m--help               '$'\e''[[value]mFlag. Optional. Display this help.'$'\e''[[reset]m'$'\n''    '$'\e''[[blue]m--print              '$'\e''[[value]mFlag. Optional. Show the command.'$'\e''[[reset]m'$'\n''    '$'\e''[[blue]m--binary             '$'\e''[[value]mExecutable. Optional. The binary to use to do the dump. Defaults to '$'\e''[[code]mMARIADB_BINARY_DUMP'$'\e''[[reset]m.'$'\e''[[reset]m'$'\n''    '$'\e''[[blue]m--lock               '$'\e''[[value]mFlag. Optional. Lock the database during dump'$'\e''[[reset]m'$'\n''    '$'\e''[[blue]m--password password  '$'\e''[[value]mString. Optional. Password to connect'$'\e''[[reset]m'$'\n''    '$'\e''[[blue]m--user user          '$'\e''[[value]mString. Optional. User to connect'$'\e''[[reset]m'$'\n''    '$'\e''[[blue]m--host host          '$'\e''[[value]mString. Optional. Host to connect'$'\e''[[reset]m'$'\n''    '$'\e''[[blue]m--port port          '$'\e''[[value]mInteger. Optional. Port to connect'$'\e''[[reset]m'$'\n'''$'\n''Dump a MariaDB database to raw SQL'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[code]m0'$'\e''[[reset]m - Success'$'\n''- '$'\e''[[code]m1'$'\e''[[reset]m - Environment error'$'\n''- '$'\e''[[code]m2'$'\e''[[reset]m - Argument error'$'\n'''
 # shellcheck disable=SC2016
-helpPlain='Usage: mariadbDump [ --help ] [ --print ] [ --binary ] [ --lock ] [ --password password ] [ --user user ] [ --host host ] [ --port port ]
-
-    --help               Flag. Optional. Display this help.
-    --print              Flag. Optional. Show the command.
-    --binary             Executable. Optional. The binary to use to do the dump. Defaults to MARIADB_BINARY_DUMP.
-    --lock               Flag. Optional. Lock the database during dump
-    --password password  String. Optional. Password to connect
-    --user user          String. Optional. User to connect
-    --host host          String. Optional. Host to connect
-    --port port          Integer. Optional. Port to connect
-
-Dump a MariaDB database to raw SQL
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-'
+helpPlain='Usage: mariadbDump [ --help ] [ --print ] [ --binary ] [ --lock ] [ --password password ] [ --user user ] [ --host host ] [ --port port ]'$'\n'''$'\n''    --help               Flag. Optional. Display this help.'$'\n''    --print              Flag. Optional. Show the command.'$'\n''    --binary             Executable. Optional. The binary to use to do the dump. Defaults to MARIADB_BINARY_DUMP.'$'\n''    --lock               Flag. Optional. Lock the database during dump'$'\n''    --password password  String. Optional. Password to connect'$'\n''    --user user          String. Optional. User to connect'$'\n''    --host host          String. Optional. Host to connect'$'\n''    --port port          Integer. Optional. Port to connect'$'\n'''$'\n''Dump a MariaDB database to raw SQL'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''

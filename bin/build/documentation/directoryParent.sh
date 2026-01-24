@@ -1,46 +1,20 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-22
+# Generated on 2026-01-24
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/directory.sh"
 argument="startingDirectory - Required. EmptyString|RealDirectory. Uses the current directory if blank."$'\n'"--pattern filePattern - RelativePath. Required. The file or directory to find the home for."$'\n'"--test testExpression - String. Optional. Zero or more. The \`test\` argument to test the targeted \`filePattern\`. By default uses \`-d\`."$'\n'""
 base="directory.sh"
 description="Finds a file above \`startingDirectory\`, uses \`testExpression\` to test (defaults to \`-d\`)"$'\n'""
+exitCode="0"
 file="bin/build/tools/directory.sh"
-fn="directoryParent"
-foundNames=""
+foundNames=([0]="argument")
+rawComment="Finds a file above \`startingDirectory\`, uses \`testExpression\` to test (defaults to \`-d\`)"$'\n'"Argument: startingDirectory - Required. EmptyString|RealDirectory. Uses the current directory if blank."$'\n'"Argument: --pattern filePattern - RelativePath. Required. The file or directory to find the home for."$'\n'"Argument: --test testExpression - String. Optional. Zero or more. The \`test\` argument to test the targeted \`filePattern\`. By default uses \`-d\`."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
-sourceFile="bin/build/tools/directory.sh"
 sourceModified="1769063211"
 summary="Finds a file above \`startingDirectory\`, uses \`testExpression\` to test (defaults"
 usage="directoryParent startingDirectory --pattern filePattern [ --test testExpression ]"
 # shellcheck disable=SC2016
-helpConsole='[92mUsage[0m: [38;2;170;170;255mdirectoryParent[0m [38;2;255;255;0m[35;48;2;0;0;0mstartingDirectory[0m[0m [38;2;255;255;0m[35;48;2;0;0;0m--pattern filePattern[0m[0m [94m[ --test testExpression ][0m
-
-    [31mstartingDirectory      [1;97mRequired. EmptyString|RealDirectory. Uses the current directory if blank.[0m
-    [31m--pattern filePattern  [1;97mRelativePath. Required. The file or directory to find the home for.[0m
-    [94m--test testExpression  [1;97mString. Optional. Zero or more. The [38;2;0;255;0;48;2;0;0;0mtest[0m argument to test the targeted [38;2;0;255;0;48;2;0;0;0mfilePattern[0m. By default uses [38;2;0;255;0;48;2;0;0;0m-d[0m.[0m
-
-Finds a file above [38;2;0;255;0;48;2;0;0;0mstartingDirectory[0m, uses [38;2;0;255;0;48;2;0;0;0mtestExpression[0m to test (defaults to [38;2;0;255;0;48;2;0;0;0m-d[0m)
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-'
+helpConsole=''$'\e''[[label]mUsage'$'\e''[0m: '$'\e''[[info]mdirectoryParent'$'\e''[0m '$'\e''[[bold]m'$'\e''[[magenta]mstartingDirectory'$'\e''[0m'$'\e''[0m '$'\e''[[bold]m'$'\e''[[magenta]m--pattern filePattern'$'\e''[0m'$'\e''[0m '$'\e''[[blue]m[ --test testExpression ]'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[red]mstartingDirectory      '$'\e''[[value]mRequired. EmptyString|RealDirectory. Uses the current directory if blank.'$'\e''[[reset]m'$'\n''    '$'\e''[[red]m--pattern filePattern  '$'\e''[[value]mRelativePath. Required. The file or directory to find the home for.'$'\e''[[reset]m'$'\n''    '$'\e''[[blue]m--test testExpression  '$'\e''[[value]mString. Optional. Zero or more. The '$'\e''[[code]mtest'$'\e''[[reset]m argument to test the targeted '$'\e''[[code]mfilePattern'$'\e''[[reset]m. By default uses '$'\e''[[code]m-d'$'\e''[[reset]m.'$'\e''[[reset]m'$'\n'''$'\n''Finds a file above '$'\e''[[code]mstartingDirectory'$'\e''[[reset]m, uses '$'\e''[[code]mtestExpression'$'\e''[[reset]m to test (defaults to '$'\e''[[code]m-d'$'\e''[[reset]m)'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[code]m0'$'\e''[[reset]m - Success'$'\n''- '$'\e''[[code]m1'$'\e''[[reset]m - Environment error'$'\n''- '$'\e''[[code]m2'$'\e''[[reset]m - Argument error'$'\n'''
 # shellcheck disable=SC2016
-helpPlain='Usage: directoryParent startingDirectory --pattern filePattern [ --test testExpression ]
-
-    startingDirectory      Required. EmptyString|RealDirectory. Uses the current directory if blank.
-    --pattern filePattern  RelativePath. Required. The file or directory to find the home for.
-    --test testExpression  String. Optional. Zero or more. The test argument to test the targeted filePattern. By default uses -d.
-
-Finds a file above startingDirectory, uses testExpression to test (defaults to -d)
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-'
+helpPlain='Usage: directoryParent startingDirectory --pattern filePattern [ --test testExpression ]'$'\n'''$'\n''    startingDirectory      Required. EmptyString|RealDirectory. Uses the current directory if blank.'$'\n''    --pattern filePattern  RelativePath. Required. The file or directory to find the home for.'$'\n''    --test testExpression  String. Optional. Zero or more. The test argument to test the targeted filePattern. By default uses -d.'$'\n'''$'\n''Finds a file above startingDirectory, uses testExpression to test (defaults to -d)'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''

@@ -1,42 +1,20 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-22
+# Generated on 2026-01-24
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/console.sh"
 argument="backgroundColor - String. Optional. Background color."$'\n'""
 base="console.sh"
-description="Print the suggested color mode for the current environment"$'\n'""$'\n'""
+description="Print the suggested color mode for the current environment"$'\n'""
+exitCode="0"
 file="bin/build/tools/console.sh"
-fn="consoleConfigureColorMode"
-foundNames=""
+foundNames=([0]="argument")
+rawComment="Argument: backgroundColor - String. Optional. Background color."$'\n'"Print the suggested color mode for the current environment"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
-sourceFile="bin/build/tools/console.sh"
-sourceModified="1769063211"
+sourceModified="1769209815"
 summary="Print the suggested color mode for the current environment"
 usage="consoleConfigureColorMode [ backgroundColor ]"
 # shellcheck disable=SC2016
-helpConsole='[92mUsage[0m: [38;2;170;170;255mconsoleConfigureColorMode[0m [94m[ backgroundColor ][0m
-
-    [94mbackgroundColor  [1;97mString. Optional. Background color.[0m
-
-Print the suggested color mode for the current environment
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-'
+helpConsole=''$'\e''[[label]mUsage'$'\e''[0m: '$'\e''[[info]mconsoleConfigureColorMode'$'\e''[0m '$'\e''[[blue]m[ backgroundColor ]'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[blue]mbackgroundColor  '$'\e''[[value]mString. Optional. Background color.'$'\e''[[reset]m'$'\n'''$'\n''Print the suggested color mode for the current environment'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[code]m0'$'\e''[[reset]m - Success'$'\n''- '$'\e''[[code]m1'$'\e''[[reset]m - Environment error'$'\n''- '$'\e''[[code]m2'$'\e''[[reset]m - Argument error'$'\n'''
 # shellcheck disable=SC2016
-helpPlain='Usage: consoleConfigureColorMode [ backgroundColor ]
-
-    backgroundColor  String. Optional. Background color.
-
-Print the suggested color mode for the current environment
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-'
+helpPlain='Usage: consoleConfigureColorMode [ backgroundColor ]'$'\n'''$'\n''    backgroundColor  String. Optional. Background color.'$'\n'''$'\n''Print the suggested color mode for the current environment'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''

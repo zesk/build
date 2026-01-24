@@ -1,61 +1,22 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-22
+# Generated on 2026-01-24
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/documentation.sh"
 argument="--documentation documentationPath - Directory. Optional. Path to documentation root. Default is \`./documentation/source\`."$'\n'"--source sourcePath - Directory. Optional. Path to source environment files. Defaults to \`\$(buildHome)/bin/env\` if not specified."$'\n'"--help - Flag. Optional. Display this help."$'\n'""
 base="documentation.sh"
-description="Build documentation for ./bin/env (or bin/build/env) directory."$'\n'""$'\n'"Creates a cache at \`documentationBuildCache\`"$'\n'""$'\n'""$'\n'"Return Code: 0 - Success"$'\n'"Return Code: 1 - Issue with environment"$'\n'"Return Code: 2 - Argument error"$'\n'""
+description="Build documentation for ./bin/env (or bin/build/env) directory."$'\n'"Creates a cache at \`documentationBuildCache\`"$'\n'""
+exitCode="0"
 file="bin/build/tools/documentation.sh"
-fn="documentationBuildEnvironment"
-foundNames=""
-return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
+foundNames=([0]="argument" [1]="see" [2]="return_code")
+rawComment="Build documentation for ./bin/env (or bin/build/env) directory."$'\n'"Creates a cache at \`documentationBuildCache\`"$'\n'"Argument: --documentation documentationPath - Directory. Optional. Path to documentation root. Default is \`./documentation/source\`."$'\n'"Argument: --source sourcePath - Directory. Optional. Path to source environment files. Defaults to \`\$(buildHome)/bin/env\` if not specified."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"See: documentationBuild"$'\n'"Return Code: 0 - Success"$'\n'"Return Code: 1 - Issue with environment"$'\n'"Return Code: 2 - Argument error"$'\n'""$'\n'""
+return_code="0 - Success"$'\n'"1 - Issue with environment"$'\n'"2 - Argument error"$'\n'""
 see="documentationBuild"$'\n'""
 sourceFile="bin/build/tools/documentation.sh"
 sourceModified="1769065497"
 summary="Build documentation for ./bin/env (or bin/build/env) directory."
 usage="documentationBuildEnvironment [ --documentation documentationPath ] [ --source sourcePath ] [ --help ]"
 # shellcheck disable=SC2016
-helpConsole='[92mUsage[0m: [38;2;170;170;255mdocumentationBuildEnvironment[0m [94m[ --documentation documentationPath ][0m [94m[ --source sourcePath ][0m [94m[ --help ][0m
-
-    [94m--documentation documentationPath  [1;97mDirectory. Optional. Path to documentation root. Default is [38;2;0;255;0;48;2;0;0;0m./documentation/source[0m.[0m
-    [94m--source sourcePath                [1;97mDirectory. Optional. Path to source environment files. Defaults to [38;2;0;255;0;48;2;0;0;0m$(buildHome)/bin/env[0m if not specified.[0m
-    [94m--help                             [1;97mFlag. Optional. Display this help.[0m
-
-Build documentation for ./bin/env (or bin/build/env) directory.
-
-Creates a cache at [38;2;0;255;0;48;2;0;0;0mdocumentationBuildCache[0m
-
-
-Return Code: 0 - Success
-Return Code: 1 - Issue with environment
-Return Code: 2 - Argument error
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-'
+helpConsole=''$'\e''[[label]mUsage'$'\e''[0m: '$'\e''[[info]mdocumentationBuildEnvironment'$'\e''[0m '$'\e''[[blue]m[ --documentation documentationPath ]'$'\e''[0m '$'\e''[[blue]m[ --source sourcePath ]'$'\e''[0m '$'\e''[[blue]m[ --help ]'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[blue]m--documentation documentationPath  '$'\e''[[value]mDirectory. Optional. Path to documentation root. Default is '$'\e''[[code]m./documentation/source'$'\e''[[reset]m.'$'\e''[[reset]m'$'\n''    '$'\e''[[blue]m--source sourcePath                '$'\e''[[value]mDirectory. Optional. Path to source environment files. Defaults to '$'\e''[[code]m$(buildHome)/bin/env'$'\e''[[reset]m if not specified.'$'\e''[[reset]m'$'\n''    '$'\e''[[blue]m--help                             '$'\e''[[value]mFlag. Optional. Display this help.'$'\e''[[reset]m'$'\n'''$'\n''Build documentation for ./bin/env (or bin/build/env) directory.'$'\n''Creates a cache at '$'\e''[[code]mdocumentationBuildCache'$'\e''[[reset]m'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[code]m0'$'\e''[[reset]m - Success'$'\n''- '$'\e''[[code]m1'$'\e''[[reset]m - Issue with environment'$'\n''- '$'\e''[[code]m2'$'\e''[[reset]m - Argument error'$'\n'''
 # shellcheck disable=SC2016
-helpPlain='Usage: documentationBuildEnvironment [ --documentation documentationPath ] [ --source sourcePath ] [ --help ]
-
-    --documentation documentationPath  Directory. Optional. Path to documentation root. Default is ./documentation/source.
-    --source sourcePath                Directory. Optional. Path to source environment files. Defaults to $(buildHome)/bin/env if not specified.
-    --help                             Flag. Optional. Display this help.
-
-Build documentation for ./bin/env (or bin/build/env) directory.
-
-Creates a cache at documentationBuildCache
-
-
-Return Code: 0 - Success
-Return Code: 1 - Issue with environment
-Return Code: 2 - Argument error
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-'
+helpPlain='Usage: documentationBuildEnvironment [ --documentation documentationPath ] [ --source sourcePath ] [ --help ]'$'\n'''$'\n''    --documentation documentationPath  Directory. Optional. Path to documentation root. Default is ./documentation/source.'$'\n''    --source sourcePath                Directory. Optional. Path to source environment files. Defaults to $(buildHome)/bin/env if not specified.'$'\n''    --help                             Flag. Optional. Display this help.'$'\n'''$'\n''Build documentation for ./bin/env (or bin/build/env) directory.'$'\n''Creates a cache at documentationBuildCache'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Issue with environment'$'\n''- 2 - Argument error'$'\n'''

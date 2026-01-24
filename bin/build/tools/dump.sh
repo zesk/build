@@ -179,7 +179,7 @@ dumpPipe() {
   fi
 
   local decoration width
-  decoration="$(decorate code "$(echoBar)")"
+  decoration="$(decorate code "$(consoleLine)")"
   width=$(consoleColumns) || throwEnvironment "$handler" consoleColumns || return $?
   printf -- "%s\n%s\n%s\n" "$decoration" "$("$endBinary" -n "$showLines" "$item" | decorate wrap --width "$((width - 2))" --fill " " "$symbol" "$(decorate reset --)")" "$decoration"
   rm -rf "$item" || :
@@ -194,6 +194,10 @@ _dumpPipe() {
 # Argument: fileName0 - File. Optional. File to dump.
 # stdin: text (optional)
 # stdout: formatted text (optional)
+# Argument: --symbol symbolString - String. Optional. Prefix for each output line.
+# Argument: --lines lineCount - PositiveInteger. Optional. Number of lines to output.
+# DOC TEMPLATE: --help 1
+# Argument: --help - Flag. Optional. Display this help.
 dumpFile() {
   local handler="_${FUNCNAME[0]}"
   local files=() dumpArgs=()
@@ -207,22 +211,15 @@ dumpFile() {
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
-    --symbol)
-      shift || throwArgument "$handler" "shift $argument" || return $?
-      dumpArgs+=("$argument" "$1")
-      ;;
-    --lines)
-      shift || throwArgument "$handler" "missing $argument argument" || return $?
-      dumpArgs+=("--lines" "$1")
-      ;;
+    --symbol) shift && dumpArgs+=("$argument" "$1") ;;
+    --lines) shift && dumpArgs+=("--lines" "$1") ;;
     *)
       [ -f "$argument" ] || throwArgument "$handler" "$argument is not a item" || return $?
-      files+=("$argument")
+      files+=("$(validate "$handler" "File" "file" "$argument")") || return $?
       ;;
     esac
-    shift || throwArgument "$handler" shift || return $?
+    shift
   done
-
   if [ ${#files[@]} -eq 0 ]; then
     catchEnvironment "$handler" dumpPipe "${dumpArgs[@]+${dumpArgs[@]}}" "(stdin)" || return $?
   else
@@ -253,9 +250,7 @@ __internalDumpEnvironment() {
   local maxLen=64 skipEnv=() name matches=() fillMatches=true secureSuffix="- HIDDEN" showSkipped=false
 
   while read -r name; do
-    if ! inArray "$name" PATH HOME OSTYPE PWD TERM; then
-      skipEnv+=("$name")
-    fi
+    if ! inArray "$name" PATH HOME OSTYPE PWD TERM; then skipEnv+=("$name"); fi
   done < <(environmentSecureVariables) || :
 
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
@@ -441,7 +436,7 @@ dumpHex() {
     shift
   done
 
-  whichExists od || throwEnvironment "$handler" "od required to be installed" || return $?
+  executableExists od || throwEnvironment "$handler" "od required to be installed" || return $?
 
   if [ "${#arguments[@]}" -eq 0 ]; then
     "${runner[@]}"

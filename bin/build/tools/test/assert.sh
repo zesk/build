@@ -35,7 +35,7 @@
 # Argument: --dump-binary - Flag. Optional. Output `stderr` and `stdout` after test regardless, displayed as binary.
 # Argument: --head - Flag. Optional. When outputting `stderr` or `stdout`, output the head of the file.
 # Argument: --tail - Flag. Optional. When outputting `stderr` or `stdout`, output the tail of the file. (Default)
-# Example:     assertEquals "$(alignRight 4 "hi")" "  hi" "alignRight not working"
+# Example:     assertEquals "$(textAlignRight 4 "hi")" "  hi" "textAlignRight not working"
 # Reviewed: 2023-11-12
 #
 assertEquals() {
@@ -107,7 +107,7 @@ _assertStringNotEmpty() {
 # Argument: --head - Flag. Optional. When outputting `stderr` or `stdout`, output the head of the file.
 # Argument: --tail - Flag. Optional. When outputting `stderr` or `stdout`, output the tail of the file. (Default)
 # Argument: string ... - Empty strings
-# Example:     assertEquals "$(alignRight 4 "hi")" "  hi" "alignRight not working"
+# Example:     assertEquals "$(textAlignRight 4 "hi")" "  hi" "textAlignRight not working"
 # Reviewed: 2023-11-12
 #
 assertStringEmpty() {

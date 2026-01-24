@@ -1,53 +1,21 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-22
+# Generated on 2026-01-24
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/prompt.sh"
 argument="--help - Flag. Optional. Display this help."$'\n'"... - Arguments. Optional. Identical arguments to \`read\` (but includes \`-r\`)"$'\n'""
 base="prompt.sh"
-description="Prompt the user properly honoring any attached console."$'\n'""$'\n'"Arguments are the same as \`read\`, except:"$'\n'""$'\n'"\`-r\` is implied and does not need to be specified"$'\n'""$'\n'""
+description="Prompt the user properly honoring any attached console."$'\n'"Arguments are the same as \`read\`, except:"$'\n'"\`-r\` is implied and does not need to be specified"$'\n'""
+exitCode="0"
 file="bin/build/tools/prompt.sh"
-fn="bashUserInput"
-foundNames=""
+foundNames=([0]="see" [1]="argument")
+rawComment="Prompt the user properly honoring any attached console."$'\n'"Arguments are the same as \`read\`, except:"$'\n'"\`-r\` is implied and does not need to be specified"$'\n'"See: read"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Argument: ... - Arguments. Optional. Identical arguments to \`read\` (but includes \`-r\`)"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 see="read"$'\n'""
-sourceFile="bin/build/tools/prompt.sh"
 sourceModified="1769063211"
 summary="Prompt the user properly honoring any attached console."
 usage="bashUserInput [ --help ] [ ... ]"
 # shellcheck disable=SC2016
-helpConsole='[92mUsage[0m: [38;2;170;170;255mbashUserInput[0m [94m[ --help ][0m [94m[ ... ][0m
-
-    [94m--help  [1;97mFlag. Optional. Display this help.[0m
-    [94m...     [1;97mArguments. Optional. Identical arguments to [38;2;0;255;0;48;2;0;0;0mread[0m (but includes [38;2;0;255;0;48;2;0;0;0m-r[0m)[0m
-
-Prompt the user properly honoring any attached console.
-
-Arguments are the same as [38;2;0;255;0;48;2;0;0;0mread[0m, except:
-
-[38;2;0;255;0;48;2;0;0;0m-r[0m is implied and does not need to be specified
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-'
+helpConsole=''$'\e''[[label]mUsage'$'\e''[0m: '$'\e''[[info]mbashUserInput'$'\e''[0m '$'\e''[[blue]m[ --help ]'$'\e''[0m '$'\e''[[blue]m[ ... ]'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[blue]m--help  '$'\e''[[value]mFlag. Optional. Display this help.'$'\e''[[reset]m'$'\n''    '$'\e''[[blue]m...     '$'\e''[[value]mArguments. Optional. Identical arguments to '$'\e''[[code]mread'$'\e''[[reset]m (but includes '$'\e''[[code]m-r'$'\e''[[reset]m)'$'\e''[[reset]m'$'\n'''$'\n''Prompt the user properly honoring any attached console.'$'\n''Arguments are the same as '$'\e''[[code]mread'$'\e''[[reset]m, except:'$'\n'''$'\e''[[code]m-r'$'\e''[[reset]m is implied and does not need to be specified'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[code]m0'$'\e''[[reset]m - Success'$'\n''- '$'\e''[[code]m1'$'\e''[[reset]m - Environment error'$'\n''- '$'\e''[[code]m2'$'\e''[[reset]m - Argument error'$'\n'''
 # shellcheck disable=SC2016
-helpPlain='Usage: bashUserInput [ --help ] [ ... ]
-
-    --help  Flag. Optional. Display this help.
-    ...     Arguments. Optional. Identical arguments to read (but includes -r)
-
-Prompt the user properly honoring any attached console.
-
-Arguments are the same as read, except:
-
--r is implied and does not need to be specified
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-'
+helpPlain='Usage: bashUserInput [ --help ] [ ... ]'$'\n'''$'\n''    --help  Flag. Optional. Display this help.'$'\n''    ...     Arguments. Optional. Identical arguments to read (but includes -r)'$'\n'''$'\n''Prompt the user properly honoring any attached console.'$'\n''Arguments are the same as read, except:'$'\n''-r is implied and does not need to be specified'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''

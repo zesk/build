@@ -94,7 +94,7 @@ __interactiveCountdownReadCharacter() {
 
   # IDENTICAL __interactiveCountdownReadBooleanStatus 3
   [ "$attempts" -le 1 ] || prefix="$(decorate value "[ 🧪 $counter of $attempts ]") "
-  [ "$timeout" = "" ] || timingSuffix="$(printf " %s %s" "$icon" "$(alignRight "$width" "$(((timeout - elapsed + 500) / 1000))")")"
+  [ "$timeout" = "" ] || timingSuffix="$(printf " %s %s" "$icon" "$(textAlignRight "$width" "$(((timeout - elapsed + 500) / 1000))")")"
   prompt=$(printf -- "%s%s%s%s" "$prefix" "$message" "$extras" "$timingSuffix")
 
   while true; do
@@ -109,7 +109,7 @@ __interactiveCountdownReadCharacter() {
       fi
       # IDENTICAL __interactiveCountdownReadBooleanStatus 3
       [ "$attempts" -le 1 ] || prefix="$(decorate value "[ 🧪 $counter of $attempts ]") "
-      [ "$timeout" = "" ] || timingSuffix="$(printf " %s %s" "$icon" "$(alignRight "$width" "$(((timeout - elapsed + 500) / 1000))")")"
+      [ "$timeout" = "" ] || timingSuffix="$(printf " %s %s" "$icon" "$(textAlignRight "$width" "$(((timeout - elapsed + 500) / 1000))")")"
       prompt=$(printf -- "%s%s%s%s" "$prefix" "$message" "$extras" "$timingSuffix")
       statusMessage printf -- ""
     done
@@ -124,7 +124,7 @@ __interactiveCountdownReadCharacter() {
       fi
       # IDENTICAL __interactiveCountdownReadBooleanStatus 3
       [ "$attempts" -le 1 ] || prefix="$(decorate value "[ 🧪 $counter of $attempts ]") "
-      [ "$timeout" = "" ] || timingSuffix="$(printf " %s %s" "$icon" "$(alignRight "$width" "$(((timeout - elapsed + 500) / 1000))")")"
+      [ "$timeout" = "" ] || timingSuffix="$(printf " %s %s" "$icon" "$(textAlignRight "$width" "$(((timeout - elapsed + 500) / 1000))")")"
       prompt=$(printf -- "%s%s%s%s" "$prefix" "$message" "$extras" "$timingSuffix")
     fi
   done

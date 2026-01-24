@@ -3,7 +3,7 @@ catchCode
 catchEnvironment
 catchEnvironmentQuiet
 catchReturn
-clearLine
+consoleLineFill
 escapeBash
 execute
 executeEcho

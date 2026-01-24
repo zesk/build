@@ -83,7 +83,7 @@ __interactiveManager() {
           message="$message (not repaired)"
         fi
       fi
-      boxedHeading --size 1 "$message"
+      consoleHeadingBoxed --size 1 "$message"
       dumpPipe --head --lines "$rowsAllowed" "OUTPUT" <"$output"
       if [ $index -eq "${#files[@]}" ]; then
         nextMessage=$(decorate green "(last one)")

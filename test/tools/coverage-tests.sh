@@ -355,7 +355,7 @@ bashBuiltins
 bashStripComments
 isBitBucketPipeline
 brewInstall
-hasConsoleAnimation
+consoleHasAnimation
 colorSampleCodes
 isTTYAvailable
 consoleColumns
@@ -375,7 +375,7 @@ isBashDebug
 isErrorExit
 bashDebuggerEnable
 bashDebuggerDisable
-hasColors
+consoleHasColors
 decorations
 deployPackageName
 deprecatedIgnore
@@ -384,7 +384,7 @@ dockerComposeIsRunning
 dockerComposeCommandList
 dockerPlatformDefault
 dumpDockerTestFile
-insideDocker
+dockerInside
 dockerListContext
 environmentNames
 environmentLines

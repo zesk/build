@@ -37,7 +37,7 @@ ___documentTemplateFunction() {
 
   # IDENTICAL managerArgumentRunValidation 2
   [ -n "$manager" ] || manager=$(packageManagerDefault) || throwEnvironment "$handler" "No package manager" || return $?
-  whichExists "$manager" || throwEnvironment "$handler" "$manager does not exist" || return $?
+  executableExists "$manager" || throwEnvironment "$handler" "$manager does not exist" || return $?
 
   # IDENTICAL managerArgumentValidation 1
   [ -n "$manager" ] || manager=$(packageManagerDefault) || throwEnvironment "$handler" "No package manager" || return $?

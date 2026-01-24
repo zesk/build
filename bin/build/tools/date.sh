@@ -114,7 +114,7 @@ _dateFromTimestamp() {
 # DOC TEMPLATE: --help 1
 # Argument: --help - Flag. Optional. Display this help.
 # Example:     rotated="$log.$({fn} --local)"
-yesterdayDate() {
+dateYesterday() {
   local handler="_${FUNCNAME[0]}"
   if [ $# -eq 0 ]; then
     ts=$(date -u +%s) || return $?
@@ -127,7 +127,7 @@ yesterdayDate() {
   fi
   dateFromTimestamp "$(($(date -u +%s) - 86400))" %F
 }
-_yesterdayDate() {
+_dateYesterday() {
   # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
@@ -139,7 +139,7 @@ _yesterdayDate() {
 # DOC TEMPLATE: --help 1
 # Argument: --help - Flag. Optional. Display this help.
 # Example:     rotated="$log.$({fn})"
-tomorrowDate() {
+dateTomorrow() {
   local handler="_${FUNCNAME[0]}" ts
   if [ $# -eq 0 ]; then
     ts=$(date -u +%s) || return $?
@@ -152,7 +152,7 @@ tomorrowDate() {
   fi
   dateFromTimestamp "$((ts + 86400))" %F
 }
-_tomorrowDate() {
+_dateTomorrow() {
   # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
@@ -164,7 +164,7 @@ _tomorrowDate() {
 # Argument: --help - Flag. Optional. Display this help.
 # Environment: Compatible with BSD and GNU date.
 # Example:     date="$({fn})"
-todayDate() {
+dateToday() {
   local handler="_${FUNCNAME[0]}"
   local uu=(-u)
   [ $# -eq 0 ] || case "$1" in
@@ -174,7 +174,7 @@ todayDate() {
   esac
   date "${uu[@]+"${uu[@]}"}" +%F
 }
-_todayDate() {
+_dateToday() {
   # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

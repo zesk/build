@@ -1,50 +1,20 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-22
+# Generated on 2026-01-24
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/utilities.sh"
 argument="--mode mode - String. Optional."$'\n'"namedPipe"$'\n'"--writer line ... - When encountered all additional arguments are written to the runner."$'\n'"readerExecutable ... - Callable. Optional."$'\n'""
 base="utilities.sh"
 description="Single reader, multiple writers"$'\n'"Attempt at having docker communicate back to the outside world."$'\n'""
+exitCode="0"
 file="bin/build/tools/utilities.sh"
-fn="pipeRunner"
-foundNames=""
+foundNames=([0]="argument")
+rawComment="Single reader, multiple writers"$'\n'"Attempt at having docker communicate back to the outside world."$'\n'"Argument: --mode mode - String. Optional."$'\n'"Argument: namedPipe"$'\n'"Argument: --writer line ... - When encountered all additional arguments are written to the runner."$'\n'"Argument: readerExecutable ... - Callable. Optional."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
-sourceFile="bin/build/tools/utilities.sh"
 sourceModified="1769063211"
 summary="Single reader, multiple writers"
 usage="pipeRunner [ --mode mode ] [ namedPipe ] [ --writer line ... ] [ readerExecutable ... ]"
 # shellcheck disable=SC2016
-helpConsole='[92mUsage[0m: [38;2;170;170;255mpipeRunner[0m [94m[ --mode mode ][0m [94m[ namedPipe ][0m [94m[ --writer line ... ][0m [94m[ readerExecutable ... ][0m
-
-    [94m--mode mode           [1;97mString. Optional.[0m
-    [94mnamedPipe             [1;97mnamedPipe[0m
-    [94m--writer line ...     [1;97mWhen encountered all additional arguments are written to the runner.[0m
-    [94mreaderExecutable ...  [1;97mCallable. Optional.[0m
-
-Single reader, multiple writers
-Attempt at having docker communicate back to the outside world.
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-'
+helpConsole=''$'\e''[[label]mUsage'$'\e''[0m: '$'\e''[[info]mpipeRunner'$'\e''[0m '$'\e''[[blue]m[ --mode mode ]'$'\e''[0m '$'\e''[[blue]m[ namedPipe ]'$'\e''[0m '$'\e''[[blue]m[ --writer line ... ]'$'\e''[0m '$'\e''[[blue]m[ readerExecutable ... ]'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[blue]m--mode mode           '$'\e''[[value]mString. Optional.'$'\e''[[reset]m'$'\n''    '$'\e''[[blue]mnamedPipe             '$'\e''[[value]mnamedPipe'$'\e''[[reset]m'$'\n''    '$'\e''[[blue]m--writer line ...     '$'\e''[[value]mWhen encountered all additional arguments are written to the runner.'$'\e''[[reset]m'$'\n''    '$'\e''[[blue]mreaderExecutable ...  '$'\e''[[value]mCallable. Optional.'$'\e''[[reset]m'$'\n'''$'\n''Single reader, multiple writers'$'\n''Attempt at having docker communicate back to the outside world.'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[code]m0'$'\e''[[reset]m - Success'$'\n''- '$'\e''[[code]m1'$'\e''[[reset]m - Environment error'$'\n''- '$'\e''[[code]m2'$'\e''[[reset]m - Argument error'$'\n'''
 # shellcheck disable=SC2016
-helpPlain='Usage: pipeRunner [ --mode mode ] [ namedPipe ] [ --writer line ... ] [ readerExecutable ... ]
-
-    --mode mode           String. Optional.
-    namedPipe             namedPipe
-    --writer line ...     When encountered all additional arguments are written to the runner.
-    readerExecutable ...  Callable. Optional.
-
-Single reader, multiple writers
-Attempt at having docker communicate back to the outside world.
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-'
+helpPlain='Usage: pipeRunner [ --mode mode ] [ namedPipe ] [ --writer line ... ] [ readerExecutable ... ]'$'\n'''$'\n''    --mode mode           String. Optional.'$'\n''    namedPipe             namedPipe'$'\n''    --writer line ...     When encountered all additional arguments are written to the runner.'$'\n''    readerExecutable ...  Callable. Optional.'$'\n'''$'\n''Single reader, multiple writers'$'\n''Attempt at having docker communicate back to the outside world.'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''

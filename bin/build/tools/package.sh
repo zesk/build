@@ -46,7 +46,7 @@ __packageListFunction() {
 
   # IDENTICAL managerArgumentRunValidation 2
   [ -n "$manager" ] || manager=$(packageManagerDefault) || throwEnvironment "$handler" "No package manager" || return $?
-  whichExists "$manager" || throwEnvironment "$handler" "$manager does not exist" || return $?
+  executableExists "$manager" || throwEnvironment "$handler" "$manager does not exist" || return $?
 
   local listFunction="__${manager}${functionVerb}List"
   isFunction "$listFunction" || throwEnvironment "$handler" "$listFunction is not defined" || return $?
@@ -103,7 +103,7 @@ __packageUpFunction() {
 
   # IDENTICAL managerArgumentRunValidation 2
   [ -n "$manager" ] || manager=$(packageManagerDefault) || throwEnvironment "$handler" "No package manager" || return $?
-  whichExists "$manager" || throwEnvironment "$handler" "$manager does not exist" || return $?
+  executableExists "$manager" || throwEnvironment "$handler" "$manager does not exist" || return $?
 
   local packageFunction="__${manager}${suffix}"
   isFunction "$packageFunction" || throwEnvironment "$handler" "$packageFunction is not a defined function" || return $?
@@ -272,18 +272,18 @@ packageWhich() {
 
   # IDENTICAL managerArgumentRunValidation 2
   [ -n "$manager" ] || manager=$(packageManagerDefault) || throwEnvironment "$handler" "No package manager" || return $?
-  whichExists "$manager" || throwEnvironment "$handler" "$manager does not exist" || return $?
+  executableExists "$manager" || throwEnvironment "$handler" "$manager does not exist" || return $?
   [ "${#packages[@]}" -gt 0 ] || packages+=("$binary")
 
   if ! $forceFlag; then
     [ -n "$binary" ] || throwArgument "$handler" "Missing binary" || return $?
     # Already installed
-    ! whichExists "$binary" || return 0
+    ! executableExists "$binary" || return 0
   fi
   # Install packages
   catchReturn "$handler" packageInstall "${vv[@]+"${vv[@]}"}" --manager "$manager" --force "${packages[@]}" || return $?
   # Ensure binary now exists, otherwise fail
-  whichExists "$binary" || throwEnvironment "$handler" "$manager packages \"${packages[*]}\" did not add $binary to the PATH: ${PATH-}" || return $?
+  executableExists "$binary" || throwEnvironment "$handler" "$manager packages \"${packages[*]}\" did not add $binary to the PATH: ${PATH-}" || return $?
 }
 _packageWhich() {
   # __IDENTICAL__ usageDocument 1
@@ -339,11 +339,11 @@ packageWhichUninstall() {
 
   # IDENTICAL managerArgumentRunValidation 2
   [ -n "$manager" ] || manager=$(packageManagerDefault) || throwEnvironment "$handler" "No package manager" || return $?
-  whichExists "$manager" || throwEnvironment "$handler" "$manager does not exist" || return $?
+  executableExists "$manager" || throwEnvironment "$handler" "$manager does not exist" || return $?
 
   [ -n "$binary" ] || throwArgument "$handler" "Missing binary" || return $?
   [ 0 -lt "${#packages[@]}" ] || throwArgument "$handler" "Missing packages" || return $?
-  if ! whichExists "$binary"; then
+  if ! executableExists "$binary"; then
     return 0
   fi
   catchReturn "$handler" packageUninstall "${vv[@]+"${vv[@]}"}" --manager "$manager" "${packages[@]}" || return $?
@@ -414,7 +414,7 @@ packageInstall() {
 
   # IDENTICAL managerArgumentRunValidation 2
   [ -n "$manager" ] || manager=$(packageManagerDefault) || throwEnvironment "$handler" "No package manager" || return $?
-  whichExists "$manager" || throwEnvironment "$handler" "$manager does not exist" || return $?
+  executableExists "$manager" || throwEnvironment "$handler" "$manager does not exist" || return $?
 
   local __start quietLog installed
 
@@ -550,7 +550,7 @@ packageUninstall() {
 
   # IDENTICAL managerArgumentRunValidation 2
   [ -n "$manager" ] || manager=$(packageManagerDefault) || throwEnvironment "$handler" "No package manager" || return $?
-  whichExists "$manager" || throwEnvironment "$handler" "$manager does not exist" || return $?
+  executableExists "$manager" || throwEnvironment "$handler" "$manager does not exist" || return $?
 
   [ 0 -lt "${#packages[@]}" ] || throwArgument "$handler" "Requires at least one package to uninstall" || return $?
 
@@ -719,9 +719,9 @@ packageGroupWhich() {
 
   # IDENTICAL managerArgumentRunValidation 2
   [ -n "$manager" ] || manager=$(packageManagerDefault) || throwEnvironment "$handler" "No package manager" || return $?
-  whichExists "$manager" || throwEnvironment "$handler" "$manager does not exist" || return $?
+  executableExists "$manager" || throwEnvironment "$handler" "$manager does not exist" || return $?
 
-  whichExists "$binary" || catchReturn "$handler" packageGroupInstall --manager "$manager" "${groups[@]}" || return $?
+  executableExists "$binary" || catchReturn "$handler" packageGroupInstall --manager "$manager" "${groups[@]}" || return $?
 }
 _packageGroupWhich() {
   # __IDENTICAL__ usageDocument 1
@@ -762,7 +762,7 @@ packageGroupInstall() {
 
   # IDENTICAL managerArgumentRunValidation 2
   [ -n "$manager" ] || manager=$(packageManagerDefault) || throwEnvironment "$handler" "No package manager" || return $?
-  whichExists "$manager" || throwEnvironment "$handler" "$manager does not exist" || return $?
+  executableExists "$manager" || throwEnvironment "$handler" "$manager does not exist" || return $?
 
   local package group
   for group in "${groups[@]}"; do
@@ -810,7 +810,7 @@ packageGroupUninstall() {
 
   # IDENTICAL managerArgumentRunValidation 2
   [ -n "$manager" ] || manager=$(packageManagerDefault) || throwEnvironment "$handler" "No package manager" || return $?
-  whichExists "$manager" || throwEnvironment "$handler" "$manager does not exist" || return $?
+  executableExists "$manager" || throwEnvironment "$handler" "$manager does not exist" || return $?
 
   local package group
   for group in "${groups[@]}"; do

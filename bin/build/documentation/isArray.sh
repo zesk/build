@@ -1,44 +1,20 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-22
+# Generated on 2026-01-24
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/type.sh"
 argument="variableName - String. Required. Variable name to check."$'\n'"--help - Flag. Optional. Display this help."$'\n'""
 base="type.sh"
 description="Is a variable declared as an array?"$'\n'""
+exitCode="0"
 file="bin/build/tools/type.sh"
-fn="isArray"
-foundNames=""
+foundNames=([0]="argument")
+rawComment="Is a variable declared as an array?"$'\n'"Argument: variableName - String. Required. Variable name to check."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
-sourceFile="bin/build/tools/type.sh"
 sourceModified="1769063211"
 summary="Is a variable declared as an array?"
 usage="isArray variableName [ --help ]"
 # shellcheck disable=SC2016
-helpConsole='[92mUsage[0m: [38;2;170;170;255misArray[0m [38;2;255;255;0m[35;48;2;0;0;0mvariableName[0m[0m [94m[ --help ][0m
-
-    [31mvariableName  [1;97mString. Required. Variable name to check.[0m
-    [94m--help        [1;97mFlag. Optional. Display this help.[0m
-
-Is a variable declared as an array?
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-'
+helpConsole=''$'\e''[[label]mUsage'$'\e''[0m: '$'\e''[[info]misArray'$'\e''[0m '$'\e''[[bold]m'$'\e''[[magenta]mvariableName'$'\e''[0m'$'\e''[0m '$'\e''[[blue]m[ --help ]'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[red]mvariableName  '$'\e''[[value]mString. Required. Variable name to check.'$'\e''[[reset]m'$'\n''    '$'\e''[[blue]m--help        '$'\e''[[value]mFlag. Optional. Display this help.'$'\e''[[reset]m'$'\n'''$'\n''Is a variable declared as an array?'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[code]m0'$'\e''[[reset]m - Success'$'\n''- '$'\e''[[code]m1'$'\e''[[reset]m - Environment error'$'\n''- '$'\e''[[code]m2'$'\e''[[reset]m - Argument error'$'\n'''
 # shellcheck disable=SC2016
-helpPlain='Usage: isArray variableName [ --help ]
-
-    variableName  String. Required. Variable name to check.
-    --help        Flag. Optional. Display this help.
-
-Is a variable declared as an array?
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-'
+helpPlain='Usage: isArray variableName [ --help ]'$'\n'''$'\n''    variableName  String. Required. Variable name to check.'$'\n''    --help        Flag. Optional. Display this help.'$'\n'''$'\n''Is a variable declared as an array?'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''

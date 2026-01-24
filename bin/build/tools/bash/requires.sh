@@ -90,14 +90,14 @@ __bashCheckRequires() {
   local functionName binaries=() total=0 defined=() missing=() required=() ignored=()
   while read -r functionName; do
     [ -n "$functionName" ] || continue
-    if [ "${#ignorePrefixes[@]}" -gt 0 ] && beginsWith "$functionName" "${ignorePrefixes[@]}"; then
+    if [ "${#ignorePrefixes[@]}" -gt 0 ] && stringBegins "$functionName" "${ignorePrefixes[@]}"; then
       ignored+=("$functionName")
     elif [ "${#ignore[@]}" -gt 0 ] && inArray "$functionName" "${ignore[@]}"; then
       ignored+=("$functionName")
     else
       total=$((total + 1))
       if ! bashFunctionDefined "$functionName" "${files[@]}"; then
-        if whichExists "$functionName" || [ "$(type -t "$functionName")" = "builtin" ]; then
+        if executableExists "$functionName" || [ "$(type -t "$functionName")" = "builtin" ]; then
           binaries+=("$functionName")
         else
           missing+=("$functionName")
@@ -114,7 +114,7 @@ __bashCheckRequires() {
   if "$unusedFlag"; then
     while read -r functionName; do
       [ -n "$functionName" ] || continue
-      if [ "${#ignorePrefixes[@]}" -gt 0 ] && beginsWith "$functionName" "${ignorePrefixes[@]}"; then
+      if [ "${#ignorePrefixes[@]}" -gt 0 ] && stringBegins "$functionName" "${ignorePrefixes[@]}"; then
         ignored+=("$functionName")
       elif [ "${#ignore[@]}" -gt 0 ] && inArray "$functionName" "${ignore[@]}"; then
         ignored+=("$functionName")

@@ -42,7 +42,7 @@ __usageTemplate() {
   exitCode=$(validate "$handler" UnsignedInteger "exitCode" "$5") || return $?
   shift 5 || throwArgument "$handler" "shift 5" || return $?
 
-  local usageColor=green
+  local usageColor=label
   if [ $# -gt 0 ] && [ -n "$*" ]; then
     if [ "$exitCode" -eq 0 ]; then
       printf "%s\n\n" "$(decorate success "$@")"

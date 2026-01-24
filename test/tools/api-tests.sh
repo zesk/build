@@ -33,10 +33,10 @@ testEnvironmentVariables() {
 testDates() {
   local t y ty tm td yy ym yd
   assertEquals "$(dateFromTimestamp 1697666075 %F)" "2023-10-18" || return $?
-  assertEquals "$(todayDate)" "$(date -u +%F)" || return $?
+  assertEquals "$(dateToday)" "$(date -u +%F)" || return $?
 
-  t="$(todayDate)" || returnEnvironment todayDate failed || return $?
-  y="$(yesterdayDate)" || returnEnvironment yesterdayDate failed || return $?
+  t="$(dateToday)" || returnEnvironment dateToday failed || return $?
+  y="$(dateYesterday)" || returnEnvironment dateYesterday failed || return $?
 
   assertEquals "${#t}" "${#y}" || return $?
 

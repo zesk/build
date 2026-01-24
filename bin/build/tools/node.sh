@@ -45,11 +45,11 @@ _nodeInstall() {
 
 __nodeInstall_corepackEnable() {
   local handler="$1"
-  if ! whichExists corepack; then
+  if ! executableExists corepack; then
     statusMessage decorate warning "No corepack - installing using npm" || return $?
     catchEnvironment "$handler" npmInstall || return $?
     catchEnvironment "$handler" npm install -g corepack || return $?
-    whichExists corepack || throwEnvironment "$handler" "corepack not found after global installation - failing: PATH=$PATH" || return $?
+    executableExists corepack || throwEnvironment "$handler" "corepack not found after global installation - failing: PATH=$PATH" || return $?
   fi
   local home
   home=$(catchReturn "$handler" buildHome) || return $?
@@ -169,7 +169,7 @@ nodePackageManagerInstall() {
   local manager
 
   manager=$(catchEnvironment "$handler" nodePackageManager) || return $?
-  if whichExists "$manager"; then
+  if executableExists "$manager"; then
     return 0
   fi
   local method="${manager}Install"
@@ -188,7 +188,7 @@ nodePackageManagerUninstall() {
   local manager
 
   manager=$(catchEnvironment "$handler" nodePackageManager) || return $?
-  if ! whichExists "$manager"; then
+  if ! executableExists "$manager"; then
     return 0
   fi
   local method="${manager}Uninstall"

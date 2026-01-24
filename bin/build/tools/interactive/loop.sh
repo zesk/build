@@ -66,7 +66,7 @@ __loopExecute() {
       suffix=$(decorate warning "(loading)")
     fi
 
-    catchEnvironment "$handler" boxedHeading --outside "$outsideColor" --inside "$outsideColor" "$title $suffix" | plasterLines || return $?
+    catchReturn "$handler" consoleHeadingBoxed --outside "$outsideColor" --inside "$outsideColor" "$title $suffix" | plasterLines || return $?
     printf "%s\n" "$statusLine" | plasterLines
     IFS=$'\n' read -r -d '' _ saveY < <(cursorGet)
 
@@ -95,18 +95,18 @@ __loopExecute() {
     cursorSet 1 1
 
     if inArray "$exitCode" "${until[@]}"; then
-      catchEnvironment "$handler" boxedHeading --outside "$outsideColor" --inside success "$title (SUCCESS)" | plasterLines || return $?
+      catchReturn "$handler" consoleHeadingBoxed --outside "$outsideColor" --inside success "$title (SUCCESS)" | plasterLines || return $?
       printf "%s\n" "$statusLine" | plasterLines || return $?
       catchEnvironment "$handler" plasterLines <"$outputBuffer" || return $?
       cursorSet 1 "$((rowCount - 1))"
       bigText "Success"
       done=true
     else
-      catchEnvironment "$handler" boxedHeading --outside "$outsideColor" --inside "$outsideColor" "$title $(decorate orange "(looping)")" || echo "EXIT CODE: $?"
+      catchReturn "$handler" consoleHeadingBoxed --outside "$outsideColor" --inside "$outsideColor" "$title $(decorate orange "(looping)")" || echo "EXIT CODE: $?"
       printf "%s\n" "$statusLine" | plasterLines || return $?
       (
         tail -n "$showRows" <"$outputBuffer"
-        [ "$showRows" -lt "$nLines" ] || repeat "$((showRows - nLines))" "\n"
+        [ "$showRows" -lt "$nLines" ] || textRepeat "$((showRows - nLines))" "\n"
       ) | plasterLines
       elapsed=$((elapsed / 1000))
       if [ "$elapsed" -lt "$sleepDelay" ]; then

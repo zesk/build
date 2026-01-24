@@ -59,7 +59,7 @@ __resultTextSizeColor() {
   text="$(__resultTextCleaned "$*")"
   local length="${#text}"
 
-  printf -- "%s %s\n" "$(decorate "$color" "$text")" "$(decorate subtle "$(alignRight 9 "$(pluralWord "$length" char)")")"
+  printf -- "%s %s\n" "$(decorate "$color" "$text")" "$(decorate subtle "$(textAlignRight 9 "$(pluralWord "$length" char)")")"
 }
 
 ___printResultPair() {
@@ -189,12 +189,18 @@ _assertConditionHelper() {
   local flag=";Assert-Profile:true;" flags=";${BUILD_TEST_FLAGS-};"
 
   local handler="$1" && shift
+
   local pairs=() debugFlag=false
-  local success=true file="" lineDepth="" lineNumber="" displayName="" tester="" formatter="__resultFormatter"
+  local formatter="__assertResultFormatter"
+
+  local doPlumber=""
+  local success=true
+  local lineDepth="" lineNumber="" displayName="" tester="" file=""
+
   local outputContains=() outputNotContains=() stderrContains=() stderrNotContains=()
+
   local doPlumber="" leaks=() whichEnd="tail"
   local errorsOk=false dumpFlag=false dumpBinaryFlag=false expectedExitCode=0 code1=false debugLines=false
-  local message result testPassed runner exitCode outputFile errorFile stderrTitle stdoutTitle
 
   # profiling variables
   local profile=false _profile="" _profileStart="" _next _used=0
@@ -225,7 +231,7 @@ _assertConditionHelper() {
     --line) shift && lineNumber="${1-}" ;;
     --line-depth) shift && lineDepth="$(validate "$handler" PositiveInteger "$argument" "${1-}")" || return $? ;;
     --test) shift && tester="$(validate "$handler" String "$argument" "${1-}")" || return $? ;;
-    --formatter) shift && formatter="$(validate "$handler" String "$argument" "${1-}")" || return $? ;;
+    --formatter) shift && formatter="$(validate "$handler" Callable "$argument" "${1-}")" || return $? ;;
     --stderr-ok) errorsOk=true ;;
     --stderr-match)
       shift && [ -n "${1-}" ] || throwArgument "$handler" "Blank $argument argument" || return $?
@@ -289,17 +295,17 @@ _assertConditionHelper() {
   fi
   [ -n "$tester" ] || throwArgument "$handler" "--test required ($*)" || return $?
 
-  outputFile=$(mktemp) || throwEnvironment "$handler" "mktemp failed?" || return $?
-  errorFile="$outputFile.err"
+  local outputFile && outputFile=$(fileTemporaryName "$handler") || return $?
+  local errorFile="$outputFile.err"
+  local runner=("$tester")
   if $doPlumber; then
     runner=(plumber "${leaks[@]+"${leaks[@]}"}" "$tester")
-  else
-    runner=("$tester")
   fi
   buildDebugStart "assert"
   ! $debugFlag || __buildDebugEnable v
-  exitCode=0
+  local exitCode=0
   local clean=("$outputFile" "$errorFile")
+  local testPassed=false
 
   # ********************************************************************************************************************
   if $profile; then _next="$(timingStart)" && printf "%d %s\n" "$((_next - _profile))" "runner-setup" && _profile=$_next; fi
@@ -320,7 +326,7 @@ _assertConditionHelper() {
   else
     $success && testPassed=false || testPassed=true
   fi
-  result="$("$formatter" "$testPassed" "$success" "$@" <"$outputFile")"
+  local result && result="$("$formatter" "$testPassed" "$success" "$@" <"$outputFile")"
   # ********************************************************************************************************************
   if $profile; then
     _next="$(timingStart)"
@@ -330,6 +336,7 @@ _assertConditionHelper() {
   fi
 
   # shellcheck disable=SC2059
+  local message
   message="$(printf "$(decorate label %s) %s, " "${pairs[@]+"${pairs[@]}"}")"
   message="${message%, }"
   message="$(printf -- "%s ➡️ %s -> %s\n" "$linePrefix" "$message" "$result")"
@@ -344,8 +351,8 @@ _assertConditionHelper() {
   if $errorsOk && [ ! -s "$errorFile" ]; then
     statusMessage --last printf "%s – %s" "$message" "$(decorate warning "--stderr-ok used but is NOT necessary")"
   fi
-  stderrTitle="$functionName (stderr)"
-  stdoutTitle="$functionName (stdout)"
+
+  local stdoutTitle="$functionName (stdout)" stderrTitle="$functionName (stderr)"
   if [ ${#stderrContains[@]} -gt 0 ]; then
     __assertFileContainsThis "$handler" --line "$lineNumber" --display "$stderrTitle" "$errorFile" "${stderrContains[@]}" || testPassed=false
   fi
@@ -484,7 +491,7 @@ __assertFileContainsHelper() {
 # Generic formatter
 # Argument: testPassed
 # Argument: arguments
-__resultFormatter() {
+__assertResultFormatter() {
   local testPassed="${1-}" success="${2-}"
 
   shift 2

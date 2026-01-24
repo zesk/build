@@ -240,7 +240,7 @@ testSuite() {
     local intro
     intro=$(printf -- "%s started on %s %s\n" "$(decorate BOLD magenta "${handler#_}")" "$startString" "$load")
     if "$verboseMode"; then
-      hasColors || printf "%s" "No colors available in TERM ${TERM-}\n"
+      consoleHasColors || printf "%s" "No colors available in TERM ${TERM-}\n"
       statusMessage printf -- "%s" "$intro"
     fi
     catchEnvironment "$handler" printf -- "%s\n" "$intro" >>"$quietLog" || returnClean $? "${clean[@]}" || return $?
@@ -334,7 +334,7 @@ testSuite() {
         if [ "$item" = "$startTest" ]; then
           startTest=
           actualTest="-"
-          clearLine
+          consoleLineFill
           $beQuiet || decorate warning "Continuing at test $(decorate code "$item") ..."
         else
           $beQuiet || statusMessage decorate warning "Skipping $(decorate code "$item") ..."
@@ -412,7 +412,7 @@ testSuite() {
         printf "%s\n" "$item" >"$continueFile"
       fi
       if [ "$sectionName" != "$sectionNameHeading" ]; then
-        clearLine
+        consoleLineFill
         __testHeading "$sectionName"
         timingReport "$allTestStart" "elapsed"
         sectionNameHeading="$sectionName"
@@ -710,7 +710,7 @@ __testStatsFormat() {
   local milliseconds functionName
   while read -r milliseconds functionName; do
     if isUnsignedInteger "$milliseconds"; then
-      printf -- "%s %s\n" "$(decorate value "$(alignRight 6 "$(timingFormat "$milliseconds")")")" "$(decorate code "$functionName")"
+      printf -- "%s %s\n" "$(decorate value "$(textAlignRight 6 "$(timingFormat "$milliseconds")")")" "$(decorate code "$functionName")"
     else
       printf "%s %s\n" "$milliseconds" "$functionName"
     fi
@@ -722,16 +722,16 @@ __testStats() {
   targetFile="$(buildHome)/test.stats"
   sort -rn <"$statsFile" >"$targetFile"
   rm -rf "$statsFile" || :
-  boxedHeading "Slowest tests"
+  consoleHeadingBoxed "Slowest tests"
   head -n 50 <"$targetFile" | __testStatsFormat
-  boxedHeading "Fastest tests"
+  consoleHeadingBoxed "Fastest tests"
   grep -v -e '^0 ' "$targetFile" | tail -n 20 | __testStatsFormat
-  boxedHeading "Zero-second tests"
+  consoleHeadingBoxed "Zero-second tests"
   set +o pipefail
   IFS=$'\n' read -d '' -r -a zeroTests < <(grep -e '^0 ' "$targetFile" | awk '{ print $2 }') || :
   printf -- "%s " "${zeroTests[@]+"${zeroTests[@]}"}"
   printf -- "\n"
-  boxedHeading "Functions asserted (cumulative)"
+  consoleHeadingBoxed "Functions asserted (cumulative)"
   cat "$(__assertedFunctions)"
   lines=$(catchReturn "$handler" fileLineCount "$(__assertedFunctions)") || return $?
   decorate info "$lines $(plural "$lines" "function" "functions")"
@@ -795,7 +795,7 @@ __testSuiteExecutor() {
     fi
     shift
   done
-  clearLine
+  consoleLineFill
   return 1
 }
 
@@ -848,8 +848,8 @@ __testDidAnythingFail() {
 #
 __testSection() {
   [ -n "$*" ] || returnArgument "Blank argument $(debuggingStack)"
-  clearLine
-  boxedHeading --size 0 "$@"
+  consoleLineFill
+  consoleHeadingBoxed --size 0 "$@"
 }
 
 #
@@ -858,9 +858,9 @@ __testSection() {
 __testHeading() {
   local bar
 
-  bar=$(decorate code "$(echoBar '*')")
+  bar=$(decorate code "$(consoleLine '*')")
 
-  clearLine
+  consoleLineFill
   printf -- "%s\n" "$bar"
   bigText "$@" | decorate wrap --fill " " "    " | decorate code
   printf -- "%s\n" "$bar"
@@ -870,8 +870,8 @@ __testHeading() {
 # Output debugging for terminal issues and colors/CI
 #
 __testDebugTermDisplay() {
-  printf -- "TERM: %s DISPLAY: %s hasColors: %s\n" "${TERM-none}" "${DISPLAY-none}" "$(
-    hasColors
+  printf -- "TERM: %s DISPLAY: %s consoleHasColors: %s\n" "${TERM-none}" "${DISPLAY-none}" "$(
+    consoleHasColors
     printf %d $?
   )"
 }
@@ -946,7 +946,7 @@ __testLoad() {
         continue
       fi
       ! inArray "$__test" "${__tests[@]+"${__tests[@]}"}" || {
-        clearLine
+        consoleLineFill
         decorate error "$1 - Duplicated: $(decorate code "$__test")"
       } 1>&2
       __tests+=("$__test")

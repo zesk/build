@@ -1,62 +1,21 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-22
+# Generated on 2026-01-24
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/environment.sh"
 argument="--verbose - Flag. Optional. Output errors with variables."$'\n'"--debug - Flag. Optional. Debugging mode, for developers probably."$'\n'"--prefix - String. Optional. Prefix each environment variable defined with this string. e.g. \`NAME\` -> \`DSN_NAME\` for \`--prefix DSN_\`"$'\n'"--context - String. Optional. Name of the context for debugging or error messages. (e.g. what is this doing for whom and why)"$'\n'"--ignore environmentName - String. Optional. Environment value to ignore on load."$'\n'"--secure environmentName - String. Optional. If found, entire load fails."$'\n'"--secure-defaults - Flag. Optional. Add a list of environment variables considered security risks to the \`--ignore\` list."$'\n'"--execute arguments ... - Callable. Optional. All additional arguments are passed to callable after loading environment."$'\n'"--help - Flag. Optional. Display this help."$'\n'""
 base="environment.sh"
-description="Safely load an environment from stdin (no code execution)"$'\n'"Return Code: 2 - if file does not exist; outputs an error"$'\n'"Return Code: 0 - if files are loaded successfully"$'\n'""
+description="Safely load an environment from stdin (no code execution)"$'\n'""
+exitCode="0"
 file="bin/build/tools/environment.sh"
-fn="environmentLoad"
-foundNames=""
-return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
+foundNames=([0]="argument" [1]="return_code")
+rawComment="Safely load an environment from stdin (no code execution)"$'\n'"Argument: --verbose - Flag. Optional. Output errors with variables."$'\n'"Argument: --debug - Flag. Optional. Debugging mode, for developers probably."$'\n'"Argument: --prefix - String. Optional. Prefix each environment variable defined with this string. e.g. \`NAME\` -> \`DSN_NAME\` for \`--prefix DSN_\`"$'\n'"Argument: --context - String. Optional. Name of the context for debugging or error messages. (e.g. what is this doing for whom and why)"$'\n'"Argument: --ignore environmentName - String. Optional. Environment value to ignore on load."$'\n'"Argument: --secure environmentName - String. Optional. If found, entire load fails."$'\n'"Argument: --secure-defaults - Flag. Optional. Add a list of environment variables considered security risks to the \`--ignore\` list."$'\n'"Argument: --execute arguments ... - Callable. Optional. All additional arguments are passed to callable after loading environment."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Return Code: 2 - if file does not exist; outputs an error"$'\n'"Return Code: 0 - if files are loaded successfully"$'\n'""$'\n'""
+return_code="2 - if file does not exist; outputs an error"$'\n'"0 - if files are loaded successfully"$'\n'""
 sourceFile="bin/build/tools/environment.sh"
-sourceModified="1769063211"
+sourceModified="1769203760"
 summary="Safely load an environment from stdin (no code execution)"
 usage="environmentLoad [ --verbose ] [ --debug ] [ --prefix ] [ --context ] [ --ignore environmentName ] [ --secure environmentName ] [ --secure-defaults ] [ --execute arguments ... ] [ --help ]"
 # shellcheck disable=SC2016
-helpConsole='[92mUsage[0m: [38;2;170;170;255menvironmentLoad[0m [94m[ --verbose ][0m [94m[ --debug ][0m [94m[ --prefix ][0m [94m[ --context ][0m [94m[ --ignore environmentName ][0m [94m[ --secure environmentName ][0m [94m[ --secure-defaults ][0m [94m[ --execute arguments ... ][0m [94m[ --help ][0m
-
-    [94m--verbose                 [1;97mFlag. Optional. Output errors with variables.[0m
-    [94m--debug                   [1;97mFlag. Optional. Debugging mode, for developers probably.[0m
-    [94m--prefix                  [1;97mString. Optional. Prefix each environment variable defined with this string. e.g. [38;2;0;255;0;48;2;0;0;0mNAME[0m -> [38;2;0;255;0;48;2;0;0;0mDSN_NAME[0m for [38;2;0;255;0;48;2;0;0;0m--prefix DSN_[0m[0m
-    [94m--context                 [1;97mString. Optional. Name of the context for debugging or error messages. (e.g. what is this doing for whom and why)[0m
-    [94m--ignore environmentName  [1;97mString. Optional. Environment value to ignore on load.[0m
-    [94m--secure environmentName  [1;97mString. Optional. If found, entire load fails.[0m
-    [94m--secure-defaults         [1;97mFlag. Optional. Add a list of environment variables considered security risks to the [38;2;0;255;0;48;2;0;0;0m--ignore[0m list.[0m
-    [94m--execute arguments ...   [1;97mCallable. Optional. All additional arguments are passed to callable after loading environment.[0m
-    [94m--help                    [1;97mFlag. Optional. Display this help.[0m
-
-Safely load an environment from stdin (no code execution)
-Return Code: 2 - if file does not exist; outputs an error
-Return Code: 0 - if files are loaded successfully
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-'
+helpConsole=''$'\e''[[label]mUsage'$'\e''[0m: '$'\e''[[info]menvironmentLoad'$'\e''[0m '$'\e''[[blue]m[ --verbose ]'$'\e''[0m '$'\e''[[blue]m[ --debug ]'$'\e''[0m '$'\e''[[blue]m[ --prefix ]'$'\e''[0m '$'\e''[[blue]m[ --context ]'$'\e''[0m '$'\e''[[blue]m[ --ignore environmentName ]'$'\e''[0m '$'\e''[[blue]m[ --secure environmentName ]'$'\e''[0m '$'\e''[[blue]m[ --secure-defaults ]'$'\e''[0m '$'\e''[[blue]m[ --execute arguments ... ]'$'\e''[0m '$'\e''[[blue]m[ --help ]'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[blue]m--verbose                 '$'\e''[[value]mFlag. Optional. Output errors with variables.'$'\e''[[reset]m'$'\n''    '$'\e''[[blue]m--debug                   '$'\e''[[value]mFlag. Optional. Debugging mode, for developers probably.'$'\e''[[reset]m'$'\n''    '$'\e''[[blue]m--prefix                  '$'\e''[[value]mString. Optional. Prefix each environment variable defined with this string. e.g. '$'\e''[[code]mNAME'$'\e''[[reset]m -> '$'\e''[[code]mDSN_NAME'$'\e''[[reset]m for '$'\e''[[code]m--prefix DSN_'$'\e''[[reset]m'$'\e''[[reset]m'$'\n''    '$'\e''[[blue]m--context                 '$'\e''[[value]mString. Optional. Name of the context for debugging or error messages. (e.g. what is this doing for whom and why)'$'\e''[[reset]m'$'\n''    '$'\e''[[blue]m--ignore environmentName  '$'\e''[[value]mString. Optional. Environment value to ignore on load.'$'\e''[[reset]m'$'\n''    '$'\e''[[blue]m--secure environmentName  '$'\e''[[value]mString. Optional. If found, entire load fails.'$'\e''[[reset]m'$'\n''    '$'\e''[[blue]m--secure-defaults         '$'\e''[[value]mFlag. Optional. Add a list of environment variables considered security risks to the '$'\e''[[code]m--ignore'$'\e''[[reset]m list.'$'\e''[[reset]m'$'\n''    '$'\e''[[blue]m--execute arguments ...   '$'\e''[[value]mCallable. Optional. All additional arguments are passed to callable after loading environment.'$'\e''[[reset]m'$'\n''    '$'\e''[[blue]m--help                    '$'\e''[[value]mFlag. Optional. Display this help.'$'\e''[[reset]m'$'\n'''$'\n''Safely load an environment from stdin (no code execution)'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[code]m2'$'\e''[[reset]m - if file does not exist; outputs an error'$'\n''- '$'\e''[[code]m0'$'\e''[[reset]m - if files are loaded successfully'$'\n'''
 # shellcheck disable=SC2016
-helpPlain='Usage: environmentLoad [ --verbose ] [ --debug ] [ --prefix ] [ --context ] [ --ignore environmentName ] [ --secure environmentName ] [ --secure-defaults ] [ --execute arguments ... ] [ --help ]
-
-    --verbose                 Flag. Optional. Output errors with variables.
-    --debug                   Flag. Optional. Debugging mode, for developers probably.
-    --prefix                  String. Optional. Prefix each environment variable defined with this string. e.g. NAME -> DSN_NAME for --prefix DSN_
-    --context                 String. Optional. Name of the context for debugging or error messages. (e.g. what is this doing for whom and why)
-    --ignore environmentName  String. Optional. Environment value to ignore on load.
-    --secure environmentName  String. Optional. If found, entire load fails.
-    --secure-defaults         Flag. Optional. Add a list of environment variables considered security risks to the --ignore list.
-    --execute arguments ...   Callable. Optional. All additional arguments are passed to callable after loading environment.
-    --help                    Flag. Optional. Display this help.
-
-Safely load an environment from stdin (no code execution)
-Return Code: 2 - if file does not exist; outputs an error
-Return Code: 0 - if files are loaded successfully
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-'
+helpPlain='Usage: environmentLoad [ --verbose ] [ --debug ] [ --prefix ] [ --context ] [ --ignore environmentName ] [ --secure environmentName ] [ --secure-defaults ] [ --execute arguments ... ] [ --help ]'$'\n'''$'\n''    --verbose                 Flag. Optional. Output errors with variables.'$'\n''    --debug                   Flag. Optional. Debugging mode, for developers probably.'$'\n''    --prefix                  String. Optional. Prefix each environment variable defined with this string. e.g. NAME -> DSN_NAME for --prefix DSN_'$'\n''    --context                 String. Optional. Name of the context for debugging or error messages. (e.g. what is this doing for whom and why)'$'\n''    --ignore environmentName  String. Optional. Environment value to ignore on load.'$'\n''    --secure environmentName  String. Optional. If found, entire load fails.'$'\n''    --secure-defaults         Flag. Optional. Add a list of environment variables considered security risks to the --ignore list.'$'\n''    --execute arguments ...   Callable. Optional. All additional arguments are passed to callable after loading environment.'$'\n''    --help                    Flag. Optional. Display this help.'$'\n'''$'\n''Safely load an environment from stdin (no code execution)'$'\n'''$'\n''Return codes:'$'\n''- 2 - if file does not exist; outputs an error'$'\n''- 0 - if files are loaded successfully'$'\n'''

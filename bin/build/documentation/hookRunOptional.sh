@@ -1,88 +1,27 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-22
+# Generated on 2026-01-24
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/hook.sh"
 argument="--next scriptName - File. Optional. Run the script found *after* the named script, if any. Allows easy chaining of scripts."$'\n'"--application applicationHome - Path. Optional. Directory of alternate application home."$'\n'"--extensions extensionList - ColonDelimitedList. Optional. List of extensions to search, in order for matching files in each hook directory. Defaults to \`BUILD_HOOK_EXTENSIONS\`."$'\n'"hookName - String. Required. Hook name to run."$'\n'"... - Arguments. Optional. Any arguments to the hook. See each hook implementation for details."$'\n'"--help - Flag. Optional. Display this help."$'\n'""
 base="hook.sh"
 build_debug="hook - \`hookRun\` and \`hookSource\` and optional versions of the same functions will output additional debugging information"$'\n'""
-description="Identical to \`hookRun\` but returns exit code zero if the hook does not exist."$'\n'""$'\n'"Return Code: Any - The hook exit code is returned if it is run"$'\n'"Return Code: 1 - is returned if the hook is not found"$'\n'""
+description="Identical to \`hookRun\` but returns exit code zero if the hook does not exist."$'\n'""
 environment="BUILD_HOOK_EXTENSIONS"$'\n'"BUILD_HOOK_DIRS"$'\n'""
 example="    version=\"\$(hookRunOptional version-current)\""$'\n'""
+exitCode="0"
 file="bin/build/tools/hook.sh"
-fn="hookRunOptional"
-foundNames=""
-return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
+foundNames=([0]="argument" [1]="return_code" [2]="example" [3]="see" [4]="test" [5]="environment" [6]="build_debug")
+rawComment="Identical to \`hookRun\` but returns exit code zero if the hook does not exist."$'\n'"Argument: --next scriptName - File. Optional. Run the script found *after* the named script, if any. Allows easy chaining of scripts."$'\n'"Argument: --application applicationHome - Path. Optional. Directory of alternate application home."$'\n'"Argument: --extensions extensionList - ColonDelimitedList. Optional. List of extensions to search, in order for matching files in each hook directory. Defaults to \`BUILD_HOOK_EXTENSIONS\`."$'\n'"Argument: hookName - String. Required. Hook name to run."$'\n'"Argument: ... - Arguments. Optional. Any arguments to the hook. See each hook implementation for details."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Return Code: Any - The hook exit code is returned if it is run"$'\n'"Return Code: 1 - is returned if the hook is not found"$'\n'"Example:     version=\"\$({fn} version-current)\""$'\n'"See: hooks.md hookRunOptional hookRun"$'\n'"Test: testHookSystem"$'\n'"Environment: BUILD_HOOK_EXTENSIONS"$'\n'"Environment: BUILD_HOOK_DIRS"$'\n'"BUILD_DEBUG: hook - \`hookRun\` and \`hookSource\` and optional versions of the same functions will output additional debugging information"$'\n'""$'\n'""
+return_code="Any - The hook exit code is returned if it is run"$'\n'"1 - is returned if the hook is not found"$'\n'""
 see="hooks.md hookRunOptional hookRun"$'\n'""
 sourceFile="bin/build/tools/hook.sh"
-sourceModified="1769063211"
+sourceModified="1769184734"
 summary="Identical to \`hookRun\` but returns exit code zero if the"
 test="testHookSystem"$'\n'""
 usage="hookRunOptional [ --next scriptName ] [ --application applicationHome ] [ --extensions extensionList ] hookName [ ... ] [ --help ]"
 version=""
 # shellcheck disable=SC2016
-helpConsole='[92mUsage[0m: [38;2;170;170;255mhookRunOptional[0m [94m[ --next scriptName ][0m [94m[ --application applicationHome ][0m [94m[ --extensions extensionList ][0m [38;2;255;255;0m[35;48;2;0;0;0mhookName[0m[0m [94m[ ... ][0m [94m[ --help ][0m
-
-    [94m--next scriptName              [1;97mFile. Optional. Run the script found [36mafter[0m the named script, if any. Allows easy chaining of scripts.[0m
-    [94m--application applicationHome  [1;97mPath. Optional. Directory of alternate application home.[0m
-    [94m--extensions extensionList     [1;97mColonDelimitedList. Optional. List of extensions to search, in order for matching files in each hook directory. Defaults to [38;2;0;255;0;48;2;0;0;0mBUILD_HOOK_EXTENSIONS[0m.[0m
-    [31mhookName                       [1;97mString. Required. Hook name to run.[0m
-    [94m...                            [1;97mArguments. Optional. Any arguments to the hook. See each hook implementation for details.[0m
-    [94m--help                         [1;97mFlag. Optional. Display this help.[0m
-
-Identical to [38;2;0;255;0;48;2;0;0;0mhookRun[0m but returns exit code zero if the hook does not exist.
-
-Return Code: Any - The hook exit code is returned if it is run
-Return Code: 1 - is returned if the hook is not found
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-
-Environment variables:
-- BUILD_HOOK_EXTENSIONS
-- BUILD_HOOK_DIRS
-- 
-
-Example:
-    version="$(hookRunOptional version-current)"
-
-[38;2;0;255;0;48;2;0;0;0mBUILD_DEBUG[0m settings:
-- hook - [38;2;0;255;0;48;2;0;0;0mhookRun[0m and [38;2;0;255;0;48;2;0;0;0mhookSource[0m and optional versions of the same functions will output additional debugging information
-- 
-'
+helpConsole=''$'\e''[[label]mUsage'$'\e''[0m: '$'\e''[[info]mhookRunOptional'$'\e''[0m '$'\e''[[blue]m[ --next scriptName ]'$'\e''[0m '$'\e''[[blue]m[ --application applicationHome ]'$'\e''[0m '$'\e''[[blue]m[ --extensions extensionList ]'$'\e''[0m '$'\e''[[bold]m'$'\e''[[magenta]mhookName'$'\e''[0m'$'\e''[0m '$'\e''[[blue]m[ ... ]'$'\e''[0m '$'\e''[[blue]m[ --help ]'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[blue]m--next scriptName              '$'\e''[[value]mFile. Optional. Run the script found '$'\e''[[cyan]mafter'$'\e''[[reset]m the named script, if any. Allows easy chaining of scripts.'$'\e''[[reset]m'$'\n''    '$'\e''[[blue]m--application applicationHome  '$'\e''[[value]mPath. Optional. Directory of alternate application home.'$'\e''[[reset]m'$'\n''    '$'\e''[[blue]m--extensions extensionList     '$'\e''[[value]mColonDelimitedList. Optional. List of extensions to search, in order for matching files in each hook directory. Defaults to '$'\e''[[code]mBUILD_HOOK_EXTENSIONS'$'\e''[[reset]m.'$'\e''[[reset]m'$'\n''    '$'\e''[[red]mhookName                       '$'\e''[[value]mString. Required. Hook name to run.'$'\e''[[reset]m'$'\n''    '$'\e''[[blue]m...                            '$'\e''[[value]mArguments. Optional. Any arguments to the hook. See each hook implementation for details.'$'\e''[[reset]m'$'\n''    '$'\e''[[blue]m--help                         '$'\e''[[value]mFlag. Optional. Display this help.'$'\e''[[reset]m'$'\n'''$'\n''Identical to '$'\e''[[code]mhookRun'$'\e''[[reset]m but returns exit code zero if the hook does not exist.'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[code]mAny'$'\e''[[reset]m - The hook exit code is returned if it is run'$'\n''- '$'\e''[[code]m1'$'\e''[[reset]m - is returned if the hook is not found'$'\n'''$'\n''Environment variables:'$'\n''- BUILD_HOOK_EXTENSIONS'$'\n''- BUILD_HOOK_DIRS'$'\n'''$'\n''Example:'$'\n''    version="$(hookRunOptional version-current)"'$'\n'''$'\n'''$'\e''[[code]mBUILD_DEBUG'$'\e''[[reset]m settings:'$'\n''- '$'\e''[[code]mhook'$'\e''[[reset]m - '$'\e''[[code]mhookRun'$'\e''[[reset]m and '$'\e''[[code]mhookSource'$'\e''[[reset]m and optional versions of the same functions will output additional debugging information'$'\n'''
 # shellcheck disable=SC2016
-helpPlain='Usage: hookRunOptional [ --next scriptName ] [ --application applicationHome ] [ --extensions extensionList ] hookName [ ... ] [ --help ]
-
-    --next scriptName              File. Optional. Run the script found after the named script, if any. Allows easy chaining of scripts.
-    --application applicationHome  Path. Optional. Directory of alternate application home.
-    --extensions extensionList     ColonDelimitedList. Optional. List of extensions to search, in order for matching files in each hook directory. Defaults to BUILD_HOOK_EXTENSIONS.
-    hookName                       String. Required. Hook name to run.
-    ...                            Arguments. Optional. Any arguments to the hook. See each hook implementation for details.
-    --help                         Flag. Optional. Display this help.
-
-Identical to hookRun but returns exit code zero if the hook does not exist.
-
-Return Code: Any - The hook exit code is returned if it is run
-Return Code: 1 - is returned if the hook is not found
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-
-Environment variables:
-- BUILD_HOOK_EXTENSIONS
-- BUILD_HOOK_DIRS
-- 
-
-Example:
-    version="$(hookRunOptional version-current)"
-
-BUILD_DEBUG settings:
-- hook - hookRun and hookSource and optional versions of the same functions will output additional debugging information
-- 
-'
+helpPlain='Usage: hookRunOptional [ --next scriptName ] [ --application applicationHome ] [ --extensions extensionList ] hookName [ ... ] [ --help ]'$'\n'''$'\n''    --next scriptName              File. Optional. Run the script found after the named script, if any. Allows easy chaining of scripts.'$'\n''    --application applicationHome  Path. Optional. Directory of alternate application home.'$'\n''    --extensions extensionList     ColonDelimitedList. Optional. List of extensions to search, in order for matching files in each hook directory. Defaults to BUILD_HOOK_EXTENSIONS.'$'\n''    hookName                       String. Required. Hook name to run.'$'\n''    ...                            Arguments. Optional. Any arguments to the hook. See each hook implementation for details.'$'\n''    --help                         Flag. Optional. Display this help.'$'\n'''$'\n''Identical to hookRun but returns exit code zero if the hook does not exist.'$'\n'''$'\n''Return codes:'$'\n''- Any - The hook exit code is returned if it is run'$'\n''- 1 - is returned if the hook is not found'$'\n'''$'\n''Environment variables:'$'\n''- BUILD_HOOK_EXTENSIONS'$'\n''- BUILD_HOOK_DIRS'$'\n'''$'\n''Example:'$'\n''    version="$(hookRunOptional version-current)"'$'\n'''$'\n''BUILD_DEBUG settings:'$'\n''- hook - hookRun and hookSource and optional versions of the same functions will output additional debugging information'$'\n'''

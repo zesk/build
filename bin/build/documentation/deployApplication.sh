@@ -1,81 +1,24 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-22
+# Generated on 2026-01-24
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/deploy.sh"
 argument="--help - Flag. Optional. This help."$'\n'"--first - Flag. Optional. The first deployment has no prior version and can not be reverted."$'\n'"--revert - Flag. Optional. Means this is part of the undo process of a deployment."$'\n'"--home deployHome - Directory. Required. Path where the deployments database is on system."$'\n'"--id applicationId - String. Required. Should match \`APPLICATION_ID\` or \`APPLICATION_TAG\` in \`.env\` or \`.deploy/\`"$'\n'"--application applicationPath - FileDirectory. Required. Path on the  system where the application is live"$'\n'"--target targetPackage - Filename. Optional. Package name, defaults to \`BUILD_TARGET\`"$'\n'"--message message - String. Optional. Message to display in the maintenance message on systems while upgrade is occurring."$'\n'""
 base="deploy.sh"
-description="This acts on the local file system only but used in tandem with [deployment](./deployment.md) functions."$'\n'""$'\n'"Use-Hook: maintenance"$'\n'"Use-Hook: deploy-shutdown"$'\n'"Use-Hook: deploy-activate deploy-start deploy-finish"$'\n'""$'\n'""
+description="This acts on the local file system only but used in tandem with [deployment](./deployment.md) functions."$'\n'""
 environment="BUILD_TARGET APPLICATION_ID APPLICATION_TAG"$'\n'""
 example="deployApplication --home /var/www/DEPLOY --id 10c2fab1 --application /var/www/apps/cool-app"$'\n'""
+exitCode="0"
 file="bin/build/tools/deploy.sh"
-fn="deployApplication"
-foundNames=""
+foundNames=([0]="summary" [1]="argument" [2]="environment" [3]="example" [4]="use_hook" [5]="see")
+rawComment="Summary: Deploy an application from a deployment repository"$'\n'"This acts on the local file system only but used in tandem with [deployment](./deployment.md) functions."$'\n'"Argument: --help - Flag. Optional. This help."$'\n'"Argument: --first - Flag. Optional. The first deployment has no prior version and can not be reverted."$'\n'"Argument: --revert - Flag. Optional. Means this is part of the undo process of a deployment."$'\n'"Argument: --home deployHome - Directory. Required. Path where the deployments database is on system."$'\n'"Argument: --id applicationId - String. Required. Should match \`APPLICATION_ID\` or \`APPLICATION_TAG\` in \`.env\` or \`.deploy/\`"$'\n'"Argument: --application applicationPath - FileDirectory. Required. Path on the  system where the application is live"$'\n'"Argument: --target targetPackage - Filename. Optional. Package name, defaults to \`BUILD_TARGET\`"$'\n'"Argument: --message message - String. Optional. Message to display in the maintenance message on systems while upgrade is occurring."$'\n'"Environment: BUILD_TARGET APPLICATION_ID APPLICATION_TAG"$'\n'"Example: {fn} --home /var/www/DEPLOY --id 10c2fab1 --application /var/www/apps/cool-app"$'\n'"Use-Hook: maintenance"$'\n'"Use-Hook: deploy-shutdown"$'\n'"Use-Hook: deploy-activate deploy-start deploy-finish"$'\n'"See: deployToRemote"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 see="deployToRemote"$'\n'""
-sourceFile="bin/build/tools/deploy.sh"
 sourceModified="1769063211"
 summary="Deploy an application from a deployment repository"$'\n'""
 usage="deployApplication [ --help ] [ --first ] [ --revert ] --home deployHome --id applicationId --application applicationPath [ --target targetPackage ] [ --message message ]"
+use_hook="maintenance"$'\n'"deploy-shutdown"$'\n'"deploy-activate deploy-start deploy-finish"$'\n'""
 # shellcheck disable=SC2016
-helpConsole='[92mUsage[0m: [38;2;170;170;255mdeployApplication[0m [94m[ --help ][0m [94m[ --first ][0m [94m[ --revert ][0m [38;2;255;255;0m[35;48;2;0;0;0m--home deployHome[0m[0m [38;2;255;255;0m[35;48;2;0;0;0m--id applicationId[0m[0m [38;2;255;255;0m[35;48;2;0;0;0m--application applicationPath[0m[0m [94m[ --target targetPackage ][0m [94m[ --message message ][0m
-
-    [94m--help                         [1;97mFlag. Optional. This help.[0m
-    [94m--first                        [1;97mFlag. Optional. The first deployment has no prior version and can not be reverted.[0m
-    [94m--revert                       [1;97mFlag. Optional. Means this is part of the undo process of a deployment.[0m
-    [31m--home deployHome              [1;97mDirectory. Required. Path where the deployments database is on system.[0m
-    [31m--id applicationId             [1;97mString. Required. Should match [38;2;0;255;0;48;2;0;0;0mAPPLICATION_ID[0m or [38;2;0;255;0;48;2;0;0;0mAPPLICATION_TAG[0m in [38;2;0;255;0;48;2;0;0;0m.env[0m or [38;2;0;255;0;48;2;0;0;0m.deploy/[0m[0m
-    [31m--application applicationPath  [1;97mFileDirectory. Required. Path on the  system where the application is live[0m
-    [94m--target targetPackage         [1;97mFilename. Optional. Package name, defaults to [38;2;0;255;0;48;2;0;0;0mBUILD_TARGET[0m[0m
-    [94m--message message              [1;97mString. Optional. Message to display in the maintenance message on systems while upgrade is occurring.[0m
-
-This acts on the local file system only but used in tandem with [deployment](./deployment.md) functions.
-
-Use-Hook: maintenance
-Use-Hook: deploy-shutdown
-Use-Hook: deploy-activate deploy-start deploy-finish
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-
-Environment variables:
-- BUILD_TARGET APPLICATION_ID APPLICATION_TAG
-- 
-
-Example:
-deployApplication --home /var/www/DEPLOY --id 10c2fab1 --application /var/www/apps/cool-app
-'
+helpConsole=''$'\e''[[label]mUsage'$'\e''[0m: '$'\e''[[info]mdeployApplication'$'\e''[0m '$'\e''[[blue]m[ --help ]'$'\e''[0m '$'\e''[[blue]m[ --first ]'$'\e''[0m '$'\e''[[blue]m[ --revert ]'$'\e''[0m '$'\e''[[bold]m'$'\e''[[magenta]m--home deployHome'$'\e''[0m'$'\e''[0m '$'\e''[[bold]m'$'\e''[[magenta]m--id applicationId'$'\e''[0m'$'\e''[0m '$'\e''[[bold]m'$'\e''[[magenta]m--application applicationPath'$'\e''[0m'$'\e''[0m '$'\e''[[blue]m[ --target targetPackage ]'$'\e''[0m '$'\e''[[blue]m[ --message message ]'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[blue]m--help                         '$'\e''[[value]mFlag. Optional. This help.'$'\e''[[reset]m'$'\n''    '$'\e''[[blue]m--first                        '$'\e''[[value]mFlag. Optional. The first deployment has no prior version and can not be reverted.'$'\e''[[reset]m'$'\n''    '$'\e''[[blue]m--revert                       '$'\e''[[value]mFlag. Optional. Means this is part of the undo process of a deployment.'$'\e''[[reset]m'$'\n''    '$'\e''[[red]m--home deployHome              '$'\e''[[value]mDirectory. Required. Path where the deployments database is on system.'$'\e''[[reset]m'$'\n''    '$'\e''[[red]m--id applicationId             '$'\e''[[value]mString. Required. Should match '$'\e''[[code]mAPPLICATION_ID'$'\e''[[reset]m or '$'\e''[[code]mAPPLICATION_TAG'$'\e''[[reset]m in '$'\e''[[code]m.env'$'\e''[[reset]m or '$'\e''[[code]m.deploy/'$'\e''[[reset]m'$'\e''[[reset]m'$'\n''    '$'\e''[[red]m--application applicationPath  '$'\e''[[value]mFileDirectory. Required. Path on the  system where the application is live'$'\e''[[reset]m'$'\n''    '$'\e''[[blue]m--target targetPackage         '$'\e''[[value]mFilename. Optional. Package name, defaults to '$'\e''[[code]mBUILD_TARGET'$'\e''[[reset]m'$'\e''[[reset]m'$'\n''    '$'\e''[[blue]m--message message              '$'\e''[[value]mString. Optional. Message to display in the maintenance message on systems while upgrade is occurring.'$'\e''[[reset]m'$'\n'''$'\n''This acts on the local file system only but used in tandem with [deployment](./deployment.md) functions.'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[code]m0'$'\e''[[reset]m - Success'$'\n''- '$'\e''[[code]m1'$'\e''[[reset]m - Environment error'$'\n''- '$'\e''[[code]m2'$'\e''[[reset]m - Argument error'$'\n'''$'\n''Environment variables:'$'\n''- BUILD_TARGET APPLICATION_ID APPLICATION_TAG'$'\n'''$'\n''Example:'$'\n''deployApplication --home /var/www/DEPLOY --id 10c2fab1 --application /var/www/apps/cool-app'$'\n'''
 # shellcheck disable=SC2016
-helpPlain='Usage: deployApplication [ --help ] [ --first ] [ --revert ] --home deployHome --id applicationId --application applicationPath [ --target targetPackage ] [ --message message ]
-
-    --help                         Flag. Optional. This help.
-    --first                        Flag. Optional. The first deployment has no prior version and can not be reverted.
-    --revert                       Flag. Optional. Means this is part of the undo process of a deployment.
-    --home deployHome              Directory. Required. Path where the deployments database is on system.
-    --id applicationId             String. Required. Should match APPLICATION_ID or APPLICATION_TAG in .env or .deploy/
-    --application applicationPath  FileDirectory. Required. Path on the  system where the application is live
-    --target targetPackage         Filename. Optional. Package name, defaults to BUILD_TARGET
-    --message message              String. Optional. Message to display in the maintenance message on systems while upgrade is occurring.
-
-This acts on the local file system only but used in tandem with [deployment](./deployment.md) functions.
-
-Use-Hook: maintenance
-Use-Hook: deploy-shutdown
-Use-Hook: deploy-activate deploy-start deploy-finish
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-
-Environment variables:
-- BUILD_TARGET APPLICATION_ID APPLICATION_TAG
-- 
-
-Example:
-deployApplication --home /var/www/DEPLOY --id 10c2fab1 --application /var/www/apps/cool-app
-'
+helpPlain='Usage: deployApplication [ --help ] [ --first ] [ --revert ] --home deployHome --id applicationId --application applicationPath [ --target targetPackage ] [ --message message ]'$'\n'''$'\n''    --help                         Flag. Optional. This help.'$'\n''    --first                        Flag. Optional. The first deployment has no prior version and can not be reverted.'$'\n''    --revert                       Flag. Optional. Means this is part of the undo process of a deployment.'$'\n''    --home deployHome              Directory. Required. Path where the deployments database is on system.'$'\n''    --id applicationId             String. Required. Should match APPLICATION_ID or APPLICATION_TAG in .env or .deploy/'$'\n''    --application applicationPath  FileDirectory. Required. Path on the  system where the application is live'$'\n''    --target targetPackage         Filename. Optional. Package name, defaults to BUILD_TARGET'$'\n''    --message message              String. Optional. Message to display in the maintenance message on systems while upgrade is occurring.'$'\n'''$'\n''This acts on the local file system only but used in tandem with [deployment](./deployment.md) functions.'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''$'\n''Environment variables:'$'\n''- BUILD_TARGET APPLICATION_ID APPLICATION_TAG'$'\n'''$'\n''Example:'$'\n''deployApplication --home /var/www/DEPLOY --id 10c2fab1 --application /var/www/apps/cool-app'$'\n'''

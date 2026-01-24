@@ -7,13 +7,17 @@
 
 __usageDocumentSections() {
   cat <<'EOF'
-return_code|- |Return codes
-environment|- |Environment variables
-stdin||Reads from `stdin`
-stdout||Writes to `stdout`
-example||Example
-build_debug|- |`BUILD_DEBUG` settings
+return_code|Return codes|__consoleFormatList
+environment|Environment variables|__consoleFormatList
+stdin|Reads from `stdin`|cat
+stdout|Writes to `stdout`|cat
+example|Example|cat
+build_debug|`BUILD_DEBUG` settings|__consoleFormatList
 EOF
+}
+
+__consoleFormatList() {
+  markdownFormatList | markdownToConsole
 }
 
 # BUILD_DEBUG: usage-cache-skip
@@ -42,7 +46,9 @@ __usageDocument() {
   [ $# -ge 2 ] || throwArgument "$handler" "Expected 2 arguments, got $#:$(printf -- " \"%s\"" "$@")" || return $?
 
   local functionDefinitionFile="${1-}" functionName="${2-}"
-  local displayName="${fn-"$functionName"}"
+  local displayName="${fn:-"$functionName"}"
+  # [ -n "$displayName" ] || displayName="$functionName"
+
   shift 2 || throwArgument "$handler" "Missing arguments" || return $?
 
   local home returnCode="${1-NONE}"
@@ -143,14 +149,14 @@ __usageDocument() {
     [ "$returnCode" -eq 0 ] || exec 1>&2 && color="error"
 
     catchReturn "$__handler" bashRecursionDebug || return $?
-    local variable prefix label done=false suffix=""
-    while ! $done; do
-      IFS="|" read -r variable prefix label || done=true
+    local variable label formatter finished=false suffix=""
+    while ! $finished; do
+      IFS="|" read -r variable label formatter || finished=true
       [ -n "$variable" ] || continue
       local value="${!variable}"
       if [ -n "$value" ]; then
         local formatted
-        formatted="$(printf "\n\n%s\n%s\n" "$label:" "$(decorate wrap "$prefix" "" <<<"$value")")"
+        formatted="$(printf "\n\n%s\n%s\n" "$label:" "$(catchEnvironment "$handler" "$formatter" <<<"$value")")" || return $?
         suffix="$suffix$formatted"
       fi
     done < <(__usageDocumentSections)

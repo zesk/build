@@ -97,7 +97,7 @@ _simplePHPServer() {
   if [ ! -d "${PHP_SERVER_ROOT-}" ]; then
     returnEnvironment "PHP_SERVER_ROOT is not a directory" || return $?
   fi
-  decoration="$(echoBar ':.')"
+  decoration="$(consoleLine ':.')"
   printf "%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n" \
     "$(decorate magenta "$decoration")" "$(decorate blue "$decoration")" \
     "$(decorate success "Starting PHP Server")" \
@@ -140,7 +140,7 @@ _warmupServer() {
     fi
     printf "%s" "$(decorate green .)"
   done
-  clearLine
+  consoleLineFill
   printf "%s %s\n" "$(decorate info "Server warmed up with value:")" "$(decorate code "$value")"
 }
 
@@ -154,7 +154,7 @@ _waitForValueTimeout() {
     if ! value="$(_simplePHPRequest)"; then
       returnEnvironment "request failed" || return $?
     fi
-    clearLine
+    consoleLineFill
     if [ -z "$value" ] || [ "$value" != "$1" ]; then
       printf "%s %s %s %s\n" "$(decorate code "Request for")" "$(decorate code "$1")" "$(decorate info ", received")" "$(decorate red "$value")"
       return "$errorTimeout"
@@ -162,7 +162,7 @@ _waitForValueTimeout() {
       break
     fi
   done
-  clearLine
+  consoleLineFill
   printf "%s %s\n" "$(decorate info "Server found value:")" "$(decorate code "$value")"
 }
 
@@ -317,7 +317,7 @@ testDeployApplication() {
     _waitForValue "$t" || return $?
 
     assertEquals "$t" "$(_simplePHPRequest)" "PHP application new version $t" || return $?
-    clearLine
+    consoleLineFill
     # _deployShowFiles "$d" || :
     assertEquals "$t" "$(deployApplicationVersion "$d/live-app")" || return $?
     if [ -n "$lastOne" ]; then

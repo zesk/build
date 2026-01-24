@@ -77,7 +77,7 @@ phpComposer() {
     composerBin+=("-v" "$composerDirectory/$cacheDir:/tmp")
     composerBin+=("$dockerImage")
     butFirst="Pulled composer image. "
-  elif ! whichExists composer; then
+  elif ! executableExists composer; then
     $quietFlag || statusMessage decorate info "Installing composer ... "
     catchEnvironment "$handler" phpComposerInstall || return $?
     butFirst="Installed composer. "
@@ -104,7 +104,7 @@ _phpComposer() {
 phpComposerInstall() {
   local handler="_${FUNCNAME[0]}"
   [ $# -eq 0 ] || __help --only "$handler" "$@" || return "$(convertValue $? 1 0)"
-  ! whichExists composer || return 0
+  ! executableExists composer || return 0
   catchReturn "$handler" phpInstall || return $?
   local target="/usr/local/bin/composer"
   local tempBinary="$target.$$"

@@ -1,11 +1,11 @@
 #!/bin/bash
 #
-# Original of whichExists
+# Original of executableExists
 #
 # Copyright &copy; 2026 Market Acumen, Inc.
 #
 
-# IDENTICAL whichExists EOF
+# IDENTICAL executableExists EOF
 
 # Summary: Does a binary exist in the PATH?
 # Argument: --any - Flag. Optional. If any binary exists then return 0 (success). Otherwise, all binaries must exist.
@@ -14,11 +14,11 @@
 # Argument: --help - Flag. Optional. Display this help.
 # Return Code: 0 - If all values are found (without the `--any` flag), or if *any* binary is found with the `--any` flag
 # Return Code: 1 - If any value is not found (without the `--any` flag), or if *all* binaries are NOT found with the `--any` flag.
-# Example:     whichExists cp date aws ls mv stat || throwEnvironment "$handler" "Need basic environment to work" || return $?
-# Example:     whichExists --any terraform tofu || throwEnvironment "$handler" "No available infrastructure providers" || return $?
-# Example:     whichExists --any curl wget || throwEnvironment "$handler" "No way to download URLs easily" || return $?
+# Example:     executableExists cp date aws ls mv stat || throwEnvironment "$handler" "Need basic environment to work" || return $?
+# Example:     executableExists --any terraform tofu || throwEnvironment "$handler" "No available infrastructure providers" || return $?
+# Example:     executableExists --any curl wget || throwEnvironment "$handler" "No way to download URLs easily" || return $?
 # Requires: throwArgument decorate __decorateExtensionEach command
-whichExists() {
+executableExists() {
   local handler="_${FUNCNAME[0]}"
   local __saved=("$@") __count=$# anyFlag=false
   [ $# -gt 0 ] || throwArgument "$handler" "no arguments" || return $?
@@ -42,7 +42,7 @@ whichExists() {
     shift
   done
 }
-_whichExists() {
+_executableExists() {
   # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

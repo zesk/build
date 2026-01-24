@@ -1,42 +1,20 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-22
+# Generated on 2026-01-24
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/colors.sh"
 argument="--help - Flag. Optional. Display this help."$'\n'""
 base="colors.sh"
 description="If you want to explore what colors are available in your terminal, try this."$'\n'""
+exitCode="0"
 file="bin/build/tools/colors.sh"
-fn="colorSampleCodes"
-foundNames=""
+foundNames=([0]="summary" [1]="argument")
+rawComment="Summary: Alternate color output"$'\n'"If you want to explore what colors are available in your terminal, try this."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
-sourceFile="bin/build/tools/colors.sh"
-sourceModified="1769063211"
+sourceModified="1769211509"
 summary="Alternate color output"$'\n'""
 usage="colorSampleCodes [ --help ]"
 # shellcheck disable=SC2016
-helpConsole='[92mUsage[0m: [38;2;170;170;255mcolorSampleCodes[0m [94m[ --help ][0m
-
-    [94m--help  [1;97mFlag. Optional. Display this help.[0m
-
-If you want to explore what colors are available in your terminal, try this.
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-'
+helpConsole=''$'\e''[[label]mUsage'$'\e''[0m: '$'\e''[[info]mcolorSampleCodes'$'\e''[0m '$'\e''[[blue]m[ --help ]'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[blue]m--help  '$'\e''[[value]mFlag. Optional. Display this help.'$'\e''[[reset]m'$'\n'''$'\n''If you want to explore what colors are available in your terminal, try this.'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[code]m0'$'\e''[[reset]m - Success'$'\n''- '$'\e''[[code]m1'$'\e''[[reset]m - Environment error'$'\n''- '$'\e''[[code]m2'$'\e''[[reset]m - Argument error'$'\n'''
 # shellcheck disable=SC2016
-helpPlain='Usage: colorSampleCodes [ --help ]
-
-    --help  Flag. Optional. Display this help.
-
-If you want to explore what colors are available in your terminal, try this.
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-'
+helpPlain='Usage: colorSampleCodes [ --help ]'$'\n'''$'\n''    --help  Flag. Optional. Display this help.'$'\n'''$'\n''If you want to explore what colors are available in your terminal, try this.'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''

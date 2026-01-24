@@ -75,9 +75,9 @@ _fileReverseLines() {
 # Argument: --find findArguments - String. Optional. Add arguments to exclude files or paths. SPACE-delimited for multiple options.
 # Argument: path ... - Directory. Optional. One or more paths to scan for shell files. Uses PWD if not specified.
 # Environment: Works from the current directory
-# See: makeShellFilesExecutable
+# See: bashMakeExecutable
 # See: chmod-sh.sh
-makeShellFilesExecutable() {
+bashMakeExecutable() {
   local handler="_${FUNCNAME[0]}"
 
   local path findArgs=() paths=()
@@ -109,12 +109,12 @@ makeShellFilesExecutable() {
     done
   ) || return $?
 }
-_makeShellFilesExecutable() {
+_bashMakeExecutable() {
   # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# IDENTICAL whichExists 40
+# IDENTICAL executableExists 40
 
 # Summary: Does a binary exist in the PATH?
 # Argument: --any - Flag. Optional. If any binary exists then return 0 (success). Otherwise, all binaries must exist.
@@ -123,11 +123,11 @@ _makeShellFilesExecutable() {
 # Argument: --help - Flag. Optional. Display this help.
 # Return Code: 0 - If all values are found (without the `--any` flag), or if *any* binary is found with the `--any` flag
 # Return Code: 1 - If any value is not found (without the `--any` flag), or if *all* binaries are NOT found with the `--any` flag.
-# Example:     whichExists cp date aws ls mv stat || throwEnvironment "$handler" "Need basic environment to work" || return $?
-# Example:     whichExists --any terraform tofu || throwEnvironment "$handler" "No available infrastructure providers" || return $?
-# Example:     whichExists --any curl wget || throwEnvironment "$handler" "No way to download URLs easily" || return $?
+# Example:     executableExists cp date aws ls mv stat || throwEnvironment "$handler" "Need basic environment to work" || return $?
+# Example:     executableExists --any terraform tofu || throwEnvironment "$handler" "No available infrastructure providers" || return $?
+# Example:     executableExists --any curl wget || throwEnvironment "$handler" "No way to download URLs easily" || return $?
 # Requires: throwArgument decorate __decorateExtensionEach command
-whichExists() {
+executableExists() {
   local handler="_${FUNCNAME[0]}"
   local __saved=("$@") __count=$# anyFlag=false
   [ $# -gt 0 ] || throwArgument "$handler" "no arguments" || return $?
@@ -151,7 +151,7 @@ whichExists() {
     shift
   done
 }
-_whichExists() {
+_executableExists() {
   # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
@@ -265,7 +265,7 @@ _serviceToPort() {
 # Appends (or creates) `original` to the file named `extension` in `directory`
 # Appends `original` to file `directory/@` as well.
 # `extension` is computed from `original` and an empty extension is written to '!'
-__extensionListsLog() {
+__fileExtensionListsLog() {
   local directory="$1" original="$2"
   local name extension
   name="$(basename "$original")" || returnArgument "basename $name" || return $?
@@ -293,7 +293,7 @@ __extensionListsLog() {
 # - `foo.` -> `"!"``
 # - `foo-bar` -> `"!"``
 #
-extensionLists() {
+fileExtensionLists() {
   local handler="_${FUNCNAME[0]}"
 
   local names=() directory="" cleanFlag=false
@@ -326,16 +326,16 @@ extensionLists() {
   local name
   if [ ${#names[@]} -gt 0 ]; then
     for name in "${names[@]}"; do
-      catchReturn "$handler" __extensionListsLog "$directory" "$name" || return $?
+      catchReturn "$handler" __fileExtensionListsLog "$directory" "$name" || return $?
     done
   else
     catchEnvironment "$handler" touch "$directory/@" || return $?
     while read -r name; do
-      catchReturn "$handler" __extensionListsLog "$directory" "$name" || return $?
+      catchReturn "$handler" __fileExtensionListsLog "$directory" "$name" || return $?
     done
   fi
 }
-_extensionLists() {
+_fileExtensionLists() {
   # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
@@ -354,7 +354,7 @@ loadAverage() {
   local averages=()
   if [ -f "/proc/loadavg" ]; then
     text="$(cat /proc/loadavg)"
-  elif whichExists uptime; then
+  elif executableExists uptime; then
     text=$(catchEnvironment "$handler" uptime) || return $?
     text="${text##*average}"_
     text="${text##*:}"

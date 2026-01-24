@@ -1,45 +1,22 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-22
+# Generated on 2026-01-24
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/environment.sh"
 argument="none"
 base="environment.sh"
-description="Output a list of environment variables and ignore function definitions"$'\n'""$'\n'"both \`set\` and \`env\` output functions and this is an easy way to just output"$'\n'"exported variables"$'\n'""$'\n'""
+description="Output a list of environment variables and ignore function definitions"$'\n'"both \`set\` and \`env\` output functions and this is an easy way to just output"$'\n'"exported variables"$'\n'""
+exitCode="0"
 file="bin/build/tools/environment.sh"
-fn="environmentVariables"
-foundNames=""
+foundNames=([0]="requires")
+rawComment="Output a list of environment variables and ignore function definitions"$'\n'"both \`set\` and \`env\` output functions and this is an easy way to just output"$'\n'"exported variables"$'\n'"Requires: declare grep cut usageDocument __help"$'\n'""$'\n'""
 requires="declare grep cut usageDocument __help"$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/environment.sh"
-sourceModified="1769063211"
+sourceModified="1769203760"
 summary="Output a list of environment variables and ignore function definitions"
 usage="environmentVariables"
 # shellcheck disable=SC2016
-helpConsole='[92mUsage[0m: [38;2;170;170;255menvironmentVariables[0m
-
-Output a list of environment variables and ignore function definitions
-
-both [38;2;0;255;0;48;2;0;0;0mset[0m and [38;2;0;255;0;48;2;0;0;0menv[0m output functions and this is an easy way to just output
-exported variables
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-'
+helpConsole=''$'\e''[[label]mUsage'$'\e''[0m: '$'\e''[[info]menvironmentVariables'$'\e''[0m'$'\n'''$'\n''Output a list of environment variables and ignore function definitions'$'\n''both '$'\e''[[code]mset'$'\e''[[reset]m and '$'\e''[[code]menv'$'\e''[[reset]m output functions and this is an easy way to just output'$'\n''exported variables'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[code]m0'$'\e''[[reset]m - Success'$'\n''- '$'\e''[[code]m1'$'\e''[[reset]m - Environment error'$'\n''- '$'\e''[[code]m2'$'\e''[[reset]m - Argument error'$'\n'''
 # shellcheck disable=SC2016
-helpPlain='Usage: environmentVariables
-
-Output a list of environment variables and ignore function definitions
-
-both set and env output functions and this is an easy way to just output
-exported variables
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-'
+helpPlain='Usage: environmentVariables'$'\n'''$'\n''Output a list of environment variables and ignore function definitions'$'\n''both set and env output functions and this is an easy way to just output'$'\n''exported variables'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''

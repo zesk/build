@@ -192,7 +192,7 @@ testFetch() {
 }
 
 testFetchTimeout() {
-  whichExists curl wget || assertExitCode 0 packageInstall curl wget || return $?
+  executableExists curl wget || assertExitCode 0 packageInstall curl wget || return $?
   assertExitCode --stdout-match 2 0 urlFetch --curl --timeout 5 "https://marketacumen.com/slow.php?t=2" || return $?
   assertExitCode --stdout-match 2 0 urlFetch --wget --timeout 5 "https://marketacumen.com/slow.php?t=2" || return $?
   assertExitCode --stderr-ok 1 urlFetch --curl --timeout 1 "https://marketacumen.com/slow.php?t=3" || return $?

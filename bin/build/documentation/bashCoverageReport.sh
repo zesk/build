@@ -1,14 +1,15 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-22
+# Generated on 2026-01-24
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/coverage.sh"
 argument="--cache cacheDirectory - Optional. Directory."$'\n'"--target targetDirectory - Optional. Directory."$'\n'"statsFile - File. Required."$'\n'""
 base="coverage.sh"
-description="Generate a coverage report using the coverage statistics file"$'\n'""$'\n'"*This is a work in progress and is unfinished as of January 2026. Plans are to do this in another language.*"$'\n'""
+description="Generate a coverage report using the coverage statistics file"$'\n'"*This is a work in progress and is unfinished as of January 2026. Plans are to do this in another language.*"$'\n'""
+exitCode="0"
 file="bin/build/tools/coverage.sh"
-fn="bashCoverageReport"
-foundNames=""
+foundNames=([0]="summary" [1]="argument" [2]="stdin")
+rawComment="Generate a coverage report using the coverage statistics file"$'\n'"*This is a work in progress and is unfinished as of January 2026. Plans are to do this in another language.*"$'\n'"Summary: Experimental. Likely abandon."$'\n'"Argument: --cache cacheDirectory - Optional. Directory."$'\n'"Argument: --target targetDirectory - Optional. Directory."$'\n'"Argument: statsFile - File. Required."$'\n'"stdin: Accepts a stats file"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/coverage.sh"
 sourceModified="1769063211"
@@ -16,42 +17,6 @@ stdin="Accepts a stats file"$'\n'""
 summary="Experimental. Likely abandon."$'\n'""
 usage="bashCoverageReport [ --cache cacheDirectory ] [ --target targetDirectory ] statsFile"
 # shellcheck disable=SC2016
-helpConsole='[92mUsage[0m: [38;2;170;170;255mbashCoverageReport[0m [94m[ --cache cacheDirectory ][0m [94m[ --target targetDirectory ][0m [38;2;255;255;0m[35;48;2;0;0;0mstatsFile[0m[0m
-
-    [94m--cache cacheDirectory    [1;97mOptional. Directory.[0m
-    [94m--target targetDirectory  [1;97mOptional. Directory.[0m
-    [31mstatsFile                 [1;97mFile. Required.[0m
-
-Generate a coverage report using the coverage statistics file
-
-[36mThis is a work in progress and is unfinished as of January 2026. Plans are to do this in another language.[0m
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-
-Reads from [38;2;0;255;0;48;2;0;0;0mstdin[0m:
-Accepts a stats file
-'
+helpConsole=''$'\e''[[label]mUsage'$'\e''[0m: '$'\e''[[info]mbashCoverageReport'$'\e''[0m '$'\e''[[blue]m[ --cache cacheDirectory ]'$'\e''[0m '$'\e''[[blue]m[ --target targetDirectory ]'$'\e''[0m '$'\e''[[bold]m'$'\e''[[magenta]mstatsFile'$'\e''[0m'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[blue]m--cache cacheDirectory    '$'\e''[[value]mOptional. Directory.'$'\e''[[reset]m'$'\n''    '$'\e''[[blue]m--target targetDirectory  '$'\e''[[value]mOptional. Directory.'$'\e''[[reset]m'$'\n''    '$'\e''[[red]mstatsFile                 '$'\e''[[value]mFile. Required.'$'\e''[[reset]m'$'\n'''$'\n''Generate a coverage report using the coverage statistics file'$'\n'''$'\e''[[cyan]mThis is a work in progress and is unfinished as of January 2026. Plans are to do this in another language.'$'\e''[[reset]m'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[code]m0'$'\e''[[reset]m - Success'$'\n''- '$'\e''[[code]m1'$'\e''[[reset]m - Environment error'$'\n''- '$'\e''[[code]m2'$'\e''[[reset]m - Argument error'$'\n'''$'\n''Reads from '$'\e''[[code]mstdin'$'\e''[[reset]m:'$'\n''Accepts a stats file'$'\n'''
 # shellcheck disable=SC2016
-helpPlain='Usage: bashCoverageReport [ --cache cacheDirectory ] [ --target targetDirectory ] statsFile
-
-    --cache cacheDirectory    Optional. Directory.
-    --target targetDirectory  Optional. Directory.
-    statsFile                 File. Required.
-
-Generate a coverage report using the coverage statistics file
-
-This is a work in progress and is unfinished as of January 2026. Plans are to do this in another language.
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-
-Reads from stdin:
-Accepts a stats file
-'
+helpPlain='Usage: bashCoverageReport [ --cache cacheDirectory ] [ --target targetDirectory ] statsFile'$'\n'''$'\n''    --cache cacheDirectory    Optional. Directory.'$'\n''    --target targetDirectory  Optional. Directory.'$'\n''    statsFile                 File. Required.'$'\n'''$'\n''Generate a coverage report using the coverage statistics file'$'\n''This is a work in progress and is unfinished as of January 2026. Plans are to do this in another language.'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''$'\n''Reads from stdin:'$'\n''Accepts a stats file'$'\n'''

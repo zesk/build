@@ -110,7 +110,7 @@
 - darwinNotification
 - darwinSoundInstall
 - darwinSoundValid
-- debugOpenFiles
+- filesOpenStatus
 - debuggingStack
 - decoratePath
 - decorateStyle
@@ -171,7 +171,7 @@
 - fileOwner
 - fileReverseLines
 - filesRename
-- findUncaughtAssertions
+- bashFindUncaughtAssertions
 - gitBranchExists
 - gitBranchExistsLocal
 - gitBranchExistsRemote
@@ -226,7 +226,7 @@
 - isType
 - isValidateType
 - isVisualStudioCode
-- lineFill
+- consoleHeadingLine
 - linkRename
 - listCleanDuplicates
 - loopExecute
@@ -256,7 +256,7 @@
 - pipUninstall
 - pipWrapper
 - pipeRunner
-- plainLength
+- consolePlainLength
 - processOpenPipes
 - pythonPackageInstalled
 - returnClean
@@ -382,7 +382,7 @@ On a "2x" machine:
 - bashShowUsage
 - bashStripComments
 - bashUserInput
-- beginsWith
+- stringBegins
 - bigTextAt
 - bitbucketContainer
 - brewInstall
@@ -414,7 +414,7 @@ On a "2x" machine:
 - darwinSoundInstall
 - darwinSoundNames
 - darwinSoundValid
-- debugOpenFiles
+- filesOpenStatus
 - debuggingStack
 - decoratePath
 - decorateStyle
@@ -486,7 +486,7 @@ On a "2x" machine:
 - fileOwner
 - fileReverseLines
 - filesRename
-- findUncaughtAssertions
+- bashFindUncaughtAssertions
 - bitbucketGetVariable
 - gitBranchExists
 - gitBranchExistsLocal
@@ -518,8 +518,8 @@ On a "2x" machine:
 - githubProjectJSON
 - githubPublishDate
 - githubRelease
-- hasColors
-- hasConsoleAnimation
+- consoleHasColors
+- consoleHasAnimation
 - hookRunOptional
 - hookSource
 - hookSourceOptional
@@ -538,7 +538,7 @@ On a "2x" machine:
 - iTerm2SetUserVariable
 - iTerm2Version
 - identicalCheckShell
-- insideDocker
+- dockerInside
 - installInstallBinary
 - approveBashSource
 - interactiveCountdown
@@ -553,7 +553,7 @@ On a "2x" machine:
 - isType
 - isValidateType
 - isVisualStudioCode
-- lineFill
+- consoleHeadingLine
 - linkRename
 - listCleanDuplicates
 - loadAverage
@@ -590,7 +590,7 @@ On a "2x" machine:
 - phpTailLog
 - phpTest
 - pipeRunner
-- plainLength
+- consolePlainLength
 - plasterLines
 - processOpenPipes
 - quoteBashString
@@ -612,7 +612,7 @@ On a "2x" machine:
 - validateFileContents
 - veeGitTag
 - websiteScrape
-- whichHook
+- hookFind
 
 ## Moving to validate
 

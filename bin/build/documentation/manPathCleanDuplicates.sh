@@ -1,50 +1,21 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-22
+# Generated on 2026-01-24
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/manpath.sh"
 argument="--help - Flag. Optional. Display this help."$'\n'""
 base="manpath.sh"
-description="Cleans the MANPATH and removes non-directory entries and duplicates"$'\n'""$'\n'"Maintains ordering."$'\n'""$'\n'"No-Arguments: default"$'\n'""
+description="Cleans the MANPATH and removes non-directory entries and duplicates"$'\n'"Maintains ordering."$'\n'""
+exitCode="0"
 file="bin/build/tools/manpath.sh"
-fn="manPathCleanDuplicates"
-foundNames=""
+foundNames=([0]="argument" [1]="no_arguments")
+no_arguments="default"$'\n'""
+rawComment="Cleans the MANPATH and removes non-directory entries and duplicates"$'\n'"Maintains ordering."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"No-Arguments: default"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
-sourceFile="bin/build/tools/manpath.sh"
 sourceModified="1769063211"
 summary="Cleans the MANPATH and removes non-directory entries and duplicates"
 usage="manPathCleanDuplicates [ --help ]"
 # shellcheck disable=SC2016
-helpConsole='[92mUsage[0m: [38;2;170;170;255mmanPathCleanDuplicates[0m [94m[ --help ][0m
-
-    [94m--help  [1;97mFlag. Optional. Display this help.[0m
-
-Cleans the MANPATH and removes non-directory entries and duplicates
-
-Maintains ordering.
-
-No-Arguments: default
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-'
+helpConsole=''$'\e''[[label]mUsage'$'\e''[0m: '$'\e''[[info]mmanPathCleanDuplicates'$'\e''[0m '$'\e''[[blue]m[ --help ]'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[blue]m--help  '$'\e''[[value]mFlag. Optional. Display this help.'$'\e''[[reset]m'$'\n'''$'\n''Cleans the MANPATH and removes non-directory entries and duplicates'$'\n''Maintains ordering.'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[code]m0'$'\e''[[reset]m - Success'$'\n''- '$'\e''[[code]m1'$'\e''[[reset]m - Environment error'$'\n''- '$'\e''[[code]m2'$'\e''[[reset]m - Argument error'$'\n'''
 # shellcheck disable=SC2016
-helpPlain='Usage: manPathCleanDuplicates [ --help ]
-
-    --help  Flag. Optional. Display this help.
-
-Cleans the MANPATH and removes non-directory entries and duplicates
-
-Maintains ordering.
-
-No-Arguments: default
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-'
+helpPlain='Usage: manPathCleanDuplicates [ --help ]'$'\n'''$'\n''    --help  Flag. Optional. Display this help.'$'\n'''$'\n''Cleans the MANPATH and removes non-directory entries and duplicates'$'\n''Maintains ordering.'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''

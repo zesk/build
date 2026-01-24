@@ -1,47 +1,22 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-22
+# Generated on 2026-01-24
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/github.sh"
 argument="none"
 base="github.sh"
 description="Get a project JSON structure"$'\n'""
 environment="GITHUB_ACCESS_TOKEN"$'\n'""
+exitCode="0"
 file="bin/build/tools/github.sh"
-fn="githubProjectJSON"
-foundNames=""
+foundNames=([0]="environment")
+rawComment="Get a project JSON structure"$'\n'"Environment: GITHUB_ACCESS_TOKEN"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/github.sh"
-sourceModified="1769063211"
+sourceModified="1769111847"
 summary="Get a project JSON structure"
 usage="githubProjectJSON"
 # shellcheck disable=SC2016
-helpConsole='[92mUsage[0m: [38;2;170;170;255mgithubProjectJSON[0m
-
-Get a project JSON structure
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-
-Environment variables:
-- GITHUB_ACCESS_TOKEN
-- 
-'
+helpConsole=''$'\e''[[label]mUsage'$'\e''[0m: '$'\e''[[info]mgithubProjectJSON'$'\e''[0m'$'\n'''$'\n''Get a project JSON structure'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[code]m0'$'\e''[[reset]m - Success'$'\n''- '$'\e''[[code]m1'$'\e''[[reset]m - Environment error'$'\n''- '$'\e''[[code]m2'$'\e''[[reset]m - Argument error'$'\n'''$'\n''Environment variables:'$'\n''- GITHUB_ACCESS_TOKEN'$'\n'''
 # shellcheck disable=SC2016
-helpPlain='Usage: githubProjectJSON
-
-Get a project JSON structure
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-
-Environment variables:
-- GITHUB_ACCESS_TOKEN
-- 
-'
+helpPlain='Usage: githubProjectJSON'$'\n'''$'\n''Get a project JSON structure'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''$'\n''Environment variables:'$'\n''- GITHUB_ACCESS_TOKEN'$'\n'''

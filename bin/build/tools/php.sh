@@ -76,7 +76,7 @@ _phpTailLog() {
 phpLog() {
   local handler="_${FUNCNAME[0]}"
   [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
-  whichExists php || throwEnvironment "$handler" "php not installed" || return $?
+  executableExists php || throwEnvironment "$handler" "php not installed" || return $?
   php -r "echo ini_get('error_log');" 2>/dev/null || throwEnvironment "$handler" "php installation issue" || return $?
 }
 _phpLog() {
@@ -90,7 +90,7 @@ _phpLog() {
 phpIniFile() {
   local handler="_${FUNCNAME[0]}"
   [ $# -eq 0 ] || __help --only "$handler" "$@" || return "$(convertValue $? 1 0)"
-  whichExists php || throwEnvironment "$handler" "php not installed" || return $?
+  executableExists php || throwEnvironment "$handler" "php not installed" || return $?
   php -r "echo get_cfg_var('cfg_file_path');" 2>/dev/null || throwEnvironment "$handler" "php installation issue" || return $?
 }
 _phpIniFile() {
@@ -322,7 +322,7 @@ _phpBuildBanner() {
     "$label: " "$@"
 }
 _phpEchoBar() {
-  decorate BOLD blue "$(echoBar '.-+^`^+-')" || :
+  decorate BOLD blue "$(consoleLine '.-+^`^+-')" || :
 }
 
 # Argument: --env-file envFile - File. Optional. Environment file to load.
@@ -445,7 +445,7 @@ _phpTestCleanup() {
 _phpTestResult() {
   local message=$1 color=$2 top=$3 bottom=$4 width=${5-16} thick="${6-3}"
   local gap="    "
-  repeat "$thick" "$(printf "%s" "$(repeat "$width" "$top")")"$'\n'
+  textRepeat "$thick" "$(printf "%s" "$(textRepeat "$width" "$top")")"$'\n'
   bigText "$message" | decorate "$color" | decorate wrap "$top$gap" "$gap$bottom"
-  repeat "$thick" "$(printf "%s" "$(repeat "$width" "$bottom")")"$'\n'
+  textRepeat "$thick" "$(printf "%s" "$(textRepeat "$width" "$bottom")")"$'\n'
 }

@@ -1,42 +1,21 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-22
+# Generated on 2026-01-24
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/console.sh"
 argument="None"$'\n'""
 base="console.sh"
-description="Set the title of the window for the console to \"user@hostname: pwd\""$'\n'""
+description="No documentation for \`consoleDefaultTitle\`."$'\n'""
+exitCode="0"
 file="bin/build/tools/console.sh"
-fn="consoleDefaultTitle"
-foundNames=""
+foundNames=([0]="set_the_title_of_the_window_for_the_console_to__user_hostname" [1]="argument")
+rawComment="Set the title of the window for the console to \"user@hostname: pwd\""$'\n'"Argument: None"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
-sourceFile="bin/build/tools/console.sh"
-sourceModified="1769063211"
-summary="Set the title of the window for the console to"
+set_the_title_of_the_window_for_the_console_to__user_hostname="pwd\""$'\n'""
+sourceModified="1769209815"
+summary="undocumented"
 usage="consoleDefaultTitle [ None ]"
 # shellcheck disable=SC2016
-helpConsole='[92mUsage[0m: [38;2;170;170;255mconsoleDefaultTitle[0m [94m[ None ][0m
-
-    [94mNone  [1;97mNone[0m
-
-Set the title of the window for the console to "user@hostname: pwd"
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-'
+helpConsole=''$'\e''[[label]mUsage'$'\e''[0m: '$'\e''[[info]mconsoleDefaultTitle'$'\e''[0m '$'\e''[[blue]m[ None ]'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[blue]mNone  '$'\e''[[value]mNone'$'\e''[[reset]m'$'\n'''$'\n''No documentation for '$'\e''[[code]mconsoleDefaultTitle'$'\e''[[reset]m.'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[code]m0'$'\e''[[reset]m - Success'$'\n''- '$'\e''[[code]m1'$'\e''[[reset]m - Environment error'$'\n''- '$'\e''[[code]m2'$'\e''[[reset]m - Argument error'$'\n'''
 # shellcheck disable=SC2016
-helpPlain='Usage: consoleDefaultTitle [ None ]
-
-    None  None
-
-Set the title of the window for the console to "user@hostname: pwd"
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-'
+helpPlain='Usage: consoleDefaultTitle [ None ]'$'\n'''$'\n''    None  None'$'\n'''$'\n''No documentation for consoleDefaultTitle.'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''

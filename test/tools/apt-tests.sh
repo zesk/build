@@ -8,7 +8,7 @@
 
 testAptIsInstalled() {
   assertExitCode 0 aptIsInstalled --help || return $?
-  if whichExists apt; then
+  if executableExists apt; then
     assertExitCode 0 aptIsInstalled || return $?
   else
     assertExitCode 1 aptIsInstalled || return $?

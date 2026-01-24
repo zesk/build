@@ -1,63 +1,23 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-22
+# Generated on 2026-01-24
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/json.sh"
 argument="--help - Flag. Optional. Display this help."$'\n'""
 base="json.sh"
 description="Format something neatly as JSON"$'\n'""
 example="    json < inputFile > outputFile"$'\n'""
+exitCode="0"
 file="bin/build/tools/json.sh"
-fn="json"
-foundNames=""
+foundNames=([0]="argument" [1]="summary" [2]="example" [3]="stdin" [4]="stdout")
+rawComment="Argument: --help - Flag. Optional. Display this help."$'\n'"Summary: JSON pretty"$'\n'"Format something neatly as JSON"$'\n'"Example:     json < inputFile > outputFile"$'\n'"stdin: JSONFile"$'\n'"stdout: JSONFile pretty formatted"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
-sourceFile="bin/build/tools/json.sh"
-sourceModified="1769063211"
+sourceModified="1769184734"
 stdin="JSONFile"$'\n'""
 stdout="JSONFile pretty formatted"$'\n'""
 summary="JSON pretty"$'\n'""
 usage="json [ --help ]"
 # shellcheck disable=SC2016
-helpConsole='[92mUsage[0m: [38;2;170;170;255mjson[0m [94m[ --help ][0m
-
-    [94m--help  [1;97mFlag. Optional. Display this help.[0m
-
-Format something neatly as JSON
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-
-Reads from [38;2;0;255;0;48;2;0;0;0mstdin[0m:
-JSONFile
-
-Writes to [38;2;0;255;0;48;2;0;0;0mstdout[0m:
-JSONFile pretty formatted
-
-Example:
-    json < inputFile > outputFile
-'
+helpConsole=''$'\e''[[label]mUsage'$'\e''[0m: '$'\e''[[info]mjson'$'\e''[0m '$'\e''[[blue]m[ --help ]'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[blue]m--help  '$'\e''[[value]mFlag. Optional. Display this help.'$'\e''[[reset]m'$'\n'''$'\n''Format something neatly as JSON'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[code]m0'$'\e''[[reset]m - Success'$'\n''- '$'\e''[[code]m1'$'\e''[[reset]m - Environment error'$'\n''- '$'\e''[[code]m2'$'\e''[[reset]m - Argument error'$'\n'''$'\n''Reads from '$'\e''[[code]mstdin'$'\e''[[reset]m:'$'\n''JSONFile'$'\n'''$'\n''Writes to '$'\e''[[code]mstdout'$'\e''[[reset]m:'$'\n''JSONFile pretty formatted'$'\n'''$'\n''Example:'$'\n''    json < inputFile > outputFile'$'\n'''
 # shellcheck disable=SC2016
-helpPlain='Usage: json [ --help ]
-
-    --help  Flag. Optional. Display this help.
-
-Format something neatly as JSON
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-
-Reads from stdin:
-JSONFile
-
-Writes to stdout:
-JSONFile pretty formatted
-
-Example:
-    json < inputFile > outputFile
-'
+helpPlain='Usage: json [ --help ]'$'\n'''$'\n''    --help  Flag. Optional. Display this help.'$'\n'''$'\n''Format something neatly as JSON'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''$'\n''Reads from stdin:'$'\n''JSONFile'$'\n'''$'\n''Writes to stdout:'$'\n''JSONFile pretty formatted'$'\n'''$'\n''Example:'$'\n''    json < inputFile > outputFile'$'\n'''

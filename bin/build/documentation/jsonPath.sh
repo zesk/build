@@ -1,46 +1,20 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-22
+# Generated on 2026-01-24
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/json.sh"
 argument="path - String. Output a json path separated by dots."$'\n'""
 base="json.sh"
-description="Generate a path for a JSON structure for use in \`jq\` queries"$'\n'""$'\n'"Without arguments, displays help."$'\n'""
+description="Generate a path for a JSON structure for use in \`jq\` queries"$'\n'"Without arguments, displays help."$'\n'""
+exitCode="0"
 file="bin/build/tools/json.sh"
-fn="jsonPath"
-foundNames=""
+foundNames=([0]="summary" [1]="argument")
+rawComment="Summary: Generate \`jq\` paths"$'\n'"Generate a path for a JSON structure for use in \`jq\` queries"$'\n'"Argument: path - String. Output a json path separated by dots."$'\n'"Without arguments, displays help."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
-sourceFile="bin/build/tools/json.sh"
-sourceModified="1769063211"
+sourceModified="1769184734"
 summary="Generate \`jq\` paths"$'\n'""
 usage="jsonPath [ path ]"
 # shellcheck disable=SC2016
-helpConsole='[92mUsage[0m: [38;2;170;170;255mjsonPath[0m [94m[ path ][0m
-
-    [94mpath  [1;97mString. Output a json path separated by dots.[0m
-
-Generate a path for a JSON structure for use in [38;2;0;255;0;48;2;0;0;0mjq[0m queries
-
-Without arguments, displays help.
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-'
+helpConsole=''$'\e''[[label]mUsage'$'\e''[0m: '$'\e''[[info]mjsonPath'$'\e''[0m '$'\e''[[blue]m[ path ]'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[blue]mpath  '$'\e''[[value]mString. Output a json path separated by dots.'$'\e''[[reset]m'$'\n'''$'\n''Generate a path for a JSON structure for use in '$'\e''[[code]mjq'$'\e''[[reset]m queries'$'\n''Without arguments, displays help.'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[code]m0'$'\e''[[reset]m - Success'$'\n''- '$'\e''[[code]m1'$'\e''[[reset]m - Environment error'$'\n''- '$'\e''[[code]m2'$'\e''[[reset]m - Argument error'$'\n'''
 # shellcheck disable=SC2016
-helpPlain='Usage: jsonPath [ path ]
-
-    path  String. Output a json path separated by dots.
-
-Generate a path for a JSON structure for use in jq queries
-
-Without arguments, displays help.
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-'
+helpPlain='Usage: jsonPath [ path ]'$'\n'''$'\n''    path  String. Output a json path separated by dots.'$'\n'''$'\n''Generate a path for a JSON structure for use in jq queries'$'\n''Without arguments, displays help.'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''

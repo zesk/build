@@ -11,7 +11,7 @@
 # Argument: installer
 # Argument: uninstaller
 __checkFunctionInstallsAndUninstallsBinary() {
-  __checkFunctionInstallsAndUninstalls "whichExists" "Binary" "$@"
+  __checkFunctionInstallsAndUninstalls "executableExists" "Binary" "$@"
 }
 
 # Argument: packageName
@@ -24,7 +24,7 @@ __checkFunctionInstallsAndUninstallsPackage() {
 # Argument: binary
 # Argument: installer
 __checkFunctionInstallsBinary() {
-  __checkFunctionInstalls "whichExists" "Binary" "$@"
+  __checkFunctionInstalls "executableExists" "Binary" "$@"
 }
 
 # Argument: packageName

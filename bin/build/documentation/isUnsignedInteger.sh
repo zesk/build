@@ -1,50 +1,24 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-22
+# Generated on 2026-01-24
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/example.sh"
 argument="value - EmptyString. Value to test if it is an unsigned integer."$'\n'""
 base="example.sh"
 credits="F. Hauri - Give Up GitHub (isnum_Case)"$'\n'""
-description="Test if a value is a 0 or greater integer. Leading \"+\" is ok."$'\n'"Return Code: 0 - if it is an unsigned integer"$'\n'"Return Code: 1 - if it is not an unsigned integer"$'\n'""
+description="Test if a value is a 0 or greater integer. Leading \"+\" is ok."$'\n'""
+exitCode="0"
 file="bin/build/tools/example.sh"
-fn="isUnsignedInteger"
-foundNames=""
+foundNames=([0]="summary" [1]="source" [2]="credits" [3]="original" [4]="argument" [5]="return_code" [6]="requires")
 original="is_uint"$'\n'""
+rawComment="Summary: Is value an unsigned integer?"$'\n'"Test if a value is a 0 or greater integer. Leading \"+\" is ok."$'\n'"Source: https://stackoverflow.com/questions/806906/how-do-i-test-if-a-variable-is-a-number-in-bash"$'\n'"Credits: F. Hauri - Give Up GitHub (isnum_Case)"$'\n'"Original: is_uint"$'\n'"Argument: value - EmptyString. Value to test if it is an unsigned integer."$'\n'"Return Code: 0 - if it is an unsigned integer"$'\n'"Return Code: 1 - if it is not an unsigned integer"$'\n'"Requires: returnMessage"$'\n'""$'\n'""
 requires="returnMessage"$'\n'""
-return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
+return_code="0 - if it is an unsigned integer"$'\n'"1 - if it is not an unsigned integer"$'\n'""
 source="https://stackoverflow.com/questions/806906/how-do-i-test-if-a-variable-is-a-number-in-bash"$'\n'""
-sourceFile="bin/build/tools/example.sh"
-sourceModified="1769063211"
+sourceModified="1769208503"
 summary="Is value an unsigned integer?"$'\n'""
 usage="isUnsignedInteger [ value ]"
 # shellcheck disable=SC2016
-helpConsole='[92mUsage[0m: [38;2;170;170;255misUnsignedInteger[0m [94m[ value ][0m
-
-    [94mvalue  [1;97mEmptyString. Value to test if it is an unsigned integer.[0m
-
-Test if a value is a 0 or greater integer. Leading "+" is ok.
-Return Code: 0 - if it is an unsigned integer
-Return Code: 1 - if it is not an unsigned integer
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-'
+helpConsole=''$'\e''[[label]mUsage'$'\e''[0m: '$'\e''[[info]misUnsignedInteger'$'\e''[0m '$'\e''[[blue]m[ value ]'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[blue]mvalue  '$'\e''[[value]mEmptyString. Value to test if it is an unsigned integer.'$'\e''[[reset]m'$'\n'''$'\n''Test if a value is a 0 or greater integer. Leading "+" is ok.'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[code]m0'$'\e''[[reset]m - if it is an unsigned integer'$'\n''- '$'\e''[[code]m1'$'\e''[[reset]m - if it is not an unsigned integer'$'\n'''
 # shellcheck disable=SC2016
-helpPlain='Usage: isUnsignedInteger [ value ]
-
-    value  EmptyString. Value to test if it is an unsigned integer.
-
-Test if a value is a 0 or greater integer. Leading "+" is ok.
-Return Code: 0 - if it is an unsigned integer
-Return Code: 1 - if it is not an unsigned integer
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-'
+helpPlain='Usage: isUnsignedInteger [ value ]'$'\n'''$'\n''    value  EmptyString. Value to test if it is an unsigned integer.'$'\n'''$'\n''Test if a value is a 0 or greater integer. Leading "+" is ok.'$'\n'''$'\n''Return codes:'$'\n''- 0 - if it is an unsigned integer'$'\n''- 1 - if it is not an unsigned integer'$'\n'''

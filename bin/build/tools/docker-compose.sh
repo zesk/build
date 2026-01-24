@@ -11,11 +11,11 @@ dockerComposeWrapper() {
   local handler="_${FUNCNAME[0]}"
 
   [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
-  whichExists docker || throwEnvironment "$handler" "Missing docker binary" || return $?
+  executableExists docker || throwEnvironment "$handler" "Missing docker binary" || return $?
   if muzzle docker compose --help; then
     catchEnvironment "$handler" docker compose "$@" || return $?
   else
-    whichExists docker-compose || throwEnvironment "$handler" "Missing docker-compose binary" || return $?
+    executableExists docker-compose || throwEnvironment "$handler" "Missing docker-compose binary" || return $?
     catchEnvironment "$handler" docker-compose "$@" || return $?
   fi
 }
@@ -37,7 +37,7 @@ _dockerComposeWrapper() {
 dockerComposeInstall() {
   local handler="_${FUNCNAME[0]}"
   [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
-  whichExists docker || throwEnvironment "$handler" "Missing docker binary" || return $?
+  executableExists docker || throwEnvironment "$handler" "Missing docker binary" || return $?
   if muzzle docker compose --help; then
     return 0
   fi

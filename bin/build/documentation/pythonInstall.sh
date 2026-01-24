@@ -1,50 +1,20 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-22
+# Generated on 2026-01-24
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/python.sh"
 argument="--help - Flag. Optional. Display this help."$'\n'""
 base="python.sh"
-description="Install \`python\`"$'\n'""$'\n'"When this tool succeeds the \`python\` binary is available in the local operating system."$'\n'"Return Code: 1 - If installation fails"$'\n'"Return Code: 0 - If installation succeeds"$'\n'""
+description="Install \`python\`"$'\n'"When this tool succeeds the \`python\` binary is available in the local operating system."$'\n'""
+exitCode="0"
 file="bin/build/tools/python.sh"
-fn="pythonInstall"
-foundNames=""
-return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
-sourceFile="bin/build/tools/python.sh"
-sourceModified="1769097744"
+foundNames=([0]="summary" [1]="argument" [2]="return_code")
+rawComment="Install \`python\`"$'\n'"Summary: Install \`python\`"$'\n'"When this tool succeeds the \`python\` binary is available in the local operating system."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Return Code: 1 - If installation fails"$'\n'"Return Code: 0 - If installation succeeds"$'\n'""$'\n'""
+return_code="1 - If installation fails"$'\n'"0 - If installation succeeds"$'\n'""
+sourceModified="1769184734"
 summary="Install \`python\`"$'\n'""
 usage="pythonInstall [ --help ]"
 # shellcheck disable=SC2016
-helpConsole='[92mUsage[0m: [38;2;170;170;255mpythonInstall[0m [94m[ --help ][0m
-
-    [94m--help  [1;97mFlag. Optional. Display this help.[0m
-
-Install [38;2;0;255;0;48;2;0;0;0mpython[0m
-
-When this tool succeeds the [38;2;0;255;0;48;2;0;0;0mpython[0m binary is available in the local operating system.
-Return Code: 1 - If installation fails
-Return Code: 0 - If installation succeeds
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-'
+helpConsole=''$'\e''[[label]mUsage'$'\e''[0m: '$'\e''[[info]mpythonInstall'$'\e''[0m '$'\e''[[blue]m[ --help ]'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[blue]m--help  '$'\e''[[value]mFlag. Optional. Display this help.'$'\e''[[reset]m'$'\n'''$'\n''Install '$'\e''[[code]mpython'$'\e''[[reset]m'$'\n''When this tool succeeds the '$'\e''[[code]mpython'$'\e''[[reset]m binary is available in the local operating system.'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[code]m1'$'\e''[[reset]m - If installation fails'$'\n''- '$'\e''[[code]m0'$'\e''[[reset]m - If installation succeeds'$'\n'''
 # shellcheck disable=SC2016
-helpPlain='Usage: pythonInstall [ --help ]
-
-    --help  Flag. Optional. Display this help.
-
-Install python
-
-When this tool succeeds the python binary is available in the local operating system.
-Return Code: 1 - If installation fails
-Return Code: 0 - If installation succeeds
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-'
+helpPlain='Usage: pythonInstall [ --help ]'$'\n'''$'\n''    --help  Flag. Optional. Display this help.'$'\n'''$'\n''Install python'$'\n''When this tool succeeds the python binary is available in the local operating system.'$'\n'''$'\n''Return codes:'$'\n''- 1 - If installation fails'$'\n''- 0 - If installation succeeds'$'\n'''

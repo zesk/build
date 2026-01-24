@@ -1,47 +1,21 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-22
+# Generated on 2026-01-24
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/_sugar.sh"
 argument="testValue - Boolean. Required. Test value"$'\n'"trueChoice - EmptyString. Optional. Value to output when testValue is \`true\`"$'\n'"falseChoice - EmptyString. Optional. Value to output when testValue is \`false\`"$'\n'""
 base="_sugar.sh"
 description="Boolean selector"$'\n'""
+exitCode="0"
 file="bin/build/tools/_sugar.sh"
-fn="booleanChoose"
-foundNames=""
+foundNames=([0]="requires" [1]="argument")
+rawComment="Boolean selector"$'\n'"Requires: isBoolean returnArgument printf"$'\n'"Argument: testValue - Boolean. Required. Test value"$'\n'"Argument: trueChoice - EmptyString. Optional. Value to output when testValue is \`true\`"$'\n'"Argument: falseChoice - EmptyString. Optional. Value to output when testValue is \`false\`"$'\n'""$'\n'""
 requires="isBoolean returnArgument printf"$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
-sourceFile="bin/build/tools/_sugar.sh"
 sourceModified="1769063211"
 summary="Boolean selector"
 usage="booleanChoose testValue [ trueChoice ] [ falseChoice ]"
 # shellcheck disable=SC2016
-helpConsole='[92mUsage[0m: [38;2;170;170;255mbooleanChoose[0m [38;2;255;255;0m[35;48;2;0;0;0mtestValue[0m[0m [94m[ trueChoice ][0m [94m[ falseChoice ][0m
-
-    [31mtestValue    [1;97mBoolean. Required. Test value[0m
-    [94mtrueChoice   [1;97mEmptyString. Optional. Value to output when testValue is [38;2;0;255;0;48;2;0;0;0mtrue[0m[0m
-    [94mfalseChoice  [1;97mEmptyString. Optional. Value to output when testValue is [38;2;0;255;0;48;2;0;0;0mfalse[0m[0m
-
-Boolean selector
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-'
+helpConsole=''$'\e''[[label]mUsage'$'\e''[0m: '$'\e''[[info]mbooleanChoose'$'\e''[0m '$'\e''[[bold]m'$'\e''[[magenta]mtestValue'$'\e''[0m'$'\e''[0m '$'\e''[[blue]m[ trueChoice ]'$'\e''[0m '$'\e''[[blue]m[ falseChoice ]'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[red]mtestValue    '$'\e''[[value]mBoolean. Required. Test value'$'\e''[[reset]m'$'\n''    '$'\e''[[blue]mtrueChoice   '$'\e''[[value]mEmptyString. Optional. Value to output when testValue is '$'\e''[[code]mtrue'$'\e''[[reset]m'$'\e''[[reset]m'$'\n''    '$'\e''[[blue]mfalseChoice  '$'\e''[[value]mEmptyString. Optional. Value to output when testValue is '$'\e''[[code]mfalse'$'\e''[[reset]m'$'\e''[[reset]m'$'\n'''$'\n''Boolean selector'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[code]m0'$'\e''[[reset]m - Success'$'\n''- '$'\e''[[code]m1'$'\e''[[reset]m - Environment error'$'\n''- '$'\e''[[code]m2'$'\e''[[reset]m - Argument error'$'\n'''
 # shellcheck disable=SC2016
-helpPlain='Usage: booleanChoose testValue [ trueChoice ] [ falseChoice ]
-
-    testValue    Boolean. Required. Test value
-    trueChoice   EmptyString. Optional. Value to output when testValue is true
-    falseChoice  EmptyString. Optional. Value to output when testValue is false
-
-Boolean selector
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-'
+helpPlain='Usage: booleanChoose testValue [ trueChoice ] [ falseChoice ]'$'\n'''$'\n''    testValue    Boolean. Required. Test value'$'\n''    trueChoice   EmptyString. Optional. Value to output when testValue is true'$'\n''    falseChoice  EmptyString. Optional. Value to output when testValue is false'$'\n'''$'\n''Boolean selector'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''

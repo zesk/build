@@ -1,63 +1,25 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-22
+# Generated on 2026-01-24
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/colors.sh"
 argument="--help - Flag. Optional. Display this help."$'\n'""
 base="colors.sh"
-description="Output the number of columns in the terminal. Default is 60 if not able to be determined from \`TERM\`."$'\n'"Side Effect: MAY define two environment variables"$'\n'""
+description="Output the number of columns in the terminal. Default is 60 if not able to be determined from \`TERM\`."$'\n'""
 environment="- \`COLUMNS\` - May be defined after calling this"$'\n'"- \`LINES\` - May be defined after calling this"$'\n'""
 example="    tail -n \$(consoleRows) \"\$file\""$'\n'""
+exitCode="0"
 file="bin/build/tools/colors.sh"
-fn="consoleRows"
-foundNames=""
+foundNames=([0]="summary" [1]="argument" [2]="see" [3]="example" [4]="environment" [5]="side_effect")
+rawComment="Summary: Row count in current console"$'\n'"Output the number of columns in the terminal. Default is 60 if not able to be determined from \`TERM\`."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"See: stty"$'\n'"Example:     tail -n \$(consoleRows) \"\$file\""$'\n'"Environment: - \`COLUMNS\` - May be defined after calling this"$'\n'"Environment: - \`LINES\` - May be defined after calling this"$'\n'"Side Effect: MAY define two environment variables"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 see="stty"$'\n'""
+side_effect="MAY define two environment variables"$'\n'""
 sourceFile="bin/build/tools/colors.sh"
-sourceModified="1769063211"
+sourceModified="1769211509"
 summary="Row count in current console"$'\n'""
 usage="consoleRows [ --help ]"
 # shellcheck disable=SC2016
-helpConsole='[92mUsage[0m: [38;2;170;170;255mconsoleRows[0m [94m[ --help ][0m
-
-    [94m--help  [1;97mFlag. Optional. Display this help.[0m
-
-Output the number of columns in the terminal. Default is 60 if not able to be determined from [38;2;0;255;0;48;2;0;0;0mTERM[0m.
-Side Effect: MAY define two environment variables
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-
-Environment variables:
-- - [38;2;0;255;0;48;2;0;0;0mCOLUMNS[0m - May be defined after calling this
-- - [38;2;0;255;0;48;2;0;0;0mLINES[0m - May be defined after calling this
-- 
-
-Example:
-    tail -n $(consoleRows) "$file"
-'
+helpConsole=''$'\e''[[label]mUsage'$'\e''[0m: '$'\e''[[info]mconsoleRows'$'\e''[0m '$'\e''[[blue]m[ --help ]'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[blue]m--help  '$'\e''[[value]mFlag. Optional. Display this help.'$'\e''[[reset]m'$'\n'''$'\n''Output the number of columns in the terminal. Default is 60 if not able to be determined from '$'\e''[[code]mTERM'$'\e''[[reset]m.'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[code]m0'$'\e''[[reset]m - Success'$'\n''- '$'\e''[[code]m1'$'\e''[[reset]m - Environment error'$'\n''- '$'\e''[[code]m2'$'\e''[[reset]m - Argument error'$'\n'''$'\n''Environment variables:'$'\n''- '$'\e''[[code]mCOLUMNS'$'\e''[[reset]m - May be defined after calling this'$'\n''- '$'\e''[[code]mLINES'$'\e''[[reset]m - May be defined after calling this'$'\n'''$'\n''Example:'$'\n''    tail -n $(consoleRows) "$file"'$'\n'''
 # shellcheck disable=SC2016
-helpPlain='Usage: consoleRows [ --help ]
-
-    --help  Flag. Optional. Display this help.
-
-Output the number of columns in the terminal. Default is 60 if not able to be determined from TERM.
-Side Effect: MAY define two environment variables
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-
-Environment variables:
-- - COLUMNS - May be defined after calling this
-- - LINES - May be defined after calling this
-- 
-
-Example:
-    tail -n $(consoleRows) "$file"
-'
+helpPlain='Usage: consoleRows [ --help ]'$'\n'''$'\n''    --help  Flag. Optional. Display this help.'$'\n'''$'\n''Output the number of columns in the terminal. Default is 60 if not able to be determined from TERM.'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''$'\n''Environment variables:'$'\n''- COLUMNS - May be defined after calling this'$'\n''- LINES - May be defined after calling this'$'\n'''$'\n''Example:'$'\n''    tail -n $(consoleRows) "$file"'$'\n'''

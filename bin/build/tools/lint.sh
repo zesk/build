@@ -165,7 +165,7 @@ bashLintFiles() {
     {
       statusMessage --last printf -- "%s\n" "$(decorate warning "$(pluralWord ${#failedFiles[@]} file) failed:")"
       for failedFile in "${failedFiles[@]}"; do
-        bashLint "${ff[@]+"${ff[@]}"}" --verbose "$failedFile" 2>/dev/null | dumpPipe "$(decorate warning "$(lineFill "•" "••[ $(decorate file "$failedFile") ]")")"
+        bashLint "${ff[@]+"${ff[@]}"}" --verbose "$failedFile" 2>/dev/null | dumpPipe "$(decorate warning "$(consoleHeadingLine "•" "••[ $(decorate file "$failedFile") ]")")"
       done
     } 1>&2
     if $interactive; then
@@ -263,8 +263,8 @@ _bashLintInteractiveCheck() {
   fi
   if $scriptPassed; then
     bigText "SUCCESS $(basename "$script")" | decorate green
-    boxedHeading "$script now passes" | decorate BOLD green
-    decorate orange "$(echoBar "*")"
+    consoleHeadingBoxed "$script now passes" | decorate BOLD green
+    decorate orange "$(consoleLine "*")"
     return 0
   fi
 
@@ -273,7 +273,7 @@ _bashLintInteractiveCheck() {
   printf -- "%s\n%s\n%s\n" "$(decorate red "$failedReason")" \
     "$(decorate label "Queue")" \
     "$(decorate subtle "$(printf -- "- %s\n" "$@")")"
-  decorate blue "$(echoBar "+-")"
+  decorate blue "$(consoleLine "+-")"
   decorate info "$# $(plural $# item files) remain"
   return 1
 }
@@ -287,7 +287,7 @@ _bashLintInteractiveCheck() {
 # Argument: --exec binary - Executable. Optional. For each failed file run this command.
 # Argument: directory - Directory. Optional. Where to search for files to check.
 # Argument: --list - Flag. Optional. List files which fail. (Default is simply to exit silently.)
-findUncaughtAssertions() {
+bashFindUncaughtAssertions() {
   local handler="_${FUNCNAME[0]}"
 
   local listFlag=false binary="" directory="" ff=()
@@ -343,7 +343,7 @@ findUncaughtAssertions() {
         local problemLine="${problemFile##*:}"
         problemFile="${problemFile%:*}"
         if [ "$problemFile" != "$lastProblemFile" ]; then
-          # IDENTICAL findUncaughtAssertions-loop 3
+          # IDENTICAL bashFindUncaughtAssertions-loop 3
           if $listFlag && [ -n "$lastProblemFile" ]; then
             printf -- "%s (Lines %s)\n" "$(decorate code "$lastProblemFile")" "$(IFS=, decorate magenta "${problemLines[*]}")"
           fi
@@ -353,7 +353,7 @@ findUncaughtAssertions() {
         fi
         problemLines+=("$problemLine")
       done < <(cut -d : -f 1,2 <"$tempFile" | sort -u)
-      # IDENTICAL findUncaughtAssertions-loop 3
+      # IDENTICAL bashFindUncaughtAssertions-loop 3
       if $listFlag && [ -n "$lastProblemFile" ]; then
         printf -- "%s (Lines %s)\n" "$(decorate code "$lastProblemFile")" "$(IFS=, decorate magenta "${problemLines[*]}")"
       fi
@@ -365,7 +365,7 @@ findUncaughtAssertions() {
   catchEnvironment "$handler" rm "$tempFile" || return $?
   [ ${#problemFiles[@]} -eq 0 ]
 }
-_findUncaughtAssertions() {
+_bashFindUncaughtAssertions() {
   # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

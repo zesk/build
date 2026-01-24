@@ -1,58 +1,22 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-22
+# Generated on 2026-01-24
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/text.sh"
 argument="... - Arguments. Required. printf arguments."$'\n'""
 base="text.sh"
 description="Pipe to output some text before any output, otherwise, nothing is output."$'\n'"Without arguments, displays help."$'\n'""
+exitCode="0"
 file="bin/build/tools/text.sh"
-fn="printfOutputPrefix"
-foundNames=""
+foundNames=([0]="argument" [1]="stdin" [2]="stdout")
+rawComment="Pipe to output some text before any output, otherwise, nothing is output."$'\n'"Argument: ... - Arguments. Required. printf arguments."$'\n'"Without arguments, displays help."$'\n'"stdin: text (Optional)"$'\n'"stdout: printf output and then the stdin text IFF stdin text is non-blank"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
-sourceFile="bin/build/tools/text.sh"
-sourceModified="1769063211"
+sourceModified="1769201188"
 stdin="text (Optional)"$'\n'""
 stdout="printf output and then the stdin text IFF stdin text is non-blank"$'\n'""
 summary="Pipe to output some text before any output, otherwise, nothing"
 usage="printfOutputPrefix ..."
 # shellcheck disable=SC2016
-helpConsole='[92mUsage[0m: [38;2;170;170;255mprintfOutputPrefix[0m [38;2;255;255;0m[35;48;2;0;0;0m...[0m[0m
-
-    [31m...  [1;97mArguments. Required. printf arguments.[0m
-
-Pipe to output some text before any output, otherwise, nothing is output.
-Without arguments, displays help.
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-
-Reads from [38;2;0;255;0;48;2;0;0;0mstdin[0m:
-text (Optional)
-
-Writes to [38;2;0;255;0;48;2;0;0;0mstdout[0m:
-printf output and then the stdin text IFF stdin text is non-blank
-'
+helpConsole=''$'\e''[[label]mUsage'$'\e''[0m: '$'\e''[[info]mprintfOutputPrefix'$'\e''[0m '$'\e''[[bold]m'$'\e''[[magenta]m...'$'\e''[0m'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[red]m...  '$'\e''[[value]mArguments. Required. printf arguments.'$'\e''[[reset]m'$'\n'''$'\n''Pipe to output some text before any output, otherwise, nothing is output.'$'\n''Without arguments, displays help.'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[code]m0'$'\e''[[reset]m - Success'$'\n''- '$'\e''[[code]m1'$'\e''[[reset]m - Environment error'$'\n''- '$'\e''[[code]m2'$'\e''[[reset]m - Argument error'$'\n'''$'\n''Reads from '$'\e''[[code]mstdin'$'\e''[[reset]m:'$'\n''text (Optional)'$'\n'''$'\n''Writes to '$'\e''[[code]mstdout'$'\e''[[reset]m:'$'\n''printf output and then the stdin text IFF stdin text is non-blank'$'\n'''
 # shellcheck disable=SC2016
-helpPlain='Usage: printfOutputPrefix ...
-
-    ...  Arguments. Required. printf arguments.
-
-Pipe to output some text before any output, otherwise, nothing is output.
-Without arguments, displays help.
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-
-Reads from stdin:
-text (Optional)
-
-Writes to stdout:
-printf output and then the stdin text IFF stdin text is non-blank
-'
+helpPlain='Usage: printfOutputPrefix ...'$'\n'''$'\n''    ...  Arguments. Required. printf arguments.'$'\n'''$'\n''Pipe to output some text before any output, otherwise, nothing is output.'$'\n''Without arguments, displays help.'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''$'\n''Reads from stdin:'$'\n''text (Optional)'$'\n'''$'\n''Writes to stdout:'$'\n''printf output and then the stdin text IFF stdin text is non-blank'$'\n'''

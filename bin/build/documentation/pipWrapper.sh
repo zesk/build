@@ -1,50 +1,20 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-22
+# Generated on 2026-01-24
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/python.sh"
 argument="--bin binary - Executable. Optional. Binary for \`pip\`."$'\n'"--handler handler - Function. Optional. Use this error handler instead of the default error handler."$'\n'"--help - Flag. Optional. Display this help."$'\n'"--debug - Flag. Optional. Show outputs to \`which\` and \`command -v\` for \`pip\`"$'\n'"... - Arguments. Optional. Arguments passed to \`pip\`"$'\n'""
 base="python.sh"
 description="Run pip whether it is installed as a module or as a binary"$'\n'""
+exitCode="0"
 file="bin/build/tools/python.sh"
-fn="pipWrapper"
-foundNames=""
+foundNames=([0]="argument")
+rawComment="Run pip whether it is installed as a module or as a binary"$'\n'"Argument: --bin binary - Executable. Optional. Binary for \`pip\`."$'\n'"Argument: --handler handler - Function. Optional. Use this error handler instead of the default error handler."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Argument: --debug - Flag. Optional. Show outputs to \`which\` and \`command -v\` for \`pip\`"$'\n'"Argument: ... - Arguments. Optional. Arguments passed to \`pip\`"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
-sourceFile="bin/build/tools/python.sh"
-sourceModified="1769097744"
+sourceModified="1769184734"
 summary="Run pip whether it is installed as a module or"
 usage="pipWrapper [ --bin binary ] [ --handler handler ] [ --help ] [ --debug ] [ ... ]"
 # shellcheck disable=SC2016
-helpConsole='[92mUsage[0m: [38;2;170;170;255mpipWrapper[0m [94m[ --bin binary ][0m [94m[ --handler handler ][0m [94m[ --help ][0m [94m[ --debug ][0m [94m[ ... ][0m
-
-    [94m--bin binary       [1;97mExecutable. Optional. Binary for [38;2;0;255;0;48;2;0;0;0mpip[0m.[0m
-    [94m--handler handler  [1;97mFunction. Optional. Use this error handler instead of the default error handler.[0m
-    [94m--help             [1;97mFlag. Optional. Display this help.[0m
-    [94m--debug            [1;97mFlag. Optional. Show outputs to [38;2;0;255;0;48;2;0;0;0mwhich[0m and [38;2;0;255;0;48;2;0;0;0mcommand -v[0m for [38;2;0;255;0;48;2;0;0;0mpip[0m[0m
-    [94m...                [1;97mArguments. Optional. Arguments passed to [38;2;0;255;0;48;2;0;0;0mpip[0m[0m
-
-Run pip whether it is installed as a module or as a binary
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-'
+helpConsole=''$'\e''[[label]mUsage'$'\e''[0m: '$'\e''[[info]mpipWrapper'$'\e''[0m '$'\e''[[blue]m[ --bin binary ]'$'\e''[0m '$'\e''[[blue]m[ --handler handler ]'$'\e''[0m '$'\e''[[blue]m[ --help ]'$'\e''[0m '$'\e''[[blue]m[ --debug ]'$'\e''[0m '$'\e''[[blue]m[ ... ]'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[blue]m--bin binary       '$'\e''[[value]mExecutable. Optional. Binary for '$'\e''[[code]mpip'$'\e''[[reset]m.'$'\e''[[reset]m'$'\n''    '$'\e''[[blue]m--handler handler  '$'\e''[[value]mFunction. Optional. Use this error handler instead of the default error handler.'$'\e''[[reset]m'$'\n''    '$'\e''[[blue]m--help             '$'\e''[[value]mFlag. Optional. Display this help.'$'\e''[[reset]m'$'\n''    '$'\e''[[blue]m--debug            '$'\e''[[value]mFlag. Optional. Show outputs to '$'\e''[[code]mwhich'$'\e''[[reset]m and '$'\e''[[code]mcommand -v'$'\e''[[reset]m for '$'\e''[[code]mpip'$'\e''[[reset]m'$'\e''[[reset]m'$'\n''    '$'\e''[[blue]m...                '$'\e''[[value]mArguments. Optional. Arguments passed to '$'\e''[[code]mpip'$'\e''[[reset]m'$'\e''[[reset]m'$'\n'''$'\n''Run pip whether it is installed as a module or as a binary'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[code]m0'$'\e''[[reset]m - Success'$'\n''- '$'\e''[[code]m1'$'\e''[[reset]m - Environment error'$'\n''- '$'\e''[[code]m2'$'\e''[[reset]m - Argument error'$'\n'''
 # shellcheck disable=SC2016
-helpPlain='Usage: pipWrapper [ --bin binary ] [ --handler handler ] [ --help ] [ --debug ] [ ... ]
-
-    --bin binary       Executable. Optional. Binary for pip.
-    --handler handler  Function. Optional. Use this error handler instead of the default error handler.
-    --help             Flag. Optional. Display this help.
-    --debug            Flag. Optional. Show outputs to which and command -v for pip
-    ...                Arguments. Optional. Arguments passed to pip
-
-Run pip whether it is installed as a module or as a binary
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-'
+helpPlain='Usage: pipWrapper [ --bin binary ] [ --handler handler ] [ --help ] [ --debug ] [ ... ]'$'\n'''$'\n''    --bin binary       Executable. Optional. Binary for pip.'$'\n''    --handler handler  Function. Optional. Use this error handler instead of the default error handler.'$'\n''    --help             Flag. Optional. Display this help.'$'\n''    --debug            Flag. Optional. Show outputs to which and command -v for pip'$'\n''    ...                Arguments. Optional. Arguments passed to pip'$'\n'''$'\n''Run pip whether it is installed as a module or as a binary'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''

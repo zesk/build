@@ -31,7 +31,7 @@ __networkConfigurationFiltered() {
     shift
   done
 
-  whichExists ifconfig || throwEnvironment "$handler" "Need ifconfig (net-tools) installed. not available in PATH: $PATH" || return $?
+  executableExists ifconfig || throwEnvironment "$handler" "Need ifconfig (net-tools) installed. not available in PATH: $PATH" || return $?
 
   case "$(lowercase "${OSTYPE-}")" in
   linux) ifconfig | grep "$patternNotGNU" | cut -f 2 -d : | trimSpace | cut -f 1 -d ' ' ;;

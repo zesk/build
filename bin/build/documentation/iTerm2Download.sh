@@ -1,55 +1,22 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-22
+# Generated on 2026-01-24
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/iterm2.sh"
 argument="file - File. Optional. File to download."$'\n'"--name name - String. Optional. Target name of the file once downloaded."$'\n'"--ignore | -i - Flag. Optional. If the current terminal is not iTerm2, then exit status 0 and do nothing."$'\n'""
 base="iterm2.sh"
 description="Download an file from remote to terminal host"$'\n'"Argument:"$'\n'""
+exitCode="0"
 file="bin/build/tools/iterm2.sh"
-fn="iTerm2Download"
-foundNames=""
+foundNames=([0]="argument" [1]="stdin")
+rawComment="Download an file from remote to terminal host"$'\n'"Argument: file - File. Optional. File to download."$'\n'"Argument: --name name - String. Optional. Target name of the file once downloaded."$'\n'"Argument:"$'\n'"Argument: --ignore | -i - Flag. Optional. If the current terminal is not iTerm2, then exit status 0 and do nothing."$'\n'"stdin: file"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/iterm2.sh"
-sourceModified="1769063211"
+sourceModified="1769184734"
 stdin="file"$'\n'""
 summary="Download an file from remote to terminal host"
 usage="iTerm2Download [ file ] [ --name name ] [ --ignore | -i ]"
 # shellcheck disable=SC2016
-helpConsole='[92mUsage[0m: [38;2;170;170;255miTerm2Download[0m [94m[ file ][0m [94m[ --name name ][0m [94m[ --ignore | -i ][0m
-
-    [94mfile           [1;97mFile. Optional. File to download.[0m
-    [94m--name name    [1;97mString. Optional. Target name of the file once downloaded.[0m
-    [94m--ignore | -i  [1;97mFlag. Optional. If the current terminal is not iTerm2, then exit status 0 and do nothing.[0m
-
-Download an file from remote to terminal host
-Argument:
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-
-Reads from [38;2;0;255;0;48;2;0;0;0mstdin[0m:
-file
-'
+helpConsole=''$'\e''[[label]mUsage'$'\e''[0m: '$'\e''[[info]miTerm2Download'$'\e''[0m '$'\e''[[blue]m[ file ]'$'\e''[0m '$'\e''[[blue]m[ --name name ]'$'\e''[0m '$'\e''[[blue]m[ --ignore | -i ]'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[blue]mfile           '$'\e''[[value]mFile. Optional. File to download.'$'\e''[[reset]m'$'\n''    '$'\e''[[blue]m--name name    '$'\e''[[value]mString. Optional. Target name of the file once downloaded.'$'\e''[[reset]m'$'\n''    '$'\e''[[blue]m--ignore | -i  '$'\e''[[value]mFlag. Optional. If the current terminal is not iTerm2, then exit status 0 and do nothing.'$'\e''[[reset]m'$'\n'''$'\n''Download an file from remote to terminal host'$'\n''Argument:'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[code]m0'$'\e''[[reset]m - Success'$'\n''- '$'\e''[[code]m1'$'\e''[[reset]m - Environment error'$'\n''- '$'\e''[[code]m2'$'\e''[[reset]m - Argument error'$'\n'''$'\n''Reads from '$'\e''[[code]mstdin'$'\e''[[reset]m:'$'\n''file'$'\n'''
 # shellcheck disable=SC2016
-helpPlain='Usage: iTerm2Download [ file ] [ --name name ] [ --ignore | -i ]
-
-    file           File. Optional. File to download.
-    --name name    String. Optional. Target name of the file once downloaded.
-    --ignore | -i  Flag. Optional. If the current terminal is not iTerm2, then exit status 0 and do nothing.
-
-Download an file from remote to terminal host
-Argument:
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-
-Reads from stdin:
-file
-'
+helpPlain='Usage: iTerm2Download [ file ] [ --name name ] [ --ignore | -i ]'$'\n'''$'\n''    file           File. Optional. File to download.'$'\n''    --name name    String. Optional. Target name of the file once downloaded.'$'\n''    --ignore | -i  Flag. Optional. If the current terminal is not iTerm2, then exit status 0 and do nothing.'$'\n'''$'\n''Download an file from remote to terminal host'$'\n''Argument:'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''$'\n''Reads from stdin:'$'\n''file'$'\n'''

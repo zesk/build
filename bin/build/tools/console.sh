@@ -146,8 +146,7 @@ consoleConfigureDecorate() {
   local handler="_${FUNCNAME[0]}"
   [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
 
-  local mode
-  mode=$(catchReturn "$handler" consoleConfigureColorMode "$@") || return $?
+  local mode && mode=$(catchReturn "$handler" consoleConfigureColorMode "$@") || return $?
   case "$mode" in
   dark) __decorateStylesDefaultDark ;;
   light) __decorateStylesDefaultLight ;;
@@ -210,7 +209,7 @@ consoleLinksSupported() {
   [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
   export HOSTNAME
   [ -n "${HOSTNAME-}" ] || return 1
-  hasConsoleAnimation || return 1
+  consoleHasAnimation || return 1
   ! isBitBucketPipeline || return 1
   ! isiTerm2 || return 0
 }

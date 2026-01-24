@@ -19,13 +19,13 @@
 # stderr: error messages
 # Return Code: 0 - Field was found and was non-blank
 # Return Code: 1 - Field was not found or is blank
-# Requires: jq whichExists throwEnvironment printf rm decorate head
+# Requires: jq executableExists throwEnvironment printf rm decorate head
 jsonField() {
   [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
   local handler="$1" jsonFile="$2" value message && shift 2
 
   [ -f "$jsonFile" ] || throwEnvironment "$handler" "$jsonFile is not a file" || return $?
-  whichExists jq || throwEnvironment "$handler" "Requires jq - not installed" || return $?
+  executableExists jq || throwEnvironment "$handler" "Requires jq - not installed" || return $?
   if ! value=$(jq -r "$@" <"$jsonFile"); then
     message="$(printf -- "%s\n%s\n" "Unable to fetch selector $(decorate each code -- "$@") from JSON:" "$(head -n 100 "$jsonFile")")"
     throwEnvironment "$handler" "$message" || return $?

@@ -1,46 +1,23 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-22
+# Generated on 2026-01-24
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/git.sh"
 argument="none"
 base="git.sh"
 credit="Chris Johnsen"$'\n'""
-description="Return Code: 1 - the repo has NOT been modified"$'\n'"Return Code: 0 - the repo has been modified"$'\n'""$'\n'"Has a git repository been changed from HEAD?"$'\n'""$'\n'""
+description="Has a git repository been changed from HEAD?"$'\n'""
+exitCode="0"
 file="bin/build/tools/git.sh"
-fn="gitRepositoryChanged"
-foundNames=""
-return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
+foundNames=([0]="return_code" [1]="source" [2]="credit")
+rawComment="Return Code: 1 - the repo has NOT been modified"$'\n'"Return Code: 0 - the repo has been modified"$'\n'"Has a git repository been changed from HEAD?"$'\n'"Source: https://stackoverflow.com/questions/3882838/whats-an-easy-way-to-detect-modified-files-in-a-git-workspace/3899339#3899339"$'\n'"Credit: Chris Johnsen"$'\n'""$'\n'""
+return_code="1 - the repo has NOT been modified"$'\n'"0 - the repo has been modified"$'\n'""
 source="https://stackoverflow.com/questions/3882838/whats-an-easy-way-to-detect-modified-files-in-a-git-workspace/3899339#3899339"$'\n'""
 sourceFile="bin/build/tools/git.sh"
-sourceModified="1769063211"
-summary="Return Code: 1 - the repo has NOT been modified"
+sourceModified="1769199547"
+summary="Has a git repository been changed from HEAD?"
 usage="gitRepositoryChanged"
 # shellcheck disable=SC2016
-helpConsole='[92mUsage[0m: [38;2;170;170;255mgitRepositoryChanged[0m
-
-Return Code: 1 - the repo has NOT been modified
-Return Code: 0 - the repo has been modified
-
-Has a git repository been changed from HEAD?
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-'
+helpConsole=''$'\e''[[label]mUsage'$'\e''[0m: '$'\e''[[info]mgitRepositoryChanged'$'\e''[0m'$'\n'''$'\n''Has a git repository been changed from HEAD?'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[code]m1'$'\e''[[reset]m - the repo has NOT been modified'$'\n''- '$'\e''[[code]m0'$'\e''[[reset]m - the repo has been modified'$'\n'''
 # shellcheck disable=SC2016
-helpPlain='Usage: gitRepositoryChanged
-
-Return Code: 1 - the repo has NOT been modified
-Return Code: 0 - the repo has been modified
-
-Has a git repository been changed from HEAD?
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-'
+helpPlain='Usage: gitRepositoryChanged'$'\n'''$'\n''Has a git repository been changed from HEAD?'$'\n'''$'\n''Return codes:'$'\n''- 1 - the repo has NOT been modified'$'\n''- 0 - the repo has been modified'$'\n'''

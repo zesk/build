@@ -273,7 +273,7 @@ _commentArgumentSpecificationParseLine() {
   # 5. `--flag argumentName ... -`
   # 6. `--flag argumentOne argumentTwo ... -`
   # 7. `--flag ... -- -`
-  savedLine="$(decorate each code "$@")"
+  savedLine="$(decorate each code -- "$@")"
   while [ "$#" -gt 0 ]; do
     local argument="$1"
     case "$argument" in

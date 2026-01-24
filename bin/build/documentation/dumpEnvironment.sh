@@ -1,52 +1,21 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-22
+# Generated on 2026-01-24
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/dump.sh"
 argument="--maximum-length maximumLength - PositiveInteger. Optional. The maximum number of characters to output for each environment variable."$'\n'"--skip-env environmentVariable - EnvironmentVariable. Optional. Skip this environment variable (must match exactly)."$'\n'"--show-skipped - Flag. Show skipped environment variables."$'\n'"--secure-match matchString - String. Optional. If an environment variable matches any case-insensitive part of this string, then hide it. If nothing specified, uses a \`secret\` \`key\` and \`password\`. If one value is specified the list is reset to zero. To show all variables pass a blank or \`-\` value here."$'\n'"--secure-suffix secureSuffix  - EmptyString. Optional. Suffix to display after hidden arguments."$'\n'"--help - Flag. Optional. Display this help."$'\n'""
 base="dump.sh"
-description="Output the environment but try to hide secure value"$'\n'""$'\n'""
+description="Output the environment but try to hide secure value"$'\n'""
+exitCode="0"
 file="bin/build/tools/dump.sh"
-fn="dumpEnvironment"
-foundNames=""
+foundNames=([0]="argument")
+rawComment="Output the environment but try to hide secure value"$'\n'"Argument: --maximum-length maximumLength - PositiveInteger. Optional. The maximum number of characters to output for each environment variable."$'\n'"Argument: --skip-env environmentVariable - EnvironmentVariable. Optional. Skip this environment variable (must match exactly)."$'\n'"Argument: --show-skipped - Flag. Show skipped environment variables."$'\n'"Argument: --secure-match matchString - String. Optional. If an environment variable matches any case-insensitive part of this string, then hide it. If nothing specified, uses a \`secret\` \`key\` and \`password\`. If one value is specified the list is reset to zero. To show all variables pass a blank or \`-\` value here."$'\n'"Argument: --secure-suffix secureSuffix  - EmptyString. Optional. Suffix to display after hidden arguments."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/dump.sh"
-sourceModified="1769063211"
+sourceModified="1769184734"
 summary="Output the environment but try to hide secure value"
 usage="dumpEnvironment [ --maximum-length maximumLength ] [ --skip-env environmentVariable ] [ --show-skipped ] [ --secure-match matchString ] [ --secure-suffix secureSuffix  ] [ --help ]"
 # shellcheck disable=SC2016
-helpConsole='[92mUsage[0m: [38;2;170;170;255mdumpEnvironment[0m [94m[ --maximum-length maximumLength ][0m [94m[ --skip-env environmentVariable ][0m [94m[ --show-skipped ][0m [94m[ --secure-match matchString ][0m [94m[ --secure-suffix secureSuffix  ][0m [94m[ --help ][0m
-
-    [94m--maximum-length maximumLength  [1;97mPositiveInteger. Optional. The maximum number of characters to output for each environment variable.[0m
-    [94m--skip-env environmentVariable  [1;97mEnvironmentVariable. Optional. Skip this environment variable (must match exactly).[0m
-    [94m--show-skipped                  [1;97mFlag. Show skipped environment variables.[0m
-    [94m--secure-match matchString      [1;97mString. Optional. If an environment variable matches any case-insensitive part of this string, then hide it. If nothing specified, uses a [38;2;0;255;0;48;2;0;0;0msecret[0m [38;2;0;255;0;48;2;0;0;0mkey[0m and [38;2;0;255;0;48;2;0;0;0mpassword[0m. If one value is specified the list is reset to zero. To show all variables pass a blank or [38;2;0;255;0;48;2;0;0;0m-[0m value here.[0m
-    [94m--secure-suffix secureSuffix    [1;97mEmptyString. Optional. Suffix to display after hidden arguments.[0m
-    [94m--help                          [1;97mFlag. Optional. Display this help.[0m
-
-Output the environment but try to hide secure value
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-'
+helpConsole=''$'\e''[[label]mUsage'$'\e''[0m: '$'\e''[[info]mdumpEnvironment'$'\e''[0m '$'\e''[[blue]m[ --maximum-length maximumLength ]'$'\e''[0m '$'\e''[[blue]m[ --skip-env environmentVariable ]'$'\e''[0m '$'\e''[[blue]m[ --show-skipped ]'$'\e''[0m '$'\e''[[blue]m[ --secure-match matchString ]'$'\e''[0m '$'\e''[[blue]m[ --secure-suffix secureSuffix  ]'$'\e''[0m '$'\e''[[blue]m[ --help ]'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[blue]m--maximum-length maximumLength  '$'\e''[[value]mPositiveInteger. Optional. The maximum number of characters to output for each environment variable.'$'\e''[[reset]m'$'\n''    '$'\e''[[blue]m--skip-env environmentVariable  '$'\e''[[value]mEnvironmentVariable. Optional. Skip this environment variable (must match exactly).'$'\e''[[reset]m'$'\n''    '$'\e''[[blue]m--show-skipped                  '$'\e''[[value]mFlag. Show skipped environment variables.'$'\e''[[reset]m'$'\n''    '$'\e''[[blue]m--secure-match matchString      '$'\e''[[value]mString. Optional. If an environment variable matches any case-insensitive part of this string, then hide it. If nothing specified, uses a '$'\e''[[code]msecret'$'\e''[[reset]m '$'\e''[[code]mkey'$'\e''[[reset]m and '$'\e''[[code]mpassword'$'\e''[[reset]m. If one value is specified the list is reset to zero. To show all variables pass a blank or '$'\e''[[code]m-'$'\e''[[reset]m value here.'$'\e''[[reset]m'$'\n''    '$'\e''[[blue]m--secure-suffix secureSuffix    '$'\e''[[value]mEmptyString. Optional. Suffix to display after hidden arguments.'$'\e''[[reset]m'$'\n''    '$'\e''[[blue]m--help                          '$'\e''[[value]mFlag. Optional. Display this help.'$'\e''[[reset]m'$'\n'''$'\n''Output the environment but try to hide secure value'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[code]m0'$'\e''[[reset]m - Success'$'\n''- '$'\e''[[code]m1'$'\e''[[reset]m - Environment error'$'\n''- '$'\e''[[code]m2'$'\e''[[reset]m - Argument error'$'\n'''
 # shellcheck disable=SC2016
-helpPlain='Usage: dumpEnvironment [ --maximum-length maximumLength ] [ --skip-env environmentVariable ] [ --show-skipped ] [ --secure-match matchString ] [ --secure-suffix secureSuffix  ] [ --help ]
-
-    --maximum-length maximumLength  PositiveInteger. Optional. The maximum number of characters to output for each environment variable.
-    --skip-env environmentVariable  EnvironmentVariable. Optional. Skip this environment variable (must match exactly).
-    --show-skipped                  Flag. Show skipped environment variables.
-    --secure-match matchString      String. Optional. If an environment variable matches any case-insensitive part of this string, then hide it. If nothing specified, uses a secret key and password. If one value is specified the list is reset to zero. To show all variables pass a blank or - value here.
-    --secure-suffix secureSuffix    EmptyString. Optional. Suffix to display after hidden arguments.
-    --help                          Flag. Optional. Display this help.
-
-Output the environment but try to hide secure value
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-'
+helpPlain='Usage: dumpEnvironment [ --maximum-length maximumLength ] [ --skip-env environmentVariable ] [ --show-skipped ] [ --secure-match matchString ] [ --secure-suffix secureSuffix  ] [ --help ]'$'\n'''$'\n''    --maximum-length maximumLength  PositiveInteger. Optional. The maximum number of characters to output for each environment variable.'$'\n''    --skip-env environmentVariable  EnvironmentVariable. Optional. Skip this environment variable (must match exactly).'$'\n''    --show-skipped                  Flag. Show skipped environment variables.'$'\n''    --secure-match matchString      String. Optional. If an environment variable matches any case-insensitive part of this string, then hide it. If nothing specified, uses a secret key and password. If one value is specified the list is reset to zero. To show all variables pass a blank or - value here.'$'\n''    --secure-suffix secureSuffix    EmptyString. Optional. Suffix to display after hidden arguments.'$'\n''    --help                          Flag. Optional. Display this help.'$'\n'''$'\n''Output the environment but try to hide secure value'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''

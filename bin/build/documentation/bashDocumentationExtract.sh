@@ -1,15 +1,16 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-22
+# Generated on 2026-01-24
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/documentation.sh"
 argument="handler - Function. Required."$'\n'"function - String. Required."$'\n'"sourceFile - File. Required."$'\n'"--generate - Flag. Optional. Generate cached files."$'\n'"--no-cache - Flag. Optional. Skip any attempt to cache anything."$'\n'"--cache - Flag. Optional. Force use of cache."$'\n'"--help - Flag. Optional. Display this help."$'\n'""
 base="documentation.sh"
 build_debug="usage-cache-skip - Skip caching by default (override with \`--cache\`)"$'\n'""
-description="Extract documentation variables from a comment stripped of the '# ' prefixes."$'\n'""$'\n'"A few special values are generated/computed:"$'\n'""$'\n'"- \`description\` - Any line in the comment which is not in variable is appended to the field \`description\`"$'\n'"- \`fn\` - The function name (no parenthesis or anything)"$'\n'"- \`base\` - The basename of the file"$'\n'"- \`file\` - The relative path name of the file from the application root"$'\n'"- \`summary\` - Defaults to first ten words of \`description\`"$'\n'"- \`exit_code\` - Defaults to \`0 - Always succeeds\`"$'\n'"- \`reviewed\`  - Defaults to \`Never\`"$'\n'"- \`environment\"  - Defaults to \`No environment dependencies or modifications.\`"$'\n'""$'\n'"Otherwise the assumed variables (in addition to above) to define functions are:"$'\n'""$'\n'"- \`argument\` - Individual arguments"$'\n'"- \`usage\` - Canonical usage example (code)"$'\n'"- \`example\` - An example of usage (code, many)"$'\n'"- \`depends\` - Any dependencies (list)"$'\n'""$'\n'""
+description="Extract documentation variables from a comment stripped of the '# ' prefixes."$'\n'"A few special values are generated/computed:"$'\n'"- \`description\` - Any line in the comment which is not in variable is appended to the field \`description\`"$'\n'"- \`fn\` - The function name (no parenthesis or anything)"$'\n'"- \`base\` - The basename of the file"$'\n'"- \`file\` - The relative path name of the file from the application root"$'\n'"- \`summary\` - Defaults to first ten words of \`description\`"$'\n'"- \`exit_code\` - Defaults to \`0 - Always succeeds\`"$'\n'"- \`reviewed\`  - Defaults to \`Never\`"$'\n'"- \`environment\"  - Defaults to \`No environment dependencies or modifications.\`"$'\n'"Otherwise the assumed variables (in addition to above) to define functions are:"$'\n'"- \`argument\` - Individual arguments"$'\n'"- \`usage\` - Canonical usage example (code)"$'\n'"- \`example\` - An example of usage (code, many)"$'\n'"- \`depends\` - Any dependencies (list)"$'\n'""
+exitCode="0"
 file="bin/build/tools/documentation.sh"
-fn="bashDocumentationExtract"
-foundNames=""
+foundNames=([0]="summary" [1]="argument" [2]="stdin" [3]="build_debug")
+rawComment="Extract documentation variables from a comment stripped of the '# ' prefixes."$'\n'"A few special values are generated/computed:"$'\n'"- \`description\` - Any line in the comment which is not in variable is appended to the field \`description\`"$'\n'"- \`fn\` - The function name (no parenthesis or anything)"$'\n'"- \`base\` - The basename of the file"$'\n'"- \`file\` - The relative path name of the file from the application root"$'\n'"- \`summary\` - Defaults to first ten words of \`description\`"$'\n'"- \`exit_code\` - Defaults to \`0 - Always succeeds\`"$'\n'"- \`reviewed\`  - Defaults to \`Never\`"$'\n'"- \`environment\"  - Defaults to \`No environment dependencies or modifications.\`"$'\n'"Otherwise the assumed variables (in addition to above) to define functions are:"$'\n'"- \`argument\` - Individual arguments"$'\n'"- \`usage\` - Canonical usage example (code)"$'\n'"- \`example\` - An example of usage (code, many)"$'\n'"- \`depends\` - Any dependencies (list)"$'\n'"Summary: Generate a set of name/value pairs to document bash functions"$'\n'"Argument: handler - Function. Required."$'\n'"Argument: function - String. Required."$'\n'"Argument: sourceFile - File. Required."$'\n'"Argument: --generate - Flag. Optional. Generate cached files."$'\n'"Argument: --no-cache - Flag. Optional. Skip any attempt to cache anything."$'\n'"Argument: --cache - Flag. Optional. Force use of cache."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"stdin: Pipe stripped comments to extract information"$'\n'"BUILD_DEBUG: usage-cache-skip - Skip caching by default (override with \`--cache\`)"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/documentation.sh"
 sourceModified="1769065497"
@@ -17,90 +18,6 @@ stdin="Pipe stripped comments to extract information"$'\n'""
 summary="Generate a set of name/value pairs to document bash functions"$'\n'""
 usage="bashDocumentationExtract handler function sourceFile [ --generate ] [ --no-cache ] [ --cache ] [ --help ]"
 # shellcheck disable=SC2016
-helpConsole='[92mUsage[0m: [38;2;170;170;255mbashDocumentationExtract[0m [38;2;255;255;0m[35;48;2;0;0;0mhandler[0m[0m [38;2;255;255;0m[35;48;2;0;0;0mfunction[0m[0m [38;2;255;255;0m[35;48;2;0;0;0msourceFile[0m[0m [94m[ --generate ][0m [94m[ --no-cache ][0m [94m[ --cache ][0m [94m[ --help ][0m
-
-    [31mhandler     [1;97mFunction. Required.[0m
-    [31mfunction    [1;97mString. Required.[0m
-    [31msourceFile  [1;97mFile. Required.[0m
-    [94m--generate  [1;97mFlag. Optional. Generate cached files.[0m
-    [94m--no-cache  [1;97mFlag. Optional. Skip any attempt to cache anything.[0m
-    [94m--cache     [1;97mFlag. Optional. Force use of cache.[0m
-    [94m--help      [1;97mFlag. Optional. Display this help.[0m
-
-Extract documentation variables from a comment stripped of the '\''# '\'' prefixes.
-
-A few special values are generated/computed:
-
-- [38;2;0;255;0;48;2;0;0;0mdescription[0m - Any line in the comment which is not in variable is appended to the field [38;2;0;255;0;48;2;0;0;0mdescription[0m
-- [38;2;0;255;0;48;2;0;0;0mfn[0m - The function name (no parenthesis or anything)
-- [38;2;0;255;0;48;2;0;0;0mbase[0m - The basename of the file
-- [38;2;0;255;0;48;2;0;0;0mfile[0m - The relative path name of the file from the application root
-- [38;2;0;255;0;48;2;0;0;0msummary[0m - Defaults to first ten words of [38;2;0;255;0;48;2;0;0;0mdescription[0m
-- [38;2;0;255;0;48;2;0;0;0mexit_code[0m - Defaults to [38;2;0;255;0;48;2;0;0;0m0 - Always succeeds[0m
-- [38;2;0;255;0;48;2;0;0;0mreviewed[0m  - Defaults to [38;2;0;255;0;48;2;0;0;0mNever[0m
-- [38;2;0;255;0;48;2;0;0;0menvironment"  - Defaults to [0mNo environment dependencies or modifications.[38;2;0;255;0;48;2;0;0;0m[0m
-
-Otherwise the assumed variables (in addition to above) to define functions are:
-
-- [38;2;0;255;0;48;2;0;0;0margument[0m - Individual arguments
-- [38;2;0;255;0;48;2;0;0;0musage[0m - Canonical usage example (code)
-- [38;2;0;255;0;48;2;0;0;0mexample[0m - An example of usage (code, many)
-- [38;2;0;255;0;48;2;0;0;0mdepends[0m - Any dependencies (list)
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-
-Reads from [38;2;0;255;0;48;2;0;0;0mstdin[0m:
-Pipe stripped comments to extract information
-
-[38;2;0;255;0;48;2;0;0;0mBUILD_DEBUG[0m settings:
-- usage-cache-skip - Skip caching by default (override with [38;2;0;255;0;48;2;0;0;0m--cache[0m)
-- 
-'
+helpConsole=''$'\e''[[label]mUsage'$'\e''[0m: '$'\e''[[info]mbashDocumentationExtract'$'\e''[0m '$'\e''[[bold]m'$'\e''[[magenta]mhandler'$'\e''[0m'$'\e''[0m '$'\e''[[bold]m'$'\e''[[magenta]mfunction'$'\e''[0m'$'\e''[0m '$'\e''[[bold]m'$'\e''[[magenta]msourceFile'$'\e''[0m'$'\e''[0m '$'\e''[[blue]m[ --generate ]'$'\e''[0m '$'\e''[[blue]m[ --no-cache ]'$'\e''[0m '$'\e''[[blue]m[ --cache ]'$'\e''[0m '$'\e''[[blue]m[ --help ]'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[red]mhandler     '$'\e''[[value]mFunction. Required.'$'\e''[[reset]m'$'\n''    '$'\e''[[red]mfunction    '$'\e''[[value]mString. Required.'$'\e''[[reset]m'$'\n''    '$'\e''[[red]msourceFile  '$'\e''[[value]mFile. Required.'$'\e''[[reset]m'$'\n''    '$'\e''[[blue]m--generate  '$'\e''[[value]mFlag. Optional. Generate cached files.'$'\e''[[reset]m'$'\n''    '$'\e''[[blue]m--no-cache  '$'\e''[[value]mFlag. Optional. Skip any attempt to cache anything.'$'\e''[[reset]m'$'\n''    '$'\e''[[blue]m--cache     '$'\e''[[value]mFlag. Optional. Force use of cache.'$'\e''[[reset]m'$'\n''    '$'\e''[[blue]m--help      '$'\e''[[value]mFlag. Optional. Display this help.'$'\e''[[reset]m'$'\n'''$'\n''Extract documentation variables from a comment stripped of the '\''# '\'' prefixes.'$'\n''A few special values are generated/computed:'$'\n''- '$'\e''[[code]mdescription'$'\e''[[reset]m - Any line in the comment which is not in variable is appended to the field '$'\e''[[code]mdescription'$'\e''[[reset]m'$'\n''- '$'\e''[[code]mfn'$'\e''[[reset]m - The function name (no parenthesis or anything)'$'\n''- '$'\e''[[code]mbase'$'\e''[[reset]m - The basename of the file'$'\n''- '$'\e''[[code]mfile'$'\e''[[reset]m - The relative path name of the file from the application root'$'\n''- '$'\e''[[code]msummary'$'\e''[[reset]m - Defaults to first ten words of '$'\e''[[code]mdescription'$'\e''[[reset]m'$'\n''- '$'\e''[[code]mexit_code'$'\e''[[reset]m - Defaults to '$'\e''[[code]m0 - Always succeeds'$'\e''[[reset]m'$'\n''- '$'\e''[[code]mreviewed'$'\e''[[reset]m  - Defaults to '$'\e''[[code]mNever'$'\e''[[reset]m'$'\n''- '$'\e''[[code]menvironment"  - Defaults to '$'\e''[[reset]mNo environment dependencies or modifications.'$'\e''[[code]m'$'\e''[[reset]m'$'\n''Otherwise the assumed variables (in addition to above) to define functions are:'$'\n''- '$'\e''[[code]margument'$'\e''[[reset]m - Individual arguments'$'\n''- '$'\e''[[code]musage'$'\e''[[reset]m - Canonical usage example (code)'$'\n''- '$'\e''[[code]mexample'$'\e''[[reset]m - An example of usage (code, many)'$'\n''- '$'\e''[[code]mdepends'$'\e''[[reset]m - Any dependencies (list)'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[code]m0'$'\e''[[reset]m - Success'$'\n''- '$'\e''[[code]m1'$'\e''[[reset]m - Environment error'$'\n''- '$'\e''[[code]m2'$'\e''[[reset]m - Argument error'$'\n'''$'\n''Reads from '$'\e''[[code]mstdin'$'\e''[[reset]m:'$'\n''Pipe stripped comments to extract information'$'\n'''$'\n'''$'\e''[[code]mBUILD_DEBUG'$'\e''[[reset]m settings:'$'\n''- '$'\e''[[code]musage-cache-skip'$'\e''[[reset]m - Skip caching by default (override with '$'\e''[[code]m--cache'$'\e''[[reset]m)'$'\n'''
 # shellcheck disable=SC2016
-helpPlain='Usage: bashDocumentationExtract handler function sourceFile [ --generate ] [ --no-cache ] [ --cache ] [ --help ]
-
-    handler     Function. Required.
-    function    String. Required.
-    sourceFile  File. Required.
-    --generate  Flag. Optional. Generate cached files.
-    --no-cache  Flag. Optional. Skip any attempt to cache anything.
-    --cache     Flag. Optional. Force use of cache.
-    --help      Flag. Optional. Display this help.
-
-Extract documentation variables from a comment stripped of the '\''# '\'' prefixes.
-
-A few special values are generated/computed:
-
-- description - Any line in the comment which is not in variable is appended to the field description
-- fn - The function name (no parenthesis or anything)
-- base - The basename of the file
-- file - The relative path name of the file from the application root
-- summary - Defaults to first ten words of description
-- exit_code - Defaults to 0 - Always succeeds
-- reviewed  - Defaults to Never
-- environment"  - Defaults to No environment dependencies or modifications.
-
-Otherwise the assumed variables (in addition to above) to define functions are:
-
-- argument - Individual arguments
-- usage - Canonical usage example (code)
-- example - An example of usage (code, many)
-- depends - Any dependencies (list)
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-
-Reads from stdin:
-Pipe stripped comments to extract information
-
-BUILD_DEBUG settings:
-- usage-cache-skip - Skip caching by default (override with --cache)
-- 
-'
+helpPlain='Usage: bashDocumentationExtract handler function sourceFile [ --generate ] [ --no-cache ] [ --cache ] [ --help ]'$'\n'''$'\n''    handler     Function. Required.'$'\n''    function    String. Required.'$'\n''    sourceFile  File. Required.'$'\n''    --generate  Flag. Optional. Generate cached files.'$'\n''    --no-cache  Flag. Optional. Skip any attempt to cache anything.'$'\n''    --cache     Flag. Optional. Force use of cache.'$'\n''    --help      Flag. Optional. Display this help.'$'\n'''$'\n''Extract documentation variables from a comment stripped of the '\''# '\'' prefixes.'$'\n''A few special values are generated/computed:'$'\n''- description - Any line in the comment which is not in variable is appended to the field description'$'\n''- fn - The function name (no parenthesis or anything)'$'\n''- base - The basename of the file'$'\n''- file - The relative path name of the file from the application root'$'\n''- summary - Defaults to first ten words of description'$'\n''- exit_code - Defaults to 0 - Always succeeds'$'\n''- reviewed  - Defaults to Never'$'\n''- environment"  - Defaults to No environment dependencies or modifications.'$'\n''Otherwise the assumed variables (in addition to above) to define functions are:'$'\n''- argument - Individual arguments'$'\n''- usage - Canonical usage example (code)'$'\n''- example - An example of usage (code, many)'$'\n''- depends - Any dependencies (list)'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''$'\n''Reads from stdin:'$'\n''Pipe stripped comments to extract information'$'\n'''$'\n''BUILD_DEBUG settings:'$'\n''- usage-cache-skip - Skip caching by default (override with --cache)'$'\n'''

@@ -444,31 +444,6 @@ _stringContainsInsensitive() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# Argument: text - String. Optional. String to match.
-# Argument: prefixText - String. Required. One or more. Does this prefix exist in our `text`?
-# Return Code: 0 - If `text` has any prefix
-# Does text have one or more prefixes?
-beginsWith() {
-  local handler="_${FUNCNAME[0]}"
-  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
-
-  local text="${1-}"
-  [ -n "$text" ] || throwArgument "$handler" "Empty text" || return $?
-
-  shift
-  while [ $# -gt 0 ]; do
-    if [ -n "$1" ]; then
-      [ "${text#"$1"}" = "$text" ] || return 0
-    fi
-    shift
-  done
-  return 1
-}
-_beginsWith() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
-}
-
 #
 # Check if one string is a substring of another set of strings (case-sensitive)
 #
@@ -843,24 +818,96 @@ _stripAnsi() {
 # Argument: text - EmptyString. Optional. text to determine the plaintext length of. If not supplied reads from standard input.
 # stdin: A file to determine the plain-text length
 # stdout: `UnsignedInteger`. Length of the plain characters in the input arguments.
-plainLength() {
+consolePlainLength() {
   local handler="_${FUNCNAME[0]}"
   [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
 
   if [ $# -gt 0 ]; then
-    local text
-    text="$(stripAnsi <<<"$*")"
+    local text && text="$(stripAnsi <<<"$*")"
     printf "%d\n" "${#text}"
   else
-    local count
-    count=$(trimSpace "$(stripAnsi | wc -c)")
+    local count && count=$(trimSpace "$(stripAnsi | wc -c)")
     # wc -c ALWAYS counts an added newline so remove it from results
     printf "%d\n" "$((count - 1))"
   fi
 }
-_plainLength() {
+_consolePlainLength() {
   # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+# Summary: Truncate console output width
+# Argument: width - UnsignedInteger. Required. Width to maintain.
+# Argument: text - String. Optional. Text to trim to a console width.
+# stdin: String. Optional. Text to trim to a console width.
+# stdout: String. Console string trimmed to the width requested.
+consoleTrimWidth() {
+  local handler="_${FUNCNAME[0]}"
+
+  local foundArgument=false width=""
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
+  local __saved=("$@") __count=$#
+  while [ $# -gt 0 ]; do
+    local argument="$1" __index=$((__count - $# + 1))
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    case "$argument" in
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
+    *)
+      if [ -z "$width" ]; then
+        width=$(validate "$handler" UnsignedInteger "characters" "$argument") || return $?
+      else
+        foundArgument=true
+        __consoleTrimWidth "$handler" "$width" "$argument" || return $?
+      fi
+      ;;
+    esac
+    shift
+  done
+  [ -n "$width" ] || throwArgument "$handler" "Need width" || return $?
+  ! $foundArgument || return 0
+  local finished=false && while ! $finished; do
+    local textLine && read -r textLine || finished=true
+    [ -n "$textLine" ] || ! $finished || continue
+    __consoleTrimWidth "$handler" "$width" "$textLine" || return $?
+  done
+}
+_consoleTrimWidth() {
+  # __IDENTICAL__ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+__consoleTrimWidth() {
+  local handler="$1" && shift
+  local trimWidth="$1" && shift
+  local textLine="$1" && shift
+
+  local search=$'\e'"[0m"
+  local replace=$'\2'
+  local modded=${textLine//"$search"/"$replace"}
+  if [ "$modded" = "$textLine" ]; then
+    printf "%s\n" "${textLine:0:$trimWidth}"
+    return 0
+  fi
+  local finished=false prefix="" textWidth=0
+  while ! $finished; do
+    local part && IFS="" read -r -d "$replace" -a part || finished=true
+    local newWidth=0
+    if [ -n "$part" ]; then
+      newWidth=$(consolePlainLength "$part")
+      if isInteger "$newWidth" && [ "$newWidth" -gt 0 ] && [ "$((textWidth + newWidth))" -gt "$trimWidth" ]; then
+        part=$(printf -- "%s" "$part" | stripAnsi)
+        changed=$((trimWidth - textWidth))
+        part="${part:0:$changed}"
+        finished=true
+      fi
+    fi
+    printf -- "%s%s" "$prefix" "$part"
+    textWidth=$((textWidth + newWidth))
+    ! $finished || return 0
+    prefix="$search"
+  done <<<"$modded"
 }
 
 # Generates a checksum of standard input and outputs a SHA1 checksum in hexadecimal without any extra stuff
@@ -868,6 +915,7 @@ _plainLength() {
 # You can use this as a pipe or pass in arguments which are files to be hashed.
 #
 # Argument: filename ... - File. One or more filenames to generate a checksum for
+# Argument: --cache cacheDirectory - Directory. Cache file cache values here for speed optimization.
 # Depends: sha1sum
 # Summary: SHA1 checksum of standard input
 # Example:     shaPipe < "$fileName"
@@ -880,31 +928,6 @@ shaPipe() {
   __textLoader "_${FUNCNAME[0]}" "__${FUNCNAME[0]}" "$@"
 }
 _shaPipe() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
-}
-
-# Generates a checksum of standard input and outputs a SHA1 checksum in hexadecimal without any extra stuff
-#
-# You can use this as a pipe or pass in arguments which are files to be hashed.
-#
-# Speeds up shaPipe using modification dates of the files instead.
-#
-# The `cacheDirectory`
-#
-# Argument: cacheDirectory - Directory. Optional. The directory where cache files can be stored exclusively for this function. Supports a blank value to disable caching, otherwise, it must be a valid directory.
-# Argument: filename - File. Optional. File determine the sha value for.
-# Depends: sha1sum shaPipe
-# Summary: SHA1 checksum of standard input
-# Example:     cachedShaPipe "$cacheDirectory" < "$fileName"
-# Example:     cachedShaPipe "$cacheDirectory" "$fileName0" "$fileName1"
-# Output: cf7861b50054e8c680a9552917b43ec2b9edae2b
-# stdin: any file
-# stdout: `String`. A hexadecimal string which uniquely represents the data in `stdin`.
-cachedShaPipe() {
-  __textLoader "_${FUNCNAME[0]}" "__${FUNCNAME[0]}" "$@"
-}
-_cachedShaPipe() {
   # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
@@ -1086,6 +1109,108 @@ stringReplace() {
   sed -e "$sedCommand"
 }
 _stringReplace() {
+  # __IDENTICAL__ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+# Format text and align it right using spaces.
+#
+# Summary: align text right
+# Argument: characterWidth - Characters to align right
+# Argument: text ... - Text to align right
+# DOC TEMPLATE: --help 1
+# Argument: --help - Flag. Optional. Display this help.
+# Example:     printf "%s: %s\n" "$(textAlignRight 20 Name)" "$name"
+# Example:     printf "%s: %s\n" "$(textAlignRight 20 Profession)" "$occupation"
+# Example:                 Name: Juanita
+# Example:           Profession: Engineer
+textAlignRight() {
+  local handler="_${FUNCNAME[0]}"
+  local n
+  __help "$handler" "$@" || return 0
+  n=$(validate "$handler" UnsignedInteger "characterWidth" "${1-}") && shift || return $?
+  printf "%${n}s" "$*"
+}
+_textAlignRight() {
+  # __IDENTICAL__ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+# Summary: align text left
+# Format text and align it left using spaces.
+#
+# DOC TEMPLATE: --help 1
+# Argument: --help - Flag. Optional. Display this help.
+# Argument: characterWidth - UnsignedInteger. Required. Number of characters to align left
+# Argument: text ... - Text to align left.
+#
+# Example:     printf "%s: %s\n" "$(textAlignLeft 14 Name)" "$name"
+# Example:     printf "%s: %s\n" "$(textAlignLeft 14 Profession)" "$occupation"
+# Example:     Name          : Tyrone
+# Example:     Profession    : Engineer
+textAlignLeft() {
+  local handler="_${FUNCNAME[0]}"
+  local n
+  __help "$handler" "$@" || return 0
+  n=$(validate "$handler" UnsignedInteger "characterWidth" "${1-}") && shift || return $?
+  catchEnvironment "$handler" printf -- "%-${n}s" "$*" || return $?
+}
+_textAlignLeft() {
+  # __IDENTICAL__ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+# Argument: `count` - UnsignedInteger. Required. Count of times to repeat.
+# Argument: `text` .. - String. Required. A sequence of characters to repeat.
+# DOC TEMPLATE: --help 1
+# Argument: --help - Flag. Optional. Display this help.
+# Example:     textRepeat 80 =
+# Example:     decorate info Hello world
+# Example:     textRepeat 80 -
+# Internal: Uses power of 2 strings to minimize the number of print statements. Nerd.
+# Summary: Repeat a string
+textRepeat() {
+  local handler="_${FUNCNAME[0]}"
+
+  local count=""
+
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
+  local __saved=("$@") __count=$#
+  while [ $# -gt 0 ]; do
+    local argument="$1" __index=$((__count - $# + 1))
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    case "$argument" in
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
+    *)
+      if [ -z "$count" ]; then
+        count="$(validate "$handler" UnsignedInteger "count" "$1")" || return $?
+      else
+        local powers curPow
+        powers=("$*")
+        curPow=${#powers[@]}
+        while [ $((2 ** curPow)) -le "$count" ]; do
+          powers["$curPow"]="${powers[$curPow - 1]}${powers[$curPow - 1]}"
+          curPow=$((curPow + 1))
+        done
+        curPow=0
+        while [ "$count" -gt 0 ] && [ $curPow -lt ${#powers[@]} ]; do
+          if [ $((count & (2 ** curPow))) -ne 0 ]; then
+            printf -- "%s" "${powers[$curPow]}"
+            count=$((count - (2 ** curPow)))
+          fi
+          curPow=$((curPow + 1))
+        done
+        return 0
+      fi
+      ;;
+    esac
+    shift
+  done
+  throwArgument "$handler" "requires text" || return $?
+}
+_textRepeat() {
   # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

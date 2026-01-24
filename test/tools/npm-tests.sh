@@ -10,11 +10,11 @@
 #
 testNPMInstallations() {
   # npm 18 installed in this image
-  if ! whichExists npm; then
+  if ! executableExists npm; then
     # Part of core install in some systems, so no uninstall
     __checkFunctionInstallsBinary npm npmInstall || return $?
   fi
-  if ! whichExists docker-compose; then
+  if ! executableExists docker-compose; then
     # Part of core install in some systems, so no uninstall
     __checkFunctionInstallsBinary docker-compose dockerComposeInstall || return $?
   fi

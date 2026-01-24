@@ -520,7 +520,7 @@ iTerm2SetColors() {
     return $exitCode
   fi
 
-  if whichExists bc; then
+  if executableExists bc; then
     ! $verboseFlag || statusMessage decorate info "Filling in missing colors: $(decorate each --count --index code "${needColors[@]}")"
     set -- "${needColors[@]}"
     while [ $# -gt 0 ]; do

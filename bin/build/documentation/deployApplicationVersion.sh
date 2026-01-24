@@ -1,48 +1,20 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-22
+# Generated on 2026-01-24
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/deploy.sh"
 argument="applicationHome - Directory. Required. Application home to get the version from."$'\n'""
 base="deploy.sh"
-description="Extracts version from an application either from \`.deploy\` files or from the the \`.env\` if"$'\n'"that does not exist."$'\n'""$'\n'"Checks \`APPLICATION_ID\` and \`APPLICATION_TAG\` and uses first non-blank value."$'\n'""$'\n'""
+description="Extracts version from an application either from \`.deploy\` files or from the the \`.env\` if"$'\n'"that does not exist."$'\n'"Checks \`APPLICATION_ID\` and \`APPLICATION_TAG\` and uses first non-blank value."$'\n'""
+exitCode="0"
 file="bin/build/tools/deploy.sh"
-fn="deployApplicationVersion"
-foundNames=""
+foundNames=([0]="argument")
+rawComment="Argument: applicationHome - Directory. Required. Application home to get the version from."$'\n'"Extracts version from an application either from \`.deploy\` files or from the the \`.env\` if"$'\n'"that does not exist."$'\n'"Checks \`APPLICATION_ID\` and \`APPLICATION_TAG\` and uses first non-blank value."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
-sourceFile="bin/build/tools/deploy.sh"
 sourceModified="1769063211"
 summary="Extracts version from an application either from \`.deploy\` files or"
 usage="deployApplicationVersion applicationHome"
 # shellcheck disable=SC2016
-helpConsole='[92mUsage[0m: [38;2;170;170;255mdeployApplicationVersion[0m [38;2;255;255;0m[35;48;2;0;0;0mapplicationHome[0m[0m
-
-    [31mapplicationHome  [1;97mDirectory. Required. Application home to get the version from.[0m
-
-Extracts version from an application either from [38;2;0;255;0;48;2;0;0;0m.deploy[0m files or from the the [38;2;0;255;0;48;2;0;0;0m.env[0m if
-that does not exist.
-
-Checks [38;2;0;255;0;48;2;0;0;0mAPPLICATION_ID[0m and [38;2;0;255;0;48;2;0;0;0mAPPLICATION_TAG[0m and uses first non-blank value.
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-'
+helpConsole=''$'\e''[[label]mUsage'$'\e''[0m: '$'\e''[[info]mdeployApplicationVersion'$'\e''[0m '$'\e''[[bold]m'$'\e''[[magenta]mapplicationHome'$'\e''[0m'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[red]mapplicationHome  '$'\e''[[value]mDirectory. Required. Application home to get the version from.'$'\e''[[reset]m'$'\n'''$'\n''Extracts version from an application either from '$'\e''[[code]m.deploy'$'\e''[[reset]m files or from the the '$'\e''[[code]m.env'$'\e''[[reset]m if'$'\n''that does not exist.'$'\n''Checks '$'\e''[[code]mAPPLICATION_ID'$'\e''[[reset]m and '$'\e''[[code]mAPPLICATION_TAG'$'\e''[[reset]m and uses first non-blank value.'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[code]m0'$'\e''[[reset]m - Success'$'\n''- '$'\e''[[code]m1'$'\e''[[reset]m - Environment error'$'\n''- '$'\e''[[code]m2'$'\e''[[reset]m - Argument error'$'\n'''
 # shellcheck disable=SC2016
-helpPlain='Usage: deployApplicationVersion applicationHome
-
-    applicationHome  Directory. Required. Application home to get the version from.
-
-Extracts version from an application either from .deploy files or from the the .env if
-that does not exist.
-
-Checks APPLICATION_ID and APPLICATION_TAG and uses first non-blank value.
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-'
+helpPlain='Usage: deployApplicationVersion applicationHome'$'\n'''$'\n''    applicationHome  Directory. Required. Application home to get the version from.'$'\n'''$'\n''Extracts version from an application either from .deploy files or from the the .env if'$'\n''that does not exist.'$'\n''Checks APPLICATION_ID and APPLICATION_TAG and uses first non-blank value.'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''

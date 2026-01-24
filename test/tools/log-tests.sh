@@ -17,19 +17,19 @@ testLogFileRotate() {
   n=1
 
   #-----------------------------------------------------------------------------------------
-  decorate success "$(clearLine)SECTION $(incrementor "$name")"
+  decorate success "$(consoleLineFill)SECTION $(incrementor "$name")"
 
   assertFileDoesNotExist "$tempDir/test.log" || return $?
 
   assertNotExitCode --stderr-ok 0 rotateLog "$tempDir/test.log" "$count" || return $?
 
-  decorate success "$(clearLine)SECTION $(incrementor "$name")"
+  decorate success "$(consoleLineFill)SECTION $(incrementor "$name")"
   # Not a file
   mkdir "$tempDir/test.log" || :
   assertNotExitCode --stderr-ok 0 rotateLog "$tempDir/test.log" "$count" || return $?
   rm -rf "$tempDir/test.log/" || :
 
-  decorate success "$(clearLine)SECTION $(incrementor "$name")"
+  decorate success "$(consoleLineFill)SECTION $(incrementor "$name")"
   # File now exists
   touch "$tempDir/test.log"
   assertNotExitCode --stderr-ok 0 rotateLog "$tempDir/test.log" NOTINT || return $?
@@ -40,9 +40,9 @@ testLogFileRotate() {
   rm "$tempDir/test.log" || return $?
 
   #-----------------------------------------------------------------------------------------
-  decorate success "$(clearLine)SECTION $(incrementor "$name")"
+  decorate success "$(consoleLineFill)SECTION $(incrementor "$name")"
 
-  printf "%s" "$(repeat "$n" "x")" >"$tempDir/test.log" || return $?
+  printf "%s" "$(textRepeat "$n" "x")" >"$tempDir/test.log" || return $?
   assertFileDoesNotExist "$tempDir/test.log.1" || return $?
   assertFileDoesNotExist "$tempDir/test.log.2" || return $?
   assertFileDoesNotExist "$tempDir/test.log.3" || return $?
@@ -51,7 +51,7 @@ testLogFileRotate() {
   assertFileDoesNotExist "$tempDir/test.log.6" || return $?
 
   #-----------------------------------------------------------------------------------------
-  decorate success "$(clearLine)SECTION $(incrementor "$name")"
+  decorate success "$(consoleLineFill)SECTION $(incrementor "$name")"
 
   rotateLog "$tempDir/test.log" "$count" || return $?
   assertFileExists "$tempDir/test.log" || return $?
@@ -63,7 +63,7 @@ testLogFileRotate() {
   assertFileDoesNotExist "$tempDir/test.log.6" || return $?
 
   #-----------------------------------------------------------------------------------------
-  decorate success "$(clearLine)SECTION $(incrementor "$name")"
+  decorate success "$(consoleLineFill)SECTION $(incrementor "$name")"
 
   rotateLog "$tempDir/test.log" "$count" || return $?
   assertFileExists "$tempDir/test.log" || return $?
@@ -75,7 +75,7 @@ testLogFileRotate() {
   assertFileDoesNotExist "$tempDir/test.log.6" || return $?
 
   #-----------------------------------------------------------------------------------------
-  decorate success "$(clearLine)SECTION $(incrementor "$name")"
+  decorate success "$(consoleLineFill)SECTION $(incrementor "$name")"
 
   rotateLog "$tempDir/test.log" "$count" || return $?
   assertFileExists "$tempDir/test.log" || return $?
@@ -87,7 +87,7 @@ testLogFileRotate() {
   assertFileDoesNotExist "$tempDir/test.log.6" || return $?
 
   #-----------------------------------------------------------------------------------------
-  decorate success "$(clearLine)SECTION $(incrementor "$name")"
+  decorate success "$(consoleLineFill)SECTION $(incrementor "$name")"
 
   rotateLog "$tempDir/test.log" "$count" || return $?
   assertFileExists "$tempDir/test.log" || return $?
@@ -99,7 +99,7 @@ testLogFileRotate() {
   assertFileDoesNotExist "$tempDir/test.log.6" || return $?
 
   #-----------------------------------------------------------------------------------------
-  decorate success "$(clearLine)SECTION $(incrementor "$name")"
+  decorate success "$(consoleLineFill)SECTION $(incrementor "$name")"
 
   rotateLog "$tempDir/test.log" "$count" || return $?
   assertFileExists "$tempDir/test.log" || return $?
@@ -155,7 +155,7 @@ testLogFileRotate1() {
   printf "%s %s\n" "${FUNCNAME[0]}" "$i"
   i=$((i + 1))
 
-  printf "%s" "$(repeat "$n" "x")" >"$tempDir/test.log" || return $?
+  printf "%s" "$(textRepeat "$n" "x")" >"$tempDir/test.log" || return $?
   assertFileDoesNotExist "$tempDir/test.log.1" || return $?
   assertFileDoesNotExist "$tempDir/test.log.2" || return $?
   assertFileDoesNotExist "$tempDir/test.log.3" || return $?

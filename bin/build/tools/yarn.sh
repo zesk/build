@@ -44,7 +44,7 @@ yarnInstall() {
     shift
   done
 
-  if whichExists yarn; then
+  if executableExists yarn; then
     return 0
   fi
   local home start

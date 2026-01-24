@@ -1,44 +1,20 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-22
+# Generated on 2026-01-24
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/package.sh"
 argument="packageName - A simple package name which will be expanded to specific platform or package-manager specific package names"$'\n'"--manager packageManager - String. Optional. Package manager to use. (apk, apt, brew)"$'\n'""
 base="package.sh"
 description="No documentation for \`packageMapping\`."$'\n'""
+exitCode="0"
 file="bin/build/tools/package.sh"
-fn="packageMapping"
-foundNames=""
+foundNames=([0]="argument")
+rawComment="Argument: packageName - A simple package name which will be expanded to specific platform or package-manager specific package names"$'\n'"Argument: --manager packageManager - String. Optional. Package manager to use. (apk, apt, brew)"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
-sourceFile="bin/build/tools/package.sh"
-sourceModified="1769063211"
+sourceModified="1769184734"
 summary="undocumented"
 usage="packageMapping [ packageName ] [ --manager packageManager ]"
 # shellcheck disable=SC2016
-helpConsole='[92mUsage[0m: [38;2;170;170;255mpackageMapping[0m [94m[ packageName ][0m [94m[ --manager packageManager ][0m
-
-    [94mpackageName               [1;97mA simple package name which will be expanded to specific platform or package-manager specific package names[0m
-    [94m--manager packageManager  [1;97mString. Optional. Package manager to use. (apk, apt, brew)[0m
-
-No documentation for [38;2;0;255;0;48;2;0;0;0mpackageMapping[0m.
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-'
+helpConsole=''$'\e''[[label]mUsage'$'\e''[0m: '$'\e''[[info]mpackageMapping'$'\e''[0m '$'\e''[[blue]m[ packageName ]'$'\e''[0m '$'\e''[[blue]m[ --manager packageManager ]'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[blue]mpackageName               '$'\e''[[value]mA simple package name which will be expanded to specific platform or package-manager specific package names'$'\e''[[reset]m'$'\n''    '$'\e''[[blue]m--manager packageManager  '$'\e''[[value]mString. Optional. Package manager to use. (apk, apt, brew)'$'\e''[[reset]m'$'\n'''$'\n''No documentation for '$'\e''[[code]mpackageMapping'$'\e''[[reset]m.'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[code]m0'$'\e''[[reset]m - Success'$'\n''- '$'\e''[[code]m1'$'\e''[[reset]m - Environment error'$'\n''- '$'\e''[[code]m2'$'\e''[[reset]m - Argument error'$'\n'''
 # shellcheck disable=SC2016
-helpPlain='Usage: packageMapping [ packageName ] [ --manager packageManager ]
-
-    packageName               A simple package name which will be expanded to specific platform or package-manager specific package names
-    --manager packageManager  String. Optional. Package manager to use. (apk, apt, brew)
-
-No documentation for packageMapping.
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-'
+helpPlain='Usage: packageMapping [ packageName ] [ --manager packageManager ]'$'\n'''$'\n''    packageName               A simple package name which will be expanded to specific platform or package-manager specific package names'$'\n''    --manager packageManager  String. Optional. Package manager to use. (apk, apt, brew)'$'\n'''$'\n''No documentation for packageMapping.'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''

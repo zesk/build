@@ -1,50 +1,21 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-22
+# Generated on 2026-01-24
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/completion.sh"
 argument="--quiet - Flag. Optional. Do not output any messages to stdout."$'\n'"--alias name - String. Optional. The name of the alias to create."$'\n'"--reload-alias name - String. Optional. The name of the alias which reloads Zesk Build. (source)"$'\n'""
 base="completion.sh"
-description="Add completion handler for Zesk Build to Bash"$'\n'"This has the side effect of turning on the shell option \`expand_aliases\`"$'\n'"Shell Option: +expand_aliases"$'\n'""
+description="Add completion handler for Zesk Build to Bash"$'\n'"This has the side effect of turning on the shell option \`expand_aliases\`"$'\n'""
+exitCode="0"
 file="bin/build/tools/completion.sh"
-fn="buildCompletion"
-foundNames=""
+foundNames=([0]="argument" [1]="shell_option")
+rawComment="Add completion handler for Zesk Build to Bash"$'\n'"Argument: --quiet - Flag. Optional. Do not output any messages to stdout."$'\n'"Argument: --alias name - String. Optional. The name of the alias to create."$'\n'"Argument: --reload-alias name - String. Optional. The name of the alias which reloads Zesk Build. (source)"$'\n'"This has the side effect of turning on the shell option \`expand_aliases\`"$'\n'"Shell Option: +expand_aliases"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
-sourceFile="bin/build/tools/completion.sh"
+shell_option="+expand_aliases"$'\n'""
 sourceModified="1769063211"
 summary="Add completion handler for Zesk Build to Bash"
 usage="buildCompletion [ --quiet ] [ --alias name ] [ --reload-alias name ]"
 # shellcheck disable=SC2016
-helpConsole='[92mUsage[0m: [38;2;170;170;255mbuildCompletion[0m [94m[ --quiet ][0m [94m[ --alias name ][0m [94m[ --reload-alias name ][0m
-
-    [94m--quiet              [1;97mFlag. Optional. Do not output any messages to stdout.[0m
-    [94m--alias name         [1;97mString. Optional. The name of the alias to create.[0m
-    [94m--reload-alias name  [1;97mString. Optional. The name of the alias which reloads Zesk Build. (source)[0m
-
-Add completion handler for Zesk Build to Bash
-This has the side effect of turning on the shell option [38;2;0;255;0;48;2;0;0;0mexpand_aliases[0m
-Shell Option: +expand_aliases
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-'
+helpConsole=''$'\e''[[label]mUsage'$'\e''[0m: '$'\e''[[info]mbuildCompletion'$'\e''[0m '$'\e''[[blue]m[ --quiet ]'$'\e''[0m '$'\e''[[blue]m[ --alias name ]'$'\e''[0m '$'\e''[[blue]m[ --reload-alias name ]'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[blue]m--quiet              '$'\e''[[value]mFlag. Optional. Do not output any messages to stdout.'$'\e''[[reset]m'$'\n''    '$'\e''[[blue]m--alias name         '$'\e''[[value]mString. Optional. The name of the alias to create.'$'\e''[[reset]m'$'\n''    '$'\e''[[blue]m--reload-alias name  '$'\e''[[value]mString. Optional. The name of the alias which reloads Zesk Build. (source)'$'\e''[[reset]m'$'\n'''$'\n''Add completion handler for Zesk Build to Bash'$'\n''This has the side effect of turning on the shell option '$'\e''[[code]mexpand_aliases'$'\e''[[reset]m'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[code]m0'$'\e''[[reset]m - Success'$'\n''- '$'\e''[[code]m1'$'\e''[[reset]m - Environment error'$'\n''- '$'\e''[[code]m2'$'\e''[[reset]m - Argument error'$'\n'''
 # shellcheck disable=SC2016
-helpPlain='Usage: buildCompletion [ --quiet ] [ --alias name ] [ --reload-alias name ]
-
-    --quiet              Flag. Optional. Do not output any messages to stdout.
-    --alias name         String. Optional. The name of the alias to create.
-    --reload-alias name  String. Optional. The name of the alias which reloads Zesk Build. (source)
-
-Add completion handler for Zesk Build to Bash
-This has the side effect of turning on the shell option expand_aliases
-Shell Option: +expand_aliases
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-'
+helpPlain='Usage: buildCompletion [ --quiet ] [ --alias name ] [ --reload-alias name ]'$'\n'''$'\n''    --quiet              Flag. Optional. Do not output any messages to stdout.'$'\n''    --alias name         String. Optional. The name of the alias to create.'$'\n''    --reload-alias name  String. Optional. The name of the alias which reloads Zesk Build. (source)'$'\n'''$'\n''Add completion handler for Zesk Build to Bash'$'\n''This has the side effect of turning on the shell option expand_aliases'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''

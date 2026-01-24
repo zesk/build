@@ -1,49 +1,21 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-22
+# Generated on 2026-01-24
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/docker-compose.sh"
 argument="command - String. Required. The command to test."$'\n'"--help - Flag. Optional. Display this help."$'\n'""
 base="docker-compose.sh"
-description="Is this a docker compose command?"$'\n'"Return Code: 0 - Yes, it is."$'\n'"Return Code: 1 - No, it is not."$'\n'""
+description="Is this a docker compose command?"$'\n'""
+exitCode="0"
 file="bin/build/tools/docker-compose.sh"
-fn="isDockerComposeCommand"
-foundNames=""
-return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
+foundNames=([0]="argument" [1]="see" [2]="return_code")
+rawComment="Is this a docker compose command?"$'\n'"Argument: command - String. Required. The command to test."$'\n'"See: dockerComposeCommandList"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Return Code: 0 - Yes, it is."$'\n'"Return Code: 1 - No, it is not."$'\n'""$'\n'""
+return_code="0 - Yes, it is."$'\n'"1 - No, it is not."$'\n'""
 see="dockerComposeCommandList"$'\n'""
-sourceFile="bin/build/tools/docker-compose.sh"
-sourceModified="1769063211"
+sourceModified="1769184734"
 summary="Is this a docker compose command?"
 usage="isDockerComposeCommand command [ --help ]"
 # shellcheck disable=SC2016
-helpConsole='[92mUsage[0m: [38;2;170;170;255misDockerComposeCommand[0m [38;2;255;255;0m[35;48;2;0;0;0mcommand[0m[0m [94m[ --help ][0m
-
-    [31mcommand  [1;97mString. Required. The command to test.[0m
-    [94m--help   [1;97mFlag. Optional. Display this help.[0m
-
-Is this a docker compose command?
-Return Code: 0 - Yes, it is.
-Return Code: 1 - No, it is not.
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-'
+helpConsole=''$'\e''[[label]mUsage'$'\e''[0m: '$'\e''[[info]misDockerComposeCommand'$'\e''[0m '$'\e''[[bold]m'$'\e''[[magenta]mcommand'$'\e''[0m'$'\e''[0m '$'\e''[[blue]m[ --help ]'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[red]mcommand  '$'\e''[[value]mString. Required. The command to test.'$'\e''[[reset]m'$'\n''    '$'\e''[[blue]m--help   '$'\e''[[value]mFlag. Optional. Display this help.'$'\e''[[reset]m'$'\n'''$'\n''Is this a docker compose command?'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[code]m0'$'\e''[[reset]m - Yes, it is.'$'\n''- '$'\e''[[code]m1'$'\e''[[reset]m - No, it is not.'$'\n'''
 # shellcheck disable=SC2016
-helpPlain='Usage: isDockerComposeCommand command [ --help ]
-
-    command  String. Required. The command to test.
-    --help   Flag. Optional. Display this help.
-
-Is this a docker compose command?
-Return Code: 0 - Yes, it is.
-Return Code: 1 - No, it is not.
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-'
+helpPlain='Usage: isDockerComposeCommand command [ --help ]'$'\n'''$'\n''    command  String. Required. The command to test.'$'\n''    --help   Flag. Optional. Display this help.'$'\n'''$'\n''Is this a docker compose command?'$'\n'''$'\n''Return codes:'$'\n''- 0 - Yes, it is.'$'\n''- 1 - No, it is not.'$'\n'''

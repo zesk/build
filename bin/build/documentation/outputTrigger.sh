@@ -1,58 +1,23 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-22
+# Generated on 2026-01-24
 # shellcheck disable=SC2034
+# shellcheck source=/dev/null
 # shellcheck source=/dev/null
 applicationFile="bin/build/tools/debug.sh"
 argument="--help - Help"$'\n'"--verbose - Flag. Optional. Verbose messages when no errors exist."$'\n'"--name name - String. Optional. Name for verbose mode."$'\n'""
 base="debug.sh"
 description="Check output for content and trigger environment error if found"$'\n'"Usage {fn} [ --help ] [ --verbose ] [ --name name ]"$'\n'"# shellcheck source=/dev/null"$'\n'""
 example="    source \"\$include\" > >(outputTrigger source \"\$include\") || return \$?"$'\n'""
+exitCode="0"
 file="bin/build/tools/debug.sh"
-fn="outputTrigger"
-foundNames=""
+foundNames=([0]="argument" [1]="example")
+rawComment="Check output for content and trigger environment error if found"$'\n'"Usage {fn} [ --help ] [ --verbose ] [ --name name ]"$'\n'"Argument: --help - Help"$'\n'"Argument: --verbose - Flag. Optional. Verbose messages when no errors exist."$'\n'"Argument: --name name - String. Optional. Name for verbose mode."$'\n'"# shellcheck source=/dev/null"$'\n'"Example:     source \"\$include\" > >(outputTrigger source \"\$include\") || return \$?"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
-sourceFile="bin/build/tools/debug.sh"
-sourceModified="1769063211"
+sourceModified="1769208503"
 summary="Check output for content and trigger environment error if found"
 usage="outputTrigger [ --help ] [ --verbose ] [ --name name ]"
 # shellcheck disable=SC2016
-helpConsole='[92mUsage[0m: [38;2;170;170;255moutputTrigger[0m [94m[ --help ][0m [94m[ --verbose ][0m [94m[ --name name ][0m
-
-    [94m--help       [1;97mHelp[0m
-    [94m--verbose    [1;97mFlag. Optional. Verbose messages when no errors exist.[0m
-    [94m--name name  [1;97mString. Optional. Name for verbose mode.[0m
-
-Check output for content and trigger environment error if found
-Usage outputTrigger [ --help ] [ --verbose ] [ --name name ]
-# shellcheck source=/dev/null
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-
-Example:
-    source "$include" > >(outputTrigger source "$include") || return $?
-'
+helpConsole=''$'\e''[[label]mUsage'$'\e''[0m: '$'\e''[[info]moutputTrigger'$'\e''[0m '$'\e''[[blue]m[ --help ]'$'\e''[0m '$'\e''[[blue]m[ --verbose ]'$'\e''[0m '$'\e''[[blue]m[ --name name ]'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[blue]m--help       '$'\e''[[value]mHelp'$'\e''[[reset]m'$'\n''    '$'\e''[[blue]m--verbose    '$'\e''[[value]mFlag. Optional. Verbose messages when no errors exist.'$'\e''[[reset]m'$'\n''    '$'\e''[[blue]m--name name  '$'\e''[[value]mString. Optional. Name for verbose mode.'$'\e''[[reset]m'$'\n'''$'\n''Check output for content and trigger environment error if found'$'\n''Usage outputTrigger [ --help ] [ --verbose ] [ --name name ]'$'\n''# shellcheck source=/dev/null'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[code]m0'$'\e''[[reset]m - Success'$'\n''- '$'\e''[[code]m1'$'\e''[[reset]m - Environment error'$'\n''- '$'\e''[[code]m2'$'\e''[[reset]m - Argument error'$'\n'''$'\n''Example:'$'\n''    source "$include" > >(outputTrigger source "$include") || return $?'$'\n'''
 # shellcheck disable=SC2016
-helpPlain='Usage: outputTrigger [ --help ] [ --verbose ] [ --name name ]
-
-    --help       Help
-    --verbose    Flag. Optional. Verbose messages when no errors exist.
-    --name name  String. Optional. Name for verbose mode.
-
-Check output for content and trigger environment error if found
-Usage outputTrigger [ --help ] [ --verbose ] [ --name name ]
-# shellcheck source=/dev/null
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-
-Example:
-    source "$include" > >(outputTrigger source "$include") || return $?
-'
+helpPlain='Usage: outputTrigger [ --help ] [ --verbose ] [ --name name ]'$'\n'''$'\n''    --help       Help'$'\n''    --verbose    Flag. Optional. Verbose messages when no errors exist.'$'\n''    --name name  String. Optional. Name for verbose mode.'$'\n'''$'\n''Check output for content and trigger environment error if found'$'\n''Usage outputTrigger [ --help ] [ --verbose ] [ --name name ]'$'\n''# shellcheck source=/dev/null'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''$'\n''Example:'$'\n''    source "$include" > >(outputTrigger source "$include") || return $?'$'\n'''

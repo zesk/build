@@ -57,9 +57,9 @@ testIsUpToDate() {
 
   assertExitCode 0 isUpToDate "$testDate" "$expirationDays" || return $?
 
-  testDate=$(todayDate)
+  testDate=$(dateToday)
 
-  __testSection "todayDate: $testDate"
+  __testSection "dateToday: $testDate"
 
   expirationDays=0
   assertExitCode 0 isUpToDate "$testDate" "$expirationDays" || return $?
@@ -68,9 +68,9 @@ testIsUpToDate() {
   expirationDays=2
   assertExitCode 0 isUpToDate "$testDate" "$expirationDays" || return $?
 
-  testDate=$(yesterdayDate)
+  testDate=$(dateYesterday)
 
-  __testSection "yesterdayDate: $testDate"
+  __testSection "dateYesterday: $testDate"
 
   expirationDays=0
   assertNotExitCode 0 isUpToDate "$testDate" "$expirationDays" || return $?
@@ -79,9 +79,9 @@ testIsUpToDate() {
   expirationDays=2
   assertExitCode 0 isUpToDate "$testDate" "$expirationDays" || return $?
 
-  testDate=$(tomorrowDate)
+  testDate=$(dateTomorrow)
 
-  __testSection "tomorrowDate: $testDate"
+  __testSection "dateTomorrow: $testDate"
 
   expirationDays=0
   assertExitCode 0 isUpToDate "$testDate" "$expirationDays" || return $?

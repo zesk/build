@@ -10,6 +10,28 @@ decorate bold-orange|decorate BOLD orange|
 decorate bold-red|decorate BOLD red|
 decorate bold-white|decorate BOLD white|
 decorate bold-yellow|decorate BOLD yellow|
+alignLeft|textAlignLeft|
+alignRight|textAlignRight|
+cachedShaPipe | shaPipe --cache|
+clearLine|consoleLineFill|
+debugOpenFiles|filesOpenStatus
+findUncaughtAssertions|bashFindUncaughtAssertions|
+hasColors|consoleHasColors|
+hasConsoleAnimation|consoleHasAnimation|
+insideDocker|dockerInside|
+isAbsolutePath|pathIsAbsolute|
+makeShellFilesExecutable|bashMakeExecutable|
+echoBar|consoleLine|
+yesterdayDate|dateYesterday|
+todayDate|dateToday|
+tomorrowDate|dateTomorrow|
+beginsWith|stringBegins|
+extensionLists|fileExtensionLists|
+whichHook|hookFind|
+whichExists|executableExists|
+lineFill|consoleHeadingLine|
+boxedHeading|consoleHeadingBoxed|
+plainLength|consolePlainLength|
 
 # v0.40.4
 usageArgumentDate "$handler"|validate "$handler" Date|

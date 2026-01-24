@@ -28,7 +28,7 @@ if source "${BASH_SOURCE[0]%/*}/../build/tools.sh"; then
     nonOriginal=bin/build/tools/_sugar.sh
 
     statusMessage decorate success Making shell files executable ...
-    catchEnvironment "$handler" makeShellFilesExecutable | printfOutputPrefix -- "\n" || return $?
+    catchEnvironment "$handler" bashMakeExecutable | printfOutputPrefix -- "\n" || return $?
 
     if [ "$(fileNewest "$original" "$nonOriginal")" = "$nonOriginal" ]; then
       nonOriginalWithEOF=$(fileTemporaryName "$handler") || return $?

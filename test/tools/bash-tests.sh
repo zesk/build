@@ -138,7 +138,7 @@ testBashSourcePath() {
   # Regardless of order someone will not exist
 
   assertNotExitCode --stderr-match "not executable" 0 bashSourcePath "$testPath" || return $?
-  catchEnvironment "$handler" muzzle makeShellFilesExecutable "$testPath" || return $?
+  catchEnvironment "$handler" muzzle bashMakeExecutable "$testPath" || return $?
   assertNotExitCode --stderr-match "not a bash source" 0 bashSourcePath "$testPath" || return $?
 
   catchEnvironment "$handler" rm -rf "$testPath/"*.sh || return $?
@@ -146,7 +146,7 @@ testBashSourcePath() {
   assertEquals "${ZESK_BUILD-}" "" || return $?
   printf "%s\n" "#!/usr/bin/env bash" "export ZESK_BUILD=true" >"$testPath/1.sh"
   printf "%s\n" "#!/usr/bin/env bash" "_testZeskBuildFunction() {" "    decorate green Not easy being green." "}" >"$testPath/2.sh"
-  catchEnvironment "$handler" muzzle makeShellFilesExecutable "$testPath" || return $?
+  catchEnvironment "$handler" muzzle bashMakeExecutable "$testPath" || return $?
 
   assertExitCode --leak ZESK_BUILD 0 bashSourcePath "$testPath" || return $?
 
@@ -216,7 +216,7 @@ testBashSourcePathDot() {
   assertNotExitCode --stderr-match 'not executable' 0 bashSourcePath "$testPath/.foobar/.eefo/.dots/" || return $?
   assertNotExitCode --stderr-match 'not executable' 0 bashSourcePath "$testPath/.foobar/.eefo/" || return $?
   assertNotExitCode --stderr-match 'not executable' 0 bashSourcePath "$testPath/.foobar" || return $?
-  assertExitCode --stdout-match test.sh --stdout-match goo.sh --stdout-match beep.sh 0 makeShellFilesExecutable "$testPath/.foobar/.eefo/.dots/" "$testPath/.foobar/.eefo/" "$testPath/.foobar/" || return $?
+  assertExitCode --stdout-match test.sh --stdout-match goo.sh --stdout-match beep.sh 0 bashMakeExecutable "$testPath/.foobar/.eefo/.dots/" "$testPath/.foobar/.eefo/" "$testPath/.foobar/" || return $?
 
   assertExitCode --leak testPasses 0 bashSourcePath "$testPath/.foobar/.eefo/.dots/" || return $?
   assertEquals "$testPasses" "dots" || return $?

@@ -1,51 +1,21 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-22
+# Generated on 2026-01-24
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/user.sh"
 argument="user - String. Optional. User name to look up. Uses \`whoami\` if not supplied."$'\n'"database - File. Optional. User name database file to examine. Uses \`/etc/passwd\` if not supplied."$'\n'""
 base="user.sh"
 description="Look user up, output user home directory"$'\n'""
+exitCode="0"
 file="bin/build/tools/user.sh"
-fn="userRecordHome"
-foundNames=""
+foundNames=([0]="summary" [1]="stdout" [2]="file" [3]="argument")
+rawComment="Summary: Quick user database query of the user home directory"$'\n'"Look user up, output user home directory"$'\n'"stdout: \`Directory\`. The user home directory."$'\n'"File: /etc/passwd - Used for the default user database."$'\n'"Argument: user - String. Optional. User name to look up. Uses \`whoami\` if not supplied."$'\n'"Argument: database - File. Optional. User name database file to examine. Uses \`/etc/passwd\` if not supplied."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
-sourceFile="bin/build/tools/user.sh"
 sourceModified="1768246145"
 stdout="\`Directory\`. The user home directory."$'\n'""
 summary="Quick user database query of the user home directory"$'\n'""
 usage="userRecordHome [ user ] [ database ]"
 # shellcheck disable=SC2016
-helpConsole='[92mUsage[0m: [38;2;170;170;255muserRecordHome[0m [94m[ user ][0m [94m[ database ][0m
-
-    [94muser      [1;97mString. Optional. User name to look up. Uses [38;2;0;255;0;48;2;0;0;0mwhoami[0m if not supplied.[0m
-    [94mdatabase  [1;97mFile. Optional. User name database file to examine. Uses [38;2;0;255;0;48;2;0;0;0m/etc/passwd[0m if not supplied.[0m
-
-Look user up, output user home directory
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-
-Writes to [38;2;0;255;0;48;2;0;0;0mstdout[0m:
-[38;2;0;255;0;48;2;0;0;0mDirectory[0m. The user home directory.
-'
+helpConsole=''$'\e''[[label]mUsage'$'\e''[0m: '$'\e''[[info]muserRecordHome'$'\e''[0m '$'\e''[[blue]m[ user ]'$'\e''[0m '$'\e''[[blue]m[ database ]'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[blue]muser      '$'\e''[[value]mString. Optional. User name to look up. Uses '$'\e''[[code]mwhoami'$'\e''[[reset]m if not supplied.'$'\e''[[reset]m'$'\n''    '$'\e''[[blue]mdatabase  '$'\e''[[value]mFile. Optional. User name database file to examine. Uses '$'\e''[[code]m/etc/passwd'$'\e''[[reset]m if not supplied.'$'\e''[[reset]m'$'\n'''$'\n''Look user up, output user home directory'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[code]m0'$'\e''[[reset]m - Success'$'\n''- '$'\e''[[code]m1'$'\e''[[reset]m - Environment error'$'\n''- '$'\e''[[code]m2'$'\e''[[reset]m - Argument error'$'\n'''$'\n''Writes to '$'\e''[[code]mstdout'$'\e''[[reset]m:'$'\n'''$'\e''[[code]mDirectory'$'\e''[[reset]m. The user home directory.'$'\n'''
 # shellcheck disable=SC2016
-helpPlain='Usage: userRecordHome [ user ] [ database ]
-
-    user      String. Optional. User name to look up. Uses whoami if not supplied.
-    database  File. Optional. User name database file to examine. Uses /etc/passwd if not supplied.
-
-Look user up, output user home directory
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-
-Writes to stdout:
-Directory. The user home directory.
-'
+helpPlain='Usage: userRecordHome [ user ] [ database ]'$'\n'''$'\n''    user      String. Optional. User name to look up. Uses whoami if not supplied.'$'\n''    database  File. Optional. User name database file to examine. Uses /etc/passwd if not supplied.'$'\n'''$'\n''Look user up, output user home directory'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''$'\n''Writes to stdout:'$'\n''Directory. The user home directory.'$'\n'''

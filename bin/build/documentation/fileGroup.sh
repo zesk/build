@@ -1,50 +1,21 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-22
+# Generated on 2026-01-24
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/file.sh"
 argument="file - File to get the owner for"$'\n'"--help - Flag. Optional. Display this help."$'\n'""
 base="file.sh"
-description="Get the file group name"$'\n'"Outputs the file group for each file passed on the command line"$'\n'"Return Code: 0 - Success"$'\n'"Return Code: 1 - Unable to access file"$'\n'""
+description="Get the file group name"$'\n'"Outputs the file group for each file passed on the command line"$'\n'""
+exitCode="0"
 file="bin/build/tools/file.sh"
-fn="fileGroup"
-foundNames=""
-return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
+foundNames=([0]="argument" [1]="return_code")
+rawComment="Get the file group name"$'\n'"Argument: file - File to get the owner for"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Outputs the file group for each file passed on the command line"$'\n'"Return Code: 0 - Success"$'\n'"Return Code: 1 - Unable to access file"$'\n'""$'\n'""
+return_code="0 - Success"$'\n'"1 - Unable to access file"$'\n'""
 sourceFile="bin/build/tools/file.sh"
-sourceModified="1769063211"
+sourceModified="1769184734"
 summary="Get the file group name"
 usage="fileGroup [ file ] [ --help ]"
 # shellcheck disable=SC2016
-helpConsole='[92mUsage[0m: [38;2;170;170;255mfileGroup[0m [94m[ file ][0m [94m[ --help ][0m
-
-    [94mfile    [1;97mFile to get the owner for[0m
-    [94m--help  [1;97mFlag. Optional. Display this help.[0m
-
-Get the file group name
-Outputs the file group for each file passed on the command line
-Return Code: 0 - Success
-Return Code: 1 - Unable to access file
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-'
+helpConsole=''$'\e''[[label]mUsage'$'\e''[0m: '$'\e''[[info]mfileGroup'$'\e''[0m '$'\e''[[blue]m[ file ]'$'\e''[0m '$'\e''[[blue]m[ --help ]'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[blue]mfile    '$'\e''[[value]mFile to get the owner for'$'\e''[[reset]m'$'\n''    '$'\e''[[blue]m--help  '$'\e''[[value]mFlag. Optional. Display this help.'$'\e''[[reset]m'$'\n'''$'\n''Get the file group name'$'\n''Outputs the file group for each file passed on the command line'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[code]m0'$'\e''[[reset]m - Success'$'\n''- '$'\e''[[code]m1'$'\e''[[reset]m - Unable to access file'$'\n'''
 # shellcheck disable=SC2016
-helpPlain='Usage: fileGroup [ file ] [ --help ]
-
-    file    File to get the owner for
-    --help  Flag. Optional. Display this help.
-
-Get the file group name
-Outputs the file group for each file passed on the command line
-Return Code: 0 - Success
-Return Code: 1 - Unable to access file
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-'
+helpPlain='Usage: fileGroup [ file ] [ --help ]'$'\n'''$'\n''    file    File to get the owner for'$'\n''    --help  Flag. Optional. Display this help.'$'\n'''$'\n''Get the file group name'$'\n''Outputs the file group for each file passed on the command line'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Unable to access file'$'\n'''

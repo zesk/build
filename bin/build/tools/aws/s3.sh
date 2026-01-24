@@ -30,7 +30,7 @@ __awsS3DirectoryDelete() {
   done
   [ ${#urls[@]} -gt 0 ] || throwArgument "$handler" "At least one URL is required" || return $?
 
-  whichExists aws || catchReturn "$handler" awsInstall || return $?
+  executableExists aws || catchReturn "$handler" awsInstall || return $?
 
   local url
   for url in "${urls[@]}"; do
@@ -83,7 +83,7 @@ __awsS3Upload() {
   local start
   start=$(catchReturn "$handler" timingStart) || return $?
 
-  whichExists aws || catchReturn "$handler" awsInstall || return $?
+  executableExists aws || catchReturn "$handler" awsInstall || return $?
 
   [ -n "$target" ] || throwArgument "$handler" "--target required" || return $?
   if [ $((${#uploadFiles[@]} + ${#uploadDirectories[@]})) -eq 0 ]; then

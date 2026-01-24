@@ -1,78 +1,22 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-22
+# Generated on 2026-01-24
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/usage.sh"
 argument="functionDefinitionFile - File. Required. The file in which the function is defined. If you don't know, use \`__bashDocumentation_FindFunctionDefinitions\` or \`__bashDocumentation_FindFunctionDefinition\`."$'\n'"functionName - String. Required. The function which actually defines our usage syntax. Documentation is extracted from this function, regardless."$'\n'"exitCode - Integer. Required. The function which actually defines our usage syntax. Documentation is extracted from this function, regardless."$'\n'"message - String. Optional. A message."$'\n'""
 base="usage.sh"
 build_debug="fast-usage - \`usageDocument\` does not output formatted help for performance reasons"$'\n'"handler - For all \`--help\` and any function which uses \`usageTemplate\` to output documentation (upon error), the stack will be displayed"$'\n'""
-description="Actual function is called \`{functionName}\`."$'\n'""$'\n'""$'\n'"Generates console usage output for a script using documentation tools parsed from the comment of the function identified."$'\n'""$'\n'"Simplifies documentation and keeps it with the code."$'\n'""$'\n'""
+description="Actual function is called \`{functionName}\`."$'\n'"Generates console usage output for a script using documentation tools parsed from the comment of the function identified."$'\n'"Simplifies documentation and keeps it with the code."$'\n'""
 environment="*BUILD_DEBUG* - Add \`fast-usage\` to make this quicker when you do not care about usage/failure."$'\n'""
+exitCode="0"
 file="bin/build/tools/usage.sh"
-fn="usageDocument"
-foundNames=""
+foundNames=([0]="summary" [1]="argument" [2]="environment" [3]="build_debug")
+rawComment="Summary: Universal error handler for functions (with formatting)"$'\n'"Actual function is called \`{functionName}\`."$'\n'"Argument: functionDefinitionFile - File. Required. The file in which the function is defined. If you don't know, use \`__bashDocumentation_FindFunctionDefinitions\` or \`__bashDocumentation_FindFunctionDefinition\`."$'\n'"Argument: functionName - String. Required. The function which actually defines our usage syntax. Documentation is extracted from this function, regardless."$'\n'"Argument: exitCode - Integer. Required. The function which actually defines our usage syntax. Documentation is extracted from this function, regardless."$'\n'"Argument: message - String. Optional. A message."$'\n'"Generates console usage output for a script using documentation tools parsed from the comment of the function identified."$'\n'"Simplifies documentation and keeps it with the code."$'\n'"Environment: *BUILD_DEBUG* - Add \`fast-usage\` to make this quicker when you do not care about usage/failure."$'\n'"BUILD_DEBUG: fast-usage - \`usageDocument\` does not output formatted help for performance reasons"$'\n'"BUILD_DEBUG: handler - For all \`--help\` and any function which uses \`usageTemplate\` to output documentation (upon error), the stack will be displayed"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
-sourceFile="bin/build/tools/usage.sh"
-sourceModified="1769066861"
+sourceModified="1769216318"
 summary="Universal error handler for functions (with formatting)"$'\n'""
 usage="usageDocument functionDefinitionFile functionName exitCode [ message ]"
 # shellcheck disable=SC2016
-helpConsole='[92mUsage[0m: [38;2;170;170;255musageDocument[0m [38;2;255;255;0m[35;48;2;0;0;0mfunctionDefinitionFile[0m[0m [38;2;255;255;0m[35;48;2;0;0;0mfunctionName[0m[0m [38;2;255;255;0m[35;48;2;0;0;0mexitCode[0m[0m [94m[ message ][0m
-
-    [31mfunctionDefinitionFile  [1;97mFile. Required. The file in which the function is defined. If you don'\''t know, use [38;2;0;255;0;48;2;0;0;0m__bashDocumentation_FindFunctionDefinitions[0m or [38;2;0;255;0;48;2;0;0;0m__bashDocumentation_FindFunctionDefinition[0m.[0m
-    [31mfunctionName            [1;97mString. Required. The function which actually defines our usage syntax. Documentation is extracted from this function, regardless.[0m
-    [31mexitCode                [1;97mInteger. Required. The function which actually defines our usage syntax. Documentation is extracted from this function, regardless.[0m
-    [94mmessage                 [1;97mString. Optional. A message.[0m
-
-Actual function is called [38;2;0;255;0;48;2;0;0;0musageDocument[0m.
-
-
-Generates console usage output for a script using documentation tools parsed from the comment of the function identified.
-
-Simplifies documentation and keeps it with the code.
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-
-Environment variables:
-- [36mBUILD_DEBUG[0m - Add [38;2;0;255;0;48;2;0;0;0mfast-usage[0m to make this quicker when you do not care about usage/failure.
-- 
-
-[38;2;0;255;0;48;2;0;0;0mBUILD_DEBUG[0m settings:
-- fast-usage - [38;2;0;255;0;48;2;0;0;0musageDocument[0m does not output formatted help for performance reasons
-- handler - For all [38;2;0;255;0;48;2;0;0;0m--help[0m and any function which uses [38;2;0;255;0;48;2;0;0;0musageTemplate[0m to output documentation (upon error), the stack will be displayed
-- 
-'
+helpConsole=''$'\e''[[label]mUsage'$'\e''[0m: '$'\e''[[info]musageDocument'$'\e''[0m '$'\e''[[bold]m'$'\e''[[magenta]mfunctionDefinitionFile'$'\e''[0m'$'\e''[0m '$'\e''[[bold]m'$'\e''[[magenta]mfunctionName'$'\e''[0m'$'\e''[0m '$'\e''[[bold]m'$'\e''[[magenta]mexitCode'$'\e''[0m'$'\e''[0m '$'\e''[[blue]m[ message ]'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[red]mfunctionDefinitionFile  '$'\e''[[value]mFile. Required. The file in which the function is defined. If you don'\''t know, use '$'\e''[[code]m__bashDocumentation_FindFunctionDefinitions'$'\e''[[reset]m or '$'\e''[[code]m__bashDocumentation_FindFunctionDefinition'$'\e''[[reset]m.'$'\e''[[reset]m'$'\n''    '$'\e''[[red]mfunctionName            '$'\e''[[value]mString. Required. The function which actually defines our usage syntax. Documentation is extracted from this function, regardless.'$'\e''[[reset]m'$'\n''    '$'\e''[[red]mexitCode                '$'\e''[[value]mInteger. Required. The function which actually defines our usage syntax. Documentation is extracted from this function, regardless.'$'\e''[[reset]m'$'\n''    '$'\e''[[blue]mmessage                 '$'\e''[[value]mString. Optional. A message.'$'\e''[[reset]m'$'\n'''$'\n''Actual function is called '$'\e''[[code]musageDocument'$'\e''[[reset]m.'$'\n''Generates console usage output for a script using documentation tools parsed from the comment of the function identified.'$'\n''Simplifies documentation and keeps it with the code.'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[code]m0'$'\e''[[reset]m - Success'$'\n''- '$'\e''[[code]m1'$'\e''[[reset]m - Environment error'$'\n''- '$'\e''[[code]m2'$'\e''[[reset]m - Argument error'$'\n'''$'\n''Environment variables:'$'\n''- '$'\e''[[cyan]mBUILD_DEBUG'$'\e''[[reset]m- '$'\e''[[code]m'$'\e''[[reset]m - Add '$'\e''[[code]mfast-usage'$'\e''[[reset]m to make this quicker when you do not care about usage/failure.'$'\n'''$'\n'''$'\e''[[code]mBUILD_DEBUG'$'\e''[[reset]m settings:'$'\n''- '$'\e''[[code]mfast-usage'$'\e''[[reset]m - '$'\e''[[code]musageDocument'$'\e''[[reset]m does not output formatted help for performance reasons'$'\n''- '$'\e''[[code]mhandler'$'\e''[[reset]m - For all '$'\e''[[code]m--help'$'\e''[[reset]m and any function which uses '$'\e''[[code]musageTemplate'$'\e''[[reset]m to output documentation (upon error), the stack will be displayed'$'\n'''
 # shellcheck disable=SC2016
-helpPlain='Usage: usageDocument functionDefinitionFile functionName exitCode [ message ]
-
-    functionDefinitionFile  File. Required. The file in which the function is defined. If you don'\''t know, use __bashDocumentation_FindFunctionDefinitions or __bashDocumentation_FindFunctionDefinition.
-    functionName            String. Required. The function which actually defines our usage syntax. Documentation is extracted from this function, regardless.
-    exitCode                Integer. Required. The function which actually defines our usage syntax. Documentation is extracted from this function, regardless.
-    message                 String. Optional. A message.
-
-Actual function is called usageDocument.
-
-
-Generates console usage output for a script using documentation tools parsed from the comment of the function identified.
-
-Simplifies documentation and keeps it with the code.
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-
-Environment variables:
-- BUILD_DEBUG - Add fast-usage to make this quicker when you do not care about usage/failure.
-- 
-
-BUILD_DEBUG settings:
-- fast-usage - usageDocument does not output formatted help for performance reasons
-- handler - For all --help and any function which uses usageTemplate to output documentation (upon error), the stack will be displayed
-- 
-'
+helpPlain='Usage: usageDocument functionDefinitionFile functionName exitCode [ message ]'$'\n'''$'\n''    functionDefinitionFile  File. Required. The file in which the function is defined. If you don'\''t know, use __bashDocumentation_FindFunctionDefinitions or __bashDocumentation_FindFunctionDefinition.'$'\n''    functionName            String. Required. The function which actually defines our usage syntax. Documentation is extracted from this function, regardless.'$'\n''    exitCode                Integer. Required. The function which actually defines our usage syntax. Documentation is extracted from this function, regardless.'$'\n''    message                 String. Optional. A message.'$'\n'''$'\n''Actual function is called usageDocument.'$'\n''Generates console usage output for a script using documentation tools parsed from the comment of the function identified.'$'\n''Simplifies documentation and keeps it with the code.'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''$'\n''Environment variables:'$'\n''- BUILD_DEBUG-  - Add fast-usage to make this quicker when you do not care about usage/failure.'$'\n'''$'\n''BUILD_DEBUG settings:'$'\n''- fast-usage - usageDocument does not output formatted help for performance reasons'$'\n''- handler - For all --help and any function which uses usageTemplate to output documentation (upon error), the stack will be displayed'$'\n'''

@@ -25,7 +25,7 @@ __bashDocumentationSettingsFileDetails() {
   local definitionFile lineNumber
 
   definitionFile=$(validate "$handler" RealFile "definitionFile" "${1-}") && shift || return $?
-  local lineNumber="${2-}"
+  local lineNumber="${1-}"
 
   local home
   home=$(catchReturn "$handler" buildHome) || return $?
@@ -47,7 +47,7 @@ __bashDocumentationSettingsFileDetails() {
 # Argument: --no-cache - Flag. Optional. Skip any attempt to cache anything.
 # Argument: --cache - Flag. Optional. Force use of cache.
 # DOC TEMPLATE: --help 1
-# Argument: --help - Optional. Flag. Display this help.
+# Argument: --help - Flag. Optional. Display this help.
 # BUILD_DEBUG: usage-cache-skip - Skip caching by default (override with `--cache`)
 __bashDocumentationExtract() {
   local __saved=("$@") __count=$#
@@ -127,9 +127,13 @@ __bashDocumentationExtractGenerateCache() {
   (
     local extras=()
     extras+=("#!/usr/bin/env bash" "# Copyright &copy; $(date +%Y) $(catchReturn "$handler" buildEnvironmentGet BUILD_COMPANY)") || return $?
-    extras+=("# Generated on $(todayDate)")
+    extras+=("# Generated on $(dateToday)")
     bashRecursionDebug || return $?
-    __bashDocumentationExtractDirect "$handler" "$fn" "$source" "${extras[@]}" "$@" | catchEnvironment "$handler" environmentCompile --keep-comments --parse | catchEnvironment "$handler" tee "$definitionFile" || returnClean $? "$definitionFile" || $?
+    local uncompiled="${definitionFile%.sh}.uncompiled.sh"
+    local clean=("$uncompiled")
+    __bashDocumentationExtractDirect "$handler" "$fn" "$source" "${extras[@]}" "$@" >"$uncompiled" || returnClean $? "${clean[@]}" || $?
+    catchEnvironment "$handler" environmentCompile --keep-comments --parse <"$uncompiled" | catchEnvironment "$handler" tee "$definitionFile" || returnClean $? "${clean[@]}" || $?
+    buildDebugEnabled "environmentCompile" || catchEnvironment "$handler" rm -f "${clean[@]}" || return $?
     bashRecursionDebug --end || return $?
   ) || return $?
 }
@@ -150,12 +154,16 @@ __bashDocumentationExtractDirect() {
   export fn base
 
   local mapNames=("fn") simpleNames=("fn")
-  local desc=() lastName="" foundNames=() lastName="" values=()
+  local desc=() lastName="" foundNames=() lastName="" values=() rawComment="" finished=false
   __bashDocumentationSettingsHeader "$handler" "$fn" || return $?
   # Read comment (stripped of #) from stdin
-  while IFS= read -r line; do
-    local name="${line%%:*}" value
-    if ! environmentVariableNameValid "$name" || [ "$name" = "$line" ] || [ "${line%%:}" != "$line" ] || [ "${line##:}" != "$line" ]; then
+  while ! $finished; do
+    IFS= read -r line || finished=true
+    [ -n "$line" ] || continue
+    rawComment="$rawComment$line"$'\n'
+    local name="${line%%:*}" value cleanName
+    cleanName="$(lowercase "$(printf '%s' "$name" | sed 's/[^A-Za-z0-9]/_/g')")" || return $?
+    if ! environmentVariableNameValid "$cleanName" || [ "$name" = "$line" ] || [ "${line%%:}" != "$line" ] || [ "${line##:}" != "$line" ]; then
       # no colon or ends with colon *or* starts with :
       # strip starting colon (end colon STAYS)
       value="${line##:}"
@@ -165,11 +173,11 @@ __bashDocumentationExtractDirect() {
     else
       value="${line#*:}"
       value="${value# }"
+      name="$cleanName"
       case "$name" in
       ":sourceFile") name="${name:1}" && source="$value" ;;
       ":sourceLine") name="${name:1}" ;;
       esac
-      name="$(lowercase "$(printf '%s' "$name" | sed 's/[^A-Za-z0-9]/_/g')")" || return $?
       case "$name" in
       description)
         value="$(catchReturn "$handler" trimSpace "$value")" || return $?
@@ -246,6 +254,6 @@ __bashDocumentationExtractDirect() {
       catchReturn "$handler" printf "%s\n" "export usage; usage=\"\$fn\$(__bashDocumentationDefaultArguments \"\$argument\")\"" || return $?
     fi
   fi
-
+  catchReturn "$handler" __dumpNameValue "rawComment" "$rawComment" || return $?
   catchReturn "$handler" __dumpArrayValue "foundNames" "${foundNames[@]+"${foundNames[@]}"}" || return $?
 }

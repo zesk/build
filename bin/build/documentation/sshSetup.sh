@@ -1,61 +1,21 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-22
+# Generated on 2026-01-24
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/ssh.sh"
 argument="--force - Flag. Optional. Force the program to create a new key if one exists"$'\n'"server - String. Required. Servers to connect to to set up authorization"$'\n'""
 base="ssh.sh"
-description="Set up SSH for a user with ID and backup keys in \`~/.ssh\`"$'\n'""$'\n'"Create a key for a user for SSH authentication to other servers."$'\n'""$'\n'""$'\n'"Add .ssh key for current user"$'\n'""$'\n'""$'\n'"You will need the password for this server for the current user."$'\n'""
+description="Set up SSH for a user with ID and backup keys in \`~/.ssh\`"$'\n'"Create a key for a user for SSH authentication to other servers."$'\n'"Add .ssh key for current user"$'\n'"You will need the password for this server for the current user."$'\n'""
+exitCode="0"
 file="bin/build/tools/ssh.sh"
-fn="sshSetup"
-foundNames=""
+foundNames=([0]="argument" [1]="requires")
+rawComment="Set up SSH for a user with ID and backup keys in \`~/.ssh\`"$'\n'"Create a key for a user for SSH authentication to other servers."$'\n'"Add .ssh key for current user"$'\n'"Argument: --force - Flag. Optional. Force the program to create a new key if one exists"$'\n'"Argument: server - String. Required. Servers to connect to to set up authorization"$'\n'"You will need the password for this server for the current user."$'\n'"Requires: userRecordHome catchEnvironment throwEnvironment"$'\n'""$'\n'""
 requires="userRecordHome catchEnvironment throwEnvironment"$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
-sourceFile="bin/build/tools/ssh.sh"
-sourceModified="1769063211"
+sourceModified="1769184556"
 summary="Set up SSH for a user with ID and backup"
 usage="sshSetup [ --force ] server"
 # shellcheck disable=SC2016
-helpConsole='[92mUsage[0m: [38;2;170;170;255msshSetup[0m [94m[ --force ][0m [38;2;255;255;0m[35;48;2;0;0;0mserver[0m[0m
-
-    [94m--force  [1;97mFlag. Optional. Force the program to create a new key if one exists[0m
-    [31mserver   [1;97mString. Required. Servers to connect to to set up authorization[0m
-
-Set up SSH for a user with ID and backup keys in [38;2;0;255;0;48;2;0;0;0m~/.ssh[0m
-
-Create a key for a user for SSH authentication to other servers.
-
-
-Add .ssh key for current user
-
-
-You will need the password for this server for the current user.
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-'
+helpConsole=''$'\e''[[label]mUsage'$'\e''[0m: '$'\e''[[info]msshSetup'$'\e''[0m '$'\e''[[blue]m[ --force ]'$'\e''[0m '$'\e''[[bold]m'$'\e''[[magenta]mserver'$'\e''[0m'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[blue]m--force  '$'\e''[[value]mFlag. Optional. Force the program to create a new key if one exists'$'\e''[[reset]m'$'\n''    '$'\e''[[red]mserver   '$'\e''[[value]mString. Required. Servers to connect to to set up authorization'$'\e''[[reset]m'$'\n'''$'\n''Set up SSH for a user with ID and backup keys in '$'\e''[[code]m~/.ssh'$'\e''[[reset]m'$'\n''Create a key for a user for SSH authentication to other servers.'$'\n''Add .ssh key for current user'$'\n''You will need the password for this server for the current user.'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[code]m0'$'\e''[[reset]m - Success'$'\n''- '$'\e''[[code]m1'$'\e''[[reset]m - Environment error'$'\n''- '$'\e''[[code]m2'$'\e''[[reset]m - Argument error'$'\n'''
 # shellcheck disable=SC2016
-helpPlain='Usage: sshSetup [ --force ] server
-
-    --force  Flag. Optional. Force the program to create a new key if one exists
-    server   String. Required. Servers to connect to to set up authorization
-
-Set up SSH for a user with ID and backup keys in ~/.ssh
-
-Create a key for a user for SSH authentication to other servers.
-
-
-Add .ssh key for current user
-
-
-You will need the password for this server for the current user.
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-'
+helpPlain='Usage: sshSetup [ --force ] server'$'\n'''$'\n''    --force  Flag. Optional. Force the program to create a new key if one exists'$'\n''    server   String. Required. Servers to connect to to set up authorization'$'\n'''$'\n''Set up SSH for a user with ID and backup keys in ~/.ssh'$'\n''Create a key for a user for SSH authentication to other servers.'$'\n''Add .ssh key for current user'$'\n''You will need the password for this server for the current user.'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''

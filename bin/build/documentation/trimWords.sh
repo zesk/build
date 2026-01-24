@@ -1,52 +1,22 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-22
+# Generated on 2026-01-24
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/text.sh"
 argument="wordCount - PositiveInteger. Words to output"$'\n'"word0 ... - EmptyString. One or more words to output"$'\n'""
 base="text.sh"
-description="Remove words from the end of a phrase"$'\n'""$'\n'""$'\n'""
+description="Remove words from the end of a phrase"$'\n'""
 example="    printf \"%s: %s\\n\" \"Summary:\" \"\$(trimWords 10 \$description)\""$'\n'""
+exitCode="0"
 file="bin/build/tools/text.sh"
-fn="trimWords"
-foundNames=""
+foundNames=([0]="argument" [1]="example" [2]="tested")
+rawComment="Remove words from the end of a phrase"$'\n'"Argument: wordCount - PositiveInteger. Words to output"$'\n'"Argument: word0 ... - EmptyString. One or more words to output"$'\n'"Example:     printf \"%s: %s\\n\" \"Summary:\" \"\$(trimWords 10 \$description)\""$'\n'"Tested: No"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
-sourceFile="bin/build/tools/text.sh"
-sourceModified="1769063211"
+sourceModified="1769226342"
 summary="Remove words from the end of a phrase"
 tested="No"$'\n'""
 usage="trimWords [ wordCount ] [ word0 ... ]"
 # shellcheck disable=SC2016
-helpConsole='[92mUsage[0m: [38;2;170;170;255mtrimWords[0m [94m[ wordCount ][0m [94m[ word0 ... ][0m
-
-    [94mwordCount  [1;97mPositiveInteger. Words to output[0m
-    [94mword0 ...  [1;97mEmptyString. One or more words to output[0m
-
-Remove words from the end of a phrase
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-
-Example:
-    printf "%s: %s\n" "Summary:" "$(trimWords 10 $description)"
-'
+helpConsole=''$'\e''[[label]mUsage'$'\e''[0m: '$'\e''[[info]mtrimWords'$'\e''[0m '$'\e''[[blue]m[ wordCount ]'$'\e''[0m '$'\e''[[blue]m[ word0 ... ]'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[blue]mwordCount  '$'\e''[[value]mPositiveInteger. Words to output'$'\e''[[reset]m'$'\n''    '$'\e''[[blue]mword0 ...  '$'\e''[[value]mEmptyString. One or more words to output'$'\e''[[reset]m'$'\n'''$'\n''Remove words from the end of a phrase'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[code]m0'$'\e''[[reset]m - Success'$'\n''- '$'\e''[[code]m1'$'\e''[[reset]m - Environment error'$'\n''- '$'\e''[[code]m2'$'\e''[[reset]m - Argument error'$'\n'''$'\n''Example:'$'\n''    printf "%s: %s\n" "Summary:" "$(trimWords 10 $description)"'$'\n'''
 # shellcheck disable=SC2016
-helpPlain='Usage: trimWords [ wordCount ] [ word0 ... ]
-
-    wordCount  PositiveInteger. Words to output
-    word0 ...  EmptyString. One or more words to output
-
-Remove words from the end of a phrase
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-
-Example:
-    printf "%s: %s\n" "Summary:" "$(trimWords 10 $description)"
-'
+helpPlain='Usage: trimWords [ wordCount ] [ word0 ... ]'$'\n'''$'\n''    wordCount  PositiveInteger. Words to output'$'\n''    word0 ...  EmptyString. One or more words to output'$'\n'''$'\n''Remove words from the end of a phrase'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''$'\n''Example:'$'\n''    printf "%s: %s\n" "Summary:" "$(trimWords 10 $description)"'$'\n'''

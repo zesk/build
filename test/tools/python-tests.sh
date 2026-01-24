@@ -8,8 +8,8 @@
 
 # Tag: package-install
 testPythonInstallation() {
-  if ! whichExists python; then
-    __checkFunctionInstalls whichExists "Package" python pythonInstall || return $?
+  if ! executableExists python; then
+    __checkFunctionInstalls executableExists "Package" python pythonInstall || return $?
   fi
 }
 
@@ -57,14 +57,14 @@ testPythonVirtual() {
 
 # Tag: package-install
 testPythonUninstallation() {
-  if whichExists python; then
+  if executableExists python; then
     python --version
     #    assertExitCode 0 pythonUninstall || return $?
-    #    if whichExists python; then
+    #    if executableExists python; then
     #      printf -- "%s\n" "PATHS:" "- command -v: $(command -v python)" "- which: $(which python)" | decorate warning || return $?
     #      decorate error "$(python --version)"
     #      throwEnvironment "$handler" "python is still installed for some reason" || return $?
     #    fi
-    __checkFunctionUninstalls whichExists "already installed" python pythonUninstall || return $?
+    __checkFunctionUninstalls executableExists "already installed" python pythonUninstall || return $?
   fi
 }

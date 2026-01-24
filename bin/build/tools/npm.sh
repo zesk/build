@@ -42,7 +42,7 @@ npmInstall() {
     shift
   done
 
-  if whichExists npm; then
+  if executableExists npm; then
     return 0
   fi
   catchReturn "$handler" buildEnvironmentLoad BUILD_NPM_VERSION || return $?

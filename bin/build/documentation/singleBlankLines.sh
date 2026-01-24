@@ -1,58 +1,22 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-22
+# Generated on 2026-01-24
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/text.sh"
 argument="--help - Flag. Optional. Display this help."$'\n'""
 base="text.sh"
-description="Ensures blank lines are singular"$'\n'"Used often to clean up markdown \`.md\` files, but can be used for any line-based configuration file which allows blank lines."$'\n'""$'\n'""
+description="Ensures blank lines are singular"$'\n'"Used often to clean up markdown \`.md\` files, but can be used for any line-based configuration file which allows blank lines."$'\n'""
+exitCode="0"
 file="bin/build/tools/text.sh"
-fn="singleBlankLines"
-foundNames=""
+foundNames=([0]="argument" [1]="stdin" [2]="stdout")
+rawComment="Ensures blank lines are singular"$'\n'"Used often to clean up markdown \`.md\` files, but can be used for any line-based configuration file which allows blank lines."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"stdin: Reads lines from stdin until EOF"$'\n'"stdout: Outputs modified lines where any blank lines are replaced with a single blank line."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
-sourceFile="bin/build/tools/text.sh"
-sourceModified="1769063211"
+sourceModified="1769201188"
 stdin="Reads lines from stdin until EOF"$'\n'""
 stdout="Outputs modified lines where any blank lines are replaced with a single blank line."$'\n'""
 summary="Ensures blank lines are singular"
 usage="singleBlankLines [ --help ]"
 # shellcheck disable=SC2016
-helpConsole='[92mUsage[0m: [38;2;170;170;255msingleBlankLines[0m [94m[ --help ][0m
-
-    [94m--help  [1;97mFlag. Optional. Display this help.[0m
-
-Ensures blank lines are singular
-Used often to clean up markdown [38;2;0;255;0;48;2;0;0;0m.md[0m files, but can be used for any line-based configuration file which allows blank lines.
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-
-Reads from [38;2;0;255;0;48;2;0;0;0mstdin[0m:
-Reads lines from stdin until EOF
-
-Writes to [38;2;0;255;0;48;2;0;0;0mstdout[0m:
-Outputs modified lines where any blank lines are replaced with a single blank line.
-'
+helpConsole=''$'\e''[[label]mUsage'$'\e''[0m: '$'\e''[[info]msingleBlankLines'$'\e''[0m '$'\e''[[blue]m[ --help ]'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[blue]m--help  '$'\e''[[value]mFlag. Optional. Display this help.'$'\e''[[reset]m'$'\n'''$'\n''Ensures blank lines are singular'$'\n''Used often to clean up markdown '$'\e''[[code]m.md'$'\e''[[reset]m files, but can be used for any line-based configuration file which allows blank lines.'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[code]m0'$'\e''[[reset]m - Success'$'\n''- '$'\e''[[code]m1'$'\e''[[reset]m - Environment error'$'\n''- '$'\e''[[code]m2'$'\e''[[reset]m - Argument error'$'\n'''$'\n''Reads from '$'\e''[[code]mstdin'$'\e''[[reset]m:'$'\n''Reads lines from stdin until EOF'$'\n'''$'\n''Writes to '$'\e''[[code]mstdout'$'\e''[[reset]m:'$'\n''Outputs modified lines where any blank lines are replaced with a single blank line.'$'\n'''
 # shellcheck disable=SC2016
-helpPlain='Usage: singleBlankLines [ --help ]
-
-    --help  Flag. Optional. Display this help.
-
-Ensures blank lines are singular
-Used often to clean up markdown .md files, but can be used for any line-based configuration file which allows blank lines.
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-
-Reads from stdin:
-Reads lines from stdin until EOF
-
-Writes to stdout:
-Outputs modified lines where any blank lines are replaced with a single blank line.
-'
+helpPlain='Usage: singleBlankLines [ --help ]'$'\n'''$'\n''    --help  Flag. Optional. Display this help.'$'\n'''$'\n''Ensures blank lines are singular'$'\n''Used often to clean up markdown .md files, but can be used for any line-based configuration file which allows blank lines.'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''$'\n''Reads from stdin:'$'\n''Reads lines from stdin until EOF'$'\n'''$'\n''Writes to stdout:'$'\n''Outputs modified lines where any blank lines are replaced with a single blank line.'$'\n'''

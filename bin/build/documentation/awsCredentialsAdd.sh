@@ -1,56 +1,21 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-22
+# Generated on 2026-01-24
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/aws.sh"
 argument="--profile profileName - String. Optional. The credentials profile to write (default value is \`default\`)"$'\n'"--force - Flag. Optional. Write the credentials file even if the profile already exists"$'\n'"--comments - Flag. Optional. Write comments to the credentials file (in addition to updating the record)."$'\n'"--help - Flag. Optional. Display this help."$'\n'"key - The AWS_ACCESS_KEY_ID to write"$'\n'"secret - The AWS_SECRET_ACCESS_KEY to write"$'\n'""
 base="aws.sh"
-description="Write the credentials to the AWS credentials file."$'\n'""$'\n'"If the AWS credentials file is not found, it is created"$'\n'""$'\n'""
+description="Write the credentials to the AWS credentials file."$'\n'"If the AWS credentials file is not found, it is created"$'\n'""
+exitCode="0"
 file="bin/build/tools/aws.sh"
-fn="awsCredentialsAdd"
-foundNames=""
+foundNames=([0]="summary" [1]="argument")
+rawComment="Write the credentials to the AWS credentials file."$'\n'"If the AWS credentials file is not found, it is created"$'\n'"Summary: Write an AWS profile to the AWS credentials file"$'\n'"Argument: --profile profileName - String. Optional. The credentials profile to write (default value is \`default\`)"$'\n'"Argument: --force - Flag. Optional. Write the credentials file even if the profile already exists"$'\n'"Argument: --comments - Flag. Optional. Write comments to the credentials file (in addition to updating the record)."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Argument: key - The AWS_ACCESS_KEY_ID to write"$'\n'"Argument: secret - The AWS_SECRET_ACCESS_KEY to write"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/aws.sh"
-sourceModified="1769063211"
+sourceModified="1769185802"
 summary="Write an AWS profile to the AWS credentials file"$'\n'""
 usage="awsCredentialsAdd [ --profile profileName ] [ --force ] [ --comments ] [ --help ] [ key ] [ secret ]"
 # shellcheck disable=SC2016
-helpConsole='[92mUsage[0m: [38;2;170;170;255mawsCredentialsAdd[0m [94m[ --profile profileName ][0m [94m[ --force ][0m [94m[ --comments ][0m [94m[ --help ][0m [94m[ key ][0m [94m[ secret ][0m
-
-    [94m--profile profileName  [1;97mString. Optional. The credentials profile to write (default value is [38;2;0;255;0;48;2;0;0;0mdefault[0m)[0m
-    [94m--force                [1;97mFlag. Optional. Write the credentials file even if the profile already exists[0m
-    [94m--comments             [1;97mFlag. Optional. Write comments to the credentials file (in addition to updating the record).[0m
-    [94m--help                 [1;97mFlag. Optional. Display this help.[0m
-    [94mkey                    [1;97mThe AWS_ACCESS_KEY_ID to write[0m
-    [94msecret                 [1;97mThe AWS_SECRET_ACCESS_KEY to write[0m
-
-Write the credentials to the AWS credentials file.
-
-If the AWS credentials file is not found, it is created
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-'
+helpConsole=''$'\e''[[label]mUsage'$'\e''[0m: '$'\e''[[info]mawsCredentialsAdd'$'\e''[0m '$'\e''[[blue]m[ --profile profileName ]'$'\e''[0m '$'\e''[[blue]m[ --force ]'$'\e''[0m '$'\e''[[blue]m[ --comments ]'$'\e''[0m '$'\e''[[blue]m[ --help ]'$'\e''[0m '$'\e''[[blue]m[ key ]'$'\e''[0m '$'\e''[[blue]m[ secret ]'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[blue]m--profile profileName  '$'\e''[[value]mString. Optional. The credentials profile to write (default value is '$'\e''[[code]mdefault'$'\e''[[reset]m)'$'\e''[[reset]m'$'\n''    '$'\e''[[blue]m--force                '$'\e''[[value]mFlag. Optional. Write the credentials file even if the profile already exists'$'\e''[[reset]m'$'\n''    '$'\e''[[blue]m--comments             '$'\e''[[value]mFlag. Optional. Write comments to the credentials file (in addition to updating the record).'$'\e''[[reset]m'$'\n''    '$'\e''[[blue]m--help                 '$'\e''[[value]mFlag. Optional. Display this help.'$'\e''[[reset]m'$'\n''    '$'\e''[[blue]mkey                    '$'\e''[[value]mThe AWS_ACCESS_KEY_ID to write'$'\e''[[reset]m'$'\n''    '$'\e''[[blue]msecret                 '$'\e''[[value]mThe AWS_SECRET_ACCESS_KEY to write'$'\e''[[reset]m'$'\n'''$'\n''Write the credentials to the AWS credentials file.'$'\n''If the AWS credentials file is not found, it is created'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[code]m0'$'\e''[[reset]m - Success'$'\n''- '$'\e''[[code]m1'$'\e''[[reset]m - Environment error'$'\n''- '$'\e''[[code]m2'$'\e''[[reset]m - Argument error'$'\n'''
 # shellcheck disable=SC2016
-helpPlain='Usage: awsCredentialsAdd [ --profile profileName ] [ --force ] [ --comments ] [ --help ] [ key ] [ secret ]
-
-    --profile profileName  String. Optional. The credentials profile to write (default value is default)
-    --force                Flag. Optional. Write the credentials file even if the profile already exists
-    --comments             Flag. Optional. Write comments to the credentials file (in addition to updating the record).
-    --help                 Flag. Optional. Display this help.
-    key                    The AWS_ACCESS_KEY_ID to write
-    secret                 The AWS_SECRET_ACCESS_KEY to write
-
-Write the credentials to the AWS credentials file.
-
-If the AWS credentials file is not found, it is created
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-'
+helpPlain='Usage: awsCredentialsAdd [ --profile profileName ] [ --force ] [ --comments ] [ --help ] [ key ] [ secret ]'$'\n'''$'\n''    --profile profileName  String. Optional. The credentials profile to write (default value is default)'$'\n''    --force                Flag. Optional. Write the credentials file even if the profile already exists'$'\n''    --comments             Flag. Optional. Write comments to the credentials file (in addition to updating the record).'$'\n''    --help                 Flag. Optional. Display this help.'$'\n''    key                    The AWS_ACCESS_KEY_ID to write'$'\n''    secret                 The AWS_SECRET_ACCESS_KEY to write'$'\n'''$'\n''Write the credentials to the AWS credentials file.'$'\n''If the AWS credentials file is not found, it is created'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''

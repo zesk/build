@@ -7,9 +7,9 @@
 #
 
 testAlignRight() {
-  assertEquals "$(alignRight 20 012345)" "              012345" || return $?
-  assertEquals "$(alignRight 5 012345)" "012345" || return $?
-  assertEquals "$(alignRight 0 012345)" "012345" || return $?
+  assertEquals "$(textAlignRight 20 012345)" "              012345" || return $?
+  assertEquals "$(textAlignRight 5 012345)" "012345" || return $?
+  assertEquals "$(textAlignRight 0 012345)" "012345" || return $?
 }
 
 testPlural() {
@@ -191,7 +191,7 @@ testBeginsWith() {
   while read -r expected text remainder; do
     local args=()
     IFS=" " read -r -a args <<<"$remainder" || :
-    assertExitCode --display "beginsWith \"$text\" ${args[*]}" "$expected" beginsWith "$text" "${args[@]+"${args[@]}"}" || return $?
+    assertExitCode --display "stringBegins \"$text\" ${args[*]}" "$expected" stringBegins "$text" "${args[@]+"${args[@]}"}" || return $?
   done < <(__dataBeginsWith)
 }
 
@@ -353,8 +353,8 @@ EOF
 testPlainLength() {
   local expected content
   while IFS="|" read -r expected content; do
-    assertEquals --display "plainLength $content (${#content})" "$expected" "$(plainLength "$content")" || return $?
-    assertEquals --display "plainLength <<< $content (${#content})" "$expected" "$(plainLength <<<"$content")" || return $?
+    assertEquals --display "consolePlainLength $content (${#content})" "$expected" "$(consolePlainLength "$content")" || return $?
+    assertEquals --display "consolePlainLength <<< $content (${#content})" "$expected" "$(consolePlainLength <<<"$content")" || return $?
   done < <(__dataPlainLength)
 }
 
@@ -401,7 +401,7 @@ testSingleBlankLines() {
 }
 
 testText() {
-  assertOutputContains Hello boxedHeading Hello || return $?
+  assertOutputContains Hello consoleHeadingBoxed Hello || return $?
 }
 
 testLowercase() {
@@ -416,7 +416,7 @@ testPrintfOutput() {
 }
 
 __maxLineLengthFile() {
-  repeat "$1" _
+  textRepeat "$1" _
   printf "\n%s\n" "$(randomString)"
 }
 

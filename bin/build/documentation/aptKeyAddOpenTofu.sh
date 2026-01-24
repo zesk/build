@@ -1,49 +1,21 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-22
+# Generated on 2026-01-24
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/tofu.sh"
 argument="--help - Flag. Optional. Display this help."$'\n'""
 base="tofu.sh"
-description="Add keys to enable apt to download tofu directly from opentofu.org"$'\n'""$'\n'"Return Code: 1 - if environment is awry"$'\n'"Return Code: 0 - All good to install terraform"$'\n'""
+description="Add keys to enable apt to download tofu directly from opentofu.org"$'\n'""
+exitCode="0"
 file="bin/build/tools/tofu.sh"
-fn="aptKeyAddOpenTofu"
-foundNames=""
-return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
+foundNames=([0]="argument" [1]="return_code" [2]="see")
+rawComment="Add keys to enable apt to download tofu directly from opentofu.org"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Return Code: 1 - if environment is awry"$'\n'"Return Code: 0 - All good to install terraform"$'\n'"See: aptKeyRemoveOpenTofu"$'\n'""$'\n'""
+return_code="1 - if environment is awry"$'\n'"0 - All good to install terraform"$'\n'""
 see="aptKeyRemoveOpenTofu"$'\n'""
-sourceFile="bin/build/tools/tofu.sh"
-sourceModified="1769063211"
+sourceModified="1769184734"
 summary="Add keys to enable apt to download tofu directly from"
 usage="aptKeyAddOpenTofu [ --help ]"
 # shellcheck disable=SC2016
-helpConsole='[92mUsage[0m: [38;2;170;170;255maptKeyAddOpenTofu[0m [94m[ --help ][0m
-
-    [94m--help  [1;97mFlag. Optional. Display this help.[0m
-
-Add keys to enable apt to download tofu directly from opentofu.org
-
-Return Code: 1 - if environment is awry
-Return Code: 0 - All good to install terraform
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-'
+helpConsole=''$'\e''[[label]mUsage'$'\e''[0m: '$'\e''[[info]maptKeyAddOpenTofu'$'\e''[0m '$'\e''[[blue]m[ --help ]'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[blue]m--help  '$'\e''[[value]mFlag. Optional. Display this help.'$'\e''[[reset]m'$'\n'''$'\n''Add keys to enable apt to download tofu directly from opentofu.org'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[code]m1'$'\e''[[reset]m - if environment is awry'$'\n''- '$'\e''[[code]m0'$'\e''[[reset]m - All good to install terraform'$'\n'''
 # shellcheck disable=SC2016
-helpPlain='Usage: aptKeyAddOpenTofu [ --help ]
-
-    --help  Flag. Optional. Display this help.
-
-Add keys to enable apt to download tofu directly from opentofu.org
-
-Return Code: 1 - if environment is awry
-Return Code: 0 - All good to install terraform
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-'
+helpPlain='Usage: aptKeyAddOpenTofu [ --help ]'$'\n'''$'\n''    --help  Flag. Optional. Display this help.'$'\n'''$'\n''Add keys to enable apt to download tofu directly from opentofu.org'$'\n'''$'\n''Return codes:'$'\n''- 1 - if environment is awry'$'\n''- 0 - All good to install terraform'$'\n'''

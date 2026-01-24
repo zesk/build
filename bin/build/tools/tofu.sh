@@ -60,11 +60,11 @@ tofuInstall() {
   local handler="_${FUNCNAME[0]}" binary="tofu"
 
   __help "$handler" "$@" || return 0
-  ! whichExists "$binary" || return 0
+  ! executableExists "$binary" || return 0
   catchReturn "$handler" packageInstall apt-transport-https ca-certificates curl gnupg || return $?
   catchReturn "$handler" aptKeyAddOpenTofu || return $?
   catchReturn "$handler" packageInstall "$binary" "$@" || return $?
-  whichExists "$binary" || throwEnvironment "$handler" "No $binary binary found - installation failed" || return $?
+  executableExists "$binary" || throwEnvironment "$handler" "No $binary binary found - installation failed" || return $?
 }
 _tofuInstall() {
   # __IDENTICAL__ usageDocument 1

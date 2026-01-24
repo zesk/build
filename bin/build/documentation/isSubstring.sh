@@ -1,51 +1,21 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-22
+# Generated on 2026-01-24
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/text.sh"
 argument="needle - String. Required. Thing to search for, not blank."$'\n'"haystack ... - EmptyString. Optional. One or more array elements to match"$'\n'""
 base="text.sh"
-description="Check if one string is a substring of another set of strings (case-sensitive)"$'\n'""$'\n'"Return Code: 0 - If element is a substring of any haystack"$'\n'"Return Code: 1 - If element is NOT found as a substring of any haystack"$'\n'""$'\n'""
+description="Check if one string is a substring of another set of strings (case-sensitive)"$'\n'""
+exitCode="0"
 file="bin/build/tools/text.sh"
-fn="isSubstring"
-foundNames=""
-return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
-sourceFile="bin/build/tools/text.sh"
-sourceModified="1769063211"
+foundNames=([0]="argument" [1]="return_code" [2]="tested")
+rawComment="Check if one string is a substring of another set of strings (case-sensitive)"$'\n'"Argument: needle - String. Required. Thing to search for, not blank."$'\n'"Argument: haystack ... - EmptyString. Optional. One or more array elements to match"$'\n'"Return Code: 0 - If element is a substring of any haystack"$'\n'"Return Code: 1 - If element is NOT found as a substring of any haystack"$'\n'"Tested: No"$'\n'""$'\n'""
+return_code="0 - If element is a substring of any haystack"$'\n'"1 - If element is NOT found as a substring of any haystack"$'\n'""
+sourceModified="1769201188"
 summary="Check if one string is a substring of another set"
 tested="No"$'\n'""
 usage="isSubstring needle [ haystack ... ]"
 # shellcheck disable=SC2016
-helpConsole='[92mUsage[0m: [38;2;170;170;255misSubstring[0m [38;2;255;255;0m[35;48;2;0;0;0mneedle[0m[0m [94m[ haystack ... ][0m
-
-    [31mneedle        [1;97mString. Required. Thing to search for, not blank.[0m
-    [94mhaystack ...  [1;97mEmptyString. Optional. One or more array elements to match[0m
-
-Check if one string is a substring of another set of strings (case-sensitive)
-
-Return Code: 0 - If element is a substring of any haystack
-Return Code: 1 - If element is NOT found as a substring of any haystack
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-'
+helpConsole=''$'\e''[[label]mUsage'$'\e''[0m: '$'\e''[[info]misSubstring'$'\e''[0m '$'\e''[[bold]m'$'\e''[[magenta]mneedle'$'\e''[0m'$'\e''[0m '$'\e''[[blue]m[ haystack ... ]'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[red]mneedle        '$'\e''[[value]mString. Required. Thing to search for, not blank.'$'\e''[[reset]m'$'\n''    '$'\e''[[blue]mhaystack ...  '$'\e''[[value]mEmptyString. Optional. One or more array elements to match'$'\e''[[reset]m'$'\n'''$'\n''Check if one string is a substring of another set of strings (case-sensitive)'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[code]m0'$'\e''[[reset]m - If element is a substring of any haystack'$'\n''- '$'\e''[[code]m1'$'\e''[[reset]m - If element is NOT found as a substring of any haystack'$'\n'''
 # shellcheck disable=SC2016
-helpPlain='Usage: isSubstring needle [ haystack ... ]
-
-    needle        String. Required. Thing to search for, not blank.
-    haystack ...  EmptyString. Optional. One or more array elements to match
-
-Check if one string is a substring of another set of strings (case-sensitive)
-
-Return Code: 0 - If element is a substring of any haystack
-Return Code: 1 - If element is NOT found as a substring of any haystack
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-'
+helpPlain='Usage: isSubstring needle [ haystack ... ]'$'\n'''$'\n''    needle        String. Required. Thing to search for, not blank.'$'\n''    haystack ...  EmptyString. Optional. One or more array elements to match'$'\n'''$'\n''Check if one string is a substring of another set of strings (case-sensitive)'$'\n'''$'\n''Return codes:'$'\n''- 0 - If element is a substring of any haystack'$'\n''- 1 - If element is NOT found as a substring of any haystack'$'\n'''

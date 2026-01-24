@@ -1,46 +1,20 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-22
+# Generated on 2026-01-24
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/directory.sh"
 argument="path - String. Optional. Path to check."$'\n'""
 base="directory.sh"
-description="Is a path an absolute path?"$'\n'"Return Code: 0 - if all paths passed in are absolute paths (begin with \`/\`)."$'\n'"Return Code: 1 - one ore more paths are not absolute paths"$'\n'""
+description="Is a path an absolute path?"$'\n'""
+exitCode="0"
 file="bin/build/tools/directory.sh"
-fn="pathIsAbsolute"
-foundNames=""
-return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
-sourceFile="bin/build/tools/directory.sh"
+foundNames=([0]="argument" [1]="return_code")
+rawComment="Is a path an absolute path?"$'\n'"Argument: path - String. Optional. Path to check."$'\n'"Return Code: 0 - if all paths passed in are absolute paths (begin with \`/\`)."$'\n'"Return Code: 1 - one ore more paths are not absolute paths"$'\n'""$'\n'""
+return_code="0 - if all paths passed in are absolute paths (begin with \`/\`)."$'\n'"1 - one ore more paths are not absolute paths"$'\n'""
 sourceModified="1769063211"
 summary="Is a path an absolute path?"
 usage="pathIsAbsolute [ path ]"
 # shellcheck disable=SC2016
-helpConsole='[92mUsage[0m: [38;2;170;170;255mpathIsAbsolute[0m [94m[ path ][0m
-
-    [94mpath  [1;97mString. Optional. Path to check.[0m
-
-Is a path an absolute path?
-Return Code: 0 - if all paths passed in are absolute paths (begin with [38;2;0;255;0;48;2;0;0;0m/[0m).
-Return Code: 1 - one ore more paths are not absolute paths
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-'
+helpConsole=''$'\e''[[label]mUsage'$'\e''[0m: '$'\e''[[info]mpathIsAbsolute'$'\e''[0m '$'\e''[[blue]m[ path ]'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[blue]mpath  '$'\e''[[value]mString. Optional. Path to check.'$'\e''[[reset]m'$'\n'''$'\n''Is a path an absolute path?'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[code]m0'$'\e''[[reset]m - if all paths passed in are absolute paths (begin with '$'\e''[[code]m/'$'\e''[[reset]m).'$'\n''- '$'\e''[[code]m1'$'\e''[[reset]m - one ore more paths are not absolute paths'$'\n'''
 # shellcheck disable=SC2016
-helpPlain='Usage: pathIsAbsolute [ path ]
-
-    path  String. Optional. Path to check.
-
-Is a path an absolute path?
-Return Code: 0 - if all paths passed in are absolute paths (begin with /).
-Return Code: 1 - one ore more paths are not absolute paths
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-'
+helpPlain='Usage: pathIsAbsolute [ path ]'$'\n'''$'\n''    path  String. Optional. Path to check.'$'\n'''$'\n''Is a path an absolute path?'$'\n'''$'\n''Return codes:'$'\n''- 0 - if all paths passed in are absolute paths (begin with /).'$'\n''- 1 - one ore more paths are not absolute paths'$'\n'''

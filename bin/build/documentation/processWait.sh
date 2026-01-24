@@ -1,48 +1,20 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-22
+# Generated on 2026-01-24
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/process.sh"
 argument="processId - Integer. Required. Wait for process ID to exit."$'\n'"--timeout seconds - Integer. Optional. Wait for this long after sending a signals to see if a process exits. If not supplied waits 1 second after each signal, then waits forever."$'\n'"--signals signal - CommaDelimitedList. Optional. Send each signal to processes, in order."$'\n'"--require - Flag. Optional. Require all processes to be alive upon first invocation."$'\n'""
 base="process.sh"
-description="Wait for processes not owned by this process to exit, and send signals to terminate processes."$'\n'""$'\n'""$'\n'""
+description="Wait for processes not owned by this process to exit, and send signals to terminate processes."$'\n'""
+exitCode="0"
 file="bin/build/tools/process.sh"
-fn="processWait"
-foundNames=""
+foundNames=([0]="argument")
+rawComment="Wait for processes not owned by this process to exit, and send signals to terminate processes."$'\n'"Argument: processId - Integer. Required. Wait for process ID to exit."$'\n'"Argument: --timeout seconds - Integer. Optional. Wait for this long after sending a signals to see if a process exits. If not supplied waits 1 second after each signal, then waits forever."$'\n'"Argument: --signals signal - CommaDelimitedList. Optional. Send each signal to processes, in order."$'\n'"Argument: --require - Flag. Optional. Require all processes to be alive upon first invocation."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
-sourceFile="bin/build/tools/process.sh"
 sourceModified="1769063211"
 summary="Wait for processes not owned by this process to exit,"
 usage="processWait processId [ --timeout seconds ] [ --signals signal ] [ --require ]"
 # shellcheck disable=SC2016
-helpConsole='[92mUsage[0m: [38;2;170;170;255mprocessWait[0m [38;2;255;255;0m[35;48;2;0;0;0mprocessId[0m[0m [94m[ --timeout seconds ][0m [94m[ --signals signal ][0m [94m[ --require ][0m
-
-    [31mprocessId          [1;97mInteger. Required. Wait for process ID to exit.[0m
-    [94m--timeout seconds  [1;97mInteger. Optional. Wait for this long after sending a signals to see if a process exits. If not supplied waits 1 second after each signal, then waits forever.[0m
-    [94m--signals signal   [1;97mCommaDelimitedList. Optional. Send each signal to processes, in order.[0m
-    [94m--require          [1;97mFlag. Optional. Require all processes to be alive upon first invocation.[0m
-
-Wait for processes not owned by this process to exit, and send signals to terminate processes.
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-'
+helpConsole=''$'\e''[[label]mUsage'$'\e''[0m: '$'\e''[[info]mprocessWait'$'\e''[0m '$'\e''[[bold]m'$'\e''[[magenta]mprocessId'$'\e''[0m'$'\e''[0m '$'\e''[[blue]m[ --timeout seconds ]'$'\e''[0m '$'\e''[[blue]m[ --signals signal ]'$'\e''[0m '$'\e''[[blue]m[ --require ]'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[red]mprocessId          '$'\e''[[value]mInteger. Required. Wait for process ID to exit.'$'\e''[[reset]m'$'\n''    '$'\e''[[blue]m--timeout seconds  '$'\e''[[value]mInteger. Optional. Wait for this long after sending a signals to see if a process exits. If not supplied waits 1 second after each signal, then waits forever.'$'\e''[[reset]m'$'\n''    '$'\e''[[blue]m--signals signal   '$'\e''[[value]mCommaDelimitedList. Optional. Send each signal to processes, in order.'$'\e''[[reset]m'$'\n''    '$'\e''[[blue]m--require          '$'\e''[[value]mFlag. Optional. Require all processes to be alive upon first invocation.'$'\e''[[reset]m'$'\n'''$'\n''Wait for processes not owned by this process to exit, and send signals to terminate processes.'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[code]m0'$'\e''[[reset]m - Success'$'\n''- '$'\e''[[code]m1'$'\e''[[reset]m - Environment error'$'\n''- '$'\e''[[code]m2'$'\e''[[reset]m - Argument error'$'\n'''
 # shellcheck disable=SC2016
-helpPlain='Usage: processWait processId [ --timeout seconds ] [ --signals signal ] [ --require ]
-
-    processId          Integer. Required. Wait for process ID to exit.
-    --timeout seconds  Integer. Optional. Wait for this long after sending a signals to see if a process exits. If not supplied waits 1 second after each signal, then waits forever.
-    --signals signal   CommaDelimitedList. Optional. Send each signal to processes, in order.
-    --require          Flag. Optional. Require all processes to be alive upon first invocation.
-
-Wait for processes not owned by this process to exit, and send signals to terminate processes.
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-'
+helpPlain='Usage: processWait processId [ --timeout seconds ] [ --signals signal ] [ --require ]'$'\n'''$'\n''    processId          Integer. Required. Wait for process ID to exit.'$'\n''    --timeout seconds  Integer. Optional. Wait for this long after sending a signals to see if a process exits. If not supplied waits 1 second after each signal, then waits forever.'$'\n''    --signals signal   CommaDelimitedList. Optional. Send each signal to processes, in order.'$'\n''    --require          Flag. Optional. Require all processes to be alive upon first invocation.'$'\n'''$'\n''Wait for processes not owned by this process to exit, and send signals to terminate processes.'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''

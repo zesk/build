@@ -768,7 +768,7 @@ __deployCommandsFile() {
   done
   # shellcheck disable=SC2016
   printf -- "cd \"%s\" || exit \$?\n" "$appHome"
-  # return $? is here for findUncaughtAssertions line
+  # return $? is here for bashFindUncaughtAssertions line
   printf -- "%s/bin/build/tools.sh execute deployRemoteFinish %s|| exit \$?\n" "$appHome" "$(printf '"%s" ' "$@")" || return $?
 }
 

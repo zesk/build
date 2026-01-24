@@ -1,52 +1,21 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-22
+# Generated on 2026-01-24
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/file.sh"
 argument="item - String. Optional. Thing to classify"$'\n'"--help - Flag. Optional. Display this help."$'\n'""
 base="file.sh"
-description="Better type handling of shell objects"$'\n'""$'\n'"Outputs one of \`type\` output or enhancements:"$'\n'"- \`builtin\`, \`function\`, \`alias\`, \`file\`"$'\n'"- \`link-directory\`, \`link-file\`, \`link-dead\`, \`directory\`, \`integer\`, \`unknown\`"$'\n'""
+description="Better type handling of shell objects"$'\n'"Outputs one of \`type\` output or enhancements:"$'\n'"- \`builtin\`, \`function\`, \`alias\`, \`file\`"$'\n'"- \`link-directory\`, \`link-file\`, \`link-dead\`, \`directory\`, \`integer\`, \`unknown\`"$'\n'""
+exitCode="0"
 file="bin/build/tools/file.sh"
-fn="fileType"
-foundNames=""
+foundNames=([0]="argument")
+rawComment="Argument: item - String. Optional. Thing to classify"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Better type handling of shell objects"$'\n'"Outputs one of \`type\` output or enhancements:"$'\n'"- \`builtin\`, \`function\`, \`alias\`, \`file\`"$'\n'"- \`link-directory\`, \`link-file\`, \`link-dead\`, \`directory\`, \`integer\`, \`unknown\`"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/file.sh"
-sourceModified="1769063211"
+sourceModified="1769184734"
 summary="Better type handling of shell objects"
 usage="fileType [ item ] [ --help ]"
 # shellcheck disable=SC2016
-helpConsole='[92mUsage[0m: [38;2;170;170;255mfileType[0m [94m[ item ][0m [94m[ --help ][0m
-
-    [94mitem    [1;97mString. Optional. Thing to classify[0m
-    [94m--help  [1;97mFlag. Optional. Display this help.[0m
-
-Better type handling of shell objects
-
-Outputs one of [38;2;0;255;0;48;2;0;0;0mtype[0m output or enhancements:
-- [38;2;0;255;0;48;2;0;0;0mbuiltin[0m, [38;2;0;255;0;48;2;0;0;0mfunction[0m, [38;2;0;255;0;48;2;0;0;0malias[0m, [38;2;0;255;0;48;2;0;0;0mfile[0m
-- [38;2;0;255;0;48;2;0;0;0mlink-directory[0m, [38;2;0;255;0;48;2;0;0;0mlink-file[0m, [38;2;0;255;0;48;2;0;0;0mlink-dead[0m, [38;2;0;255;0;48;2;0;0;0mdirectory[0m, [38;2;0;255;0;48;2;0;0;0minteger[0m, [38;2;0;255;0;48;2;0;0;0munknown[0m
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-'
+helpConsole=''$'\e''[[label]mUsage'$'\e''[0m: '$'\e''[[info]mfileType'$'\e''[0m '$'\e''[[blue]m[ item ]'$'\e''[0m '$'\e''[[blue]m[ --help ]'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[blue]mitem    '$'\e''[[value]mString. Optional. Thing to classify'$'\e''[[reset]m'$'\n''    '$'\e''[[blue]m--help  '$'\e''[[value]mFlag. Optional. Display this help.'$'\e''[[reset]m'$'\n'''$'\n''Better type handling of shell objects'$'\n''Outputs one of '$'\e''[[code]mtype'$'\e''[[reset]m output or enhancements:'$'\n''- '$'\e''[[code]mbuiltin'$'\e''[[reset]m, '$'\e''[[code]mfunction'$'\e''[[reset]m, '$'\e''[[code]malias'$'\e''[[reset]m, '$'\e''[[code]mfile'$'\e''[[reset]m'$'\n''- '$'\e''[[code]mlink-directory'$'\e''[[reset]m, '$'\e''[[code]mlink-file'$'\e''[[reset]m, '$'\e''[[code]mlink-dead'$'\e''[[reset]m, '$'\e''[[code]mdirectory'$'\e''[[reset]m, '$'\e''[[code]minteger'$'\e''[[reset]m, '$'\e''[[code]munknown'$'\e''[[reset]m'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[code]m0'$'\e''[[reset]m - Success'$'\n''- '$'\e''[[code]m1'$'\e''[[reset]m - Environment error'$'\n''- '$'\e''[[code]m2'$'\e''[[reset]m - Argument error'$'\n'''
 # shellcheck disable=SC2016
-helpPlain='Usage: fileType [ item ] [ --help ]
-
-    item    String. Optional. Thing to classify
-    --help  Flag. Optional. Display this help.
-
-Better type handling of shell objects
-
-Outputs one of type output or enhancements:
-- builtin, function, alias, file
-- link-directory, link-file, link-dead, directory, integer, unknown
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-'
+helpPlain='Usage: fileType [ item ] [ --help ]'$'\n'''$'\n''    item    String. Optional. Thing to classify'$'\n''    --help  Flag. Optional. Display this help.'$'\n'''$'\n''Better type handling of shell objects'$'\n''Outputs one of type output or enhancements:'$'\n''- builtin, function, alias, file'$'\n''- link-directory, link-file, link-dead, directory, integer, unknown'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''

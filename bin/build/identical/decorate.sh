@@ -23,7 +23,7 @@
 # Return Code: 1 - Colors are likely not supported by console
 # Environment: BUILD_COLORS - Boolean. Optional. Whether the build system will output ANSI colors.
 # Requires: isPositiveInteger tput
-hasColors() {
+consoleHasColors() {
   # --help is only argument allowed
   [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
 
@@ -44,8 +44,8 @@ hasColors() {
   fi
   [ "${BUILD_COLORS-}" = "true" ]
 }
-_hasColors() {
-  true || hasColors --help
+_consoleHasColors() {
+  true || consoleHasColors --help
   # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
@@ -57,11 +57,11 @@ _hasColors() {
 # Argument: lightStartCode - Escape code label for light mode (color)
 # Argument: endCode - Escape end code
 # Argument: text ... - Text to output.
-# Requires: hasColors printf
+# Requires: consoleHasColors printf
 __decorate() {
   local prefix="$1" start="$2" end="$3" && shift 3
   export BUILD_COLORS
-  if [ -n "${BUILD_COLORS-}" ] && [ "${BUILD_COLORS-}" = "true" ] || [ -z "${BUILD_COLORS-}" ] && hasColors; then
+  if [ -n "${BUILD_COLORS-}" ] && [ "${BUILD_COLORS-}" = "true" ] || [ -z "${BUILD_COLORS-}" ] && consoleHasColors; then
     if [ $# -eq 0 ]; then printf -- "%s$start" ""; else printf -- "$start%s$end\n" "$*"; fi
     return 0
   fi
@@ -175,19 +175,19 @@ __decorateStylesDefaultLight() {
     "success=42;30 Success"
     "subtle=1;38;5;252"
     "label=34;103"
-    "value=1;40;97"
+    "value=30;107"
     "decoration=45;97"
   )
   __decorateStylesBase "${aa[@]}"
 }
 __decorateStylesDefaultDark() {
   local aa=(
-    "info=1;33 Info"
-    "notice=1;97;44 Notice"
+    "info=33 Info"
+    "notice=97;44 Notice"
     "success=0;32 Success"
-    "subtle=1;38;5;240"
-    "label=1;96"
-    "value=1;97"
+    "subtle=38;5;240"
+    "label=96;40"
+    "value=94"
     "decoration=45;30"
   )
   __decorateStylesBase "${aa[@]}"
@@ -196,7 +196,7 @@ __decorateStylesDefaultDark() {
 # fn: decorate each
 # Runs the following command on each subsequent argument for formatting
 # Also supports formatting input lines instead (on the same line)
-# Example:     decorate each code "$@"
+# Example:     decorate each code -- "$@"
 # Requires: decorate printf
 # Argument: style - String. Required. The style to decorate each element.
 # Argument: -- - Flag. Optional. Pass as the first argument after the style to avoid reading arguments from stdin.

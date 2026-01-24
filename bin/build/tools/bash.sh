@@ -188,7 +188,7 @@ bashLibrary() {
     source "$home/$run" || throwEnvironment "$handler" "source ${run//${HOME-}/~} failed" || return $?
     ! $verboseFlag || decorate info "Reloaded $(decorate code "$run") @ $(decorate info "${home//${HOME-}/~}")"
   else
-    ! $verboseFlag || decorate info "Running $(decorate file "$home/$run")" "$(decorate each code "$@")"
+    ! $verboseFlag || decorate info "Running $(decorate file "$home/$run")" "$(decorate each code -- "$@")"
     execute "$home/$run" "$@" || return $?
   fi
   return 0

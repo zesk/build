@@ -41,12 +41,13 @@ _usageDocument() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# IDENTICAL __usageDocumentCached 22
+# IDENTICAL __usageDocumentCached 24
 
 # Argument: handler - Function. Required.
 # Argument: home - Directory. BUILD_HOME
 # Argument: functionName - String. Function to display usage for
 # Environment: BUILD_COLORS
+# Requires: decorateThemed catchEnvironment
 __usageDocumentCached() {
   local handler="${1-}" && shift
   local home="${1-}" && shift
@@ -54,11 +55,12 @@ __usageDocumentCached() {
   local settingsFile="$home/bin/build/documentation/$functionName.sh"
   [ -f "$settingsFile" ] || return 1
   (
-    local helpConsole helpPlain
+    set -a
+    export helpConsole helpPlain
     # shellcheck source=/dev/null
     catchEnvironment "$handler" source "$settingsFile" || return $?
     if [ "${BUILD_COLORS-}" != "false" ]; then
-      catchEnvironment "$handler" printf "%s\n" "$helpConsole" || return $?
+      catchEnvironment "$handler" decorateThemed <<<"$helpConsole" || return $?
     else
       catchEnvironment "$handler" printf "%s\n" "$helpPlain" || return $?
     fi
@@ -118,7 +120,7 @@ usageRequireBinary() {
   fi
   local binary
   for binary in "$@"; do
-    whichExists "$binary" || throwEnvironment "$handler" "$binary is not available in path, not found: $(decorate code "$PATH")"
+    executableExists "$binary" || throwEnvironment "$handler" "$binary is not available in path, not found: $(decorate code "$PATH")"
   done
 }
 _usageRequireBinary() {

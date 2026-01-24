@@ -6,13 +6,13 @@
 #
 
 testWhichExists() {
-  assertExitCode 0 whichExists ls || return $?
-  assertExitCode 0 whichExists cat || return $?
-  assertExitCode 0 whichExists ls cat grep awk sed || return $?
-  assertExitCode 1 whichExists randombinarywhichusuallyneverexists || return $?
-  assertExitCode 1 whichExists randombinarywhichusuallyneverexists ls cat grep awk sed || return $?
-  assertExitCode 1 whichExists ls cat grep awk sed randombinarywhichusuallyneverexists || return $?
-  assertExitCode 0 whichExists --any ls randombinarywhichusuallyneverexists honestgovernment || return $?
+  assertExitCode 0 executableExists ls || return $?
+  assertExitCode 0 executableExists cat || return $?
+  assertExitCode 0 executableExists ls cat grep awk sed || return $?
+  assertExitCode 1 executableExists randombinarywhichusuallyneverexists || return $?
+  assertExitCode 1 executableExists randombinarywhichusuallyneverexists ls cat grep awk sed || return $?
+  assertExitCode 1 executableExists ls cat grep awk sed randombinarywhichusuallyneverexists || return $?
+  assertExitCode 0 executableExists --any ls randombinarywhichusuallyneverexists honestgovernment || return $?
 }
 
 testGroupID() {

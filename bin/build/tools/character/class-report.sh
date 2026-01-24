@@ -70,18 +70,18 @@ __characterClassReport() {
     local matched=0 outerText class character
     if $classOuter; then
       class="$outer"
-      outerText="$(decorate label "$(alignRight 10 "$outer")")"
+      outerText="$(decorate label "$(textAlignRight 10 "$outer")")"
     else
       character="$(characterFromInteger "$outer")" 2>/dev/null
       if ! isCharacterClass print "$character"; then
         outerText="$(printf "x%x " "$outer")"
-        outerText="$(alignRight 5 "$outerText")"
+        outerText="$(textAlignRight 5 "$outerText")"
         outerText="$(decorate subtle "$outerText")"
       else
-        outerText="$(decorate blue "$(alignRight 5 "$character")")"
+        outerText="$(decorate blue "$(textAlignRight 5 "$character")")"
       fi
     fi
-    printf "%s: " "$(alignLeft "$width" "$outerText")"
+    printf "%s: " "$(textAlignLeft "$width" "$outerText")"
     local inner
     for inner in "${innerList[@]}"; do
       if $classOuter; then

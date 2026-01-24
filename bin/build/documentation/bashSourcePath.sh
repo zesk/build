@@ -1,55 +1,21 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-22
+# Generated on 2026-01-24
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/bash.sh"
 argument="--exclude pattern - String. Optional. String passed to \`! -path pattern\` in \`find\`"$'\n'"directory ... - Directory. Required. Directory to \`source\` all \`.sh\` files used."$'\n'"--help - Flag. Optional. Display this help."$'\n'""
 base="bash.sh"
 description="Load a directory of bash scripts, excluding any dot directories (\`*/.*/*\`), and optionally any additional"$'\n'"files if you use \`--exclude\`. But recursively loads scripts in sorted alphabetic order within the directory until one fails."$'\n'"All files must be executable."$'\n'"Load a directory of \`.sh\` files using \`source\` to make the code available."$'\n'"Has security implications. Use with caution and ensure your directory is protected."$'\n'""
+exitCode="0"
 file="bin/build/tools/bash.sh"
-fn="bashSourcePath"
-foundNames=""
+foundNames=([0]="summary" [1]="argument" [2]="security")
+rawComment="Summary: Load a directory of bash scripts"$'\n'"Load a directory of bash scripts, excluding any dot directories (\`*/.*/*\`), and optionally any additional"$'\n'"files if you use \`--exclude\`. But recursively loads scripts in sorted alphabetic order within the directory until one fails."$'\n'"All files must be executable."$'\n'"Argument: --exclude pattern - String. Optional. String passed to \`! -path pattern\` in \`find\`"$'\n'"Argument: directory ... - Directory. Required. Directory to \`source\` all \`.sh\` files used."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Security: Loads bash files"$'\n'"Load a directory of \`.sh\` files using \`source\` to make the code available."$'\n'"Has security implications. Use with caution and ensure your directory is protected."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 security="Loads bash files"$'\n'""
-sourceFile="bin/build/tools/bash.sh"
-sourceModified="1769063211"
+sourceModified="1769208503"
 summary="Load a directory of bash scripts"$'\n'""
 usage="bashSourcePath [ --exclude pattern ] directory ... [ --help ]"
 # shellcheck disable=SC2016
-helpConsole='[92mUsage[0m: [38;2;170;170;255mbashSourcePath[0m [94m[ --exclude pattern ][0m [38;2;255;255;0m[35;48;2;0;0;0mdirectory ...[0m[0m [94m[ --help ][0m
-
-    [94m--exclude pattern  [1;97mString. Optional. String passed to [38;2;0;255;0;48;2;0;0;0m! -path pattern[0m in [38;2;0;255;0;48;2;0;0;0mfind[0m[0m
-    [31mdirectory ...      [1;97mDirectory. Required. Directory to [38;2;0;255;0;48;2;0;0;0msource[0m all [38;2;0;255;0;48;2;0;0;0m.sh[0m files used.[0m
-    [94m--help             [1;97mFlag. Optional. Display this help.[0m
-
-Load a directory of bash scripts, excluding any dot directories ([38;2;0;255;0;48;2;0;0;0m[36m/.[0m/[36m[0m), and optionally any additional[0m
-files if you use [38;2;0;255;0;48;2;0;0;0m--exclude[0m. But recursively loads scripts in sorted alphabetic order within the directory until one fails.
-All files must be executable.
-Load a directory of [38;2;0;255;0;48;2;0;0;0m.sh[0m files using [38;2;0;255;0;48;2;0;0;0msource[0m to make the code available.
-Has security implications. Use with caution and ensure your directory is protected.
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-'
+helpConsole=''$'\e''[[label]mUsage'$'\e''[0m: '$'\e''[[info]mbashSourcePath'$'\e''[0m '$'\e''[[blue]m[ --exclude pattern ]'$'\e''[0m '$'\e''[[bold]m'$'\e''[[magenta]mdirectory ...'$'\e''[0m'$'\e''[0m '$'\e''[[blue]m[ --help ]'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[blue]m--exclude pattern  '$'\e''[[value]mString. Optional. String passed to '$'\e''[[code]m! -path pattern'$'\e''[[reset]m in '$'\e''[[code]mfind'$'\e''[[reset]m'$'\e''[[reset]m'$'\n''    '$'\e''[[red]mdirectory ...      '$'\e''[[value]mDirectory. Required. Directory to '$'\e''[[code]msource'$'\e''[[reset]m all '$'\e''[[code]m.sh'$'\e''[[reset]m files used.'$'\e''[[reset]m'$'\n''    '$'\e''[[blue]m--help             '$'\e''[[value]mFlag. Optional. Display this help.'$'\e''[[reset]m'$'\n'''$'\n''Load a directory of bash scripts, excluding any dot directories ('$'\e''[[code]m'$'\e''[[cyan]m/.'$'\e''[[reset]m/'$'\e''[[cyan]m'$'\e''[[reset]m), and optionally any additional'$'\e''[[reset]m'$'\n''files if you use '$'\e''[[code]m--exclude'$'\e''[[reset]m. But recursively loads scripts in sorted alphabetic order within the directory until one fails.'$'\n''All files must be executable.'$'\n''Load a directory of '$'\e''[[code]m.sh'$'\e''[[reset]m files using '$'\e''[[code]msource'$'\e''[[reset]m to make the code available.'$'\n''Has security implications. Use with caution and ensure your directory is protected.'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[code]m0'$'\e''[[reset]m - Success'$'\n''- '$'\e''[[code]m1'$'\e''[[reset]m - Environment error'$'\n''- '$'\e''[[code]m2'$'\e''[[reset]m - Argument error'$'\n'''
 # shellcheck disable=SC2016
-helpPlain='Usage: bashSourcePath [ --exclude pattern ] directory ... [ --help ]
-
-    --exclude pattern  String. Optional. String passed to ! -path pattern in find
-    directory ...      Directory. Required. Directory to source all .sh files used.
-    --help             Flag. Optional. Display this help.
-
-Load a directory of bash scripts, excluding any dot directories (/./), and optionally any additional
-files if you use --exclude. But recursively loads scripts in sorted alphabetic order within the directory until one fails.
-All files must be executable.
-Load a directory of .sh files using source to make the code available.
-Has security implications. Use with caution and ensure your directory is protected.
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-'
+helpPlain='Usage: bashSourcePath [ --exclude pattern ] directory ... [ --help ]'$'\n'''$'\n''    --exclude pattern  String. Optional. String passed to ! -path pattern in find'$'\n''    directory ...      Directory. Required. Directory to source all .sh files used.'$'\n''    --help             Flag. Optional. Display this help.'$'\n'''$'\n''Load a directory of bash scripts, excluding any dot directories (/./), and optionally any additional'$'\n''files if you use --exclude. But recursively loads scripts in sorted alphabetic order within the directory until one fails.'$'\n''All files must be executable.'$'\n''Load a directory of .sh files using source to make the code available.'$'\n''Has security implications. Use with caution and ensure your directory is protected.'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''

@@ -1,52 +1,22 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-22
+# Generated on 2026-01-24
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/type.sh"
 argument="value - EmptyString. Required. Value to test."$'\n'"value - EmptyString. The value to test."$'\n'""
 base="type.sh"
 credits="F. Hauri - Give Up GitHub (isuint_Case)"$'\n'""
-description="Test if an argument is a signed integer"$'\n'""$'\n'"Return Code: 0 - if it is a signed integer"$'\n'"Return Code: 1 - if it is not a signed integer"$'\n'""$'\n'""
+description="Test if an argument is a signed integer"$'\n'""
+exitCode="0"
 file="bin/build/tools/type.sh"
-fn="isInteger"
-foundNames=""
-return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
+foundNames=([0]="argument" [1]="return_code" [2]="credits" [3]="source")
+rawComment="Test if an argument is a signed integer"$'\n'"Argument: value - EmptyString. Required. Value to test."$'\n'"Return Code: 0 - if it is a signed integer"$'\n'"Return Code: 1 - if it is not a signed integer"$'\n'"Argument: value - EmptyString. The value to test."$'\n'"Credits: F. Hauri - Give Up GitHub (isuint_Case)"$'\n'"Source: https://stackoverflow.com/questions/806906/how-do-i-test-if-a-variable-is-a-number-in-bash"$'\n'""$'\n'""
+return_code="0 - if it is a signed integer"$'\n'"1 - if it is not a signed integer"$'\n'""
 source="https://stackoverflow.com/questions/806906/how-do-i-test-if-a-variable-is-a-number-in-bash"$'\n'""
-sourceFile="bin/build/tools/type.sh"
 sourceModified="1769063211"
 summary="Test if an argument is a signed integer"
 usage="isInteger value [ value ]"
 # shellcheck disable=SC2016
-helpConsole='[92mUsage[0m: [38;2;170;170;255misInteger[0m [38;2;255;255;0m[35;48;2;0;0;0mvalue[0m[0m [94m[ value ][0m
-
-    [31mvalue  [1;97mEmptyString. Required. Value to test.[0m
-    [94mvalue  [1;97mEmptyString. The value to test.[0m
-
-Test if an argument is a signed integer
-
-Return Code: 0 - if it is a signed integer
-Return Code: 1 - if it is not a signed integer
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-'
+helpConsole=''$'\e''[[label]mUsage'$'\e''[0m: '$'\e''[[info]misInteger'$'\e''[0m '$'\e''[[bold]m'$'\e''[[magenta]mvalue'$'\e''[0m'$'\e''[0m '$'\e''[[blue]m[ value ]'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[red]mvalue  '$'\e''[[value]mEmptyString. Required. Value to test.'$'\e''[[reset]m'$'\n''    '$'\e''[[blue]mvalue  '$'\e''[[value]mEmptyString. The value to test.'$'\e''[[reset]m'$'\n'''$'\n''Test if an argument is a signed integer'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[code]m0'$'\e''[[reset]m - if it is a signed integer'$'\n''- '$'\e''[[code]m1'$'\e''[[reset]m - if it is not a signed integer'$'\n'''
 # shellcheck disable=SC2016
-helpPlain='Usage: isInteger value [ value ]
-
-    value  EmptyString. Required. Value to test.
-    value  EmptyString. The value to test.
-
-Test if an argument is a signed integer
-
-Return Code: 0 - if it is a signed integer
-Return Code: 1 - if it is not a signed integer
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-'
+helpPlain='Usage: isInteger value [ value ]'$'\n'''$'\n''    value  EmptyString. Required. Value to test.'$'\n''    value  EmptyString. The value to test.'$'\n'''$'\n''Test if an argument is a signed integer'$'\n'''$'\n''Return codes:'$'\n''- 0 - if it is a signed integer'$'\n''- 1 - if it is not a signed integer'$'\n'''

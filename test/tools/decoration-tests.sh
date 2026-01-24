@@ -7,23 +7,23 @@
 #
 
 testRepeat() {
-  assertEquals "$(repeat 10 "@")" "@@@@@@@@@@" || return $?
-  assertEquals "$(repeat 11 "!")" "!!!!!!!!!!!" || return $?
-  assertEquals "$(repeat 1 "x")" "x" || return $?
-  assertEquals "$(repeat 0 "x")" "" || return $?
+  assertEquals "$(textRepeat 10 "@")" "@@@@@@@@@@" || return $?
+  assertEquals "$(textRepeat 11 "!")" "!!!!!!!!!!!" || return $?
+  assertEquals "$(textRepeat 1 "x")" "x" || return $?
+  assertEquals "$(textRepeat 0 "x")" "" || return $?
 }
 
 testAlignRight() {
-  assertEquals "$(alignRight 10 "Dogmatic")" "  Dogmatic" || return $?
-  assertEquals "$(alignRight 10 "")" "          " || return $?
-  assertEquals "$(alignRight 2 "Dogmatic")" "Dogmatic" || return $?
-  assertEquals "$(alignRight 2 "")" "  " || return $?
+  assertEquals "$(textAlignRight 10 "Dogmatic")" "  Dogmatic" || return $?
+  assertEquals "$(textAlignRight 10 "")" "          " || return $?
+  assertEquals "$(textAlignRight 2 "Dogmatic")" "Dogmatic" || return $?
+  assertEquals "$(textAlignRight 2 "")" "  " || return $?
 }
 testAlignLeft() {
-  assertEquals "$(alignLeft 10 "Dogmatic")" "Dogmatic  " || return $?
-  assertEquals "$(alignLeft 10 "")" "          " || return $?
-  assertEquals "$(alignLeft 2 "Dogmatic")" "Dogmatic" || return $?
-  assertEquals "$(alignLeft 2 "")" "  " || return $?
+  assertEquals "$(textAlignLeft 10 "Dogmatic")" "Dogmatic  " || return $?
+  assertEquals "$(textAlignLeft 10 "")" "          " || return $?
+  assertEquals "$(textAlignLeft 2 "Dogmatic")" "Dogmatic" || return $?
+  assertEquals "$(textAlignLeft 2 "")" "  " || return $?
 }
 
 testRepeat2() {
@@ -32,7 +32,7 @@ testRepeat2() {
 
   n=0
   while [ "$n" -lt ${#string} ]; do
-    assertEquals "${string:0:$n}" "$(repeat "$n" .)" "Failed to match repeat $n" || return $?
+    assertEquals "${string:0:$n}" "$(textRepeat "$n" .)" "Failed to match textRepeat $n" || return $?
     n=$((n + 1))
   done
 }
@@ -44,7 +44,7 @@ testLabeledBigText() {
 
 testBoxedHeading() {
   local header="A really, really, really, really, really, really, really, really, really, really, really, really, really, really, really, really, really, really, really, really, really, really, really, really, really, really, long string which should likely be longer than any console or testing window that would likely be available at any point in the near or potential future which may have longer text widths perhaps even more than a few hundred. Waldo"
-  assertExitCode --stdout-match "A really, really" --stdout-no-match Waldo 0 boxedHeading "$header" || return $?
-  assertExitCode --stdout-match "A really, really" --stdout-no-match Waldo 0 boxedHeading --size 10 "$header" || return $?
-  assertExitCode --stdout-match "A really, really" --stdout-no-match Waldo 0 boxedHeading --shrink 20 "$header" || return $?
+  assertExitCode --stdout-match "A really, really" --stdout-no-match Waldo 0 consoleHeadingBoxed "$header" || return $?
+  assertExitCode --stdout-match "A really, really" --stdout-no-match Waldo 0 consoleHeadingBoxed --size 10 "$header" || return $?
+  assertExitCode --stdout-match "A really, really" --stdout-no-match Waldo 0 consoleHeadingBoxed --shrink 20 "$header" || return $?
 }

@@ -29,7 +29,7 @@ if source "${BASH_SOURCE[0]%/*}/../tools.sh"; then
       ba=(--debug)
     fi
     catchEnvironment "$handler" bashSanitize "${ba[@]+"${ba[@]}"}" "${changed[@]+"${changed[@]}"}" || return $?
-    if whichExists shfmt; then
+    if executableExists shfmt; then
       export SHFMT_ARGUMENTS
       catchReturn "$handler" buildEnvironmentLoad SHFMT_ARGUMENTS || return $?
       isArray SHFMT_ARGUMENTS || SHFMT_ARGUMENTS=()

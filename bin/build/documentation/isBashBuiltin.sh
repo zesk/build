@@ -1,44 +1,20 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-22
+# Generated on 2026-01-24
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/bash.sh"
 argument="builtin - String. Required. String to check if it's a bash builtin."$'\n'""
 base="bash.sh"
-description="Return Code: 0 - Yes, this string is a bash builtin command."$'\n'"Return Code: 1 - No, this is not a bash builtin command"$'\n'""
+description="No documentation for \`isBashBuiltin\`."$'\n'""
+exitCode="0"
 file="bin/build/tools/bash.sh"
-fn="isBashBuiltin"
-foundNames=""
-return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
-sourceFile="bin/build/tools/bash.sh"
-sourceModified="1769063211"
-summary="Return Code: 0 - Yes, this string is a bash"
+foundNames=([0]="argument" [1]="return_code")
+rawComment="Argument: builtin - String. Required. String to check if it's a bash builtin."$'\n'"Return Code: 0 - Yes, this string is a bash builtin command."$'\n'"Return Code: 1 - No, this is not a bash builtin command"$'\n'""$'\n'""
+return_code="0 - Yes, this string is a bash builtin command."$'\n'"1 - No, this is not a bash builtin command"$'\n'""
+sourceModified="1769208503"
+summary="undocumented"
 usage="isBashBuiltin builtin"
 # shellcheck disable=SC2016
-helpConsole='[92mUsage[0m: [38;2;170;170;255misBashBuiltin[0m [38;2;255;255;0m[35;48;2;0;0;0mbuiltin[0m[0m
-
-    [31mbuiltin  [1;97mString. Required. String to check if it'\''s a bash builtin.[0m
-
-Return Code: 0 - Yes, this string is a bash builtin command.
-Return Code: 1 - No, this is not a bash builtin command
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-'
+helpConsole=''$'\e''[[label]mUsage'$'\e''[0m: '$'\e''[[info]misBashBuiltin'$'\e''[0m '$'\e''[[bold]m'$'\e''[[magenta]mbuiltin'$'\e''[0m'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[red]mbuiltin  '$'\e''[[value]mString. Required. String to check if it'\''s a bash builtin.'$'\e''[[reset]m'$'\n'''$'\n''No documentation for '$'\e''[[code]misBashBuiltin'$'\e''[[reset]m.'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[code]m0'$'\e''[[reset]m - Yes, this string is a bash builtin command.'$'\n''- '$'\e''[[code]m1'$'\e''[[reset]m - No, this is not a bash builtin command'$'\n'''
 # shellcheck disable=SC2016
-helpPlain='Usage: isBashBuiltin builtin
-
-    builtin  String. Required. String to check if it'\''s a bash builtin.
-
-Return Code: 0 - Yes, this string is a bash builtin command.
-Return Code: 1 - No, this is not a bash builtin command
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-'
+helpPlain='Usage: isBashBuiltin builtin'$'\n'''$'\n''    builtin  String. Required. String to check if it'\''s a bash builtin.'$'\n'''$'\n''No documentation for isBashBuiltin.'$'\n'''$'\n''Return codes:'$'\n''- 0 - Yes, this string is a bash builtin command.'$'\n''- 1 - No, this is not a bash builtin command'$'\n'''

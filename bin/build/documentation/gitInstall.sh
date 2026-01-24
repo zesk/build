@@ -1,42 +1,21 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-22
+# Generated on 2026-01-24
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/git.sh"
 argument="package - Additional packages to install"$'\n'""
 base="git.sh"
 description="Installs the \`git\` binary"$'\n'""
+exitCode="0"
 file="bin/build/tools/git.sh"
-fn="gitInstall"
-foundNames=""
+foundNames=([0]="argument" [1]="summary")
+rawComment="Installs the \`git\` binary"$'\n'"Argument: package - Additional packages to install"$'\n'"Summary: Install git if needed"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/git.sh"
-sourceModified="1769063211"
+sourceModified="1769199547"
 summary="Install git if needed"$'\n'""
 usage="gitInstall [ package ]"
 # shellcheck disable=SC2016
-helpConsole='[92mUsage[0m: [38;2;170;170;255mgitInstall[0m [94m[ package ][0m
-
-    [94mpackage  [1;97mAdditional packages to install[0m
-
-Installs the [38;2;0;255;0;48;2;0;0;0mgit[0m binary
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-'
+helpConsole=''$'\e''[[label]mUsage'$'\e''[0m: '$'\e''[[info]mgitInstall'$'\e''[0m '$'\e''[[blue]m[ package ]'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[blue]mpackage  '$'\e''[[value]mAdditional packages to install'$'\e''[[reset]m'$'\n'''$'\n''Installs the '$'\e''[[code]mgit'$'\e''[[reset]m binary'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[code]m0'$'\e''[[reset]m - Success'$'\n''- '$'\e''[[code]m1'$'\e''[[reset]m - Environment error'$'\n''- '$'\e''[[code]m2'$'\e''[[reset]m - Argument error'$'\n'''
 # shellcheck disable=SC2016
-helpPlain='Usage: gitInstall [ package ]
-
-    package  Additional packages to install
-
-Installs the git binary
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-'
+helpPlain='Usage: gitInstall [ package ]'$'\n'''$'\n''    package  Additional packages to install'$'\n'''$'\n''Installs the git binary'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''

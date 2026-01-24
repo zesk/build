@@ -29,7 +29,7 @@ _gitAddRemotesToSSHKnown() {
     statusMessage decorate info "Adding $remoteHost to SSH known hosts ..."
     catchEnvironment "$handler" sshKnownHostAdd "$remoteHost" || return $?
   done
-  clearLine
+  consoleLineFill
 }
 
 # Test-Build-Home: true

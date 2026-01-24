@@ -23,9 +23,9 @@ __awsTestCleanup() {
 }
 
 testAWSInstall() {
-  if ! whichExists aws; then
+  if ! executableExists aws; then
     assertExitCode 0 awsInstall || return $?
-    assertExitCode 0 whichExists aws || return $?
+    assertExitCode 0 executableExists aws || return $?
   fi
 }
 
@@ -151,29 +151,29 @@ testAWSExpiration() {
   AWS_ACCESS_KEY_DATE="$thisYear-$thisMonth-01"
   _isAWSKeyUpToDateTest "$LINENO" true "$expirationDays" || return $?
 
-  __testSection yesterdayDate 0
-  AWS_ACCESS_KEY_DATE=$(yesterdayDate)
+  __testSection dateYesterday 0
+  AWS_ACCESS_KEY_DATE=$(dateYesterday)
   expirationDays=0
   _isAWSKeyUpToDateTest "$LINENO" false $expirationDays || return $?
 
-  __testSection yesterdayDate 1
+  __testSection dateYesterday 1
   expirationDays=1
   _isAWSKeyUpToDateTest "$LINENO" true $expirationDays || return $?
 
-  __testSection yesterdayDate 2
+  __testSection dateYesterday 2
   expirationDays=2
   _isAWSKeyUpToDateTest "$LINENO" true $expirationDays || return $?
 
-  AWS_ACCESS_KEY_DATE=$(todayDate)
+  AWS_ACCESS_KEY_DATE=$(dateToday)
 
   expirationDays=0
-  __testSection todayDate $expirationDays
+  __testSection dateToday $expirationDays
   _isAWSKeyUpToDateTest "$LINENO" true $expirationDays || return $?
   expirationDays=1
-  __testSection todayDate $expirationDays
+  __testSection dateToday $expirationDays
   _isAWSKeyUpToDateTest "$LINENO" true $expirationDays || return $?
   expirationDays=2
-  __testSection todayDate $expirationDays
+  __testSection dateToday $expirationDays
   _isAWSKeyUpToDateTest "$LINENO" true $expirationDays || return $?
 
   timingReport "$start" Done

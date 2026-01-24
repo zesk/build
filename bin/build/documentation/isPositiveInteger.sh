@@ -1,49 +1,21 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-22
+# Generated on 2026-01-24
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/type.sh"
 argument="value - EmptyString. Required. Value to check if it is an unsigned integer"$'\n'""
 base="type.sh"
-description="Test if an argument is a positive integer (non-zero)"$'\n'"Takes one argument only."$'\n'"Return Code: 0 - if it is a positive integer"$'\n'"Return Code: 1 - if it is not a positive integer"$'\n'""
+description="Test if an argument is a positive integer (non-zero)"$'\n'"Takes one argument only."$'\n'""
+exitCode="0"
 file="bin/build/tools/type.sh"
-fn="isPositiveInteger"
-foundNames=""
+foundNames=([0]="argument" [1]="return_code" [2]="requires")
+rawComment="Test if an argument is a positive integer (non-zero)"$'\n'"Takes one argument only."$'\n'"Argument: value - EmptyString. Required. Value to check if it is an unsigned integer"$'\n'"Return Code: 0 - if it is a positive integer"$'\n'"Return Code: 1 - if it is not a positive integer"$'\n'"Requires: catchArgument isUnsignedInteger usageDocument"$'\n'""$'\n'""
 requires="catchArgument isUnsignedInteger usageDocument"$'\n'""
-return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
-sourceFile="bin/build/tools/type.sh"
+return_code="0 - if it is a positive integer"$'\n'"1 - if it is not a positive integer"$'\n'""
 sourceModified="1769063211"
 summary="Test if an argument is a positive integer (non-zero)"
 usage="isPositiveInteger value"
 # shellcheck disable=SC2016
-helpConsole='[92mUsage[0m: [38;2;170;170;255misPositiveInteger[0m [38;2;255;255;0m[35;48;2;0;0;0mvalue[0m[0m
-
-    [31mvalue  [1;97mEmptyString. Required. Value to check if it is an unsigned integer[0m
-
-Test if an argument is a positive integer (non-zero)
-Takes one argument only.
-Return Code: 0 - if it is a positive integer
-Return Code: 1 - if it is not a positive integer
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-'
+helpConsole=''$'\e''[[label]mUsage'$'\e''[0m: '$'\e''[[info]misPositiveInteger'$'\e''[0m '$'\e''[[bold]m'$'\e''[[magenta]mvalue'$'\e''[0m'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[red]mvalue  '$'\e''[[value]mEmptyString. Required. Value to check if it is an unsigned integer'$'\e''[[reset]m'$'\n'''$'\n''Test if an argument is a positive integer (non-zero)'$'\n''Takes one argument only.'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[code]m0'$'\e''[[reset]m - if it is a positive integer'$'\n''- '$'\e''[[code]m1'$'\e''[[reset]m - if it is not a positive integer'$'\n'''
 # shellcheck disable=SC2016
-helpPlain='Usage: isPositiveInteger value
-
-    value  EmptyString. Required. Value to check if it is an unsigned integer
-
-Test if an argument is a positive integer (non-zero)
-Takes one argument only.
-Return Code: 0 - if it is a positive integer
-Return Code: 1 - if it is not a positive integer
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-'
+helpPlain='Usage: isPositiveInteger value'$'\n'''$'\n''    value  EmptyString. Required. Value to check if it is an unsigned integer'$'\n'''$'\n''Test if an argument is a positive integer (non-zero)'$'\n''Takes one argument only.'$'\n'''$'\n''Return codes:'$'\n''- 0 - if it is a positive integer'$'\n''- 1 - if it is not a positive integer'$'\n'''

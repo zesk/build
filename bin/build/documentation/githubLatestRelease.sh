@@ -1,51 +1,22 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-22
+# Generated on 2026-01-24
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/github.sh"
 argument="projectName - String. Required. Github project name in the form of \`owner/repository\`"$'\n'""
 base="github.sh"
-description="Get the latest release version"$'\n'""$'\n'""
+description="Get the latest release version"$'\n'""
 environment="GITHUB_ACCESS_TOKEN"$'\n'""
+exitCode="0"
 file="bin/build/tools/github.sh"
-fn="githubLatestRelease"
-foundNames=""
+foundNames=([0]="argument" [1]="environment")
+rawComment="Get the latest release version"$'\n'"Argument: projectName - String. Required. Github project name in the form of \`owner/repository\`"$'\n'"Environment: GITHUB_ACCESS_TOKEN"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/github.sh"
-sourceModified="1769063211"
+sourceModified="1769111847"
 summary="Get the latest release version"
 usage="githubLatestRelease projectName"
 # shellcheck disable=SC2016
-helpConsole='[92mUsage[0m: [38;2;170;170;255mgithubLatestRelease[0m [38;2;255;255;0m[35;48;2;0;0;0mprojectName[0m[0m
-
-    [31mprojectName  [1;97mString. Required. Github project name in the form of [38;2;0;255;0;48;2;0;0;0mowner/repository[0m[0m
-
-Get the latest release version
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-
-Environment variables:
-- GITHUB_ACCESS_TOKEN
-- 
-'
+helpConsole=''$'\e''[[label]mUsage'$'\e''[0m: '$'\e''[[info]mgithubLatestRelease'$'\e''[0m '$'\e''[[bold]m'$'\e''[[magenta]mprojectName'$'\e''[0m'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[red]mprojectName  '$'\e''[[value]mString. Required. Github project name in the form of '$'\e''[[code]mowner/repository'$'\e''[[reset]m'$'\e''[[reset]m'$'\n'''$'\n''Get the latest release version'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[code]m0'$'\e''[[reset]m - Success'$'\n''- '$'\e''[[code]m1'$'\e''[[reset]m - Environment error'$'\n''- '$'\e''[[code]m2'$'\e''[[reset]m - Argument error'$'\n'''$'\n''Environment variables:'$'\n''- GITHUB_ACCESS_TOKEN'$'\n'''
 # shellcheck disable=SC2016
-helpPlain='Usage: githubLatestRelease projectName
-
-    projectName  String. Required. Github project name in the form of owner/repository
-
-Get the latest release version
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-
-Environment variables:
-- GITHUB_ACCESS_TOKEN
-- 
-'
+helpPlain='Usage: githubLatestRelease projectName'$'\n'''$'\n''    projectName  String. Required. Github project name in the form of owner/repository'$'\n'''$'\n''Get the latest release version'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''$'\n''Environment variables:'$'\n''- GITHUB_ACCESS_TOKEN'$'\n'''

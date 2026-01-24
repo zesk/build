@@ -1,52 +1,20 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-22
+# Generated on 2026-01-24
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/prompt.sh"
 argument="colorScheme - String. Optional. Color scheme to choose: \`light\`, \`dark\`, \`forest\`"$'\n'"--help - Flag. Optional. Display this help."$'\n'""
 base="prompt.sh"
 description="Color schemes for prompts"$'\n'"Options are:"$'\n'"- forest"$'\n'"- light (default)"$'\n'"- dark"$'\n'""
+exitCode="0"
 file="bin/build/tools/prompt.sh"
-fn="bashPromptColorScheme"
-foundNames=""
+foundNames=([0]="argument")
+rawComment="Color schemes for prompts"$'\n'"Options are:"$'\n'"- forest"$'\n'"- light (default)"$'\n'"- dark"$'\n'"Argument: colorScheme - String. Optional. Color scheme to choose: \`light\`, \`dark\`, \`forest\`"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
-sourceFile="bin/build/tools/prompt.sh"
 sourceModified="1769063211"
 summary="Color schemes for prompts"
 usage="bashPromptColorScheme [ colorScheme ] [ --help ]"
 # shellcheck disable=SC2016
-helpConsole='[92mUsage[0m: [38;2;170;170;255mbashPromptColorScheme[0m [94m[ colorScheme ][0m [94m[ --help ][0m
-
-    [94mcolorScheme  [1;97mString. Optional. Color scheme to choose: [38;2;0;255;0;48;2;0;0;0mlight[0m, [38;2;0;255;0;48;2;0;0;0mdark[0m, [38;2;0;255;0;48;2;0;0;0mforest[0m[0m
-    [94m--help       [1;97mFlag. Optional. Display this help.[0m
-
-Color schemes for prompts
-Options are:
-- forest
-- light (default)
-- dark
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-'
+helpConsole=''$'\e''[[label]mUsage'$'\e''[0m: '$'\e''[[info]mbashPromptColorScheme'$'\e''[0m '$'\e''[[blue]m[ colorScheme ]'$'\e''[0m '$'\e''[[blue]m[ --help ]'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[blue]mcolorScheme  '$'\e''[[value]mString. Optional. Color scheme to choose: '$'\e''[[code]mlight'$'\e''[[reset]m, '$'\e''[[code]mdark'$'\e''[[reset]m, '$'\e''[[code]mforest'$'\e''[[reset]m'$'\e''[[reset]m'$'\n''    '$'\e''[[blue]m--help       '$'\e''[[value]mFlag. Optional. Display this help.'$'\e''[[reset]m'$'\n'''$'\n''Color schemes for prompts'$'\n''Options are:'$'\n''- forest'$'\n''- light (default)'$'\n''- dark'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[code]m0'$'\e''[[reset]m - Success'$'\n''- '$'\e''[[code]m1'$'\e''[[reset]m - Environment error'$'\n''- '$'\e''[[code]m2'$'\e''[[reset]m - Argument error'$'\n'''
 # shellcheck disable=SC2016
-helpPlain='Usage: bashPromptColorScheme [ colorScheme ] [ --help ]
-
-    colorScheme  String. Optional. Color scheme to choose: light, dark, forest
-    --help       Flag. Optional. Display this help.
-
-Color schemes for prompts
-Options are:
-- forest
-- light (default)
-- dark
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-'
+helpPlain='Usage: bashPromptColorScheme [ colorScheme ] [ --help ]'$'\n'''$'\n''    colorScheme  String. Optional. Color scheme to choose: light, dark, forest'$'\n''    --help       Flag. Optional. Display this help.'$'\n'''$'\n''Color schemes for prompts'$'\n''Options are:'$'\n''- forest'$'\n''- light (default)'$'\n''- dark'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''

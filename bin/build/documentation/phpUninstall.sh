@@ -1,54 +1,20 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-22
+# Generated on 2026-01-24
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/php.sh"
 argument="package - Additional packages to install"$'\n'""
 base="php.sh"
-description="Uninstall \`php\`"$'\n'""$'\n'"If this fails it will output the installation log."$'\n'""$'\n'"When this tool succeeds the \`php\` binary is no longer available in the local operating system."$'\n'"Return Code: 1 - If uninstallation fails"$'\n'"Return Code: 0 - If uninstallation succeeds"$'\n'""
+description="Uninstall \`php\`"$'\n'"If this fails it will output the installation log."$'\n'"When this tool succeeds the \`php\` binary is no longer available in the local operating system."$'\n'""
+exitCode="0"
 file="bin/build/tools/php.sh"
-fn="phpUninstall"
-foundNames=""
-return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
-sourceFile="bin/build/tools/php.sh"
-sourceModified="1769063211"
+foundNames=([0]="argument" [1]="summary" [2]="return_code")
+rawComment="Uninstall \`php\`"$'\n'"If this fails it will output the installation log."$'\n'"Argument: package - Additional packages to install"$'\n'"Summary: Uninstall \`php\`"$'\n'"When this tool succeeds the \`php\` binary is no longer available in the local operating system."$'\n'"Return Code: 1 - If uninstallation fails"$'\n'"Return Code: 0 - If uninstallation succeeds"$'\n'""$'\n'""
+return_code="1 - If uninstallation fails"$'\n'"0 - If uninstallation succeeds"$'\n'""
+sourceModified="1769190358"
 summary="Uninstall \`php\`"$'\n'""
 usage="phpUninstall [ package ]"
 # shellcheck disable=SC2016
-helpConsole='[92mUsage[0m: [38;2;170;170;255mphpUninstall[0m [94m[ package ][0m
-
-    [94mpackage  [1;97mAdditional packages to install[0m
-
-Uninstall [38;2;0;255;0;48;2;0;0;0mphp[0m
-
-If this fails it will output the installation log.
-
-When this tool succeeds the [38;2;0;255;0;48;2;0;0;0mphp[0m binary is no longer available in the local operating system.
-Return Code: 1 - If uninstallation fails
-Return Code: 0 - If uninstallation succeeds
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-'
+helpConsole=''$'\e''[[label]mUsage'$'\e''[0m: '$'\e''[[info]mphpUninstall'$'\e''[0m '$'\e''[[blue]m[ package ]'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[blue]mpackage  '$'\e''[[value]mAdditional packages to install'$'\e''[[reset]m'$'\n'''$'\n''Uninstall '$'\e''[[code]mphp'$'\e''[[reset]m'$'\n''If this fails it will output the installation log.'$'\n''When this tool succeeds the '$'\e''[[code]mphp'$'\e''[[reset]m binary is no longer available in the local operating system.'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[code]m1'$'\e''[[reset]m - If uninstallation fails'$'\n''- '$'\e''[[code]m0'$'\e''[[reset]m - If uninstallation succeeds'$'\n'''
 # shellcheck disable=SC2016
-helpPlain='Usage: phpUninstall [ package ]
-
-    package  Additional packages to install
-
-Uninstall php
-
-If this fails it will output the installation log.
-
-When this tool succeeds the php binary is no longer available in the local operating system.
-Return Code: 1 - If uninstallation fails
-Return Code: 0 - If uninstallation succeeds
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-'
+helpPlain='Usage: phpUninstall [ package ]'$'\n'''$'\n''    package  Additional packages to install'$'\n'''$'\n''Uninstall php'$'\n''If this fails it will output the installation log.'$'\n''When this tool succeeds the php binary is no longer available in the local operating system.'$'\n'''$'\n''Return codes:'$'\n''- 1 - If uninstallation fails'$'\n''- 0 - If uninstallation succeeds'$'\n'''

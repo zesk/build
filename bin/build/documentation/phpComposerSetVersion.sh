@@ -1,66 +1,20 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-22
+# Generated on 2026-01-24
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/php-composer.sh"
 argument="--version - String. Use this version instead of current version."$'\n'"--home - Directory. Optional. Use this directory for the location of \`composer.json\`."$'\n'"--status - Flag. Optional. When set, returns 0 when te version was updated successfully and \$(returnCode identical) when the files are the same"$'\n'"--quiet - Flag. Optional. Do not output anything to stdout and just do the action and exit."$'\n'""
 base="php-composer.sh"
-description="For any project, ensures the \`version\` field in \`composer.json\` matches \`runHook version-current\`"$'\n'""$'\n'"Run as a commit hook for any PHP project or as part of your build or development process"$'\n'""$'\n'"Typically the version is copied in without the leading \`v\`."$'\n'""$'\n'"Return Code: 0 - File was updated successfully."$'\n'"Return Code: 1 - Environment error"$'\n'"Return Code: 2 - Argument error"$'\n'"Return Code: 105 - Identical files (only when --status is passed)"$'\n'""
+description="For any project, ensures the \`version\` field in \`composer.json\` matches \`runHook version-current\`"$'\n'"Run as a commit hook for any PHP project or as part of your build or development process"$'\n'"Typically the version is copied in without the leading \`v\`."$'\n'""
+exitCode="0"
 file="bin/build/tools/php-composer.sh"
-fn="phpComposerSetVersion"
-foundNames=""
-return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
-sourceFile="bin/build/tools/php-composer.sh"
-sourceModified="1769063211"
+foundNames=([0]="argument" [1]="return_code")
+rawComment="For any project, ensures the \`version\` field in \`composer.json\` matches \`runHook version-current\`"$'\n'"Run as a commit hook for any PHP project or as part of your build or development process"$'\n'"Typically the version is copied in without the leading \`v\`."$'\n'"Argument: --version - String. Use this version instead of current version."$'\n'"Argument: --home - Directory. Optional. Use this directory for the location of \`composer.json\`."$'\n'"Argument: --status - Flag. Optional. When set, returns 0 when te version was updated successfully and \$(returnCode identical) when the files are the same"$'\n'"Argument: --quiet - Flag. Optional. Do not output anything to stdout and just do the action and exit."$'\n'"Return Code: 0 - File was updated successfully."$'\n'"Return Code: 1 - Environment error"$'\n'"Return Code: 2 - Argument error"$'\n'"Return Code: 105 - Identical files (only when --status is passed)"$'\n'""$'\n'""
+return_code="0 - File was updated successfully."$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'"105 - Identical files (only when --status is passed)"$'\n'""
+sourceModified="1769184734"
 summary="For any project, ensures the \`version\` field in \`composer.json\` matches"
 usage="phpComposerSetVersion [ --version ] [ --home ] [ --status ] [ --quiet ]"
 # shellcheck disable=SC2016
-helpConsole='[92mUsage[0m: [38;2;170;170;255mphpComposerSetVersion[0m [94m[ --version ][0m [94m[ --home ][0m [94m[ --status ][0m [94m[ --quiet ][0m
-
-    [94m--version  [1;97mString. Use this version instead of current version.[0m
-    [94m--home     [1;97mDirectory. Optional. Use this directory for the location of [38;2;0;255;0;48;2;0;0;0mcomposer.json[0m.[0m
-    [94m--status   [1;97mFlag. Optional. When set, returns 0 when te version was updated successfully and $(returnCode identical) when the files are the same[0m
-    [94m--quiet    [1;97mFlag. Optional. Do not output anything to stdout and just do the action and exit.[0m
-
-For any project, ensures the [38;2;0;255;0;48;2;0;0;0mversion[0m field in [38;2;0;255;0;48;2;0;0;0mcomposer.json[0m matches [38;2;0;255;0;48;2;0;0;0mrunHook version-current[0m
-
-Run as a commit hook for any PHP project or as part of your build or development process
-
-Typically the version is copied in without the leading [38;2;0;255;0;48;2;0;0;0mv[0m.
-
-Return Code: 0 - File was updated successfully.
-Return Code: 1 - Environment error
-Return Code: 2 - Argument error
-Return Code: 105 - Identical files (only when --status is passed)
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-'
+helpConsole=''$'\e''[[label]mUsage'$'\e''[0m: '$'\e''[[info]mphpComposerSetVersion'$'\e''[0m '$'\e''[[blue]m[ --version ]'$'\e''[0m '$'\e''[[blue]m[ --home ]'$'\e''[0m '$'\e''[[blue]m[ --status ]'$'\e''[0m '$'\e''[[blue]m[ --quiet ]'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[blue]m--version  '$'\e''[[value]mString. Use this version instead of current version.'$'\e''[[reset]m'$'\n''    '$'\e''[[blue]m--home     '$'\e''[[value]mDirectory. Optional. Use this directory for the location of '$'\e''[[code]mcomposer.json'$'\e''[[reset]m.'$'\e''[[reset]m'$'\n''    '$'\e''[[blue]m--status   '$'\e''[[value]mFlag. Optional. When set, returns 0 when te version was updated successfully and $(returnCode identical) when the files are the same'$'\e''[[reset]m'$'\n''    '$'\e''[[blue]m--quiet    '$'\e''[[value]mFlag. Optional. Do not output anything to stdout and just do the action and exit.'$'\e''[[reset]m'$'\n'''$'\n''For any project, ensures the '$'\e''[[code]mversion'$'\e''[[reset]m field in '$'\e''[[code]mcomposer.json'$'\e''[[reset]m matches '$'\e''[[code]mrunHook version-current'$'\e''[[reset]m'$'\n''Run as a commit hook for any PHP project or as part of your build or development process'$'\n''Typically the version is copied in without the leading '$'\e''[[code]mv'$'\e''[[reset]m.'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[code]m0'$'\e''[[reset]m - File was updated successfully.'$'\n''- '$'\e''[[code]m1'$'\e''[[reset]m - Environment error'$'\n''- '$'\e''[[code]m2'$'\e''[[reset]m - Argument error'$'\n''- '$'\e''[[code]m105'$'\e''[[reset]m - Identical files (only when --status is passed)'$'\n'''
 # shellcheck disable=SC2016
-helpPlain='Usage: phpComposerSetVersion [ --version ] [ --home ] [ --status ] [ --quiet ]
-
-    --version  String. Use this version instead of current version.
-    --home     Directory. Optional. Use this directory for the location of composer.json.
-    --status   Flag. Optional. When set, returns 0 when te version was updated successfully and $(returnCode identical) when the files are the same
-    --quiet    Flag. Optional. Do not output anything to stdout and just do the action and exit.
-
-For any project, ensures the version field in composer.json matches runHook version-current
-
-Run as a commit hook for any PHP project or as part of your build or development process
-
-Typically the version is copied in without the leading v.
-
-Return Code: 0 - File was updated successfully.
-Return Code: 1 - Environment error
-Return Code: 2 - Argument error
-Return Code: 105 - Identical files (only when --status is passed)
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-'
+helpPlain='Usage: phpComposerSetVersion [ --version ] [ --home ] [ --status ] [ --quiet ]'$'\n'''$'\n''    --version  String. Use this version instead of current version.'$'\n''    --home     Directory. Optional. Use this directory for the location of composer.json.'$'\n''    --status   Flag. Optional. When set, returns 0 when te version was updated successfully and $(returnCode identical) when the files are the same'$'\n''    --quiet    Flag. Optional. Do not output anything to stdout and just do the action and exit.'$'\n'''$'\n''For any project, ensures the version field in composer.json matches runHook version-current'$'\n''Run as a commit hook for any PHP project or as part of your build or development process'$'\n''Typically the version is copied in without the leading v.'$'\n'''$'\n''Return codes:'$'\n''- 0 - File was updated successfully.'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n''- 105 - Identical files (only when --status is passed)'$'\n'''

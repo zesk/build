@@ -10,7 +10,7 @@ __awsInstall() {
 
   [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
 
-  if whichExists aws; then
+  if executableExists aws; then
     return 0
   fi
 

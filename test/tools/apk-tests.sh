@@ -26,11 +26,10 @@ testIsApkInstalled() {
   fi
 
   mockEnvironmentStop BUILD_DEBUG
-
 }
 
 testAlpineContainer() {
-  if whichExists docker; then
+  if executableExists docker; then
 
     mockEnvironmentStart BUILD_DOCKER_IMAGE
     mockEnvironmentStart BUILD_DOCKER_PATH

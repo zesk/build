@@ -24,6 +24,7 @@ pipelines:
           artifacts:
             - .build.env
           script:
+            - bin/build/tools.sh timing --name zesk-build-load env -i PATH=$PATH HOME=$HOME bin/build/tools.sh timing timingStart
             - bin/build.sh --commit
             - bin/tools.sh buildStepInitialize "${BUILD_TEST_DUMP_ENVIRONMENT-}"
       - parallel:
@@ -36,6 +37,7 @@ pipelines:
                 size: 2x
                 name: Production Fast Tests 2x
                 script:
+                  - bin/build/tools.sh timing --name zesk-build-load env -i PATH=$PATH HOME=$HOME bin/build/tools.sh timing timingStart
                   - bin/tools.sh buildStepInitialize "${BUILD_TEST_DUMP_ENVIRONMENT-}"
                   - bin/tools.sh buildProductionTest --env-file .build.env --skip-tag slow --skip-tag package-install
             - step:
@@ -47,6 +49,7 @@ pipelines:
                 size: 4x
                 name: Production Slow Tests 4x
                 script:
+                  - bin/build/tools.sh timing --name zesk-build-load env -i PATH=$PATH HOME=$HOME bin/build/tools.sh timing timingStart
                   - bin/tools.sh buildStepInitialize "${BUILD_TEST_DUMP_ENVIRONMENT-}"
                   - bin/tools.sh buildProductionTest --env-file .build.env --tag slow
             - step:
@@ -58,6 +61,7 @@ pipelines:
                 size: 1x
                 name: Production Package Tests 1x
                 script:
+                  - bin/build/tools.sh timing --name zesk-build-load env -i PATH=$PATH HOME=$HOME bin/build/tools.sh timing timingStart
                   - bin/tools.sh buildStepInitialize "${BUILD_TEST_DUMP_ENVIRONMENT-}"
                   - bin/tools.sh buildProductionTest --env-file .build.env --tag package-install --skip-tag package-install-last # poor man's ordering
                   - bin/tools.sh buildProductionTest --env-file .build.env --tag package-install --tag +package-install-last # poor man's ordering
@@ -69,6 +73,7 @@ pipelines:
             - documentation/.site/
             - documentation/.docs/
           script:
+            - bin/build/tools.sh timing --name zesk-build-load env -i PATH=$PATH HOME=$HOME bin/build/tools.sh timing timingStart
             - bin/tools.sh buildStepInitialize "${BUILD_TEST_DUMP_ENVIRONMENT-}"
             - bin/build/tools.sh environmentFileLoad .build.env --execute bin/build.sh --documentation
             - bin/deploy.sh --env-file .build.env --documentation --release
@@ -83,6 +88,7 @@ pipelines:
           services:
             - docker
           script:
+            - bin/build/tools.sh timing --name zesk-build-load env -i PATH=$PATH HOME=$HOME bin/build/tools.sh timing timingStart
             - bin/build.sh
             - bin/tools.sh buildStepInitialize "${BUILD_TEST_DUMP_ENVIRONMENT-}"
       - parallel:
@@ -96,6 +102,7 @@ pipelines:
                 size: 2x
                 name: Staging Fast Tests 2x
                 script:
+                  - bin/build/tools.sh timing --name zesk-build-load env -i PATH=$PATH HOME=$HOME bin/build/tools.sh timing timingStart
                   - bin/tools.sh buildStepInitialize "${BUILD_TEST_DUMP_ENVIRONMENT-}"
                   - bin/tools.sh buildStagingTest --env-file .build.env --skip-tag slow --skip-tag package-install
             - step:
@@ -107,6 +114,7 @@ pipelines:
                 size: 4x
                 name: Staging Slow Tests 4x
                 script:
+                  - bin/build/tools.sh timing --name zesk-build-load env -i PATH=$PATH HOME=$HOME bin/build/tools.sh timing timingStart
                   - bin/tools.sh buildStepInitialize "${BUILD_TEST_DUMP_ENVIRONMENT-}"
                   - bin/tools.sh buildStagingTest --env-file .build.env --tag slow
             - step:
@@ -118,6 +126,7 @@ pipelines:
                 size: 1x
                 name: Staging Package Tests 1x
                 script:
+                  - bin/build/tools.sh timing --name zesk-build-load env -i PATH=$PATH HOME=$HOME bin/build/tools.sh timing timingStart
                   - bin/tools.sh buildStepInitialize "${BUILD_TEST_DUMP_ENVIRONMENT-}"
                   - bin/tools.sh buildStagingTest --env-file .build.env --tag package-install --skip-tag package-install-last
                   - bin/tools.sh buildStagingTest --env-file .build.env --tag package-install --tag +package-install-last
@@ -129,6 +138,7 @@ pipelines:
             - documentation/.docs/
             - .interrupt.log
           script:
+            - bin/build/tools.sh timing --name zesk-build-load env -i PATH=$PATH HOME=$HOME bin/build/tools.sh timing timingStart
             - bin/tools.sh buildStepInitialize "${BUILD_TEST_DUMP_ENVIRONMENT-}"
             - bin/build/tools.sh environmentFileLoad .build.env --execute bin/build.sh --documentation --commit
             - bin/deploy.sh --env-file .build.env --documentation --no-release
@@ -143,6 +153,7 @@ pipelines:
           services:
             - docker
           script:
+            - bin/build/tools.sh timing --name zesk-build-load env -i PATH=$PATH HOME=$HOME bin/build/tools.sh timing timingStart
             - bin/build.sh --documentation
             - bin/tools.sh buildStepInitialize "${BUILD_TEST_DUMP_ENVIRONMENT-}"
             - bin/deploy.sh --env-file .build.env --documentation --release
@@ -158,6 +169,7 @@ pipelines:
           services:
             - docker
           script:
+            - bin/build/tools.sh timing --name zesk-build-load env -i PATH=$PATH HOME=$HOME bin/build/tools.sh timing timingStart
             - bin/tools.sh buildStepInitialize "${BUILD_TEST_DUMP_ENVIRONMENT-}"
             - IFS=' ' read -r -a aa < <(printf "%s\n" "${BUILD_TEST_ARGUMENTS-}")
             - BUILD_TEST_FLAGS="${BUILD_TEST_FLAGS-};Plumber:true;Housekeeper:true" BUILD_DEBUG="${BUILD_DEBUG-%,},usage" bin/test.sh "${aa[@]+"${aa[@]}"}"
@@ -172,6 +184,7 @@ pipelines:
             - documentation/.docs/
             - .interrupt.log
           script:
+            - bin/build/tools.sh timing --name zesk-build-load env -i PATH=$PATH HOME=$HOME bin/build/tools.sh timing timingStart
             - bin/build.sh --documentation --commit
             - bin/tools.sh buildStepInitialize "${BUILD_TEST_DUMP_ENVIRONMENT-}"
             - bin/deploy.sh --env-file .build.env --documentation --no-release
@@ -200,6 +213,7 @@ pipelines:
             - documentation/.docs/
             - .interrupt.log
           script:
+            - bin/build/tools.sh timing --name zesk-build-load env -i PATH=$PATH HOME=$HOME bin/build/tools.sh timing timingStart
             - bin/build.sh --documentation --commit
             - bin/tools.sh buildStepInitialize "${BUILD_TEST_DUMP_ENVIRONMENT-}"
             - bin/deploy.sh --env-file .build.env --documentation --no-release
@@ -215,6 +229,7 @@ pipelines:
           services:
             - docker
           script:
+            - bin/build/tools.sh timing --name zesk-build-load env -i PATH=$PATH HOME=$HOME bin/build/tools.sh timing timingStart
             - IFS=' ' read -r -a aa < <(printf "%s\n" "${BUILD_TEST_ARGUMENTS-}")
             - bin/build.sh --no-documentation --no-commit --debug
             - bin/tools.sh buildStepInitialize "${BUILD_TEST_DUMP_ENVIRONMENT-}"

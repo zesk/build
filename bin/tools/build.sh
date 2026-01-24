@@ -65,7 +65,7 @@ _buildStepInitialize() {
 __buildDebugColors() {
   printf -- "BUILD_COLORS=\"%s\"\n" "${BUILD_COLORS-}"
   printf -- "tput colors %s" "$(tput colors 2>&1 || :)"
-  if hasColors; then
+  if consoleHasColors; then
     decorate success "Has colors"
   else
     decorate error "No colors ${BUILD_COLORS-¢}"
@@ -164,7 +164,7 @@ __buildBuild() {
 
   local size
 
-  if ! whichExists yq; then
+  if ! executableExists yq; then
     size=$(grep -E '(deployment|size):' bitbucket-pipelines.yml | grep -A 1 "${BITBUCKET_DEPLOYMENT_ENVIRONMENT-}" | grep 'size:' | awk '{ print $2 }') || :
   else
     size=$(yq ".. | select(has(\"deployment\") and .deployment == \"${BITBUCKET_DEPLOYMENT_ENVIRONMENT-}\") | .size" <"$home/bitbucket-pipelines.yml") || :
@@ -172,14 +172,14 @@ __buildBuild() {
   [ -n "$size" ] || size="1x"
 
   catchReturn "$handler" bigText "$(buildEnvironmentGet APPLICATION_NAME) $(hookVersionCurrent)" || return $?
-  echoBar "."
+  consoleLine "."
   decorate pair Branch "${BITBUCKET_BRANCH-}"
   decorate pair Deployment "${BITBUCKET_DEPLOYMENT_ENVIRONMENT-}"
   decorate pair Workspace "${BITBUCKET_WORKSPACE-}"
   decorate pair "Hardware Size" "${size}"
-  echoBar "."
+  consoleLine "."
   dumpEnvironment
-  echoBar "#"
+  consoleLine "#"
 
   ! $debugFlag || statusMessage decorate info "Updating markdown ..."
   if ! "$home/bin/update-md.sh" --skip-commit; then

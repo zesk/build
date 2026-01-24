@@ -36,7 +36,7 @@
 # Argument: --timeout timeoutSeconds - PositiveInteger. Optional. A number of seconds to wait before failing. Defaults to `BUILD_URL_TIMEOUT` environment value.
 # Argument: url - URL. Required. URL to fetch to target file.
 # Argument: file - FileDirectory. Optional. Target file. Use `-` to send to `stdout`. Default value is `-`.
-# Requires: returnMessage whichExists decorate
+# Requires: returnMessage executableExists decorate
 # Requires: validate
 # Requires: throwArgument catchArgument
 # Requires: throwEnvironment catchEnvironment
@@ -72,7 +72,7 @@ urlFetch() {
     --binary)
       local tempBin
       shift && tempBin=$(validate "$handler" String "$argument" "${1-}") || return $?
-      whichExists "$tempBin" || throwArgument "$handler" "$tempBin must be in PATH: $PATH" || return $?
+      executableExists "$tempBin" || throwArgument "$handler" "$tempBin must be in PATH: $PATH" || return $?
       binary=("$tempBin")
       ;;
     --argument-format)
@@ -137,7 +137,7 @@ urlFetch() {
   fi
 
   # Binary
-  [ "${#binary[@]}" -gt 0 ] || whichExists wget && binary=("wget") || whichExists "curl" && binary=("curl") || throwArgument "$handler" "No binary found" || return $?
+  [ "${#binary[@]}" -gt 0 ] || executableExists wget && binary=("wget") || executableExists "curl" && binary=("curl") || throwArgument "$handler" "No binary found" || return $?
 
   if [ "${binary[0]}" = "curl" ] && $userHasColons; then
     throwArgument "$handler" "$argument: Users ($argument \"$(decorate code "$user")\") with colons are not supported by curl, use wget" || return $?

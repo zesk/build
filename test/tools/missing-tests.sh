@@ -61,7 +61,7 @@ testEverythingElse() {
   #  consoleSetTitle
   #  contextShow
 
-  #  debugOpenFiles
+  #  filesOpenStatus
   #  debuggingStack
 
   #  deployLink
@@ -124,7 +124,7 @@ testEverythingElse() {
   #  isPHPStorm
   #  isPyCharm
   #  isVisualStudioCode
-  #  lineFill
+  #  consoleHeadingLine
   #  linkRename
   #  loopExecute
   #  manPathCleanDuplicates

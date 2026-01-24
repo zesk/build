@@ -1,54 +1,23 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-22
+# Generated on 2026-01-24
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/map.sh"
 argument="\`prefix\` - Optional prefix for token search, defaults to \`{\` (same as \`map.sh\`)"$'\n'"\`suffix\` - Optional suffix for token search, defaults to \`}\` (same as \`map.sh\`)"$'\n'""
 base="map.sh"
 depends="sed quoteSedPattern"$'\n'""
-description="Short description: list mappable variables in a file (without prefix or suffix)"$'\n'""
+description="No documentation for \`mapTokens\`."$'\n'""
 environment="None."$'\n'""
+exitCode="0"
 file="bin/build/tools/map.sh"
-fn="mapTokens"
-foundNames=""
+foundNames=([0]="argument" [1]="environment" [2]="short_description" [3]="depends")
+rawComment="Argument: \`prefix\` - Optional prefix for token search, defaults to \`{\` (same as \`map.sh\`)"$'\n'"Argument: \`suffix\` - Optional suffix for token search, defaults to \`}\` (same as \`map.sh\`)"$'\n'"Environment: None."$'\n'"Short description: list mappable variables in a file (without prefix or suffix)"$'\n'"Depends: sed quoteSedPattern"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
-sourceFile="bin/build/tools/map.sh"
+short_description="list mappable variables in a file (without prefix or suffix)"$'\n'""
 sourceModified="1769063211"
-summary="Short description: list mappable variables in a file (without prefix"
+summary="undocumented"
 usage="mapTokens [ \`prefix\` ] [ \`suffix\` ]"
 # shellcheck disable=SC2016
-helpConsole='[92mUsage[0m: [38;2;170;170;255mmapTokens[0m [94m[ `prefix` ][0m [94m[ `suffix` ][0m
-
-    [94m[38;2;0;255;0;48;2;0;0;0mprefix[0m  [1;97mOptional prefix for token search, defaults to [38;2;0;255;0;48;2;0;0;0m{[0m (same as [38;2;0;255;0;48;2;0;0;0mmap.sh[0m)[0m
-    [94m[38;2;0;255;0;48;2;0;0;0msuffix[0m  [1;97mOptional suffix for token search, defaults to [38;2;0;255;0;48;2;0;0;0m}[0m (same as [38;2;0;255;0;48;2;0;0;0mmap.sh[0m)[0m
-
-Short description: list mappable variables in a file (without prefix or suffix)
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-
-Environment variables:
-- None.
-- 
-'
+helpConsole=''$'\e''[[label]mUsage'$'\e''[0m: '$'\e''[[info]mmapTokens'$'\e''[0m '$'\e''[[blue]m[ `prefix` ]'$'\e''[0m '$'\e''[[blue]m[ `suffix` ]'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[blue]m'$'\e''[[code]mprefix'$'\e''[[reset]m  '$'\e''[[value]mOptional prefix for token search, defaults to '$'\e''[[code]m{'$'\e''[[reset]m (same as '$'\e''[[code]mmap.sh'$'\e''[[reset]m)'$'\e''[[reset]m'$'\n''    '$'\e''[[blue]m'$'\e''[[code]msuffix'$'\e''[[reset]m  '$'\e''[[value]mOptional suffix for token search, defaults to '$'\e''[[code]m}'$'\e''[[reset]m (same as '$'\e''[[code]mmap.sh'$'\e''[[reset]m)'$'\e''[[reset]m'$'\n'''$'\n''No documentation for '$'\e''[[code]mmapTokens'$'\e''[[reset]m.'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[code]m0'$'\e''[[reset]m - Success'$'\n''- '$'\e''[[code]m1'$'\e''[[reset]m - Environment error'$'\n''- '$'\e''[[code]m2'$'\e''[[reset]m - Argument error'$'\n'''$'\n''Environment variables:'$'\n''- None.'$'\n'''
 # shellcheck disable=SC2016
-helpPlain='Usage: mapTokens [ `prefix` ] [ `suffix` ]
-
-    prefix  Optional prefix for token search, defaults to { (same as map.sh)
-    suffix  Optional suffix for token search, defaults to } (same as map.sh)
-
-Short description: list mappable variables in a file (without prefix or suffix)
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-
-Environment variables:
-- None.
-- 
-'
+helpPlain='Usage: mapTokens [ `prefix` ] [ `suffix` ]'$'\n'''$'\n''    prefix  Optional prefix for token search, defaults to { (same as map.sh)'$'\n''    suffix  Optional suffix for token search, defaults to } (same as map.sh)'$'\n'''$'\n''No documentation for mapTokens.'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''$'\n''Environment variables:'$'\n''- None.'$'\n'''

@@ -24,11 +24,17 @@
 
 {newlineHide}
 
+## Formatting
+
+{textAlignLeft}
+
+{textAlignRight}
+
 ## Cleanup ANSI text
 
 {stripAnsi}
 
-{plainLength}
+{consolePlainLength}
 
 ### Space trimming
 
@@ -60,7 +66,7 @@
 
 {stringContainsInsensitive}
 
-{beginsWith}
+{stringBegins}
 
 {stringOffset}
 
@@ -75,16 +81,21 @@
 ## Language-related
 
 {plural}
+
 {pluralWord}
+
 {parseBoolean}
 
 ## Transformation
 
 {lowercase}
+
 {uppercase}
+
 {shaPipe}
-{cachedShaPipe}
+
 {cannon}
+
 {stringReplace}
 
 ## Random

@@ -45,6 +45,7 @@ buildUsageCompile() {
   local cleanFlag=false quickFlag=true
 
   bashDebugInterruptFile
+  set -eou pipefail
 
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
@@ -77,7 +78,6 @@ buildUsageCompile() {
   local start && start=$(timingStart)
 
   catchReturn "$handler" muzzle directoryRequire "$docPath" || return $?
-
   local tempFunctions actualTotalFunctions totalFunctions
 
   tempFunctions=$(fileTemporaryName "$handler") || return $?
@@ -112,7 +112,6 @@ buildUsageCompile() {
   fi
   local finished=false
   local index=0
-
   while ! $finished; do
     index=$((index + 1))
     local prefix="#$index/$totalFunctions -"
@@ -149,9 +148,10 @@ __buildUsageCompileFunction() {
   local sourceFile=""
 
   if [ -f "$documentationSettingsFile" ]; then
+
     sourceFile=$(
       # shellcheck source=/dev/null
-      local sourceFile && source "$documentationSettingsFile" || : && printf "%s\n" "${sourceFile-}" || :
+      export sourceFile && source "$documentationSettingsFile" || : && printf "%s\n" "${sourceFile-}" || :
     ) || :
     if [ -z "$sourceFile" ]; then
       statusMessage --last decorate error "Corrupt $documentationSettingsFile - removing" || return $?
@@ -177,17 +177,30 @@ __buildUsageCompileFunction() {
   if [ ! -f "$documentationSettingsFile" ]; then
     throwEnvironment "$handler" "${prefix}: bashDocumentationExtract $fun $sourceFile did not generate $documentationSettingsFile" || returnClean $? "${clean[@]}" || return $?
   else
-    BUILD_DEBUG="" BUILD_COLORS=true catchEnvironment "$handler" usageDocument "$sourceFile" "$fun" 0 >"$tempHelp" || returnClean $? "${clean[@]}" || return $?
+
+    catchReturn "$handler" decorateThemelessMode || return $?
+    fn="" BUILD_DEBUG="" BUILD_COLORS=true catchEnvironment "$handler" usageDocument "$sourceFile" "$fun" 0 >"$tempHelp" || returnClean $? "${clean[@]}" || returnUndo $? decorateThemelessMode --end || return $?
+    catchReturn "$handler" decorateThemelessMode --end || returnClean $? "${clean[@]}" || return $?
     {
-      catchEnvironment "$handler" printf "%s\n%s=%s\n" "# shellcheck disable=SC2016" "helpConsole" "$(escapeBash <"$tempHelp")" || return $?
-      catchEnvironment "$handler" printf "%s\n%s=%s\n" "# shellcheck disable=SC2016" "helpPlain" "$(escapeBash <"$tempHelp" | stripAnsi)" || return $?
+      local replace helpCode && helpCode="$(escapeBash <"$tempHelp")"
+      replace="'\$'\e''"
+      helpCode=${helpCode//$'\e'/"$replace"}
+      replace="'\$'\n''"
+      helpCode=${helpCode//$'\n'/"$replace"}
+      catchEnvironment "$handler" printf "%s\n%s=%s\n" "# shellcheck disable=SC2016" "helpConsole" "$helpCode" || returnClean $? "${clean[@]}" || return $?
+
+      helpCode="$(decorateThemed <"$tempHelp" | stripAnsi | escapeBash)"
+      replace="'\$'\n''"
+      helpCode=${helpCode//$'\n'/"$replace"}
+      catchEnvironment "$handler" printf "%s\n%s=%s\n" "# shellcheck disable=SC2016" "helpPlain" "$helpCode" || returnClean $? "${clean[@]}" || return $?
     } >>"$documentationSettingsFile" || returnClean $? "${clean[@]}" || return $?
     if buildDebugEnabled "usage-compile"; then
       dumpPipe "Help for $fun" <"$tempHelp" 1>&2
       dumpPipe "Settings for $fun" <"$documentationSettingsFile" 1>&2
     fi
+
     catchEnvironment "$handler" rm -f "${clean[@]}" || return $?
-    catchEnvironment "$handler" touch "$documentationSettingsFile" || returnClean $? "${clean[@]}" || return $?
+    catchEnvironment "$handler" touch "$documentationSettingsFile" || return $?
   fi
 }
 
@@ -385,7 +398,7 @@ buildDocumentationBuild() {
 
   # Greeting
   catchReturn "$handler" buildEnvironmentLoad APPLICATION_NAME || return $?
-  statusMessage lineFill . "$(decorate info "${APPLICATION_NAME} documentation started on $(decorate value "$(date +"%F %T")")") "
+  statusMessage consoleHeadingLine . "$(decorate info "${APPLICATION_NAME} documentation started on $(decorate value "$(date +"%F %T")")") "
 
   if $verboseFlag; then
     decorate pair "Update Templates" "$updateTemplates"

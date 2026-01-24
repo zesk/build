@@ -1,48 +1,20 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-22
+# Generated on 2026-01-24
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/text.sh"
 argument="text - String. Required. Text to search for mapping tokens."$'\n'""
 base="text.sh"
-description="Check if text contains plaintext only."$'\n'"Without arguments, displays help."$'\n'"Return code: - \`0\` - Text is plain"$'\n'"Return code: - \`1\` - Text contains non-plain characters"$'\n'""
+description="Check if text contains plaintext only."$'\n'"Without arguments, displays help."$'\n'""
+exitCode="0"
 file="bin/build/tools/text.sh"
-fn="isPlain"
-foundNames=""
-return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
-sourceFile="bin/build/tools/text.sh"
-sourceModified="1769063211"
+foundNames=([0]="argument" [1]="return_code")
+rawComment="Check if text contains plaintext only."$'\n'"Argument: text - String. Required. Text to search for mapping tokens."$'\n'"Without arguments, displays help."$'\n'"Return code: - \`0\` - Text is plain"$'\n'"Return code: - \`1\` - Text contains non-plain characters"$'\n'""$'\n'""
+return_code="- \`0\` - Text is plain"$'\n'"- \`1\` - Text contains non-plain characters"$'\n'""
+sourceModified="1769201188"
 summary="Check if text contains plaintext only."
 usage="isPlain text"
 # shellcheck disable=SC2016
-helpConsole='[92mUsage[0m: [38;2;170;170;255misPlain[0m [38;2;255;255;0m[35;48;2;0;0;0mtext[0m[0m
-
-    [31mtext  [1;97mString. Required. Text to search for mapping tokens.[0m
-
-Check if text contains plaintext only.
-Without arguments, displays help.
-Return code: - [38;2;0;255;0;48;2;0;0;0m0[0m - Text is plain
-Return code: - [38;2;0;255;0;48;2;0;0;0m1[0m - Text contains non-plain characters
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-'
+helpConsole=''$'\e''[[label]mUsage'$'\e''[0m: '$'\e''[[info]misPlain'$'\e''[0m '$'\e''[[bold]m'$'\e''[[magenta]mtext'$'\e''[0m'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[red]mtext  '$'\e''[[value]mString. Required. Text to search for mapping tokens.'$'\e''[[reset]m'$'\n'''$'\n''Check if text contains plaintext only.'$'\n''Without arguments, displays help.'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[code]m0'$'\e''[[reset]m - Text is plain'$'\n''- '$'\e''[[code]m1'$'\e''[[reset]m - Text contains non-plain characters'$'\n'''
 # shellcheck disable=SC2016
-helpPlain='Usage: isPlain text
-
-    text  String. Required. Text to search for mapping tokens.
-
-Check if text contains plaintext only.
-Without arguments, displays help.
-Return code: - 0 - Text is plain
-Return code: - 1 - Text contains non-plain characters
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-'
+helpPlain='Usage: isPlain text'$'\n'''$'\n''    text  String. Required. Text to search for mapping tokens.'$'\n'''$'\n''Check if text contains plaintext only.'$'\n''Without arguments, displays help.'$'\n'''$'\n''Return codes:'$'\n''- 0 - Text is plain'$'\n''- 1 - Text contains non-plain characters'$'\n'''

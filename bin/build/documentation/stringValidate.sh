@@ -1,47 +1,21 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-22
+# Generated on 2026-01-24
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/character.sh"
 argument="text - Text to validate"$'\n'"class0 ... - One or more character classes that the characters in string should match"$'\n'"--help - Flag. Optional. Display this help."$'\n'""
 base="character.sh"
 description="Ensure that every character in a text string passes all character class tests"$'\n'""
+exitCode="0"
 file="bin/build/tools/character.sh"
-fn="stringValidate"
-foundNames=""
+foundNames=([0]="argument" [1]="note")
 note="This is slow."$'\n'""
+rawComment="Ensure that every character in a text string passes all character class tests"$'\n'"Argument: text - Text to validate"$'\n'"Argument: class0 ... - One or more character classes that the characters in string should match"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Note: This is slow."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
-sourceFile="bin/build/tools/character.sh"
 sourceModified="1769063211"
 summary="Ensure that every character in a text string passes all"
 usage="stringValidate [ text ] [ class0 ... ] [ --help ]"
 # shellcheck disable=SC2016
-helpConsole='[92mUsage[0m: [38;2;170;170;255mstringValidate[0m [94m[ text ][0m [94m[ class0 ... ][0m [94m[ --help ][0m
-
-    [94mtext        [1;97mText to validate[0m
-    [94mclass0 ...  [1;97mOne or more character classes that the characters in string should match[0m
-    [94m--help      [1;97mFlag. Optional. Display this help.[0m
-
-Ensure that every character in a text string passes all character class tests
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-'
+helpConsole=''$'\e''[[label]mUsage'$'\e''[0m: '$'\e''[[info]mstringValidate'$'\e''[0m '$'\e''[[blue]m[ text ]'$'\e''[0m '$'\e''[[blue]m[ class0 ... ]'$'\e''[0m '$'\e''[[blue]m[ --help ]'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[blue]mtext        '$'\e''[[value]mText to validate'$'\e''[[reset]m'$'\n''    '$'\e''[[blue]mclass0 ...  '$'\e''[[value]mOne or more character classes that the characters in string should match'$'\e''[[reset]m'$'\n''    '$'\e''[[blue]m--help      '$'\e''[[value]mFlag. Optional. Display this help.'$'\e''[[reset]m'$'\n'''$'\n''Ensure that every character in a text string passes all character class tests'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[code]m0'$'\e''[[reset]m - Success'$'\n''- '$'\e''[[code]m1'$'\e''[[reset]m - Environment error'$'\n''- '$'\e''[[code]m2'$'\e''[[reset]m - Argument error'$'\n'''
 # shellcheck disable=SC2016
-helpPlain='Usage: stringValidate [ text ] [ class0 ... ] [ --help ]
-
-    text        Text to validate
-    class0 ...  One or more character classes that the characters in string should match
-    --help      Flag. Optional. Display this help.
-
-Ensure that every character in a text string passes all character class tests
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-'
+helpPlain='Usage: stringValidate [ text ] [ class0 ... ] [ --help ]'$'\n'''$'\n''    text        Text to validate'$'\n''    class0 ...  One or more character classes that the characters in string should match'$'\n''    --help      Flag. Optional. Display this help.'$'\n'''$'\n''Ensure that every character in a text string passes all character class tests'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''

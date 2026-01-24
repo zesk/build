@@ -7,6 +7,8 @@
 
 Hides these from [New and uncategorized functions](./todo.md)
 
+{cachedShaPipe}
+
 {consoleColorMode}
 
 {newRelease}
@@ -30,3 +32,29 @@ Hides these from [New and uncategorized functions](./todo.md)
 {mapEnvironmentSed}
 
 {isAbsolutePath}
+
+{tomorrowDate}
+
+{boxedHeading}
+
+{lineFill}
+
+{repeat}
+
+{whichExists}
+
+{whichHook}
+
+{extensionLists}
+
+{yesterdayDate}
+
+{todayDate}
+
+{tomorrowDate}
+
+{buildFailed}
+
+{makeShellFilesExecutable}
+
+{echoBar}

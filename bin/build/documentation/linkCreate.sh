@@ -1,44 +1,20 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-22
+# Generated on 2026-01-24
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/file.sh"
 argument="target - Exists. File. Source file name or path."$'\n'"linkName - String. Required. Link short name, created next to \`target\`."$'\n'""
 base="file.sh"
-description="Create a link"$'\n'""$'\n'""
+description="Create a link"$'\n'""
+exitCode="0"
 file="bin/build/tools/file.sh"
-fn="linkCreate"
-foundNames=""
+foundNames=([0]="argument")
+rawComment="Create a link"$'\n'"Argument: target - Exists. File. Source file name or path."$'\n'"Argument: linkName - String. Required. Link short name, created next to \`target\`."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
-sourceFile="bin/build/tools/file.sh"
-sourceModified="1769063211"
+sourceModified="1769184734"
 summary="Create a link"
 usage="linkCreate [ target ] linkName"
 # shellcheck disable=SC2016
-helpConsole='[92mUsage[0m: [38;2;170;170;255mlinkCreate[0m [94m[ target ][0m [38;2;255;255;0m[35;48;2;0;0;0mlinkName[0m[0m
-
-    [94mtarget    [1;97mExists. File. Source file name or path.[0m
-    [31mlinkName  [1;97mString. Required. Link short name, created next to [38;2;0;255;0;48;2;0;0;0mtarget[0m.[0m
-
-Create a link
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-'
+helpConsole=''$'\e''[[label]mUsage'$'\e''[0m: '$'\e''[[info]mlinkCreate'$'\e''[0m '$'\e''[[blue]m[ target ]'$'\e''[0m '$'\e''[[bold]m'$'\e''[[magenta]mlinkName'$'\e''[0m'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[blue]mtarget    '$'\e''[[value]mExists. File. Source file name or path.'$'\e''[[reset]m'$'\n''    '$'\e''[[red]mlinkName  '$'\e''[[value]mString. Required. Link short name, created next to '$'\e''[[code]mtarget'$'\e''[[reset]m.'$'\e''[[reset]m'$'\n'''$'\n''Create a link'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[code]m0'$'\e''[[reset]m - Success'$'\n''- '$'\e''[[code]m1'$'\e''[[reset]m - Environment error'$'\n''- '$'\e''[[code]m2'$'\e''[[reset]m - Argument error'$'\n'''
 # shellcheck disable=SC2016
-helpPlain='Usage: linkCreate [ target ] linkName
-
-    target    Exists. File. Source file name or path.
-    linkName  String. Required. Link short name, created next to target.
-
-Create a link
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-'
+helpPlain='Usage: linkCreate [ target ] linkName'$'\n'''$'\n''    target    Exists. File. Source file name or path.'$'\n''    linkName  String. Required. Link short name, created next to target.'$'\n'''$'\n''Create a link'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''

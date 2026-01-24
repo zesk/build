@@ -1,15 +1,16 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-22
+# Generated on 2026-01-24
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/utilities.sh"
 argument="count - Integer. Optional. Sets the value for any following named variables to this value."$'\n'"variable - String. Optional. Variable to change or increment."$'\n'"--reset - Flag. Optional. Reset all counters to zero."$'\n'""
 base="utilities.sh"
 depends="buildCacheDirectory"$'\n'""
-description="Set or increment a process-wide incrementor. If no numeric value is supplied the default is to increment the current value and output it."$'\n'"New values are set to 0 by default so will output \`1\` upon first handler."$'\n'"If no variable name is supplied it uses the default variable name \`default\`."$'\n'""$'\n'"Variable names can contain alphanumeric characters, underscore, or dash."$'\n'""$'\n'"Sets \`default\` incrementor to 1 and outputs \`1\`"$'\n'""$'\n'"    {fn} 1"$'\n'""$'\n'"Increments the \`kitty\` counter and outputs \`1\` on first call and \`n + 1\` for each subsequent call."$'\n'""$'\n'"    {fn} kitty"$'\n'""$'\n'"Sets \`kitty\` incrementor to 2 and outputs \`2\`"$'\n'""$'\n'"    {fn} 2 kitty"$'\n'""$'\n'"shellcheck disable=SC2120"$'\n'""
+description="Set or increment a process-wide incrementor. If no numeric value is supplied the default is to increment the current value and output it."$'\n'"New values are set to 0 by default so will output \`1\` upon first handler."$'\n'"If no variable name is supplied it uses the default variable name \`default\`."$'\n'"Variable names can contain alphanumeric characters, underscore, or dash."$'\n'"Sets \`default\` incrementor to 1 and outputs \`1\`"$'\n'"    {fn} 1"$'\n'"Increments the \`kitty\` counter and outputs \`1\` on first call and \`n + 1\` for each subsequent call."$'\n'"    {fn} kitty"$'\n'"Sets \`kitty\` incrementor to 2 and outputs \`2\`"$'\n'"    {fn} 2 kitty"$'\n'"shellcheck disable=SC2120"$'\n'""
+exitCode="0"
 file="bin/build/tools/utilities.sh"
-fn="incrementor"
-foundNames=""
+foundNames=([0]="argument" [1]="depends" [2]="see")
+rawComment="Argument: count - Integer. Optional. Sets the value for any following named variables to this value."$'\n'"Argument: variable - String. Optional. Variable to change or increment."$'\n'"Argument: --reset - Flag. Optional. Reset all counters to zero."$'\n'"Set or increment a process-wide incrementor. If no numeric value is supplied the default is to increment the current value and output it."$'\n'"New values are set to 0 by default so will output \`1\` upon first handler."$'\n'"If no variable name is supplied it uses the default variable name \`default\`."$'\n'"Variable names can contain alphanumeric characters, underscore, or dash."$'\n'"Sets \`default\` incrementor to 1 and outputs \`1\`"$'\n'"    {fn} 1"$'\n'"Increments the \`kitty\` counter and outputs \`1\` on first call and \`n + 1\` for each subsequent call."$'\n'"    {fn} kitty"$'\n'"Sets \`kitty\` incrementor to 2 and outputs \`2\`"$'\n'"    {fn} 2 kitty"$'\n'"Depends: buildCacheDirectory"$'\n'"See: buildCacheDirectory"$'\n'"shellcheck disable=SC2120"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 see="buildCacheDirectory"$'\n'""
 sourceFile="bin/build/tools/utilities.sh"
@@ -17,68 +18,6 @@ sourceModified="1769063211"
 summary="Set or increment a process-wide incrementor. If no numeric value"
 usage="incrementor [ count ] [ variable ] [ --reset ]"
 # shellcheck disable=SC2016
-helpConsole='[92mUsage[0m: [38;2;170;170;255mincrementor[0m [94m[ count ][0m [94m[ variable ][0m [94m[ --reset ][0m
-
-    [94mcount     [1;97mInteger. Optional. Sets the value for any following named variables to this value.[0m
-    [94mvariable  [1;97mString. Optional. Variable to change or increment.[0m
-    [94m--reset   [1;97mFlag. Optional. Reset all counters to zero.[0m
-
-Set or increment a process-wide incrementor. If no numeric value is supplied the default is to increment the current value and output it.
-New values are set to 0 by default so will output [38;2;0;255;0;48;2;0;0;0m1[0m upon first handler.
-If no variable name is supplied it uses the default variable name [38;2;0;255;0;48;2;0;0;0mdefault[0m.
-
-Variable names can contain alphanumeric characters, underscore, or dash.
-
-Sets [38;2;0;255;0;48;2;0;0;0mdefault[0m incrementor to 1 and outputs [38;2;0;255;0;48;2;0;0;0m1[0m
-
-    incrementor 1
-
-Increments the [38;2;0;255;0;48;2;0;0;0mkitty[0m counter and outputs [38;2;0;255;0;48;2;0;0;0m1[0m on first call and [38;2;0;255;0;48;2;0;0;0mn + 1[0m for each subsequent call.
-
-    incrementor kitty
-
-Sets [38;2;0;255;0;48;2;0;0;0mkitty[0m incrementor to 2 and outputs [38;2;0;255;0;48;2;0;0;0m2[0m
-
-    incrementor 2 kitty
-
-shellcheck disable=SC2120
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-'
+helpConsole=''$'\e''[[label]mUsage'$'\e''[0m: '$'\e''[[info]mincrementor'$'\e''[0m '$'\e''[[blue]m[ count ]'$'\e''[0m '$'\e''[[blue]m[ variable ]'$'\e''[0m '$'\e''[[blue]m[ --reset ]'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[blue]mcount     '$'\e''[[value]mInteger. Optional. Sets the value for any following named variables to this value.'$'\e''[[reset]m'$'\n''    '$'\e''[[blue]mvariable  '$'\e''[[value]mString. Optional. Variable to change or increment.'$'\e''[[reset]m'$'\n''    '$'\e''[[blue]m--reset   '$'\e''[[value]mFlag. Optional. Reset all counters to zero.'$'\e''[[reset]m'$'\n'''$'\n''Set or increment a process-wide incrementor. If no numeric value is supplied the default is to increment the current value and output it.'$'\n''New values are set to 0 by default so will output '$'\e''[[code]m1'$'\e''[[reset]m upon first handler.'$'\n''If no variable name is supplied it uses the default variable name '$'\e''[[code]mdefault'$'\e''[[reset]m.'$'\n''Variable names can contain alphanumeric characters, underscore, or dash.'$'\n''Sets '$'\e''[[code]mdefault'$'\e''[[reset]m incrementor to 1 and outputs '$'\e''[[code]m1'$'\e''[[reset]m'$'\n''    incrementor 1'$'\n''Increments the '$'\e''[[code]mkitty'$'\e''[[reset]m counter and outputs '$'\e''[[code]m1'$'\e''[[reset]m on first call and '$'\e''[[code]mn + 1'$'\e''[[reset]m for each subsequent call.'$'\n''    incrementor kitty'$'\n''Sets '$'\e''[[code]mkitty'$'\e''[[reset]m incrementor to 2 and outputs '$'\e''[[code]m2'$'\e''[[reset]m'$'\n''    incrementor 2 kitty'$'\n''shellcheck disable=SC2120'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[code]m0'$'\e''[[reset]m - Success'$'\n''- '$'\e''[[code]m1'$'\e''[[reset]m - Environment error'$'\n''- '$'\e''[[code]m2'$'\e''[[reset]m - Argument error'$'\n'''
 # shellcheck disable=SC2016
-helpPlain='Usage: incrementor [ count ] [ variable ] [ --reset ]
-
-    count     Integer. Optional. Sets the value for any following named variables to this value.
-    variable  String. Optional. Variable to change or increment.
-    --reset   Flag. Optional. Reset all counters to zero.
-
-Set or increment a process-wide incrementor. If no numeric value is supplied the default is to increment the current value and output it.
-New values are set to 0 by default so will output 1 upon first handler.
-If no variable name is supplied it uses the default variable name default.
-
-Variable names can contain alphanumeric characters, underscore, or dash.
-
-Sets default incrementor to 1 and outputs 1
-
-    incrementor 1
-
-Increments the kitty counter and outputs 1 on first call and n + 1 for each subsequent call.
-
-    incrementor kitty
-
-Sets kitty incrementor to 2 and outputs 2
-
-    incrementor 2 kitty
-
-shellcheck disable=SC2120
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-'
+helpPlain='Usage: incrementor [ count ] [ variable ] [ --reset ]'$'\n'''$'\n''    count     Integer. Optional. Sets the value for any following named variables to this value.'$'\n''    variable  String. Optional. Variable to change or increment.'$'\n''    --reset   Flag. Optional. Reset all counters to zero.'$'\n'''$'\n''Set or increment a process-wide incrementor. If no numeric value is supplied the default is to increment the current value and output it.'$'\n''New values are set to 0 by default so will output 1 upon first handler.'$'\n''If no variable name is supplied it uses the default variable name default.'$'\n''Variable names can contain alphanumeric characters, underscore, or dash.'$'\n''Sets default incrementor to 1 and outputs 1'$'\n''    incrementor 1'$'\n''Increments the kitty counter and outputs 1 on first call and n + 1 for each subsequent call.'$'\n''    incrementor kitty'$'\n''Sets kitty incrementor to 2 and outputs 2'$'\n''    incrementor 2 kitty'$'\n''shellcheck disable=SC2120'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''

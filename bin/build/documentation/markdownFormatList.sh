@@ -1,60 +1,22 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-22
+# Generated on 2026-01-24
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/markdown.sh"
 argument="none"
 base="markdown.sh"
-description="Simple function to make list-like things more list-like in Markdown"$'\n'""$'\n'"1. remove leading \"dash space\" if it exists (\`- \`)"$'\n'"2. Semantically, if the phrase matches \`[word]+[space][dash][space]\`. backtick quote the \`[word]\`, otherwise skip"$'\n'"3. Prefix each line with a \"dash space\" (\`- \`)"$'\n'""
+description="Simple function to make list-like things more list-like in Markdown"$'\n'"1. Remove all trailing spaces from all lines"$'\n'"2. remove leading \"dash space\" if it exists (\`- \`)"$'\n'"3. Semantically, if the phrase matches \`[word]+[space][dash][space]\`. backtick quote the \`[word]\`, otherwise skip"$'\n'"4. Prefix each line with a \"dash space\" (\`- \`)"$'\n'""
+exitCode="0"
 file="bin/build/tools/markdown.sh"
-fn="markdownFormatList"
-foundNames=""
+foundNames=([0]="stdin" [1]="stdout")
+rawComment="Simple function to make list-like things more list-like in Markdown"$'\n'"1. Remove all trailing spaces from all lines"$'\n'"2. remove leading \"dash space\" if it exists (\`- \`)"$'\n'"3. Semantically, if the phrase matches \`[word]+[space][dash][space]\`. backtick quote the \`[word]\`, otherwise skip"$'\n'"4. Prefix each line with a \"dash space\" (\`- \`)"$'\n'"stdin: reads input from stdin"$'\n'"stdout: formatted markdown list"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
-sourceFile="bin/build/tools/markdown.sh"
-sourceModified="1769063211"
+sourceModified="1769190358"
 stdin="reads input from stdin"$'\n'""
 stdout="formatted markdown list"$'\n'""
 summary="Simple function to make list-like things more list-like in Markdown"
 usage="markdownFormatList"
 # shellcheck disable=SC2016
-helpConsole='[92mUsage[0m: [38;2;170;170;255mmarkdownFormatList[0m
-
-Simple function to make list-like things more list-like in Markdown
-
-1. remove leading "dash space" if it exists ([38;2;0;255;0;48;2;0;0;0m- [0m)
-2. Semantically, if the phrase matches [38;2;0;255;0;48;2;0;0;0m[word]+[space][dash][space][0m. backtick quote the [38;2;0;255;0;48;2;0;0;0m[word][0m, otherwise skip
-3. Prefix each line with a "dash space" ([38;2;0;255;0;48;2;0;0;0m- [0m)
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-
-Reads from [38;2;0;255;0;48;2;0;0;0mstdin[0m:
-reads input from stdin
-
-Writes to [38;2;0;255;0;48;2;0;0;0mstdout[0m:
-formatted markdown list
-'
+helpConsole=''$'\e''[[label]mUsage'$'\e''[0m: '$'\e''[[info]mmarkdownFormatList'$'\e''[0m'$'\n'''$'\n''Simple function to make list-like things more list-like in Markdown'$'\n''1. Remove all trailing spaces from all lines'$'\n''2. remove leading "dash space" if it exists ('$'\e''[[code]m- '$'\e''[[reset]m)'$'\n''3. Semantically, if the phrase matches '$'\e''[[code]m[word]+[space][dash][space]'$'\e''[[reset]m. backtick quote the '$'\e''[[code]m[word]'$'\e''[[reset]m, otherwise skip'$'\n''4. Prefix each line with a "dash space" ('$'\e''[[code]m- '$'\e''[[reset]m)'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[code]m0'$'\e''[[reset]m - Success'$'\n''- '$'\e''[[code]m1'$'\e''[[reset]m - Environment error'$'\n''- '$'\e''[[code]m2'$'\e''[[reset]m - Argument error'$'\n'''$'\n''Reads from '$'\e''[[code]mstdin'$'\e''[[reset]m:'$'\n''reads input from stdin'$'\n'''$'\n''Writes to '$'\e''[[code]mstdout'$'\e''[[reset]m:'$'\n''formatted markdown list'$'\n'''
 # shellcheck disable=SC2016
-helpPlain='Usage: markdownFormatList
-
-Simple function to make list-like things more list-like in Markdown
-
-1. remove leading "dash space" if it exists (- )
-2. Semantically, if the phrase matches [word]+[space][dash][space]. backtick quote the [word], otherwise skip
-3. Prefix each line with a "dash space" (- )
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-
-Reads from stdin:
-reads input from stdin
-
-Writes to stdout:
-formatted markdown list
-'
+helpPlain='Usage: markdownFormatList'$'\n'''$'\n''Simple function to make list-like things more list-like in Markdown'$'\n''1. Remove all trailing spaces from all lines'$'\n''2. remove leading "dash space" if it exists (- )'$'\n''3. Semantically, if the phrase matches [word]+[space][dash][space]. backtick quote the [word], otherwise skip'$'\n''4. Prefix each line with a "dash space" (- )'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''$'\n''Reads from stdin:'$'\n''reads input from stdin'$'\n'''$'\n''Writes to stdout:'$'\n''formatted markdown list'$'\n'''

@@ -36,7 +36,7 @@ markdownIndentHeading() {
 
   local line append
 
-  append=$(repeat "$direction" "#")
+  append=$(textRepeat "$direction" "#")
   while IFS="" read -r line; do
     if [ "${line:0:1}" = "#" ]; then
       printf "%s\n" "$append$line"
@@ -111,9 +111,10 @@ _markdownRemoveUnfinishedSections() {
 #
 # Simple function to make list-like things more list-like in Markdown
 #
-# 1. remove leading "dash space" if it exists (`- `)
-# 2. Semantically, if the phrase matches `[word]+[space][dash][space]`. backtick quote the `[word]`, otherwise skip
-# 3. Prefix each line with a "dash space" (`- `)
+# 1. Remove all trailing spaces from all lines
+# 2. remove leading "dash space" if it exists (`- `)
+# 3. Semantically, if the phrase matches `[word]+[space][dash][space]`. backtick quote the `[word]`, otherwise skip
+# 4. Prefix each line with a "dash space" (`- `)
 # stdin: reads input from stdin
 # stdout: formatted markdown list
 markdownFormatList() {
@@ -121,9 +122,11 @@ markdownFormatList() {
   local wordClass='[-.`_A-Za-z0-9[:space:]]' spaceClass='[[:space:]]'
   # shellcheck disable=SC2016
   sed \
+    -e "s/[[:space:]]*\$//g" \
     -e "s/^- //1" \
     -e "s/\`\($wordClass*\)\`${spaceClass}-${spaceClass}/\1 - /1" \
     -e "s/\($wordClass*\)${spaceClass}-${spaceClass}/- \`\1\` - /1" \
+    -e "/^$/q" \
     -e "s/^\([^-]\)/- \1/1"
 }
 _markdownFormatList() {

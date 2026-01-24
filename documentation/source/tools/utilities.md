@@ -6,6 +6,6 @@
 
 {incrementor}
 
-{extensionLists}
+{fileExtensionLists}
 
 {pipeRunner}

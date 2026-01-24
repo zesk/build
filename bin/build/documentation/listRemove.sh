@@ -1,48 +1,20 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-22
+# Generated on 2026-01-24
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/list.sh"
 argument="listValue - Required. List value to modify."$'\n'"separator - Required. Separator string for item values (typically \`:\`)"$'\n'"item - the item to be removed from the \`listValue\`"$'\n'"--help - Flag. Optional. Display this help."$'\n'""
 base="list.sh"
 description="Remove one or more items from a text-delimited list"$'\n'""
+exitCode="0"
 file="bin/build/tools/list.sh"
-fn="listRemove"
-foundNames=""
+foundNames=([0]="argument")
+rawComment="Remove one or more items from a text-delimited list"$'\n'"Argument: listValue - Required. List value to modify."$'\n'"Argument: separator - Required. Separator string for item values (typically \`:\`)"$'\n'"Argument: item - the item to be removed from the \`listValue\`"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
-sourceFile="bin/build/tools/list.sh"
 sourceModified="1769063211"
 summary="Remove one or more items from a text-delimited list"
 usage="listRemove listValue separator [ item ] [ --help ]"
 # shellcheck disable=SC2016
-helpConsole='[92mUsage[0m: [38;2;170;170;255mlistRemove[0m [38;2;255;255;0m[35;48;2;0;0;0mlistValue[0m[0m [38;2;255;255;0m[35;48;2;0;0;0mseparator[0m[0m [94m[ item ][0m [94m[ --help ][0m
-
-    [31mlistValue  [1;97mRequired. List value to modify.[0m
-    [31mseparator  [1;97mRequired. Separator string for item values (typically [38;2;0;255;0;48;2;0;0;0m:[0m)[0m
-    [94mitem       [1;97mthe item to be removed from the [38;2;0;255;0;48;2;0;0;0mlistValue[0m[0m
-    [94m--help     [1;97mFlag. Optional. Display this help.[0m
-
-Remove one or more items from a text-delimited list
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-'
+helpConsole=''$'\e''[[label]mUsage'$'\e''[0m: '$'\e''[[info]mlistRemove'$'\e''[0m '$'\e''[[bold]m'$'\e''[[magenta]mlistValue'$'\e''[0m'$'\e''[0m '$'\e''[[bold]m'$'\e''[[magenta]mseparator'$'\e''[0m'$'\e''[0m '$'\e''[[blue]m[ item ]'$'\e''[0m '$'\e''[[blue]m[ --help ]'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[red]mlistValue  '$'\e''[[value]mRequired. List value to modify.'$'\e''[[reset]m'$'\n''    '$'\e''[[red]mseparator  '$'\e''[[value]mRequired. Separator string for item values (typically '$'\e''[[code]m:'$'\e''[[reset]m)'$'\e''[[reset]m'$'\n''    '$'\e''[[blue]mitem       '$'\e''[[value]mthe item to be removed from the '$'\e''[[code]mlistValue'$'\e''[[reset]m'$'\e''[[reset]m'$'\n''    '$'\e''[[blue]m--help     '$'\e''[[value]mFlag. Optional. Display this help.'$'\e''[[reset]m'$'\n'''$'\n''Remove one or more items from a text-delimited list'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[code]m0'$'\e''[[reset]m - Success'$'\n''- '$'\e''[[code]m1'$'\e''[[reset]m - Environment error'$'\n''- '$'\e''[[code]m2'$'\e''[[reset]m - Argument error'$'\n'''
 # shellcheck disable=SC2016
-helpPlain='Usage: listRemove listValue separator [ item ] [ --help ]
-
-    listValue  Required. List value to modify.
-    separator  Required. Separator string for item values (typically :)
-    item       the item to be removed from the listValue
-    --help     Flag. Optional. Display this help.
-
-Remove one or more items from a text-delimited list
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-'
+helpPlain='Usage: listRemove listValue separator [ item ] [ --help ]'$'\n'''$'\n''    listValue  Required. List value to modify.'$'\n''    separator  Required. Separator string for item values (typically :)'$'\n''    item       the item to be removed from the listValue'$'\n''    --help     Flag. Optional. Display this help.'$'\n'''$'\n''Remove one or more items from a text-delimited list'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''

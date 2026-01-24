@@ -19,7 +19,7 @@
 pythonInstall() {
   local handler="_${FUNCNAME[0]}"
   [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
-  if ! whichExists python; then
+  if ! executableExists python; then
     catchReturn "$handler" packageGroupInstall "$@" python || return $?
   fi
 }
@@ -32,7 +32,7 @@ _pythonInstall() {
 pythonUninstall() {
   local handler="_${FUNCNAME[0]}"
   [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
-  if whichExists python; then
+  if executableExists python; then
     catchReturn "$handler" packageGroupUninstall "$@" python || return $?
   fi
 }
@@ -228,7 +228,7 @@ pipWrapper() {
   catchReturn "$handler" pythonInstall || return $?
   if [ -n "$binary" ]; then
     catchReturn "$handler" "$binary" "$@" || return $?
-  elif whichExists pip; then
+  elif executableExists pip; then
     ! $debugFlag || printf "%s\n" "which: $(which pip)" "command: $(command -v pip)" 1>&2
     catchReturn "$handler" pip "$@" || return $?
   else

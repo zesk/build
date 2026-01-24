@@ -55,9 +55,9 @@ testPackageBasics() {
   assertExitCode 0 packageUninstall zip || return $?
   assertNotExitCode 0 packageIsInstalled zip || return $?
   assertExitCode 0 packageGroupInstall mariadb || return $?
-  assertExitCode 0 whichExists mariadb || return $?
+  assertExitCode 0 executableExists mariadb || return $?
   assertExitCode 0 packageGroupUninstall mariadb || return $?
-  assertNotExitCode 0 whichExists mariadb || return $?
+  assertNotExitCode 0 executableExists mariadb || return $?
 
   assertOutputContains mariadb packageMapping mariadb || return $?
 }

@@ -9,63 +9,89 @@
 
 __shaPipe() {
   local handler="$1" && shift
-  local argument debug=false
+  local debugFlag=false files=() cachePath=""
 
-  ! buildDebugEnabled shaPipe || debug=true
-  whichExists sha1sum || throwEnvironment "$handler" "Need packageGroupInstall sha1sum" || return $?
-  if [ -n "$*" ]; then
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
+  local __saved=("$@") __count=$#
+  while [ $# -gt 0 ]; do
+    local argument="$1" __index=$((__count - $# + 1))
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    case "$argument" in
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
+    # _IDENTICAL_ handlerHandler 1
+    --handler) shift && handler=$(validate "$handler" Function "$argument" "${1-}") || return $? ;;
+    --debug) debugFlag=true ;;
+    --cached) cachedFlag=true ;;
+    --cache) shift && cachePath="$(validate "$handler" Directory "$argument" "${1-}")" && cachedFlag=true || return $? ;;
+    *)
+      files+=("$(validate "$handler" File "fileToChecksum" "$argument")") || return $?
+      # _IDENTICAL_ argumentUnknownHandler 1
+      throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
+      ;;
+    esac
+    shift
+  done
+
+  executableExists sha1sum || throwEnvironment "$handler" "Need packageGroupInstall sha1sum" || return $?
+
+  local debugLog=""
+  if $debugFlag || buildDebugEnabled shaPipe; then
+    debugLog="$(catchReturn "$handler" buildCacheDirectory)/shaPipe.log" || return $?
+  fi
+
+  if [ "${#files[@]}" -eq 0 ]; then
+    [ -z "$debugLog" ] || printf "%s: stdin\n" "$(date +"%FT%T")" >>shaPipe.log
+    ___shaPipe "$handler" || throwEnvironment "$handler" "sha1sum" || return $?
+  elif "$cachedFlag"; then
+    __shaPipeCached "$handler" "$cachePath" "${files[@]}" || return $?
+  else
+    set -- "${files[@]}"
     while [ $# -gt 0 ]; do
-      argument="$1"
-      [ "$argument" != "--help" ] || __help "$handler" "$@" || return 0
-      [ -f "$1" ] || throwArgument "$handler" "$1 is not a file" || return $?
-      [ -n "$argument" ] || throwArgument "$handler" "blank argument" || return $?
-      if $debug; then
-        printf "%s: %s\n" "$(date +"%FT%T")" "$argument" >>shaPipe.log
-      fi
-      sha1sum <"$argument" | cut -f 1 -d ' '
+      [ -z "$debugLog" ] || printf "%s: %s\n" "$(date +"%FT%T")" "$1" >>shaPipe.log
+      ___shaPipe "$handler" <"$1"
       shift
     done
-  else
-    if $debug; then
-      printf "%s: stdin\n" "$(date +"%FT%T")" >>shaPipe.log
-    fi
-    sha1sum | cut -f 1 -d ' ' || throwEnvironment "$handler" "sha1sum" || return $?
   fi
 }
 
-__cachedShaPipe() {
+___shaPipe() {
   local handler="$1" && shift
-  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
+  catchReturn "$handler" sha1sum "$@" | catchReturn "$handler" cut -f 1 -d ' ' || return $?
+}
 
-  local argument
-  local cacheDirectory="${1-}"
+__shaPipeCached() {
+  local handler="$1" && shift
+  local cacheDirectory="" files=()
 
-  shift || throwArgument "$handler" "Missing cacheDirectory" || return $?
-
-  # Special case to skip caching
-  if [ -z "$cacheDirectory" ]; then
-    shaPipe "$@"
-    return $?
-  fi
-  cacheDirectory="${cacheDirectory%/}"
-
-  [ -d "$cacheDirectory" ] || throwArgument "$handler" "cachedShaPipe: cacheDirectory \"$cacheDirectory\" is not a directory" || return $?
-  if [ $# -gt 0 ]; then
-    while [ $# -gt 0 ]; do
-      argument="$1"
-      [ "$argument" != "--help" ] || __help "$handler" "$@" || return 0
-      [ -n "$argument" ] || throwArgument "$handler" "blank argument" || return $?
-      [ -f "$argument" ] || throwArgument "$handler" "not a file $(decorate label "$argument")" || return $?
-      cacheFile="$cacheDirectory/${argument#/}"
+  local __saved=("$@") __count=$#
+  while [ $# -gt 0 ]; do
+    case "$1" in
+    "") shift && ___shaPipe "$handler" "$@" && return $? || return $? ;;
+    *)
+      if [ -z "$cacheDirectory" ]; then
+        cacheDirectory="$(validate "$handler" Directory "cacheDirectory" "$1")" || return $?
+      else
+        files+=("$(validate "$handler" RealFile "file" "$1")") || return $?
+      fi
+      ;;
+    esac
+    shift
+  done
+  if [ ${#files[@]} -gt 0 ]; then
+    cacheDirectory="${cacheDirectory%/}"
+    local file && for file in "${files[@]}"; do
+      cacheFile="$cacheDirectory/${file#/}"
       cacheFile=$(catchReturn "$handler" fileDirectoryRequire "$cacheFile") || return $?
-      if [ -f "$cacheFile" ] && fileIsNewest "$cacheFile" "$1"; then
+      if [ -f "$cacheFile" ] && [ "$cacheFile" -nt "$1" ]; then
         printf "%s\n" "$(cat "$cacheFile")"
       else
-        catchReturn "$handler" shaPipe "$argument" | catchEnvironment "$handler" tee "$cacheFile" || return $?
+        ___shaPipe "$handler" "$argument" | catchEnvironment "$handler" tee "$cacheFile" || return $?
       fi
       shift
     done
   else
-    shaPipe
+    ___shaPipe "$handler" || return $?
   fi
 }

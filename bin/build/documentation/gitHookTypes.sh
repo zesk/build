@@ -1,57 +1,22 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-22
+# Generated on 2026-01-24
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/git.sh"
 argument="none"
 base="git.sh"
 description="List current valid git hook types"$'\n'"Hook types:"$'\n'"- pre-commit"$'\n'"- pre-push"$'\n'"- pre-merge-commit"$'\n'"- pre-rebase"$'\n'"- pre-receive"$'\n'"- update"$'\n'"- post-update"$'\n'"- post-commit"$'\n'""
+exitCode="0"
 file="bin/build/tools/git.sh"
-fn="gitHookTypes"
-foundNames=""
+foundNames=([0]="output")
 output="lines:gitHookType"$'\n'""
+rawComment="List current valid git hook types"$'\n'"Output: lines:gitHookType"$'\n'"Hook types:"$'\n'"- pre-commit"$'\n'"- pre-push"$'\n'"- pre-merge-commit"$'\n'"- pre-rebase"$'\n'"- pre-receive"$'\n'"- update"$'\n'"- post-update"$'\n'"- post-commit"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/git.sh"
-sourceModified="1769063211"
+sourceModified="1769199547"
 summary="List current valid git hook types"
 usage="gitHookTypes"
 # shellcheck disable=SC2016
-helpConsole='[92mUsage[0m: [38;2;170;170;255mgitHookTypes[0m
-
-List current valid git hook types
-Hook types:
-- pre-commit
-- pre-push
-- pre-merge-commit
-- pre-rebase
-- pre-receive
-- update
-- post-update
-- post-commit
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-'
+helpConsole=''$'\e''[[label]mUsage'$'\e''[0m: '$'\e''[[info]mgitHookTypes'$'\e''[0m'$'\n'''$'\n''List current valid git hook types'$'\n''Hook types:'$'\n''- pre-commit'$'\n''- pre-push'$'\n''- pre-merge-commit'$'\n''- pre-rebase'$'\n''- pre-receive'$'\n''- update'$'\n''- post-update'$'\n''- post-commit'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[code]m0'$'\e''[[reset]m - Success'$'\n''- '$'\e''[[code]m1'$'\e''[[reset]m - Environment error'$'\n''- '$'\e''[[code]m2'$'\e''[[reset]m - Argument error'$'\n'''
 # shellcheck disable=SC2016
-helpPlain='Usage: gitHookTypes
-
-List current valid git hook types
-Hook types:
-- pre-commit
-- pre-push
-- pre-merge-commit
-- pre-rebase
-- pre-receive
-- update
-- post-update
-- post-commit
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-'
+helpPlain='Usage: gitHookTypes'$'\n'''$'\n''List current valid git hook types'$'\n''Hook types:'$'\n''- pre-commit'$'\n''- pre-push'$'\n''- pre-merge-commit'$'\n''- pre-rebase'$'\n''- pre-receive'$'\n''- update'$'\n''- post-update'$'\n''- post-commit'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''

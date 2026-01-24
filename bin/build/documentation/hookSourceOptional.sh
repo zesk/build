@@ -1,87 +1,26 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-22
+# Generated on 2026-01-24
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/hook.sh"
 argument="--application applicationHome - Path. Optional. Directory of alternate application home."$'\n'"--extensions extensionList - ColonDelimitedList. Optional. List of extensions to search, in order for matching files in each hook directory. Defaults to \`BUILD_HOOK_EXTENSIONS\`."$'\n'"hookName ... - String. Required. Hook to source (if it exists)."$'\n'""
 base="hook.sh"
 build_debug="hook - \`hookRun\` and \`hookSource\` and optional versions of the same functions will output additional debugging information"$'\n'""
-description="Identical to \`hookRun\` but returns exit code zero if the hook does not exist."$'\n'""$'\n'"Return Code: Any - The hook exit code is returned if it is run"$'\n'"Return Code: 0 - is returned if the hook is not found"$'\n'""
+description="Identical to \`hookRun\` but returns exit code zero if the hook does not exist."$'\n'""
 environment="BUILD_HOOK_EXTENSIONS"$'\n'"BUILD_HOOK_DIRS"$'\n'"BUILD_DEBUG"$'\n'""
 example="    if ! hookSourceOptional test-cleanup >>\"\$quietLog\"; then"$'\n'"        buildFailed \"\$quietLog\""$'\n'"    fi"$'\n'""
+exitCode="0"
 file="bin/build/tools/hook.sh"
-fn="hookSourceOptional"
-foundNames=""
-return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
+foundNames=([0]="argument" [1]="return_code" [2]="example" [3]="test" [4]="see" [5]="environment" [6]="build_debug")
+rawComment="Identical to \`hookRun\` but returns exit code zero if the hook does not exist."$'\n'"Argument: --application applicationHome - Path. Optional. Directory of alternate application home."$'\n'"Argument: --extensions extensionList - ColonDelimitedList. Optional. List of extensions to search, in order for matching files in each hook directory. Defaults to \`BUILD_HOOK_EXTENSIONS\`."$'\n'"Argument: hookName ... - String. Required. Hook to source (if it exists)."$'\n'"Return Code: Any - The hook exit code is returned if it is run"$'\n'"Return Code: 0 - is returned if the hook is not found"$'\n'"Example:     if ! {fn} test-cleanup >>\"\$quietLog\"; then"$'\n'"Example:         buildFailed \"\$quietLog\""$'\n'"Example:     fi"$'\n'"Test: testHookSystem"$'\n'"See: hooks.md hookRun"$'\n'"Environment: BUILD_HOOK_EXTENSIONS"$'\n'"Environment: BUILD_HOOK_DIRS"$'\n'"Environment: BUILD_DEBUG"$'\n'"BUILD_DEBUG: hook - \`hookRun\` and \`hookSource\` and optional versions of the same functions will output additional debugging information"$'\n'""$'\n'""
+return_code="Any - The hook exit code is returned if it is run"$'\n'"0 - is returned if the hook is not found"$'\n'""
 see="hooks.md hookRun"$'\n'""
 sourceFile="bin/build/tools/hook.sh"
-sourceModified="1769063211"
+sourceModified="1769184734"
 summary="Identical to \`hookRun\` but returns exit code zero if the"
 test="testHookSystem"$'\n'""
 usage="hookSourceOptional [ --application applicationHome ] [ --extensions extensionList ] hookName ..."
 # shellcheck disable=SC2016
-helpConsole='[92mUsage[0m: [38;2;170;170;255mhookSourceOptional[0m [94m[ --application applicationHome ][0m [94m[ --extensions extensionList ][0m [38;2;255;255;0m[35;48;2;0;0;0mhookName ...[0m[0m
-
-    [94m--application applicationHome  [1;97mPath. Optional. Directory of alternate application home.[0m
-    [94m--extensions extensionList     [1;97mColonDelimitedList. Optional. List of extensions to search, in order for matching files in each hook directory. Defaults to [38;2;0;255;0;48;2;0;0;0mBUILD_HOOK_EXTENSIONS[0m.[0m
-    [31mhookName ...                   [1;97mString. Required. Hook to source (if it exists).[0m
-
-Identical to [38;2;0;255;0;48;2;0;0;0mhookRun[0m but returns exit code zero if the hook does not exist.
-
-Return Code: Any - The hook exit code is returned if it is run
-Return Code: 0 - is returned if the hook is not found
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-
-Environment variables:
-- BUILD_HOOK_EXTENSIONS
-- BUILD_HOOK_DIRS
-- BUILD_DEBUG
-- 
-
-Example:
-    if ! hookSourceOptional test-cleanup >>"$quietLog"; then
-        buildFailed "$quietLog"
-    fi
-
-[38;2;0;255;0;48;2;0;0;0mBUILD_DEBUG[0m settings:
-- hook - [38;2;0;255;0;48;2;0;0;0mhookRun[0m and [38;2;0;255;0;48;2;0;0;0mhookSource[0m and optional versions of the same functions will output additional debugging information
-- 
-'
+helpConsole=''$'\e''[[label]mUsage'$'\e''[0m: '$'\e''[[info]mhookSourceOptional'$'\e''[0m '$'\e''[[blue]m[ --application applicationHome ]'$'\e''[0m '$'\e''[[blue]m[ --extensions extensionList ]'$'\e''[0m '$'\e''[[bold]m'$'\e''[[magenta]mhookName ...'$'\e''[0m'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[blue]m--application applicationHome  '$'\e''[[value]mPath. Optional. Directory of alternate application home.'$'\e''[[reset]m'$'\n''    '$'\e''[[blue]m--extensions extensionList     '$'\e''[[value]mColonDelimitedList. Optional. List of extensions to search, in order for matching files in each hook directory. Defaults to '$'\e''[[code]mBUILD_HOOK_EXTENSIONS'$'\e''[[reset]m.'$'\e''[[reset]m'$'\n''    '$'\e''[[red]mhookName ...                   '$'\e''[[value]mString. Required. Hook to source (if it exists).'$'\e''[[reset]m'$'\n'''$'\n''Identical to '$'\e''[[code]mhookRun'$'\e''[[reset]m but returns exit code zero if the hook does not exist.'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[code]mAny'$'\e''[[reset]m - The hook exit code is returned if it is run'$'\n''- '$'\e''[[code]m0'$'\e''[[reset]m - is returned if the hook is not found'$'\n'''$'\n''Environment variables:'$'\n''- BUILD_HOOK_EXTENSIONS'$'\n''- BUILD_HOOK_DIRS'$'\n''- BUILD_DEBUG'$'\n'''$'\n''Example:'$'\n''    if ! hookSourceOptional test-cleanup >>"$quietLog"; then'$'\n''        buildFailed "$quietLog"'$'\n''    fi'$'\n'''$'\n'''$'\e''[[code]mBUILD_DEBUG'$'\e''[[reset]m settings:'$'\n''- '$'\e''[[code]mhook'$'\e''[[reset]m - '$'\e''[[code]mhookRun'$'\e''[[reset]m and '$'\e''[[code]mhookSource'$'\e''[[reset]m and optional versions of the same functions will output additional debugging information'$'\n'''
 # shellcheck disable=SC2016
-helpPlain='Usage: hookSourceOptional [ --application applicationHome ] [ --extensions extensionList ] hookName ...
-
-    --application applicationHome  Path. Optional. Directory of alternate application home.
-    --extensions extensionList     ColonDelimitedList. Optional. List of extensions to search, in order for matching files in each hook directory. Defaults to BUILD_HOOK_EXTENSIONS.
-    hookName ...                   String. Required. Hook to source (if it exists).
-
-Identical to hookRun but returns exit code zero if the hook does not exist.
-
-Return Code: Any - The hook exit code is returned if it is run
-Return Code: 0 - is returned if the hook is not found
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-
-Environment variables:
-- BUILD_HOOK_EXTENSIONS
-- BUILD_HOOK_DIRS
-- BUILD_DEBUG
-- 
-
-Example:
-    if ! hookSourceOptional test-cleanup >>"$quietLog"; then
-        buildFailed "$quietLog"
-    fi
-
-BUILD_DEBUG settings:
-- hook - hookRun and hookSource and optional versions of the same functions will output additional debugging information
-- 
-'
+helpPlain='Usage: hookSourceOptional [ --application applicationHome ] [ --extensions extensionList ] hookName ...'$'\n'''$'\n''    --application applicationHome  Path. Optional. Directory of alternate application home.'$'\n''    --extensions extensionList     ColonDelimitedList. Optional. List of extensions to search, in order for matching files in each hook directory. Defaults to BUILD_HOOK_EXTENSIONS.'$'\n''    hookName ...                   String. Required. Hook to source (if it exists).'$'\n'''$'\n''Identical to hookRun but returns exit code zero if the hook does not exist.'$'\n'''$'\n''Return codes:'$'\n''- Any - The hook exit code is returned if it is run'$'\n''- 0 - is returned if the hook is not found'$'\n'''$'\n''Environment variables:'$'\n''- BUILD_HOOK_EXTENSIONS'$'\n''- BUILD_HOOK_DIRS'$'\n''- BUILD_DEBUG'$'\n'''$'\n''Example:'$'\n''    if ! hookSourceOptional test-cleanup >>"$quietLog"; then'$'\n''        buildFailed "$quietLog"'$'\n''    fi'$'\n'''$'\n''BUILD_DEBUG settings:'$'\n''- hook - hookRun and hookSource and optional versions of the same functions will output additional debugging information'$'\n'''

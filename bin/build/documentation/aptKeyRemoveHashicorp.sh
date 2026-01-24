@@ -1,48 +1,20 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-22
+# Generated on 2026-01-24
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/terraform.sh"
 argument="--help - Flag. Optional. Display this help."$'\n'""
 base="terraform.sh"
-description="Add keys to enable apt to download terraform directly from hashicorp.com"$'\n'""$'\n'"Return Code: 1 - if environment is awry"$'\n'"Return Code: 0 - All good to install terraform"$'\n'""
+description="Add keys to enable apt to download terraform directly from hashicorp.com"$'\n'""
+exitCode="0"
 file="bin/build/tools/terraform.sh"
-fn="aptKeyRemoveHashicorp"
-foundNames=""
-return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
-sourceFile="bin/build/tools/terraform.sh"
-sourceModified="1769063211"
+foundNames=([0]="argument" [1]="return_code")
+rawComment="Add keys to enable apt to download terraform directly from hashicorp.com"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Return Code: 1 - if environment is awry"$'\n'"Return Code: 0 - All good to install terraform"$'\n'""$'\n'""
+return_code="1 - if environment is awry"$'\n'"0 - All good to install terraform"$'\n'""
+sourceModified="1769184734"
 summary="Add keys to enable apt to download terraform directly from"
 usage="aptKeyRemoveHashicorp [ --help ]"
 # shellcheck disable=SC2016
-helpConsole='[92mUsage[0m: [38;2;170;170;255maptKeyRemoveHashicorp[0m [94m[ --help ][0m
-
-    [94m--help  [1;97mFlag. Optional. Display this help.[0m
-
-Add keys to enable apt to download terraform directly from hashicorp.com
-
-Return Code: 1 - if environment is awry
-Return Code: 0 - All good to install terraform
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-'
+helpConsole=''$'\e''[[label]mUsage'$'\e''[0m: '$'\e''[[info]maptKeyRemoveHashicorp'$'\e''[0m '$'\e''[[blue]m[ --help ]'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[blue]m--help  '$'\e''[[value]mFlag. Optional. Display this help.'$'\e''[[reset]m'$'\n'''$'\n''Add keys to enable apt to download terraform directly from hashicorp.com'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[code]m1'$'\e''[[reset]m - if environment is awry'$'\n''- '$'\e''[[code]m0'$'\e''[[reset]m - All good to install terraform'$'\n'''
 # shellcheck disable=SC2016
-helpPlain='Usage: aptKeyRemoveHashicorp [ --help ]
-
-    --help  Flag. Optional. Display this help.
-
-Add keys to enable apt to download terraform directly from hashicorp.com
-
-Return Code: 1 - if environment is awry
-Return Code: 0 - All good to install terraform
-
-Return codes:
-- 0 - Success
-- 1 - Environment error
-- 2 - Argument error
-- 
-'
+helpPlain='Usage: aptKeyRemoveHashicorp [ --help ]'$'\n'''$'\n''    --help  Flag. Optional. Display this help.'$'\n'''$'\n''Add keys to enable apt to download terraform directly from hashicorp.com'$'\n'''$'\n''Return codes:'$'\n''- 1 - if environment is awry'$'\n''- 0 - All good to install terraform'$'\n'''
