@@ -12,6 +12,7 @@ foundNames=([0]="argument" [1]="requires")
 rawComment="Output the list of environment variable names which can be loaded via \`buildEnvironmentLoad\` or \`buildEnvironmentGet\`"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Requires: convertValue _buildEnvironmentPath find sort read __help catchEnvironment"$'\n'""$'\n'""
 requires="convertValue _buildEnvironmentPath find sort read __help catchEnvironment"$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
+sourceFile="bin/build/tools/build.sh"
 sourceModified="1769208503"
 summary="Output the list of environment variable names which can be"
 usage="buildEnvironmentNames [ --help ]"

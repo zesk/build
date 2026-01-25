@@ -12,7 +12,7 @@ foundNames=([0]="argument" [1]="stdin" [2]="stdout")
 rawComment="Ensures blank lines are singular"$'\n'"Used often to clean up markdown \`.md\` files, but can be used for any line-based configuration file which allows blank lines."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"stdin: Reads lines from stdin until EOF"$'\n'"stdout: Outputs modified lines where any blank lines are replaced with a single blank line."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/text.sh"
-sourceModified="1769276468"
+sourceModified="1769320918"
 stdin="Reads lines from stdin until EOF"$'\n'""
 stdout="Outputs modified lines where any blank lines are replaced with a single blank line."$'\n'""
 summary="Ensures blank lines are singular"

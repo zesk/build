@@ -8,7 +8,6 @@ base="_sugar.sh"
 description="map a value from one value to another given from-to pairs"$'\n'"Prints the mapped value to stdout"$'\n'""
 exitCode="0"
 file="bin/build/tools/_sugar.sh"
-foundNames=([0]="argument")
 rawComment="map a value from one value to another given from-to pairs"$'\n'"Prints the mapped value to stdout"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Argument: value - String. A value."$'\n'"Argument: from - String. When value matches \`from\`, instead print \`to\`"$'\n'"Argument: to - String. The value to print when \`from\` matches \`value\`"$'\n'"Argument: ... - String. Optional. Additional from-to pairs can be passed, first matching value is used, all values will be examined if none match"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/_sugar.sh"

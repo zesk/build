@@ -12,7 +12,8 @@ file="bin/build/tools/text.sh"
 foundNames=([0]="argument" [1]="example" [2]="summary")
 rawComment="Argument: \`count\` - UnsignedInteger. Required. Count of times to repeat."$'\n'"Argument: \`text\` .. - String. Required. A sequence of characters to repeat."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Example:     textRepeat 80 ="$'\n'"Example:     decorate info Hello world"$'\n'"Example:     textRepeat 80 -"$'\n'"Summary: Repeat a string"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
-sourceModified="1769276468"
+sourceFile="bin/build/tools/text.sh"
+sourceModified="1769320918"
 summary="Repeat a string"$'\n'""
 usage="textRepeat \`count\` \`text\` .. [ --help ]"
 # shellcheck disable=SC2016

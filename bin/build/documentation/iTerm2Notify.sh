@@ -8,7 +8,6 @@ base="iterm2.sh"
 description="Sends a notification message via Mac OS X from iTerm2"$'\n'""
 exitCode="0"
 file="bin/build/tools/iterm2.sh"
-foundNames=([0]="argument")
 rawComment="Sends a notification message via Mac OS X from iTerm2"$'\n'"Argument: message - String. Required. Text to display."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/iterm2.sh"

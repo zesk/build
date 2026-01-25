@@ -8,7 +8,6 @@ base="directory.sh"
 description="Does the file's directory exist?"$'\n'""
 exitCode="0"
 file="bin/build/tools/directory.sh"
-foundNames=([0]="argument")
 rawComment="Does the file's directory exist?"$'\n'"Argument: directory - Directory. Required. Test if file directory exists (file does not have to exist)"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/directory.sh"

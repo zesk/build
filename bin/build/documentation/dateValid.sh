@@ -8,7 +8,6 @@ base="date.sh"
 description="Is a date valid?"$'\n'""
 exitCode="0"
 file="bin/build/tools/date.sh"
-foundNames=([0]="argument")
 rawComment="Is a date valid?"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Argument: -- - Flag. Optional. Stops command processing to enable arbitrary text to be passed as additional arguments without special meaning."$'\n'"Argument: text - String. Required. Text to validate as a date after the year 1600. Does not validate month and day combinations."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/date.sh"

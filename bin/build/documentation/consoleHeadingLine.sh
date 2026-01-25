@@ -8,7 +8,6 @@ base="line.sh"
 description="Output a line and fill columns with a character"$'\n'""
 exitCode="0"
 file="bin/build/tools/decorate/line.sh"
-foundNames=([0]="argument")
 rawComment="Output a line and fill columns with a character"$'\n'"Argument: barText - String. Required. Text to fill line with, repeated. If not specified uses \`-\`"$'\n'"Argument: displayText - String. Optional.  Text to display on the line before the fill bar."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/decorate/line.sh"

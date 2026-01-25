@@ -8,7 +8,6 @@ base="path.sh"
 description="Modify the PATH environment variable to add a path."$'\n'""
 exitCode="0"
 file="bin/build/tools/path.sh"
-foundNames=([0]="argument")
 rawComment="Modify the PATH environment variable to add a path."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Argument: --first - Flag. Optional. Place any paths after this flag first in the list"$'\n'"Argument: --last - Flag. Optional. Place any paths after this flag last in the list. Default."$'\n'"Argument: path - the path to be added to the \`PATH\` environment"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/path.sh"

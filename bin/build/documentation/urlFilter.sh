@@ -11,6 +11,7 @@ file="bin/build/tools/url.sh"
 foundNames=([0]="argument" [1]="stdin" [2]="stdout" [3]="takes_a_text_file_and_outputs_any__https")
 rawComment="Open URLs which appear in a stream"$'\n'"Argument: --show-file - Boolean. Optional. Show the file name in the output (suffix with \`: \`)"$'\n'"Argument: --file name - String. Optional. The file name to display - can be any text."$'\n'"Argument: file - File. Optional. A file to read and output URLs found."$'\n'"stdin: text"$'\n'"stdout: line:URL"$'\n'"Takes a text file and outputs any \`https://\` or \`http://\` URLs found within."$'\n'"URLs are explicitly trimmed at quote, whitespace and escape boundaries."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
+sourceFile="bin/build/tools/url.sh"
 sourceModified="1769184734"
 stdin="text"$'\n'""
 stdout="line:URL"$'\n'""

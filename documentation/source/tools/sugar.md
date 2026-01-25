@@ -37,7 +37,7 @@ This is universally used throughout.
 {throwArgument}
 
 {muzzle}
-{mapReturn}
+{returnMap}
 {convertValue}
 
 ## Handling arguments and stdin similarly

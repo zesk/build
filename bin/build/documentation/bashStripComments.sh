@@ -11,6 +11,7 @@ file="bin/build/tools/bash.sh"
 foundNames=([0]="summary" [1]="argument")
 rawComment="Summary: Pipe to strip comments from a bash file"$'\n'"Removes literally any line which begins with zero or more whitespace characters and then a \`#\`."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
+sourceFile="bin/build/tools/bash.sh"
 sourceModified="1769208503"
 summary="Pipe to strip comments from a bash file"$'\n'""
 usage="bashStripComments [ --help ]"

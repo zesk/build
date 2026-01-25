@@ -8,7 +8,6 @@ base="docker.sh"
 description="Does a docker volume exist with name?"$'\n'""
 exitCode="0"
 file="bin/build/tools/docker.sh"
-foundNames=([0]="argument")
 rawComment="Does a docker volume exist with name?"$'\n'"Argument: name - String. Required."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/docker.sh"

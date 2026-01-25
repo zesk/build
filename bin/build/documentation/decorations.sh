@@ -8,10 +8,10 @@ base="core.sh"
 description="Output a list of build-in decoration styles, one per line"$'\n'""
 exitCode="0"
 file="bin/build/tools/decorate/core.sh"
-foundNames=([0]="argument")
 rawComment="Output a list of build-in decoration styles, one per line"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
-sourceModified="1769305343"
+sourceFile="bin/build/tools/decorate/core.sh"
+sourceModified="1769305535"
 summary="Output a list of build-in decoration styles, one per line"
 usage="decorations [ --help ]"
 # shellcheck disable=SC2016

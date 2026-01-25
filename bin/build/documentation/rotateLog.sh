@@ -8,7 +8,6 @@ base="log.sh"
 description="Rotate a log file"$'\n'"Backs up files as:"$'\n'"    logFile"$'\n'"    logFile.1"$'\n'"    logFile.2"$'\n'"    logFile.3"$'\n'"But maintains file descriptors for \`logFile\`."$'\n'""
 exitCode="0"
 file="bin/build/tools/log.sh"
-foundNames=([0]="argument")
 rawComment="Argument: --dry-run - Flag. Optional. Do not change anything."$'\n'"Argument: logFile - Required. A log file which exists."$'\n'"Argument: count - Required. Integer of log files to maintain."$'\n'"Rotate a log file"$'\n'"Backs up files as:"$'\n'"    logFile"$'\n'"    logFile.1"$'\n'"    logFile.2"$'\n'"    logFile.3"$'\n'"But maintains file descriptors for \`logFile\`."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/log.sh"

@@ -16,7 +16,7 @@ rawComment="Outputs the \`singular\` value to standard out when the value of \`n
 return_code="1 - If count is non-numeric"$'\n'"0 - If count is numeric"$'\n'""
 short_description="Output numeric messages which are grammatically accurate"$'\n'""
 sourceFile="bin/build/tools/text.sh"
-sourceModified="1769276468"
+sourceModified="1769320918"
 stdout="\`String\`. The plural form for non-1 values. e.g. \`\$(plural 2 potato potatoes)\` = \`potatoes\`"$'\n'""
 summary="Outputs the \`singular\` value to standard out when the value"
 usage="plural number singular [ plural ]"

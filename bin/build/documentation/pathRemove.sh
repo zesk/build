@@ -8,7 +8,6 @@ base="path.sh"
 description="Remove a path from the PATH environment variable"$'\n'""
 exitCode="0"
 file="bin/build/tools/path.sh"
-foundNames=([0]="argument")
 rawComment="Remove a path from the PATH environment variable"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Argument: path - Requires. String. The path to be removed from the \`PATH\` environment."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/path.sh"

@@ -8,7 +8,6 @@ base="build.sh"
 description="Generate the path for a quiet log in the build cache directory, creating it if necessary."$'\n'""
 exitCode="0"
 file="bin/build/tools/build.sh"
-foundNames=([0]="argument")
 rawComment="Generate the path for a quiet log in the build cache directory, creating it if necessary."$'\n'"Argument: name - String. Required. The log file name to create. Trims leading \`_\` if present."$'\n'"Argument: --no-create - Flag. Optional. Do not require creation of the directory where the log file will appear."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/build.sh"

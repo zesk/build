@@ -8,7 +8,6 @@ base="darwin.sh"
 description="Install a sound file for notifications"$'\n'""
 exitCode="0"
 file="bin/build/tools/darwin.sh"
-foundNames=([0]="argument")
 rawComment="Install a sound file for notifications"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Argument: soundFile ... - File. Required. Sound file(s) to install in user library."$'\n'"Argument: --create - Flag. Optional. Create sound directory if it does not exist."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/darwin.sh"

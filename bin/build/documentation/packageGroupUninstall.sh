@@ -8,7 +8,6 @@ base="package.sh"
 description="Uninstall a package group"$'\n'"Any unrecognized groups are uninstalled using the name as-is."$'\n'""
 exitCode="0"
 file="bin/build/tools/package.sh"
-foundNames=([0]="argument")
 rawComment="Uninstall a package group"$'\n'"Argument: group - String. Required. Currently allowed: \"python\""$'\n'"Any unrecognized groups are uninstalled using the name as-is."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/package.sh"

@@ -8,7 +8,6 @@ base="markdown.sh"
 description="Displays any markdown files next to the given index file which are not found within the index file as links."$'\n'""
 exitCode="0"
 file="bin/build/tools/markdown.sh"
-foundNames=([0]="argument")
 rawComment="Argument: indexFile ... - File. Required. One or more index files to check."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Argument: --handler handler - Function. Optional. Use this error handler instead of the default error handler."$'\n'"Displays any markdown files next to the given index file which are not found within the index file as links."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/markdown.sh"

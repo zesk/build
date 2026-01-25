@@ -8,7 +8,6 @@ base="apt.sh"
 description="Run apt-get non-interactively"$'\n'""
 exitCode="0"
 file="bin/build/tools/apt.sh"
-foundNames=([0]="argument")
 rawComment="Run apt-get non-interactively"$'\n'"Argument: ... - Arguments. Pass through arguments to \`apt-get\`"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/apt.sh"

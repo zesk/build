@@ -8,11 +8,10 @@ base="sugar.sh"
 description="Support arguments and stdin as arguments to an executor"$'\n'""
 exitCode="0"
 file="bin/build/tools/sugar.sh"
-foundNames=([0]="argument")
 rawComment="Support arguments and stdin as arguments to an executor"$'\n'"Argument: executor ... -- - The command to run on each line of input or on each additional argument. Arguments to prefix the final variable argument can be supplied prior to an initial \`--\`."$'\n'"Argument: -- - Alone after the executor forces \`stdin\` to be ignored. The \`--\` flag is also removed from the arguments passed to the executor."$'\n'"Argument: ... - Any additional arguments are passed directly to the executor"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/sugar.sh"
-sourceModified="1769063211"
+sourceModified="1769320918"
 summary="Support arguments and stdin as arguments to an executor"
 usage="executeInputSupport [ executor ... -- ] [ -- ] [ ... ]"
 # shellcheck disable=SC2016

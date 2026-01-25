@@ -8,7 +8,6 @@ base="interactive.sh"
 description="Run checks interactively until errors are all fixed."$'\n'"Not ready for prime time yet - written not tested."$'\n'""
 exitCode="0"
 file="bin/build/tools/interactive.sh"
-foundNames=([0]="argument")
 rawComment="Argument: loopCallable - Callable. Required. Call this on each file and a zero result code means passed and non-zero means fails."$'\n'"Argument: --exec binary - Callable. Optional. Run binary with files as an argument for any failed files. Only works if you pass in item names."$'\n'"Argument: --delay delaySeconds - Integer. Optional. Delay in seconds between checks in interactive mode."$'\n'"Argument: fileToCheck ... - File. Optional. Shell file to validate. May also supply file names via stdin."$'\n'"Run checks interactively until errors are all fixed."$'\n'"Not ready for prime time yet - written not tested."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/interactive.sh"

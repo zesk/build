@@ -8,7 +8,7 @@ escapeBash
 execute
 executeEcho
 executeInputSupport
-mapReturn
+returnMap
 plasterLines
 quoteBashString
 returnArgument

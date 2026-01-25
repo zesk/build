@@ -8,7 +8,6 @@ base="list.sh"
 description="Remove one or more items from a text-delimited list"$'\n'""
 exitCode="0"
 file="bin/build/tools/list.sh"
-foundNames=([0]="argument")
 rawComment="Remove one or more items from a text-delimited list"$'\n'"Argument: listValue - Required. List value to modify."$'\n'"Argument: separator - Required. Separator string for item values (typically \`:\`)"$'\n'"Argument: item - the item to be removed from the \`listValue\`"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/list.sh"

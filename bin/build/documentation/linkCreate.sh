@@ -8,7 +8,6 @@ base="file.sh"
 description="Create a link"$'\n'""
 exitCode="0"
 file="bin/build/tools/file.sh"
-foundNames=([0]="argument")
 rawComment="Create a link"$'\n'"Argument: target - Exists. File. Source file name or path."$'\n'"Argument: linkName - String. Required. Link short name, created next to \`target\`."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/file.sh"

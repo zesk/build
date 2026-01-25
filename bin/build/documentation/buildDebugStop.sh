@@ -13,6 +13,7 @@ rawComment="Stop build debugging if it is enabled"$'\n'"See: buildDebugStart"$'\
 requires="buildDebugEnabled"$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 see="buildDebugStart"$'\n'""
+sourceFile="bin/build/tools/debug.sh"
 sourceModified="1769208503"
 summary="Stop build debugging if it is enabled"
 usage="buildDebugStop [ --help ]"

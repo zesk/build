@@ -445,7 +445,7 @@ All functions in Zesk Build, alphabetically.
 - {SEE:manPathConfigure}
 - {SEE:manPathRemove}
 - {SEE:mapEnvironment}
-- {SEE:mapReturn}
+- {SEE:returnMap}
 - {SEE:mapTokens}
 - {SEE:mapValue}
 - {SEE:mapValueTrim}

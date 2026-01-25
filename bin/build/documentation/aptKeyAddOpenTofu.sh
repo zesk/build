@@ -12,6 +12,7 @@ foundNames=([0]="argument" [1]="return_code" [2]="see")
 rawComment="Add keys to enable apt to download tofu directly from opentofu.org"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Return Code: 1 - if environment is awry"$'\n'"Return Code: 0 - All good to install terraform"$'\n'"See: aptKeyRemoveOpenTofu"$'\n'""$'\n'""
 return_code="1 - if environment is awry"$'\n'"0 - All good to install terraform"$'\n'""
 see="aptKeyRemoveOpenTofu"$'\n'""
+sourceFile="bin/build/tools/tofu.sh"
 sourceModified="1769184734"
 summary="Add keys to enable apt to download tofu directly from"
 usage="aptKeyAddOpenTofu [ --help ]"

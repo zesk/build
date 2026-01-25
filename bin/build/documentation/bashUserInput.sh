@@ -12,6 +12,7 @@ foundNames=([0]="see" [1]="argument")
 rawComment="Prompt the user properly honoring any attached console."$'\n'"Arguments are the same as \`read\`, except:"$'\n'"\`-r\` is implied and does not need to be specified"$'\n'"See: read"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Argument: ... - Arguments. Optional. Identical arguments to \`read\` (but includes \`-r\`)"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 see="read"$'\n'""
+sourceFile="bin/build/tools/prompt.sh"
 sourceModified="1769063211"
 summary="Prompt the user properly honoring any attached console."
 usage="bashUserInput [ --help ] [ ... ]"

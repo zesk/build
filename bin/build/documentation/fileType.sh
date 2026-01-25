@@ -8,7 +8,6 @@ base="file.sh"
 description="Better type handling of shell objects"$'\n'"Outputs one of \`type\` output or enhancements:"$'\n'"- \`builtin\`, \`function\`, \`alias\`, \`file\`"$'\n'"- \`link-directory\`, \`link-file\`, \`link-dead\`, \`directory\`, \`integer\`, \`unknown\`"$'\n'""
 exitCode="0"
 file="bin/build/tools/file.sh"
-foundNames=([0]="argument")
 rawComment="Argument: item - String. Optional. Thing to classify"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Better type handling of shell objects"$'\n'"Outputs one of \`type\` output or enhancements:"$'\n'"- \`builtin\`, \`function\`, \`alias\`, \`file\`"$'\n'"- \`link-directory\`, \`link-file\`, \`link-dead\`, \`directory\`, \`integer\`, \`unknown\`"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/file.sh"

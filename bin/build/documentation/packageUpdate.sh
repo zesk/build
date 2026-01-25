@@ -8,7 +8,6 @@ base="package.sh"
 description="Update packages lists and sources"$'\n'""
 exitCode="0"
 file="bin/build/tools/package.sh"
-foundNames=([0]="argument")
 rawComment="Update packages lists and sources"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Argument: --verbose - Flag. Optional. Display progress to the terminal."$'\n'"Argument: --manager packageManager - String. Optional. Package manager to use. (apk, apt, brew)"$'\n'"Argument: --force - Flag. Optional. Force even if it was updated recently."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/package.sh"

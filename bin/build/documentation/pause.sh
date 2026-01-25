@@ -8,7 +8,6 @@ base="interactive.sh"
 description="Pause for user input"$'\n'""
 exitCode="0"
 file="bin/build/tools/interactive.sh"
-foundNames=([0]="argument")
 rawComment="Pause for user input"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Argument: -- - Flag. Optional. Stops command processing to enable arbitrary text to be passed as additional arguments without special meaning."$'\n'"Argument: message ... - Display this message while pausing"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/interactive.sh"

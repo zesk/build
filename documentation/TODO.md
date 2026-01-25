@@ -36,7 +36,7 @@
 # Helpers (why)
 
 - _muzzle
-- _mapReturn
+- _returnMap
 - _convertValue
 - _returnUndo
 - _returnCode
@@ -338,7 +338,7 @@ On a "2x" machine:
 - _catchCode
 - catchEnvironmentQuiet
 - _deprecated
-- _mapReturn
+- _returnMap
 - __undo
 - executeInputSupport
 - applicationHomeAliases

@@ -67,10 +67,10 @@ _fileExtractLines() {
 # DOC TEMPLATE: --help 1
 # Argument: --help - Flag. Optional. Display this help.
 # Argument: ... - Arguments. Passed directly to `grep`.
-# Requires: grep mapReturn
+# Requires: grep returnMap
 grepSafe() {
   [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
-  grep "$@" || mapReturn $? 1 0 || return $?
+  grep "$@" || returnMap $? 1 0 || return $?
 }
 _grepSafe() {
   # __IDENTICAL__ usageDocument 1

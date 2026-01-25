@@ -8,7 +8,6 @@ base="type.sh"
 description="True-ish"$'\n'"Succeeds when all arguments are \"true\"-ish"$'\n'""
 exitCode="0"
 file="bin/build/tools/type.sh"
-foundNames=([0]="argument")
 rawComment="True-ish"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Argument: value ... - EmptyString. One or more values to test."$'\n'"Succeeds when all arguments are \"true\"-ish"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/type.sh"

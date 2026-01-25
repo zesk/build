@@ -11,6 +11,7 @@ file="bin/build/tools/build.sh"
 foundNames=([0]="stdout" [1]="argument")
 rawComment="List all functions which are currently deprecated in Zesk Build"$'\n'"stdout: String"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
+sourceFile="bin/build/tools/build.sh"
 sourceModified="1769208503"
 stdout="String"$'\n'""
 summary="List all functions which are currently deprecated in Zesk Build"

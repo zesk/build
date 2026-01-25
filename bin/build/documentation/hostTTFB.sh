@@ -8,7 +8,6 @@ base="web.sh"
 description="Fetch Time to First Byte and other stats"$'\n'""
 exitCode="0"
 file="bin/build/tools/web.sh"
-foundNames=([0]="argument")
 rawComment="Fetch Time to First Byte and other stats"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Argument: url - URL. Required. URL to check."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/web.sh"

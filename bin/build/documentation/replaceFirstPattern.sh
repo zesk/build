@@ -12,7 +12,7 @@ foundNames=([0]="stdin" [1]="stdout")
 rawComment="Replaces the first and only the first occurrence of a pattern in a line with a replacement string."$'\n'"Without arguments, displays help."$'\n'"stdin: Reads lines from stdin until EOF"$'\n'"stdout: Outputs modified lines"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/text.sh"
-sourceModified="1769276468"
+sourceModified="1769320918"
 stdin="Reads lines from stdin until EOF"$'\n'""
 stdout="Outputs modified lines"$'\n'""
 summary="Replaces the first and only the first occurrence of a"

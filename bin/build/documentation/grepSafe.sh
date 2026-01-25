@@ -9,12 +9,12 @@ description="\`grep\` but returns 0 when nothing matches"$'\n'"Allow blank files
 exitCode="0"
 file="bin/build/tools/text.sh"
 foundNames=([0]="see" [1]="return_code" [2]="argument" [3]="requires")
-rawComment="\`grep\` but returns 0 when nothing matches"$'\n'"See: grep"$'\n'"Allow blank files or no matches -"$'\n'"- \`grep\` - returns 1 - no lines selected"$'\n'"- \`grep\` - returns 0 - lines selected"$'\n'"Return Code: 0 - Normal operation"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Argument: ... - Arguments. Passed directly to \`grep\`."$'\n'"Requires: grep mapReturn"$'\n'""$'\n'""
-requires="grep mapReturn"$'\n'""
+rawComment="\`grep\` but returns 0 when nothing matches"$'\n'"See: grep"$'\n'"Allow blank files or no matches -"$'\n'"- \`grep\` - returns 1 - no lines selected"$'\n'"- \`grep\` - returns 0 - lines selected"$'\n'"Return Code: 0 - Normal operation"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Argument: ... - Arguments. Passed directly to \`grep\`."$'\n'"Requires: grep returnMap"$'\n'""$'\n'""
+requires="grep returnMap"$'\n'""
 return_code="0 - Normal operation"$'\n'""
 see="grep"$'\n'""
 sourceFile="bin/build/tools/text.sh"
-sourceModified="1769276468"
+sourceModified="1769320918"
 summary="\`grep\` but returns 0 when nothing matches"
 usage="grepSafe [ --help ] [ ... ]"
 # shellcheck disable=SC2016

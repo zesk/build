@@ -101,7 +101,7 @@ testBuildFunctionsCoverage() {
 
     # grep returns 1 when nothing matches
 
-    matchingTests=$(xargs -0 grep -l -e "$pattern" <"$allTestFiles" 2>/dev/null || mapReturn $? 1 0 123 0 | trimBoth) || return $?
+    matchingTests=$(xargs -0 grep -l -e "$pattern" <"$allTestFiles" 2>/dev/null || returnMap $? 1 0 123 0 | trimBoth) || return $?
     [ -z "$matchingTests" ] || foundCount=$(catchReturn "$handler" fileLineCount <<<"$matchingTests") || return $?
     # statusMessage decorate error "Matches $foundCount: $matchingTests"
 

@@ -8,7 +8,6 @@ base="manpath.sh"
 description="Remove a path from the MANPATH environment variable"$'\n'""
 exitCode="0"
 file="bin/build/tools/manpath.sh"
-foundNames=([0]="argument")
 rawComment="Remove a path from the MANPATH environment variable"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Argument: path - Directory. Required. The path to be removed from the \`MANPATH\` environment"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/manpath.sh"

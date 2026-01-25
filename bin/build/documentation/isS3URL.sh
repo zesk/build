@@ -8,7 +8,6 @@ base="aws.sh"
 description="Is the URL passed in a S3 URL?"$'\n'"Without arguments, displays help."$'\n'""
 exitCode="0"
 file="bin/build/tools/aws.sh"
-foundNames=([0]="argument")
 rawComment="Is the URL passed in a S3 URL?"$'\n'"Argument: value - EmptyString. Value to check."$'\n'"Without arguments, displays help."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/aws.sh"

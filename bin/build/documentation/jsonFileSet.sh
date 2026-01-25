@@ -8,7 +8,6 @@ base="json.sh"
 description="Set or delete a value in a JSON file"$'\n'""
 exitCode="0"
 file="bin/build/tools/json.sh"
-foundNames=([0]="argument")
 rawComment="Set or delete a value in a JSON file"$'\n'"Argument: jsonFile - File. Required. File to get value from."$'\n'"Argument: path - String. Required. dot-separated path to modify (e.g. \`extra.fingerprint\`)"$'\n'"Argument: value ... - EmptyString. Optional. Value to set. If more than one value is set, value is set to an array value. If no value passed, the key is deleted. **Note the difference between a blank argument and NO argument.**"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/json.sh"

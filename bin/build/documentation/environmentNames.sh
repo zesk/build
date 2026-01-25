@@ -13,7 +13,7 @@ foundNames=([0]="example" [1]="argument")
 rawComment="Example:     {fn} < \"\$stateFile\""$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"List names of environment values set in a bash state file"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/environment.sh"
-sourceModified="1769229530"
+sourceModified="1769320208"
 summary="List names of environment values set in a bash state"
 usage="environmentNames [ --help ]"
 # shellcheck disable=SC2016

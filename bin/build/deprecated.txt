@@ -32,6 +32,7 @@ whichExists|executableExists|
 lineFill|consoleHeadingLine|
 boxedHeading|consoleHeadingBoxed|
 plainLength|consolePlainLength|
+mapReturn|returnMap|
 
 # v0.40.4
 usageArgumentDate "$handler"|validate "$handler" Date|

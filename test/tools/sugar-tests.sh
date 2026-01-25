@@ -63,13 +63,13 @@ testUndo() {
 }
 
 testMapReturn() {
-  assertExitCode 99 mapReturn 1 1 99 || return $?
-  assertExitCode 99 mapReturn 1 1 99 1 98 || return $?
-  assertExitCode 99 mapReturn 99 1 99 2 98 || return $?
-  assertExitCode 98 mapReturn 2 1 99 2 98 || return $?
+  assertExitCode 99 returnMap 1 1 99 || return $?
+  assertExitCode 99 returnMap 1 1 99 1 98 || return $?
+  assertExitCode 99 returnMap 99 1 99 2 98 || return $?
+  assertExitCode 98 returnMap 2 1 99 2 98 || return $?
   local i
   for i in $(seq 1 10); do
-    assertExitCode $((i + 1)) mapReturn "$i" 1 2 2 3 3 4 4 5 5 6 6 7 7 8 8 9 9 10 10 11 || return $?
+    assertExitCode $((i + 1)) returnMap "$i" 1 2 2 3 3 4 4 5 5 6 6 7 7 8 8 9 9 10 10 11 || return $?
   done
 }
 

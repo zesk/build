@@ -12,7 +12,7 @@ foundNames=([0]="argument" [1]="return_code")
 rawComment="Safely load an environment from stdin (no code execution)"$'\n'"Argument: --verbose - Flag. Optional. Output errors with variables."$'\n'"Argument: --debug - Flag. Optional. Debugging mode, for developers probably."$'\n'"Argument: --prefix - String. Optional. Prefix each environment variable defined with this string. e.g. \`NAME\` -> \`DSN_NAME\` for \`--prefix DSN_\`"$'\n'"Argument: --context - String. Optional. Name of the context for debugging or error messages. (e.g. what is this doing for whom and why)"$'\n'"Argument: --ignore environmentName - String. Optional. Environment value to ignore on load."$'\n'"Argument: --secure environmentName - String. Optional. If found, entire load fails."$'\n'"Argument: --secure-defaults - Flag. Optional. Add a list of environment variables considered security risks to the \`--ignore\` list."$'\n'"Argument: --execute arguments ... - Callable. Optional. All additional arguments are passed to callable after loading environment."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Return Code: 2 - if file does not exist; outputs an error"$'\n'"Return Code: 0 - if files are loaded successfully"$'\n'""$'\n'""
 return_code="2 - if file does not exist; outputs an error"$'\n'"0 - if files are loaded successfully"$'\n'""
 sourceFile="bin/build/tools/environment.sh"
-sourceModified="1769229530"
+sourceModified="1769320208"
 summary="Safely load an environment from stdin (no code execution)"
 usage="environmentLoad [ --verbose ] [ --debug ] [ --prefix ] [ --context ] [ --ignore environmentName ] [ --secure environmentName ] [ --secure-defaults ] [ --execute arguments ... ] [ --help ]"
 # shellcheck disable=SC2016

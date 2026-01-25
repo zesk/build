@@ -8,7 +8,6 @@ base="terraform.sh"
 description="Remove terraform binary"$'\n'""
 exitCode="0"
 file="bin/build/tools/terraform.sh"
-foundNames=([0]="argument")
 rawComment="Remove terraform binary"$'\n'"Argument: package ... - String. Optional. Additional packages to uninstall using \`packageUninstall\`"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/terraform.sh"
