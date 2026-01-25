@@ -11,6 +11,7 @@ file="bin/build/tools/bash.sh"
 foundNames=([0]="argument" [1]="return_code")
 rawComment="Argument: builtin - String. Required. String to check if it's a bash builtin."$'\n'"Return Code: 0 - Yes, this string is a bash builtin command."$'\n'"Return Code: 1 - No, this is not a bash builtin command"$'\n'""$'\n'""
 return_code="0 - Yes, this string is a bash builtin command."$'\n'"1 - No, this is not a bash builtin command"$'\n'""
+sourceFile="bin/build/tools/bash.sh"
 sourceModified="1769208503"
 summary="undocumented"
 usage="isBashBuiltin builtin"

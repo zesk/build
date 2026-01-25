@@ -139,8 +139,6 @@ ___documentTemplateFunction() {
     shift
   done
 
-
-
   # IDENTICAL startBeginTiming 1
   local start && start=$(timingStart) || return $?
 
