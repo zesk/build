@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-24
+# Generated on 2026-01-25
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/docker-compose.sh"
 argument="command - String. Required. The command to test."$'\n'"--help - Flag. Optional. Display this help."$'\n'""
@@ -12,7 +12,6 @@ foundNames=([0]="argument" [1]="see" [2]="return_code")
 rawComment="Is this a docker compose command?"$'\n'"Argument: command - String. Required. The command to test."$'\n'"See: dockerComposeCommandList"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Return Code: 0 - Yes, it is."$'\n'"Return Code: 1 - No, it is not."$'\n'""$'\n'""
 return_code="0 - Yes, it is."$'\n'"1 - No, it is not."$'\n'""
 see="dockerComposeCommandList"$'\n'""
-sourceFile="bin/build/tools/docker-compose.sh"
 sourceModified="1769184734"
 summary="Is this a docker compose command?"
 usage="isDockerComposeCommand command [ --help ]"

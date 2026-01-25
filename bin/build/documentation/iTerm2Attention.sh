@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-24
+# Generated on 2026-01-25
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/iterm2.sh"
 argument="--ignore | -i - Flag. Optional. If the current terminal is not iTerm2, then exit status 0 and do nothing."$'\n'"--verbose | -v - Flag. Optional. Verbose mode. Show what you are doing."$'\n'"action. String. Action to attract attention: \`true\`, \`false\` or \`!\`"$'\n'""
@@ -11,6 +11,7 @@ file="bin/build/tools/iterm2.sh"
 foundNames=([0]="argument")
 rawComment="Attract the operator"$'\n'"Argument: --ignore | -i - Flag. Optional. If the current terminal is not iTerm2, then exit status 0 and do nothing."$'\n'"Argument: --verbose | -v - Flag. Optional. Verbose mode. Show what you are doing."$'\n'"Argument: action. String. Action to attract attention: \`true\`, \`false\` or \`!\`"$'\n'"Actions:"$'\n'"- \`true\` - start making dock icon bounce"$'\n'"- \`false\` - stop making dock icon bounce"$'\n'"- \`!\` - Show fireworks at cursor"$'\n'"- \`fireworks\` - Show fireworks at cursor"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
+sourceFile="bin/build/tools/iterm2.sh"
 sourceModified="1769184734"
 summary="Attract the operator"
 usage="iTerm2Attention [ --ignore | -i ] [ --verbose | -v ] [ action. String. Action to attract attention: \`true\`, \`false\` or \`!\` ]"

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-24
+# Generated on 2026-01-25
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/decorate/big.sh"
 argument="--top - Flag. Optional. Place label at the top."$'\n'"--bottom - Flag. Optional. Place label at the bottom."$'\n'"--prefix prefixText - String. Optional. Optional prefix on each line."$'\n'"--tween tweenText - String. Optional. Optional between text after label and before \`bigText\` on each line (allows coloring or other decorations)."$'\n'"--suffix suffixText - String. Optional. Optional suffix on each line."$'\n'"label - String. Required. Label to place on the left of big text."$'\n'"text - String. Required. Text for \`bigText\`."$'\n'""

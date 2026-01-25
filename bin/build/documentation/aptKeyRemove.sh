@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-24
+# Generated on 2026-01-25
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/apt.sh"
 argument="keyName - String. Required. One or more key names to remove."$'\n'"--skip - Flag. Optional. a Do not do \`apt-get update\` afterwards to update the database."$'\n'"--help - Flag. Optional. Display this help."$'\n'""
@@ -11,7 +11,6 @@ file="bin/build/tools/apt.sh"
 foundNames=([0]="argument" [1]="return_code")
 rawComment="Remove apt keys"$'\n'"Argument: keyName - String. Required. One or more key names to remove."$'\n'"Argument: --skip - Flag. Optional. a Do not do \`apt-get update\` afterwards to update the database."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Return Code: 1 - if environment is awry"$'\n'"Return Code: 0 - Apt key was removed AOK"$'\n'""$'\n'""
 return_code="1 - if environment is awry"$'\n'"0 - Apt key was removed AOK"$'\n'""
-sourceFile="bin/build/tools/apt.sh"
 sourceModified="1769184734"
 summary="Remove apt keys"
 usage="aptKeyRemove keyName [ --skip ] [ --help ]"

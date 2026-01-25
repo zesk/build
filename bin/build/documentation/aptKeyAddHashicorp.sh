@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-24
+# Generated on 2026-01-25
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/terraform.sh"
 argument="--help - Flag. Optional. Display this help."$'\n'""
@@ -11,7 +11,6 @@ file="bin/build/tools/terraform.sh"
 foundNames=([0]="return_code" [1]="argument")
 rawComment="Add keys to enable apt to download terraform directly from hashicorp.com"$'\n'"Return Code: 1 - if environment is awry"$'\n'"Return Code: 0 - All good to install terraform"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'""$'\n'""
 return_code="1 - if environment is awry"$'\n'"0 - All good to install terraform"$'\n'""
-sourceFile="bin/build/tools/terraform.sh"
 sourceModified="1769184734"
 summary="Add keys to enable apt to download terraform directly from"
 usage="aptKeyAddHashicorp [ --help ]"

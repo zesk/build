@@ -39,7 +39,7 @@ processWait() {
   local processId processIds=() requireFlag=false verboseFlag=false timeout=-1 signalTimeout=1 signals=()
 
   # IDENTICAL startBeginTiming 1
-  start=$(timingStart) || return $?
+  local start && start=$(timingStart) || return $?
 
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#

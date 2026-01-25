@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-24
+# Generated on 2026-01-25
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/docker-compose.sh"
 argument="--help - Flag. Optional. Display this help."$'\n'""
@@ -11,7 +11,6 @@ file="bin/build/tools/docker-compose.sh"
 foundNames=([0]="argument" [1]="return_code")
 rawComment="Is docker compose currently running?"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Return Code: 1 - Not running"$'\n'"Return Code: 0 - Running"$'\n'""$'\n'""
 return_code="1 - Not running"$'\n'"0 - Running"$'\n'""
-sourceFile="bin/build/tools/docker-compose.sh"
 sourceModified="1769184734"
 summary="Is docker compose currently running?"
 usage="dockerComposeIsRunning [ --help ]"

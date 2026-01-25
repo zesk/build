@@ -74,10 +74,10 @@ __identicalCheckInsideLoopLineHandler() {
     if ! diff -b -q "$countFile" "$compareFile" >/dev/null; then
       {
         statusMessage --last printf -- "[%s] %s\n< %s\n> %s%s\n" "$(decorate code "$token")" "$(decorate error "Token code changed ($count)")" "$(decorate success "$(decorate file "$tokenFileName")")" "$(decorate warning "$(decorate file "$searchFile")")"
-        diff -b "$countFile" "$compareFile" | decorate code | decorate wrap "$(decorate subtle "diff: ")" || :
+        diff -u -b "$countFile" "$compareFile" | decorate diff info subtle | decorate wrap "$(decorate subtle "diff: ")" || :
         if buildDebugEnabled identical-compare; then
-          decorate wrap "<: " <"$countFile"
-          decorate wrap ">: " <"$compareFile"
+          decorate info <"$countFile" | decorate wrap "<: "
+          decorate subtle <"$compareFile" | decorate wrap ">: "
         fi
       } 1>&2
       isBadFile=true

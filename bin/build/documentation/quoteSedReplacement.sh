@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-24
+# Generated on 2026-01-25
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/sed.sh"
 argument="text - EmptyString. Required. Text to quote"$'\n'"separatorChar - The character used to separate the sed pattern and replacement. Defaults to \`/\`."$'\n'""
@@ -15,6 +15,7 @@ output="string quoted and appropriate to insert in a \`sed\` replacement phrase"
 rawComment="Summary: Quote sed replacement strings for shell use"$'\n'"Argument: text - EmptyString. Required. Text to quote"$'\n'"Argument: separatorChar - The character used to separate the sed pattern and replacement. Defaults to \`/\`."$'\n'"Output: string quoted and appropriate to insert in a \`sed\` replacement phrase"$'\n'"Example:     sed \"s/\$(quoteSedPattern \"\$1\")/\$(quoteSedReplacement \"\$2\")/g\""$'\n'"Example:     needSlash=\$(quoteSedPattern '\$.*/[\\]^')"$'\n'"Requires: printf sed usageDocument __help"$'\n'""$'\n'""
 requires="printf sed usageDocument __help"$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
+sourceFile="bin/build/tools/sed.sh"
 sourceModified="1769063211"
 summary="Quote sed replacement strings for shell use"$'\n'""
 usage="quoteSedReplacement text [ separatorChar ]"

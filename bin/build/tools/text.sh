@@ -892,7 +892,7 @@ __consoleTrimWidth() {
   fi
   local finished=false prefix="" textWidth=0
   while ! $finished; do
-    local part && IFS="" read -r -d "$replace" -a part || finished=true
+    local part="" && IFS="" read -r -d "$replace" part || finished=true
     local newWidth=0
     if [ -n "$part" ]; then
       newWidth=$(consolePlainLength "$part")

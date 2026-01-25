@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-24
+# Generated on 2026-01-25
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/test.sh"
 apt_get="xxd"$'\n'""
@@ -13,6 +13,7 @@ file="bin/build/tools/test.sh"
 foundNames=([0]="depends" [1]="apt_get" [2]="stdin" [3]="stdout")
 rawComment="Dumps output as hex"$'\n'"Depends: xxd"$'\n'"apt-get: xxd"$'\n'"stdin: binary"$'\n'"stdout: formatted output set to ideal \`consoleColumns\`"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
+sourceFile="bin/build/tools/test.sh"
 sourceModified="1769063211"
 stdin="binary"$'\n'""
 stdout="formatted output set to ideal \`consoleColumns\`"$'\n'""

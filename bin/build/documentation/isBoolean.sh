@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-24
+# Generated on 2026-01-25
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/_sugar.sh"
 argument="--help - Flag. Optional. Display this help."$'\n'"value - String. Optional. Value to check if it is a boolean."$'\n'""
@@ -13,7 +13,6 @@ rawComment="Boolean test"$'\n'"If you want \"true-ish\" use \`isTrue\`."$'\n'"Re
 requires="usageDocument printf"$'\n'""
 return_code="0 - if value is a boolean"$'\n'"1 - if value is not a boolean"$'\n'""
 see="isTrue parseBoolean"$'\n'""
-sourceFile="bin/build/tools/_sugar.sh"
 sourceModified="1769063211"
 summary="Boolean test"
 usage="isBoolean [ --help ] [ value ]"

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-24
+# Generated on 2026-01-25
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/tar.sh"
 argument="target - The tar.gz file to create"$'\n'"files - A list of files to include in the tar file"$'\n'""
@@ -12,6 +12,7 @@ foundNames=([0]="short_description" [1]="argument")
 rawComment="Platform agnostic tar cfz which ignores owner and attributes"$'\n'"\`tar\` command is not cross-platform so this differentiates between the GNU and BSD command line arguments without needing to know what operating system you are on. Creates a gz-compressed tar file (\`.tgz\` or \`.tar.gz\`) with user and group set to 0 and no extended attributes attached to the files."$'\n'"Short description: Platform agnostic tar create which keeps user and group as user 0"$'\n'"Argument: target - The tar.gz file to create"$'\n'"Argument: files - A list of files to include in the tar file"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 short_description="Platform agnostic tar create which keeps user and group as user 0"$'\n'""
+sourceFile="bin/build/tools/tar.sh"
 sourceModified="1769063211"
 summary="Platform agnostic tar cfz which ignores owner and attributes"
 usage="tarCreate [ target ] [ files ]"

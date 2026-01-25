@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-24
+# Generated on 2026-01-25
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/character.sh"
 argument="character - Required. Single character to test."$'\n'"class ... - String. Optional. A class name or a character to match. If more than is supplied, a single value must match to succeed (any)."$'\n'"--help - Flag. Optional. Display this help."$'\n'""
@@ -11,7 +11,6 @@ file="bin/build/tools/character.sh"
 foundNames=([0]="argument")
 rawComment="Does this character match one or more character classes?"$'\n'"Argument: character - Required. Single character to test."$'\n'"Argument: class ... - String. Optional. A class name or a character to match. If more than is supplied, a single value must match to succeed (any)."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
-sourceFile="bin/build/tools/character.sh"
 sourceModified="1769063211"
 summary="Does this character match one or more character classes?"
 usage="isCharacterClasses character [ class ... ] [ --help ]"

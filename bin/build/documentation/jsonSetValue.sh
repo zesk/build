@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-24
+# Generated on 2026-01-25
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/json.sh"
 argument="--filter - Function. Optional. Run value through this filter prior to inserting into the JSON file."$'\n'"--status - Flag. Optional. When set, returns \`0\` when the value was updated successfully and \`\$(returnCode identical)\` when the values is the same"$'\n'"--quiet - Flag. Optional. Do not output anything to \`stdout\` and just do the action and exit."$'\n'"--generator - Function. Optional. Function to generate the value. Defaults to \`hookVersionCurrent\`."$'\n'"--value - String. Optional. Value to set in JSON file. (Skips generation)"$'\n'"--key - String. Optional. Key to set in JSON file. Defaults to \`version\`."$'\n'"key - Required. If not specified as \`--key\`, specify it here."$'\n'"file - File. Required. Modify and update this file"$'\n'""

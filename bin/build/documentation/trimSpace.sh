@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-24
+# Generated on 2026-01-25
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/text.sh"
 argument="text - EmptyString. Optional. Text to remove spaces. If no arguments are supplied it is assumed that input should be read from standard input."$'\n'""
@@ -14,8 +14,7 @@ foundNames=([0]="argument" [1]="stdin" [2]="stdout" [3]="example" [4]="summary" 
 rawComment="Trim spaces and only spaces from arguments or a pipe"$'\n'"Argument: text - EmptyString. Optional. Text to remove spaces. If no arguments are supplied it is assumed that input should be read from standard input."$'\n'"stdin: Reads lines from stdin until EOF"$'\n'"stdout: Outputs trimmed lines"$'\n'"Example:     {fn} \"\$token\""$'\n'"Example:     grep \"\$tokenPattern\" | trimSpace > \"\$tokensFound\""$'\n'"Summary: Trim whitespace of a bash argument"$'\n'"Source: https://web.archive.org/web/20121022051228/http://codesnippets.joyent.com/posts/show/1816"$'\n'"Credits: Chris F.A. Johnson (2008)"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 source="https://web.archive.org/web/20121022051228/http://codesnippets.joyent.com/posts/show/1816"$'\n'""
-sourceFile="bin/build/tools/text.sh"
-sourceModified="1769226342"
+sourceModified="1769276468"
 stdin="Reads lines from stdin until EOF"$'\n'""
 stdout="Outputs trimmed lines"$'\n'""
 summary="Trim whitespace of a bash argument"$'\n'""

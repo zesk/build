@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-24
+# Generated on 2026-01-25
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/file.sh"
 argument="--help - Flag. Optional. Display this help."$'\n'"pattern ... - String. Required.\`grep -e\` Pattern to find in files."$'\n'"-- - Delimiter. Required. exception."$'\n'"exception ... - String. Optional. \`grep -e\` File pattern which should be ignored."$'\n'"-- - Delimiter. Required. file."$'\n'"file ... - File. Required. File to search. Special file \`-\` indicates files should be read from \`stdin\`."$'\n'""
@@ -11,6 +11,7 @@ file="bin/build/tools/file.sh"
 foundNames=([0]="argument")
 rawComment="Find list of files which do NOT match a specific pattern or patterns and output them"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Argument: pattern ... - String. Required.\`grep -e\` Pattern to find in files."$'\n'"Argument: -- - Delimiter. Required. exception."$'\n'"Argument: exception ... - String. Optional. \`grep -e\` File pattern which should be ignored."$'\n'"Argument: -- - Delimiter. Required. file."$'\n'"Argument: file ... - File. Required. File to search. Special file \`-\` indicates files should be read from \`stdin\`."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
+sourceFile="bin/build/tools/file.sh"
 sourceModified="1769184734"
 summary="Find list of files which do NOT match a specific"
 usage="fileNotMatches [ --help ] pattern ... -- [ exception ... ] -- file ..."

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-24
+# Generated on 2026-01-25
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/git.sh"
 argument="none"
@@ -12,6 +12,7 @@ foundNames=([0]="see" [1]="return_code")
 rawComment="Set up a pre-commit hook and create a cache of our files by extension."$'\n'"See: gitPreCommitCleanup"$'\n'"Return code: 0 - One or more files are available as part of the commit"$'\n'"Return code: 1 - Error, or zero files are available as part of the commit"$'\n'""$'\n'""
 return_code="0 - One or more files are available as part of the commit"$'\n'"1 - Error, or zero files are available as part of the commit"$'\n'""
 see="gitPreCommitCleanup"$'\n'""
+sourceFile="bin/build/tools/git.sh"
 sourceModified="1769199547"
 summary="Set up a pre-commit hook and create a cache of"
 usage="gitPreCommitSetup"

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-24
+# Generated on 2026-01-25
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/documentation.sh"
 argument="--env-file envFile - File. Optional. One (or more) environment files used to map \`documentTemplate\` prior to scanning, as defaults prior to each function generation, and after file generation."$'\n'"cacheDirectory - Required. Cache directory where the indexes live."$'\n'"sourceFile - Required. The document template containing functions to define"$'\n'"functionTemplate - Required. The template for individual functions defined in the \`documentTemplate\`."$'\n'"targetFile - Required. Target file to generate"$'\n'"--help - Flag. Optional. Display this help."$'\n'""
@@ -13,6 +13,7 @@ rawComment="Summary: Convert a template file to a documentation file using templ
 requires="catchEnvironment timingStart throwArgument usageArgumentFile usageArgumentDirectory usageArgumentFileDirectory"$'\n'"basename decorate statusMessage fileTemporaryName rm grep cut source mapTokens returnClean"$'\n'"mapEnvironment shaPipe printf"$'\n'""
 return_code="0 - If success"$'\n'"1 - Issue with file generation"$'\n'"2 - Argument error"$'\n'""
 see="documentationIndexLookup"$'\n'"documentationIndexIndex"$'\n'""
+sourceFile="bin/build/tools/documentation.sh"
 sourceModified="1769065497"
 summary="Convert a template file to a documentation file using templates"$'\n'""
 usage="documentationTemplateCompile [ --env-file envFile ] cacheDirectory sourceFile functionTemplate targetFile [ --help ]"

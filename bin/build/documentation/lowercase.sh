@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-24
+# Generated on 2026-01-25
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/text.sh"
 argument="-- - Flag. Optional. Stops command processing to enable arbitrary text to be passed as additional arguments without special meaning."$'\n'"--help - Flag. Optional. Display this help."$'\n'"text - EmptyString. Required. Text to convert to lowercase"$'\n'""
@@ -13,7 +13,7 @@ rawComment="Convert text to lowercase"$'\n'"Argument: -- - Flag. Optional. Stops
 requires="tr"$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/text.sh"
-sourceModified="1769226342"
+sourceModified="1769276468"
 stdout="\`String\`. The lowercase version of the \`text\`."$'\n'""
 summary="Convert text to lowercase"
 usage="lowercase [ -- ] [ --help ] text"

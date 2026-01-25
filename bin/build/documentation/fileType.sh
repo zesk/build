@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-24
+# Generated on 2026-01-25
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/file.sh"
 argument="item - String. Optional. Thing to classify"$'\n'"--help - Flag. Optional. Display this help."$'\n'""
@@ -11,6 +11,7 @@ file="bin/build/tools/file.sh"
 foundNames=([0]="argument")
 rawComment="Argument: item - String. Optional. Thing to classify"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Better type handling of shell objects"$'\n'"Outputs one of \`type\` output or enhancements:"$'\n'"- \`builtin\`, \`function\`, \`alias\`, \`file\`"$'\n'"- \`link-directory\`, \`link-file\`, \`link-dead\`, \`directory\`, \`integer\`, \`unknown\`"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
+sourceFile="bin/build/tools/file.sh"
 sourceModified="1769184734"
 summary="Better type handling of shell objects"
 usage="fileType [ item ] [ --help ]"

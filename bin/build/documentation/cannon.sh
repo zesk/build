@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-24
+# Generated on 2026-01-25
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/map.sh"
 argument="--help - Flag. Optional. Display this help."$'\n'"--handler handler - Function. Optional. Use this error handler instead of the default error handler."$'\n'"--path cannonPath - Directory. Optional. Run cannon operation starting in this directory."$'\n'"fromText - Required. String of text to search for."$'\n'"toText - Required. String of text to replace."$'\n'"findArgs ... - Arguments. Optional. Any additional arguments are meant to filter files."$'\n'""

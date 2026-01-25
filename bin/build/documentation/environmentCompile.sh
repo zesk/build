@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-24
+# Generated on 2026-01-25
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/environment.sh"
 argument="--underscore - Flag. Optional. Include environment variables which begin with underscore \`_\`."$'\n'"--secure - Flag. Optional. Include environment variables which are in \`environmentSecureVariables\`"$'\n'"--keep-comments - Flag. Keep all comments in the source"$'\n'"--variables - CommaDelimitedList. Optional. Always output the value of these variables."$'\n'"--parse - Flag. Optional. Parse the file for things which look like variables to output (basically \`^foo=\`)"$'\n'"environmentFile - File. Required. Environment file to load, evaluate, and output in raw form (Bash-compatible)."$'\n'""
@@ -12,6 +12,7 @@ foundNames=([0]="argument" [1]="security")
 rawComment="Load an environment file and evaluate it using bash and output the changed environment variables after running"$'\n'"Do not perform this operation on files which are untrusted."$'\n'"Argument: --underscore - Flag. Optional. Include environment variables which begin with underscore \`_\`."$'\n'"Argument: --secure - Flag. Optional. Include environment variables which are in \`environmentSecureVariables\`"$'\n'"Argument: --keep-comments - Flag. Keep all comments in the source"$'\n'"Argument: --variables - CommaDelimitedList. Optional. Always output the value of these variables."$'\n'"Argument: --parse - Flag. Optional. Parse the file for things which look like variables to output (basically \`^foo=\`)"$'\n'"Argument: environmentFile - File. Required. Environment file to load, evaluate, and output in raw form (Bash-compatible)."$'\n'"Security: source"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 security="source"$'\n'""
+sourceFile="bin/build/tools/environment.sh"
 sourceModified="1769229530"
 summary="Load an environment file and evaluate it using bash and"
 usage="environmentCompile [ --underscore ] [ --secure ] [ --keep-comments ] [ --variables ] [ --parse ] environmentFile"

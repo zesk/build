@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-24
+# Generated on 2026-01-25
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/directory.sh"
 argument="directoryPath ... - One or more directories to create"$'\n'"--help - Flag. Optional. Display this help."$'\n'"--mode fileMode - String. Optional. Enforce the directory mode for \`mkdir --mode\` and \`chmod\`. Affects directories after it in the command line; supply multiple modes and order your directories if needed. Set to \`-\` to reset to no value."$'\n'"--owner ownerName - String. Optional. Enforce the directory owner the directory. Affects all directories supplied AFTER it on the command line. Set to \`-\` to reset to no value."$'\n'""
@@ -13,7 +13,6 @@ foundNames=([0]="argument" [1]="example" [2]="requires")
 rawComment="Given a list of directories, ensure they exist and create them if they do not."$'\n'"Argument: directoryPath ... - One or more directories to create"$'\n'"Example:     {fn} \"\$cachePath\""$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Argument: --mode fileMode - String. Optional. Enforce the directory mode for \`mkdir --mode\` and \`chmod\`. Affects directories after it in the command line; supply multiple modes and order your directories if needed. Set to \`-\` to reset to no value."$'\n'"Argument: --owner ownerName - String. Optional. Enforce the directory owner the directory. Affects all directories supplied AFTER it on the command line. Set to \`-\` to reset to no value."$'\n'"Requires: throwArgument usageArgumentFunction usageArgumentString decorate catchEnvironment dirname"$'\n'"Requires: chmod chown"$'\n'""$'\n'""
 requires="throwArgument usageArgumentFunction usageArgumentString decorate catchEnvironment dirname"$'\n'"chmod chown"$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
-sourceFile="bin/build/tools/directory.sh"
 sourceModified="1769063211"
 summary="Given a list of directories, ensure they exist and create"
 usage="directoryRequire [ directoryPath ... ] [ --help ] [ --mode fileMode ] [ --owner ownerName ]"

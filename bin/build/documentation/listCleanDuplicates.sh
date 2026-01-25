@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-24
+# Generated on 2026-01-25
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/list.sh"
 argument="separator - String. Required. List separator character."$'\n'"listText - String. Required. List to clean duplicates."$'\n'"--removed - Flag. Optional. Show removed items instead of the new list."$'\n'"--help - Flag. Optional. Display this help."$'\n'""

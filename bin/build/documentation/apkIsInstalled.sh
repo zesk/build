@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-24
+# Generated on 2026-01-25
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/apk.sh"
 argument="--help - Flag. Optional. Display this help."$'\n'""
@@ -11,6 +11,7 @@ file="bin/build/tools/apk.sh"
 foundNames=([0]="argument" [1]="return_code")
 rawComment="Is this an Alpine system and is apk installed?"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Return Code: 0 - System is an alpine system and apk is installed"$'\n'"Return Code: 1 - System is not an alpine system or apk is not installed"$'\n'""$'\n'""
 return_code="0 - System is an alpine system and apk is installed"$'\n'"1 - System is not an alpine system or apk is not installed"$'\n'""
+sourceFile="bin/build/tools/apk.sh"
 sourceModified="1769184734"
 summary="Is this an Alpine system and is apk installed?"
 usage="apkIsInstalled [ --help ]"

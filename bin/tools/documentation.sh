@@ -174,6 +174,7 @@ __buildUsageCompileFunction() {
   if [ ! -f "$documentationSettingsFile" ]; then
     throwEnvironment "$handler" "${prefix}: bashDocumentationExtract $fun $sourceFile did not generate $documentationSettingsFile" || returnClean $? "${clean[@]}" || return $?
   else
+
     catchReturn "$handler" decorateThemelessMode || return $?
     fn="" BUILD_DEBUG="" BUILD_COLORS=true catchEnvironment "$handler" usageDocument "$sourceFile" "$fun" 0 >"$tempHelp" || returnClean $? "${clean[@]}" || returnUndo $? decorateThemelessMode --end || return $?
     catchReturn "$handler" decorateThemelessMode --end || returnClean $? "${clean[@]}" || return $?

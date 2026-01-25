@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-24
+# Generated on 2026-01-25
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/deploy.sh"
 argument="deployHome - Directory. Required. Deployment database home."$'\n'""
@@ -13,7 +13,6 @@ foundNames=([0]="argument" [1]="leak" [2]="environment")
 leak="BUILD_TARGET"$'\n'""
 rawComment="Argument: deployHome - Directory. Required. Deployment database home."$'\n'"Outputs the build target name which is based on the environment \`BUILD_TARGET\`."$'\n'"If this is called on a non-deployment system, use the application root instead of"$'\n'"\`deployHome\` for compatibility."$'\n'"Leak: BUILD_TARGET"$'\n'"Environment: BUILD_TARGET"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
-sourceFile="bin/build/tools/deploy.sh"
 sourceModified="1769063211"
 summary="Outputs the build target name which is based on the"
 usage="deployPackageName deployHome"

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-24
+# Generated on 2026-01-25
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/ssh.sh"
 argument="hostName ... - String. Optional. One ore more hosts to add to the known hosts file"$'\n'"--skip-backup | --no-backup - Flag. Optional. Skip the file backup as \`name.\$(dateToday)\`"$'\n'"--verbose - Flag. Optional. Be verbose."$'\n'""
@@ -11,6 +11,7 @@ file="bin/build/tools/ssh.sh"
 foundNames=([0]="return_code" [1]="argument")
 rawComment="Adds the host to the \`~/.known_hosts\` if it is not found in it already"$'\n'"Side effects:"$'\n'"1. \`~/.ssh\` may be created if it does not exist"$'\n'"1. \`~/.ssh\` mode is set to \`0700\` (read/write/execute user)"$'\n'"1. \`~/.ssh/known_hosts\` is created if it does not exist"$'\n'"1. \`~/.ssh/known_hosts\` mode is set to \`0600\` (read/write user)"$'\n'"1. \`~./.ssh/known_hosts\` is possibly modified (appended)"$'\n'"If this function fails then ~/.ssh/known_hosts may be modified for any hosts which did not fail"$'\n'"Return Code: 1 - Environment errors"$'\n'"Return Code: 0 - All hosts exist in or were successfully added to the known hosts file"$'\n'"Argument: hostName ... - String. Optional. One ore more hosts to add to the known hosts file"$'\n'"Argument: --skip-backup | --no-backup - Flag. Optional. Skip the file backup as \`name.\$(dateToday)\`"$'\n'"Argument: --verbose - Flag. Optional. Be verbose."$'\n'"If no arguments are passed, the default behavior is to set up the \`~/.ssh\` directory and create the known hosts file."$'\n'""$'\n'""
 return_code="1 - Environment errors"$'\n'"0 - All hosts exist in or were successfully added to the known hosts file"$'\n'""
+sourceFile="bin/build/tools/ssh.sh"
 sourceModified="1769184556"
 summary="Adds the host to the \`~/.known_hosts\` if it is not"
 usage="sshKnownHostRemove [ hostName ... ] [ --skip-backup | --no-backup ] [ --verbose ]"

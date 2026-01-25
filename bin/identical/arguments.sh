@@ -87,10 +87,8 @@ __documentTemplateFunction() {
     shift
   done
 
-  local start
-
   # IDENTICAL startBeginTiming 1
-  start=$(timingStart) || return $?
+  local start && start=$(timingStart) || return $?
 
   # IDENTICAL profileNameArgumentValidation 4
   if [ -z "$profileName" ]; then
@@ -141,10 +139,10 @@ ___documentTemplateFunction() {
     shift
   done
 
-  local start
+
 
   # IDENTICAL startBeginTiming 1
-  start=$(timingStart) || return $?
+  local start && start=$(timingStart) || return $?
 
   # IDENTICAL profileNameArgumentValidation 4
   if [ -z "$profileName" ]; then

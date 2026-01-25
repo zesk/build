@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-24
+# Generated on 2026-01-25
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/character.sh"
 argument="className - String. Required. Class to check."$'\n'"character ... - String. Optional. Characters to test."$'\n'"--help - Flag. Optional. Display this help."$'\n'""
@@ -11,7 +11,6 @@ file="bin/build/tools/character.sh"
 foundNames=([0]="argument")
 rawComment="Poor-man's bash character class matching"$'\n'"Returns true if all \`characters\` are of \`className\`"$'\n'"\`className\` can be one of:"$'\n'"    alnum   alpha   ascii   blank   cntrl   digit   graph   lower"$'\n'"    print   punct   space   upper   word    xdigit"$'\n'"Argument: className - String. Required. Class to check."$'\n'"Argument: character ... - String. Optional. Characters to test."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
-sourceFile="bin/build/tools/character.sh"
 sourceModified="1769063211"
 summary="Poor-man's bash character class matching"
 usage="isCharacterClass className [ character ... ] [ --help ]"

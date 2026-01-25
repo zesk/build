@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-24
+# Generated on 2026-01-25
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/_sugar.sh"
 argument="message ... - String. Optional. Message to output."$'\n'""
@@ -12,6 +12,7 @@ foundNames=([0]="argument" [1]="return_code" [2]="requires")
 rawComment="Return \`environment\` error code. Outputs \`message ...\` to \`stderr\`."$'\n'"Argument: message ... - String. Optional. Message to output."$'\n'"Return Code: 1"$'\n'"Requires: returnMessage"$'\n'""$'\n'""
 requires="returnMessage"$'\n'""
 return_code="1"$'\n'""
+sourceFile="bin/build/tools/_sugar.sh"
 sourceModified="1769063211"
 summary="Return \`environment\` error code. Outputs \`message ...\` to \`stderr\`."
 usage="returnEnvironment [ message ... ]"

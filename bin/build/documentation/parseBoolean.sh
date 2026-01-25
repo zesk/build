@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-24
+# Generated on 2026-01-25
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/text.sh"
 argument="none"
@@ -12,7 +12,8 @@ foundNames=([0]="return_code" [1]="requires")
 rawComment="Parses text and determines if it's true-ish"$'\n'"Return Code: 0 - true"$'\n'"Return Code: 1 - false"$'\n'"Return Code: 2 - Neither"$'\n'"Requires: lowercase __help"$'\n'"Without arguments, displays help."$'\n'"Return code: - \`0\` - Text is plain"$'\n'"Return code: - \`1\` - Text contains non-plain characters"$'\n'""$'\n'""
 requires="lowercase __help"$'\n'""
 return_code="0 - true"$'\n'"1 - false"$'\n'"2 - Neither"$'\n'"- \`0\` - Text is plain"$'\n'"- \`1\` - Text contains non-plain characters"$'\n'""
-sourceModified="1769226342"
+sourceFile="bin/build/tools/text.sh"
+sourceModified="1769276468"
 summary="Parses text and determines if it's true-ish"
 usage="parseBoolean"
 # shellcheck disable=SC2016

@@ -1006,7 +1006,6 @@ environmentCompile() {
       set +a # Undo
       [ "$exitCode" -eq 0 ] || throwEnvironment "$__handler" "source $1 failed with $exitCode" || returnClean "$exitCode" "${clean[@]}" || returnUndo $? set +a || return $?
       ! $keepComments || catchReturn "$handler" bashCommentFilter --only <"$environmentFile" | grepSafe -e '^#' >>"$tempEnv.save" || returnClean $? "${clean[@]}" || returnUndo $? set +a || return $?
-      shift
     done
     if $__debugFlag; then
       declare -ax | dumpPipe "declare -ax OUTSIDE" 1>&2

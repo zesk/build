@@ -107,10 +107,10 @@ __identicalCheck() {
   [ ${#findArgs[@]} -gt 0 ] || throwArgument "$handler" "Need to specify at least one --extension" || return $?
   [ ${#prefixes[@]} -gt 0 ] || throwArgument "$handler" "Need to specify at least one prefix (Try --prefix '# IDENTICAL')" || return $?
 
-  local start failureCode exitCode=0 clean=()
+  local failureCode exitCode=0 clean=()
 
   # IDENTICAL startBeginTiming 1
-  start=$(timingStart) || return $?
+  local start && start=$(timingStart) || return $?
   failureCode="$(returnCode identical)"
 
   rootDir=$(catchEnvironment "$handler" realPath "$rootDir") || return $?

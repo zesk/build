@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-24
+# Generated on 2026-01-25
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/usage.sh"
 argument="--help - Flag. Optional. Display this help."$'\n'"source - File. Required. File where documentation exists."$'\n'"function - String. Required. Function to document."$'\n'"returnCode - UnsignedInteger. Required. Exit code to return."$'\n'"message ... - String. Optional. Message to display to the user."$'\n'""
@@ -12,7 +12,6 @@ foundNames=([0]="argument" [1]="requires")
 rawComment="Output a simple error message for a function"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Argument: source - File. Required. File where documentation exists."$'\n'"Argument: function - String. Required. Function to document."$'\n'"Argument: returnCode - UnsignedInteger. Required. Exit code to return."$'\n'"Argument: message ... - String. Optional. Message to display to the user."$'\n'"Requires: bashFunctionComment decorate read printf returnCodeString __help usageDocument __usageDocumentCached"$'\n'""$'\n'""
 requires="bashFunctionComment decorate read printf returnCodeString __help usageDocument __usageDocumentCached"$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
-sourceFile="bin/build/tools/usage.sh"
 sourceModified="1769216318"
 summary="Output a simple error message for a function"
 usage="usageDocumentSimple [ --help ] source function returnCode [ message ... ]"

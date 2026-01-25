@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-24
+# Generated on 2026-01-25
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/text.sh"
 argument="number - Number. Required. An integer or floating point number"$'\n'"singular - String. Required. The singular form of a noun"$'\n'"plural - String. Optional. The plural form of a noun. If not specified uses \`singular\` plus an ess."$'\n'""
@@ -15,7 +15,8 @@ n=""
 rawComment="Outputs the \`singular\` value to standard out when the value of \`number\` is one."$'\n'"Otherwise, outputs the \`plural\` value to standard out."$'\n'"Short description: Output numeric messages which are grammatically accurate"$'\n'"Argument: number - Number. Required. An integer or floating point number"$'\n'"Argument: singular - String. Required. The singular form of a noun"$'\n'"Argument: plural - String. Optional. The plural form of a noun. If not specified uses \`singular\` plus an ess."$'\n'"Return Code: 1 - If count is non-numeric"$'\n'"Return Code: 0 - If count is numeric"$'\n'"Example:     count=\$(fileLineCount \"\$foxSightings\") || return \$?"$'\n'"Example:     printf \"We saw %d %s.\\n\" \"\$count\" \"\$(plural \"\$count\" fox foxes)\""$'\n'"Example:"$'\n'"Example:     n=\$((\$(date +%s)) - start))"$'\n'"Example:     printf \"That took %d %s\" \"\$n\" \"\$(plural \"\$n\" second seconds)\""$'\n'"stdout: \`String\`. The plural form for non-1 values. e.g. \`\$(plural 2 potato potatoes)\` = \`potatoes\`"$'\n'""$'\n'""
 return_code="1 - If count is non-numeric"$'\n'"0 - If count is numeric"$'\n'""
 short_description="Output numeric messages which are grammatically accurate"$'\n'""
-sourceModified="1769226342"
+sourceFile="bin/build/tools/text.sh"
+sourceModified="1769276468"
 stdout="\`String\`. The plural form for non-1 values. e.g. \`\$(plural 2 potato potatoes)\` = \`potatoes\`"$'\n'""
 summary="Outputs the \`singular\` value to standard out when the value"
 usage="plural number singular [ plural ]"

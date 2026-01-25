@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-24
+# Generated on 2026-01-25
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/environment.sh"
 argument="none"
@@ -12,6 +12,7 @@ foundNames=([0]="requires")
 rawComment="Output a list of environment variables and ignore function definitions"$'\n'"both \`set\` and \`env\` output functions and this is an easy way to just output"$'\n'"exported variables"$'\n'"Requires: declare grep cut usageDocument __help"$'\n'""$'\n'""
 requires="declare grep cut usageDocument __help"$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
+sourceFile="bin/build/tools/environment.sh"
 sourceModified="1769229530"
 summary="Output a list of environment variables and ignore function definitions"
 usage="environmentVariables"

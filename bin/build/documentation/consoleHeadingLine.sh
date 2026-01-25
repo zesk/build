@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-24
+# Generated on 2026-01-25
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/decorate/line.sh"
 argument="barText - String. Required. Text to fill line with, repeated. If not specified uses \`-\`"$'\n'"displayText - String. Optional.  Text to display on the line before the fill bar."$'\n'""

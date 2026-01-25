@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-24
+# Generated on 2026-01-25
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/pipeline.sh"
 argument="keyDate - Date. Required. Formatted like \`YYYY-MM-DD\`. Truncated at 10 characters as well."$'\n'"upToDateDays - Integer. Required. Days that key expires after \`keyDate\`."$'\n'"--name name - String. Optional. Name of the expiring item for error messages."$'\n'"--help - Flag. Optional. Display this help."$'\n'""

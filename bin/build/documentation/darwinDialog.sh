@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-24
+# Generated on 2026-01-25
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/darwin.sh"
 argument="--choice choiceText - String. Optional. Title of the thing."$'\n'"--ok - Flag. Optional. Adds \"OK\" as an option."$'\n'"--cancel - Flag. Optional. Adds \"Cancel\" as an option."$'\n'"--default buttonIndex - Integer. Required. The button (0-based index) to make the default button choice."$'\n'"--help - Flag. Optional. Display this help."$'\n'"message ... - String. Required. The message to display in the dialog."$'\n'""

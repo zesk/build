@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-24
+# Generated on 2026-01-25
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/file.sh"
 argument="directory - Directory. Required. Directory to search for the newest file."$'\n'"--find findArgs ... -- - Arguments. Optional. Arguments delimited by a double-dash (or end of argument list)"$'\n'""
@@ -11,7 +11,6 @@ file="bin/build/tools/file.sh"
 foundNames=([0]="argument")
 rawComment="Find the newest modified file in a directory"$'\n'"Argument: directory - Directory. Required. Directory to search for the newest file."$'\n'"Argument: --find findArgs ... -- - Arguments. Optional. Arguments delimited by a double-dash (or end of argument list)"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
-sourceFile="bin/build/tools/file.sh"
 sourceModified="1769184734"
 summary="Find the newest modified file in a directory"
 usage="directoryNewestFile directory [ --find findArgs ... -- ]"

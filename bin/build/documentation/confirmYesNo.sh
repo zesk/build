@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-24
+# Generated on 2026-01-25
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/interactive.sh"
 argument="--default defaultValue - Boolean. Optional. Value to return if no value given by user"$'\n'"--attempts attempts - PositiveInteger. Optional. User can give us a bad response this many times before we return the default."$'\n'"--timeout seconds - PositiveInteger. Optional. Wait this long before choosing the default. If no default, default is --no."$'\n'"--info - Flag. Optional. Add \`Type Y or N\` as instructions to the user."$'\n'"--yes - Flag. Optional. Short for \`--default yes\`"$'\n'"--no - Flag. Optional. Short for \`--default no\`"$'\n'"--help - Flag. Optional. Display this help."$'\n'"--handler handler - Function. Optional. Use this error handler instead of the default error handler."$'\n'"message ... - String. Any additional arguments are considered part of the message."$'\n'""

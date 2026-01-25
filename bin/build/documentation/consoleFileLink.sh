@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-24
+# Generated on 2026-01-25
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/console.sh"
 argument="--no-app - Flag. Optional. Do not map the application path in \`decoratePath\`"$'\n'"fileName - String. Required. File path to output."$'\n'"text - String. Optional. Text to output linked to file."$'\n'""

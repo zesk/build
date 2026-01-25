@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-24
+# Generated on 2026-01-25
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/text.sh"
 argument="width - UnsignedInteger. Required. Width to maintain."$'\n'"text - String. Optional. Text to trim to a console width."$'\n'""
@@ -11,7 +11,8 @@ file="bin/build/tools/text.sh"
 foundNames=([0]="summary" [1]="argument" [2]="stdin" [3]="stdout")
 rawComment="Summary: Truncate console output width"$'\n'"Argument: width - UnsignedInteger. Required. Width to maintain."$'\n'"Argument: text - String. Optional. Text to trim to a console width."$'\n'"stdin: String. Optional. Text to trim to a console width."$'\n'"stdout: String. Console string trimmed to the width requested."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
-sourceModified="1769226342"
+sourceFile="bin/build/tools/text.sh"
+sourceModified="1769276468"
 stdin="String. Optional. Text to trim to a console width."$'\n'""
 stdout="String. Console string trimmed to the width requested."$'\n'""
 summary="Truncate console output width"$'\n'""

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-24
+# Generated on 2026-01-25
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/dump.sh"
 argument="-x - Flag. Optional. Show exported variables. (verbose)"$'\n'"--me - Flag. Optional. Show calling function call stack frame."$'\n'"--exit - Flag. Optional. Exit with code 0 after output."$'\n'""

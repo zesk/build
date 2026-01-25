@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-24
+# Generated on 2026-01-25
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/file.sh"
 argument="file ... - Required. One or more files to get size of."$'\n'"--help - Flag. Optional. Display this help."$'\n'""
@@ -11,6 +11,7 @@ file="bin/build/tools/file.sh"
 foundNames=([0]="argument" [1]="return_code")
 rawComment="Argument: file ... - Required. One or more files to get size of."$'\n'"Return Code: 0 - Success"$'\n'"Return Code: 1 - Environment error"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'""
+sourceFile="bin/build/tools/file.sh"
 sourceModified="1769184734"
 summary="undocumented"
 usage="fileSize file ... [ --help ]"

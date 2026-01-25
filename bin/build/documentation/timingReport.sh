@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-24
+# Generated on 2026-01-25
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/timing.sh"
 argument="--color color - Make text this color (default is \`green\`)"$'\n'"--help - Flag. Optional. Display this help."$'\n'"--handler handler - Function. Optional. Use this error handler instead of the default error handler."$'\n'"start - Unix timestamp milliseconds. See \`timingStart\`."$'\n'"message - Any additional arguments are output before the elapsed value computed"$'\n'""
@@ -14,7 +14,6 @@ init=""
 rawComment="Outputs the timing optionally prefixed by a message."$'\n'"Summary: Output the time elapsed"$'\n'"Outputs a nice colorful message showing the number of seconds elapsed as well as your custom message."$'\n'"Argument: --color color - Make text this color (default is \`green\`)"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Argument: --handler handler - Function. Optional. Use this error handler instead of the default error handler."$'\n'"Argument: start - Unix timestamp milliseconds. See \`timingStart\`."$'\n'"Argument: message - Any additional arguments are output before the elapsed value computed"$'\n'"Return Code: 0 - Exits with exit code zero"$'\n'"See: timingStart"$'\n'"Example:     init=\$(timingStart)"$'\n'"Example:     ..."$'\n'"Example:     timingReport \"\$init\" \"Deploy completed in\""$'\n'""$'\n'""
 return_code="0 - Exits with exit code zero"$'\n'""
 see="timingStart"$'\n'""
-sourceFile="bin/build/tools/timing.sh"
 sourceModified="1769063211"
 summary="Output the time elapsed"$'\n'""
 usage="timingReport [ --color color ] [ --help ] [ --handler handler ] [ start ] [ message ]"

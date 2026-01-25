@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-24
+# Generated on 2026-01-25
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/git.sh"
 argument="extension - String. Optional. Extension to display"$'\n'""
@@ -11,6 +11,7 @@ file="bin/build/tools/git.sh"
 foundNames=([0]="argument")
 rawComment="Output a display for pre-commit files changed"$'\n'"Argument: extension - String. Optional. Extension to display"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
+sourceFile="bin/build/tools/git.sh"
 sourceModified="1769199547"
 summary="Output a display for pre-commit files changed"
 usage="gitPreCommitHeader [ extension ]"

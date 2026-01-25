@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-24
+# Generated on 2026-01-25
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/text.sh"
 argument="file ... - File. Required. File to check if the last character is a newline."$'\n'""
@@ -11,7 +11,8 @@ file="bin/build/tools/text.sh"
 foundNames=([0]="argument" [1]="return_code" [2]="test")
 rawComment="Does a file end with a newline or is empty?"$'\n'"Typically used to determine if a newline is needed before appending a file."$'\n'"Argument: file ... - File. Required. File to check if the last character is a newline."$'\n'"Return Code: 0 - All files ends with a newline"$'\n'"Return Code: 1 - One or more files ends with a non-newline"$'\n'"Test: testFileEndsWithNewline"$'\n'""$'\n'""
 return_code="0 - All files ends with a newline"$'\n'"1 - One or more files ends with a non-newline"$'\n'""
-sourceModified="1769226342"
+sourceFile="bin/build/tools/text.sh"
+sourceModified="1769276468"
 summary="Does a file end with a newline or is empty?"
 test="testFileEndsWithNewline"$'\n'""
 usage="fileEndsWithNewline file ..."

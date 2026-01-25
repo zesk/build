@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-24
+# Generated on 2026-01-25
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/timing.sh"
 argument="--help - Flag. Optional. Display this help."$'\n'""
@@ -14,7 +14,6 @@ init=""
 rawComment="Summary: Start a timer"$'\n'"Outputs the offset in milliseconds from January 1, 1970."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Example:     init=\$(timingStart)"$'\n'"Example:     ..."$'\n'"Example:     timingReport \"\$init\" \"Completed in\""$'\n'"Requires: __timestamp, returnEnvironment date"$'\n'"Should never fail, unless date is not installed"$'\n'""$'\n'""
 requires="__timestamp, returnEnvironment date"$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
-sourceFile="bin/build/tools/timing.sh"
 sourceModified="1769063211"
 summary="Start a timer"$'\n'""
 usage="timingStart [ --help ]"

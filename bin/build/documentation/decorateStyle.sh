@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-24
+# Generated on 2026-01-25
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/decorate/style.sh"
 argument="style - String. Required. The style to fetch or replace."$'\n'"newFormat - String. Optional. The new style formatting options as a string in the form \`lp dp label\`"$'\n'""
@@ -11,7 +11,6 @@ file="bin/build/tools/decorate/style.sh"
 foundNames=([0]="argument")
 rawComment="Fetch"$'\n'"Argument: style - String. Required. The style to fetch or replace."$'\n'"Argument: newFormat - String. Optional. The new style formatting options as a string in the form \`lp dp label\`"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
-sourceFile="bin/build/tools/decorate/style.sh"
 sourceModified="1769205647"
 summary="Fetch"
 usage="decorateStyle style [ newFormat ]"

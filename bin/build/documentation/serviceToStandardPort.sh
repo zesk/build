@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-24
+# Generated on 2026-01-25
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/platform.sh"
 argument="--help - Flag. Optional. Display this help."$'\n'"service ... - String. Optional. A unix service typically found in \`/etc/services\`"$'\n'""
@@ -13,6 +13,7 @@ output="Port number of associated service (integer) one per line"$'\n'""
 rawComment="Hard-coded services for:"$'\n'"- \`ssh\` -> 22"$'\n'"- \`http\`-> 80"$'\n'"- \`https\`-> 80"$'\n'"- \`postgres\`-> 5432"$'\n'"- \`mariadb\`-> 3306"$'\n'"- \`mysql\`-> 3306"$'\n'"Backup when \`/etc/services\` does not exist."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Argument: service ... - String. Optional. A unix service typically found in \`/etc/services\`"$'\n'"Output: Port number of associated service (integer) one per line"$'\n'"Return Code: 1 - service not found"$'\n'"Return Code: 0 - service found and output is an integer"$'\n'"See: serviceToPort"$'\n'""$'\n'""
 return_code="1 - service not found"$'\n'"0 - service found and output is an integer"$'\n'""
 see="serviceToPort"$'\n'""
+sourceFile="bin/build/tools/platform.sh"
 sourceModified="1769184734"
 summary="Hard-coded services for:"
 usage="serviceToStandardPort [ --help ] [ service ... ]"

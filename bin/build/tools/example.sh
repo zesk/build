@@ -69,7 +69,7 @@ exampleFunction() {
   local start
 
   # IDENTICAL startBeginTiming 1
-  start=$(timingStart) || return $?
+  local start && start=$(timingStart) || return $?
 
   # Load MANPATH environment
   export MANPATH

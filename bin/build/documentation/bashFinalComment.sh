@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-24
+# Generated on 2026-01-25
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/bash.sh"
 argument="--help - Flag. Optional. Display this help."$'\n'""
@@ -12,6 +12,7 @@ foundNames=([0]="argument" [1]="requires")
 rawComment="Extracts the final comment from a stream"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Requires: fileReverseLines sed cut grep convertValue"$'\n'""$'\n'""
 requires="fileReverseLines sed cut grep convertValue"$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
+sourceFile="bin/build/tools/bash.sh"
 sourceModified="1769208503"
 summary="Extracts the final comment from a stream"
 usage="bashFinalComment [ --help ]"

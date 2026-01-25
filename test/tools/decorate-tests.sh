@@ -6,6 +6,44 @@
 # Copyright &copy; 2026 Market Acumen, Inc.
 #
 
+testConsoleTrimWidth() {
+  local handler="returnMessage"
+  local testLine
+
+  testLine=$(catchReturn "$handler" decorate pair 12 "Occupation" "Professional Typist") || return $?
+
+  local lineWidth && lineWidth=$(catchReturn "$handler" consolePlainLength "$testLine") || return $?
+
+  assertEquals "$testLine" "$(catchReturn "$handler" consoleTrimWidth "$((lineWidth + 5))" "$testLine")" || return $?
+  assertEquals "$testLine" "$(catchReturn "$handler" consoleTrimWidth "$((lineWidth + 1))" "$testLine")" || return $?
+  assertEquals "$testLine" "$(catchReturn "$handler" consoleTrimWidth "$lineWidth" "$testLine")" || return $?
+
+  assertExitCode 0 isPositiveInteger "$lineWidth" || return $?
+  index="$lineWidth"
+  while [ "$index" -gt 0 ]; do
+    local trimmedLine && trimmedLine=$(catchReturn "$handler" consoleTrimWidth "$index" "$testLine") || return $?
+    local trimmedLineWidth && trimmedLineWidth=$(catchReturn "$handler" consolePlainLength "$trimmedLine") || return $?
+    assertEquals --display "consoleTrimWidth: Trimming console line to $index characters" "$index" "$trimmedLineWidth" || return $?
+    index=$((index - 1))
+  done
+}
+
+testDecorateThemed() {
+  local handler="returnMessage"
+
+  local testString && testString=$(catchReturn "$handler" randomString) || return $?
+  testString=${testString:0:6}
+  local style && while read -r style; do
+    local expected && expected=$(catchReturn "$handler" decorate "$style" "$testString") || return $?
+    catchReturn "$handler" decorateThemelessMode || return $?
+    local themeDefer && themeDefer=$(catchReturn "$handler" decorate "$style" "$testString") || return $?
+    catchReturn "$handler" decorateThemelessMode --end || return $?
+    assertNotEquals "$expected" "$themeDefer" || return $?
+    local actual && actual=$(printf "%s" "$themeDefer" | catchReturn "$handler" decorateThemed) || return $?
+    assertEquals "$expected" "$actual" || return $?
+  done < <(decorations)
+}
+
 testDecorateInitialized() {
   mockEnvironmentStart BUILD_COLORS
   mockEnvironmentStart __BUILD_DECORATE

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-24
+# Generated on 2026-01-25
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/user.sh"
 argument="pathSegment - String. Optional. Add these path segments to the HOME directory returned. Does not create them."$'\n'""
@@ -11,6 +11,7 @@ file="bin/build/tools/user.sh"
 foundNames=([0]="argument" [1]="return_code")
 rawComment="The current user HOME (must exist)"$'\n'"Argument: pathSegment - String. Optional. Add these path segments to the HOME directory returned. Does not create them."$'\n'"No directories *should* be created by calling this, nor should any assumptions be made about the ability to read or write files in this directory."$'\n'"Return Code: 1 - Issue with \`buildEnvironmentGet HOME\` or \$HOME is not a directory (say, it's a file)"$'\n'"Return Code: 0 - Home directory exists."$'\n'""$'\n'""
 return_code="1 - Issue with \`buildEnvironmentGet HOME\` or \$HOME is not a directory (say, it's a file)"$'\n'"0 - Home directory exists."$'\n'""
+sourceFile="bin/build/tools/user.sh"
 sourceModified="1768246145"
 summary="The current user HOME (must exist)"
 usage="userHome [ pathSegment ]"

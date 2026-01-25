@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-24
+# Generated on 2026-01-25
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/node.sh"
 argument="--help - Flag. Optional. Display this help."$'\n'"managerName - String. Required. The node package manager name to check."$'\n'""

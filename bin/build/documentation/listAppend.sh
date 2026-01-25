@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-24
+# Generated on 2026-01-25
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/list.sh"
 argument="listValue - Required. Path value to modify."$'\n'"separator - Required. Separator string for item values (typically \`:\`)"$'\n'"--first - Flag. Optional. Place any items after this flag first in the list"$'\n'"--last - Flag. Optional. Place any items after this flag last in the list. Default."$'\n'"item - the path to be added to the \`listValue\`"$'\n'"--help - Flag. Optional. Display this help."$'\n'""

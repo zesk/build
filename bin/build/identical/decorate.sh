@@ -198,27 +198,31 @@ __decorateStylesDefaultDark() {
 # Also supports formatting input lines instead (on the same line)
 # Example:     decorate each code -- "$@"
 # Requires: decorate printf
-# Argument: style - String. Required. The style to decorate each element.
+# Argument: style - CommaDelimitedList. Required. Style arguments passed directly to decorate for each item.
 # Argument: -- - Flag. Optional. Pass as the first argument after the style to avoid reading arguments from stdin.
 # Argument: --index - Flag. Optional. Show the index of each item before with a colon. `0:first 1:second` etc.
 # Argument: --count - Flag. Optional. Show the count of items in the list after the list is generated.
 __decorateExtensionEach() {
-  local formatted=() item addIndex=false showCount=false index=0 prefix=""
+  local __saved=("$@") __count=$#
+  local formatted=() item addIndex=false showCount=false index=0 prefix="" style=""
 
   while [ $# -gt 0 ]; do
-    case "$1" in
-    --index) addIndex=true ;;
-    --count) showCount=true ;;
-    --arguments) showCount=true ;;
-    *) code="$1" && shift && break ;;
+    case "$1" in --index) addIndex=true ;; --count) showCount=true ;; --arguments) showCount=true ;;
+    "") throwArgument "$handler" "Blank argument" || return $? ;;
+    *) style="$1" && shift && break ;;
     esac
     shift
   done
+  local codes=("$style")
+  if [ "$style" != "${style#*,}" ]; then
+    IFS="," read -r -a codes <<<"$style"
+    [ "${#codes[@]}" -gt 0 ] || throwArgument "$handler" "Blank style passed to each: \"$style\" (${__saved[*]})"
+  fi
   if [ $# -eq 0 ]; then
     local byte
     if read -r -t 1 -n 1 byte; then
       if [ "$byte" = $'\n' ]; then
-        formatted+=("$prefix$(decorate "$code" "")")
+        formatted+=("$prefix$(decorate "${codes[@]}" "")")
         byte=""
       fi
       local done=false
@@ -226,7 +230,7 @@ __decorateExtensionEach() {
         IFS='' read -r item || done=true
         [ -n "$byte$item" ] || ! $done || break
         ! $addIndex || prefix="$index:"
-        formatted+=("$prefix$(decorate "$code" "$byte$item")")
+        formatted+=("$prefix$(decorate "${codes[@]}" "$byte$item")")
         byte=""
         index=$((index + 1))
       done
@@ -236,7 +240,7 @@ __decorateExtensionEach() {
     while [ $# -gt 0 ]; do
       ! $addIndex || prefix="$index:"
       item="$1"
-      formatted+=("$prefix$(decorate "$code" "$item")")
+      formatted+=("$prefix$(decorate "${codes[@]}" "$item")")
       shift
       index=$((index + 1))
     done
@@ -246,7 +250,7 @@ __decorateExtensionEach() {
 }
 
 # fn: decorate BOLD
-# Argument: style - String. Style to display. Use `-`, `--`, or blank for no style.
+# Argument: style - CommaDelimitedList. Required. Style arguments passed directly to decorate for each item.
 # Argument: text ... - EmptyString. Optional. Text to format. Use `--` to output begin codes only.
 __decorateExtensionBOLD() {
   local style="${1-}" && shift
@@ -256,11 +260,20 @@ __decorateExtensionBOLD() {
     return 0
     ;;
   esac
+  local codes=("$style")
+  if [ "$style" != "${style#*,}" ]; then
+    IFS="," read -r -a codes <<<"$style"
+    [ "${#codes[@]}" -gt 0 ] || throwArgument "$handler" "Blank style passed to BOLD: \"$style\" (${__saved[*]})"
+  fi
   if [ "$*" != "--" ]; then
-    decorate bold "$(decorate "$style" -- "$@")"
+    if [ $# -eq 0 ]; then
+      decorate "${codes[@]}" | decorate bold
+    else
+      decorate bold "$(decorate "${codes[@]}" -- "$@")"
+    fi
   else
     decorate bold --
-    decorate "$style" --
+    decorate "${codes[@]}" --
   fi
 }
 
@@ -269,6 +282,21 @@ __decorateExtensionBOLD() {
 # Mostly $ and " are problematic within a string
 # Requires: printf decorate
 __decorateExtensionQuote() {
+  if [ $# -eq 0 ]; then
+    local finished=false
+    while ! $finished; do
+      local line="" && IFS="" read -d $'\n' -r line || finished=true
+      [ -n "$line" ] || ! $finished || continue
+      __decorateExtensionQuoteProcessLine "$line" || return $?
+    done
+  else
+    [ "$1" != "--" ] || shift
+    __decorateExtensionQuoteProcessLine "$@" || return $?
+  fi
+}
+
+# Argument: text ... - String. Text to quote
+__decorateExtensionQuoteProcessLine() {
   local text="$*"
   text="${text//\"/\\\"}"
   text="${text//\$/\\\$}"

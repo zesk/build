@@ -14,7 +14,7 @@ __documentationTemplateCompile() {
   local start
 
   # IDENTICAL startBeginTiming 1
-  start=$(timingStart) || return $?
+  local start && start=$(timingStart) || return $?
 
   local cacheDirectory="" sourceFile="" functionTemplate="" targetFile=""
   local forceFlag=false envFiles=() verboseFlag=false
@@ -243,7 +243,7 @@ __documentationTemplateDirectoryCompile() {
   done
 
   # IDENTICAL startBeginTiming 1
-  start=$(timingStart) || return $?
+  local start && start=$(timingStart) || return $?
 
   local argument
   for argument in cacheDirectory templateDirectory functionTemplate targetDirectory; do

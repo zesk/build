@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-24
+# Generated on 2026-01-25
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/environment.sh"
 argument="where - Directory. Optional. Where to load the \`.env\` files."$'\n'"--help - Flag. Optional. Display this help."$'\n'""
@@ -13,6 +13,7 @@ foundNames=([0]="argument" [1]="see" [2]="summary" [3]="return_code" [4]="deprec
 rawComment="Argument: where - Directory. Optional. Where to load the \`.env\` files."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Loads \`.env\` which is the current project configuration file"$'\n'"Also loads \`.env.local\` if it exists"$'\n'"Generally speaking - these are NAME=value files and should be parsable by"$'\n'"bash and other languages."$'\n'"See: toDockerEnv"$'\n'"Summary: Load \`.env\` and optional \`.env.local\` into bash context"$'\n'"Requires the file \`.env\` to exist and is loaded via bash \`source\` and all variables are \`export\`ed in the current shell context."$'\n'"If \`.env.local\` exists, it is also loaded in a similar manner."$'\n'"Use with caution on trusted content only."$'\n'"Return Code: 1 - if \`.env\` does not exist; outputs an error"$'\n'"Return Code: 0 - if files are loaded successfully"$'\n'"DEPRECATED: 2024-07-20"$'\n'"See: environmentFileLoad"$'\n'""$'\n'""
 return_code="1 - if \`.env\` does not exist; outputs an error"$'\n'"0 - if files are loaded successfully"$'\n'""
 see="toDockerEnv"$'\n'"environmentFileLoad"$'\n'""
+sourceFile="bin/build/tools/environment.sh"
 sourceModified="1769229530"
 summary="Load \`.env\` and optional \`.env.local\` into bash context"$'\n'""
 usage="dotEnvConfigure [ where ] [ --help ]"

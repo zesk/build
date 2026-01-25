@@ -32,6 +32,8 @@ Zesk Build supports customizations of all decoration colors to custom values.
 
 {__decorateExtensionPair}
 
+{__decorateExtensionDiff}
+
 {__decorateExtensionWrap}
 
 {__decorateExtensionQuote}

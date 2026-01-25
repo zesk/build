@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-24
+# Generated on 2026-01-25
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/example.sh"
 argument="value - EmptyString. Value to test if it is an unsigned integer."$'\n'""
@@ -16,7 +16,7 @@ requires="returnMessage"$'\n'""
 return_code="0 - if it is an unsigned integer"$'\n'"1 - if it is not an unsigned integer"$'\n'""
 source="https://stackoverflow.com/questions/806906/how-do-i-test-if-a-variable-is-a-number-in-bash"$'\n'""
 sourceFile="bin/build/tools/example.sh"
-sourceModified="1769208503"
+sourceModified="1769277627"
 summary="Is value an unsigned integer?"$'\n'""
 usage="isUnsignedInteger [ value ]"
 # shellcheck disable=SC2016

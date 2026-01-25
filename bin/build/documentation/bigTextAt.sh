@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-24
+# Generated on 2026-01-25
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/decorate/big.sh"
 argument="none"
@@ -11,7 +11,6 @@ file="bin/build/tools/decorate/big.sh"
 foundNames=()
 rawComment="Experimental"$'\n'"Place bigText at a position on the console"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
-sourceFile="bin/build/tools/decorate/big.sh"
 sourceModified="1769190358"
 summary="Experimental"
 usage="bigTextAt"

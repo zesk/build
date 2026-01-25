@@ -51,6 +51,7 @@ __bashDocumentationSettingsFileDetails() {
 # BUILD_DEBUG: usage-cache-skip - Skip caching by default (override with `--cache`)
 __bashDocumentationExtract() {
   local __saved=("$@") __count=$#
+
   local handler="$1" && shift
   local generateCache=false fn="" source="" checkCache=true
 
@@ -120,7 +121,10 @@ __bashDocumentationExtractCheckCache() {
 }
 
 __bashDocumentationExtractGenerateCache() {
-  local handler="$1" source="$2" definitionFile="$3" fn="$4" && shift 4
+  local handler="$1" && shift
+  local source="$1" && shift
+  local definitionFile="$1" && shift
+  local fn="$1" && shift
   catchEnvironment "$handler" muzzle fileDirectoryRequire "$definitionFile" || return $?
   catchEnvironment "$handler" touch "$definitionFile" || return $?
   catchEnvironment "$handler" chmod +x "$definitionFile" || return $?

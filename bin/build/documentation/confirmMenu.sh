@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-24
+# Generated on 2026-01-25
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/interactive.sh"
 argument="--choice choiceCharacter - String. Required. Character to accept."$'\n'"--default default - String. Optional. Character to choose when there is a timeout or other failure."$'\n'"--result resultFile - File. Required. File to write the result to."$'\n'"--attempts attemptCount - PositiveInteger. Optional. Number of attempts to try and get valid unput from the user."$'\n'"--timeout timeoutSeconds - PositiveInteger. Optional. Number of seconds to wait for user input before stopping."$'\n'"--prompt promptString - String. Optional. String to suffix the prompt with (usually tells the user what to do)"$'\n'"message - String. Optional. Display this message as the confirmation menu."$'\n'""

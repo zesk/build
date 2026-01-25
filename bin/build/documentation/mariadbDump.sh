@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-24
+# Generated on 2026-01-25
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/mariadb.sh"
 argument="--help - Flag. Optional. Display this help."$'\n'"--print - Flag. Optional. Show the command."$'\n'"--binary - Executable. Optional. The binary to use to do the dump. Defaults to \`MARIADB_BINARY_DUMP\`."$'\n'"--lock - Flag. Optional. Lock the database during dump"$'\n'"--password password - String. Optional. Password to connect"$'\n'"--user user - String. Optional. User to connect"$'\n'"--host host - String. Optional. Host to connect"$'\n'"--port port - Integer. Optional. Port to connect"$'\n'""

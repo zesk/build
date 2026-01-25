@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-24
+# Generated on 2026-01-25
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/example.sh"
 argument="exitCode - UnsignedInteger. Required. Exit code to return. Default is 1."$'\n'"message ... - String. Optional. Message to output"$'\n'""
@@ -12,7 +12,8 @@ foundNames=([0]="argument" [1]="return_code" [2]="requires")
 rawComment="Return passed in integer return code and output message to \`stderr\` (non-zero) or \`stdout\` (zero)"$'\n'"Argument: exitCode - UnsignedInteger. Required. Exit code to return. Default is 1."$'\n'"Argument: message ... - String. Optional. Message to output"$'\n'"Return Code: exitCode"$'\n'"Requires: isUnsignedInteger printf returnMessage"$'\n'""$'\n'""
 requires="isUnsignedInteger printf returnMessage"$'\n'""
 return_code="exitCode"$'\n'""
-sourceModified="1769208503"
+sourceFile="bin/build/tools/example.sh"
+sourceModified="1769277627"
 summary="Return passed in integer return code and output message to"
 usage="returnMessage exitCode [ message ... ]"
 # shellcheck disable=SC2016

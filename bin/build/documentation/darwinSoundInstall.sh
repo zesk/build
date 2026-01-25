@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-24
+# Generated on 2026-01-25
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/darwin.sh"
 argument="--help - Flag. Optional. Display this help."$'\n'"soundFile ... - File. Required. Sound file(s) to install in user library."$'\n'"--create - Flag. Optional. Create sound directory if it does not exist."$'\n'""

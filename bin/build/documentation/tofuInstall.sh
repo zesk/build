@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-24
+# Generated on 2026-01-25
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/tofu.sh"
 argument="package - String. Optional. Additional packages to install using \`packageInstall\`"$'\n'"--help - Flag. Optional. Display this help."$'\n'""
@@ -12,6 +12,7 @@ foundNames=([0]="argument" [1]="see")
 rawComment="Install tofu binary"$'\n'"Argument: package - String. Optional. Additional packages to install using \`packageInstall\`"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"See: tofuUninstall packageInstall"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 see="tofuUninstall packageInstall"$'\n'""
+sourceFile="bin/build/tools/tofu.sh"
 sourceModified="1769184734"
 summary="Install tofu binary"
 usage="tofuInstall [ package ] [ --help ]"

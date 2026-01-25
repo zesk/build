@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-24
+# Generated on 2026-01-25
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/hook.sh"
 argument="--application applicationHome - Path. Optional. Directory of alternate application home."$'\n'"--extensions extensionList - ColonDelimitedList. Optional. List of extensions to search, in order for matching files in each hook directory. Defaults to \`BUILD_HOOK_EXTENSIONS\`."$'\n'"hookName ... - String. Required. Hook to source (if it exists)."$'\n'""
@@ -15,6 +15,7 @@ foundNames=([0]="argument" [1]="return_code" [2]="example" [3]="test" [4]="see" 
 rawComment="Identical to \`hookRun\` but returns exit code zero if the hook does not exist."$'\n'"Argument: --application applicationHome - Path. Optional. Directory of alternate application home."$'\n'"Argument: --extensions extensionList - ColonDelimitedList. Optional. List of extensions to search, in order for matching files in each hook directory. Defaults to \`BUILD_HOOK_EXTENSIONS\`."$'\n'"Argument: hookName ... - String. Required. Hook to source (if it exists)."$'\n'"Return Code: Any - The hook exit code is returned if it is run"$'\n'"Return Code: 0 - is returned if the hook is not found"$'\n'"Example:     if ! {fn} test-cleanup >>\"\$quietLog\"; then"$'\n'"Example:         buildFailed \"\$quietLog\""$'\n'"Example:     fi"$'\n'"Test: testHookSystem"$'\n'"See: hooks.md hookRun"$'\n'"Environment: BUILD_HOOK_EXTENSIONS"$'\n'"Environment: BUILD_HOOK_DIRS"$'\n'"Environment: BUILD_DEBUG"$'\n'"BUILD_DEBUG: hook - \`hookRun\` and \`hookSource\` and optional versions of the same functions will output additional debugging information"$'\n'""$'\n'""
 return_code="Any - The hook exit code is returned if it is run"$'\n'"0 - is returned if the hook is not found"$'\n'""
 see="hooks.md hookRun"$'\n'""
+sourceFile="bin/build/tools/hook.sh"
 sourceModified="1769184734"
 summary="Identical to \`hookRun\` but returns exit code zero if the"
 test="testHookSystem"$'\n'""

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-24
+# Generated on 2026-01-25
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/interactive.sh"
 argument="--help - Flag. Optional. Display this help."$'\n'"--handler handler - Function. Optional. Use this error handler instead of the default error handler."$'\n'"--verbose - Flag. Optional. Be verbose."$'\n'"--title title - String. Optional. Sets the title for the notification."$'\n'"--message message - String. Optional. Display this message (alias is \`-m\`)"$'\n'"--fail failMessage - String. Optional. Display this message in console and dialog upon failure."$'\n'"--sound soundName - String. Optional. Sets the sound played for the notification."$'\n'"--fail-title title - String. Optional. Sets the title for the notification if the binary fails."$'\n'"--fail-sound soundName - String. Optional. Sets the sound played for the notification if the binary fails."$'\n'""

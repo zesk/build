@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-24
+# Generated on 2026-01-25
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/text.sh"
 argument="text - String. Required. Text to search for mapping tokens."$'\n'""
@@ -12,7 +12,7 @@ foundNames=([0]="argument" [1]="return_code")
 rawComment="Check if text contains plaintext only."$'\n'"Argument: text - String. Required. Text to search for mapping tokens."$'\n'"Without arguments, displays help."$'\n'"Return code: - \`0\` - Text is plain"$'\n'"Return code: - \`1\` - Text contains non-plain characters"$'\n'""$'\n'""
 return_code="- \`0\` - Text is plain"$'\n'"- \`1\` - Text contains non-plain characters"$'\n'""
 sourceFile="bin/build/tools/text.sh"
-sourceModified="1769226342"
+sourceModified="1769276468"
 summary="Check if text contains plaintext only."
 usage="isPlain text"
 # shellcheck disable=SC2016

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-24
+# Generated on 2026-01-25
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/utilities.sh"
 argument="--mode mode - String. Optional."$'\n'"namedPipe"$'\n'"--writer line ... - When encountered all additional arguments are written to the runner."$'\n'"readerExecutable ... - Callable. Optional."$'\n'""
@@ -11,6 +11,7 @@ file="bin/build/tools/utilities.sh"
 foundNames=([0]="argument")
 rawComment="Single reader, multiple writers"$'\n'"Attempt at having docker communicate back to the outside world."$'\n'"Argument: --mode mode - String. Optional."$'\n'"Argument: namedPipe"$'\n'"Argument: --writer line ... - When encountered all additional arguments are written to the runner."$'\n'"Argument: readerExecutable ... - Callable. Optional."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
+sourceFile="bin/build/tools/utilities.sh"
 sourceModified="1769063211"
 summary="Single reader, multiple writers"
 usage="pipeRunner [ --mode mode ] [ namedPipe ] [ --writer line ... ] [ readerExecutable ... ]"

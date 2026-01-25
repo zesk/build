@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-24
+# Generated on 2026-01-25
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/environment.sh"
 argument="encodedValue - String. Required. Value to convert to tokens, one per line"$'\n'"--help - Flag. Optional. Display this help."$'\n'""
@@ -11,6 +11,7 @@ file="bin/build/tools/environment.sh"
 foundNames=([0]="argument" [1]="stdout")
 rawComment="Convert an array value which was loaded already"$'\n'"Argument: encodedValue - String. Required. Value to convert to tokens, one per line"$'\n'"stdout: Array values separated by newlines"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
+sourceFile="bin/build/tools/environment.sh"
 sourceModified="1769229530"
 stdout="Array values separated by newlines"$'\n'""
 summary="Convert an array value which was loaded already"
