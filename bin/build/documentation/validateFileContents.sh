@@ -13,7 +13,6 @@ foundNames=([0]="example" [1]="argument" [2]="side_effect" [3]="summary" [4]="re
 rawComment="Search for item extensions and ensure that text is found in each item."$'\n'"This can be run on any directory tree to test files in any application."$'\n'"By default, any directory which begins with a dot \`.\` will be ignored."$'\n'"Example:     {fn} foo.sh my.sh -- \"Copyright 2024\" \"Company, LLC\""$'\n'"Argument: file ... - File. Required. A item to look for matches in. Use \`-\` to read file list from \`stdin\`."$'\n'"Argument: -- - Required. Separates files from text"$'\n'"Argument: text ... - Required. Text which must exist in each item"$'\n'"Side-effect: Errors written to stderr, status written to stdout"$'\n'"Summary: Check files for the existence of a string or strings"$'\n'"Return Code: 0 - All found files contain all text string or strings"$'\n'"Return Code: 1 - One or more files does not contain all text string or strings"$'\n'"Return Code: 2 - Arguments error (missing extension or text)"$'\n'""$'\n'""
 return_code="0 - All found files contain all text string or strings"$'\n'"1 - One or more files does not contain all text string or strings"$'\n'"2 - Arguments error (missing extension or text)"$'\n'""
 side_effect="Errors written to stderr, status written to stdout"$'\n'""
-sourceFile="bin/build/tools/lint.sh"
 sourceModified="1769199547"
 summary="Check files for the existence of a string or strings"$'\n'""
 usage="validateFileContents file ... -- text ..."

@@ -12,7 +12,6 @@ file="bin/build/tools/decorate/theme.sh"
 foundNames=([0]="argument" [1]="environment")
 rawComment="Converts decoration style to a mode where the theme can be applied later to text which is formatted."$'\n'"All decorate calls made after this call will output with special codes not to be displayed to the user."$'\n'"Argument: --end - Flag. Optional. End themeless mode."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Environment: __BUILD_DECORATE"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
-sourceFile="bin/build/tools/decorate/theme.sh"
 sourceModified="1769205723"
 summary="Converts decoration style to a mode where the theme can"
 usage="decorateThemelessMode [ --end ] [ --help ]"

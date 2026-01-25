@@ -11,7 +11,6 @@ file="bin/build/tools/quote.sh"
 foundNames=([0]="argument" [1]="stdin" [2]="stdout")
 rawComment="Converts strings to shell escaped strings"$'\n'"Argument: string - String. Optional. String to convert to a bash-compatible string."$'\n'"stdin: text - Optional."$'\n'"stdout: bash-compatible string"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
-sourceFile="bin/build/tools/quote.sh"
 sourceModified="1769063211"
 stdin="text - Optional."$'\n'""
 stdout="bash-compatible string"$'\n'""

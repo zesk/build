@@ -11,7 +11,6 @@ file="bin/build/tools/colors.sh"
 foundNames=([0]="argument" [1]="stdin")
 rawComment="Set the terminal color scheme to the specification"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Argument: --handler handler - Function. Optional. Use this error handler instead of the default error handler."$'\n'"Argument: --debug - Flag. Optional. Show additional debugging information."$'\n'"stdin: Scheme definition with \`colorName=colorValue\` on each line"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
-sourceFile="bin/build/tools/colors.sh"
 sourceModified="1769211509"
 stdin="Scheme definition with \`colorName=colorValue\` on each line"$'\n'""
 summary="Set the terminal color scheme to the specification"

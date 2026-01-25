@@ -13,7 +13,6 @@ rawComment="Output all exported environment variables, hiding secure ones and on
 requires="throwArgument decorate environmentSecureVariables grepSafe env removeFields"$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 see="environmentSecureVariables"$'\n'""
-sourceFile="bin/build/tools/environment.sh"
 sourceModified="1769320208"
 summary="Output all exported environment variables, hiding secure ones and ones"
 usage="environmentOutput [ --underscore ] [ --skip-prefix prefixString ] [ --secure ] [ variable ... ]"

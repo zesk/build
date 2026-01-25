@@ -13,7 +13,6 @@ foundNames=([0]="summary" [1]="argument" [2]="example")
 rawComment="Returns yesterday's date, in YYYY-MM-DD format. (same as \`%F\`)"$'\n'"Summary: Yesterday's date (UTC time)"$'\n'"Argument: --local - Flag. Optional. Local yesterday"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Example:     rotated=\"\$log.\$({fn} --local)\""$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 rotated=""
-sourceFile="bin/build/tools/date.sh"
 sourceModified="1769184556"
 summary="Yesterday's date (UTC time)"$'\n'""
 usage="dateYesterday [ --local ] [ --help ]"

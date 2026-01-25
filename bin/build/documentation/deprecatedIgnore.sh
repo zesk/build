@@ -12,7 +12,6 @@ file="bin/build/tools/deprecated-tools.sh"
 foundNames=([0]="environment")
 rawComment="Output a list of tokens for \`find\` to ignore in deprecated calls"$'\n'"Skips dot directories and release notes by default and any file named \`deprecated.sh\` \`deprecated.txt\` or \`deprecated.md\`."$'\n'"Environment: BUILD_RELEASE_NOTES"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
-sourceFile="bin/build/tools/deprecated-tools.sh"
 sourceModified="1769063211"
 summary="Output a list of tokens for \`find\` to ignore in"
 usage="deprecatedIgnore"

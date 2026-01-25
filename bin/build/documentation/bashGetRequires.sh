@@ -12,7 +12,6 @@ foundNames=([0]="argument" [1]="gets_a_list_of_the__requires")
 gets_a_list_of_the__requires="\` comments in a bash file"$'\n'""
 rawComment="Argument: script - File. Required. Bash script to fetch requires tokens from."$'\n'"Gets a list of the \`Requires:\` comments in a bash file"$'\n'"Returns a unique list of tokens"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
-sourceFile="bin/build/tools/bash.sh"
 sourceModified="1769208503"
 summary="Returns a unique list of tokens"
 usage="bashGetRequires script"

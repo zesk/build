@@ -12,7 +12,6 @@ foundNames=([0]="output" [1]="argument")
 output="text"$'\n'""
 rawComment="Output arguments joined by a character"$'\n'"Output: text"$'\n'"Argument: separator - EmptyString. Required. Single character to join elements. If a multi-character string is used only the first character is used as the delimiter."$'\n'"Argument: text0 ... - String. Optional. One or more strings to join"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
-sourceFile="bin/build/tools/list.sh"
 sourceModified="1769063211"
 summary="Output arguments joined by a character"
 usage="listJoin separator [ text0 ... ] [ --help ]"

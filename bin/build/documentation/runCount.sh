@@ -11,7 +11,6 @@ file="bin/build/tools/platform.sh"
 foundNames=([0]="argument" [1]="return_code" [2]="summary")
 rawComment="Argument: count - The number of times to run the binary"$'\n'"Argument: binary - The binary to run"$'\n'"Argument: args ... - Any arguments to pass to the binary each run"$'\n'"Return Code: 0 - success"$'\n'"Return Code: 2 - \`count\` is not an unsigned number"$'\n'"Return Code: Any - If \`binary\` fails, the exit code is returned"$'\n'"Summary: Run a binary count times"$'\n'""$'\n'""
 return_code="0 - success"$'\n'"2 - \`count\` is not an unsigned number"$'\n'"Any - If \`binary\` fails, the exit code is returned"$'\n'""
-sourceFile="bin/build/tools/platform.sh"
 sourceModified="1769184734"
 summary="Run a binary count times"$'\n'""
 usage="runCount [ count ] [ binary ] [ args ... ]"

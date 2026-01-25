@@ -11,7 +11,6 @@ file="bin/build/tools/git.sh"
 foundNames=([0]="argument" [1]="summary")
 rawComment="Installs the \`git\` binary"$'\n'"Argument: package - Additional packages to install"$'\n'"Summary: Install git if needed"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
-sourceFile="bin/build/tools/git.sh"
 sourceModified="1769199547"
 summary="Install git if needed"$'\n'""
 usage="gitInstall [ package ]"

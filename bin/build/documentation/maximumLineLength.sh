@@ -11,7 +11,6 @@ file="bin/build/tools/text.sh"
 foundNames=([0]="stdin" [1]="stdout")
 rawComment="Outputs the maximum line length passed into stdin"$'\n'"stdin: Lines are read from standard in and line length is computed for each line"$'\n'"stdout: \`UnsignedInteger\`"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
-sourceFile="bin/build/tools/text.sh"
 sourceModified="1769320918"
 stdin="Lines are read from standard in and line length is computed for each line"$'\n'""
 stdout="\`UnsignedInteger\`"$'\n'""

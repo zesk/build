@@ -11,7 +11,6 @@ file="bin/build/tools/console.sh"
 foundNames=([0]="summary" [1]="argument")
 rawComment="Summary: console hyperlinks"$'\n'"Output a hyperlink to the console"$'\n'"OSC 8 standard for terminals"$'\n'"No way to test ability, I think. Maybe \`tput\`."$'\n'"Argument: link - EmptyString. Required. Link to output."$'\n'"Argument: text - String. Optional. Text to display, if none then uses \`link\`."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
-sourceFile="bin/build/tools/console.sh"
 sourceModified="1769209815"
 summary="console hyperlinks"$'\n'""
 usage="consoleLink link [ text ] [ --help ]"

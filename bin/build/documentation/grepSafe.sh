@@ -13,7 +13,6 @@ rawComment="\`grep\` but returns 0 when nothing matches"$'\n'"See: grep"$'\n'"Al
 requires="grep returnMap"$'\n'""
 return_code="0 - Normal operation"$'\n'""
 see="grep"$'\n'""
-sourceFile="bin/build/tools/text.sh"
 sourceModified="1769320918"
 summary="\`grep\` but returns 0 when nothing matches"
 usage="grepSafe [ --help ] [ ... ]"

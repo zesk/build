@@ -11,7 +11,6 @@ file="bin/build/tools/apt.sh"
 foundNames=([0]="argument" [1]="return_code")
 rawComment="Add keys to enable apt to download terraform directly from hashicorp.com"$'\n'"Argument: --title keyTitle - String. Optional. Title of the key."$'\n'"Argument: --name keyName - String. Required. Name of the key used to generate file names."$'\n'"Argument: --url remoteUrl - URL. Required. Remote URL of gpg key."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Return Code: 1 - if environment is awry"$'\n'"Return Code: 0 - Apt key is installed AOK"$'\n'""$'\n'""
 return_code="1 - if environment is awry"$'\n'"0 - Apt key is installed AOK"$'\n'""
-sourceFile="bin/build/tools/apt.sh"
 sourceModified="1769184734"
 summary="Add keys to enable apt to download terraform directly from"
 usage="aptKeyAdd [ --title keyTitle ] --name keyName --url remoteUrl [ --help ]"

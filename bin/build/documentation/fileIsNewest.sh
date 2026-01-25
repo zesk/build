@@ -11,7 +11,6 @@ file="bin/build/tools/file.sh"
 foundNames=([0]="argument" [1]="return_code")
 rawComment="Check to see if the first file is the newest one"$'\n'"If \`sourceFile\` is modified AFTER ALL \`targetFile\`s, return \`0\`\`"$'\n'"Otherwise return \`1\`\`"$'\n'"Argument: sourceFile - File. Required. File to check"$'\n'"Argument: targetFile ... - File. Optional. One or more files to compare. All must exist."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Return Code: 1 - \`sourceFile\`, 'targetFile' does not exist, or"$'\n'"Return Code: 0 - All files exist and \`sourceFile\` is the oldest file"$'\n'""$'\n'""
 return_code="1 - \`sourceFile\`, 'targetFile' does not exist, or"$'\n'"0 - All files exist and \`sourceFile\` is the oldest file"$'\n'""
-sourceFile="bin/build/tools/file.sh"
 sourceModified="1769184734"
 summary="Check to see if the first file is the newest"
 usage="fileIsNewest sourceFile [ targetFile ... ] [ --help ]"

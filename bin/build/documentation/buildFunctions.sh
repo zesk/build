@@ -12,7 +12,6 @@ file="bin/build/tools/build.sh"
 foundNames=([0]="argument" [1]="environment")
 rawComment="Argument: --help - Flag. Optional. Display this help."$'\n'"Argument: --deprecated - Flag. Optional. Include all deprecated functions as well."$'\n'"Environment: BUILD_HOME"$'\n'"Prints the list of functions defined in Zesk Build"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
-sourceFile="bin/build/tools/build.sh"
 sourceModified="1769208503"
 summary="Prints the list of functions defined in Zesk Build"
 usage="buildFunctions [ --help ] [ --deprecated ] [ --help ]"

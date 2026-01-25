@@ -14,7 +14,6 @@ rawComment="Argument: directoryOrFile - Exists. Required. Directory or file to \
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 security="Loads bash files"$'\n'""
 see="XDG_STATE_HOME.sh"$'\n'""
-sourceFile="bin/build/tools/interactive.sh"
 sourceModified="1769063211"
 summary="Loads files or a directory of \`.sh\` files using \`source\`"
 usage="approveBashSource directoryOrFile [ --info ] [ --no-info ] [ --verbose ] [ --clear ] [ --prefix ]"

@@ -11,7 +11,6 @@ file="bin/build/tools/environment/convert.sh"
 foundNames=([0]="argument" [1]="stdin" [2]="stdout" [3]="return_code")
 rawComment="Ensure an environment file is compatible with non-quoted docker environment files"$'\n'"May take a list of files to convert or stdin piped in"$'\n'"Outputs bash-compatible entries to stdout"$'\n'"Any output to stdout is considered valid output"$'\n'"Any output to stderr is errors in the file but is written to be compatible with a bash"$'\n'"Argument: filename ... - File. Optional. Docker environment file to convert."$'\n'"stdin: An environment file of any format"$'\n'"stdout: Environment file in Bash-compatible format"$'\n'"Return Code: 1 - if errors occur"$'\n'"Return Code: 0 - if file is valid"$'\n'""$'\n'""
 return_code="1 - if errors occur"$'\n'"0 - if file is valid"$'\n'""
-sourceFile="bin/build/tools/environment/convert.sh"
 sourceModified="1769063211"
 stdin="An environment file of any format"$'\n'""
 stdout="Environment file in Bash-compatible format"$'\n'""

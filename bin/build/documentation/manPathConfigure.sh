@@ -12,7 +12,6 @@ foundNames=([0]="see" [1]="argument")
 rawComment="Modify the MANPATH environment variable to add a path."$'\n'"See: manPathRemove"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Argument: --first - Flag. Optional. Place any paths after this flag first in the list"$'\n'"Argument: --last - Flag. Optional. Place any paths after this flag last in the list. Default."$'\n'"Argument: path - the path to be added to the \`MANPATH\` environment"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 see="manPathRemove"$'\n'""
-sourceFile="bin/build/tools/manpath.sh"
 sourceModified="1769063211"
 summary="Modify the MANPATH environment variable to add a path."
 usage="manPathConfigure [ --help ] [ --first ] [ --last ] [ path ]"

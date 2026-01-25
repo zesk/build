@@ -12,7 +12,6 @@ foundNames=([0]="output" [1]="argument")
 output="lines:IPv4"$'\n'""
 rawComment="List MAC addresses associated with this system using \`ifconfig\`"$'\n'"Output: lines:IPv4"$'\n'"Argument: --install - Flag. Optional. Install any packages required to get \`ifconfig\` installed first."$'\n'"Argument: --help - Flag. Optional. This help."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
-sourceFile="bin/build/tools/network.sh"
 sourceModified="1769184734"
 summary="List MAC addresses associated with this system using \`ifconfig\`"
 usage="networkMACAddressList [ --install ] [ --help ]"

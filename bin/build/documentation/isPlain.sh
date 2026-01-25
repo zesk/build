@@ -11,7 +11,6 @@ file="bin/build/tools/text.sh"
 foundNames=([0]="argument" [1]="return_code")
 rawComment="Check if text contains plaintext only."$'\n'"Argument: text - String. Required. Text to search for mapping tokens."$'\n'"Without arguments, displays help."$'\n'"Return code: - \`0\` - Text is plain"$'\n'"Return code: - \`1\` - Text contains non-plain characters"$'\n'""$'\n'""
 return_code="- \`0\` - Text is plain"$'\n'"- \`1\` - Text contains non-plain characters"$'\n'""
-sourceFile="bin/build/tools/text.sh"
 sourceModified="1769320918"
 summary="Check if text contains plaintext only."
 usage="isPlain text"

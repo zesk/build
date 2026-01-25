@@ -12,7 +12,6 @@ foundNames=([0]="argument" [1]="see")
 rawComment="Uninstall tofu binary and apt sources keys"$'\n'"Argument: package - String. Optional. Additional packages to uninstall using \`packageUninstall\`"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"See: tofuInstall packageUninstall"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 see="tofuInstall packageUninstall"$'\n'""
-sourceFile="bin/build/tools/tofu.sh"
 sourceModified="1769184734"
 summary="Uninstall tofu binary and apt sources keys"
 usage="tofuUninstall [ package ] [ --help ]"

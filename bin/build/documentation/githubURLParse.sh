@@ -11,8 +11,7 @@ file="bin/build/tools/github.sh"
 foundNames=([0]="argument")
 rawComment="Parse a GitHub URL and return the owner and project name"$'\n'"Argument: url - URL. Required. URL to parse."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
-sourceFile="bin/build/tools/github.sh"
-sourceModified="1769111847"
+sourceModified="1769323931"
 summary="Parse a GitHub URL and return the owner and project"
 usage="githubURLParse url"
 # shellcheck disable=SC2016

@@ -11,7 +11,6 @@ file="bin/build/tools/git.sh"
 foundNames=()
 rawComment="Does git have any tags?"$'\n'"May need to \`git pull --tags\`, or no tags exist."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
-sourceFile="bin/build/tools/git.sh"
 sourceModified="1769199547"
 summary="Does git have any tags?"
 usage="gitHasAnyRefs"

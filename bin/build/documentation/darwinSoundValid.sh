@@ -11,7 +11,6 @@ file="bin/build/tools/darwin.sh"
 foundNames=()
 rawComment="Is a Darwin sound name valid?"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
-sourceFile="bin/build/tools/darwin.sh"
 sourceModified="1769063211"
 summary="Is a Darwin sound name valid?"
 usage="darwinSoundValid"

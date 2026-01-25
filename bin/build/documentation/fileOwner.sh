@@ -11,7 +11,6 @@ file="bin/build/tools/file.sh"
 foundNames=([0]="argument" [1]="return_code")
 rawComment="Get the file owner name"$'\n'"Argument: file - File to get the owner for"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Outputs the file owner for each file passed on the command line"$'\n'"Return Code: 0 - Success"$'\n'"Return Code: 1 - Unable to access file"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Unable to access file"$'\n'""
-sourceFile="bin/build/tools/file.sh"
 sourceModified="1769184734"
 summary="Get the file owner name"
 usage="fileOwner [ file ] [ --help ]"

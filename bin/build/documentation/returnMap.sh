@@ -11,8 +11,7 @@ file="bin/build/tools/sugar.sh"
 foundNames=([0]="argument")
 rawComment="map a return value from one value to another"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Argument: value - Integer. A return value."$'\n'"Argument: from - Integer. When value matches \`from\`, instead return \`to\`"$'\n'"Argument: to - Integer. The value to return when \`from\` matches \`value\`"$'\n'"Argument: ... - Additional from-to pairs can be passed, first matching value is used, all values will be examined if none match"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
-sourceFile="bin/build/tools/sugar.sh"
-sourceModified="1769320918"
+sourceModified="1769323869"
 summary="map a return value from one value to another"
 usage="returnMap [ --help ] [ value ] [ from ] [ to ] [ ... ]"
 # shellcheck disable=SC2016

@@ -11,7 +11,6 @@ file="bin/build/tools/developer.sh"
 foundNames=()
 rawComment="Announce a list of functions now available"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
-sourceFile="bin/build/tools/developer.sh"
 sourceModified="1769184734"
 summary="Announce a list of functions now available"
 usage="developerAnnounce"

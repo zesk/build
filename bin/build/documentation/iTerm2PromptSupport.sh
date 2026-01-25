@@ -14,7 +14,6 @@ rawComment="Add support for iTerm2 to bashPrompt"$'\n'"If you are wondering what
 requires="catchEnvironment muzzle bashPrompt bashPromptMarkers iTerm2UpdateState"$'\n'"__iTerm2_mark __iTerm2_suffix __iTerm2UpdateState"$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 see="bashPrompt"$'\n'""
-sourceFile="bin/build/tools/iterm2.sh"
 sourceModified="1769184734"
 summary="Add support for iTerm2 to bashPrompt"
 usage="iTerm2PromptSupport [ --help ]"

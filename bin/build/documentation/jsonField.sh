@@ -12,7 +12,6 @@ foundNames=([0]="argument" [1]="stdout" [2]="stderr" [3]="return_code" [4]="requ
 rawComment="Fetch a non-blank field from a JSON file with error handling"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Argument: handler - Function. Required. Error handler."$'\n'"Argument: jsonFile - File. Required. A JSON file to parse"$'\n'"Argument: ... - Arguments. Optional. Passed directly to jq"$'\n'"stdout: selected field"$'\n'"stderr: error messages"$'\n'"Return Code: 0 - Field was found and was non-blank"$'\n'"Return Code: 1 - Field was not found or is blank"$'\n'"Requires: jq executableExists throwEnvironment printf rm decorate head"$'\n'""$'\n'""
 requires="jq executableExists throwEnvironment printf rm decorate head"$'\n'""
 return_code="0 - Field was found and was non-blank"$'\n'"1 - Field was not found or is blank"$'\n'""
-sourceFile="bin/build/tools/json.sh"
 sourceModified="1769184734"
 stderr="error messages"$'\n'""
 stdout="selected field"$'\n'""

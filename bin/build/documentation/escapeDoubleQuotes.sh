@@ -13,7 +13,6 @@ foundNames=([0]="argument" [1]="output" [2]="example")
 output="Single quotes are prefixed with a backslash"$'\n'""
 rawComment="Quote strings for inclusion in shell quoted strings"$'\n'"Argument: text - String. Optional. Text to quote"$'\n'"Output: Single quotes are prefixed with a backslash"$'\n'"Example:     {fn} \"Now I can't not include this in a bash string.\""$'\n'"Without arguments, displays help."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
-sourceFile="bin/build/tools/quote.sh"
 sourceModified="1769063211"
 summary="Quote strings for inclusion in shell quoted strings"
 usage="escapeDoubleQuotes [ text ]"

@@ -14,7 +14,6 @@ rawComment="Summary: Convert tokens in files to environment variable values"$'\n
 requires="environmentVariables cat throwEnvironment catchEnvironment"$'\n'"throwArgument decorate validate"$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 see="mapValue"$'\n'""
-sourceFile="bin/build/tools/map.sh"
 sourceModified="1769063211"
 summary="Convert tokens in files to environment variable values"$'\n'""
 usage="mapEnvironment [ environmentVariableName ] [ --prefix ] [ --suffix ] [ --search-filter ] [ --replace-filter ] [ --help ]"

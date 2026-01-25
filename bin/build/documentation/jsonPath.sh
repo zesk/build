@@ -11,7 +11,6 @@ file="bin/build/tools/json.sh"
 foundNames=([0]="summary" [1]="argument")
 rawComment="Summary: Generate \`jq\` paths"$'\n'"Generate a path for a JSON structure for use in \`jq\` queries"$'\n'"Argument: path - String. Output a json path separated by dots."$'\n'"Without arguments, displays help."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
-sourceFile="bin/build/tools/json.sh"
 sourceModified="1769184734"
 summary="Generate \`jq\` paths"$'\n'""
 usage="jsonPath [ path ]"

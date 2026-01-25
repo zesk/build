@@ -12,7 +12,6 @@ foundNames=([0]="requires" [1]="argument")
 rawComment="Boolean selector"$'\n'"Requires: isBoolean returnArgument printf"$'\n'"Argument: testValue - Boolean. Required. Test value"$'\n'"Argument: trueChoice - EmptyString. Optional. Value to output when testValue is \`true\`"$'\n'"Argument: falseChoice - EmptyString. Optional. Value to output when testValue is \`false\`"$'\n'""$'\n'""
 requires="isBoolean returnArgument printf"$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
-sourceFile="bin/build/tools/_sugar.sh"
 sourceModified="1769063211"
 summary="Boolean selector"
 usage="booleanChoose testValue [ trueChoice ] [ falseChoice ]"

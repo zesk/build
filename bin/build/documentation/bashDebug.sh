@@ -17,7 +17,6 @@ file="bin/build/tools/debugger.sh"
 foundNames=([0]="_fn_" [1]="____usage" [2]="argument")
 rawComment="{fn}: Simple debugger to walk through a program"$'\n'"    Usage: {fn} [ --help ] commandToDebug ..."$'\n'"Argument: commandToDebug - Callable. Required. Command to debug."$'\n'"Debugger accepts the following keystrokes:"$'\n'"### Flow control"$'\n'"- \`.\` or \` \` or Return - Repeat last flow command"$'\n'"- \`j\`         - Skip next command (jump over)"$'\n'"- \`s\` or \`n\`  - Step to next command (step)"$'\n'"- \`i\` or \`d\`  - Step into next command (follow)"$'\n'"- \`q\`         - Quit debugger (and continue execution)"$'\n'"- \`!\`         - Enter a command to execute"$'\n'"### Watching"$'\n'"- \`w\`         - Enter a watch expression"$'\n'"- \`u\`         - Remove a watch expression"$'\n'"### Utilities"$'\n'"\`k\`         - Display call stack"$'\n'"\`*\`         - Add an interrupt handler to capture the stack upon interrupt (SIGINT, or Ctrl-C from a console)"$'\n'"\`h\` or \`?\`  - This help"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
-sourceFile="bin/build/tools/debugger.sh"
 sourceModified="1769063211"
 summary="Debugger accepts the following keystrokes:"
 usage="bashDebug commandToDebug"

@@ -12,7 +12,6 @@ foundNames=([0]="argument" [1]="platform")
 platform="Darwin"$'\n'""
 rawComment="Install Homebrew"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Platform: Darwin"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
-sourceFile="bin/build/tools/brew.sh"
 sourceModified="1769184734"
 summary="Install Homebrew"
 usage="brewInstall [ --help ]"

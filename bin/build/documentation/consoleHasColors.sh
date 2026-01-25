@@ -13,8 +13,7 @@ foundNames=([0]="argument" [1]="return_code" [2]="environment" [3]="requires")
 rawComment="Sets the environment variable \`BUILD_COLORS\` if not set, uses \`TERM\` to calculate"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Return Code: 0 - Console or output supports colors"$'\n'"Return Code: 1 - Colors are likely not supported by console"$'\n'"Environment: BUILD_COLORS - Boolean. Optional. Whether the build system will output ANSI colors."$'\n'"Requires: isPositiveInteger tput"$'\n'""$'\n'""
 requires="isPositiveInteger tput"$'\n'""
 return_code="0 - Console or output supports colors"$'\n'"1 - Colors are likely not supported by console"$'\n'""
-sourceFile="bin/build/tools/decorate/core.sh"
-sourceModified="1769305535"
+sourceModified="1769323254"
 summary="Sets the environment variable \`BUILD_COLORS\` if not set, uses \`TERM\`"
 usage="consoleHasColors [ --help ]"
 # shellcheck disable=SC2016

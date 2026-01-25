@@ -13,7 +13,6 @@ foundNames=([0]="argument" [1]="return_code" [2]="credits" [3]="source")
 rawComment="Test if an argument is a signed integer"$'\n'"Argument: value - EmptyString. Required. Value to test."$'\n'"Return Code: 0 - if it is a signed integer"$'\n'"Return Code: 1 - if it is not a signed integer"$'\n'"Argument: value - EmptyString. The value to test."$'\n'"Credits: F. Hauri - Give Up GitHub (isuint_Case)"$'\n'"Source: https://stackoverflow.com/questions/806906/how-do-i-test-if-a-variable-is-a-number-in-bash"$'\n'""$'\n'""
 return_code="0 - if it is a signed integer"$'\n'"1 - if it is not a signed integer"$'\n'""
 source="https://stackoverflow.com/questions/806906/how-do-i-test-if-a-variable-is-a-number-in-bash"$'\n'""
-sourceFile="bin/build/tools/type.sh"
 sourceModified="1769063211"
 summary="Test if an argument is a signed integer"
 usage="isInteger value [ value ]"

@@ -12,7 +12,6 @@ foundNames=([0]="argument" [1]="requires")
 rawComment="Extract a bash comment from a file. Excludes lines containing the following tokens:"$'\n'"Argument: source - File. Required. File where the function is defined."$'\n'"Argument: lineNumber - String. Required. Previously computed line number of the function."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Requires: head bashFinalComment"$'\n'"Requires: __help usageDocument"$'\n'""$'\n'""
 requires="head bashFinalComment"$'\n'"__help usageDocument"$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
-sourceFile="bin/build/tools/bash.sh"
 sourceModified="1769208503"
 summary="Extract a bash comment from a file. Excludes lines containing"
 usage="bashFileComment source lineNumber [ --help ]"

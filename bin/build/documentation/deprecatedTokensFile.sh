@@ -11,7 +11,6 @@ file="bin/build/tools/deprecated-tools.sh"
 foundNames=()
 rawComment="Run deprecated tokens file search"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
-sourceFile="bin/build/tools/deprecated-tools.sh"
 sourceModified="1769063211"
 summary="Run deprecated tokens file search"
 usage="deprecatedTokensFile"

@@ -14,7 +14,6 @@ foundNames=([0]="argument" [1]="requires" [2]="environment" [3]="build_debug")
 rawComment="Dump the function and include stacks and the current environment"$'\n'"Argument: -x - Flag. Optional. Show exported variables. (verbose)"$'\n'"Argument: --me - Flag. Optional. Show calling function call stack frame."$'\n'"Argument: --exit - Flag. Optional. Exit with code 0 after output."$'\n'"Requires: printf usageDocument"$'\n'"Environment: BUILD_DEBUG"$'\n'"BUILD_DEBUG: debuggingStack - \`debuggingStack\` shows arguments passed (extra) and exports (optional flag) ALWAYS"$'\n'"Requires: throwArgument"$'\n'""$'\n'""
 requires="printf usageDocument"$'\n'"throwArgument"$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
-sourceFile="bin/build/tools/dump.sh"
 sourceModified="1769184734"
 summary="Dump the function and include stacks and the current environment"
 usage="debuggingStack [ -x ] [ --me ] [ --exit ]"

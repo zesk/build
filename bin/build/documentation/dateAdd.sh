@@ -13,7 +13,6 @@ foundNames=([0]="argument" [1]="stdout" [2]="example")
 newYearsEve=""
 rawComment="Add or subtract days from a text date"$'\n'"Argument: --days delta - SignedInteger. Number of days to add (or subtract - use a negative number). Affects all timestamps *after* it."$'\n'"Argument: timestamp ... - Date. Timestamp to update."$'\n'"stdout: Date with days added to it"$'\n'"Example:     newYearsEve=\$(dateAdd --days -1 \"2025-01-01\")"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
-sourceFile="bin/build/tools/date.sh"
 sourceModified="1769184556"
 stdout="Date with days added to it"$'\n'""
 summary="Add or subtract days from a text date"

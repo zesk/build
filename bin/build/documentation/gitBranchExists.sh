@@ -11,7 +11,6 @@ file="bin/build/tools/git.sh"
 foundNames=([0]="argument" [1]="return_code")
 rawComment="Does a branch exist locally or remotely?"$'\n'"Argument: branch ... - String. Required. List of branch names to check."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Return Code: 0 - All branches passed exist"$'\n'"Return Code: 1 - At least one branch does not exist locally or remotely"$'\n'""$'\n'""
 return_code="0 - All branches passed exist"$'\n'"1 - At least one branch does not exist locally or remotely"$'\n'""
-sourceFile="bin/build/tools/git.sh"
 sourceModified="1769199547"
 summary="Does a branch exist locally or remotely?"
 usage="gitBranchExists branch ... [ --help ]"

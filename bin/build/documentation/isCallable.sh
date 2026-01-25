@@ -12,7 +12,6 @@ foundNames=([0]="argument" [1]="return_code" [2]="requires")
 rawComment="Test if all arguments are callable as a command"$'\n'"Argument: string - EmptyString. Required. Path to binary to test if it is executable."$'\n'"If no arguments are passed, returns exit code 1."$'\n'"Return Code: 0 - All arguments are callable as a command"$'\n'"Return Code: 1 - One or or more arguments are callable as a command"$'\n'"Requires: throwArgument __help isExecutable isFunction"$'\n'""$'\n'""
 requires="throwArgument __help isExecutable isFunction"$'\n'""
 return_code="0 - All arguments are callable as a command"$'\n'"1 - One or or more arguments are callable as a command"$'\n'""
-sourceFile="bin/build/tools/type.sh"
 sourceModified="1769063211"
 summary="Test if all arguments are callable as a command"
 usage="isCallable string"

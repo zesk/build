@@ -13,7 +13,6 @@ foundNames=([0]="argument" [1]="example" [2]="output" [3]="return_code")
 output="423"$'\n'""
 rawComment="Outputs value of virtual memory allocated for a process, value is in kilobytes"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Argument: pid - Process ID of running process"$'\n'"Example:     {fn} 23"$'\n'"Output: 423"$'\n'"Return Code: 0 - Success"$'\n'"Return Code: 2 - Argument error"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"2 - Argument error"$'\n'""
-sourceFile="bin/build/tools/process.sh"
 sourceModified="1769277628"
 summary="Outputs value of virtual memory allocated for a process, value"
 usage="processVirtualMemoryAllocation [ --help ] [ pid ]"

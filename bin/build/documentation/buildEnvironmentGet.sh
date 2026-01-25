@@ -12,7 +12,6 @@ file="bin/build/tools/build.sh"
 foundNames=([0]="argument" [1]="environment")
 rawComment="Load and print one or more environment settings"$'\n'"Argument: envName - String. Optional. Name of the environment value to load. Afterwards this should be defined (possibly blank) and \`export\`ed."$'\n'"Argument: --application applicationHome - Path. Optional. Directory of alternate application home. Can be specified more than once to change state."$'\n'"If BOTH files exist, both are sourced, so application environments should anticipate values"$'\n'"created by build's default."$'\n'"Modifies local environment. Not usually run within a subshell."$'\n'"Environment: \$envName"$'\n'"Environment: BUILD_ENVIRONMENT_DIRS - \`:\` separated list of paths to load env files"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
-sourceFile="bin/build/tools/build.sh"
 sourceModified="1769208503"
 summary="Load and print one or more environment settings"
 usage="buildEnvironmentGet [ envName ] [ --application applicationHome ]"

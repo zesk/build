@@ -12,8 +12,7 @@ file="bin/build/tools/github.sh"
 foundNames=([0]="environment")
 rawComment="Get a project JSON structure"$'\n'"Environment: GITHUB_ACCESS_TOKEN"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
-sourceFile="bin/build/tools/github.sh"
-sourceModified="1769111847"
+sourceModified="1769323931"
 summary="Get a project JSON structure"
 usage="githubProjectJSON"
 # shellcheck disable=SC2016

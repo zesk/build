@@ -13,7 +13,6 @@ rawComment="Summary: Convert a template file to a documentation file using templ
 requires="catchEnvironment timingStart throwArgument usageArgumentFile usageArgumentDirectory usageArgumentFileDirectory"$'\n'"basename decorate statusMessage fileTemporaryName rm grep cut source mapTokens returnClean"$'\n'"mapEnvironment shaPipe printf"$'\n'""
 return_code="0 - If success"$'\n'"1 - Issue with file generation"$'\n'"2 - Argument error"$'\n'""
 see="documentationIndexLookup"$'\n'"documentationIndexIndex"$'\n'""
-sourceFile="bin/build/tools/documentation.sh"
 sourceModified="1769065497"
 summary="Convert a template file to a documentation file using templates"$'\n'""
 usage="documentationTemplateCompile [ --env-file envFile ] cacheDirectory sourceFile functionTemplate targetFile [ --help ]"

@@ -14,7 +14,6 @@ foundNames=([0]="argument" [1]="requires" [2]="build_debug" [3]="environment")
 rawComment="Wrapper for \`mktemp\`. Generate a temporary file name, and fail using a function"$'\n'"Argument: handler - Function. Required. Function to call on failure. Function Type: returnMessage"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Argument: ... - Arguments. Optional. Any additional arguments are passed through."$'\n'"Requires: mktemp __help catchEnvironment usageDocument"$'\n'"BUILD_DEBUG: temp - Logs backtrace of all temporary files to a file in application root named after this function to detect and clean up leaks"$'\n'"Environment: BUILD_DEBUG"$'\n'""$'\n'""
 requires="mktemp __help catchEnvironment usageDocument"$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
-sourceFile="bin/build/tools/file.sh"
 sourceModified="1769184734"
 summary="Wrapper for \`mktemp\`. Generate a temporary file name, and fail"
 usage="fileTemporaryName handler [ --help ] [ ... ]"

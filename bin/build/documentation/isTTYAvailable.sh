@@ -14,7 +14,6 @@ foundNames=([0]="summary" [1]="see" [2]="argument" [3]="environment" [4]="credit
 rawComment="Summary: Quiet test for a TTY"$'\n'"Returns 0 if a tty is available, 1 if not. Caches the saved value in \`__BUILD_HAS_TTY\` to avoid running the test each call.ZL"$'\n'"See: stty /dev/tty"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Environment: - \`__BUILD_HAS_TTY\` - Cached value of \`false\` or \`true\`. Any other value forces computation during this call."$'\n'"Credits: Tim Perry"$'\n'"URL: https://stackoverflow.com/questions/69075612/cross-platform-method-to-detect-whether-dev-tty-is-available-functional"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 see="stty /dev/tty"$'\n'""
-sourceFile="bin/build/tools/colors.sh"
 sourceModified="1769211509"
 summary="Quiet test for a TTY"$'\n'""
 url="https://stackoverflow.com/questions/69075612/cross-platform-method-to-detect-whether-dev-tty-is-available-functional"$'\n'""

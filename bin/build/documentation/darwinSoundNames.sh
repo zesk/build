@@ -11,7 +11,6 @@ file="bin/build/tools/darwin.sh"
 foundNames=()
 rawComment="List valid sound names usable for notifications in Darwin"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
-sourceFile="bin/build/tools/darwin.sh"
 sourceModified="1769063211"
 summary="List valid sound names usable for notifications in Darwin"
 usage="darwinSoundNames"

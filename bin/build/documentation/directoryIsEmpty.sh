@@ -11,7 +11,6 @@ file="bin/build/tools/directory.sh"
 foundNames=([0]="argument" [1]="return_code")
 rawComment="Argument: directory - Directory. Optional. Directory to check if empty."$'\n'"Does a directory exist and is it empty?"$'\n'"Return Code: 2 - Directory does not exist"$'\n'"Return Code: 1 - Directory is not empty"$'\n'"Return Code: 0 - Directory is empty"$'\n'""$'\n'""
 return_code="2 - Directory does not exist"$'\n'"1 - Directory is not empty"$'\n'"0 - Directory is empty"$'\n'""
-sourceFile="bin/build/tools/directory.sh"
 sourceModified="1769063211"
 summary="Does a directory exist and is it empty?"
 usage="directoryIsEmpty [ directory ]"

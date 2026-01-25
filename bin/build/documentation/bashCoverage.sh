@@ -12,8 +12,7 @@ foundNames=([0]="argument" [1]="see")
 rawComment="Argument: --target reportFile - File. Optional. Write coverage data to this file."$'\n'"Argument: thingToRun - Callable. Required. Function to run and collect coverage data."$'\n'"Collect code coverage statistics for a code sample"$'\n'"Convert resulting files using \`bashCoverageReport\`"$'\n'"See: bashCoverageReport"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 see="bashCoverageReport"$'\n'""
-sourceFile="bin/build/tools/coverage.sh"
-sourceModified="1769277626"
+sourceModified="1769322366"
 summary="Collect code coverage statistics for a code sample"
 usage="bashCoverage [ --target reportFile ] thingToRun"
 # shellcheck disable=SC2016

@@ -11,7 +11,6 @@ file="bin/build/tools/git.sh"
 foundNames=([0]="argument" [1]="stdout")
 rawComment="List the extensions available"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"stdout: String. One per line."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
-sourceFile="bin/build/tools/git.sh"
 sourceModified="1769199547"
 stdout="String. One per line."$'\n'""
 summary="List the extensions available"

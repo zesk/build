@@ -12,7 +12,6 @@ foundNames=([0]="argument" [1]="see")
 rawComment="Rename a link"$'\n'"Argument: from - Link. Required. Link to rename."$'\n'"Argument: to - FileDirectory. Required. New link path."$'\n'"Renames a link forcing replacement, and works on different versions of \`mv\` which differs between systems."$'\n'"See: mv"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 see="mv"$'\n'""
-sourceFile="bin/build/tools/file.sh"
 sourceModified="1769184734"
 summary="Rename a link"
 usage="linkRename from to"

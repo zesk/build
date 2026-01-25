@@ -13,7 +13,6 @@ foundNames=([0]="summary" [1]="argument" [2]="example")
 rawComment="Summary: Tomorrow's date in UTC"$'\n'"Returns tomorrow's date (UTC time), in YYYY-MM-DD format. (same as \`%F\`)"$'\n'"Argument: --local - Flag. Optional. Local tomorrow"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Example:     rotated=\"\$log.\$({fn})\""$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 rotated=""
-sourceFile="bin/build/tools/date.sh"
 sourceModified="1769184556"
 summary="Tomorrow's date in UTC"$'\n'""
 usage="dateTomorrow [ --local ] [ --help ]"

@@ -14,7 +14,6 @@ foundNames=([0]="argument" [1]="environment" [2]="short_description" [3]="depend
 rawComment="Argument: \`prefix\` - Optional prefix for token search, defaults to \`{\` (same as \`map.sh\`)"$'\n'"Argument: \`suffix\` - Optional suffix for token search, defaults to \`}\` (same as \`map.sh\`)"$'\n'"Environment: None."$'\n'"Short description: list mappable variables in a file (without prefix or suffix)"$'\n'"Depends: sed quoteSedPattern"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 short_description="list mappable variables in a file (without prefix or suffix)"$'\n'""
-sourceFile="bin/build/tools/map.sh"
 sourceModified="1769063211"
 summary="undocumented"
 usage="mapTokens [ \`prefix\` ] [ \`suffix\` ]"

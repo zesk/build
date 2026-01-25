@@ -14,7 +14,6 @@ foundNames=([0]="depends" [1]="example" [2]="output" [3]="stdout")
 output="cf7861b50054e8c680a9552917b43ec2b9edae2b"$'\n'""
 rawComment="Depends: sha1sum, /dev/random"$'\n'"Description: Outputs 40 random hexadecimal characters, lowercase."$'\n'"Example:     testPassword=\"\$(randomString)\""$'\n'"Output: cf7861b50054e8c680a9552917b43ec2b9edae2b"$'\n'"stdout: \`String\`. A random hexadecimal string."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
-sourceFile="bin/build/tools/text.sh"
 sourceModified="1769320918"
 stdout="\`String\`. A random hexadecimal string."$'\n'""
 summary="Outputs 40 random hexadecimal characters, lowercase."

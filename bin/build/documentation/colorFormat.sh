@@ -11,7 +11,6 @@ file="bin/build/tools/colors.sh"
 foundNames=([0]="stdin" [1]="argument")
 rawComment="Take r g b decimal values and convert them to hex color values"$'\n'"stdin: list:UnsignedInteger"$'\n'"Argument: format - String. Optional. Formatting string."$'\n'"Argument: red - UnsignedInteger. Optional. Red component."$'\n'"Argument: green - UnsignedInteger. Optional. Blue component."$'\n'"Argument: blue - UnsignedInteger. Optional. Green component."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Takes arguments or stdin values in groups of 3."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
-sourceFile="bin/build/tools/colors.sh"
 sourceModified="1769211509"
 stdin="list:UnsignedInteger"$'\n'""
 summary="Take r g b decimal values and convert them to"

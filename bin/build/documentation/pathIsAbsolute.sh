@@ -11,7 +11,6 @@ file="bin/build/tools/directory.sh"
 foundNames=([0]="argument" [1]="return_code")
 rawComment="Is a path an absolute path?"$'\n'"Argument: path - String. Optional. Path to check."$'\n'"Return Code: 0 - if all paths passed in are absolute paths (begin with \`/\`)."$'\n'"Return Code: 1 - one ore more paths are not absolute paths"$'\n'""$'\n'""
 return_code="0 - if all paths passed in are absolute paths (begin with \`/\`)."$'\n'"1 - one ore more paths are not absolute paths"$'\n'""
-sourceFile="bin/build/tools/directory.sh"
 sourceModified="1769063211"
 summary="Is a path an absolute path?"
 usage="pathIsAbsolute [ path ]"

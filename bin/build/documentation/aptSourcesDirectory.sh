@@ -11,7 +11,6 @@ file="bin/build/tools/apt.sh"
 foundNames=()
 rawComment="Get APT source list path"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
-sourceFile="bin/build/tools/apt.sh"
 sourceModified="1769184734"
 summary="Get APT source list path"
 usage="aptSourcesDirectory"

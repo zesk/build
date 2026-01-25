@@ -12,7 +12,6 @@ foundNames=([0]="argument" [1]="no_arguments")
 no_arguments="default"$'\n'""
 rawComment="Cleans the MANPATH and removes non-directory entries and duplicates"$'\n'"Maintains ordering."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"No-Arguments: default"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
-sourceFile="bin/build/tools/manpath.sh"
 sourceModified="1769063211"
 summary="Cleans the MANPATH and removes non-directory entries and duplicates"
 usage="manPathCleanDuplicates [ --help ]"

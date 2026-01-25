@@ -11,7 +11,6 @@ file="bin/build/tools/decorate/theme.sh"
 foundNames=([0]="argument" [1]="stdin" [2]="stdout")
 rawComment="Applies the current theme to text rendered using \`decorateThemelessMode\`"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"stdin: Text to apply current theme to"$'\n'"stdout: Console-ready text"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
-sourceFile="bin/build/tools/decorate/theme.sh"
 sourceModified="1769205723"
 stdin="Text to apply current theme to"$'\n'""
 stdout="Console-ready text"$'\n'""

@@ -12,7 +12,6 @@ foundNames=([0]="argument" [1]="requires")
 rawComment="Argument: directory - Directory. Required. Directory to change to prior to running command."$'\n'"Argument: command - Callable. Required. Thing to do in this directory."$'\n'"Argument: ... - Arguments. Optional. Arguments to \`command\`."$'\n'"Run a command after changing directory to it and then returning to the previous directory afterwards."$'\n'"Requires: pushd popd"$'\n'""$'\n'""
 requires="pushd popd"$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
-sourceFile="bin/build/tools/directory.sh"
 sourceModified="1769063211"
 summary="Run a command after changing directory to it and then"
 usage="directoryChange directory command [ ... ]"
