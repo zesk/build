@@ -87,11 +87,11 @@ phpComposer() {
 
   catchEnvironment "$handler" muzzle pushd "$composerDirectory" || return $?
   printf "%s\n" "Running: ${composerBin[*]} validate" >>"$quietLog"
-  "${composerBin[@]}" validate >>"$quietLog" 2>&1 || returnUndo $? muzzle popd || buildFailed "$quietLog" || return $?
+  "${composerBin[@]}" validate >>"$quietLog" 2>&1 || returnUndo $? muzzle popd -- dumpFile "$quietLog" || return $?
 
   $quietFlag || statusMessage decorate info "Application packages ... " || :
   printf "%s\n" "Running: ${composerBin[*]} install ${installArgs[*]}" >>"$quietLog" || :
-  "${composerBin[@]}" install "${installArgs[@]}" >>"$quietLog" 2>&1 || returnUndo $? muzzle popd || buildFailed "$quietLog" || return $?
+  "${composerBin[@]}" install "${installArgs[@]}" >>"$quietLog" 2>&1 || returnUndo $? muzzle popd -- dumpFile "$quietLog" || return $?
   catchEnvironment "$handler" muzzle popd || return $?
   $quietFlag || statusMessage --last timingReport "$start" "${FUNCNAME[0]} completed in" || :
 }

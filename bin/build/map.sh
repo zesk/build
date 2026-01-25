@@ -572,7 +572,7 @@ __validateTypeCallable() {
   printf "%s\n" "${1-}"
 }
 
-# IDENTICAL decorate 290
+# IDENTICAL decorate 289
 
 # Sets the environment variable `BUILD_COLORS` if not set, uses `TERM` to calculate
 #
@@ -653,10 +653,10 @@ _decorations() {
 # Environment: BUILD_COLORS - Boolean. Colors enabled (`true` or `false`).
 # Requires: isFunction returnArgument awk catchEnvironment usageDocument executeInputSupport __help
 decorate() {
-  local handler="_${FUNCNAME[0]}" text="" what="${1-}" lp style && shift 2>/dev/null
-  [ "$what" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
+  local handler="_${FUNCNAME[0]}" what="${1-}"
+  [ "$what" != "--help" ] || __help "$handler" "$@" || return 0
   [ -n "$what" ] || catchArgument "$handler" "Requires at least one argument: \"$*\"" || return $?
-  catchReturn "$handler" _decorateInitialize || return $?
+  local style && shift && catchReturn "$handler" _decorateInitialize || return $?
   if ! style=$(__decorateStyle "$what"); then
     local extend func="${what/-/_}"
     extend="__decorateExtension$(printf "%s" "${func:0:1}" | awk '{print toupper($0)}')${func:1}"
@@ -669,8 +669,7 @@ decorate() {
       executeInputSupport "$handler" __decorate "❌" "[$what ☹️" "]" -- "$@" || return 2
     fi
   fi
-  local IFS
-  IFS=" " read -r lp text <<<"$style" || :
+  local lp text="" && IFS=" " read -r lp text <<<"$style" || :
   local p='\033['
   executeInputSupport "$handler" __decorate "$text" "${p}${lp}m" "${p}0m" -- "$@" || return $?
 }

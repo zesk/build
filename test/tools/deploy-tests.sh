@@ -223,7 +223,8 @@ testDeployApplication() {
   start=$(timingStart)
   if ! _simplePHPServer; then
     decorate error _simplePHPServer failed
-    buildFailed "$quietLog" || return $?
+    dumpPipe Log <"$quietLog"
+    return 1
   fi
   while ! _isSimplePHPServerRunning; do
     elapsed=$(($(timingStart) - start))
@@ -308,11 +309,6 @@ testDeployApplication() {
       _deployShowFiles "$d" || return $?
     fi
 
-    #    if ! _simplePHPServer --kill "$d/live-app"; then
-    #      decorate error _simplePHPServer restart failed
-    #      buildFailed "$quietLog" || return $?
-    #    fi
-    #
     decorate pair 40 _simplePHPRequest "$(_simplePHPRequest)"
     _waitForValue "$t" || return $?
 

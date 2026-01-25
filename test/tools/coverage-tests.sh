@@ -35,6 +35,8 @@ testCoverageNeedToUpdate() {
 testCoverageReportThing() {
   local codes expected template
 
+  muzzle bashCoverageReport --help
+
   codes=$(printf "%s\n" "return" "1")
 
   template="$(__bashCoverageReportTemplate "not-covered.html")"
@@ -383,7 +385,6 @@ developerUndo
 dockerComposeIsRunning
 dockerComposeCommandList
 dockerPlatformDefault
-dumpDockerTestFile
 dockerInside
 dockerListContext
 environmentNames

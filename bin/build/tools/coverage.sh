@@ -58,7 +58,6 @@ _bashCoverage() {
 bashCoverageReport() {
   __coverageLoader "_${FUNCNAME[0]}" "__${FUNCNAME[0]}" "$@"
 }
-
 _bashCoverageReport() {
   # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"

@@ -4,7 +4,7 @@
 #
 
 __bashCoverageReport() {
-  local handler="_${FUNCNAME[0]}"
+  local handler="$1" && shift
 
   local reportCache="" target="" files=()
 
@@ -101,7 +101,7 @@ __bashCoverageReportTemplate() {
   local home path
 
   home=$(catchReturn "$handler" buildHome) || return $?
-  path="$home/bin/build/tools/coverage/$1"
+  path="$home/bin/build/tools/coverage/html/$1"
   [ -f "$path" ] || returnEnvironment "${FUNCNAME[0]} $path not found" || return $?
   printf -- "%s\n" "$path"
 }

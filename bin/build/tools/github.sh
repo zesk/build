@@ -297,14 +297,14 @@ githubRelease() {
     -d "$JSON" >"$resultsFile"; then
     decorate error "POST failed to GitHub" 1>&2 || :
     decorate code <<<"$JSON" | decorate wrap "$(decorate info "JSON: ")" 1>&2
-    buildFailed "$resultsFile" 1>&2 || return $?
+    dumpPipe results <"$resultsFile" 1>&2 || return $?
   fi
   url="$(jq .html_url <"$resultsFile")"
   if [ -z "$url" ] || [ "$url" = "null" ]; then
     decorate error "Results had no html_url" 1>&2 || :
     decorate error "Access token length ${#accessToken}" 1>&2 || :
     decorate code <<<"$JSON" | decorate wrap "$(decorate info "Submitted JSON: ")" 1>&2
-    buildFailed "$resultsFile" 1>&2 || return $?
+    dumpPipe results <"$resultsFile" 1>&2 || return $?
   fi
   printf "%s: %s\n" "$(decorate info URL)" "$(decorate orange "$url")" || :
 

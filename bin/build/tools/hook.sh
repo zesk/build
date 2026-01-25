@@ -195,9 +195,7 @@ _hookSource() {
 # Argument: hookName ... - String. Required. Hook to source (if it exists).
 # Return Code: Any - The hook exit code is returned if it is run
 # Return Code: 0 - is returned if the hook is not found
-# Example:     if ! {fn} test-cleanup >>"$quietLog"; then
-# Example:         buildFailed "$quietLog"
-# Example:     fi
+# Example:     {fn} test-cleanup
 # Test: testHookSystem
 # See: hooks.md hookRun
 # Environment: BUILD_HOOK_EXTENSIONS

@@ -804,7 +804,7 @@ __deployUploadPackage() {
     catchEnvironment "$handler" ssh "$(__deploySSHOptions)" -T "$userHost" bash --noprofile -s -e < <(__deployCreateDirectoryCommands "$applicationPath" "$remotePath") || return $?
     printf "%s: %s %s\n" "$(decorate green "$userHost")" "$(decorate info "Uploading to")" "$(decorate red "$remotePath/$buildTarget")"
     if ! printf -- '@put %s %s' "$buildTarget" "$remotePath/$buildTarget" | sftp "$(__deploySSHOptions)" "$userHost" 2>/dev/null; then
-      throwEnvironment "$handler" "Upload $remotePath/$buildTarget to $userHost buildFailed " || return $?
+      throwEnvironment "$handler" "Upload $remotePath/$buildTarget to $userHost failed " || return $?
     fi
     timingReport "$start" "Deployment setup completed on $(decorate green "$userHost") in " || :
   done

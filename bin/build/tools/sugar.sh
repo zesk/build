@@ -12,7 +12,7 @@
 # Argument: handler - Function. Required. Failure command
 # Argument: quietLog - File. Required. File to output log to temporarily for this command. If `quietLog` is `-` then creates a temporary file for the command which is deleted automatically.
 # Argument: command ... - Callable. Required. Thing to run and append output to `quietLog`.
-# Requires: isFunction returnArgument buildFailed debuggingStack throwEnvironment
+# Requires: isFunction returnArgument debuggingStack throwEnvironment
 catchEnvironmentQuiet() {
   local __handler="${1-}" quietLog="${2-}" clean=() && shift 2
   # __IDENTICAL__ __checkHandler 1
@@ -25,8 +25,12 @@ catchEnvironmentQuiet() {
       throwArgument "$handler" "Directory for $(decorate file "$quietLog") does not exist!" || return $?
     fi
   fi
-  "$@" >>"$quietLog" 2>&1 || buildFailed "$quietLog" || throwEnvironment "$__handler" "$@" || returnClean $? "${clean[@]+"${clean[@]}"}" || return $?
-  returnClean 0 "${clean[@]+"${clean[@]}"}" || return $?
+  if "$@" >>"$quietLog" 2>&1; then
+    returnClean 0 "${clean[@]+"${clean[@]}"}" || return $?
+    return 0
+  fi
+  tail -f 30 "$quietLog" 1>&2 || :
+  throwEnvironment "$__handler" "$@" || returnClean $? "${clean[@]+"${clean[@]}"}" || return $?
 }
 
 # Logs all deprecated functions to application root in a file called `.deprecated`

@@ -255,7 +255,8 @@ phpBuild() {
     catchReturn "$handler" environmentFileApplicationMake "${environments[@]}" -- "${optionals[@]}" >"$dotEnv" || returnClean $? "${clean[@]}" || return $?
   fi
   if ! grep -q APPLICATION "$dotEnv"; then
-    buildFailed "$dotEnv" || throwEnvironment "$handler" "$dotEnv file seems to be invalid:" || returnClean $? "${clean[@]}" || return $?
+    dumpFile "$dotEnv" 1>&2 || :
+    throwEnvironment "$handler" "$dotEnv file seems to be invalid:" || returnClean $? "${clean[@]}" || return $?
   fi
   local environment
   for environment in "${environments[@]}" "${optionals[@]}"; do
