@@ -125,6 +125,9 @@ __bashDocumentationExtractGenerateCache() {
   local source="$1" && shift
   local definitionFile="$1" && shift
   local fn="$1" && shift
+
+  local variableList="sourceFile,fn,usage,argument,description,usage,summary,file,base,applicationFile,foundNames"
+
   catchEnvironment "$handler" muzzle fileDirectoryRequire "$definitionFile" || return $?
   catchEnvironment "$handler" touch "$definitionFile" || return $?
   catchEnvironment "$handler" chmod +x "$definitionFile" || return $?
@@ -138,7 +141,7 @@ __bashDocumentationExtractGenerateCache() {
     bashRecursionDebug || return $?
     __bashDocumentationExtractDirect "$handler" "$fn" "$source" "${extras[@]}" "$@" >"$uncompiled" || returnClean $? "${clean[@]}" || $?
     bashRecursionDebug --end || return $?
-    catchEnvironment "$handler" environmentCompile --keep-comments --parse --variables sourceFile <"$uncompiled" | catchEnvironment "$handler" tee "$definitionFile" || returnClean $? "${clean[@]}" || $?
+    catchEnvironment "$handler" environmentCompile --keep-comments --parse --variables "$variableList" <"$uncompiled" | catchEnvironment "$handler" tee "$definitionFile" || returnClean $? "${clean[@]}" || $?
     buildDebugEnabled "environmentCompile" || catchEnvironment "$handler" rm -f "${clean[@]}" || return $?
   ) || return $?
 }

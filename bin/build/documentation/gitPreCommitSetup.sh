@@ -6,16 +6,17 @@ applicationFile="bin/build/tools/git.sh"
 argument="none"
 base="git.sh"
 description="Set up a pre-commit hook and create a cache of our files by extension."$'\n'""
-exitCode="0"
 file="bin/build/tools/git.sh"
 foundNames=([0]="see" [1]="return_code")
 rawComment="Set up a pre-commit hook and create a cache of our files by extension."$'\n'"See: gitPreCommitCleanup"$'\n'"Return code: 0 - One or more files are available as part of the commit"$'\n'"Return code: 1 - Error, or zero files are available as part of the commit"$'\n'""$'\n'""
 return_code="0 - One or more files are available as part of the commit"$'\n'"1 - Error, or zero files are available as part of the commit"$'\n'""
 see="gitPreCommitCleanup"$'\n'""
+sourceFile="bin/build/tools/git.sh"
 sourceModified="1769199547"
 summary="Set up a pre-commit hook and create a cache of"
 usage="gitPreCommitSetup"
 # shellcheck disable=SC2016
-helpConsole=''$'\e''[[label]mUsage'$'\e''[0m: '$'\e''[[info]mgitPreCommitSetup'$'\e''[0m'$'\n'''$'\n''Set up a pre-commit hook and create a cache of our files by extension.'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[code]m0'$'\e''[[reset]m - One or more files are available as part of the commit'$'\n''- '$'\e''[[code]m1'$'\e''[[reset]m - Error, or zero files are available as part of the commit'$'\n'''
+helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]mgitPreCommitSetup'$'\e''[0m'$'\n'''$'\n''Set up a pre-commit hook and create a cache of our files by extension.'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - One or more files are available as part of the commit'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - Error, or zero files are available as part of the commit'$'\n'''
 # shellcheck disable=SC2016
 helpPlain='Usage: gitPreCommitSetup'$'\n'''$'\n''Set up a pre-commit hook and create a cache of our files by extension.'$'\n'''$'\n''Return codes:'$'\n''- 0 - One or more files are available as part of the commit'$'\n''- 1 - Error, or zero files are available as part of the commit'$'\n'''
+# elapsed 0.519

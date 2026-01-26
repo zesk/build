@@ -6,16 +6,17 @@ applicationFile="bin/build/tools/package.sh"
 argument="none"
 base="package.sh"
 description="Determine the default package manager on this platform."$'\n'"Output is one of:"$'\n'"- apk apt brew port"$'\n'""
-exitCode="0"
 file="bin/build/tools/package.sh"
 foundNames=([0]="see")
 rawComment="Determine the default package manager on this platform."$'\n'"Output is one of:"$'\n'"- apk apt brew port"$'\n'"See: platform"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 see="platform"$'\n'""
+sourceFile="bin/build/tools/package.sh"
 sourceModified="1769184734"
 summary="Determine the default package manager on this platform."
 usage="packageManagerDefault"
 # shellcheck disable=SC2016
-helpConsole=''$'\e''[[label]mUsage'$'\e''[0m: '$'\e''[[info]mpackageManagerDefault'$'\e''[0m'$'\n'''$'\n''Determine the default package manager on this platform.'$'\n''Output is one of:'$'\n''- apk apt brew port'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[code]m0'$'\e''[[reset]m - Success'$'\n''- '$'\e''[[code]m1'$'\e''[[reset]m - Environment error'$'\n''- '$'\e''[[code]m2'$'\e''[[reset]m - Argument error'$'\n'''
+helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]mpackageManagerDefault'$'\e''[0m'$'\n'''$'\n''Determine the default package manager on this platform.'$'\n''Output is one of:'$'\n''- apk apt brew port'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - Success'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - Environment error'$'\n''- '$'\e''[[(code)]m2'$'\e''[[(reset)]m - Argument error'$'\n'''
 # shellcheck disable=SC2016
 helpPlain='Usage: packageManagerDefault'$'\n'''$'\n''Determine the default package manager on this platform.'$'\n''Output is one of:'$'\n''- apk apt brew port'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''
+# elapsed 0.512

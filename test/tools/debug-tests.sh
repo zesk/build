@@ -91,25 +91,44 @@ testBuildDebugEnabled() {
 }
 
 testErrorExit() {
-  local actual
+  local results=()
+
+  set +e && set +E
+  assertNotExitCode 0 isErrorExit || return $?
+  results+=("$(
+    isErrorExit
+    printf %d $?
+  )")
+  set -e && set +E
+  assertExitCode 0 isErrorExit || return $?
+  results+=("$(
+    isErrorExit
+    printf %d $?
+  )")
+  set +e && set -E
+  assertExitCode 0 isErrorExit || return $?
+  results+=("$(
+    isErrorExit
+    printf %d $?
+  )")
+  set -e && set -E
+  assertExitCode 0 isErrorExit || return $?
+  results+=("$(
+    isErrorExit
+    printf %d $?
+  )")
+  assertEquals "1" "${results[0]}" "+e +E -> \$(isErrorExit; printf %d \$?)" || return $?
+  assertEquals "1" "${results[1]}" "-e +E -> \$(isErrorExit; printf %d \$?)" || return $?
+  assertEquals "0" "${results[2]}" "+e -E -> \$(isErrorExit; printf %d \$?)" || return $?
+  assertEquals "0" "${results[3]}" "-e -E -> \$(isErrorExit; printf %d \$?)" || return $?
+
+  # `set -e` DOES NOT INHERIT TO SUBSHELLS AFAIK and there is no easy way to do so
+  # `set -E` DOES inherit to subshells
+  # In general, the consensus is to avoid using set -e and use trap ERR
+  # 2024-10
 
   set +E
   set +e
-  assertExitCode 0 isErrorExit || return $?
-  set -E
-  set -e
-  assertExitCode 0 isErrorExit || return $?
-  set -E
-  set -e
-  actual="$(
-    isErrorExit
-    printf %d $?
-  )"
-  assertEquals "0" "$actual" "\$(isErrorExit; printf %d $?)" || return $?
-
-  # `set -e` DOES NOT INHERIT TO SUBSHELLS AFAIK and there is no easy way to do so
-  # In general, the consensus is to avoid using set -e and use trap ERR
-  # 2024-10
 }
 
 # leaks world

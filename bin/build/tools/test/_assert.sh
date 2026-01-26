@@ -462,10 +462,17 @@ __assertFileContainsHelper() {
   displayName="${displayName:-"$file"}"
   [ -f "$file" ] || _assertFailure "$functionName" "$displayName is not a file \"$file\": $*" || return $?
 
-  local args verb notVerb
+  local args verb notVerb failWhy
 
-  verb=$(booleanChoose "$success" "contains" "does not contain") || return $?
-  notVerb=$(booleanChoose "$success" "does not contain" "contains") || return $?
+  if $success; then
+    verb="contains"
+    notVerb="does not contain"
+    failWhy="but should"
+  else
+    verb="does not contain"
+    notVerb="contains"
+    failWhy="and should not"
+  fi
   args=("$@")
 
   while [ $# -gt 0 ]; do
@@ -481,7 +488,7 @@ __assertFileContainsHelper() {
       _assertSuccess "$functionName" "$linePrefix$displayName $verb string: \"$(decorate code "$expected")\"" || return $?
     else
       local message
-      message="$(printf -- "%s %s %s\n%s" "$linePrefix$displayName" "$notVerb string:" "$(decorate code "$expected")" "$(dumpPipe --tail "$displayName" <"$file")")"
+      message="$(printf -- "%s %s %s\n%s" "$linePrefix$displayName" "$notVerb string ($failWhy):" "$(decorate code "$expected")" "$(dumpPipe --tail "$displayName" <"$file")")"
       _assertFailure "$functionName" "$message" || return $?
     fi
     shift

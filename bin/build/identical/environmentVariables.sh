@@ -15,7 +15,7 @@
 # Requires: declare grep cut usageDocument __help
 environmentVariables() {
   [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
-  declare -px | grep 'declare -x ' | cut -f 1 -d= | cut -f 3 -d' '
+  declare -px | grep 'declare -x ' | cut -f 1 -d "=" | cut -f 3 -d " "
 }
 _environmentVariables() {
   true || environmentVariables --help

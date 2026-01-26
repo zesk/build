@@ -259,6 +259,61 @@ _buildEnvironmentFiles() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
+# Adds an environment variable file to a project
+# DOC TEMPLATE: --help 1
+# Argument: --help - Flag. Optional. Display this help.
+# Argument: environmentName ... - EnvironmentName. Required. One or more environment variable names to add to this project.
+buildEnvironmentAdd() {
+  local handler="_${FUNCNAME[0]}"
+  local name environmentNames=()
+
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
+  local __saved=("$@") __count=$#
+  while [ $# -gt 0 ]; do
+    local argument="$1" __index=$((__count - $# + 1))
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    case "$argument" in
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
+    *)
+      name=$(validate "$handler" EnvironmentVariable "environmentVariable" "$1") || return $?
+      environmentNames+=("$name")
+      ;;
+    esac
+    shift
+  done
+
+  local home
+  home=$(catchReturn "$handler" buildHome) || return $?
+  [ ${#environmentNames[@]} -gt 0 ] || throwArgument "$handler" "Need at least one $(decorate code environmentVariable)" || return $?
+
+  local year company
+
+  year=$(catchEnvironment "$handler" date +%Y) || return $?
+  company=$(buildEnvironmentGet BUILD_COMPANY)
+  for name in "${environmentNames[@]}"; do
+    local path="$home/bin/env/$name.sh"
+    if [ -f "$path" ] && ! fileIsEmpty "$path"; then
+      if [ ! -x "$path" ]; then
+        statusMessage --last decorate warning "Making $(decorate file "$path") executable ..."
+        catchEnvironment "$handler" chmod +x "$path" || return $?
+      else
+        statusMessage --last decorate info "Exists: $(decorate file "$path")"
+      fi
+    else
+      catchEnvironment "$handler" printf -- "%s\n" "#!/usr/bin/env bash" "# Copyright &copy; $year $company" "# Type: String" "# Category: Application" "# All about $name and how it is used" "export $name" "$name=\"\${$name-}\"" >"$path" || return $?
+      catchEnvironment "$handler" chmod +x "$path" || return $?
+      statusMessage --last decorate success "Created $(decorate file "$path")"
+    fi
+  done
+}
+_buildEnvironmentAdd() {
+  # __IDENTICAL__ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+
 # Load one or more environment settings from the environment file path.
 #
 # Argument: envName - String. Optional. Name of the environment value to load. Afterwards this should be defined (possibly blank) and `export`ed.

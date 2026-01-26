@@ -48,7 +48,7 @@ decorateThemelessMode() {
   local finished=false && while ! $finished; do
     local style && read -r style || finished=true
     [ -n "$style" ] || continue
-    styles+=("$style=[$style]")
+    styles+=("$style=[($style)]")
   done < <(decorations)
 
   __BUILD_DECORATE_SAVED="${__BUILD_DECORATE-}"
@@ -105,7 +105,7 @@ __decorateThemeGenerateSedFile() {
   local handler="$1" && shift
   local style colorCode && while IFS="=" read -r -d ':' style colorCode; do
     # colorCode - Strip space and after "1;33 Info" -> "1;33"
-    [ -z "$style" ] || catchReturn "$handler" sedReplacePattern "[$style]" "${colorCode%% *}" || return $?
+    [ -z "$style" ] || catchReturn "$handler" sedReplacePattern "[($style)]" "${colorCode%% *}" || return $?
   done
 }
 

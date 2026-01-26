@@ -6,16 +6,17 @@ applicationFile="bin/build/tools/_sugar.sh"
 argument="message ... - String. Optional. Message to output."$'\n'""
 base="_sugar.sh"
 description="Return \`argument\` error code. Outputs \`message ...\` to \`stderr\`."$'\n'""
-exitCode="0"
 file="bin/build/tools/_sugar.sh"
 foundNames=([0]="argument" [1]="return_code" [2]="requires")
 rawComment="Return \`argument\` error code. Outputs \`message ...\` to \`stderr\`."$'\n'"Argument: message ... - String. Optional. Message to output."$'\n'"Return Code: 2"$'\n'"Requires: returnMessage"$'\n'""$'\n'""
 requires="returnMessage"$'\n'""
 return_code="2"$'\n'""
+sourceFile="bin/build/tools/_sugar.sh"
 sourceModified="1769063211"
 summary="Return \`argument\` error code. Outputs \`message ...\` to \`stderr\`."
 usage="returnArgument [ message ... ]"
 # shellcheck disable=SC2016
-helpConsole=''$'\e''[[label]mUsage'$'\e''[0m: '$'\e''[[info]mreturnArgument'$'\e''[0m '$'\e''[[blue]m[ message ... ]'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[blue]mmessage ...  '$'\e''[[value]mString. Optional. Message to output.'$'\e''[[reset]m'$'\n'''$'\n''Return '$'\e''[[code]margument'$'\e''[[reset]m error code. Outputs '$'\e''[[code]mmessage ...'$'\e''[[reset]m to '$'\e''[[code]mstderr'$'\e''[[reset]m.'$'\n'''$'\n''Return codes:'$'\n''- 2'$'\n'''
+helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]mreturnArgument'$'\e''[0m '$'\e''[[(blue)]m[ message ... ]'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[(blue)]mmessage ...  '$'\e''[[(value)]mString. Optional. Message to output.'$'\e''[[(reset)]m'$'\n'''$'\n''Return '$'\e''[[(code)]margument'$'\e''[[(reset)]m error code. Outputs '$'\e''[[(code)]mmessage ...'$'\e''[[(reset)]m to '$'\e''[[(code)]mstderr'$'\e''[[(reset)]m.'$'\n'''$'\n''Return codes:'$'\n''- 2'$'\n'''
 # shellcheck disable=SC2016
 helpPlain='Usage: returnArgument [ message ... ]'$'\n'''$'\n''    message ...  String. Optional. Message to output.'$'\n'''$'\n''Return argument error code. Outputs message ... to stderr.'$'\n'''$'\n''Return codes:'$'\n''- 2'$'\n'''
+# elapsed 0.544
