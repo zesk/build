@@ -186,7 +186,6 @@ _environmentLines() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-
 # Safely load an environment from stdin (no code execution)
 # Argument: --verbose - Flag. Optional. Output errors with variables.
 # Argument: --debug - Flag. Optional. Debugging mode, for developers probably.

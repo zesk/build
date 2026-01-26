@@ -313,7 +313,6 @@ _buildEnvironmentAdd() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-
 # Load one or more environment settings from the environment file path.
 #
 # Argument: envName - String. Optional. Name of the environment value to load. Afterwards this should be defined (possibly blank) and `export`ed.

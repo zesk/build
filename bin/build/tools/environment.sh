@@ -187,7 +187,6 @@ _environmentClean() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-
 # Output all exported environment variables, hiding secure ones and ones prefixed with underscore.
 # Any values which contain a newline are also skipped.
 #
