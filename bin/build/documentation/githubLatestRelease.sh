@@ -19,4 +19,4 @@ usage="githubLatestRelease projectName"
 helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]mgithubLatestRelease'$'\e''[0m '$'\e''[[(bold)]m'$'\e''[[(magenta)]mprojectName'$'\e''[0m'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[(red)]mprojectName  '$'\e''[[(value)]mString. Required. Github project name in the form of '$'\e''[[(code)]mowner/repository'$'\e''[[(reset)]m'$'\e''[[(reset)]m'$'\n'''$'\n''Get the latest release version'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - Success'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - Environment error'$'\n''- '$'\e''[[(code)]m2'$'\e''[[(reset)]m - Argument error'$'\n'''$'\n''Environment variables:'$'\n''- GITHUB_ACCESS_TOKEN'$'\n'''
 # shellcheck disable=SC2016
 helpPlain='Usage: githubLatestRelease projectName'$'\n'''$'\n''    projectName  String. Required. Github project name in the form of owner/repository'$'\n'''$'\n''Get the latest release version'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''$'\n''Environment variables:'$'\n''- GITHUB_ACCESS_TOKEN'$'\n'''
-# elapsed 0.576
+# elapsed 0.495

@@ -20,4 +20,4 @@ usage="isInteger value [ value ]"
 helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]misInteger'$'\e''[0m '$'\e''[[(bold)]m'$'\e''[[(magenta)]mvalue'$'\e''[0m'$'\e''[0m '$'\e''[[(blue)]m[ value ]'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[(red)]mvalue  '$'\e''[[(value)]mEmptyString. Required. Value to test.'$'\e''[[(reset)]m'$'\n''    '$'\e''[[(blue)]mvalue  '$'\e''[[(value)]mEmptyString. The value to test.'$'\e''[[(reset)]m'$'\n'''$'\n''Test if an argument is a signed integer'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - if it is a signed integer'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - if it is not a signed integer'$'\n'''
 # shellcheck disable=SC2016
 helpPlain='Usage: isInteger value [ value ]'$'\n'''$'\n''    value  EmptyString. Required. Value to test.'$'\n''    value  EmptyString. The value to test.'$'\n'''$'\n''Test if an argument is a signed integer'$'\n'''$'\n''Return codes:'$'\n''- 0 - if it is a signed integer'$'\n''- 1 - if it is not a signed integer'$'\n'''
-# elapsed 0.472
+# elapsed 0.476

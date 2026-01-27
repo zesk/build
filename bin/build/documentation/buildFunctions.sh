@@ -12,11 +12,11 @@ foundNames=([0]="argument" [1]="environment")
 rawComment="Argument: --help - Flag. Optional. Display this help."$'\n'"Argument: --deprecated - Flag. Optional. Include all deprecated functions as well."$'\n'"Environment: BUILD_HOME"$'\n'"Prints the list of functions defined in Zesk Build"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/build.sh"
-sourceModified="1769549039"
+sourceModified="1769551162"
 summary="Prints the list of functions defined in Zesk Build"
 usage="buildFunctions [ --help ] [ --deprecated ] [ --help ]"
 # shellcheck disable=SC2016
 helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]mbuildFunctions'$'\e''[0m '$'\e''[[(blue)]m[ --help ]'$'\e''[0m '$'\e''[[(blue)]m[ --deprecated ]'$'\e''[0m '$'\e''[[(blue)]m[ --help ]'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[(blue)]m--help        '$'\e''[[(value)]mFlag. Optional. Display this help.'$'\e''[[(reset)]m'$'\n''    '$'\e''[[(blue)]m--deprecated  '$'\e''[[(value)]mFlag. Optional. Include all deprecated functions as well.'$'\e''[[(reset)]m'$'\n''    '$'\e''[[(blue)]m--help        '$'\e''[[(value)]mFlag. Optional. Display this help.'$'\e''[[(reset)]m'$'\n'''$'\n''Prints the list of functions defined in Zesk Build'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - Success'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - Environment error'$'\n''- '$'\e''[[(code)]m2'$'\e''[[(reset)]m - Argument error'$'\n'''$'\n''Environment variables:'$'\n''- BUILD_HOME'$'\n'''
 # shellcheck disable=SC2016
 helpPlain='Usage: buildFunctions [ --help ] [ --deprecated ] [ --help ]'$'\n'''$'\n''    --help        Flag. Optional. Display this help.'$'\n''    --deprecated  Flag. Optional. Include all deprecated functions as well.'$'\n''    --help        Flag. Optional. Display this help.'$'\n'''$'\n''Prints the list of functions defined in Zesk Build'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''$'\n''Environment variables:'$'\n''- BUILD_HOME'$'\n'''
-# elapsed 0.526
+# elapsed 0.813

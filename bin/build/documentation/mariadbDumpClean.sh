@@ -20,4 +20,4 @@ usage="mariadbDumpClean"
 helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]mmariadbDumpClean'$'\e''[0m'$'\n'''$'\n''Clean mariadb dumps of the dreaded code '$'\e''[[(code)]m/'$'\e''[[(cyan)]m!999999\- enable the sandbox mode '$'\e''[[(reset)]m/'$'\e''[[(reset)]m'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - Success'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - Environment error'$'\n''- '$'\e''[[(code)]m2'$'\e''[[(reset)]m - Argument error'$'\n'''$'\n''Reads from '$'\e''[[(code)]mstdin'$'\e''[[(reset)]m:'$'\n''mariadbDump'$'\n'''$'\n''Writes to '$'\e''[[(code)]mstdout'$'\e''[[(reset)]m:'$'\n''mariadbDump (cleaned)'$'\n'''
 # shellcheck disable=SC2016
 helpPlain='Usage: mariadbDumpClean'$'\n'''$'\n''Clean mariadb dumps of the dreaded code /!999999\- enable the sandbox mode /'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''$'\n''Reads from stdin:'$'\n''mariadbDump'$'\n'''$'\n''Writes to stdout:'$'\n''mariadbDump (cleaned)'$'\n'''
-# elapsed 0.389
+# elapsed 0.388

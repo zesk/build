@@ -18,4 +18,4 @@ usage="gitTagDelete [ --help ] [ tag ]"
 helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]mgitTagDelete'$'\e''[0m '$'\e''[[(blue)]m[ --help ]'$'\e''[0m '$'\e''[[(blue)]m[ tag ]'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[(blue)]m--help  '$'\e''[[(value)]mFlag. Optional. Display this help.'$'\e''[[(reset)]m'$'\n''    '$'\e''[[(blue)]mtag     '$'\e''[[(value)]mThe tag to delete locally and at origin'$'\e''[[(reset)]m'$'\n'''$'\n''Delete git tag locally and at origin'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]margument'$'\e''[[(reset)]m - Any stage fails will result in this exit code. Partial deletion may occur.'$'\n'''
 # shellcheck disable=SC2016
 helpPlain='Usage: gitTagDelete [ --help ] [ tag ]'$'\n'''$'\n''    --help  Flag. Optional. Display this help.'$'\n''    tag     The tag to delete locally and at origin'$'\n'''$'\n''Delete git tag locally and at origin'$'\n'''$'\n''Return codes:'$'\n''- argument - Any stage fails will result in this exit code. Partial deletion may occur.'$'\n'''
-# elapsed 0.555
+# elapsed 0.421

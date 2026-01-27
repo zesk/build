@@ -19,4 +19,4 @@ usage="isDockerComposeCommand command [ --help ]"
 helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]misDockerComposeCommand'$'\e''[0m '$'\e''[[(bold)]m'$'\e''[[(magenta)]mcommand'$'\e''[0m'$'\e''[0m '$'\e''[[(blue)]m[ --help ]'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[(red)]mcommand  '$'\e''[[(value)]mString. Required. The command to test.'$'\e''[[(reset)]m'$'\n''    '$'\e''[[(blue)]m--help   '$'\e''[[(value)]mFlag. Optional. Display this help.'$'\e''[[(reset)]m'$'\n'''$'\n''Is this a docker compose command?'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - Yes, it is.'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - No, it is not.'$'\n'''
 # shellcheck disable=SC2016
 helpPlain='Usage: isDockerComposeCommand command [ --help ]'$'\n'''$'\n''    command  String. Required. The command to test.'$'\n''    --help   Flag. Optional. Display this help.'$'\n'''$'\n''Is this a docker compose command?'$'\n'''$'\n''Return codes:'$'\n''- 0 - Yes, it is.'$'\n''- 1 - No, it is not.'$'\n'''
-# elapsed 0.481
+# elapsed 0.47

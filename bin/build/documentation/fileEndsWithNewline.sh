@@ -19,4 +19,4 @@ usage="fileEndsWithNewline file ..."
 helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]mfileEndsWithNewline'$'\e''[0m '$'\e''[[(bold)]m'$'\e''[[(magenta)]mfile ...'$'\e''[0m'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[(red)]mfile ...  '$'\e''[[(value)]mFile. Required. File to check if the last character is a newline.'$'\e''[[(reset)]m'$'\n'''$'\n''Does a file end with a newline or is empty?'$'\n''Typically used to determine if a newline is needed before appending a file.'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - All files ends with a newline'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - One or more files ends with a non-newline'$'\n'''
 # shellcheck disable=SC2016
 helpPlain='Usage: fileEndsWithNewline file ...'$'\n'''$'\n''    file ...  File. Required. File to check if the last character is a newline.'$'\n'''$'\n''Does a file end with a newline or is empty?'$'\n''Typically used to determine if a newline is needed before appending a file.'$'\n'''$'\n''Return codes:'$'\n''- 0 - All files ends with a newline'$'\n''- 1 - One or more files ends with a non-newline'$'\n'''
-# elapsed 0.433
+# elapsed 0.442
