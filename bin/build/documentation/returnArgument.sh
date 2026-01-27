@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-25
+# Generated on 2026-01-27
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/_sugar.sh"
 argument="message ... - String. Optional. Message to output."$'\n'""
@@ -19,4 +19,4 @@ usage="returnArgument [ message ... ]"
 helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]mreturnArgument'$'\e''[0m '$'\e''[[(blue)]m[ message ... ]'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[(blue)]mmessage ...  '$'\e''[[(value)]mString. Optional. Message to output.'$'\e''[[(reset)]m'$'\n'''$'\n''Return '$'\e''[[(code)]margument'$'\e''[[(reset)]m error code. Outputs '$'\e''[[(code)]mmessage ...'$'\e''[[(reset)]m to '$'\e''[[(code)]mstderr'$'\e''[[(reset)]m.'$'\n'''$'\n''Return codes:'$'\n''- 2'$'\n'''
 # shellcheck disable=SC2016
 helpPlain='Usage: returnArgument [ message ... ]'$'\n'''$'\n''    message ...  String. Optional. Message to output.'$'\n'''$'\n''Return argument error code. Outputs message ... to stderr.'$'\n'''$'\n''Return codes:'$'\n''- 2'$'\n'''
-# elapsed 0.544
+# elapsed 0.43

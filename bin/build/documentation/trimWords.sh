@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-25
+# Generated on 2026-01-27
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/text.sh"
 argument="wordCount - PositiveInteger. Words to output"$'\n'"word0 ... - EmptyString. One or more words to output"$'\n'""
@@ -20,4 +20,4 @@ usage="trimWords [ wordCount ] [ word0 ... ]"
 helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]mtrimWords'$'\e''[0m '$'\e''[[(blue)]m[ wordCount ]'$'\e''[0m '$'\e''[[(blue)]m[ word0 ... ]'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[(blue)]mwordCount  '$'\e''[[(value)]mPositiveInteger. Words to output'$'\e''[[(reset)]m'$'\n''    '$'\e''[[(blue)]mword0 ...  '$'\e''[[(value)]mEmptyString. One or more words to output'$'\e''[[(reset)]m'$'\n'''$'\n''Remove words from the end of a phrase'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - Success'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - Environment error'$'\n''- '$'\e''[[(code)]m2'$'\e''[[(reset)]m - Argument error'$'\n'''$'\n''Example:'$'\n''    printf "%s: %s\n" "Summary:" "$(trimWords 10 $description)"'$'\n'''
 # shellcheck disable=SC2016
 helpPlain='Usage: trimWords [ wordCount ] [ word0 ... ]'$'\n'''$'\n''    wordCount  PositiveInteger. Words to output'$'\n''    word0 ...  EmptyString. One or more words to output'$'\n'''$'\n''Remove words from the end of a phrase'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''$'\n''Example:'$'\n''    printf "%s: %s\n" "Summary:" "$(trimWords 10 $description)"'$'\n'''
-# elapsed 0.562
+# elapsed 0.456

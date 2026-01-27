@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-25
+# Generated on 2026-01-27
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/docker.sh"
 argument="none"
@@ -20,4 +20,4 @@ usage="dockerInside"
 helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]mdockerInside'$'\e''[0m'$'\n'''$'\n''Are we inside a docker container right now?'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - Yes'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - No'$'\n'''
 # shellcheck disable=SC2016
 helpPlain='Usage: dockerInside'$'\n'''$'\n''Are we inside a docker container right now?'$'\n'''$'\n''Return codes:'$'\n''- 0 - Yes'$'\n''- 1 - No'$'\n'''
-# elapsed 0.447
+# elapsed 0.386

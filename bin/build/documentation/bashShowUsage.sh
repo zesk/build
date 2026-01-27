@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-25
+# Generated on 2026-01-27
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/bash.sh"
 argument="functionName - String. Required. Function which should be called somewhere within a file."$'\n'"file - File. Required. File to search for function handler."$'\n'"--help - Flag. Optional. Display this help."$'\n'""
@@ -12,11 +12,11 @@ rawComment="Show function handler in files"$'\n'"Argument: functionName - String
 requires="throwArgument decorate usageArgumentString usageArgumentFile quoteGrepPattern bashStripComments cat grep"$'\n'""
 return_code="0 - Function is used within the file"$'\n'"1 - Function is *not* used within the file"$'\n'""
 sourceFile="bin/build/tools/bash.sh"
-sourceModified="1769208503"
+sourceModified="1769535118"
 summary="Show function handler in files"
 usage="bashShowUsage functionName file [ --help ]"
 # shellcheck disable=SC2016
 helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]mbashShowUsage'$'\e''[0m '$'\e''[[(bold)]m'$'\e''[[(magenta)]mfunctionName'$'\e''[0m'$'\e''[0m '$'\e''[[(bold)]m'$'\e''[[(magenta)]mfile'$'\e''[0m'$'\e''[0m '$'\e''[[(blue)]m[ --help ]'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[(red)]mfunctionName  '$'\e''[[(value)]mString. Required. Function which should be called somewhere within a file.'$'\e''[[(reset)]m'$'\n''    '$'\e''[[(red)]mfile          '$'\e''[[(value)]mFile. Required. File to search for function handler.'$'\e''[[(reset)]m'$'\n''    '$'\e''[[(blue)]m--help        '$'\e''[[(value)]mFlag. Optional. Display this help.'$'\e''[[(reset)]m'$'\n'''$'\n''Show function handler in files'$'\n''This check is simplistic and does not verify actual coverage or code paths.'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - Function is used within the file'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - Function is '$'\e''[[(cyan)]mnot'$'\e''[[(reset)]m used within the file'$'\n'''
 # shellcheck disable=SC2016
 helpPlain='Usage: bashShowUsage functionName file [ --help ]'$'\n'''$'\n''    functionName  String. Required. Function which should be called somewhere within a file.'$'\n''    file          File. Required. File to search for function handler.'$'\n''    --help        Flag. Optional. Display this help.'$'\n'''$'\n''Show function handler in files'$'\n''This check is simplistic and does not verify actual coverage or code paths.'$'\n'''$'\n''Return codes:'$'\n''- 0 - Function is used within the file'$'\n''- 1 - Function is not used within the file'$'\n'''
-# elapsed 0.575
+# elapsed 0.474

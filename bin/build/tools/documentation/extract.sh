@@ -156,6 +156,16 @@ __bashDocumentationExtractDirect() {
   local fn="$1" && shift
   local source="$1" && shift
 
+  # ********************************************************************************************************************
+  # Configure your profiling flags as desired using whatever global needed
+  export BUILD_DEBUG
+  local flag=",usage-profile," flags=",${BUILD_DEBUG-},"
+
+  # IDENTICAL profileFunctionHead 4
+  # ********************************************************************************************************************
+  local __profile="false" __profile0="" __profileNext __profileUsed=0 __profileLabel="arguments (#$__count)" __profilePrefix="Profile-${FUNCNAME[0]}: "
+  if [ -n "$flags" ] && [ "${flags#*"$flag"}" != "$flags" ]; then __profile=$(timingStart) && __profile0=$__profile; fi
+  # ********************************************************************************************************************
   catchEnvironment "$handler" printf -- "%s\n" "$@" || return $?
   # subshell to hide exports
   local dumper line
@@ -171,6 +181,11 @@ __bashDocumentationExtractDirect() {
     rawComment="$rawComment$line"$'\n'
     local name="${line%%:*}" value cleanName
     cleanName="$(lowercase "$(printf '%s' "$name" | sed 's/[^A-Za-z0-9]/_/g')")" || return $?
+    __profileLabel="$cleanName"
+    # IDENTICAL profileFunctionMarker 3
+    # ********************************************************************************************************************
+    if [ "$__profile" != "false" ]; then __profileNext="$(timingStart)" && printf "Line %d: %s%d %s\n" "$LINENO" "$__profilePrefix" "$((__profileNext - __profile))" "$__profileLabel" 1>&2 && __profile=$__profileNext; fi
+    # ********************************************************************************************************************
     if ! environmentVariableNameValid "$cleanName" || [ "$name" = "$line" ] || [ "${line%%:}" != "$line" ] || [ "${line##:}" != "$line" ]; then
       # no colon or ends with colon *or* starts with :
       # strip starting colon (end colon STAYS)
@@ -264,4 +279,14 @@ __bashDocumentationExtractDirect() {
   fi
   catchReturn "$handler" __dumpNameValue "rawComment" "$rawComment" || return $?
   catchReturn "$handler" __dumpArrayValue "foundNames" "${foundNames[@]+"${foundNames[@]}"}" || return $?
+
+  # IDENTICAL profileFunctionTail 7
+  # ********************************************************************************************************************
+  if [ "$__profile" != "false" ]; then
+    __profileNext="$(timingStart)" && printf "Line %d: %s%d %s\n" "$LINENO" "$__profilePrefix" "$((__profileNext - __profile))" "$__profileLabel" 1>&2
+    printf -- "Line %d: %s%d %s (%d + %d) %s + %s %d%%\n" "$LINENO" "$__profilePrefix" "$((__profileNext - __profile0))" '*TOTAL*' "$((__profileNext - __profile0 - __profileUsed))" "$__profileUsed" 'us' 'them' "$(((100 * __profileUsed) / (__profileNext - __profile0)))" 1>&2
+  fi
+  # ********************************************************************************************************************
+
+  return 0
 }

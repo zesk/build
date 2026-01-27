@@ -79,7 +79,6 @@ testBuildFunctionsCoverage() {
   clean+=("$allTestFiles")
 
   __deprecatedFunctions "$handler" "$home" >"$deprecatedFunctions" || return $?
-  catchReturn "$handler" __deprecatedFunctionsSoon >>"$deprecatedFunctions" || return $?
   catchEnvironment "$handler" find "$home/test/tools" -type f -name '*.sh' -print0 >"$allTestFiles" || return $?
 
   local requireCoverageDate
@@ -120,38 +119,6 @@ testBuildFunctionsCoverage() {
   else
     [ "${#missing[@]}" -eq 0 ] || throwEnvironment "$handler" "Functions require at least 1 test: ($(decorate magenta "after $requireCoverageDate")):"$'\n'"$(printf "%s\n" "${missing[@]}" | decorate code | decorate wrap "- ")"
   fi
-}
-__deprecatedFunctionsSoon() {
-  decorate wrap "usage""Argument" <<EOF
-ApplicationDirectory
-ApplicationDirectoryList
-ApplicationFile
-Arguments
-Array
-Boolean
-Callable
-ColonDelimitedList
-CommaDelimitedList
-Date
-DirectoryList
-EmptyString
-EnvironmentVariable
-Executable
-Exists
-Flag
-Function
-Link
-List
-LoadEnvironmentFile
-Missing
-Number
-RealDirectory
-RealFile
-RemoteDirectory
-Secret
-String
-URL
-EOF
 }
 
 # Tag: slow

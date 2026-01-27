@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-25
+# Generated on 2026-01-27
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/node.sh"
 argument="--help - Flag. Optional. Display this help."$'\n'"managerName - String. Required. The node package manager name to check."$'\n'""
@@ -19,4 +19,4 @@ valid_names_are="npm yarn"$'\n'""
 helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]mnodePackageManagerValid'$'\e''[0m '$'\e''[[(blue)]m[ --help ]'$'\e''[0m '$'\e''[[(bold)]m'$'\e''[[(magenta)]mmanagerName'$'\e''[0m'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[(blue)]m--help       '$'\e''[[(value)]mFlag. Optional. Display this help.'$'\e''[[(reset)]m'$'\n''    '$'\e''[[(red)]mmanagerName  '$'\e''[[(value)]mString. Required. The node package manager name to check.'$'\e''[[(reset)]m'$'\n'''$'\n''Is the passed node package manager name valid?'$'\n''Without arguments, shows the valid package manager names.'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - Yes, it'\''s a valid package manager name.'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - No, it'\''s not a valid package manager name.'$'\n'''
 # shellcheck disable=SC2016
 helpPlain='Usage: nodePackageManagerValid [ --help ] managerName'$'\n'''$'\n''    --help       Flag. Optional. Display this help.'$'\n''    managerName  String. Required. The node package manager name to check.'$'\n'''$'\n''Is the passed node package manager name valid?'$'\n''Without arguments, shows the valid package manager names.'$'\n'''$'\n''Return codes:'$'\n''- 0 - Yes, it'\''s a valid package manager name.'$'\n''- 1 - No, it'\''s not a valid package manager name.'$'\n'''
-# elapsed 0.571
+# elapsed 0.435

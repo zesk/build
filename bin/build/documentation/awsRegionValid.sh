@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-25
+# Generated on 2026-01-27
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/aws.sh"
 argument="region ... - String. Required. The AWS Region to validate."$'\n'"--help - Flag. Optional. Display this help."$'\n'""
@@ -19,4 +19,4 @@ usage="awsRegionValid region ... [ --help ]"
 helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]mawsRegionValid'$'\e''[0m '$'\e''[[(bold)]m'$'\e''[[(magenta)]mregion ...'$'\e''[0m'$'\e''[0m '$'\e''[[(blue)]m[ --help ]'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[(red)]mregion ...  '$'\e''[[(value)]mString. Required. The AWS Region to validate.'$'\e''[[(reset)]m'$'\n''    '$'\e''[[(blue)]m--help      '$'\e''[[(value)]mFlag. Optional. Display this help.'$'\e''[[(reset)]m'$'\n'''$'\n''Checks an AWS region identifier for validity as of September 2024.'$'\n''Note that passing no parameters returns success.'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - All regions are valid AWS region'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - One or more regions are NOT a valid AWS region'$'\n'''
 # shellcheck disable=SC2016
 helpPlain='Usage: awsRegionValid region ... [ --help ]'$'\n'''$'\n''    region ...  String. Required. The AWS Region to validate.'$'\n''    --help      Flag. Optional. Display this help.'$'\n'''$'\n''Checks an AWS region identifier for validity as of September 2024.'$'\n''Note that passing no parameters returns success.'$'\n'''$'\n''Return codes:'$'\n''- 0 - All regions are valid AWS region'$'\n''- 1 - One or more regions are NOT a valid AWS region'$'\n'''
-# elapsed 0.475
+# elapsed 0.636

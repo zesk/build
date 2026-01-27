@@ -12,6 +12,9 @@ However, for portability with POSIX or other shell implementations it is not rec
 
 Shell options turn features within `bash` on and off interactively.
 
+- `shopt -s` - Set the option (enable it)
+- `shopt -u` - Unset the option (disable it)
+
 ### Shell interactivity
 
 - `cdable_vars` - Allows `cd HOME` (assumes any non-directory is the variable name) (Recommend `off`)

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-25
+# Generated on 2026-01-27
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/tofu.sh"
 argument="--help - Flag. Optional. Display this help."$'\n'""
@@ -19,4 +19,4 @@ usage="aptKeyRemoveOpenTofu [ --help ]"
 helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]maptKeyRemoveOpenTofu'$'\e''[0m '$'\e''[[(blue)]m[ --help ]'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[(blue)]m--help  '$'\e''[[(value)]mFlag. Optional. Display this help.'$'\e''[[(reset)]m'$'\n'''$'\n''Remove keys to disable apt to download tofu from opentofu.org'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - Environment problems'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - All good to install tofu'$'\n'''
 # shellcheck disable=SC2016
 helpPlain='Usage: aptKeyRemoveOpenTofu [ --help ]'$'\n'''$'\n''    --help  Flag. Optional. Display this help.'$'\n'''$'\n''Remove keys to disable apt to download tofu from opentofu.org'$'\n'''$'\n''Return codes:'$'\n''- 1 - Environment problems'$'\n''- 0 - All good to install tofu'$'\n'''
-# elapsed 0.466
+# elapsed 0.573

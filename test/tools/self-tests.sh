@@ -96,11 +96,9 @@ testBuildEnvironmentLoadAll() {
         assertFileExists "$envFile" || throwEnvironment "$handler" "envFile missing loading $loadIt" || return $?
         assertFileContains "$envFile" "# Type:" "# Category:" || return $?
 
-        local type
-        type=$(grep -m 1 -e "^# Type:" "$envFile" | cut -f 2 -d : | trimSpace)
+        local type && type=$(grep -m 1 -e "^# Type:" "$envFile" | cut -f 2 -d : | trimSpace)
 
-        validator="usage""Argument$type"
-        isFunction "$validator" || returnEnvironment "$type is not a known type in $(decorate file "$envFile")" || return $?
+        isValidateType "$type" || returnEnvironment "$type is not a known type in $(decorate file "$envFile")" || return $?
       done < <(catchReturn "$handler" buildEnvironmentFiles "$loadIt") || return $?
     ) || return $?
   done < <(find "$home" -type f -name '*.sh' -path '*/env/*' ! -path '*/test/*' ! -path '*/.*/*' -exec basename {} \; | cut -d . -f 1) || return $?

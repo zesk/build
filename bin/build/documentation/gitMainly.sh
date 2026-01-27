@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-25
+# Generated on 2026-01-27
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/git.sh"
 argument="none"
@@ -18,4 +18,4 @@ usage="gitMainly"
 helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]mgitMainly'$'\e''[0m'$'\n'''$'\n''Merge '$'\e''[[(code)]mstaging'$'\e''[[(reset)]m and '$'\e''[[(code)]mmain'$'\e''[[(reset)]m branches of a git repository into the current branch.'$'\n''Will merge '$'\e''[[(code)]morigin/staging'$'\e''[[(reset)]m and '$'\e''[[(code)]morigin/main'$'\e''[[(reset)]m after doing a '$'\e''[[(code)]m--pull'$'\e''[[(reset)]m for both of them'$'\n''Current repository should be clean and have no modified files.'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - Already in main, staging, or HEAD, or git merge failed'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - git merge succeeded'$'\n'''
 # shellcheck disable=SC2016
 helpPlain='Usage: gitMainly'$'\n'''$'\n''Merge staging and main branches of a git repository into the current branch.'$'\n''Will merge origin/staging and origin/main after doing a --pull for both of them'$'\n''Current repository should be clean and have no modified files.'$'\n'''$'\n''Return codes:'$'\n''- 1 - Already in main, staging, or HEAD, or git merge failed'$'\n''- 0 - git merge succeeded'$'\n'''
-# elapsed 0.534
+# elapsed 0.402

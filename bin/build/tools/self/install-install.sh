@@ -90,7 +90,7 @@ __installInstallBinary() {
   if [ "$relTop" = "$path" ]; then
     throwArgument "$handler" "Path ($path) ($(realPath "$path")) is not within applicationHome ($applicationHome)" || return $?
   fi
-  relTop=$(directoryRelativePath "$relTop")
+  relTop=$(catchReturn "$handler" directoryRelativePath "$relTop") || return $?
 
   # Get installation binary
   temp="$path/.downloaded.$$"
@@ -102,7 +102,7 @@ __installInstallBinary() {
       [ -n "$urlFunction" ] || catchArgument "$handler" "Need --url or --url-function" || return $?
       url=$("$urlFunction" "$handler") || return $?
       [ -n "$url" ] || throwEnvironment "$urlFunction failed to generate a URL" || return $?
-      urlValid "$url" || throwEnvironment "$urlFunction failed to generate a VALID URL: $url" || return $?
+      urlValid "$url" || throwEnvironment "$urlFunction failed to generate a VALID URL: \"$url\"" || return $?
     fi
     if ! curl -s -o - "$url" >"$temp"; then
       throwEnvironment "$handler" "Unable to download $(decorate code "$url")" || returnClean $? "$temp" || return $?

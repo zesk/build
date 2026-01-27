@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-25
+# Generated on 2026-01-27
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/date.sh"
 argument="integerTimestamp - Integer. Required. Integer timestamp offset (unix timestamp, same as \`\$(date +%s)\`)"$'\n'"format - String. Optional. How to output the date (e.g. \`%F\` - no \`+\` is required)"$'\n'"--help - Flag. Optional. Display this help."$'\n'"--local - Flag. Optional. Show the local time, not UTC."$'\n'""
@@ -22,4 +22,4 @@ usage="dateFromTimestamp integerTimestamp [ format ] [ --help ] [ --local ]"
 helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]mdateFromTimestamp'$'\e''[0m '$'\e''[[(bold)]m'$'\e''[[(magenta)]mintegerTimestamp'$'\e''[0m'$'\e''[0m '$'\e''[[(blue)]m[ format ]'$'\e''[0m '$'\e''[[(blue)]m[ --help ]'$'\e''[0m '$'\e''[[(blue)]m[ --local ]'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[(red)]mintegerTimestamp  '$'\e''[[(value)]mInteger. Required. Integer timestamp offset (unix timestamp, same as '$'\e''[[(code)]m$(date +%s)'$'\e''[[(reset)]m)'$'\e''[[(reset)]m'$'\n''    '$'\e''[[(red)]mformat            '$'\e''[[(value)]mString. Optional. How to output the date (e.g. '$'\e''[[(code)]m%F'$'\e''[[(reset)]m - no '$'\e''[[(code)]m+'$'\e''[[(reset)]m is required)'$'\e''[[(reset)]m'$'\n''    '$'\e''[[(blue)]m--help            '$'\e''[[(value)]mFlag. Optional. Display this help.'$'\e''[[(reset)]m'$'\n''    '$'\e''[[(blue)]m--local           '$'\e''[[(value)]mFlag. Optional. Show the local time, not UTC.'$'\e''[[(reset)]m'$'\n'''$'\n''dateFromTimestamp 1681966800 %F'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - If parsing is successful'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - If parsing fails'$'\n'''$'\n''Environment variables:'$'\n''- Compatible with BSD and GNU date.'$'\n'''$'\n''Example:'$'\n''    dateField=$(dateFromTimestamp $init %Y)'$'\n'''
 # shellcheck disable=SC2016
 helpPlain='Usage: dateFromTimestamp integerTimestamp [ format ] [ --help ] [ --local ]'$'\n'''$'\n''    integerTimestamp  Integer. Required. Integer timestamp offset (unix timestamp, same as $(date +%s))'$'\n''    format            String. Optional. How to output the date (e.g. %F - no + is required)'$'\n''    --help            Flag. Optional. Display this help.'$'\n''    --local           Flag. Optional. Show the local time, not UTC.'$'\n'''$'\n''dateFromTimestamp 1681966800 %F'$'\n'''$'\n''Return codes:'$'\n''- 0 - If parsing is successful'$'\n''- 1 - If parsing fails'$'\n'''$'\n''Environment variables:'$'\n''- Compatible with BSD and GNU date.'$'\n'''$'\n''Example:'$'\n''    dateField=$(dateFromTimestamp $init %Y)'$'\n'''
-# elapsed 0.666
+# elapsed 0.734

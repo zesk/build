@@ -20,6 +20,7 @@ testEverythingElse() {
 
   #  bashFileComment
   #  bashFinalComment
+  #  bashCommentVariable
   #  bashFunctionCommentVariable
   #  bashFunctionDefined
 

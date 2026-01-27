@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-25
+# Generated on 2026-01-27
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/identical.sh"
 argument="--help - Flag. Optional. Display this help."$'\n'"--handler handler - Function. Optional. Use this error handler instead of the default error handler."$'\n'"... - Arguments. Required. Arguments to \`identicalCheck\` for your watch."$'\n'""
@@ -18,4 +18,4 @@ usage="identicalWatch [ --help ] [ --handler handler ] ..."
 helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]midenticalWatch'$'\e''[0m '$'\e''[[(blue)]m[ --help ]'$'\e''[0m '$'\e''[[(blue)]m[ --handler handler ]'$'\e''[0m '$'\e''[[(bold)]m'$'\e''[[(magenta)]m...'$'\e''[0m'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[(blue)]m--help             '$'\e''[[(value)]mFlag. Optional. Display this help.'$'\e''[[(reset)]m'$'\n''    '$'\e''[[(blue)]m--handler handler  '$'\e''[[(value)]mFunction. Optional. Use this error handler instead of the default error handler.'$'\e''[[(reset)]m'$'\n''    '$'\e''[[(red)]m...                '$'\e''[[(value)]mArguments. Required. Arguments to '$'\e''[[(code)]midenticalCheck'$'\e''[[(reset)]m for your watch.'$'\e''[[(reset)]m'$'\n'''$'\n''Watch a project for changes and propagate them immediately upon save. Can be quite dangerous so use with caution.'$'\n''Still a known bug which trims the last end bracket from files'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - Success'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - Environment error'$'\n''- '$'\e''[[(code)]m2'$'\e''[[(reset)]m - Argument error'$'\n'''
 # shellcheck disable=SC2016
 helpPlain='Usage: identicalWatch [ --help ] [ --handler handler ] ...'$'\n'''$'\n''    --help             Flag. Optional. Display this help.'$'\n''    --handler handler  Function. Optional. Use this error handler instead of the default error handler.'$'\n''    ...                Arguments. Required. Arguments to identicalCheck for your watch.'$'\n'''$'\n''Watch a project for changes and propagate them immediately upon save. Can be quite dangerous so use with caution.'$'\n''Still a known bug which trims the last end bracket from files'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''
-# elapsed 0.618
+# elapsed 0.473

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-25
+# Generated on 2026-01-27
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/decorate/core.sh"
 argument="--help - Flag. Optional. Display this help."$'\n'""
@@ -20,4 +20,4 @@ usage="consoleHasColors [ --help ]"
 helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]mconsoleHasColors'$'\e''[0m '$'\e''[[(blue)]m[ --help ]'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[(blue)]m--help  '$'\e''[[(value)]mFlag. Optional. Display this help.'$'\e''[[(reset)]m'$'\n'''$'\n''Sets the environment variable '$'\e''[[(code)]mBUILD_COLORS'$'\e''[[(reset)]m if not set, uses '$'\e''[[(code)]mTERM'$'\e''[[(reset)]m to calculate'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - Console or output supports colors'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - Colors are likely not supported by console'$'\n'''$'\n''Environment variables:'$'\n''- '$'\e''[[(code)]mBUILD_COLORS'$'\e''[[(reset)]m - Boolean. Optional. Whether the build system will output ANSI colors.'$'\n'''
 # shellcheck disable=SC2016
 helpPlain='Usage: consoleHasColors [ --help ]'$'\n'''$'\n''    --help  Flag. Optional. Display this help.'$'\n'''$'\n''Sets the environment variable BUILD_COLORS if not set, uses TERM to calculate'$'\n'''$'\n''Return codes:'$'\n''- 0 - Console or output supports colors'$'\n''- 1 - Colors are likely not supported by console'$'\n'''$'\n''Environment variables:'$'\n''- BUILD_COLORS - Boolean. Optional. Whether the build system will output ANSI colors.'$'\n'''
-# elapsed 0.506
+# elapsed 0.524

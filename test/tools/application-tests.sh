@@ -29,3 +29,21 @@ testApplicationHome() {
 testApplicationHomeAliases() {
   assertExitCode 0 applicationHomeAliases xxx XXX || return $?
 }
+
+testBuildApplicationConfigure() {
+  local handler="returnMessage"
+  local tempPath && tempPath=$(fileTemporaryName "$handler" -d) || return $?
+  catchReturn "$handler" buildApplicationConfigure --path "$tempPath" --non-interactive --code 'testApp' --name 'My Test App' || return $?
+  assertExitCode 0 buildApplicationConfigure --path "$tempPath" --non-interactive --code 'testApp' --name 'My Test App' || return $?
+  local f && for f in "bin/developer.sh" "bin/tools.sh" "bin/install-bin-build.sh"; do
+    assertFileExists "$tempPath/$f" || return $?
+  done
+  local d && for d in "bin/tools" "bin/hooks"; do
+    assertDirectoryExists "$tempPath/$d" || return $?
+  done
+  assertDirectoryDoesNotExist "$tempPath/bin/build" || return $?
+  assertExitCode 0 source "$tempPath/bin/tools.sh" || return $?
+  assertDirectoryExists "$tempPath/bin/build" || return $?
+
+  catchEnvironment "$handler" rm -rf "$tempPath" || return $?
+}

@@ -259,13 +259,42 @@ _buildEnvironmentFiles() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
+__buildEnvironmentAddFile() {
+  loacl handler="$1" templateHome="$2" name="$3" value="$4"
+
+  [ -n "$value" ] || value="\${$name-}"
+  local template && template=$(bashEnvironmentFiles --application "$templateHome" "$name" 2>/dev/null | tail -n 1) || :
+  if [ -n "$template" ]; then
+    grepSafe -e "^$name" "$template"
+  else
+    local year company
+
+    year=$(catchEnvironment "$handler" date +%Y) || return $?
+    company=$(buildEnvironmentGet BUILD_COMPANY)
+    local ll=(
+      "#!/usr/bin/env bash"
+      "# Copyright &copy; $year $company"
+      "# Type: String"
+      "# Category: Application"
+      "# All about $name and how it is used" "export $name"
+    )
+    catchEnvironment "$handler" printf -- "%s\n" "${ll[@]}" || return $?
+  fi
+  catchEnvironment "$handler" printf -- "%s\n" "$name=\"$value\"" || return $?
+}
+
 # Adds an environment variable file to a project
 # DOC TEMPLATE: --help 1
 # Argument: --help - Flag. Optional. Display this help.
+# Argument: --force - Flag. Optional. Replace the existing file if it exists or create it if it does not.
+# Argument: --quiet - Flag. Optional. No status messages.
+# Argument: --verbose - Flag. Optional. Display status messages.
+# Argument: --value value - String. Optional. Set the value to this fixed string in the file. Only valid when a single `environmentName` is used.
 # Argument: environmentName ... - EnvironmentName. Required. One or more environment variable names to add to this project.
 buildEnvironmentAdd() {
   local handler="_${FUNCNAME[0]}"
-  local name environmentNames=()
+  local value="" environmentNames=() forceFlag=false verboseFlag=true
+  local home=""
 
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
@@ -276,35 +305,37 @@ buildEnvironmentAdd() {
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
-    *)
-      name=$(validate "$handler" EnvironmentVariable "environmentVariable" "$1") || return $?
-      environmentNames+=("$name")
-      ;;
+    --application) shift && home="$(validate "$handler" Directory "applicationHome" "${1-}")" || return $? ;;
+    --force) forceFlag=true ;;
+    --quiet) verboseFlag=false ;;
+    --verbose) verboseFlag=true ;;
+    --value) shift && value=$(validate "$handler" String "value" "${1-}") || return $? ;;
+    *) environmentNames+=("$(validate "$handler" EnvironmentVariable "environmentVariable" "$argument")") || return $? ;;
     esac
     shift
   done
 
-  local home
-  home=$(catchReturn "$handler" buildHome) || return $?
   [ ${#environmentNames[@]} -gt 0 ] || throwArgument "$handler" "Need at least one $(decorate code environmentVariable)" || return $?
 
-  local year company
+  local templateHome && templateHome=$(catchReturn "$handler" buildHome) || return $?
+  [ -n "$home" ] || home="$templateHome"
 
-  year=$(catchEnvironment "$handler" date +%Y) || return $?
-  company=$(buildEnvironmentGet BUILD_COMPANY)
-  for name in "${environmentNames[@]}"; do
+  local name && for name in "${environmentNames[@]}"; do
     local path="$home/bin/env/$name.sh"
-    if [ -f "$path" ] && ! fileIsEmpty "$path"; then
+    if ! $forceFlag || [ -f "$path" ] && ! fileIsEmpty "$path"; then
       if [ ! -x "$path" ]; then
-        statusMessage --last decorate warning "Making $(decorate file "$path") executable ..."
+        ! $verboseFlag || statusMessage --last decorate warning "Making existing $(decorate file "$path") executable ..."
         catchEnvironment "$handler" chmod +x "$path" || return $?
       else
-        statusMessage --last decorate info "Exists: $(decorate file "$path")"
+        ! $verboseFlag || statusMessage --last decorate info "$(decorate file "$path") already exists, no changes made"
       fi
     else
-      catchEnvironment "$handler" printf -- "%s\n" "#!/usr/bin/env bash" "# Copyright &copy; $year $company" "# Type: String" "# Category: Application" "# All about $name and how it is used" "export $name" "$name=\"\${$name-}\"" >"$path" || return $?
+      local verb="Created"
+      [ ! -f "$path" ] || verb="Replaced"
+      [ -n "$value" ] || value="\${$name-}"
+      __buildEnvironmentAddFile "$handler" "$templateHome" "$name" "$value" >"$path" || return $?
       catchEnvironment "$handler" chmod +x "$path" || return $?
-      statusMessage --last decorate success "Created $(decorate file "$path")"
+      ! $verboseFlag || statusMessage --last decorate success "$verb $(decorate file "$path")"
     fi
   done
 }

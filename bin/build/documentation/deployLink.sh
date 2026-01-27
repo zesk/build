@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-25
+# Generated on 2026-01-27
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/deploy.sh"
 argument="applicationLinkPath - Path. Required. Path where the link is created."$'\n'"applicationPath - Path. Optional. Path where the link will point to. If not supplied uses current working directory."$'\n'""
@@ -19,4 +19,4 @@ usage="deployLink applicationLinkPath [ applicationPath ]"
 helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]mdeployLink'$'\e''[0m '$'\e''[[(bold)]m'$'\e''[[(magenta)]mapplicationLinkPath'$'\e''[0m'$'\e''[0m '$'\e''[[(blue)]m[ applicationPath ]'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[(red)]mapplicationLinkPath  '$'\e''[[(value)]mPath. Required. Path where the link is created.'$'\e''[[(reset)]m'$'\n''    '$'\e''[[(blue)]mapplicationPath      '$'\e''[[(value)]mPath. Optional. Path where the link will point to. If not supplied uses current working directory.'$'\e''[[(reset)]m'$'\n'''$'\n''Link new version of application.'$'\n''When called, current directory is the '$'\e''[[(red)]mnew'$'\e''[[(reset)]m application and the '$'\e''[[(code)]mapplicationLinkPath'$'\e''[[(reset)]m which is'$'\n''passed as an argument is the place where the '$'\e''[[(red)]mnew'$'\e''[[(reset)]m application should be linked to'$'\n''in order to activate it.'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - Success'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - Environment error'$'\n''- '$'\e''[[(code)]m2'$'\e''[[(reset)]m - Argument error'$'\n'''$'\n''Environment variables:'$'\n''- PWD'$'\n'''
 # shellcheck disable=SC2016
 helpPlain='Usage: deployLink applicationLinkPath [ applicationPath ]'$'\n'''$'\n''    applicationLinkPath  Path. Required. Path where the link is created.'$'\n''    applicationPath      Path. Optional. Path where the link will point to. If not supplied uses current working directory.'$'\n'''$'\n''Link new version of application.'$'\n''When called, current directory is the new application and the applicationLinkPath which is'$'\n''passed as an argument is the place where the new application should be linked to'$'\n''in order to activate it.'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''$'\n''Environment variables:'$'\n''- PWD'$'\n'''
-# elapsed 0.617
+# elapsed 0.729

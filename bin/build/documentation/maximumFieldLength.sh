@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-25
+# Generated on 2026-01-27
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/text.sh"
 argument="fieldIndex - UnsignedInteger. Required. The field to compute the maximum length for"$'\n'"separatorChar - String. Optional. The separator character to delineate fields. Uses space if not supplied."$'\n'""
@@ -20,4 +20,4 @@ usage="maximumFieldLength fieldIndex [ separatorChar ]"
 helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]mmaximumFieldLength'$'\e''[0m '$'\e''[[(bold)]m'$'\e''[[(magenta)]mfieldIndex'$'\e''[0m'$'\e''[0m '$'\e''[[(blue)]m[ separatorChar ]'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[(red)]mfieldIndex     '$'\e''[[(value)]mUnsignedInteger. Required. The field to compute the maximum length for'$'\e''[[(reset)]m'$'\n''    '$'\e''[[(blue)]mseparatorChar  '$'\e''[[(value)]mString. Optional. The separator character to delineate fields. Uses space if not supplied.'$'\e''[[(reset)]m'$'\n'''$'\n''Given an input file, determine the maximum length of fieldIndex, using separatorChar as a delimiter between fields'$'\n''Defaults to first field (fieldIndex of '$'\e''[[(code)]m1'$'\e''[[(reset)]m), space separator (separatorChar is '$'\e''[[(code)]m '$'\e''[[(reset)]m)'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - Success'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - Environment error'$'\n''- '$'\e''[[(code)]m2'$'\e''[[(reset)]m - Argument error'$'\n'''$'\n''Reads from '$'\e''[[(code)]mstdin'$'\e''[[(reset)]m:'$'\n''Lines are read from standard in and line length is computed for each line'$'\n'''$'\n''Writes to '$'\e''[[(code)]mstdout'$'\e''[[(reset)]m:'$'\n'''$'\e''[[(code)]mUnsignedInteger'$'\e''[[(reset)]m'$'\n'''
 # shellcheck disable=SC2016
 helpPlain='Usage: maximumFieldLength fieldIndex [ separatorChar ]'$'\n'''$'\n''    fieldIndex     UnsignedInteger. Required. The field to compute the maximum length for'$'\n''    separatorChar  String. Optional. The separator character to delineate fields. Uses space if not supplied.'$'\n'''$'\n''Given an input file, determine the maximum length of fieldIndex, using separatorChar as a delimiter between fields'$'\n''Defaults to first field (fieldIndex of 1), space separator (separatorChar is  )'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''$'\n''Reads from stdin:'$'\n''Lines are read from standard in and line length is computed for each line'$'\n'''$'\n''Writes to stdout:'$'\n''UnsignedInteger'$'\n'''
-# elapsed 0.567
+# elapsed 0.464

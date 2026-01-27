@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-25
+# Generated on 2026-01-27
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/git.sh"
 argument="--last - Flag. Optional. Append last comment"$'\n'"-- - Flag. Optional. Skip updating release notes with comment."$'\n'"--help - Flag. Optional. I need somebody."$'\n'"comment - Text. Optional. A text comment for release notes and describing in general terms, what was done for a commit message."$'\n'""
@@ -19,4 +19,4 @@ usage="gitCommit [ --last ] [ -- ] [ --help ] [ comment ]"
 helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]mgitCommit'$'\e''[0m '$'\e''[[(blue)]m[ --last ]'$'\e''[0m '$'\e''[[(blue)]m[ -- ]'$'\e''[0m '$'\e''[[(blue)]m[ --help ]'$'\e''[0m '$'\e''[[(blue)]m[ comment ]'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[(blue)]m--last   '$'\e''[[(value)]mFlag. Optional. Append last comment'$'\e''[[(reset)]m'$'\n''    '$'\e''[[(blue)]m--       '$'\e''[[(value)]mFlag. Optional. Skip updating release notes with comment.'$'\e''[[(reset)]m'$'\n''    '$'\e''[[(blue)]m--help   '$'\e''[[(value)]mFlag. Optional. I need somebody.'$'\e''[[(reset)]m'$'\n''    '$'\e''[[(blue)]mcomment  '$'\e''[[(value)]mText. Optional. A text comment for release notes and describing in general terms, what was done for a commit message.'$'\e''[[(reset)]m'$'\n'''$'\n''Commits all files added to git and also update release notes with comment'$'\n''Comment wisely. Does not duplicate comments. Check your release notes.'$'\n''Example:'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - Success'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - Environment error'$'\n''- '$'\e''[[(code)]m2'$'\e''[[(reset)]m - Argument error'$'\n'''$'\n''Example:'$'\n''    c last'$'\n''    c --last'$'\n''    c --'$'\n''... are all equivalent.'$'\n'''
 # shellcheck disable=SC2016
 helpPlain='Usage: gitCommit [ --last ] [ -- ] [ --help ] [ comment ]'$'\n'''$'\n''    --last   Flag. Optional. Append last comment'$'\n''    --       Flag. Optional. Skip updating release notes with comment.'$'\n''    --help   Flag. Optional. I need somebody.'$'\n''    comment  Text. Optional. A text comment for release notes and describing in general terms, what was done for a commit message.'$'\n'''$'\n''Commits all files added to git and also update release notes with comment'$'\n''Comment wisely. Does not duplicate comments. Check your release notes.'$'\n''Example:'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''$'\n''Example:'$'\n''    c last'$'\n''    c --last'$'\n''    c --'$'\n''... are all equivalent.'$'\n'''
-# elapsed 0.608
+# elapsed 0.467

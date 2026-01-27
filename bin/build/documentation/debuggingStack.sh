@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-25
+# Generated on 2026-01-27
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/dump.sh"
 argument="-x - Flag. Optional. Show exported variables. (verbose)"$'\n'"--me - Flag. Optional. Show calling function call stack frame."$'\n'"--exit - Flag. Optional. Exit with code 0 after output."$'\n'""
@@ -21,4 +21,4 @@ usage="debuggingStack [ -x ] [ --me ] [ --exit ]"
 helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]mdebuggingStack'$'\e''[0m '$'\e''[[(blue)]m[ -x ]'$'\e''[0m '$'\e''[[(blue)]m[ --me ]'$'\e''[0m '$'\e''[[(blue)]m[ --exit ]'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[(blue)]m-x      '$'\e''[[(value)]mFlag. Optional. Show exported variables. (verbose)'$'\e''[[(reset)]m'$'\n''    '$'\e''[[(blue)]m--me    '$'\e''[[(value)]mFlag. Optional. Show calling function call stack frame.'$'\e''[[(reset)]m'$'\n''    '$'\e''[[(blue)]m--exit  '$'\e''[[(value)]mFlag. Optional. Exit with code 0 after output.'$'\e''[[(reset)]m'$'\n'''$'\n''Dump the function and include stacks and the current environment'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - Success'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - Environment error'$'\n''- '$'\e''[[(code)]m2'$'\e''[[(reset)]m - Argument error'$'\n'''$'\n''Environment variables:'$'\n''- BUILD_DEBUG'$'\n'''$'\n'''$'\e''[[(code)]mBUILD_DEBUG'$'\e''[[(reset)]m settings:'$'\n''- '$'\e''[[(code)]mdebuggingStack'$'\e''[[(reset)]m - '$'\e''[[(code)]mdebuggingStack'$'\e''[[(reset)]m shows arguments passed (extra) and exports (optional flag) ALWAYS'$'\n'''
 # shellcheck disable=SC2016
 helpPlain='Usage: debuggingStack [ -x ] [ --me ] [ --exit ]'$'\n'''$'\n''    -x      Flag. Optional. Show exported variables. (verbose)'$'\n''    --me    Flag. Optional. Show calling function call stack frame.'$'\n''    --exit  Flag. Optional. Exit with code 0 after output.'$'\n'''$'\n''Dump the function and include stacks and the current environment'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''$'\n''Environment variables:'$'\n''- BUILD_DEBUG'$'\n'''$'\n''BUILD_DEBUG settings:'$'\n''- debuggingStack - debuggingStack shows arguments passed (extra) and exports (optional flag) ALWAYS'$'\n'''
-# elapsed 0.542
+# elapsed 0.766

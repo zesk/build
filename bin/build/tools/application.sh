@@ -130,3 +130,156 @@ _applicationHomeAliases() {
   # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
+
+# Set up a new project for Zesk Build
+# - Creates shell development environment
+# - Registers git hooks
+# - Configures base environment variables
+# EXPERIMENTAL - not finished yet.
+buildApplicationConfigure() {
+  local handler="_${FUNCNAME[0]}"
+
+  local home="" name="" interactive=true
+
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
+  local __saved=("$@") __count=$#
+  while [ $# -gt 0 ]; do
+    local argument="$1" __index=$((__count - $# + 1))
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    case "$argument" in
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
+    # _IDENTICAL_ handlerHandler 1
+    --handler) shift && handler=$(validate "$handler" Function "$argument" "${1-}") || return $? ;;
+    --non-interactive) interactive=false ;;
+    --name) shift && name="$(validate "$handler" String "$argument" "${1-}")" || return $? ;;
+    --code) shift && code="$(validate "$handler" String "$argument" "${1-}")" || return $? ;;
+    --path) shift && home="$(validate "$handler" Directory "$argument" "${1-}")" || return $? ;;
+    *)
+      # _IDENTICAL_ argumentUnknownHandler 1
+      throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
+      ;;
+    esac
+    shift
+  done
+
+  local templateHome && templateHome=$(catchReturn "$handler" buildHome) || return $?
+  [ -n "$home" ] || home="$templateHome"
+  [ -n "$name" ] || throwArgument "$handler" "Requires name" || return $?
+  if [ -z "$code" ]; then
+    catchReturn "$handler" decorate warning "Using default code $(decorate code "$code")" || return $?
+    code="$(catchReturn "$handler" basename "$home")" || return $?
+  fi
+
+  __buildApplicationConfigurePaths "$handler" "$home" true || return $?
+  __buildApplicationConfigureShellFiles "$handler" "$home" true "$templateHome" || return $?
+  APPLICATION_CODE=$code APPLICATION_NAME=$name __buildApplicationConfigureEnvironmentFiles "$handler" "$home" true "$interactive" || return $?
+
+  __buildApplicationConfigurePaths "$handler" "$home" false || return $?
+  __buildApplicationConfigureShellFiles "$handler" "$home" false "$templateHome" || return $?
+  APPLICATION_CODE=$code APPLICATION_NAME=$name __buildApplicationConfigureEnvironmentFiles "$handler" "$home" false "$interactive" || return $?
+}
+_buildApplicationConfigure() {
+  # __IDENTICAL__ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+__buildApplicationConfigurePaths() {
+  local handler="$1" && shift
+  local home="$1" && shift
+  local preflight="$1" && shift
+
+  local d && for d in bin/env bin/hooks bin/tools etc; do
+    local target="$home/$d"
+    if $preflight; then
+      [ -d "$target" ] || decorate info "Will create $(decorate file "$target")" || return $?
+    else
+      directoryRequire --handler "$handler" "$home/$d" || return $?
+    fi
+  done
+}
+
+__buildApplicationConfigureEnvironmentFiles() {
+  local handler="$1" && shift
+  local home="$1" && shift
+  local preflight="$1" && shift
+  local interactive="$1" && shift
+
+  local envs=(
+    APPLICATION_NAME APPLICATION_CODE APPLICATION_CODE_EXTENSIONS APPLICATION_CODE_IGNORE APPLICATION_JSON APPLICATION_JSON_PREFIX BUILD_RELEASE_NOTES
+  )
+  export "${envs[@]}"
+  local e && for e in "${envs[@]}"; do
+    local target="$home/bin/env/$e.sh"
+    local value="${!e-}"
+    if $preflight; then
+      [ -f "$target" ] || decorate info "Will create $(decorate file "$target") - current value \"$(decorate code "$value")\"" || return $?
+      if [ -z "$value" ]; then
+        local type
+        local envFileSource && envFileSource="$(catchReturn "$handler" buildEnvironmentFiles --application "$home" "$e" | tail -n 1)" || return $?
+        type=$(catchReturn "$handler" bashCommentVariable Type <"$envFileSource") || return $?
+        if [ -z "$type" ]; then
+          decorate warning "Unable to retrieve type from file $(decorate file "$envFileSource")"
+          type="String"
+        fi
+        if $interactive; then
+          local finished=false && while ! $finished; do
+            local newEnvValue && newEnvValue=$(bashUserInput -p "$(decorate notice "Value for") $(decorate code "$e")? (type $(decorate value "$type")) ")
+            if newEnvValue=$(validate "$type" "$e" "$newEnvValue"); then
+              finished=true
+              declare -x "$e"="$newEnvValue"
+            else
+              decorate warning "$newEnvValue is not a valid $(decorate code "$type")"
+            fi
+          done
+        fi
+      fi
+    else
+      catchReturn "$handler" buildEnvironmentAdd --application "$home" "$e" --value "$value" || return $?
+    fi
+  done
+}
+
+__buildApplicationConfigureShellFiles() {
+  local handler="$1" && shift
+  local home="$1" && shift
+  local preflight="$1" && shift
+  local templateHome="$1" && shift
+
+  local files=(
+    bin/tools.sh
+    bin/developer.sh
+    bin/tools/__developer.sh
+    bin/install-bin-build.sh
+  )
+  local file target
+  if $preflight; then
+    for file in "${files[@]}"; do
+      target="$home/$file"
+      [ -f "$target" ] || decorate info "Will create $(decorate file "$target")" || return $?
+    done
+  else
+    # bin/tools.sh
+    file=${files[0]}
+    target="$home/$file"
+    catchEnvironment "$handler" cp -f "$templateHome/bin/build/identical/application.sh" "$target" || return $?
+
+    # bin/developer.sh
+    file=${files[1]}
+    target="$home/$file"
+    if [ ! -e "$target" ]; then
+      catchReturn "$handler" mapEnvironment <"$templateHome/bin/build/developer.sample.sh" >"$target" || return $?
+    fi
+
+    # bin/developer.sh
+    file=${files[2]}
+    target="$home/$file"
+    if [ ! -e "$target" ]; then
+      catchEnvironment "$handler" cp -f "$templateHome/bin/build/identical/__developer.sh" "$target" || return $?
+    fi
+
+    # bin/install-bin-build.sh
+    catchReturn "$handler" installInstallBuild "$home/bin" "$home" || return $?
+  fi
+}

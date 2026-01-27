@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-25
+# Generated on 2026-01-27
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/json.sh"
 argument="jsonFile - File. Required. File to get value from."$'\n'"path - String. Required. dot-separated path to get"$'\n'""
@@ -18,4 +18,4 @@ usage="jsonFileGet jsonFile path"
 helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]mjsonFileGet'$'\e''[0m '$'\e''[[(bold)]m'$'\e''[[(magenta)]mjsonFile'$'\e''[0m'$'\e''[0m '$'\e''[[(bold)]m'$'\e''[[(magenta)]mpath'$'\e''[0m'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[(red)]mjsonFile  '$'\e''[[(value)]mFile. Required. File to get value from.'$'\e''[[(reset)]m'$'\n''    '$'\e''[[(red)]mpath      '$'\e''[[(value)]mString. Required. dot-separated path to get'$'\e''[[(reset)]m'$'\n'''$'\n''Get a value in a JSON file'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - Success'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - Environment error'$'\n''- '$'\e''[[(code)]m2'$'\e''[[(reset)]m - Argument error'$'\n'''
 # shellcheck disable=SC2016
 helpPlain='Usage: jsonFileGet jsonFile path'$'\n'''$'\n''    jsonFile  File. Required. File to get value from.'$'\n''    path      String. Required. dot-separated path to get'$'\n'''$'\n''Get a value in a JSON file'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''
-# elapsed 0.59
+# elapsed 0.532

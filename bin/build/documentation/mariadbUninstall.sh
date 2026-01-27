@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-25
+# Generated on 2026-01-27
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/mariadb.sh"
 argument="none"
@@ -18,4 +18,4 @@ usage="mariadbUninstall"
 helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]mmariadbUninstall'$'\e''[0m'$'\n'''$'\n''Uninstall '$'\e''[[(code)]mmariadb'$'\e''[[(reset)]m'$'\n''When this tool succeeds the '$'\e''[[(code)]mmariadb'$'\e''[[(reset)]m binary will no longer be available in the local operating system.'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - If uninstallation fails'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - If uninstallation succeeds'$'\n'''
 # shellcheck disable=SC2016
 helpPlain='Usage: mariadbUninstall'$'\n'''$'\n''Uninstall mariadb'$'\n''When this tool succeeds the mariadb binary will no longer be available in the local operating system.'$'\n'''$'\n''Return codes:'$'\n''- 1 - If uninstallation fails'$'\n''- 0 - If uninstallation succeeds'$'\n'''
-# elapsed 0.529
+# elapsed 0.384

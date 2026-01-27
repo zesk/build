@@ -42,8 +42,9 @@ __buildUsageIsComplete() {
 buildUsageCompile() {
   local handler="_${FUNCNAME[0]}"
 
-  local cleanFlag=false quickFlag=true
+  local cleanFlag=false quickFlag=true gitActions=true
 
+  shopt -u expand_aliases
   decorateInitialized || decorate info --
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
@@ -55,6 +56,7 @@ buildUsageCompile() {
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
     --clean) cleanFlag=true ;;
+    --skip-git) gitActions=false ;;
     --all) quickFlag=false ;;
     *)
       # _IDENTICAL_ argumentUnknownHandler 1
@@ -91,7 +93,7 @@ buildUsageCompile() {
         catchReturn "$handler" fileModificationTimes "$home/bin/build/tools/" -name '*.sh' || return $?
         catchReturn "$handler" fileModificationTimes "$docPath" -name '*.sh' || return $?
       } | catchReturn "$handler" sort -rn >"$allModificationTimes" || returnClean $? "${clean[@]}" || return $?
-
+      # dumpPipe --lines 10000 "ALL" <"$allModificationTimes"
       local filePath
       while read -r filePath; do
         # If prefixed with a docPath, then skip it
@@ -118,7 +120,15 @@ buildUsageCompile() {
     statusMessage timing --name "$prefix $fun" __buildUsageCompileFunction "$handler" "$docPath" "$fun" "$prefix" || return $?
   done <"$tempFunctions" || returnClean $? "${clean[@]}" || return $?
   catchEnvironment "$handler" rm -f "${clean[@]}" || return $?
-
+  if $gitActions; then
+    local deprecatedEnvs=()
+    local fun && while read -r fun; do
+      local target="$home/bin/build/documentation/$fun.sh"
+      [ ! -f "$target" ] || deprecatedEnvs+=("$target")
+    done < <(buildDeprecatedFunctions)
+    [ "${#deprecatedEnvs[@]}" -eq 0 ] || catchEnvironment "$handler" git rm "${deprecatedEnvs[@]}" || return $?
+    catchEnvironment "$handler" git add "$home/bin/build/documentation/"*.sh || return $?
+  fi
   catchReturn "$handler" statusMessage --last timingReport "$start" "$totalFunctions completed in" || return $?
 }
 _buildUsageCompile() {
@@ -137,6 +147,14 @@ __buildUsageCompileFunction() {
   local handler="$1" && shift
   local docPath="$1" && shift
 
+  export BUILD_DEBUG
+  local flag=",usage-profile," flags=",${BUILD_DEBUG-},"
+
+  # IDENTICAL profileFunctionHead 4
+  # ********************************************************************************************************************
+  local __profile="false" __profile0="" __profileNext __profileUsed=0 __profileLabel="arguments (#$__count)" __profilePrefix="Profile-${FUNCNAME[0]}: "
+  if [ -n "$flags" ] && [ "${flags#*"$flag"}" != "$flags" ]; then __profile=$(timingStart) && __profile0=$__profile; fi
+  # ********************************************************************************************************************
   local fun && fun=$(validate "$handler" Function "function" "${1-}") && shift || return $?
   local documentationSettingsFile="$docPath/$fun.sh"
   local prefix="$*" && set -- && [ -z "$prefix" ] || prefix="${prefix% } "
@@ -144,7 +162,13 @@ __buildUsageCompileFunction() {
 
   local sourceFile=""
 
+  __profilePrefix="${__profilePrefix}[$fun] "
   if [ -f "$documentationSettingsFile" ]; then
+    __profileLabel="settings exists"
+    # IDENTICAL profileFunctionMarker 3
+    # ********************************************************************************************************************
+    if [ "$__profile" != "false" ]; then __profileNext="$(timingStart)" && printf "Line %d: %s%d %s\n" "$LINENO" "$__profilePrefix" "$((__profileNext - __profile))" "$__profileLabel" 1>&2 && __profile=$__profileNext; fi
+    # ********************************************************************************************************************
     sourceFile=$(
       # shellcheck source=/dev/null
       export sourceFile && source "$documentationSettingsFile" || : && printf "%s\n" "${sourceFile-}" || :
@@ -152,24 +176,59 @@ __buildUsageCompileFunction() {
     if [ -z "$sourceFile" ]; then
       statusMessage --last decorate error "Corrupt $documentationSettingsFile - removing" || return $?
       catchEnvironment "$handler" rm -f "$documentationSettingsFile" || return $?
+      __profileLabel="settings sourceFile failed"
+    else
+      __profileLabel="Settings source non-empty"
     fi
+    # IDENTICAL profileFunctionMarker 3
+    # ********************************************************************************************************************
+    if [ "$__profile" != "false" ]; then __profileNext="$(timingStart)" && printf "Line %d: %s%d %s\n" "$LINENO" "$__profilePrefix" "$((__profileNext - __profile))" "$__profileLabel" 1>&2 && __profile=$__profileNext; fi
+  # ********************************************************************************************************************
   fi
+
   if [ -z "$sourceFile" ]; then
+    __profileLabel="blank source"
+    # IDENTICAL profileFunctionMarker 3
+    # ********************************************************************************************************************
+    if [ "$__profile" != "false" ]; then __profileNext="$(timingStart)" && printf "Line %d: %s%d %s\n" "$LINENO" "$__profilePrefix" "$((__profileNext - __profile))" "$__profileLabel" 1>&2 && __profile=$__profileNext; fi
+    # ********************************************************************************************************************
     sourceFile=$(__bashDocumentation_FindFunctionDefinitions "$(buildHome)/bin/build/tools" "$fun") || return $?
     local sourcesFound && sourcesFound=$(catchReturn "$handler" printf "%s\n" "$sourceFile" | fileLineCount) || return $?
     if [ "$sourcesFound" -gt 1 ]; then
       throwEnvironment "$handler" "${prefix} Multiple sources found for $prettyFun (x$sourcesFound): ${sourceFile//$'\n'/, }" || return $?
     fi
     [ -f "$sourceFile" ] || throwEnvironment "$handler" "${prefix} No source found for $prettyFun" || return $?
+
+    __profileLabel="find function source"
+    # IDENTICAL profileFunctionMarker 3
+    # ********************************************************************************************************************
+    if [ "$__profile" != "false" ]; then __profileNext="$(timingStart)" && printf "Line %d: %s%d %s\n" "$LINENO" "$__profilePrefix" "$((__profileNext - __profile))" "$__profileLabel" 1>&2 && __profile=$__profileNext; fi
+    # ********************************************************************************************************************
   fi
 
   local tempComment && tempComment=$(fileTemporaryName "$handler") || return $?
   local tempHelp="$tempComment.help"
   clean+=("$tempComment" "$tempHelp")
 
+  __profileLabel="arguments"
+  # IDENTICAL profileFunctionMarker 3
+  # ********************************************************************************************************************
+  if [ "$__profile" != "false" ]; then __profileNext="$(timingStart)" && printf "Line %d: %s%d %s\n" "$LINENO" "$__profilePrefix" "$((__profileNext - __profile))" "$__profileLabel" 1>&2 && __profile=$__profileNext; fi
+  # ********************************************************************************************************************
   catchReturn "$handler" bashFunctionComment "$sourceFile" "$fun" >"$tempComment" || returnClean $? "${clean[@]}" || return $?
   catchReturn "$handler" rm -f "$documentationSettingsFile" || return $?
+  __profileLabel="bashFunctionComment"
+  # IDENTICAL profileFunctionMarker 3
+  # ********************************************************************************************************************
+  if [ "$__profile" != "false" ]; then __profileNext="$(timingStart)" && printf "Line %d: %s%d %s\n" "$LINENO" "$__profilePrefix" "$((__profileNext - __profile))" "$__profileLabel" 1>&2 && __profile=$__profileNext; fi
+  # ********************************************************************************************************************
   catchReturn "$handler" muzzle bashDocumentationExtract --generate "$fun" "$sourceFile" <"$tempComment" || returnClean $? "${clean[@]}" || return $?
+
+  __profileLabel="bashDocumentationExtract"
+  # IDENTICAL profileFunctionMarker 3
+  # ********************************************************************************************************************
+  if [ "$__profile" != "false" ]; then __profileNext="$(timingStart)" && printf "Line %d: %s%d %s\n" "$LINENO" "$__profilePrefix" "$((__profileNext - __profile))" "$__profileLabel" 1>&2 && __profile=$__profileNext; fi
+  # ********************************************************************************************************************
   if [ ! -f "$documentationSettingsFile" ]; then
     throwEnvironment "$handler" "${prefix}: bashDocumentationExtract $fun $sourceFile did not generate $documentationSettingsFile" || returnClean $? "${clean[@]}" || return $?
   else
@@ -196,7 +255,23 @@ __buildUsageCompileFunction() {
     fi
     catchEnvironment "$handler" rm -f "${clean[@]}" || return $?
     catchEnvironment "$handler" printf "%s\n" "# elapsed $(timingFormat "$(timingElapsed "$init")")" >>"$documentationSettingsFile" || return $?
+
+    __profileLabel="decorateThemeless"
+    # IDENTICAL profileFunctionMarker 3
+    # ********************************************************************************************************************
+    if [ "$__profile" != "false" ]; then __profileNext="$(timingStart)" && printf "Line %d: %s%d %s\n" "$LINENO" "$__profilePrefix" "$((__profileNext - __profile))" "$__profileLabel" 1>&2 && __profile=$__profileNext; fi
+    # ********************************************************************************************************************
   fi
+
+  # IDENTICAL profileFunctionTail 7
+  # ********************************************************************************************************************
+  if [ "$__profile" != "false" ]; then
+    __profileNext="$(timingStart)" && printf "Line %d: %s%d %s\n" "$LINENO" "$__profilePrefix" "$((__profileNext - __profile))" "$__profileLabel" 1>&2
+    printf -- "Line %d: %s%d %s (%d + %d) %s + %s %d%%\n" "$LINENO" "$__profilePrefix" "$((__profileNext - __profile0))" '*TOTAL*' "$((__profileNext - __profile0 - __profileUsed))" "$__profileUsed" 'us' 'them' "$(((100 * __profileUsed) / (__profileNext - __profile0)))" 1>&2
+  fi
+  # ********************************************************************************************************************
+
+  return 0
 }
 
 __buildDocumentationBuildDirectory() {

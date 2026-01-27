@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-25
+# Generated on 2026-01-27
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/sed.sh"
 argument="text - EmptyString. Required. Text to quote"$'\n'"separatorChar - The character used to separate the sed pattern and replacement. Defaults to \`/\`."$'\n'""
@@ -22,4 +22,4 @@ usage="quoteSedReplacement text [ separatorChar ]"
 helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]mquoteSedReplacement'$'\e''[0m '$'\e''[[(bold)]m'$'\e''[[(magenta)]mtext'$'\e''[0m'$'\e''[0m '$'\e''[[(blue)]m[ separatorChar ]'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[(red)]mtext           '$'\e''[[(value)]mEmptyString. Required. Text to quote'$'\e''[[(reset)]m'$'\n''    '$'\e''[[(blue)]mseparatorChar  '$'\e''[[(value)]mThe character used to separate the sed pattern and replacement. Defaults to '$'\e''[[(code)]m/'$'\e''[[(reset)]m.'$'\e''[[(reset)]m'$'\n'''$'\n''Quote sed replacement strings for shell use'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - Success'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - Environment error'$'\n''- '$'\e''[[(code)]m2'$'\e''[[(reset)]m - Argument error'$'\n'''$'\n''Example:'$'\n''    sed "s/$(quoteSedPattern "$1")/$(quoteSedReplacement "$2")/g"'$'\n''    needSlash=$(quoteSedPattern '\''$.'$'\e''[[(cyan)]m/[\]^'\'')'$'\e''[[(reset)]m'$'\n'''
 # shellcheck disable=SC2016
 helpPlain='Usage: quoteSedReplacement text [ separatorChar ]'$'\n'''$'\n''    text           EmptyString. Required. Text to quote'$'\n''    separatorChar  The character used to separate the sed pattern and replacement. Defaults to /.'$'\n'''$'\n''Quote sed replacement strings for shell use'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''$'\n''Example:'$'\n''    sed "s/$(quoteSedPattern "$1")/$(quoteSedReplacement "$2")/g"'$'\n''    needSlash=$(quoteSedPattern '\''$./[\]^'\'')'$'\n'''
-# elapsed 0.717
+# elapsed 0.464

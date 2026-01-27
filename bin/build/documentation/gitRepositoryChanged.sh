@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-25
+# Generated on 2026-01-27
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/git.sh"
 argument="none"
@@ -20,4 +20,4 @@ usage="gitRepositoryChanged"
 helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]mgitRepositoryChanged'$'\e''[0m'$'\n'''$'\n''Has a git repository been changed from HEAD?'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - the repo has NOT been modified'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - the repo has been modified'$'\n'''
 # shellcheck disable=SC2016
 helpPlain='Usage: gitRepositoryChanged'$'\n'''$'\n''Has a git repository been changed from HEAD?'$'\n'''$'\n''Return codes:'$'\n''- 1 - the repo has NOT been modified'$'\n''- 0 - the repo has been modified'$'\n'''
-# elapsed 0.526
+# elapsed 0.403

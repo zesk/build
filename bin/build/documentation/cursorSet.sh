@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-25
+# Generated on 2026-01-27
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/cursor.sh"
 argument="x - UnsignedInteger. Required. Column to place the cursor."$'\n'"y - UnsignedInteger. Required. Row to place the cursor."$'\n'""
@@ -18,4 +18,4 @@ usage="cursorSet x y"
 helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]mcursorSet'$'\e''[0m '$'\e''[[(bold)]m'$'\e''[[(magenta)]mx'$'\e''[0m'$'\e''[0m '$'\e''[[(bold)]m'$'\e''[[(magenta)]my'$'\e''[0m'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[(red)]mx  '$'\e''[[(value)]mUnsignedInteger. Required. Column to place the cursor.'$'\e''[[(reset)]m'$'\n''    '$'\e''[[(red)]my  '$'\e''[[(value)]mUnsignedInteger. Required. Row to place the cursor.'$'\e''[[(reset)]m'$'\n'''$'\n''Move the cursor to x y'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - Success'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - Environment error'$'\n''- '$'\e''[[(code)]m2'$'\e''[[(reset)]m - Argument error'$'\n'''
 # shellcheck disable=SC2016
 helpPlain='Usage: cursorSet x y'$'\n'''$'\n''    x  UnsignedInteger. Required. Column to place the cursor.'$'\n''    y  UnsignedInteger. Required. Row to place the cursor.'$'\n'''$'\n''Move the cursor to x y'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''
-# elapsed 0.6
+# elapsed 0.624

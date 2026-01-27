@@ -37,6 +37,8 @@
 
 {bashFunctionComment}
 
+{bashCommentVariable}
+
 {bashFunctionCommentVariable}
 
 {bashCommentFilter}

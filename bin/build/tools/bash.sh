@@ -408,7 +408,7 @@ __bashListFunctions() {
 bashFunctionCommentVariable() {
   local handler="_${FUNCNAME[0]}"
 
-  local source="" functionName="" variableName="" prefixFlag=false
+  local source="" functionName="" variableName="" prefixFlag=false aa=()
 
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
@@ -419,9 +419,7 @@ bashFunctionCommentVariable() {
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
-    --prefix)
-      prefixFlag=true
-      ;;
+    --prefix) aa+=("$argument") ;;
     *)
       if [ -z "$source" ]; then
         source="$(validate "$handler" File "source" "${1-}")" || return $?
@@ -434,6 +432,38 @@ bashFunctionCommentVariable() {
     esac
     shift
   done
+  catchReturn "$handler" bashCommentVariable "${aa[@]}" "$variableName" < <(catchReturn "$handler" bashFunctionComment "$source" "$functionName") || return $?
+}
+_bashFunctionCommentVariable() {
+  # __IDENTICAL__ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+# Gets a list of the variable values from a bash function comment
+# Argument: variableName - String. Required. Get this variable value.
+# stdin: Comment source (`# ` removed)
+# Argument: --prefix - flag. Optional. Find variables with the prefix `variableName`
+# DOC TEMPLATE: --help 1
+# Argument: --help - Flag. Optional. Display this help.
+bashCommentVariable() {
+  local handler="_${FUNCNAME[0]}"
+
+  local variableName="" prefixFlag=false
+  # _IDENTICAL_ argumentNonBlankLoopHandler 6
+  local __saved=("$@") __count=$#
+  while [ $# -gt 0 ]; do
+    local argument="$1" __index=$((__count - $# + 1))
+    # __IDENTICAL__ __checkBlankArgumentHandler 1
+    [ -n "$argument" ] || throwArgument "$handler" "blank #$__index/$__count ($(decorate each quote -- "${__saved[@]}"))" || return $?
+    case "$argument" in
+    # _IDENTICAL_ helpHandler 1
+    --help) "$handler" 0 && return $? || return $? ;;
+    --prefix) prefixFlag=true ;;
+    *) variableName="$(validate "$handler" String "variableName" "${1-}")" || return $? ;;
+    esac
+    shift
+  done
+  [ -n "$variableName" ] || throwArgument "$handler" "variableName is required" || return $?
 
   local matchLine grepSuffix="" trimSuffix=":"
   if $prefixFlag; then
@@ -444,9 +474,9 @@ bashFunctionCommentVariable() {
     matchLine="${matchLine#*"$variableName$trimSuffix"}"
     matchLine=${matchLine# }
     printf "%s\n" "${matchLine}"
-  done < <(bashFunctionComment "$source" "$functionName" | grep -e "[[:space:]]*$variableName$grepSuffix:[[:space:]]*" | trimSpace || :)
+  done < <(grepSafe -e "[[:space:]]*$variableName$grepSuffix:[[:space:]]*" | trimSpace)
 }
-_bashFunctionCommentVariable() {
+_bashCommentVariable() {
   # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }

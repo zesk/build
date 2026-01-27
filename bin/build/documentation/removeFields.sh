@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-25
+# Generated on 2026-01-27
 # shellcheck disable=SC2034
 applicationFile="bin/build/tools/text.sh"
 argument="fieldCount - Integer. Optional. Number of field to remove. Default is just first \`1\`."$'\n'""
@@ -21,4 +21,4 @@ usage="removeFields [ fieldCount ]"
 helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]mremoveFields'$'\e''[0m '$'\e''[[(blue)]m[ fieldCount ]'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[(blue)]mfieldCount  '$'\e''[[(value)]mInteger. Optional. Number of field to remove. Default is just first '$'\e''[[(code)]m1'$'\e''[[(reset)]m.'$'\e''[[(reset)]m'$'\n'''$'\n''Remove fields from left to right from a text file as a pipe'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - Success'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - Environment error'$'\n''- '$'\e''[[(code)]m2'$'\e''[[(reset)]m - Argument error'$'\n'''$'\n''Reads from '$'\e''[[(code)]mstdin'$'\e''[[(reset)]m:'$'\n''A file with fields separated by spaces'$'\n'''$'\n''Writes to '$'\e''[[(code)]mstdout'$'\e''[[(reset)]m:'$'\n''The same file with the first '$'\e''[[(code)]mfieldCount'$'\e''[[(reset)]m fields removed from each line.'$'\n'''
 # shellcheck disable=SC2016
 helpPlain='Usage: removeFields [ fieldCount ]'$'\n'''$'\n''    fieldCount  Integer. Optional. Number of field to remove. Default is just first 1.'$'\n'''$'\n''Remove fields from left to right from a text file as a pipe'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''$'\n''Reads from stdin:'$'\n''A file with fields separated by spaces'$'\n'''$'\n''Writes to stdout:'$'\n''The same file with the first fieldCount fields removed from each line.'$'\n'''
-# elapsed 0.572
+# elapsed 0.472

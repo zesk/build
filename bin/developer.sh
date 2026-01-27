@@ -89,6 +89,9 @@ if source "${BASH_SOURCE[0]%/*}/tools.sh"; then
 
     export BUILD_PROJECT_DEACTIVATE="${FUNCNAME[0]}Undo"
 
+    export BUILD_DEBUG
+    BUILD_DEBUG="$(listAppend "${BUILD_DEBUG-}" "," "handler")"
+
     unset "${FUNCNAME[0]}" "_${FUNCNAME[0]}"
   }
   ___buildConfigure() {
