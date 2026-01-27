@@ -18,4 +18,4 @@ usage="directoryClobber source target"
 helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]mdirectoryClobber'$'\e''[0m '$'\e''[[(bold)]m'$'\e''[[(magenta)]msource'$'\e''[0m'$'\e''[0m '$'\e''[[(bold)]m'$'\e''[[(magenta)]mtarget'$'\e''[0m'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[(red)]msource  '$'\e''[[(value)]mDirectory. Required. target'$'\e''[[(reset)]m'$'\n''    '$'\e''[[(red)]mtarget  '$'\e''[[(value)]mFileDirectory. Required.'$'\e''[[(reset)]m'$'\n'''$'\n''Copy directory over another sort-of-atomically'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - Success'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - Environment error'$'\n''- '$'\e''[[(code)]m2'$'\e''[[(reset)]m - Argument error'$'\n'''
 # shellcheck disable=SC2016
 helpPlain='Usage: directoryClobber source target'$'\n'''$'\n''    source  Directory. Required. target'$'\n''    target  FileDirectory. Required.'$'\n'''$'\n''Copy directory over another sort-of-atomically'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''
-# elapsed 0.64
+# elapsed 0.522

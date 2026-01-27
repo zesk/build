@@ -158,9 +158,11 @@ __installInstallBinaryLegacy() {
   fi
   catchEnvironment "$handler" rm "$temp" || return $?
 }
+
 __installInstallBinaryIsLegacy() {
   grep -q '^relTop=' >/dev/null
 }
+
 __installInstallBinaryCustomizeLegacy() {
   sed "s/^relTop=.*$/relTop=$(quoteSedReplacement "$1")/g"
 }
@@ -189,6 +191,7 @@ _installInstallBinaryDifferFilter() {
 _installInstallBinaryCanCustomize() {
   grep -q -e '^__installPackageConfiguration ' "$@"
 }
+
 _installInstallBinaryCustomize() {
   grep -v -e '^__installPackageConfiguration '
   printf "__installPackageConfiguration %s \"%s\"\n" "$1" '$@'

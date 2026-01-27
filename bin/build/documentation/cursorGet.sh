@@ -21,4 +21,4 @@ usage="cursorGet"
 helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]mcursorGet'$'\e''[0m'$'\n'''$'\n''Get the current cursor position'$'\n''Output is <x> <newline> <y> <newline>'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - Success'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - Environment error'$'\n''- '$'\e''[[(code)]m2'$'\e''[[(reset)]m - Argument error'$'\n'''$'\n''Writes to '$'\e''[[(code)]mstdout'$'\e''[[(reset)]m:'$'\n''UnsignedInteger'$'\n'''$'\n''Example:'$'\n''    IFS=$'\''\n'\'' read -r -d '\'''\'' saveX saveY < <(cursorGet)'$'\n'''
 # shellcheck disable=SC2016
 helpPlain='Usage: cursorGet'$'\n'''$'\n''Get the current cursor position'$'\n''Output is <x> <newline> <y> <newline>'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''$'\n''Writes to stdout:'$'\n''UnsignedInteger'$'\n'''$'\n''Example:'$'\n''    IFS=$'\''\n'\'' read -r -d '\'''\'' saveX saveY < <(cursorGet)'$'\n'''
-# elapsed 0.536
+# elapsed 0.422

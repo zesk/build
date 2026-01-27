@@ -259,26 +259,46 @@ _buildEnvironmentFiles() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-__buildEnvironmentAddFile() {
-  loacl handler="$1" templateHome="$2" name="$3" value="$4"
+__buildEnvironmentFileHeader() {
+  local handler="$1" && shift
+
+  local year company
+  year=$(catchEnvironment "$handler" date +%Y) || return $?
+  company=$(catchReturn "$handler" buildEnvironmentGet BUILD_COMPANY) || return $?
+  local ll=(
+    "#!/usr/bin/env bash"
+    "# Copyright &copy; $year $company"
+  )
+  catchEnvironment "$handler" printf -- "%s\n" "${ll[@]+"${ll[@]}"}" || return $?
+}
+
+__buildEnvironmentDefaultFile() {
+  local handler="$1" && shift
+  local name="$1" && shift
+
+  local app && app=$(catchReturn "$handler" buildEnvironmentGet APPLICATION_CODE) || return $?
+  local ll=(
+    "# Category: Application"
+    "# Application: $app"
+    "# Type: String"
+    "# A description of \"$name\" and how it is used"
+    "export $name"
+  )
+  catchEnvironment "$handler" printf -- "%s\n" "${ll[@]+"${ll[@]}"}" || return $?
+}
+
+# Generate a file from a template or from scratch
+__buildEnvironmentMakeFile() {
+  local handler="$1" templateHome="$2" name="$3" value="$4"
 
   [ -n "$value" ] || value="\${$name-}"
   local template && template=$(bashEnvironmentFiles --application "$templateHome" "$name" 2>/dev/null | tail -n 1) || :
-  if [ -n "$template" ]; then
-    grepSafe -e "^$name" "$template"
-  else
-    local year company
 
-    year=$(catchEnvironment "$handler" date +%Y) || return $?
-    company=$(buildEnvironmentGet BUILD_COMPANY)
-    local ll=(
-      "#!/usr/bin/env bash"
-      "# Copyright &copy; $year $company"
-      "# Type: String"
-      "# Category: Application"
-      "# All about $name and how it is used" "export $name"
-    )
-    catchEnvironment "$handler" printf -- "%s\n" "${ll[@]}" || return $?
+  __buildEnvironmentFileHeader "$handler" || return $?
+  if [ -n "$template" ]; then
+    catchReturn "$handler" grepSafe -v -e "^$name" -e "^#!" -e 'Copyright' "$template" || return $?
+  else
+    __buildEnvironmentDefaultFile "$handler" "$name" || return $?
   fi
   catchEnvironment "$handler" printf -- "%s\n" "$name=\"$value\"" || return $?
 }
@@ -333,7 +353,7 @@ buildEnvironmentAdd() {
       local verb="Created"
       [ ! -f "$path" ] || verb="Replaced"
       [ -n "$value" ] || value="\${$name-}"
-      __buildEnvironmentAddFile "$handler" "$templateHome" "$name" "$value" >"$path" || return $?
+      __buildEnvironmentMakeFile "$handler" "$templateHome" "$name" "$value" >"$path" || return $?
       catchEnvironment "$handler" chmod +x "$path" || return $?
       ! $verboseFlag || statusMessage --last decorate success "$verb $(decorate file "$path")"
     fi

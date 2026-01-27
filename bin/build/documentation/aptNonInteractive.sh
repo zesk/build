@@ -18,4 +18,4 @@ usage="aptNonInteractive [ ... ]"
 helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]maptNonInteractive'$'\e''[0m '$'\e''[[(blue)]m[ ... ]'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[(blue)]m...  '$'\e''[[(value)]mArguments. Pass through arguments to '$'\e''[[(code)]mapt-get'$'\e''[[(reset)]m'$'\e''[[(reset)]m'$'\n'''$'\n''Run apt-get non-interactively'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - Success'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - Environment error'$'\n''- '$'\e''[[(code)]m2'$'\e''[[(reset)]m - Argument error'$'\n'''
 # shellcheck disable=SC2016
 helpPlain='Usage: aptNonInteractive [ ... ]'$'\n'''$'\n''    ...  Arguments. Pass through arguments to apt-get'$'\n'''$'\n''Run apt-get non-interactively'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''
-# elapsed 0.589
+# elapsed 0.525
