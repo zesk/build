@@ -23,4 +23,4 @@ usage="randomString"
 helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]mrandomString'$'\e''[0m'$'\n'''$'\n''Outputs 40 random hexadecimal characters, lowercase.'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - Success'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - Environment error'$'\n''- '$'\e''[[(code)]m2'$'\e''[[(reset)]m - Argument error'$'\n'''$'\n''Writes to '$'\e''[[(code)]mstdout'$'\e''[[(reset)]m:'$'\n'''$'\e''[[(code)]mString'$'\e''[[(reset)]m. A random hexadecimal string.'$'\n'''$'\n''Example:'$'\n''    testPassword="$(randomString)"'$'\n'''
 # shellcheck disable=SC2016
 helpPlain='Usage: randomString'$'\n'''$'\n''Outputs 40 random hexadecimal characters, lowercase.'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''$'\n''Writes to stdout:'$'\n''String. A random hexadecimal string.'$'\n'''$'\n''Example:'$'\n''    testPassword="$(randomString)"'$'\n'''
-# elapsed 0.412
+# elapsed 0.409

@@ -18,4 +18,4 @@ usage="pipUpgrade [ --help ] [ --bin binary ]"
 helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]mpipUpgrade'$'\e''[0m '$'\e''[[(blue)]m[ --help ]'$'\e''[0m '$'\e''[[(blue)]m[ --bin binary ]'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[(blue)]m--help        '$'\e''[[(value)]mFlag. Optional. Display this help.'$'\e''[[(reset)]m'$'\n''    '$'\e''[[(blue)]m--bin binary  '$'\e''[[(value)]mExecutable. Optional. Binary for '$'\e''[[(code)]mpip'$'\e''[[(reset)]m.'$'\e''[[(reset)]m'$'\n'''$'\n''Utility to upgrade pip correctly'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - Success'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - Environment error'$'\n''- '$'\e''[[(code)]m2'$'\e''[[(reset)]m - Argument error'$'\n'''
 # shellcheck disable=SC2016
 helpPlain='Usage: pipUpgrade [ --help ] [ --bin binary ]'$'\n'''$'\n''    --help        Flag. Optional. Display this help.'$'\n''    --bin binary  Executable. Optional. Binary for pip.'$'\n'''$'\n''Utility to upgrade pip correctly'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''
-# elapsed 0.445
+# elapsed 0.433

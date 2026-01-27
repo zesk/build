@@ -18,4 +18,4 @@ usage="pathIsAbsolute [ path ]"
 helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]mpathIsAbsolute'$'\e''[0m '$'\e''[[(blue)]m[ path ]'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[(blue)]mpath  '$'\e''[[(value)]mString. Optional. Path to check.'$'\e''[[(reset)]m'$'\n'''$'\n''Is a path an absolute path?'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - if all paths passed in are absolute paths (begin with '$'\e''[[(code)]m/'$'\e''[[(reset)]m).'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - one ore more paths are not absolute paths'$'\n'''
 # shellcheck disable=SC2016
 helpPlain='Usage: pathIsAbsolute [ path ]'$'\n'''$'\n''    path  String. Optional. Path to check.'$'\n'''$'\n''Is a path an absolute path?'$'\n'''$'\n''Return codes:'$'\n''- 0 - if all paths passed in are absolute paths (begin with /).'$'\n''- 1 - one ore more paths are not absolute paths'$'\n'''
-# elapsed 0.449
+# elapsed 0.519
