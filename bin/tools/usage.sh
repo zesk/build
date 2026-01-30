@@ -163,7 +163,7 @@ __buildUsageCompileFunction() {
       statusMessage decorate error "Corrupt $documentationSettingsFile (sourceFile) - removing"
       catchEnvironment "$handler" rm -f "$documentationSettingsFile" || return $?
       __profileLabel="settings sourceFile missing"
-    elif [ -z "$sourceHash" ]; then
+    elif [ -z "$sourceHash" ] || [ "$sourceHash" = "none" ]; then
       statusMessage decorate error "Corrupt $documentationSettingsFile (sourceHash) - removing"
       catchEnvironment "$handler" rm -f "$documentationSettingsFile" || return $?
       __profileLabel="settings sourceHash missing"
