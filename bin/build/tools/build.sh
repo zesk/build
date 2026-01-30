@@ -329,7 +329,7 @@ buildEnvironmentAdd() {
     --force) forceFlag=true ;;
     --quiet) verboseFlag=false ;;
     --verbose) verboseFlag=true ;;
-    --value) shift && value=$(validate "$handler" String "value" "${1-}") || return $? ;;
+    --value) shift && value="${1-}" ;;
     *) environmentNames+=("$(validate "$handler" EnvironmentVariable "environmentVariable" "$argument")") || return $? ;;
     esac
     shift
