@@ -28,10 +28,16 @@
 
 {serviceToStandardPort}
 
-## Users and Groups
+## Users
+
+{userHome}
+
+{userRecord}
+
+{userRecordHome}
+
+{userRecordName}
+
+## Groups
 
 {groupID}
-
-## Miscellaneous
-
-{JSON}

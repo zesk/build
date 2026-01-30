@@ -8,11 +8,11 @@
 
 {buildDocumentationBuild}
 
-{buildDocumentationExtractionUpdate}
-
 ### Generating documentation cache files
 
 {buildUsageCompile}
+
+{buildUsageCompileParallel}
 
 ## Development
 
