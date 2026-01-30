@@ -44,7 +44,6 @@ _testTools() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-
 # Deprecated: 2026-01
 maximumFieldLength() {
   _deprecated "${FUNCNAME[0]}"

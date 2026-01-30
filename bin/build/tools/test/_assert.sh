@@ -407,7 +407,7 @@ _assertConditionHelper() {
     printf -- "Line %d: %s%d %s (%d + %d) %s + %s %d%%\n" "$LINENO" "$__profilePrefix" "$((__profileNext - __profile0))" '*TOTAL*' "$((__profileNext - __profile0 - __profileUsed))" "$__profileUsed" 'us' 'them' "$(((100 * __profileUsed) / (__profileNext - __profile0)))" 1>&2
   fi
   # ********************************************************************************************************************
-  return "$exitCode"
+
 }
 
 # Argument: thisName - Reported function for success or failure

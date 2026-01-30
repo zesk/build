@@ -75,7 +75,6 @@ _buildQuickTest() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-
 # Run tests (and continue from last failure point)
 # Do not do housekeeper or plumber by default. (faster)
 buildStagingTest() {

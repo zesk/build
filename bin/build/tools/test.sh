@@ -1401,7 +1401,6 @@ returnAssert() {
   return 97 # "$(returnCode assert)"
 }
 
-
 # IDENTICAL returnIdentical 7
 
 # Return code is `identical`
@@ -1410,7 +1409,6 @@ returnIdentical() {
   # _IDENTICAL_ returnIdenticalCode 1
   return 105 # "$(returnCode identical)"
 }
-
 
 # IDENTICAL returnLeak 7
 

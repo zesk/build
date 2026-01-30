@@ -73,9 +73,8 @@ __reloadChanges() {
   fi
 
   __reloadChangesRemove "$handler" "$cacheFile" "$source" || return $?
-
   catchEnvironment "$handler" printf -- "%s\n" "$source" "$name" "${paths[@]}" "--" >>"$cacheFile" || return $?
-
+  ___bashPromptModule_reloadChangesInit "$handler" <"$cacheFile" || return $?
   decorate success "Watching $(decorate each file "${paths[@]}") as $(decorate value "$name")"
   bashPrompt --skip-prompt --first __bashPromptModule_reloadChanges
 }
@@ -136,9 +135,12 @@ __reloadChangesRemove() {
 }
 
 __reloadChangesCacheFile() {
-  local handler="$1" extension="${2-state}" prefix
+  local handler="$1" && shift
+  local extension="${1-state}" && shift
 
   export __BASH_PROMPT_RELOAD_CHANGES_CACHE
+
+  local prefix
   if [ -z "${__BASH_PROMPT_RELOAD_CHANGES_CACHE-}" ]; then
     local reloadHome cacheFile
     reloadHome=$(catchReturn "$handler" buildEnvironmentGetDirectory --subdirectory "reloadChanges" XDG_STATE_HOME) || return $?
@@ -203,7 +205,7 @@ __bashPromptModule_reloadChanges() {
         removeSources+=("$source")
       else
         ! $profile || timingReport "$start" "Running check for $source"
-        if ___bashPromptModule_reloadChangesCheck "$handler" "$debug" "$pathStateFile" "$source" "$name" "${directories[@]+"${directories[@]}"}" -- "${files[@]+"${files[@]}"}"; then
+        if ___bashPromptModule_reloadChangesCheck "$handler" "$debug" true "$pathStateFile" "$source" "$name" "${directories[@]+"${directories[@]}"}" -- "${files[@]+"${files[@]}"}"; then
           # shellcheck source=/dev/null
           source "$source"
         fi
@@ -235,9 +237,29 @@ ___bashPromptModule_reloadChanges() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
+___bashPromptModule_reloadChangesInit() {
+  local handler="$1" && shift
+  local cacheFile
+  local source="" name=""
+  local ff=() dd=() sourceIndex=0
+  while read -r source; do
+    catchEnvironment "$handler" read -r name || return $?
+    local path && while read -r path; do
+      if [ "$path" = "--" ]; then
+        break
+      fi
+      [ -d "$path" ] && dd+=("$path") || ff+=("$path")
+    done
+    cacheFile=$(__reloadChangesCacheFile "$handler" "$sourceIndex")
+    ___bashPromptModule_reloadChangesCheck "$handler" false false "$cacheFile" "$source" "$name" "${dd[@]+"${dd[@]}"}" -- "${ff[@]+"${ff[@]}"}" || :
+    sourceIndex=$((sourceIndex + 1))
+  done
+}
+
 ___bashPromptModule_reloadChangesCheck() {
   local handler="$1" && shift
   local debug="$1" && shift
+  local verbose="$1" && shift
   local pathStateFile="$1" && shift
   local source="$1" && shift
   local name="$1" && shift
@@ -301,7 +323,7 @@ ___bashPromptModule_reloadChangesCheck() {
   local prefix=""
   [ -z "$stateNewestFile" ] || prefix="$(decorate file "$stateNewestFile") -> "
   [ "$maxNewestFile" != "$stateNewestFile" ] || prefix="✏️"
-  printf "%s %s\n" "$(decorate value "$name")" "$(decorate info "code changed, reloading $(decorate file "$source") [$prefix$(decorate file "$maxNewestFile")]")"
+  ! $verbose || printf "%s %s\n" "$(decorate value "$name")" "$(decorate info "code changed, reloading $(decorate file "$source") [$prefix$(decorate file "$maxNewestFile")]")"
   ! $debug || decorate info "Saving new state file $maxModified $maxNewestFile"
 
   printf "%s\n" "$maxModified" "$maxNewestFile" >"$pathStateFile"
