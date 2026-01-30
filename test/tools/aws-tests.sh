@@ -35,7 +35,6 @@ testAWSIPAccess() {
   local quietLog=$1 id key start
   local tempHome
 
-  dumpEnvironment
   if [ -z "$quietLog" ]; then
     returnArgument "testAWSIPAccess missing log" || return $?
   fi

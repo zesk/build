@@ -55,7 +55,6 @@ __buildDeploy() {
   currentVersion="$(catchReturn "$handler" hookRun version-current)" || return $?
   [ -n "$currentVersion" ] || throwEnvironment "$handler" "Blank version-current" || return $?
   bigText "Deploy $name $currentVersion" | decorate success
-  dumpEnvironment
 
   local start
   start=$(timingStart)
