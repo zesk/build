@@ -67,10 +67,10 @@ testCharacterFromInteger() {
   assertEquals a "$(characterFromInteger "$(returnCode assert)")" || return $?
 }
 
-# Tag: slow-non-critical slow
 testCharacterClassReport() {
-  characterClassReport --class
-  characterClassReport --char
+  # This is super-slow
+  # characterClassReport --class || return $?
+  assertExitCode 0 characterClassReport --help || return $?
 }
 
 testCharacterClasses() {

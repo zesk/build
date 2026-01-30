@@ -13,7 +13,7 @@
 __characterClassReport() {
   local handler="$1" && shift
 
-  local classOuter=false
+  local classOuter=true
 
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
@@ -50,61 +50,69 @@ __characterClassReport() {
     # Skip attempting to modify ulimit - no permission likely so just venture on
     savedLimit=""
   fi
-  local indexList=() outerList=() innerList=() nouns=()
+  local indexList=() nouns=()
 
   # shellcheck disable=SC2207
   indexList=($(seq 0 127))
 
   if $classOuter; then
-    outerList=("${classList[@]}")
-    innerList=("${indexList[@]}")
     nouns=("character" "characters")
   else
     # shellcheck disable=SC2207
-    outerList=("${indexList[@]}")
-    innerList=("${classList[@]}")
     nouns=("class" "classes")
   fi
-  local total=0 outer
-  for outer in "${outerList[@]}"; do
-    local matched=0 outerText class character
-    if $classOuter; then
-      class="$outer"
-      outerText="$(decorate label "$(textAlignRight 10 "$outer")")"
-    else
-      character="$(characterFromInteger "$outer")" 2>/dev/null
-      if ! isCharacterClass print "$character"; then
-        outerText="$(printf "x%x " "$outer")"
+  local total=0
+
+  local matched outerText
+  if $classOuter; then
+    local class && for class in "${classList[@]}"; do
+      matched=0
+      outerText="$(decorate label "$(textAlignRight 10 "$class")")"
+      printf "%s: " "$(textAlignLeft "$width" "$outerText")"
+      local index character && for index in "${indexList[@]}"; do
+        character="$(catchEnvironment "$handler" characterFromInteger "$index")" || return $?
+        if isCharacterClass "$class" "$character"; then
+          matched=$((matched + 1))
+          if $classOuter; then
+            case "$character" in
+            [[:print:]]) printf "%s " "$(decorate blue "$character")" ;;
+            *) printf "%s " "$(decorate subtle "$(printf "x%x" "$index")")" ;;
+            esac
+          else
+            printf "%s " "$(decorate blue "$class")"
+          fi
+        fi
+      done
+      printf "[%s %s]\n" "$(decorate BOLD magenta "$matched")" "$(plural "$matched" "${nouns[@]}")"
+      total=$((total + matched))
+    done
+  else
+    local index character && for index in "${indexList[@]}"; do
+      character="$(catchEnvironment "$handler" characterFromInteger "$index")" || return $?
+      case "$character" in
+      [[:print:]])
+        outerText="$(decorate blue "$(textAlignRight 5 "$character")")"
+        ;;
+      *)
+        outerText="$(printf "x%x " "$index")"
         outerText="$(textAlignRight 5 "$outerText")"
         outerText="$(decorate subtle "$outerText")"
+        ;;
+      esac
+      printf "%s: " "$(textAlignLeft "$width" "$outerText")"
+      local matchedClasses=() && IFS=$'\n' read -r -d '' -a matchedClasses < <(characterClasses "$character")
+      matched=${#matchedClasses[@]}
+      local classText
+      if [ "$matched" -eq 0 ]; then
+        classText=$(decorate warning "none")
       else
-        outerText="$(decorate blue "$(textAlignRight 5 "$character")")"
+        classText="$(decorate blue "${matchedClasses[*]}")"
       fi
-    fi
-    printf "%s: " "$(textAlignLeft "$width" "$outerText")"
-    local inner
-    for inner in "${innerList[@]}"; do
-      if $classOuter; then
-        character="$(characterFromInteger "$inner")"
-      else
-        class="$inner"
-      fi
-      if isCharacterClass "$class" "$character"; then
-        matched=$((matched + 1))
-        if $classOuter; then
-          if ! isCharacterClass print "$character"; then
-            printf "%s " "$(decorate subtle "$(printf "x%x" "$inner")")"
-          else
-            printf "%s " "$(decorate blue "$(characterFromInteger "$inner")")"
-          fi
-        else
-          printf "%s " "$(decorate blue "$class")"
-        fi
-      fi
+      printf "%s [%s %s]\n" "$classText" "$(decorate BOLD magenta "$matched")" "$(plural "$matched" "${nouns[@]}")"
+      total=$((total + matched))
     done
-    printf "[%s %s]\n" "$(decorate BOLD magenta "$matched")" "$(decorate subtle "$(plural "$matched" "${nouns[@]}")")"
-    total=$((total + matched))
-  done
+  fi
+
   printf "%s total %s\n" "$(decorate BOLD red "$total")" "$(decorate red "$(plural "$total" "${nouns[@]}")")"
   [ -z "$savedLimit" ] || ulimit -n "$savedLimit" 1>/dev/null 2>&1 || :
 }

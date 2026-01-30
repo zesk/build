@@ -13,6 +13,7 @@ __characterLoader() {
 }
 
 # Write a report of the character classes
+# TODO: This is super-slow
 # Argument: --class - Flag. Optional. Show class and then characters in that class.
 # Argument: --char - Flag. Optional. Show characters and then class for that character.
 # DOC TEMPLATE: --help 1
@@ -131,12 +132,12 @@ characterFromInteger() {
     *)
       isUnsignedInteger "$argument" || throwArgument "$handler" "Argument is not unsigned integer: $(decorate code "$argument")" || return $?
       [ "$argument" -lt 256 ] || throwArgument "$handler" "Integer out of range: \"$argument\"" || return $?
-      if [ "$argument" -eq 0 ]; then
-        printf "%s\n" $'\0'
-      else
+      case "$argument" in
+      *)
         # shellcheck disable=SC2059
-        printf "\\$(printf '%03o' "$argument")"
-      fi
+        printf "\\$(printf '%03o' "$argument")\n"
+        ;;
+      esac
       ;;
     esac
     shift
@@ -147,12 +148,38 @@ _characterFromInteger() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# List the valid character classes allowed in `isCharacterClass`
+# List the classes allowed in `isCharacterClass`
 # DOC TEMPLATE: --help 1
 # Argument: --help - Flag. Optional. Display this help.
+# Argument: character ... - String. Optional. Output the character classes associated with this character. Uses the first character only. Multiple parameters are output without a delimiter.
 characterClasses() {
-  [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
-  printf "%s\n" alnum alpha ascii blank cntrl digit graph lower print punct space upper word xdigit
+  local handler="_${FUNCNAME[0]}"
+  [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
+  if [ $# -eq 0 ]; then
+    printf "%s\n" alnum alpha ascii blank cntrl digit graph lower print punct space upper word xdigit
+  else
+    while [ $# -gt 0 ]; do
+      local character="${1:0:1}"
+      # ${#1} is zero for certain control characters like 0xe and 0x4 it seems
+      local matchedClasses=()
+      case "$character" in [[:alnum:]]) matchedClasses+=("alnum") ;; esac
+      case "$character" in [[:alpha:]]) matchedClasses+=("alpha") ;; esac
+      case "$character" in [[:ascii:]]) matchedClasses+=("ascii") ;; esac
+      case "$character" in [[:blank:]]) matchedClasses+=("blank") ;; esac
+      case "$character" in [[:cntrl:]]) matchedClasses+=("cntrl") ;; esac
+      case "$character" in [[:digit:]]) matchedClasses+=("digit") ;; esac
+      case "$character" in [[:graph:]]) matchedClasses+=("graph") ;; esac
+      case "$character" in [[:lower:]]) matchedClasses+=("lower") ;; esac
+      case "$character" in [[:print:]]) matchedClasses+=("print") ;; esac
+      case "$character" in [[:punct:]]) matchedClasses+=("punct") ;; esac
+      case "$character" in [[:space:]]) matchedClasses+=("space") ;; esac
+      case "$character" in [[:upper:]]) matchedClasses+=("upper") ;; esac
+      case "$character" in [[:word:]]) matchedClasses+=("word") ;; esac
+      case "$character" in [[:xdigit:]]) matchedClasses+=("xdigit") ;; esac
+      printf "%s\n" "${matchedClasses[@]}"
+      shift
+    done
+  fi
 }
 _characterClasses() {
   true || characterClasses --help
