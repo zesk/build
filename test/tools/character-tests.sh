@@ -67,15 +67,35 @@ testCharacterFromInteger() {
   assertEquals a "$(characterFromInteger "$(returnCode assert)")" || return $?
 }
 
+# Tag: slow slow-non-critical
 testCharacterClassReport() {
   # This is super-slow
-  # characterClassReport --class || return $?
+  assertExitCode --dump 0 characterClassReport --char || return $?
   assertExitCode 0 characterClassReport --help || return $?
 }
 
 testCharacterClasses() {
-  assertOutputContains alpha characterClasses || return $?
-  assertOutputContains xdigit characterClasses || return $?
+  local c m=()
+
+  for c in alnum alpha ascii blank cntrl digit graph lower print punct space upper word xdigit; do
+    m+=(--stdout-match "$c")
+  done
+  assertExitCode "${m[@]}" 0 characterClasses || return $?
+  for c in alnum alpha ascii graph print upper word xdigit; do
+    m+=(--stdout-match "$c")
+  done
+  for c in blank cntrl digit lower punct space; do
+    m+=(--stdout-no-match "$c")
+  done
+  assertExitCode "${m[@]}" characterClasses A || return $?
+  m=()
+  for c in alnum ascii digit graph print word xdigit; do
+    m+=(--stdout-match "$c")
+  done
+  for c in alpha blank cntrl lower punct space upper; do
+    m+=(--stdout-no-match "$c")
+  done
+  assertExitCode "${m[@]}" characterClasses 0 || return $?
 }
 
 testIsCharacterClass() {
