@@ -225,8 +225,7 @@ testSuite() {
   catchEnvironment "$handler" printf -- "%s\n" "$__TEST_SUITE_TRACE" >>"$quietLog" || returnClean $? "${clean[@]}" || return $?
 
   # Color mode
-  export __BUILD_COLORS
-  [ -n "${__BUILD_COLORS-}" ] || muzzle consoleConfigureDecorate || :
+  decorateInitialized || muzzle consoleConfigureDecorate || :
 
   [ "${#testPaths[@]}" -gt 0 ] || throwArgument "$handler" "Need at least one --tests directory ($(decorate each quote "${__saved[@]}"))" || returnClean $? "${clean[@]}" || return $?
 

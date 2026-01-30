@@ -42,7 +42,7 @@ testBuildApplicationConfigure() {
     assertDirectoryExists "$tempPath/$d" || return $?
   done
   assertDirectoryDoesNotExist "$tempPath/bin/build" || return $?
-  assertExitCode 0 source "$tempPath/bin/tools.sh" || return $?
+  assertExitCode --stdout-match "Hello, world." 0 "$tempPath/bin/tools.sh" decorate info "Hello, world." || return $?
   assertDirectoryExists "$tempPath/bin/build" || return $?
 
   catchEnvironment "$handler" rm -rf "$tempPath" || return $?

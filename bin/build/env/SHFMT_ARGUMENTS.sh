@@ -3,6 +3,6 @@
 # Copyright &copy; 2026 Market Acumen, Inc.
 # Category: Bash
 # See: pre-commit-sh.sh
-# Type: Array(String)
+# Type: Array
 export SHFMT_ARGUMENTS
 SHFMT_ARGUMENTS=(-i 2)

@@ -139,7 +139,7 @@ _applicationHomeAliases() {
 buildApplicationConfigure() {
   local handler="_${FUNCNAME[0]}"
 
-  local home="" name="" interactive=true
+  local home="" name="" interactive=true code=""
 
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
@@ -209,7 +209,6 @@ __buildApplicationConfigureEnvironmentFiles() {
   local envs=(
     APPLICATION_NAME APPLICATION_CODE APPLICATION_CODE_EXTENSIONS APPLICATION_CODE_IGNORE APPLICATION_JSON APPLICATION_JSON_PREFIX BUILD_RELEASE_NOTES
   )
-  export "${envs[@]}"
   local e && for e in "${envs[@]}"; do
     local target="$home/bin/env/$e.sh"
     local value="${!e-}"
