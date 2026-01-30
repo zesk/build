@@ -9,12 +9,11 @@ file="bin/build/tools/application.sh"
 foundNames=([0]="argument")
 rawComment="Set aliases \`G\` and \`g\` default for \`applicationHome\`"$'\n'"Localize as you wish for your own shell"$'\n'"Argument: goAlias - String. Alias for \`applicationHome --go\`. Default is \`g\`."$'\n'"Argument: setAlias - String. Alias for \`applicationHome\`. Default is \`G\`."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
-sourceFile="bin/build/tools/application.sh"
-sourceHash="9dff33234920029caa0f80346c8f9d76d44cd67e"
+sourceHash="2691fbe337038fe23992519180119fca2b0fb1ce"
 summary="Set aliases \`G\` and \`g\` default for \`applicationHome\`"
 usage="applicationHomeAliases [ goAlias ] [ setAlias ]"
 # shellcheck disable=SC2016
 helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]mapplicationHomeAliases'$'\e''[0m '$'\e''[[(blue)]m[ goAlias ]'$'\e''[0m '$'\e''[[(blue)]m[ setAlias ]'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[(blue)]mgoAlias   '$'\e''[[(value)]mString. Alias for '$'\e''[[(code)]mapplicationHome --go'$'\e''[[(reset)]m. Default is '$'\e''[[(code)]mg'$'\e''[[(reset)]m.'$'\e''[[(reset)]m'$'\n''    '$'\e''[[(blue)]msetAlias  '$'\e''[[(value)]mString. Alias for '$'\e''[[(code)]mapplicationHome'$'\e''[[(reset)]m. Default is '$'\e''[[(code)]mG'$'\e''[[(reset)]m.'$'\e''[[(reset)]m'$'\n'''$'\n''Set aliases '$'\e''[[(code)]mG'$'\e''[[(reset)]m and '$'\e''[[(code)]mg'$'\e''[[(reset)]m default for '$'\e''[[(code)]mapplicationHome'$'\e''[[(reset)]m'$'\n''Localize as you wish for your own shell'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - Success'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - Environment error'$'\n''- '$'\e''[[(code)]m2'$'\e''[[(reset)]m - Argument error'$'\n'''
 # shellcheck disable=SC2016
-helpPlain='[[(label)]mUsage: [[(info)]mapplicationHomeAliases [[(blue)]m[ goAlias ] [[(blue)]m[ setAlias ]'$'\n'''$'\n''    [[(blue)]mgoAlias   String. Alias for applicationHome --go. Default is g.'$'\n''    [[(blue)]msetAlias  String. Alias for applicationHome. Default is G.'$'\n'''$'\n''Set aliases G and g default for applicationHome'$'\n''Localize as you wish for your own shell'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''
-# elapsed 2.739
+helpPlain='Usage: applicationHomeAliases [ goAlias ] [ setAlias ]'$'\n'''$'\n''    goAlias   String. Alias for applicationHome --go. Default is g.'$'\n''    setAlias  String. Alias for applicationHome. Default is G.'$'\n'''$'\n''Set aliases G and g default for applicationHome'$'\n''Localize as you wish for your own shell'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''
+# elapsed 0.589
