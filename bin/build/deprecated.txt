@@ -33,6 +33,9 @@ lineFill|consoleHeadingLine|
 boxedHeading|consoleHeadingBoxed|
 plainLength|consolePlainLength|
 mapReturn|returnMap|
+maximumFieldLength|fileFieldMaximum|
+maximumLineLength|fileLineMaximum|
+stripAnsi|consoleToPlain|
 
 # v0.40.4
 usageArgumentDate "$handler"|validate "$handler" Date|
@@ -210,62 +213,3 @@ DockerEnvToBash|EnvironmentFileDockerToBashCompatible
 dockerEnvFromBashEnv|environmentFileBashCompatibleToDocker
 DockerEnvFromBashEnv|EnvironmentFileBashCompatibleToDocker
 checkDockerEnvFile|environmentFileIsDocker|
-
-# v0.34.0
-sshAddKnownHost|sshKnownHostAdd
-bashPromptModule_iTerm2Colors|bashPromptModule_TermColors
-
-wrapLines|decorate wrap
-inputConfigurationAdd|readlineConfigurationAdd
-
-# v0.31.1
-(__where)|(__gitHookPath)|
-IDENTICAL __where|IDENTICAL __gitHookPath|
-
-# v0.30.3
-listFileModificationTimes|fileModificationTimes
-
-# v0.26.1
-usageArguments|__usageFormatArguments|
-
-# v0.25.10
-substringFound|stringContains|
-substringInsensitiveFound|stringContainsInsensitive|
-.env.STAGING|.STAGING.env|
-.env.PRODUCTION|.PRODUCTION.env|
-.env.staging|.staging.env|
-.env.production|.production.env|
-
-# v0.25.7
-IDENTICAL argumentUnknown|_IDENTICAL_ argumentUnknown
-IDENTICAL argument-esac-shift|_IDENTICAL_ argument-esac-shift
-IDENTICAL argument-case-header|_IDENTICAL_ argument-case-header
-IDENTICAL argument-case-header-blank|_IDENTICAL_ argument-case-blank-argument-header
-IDENTICAL argument-case-blank-argument-header|_IDENTICAL_ argument-case-blank-argument-header
-
-# v0.25.5
-argument-case-header-blank|argument-case-blank-argument-header
-# v0.25.4
-
-# v0.25.0
-beginTiming|timingStart
-reportTiming|timingReport
-bashPromptUser|bashUserInput
-
-# v0.24.0
-joinArguments|listJoin
-listTokens|mapTokens
-
-# v0.23.0
-APPLICATION_REMOTE_PATH|APPLICATION_REMOTE_HOME
-DEPLOY_REMOTE_PATH|DEPLOY_REMOTE_HOME
-BUILD_ENVIRONMENT_PATH|BUILD_ENVIRONMENT_DIRS
-BUILD_HOOK_PATH|BUILD_HOOK_DIRS
-
-# v0.21.0
-runOptionalHook|hookRunOptional|-or|-name|*.md
-runHook|hookRun|-or|-name|*.md
-__failArgument|__throwArgument
-__failEnvironment|__throwEnvironment
-__usageEnvironment|__catchEnvironment
-__usageArgument|__catchArgument

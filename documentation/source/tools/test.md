@@ -4,8 +4,6 @@
 [🛠️ Tools ](./index.md) &middot; [⬅ Top ](../index.md)
 <hr />
 
-{validateFileExtensionContents}
-{validateFileContents}
 {evalCheck}
 {bashFindUncaughtAssertions}
 

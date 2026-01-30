@@ -539,11 +539,10 @@ _fileMatches() {
 }
 
 # Argument: success - Boolean. Required. Should it match or NOT match to be considered success? `true` means match is success
-# Argument: pattern ... - String. Required.`grep -e` Pattern to find in files. No quoting is added so ensure these are compatible with `grep -e`.
-# Argument: -- - Delimiter. Required. exception.
-# Argument: exception ... - String. Optional. `grep -e` File pattern which should be ignored.
-# Argument: -- - Delimiter. Required. file.
-# Argument: file ... - File. Required. File to search. Special file `-` indicates files should be read from `stdin`.
+# Argument: pattern ... -- - String. Required.`grep -e` Pattern to find in files. No quoting is added so ensure these are compatible with `grep -e`.
+# Argument: exception ... -- - String. Optional. `grep -e` File pattern which should be ignored.
+# Argument: file ... - File. Optional. File to search. Special file `-` indicates files should be read from `stdin`, or blank also means read from `stdin`.
+# stdin: Files to search, one per line
 _fileMatchesHelper() {
   local handler="${1-}" && shift
   local success="${1-}" && shift
@@ -567,19 +566,16 @@ _fileMatchesHelper() {
     shift
   done
   [ "${#patterns[@]}" -gt 0 ] || catchArgument "$handler" "No patterns" || return $?
-  [ $# -gt 0 ] || catchArgument "$handler" "no exceptions or files" || return $?
   while [ $# -gt 0 ]; do [ "$1" = "--" ] && shift && break || exceptions+=("$1") && shift; done
-  [ $# -gt 0 ] || catchArgument "$handler" "no files" || return $?
   fileList=$(fileTemporaryName "$handler") || return $?
   foundLines="$fileList.found"
   clean=("$fileList" "$foundLines")
-  if [ "$1" = "-" ]; then
+  if [ $# -eq 0 ] || [ "$1" = "-" ]; then
     catchEnvironment "$handler" cat >"$fileList" || returnClean $? "${clean[@]}" || return $?
+  else
+    catchEnvironment "$handler" printf "%s\n" "$@" >"$fileList" || returnClean $? "${clean[@]}" || return $?
   fi
   for pattern in "${patterns[@]}"; do
-    if [ "$1" != "-" ]; then
-      catchEnvironment "$handler" printf "%s\n" "$@" >"$fileList" || returnClean $? "${clean[@]}" || return $?
-    fi
     while read -r file; do
       if [ "${#exceptions[@]}" -gt 0 ] && stringContains "$file" "${exceptions[@]}"; then
         continue

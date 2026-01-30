@@ -1,8 +1,7 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-27
+# Generated on 2026-01-30
 # shellcheck disable=SC2034
-applicationFile="bin/build/tools/environment/application.sh"
 argument="where - Directory. Optional. Where to load the \`.env\` files."$'\n'"--help - Flag. Optional. Display this help."$'\n'""
 base="application.sh"
 deprecated="2024-07-20"$'\n'""
@@ -13,11 +12,11 @@ rawComment="Argument: where - Directory. Optional. Where to load the \`.env\` fi
 return_code="1 - if \`.env\` does not exist; outputs an error"$'\n'"0 - if files are loaded successfully"$'\n'""
 see="toDockerEnv"$'\n'"environmentFileLoad"$'\n'""
 sourceFile="bin/build/tools/environment/application.sh"
-sourceModified="1769451094"
+sourceHash="098b7608780123a2e21e2a57911d53cdd9997acc"
 summary="Load \`.env\` and optional \`.env.local\` into bash context"$'\n'""
 usage="dotEnvConfigure [ where ] [ --help ]"
 # shellcheck disable=SC2016
 helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]mdotEnvConfigure'$'\e''[0m '$'\e''[[(blue)]m[ where ]'$'\e''[0m '$'\e''[[(blue)]m[ --help ]'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[(blue)]mwhere   '$'\e''[[(value)]mDirectory. Optional. Where to load the '$'\e''[[(code)]m.env'$'\e''[[(reset)]m files.'$'\e''[[(reset)]m'$'\n''    '$'\e''[[(blue)]m--help  '$'\e''[[(value)]mFlag. Optional. Display this help.'$'\e''[[(reset)]m'$'\n'''$'\n''Loads '$'\e''[[(code)]m.env'$'\e''[[(reset)]m which is the current project configuration file'$'\n''Also loads '$'\e''[[(code)]m.env.local'$'\e''[[(reset)]m if it exists'$'\n''Generally speaking - these are NAME=value files and should be parsable by'$'\n''bash and other languages.'$'\n''Requires the file '$'\e''[[(code)]m.env'$'\e''[[(reset)]m to exist and is loaded via bash '$'\e''[[(code)]msource'$'\e''[[(reset)]m and all variables are '$'\e''[[(code)]mexport'$'\e''[[(reset)]med in the current shell context.'$'\n''If '$'\e''[[(code)]m.env.local'$'\e''[[(reset)]m exists, it is also loaded in a similar manner.'$'\n''Use with caution on trusted content only.'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - if '$'\e''[[(code)]m.env'$'\e''[[(reset)]m does not exist; outputs an error'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - if files are loaded successfully'$'\n'''
 # shellcheck disable=SC2016
-helpPlain='Usage: dotEnvConfigure [ where ] [ --help ]'$'\n'''$'\n''    where   Directory. Optional. Where to load the .env files.'$'\n''    --help  Flag. Optional. Display this help.'$'\n'''$'\n''Loads .env which is the current project configuration file'$'\n''Also loads .env.local if it exists'$'\n''Generally speaking - these are NAME=value files and should be parsable by'$'\n''bash and other languages.'$'\n''Requires the file .env to exist and is loaded via bash source and all variables are exported in the current shell context.'$'\n''If .env.local exists, it is also loaded in a similar manner.'$'\n''Use with caution on trusted content only.'$'\n'''$'\n''Return codes:'$'\n''- 1 - if .env does not exist; outputs an error'$'\n''- 0 - if files are loaded successfully'$'\n'''
-# elapsed 0.424
+helpPlain='[[(label)]mUsage: [[(info)]mdotEnvConfigure [[(blue)]m[ where ] [[(blue)]m[ --help ]'$'\n'''$'\n''    [[(blue)]mwhere   [[(value)]mDirectory. Optional. Where to load the [[(code)]m.env[[(reset)]m files.[[(reset)]m'$'\n''    [[(blue)]m--help  [[(value)]mFlag. Optional. Display this help.[[(reset)]m'$'\n'''$'\n''Loads [[(code)]m.env[[(reset)]m which is the current project configuration file'$'\n''Also loads [[(code)]m.env.local[[(reset)]m if it exists'$'\n''Generally speaking - these are NAME=value files and should be parsable by'$'\n''bash and other languages.'$'\n''Requires the file [[(code)]m.env[[(reset)]m to exist and is loaded via bash [[(code)]msource[[(reset)]m and all variables are [[(code)]mexport[[(reset)]med in the current shell context.'$'\n''If [[(code)]m.env.local[[(reset)]m exists, it is also loaded in a similar manner.'$'\n''Use with caution on trusted content only.'$'\n'''$'\n''Return codes:'$'\n''- [[(code)]m1[[(reset)]m - if [[(code)]m.env[[(reset)]m does not exist; outputs an error'$'\n''- [[(code)]m0[[(reset)]m - if files are loaded successfully'$'\n'''
+# elapsed 2.784

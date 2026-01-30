@@ -1,8 +1,7 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-27
+# Generated on 2026-01-29
 # shellcheck disable=SC2034
-applicationFile="bin/build/tools/vendor.sh"
 argument="--help - Flag. Optional. Display this help."$'\n'""
 base="vendor.sh"
 description="Are we within the JetBrains PyCharm terminal?"$'\n'""
@@ -12,11 +11,11 @@ rawComment="Are we within the JetBrains PyCharm terminal?"$'\n'"Argument: --help
 return_code="0 - within the PyCharm terminal"$'\n'"1 - not within the PyCharm terminal AFAIK"$'\n'""
 see="contextOpen"$'\n'""
 sourceFile="bin/build/tools/vendor.sh"
-sourceModified="1769063211"
+sourceHash="a00ec5f768f6e94f4baef8adcc9e53d11158fb5a"
 summary="Are we within the JetBrains PyCharm terminal?"
 usage="isPyCharm [ --help ]"
 # shellcheck disable=SC2016
 helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]misPyCharm'$'\e''[0m '$'\e''[[(blue)]m[ --help ]'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[(blue)]m--help  '$'\e''[[(value)]mFlag. Optional. Display this help.'$'\e''[[(reset)]m'$'\n'''$'\n''Are we within the JetBrains PyCharm terminal?'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - within the PyCharm terminal'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - not within the PyCharm terminal AFAIK'$'\n'''
 # shellcheck disable=SC2016
 helpPlain='Usage: isPyCharm [ --help ]'$'\n'''$'\n''    --help  Flag. Optional. Display this help.'$'\n'''$'\n''Are we within the JetBrains PyCharm terminal?'$'\n'''$'\n''Return codes:'$'\n''- 0 - within the PyCharm terminal'$'\n''- 1 - not within the PyCharm terminal AFAIK'$'\n'''
-# elapsed 0.435
+# elapsed 1.295

@@ -391,7 +391,7 @@ urlFilter() {
   if $showFile && [ -n "$file" ]; then
     prefix="$file: "
   fi
-  stripAnsi | while IFS="" read -r line; do
+  consoleToPlain | while IFS="" read -r line; do
     lineNumber=$((lineNumber + 1))
     _urlExtract "$line" "$prefix" "$lineNumber" "$debugFlag" || :
   done

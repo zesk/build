@@ -62,7 +62,7 @@ __decorateExtensionWrap() {
   local actualWidth
   if [ -n "$width" ]; then
     local strippedText
-    strippedText="$(printf "%s" "$prefix$suffix" | stripAnsi)"
+    strippedText="$(printf "%s" "$prefix$suffix" | consoleToPlain)"
     actualWidth=$((width - ${#strippedText}))
     if [ "$actualWidth" -lt 0 ]; then
       throwArgument "$handler" "$width is too small to support prefix and suffix characters (${#prefix} + ${#suffix}):"$'\n'"prefix=$prefix"$'\n'"suffix=$suffix" || return $?
@@ -76,7 +76,7 @@ __decorateExtensionWrap() {
   while IFS= read -r line; do
     if [ -n "$fill" ]; then
       local cleanLine
-      cleanLine="$(printf "%s" "$line" | stripAnsi)"
+      cleanLine="$(printf "%s" "$line" | consoleToPlain)"
       padWidth=$((actualWidth - ${#cleanLine}))
       if [ $padWidth -gt 0 ]; then
         pad=$(textRepeat "$padWidth" "$fill")

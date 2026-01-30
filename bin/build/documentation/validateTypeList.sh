@@ -1,8 +1,7 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-27
+# Generated on 2026-01-30
 # shellcheck disable=SC2034
-applicationFile="bin/build/tools/validate.sh"
 argument="none"
 base="validate.sh"
 description="List types which can be validated"$'\n'""
@@ -11,11 +10,11 @@ foundNames=()
 rawComment="List types which can be validated"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/validate.sh"
-sourceModified="1769208503"
+sourceHash="a017130c50cfd71b97bdb37416d0588209c03574"
 summary="List types which can be validated"
 usage="validateTypeList"
 # shellcheck disable=SC2016
 helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]mvalidateTypeList'$'\e''[0m'$'\n'''$'\n''List types which can be validated'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - Success'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - Environment error'$'\n''- '$'\e''[[(code)]m2'$'\e''[[(reset)]m - Argument error'$'\n'''
 # shellcheck disable=SC2016
 helpPlain='Usage: validateTypeList'$'\n'''$'\n''List types which can be validated'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''
-# elapsed 0.403
+# elapsed 0.553

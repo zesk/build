@@ -1,8 +1,7 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-27
+# Generated on 2026-01-30
 # shellcheck disable=SC2034
-applicationFile="bin/build/tools/text.sh"
 argument="--help - Flag. Optional. Display this help."$'\n'"--handler handler - Function. Optional. Use this error handler instead of the default error handler."$'\n'"file - File. Optional. Output line count for each file specified. If no files specified, uses stdin."$'\n'""
 base="text.sh"
 description="Outputs the number of lines read from stdin (or supplied files) until EOF. For multiple files passed on the command line - each one is output separately."$'\n'"This is essentially a wrapper around \`wc -l\` which strips whitespace and does type checking."$'\n'""
@@ -11,13 +10,8 @@ foundNames=([0]="stdout" [1]="argument" [2]="stdin")
 rawComment="stdout: UnsignedInteger"$'\n'"Outputs the number of lines read from stdin (or supplied files) until EOF. For multiple files passed on the command line - each one is output separately."$'\n'"This is essentially a wrapper around \`wc -l\` which strips whitespace and does type checking."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Argument: --handler handler - Function. Optional. Use this error handler instead of the default error handler."$'\n'"Argument: file - File. Optional. Output line count for each file specified. If no files specified, uses stdin."$'\n'"stdin: Lines are read from standard in and counted"$'\n'"stdout: \`UnsignedInteger\`"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/text.sh"
-sourceModified="1769320918"
+sourceHash="fe2d9b708c7989f56c14d5c18c68077ff92c9081"
 stdin="Lines are read from standard in and counted"$'\n'""
 stdout="UnsignedInteger"$'\n'"\`UnsignedInteger\`"$'\n'""
 summary="Outputs the number of lines read from stdin (or supplied"
 usage="fileLineCount [ --help ] [ --handler handler ] [ file ]"
-# shellcheck disable=SC2016
-helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]mfileLineCount'$'\e''[0m '$'\e''[[(blue)]m[ --help ]'$'\e''[0m '$'\e''[[(blue)]m[ --handler handler ]'$'\e''[0m '$'\e''[[(blue)]m[ file ]'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[(blue)]m--help             '$'\e''[[(value)]mFlag. Optional. Display this help.'$'\e''[[(reset)]m'$'\n''    '$'\e''[[(blue)]m--handler handler  '$'\e''[[(value)]mFunction. Optional. Use this error handler instead of the default error handler.'$'\e''[[(reset)]m'$'\n''    '$'\e''[[(blue)]mfile               '$'\e''[[(value)]mFile. Optional. Output line count for each file specified. If no files specified, uses stdin.'$'\e''[[(reset)]m'$'\n'''$'\n''Outputs the number of lines read from stdin (or supplied files) until EOF. For multiple files passed on the command line - each one is output separately.'$'\n''This is essentially a wrapper around '$'\e''[[(code)]mwc -l'$'\e''[[(reset)]m which strips whitespace and does type checking.'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - Success'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - Environment error'$'\n''- '$'\e''[[(code)]m2'$'\e''[[(reset)]m - Argument error'$'\n'''$'\n''Reads from '$'\e''[[(code)]mstdin'$'\e''[[(reset)]m:'$'\n''Lines are read from standard in and counted'$'\n'''$'\n''Writes to '$'\e''[[(code)]mstdout'$'\e''[[(reset)]m:'$'\n''UnsignedInteger'$'\n'''$'\e''[[(code)]mUnsignedInteger'$'\e''[[(reset)]m'$'\n'''
-# shellcheck disable=SC2016
-helpPlain='Usage: fileLineCount [ --help ] [ --handler handler ] [ file ]'$'\n'''$'\n''    --help             Flag. Optional. Display this help.'$'\n''    --handler handler  Function. Optional. Use this error handler instead of the default error handler.'$'\n''    file               File. Optional. Output line count for each file specified. If no files specified, uses stdin.'$'\n'''$'\n''Outputs the number of lines read from stdin (or supplied files) until EOF. For multiple files passed on the command line - each one is output separately.'$'\n''This is essentially a wrapper around wc -l which strips whitespace and does type checking.'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''$'\n''Reads from stdin:'$'\n''Lines are read from standard in and counted'$'\n'''$'\n''Writes to stdout:'$'\n''UnsignedInteger'$'\n''UnsignedInteger'$'\n'''
-# elapsed 0.476

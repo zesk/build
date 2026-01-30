@@ -1,8 +1,7 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-27
+# Generated on 2026-01-29
 # shellcheck disable=SC2034
-applicationFile="bin/build/tools/vendor.sh"
 argument="--help - Flag. Optional. Display this help."$'\n'""
 base="vendor.sh"
 description="Are we within the JetBrains PHPStorm terminal?"$'\n'""
@@ -12,11 +11,11 @@ rawComment="Are we within the JetBrains PHPStorm terminal?"$'\n'"Argument: --hel
 return_code="0 - within the PhpStorm terminal"$'\n'"1 - not within the PhpStorm terminal AFAIK"$'\n'""
 see="contextOpen"$'\n'""
 sourceFile="bin/build/tools/vendor.sh"
-sourceModified="1769063211"
+sourceHash="a00ec5f768f6e94f4baef8adcc9e53d11158fb5a"
 summary="Are we within the JetBrains PHPStorm terminal?"
 usage="isPHPStorm [ --help ]"
 # shellcheck disable=SC2016
 helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]misPHPStorm'$'\e''[0m '$'\e''[[(blue)]m[ --help ]'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[(blue)]m--help  '$'\e''[[(value)]mFlag. Optional. Display this help.'$'\e''[[(reset)]m'$'\n'''$'\n''Are we within the JetBrains PHPStorm terminal?'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - within the PhpStorm terminal'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - not within the PhpStorm terminal AFAIK'$'\n'''
 # shellcheck disable=SC2016
-helpPlain='Usage: isPHPStorm [ --help ]'$'\n'''$'\n''    --help  Flag. Optional. Display this help.'$'\n'''$'\n''Are we within the JetBrains PHPStorm terminal?'$'\n'''$'\n''Return codes:'$'\n''- 0 - within the PhpStorm terminal'$'\n''- 1 - not within the PhpStorm terminal AFAIK'$'\n'''
-# elapsed 0.409
+helpPlain='Usage: [[(info)]misPHPStorm [ --help ]'$'\n'''$'\n''    --help  Flag. Optional. Display this help.'$'\n'''$'\n''Are we within the JetBrains PHPStorm terminal?'$'\n'''$'\n''Return codes:'$'\n''- 0 - within the PhpStorm terminal'$'\n''- 1 - not within the PhpStorm terminal AFAIK'$'\n'''
+# elapsed 1.545

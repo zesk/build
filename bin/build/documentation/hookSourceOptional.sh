@@ -1,8 +1,7 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-27
+# Generated on 2026-01-30
 # shellcheck disable=SC2034
-applicationFile="bin/build/tools/hook.sh"
 argument="--application applicationHome - Path. Optional. Directory of alternate application home."$'\n'"--extensions extensionList - ColonDelimitedList. Optional. List of extensions to search, in order for matching files in each hook directory. Defaults to \`BUILD_HOOK_EXTENSIONS\`."$'\n'"hookName ... - String. Required. Hook to source (if it exists)."$'\n'""
 base="hook.sh"
 build_debug="hook - \`hookRun\` and \`hookSource\` and optional versions of the same functions will output additional debugging information"$'\n'""
@@ -15,7 +14,7 @@ rawComment="Identical to \`hookRun\` but returns exit code zero if the hook does
 return_code="Any - The hook exit code is returned if it is run"$'\n'"0 - is returned if the hook is not found"$'\n'""
 see="hooks.md hookRun"$'\n'""
 sourceFile="bin/build/tools/hook.sh"
-sourceModified="1769324061"
+sourceHash="ca4324b993995a1e38420f04516f1fbf3aaa6bef"
 summary="Identical to \`hookRun\` but returns exit code zero if the"
 test="testHookSystem"$'\n'""
 usage="hookSourceOptional [ --application applicationHome ] [ --extensions extensionList ] hookName ..."
@@ -23,4 +22,4 @@ usage="hookSourceOptional [ --application applicationHome ] [ --extensions exten
 helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]mhookSourceOptional'$'\e''[0m '$'\e''[[(blue)]m[ --application applicationHome ]'$'\e''[0m '$'\e''[[(blue)]m[ --extensions extensionList ]'$'\e''[0m '$'\e''[[(bold)]m'$'\e''[[(magenta)]mhookName ...'$'\e''[0m'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[(blue)]m--application applicationHome  '$'\e''[[(value)]mPath. Optional. Directory of alternate application home.'$'\e''[[(reset)]m'$'\n''    '$'\e''[[(blue)]m--extensions extensionList     '$'\e''[[(value)]mColonDelimitedList. Optional. List of extensions to search, in order for matching files in each hook directory. Defaults to '$'\e''[[(code)]mBUILD_HOOK_EXTENSIONS'$'\e''[[(reset)]m.'$'\e''[[(reset)]m'$'\n''    '$'\e''[[(red)]mhookName ...                   '$'\e''[[(value)]mString. Required. Hook to source (if it exists).'$'\e''[[(reset)]m'$'\n'''$'\n''Identical to '$'\e''[[(code)]mhookRun'$'\e''[[(reset)]m but returns exit code zero if the hook does not exist.'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]mAny'$'\e''[[(reset)]m - The hook exit code is returned if it is run'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - is returned if the hook is not found'$'\n'''$'\n''Environment variables:'$'\n''- BUILD_HOOK_EXTENSIONS'$'\n''- BUILD_HOOK_DIRS'$'\n''- BUILD_DEBUG'$'\n'''$'\n''Example:'$'\n''    hookSourceOptional test-cleanup'$'\n'''$'\n'''$'\e''[[(code)]mBUILD_DEBUG'$'\e''[[(reset)]m settings:'$'\n''- '$'\e''[[(code)]mhook'$'\e''[[(reset)]m - '$'\e''[[(code)]mhookRun'$'\e''[[(reset)]m and '$'\e''[[(code)]mhookSource'$'\e''[[(reset)]m and optional versions of the same functions will output additional debugging information'$'\n'''
 # shellcheck disable=SC2016
 helpPlain='Usage: hookSourceOptional [ --application applicationHome ] [ --extensions extensionList ] hookName ...'$'\n'''$'\n''    --application applicationHome  Path. Optional. Directory of alternate application home.'$'\n''    --extensions extensionList     ColonDelimitedList. Optional. List of extensions to search, in order for matching files in each hook directory. Defaults to BUILD_HOOK_EXTENSIONS.'$'\n''    hookName ...                   String. Required. Hook to source (if it exists).'$'\n'''$'\n''Identical to hookRun but returns exit code zero if the hook does not exist.'$'\n'''$'\n''Return codes:'$'\n''- Any - The hook exit code is returned if it is run'$'\n''- 0 - is returned if the hook is not found'$'\n'''$'\n''Environment variables:'$'\n''- BUILD_HOOK_EXTENSIONS'$'\n''- BUILD_HOOK_DIRS'$'\n''- BUILD_DEBUG'$'\n'''$'\n''Example:'$'\n''    hookSourceOptional test-cleanup'$'\n'''$'\n''BUILD_DEBUG settings:'$'\n''- hook - hookRun and hookSource and optional versions of the same functions will output additional debugging information'$'\n'''
-# elapsed 0.494
+# elapsed 2.618

@@ -395,7 +395,7 @@ trimBoth
 trimHead
 trimTail
 singleBlankLines
-stripAnsi
+consoleToPlain
 randomString
 timingStart
 validateTypeList

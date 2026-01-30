@@ -17,7 +17,7 @@ testUsageTemplate() {
 
   # Now test internals
   local output
-  output=$(__usageTemplate testThatFunction "--one thing^ String. Required. Thing."$'\n'"--another thing^ Integer. Optional. Another thing." "^" "Makes the world a better place" 0 | stripAnsi) || throwEnvironment "$handler" "usageTemplate failed" || return $?
+  output=$(__usageTemplate testThatFunction "--one thing^ String. Required. Thing."$'\n'"--another thing^ Integer. Optional. Another thing." "^" "Makes the world a better place" 0 | consoleToPlain) || throwEnvironment "$handler" "usageTemplate failed" || return $?
   assertEquals "$output" "$(cat "$home/test/example/usageTemplateSimple.txt")" || return $?
 }
 

@@ -1,8 +1,7 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-27
+# Generated on 2026-01-29
 # shellcheck disable=SC2034
-applicationFile="bin/build/tools/directory.sh"
 argument="--help - Flag. Optional. Display this help."$'\n'"--mode fileMode - String. Optional. Enforce the directory mode for \`mkdir --mode\` and \`chmod\`. Affects directories after it in the command line; supply multiple modes and order your directories if needed. Set to \`-\` to reset to no value."$'\n'"--owner ownerName - String. Optional. Enforce the directory owner the directory. Affects all directories supplied AFTER it on the command line. Set to \`-\` to reset to no value."$'\n'"fileDirectory ... - FileDirectory. Required. Test if file directory exists (file does not have to exist)"$'\n'""
 base="directory.sh"
 description="Given a list of files, ensure their parent directories exist"$'\n'"Creates the directories for all files passed in."$'\n'""
@@ -14,11 +13,11 @@ rawComment="Given a list of files, ensure their parent directories exist"$'\n'"C
 requires="chmod throwArgument usageArgumentString decorate catchEnvironment dirname"$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/directory.sh"
-sourceModified="1769063211"
+sourceHash="3208655560421bf47879e846dcb93d72afdf47f7"
 summary="Given a list of files, ensure their parent directories exist"
 usage="fileDirectoryRequire [ --help ] [ --mode fileMode ] [ --owner ownerName ] fileDirectory ..."
 # shellcheck disable=SC2016
 helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]mfileDirectoryRequire'$'\e''[0m '$'\e''[[(blue)]m[ --help ]'$'\e''[0m '$'\e''[[(blue)]m[ --mode fileMode ]'$'\e''[0m '$'\e''[[(blue)]m[ --owner ownerName ]'$'\e''[0m '$'\e''[[(bold)]m'$'\e''[[(magenta)]mfileDirectory ...'$'\e''[0m'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[(blue)]m--help             '$'\e''[[(value)]mFlag. Optional. Display this help.'$'\e''[[(reset)]m'$'\n''    '$'\e''[[(blue)]m--mode fileMode    '$'\e''[[(value)]mString. Optional. Enforce the directory mode for '$'\e''[[(code)]mmkdir --mode'$'\e''[[(reset)]m and '$'\e''[[(code)]mchmod'$'\e''[[(reset)]m. Affects directories after it in the command line; supply multiple modes and order your directories if needed. Set to '$'\e''[[(code)]m-'$'\e''[[(reset)]m to reset to no value.'$'\e''[[(reset)]m'$'\n''    '$'\e''[[(blue)]m--owner ownerName  '$'\e''[[(value)]mString. Optional. Enforce the directory owner the directory. Affects all directories supplied AFTER it on the command line. Set to '$'\e''[[(code)]m-'$'\e''[[(reset)]m to reset to no value.'$'\e''[[(reset)]m'$'\n''    '$'\e''[[(red)]mfileDirectory ...  '$'\e''[[(value)]mFileDirectory. Required. Test if file directory exists (file does not have to exist)'$'\e''[[(reset)]m'$'\n'''$'\n''Given a list of files, ensure their parent directories exist'$'\n''Creates the directories for all files passed in.'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - Success'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - Environment error'$'\n''- '$'\e''[[(code)]m2'$'\e''[[(reset)]m - Argument error'$'\n'''$'\n''Example:'$'\n''    logFile=./.build/$me.log'$'\n''    fileDirectoryRequire "$logFile"'$'\n'''
 # shellcheck disable=SC2016
 helpPlain='Usage: fileDirectoryRequire [ --help ] [ --mode fileMode ] [ --owner ownerName ] fileDirectory ...'$'\n'''$'\n''    --help             Flag. Optional. Display this help.'$'\n''    --mode fileMode    String. Optional. Enforce the directory mode for mkdir --mode and chmod. Affects directories after it in the command line; supply multiple modes and order your directories if needed. Set to - to reset to no value.'$'\n''    --owner ownerName  String. Optional. Enforce the directory owner the directory. Affects all directories supplied AFTER it on the command line. Set to - to reset to no value.'$'\n''    fileDirectory ...  FileDirectory. Required. Test if file directory exists (file does not have to exist)'$'\n'''$'\n''Given a list of files, ensure their parent directories exist'$'\n''Creates the directories for all files passed in.'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''$'\n''Example:'$'\n''    logFile=./.build/$me.log'$'\n''    fileDirectoryRequire "$logFile"'$'\n'''
-# elapsed 0.496
+# elapsed 0.61

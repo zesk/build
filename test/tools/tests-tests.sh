@@ -23,7 +23,7 @@ testWrapperShellScripts() {
     catchEnvironment "$handler" "shellcheck failed" || return $?
   fi
   catchEnvironment "$handler" muzzle pushd "$home" || return $?
-  if ! validateFileExtensionContents sh -- "Copyright &copy; $thisYear" "$BUILD_COMPANY" -- "${findArgs[@]}"; then
+  if ! fileMatches "Copyright &copy; $thisYear" "$BUILD_COMPANY" -- < <(find "$home" -name '*.sh' "${findArgs[@]}"); then
     unset BUILD_COMPANY
     catchEnvironment "$handler" "validateFileExtensionContents failed" || return $?
   fi

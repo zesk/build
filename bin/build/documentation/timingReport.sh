@@ -1,8 +1,7 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-27
+# Generated on 2026-01-29
 # shellcheck disable=SC2034
-applicationFile="bin/build/tools/timing.sh"
 argument="--color color - Make text this color (default is \`green\`)"$'\n'"--help - Flag. Optional. Display this help."$'\n'"--handler handler - Function. Optional. Use this error handler instead of the default error handler."$'\n'"start - Unix timestamp milliseconds. See \`timingStart\`."$'\n'"message - Any additional arguments are output before the elapsed value computed"$'\n'""
 base="timing.sh"
 description="Outputs the timing optionally prefixed by a message."$'\n'"Outputs a nice colorful message showing the number of seconds elapsed as well as your custom message."$'\n'""
@@ -14,7 +13,7 @@ rawComment="Outputs the timing optionally prefixed by a message."$'\n'"Summary: 
 return_code="0 - Exits with exit code zero"$'\n'""
 see="timingStart"$'\n'""
 sourceFile="bin/build/tools/timing.sh"
-sourceModified="1769063211"
+sourceHash="8cfb9a50fadfff4b381ff34068eab3136b206319"
 summary="Output the time elapsed"$'\n'""
 usage="timingReport [ --color color ] [ --help ] [ --handler handler ] [ start ] [ message ]"
 # shellcheck disable=SC2016

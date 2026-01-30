@@ -1,8 +1,7 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-27
+# Generated on 2026-01-29
 # shellcheck disable=SC2034
-applicationFile="bin/build/tools/date.sh"
 argument="--local - Flag. Optional. Local yesterday"$'\n'"--help - Flag. Optional. Display this help."$'\n'""
 base="date.sh"
 description="Returns yesterday's date, in YYYY-MM-DD format. (same as \`%F\`)"$'\n'""
@@ -13,11 +12,11 @@ rawComment="Returns yesterday's date, in YYYY-MM-DD format. (same as \`%F\`)"$'\
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 rotated=""
 sourceFile="bin/build/tools/date.sh"
-sourceModified="1769184556"
+sourceHash="9a217a468b4498cc58a48e05ea655c248a77d8c1"
 summary="Yesterday's date (UTC time)"$'\n'""
 usage="dateYesterday [ --local ] [ --help ]"
 # shellcheck disable=SC2016
 helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]mdateYesterday'$'\e''[0m '$'\e''[[(blue)]m[ --local ]'$'\e''[0m '$'\e''[[(blue)]m[ --help ]'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[(blue)]m--local  '$'\e''[[(value)]mFlag. Optional. Local yesterday'$'\e''[[(reset)]m'$'\n''    '$'\e''[[(blue)]m--help   '$'\e''[[(value)]mFlag. Optional. Display this help.'$'\e''[[(reset)]m'$'\n'''$'\n''Returns yesterday'\''s date, in YYYY-MM-DD format. (same as '$'\e''[[(code)]m%F'$'\e''[[(reset)]m)'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - Success'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - Environment error'$'\n''- '$'\e''[[(code)]m2'$'\e''[[(reset)]m - Argument error'$'\n'''$'\n''Example:'$'\n''    rotated="$log.$(dateYesterday --local)"'$'\n'''
 # shellcheck disable=SC2016
-helpPlain='Usage: dateYesterday [ --local ] [ --help ]'$'\n'''$'\n''    --local  Flag. Optional. Local yesterday'$'\n''    --help   Flag. Optional. Display this help.'$'\n'''$'\n''Returns yesterday'\''s date, in YYYY-MM-DD format. (same as %F)'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''$'\n''Example:'$'\n''    rotated="$log.$(dateYesterday --local)"'$'\n'''
-# elapsed 0.454
+helpPlain='[[(label)]mUsage: [[(info)]mdateYesterday [[(blue)]m[ --local ] [[(blue)]m[ --help ]'$'\n'''$'\n''    [[(blue)]m--local  Flag. Optional. Local yesterday'$'\n''    [[(blue)]m--help   Flag. Optional. Display this help.'$'\n'''$'\n''Returns yesterday'\''s date, in YYYY-MM-DD format. (same as %F)'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''$'\n''Example:'$'\n''    rotated="$log.$(dateYesterday --local)"'$'\n'''
+# elapsed 1.89

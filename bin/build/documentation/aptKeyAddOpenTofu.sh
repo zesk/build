@@ -1,8 +1,7 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-27
+# Generated on 2026-01-29
 # shellcheck disable=SC2034
-applicationFile="bin/build/tools/tofu.sh"
 argument="--help - Flag. Optional. Display this help."$'\n'""
 base="tofu.sh"
 description="Add keys to enable apt to download tofu directly from opentofu.org"$'\n'""
@@ -12,11 +11,11 @@ rawComment="Add keys to enable apt to download tofu directly from opentofu.org"$
 return_code="1 - if environment is awry"$'\n'"0 - All good to install terraform"$'\n'""
 see="aptKeyRemoveOpenTofu"$'\n'""
 sourceFile="bin/build/tools/tofu.sh"
-sourceModified="1769184734"
+sourceHash="43ee145bf6b54d6972866add37ebf9eda9c165df"
 summary="Add keys to enable apt to download tofu directly from"
 usage="aptKeyAddOpenTofu [ --help ]"
 # shellcheck disable=SC2016
 helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]maptKeyAddOpenTofu'$'\e''[0m '$'\e''[[(blue)]m[ --help ]'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[(blue)]m--help  '$'\e''[[(value)]mFlag. Optional. Display this help.'$'\e''[[(reset)]m'$'\n'''$'\n''Add keys to enable apt to download tofu directly from opentofu.org'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - if environment is awry'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - All good to install terraform'$'\n'''
 # shellcheck disable=SC2016
-helpPlain='Usage: aptKeyAddOpenTofu [ --help ]'$'\n'''$'\n''    --help  Flag. Optional. Display this help.'$'\n'''$'\n''Add keys to enable apt to download tofu directly from opentofu.org'$'\n'''$'\n''Return codes:'$'\n''- 1 - if environment is awry'$'\n''- 0 - All good to install terraform'$'\n'''
-# elapsed 0.454
+helpPlain='[[(label)]mUsage: [[(info)]maptKeyAddOpenTofu [[(blue)]m[ --help ]'$'\n'''$'\n''    [[(blue)]m--help  [[(value)]mFlag. Optional. Display this help.'$'\n'''$'\n''Add keys to enable apt to download tofu directly from opentofu.org'$'\n'''$'\n''Return codes:'$'\n''- [[(code)]m1 - if environment is awry'$'\n''- [[(code)]m0 - All good to install terraform'$'\n'''
+# elapsed 2.081

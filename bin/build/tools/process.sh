@@ -124,7 +124,7 @@ processWait() {
       if [ ${#sendSignals[@]} -gt 0 ]; then
         signal="${sendSignals[0]}"
         unset 'sendSignals[0]'
-        sendSignals=("${sendSignals[@]}")
+        sendSignals=("${sendSignals[@]+"${sendSignals[@]}"}")
         # Reset aliveIds, load them from _processSignal
         ! $verboseFlag || statusMessage decorate info "Sending $(decorate label "$signal") to $(IFS=, decorate code "${processIds[*]}")"
         catchEnvironment "$handler" _processSignal "$signal" "${processIds[@]}" >"$processTemp" || return $?

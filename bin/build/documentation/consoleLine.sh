@@ -1,8 +1,7 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-27
+# Generated on 2026-01-30
 # shellcheck disable=SC2034
-applicationFile="bin/build/tools/decorate/line.sh"
 argument="alternateChar - String. Optional. Use an alternate character or string output"$'\n'"offset - Integer. Optional. an integer offset to increase or decrease the size of the bar (default is \`0\`)"$'\n'""
 base="line.sh"
 description="Output a bar as wide as the console using the \`=\` symbol."$'\n'""
@@ -13,11 +12,11 @@ rawComment="Summary: Output a bar as wide as the console"$'\n'"Output a bar as w
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 see="consoleColumns"$'\n'""
 sourceFile="bin/build/tools/decorate/line.sh"
-sourceModified="1769227354"
+sourceHash="d4cd740d5d6a84a884fd713f35b747da69c16f00"
 summary="Output a bar as wide as the console"$'\n'""
 usage="consoleLine [ alternateChar ] [ offset ]"
 # shellcheck disable=SC2016
 helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]mconsoleLine'$'\e''[0m '$'\e''[[(blue)]m[ alternateChar ]'$'\e''[0m '$'\e''[[(blue)]m[ offset ]'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[(blue)]malternateChar  '$'\e''[[(value)]mString. Optional. Use an alternate character or string output'$'\e''[[(reset)]m'$'\n''    '$'\e''[[(blue)]moffset         '$'\e''[[(value)]mInteger. Optional. an integer offset to increase or decrease the size of the bar (default is '$'\e''[[(code)]m0'$'\e''[[(reset)]m)'$'\e''[[(reset)]m'$'\n'''$'\n''Output a bar as wide as the console using the '$'\e''[[(code)]m='$'\e''[[(reset)]m symbol.'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - Success'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - Environment error'$'\n''- '$'\e''[[(code)]m2'$'\e''[[(reset)]m - Argument error'$'\n'''$'\n''Example:'$'\n''    decorate success $(consoleLine =-)'$'\n''    decorate success $(consoleLine "- Success ")'$'\n''    decorate magenta $(consoleLine +-)'$'\n'''
 # shellcheck disable=SC2016
-helpPlain='Usage: consoleLine [ alternateChar ] [ offset ]'$'\n'''$'\n''    alternateChar  String. Optional. Use an alternate character or string output'$'\n''    offset         Integer. Optional. an integer offset to increase or decrease the size of the bar (default is 0)'$'\n'''$'\n''Output a bar as wide as the console using the = symbol.'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''$'\n''Example:'$'\n''    decorate success $(consoleLine =-)'$'\n''    decorate success $(consoleLine "- Success ")'$'\n''    decorate magenta $(consoleLine +-)'$'\n'''
-# elapsed 0.754
+helpPlain='[[(label)]mUsage: [[(info)]mconsoleLine [[(blue)]m[ alternateChar ] [[(blue)]m[ offset ]'$'\n'''$'\n''    [[(blue)]malternateChar  [[(value)]mString. Optional. Use an alternate character or string output'$'\n''    [[(blue)]moffset         [[(value)]mInteger. Optional. an integer offset to increase or decrease the size of the bar (default is [[(code)]m0)'$'\n'''$'\n''Output a bar as wide as the console using the [[(code)]m= symbol.'$'\n'''$'\n''Return codes:'$'\n''- [[(code)]m0 - Success'$'\n''- [[(code)]m1 - Environment error'$'\n''- [[(code)]m2 - Argument error'$'\n'''$'\n''Example:'$'\n''    decorate success $(consoleLine =-)'$'\n''    decorate success $(consoleLine "- Success ")'$'\n''    decorate magenta $(consoleLine +-)'$'\n'''
+# elapsed 2.986

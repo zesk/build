@@ -72,8 +72,7 @@ if source "${BASH_SOURCE[0]%/*}/tools.sh"; then
     catchReturn "$handler" colorScheme <"$home/etc/term-colors.conf" || return $?
 
     # shellcheck disable=SC2139
-    alias t="$home/bin/build/tools.sh"
-    alias tools=t
+    alias t="tools"
     alias '?'="__buildHelp"
     alias bpr='__buildFingerUpdate && gitCommit && buildPR'
 

@@ -459,8 +459,8 @@ All functions in Zesk Build, alphabetically.
 - {SEE:markdownIndentHeading}
 - {SEE:markdownRemoveUnfinishedSections}
 - {SEE:markdownToConsole}
-- {SEE:maximumFieldLength}
-- {SEE:maximumLineLength}
+- {SEE:fileFieldMaximum}
+- {SEE:fileLineMaximum}
 - {SEE:muzzle}
 - {SEE:networkIPList}
 - {SEE:networkMACAddressList}
@@ -572,7 +572,7 @@ All functions in Zesk Build, alphabetically.
 - {SEE:stringOffsetInsensitive}
 - {SEE:stringReplace}
 - {SEE:stringValidate}
-- {SEE:stripAnsi}
+- {SEE:consoleToPlain}
 - {SEE:sysvInitScriptInstall}
 - {SEE:sysvInitScriptUninstall}
 - {SEE:tarCreate}

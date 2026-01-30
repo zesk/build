@@ -32,7 +32,7 @@
 
 ## Cleanup ANSI text
 
-{stripAnsi}
+{consoleToPlain}
 
 {consoleTrimWidth}
 
@@ -74,9 +74,9 @@
 
 {stringOffsetInsensitive}
 
-{maximumFieldLength}
+{fileFieldMaximum}
 
-{maximumLineLength}
+{fileLineMaximum}
 
 {fileEndsWithNewline}
 

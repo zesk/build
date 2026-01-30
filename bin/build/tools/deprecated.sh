@@ -2,7 +2,7 @@
 #
 # Copyright &copy; 2026 Market Acumen, Inc.
 #
-# Graveyard for code
+# Graveyard for code - 6 month death after it appears here. Same for deprecated.txt support.
 #
 # You should stop using these. Soon. Now. Yesterday.
 #
@@ -17,6 +17,18 @@
 #  |____/ \___| .__/|_|  \___|\___\__,_|\__\___|\__,_|
 #             |_|
 #
+
+# Deprecated: 2026-01
+maximumFieldLength() {
+  _deprecated "${FUNCNAME[0]}"
+  fileFieldMaximum "$@"
+}
+
+# Deprecated: 2026-01
+maximumLineLength() {
+  _deprecated "${FUNCNAME[0]}"
+  fileLineMaximum "$@"
+}
 
 # Deprecated: 2026-01
 boxedHeading() {

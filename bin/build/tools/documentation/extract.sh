@@ -30,11 +30,10 @@ __bashDocumentationSettingsFileDetails() {
   local home
   home=$(catchReturn "$handler" buildHome) || return $?
 
-  local applicationFile="${definitionFile#"${home%/}"/}"
-  catchReturn "$handler" __dumpSimpleValue "sourceFile" "$applicationFile" || return $?
-  catchReturn "$handler" __dumpSimpleValue "applicationFile" "$applicationFile" || return $?
-  catchReturn "$handler" __dumpSimpleValue "sourceModified" "$(fileModificationTime "$definitionFile")" || return $?
-  catchReturn "$handler" __dumpSimpleValue "file" "$applicationFile" || return $?
+  local file="${definitionFile#"${home%/}"/}"
+  catchReturn "$handler" __dumpSimpleValue "file" "$file" || return $?
+  catchReturn "$handler" __dumpSimpleValue "sourceFile" "$file" || return $?
+  catchReturn "$handler" __dumpSimpleValue "sourceHash" "$(shaPipe <"$definitionFile")" || return $?
   catchReturn "$handler" __dumpSimpleValue "base" "$(basename "$definitionFile")" || return $?
   [ -z "$lineNumber" ] || catchReturn "$handler" __dumpSimpleValue "sourceLine" "$lineNumber" || return $?
 }
@@ -103,15 +102,15 @@ __bashDocumentationExtract() {
 }
 __bashDocumentationExtractCheckCache() {
   local handler="$1" source="$2" definitionFile="$3"
-  local currentModified && currentModified=$(catchReturn "$handler" fileModificationTime "$source") || return $?
+  local sourceHash && sourceHash=$(catchReturn "$handler" shaPipe <"$source") || return $?
   if [ -f "$definitionFile" ] && [ "$source" -ot "$definitionFile" ]; then
-    local sourceModified && sourceModified=$(
-      local sourceModified
+    local savedSourceHash && savedSourceHash=$(
+      local sourceHash
       # shellcheck source=/dev/null
       catchEnvironment "$handler" source "$definitionFile" || return $?
-      catchEnvironment "$handler" printf -- "%s\n" "${sourceModified-}" || return $?
+      catchEnvironment "$handler" printf -- "%s\n" "${sourceHash-}" || return $?
     ) || :
-    if isInteger "$sourceModified" && [ "$sourceModified" -eq "$currentModified" ]; then
+    if [ "$savedSourceHash" -eq "$sourceHash" ]; then
       catchEnvironment "$handler" touch "$definitionFile" || return $?
       catchEnvironment "$handler" cat "$definitionFile" || return $?
       return 0
@@ -126,7 +125,7 @@ __bashDocumentationExtractGenerateCache() {
   local definitionFile="$1" && shift
   local fn="$1" && shift
 
-  local variableList="sourceFile,fn,usage,argument,description,usage,summary,file,base,applicationFile,foundNames"
+  local variableList="sourceFile,fn,usage,argument,description,usage,summary,file,base,sourceHash,foundNames"
 
   catchEnvironment "$handler" muzzle fileDirectoryRequire "$definitionFile" || return $?
   catchEnvironment "$handler" touch "$definitionFile" || return $?
@@ -136,7 +135,7 @@ __bashDocumentationExtractGenerateCache() {
     extras+=("#!/usr/bin/env bash" "# Copyright &copy; $(date +%Y) $(catchReturn "$handler" buildEnvironmentGet BUILD_COMPANY)") || return $?
     extras+=("# Generated on $(dateToday)")
     catchReturn "$handler" environmentClean || return $?
-    local uncompiled="${definitionFile%.sh}.uncompiled.sh"
+    local uncompiled="${definitionFile%.sh}.sh.uncompiled"
     local clean=("$uncompiled")
     bashRecursionDebug || return $?
     __bashDocumentationExtractDirect "$handler" "$fn" "$source" "${extras[@]}" "$@" >"$uncompiled" || returnClean $? "${clean[@]}" || $?
@@ -180,7 +179,7 @@ __bashDocumentationExtractDirect() {
     [ -n "$line" ] || continue
     rawComment="$rawComment$line"$'\n'
     local name="${line%%:*}" value cleanName
-    cleanName="$(lowercase "$(printf '%s' "$name" | sed 's/[^A-Za-z0-9]/_/g')")" || return $?
+    cleanName="$(lowercase "$(printf '%s' "$name" | sed 's/[- ]/_/g')")" || return $?
     __profileLabel="$cleanName"
     # IDENTICAL profileFunctionMarker 3
     # ********************************************************************************************************************

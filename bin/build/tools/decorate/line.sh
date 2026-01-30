@@ -68,7 +68,7 @@ consoleHeadingLine() {
   shift || :
 
   text="$*"
-  cleanText=$(stripAnsi <<<"$text")
+  cleanText=$(consoleToPlain <<<"$text")
   local barWidth=$((width - ${#cleanText}))
   if [ $barWidth -gt 0 ]; then
     local count=$((barWidth / ${#barText}))

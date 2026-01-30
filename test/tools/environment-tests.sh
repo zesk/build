@@ -8,11 +8,28 @@
 
 testBuildEnvironmentAdd() {
   local handler="returnMessage"
+  local debugMode=false
+
+  local home && home=$(catchReturn "$handler" buildHome) || return $?
 
   assertFileDoesNotExist "$home/bin/env/FOOBAR.sh" || return $?
+  assertFileDoesNotExist "$home/bin/env/APPLICATION_ID.sh" || return $?
+
+  local year && year=$(date +%Y)
+
   assertExitCode 0 buildEnvironmentAdd FOOBAR || return $?
+  ! $debugMode || dumpPipe FOOBAR <"$home/bin/env/FOOBAR.sh"
   assertFileExists "$home/bin/env/FOOBAR.sh" || return $?
+  assertFileContains "$home/bin/env/FOOBAR.sh" Copyright "$year" FOOBAR bash || return $?
+
+  assertExitCode 0 buildEnvironmentAdd --value 'Mr. Anderson' APPLICATION_ID || return $?
+  ! $debugMode || dumpPipe APPLICATION_ID <"$home/bin/env/FOOBAR.sh"
+
+  assertFileExists "$home/bin/env/APPLICATION_ID.sh" || return $?
+  assertFileContains "$home/bin/env/APPLICATION_ID.sh" Copyright "$year" "Category: Deployment" "This is the unique hash" || return $?
+
   catchReturn "$handler" rm -f "$home/bin/env/FOOBAR.sh" || return $?
+  catchReturn "$handler" rm -f "$home/bin/env/APPLICATION_ID.sh" || return $?
 }
 
 testEnvironmentParseVariables() {

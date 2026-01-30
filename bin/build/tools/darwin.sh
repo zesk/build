@@ -112,7 +112,7 @@ _darwinSoundNames() {
 
 __osascriptClean() {
   local text
-  text="$(stripAnsi <<<"$1")"
+  text="$(consoleToPlain <<<"$1")"
   text="${text//$'\n'/\\n}"
   text="${text//$'\r'/}"
   text="$(escapeDoubleQuotes "$text")"

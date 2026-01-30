@@ -254,7 +254,7 @@ __approvedSources() {
     else
       local textTime fileText padding nearWidth
       textTime="$(dateFromTimestamp "$timestamp")"
-      nearWidth="$(stripAnsi <<<"$displayName")"
+      nearWidth="$(consoleToPlain <<<"$displayName")"
       padding=$((60 - ${#nearWidth}))
       fileText="$displayName"
       if [ ${#highlighted[@]} -gt 0 ] && inArray "$name" "${highlighted[@]}"; then

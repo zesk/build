@@ -423,7 +423,7 @@ __maxLineLengthFile() {
 testMaximumLineLength() {
   local n
   for n in 54 94 112 199; do
-    assertEquals "$n" "$(__maxLineLengthFile "$n" | maximumLineLength)" || return $?
+    assertEquals "$n" "$(__maxLineLengthFile "$n" | fileLineMaximum)" || return $?
   done
 }
 
@@ -452,6 +452,6 @@ EOF
 testMaximumFieldLength() {
   local expectedLength fieldIndex
   while read -r expectedLength fieldIndex; do
-    assertEquals --display "Field $fieldIndex" "$expectedLength" "$(__maxFieldLengthFile | maximumFieldLength "$fieldIndex" ,)" || return $?
+    assertEquals --display "Field $fieldIndex" "$expectedLength" "$(__maxFieldLengthFile | fileFieldMaximum "$fieldIndex" ,)" || return $?
   done < <(__maxFieldResults)
 }

@@ -199,7 +199,7 @@ labeledBigText() {
         throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
       fi
       label="$argument"
-      plainLabel="$(printf -- "%s\n" "$label" | stripAnsi)" || throwArgument "$handler" "Unable to clean label" || return $?
+      plainLabel="$(printf -- "%s\n" "$label" | consoleToPlain)" || throwArgument "$handler" "Unable to clean label" || return $?
       shift
       break
       ;;
@@ -210,7 +210,7 @@ labeledBigText() {
   local banner nLines
   banner="$(bigText "$@")"
   nLines=$(printf -- "%s\n" "$banner" | fileLineCount)
-  plainLabel="$(printf -- "%s\n" "$label" | stripAnsi)"
+  plainLabel="$(printf -- "%s\n" "$label" | consoleToPlain)"
   tweenNonLabel="$(textRepeat "$((${#plainLabel}))" " ")$tweenNonLabel"
   if $isBottom; then
     printf -- "%s%s\n""%s%s%s\n" \

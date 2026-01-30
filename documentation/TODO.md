@@ -235,8 +235,8 @@
 - manPathRemove
 - mapValueTrim
 - markdownIndentHeading
-- maximumFieldLength
-- maximumLineLength
+- fileFieldMaximum
+- fileLineMaximum
 - nodePackageManagerValid
 - notify
 - packageAvailableList
@@ -563,8 +563,8 @@ On a "2x" machine:
 - manPathRemove
 - mapValueTrim
 - markdownIndentHeading
-- maximumFieldLength
-- maximumLineLength
+- fileFieldMaximum
+- fileLineMaximum
 - newlineHide
 - nodePackageManager
 - nodePackageManagerInstall

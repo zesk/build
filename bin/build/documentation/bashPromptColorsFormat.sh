@@ -1,8 +1,7 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-27
+# Generated on 2026-01-29
 # shellcheck disable=SC2034
-applicationFile="bin/build/tools/prompt.sh"
 argument="text - String. Required. List of color names in a colon separated list."$'\n'""
 base="prompt.sh"
 description="Given a list of color names, generate the color codes in a colon separated list"$'\n'""
@@ -12,7 +11,7 @@ rawComment="Given a list of color names, generate the color codes in a colon sep
 requires="decorations read inArray decorate listJoin"$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/prompt.sh"
-sourceModified="1769063211"
+sourceHash="fc63fe3c8fc2252b25fcc5441cb2a0ad4051e1d7"
 stdout="Outputs color *codes* separated by colons."$'\n'""
 summary="Given a list of color names, generate the color codes"
 usage="bashPromptColorsFormat text"
@@ -20,4 +19,4 @@ usage="bashPromptColorsFormat text"
 helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]mbashPromptColorsFormat'$'\e''[0m '$'\e''[[(bold)]m'$'\e''[[(magenta)]mtext'$'\e''[0m'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[(red)]mtext  '$'\e''[[(value)]mString. Required. List of color names in a colon separated list.'$'\e''[[(reset)]m'$'\n'''$'\n''Given a list of color names, generate the color codes in a colon separated list'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - Success'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - Environment error'$'\n''- '$'\e''[[(code)]m2'$'\e''[[(reset)]m - Argument error'$'\n'''$'\n''Writes to '$'\e''[[(code)]mstdout'$'\e''[[(reset)]m:'$'\n''Outputs color '$'\e''[[(cyan)]mcodes'$'\e''[[(reset)]m separated by colons.'$'\n'''
 # shellcheck disable=SC2016
 helpPlain='Usage: bashPromptColorsFormat text'$'\n'''$'\n''    text  String. Required. List of color names in a colon separated list.'$'\n'''$'\n''Given a list of color names, generate the color codes in a colon separated list'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''$'\n''Writes to stdout:'$'\n''Outputs color codes separated by colons.'$'\n'''
-# elapsed 0.453
+# elapsed 0.557

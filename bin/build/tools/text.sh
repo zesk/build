@@ -542,7 +542,7 @@ _trimWords() {
 # Argument: separatorChar - String. Optional. The separator character to delineate fields. Uses space if not supplied.
 # stdin: Lines are read from standard in and line length is computed for each line
 # stdout: `UnsignedInteger`
-maximumFieldLength() {
+fileFieldMaximum() {
   local handler="_${FUNCNAME[0]}"
 
   [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
@@ -556,7 +556,7 @@ maximumFieldLength() {
   fi
   awk "${separatorChar[@]+"${separatorChar[@]}"}" "{ print length(\$$index) }" | sort -rn | head -n 1
 }
-_maximumFieldLength() {
+_fileFieldMaximum() {
   # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
@@ -565,7 +565,7 @@ _maximumFieldLength() {
 # Outputs the maximum line length passed into stdin
 # stdin: Lines are read from standard in and line length is computed for each line
 # stdout: `UnsignedInteger`
-maximumLineLength() {
+fileLineMaximum() {
   local handler="_${FUNCNAME[0]}"
   local max
 
@@ -578,7 +578,7 @@ maximumLineLength() {
   done
   printf "%d" "$max"
 }
-_maximumLineLength() {
+_fileLineMaximum() {
   # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
@@ -804,12 +804,12 @@ _uppercase() {
 # Depends: sed
 # stdin: arbitrary text which may contain ANSI escape sequences for the terminal
 # stdout: the same text with those ANSI escape sequences removed
-stripAnsi() {
+consoleToPlain() {
   [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
   sed -e $'s,\x1B\[[0-9;]*[a-zA-Z],,g' -e $'s,\x1B\][^\x1B]*\x1B\x5c\x5c,,g'
 }
-_stripAnsi() {
-  true || stripAnsi --help
+_consoleToPlain() {
+  true || consoleToPlain --help
   # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
@@ -823,10 +823,10 @@ consolePlainLength() {
   [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
 
   if [ $# -gt 0 ]; then
-    local text && text="$(stripAnsi <<<"$*")"
+    local text && text="$(consoleToPlain <<<"$*")"
     printf "%d\n" "${#text}"
   else
-    local count && count=$(trimSpace "$(stripAnsi | wc -c)")
+    local count && count=$(trimSpace "$(consoleToPlain | wc -c)")
     # wc -c ALWAYS counts an added newline so remove it from results
     printf "%d\n" "$((count - 1))"
   fi
@@ -897,7 +897,7 @@ __consoleTrimWidth() {
     if [ -n "$part" ]; then
       newWidth=$(consolePlainLength "$part")
       if isInteger "$newWidth" && [ "$newWidth" -gt 0 ] && [ "$((textWidth + newWidth))" -gt "$trimWidth" ]; then
-        part=$(printf -- "%s" "$part" | stripAnsi)
+        part=$(printf -- "%s" "$part" | consoleToPlain)
         changed=$((trimWidth - textWidth))
         part="${part:0:$changed}"
         finished=true

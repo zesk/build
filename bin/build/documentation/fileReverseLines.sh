@@ -1,8 +1,7 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-27
+# Generated on 2026-01-29
 # shellcheck disable=SC2034
-applicationFile="bin/build/tools/platform.sh"
 argument="none"
 base="platform.sh"
 credits="Eric Pement"$'\n'""
@@ -14,11 +13,11 @@ rawComment="Reverses a pipe's input lines to output using an awk trick."$'\n'"No
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 source="https://web.archive.org/web/20090208232311/http://student.northpark.edu/pemente/awk/awk1line.txt"$'\n'""
 sourceFile="bin/build/tools/platform.sh"
-sourceModified="1769184734"
+sourceHash="a1e5b60c969c8edace1146de6c1a3e07b2d6a084"
 summary="Reverse output lines"$'\n'""
 usage="fileReverseLines"
 # shellcheck disable=SC2016
 helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]mfileReverseLines'$'\e''[0m'$'\n'''$'\n''Reverses a pipe'\''s input lines to output using an awk trick.'$'\n''Not recommended on big files.'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - Success'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - Environment error'$'\n''- '$'\e''[[(code)]m2'$'\e''[[(reset)]m - Argument error'$'\n'''
 # shellcheck disable=SC2016
-helpPlain='Usage: fileReverseLines'$'\n'''$'\n''Reverses a pipe'\''s input lines to output using an awk trick.'$'\n''Not recommended on big files.'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''
-# elapsed 0.555
+helpPlain='[[(label)]mUsage: [[(info)]mfileReverseLines'$'\n'''$'\n''Reverses a pipe'\''s input lines to output using an awk trick.'$'\n''Not recommended on big files.'$'\n'''$'\n''Return codes:'$'\n''- [[(code)]m0[[(reset)]m - Success'$'\n''- [[(code)]m1[[(reset)]m - Environment error'$'\n''- [[(code)]m2[[(reset)]m - Argument error'$'\n'''
+# elapsed 2.22

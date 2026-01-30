@@ -1,8 +1,7 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-27
+# Generated on 2026-01-29
 # shellcheck disable=SC2034
-applicationFile="bin/build/tools/_sugar.sh"
 argument="message ... - String. Optional. Message to output."$'\n'""
 base="_sugar.sh"
 description="Return \`argument\` error code. Outputs \`message ...\` to \`stderr\`."$'\n'""
@@ -12,11 +11,11 @@ rawComment="Return \`argument\` error code. Outputs \`message ...\` to \`stderr\
 requires="returnMessage"$'\n'""
 return_code="2"$'\n'""
 sourceFile="bin/build/tools/_sugar.sh"
-sourceModified="1769063211"
+sourceHash="4bce6d8a22071b1c44a64aadb33672fc47a840f1"
 summary="Return \`argument\` error code. Outputs \`message ...\` to \`stderr\`."
 usage="returnArgument [ message ... ]"
 # shellcheck disable=SC2016
 helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]mreturnArgument'$'\e''[0m '$'\e''[[(blue)]m[ message ... ]'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[(blue)]mmessage ...  '$'\e''[[(value)]mString. Optional. Message to output.'$'\e''[[(reset)]m'$'\n'''$'\n''Return '$'\e''[[(code)]margument'$'\e''[[(reset)]m error code. Outputs '$'\e''[[(code)]mmessage ...'$'\e''[[(reset)]m to '$'\e''[[(code)]mstderr'$'\e''[[(reset)]m.'$'\n'''$'\n''Return codes:'$'\n''- 2'$'\n'''
 # shellcheck disable=SC2016
 helpPlain='Usage: returnArgument [ message ... ]'$'\n'''$'\n''    message ...  String. Optional. Message to output.'$'\n'''$'\n''Return argument error code. Outputs message ... to stderr.'$'\n'''$'\n''Return codes:'$'\n''- 2'$'\n'''
-# elapsed 0.417
+# elapsed 0.529

@@ -186,7 +186,7 @@ __documentationUnlinked() {
 # of the fields in this, write functions in the form `_bashDocumentationFormatter_${name}` such that
 # name matches the variable name (lowercase alphanumeric characters and underscores).
 #
-# Filter functions should modify the input/output pipe; an example can be found in `{applicationFile}` by looking at
+# Filter functions should modify the input/output pipe; an example can be found in `{file}` by looking at
 # sample function `_bashDocumentationFormatter_return_code`.
 #
 # See: _bashDocumentationFormatter_return_code

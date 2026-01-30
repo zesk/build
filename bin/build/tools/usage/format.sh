@@ -55,7 +55,7 @@ __usageTemplate() {
     fi
   fi
   description=${description:-"No description"}
-  nSpaces=$(maximumFieldLength 1 "$delimiter" <<<"$options")
+  nSpaces=$(fileFieldMaximum 1 "$delimiter" <<<"$options")
 
   if [ -n "$delimiter" ] && [ -n "$options" ] && [ "$options" != "none" ]; then
     printf -- "%s: %s%s\n\n%s\n\n%s\n" \
@@ -72,7 +72,7 @@ __usageTemplate() {
       "$(markdownToConsole <<<"$description")" |
       trimBoth
   fi
-  if buildDebugEnabled handler; then
+  if [ "$exitCode" != "0" ] && buildDebugEnabled handler; then
     debuggingStack
   fi
   return "$exitCode"
@@ -87,7 +87,7 @@ ___usageTemplate() {
 #
 # Example:     {fn} nSpaces separatorChar labelPrefix valuePrefix < formatFile
 #
-# use with maximumFieldLength 1 to generate widths
+# use with fileFieldMaximum 1 to generate widths
 #
 # DOC TEMPLATE: --help 1
 # Argument: --help - Flag. Optional. Display this help.

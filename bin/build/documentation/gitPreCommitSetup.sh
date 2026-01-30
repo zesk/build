@@ -1,8 +1,7 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-27
+# Generated on 2026-01-29
 # shellcheck disable=SC2034
-applicationFile="bin/build/tools/git.sh"
 argument="none"
 base="git.sh"
 description="Set up a pre-commit hook and create a cache of our files by extension."$'\n'""
@@ -12,11 +11,11 @@ rawComment="Set up a pre-commit hook and create a cache of our files by extensio
 return_code="0 - One or more files are available as part of the commit"$'\n'"1 - Error, or zero files are available as part of the commit"$'\n'""
 see="gitPreCommitCleanup"$'\n'""
 sourceFile="bin/build/tools/git.sh"
-sourceModified="1769199547"
+sourceHash="3d571e2d1ac61ab50aca59a14e16e0ada007496b"
 summary="Set up a pre-commit hook and create a cache of"
 usage="gitPreCommitSetup"
 # shellcheck disable=SC2016
 helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]mgitPreCommitSetup'$'\e''[0m'$'\n'''$'\n''Set up a pre-commit hook and create a cache of our files by extension.'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - One or more files are available as part of the commit'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - Error, or zero files are available as part of the commit'$'\n'''
 # shellcheck disable=SC2016
 helpPlain='Usage: gitPreCommitSetup'$'\n'''$'\n''Set up a pre-commit hook and create a cache of our files by extension.'$'\n'''$'\n''Return codes:'$'\n''- 0 - One or more files are available as part of the commit'$'\n''- 1 - Error, or zero files are available as part of the commit'$'\n'''
-# elapsed 0.409
+# elapsed 2.004

@@ -4,4 +4,4 @@
 # Category: Documentation
 # Type: String
 export BUILD_DOCUMENTATION_SOURCE_LINK_PATTERN
-BUILD_DOCUMENTATION_SOURCE_LINK_PATTERN="https://github.com/zesk/build/blob/main/{applicationFile}#L{line}"
+BUILD_DOCUMENTATION_SOURCE_LINK_PATTERN="https://github.com/zesk/build/blob/main/{file}#L{line}"

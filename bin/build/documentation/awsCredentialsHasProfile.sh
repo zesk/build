@@ -1,8 +1,7 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-27
+# Generated on 2026-01-29
 # shellcheck disable=SC2034
-applicationFile="bin/build/tools/aws.sh"
 argument="profileName - The credentials profile to load (default value is \`default\` and loads section identified by \`[default]\` in \`~/.aws/credentials\`)"$'\n'"--help - Flag. Optional. Display this help."$'\n'""
 base="aws.sh"
 description="Extract a profile from a credentials file"$'\n'"If the AWS credentials file is not found, returns exit code 1 and outputs nothing."$'\n'"If the AWS credentials file is incomplete, returns exit code 1 and outputs nothing."$'\n'""
@@ -13,11 +12,11 @@ rawComment="Extract a profile from a credentials file"$'\n'"If the AWS credentia
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 setFile=""
 sourceFile="bin/build/tools/aws.sh"
-sourceModified="1769185802"
+sourceHash="3b62faeca80ac2a7aa667991589c611b8a721864"
 summary="Get credentials and output environment variables for AWS authentication"$'\n'""
 usage="awsCredentialsHasProfile [ profileName ] [ --help ]"
 # shellcheck disable=SC2016
 helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]mawsCredentialsHasProfile'$'\e''[0m '$'\e''[[(blue)]m[ profileName ]'$'\e''[0m '$'\e''[[(blue)]m[ --help ]'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[(blue)]mprofileName  '$'\e''[[(value)]mThe credentials profile to load (default value is '$'\e''[[(code)]mdefault'$'\e''[[(reset)]m and loads section identified by '$'\e''[[(code)]m[default]'$'\e''[[(reset)]m in '$'\e''[[(code)]m~/.aws/credentials'$'\e''[[(reset)]m)'$'\e''[[(reset)]m'$'\n''    '$'\e''[[(blue)]m--help       '$'\e''[[(value)]mFlag. Optional. Display this help.'$'\e''[[(reset)]m'$'\n'''$'\n''Extract a profile from a credentials file'$'\n''If the AWS credentials file is not found, returns exit code 1 and outputs nothing.'$'\n''If the AWS credentials file is incomplete, returns exit code 1 and outputs nothing.'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - Success'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - Environment error'$'\n''- '$'\e''[[(code)]m2'$'\e''[[(reset)]m - Argument error'$'\n'''$'\n''Example:'$'\n''    setFile=$(fileTemporaryName "$handler") || return $?'$'\n''    if awsEnvironment "$profile" > "$setFile"; then'$'\n''    eval $(cat "$setFile")'$'\n''    rm "$setFile"'$'\n''    else'$'\n''    decorate error "Need $profile profile in aws credentials file"'$'\e''[[(code)]m'$'\e''[[(reset)]m'$'\n''    exit 1'$'\n''    fi'$'\n'''
 # shellcheck disable=SC2016
-helpPlain='Usage: awsCredentialsHasProfile [ profileName ] [ --help ]'$'\n'''$'\n''    profileName  The credentials profile to load (default value is default and loads section identified by [default] in ~/.aws/credentials)'$'\n''    --help       Flag. Optional. Display this help.'$'\n'''$'\n''Extract a profile from a credentials file'$'\n''If the AWS credentials file is not found, returns exit code 1 and outputs nothing.'$'\n''If the AWS credentials file is incomplete, returns exit code 1 and outputs nothing.'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''$'\n''Example:'$'\n''    setFile=$(fileTemporaryName "$handler") || return $?'$'\n''    if awsEnvironment "$profile" > "$setFile"; then'$'\n''    eval $(cat "$setFile")'$'\n''    rm "$setFile"'$'\n''    else'$'\n''    decorate error "Need $profile profile in aws credentials file"'$'\n''    exit 1'$'\n''    fi'$'\n'''
-# elapsed 0.456
+helpPlain='[[(label)]mUsage: [[(info)]mawsCredentialsHasProfile [[(blue)]m[ profileName ] [[(blue)]m[ --help ]'$'\n'''$'\n''    [[(blue)]mprofileName  [[(value)]mThe credentials profile to load (default value is [[(code)]mdefault[[(reset)]m and loads section identified by [[(code)]m[default][[(reset)]m in [[(code)]m~/.aws/credentials[[(reset)]m)[[(reset)]m'$'\n''    [[(blue)]m--help       [[(value)]mFlag. Optional. Display this help.[[(reset)]m'$'\n'''$'\n''Extract a profile from a credentials file'$'\n''If the AWS credentials file is not found, returns exit code 1 and outputs nothing.'$'\n''If the AWS credentials file is incomplete, returns exit code 1 and outputs nothing.'$'\n'''$'\n''Return codes:'$'\n''- [[(code)]m0[[(reset)]m - Success'$'\n''- [[(code)]m1[[(reset)]m - Environment error'$'\n''- [[(code)]m2[[(reset)]m - Argument error'$'\n'''$'\n''Example:'$'\n''    setFile=$(fileTemporaryName "$handler") || return $?'$'\n''    if awsEnvironment "$profile" > "$setFile"; then'$'\n''    eval $(cat "$setFile")'$'\n''    rm "$setFile"'$'\n''    else'$'\n''    decorate error "Need $profile profile in aws credentials file"[[(code)]m[[(reset)]m'$'\n''    exit 1'$'\n''    fi'$'\n'''
+# elapsed 2.355

@@ -292,7 +292,7 @@ __buildEnvironmentMakeFile() {
   local handler="$1" templateHome="$2" name="$3" value="$4"
 
   [ -n "$value" ] || value="\${$name-}"
-  local template && template=$(bashEnvironmentFiles --application "$templateHome" "$name" 2>/dev/null | tail -n 1) || :
+  local template && template=$(buildEnvironmentFiles --application "$templateHome" "$name" 2>/dev/null | tail -n 1) || :
 
   __buildEnvironmentFileHeader "$handler" || return $?
   if [ -n "$template" ]; then
@@ -342,7 +342,7 @@ buildEnvironmentAdd() {
 
   local name && for name in "${environmentNames[@]}"; do
     local path="$home/bin/env/$name.sh"
-    if ! $forceFlag || [ -f "$path" ] && ! fileIsEmpty "$path"; then
+    if [ -f "$path" ] && ! fileIsEmpty "$path" && ! $forceFlag; then
       if [ ! -x "$path" ]; then
         ! $verboseFlag || statusMessage --last decorate warning "Making existing $(decorate file "$path") executable ..."
         catchEnvironment "$handler" chmod +x "$path" || return $?

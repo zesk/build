@@ -1,8 +1,7 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-27
+# Generated on 2026-01-29
 # shellcheck disable=SC2034
-applicationFile="bin/build/tools/timing.sh"
 argument="timingOffset - UnsignedInteger. Required. Offset in milliseconds from January 1, 1970."$'\n'"--help - Flag. Optional. Display this help."$'\n'""
 base="timing.sh"
 description="Show elapsed time from a start time"$'\n'""
@@ -14,7 +13,7 @@ rawComment="Summary: Show elapsed time from a start time"$'\n'"Argument: timingO
 requires="__timestamp returnEnvironment validate date"$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/timing.sh"
-sourceModified="1769063211"
+sourceHash="8cfb9a50fadfff4b381ff34068eab3136b206319"
 summary="Show elapsed time from a start time"$'\n'""
 usage="timingElapsed timingOffset [ --help ]"
 # shellcheck disable=SC2016

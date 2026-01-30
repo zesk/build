@@ -77,7 +77,7 @@ __hookNotify() {
       fi
     fi
     local message
-    message="$(catchEnvironment "$handler" stripAnsi <<<"$*")" || return $?
+    message="$(catchReturn "$handler" consoleToPlain <<<"$*")" || return $?
     [ -n "$message" ] || message="Silence is golden."
     muzzle darwinNotification "${ss[@]+"${ss[@]}"}" --title "$title" "$message"
   else
