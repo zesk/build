@@ -9,7 +9,7 @@ repairProfile() {
 
   local home && home=$(catchReturn "$handler" buildHome) || return $?
 
-  catchReturn "$handler" "$home/bin/build/repair.sh" profileFunctionMarker profileFunctionMarkerOthers profileFunctionTail profileFunctionHead || return $?
+  catchReturn "$handler" "$home/bin/build/repair.sh" profileFunctionMarker profileFunctionMarkerOthers profileFunctionTail profileFunctionHead profileFunctionEnable || return $?
 }
 _repairProfile() {
   # __IDENTICAL__ usageDocument 1

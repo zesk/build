@@ -135,19 +135,20 @@ _assertFailure() {
   local timing="" flags=";${BUILD_TEST_FLAGS-};" flag="Assert-Statistics:true"
   if [ "${flags#*;"$flag";}" != "$flags" ]; then
     __assertTimingSetup && timing=" [$(__assertTimingCalculate)]" || :
-    (muzzle incrementor assert-failure &)
+    incrementor assert-failure >/dev/null 2>&1 &
   fi
-  shift && statusMessage --last printf -- "%s %s %s " "$failIcon" "$(decorate error "$function")" "$*" "$timing" 1>&2 || return $?
-  return "$(returnCode assert)"
+  shift && statusMessage --last printf -- "%s %s %s%s" "$failIcon" "$(decorate error "$function")" "$*" "$timing" 1>&2 || return $?
+  returnAssert
 }
+
 _assertSuccess() {
   local function="${1-None}" successIcon="✅"
   local timing="" flags=";${BUILD_TEST_FLAGS-};" flag="Assert-Statistics:true"
   if [ "${flags#*;"$flag";}" != "$flags" ]; then
     __assertTimingSetup && timing=" [$(__assertTimingCalculate)]" || :
-    (muzzle incrementor assert-success &)
+    incrementor assert-success >/dev/null 2>&1 &
   fi
-  shift && statusMessage printf -- "%s %s %s%s " "$successIcon" "$(decorate success "$function")" "$*" "$timing" || return $?
+  shift && statusMessage printf -- "%s %s %s%s" "$successIcon" "$(decorate success "$function")" "$*" "$timing" || return $?
 }
 _assertionStatistics() {
   local item
@@ -160,28 +161,37 @@ _assertionStatistics() {
 }
 
 # INTERNAL: To optimize this (or see where it is slow), use
-# INTERNAL:     BUILD_COLORS=false bin/tools.sh testTools assertEquals --profile a a | grep -v assert | sort -rn --key=2.1
-# INTERNAL:     bin/tools.sh testTools assertEquals --profile a a | grep -v assert | sort -rn --key=2.1
+# INTERNAL:     BUILD_COLORS=false bin/tools.sh assertEquals --profile a a | grep -v assert | sort -rn --key=2.1
+# INTERNAL:     bin/tools.sh assertEquals --profile a a | grep -v assert | sort -rn --key=2.1
 # Core condition assertion handler
-# DOC TEMPLATE: assert-common 18
+# DOC TEMPLATE: assert-common 27
 # Argument: --help - Flag. Optional. Display this help.
+# Argument: --handler handler - Function. Optional. Use this error handler instead of the default error handler.
+# INTERNAL: Argument: --return returnCode - UnsignedInteger. Optional. Return code to expect from the `testFunction`.
+# Argument: --display - String. Optional. Display name for the condition.
+# INTERNAL: Argument: --success - Flag. Optional. Whether the assertion should pass (`true`) or fail (`false`) - most functions have this already baked in.
+# INTERNAL: Argument: --profile - Flag. Optional. Profile the assertion function.
+# Argument: --debug - Flag. Optional. Debugging enabled for the assertion function.
 # Argument: --line lineNumber - Integer. Optional. Line number of calling function. Typically this is not required as it is computed from the calling function using `--line-depth`.
 # Argument: --line-depth depth - Integer. Optional. The depth in the stack of function calls to find the line number of the calling function.
-# Argument: --debug - Flag. Optional. Debugging enabled for the assertion function.
-# Argument: --debug-lines - Flag. Optional. Debugging of SOLELY differences between `--line` passed in and the computed line from the `--line-depth` parameter.
-# Argument: --display - String. Optional. Display name for the condition.
-# Argument: --success - Boolean. Optional. Whether the assertion should pass (`true`) or fail (`false`) - most functions have this already baked in.
-# Argument: --stderr-match - String. Optional. One or more strings which must match `stderr` output. Implies `--stderr-ok`
-# Argument: --stdout-no-match - String. Optional. One or more strings which must match NOT `stderr` output.
+# INTERNAL: Argument: --test testFunction - Callable. Required. The test call to run.
+# INTERNAL: Argument: --formatter formatterFunction - Callable. Optional. The formatter to format the test result.
 # Argument: --stdout-match - String. Optional. One or more strings which must match `stdout` output.
 # Argument: --stdout-no-match - String. Optional. One or more strings which must match `stdout` output.
 # Argument: --stderr-ok - Flag. Optional. Output to `stderr` will not cause the test to fail.
-# Argument: --leak globalName - Zero or more. String. Allow global leaks for these globals.
-# Argument: --skip-plumber - Flag. Optional. Skip plumber check for function calls.
+# Argument: --stderr-match - String. Optional. One or more strings which must match `stderr` output. Implies `--stderr-ok`
+# Argument: --stderr-no-match - String. Optional. One or more strings which must match NOT `stderr` output. Implies `--stderr-ok`
 # Argument: --dump - Flag. Optional. Output `stderr` and `stdout` after test regardless.
 # Argument: --dump-binary - Flag. Optional. Output `stderr` and `stdout` after test regardless, displayed as binary.
+# Argument: --plumber - Flag. Optional. Wrap the test call with the `plumber` call to detect local leaks.
+# Argument: --leak globalName - Zero or more. String. Allow global leaks for these globals when `--plumber` is enabled.
+# Argument: --skip-plumber - Flag. Optional. Skip plumber check for function calls. When specified with `--plumber` the last occurrence on the command line is effective.
 # Argument: --head - Flag. Optional. When outputting `stderr` or `stdout`, output the head of the file.
 # Argument: --tail - Flag. Optional. When outputting `stderr` or `stdout`, output the tail of the file. (Default)
+# INTERNAL: Argument: --debug-lines - Flag. Optional. Debugging of SOLELY differences between `--line` passed in and the computed line from the `--line-depth` parameter.
+# INTERNAL: Argument: --code1 - Flag. Optional. When passed the first argument to this function is the `returnCode`.
+# INTERNAL: Argument: ... - Arguments. Optional. Additional arguments are passed to `testFunction` or `formatterFunction`.
+# END DOC TEMPLATE: assert-common
 # Return Code: 1 - If the assertions fails
 # Return Code: 0 - If the assertion succeeds
 _assertConditionHelper() {
@@ -202,10 +212,11 @@ _assertConditionHelper() {
   local doPlumber="" leaks=() whichEnd="tail"
   local errorsOk=false dumpFlag=false dumpBinaryFlag=false expectedExitCode=0 code1=false debugLines=false
 
-  # profiling variables
-  local profile=false _profile="" _profileStart="" _next _used=0
-
-  if [ "${flags#*"$flag"}" != "$flags" ]; then profile=true && _profile=$(timingStart) && _profileStart=$_profile; fi
+  # IDENTICAL profileFunctionHead 4
+  # ********************************************************************************************************************
+  local __profile="false" __profile0="" __profileNext __profileUsed=0 __profileLabel="arguments (#$__count)" __profilePrefix="Profile-${FUNCNAME[0]}: "
+  if [ -n "$flags" ] && [ "${flags#*"$flag"}" != "$flags" ]; then __profile=$(timingStart) && __profile0=$__profile; fi
+  # ********************************************************************************************************************
 
   # _IDENTICAL_ argumentBlankLoopHandler 4
   local __saved=("$@") __count=$#
@@ -222,42 +233,32 @@ _assertConditionHelper() {
       ;;
     --display) shift && displayName="$(validate "$handler" String "$argument" "${1-}")" || return $? ;;
     --success)
-      shift && success="$(validate "$handler" boolean "$argument" "${1-}")" || return $?
+      shift && success="$(validate "$handler" Boolean "$argument" "${1-}")" || return $?
       pairs+=("should" "$(booleanChoose "$success" "succeed" "$(decorate warning "fail")")")
       ;;
-    # ********************************************************************************************************************
-    --profile) profile=true && _profile=$(timingStart) && _profileStart=$_profile ;;
+    --profile)
+      # IDENTICAL profileFunctionEnable 3
+      # ********************************************************************************************************************
+      if [ "$__profile" = "false" ]; then __profile=$(timingStart) && __profile0=$__profile; fi
+      # ********************************************************************************************************************
+      ;;
     --debug) debugFlag=true ;;
     --line) shift && lineNumber="${1-}" ;;
     --line-depth) shift && lineDepth="$(validate "$handler" PositiveInteger "$argument" "${1-}")" || return $? ;;
     --test) shift && tester="$(validate "$handler" String "$argument" "${1-}")" || return $? ;;
     --formatter) shift && formatter="$(validate "$handler" Callable "$argument" "${1-}")" || return $? ;;
     --stderr-ok) errorsOk=true ;;
-    --stderr-match)
-      shift && [ -n "${1-}" ] || throwArgument "$handler" "Blank $argument argument" || return $?
-      stderrContains+=("$1")
-      errorsOk=true
-      ;;
-    --stderr-no-match)
-      shift && [ -n "${1-}" ] || throwArgument "$handler" "Blank $argument argument" || return $?
-      stderrNotContains+=("$1")
-      errorsOk=true
-      ;;
-    --stdout-match)
-      shift && [ -n "${1-}" ] || throwArgument "$handler" "Blank $argument argument" || return $?
-      outputContains+=("$1")
-      ;;
-    --stdout-no-match)
-      shift && [ -n "${1-}" ] || throwArgument "$handler" "Blank $argument argument" || return $?
-      outputNotContains+=("$1")
-      ;;
+    --stderr-match) errorsOk=true && shift && stderrContains+=("$(validate "$handler" String "stderrContainsText" "${1-}")") || return $? ;;
+    --stderr-no-match) errorsOk=true && shift && stderrNotContains+=("$(validate "$handler" String "stderrNotContainsText" "${1-}")") || return $? ;;
+    --stdout-match) shift && outputContains+=("$(validate "$handler" String "stdoutContainsText" "${1-}")") || return $? ;;
+    --stdout-no-match) shift && outputNotContains+=("$(validate "$handler" String "stdoutNotContainsText" "${1-}")") || return $? ;;
     --dump) dumpFlag=true && dumpBinaryFlag=false ;;
     --dump-binary) dumpBinaryFlag=true && dumpFlag=true ;;
     --plumber) doPlumber=true ;;
+    --leak) shift && doPlumber=true && leaks+=(--leak "$(validate "$handler" String "$argument globalName" "${1-}")") || return $? ;;
+    --skip-plumber) doPlumber=false && leaks=() ;;
     --head) whichEnd="head" ;;
     --tail) whichEnd="tail" ;;
-    --skip-plumber) doPlumber=false && leaks=() ;;
-    --leak) shift && doPlumber=true && leaks+=(--leak "$(validate "$handler" String "$argument globalName" "${1-}")") || return $? ;;
     --debug-lines) debugLines=true ;;
     --code1) code1=true ;;
     *)
@@ -273,8 +274,11 @@ _assertConditionHelper() {
     shift
   fi
 
+  __profileLabel="arguments"
+  # IDENTICAL profileFunctionMarker 3
   # ********************************************************************************************************************
-  if $profile; then _next="$(timingStart)" && printf "%d %s\n" "$((_next - _profile))" "arguments (#$__count)" && _profile=$_next; fi
+  if [ "$__profile" != "false" ]; then __profileNext="$(timingStart)" && printf "Line %d: %s%d %s\n" "$LINENO" "$__profilePrefix" "$((__profileNext - __profile))" "$__profileLabel" 1>&2 && __profile=$__profileNext; fi
+  # ********************************************************************************************************************
 
   # IDENTICAL lineDepthComputation 11
   local linePrefix=""
@@ -307,18 +311,19 @@ _assertConditionHelper() {
   local clean=("$outputFile" "$errorFile")
   local testPassed=false
 
+  __profileLabel="runner-setup"
+  # IDENTICAL profileFunctionMarker 3
   # ********************************************************************************************************************
-  if $profile; then _next="$(timingStart)" && printf "%d %s\n" "$((_next - _profile))" "runner-setup" && _profile=$_next; fi
+  if [ "$__profile" != "false" ]; then __profileNext="$(timingStart)" && printf "Line %d: %s%d %s\n" "$LINENO" "$__profilePrefix" "$((__profileNext - __profile))" "$__profileLabel" 1>&2 && __profile=$__profileNext; fi
+  # ********************************************************************************************************************
 
   "${runner[@]}" "$@" >"$outputFile" 2>"$errorFile" || exitCode=$?
 
+  __profileLabel="runner"
+  # IDENTICAL profileFunctionMarkerOthers 3
   # ********************************************************************************************************************
-  if $profile; then
-    _next="$(timingStart)"
-    _used=$((_used + (_next - _profile)))
-    printf "%d %s\n" "$((_next - _profile))" "runner"
-    _profile=$_next
-  fi
+  if [ "$__profile" != "false" ]; then __profileNext="$(timingStart)" && __profileUsed=$((__profileUsed + (__profileNext - __profile))) && printf "Line %d: %s%d %s (*them %d)\n" "$LINENO" "$__profilePrefix" "$((__profileNext - __profile))" "$__profileLabel" "$__profileUsed" 1>&2 && __profile=$__profileNext; fi
+  # ********************************************************************************************************************
 
   ! $debugFlag || __buildDebugDisable v
   if [ "$exitCode" = "$expectedExitCode" ]; then
@@ -327,13 +332,12 @@ _assertConditionHelper() {
     $success && testPassed=false || testPassed=true
   fi
   local result && result="$("$formatter" "$testPassed" "$success" "$@" <"$outputFile")"
+
+  __profileLabel="formatter"
+  # IDENTICAL profileFunctionMarkerOthers 3
   # ********************************************************************************************************************
-  if $profile; then
-    _next="$(timingStart)"
-    _used=$((_used + (_next - _profile)))
-    printf "%d %s\n" "$((_next - _profile))" "formatter"
-    _profile=$_next
-  fi
+  if [ "$__profile" != "false" ]; then __profileNext="$(timingStart)" && __profileUsed=$((__profileUsed + (__profileNext - __profile))) && printf "Line %d: %s%d %s (*them %d)\n" "$LINENO" "$__profilePrefix" "$((__profileNext - __profile))" "$__profileLabel" "$__profileUsed" 1>&2 && __profile=$__profileNext; fi
+  # ********************************************************************************************************************
 
   # shellcheck disable=SC2059
   local message
@@ -354,28 +358,35 @@ _assertConditionHelper() {
 
   local stdoutTitle="$functionName (stdout)" stderrTitle="$functionName (stderr)"
   if [ ${#stderrContains[@]} -gt 0 ]; then
-    __assertFileContainsThis "$handler" --line "$lineNumber" --display "$stderrTitle" "$errorFile" "${stderrContains[@]}" || testPassed=false
+    __assertFileContainsThis "$__profile" "$handler" --line "$lineNumber" --display "$stderrTitle" "$errorFile" "${stderrContains[@]}" || testPassed=false
   fi
   if [ ${#stderrNotContains[@]} -gt 0 ]; then
-    __assertFileDoesNotContainThis "$handler" --line "$lineNumber" --display "$stderrTitle" "$errorFile" "${stderrNotContains[@]}" || testPassed=false
+    __assertFileDoesNotContainThis "$__profile" "$handler" --line "$lineNumber" --display "$stderrTitle" "$errorFile" "${stderrNotContains[@]}" || testPassed=false
   fi
   if [ ${#outputContains[@]} -gt 0 ]; then
-    __assertFileContainsThis "$handler" --line "$lineNumber" --display "$stdoutTitle" "$outputFile" "${outputContains[@]}" || testPassed=false
+    __assertFileContainsThis "$__profile" "$handler" --line "$lineNumber" --display "$stdoutTitle" "$outputFile" "${outputContains[@]}" || testPassed=false
   fi
   if [ ${#outputNotContains[@]} -gt 0 ]; then
-    __assertFileDoesNotContainThis "$handler" --line "$lineNumber" --display "$stdoutTitle" "$outputFile" "${outputNotContains[@]}" || testPassed=false
+    __assertFileDoesNotContainThis "$__profile" "$handler" --line "$lineNumber" --display "$stdoutTitle" "$outputFile" "${outputNotContains[@]}" || testPassed=false
   fi
 
+  __profileLabel="output-processing 0:(${#outputContains[@]},!${#outputNotContains[@]}) 1:(${#stderrContains[@]},!${#stderrNotContains[@]})"
+  # IDENTICAL profileFunctionMarker 3
   # ********************************************************************************************************************
-  if $profile; then _next="$(timingStart)" && printf "%d %s\n" "$((_next - _profile))" output-processing && _profile=$_next; fi
+  if [ "$__profile" != "false" ]; then __profileNext="$(timingStart)" && printf "Line %d: %s%d %s\n" "$LINENO" "$__profilePrefix" "$((__profileNext - __profile))" "$__profileLabel" 1>&2 && __profile=$__profileNext; fi
+  # ********************************************************************************************************************
+
   if $testPassed; then
     _assertSuccess "$functionName" "$displayName $message" || exitCode=$?
     exitCode=0
   else
     _assertFailure "$functionName" "$displayName $message" || exitCode=$?
   fi
+  __profileLabel="assert-status"
+  # IDENTICAL profileFunctionMarker 3
   # ********************************************************************************************************************
-  if $profile; then _next="$(timingStart)" && printf "%d %s\n" "$((_next - _profile))" assert-status && _profile=$_next; fi
+  if [ "$__profile" != "false" ]; then __profileNext="$(timingStart)" && printf "Line %d: %s%d %s\n" "$LINENO" "$__profilePrefix" "$((__profileNext - __profile))" "$__profileLabel" 1>&2 && __profile=$__profileNext; fi
+  # ********************************************************************************************************************
 
   if ! $testPassed || $dumpFlag; then
     if $dumpBinaryFlag; then
@@ -388,16 +399,20 @@ _assertConditionHelper() {
   fi
   catchEnvironment "$handler" rm -f "${clean[@]}" || return $?
   # ********************************************************************************************************************
-  if $profile; then
-    _next="$(timingStart)" && printf "%d %s\n" "$((_next - _profile))" cleanup
-    printf -- "%d %s (%d + %d) %s + %s\n" "$((_next - _profileStart))" '*TOTAL*' "$((_next - _profileStart - _used))" "$_used" 'us' 'them'
+  __profileLabel="cleanup"
+  # IDENTICAL profileFunctionTail 7
+  # ********************************************************************************************************************
+  if [ "$__profile" != "false" ]; then
+    __profileNext="$(timingStart)" && printf "Line %d: %s%d %s\n" "$LINENO" "$__profilePrefix" "$((__profileNext - __profile))" "$__profileLabel" 1>&2
+    printf -- "Line %d: %s%d %s (%d + %d) %s + %s %d%%\n" "$LINENO" "$__profilePrefix" "$((__profileNext - __profile0))" '*TOTAL*' "$((__profileNext - __profile0 - __profileUsed))" "$__profileUsed" 'us' 'them' "$(((100 * __profileUsed) / (__profileNext - __profile0)))" 1>&2
   fi
+  # ********************************************************************************************************************
   return "$exitCode"
 }
 
 # Argument: thisName - Reported function for success or failure
 # Argument: fileName - File to search
-# Argument: string0 ... - One or more strings which must NOT be found anywhere in `fileName`
+# Argument: string0 ... - String. One or more strings which must NOT be found anywhere in `fileName`
 # Return Code: 1 - If the assertions fails
 # Return Code: 0 - If the assertion succeeds
 # Environment: If the file does not exist, this will fail.
@@ -405,12 +420,11 @@ _assertConditionHelper() {
 # Example:     assertFileDoesNotContain "$logFile" warning Warning WARNING
 #
 __assertFileContainsHelper() {
-  local success="$1"
-  local handler="$2"
+  local success="$1" && shift
+  local __profile="$1" && shift
+  local handler="$1" && shift
   local argument
-  local lineNumber="" file="" displayName="" lineDepth="" debugLines=false
-
-  shift 2
+  local lineNumber="" file="" displayName="" lineDepth="" debugLines=false matches=() quoted=()
 
   # _IDENTICAL_ argumentBlankLoopHandler 4
   local __saved=("$@") __count=$#
@@ -419,31 +433,24 @@ __assertFileContainsHelper() {
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
-    --display)
-      shift
-      displayName="$(validate "$handler" String "$argument" "${1-}")" || return $?
-      ;;
-    --line)
-      shift
-      lineNumber="${1-}"
-      ;;
-    --line-depth)
-      shift
-      lineDepth="$(validate "$handler" PositiveInteger "$argument" "${1-}")" || return $?
-      ;;
-    --debug-lines)
-      debugLines=true
-      ;;
+    --display) shift && displayName="$(validate "$handler" String "$argument" "${1-}")" || return $? ;;
+    --line) shift && lineNumber="${1-}" ;;
+    --line-depth) shift && lineDepth="$(validate "$handler" PositiveInteger "$argument" "${1-}")" || return $? ;;
+    --debug-lines) debugLines=true ;;
     *)
       if [ -z "$file" ]; then
-        file="$argument"
+        file=$(validate "$handler" File "$displayName" "$argument") || return $?
       else
-        break
+        local match && match="$(validate "$handler" String "match" "$argument")" || return $?
+        matches+=("$match")
+        quoted+=("$(catchReturn "$handler" quoteGrepPattern "$match")") || return $?
       fi
       ;;
     esac
     shift
   done
+
+  [ 0 -lt "${#matches[@]}" ] || throwArgument "$handler" "Requires at least one match" || return $?
 
   # IDENTICAL lineDepthComputation 11
   local linePrefix=""
@@ -460,39 +467,52 @@ __assertFileContainsHelper() {
 
   local functionName="${handler#_}"
   displayName="${displayName:-"$file"}"
-  [ -f "$file" ] || _assertFailure "$functionName" "$displayName is not a file \"$file\": $*" || return $?
 
-  local args verb notVerb failWhy
+  __profileLabel="__assertFileContainsHelper head" || return $? # assertion check fails without the || return $? here
+  # IDENTICAL profileFunctionMarker 3
+  # ********************************************************************************************************************
+  if [ "$__profile" != "false" ]; then __profileNext="$(timingStart)" && printf "Line %d: %s%d %s\n" "$LINENO" "$__profilePrefix" "$((__profileNext - __profile))" "$__profileLabel" 1>&2 && __profile=$__profileNext; fi
+  # ********************************************************************************************************************
 
-  if $success; then
-    verb="contains"
-    notVerb="does not contain"
-    failWhy="but should"
+  local successes=() failures=() verb notVerb failWhy && if $success; then
+    IFS="|" read -r verb notVerb failWhy <<<"contains|does not contain|but should"
+    local index=0 match && for match in "${quoted[@]}"; do
+      if ! grep -q -e "$match" "$file"; then
+        failures+=("${matches[index]}")
+      else
+        successes+=("${matches[index]}")
+      fi
+      index=$((index + 1))
+    done
+    __profileLabel="grep (find) x ${#matches[@]} $file"
   else
-    verb="does not contain"
-    notVerb="contains"
-    failWhy="and should not"
+    IFS="|" read -r verb notVerb failWhy <<<"does not contain|contains|and should not"
+    if grep -q -e "\($(listJoin "\|" "${quoted[@]}")\)" "$file"; then
+      local index=0 match && for match in "${quoted[@]}"; do
+        if grep -q -e "$match" "$file"; then
+          failures+=("${matches[index]}")
+        fi
+        index=$((index + 1))
+      done
+    else
+      successes+=("${matches[@]}")
+    fi
+    __profileLabel="grep (not found) x ${#matches[@]} $file"
   fi
-  args=("$@")
 
-  while [ $# -gt 0 ]; do
-    local expected="$1" found
-    [ -n "$expected" ] || _assertFailure "$functionName" "Blank match passed: ${args[*]}" || return $?
-    if grep -q -e "$(quoteGrepPattern "$expected")" "$file"; then
-      found=true
-    else
-      found=false
-    fi
-    if [ "$found" = "$success" ]; then
-      # shellcheck disable=SC2059
-      _assertSuccess "$functionName" "$linePrefix$displayName $verb string: \"$(decorate code "$expected")\"" || return $?
-    else
-      local message
-      message="$(printf -- "%s %s %s\n%s" "$linePrefix$displayName" "$notVerb string ($failWhy):" "$(decorate code "$expected")" "$(dumpPipe --tail "$displayName" <"$file")")"
-      _assertFailure "$functionName" "$message" || return $?
-    fi
-    shift
-  done
+  if [ "${#failures[@]}" -gt 0 ]; then
+    local message
+    message="$(printf -- "%s %s %s\n%s" "$linePrefix$displayName" "$notVerb $(plural "${#failures[@]}" string):" "$failWhy: $(decorate each code "${failures[@]}")" "$(dumpPipe --tail "$displayName" <"$file")")"
+    __profileLabel="$__profileLabel failed"
+    # IDENTICAL profileFunctionMarker 3
+    # ********************************************************************************************************************
+    if [ "$__profile" != "false" ]; then __profileNext="$(timingStart)" && printf "Line %d: %s%d %s\n" "$LINENO" "$__profilePrefix" "$((__profileNext - __profile))" "$__profileLabel" 1>&2 && __profile=$__profileNext; fi
+    # ********************************************************************************************************************
+    _assertFailure "$functionName" "$message" || return $?
+    returnAssert
+  fi
+  __profileLabel="$__profileLabel success"
+  _assertSuccess "$functionName" "$linePrefix$displayName $verb $(plural "${#successes[@]}" string): \"$(decorate each code "${successes[@]}")\"" || return $?
 }
 
 # Generic formatter

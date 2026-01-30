@@ -114,7 +114,7 @@ _buildUsageCompile() {
 __buildUsageLoad() {
   local handler="$1" && shift
 
-  catchReturn "$handler" testTools || return $?
+  : # Do nothing currently
 }
 
 # Extract and build the bin/build/documentation/ cache

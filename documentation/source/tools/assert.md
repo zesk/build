@@ -4,7 +4,6 @@
 [🛠️ Tools ](./index.md) &middot; [⬅ Top ](../index.md)
 <hr />
 
-
 These functions are solely available after you call `testSuite`. Check out our [testing guide](../guide/testing.md)
 
 ## Equality
@@ -76,3 +75,21 @@ These functions are solely available after you call `testSuite`. Check out our [
 {assertZeroFileSize}
 
 {assertNotZeroFileSize}
+
+## Test Mocking help
+
+{mockEnvironmentStart}
+
+{mockEnvironmentStop}
+
+{mockConsoleAnimationStart}
+
+{mockConsoleAnimationStop}
+
+# Assert return code
+
+{returnAssert}
+
+{returnIdentical}
+
+{returnLeak}

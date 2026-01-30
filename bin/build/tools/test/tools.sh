@@ -8,63 +8,10 @@
 export __TEST_SUITE_TRACE
 export globalTestFailure=
 
-# Run bash test suites for {name}.
-#
-# Supports argument flags in tests:
-# `TAP-Directive` `Test-Skip` `TODO`
-# You can also use `BUILD_TEST_FLAGS` to change the default flags.
-#
-# #### Tag filters
-#
-# Prefix a tag with `+` for `--tag` or `--skip-tag` queries to add the meaning "previous *AND*".
-#
-# - `--tag foo --tag bar` means tests must have `foo` tag OR must have `bar` tag
-# - `--tag foo --tag +bar` means tests must have `foo` tag AND must have `bar` tag (must have both)
-# - `--skip-tag foo --skip-tag bar` means skip any test with `foo` tag OR with any test with `bar` tag (either)
-# - `--skip-tag foo --skip-tag +bar` means skip any test with `foo` tag AND with the `bar` tag (must have both)
-# - `--tag a --tag +b --tag c --tag +d --tag +e` is `(a and b) or (c and d and e)`
-#
-# Notes: Consider using `--tag a+b --tag c+d+e` instead? TODO
-# Environment: - `BUILD_TEST_FLAGS` - Modify default flags and test behavior.
-# Environment: - `BUILD_DEBUG` - Many settings to debug different systems, comma-delimited.
-# Filters (`--tag` and `--skip-tag`) are applied in order after the function pattern or suite filter.
-# DOC TEMPLATE: --help 1
-# Argument: --help - Flag. Optional. Display this help.
-# Argument: --clean - Flag. Optional. Delete test artifact files and exit. (No tests run)
-# Argument: --list - Flag. Optional. List all test names (which match if applicable).
-# Argument: --env-file environmentFile - EnvironmentFile. Optional. Load one ore more environment files prior to running tests
-# Argument: --continue - Flag. Optional. Continue from last successful test.
-# Argument: -c - Flag. Optional. Continue from last successful test.
-# Argument: --delete directoryOrFile - FileDirectory. Optional. A file or directory to delete when the test suite terminates.
-# Argument: --delete-common - Flag. Delete `./vendor` and `./node_modules` (and other temporary build directories) by default.
-# Argument: --verbose - Flag. Optional. Be verbose.
-# Argument: --coverage - Flag. Optional. Feature in progress - generate a coverage file for tests.
-# Argument: --no-stats - Flag. Optional. Do not generate a test.stats file showing test timings when completed.
-# Argument: --messy - Flag. Optional. Do not delete test artifact files afterwards.
-# Argument: --fail executor - Callable. Optional. One or more programs to run on the failed test files. Takes arguments: testName testFile testLine
-# Argument: --cd-away - Flag. Optional. Change directories to a temporary directory before each test.
-# Argument: --tap tapFile - FileDirectory. Optional. Output test results in TAP format to `tapFile`.
-# Argument: --show - Flag. Optional. List all test suites.
-# Argument: -l - Flag. Optional. List all test suites.
-# Argument: --one testSuite - String. Optional. Add one test suite to run. (Synonym for `--suite`)
-# Argument: --suite testSuite - String. Optional. Add one test suite to run.
-# Argument: -1 testSuite - String. Optional. Add one test suite to run. (Synonym for `--suite`)
-# Argument: --tag tagName - String. Optional. Include tests (only) tagged with this name.
-# Argument: --show-tags - Flag. Optional. Of the matched tests, display the tags that they have, if any. Unique list.
-# Argument: --skip-tag tagName - String. Optional. Skip tests tagged with this name.
-# Argument: testFunctionPattern - String. Optional. Test function (or substring of function name) to run.
-# Hook: bash-test-start
-# Hook: bash-test-pass
-# Hook: bash-test-fail
-# Requires: head tee printf trap
-# Requires: decorate loadAverage consoleConfigureColorMode
-# Requires: buildEnvironmentLoad usageArgumentString catchEnvironment
-# Requires: bashCoverage
 # TODO: bashCoverage support
 # TODO: results.xml output (hooks?)
-# BUILD_DEBUG: test-dump-environment - When set tests will dump the environment at the end.
-testSuite() {
-  local handler="_${FUNCNAME[0]}"
+__testSuite() {
+  local handler="$1" && shift
 
   local tags=() skipTags=() runner=()
   local beQuiet=false listFlag=false verboseMode=false continueFlag=false doStats=true showFlag=false showTags=false tapFile="" cleanFlag=false
@@ -312,7 +259,9 @@ testSuite() {
   # Otherwise, delete the continue file.
 
   if $continueFlag; then
-    if [ -z "$startTest" ]; then
+    if [ "${#matchTests[@]}" -gt 0 ]; then
+      ! $verboseMode || statusMessage decorate info "Continue is ignored when a match test is specified: ${matchTests[*]}"
+    elif [ -z "$startTest" ]; then
       # If the continue file exists, the file contains the next test name on line 1
       startTest="$([ ! -f "$continueFile" ] || head -n 1 "$continueFile")"
       if [ "$startTest" = "PASSED" ]; then
@@ -485,7 +434,7 @@ testSuite() {
   IFS=$'\n' read -r -d '' assertionFailures assertionSuccesses < <(_assertionStatistics)
 
   local failColor="error"
-  [ "$assertionFailures" -ne 0 ] || failColor="subtle"
+  [ "$assertionFailures" -ne 0 ] || failColor="info"
 
   stats+=("$(decorate "$failColor" "$(pluralWord "$assertionFailures" "failed assertion")")," "$(decorate success "$(pluralWord "$assertionSuccesses" "successful assertion")")")
   [ -z "$statsFile" ] || __testStats "$statsFile"

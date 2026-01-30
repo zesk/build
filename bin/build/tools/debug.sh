@@ -507,26 +507,22 @@ outputTrigger() {
     shift
   done
 
-  local error lineCount=0
+  local tempOutput lineCount=0
 
-  error=$(fileTemporaryName "$handler") || return $?
+  tempOutput=$(fileTemporaryName "$handler") || return $?
   local line
   while read -r line; do
-    printf "%s\n" "$line" >>"$error"
+    printf "%s\n" "$line" >>"$tempOutput"
     lineCount=$((lineCount + 1))
   done
-
-  local lineText
-  lineText="$(pluralWord "$lineCount" line)"
-  if [ ! -s "$error" ]; then
-    rm -rf "$error" || :
-    ! $verbose || decorate info "No output in $(decorate code "$name") $(decorate value "$lineText")" || :
+  if [ ! -s "$tempOutput" ]; then
+    catchEnvironment "$handler" rm -rf "$tempOutput" || return $?
+    ! $verbose || decorate info "No output in $(decorate code "$name") $(decorate value "$(pluralWord "$lineCount" line)")" || :
     return 0
   fi
-
-  local message
-  message=$(catchEnvironment "$handler" dumpPipe --vanish "$error") || return $?
-  throwEnvironment "$handler" "stderr found in $(decorate code "$name") $(decorate value "$lineText"): " "$@" "$message" || return $?
+  catchEnvironment "$handler" cat "$tempOutput" || return $?
+  ! $verbose || throwEnvironment "$handler" "stderr found in $(decorate code "$name") $(decorate value "$(pluralWord "$lineCount" line)"): " "$@" || return $?
+  return 1
 }
 _outputTrigger() {
   # __IDENTICAL__ usageDocument 1

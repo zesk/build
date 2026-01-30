@@ -14,7 +14,7 @@ _loadTools() {
   if ! . "$(dirname "${BASH_SOURCE[0]}")/../../bin/build/tools.sh"; then
     return 1
   fi
-  testTools :
+  muzzle testSuite --help :
 }
 _subprocessClearValue() {
   printf "%s" "" >"$savedValue"

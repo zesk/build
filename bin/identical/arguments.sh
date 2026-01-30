@@ -32,25 +32,34 @@ source "${BASH_SOURCE[0]%/*}/../tools.sh"
 # Argument: --help - Flag. Optional. Display this help.
 # DOC TEMPLATE: --env-file 1
 # Argument: --env-file envFile - File. Optional. Environment file to load - can handle any format.
-# DOC TEMPLATE: assert-common 18
+# DOC TEMPLATE: assert-common 27
 # Argument: --help - Flag. Optional. Display this help.
+# Argument: --handler handler - Function. Optional. Use this error handler instead of the default error handler.
+# INTERNAL: Argument: --return returnCode - UnsignedInteger. Optional. Return code to expect from the `testFunction`.
+# Argument: --display - String. Optional. Display name for the condition.
+# INTERNAL: Argument: --success - Flag. Optional. Whether the assertion should pass (`true`) or fail (`false`) - most functions have this already baked in.
+# INTERNAL: Argument: --profile - Flag. Optional. Profile the assertion function.
+# Argument: --debug - Flag. Optional. Debugging enabled for the assertion function.
 # Argument: --line lineNumber - Integer. Optional. Line number of calling function. Typically this is not required as it is computed from the calling function using `--line-depth`.
 # Argument: --line-depth depth - Integer. Optional. The depth in the stack of function calls to find the line number of the calling function.
-# Argument: --debug - Flag. Optional. Debugging enabled for the assertion function.
-# Argument: --debug-lines - Flag. Optional. Debugging of SOLELY differences between `--line` passed in and the computed line from the `--line-depth` parameter.
-# Argument: --display - String. Optional. Display name for the condition.
-# Argument: --success - Boolean. Optional. Whether the assertion should pass (`true`) or fail (`false`) - most functions have this already baked in.
-# Argument: --stderr-match - String. Optional. One or more strings which must match `stderr` output. Implies `--stderr-ok`
-# Argument: --stdout-no-match - String. Optional. One or more strings which must match NOT `stderr` output.
+# INTERNAL: Argument: --test testFunction - Callable. Required. The test call to run.
+# INTERNAL: Argument: --formatter formatterFunction - Callable. Optional. The formatter to format the test result.
 # Argument: --stdout-match - String. Optional. One or more strings which must match `stdout` output.
 # Argument: --stdout-no-match - String. Optional. One or more strings which must match `stdout` output.
 # Argument: --stderr-ok - Flag. Optional. Output to `stderr` will not cause the test to fail.
-# Argument: --leak globalName - Zero or more. String. Allow global leaks for these globals.
-# Argument: --skip-plumber - Flag. Optional. Skip plumber check for function calls.
+# Argument: --stderr-match - String. Optional. One or more strings which must match `stderr` output. Implies `--stderr-ok`
+# Argument: --stderr-no-match - String. Optional. One or more strings which must match NOT `stderr` output. Implies `--stderr-ok`
 # Argument: --dump - Flag. Optional. Output `stderr` and `stdout` after test regardless.
 # Argument: --dump-binary - Flag. Optional. Output `stderr` and `stdout` after test regardless, displayed as binary.
+# Argument: --plumber - Flag. Optional. Wrap the test call with the `plumber` call to detect local leaks.
+# Argument: --leak globalName - Zero or more. String. Allow global leaks for these globals when `--plumber` is enabled.
+# Argument: --skip-plumber - Flag. Optional. Skip plumber check for function calls. When specified with `--plumber` the last occurrence on the command line is effective.
 # Argument: --head - Flag. Optional. When outputting `stderr` or `stdout`, output the head of the file.
 # Argument: --tail - Flag. Optional. When outputting `stderr` or `stdout`, output the tail of the file. (Default)
+# INTERNAL: Argument: --debug-lines - Flag. Optional. Debugging of SOLELY differences between `--line` passed in and the computed line from the `--line-depth` parameter.
+# INTERNAL: Argument: --code1 - Flag. Optional. When passed the first argument to this function is the `returnCode`.
+# INTERNAL: Argument: ... - Arguments. Optional. Additional arguments are passed to `testFunction` or `formatterFunction`.
+# END DOC TEMPLATE: assert-common
 # This function serves as a sample for all other templates. DOES NOT NEED TO MAKE SENSE. Do not add a Requires: to this function.
 __documentTemplateFunction() {
   local handler="_${FUNCNAME[0]}"

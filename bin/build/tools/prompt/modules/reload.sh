@@ -142,13 +142,13 @@ __reloadChangesCacheFile() {
   if [ -z "${__BASH_PROMPT_RELOAD_CHANGES_CACHE-}" ]; then
     local reloadHome cacheFile
     reloadHome=$(catchReturn "$handler" buildEnvironmentGetDirectory --subdirectory "reloadChanges" XDG_STATE_HOME) || return $?
-    cacheFile="$(catchReturn "$handler" buildEnvironmentGet APPLICATION_CODE)." || return $?
+    cacheFile="$(catchReturn "$handler" buildEnvironmentGet APPLICATION_CODE)" || return $?
     prefix="${reloadHome%/}/$cacheFile"
     __BASH_PROMPT_RELOAD_CHANGES_CACHE="$prefix"
   else
     prefix="$__BASH_PROMPT_RELOAD_CHANGES_CACHE"
   fi
-  printf "%s%s\n" "$prefix" "$extension"
+  printf "%s.%s\n" "$prefix" "$extension"
 }
 
 # Check for shell files changing and reload a shell script after any changes and notify the user

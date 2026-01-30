@@ -998,14 +998,14 @@ __usageDocumentCached() {
   local handler="${1-}" && shift
   local home="${1-}" && shift
   local functionName="${1-}" && shift
-  local settingsFile="$home/bin/build/documentation/$functionName.sh"
+  local suffix="bin/build/documentation/$functionName.sh"
+  local settingsFile="$home/$suffix"
   [ -f "$settingsFile" ] || return 1
   (
-    set -a
-    export helpConsole helpPlain
+    local helpConsole="" helpPlain="no helpPlain in $suffix"
     # shellcheck source=/dev/null
     catchEnvironment "$handler" source "$settingsFile" || return $?
-    if [ "${BUILD_COLORS-}" != "false" ]; then
+    if [ "${BUILD_COLORS-}" != "false" ] && [ -n "$helpConsole" ]; then
       catchEnvironment "$handler" decorateThemed <<<"$helpConsole" || return $?
     else
       catchEnvironment "$handler" printf "%s\n" "$helpPlain" || return $?

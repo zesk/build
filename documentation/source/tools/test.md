@@ -4,18 +4,14 @@
 [🛠️ Tools ](./index.md) &middot; [⬅ Top ](../index.md)
 <hr />
 
-{evalCheck}
-{bashFindUncaughtAssertions}
-
 ## Test Subsystem
 
 {testTools}
 
 {testSuite}
 
-## Mocking help
+## Code quality tools
 
-{mockEnvironmentStart}
-{mockEnvironmentStop}
-{mockConsoleAnimationStart}
-{mockConsoleAnimationStop}
+{bashFindUncaughtAssertions}
+
+{evalCheck}

@@ -36,6 +36,7 @@ mapReturn|returnMap|
 maximumFieldLength|fileFieldMaximum|
 maximumLineLength|fileLineMaximum|
 stripAnsi|consoleToPlain|
+testTools testSuite|testSuite|
 
 # v0.40.4
 usageArgumentDate "$handler"|validate "$handler" Date|

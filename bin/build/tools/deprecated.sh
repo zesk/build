@@ -18,6 +18,33 @@
 #             |_|
 #
 
+# Load test tools
+# Deprecated: 2025-01 - just call `testSuite` which does this
+# Deprecated: 2026-01
+# DOC TEMPLATE: --help 1
+# Argument: --help - Flag. Optional. Display this help.
+# Argument: binary - Callable. Optional. Run this program after loading test tools.
+# Argument: ... - Optional. Arguments. Arguments for binary.
+testTools() {
+  local handler="_${FUNCNAME[0]}"
+
+  __help "$handler" "${1-}" || return 0
+
+  _deprecated "${FUNCNAME[0]}"
+
+  __testLoader "$handler" : || return $?
+  catchEnvironment "$handler" isFunction __testSuite || return $?
+
+  [ $# -ne 0 ] || return 0
+  isCallable "$1" || throwArgument "$handler" "$1 is not callable" || return $?
+  catchEnvironment "$handler" "$@" || return $?
+}
+_testTools() {
+  # __IDENTICAL__ usageDocument 1
+  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+}
+
+
 # Deprecated: 2026-01
 maximumFieldLength() {
   _deprecated "${FUNCNAME[0]}"

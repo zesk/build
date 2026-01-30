@@ -18,6 +18,11 @@ __testFunction() {
   if [ -n "$flags" ] && [ "${flags#*"$flag"}" != "$flags" ]; then __profile=$(timingStart) && __profile0=$__profile; fi
   # ********************************************************************************************************************
 
+  # IDENTICAL profileFunctionEnable 3
+  # ********************************************************************************************************************
+  if [ "$__profile" = "false" ]; then __profile=$(timingStart) && __profile0=$__profile; fi
+  # ********************************************************************************************************************
+
   false || muzzle identicalCheck || return $?
   sleep 1
 
@@ -27,11 +32,13 @@ __testFunction() {
   if [ "$__profile" != "false" ]; then __profileNext="$(timingStart)" && printf "Line %d: %s%d %s\n" "$LINENO" "$__profilePrefix" "$((__profileNext - __profile))" "$__profileLabel" 1>&2 && __profile=$__profileNext; fi
   # ********************************************************************************************************************
 
+  __profileLabel="describe what happened between this and prior profile call"
   # IDENTICAL profileFunctionMarkerOthers 3
   # ********************************************************************************************************************
   if [ "$__profile" != "false" ]; then __profileNext="$(timingStart)" && __profileUsed=$((__profileUsed + (__profileNext - __profile))) && printf "Line %d: %s%d %s (*them %d)\n" "$LINENO" "$__profilePrefix" "$((__profileNext - __profile))" "$__profileLabel" "$__profileUsed" 1>&2 && __profile=$__profileNext; fi
   # ********************************************************************************************************************
 
+  __profileLabel="describe what happened between this and prior profile call"
   # IDENTICAL profileFunctionTail 7
   # ********************************************************************************************************************
   if [ "$__profile" != "false" ]; then

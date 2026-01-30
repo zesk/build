@@ -17,11 +17,12 @@ __mockEnvironmentEmpty() {
 }
 
 # Fake a value for testing
+# Argument: handler - Function. Required. Error handler.
 # Argument: globalName - EnvironmentVariable. Required. Global to change temporarily to a value.
 # Argument: value - EmptyString. Optional. Force the value of `globalName` to this value temporarily. Saves the original value.
 # Argument: ... - Continue passing pairs of globalName value to mock additional values.
-mockEnvironmentStart() {
-  local handler="_${FUNCNAME[0]}"
+__mockEnvironmentStart() {
+  local handler="$1" && shift
   while [ $# -gt 0 ]; do
     local argument="${1-}" && shift
     local value="${1-}"
@@ -35,17 +36,12 @@ mockEnvironmentStart() {
     export "$argument"="$value"
   done
 }
-_mockEnvironmentStart() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
-}
 
-# Restore a mocked value. Works solely with the default `saveGlobalName` (e.g. `__MOCK_${globalName}`).
-# DOC TEMPLATE: --help 1
-# Argument: --help - Flag. Optional. Display this help.
+# Fake a value for testing
+# Argument: handler - Function. Required. Error handler.
 # Argument: globalName ... - EnvironmentVariable. Required. Global to restore from the mocked saved value.
-mockEnvironmentStop() {
-  local handler="_${FUNCNAME[0]}"
+__mockEnvironmentStop() {
+  local handler="$1" && shift
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
@@ -55,6 +51,8 @@ mockEnvironmentStop() {
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
+    # _IDENTICAL_ handlerHandler 1
+    --handler) shift && handler=$(validate "$handler" Function "$argument" "${1-}") || return $? ;;
     *)
       local emptyValue saveGlobal
       emptyValue="$(__mockEnvironmentEmpty "$argument")"
@@ -76,29 +74,16 @@ mockEnvironmentStop() {
   done
 }
 
-# Fake `consoleHasAnimation` for testing
-# Argument: true | false - Boolean. Force the value of consoleHasAnimation to this value temporarily. Saves the original value.
-# Developer Note: Keep this here to keep it close to the definition it modifies
-mockConsoleAnimationStart() {
-  local handler="_${FUNCNAME[0]}" flag
+__mockConsoleAnimationStart() {
+  local handler="$1" && shift
 
-  flag=$(validate "$handler" boolean "flag" "${1-}") || return $?
-  catchReturn "$handler" mockEnvironmentStart CI || return $?
-  export CI
-  CI="$(booleanChoose "$flag" "" "testCI")"
-}
-_mockConsoleAnimationStart() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+  local flag && flag=$(validate "$handler" Boolean "flag" "${1-}") || return $?
+  __mockEnvironmentStart "$handler" CI || return $?
+  export CI && CI="$(booleanChoose "$flag" "" "testCI")"
 }
 
 # Stop faking `consoleHasAnimation` for testing
-mockConsoleAnimationStop() {
-  local handler="_${FUNCNAME[0]}" flag="${1-}"
-
-  mockEnvironmentStop CI
-}
-_mockConsoleAnimationStop() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
+__mockConsoleAnimationStop() {
+  local handler="$1" && shift
+  __mockEnvironmentStop "$1" "$@" CI || return $?
 }

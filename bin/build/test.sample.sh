@@ -10,19 +10,17 @@
 # shellcheck source=/dev/null
 source "${BASH_SOURCE[0]%/*}/tools.sh" || exit 99
 
-#
 # Standard test layout
 #
 # Test functions prefixed with the word `test` in:
 #
-# - ./test/tests/suite-tests.sh
+# - `./test/tests/suite-tests.sh`
 #
 # Test support files (available per test):
 #
-# - ./test/support/*.sh -
+# - `./test/support/*.sh` -
 #
-# Once ready, do `testTools testSuite --help`
-#
+# Once ready, do `testSuite --help`
 __buildTestSuite() {
   local handler="_${FUNCNAME[0]}"
   local testHome
@@ -33,7 +31,7 @@ __buildTestSuite() {
   # Include our own test support files if needed
   [ ! -d "$testHome/test/support" ] || catchEnvironment "$handler" bashSourcePath "$testHome/test/support" || return $?
 
-  catchEnvironment "$handler" testTools testSuite --tests "$testHome/test/tests/" "$@" || return $?
+  catchEnvironment "$handler" testSuite --tests "$testHome/test/tests/" "$@" || return $?
 }
 ___buildTestSuite() {
   # __IDENTICAL__ usageDocument 1

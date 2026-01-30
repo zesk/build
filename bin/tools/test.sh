@@ -36,8 +36,8 @@ buildTestSuite() {
 
   __buildTestRequirements "$handler" || return $?
 
-  catchEnvironment "$handler" testTools testSuite --cd-away --delete-common --tests "$testHome/test/tools/" "$@" || return $?
+  catchEnvironment "$handler" testSuite --cd-away --delete-common --tests "$testHome/test/tools/" "$@" || return $?
 }
 _buildTestSuite() {
-  name="$(buildEnvironmentGet APPLICATION_NAME)" fn="${FUNCNAME[0]#_}" testTools _testSuite "$@"
+  name="$(buildEnvironmentGet APPLICATION_NAME)" fn="${FUNCNAME[0]#_}" _testSuite "$@"
 }

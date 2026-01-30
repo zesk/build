@@ -8,7 +8,7 @@
 set -eou pipefail
 
 # shellcheck source=/dev/null
-if source "${BASH_SOURCE[0]%/*}/../build/tools.sh"; then
+if source "${BASH_SOURCE[0]%/*}/../tools.sh"; then
 
   # Default pre commit hook for Zesk Build
   # - All shell files (`.sh`) are made executable (+x)
@@ -16,7 +16,6 @@ if source "${BASH_SOURCE[0]%/*}/../build/tools.sh"; then
   __hookPreCommit() {
     local handler="_${FUNCNAME[0]}"
     # gitPreCommitSetup is already called
-    local fileCopies nonOriginalWithEOF nonOriginal original
 
     gitPreCommitHeader sh md json
 
@@ -24,16 +23,15 @@ if source "${BASH_SOURCE[0]%/*}/../build/tools.sh"; then
     catchEnvironment "$handler" ./bin/update-md.sh --skip-commit || return $?
 
     statusMessage decorate success Updating _sugar.sh
-    original="bin/build/identical/_sugar.sh"
-    nonOriginal=bin/build/tools/_sugar.sh
+    local original="bin/build/identical/_sugar.sh" nonOriginal="bin/build/tools/_sugar.sh"
 
     statusMessage decorate success Making shell files executable ...
     catchEnvironment "$handler" bashMakeExecutable | printfOutputPrefix -- "\n" || return $?
 
     if [ "$(fileNewest "$original" "$nonOriginal")" = "$nonOriginal" ]; then
-      nonOriginalWithEOF=$(fileTemporaryName "$handler") || return $?
+      local nonOriginalWithEOF && nonOriginalWithEOF=$(fileTemporaryName "$handler") || return $?
       catchEnvironment "$handler" sed -e 's/IDENTICAL _sugar [0-9][0-9]*/IDENTICAL _sugar EOF/g' -e 's/DO NOT EDIT/EDIT/g' <"$nonOriginal" >"$nonOriginalWithEOF" || return $?
-      fileCopies=("$nonOriginalWithEOF" "$original")
+      local fileCopies=("$nonOriginalWithEOF" "$original")
       # Can not be trusted to not edit the right one
       if ! diff -q "${fileCopies[@]}" 2>/dev/null; then
         catchEnvironment "$handler" cp "${fileCopies[@]}" || returnClean "$nonOriginalWithEOF" || return $?
@@ -43,6 +41,15 @@ if source "${BASH_SOURCE[0]%/*}/../build/tools.sh"; then
       rm -f "$nonOriginalWithEOF" || :
     fi
 
+    local home && home=$(catchReturn "$handler" buildHome) || return $?
+    if ! find "$home/bin/build/documentation" -type f -name '*.sh' -empty | decorate warning | decorate wrap "- " "" | outputTrigger | printfOutputPrefix "%s\n" "$(decorate error "Zero documentation files:")"; then
+      statusMessage decorate info "Building usage ..."
+      catchEnvironment "$handler" find "$home/bin/build/documentation" -type f -name '*.sh' -empty -delete || return $?
+      CI="" buildUsageCompile --skip-git || return $?
+      if ! find "$home/bin/build/documentation" -type f -name '*.sh' -empty | decorate warning | decorate wrap "- " "" | outputTrigger | printfOutputPrefix "%s\n" "$(decorate error "Can not create documentation files:")" 1>&2; then
+        return 1
+      fi
+    fi
     hookRunOptional --next "${BASH_SOURCE[0]}" pre-commit "$@"
   }
   ___hookPreCommit() {
