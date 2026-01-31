@@ -54,7 +54,7 @@ __bashSanitize() {
     catchEnvironment "$handler" printf "%s\n" "$@" >"$fileList.$$" || returnClean $? "${clean[@]}" || return $?
   fi
   if [ "${#exceptions[@]}" -gt 0 ]; then
-    local ee=("-v") e && for e in "${exceptions[@]}"; do ee+=("-e" "$(quoteGrepPatttern "$e")"); done
+    local ee=("-v") e && for e in "${exceptions[@]}"; do ee+=("-e" "$(quoteGrepPattern "$e")"); done
     catchReturn "$handler" grepSafe "${ee[@]}" <"$fileList.$$" >"$fileList" || returnClean $? "${clean[@]}" || return $?
     catchReturn "$handler" rm -rf "$fileList.$$" || returnClean $? "${clean[@]}" || return $?
   else

@@ -138,7 +138,6 @@ _returnUndo() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-
 # IDENTICAL executeInputSupport 39
 
 # Support arguments and stdin as arguments to an executor
