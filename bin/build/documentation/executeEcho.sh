@@ -18,5 +18,4 @@ usage="executeEcho [ command ... ]"
 # shellcheck disable=SC2016
 helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]mexecuteEcho'$'\e''[0m '$'\e''[[(blue)]m[ command ... ]'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[(blue)]mcommand ...  '$'\e''[[(value)]mAny command and arguments to run.'$'\e''[[(reset)]m'$'\n'''$'\n''Output the '$'\e''[[(code)]mcommand ...'$'\e''[[(reset)]m to stdout prior to running, then '$'\e''[[(code)]mexecute'$'\e''[[(reset)]m it'$'\n'''$'\n''Return codes:'$'\n''- Any'$'\n'''
 # shellcheck disable=SC2016
-helpPlain='[[(label)]mUsage: [[(info)]mexecuteEcho [[(blue)]m[ command ... ]'$'\n'''$'\n''    [[(blue)]mcommand ...  [[(value)]mAny command and arguments to run.[[(reset)]m'$'\n'''$'\n''Output the [[(code)]mcommand ...[[(reset)]m to stdout prior to running, then [[(code)]mexecute[[(reset)]m it'$'\n'''$'\n''Return codes:'$'\n''- Any'$'\n'''
-# elapsed 2.863
+helpPlain='Usage: [[(info)]mexecuteEcho [ command ... ]'$'\n'''$'\n''    command ...  Any command and arguments to run.'$'\n'''$'\n''Output the command ... to stdout prior to running, then execute it'$'\n'''$'\n''Return codes:'$'\n''- Any'$'\n'''

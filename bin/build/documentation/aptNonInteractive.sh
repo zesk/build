@@ -6,7 +6,6 @@ argument="... - Arguments. Pass through arguments to \`apt-get\`"$'\n'""
 base="apt.sh"
 description="Run apt-get non-interactively"$'\n'""
 file="bin/build/tools/apt.sh"
-foundNames=([0]="argument")
 rawComment="Run apt-get non-interactively"$'\n'"Argument: ... - Arguments. Pass through arguments to \`apt-get\`"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/apt.sh"
@@ -17,5 +16,4 @@ usage="aptNonInteractive [ ... ]"
 # shellcheck disable=SC2016
 helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]maptNonInteractive'$'\e''[0m '$'\e''[[(blue)]m[ ... ]'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[(blue)]m...  '$'\e''[[(value)]mArguments. Pass through arguments to '$'\e''[[(code)]mapt-get'$'\e''[[(reset)]m'$'\e''[[(reset)]m'$'\n'''$'\n''Run apt-get non-interactively'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - Success'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - Environment error'$'\n''- '$'\e''[[(code)]m2'$'\e''[[(reset)]m - Argument error'$'\n'''
 # shellcheck disable=SC2016
-helpPlain='[[(label)]mUsage: aptNonInteractive [[(blue)]m[ ... ]'$'\n'''$'\n''    [[(blue)]m...  [[(value)]mArguments. Pass through arguments to [[(code)]mapt-get'$'\n'''$'\n''Run apt-get non-interactively'$'\n'''$'\n''Return codes:'$'\n''- [[(code)]m0 - Success'$'\n''- [[(code)]m1 - Environment error'$'\n''- [[(code)]m2 - Argument error'$'\n'''
-# elapsed 3.574
+helpPlain='Usage: aptNonInteractive [ ... ]'$'\n'''$'\n''    ...  Arguments. Pass through arguments to apt-get'$'\n'''$'\n''Run apt-get non-interactively'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''

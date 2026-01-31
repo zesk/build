@@ -272,7 +272,7 @@ __buildUsageCompileFunction() {
   if [ ! -f "$documentationSettingsFile" ]; then
     throwEnvironment "$handler" "${prefix}: bashDocumentationExtract $fun $sourceFile did not generate $documentationSettingsFile" || returnClean $? "${clean[@]}" || return $?
   else
-    local init && init=$(timingStart)
+    # local init && init=$(timingStart)
     catchReturn "$handler" decorateThemelessMode || return $?
     fn="" BUILD_DEBUG="" BUILD_COLORS=true catchEnvironment "$handler" usageDocument "$sourceFile" "$fun" 0 >"$tempHelp" || returnClean $? "${clean[@]}" || returnUndo $? decorateThemelessMode --end || return $?
     catchReturn "$handler" decorateThemelessMode --end || returnClean $? "${clean[@]}" || return $?
@@ -294,7 +294,7 @@ __buildUsageCompileFunction() {
       dumpPipe "Settings for $fun" <"$documentationSettingsFile" 1>&2
     fi
     catchEnvironment "$handler" rm -f "${clean[@]}" || return $?
-    catchEnvironment "$handler" printf "%s\n" "# elapsed $(timingFormat "$(timingElapsed "$init")")" >>"$documentationSettingsFile" || return $?
+    # catchEnvironment "$handler" printf "%s\n" "# elapsed $(timingFormat "$(timingElapsed "$init")")" >>"$documentationSettingsFile" || return $?
 
     __profileLabel="decorateThemeless"
     # IDENTICAL profileFunctionMarker 3

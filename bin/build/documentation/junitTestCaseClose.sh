@@ -6,7 +6,6 @@ argument="none"
 base="junit.sh"
 description="Close tag for \`testcase\` - Test case"$'\n'""
 file="bin/build/tools/junit.sh"
-foundNames=()
 rawComment="Close tag for \`testcase\` - Test case"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/junit.sh"
@@ -17,5 +16,4 @@ usage="junitTestCaseClose"
 # shellcheck disable=SC2016
 helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]mjunitTestCaseClose'$'\e''[0m'$'\n'''$'\n''Close tag for '$'\e''[[(code)]mtestcase'$'\e''[[(reset)]m - Test case'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - Success'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - Environment error'$'\n''- '$'\e''[[(code)]m2'$'\e''[[(reset)]m - Argument error'$'\n'''
 # shellcheck disable=SC2016
-helpPlain='[[(label)]mUsage: [[(info)]mjunitTestCaseClose'$'\n'''$'\n''Close tag for testcase - Test case'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''
-# elapsed 0.643
+helpPlain='Usage: [[(info)]mjunitTestCaseClose'$'\n'''$'\n''Close tag for testcase - Test case'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''

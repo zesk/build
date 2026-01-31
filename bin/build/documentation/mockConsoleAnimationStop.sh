@@ -17,5 +17,4 @@ usage="mockConsoleAnimationStop"
 # shellcheck disable=SC2016
 helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]mmockConsoleAnimationStop'$'\e''[0m'$'\n'''$'\n''Stop faking '$'\e''[[(code)]mconsoleHasAnimation'$'\e''[[(reset)]m for testing'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - Success'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - Environment error'$'\n''- '$'\e''[[(code)]m2'$'\e''[[(reset)]m - Argument error'$'\n'''
 # shellcheck disable=SC2016
-helpPlain='Usage: mockConsoleAnimationStop'$'\n'''$'\n''Stop faking consoleHasAnimation for testing'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''
-# elapsed 0.643
+helpPlain='[[(label)]mUsage: [[(info)]mmockConsoleAnimationStop'$'\n'''$'\n''Stop faking consoleHasAnimation for testing'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''

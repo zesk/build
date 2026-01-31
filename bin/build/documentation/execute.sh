@@ -18,5 +18,4 @@ usage="execute binary ..."
 # shellcheck disable=SC2016
 helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]mexecute'$'\e''[0m '$'\e''[[(bold)]m'$'\e''[[(magenta)]mbinary ...'$'\e''[0m'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[(red)]mbinary ...  '$'\e''[[(value)]mExecutable. Required. Any arguments are passed to '$'\e''[[(code)]mbinary'$'\e''[[(reset)]m.'$'\e''[[(reset)]m'$'\n'''$'\n''Run binary and output failed command upon error'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - Success'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - Environment error'$'\n''- '$'\e''[[(code)]m2'$'\e''[[(reset)]m - Argument error'$'\n'''
 # shellcheck disable=SC2016
-helpPlain='[[(label)]mUsage: execute [[(bold)]m[[(magenta)]mbinary ...'$'\n'''$'\n''    [[(red)]mbinary ...  [[(value)]mExecutable. Required. Any arguments are passed to binary.'$'\n'''$'\n''Run binary and output failed command upon error'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''
-# elapsed 3.042
+helpPlain='Usage: [[(info)]mexecute binary ...'$'\n'''$'\n''    binary ...  Executable. Required. Any arguments are passed to binary.'$'\n'''$'\n''Run binary and output failed command upon error'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''

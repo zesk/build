@@ -17,5 +17,4 @@ usage="bigTextAt"
 # shellcheck disable=SC2016
 helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]mbigTextAt'$'\e''[0m'$'\n'''$'\n''Experimental'$'\n''Place bigText at a position on the console'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - Success'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - Environment error'$'\n''- '$'\e''[[(code)]m2'$'\e''[[(reset)]m - Argument error'$'\n'''
 # shellcheck disable=SC2016
-helpPlain='Usage: bigTextAt'$'\n'''$'\n''Experimental'$'\n''Place bigText at a position on the console'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''
-# elapsed 2.985
+helpPlain='[[(label)]mUsage: [[(info)]mbigTextAt'$'\n'''$'\n''Experimental'$'\n''Place bigText at a position on the console'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''

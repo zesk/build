@@ -19,5 +19,4 @@ usage="gitRepositoryChanged"
 # shellcheck disable=SC2016
 helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]mgitRepositoryChanged'$'\e''[0m'$'\n'''$'\n''Has a git repository been changed from HEAD?'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - the repo has NOT been modified'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - the repo has been modified'$'\n'''
 # shellcheck disable=SC2016
-helpPlain='[[(label)]mUsage: gitRepositoryChanged'$'\n'''$'\n''Has a git repository been changed from HEAD?'$'\n'''$'\n''Return codes:'$'\n''- [[(code)]m1 - the repo has NOT been modified'$'\n''- [[(code)]m0 - the repo has been modified'$'\n'''
-# elapsed 3.073
+helpPlain='Usage: [[(info)]mgitRepositoryChanged'$'\n'''$'\n''Has a git repository been changed from HEAD?'$'\n'''$'\n''Return codes:'$'\n''- 1 - the repo has NOT been modified'$'\n''- 0 - the repo has been modified'$'\n'''

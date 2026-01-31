@@ -17,5 +17,4 @@ usage="mariadbUninstall"
 # shellcheck disable=SC2016
 helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]mmariadbUninstall'$'\e''[0m'$'\n'''$'\n''Uninstall '$'\e''[[(code)]mmariadb'$'\e''[[(reset)]m'$'\n''When this tool succeeds the '$'\e''[[(code)]mmariadb'$'\e''[[(reset)]m binary will no longer be available in the local operating system.'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - If uninstallation fails'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - If uninstallation succeeds'$'\n'''
 # shellcheck disable=SC2016
-helpPlain='[[(label)]mUsage: [[(info)]mmariadbUninstall'$'\n'''$'\n''Uninstall [[(code)]mmariadb[[(reset)]m'$'\n''When this tool succeeds the [[(code)]mmariadb[[(reset)]m binary will no longer be available in the local operating system.'$'\n'''$'\n''Return codes:'$'\n''- [[(code)]m1[[(reset)]m - If uninstallation fails'$'\n''- [[(code)]m0[[(reset)]m - If uninstallation succeeds'$'\n'''
-# elapsed 4.19
+helpPlain='[[(label)]mUsage: [[(info)]mmariadbUninstall'$'\n'''$'\n''Uninstall [[(code)]mmariadb'$'\n''When this tool succeeds the [[(code)]mmariadb binary will no longer be available in the local operating system.'$'\n'''$'\n''Return codes:'$'\n''- [[(code)]m1 - If uninstallation fails'$'\n''- [[(code)]m0 - If uninstallation succeeds'$'\n'''

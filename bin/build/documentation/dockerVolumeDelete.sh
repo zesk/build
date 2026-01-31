@@ -17,5 +17,4 @@ usage="dockerVolumeDelete name"
 # shellcheck disable=SC2016
 helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]mdockerVolumeDelete'$'\e''[0m '$'\e''[[(bold)]m'$'\e''[[(magenta)]mname'$'\e''[0m'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[(red)]mname  '$'\e''[[(value)]mString. Required. Volume name to delete.'$'\e''[[(reset)]m'$'\n'''$'\n''Delete a docker volume'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - Success'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - Environment error'$'\n''- '$'\e''[[(code)]m2'$'\e''[[(reset)]m - Argument error'$'\n'''
 # shellcheck disable=SC2016
-helpPlain='[[(label)]mUsage: [[(info)]mdockerVolumeDelete [[(bold)]m[[(magenta)]mname'$'\n'''$'\n''    [[(red)]mname  String. Required. Volume name to delete.'$'\n'''$'\n''Delete a docker volume'$'\n'''$'\n''Return codes:'$'\n''- [[(code)]m0 - Success'$'\n''- [[(code)]m1 - Environment error'$'\n''- [[(code)]m2 - Argument error'$'\n'''
-# elapsed 3.032
+helpPlain='Usage: [[(info)]mdockerVolumeDelete [[(magenta)]mname'$'\n'''$'\n''    [[(red)]mname  String. Required. Volume name to delete.'$'\n'''$'\n''Delete a docker volume'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''

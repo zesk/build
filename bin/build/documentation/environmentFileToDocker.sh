@@ -6,6 +6,7 @@ argument="envFile ... - File. Required. One or more files to convert."$'\n'""
 base="convert.sh"
 description="Takes any environment file and makes it docker-compatible"$'\n'"Outputs the compatible env to stdout"$'\n'""
 file="bin/build/tools/environment/convert.sh"
+foundNames=([0]="argument")
 rawComment="Takes any environment file and makes it docker-compatible"$'\n'"Outputs the compatible env to stdout"$'\n'"Argument: envFile ... - File. Required. One or more files to convert."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/environment/convert.sh"
@@ -16,5 +17,4 @@ usage="environmentFileToDocker envFile ..."
 # shellcheck disable=SC2016
 helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]menvironmentFileToDocker'$'\e''[0m '$'\e''[[(bold)]m'$'\e''[[(magenta)]menvFile ...'$'\e''[0m'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[(red)]menvFile ...  '$'\e''[[(value)]mFile. Required. One or more files to convert.'$'\e''[[(reset)]m'$'\n'''$'\n''Takes any environment file and makes it docker-compatible'$'\n''Outputs the compatible env to stdout'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - Success'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - Environment error'$'\n''- '$'\e''[[(code)]m2'$'\e''[[(reset)]m - Argument error'$'\n'''
 # shellcheck disable=SC2016
-helpPlain='Usage: [[(info)]menvironmentFileToDocker [[(bold)]m[[(magenta)]menvFile ...'$'\n'''$'\n''    [[(red)]menvFile ...  [[(value)]mFile. Required. One or more files to convert.'$'\n'''$'\n''Takes any environment file and makes it docker-compatible'$'\n''Outputs the compatible env to stdout'$'\n'''$'\n''Return codes:'$'\n''- [[(code)]m0 - Success'$'\n''- [[(code)]m1 - Environment error'$'\n''- [[(code)]m2 - Argument error'$'\n'''
-# elapsed 3.031
+helpPlain='Usage: environmentFileToDocker envFile ...'$'\n'''$'\n''    envFile ...  File. Required. One or more files to convert.'$'\n'''$'\n''Takes any environment file and makes it docker-compatible'$'\n''Outputs the compatible env to stdout'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''

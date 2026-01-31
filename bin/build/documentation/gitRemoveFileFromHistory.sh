@@ -17,5 +17,4 @@ usage="gitRemoveFileFromHistory"
 # shellcheck disable=SC2016
 helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]mgitRemoveFileFromHistory'$'\e''[0m'$'\n'''$'\n''Has a lot of caveats'$'\n''gitRemoveFileFromHistory path/to/file'$'\n''usually have to '$'\e''[[(code)]mgit push --force'$'\e''[[(reset)]m'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - Success'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - Environment error'$'\n''- '$'\e''[[(code)]m2'$'\e''[[(reset)]m - Argument error'$'\n'''
 # shellcheck disable=SC2016
-helpPlain='Usage: gitRemoveFileFromHistory'$'\n'''$'\n''Has a lot of caveats'$'\n''gitRemoveFileFromHistory path/to/file'$'\n''usually have to git push --force'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''
-# elapsed 3.165
+helpPlain='[[(label)]mUsage: [[(info)]mgitRemoveFileFromHistory'$'\n'''$'\n''Has a lot of caveats'$'\n''gitRemoveFileFromHistory path/to/file'$'\n''usually have to [[(code)]mgit push --force'$'\n'''$'\n''Return codes:'$'\n''- [[(code)]m0 - Success'$'\n''- [[(code)]m1 - Environment error'$'\n''- [[(code)]m2 - Argument error'$'\n'''

@@ -18,5 +18,4 @@ usage="returnArgument [ message ... ]"
 # shellcheck disable=SC2016
 helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]mreturnArgument'$'\e''[0m '$'\e''[[(blue)]m[ message ... ]'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[(blue)]mmessage ...  '$'\e''[[(value)]mString. Optional. Message to output.'$'\e''[[(reset)]m'$'\n'''$'\n''Return '$'\e''[[(code)]margument'$'\e''[[(reset)]m error code. Outputs '$'\e''[[(code)]mmessage ...'$'\e''[[(reset)]m to '$'\e''[[(code)]mstderr'$'\e''[[(reset)]m.'$'\n'''$'\n''Return codes:'$'\n''- 2'$'\n'''
 # shellcheck disable=SC2016
-helpPlain='Usage: [[(info)]mreturnArgument [[(blue)]m[ message ... ]'$'\n'''$'\n''    [[(blue)]mmessage ...  String. Optional. Message to output.'$'\n'''$'\n''Return argument error code. Outputs message ... to stderr.'$'\n'''$'\n''Return codes:'$'\n''- 2'$'\n'''
-# elapsed 2.703
+helpPlain='[[(label)]mUsage: [[(info)]mreturnArgument [[(blue)]m[ message ... ]'$'\n'''$'\n''    [[(blue)]mmessage ...  [[(value)]mString. Optional. Message to output.[[(reset)]m'$'\n'''$'\n''Return [[(code)]margument[[(reset)]m error code. Outputs [[(code)]mmessage ...[[(reset)]m to [[(code)]mstderr[[(reset)]m.'$'\n'''$'\n''Return codes:'$'\n''- 2'$'\n'''

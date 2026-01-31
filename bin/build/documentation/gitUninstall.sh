@@ -16,5 +16,4 @@ usage="gitUninstall [ package ]"
 # shellcheck disable=SC2016
 helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]mgitUninstall'$'\e''[0m '$'\e''[[(blue)]m[ package ]'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[(blue)]mpackage  '$'\e''[[(value)]mAdditional packages to uninstall'$'\e''[[(reset)]m'$'\n'''$'\n''Uninstalls the '$'\e''[[(code)]mgit'$'\e''[[(reset)]m binary'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - Success'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - Environment error'$'\n''- '$'\e''[[(code)]m2'$'\e''[[(reset)]m - Argument error'$'\n'''
 # shellcheck disable=SC2016
-helpPlain='[[(label)]mUsage: [[(info)]mgitUninstall [ package ]'$'\n'''$'\n''    package  [[(value)]mAdditional packages to uninstall'$'\n'''$'\n''Uninstalls the [[(code)]mgit binary'$'\n'''$'\n''Return codes:'$'\n''- [[(code)]m0 - Success'$'\n''- [[(code)]m1 - Environment error'$'\n''- [[(code)]m2 - Argument error'$'\n'''
-# elapsed 3.456
+helpPlain='[[(label)]mUsage: gitUninstall [[(blue)]m[ package ]'$'\n'''$'\n''    [[(blue)]mpackage  [[(value)]mAdditional packages to uninstall'$'\n'''$'\n''Uninstalls the [[(code)]mgit binary'$'\n'''$'\n''Return codes:'$'\n''- [[(code)]m0 - Success'$'\n''- [[(code)]m1 - Environment error'$'\n''- [[(code)]m2 - Argument error'$'\n'''

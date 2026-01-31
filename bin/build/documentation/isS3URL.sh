@@ -17,5 +17,4 @@ usage="isS3URL [ value ]"
 # shellcheck disable=SC2016
 helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]misS3URL'$'\e''[0m '$'\e''[[(blue)]m[ value ]'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[(blue)]mvalue  '$'\e''[[(value)]mEmptyString. Value to check.'$'\e''[[(reset)]m'$'\n'''$'\n''Is the URL passed in a S3 URL?'$'\n''Without arguments, displays help.'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - Success'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - Environment error'$'\n''- '$'\e''[[(code)]m2'$'\e''[[(reset)]m - Argument error'$'\n'''
 # shellcheck disable=SC2016
-helpPlain='[[(label)]mUsage: isS3URL [[(blue)]m[ value ]'$'\n'''$'\n''    [[(blue)]mvalue  [[(value)]mEmptyString. Value to check.'$'\n'''$'\n''Is the URL passed in a S3 URL?'$'\n''Without arguments, displays help.'$'\n'''$'\n''Return codes:'$'\n''- [[(code)]m0 - Success'$'\n''- [[(code)]m1 - Environment error'$'\n''- [[(code)]m2 - Argument error'$'\n'''
-# elapsed 3.634
+helpPlain='Usage: isS3URL [ value ]'$'\n'''$'\n''    value  EmptyString. Value to check.'$'\n'''$'\n''Is the URL passed in a S3 URL?'$'\n''Without arguments, displays help.'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''

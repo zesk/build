@@ -18,4 +18,3 @@ usage="daemontoolsHome"
 helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]mdaemontoolsHome'$'\e''[0m'$'\n'''$'\n''Print the daemontools service home path'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - success'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - No environment file found'$'\n'''
 # shellcheck disable=SC2016
 helpPlain='Usage: [[(info)]mdaemontoolsHome'$'\n'''$'\n''Print the daemontools service home path'$'\n'''$'\n''Return codes:'$'\n''- 0 - success'$'\n''- 1 - No environment file found'$'\n'''
-# elapsed 3.467

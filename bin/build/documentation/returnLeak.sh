@@ -17,5 +17,4 @@ usage="returnLeak"
 # shellcheck disable=SC2016
 helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]mreturnLeak'$'\e''[0m'$'\n'''$'\n''Return code is '$'\e''[[(code)]mleak'$'\e''[[(reset)]m'$'\n'''$'\n''Return codes:'$'\n''- 108'$'\n'''
 # shellcheck disable=SC2016
-helpPlain='Usage: returnLeak'$'\n'''$'\n''Return code is leak'$'\n'''$'\n''Return codes:'$'\n''- 108'$'\n'''
-# elapsed 0.679
+helpPlain='[[(label)]mUsage: [[(info)]mreturnLeak'$'\n'''$'\n''Return code is [[(code)]mleak'$'\n'''$'\n''Return codes:'$'\n''- 108'$'\n'''

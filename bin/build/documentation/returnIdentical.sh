@@ -17,5 +17,4 @@ usage="returnIdentical"
 # shellcheck disable=SC2016
 helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]mreturnIdentical'$'\e''[0m'$'\n'''$'\n''Return code is '$'\e''[[(code)]midentical'$'\e''[[(reset)]m'$'\n'''$'\n''Return codes:'$'\n''- 105'$'\n'''
 # shellcheck disable=SC2016
-helpPlain='Usage: returnIdentical'$'\n'''$'\n''Return code is identical'$'\n'''$'\n''Return codes:'$'\n''- 105'$'\n'''
-# elapsed 0.629
+helpPlain='Usage: [[(info)]mreturnIdentical'$'\n'''$'\n''Return code is identical'$'\n'''$'\n''Return codes:'$'\n''- 105'$'\n'''

@@ -18,4 +18,3 @@ usage="consoleConfigureColorMode [ backgroundColor ]"
 helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]mconsoleConfigureColorMode'$'\e''[0m '$'\e''[[(blue)]m[ backgroundColor ]'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[(blue)]mbackgroundColor  '$'\e''[[(value)]mString. Optional. Background color.'$'\e''[[(reset)]m'$'\n'''$'\n''Print the suggested color mode for the current environment'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - Success'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - Environment error'$'\n''- '$'\e''[[(code)]m2'$'\e''[[(reset)]m - Argument error'$'\n'''
 # shellcheck disable=SC2016
 helpPlain='Usage: consoleConfigureColorMode [ backgroundColor ]'$'\n'''$'\n''    backgroundColor  String. Optional. Background color.'$'\n'''$'\n''Print the suggested color mode for the current environment'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''
-# elapsed 3.44

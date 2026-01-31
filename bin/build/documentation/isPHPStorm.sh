@@ -18,5 +18,4 @@ usage="isPHPStorm [ --help ]"
 # shellcheck disable=SC2016
 helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]misPHPStorm'$'\e''[0m '$'\e''[[(blue)]m[ --help ]'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[(blue)]m--help  '$'\e''[[(value)]mFlag. Optional. Display this help.'$'\e''[[(reset)]m'$'\n'''$'\n''Are we within the JetBrains PHPStorm terminal?'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - within the PhpStorm terminal'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - not within the PhpStorm terminal AFAIK'$'\n'''
 # shellcheck disable=SC2016
-helpPlain='Usage: [[(info)]misPHPStorm [ --help ]'$'\n'''$'\n''    --help  Flag. Optional. Display this help.'$'\n'''$'\n''Are we within the JetBrains PHPStorm terminal?'$'\n'''$'\n''Return codes:'$'\n''- 0 - within the PhpStorm terminal'$'\n''- 1 - not within the PhpStorm terminal AFAIK'$'\n'''
-# elapsed 3.648
+helpPlain='Usage: isPHPStorm [ --help ]'$'\n'''$'\n''    --help  Flag. Optional. Display this help.'$'\n'''$'\n''Are we within the JetBrains PHPStorm terminal?'$'\n'''$'\n''Return codes:'$'\n''- 0 - within the PhpStorm terminal'$'\n''- 1 - not within the PhpStorm terminal AFAIK'$'\n'''
