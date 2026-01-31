@@ -244,7 +244,10 @@ testHousekeeper() {
 testOutputTrigger() {
   local handler="returnMessage"
 
-  assertExitCode --stderr-match YoYoBaby 1 outputTrigger --name YoYoBaby <<<"Hello" || return $?
+  printf "%s\n" "Hello" | assertExitCode 1 outputTrigger --name YoYoBaby || return $?
+  printf "%s" "Hello" | assertExitCode 1 outputTrigger --name YoYoBaby || return $?
+  assertExitCode 1 outputTrigger --name YoYoBaby <<<"Hello" || return $?
+  assertExitCode --stderr-match YoYoBaby 1 outputTrigger --verbose --name YoYoBaby <<<"Hello" || return $?
   local temp
   temp=$(fileTemporaryName "$handler") || return $?
   assertExitCode 0 outputTrigger --name YoYoBaby <"$temp" || return $?

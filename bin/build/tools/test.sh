@@ -925,7 +925,7 @@ _assertOutputDoesNotContain() {
 # Reviewed: 2023-11-12
 #
 assertFileContains() {
-  __testLoader "_${FUNCNAME[0]}" __assertFileContainsThis --line-depth 2 "$@" || return $?
+  __testLoader "_${FUNCNAME[0]}" __assertFileContainsHelper true false --line-depth 2 "$@" || return $?
 }
 _assertFileContains() {
   # __IDENTICAL__ usageDocument 1
@@ -970,7 +970,7 @@ _assertFileContains() {
 # Example:     assertFileDoesNotContain $logFile warning Warning WARNING
 #
 assertFileDoesNotContain() {
-  __testLoader "_${FUNCNAME[0]}" __assertFileDoesNotContainThis "$@" || return $?
+  __testLoader "_${FUNCNAME[0]}" __assertFileContainsHelper false false --line-depth 2 "$@" || return $?
 }
 _assertFileDoesNotContain() {
   # __IDENTICAL__ usageDocument 1
@@ -1295,7 +1295,7 @@ _assertGreaterThanOrEqual() {
 # Return Code: 0 - expected less than to actual
 # Return Code: 1 - expected greater than or equal to actual, or invalid numbers
 assertLessThan() {
-  __testLoa "_${FUNCNAME[0]}" _assertNumericHelper "$@" -lt || return $?
+  __testLoader "_${FUNCNAME[0]}" _assertNumericHelper "$@" -lt || return $?
 }
 _assertLessThan() {
   # __IDENTICAL__ usageDocument 1

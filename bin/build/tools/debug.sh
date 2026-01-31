@@ -510,9 +510,11 @@ outputTrigger() {
   local tempOutput lineCount=0
 
   tempOutput=$(fileTemporaryName "$handler") || return $?
-  local line
-  while read -r line; do
-    printf "%s\n" "$line" >>"$tempOutput"
+  local finished=false
+  while ! $finished; do
+    read -r line || finished=true
+    local delim=$'\n' && ! $finished || delim=""
+    printf "%s%s" "$line" "$delim" >>"$tempOutput"
     lineCount=$((lineCount + 1))
   done
   if [ ! -s "$tempOutput" ]; then

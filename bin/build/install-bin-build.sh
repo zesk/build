@@ -713,7 +713,7 @@ validate() {
   local handler="_${FUNCNAME[0]}"
   local prefix="__validateType"
 
-  [ $# -eq 0 ] || __help "$handler" "$@" || return 0
+  [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
   [ $# -ge 4 ] || throwArgument "$handler" "Missing arguments - expect 4 or more (#$#: $(decorate each code -- "$@"))" || return $?
 
   local handler="$1" && shift

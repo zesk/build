@@ -8,12 +8,14 @@
 
 testColorSampleCodes() {
   assertExitCode 0 colorSampleCodes || return $?
-  assertNotExitCode --stderr-match "Only argument allowed is" --stderr-match "--help" 0 colorSampleCodes --no-arguments-really-allowed || return $?
+  assertExitCode --stderr-match "Only argument allowed is" --stderr-match "--help" 2 colorSampleCodes --no-arguments-really-allowed || return $?
 }
+
 testColorSampleStyles() {
   assertExitCode 0 colorSampleStyles || return $?
   assertExitCode --stdout-match "quiz nymph" 0 colorSampleStyles "Glib jocks quiz nymph to vex dwarf." || return $?
 }
+
 testSemanticColorSampleStyles() {
   local mode
   mockEnvironmentStart __BUILD_DECORATE

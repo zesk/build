@@ -38,19 +38,19 @@ testAssertEquality() {
 
 testAssertComparisons() {
   # Simple numbers
-  assertExitCode 0 assertGreaterThan 10 9 || return $?                   # a > b
-  assertNotExitCode --stderr-ok 0 assertGreaterThan 9 10 || return $?    # a > b
-  assertNotExitCode --stderr-ok 0 assertGreaterThan 100 100 || return $? # a > b
+  assertExitCode 0 assertGreaterThan --line "$LINENO" 10 9 || return $?                   # a > b
+  assertNotExitCode --stderr-ok 0 assertGreaterThan --line "$LINENO" 9 10 || return $?    # a > b
+  assertNotExitCode --stderr-ok 0 assertGreaterThan --line "$LINENO" 100 100 || return $? # a > b
 
-  assertExitCode 0 assertGreaterThanOrEqual 10 9 || return $?                # a > b
-  assertNotExitCode --stderr-ok 0 assertGreaterThanOrEqual 9 10 || return $? # a > b
-  assertExitCode 0 assertGreaterThanOrEqual 100 100 || return $?             # a > b
+  assertExitCode 0 assertGreaterThanOrEqual --line "$LINENO" 10 9 || return $?                # a > b
+  assertNotExitCode --stderr-ok 0 assertGreaterThanOrEqual --line "$LINENO" 9 10 || return $? # a > b
+  assertExitCode 0 assertGreaterThanOrEqual --line "$LINENO" 100 100 || return $?             # a > b
 
-  assertNotExitCode --stderr-ok 0 assertLessThan 10 9 || return $?    # a < b
-  assertExitCode 0 assertLessThan 9 10 || return $?                   # a < b
-  assertNotExitCode --stderr-ok 0 assertLessThan 100 100 || return $? # a < b
+  assertNotExitCode --stderr-ok 0 assertLessThan --line "$LINENO" 10 9 || return $? # a < b
+  assertExitCode 0 assertLessThan 9 10 || return $?                                 # a < b
+  assertNotExitCode --stderr-ok 0 assertLessThan 100 100 || return $?               # a < b
 
-  assertNotExitCode --stderr-ok 0 assertLessThanOrEqual 10 9 || return $? # a <= b
-  assertExitCode 0 assertLessThanOrEqual 9 10 || return $?                # a <= b
-  assertExitCode 0 assertLessThanOrEqual 100 100 || return $?             # a <= b
+  assertNotExitCode --stderr-ok 0 assertLessThanOrEqual --line "$LINENO" 10 9 || return $? # a <= b
+  assertExitCode 0 assertLessThanOrEqual --line "$LINENO" 9 10 || return $?                # a <= b
+  assertExitCode 0 assertLessThanOrEqual --line "$LINENO" 100 100 || return $?             # a <= b
 }

@@ -21,13 +21,11 @@ testHooks() {
 }
 
 testEnvironmentVariables() {
-  assertOutputContains PWD environmentVariables || return $?
-  assertOutputContains SHLVL environmentVariables || return $?
-  assertOutputContains PATH environmentVariables || return $?
-  assertOutputContains HOME environmentVariables || return $?
-  assertOutputContains LANG environmentVariables || return $?
-  assertOutputContains PWD environmentVariables || return $?
-  decorate success testEnvironmentVariables OK || return $?
+  local mm=()
+  local m && for m in PWD SHLVL PATH HOME LANG PWD; do
+    mm+=(--stdout-match "$m")
+  done
+  assertExitCode "${mm[@]}" 0 environmentVariables || return $?
 }
 
 testDates() {

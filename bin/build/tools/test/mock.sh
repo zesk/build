@@ -16,11 +16,6 @@ __mockEnvironmentEmpty() {
   printf "%s\n" "__EMPTY__ _${1:0:1}_${1:1}_"
 }
 
-# Fake a value for testing
-# Argument: handler - Function. Required. Error handler.
-# Argument: globalName - EnvironmentVariable. Required. Global to change temporarily to a value.
-# Argument: value - EmptyString. Optional. Force the value of `globalName` to this value temporarily. Saves the original value.
-# Argument: ... - Continue passing pairs of globalName value to mock additional values.
 __mockEnvironmentStart() {
   local handler="$1" && shift
   while [ $# -gt 0 ]; do
@@ -37,9 +32,6 @@ __mockEnvironmentStart() {
   done
 }
 
-# Fake a value for testing
-# Argument: handler - Function. Required. Error handler.
-# Argument: globalName ... - EnvironmentVariable. Required. Global to restore from the mocked saved value.
 __mockEnvironmentStop() {
   local handler="$1" && shift
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
@@ -82,8 +74,7 @@ __mockConsoleAnimationStart() {
   export CI && CI="$(booleanChoose "$flag" "" "testCI")"
 }
 
-# Stop faking `consoleHasAnimation` for testing
 __mockConsoleAnimationStop() {
   local handler="$1" && shift
-  __mockEnvironmentStop "$1" "$@" CI || return $?
+  __mockEnvironmentStop "$@" CI || return $?
 }

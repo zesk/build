@@ -358,16 +358,16 @@ _assertConditionHelper() {
 
   local stdoutTitle="$functionName (stdout)" stderrTitle="$functionName (stderr)"
   if [ ${#stderrContains[@]} -gt 0 ]; then
-    __assertFileContainsThis "$__profile" "$handler" --line "$lineNumber" --display "$stderrTitle" "$errorFile" "${stderrContains[@]}" || testPassed=false
+    __assertFileContainsHelper "$handler" true "$__profile" --line "$lineNumber" --display "$stderrTitle" "$errorFile" -- "${stderrContains[@]}" || testPassed=false
   fi
   if [ ${#stderrNotContains[@]} -gt 0 ]; then
-    __assertFileDoesNotContainThis "$__profile" "$handler" --line "$lineNumber" --display "$stderrTitle" "$errorFile" "${stderrNotContains[@]}" || testPassed=false
+    __assertFileContainsHelper "$handler" false "$__profile" --line "$lineNumber" --display "$stderrTitle" "$errorFile" -- "${stderrNotContains[@]}" || testPassed=false
   fi
   if [ ${#outputContains[@]} -gt 0 ]; then
-    __assertFileContainsThis "$__profile" "$handler" --line "$lineNumber" --display "$stdoutTitle" "$outputFile" "${outputContains[@]}" || testPassed=false
+    __assertFileContainsHelper "$handler" true "$__profile" --line "$lineNumber" --display "$stdoutTitle" "$outputFile" -- "${outputContains[@]}" || testPassed=false
   fi
   if [ ${#outputNotContains[@]} -gt 0 ]; then
-    __assertFileDoesNotContainThis "$__profile" "$handler" --line "$lineNumber" --display "$stdoutTitle" "$outputFile" "${outputNotContains[@]}" || testPassed=false
+    __assertFileContainsHelper "$handler" false "$__profile" --line "$lineNumber" --display "$stdoutTitle" "$outputFile" -- "${outputNotContains[@]}" || testPassed=false
   fi
 
   __profileLabel="output-processing 0:(${#outputContains[@]},!${#outputNotContains[@]}) 1:(${#stderrContains[@]},!${#stderrNotContains[@]})"
@@ -381,6 +381,7 @@ _assertConditionHelper() {
     exitCode=0
   else
     _assertFailure "$functionName" "$displayName $message" || exitCode=$?
+    [ "$exitCode" != "0" ] || exitCode=$(returnCode assert)
   fi
   __profileLabel="assert-status"
   # IDENTICAL profileFunctionMarker 3
@@ -399,7 +400,7 @@ _assertConditionHelper() {
   fi
   catchEnvironment "$handler" rm -f "${clean[@]}" || return $?
   # ********************************************************************************************************************
-  __profileLabel="cleanup"
+  __profileLabel="cleanup -> return $exitCode"
   # IDENTICAL profileFunctionTail 7
   # ********************************************************************************************************************
   if [ "$__profile" != "false" ]; then
@@ -407,11 +408,12 @@ _assertConditionHelper() {
     printf -- "Line %d: %s%d %s (%d + %d) %s + %s %d%%\n" "$LINENO" "$__profilePrefix" "$((__profileNext - __profile0))" '*TOTAL*' "$((__profileNext - __profile0 - __profileUsed))" "$__profileUsed" 'us' 'them' "$(((100 * __profileUsed) / (__profileNext - __profile0)))" 1>&2
   fi
   # ********************************************************************************************************************
-
+  return "$exitCode"
 }
 
 # Argument: thisName - Reported function for success or failure
 # Argument: fileName - File to search
+# Argument: -- - Delimiter. Required. Separate arguments from match strings.
 # Argument: string0 ... - String. One or more strings which must NOT be found anywhere in `fileName`
 # Return Code: 1 - If the assertions fails
 # Return Code: 0 - If the assertion succeeds
@@ -420,10 +422,10 @@ _assertConditionHelper() {
 # Example:     assertFileDoesNotContain "$logFile" warning Warning WARNING
 #
 __assertFileContainsHelper() {
+  local __aa=("$@")
+  local handler="$1" && shift
   local success="$1" && shift
   local __profile="$1" && shift
-  local handler="$1" && shift
-  local argument
   local lineNumber="" file="" displayName="" lineDepth="" debugLines=false matches=() quoted=()
 
   # _IDENTICAL_ argumentBlankLoopHandler 4
@@ -437,19 +439,27 @@ __assertFileContainsHelper() {
     --line) shift && lineNumber="${1-}" ;;
     --line-depth) shift && lineDepth="$(validate "$handler" PositiveInteger "$argument" "${1-}")" || return $? ;;
     --debug-lines) debugLines=true ;;
+    --)
+      [ -n "$file" ] || throwArgument "$handler" "No file before --" || return $?
+      shift && break
+      ;;
     *)
       if [ -z "$file" ]; then
         file=$(validate "$handler" File "$displayName" "$argument") || return $?
       else
-        local match && match="$(validate "$handler" String "match" "$argument")" || return $?
-        matches+=("$match")
-        quoted+=("$(catchReturn "$handler" quoteGrepPattern "$match")") || return $?
+        # _IDENTICAL_ argumentUnknownHandler 1
+        throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
       fi
       ;;
     esac
     shift
   done
-
+  while [ $# -gt 0 ]; do
+    local match && match="$(validate "$handler" String "match" "$1")" || return $?
+    matches+=("$match")
+    quoted+=("$(catchReturn "$handler" quoteGrepPattern "$match")") || return $?
+    shift
+  done
   [ 0 -lt "${#matches[@]}" ] || throwArgument "$handler" "Requires at least one match" || return $?
 
   # IDENTICAL lineDepthComputation 11
@@ -539,7 +549,7 @@ __assertResultFormatter() {
 
 _assertEqualsHelper() {
   local handler="$1" && shift
-  _assertConditionHelper "$handler" --line-depth 2 --test ___assertIsEqual --formatter ___assertIsEqualFormat "$@" || return $?
+  _assertConditionHelper "$handler" --line-depth 5 --test ___assertIsEqual --formatter ___assertIsEqualFormat "$@" || return $?
 }
 
 ___assertIsEqual() {
@@ -572,7 +582,7 @@ ___assertIsEqualFormat() {
 
 _assertStringEmptyHelper() {
   local handler="$1" && shift
-  _assertConditionHelper "$handler" --line-depth 2 --test ___assertIsEmpty --formatter ___assertIsEmptyFormat "$@" || return $?
+  _assertConditionHelper "$handler" --line-depth 5 --test ___assertIsEmpty --formatter ___assertIsEmptyFormat "$@" || return $?
 }
 
 ___assertIsEmpty() {
@@ -677,7 +687,7 @@ ___assertContainsFormat() {
 #=== === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === ===
 _assertDirectoryExistsHelper() {
   local handler="$1" && shift
-  _assertConditionHelper "$handler" --line-depth 2 --test ___assertDirectoryExists --formatter ___assertDirectoryExistsFormat "$@" || return $?
+  _assertConditionHelper "$handler" --line-depth 5 --test ___assertDirectoryExists --formatter ___assertDirectoryExistsFormat "$@" || return $?
 }
 ___assertDirectoryExists() {
   while [ $# -gt 0 ]; do
@@ -698,7 +708,7 @@ ___assertDirectoryExistsFormat() {
 #=== === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === ===
 _assertDirectoryEmptyHelper() {
   local handler="$1" && shift
-  _assertConditionHelper "$handler" --line-depth 2 --test ___assertDirectoryEmpty --formatter ___assertDirectoryEmptyFormat "$@" || return $?
+  _assertConditionHelper "$handler" --line-depth 5 --test ___assertDirectoryEmpty --formatter ___assertDirectoryEmptyFormat "$@" || return $?
 }
 ___assertDirectoryEmpty() {
   while [ $# -gt 0 ]; do
@@ -719,7 +729,7 @@ ___assertDirectoryEmptyFormat() {
 #=== === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === ===
 _assertFileExistsHelper() {
   local handler="$1" && shift
-  _assertConditionHelper "$handler" --line-depth 2 --test ___assertFileExists --formatter ___assertFileExistsFormat "$@" || return $?
+  _assertConditionHelper "$handler" --line-depth 5 --test ___assertFileExists --formatter ___assertFileExistsFormat "$@" || return $?
 }
 ___assertFileExists() {
   while [ $# -gt 0 ]; do
@@ -740,7 +750,7 @@ ___assertFileExistsFormat() {
 #=== === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === ===
 _assertFileSizeHelper() {
   local handler="$1" && shift
-  _assertConditionHelper "$handler" --line-depth 2 --test ___assertFileSize --formatter ___assertFileSizeFormat "$@" || return $?
+  _assertConditionHelper "$handler" --line-depth 5 --test ___assertFileSize --formatter ___assertFileSizeFormat "$@" || return $?
 }
 ___assertFileSize() {
   local expectedSize="${1-}" actualSize
@@ -770,7 +780,7 @@ ___assertFileSizeFormat() {
 #=== === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === ===
 _assertOutputEqualsHelper() {
   local handler="$1" && shift
-  _assertConditionHelper "$handler" --line-depth 2 --test ___assertOutputEquals --formatter ___assertOutputEqualsFormat "$@" || return $?
+  _assertConditionHelper "$handler" --line-depth 5 --test ___assertOutputEquals --formatter ___assertOutputEqualsFormat "$@" || return $?
 }
 ___assertOutputEquals() {
   local handler="returnMessage"
@@ -801,18 +811,6 @@ ___assertOutputEqualsFormat() {
   printf -- "%s %s %s %s" "$message" "$(decorate code "$(cat)")" "$(__resultText "$testPassed" "$verb")" "$(__resultTextSize "$testPassed" "$expected")"
 }
 
-# Argument: thisName
-# Argument: arguments
-__assertFileContainsThis() {
-  __assertFileContainsHelper true "$@" || return $?
-}
-
-# Argument: thisName
-# Argument: arguments
-__assertFileDoesNotContainThis() {
-  __assertFileContainsHelper false "$@" || return $?
-}
-
 #=== === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === === ===
 #
 # Exit Code
@@ -835,7 +833,7 @@ __assertFileDoesNotContainThis() {
 #
 _assertExitCodeHelper() {
   local handler="$1" && shift
-  _assertConditionHelper "$handler" --line-depth 2 --code1 --test ___assertExitCodeTest --formatter ___assertExitCodeFormat "$@" || return $?
+  _assertConditionHelper "$handler" --line-depth 5 --code1 --test ___assertExitCodeTest --formatter ___assertExitCodeFormat "$@" || return $?
 }
 ___assertExitCodeTest() {
   local binary="${1-}"
@@ -874,7 +872,7 @@ ___assertExitCodeFormat() {
 #
 _assertOutputContainsHelper() {
   local handler="$1" && shift
-  _assertConditionHelper "$handler" --line-depth 2 --test ___assertOutputContainsTest --formatter ___assertOutputContainsFormat "$@" || return $?
+  _assertConditionHelper "$handler" --line-depth 5 --test ___assertOutputContainsTest --formatter ___assertOutputContainsFormat "$@" || return $?
 }
 ___assertOutputContainsTest() {
   local handler="returnMessage"
