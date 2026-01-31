@@ -6,15 +6,13 @@ argument="none"
 base="git.sh"
 description="Uninstalls the \`git\` binary"$'\n'"Argument: package - Additional packages to uninstall"$'\n'"Summary: Uninstall git"$'\n'""
 file="bin/build/tools/git.sh"
-foundNames=()
 rawComment="Uninstalls the \`git\` binary"$'\n'"Argument: package - Additional packages to uninstall"$'\n'"Summary: Uninstall git"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
-sourceFile="bin/build/tools/git.sh"
-sourceHash="3d571e2d1ac61ab50aca59a14e16e0ada007496b"
+sourceHash="0d4d5f47dbc638a6a3fc43178a3954586bc34adf"
 summary="Uninstalls the \`git\` binary"
 usage="gitUninstall"
 # shellcheck disable=SC2016
 helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]mgitUninstall'$'\e''[0m'$'\n'''$'\n''Uninstalls the '$'\e''[[(code)]mgit'$'\e''[[(reset)]m binary'$'\n''Argument: package - Additional packages to uninstall'$'\n''Summary: Uninstall git'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - Success'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - Environment error'$'\n''- '$'\e''[[(code)]m2'$'\e''[[(reset)]m - Argument error'$'\n'''
 # shellcheck disable=SC2016
 helpPlain='Usage: gitUninstall'$'\n'''$'\n''Uninstalls the git binary'$'\n''Argument: package - Additional packages to uninstall'$'\n''Summary: Uninstall git'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''
-# elapsed 0.481
+# elapsed 0.588
