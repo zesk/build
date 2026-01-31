@@ -1,23 +1,20 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-29
+# Generated on 2026-01-31
 # shellcheck disable=SC2034
-argument="--find findArguments - String. Optional. Add arguments to exclude files or paths. SPACE-delimited for multiple options."$'\n'"path ... - Directory. Optional. One or more paths to scan for shell files. Uses PWD if not specified."$'\n'""
+argument="none"
 base="platform.sh"
-description="Makes all \`*.sh\` files executable"$'\n'""
-environment="Works from the current directory"$'\n'""
+description="Makes all \`*.sh\` files executable"$'\n'"TODO: - findArguments is different here than other places"$'\n'"Argument: --find findArguments - String. Optional. Add arguments to exclude files or paths. SPACE-delimited for multiple options."$'\n'"Argument: path ... - Directory. Optional. One or more paths to scan for shell files. Uses PWD if not specified."$'\n'"Environment: Works from the current directory"$'\n'"See: bashMakeExecutable"$'\n'"See: chmod-sh.sh"$'\n'""
 file="bin/build/tools/platform.sh"
-foundNames=([0]="todo" [1]="argument" [2]="environment" [3]="see")
+foundNames=()
 rawComment="Makes all \`*.sh\` files executable"$'\n'"TODO: - findArguments is different here than other places"$'\n'"Argument: --find findArguments - String. Optional. Add arguments to exclude files or paths. SPACE-delimited for multiple options."$'\n'"Argument: path ... - Directory. Optional. One or more paths to scan for shell files. Uses PWD if not specified."$'\n'"Environment: Works from the current directory"$'\n'"See: bashMakeExecutable"$'\n'"See: chmod-sh.sh"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
-see="bashMakeExecutable"$'\n'"chmod-sh.sh"$'\n'""
 sourceFile="bin/build/tools/platform.sh"
 sourceHash="a1e5b60c969c8edace1146de6c1a3e07b2d6a084"
 summary="Makes all \`*.sh\` files executable"
-todo="- findArguments is different here than other places"$'\n'""
-usage="bashMakeExecutable [ --find findArguments ] [ path ... ]"
+usage="bashMakeExecutable"
 # shellcheck disable=SC2016
-helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]mbashMakeExecutable'$'\e''[0m '$'\e''[[(blue)]m[ --find findArguments ]'$'\e''[0m '$'\e''[[(blue)]m[ path ... ]'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[(blue)]m--find findArguments  '$'\e''[[(value)]mString. Optional. Add arguments to exclude files or paths. SPACE-delimited for multiple options.'$'\e''[[(reset)]m'$'\n''    '$'\e''[[(blue)]mpath ...              '$'\e''[[(value)]mDirectory. Optional. One or more paths to scan for shell files. Uses PWD if not specified.'$'\e''[[(reset)]m'$'\n'''$'\n''Makes all '$'\e''[[(code)]m'$'\e''[[(cyan)]m.sh'$'\e''[[(reset)]m files executable'$'\e''[[(reset)]m'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - Success'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - Environment error'$'\n''- '$'\e''[[(code)]m2'$'\e''[[(reset)]m - Argument error'$'\n'''$'\n''Environment variables:'$'\n''- Works from the current directory'$'\n'''
+helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]mbashMakeExecutable'$'\e''[0m'$'\n'''$'\n''Makes all '$'\e''[[(code)]m'$'\e''[[(cyan)]m.sh'$'\e''[[(reset)]m files executable'$'\e''[[(reset)]m'$'\n''TODO: - findArguments is different here than other places'$'\n''Argument: --find findArguments - String. Optional. Add arguments to exclude files or paths. SPACE-delimited for multiple options.'$'\n''Argument: path ... - Directory. Optional. One or more paths to scan for shell files. Uses PWD if not specified.'$'\n''Environment: Works from the current directory'$'\n''See: bashMakeExecutable'$'\n''See: chmod-sh.sh'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - Success'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - Environment error'$'\n''- '$'\e''[[(code)]m2'$'\e''[[(reset)]m - Argument error'$'\n'''
 # shellcheck disable=SC2016
-helpPlain='[[(label)]mUsage: [[(info)]mbashMakeExecutable [[(blue)]m[ --find findArguments ] [[(blue)]m[ path ... ]'$'\n'''$'\n''    [[(blue)]m--find findArguments  [[(value)]mString. Optional. Add arguments to exclude files or paths. SPACE-delimited for multiple options.[[(reset)]m'$'\n''    [[(blue)]mpath ...              [[(value)]mDirectory. Optional. One or more paths to scan for shell files. Uses PWD if not specified.[[(reset)]m'$'\n'''$'\n''Makes all [[(code)]m[[(cyan)]m.sh[[(reset)]m files executable[[(reset)]m'$'\n'''$'\n''Return codes:'$'\n''- [[(code)]m0[[(reset)]m - Success'$'\n''- [[(code)]m1[[(reset)]m - Environment error'$'\n''- [[(code)]m2[[(reset)]m - Argument error'$'\n'''$'\n''Environment variables:'$'\n''- Works from the current directory'$'\n'''
-# elapsed 2.63
+helpPlain='Usage: bashMakeExecutable'$'\n'''$'\n''Makes all .sh files executable'$'\n''TODO: - findArguments is different here than other places'$'\n''Argument: --find findArguments - String. Optional. Add arguments to exclude files or paths. SPACE-delimited for multiple options.'$'\n''Argument: path ... - Directory. Optional. One or more paths to scan for shell files. Uses PWD if not specified.'$'\n''Environment: Works from the current directory'$'\n''See: bashMakeExecutable'$'\n''See: chmod-sh.sh'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''
+# elapsed 0.43

@@ -210,7 +210,7 @@ phpBuild() {
   [ -n "$targetName" ] || throwArgument "$handler" "--name argument blank" || return $?
   [ $# -gt 0 ] || throwArgument "$handler" "Need to supply a list of files for application $(decorate code "$targetName")" || return $?
 
-  usageRequireBinary "$handler" tar || return $?
+  muzzle validate "$handler" Executable "${FUNCNAME[0]} requirements" tar || return $?
   catchReturn "$handler" buildEnvironmentLoad "${environments[@]}" "${optionals[@]}" || return $?
 
   local missingFile tarFile

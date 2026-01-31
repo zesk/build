@@ -288,7 +288,7 @@ daemontoolsExecute() {
   local home
   home="$(catchReturn "$handler" daemontoolsHome)" || return $?
 
-  usageRequireBinary "$handler" svscanboot id svc svstat || return $?
+  muzzle validate "$handler" Executable "${FUNCNAME[0]} requirements" svscanboot id svc svstat || return $?
   catchReturn "$handler" muzzle directoryRequire --mode 0775 --owner root:root "$home" || return $?
   catchEnvironment "$handler" muzzle nohup bash -c 'svscanboot &' 2>&1 || return $?
 }
@@ -319,7 +319,7 @@ _daemontoolsProcessIds() {
 #
 # Terminate daemontools as gracefully as possible
 # Argument: --timeout seconds - Integer. Optional.
-# Requires: throwArgument decorate usageArgumentInteger throwEnvironment catchEnvironment usageRequireBinary statusMessage
+# Requires: throwArgument decorate usageArgumentInteger throwEnvironment catchEnvironment validate statusMessage
 # Requires: svscanboot id svc svstat
 daemontoolsTerminate() {
   local handler="_${FUNCNAME[0]}"
@@ -335,10 +335,7 @@ daemontoolsTerminate() {
     case "$argument" in
     # _IDENTICAL_ helpHandler 1
     --help) "$handler" 0 && return $? || return $? ;;
-    --timeout)
-      shift || throwArgument "$handler" "missing $argument argument" || return $?
-      timeout=$(handlerArgumentInteger "$handler" "seconds" "$1") || return $?
-      ;;
+    --timeout) shift && timeout=$(validate "$handler" Integer "seconds" "$1") || return $? ;;
     *)
       # _IDENTICAL_ argumentUnknownHandler 1
       throwArgument "$handler" "unknown #$__index/$__count \"$argument\" ($(decorate each code -- "${__saved[@]}"))" || return $?
@@ -347,40 +344,35 @@ daemontoolsTerminate() {
     shift
   done
 
-  local home
-
   # IDENTICAL rootUser 1
   [ "$(id -u 2>/dev/null)" = "0" ] || throwEnvironment "$handler" "Must be root" || return $?
 
-  home="$(catchEnvironment "$handler" daemontoolsHome)" || return $?
-  home="${home%/}"
-  usageRequireBinary "$handler" svscanboot id svc svstat || return $?
+  muzzle validate "$handler" Executable "${FUNCNAME[0]} requirements" svscanboot id svc svstat || return $?
 
-  statusMessage decorate warning "Shutting down services ..."
-  local service
-  while read -r service; do
+  local home && home="$(catchEnvironment "$handler" daemontoolsHome)" && home="${home%/}" || return $?
+
+  catchReturn "$handler" statusMessage decorate warning "Shutting down services [$(decorate file "$home")]" || return $?
+  local service && while read -r service; do
     service="${service%/}"
     if [ "$service" = "$home" ]; then
       continue
     fi
-    statusMessage decorate warning "Shutting down $service ..."
+    catchReturn "$handler" statusMessage decorate warning "Shutting down $service ..." || return $?
     catchEnvironment "$handler" svc -dx "$service" || return $?
     [ ! -d "$service/log" ] || catchEnvironment "$handler" svc -dx "$service/log" || return $?
   done < <(find "$home" -maxdepth 1 -type d)
-  local processId processIds=()
-  while read -r processId; do processIds+=("$processId"); done < <(daemontoolsProcessIds)
+  local processId processIds=() && while read -r processId; do processIds+=("$processId"); done < <(daemontoolsProcessIds)
   if [ ${#processIds[@]} -eq 0 ]; then
-    statusMessage --last decorate warning "daemontools is not running"
+    catchReturn "$handler" statusMessage --last decorate warning "daemontools is not running" || return $?
   else
-    statusMessage decorate warning "Shutting down processes ..."
-    printf "%s\n%s\n" "processIds" "$(printf -- "- %s\n" "${processIds[@]}")"
+    catchReturn "$handler" statusMessage decorate warning "Shutting down processes ..." || return $?
+    catchReturn "$handler" printf "%s\n%s\n" "processIds" "$(catchReturn "$handler" printf -- "- %s\n" "${processIds[@]}")" || return $?
     catchEnvironment "$handler" processWait --verbose --signals TERM,QUIT,KILL --timeout "$timeout" "${processIds[@]}" || return $?
-    local remaining
-    remaining="$(daemontoolsProcessIds)"
+    local remaining && remaining="$(catchReturn "$handler" daemontoolsProcessIds)" || return $?
     if [ -n "$remaining" ]; then
       throwEnvironment "$handler" "daemontools processes still exist: $remaining" || return $?
     fi
-    statusMessage --last decorate success "Terminated daemontools"
+    statusMessage --last decorate success "Terminated daemontools" || return $?
   fi
 }
 _daemontoolsTerminate() {
@@ -417,7 +409,7 @@ daemontoolsRestart() {
 
   home="$(catchEnvironment "$handler" daemontoolsHome)" || return $?
   home="${home%/}"
-  usageRequireBinary "$handler" svscanboot id svc svstat || return $?
+  muzzle validate "$handler" Executable "${FUNCNAME[0]} requirements" svscanboot id svc svstat || return $?
 
   local killLoop foundOne maxLoops
 
@@ -534,7 +526,7 @@ daemontoolsManager() {
 
   catchReturn "$handler" buildEnvironmentLoad DAEMONTOOLS_HOME || return $?
 
-  usageRequireBinary "$handler" svc svstat || return $?
+  muzzle validate "$handler" Executable "${FUNCNAME[0]} requirements" svc svstat || return $?
 
   svcBin=$(catchEnvironment "$handler" which svc) || return $?
   statBin=$(catchEnvironment "$handler" which svstat) || return $?

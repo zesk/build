@@ -1,20 +1,20 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-29
+# Generated on 2026-01-31
 # shellcheck disable=SC2034
-argument="deployHome - Directory. Required. Deployment database home."$'\n'"applicationPath - Directory. Required. Application target path."$'\n'""
+argument="none"
 base="deploy.sh"
-description="Automatically convert application deployments using non-links to links."$'\n'""
+description="Argument: deployHome - Directory. Required. Deployment database home."$'\n'"Argument: applicationPath - Directory. Required. Application target path."$'\n'"Automatically convert application deployments using non-links to links."$'\n'""
 file="bin/build/tools/deploy.sh"
-foundNames=([0]="argument")
+foundNames=()
 rawComment="Argument: deployHome - Directory. Required. Deployment database home."$'\n'"Argument: applicationPath - Directory. Required. Application target path."$'\n'"Automatically convert application deployments using non-links to links."$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/deploy.sh"
 sourceHash="a31b1bbd4c1948917bf8d67d421a1dfa3abe655d"
-summary="Automatically convert application deployments using non-links to links."
-usage="deployMigrateDirectoryToLink deployHome applicationPath"
+summary="Argument: deployHome - Directory. Required. Deployment database home."
+usage="deployMigrateDirectoryToLink"
 # shellcheck disable=SC2016
-helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]mdeployMigrateDirectoryToLink'$'\e''[0m '$'\e''[[(bold)]m'$'\e''[[(magenta)]mdeployHome'$'\e''[0m'$'\e''[0m '$'\e''[[(bold)]m'$'\e''[[(magenta)]mapplicationPath'$'\e''[0m'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[(red)]mdeployHome       '$'\e''[[(value)]mDirectory. Required. Deployment database home.'$'\e''[[(reset)]m'$'\n''    '$'\e''[[(red)]mapplicationPath  '$'\e''[[(value)]mDirectory. Required. Application target path.'$'\e''[[(reset)]m'$'\n'''$'\n''Automatically convert application deployments using non-links to links.'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - Success'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - Environment error'$'\n''- '$'\e''[[(code)]m2'$'\e''[[(reset)]m - Argument error'$'\n'''
+helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]mdeployMigrateDirectoryToLink'$'\e''[0m'$'\n'''$'\n''Argument: deployHome - Directory. Required. Deployment database home.'$'\n''Argument: applicationPath - Directory. Required. Application target path.'$'\n''Automatically convert application deployments using non-links to links.'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - Success'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - Environment error'$'\n''- '$'\e''[[(code)]m2'$'\e''[[(reset)]m - Argument error'$'\n'''
 # shellcheck disable=SC2016
-helpPlain='Usage: deployMigrateDirectoryToLink deployHome applicationPath'$'\n'''$'\n''    deployHome       Directory. Required. Deployment database home.'$'\n''    applicationPath  Directory. Required. Application target path.'$'\n'''$'\n''Automatically convert application deployments using non-links to links.'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''
-# elapsed 0.717
+helpPlain='Usage: deployMigrateDirectoryToLink'$'\n'''$'\n''Argument: deployHome - Directory. Required. Deployment database home.'$'\n''Argument: applicationPath - Directory. Required. Application target path.'$'\n''Automatically convert application deployments using non-links to links.'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''
+# elapsed 0.439

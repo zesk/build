@@ -68,8 +68,12 @@ __bashSanitize() {
   undo=(muzzle popd)
 
   statusMessage decorate success Making shell files executable ...
-
-  grepSafe --null -e ".sh$" <"$fileList" | xargs -0 chmod -v +x {} \; | decorate info | decorate wrap -- "- "
+  local file && while read -r file; do
+    if [ ! -x "$file" ]; then
+      catchReturn "$handler" printf -- "%s%s\n" "- +x -> " "$(decorate info "$file")" || return $?
+      catchReturn "$handler" chmod +x "$file" || return $?
+    fi
+  done < <(grepSafe -e "\.sh\$" "$fileList")
 
   if [ ${#cad[@]} -eq 0 ]; then
     cad+=("$(pwd)")

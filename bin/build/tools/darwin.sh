@@ -127,7 +127,7 @@ __osascriptClean() {
 darwinNotification() {
   local handler="_${FUNCNAME[0]}"
 
-  local message=() title="" soundName="" debugFlag=false
+  local messages=() title="" soundName="" debugFlag=false
 
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
@@ -152,23 +152,24 @@ darwinNotification() {
       ;;
     --)
       shift
-      message=("$@")
+      messages=("$@")
       set --
       break
       ;;
     *)
-      message+=("$1")
+      messages+=("$1")
       ;;
     esac
     shift
   done
+  [ 0 -lt "${#messages[@]}" ] || throwArgument "$handler" "Requires a message" || return $?
 
-  usageRequireBinary "$handler" osascript || return $?
+  muzzle validate "$handler" Executable "${FUNCNAME[0]} requirements" osascript || return $?
 
   [ -n "$title" ] || title="Zesk Build Notification"
   local messageText
 
-  messageText="$(__osascriptClean "${message[*]}")"
+  messageText="$(__osascriptClean "${messages[*]}")"
   title="$(__osascriptClean "$title")"
 
   # https://developer.apple.com/library/archive/documentation/AppleScript/Conceptual/AppleScriptLangGuide/reference/ASLR_cmds.html#//apple_ref/doc/uid/TP40000983-CH216-SW224
@@ -252,7 +253,7 @@ darwinDialog() {
     shift
   done
 
-  usageRequireBinary "$handler" osascript || return $?
+  muzzle validate "$handler" Executable "${FUNCNAME[0]} requirements" osascript || return $?
 
   [ "$icon" != "-" ] || icon="$(buildHome)/etc/zesk-build-icon.png"
 

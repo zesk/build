@@ -1,21 +1,20 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-30
+# Generated on 2026-01-31
 # shellcheck disable=SC2034
-argument="functionName - String. Required. Function which should be called somewhere within a file."$'\n'"file - File. Required. File to search for function handler."$'\n'"--help - Flag. Optional. Display this help."$'\n'""
+argument="none"
 base="bash.sh"
-description="Show function handler in files"$'\n'"This check is simplistic and does not verify actual coverage or code paths."$'\n'""
+description="Show function handler in files"$'\n'"Argument: functionName - String. Required. Function which should be called somewhere within a file."$'\n'"Argument: file - File. Required. File to search for function handler."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Return Code: 0 - Function is used within the file"$'\n'"Return Code: 1 - Function is *not* used within the file"$'\n'"This check is simplistic and does not verify actual coverage or code paths."$'\n'"Requires: throwArgument decorate usageArgumentString usageArgumentFile quoteGrepPattern bashStripComments cat grep"$'\n'""
 file="bin/build/tools/bash.sh"
-foundNames=([0]="argument" [1]="return_code" [2]="requires")
+foundNames=()
 rawComment="Show function handler in files"$'\n'"Argument: functionName - String. Required. Function which should be called somewhere within a file."$'\n'"Argument: file - File. Required. File to search for function handler."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Return Code: 0 - Function is used within the file"$'\n'"Return Code: 1 - Function is *not* used within the file"$'\n'"This check is simplistic and does not verify actual coverage or code paths."$'\n'"Requires: throwArgument decorate usageArgumentString usageArgumentFile quoteGrepPattern bashStripComments cat grep"$'\n'""$'\n'""
-requires="throwArgument decorate usageArgumentString usageArgumentFile quoteGrepPattern bashStripComments cat grep"$'\n'""
-return_code="0 - Function is used within the file"$'\n'"1 - Function is *not* used within the file"$'\n'""
+return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/bash.sh"
 sourceHash="c27f4788f9122cfbb778e66b32894938a8ca0ace"
 summary="Show function handler in files"
-usage="bashShowUsage functionName file [ --help ]"
+usage="bashShowUsage"
 # shellcheck disable=SC2016
-helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]mbashShowUsage'$'\e''[0m '$'\e''[[(bold)]m'$'\e''[[(magenta)]mfunctionName'$'\e''[0m'$'\e''[0m '$'\e''[[(bold)]m'$'\e''[[(magenta)]mfile'$'\e''[0m'$'\e''[0m '$'\e''[[(blue)]m[ --help ]'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[(red)]mfunctionName  '$'\e''[[(value)]mString. Required. Function which should be called somewhere within a file.'$'\e''[[(reset)]m'$'\n''    '$'\e''[[(red)]mfile          '$'\e''[[(value)]mFile. Required. File to search for function handler.'$'\e''[[(reset)]m'$'\n''    '$'\e''[[(blue)]m--help        '$'\e''[[(value)]mFlag. Optional. Display this help.'$'\e''[[(reset)]m'$'\n'''$'\n''Show function handler in files'$'\n''This check is simplistic and does not verify actual coverage or code paths.'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - Function is used within the file'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - Function is '$'\e''[[(cyan)]mnot'$'\e''[[(reset)]m used within the file'$'\n'''
+helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]mbashShowUsage'$'\e''[0m'$'\n'''$'\n''Show function handler in files'$'\n''Argument: functionName - String. Required. Function which should be called somewhere within a file.'$'\n''Argument: file - File. Required. File to search for function handler.'$'\n''Argument: --help - Flag. Optional. Display this help.'$'\n''Return Code: 0 - Function is used within the file'$'\n''Return Code: 1 - Function is '$'\e''[[(cyan)]mnot'$'\e''[[(reset)]m used within the file'$'\n''This check is simplistic and does not verify actual coverage or code paths.'$'\n''Requires: throwArgument decorate usageArgumentString usageArgumentFile quoteGrepPattern bashStripComments cat grep'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - Success'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - Environment error'$'\n''- '$'\e''[[(code)]m2'$'\e''[[(reset)]m - Argument error'$'\n'''
 # shellcheck disable=SC2016
-helpPlain='Usage: bashShowUsage [[(magenta)]mfunctionName [[(magenta)]mfile [[(blue)]m[ --help ]'$'\n'''$'\n''    [[(red)]mfunctionName  [[(value)]mString. Required. Function which should be called somewhere within a file.'$'\n''    [[(red)]mfile          [[(value)]mFile. Required. File to search for function handler.'$'\n''    [[(blue)]m--help        [[(value)]mFlag. Optional. Display this help.'$'\n'''$'\n''Show function handler in files'$'\n''This check is simplistic and does not verify actual coverage or code paths.'$'\n'''$'\n''Return codes:'$'\n''- [[(code)]m0 - Function is used within the file'$'\n''- [[(code)]m1 - Function is [[(cyan)]mnot used within the file'$'\n'''
-# elapsed 2.807
+helpPlain='Usage: bashShowUsage'$'\n'''$'\n''Show function handler in files'$'\n''Argument: functionName - String. Required. Function which should be called somewhere within a file.'$'\n''Argument: file - File. Required. File to search for function handler.'$'\n''Argument: --help - Flag. Optional. Display this help.'$'\n''Return Code: 0 - Function is used within the file'$'\n''Return Code: 1 - Function is not used within the file'$'\n''This check is simplistic and does not verify actual coverage or code paths.'$'\n''Requires: throwArgument decorate usageArgumentString usageArgumentFile quoteGrepPattern bashStripComments cat grep'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''
+# elapsed 0.437

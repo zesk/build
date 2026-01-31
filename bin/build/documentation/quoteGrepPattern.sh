@@ -1,24 +1,20 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-29
+# Generated on 2026-01-31
 # shellcheck disable=SC2034
-argument="text - EmptyString. Required. Text to quote."$'\n'""
+argument="none"
 base="quote.sh"
-description="Quote grep -e patterns for shell use"$'\n'"Without arguments, displays help."$'\n'""
-example="    grep -e \"\$(quoteGrepPattern \"\$pattern\")\" < \"\$filterFile\""$'\n'""
+description="Quote grep -e patterns for shell use"$'\n'"Quotes: \" . [ ] | \\n with a backslash"$'\n'"Argument: text - EmptyString. Required. Text to quote."$'\n'"Output: string quoted and appropriate to insert in a grep search or replacement phrase"$'\n'"Example:     grep -e \"\$(quoteGrepPattern \"\$pattern\")\" < \"\$filterFile\""$'\n'"Requires: printf sed"$'\n'"Without arguments, displays help."$'\n'""
 file="bin/build/tools/quote.sh"
-foundNames=([0]="quotes" [1]="argument" [2]="output" [3]="example" [4]="requires")
-output="string quoted and appropriate to insert in a grep search or replacement phrase"$'\n'""
-quotes="\" . [ ] | \\n with a backslash"$'\n'""
+foundNames=()
 rawComment="Quote grep -e patterns for shell use"$'\n'"Quotes: \" . [ ] | \\n with a backslash"$'\n'"Argument: text - EmptyString. Required. Text to quote."$'\n'"Output: string quoted and appropriate to insert in a grep search or replacement phrase"$'\n'"Example:     grep -e \"\$(quoteGrepPattern \"\$pattern\")\" < \"\$filterFile\""$'\n'"Requires: printf sed"$'\n'"Without arguments, displays help."$'\n'""$'\n'""
-requires="printf sed"$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/quote.sh"
 sourceHash="4a4dd20eec875783f639ec3aa86d72a8482d5ab0"
 summary="Quote grep -e patterns for shell use"
-usage="quoteGrepPattern text"
+usage="quoteGrepPattern"
 # shellcheck disable=SC2016
-helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]mquoteGrepPattern'$'\e''[0m '$'\e''[[(bold)]m'$'\e''[[(magenta)]mtext'$'\e''[0m'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[(red)]mtext  '$'\e''[[(value)]mEmptyString. Required. Text to quote.'$'\e''[[(reset)]m'$'\n'''$'\n''Quote grep -e patterns for shell use'$'\n''Without arguments, displays help.'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - Success'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - Environment error'$'\n''- '$'\e''[[(code)]m2'$'\e''[[(reset)]m - Argument error'$'\n'''$'\n''Example:'$'\n''    grep -e "$(quoteGrepPattern "$pattern")" < "$filterFile"'$'\n'''
+helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]mquoteGrepPattern'$'\e''[0m'$'\n'''$'\n''Quote grep -e patterns for shell use'$'\n''Quotes: " . [ ] | \n with a backslash'$'\n''Argument: text - EmptyString. Required. Text to quote.'$'\n''Output: string quoted and appropriate to insert in a grep search or replacement phrase'$'\n''Example:     grep -e "$(quoteGrepPattern "$pattern")" < "$filterFile"'$'\n''Requires: printf sed'$'\n''Without arguments, displays help.'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - Success'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - Environment error'$'\n''- '$'\e''[[(code)]m2'$'\e''[[(reset)]m - Argument error'$'\n'''
 # shellcheck disable=SC2016
-helpPlain='Usage: quoteGrepPattern text'$'\n'''$'\n''    text  EmptyString. Required. Text to quote.'$'\n'''$'\n''Quote grep -e patterns for shell use'$'\n''Without arguments, displays help.'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''$'\n''Example:'$'\n''    grep -e "$(quoteGrepPattern "$pattern")" < "$filterFile"'$'\n'''
-# elapsed 0.487
+helpPlain='Usage: quoteGrepPattern'$'\n'''$'\n''Quote grep -e patterns for shell use'$'\n''Quotes: " . [ ] | \n with a backslash'$'\n''Argument: text - EmptyString. Required. Text to quote.'$'\n''Output: string quoted and appropriate to insert in a grep search or replacement phrase'$'\n''Example:     grep -e "$(quoteGrepPattern "$pattern")" < "$filterFile"'$'\n''Requires: printf sed'$'\n''Without arguments, displays help.'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''
+# elapsed 0.478

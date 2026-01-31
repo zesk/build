@@ -4,16 +4,17 @@
 # shellcheck disable=SC2034
 argument="none"
 base="colors.sh"
-description="Does the console support animation?"$'\n'""
+description="Does the console support animation?"$'\n'"Return Code: 0 - Supports console animation"$'\n'"Return Code: 1 - Does not support console animation"$'\n'""
 file="bin/build/tools/colors.sh"
-foundNames=([0]="return_code")
+foundNames=()
 rawComment="Does the console support animation?"$'\n'"Return Code: 0 - Supports console animation"$'\n'"Return Code: 1 - Does not support console animation"$'\n'""$'\n'""
-return_code="0 - Supports console animation"$'\n'"1 - Does not support console animation"$'\n'""
+return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
+sourceFile="bin/build/tools/colors.sh"
 sourceHash="9f54e9ae3d6bd1960826e3412b3edfd9c241f895"
 summary="Does the console support animation?"
 usage="consoleHasAnimation"
 # shellcheck disable=SC2016
-helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]mconsoleHasAnimation'$'\e''[0m'$'\n'''$'\n''Does the console support animation?'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - Supports console animation'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - Does not support console animation'$'\n'''
+helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]mconsoleHasAnimation'$'\e''[0m'$'\n'''$'\n''Does the console support animation?'$'\n''Return Code: 0 - Supports console animation'$'\n''Return Code: 1 - Does not support console animation'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - Success'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - Environment error'$'\n''- '$'\e''[[(code)]m2'$'\e''[[(reset)]m - Argument error'$'\n'''
 # shellcheck disable=SC2016
-helpPlain='Usage: consoleHasAnimation'$'\n'''$'\n''Does the console support animation?'$'\n'''$'\n''Return codes:'$'\n''- 0 - Supports console animation'$'\n''- 1 - Does not support console animation'$'\n'''
-# elapsed 0.644
+helpPlain='Usage: consoleHasAnimation'$'\n'''$'\n''Does the console support animation?'$'\n''Return Code: 0 - Supports console animation'$'\n''Return Code: 1 - Does not support console animation'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''
+# elapsed 0.418

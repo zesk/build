@@ -6,14 +6,11 @@
 
 A place to store and organize the various encodings used throughout this project.
 
-## Decorate
+## Comma `,`
 
-- Decoration style names use a `:` separated list and `=` to delimit values
-- ANSI console codes are `;`-separated color values
-- Decoration themed functionality uses `[(name)]` tokens in text which are universally replaced
 - Decorate style in extension arguments uses `,` separated lists
 
-## Environment
+## Colon `:`
 
 - `APPLICATION_CODE_EXTENSIONS` uses `:` to delimit arguments
 - `APPLICATION_CODE_IGNORE` uses `:` to delimit arguments
@@ -26,6 +23,15 @@ A place to store and organize the various encodings used throughout this project
 - `BUILD_PROMPT_COLORS` uses `:` to delimit colors (5 total)
 - `XDG_CONFIG_DIRS` uses `:` to delimit paths
 - `XDG_DATA_DIRS` uses `:` to delimit paths
+- `BUILD_TEST_FLAGS` uses `:` for name/value pairs in a list separated by `;`, so:
+  `Assert-Statistics:true;Plumber:false` as an example
+
+## Semicolon `:`
+
+- `BUILD_TEST_FLAGS` uses `:` for name/value pairs in a list separated by `;`, so:
+  `Assert-Statistics:true;Plumber:false` as an example
+- ANSI console codes are `;`-separated color values
+- Decoration style names use a `:` separated list and `=` to delimit values
 
 ## Space ... the final frontier
 
@@ -34,9 +40,21 @@ A place to store and organize the various encodings used throughout this project
 
 ## Arrays
 
+These are initialized as Bash arrays and can be expressed as `${variable[@]}` in code.
+
 - `SHFMT_ARGUMENTS` is a bash array
 
-## Brackets
+If in doubt do:
+
+    export VAR_WHICH_SHOULD_BE_AN_ARRAY
+    isArray VAR_WHICH_SHOULD_BE_AN_ARRAY || VAR_WHICH_SHOULD_BE_AN_ARRAY=()
+    myProgram "${VAR_WHICH_SHOULD_BE_AN_ARRAY[@]}" "$workItem"
+
+## Brackets `{}`
 
 - `mapEnvironment` defaults to using tokens with `{brackets}`
 - `mapValue` defaults to using tokens with `{brackets}`
+
+## UFOs `[()]`
+
+- Decoration themed functionality uses `[(name)]` tokens in text which are universally replaced

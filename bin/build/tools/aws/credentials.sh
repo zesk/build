@@ -40,7 +40,7 @@ __awsCredentialsFile() {
     shift
   done
 
-  usageRequireBinary "$handler" mkdir chmod touch || return $?
+  muzzle validate "$handler" Executable "${FUNCNAME[0]} requirements" mkdir chmod touch || return $?
 
   if [ -z "$home" ]; then
     home="$(catchReturn "$handler" userHome)" || return $?

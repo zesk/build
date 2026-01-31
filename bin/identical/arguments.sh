@@ -18,7 +18,7 @@
 # Example
 # Example:     tempFile=$(fileTemporaryName "$handler") || return $?
 # Example:     catchEnvironment "$handler" rm -f "$tempFile" || return $?
-# Example:     usageRequireBinary "$handler" curl sftp || return $?
+# Example:     muzzle validate "$handler" Executable "${FUNCNAME[0]} requirements" curl sftp || return $?
 __errorHandler() {
   return 0
 }

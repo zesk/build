@@ -242,7 +242,7 @@ dockerImages() {
     shift
   done
 
-  usageRequireBinary "$handler" docker || return $?
+  muzzle validate "$handler" Executable "${FUNCNAME[0]} requirements" docker || return $?
 
   # Do not use --format json as it is not backwards compatible
   docker images "${filter[@]+"${filter[@]}"}" | awk '{ print $1 ":" $2 }' | grep -v 'REPOSITORY:'

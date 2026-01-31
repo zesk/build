@@ -1,20 +1,20 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-30
+# Generated on 2026-01-31
 # shellcheck disable=SC2034
-argument="--help - Flag. Optional. Display this help."$'\n'"url ... - String. URL. Required. A Uniform Resource Locator"$'\n'""
+argument="none"
 base="url.sh"
-description="Checks if a URL is valid"$'\n'""
+description="Checks if a URL is valid"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Argument: url ... - String. URL. Required. A Uniform Resource Locator"$'\n'"Return Code: 0 - all URLs passed in are valid"$'\n'"Return Code: 1 - at least one URL passed in is not a valid URL"$'\n'""
 file="bin/build/tools/url.sh"
-foundNames=([0]="argument" [1]="return_code")
+foundNames=()
 rawComment="Checks if a URL is valid"$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'"Argument: url ... - String. URL. Required. A Uniform Resource Locator"$'\n'"Return Code: 0 - all URLs passed in are valid"$'\n'"Return Code: 1 - at least one URL passed in is not a valid URL"$'\n'""$'\n'""
-return_code="0 - all URLs passed in are valid"$'\n'"1 - at least one URL passed in is not a valid URL"$'\n'""
+return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/url.sh"
 sourceHash="7a4bdc5b163f1c16b416ea3bac111f15d9a5f6b1"
 summary="Checks if a URL is valid"
-usage="urlValid [ --help ] url ..."
+usage="urlValid"
 # shellcheck disable=SC2016
-helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]murlValid'$'\e''[0m '$'\e''[[(blue)]m[ --help ]'$'\e''[0m '$'\e''[[(bold)]m'$'\e''[[(magenta)]murl ...'$'\e''[0m'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[(blue)]m--help   '$'\e''[[(value)]mFlag. Optional. Display this help.'$'\e''[[(reset)]m'$'\n''    '$'\e''[[(red)]murl ...  '$'\e''[[(value)]mString. URL. Required. A Uniform Resource Locator'$'\e''[[(reset)]m'$'\n'''$'\n''Checks if a URL is valid'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - all URLs passed in are valid'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - at least one URL passed in is not a valid URL'$'\n'''
+helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]murlValid'$'\e''[0m'$'\n'''$'\n''Checks if a URL is valid'$'\n''Argument: --help - Flag. Optional. Display this help.'$'\n''Argument: url ... - String. URL. Required. A Uniform Resource Locator'$'\n''Return Code: 0 - all URLs passed in are valid'$'\n''Return Code: 1 - at least one URL passed in is not a valid URL'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - Success'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - Environment error'$'\n''- '$'\e''[[(code)]m2'$'\e''[[(reset)]m - Argument error'$'\n'''
 # shellcheck disable=SC2016
-helpPlain='Usage: urlValid [ --help ] url ...'$'\n'''$'\n''    --help   Flag. Optional. Display this help.'$'\n''    url ...  String. URL. Required. A Uniform Resource Locator'$'\n'''$'\n''Checks if a URL is valid'$'\n'''$'\n''Return codes:'$'\n''- 0 - all URLs passed in are valid'$'\n''- 1 - at least one URL passed in is not a valid URL'$'\n'''
-# elapsed 0.598
+helpPlain='Usage: urlValid'$'\n'''$'\n''Checks if a URL is valid'$'\n''Argument: --help - Flag. Optional. Display this help.'$'\n''Argument: url ... - String. URL. Required. A Uniform Resource Locator'$'\n''Return Code: 0 - all URLs passed in are valid'$'\n''Return Code: 1 - at least one URL passed in is not a valid URL'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''
+# elapsed 0.456

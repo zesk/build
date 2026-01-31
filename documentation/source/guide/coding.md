@@ -307,44 +307,9 @@ handler:
     catchArgument "$handler" isInteger "$argument" || return $?
     throwArgument "$handler" "No deployment application directory exists" || return $?
 
-### Argument utilities
-
-These will be replaced with [`validate`](../tools/validate.md) commands in an upcoming release.
-
-- [`usageArgumentDirectory`](../tools/handler.md#usageArgumentDirectory) - Argument must be a valid directory
-- [`usageArgumentFile`](../tools/handler.md#usageArgumentFile) - Argument must be a valid file
-- [`usageArgumentFileDirectory`](../tools/handler.md#usageArgumentFileDirectory) - Argument must be a file which may or
-  may
-  not exist in a directory which exists
-- [`usageArgumentDirectory`](../tools/handler.md#usageArgumentDirectory) - Argument must be a directory
-- [`usageArgumentRealDirectory`](../tools/handler.md#usageArgumentRealDirectory) - Argument must be a directory and
-  converted to the real path
-- [`usageArgumentFile`](../tools/handler.md#usageArgumentFile) - Argument must be a valid file
-- [`usageArgumentFileDirectory`](../tools/handler.md#usageArgumentFileDirectory) - Argument must be a file path which is
-  a
-  directory that exists
-- [`usageArgumentInteger`](../tools/handler.md#usageArgumentInteger) - Argument must be an integer
-- [`usageArgumentPositiveInteger`](../tools/handler.md#usageArgumentPositiveInteger) - Argument must be a positive
-  integer (1 or greater)
-- [`usageArgumentUnsignedInteger`](../tools/handler.md#usageArgumentUnsignedInteger) - Argument must be an unsigned
-  integer (0 or greater)
-- [`usageArgumentLoadEnvironmentFile`](../tools/handler.md#usageArgumentLoadEnvironmentFile) - Argument must be an
-  environment file which is also loaded immediately.
-- [`usageArgumentString`](../tools/handler.md#usageArgumentString) - Argument must be a non-blank string
-- [`usageArgumentEmptyString`](../tools/handler.md#usageArgumentEmptyString) - Argument may be anything
-- [`usageArgumentBoolean`](../tools/handler.md#usageArgumentBoolean) - Argument must be a boolean value (`true` or
-  `false`)
-- [`usageArgumentEnvironmentVariable`](../tools/handler.md#usageArgumentEnvironmentVariable) - Argument must be a valid
-  environment variable name
-- [`usageArgumentURL`](../tools/handler.md#usageArgumentURL) - Argument must be a valid URL
-- [`usageArgumentCallable`](../tools/handler.md#usageArgumentCallable) - Argument must be callable (a function or
-  executable)
-- [`usageArgumentFunction`](../tools/handler.md#usageArgumentFunction) - Argument must be a function
-- [`usageArgumentExecutable`](../tools/handler.md#usageArgumentExecutable) - Argument must be a binary which can be
-  executed
-
 ### See
 
+- [Validate function](../tools/validate.md)
 - [Usage functions](../tools/usage.md)
 - [`_argument`](../tools/sugar.md#_argument)
 - [`__argument`](../tools/sugar.md#__argument)

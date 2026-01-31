@@ -1,21 +1,20 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-29
+# Generated on 2026-01-31
 # shellcheck disable=SC2034
-argument="--prefix prefix - String. Required. A text prefix to search for to identify identical sections (e.g. \`# IDENTICAL\`) (may specify more than one)"$'\n'"file ... - File. Required. A file to search for identical tokens."$'\n'""
+argument="none"
 base="identical.sh"
-description="No documentation for \`identicalFindTokens\`."$'\n'""
+description="Argument: --prefix prefix - String. Required. A text prefix to search for to identify identical sections (e.g. \`# IDENTICAL\`) (may specify more than one)"$'\n'"Argument: file ... - File. Required. A file to search for identical tokens."$'\n'"stdout: tokens, one per line"$'\n'""
 file="bin/build/tools/identical.sh"
-foundNames=([0]="argument" [1]="stdout")
+foundNames=()
 rawComment="Argument: --prefix prefix - String. Required. A text prefix to search for to identify identical sections (e.g. \`# IDENTICAL\`) (may specify more than one)"$'\n'"Argument: file ... - File. Required. A file to search for identical tokens."$'\n'"stdout: tokens, one per line"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/identical.sh"
 sourceHash="3d17e0e52d21bf0984ad94f99e9132c29a6aaed3"
-stdout="tokens, one per line"$'\n'""
-summary="undocumented"
-usage="identicalFindTokens --prefix prefix file ..."
+summary="Argument: --prefix prefix - String. Required. A text prefix to"
+usage="identicalFindTokens"
 # shellcheck disable=SC2016
-helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]midenticalFindTokens'$'\e''[0m '$'\e''[[(bold)]m'$'\e''[[(magenta)]m--prefix prefix'$'\e''[0m'$'\e''[0m '$'\e''[[(bold)]m'$'\e''[[(magenta)]mfile ...'$'\e''[0m'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[(red)]m--prefix prefix  '$'\e''[[(value)]mString. Required. A text prefix to search for to identify identical sections (e.g. '$'\e''[[(code)]m# IDENTICAL'$'\e''[[(reset)]m) (may specify more than one)'$'\e''[[(reset)]m'$'\n''    '$'\e''[[(red)]mfile ...         '$'\e''[[(value)]mFile. Required. A file to search for identical tokens.'$'\e''[[(reset)]m'$'\n'''$'\n''No documentation for '$'\e''[[(code)]midenticalFindTokens'$'\e''[[(reset)]m.'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - Success'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - Environment error'$'\n''- '$'\e''[[(code)]m2'$'\e''[[(reset)]m - Argument error'$'\n'''$'\n''Writes to '$'\e''[[(code)]mstdout'$'\e''[[(reset)]m:'$'\n''tokens, one per line'$'\n'''
+helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]midenticalFindTokens'$'\e''[0m'$'\n'''$'\n''Argument: --prefix prefix - String. Required. A text prefix to search for to identify identical sections (e.g. '$'\e''[[(code)]m# IDENTICAL'$'\e''[[(reset)]m) (may specify more than one)'$'\n''Argument: file ... - File. Required. A file to search for identical tokens.'$'\n''stdout: tokens, one per line'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - Success'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - Environment error'$'\n''- '$'\e''[[(code)]m2'$'\e''[[(reset)]m - Argument error'$'\n'''
 # shellcheck disable=SC2016
-helpPlain='Usage: identicalFindTokens --prefix prefix file ...'$'\n'''$'\n''    --prefix prefix  String. Required. A text prefix to search for to identify identical sections (e.g. # IDENTICAL) (may specify more than one)'$'\n''    file ...         File. Required. A file to search for identical tokens.'$'\n'''$'\n''No documentation for identicalFindTokens.'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''$'\n''Writes to stdout:'$'\n''tokens, one per line'$'\n'''
-# elapsed 0.538
+helpPlain='Usage: identicalFindTokens'$'\n'''$'\n''Argument: --prefix prefix - String. Required. A text prefix to search for to identify identical sections (e.g. # IDENTICAL) (may specify more than one)'$'\n''Argument: file ... - File. Required. A file to search for identical tokens.'$'\n''stdout: tokens, one per line'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''
+# elapsed 0.475

@@ -1095,7 +1095,7 @@ gitBranchify() {
 
   export GIT_BRANCH_FORMAT GIT_REMOTE
 
-  usageRequireBinary "$handler" whoami || return $?
+  muzzle validate "$handler" Executable "${FUNCNAME[0]} requirements" whoami || return $?
   catchReturn "$handler" buildEnvironmentLoad GIT_BRANCH_FORMAT GIT_REMOTE || return $?
   [ -n "$GIT_REMOTE" ] || catchEnvironment "$handler" "GIT_REMOTE requires a value" || return $?
 

@@ -1,13 +1,12 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-29
+# Generated on 2026-01-31
 # shellcheck disable=SC2034
 argument="none"
 base="git.sh"
-description="List current valid git hook types"$'\n'"Hook types:"$'\n'"- pre-commit"$'\n'"- pre-push"$'\n'"- pre-merge-commit"$'\n'"- pre-rebase"$'\n'"- pre-receive"$'\n'"- update"$'\n'"- post-update"$'\n'"- post-commit"$'\n'""
+description="List current valid git hook types"$'\n'"Output: lines:gitHookType"$'\n'"Hook types:"$'\n'"- pre-commit"$'\n'"- pre-push"$'\n'"- pre-merge-commit"$'\n'"- pre-rebase"$'\n'"- pre-receive"$'\n'"- update"$'\n'"- post-update"$'\n'"- post-commit"$'\n'""
 file="bin/build/tools/git.sh"
-foundNames=([0]="output")
-output="lines:gitHookType"$'\n'""
+foundNames=()
 rawComment="List current valid git hook types"$'\n'"Output: lines:gitHookType"$'\n'"Hook types:"$'\n'"- pre-commit"$'\n'"- pre-push"$'\n'"- pre-merge-commit"$'\n'"- pre-rebase"$'\n'"- pre-receive"$'\n'"- update"$'\n'"- post-update"$'\n'"- post-commit"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/git.sh"
@@ -15,7 +14,7 @@ sourceHash="3d571e2d1ac61ab50aca59a14e16e0ada007496b"
 summary="List current valid git hook types"
 usage="gitHookTypes"
 # shellcheck disable=SC2016
-helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]mgitHookTypes'$'\e''[0m'$'\n'''$'\n''List current valid git hook types'$'\n''Hook types:'$'\n''- pre-commit'$'\n''- pre-push'$'\n''- pre-merge-commit'$'\n''- pre-rebase'$'\n''- pre-receive'$'\n''- update'$'\n''- post-update'$'\n''- post-commit'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - Success'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - Environment error'$'\n''- '$'\e''[[(code)]m2'$'\e''[[(reset)]m - Argument error'$'\n'''
+helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]mgitHookTypes'$'\e''[0m'$'\n'''$'\n''List current valid git hook types'$'\n''Output: lines:gitHookType'$'\n''Hook types:'$'\n''- pre-commit'$'\n''- pre-push'$'\n''- pre-merge-commit'$'\n''- pre-rebase'$'\n''- pre-receive'$'\n''- update'$'\n''- post-update'$'\n''- post-commit'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - Success'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - Environment error'$'\n''- '$'\e''[[(code)]m2'$'\e''[[(reset)]m - Argument error'$'\n'''
 # shellcheck disable=SC2016
-helpPlain='Usage: gitHookTypes'$'\n'''$'\n''List current valid git hook types'$'\n''Hook types:'$'\n''- pre-commit'$'\n''- pre-push'$'\n''- pre-merge-commit'$'\n''- pre-rebase'$'\n''- pre-receive'$'\n''- update'$'\n''- post-update'$'\n''- post-commit'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''
-# elapsed 2.313
+helpPlain='Usage: gitHookTypes'$'\n'''$'\n''List current valid git hook types'$'\n''Output: lines:gitHookType'$'\n''Hook types:'$'\n''- pre-commit'$'\n''- pre-push'$'\n''- pre-merge-commit'$'\n''- pre-rebase'$'\n''- pre-receive'$'\n''- update'$'\n''- post-update'$'\n''- post-commit'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''
+# elapsed 0.488

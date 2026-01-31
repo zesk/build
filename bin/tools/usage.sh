@@ -176,13 +176,15 @@ __buildUsageCompileFunction() {
   # ********************************************************************************************************************
   fi
 
+  local home && home=$(catchReturn "$handler" buildHome) || return $?
+
   if [ -z "$sourceFile" ]; then
     __profileLabel="blank source"
     # IDENTICAL profileFunctionMarker 3
     # ********************************************************************************************************************
     if [ "$__profile" != "false" ]; then __profileNext="$(timingStart)" && printf "Line %d: %s%d %s\n" "$LINENO" "$__profilePrefix" "$((__profileNext - __profile))" "$__profileLabel" 1>&2 && __profile=$__profileNext; fi
     # ********************************************************************************************************************
-    sourceFile=$(__bashDocumentation_FindFunctionDefinitions "$(buildHome)/bin/build/tools" "$fun") || return $?
+    sourceFile=$(__bashDocumentation_FindFunctionDefinitions "$home/bin/build/tools" "$fun") || return $?
     local sourcesFound && sourcesFound=$(catchReturn "$handler" printf "%s\n" "$sourceFile" | fileLineCount) || return $?
     if [ "$sourcesFound" -gt 1 ]; then
       throwEnvironment "$handler" "${prefix} Multiple sources found for $prettyFun (x$sourcesFound): ${sourceFile//$'\n'/, }" || return $?

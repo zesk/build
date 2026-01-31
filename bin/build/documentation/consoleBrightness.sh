@@ -2,20 +2,19 @@
 # Copyright &copy; 2026 Market Acumen, Inc.
 # Generated on 2026-01-31
 # shellcheck disable=SC2034
-argument="--foreground - Flag. Optional. Get the console text color."$'\n'"--background - Flag. Optional. Get the console background color."$'\n'""
+argument="none"
 base="console.sh"
-description="Fetch the brightness of the console using \`consoleGetColor\`"$'\n'""
+description="Summary: Output the brightness of the background color of the console as a number between 0 and 100"$'\n'"Argument: --foreground - Flag. Optional. Get the console text color."$'\n'"Argument: --background - Flag. Optional. Get the console background color."$'\n'"Fetch the brightness of the console using \`consoleGetColor\`"$'\n'"See: consoleGetColor"$'\n'"Output: Integer. between 0 and 100."$'\n'"Return Code: 0 - Success"$'\n'"Return Code: 1 - A problem occurred with \`consoleGetColor\`"$'\n'""
 file="bin/build/tools/console.sh"
-foundNames=([0]="summary" [1]="argument" [2]="see" [3]="output" [4]="return_code")
-output="Integer. between 0 and 100."$'\n'""
+foundNames=()
 rawComment="Summary: Output the brightness of the background color of the console as a number between 0 and 100"$'\n'"Argument: --foreground - Flag. Optional. Get the console text color."$'\n'"Argument: --background - Flag. Optional. Get the console background color."$'\n'"Fetch the brightness of the console using \`consoleGetColor\`"$'\n'"See: consoleGetColor"$'\n'"Output: Integer. between 0 and 100."$'\n'"Return Code: 0 - Success"$'\n'"Return Code: 1 - A problem occurred with \`consoleGetColor\`"$'\n'""$'\n'""
-return_code="0 - Success"$'\n'"1 - A problem occurred with \`consoleGetColor\`"$'\n'""
-see="consoleGetColor"$'\n'""
+return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
+sourceFile="bin/build/tools/console.sh"
 sourceHash="91c4bb28f83e34c39b4dcef4774e2addc1f37c12"
-summary="Output the brightness of the background color of the console as a number between 0 and 100"$'\n'""
-usage="consoleBrightness [ --foreground ] [ --background ]"
+summary="Summary: Output the brightness of the background color of the"
+usage="consoleBrightness"
 # shellcheck disable=SC2016
-helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]mconsoleBrightness'$'\e''[0m '$'\e''[[(blue)]m[ --foreground ]'$'\e''[0m '$'\e''[[(blue)]m[ --background ]'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[(blue)]m--foreground  '$'\e''[[(value)]mFlag. Optional. Get the console text color.'$'\e''[[(reset)]m'$'\n''    '$'\e''[[(blue)]m--background  '$'\e''[[(value)]mFlag. Optional. Get the console background color.'$'\e''[[(reset)]m'$'\n'''$'\n''Fetch the brightness of the console using '$'\e''[[(code)]mconsoleGetColor'$'\e''[[(reset)]m'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - Success'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - A problem occurred with '$'\e''[[(code)]mconsoleGetColor'$'\e''[[(reset)]m'$'\n'''
+helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]mconsoleBrightness'$'\e''[0m'$'\n'''$'\n''Summary: Output the brightness of the background color of the console as a number between 0 and 100'$'\n''Argument: --foreground - Flag. Optional. Get the console text color.'$'\n''Argument: --background - Flag. Optional. Get the console background color.'$'\n''Fetch the brightness of the console using '$'\e''[[(code)]mconsoleGetColor'$'\e''[[(reset)]m'$'\n''See: consoleGetColor'$'\n''Output: Integer. between 0 and 100.'$'\n''Return Code: 0 - Success'$'\n''Return Code: 1 - A problem occurred with '$'\e''[[(code)]mconsoleGetColor'$'\e''[[(reset)]m'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - Success'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - Environment error'$'\n''- '$'\e''[[(code)]m2'$'\e''[[(reset)]m - Argument error'$'\n'''
 # shellcheck disable=SC2016
-helpPlain='Usage: consoleBrightness [ --foreground ] [ --background ]'$'\n'''$'\n''    --foreground  Flag. Optional. Get the console text color.'$'\n''    --background  Flag. Optional. Get the console background color.'$'\n'''$'\n''Fetch the brightness of the console using consoleGetColor'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - A problem occurred with consoleGetColor'$'\n'''
-# elapsed 0.72
+helpPlain='Usage: consoleBrightness'$'\n'''$'\n''Summary: Output the brightness of the background color of the console as a number between 0 and 100'$'\n''Argument: --foreground - Flag. Optional. Get the console text color.'$'\n''Argument: --background - Flag. Optional. Get the console background color.'$'\n''Fetch the brightness of the console using consoleGetColor'$'\n''See: consoleGetColor'$'\n''Output: Integer. between 0 and 100.'$'\n''Return Code: 0 - Success'$'\n''Return Code: 1 - A problem occurred with consoleGetColor'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''
+# elapsed 0.472

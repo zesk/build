@@ -4,7 +4,7 @@
 [🛠️ Tools ](./index.md) &middot; [⬅ Top ](../index.md)
 <hr />
 
-This is a new feature and is in progress.
+> Note: `validate` in use universally as of [v0.41.0](../release/v0.41.0.md).
 
 {validate}
 
