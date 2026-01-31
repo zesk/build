@@ -45,15 +45,21 @@ __bashSanitize() {
     ! $debugFlag || statusMessage decorate info "Loaded $(pluralWord ${#exceptions} pattern) [$(decorate file "$file")]"
   done < <(find "$home" -name "bashSanitize.conf" -type f ! -path "*/.*/*")
 
-  local fileList
+  local fileList && fileList=$(fileTemporaryName "$handler") || return $?
+  local clean=("$fileList.$$" "$fileList")
 
-  fileList=$(fileTemporaryName "$handler") || return $?
   if [ "$#" -eq 0 ]; then
-    catchEnvironment "$handler" cat >"$fileList" || return $?
+    catchEnvironment "$handler" cat >"$fileList.$$" || returnClean $? "${clean[@]}" || return $?
   else
-    catchEnvironment "$handler" printf "%s\n" "$@" >"$fileList" || return $?
+    catchEnvironment "$handler" printf "%s\n" "$@" >"$fileList.$$" || returnClean $? "${clean[@]}" || return $?
   fi
-
+  if [ "${#exceptions[@]}" -gt 0 ]; then
+    local ee=("-v") e && for e in "${exceptions[@]}"; do ee+=("-e" "$(quoteGrepPatttern "$e")"); done
+    catchReturn "$handler" grepSafe "${ee[@]}" <"$fileList.$$" >"$fileList" || returnClean $? "${clean[@]}" || return $?
+    catchReturn "$handler" rm -rf "$fileList.$$" || returnClean $? "${clean[@]}" || return $?
+  else
+    catchReturn "$handler" mv "$fileList.$$" "$fileList" || returnClean $? "${clean[@]}" || return $?
+  fi
   local undo=()
 
   # CHANGE DIRECTORY HERE
@@ -63,10 +69,7 @@ __bashSanitize() {
 
   statusMessage decorate success Making shell files executable ...
 
-  local shellFile
-  while read -r shellFile; do
-    statusMessage decorate info "+x $(decorate file "$shellFile")"
-  done < <(catchEnvironment "$handler" bashMakeExecutable) || returnUndo $? "${undo[@]}" || return $?
+  grepSafe --null -e ".sh$" <"$fileList" | xargs -0 chmod -v +x {} \; | decorate info | decorate wrap -- "- "
 
   if [ ${#cad[@]} -eq 0 ]; then
     cad+=("$(pwd)")

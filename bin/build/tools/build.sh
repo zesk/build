@@ -84,6 +84,7 @@ _buildDeprecatedFunctions() {
 # Prints the list of functions defined in Zesk Build
 # DOC TEMPLATE: --help 1
 # Argument: --help - Flag. Optional. Display this help.
+# shellcheck disable=SC2120
 buildFunctions() {
   local handler="_${FUNCNAME[0]}" hideDeprecated=true
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
@@ -147,6 +148,7 @@ _buildCacheDirectory() {
 # Prints the build home directory (usually same as the application root)
 # DOC TEMPLATE: --help 1
 # Argument: --help - Flag. Optional. Display this help.
+# shellcheck disable=SC2120
 buildHome() {
   local handler="_${FUNCNAME[0]}"
   export BUILD_HOME
@@ -453,7 +455,7 @@ unalias tools 2>/dev/null || :
 tools() {
   local handler="_${FUNCNAME[0]}"
 
-  local run="bin/build/tools.sh" vv=() verboseFlag=false startDirectory=""
+  local toolsBin="bin/build/tools.sh" vv=() verboseFlag=false startDirectory=""
 
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
@@ -484,14 +486,14 @@ tools() {
   [ -n "$startDirectory" ] || startDirectory=$(catchEnvironment "$handler" pwd) || return $?
 
   local home code=0
-  if ! home=$(bashLibraryHome "$run" "$startDirectory" 2>/dev/null); then
+  if ! home=$(bashLibraryHome "$toolsBin" "$startDirectory" 2>/dev/null); then
     home=$(catchReturn "$handler" buildHome) || return $?
-    ! $verboseFlag || statusMessage decorate info "Running $(decorate file "$home/$run")" "$(decorate each code -- "$@")"
-    "$home/$run" "$@" || code=$?
+    ! $verboseFlag || statusMessage decorate info "Running $(decorate file "$home/$toolsBin")" "$(decorate each code -- "$@")"
+    "$home/$toolsBin" "$@" || code=$?
   else
-    bashLibrary "${vv[@]+"${vv[@]}"}" "$run" "$@" || code=$?
+    bashLibrary "${vv[@]+"${vv[@]}"}" "$toolsBin" "$@" || code=$?
   fi
-  ! $verboseFlag || statusMessage --last printf -- "%s %s" "$(decorate each code "$home/$run" "$@")" "$(decorate notice "Exit code: $code")"
+  ! $verboseFlag || statusMessage --last printf -- "%s %s" "$(decorate each code "$home/$toolsBin" "$@")" "$(decorate notice "Return code: $code")"
   return $code
 }
 _tools() {

@@ -81,6 +81,7 @@ _dockerComposeUninstall() {
 # Argument: --help - Flag. Optional. Display this help.
 # Return Code: 1 - Not running
 # Return Code: 0 - Running
+# shellcheck disable=SC2120
 dockerComposeIsRunning() {
   local handler="_${FUNCNAME[0]}"
   [ $# -eq 0 ] || __help --only "$handler" "$@" || return "$(convertValue $? 1 0)"

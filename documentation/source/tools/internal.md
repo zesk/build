@@ -8,13 +8,21 @@
 
 {buildDocumentationBuild}
 
-### Generating documentation cache files
+### Generating cache files
 
 {buildUsageCompile}
 
 {buildUsageCompileParallel}
 
+{buildToolsCompile}
+
+## Deployment
+
+{buildStepInitialize}
+
 ## Development
+
+{repairProfile}
 
 {buildPreRelease}
 

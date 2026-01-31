@@ -13,6 +13,7 @@
 # Environment: None.
 # Short description: list mappable variables in a file (without prefix or suffix)
 # Depends: sed quoteSedPattern
+# shellcheck disable=SC2120
 mapTokens() {
   local handler="_${FUNCNAME[0]}"
   [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
@@ -135,7 +136,7 @@ _mapValueTrim() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# IDENTICAL mapEnvironment 86
+# IDENTICAL mapEnvironment 87
 
 # Summary: Convert tokens in files to environment variable values
 #
@@ -155,6 +156,7 @@ _mapValueTrim() {
 # Example:     printf %s "{NAME}, {PLACE}.\n" | NAME=Hello PLACE=world mapEnvironment NAME PLACE
 # Requires: environmentVariables cat throwEnvironment catchEnvironment
 # Requires: throwArgument decorate validate
+# shellcheck disable=SC2120
 mapEnvironment() {
   local handler="_${FUNCNAME[0]}"
 

@@ -216,15 +216,15 @@ usageArgumentDirectoryList() {
     throwArgument "$handler" "${FUNCNAME[0]} Need at least 3 arguments" || return $?
     return $?
   fi
-  local directories=() directory result=() index=0
+  local directories=() directory dd=() index=0
   IFS=":" read -r -a directories <<<"$3" || :
   for directory in "${directories[@]+"${directories[@]}"}"; do
     [ -n "$directory" ] || continue
     [ -d "$directory" ] || throwArgument "$handler" "$2 element #$index is not a directory $(decorate code "$directory"): $(decorate value "$3")" || return $?
-    result+=("$directory")
+    dd+=("$directory")
     index=$((index + 1))
   done
-  printf "%s\n" "$(listJoin ":" "${result[@]+"${result[@]}"}")"
+  printf "%s\n" "$(listJoin ":" "${dd[@]+"${dd[@]}"}")"
 }
 
 # Validates a value as an application-relative directory search list. Upon success, outputs the entire list, cleans up any invalid values or trailing characters.
@@ -243,7 +243,7 @@ usageArgumentApplicationDirectoryList() {
     return $?
   fi
 
-  local home directories=() directory result=() index=0
+  local home directories=() directory dd=() index=0
 
   home=$(catchReturn "$handler" buildHome) || return $?
   IFS=":" read -r -a directories <<<"$3" || :
@@ -253,10 +253,10 @@ usageArgumentApplicationDirectoryList() {
     directory="${directory#/}"
     directory="${directory%/}"
     [ -d "${home%/}/$directory" ] || throwArgument "$handler" "$2 element #$index is not a directory $(decorate code "$home/$directory"): $(decorate value "$3")" || return $?
-    result+=("$directory")
+    dd+=("$directory")
     index=$((index + 1))
   done
-  printf "%s\n" "$(listJoin ":" "${result[@]+"${result[@]}"}")"
+  printf "%s\n" "$(listJoin ":" "${dd[@]+"${dd[@]}"}")"
 }
 
 # Validates a value as an application-relative directory. Upon success, outputs relative path.

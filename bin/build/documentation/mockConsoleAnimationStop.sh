@@ -10,11 +10,11 @@ foundNames=()
 rawComment="Stop faking \`consoleHasAnimation\` for testing"$'\n'""$'\n'""
 return_code="0 - Success"$'\n'"1 - Environment error"$'\n'"2 - Argument error"$'\n'""
 sourceFile="bin/build/tools/test.sh"
-sourceHash="39704e552c45a3f31ac90c8d6dbc887ea13290f6"
+sourceHash="d5d12954f38b51540f87d67aa3d877d2c77a97bc"
 summary="Stop faking \`consoleHasAnimation\` for testing"
 usage="mockConsoleAnimationStop"
 # shellcheck disable=SC2016
 helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]mmockConsoleAnimationStop'$'\e''[0m'$'\n'''$'\n''Stop faking '$'\e''[[(code)]mconsoleHasAnimation'$'\e''[[(reset)]m for testing'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - Success'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - Environment error'$'\n''- '$'\e''[[(code)]m2'$'\e''[[(reset)]m - Argument error'$'\n'''
 # shellcheck disable=SC2016
 helpPlain='Usage: mockConsoleAnimationStop'$'\n'''$'\n''Stop faking consoleHasAnimation for testing'$'\n'''$'\n''Return codes:'$'\n''- 0 - Success'$'\n''- 1 - Environment error'$'\n''- 2 - Argument error'$'\n'''
-# elapsed 0.531
+# elapsed 0.697

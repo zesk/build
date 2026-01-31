@@ -241,17 +241,17 @@ __validateTypeApplicationFile() {
 
 __validateTypeApplicationDirectoryList() {
   local value="${1-}"
-  local home directories=() directory result=() index=0
+  local home directories=() directory dd=() index=0
 
   home=$(catchReturn "$handler" buildHome) || return $?
   home="${home%/}"
   IFS=":" read -r -a directories <<<"$value" || :
   for directory in "${directories[@]+"${directories[@]}"}"; do
     directory="$(___validateTypeApplicationDirectory "$home" "$directory")" || _validateThrow "element #$index ($(decorate error "$directory"): $(decorate value "$value")" || return $?
-    result+=("$directory")
+    dd+=("$directory")
     index=$((index + 1))
   done
-  printf "%s\n" "$(listJoin ":" "${result[@]+"${result[@]}"}")"
+  printf "%s\n" "$(listJoin ":" "${dd[@]+"${dd[@]}"}")"
 }
 
 # Flags are command line options which set a value to true, usually
@@ -287,15 +287,15 @@ __validateTypeDate() {
 # List of directories separated by `:`
 __validateTypeDirectoryList() {
   local value="${1-}"
-  local directories=() directory result=() index=0
+  local directories=() directory dd=() index=0
   IFS=":" read -r -a directories <<<"$value" || :
   for directory in "${directories[@]+"${directories[@]}"}"; do
     [ -n "$directory" ] || continue
     [ -d "$directory" ] || _validateThrow "element #$index is not type directory $(decorate code "$directory"): $(decorate value "$value")" || return $?
-    result+=("$directory")
+    dd+=("$directory")
     index=$((index + 1))
   done
-  printf "%s\n" "$(listJoin ":" "${result[@]+"${result[@]}"}")"
+  printf "%s\n" "$(listJoin ":" "${dd[@]+"${dd[@]}"}")"
 }
 
 # A valid environment variable name

@@ -22,7 +22,7 @@
 consoleHeadingBoxed() {
   local handler="_${FUNCNAME[0]}"
 
-  local text=() outside="decoration" inside="" shrink=0 nLines=1
+  local textLines=() outside="decoration" inside="" shrink=0 nLines=1
 
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
@@ -37,7 +37,7 @@ consoleHeadingBoxed() {
     --inside) shift && inside=$(validate "$handler" EmptyString "$argument" "${1-}") || return $? ;;
     --shrink) shift && shrink=$(validate "$handler" UnsignedInteger "$argument" "${1-}") || return $? ;;
     --size) shift && nLines=$(validate "$handler" UnsignedInteger "$argument" "${1-}") || return $? ;;
-    *) text+=("$argument") ;;
+    *) textLines+=("$argument") ;;
     esac
     shift
   done
@@ -64,14 +64,14 @@ consoleHeadingBoxed() {
   catchReturn "$handler" "${run[@]}" "$bar" || return $?
   catchReturn "$handler" printf "%s" "$head" || return $?
   endBar="$("${run[@]}" "$endBar")"
-  if [ "${#text[@]}" -eq 0 ]; then
+  if [ "${#textLines[@]}" -eq 0 ]; then
     local finished=false && while ! $finished; do
       local textLine && read -r textLine || finished=true
       [ -n "$textLine" ] || ! $finished || continue
       __boxLine "$handler" "$width" "$textLine" "$endBar" || return $?
     done
   else
-    __boxLine "$handler" "$width" "${text[*]}" "$endBar" || return $?
+    __boxLine "$handler" "$width" "${textLines[*]}" "$endBar" || return $?
   fi
   catchReturn "$handler" printf "%s" "$head" || return $?
   catchReturn "$handler" "${run[@]}" "$bar" || return $?

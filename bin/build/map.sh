@@ -194,7 +194,7 @@ _usageDocumentSimple() {
 # Requires: fileReverseLines sed cut grep convertValue
 bashFinalComment() {
   [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
-  grep -v -e '\( IDENTICAL \|_IDENTICAL_\|DOC TEMPLATE:\|Internal:\|INTERNAL:\)' | fileReverseLines | sed -n -e 1d -e '/^[[:space:]]*#/ { p'$'\n''b'$'\n''}; q' | sed -e 's/^[[:space:]]*#[[:space:]]//' -e 's/^[[:space:]]*#$//' | fileReverseLines || :
+  grep -v -e '\(shellcheck | IDENTICAL \|_IDENTICAL_\|DOC TEMPLATE:\|Internal:\|INTERNAL:\)' | fileReverseLines | sed -n -e 1d -e '/^[[:space:]]*#/ { p'$'\n''b'$'\n''}; q' | sed -e 's/^[[:space:]]*#[[:space:]]//' -e 's/^[[:space:]]*#$//' | fileReverseLines || :
   # Explained:
   # - grep -v ... - Removes internal documentation and anything we want to hide from the user
   # - fileReverseLines - First reversal to get that comment, file lines are reverse ordered
@@ -979,7 +979,7 @@ _environmentVariables() {
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
 
-# IDENTICAL mapEnvironment 86
+# IDENTICAL mapEnvironment 87
 
 # Summary: Convert tokens in files to environment variable values
 #
@@ -999,6 +999,7 @@ _environmentVariables() {
 # Example:     printf %s "{NAME}, {PLACE}.\n" | NAME=Hello PLACE=world mapEnvironment NAME PLACE
 # Requires: environmentVariables cat throwEnvironment catchEnvironment
 # Requires: throwArgument decorate validate
+# shellcheck disable=SC2120
 mapEnvironment() {
   local handler="_${FUNCNAME[0]}"
 

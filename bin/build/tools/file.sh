@@ -314,24 +314,24 @@ _realPath() {
 # Removes dot and dot-dot paths from a path correctly
 directoryPathSimplify() {
   [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
-  local path elements=() segment dot=0 result IFS="/"
+  local path elements=() segment dot=0 pathResult=() IFS="/"
   while [ $# -gt 0 ]; do
     path="$1"
     path="${path#"./"}"
     path="${path//\/\.\///}"
     read -r -a elements <<<"$path" || :
     if [ "${#elements[@]}" -gt 0 ]; then
-      result=()
+      pathResult=()
       for segment in "${elements[@]+"${elements[@]}"}"; do
         if [ "$segment" = ".." ]; then
           dot=$((dot + 1))
         elif [ $dot -gt 0 ]; then
           dot=$((dot - 1))
         else
-          result+=("$segment")
+          pathResult+=("$segment")
         fi
       done
-      printf "%s\n" "${result[*]-}"
+      printf "%s\n" "${pathResult[*]-}"
     else
       printf "\n"
     fi

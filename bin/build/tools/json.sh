@@ -72,11 +72,11 @@ __jqObject() {
   local path="$1" jqPrefix="${2-"{}"}"
   local segments=() segment
   IFS="." read -r -a segments <<<"${path#.}"
-  local reverse=()
+  local jqRev=()
   for segment in "${segments[@]}"; do
-    reverse=("$segment" "${reverse[@]+"${reverse[@]}"}")
+    jqRev=("$segment" "${jqRev[@]+"${jqRev[@]}"}")
   done
-  for segment in "${reverse[@]}"; do
+  for segment in "${jqRev[@]}"; do
     jqPrefix="{ $segment: $jqPrefix }"
   done
   printf "%s\n" "$jqPrefix"

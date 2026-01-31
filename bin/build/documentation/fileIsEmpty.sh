@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright &copy; 2026 Market Acumen, Inc.
-# Generated on 2026-01-30
+# Generated on 2026-01-31
 # shellcheck disable=SC2034
 argument="file - File. Optional. One or more files, all of which must be empty."$'\n'"--help - Flag. Optional. Display this help."$'\n'""
 base="file.sh"
@@ -9,12 +9,11 @@ file="bin/build/tools/file.sh"
 foundNames=([0]="return_code" [1]="argument")
 rawComment="Is this an empty (zero-sized) file?"$'\n'"Return Code: 0 - if all files passed in are empty files"$'\n'"Return Code: 1 - if any files passed in are non-empty files"$'\n'"Argument: file - File. Optional. One or more files, all of which must be empty."$'\n'"Argument: --help - Flag. Optional. Display this help."$'\n'""$'\n'""
 return_code="0 - if all files passed in are empty files"$'\n'"1 - if any files passed in are non-empty files"$'\n'""
-sourceFile="bin/build/tools/file.sh"
-sourceHash="5a3166bdcad258247586af970c54a4cbceb9dce7"
+sourceHash="3b2ff8d50f51bb66cfa45739fb7abe9787c417f0"
 summary="Is this an empty (zero-sized) file?"
 usage="fileIsEmpty [ file ] [ --help ]"
 # shellcheck disable=SC2016
 helpConsole=''$'\e''[[(label)]mUsage'$'\e''[0m: '$'\e''[[(info)]mfileIsEmpty'$'\e''[0m '$'\e''[[(blue)]m[ file ]'$'\e''[0m '$'\e''[[(blue)]m[ --help ]'$'\e''[0m'$'\n'''$'\n''    '$'\e''[[(blue)]mfile    '$'\e''[[(value)]mFile. Optional. One or more files, all of which must be empty.'$'\e''[[(reset)]m'$'\n''    '$'\e''[[(blue)]m--help  '$'\e''[[(value)]mFlag. Optional. Display this help.'$'\e''[[(reset)]m'$'\n'''$'\n''Is this an empty (zero-sized) file?'$'\n'''$'\n''Return codes:'$'\n''- '$'\e''[[(code)]m0'$'\e''[[(reset)]m - if all files passed in are empty files'$'\n''- '$'\e''[[(code)]m1'$'\e''[[(reset)]m - if any files passed in are non-empty files'$'\n'''
 # shellcheck disable=SC2016
 helpPlain='Usage: fileIsEmpty [ file ] [ --help ]'$'\n'''$'\n''    file    File. Optional. One or more files, all of which must be empty.'$'\n''    --help  Flag. Optional. Display this help.'$'\n'''$'\n''Is this an empty (zero-sized) file?'$'\n'''$'\n''Return codes:'$'\n''- 0 - if all files passed in are empty files'$'\n''- 1 - if any files passed in are non-empty files'$'\n'''
-# elapsed 0.83
+# elapsed 0.597

@@ -457,6 +457,7 @@ _dumpHex() {
 # apt-get: xxd
 # stdin: binary
 # stdout: formatted output set to ideal `consoleColumns`
+# shellcheck disable=SC2120
 dumpBinary() {
   local handler="_${FUNCNAME[0]}"
 

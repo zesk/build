@@ -17,15 +17,9 @@
 # Argument: --background - Flag. Optional. Get the console background color.
 consoleGetColor() {
   local handler="_${FUNCNAME[0]}"
-  local argument
-  local xtermCode sttyOld color colors success result noTTY
-  local timingTweak
+  local xtermCode="11"
+  local timingTweak=0.1
 
-  success=false
-
-  timingTweak=0.1
-  noTTY=false
-  xtermCode="11"
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
   while [ $# -gt 0 ]; do
@@ -48,8 +42,9 @@ consoleGetColor() {
     esac
     shift
   done
-  colors=()
-  if ! sttyOld=$(stty -g 2>/dev/null); then
+  local exitCode=0 parsedColors=()
+  local noTTY=false
+  local sttyOld && if ! sttyOld=$(stty -g 2>/dev/null); then
     noTTY=true
     printf -- "\e]%d;?\e\\" "${xtermCode}" || :
     sleep "$timingTweak" || :
@@ -62,18 +57,19 @@ consoleGetColor() {
     read -t 2 -r result </dev/tty
     exitCode=$?
   fi
+  local success=false result=""
   if [ $exitCode -ne 0 ]; then
     success=true
     # remove escape chars
     result="${result#*;}"
     result="${result#rgb:}"
-    IFS='/' read -r -a colors < <(printf -- "%s\\n" "$result" | sed 's/[^a-f0-9/]//g') || :
+    IFS='/' read -r -a parsedColors < <(printf -- "%s\\n" "$result" | sed 's/[^a-f0-9/]//g') || :
   fi
   if ! "$noTTY" && ! stty "$sttyOld"; then
     throwEnvironment "$handler" "stty reset to \"$sttyOld\" failed" || return $?
   fi
   if $success; then
-    for color in "${colors[@]+${colors[@]}}"; do
+    local color && for color in "${parsedColors[@]+${parsedColors[@]}}"; do
       case "$color" in
       [0-9a-fA-F][0-9a-fA-F][0-9a-fA-F][0-9a-fA-F])
         printf -- "%d\n" $(((0x$color + 0) / 256))
@@ -142,6 +138,7 @@ _consoleConfigureColorMode() {
 #
 # DOC TEMPLATE: --help 1
 # Argument: --help - Flag. Optional. Display this help.
+# shellcheck disable=SC2120
 consoleConfigureDecorate() {
   local handler="_${FUNCNAME[0]}"
   [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
@@ -210,6 +207,8 @@ consoleLinksSupported() {
   export HOSTNAME
   [ -n "${HOSTNAME-}" ] || return 1
   consoleHasAnimation || return 1
+  # ok to not pass $@ through
+  # shellcheck disable=SC2119
   ! isBitBucketPipeline || return 1
   ! isiTerm2 || return 0
 }
@@ -236,6 +235,8 @@ consoleFileLink() {
       --no-app) aa=("$1") ;;
       *)
         local path="$1"
+        # ok to not pass $@ through
+        # shellcheck disable=SC2119
         isPlain "$path" || throwArgument "$handler" "Path contains non-plain characters:"$'\n\n'"$(dumpBinary <<<"$path")"$'\n'"$(debuggingStack)" || return $?
         if [ "${path:0:1}" != "/" ]; then
           path="$(pwd)/$(directoryPathSimplify "$path")"

@@ -80,7 +80,7 @@ _bitbucketContainer() {
 # Are we currently in the BitBucket pipeline?
 # Return Code: 0 - is BitBucket pipeline
 # Return Code: 1 - Not a BitBucket pipeline
-#
+# shellcheck disable=SC2120
 isBitBucketPipeline() {
   [ $# -eq 0 ] || __help --only "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
   export BUILD_DEBUG BITBUCKET_WORKSPACE CI

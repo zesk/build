@@ -179,7 +179,7 @@ __bashDocumentationExtractDirect() {
     [ -n "$line" ] || continue
     rawComment="$rawComment$line"$'\n'
     local name="${line%%:*}" value cleanName
-    cleanName="$(lowercase "$(printf '%s' "$name" | sed 's/[- ]/_/g')")" || return $?
+    cleanName="$(lowercase "$(sed 's/[- ]/_/g')" <<<"$name")" || return $?
     __profileLabel="$cleanName"
     # IDENTICAL profileFunctionMarker 3
     # ********************************************************************************************************************

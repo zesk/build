@@ -82,9 +82,9 @@ __toolsTimingLoad() {
   while [ "$#" -gt 0 ]; do
     ! isFunction __timestamp || start=$(__timestamp)
     # shellcheck source=/dev/null
-    source "$toolsPath/$toolFile.sh" || returnMessage $internalError "%s\n" "Loading $toolFile.sh failed" || return $?
+    source "$toolsPath/$1.sh" || returnMessage $internalError "%s\n" "Loading $1.sh failed" || return $?
     ! isFunction __timestamp || elapsed=$(($(__timestamp) - start))
-    printf "%s %s\n" "$elapsed" "$toolFile" >>"${BASH_SOURCE[0]%/*}/../../.tools.times"
+    printf "%s %s\n" "$elapsed" "$1" >>"${BASH_SOURCE[0]%/*}/../../.tools.times"
     shift
   done
   sort -r "${BASH_SOURCE[0]%/*}/../../.tools.times" >"${BASH_SOURCE[0]%/*}/../../.tools.times.sorted"

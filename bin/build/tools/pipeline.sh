@@ -69,6 +69,7 @@ _versionSort() {
 # Argument: --help - Flag. Optional. Display this help.
 # Environment: IP_URL
 # Environment: IP_URL_FILTER
+# shellcheck disable=SC2120
 ipLookup() {
   local handler="_${FUNCNAME[0]}"
 

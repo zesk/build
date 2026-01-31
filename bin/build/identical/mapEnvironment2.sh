@@ -27,6 +27,7 @@
 # Example:     printf %s "{NAME}, {PLACE}.\n" | NAME=Hello PLACE=world mapEnvironment NAME PLACE
 # Requires: environmentVariables cat throwEnvironment catchEnvironment
 # Requires: throwArgument decorate validate
+# shellcheck disable=SC2120
 mapEnvironment() {
   local handler="_${FUNCNAME[0]}"
 

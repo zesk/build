@@ -12,6 +12,7 @@
 # stdout: UnsignedInteger
 # Escape: ESC `[6n`
 # Example:     IFS=$'\n' read -r -d '' saveX saveY < <(cursorGet)
+# shellcheck disable=SC2120
 cursorGet() {
   local handler="_${FUNCNAME[0]}"
   [ $# -eq 0 ] || __help --only "$handler" "$@" || return "$(convertValue $? 1 0)"

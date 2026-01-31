@@ -39,6 +39,7 @@ __documentationTemplateUpdate() {
 # Argument: todoTemplateCode - File. Optional. Template code for template.
 __documentationTemplateUpdateUnlinked() {
   local handler="_${FUNCNAME[0]}"
+  local maxMissing=50
 
   local cacheDirectory envFile template
   cacheDirectory=$(validate "$handler" Directory "cacheDirectory" "${1-}") && shift || return $?
@@ -59,10 +60,10 @@ __documentationTemplateUpdateUnlinked() {
   # Subshell hide globals
   (
     local content
-    if [ "$total" -lt 40 ]; then
+    if [ "$total" -lt "$maxMissing" ]; then
       content="$(sort <"$unlinkedFunctions")"
     else
-      content="- *ERROR* found more than $total unlinked - something is wrong"
+      content="- *ERROR* found more than $maxMissing ($total) unlinked - something is wrong"
     fi
     content=$content total=$total mapEnvironment content total <"$todoTemplate" >"$template.$$"
   ) || returnClean $? "${clean[@]}" || return $?

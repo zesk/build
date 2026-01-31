@@ -203,7 +203,7 @@ environmentLoad() {
   local handler="_${FUNCNAME[0]}"
 
   local ff=() required=true ignoreList=() secureList=()
-  local verboseMode=false debugMode=false hasOne=false execute=() variablePrefix="" context=""
+  local verboseMode=false debugMode=false hasOne=false execCommand=() variablePrefix="" context=""
 
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
@@ -255,7 +255,7 @@ environmentLoad() {
       shift
       binary=$(validate "$handler" Callable "$argument" "${1-}") || return $?
       shift
-      execute=("$binary" "$@")
+      execCommand=("$binary" "$@")
       break
       ;;
     *)
@@ -306,9 +306,9 @@ environmentLoad() {
     done
   fi
 
-  if [ ${#execute[@]} -gt 0 ]; then
+  if [ ${#execCommand[@]} -gt 0 ]; then
     ! $debugMode || printf "RUNNING: %s" "$*"
-    catchEnvironment "$handler" "${execute[@]}" || return $?
+    catchEnvironment "$handler" "${execCommand[@]}" || return $?
   fi
 }
 _environmentLoad() {
@@ -334,7 +334,7 @@ environmentFileLoad() {
   local handler="_${FUNCNAME[0]}"
 
   local ff=() environmentFile required=true
-  local verboseMode=false debugMode=false hasOne=false execute=() variablePrefix="" ee=() pp=()
+  local verboseMode=false debugMode=false hasOne=false execCommand=() variablePrefix="" ee=() pp=()
 
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
@@ -379,7 +379,7 @@ environmentFileLoad() {
       shift
       binary=$(validate "$handler" Callable "$argument" "${1-}") || return $?
       shift
-      execute=("$binary" "$@")
+      execCommand=("$binary" "$@")
       break
       ;;
     *)
@@ -411,9 +411,9 @@ environmentFileLoad() {
     ! $debugMode || printf "%s lines:\n%s\n" "$(decorate code "$environmentFile")" "$(environmentLines <"$environmentFile")"
     catchReturn "$handler" environmentLoad --context "$environmentFile" "${pp[@]+"${pp[@]}"}" "${ee[@]+"${ee[@]}"}" < <(environmentLines <"$environmentFile") || return $?
   done
-  if [ ${#execute[@]} -gt 0 ]; then
-    ! $debugMode || printf "RUNNING: %s" "${execute[*]}"
-    catchEnvironment "$handler" "${execute[@]}" || return $?
+  if [ ${#execCommand[@]} -gt 0 ]; then
+    ! $debugMode || printf "RUNNING: %s" "${execCommand[*]}"
+    catchEnvironment "$handler" "${execCommand[@]}" || return $?
   fi
 }
 _environmentFileLoad() {

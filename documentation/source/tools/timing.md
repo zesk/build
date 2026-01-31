@@ -8,6 +8,8 @@ Millisecond timing support when the underlying operating system supports it.
 
 {timing}
 
+{timingElapsed}
+
 {timingStart}
 
 {timingFormat}

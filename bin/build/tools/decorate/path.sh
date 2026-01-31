@@ -35,6 +35,8 @@ decoratePath() {
     --path)
       path="${argument%%=*}"
       icon="${argument#*=}"
+      # SC2016 happens upon simplification
+      # shellcheck disable=SC2016
       [ -n "$icon" ] || throwArgument "$handler" "Invalid path, must be in the form \`path=icon\`" || return $?
       mapping=("$path" "$icon" "${mapping[@]+"${mapping[@]}"}")
       ;;

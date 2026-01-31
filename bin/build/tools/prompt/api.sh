@@ -129,11 +129,11 @@ __bashPrompt() {
     colorsTextFormatted=$(bashPromptColorsFormat "${colorsText}")
   fi
 
-  local colors=()
-  IFS=":" read -r -a colors <<<"$colorsTextFormatted"
+  local colorsParsed=()
+  IFS=":" read -r -a colorsParsed <<<"$colorsTextFormatted"
 
   isArray __BASH_PROMPT_PREVIOUS || __BASH_PROMPT_PREVIOUS=()
-  __BASH_PROMPT_PREVIOUS=("$successPrompt" "$failurePrompt" "$colorsTextFormatted" "$label" 0 "${colors[0]}" "$successPrompt" "")
+  __BASH_PROMPT_PREVIOUS=("$successPrompt" "$failurePrompt" "$colorsTextFormatted" "$label" 0 "${colorsParsed[0]}" "$successPrompt" "")
 
   # Skip prompt on time
   ! $skipPrompt || return 0
@@ -297,18 +297,18 @@ __bashPromptHideEscapes() {
 
 # Environment: __BASH_PROMPT_PREVIOUS
 __bashPromptCode() {
-  local colors=() reset colorFormat="${1-}" && shift || return $?
+  local colorsArray=() reset colorFormat="${1-}" && shift || return $?
   reset="$(decorate reset --)"
-  IFS=":" read -r -a colors <<<"$colorFormat" || :
+  IFS=":" read -r -a colorsArray <<<"$colorFormat" || :
   printf "%s %s\n" \
     "$" "$(__bashPromptHideEscapes "\${__BASH_PROMPT_PREVIOUS[5]-}" "\$" "$reset")" \
     "code" "$(__bashPromptHideEscapes "\${__BASH_PROMPT_PREVIOUS[5]-}" "\${__BASH_PROMPT_PREVIOUS[4]#0}" "$reset")" \
     "return" "$(__bashPromptHideEscapes "\${__BASH_PROMPT_PREVIOUS[5]-}" "\${__BASH_PROMPT_PREVIOUS[7]}" "$reset")" \
     "status" "$(__bashPromptHideEscapes "\${__BASH_PROMPT_PREVIOUS[5]-}" "\${__BASH_PROMPT_PREVIOUS[6]-}" "$reset")" \
     "label" "\${__BASH_PROMPT_PREVIOUS[3]-}" \
-    "user" "$(__bashPromptHideEscapes "${colors[2]-}" "\u" "$reset")" \
-    "host" "$(__bashPromptHideEscapes "${colors[3]-}" "\h" "$reset")" \
-    "directory" "$(__bashPromptHideEscapes "${colors[4]-}" "\w" "$reset")" \
+    "user" "$(__bashPromptHideEscapes "${colorsArray[2]-}" "\u" "$reset")" \
+    "host" "$(__bashPromptHideEscapes "${colorsArray[3]-}" "\h" "$reset")" \
+    "directory" "$(__bashPromptHideEscapes "${colorsArray[4]-}" "\w" "$reset")" \
     "reset" "\[$reset\]"
 }
 

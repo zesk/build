@@ -20,8 +20,7 @@
 # DOC TEMPLATE: --help 1
 # Argument: --help - Flag. Optional. Display this help.
 # Argument: --fix - Flag. Optional. Fix files when possible.
-# Argument: script - File. Optional. Shell script to validate
-# Argument: verbose - Flag. Optional. Be verbose.
+# Argument: --verbose - Flag. Optional. Be verbose.
 # Argument: script - File. Optional. Shell script to validate
 # Side-effect: shellcheck is installed
 # Side-effect: Status written to stdout, errors written to stderr
@@ -57,7 +56,6 @@ bashLint() {
         installed=true
       fi
       if ! [ -f "$argument" ]; then
-
         throwArgument "$handler" "$(printf -- "%s: %s PWD: %s" "Not a item" "$(decorate code "$argument")" "$(pwd)")" || return $?
       fi
 

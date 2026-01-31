@@ -5,47 +5,14 @@
 # Copyright: Copyright &copy; 2026 Market Acumen, Inc.
 #
 
-# Experimental - resulting file ends up being around 1MB
-buildToolsCompile() {
-  local handler="_${FUNCNAME[0]}"
-  local home
-
-  home=$(catchReturn "$handler" buildHome) || return $?
-
-  local tempDirectory
-  tempDirectory=$(fileTemporaryName "$handler" -d) || return $?
-
-  local clean=("$tempDirectory")
-  local targetFile="$tempDirectory/source/tools.sh"
-  local sourcePath="$home/bin/build"
-  local sourceFile="$sourcePath/tools.sh" sourceFileLines
-
-  sourceFileLines=$(fileLineCount "$sourceFile")
-  catchEnvironment "$handler" muzzle directoryRequire "$tempDirectory/source" || return $?
-  catchEnvironment "$handler" grep -B "$sourceFileLines" -e '^# LOAD' <"$sourceFile" | grep -v '# LOAD' >"$targetFile" || returnClean $? "${clean[@]}" || return $?
-  catchEnvironment "$handler" cp -r "$sourcePath/identical" "$tempDirectory/identical" || returnClean $? "${clean[@]}" || return $?
-  catchEnvironment "$handler" muzzle identicalCheck --repair "$tempDirectory/identical" --extension "sh" --prefix "# COMPILED" --cd "$tempDirectory" || returnClean $? "${clean[@]}" || return $?
-
-  local toolsPath="$home/bin/build/tools"
-  local toolsList="$toolsPath/tools.conf" toolFile
-  [ -f "$toolsList" ] || throwEnvironment "$handler" "Missing $toolsList" 1>&2 || returnClean $? "${clean[@]}" || return $?
-  while read -r toolFile; do
-    [ "${toolFile#\#}" = "$toolFile" ] || continue
-    {
-      printf "%s\n" "" "# ${toolFile#"$home"}" "" || returnClean $? "${clean[@]}" || return $?
-      catchEnvironment "$handler" cat "$toolsPath/$toolFile.sh" || returnClean $? "${clean[@]}" || return $?
-    } >>"$targetFile" || returnClean $? "${clean[@]}" || return $?
-  done <"$toolsList"
-  catchEnvironment "$handler" cat "$toolsPath/../env/BUILD_HOME.sh" >>"$targetFile" || return $?
-  catchEnvironment "$handler" grep -A "$sourceFileLines" -e '^# LOAD' <"$sourceFile" | grep -v '# LOAD' >>"$targetFile" || returnClean $? "${clean[@]}" || return $?
-  catchEnvironment "$handler" cp "$targetFile" "$sourcePath/tools-compiled.sh" || return $?
-  catchEnvironment "$handler" rm -rf "${clean[@]}" || return $?
-}
-_buildToolsCompile() {
-  # __IDENTICAL__ usageDocument 1
-  usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
-}
-
+# Summary: Build step check
+# Category: Zesk Build Deployment
+# Run at the start of build steps to check that the environment exists and dump it, optionally using a build flag
+# passed as the first argument.
+# Check if `.build.env` exists and dump the environment if `true` passed
+# Return Code: 1 - `.build.env` is missing
+# Return Code: 0 - All is well
+# Argument: dumpEnv - Boolean. Optional. When `true` dumps the environment.
 buildStepInitialize() {
   local handler="_${FUNCNAME[0]}"
   local home

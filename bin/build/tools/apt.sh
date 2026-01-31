@@ -21,6 +21,7 @@ __aptLoader() {
 #
 # Is apt-get installed?
 #
+# shellcheck disable=SC2120
 aptIsInstalled() {
   [ "${1-}" != "--help" ] || __help "_${FUNCNAME[0]}" "$@" || return 0
   executableExists apt apt-get dpkg 2>/dev/null && [ -f /etc/debian_version ]

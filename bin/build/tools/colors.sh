@@ -2,9 +2,6 @@
 #
 # Copyright &copy; 2026 Market Acumen, Inc.
 #
-# Depends: text.sh
-# Docs: o ./documentation/source/tools/colors.md
-# Test: o ./test/tools/colors-tests.sh
 
 ###############################################################################
 #
@@ -21,7 +18,8 @@
 # This modifies text containing escape sequences to best make text look correct
 #
 __wrapColor() {
-  local escapeColor=$'\e'"[" prefix="$1" && shift
+  local escapeColor=$'\e'"["
+  local wrapPrefix="$1" && shift
   local suffix="${escapeColor}0m" text="$*" _magic="¢" start starts end ends
 
   # "This is a (1word) and (2phrase)"
@@ -37,17 +35,17 @@ __wrapColor() {
       IFS="$_magic" read -r -a ends <<<"$start" || :
       # [ "This is a ", "1word" ]
       if [ "${#ends[@]}" -eq 2 ]; then
-        printf "%s" "$prefix"
+        printf "%s" "$wrapPrefix"
         printf "%s" "${ends[0]}"
         printf "%s" "$suffix"
         printf "%s%s" "$escapeColor" "${ends[1]}"
       else
         # starts are divided by "$suffix" so must be added back
-        printf -- "%s%s%s" "$prefix" "$start" "$suffix"
+        printf -- "%s%s%s" "$wrapPrefix" "$start" "$suffix"
       fi
     done
   else
-    printf -- "%s%s%s" "$prefix" "$text" "$suffix"
+    printf -- "%s%s%s" "$wrapPrefix" "$text" "$suffix"
   fi
 }
 
@@ -172,7 +170,7 @@ _colorSampleCombinations() {
 #
 colorSampleStyles() {
   [ $# -eq 0 ] || __help "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
-  local colors=(
+  local styles=(
     red
     green
     blue
@@ -197,11 +195,11 @@ colorSampleStyles() {
   )
   local text="$*" i
   [ -n "$text" ] || text="The quick brown fox jumped over the lazy dog."
-  for i in "${colors[@]}"; do
+  local style && for style in "${styles[@]}"; do
     local label
-    label=$(textAlignLeft 10 "$i")
-    printf -- "%s%s\n" "$(decorate reset --)" "$(decorate "$i" "     $label: $text")"
-    printf -- "%s%s\n" "$(decorate reset --)" "$(decorate BOLD "$i" "BOLD $label: $text")"
+    label=$(textAlignLeft 10 "$style")
+    printf -- "%s%s\n" "$(decorate reset --)" "$(decorate "$style" "     $label: $text")"
+    printf -- "%s%s\n" "$(decorate reset --)" "$(decorate BOLD "$style" "BOLD $label: $text")"
   done
 }
 _colorSampleStyles() {
@@ -214,27 +212,27 @@ _colorSampleStyles() {
 #
 colorSampleSemanticStyles() {
   [ $# -eq 0 ] || __help "_${FUNCNAME[0]}" "$@" || return "$(convertValue $? 1 0)"
-  local i colors=(
-    info
-    success
-    notice
-    warning
-    error
+  local styles=(
     code
-    label
-    value
     decoration
+    error
+    info
+    label
+    notice
     subtle
+    success
+    value
+    warning
   )
-  local text="$*" reset
-  reset=$'\e'"[0m"
+  local text="$*" reset=$'\e'"[0m"
   [ -n "$text" ] || text="The quick brown fox jumped over the lazy dog."
-  for i in "${colors[@]}"; do
-    local leftLabel && leftLabel=$(textAlignLeft 10 "$i")
+
+  local style && for style in "${styles[@]}"; do
+    local leftLabel && leftLabel=$(textAlignLeft 10 "$style")
     printf "%s" "$reset"
-    decorate "$i" "     $leftLabel: $text"
+    decorate "$style" "     $leftLabel: $text"
     printf "%s" "$reset"
-    decorate BOLD "$i" "BOLD $leftLabel: $text"
+    decorate BOLD "$style" "BOLD $leftLabel: $text"
   done
   decorate "pair" "pair" "$text"
   decorate BOLD "pair" "BOLD pair" "$text"
@@ -503,19 +501,20 @@ __colorBrightness() {
 # Argument: greenValue - Integer. Optional. Red RGB value (0-255)
 # Argument: blueValue - Integer. Optional. Red RGB value (0-255)
 # stdin: 3 integer values [ Optional ]
+# shellcheck disable=SC2120
 colorBrightness() {
   local handler="_${FUNCNAME[0]}"
   local r g b
 
   if [ $# -eq 0 ]; then
-    local done=false color colors=()
+    local done=false color colorsArray=()
     # 0.299 R + 0.587 G + 0.114 B
     while ! $done; do
       read -r color || done=true
-      colors+=("$color")
-      if [ ${#colors[@]} -eq 3 ]; then
-        __colorBrightness "$handler" "${colors[@]}" || return $?
-        colors=()
+      colorsArray+=("$color")
+      if [ ${#colorsArray[@]} -eq 3 ]; then
+        __colorBrightness "$handler" "${colorsArray[@]}" || return $?
+        colorsArray=()
       fi
     done
   elif [ $# -lt 3 ]; then
@@ -724,7 +723,7 @@ _colorParse() {
 # Requires: bc
 colorMultiply() {
   local handler="_${FUNCNAME[0]}"
-  local factor colors=()
+  local factor colorsArray=()
 
   [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
 
@@ -733,12 +732,12 @@ colorMultiply() {
 
   local red green blue
   if [ $# -gt 0 ]; then
-    colors=("$@")
+    colorsArray=("$@")
   else
-    local color && while read -r color; do colors+=("$color"); done
+    local color && while read -r color; do colorsArray+=("$color"); done
   fi
 
-  set -- "${colors[@]+"${colors[@]}"}"
+  set -- "${colorsArray[@]+"${colorsArray[@]}"}"
   while [ $# -gt 0 ]; do
     local red green blue
     red=$(validate "$handler" UnsignedInteger "redValue" "${1-}") && shift || return $?

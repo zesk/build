@@ -302,6 +302,7 @@ trimSpace() {
       shift
     done
   else
+    # shellcheck disable=SC2016
     catchEnvironment "$handler" awk "{\$1=\$1};NF" || return $?
   fi
 }
@@ -547,14 +548,13 @@ fileFieldMaximum() {
 
   [ "${1-}" != "--help" ] || __help "$handler" "$@" || return 0
 
-  local index=$((${1-1} + 0)) separatorChar=${2-}
+  local index=$((${1-1} + 0)) charArg=${2-}
 
-  if [ -n "$separatorChar" ]; then
-    separatorChar=("-F$separatorChar")
-  else
-    separatorChar=()
+  local ss=()
+  if [ -n "$charArg" ]; then
+    ss=("-F$charArg")
   fi
-  awk "${separatorChar[@]+"${separatorChar[@]}"}" "{ print length(\$$index) }" | sort -rn | head -n 1
+  catchReturn "$handler" awk "${ss[@]+"${ss[@]}"}" "{ print length(\$$index) }" | catchReturn "$handler" sort -rn | catchReturn "$handler" head -n 1 || return $?
 }
 _fileFieldMaximum() {
   # __IDENTICAL__ usageDocument 1

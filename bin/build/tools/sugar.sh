@@ -112,7 +112,7 @@ _returnMap() {
 # Requires: isUnsignedInteger throwArgument decorate execute
 # Requires: usageDocument
 returnUndo() {
-  local __count=$# __saved=("$@") __handler="_${FUNCNAME[0]}" code="${1-}" args=()
+  local __count=$# __saved=("$@") __handler="_${FUNCNAME[0]}" code="${1-}" execArguments=()
   # __IDENTICAL__ __checkHelp1__handler 1
   [ "${1-}" != "--help" ] || __help "$__handler" "$@" || return 0
   shift
@@ -121,22 +121,23 @@ returnUndo() {
   while [ $# -gt 0 ]; do
     case "$1" in
     --)
-      [ "${#args[@]}" -eq 0 ] || execute "${args[@]}" || :
-      args=()
+      [ "${#execArguments[@]}" -eq 0 ] || muzzle execute "${execArguments[@]}" || :
+      execArguments=()
       ;;
     *)
-      args+=("$1")
+      execArguments+=("$1")
       ;;
     esac
     shift
   done
-  [ "${#args[@]}" -eq 0 ] || execute "${args[@]}" || :
+  [ "${#execArguments[@]}" -eq 0 ] || muzzle execute "${execArguments[@]}" || :
   return "$code"
 }
 _returnUndo() {
   # __IDENTICAL__ usageDocument 1
   usageDocument "${BASH_SOURCE[0]}" "${FUNCNAME[0]#_}" "$@"
 }
+
 
 # IDENTICAL executeInputSupport 39
 

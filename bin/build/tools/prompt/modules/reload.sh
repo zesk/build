@@ -136,7 +136,7 @@ __reloadChangesRemove() {
 
 __reloadChangesCacheFile() {
   local handler="$1" && shift
-  local extension="${1-state}" && shift
+  local extension="${1:-state}"
 
   export __BASH_PROMPT_RELOAD_CHANGES_CACHE
 

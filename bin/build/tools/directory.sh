@@ -190,7 +190,7 @@ _fileDirectoryExists() {
 directoryRequire() {
   local handler="_${FUNCNAME[0]}"
 
-  local mode=() owner="" directories=() noun="directory" output=""
+  local modeArray=() owner="" directories=() noun="directory" output=""
 
   # _IDENTICAL_ argumentNonBlankLoopHandler 6
   local __saved=("$@") __count=$#
@@ -210,8 +210,8 @@ directoryRequire() {
       ;;
     --mode)
       shift
-      mode=("$argument" "$(validate "$handler" String "$argument" "${1-}")") || return $?
-      [ "${mode[1]}" != "-" ] || mode=()
+      modeArray=("$argument" "$(validate "$handler" String "$argument" "${1-}")") || return $?
+      [ "${modeArray[1]}" != "-" ] || modeArray=()
       ;;
     --noun)
       shift
@@ -224,9 +224,9 @@ directoryRequire() {
     *)
       local name="$argument"
       if [ -d "$name" ]; then
-        [ 0 -eq "${#mode[@]}" ] || catchEnvironment "$handler" chmod "${mode[1]}" "$name" || return $?
+        [ 0 -eq "${#modeArray[@]}" ] || catchEnvironment "$handler" chmod "${modeArray[1]}" "$name" || return $?
       else
-        catchEnvironment "$handler" mkdir -p "${mode[@]+"${mode[@]}"}" "$name" || return $?
+        catchEnvironment "$handler" mkdir -p "${modeArray[@]+"${modeArray[@]}"}" "$name" || return $?
       fi
       [ -z "$owner" ] || catchEnvironment "$handler" chown "$owner" "$name" || return $?
       directories+=("$name")
